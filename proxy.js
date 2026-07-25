@@ -465,8 +465,10 @@ function _issueSyncToken(S) {
   else S.pendingTok = frame;
 }
 // ── PokerTH game-server registry (admin Layer A) — see /admin/servers ──
-// Entries: { id, name, host, port, tls }. A saved server is auto-added to the
-// dial allowlist via isHostAllowed / isPortAllowed. The proxy remains a pure
+// Entries: { id, name, host, port, tls, sni, noverify }. A saved server is
+// auto-added to the dial allowlist via isHostAllowed / isPortAllowed. TLS
+// details (SNI name, per-server verification opt-out) live on the entry too —
+// see _serverTlsOpts. The proxy remains a pure
 // relay; it does NOT run or configure the dedicated game server itself.
 function _serversList() { var a = _adminConfig && _adminConfig.servers; return Array.isArray(a) ? a : []; }
 function _sanitizeServer(s) {
@@ -476,7 +478,33 @@ function _sanitizeServer(s) {
   var port = parseInt(s.port, 10); if (!(port >= 1 && port <= 65535)) port = 7234;
   var name = String(s.name || '').trim().slice(0, 40) || host;
   var id = String(s.id || '').trim().slice(0, 40) || ('srv_' + Math.random().toString(36).slice(2, 9));
-  return { id: id, name: name, host: host, port: port, tls: !!s.tls };
+  // Nom présenté en SNI et vérifié contre le certificat. Utile quand `host`
+  // est une IP : Node vérifierait alors le certificat contre l'IP, qui n'est
+  // presque jamais dans les SAN → ERR_TLS_CERT_ALTNAME_INVALID.
+  var sni = String(s.sni || '').trim().toLowerCase().slice(0, 255);
+  if (sni && !/^[a-z0-9.-]+$/.test(sni)) sni = '';
+  return { id: id, name: name, host: host, port: port, tls: !!s.tls,
+           sni: sni, noverify: !!s.noverify };
+}
+
+// Options TLS propres à UN serveur enregistré. Deux besoins réels :
+//  · `sni` — se connecter à une IP privée (ex. 10.7.7.150) tout en présentant
+//    et en vérifiant le nom que le certificat couvre. La vérification reste
+//    ACTIVE : c'est le nom vérifié qui change, pas le niveau de contrôle.
+//  · `noverify` — certificat auto-signé ou expiré : on désarme la vérification
+//    POUR CE SERVEUR SEULEMENT. Jamais globalement — un interrupteur global
+//    (`--insecure`) affaiblirait silencieusement toutes les autres cibles.
+// Renvoie les valeurs neutres si le couple host:port n'est pas enregistré.
+function _serverTlsOpts(host, port) {
+  var h = String(host || '').trim().toLowerCase();
+  var pt = parseInt(port, 10);
+  var list = _serversList();
+  for (var i = 0; i < list.length; i++) {
+    var e = list[i];
+    if (e && String(e.host).toLowerCase() === h && parseInt(e.port, 10) === pt)
+      return { sni: String(e.sni || ''), noverify: !!e.noverify };
+  }
+  return { sni: '', noverify: false };
 }
 // The server the client uses for the "Internet / PokerTH.net" entry mode: a
 // pointer (activeServerId) into the registry above. Returns {name,host,port,tls}
@@ -700,9 +728,14 @@ function lobbyProbe(host, port, useTls, cb) {
     }
   }
   try {
+    // Le Check DOIT utiliser exactement les réglages de la vraie connexion de
+    // jeu : forcer rejectUnauthorized:false ici donnerait un ✓ vert alors que
+    // la partie échouerait ensuite en CERT_HAS_EXPIRED (piège du 24/07).
+    var _t = _serverTlsOpts(host, port);
+    var _sni = _t.sni || (/^[0-9.]+$/.test(host) ? '' : host);
     var opts = { host: host, port: port };
     sock = useTls
-      ? tls.connect(Object.assign({ rejectUnauthorized: false, servername: /^[0-9.]+$/.test(host) ? undefined : host }, opts), function () {})
+      ? tls.connect(Object.assign({ rejectUnauthorized: !(INSECURE_TLS || _t.noverify) }, (_sni ? { servername: _sni } : {}), opts), function () {})
       : net.connect(opts, function () {});
     sock.setTimeout(8000);
     sock.on('data', feed);
@@ -2132,9 +2165,12 @@ function handleAdmin(req, res, reqPathOnly, query) {
       var t0 = Date.now(), done = false, sock = null;
       function finish(ok, err) { if (done) return; done = true; try { if (sock) sock.destroy(); } catch (e) {} return adminJson(res, 200, { ok: true, reachable: ok, ms: Date.now() - t0, error: err || '' }); }
       try {
+        // Mêmes réglages TLS que la connexion de jeu (cf. lobbyProbe).
+        var _t = _serverTlsOpts(host, port);
+        var _sni = _t.sni || (/^[0-9.]+$/.test(host) ? '' : host);
         var opts = { host: host, port: port };
         sock = useTls
-          ? tls.connect(Object.assign({ rejectUnauthorized: false, servername: /^[0-9.]+$/.test(host) ? undefined : host }, opts), function () { finish(true, ''); })
+          ? tls.connect(Object.assign({ rejectUnauthorized: !(INSECURE_TLS || _t.noverify) }, (_sni ? { servername: _sni } : {}), opts), function () { finish(true, ''); })
           : net.connect(opts, function () { finish(true, ''); });
         sock.setTimeout(6000);
         sock.on('timeout', function () { finish(false, 'timeout'); });
@@ -3533,15 +3569,27 @@ function _lookupPreferV4(host, cb) {
 function _openUpstream(S) {
   _scheduleConn(() => {
     _lookupPreferV4(S.host, (addr) => {
-      const isIp = net.isIP(addr) !== 0;
-      const opts = { host: addr, port: S.port, ...(!isIp && { servername: S.host }) };
+      // Réglages TLS de l'entrée de registre correspondante (voir _serverTlsOpts).
+      const tOpt = _serverTlsOpts(S.host, S.port);
+      // Le SNI se déduit du host DEMANDÉ, pas de l'adresse résolue : `addr` est
+      // presque toujours une IP (dns.lookup), donc l'ancien test `net.isIP(addr)`
+      // supprimait le servername dans tous les cas. Node vérifiait alors le
+      // certificat contre l'IP — échec de nom garanti sur toute cible TLS. Le
+      // bug restait invisible tant qu'aucun serveur TLS vérifié n'était utilisé.
+      const sniName = tOpt.sni || (net.isIP(S.host) ? '' : String(S.host || ''));
+      const verify = !(INSECURE_TLS || tOpt.noverify);
+      const opts = { host: addr, port: S.port, ...(sniName && { servername: sniName }) };
       const onConn = () => {
         S.connected = true;
-        const info = S.useTls ? '(TLS ' + (S.sock.getCipher() ? S.sock.getCipher().name : '?') + ')' : '(raw TCP)';
+        const info = S.useTls
+          ? '(TLS ' + (S.sock.getCipher() ? S.sock.getCipher().name : '?')
+            + (sniName && sniName !== S.host ? ', sni=' + sniName : '')
+            + (verify ? '' : ', verify OFF') + ')'
+          : '(raw TCP)';
         console.log('[+] Connected ' + info + ' → ' + addr + ':' + S.port);
       };
       S.sock = S.useTls
-        ? tls.connect({ ...opts, rejectUnauthorized: !INSECURE_TLS }, onConn)
+        ? tls.connect({ ...opts, rejectUnauthorized: verify }, onConn)
         : net.connect(opts, onConn);
 
       S.sock.on('data', chunk => {

@@ -526,7 +526,7 @@
     <div id="panel-servers" style="display:none">
       <div class="card">
         <div class="boardhead" style="margin-bottom:6px"><h2 style="margin:0">Game servers</h2><button id="srvAddBtn" class="use">+ Add server</button></div>
-        <p class="muted" style="margin:2px 0 10px">PokerTH game servers the web client may dial — your LAN box or an Internet host. Saving a server adds it to the proxy's dial allowlist (host + port). The proxy is only a relay; it does not run or configure the game server itself. “Check” connects to the server to read live player &amp; game counts.</p>
+        <p class="muted" style="margin:2px 0 10px">PokerTH game servers the web client may dial — your LAN box or an Internet host. Saving a server adds it to the proxy's dial allowlist (host + port). The proxy is only a relay; it does not run or configure the game server itself. “Check” connects to the server to read live player &amp; game counts, using the very same TLS settings as a real game connection. For a TLS server reached by IP, put the certificate's name in “TLS name”; “Skip cert check” accepts a self-signed or expired certificate for that one server.</p>
         <div class="card" style="margin:0 0 10px;padding:10px">
           <div style="margin-bottom:6px"><b>Internet / PokerTH.net — source</b></div>
           <label class="muted" style="display:block;margin:3px 0"><input type="radio" name="srvSource" class="srcManual"> <b>Manual</b> — use the active server below (or built-in pokerth.net:7234)</label>
@@ -587,7 +587,7 @@
   var _transport = 'direct';
   var _slUrl = '';
   function srvEsc(s){ return String(s==null?'':s).replace(/[&<>"]/g,function(c){return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'})[c];}); }
-  function srvSyncRow(row,i){ if(!_srv[i]) return; _srv[i].name=row.querySelector('.srvN').value.trim(); _srv[i].host=row.querySelector('.srvH').value.trim(); _srv[i].port=parseInt(row.querySelector('.srvP').value,10)||7234; _srv[i].tls=!!row.querySelector('.srvT').checked; }
+  function srvSyncRow(row,i){ if(!_srv[i]) return; _srv[i].name=row.querySelector('.srvN').value.trim(); _srv[i].host=row.querySelector('.srvH').value.trim(); _srv[i].port=parseInt(row.querySelector('.srvP').value,10)||7234; _srv[i].tls=!!row.querySelector('.srvT').checked; var _s=row.querySelector('.srvSNI'); _srv[i].sni=_s?_s.value.trim().toLowerCase():''; var _n=row.querySelector('.srvNV'); _srv[i].noverify=!!(_n&&_n.checked); }
   function srvSyncAll(){ var box=$('srvRows'); if(!box) return; [].slice.call(box.querySelectorAll('.srow')).forEach(function(row){ srvSyncRow(row,+row.getAttribute('data-i')); }); }
   function srvProbe(i,row){ var s=_srv[i]; if(!s||!s.host) return; var st=row.querySelector('.srvStat'); st.textContent='Checking…'; st.className='srvStat msg';
     api('/admin/servers/lobby',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({host:s.host,port:s.port,tls:s.tls})}).then(function(r){return r.json();}).then(function(d){
@@ -608,6 +608,7 @@
         +'<div class="defrow" style="display:flex;gap:10px;align-items:center;margin:0 0 6px"><span style="width:46px">Name</span><input class="srvN" maxlength="40" placeholder="My LAN game" value="'+srvEsc(s.name)+'" style="flex:1;min-width:0"></div>'
         +'<div class="defrow" style="display:flex;gap:10px;align-items:center;margin:6px 0"><span style="width:46px">Host</span><input class="srvH" maxlength="255" placeholder="192.168.1.10 or box.ddns.net" value="'+srvEsc(s.host)+'" autocomplete="off" style="flex:1;min-width:0"></div>'
         +'<div class="periodrow" style="margin:6px 0;flex-wrap:wrap"><label class="muted">Port <input class="srvP" type="number" min="1" max="65535" value="'+(parseInt(s.port,10)||7234)+'" style="margin:0;width:90px"></label><label class="muted">TLS <input class="srvT" type="checkbox" '+(s.tls?'checked':'')+'></label><label class="muted" title="Use this server for the Internet / PokerTH.net button">Active <input class="srvA" type="radio" name="srvActive" '+(s.id&&s.id===_activeSrv?'checked':'')+' '+(s.id?'':'disabled')+'></label><button class="use srvTest" type="button">Check</button><button class="ghost srvDel" type="button">Remove</button></div>'
+        +'<div class="defrow" style="display:flex;gap:10px;align-items:center;margin:6px 0;flex-wrap:wrap"><span style="width:70px" title="Name checked against the certificate. Required when Host is an IP: the certificate almost never lists the IP.">TLS name</span><input class="srvSNI" maxlength="255" placeholder="certificate name, e.g. pokerth.net (leave empty to use Host)" value="'+srvEsc(s.sni||'')+'" autocomplete="off" style="flex:1;min-width:120px"><label class="muted" title="Accept a self-signed or expired certificate for THIS server only. Leave off whenever possible.">Skip cert check <input class="srvNV" type="checkbox" '+(s.noverify?'checked':'')+'></label></div>'
         +'<div class="srvStat msg" style="margin:4px 0 0"></div>'
         +'</div>';
     }).join('');
@@ -615,7 +616,7 @@
       var i=+row.getAttribute('data-i');
       row.querySelector('.srvDel').addEventListener('click',function(){ srvSyncAll(); _srv.splice(i,1); renderServers(); });
       row.querySelector('.srvTest').addEventListener('click',function(){ srvSyncRow(row,i); srvProbe(i,row); });
-      ['.srvN','.srvH','.srvP','.srvT'].forEach(function(sel){ var el=row.querySelector(sel); if(el) el.addEventListener('change',function(){ srvSyncRow(row,i); }); });
+      ['.srvN','.srvH','.srvP','.srvT','.srvSNI','.srvNV'].forEach(function(sel){ var el=row.querySelector(sel); if(el) el.addEventListener('change',function(){ srvSyncRow(row,i); }); });
       var _aEl=row.querySelector('.srvA'); if(_aEl) _aEl.addEventListener('change',function(){ srvSyncRow(row,i); if(_srv[i]&&_srv[i].id) _activeSrv=_srv[i].id; });
     });
     var _none=box.querySelector('.srvANone'); if(_none) _none.addEventListener('change',function(){ _activeSrv=''; });
@@ -624,7 +625,7 @@
     var box=$('srvRows'); if(box) box.innerHTML='<div class="empty">Loading…</div>';
     api('/admin/servers').then(function(r){return r.json();}).then(function(d){
       if(!d||!d.ok){ if(box) box.innerHTML='<div class="empty">'+srvEsc((d&&d.error)||'Error')+'</div>'; return; }
-      _srv=(d.servers||[]).map(function(s){return {id:s.id,name:s.name||'',host:s.host||'',port:parseInt(s.port,10)||7234,tls:!!s.tls};});
+      _srv=(d.servers||[]).map(function(s){return {id:s.id,name:s.name||'',host:s.host||'',port:parseInt(s.port,10)||7234,tls:!!s.tls,sni:s.sni||'',noverify:!!s.noverify};});
       _activeSrv=d.activeServerId||'';
       _srcMode=(d.source==='auto')?'auto':'manual'; _transport=(d.transport==='proxy')?'proxy':'direct'; _slUrl=d.serverlistUrl||'';
       applySourceUI(d.serverlist||null); applyTransportUI();
