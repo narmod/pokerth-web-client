@@ -152,7 +152,7 @@ use too. Items are grouped by status rather than fixed phases.
   pagination) plus per-player profile cards, via same-origin `/api/ranking` and
   `/api/player` relays.
 - In-game invitations from the lobby players list (native protocol — reaches official
-  clients too), community vote-kick petitions, and country flags on avatars.
+  clients too) and country flags on avatars.
 - Player-comfort moderation: ignore a player (persisted), locally mute reactions, and an
   option to strip emojis from received chat.
 - Lobby game cards show player counts, status, and each table's blind level and raise schedule.

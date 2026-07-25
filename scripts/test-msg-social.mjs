@@ -37,14 +37,10 @@ function subOf(inner) { return Proto.decode(Proto.encode(inner)); } // sub = sou
 S.myId = 5; S.players = { 5: 'Moi', 9: 'Bob' };
 S.ws = { readyState: 1, send: () => {} };
 
-// ── Kick petitions : le handler délègue à petitions.mjs (état S._pet)
-S._pet = null; S.games = {}; S.amInGame = false; S.gId = 3; // même table que la pétition (sinon _petTick la rejette)
+// ── État de départ commun aux handlers sociaux
+S.games = {}; S.amInGame = false; S.gId = 3;
 window._offlineMode = false;
-let sub = subOf([[1, 0, 3], [2, 0, 77], [3, 0, 9], [4, 0, 5], [5, 0, 30], [6, 0, 2]]);
-M.onStartKickPetition(sub);
-ok(S._pet && S._pet.petitionId === 77 && S._pet.target === 5,
-   'onStartKickPetition : pétition enregistrée (id 77, cible moi)');
-if (S._pet && S._pet.timer) clearInterval(S._pet.timer);
+let sub;
 
 // ── InviteNotify : seulement si l'invité, c'est moi
 S._inv = null;
@@ -123,7 +119,7 @@ M.onChatReject(sub);
 ok(gameChats.length === 1, 'onChatReject : refus en partie → addGameChat système');
 
 // Ponts window
-ok(window.onChat === M.onChat && window.onStartKickPetition === M.onStartKickPetition &&
+ok(window.onChat === M.onChat && window.onInviteNotify === M.onInviteNotify &&
    window.onChatReject === M.onChatReject, 'ponts window.* en place');
 
 console.log(fail ? `\n${fail}/${n} ÉCHECS` : `\n${n}/${n} OK`);

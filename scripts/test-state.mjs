@@ -52,7 +52,7 @@ ok(S._statsOpen === false && S._statsTab === 'session' && S._boardSort === 'net'
 ok(S._pimTab === 'session' && S._pimPid === 0, 'popup profil : onglet session / pid 0');
 
 // V3 — Pétitions / invitations + chat / notifs / titre
-ok(S._pet === null && S._inv === null, '_pet / _inv init = null');
+ok(S._inv === null, '_inv init = null');
 ok(typeof S._invSent === 'object' && Object.keys(S._invSent).length === 0, '_invSent init = {}');
 ok(S._lastMsgWasReaction === false && S._chatRejectShown === false, 'drapeaux chat init = false');
 ok(Array.isArray(S._reactEmojiQueue) && S._reactEmojiQueue.length === 0
@@ -162,7 +162,7 @@ ok(JSON.stringify(keys) === JSON.stringify(['REACT_EMOJI_MIN_GAP', 'REACT_EMOJI_
    '_SPEAK_MAX', '_avatarPickerBackdropHandler', '_avatarPickerBtnHandler',
    '_avatarPopupOrigNextSibling', '_avatarPopupOrigParent', '_boardEligible', '_boardSort',
    '_chatRejectShown', '_curU', '_gameCounted', '_hapticEnabled', '_inv', '_invSent',
-   '_lastMsgWasReaction', '_lifePushTimer', '_myAvatarCache', '_origTitle', '_pet', '_pimPid',
+   '_lastMsgWasReaction', '_lifePushTimer', '_myAvatarCache', '_origTitle', '_pimPid',
    '_pimTab', '_playerAvatars', '_playerImgAvatars', '_pthAvatarHashes',
    '_pthAvatarReqIdToHash', '_pthAvatarsByHash', '_pthDataUrls', '_pthNextAvatarReqId',
    '_reactEmojiLastSent', '_reactEmojiQueue', '_reactEmojiTimer', '_speakQ', '_speaking',

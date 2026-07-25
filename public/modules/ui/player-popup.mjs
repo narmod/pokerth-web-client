@@ -230,22 +230,6 @@ function openPlayerInfoPopup(pid, autoStats) {
     if (infoEl) {
       infoEl.innerHTML = _otherPlayerInfoHtml(targetPid);
       infoEl.style.display = '';
-      // Community vote-kick entry — live (online) game only, seated
-      // opponent, when we're seated and not the host (the host has the
-      // direct kick). The server still arbitrates via AskKickDenied.
-      try {
-        if (!window._offlineMode && S.gId && targetPid !== S.myId && !S.amGameAdmin &&
-            !S._amSpectator && S.seatData[targetPid] && !S.seatData[targetPid].gone) {
-          var _vkBtn = document.createElement('button');
-          _vkBtn.className = 'pim-votekick-btn';
-          _vkBtn.textContent = t('petitionAsk');
-          _vkBtn.style.cssText = 'display:block;width:100%;margin-top:10px;padding:8px 0;' +
-            'border:1px solid var(--gold,#E3C800);border-radius:8px;cursor:pointer;' +
-            'background:transparent;color:var(--text,#eff1f5);font-weight:600';
-          _vkBtn.addEventListener('click', function(){ window._petAsk(targetPid); });
-          infoEl.appendChild(_vkBtn);
-        }
-      } catch(e) {}
     }
   }
   // Ouverture directe sur les stats (bouton 📊 de la liste) : charge le

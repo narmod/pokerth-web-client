@@ -414,19 +414,6 @@ const MSG = (() => {
     return Proto.encode([[1,0,76],[77,2,msg]]);
   }
 
-  // AskKickPlayerMessage (type 55, env field 56): gameId=1, playerId=2.
-  // Asks the server to open a community vote-kick petition. The server
-  // answers AskKickDenied if not allowed, else broadcasts StartKickPetition.
-  function buildAskKickPlayer(gameId, playerId) {
-    const msg = Proto.encode([[1,0,gameId],[2,0,playerId]]);
-    return Proto.encode([[1,0,T.AskKickPlayer],[56,2,msg]]);
-  }
-  // VoteKickRequestMessage (type 58, env field 59): gameId=1, petitionId=2,
-  // voteKick=3 (bool). Casts our vote on a running petition.
-  function buildVoteKick(gameId, petitionId, voteYes) {
-    const msg = Proto.encode([[1,0,gameId],[2,0,petitionId],[3,0,voteYes?1:0]]);
-    return Proto.encode([[1,0,T.VoteKickRequest],[59,2,msg]]);
-  }
 
   // RejectGameInvitationMessage (type 34, env field 35): gameId=1, myRejectReason=2.
   //   reason: 0 = rejectReasonNo (polite decline), 1 = rejectReasonBusy.
@@ -440,7 +427,7 @@ const MSG = (() => {
     const msg = Proto.encode([[1,0,gameId],[2,0,playerId]]);
     return Proto.encode([[1,0,T.InvitePlayerToGame],[33,2,msg]]);
   }
-  return { T, parse, scramClientFirst, scramClientFinal, scramFindServerFirst, buildInit, buildChat, buildGameChat, buildJoin, buildJoinGame, buildRejoinGame, buildStartEventAck, buildMyAction, buildCreateGame, buildLeaveGame, buildStartWithBots, buildKickPlayer, buildShowMyCards, buildAdminBanPlayer, buildAskKickPlayer, buildVoteKick, buildRejectInvite, buildInvitePlayer };
+  return { T, parse, scramClientFirst, scramClientFinal, scramFindServerFirst, buildInit, buildChat, buildGameChat, buildJoin, buildJoinGame, buildRejoinGame, buildStartEventAck, buildMyAction, buildCreateGame, buildLeaveGame, buildStartWithBots, buildKickPlayer, buildShowMyCards, buildAdminBanPlayer, buildRejectInvite, buildInvitePlayer };
 })();
 
 // ─── Exports ES + alias legacy ───────────────────────────────────────────

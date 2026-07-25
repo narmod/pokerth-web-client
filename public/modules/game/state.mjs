@@ -43,7 +43,6 @@ export const S = {
   _pimPid: 0,              // pid affiché dans le popup profil (0 / myId = mon profil)
 
   // ── V3 · Pétitions / invitations + chat / notifs / titre (domaines K + J) ──
-  _pet: null,              // { petitionId, target, endsAt, timer, voted } | null
   _inv: null,              // { gameId } | null
   _invSent: {},            // pids invited during the current invite-modal session
   _lastMsgWasReaction: false, // true si le dernier chat envoyé était une réaction

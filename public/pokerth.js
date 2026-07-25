@@ -3562,7 +3562,7 @@ const App = (() => {
   }
 
   // ── HANDLER DE MESSAGES ──
-  // [9f-5] Vote-kick (_pet*) et invitations (_invite*) déplacés dans
+  // [9f-5] Invitations (_invite*) déplacées dans
   // public/modules/net/petitions.mjs (toujours globaux via window.*).
 
   function handleMsg(buf) {
@@ -3585,12 +3585,6 @@ const App = (() => {
     switch (type) {
 
       // Le serveur s'annonce → on envoie notre Init
-      // ── Kick petitions / vote-kick ──
-      case T.StartKickPetition: { onStartKickPetition(sub); break; } // [9g-C2] → net/msg-social.mjs
-      case T.KickPetitionUpdate: { onKickPetitionUpdate(sub); break; } // [9g-C2] → net/msg-social.mjs
-      case T.VoteKickReply: { onVoteKickReply(sub); break; } // [9g-C2] → net/msg-social.mjs
-      case T.EndKickPetition: { onEndKickPetition(sub); break; } // [9g-C2] → net/msg-social.mjs
-      case T.AskKickDenied: { onAskKickDenied(sub); break; } // [9g-C2] → net/msg-social.mjs
 
       // ── Game invitation: the host invited us to a table ──
       case T.InviteNotify: { onInviteNotify(sub); break; } // [9g-C2] → net/msg-social.mjs
@@ -9314,7 +9308,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.4-web.55'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.4-web.56'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

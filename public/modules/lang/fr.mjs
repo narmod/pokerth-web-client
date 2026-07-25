@@ -180,17 +180,6 @@ export const strings = {
     kickConfirmMsg:'Le joueur "{name}" sera expulsé de la table.',
     kickRequested:'Kick demandé pour {name} (en attente du serveur…)',
     kickNotProcessed:"Le serveur n'a pas traité le kick de {name} — version PokerTH < 2.0.6 probable.",
-    // ── Vote d'exclusion ──
-    petitionAsk:"Lancer un vote d'exclusion", petitionTitle:'Exclure {name} ?',
-    petitionAgainstYou:'Un vote pour vous exclure est en cours',
-    petitionVoteYes:'Exclure', petitionVoteNo:'Garder',
-    petitionTally:'Pour {y} · Contre {n} · requis {k}',
-    petitionTimeLeft:'{s}s', petitionVoted:'Vote enregistré',
-    petitionStarted:"Vote d'exclusion lancé contre {name}",
-    petitionResultKicked:'{name} a été exclu', petitionResultRejected:'Vote rejeté',
-    petitionEndTimeout:'Délai écoulé', petitionEndLeft:'Joueur déjà parti',
-    petitionEndFew:'Pas assez de joueurs', petitionDenied:'Impossible de lancer le vote pour le moment',
-    petitionAlreadyVoted:'Vous avez déjà voté',
     // ── Invitations à une partie ──
     inviteTitle:'{name} vous invite à {table}', inviteAccept:'Accepter', inviteDecline:'Refuser',
     inviteAccepted:'Connexion à la table...',

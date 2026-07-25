@@ -1,9 +1,9 @@
 // ═══════════════════════════════════════════════════════════════════
-// Handlers réseau — social (kick-petitions, invitations, chat,
+// Handlers réseau — social (invitations, chat,
 // avertissement de timeout) — chantier ESM #9g-C2. Chaque fonction =
 // le corps EXACT de l'ancienne case de handleMsg (signature (sub),
 // `break` retiré ; RejectInvNotify était une case vide, conservée en
-// no-op documenté). Adaptations : _pet*/_inviteShow (petitions.mjs),
+// no-op documenté). Adaptations : _inviteShow (petitions.mjs),
 // handleIncomingReaction (reactions.mjs), addChat (chat.mjs), t
 // (i18n.mjs), Proto, MSG, send importés ; addGameChat →
 // window.addGameChat (2×, fonction top-level du script) ;
@@ -16,39 +16,11 @@ import { Proto } from './proto.mjs';
 import { MSG } from './messages.mjs';
 import { send } from './session.mjs';
 import { t } from '../i18n.mjs';
-import { _petStart, _petUpdate, _petVoteReply, _petEnd, _petAskDenied,
-         _inviteShow } from './petitions.mjs';
+import { _inviteShow } from './petitions.mjs';
 import { handleIncomingReaction } from '../ui/reactions.mjs';
 import { addChat } from '../ui/chat.mjs';
 
 const T = MSG.T;
-
-function onStartKickPetition(sub) {
-  _petStart({
-    gameId:     Proto.u32(sub, 1),
-    petitionId: Proto.u32(sub, 2),
-    proposer:   Proto.u32(sub, 3),
-    target:     Proto.u32(sub, 4),
-    timeout:    Proto.u32(sub, 5),
-    needed:     Proto.u32(sub, 6),
-  });
-}
-
-function onKickPetitionUpdate(sub) {
-  _petUpdate(Proto.u32(sub, 2), Proto.u32(sub, 3), Proto.u32(sub, 4), Proto.u32(sub, 5));
-}
-
-function onVoteKickReply(sub) {
-  _petVoteReply(Proto.u32(sub, 2), Proto.u32(sub, 3));
-}
-
-function onEndKickPetition(sub) {
-  _petEnd(Proto.u32(sub, 2), Proto.u32(sub, 5), Proto.u32(sub, 6));
-}
-
-function onAskKickDenied(sub) {
-  _petAskDenied(Proto.u32(sub, 3));
-}
 
 function onInviteNotify(sub) {
   // InviteNotify: gameId=1, playerIdWho=2 (invitee), playerIdByWhom=3 (host)
@@ -172,11 +144,9 @@ function onDialog(sub) {
   return;
 }
 
-export { onStartKickPetition, onKickPetitionUpdate, onVoteKickReply,
-         onEndKickPetition, onAskKickDenied, onInviteNotify,
+export { onInviteNotify,
          onRejectInvNotify, onChat, onTimeoutWarning, onChatReject, onDialog };
 
-for (const [k, v] of Object.entries({ onStartKickPetition,
-  onKickPetitionUpdate, onVoteKickReply, onEndKickPetition,
-  onAskKickDenied, onInviteNotify, onRejectInvNotify, onChat,
+for (const [k, v] of Object.entries({
+  onInviteNotify, onRejectInvNotify, onChat,
   onTimeoutWarning, onChatReject, onDialog })) window[k] = v;

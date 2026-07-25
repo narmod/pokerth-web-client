@@ -179,17 +179,6 @@ export const strings = {
     kickRequested:'Kick requested for {name} (waiting for server…)',
     kickNotProcessed:'Server did not process kick of {name} — likely PokerTH server < 2.0.6.',
     kickAtLeast2:'At least 2 players are needed to start.',
-    // ── Vote-kick / kick petitions ──
-    petitionAsk:'Start kick vote', petitionTitle:'Kick {name}?',
-    petitionAgainstYou:'A vote to kick you is underway',
-    petitionVoteYes:'Kick', petitionVoteNo:'Keep',
-    petitionTally:'For {y} · Against {n} · need {k}',
-    petitionTimeLeft:'{s}s left', petitionVoted:'Vote recorded',
-    petitionStarted:'Kick vote started for {name}',
-    petitionResultKicked:'{name} was kicked', petitionResultRejected:'Vote rejected',
-    petitionEndTimeout:'Vote timed out', petitionEndLeft:'Player already left',
-    petitionEndFew:'Not enough players', petitionDenied:'Cannot start a vote right now',
-    petitionAlreadyVoted:'You already voted',
     // ── Game invitations ──
     inviteTitle:'{name} invited you to {table}', inviteAccept:'Accept', inviteDecline:'Decline',
     inviteAccepted:'Joining the table...',

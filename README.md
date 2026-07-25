@@ -226,7 +226,6 @@ This project is a **web frontend** that connects to any PokerTH server straight 
 - **🏆 Ranking** — a leaderboard modal (🏆 button on the connect screen and in the lobby) covering **PokerTH, BBC and WEC** rankings, with a season picker, an All-Time toggle, and — on the PokerTH source — live search and pagination; results are cached briefly client-side. Tapping a player opens their **profile card** (member since, last login, current-season rank/score, last 5 games) fetched live from the same relay
 - **🏆 Trophées (Training mode)** — a fourth tab in the ranking window, shown only in Training mode once connected, with 27 achievements grouped by Progress · Skill · Play-style · Fun · PokerTH formats. Locked ones are greyed out, a 👥 badge marks achievements that need a set number of players, and unlocking one pops a toast; an "X/27" counter also appears on your profile card and the end-of-game screen. Localised in all 36 languages
 - **Invite a player** to your table from the lobby players list — reaches the invited player instantly, including on the official desktop/mobile clients
-- **Vote-kick** — any player can start a community petition to remove a disruptive player mid-game; others vote to resolve it (separate from the admin-only Kickban, see *Official client (QML) tracking* below)
 - **Country flag on avatar** — an optional badge showing each player's country, sourced from the server
 
 ### Poker table

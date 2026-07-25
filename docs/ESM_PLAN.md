@@ -166,7 +166,7 @@ dans le code déplacé ; `import { S } from '../game/state.mjs'` remplace le
 | 9f-2 | `ui/media.mjs` | voix (speak/_speakNext/_pickVoice/_voiceLangTag/_voiceUtterance/_loadVoices/voiceActionPhrase/toggleVoice) + haptique (hapticBuzz/toggleHaptic) + _syncMediaToggleButtons (~180) |
 | 9f-3 | `game/turn-timer.mjs` | _updateTimer · startTurnTimer · stopTurnTimer · _timerRectSvg (~90) |
 | 9f-4 | `game/stats.mjs` | famille _life* · _pushStats · _stats*/renderStats · _board*/renderBoard · toggleStats/initStats/recordHand (~350) |
-| 9f-5 | `net/petitions.mjs` | _pet* (kick-petitions) + _inv* (invitations) (~250) |
+| 9f-5 | `net/petitions.mjs` | _inv* (invitations) — bloc _pet* (vote-kick) retiré le 2026-07-25 |
 | 9f-6 | `ui/chat.mjs` | addChat · _chatLocalCmd (~300) |
 | 9f-7 | `ui/player-popup.mjs` | openPlayerInfoPopup · _otherPlayerInfoHtml · _pim* · picker avatar lobby · _avatarChipHtml · _pthAvatarFor · _myAvatarDisplay/ToBroadcast · _ccToFlag (~450) |
 | 9f-8 | `ui/lobby.mjs` | renderGames · renderTablePlayers · _renderInfo* · renderGameInfoPanel · _renderLobbyWaitActions · updateLobbyStatsBar · _tableMatches/_refreshFilterChips · MODE_LABEL/GTYPE (~400) |
