@@ -677,6 +677,39 @@ function _activePokerthnetServer() {
   }
   return _activeManualServer();
 }
+// Cible réellement composée pour l'entrée « Internet / PokerTH.net », telle
+// que le client la recevra via /app-config. Trois sources possibles et une
+// seule vérité — l'admin devait jusqu'ici la reconstituer de tête à partir de
+// (source Manual/Auto) × (radio actif) × (serverlist résolue ou non).
+// `from` : 'serverlist' (auto) · 'manual' (entrée active) · 'builtin' (défaut
+// intégré du client, pokerth.net:7234 — aucun serveur de jeu n'y écoute).
+// Réglages TLS d'une requête /admin/servers/{probe,lobby} : ceux du corps s'ils
+// sont présents (état non enregistré du formulaire), sinon ceux du registre.
+function _tlsFromBody(d, host, port) {
+  if (d && (typeof d.sni === 'string' || typeof d.noverify === 'boolean')) {
+    var sni = String(d.sni || '').trim().toLowerCase().slice(0, 255);
+    if (sni && !/^[a-z0-9.-]+$/.test(sni)) sni = '';
+    return { sni: sni, noverify: !!d.noverify };
+  }
+  return _serverTlsOpts(host, port);
+}
+
+function _effectiveTarget() {
+  var src = _pokerthnetSource();
+  var srv = _activePokerthnetServer();
+  var from = srv ? (src === 'auto' ? 'serverlist' : 'manual') : 'builtin';
+  return {
+    from: from,
+    source: src,
+    transport: _internetTransport(),
+    name: srv ? (srv.name || '') : '',
+    host: srv ? srv.host : 'pokerth.net',
+    port: srv ? srv.port : 7234,
+    tls: srv ? !!srv.tls : false,
+    error: (src === 'auto' && !srv) ? (_serverlistCache.error || 'serverlist not resolved') : ''
+  };
+}
+
 // ── PokerTH protocol (lobby status probes) — ESM bundle loaded async ──
 let PROTO = null;
 (function () {
@@ -689,7 +722,7 @@ let PROTO = null;
 // version, no login), then guest-login and count GameListNewMessage frames. Mirrors the
 // web client's wire framing (4-byte big-endian length prefix + protobuf). Read-only;
 // disconnects after a short quiet window or an overall timeout. cb(result).
-function lobbyProbe(host, port, useTls, cb) {
+function lobbyProbe(host, port, useTls, cb, tlsOverride) {
   if (!PROTO) return cb({ ok: true, reachable: false, error: 'protocol not ready', ms: 0 });
   var t0 = Date.now(), done = false, sock = null, rx = Buffer.alloc(0), sentInit = false, gotAck = false;
   var players = null, ver = '', games = new Map();
@@ -731,7 +764,7 @@ function lobbyProbe(host, port, useTls, cb) {
     // Le Check DOIT utiliser exactement les réglages de la vraie connexion de
     // jeu : forcer rejectUnauthorized:false ici donnerait un ✓ vert alors que
     // la partie échouerait ensuite en CERT_HAS_EXPIRED (piège du 24/07).
-    var _t = _serverTlsOpts(host, port);
+    var _t = tlsOverride || _serverTlsOpts(host, port);
     var _sni = _t.sni || (/^[0-9.]+$/.test(host) ? '' : host);
     var opts = { host: host, port: port };
     sock = useTls
@@ -2106,7 +2139,7 @@ function handleAdmin(req, res, reqPathOnly, query) {
       _serversList().forEach(function (s) { if (_hosts.indexOf(s.host) < 0) _hosts.push(s.host); if (_ports.indexOf(s.port) < 0) _ports.push(s.port); });
       var _autoSrv = _serverlistCache.server;
       if (_autoSrv) { if (_hosts.indexOf(_autoSrv.host) < 0) _hosts.push(_autoSrv.host); if (_ports.indexOf(_autoSrv.port) < 0) _ports.push(_autoSrv.port); }
-      return adminJson(res, 200, { ok: true, servers: _serversList(), activeServerId: (_adminConfig.activeServerId || ''), source: _pokerthnetSource(), transport: _internetTransport(), serverlistUrl: _serverlistUrl(), serverlist: { server: _serverlistCache.server, fetchedAt: _serverlistCache.fetchedAt, error: _serverlistCache.error }, allowlist: { hosts: _hosts, ports: _ports } });
+      return adminJson(res, 200, { ok: true, servers: _serversList(), activeServerId: (_adminConfig.activeServerId || ''), source: _pokerthnetSource(), transport: _internetTransport(), serverlistUrl: _serverlistUrl(), serverlist: { server: _serverlistCache.server, fetchedAt: _serverlistCache.fetchedAt, error: _serverlistCache.error }, allowlist: { hosts: _hosts, ports: _ports }, effective: _effectiveTarget() });
     }
     return readJsonBody(req, function (d) {
       if (!adminAuthed(query, d && d.token)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
@@ -2165,8 +2198,10 @@ function handleAdmin(req, res, reqPathOnly, query) {
       var t0 = Date.now(), done = false, sock = null;
       function finish(ok, err) { if (done) return; done = true; try { if (sock) sock.destroy(); } catch (e) {} return adminJson(res, 200, { ok: true, reachable: ok, ms: Date.now() - t0, error: err || '' }); }
       try {
-        // Mêmes réglages TLS que la connexion de jeu (cf. lobbyProbe).
-        var _t = _serverTlsOpts(host, port);
+        // Mêmes réglages TLS que la connexion de jeu (cf. lobbyProbe). Le corps
+        // peut les surcharger : le Check de /admin teste alors ce que l'admin a
+        // SOUS LES YEUX, sans l'obliger à enregistrer d'abord.
+        var _t = _tlsFromBody(d, host, port);
         var _sni = _t.sni || (/^[0-9.]+$/.test(host) ? '' : host);
         var opts = { host: host, port: port };
         sock = useTls
@@ -2187,7 +2222,7 @@ function handleAdmin(req, res, reqPathOnly, query) {
       if (!host) return adminJson(res, 400, { ok: false, error: 'host required' });
       if (!isPortAllowed(port)) return adminJson(res, 200, { ok: true, reachable: false, error: 'port not allowed' });
       if (!isHostAllowed(host)) return adminJson(res, 200, { ok: true, reachable: false, error: 'host not in allowlist (save it first)' });
-      lobbyProbe(host, port, useTls, function (r) { return adminJson(res, 200, r); });
+      lobbyProbe(host, port, useTls, function (r) { return adminJson(res, 200, r); }, _tlsFromBody(d, host, port));
     });
   }
   if (reqPathOnly === '/admin/pkg-upload' && req.method === 'POST') {
