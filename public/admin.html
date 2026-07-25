@@ -540,21 +540,23 @@
     <div id="panel-servers" style="display:none">
       <div class="card">
         <div class="boardhead" style="margin-bottom:6px"><h2 style="margin:0">Game servers</h2><button id="srvAddBtn" class="use">+ Add server</button></div>
-        <p class="muted" style="margin:2px 0 10px">PokerTH game servers the web client may dial. Saving a server adds it to the proxy's dial allowlist (host + port); the proxy is only a relay and never runs the game server itself. A server is only used once you tick <b>Active</b> and save — the banner above always shows what will actually be dialled. <b>Check</b> uses the values currently on screen, with the very same TLS settings as a real game connection, so a green result is trustworthy.</p>
+        <p class="muted" style="margin:2px 0 10px">Where the <b>Internet / PokerTH.net</b> button of the login page connects. Three choices below — the banner always shows the result. The proxy is only a relay; it never runs the game server itself.</p>
         <div id="srvEff" class="srveff"><span class="muted">Loading…</span></div>
         <div class="card" style="margin:0 0 10px;padding:10px">
-          <div style="margin-bottom:6px"><b>Internet / PokerTH.net — source</b></div>
-          <label class="muted" style="display:block;margin:3px 0"><input type="radio" name="srvSource" class="srcManual"> <b>Manual</b> — use the active server below (or built-in pokerth.net:7234)</label>
-          <label class="muted" style="display:block;margin:3px 0"><input type="radio" name="srvSource" class="srcAuto"> <b>Auto</b> — download the official serverlist (auto-updates if PokerTH moves)</label>
+          <div style="margin-bottom:6px"><b>1 · Which server?</b> <span class="muted" style="font-weight:normal">(source)</span></div>
+          <label class="muted" style="display:block;margin:3px 0"><input type="radio" name="srvSource" class="srcManual"> <b>Manual</b> — the server marked <b>Active</b> in the list (step 3)</label>
+          <label class="muted" style="display:block;margin:3px 0"><input type="radio" name="srvSource" class="srcAuto"> <b>Auto</b> — follow the official serverlist (auto-updates if PokerTH moves; the list below is ignored)</label>
           <div class="srcAutoBox" style="display:none;margin:6px 0 0">
             <div class="defrow" style="display:flex;gap:10px;align-items:center;margin:4px 0"><span style="white-space:nowrap">Serverlist URL</span><input id="srvSlUrl" maxlength="300" placeholder="https://pokerth.net/serverlist.xml.z" autocomplete="off" style="flex:1;min-width:0"></div>
             <div class="periodrow" style="margin:4px 0"><button id="srvSlCheck" class="use" type="button">Check serverlist</button></div>
             <div id="srvSlStat" class="msg" style="margin:4px 0 0"></div>
           </div>
-          <div style="margin:10px 0 6px"><b>Internet / PokerTH.net — transport</b></div>
+          <div style="margin:10px 0 6px"><b>2 · How?</b> <span class="muted" style="font-weight:normal">(transport)</span></div>
           <label class="muted" style="display:block;margin:3px 0"><input type="radio" name="srvTransport" class="trDirect"> <b>Direct WS</b> — browser dials wss://www.pokerth.net/pthlive itself (historical; no reconnect grace)</label>
           <label class="muted" style="display:block;margin:3px 0"><input type="radio" name="srvTransport" class="trProxy"> <b>Via proxy</b> — bridge through this proxy (session kept alive on wifi drops, buffered reconnect)</label>
         </div>
+        <div style="margin:2px 0 6px"><b>3 · Registered servers</b> <span class="muted" style="font-weight:normal">— used in Manual; saving also allowlists host + port. “Check” tests the values on screen with the same TLS settings as a real game.</span></div>
+        <div id="srvAutoNote" class="srvhint" style="display:none;color:#FFC107;margin:0 0 6px">Source is <b>Auto</b>: the serverlist decides — “Active” below has no effect until you switch back to Manual.</div>
         <div id="srvRows"><div class="empty">Loading…</div></div>
         <div class="periodrow" style="margin-top:10px"><button id="srvSaveBtn" class="use">Save all</button></div>
         <div id="srvState" class="msg"></div>
@@ -677,7 +679,7 @@
   function renderServers(){
     var box=$('srvRows'); if(!box) return;
     if(!_srv.length){ box.innerHTML='<div class="empty">No server yet. Click “+ Add server”.</div>'; return; }
-    box.innerHTML=('<div class="defrow" style="margin:0 0 8px"><label class="muted" title="Built-in default for the Internet / PokerTH.net button"><input type="radio" name="srvActive" class="srvANone" '+(_activeSrv?'':'checked')+'> <b>Internet / PokerTH.net</b> &rarr; built-in default (pokerth.net:7234)</label></div>')+_srv.map(function(s,i){
+    box.innerHTML=('<div class="defrow" style="margin:0 0 8px"><label class="muted" title="No server selected: the client falls back to the address built into its code"><input type="radio" name="srvActive" class="srvANone" '+(_activeSrv?'':'checked')+'> <b>None</b> — fall back to the built-in client address (pokerth.net:7234). <span style="color:#FFC107">No game server listens there; players will not be able to connect.</span></label></div>')+_srv.map(function(s,i){
       var pw=srvPortWarn(s.port);
       return '<div class="card srow" style="margin:0 0 8px;padding:12px" data-i="'+i+'">'
         +'<div class="sfield"><span>Name</span><input type="text" class="srvN" maxlength="40" placeholder="PokerTH.net (internal)" value="'+srvEsc(s.name)+'">'
@@ -740,6 +742,11 @@
     var rm=document.querySelector('.srcManual'), ra=document.querySelector('.srcAuto'), box=document.querySelector('.srcAutoBox');
     if(rm) rm.checked=(_srcMode!=='auto'); if(ra) ra.checked=(_srcMode==='auto');
     if(box) box.style.display=(_srcMode==='auto')?'block':'none';
+    // Source Auto → la sélection « Active » est ignorée (la serverlist décide).
+    // Griser la liste rend cette règle visible ; les champs restent éditables
+    // (préparer/Check-er un serveur avant de repasser en Manual reste utile).
+    var rows=$('srvRows'); if(rows){ rows.style.opacity=(_srcMode==='auto')?'0.55':''; }
+    var note=$('srvAutoNote'); if(note){ note.style.display=(_srcMode==='auto')?'block':'none'; }
     var uf=$('srvSlUrl'); if(uf && document.activeElement!==uf) uf.value=_slUrl||'';
     if(sl!==undefined){ var st=$('srvSlStat'); if(st){
       if(sl&&sl.server){ var s=sl.server; st.textContent='Resolved: '+srvEsc(s.name||s.host)+' \u2014 '+srvEsc(s.host)+':'+s.port+(s.tls?' (TLS)':''); st.className='msg ok'; }
