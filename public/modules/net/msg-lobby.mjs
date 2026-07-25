@@ -125,6 +125,7 @@ function onInitAck(sub) {
     S._reconnectAttempts = 0;
     S.myId = Proto.u32(sub, 2);
     S._rejoinNickRetries = 0;
+    _nickBusyReset();           // pseudo accepté → compteur de réessais à zéro
     // Demander NOTRE PROPRE PlayerInfo : le serveur n'écho pas toujours
     // notre arrivée dans PlayerList, donc sans ça on n'apprend jamais le
     // hash de notre avatar pokerth.net. Le handler PlayerInfoReply
@@ -224,6 +225,74 @@ function onAdminBanPlayerAck(sub) {
     return;
 }
 
+// ── « Pseudo déjà utilisé » (Error 4) : réessai automatique borné ──────
+// Après une coupure en jeu, le pseudo reste tenu quelques dizaines de
+// secondes par la session précédente : grâce du proxy (SESSION_GRACE_MS,
+// 120 s) en mode « via proxy », ou socket morte pas encore détectée par le
+// serveur PokerTH en Direct WS. Renommer le joueur lui ferait PERDRE son
+// siège, et enchaîner les Init ferait bloquer l'IP (initBlocked, err 7).
+// → on retente le MÊME pseudo, au plus NICK_BUSY_MAX fois, espacées de
+// NICK_BUSY_DELAY_MS (≫ MIN_CONN_GAP 5 s du proxy), avec compte à rebours
+// dans la zone de statut. `pth_resume` / `_pendingRejoin` sont CONSERVÉS :
+// dès que le fantôme tombe, l'InitAck enchaîne sur buildRejoinGame et le
+// siège est récupéré. Désactivable : option avancée `nick_retry`.
+const NICK_BUSY_MAX = 3;
+const NICK_BUSY_DELAY_MS = 30000;
+
+function _nickBusyClear() {
+  try { clearTimeout(window._nickBusyTimer); } catch (e) {}
+  try { clearInterval(window._nickBusyTick); } catch (e) {}
+  window._nickBusyTimer = null; window._nickBusyTick = null;
+}
+
+function _nickBusyReset() { _nickBusyClear(); S._nickBusyTries = 0; }
+
+function _nickBusyRetry() {
+  _nickBusyClear();
+  // Changement de pseudo → nouveau budget de tentatives.
+  if (S._nickBusyName !== S.myName) { S._nickBusyTries = 0; S._nickBusyName = S.myName; }
+  var _optOn = true;
+  try { if (typeof window._advGet === 'function') _optOn = window._advGet('nick_retry', true); } catch (e) {}
+  var _ipBlocked = !!(S._ipBlockUntil && Date.now() < S._ipBlockUntil);
+  if (!_optOn || window._offlineMode || _ipBlocked) {
+    // Réessai désactivé (ou IP déjà en pénitence) : on informe et on s'arrête,
+    // mais on garde le marqueur de reprise — une reconnexion manuelle plus
+    // tard doit encore pouvoir réclamer le siège.
+    setStatus(t('nickInUseStop', { name: S.myName }), 'err');
+    return;
+  }
+  if ((S._nickBusyTries | 0) >= NICK_BUSY_MAX) {
+    // Budget épuisé : le siège n'est plus réclamable de façon fiable, on purge
+    // le marqueur pour ne pas re-rejoindre une table qu'on a fini par quitter.
+    S._nickBusyTries = 0; S._pendingRejoin = 0;
+    try { localStorage.removeItem('pth_resume'); } catch (e) {}
+    setStatus(t('nickInUseGiveUp', { name: S.myName, max: NICK_BUSY_MAX }), 'err');
+    return;
+  }
+  S._nickBusyTries = (S._nickBusyTries | 0) + 1;
+  var _left = Math.round(NICK_BUSY_DELAY_MS / 1000);
+  var _paint = function () {
+    setStatus(t('nickInUseRetry', { name: S.myName, n: _left,
+      a: S._nickBusyTries, max: NICK_BUSY_MAX }), 'err');
+    if (_left > 0) _left--;
+  };
+  _paint();
+  window._nickBusyTick = setInterval(_paint, 1000);
+  window._nickBusyTimer = setTimeout(function () {
+    _nickBusyClear();
+    S._nickBusyAuto = true;          // ce connect() est le nôtre : garder le compteur
+    try { App.connect(); } catch (e) {}
+  }, NICK_BUSY_DELAY_MS);
+}
+// Appelé au début de App.connect(). Une relance AUTO garde le compteur (sinon
+// le budget ne s'épuiserait jamais) ; une reprise MANUELLE le remet à zéro —
+// l'utilisateur qui reclique a droit à un budget neuf.
+window._nickBusyCancel = function () {
+  _nickBusyClear();
+  if (S._nickBusyAuto) { S._nickBusyAuto = false; return; }
+  S._nickBusyTries = 0;
+};
+
 function onError(sub) {
     _endConnecting();   // server rejected → free the button now
     S._lastConnectFailed = true;
@@ -245,24 +314,17 @@ function onError(sub) {
       setStatus(t('ipBlockedRetry'), 'err'); return;
     }
     if (r === 4) {
-      // Pseudo déjà utilisé sur le serveur. On NE renomme JAMAIS (l'ancien
-      // code passait à « narmod_211 ») et on N'enchaîne PAS d'essais : ces
-      // deux comportements alimentaient une tempête de connexions qui
-      // finissait par faire bloquer l'IP (initBlocked). À la place : on
-      // informe clairement et on s'arrête. L'utilisateur attend que sa
-      // session précédente expire (~2 min, grâce proxy) ou choisit un autre
-      // pseudo, puis se reconnecte manuellement. (En multi-onglets, chaque
-      // onglet doit utiliser un pseudo distinct — ce message le rappelle.)
-      S._pendingRejoin = 0; S._rejoinNickRetries = 0;
+      // Pseudo déjà utilisé sur le serveur : c'est presque toujours NOTRE
+      // propre session précédente qui n'est pas encore retombée. On ne renomme
+      // JAMAIS (l'ancien code passait à « narmod_211 » → siège abandonné) et on
+      // n'enchaîne pas les Init à l'aveugle (tempête de connexions → IP
+      // bloquée). Le réessai borné ci-dessous garde le pseudo ET le marqueur de
+      // reprise, pour que le siège soit réclamé dès que le fantôme tombe.
+      S._rejoinNickRetries = 0;
       S._wasAuthenticated = false;
-      S._intentionalDisconnect = true;             // stoppe toute reconnexion auto
-      try { localStorage.removeItem('pth_resume'); } catch (e) {}
+      S._intentionalDisconnect = true;   // neutralise le backoff générique de onclose
       window._hideBanner();
-      var _fr = (typeof window._lang === 'undefined' || window._lang !== 'en');
-      var _msg = _fr
-        ? '« ' + S.myName + ' » est déjà utilisé. Une session précédente est peut-être encore active : patiente ~2 min, ou choisis un autre pseudo, puis reconnecte.'
-        : '“' + S.myName + '” is already in use. A previous session may still be active: wait ~2 min, or pick another nickname, then reconnect.';
-      setStatus(_msg, 'err');
+      _nickBusyRetry();
     } else {
       setStatus(t('errGeneric', { code: codes[r] || ('code ' + r) }), 'err');
     }

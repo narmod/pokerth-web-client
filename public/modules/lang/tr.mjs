@@ -12,6 +12,7 @@ export const meta = {
 };
 
 export const strings = {
+    advSecConn:'Bağlantı', advNickRetry:'Takma ad hâlâ kullanımdaysa otomatik olarak yeniden dene', nickInUseRetry:'“{name}” hâlâ kullanımda — {n} sn sonra yeni deneme ({a}/{max})…', nickInUseGiveUp:'{max} denemeden sonra “{name}” hâlâ kullanımda. Önceki bir oturum sunucuda hâlâ açık — birkaç dakika sonra tekrar dene ya da başka bir takma ad seç.',
     // — i18n gap-fill (backup / trophies / back tooltip) —
     advKeyNav:'Esc kapatır/iptal eder, Enter onaylar (masa dışında)',
     achTitle:'Kupalar', advBackupSec:'Tam yedek (web istemcisi)', advBackupDesc:'Bu tarayıcıdaki her şeyi tek bir dosyaya kaydeder: web seçenekleri, temalar, desteler, özel koltuklar, avatar görseli, kupalar ve istatistikler — hesabınla eşitlenemeyecek kadar büyük olanlar dahil. Parolan ve oturumun asla dahil edilmez; içe aktarma kupaları değiştirmek yerine birleştirir, böylece ilerleme kaybolmaz.', advBackupExport:'Yedeği dışa aktar', advBackupImport:'Yedeği içe aktar', advWinOpen:'Penceresi açıkken düğmeyi altın renkle vurgula', backTooltip:'Geri',

@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+    advSecConn:'Conexiune', advNickRetry:'Reîncearcă automat cât timp pseudonimul este ocupat', nickInUseRetry:'„{name}“ este încă ocupat — reîncercare în {n} s ({a}/{max})…', nickInUseGiveUp:'„{name}“ este încă ocupat după {max} încercări. O sesiune anterioară a rămas deschisă pe server — încearcă din nou peste câteva minute sau alege alt pseudonim.',
     // — i18n gap-fill (backup / trophies / back tooltip) —
     advKeyNav:'Esc închide/anulează, Enter confirmă (în afara mesei)',
     achTitle:'Trofee', advBackupSec:'Copie de rezervă completă (client web)', advBackupDesc:'Salvează într-un singur fișier tot ce conține acest browser: opțiuni web, teme, pachete de cărți, locuri personalizate, imaginea avatarului, trofee și statistici — inclusiv ce este prea mare pentru a fi sincronizat cu contul tău. Parola și sesiunea nu sunt niciodată incluse, iar importul îmbină trofeele în loc să le înlocuiască, așa că progresul nu se pierde niciodată.', advBackupExport:'Exportă copia', advBackupImport:'Importă o copie', advWinOpen:'Evidențiază butonul cu auriu cât timp fereastra sa este deschisă', backTooltip:'Înapoi',

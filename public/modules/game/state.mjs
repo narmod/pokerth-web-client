@@ -126,6 +126,9 @@ export const S = {
   _pendingRejoin: 0,       // gameId à rejoindre après reconnexion (0 = aucun)
   _pendingRejoinSpec: false, // true = on était SPECTATEUR → re-spectater (pas de siège à réclamer)
   _rejoinNickRetries: 0,
+  _nickBusyTries: 0,      // réessais auto « pseudo occupé » (Error 4) déjà consommés
+  _nickBusyName: '',      // pseudo pour lequel le compteur ci-dessus a été armé
+  _nickBusyAuto: false,   // true = le prochain connect() vient du réessai auto (garde le compteur)
   _wasAuthenticated: false, // true seulement après InitAck réussi
   _lastConnectTime: 0,
   _lastConnectFailed: false,

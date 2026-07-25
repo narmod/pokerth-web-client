@@ -9,6 +9,7 @@ export const meta = {
 };
 
 export const strings = {
+    advSecConn:'Conexão', advNickRetry:'Tentar novamente de forma automática quando o apelido ainda estiver em uso', nickInUseRetry:'“{name}” ainda está em uso — nova tentativa em {n} s ({a}/{max})…', nickInUseGiveUp:'“{name}” ainda está em uso após {max} tentativas. Uma sessão anterior continua aberta no servidor — tente de novo em alguns minutos ou escolha outro apelido.',
     // — i18n gap-fill (backup / trophies / back tooltip) —
     advKeyNav:'Esc fecha/cancela, Enter confirma (fora da mesa)',
     achTitle:'Troféus', advBackupSec:'Backup completo (cliente web)', advBackupDesc:'Salva em um único arquivo tudo o que este navegador contém: opções web, temas, baralhos, assentos personalizados, imagem de avatar, troféus e estatísticas — incluindo o que é grande demais para sincronizar com sua conta. Sua senha e sua sessão nunca são incluídas, e a importação mescla os troféus em vez de substituí-los, então o progresso nunca é perdido.', advBackupExport:'Exportar backup', advBackupImport:'Importar backup', advWinOpen:'Destacar o botão em dourado enquanto a janela estiver aberta', backTooltip:'Voltar',

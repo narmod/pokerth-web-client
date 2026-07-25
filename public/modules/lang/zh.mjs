@@ -11,6 +11,7 @@ export const meta = {
 };
 
 export const strings = {
+    advSecConn:'连接', advNickRetry:'昵称仍被占用时自动重试', nickInUseRetry:'“{name}” 仍被占用 — {n} 秒后重试（{a}/{max}）…', nickInUseGiveUp:'尝试 {max} 次后，“{name}” 仍被占用。之前的会话在服务器上尚未关闭 — 请几分钟后再试，或换一个昵称。',
     // — i18n gap-fill (backup / trophies / back tooltip) —
     advKeyNav:'Esc 关闭/取消，Enter 确认（牌桌之外）',
     achTitle:'成就', advBackupSec:'完整备份（网页客户端）', advBackupDesc:'将此浏览器保存的所有内容导出为一个文件：网页选项、主题、牌背、自定义座位、头像图片、成就和统计——包括因过大而无法与账号同步的内容。密码和会话绝不会包含在内；导入时成就会合并而非覆盖，因此进度不会丢失。', advBackupExport:'导出备份', advBackupImport:'导入备份', advWinOpen:'窗口打开时以金色高亮对应按钮', backTooltip:'返回',

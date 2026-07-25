@@ -11,6 +11,7 @@ export const meta = {
 };
 
 export const strings = {
+    advSecConn:'連線', advNickRetry:'暱稱仍被占用時自動重試', nickInUseRetry:'「{name}」仍被占用 — {n} 秒後重試（{a}/{max}）…', nickInUseGiveUp:'嘗試 {max} 次後，「{name}」仍被占用。先前的工作階段在伺服器上尚未關閉 — 請幾分鐘後再試，或改用其他暱稱。',
     // — i18n gap-fill (backup / trophies / back tooltip) —
     advKeyNav:'Esc 關閉/取消，Enter 確認（牌桌之外）',
     achTitle:'獎盃', advBackupSec:'完整備份（網頁用戶端）', advBackupDesc:'將此瀏覽器保存的所有內容匯出成一個檔案：網頁選項、主題、牌組、自訂座位、頭像圖片、獎盃與統計——包括太大而無法與帳號同步的內容。密碼與工作階段絕不會包含在內；匯入時獎盃會合併而非覆蓋，因此進度不會遺失。', advBackupExport:'匯出備份', advBackupImport:'匯入備份', advWinOpen:'視窗開啟時以金色標示對應按鈕', backTooltip:'返回',

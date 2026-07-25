@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+    advSecConn:'Verbinding', advNickRetry:'Probeer outomaties weer wanneer die bynaam nog gebruik word', nickInUseRetry:'“{name}” word nog gebruik — nuwe poging oor {n} s ({a}/{max})…', nickInUseGiveUp:'“{name}” word ná {max} pogings steeds gebruik. ’n Vorige sessie is nog op die bediener oop — probeer oor ’n paar minute weer of kies ’n ander bynaam.',
     // — i18n gap-fill (backup / trophies / back tooltip) —
     advKeyNav:'Esc sluit/kanselleer, Enter bevestig (buite die tafel)',
     achTitle:'Trofeë', advBackupSec:'Volledige rugsteun (webkliënt)', advBackupDesc:'Stoor alles wat hierdie blaaier bevat in een lêer: webopsies, temas, kaartstelle, pasgemaakte sitplekke, avatarprent, trofeë en statistieke — ook dit wat te groot is om met jou rekening te sinchroniseer. Jou wagwoord en sessie word nooit ingesluit nie, en invoer voeg trofeë saam in plaas daarvan om hulle te vervang, sodat vordering nooit verlore gaan nie.', advBackupExport:'Voer rugsteun uit', advBackupImport:'Voer rugsteun in', advWinOpen:'Merk die knoppie in goud terwyl sy venster oop is', backTooltip:'Terug',

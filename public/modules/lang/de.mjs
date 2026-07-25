@@ -15,6 +15,7 @@ export const meta = {
 };
 
 export const strings = {
+    advSecConn:'Verbindung', advNickRetry:'Automatisch erneut versuchen, wenn der Spitzname noch belegt ist', nickInUseRetry:'„{name}“ ist noch belegt — neuer Versuch in {n} s ({a}/{max})…', nickInUseGiveUp:'„{name}“ ist nach {max} Versuchen immer noch belegt. Eine frühere Sitzung ist auf dem Server noch offen — versuche es in ein paar Minuten erneut oder wähle einen anderen Spitznamen.',
     // — i18n gap-fill (backup / trophies / back tooltip) —
     advKeyNav:'Esc schließt/bricht ab, Enter bestätigt (außerhalb des Tisches)',
     achTitle:'Trophäen', advBackupSec:'Vollständige Sicherung (Web-Client)', advBackupDesc:'Speichert alles, was dieser Browser enthält, in einer Datei: Web-Optionen, Themes, Decks, eigene Sitzplätze, Avatarbild, Trophäen und Statistiken — auch das, was zu groß ist, um mit deinem Konto synchronisiert zu werden. Passwort und Sitzung werden nie mitgespeichert, und beim Import werden Trophäen zusammengeführt statt ersetzt, sodass kein Fortschritt verloren geht.', advBackupExport:'Sicherung exportieren', advBackupImport:'Sicherung importieren', advWinOpen:'Schaltfläche in Gold hervorheben, solange ihr Fenster offen ist', backTooltip:'Zurück',

@@ -9,6 +9,7 @@ export const meta = {
 };
 
 export const strings = {
+    advSecConn:'接続', advNickRetry:'ニックネームがまだ使用中のときは自動で再試行する', nickInUseRetry:'「{name}」はまだ使用中です — {n} 秒後に再試行（{a}/{max}）…', nickInUseGiveUp:'{max} 回試しても「{name}」はまだ使用中です。前のセッションがサーバー上で開いたままです — 数分後にもう一度試すか、別のニックネームを選んでください。',
     // — i18n gap-fill (backup / trophies / back tooltip) —
     advKeyNav:'Esc で閉じる/取り消し、Enter で確定 (テーブル外)',
     achTitle:'トロフィー', advBackupSec:'完全バックアップ (ウェブクライアント)', advBackupDesc:'このブラウザーが保持しているものをすべて 1 つのファイルに保存します: ウェブ設定、テーマ、デッキ、カスタム席、アバター画像、トロフィー、統計 — アカウントと同期するには大きすぎるものも含みます。パスワードとセッションは決して含まれません。インポートはトロフィーを置き換えるのではなく統合するため、進行状況が失われることはありません。', advBackupExport:'バックアップを書き出す', advBackupImport:'バックアップを読み込む', advWinOpen:'ウィンドウが開いている間、そのボタンを金色で強調する', backTooltip:'戻る',

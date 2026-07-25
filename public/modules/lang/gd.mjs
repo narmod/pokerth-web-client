@@ -11,6 +11,7 @@ export const meta = {
 };
 
 export const strings = {
+    advSecConn:'Ceangal', advNickRetry:'Feuch a-rithist gu fèin-obrachail fhad ’s a tha am far-ainm ’ga chleachdadh', nickInUseRetry:'Tha “{name}” ’ga chleachdadh fhathast — oidhirp ùr an ceann {n} d ({a}/{max})…', nickInUseGiveUp:'Tha “{name}” ’ga chleachdadh fhathast às dèidh {max} oidhirpean. Tha seisean roimhe fhathast fosgailte air an fhrithealaiche — feuch a-rithist an ceann beagan mhionaidean no tagh far-ainm eile.',
     // — i18n gap-fill (backup / trophies / back tooltip) —
     advKeyNav:'Bidh Esc a’ dùnadh/a’ sgur dheth, Enter a’ dearbhadh (taobh a-muigh a’ bhùird)',
     achTitle:'Duaisean', advBackupSec:'Lethbhreac-glèidhidh slàn (cliant-lìn)', advBackupDesc:'Sàbhail anns an aon fhaidhle a h-uile càil a tha sa bhrabhsair seo: roghainnean lìn, ùrlaran, cairtean, suidheachain gnàthaichte, dealbh avatar, duaisean agus staitistig — a’ gabhail a-steach na tha ro mhòr airson sioncronachadh leis a’ chunntas agad. Cha tèid am facal-faire no an seisean a ghabhail a-steach idir, agus bidh an ion-phortadh a’ co-mheasgachadh nan duaisean seach an cur nan àite, agus mar sin cha tèid adhartas air chall.', advBackupExport:'Às-phortaich an lethbhreac', advBackupImport:'Ion-phortaich lethbhreac', advWinOpen:'Soillsich am putan ann an òr fhad ’s a tha an uinneag aige fosgailte', backTooltip:'Air ais',

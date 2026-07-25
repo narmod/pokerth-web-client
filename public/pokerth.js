@@ -401,6 +401,7 @@ function openAdvancedOptions() {
   try { var _dm = document.getElementById('adv-darkmode'); if (_dm && window.getTheme) _dm.value = window.getTheme() || 'auto'; } catch (e) {}
   sync('adv-pingavatar', 'ping_avatar', true); // défaut QML : ShowPingStateInAvatar=1
   sync('adv-autoleave', 'auto_leave', false);
+  sync('adv-nickretry', 'nick_retry', true);   // réessai auto quand le pseudo est encore occupé
   // Barre d'état de jeu (pot-strip : H#/G#, pot+bets, phase) masquable
   try {
     var _ps = document.getElementById('pot-strip');
@@ -4556,6 +4557,9 @@ const App = (() => {
     connect(opts) {
       opts = opts || {};
       var _preserve = !!opts.preserve;
+      // Un appel à connect() (clic manuel OU réessai auto « pseudo occupé »)
+      // annule le compte à rebours en cours : une seule tentative à la fois.
+      try { if (window._nickBusyCancel) window._nickBusyCancel(); } catch (e) {}
       // ── Fix 2 + 3: re-entrancy guard ──
       // Disable double-clicks: if a connect() is already in progress
       // (either waiting on SW, waiting on previous WS to close, or
@@ -9308,7 +9312,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.4-web.56'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.4-web.57'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

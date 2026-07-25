@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+    advSecConn:'Připojení', advNickRetry:'Automaticky opakovat pokus, dokud je přezdívka obsazená', nickInUseRetry:'„{name}“ je stále obsazená — další pokus za {n} s ({a}/{max})…', nickInUseGiveUp:'„{name}“ je po {max} pokusech stále obsazená. Předchozí relace zůstává na serveru otevřená — zkuste to za pár minut znovu nebo zvolte jinou přezdívku.',
     // — i18n gap-fill (backup / trophies / back tooltip) —
     advKeyNav:'Esc zavírá/ruší, Enter potvrzuje (mimo stůl)',
     achTitle:'Trofeje', advBackupSec:'Úplná záloha (webový klient)', advBackupDesc:'Uloží vše, co tento prohlížeč obsahuje, do jednoho souboru: webová nastavení, motivy, balíčky karet, vlastní místa, obrázek avataru, trofeje a statistiky — včetně toho, co je příliš velké na synchronizaci s účtem. Heslo ani relace se nikdy neukládají a import trofeje slučuje místo nahrazování, takže postup se nikdy neztratí.', advBackupExport:'Exportovat zálohu', advBackupImport:'Importovat zálohu', advWinOpen:'Zvýraznit tlačítko zlatě, dokud je jeho okno otevřené', backTooltip:'Zpět',

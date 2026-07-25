@@ -15,6 +15,7 @@ export const meta = {
 };
 
 export const strings = {
+    advSecConn:'Verbinding', advNickRetry:'Automatisch opnieuw proberen wanneer de bijnaam nog in gebruik is', nickInUseRetry:'“{name}” is nog in gebruik — nieuwe poging over {n} s ({a}/{max})…', nickInUseGiveUp:'“{name}” is na {max} pogingen nog steeds in gebruik. Een vorige sessie staat nog open op de server — probeer het over enkele minuten opnieuw of kies een andere bijnaam.',
     // — i18n gap-fill (backup / trophies / back tooltip) —
     advKeyNav:'Esc sluit/annuleert, Enter bevestigt (buiten de tafel)',
     achTitle:'Trofeeën', advBackupSec:'Volledige back-up (webclient)', advBackupDesc:'Slaat alles wat deze browser bevat op in één bestand: webopties, thema’s, decks, aangepaste zitplaatsen, avatarafbeelding, trofeeën en statistieken — ook wat te groot is om met je account te synchroniseren. Je wachtwoord en sessie worden nooit meegenomen, en bij het importeren worden trofeeën samengevoegd in plaats van vervangen, zodat er nooit voortgang verloren gaat.', advBackupExport:'Back-up exporteren', advBackupImport:'Back-up importeren', advWinOpen:'Markeer de knop in goud zolang het venster open is', backTooltip:'Terug',

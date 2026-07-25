@@ -13,6 +13,7 @@ export const meta = {
 };
 
 export const strings = {
+    advSecConn:'연결', advNickRetry:'닉네임이 아직 사용 중일 때 자동으로 다시 시도', nickInUseRetry:'"{name}"은(는) 아직 사용 중입니다 — {n}초 후 재시도 ({a}/{max})…', nickInUseGiveUp:'{max}번 시도한 뒤에도 "{name}"은(는) 아직 사용 중입니다. 이전 세션이 서버에 열려 있습니다 — 몇 분 후에 다시 시도하거나 다른 닉네임을 선택하세요.',
     // — i18n gap-fill (backup / trophies / back tooltip) —
     advKeyNav:'Esc는 닫기/취소, Enter는 확인 (테이블 밖)',
     achTitle:'트로피', advBackupSec:'전체 백업 (웹 클라이언트)', advBackupDesc:'이 브라우저가 보관한 모든 것을 파일 하나에 저장합니다: 웹 옵션, 테마, 덱, 사용자 지정 좌석, 아바타 이미지, 트로피, 통계 — 계정과 동기화하기에는 너무 큰 항목도 포함됩니다. 비밀번호와 세션은 절대 포함되지 않으며, 가져오기는 트로피를 교체하지 않고 병합하므로 진행 상황이 사라지지 않습니다.', advBackupExport:'백업 내보내기', advBackupImport:'백업 가져오기', advWinOpen:'창이 열려 있는 동안 해당 버튼을 금색으로 강조', backTooltip:'뒤로',

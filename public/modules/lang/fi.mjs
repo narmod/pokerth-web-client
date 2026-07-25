@@ -9,6 +9,7 @@ export const meta = {
 };
 
 export const strings = {
+    advSecConn:'Yhteys', advNickRetry:'Yritä automaattisesti uudelleen, kun nimimerkki on yhä käytössä', nickInUseRetry:'”{name}” on yhä käytössä — uusi yritys {n} s kuluttua ({a}/{max})…', nickInUseGiveUp:'”{name}” on yhä käytössä {max} yrityksen jälkeen. Aiempi istunto on yhä auki palvelimella — yritä muutaman minuutin kuluttua uudelleen tai valitse toinen nimimerkki.',
     // — i18n gap-fill (backup / trophies / back tooltip) —
     advKeyNav:'Esc sulkee/peruuttaa, Enter vahvistaa (pöydän ulkopuolella)',
     achTitle:'Palkinnot', advBackupSec:'Täysi varmuuskopio (verkkoasiakas)', advBackupDesc:'Tallentaa kaiken, mitä tämä selain sisältää, yhteen tiedostoon: verkkoasetukset, teemat, korttipakat, mukautetut paikat, avatar-kuvan, palkinnot ja tilastot — myös sen, mikä on liian suuri synkronoitavaksi tilillesi. Salasanaa ja istuntoa ei koskaan sisällytetä, ja tuonti yhdistää palkinnot niiden korvaamisen sijaan, joten edistyminen ei katoa.', advBackupExport:'Vie varmuuskopio', advBackupImport:'Tuo varmuuskopio', advWinOpen:'Korosta painike kullalla, kun sen ikkuna on auki', backTooltip:'Takaisin',

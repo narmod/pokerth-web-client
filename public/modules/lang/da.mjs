@@ -9,6 +9,7 @@ export const meta = {
 };
 
 export const strings = {
+    advSecConn:'Forbindelse', advNickRetry:'Prøv automatisk igen, når kaldenavnet stadig er i brug', nickInUseRetry:'”{name}” er stadig i brug — nyt forsøg om {n} s ({a}/{max})…', nickInUseGiveUp:'”{name}” er stadig i brug efter {max} forsøg. En tidligere session er stadig åben på serveren — prøv igen om et par minutter, eller vælg et andet kaldenavn.',
     // — i18n gap-fill (backup / trophies / back tooltip) —
     advKeyNav:'Esc lukker/annullerer, Enter bekræfter (uden for bordet)',
     achTitle:'Trofæer', advBackupSec:'Fuld sikkerhedskopi (webklient)', advBackupDesc:'Gemmer alt, hvad denne browser indeholder, i én fil: webindstillinger, temaer, kortspil, tilpassede pladser, avatarbillede, trofæer og statistik — også det, der er for stort til at synkronisere med din konto. Adgangskode og session gemmes aldrig, og import fletter trofæer i stedet for at erstatte dem, så fremskridt aldrig går tabt.', advBackupExport:'Eksportér sikkerhedskopi', advBackupImport:'Importér sikkerhedskopi', advWinOpen:'Fremhæv knappen i guld, mens dens vindue er åbent', backTooltip:'Tilbage',

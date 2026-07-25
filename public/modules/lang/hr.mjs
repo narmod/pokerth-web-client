@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+    advSecConn:'Veza', advNickRetry:'Automatski ponovi pokušaj dok je nadimak zauzet', nickInUseRetry:'„{name}“ je još zauzet — novi pokušaj za {n} s ({a}/{max})…', nickInUseGiveUp:'„{name}“ je zauzet i nakon {max} pokušaja. Prethodna sesija još je otvorena na poslužitelju — pokušajte ponovno za nekoliko minuta ili odaberite drugi nadimak.',
     // — i18n gap-fill (backup / trophies / back tooltip) —
     advKeyNav:'Esc zatvara/otkazuje, Enter potvrđuje (izvan stola)',
     achTitle:'Trofeji', advBackupSec:'Potpuna sigurnosna kopija (web klijent)', advBackupDesc:'Sprema u jednu datoteku sve što ovaj preglednik sadrži: web postavke, teme, špilove, prilagođena mjesta, sliku avatara, trofeje i statistiku — uključujući ono što je preveliko za sinkronizaciju s računom. Lozinka i sesija nikada nisu uključene, a uvoz spaja trofeje umjesto da ih zamijeni, pa se napredak nikada ne gubi.', advBackupExport:'Izvezi kopiju', advBackupImport:'Uvezi kopiju', advWinOpen:'Istakni gumb zlatnom bojom dok je njegov prozor otvoren', backTooltip:'Natrag',

@@ -15,6 +15,7 @@ export const meta = {
 };
 
 export const strings = {
+    advSecConn:'Connessione', advNickRetry:'Riprova automaticamente quando il nickname è ancora in uso', nickInUseRetry:'«{name}» è ancora in uso — nuovo tentativo tra {n} s ({a}/{max})…', nickInUseGiveUp:'«{name}» è ancora in uso dopo {max} tentativi. Una sessione precedente è ancora aperta sul server — riprova tra qualche minuto o scegli un altro nickname.',
     // — i18n gap-fill (backup / trophies / back tooltip) —
     advKeyNav:'Esc chiude/annulla, Invio conferma (fuori dal tavolo)',
     achTitle:'Trofei', advBackupSec:'Backup completo (client web)', advBackupDesc:'Salva in un unico file tutto ciò che questo browser contiene: opzioni web, temi, mazzi, posti personalizzati, immagine dell’avatar, trofei e statistiche, compreso ciò che è troppo grande per essere sincronizzato con il tuo account. La password e la sessione non sono mai incluse e l’importazione unisce i trofei invece di sostituirli, quindi i progressi non vanno mai persi.', advBackupExport:'Esporta backup', advBackupImport:'Importa backup', advWinOpen:'Evidenzia il pulsante in oro mentre la sua finestra è aperta', backTooltip:'Indietro',

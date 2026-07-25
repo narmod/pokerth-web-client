@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+    advSecConn:'Kết nối', advNickRetry:'Tự động thử lại khi biệt danh vẫn đang được dùng', nickInUseRetry:'“{name}” vẫn đang được dùng — thử lại sau {n} giây ({a}/{max})…', nickInUseGiveUp:'Sau {max} lần thử, “{name}” vẫn đang được dùng. Một phiên trước đó vẫn mở trên máy chủ — hãy thử lại sau vài phút hoặc chọn biệt danh khác.',
     // — i18n gap-fill (backup / trophies / back tooltip) —
     advKeyNav:'Esc đóng/hủy, Enter xác nhận (ngoài bàn chơi)',
     achTitle:'Danh hiệu', advBackupSec:'Sao lưu đầy đủ (ứng dụng web)', advBackupDesc:'Lưu mọi thứ trình duyệt này đang giữ vào một tệp: tùy chọn web, chủ đề, bộ bài, chỗ ngồi tùy chỉnh, ảnh đại diện, danh hiệu và thống kê — kể cả những gì quá lớn để đồng bộ với tài khoản. Mật khẩu và phiên đăng nhập không bao giờ được đưa vào, và khi nhập, danh hiệu được hợp nhất thay vì thay thế, nên tiến trình không bao giờ bị mất.', advBackupExport:'Xuất bản sao lưu', advBackupImport:'Nhập bản sao lưu', advWinOpen:'Làm nổi nút bằng màu vàng khi cửa sổ của nó đang mở', backTooltip:'Quay lại',
