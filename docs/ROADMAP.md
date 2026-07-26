@@ -48,9 +48,10 @@ use too. Items are grouped by status rather than fixed phases.
 
 **Appearance & theming**
 - A QML-style styles window with four tabs — Table · Cards · Card back · Seats — each
-  choice saved independently. 12 table styles (PokerTH default QML table style,
+  choice saved independently. 14 table styles (PokerTH default QML table style,
   Green Casino, Danuxi Blue, Mute, Mute 02, Teal, Lemming, Matrix, Star Trek, TripSixes,
-  Wanted, Xanax), listed with a large preview, name and author ("PokerTH Development Team"
+  Wanted, Xanax, plus the two styles new in the official 2.1.4 release — Saloon and
+  Discworld), listed with a large preview, name and author ("PokerTH Development Team"
   for the official styles) like the official picker; as in the official `StyleProvider`,
   each table style carries its own felt, pucks and action-button skins.
 - UI palette (Dark / Light / Auto) follows the official *Dark Mode* setting in the
@@ -62,16 +63,17 @@ use too. Items are grouped by status rather than fixed phases.
 - Semantic-colour system so the whole UI recolours consistently per theme — gold uses the
   official QML accent (`#E3C800`) and is kept only for deliberate game assets (dealer
   button, chip denominations, win bursts).
-- Official card decks: seven more official PokerTH decks (Bella Union, Nobus Classic,
-  Stardust, Star Trek, Lemming, Xanax) added to the deck gallery, each with a live preview.
+- Official card decks: the official PokerTH decks (Bella Union, Nobus Classic, Stardust,
+  Star Trek, Lemming, Xanax, and the Discworld deck new in 2.1.4) added to the deck
+  gallery, each with a live preview.
 - Style import: install a table or card deck from a `.zip` (parsing the four 2.1.3 style keys), or a custom card-back image.
 - Coloured glossy action buttons (Fold red / Check-Call blue / Raise green / All-In orange)
   and an animated flaming-chip emblem on the login screen (respects reduced-motion).
-- Eight theme-aware seat "packs", switchable like decks: PokerTH landscape and PokerTH
-  portrait (faithful renders of the official QML player boxes), Classic, Chip, Plate,
-  Card, Compact, and Bar; pack names kept in English across all languages. The default is
-  the PokerTH pack matching the screen orientation, with an orientation-sync option (on by
-  default); an explicit choice is saved and always wins.
+- Theme-aware seat "packs", switchable like decks: the built-in PokerTH pack is a
+  faithful render of the official QML player boxes, in a single pack whose
+  landscape/portrait variant follows the screen orientation automatically; more packs
+  (Onyx Pill, Boardwalk, High Roller…) come from the gallery and can be imported from a
+  `.zip`. Pack names kept in English across all languages; an explicit choice is saved.
 - Responsive seat layout: on phones and tablets the seats tighten around the felt so players
   stay close to the table; desktop keeps the wider layout.
 
