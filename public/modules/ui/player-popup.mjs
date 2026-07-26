@@ -220,9 +220,11 @@ function openPlayerInfoPopup(pid, autoStats) {
     S._pimTab = 'session';
     _renderProfileStats();
     if (infoEl) {
-      var _selfCups = _cupsBlockHtml(targetPid);
-      infoEl.innerHTML = _selfCups;
-      infoEl.style.display = _selfCups ? '' : 'none';
+      // Mêmes infos en jeu + stats de comportement que pour un adversaire,
+      // PUIS les coupes (demande narmod 26/07 : parité self/adversaires).
+      var _selfInfo = _inGameInfoHtml(targetPid) + _cupsBlockHtml(targetPid);
+      infoEl.innerHTML = _selfInfo;
+      infoEl.style.display = _selfInfo ? '' : 'none';
     }
   } else {
     // Adversaire : rôle + infos en jeu, pas de stats ni de bouton avatar.
@@ -232,13 +234,16 @@ function openPlayerInfoPopup(pid, autoStats) {
       infoEl.style.display = '';
     }
   }
-  // Ouverture directe sur les stats (bouton 📊 de la liste) : charge le
-  // profil de saison du joueur (mêmes stats que « Voir les coupes »), sans
-  // clic supplémentaire — moi compris depuis que mes coupes sont rendues.
-  // Sans effet si le bloc n'existe pas (bot, invité, hors réseau).
+  // Stats de comportement (VPIP/PFR/AF…) : locales et légères → chargées à
+  // CHAQUE ouverture dès que le conteneur existe, self compris. Les coupes de
+  // saison (réseau pokerth.net, rallongent le popup) ne se chargent QUE sur
+  // demande explicite : bouton 🏆, ou bouton 📊 de la liste (autoStats) —
+  // plus jamais automatiquement depuis la table (revirement narmod 26/07).
+  if (document.getElementById('pim-stats-hud')) {
+    try { _pimLoadPlayerStats(targetPid); } catch (e) {}
+  }
   if (autoStats && document.getElementById('pim-cups-btn')) {
     try { _pimLoadCups(targetPid); } catch (e) {}
-    try { _pimLoadPlayerStats(targetPid); } catch (e) {}
   }
   modal.style.display = 'flex';
 }
@@ -314,21 +319,14 @@ function _pimNameFor(pid) {
   try { return window.getPlayerName(pid) || null; } catch (e) { return null; }
 }
 
-function _otherPlayerInfoHtml(pid) {
+// Bloc « infos en jeu » (stack, mise, statut, pastilles D/SB/BB) + conteneur
+// des stats de comportement (#pim-stats-hud, rempli en asynchrone par
+// _pimLoadPlayerStats). PARTAGÉ self/adversaires : ma propre box doit montrer
+// les mêmes stats en cours que celles des autres (demande narmod 26/07).
+// Rien si le joueur n'est pas attablé (lobby) — dégrade proprement.
+function _inGameInfoHtml(pid) {
   function tt(k, fb) { var v = (typeof t === 'function') ? t(k) : null; return (v && v !== k) ? v : fb; }
   var html = '';
-  // Rôle
-  var roleTxt;
-  if (window.isBot(pid)) {
-    roleTxt = '🤖 ' + tt('piRoleBot', 'Bot');
-  } else {
-    var rg = S._playerRights[pid] || 0;
-    roleTxt = (rg === 3) ? tt('piRoleAdmin', 'Admin')
-            : (rg === 2) ? tt('piRoleRegistered', 'Registered')
-            : tt('piRoleGuest', 'Guest');
-  }
-  html += '<div class="pim-role">' + esc(roleTxt) + '</div>';
-  // Infos en jeu (uniquement si le joueur est attablé / a des données siège).
   var sd = S.seatData[pid];
   if (sd) {
     var rows = '';
@@ -356,6 +354,26 @@ function _otherPlayerInfoHtml(pid) {
   }
   // Stats de comportement (rempli en asynchrone par _pimLoadPlayerStats).
   html += '<div id="pim-stats-hud" class="pim-stat-box" data-pid="' + pid + '" style="display:none"></div>';
+  return html;
+}
+
+function _otherPlayerInfoHtml(pid) {
+  function tt(k, fb) { var v = (typeof t === 'function') ? t(k) : null; return (v && v !== k) ? v : fb; }
+  var html = '';
+  // Rôle
+  var roleTxt;
+  if (window.isBot(pid)) {
+    roleTxt = '🤖 ' + tt('piRoleBot', 'Bot');
+  } else {
+    var rg = S._playerRights[pid] || 0;
+    roleTxt = (rg === 3) ? tt('piRoleAdmin', 'Admin')
+            : (rg === 2) ? tt('piRoleRegistered', 'Registered')
+            : tt('piRoleGuest', 'Guest');
+  }
+  html += '<div class="pim-role">' + esc(roleTxt) + '</div>';
+  // Infos en jeu + conteneur des stats de comportement (partagés avec la
+  // self-box, cf. _inGameInfoHtml).
+  html += _inGameInfoHtml(pid);
   // Coupes + lien profil pokerth.net (identique pour moi et pour les autres).
   html += _cupsBlockHtml(pid);
   var _ignNm = window.getPlayerName(pid);

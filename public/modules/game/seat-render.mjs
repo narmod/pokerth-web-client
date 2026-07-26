@@ -75,11 +75,11 @@ function renderSeatsImmediate() {
       var seat = (ev.target && ev.target.closest) ? ev.target.closest('.seat[data-pid]') : null;
       if (!seat || seat.classList.contains('seat-ghost')) return; // siège vide / joueur parti
       var sp = parseInt(seat.getAttribute('data-pid'), 10);
-      // autoStats = true : le popup ouvert depuis un avatar DE LA TABLE affiche
-      // directement les classements (demande narmod), sans passer par le bouton
-      // 🏆. Sans effet pour un bot, un invité ou hors pokerth.net ; les appels
-      // sont mémoïsés 5 min côté rkLoadPlayerCups.
-      if (!isNaN(sp)) openPlayerInfoPopup(sp, true);
+      // PAS d'autoStats depuis la table (revirement narmod 26/07) : les coupes
+      // de saison ne se chargent plus automatiquement à l'ouverture — bouton 🏆
+      // à la demande. Les stats de comportement (VPIP…) restent chargées par le
+      // popup lui-même. Le bouton 📊 de la liste lobby garde l'auto-chargement.
+      if (!isNaN(sp)) openPlayerInfoPopup(sp);
     });
   }
   if (!S.seats.length) { el.innerHTML = ''; return; }
