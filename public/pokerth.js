@@ -386,6 +386,8 @@ function openAdvancedOptions() {
   sync('adv-logon', 'log_on', true);
   sync('adv-statstrack', 'stats_track', true);
   sync('adv-hudon', 'hud_on', false);
+  sync('adv-pdbauto', 'pdb_auto', false);   // ecriture auto du .pdb dans un dossier local (web)
+  try { if (typeof window._pdbAutoUi === 'function') window._pdbAutoUi(); } catch (e) {}
   try { var _li = document.getElementById('adv-loginterval'); if (_li) _li.value = _getLogInterval(); } catch (e) {}
   sync('adv-zoomfollow', 'zoom_follow', true); // défaut QML : suivi actif quand le zoom l'est
   sync('adv-snd-actions', 'snd_actions', true);
@@ -1114,7 +1116,7 @@ var _CFG_WEB_SYNC_KEYS = [
   'pth_log_interval', 'pth_avatar', 'pth_ignored', 'pth_prefs_lan',
   // Web-only sans equivalent config.xml : elles appelaient _cfgSyncMark() mais
   // n'etaient collectees par aucun canal (donc jamais synchronisees).
-  'pth_conn_pill', 'pth_stats_track'
+  'pth_conn_pill', 'pth_stats_track', 'pth_pdb_auto'
 ];
 // Succès (mode entraînement) : mêmes transport et compte que les réglages, mais
 // réconciliation par FUSION et non par écrasement — la progression est cumulative,
@@ -9322,7 +9324,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.4-web.63'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.4-web.64'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

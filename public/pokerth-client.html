@@ -544,6 +544,7 @@ function onAvatarImageChosen(input) {
   var CRIT = ['/pokerth.css', '/chat-emotes.js', '/pokerth.js',
     '/modules/i18n.mjs', '/modules/theme.mjs', '/modules/sounds.mjs',
     '/modules/handlog.mjs',
+    '/modules/pdb-autosave.mjs',
     '/modules/journal.mjs',
     '/modules/game/state.mjs',
     '/modules/ui/fmt.mjs',
@@ -2203,6 +2204,7 @@ function onAvatarImageChosen(input) {
 <script type="module" src="modules/music.mjs"></script>
 <script defer src="vendor/sql-wasm.js"></script>
 <script type="module" src="modules/handlog.mjs"></script>
+<script type="module" src="modules/pdb-autosave.mjs"></script>
 <script type="module" src="modules/journal.mjs"></script>
 <script type="module" src="modules/game/state.mjs"></script>
 <script type="module" src="modules/ui/fmt.mjs"></script>
@@ -2764,6 +2766,13 @@ if ('serviceWorker' in navigator) {
               <button type="button" class="btn-sm adv-export-btn" onclick="_advExportPdb('session',this)"><span data-i18n="advStatsExportSession">Export session</span></button>
               <button type="button" class="btn-sm adv-export-btn" onclick="_advExportPdb('all',this)"><span data-i18n="advStatsExportAll">Export all history</span></button>
             </div>
+            <div class="adv-sec" data-i18n="advPdbAutoSec">Automatic .pdb file</div>
+            <div class="adv-link-desc" data-i18n="advPdbAutoDesc">Write the .pdb log into a folder on your computer and update it after every hand, like the desktop client. Desktop Chrome, Edge and Opera only.</div>
+            <label class="adv-row"><input type="checkbox" id="adv-pdbauto" onchange="setAdvOpt('pdb_auto',this.checked)"><span data-i18n="advPdbAuto">Write the .pdb file automatically</span><em class="adv-webtag">web</em></label>
+            <div class="adv-row adv-export-row">
+              <button type="button" class="btn-sm adv-export-btn" id="adv-pdbauto-pick" onclick="if(window._pdbAutoPick)window._pdbAutoPick()"><span data-i18n="advPdbAutoPick">Choose folder…</span></button>
+            </div>
+            <div class="adv-link-desc" id="adv-pdbauto-status"></div>
           </div>
         </section>
         <section class="adv-panel" data-cat="reset" id="adv-panel-reset" role="tabpanel" aria-labelledby="adv-cat-reset">

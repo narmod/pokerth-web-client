@@ -1951,6 +1951,7 @@ function _renderRange(modal) {
         store.putHandBundle(rec.sessionId, hand, actions);
         try { if (typeof window._renderStats === 'function') window._renderStats(); } catch (_e) {}
         try { if (typeof window._hudRefresh === 'function') window._hudRefresh(); } catch (_e) {}
+        try { if (typeof window._pdbAutoSave === 'function') window._pdbAutoSave(); } catch (_e) {}
       }
     });
     if (typeof window !== 'undefined') { window._handlog = rec; window._handlogStore = store; }
