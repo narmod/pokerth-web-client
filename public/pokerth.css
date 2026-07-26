@@ -7240,6 +7240,15 @@ html[data-seat-struct="qml"] .seat.me.active .seat-plate::after { border-width: 
 /* Couché : 0.72 ; éliminé : la base gère déjà l'estompe (transition QML 250ms). */
 html[data-seat-struct="qml"] .seat { transition: opacity 0.25s ease-out; }
 html[data-seat-struct="qml"] .seat.folded { opacity: 0.72; }
+/* Self couché : NE PAS estomper le siège entier — l'opacité d'un parent
+   plafonne celle de ses enfants, donc les hole-cards devenaient illisibles
+   sur les thèmes clairs (narmod 2026-07-26). On estompe avatar / infos /
+   pied séparément (repère de fold conservé, ✕ compris) et MES cartes
+   restent pleinement opaques. Adversaires inchangés (parité QML). */
+html[data-seat-struct="qml"] .seat.me.folded { opacity: 1; }
+html[data-seat-struct="qml"] .seat.me.folded .seat-avatar,
+html[data-seat-struct="qml"] .seat.me.folded .seat-info,
+html[data-seat-struct="qml"] .seat.me.folded .seat-foot { opacity: 0.72; }
 /* Mise (pack PokerTH) : icône jeton à gauche du montant, comme le BetChip du
    client officiel (chipStack.svg). On garde la pastille de base (fond sombre,
    montant crème) et on préfixe juste le jeton PokerTH. */
