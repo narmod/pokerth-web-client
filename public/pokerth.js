@@ -4710,6 +4710,16 @@ const App = (() => {
         }
       } catch(e) {}
       const proxyUrl  = $('proxy').value.trim();
+      // Mode Internet/pokerth.net et entraînement : le proxy est TOUJOURS le
+      // site qui sert l'app — jamais le champ #proxy, réservé au LAN/serveur
+      // dédié. Ce champ est repeuplé depuis localStorage (pth_proxy) même
+      // quand il est masqué : une vieille adresse (p.ex. le serveur de démo)
+      // détournait silencieusement la connexion vers un AUTRE proxy — le
+      // handshake réussissait (« Proxy connecté »), puis plus rien, et aucune
+      // trace dans les logs du bon serveur.
+      const _smVal = $('server-mode') ? $('server-mode').value : '';
+      const _sameOriginWs = (location.protocol === 'https:' ? 'wss://' : 'ws://') + location.host;
+      const effProxyUrl = (_smVal === 'pokerthnet' || _smVal === 'offline') ? _sameOriginWs : proxyUrl;
       const host      = $('host').value.trim();
       const port      = $('port').value.trim() || '7234';
       const loginMode = $('login-mode') ? $('login-mode').value : 'guest';
@@ -4728,7 +4738,7 @@ const App = (() => {
       // Ré-aligne l'avatar-upload (initiale) sur le pseudo définitif AVANT l'Init.
       try { if (window.refreshMyAvatar) window.refreshMyAvatar(); } catch(e) {}
       if (S.myName.length < 3) { setStatus(t('nickTooShort'), 'err'); return; }
-      if (!_off && (!proxyUrl || !host)) { setStatus(t('fillFields'), 'err'); return; }
+      if (!_off && (!effProxyUrl || !host)) { setStatus(t('fillFields'), 'err'); return; }
 
       if (!_off && loginMode === 'auth' && (!$('pass') || !$('pass').value.trim())) {
         setStatus(t('enterPassword'), 'err');
@@ -4789,7 +4799,7 @@ const App = (() => {
       window.directWS = isPokerThDirect && targetIsPokerTH && (window._pthNetTransport !== 'proxy');
       const finalUrl = window.directWS
         ? 'wss://www.pokerth.net:443/pthlive'
-        : proxyUrl + '?host=' + encodeURIComponent(host) + '&port=' + encodeURIComponent(port) + '&tls=' + tlsParam + '&sid=' + encodeURIComponent(_getSessionId());
+        : effProxyUrl + '?host=' + encodeURIComponent(host) + '&port=' + encodeURIComponent(port) + '&tls=' + tlsParam + '&sid=' + encodeURIComponent(_getSessionId());
 
       setStatus(window.directWS ? t('connDirect') : t('connProxy'));
 
@@ -4806,7 +4816,7 @@ const App = (() => {
       // qui sert l'app héberge aussi le proxy → dériver de location.
       try {
         if (window.directWS || _off) {
-          var _nBase = proxyUrl || ((location.protocol === 'https:' ? 'wss://' : 'ws://') + location.host);
+          var _nBase = effProxyUrl || _sameOriginWs;
           _openNotifyWS(_nBase, _off ? 'offline' : 'pthnet');
         } else {
           _closeNotifyWS();
@@ -9312,7 +9322,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.4-web.61'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.4-web.62'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
