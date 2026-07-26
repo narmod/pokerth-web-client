@@ -828,8 +828,13 @@ function onEndOfHandShow(sub) {
       const r   = Proto.decode(rb);
       const pid = Proto.u32(r, 1);
       // FIX : joueur qui a foldé ne révèle pas ses cartes → null (pas 0 = 2♣ fantôme)
-      const c1  = Proto.u32orNull(r, 2);
-      const c2  = Proto.u32orNull(r, 3);
+      // Parité QML 2.1.4 (bugfix « folded players at showdown ») : les champs
+      // PlayerResult.resultCard1/2 sont *required* dans le proto — le serveur
+      // les remplit aussi pour les joueurs couchés. Filtrage client sur l'état
+      // folded suivi par siège (posé à chaque PlayersActionDone, action=1).
+      const _fdSD = !!(S.seatData[pid] && S.seatData[pid].folded);
+      const c1  = _fdSD ? null : Proto.u32orNull(r, 2);
+      const c2  = _fdSD ? null : Proto.u32orNull(r, 3);
       const won = Proto.u32(r, 5);
       const cash= Proto.u32(r, 6);
       if (S.seatData[pid]) {
@@ -921,8 +926,10 @@ function onEndOfHandShow(sub) {
         for (var _ri = 0; _ri < results.length; _ri++) {
           var _rr = Proto.decode(results[_ri]);
           var _rpid = Proto.u32(_rr, 1);
-          var _rc1 = Proto.u32orNull(_rr, 2);
-          var _rc2 = Proto.u32orNull(_rr, 3);
+          // Même filtre foldé que la boucle de révélation ci-dessus.
+          var _rfd = !!(S.seatData[_rpid] && S.seatData[_rpid].folded);
+          var _rc1 = _rfd ? null : Proto.u32orNull(_rr, 2);
+          var _rc2 = _rfd ? null : Proto.u32orNull(_rr, 3);
           var _rwon = Proto.u32(_rr, 6);
           var _htext = null, _hint = null;
           if (_rc1 != null && _rc2 != null && typeof evaluateBestHand === 'function') {

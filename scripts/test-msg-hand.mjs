@@ -163,6 +163,21 @@ logs.length = 0;
 M.onYourActionRejected(subOf([[1, 0, 12], [2, 0, 1], [3, 0, 5], [4, 0, 2]]));
 ok(logs.length >= 1, 'onYourActionRejected : entrée de log');
 
+// ── onEndOfHandShow : les cartes des joueurs COUCHÉS ne sont pas révélées
+// (parité QML 2.1.4 — resultCard1/2 sont required, le serveur les envoie
+// aussi pour les foldés ; le client doit filtrer sur l'état folded).
+S.seatData[8] = { money: 3000, folded: false };
+S.seatData[9].folded = true;
+M.onEndOfHandShow(subOf([
+  [2, 2, Proto.encode([[1, 0, 9], [2, 0, 7],  [3, 0, 8],  [5, 0, 0],   [6, 0, 2900]])], // foldé
+  [2, 2, Proto.encode([[1, 0, 8], [2, 0, 12], [3, 0, 25], [5, 0, 100], [6, 0, 3100]])]  // gagnant
+]));
+ok(S.seatData[9].card1 === null && S.seatData[9].card2 === null,
+   'onEndOfHandShow : cartes du joueur foldé NON révélées');
+ok(S.seatData[8].card1 === 12 && S.seatData[8].card2 === 25,
+   'onEndOfHandShow : cartes du joueur en abattage bien révélées');
+ok(S.seatData[9].money === 2900, 'onEndOfHandShow : stack du foldé quand même mis à jour');
+
 // Ponts window
 ok(window.onGameStartInitial === M.onGameStartInitial && window.onHandStart === M.onHandStart &&
    window.onPlayersTurn === M.onPlayersTurn && window.onEndOfHandShow === M.onEndOfHandShow &&
