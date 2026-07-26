@@ -6,7 +6,7 @@ use too. Items are grouped by status rather than fixed phases.
 
 > **Tracking the official client, continuously.** The in-game screen is kept aligned
 > with PokerTH's official QML client on an ongoing basis — as the official client
-> evolves (currently the 2.1.3 build), the web client re-syncs to match. See
+> evolves (currently the 2.1.4 build), the web client re-syncs to match. See
 > *Official client (QML) tracking* below.
 
 ## ✅ Shipped
@@ -163,7 +163,7 @@ use too. Items are grouped by status rather than fixed phases.
 - The in-game screen is audited feature-by-feature against PokerTH's official QML client
   (sources extracted from the official desktop AppImage and Android APK builds) and
   re-synced as that client evolves. Feature parity was first reached in the `v0.3.166`
-  series; work since has been fidelity tuning against the newer **2.1.3** build. Feature
+  series; work since has been fidelity tuning against the newer builds (currently **2.1.4**). Feature
   coverage includes:
   - F1–F8 keyboard shortcuts matching the official client (fold / check-call / bet-raise /
     all-in, alternate key order, playing-mode switches), plus F5 to show your cards after
@@ -233,9 +233,13 @@ use too. Items are grouped by status rather than fixed phases.
 
 ## 🔨 Now (in progress)
 
+- **Official pokerth.net deployment** — the client is live on the official
+  infrastructure at [webclient.pokerth.net](https://webclient.pokerth.net/)
+  (see [INSTALL_POKERTH_NET.md](INSTALL_POKERTH_NET.md)); remaining work is
+  finishing the in-host route between the web proxy and the game server.
 - **Official QML client fidelity** — ongoing pixel-and-behaviour alignment of the in-game
-  screen with the official 2.1.3 QML client (action bar, mobile layouts, seat geometry);
-  this is the current focus, with the Code-health work below up next.
+  screen with the official 2.1.4 QML client (action bar, mobile layouts, seat geometry);
+  with the Code-health work below up next.
 
 ## ⏭️ Next
 

@@ -1,15 +1,21 @@
 # Changelog
 
 All notable changes to this project are summarised here. It loosely follows
-[Keep a Changelog](https://keepachangelog.com/) and Semantic Versioning
-(currently a `0.x` beta line). Granular, per-build tags are published on the
+[Keep a Changelog](https://keepachangelog.com/). Since `v2.1.4-web.0`
+(2026-07-22) the version tracks the upstream PokerTH release the client is
+aligned with, as `MAJOR.MINOR.PATCH-web.N` — a new upstream release resets the
+web counter (`2.1.5` → `2.1.5-web.0`). Granular, per-build tags are published on the
 [GitHub Releases](https://github.com/narmod/pokerth-web-client/releases) page;
 this file captures what matters to players and operators.
 
-## [Unreleased]
+## 2.1.4-web line (2026)
 
-Fidelity and interface work bringing the client closer to PokerTH's official QML
-client, now tracking the **2.1.3** build.
+The `2.1.4-web.N` line opened with `v2.1.4-web.0` (2026-07-22), replacing the
+`0.3.x` beta numbering. The in-game screen now tracks the official **2.1.4**
+QML build, and the client is live on the official infrastructure at
+**[webclient.pokerth.net](https://webclient.pokerth.net/)**. Highlights of the
+line so far — fidelity and interface work bringing the client closer to the
+official QML client:
 
 ### Changed
 - **Smarter training bots — multi-street aggression.** Bots no longer play each

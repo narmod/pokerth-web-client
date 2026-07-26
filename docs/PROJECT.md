@@ -5,8 +5,9 @@ PokerTH Web Client is a modern, browser-based interface for
 game. It lets players join the existing PokerTH server ecosystem — or play
 offline against bots — from any desktop, tablet, or phone browser, with no
 native install. It is developed in coordination with the upstream PokerTH
-project, aiming to align closely with the official QML client (currently the 2.1.3
-build) while staying fully compatible with current PokerTH servers.
+project, aiming to align closely with the official QML client (currently the 2.1.4
+build) while staying fully compatible with current PokerTH servers. The official
+instance is live at [webclient.pokerth.net](https://webclient.pokerth.net/).
 
 This document is a high-level map of *what the project is* and *how it fits
 together*. For installation, hosting, and the complete feature list, see the

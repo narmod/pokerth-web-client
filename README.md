@@ -1,7 +1,7 @@
 # PokerTH Web Client
 
 <p align="center">
-  <a href="https://pokerth.ddns.net/">
+  <a href="https://webclient.pokerth.net/">
     <img src="public/screenshots/social-preview.png" alt="PokerTH Web Client — play Texas Hold'em in your browser" width="680"/>
   </a>
 </p>
@@ -13,7 +13,7 @@
 </p>
 
 <p align="center">
-  <a href="https://pokerth.ddns.net/"><img src="https://img.shields.io/badge/%E2%96%B6%20Live%20demo-pokerth.ddns.net-2E7D32?style=for-the-badge" alt="Live demo — pokerth.ddns.net"/></a>
+  <a href="https://webclient.pokerth.net/"><img src="https://img.shields.io/badge/%E2%99%A0%20Play%20now-webclient.pokerth.net-E3C800?style=for-the-badge&labelColor=1d222b" alt="Play now — webclient.pokerth.net"/></a>
 </p>
 
 <p align="center">
@@ -55,7 +55,7 @@
 <sub>📂 = collapsible section — click the **“Show…”** line to expand it.</sub>
 
 - [✨ Highlights](#highlights)
-- [🎮 Live demo](#live-demo)
+- [🎮 Play now](#live-demo)
 - [Why this project exists](#why-this-project-exists)
 - [Screenshots](#screenshots)
 - [Features](#features)
@@ -86,11 +86,11 @@
 ---
 
 <a id="live-demo"></a>
-## 🎮 Live demo
+## 🎮 Play now
 
-**Try it now: [https://pokerth.ddns.net/](https://pokerth.ddns.net/)**
+**Play at the official address: [https://webclient.pokerth.net/](https://webclient.pokerth.net/)** — the web client, hosted on the official **pokerth.net** infrastructure.
 
-Play right away — no account needed, no install. Pick **🌐 Internet** to join the public, official pokerth.net server (as a guest, or with your registered account), or **LAN / Dedicated server** to play on the demo's own PokerTH server, hosted on a small VPS — choose any nickname (Guest mode off), create a table, and invite friends.
+Play right away — no account needed, no install. Pick **🌐 Internet** to join the public, official pokerth.net server (as a guest, or with your registered account), or **LAN / Dedicated server** to connect to your own PokerTH server — choose any nickname (Guest mode off), create a table, and invite friends.
 
 Want to try with **no server or connection at all**? Pick **🏋️ Training mode** and play instantly against bots — fully offline.
 
@@ -320,7 +320,7 @@ A full appearance system, reached from the **Theme** button — a styles window 
 The in-game screen is audited feature-by-feature against PokerTH's official QML client
 (sources extracted from the official desktop AppImage and Android APK builds) and kept
 aligned as that client evolves. Feature parity was first reached in the `v0.3.166` series;
-the work since has been fidelity tuning against the newer **2.1.3** build:
+the work since has been fidelity tuning against the newer builds (currently **2.1.4**):
 - **Keyboard shortcuts**: F1–F8 mirror the official client (fold / check-call / bet-raise /
   all-in, alternate key order, playing-mode switches), plus **F5** to show your cards
   after a hand that ended with no showdown
@@ -1104,7 +1104,7 @@ Please include the `pthDiag()` output, your browser/OS and the displayed build n
 <a id="roadmap"></a>
 ## Roadmap / Suggested next steps
 
-Development is tracked in **[`docs/ROADMAP.md`](docs/ROADMAP.md)**, grouped as *Shipped · Now · Next · Later*. The in-game screen **tracks the official QML client continuously** — feature parity was first reached in the `v0.3.166` series and the work since has been fidelity tuning against the newer 2.1.3 build (see [Official client (QML) tracking](#official-client-qml-tracking) above). Current focus: the registered-account login flow on pokerth.net and code-health work — splitting `pokerth.js` into modules, adding linting and an automated test suite, and moving the remaining hand-written Protobuf paths onto the generated bundle in `public/proto/`. Further out: local multiplayer over WebRTC, a streamer-friendly read-only embed, and a native review of the machine-assisted translations.
+Development is tracked in **[`docs/ROADMAP.md`](docs/ROADMAP.md)**, grouped as *Shipped · Now · Next · Later*. The in-game screen **tracks the official QML client continuously** — feature parity was first reached in the `v0.3.166` series and the work since has been fidelity tuning against the newer builds (currently 2.1.4) (see [Official client (QML) tracking](#official-client-qml-tracking) above). Current focus: the official deployment at [webclient.pokerth.net](https://webclient.pokerth.net/) and code-health work — adding linting, and moving the remaining hand-written Protobuf paths onto the generated bundle in `public/proto/` (the module split and an automated test suite are done). Further out: local multiplayer over WebRTC, a streamer-friendly read-only embed, and a native review of the machine-assisted translations.
 
 ---
 
