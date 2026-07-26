@@ -19,13 +19,15 @@
   /* Onglet Game servers : grille qui se replie proprement sur mobile. Les
      largeurs fixes + flex sans wrap faisaient déborder Port/TLS/Check hors
      de la carte, et éloignaient « TLS name » de son champ. */
-  .srow .sfield{display:flex;align-items:center;gap:8px;margin:6px 0;min-width:0}
-  .srow .sfield>span{flex:0 0 auto;min-width:64px;font-size:.82rem;color:var(--text)}
-  .srow .sfield>input[type=text],.srow .sfield>input[type=number]{flex:1 1 auto;min-width:0;margin:0}
-  .srow .srowline{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin:8px 0 0}
-  .srow .srowline label{display:inline-flex;align-items:center;gap:5px;margin:0;font-size:.82rem}
-  .srow .stls{border-left:2px solid var(--line);padding-left:10px;margin:8px 0 0}
-  .srow .sdirty{font-size:.72rem;color:#FFC107;border:1px solid #FFC107;border-radius:6px;padding:1px 6px;margin-left:8px}
+  .gsrow{display:block}
+  .gsrow .sfield{display:flex;align-items:center;gap:8px;margin:6px 0;min-width:0}
+  .gsrow .sfield>span{flex:0 0 auto;min-width:64px;font-size:.82rem;color:var(--text)}
+  .gsrow .sfield>input[type=text],.gsrow .sfield>input[type=number]{flex:1 1 auto;min-width:0;margin:0;width:auto}
+  .gsrow .srowline{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin:8px 0 0}
+  .gsrow .srowline label{display:inline-flex;align-items:center;gap:5px;margin:0;font-size:.82rem}
+  .gsrow .srowline button{flex:0 0 auto}
+  .gsrow .stls{border-left:2px solid var(--line);padding-left:10px;margin:8px 0 0}
+  .gsrow .sdirty{font-size:.72rem;color:#FFC107;border:1px solid #FFC107;border-radius:6px;padding:1px 6px;margin-left:8px}
   .srvhint{font-size:.78rem;color:var(--text);margin:6px 0 0}
   .srveff{border:1px solid var(--line);border-radius:10px;padding:10px;margin:0 0 10px}
   .srveff b{color:var(--gold)}
@@ -133,6 +135,10 @@
     .tabs{overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;gap:4px}
     .tabs::-webkit-scrollbar{display:none}
     .tab{flex:0 0 auto;white-space:nowrap;padding:8px 11px;font-size:.8rem}
+    .gsrow .sfield{flex-wrap:wrap}
+    .gsrow .sfield>span{min-width:100%}
+    .gsrow .sfield>input[type=text],.gsrow .sfield>input[type=number]{width:100%;max-width:none}
+    .gsrow .srowline button{flex:1 1 40%}
   }
 </style>
 <script>(function(){try{var t=localStorage.getItem('pth_admin_theme');if(t!=='light'&&t!=='dark')t='dark';document.documentElement.setAttribute('data-admin-theme',t);}catch(e){}})();</script>
@@ -608,7 +614,7 @@
   // (voir _tlsFromBody côté proxy), mais la connexion de jeu, elle, n'utilisera
   // que ce qui est enregistré : le badge évite d'oublier l'étape.
   var _srvDirty = {};
-  function srvMarkDirty(i){ _srvDirty[i]=true; var r=document.querySelector('.srow[data-i="'+i+'"]'); if(r){ var b=r.querySelector('.sdirty'); if(b) b.style.display=''; } var st=$('srvState'); if(st){ st.textContent='Unsaved changes'; st.className='msg'; } }
+  function srvMarkDirty(i){ _srvDirty[i]=true; var r=document.querySelector('.gsrow[data-i="'+i+'"]'); if(r){ var b=r.querySelector('.sdirty'); if(b) b.style.display=''; } var st=$('srvState'); if(st){ st.textContent='Unsaved changes'; st.className='msg'; } }
   function srvSyncRow(row,i){ if(!_srv[i]) return;
     _srv[i].name=row.querySelector('.srvN').value.trim();
     _srv[i].host=row.querySelector('.srvH').value.trim();
@@ -617,7 +623,7 @@
     var _s=row.querySelector('.srvSNI'); _srv[i].sni=_s?_s.value.trim().toLowerCase():'';
     var _n=row.querySelector('.srvNV'); _srv[i].noverify=!!(_n&&_n.checked);
   }
-  function srvSyncAll(){ var box=$('srvRows'); if(!box) return; [].slice.call(box.querySelectorAll('.srow')).forEach(function(row){ srvSyncRow(row,+row.getAttribute('data-i')); }); }
+  function srvSyncAll(){ var box=$('srvRows'); if(!box) return; [].slice.call(box.querySelectorAll('.gsrow')).forEach(function(row){ srvSyncRow(row,+row.getAttribute('data-i')); }); }
 
   // Ports WebSocket du serveur PokerTH : le proxy parle du TCP brut préfixé
   // [u32 len], pas de handshake HTTP Upgrade — les composer ne peut pas marcher.
@@ -681,7 +687,7 @@
     if(!_srv.length){ box.innerHTML='<div class="empty">No server yet. Click “+ Add server”.</div>'; return; }
     box.innerHTML=('<div class="defrow" style="margin:0 0 8px"><label class="muted" title="No server selected: the client falls back to the address built into its code"><input type="radio" name="srvActive" class="srvANone" '+(_activeSrv?'':'checked')+'> <b>None</b> — fall back to the built-in client address (pokerth.net:7234). <span style="color:#FFC107">No game server listens there; players will not be able to connect.</span></label></div>')+_srv.map(function(s,i){
       var pw=srvPortWarn(s.port);
-      return '<div class="card srow" style="margin:0 0 8px;padding:12px" data-i="'+i+'">'
+      return '<div class="card gsrow" style="margin:0 0 8px;padding:12px" data-i="'+i+'">'
         +'<div class="sfield"><span>Name</span><input type="text" class="srvN" maxlength="40" placeholder="PokerTH.net (internal)" value="'+srvEsc(s.name)+'">'
           +'<span class="sdirty" style="display:none">unsaved</span></div>'
         +'<div class="sfield"><span>Host</span><input type="text" class="srvH" maxlength="255" placeholder="10.7.7.150 or box.ddns.net" value="'+srvEsc(s.host)+'" autocomplete="off"></div>'
@@ -701,7 +707,7 @@
         +'<div class="srvStat msg" style="margin:8px 0 0"></div>'
         +'</div>';
     }).join('');
-    [].slice.call(box.querySelectorAll('.srow')).forEach(function(row){
+    [].slice.call(box.querySelectorAll('.gsrow')).forEach(function(row){
       var i=+row.getAttribute('data-i');
       if(_srvDirty[i]){ var b=row.querySelector('.sdirty'); if(b) b.style.display=''; }
       row.querySelector('.srvDel').addEventListener('click',function(){ srvSyncAll(); _srv.splice(i,1); _srvDirty={}; renderServers(); srvMarkDirty(i); });
