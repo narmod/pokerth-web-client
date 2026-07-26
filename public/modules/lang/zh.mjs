@@ -11,6 +11,10 @@ export const meta = {
 };
 
 export const strings = {
+  jrUploadNet: '\u5728 pokerth.net \u4e0a\u5206\u6790\u2026',
+  jrUploadFail: '\u4e0a\u4f20\u5230 pokerth.net \u5931\u8d25',
+  advPdbUpload: '\u5728\u65e5\u5fd7\u7a97\u53e3\u663e\u793a\u201c\u5728 pokerth.net \u4e0a\u5206\u6790\u201d\uff08\u5c06\u65e5\u5fd7\u53d1\u9001\u5230 pokerth.net\uff09',
+
     advSecConn:'连接', advNickRetry:'昵称仍被占用时自动重试', nickInUseRetry:'“{name}” 仍被占用 — {n} 秒后重试（{a}/{max}）…', nickInUseGiveUp:'尝试 {max} 次后，“{name}” 仍被占用。之前的会话在服务器上尚未关闭 — 请几分钟后再试，或换一个昵称。',
     // — i18n gap-fill (backup / trophies / back tooltip) —
     advKeyNav:'Esc 关闭/取消，Enter 确认（牌桌之外）',

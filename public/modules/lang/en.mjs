@@ -16,6 +16,10 @@ export const meta = {
 };
 
 export const strings = {
+  jrUploadNet: 'Analyse on pokerth.net\u2026',
+  jrUploadFail: 'Upload to pokerth.net failed',
+  advPdbUpload: 'Show \u201cAnalyse on pokerth.net\u201d in the logs window (sends the log to pokerth.net)',
+
     advSecConn:'Connection', advNickRetry:'Retry automatically when the nickname is still in use', nickInUseRetry:'“{name}” is still in use — retrying in {n}s ({a}/{max})…', nickInUseGiveUp:'“{name}” is still in use after {max} attempts. A previous session is still open on the server — try again in a few minutes, or pick another nickname.',
     // — i18n gap-fill (backup / trophies / back tooltip) —
     achTitle:'Trophies', advBackupSec:'Full backup (web client)', advBackupDesc:'Save everything this browser holds into one file: web options, themes, decks, custom seats, avatar image, achievements and stats — including what is too large to sync with your account. Your password and session are never included, and importing merges achievements instead of replacing them, so progress is never lost.', advBackupExport:'Export backup', advBackupImport:'Import backup', advWinOpen:'Highlight the button in gold while its window is open', backTooltip:'Back',

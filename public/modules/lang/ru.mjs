@@ -15,6 +15,10 @@ export const meta = {
 };
 
 export const strings = {
+  jrUploadNet: '\u0410\u043d\u0430\u043b\u0438\u0437 \u043d\u0430 pokerth.net\u2026',
+  jrUploadFail: '\u041d\u0435 \u0443\u0434\u0430\u043b\u043e\u0441\u044c \u043e\u0442\u043f\u0440\u0430\u0432\u0438\u0442\u044c \u043d\u0430 pokerth.net',
+  advPdbUpload: '\u041f\u043e\u043a\u0430\u0437\u044b\u0432\u0430\u0442\u044c \u00ab\u0410\u043d\u0430\u043b\u0438\u0437 \u043d\u0430 pokerth.net\u00bb \u0432 \u043e\u043a\u043d\u0435 \u0436\u0443\u0440\u043d\u0430\u043b\u043e\u0432 (\u043e\u0442\u043f\u0440\u0430\u0432\u043b\u044f\u0435\u0442 \u0436\u0443\u0440\u043d\u0430\u043b \u043d\u0430 pokerth.net)',
+
     advSecConn:'Подключение', advNickRetry:'Автоматически повторять попытку, пока ник занят', nickInUseRetry:'«{name}» ещё занят — повтор через {n} с ({a}/{max})…', nickInUseGiveUp:'«{name}» всё ещё занят после {max} попыток. Предыдущая сессия остаётся открытой на сервере — попробуйте через несколько минут или выберите другой ник.',
     // — i18n gap-fill (backup / trophies / back tooltip) —
     advKeyNav:'Esc закрывает/отменяет, Enter подтверждает (вне стола)',

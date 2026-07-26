@@ -10,6 +10,10 @@ export const meta = {
 };
 
 export const strings = {
+  jrUploadNet: 'Ph\u00e2n t\u00edch tr\u00ean pokerth.net\u2026',
+  jrUploadFail: 'T\u1ea3i l\u00ean pokerth.net th\u1ea5t b\u1ea1i',
+  advPdbUpload: 'Hi\u1ec7n \u201cPh\u00e2n t\u00edch tr\u00ean pokerth.net\u201d trong c\u1eeda s\u1ed5 nh\u1eadt k\u00fd (g\u1eedi nh\u1eadt k\u00fd \u0111\u1ebfn pokerth.net)',
+
     advSecConn:'Kết nối', advNickRetry:'Tự động thử lại khi biệt danh vẫn đang được dùng', nickInUseRetry:'“{name}” vẫn đang được dùng — thử lại sau {n} giây ({a}/{max})…', nickInUseGiveUp:'Sau {max} lần thử, “{name}” vẫn đang được dùng. Một phiên trước đó vẫn mở trên máy chủ — hãy thử lại sau vài phút hoặc chọn biệt danh khác.',
     // — i18n gap-fill (backup / trophies / back tooltip) —
     advKeyNav:'Esc đóng/hủy, Enter xác nhận (ngoài bàn chơi)',

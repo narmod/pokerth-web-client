@@ -10,6 +10,10 @@ export const meta = {
 };
 
 export const strings = {
+  jrUploadNet: 'Analizuoti pokerth.net\u2026',
+  jrUploadFail: '\u012ek\u0117limas \u012f pokerth.net nepavyko',
+  advPdbUpload: 'Rodyti \u201eAnalizuoti pokerth.net\u201c \u017eurnal\u0173 lange (siun\u010dia \u017eurnal\u0105 \u012f pokerth.net)',
+
     advSecConn:'Ryšys', advNickRetry:'Automatiškai kartoti bandymą, kol slapyvardis užimtas', nickInUseRetry:'„{name}“ vis dar užimtas — naujas bandymas po {n} s ({a}/{max})…', nickInUseGiveUp:'„{name}“ po {max} bandymų vis dar užimtas. Ankstesnė sesija serveryje tebėra atvira — pabandykite po kelių minučių arba pasirinkite kitą slapyvardį.',
     // — i18n gap-fill (backup / trophies / back tooltip) —
     advKeyNav:'Esc uždaro/atšaukia, Enter patvirtina (ne prie stalo)',

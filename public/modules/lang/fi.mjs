@@ -9,6 +9,10 @@ export const meta = {
 };
 
 export const strings = {
+  jrUploadNet: 'Analysoi pokerth.netiss\u00e4\u2026',
+  jrUploadFail: 'L\u00e4hetys pokerth.netiin ep\u00e4onnistui',
+  advPdbUpload: 'N\u00e4yt\u00e4 \u201dAnalysoi pokerth.netiss\u00e4\u201d lokien ikkunassa (l\u00e4hett\u00e4\u00e4 lokin pokerth.netiin)',
+
     advSecConn:'Yhteys', advNickRetry:'Yritä automaattisesti uudelleen, kun nimimerkki on yhä käytössä', nickInUseRetry:'”{name}” on yhä käytössä — uusi yritys {n} s kuluttua ({a}/{max})…', nickInUseGiveUp:'”{name}” on yhä käytössä {max} yrityksen jälkeen. Aiempi istunto on yhä auki palvelimella — yritä muutaman minuutin kuluttua uudelleen tai valitse toinen nimimerkki.',
     // — i18n gap-fill (backup / trophies / back tooltip) —
     advKeyNav:'Esc sulkee/peruuttaa, Enter vahvistaa (pöydän ulkopuolella)',

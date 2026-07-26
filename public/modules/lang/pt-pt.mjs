@@ -9,6 +9,10 @@ export const meta = {
 };
 
 export const strings = {
+  jrUploadNet: 'Analisar no pokerth.net\u2026',
+  jrUploadFail: 'Falha no envio para pokerth.net',
+  advPdbUpload: 'Mostrar \u00abAnalisar no pokerth.net\u00bb na janela de registos (envia o registo para pokerth.net)',
+
     advSecConn:'Ligação', advNickRetry:'Tentar novamente de forma automática quando a alcunha ainda estiver em uso', nickInUseRetry:'“{name}” ainda está em uso — nova tentativa em {n} s ({a}/{max})…', nickInUseGiveUp:'“{name}” ainda está em uso após {max} tentativas. Uma sessão anterior continua aberta no servidor — tente de novo dentro de alguns minutos ou escolha outra alcunha.',
     // — i18n gap-fill (backup / trophies / back tooltip) —
     advKeyNav:'Esc fecha/cancela, Enter confirma (fora da mesa)',

@@ -410,6 +410,7 @@ function _ensureModal() {
         '<button type="button" class="btn-sm" id="jr-del"></button>' +
         '<span class="jr-spacer"></span>' +
         '<button type="button" class="btn-sm" id="jr-analyze"></button>' +
+        '<button type="button" class="btn-sm" id="jr-upload"></button>' +
       '</div>' +
       '<div class="jr-foot">' +
         '<span id="jr-keep-lbl"></span>' +
@@ -434,6 +435,7 @@ function _ensureModal() {
   $('jr-del').addEventListener('click', _delSelected);
   $('jr-delall').addEventListener('click', _delAll);
   $('jr-analyze').addEventListener('click', () => { _analyze = !_analyze; _anHand = 0; _renderRight(); });
+  $('jr-upload').addEventListener('click', _uploadAnalysis);
   $('jr-an-back').addEventListener('click', () => { _analyze = false; _renderRight(); });
   $('jr-an-hand').addEventListener('change', () => { _anHand = parseInt($('jr-an-hand').value, 10) || 0; _renderRight(); });
   $('jr-an-prev').addEventListener('click', () => _stepHand(-1));
@@ -457,6 +459,8 @@ function _applyTexts() {
   $('jr-del').textContent = T('jrDelete', 'Delete');
   $('jr-delall').textContent = T('jrDeleteAll', 'Delete all');
   $('jr-analyze').textContent = T('jrAnalyze', 'Analyse log file\u2026');
+  $('jr-upload').textContent = T('jrUploadNet', 'Analyse on pokerth.net\u2026');
+  $('jr-upload').style.display = _uploadEnabled() ? '' : 'none';
   $('jr-an-back').textContent = T('jrBack', 'Back to preview');
   $('jr-keep-lbl').textContent = T('jrRetention', 'Keep logs');
   const ko = $('jr-keep').options;
@@ -630,6 +634,40 @@ async function _saveAsPdb() {
   } catch (_e) {
     alert(T('jrNoSql', 'PDB export unavailable (sql.js not loaded)'));
   }
+}
+
+// ── Analyse sur pokerth.net ────────────────────────────────────────────────
+// Envoie le .pdb de la session sélectionnée à l'API du ranking officiel
+// (POST /pthranking/game/pdb, ajoutée le 26/07/2026 avec sp0ck) puis ouvre la
+// page d'analyse /gamelog?pdb=<id> dans un nouvel onglet. Même pipeline que
+// le bouton « log-analysis » du client de bureau.
+// Option avancée : pth_pdb_upload (ON par défaut) — masque le bouton si off.
+const PTHNET_PDB_API = 'https://www.pokerth.net/pthranking/game/pdb';
+const PTHNET_GAMELOG = 'https://www.pokerth.net/gamelog?pdb=';
+
+function _uploadEnabled() {
+  try { return localStorage.getItem('pth_pdb_upload') !== '0'; } catch (_e) { return true; }
+}
+
+async function _uploadAnalysis() {
+  if (!_sel) return;
+  if (typeof window._buildPdb !== 'function') { alert(T('jrNoSql', 'PDB export unavailable (sql.js not loaded)')); return; }
+  const btn = document.getElementById('jr-upload');
+  const old = btn ? btn.textContent : '';
+  if (btn) { btn.disabled = true; btn.textContent = '\u2026'; }
+  try {
+    const tb = _sessionTables(_all, _sel);
+    const bytes = await window._buildPdb(tb);
+    const fd = new FormData();
+    fd.append('pdb', new Blob([bytes], { type: 'application/x-sqlite3' }), _fileBase(tb.session, _sel) + '.pdb');
+    const r = await fetch(PTHNET_PDB_API, { method: 'POST', body: fd });
+    const j = await r.json();
+    if (!j || j.status !== true || !j.msg || !j.msg.id) throw new Error('bad response');
+    window.open(PTHNET_GAMELOG + encodeURIComponent(j.msg.id), '_blank', 'noopener');
+  } catch (_e) {
+    alert(T('jrUploadFail', 'Upload to pokerth.net failed'));
+  }
+  if (btn) { btn.disabled = false; btn.textContent = old; }
 }
 
 async function _delSelected() {

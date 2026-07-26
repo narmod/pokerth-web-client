@@ -10,6 +10,10 @@ export const meta = {
 };
 
 export const strings = {
+  jrUploadNet: 'Analiziraj na pokerth.net\u2026',
+  jrUploadFail: 'Prijenos na pokerth.net nije uspio',
+  advPdbUpload: 'Prika\u017ei \u201eAnaliziraj na pokerth.net\u201d u prozoru logova (\u0161alje log na pokerth.net)',
+
     advSecConn:'Veza', advNickRetry:'Automatski ponovi pokušaj dok je nadimak zauzet', nickInUseRetry:'„{name}“ je još zauzet — novi pokušaj za {n} s ({a}/{max})…', nickInUseGiveUp:'„{name}“ je zauzet i nakon {max} pokušaja. Prethodna sesija još je otvorena na poslužitelju — pokušajte ponovno za nekoliko minuta ili odaberite drugi nadimak.',
     // — i18n gap-fill (backup / trophies / back tooltip) —
     advKeyNav:'Esc zatvara/otkazuje, Enter potvrđuje (izvan stola)',

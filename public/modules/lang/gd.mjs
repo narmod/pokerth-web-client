@@ -11,6 +11,10 @@ export const meta = {
 };
 
 export const strings = {
+  jrUploadNet: 'Sgr\u00f9d air pokerth.net\u2026',
+  jrUploadFail: 'Dh\'fh\u00e0illig an luchdadh suas gu pokerth.net',
+  advPdbUpload: 'Seall \u201cSgr\u00f9d air pokerth.net\u201d ann an uinneag nan logaichean (cuiridh e an loga gu pokerth.net)',
+
     advSecConn:'Ceangal', advNickRetry:'Feuch a-rithist gu fèin-obrachail fhad ’s a tha am far-ainm ’ga chleachdadh', nickInUseRetry:'Tha “{name}” ’ga chleachdadh fhathast — oidhirp ùr an ceann {n} d ({a}/{max})…', nickInUseGiveUp:'Tha “{name}” ’ga chleachdadh fhathast às dèidh {max} oidhirpean. Tha seisean roimhe fhathast fosgailte air an fhrithealaiche — feuch a-rithist an ceann beagan mhionaidean no tagh far-ainm eile.',
     // — i18n gap-fill (backup / trophies / back tooltip) —
     advKeyNav:'Bidh Esc a’ dùnadh/a’ sgur dheth, Enter a’ dearbhadh (taobh a-muigh a’ bhùird)',

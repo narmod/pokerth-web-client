@@ -10,6 +10,10 @@ export const meta = {
 };
 
 export const strings = {
+  jrUploadNet: 'Analyzovat na pokerth.net\u2026',
+  jrUploadFail: 'Nahr\u00e1n\u00ed na pokerth.net se nezda\u0159ilo',
+  advPdbUpload: 'Zobrazit \u201eAnalyzovat na pokerth.net\u201c v okn\u011b log\u016f (ode\u0161le log na pokerth.net)',
+
     advSecConn:'Připojení', advNickRetry:'Automaticky opakovat pokus, dokud je přezdívka obsazená', nickInUseRetry:'„{name}“ je stále obsazená — další pokus za {n} s ({a}/{max})…', nickInUseGiveUp:'„{name}“ je po {max} pokusech stále obsazená. Předchozí relace zůstává na serveru otevřená — zkuste to za pár minut znovu nebo zvolte jinou přezdívku.',
     // — i18n gap-fill (backup / trophies / back tooltip) —
     advKeyNav:'Esc zavírá/ruší, Enter potvrzuje (mimo stůl)',

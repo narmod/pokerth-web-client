@@ -10,6 +10,10 @@ export const meta = {
 };
 
 export const strings = {
+  jrUploadNet: '\u0410\u043d\u0430\u043b\u0438\u0437\u0430 \u043d\u0430 pokerth.net\u2026',
+  jrUploadFail: '\u041e\u0442\u043f\u0440\u0435\u043c\u0430\u045a\u0435 \u043d\u0430 pokerth.net \u043d\u0438\u0458\u0435 \u0443\u0441\u043f\u0435\u043b\u043e',
+  advPdbUpload: '\u041f\u0440\u0438\u043a\u0430\u0436\u0438 \u201e\u0410\u043d\u0430\u043b\u0438\u0437\u0430 \u043d\u0430 pokerth.net\u201c \u0443 \u043f\u0440\u043e\u0437\u043e\u0440\u0443 \u0435\u0432\u0438\u0434\u0435\u043d\u0446\u0438\u0458\u0430 (\u0448\u0430\u0459\u0435 \u0435\u0432\u0438\u0434\u0435\u043d\u0446\u0438\u0458\u0443 \u043d\u0430 pokerth.net)',
+
     advSecConn:'Веза', advNickRetry:'Аутоматски понови покушај док је надимак заузет', nickInUseRetry:'„{name}“ је још заузет — нови покушај за {n} с ({a}/{max})…', nickInUseGiveUp:'„{name}“ је заузет и након {max} покушаја. Претходна сесија је још отворена на серверу — покушајте поново за неколико минута или изаберите други надимак.',
     // — i18n gap-fill (backup / trophies / back tooltip) —
     advKeyNav:'Esc затвара/отказује, Enter потврђује (ван стола)',

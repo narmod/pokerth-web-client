@@ -2756,6 +2756,7 @@ if ('serviceWorker' in navigator) {
             <div class="adv-sec" data-i18n="advSecJournal">Session logs</div>
             <div class="adv-link-desc" data-i18n="advJournalDesc">Browse, export, analyse and delete session logs, like the official client.</div>
             <div class="adv-row adv-export-row"><button type="button" class="adv-link-btn" onclick="closeAdvancedOptions();if(window._openJournal)window._openJournal()"><span data-i18n="advJournalOpen">Manage logs…</span></button></div>
+            <label class="adv-row"><input type="checkbox" id="adv-pdbupload" onchange="setAdvOpt('pdb_upload',this.checked)"><span data-i18n="advPdbUpload">Show “Analyse on pokerth.net” in the logs window (sends the log to pokerth.net)</span><em class="adv-webtag">web</em></label>
             <div class="adv-sec" data-i18n="advSecLogSettings">Log settings</div>
             <label class="adv-row"><input type="checkbox" id="adv-logon" onchange="setAdvOpt('log_on',this.checked)"><span data-i18n="advLogOn">Enable logging</span></label>
             <label class="adv-row"><input type="checkbox" id="adv-statstrack" onchange="setAdvOpt('stats_track',this.checked)"><span data-i18n="advStatsTrack">Record hand statistics</span><em class="adv-webtag">web</em></label>

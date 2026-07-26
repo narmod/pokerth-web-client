@@ -16,6 +16,10 @@ export const meta = {
 };
 
 export const strings = {
+  jrUploadNet: 'Analyser sur pokerth.net\u2026',
+  jrUploadFail: '\u00c9chec de l\'envoi vers pokerth.net',
+  advPdbUpload: 'Afficher \u00ab Analyser sur pokerth.net \u00bb dans la fen\u00eatre des logs (envoie le log \u00e0 pokerth.net)',
+
     advSecConn:'Connexion', advNickRetry:'Réessayer automatiquement quand le pseudo est encore occupé', nickInUseRetry:'« {name} » est encore occupé — nouvelle tentative dans {n} s ({a}/{max})…', nickInUseGiveUp:'« {name} » est toujours occupé après {max} tentatives. Une session précédente reste ouverte côté serveur — réessaie dans quelques minutes ou choisis un autre pseudo.',
     // — i18n gap-fill (backup / trophies / back tooltip) —
     achTitle:'Trophées', advBackupSec:'Sauvegarde complète (client web)', advBackupDesc:'Enregistre dans un seul fichier tout ce que ce navigateur contient : options web, thèmes, decks, sièges personnalisés, image d’avatar, trophées et statistiques — y compris ce qui est trop volumineux pour être synchronisé avec ton compte. Ton mot de passe et ta session ne sont jamais inclus, et l’import fusionne les trophées au lieu de les remplacer : aucune progression n’est perdue.', advBackupExport:'Exporter la sauvegarde', advBackupImport:'Importer une sauvegarde', advWinOpen:'Surligner le bouton en or tant que sa fenêtre est ouverte', backTooltip:'Retour',

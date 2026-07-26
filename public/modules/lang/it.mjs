@@ -15,6 +15,10 @@ export const meta = {
 };
 
 export const strings = {
+  jrUploadNet: 'Analizza su pokerth.net\u2026',
+  jrUploadFail: 'Invio a pokerth.net non riuscito',
+  advPdbUpload: 'Mostra \u00abAnalizza su pokerth.net\u00bb nella finestra dei log (invia il log a pokerth.net)',
+
     advSecConn:'Connessione', advNickRetry:'Riprova automaticamente quando il nickname è ancora in uso', nickInUseRetry:'«{name}» è ancora in uso — nuovo tentativo tra {n} s ({a}/{max})…', nickInUseGiveUp:'«{name}» è ancora in uso dopo {max} tentativi. Una sessione precedente è ancora aperta sul server — riprova tra qualche minuto o scegli un altro nickname.',
     // — i18n gap-fill (backup / trophies / back tooltip) —
     advKeyNav:'Esc chiude/annulla, Invio conferma (fuori dal tavolo)',

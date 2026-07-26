@@ -14,6 +14,10 @@ export const meta = {
 };
 
 export const strings = {
+  jrUploadNet: 'pokerth.net \u092a\u0930 \u0935\u093f\u0936\u094d\u0932\u0947\u0937\u0923 \u0915\u0930\u0947\u0902\u2026',
+  jrUploadFail: 'pokerth.net \u092a\u0930 \u0905\u092a\u0932\u094b\u0921 \u0935\u093f\u092b\u0932 \u0930\u0939\u093e',
+  advPdbUpload: '\u0932\u0949\u0917 \u0935\u093f\u0902\u0921\u094b \u092e\u0947\u0902 \u201cpokerth.net \u092a\u0930 \u0935\u093f\u0936\u094d\u0932\u0947\u0937\u0923 \u0915\u0930\u0947\u0902\u201d \u0926\u093f\u0916\u093e\u090f\u0901 (\u0932\u0949\u0917 pokerth.net \u0915\u094b \u092d\u0947\u091c\u0924\u093e \u0939\u0948)',
+
     advSecConn:'कनेक्शन', advNickRetry:'उपनाम अब भी उपयोग में हो तो स्वतः पुनः प्रयास करें', nickInUseRetry:'"{name}" अब भी उपयोग में है — {n} सेकंड में पुनः प्रयास ({a}/{max})…', nickInUseGiveUp:'{max} प्रयासों के बाद भी "{name}" उपयोग में है। पिछला सत्र सर्वर पर अब भी खुला है — कुछ मिनट बाद फिर प्रयास करें या कोई दूसरा उपनाम चुनें।',
     // — i18n gap-fill (backup / trophies / back tooltip) —
     advKeyNav:'Esc बंद/रद्द करता है, Enter पुष्टि करता है (टेबल के बाहर)',

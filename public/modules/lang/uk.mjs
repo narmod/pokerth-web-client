@@ -9,6 +9,10 @@ export const meta = {
 };
 
 export const strings = {
+  jrUploadNet: '\u0410\u043d\u0430\u043b\u0456\u0437 \u043d\u0430 pokerth.net\u2026',
+  jrUploadFail: '\u041d\u0435 \u0432\u0434\u0430\u043b\u043e\u0441\u044f \u043d\u0430\u0434\u0456\u0441\u043b\u0430\u0442\u0438 \u043d\u0430 pokerth.net',
+  advPdbUpload: '\u041f\u043e\u043a\u0430\u0437\u0443\u0432\u0430\u0442\u0438 \u00ab\u0410\u043d\u0430\u043b\u0456\u0437 \u043d\u0430 pokerth.net\u00bb \u0443 \u0432\u0456\u043a\u043d\u0456 \u0436\u0443\u0440\u043d\u0430\u043b\u0456\u0432 (\u043d\u0430\u0434\u0441\u0438\u043b\u0430\u0454 \u0436\u0443\u0440\u043d\u0430\u043b \u043d\u0430 pokerth.net)',
+
     advSecConn:'Підключення', advNickRetry:'Автоматично повторювати спробу, поки нік зайнятий', nickInUseRetry:'«{name}» ще зайнятий — повтор через {n} с ({a}/{max})…', nickInUseGiveUp:'«{name}» досі зайнятий після {max} спроб. Попередня сесія залишається відкритою на сервері — спробуйте за кілька хвилин або виберіть інший нік.',
     // — i18n gap-fill (backup / trophies / back tooltip) —
     advKeyNav:'Esc закриває/скасовує, Enter підтверджує (поза столом)',

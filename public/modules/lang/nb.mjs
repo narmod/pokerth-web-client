@@ -9,6 +9,10 @@ export const meta = {
 };
 
 export const strings = {
+  jrUploadNet: 'Analyser p\u00e5 pokerth.net\u2026',
+  jrUploadFail: 'Opplasting til pokerth.net mislyktes',
+  advPdbUpload: 'Vis \u00abAnalyser p\u00e5 pokerth.net\u00bb i loggvinduet (sender loggen til pokerth.net)',
+
     advSecConn:'Tilkobling', advNickRetry:'Prøv automatisk på nytt når kallenavnet fortsatt er i bruk', nickInUseRetry:'”{name}” er fortsatt i bruk — nytt forsøk om {n} s ({a}/{max})…', nickInUseGiveUp:'”{name}” er fortsatt i bruk etter {max} forsøk. En tidligere økt er fortsatt åpen på serveren — prøv igjen om noen minutter eller velg et annet kallenavn.',
     // — i18n gap-fill (backup / trophies / back tooltip) —
     advKeyNav:'Esc lukker/avbryter, Enter bekrefter (utenfor bordet)',

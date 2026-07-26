@@ -11,6 +11,10 @@ export const meta = {
 };
 
 export const strings = {
+  jrUploadNet: 'pokerth.net-\u0b87\u0bb2\u0bcd \u0baa\u0b95\u0bc1\u0baa\u0bcd\u0baa\u0bbe\u0baf\u0bcd\u0bb5\u0bc1\u2026',
+  jrUploadFail: 'pokerth.net-\u0b95\u0bcd\u0b95\u0bc1 \u0baa\u0ba4\u0bbf\u0bb5\u0bc7\u0bb1\u0bcd\u0bb1\u0bae\u0bcd \u0ba4\u0bcb\u0bb2\u0bcd\u0bb5\u0bbf',
+  advPdbUpload: '\u0baa\u0ba4\u0bbf\u0bb5\u0bc1 \u0b9a\u0bbe\u0bb3\u0bb0\u0ba4\u0bcd\u0ba4\u0bbf\u0bb2\u0bcd \u201cpokerth.net-\u0b87\u0bb2\u0bcd \u0baa\u0b95\u0bc1\u0baa\u0bcd\u0baa\u0bbe\u0baf\u0bcd\u0bb5\u0bc1\u201d \u0b95\u0bbe\u0b9f\u0bcd\u0b9f\u0bc1 (\u0baa\u0ba4\u0bbf\u0bb5\u0bc8 pokerth.net-\u0b95\u0bcd\u0b95\u0bc1 \u0b85\u0ba9\u0bc1\u0baa\u0bcd\u0baa\u0bc1\u0bae\u0bcd)',
+
     advSecConn:'இணைப்பு', advNickRetry:'புனைப்பெயர் இன்னும் பயன்பாட்டில் இருந்தால் தானாக மீண்டும் முயற்சி', nickInUseRetry:'"{name}" இன்னும் பயன்பாட்டில் உள்ளது — {n} வினாடியில் மீண்டும் முயற்சி ({a}/{max})…', nickInUseGiveUp:'{max} முயற்சிகளுக்குப் பிறகும் "{name}" பயன்பாட்டில் உள்ளது. முந்தைய அமர்வு சேவையகத்தில் இன்னும் திறந்திருக்கிறது — சில நிமிடங்களில் மீண்டும் முயற்சிக்கவும் அல்லது வேறு புனைப்பெயரைத் தேர்வுசெய்யவும்.',
     // — i18n gap-fill (backup / trophies / back tooltip) —
     advKeyNav:'Esc மூடும்/ரத்து செய்யும், Enter உறுதிப்படுத்தும் (மேசைக்கு வெளியே)',

@@ -13,6 +13,10 @@ export const meta = {
 };
 
 export const strings = {
+  jrUploadNet: 'pokerth.net\uc5d0\uc11c \ubd84\uc11d\u2026',
+  jrUploadFail: 'pokerth.net \uc5c5\ub85c\ub4dc \uc2e4\ud328',
+  advPdbUpload: '\ub85c\uadf8 \ucc3d\uc5d0 \u201cpokerth.net\uc5d0\uc11c \ubd84\uc11d\u201d \ud45c\uc2dc(\ub85c\uadf8\ub97c pokerth.net\uc73c\ub85c \uc804\uc1a1)',
+
     advSecConn:'연결', advNickRetry:'닉네임이 아직 사용 중일 때 자동으로 다시 시도', nickInUseRetry:'"{name}"은(는) 아직 사용 중입니다 — {n}초 후 재시도 ({a}/{max})…', nickInUseGiveUp:'{max}번 시도한 뒤에도 "{name}"은(는) 아직 사용 중입니다. 이전 세션이 서버에 열려 있습니다 — 몇 분 후에 다시 시도하거나 다른 닉네임을 선택하세요.',
     // — i18n gap-fill (backup / trophies / back tooltip) —
     advKeyNav:'Esc는 닫기/취소, Enter는 확인 (테이블 밖)',
