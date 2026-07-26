@@ -234,7 +234,10 @@ function setMyTurnActive(active) {
     try {
       if (localStorage.getItem('pth_focus_bet') === '1') {
         var _ri = document.getElementById('raise-amt');
-        if (_ri) setTimeout(function () { try { _ri.focus(); } catch (e) {} }, 60);
+        // focus() + select() : sans la sélection, le curseur se posait en
+        // DÉBUT de champ → taper « 200 » devant « 80 » donnait « 20080 »
+        // (remonté forum 26/07). Sélection = la frappe remplace le défaut.
+        if (_ri) setTimeout(function () { try { _ri.focus(); _ri.select(); } catch (e) {} }, 60);
       }
     } catch (e) {}
   }

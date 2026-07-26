@@ -92,9 +92,25 @@ document.addEventListener('keydown', function (e) {
 }, true);
 
 document.addEventListener('keydown', function(e) {
-  // Ne pas intercepter si on tape dans un input/textarea
+  // Ne pas intercepter si on tape dans un input/textarea — SAUF le champ de
+  // mise (#raise-amt) : parité QML ApplicationShortcut (bible §6). Quand le
+  // focus auto du champ est actif (EnableBetInputFocusSwitch), TOUTES les
+  // frappes atterrissaient dans l'input et sortaient ici → F1–F4 morts,
+  // lettres mortes, Entrée ne validait jamais (remonté forum 26/07).
+  // Pendant que #raise-amt a le focus, on laisse passer : F1–F12, Alt+…,
+  // Entrée, et les lettres a–z re-bindables (le champ n'accepte que des
+  // chiffres, aucune collision). Les CHIFFRES et l'ESPACE restent réservés à
+  // la saisie du montant (bindings par défaut 1/2/3 = mises rapides, espace =
+  // Call : les intercepter pendant la frappe déclencherait des actions).
   var tag = (e.target.tagName || '').toLowerCase();
-  if (tag === 'input' || tag === 'textarea' || e.target.isContentEditable) return;
+  var _typing = (tag === 'input' || tag === 'textarea' || e.target.isContentEditable);
+  var _betFocus = _typing && e.target.id === 'raise-amt';
+  if (_typing && !_betFocus) return;
+  if (_betFocus) {
+    var _bk = (e.key || '').toLowerCase();
+    if (!(/^f[1-9]$|^f1[0-2]$/.test(_bk) || e.altKey || _bk === 'enter'
+          || (_bk.length === 1 && /[a-z]/.test(_bk)))) return;
+  }
   // C'est mon tour SSI le vrai panneau d'action interactif est present : #g-actions
   // contient la grille reelle en ENFANT DIRECT (.action-grid), ou l'apercu hors-tour
   // enveloppe dans .actions-preview, ou un message d'attente. (Les anciennes gardes
