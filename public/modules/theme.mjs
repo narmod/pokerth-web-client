@@ -249,7 +249,8 @@ function _loadGalleryDecks() {
         if (!Array.isArray(list)) return;
         _galleryDecks = list.filter(function (d) { return d && d.id; }).map(function (d) {
           return { id: String(d.id), name: d.name || String(d.id), preview: d.preview || null, ext: (d.ext === 'svg' ? 'svg' : 'png'), swatch: '#1e6b1e' };
-        }).filter(function (d) { for (var i = 0; i < DECKS.length; i++) if (DECKS[i].id === d.id) return false; return true; });
+        }).filter(function (d) { for (var i = 0; i < DECKS.length; i++) if (DECKS[i].id === d.id) return false; return true; })
+          .concat(_galleryDecks.filter(function (d) { return d && d._imported; }));   // ne jamais perdre les decks importes en local (IndexedDB)
         if (_body) _render();
       })
       .catch(function () {});
@@ -285,7 +286,8 @@ function _loadGallerySeats() {
                    plateUrl: s.plateUrl || null, cssUrl: s.cssUrl || null, selfUrl: s.selfUrl || null,
                    slice: slice, width: width, pad: pad,
                    selfSlice: (s.selfSlice != null ? s.selfSlice : slice), selfWidth: (s.selfWidth != null ? s.selfWidth : width), selfPad: s.selfPad || pad };
-        }).filter(function (s) { return !_isBuiltinSeat(s.id); });
+        }).filter(function (s) { return !_isBuiltinSeat(s.id); })
+          .concat(_gallerySeats.filter(function (s) { return s && s._imported; }));   // idem : packs de sieges importes preserves
         try { seat.apply(seat.get()); } catch (e) {}   // pack now known -> inject its vars
         if (_body) _render();
       })
@@ -573,7 +575,8 @@ function _loadGalleryTables() {
           var pk = null, pv = t.pucks;
           if (pv) { pk = {}; ['dealer','sb','bb'].forEach(function (k) { if (pv[k]) pk[k] = 'url(' + pv[k] + ')'; }); }
           return { id: String(t.id), name: t.name || String(t.id), feltUrl: t.feltUrl, pucks: pk, preview: t.preview || (pv && pv.dealer) || null, swatch: '#1e6b1e', full: !!t.full, fs: !!t.fullscreen, align: (typeof t.align === 'string' ? t.align : null) };
-        }).filter(function (t) { if (_isBuiltinTable(t.id)) return false; if (_OFFICIAL_GALLERY_DUP[t.id]) return false; for (var i=0;i<_tablePkgs.length;i++) if (_tablePkgs[i].id===t.id) return false; return true; });
+        }).filter(function (t) { if (_isBuiltinTable(t.id)) return false; if (_OFFICIAL_GALLERY_DUP[t.id]) return false; for (var i=0;i<_tablePkgs.length;i++) if (_tablePkgs[i].id===t.id) return false; return true; })
+          .concat(_galleryTables.filter(function (t) { return t && t._imported; }));   // idem : tables importees preservees
         try { table.apply(table.get()); pucks.apply(pucks.get()); } catch (e) {}
         if (_body) _render();
       })
