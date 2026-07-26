@@ -466,7 +466,7 @@ function cardbackGet() { try { return localStorage.getItem('pth_cardback') || ''
 function cardbackApply(id, ext) {
   try {
     if (id) localStorage.setItem('pth_cardback', id); else localStorage.removeItem('pth_cardback');
-    if (id && id !== 'custom') localStorage.setItem('pth_cardback_ext', ext || _deckExt(id));
+    if (id && id !== 'custom') localStorage.setItem('pth_cardback_ext', ext || _cardbackExt(id));
     else localStorage.removeItem('pth_cardback_ext');
   } catch (e) {}
   try { if (window._refreshDeck) window._refreshDeck(); } catch (e) {}
@@ -506,6 +506,15 @@ function _cardbackPickFile() {
 // Dos de cartes autonomes (portes du client QML data/gfx/qml/backside/*, AGPL-3.0).
 // Chacun est un flipside.svg seul sous /cards/<id>/ (aucune face -> pas un deck).
 // Noms de style conserves tels quels (proper names), comme Star Trek / Xanax.
+// Extension d'un dos : les dos autonomes ci-dessous n'ont pas de deck de faces,
+// donc _deckExt (qui ne balaie que DECKS + galerie) renvoyait 'png' pour eux et
+// l'URL /cards/<id>/flipside.png tombait en 404 — le dos restait inapplicable
+// depuis la vue a onglets, qui appelle cardbackApply sans ext. (forum 26/07)
+function _cardbackExt(id) {
+  for (var i = 0; i < _STANDALONE_BACKS.length; i++)
+    if (_STANDALONE_BACKS[i].id === id) return _STANDALONE_BACKS[i].ext || 'png';
+  return _deckExt(id);
+}
 var _STANDALONE_BACKS = [
   { id: 'back-danuxi',      key: 'cardbackDanuxi',      fallback: 'Danuxi',              ext: 'svg' },
   { id: 'back-matrix',      key: 'cardbackMatrix',      fallback: 'Matrix',              ext: 'svg' },
