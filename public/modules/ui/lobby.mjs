@@ -264,6 +264,12 @@ function _renderLobbyWaitActions() {
   var _sl = document.getElementById('s-lobby');
   var _wasWaiting = _sl ? _sl.classList.contains('lobby-waiting') : false;
   if (_sl) _sl.classList.toggle('lobby-waiting', mine);
+  // Bandeau « En attente de joueurs » du header : synchronisé ici aussi.
+  // _renderLobbyWaitActions est rappelée à chaque rafraîchissement lobby
+  // (renderGameInfoPanel), donc le bandeau ne peut plus rester figé quand
+  // le retour au lobby passe par un chemin qui n'appelle pas _wpHide
+  // (RemovedFromGame → _resetGameState, reconnexion InitAck…). (narmod 26/07)
+  try { _updateLobbyWaitStatus(); } catch (e) {}
   // Colonne « Inviter » de la liste Joueurs : ajoutée/retirée au changement
   // de mode -> re-render immédiat (sinon elle n'apparaît qu'au prochain event lobby).
   if (_sl && _wasWaiting !== mine) { try { if (typeof renderPlayersList === 'function') window.renderPlayersList(); } catch(e) {} }
