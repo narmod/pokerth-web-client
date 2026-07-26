@@ -266,6 +266,7 @@
         <div class="defrow" style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin:5px 0"><span>License URL</span><input id="mzLicenseUrl" maxlength="300" placeholder="https://… (optional — makes the credit a link)" autocomplete="off" style="flex:1;min-width:0"></div>
         <div id="mzDrop" class="drop">Drop an <b>.mp3</b> here, or click to choose</div>
         <input id="mzFile" type="file" accept=".mp3,audio/mpeg" style="display:none">
+        <div class="defrow" style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin:10px 0 5px"><span>…or URL</span><input id="mzUrl" maxlength="500" placeholder="https://…/track.mp3 (server downloads it — bypasses upload size limits)" autocomplete="off" style="flex:1;min-width:0"><button id="mzImportBtn" class="use">Import</button></div>
         <div id="mzProg" class="prog"><i></i></div>
         <div id="mzMsg" class="msg"></div>
         <p class="muted" style="margin:8px 0 0">The track appears in players’ music panel automatically the next time they open it. Please make sure you have the right to share the file and that the author is credited.</p>
@@ -933,6 +934,8 @@
     if(!/\.mp3$/i.test(f.name) && f.type!=='audio/mpeg'){ mzSay('Choose an .mp3 file.','err'); return; }
     var title=($('mzTitle').value||'').trim();
     if(!title){ mzSay('Enter a title first.','err'); $('mzTitle').focus(); return; }
+    // Gros fichier : chemin chunké (l'infra amont peut refuser les corps > ~1 Mo en 413).
+    if(f.size>MZ_CHUNK){ mzUploadChunked(f,title); return; }
     mzSay('Uploading \u201c'+f.name+'\u201d\u2026'); mzProg(0);
     var q='/admin/music-upload?title='+encodeURIComponent(title)
         +'&artist='+encodeURIComponent(($('mzArtist').value||'').trim())
@@ -949,6 +952,49 @@
     xhr.send(f);
     $('mzFile').value='';
   }
+  // Tranches de 700 Ko : nettement sous le client_max_body_size par defaut de
+  // nginx (1 Mo), que l'infra amont ne souhaite pas relever pour l'instant.
+  var MZ_CHUNK=700*1024;
+  function mzMeta(title){ return { title:title, artist:($('mzArtist').value||'').trim(), credit:($('mzCredit').value||'').trim(), licenseUrl:($('mzLicenseUrl').value||'').trim(), token:tok() }; }
+  function mzDoneOk(d){ mzProgHide(); mzSay('Added: '+d.title+' \u2014 it now appears in the players\u2019 music panel.','ok'); $('mzTitle').value='';$('mzArtist').value='';$('mzCredit').value='';$('mzLicenseUrl').value=''; if($('mzUrl'))$('mzUrl').value=''; mzRefresh(); }
+  function mzUploadChunked(f,title){
+    mzSay('Uploading \u201c'+f.name+'\u201d in chunks\u2026'); mzProg(0);
+    var meta=mzMeta(title); meta.size=f.size;
+    api('/admin/music-upload-begin',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(meta)})
+      .then(function(r){return r.json();}).then(function(d){
+        if(!d||!d.ok){ mzProgHide(); mzSay('Failed: '+((d&&d.error)||'begin error'),'err'); return; }
+        var uid=d.uid, seq=0, off=0;
+        function next(){
+          if(off>=f.size){
+            api('/admin/music-upload-finish',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({uid:uid,token:tok()})})
+              .then(function(r){return r.json();}).then(function(d2){ if(d2&&d2.ok)mzDoneOk(d2); else { mzProgHide(); mzSay('Failed: '+((d2&&d2.error)||'finish error'),'err'); } })
+              .catch(function(){ mzProgHide(); mzSay('Upload failed \u2014 network error at finish.','err'); });
+            return;
+          }
+          var slice=f.slice(off,Math.min(off+MZ_CHUNK,f.size));
+          api('/admin/music-upload-chunk?uid='+encodeURIComponent(uid)+'&seq='+seq,{method:'POST',headers:{'Content-Type':'application/octet-stream'},body:slice})
+            .then(function(r){return r.json();}).then(function(d2){
+              if(!d2||!d2.ok){ mzProgHide(); mzSay('Failed at chunk '+seq+': '+((d2&&d2.error)||'error'),'err'); return; }
+              off+=slice.size; seq+=1; mzProg(off/f.size); next();
+            })
+            .catch(function(){ mzProgHide(); mzSay('Upload failed \u2014 network error at chunk '+seq+'.','err'); });
+        }
+        next();
+      })
+      .catch(function(){ mzProgHide(); mzSay('Upload failed \u2014 network error.','err'); });
+  }
+  function mzImport(){
+    var u=($('mzUrl').value||'').trim();
+    if(!u){ mzSay('Enter a URL first.','err'); $('mzUrl').focus(); return; }
+    var title=($('mzTitle').value||'').trim();
+    if(!title){ mzSay('Enter a title first.','err'); $('mzTitle').focus(); return; }
+    var meta=mzMeta(title); meta.url=u;
+    mzSay('Importing from URL \u2014 the server is downloading the file\u2026'); mzProg(0.15);
+    api('/admin/music-import',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(meta)})
+      .then(function(r){return r.json();}).then(function(d){ if(d&&d.ok)mzDoneOk(d); else { mzProgHide(); mzSay('Failed: '+((d&&d.error)||'import error'),'err'); } })
+      .catch(function(){ mzProgHide(); mzSay('Import failed \u2014 network error.','err'); });
+  }
+  (function(){ var b=$('mzImportBtn'); if(b)b.addEventListener('click',mzImport); var u=$('mzUrl'); if(u)u.addEventListener('keydown',function(e){ if(e.key==='Enter')mzImport(); }); })();
   function mzRemove(id,nm){ if(!confirm('Remove \u201c'+nm+'\u201d?'))return;
     api('/admin/music-remove',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id:id,token:tok()})})
       .then(function(r){return r.json();}).then(function(d){ if(d.ok)mzRefresh(); else mzSay('Remove: '+(d.error||'error'),'err'); }).catch(function(){ mzSay('Remove failed \u2014 network error.','err'); }); }

@@ -1822,6 +1822,86 @@ function uniqueMusicId(base) {
   while (taken[id]) id = base + '-' + (n++);
   return id;
 }
+// Enregistre une piste admin depuis un buffer MP3 déjà validé (utilisé par
+// l'import URL et le finish de l'upload chunké — la route historique
+// /admin/music-upload garde son code en place, inchangé).
+function musicRegisterTrack(fields, buf) {
+  var title = musicStr(fields.title, 120);
+  var id = uniqueMusicId(title);
+  try { fs.mkdirSync(MUSIC_DIR, { recursive: true }); fs.writeFileSync(path.join(MUSIC_DIR, id + '.mp3'), buf); }
+  catch (e) { return { error: 'write failed' }; }
+  var artist = musicStr(fields.artist, 120);
+  var entry = {
+    id: id, title: title, artist: artist, file: '/music/' + id + '.mp3',
+    license: musicStr(fields.license, 60), licenseUrl: musicStr(fields.licenseUrl, 300),
+    source: musicStr(fields.source, 120), sourceUrl: musicStr(fields.sourceUrl, 300),
+    credit: musicStr(fields.credit, 300) || (title + (artist ? ' by ' + artist : '')),
+    active: true
+  };
+  _adminConfig.musicTracks = musicAdminTracks().concat([entry]);
+  saveAdminConfig();
+  return { id: id, title: title };
+}
+// Téléchargeur générique côté serveur pour l'import de musique par URL.
+// Contourne le 413 de l'infra amont (nginx/Cloudflare limitent le CORPS des
+// requêtes entrantes ; rien ne limite ce que le conteneur télécharge en
+// sortie). Même recette que _doFetchServerlist : User-Agent explicite
+// (Cloudflare 403 sinon), redirections bornées, plafond d'octets.
+function musicFetchUrl(u, cb, _hops) {
+  var hops = _hops | 0, mod, opts, raw0 = '';
+  try {
+    raw0 = String(u || '').trim();
+    if (raw0 && !/^https?:\/\//i.test(raw0)) raw0 = 'https://' + raw0;
+    var parsed = new url.URL(raw0);
+    if (parsed.protocol !== 'https:' && parsed.protocol !== 'http:') return cb('bad url scheme', null);
+    mod = parsed.protocol === 'https:' ? https : http;
+    opts = {
+      protocol: parsed.protocol, hostname: parsed.hostname,
+      port: parsed.port || undefined,
+      path: parsed.pathname + (parsed.search || ''),
+      headers: { 'User-Agent': SERVERLIST_UA, 'Accept': '*/*', 'Accept-Encoding': 'identity' }
+    };
+  } catch (e) { return cb('bad url', null); }
+  var done = false;
+  function finish(err, buf) { if (done) return; done = true; cb(err, buf); }
+  var rq;
+  try {
+    rq = mod.get(opts, function (resp) {
+      if (resp.statusCode >= 300 && resp.statusCode < 400 && resp.headers && resp.headers.location && hops < SERVERLIST_MAX_HOPS) {
+        var next = '';
+        try { next = new url.URL(resp.headers.location, raw0).href; } catch (e) { next = ''; }
+        resp.resume();
+        if (!next) return finish('bad redirect', null);
+        if (done) return;
+        done = true;
+        return musicFetchUrl(next, cb, hops + 1);
+      }
+      if (resp.statusCode !== 200) { resp.resume(); return finish('http ' + resp.statusCode, null); }
+      var chunks = [], total = 0, aborted = false;
+      resp.on('data', function (c) { total += c.length; if (total > MAX_UPLOAD) { aborted = true; try { resp.destroy(); } catch (e) {} return; } chunks.push(c); });
+      resp.on('end', function () { if (aborted) return finish('file larger than 25 MB', null); finish(null, Buffer.concat(chunks)); });
+      resp.on('error', function () { finish('download error', null); });
+    });
+    rq.setTimeout(30000, function () { try { rq.destroy(); } catch (e) {} finish('timeout', null); });
+    rq.on('error', function (e) { finish('download failed: ' + (e && e.code || 'error'), null); });
+  } catch (e) { return finish('download failed', null); }
+}
+// ── Upload par morceaux ────────────────────────────────────────────────────
+// L'infra amont (nginx client_max_body_size, non modifiable pour l'instant)
+// rejette les gros corps en 413. Le client découpe donc le MP3 en tranches
+// < 1 Mo, réassemblées ici dans un fichier temporaire, strictement en
+// séquence. Chaque session est liée aux métadonnées données au begin.
+var MZ_CHUNK_MAX = 950 * 1024;          // plafond serveur par tranche (client : 700 Ko)
+var MZ_SESSION_TTL = 15 * 60 * 1000;    // session abandonnée purgée après 15 min
+var MZ_SESSION_CAP = 4;                 // uploads chunkés simultanés
+var _mzSessions = {};
+function _mzGc() {
+  var now = Date.now();
+  Object.keys(_mzSessions).forEach(function (k) {
+    var ss = _mzSessions[k];
+    if (now - ss.touched > MZ_SESSION_TTL) { try { fs.rmSync(ss.tmp, { force: true }); } catch (e) {} delete _mzSessions[k]; }
+  });
+}
 // Composed list for the admin UI: built-ins (flagged, with hidden→inactive) then admin tracks.
 function musicOrderList() { var a = _adminConfig && _adminConfig.musicOrder; return Array.isArray(a) ? a : []; }
 // Apply the admin-defined playlist order: ids listed in musicOrder come first in
@@ -2408,6 +2488,78 @@ function handleAdmin(req, res, reqPathOnly, query) {
       d.order.forEach(function (x) { var id = slugId(x); if (known[id] && clean.indexOf(id) < 0) clean.push(id); });
       _adminConfig.musicOrder = clean; saveAdminConfig();
       return adminJson(res, 200, { ok: true, order: clean });
+    });
+  }
+  // Import d'une piste par URL : c'est le SERVEUR qui télécharge le MP3, donc
+  // la limite de taille des requêtes entrantes (413 nginx) ne s'applique pas.
+  if (reqPathOnly === '/admin/music-import' && req.method === 'POST') {
+    return readJsonBody(req, function (d) {
+      if (!hasScope('music', query, d && d.token)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
+      var title = musicStr(d && d.title, 120);
+      if (!title) return adminJson(res, 400, { ok: false, error: 'title required' });
+      var u = String(d && d.url || '').trim();
+      if (!u) return adminJson(res, 400, { ok: false, error: 'url required' });
+      musicFetchUrl(u, function (err, buf) {
+        if (err) return adminJson(res, 502, { ok: false, error: err });
+        if (!buf || !buf.length) return adminJson(res, 502, { ok: false, error: 'empty download' });
+        if (!isMp3(buf)) return adminJson(res, 400, { ok: false, error: 'downloaded file is not an MP3' });
+        var r = musicRegisterTrack(d || {}, buf);
+        if (r.error) return adminJson(res, 500, { ok: false, error: r.error });
+        return adminJson(res, 200, { ok: true, id: r.id, title: r.title, bytes: buf.length });
+      });
+    });
+  }
+  // Upload par morceaux — begin : ouvre une session liée aux métadonnées.
+  if (reqPathOnly === '/admin/music-upload-begin' && req.method === 'POST') {
+    return readJsonBody(req, function (d) {
+      if (!hasScope('music', query, d && d.token)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
+      var title = musicStr(d && d.title, 120);
+      if (!title) return adminJson(res, 400, { ok: false, error: 'title required' });
+      var size = parseInt(d && d.size, 10);
+      if (!(Number.isInteger(size) && size > 0 && size <= MAX_UPLOAD)) return adminJson(res, 400, { ok: false, error: 'bad size (max 25 MB)' });
+      _mzGc();
+      if (Object.keys(_mzSessions).length >= MZ_SESSION_CAP) return adminJson(res, 429, { ok: false, error: 'too many uploads in progress, retry later' });
+      var uid = 'mz' + Date.now().toString(36) + Math.random().toString(36).slice(2, 10);
+      var tmp = path.join(os.tmpdir(), 'mzup-' + uid + '.part');
+      try { fs.writeFileSync(tmp, Buffer.alloc(0)); } catch (e) { return adminJson(res, 500, { ok: false, error: 'temp write failed' }); }
+      _mzSessions[uid] = {
+        tmp: tmp, size: size, got: 0, next: 0, touched: Date.now(),
+        fields: { title: title, artist: d && d.artist, credit: d && d.credit, licenseUrl: d && d.licenseUrl, license: d && d.license, source: d && d.source, sourceUrl: d && d.sourceUrl }
+      };
+      return adminJson(res, 200, { ok: true, uid: uid, chunkMax: MZ_CHUNK_MAX });
+    });
+  }
+  // Upload par morceaux — chunk : corps brut < 1 Mo, séquence stricte.
+  if (reqPathOnly === '/admin/music-upload-chunk' && req.method === 'POST') {
+    if (!hasScope('music', query)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
+    var _cs = _mzSessions[String(query.uid || '')];
+    if (!_cs) return adminJson(res, 404, { ok: false, error: 'unknown or expired upload session' });
+    var _cSeq = parseInt(query.seq, 10);
+    if (_cSeq !== _cs.next) return adminJson(res, 409, { ok: false, error: 'out of sequence (expected ' + _cs.next + ')' });
+    return readRawBody(req, MZ_CHUNK_MAX, function (buf) {
+      if (!buf || !buf.length) return adminJson(res, 413, { ok: false, error: 'empty chunk or chunk too large' });
+      if (_cs.got + buf.length > _cs.size) { try { fs.rmSync(_cs.tmp, { force: true }); } catch (e) {} delete _mzSessions[String(query.uid || '')]; return adminJson(res, 400, { ok: false, error: 'more bytes than announced' }); }
+      try { fs.appendFileSync(_cs.tmp, buf); } catch (e) { return adminJson(res, 500, { ok: false, error: 'temp write failed' }); }
+      _cs.got += buf.length; _cs.next += 1; _cs.touched = Date.now();
+      return adminJson(res, 200, { ok: true, got: _cs.got, next: _cs.next });
+    });
+  }
+  // Upload par morceaux — finish : vérifie taille + signature MP3, enregistre.
+  if (reqPathOnly === '/admin/music-upload-finish' && req.method === 'POST') {
+    return readJsonBody(req, function (d) {
+      if (!hasScope('music', query, d && d.token)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
+      var uid = String(d && d.uid || '');
+      var ss = _mzSessions[uid];
+      if (!ss) return adminJson(res, 404, { ok: false, error: 'unknown or expired upload session' });
+      delete _mzSessions[uid];
+      var buf = null;
+      try { buf = fs.readFileSync(ss.tmp); } catch (e) {}
+      try { fs.rmSync(ss.tmp, { force: true }); } catch (e) {}
+      if (!buf || buf.length !== ss.size) return adminJson(res, 400, { ok: false, error: 'incomplete upload (' + (buf ? buf.length : 0) + '/' + ss.size + ' bytes)' });
+      if (!isMp3(buf)) return adminJson(res, 400, { ok: false, error: 'not an MP3 file' });
+      var r = musicRegisterTrack(ss.fields, buf);
+      if (r.error) return adminJson(res, 500, { ok: false, error: r.error });
+      return adminJson(res, 200, { ok: true, id: r.id, title: r.title });
     });
   }
   if (reqPathOnly === '/admin/update' && req.method === 'POST') {
