@@ -17,7 +17,6 @@ export const meta = {
 export const strings = {
   jrUploadNet: 'Auf pokerth.net analysieren\u2026',
   jrUploadFail: 'Upload zu pokerth.net fehlgeschlagen',
-  advPdbUpload: '\u201eAuf pokerth.net analysieren\u201c im Log-Fenster anzeigen (sendet das Log an pokerth.net)',
 
     advSecConn:'Verbindung', advNickRetry:'Automatisch erneut versuchen, wenn der Spitzname noch belegt ist', nickInUseRetry:'„{name}“ ist noch belegt — neuer Versuch in {n} s ({a}/{max})…', nickInUseGiveUp:'„{name}“ ist nach {max} Versuchen immer noch belegt. Eine frühere Sitzung ist auf dem Server noch offen — versuche es in ein paar Minuten erneut oder wähle einen anderen Spitznamen.',
     // — i18n gap-fill (backup / trophies / back tooltip) —

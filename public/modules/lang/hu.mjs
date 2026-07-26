@@ -12,7 +12,6 @@ export const meta = {
 export const strings = {
   jrUploadNet: 'Elemz\u00e9s a pokerth.net-en\u2026',
   jrUploadFail: 'A felt\u00f6lt\u00e9s a pokerth.net-re nem siker\u00fclt',
-  advPdbUpload: 'Az \u201eElemz\u00e9s a pokerth.net-en\u201d megjelen\u00edt\u00e9se a napl\u00f3ablakban (elk\u00fcldi a napl\u00f3t a pokerth.net-re)',
 
     advSecConn:'Kapcsolat', advNickRetry:'Automatikus újrapróbálkozás, amíg a becenév foglalt', nickInUseRetry:'A(z) „{name}“ még foglalt — újabb próbálkozás {n} mp múlva ({a}/{max})…', nickInUseGiveUp:'A(z) „{name}“ {max} próbálkozás után is foglalt. Egy korábbi munkamenet még nyitva van a kiszolgálón — próbáld újra pár perc múlva, vagy válassz másik becenevet.',
     // — i18n gap-fill (backup / trophies / back tooltip) —

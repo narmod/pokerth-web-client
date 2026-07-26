@@ -14,7 +14,6 @@ export const meta = {
 export const strings = {
   jrUploadNet: 'pokerth.net \u00fczerinde analiz et\u2026',
   jrUploadFail: 'pokerth.net\'e y\u00fckleme ba\u015far\u0131s\u0131z',
-  advPdbUpload: 'Log penceresinde \u201cpokerth.net \u00fczerinde analiz et\u201d g\u00f6ster (logu pokerth.net\'e g\u00f6nderir)',
 
     advSecConn:'Bağlantı', advNickRetry:'Takma ad hâlâ kullanımdaysa otomatik olarak yeniden dene', nickInUseRetry:'“{name}” hâlâ kullanımda — {n} sn sonra yeni deneme ({a}/{max})…', nickInUseGiveUp:'{max} denemeden sonra “{name}” hâlâ kullanımda. Önceki bir oturum sunucuda hâlâ açık — birkaç dakika sonra tekrar dene ya da başka bir takma ad seç.',
     // — i18n gap-fill (backup / trophies / back tooltip) —

@@ -12,7 +12,6 @@ export const meta = {
 export const strings = {
   jrUploadNet: '\u0410\u043d\u0430\u043b\u0438\u0437 \u0432 pokerth.net\u2026',
   jrUploadFail: '\u041a\u0430\u0447\u0432\u0430\u043d\u0435\u0442\u043e \u0432 pokerth.net \u043d\u0435 \u0443\u0441\u043f\u044f',
-  advPdbUpload: '\u041f\u043e\u043a\u0430\u0437\u0432\u0430\u0439 \u201e\u0410\u043d\u0430\u043b\u0438\u0437 \u0432 pokerth.net\u201c \u0432 \u043f\u0440\u043e\u0437\u043e\u0440\u0435\u0446\u0430 \u0441 \u043b\u043e\u0433\u043e\u0432\u0435 (\u0438\u0437\u043f\u0440\u0430\u0449\u0430 \u043b\u043e\u0433\u0430 \u043a\u044a\u043c pokerth.net)',
 
     advSecConn:'Свързване', advNickRetry:'Автоматичен нов опит, докато прякорът е зает', nickInUseRetry:'„{name}“ още е зает — нов опит след {n} сек. ({a}/{max})…', nickInUseGiveUp:'„{name}“ е зает и след {max} опита. Предишна сесия още е отворена на сървъра — опитайте пак след няколко минути или изберете друг прякор.',
     // — i18n gap-fill (backup / trophies / back tooltip) —

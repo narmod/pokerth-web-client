@@ -11,7 +11,6 @@ export const meta = {
 export const strings = {
   jrUploadNet: 'Analys\u00e9r p\u00e5 pokerth.net\u2026',
   jrUploadFail: 'Upload til pokerth.net mislykkedes',
-  advPdbUpload: 'Vis \u201dAnalys\u00e9r p\u00e5 pokerth.net\u201d i logvinduet (sender loggen til pokerth.net)',
 
     advSecConn:'Forbindelse', advNickRetry:'Prøv automatisk igen, når kaldenavnet stadig er i brug', nickInUseRetry:'”{name}” er stadig i brug — nyt forsøg om {n} s ({a}/{max})…', nickInUseGiveUp:'”{name}” er stadig i brug efter {max} forsøg. En tidligere session er stadig åben på serveren — prøv igen om et par minutter, eller vælg et andet kaldenavn.',
     // — i18n gap-fill (backup / trophies / back tooltip) —

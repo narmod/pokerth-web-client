@@ -12,7 +12,6 @@ export const meta = {
 export const strings = {
   jrUploadNet: 'Analizeaz\u0103 pe pokerth.net\u2026',
   jrUploadFail: '\u00cenc\u0103rcarea pe pokerth.net a e\u0219uat',
-  advPdbUpload: 'Afi\u0219eaz\u0103 \u201eAnalizeaz\u0103 pe pokerth.net\u201d \u00een fereastra de loguri (trimite logul la pokerth.net)',
 
     advSecConn:'Conexiune', advNickRetry:'Reîncearcă automat cât timp pseudonimul este ocupat', nickInUseRetry:'„{name}“ este încă ocupat — reîncercare în {n} s ({a}/{max})…', nickInUseGiveUp:'„{name}“ este încă ocupat după {max} încercări. O sesiune anterioară a rămas deschisă pe server — încearcă din nou peste câteva minute sau alege alt pseudonim.',
     // — i18n gap-fill (backup / trophies / back tooltip) —

@@ -12,7 +12,6 @@ export const meta = {
 export const strings = {
   jrUploadNet: 'Analyzova\u0165 na pokerth.net\u2026',
   jrUploadFail: 'Nahranie na pokerth.net zlyhalo',
-  advPdbUpload: 'Zobrazi\u0165 \u201eAnalyzova\u0165 na pokerth.net\u201c v okne logov (ode\u0161le log na pokerth.net)',
 
     advSecConn:'Pripojenie', advNickRetry:'Automaticky opakovať pokus, kým je prezývka obsadená', nickInUseRetry:'„{name}“ je stále obsadená — ďalší pokus o {n} s ({a}/{max})…', nickInUseGiveUp:'„{name}“ je po {max} pokusoch stále obsadená. Predchádzajúca relácia zostáva na serveri otvorená — skúste to o pár minút znova alebo zvoľte inú prezývku.',
     // — i18n gap-fill (backup / trophies / back tooltip) —

@@ -12,7 +12,6 @@ export const meta = {
 export const strings = {
   jrUploadNet: 'Ontleed op pokerth.net\u2026',
   jrUploadFail: 'Oplaai na pokerth.net het misluk',
-  advPdbUpload: 'Wys \u201cOntleed op pokerth.net\u201d in die logvenster (stuur die log na pokerth.net)',
 
     advSecConn:'Verbinding', advNickRetry:'Probeer outomaties weer wanneer die bynaam nog gebruik word', nickInUseRetry:'“{name}” word nog gebruik — nuwe poging oor {n} s ({a}/{max})…', nickInUseGiveUp:'“{name}” word ná {max} pogings steeds gebruik. ’n Vorige sessie is nog op die bediener oop — probeer oor ’n paar minute weer of kies ’n ander bynaam.',
     // — i18n gap-fill (backup / trophies / back tooltip) —

@@ -12,7 +12,6 @@ export const meta = {
 export const strings = {
   jrUploadNet: '\u0391\u03bd\u03ac\u03bb\u03c5\u03c3\u03b7 \u03c3\u03c4\u03bf pokerth.net\u2026',
   jrUploadFail: '\u0397 \u03b1\u03c0\u03bf\u03c3\u03c4\u03bf\u03bb\u03ae \u03c3\u03c4\u03bf pokerth.net \u03b1\u03c0\u03ad\u03c4\u03c5\u03c7\u03b5',
-  advPdbUpload: '\u0395\u03bc\u03c6\u03ac\u03bd\u03b9\u03c3\u03b7 \u03c4\u03bf\u03c5 \u00ab\u0391\u03bd\u03ac\u03bb\u03c5\u03c3\u03b7 \u03c3\u03c4\u03bf pokerth.net\u00bb \u03c3\u03c4\u03bf \u03c0\u03b1\u03c1\u03ac\u03b8\u03c5\u03c1\u03bf \u03ba\u03b1\u03c4\u03b1\u03b3\u03c1\u03b1\u03c6\u03ce\u03bd (\u03c3\u03c4\u03ad\u03bb\u03bd\u03b5\u03b9 \u03c4\u03bf \u03b1\u03c1\u03c7\u03b5\u03af\u03bf \u03c3\u03c4\u03bf pokerth.net)',
 
     advSecConn:'Σύνδεση', advNickRetry:'Αυτόματη επανάληψη όσο το ψευδώνυμο παραμένει σε χρήση', nickInUseRetry:'Το «{name}» είναι ακόμα σε χρήση — νέα προσπάθεια σε {n} δευτ. ({a}/{max})…', nickInUseGiveUp:'Το «{name}» παραμένει σε χρήση μετά από {max} προσπάθειες. Μια προηγούμενη συνεδρία είναι ακόμα ανοιχτή στον διακομιστή — δοκίμασε ξανά σε λίγα λεπτά ή διάλεξε άλλο ψευδώνυμο.',
     // — i18n gap-fill (backup / trophies / back tooltip) —

@@ -18,7 +18,6 @@ export const meta = {
 export const strings = {
   jrUploadNet: 'Analizuj na pokerth.net\u2026',
   jrUploadFail: 'Wysy\u0142anie do pokerth.net nie powiod\u0142o si\u0119',
-  advPdbUpload: 'Poka\u017c \u201eAnalizuj na pokerth.net\u201d w oknie log\u00f3w (wysy\u0142a log do pokerth.net)',
 
     advSecConn:'Połączenie', advNickRetry:'Automatycznie ponawiaj próbę, gdy pseudonim jest nadal zajęty', nickInUseRetry:'„{name}“ jest nadal zajęty — kolejna próba za {n} s ({a}/{max})…', nickInUseGiveUp:'„{name}“ jest nadal zajęty po {max} próbach. Poprzednia sesja wciąż jest otwarta na serwerze — spróbuj ponownie za kilka minut lub wybierz inny pseudonim.',
     // — i18n gap-fill (backup / trophies / back tooltip) —

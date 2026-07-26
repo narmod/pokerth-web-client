@@ -460,7 +460,6 @@ function _applyTexts() {
   $('jr-delall').textContent = T('jrDeleteAll', 'Delete all');
   $('jr-analyze').textContent = T('jrAnalyze', 'Analyse log file\u2026');
   $('jr-upload').textContent = T('jrUploadNet', 'Analyse on pokerth.net\u2026');
-  $('jr-upload').style.display = _uploadEnabled() ? '' : 'none';
   $('jr-an-back').textContent = T('jrBack', 'Back to preview');
   $('jr-keep-lbl').textContent = T('jrRetention', 'Keep logs');
   const ko = $('jr-keep').options;
@@ -641,13 +640,8 @@ async function _saveAsPdb() {
 // (POST /pthranking/game/pdb, ajoutée le 26/07/2026 avec sp0ck) puis ouvre la
 // page d'analyse /gamelog?pdb=<id> dans un nouvel onglet. Même pipeline que
 // le bouton « log-analysis » du client de bureau.
-// Option avancée : pth_pdb_upload (ON par défaut) — masque le bouton si off.
 const PTHNET_PDB_API = 'https://www.pokerth.net/pthranking/game/pdb';
 const PTHNET_GAMELOG = 'https://www.pokerth.net/gamelog?pdb=';
-
-function _uploadEnabled() {
-  try { return localStorage.getItem('pth_pdb_upload') !== '0'; } catch (_e) { return true; }
-}
 
 async function _uploadAnalysis() {
   if (!_sel) return;

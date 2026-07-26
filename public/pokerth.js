@@ -387,7 +387,6 @@ function openAdvancedOptions() {
   sync('adv-statstrack', 'stats_track', true);
   sync('adv-hudon', 'hud_on', false);
   sync('adv-pdbauto', 'pdb_auto', false);   // ecriture auto du .pdb dans un dossier local (web)
-  sync('adv-pdbupload', 'pdb_upload', true);   // bouton « Analyse on pokerth.net » dans la fenetre des logs (web)
   try { if (typeof window._pdbAutoUi === 'function') window._pdbAutoUi(); } catch (e) {}
   try { var _li = document.getElementById('adv-loginterval'); if (_li) _li.value = _getLogInterval(); } catch (e) {}
   sync('adv-zoomfollow', 'zoom_follow', true); // défaut QML : suivi actif quand le zoom l'est
@@ -9331,7 +9330,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.4-web.69'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.4-web.70'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

@@ -12,7 +12,6 @@ export const meta = {
 export const strings = {
   jrUploadNet: 'Analitza a pokerth.net\u2026',
   jrUploadFail: 'Ha fallat l\'enviament a pokerth.net',
-  advPdbUpload: 'Mostra \u00abAnalitza a pokerth.net\u00bb a la finestra de registres (envia el registre a pokerth.net)',
 
     advSecConn:'Connexió', advNickRetry:'Torna-ho a provar automàticament mentre l’àlies estigui en ús', nickInUseRetry:'«{name}» encara està en ús — nou intent d’aquí a {n} s ({a}/{max})…', nickInUseGiveUp:'«{name}» encara està en ús després de {max} intents. Una sessió anterior continua oberta al servidor — torna-ho a provar d’aquí a uns minuts o tria un altre àlies.',
     // — i18n gap-fill (backup / trophies / back tooltip) —

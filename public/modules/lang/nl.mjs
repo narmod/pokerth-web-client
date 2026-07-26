@@ -17,7 +17,6 @@ export const meta = {
 export const strings = {
   jrUploadNet: 'Analyseren op pokerth.net\u2026',
   jrUploadFail: 'Uploaden naar pokerth.net mislukt',
-  advPdbUpload: '\u2018Analyseren op pokerth.net\u2019 tonen in het logvenster (stuurt het log naar pokerth.net)',
 
     advSecConn:'Verbinding', advNickRetry:'Automatisch opnieuw proberen wanneer de bijnaam nog in gebruik is', nickInUseRetry:'“{name}” is nog in gebruik — nieuwe poging over {n} s ({a}/{max})…', nickInUseGiveUp:'“{name}” is na {max} pogingen nog steeds in gebruik. Een vorige sessie staat nog open op de server — probeer het over enkele minuten opnieuw of kies een andere bijnaam.',
     // — i18n gap-fill (backup / trophies / back tooltip) —

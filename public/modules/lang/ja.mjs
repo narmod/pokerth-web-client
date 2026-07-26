@@ -11,7 +11,6 @@ export const meta = {
 export const strings = {
   jrUploadNet: 'pokerth.net\u3067\u5206\u6790\u2026',
   jrUploadFail: 'pokerth.net\u3078\u306e\u30a2\u30c3\u30d7\u30ed\u30fc\u30c9\u306b\u5931\u6557\u3057\u307e\u3057\u305f',
-  advPdbUpload: '\u30ed\u30b0\u30a6\u30a3\u30f3\u30c9\u30a6\u306b\u300cpokerth.net\u3067\u5206\u6790\u300d\u3092\u8868\u793a\uff08\u30ed\u30b0\u3092pokerth.net\u306b\u9001\u4fe1\u3057\u307e\u3059\uff09',
 
     advSecConn:'接続', advNickRetry:'ニックネームがまだ使用中のときは自動で再試行する', nickInUseRetry:'「{name}」はまだ使用中です — {n} 秒後に再試行（{a}/{max}）…', nickInUseGiveUp:'{max} 回試しても「{name}」はまだ使用中です。前のセッションがサーバー上で開いたままです — 数分後にもう一度試すか、別のニックネームを選んでください。',
     // — i18n gap-fill (backup / trophies / back tooltip) —

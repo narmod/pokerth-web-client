@@ -18,7 +18,6 @@ export const meta = {
 export const strings = {
   jrUploadNet: 'Analyse on pokerth.net\u2026',
   jrUploadFail: 'Upload to pokerth.net failed',
-  advPdbUpload: 'Show \u201cAnalyse on pokerth.net\u201d in the logs window (sends the log to pokerth.net)',
 
     advSecConn:'Connection', advNickRetry:'Retry automatically when the nickname is still in use', nickInUseRetry:'“{name}” is still in use — retrying in {n}s ({a}/{max})…', nickInUseGiveUp:'“{name}” is still in use after {max} attempts. A previous session is still open on the server — try again in a few minutes, or pick another nickname.',
     // — i18n gap-fill (backup / trophies / back tooltip) —

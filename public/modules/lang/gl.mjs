@@ -12,7 +12,6 @@ export const meta = {
 export const strings = {
   jrUploadNet: 'Analizar en pokerth.net\u2026',
   jrUploadFail: 'Fallou o env\u00edo a pokerth.net',
-  advPdbUpload: 'Mostrar \u00abAnalizar en pokerth.net\u00bb na xanela de rexistros (env\u00eda o rexistro a pokerth.net)',
 
     advSecConn:'Conexión', advNickRetry:'Reintentar automaticamente mentres o alcume siga en uso', nickInUseRetry:'«{name}» segue en uso — novo intento en {n} s ({a}/{max})…', nickInUseGiveUp:'«{name}» segue en uso tras {max} intentos. Unha sesión anterior segue aberta no servidor — téntao de novo dentro duns minutos ou escolle outro alcume.',
     // — i18n gap-fill (backup / trophies / back tooltip) —

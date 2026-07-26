@@ -13,7 +13,6 @@ export const meta = {
 export const strings = {
   jrUploadNet: '\u5728 pokerth.net \u4e0a\u5206\u6790\u2026',
   jrUploadFail: '\u4e0a\u50b3\u5230 pokerth.net \u5931\u6557',
-  advPdbUpload: '\u5728\u65e5\u8a8c\u8996\u7a97\u986f\u793a\u300c\u5728 pokerth.net \u4e0a\u5206\u6790\u300d\uff08\u5c07\u65e5\u8a8c\u50b3\u9001\u5230 pokerth.net\uff09',
 
     advSecConn:'連線', advNickRetry:'暱稱仍被占用時自動重試', nickInUseRetry:'「{name}」仍被占用 — {n} 秒後重試（{a}/{max}）…', nickInUseGiveUp:'嘗試 {max} 次後，「{name}」仍被占用。先前的工作階段在伺服器上尚未關閉 — 請幾分鐘後再試，或改用其他暱稱。',
     // — i18n gap-fill (backup / trophies / back tooltip) —
