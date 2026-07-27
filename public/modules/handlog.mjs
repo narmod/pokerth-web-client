@@ -591,6 +591,27 @@ class StatsData {
     // Hand → stacks (Seat_i_Cash) index
     this._handByGH = new Map();
     for (const h of this.hands) this._handByGH.set(h.uniqueGameID + ':' + h.handID, h);
+
+    // Index par joueur, construits UNE fois. Sans eux, chaque méthode « du
+    // joueur » rebalayait les 4 tables complètes → coût O(joueurs × dataset)
+    // (rapport forum : gel de l'onglet History après import de 759 logs ;
+    // mesuré 18,5 s pour 400 joueurs / 225 k actions, 0,3 s après indexation).
+    this._actsOfName = new Map();   // nom → actions (ordre actionID)
+    this._gamesByUg = new Map();    // uniqueGameID → [games]
+    this._playersByUg = new Map();  // uniqueGameID → [players]
+    this._handsByUg = new Map();    // uniqueGameID → [hands]
+    const _nameByGS = new Map();    // 'ug:seat' → nom
+    for (const p of this.players) {
+      _nameByGS.set(p.uniqueGameID + ':' + p.seat, p.player);
+      (this._playersByUg.get(p.uniqueGameID) || this._playersByUg.set(p.uniqueGameID, []).get(p.uniqueGameID)).push(p);
+    }
+    for (const g of this.games) (this._gamesByUg.get(g.uniqueGameID) || this._gamesByUg.set(g.uniqueGameID, []).get(g.uniqueGameID)).push(g);
+    for (const x of this.hands) (this._handsByUg.get(x.uniqueGameID) || this._handsByUg.set(x.uniqueGameID, []).get(x.uniqueGameID)).push(x);
+    for (const a of this._actions) {
+      const nm = _nameByGS.get(a.uniqueGameID + ':' + a.seat);
+      if (nm == null) continue;
+      (this._actsOfName.get(nm) || this._actsOfName.set(nm, []).get(nm)).push(a);
+    }
   }
 
   getPlayers() { return Array.from(this._seatsOf.keys()); }
@@ -604,12 +625,9 @@ class StatsData {
 
   // Mains où le joueur a AGI (via table Action, siège du joueur dans la partie).
   getHandsPlayedByPlayer(name) {
-    const seats = this.getPlayerSeats(name);
     const out = [];
     const seen = new Set();
-    for (const a of this._actions) {
-      const seat = seats.get(a.uniqueGameID);
-      if (seat == null || a.seat !== seat) continue;
+    for (const a of (this._actsOfName.get(name) || [])) {
       const k = a.uniqueGameID + ':' + a.handID;
       if (seen.has(k)) continue;
       seen.add(k);
@@ -644,13 +662,11 @@ class StatsData {
 
   // Actions preflop du joueur.
   preflopActionsOfPlayer(name) {
-    const seats = this.getPlayerSeats(name);
-    return this._actions.filter((a) => a.beRo === 0 && a.seat === seats.get(a.uniqueGameID));
+    return (this._actsOfName.get(name) || []).filter((a) => a.beRo === 0);
   }
 
   allActionsOfPlayer(name) {
-    const seats = this.getPlayerSeats(name);
-    return this._actions.filter((a) => a.seat === seats.get(a.uniqueGameID));
+    return this._actsOfName.get(name) || [];
   }
 }
 
@@ -964,18 +980,31 @@ class StatsCalculator {
     const last = hands.slice(-RECENT_HANDS);
     const keepHand = new Set(last.map(([ug, h]) => ug + ':' + h));
     const keepGame = new Set(last.map(([ug]) => ug));
-    const sub = new StatsData({
-      games:   d.games.filter((g) => keepGame.has(g.uniqueGameID)),
-      players: d.players.filter((p) => keepGame.has(p.uniqueGameID)),
-      hands:   d.hands.filter((h) => keepHand.has(h.uniqueGameID + ':' + h.handID)),
-      actions: d.actions.filter((a) => keepHand.has(a.uniqueGameID + ':' + a.handID)),
-    });
+    // Sous-jeu monté depuis les index : sans cela, chaque joueur refiltrait
+    // les 4 tables entières (cause principale du gel History sur gros import).
+    const sGames = [], sPlayers = [], sHands = [], sActions = [];
+    for (const ug of keepGame) {
+      const g = d._gamesByUg.get(ug); if (g) sGames.push(...g);
+      const p = d._playersByUg.get(ug); if (p) sPlayers.push(...p);
+    }
+    for (const k of keepHand) {
+      const [ug, hd] = k.split(':').map(Number);
+      const hh = d._handByGH.get(k); if (hh) sHands.push(hh);
+      sActions.push(...d.getActions(ug, hd));
+    }
+    const sub = new StatsData({ games: sGames, players: sPlayers, hands: sHands, actions: sActions });
     return new StatsCalculator(sub).calculatePlayerStats(name);
   }
 
-  calculateAllPlayersStats() {
+  // `names` (optionnel) restreint le calcul aux joueurs demandés : à une table
+  // on n'affiche que les joueurs assis, inutile de calculer tout l'historique
+  // (gel signalé sur 759 logs importés). Sans argument : tous les joueurs,
+  // comportement d'origine.
+  calculateAllPlayersStats(names) {
     const out = {};
+    const wanted = names && names.length ? new Set(names) : null;
     for (const name of this.d.getPlayers()) {
+      if (wanted && !wanted.has(name)) continue;
       const s = this.calculatePlayerStats(name);
       s.recent = this.recentStatsFor(name);
       out[name] = s;
@@ -1105,6 +1134,9 @@ const _esc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({ '&'
 
 // Construit les tables .pdb (modèle recorder) à partir du store, filtrées par
 // portée. En session : uniquement la session courante du recorder.
+// Cache du dernier rendu du tableau de stats (cf. renderStats).
+let _renderCache = null;
+
 async function _loadTables(scope) {
   const store = (typeof window !== 'undefined') ? window._handlogStore : null;
   if (!store) return { games: [], players: [], hands: [], actions: [] };
@@ -1197,17 +1229,27 @@ async function renderStatsPanel() {
   if (!el._built) { el.innerHTML = '<div class="odds-hd">' + _ht('gipTabStats','Stats') + '</div>' + scopeBtns + '<div class="stats-wait">…</div>'; el._built = true; }
 
   const tables = await _loadTables(_statsScope);
+  // Cache : le tableau est re-rendu à chaque ouverture, changement de langue ou
+  // de portée ; sans cache on relisait IndexedDB et on recalculait tout à
+  // chaque fois. Invalidé dès que le volume de données change (nouvelle main,
+  // import, suppression) ou que la liste des joueurs affichés change.
+  const wantNames = tablePlayers.length ? tablePlayers.map((p) => p.name) : null;
+  const ck = _statsScope + '|' + tables.hands.length + '|' + tables.actions.length
+    + '|' + (wantNames ? wantNames.join(',') : '*');
   let statsByName = {};
-  try {
-    const data = new StatsData(tables);
-    const calc = new StatsCalculator(data);
-    statsByName = calc.calculateAllPlayersStats();
-  } catch (_e) { statsByName = {}; }
+  if (_renderCache && _renderCache.key === ck) {
+    statsByName = _renderCache.stats;
+  } else {
+    try {
+      const data = new StatsData(tables);
+      const calc = new StatsCalculator(data);
+      statsByName = calc.calculateAllPlayersStats(wantNames);
+    } catch (_e) { statsByName = {}; }
+    _renderCache = { key: ck, stats: statsByName };
+  }
 
   // Lignes : joueurs de la table d'abord (ordre de la table), puis rien d'autre.
-  const rowsFor = tablePlayers.length
-    ? tablePlayers.map((p) => p.name)
-    : Object.keys(statsByName);
+  const rowsFor = wantNames || Object.keys(statsByName);
 
   let head = '<tr><th class="stats-name"></th>';
   for (const [, lbl, title] of COLS) head += '<th title="' + _esc(title) + '">' + _esc(lbl) + '</th>';
@@ -1446,7 +1488,17 @@ async function _computeStats() {
   const all = await store.loadAll();
   const data = new StatsData({ games: all.games, players: all.players, hands: all.hands, actions: all.actions });
   _dataCache = data;
-  _statsCache = new StatsCalculator(data).calculateAllPlayersStats();
+  // Seuls les joueurs attablés sont lus dans ces caches (cf. _statsFor /
+  // _scopeOfName) : inutile de calculer tout l'historique à chaque passe du
+  // HUD (toutes les 2,5 s en jeu). Sans table connue, comportement d'origine.
+  let _tpNames = [];
+  try {
+    if (typeof window._statsTablePlayers === 'function') {
+      _tpNames = (window._statsTablePlayers() || []).map((p) => p && p.name).filter(Boolean);
+    }
+  } catch (_e) {}
+  const _want = _tpNames.length ? _tpNames : null;
+  _statsCache = new StatsCalculator(data).calculateAllPlayersStats(_want);
   // Second jeu, restreint a la session courante (portee des invites).
   const sid = (window._handlog && window._handlog.sessionId) || null;
   if (sid) {
@@ -1457,7 +1509,7 @@ async function _computeStats() {
       hands:   all.hands.filter(keep),
       actions: all.actions.filter(keep),
     });
-    _statsCacheSession = new StatsCalculator(sData).calculateAllPlayersStats();
+    _statsCacheSession = new StatsCalculator(sData).calculateAllPlayersStats(_want);
   } else {
     _statsCacheSession = _statsCache;
   }
