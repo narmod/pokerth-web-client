@@ -6,7 +6,7 @@
 // TO TRANSLATE: copy this file to <lang>.mjs and translate every t/b/list
 // value and the keys[] labels (NOT the key names). Keep poker action terms
 // (Fold, Check, Call, Bet, Raise, All-In) in English, as everywhere else.
-// Chapters 4–8 are being written — an empty sections[] shows the helpWip note.
+// An empty sections[] shows the localized helpWip note (none currently).
 export const help = {
   chapters: [
     {
@@ -86,11 +86,80 @@ export const help = {
           b: ['Two optional protections: Anti-peek keeps your own cards hidden until you tap them (useful when someone can see your screen), and the accidental-call guard briefly blocks the Call button right after a big raise, so a tap aimed at a smaller call cannot hit the raised amount by accident. Both live in Advanced options.'] }
       ]
     },
-    { id: 'info',    icon: '\uD83D\uDCCA', title: 'Info panel',        sections: [] },
-    { id: 'chat',    icon: '\uD83D\uDCAC', title: 'Chat & social',     sections: [] },
-    { id: 'lobby',   icon: '\uD83C\uDFDB\uFE0F', title: 'Lobby & games', sections: [] },
-    { id: 'pthnet',  icon: '\uD83C\uDF10', title: 'pokerth.net',       sections: [] },
-    { id: 'offline', icon: '\uD83C\uDFCB\uFE0F', title: 'Training mode', sections: [] },
+    {
+      id: 'info', icon: '\uD83D\uDCCA', title: 'Info panel',
+      sections: [
+        { id: 'open', t: 'Opening the panel',
+          b: ['During a game, the info panel opens from the header (or Alt+L / Alt+I) and has three tabs: Log, Chances and Stats. On phones it floats over the table; on larger screens it is a draggable, resizable window \u2014 grab the \u28ff grip to move it, the edges to resize. Its position is remembered.'] },
+        { id: 'log', t: 'Game log',
+          b: ['The Log tab records the whole game hand by hand: blinds, every action with amounts, revealed cards and winners, color-coded for quick reading. The export button saves the log as a file if you want to review a session later.'] },
+        { id: 'odds', t: 'Chances (odds monitor)',
+          b: ['The Chances tab shows, for your current hand, the live probability of ending up with each of the 10 hand categories \u2014 from High Card to Royal Flush \u2014 each with its icon, percentage and bar. The display grays out once you fold. It only ever uses your own cards and the community cards: it sees nothing your opponents don\u2019t show.'] },
+        { id: 'stats', t: 'Stats',
+          b: ['The Stats tab tracks your session: hands played, flops seen, showdowns, win rates and more. Statistics tracking can be turned off in Advanced options.'] },
+        { id: 'handsbtn', t: 'Hand combinations overview',
+          b: ['The poker-hands icon on the felt opens a quick overview of the 10 combinations at any time \u2014 handy while learning. It can be hidden in Advanced options.'] }
+      ]
+    },
+    {
+      id: 'chat', icon: '\uD83D\uDCAC', title: 'Chat & social',
+      sections: [
+        { id: 'panels', t: 'Lobby chat and game chat',
+          b: ['There is a chat in the lobby and one at the table. On phones the game chat floats over the table; on larger screens it is a draggable, resizable window. A badge on the chat button counts unread messages.'] },
+        { id: 'typing', t: 'Typing helpers',
+          list: [
+            'Tab completes a nickname \u2014 press Tab again to cycle through matches.',
+            '\u2191 / \u2193 browse your own message history.',
+            'The emoji button opens a full picker; typing : also suggests emotes as you type.'] },
+        { id: 'reactions', t: 'Emoji reactions',
+          b: ['The reaction button opens a picker of 30 animated reactions (\uD83C\uDF89, \uD83D\uDE02, \uD83D\uDE31, \uD83D\uDD25\u2026) that play with an effect above your seat, visible to everyone at the table \u2014 including players on the desktop client. Reactions can be disabled entirely in Advanced options.'] },
+        { id: 'translate', t: 'Understanding everyone',
+          b: ['With chat translation enabled, each message gets a translate button that renders it in your language (uses the browser\u2019s built-in translator; a recent Chrome or Edge is required). Common table abbreviations (gg, nh, utg\u2026) are explained in a tooltip when you hover them \u2014 both options live in Advanced options \u2192 Chat.'] },
+        { id: 'social', t: 'Players: profile, invite, ignore',
+          b: ['Tap any player \u2014 at the table or in the lobby list \u2014 to open their card: profile and stats, invite them to your game, or ignore them (their chat messages are hidden; ignoring is reversible at any time). A confirmation before invite/ignore can be enabled in the options.'] }
+      ]
+    },
+    {
+      id: 'lobby', icon: '\uD83C\uDFDB\uFE0F', title: 'Lobby & games',
+      sections: [
+        { id: 'list', t: 'The game list',
+          b: ['The lobby lists every table on the server with its status color: green = open (you can join), orange = running, yellow = full, red = closed. Filters narrow the list (open, no password, live, ranked) and the search field finds a game by name. The players pill opens the list of everyone online, searchable and sortable.'] },
+        { id: 'join', t: 'Joining and spectating',
+          b: ['Select an open game and join it \u2014 a padlock means a password is required. Running games that allow spectators can be watched live: you see the table and chat, but hole cards stay hidden and you cannot act.'] },
+        { id: 'gameinfo', t: 'Game info',
+          b: ['Before joining, the game info card shows everything that defines the table: game type, blinds and how they increase (doubling or a manual list), start cash, action timeout, delay between hands, and who is already seated.'] },
+        { id: 'create', t: 'Creating a game',
+          b: ['Create your own table: name, number of players, start cash, first small blind and raise schedule, action timeout, and whether spectators are allowed. Four game types exist: Normal (anyone), registered-players-only, invite-only, and Ranking (counts toward the official ranking \u2014 no password allowed there). Your favorite settings can be saved and reloaded.'] },
+        { id: 'invites', t: 'Invitations',
+          b: ['Players can invite you to their table; you get a notification you can accept or decline. Being invited is the only way into an invite-only game.'] }
+      ]
+    },
+    {
+      id: 'pthnet', icon: '\uD83C\uDF10', title: 'pokerth.net',
+      sections: [
+        { id: 'account', t: 'Your account',
+          b: ['The official Internet server is pokerth.net. Playing there requires a free pokerth.net account \u2014 register on the website, then log in here with the same nickname and password. This web client connects to the very same server as the desktop client: same accounts, same tables, same rankings, and you can sit at a table with desktop players.'] },
+        { id: 'ranked', t: 'Ranking games and seasons',
+          b: ['Games of type Ranking count toward the official season ranking. Your in-app profile shows when you joined, your current season\u2019s Rank, Score, average and games played, plus your latest results. Regular (non-ranking) games are just for fun and change nothing.'] },
+        { id: 'rankings', t: 'Ranking pages',
+          b: ['The ranking entry opens the official PokerTH ranking, searchable by player, along with the community rankings (BBC, WEC). If you don\u2019t care about rankings, the entry can be hidden in Advanced options \u2192 Community.'] },
+        { id: 'avatars', t: 'Avatars and flags',
+          b: ['On pokerth.net your avatar is distributed to other players through the avatar server, and a small country flag can be shown on player boxes. Both are optional and configurable in the options.'] }
+      ]
+    },
+    {
+      id: 'offline', icon: '\uD83C\uDFCB\uFE0F', title: 'Training mode',
+      sections: [
+        { id: 'what', t: 'What it is',
+          b: ['Local / training mode is a full game against computer opponents: no connection, no account, nothing at stake. Once the app is installed (or simply visited once), it works completely offline \u2014 perfect for learning the game, testing the interface or passing time in airplane mode.'] },
+        { id: 'setup', t: 'Setting up a game',
+          b: ['Choose the number of opponents, start cash, blinds and raise schedule, and game speed. The bot line-up and difficulty can be adjusted in Advanced options \u2192 Local game \u2014 from gentle opponents to a tougher, mixed table.'] },
+        { id: 'trophies', t: 'Trophies',
+          b: ['Training mode has its own progression: 28 trophies across six categories (progress, skill, style, formats, fun and a secret one) unlock as you play \u2014 hands played, games won, big bluffs, special hands and more. Your trophy progress is cumulative and merges across devices when account settings sync is active.'] },
+        { id: 'learn', t: 'A good place to learn',
+          b: ['Everything from the other chapters works here too: the odds monitor, the assistance display, pre-selection, keyboard shortcuts. Training mode is the best place to try them without pressure before heading to pokerth.net.'] }
+      ]
+    },
     {
       id: 'options', icon: '\u2699\uFE0F', title: 'Options & shortcuts',
       sections: [
