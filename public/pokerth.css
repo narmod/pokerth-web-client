@@ -7863,6 +7863,15 @@ html[data-seat-edit="1"] #g-seats .seat.seat-ghost { outline: none; cursor: defa
 .music-pl-mv svg { width: 15px; height: 15px; display: block; }
 .music-credit { font-size: var(--fs-xs); color: var(--gold-dim); text-align: center; }
 .music-credit a { color: var(--gold-dim); }
+/* Radios (flux live) : pastille LIVE dans la playlist + libellé LIVE à la place de la durée */
+.music-pl-live {
+  flex: 0 0 auto; margin-left: 6px; padding: 0 4px;
+  font-size: var(--fs-2xs); font-weight: 700; letter-spacing: 0.06em;
+  color: #ff5252; border: 1px solid rgba(255, 82, 82, 0.55); border-radius: 3px;
+}
+.music-dur.music-live { color: #ff5252; font-weight: 700; letter-spacing: 0.04em; }
+.music-dur.music-live::before { content: '\25CF '; animation: pth-live-blink 1.6s ease-in-out infinite; display: inline-block; }
+@keyframes pth-live-blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.25; } }
 
 /* Balance G/D (lot 2) */
 .music-bal { display: flex; align-items: center; gap: var(--sp-3); }

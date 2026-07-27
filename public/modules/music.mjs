@@ -30,6 +30,11 @@
 //   window.Music.isPlaying() / current() / tracks()
 // ─────────────────────────────────────────────────────────────────────────
 
+// Manifest entries may also be LIVE RADIO STREAMS: { stream: true, file: <url> }.
+// Streams get a LIVE badge, no seek/duration, auto-reconnect on drop, and the
+// usual credit/licenseUrl line for attribution. Stations must be HTTPS (mixed
+// content) and ideally CORS-enabled; non-CORS stations fall back to a plain
+// audio element outside the WebAudio graph (see _playBypass).
 const MANIFEST_URL = '/music/tracks.json';
 const LS_TRACK  = 'pth_music_track';
 const LS_VOL    = 'pth_music_vol';
@@ -60,6 +65,16 @@ let _ctx = null, _srcNode = null, _gain = null, _waReady = false, _waFailed = fa
 let _panner = null, _analyser = null, _vuData = null, _vuRAF = 0, _vuDead = false, _vuZeroFrames = 0;
 let _msReady = false;
 let _shade = false;   // mode compact « windowshade »
+// ── Radios (flux live) ──
+// Un flux Icecast/Shoutcast est joué d'abord sur l'élément principal en CORS
+// (crossorigin="anonymous"), pour garder le graphe WebAudio (volume iOS, VU,
+// fondus). Si la station ne sert pas Access-Control-Allow-Origin, le chargement
+// échoue → repli automatique sur un 2e élément SANS crossorigin, hors graphe
+// (une source cross-origin non-CORS dans le graphe sortirait en silence total).
+// Limite du repli : volume via element.volume (sans effet sur iOS), VU éteint.
+let _radioEl = null;    // élément de secours hors WebAudio
+let _bypass  = false;   // true = la lecture courante passe par _radioEl
+let _corsTried = false; // un flux vient d'être tenté en CORS (erreur ⇒ repli)
 let _fadePauseTimer = null;
 const FADE = 0.45;   // durée du fondu (s)
 // StereoPannerNode support, probed WITHOUT creating an AudioContext (iOS-safe).
@@ -117,7 +132,8 @@ function _el() {
     _audio.loop = (_repeat === 'one');
     _audio.preload = 'none';
     try { _audio.volume = getVolume(); } catch (e) {}
-    ['play', 'pause', 'error'].forEach(function (ev) { _audio.addEventListener(ev, _render); });
+    ['play', 'pause'].forEach(function (ev) { _audio.addEventListener(ev, _render); });
+    _audio.addEventListener('error', _onMainError);
     _audio.addEventListener('ended', _onEnded);
     // Progress wiring — bound ONCE on the persistent element (not per-render),
     // updates whatever progress row currently exists in the panel.
@@ -126,7 +142,43 @@ function _el() {
   }
   return _audio;
 }
+function _radioElInit() {
+  if (!_radioEl) {
+    _radioEl = new Audio();
+    _radioEl.preload = 'none';
+    ['play', 'pause', 'error'].forEach(function (ev) { _radioEl.addEventListener(ev, _render); });
+    _radioEl.addEventListener('ended', _onEnded);
+    ['timeupdate', 'loadedmetadata', 'durationchange'].forEach(function (ev) { _radioEl.addEventListener(ev, _renderProgress); });
+  }
+  return _radioEl;
+}
+// Erreur sur l'élément principal : si c'était une tentative CORS sur un flux
+// radio, rejouer sur l'élément de secours ; sinon, simple re-rendu.
+function _onMainError() {
+  var t = _byId(_curId);
+  if (_isStream(t) && _corsTried && !_bypass) {
+    _corsTried = false;
+    t._noCors = true;                     // mémo : prochaine fois, repli direct
+    _playBypass(t);
+    return;
+  }
+  _render();
+}
+function _playBypass(t) {
+  var r = _radioElInit();
+  _bypass = true;
+  try { _audio.pause(); _audio.removeAttribute('src'); _audio.load(); } catch (e) {}
+  r.src = t.file;
+  _applyVol(getVolume());
+  try { var p = r.play(); if (p && p.catch) p.catch(function () {}); } catch (e) {}
+  _render();
+}
 function _onEnded() {
+  if (_curIsStream()) {                       // un direct ne « finit » pas : coupure réseau → une reprise
+    var el = _active(), t = _byId(_curId);
+    if (el && t) { try { el.src = t.file; var p = el.play(); if (p && p.catch) p.catch(function () {}); } catch (e) {} }
+    _render(); return;
+  }
   if (_repeat === 'all') { next(); return; }   // advance through the playlist (wraps)
   // 'off' — stop at the end ('one' never fires 'ended' since loop=true).
   if (_audio) { try { _audio.currentTime = 0; } catch (e) {} }
@@ -136,6 +188,7 @@ function _onEnded() {
 // Route the desired volume to the gain node once the graph exists, otherwise to
 // the element directly (no-op on iOS, but the gain node takes over on first play).
 function _applyVol(v) {
+  if (_bypass) { if (_radioEl) try { _radioEl.volume = v; } catch (e) {} return; }
   if (_waReady && _gain) { try { _gain.gain.value = v; } catch (e) {} }
   else if (_audio)       { try { _audio.volume = v; } catch (e) {} }
 }
@@ -197,43 +250,70 @@ async function loadManifest(force) {
 
 function tracks()    { return _tracks.slice(); }
 function current()   { return _curId; }
-function isPlaying() { return !!(_audio && !_audio.paused); }
+function isPlaying() { var el = _active(); return !!(el && !el.paused); }
 function _index(id)  { for (var i = 0; i < _tracks.length; i++) if (_tracks[i].id === id) return i; return -1; }
+function _isStream(t)   { return !!(t && t.stream); }
+function _curIsStream() { return _isStream(_byId(_curId)); }
+function _active()      { return (_bypass && _radioEl) ? _radioEl : _audio; }
 function _byId(id)   { var i = _index(id); return i >= 0 ? _tracks[i] : null; }
 
 async function play(id) {
   await loadManifest();
   var t = id ? _byId(id) : (_byId(_curId) || _tracks[0]);
   if (!t) { _render(); return; }
+  var stream = _isStream(t);
   var a = _el();
-  if (_curId !== t.id || !a.src) {
+  if (_curId !== t.id || !_active().src) {
     _curId = t.id;
-    a.src = t.file;
-    _durProbed = false;   // new source — re-resolve its duration on metadata load
+    _durProbed = stream;  // pas de sonde de durée sur un direct (durée = Infinity)
     _probedDur = 0;
     try { localStorage.setItem(LS_TRACK, t.id); } catch (e) {}
+    if (stream && t._noCors) {            // station connue sans CORS → repli direct
+      _radioElInit().src = t.file;
+      _bypass = true;
+      try { a.pause(); a.removeAttribute('src'); a.load(); } catch (e) {}
+    } else {
+      if (_bypass && _radioEl) { try { _radioEl.pause(); _radioEl.removeAttribute('src'); _radioEl.load(); } catch (e) {} }
+      _bypass = false;
+      _corsTried = stream;                // erreur de chargement ⇒ _onMainError tentera le repli
+      try { if (stream) a.crossOrigin = 'anonymous'; else a.removeAttribute('crossorigin'); } catch (e) {}
+      a.src = t.file;
+    }
   }
+  var el = _active();
   _ensureWebAudio(); _resumeCtx();        // build/unlock the audio graph (covers programmatic play too)
   if (_fadePauseTimer) { clearTimeout(_fadePauseTimer); _fadePauseTimer = null; }
-  // Fondu d'entrée : gain à 0 avant lecture, puis montée vers le volume.
-  if (_waReady && _gain && _ctx) { try { _gain.gain.cancelScheduledValues(_ctx.currentTime); _gain.gain.setValueAtTime(0, _ctx.currentTime); } catch (e) {} }
+  // Fondu d'entrée : gain à 0 avant lecture, puis montée vers le volume (hors bypass).
+  if (!_bypass && _waReady && _gain && _ctx) { try { _gain.gain.cancelScheduledValues(_ctx.currentTime); _gain.gain.setValueAtTime(0, _ctx.currentTime); } catch (e) {} }
   else { _applyVol(getVolume()); }
-  try { await a.play(); } catch (e) { /* gesture/load issue — UI reflects paused */ }
-  if (!_fadeTo(getVolume(), FADE)) _applyVol(getVolume());
+  try { await el.play(); } catch (e) { /* gesture/load issue — UI reflects paused */ }
+  if (_bypass || !_fadeTo(getVolume(), FADE)) _applyVol(getVolume());
   _render();
 }
 function pause() {
-  if (!_audio) { _render(); return; }
-  if (_waReady && _gain && _ctx && !_audio.paused) {
+  var el = _active();
+  if (!el) { _render(); return; }
+  if (!_bypass && _waReady && _gain && _ctx && !el.paused) {
     _fadeTo(0, 0.35);
     if (_fadePauseTimer) clearTimeout(_fadePauseTimer);
     _fadePauseTimer = setTimeout(function () { _fadePauseTimer = null; try { _audio.pause(); } catch (e) {} }, 360);
     return;   // le 'pause' event rendra l'UI à l'arrêt réel
   }
-  try { _audio.pause(); } catch (e) {}
+  try { el.pause(); } catch (e) {}
   _render();
 }
-function stop()  { if (_fadePauseTimer) { clearTimeout(_fadePauseTimer); _fadePauseTimer = null; } if (_audio) { try { _audio.pause(); _audio.currentTime = 0; } catch (e) {} } _render(); }
+function stop()  {
+  if (_fadePauseTimer) { clearTimeout(_fadePauseTimer); _fadePauseTimer = null; }
+  var el = _active();
+  if (el) {
+    try {
+      el.pause();
+      if (_curIsStream()) { el.removeAttribute('src'); el.load(); }   // couper le flux (bande passante)
+      else el.currentTime = 0;
+    } catch (e) {}
+  }
+  _render();
+}
 function toggleTrack(id) {
   if (id && id !== _curId) return play(id);
   if (isPlaying()) { pause(); return Promise.resolve(); }
@@ -250,7 +330,7 @@ function prev() { if (_tracks.length < 2) return play(_curId); if (_shuffle) ret
 // header (exact frame count) with a CBR fallback. Pure fetch + arithmetic, works
 // identically on iOS. Result lands in _probedDur, which getDuration() falls back to.
 function _probeDuration() {
-  if (!_audio || _durProbed) return;
+  if (!_audio || _durProbed || _curIsStream()) return;
   var d = _audio.duration;
   if (isFinite(d) && d > 0) { _durProbed = true; return; }   // element already knows it
   _durProbed = true;                                         // resolve at most once per track
@@ -304,12 +384,12 @@ function _mp3DurationFromBytes(b, totalSize) {
   if (br > 0 && totalSize > i) return (totalSize - i) * 8 / (br * 1000);   // CBR fallback
   return 0;
 }
-function getDuration()    { try { var d = _audio ? _audio.duration : 0; if (isFinite(d) && d > 0) return d; return _probedDur > 0 ? _probedDur : 0; } catch (e) { return 0; } }
-function getCurrentTime() { try { return _audio ? (_audio.currentTime || 0) : 0; } catch (e) { return 0; } }
+function getDuration()    { try { var el = _active(); var d = el ? el.duration : 0; if (isFinite(d) && d > 0) return d; return _probedDur > 0 ? _probedDur : 0; } catch (e) { return 0; } }
+function getCurrentTime() { try { var el = _active(); return el ? (el.currentTime || 0) : 0; } catch (e) { return 0; } }
 function seek(t) {
-  var d = getDuration(); if (!_audio || !d) return;
+  var d = getDuration(); if (!_active() || !d || _curIsStream()) return;
   t = Math.max(0, Math.min(d, t));
-  try { _audio.currentTime = t; } catch (e) {}
+  try { _active().currentTime = t; } catch (e) {}
   _renderProgress();
 }
 // LCD time label honouring the elapsed/remaining toggle (_lcdRemain).
@@ -331,10 +411,12 @@ function _renderProgress() {
   var durEl  = _bodyEl.querySelector('.music-dur');
   if (!seekEl && !curEl && !durEl) return;
   var d = getDuration(), c = getCurrentTime(), canSeek = d > 0;
+  var live = _curIsStream();
+  if (live) canSeek = false;                   // pas de seek sur un direct
   if (!isFinite(c) || c < 0) c = 0;
   if (canSeek && c > d) c = d;                 // never display/seek beyond the track
-  if (!canSeek && c > 86400) c = 0;            // guard against a probe leaving a huge currentTime
-  if (durEl) durEl.textContent = canSeek ? _fmtTime(d) : '0:00';
+  if (!canSeek && !live && c > 86400) c = 0;   // guard against a probe leaving a huge currentTime
+  if (durEl) { durEl.textContent = live ? 'LIVE' : (canSeek ? _fmtTime(d) : '0:00'); durEl.classList.toggle('music-live', live); }
   if (!_seeking && curEl) curEl.textContent = _curLabel(c, d, canSeek);
   if (seekEl) {
     seekEl.disabled = !canSeek;
@@ -386,7 +468,8 @@ function _render() {
   var playing = isPlaying();
   var cur = _byId(_curId);
   var vol = Math.round(getVolume() * 100);
-  var _dur = getDuration(), _cur = getCurrentTime(), _canSeek = _dur > 0;
+  var _live = _curIsStream();
+  var _dur = getDuration(), _cur = getCurrentTime(), _canSeek = _live ? false : _dur > 0;
   var _pos = _canSeek ? Math.round(_cur / _dur * 1000) : 0;
   var multi = _tracks.length > 1;
   var ppKey = playing ? 'musicPause' : 'musicPlay';
@@ -402,6 +485,7 @@ function _render() {
            ' aria-selected="' + (t.id === _curId) + '" data-track-id="' + _esc(t.id) + '">' +
            '<span class="music-pl-num">' + (i + 1) + '</span>' +
            '<span class="music-pl-ttl">' + _esc(t.title || t.id) + (t.artist ? ' \u2014 ' + _esc(t.artist) : '') + '</span>' +
+           (_isStream(t) ? '<span class="music-pl-live">LIVE</span>' : '') +
            (t.id === _curId ? '<span class="music-pl-eq">' + (playing ? '\u25B8' : '\u2016') + '</span>' : '') +
            (multi ? '<span class="music-pl-move">' +
              '<button type="button" class="music-pl-mv" data-plmove="up" data-plid="' + _esc(t.id) + '"' + (i === 0 ? ' disabled' : '') + ' aria-label="' + _esc(_t('musicMoveUp', 'Move up')) + '">' + _icon('mv-up') + '</button>' +
@@ -428,14 +512,14 @@ function _render() {
     '<div class="music-lcd">' +
       '<div class="music-lcd-top">' +
         '<span class="music-time music-cur" data-mact="lcd" role="button" tabindex="0" title="' + _esc(_t('musicNowPlaying', 'Now playing')) + '">' + _curLabel(_cur, _dur, _canSeek) + '</span>' +
-        ((_vuDead || !playing) ? '' : '<span class="music-vu" aria-hidden="true">' + vuBars + '</span>') +
+        ((_vuDead || !playing || _bypass) ? '' : '<span class="music-vu" aria-hidden="true">' + vuBars + '</span>') +
       '</div>' +
       '<div class="music-marquee"><span class="music-marquee-txt">' + (nowTxt || _esc(_t('musicNoTracks', 'No tracks available'))) + '</span></div>' +
     '</div>' +
     // ── barre de position ──
     '<div class="music-seek-row">' +
       '<input type="range" class="music-seek" min="0" max="1000" step="1" value="' + _pos + '"' + (_canSeek ? '' : ' disabled') + ' aria-label="' + _esc(_t('musicNowPlaying', 'Now playing')) + '">' +
-      '<span class="music-time music-dur">' + (_canSeek ? _fmtTime(_dur) : '0:00') + '</span>' +
+      '<span class="music-time music-dur' + (_live ? ' music-live' : '') + '">' + (_live ? 'LIVE' : (_canSeek ? _fmtTime(_dur) : '0:00')) + '</span>' +
     '</div>' +
     // ── transport ──
     '<div class="music-transport">' +
@@ -574,7 +658,7 @@ function _updateMarquee() {
 // rAF ne tourne QUE si le graphe existe, qu'on lit, ET que le panneau est
 // visible (onglet + display) — sinon elle s'auto-arrête (économie CPU/thermique iOS).
 function _vuActive() {
-  if (_vuDead) return false;
+  if (_vuDead || _bypass) return false;
   if (!_analyser || !isPlaying() || !_bodyEl) return false;
   if (document.hidden) return false;
   var p = document.getElementById('music-panel');
