@@ -1379,6 +1379,10 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
 #forgot-pw-link {
   color: var(--gold); font-size: var(--fs-xs); font-weight: 600;
   text-decoration: none; opacity: 0.95; white-space: nowrap;
+  /* Poussé contre le bord droit de la ligne, donc aligné sur la fin des
+     champs de saisie (même conteneur, mêmes marges). Le gap de .guest-line
+     reste l'écart MINIMUM avec la case quand la carte est étroite. */
+  margin-left: auto;
 }
 #forgot-pw-link:hover { opacity: 1; text-decoration: none; }
 
