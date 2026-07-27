@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+  helpTitle:'Pomocník', helpSearchPh:'Hľadať v pomocníkovi…', helpWip:'Táto kapitola sa práve píše.', helpNoResults:'Žiadne výsledky', advHelpBtn:'Zobraziť položku Pomocník v ponukách',
   jrImport: 'Importovať .pdb…',
   jrImportDone: 'Import: {ok} pridané · {dup} už existuje · {ko} nečitaťeľné',
 

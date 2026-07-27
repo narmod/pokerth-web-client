@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+  helpTitle:'Ajuda', helpSearchPh:'Cerca a l\'ajuda…', helpWip:'Aquest capítol s\'està escrivint.', helpNoResults:'Cap resultat', advHelpBtn:'Mostra l\'entrada Ajuda als menús',
   jrImport: 'Importa .pdb…',
   jrImportDone: 'Importació: {ok} afegits · {dup} ja presents · {ko} il·legibles',
 

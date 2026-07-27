@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+  helpTitle:'Nápověda', helpSearchPh:'Hledat v nápovědě…', helpWip:'Tato kapitola se právě píše.', helpNoResults:'Žádné výsledky', advHelpBtn:'Zobrazit položku Nápověda v nabídkách',
   jrImport: 'Importovat .pdb…',
   jrImportDone: 'Import: {ok} přidáno · {dup} již existuje · {ko} nečitelné',
 

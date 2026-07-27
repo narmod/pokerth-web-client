@@ -9,6 +9,7 @@ export const meta = {
 };
 
 export const strings = {
+  helpTitle:'Ohje', helpSearchPh:'Etsi ohjeesta…', helpWip:'Tätä lukua kirjoitetaan parhaillaan.', helpNoResults:'Ei tuloksia', advHelpBtn:'Näytä Ohje-kohta valikoissa',
   jrImport: 'Tuo .pdb…',
   jrImportDone: 'Tuonti: {ok} lisätty · {dup} jo olemassa · {ko} lukukelvotonta',
 

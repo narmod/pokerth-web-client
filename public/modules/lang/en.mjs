@@ -16,6 +16,7 @@ export const meta = {
 };
 
 export const strings = {
+  helpTitle:'Help', helpSearchPh:'Search help…', helpWip:'This chapter is being written.', helpNoResults:'No results', advHelpBtn:'Show the Help entry in menus',
   jrImport: 'Import .pdb…',
   jrImportDone: 'Import: {ok} added · {dup} already present · {ko} unreadable',
 

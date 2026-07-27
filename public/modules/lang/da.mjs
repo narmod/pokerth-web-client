@@ -9,6 +9,7 @@ export const meta = {
 };
 
 export const strings = {
+  helpTitle:'Hjælp', helpSearchPh:'Søg i hjælpen…', helpWip:'Dette kapitel er under udarbejdelse.', helpNoResults:'Ingen resultater', advHelpBtn:'Vis Hjælp-punktet i menuerne',
   jrImport: 'Importér .pdb…',
   jrImportDone: 'Import: {ok} tilføjet · {dup} findes allerede · {ko} ulæselige',
 

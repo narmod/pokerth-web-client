@@ -11,6 +11,7 @@ export const meta = {
 };
 
 export const strings = {
+  helpTitle:'帮助', helpSearchPh:'搜索帮助…', helpWip:'本章正在编写中。', helpNoResults:'无结果', advHelpBtn:'在菜单中显示“帮助”入口',
   jrImport: '导入 .pdb…',
   jrImportDone: '导入：{ok} 个已添加 · {dup} 个已存在 · {ko} 个无法读取',
 

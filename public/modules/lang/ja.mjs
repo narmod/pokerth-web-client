@@ -9,6 +9,7 @@ export const meta = {
 };
 
 export const strings = {
+  helpTitle:'ヘルプ', helpSearchPh:'ヘルプを検索…', helpWip:'この章は執筆中です。', helpNoResults:'結果なし', advHelpBtn:'メニューにヘルプ項目を表示',
   jrImport: '.pdbをインポート…',
   jrImportDone: 'インポート: {ok}件追加 · {dup}件は既存 · {ko}件読み取り不可',
 

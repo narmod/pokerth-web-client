@@ -9931,3 +9931,45 @@ html[data-seat-struct="qml"] .seat:not(.me) .seat-narrow .seat-holecards .pk { w
 .hdr-sync svg { width: 17px; height: 17px; display: block; }
 @keyframes hdrSyncPulse { 0%, 100% { opacity: 0.32; } 50% { opacity: 1; } }
 @media (prefers-reduced-motion: reduce) { .hdr-sync.on { animation: none; opacity: 0.85; } }
+/* ── Help window (#help-modal, modules/help/index.mjs) ─────────────────────
+   Entrée « Aide » des menus des 5 headers. Même patron que #adv-modal :
+   aucun voile, carte adv-card (fenêtre flottante ≥600 px via _enableFloating,
+   feuille épinglée en portrait mobile, barre d'icônes sous 600 px par la
+   container query .adv-* partagée). Corps .help-* propre. */
+#help-modal{position:fixed;inset:0;z-index:1200;display:flex;align-items:center;justify-content:center;pointer-events:none}
+#help-modal .km-backdrop{display:none}
+#help-modal .km-card{pointer-events:auto}
+body.adv-no-helpbtn .help-menu-btn{display:none}
+.help-search{margin-top:8px}
+.help-search input{width:100%;box-sizing:border-box;background:var(--field-bg);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:7px 10px;font-size:0.85rem}
+.help-search input:focus{outline:none;border-color:var(--gold-dim)}
+.help-body{padding:2px 2px 8px}
+.help-ch-t{font-size:1.02rem;margin:2px 0 10px;color:var(--text);display:flex;align-items:center;gap:8px;font-weight:700}
+.help-ch-ic{font-size:1.05em;line-height:1}
+.help-cat-ic{font-size:1rem;line-height:1}
+.help-sec{margin:0 0 14px;border-radius:6px}
+.help-sec-t{font-size:var(--fs-2xs,0.68rem);letter-spacing:0.12em;text-transform:uppercase;color:var(--gold-dim);margin:14px 0 5px;font-weight:700}
+.help-p{margin:5px 0;font-size:0.85rem;line-height:1.55;color:var(--text)}
+.help-wip{opacity:.65;font-style:italic}
+.help-ul{margin:5px 0 5px 18px;padding:0;font-size:0.85rem;line-height:1.55;color:var(--text)}
+.help-ul li{margin:4px 0}
+.help-keys{margin:6px 0}
+.help-keyrow{display:flex;gap:10px;align-items:baseline;margin:5px 0;font-size:0.82rem;color:var(--text)}
+.help-kbd{flex:0 0 auto;min-width:120px;text-align:center;background:var(--field-bg);border:1px solid var(--border);border-radius:5px;padding:2px 8px;color:var(--gold-dim);font-size:0.72rem;white-space:nowrap}
+.help-result{display:flex;flex-direction:column;align-items:flex-start;gap:2px;width:100%;text-align:left;background:none;border:0;border-bottom:1px solid var(--border);padding:8px 6px;cursor:pointer;color:var(--text);font:inherit}
+.help-result:hover{background:rgba(var(--gold-rgb,227,200,0),.08)}
+.help-result-ch{font-size:0.68rem;color:var(--gold-dim);letter-spacing:0.08em;text-transform:uppercase}
+.help-result-t{font-size:0.85rem}
+.help-sec.help-hit{animation:helpHit 1.5s ease}
+@keyframes helpHit{0%{background:rgba(var(--gold-rgb,227,200,0),.2)}100%{background:transparent}}
+/* Portrait mobile : feuille épinglée haut/bas — miroir de la règle #adv-modal. */
+@media (max-width:599.98px) and (orientation:portrait){
+  #help-modal .adv-card{width:calc(100% - 20px);max-width:none;height:calc(100% - max(28px, 2*env(safe-area-inset-top), 2*env(safe-area-inset-bottom)));margin:0;display:flex;flex-direction:column;overflow:hidden}
+  #help-modal .adv-card .adv-layout{flex:1 1 auto;min-height:0}
+  #help-modal .adv-card .adv-nav{flex:0 0 auto}
+  #help-modal .adv-card .adv-panels{flex:1 1 auto;min-height:0;height:auto}
+}
+/* Fenêtre flottante ≥600 px — miroir de la règle #adv-modal. */
+@media (min-width:600px){
+  #help-modal .adv-card.floating-win{position:fixed;margin:0;max-width:none;max-height:none}
+}

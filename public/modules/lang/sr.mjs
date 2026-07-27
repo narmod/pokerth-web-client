@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+  helpTitle:'Помоћ', helpSearchPh:'Претражи помоћ…', helpWip:'Ово поглавље се још пише.', helpNoResults:'Нема резултата', advHelpBtn:'Прикажи ставку Помоћ у менијима',
   jrImport: 'Увоз .pdb…',
   jrImportDone: 'Увоз: {ok} додато · {dup} већ постоји · {ko} нечитљиво',
 

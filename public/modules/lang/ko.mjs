@@ -13,6 +13,7 @@ export const meta = {
 };
 
 export const strings = {
+  helpTitle:'도움말', helpSearchPh:'도움말 검색…', helpWip:'이 장은 작성 중입니다.', helpNoResults:'결과 없음', advHelpBtn:'메뉴에 도움말 항목 표시',
   jrImport: '.pdb 가져오기…',
   jrImportDone: '가져오기: {ok}개 추가 · {dup}개 이미 있음 · {ko}개 읽기 불가',
 

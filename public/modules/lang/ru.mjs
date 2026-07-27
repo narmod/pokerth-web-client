@@ -15,6 +15,7 @@ export const meta = {
 };
 
 export const strings = {
+  helpTitle:'Справка', helpSearchPh:'Поиск по справке…', helpWip:'Эта глава ещё пишется.', helpNoResults:'Ничего не найдено', advHelpBtn:'Показывать пункт «Справка» в меню',
   jrImport: 'Импорт .pdb…',
   jrImportDone: 'Импорт: {ok} добавлено · {dup} уже есть · {ko} нечитаемых',
 
