@@ -30,8 +30,10 @@ const SEL = [
 // contexte d'empilement — poser un z sur la carte n'aurait aucun effet. On cible
 // donc le conteneur, et UNIQUEMENT quand la carte est en mode fenêtre : en mode
 // modale (mobile, sous le seuil _winGate) ces conteneurs gardent leur z CSS et
-// leur priorité de dialogue.
-const HOSTS = '#ranking-modal,#tableranking-modal,#adv-modal';
+// leur priorité de dialogue. #jr-modal (Gérer les logs) suit la même règle —
+// sans lui, son z CSS 9999 écrasait toujours les autres fenêtres flottantes
+// (rapport forum : la dernière ouverte/touchée doit passer devant).
+const HOSTS = '#ranking-modal,#tableranking-modal,#adv-modal,#jr-modal';
 
 const BASE = 300, TOP = 390;
 let _z = BASE;

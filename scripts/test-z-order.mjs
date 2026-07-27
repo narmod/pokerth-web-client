@@ -19,6 +19,7 @@ const dom = new JSDOM(`<!doctype html><body>
   <!-- Fenêtres flottantes imbriquées : le z effectif est porté par le conteneur -->
   <div id="ranking-modal" style="display:none"><div class="rk-card"><div id="rk-title"></div></div></div>
   <div id="adv-modal" style="display:none"><div class="km-card"></div></div>
+  <div id="jr-modal" style="display:none"><div class="km-card jr-card"></div></div>
 </body>`, { pretendToBeVisual: true, url: 'https://pokerth.local/' });
 
 const w = dom.window;
@@ -93,6 +94,19 @@ adv.style.display = 'flex';
 advCard.classList.add('floating-win');
 await tick();
 ok(z('adv-modal') > z('ranking-modal'), 'options avancées ouvertes après : devant le classement');
+
+// Journal (Gérer les logs) : même mécanique — la dernière ouverte passe devant.
+const jr = $('jr-modal'), jrCard = jr.querySelector('.jr-card');
+jr.style.display = 'flex';
+jrCard.classList.add('floating-win');
+await tick();
+ok(z('jr-modal') > z('adv-modal'), 'logs ouverts après : devant les options avancées');
+Z.raise(advCard);
+ok(z('adv-modal') > z('jr-modal'), 'toucher les options avancées : repassent devant les logs');
+jr.style.display = 'none';
+await tick();
+ok(!$('jr-modal').style.zIndex, 'fermeture des logs : z-index CSS rendu');
+jr.style.display = 'flex'; jrCard.classList.remove('floating-win');
 
 // Fermeture → le conteneur récupère son z-index CSS de dialogue.
 adv.style.display = 'none';
