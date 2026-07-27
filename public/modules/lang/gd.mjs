@@ -949,7 +949,7 @@ export const strings = {
     musicCompact: "Dlùth",
     musicExpand: "Leudaich",
     musicMoveUp: "Gluais suas",
-    musicMoveDown: "Gluais sìos",
+    musicMoveDown: "Gluais sìos", musicRadios: "Rèidiothan",
     importSeat: "Ion-phortaich pasgan shuidheachan (.zip)",
     plColumns: "Colbhan",
     plColAvatar: "Avatar",

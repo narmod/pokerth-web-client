@@ -946,7 +946,7 @@ export const strings = {
     musicCompact: "Tömör",
     musicExpand: "Kibontás",
     musicMoveUp: "Fel",
-    musicMoveDown: "Le",
+    musicMoveDown: "Le", musicRadios: "Rádiók",
     importSeat: "Ülőhelycsomag (.zip) importálása",
     plColumns: "Oszlopok",
     plColAvatar: "Avatár",

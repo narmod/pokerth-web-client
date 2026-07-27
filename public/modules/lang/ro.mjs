@@ -874,7 +874,7 @@ export const strings = {
     musicCompact: "Compact",
     musicExpand: "Extinde",
     musicMoveUp: "Mută în sus",
-    musicMoveDown: "Mută în jos",
+    musicMoveDown: "Mută în jos", musicRadios: "Radiouri",
     importSeat: "Importă un pachet de locuri (.zip)",
     plColumns: "Coloane",
     plColAvatar: "Avatar",

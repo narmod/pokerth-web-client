@@ -870,7 +870,7 @@ export const strings = {
     musicCompact: "精簡",
     musicExpand: "展開",
     musicMoveUp: "上移",
-    musicMoveDown: "下移",
+    musicMoveDown: "下移", musicRadios: "電台",
     importSeat: "匯入座位包（.zip）",
     plColumns: "欄",
     plColAvatar: "頭像",

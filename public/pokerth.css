@@ -7823,6 +7823,17 @@ html[data-seat-edit="1"] #g-seats .seat.seat-ghost { outline: none; cursor: defa
   100%      { transform: translateX(0); }
 }
 /* Playlist dépliable */
+.music-pl-head { display: flex; align-items: stretch; gap: var(--sp-1); }
+.music-pl-head .music-pl-toggle { width: auto; flex: 0 0 auto; }
+.music-tab {
+  flex: 1 1 0; display: flex; align-items: center; justify-content: center; gap: var(--sp-2);
+  background: var(--field-bg); color: var(--text);
+  border: 1px solid var(--border); border-radius: var(--r-md);
+  padding: 7px 8px; font-size: var(--fs-sm); cursor: pointer;
+}
+.music-tab:hover { border-color: var(--gold-dim); }
+.music-tab.is-active { border-color: var(--gold-dim); color: var(--gold); background: rgba(var(--gold-rgb), 0.08); }
+.music-pl-empty { padding: 8px; text-align: center; color: var(--gold-dim); font-size: var(--fs-sm); list-style: none; }
 .music-pl-toggle {
   display: flex; align-items: center; gap: var(--sp-3); width: 100%;
   background: var(--field-bg); color: var(--text);

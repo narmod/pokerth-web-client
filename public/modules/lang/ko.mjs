@@ -678,7 +678,7 @@ export const strings = {
     musicCompact: "간략히",
     musicExpand: "펼치기",
     musicMoveUp: "위로",
-    musicMoveDown: "아래로",
+    musicMoveDown: "아래로", musicRadios: "라디오",
     importSeat: "좌석 팩(.zip) 가져오기",
     plColumns: "열",
     plColAvatar: "아바타",

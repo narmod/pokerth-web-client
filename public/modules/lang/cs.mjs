@@ -874,7 +874,7 @@ export const strings = {
     musicCompact: "Kompaktní",
     musicExpand: "Rozbalit",
     musicMoveUp: "Posunout nahoru",
-    musicMoveDown: "Posunout dolů",
+    musicMoveDown: "Posunout dolů", musicRadios: "Rádia",
     importSeat: "Importovat balíček míst (.zip)",
     plColumns: "Sloupce",
     plColAvatar: "Avatar",

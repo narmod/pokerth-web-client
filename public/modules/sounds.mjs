@@ -30,12 +30,23 @@
 // ─────────────────────────────────────────────────────────────────────────
 
 let _audioCtx = null;
+let _hadGesture = false;   // au moins un geste utilisateur depuis le chargement
 function getAudioCtx() {
   // iOS peut FERMER le contexte (state 'closed') apres une interruption longue
   // (PWA restee en arriere-plan, appel telephonique). Un contexte 'closed' ne
   // redemarre JAMAIS via resume() : on le jette et on en recree un neuf.
   if (_audioCtx && _audioCtx.state === 'closed') _audioCtx = null;
-  if (!_audioCtx) try { _audioCtx = new (window.AudioContext||window.webkitAudioContext)(); } catch(e) {}
+  if (!_audioCtx) {
+    // Ne JAMAIS creer le contexte avant le premier geste utilisateur : Chrome
+    // loggue « The AudioContext was not allowed to start » a chaque tentative
+    // (sons declenches par des evenements reseau au chargement), et un contexte
+    // ne suspendu ne jouerait rien de toute facon — le son etait deja muet dans
+    // ce cas. Les listeners d'unlock ci-dessous le creeront au 1er geste ;
+    // aucun effet audible n'est retire.
+    var ua = navigator.userActivation;
+    if (!_hadGesture && !(ua && (ua.isActive || ua.hasBeenActive))) return null;
+    try { _audioCtx = new (window.AudioContext||window.webkitAudioContext)(); } catch(e) {}
+  }
   return _audioCtx;
 }
 // ─── Volume maître des effets de jeu ──────────────────────────────────────
@@ -520,6 +531,7 @@ function toggleSoundPopover(btn) {
 //    (et non une seule fois) : un premier tap survenu sur un contexte pas
 //    encore prêt ne nous coince plus. Une fois 'running', on se désabonne.
 function _onUnlockGesture() {
+  _hadGesture = true;
   // Ne JAMAIS se desabonner : iOS re-interrompt le contexte quand la PWA
   // repasse en arriere-plan, et seul un geste utilisateur peut le relancer.
   // En restant abonnes, le prochain tap reveille le son -- au lieu de rester

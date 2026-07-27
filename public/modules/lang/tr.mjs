@@ -875,7 +875,7 @@ export const strings = {
     musicCompact: "Sıkışık",
     musicExpand: "Genişlet",
     musicMoveUp: "Yukarı taşı",
-    musicMoveDown: "Aşağı taşı",
+    musicMoveDown: "Aşağı taşı", musicRadios: "Radyolar",
     importSeat: "Koltuk paketi (.zip) içe aktar",
     plColumns: "Sütunlar",
     plColAvatar: "Avatar",

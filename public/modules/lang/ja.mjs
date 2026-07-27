@@ -870,7 +870,7 @@ export const strings = {
     musicCompact: "コンパクト",
     musicExpand: "展開",
     musicMoveUp: "上へ",
-    musicMoveDown: "下へ",
+    musicMoveDown: "下へ", musicRadios: "ラジオ",
     importSeat: "座席パック（.zip）をインポート",
     plColumns: "列",
     plColAvatar: "アバター",

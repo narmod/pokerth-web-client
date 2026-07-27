@@ -875,7 +875,7 @@ export const strings = {
     musicCompact: "Компактно",
     musicExpand: "Развернуть",
     musicMoveUp: "Вверх",
-    musicMoveDown: "Вниз",
+    musicMoveDown: "Вниз", musicRadios: "Радиостанции",
     importSeat: "Импортировать пакет мест (.zip)",
     plColumns: "Столбцы",
     plColAvatar: "Аватар",

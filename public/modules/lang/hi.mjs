@@ -753,7 +753,7 @@ export const strings = {
     musicCompact: "संक्षिप्त",
     musicExpand: "विस्तृत करें",
     musicMoveUp: "ऊपर ले जाएँ",
-    musicMoveDown: "नीचे ले जाएँ",
+    musicMoveDown: "नीचे ले जाएँ", musicRadios: "रेडियो",
     importSeat: "सीट पैक (.zip) आयात करें",
     plColumns: "स्तंभ",
     plColAvatar: "अवतार",

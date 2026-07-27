@@ -948,7 +948,7 @@ export const strings = {
     musicCompact: "சுருக்கம்",
     musicExpand: "விரிவாக்கு",
     musicMoveUp: "மேலே நகர்த்து",
-    musicMoveDown: "கீழே நகர்த்து",
+    musicMoveDown: "கீழே நகர்த்து", musicRadios: "வானொலிகள்",
     importSeat: "இருக்கைத் தொகுப்பை (.zip) இறக்குமதி செய்",
     plColumns: "நெடுவரிசைகள்",
     plColAvatar: "அவதாரம்",

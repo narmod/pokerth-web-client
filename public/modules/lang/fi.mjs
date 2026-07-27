@@ -873,7 +873,7 @@ export const strings = {
     musicCompact: "Tiivis",
     musicExpand: "Laajenna",
     musicMoveUp: "Siirrä ylös",
-    musicMoveDown: "Siirrä alas",
+    musicMoveDown: "Siirrä alas", musicRadios: "Radiot",
     importSeat: "Tuo paikkapaketti (.zip)",
     plColumns: "Sarakkeet",
     plColAvatar: "Avatar",

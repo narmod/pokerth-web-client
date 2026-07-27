@@ -872,7 +872,7 @@ export const strings = {
     musicCompact: "Kompakt",
     musicExpand: "Expandera",
     musicMoveUp: "Flytta upp",
-    musicMoveDown: "Flytta ned",
+    musicMoveDown: "Flytta ned", musicRadios: "Radiokanaler",
     importSeat: "Importera ett platspaket (.zip)",
     plColumns: "Kolumner",
     plColAvatar: "Avatar",

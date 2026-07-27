@@ -947,7 +947,7 @@ export const strings = {
     musicCompact: "Compacte",
     musicExpand: "Amplia",
     musicMoveUp: "Mou amunt",
-    musicMoveDown: "Mou avall",
+    musicMoveDown: "Mou avall", musicRadios: "Ràdios",
     importSeat: "Importa un paquet de seients (.zip)",
     plColumns: "Columnes",
     plColAvatar: "Avatar",

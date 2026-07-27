@@ -946,7 +946,7 @@ export const strings = {
     musicCompact: "Kompak",
     musicExpand: "Vou uit",
     musicMoveUp: "Skuif op",
-    musicMoveDown: "Skuif af",
+    musicMoveDown: "Skuif af", musicRadios: "Radio's",
     importSeat: "Voer 'n sitplekpakket (.zip) in",
     plColumns: "Kolomme",
     plColAvatar: "Avatar",

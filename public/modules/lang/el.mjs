@@ -946,7 +946,7 @@ export const strings = {
     musicCompact: "Συμπαγές",
     musicExpand: "Ανάπτυξη",
     musicMoveUp: "Μετακίνηση πάνω",
-    musicMoveDown: "Μετακίνηση κάτω",
+    musicMoveDown: "Μετακίνηση κάτω", musicRadios: "Ραδιόφωνα",
     importSeat: "Εισαγωγή πακέτου θέσεων (.zip)",
     plColumns: "Στήλες",
     plColAvatar: "Άβαταρ",

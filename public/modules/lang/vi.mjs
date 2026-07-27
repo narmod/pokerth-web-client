@@ -946,7 +946,7 @@ export const strings = {
     musicCompact: "Thu gọn",
     musicExpand: "Mở rộng",
     musicMoveUp: "Chuyển lên",
-    musicMoveDown: "Chuyển xuống",
+    musicMoveDown: "Chuyển xuống", musicRadios: "Đài radio",
     importSeat: "Nhập gói chỗ ngồi (.zip)",
     plColumns: "Cột",
     plColAvatar: "Ảnh đại diện",

@@ -945,7 +945,7 @@ export const strings = {
     musicCompact: "Kompaktno",
     musicExpand: "Proširi",
     musicMoveUp: "Pomakni gore",
-    musicMoveDown: "Pomakni dolje",
+    musicMoveDown: "Pomakni dolje", musicRadios: "Radio postaje",
     importSeat: "Uvezi paket mjesta (.zip)",
     plColumns: "Stupci",
     plColAvatar: "Avatar",

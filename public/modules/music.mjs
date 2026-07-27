@@ -41,6 +41,7 @@ const LS_VOL    = 'pth_music_vol';
 const LS_REPEAT = 'pth_music_repeat';
 const LS_SHUFFLE = 'pth_music_shuffle';
 const LS_BALANCE = 'pth_music_balance';
+const LS_MODE    = 'pth_music_mode';
 
 let _tracks = [];
 let _audio  = null;
@@ -75,6 +76,8 @@ let _shade = false;   // mode compact « windowshade »
 let _radioEl = null;    // élément de secours hors WebAudio
 let _bypass  = false;   // true = la lecture courante passe par _radioEl
 let _corsTried = false; // un flux vient d'être tenté en CORS (erreur ⇒ repli)
+let _mode  = 'pl';      // onglet actif de la liste : 'pl' (pistes) | 'radio' (flux live)
+let _plOpen = false;    // liste dépliée (préservé à travers les re-rendus)
 let _fadePauseTimer = null;
 const FADE = 0.45;   // durée du fondu (s)
 // StereoPannerNode support, probed WITHOUT creating an AudioContext (iOS-safe).
@@ -109,13 +112,13 @@ function setShuffle(on) {
   try { localStorage.setItem(LS_SHUFFLE, _shuffle ? '1' : '0'); } catch (e) {}
   _render();
 }
-// Pick a random track index different from the current one (no immediate repeat
-// unless there is only a single track). Used by next()/prev() when shuffle is on.
-function _randIndex() {
-  if (_tracks.length < 2) return 0;
-  var cur = _index(_curId), j;
-  do { j = Math.floor(Math.random() * _tracks.length); } while (j === cur);
-  return j;
+// Pick a random id within the group, different from the current one (no
+// immediate repeat unless the group has a single entry). Shuffle helper.
+function _randId(g) {
+  if (g.length < 2) return g[0] ? g[0].id : _curId;
+  var cur = _gIndex(_curId, g), j;
+  do { j = Math.floor(Math.random() * g.length); } while (j === cur);
+  return g[j].id;
 }
 function getRepeat() { return _repeat; }
 function setRepeat(m) {
@@ -255,13 +258,27 @@ function _index(id)  { for (var i = 0; i < _tracks.length; i++) if (_tracks[i].i
 function _isStream(t)   { return !!(t && t.stream); }
 function _curIsStream() { return _isStream(_byId(_curId)); }
 function _active()      { return (_bypass && _radioEl) ? _radioEl : _audio; }
+// Groupes : la navigation (next/prev/shuffle/répétition) reste DANS l'onglet
+// courant — la playlist n'enchaîne jamais sur une radio et inversement.
+function _group(m)      { m = m || _mode; return _tracks.filter(function (t) { return _isStream(t) === (m === 'radio'); }); }
+function _gIndex(id, g) { g = g || _group(); for (var i = 0; i < g.length; i++) if (g[i].id === id) return i; return -1; }
+function getMode()      { return _mode; }
+function setMode(m) {
+  if (m !== 'pl' && m !== 'radio') return;
+  if (_mode !== m) { _mode = m; try { localStorage.setItem(LS_MODE, m); } catch (e) {} }
+  _render();
+}
 function _byId(id)   { var i = _index(id); return i >= 0 ? _tracks[i] : null; }
 
 async function play(id) {
   await loadManifest();
-  var t = id ? _byId(id) : (_byId(_curId) || _tracks[0]);
+  var t = id ? _byId(id) : (_byId(_curId) || _group()[0] || _tracks[0]);
   if (!t) { _render(); return; }
   var stream = _isStream(t);
+  if ((_mode === 'radio') !== stream) {    // lecture hors onglet → suivre la piste
+    _mode = stream ? 'radio' : 'pl';
+    try { localStorage.setItem(LS_MODE, _mode); } catch (e) {}
+  }
   var a = _el();
   if (_curId !== t.id || !_active().src) {
     _curId = t.id;
@@ -319,8 +336,8 @@ function toggleTrack(id) {
   if (isPlaying()) { pause(); return Promise.resolve(); }
   return play(id);
 }
-function next() { if (_tracks.length < 2) return play(_curId); if (_shuffle) return play(_tracks[_randIndex()].id); var i = _index(_curId); if (i < 0) i = 0; return play(_tracks[(i + 1) % _tracks.length].id); }
-function prev() { if (_tracks.length < 2) return play(_curId); if (_shuffle) return play(_tracks[_randIndex()].id); var i = _index(_curId); if (i < 0) i = 0; return play(_tracks[(i - 1 + _tracks.length) % _tracks.length].id); }
+function next() { var g = _group(); if (g.length < 2) return play((g[0] && g[0].id) || _curId); if (_shuffle) return play(_randId(g)); var i = _gIndex(_curId, g); if (i < 0) i = 0; return play(g[(i + 1) % g.length].id); }
+function prev() { var g = _group(); if (g.length < 2) return play((g[0] && g[0].id) || _curId); if (_shuffle) return play(_randId(g)); var i = _gIndex(_curId, g); if (i < 0) i = 0; return play(g[(i - 1 + g.length) % g.length].id); }
 
 // ── Playback position / seeking ──
 // VBR / streamed MP3s advertise duration=Infinity until the browser scans the
@@ -437,7 +454,9 @@ async function refresh() {
   await loadManifest(true);
   if (!_curId) { try { _curId = localStorage.getItem(LS_TRACK) || null; } catch (e) {} }
   if (_curId && _index(_curId) < 0) _curId = null;          // saved track gone from manifest
-  if (!_curId && _tracks.length) _curId = _tracks[0].id;    // default to first (not persisted)
+  if (!_group().length && _group(_mode === 'pl' ? 'radio' : 'pl').length)
+    _mode = (_mode === 'pl' ? 'radio' : 'pl');              // onglet vide → basculer sur l'autre
+  if (!_curId && _tracks.length) _curId = (_group()[0] || _tracks[0]).id;   // default (not persisted)
   _render();
 }
 
@@ -466,12 +485,13 @@ function _render() {
     return;
   }
   var playing = isPlaying();
+  var grp = _group();
   var cur = _byId(_curId);
   var vol = Math.round(getVolume() * 100);
   var _live = _curIsStream();
   var _dur = getDuration(), _cur = getCurrentTime(), _canSeek = _live ? false : _dur > 0;
   var _pos = _canSeek ? Math.round(_cur / _dur * 1000) : 0;
-  var multi = _tracks.length > 1;
+  var multi = grp.length > 1;
   var ppKey = playing ? 'musicPause' : 'musicPlay';
   var ppIcon = _icon(playing ? 'pause' : 'play');
 
@@ -480,7 +500,7 @@ function _render() {
   var vuBars = '';
   for (var b = 0; b < 7; b++) vuBars += '<span class="music-vu-bar"></span>';
 
-  var plItems = _tracks.map(function (t, i) {
+  var plItems = grp.map(function (t, i) {
     return '<li class="music-pl-item' + (t.id === _curId ? ' is-cur' : '') + '" role="option" tabindex="0"' +
            ' aria-selected="' + (t.id === _curId) + '" data-track-id="' + _esc(t.id) + '">' +
            '<span class="music-pl-num">' + (i + 1) + '</span>' +
@@ -489,10 +509,11 @@ function _render() {
            (t.id === _curId ? '<span class="music-pl-eq">' + (playing ? '\u25B8' : '\u2016') + '</span>' : '') +
            (multi ? '<span class="music-pl-move">' +
              '<button type="button" class="music-pl-mv" data-plmove="up" data-plid="' + _esc(t.id) + '"' + (i === 0 ? ' disabled' : '') + ' aria-label="' + _esc(_t('musicMoveUp', 'Move up')) + '">' + _icon('mv-up') + '</button>' +
-             '<button type="button" class="music-pl-mv" data-plmove="down" data-plid="' + _esc(t.id) + '"' + (i === _tracks.length - 1 ? ' disabled' : '') + ' aria-label="' + _esc(_t('musicMoveDown', 'Move down')) + '">' + _icon('mv-down') + '</button>' +
+             '<button type="button" class="music-pl-mv" data-plmove="down" data-plid="' + _esc(t.id) + '"' + (i === grp.length - 1 ? ' disabled' : '') + ' aria-label="' + _esc(_t('musicMoveDown', 'Move down')) + '">' + _icon('mv-down') + '</button>' +
            '</span>' : '') +
            '</li>';
   }).join('');
+  if (!plItems) plItems = '<li class="music-pl-empty" data-i18n="musicNoTracks">' + _esc(_t('musicNoTracks', 'No tracks available')) + '</li>';
 
   var credit = (cur && cur.credit)
     ? '<div class="music-credit">' + (cur.licenseUrl
@@ -548,13 +569,21 @@ function _render() {
         '<input type="range" class="music-bal-range" min="-100" max="100" value="' + Math.round(getBalance() * 100) + '" title="' + _esc(_t('musicBalance', 'Balance')) + '" data-i18n-title="musicBalance" aria-label="' + _esc(_t('musicBalance', 'Balance')) + '">' +
         '<span class="music-bal-end">R</span>' +
       '</div>' : '') +
-    // ── playlist dépliable ──
-    '<button type="button" class="music-pl-toggle" data-mact="pl" aria-expanded="false">' +
-      '<span class="music-pl-caret">\u25B8</span>' +
-      '<span data-i18n="musicPlaylist">' + _esc(_t('musicPlaylist', 'Playlist')) + '</span>' +
-      '<span class="music-pl-count">' + _tracks.length + '</span>' +
-    '</button>' +
-    '<ul class="music-pl" role="listbox" hidden>' + plItems + '</ul>' +
+    // ── liste dépliable : onglets Playlist | Radios ──
+    '<div class="music-pl-head">' +
+      '<button type="button" class="music-pl-toggle" data-mact="pl" aria-expanded="' + _plOpen + '">' +
+        '<span class="music-pl-caret">' + (_plOpen ? '\u25BE' : '\u25B8') + '</span>' +
+      '</button>' +
+      '<button type="button" class="music-tab' + (_mode === 'pl' ? ' is-active' : '') + '" data-mtab="pl" aria-pressed="' + (_mode === 'pl') + '">' +
+        '<span data-i18n="musicPlaylist">' + _esc(_t('musicPlaylist', 'Playlist')) + '</span>' +
+        '<span class="music-pl-count">' + _group('pl').length + '</span>' +
+      '</button>' +
+      '<button type="button" class="music-tab' + (_mode === 'radio' ? ' is-active' : '') + '" data-mtab="radio" aria-pressed="' + (_mode === 'radio') + '">' +
+        '<span data-i18n="musicRadios">' + _esc(_t('musicRadios', 'Radios')) + '</span>' +
+        '<span class="music-pl-count">' + _group('radio').length + '</span>' +
+      '</button>' +
+    '</div>' +
+    '<ul class="music-pl" role="listbox"' + (_plOpen ? '' : ' hidden') + '>' + plItems + '</ul>' +
     credit +
     '</div>';
 
@@ -577,6 +606,13 @@ function _wire() {
       else if (a === 'shuffle') setShuffle(!_shuffle);
       else if (a === 'rep-one') setRepeat(_repeat === 'one' ? 'off' : 'one');
       else if (a === 'rep-all') setRepeat(_repeat === 'all' ? 'off' : 'all');
+    });
+  });
+  _bodyEl.querySelectorAll('[data-mtab]').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      _plOpen = true;
+      var m = btn.getAttribute('data-mtab');
+      if (m !== _mode) setMode(m); else _render();
     });
   });
   // Playlist rows: click (or Enter/Space) to play that track.
@@ -626,10 +662,10 @@ function _togglePlaylist() {
   var tg = _bodyEl.querySelector('.music-pl-toggle');
   var cr = _bodyEl.querySelector('.music-pl-caret');
   if (!ul || !tg) return;
-  var open = ul.hasAttribute('hidden');
-  if (open) ul.removeAttribute('hidden'); else ul.setAttribute('hidden', '');
-  tg.setAttribute('aria-expanded', String(open));
-  if (cr) cr.textContent = open ? '\u25BE' : '\u25B8';
+  _plOpen = ul.hasAttribute('hidden');
+  if (_plOpen) ul.removeAttribute('hidden'); else ul.setAttribute('hidden', '');
+  tg.setAttribute('aria-expanded', String(_plOpen));
+  if (cr) cr.textContent = _plOpen ? '\u25BE' : '\u25B8';
 }
 
 // Start the title marquee only when the text actually overflows its LCD width
@@ -717,8 +753,9 @@ function _fadeTo(target, dur) {
 // ── Réordonnancement de la playlist (ordre custom persisté pth_music_order) ──
 function _saveOrder() { try { localStorage.setItem('pth_music_order', JSON.stringify(_tracks.map(function (t) { return t.id; }))); } catch (e) {} }
 function _moveTrack(id, dir) {
-  var i = _index(id); if (i < 0) return;
-  var j = i + dir; if (j < 0 || j >= _tracks.length) return;
+  var g = _group(), gi = _gIndex(id, g); if (gi < 0) return;
+  var gj = gi + dir; if (gj < 0 || gj >= g.length) return;
+  var i = _index(g[gi].id), j = _index(g[gj].id);
   var tmp = _tracks[i]; _tracks[i] = _tracks[j]; _tracks[j] = tmp;
   _saveOrder(); _render();
 }
@@ -804,6 +841,7 @@ try { _curId = localStorage.getItem(LS_TRACK) || null; } catch (e) {}
 try { var _rm = localStorage.getItem(LS_REPEAT); if (_rm === 'one' || _rm === 'all' || _rm === 'off') _repeat = _rm; } catch (e) {}
 try { _shuffle = (localStorage.getItem(LS_SHUFFLE) === '1'); } catch (e) {}
 try { _shade = (localStorage.getItem('pth_music_shade') === '1'); } catch (e) {}
+try { var _mm = localStorage.getItem(LS_MODE); if (_mm === 'pl' || _mm === 'radio') _mode = _mm; } catch (e) {}
 
 const Music = {
   loadManifest: loadManifest,
@@ -821,6 +859,8 @@ const Music = {
   setVolume: setVolume,
   getRepeat: getRepeat,
   setRepeat: setRepeat,
+  getMode: getMode,
+  setMode: setMode,
   getShuffle: getShuffle,
   setShuffle: setShuffle,
   getBalance: getBalance,

@@ -946,7 +946,7 @@ export const strings = {
     musicCompact: "Kompaktiškas",
     musicExpand: "Išplėsti",
     musicMoveUp: "Aukštyn",
-    musicMoveDown: "Žemyn",
+    musicMoveDown: "Žemyn", musicRadios: "Radijo stotys",
     importSeat: "Importuoti vietų paketą (.zip)",
     plColumns: "Stulpeliai",
     plColAvatar: "Avataras",

@@ -946,7 +946,7 @@ export const strings = {
     musicCompact: "Компактно",
     musicExpand: "Прошири",
     musicMoveUp: "Нагоре",
-    musicMoveDown: "Надоле",
+    musicMoveDown: "Надоле", musicRadios: "Радио-станице",
     importSeat: "Увези пакет седишта (.zip)",
     plColumns: "Колоне",
     plColAvatar: "Аватар",
