@@ -272,6 +272,17 @@
         <p class="muted" style="margin:8px 0 0">The track appears in players’ music panel automatically the next time they open it. Please make sure you have the right to share the file and that the author is credited.</p>
       </div>
       <div class="card">
+        <label>Add a radio (live stream)</label>
+        <div class="defrow" style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin:5px 0"><span>Name</span><input id="mzrTitle" maxlength="120" placeholder="Station name (required)" autocomplete="off" style="flex:1;min-width:0"></div>
+        <div class="defrow" style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin:5px 0"><span>Genre</span><input id="mzrGenre" maxlength="120" placeholder="Genre / description (shown after the name)" autocomplete="off" style="flex:1;min-width:0"></div>
+        <div class="defrow" style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin:5px 0"><span>Stream URL</span><input id="mzrUrl" maxlength="500" placeholder="https://…/stream.mp3 (Icecast/Shoutcast — https only)" autocomplete="off" style="flex:1;min-width:0"></div>
+        <div class="defrow" style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin:5px 0"><span>Credit</span><input id="mzrCredit" maxlength="300" placeholder="Credit line shown in-app (auto-filled if blank)" autocomplete="off" style="flex:1;min-width:0"></div>
+        <div class="defrow" style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin:5px 0"><span>License URL</span><input id="mzrLicenseUrl" maxlength="300" placeholder="https://… (optional — makes the credit a link)" autocomplete="off" style="flex:1;min-width:0"></div>
+        <div style="margin-top:8px"><button id="mzrAddBtn" class="use">Add radio</button></div>
+        <div id="mzrMsg" class="msg"></div>
+        <p class="muted" style="margin:8px 0 0">The station appears in the Radios tab of the players’ music panel. Use royalty-free stations (Creative Commons or artist-permission) and keep the credit line accurate. http:// streams are rejected — the app is served over HTTPS and browsers block mixed content.</p>
+      </div>
+      <div class="card">
         <h2>Tracks</h2><div id="mzList"><div class="empty">Loading…</div></div>
       </div>
     </div>
@@ -1004,10 +1015,12 @@
   function mzRenderEditor(row,p){
     row.style.display='block';
     var inputs={};
-    [['Title','title',p.title,'Track title (required)'],['Artist','artist',p.artist,'Artist / composer'],['Credit','credit',p.credit,'Credit line (auto-filled if blank)'],['License URL','licenseUrl',p.licenseUrl,'https://... (optional)']].forEach(function(f){
+    var fields=[['Title','title',p.title,'Track title (required)'],['Artist','artist',p.artist,'Artist / composer'],['Credit','credit',p.credit,'Credit line (auto-filled if blank)'],['License URL','licenseUrl',p.licenseUrl,'https://... (optional)']];
+    if(p.stream)fields.splice(2,0,['Stream URL','url',p.file,'https://.../stream.mp3 (https only)']);
+    fields.forEach(function(f){
       var r=document.createElement('div'); r.style.cssText='display:flex;align-items:center;gap:10px;margin:4px 0';
       var s=document.createElement('span'); s.textContent=f[0]; s.style.cssText='min-width:86px;font-size:.78rem';
-      var inp=document.createElement('input'); inp.maxLength=300; inp.value=f[2]||''; inp.placeholder=f[3]; inp.autocomplete='off'; inp.style.cssText='flex:1;min-width:0';
+      var inp=document.createElement('input'); inp.maxLength=f[1]==='url'?500:300; inp.value=f[2]||''; inp.placeholder=f[3]; inp.autocomplete='off'; inp.style.cssText='flex:1;min-width:0';
       inputs[f[1]]=inp; r.appendChild(s); r.appendChild(inp); row.appendChild(r); });
     var bar=document.createElement('div'); bar.style.cssText='margin-top:6px;display:flex;gap:8px';
     var sv=document.createElement('button'); sv.className='use'; sv.textContent='Save'; sv.addEventListener('click',function(){ mzEditSave(p.id,inputs); });
@@ -1017,7 +1030,7 @@
   function mzEditSave(id,inputs){
     var title=(inputs.title.value||'').trim();
     if(!title){ mzSay('Title is required.','err'); inputs.title.focus(); return; }
-    api('/admin/music-edit',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id:id,token:tok(),title:title,artist:(inputs.artist.value||'').trim(),credit:(inputs.credit.value||'').trim(),licenseUrl:(inputs.licenseUrl.value||'').trim()})})
+    api('/admin/music-edit',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id:id,token:tok(),title:title,artist:(inputs.artist.value||'').trim(),credit:(inputs.credit.value||'').trim(),licenseUrl:(inputs.licenseUrl.value||'').trim(),url:inputs.url?(inputs.url.value||'').trim():undefined})})
       .then(function(r){return r.json();}).then(function(d){ if(d.ok){ mzEditId=null; mzSay('Saved.','ok'); mzRefresh(); } else mzSay('Save: '+(d.error||'error'),'err'); }).catch(function(){ mzSay('Save failed - network error.','err'); });
   }
   function mzMove(id,dir,arr){
@@ -1032,7 +1045,7 @@
       if(p.id===mzEditId && !p.builtin){ mzRenderEditor(row,p); el.appendChild(row); return; }
       if(!on)row.style.opacity='0.55';
       row.innerHTML='<div class="nm"><b></b><span></span></div>';
-      row.querySelector('b').textContent=p.title||p.id; row.querySelector('span').textContent=(p.artist||'')+(p.artist?' \u00b7 ':'')+p.id+(p.builtin?' \u00b7 built-in':'');
+      row.querySelector('b').textContent=p.title||p.id; row.querySelector('span').textContent=(p.artist||'')+(p.artist?' \u00b7 ':'')+p.id+(p.stream?' \u00b7 \ud83d\udcfb LIVE':'')+(p.builtin?' \u00b7 built-in':'');
       var tg=document.createElement('button'); tg.className='toggle '+(on?'on':'off'); tg.textContent=on?'On':'Off'; tg.title=on?'Audible to players \u2014 tap to hide':'Hidden \u2014 tap to show'; tg.addEventListener('click',function(){mzToggle(p.id,on);});
       row.appendChild(tg);
       var up=document.createElement('button'); up.className='use'; up.textContent='\u25B2'; up.title='Move up'; up.style.cssText='padding:6px 9px'; if(pi===0)up.disabled=true; up.addEventListener('click',function(){ mzMove(p.id,-1,arr); }); row.appendChild(up);
@@ -1041,6 +1054,18 @@
       el.appendChild(row); }); }
   function mzRefresh(){ api('/admin/music-list?t='+Date.now()).then(function(r){return r.json();}).then(function(d){ if($('mzEnabled')&&d&&typeof d.enabled==='boolean')$('mzEnabled').value=d.enabled?'1':'0'; if(d.ok)mzRenderList(d.tracks); else mzRenderList([]); }).catch(function(){ var el=$('mzList'); if(el)el.innerHTML='<div class="empty">Could not load tracks.</div>'; }); }
   (function(){ var d=$('mzDrop'), f=$('mzFile'); if(d&&f){ d.addEventListener('click',function(){f.click();}); d.addEventListener('dragover',function(e){e.preventDefault();d.classList.add('hot');}); d.addEventListener('dragleave',function(){d.classList.remove('hot');}); d.addEventListener('drop',function(e){e.preventDefault();d.classList.remove('hot');if(e.dataTransfer.files[0])mzUpload(e.dataTransfer.files[0]);}); f.addEventListener('change',function(){if(f.files[0])mzUpload(f.files[0]);}); } })();
+
+  (function(){ var b=$('mzrAddBtn'); if(!b) return; b.addEventListener('click', function(){
+    var m=$('mzrMsg');
+    function say(t,c){ if(m){ m.textContent=t; m.className='msg '+c; } }
+    var title=($('mzrTitle').value||'').trim();
+    if(!title){ say('Name is required.','err'); $('mzrTitle').focus(); return; }
+    var u=($('mzrUrl').value||'').trim();
+    if(!/^https:\/\/\S+$/i.test(u)){ say('Stream URL must start with https://','err'); $('mzrUrl').focus(); return; }
+    api('/admin/music-radio-add',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({token:tok(),title:title,artist:($('mzrGenre').value||'').trim(),url:u,credit:($('mzrCredit').value||'').trim(),licenseUrl:($('mzrLicenseUrl').value||'').trim()})})
+      .then(function(r){return r.json();}).then(function(d){ if(d&&d.ok){ say('Added: '+d.title+' \u2014 it now appears in the Radios tab of the players\u2019 music panel.','ok'); $('mzrTitle').value='';$('mzrGenre').value='';$('mzrUrl').value='';$('mzrCredit').value='';$('mzrLicenseUrl').value=''; mzRefresh(); } else say('Failed: '+((d&&d.error)||'error'),'err'); })
+      .catch(function(){ say('Network error.','err'); });
+  }); })();
 
   (function(){ var b=$('mzSaveEnabled'); if(!b) return; b.addEventListener('click', function(){
     var m=$('mzEnMsg'), on=($('mzEnabled')?$('mzEnabled').value==='1':true);

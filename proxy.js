@@ -2431,6 +2431,32 @@ function handleAdmin(req, res, reqPathOnly, query) {
       return adminJson(res, 200, { ok: true, id: id, title: _mTitle });
     });
   }
+  // Ajout d'une RADIO (flux live) : pas de fichier — l'entrée pointe sur une
+  // URL de flux HTTPS (le client est servi en HTTPS : un flux http:// serait
+  // bloqué en mixed content par le navigateur). L'entrée est un admin track
+  // normal avec stream:true → onglet « Radios » du lecteur, LIVE badge côté
+  // client, et gérée par les routes music-* existantes (toggle/edit/remove/order).
+  if (reqPathOnly === '/admin/music-radio-add' && req.method === 'POST') {
+    return readJsonBody(req, function (d) {
+      if (!hasScope('music', query, d && d.token)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
+      var title = musicStr(d && d.title, 120);
+      if (!title) return adminJson(res, 400, { ok: false, error: 'title required' });
+      var u = String(d && d.url || '').trim();
+      if (!/^https:\/\/\S+$/i.test(u) || u.length > 500) return adminJson(res, 400, { ok: false, error: 'stream url must be https:// (max 500 chars)' });
+      var id = uniqueMusicId(title);
+      var artist = musicStr(d && d.artist, 120);
+      var entry = {
+        id: id, title: title, artist: artist, file: u, stream: true,
+        license: musicStr(d && d.license, 60), licenseUrl: musicStr(d && d.licenseUrl, 300),
+        source: musicStr(d && d.source, 120), sourceUrl: musicStr(d && d.sourceUrl, 300),
+        credit: musicStr(d && d.credit, 300) || (title + (artist ? ' \u2014 ' + artist : '')),
+        active: true
+      };
+      _adminConfig.musicTracks = musicAdminTracks().concat([entry]);
+      saveAdminConfig();
+      return adminJson(res, 200, { ok: true, id: id, title: title });
+    });
+  }
   if (reqPathOnly === '/admin/music-remove' && req.method === 'POST') {
     return readJsonBody(req, function (d) {
       if (!hasScope('music', query, d && d.token)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
@@ -2474,6 +2500,11 @@ function handleAdmin(req, res, reqPathOnly, query) {
       if (!title) return adminJson(res, 400, { ok: false, error: 'title required' });
       t.title = title;
       t.artist = musicStr(d && d.artist, 120);
+      if (t.stream && d && d.url != null && String(d.url).trim() !== '') {   // radio : URL de flux modifiable
+        var _u = String(d.url).trim();
+        if (!/^https:\/\/\S+$/i.test(_u) || _u.length > 500) return adminJson(res, 400, { ok: false, error: 'stream url must be https:// (max 500 chars)' });
+        t.file = _u;
+      }
       t.licenseUrl = musicStr(d && d.licenseUrl, 300);
       t.credit = musicStr(d && d.credit, 300) || (title + (t.artist ? ' by ' + t.artist : ''));
       _adminConfig.musicTracks = arr; saveAdminConfig();
