@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+  hlComputing: 'Calculando…',
   helpTitle:'Axuda', helpSearchPh:'Buscar na axuda…', helpWip:'Este capítulo está en redacción.', helpNoResults:'Sen resultados', advHelpBtn:'Mostrar a entrada Axuda nos menús',
   jrImport: 'Importar .pdb…',
   jrImportDone: 'Importación: {ok} engadidos · {dup} xa presentes · {ko} ilexibles',

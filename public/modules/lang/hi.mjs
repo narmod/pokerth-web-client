@@ -14,6 +14,7 @@ export const meta = {
 };
 
 export const strings = {
+  hlComputing: 'गणना जारी…',
   helpTitle:'सहायता', helpSearchPh:'सहायता में खोजें…', helpWip:'यह अध्याय अभी लिखा जा रहा है।', helpNoResults:'कोई परिणाम नहीं', advHelpBtn:'मेनू में सहायता विकल्प दिखाएँ',
   jrImport: '.pdb आयात करें…',
   jrImportDone: 'आयात: {ok} जोड़े गए · {dup} पहले से मौजूद · {ko} अपठनीय',

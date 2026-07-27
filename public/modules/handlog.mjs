@@ -996,6 +996,32 @@ class StatsCalculator {
     return new StatsCalculator(sub).calculatePlayerStats(name);
   }
 
+  // Variante par TRANCHES : même résultat que calculateAllPlayersStats, mais
+  // rend la main au navigateur entre les joueurs (~40 ms de budget) pour que
+  // l'UI reste réactive sur un très gros historique, et signale l'avancement
+  // via onProgress(done, total). La version synchrone reste utilisée partout
+  // où le volume est petit (HUD, tests).
+  async calculateAllPlayersStatsChunked(names, onProgress) {
+    const out = {};
+    const wanted = names && names.length ? new Set(names) : null;
+    const list = this.d.getPlayers().filter((n) => !wanted || wanted.has(n));
+    const yieldNow = () => new Promise((r) => setTimeout(r, 0));
+    let t0 = Date.now();
+    for (let i = 0; i < list.length; i++) {
+      const name = list[i];
+      const s = this.calculatePlayerStats(name);
+      s.recent = this.recentStatsFor(name);
+      out[name] = s;
+      if (Date.now() - t0 > 40) {
+        if (typeof onProgress === 'function') { try { onProgress(i + 1, list.length); } catch (_e) {} }
+        await yieldNow();
+        t0 = Date.now();
+      }
+    }
+    if (typeof onProgress === 'function') { try { onProgress(list.length, list.length); } catch (_e) {} }
+    return out;
+  }
+
   // `names` (optionnel) restreint le calcul aux joueurs demandés : à une table
   // on n'affiche que les joueurs assis, inutile de calculer tout l'historique
   // (gel signalé sur 759 logs importés). Sans argument : tous les joueurs,
@@ -1136,6 +1162,9 @@ const _esc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({ '&'
 // portée. En session : uniquement la session courante du recorder.
 // Cache du dernier rendu du tableau de stats (cf. renderStats).
 let _renderCache = null;
+// Compteur de rendus : le calcul par tranches rend la main, un rendu plus
+// récent peut donc démarrer entre-temps ; seul le dernier a le droit d'écrire.
+let _renderSeq = 0;
 
 async function _loadTables(scope) {
   const store = (typeof window !== 'undefined') ? window._handlogStore : null;
@@ -1213,6 +1242,8 @@ async function renderStatsPanel() {
   if (!open || tab !== 'stats') return;
   el.style.display = '';
 
+  const _mySeq = ++_renderSeq;
+
   // Joueurs de la table (fournis par le glue du client).
   let tablePlayers = [];
   try { if (typeof window._statsTablePlayers === 'function') tablePlayers = window._statsTablePlayers() || []; } catch (_e) {}
@@ -1240,12 +1271,21 @@ async function renderStatsPanel() {
   if (_renderCache && _renderCache.key === ck) {
     statsByName = _renderCache.stats;
   } else {
+    // Calcul par tranches : l'UI reste réactive et affiche « n/N » pendant le
+    // calcul d'un gros historique (rapport forum : 759 logs importés).
+    const wait = el.querySelector('.stats-wait');
+    const _pct = (d, tot) => {
+      if (!wait || tot <= 1) return;
+      wait.textContent = _ht('hlComputing', 'Computing\u2026') + ' ' + d + '/' + tot;
+    };
     try {
       const data = new StatsData(tables);
       const calc = new StatsCalculator(data);
-      statsByName = calc.calculateAllPlayersStats(wantNames);
+      statsByName = await calc.calculateAllPlayersStatsChunked(wantNames, _pct);
     } catch (_e) { statsByName = {}; }
     _renderCache = { key: ck, stats: statsByName };
+    // Un autre rendu a pu passer pendant les pauses : ne pas écraser son écran.
+    if (_renderSeq !== _mySeq) return;
   }
 
   // Lignes : joueurs de la table d'abord (ordre de la table), puis rien d'autre.

@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+  hlComputing: 'Bereken…',
   helpTitle:'Hulp', helpSearchPh:'Deursoek die hulp…', helpWip:'Hierdie hoofstuk word nog geskryf.', helpNoResults:'Geen resultate nie', advHelpBtn:'Wys die Hulp-inskrywing in die kieslyste',
   jrImport: 'Voer .pdb in…',
   jrImportDone: 'Invoer: {ok} bygevoeg · {dup} reeds teenwoordig · {ko} onleesbaar',

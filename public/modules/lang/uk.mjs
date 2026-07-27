@@ -9,6 +9,7 @@ export const meta = {
 };
 
 export const strings = {
+  hlComputing: 'Обчислення…',
   helpTitle:'Довідка', helpSearchPh:'Пошук у довідці…', helpWip:'Цей розділ ще пишеться.', helpNoResults:'Нічого не знайдено', advHelpBtn:'Показувати пункт «Довідка» в меню',
   jrImport: 'Імпорт .pdb…',
   jrImportDone: 'Імпорт: {ok} додано · {dup} вже є · {ko} нечитабельних',

@@ -12,6 +12,7 @@ export const meta = {
 };
 
 export const strings = {
+  hlComputing: 'Hesaplanıyor…',
   helpTitle:'Yardım', helpSearchPh:'Yardımda ara…', helpWip:'Bu bölüm henüz yazılıyor.', helpNoResults:'Sonuç yok', advHelpBtn:'Menülerde Yardım öğesini göster',
   jrImport: '.pdb içe aktar…',
   jrImportDone: 'İçe aktarma: {ok} eklendi · {dup} zaten mevcut · {ko} okunamadı',

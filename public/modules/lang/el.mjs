@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+  hlComputing: 'Υπολογισμός…',
   helpTitle:'Βοήθεια', helpSearchPh:'Αναζήτηση στη βοήθεια…', helpWip:'Αυτό το κεφάλαιο γράφεται ακόμη.', helpNoResults:'Κανένα αποτέλεσμα', advHelpBtn:'Εμφάνιση της επιλογής Βοήθεια στα μενού',
   jrImport: 'Εισαγωγή .pdb…',
   jrImportDone: 'Εισαγωγή: {ok} προστέθηκαν · {dup} υπάρχουν ήδη · {ko} μη αναγνώσιμα',

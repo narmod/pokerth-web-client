@@ -9,6 +9,7 @@ export const meta = {
 };
 
 export const strings = {
+  hlComputing: 'Calculando…',
   helpTitle:'Ajuda', helpSearchPh:'Pesquisar na ajuda…', helpWip:'Este capítulo está sendo escrito.', helpNoResults:'Nenhum resultado', advHelpBtn:'Mostrar a entrada Ajuda nos menus',
   jrImport: 'Importar .pdb…',
   jrImportDone: 'Importação: {ok} adicionados · {dup} já presentes · {ko} ilegíveis',

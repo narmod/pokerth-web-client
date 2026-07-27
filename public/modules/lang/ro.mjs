@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+  hlComputing: 'Se calculează…',
   helpTitle:'Ajutor', helpSearchPh:'Caută în ajutor…', helpWip:'Acest capitol este în curs de redactare.', helpNoResults:'Niciun rezultat', advHelpBtn:'Afișează intrarea Ajutor în meniuri',
   jrImport: 'Importă .pdb…',
   jrImportDone: 'Import: {ok} adăugate · {dup} deja prezente · {ko} ilizibile',

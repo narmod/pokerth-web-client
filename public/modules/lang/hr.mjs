@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+  hlComputing: 'Računanje…',
   helpTitle:'Pomoć', helpSearchPh:'Pretraži pomoć…', helpWip:'Ovo se poglavlje još piše.', helpNoResults:'Nema rezultata', advHelpBtn:'Prikaži stavku Pomoć u izbornicima',
   jrImport: 'Uvezi .pdb…',
   jrImportDone: 'Uvoz: {ok} dodano · {dup} već postoji · {ko} nečitljivo',
