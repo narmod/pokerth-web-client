@@ -10,6 +10,9 @@ export const meta = {
 };
 
 export const strings = {
+  jrImport: 'Εισαγωγή .pdb…',
+  jrImportDone: 'Εισαγωγή: {ok} προστέθηκαν · {dup} υπάρχουν ήδη · {ko} μη αναγνώσιμα',
+
   jrUploadNet: '\u0391\u03bd\u03ac\u03bb\u03c5\u03c3\u03b7 \u03c3\u03c4\u03bf pokerth.net\u2026',
   jrUploadFail: '\u0397 \u03b1\u03c0\u03bf\u03c3\u03c4\u03bf\u03bb\u03ae \u03c3\u03c4\u03bf pokerth.net \u03b1\u03c0\u03ad\u03c4\u03c5\u03c7\u03b5',
 

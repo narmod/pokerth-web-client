@@ -10,6 +10,9 @@ export const meta = {
 };
 
 export const strings = {
+  jrImport: 'Nhập .pdb…',
+  jrImportDone: 'Nhập: {ok} đã thêm · {dup} đã có · {ko} không đọc được',
+
   jrUploadNet: 'Ph\u00e2n t\u00edch tr\u00ean pokerth.net\u2026',
   jrUploadFail: 'T\u1ea3i l\u00ean pokerth.net th\u1ea5t b\u1ea1i',
 

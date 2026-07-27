@@ -11,6 +11,9 @@ export const meta = {
 };
 
 export const strings = {
+  jrImport: 'Ion-phortaich .pdb…',
+  jrImportDone: 'Ion-phortadh: {ok} air an cur ris · {dup} ann mu thràth · {ko} do-leughaidh',
+
   jrUploadNet: 'Sgr\u00f9d air pokerth.net\u2026',
   jrUploadFail: 'Dh\'fh\u00e0illig an luchdadh suas gu pokerth.net',
 

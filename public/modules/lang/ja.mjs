@@ -9,6 +9,9 @@ export const meta = {
 };
 
 export const strings = {
+  jrImport: '.pdbをインポート…',
+  jrImportDone: 'インポート: {ok}件追加 · {dup}件は既存 · {ko}件読み取り不可',
+
   jrUploadNet: 'pokerth.net\u3067\u5206\u6790\u2026',
   jrUploadFail: 'pokerth.net\u3078\u306e\u30a2\u30c3\u30d7\u30ed\u30fc\u30c9\u306b\u5931\u6557\u3057\u307e\u3057\u305f',
 

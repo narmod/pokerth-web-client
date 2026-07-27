@@ -16,6 +16,9 @@ export const meta = {
 };
 
 export const strings = {
+  jrImport: 'Importer des .pdb…',
+  jrImportDone: 'Import : {ok} ajoutés · {dup} déjà présents · {ko} illisibles',
+
   jrUploadNet: 'Analyser sur pokerth.net\u2026',
   jrUploadFail: '\u00c9chec de l\'envoi vers pokerth.net',
 

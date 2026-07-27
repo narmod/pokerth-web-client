@@ -15,6 +15,9 @@ export const meta = {
 };
 
 export const strings = {
+  jrImport: 'Импорт .pdb…',
+  jrImportDone: 'Импорт: {ok} добавлено · {dup} уже есть · {ko} нечитаемых',
+
   jrUploadNet: '\u0410\u043d\u0430\u043b\u0438\u0437 \u043d\u0430 pokerth.net\u2026',
   jrUploadFail: '\u041d\u0435 \u0443\u0434\u0430\u043b\u043e\u0441\u044c \u043e\u0442\u043f\u0440\u0430\u0432\u0438\u0442\u044c \u043d\u0430 pokerth.net',
 

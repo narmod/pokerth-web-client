@@ -11,6 +11,9 @@ export const meta = {
 };
 
 export const strings = {
+  jrImport: '匯入 .pdb…',
+  jrImportDone: '匯入：{ok} 個已新增 · {dup} 個已存在 · {ko} 個無法讀取',
+
   jrUploadNet: '\u5728 pokerth.net \u4e0a\u5206\u6790\u2026',
   jrUploadFail: '\u4e0a\u50b3\u5230 pokerth.net \u5931\u6557',
 

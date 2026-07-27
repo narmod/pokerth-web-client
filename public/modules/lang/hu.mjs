@@ -10,6 +10,9 @@ export const meta = {
 };
 
 export const strings = {
+  jrImport: '.pdb importálása…',
+  jrImportDone: 'Importálás: {ok} hozzáadva · {dup} már létezik · {ko} olvashatatlan',
+
   jrUploadNet: 'Elemz\u00e9s a pokerth.net-en\u2026',
   jrUploadFail: 'A felt\u00f6lt\u00e9s a pokerth.net-re nem siker\u00fclt',
 

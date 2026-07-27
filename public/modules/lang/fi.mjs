@@ -9,6 +9,9 @@ export const meta = {
 };
 
 export const strings = {
+  jrImport: 'Tuo .pdb…',
+  jrImportDone: 'Tuonti: {ok} lisätty · {dup} jo olemassa · {ko} lukukelvotonta',
+
   jrUploadNet: 'Analysoi pokerth.netiss\u00e4\u2026',
   jrUploadFail: 'L\u00e4hetys pokerth.netiin ep\u00e4onnistui',
 

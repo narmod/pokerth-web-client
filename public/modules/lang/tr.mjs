@@ -12,6 +12,9 @@ export const meta = {
 };
 
 export const strings = {
+  jrImport: '.pdb içe aktar…',
+  jrImportDone: 'İçe aktarma: {ok} eklendi · {dup} zaten mevcut · {ko} okunamadı',
+
   jrUploadNet: 'pokerth.net \u00fczerinde analiz et\u2026',
   jrUploadFail: 'pokerth.net\'e y\u00fckleme ba\u015far\u0131s\u0131z',
 

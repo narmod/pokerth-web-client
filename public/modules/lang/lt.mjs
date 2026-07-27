@@ -10,6 +10,9 @@ export const meta = {
 };
 
 export const strings = {
+  jrImport: 'Importuoti .pdb…',
+  jrImportDone: 'Importas: {ok} pridėta · {dup} jau yra · {ko} neįskaitoma',
+
   jrUploadNet: 'Analizuoti pokerth.net\u2026',
   jrUploadFail: '\u012ek\u0117limas \u012f pokerth.net nepavyko',
 

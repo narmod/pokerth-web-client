@@ -407,6 +407,7 @@ function _ensureModal() {
         '<button type="button" class="btn-sm" id="jr-exp-html"></button>' +
         '<button type="button" class="btn-sm" id="jr-exp-txt"></button>' +
         '<button type="button" class="btn-sm" id="jr-saveas"></button>' +
+        '<button type="button" class="btn-sm" id="jr-import"></button>' +
         '<button type="button" class="btn-sm" id="jr-del"></button>' +
         '<span class="jr-spacer"></span>' +
         '<button type="button" class="btn-sm" id="jr-analyze"></button>' +
@@ -432,6 +433,7 @@ function _ensureModal() {
   $('jr-exp-html').addEventListener('click', () => _export(1));
   $('jr-exp-txt').addEventListener('click', () => _export(2));
   $('jr-saveas').addEventListener('click', _saveAsPdb);
+  $('jr-import').addEventListener('click', _importPdbs);
   $('jr-del').addEventListener('click', _delSelected);
   $('jr-delall').addEventListener('click', _delAll);
   $('jr-analyze').addEventListener('click', () => { _analyze = !_analyze; _anHand = 0; _renderRight(); });
@@ -456,6 +458,7 @@ function _applyTexts() {
   $('jr-exp-html').textContent = T('jrExportHtml', 'Export as HTML');
   $('jr-exp-txt').textContent = T('jrExportTxt', 'Export as txt');
   $('jr-saveas').textContent = T('jrSaveAs', 'Save as\u2026');
+  $('jr-import').textContent = T('jrImport', 'Import .pdb\u2026');
   $('jr-del').textContent = T('jrDelete', 'Delete');
   $('jr-delall').textContent = T('jrDeleteAll', 'Delete all');
   $('jr-analyze').textContent = T('jrAnalyze', 'Analyse log file\u2026');
@@ -662,6 +665,131 @@ async function _uploadAnalysis() {
     alert(T('jrUploadFail', 'Upload to pokerth.net failed'));
   }
   if (btn) { btn.disabled = false; btn.textContent = old; }
+}
+
+// ── Import de fichiers .pdb (client desktop ou web) ────────────────────────
+// Lit chaque SQLite via sql.js et insère les sessions dans IndexedDB au même
+// modèle que handlog.mjs (mêmes clés que HandStore). Dédup par sessionId
+// (Date_Heure de la table Session) : ré-importer un lot est idempotent.
+// Parse défensif : colonnes lues par nom, colonnes inconnues ignorées,
+// fichiers illisibles comptés et sautés (compte-rendu en fin d'import).
+
+function _rows(db, sql) {
+  const res = db.exec(sql);
+  if (!res || !res[0]) return [];
+  const cols = res[0].columns;
+  return res[0].values.map((v) => { const o = {}; cols.forEach((c, i) => { o[c] = v[i]; }); return o; });
+}
+
+function _parsePdb(db) {
+  const sess = _rows(db, 'SELECT * FROM Session')[0];
+  if (!sess || !sess.Date) throw new Error('no-session');
+  const session = {
+    pokerthVersion: String(sess.PokerTH_Version == null ? '' : sess.PokerTH_Version),
+    date: String(sess.Date),
+    time: String(sess.Time == null ? '' : sess.Time),
+    logVersion: sess.LogVersion == null ? 1 : sess.LogVersion | 0,
+  };
+  const sid = session.date + '_' + session.time.replace(/:/g, '');
+  const games = _rows(db, 'SELECT * FROM Game').map((r) => ({
+    uniqueGameID: r.UniqueGameID | 0, gameID: r.GameID | 0,
+    startMoney: r.Startmoney | 0, startSb: r.StartSb | 0, dealerPos: r.DealerPos | 0,
+    winnerSeat: r.Winner_Seat == null ? null : r.Winner_Seat | 0,
+  }));
+  const players = _rows(db, 'SELECT * FROM Player').map((r) => ({
+    uniqueGameID: r.UniqueGameID | 0, seat: r.Seat | 0,
+    player: String(r.Player == null ? '' : r.Player),
+  }));
+  const hands = _rows(db, 'SELECT * FROM Hand').map((r) => {
+    const h = {
+      uniqueGameID: r.UniqueGameID | 0, handID: r.HandID | 0,
+      dealerSeat: r.Dealer_Seat == null ? null : r.Dealer_Seat | 0,
+      sbAmount: r.Sb_Amount | 0, sbSeat: r.Sb_Seat | 0,
+      bbAmount: r.Bb_Amount | 0, bbSeat: r.Bb_Seat | 0,
+      board: [],
+    };
+    for (let i = 1; i <= 5; i++) { const c = r['BoardCard_' + i]; h.board.push(c == null ? null : c | 0); }
+    for (const k in r) if (/^Seat_\d+_/.test(k) && r[k] != null) h[k] = r[k];
+    return h;
+  });
+  const actions = _rows(db, 'SELECT * FROM Action ORDER BY ActionID').map((r) => ({
+    actionID: r.ActionID | 0, handID: r.HandID | 0, uniqueGameID: r.UniqueGameID | 0,
+    beRo: r.BeRo | 0, seat: r.Player | 0,
+    action: String(r.Action == null ? '' : r.Action),
+    amount: r.Amount == null ? null : r.Amount | 0,
+  }));
+  return { sid, session, games, players, hands, actions };
+}
+
+async function _sessionExists(sid) {
+  const db = await _open();
+  const found = await new Promise((res) => {
+    const r = db.transaction(['meta'], 'readonly').objectStore('meta').get('session:' + sid);
+    r.onsuccess = () => res(!!r.result);
+    r.onerror = () => res(false);
+  });
+  db.close();
+  return found;
+}
+
+async function _writeSession(t) {
+  const db = await _open();
+  await new Promise((resolve, reject) => {
+    const tx = db.transaction(STORES, 'readwrite');
+    const sid = t.sid;
+    tx.objectStore('meta').put({ k: 'session:' + sid, session: t.session, sessionId: sid });
+    const g = tx.objectStore('games');
+    t.games.forEach((x) => g.put({ id: sid + ':' + x.uniqueGameID, sessionId: sid, ...x }));
+    const p = tx.objectStore('players');
+    t.players.forEach((x) => p.put({ id: sid + ':' + x.uniqueGameID + ':' + x.seat, sessionId: sid, ...x }));
+    const h = tx.objectStore('hands');
+    t.hands.forEach((x) => h.put({ id: sid + ':' + x.uniqueGameID + ':' + x.handID, sessionId: sid, ...x }));
+    const a = tx.objectStore('actions');
+    t.actions.forEach((x) => a.put({ id: sid + ':' + x.actionID, sessionId: sid, ...x }));
+    tx.oncomplete = resolve;
+    tx.onerror = () => reject(tx.error);
+    tx.onabort = () => reject(tx.error);
+  });
+  db.close();
+}
+
+function _importPdbs() {
+  const inp = document.createElement('input');
+  inp.type = 'file'; inp.multiple = true; inp.accept = '.pdb';
+  inp.onchange = async () => {
+    const files = Array.from(inp.files || []);
+    if (!files.length) return;
+    const btn = document.getElementById('jr-import');
+    const old = btn ? btn.textContent : '';
+    if (btn) btn.disabled = true;
+    let SQL = null;
+    try {
+      if (typeof window._loadSqlJs !== 'function') throw new Error('no-sqljs');
+      SQL = await window._loadSqlJs();
+    } catch (_e) {
+      if (btn) { btn.disabled = false; btn.textContent = old; }
+      alert(T('jrNoSql', 'PDB export unavailable (sql.js not loaded)'));
+      return;
+    }
+    let ok = 0, dup = 0, ko = 0;
+    for (let i = 0; i < files.length; i++) {
+      if (btn) btn.textContent = (i + 1) + '/' + files.length + '\u2026';
+      let db = null;
+      try {
+        const buf = new Uint8Array(await files[i].arrayBuffer());
+        db = new SQL.Database(buf);
+        const t = _parsePdb(db);
+        if (await _sessionExists(t.sid)) dup++;
+        else { await _writeSession(t); ok++; }
+      } catch (_e) { ko++; }
+      if (db) { try { db.close(); } catch (_e2) {} }
+    }
+    if (btn) { btn.disabled = false; btn.textContent = old; }
+    await _reload();
+    alert(T('jrImportDone', 'Import: {ok} added \u00b7 {dup} already present \u00b7 {ko} unreadable')
+      .replace('{ok}', String(ok)).replace('{dup}', String(dup)).replace('{ko}', String(ko)));
+  };
+  inp.click();
 }
 
 async function _delSelected() {

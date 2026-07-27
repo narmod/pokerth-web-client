@@ -11,6 +11,9 @@ export const meta = {
 };
 
 export const strings = {
+  jrImport: '.pdb இறக்குமதி…',
+  jrImportDone: 'இறக்குமதி: {ok} சேர்க்கப்பட்டது · {dup} ஏற்கனவே உள்ளது · {ko} படிக்க முடியவில்லை',
+
   jrUploadNet: 'pokerth.net-\u0b87\u0bb2\u0bcd \u0baa\u0b95\u0bc1\u0baa\u0bcd\u0baa\u0bbe\u0baf\u0bcd\u0bb5\u0bc1\u2026',
   jrUploadFail: 'pokerth.net-\u0b95\u0bcd\u0b95\u0bc1 \u0baa\u0ba4\u0bbf\u0bb5\u0bc7\u0bb1\u0bcd\u0bb1\u0bae\u0bcd \u0ba4\u0bcb\u0bb2\u0bcd\u0bb5\u0bbf',
 

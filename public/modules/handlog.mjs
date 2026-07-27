@@ -1308,6 +1308,8 @@ async function exportPdb(scope) {
 if (typeof window !== 'undefined') window._exportPdb = exportPdb;
 // Exposé pour le module journal (Enregistrer sous… d'une session arbitraire).
 if (typeof window !== 'undefined') window._buildPdb = buildPdb;
+// Exposé pour le module journal (import de .pdb : lecture SQLite).
+if (typeof window !== 'undefined') window._loadSqlJs = _loadSqlJs;
 
 
 // PokerTH web client — HUD par siège + grille de range (showdown).

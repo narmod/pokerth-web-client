@@ -14,6 +14,9 @@ export const meta = {
 };
 
 export const strings = {
+  jrImport: '.pdb आयात करें…',
+  jrImportDone: 'आयात: {ok} जोड़े गए · {dup} पहले से मौजूद · {ko} अपठनीय',
+
   jrUploadNet: 'pokerth.net \u092a\u0930 \u0935\u093f\u0936\u094d\u0932\u0947\u0937\u0923 \u0915\u0930\u0947\u0902\u2026',
   jrUploadFail: 'pokerth.net \u092a\u0930 \u0905\u092a\u0932\u094b\u0921 \u0935\u093f\u092b\u0932 \u0930\u0939\u093e',
 

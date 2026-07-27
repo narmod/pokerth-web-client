@@ -10,6 +10,9 @@ export const meta = {
 };
 
 export const strings = {
+  jrImport: 'Voer .pdb in…',
+  jrImportDone: 'Invoer: {ok} bygevoeg · {dup} reeds teenwoordig · {ko} onleesbaar',
+
   jrUploadNet: 'Ontleed op pokerth.net\u2026',
   jrUploadFail: 'Oplaai na pokerth.net het misluk',
 

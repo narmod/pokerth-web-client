@@ -13,6 +13,9 @@ export const meta = {
 };
 
 export const strings = {
+  jrImport: '.pdb 가져오기…',
+  jrImportDone: '가져오기: {ok}개 추가 · {dup}개 이미 있음 · {ko}개 읽기 불가',
+
   jrUploadNet: 'pokerth.net\uc5d0\uc11c \ubd84\uc11d\u2026',
   jrUploadFail: 'pokerth.net \uc5c5\ub85c\ub4dc \uc2e4\ud328',
 

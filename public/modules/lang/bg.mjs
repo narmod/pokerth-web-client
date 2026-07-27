@@ -10,6 +10,9 @@ export const meta = {
 };
 
 export const strings = {
+  jrImport: 'Импорт на .pdb…',
+  jrImportDone: 'Импорт: {ok} добавени · {dup} вече налични · {ko} нечетими',
+
   jrUploadNet: '\u0410\u043d\u0430\u043b\u0438\u0437 \u0432 pokerth.net\u2026',
   jrUploadFail: '\u041a\u0430\u0447\u0432\u0430\u043d\u0435\u0442\u043e \u0432 pokerth.net \u043d\u0435 \u0443\u0441\u043f\u044f',
 
