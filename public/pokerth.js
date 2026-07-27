@@ -388,7 +388,7 @@ function openAdvancedOptions() {
   sync('adv-logon', 'log_on', true);
   sync('adv-statstrack', 'stats_track', true);
   sync('adv-hudon', 'hud_on', false);
-  sync('adv-pdbauto', 'pdb_auto', false);   // ecriture auto du .pdb dans un dossier local (web)
+  sync('adv-pdbauto', 'pdb_auto', true);   // ecriture auto du .pdb dans un dossier local (web) — ON par defaut
   try { if (typeof window._pdbAutoUi === 'function') window._pdbAutoUi(); } catch (e) {}
   try { var _li = document.getElementById('adv-loginterval'); if (_li) _li.value = _getLogInterval(); } catch (e) {}
   sync('adv-zoomfollow', 'zoom_follow', true); // défaut QML : suivi actif quand le zoom l'est
@@ -3838,7 +3838,17 @@ const App = (() => {
   // Liste des joueurs actuellement à la table (pour le panneau stats).
   window._statsTablePlayers = function () {
     try {
-      return (S.seats || []).map(function (pid) {
+      return (S.seats || []).filter(function (pid) {
+        // Joueur éliminé (tapis à 0, encore assis) : retiré de la liste des
+        // stats — il ne joue plus, ses lignes n'apportent rien au tour en
+        // cours (demande forum). Ses mains restent dans l'historique et le
+        // .pdb ; seul l'affichage « table » l'exclut. Tant que le stack est
+        // inconnu (non transmis), on garde le joueur.
+        var _sd = S.seatData && S.seatData[pid];
+        if (!_sd) return true;
+        if (_sd.gone) return false;
+        return !(typeof _sd.money === 'number' && _sd.money === 0);
+      }).map(function (pid) {
         return {
           pid: pid,
           name: getPlayerName(pid),
@@ -9370,7 +9380,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.4-web.112'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.4-web.113'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

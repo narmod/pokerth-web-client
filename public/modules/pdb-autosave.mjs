@@ -12,7 +12,8 @@
 // Une session = un fichier, exactement comme le client officiel : le nom vient
 // de window._handlog.sessionId, qui change à chaque chargement de page.
 //
-// Option avancée : pth_pdb_auto (OFF par défaut).
+// Option avancée : pth_pdb_auto (ON par défaut ; sans dossier choisi le
+// module reste inerte).
 // Dépend de : window._handlog (recorder), window._buildPdb (handlog.mjs).
 // Aucune régression possible : si ce module n'est pas chargé, le hook
 // window._pdbAutoSave est simplement absent.
@@ -25,11 +26,14 @@ function _supported() {
     && typeof window.indexedDB !== 'undefined');
 }
 
+// ON par défaut : rien n'est écrit tant que le joueur n'a pas choisi un
+// dossier (l'API navigateur l'exige), l'effet réel est donc d'avoir la case
+// déjà cochée au moment où il le choisit. '0' = désactivé explicitement.
 function _enabled() {
   try {
-    if (typeof localStorage === 'undefined') return false;
-    return localStorage.getItem('pth_pdb_auto') === '1';
-  } catch (_e) { return false; }
+    if (typeof localStorage === 'undefined') return true;
+    return localStorage.getItem('pth_pdb_auto') !== '0';
+  } catch (_e) { return true; }
 }
 
 // ── Persistance du handle de dossier (IndexedDB) ───────────────────────────
