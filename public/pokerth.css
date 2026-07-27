@@ -9744,7 +9744,7 @@ html[data-seat-struct="qml"] .seat:not(.me) .seat-narrow .seat-holecards .pk { w
 .hud-val{color:var(--text-hi);font-weight:600;font-variant-numeric:tabular-nums}
 
 /* Grille de range (modale centrée) */
-#range-modal{position:fixed;inset:0;z-index:60;display:none;align-items:center;justify-content:center;
+#range-modal{position:fixed;inset:0;z-index:9999;display:none;align-items:center;justify-content:center;
   background:rgba(0,0,0,.6);padding:16px}
 #range-modal .range-card{background:var(--panel-hi);border:1px solid var(--border);border-radius:var(--r-lg);
   box-shadow:0 12px 40px rgba(0,0,0,.55);max-width:min(96vw,720px);max-height:92vh;display:flex;flex-direction:column;overflow:hidden}
