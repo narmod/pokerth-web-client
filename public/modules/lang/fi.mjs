@@ -9,6 +9,7 @@ export const meta = {
 };
 
 export const strings = {
+  hlColHands: 'Pelatut kädet',
   hlComputing: 'Lasketaan…',
   helpTitle:'Ohje', helpSearchPh:'Etsi ohjeesta…', helpWip:'Tätä lukua kirjoitetaan parhaillaan.', helpNoResults:'Ei tuloksia', advHelpBtn:'Näytä Ohje-kohta valikoissa',
   jrImport: 'Tuo .pdb…',

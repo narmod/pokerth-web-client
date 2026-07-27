@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+  hlColHands: 'Suižaisti dalijimai',
   hlComputing: 'Skaičiuojama…',
   helpTitle:'Žinynas', helpSearchPh:'Ieškoti žinyne…', helpWip:'Šis skyrius dar rašomas.', helpNoResults:'Rezultatų nėra', advHelpBtn:'Rodyti Žinyno įrašą meniu',
   jrImport: 'Importuoti .pdb…',

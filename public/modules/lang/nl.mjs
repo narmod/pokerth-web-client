@@ -15,6 +15,7 @@ export const meta = {
 };
 
 export const strings = {
+  hlColHands: 'Gespeelde handen',
   hlComputing: 'Berekenen…',
   helpTitle:'Help', helpSearchPh:'Zoeken in de help…', helpWip:'Dit hoofdstuk wordt nog geschreven.', helpNoResults:'Geen resultaten', advHelpBtn:'Toon het Help-item in de menu\'s',
   jrImport: '.pdb importeren…',

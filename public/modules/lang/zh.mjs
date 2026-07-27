@@ -11,6 +11,7 @@ export const meta = {
 };
 
 export const strings = {
+  hlColHands: '已玩牌局数',
   hlComputing: '计算中…',
   helpTitle:'帮助', helpSearchPh:'搜索帮助…', helpWip:'本章正在编写中。', helpNoResults:'无结果', advHelpBtn:'在菜单中显示“帮助”入口',
   jrImport: '导入 .pdb…',

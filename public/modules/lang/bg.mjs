@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+  hlColHands: 'Изиграни раздавания',
   hlComputing: 'Изчисляване…',
   helpTitle:'Помощ', helpSearchPh:'Търсене в помощта…', helpWip:'Тази глава се пише в момента.', helpNoResults:'Няма резултати', advHelpBtn:'Показвай елемента „Помощ“ в менютата',
   jrImport: 'Импорт на .pdb…',

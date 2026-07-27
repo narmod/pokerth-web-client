@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+  hlColHands: 'Lejátszott leosztások',
   hlComputing: 'Számítás…',
   helpTitle:'Súgó', helpSearchPh:'Keresés a súgóban…', helpWip:'Ez a fejezet még készül.', helpNoResults:'Nincs találat', advHelpBtn:'A Súgó menüpont megjelenítése a menükben',
   jrImport: '.pdb importálása…',

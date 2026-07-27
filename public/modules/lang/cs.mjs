@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+  hlColHands: 'Odehrané rozdání',
   hlComputing: 'Počítání…',
   helpTitle:'Nápověda', helpSearchPh:'Hledat v nápovědě…', helpWip:'Tato kapitola se právě píše.', helpNoResults:'Žádné výsledky', advHelpBtn:'Zobrazit položku Nápověda v nabídkách',
   jrImport: 'Importovat .pdb…',

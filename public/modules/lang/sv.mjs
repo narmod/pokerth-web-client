@@ -9,6 +9,7 @@ export const meta = {
 };
 
 export const strings = {
+  hlColHands: 'Spelade händer',
   hlComputing: 'Beräknar…',
   helpTitle:'Hjälp', helpSearchPh:'Sök i hjälpen…', helpWip:'Det här kapitlet skrivs just nu.', helpNoResults:'Inga resultat', advHelpBtn:'Visa Hjälp-posten i menyerna',
   jrImport: 'Importera .pdb…',

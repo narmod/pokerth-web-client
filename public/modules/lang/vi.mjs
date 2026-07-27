@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+  hlColHands: 'Số ván đã chơi',
   hlComputing: 'Đang tính…',
   helpTitle:'Trợ giúp', helpSearchPh:'Tìm trong trợ giúp…', helpWip:'Chương này đang được biên soạn.', helpNoResults:'Không có kết quả', advHelpBtn:'Hiện mục Trợ giúp trong các menu',
   jrImport: 'Nhập .pdb…',

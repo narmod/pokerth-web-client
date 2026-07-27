@@ -11,6 +11,7 @@ export const meta = {
 };
 
 export const strings = {
+  hlColHands: 'Làmhan air an cluich',
   hlComputing: 'A’ tomhas…',
   helpTitle:'Cobhair', helpSearchPh:'Lorg sa chobhair…', helpWip:'Tha an caibideil seo ga sgrìobhadh fhathast.', helpNoResults:'Gun toradh', advHelpBtn:'Seall an t-inntrigeadh Cobhair sna clàran-taice',
   jrImport: 'Ion-phortaich .pdb…',

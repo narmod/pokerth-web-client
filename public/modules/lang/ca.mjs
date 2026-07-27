@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+  hlColHands: 'Mans jugades',
   hlComputing: 'Calculant…',
   helpTitle:'Ajuda', helpSearchPh:'Cerca a l\'ajuda…', helpWip:'Aquest capítol s\'està escrivint.', helpNoResults:'Cap resultat', advHelpBtn:'Mostra l\'entrada Ajuda als menús',
   jrImport: 'Importa .pdb…',

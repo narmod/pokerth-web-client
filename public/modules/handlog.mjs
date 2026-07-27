@@ -1210,8 +1210,12 @@ async function _loadTables(scope) {
 }
 
 // Colonnes du tableau (clé de stat, libellé court, titre).
+// [clé de stat, libellé court, infobulle par défaut, clé i18n éventuelle].
+// Les sigles poker et leur développement (VPIP = Voluntarily Put $ In Pot…)
+// restent en anglais, comme Fold/Check/Call : ce sont des termes du jeu.
+// « N » est du langage courant → traduit dans les 36 langues.
 const COLS = [
-  ['hands', 'N', 'Hands played'],
+  ['hands', 'N', 'Hands played', 'hlColHands'],
   ['vpip', 'VPIP', 'Voluntarily Put $ In Pot'],
   ['pfr', 'PFR', 'Pre-Flop Raise'],
   ['af', 'AF', 'Aggression Factor'],
@@ -1319,7 +1323,10 @@ async function renderStatsPanel() {
   const rowsFor = wantNames || Object.keys(statsByName);
 
   let head = '<tr><th class="stats-name"></th>';
-  for (const [, lbl, title] of COLS) head += '<th title="' + _esc(title) + '">' + _esc(lbl) + '</th>';
+  for (const [, lbl, title, i18nKey] of COLS) {
+    const ttl = i18nKey ? _ht(i18nKey, title) : title;
+    head += '<th title="' + _esc(ttl) + '">' + _esc(lbl) + '</th>';
+  }
   head += '</tr>';
 
   let body = '';

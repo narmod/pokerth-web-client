@@ -16,6 +16,7 @@ export const meta = {
 };
 
 export const strings = {
+  hlColHands: 'Rozegrane rozdania',
   hlComputing: 'Obliczanie…',
   helpTitle:'Pomoc', helpSearchPh:'Szukaj w pomocy…', helpWip:'Ten rozdział jest w przygotowaniu.', helpNoResults:'Brak wyników', advHelpBtn:'Pokaż pozycję Pomoc w menu',
   jrImport: 'Importuj .pdb…',

@@ -13,6 +13,7 @@ export const meta = {
 };
 
 export const strings = {
+  hlColHands: '플레이한 펌 수',
   hlComputing: '계산 중…',
   helpTitle:'도움말', helpSearchPh:'도움말 검색…', helpWip:'이 장은 작성 중입니다.', helpNoResults:'결과 없음', advHelpBtn:'메뉴에 도움말 항목 표시',
   jrImport: '.pdb 가져오기…',
