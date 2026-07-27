@@ -4276,6 +4276,7 @@ const App = (() => {
         if (typeof _stopIpBlockCountdown === 'function') _stopIpBlockCountdown();
         setStatus(t('offlineHint'), '', 'offlineHint');
         var _offReg = document.getElementById('register-link-row'); if (_offReg) _offReg.style.display = 'none';
+        var _offFpw = document.getElementById('forgot-pw-link'); if (_offFpw) _offFpw.style.display = 'none';
         try { if (window._setSrvSourceTag) window._setSrvSourceTag(false); } catch (e) {}
         return;
       }
@@ -4286,6 +4287,11 @@ const App = (() => {
       // officiel. Le libellé est déjà traduit par data-i18n (retraduit par setLang).
       var _regRow = document.getElementById('register-link-row');
       if (_regRow) _regRow.style.display = (mode === 'guest' || mode === 'auth') ? '' : 'none';
+      // Lien « mot de passe oublié ? » (à droite de la case Mode invité) :
+      // même règle — la récupération de mot de passe est un service
+      // pokerth.net, elle n'a aucun sens en LAN / serveur dédié.
+      var _fpwLink = document.getElementById('forgot-pw-link');
+      if (_fpwLink) _fpwLink.style.display = (mode === 'guest' || mode === 'auth') ? '' : 'none';
       // TLS is only ever meaningful when connecting to pokerth.net
       // (which mandates it). On LAN / private servers it's almost
       // always uncheck-and-forget, so we just hide the row there to
@@ -4496,7 +4502,7 @@ const App = (() => {
       // Connection-detail fields that only make sense for a real network
       // connection. In offline mode none of them apply, so hide them all
       // (and the advanced gear) — the screen keeps just nickname + Connect.
-      var _connDetailIds = ['conn-adv-btn','conn-advanced','tls-row','guest-mode-row','f-pass','f-server-pass','f-user-pass','register-link-row'];
+      var _connDetailIds = ['conn-adv-btn','conn-advanced','tls-row','guest-mode-row','f-pass','f-server-pass','f-user-pass','register-link-row','forgot-pw-link'];
       if (off) {
         // login-mode is irrelevant offline; force a no-password value so a
         // stale 'auth' (left by a previous pokerth.net selection) can't make
@@ -9364,7 +9370,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.4-web.104'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.4-web.105'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

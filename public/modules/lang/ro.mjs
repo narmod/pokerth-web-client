@@ -514,6 +514,7 @@ export const strings = {
     enterAccount: 'Numele contului pokerth.net',
     enterCredentials: 'Introdu datele tale pokerth.net.',
     notRegisteredYet:'Nu ești încă înregistrat?',
+    forgotPassword:'Ți-ai uitat parola?',
     chatAvailPrivate: '✅ Chat și reacții disponibile pe serverul privat.',
     connProxy: 'Se conectează la proxy...',
     connDirect: 'Conexiune directă la pokerth.net...',

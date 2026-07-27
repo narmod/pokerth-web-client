@@ -516,6 +516,7 @@ export const strings = {
     enterAccount: 'pokerth.net hesap adı',
     enterCredentials: 'pokerth.net bilgilerinizi girin.',
     notRegisteredYet:'Henüz kayıt olmadınız mı?',
+    forgotPassword:'Şifreni mi unuttun?',
     chatAvailPrivate: '✅ Özel sunucuda sohbet ve tepkiler kullanılabilir.',
     connProxy: 'Proxy’ye bağlanılıyor...',
     connDirect: 'pokerth.net’e doğrudan bağlanılıyor...',

@@ -515,6 +515,7 @@ export const strings = {
     enterAccount: 'Ainm cunntais pokerth.net',
     enterCredentials: 'Cuir a-steach am fiosrachadh pokerth.net agad.',
     notRegisteredYet:'Gun chlàradh fhathast?',
+    forgotPassword:'Na dhìochuimhnich thu am facal-faire agad?',
     chatAvailPrivate: '✅ Tha cabadaich is freagairtean rim faighinn air an fhrithealaiche phrìobhaideach.',
     connProxy: 'A\' ceangal ris a\' phrogsaidh...',
     connDirect: 'Ceangal dìreach ri pokerth.net...',

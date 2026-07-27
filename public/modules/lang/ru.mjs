@@ -519,6 +519,7 @@ export const strings = {
     enterAccount: 'Имя аккаунта pokerth.net',
     enterCredentials: 'Введите данные pokerth.net.',
     notRegisteredYet:'Ещё не зарегистрированы?',
+    forgotPassword:'Забыли пароль?',
     chatAvailPrivate: '✅ Чат и реакции доступны на частном сервере.',
     connProxy: 'Подключение к прокси...',
     connDirect: 'Прямое подключение к pokerth.net...',

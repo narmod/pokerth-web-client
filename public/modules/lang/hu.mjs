@@ -514,6 +514,7 @@ export const strings = {
     enterAccount: 'pokerth.net fióknév',
     enterCredentials: 'Add meg a pokerth.net adataidat.',
     notRegisteredYet:'Még nincs fiókja?',
+    forgotPassword:'Elfelejtetted a jelszavad?',
     chatAvailPrivate: '✅ Chat és reakciók elérhetők a privát szerveren.',
     connProxy: 'Csatlakozás a proxyhoz...',
     connDirect: 'Közvetlen csatlakozás a pokerth.net-hez...',

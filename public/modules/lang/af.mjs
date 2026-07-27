@@ -514,6 +514,7 @@ export const strings = {
     enterAccount: 'pokerth.net-rekeningnaam',
     enterCredentials: 'Voer jou pokerth.net-besonderhede in.',
     notRegisteredYet:'Nog nie geregistreer nie?',
+    forgotPassword:'Wagwoord vergeet?',
     chatAvailPrivate: '✅ Klets en reaksies beskikbaar op die privaat bediener.',
     connProxy: 'Koppel aan die instaander...',
     connDirect: 'Direkte verbinding aan pokerth.net...',

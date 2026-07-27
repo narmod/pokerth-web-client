@@ -514,6 +514,7 @@ export const strings = {
     enterAccount: 'Tên tài khoản pokerth.net',
     enterCredentials: 'Nhập thông tin pokerth.net của bạn.',
     notRegisteredYet:'Chưa đăng ký?',
+    forgotPassword:'Quên mật khẩu?',
     chatAvailPrivate: '✅ Trò chuyện và biểu cảm khả dụng trên máy chủ riêng.',
     connProxy: 'Đang kết nối tới proxy...',
     connDirect: 'Kết nối trực tiếp tới pokerth.net...',

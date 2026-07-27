@@ -1371,6 +1371,17 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
 
 .tls-row { display: flex; align-items: flex-start; gap: var(--sp-3); cursor: pointer; font-size: var(--fs-sm); color: var(--text); line-height: 1.4; }
 
+/* Ligne « Mode invité » : la case à gauche, le lien « mot de passe oublié ? »
+   à droite, nettement détaché (gap) et jamais collé au libellé. Le lien passe
+   à la ligne sur les cartes étroites plutôt que de comprimer la case. */
+.guest-line { display: flex; align-items: center; flex-wrap: wrap; gap: var(--sp-3) var(--sp-6); }
+.guest-line #guest-mode-row { flex: 0 1 auto; }
+#forgot-pw-link {
+  color: var(--gold); font-size: var(--fs-xs); font-weight: 600;
+  text-decoration: none; opacity: 0.95; white-space: nowrap;
+}
+#forgot-pw-link:hover { opacity: 1; text-decoration: none; }
+
 .row2 { display: flex; gap: var(--sp-5); }
 .row2 .f:first-child { flex: 1; }
 .row2 .f-sm { width: 110px; }

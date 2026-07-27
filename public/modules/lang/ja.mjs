@@ -513,6 +513,7 @@ export const strings = {
     enterAccount: 'pokerth.netアカウント名',
     enterCredentials: 'pokerth.netの認証情報を入力してください。',
     notRegisteredYet:'まだ登録していませんか？',
+    forgotPassword:'パスワードをお忘れですか？',
     chatAvailPrivate: '✅ プライベートサーバーでチャットとリアクションが利用可能。',
     connProxy: 'プロキシに接続中...',
     connDirect: 'pokerth.netに直接接続中...',

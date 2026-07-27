@@ -514,6 +514,7 @@ export const strings = {
     enterAccount: 'Naziv računa pokerth.net',
     enterCredentials: 'Unesite svoje pokerth.net podatke.',
     notRegisteredYet:'Još niste registrirani?',
+    forgotPassword:'Zaboravio si lozinku?',
     chatAvailPrivate: '✅ Chat i reakcije dostupni na privatnom poslužitelju.',
     connProxy: 'Spajanje na proxy...',
     connDirect: 'Izravno spajanje na pokerth.net...',

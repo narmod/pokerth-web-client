@@ -514,6 +514,7 @@ export const strings = {
     enterAccount: 'Jméno účtu pokerth.net',
     enterCredentials: 'Zadejte své údaje pokerth.net.',
     notRegisteredYet:'Ještě nemáte účet?',
+    forgotPassword:'Zapomněl jsi heslo?',
     chatAvailPrivate: '✅ Chat a reakce dostupné na soukromém serveru.',
     connProxy: 'Připojování k proxy...',
     connDirect: 'Přímé připojení k pokerth.net...',

@@ -514,6 +514,7 @@ export const strings = {
     enterAccount: 'pokerth.net paskyros vardas',
     enterCredentials: 'Įveskite savo pokerth.net duomenis.',
     notRegisteredYet:'Dar neužsiregistravote?',
+    forgotPassword:'Pamiršai slaptažodį?',
     chatAvailPrivate: '✅ Pokalbis ir reakcijos galimi privačiame serveryje.',
     connProxy: 'Jungiamasi prie tarpinio serverio...',
     connDirect: 'Tiesioginis ryšys su pokerth.net...',

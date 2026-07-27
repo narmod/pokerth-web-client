@@ -513,6 +513,7 @@ export const strings = {
     enterAccount: 'pokerth.net-tilin nimi',
     enterCredentials: 'Anna pokerth.net-tietosi.',
     notRegisteredYet:'Etkö ole vielä rekisteröitynyt?',
+    forgotPassword:'Unohditko salasanasi?',
     chatAvailPrivate: '✅ Chat ja reaktiot käytettävissä yksityisellä palvelimella.',
     connProxy: 'Yhdistetään välityspalvelimeen...',
     connDirect: 'Suora yhteys pokerth.netiin...',

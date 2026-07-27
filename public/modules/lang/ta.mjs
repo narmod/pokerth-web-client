@@ -515,6 +515,7 @@ export const strings = {
     enterAccount: 'pokerth.net கணக்குப் பெயர்',
     enterCredentials: 'உங்கள் pokerth.net விவரங்களை உள்ளிடவும்.',
     notRegisteredYet:'இன்னும் பதிவு செய்யவில்லையா?',
+    forgotPassword:'கடவுச்சொல்லை மறந்துவிட்டீர்களா?',
     chatAvailPrivate: '✅ தனிப்பட்ட சேவையகத்தில் அரட்டை மற்றும் எதிர்வினைகள் கிடைக்கின்றன.',
     connProxy: 'ப்ராக்ஸியுடன் இணைக்கிறது...',
     connDirect: 'pokerth.net உடன் நேரடி இணைப்பு...',

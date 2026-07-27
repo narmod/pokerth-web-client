@@ -515,6 +515,7 @@ export const strings = {
     enterAccount: 'Nome de conta pokerth.net',
     enterCredentials: 'Introduza os seus dados pokerth.net.',
     notRegisteredYet:'Ainda não está registado?',
+    forgotPassword:'Esqueceste-te da palavra-passe?',
     chatAvailPrivate: '✅ Chat e reações disponíveis no servidor privado.',
     connProxy: 'A ligar ao proxy...',
     connDirect: 'Ligação direta a pokerth.net...',

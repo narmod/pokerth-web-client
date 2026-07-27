@@ -258,6 +258,7 @@ export const strings = {
     enterAccount:'pokerth.net account name',
     enterCredentials:'Enter your pokerth.net credentials.',
     notRegisteredYet:'Not registered yet?',
+    forgotPassword:'Forgot your password?',
     chatAvailPrivate:'✅ Chat & reactions available on private server.',
     connProxy:'Connecting to proxy...',
     connDirect:'Direct connection to pokerth.net...',

@@ -513,6 +513,7 @@ export const strings = {
     enterAccount: 'pokerth.net-kontonavn',
     enterCredentials: 'Indtast dine pokerth.net-oplysninger.',
     notRegisteredYet:'Endnu ikke registreret?',
+    forgotPassword:'Glemt din adgangskode?',
     chatAvailPrivate: '✅ Chat og reaktioner tilgængelige på privat server.',
     connProxy: 'Forbinder til proxy...',
     connDirect: 'Direkte forbindelse til pokerth.net...',

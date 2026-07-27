@@ -1431,10 +1431,22 @@ function onAvatarImageChosen(input) {
       <span data-i18n="tlsLabel">TLS — required for pokerth.net, uncheck for LAN</span>
     </label>
 
-    <label class="tls-row" id="guest-mode-row">
-      <input type="checkbox" id="guest-mode-cb" style="accent-color:var(--gold);flex-shrink:0" onchange="App.onServerOrGuestChange()">
-      <span data-i18n="guestMode">Guest mode</span>
-    </label>
+    <!-- Ligne « Mode invité » + lien de récupération de mot de passe. Le lien
+         est HORS du <label> : à l'intérieur, tout clic dessus basculerait la
+         case (comportement natif du label sur ses descendants). Il ne concerne
+         que pokerth.net, donc il suit le même affichage que le lien
+         d'inscription — visible seulement en Internet (modes guest/auth),
+         piloté par App.onLoginModeChange(). Même style que « Pas encore
+         inscrit ? » : or, sans soulignement. -->
+    <div class="guest-line">
+      <label class="tls-row" id="guest-mode-row">
+        <input type="checkbox" id="guest-mode-cb" style="accent-color:var(--gold);flex-shrink:0" onchange="App.onServerOrGuestChange()">
+        <span data-i18n="guestMode">Guest mode</span>
+      </label>
+      <a id="forgot-pw-link" href="https://www.pokerth.net/app.php/user/forgot_password"
+         target="_blank" rel="noopener noreferrer" style="display:none">(<span
+         data-i18n="forgotPassword">Forgot your password?</span>)</a>
+    </div>
 
     <button class="btn-primary" onclick="App.connect()" data-i18n="connect">CONNECT</button>
     <div id="cstatus" class="status"></div>

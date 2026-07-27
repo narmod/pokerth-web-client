@@ -514,6 +514,7 @@ export const strings = {
     enterAccount: 'Име на акаунт pokerth.net',
     enterCredentials: 'Въведете данните си за pokerth.net.',
     notRegisteredYet:'Още нямате регистрация?',
+    forgotPassword:'Забравена парола?',
     chatAvailPrivate: '✅ Чат и реакции са налични на частния сървър.',
     connProxy: 'Свързване с проксито...',
     connDirect: 'Директна връзка с pokerth.net...',

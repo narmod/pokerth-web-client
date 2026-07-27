@@ -513,6 +513,7 @@ export const strings = {
     enterAccount: 'Ім’я акаунта pokerth.net',
     enterCredentials: 'Введіть свої дані pokerth.net.',
     notRegisteredYet:'Ще не зареєстровані?',
+    forgotPassword:'Забув пароль?',
     chatAvailPrivate: '✅ Чат і реакції доступні на приватному сервері.',
     connProxy: 'Підключення до проксі...',
     connDirect: 'Пряме з’єднання з pokerth.net...',

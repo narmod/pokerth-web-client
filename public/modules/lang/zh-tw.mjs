@@ -515,6 +515,7 @@ export const strings = {
     enterAccount: 'pokerth.net 賬戶名',
     enterCredentials: '請輸入你的 pokerth.net 憑據。',
     notRegisteredYet:'還沒註冊嗎？',
+    forgotPassword:'忘記密碼？',
     chatAvailPrivate: '✅ 私人伺服器上可用聊天和表情。',
     connProxy: '正在連線代理…',
     connDirect: '正在直接連線 pokerth.net…',
