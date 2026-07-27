@@ -652,6 +652,11 @@ async function _uploadAnalysis() {
   const btn = document.getElementById('jr-upload');
   const old = btn ? btn.textContent : '';
   if (btn) { btn.disabled = true; btn.textContent = '\u2026'; }
+  // Onglet ouvert SYNCHRONIQUEMENT (dans le geste utilisateur) : un
+  // window.open après l'await serait bloqué en silence par les bloqueurs de
+  // popups (rapport forum « ne fait rien »). L'URL est injectée après coup.
+  let tab = null;
+  try { tab = window.open('', '_blank'); } catch (_e) {}
   try {
     const tb = _sessionTables(_all, _sel);
     const bytes = await window._buildPdb(tb);
@@ -660,8 +665,16 @@ async function _uploadAnalysis() {
     const r = await fetch(PTHNET_PDB_API, { method: 'POST', body: fd });
     const j = await r.json();
     if (!j || j.status !== true || !j.msg || !j.msg.id) throw new Error('bad response');
-    window.open(PTHNET_GAMELOG + encodeURIComponent(j.msg.id), '_blank', 'noopener');
+    const url = PTHNET_GAMELOG + encodeURIComponent(j.msg.id);
+    if (tab && !tab.closed) {
+      try { tab.opener = null; } catch (_e2) {}
+      tab.location = url;
+    } else {
+      const w2 = window.open(url, '_blank', 'noopener');
+      if (!w2) alert(url); // dernier recours : montrer l'URL
+    }
   } catch (_e) {
+    if (tab && !tab.closed) { try { tab.close(); } catch (_e2) {} }
     alert(T('jrUploadFail', 'Upload to pokerth.net failed'));
   }
   if (btn) { btn.disabled = false; btn.textContent = old; }
@@ -815,6 +828,14 @@ async function _reload() {
 }
 
 export async function openJournal() {
+  // Sur mobile (modales plein écran empilées), fermer les Options avancées ;
+  // sur desktop les deux fenêtres flottent côte à côte — fermer les logs ne
+  // doit pas faire quitter les options (rapport forum).
+  let wide = false;
+  try { wide = window.matchMedia('(min-width:900px) and (min-height:600px)').matches; } catch (_e) {}
+  if (!wide && typeof window.closeAdvancedOptions === 'function') {
+    try { window.closeAdvancedOptions(); } catch (_e) {}
+  }
   const m = _ensureModal();
   _analyze = false;
   _selGame = 0;
