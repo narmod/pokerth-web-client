@@ -470,6 +470,17 @@ function onPlayerInfoReply(sub) {
     return;
 }
 
+// Rafraîchit la liste des joueurs du lobby si elle est ouverte. L'activité
+// d'un joueur (colonne « In game » et filtre « idle ») dérive de
+// S.games[..].seats et du mode de la partie : tout handler qui les modifie
+// doit repeindre la liste, sinon elle reste figée jusqu'à un autre événement
+// (rapport forum : joueur listé idle mais présent dans une partie, ou sorti
+// d'une partie mais absent de la vue idle).
+function _refreshPlayersPanelIfOpen() {
+  const _pp = document.getElementById('players-panel');
+  if (_pp && _pp.style.display !== 'none' && typeof window.renderPlayersList === 'function') window.renderPlayersList();
+}
+
 function onGameListNew(sub) {
     const id   = Proto.u32(sub, 1);
     const mode = Proto.u32(sub, 2); // 1=created,2=started,3=closed
@@ -541,6 +552,7 @@ function onGameListNew(sub) {
                   endRaiseMode: _germode, endRaiseValue: _gerval, manualBlinds: _gmb };
     if (!S.loaded) { S.loaded = true; }
     renderGames();
+    _refreshPlayersPanelIfOpen();
     // ── Auto-join from a share link ──
     // If we arrived via a "copy table link" URL and this is the
     // table it pointed to, join it now (the lobby has just told
@@ -568,6 +580,7 @@ function onGameListUpdate(sub) {
       if (mode === 3) delete S.games[id];
       else S.games[id].mode = mode;
       renderGames();
+      _refreshPlayersPanelIfOpen();
     }
     return;
 }
@@ -584,6 +597,7 @@ function onGameListPlayerJoined(sub) {
         try { send(Proto.encode([[1,0,T.PlayerInfoRequest],[19,2,Proto.encode([[1,0,pid]])]])); } catch(e) {}
       }
       renderGames();
+      _refreshPlayersPanelIfOpen();
     }
     return;
 }
@@ -598,6 +612,7 @@ function onGameListPlayerLeft(sub) {
         S.games[id].players = S.games[id].seats.length;
       } else if (S.games[id].players > 0) { S.games[id].players--; }
       renderGames();
+      _refreshPlayersPanelIfOpen();
     }
     return;
 }
