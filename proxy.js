@@ -2457,6 +2457,41 @@ function handleAdmin(req, res, reqPathOnly, query) {
       return adminJson(res, 200, { ok: true, id: id, title: title });
     });
   }
+  // Import M3U : crée une radio par entrée https:// de la playlist (#EXTM3U).
+  // Titre pris sur la ligne #EXTINF précédente si présente, sinon dérivé de
+  // l'URL. Ignorées et comptées dans skipped : URLs http:// (mixed content —
+  // le client est servi en HTTPS), URLs invalides/trop longues, doublons
+  // (même URL déjà dans la bibliothèque).
+  if (reqPathOnly === '/admin/music-radio-import' && req.method === 'POST') {
+    return readJsonBody(req, function (d) {
+      if (!hasScope('music', query, d && d.token)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
+      var txt = String(d && d.m3u || '');
+      if (!txt.trim()) return adminJson(res, 400, { ok: false, error: 'm3u content required' });
+      if (txt.length > 512 * 1024) return adminJson(res, 400, { ok: false, error: 'playlist too large (max 512 KB)' });
+      var arr = musicAdminTracks().slice();
+      _adminConfig.musicTracks = arr;               // uniqueMusicId voit les ajouts au fil de l'eau
+      var seen = {};
+      arr.concat(musicBuiltins()).forEach(function (t) { if (t && t.file) seen[t.file] = 1; });
+      var lines = txt.split(/\r?\n/), pend = '', added = [], skipped = 0;
+      for (var k = 0; k < lines.length; k++) {
+        var L = lines[k].trim();
+        if (!L) continue;
+        if (L.charAt(0) === '#') {
+          var m = /^#EXTINF:[^,]*,(.*)$/.exec(L);
+          if (m) pend = m[1].trim();
+          continue;
+        }
+        if (!/^https:\/\/\S+$/i.test(L) || L.length > 500 || seen[L]) { skipped++; pend = ''; continue; }
+        var title = musicStr(pend, 120) || L.replace(/^https:\/\//i, '').slice(0, 60);
+        var id = uniqueMusicId(title);
+        arr.push({ id: id, title: title, artist: '', file: L, stream: true, credit: title, active: true });
+        seen[L] = 1; added.push({ id: id, title: title }); pend = '';
+        if (added.length >= 200) break;              // garde-fou
+      }
+      saveAdminConfig();
+      return adminJson(res, 200, { ok: true, added: added.length, skipped: skipped, items: added });
+    });
+  }
   if (reqPathOnly === '/admin/music-remove' && req.method === 'POST') {
     return readJsonBody(req, function (d) {
       if (!hasScope('music', query, d && d.token)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });

@@ -259,7 +259,12 @@
         <p class="muted" style="margin:8px 0 0">Off removes the 🎵 entry from every player menu and makes <code>/music/*</code> answer 404 (manifest and MP3s). The track list below stays fully editable. Players already in a session keep the player until they reload.</p>
       </div>
       <div class="card">
-        <label>Add a track (.mp3)</label>
+        <h2>Add to the library</h2>
+        <div class="seg" id="mzAddSeg">
+          <button id="mzSegTrack" class="on" type="button">🎵 Music track</button>
+          <button id="mzSegRadio" type="button">📻 Radio (live stream)</button>
+        </div>
+        <div id="mzAddTrack">
         <div class="defrow" style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin:5px 0"><span>Title</span><input id="mzTitle" maxlength="120" placeholder="Track title (required)" autocomplete="off" style="flex:1;min-width:0"></div>
         <div class="defrow" style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin:5px 0"><span>Artist</span><input id="mzArtist" maxlength="120" placeholder="Artist / composer" autocomplete="off" style="flex:1;min-width:0"></div>
         <div class="defrow" style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin:5px 0"><span>Credit</span><input id="mzCredit" maxlength="300" placeholder="Credit line shown in-app (auto-filled if blank)" autocomplete="off" style="flex:1;min-width:0"></div>
@@ -270,20 +275,27 @@
         <div id="mzProg" class="prog"><i></i></div>
         <div id="mzMsg" class="msg"></div>
         <p class="muted" style="margin:8px 0 0">The track appears in players’ music panel automatically the next time they open it. Please make sure you have the right to share the file and that the author is credited.</p>
-      </div>
-      <div class="card">
-        <label>Add a radio (live stream)</label>
+        </div>
+        <div id="mzAddRadio" style="display:none">
         <div class="defrow" style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin:5px 0"><span>Name</span><input id="mzrTitle" maxlength="120" placeholder="Station name (required)" autocomplete="off" style="flex:1;min-width:0"></div>
         <div class="defrow" style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin:5px 0"><span>Genre</span><input id="mzrGenre" maxlength="120" placeholder="Genre / description (shown after the name)" autocomplete="off" style="flex:1;min-width:0"></div>
         <div class="defrow" style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin:5px 0"><span>Stream URL</span><input id="mzrUrl" maxlength="500" placeholder="https://…/stream.mp3 (Icecast/Shoutcast — https only)" autocomplete="off" style="flex:1;min-width:0"></div>
         <div class="defrow" style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin:5px 0"><span>Credit</span><input id="mzrCredit" maxlength="300" placeholder="Credit line shown in-app (auto-filled if blank)" autocomplete="off" style="flex:1;min-width:0"></div>
         <div class="defrow" style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin:5px 0"><span>License URL</span><input id="mzrLicenseUrl" maxlength="300" placeholder="https://… (optional — makes the credit a link)" autocomplete="off" style="flex:1;min-width:0"></div>
         <div style="margin-top:8px"><button id="mzrAddBtn" class="use">Add radio</button></div>
+        <div class="defrow" style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin:10px 0 5px"><span>…or M3U</span><button id="mzrM3uBtn" class="use" style="flex:1">Import an .m3u / .m3u8 playlist…</button></div>
+        <input id="mzrM3uFile" type="file" accept=".m3u,.m3u8,audio/x-mpegurl,application/vnd.apple.mpegurl" style="display:none">
         <div id="mzrMsg" class="msg"></div>
         <p class="muted" style="margin:8px 0 0">The station appears in the Radios tab of the players’ music panel. Use royalty-free stations (Creative Commons or artist-permission) and keep the credit line accurate. http:// streams are rejected — the app is served over HTTPS and browsers block mixed content.</p>
+        </div>
       </div>
       <div class="card">
-        <h2>Tracks</h2><div id="mzList"><div class="empty">Loading…</div></div>
+        <h2>Library</h2>
+        <div class="seg" id="mzListSeg">
+          <button id="mzLibTracks" class="on" type="button">Tracks <span id="mzCntT" class="muted"></span></button>
+          <button id="mzLibRadios" type="button">Radios <span id="mzCntR" class="muted"></span></button>
+        </div>
+        <div id="mzList"><div class="empty">Loading…</div></div>
       </div>
     </div>
 
@@ -1033,14 +1045,22 @@
     api('/admin/music-edit',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id:id,token:tok(),title:title,artist:(inputs.artist.value||'').trim(),credit:(inputs.credit.value||'').trim(),licenseUrl:(inputs.licenseUrl.value||'').trim(),url:inputs.url?(inputs.url.value||'').trim():undefined})})
       .then(function(r){return r.json();}).then(function(d){ if(d.ok){ mzEditId=null; mzSay('Saved.','ok'); mzRefresh(); } else mzSay('Save: '+(d.error||'error'),'err'); }).catch(function(){ mzSay('Save failed - network error.','err'); });
   }
-  function mzMove(id,dir,arr){
-    var i=-1; for(var k=0;k<arr.length;k++){ if(arr[k].id===id){ i=k; break; } }
-    if(i<0) return; var j=i+(dir<0?-1:1); if(j<0||j>=arr.length) return;
-    var ids=arr.map(function(x){return x.id;}); var tmp=ids[i]; ids[i]=ids[j]; ids[j]=tmp;
+  function mzMove(id,dir,grp){
+    var gi=-1; for(var k=0;k<grp.length;k++){ if(grp[k].id===id){ gi=k; break; } }
+    if(gi<0) return; var gj=gi+(dir<0?-1:1); if(gj<0||gj>=grp.length) return;
+    var ids=mzAll.map(function(x){return x.id;});
+    var i=ids.indexOf(grp[gi].id), j=ids.indexOf(grp[gj].id);
+    if(i<0||j<0) return; var tmp=ids[i]; ids[i]=ids[j]; ids[j]=tmp;
     api('/admin/music-order',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({order:ids,token:tok()})})
       .then(function(r){return r.json();}).then(function(d){ if(d.ok)mzRefresh(); else mzSay('Reorder: '+(d.error||'error'),'err'); }).catch(function(){ mzSay('Reorder failed - network error.','err'); });
   }
-  function mzRenderList(arr){ var el=$('mzList'); if(!el)return; if(!arr||!arr.length){ el.innerHTML='<div class="empty">(no tracks)</div>'; return; } el.innerHTML='';
+  var mzAll=[], mzLib='tracks';
+  function mzRenderList(all){ var el=$('mzList'); if(!el)return; mzAll=all||[];
+    var ct=$('mzCntT'), cr=$('mzCntR');
+    var nT=mzAll.filter(function(p){return !p.stream;}).length, nR=mzAll.length-nT;
+    if(ct)ct.textContent='('+nT+')'; if(cr)cr.textContent='('+nR+')';
+    var arr=mzAll.filter(function(p){ return !!p.stream === (mzLib==='radios'); });
+    if(!arr.length){ el.innerHTML='<div class="empty">'+(mzLib==='radios'?'(no radios — add one above or import an .m3u playlist)':'(no tracks)')+'</div>'; return; } el.innerHTML='';
     arr.forEach(function(p,pi){ var on=p.active!==false; var row=document.createElement('div'); row.className='row'; row.style.flexWrap='wrap';
       if(p.id===mzEditId && !p.builtin){ mzRenderEditor(row,p); el.appendChild(row); return; }
       if(!on)row.style.opacity='0.55';
@@ -1050,10 +1070,37 @@
       row.appendChild(tg);
       var up=document.createElement('button'); up.className='use'; up.textContent='\u25B2'; up.title='Move up'; up.style.cssText='padding:6px 9px'; if(pi===0)up.disabled=true; up.addEventListener('click',function(){ mzMove(p.id,-1,arr); }); row.appendChild(up);
       var dn=document.createElement('button'); dn.className='use'; dn.textContent='\u25BC'; dn.title='Move down'; dn.style.cssText='padding:6px 9px'; if(pi===arr.length-1)dn.disabled=true; dn.addEventListener('click',function(){ mzMove(p.id,1,arr); }); row.appendChild(dn);
-      if(!p.builtin){ var ed=document.createElement('button'); ed.className='use'; ed.textContent='Edit'; ed.addEventListener('click',function(){ mzEditId=p.id; mzRenderList(arr); }); row.appendChild(ed); var del=document.createElement('button'); del.className='del'; del.textContent='Remove'; del.addEventListener('click',function(){mzRemove(p.id,p.title||p.id);}); row.appendChild(del); }
+      // (les déplacements restent DANS l'onglet affiché ; l'ordre global est préservé)
+      if(!p.builtin){ var ed=document.createElement('button'); ed.className='use'; ed.textContent='Edit'; ed.addEventListener('click',function(){ mzEditId=p.id; mzRenderList(mzAll); }); row.appendChild(ed); var del=document.createElement('button'); del.className='del'; del.textContent='Remove'; del.addEventListener('click',function(){mzRemove(p.id,p.title||p.id);}); row.appendChild(del); }
       el.appendChild(row); }); }
   function mzRefresh(){ api('/admin/music-list?t='+Date.now()).then(function(r){return r.json();}).then(function(d){ if($('mzEnabled')&&d&&typeof d.enabled==='boolean')$('mzEnabled').value=d.enabled?'1':'0'; if(d.ok)mzRenderList(d.tracks); else mzRenderList([]); }).catch(function(){ var el=$('mzList'); if(el)el.innerHTML='<div class="empty">Could not load tracks.</div>'; }); }
   (function(){ var d=$('mzDrop'), f=$('mzFile'); if(d&&f){ d.addEventListener('click',function(){f.click();}); d.addEventListener('dragover',function(e){e.preventDefault();d.classList.add('hot');}); d.addEventListener('dragleave',function(){d.classList.remove('hot');}); d.addEventListener('drop',function(e){e.preventDefault();d.classList.remove('hot');if(e.dataTransfer.files[0])mzUpload(e.dataTransfer.files[0]);}); f.addEventListener('change',function(){if(f.files[0])mzUpload(f.files[0]);}); } })();
+
+  (function(){ // segmentés : formulaire d'ajout (Track|Radio) et bibliothèque (Tracks|Radios)
+    function seg(onBtn,offBtn,fn){ var a=$(onBtn),b=$(offBtn); if(!a||!b)return;
+      a.addEventListener('click',function(){ a.classList.add('on'); b.classList.remove('on'); fn(true); });
+      b.addEventListener('click',function(){ b.classList.add('on'); a.classList.remove('on'); fn(false); }); }
+    seg('mzSegTrack','mzSegRadio',function(isTrack){ $('mzAddTrack').style.display=isTrack?'block':'none'; $('mzAddRadio').style.display=isTrack?'none':'block'; });
+    seg('mzLibTracks','mzLibRadios',function(isTracks){ mzLib=isTracks?'tracks':'radios'; mzEditId=null; mzRenderList(mzAll); });
+  })();
+
+  (function(){ var b=$('mzrM3uBtn'), f=$('mzrM3uFile'); if(!b||!f) return;
+    b.addEventListener('click',function(){ f.click(); });
+    f.addEventListener('change',function(){
+      var file=f.files&&f.files[0]; f.value=''; if(!file) return;
+      var m=$('mzrMsg');
+      function say(t,c){ if(m){ m.textContent=t; m.className='msg '+c; } }
+      if(file.size>512*1024){ say('Playlist too large (max 512 KB).','err'); return; }
+      var rd=new FileReader();
+      rd.onload=function(){
+        api('/admin/music-radio-import',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({token:tok(),m3u:String(rd.result||'')})})
+          .then(function(r){return r.json();}).then(function(d){ if(d&&d.ok){ say('Imported '+d.added+' radio'+(d.added===1?'':'s')+(d.skipped?' \u2014 '+d.skipped+' entr'+(d.skipped===1?'y':'ies')+' skipped (http://, invalid or already present)':'')+'.', d.added?'ok':'err'); mzRefresh(); } else say('Failed: '+((d&&d.error)||'error'),'err'); })
+          .catch(function(){ say('Network error.','err'); });
+      };
+      rd.onerror=function(){ say('Could not read the file.','err'); };
+      rd.readAsText(file);
+    });
+  })();
 
   (function(){ var b=$('mzrAddBtn'); if(!b) return; b.addEventListener('click', function(){
     var m=$('mzrMsg');
