@@ -30,8 +30,8 @@ export const help = {
         { id: 'platforms', t: 'Platforms and browsers',
           b: ['The client runs in any modern browser on any system \u2014 Windows, macOS, Linux, Android, iOS. A few features rely on newer browser APIs; when an API is missing, the feature hides itself or explains why instead of breaking. The main differences to know:'],
           list: [
-            'Chrome / Edge (desktop): everything works, including writing the .pdb log to a folder and chat translation.',
-            'Firefox: everything except folder writing and chat translation (APIs not available yet).',
+            'Chrome / Edge (desktop): everything works, including writing the .pdb log to a folder.',
+            'Firefox: everything except writing the .pdb log to a folder (API not available yet).',
             'Safari / iOS: install goes through Share \u2192 Add to Home Screen; no vibration; fullscreen is limited on iPhone; sound starts after your first tap.',
             'Android: full support in Chromium browsers, including vibration and the Back-button behavior.'] },
         { id: 'avatar', t: 'Nickname and avatar',
@@ -165,7 +165,7 @@ export const help = {
           b: ['The reaction button opens a picker of 30 animated reactions (\uD83C\uDF89, \uD83D\uDE02, \uD83D\uDE31, \uD83D\uDD25\u2026) that play with an effect above your seat, visible to everyone at the table \u2014 including players on the desktop client. Reactions can be disabled entirely in Advanced options.'] },
         { id: 'translate', t: 'Understanding everyone',
           b: ['With chat translation enabled, each message gets a translate button that renders it in your language, using the browser\u2019s built-in translator. Common table abbreviations (gg, nh, utg\u2026) are explained in a tooltip when you hover them \u2014 both options live in Advanced options \u2192 Chat.'],
-          note: 'Translation uses the browser\u2019s Translator API, currently available in recent Chrome and Edge only; on Firefox and Safari the client tells you it is unsupported. The rest of the chat is unaffected.' },
+          note: 'Translation uses the Google Translate service and works in every browser \u2014 it just needs an internet connection. A message is only sent to the translation service when you tap its translate button, never automatically.' },
         { id: 'social', t: 'Players: profile, invite, ignore',
           b: ['Tap any player \u2014 at the table or in the lobby list \u2014 to open their card: profile and stats, invite them to your game, or ignore them (their chat messages are hidden; ignoring is reversible at any time). A confirmation before invite/ignore can be enabled in the options.'] }
       ]
