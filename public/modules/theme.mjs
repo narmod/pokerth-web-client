@@ -1616,6 +1616,10 @@ window.renderThemeInto = function(host){
   try { _loadGalleryDecks(); _loadGalleryTables(); _loadThemes(); _loadGallerySeats(); _loadImportedTables(); _loadImportedDecks(); _loadImportedSeats(); } catch(e){}
 };
 window._refreshThemePanel = function () { try { _render(); } catch (e) {} };
+// Relocalisation à chaud : le panneau de style est peint en JS, donc invisible
+// pour le balayage data-i18n* de setLang. _render() est déjà gardé (il ne fait
+// rien si le panneau n'est pas monté), d'où l'abonnement direct.
+try { window._onLangChange(function () { try { _render(); } catch (e) {} }); } catch (e) {}
 window.closeThemePanel = closeThemePanel;
 window.openThemeMenu = openThemePanel;   // back-compat
 window.openTableMenu = openThemePanel;   // back-compat

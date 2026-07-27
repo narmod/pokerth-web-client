@@ -503,13 +503,6 @@ function setLang(l) {
       }
     }
   } catch(e) {}
-  // Retraduire le hint de statut de l'écran de connexion (chatAvailPrivate /
-  // lanModeNote / enterCredentials selon le mode) : posé impérativement par
-  // setStatus, il restait figé dans la langue précédente.
-  try { if (typeof window._refreshConnectStatus === 'function') window._refreshConnectStatus(); } catch(e) {}
-  // Re-render aide si elle est ouverte
-  var ho = document.getElementById('hands-overlay');
-  if (ho && ho.style.display !== 'none') renderHandsHelp();
   // Refresh game screen dynamic elements if in game
   var gRound = document.getElementById('g-round');
   if (gRound && typeof gameState !== 'undefined') {
@@ -537,28 +530,14 @@ function setLang(l) {
   // Update more/less options label
   var ml = document.getElementById('cf-more-label');
   if (ml) { var cfOpen = document.getElementById('cf-more-opts'); ml.textContent = (cfOpen && cfOpen.style.display !== 'none') ? t('lessOptions') : t('moreOptions'); }
-  // Re-render the lobby game list so badges/labels follow the language
-  try { if (typeof window.renderGames === 'function') window.renderGames(); } catch(e) {}
-  // Retraduire la pastille "N joueur(s)" du header lobby (posée par les
-  // messages serveur, sans data-i18n — sinon figée dans la langue precedente).
-  try { if (typeof window._refreshPlayersPill === 'function') window._refreshPlayersPill(); } catch(e) {}
-  // Retraduire tout panneau/popup ouvert dont le contenu est posé en JS
-  // (stats de session, liste des joueurs, détails de la partie, profil).
-  try { if (typeof window._refreshOpenPanels === 'function') window._refreshOpenPanels(); } catch(e) {}
-  try { if (typeof window._refreshThemePanel === 'function') window._refreshThemePanel(); } catch(e) {}
-  // Retraduire en direct les messages systeme deja affiches dans le chat.
-  try { if (typeof window._retranslateSysChat === 'function') window._retranslateSysChat(); } catch(e) {}
-  // Re-localise le nom de table par défaut s'il n'a pas été personnalisé
-  try { if (typeof window._localizeCreateNameField === 'function') window._localizeCreateNameField(); } catch(e) {}
-  // Re-traduire la fenêtre de classement (parties dynamiques rendues en JS).
-  try { if (typeof window._retranslateRanking === 'function') window._retranslateRanking(); } catch(e) {}
-  try { if (typeof window._retranslateTableRanking === 'function') window._retranslateTableRanking(); } catch(e) {}
   // Update lang toggle buttons
   document.querySelectorAll('.lang-btn').forEach(function(b){
     b.classList.toggle('active', b.dataset.lang === _lang);
   });
-  // Abonnés au changement de langue (registre générique ci-dessus). Tout
-  // nouveau panneau rendu en JS passe par là — pas par un appel de plus ici.
+  // Abonnés au changement de langue (registre générique ci-dessus). setLang
+  // s'arrête ici : il ne balaie que le DOM déclaratif (data-i18n*) et ses
+  // propres contrôles de langue. Tout contenu rendu en JS par un autre module
+  // s'abonne chez lui — plus aucun window._refreshX() n'est appelé d'ici.
   _notifyLangChange(_lang);
 }
 

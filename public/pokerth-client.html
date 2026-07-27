@@ -3485,9 +3485,11 @@ if ('serviceWorker' in navigator) {
     else rkFetch(RK_SRC, sel ? parseInt(sel.value, 10) : null);
   };
 
-  // Re-localise the open ranking window when the language changes (called by
-  // setLang). Static labels use data-i18n; here we re-render the JS-built parts:
-  // table headers, season options, profile card, and the search placeholder.
+  // Re-localise the open ranking window when the language changes. Static
+  // labels use data-i18n; here we re-render the JS-built parts: table headers,
+  // season options, profile card, and the search placeholder. Subscribed to the
+  // i18n hot-relocalisation registry right below (setLang no longer calls any
+  // module by name).
   window._retranslateRanking = function () {
     var modal = $('ranking-modal');
     if (!modal || !modal.style.display || modal.style.display === 'none') return;
@@ -3503,6 +3505,7 @@ if ('serviceWorker' in navigator) {
     var sel = $('rk-season'); if (sel) sel.removeAttribute('data-sig');
     if (RK_CUR && RK_CUR.seasons && RK_CUR.seasons.length) rkPopulateSeasons(RK_CUR.seasons, RK_CUR.season);
   };
+  try { window._onLangChange(function () { window._retranslateRanking(); }); } catch (e) {}
 
   var rkTW = $('rk-table-wrap');
   if (rkTW) rkTW.addEventListener('click', function (e) {
@@ -3683,13 +3686,14 @@ if ('serviceWorker' in navigator) {
     m.style.display = 'none';
   };
 
-  // Re-localisation à chaud (appelée par setLang si présent).
+  // Re-localisation à chaud : abonnement au registre i18n (onLangChange).
   window._retranslateTableRanking = function () {
     var m = $('tableranking-modal');
     if (!m || !m.style.display || m.style.display === 'none') return;
     trTitleSub();
     if (TR_CUR && TR_CUR.state === 'table') trRender();
   };
+  try { window._onLangChange(function () { window._retranslateTableRanking(); }); } catch (e) {}
 
   document.addEventListener('keydown', function (e) {
     if (e.key !== 'Escape') return;

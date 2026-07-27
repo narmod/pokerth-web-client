@@ -466,3 +466,10 @@ for (const [k, v] of Object.entries({ MODE_LABEL, GTYPE, _tableMatches,
   _renderLobbyWaitActions, _guestJoinBlocked, _updateFootJoin,
   _refreshGameInfoPanel, updateLobbyStatsBar, renderGames, _gameTypeLabel,
   _updateGameHeader, _updateLobbyWaitStatus })) window[k] = v;
+
+// Relocalisation à chaud : badges de statut, libellés de type de partie et
+// compteurs de la liste du lobby sont construits en JS, donc invisibles pour
+// le balayage data-i18n* de setLang. Appel inconditionnel — c'est exactement
+// ce que faisait setLang avant la migration ; renderGames() est sans effet
+// tant que la liste n'est pas montée.
+try { window._onLangChange(function () { try { renderGames(); } catch (e) {} }); } catch (e) {}

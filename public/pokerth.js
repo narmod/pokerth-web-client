@@ -9270,6 +9270,38 @@ window.toggleCreateOverflow = toggleCreateOverflow;
 window.toggleFullscreen = toggleFullscreen;
 window.toggleGameChat = toggleGameChat;
 window.toggleHandsHelp = toggleHandsHelp;
+
+// ── Relocalisation à chaud du monolithe (registre i18n) ────────────────────
+// setLang() ne balaie que le DOM déclaratif (data-i18n*). Tout ce que ce
+// fichier peint impérativement en JS reste sinon figé dans la langue
+// précédente jusqu'à réouverture du panneau concerné. Un seul abonné pour
+// tout le monolithe : chaque bloc est gardé et ne repeint que si sa surface
+// est réellement visible.
+//
+// renderHandsHelp() est appelée ici et non depuis i18n.mjs : c'est une
+// fonction de la portée de ce module (pokerth.js est un `type="module"`),
+// donc invisible depuis un autre module. L'appel nu qui vivait dans setLang
+// levait une ReferenceError dès que la fenêtre des combinaisons était
+// ouverte, ce qui interrompait tout le reste de setLang.
+try {
+  window._onLangChange(function () {
+    // Hint de statut de l'écran de connexion (posé par setStatus).
+    try { if (typeof window._refreshConnectStatus === 'function') window._refreshConnectStatus(); } catch (e) {}
+    // Fenêtre « combinaisons du poker », si ouverte.
+    try {
+      var ho = document.getElementById('hands-overlay');
+      if (ho && ho.style.display !== 'none') renderHandsHelp();
+    } catch (e) {}
+    // Pastille « N joueur(s) » du header lobby (posée par les messages serveur).
+    try { if (typeof window._refreshPlayersPill === 'function') window._refreshPlayersPill(); } catch (e) {}
+    // Panneaux/popups ouverts rendus en JS (stats, joueurs, infos partie, profil).
+    try { if (typeof window._refreshOpenPanels === 'function') window._refreshOpenPanels(); } catch (e) {}
+    // Messages système déjà affichés dans le chat.
+    try { if (typeof window._retranslateSysChat === 'function') window._retranslateSysChat(); } catch (e) {}
+    // Nom de table par défaut, s'il n'a pas été personnalisé.
+    try { if (typeof window._localizeCreateNameField === 'function') window._localizeCreateNameField(); } catch (e) {}
+  });
+} catch (e) {}
 window.toggleHeaderOverflow = toggleHeaderOverflow;
 window.toggleLobbyChat = toggleLobbyChat;
 window.toggleLobbyOverflow = toggleLobbyOverflow;
@@ -9332,7 +9364,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.4-web.103'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.4-web.104'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
