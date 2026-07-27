@@ -113,6 +113,57 @@ const calc = (tables) => new StatsCalculator(new StatsData(tables)).calculateAll
   ok(playerStatsFor('JamaisVu') === null, 'joueur hors table → null');
 }
 
+
+// ── ATS / FTS (vol de blinds) ─────────────────────────────────────────────
+{
+  // 4 joueurs, sièges 1..4 : BTN=1, SB=2, BB=3, CO=4.
+  // Ordre préflop : CO(4) → BTN(1) → SB(2) → BB(3).
+  const players = [
+    { uniqueGameID: 1, player: 'Btn', seat: 1 },
+    { uniqueGameID: 1, player: 'Sb', seat: 2 },
+    { uniqueGameID: 1, player: 'Bb', seat: 3 },
+    { uniqueGameID: 1, player: 'Co', seat: 4 },
+  ];
+  const mkHand = (hid) => ({ uniqueGameID: 1, handID: hid,
+    dealerSeat: 1, sbSeat: 2, sbAmount: 10, bbSeat: 3, bbAmount: 20,
+    Seat_1_Cash: 1000, Seat_2_Cash: 1000, Seat_3_Cash: 1000, Seat_4_Cash: 1000 });
+  const hands = [1, 2, 3, 4].map(mkHand);
+  const actions = [
+    // 1 : CO fold, BTN relance, SB fold, BB fold → vol du BTN réussi.
+    A(1, 1, 0, 1, 'starts as dealer'), A(1, 1, 0, 2, 'posts small blind', 10), A(1, 1, 0, 3, 'posts big blind', 20),
+    A(1, 1, 0, 4, 'folds'), A(1, 1, 0, 1, 'bets', 60), A(1, 1, 0, 2, 'folds'), A(1, 1, 0, 3, 'folds'),
+    A(1, 1, 4, 1, 'wins', 90),
+    // 2 : CO limpe puis BTN relance → AUCUNE opportunité de vol pour le BTN,
+    //     opportunité SANS tentative pour le CO, aucune défense SB/BB.
+    A(1, 2, 0, 1, 'starts as dealer'), A(1, 2, 0, 2, 'posts small blind', 10), A(1, 2, 0, 3, 'posts big blind', 20),
+    A(1, 2, 0, 4, 'calls', 20), A(1, 2, 0, 1, 'bets', 80), A(1, 2, 0, 4, 'folds'),
+    A(1, 2, 0, 2, 'folds'), A(1, 2, 0, 3, 'folds'), A(1, 2, 4, 1, 'wins', 130),
+    // 3 : CO fold, BTN fold, SB relance, BB fold → vol du SB, défense BB.
+    A(1, 3, 0, 1, 'starts as dealer'), A(1, 3, 0, 2, 'posts small blind', 10), A(1, 3, 0, 3, 'posts big blind', 20),
+    A(1, 3, 0, 4, 'folds'), A(1, 3, 0, 1, 'folds'), A(1, 3, 0, 2, 'bets', 50), A(1, 3, 0, 3, 'folds'),
+    A(1, 3, 4, 2, 'wins', 70),
+    // 4 : CO fold, BTN relance, SB call → le BB n'a PLUS d'opportunité de
+    //     défense (call entre le voleur et lui) ; le SB en a une, non foldée.
+    A(1, 4, 0, 1, 'starts as dealer'), A(1, 4, 0, 2, 'posts small blind', 10), A(1, 4, 0, 3, 'posts big blind', 20),
+    A(1, 4, 0, 4, 'folds'), A(1, 4, 0, 1, 'bets', 60), A(1, 4, 0, 2, 'calls', 50), A(1, 4, 0, 3, 'folds'),
+    A(1, 4, 1, 2, 'checks'), A(1, 4, 1, 1, 'bets', 40), A(1, 4, 1, 2, 'folds'), A(1, 4, 4, 1, 'wins', 160),
+  ];
+  const st = calc({ players, hands, actions });
+  // BTN : opportunités mains 1, 3 (fold alors que tout a foldé devant) et 4
+  // (main 2 exclue par le limp) → 2 tentatives / 3 opportunités.
+  ok(st.Btn.ats === 66.7, 'ATS Btn = 66.7 (2 tentatives / 3 opportunités, limp exclu)');
+  // CO : 3 opportunités (mains 1, 3, 4 fold en premier ; main 2 limp) dont 0 relance.
+  ok(st.Co.ats === 0, 'ATS Co = 0 (limp/folds, jamais de relance)');
+  // SB : main 3 = opportunité + tentative (folds devant) → 100.
+  ok(st.Sb.ats === 100, 'ATS Sb = 100 (open après folds généraux)');
+  // FTS : BB défend mains 1 (vs BTN) et 3 (vs SB), fold les deux ; main 4 exclue (call du SB).
+  ok(st.Bb.fts === 100 && st.Bb.ats === 0, 'FTS Bb = 100 sur 2 opportunités (main 4 exclue)');
+  // SB : défense mains 1 (fold) et 4 (call) → 50.
+  ok(st.Sb.fts === 50, 'FTS Sb = 50 (1 fold / 2 opportunités)');
+  // Les mains sans dealerSeat/Seat_i_Cash (fixtures précédentes) ne cassent rien :
+  ok(st.Btn.hands === 4, 'total_hands intact');
+}
+
 // ── Ponts window ──────────────────────────────────────────────────────────
 ok(typeof window._playerStatsFor === 'function'
    && typeof window._statsEnsure === 'function'

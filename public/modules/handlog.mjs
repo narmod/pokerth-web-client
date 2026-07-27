@@ -595,6 +595,7 @@ class StatsData {
 
   getPlayers() { return Array.from(this._seatsOf.keys()); }
   getPlayerSeats(name) { return this._seatsOf.get(name) || new Map(); }
+  getHand(ug, hand) { return this._handByGH.get(ug + ':' + hand) || null; }
 
   getActions(ug, hand, beRo) {
     if (beRo != null) return this._byGHB.get(ug + ':' + hand + ':' + beRo) || [];
@@ -667,6 +668,8 @@ class StatsCalculator {
       cbet_made: 0, cbet_opportunities: 0,
       fold_to_3bet_made: 0, fold_to_3bet_opportunities: 0,
       fold_to_cbet_made: 0, fold_to_cbet_opportunities: 0,
+      steal_attempts: 0, steal_opportunities: 0,
+      fold_to_steal_made: 0, fold_to_steal_opportunities: 0,
       hands_saw_flop: 0, hands_went_to_showdown: 0, showdowns_won: 0,
       allin_count: 0, hands_won: 0,
     };
@@ -739,6 +742,13 @@ class StatsCalculator {
     for (const [ug, hand] of handsPlayed) {
       const seat = playerSeats.get(ug);
       if (seat == null) continue;
+      // ATS / FTS : analyse préflop, indépendante du flop.
+      const st = this._analyzeSteal(ug, hand, seat);
+      if (st) {
+        if (st.stealOpportunity) { S.steal_opportunities += 1; if (st.stealAttempt) S.steal_attempts += 1; }
+        if (st.defenceOpportunity) { S.fold_to_steal_opportunities += 1; if (st.foldedToSteal) S.fold_to_steal_made += 1; }
+      }
+
       const flop = d.getActions(ug, hand, 1);
       const sawFlop = flop.some((a) => a.seat === seat);
       if (!sawFlop) continue;
@@ -846,6 +856,79 @@ class StatsCalculator {
     return res;
   }
 
+  // ── ATS / FTS (extension web, demande forum ; définitions standard) ──────
+  //  · positions de vol : CO (si ≥ 4 joueurs servis), BTN, SB ;
+  //  · opportunité de vol : le joueur est en position de vol et TOUTES les
+  //    actions volontaires avant lui sont des folds (un limp ou une relance
+  //    antérieure annule l'opportunité) ;
+  //  · tentative de vol : entrer en relance ('bets' / all-in — le limp 'calls'
+  //    ne compte pas) ;
+  //  · défense : SB/BB face à une open-relance depuis une position de vol,
+  //    sans call ni re-relance entre le voleur et le défenseur ;
+  //    FTS = fold dans cette situation.
+  // Nécessite dealerSeat/sbSeat/bbSeat + Seat_i_Cash dans la table Hand
+  // (toujours présents dans les logs officiels et web) ; sinon renvoie null.
+  _analyzeSteal(ug, hand, seat) {
+    const d = this.d;
+    const h = d.getHand(ug, hand);
+    if (!h || h.dealerSeat == null) return null;
+    const dealt = [];
+    for (let i = 1; i <= 10; i++) if (h['Seat_' + i + '_Cash'] != null) dealt.push(i);
+    if (dealt.length < 2 || dealt.indexOf(h.dealerSeat) === -1) return null;
+
+    const stealSeats = new Set([h.dealerSeat]);
+    if (h.sbSeat != null) stealSeats.add(h.sbSeat);
+    if (dealt.length >= 4) {
+      // CO = siège servi juste avant le bouton dans l'ordre du ring.
+      const bi = dealt.indexOf(h.dealerSeat);
+      stealSeats.add(dealt[(bi - 1 + dealt.length) % dealt.length]);
+    }
+
+    // Actions préflop VOLONTAIRES en ordre chronologique (allowlist stricte :
+    // fold / call / bet / all-in / check — blinds, dealer, sits out exclus).
+    const isVol = (a) => {
+      const at = (a.action || '').toLowerCase();
+      return containsAny(at, FOLD_ACTIONS) || containsAny(at, VPIP_ACTIONS) || at.indexOf('checks') !== -1;
+    };
+    const vol = d.allPreflopActions(ug, hand).filter(isVol);
+    const isAgg = (a) => containsAny((a.action || '').toLowerCase(), RAISE_ACTIONS);
+    const isFold = (a) => containsAny((a.action || '').toLowerCase(), FOLD_ACTIONS);
+
+    let firstIdx = -1;
+    for (let i = 0; i < vol.length; i++) if (vol[i].seat === seat) { firstIdx = i; break; }
+
+    const res = { stealOpportunity: false, stealAttempt: false, defenceOpportunity: false, foldedToSteal: false };
+    if (firstIdx === -1) return res;
+
+    // Opportunité / tentative de vol.
+    if (stealSeats.has(seat) && seat !== h.bbSeat) {
+      let allFoldBefore = true;
+      for (let i = 0; i < firstIdx; i++) if (!isFold(vol[i])) { allFoldBefore = false; break; }
+      if (allFoldBefore) {
+        res.stealOpportunity = true;
+        if (isAgg(vol[firstIdx])) res.stealAttempt = true;
+      }
+    }
+
+    // Opportunité de défense / fold to steal.
+    if (seat === h.sbSeat || seat === h.bbSeat) {
+      let openIdx = -1;
+      for (let i = 0; i < vol.length; i++) if (!isFold(vol[i])) { openIdx = i; break; }
+      if (openIdx !== -1 && openIdx < firstIdx) {
+        const opener = vol[openIdx];
+        if (opener.seat !== seat && stealSeats.has(opener.seat) && isAgg(opener)) {
+          let cleanBetween = true;
+          for (let i = openIdx + 1; i < firstIdx; i++) if (!isFold(vol[i])) { cleanBetween = false; break; }
+          if (cleanBetween) {
+            res.defenceOpportunity = true;
+            if (isFold(vol[firstIdx])) res.foldedToSteal = true;
+          }
+        }
+      }
+    }
+    return res;
+  }
+
   _finalize(S) {
     const pct = (n, d) => (d === 0 ? 0 : (n / d) * 100);
     const af = S.total_calls === 0 ? (S.total_bets > 0 ? Infinity : 0) : S.total_bets / S.total_calls;
@@ -859,6 +942,8 @@ class StatsCalculator {
       cbet: round1(pct(S.cbet_made, S.cbet_opportunities)),
       fold_to_3bet: round1(pct(S.fold_to_3bet_made, S.fold_to_3bet_opportunities)),
       fold_to_cbet: round1(pct(S.fold_to_cbet_made, S.fold_to_cbet_opportunities)),
+      ats: round1(pct(S.steal_attempts, S.steal_opportunities)),
+      fts: round1(pct(S.fold_to_steal_made, S.fold_to_steal_opportunities)),
       wtsd: round1(pct(S.hands_went_to_showdown, S.hands_saw_flop)),
       wsd: round1(pct(S.showdowns_won, S.hands_went_to_showdown)),
       allin: S.allin_count,
@@ -969,6 +1054,7 @@ function playerVpipCombos(data, name) {
 const _STAT_RANGES = {
   vpip: [12, 45], pfr: [5, 28], af: [0.5, 3.5], three_bet: [1.5, 10],
   cbet: [35, 80], fold_to_3bet: [30, 70], fold_to_cbet: [35, 75],
+  ats: [15, 45], fts: [50, 85],
   wtsd: [20, 40], wsd: [42, 58],
 };
 function statColor(id, v) {
@@ -1045,6 +1131,8 @@ const COLS = [
   ['cbet', 'CB', 'Continuation Bet %'],
   ['fold_to_3bet', 'F3B', 'Fold to 3-Bet %'],
   ['fold_to_cbet', 'FCB', 'Fold to C-Bet %'],
+  ['ats', 'ATS', 'Attempt to Steal %'],
+  ['fts', 'FTS', 'Fold to Steal %'],
   ['wtsd', 'WTSD', 'Went To Showdown %'],
   ['wsd', 'W$SD', 'Won $ at Showdown %'],
 ];
