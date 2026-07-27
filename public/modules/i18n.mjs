@@ -402,6 +402,47 @@ function checkI18nParity() {
     });
 }
 
+// ─── Relocalisation à chaud : registre générique ─────────────────────────
+// Patron unique de l'application. Tout ce qui est traduit IMPÉRATIVEMENT en
+// JS (contenu construit par innerHTML/textContent, donc invisible pour les
+// attributs data-i18n* balayés par setLang) doit s'abonner ici plutôt que
+// d'ajouter un appel `window._refreshX()` de plus dans setLang.
+//
+//   import { onLangChange } from '../i18n.mjs';
+//   onLangChange(function (lang) {
+//     if (!monPanneauEstOuvert()) return;   // toujours garder : ne rien
+//     rerender();                            // repeindre que si visible
+//   });
+//
+// Deux voies équivalentes, au choix du module :
+//   • ESM      : onLangChange(fn) / offLangChange(fn)
+//   • non-ESM  : window._onLangChange(fn), ou
+//                document.addEventListener('pth:langchange', e => e.detail.lang)
+//
+// Contrat : chaque abonné est isolé (une exception chez l'un n'empêche pas
+// les suivants de tourner), reçoit le nouveau code de langue en argument, et
+// doit être idempotent — setLang peut être rappelé avec la même langue.
+var _langSubs = [];
+
+function onLangChange(fn) {
+  if (typeof fn === 'function' && _langSubs.indexOf(fn) < 0) _langSubs.push(fn);
+  return fn;
+}
+function offLangChange(fn) {
+  var i = _langSubs.indexOf(fn);
+  if (i >= 0) _langSubs.splice(i, 1);
+}
+function _notifyLangChange(lang) {
+  for (var i = 0; i < _langSubs.length; i++) {
+    try { _langSubs[i](lang); }
+    catch (e) { try { console.warn('[i18n] abonné langue en échec:', e); } catch (e2) {} }
+  }
+  // Miroir DOM : permet à du code non modulaire (ou à une extension) de
+  // réagir sans importer i18n.mjs.
+  try { document.dispatchEvent(new CustomEvent('pth:langchange', { detail: { lang: lang } })); }
+  catch (e) {}
+}
+
 function setLang(l) {
   _lang = l;
   try { localStorage.setItem('pth_lang', l); } catch(e) {}
@@ -516,6 +557,9 @@ function setLang(l) {
   document.querySelectorAll('.lang-btn').forEach(function(b){
     b.classList.toggle('active', b.dataset.lang === _lang);
   });
+  // Abonnés au changement de langue (registre générique ci-dessus). Tout
+  // nouveau panneau rendu en JS passe par là — pas par un appel de plus ici.
+  _notifyLangChange(_lang);
 }
 
 
@@ -613,7 +657,7 @@ function openLangMenu(ev) {
 }
 
 // ─── Modern ES module exports ───────────────────────────────────────────
-export { LANG, t, setLang, toggleLang, getLang, checkI18nParity, openLangMenu, closeLangMenu };
+export { LANG, t, setLang, toggleLang, getLang, checkI18nParity, openLangMenu, closeLangMenu, onLangChange, offLangChange };
 
 // ─── Legacy global compatibility ────────────────────────────────────────
 // pokerth.js (the un-refactored majority) still references these as bare
@@ -637,7 +681,10 @@ Object.defineProperty(window, '_lang', {
 
 // Also expose a single namespaced object for the migration-aware code
 // that wants a clean entry point.
-window.I18N = { LANG, t, setLang, toggleLang, getLang, checkParity: checkI18nParity, openLangMenu, closeLangMenu };
+window.I18N = { LANG, t, setLang, toggleLang, getLang, checkParity: checkI18nParity, openLangMenu, closeLangMenu, onLangChange, offLangChange };
+// Voie non-ESM du registre de relocalisation (cf. onLangChange ci-dessus).
+window._onLangChange = onLangChange;
+window._offLangChange = offLangChange;
 
 // ─── Auto-init: apply the current language on first DOM-ready ───────────
 // Without this, the language-toggle buttons stay empty until the user

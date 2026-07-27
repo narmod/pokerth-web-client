@@ -20,7 +20,7 @@
 //
 // Option : « Aide » masquable via Options avancées → Assistance
 // (pth_help_btn, body.adv-no-helpbtn masque .help-menu-btn).
-import { t } from '../i18n.mjs';
+import { t, onLangChange } from '../i18n.mjs';
 
 var _content = null;        // { chapters: [...] } de la langue courante (ou en)
 var _contentLang = '';      // langue effectivement chargée
@@ -249,6 +249,35 @@ function toggleHelp() {
 window.openHelp = openHelp;
 window.closeHelp = closeHelp;
 window.toggleHelp = toggleHelp;
+
+// ── Changement de langue à chaud ──
+// Le titre et le placeholder suivent déjà setLang (data-i18n*), mais la nav
+// et le corps viennent de content/<lang>.mjs : sans ça, ils restaient figés
+// dans la langue précédente jusqu'à fermeture/réouverture de la fenêtre.
+// Fenêtre fermée → rien à faire : _loadContent() voit que _contentLang ne
+// correspond plus et recharge à la prochaine ouverture.
+onLangChange(function () {
+  var m = $('help-modal');
+  if (!m || !m.style.display || m.style.display === 'none') return;
+  _loadContent().then(function () {
+    // Les id de chapitre sont stables d'une langue à l'autre (isomorphie du
+    // corpus) ; on garde donc l'endroit où l'utilisateur se trouvait.
+    var ok = _content.chapters.some(function (c) { return c.id === _chapter; });
+    if (!ok && _content.chapters.length) _chapter = _content.chapters[0].id;
+    _renderNav();
+    var res = $('help-results');
+    var searching = res && res.style.display !== 'none';
+    // Recherche en cours : on ne touche pas à la saisie de l'utilisateur, on
+    // relance juste le filtre sur le corpus fraîchement chargé.
+    if (searching) { _helpSearch(); return; }
+    // Le rendu du chapitre remet le scroll en haut ; on le restaure pour ne
+    // pas éjecter l'utilisateur du paragraphe qu'il était en train de lire.
+    var body = $('help-body');
+    var top = body ? body.scrollTop : 0;
+    _renderChapter();
+    if (body) body.scrollTop = top;
+  });
+});
 
 // Redimensionnement : bascule flottant/modal comme les Options avancées.
 window.addEventListener('resize', function () {
