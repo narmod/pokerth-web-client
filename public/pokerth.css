@@ -9973,3 +9973,6 @@ body.adv-no-helpbtn .help-menu-btn{display:none}
 @media (min-width:600px){
   #help-modal .adv-card.floating-win{position:fixed;margin:0;max-width:none;max-height:none}
 }
+/* Notes plateforme/navigateur de l'aide (champ note des sections). */
+.help-note{display:flex;gap:8px;align-items:flex-start;margin:8px 0;padding:7px 10px;font-size:0.78rem;line-height:1.5;color:var(--text);background:rgba(var(--gold-rgb,227,200,0),.07);border-left:3px solid var(--gold-dim);border-radius:0 6px 6px 0}
+.help-note-ic{flex:0 0 auto;color:var(--gold-dim);font-size:0.85rem;line-height:1.4}

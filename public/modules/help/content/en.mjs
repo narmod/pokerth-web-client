@@ -25,7 +25,15 @@ export const help = {
         { id: 'language', t: 'Language',
           b: ['The interface is available in 36 languages. Change it any time in Advanced options (gear menu) under User interface. Poker action terms (Fold, Check, Call, Bet, Raise, All-In) stay in English by convention, exactly like the desktop client.'] },
         { id: 'pwa', t: 'Install as an app',
-          b: ['This client is a Progressive Web App: you can install it from your browser menu (or the install button in the header) to get a full-screen app with its own icon. Once installed it starts instantly and the training mode works fully offline.'] },
+          b: ['This client is a Progressive Web App: you can install it from your browser menu (or the install button in the header) to get a full-screen app with its own icon. Once installed it starts instantly and the training mode works fully offline.'],
+          note: 'On Android and desktop Chrome/Edge, the install button does everything. On iPhone/iPad, Apple only allows installation through Safari: Share button \u2192 \u201cAdd to Home Screen\u201d \u2014 the client shows these steps when needed. The button disappears once the app is installed.' },
+        { id: 'platforms', t: 'Platforms and browsers',
+          b: ['The client runs in any modern browser on any system \u2014 Windows, macOS, Linux, Android, iOS. A few features rely on newer browser APIs; when an API is missing, the feature hides itself or explains why instead of breaking. The main differences to know:'],
+          list: [
+            'Chrome / Edge (desktop): everything works, including writing the .pdb log to a folder and chat translation.',
+            'Firefox: everything except folder writing and chat translation (APIs not available yet).',
+            'Safari / iOS: install goes through Share \u2192 Add to Home Screen; no vibration; fullscreen is limited on iPhone; sound starts after your first tap.',
+            'Android: full support in Chromium browsers, including vibration and the Back-button behavior.'] },
         { id: 'avatar', t: 'Nickname and avatar',
           b: ['Pick your nickname and avatar on the login screen before connecting. On pokerth.net, your nickname is your account name; avatars are shared with other players through the avatar server.'] }
       ]
@@ -87,7 +95,8 @@ export const help = {
         { id: 'seatlayout', t: 'Seat placement',
           b: ['As a web extension, the arrangement of the player boxes can be chosen in Advanced options \u2192 Seats: Automatic follows the official client (fixed slots in portrait, computed ellipse in landscape), or force the Portrait or Landscape arrangement \u2014 and Custom lets you place every seat yourself: an edit mode appears where you drag each box exactly where you want it, and the layout is saved.'] },
         { id: 'zoom', t: 'Table zoom (phones)',
-          b: ['On small screens, magnifier buttons zoom the table (2\u00d7) and you can pan with a finger \u2014 your own box and the action bar stay fixed. The view follows the active seat automatically and zooms back out at showdown for the overview. This can be turned off in Advanced options.'] },
+          b: ['On small screens, magnifier buttons zoom the table (2\u00d7) and you can pan with a finger \u2014 your own box and the action bar stay fixed. The view follows the active seat automatically and zooms back out at showdown for the overview. This can be turned off in Advanced options.'],
+          note: 'On phones and tablets, the browser\u2019s own pinch-zoom is blocked by default so a zoom gesture never fires mid-hand by accident; re-enable it in Advanced options \u2192 User interface if you prefer.' },
         { id: 'protections', t: 'Anti-peek and accidental-call protection',
           b: ['Two optional protections: Anti-peek keeps your own cards hidden until you tap them (useful when someone can see your screen), and the accidental-call guard briefly blocks the Call button right after a big raise, so a tap aimed at a smaller call cannot hit the raised amount by accident. Both live in Advanced options.'] }
       ]
@@ -105,7 +114,8 @@ export const help = {
           b: ['Beyond the live log, every hand you play is recorded locally in your browser, in the same format as the official client\u2019s .pdb log files. The Logs window (Advanced options \u2192 Log messages \u2192 Manage logs\u2026) lists your sessions and lets you work with them: preview a session with search and highlighting, filter by game, export as HTML or plain text, save the raw .pdb file, or import a .pdb recorded by the desktop client. Sessions can be deleted one by one or all at once (with confirmation), and an automatic retention setting can keep only the last 7, 30 or 90 days.',
               'The Analyse button runs a hand analysis over a session and can send a log to the pokerth.net analysis service. Everything stays on your device unless you explicitly export or upload it.'] },
         { id: 'logopts', t: 'Logging options',
-          b: ['In Advanced options \u2192 Log messages you can turn logging on or off and choose the write interval (after every action, or once per hand), matching the desktop client\u2019s settings. On desktop Chromium browsers, an extra option writes the .pdb file directly into a folder of your choice and updates it after every hand \u2014 exactly like the desktop client does, so other tools can read it live.'] },
+          b: ['In Advanced options \u2192 Log messages you can turn logging on or off and choose the write interval (after every action, or once per hand), matching the desktop client\u2019s settings. An extra option writes the .pdb file directly into a folder of your choice and updates it after every hand \u2014 exactly like the desktop client does, so other tools can read it live.'],
+          note: 'Writing into a local folder needs the File System Access API: desktop Chrome and Edge only. Firefox, Safari and mobile browsers cannot do it \u2014 the option then shows a short explanation, and manual export from the Logs window remains available everywhere.' },
         { id: 'assist', t: 'Assistance (hand strength)',
           b: ['At the top of the Chances tab, the assistance banner reads your hand for you. Before the flop it names your starting hand and rates it with stars; from the flop on it shows your current best combination and, after a quick simulation, your estimated chance of winning the hand as a percentage, with a color gauge from red (weak) to green (strong). Like the odds monitor, it only uses information you can see.',
               'Two display styles are available in Advanced options \u2192 Seats: Segments (ten blocks) or a classic progress bar. The whole assistance feature can be switched off in Advanced options \u2192 Assistance.'] },
@@ -154,7 +164,8 @@ export const help = {
         { id: 'reactions', t: 'Emoji reactions',
           b: ['The reaction button opens a picker of 30 animated reactions (\uD83C\uDF89, \uD83D\uDE02, \uD83D\uDE31, \uD83D\uDD25\u2026) that play with an effect above your seat, visible to everyone at the table \u2014 including players on the desktop client. Reactions can be disabled entirely in Advanced options.'] },
         { id: 'translate', t: 'Understanding everyone',
-          b: ['With chat translation enabled, each message gets a translate button that renders it in your language (uses the browser\u2019s built-in translator; a recent Chrome or Edge is required). Common table abbreviations (gg, nh, utg\u2026) are explained in a tooltip when you hover them \u2014 both options live in Advanced options \u2192 Chat.'] },
+          b: ['With chat translation enabled, each message gets a translate button that renders it in your language, using the browser\u2019s built-in translator. Common table abbreviations (gg, nh, utg\u2026) are explained in a tooltip when you hover them \u2014 both options live in Advanced options \u2192 Chat.'],
+          note: 'Translation uses the browser\u2019s Translator API, currently available in recent Chrome and Edge only; on Firefox and Safari the client tells you it is unsupported. The rest of the chat is unaffected.' },
         { id: 'social', t: 'Players: profile, invite, ignore',
           b: ['Tap any player \u2014 at the table or in the lobby list \u2014 to open their card: profile and stats, invite them to your game, or ignore them (their chat messages are hidden; ignoring is reversible at any time). A confirmation before invite/ignore can be enabled in the options.'] }
       ]
@@ -210,9 +221,11 @@ export const help = {
         { id: 'music', t: 'Music player',
           b: ['The music entry in the header menus opens a small lounge-music player: pick a track from the playlist, play/pause, previous/next, shuffle, and repeat one track, the whole playlist or nothing. Volume, selected track and repeat mode are remembered. Playback never starts by itself \u2014 browsers require a tap \u2014 and the player is entirely independent from the game sound effects.'] },
         { id: 'sounds', t: 'Sound effects',
-          b: ['Game sounds are grouped in four categories that can be toggled separately, exactly like the desktop client: game actions (cards dealt, Check, Call, Raise, your turn\u2026), lobby chat notification, network game notifications (player joined, game ready) and the blind-raise notification. A single volume slider controls them all, in Advanced options \u2192 Sound.'] },
+          b: ['Game sounds are grouped in four categories that can be toggled separately, exactly like the desktop client: game actions (cards dealt, Check, Call, Raise, your turn\u2026), lobby chat notification, network game notifications (player joined, game ready) and the blind-raise notification. A single volume slider controls them all, in Advanced options \u2192 Sound.'],
+          note: 'All browsers \u2014 iOS especially \u2014 refuse to play audio before you have touched the page once. If a game starts silent, a single tap anywhere brings the sound to life; the client also repairs the audio engine automatically when iOS suspends it (incoming call, backgrounding\u2026).' },
         { id: 'voice', t: 'Voice and vibration',
-          b: ['Two extra channels can keep you informed without looking at the screen: voice announcements read out the game events using your device\u2019s speech synthesis, and on phones a short vibration can mark your turn. Both are web extensions, off or on by default depending on the device, in Advanced options \u2192 Betting & turn.'] }
+          b: ['Two extra channels can keep you informed without looking at the screen: voice announcements read out the game events using your device\u2019s speech synthesis, and on phones a short vibration can mark your turn. Both are web extensions, off or on by default depending on the device, in Advanced options \u2192 Betting & turn.'],
+          note: 'Vibration works on Android (Chromium browsers); Apple does not expose a vibration API to websites, so iPhones cannot vibrate. Voice announcements work everywhere, but the available voices and languages depend on your system \u2014 the client uses the best match it finds.' }
       ]
     },
     {
@@ -234,7 +247,8 @@ export const help = {
             ['F6 / F7 / F8', 'Manual \u00b7 Auto Check/Fold \u00b7 Auto Check/Call'],
             ['Alt+M / Alt+K / Alt+F', 'Manual \u00b7 Auto Check/Call \u00b7 Auto Check/Fold'],
             ['Alt+C / Alt+L / Alt+I', 'Chat \u00b7 Game log \u00b7 Odds panel'],
-            ['F11', 'Fullscreen']] },
+            ['F11', 'Fullscreen']],
+          note: 'Shortcuts need a physical keyboard. On a Mac, the F-keys default to media controls: hold Fn (or enable \u201cUse F1, F2, etc. as standard function keys\u201d in macOS settings). On iPhone, fullscreen is limited by iOS \u2014 installing the app as a PWA gives the same full-screen experience.' },
         { id: 'webkeys', t: 'Web letter keys',
           b: ['As a web extension, single-letter keys also trigger actions and can be re-bound in Advanced options \u2192 Keyboard shortcuts:'],
           keys: [
@@ -243,7 +257,8 @@ export const help = {
             ['R', 'Raise'],
             ['A', 'All-In'],
             ['1 / 2 / 3', 'Bet 1/3 \u00b7 1/2 \u00b7 Pot'],
-            ['Esc', 'Close the topmost window (also the Android Back button)']] }
+            ['Esc', 'Close the topmost window (also the Android Back button)']],
+          note: 'On Android, the system Back button/gesture closes windows like Escape instead of leaving the game (configurable in the options). iOS has no equivalent system button \u2014 use the \u2715 of each window.' }
       ]
     }
   ]

@@ -100,6 +100,14 @@ function _renderSection(s) {
     }
     h += '</div>';
   }
+  // Notes plateforme/navigateur : bloc distinct (bord + icone), traduit avec
+  // le contenu. `note` accepte une chaine ou un tableau de chaines.
+  if (s.note) {
+    var notes = Array.isArray(s.note) ? s.note : [s.note];
+    for (var m = 0; m < notes.length; m++) {
+      h += '<p class="help-note"><span class="help-note-ic" aria-hidden="true">\u26a0</span>' + _esc(notes[m]) + '</p>';
+    }
+  }
   h += '</section>';
   return h;
 }
@@ -156,7 +164,8 @@ function _helpSearch() {
       var s = secs[j];
       var hay = _fold(s.t) + ' ' + _fold((s.b || []).join(' ')) + ' '
         + _fold((s.list || []).join(' ')) + ' '
-        + _fold((s.keys || []).map(function (r) { return r.join(' '); }).join(' '));
+        + _fold((s.keys || []).map(function (r) { return r.join(' '); }).join(' ')) + ' '
+        + _fold(Array.isArray(s.note) ? s.note.join(' ') : (s.note || ''));
       if (hay.indexOf(q) >= 0) hits.push({ ch: c, sec: s });
       if (hits.length >= 40) break;
     }
