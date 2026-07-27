@@ -8407,6 +8407,17 @@ html:not([data-seat-struct="qml"]) .seat:not(.me) .seat-foot { margin-top: 1px; 
 #g-odds-body .odds-row.warm .odds-bar>i{background:linear-gradient(90deg,#f0a020,#b36b00)}
 #g-odds-body .odds-row.hot .odds-bar>i{background:linear-gradient(90deg,#50c878,#1e8c4e)}
 #g-odds-body .odds-row.hot .odds-pct{color:#7ce0a0;font-weight:700}
+/* Chances : compression douce quand le panneau est court (parité avec le fix
+   QML « elastic row height ») — sous ~270px de corps, lignes 17px + icônes
+   réduites pour garder les 10 catégories visibles d'un regard ; en dessous,
+   la scrollbar revient comme avant (dégradation douce, CSS pur). */
+#g-odds-body{container-type:size}
+@container (max-height:270px){
+  #g-odds-body .odds-hd{margin:1px 0 3px;font-size:var(--fs-xs)}
+  #g-odds-body .odds-row{height:17px;font-size:var(--fs-xs)}
+  #g-odds-body .odds-ico{width:20px;height:13px}
+  #g-odds-body .odds-bar{height:5px}
+}
 
 /* Onglet Stats (panneau info) : tableau VPIP/PFR/AF... des joueurs de la table. */
 #g-stats-body .odds-hd{font-weight:700;font-size:var(--fs-sm);color:var(--box-accent, var(--chatlog-text, var(--gold)));margin:2px 0 5px;letter-spacing:.3px}
