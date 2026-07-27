@@ -1166,6 +1166,33 @@ let _renderCache = null;
 // récent peut donc démarrer entre-temps ; seul le dernier a le droit d'écrire.
 let _renderSeq = 0;
 
+// Ré-attribue un uniqueGameID unique à l'échelle de TOUT l'historique.
+// Le recorder repart de 1 à chaque chargement de page, et un .pdb importé
+// porte l'UniqueGameID de son propre fichier (souvent 1) : une fois les
+// sessions relues à plat, des parties différentes partageaient donc le même
+// identifiant. Toutes les tables sont indexées par « uniqueGameID:handID »
+// → mains écrasées (compteur de mains effondré), sièges et actions attribués
+// au mauvais joueur, pourcentages absurdes (rapport forum : 3000 mains
+// affichées comme 182, VPIP > 95 % pour tout le monde).
+// Les enregistrements sont déjà cloisonnés par sessionId côté IndexedDB :
+// il suffit de projeter (sessionId, uniqueGameID) sur un entier unique.
+function _nsGames(tables) {
+  const map = new Map();
+  let next = 0;
+  const ug = (r) => {
+    const k = (r.sessionId == null ? '' : r.sessionId) + ':' + r.uniqueGameID;
+    let v = map.get(k);
+    if (v === undefined) { v = ++next; map.set(k, v); }
+    return v;
+  };
+  // Les lignes viennent de getAll() : ce sont des copies fraîches, la
+  // réécriture en place ne touche pas la base.
+  for (const arr of [tables.games, tables.players, tables.hands, tables.actions]) {
+    for (const r of arr) r.uniqueGameID = ug(r);
+  }
+  return tables;
+}
+
 async function _loadTables(scope) {
   const store = (typeof window !== 'undefined') ? window._handlogStore : null;
   if (!store) return { games: [], players: [], hands: [], actions: [] };
@@ -1179,12 +1206,12 @@ async function _loadTables(scope) {
       hands = hands.filter(keep); actions = actions.filter(keep);
     }
   }
-  return { games, players, hands, actions };
+  return _nsGames({ games, players, hands, actions });
 }
 
 // Colonnes du tableau (clé de stat, libellé court, titre).
 const COLS = [
-  ['hands', 'N', 'Mains jouées'],
+  ['hands', 'N', 'Hands played'],
   ['vpip', 'VPIP', 'Voluntarily Put $ In Pot'],
   ['pfr', 'PFR', 'Pre-Flop Raise'],
   ['af', 'AF', 'Aggression Factor'],
@@ -1333,7 +1360,27 @@ async function renderStatsPanel() {
   };
 }
 
-if (typeof window !== 'undefined') window._renderStats = renderStatsPanel;
+// Rafraîchissement automatique (appelé à chaque main persistée). Sur la portée
+// History, un recalcul complet par main saccade le jeu au point de faire rater
+// son tour (rapport forum) : une main de plus ne change quasi rien à des
+// milliers, on se limite donc à un rafraîchissement par minute. La portée
+// Session, elle, doit rester immédiate, et toute action de l'utilisateur
+// (ouverture du panneau, changement de portée) passe par renderStatsPanel
+// directement, sans limitation.
+let _autoAt = 0;
+function _renderStatsAuto() {
+  if (_statsScope === 'all') {
+    const now = Date.now();
+    if (now - _autoAt < 60000) return;
+    _autoAt = now;
+  }
+  return renderStatsPanel();
+}
+
+if (typeof window !== 'undefined') {
+  window._renderStats = _renderStatsAuto;      // rafraîchissement auto (par main)
+  window._renderStatsNow = renderStatsPanel;   // rendu immédiat (UI)
+}
 
 
 // PokerTH web client — Export .pdb (log SQLite au format du client officiel).
@@ -1526,7 +1573,7 @@ async function _computeStats() {
   const store = (typeof window !== 'undefined') ? window._handlogStore : null;
   if (!store) return;
   const all = await store.loadAll();
-  const data = new StatsData({ games: all.games, players: all.players, hands: all.hands, actions: all.actions });
+  const data = new StatsData(_nsGames({ games: all.games, players: all.players, hands: all.hands, actions: all.actions }));
   _dataCache = data;
   // Seuls les joueurs attablés sont lus dans ces caches (cf. _statsFor /
   // _scopeOfName) : inutile de calculer tout l'historique à chaque passe du

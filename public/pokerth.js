@@ -8744,7 +8744,7 @@ function gipShowTab(tab) {
   var asg = document.getElementById('gip-assist');
   try { localStorage.setItem('pth_gip_tab', tab); } catch (e) {}
   if (tab === 'odds') { try { if (typeof window._renderOdds === 'function') window._renderOdds(); } catch (e) {} }
-  if (tab === 'stats') { try { if (typeof window._renderStats === 'function') window._renderStats(); } catch (e) {} }
+  if (tab === 'stats') { try { var _rs = window._renderStatsNow || window._renderStats; if (typeof _rs === 'function') _rs(); } catch (e) {} }
   try { if (typeof window._gipAssistSync === 'function') window._gipAssistSync(); } catch (e) {}
 }
 window.gipShowTab = gipShowTab;
@@ -9370,7 +9370,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.4-web.111'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.4-web.112'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
