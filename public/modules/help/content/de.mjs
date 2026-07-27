@@ -170,7 +170,8 @@ export const help = {
       id: 'lobby', icon: '\uD83C\uDFDB\uFE0F', title: 'Lobby & Spiele',
       sections: [
         { id: 'list', t: 'Die Spieleliste',
-          b: ['Die Lobby listet jeden Tisch des Servers mit seiner Statusfarbe: grün = offen (du kannst beitreten), orange = läuft, gelb = voll, rot = geschlossen. Filter grenzen die Liste ein (offen, ohne Passwort, live, gewertet), und das Suchfeld findet ein Spiel per Name. Die Spieler-Anzeige öffnet die Liste aller Online-Spieler, durchsuch- und sortierbar.'] },
+          b: ['Die Lobby listet jeden Tisch des Servers. Jeder Eintrag zeigt die Spielerzahl, den Spieltyp, ein Vorhängeschloss, wenn ein Passwort oder eine Einladung nötig ist, und ein Status-Abzeichen: \u201eWartet\u201c (grün — das Spiel hat nicht begonnen, du kannst beitreten, wenn ein Platz frei ist), \u201eLäuft\u201c (warme Farbe — live verfolgbar, wenn Zuschauer erlaubt sind) und \u201eGeschlossen\u201c (abgedunkelt). Ein voller Tisch zeigt einfach einen vollen Zähler wie 10/10; die Abzeichenfarben folgen dem aktiven Theme.',
+              'Das Filter-Auswahlmenü grenzt die Liste genau wie der Desktop-Client ein, jede Wahl strenger als die vorige: nur offene Spiele \u2192 zusätzlich ohne volle Tische \u2192 dann nur nicht-private, nur private oder nur gewertete Spiele. Deine Wahl wird gemerkt. Das Suchfeld findet ein Spiel per Name, und die Spieler-Anzeige öffnet die Liste aller Online-Spieler, durchsuch- und sortierbar.'] },
         { id: 'join', t: 'Beitreten und zuschauen',
           b: ['Wähle ein offenes Spiel und tritt bei — ein Vorhängeschloss bedeutet, dass ein Passwort nötig ist. Laufende Spiele, die Zuschauer erlauben, lassen sich live verfolgen: Du siehst Tisch und Chat, aber die Hole Cards bleiben verdeckt und du kannst nicht handeln.'] },
         { id: 'gameinfo', t: 'Spielinfos',

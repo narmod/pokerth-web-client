@@ -174,7 +174,8 @@ export const help = {
       id: 'lobby', icon: '\uD83C\uDFDB\uFE0F', title: 'Lobby & games',
       sections: [
         { id: 'list', t: 'The game list',
-          b: ['The lobby lists every table on the server with its status color: green = open (you can join), orange = running, yellow = full, red = closed. Filters narrow the list (open, no password, live, ranked) and the search field finds a game by name. The players pill opens the list of everyone online, searchable and sortable.'] },
+          b: ['The lobby lists every table on the server. Each entry shows the player count, the game type, a padlock when a password or an invitation is required, and a status badge: \u201cWaiting\u201d (green \u2014 the game has not started, you can join if a seat is free), \u201cIn progress\u201d (warm color \u2014 watchable live when spectators are allowed) and \u201cClosed\u201d (dimmed). A full table simply shows a full count, like 10/10; badge colors follow the active theme.',
+              'The filter dropdown narrows the list exactly like the desktop client, each choice stricter than the previous one: open games only \u2192 also hiding full tables \u2192 then only non-private, only private, or only ranking games. Your choice is remembered. The search field finds a game by name, and the players pill opens the list of everyone online, searchable and sortable.'] },
         { id: 'join', t: 'Joining and spectating',
           b: ['Select an open game and join it \u2014 a padlock means a password is required. Running games that allow spectators can be watched live: you see the table and chat, but hole cards stay hidden and you cannot act.'] },
         { id: 'gameinfo', t: 'Game info',

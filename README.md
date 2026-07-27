@@ -216,7 +216,7 @@ This project is a **web frontend** that connects to any PokerTH server straight 
 
 ### Lobby
 - Real-time table list with player counts, status badges, and each table's blind level and raise schedule
-- Table filters: **All / 🟢 Open / 🔓 No password / 👁 Live / Ranked** (remembered across sessions)
+- Table filter dropdown (QML parity, same choices as the desktop client): **no filter / open / open & non-full / ± private / ranking only** — remembered across sessions
 - **⚡ Join or Create** — one-tap auto-join or table creation
 - Advanced table creation: blinds, action timeout, max players, **bot difficulty** (Easy / Mixed / Normal / Hard), **game-style presets** (🐢 Relaxed / ⚖️ Normal / ⚡ Fast, tournament presets **Ranking / WeCup / BBC**, plus a **My prefs** slot that saves your own mix), **blind-increase schedule** (every N hands or N minutes) with a raise mode (double / to a target / keep last), table speed (1–10), deal delay, **game type** (Normal / Registered-only / Invite-only), ranking on/off, spectators allowed/blocked, bots fill (with a min-humans-before-bots threshold), and an optional password
 - Spectator mode (👁 Watch)
