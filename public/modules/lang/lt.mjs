@@ -625,6 +625,7 @@ export const strings = {
     jumpLatest:'Pereiti prie naujausių',
     chatTranslateBtn:'Versti', winMove:'Perkelti', loupeToggle:'Didinamasis ×2',
     sendTooltip:'Siųsti', resizeTooltip:'Vilkite, kad pakeistumėte dydį', loadingOffline:'Įkeliamas neprisijungus režimas…',
+    connectSlow:'Jungiamasi ilgai… jei reikia, bandykite dar kartą.', copyInviteLink:'Kopijuoti kvietimo nuorodą', copyInviteHint:'Gavėjas prisijungs tiesiai prie šio stalo.',
     disconnectDialogTitle: 'Atsijungti?',
     disconnectDialogBody: 'Grįšite į prisijungimo ekraną.',
     disconnectQuit: 'Atsijungti',

@@ -632,6 +632,7 @@ export const strings = {
     jumpLatest:'Zum Neuesten springen',
     chatTranslateBtn:'Übersetzen', winMove:'Verschieben', loupeToggle:'Lupe ×2',
     sendTooltip:'Senden', resizeTooltip:'Zum Anpassen ziehen', loadingOffline:'Offline-Modus wird geladen…',
+    connectSlow:'Die Verbindung dauert… bei Bedarf erneut versuchen.', copyInviteLink:'Einladungslink kopieren', copyInviteHint:'Der Empfänger tritt direkt diesem Tisch bei.',
     disconnectDialogTitle: 'Trennen?',
     disconnectDialogBody: 'Du wirst zum Login-Bildschirm zurückgebracht.',
     disconnectQuit: 'Trennen',

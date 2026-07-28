@@ -446,6 +446,7 @@ export const strings = {
     jumpLatest:'최신으로 이동',
     chatTranslateBtn:'번역', winMove:'이동', loupeToggle:'돋보기 ×2',
     sendTooltip:'보내기', resizeTooltip:'끌어서 크기 조절', loadingOffline:'오프라인 모드 로딩 중…',
+    connectSlow:'연결이 오래 걸립니다… 필요하면 다시 시도하세요.', copyInviteLink:'초대 링크 복사', copyInviteHint:'받는 사람은 이 테이블에 바로 참가합니다.',
     disconnectDialogTitle:'접속을 끊을까요?',
     disconnectDialogBody:'로그인 화면으로 돌아갑니다.',
     disconnectQuit:'접속 해제',

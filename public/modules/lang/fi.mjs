@@ -624,6 +624,7 @@ export const strings = {
     jumpLatest:'Siirry uusimpaan',
     chatTranslateBtn:'Käännä', winMove:'Siirrä', loupeToggle:'Suurennus ×2',
     sendTooltip:'Lähetä', resizeTooltip:'Muuta kokoa vetämällä', loadingOffline:'Ladataan offline-tilaa…',
+    connectSlow:'Yhteyden muodostaminen kestää… yritä tarvittaessa uudelleen.', copyInviteLink:'Kopioi kutsulinkki', copyInviteHint:'Vastaanottaja liittyy suoraan tähän pöytään.',
     disconnectDialogTitle: 'Katkaistaanko yhteys?',
     disconnectDialogBody: 'Palaat kirjautumisnäyttöön.',
     disconnectQuit: 'Katkaise yhteys',

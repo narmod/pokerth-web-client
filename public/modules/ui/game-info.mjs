@@ -113,7 +113,6 @@ function openGameInfoPopup() {
   var bodyEl  = document.getElementById('gim-body');
   if (!titleEl || !bodyEl) return;
 
-  var fr   = (window._lang === 'fr');
   var meta = S._gameMeta || {
     id: S.gId, name: '—', type: 1, maxPlayers: 0,
     priv: false, timeout: S.gameTimeout, startMoney: S.gameStartMoney,
@@ -124,7 +123,7 @@ function openGameInfoPopup() {
   // Subtitle: row of badges (admin / private). Hidden if both false.
   var badges = [];
   if (S.amGameAdmin) {
-    badges.push('<span class="gim-badge">👑 ' + (fr ? 'Admin' : 'Admin') + '</span>');
+    badges.push('<span class="gim-badge">\u{1F451} ' + esc(t('piRoleAdmin')) + '</span>');
   }
   if (meta.priv) {
     badges.push('<span class="gim-badge">🔒 ' + t('piPrivate') + '</span>');
@@ -261,12 +260,10 @@ function openGameInfoPopup() {
     html += '<div class="gim-section gim-share-section">' +
               '<button id="gim-copy-link-btn" class="gim-copy-link-btn" type="button" ' +
                 'onclick="App.copyTableLink()">' +
-                '🔗 ' + esc(fr ? 'Copier le lien d\'invitation' : 'Copy invite link') +
+                '\u{1F517} ' + esc(t('copyInviteLink')) +
               '</button>' +
               '<div class="gim-share-hint">' +
-                esc(fr
-                  ? 'Le destinataire rejoindra directement cette table.'
-                  : 'The recipient will join this table directly.') +
+                esc(t('copyInviteHint')) +
               '</div>' +
             '</div>';
   }

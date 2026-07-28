@@ -633,6 +633,7 @@ export const strings = {
     jumpLatest:'Ir a lo más reciente',
     chatTranslateBtn:'Traducir', winMove:'Mover', loupeToggle:'Lupa ×2',
     sendTooltip:'Enviar', resizeTooltip:'Arrastra para redimensionar', loadingOffline:'Cargando el modo sin conexión…',
+    connectSlow:'La conexión tarda… inténtalo de nuevo si hace falta.', copyInviteLink:'Copiar enlace de invitación', copyInviteHint:'El destinatario se unirá directamente a esta mesa.',
     disconnectDialogTitle: '¿Desconectar?',
     disconnectDialogBody: 'Volverás a la pantalla de inicio de sesión.',
     disconnectQuit: 'Desconectar',

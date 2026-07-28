@@ -628,6 +628,7 @@ export const strings = {
     jumpLatest:'Przejdź do najnowszych',
     chatTranslateBtn:'Przetłumacz', winMove:'Przenieś', loupeToggle:'Lupa ×2',
     sendTooltip:'Wyślij', resizeTooltip:'Przeciągnij, aby zmienić rozmiar', loadingOffline:'Ładowanie trybu offline…',
+    connectSlow:'Łączenie trwa dłużej… w razie potrzeby spróbuj ponownie.', copyInviteLink:'Kopiuj link z zaproszeniem', copyInviteHint:'Odbiorca dołączy bezpośrednio do tego stołu.',
     disconnectDialogTitle: 'Rozłączyć?',
     disconnectDialogBody: 'Wrócisz do ekranu logowania.',
     disconnectQuit: 'Rozłącz',

@@ -625,6 +625,7 @@ export const strings = {
     jumpLatest:'Đến mục mới nhất',
     chatTranslateBtn:'Dịch', winMove:'Di chuyển', loupeToggle:'Kính lúp ×2',
     sendTooltip:'Gửi', resizeTooltip:'Kéo để thay đổi kích thước', loadingOffline:'Đang tải chế độ ngoại tuyến…',
+    connectSlow:'Kết nối đang lâu… thử lại nếu cần.', copyInviteLink:'Sao chép liên kết mời', copyInviteHint:'Người nhận sẽ vào thẳng bàn này.',
     disconnectDialogTitle: 'Ngắt kết nối?',
     disconnectDialogBody: 'Bạn sẽ quay về màn hình đăng nhập.',
     disconnectQuit: 'Ngắt kết nối',

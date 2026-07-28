@@ -632,6 +632,7 @@ export const strings = {
     jumpLatest:'Vai al più recente',
     chatTranslateBtn:'Traduci', winMove:'Sposta', loupeToggle:'Lente ×2',
     sendTooltip:'Invia', resizeTooltip:'Trascina per ridimensionare', loadingOffline:'Caricamento della modalità offline…',
+    connectSlow:'La connessione sta impiegando tempo… riprova se necessario.', copyInviteLink:'Copia link d\'invito', copyInviteHint:'Il destinatario entrerà direttamente in questo tavolo.',
     disconnectDialogTitle: 'Disconnettere?',
     disconnectDialogBody: 'Tornerai alla schermata di accesso.',
     disconnectQuit: 'Disconnetti',

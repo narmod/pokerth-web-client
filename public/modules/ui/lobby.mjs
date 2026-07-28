@@ -27,17 +27,19 @@ import { _ccToFlag, _avatarChipHtml } from './player-popup.mjs';
 //   - Snapshot at click time, not live-updated.
 //   - Subtle underline hover on the trigger.
 // ──────────────────────────────────────────────────────────────
-function _gameTypeLabel(t) {
+// NB : le parametre s'appelait « t » et masquait l'import t() de l'i18n
+// (meme piege que dans odds-panel) — renomme en gt.
+function _gameTypeLabel(gt) {
   // PokerTH NetGameInfo.netGameType enum (from the protocol):
   //   1 = normal game (the default created via the UI)
   //   2 = registered-only
   //   3 = invite-only
   // The server has no separate "limit/no-limit" field exposed in
   // the listing -- it's always No Limit Texas Hold'em here.
-  switch (t) {
-    case 2: return (window._lang === 'fr') ? 'Inscrits seulement' : 'Registered only';
-    case 3: return (window._lang === 'fr') ? 'Sur invitation' : 'Invite only';
-    default: return (window._lang === 'fr') ? 'Partie normale' : 'Normal game';
+  switch (gt) {
+    case 2: return t('gtypeRegistered');
+    case 3: return t('gtypeInvite');
+    default: return t('gtypeNormal');
   }
 }
 

@@ -625,6 +625,7 @@ export const strings = {
     jumpLatest:'Към най-новото',
     chatTranslateBtn:'Преведи', winMove:'Преместване', loupeToggle:'Лупа ×2',
     sendTooltip:'Изпрати', resizeTooltip:'Влачете за преоразмеряване', loadingOffline:'Зареждане на офлайн режим…',
+    connectSlow:'Свързването отнема време… опитайте отново при нужда.', copyInviteLink:'Копирай връзката за покана', copyInviteHint:'Получателят ще се присъедини директно към тази маса.',
     disconnectDialogTitle: 'Да прекъснете?',
     disconnectDialogBody: 'Ще се върнете към екрана за вход.',
     disconnectQuit: 'Прекъсни',

@@ -625,6 +625,7 @@ export const strings = {
     jumpLatest:'Prejsť na najnovšie',
     chatTranslateBtn:'Preložiť', winMove:'Presunúť', loupeToggle:'Lupa ×2',
     sendTooltip:'Odoslať', resizeTooltip:'Potiahnutím zmeníte veľkosť', loadingOffline:'Načítava sa režim offline…',
+    connectSlow:'Pripájanie trvá dlhšie… v prípade potreby to skúste znova.', copyInviteLink:'Kopírovať odkaz s pozvánkou', copyInviteHint:'Príjemca sa pripojí priamo k tomuto stolu.',
     disconnectDialogTitle: 'Odpojiť?',
     disconnectDialogBody: 'Vrátite sa na prihlasovaciu obrazovku.',
     disconnectQuit: 'Odpojiť',

@@ -25,12 +25,11 @@ function _beginConnecting(){
   // handshake tears down the in-flight socket and reopens a fresh one — a
   // connect/close storm that makes the PokerTH server block the IP (err 7).
   S._connectingNow = true;
-  var _fr = (typeof window._lang === 'undefined' || window._lang !== 'en');
   var b = _connectBtnEl();
   if (b) {
     if (S._connectBtnLabel === null) S._connectBtnLabel = b.textContent;
     b.disabled = true;
-    b.textContent = _fr ? '⏳ Connexion…' : '⏳ Connecting…';
+    b.textContent = '\u23F3 ' + t('connecting');
   }
   if (S._connectTimeout) clearTimeout(S._connectTimeout);
   S._connectTimeout = setTimeout(function(){
@@ -39,7 +38,7 @@ function _beginConnecting(){
     // now cleanly close+reopen (single cycle) via the lingering-WS path.
     if (!S._connectingNow) return;
     _endConnecting();
-    try { setStatus(_fr ? 'La connexion prend du temps… réessaie si besoin.' : 'Connection is taking a while… retry if needed.', 'err'); } catch(e) {}
+    try { setStatus(t('connectSlow'), 'err'); } catch(e) {}
   }, 20000);
 }
 function _endConnecting(){

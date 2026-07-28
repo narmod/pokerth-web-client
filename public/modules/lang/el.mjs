@@ -625,6 +625,7 @@ export const strings = {
     jumpLatest:'Μετάβαση στα πιο πρόσφατα',
     chatTranslateBtn:'Μετάφραση', winMove:'Μετακίνηση', loupeToggle:'Μεγεθυντικός ×2',
     sendTooltip:'Αποστολή', resizeTooltip:'Σύρετε για αλλαγή μεγέθους', loadingOffline:'Φόρτωση λειτουργίας χωρίς σύνδεση…',
+    connectSlow:'Η σύνδεση αργεί… δοκιμάστε ξανά αν χρειαστεί.', copyInviteLink:'Αντιγραφή συνδέσμου πρόσκλησης', copyInviteHint:'Ο παραλήπτης θα μπει απευθείας σε αυτό το τραπέζι.',
     disconnectDialogTitle: 'Αποσύνδεση;',
     disconnectDialogBody: 'Θα επιστρέψετε στην οθόνη σύνδεσης.',
     disconnectQuit: 'Αποσύνδεση',

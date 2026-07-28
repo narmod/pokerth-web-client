@@ -625,6 +625,7 @@ export const strings = {
     jumpLatest:'Иди на најновије',
     chatTranslateBtn:'Преведи', winMove:'Помери', loupeToggle:'Лупа ×2',
     sendTooltip:'Пошаљи', resizeTooltip:'Повуците да промените величину', loadingOffline:'Учитавање ванмрежног режима…',
+    connectSlow:'Повезивање траје… покушајте поново ако треба.', copyInviteLink:'Копирај везу за позив', copyInviteHint:'Прималац ће се директно придружити овом столу.',
     disconnectDialogTitle: 'Prekinuti vezu?',
     disconnectDialogBody: 'Vratićete se na ekran za prijavu.',
     disconnectQuit: 'Prekini vezu',

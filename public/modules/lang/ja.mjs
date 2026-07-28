@@ -624,6 +624,7 @@ export const strings = {
     jumpLatest:'最新へ移動',
     chatTranslateBtn:'翻訳', winMove:'移動', loupeToggle:'拡大 ×2',
     sendTooltip:'送信', resizeTooltip:'ドラッグでサイズ変更', loadingOffline:'オフラインモードを読み込み中…',
+    connectSlow:'接続に時間がかかっています…必要なら再試行してください。', copyInviteLink:'招待リンクをコピー', copyInviteHint:'受け取った人はこのテーブルに直接参加します。',
     disconnectDialogTitle: '切断しますか？',
     disconnectDialogBody: 'ログイン画面に戻ります。',
     disconnectQuit: '切断',

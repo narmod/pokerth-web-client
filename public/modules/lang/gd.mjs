@@ -626,6 +626,7 @@ export const strings = {
     jumpLatest:'Leum gun fheadhainn as ùire',
     chatTranslateBtn:'Eadar-theangaich', winMove:'Gluais', loupeToggle:'Glainne-mheudachaidh ×2',
     sendTooltip:'Cuir', resizeTooltip:'Slaod gus meud atharrachadh', loadingOffline:'A\' luchdadh am modh far-loidhne…',
+    connectSlow:'Tha an ceangal a\' toirt greis… feuch a-rithist ma tha feum air.', copyInviteLink:'Dèan lethbhreac dhen cheangal cuiridh', copyInviteHint:'Thèid am faighteir a-steach dhan bhòrd seo gu dìreach.',
     disconnectDialogTitle: 'Dì-cheangail?',
     disconnectDialogBody: 'Tillidh tu dhan sgrìn clàraidh a-steach.',
     disconnectQuit: 'Dì-cheangail',

@@ -625,6 +625,7 @@ export const strings = {
     jumpLatest:'Ves al més recent',
     chatTranslateBtn:'Tradueix', winMove:'Mou', loupeToggle:'Lupa ×2',
     sendTooltip:'Envia', resizeTooltip:'Arrossega per redimensionar', loadingOffline:'Carregant el mode fora de línia…',
+    connectSlow:'La connexió triga… torna-ho a provar si cal.', copyInviteLink:'Copia l\'enllaç d\'invitació', copyInviteHint:'El destinatari s\'unirà directament a aquesta taula.',
     disconnectDialogTitle: 'Vols desconnectar?',
     disconnectDialogBody: 'Tornaràs a la pantalla d\'inici de sessió.',
     disconnectQuit: 'Desconnecta',

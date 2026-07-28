@@ -378,6 +378,7 @@ export const strings = {
     jumpLatest:'Jump to latest',
     chatTranslateBtn:'Translate', winMove:'Move', loupeToggle:'Magnifier ×2',
     sendTooltip:'Send', resizeTooltip:'Drag to resize', loadingOffline:'Loading offline mode…',
+    connectSlow:'Connection is taking a while… retry if needed.', copyInviteLink:'Copy invite link', copyInviteHint:'The recipient will join this table directly.',
     createPrefsSave:'💾 My prefs', createPrefsSaveTip:'Save this form as my personal preferences', createPrefsSaved:'Preferences saved', createPrefsLoaded:'Preferences loaded', createPrefsNone:'No saved preferences yet',
     advSecLocalGame:'Training game', advCreateDialog:'Show Game Settings Dialog for New Game', advPauseHands:'Pause between hands (continue with the winner window)', nextHandBtn:'Next hand',
     advSecTablePrefs:'Table preferences', advTablePrefsDesc:'Defaults for the tables you create in this mode — the ⭐ pill on the create form loads them.', advRaiseEveryHands:'Raise blinds every N hands', advGameSpeed:'Game speed (1–11)',

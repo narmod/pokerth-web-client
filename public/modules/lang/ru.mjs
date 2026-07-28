@@ -627,6 +627,7 @@ export const strings = {
     jumpLatest:'К самым новым',
     chatTranslateBtn:'Перевести', winMove:'Переместить', loupeToggle:'Лупа ×2',
     sendTooltip:'Отправить', resizeTooltip:'Потяните, чтобы изменить размер', loadingOffline:'Загрузка автономного режима…',
+    connectSlow:'Подключение занимает время… при необходимости повторите.', copyInviteLink:'Копировать ссылку-приглашение', copyInviteHint:'Получатель сразу присоединится к этому столу.',
     disconnectDialogTitle: 'Отключиться?',
     disconnectDialogBody: 'Вы вернётесь на экран входа.',
     disconnectQuit: 'Отключиться',

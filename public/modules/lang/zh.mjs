@@ -626,6 +626,7 @@ export const strings = {
     jumpLatest:'跳到最新',
     chatTranslateBtn:'翻译', winMove:'移动', loupeToggle:'放大镜 ×2',
     sendTooltip:'发送', resizeTooltip:'拖动调整大小', loadingOffline:'正在加载离线模式…',
+    connectSlow:'连接时间较长…如有需要请重试。', copyInviteLink:'复制邀请链接', copyInviteHint:'收到链接的人将直接加入此牌桌。',
     disconnectDialogTitle: '断开连接？',
     disconnectDialogBody: '你将返回登录界面。',
     disconnectQuit: '断开连接',

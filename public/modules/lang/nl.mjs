@@ -628,6 +628,7 @@ export const strings = {
     jumpLatest:'Naar nieuwste',
     chatTranslateBtn:'Vertalen', winMove:'Verplaatsen', loupeToggle:'Vergrootglas ×2',
     sendTooltip:'Verzenden', resizeTooltip:'Sleep om formaat te wijzigen', loadingOffline:'Offlinemodus laden…',
+    connectSlow:'De verbinding duurt lang… probeer het zo nodig opnieuw.', copyInviteLink:'Uitnodigingslink kopiëren', copyInviteHint:'De ontvanger komt rechtstreeks aan deze tafel.',
     disconnectDialogTitle: 'Verbinding verbreken?',
     disconnectDialogBody: 'Je keert terug naar het inlogscherm.',
     disconnectQuit: 'Verbinding verbreken',

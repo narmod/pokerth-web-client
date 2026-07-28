@@ -624,6 +624,7 @@ export const strings = {
     jumpLatest:'Gå till senaste',
     chatTranslateBtn:'Översätt', winMove:'Flytta', loupeToggle:'Förstoring ×2',
     sendTooltip:'Skicka', resizeTooltip:'Dra för att ändra storlek', loadingOffline:'Läser in offlineläge…',
+    connectSlow:'Anslutningen tar tid… försök igen vid behov.', copyInviteLink:'Kopiera inbjudningslänk', copyInviteHint:'Mottagaren ansluter direkt till det här bordet.',
     disconnectDialogTitle: 'Koppla från?',
     disconnectDialogBody: 'Du återvänder till inloggningsskärmen.',
     disconnectQuit: 'Koppla från',

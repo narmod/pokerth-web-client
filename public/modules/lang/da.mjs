@@ -624,6 +624,7 @@ export const strings = {
     jumpLatest:'Gå til nyeste',
     chatTranslateBtn:'Oversæt', winMove:'Flyt', loupeToggle:'Forstørrelse ×2',
     sendTooltip:'Send', resizeTooltip:'Træk for at ændre størrelse', loadingOffline:'Indlæser offlinetilstand…',
+    connectSlow:'Forbindelsen tager tid… prøv igen om nødvendigt.', copyInviteLink:'Kopiér invitationslink', copyInviteHint:'Modtageren tilslutter sig dette bord direkte.',
     disconnectDialogTitle: 'Afbryd?',
     disconnectDialogBody: 'Du vender tilbage til loginskærmen.',
     disconnectQuit: 'Afbryd',

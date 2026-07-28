@@ -4673,7 +4673,7 @@ const App = (() => {
         var that2 = this;
         var btn2 = document.querySelector('#s-connect .btn-primary');
         if (btn2) btn2.disabled = true;
-        setStatus('⏳ ' + (t('closingPrevious') || 'Fermeture de la connexion précédente…'));
+        setStatus('⏳ ' + (t('closingPrevious') || 'Closing previous connection…'));
         // Detach the old onclose to avoid the disconnect handler kicking in
         var prevWs = S.ws;
         prevWs.onclose = null;
@@ -5664,7 +5664,7 @@ const App = (() => {
           // cls 'mine' (et pas 'sys' : les messages systeme sont filtres
           // d'addGameChat) — affichage local uniquement, rien n'est envoye.
           addGameChat('seatdbg', JSON.stringify(_info), 'mine');
-        } catch (eDbg) { try { addGameChat('seatdbg', 'erreur: ' + eDbg, 'mine'); } catch (e2) {} }
+        } catch (eDbg) { try { addGameChat('seatdbg', 'error: ' + eDbg, 'mine'); } catch (e2) {} }
         return;
       }
       // ── Local diagnostic/setting commands (/help /diag /update …) — nothing
@@ -9403,7 +9403,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.4-web.118'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.4-web.119'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
