@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import { readFileSync } from 'node:fs';
 // Deterministic tests for public/modules/game/seat-render.mjs (ESM #9g-C6).
 // Run: node scripts/test-seat-render.mjs
 globalThis.window = globalThis;
@@ -110,6 +111,18 @@ S._amSpectator = false;
 ok(window.renderSeatsImmediate === M.renderSeatsImmediate && window.renderSeats === M.renderSeats &&
    window.getPlayerName === M.getPlayerName && window.isBot === M.isBot,
    'ponts window.* en place');
+
+// Garde de régression : aucune mesure ne doit prendre un siège fantôme pour
+// étalon. Le CSS y masque la rangée nom/cash en display:none, donc une boîte
+// fantôme mesure bien moins haut qu'une vraie ; la bisection en déduirait des
+// boîtes trop petites et laisserait une échelle trop grande — les boîtes
+// débordent alors sur la self et les cartes communes, de plus en plus à mesure
+// que des joueurs quittent la table. Vérification sur la source : le DOM stubé
+// ici ne rejoue pas la mesure.
+const SRC = readFileSync(new URL('../public/modules/game/seat-render.mjs', import.meta.url), 'utf8');
+const badSel = SRC.match(/querySelector(?:All)?\('\.seat:not\(\.me\)(?!:not\(\.seat-ghost\))[^']*'\)/g);
+ok(!badSel, 'aucun échantillon de mesure ne peut tomber sur un siège fantôme'
+   + (badSel ? ' — trouvé : ' + badSel.join(', ') : ''));
 
 console.log(fail ? `\n${fail}/${n} ÉCHECS` : `\n${n}/${n} OK`);
 process.exit(fail ? 1 : 0);

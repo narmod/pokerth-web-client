@@ -1110,7 +1110,18 @@ function renderSeatsImmediate() {
       if (!found) return null;
       return { w: Math.round((maxX - minX) / div), h: Math.round((maxY - minY) / div) };
     };
-    var _s0m = (window._loupeK > 1) ? null : el.querySelector('.seat:not(.me)'); // loupe : mesure figée
+    // Le siège témoin ne doit JAMAIS être un fantôme : le CSS y masque la
+    // rangée nom/cash/drapeau en display:none, donc sa hauteur mesurée est
+    // bien inférieure à celle d'une vraie boîte. La bisection croirait les
+    // boîtes plus petites qu'elles ne sont et garderait une échelle trop
+    // grande → boxes qui débordent sur la self et les cartes communes, de
+    // pire en pire à mesure que des joueurs partent (dès que le premier
+    // siège du DOM est un fantôme). Partout ailleurs dans ce fichier les
+    // fantômes sont déjà exclus des mesures (anti-chevauchement, bisection) ;
+    // il n'y a aucune raison qu'ils servent d'étalon ici. Si TOUS les
+    // adversaires sont des fantômes, on ne mesure pas : la dernière mesure
+    // valide reste en place.
+    var _s0m = (window._loupeK > 1) ? null : el.querySelector('.seat:not(.me):not(.seat-ghost)'); // loupe : mesure figée
     var _m0m = el.querySelector('.seat.me');
     var _dims = _s0m ? _unionSeat(_s0m, _seatBoxScale) : null;
     if (_dims && _dims.w > 40 && _dims.h > 30) {
