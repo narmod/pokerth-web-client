@@ -144,6 +144,13 @@ window.setAssist = function(on) {
   _applyAssistUI();
 };
 
+// Vrai quand j'ai deja jete cette main : plus aucune action ne peut etre
+// jouee ni pre-armee jusqu'a la prochaine (parite Qt-Widgets / QML).
+function _iAmFolded() {
+  return !!(S.seatData && S.seatData[S.myId] && S.seatData[S.myId].folded);
+}
+window._iAmFolded = _iAmFolded;
+
 // Exécute l'action pré-armée quand notre tour arrive (runPreAction officiel).
 // Recalcule le contexte au moment de l'exécution. Un Fold pré-armé devient
 // Check si le check est gratuit. Retourne true si une action a été jouée.
@@ -265,6 +272,9 @@ function renderMyTurnActions(preview) {
   // En aperçu (hors-tour), les 4 boutons d'action ARMENT une pré-action au
   // lieu d'agir ; le bouton armé reçoit la classe .prearmed (bord or).
   var _pv = !!preview;
+  // Foldé : les 4 touches d'action deviennent inertes (aucun clic, aucun
+  // pré-armement) jusqu'a la main suivante — .actions-preview.folded-out.
+  var _fo = _pv && _iAmFolded();
   function _preClk(name, live) { return _pv ? "App.armPreAction('" + name + "')" : live; }
   function _preCls(name) { return (_pv && S._preAction === name) ? ' prearmed' : ''; }
 
@@ -315,7 +325,7 @@ function renderMyTurnActions(preview) {
     // (Narrateur de tour "X ●●●" retiré — fidélité QML : le tour est
     // signalé uniquement par la surbrillance du siège.)
     document.getElementById('g-actions').innerHTML =
-      '<div class="actions-preview" data-cap="' + esc(t('preActionTitle')) + '">' + h + '</div>';
+      '<div class="actions-preview' + (_fo ? ' folded-out' : '') + '" data-cap="' + esc(t('preActionTitle')) + '">' + h + '</div>';
     window.updateBottomLayout();
     _wireRaiseBtn();
     return;

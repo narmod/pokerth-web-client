@@ -72,6 +72,16 @@ ok(ga.innerHTML.includes('actions-preview'), 'aperçu : classe actions-preview')
 ok(ga.innerHTML.includes("armPreAction('fold')"), 'aperçu : Fold arme une pré-action');
 ok(!ga.innerHTML.includes('act-narrator') && !ga.innerHTML.includes('thinking-dots'),
    'aperçu : aucun narrateur de tour (fidélité QML)');
+ok(!ga.innerHTML.includes('folded-out'), 'aperçu : pas de zone morte tant que je suis dans le coup');
+
+// Main jetée : la barre devient une zone morte (parité clients officiels).
+S.seatData[1].folded = true;
+A.renderMyTurnActions(true);
+ok(ga.innerHTML.includes('folded-out'), 'foldé : la barre d\'action passe en zone morte');
+ok(window._iAmFolded() === true, '_iAmFolded exposé pour le garde de armPreAction');
+S.seatData[1].folded = false;
+A.renderMyTurnActions(true);
+ok(!ga.innerHTML.includes('folded-out'), 'main suivante : la zone morte est levée');
 
 // Call avec mise à suivre + montant
 S.highestBet = 50;

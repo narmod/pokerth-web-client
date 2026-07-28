@@ -5470,6 +5470,9 @@ const App = (() => {
       if (S.turnPid === S.myId) return;  // à notre tour : inchangé (les boutons agissent)
       if (S._amSpectator || !S._gameStarted) return;
       if (S.myCards[0] == null && S.myCards[1] == null) return; // pas de cartes
+      // Main jetée : plus rien à armer jusqu'à la prochaine (parité clients
+      // officiels — la barre est une zone morte une fois foldé).
+      if (typeof window._iAmFolded === 'function' && window._iAmFolded()) return;
       S._preAction = (S._preAction === name) ? '' : name;      // toggle
       S._preActionToCall = Math.max(0, S.highestBet - ((S.seatData[S.myId] || {}).bet || 0)); // onCallAmountChanged : MON à-suivre
       renderMyTurnActions(true);                            // re-render pour le surlignage or
@@ -9403,7 +9406,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.4-web.119'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.4-web.120'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

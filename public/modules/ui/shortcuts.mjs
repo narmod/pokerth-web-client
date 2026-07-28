@@ -148,8 +148,14 @@ document.addEventListener('keydown', function(e) {
       return;
     }
   }
-  var _ap = document.querySelector('#g-actions > .action-grid');
+  // La grille est un enfant direct de #g-actions a notre tour, et enveloppee
+  // dans .actions-preview hors tour : viser le descendant couvre les deux, ce
+  // qui rend les F-touches capables d'armer une pre-action comme la souris.
+  var _ap = document.querySelector('#g-actions .action-grid');
   if (!_ap) return;
+  var _pv = !!document.querySelector('#g-actions > .actions-preview');
+  // Foldé : la barre est une zone morte, au clavier comme a la souris.
+  if (_pv && document.querySelector('#g-actions > .actions-preview.folded-out')) return;
 
   var key = e.key.toLowerCase();
   var KB = _keyBindings();
@@ -170,24 +176,31 @@ document.addEventListener('keydown', function(e) {
   else if (key === KB.bet3) act = 'bet3';
   else if (key === 'enter') act = 'enter'; // Entrée = valider la relance (fixe)
   if (!act) return;
+  // Hors tour, seules les 4 actions ont un sens : mises rapides et Entrée
+  // pilotent le champ de montant, inactif en aperçu (la pré-relance part au min).
+  if (_pv && act !== 'fold' && act !== 'call' && act !== 'raise' && act !== 'allin') return;
 
+  // En aperçu, le clic sur ces mêmes boutons ARME la pré-action (leur onclick
+  // pointe sur App.armPreAction) : le hint le dit, pour qu'on ne croie pas
+  // avoir joué. Un second appui sur la même touche désarme, comme à la souris.
+  function _hint(k) { return _pv ? (t('preActionTitle') + ' · ' + t(k)) : t(k); }
   if (act === 'fold') {
     // Fold
     var btn = document.querySelector('.btn-fold:not([disabled])');
-    if (btn) { e.preventDefault(); btn.click(); showKeyHint(t('hintFold')); }
+    if (btn) { e.preventDefault(); btn.click(); showKeyHint(_hint('hintFold')); }
   } else if (act === 'call') {
     // Call ou Check
     e.preventDefault();
     var btn = document.querySelector('.btn-call:not([disabled]), .btn-check:not([disabled])');
-    if (btn) { btn.click(); showKeyHint(btn.classList.contains('btn-check') ? t('hintCheck') : t('hintCall')); }
+    if (btn) { btn.click(); showKeyHint(_hint(btn.classList.contains('btn-check') ? 'hintCheck' : 'hintCall')); }
   } else if (act === 'raise') {
     // Raise — clique directement le bouton de relance (au montant courant de l'input).
     var btn = document.querySelector('.btn-raise:not([disabled])');
-    if (btn) { e.preventDefault(); btn.click(); showKeyHint(t('hintRaise')); }
+    if (btn) { e.preventDefault(); btn.click(); showKeyHint(_hint('hintRaise')); }
   } else if (act === 'allin') {
     // All-in
     var btn = document.querySelector('.btn-allin:not([disabled])');
-    if (btn) { e.preventDefault(); btn.click(); showKeyHint(t('hintAllin')); }
+    if (btn) { e.preventDefault(); btn.click(); showKeyHint(_hint('hintAllin')); }
   } else if (act === 'bet1' || act === 'bet2' || act === 'bet3') {
     // Mises rapides : remplit le champ via .btn-pct puis retire le focus (sinon R/Entrée
     // seraient ignorés, le champ montant étant focalisé). Valider ensuite par Raise.

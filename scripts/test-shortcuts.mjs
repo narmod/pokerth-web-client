@@ -84,5 +84,52 @@ window._rebindAction = 'fold';           // écriture nue du monolithe -> setter
 ok(window._rebindAction === 'fold', 'defineProperty bridge: bare write reaches module state');
 rebindHandler.fn(ev('Escape'));
 
+// 9) Action keys off-turn: the grid lives inside .actions-preview, where the
+// buttons arm a pre-action instead of playing it. The handler must still find
+// them (F1-F4 parity with the mouse), and must find nothing once folded.
+const actionHandler = listeners.filter((l) => !l.capture)[0];
+globalThis._advGet = (k, d) => d;        // advanced options: defaults are enough here
+globalThis.t = (k) => k;
+document.body.appendChild = () => {};    // showKeyHint pins a toast on the body
+globalThis.setTimeout = globalThis.setTimeout || (() => {});
+let clicked = [];
+function stubTable({ preview, foldedOut }) {
+  clicked = [];
+  const btn = (cls) => ({ classList: { contains: (c) => cls.includes(c) }, click() { clicked.push(cls); } });
+  document.querySelector = (sel) => {
+    if (sel === '#g-actions .action-grid') return {};
+    if (sel === '#g-actions > .actions-preview') return preview ? {} : null;
+    if (sel === '#g-actions > .actions-preview.folded-out') return foldedOut ? {} : null;
+    if (sel.includes('btn-fold')) return btn('btn-fold');
+    if (sel.includes('btn-call')) return btn('btn-call');
+    if (sel.includes('btn-raise')) return btn('btn-raise');
+    if (sel.includes('btn-allin')) return btn('btn-allin');
+    return null;
+  };
+  document.querySelectorAll = () => [];
+}
+const evk = (key) => ({ key, target: {}, preventDefault() {}, stopPropagation() {} });
+
+stubTable({ preview: true, foldedOut: false });
+actionHandler.fn(evk('F1'));
+ok(clicked.length === 1 && clicked[0] === 'btn-fold', 'off-turn: F1 reaches the fold button (arms a pre-action)');
+stubTable({ preview: true, foldedOut: false });
+actionHandler.fn(evk('F4'));
+ok(clicked[0] === 'btn-allin', 'off-turn: F4 reaches the all-in button');
+stubTable({ preview: true, foldedOut: false });
+actionHandler.fn(evk('1'));
+ok(clicked.length === 0, 'off-turn: quick-bet keys stay inert (amount field is inactive)');
+
+stubTable({ preview: true, foldedOut: true });
+actionHandler.fn(evk('F1'));
+actionHandler.fn(evk('F2'));
+actionHandler.fn(evk('F3'));
+actionHandler.fn(evk('F4'));
+ok(clicked.length === 0, 'folded: the action bar is a dead zone for the keyboard too');
+
+stubTable({ preview: false, foldedOut: false });
+actionHandler.fn(evk('F2'));
+ok(clicked[0] === 'btn-call', 'on turn: F2 still plays call/check as before');
+
 if (fails) { console.error(fails + ' test(s) failed'); process.exit(1); }
 console.log('All shortcuts tests passed.');
