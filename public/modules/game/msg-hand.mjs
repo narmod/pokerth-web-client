@@ -349,7 +349,11 @@ function onHandStart(sub) {
         // de la rotation des sièges ACTIFS, comme le client officiel.
         var _hlSeatOf = function(pid){ var i = S.seats.indexOf(pid); return i >= 0 ? i + 1 : 0; };
         var _hlActive = function(pid){ var d = S.seatData[pid]; return d && !d.gone && d.active !== false && !(d.money != null && d.money <= 0); };
-        var _hlDealerIdx = S.seats.indexOf(S.dealerPid);
+        // Le donneur de CETTE main arrive dans le champ 6 du message ;
+        // S.dealerPid n'est réaffecté que plus bas dans ce handler, donc le
+        // lire ici décalait dealer/SB/BB d'une main entière dans le .pdb.
+        var _hlDealerPid = Proto.u32(sub, 6) || S.dealerPid;
+        var _hlDealerIdx = S.seats.indexOf(_hlDealerPid);
         var _hlNextActive = function(fromIdx, step){
           var stepped = 0;
           for (var k = 1; k <= S.seats.length; k++) {
@@ -360,7 +364,7 @@ function onHandStart(sub) {
         };
         var _hlSbPid, _hlBbPid;
         var _hlActiveCount = S.seats.filter(_hlActive).length;
-        if (_hlActiveCount === 2) { _hlSbPid = S.dealerPid; _hlBbPid = _hlNextActive(_hlDealerIdx, 1); }
+        if (_hlActiveCount === 2) { _hlSbPid = _hlDealerPid; _hlBbPid = _hlNextActive(_hlDealerIdx, 1); }
         else { _hlSbPid = _hlNextActive(_hlDealerIdx, 1); _hlBbPid = _hlNextActive(_hlDealerIdx, 2); }
         var _hlStacks = {};
         for (var _sp3 = 0; _sp3 < S.seats.length; _sp3++) {
@@ -369,7 +373,7 @@ function onHandStart(sub) {
         }
         window._handlog.onHandStart({
           handID: S.handNum,
-          dealerSeat: _hlSeatOf(S.dealerPid),
+          dealerSeat: _hlSeatOf(_hlDealerPid),
           sbSeat: _hlSeatOf(_hlSbPid), sbAmount: S.smallBlind || 0,
           bbSeat: _hlSeatOf(_hlBbPid), bbAmount: (S.smallBlind || 0) * 2,
           stacks: _hlStacks
@@ -416,6 +420,12 @@ function onHandStart(sub) {
       if (S.myCards[0] != null || S.myCards[1] != null) _cd.cleared = true;
       S.myCards = [null, null];
     }
+    // Log .pdb : mes cartes fermées, connues dès HandStart. Le client officiel
+    // les écrit à chaque main, abattage ou non.
+    try {
+      if (window._handlog && S.myCards[0] != null && S.myCards[1] != null)
+        window._handlog.onOwnCards({ pid: S.myId, card1: S.myCards[0], card2: S.myCards[1] });
+    } catch (_e) {}
     try {
       _cd.money = S.seatData[S.myId] ? S.seatData[S.myId].money : undefined;
       window._pthCardDiag = _cd;
@@ -966,7 +976,9 @@ function onEndOfHandShow(sub) {
           var _rfd = !!(S.seatData[_rpid] && S.seatData[_rpid].folded);
           var _rc1 = _rfd ? null : Proto.u32orNull(_rr, 2);
           var _rc2 = _rfd ? null : Proto.u32orNull(_rr, 3);
-          var _rwon = Proto.u32(_rr, 6);
+          // champ 5 = moneyWon ; le champ 6 est playerMoney (stack final) —
+          // le lire ici faisait gagner à CHAQUE joueur la valeur de son stack.
+          var _rwon = Proto.u32(_rr, 5);
           var _htext = null, _hint = null;
           if (_rc1 != null && _rc2 != null && typeof evaluateBestHand === 'function') {
             var _ev = evaluateBestHand([_rc1, _rc2], _bdSD);

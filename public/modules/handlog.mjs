@@ -173,6 +173,21 @@ class HandRecorder {
     };
   }
 
+  // ── Mes cartes fermées ───────────────────────────────────────────────────
+  // Le log officiel enregistre TOUJOURS les hole cards du joueur qui logge,
+  // même sans abattage : le client les connaît dès HandStart. Sans ce hook la
+  // colonne Seat_<moi>_Card_* ne se remplissait qu'aux mains allées jusqu'à
+  // l'abattage (18 mains sur 67 dans le log du 2026-07-28).
+  onOwnCards({ pid, card1, card2 }) {
+    if (!this._curHand) return;
+    const seat = this._seatOfPid[pid];
+    if (seat == null) return;
+    if (card1 == null || card2 == null) return;
+    if (card1 < 0 || card1 > 51 || card2 < 0 || card2 > 51) return;
+    this._curHand['Seat_' + seat + '_Card_1'] = card1;
+    this._curHand['Seat_' + seat + '_Card_2'] = card2;
+  }
+
   // ── Action d'un joueur ───────────────────────────────────────────────────
   // pid, actionCode (1..6), totalBet (=totalPlayerBet de la street), money(restant).
   onAction({ pid, actionCode, totalBet }) {
