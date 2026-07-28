@@ -3519,6 +3519,73 @@ const httpServer = http.createServer((req, res) => {
     return;
   }
 
+  // ── Log-analysis relay (same pipeline as the desktop/QML client) ──
+  // The official client POSTs the .pdb as multipart field "pdb_file" to
+  // pokerth.net/log_file_analysis/upload.php and reads back "OK <hash>" or
+  // "ERROR <n>" (see LogHandler::analyse / UploadHelper). The server names the
+  // stored file <hash>.pdb — that hash is the key the bbc/wec reports use.
+  // A browser cannot do this itself: upload.php sends no CORS header, so the
+  // POST would go out but the answer would be unreadable. We relay it here.
+  // Body = the raw .pdb bytes; ?name= is the file name to announce upstream.
+  // NOTE: uploads leave from THIS host, so upload.php's per-IP flood guard
+  // (LOG_UPLOAD_ERROR_MAX_NUM_IP = 4) is shared by all users of this instance.
+  if (reqPathOnly === '/pdb-analyse') {
+    if (req.method !== 'POST') { res.writeHead(405); res.end('Method not allowed'); return; }
+    function _paJson(code, obj) {
+      res.writeHead(code, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' });
+      res.end(JSON.stringify(obj));
+    }
+    return readRawBody(req, 10 * 1024 * 1024, function (buf) {
+      if (!buf || !buf.length) return _paJson(413, { ok: false, error: 'empty upload or larger than 10 MB' });
+      // Cheap sanity gate before bothering the upstream server.
+      if (buf.length < 16 || buf.slice(0, 16).toString('latin1') !== 'SQLite format 3\x00')
+        return _paJson(400, { ok: false, error: 'not a pdb file' });
+      var _paName = String(query.name || '').replace(/[^A-Za-z0-9._-]/g, '').slice(0, 80);
+      if (!/\.pdb$/.test(_paName)) _paName = 'pokerth-log.pdb';
+      var _paBoundary = '----PokerTHWeb' + crypto.randomBytes(12).toString('hex');
+      var _paHead = Buffer.from(
+        '--' + _paBoundary + '\r\n' +
+        'Content-Disposition: form-data; name="pdb_file"; filename="' + _paName + '"\r\n' +
+        'Content-Type: application/octet-stream\r\n\r\n', 'latin1');
+      var _paTail = Buffer.from('\r\n--' + _paBoundary + '--\r\n', 'latin1');
+      var _paBody = Buffer.concat([_paHead, buf, _paTail]);
+      var _paReq = https.request({
+        hostname: 'www.pokerth.net', port: 443, method: 'POST',
+        path: '/log_file_analysis/upload.php',
+        headers: {
+          // Same UA as the official client — Cloudflare 403s unknown agents
+          // (this is what broke the serverlist fetch on 2026-07-24).
+          'User-Agent': 'PokerTH/2.0 (Qt Network)',
+          'Accept': '*/*',
+          'Accept-Encoding': 'identity',
+          'Content-Type': 'multipart/form-data; boundary=' + _paBoundary,
+          'Content-Length': _paBody.length
+        }
+      }, function (up) {
+        var out = '';
+        up.setEncoding('utf8');
+        up.on('data', function (c) { out += c; if (out.length > 4096) up.destroy(); });
+        up.on('end', function () {
+          var txt = String(out).trim();
+          var head = txt.split(/\s+/)[0] || '';
+          if (head === 'OK') {
+            var hash = (txt.slice(head.length).trim().split(/\s+/)[0] || '');
+            if (!/^[A-Za-z0-9]{8,64}$/.test(hash)) return _paJson(502, { ok: false, error: 'bad response' });
+            return _paJson(200, { ok: true, id: hash });
+          }
+          if (head === 'ERROR') {
+            var code = parseInt(txt.slice(head.length).trim(), 10) || 0;
+            return _paJson(502, { ok: false, error: 'upstream', code: code });
+          }
+          return _paJson(502, { ok: false, error: 'bad response' });
+        });
+      });
+      _paReq.setTimeout(30000, function () { try { _paReq.destroy(); } catch (e) {} });
+      _paReq.on('error', function (e) { _paJson(502, { ok: false, error: 'upstream unreachable: ' + e.message }); });
+      _paReq.end(_paBody);
+    });
+  }
+
   // ── Ranking relay (PokerTH / BBC / WEC) — see handleRanking above. ──
   if (reqPathOnly === '/api/ranking') {
     handleRanking(req, res, query);

@@ -639,12 +639,15 @@ async function _saveAsPdb() {
 }
 
 // ── Analyse sur pokerth.net ────────────────────────────────────────────────
-// Envoie le .pdb de la session sélectionnée à l'API du ranking officiel
-// (POST /pthranking/game/pdb, ajoutée le 26/07/2026 avec sp0ck) puis ouvre la
-// page d'analyse /gamelog?pdb=<id> dans un nouvel onglet. Même pipeline que
-// le bouton « log-analysis » du client de bureau.
-const PTHNET_PDB_API = 'https://www.pokerth.net/pthranking/game/pdb';
-const PTHNET_GAMELOG = 'https://www.pokerth.net/gamelog?pdb=';
+// Pipeline IDENTIQUE au client de bureau/QML (LogHandler::analyse) : le .pdb
+// part sur pokerth.net/log_file_analysis/upload.php, le serveur répond
+// « OK <hash> » et range le fichier sous <hash>.pdb — c'est ce hash que les
+// rapports bbc/wec utilisent. On ouvre ensuite la même page d'analyse que le
+// client officiel. Le POST passe par notre proxy (/pdb-analyse) parce que
+// upload.php n'envoie aucun en-tête CORS : le navigateur pourrait émettre la
+// requête mais pas lire la réponse, donc pas de hash, donc pas de lien.
+const PTHNET_PDB_API = '/pdb-analyse';
+const PTHNET_GAMELOG = 'https://logfile-analysis.pokerth.net/?ID=';
 
 async function _uploadAnalysis() {
   if (!_sel) return;
@@ -660,12 +663,15 @@ async function _uploadAnalysis() {
   try {
     const tb = _sessionTables(_all, _sel);
     const bytes = await window._buildPdb(tb);
-    const fd = new FormData();
-    fd.append('pdb', new Blob([bytes], { type: 'application/x-sqlite3' }), _fileBase(tb.session, _sel) + '.pdb');
-    const r = await fetch(PTHNET_PDB_API, { method: 'POST', body: fd });
+    // Corps = octets bruts du .pdb ; le nom annoncé en amont suit la même
+    // convention que le client officiel (pokerth-log-<date>_<heure>.pdb).
+    const name = _fileBase(tb.session, _sel) + '.pdb';
+    const r = await fetch(PTHNET_PDB_API + '?name=' + encodeURIComponent(name), {
+      method: 'POST', headers: { 'Content-Type': 'application/x-sqlite3' }, body: bytes
+    });
     const j = await r.json();
-    if (!j || j.status !== true || !j.msg || !j.msg.id) throw new Error('bad response');
-    const url = PTHNET_GAMELOG + encodeURIComponent(j.msg.id);
+    if (!j || j.ok !== true || !j.id) throw new Error('bad response');
+    const url = PTHNET_GAMELOG + encodeURIComponent(j.id);
     if (tab && !tab.closed) {
       try { tab.opener = null; } catch (_e2) {}
       tab.location = url;
