@@ -552,6 +552,7 @@ function onAvatarImageChosen(input) {
     '/modules/game/turn-timer.mjs',
     '/modules/game/stats.mjs',
     '/modules/net/petitions.mjs',
+    '/modules/ui/debuglog.mjs',
     '/modules/ui/livescroll.mjs',
     '/modules/ui/chat.mjs',
     '/modules/chat/abbrev.mjs',
@@ -2231,6 +2232,7 @@ function onAvatarImageChosen(input) {
 <script type="module" src="modules/game/turn-timer.mjs"></script>
 <script type="module" src="modules/game/stats.mjs"></script>
 <script type="module" src="modules/net/petitions.mjs"></script>
+<script type="module" src="modules/ui/debuglog.mjs"></script>
 <script type="module" src="modules/ui/livescroll.mjs"></script>
 <script type="module" src="modules/ui/chat.mjs"></script>
 <script type="module" src="modules/chat/abbrev.mjs"></script>
@@ -2798,7 +2800,7 @@ if ('serviceWorker' in navigator) {
           <div class="adv-body">
             <div class="adv-sec" data-i18n="advSecJournal">Session logs</div>
             <div class="adv-link-desc" data-i18n="advJournalDesc">Browse, export, analyse and delete session logs, like the official client.</div>
-            <div class="adv-row adv-export-row"><button type="button" class="adv-link-btn" onclick="if(window._openJournal)window._openJournal()"><span data-i18n="advJournalOpen">Manage logs…</span></button></div>
+            <div class="adv-row adv-export-row"><button type="button" class="adv-link-btn" onclick="if(window._openJournal)window._openJournal()"><span data-i18n="advJournalOpen">Manage logs…</span></button><button type="button" class="adv-link-btn" onclick="closeAdvancedOptions();if(window._openDebugLog)window._openDebugLog()"><span data-i18n="dbgLogOpen">Show debug log</span></button></div>
             <div class="adv-sec" data-i18n="advSecLogSettings">Log settings</div>
             <label class="adv-row"><input type="checkbox" id="adv-logon" onchange="setAdvOpt('log_on',this.checked)"><span data-i18n="advLogOn">Enable logging</span></label>
             <label class="adv-row"><input type="checkbox" id="adv-statstrack" onchange="setAdvOpt('stats_track',this.checked)"><span data-i18n="advStatsTrack">Record hand statistics</span><em class="adv-webtag">web</em></label>

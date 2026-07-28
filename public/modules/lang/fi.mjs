@@ -625,6 +625,7 @@ export const strings = {
     chatTranslateBtn:'Käännä', winMove:'Siirrä', loupeToggle:'Suurennus ×2',
     sendTooltip:'Lähetä', resizeTooltip:'Muuta kokoa vetämällä', loadingOffline:'Ladataan offline-tilaa…',
     connectSlow:'Yhteyden muodostaminen kestää… yritä tarvittaessa uudelleen.', copyInviteLink:'Kopioi kutsulinkki', copyInviteHint:'Vastaanottaja liittyy suoraan tähän pöytään.',
+    dbgLogTitle:'Virheenkorjausloki', dbgLogOpen:'Näytä virheenkorjausloki', dbgLogCopy:'Kopioi', dbgLogEmpty:'Ei vielä virheenkorjaustulostetta.',
     disconnectDialogTitle: 'Katkaistaanko yhteys?',
     disconnectDialogBody: 'Palaat kirjautumisnäyttöön.',
     disconnectQuit: 'Katkaise yhteys',

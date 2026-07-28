@@ -626,6 +626,7 @@ export const strings = {
     chatTranslateBtn:'Fordítás', winMove:'Áthelyezés', loupeToggle:'Nagyító ×2',
     sendTooltip:'Küldés', resizeTooltip:'Húzza az átméretezéshez', loadingOffline:'Kapcsolat nélküli mód betöltése…',
     connectSlow:'A kapcsolódás sokáig tart… próbáld újra, ha kell.', copyInviteLink:'Meghívó hivatkozás másolása', copyInviteHint:'A címzett közvetlenül ehhez az asztalhoz csatlakozik.',
+    dbgLogTitle:'Hibakeresési napló', dbgLogOpen:'Hibakeresési napló megjelenítése', dbgLogCopy:'Másolás', dbgLogEmpty:'Még nincs hibakeresési kimenet.',
     disconnectDialogTitle: 'Lecsatlakozol?',
     disconnectDialogBody: 'Visszatérsz a bejelentkezési képernyőre.',
     disconnectQuit: 'Lecsatlakozás',

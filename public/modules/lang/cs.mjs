@@ -626,6 +626,7 @@ export const strings = {
     chatTranslateBtn:'Přeložit', winMove:'Přesunout', loupeToggle:'Lupa ×2',
     sendTooltip:'Odeslat', resizeTooltip:'Tažením změníte velikost', loadingOffline:'Načítání režimu offline…',
     connectSlow:'Připojení trvá déle… v případě potřeby to zkuste znovu.', copyInviteLink:'Kopírovat odkaz s pozvánkou', copyInviteHint:'Příjemce se připojí přímo k tomuto stolu.',
+    dbgLogTitle:'Ladicí protokol', dbgLogOpen:'Zobrazit ladicí protokol', dbgLogCopy:'Kopírovat', dbgLogEmpty:'Zatím žádný ladicí výstup.',
     disconnectDialogTitle: 'Odpojit?',
     disconnectDialogBody: 'Vrátíte se na přihlašovací obrazovku.',
     disconnectQuit: 'Odpojit',

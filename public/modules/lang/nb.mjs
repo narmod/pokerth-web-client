@@ -625,6 +625,7 @@ export const strings = {
     chatTranslateBtn:'Oversett', winMove:'Flytt', loupeToggle:'Forstørrelse ×2',
     sendTooltip:'Send', resizeTooltip:'Dra for å endre størrelse', loadingOffline:'Laster frakoblet modus…',
     connectSlow:'Tilkoblingen tar tid… prøv igjen om nødvendig.', copyInviteLink:'Kopier invitasjonslenke', copyInviteHint:'Mottakeren blir med direkte ved dette bordet.',
+    dbgLogTitle:'Feilsøkingslogg', dbgLogOpen:'Vis feilsøkingslogg', dbgLogCopy:'Kopier', dbgLogEmpty:'Ingen feilsøkingsutdata ennå.',
     disconnectDialogTitle: 'Koble fra?',
     disconnectDialogBody: 'Du går tilbake til innloggingsskjermen.',
     disconnectQuit: 'Koble fra',

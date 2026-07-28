@@ -448,6 +448,7 @@ export const strings = {
     chatTranslateBtn:'अनुवाद करें', winMove:'ले जाएँ', loupeToggle:'आवर्धक ×2',
     sendTooltip:'भेजें', resizeTooltip:'आकार बदलने के लिए खींचें', loadingOffline:'ऑफ़लाइन मोड लोड हो रहा है…',
     connectSlow:'कनेक्शन में समय लग रहा है… ज़रूरत हो तो फिर कोशिश करें।', copyInviteLink:'आमंत्रण लिंक कॉपी करें', copyInviteHint:'प्राप्तकर्ता सीधे इसी टेबल में शामिल होगा।',
+    dbgLogTitle:'डिबग लॉग', dbgLogOpen:'डिबग लॉग दिखाएँ', dbgLogCopy:'कॉपी करें', dbgLogEmpty:'अभी तक कोई डिबग आउटपुट नहीं।',
     disconnectDialogTitle:'डिस्कनेक्ट करें?',
     disconnectDialogBody:'आपको लॉगिन स्क्रीन पर लौटाया जाएगा।',
     disconnectQuit:'डिस्कनेक्ट',

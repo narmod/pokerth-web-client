@@ -626,6 +626,7 @@ export const strings = {
     chatTranslateBtn:'Traducir', winMove:'Mover', loupeToggle:'Lupa ×2',
     sendTooltip:'Enviar', resizeTooltip:'Arrastra para redimensionar', loadingOffline:'Cargando o modo sen conexión…',
     connectSlow:'A conexión tarda… téntao de novo se fai falta.', copyInviteLink:'Copiar a ligazón de convite', copyInviteHint:'O destinatario unirase directamente a esta mesa.',
+    dbgLogTitle:'Rexistro de depuración', dbgLogOpen:'Amosar o rexistro de depuración', dbgLogCopy:'Copiar', dbgLogEmpty:'Aínda non hai saída de depuración.',
     disconnectDialogTitle: 'Queres desconectar?',
     disconnectDialogBody: 'Volverás á pantalla de inicio de sesión.',
     disconnectQuit: 'Desconectar',

@@ -626,6 +626,7 @@ export const strings = {
     chatTranslateBtn:'Prevedi', winMove:'Premjesti', loupeToggle:'Povećalo ×2',
     sendTooltip:'Pošalji', resizeTooltip:'Povucite za promjenu veličine', loadingOffline:'Učitavanje izvanmrežnog načina…',
     connectSlow:'Povezivanje traje… pokušajte ponovno ako je potrebno.', copyInviteLink:'Kopiraj poveznicu za poziv', copyInviteHint:'Primatelj će se izravno pridružiti ovom stolu.',
+    dbgLogTitle:'Zapisnik za ispravljanje pogrešaka', dbgLogOpen:'Prikaži zapisnik za ispravljanje', dbgLogCopy:'Kopiraj', dbgLogEmpty:'Još nema ispisa za ispravljanje pogrešaka.',
     disconnectDialogTitle: 'Odspojiti?',
     disconnectDialogBody: 'Vratit ćete se na zaslon za prijavu.',
     disconnectQuit: 'Odspoji',

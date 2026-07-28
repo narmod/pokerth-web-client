@@ -626,6 +626,7 @@ export const strings = {
     chatTranslateBtn:'Traduce', winMove:'Mută', loupeToggle:'Lupă ×2',
     sendTooltip:'Trimite', resizeTooltip:'Trageți pentru redimensionare', loadingOffline:'Se încarcă modul offline…',
     connectSlow:'Conectarea durează… reîncearcă dacă e nevoie.', copyInviteLink:'Copiază linkul de invitație', copyInviteHint:'Destinatarul se va alătura direct acestei mese.',
+    dbgLogTitle:'Jurnal de depanare', dbgLogOpen:'Arată jurnalul de depanare', dbgLogCopy:'Copiază', dbgLogEmpty:'Încă nu există ieșire de depanare.',
     disconnectDialogTitle: 'Deconectezi?',
     disconnectDialogBody: 'Te vei întoarce la ecranul de autentificare.',
     disconnectQuit: 'Deconectează',

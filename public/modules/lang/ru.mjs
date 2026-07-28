@@ -628,6 +628,7 @@ export const strings = {
     chatTranslateBtn:'Перевести', winMove:'Переместить', loupeToggle:'Лупа ×2',
     sendTooltip:'Отправить', resizeTooltip:'Потяните, чтобы изменить размер', loadingOffline:'Загрузка автономного режима…',
     connectSlow:'Подключение занимает время… при необходимости повторите.', copyInviteLink:'Копировать ссылку-приглашение', copyInviteHint:'Получатель сразу присоединится к этому столу.',
+    dbgLogTitle:'Журнал отладки', dbgLogOpen:'Показать журнал отладки', dbgLogCopy:'Копировать', dbgLogEmpty:'Отладочного вывода пока нет.',
     disconnectDialogTitle: 'Отключиться?',
     disconnectDialogBody: 'Вы вернётесь на экран входа.',
     disconnectQuit: 'Отключиться',

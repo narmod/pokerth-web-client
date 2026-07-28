@@ -625,6 +625,7 @@ export const strings = {
     chatTranslateBtn:'Перекласти', winMove:'Перемістити', loupeToggle:'Лупа ×2',
     sendTooltip:'Надіслати', resizeTooltip:'Перетягніть, щоб змінити розмір', loadingOffline:'Завантаження автономного режиму…',
     connectSlow:'З\'єднання триває довше… за потреби повторіть.', copyInviteLink:'Копіювати посилання-запрошення', copyInviteHint:'Одержувач приєднається безпосередньо до цього столу.',
+    dbgLogTitle:'Журнал зневадження', dbgLogOpen:'Показати журнал зневадження', dbgLogCopy:'Копіювати', dbgLogEmpty:'Виводу зневадження ще немає.',
     disconnectDialogTitle: 'Відключитися?',
     disconnectDialogBody: 'Ви повернетеся до екрана входу.',
     disconnectQuit: 'Відключитися',

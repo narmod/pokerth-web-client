@@ -625,6 +625,7 @@ export const strings = {
     chatTranslateBtn:'Översätt', winMove:'Flytta', loupeToggle:'Förstoring ×2',
     sendTooltip:'Skicka', resizeTooltip:'Dra för att ändra storlek', loadingOffline:'Läser in offlineläge…',
     connectSlow:'Anslutningen tar tid… försök igen vid behov.', copyInviteLink:'Kopiera inbjudningslänk', copyInviteHint:'Mottagaren ansluter direkt till det här bordet.',
+    dbgLogTitle:'Felsökningslogg', dbgLogOpen:'Visa felsökningslogg', dbgLogCopy:'Kopiera', dbgLogEmpty:'Ingen felsökningsutdata ännu.',
     disconnectDialogTitle: 'Koppla från?',
     disconnectDialogBody: 'Du återvänder till inloggningsskärmen.',
     disconnectQuit: 'Koppla från',

@@ -627,6 +627,7 @@ export const strings = {
     chatTranslateBtn:'翻譯', winMove:'移動', loupeToggle:'放大鏡 ×2',
     sendTooltip:'傳送', resizeTooltip:'拖曳調整大小', loadingOffline:'正在載入離線模式…',
     connectSlow:'連線時間較長…如有需要請重試。', copyInviteLink:'複製邀請連結', copyInviteHint:'收到連結的人會直接加入這張牌桌。',
+    dbgLogTitle:'偵錯記錄', dbgLogOpen:'顯示偵錯記錄', dbgLogCopy:'複製', dbgLogEmpty:'尚無偵錯輸出。',
     disconnectDialogTitle: '斷開連線？',
     disconnectDialogBody: '你將返回登入介面。',
     disconnectQuit: '斷開連線',
