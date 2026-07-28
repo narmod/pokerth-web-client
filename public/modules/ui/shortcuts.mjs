@@ -154,8 +154,9 @@ document.addEventListener('keydown', function(e) {
   var _ap = document.querySelector('#g-actions .action-grid');
   if (!_ap) return;
   var _pv = !!document.querySelector('#g-actions > .actions-preview');
-  // Foldé : la barre est une zone morte, au clavier comme a la souris.
-  if (_pv && document.querySelector('#g-actions > .actions-preview.folded-out')) return;
+  // Barre verrouillee (foldé, tapis, ou deja parle sans relance depuis) :
+  // zone morte au clavier comme a la souris.
+  if (_pv && document.querySelector('#g-actions > .actions-preview.no-action')) return;
 
   var key = e.key.toLowerCase();
   var KB = _keyBindings();

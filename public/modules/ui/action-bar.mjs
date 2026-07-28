@@ -144,12 +144,25 @@ window.setAssist = function(on) {
   _applyAssistUI();
 };
 
-// Vrai quand j'ai deja jete cette main : plus aucune action ne peut etre
-// jouee ni pre-armee jusqu'a la prochaine (parite Qt-Widgets / QML).
-function _iAmFolded() {
-  return !!(S.seatData && S.seatData[S.myId] && S.seatData[S.myId].folded);
+// Barre d'action verrouillee : rien a decider pour l'instant, donc ni clic
+// ni pre-armement (comportement des clients Qt-Widgets et QML, confirme par
+// sp0ck : « buttons are deactivated until next raise or until next round »).
+// Trois cas :
+//   · j'ai jete ma main   -> jusqu'a la main suivante ;
+//   · je suis a tapis     -> plus rien a decider de la main ;
+//   · j'ai deja parle sur cette street et personne ne m'a relance depuis
+//     -> jusqu'a une relance adverse (toCall repasse > 0) ou la street
+//        suivante, qui remet _actedStreet en decalage.
+function _barLocked() {
+  var sd = (S.seatData && S.seatData[S.myId]) || null;
+  if (!sd) return false;
+  if (sd.folded) return true;
+  if ((sd.money || 0) <= 0) return true;                    // tapis (ou elimine)
+  var board = (S.commCards || []).filter(function (c) { return c != null; }).length;
+  var toCall = Math.max(0, S.highestBet - (sd.bet || 0));
+  return (S._actedStreet === board && toCall === 0);
 }
-window._iAmFolded = _iAmFolded;
+window._barLocked = _barLocked;
 
 // Exécute l'action pré-armée quand notre tour arrive (runPreAction officiel).
 // Recalcule le contexte au moment de l'exécution. Un Fold pré-armé devient
@@ -272,9 +285,9 @@ function renderMyTurnActions(preview) {
   // En aperçu (hors-tour), les 4 boutons d'action ARMENT une pré-action au
   // lieu d'agir ; le bouton armé reçoit la classe .prearmed (bord or).
   var _pv = !!preview;
-  // Foldé : les 4 touches d'action deviennent inertes (aucun clic, aucun
-  // pré-armement) jusqu'a la main suivante — .actions-preview.folded-out.
-  var _fo = _pv && _iAmFolded();
+  // Rien a decider : les 4 touches deviennent inertes (aucun clic, aucun
+  // pré-armement) jusqu'a ce que la parole me revienne — .no-action.
+  var _fo = _pv && _barLocked();
   function _preClk(name, live) { return _pv ? "App.armPreAction('" + name + "')" : live; }
   function _preCls(name) { return (_pv && S._preAction === name) ? ' prearmed' : ''; }
 
@@ -325,7 +338,7 @@ function renderMyTurnActions(preview) {
     // (Narrateur de tour "X ●●●" retiré — fidélité QML : le tour est
     // signalé uniquement par la surbrillance du siège.)
     document.getElementById('g-actions').innerHTML =
-      '<div class="actions-preview' + (_fo ? ' folded-out' : '') + '" data-cap="' + esc(t('preActionTitle')) + '">' + h + '</div>';
+      '<div class="actions-preview' + (_fo ? ' no-action' : '') + '" data-cap="' + esc(t('preActionTitle')) + '">' + h + '</div>';
     window.updateBottomLayout();
     _wireRaiseBtn();
     return;

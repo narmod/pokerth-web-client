@@ -93,13 +93,13 @@ globalThis.t = (k) => k;
 document.body.appendChild = () => {};    // showKeyHint pins a toast on the body
 globalThis.setTimeout = globalThis.setTimeout || (() => {});
 let clicked = [];
-function stubTable({ preview, foldedOut }) {
+function stubTable({ preview, locked }) {
   clicked = [];
   const btn = (cls) => ({ classList: { contains: (c) => cls.includes(c) }, click() { clicked.push(cls); } });
   document.querySelector = (sel) => {
     if (sel === '#g-actions .action-grid') return {};
     if (sel === '#g-actions > .actions-preview') return preview ? {} : null;
-    if (sel === '#g-actions > .actions-preview.folded-out') return foldedOut ? {} : null;
+    if (sel === '#g-actions > .actions-preview.no-action') return locked ? {} : null;
     if (sel.includes('btn-fold')) return btn('btn-fold');
     if (sel.includes('btn-call')) return btn('btn-call');
     if (sel.includes('btn-raise')) return btn('btn-raise');
@@ -110,24 +110,24 @@ function stubTable({ preview, foldedOut }) {
 }
 const evk = (key) => ({ key, target: {}, preventDefault() {}, stopPropagation() {} });
 
-stubTable({ preview: true, foldedOut: false });
+stubTable({ preview: true, locked: false });
 actionHandler.fn(evk('F1'));
 ok(clicked.length === 1 && clicked[0] === 'btn-fold', 'off-turn: F1 reaches the fold button (arms a pre-action)');
-stubTable({ preview: true, foldedOut: false });
+stubTable({ preview: true, locked: false });
 actionHandler.fn(evk('F4'));
 ok(clicked[0] === 'btn-allin', 'off-turn: F4 reaches the all-in button');
-stubTable({ preview: true, foldedOut: false });
+stubTable({ preview: true, locked: false });
 actionHandler.fn(evk('1'));
 ok(clicked.length === 0, 'off-turn: quick-bet keys stay inert (amount field is inactive)');
 
-stubTable({ preview: true, foldedOut: true });
+stubTable({ preview: true, locked: true });
 actionHandler.fn(evk('F1'));
 actionHandler.fn(evk('F2'));
 actionHandler.fn(evk('F3'));
 actionHandler.fn(evk('F4'));
-ok(clicked.length === 0, 'folded: the action bar is a dead zone for the keyboard too');
+ok(clicked.length === 0, 'locked bar (folded / all-in / already acted): dead zone for the keyboard too');
 
-stubTable({ preview: false, foldedOut: false });
+stubTable({ preview: false, locked: false });
 actionHandler.fn(evk('F2'));
 ok(clicked[0] === 'btn-call', 'on turn: F2 still plays call/check as before');
 

@@ -286,6 +286,7 @@ function onHandStart(sub) {
     // clic manuel sur une action.
     S._preActionOpen = false; // referme tout panneau "aperçu" à chaque main
     S._preAction = '';        // désarme toute pré-action à chaque nouvelle main
+    S._actedStreet = -1;      // je n'ai pas encore parlé dans cette main
     // Zoom-follow : reset du suivi + restauration d'un zoom suspendu au showdown
     try { if (window._zoomHandStart) window._zoomHandStart(); } catch (_e) {}
     // Badge « main gagnante » : masqué dès la nouvelle main
@@ -668,6 +669,10 @@ function onPlayersActionDone(sub) {
     window.logAction(window.getPlayerName(pid) + ': ' + aLabel + (bet ? ' ' + bet : ''), true);
     speak(voiceActionPhrase(action, pid, bet));
     if (pid === S.myId) {
+      // Street de ma prise de parole : la barre d'action reste inerte tant
+      // que rien ne me redonne la parole (relance adverse ou street
+      // suivante) — comportement des clients Qt-Widgets et QML.
+      S._actedStreet = (S.commCards || []).filter(function (c) { return c != null; }).length;
       const myMon = (S.seatData[S.myId] || {}).money || 0;
       if (document.getElementById('g-mystack')) document.getElementById('g-mystack').textContent = myMon > 0 ? fmtChips(myMon) : '';
     }

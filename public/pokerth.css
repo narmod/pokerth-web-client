@@ -4461,11 +4461,14 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
 .actions-preview .btn-action { pointer-events: auto; filter: saturate(0.5); opacity: 0.62; }
 .actions-preview .btn-action:disabled { pointer-events: none; filter: grayscale(0.9); opacity: 0.4; }
 .actions-preview .btn-action.prearmed { filter: none; opacity: 1; }  /* action pre-armee : pleine couleur */
-/* Main jetée : les 4 touches d'action deviennent une zone morte jusqu'a la
-   main suivante (parite Qt-Widgets / QML) — ni clic, ni pre-armement, meme
-   rendu qu'un bouton desactive pour que ce soit lisible d'un coup d'oeil. */
-.actions-preview.folded-out .btn-action,
-.actions-preview.folded-out .btn-action.prearmed {
+/* Rien a decider pour l'instant — main jetee, tapis, ou j'ai deja parle et
+   personne ne m'a relance depuis : les 4 touches d'action forment une zone
+   morte jusqu'a ce que la parole revienne (relance adverse ou street
+   suivante), comme dans les clients Qt-Widgets et QML. Ni clic ni
+   pre-armement, meme rendu qu'un bouton desactive pour que ce soit lisible
+   d'un coup d'oeil. */
+.actions-preview.no-action .btn-action,
+.actions-preview.no-action .btn-action.prearmed {
   pointer-events: none;
   filter: grayscale(0.9);
   opacity: 0.4;

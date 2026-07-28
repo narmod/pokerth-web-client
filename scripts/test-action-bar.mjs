@@ -72,16 +72,47 @@ ok(ga.innerHTML.includes('actions-preview'), 'aperçu : classe actions-preview')
 ok(ga.innerHTML.includes("armPreAction('fold')"), 'aperçu : Fold arme une pré-action');
 ok(!ga.innerHTML.includes('act-narrator') && !ga.innerHTML.includes('thinking-dots'),
    'aperçu : aucun narrateur de tour (fidélité QML)');
-ok(!ga.innerHTML.includes('folded-out'), 'aperçu : pas de zone morte tant que je suis dans le coup');
+ok(!ga.innerHTML.includes('no-action'), 'aperçu : pas de zone morte tant que la parole peut revenir');
 
-// Main jetée : la barre devient une zone morte (parité clients officiels).
+// ── Zone morte : « deactivated until next raise or until next round »
+// (sp0ck, comportement des clients Qt-Widgets et QML).
+S._actedStreet = -1;
+// 1. Main jetée : verrouillé jusqu'à la main suivante.
 S.seatData[1].folded = true;
 A.renderMyTurnActions(true);
-ok(ga.innerHTML.includes('folded-out'), 'foldé : la barre d\'action passe en zone morte');
-ok(window._iAmFolded() === true, '_iAmFolded exposé pour le garde de armPreAction');
+ok(ga.innerHTML.includes('no-action'), 'foldé : la barre passe en zone morte');
+ok(window._barLocked() === true, '_barLocked exposé pour le garde de armPreAction');
 S.seatData[1].folded = false;
+
+// 2. J'ai parlé sur cette street et personne ne m'a relancé : verrouillé.
+S.commCards = [10, 20, 30];            // flop : 3 cartes
+S._actedStreet = 3;
+S.highestBet = 50; S.seatData[1].bet = 50;   // je suis à jour, rien à suivre
 A.renderMyTurnActions(true);
-ok(!ga.innerHTML.includes('folded-out'), 'main suivante : la zone morte est levée');
+ok(ga.innerHTML.includes('no-action'), 'déjà parlé sans relance depuis : zone morte');
+
+// 3. Une relance adverse me redonne la parole : déverrouillé.
+S.highestBet = 120;
+A.renderMyTurnActions(true);
+ok(!ga.innerHTML.includes('no-action'), 'relance adverse : la barre redevient armable');
+
+// 4. Street suivante : déverrouillé même sans relance.
+S.highestBet = 50; S.seatData[1].bet = 50;
+S.commCards = [10, 20, 30, 40];        // turn
+A.renderMyTurnActions(true);
+ok(!ga.innerHTML.includes('no-action'), 'street suivante : la barre redevient armable');
+
+// 5. Tapis : plus rien à décider de la main.
+S.commCards = [10, 20, 30];
+S._actedStreet = -1;
+const _mon = S.seatData[1].money;
+S.seatData[1].money = 0;
+A.renderMyTurnActions(true);
+ok(ga.innerHTML.includes('no-action'), 'à tapis : zone morte jusqu\'à la main suivante');
+S.seatData[1].money = _mon;
+S.commCards = []; S._actedStreet = -1; S.highestBet = 0; S.seatData[1].bet = 0;
+A.renderMyTurnActions(true);
+ok(!ga.innerHTML.includes('no-action'), 'nouvelle main : la zone morte est levée');
 
 // Call avec mise à suivre + montant
 S.highestBet = 50;
