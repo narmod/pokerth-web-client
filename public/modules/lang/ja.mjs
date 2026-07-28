@@ -621,6 +621,7 @@ export const strings = {
     quickCreateBtn: '作成',
     logPanelTitle: 'ログ',
     logCopied:'ログをコピーしました', logEmpty:'ログは空です', logExportTitle:'ログをエクスポート', chatClearTitle:'チャットをクリア',
+    jumpLatest:'最新へ移動',
     disconnectDialogTitle: '切断しますか？',
     disconnectDialogBody: 'ログイン画面に戻ります。',
     disconnectQuit: '切断',

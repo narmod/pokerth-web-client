@@ -629,6 +629,7 @@ export const strings = {
     quickCreateBtn: 'Erstellen',
     logPanelTitle: 'Protokoll',
     logCopied:'Protokoll kopiert', logEmpty:'Protokoll ist leer', logExportTitle:'Protokoll exportieren', chatClearTitle:'Chat leeren',
+    jumpLatest:'Zum Neuesten springen',
     disconnectDialogTitle: 'Trennen?',
     disconnectDialogBody: 'Du wirst zum Login-Bildschirm zurückgebracht.',
     disconnectQuit: 'Trennen',

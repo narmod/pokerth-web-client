@@ -622,6 +622,7 @@ export const strings = {
     quickCreateBtn: 'Crear',
     logPanelTitle: 'Rexistro',
     logCopied:'Rexistro copiado', logEmpty:'O rexistro está baleiro', logExportTitle:'Exportar rexistro', chatClearTitle:'Limpar o chat',
+    jumpLatest:'Ir ao máis recente',
     disconnectDialogTitle: 'Queres desconectar?',
     disconnectDialogBody: 'Volverás á pantalla de inicio de sesión.',
     disconnectQuit: 'Desconectar',

@@ -622,6 +622,7 @@ export const strings = {
     quickCreateBtn: 'Sukurti',
     logPanelTitle: 'Žurnalas',
     logCopied:'Žurnalas nukopijuotas', logEmpty:'Žurnalas tuščias', logExportTitle:'Eksportuoti žurnalą', chatClearTitle:'Išvalyti pokalbį',
+    jumpLatest:'Pereiti prie naujausių',
     disconnectDialogTitle: 'Atsijungti?',
     disconnectDialogBody: 'Grįšite į prisijungimo ekraną.',
     disconnectQuit: 'Atsijungti',

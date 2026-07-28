@@ -623,6 +623,7 @@ export const strings = {
     quickCreateBtn: 'உருவாக்கு',
     logPanelTitle: 'பதிவு',
     logCopied:'பதிவு நகலெடுக்கப்பட்டது', logEmpty:'பதிவு காலியாக உள்ளது', logExportTitle:'பதிவை ஏற்றுமதி செய்', chatClearTitle:'அரட்டையை அழி',
+    jumpLatest:'சமீபத்தியதற்குச் செல்',
     disconnectDialogTitle: 'துண்டிக்கவா?',
     disconnectDialogBody: 'நீங்கள் உள்நுழைவுத் திரைக்குத் திரும்புவீர்கள்.',
     disconnectQuit: 'துண்டி',

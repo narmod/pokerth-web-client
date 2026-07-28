@@ -621,6 +621,7 @@ export const strings = {
     quickCreateBtn: 'Skapa',
     logPanelTitle: 'Logg',
     logCopied:'Logg kopierad', logEmpty:'Loggen är tom', logExportTitle:'Exportera logg', chatClearTitle:'Rensa chatt',
+    jumpLatest:'Gå till senaste',
     disconnectDialogTitle: 'Koppla från?',
     disconnectDialogBody: 'Du återvänder till inloggningsskärmen.',
     disconnectQuit: 'Koppla från',

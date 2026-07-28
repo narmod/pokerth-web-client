@@ -625,6 +625,7 @@ export const strings = {
     quickCreateBtn: 'Maken',
     logPanelTitle: 'Logboek',
     logCopied:'Logboek gekopieerd', logEmpty:'Logboek is leeg', logExportTitle:'Logboek exporteren', chatClearTitle:'Chat wissen',
+    jumpLatest:'Naar nieuwste',
     disconnectDialogTitle: 'Verbinding verbreken?',
     disconnectDialogBody: 'Je keert terug naar het inlogscherm.',
     disconnectQuit: 'Verbinding verbreken',

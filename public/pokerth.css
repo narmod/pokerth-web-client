@@ -4600,6 +4600,41 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
 }
 .log-msgs::-webkit-scrollbar-thumb:hover { background: rgba(var(--gold-rgb), 0.32); }
 
+/* "Jump to latest" bar — shown only while auto-follow is paused, i.e. the
+   reader scrolled away from the live edge of the game log or of a chat
+   (see modules/ui/livescroll.mjs). It sits in the panel's flex flow, above
+   the rows for the reversed log and below them for the chats, so it never
+   covers a line and needs no measuring when the panel is resized. */
+.live-jump {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-1);
+  width: 100%;
+  padding: var(--sp-1) var(--sp-2);
+  background: rgba(var(--gold-rgb), 0.14);
+  border: none;
+  border-top: 1px solid rgba(var(--gold-rgb), 0.28);
+  color: var(--gold);
+  font-family: inherit;
+  font-size: var(--fs-2xs);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.live-jump:hover { background: rgba(var(--gold-rgb), 0.22); }
+.live-jump-up { border-top: none; border-bottom: 1px solid rgba(var(--gold-rgb), 0.28); }
+.live-jump-n {
+  min-width: 14px;
+  padding: 0 var(--sp-1);
+  background: rgba(var(--gold-rgb), 0.30);
+  border-radius: var(--r-pill);
+  font-variant-numeric: tabular-nums;
+}
+.live-jump-n:empty { display: none; }
+.live-jump-a { font-size: var(--fs-3xs); opacity: 0.8; }
+
 .g-chat-panel-header { display:flex; align-items:center; justify-content:space-between; padding:4px 10px; background:var(--chrome-tint); border-bottom:1px solid var(--border); flex-shrink:0; }
 /* Poignée de redimensionnement du chat (bord bas) — glissable au doigt */
 .chat-resize-handle {

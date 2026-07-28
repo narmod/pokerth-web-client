@@ -622,6 +622,7 @@ export const strings = {
     quickCreateBtn: 'Létrehozás',
     logPanelTitle: 'Napló',
     logCopied:'Napló másolva', logEmpty:'A napló üres', logExportTitle:'Napló exportálása', chatClearTitle:'Chat törlése',
+    jumpLatest:'Ugrás a legújabbra',
     disconnectDialogTitle: 'Lecsatlakozol?',
     disconnectDialogBody: 'Visszatérsz a bejelentkezési képernyőre.',
     disconnectQuit: 'Lecsatlakozás',

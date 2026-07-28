@@ -629,6 +629,7 @@ export const strings = {
     quickCreateBtn: 'Crea',
     logPanelTitle: 'Registro',
     logCopied:'Registro copiato', logEmpty:'Il registro è vuoto', logExportTitle:'Esporta registro', chatClearTitle:'Cancella chat',
+    jumpLatest:'Vai al più recente',
     disconnectDialogTitle: 'Disconnettere?',
     disconnectDialogBody: 'Tornerai alla schermata di accesso.',
     disconnectQuit: 'Disconnetti',

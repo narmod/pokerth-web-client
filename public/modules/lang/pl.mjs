@@ -625,6 +625,7 @@ export const strings = {
     quickCreateBtn: 'Utwórz',
     logPanelTitle: 'Dziennik',
     logCopied:'Dziennik skopiowany', logEmpty:'Dziennik jest pusty', logExportTitle:'Eksportuj dziennik', chatClearTitle:'Wyczyść czat',
+    jumpLatest:'Przejdź do najnowszych',
     disconnectDialogTitle: 'Rozłączyć?',
     disconnectDialogBody: 'Wrócisz do ekranu logowania.',
     disconnectQuit: 'Rozłącz',

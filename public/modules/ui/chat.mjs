@@ -9,6 +9,7 @@ import { S } from '../game/state.mjs';
 import { t } from '../i18n.mjs';
 import { esc } from './misc.mjs';
 import { MSG } from '../net/messages.mjs';
+import { liveBefore, liveAfter } from './livescroll.mjs';
 
 // ── Local chat commands (nothing is ever sent to the server) ────────────
 // Shared by the lobby chat and the game chat. echo(name, text) renders the
@@ -346,8 +347,12 @@ function addChat(sender, text, cls='', spec) {
       if (_txtEl) window._chatMarkAbbrev(_txtEl);
     }
   } catch (_ea) {}
+  // Suivi automatique en pause tant que le joueur relit plus haut
+  // (ui/livescroll.mjs) — miroir de addGameChat et du journal.
+  const _ls = liveBefore(el);
   el.appendChild(d);
-  el.scrollTop = el.scrollHeight;
+  if (_ls) liveAfter(el, _ls);
+  else el.scrollTop = el.scrollHeight;
 }
 
 export { _chatLocalCmd, addChat };

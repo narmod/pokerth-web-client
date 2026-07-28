@@ -622,6 +622,7 @@ export const strings = {
     quickCreateBtn: 'Creează',
     logPanelTitle: 'Jurnal',
     logCopied:'Jurnal copiat', logEmpty:'Jurnalul este gol', logExportTitle:'Exportă jurnalul', chatClearTitle:'Golește chatul',
+    jumpLatest:'Salt la cele mai recente',
     disconnectDialogTitle: 'Deconectezi?',
     disconnectDialogBody: 'Te vei întoarce la ecranul de autentificare.',
     disconnectQuit: 'Deconectează',

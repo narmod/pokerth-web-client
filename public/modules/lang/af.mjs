@@ -622,6 +622,7 @@ export const strings = {
     quickCreateBtn: 'Skep',
     logPanelTitle: 'Logboek',
     logCopied:'Logboek gekopieer', logEmpty:'Logboek is leeg', logExportTitle:'Voer logboek uit', chatClearTitle:'Vee klets uit',
+    jumpLatest:'Spring na nuutste',
     disconnectDialogTitle: 'Ontkoppel?',
     disconnectDialogBody: 'Jy sal na die aanmeldskerm terugkeer.',
     disconnectQuit: 'Ontkoppel',

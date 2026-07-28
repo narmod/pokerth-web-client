@@ -4095,23 +4095,19 @@ const App = (() => {
   window.logAction = logAction; // pont requis par ui/action-bar.mjs (9g-B4)
   // Defilement du journal — parite client Qt-Widgets / QML : le suivi
   // automatique se met en PAUSE des que le joueur quitte le bord « direct »
-  // pour relire une main precedente. Le journal continue de se remplir en
-  // arriere-plan sans deplacer la vue, et le suivi reprend tout seul des le
-  // retour au bord. La liste est inversee (le plus recent est en HAUT) : le
-  // bord « direct » est donc scrollTop === 0 et les nouvelles lignes
-  // s'inserent AU-DESSUS de la vue — on reancre donc sur la distance au bas
-  // de la zone, qui elle ne bouge pas.
+  // pour relire une main precedente, et reprend tout seul au retour. La
+  // mecanique (ancrage + barre « aller au plus recent ») vit dans
+  // ui/livescroll.mjs ; repli sur l'ancien comportement s'il n'est pas la.
   function renderLog() {
     const el = document.getElementById('g-log-body');
     if (!el) return;
-    var _live   = (el.scrollTop <= 4);              // colle au plus recent
-    var _anchor = el.scrollHeight - el.scrollTop;   // invariant en pause
+    var _ls = (typeof window._liveBefore === 'function') ? window._liveBefore(el) : null;
     el.innerHTML = S.actionLog.slice().reverse().map(function(fn){
       var s; try { s = fn(); } catch (_e) { s = ''; }
       return '<div class="log-line">'+esc(s)+'</div>';
     }).join('');
-    if (_live) el.scrollTop = 0;
-    else el.scrollTop = Math.max(0, el.scrollHeight - _anchor);
+    if (_ls) window._liveAfter(el, _ls);
+    else el.scrollTop = 0; // le plus recent est en haut (liste inversee)
   }
   window._retranslateLog = renderLog;
   // Texte brut du journal (ordre chronologique) pour l'export.
@@ -7005,8 +7001,10 @@ function addGameChat(sender, text, cls, spec) {
     d.innerHTML = '<span class="txt">'+(cls === 'sys' ? e(text) : emT(text))+'</span>';
   }
   if (spec && !sender) { try { d.dataset.sys = JSON.stringify(spec); } catch(_e){} }
+  var _ls = (typeof window._liveBefore === 'function') ? window._liveBefore(el) : null;
   el.appendChild(d);
-  el.scrollTop = el.scrollHeight;
+  if (_ls) window._liveAfter(el, _ls);
+  else el.scrollTop = el.scrollHeight;
   var cBtn = document.getElementById('chat-toggle-btn');
   var cPan = document.getElementById('g-chat-panel');
   if (cBtn && cls !== 'mine' && (!cPan || cPan.style.display === 'none')) {
@@ -8620,7 +8618,7 @@ function toggleGameChat() {
     _openFloatingNearBtn(panel, btn, { key:'pth_winpos_chat', handle: panel.querySelector('.g-chat-panel-header'), resizable:true, minW:240, minH:160, defW:300, defH:280, zoom:true }, 'left');
     if (typeof clearUnreadChat === 'function') clearUnreadChat();
     var m = document.getElementById('g-chat-msgs');
-    if (m) m.scrollTop = m.scrollHeight;
+    if (m) { if (typeof window._liveReset === 'function') window._liveReset(m); else m.scrollTop = m.scrollHeight; }
     var inp = document.getElementById('g-chat-in');
     if (inp) setTimeout(function(){ inp.focus(); }, 80);
   }
@@ -8797,7 +8795,9 @@ function toggleLog() {
     // Poignée de redimensionnement, identique au chat (glisser pour étendre).
     _openFloatingNearBtn(panel, btn, { key:'pth_winpos_log2', handle: panel.querySelector('.g-chat-panel-header'), resizable:true, minW:240, minH:140, defW: window.innerWidth >= 1400 ? 340 : 300, defH:300, zoom:true }, 'right');
     var lb = document.getElementById('g-log-body');
-    if (lb) lb.scrollTop = 0; // le plus récent est en haut (liste inversée)
+    // Le plus récent est en haut (liste inversée) : rouvrir le panneau
+    // remet le suivi automatique en marche, même s'il était en pause.
+    if (lb) { if (typeof window._liveReset === 'function') window._liveReset(lb); else lb.scrollTop = 0; }
     // Restaurer le dernier onglet consulté (Historique par défaut).
     try { gipShowTab((function(){try{var _t=localStorage.getItem('pth_gip_tab');return (_t==='odds'||_t==='stats')?_t:'log';}catch(_e){return 'log';}})()); } catch (e) {}
   }
@@ -8841,6 +8841,7 @@ window.exportLog = exportLog;
 function clearChatPanel(which){
   var el = document.getElementById(which === 'lobby' ? 'chat' : 'g-chat-msgs');
   if (el) el.innerHTML = '';
+  if (el && typeof window._liveReset === 'function') window._liveReset(el);
 }
 window.clearChatPanel = clearChatPanel;
 
@@ -9392,7 +9393,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.4-web.115'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.4-web.116'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

@@ -621,6 +621,7 @@ export const strings = {
     quickCreateBtn: 'Opprett',
     logPanelTitle: 'Logg',
     logCopied:'Logg kopiert', logEmpty:'Loggen er tom', logExportTitle:'Eksporter logg', chatClearTitle:'Tøm chat',
+    jumpLatest:'Gå til nyeste',
     disconnectDialogTitle: 'Koble fra?',
     disconnectDialogBody: 'Du går tilbake til innloggingsskjermen.',
     disconnectQuit: 'Koble fra',

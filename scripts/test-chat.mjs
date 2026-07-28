@@ -4,7 +4,7 @@
 globalThis.window = globalThis;
 globalThis.localStorage = { getItem: () => null, setItem() {}, removeItem() {} };
 function makeEl() { return { style: {}, children: [], textContent: '', innerHTML: '',
-  className: '', dataset: {}, scrollTop: 0, scrollHeight: 100,
+  className: '', dataset: {}, scrollTop: 0, scrollHeight: 100, clientHeight: 100,
   classList: { add() {}, remove() {} },
   appendChild(c) { this.children.push(c); }, remove() {} }; }
 const chatEl = makeEl();
@@ -28,7 +28,10 @@ function ok(cond, msg) { n++; if (!cond) { fail++; console.error('  ✗', msg); 
 const before = chatEl.children.length;
 C.addChat('Alice', 'salut', '');
 ok(chatEl.children.length === before + 1, 'addChat ajoute une ligne');
-ok(chatEl.scrollTop === chatEl.scrollHeight, 'addChat scrolle en bas');
+// La vue est collee au direct (stub : scrollTop 0, scrollHeight == clientHeight),
+// donc le suivi automatique de ui/livescroll.mjs scrolle bien en bas. La mise en
+// pause quand on relit plus haut est couverte par scripts/test-livescroll.mjs.
+ok(chatEl.scrollTop === chatEl.scrollHeight, 'addChat scrolle en bas (vue collee au direct)');
 
 // joueur ignoré filtré
 C.addChat('Ignoré', 'spam', '');

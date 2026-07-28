@@ -623,6 +623,7 @@ export const strings = {
     quickCreateBtn: '创建',
     logPanelTitle: '日志',
     logCopied:'日志已复制', logEmpty:'日志为空', logExportTitle:'导出日志', chatClearTitle:'清除聊天',
+    jumpLatest:'跳到最新',
     disconnectDialogTitle: '断开连接？',
     disconnectDialogBody: '你将返回登录界面。',
     disconnectQuit: '断开连接',

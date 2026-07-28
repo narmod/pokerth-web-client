@@ -622,6 +622,7 @@ export const strings = {
     quickCreateBtn: 'Napravi',
     logPanelTitle: 'Dnevnik',
     logCopied:'Дневник копиран', logEmpty:'Дневник је празан', logExportTitle:'Извези дневник', chatClearTitle:'Очисти ћаскање',
+    jumpLatest:'Иди на најновије',
     disconnectDialogTitle: 'Prekinuti vezu?',
     disconnectDialogBody: 'Vratićete se na ekran za prijavu.',
     disconnectQuit: 'Prekini vezu',

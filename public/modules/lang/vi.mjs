@@ -622,6 +622,7 @@ export const strings = {
     quickCreateBtn: 'Tạo',
     logPanelTitle: 'Nhật ký',
     logCopied:'Đã sao chép nhật ký', logEmpty:'Nhật ký trống', logExportTitle:'Xuất nhật ký', chatClearTitle:'Xóa trò chuyện',
+    jumpLatest:'Đến mục mới nhất',
     disconnectDialogTitle: 'Ngắt kết nối?',
     disconnectDialogBody: 'Bạn sẽ quay về màn hình đăng nhập.',
     disconnectQuit: 'Ngắt kết nối',

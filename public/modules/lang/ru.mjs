@@ -624,6 +624,7 @@ export const strings = {
     quickCreateBtn: 'Создать',
     logPanelTitle: 'Журнал',
     logCopied:'Журнал скопирован', logEmpty:'Журнал пуст', logExportTitle:'Экспорт журнала', chatClearTitle:'Очистить чат',
+    jumpLatest:'К самым новым',
     disconnectDialogTitle: 'Отключиться?',
     disconnectDialogBody: 'Вы вернётесь на экран входа.',
     disconnectQuit: 'Отключиться',
