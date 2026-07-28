@@ -4093,13 +4093,25 @@ const App = (() => {
     renderLog();
   }
   window.logAction = logAction; // pont requis par ui/action-bar.mjs (9g-B4)
+  // Defilement du journal — parite client Qt-Widgets / QML : le suivi
+  // automatique se met en PAUSE des que le joueur quitte le bord « direct »
+  // pour relire une main precedente. Le journal continue de se remplir en
+  // arriere-plan sans deplacer la vue, et le suivi reprend tout seul des le
+  // retour au bord. La liste est inversee (le plus recent est en HAUT) : le
+  // bord « direct » est donc scrollTop === 0 et les nouvelles lignes
+  // s'inserent AU-DESSUS de la vue — on reancre donc sur la distance au bas
+  // de la zone, qui elle ne bouge pas.
   function renderLog() {
     const el = document.getElementById('g-log-body');
     if (!el) return;
+    var _live   = (el.scrollTop <= 4);              // colle au plus recent
+    var _anchor = el.scrollHeight - el.scrollTop;   // invariant en pause
     el.innerHTML = S.actionLog.slice().reverse().map(function(fn){
       var s; try { s = fn(); } catch (_e) { s = ''; }
       return '<div class="log-line">'+esc(s)+'</div>';
     }).join('');
+    if (_live) el.scrollTop = 0;
+    else el.scrollTop = Math.max(0, el.scrollHeight - _anchor);
   }
   window._retranslateLog = renderLog;
   // Texte brut du journal (ordre chronologique) pour l'export.
@@ -9380,7 +9392,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.4-web.114'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.4-web.115'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
