@@ -623,6 +623,7 @@ export const strings = {
     logPanelTitle: 'Dnevnik',
     logCopied:'Дневник копиран', logEmpty:'Дневник је празан', logExportTitle:'Извези дневник', chatClearTitle:'Очисти ћаскање',
     jumpLatest:'Иди на најновије',
+    chatTranslateBtn:'Преведи', winMove:'Помери', loupeToggle:'Лупа ×2',
     disconnectDialogTitle: 'Prekinuti vezu?',
     disconnectDialogBody: 'Vratićete se na ekran za prijavu.',
     disconnectQuit: 'Prekini vezu',

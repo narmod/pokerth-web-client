@@ -630,6 +630,7 @@ export const strings = {
     logPanelTitle: 'Protokoll',
     logCopied:'Protokoll kopiert', logEmpty:'Protokoll ist leer', logExportTitle:'Protokoll exportieren', chatClearTitle:'Chat leeren',
     jumpLatest:'Zum Neuesten springen',
+    chatTranslateBtn:'Übersetzen', winMove:'Verschieben', loupeToggle:'Lupe ×2',
     disconnectDialogTitle: 'Trennen?',
     disconnectDialogBody: 'Du wirst zum Login-Bildschirm zurückgebracht.',
     disconnectQuit: 'Trennen',

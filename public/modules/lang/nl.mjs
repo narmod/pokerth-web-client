@@ -626,6 +626,7 @@ export const strings = {
     logPanelTitle: 'Logboek',
     logCopied:'Logboek gekopieerd', logEmpty:'Logboek is leeg', logExportTitle:'Logboek exporteren', chatClearTitle:'Chat wissen',
     jumpLatest:'Naar nieuwste',
+    chatTranslateBtn:'Vertalen', winMove:'Verplaatsen', loupeToggle:'Vergrootglas ×2',
     disconnectDialogTitle: 'Verbinding verbreken?',
     disconnectDialogBody: 'Je keert terug naar het inlogscherm.',
     disconnectQuit: 'Verbinding verbreken',

@@ -378,6 +378,7 @@ export const strings = {
     quickCreateBtn:'Cr\u00e9er',
     logPanelTitle:'Journal', logCopied:'Journal copié', logEmpty:'Journal vide', logExportTitle:'Exporter le journal',
     jumpLatest:'Aller au plus récent',
+    chatTranslateBtn:'Traduire', winMove:'Déplacer', loupeToggle:'Loupe ×2',
     createPrefsSave:'💾 Mes préfs', createPrefsSaveTip:'Enregistrer ce formulaire comme mes préférences personnelles', createPrefsSaved:'Préférences enregistrées', createPrefsLoaded:'Préférences chargées', createPrefsNone:'Aucune préférence enregistrée pour l\'instant',
     advSecLocalGame:'Partie d\'entraînement', advCreateDialog:'Afficher la boîte de dialogue pour un nouveau jeu', advPauseHands:'Pause entre les mains (reprise via la fenêtre du gagnant)', nextHandBtn:'Main suivante',
     advSecTablePrefs:'Préférences de table', advTablePrefsDesc:'Valeurs par défaut des tables que tu crées dans ce mode — la pastille ⭐ du formulaire de création les charge.', advRaiseEveryHands:'Hausse des blindes toutes les N mains', advGameSpeed:'Vitesse de jeu (1–11)',

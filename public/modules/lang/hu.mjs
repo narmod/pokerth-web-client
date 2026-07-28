@@ -623,6 +623,7 @@ export const strings = {
     logPanelTitle: 'Napló',
     logCopied:'Napló másolva', logEmpty:'A napló üres', logExportTitle:'Napló exportálása', chatClearTitle:'Chat törlése',
     jumpLatest:'Ugrás a legújabbra',
+    chatTranslateBtn:'Fordítás', winMove:'Áthelyezés', loupeToggle:'Nagyító ×2',
     disconnectDialogTitle: 'Lecsatlakozol?',
     disconnectDialogBody: 'Visszatérsz a bejelentkezési képernyőre.',
     disconnectQuit: 'Lecsatlakozás',

@@ -44,7 +44,13 @@ function ok(cond, label) {
 function eq(a, b, label) { ok(a === b, label + '  (got ' + a + ', want ' + b + ')'); }
 
 // Rows are 20 px tall, the viewport 100 px: 10 rows = 200 px of content.
-function fill(el, n) { el.children = []; for (let i = 0; i < n; i++) el.appendChild({}); }
+// offsetTop/offsetHeight are kept in sync by hand, as there is no layout.
+function reindex(el) { el.children.forEach((c, i) => { c.offsetTop = i * el._rowH; c.offsetHeight = el._rowH; }); }
+function fill(el, n) { el.children = []; for (let i = 0; i < n; i++) el.appendChild({}); reindex(el); }
+function prepend(el, n) { for (let i = 0; i < n; i++) el.children.unshift({}); reindex(el); }
+// Capped list (the game log stops at 500 entries): one row in at the head,
+// one row out at the tail, so the row count never moves again.
+function prependCapped(el, n) { for (let i = 0; i < n; i++) { el.children.unshift({}); el.children.pop(); } reindex(el); }
 
 // ── 1. Newest on top (game log) ───────────────────────────────────
 {
@@ -55,8 +61,8 @@ function fill(el, n) { el.children = []; for (let i = 0; i < n; i++) el.appendCh
 
   let s = LS.liveBefore(el);
   ok(s.live, 'log: sitting at the top counts as live');
-  el.children.unshift({});            // a new line lands above
-  LS.liveAfter(el, s);
+  prepend(el, 1);                     // a new line lands above
+  LS.liveAfter(el, s, 1);
   eq(el.scrollTop, 0, 'log: following keeps the newest line in view');
 
   // Reader scrolls down to an older hand, then two lines arrive.
@@ -64,9 +70,25 @@ function fill(el, n) { el.children = []; for (let i = 0; i < n; i++) el.appendCh
   el.fire('scroll');
   s = LS.liveBefore(el);
   ok(!s.live, 'log: leaving the top pauses the follow');
-  el.children.unshift({}); el.children.unshift({});
-  LS.liveAfter(el, s);
+  prepend(el, 2);
+  LS.liveAfter(el, s, 2);
   eq(el.scrollTop, 120, 'log: the read line stays put (offset by the 2 new rows)');
+
+  // Same, once the log is capped: rows now leave at the tail as fast as they
+  // arrive at the head, so the row count no longer says anything.
+  s = LS.liveBefore(el);
+  ok(!s.live, 'log capped: still paused');
+  prependCapped(el, 1);
+  eq(el.children.length, snapCount(s), 'log capped: the row count did not move');
+  LS.liveAfter(el, s, 1);
+  eq(el.scrollTop, 140, 'log capped: the read line still stays put');
+
+  // Without addedTop the geometric fallback is all there is; it must at
+  // least not jump back to the live edge.
+  s = LS.liveBefore(el);
+  prependCapped(el, 1);
+  LS.liveAfter(el, s);
+  ok(el.scrollTop > 0, 'log capped: no addedTop still does not snap to the top');
 
   // Back to the live edge on their own.
   el.scrollTop = 0;
@@ -74,6 +96,7 @@ function fill(el, n) { el.children = []; for (let i = 0; i < n; i++) el.appendCh
   s = LS.liveBefore(el);
   ok(s.live, 'log: returning to the top resumes the follow');
 }
+function snapCount(s) { return s.count; }
 
 // ── 2. Newest at bottom (chat) ────────────────────────────────────
 {

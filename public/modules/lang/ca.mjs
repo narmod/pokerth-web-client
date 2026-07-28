@@ -623,6 +623,7 @@ export const strings = {
     logPanelTitle: 'Registre',
     logCopied:'Registre copiat', logEmpty:'El registre és buit', logExportTitle:'Exporta el registre', chatClearTitle:'Esborra el xat',
     jumpLatest:'Ves al més recent',
+    chatTranslateBtn:'Tradueix', winMove:'Mou', loupeToggle:'Lupa ×2',
     disconnectDialogTitle: 'Vols desconnectar?',
     disconnectDialogBody: 'Tornaràs a la pantalla d\'inici de sessió.',
     disconnectQuit: 'Desconnecta',

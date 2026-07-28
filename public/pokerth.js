@@ -4090,7 +4090,7 @@ const App = (() => {
     var fn = (typeof entry === 'function') ? entry : function(){ return entry; };
     S.actionLog.push(fn);
     if (S.actionLog.length > 500) S.actionLog.shift();
-    renderLog();
+    renderLog(1);   // une ligne de plus en tete (liste inversee) — cf. renderLog
   }
   window.logAction = logAction; // pont requis par ui/action-bar.mjs (9g-B4)
   // Defilement du journal — parite client Qt-Widgets / QML : le suivi
@@ -4098,15 +4098,21 @@ const App = (() => {
   // pour relire une main precedente, et reprend tout seul au retour. La
   // mecanique (ancrage + barre « aller au plus recent ») vit dans
   // ui/livescroll.mjs ; repli sur l'ancien comportement s'il n'est pas la.
-  function renderLog() {
+  // `addedTop` = nombre de lignes gagnees en tete depuis le dernier rendu (1
+  // depuis logAction, 0 pour une simple retraduction). Indispensable une fois
+  // le plafond de 500 entrees atteint : chaque nouvelle ligne en chasse une en
+  // queue, le nombre de lignes ne bouge donc plus et la seule geometrie ne
+  // suffit plus a retrouver la ligne que le joueur est en train de lire.
+  function renderLog(addedTop) {
     const el = document.getElementById('g-log-body');
     if (!el) return;
+    var _n = (typeof addedTop === 'number') ? addedTop : 0;
     var _ls = (typeof window._liveBefore === 'function') ? window._liveBefore(el) : null;
     el.innerHTML = S.actionLog.slice().reverse().map(function(fn){
       var s; try { s = fn(); } catch (_e) { s = ''; }
       return '<div class="log-line">'+esc(s)+'</div>';
     }).join('');
-    if (_ls) window._liveAfter(el, _ls);
+    if (_ls) window._liveAfter(el, _ls, _n);
     else el.scrollTop = 0; // le plus recent est en haut (liste inversee)
   }
   window._retranslateLog = renderLog;
@@ -6982,7 +6988,10 @@ function addGameChat(sender, text, cls, spec) {
   if (sender) {
     // Traduction par message (API navigateur, opt-in Options avancees) :
     // bouton visible seulement si body.chat-tr-on (option + support).
-    var _tr = (cls !== 'mine' ? '<button class="chat-tr-btn" title="Traduire" onclick="window._chatTranslate(this)" aria-label="Translate">\u{1F310}</button>' : '');
+    // Libelle traduit ET re-traduisible : data-i18n-title suit un changement
+    // de langue, le title initial evite un survol vide avant le premier passage.
+    var _trL = 'Translate'; try { _trL = t('chatTranslateBtn'); } catch (_e) {}
+    var _tr = (cls !== 'mine' ? '<button class="chat-tr-btn" title="' + e(_trL) + '" data-i18n-title="chatTranslateBtn" onclick="window._chatTranslate(this)" aria-label="' + e(_trL) + '">\u{1F310}</button>' : '');
     // Action « /me … » (parité QML) — miroir de addChat : « *Nom fait qqch* »
     // en italique, sans « Nom: ». Le « /me » part au serveur et est reformaté
     // à l'affichage par chaque client.
@@ -9393,7 +9402,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.4-web.116'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.4-web.117'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

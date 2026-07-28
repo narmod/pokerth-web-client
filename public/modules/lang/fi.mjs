@@ -622,6 +622,7 @@ export const strings = {
     logPanelTitle: 'Loki',
     logCopied:'Loki kopioitu', logEmpty:'Loki on tyhjä', logExportTitle:'Vie loki', chatClearTitle:'Tyhjennä chat',
     jumpLatest:'Siirry uusimpaan',
+    chatTranslateBtn:'Käännä', winMove:'Siirrä', loupeToggle:'Suurennus ×2',
     disconnectDialogTitle: 'Katkaistaanko yhteys?',
     disconnectDialogBody: 'Palaat kirjautumisnäyttöön.',
     disconnectQuit: 'Katkaise yhteys',

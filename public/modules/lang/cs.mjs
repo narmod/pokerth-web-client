@@ -623,6 +623,7 @@ export const strings = {
     logPanelTitle: 'Záznam',
     logCopied:'Protokol zkopírován', logEmpty:'Protokol je prázdný', logExportTitle:'Exportovat protokol', chatClearTitle:'Vymazat chat',
     jumpLatest:'Přejít na nejnovější',
+    chatTranslateBtn:'Přeložit', winMove:'Přesunout', loupeToggle:'Lupa ×2',
     disconnectDialogTitle: 'Odpojit?',
     disconnectDialogBody: 'Vrátíte se na přihlašovací obrazovku.',
     disconnectQuit: 'Odpojit',

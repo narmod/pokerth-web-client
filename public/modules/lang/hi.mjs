@@ -445,6 +445,7 @@ export const strings = {
     logPanelTitle:'लॉग',
     logCopied:'लॉग कॉपी किया गया', logEmpty:'लॉग खाली है', logExportTitle:'लॉग निर्यात करें', chatClearTitle:'चैट साफ़ करें',
     jumpLatest:'नवीनतम पर जाएँ',
+    chatTranslateBtn:'अनुवाद करें', winMove:'ले जाएँ', loupeToggle:'आवर्धक ×2',
     disconnectDialogTitle:'डिस्कनेक्ट करें?',
     disconnectDialogBody:'आपको लॉगिन स्क्रीन पर लौटाया जाएगा।',
     disconnectQuit:'डिस्कनेक्ट',

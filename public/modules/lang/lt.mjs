@@ -623,6 +623,7 @@ export const strings = {
     logPanelTitle: 'Žurnalas',
     logCopied:'Žurnalas nukopijuotas', logEmpty:'Žurnalas tuščias', logExportTitle:'Eksportuoti žurnalą', chatClearTitle:'Išvalyti pokalbį',
     jumpLatest:'Pereiti prie naujausių',
+    chatTranslateBtn:'Versti', winMove:'Perkelti', loupeToggle:'Didinamasis ×2',
     disconnectDialogTitle: 'Atsijungti?',
     disconnectDialogBody: 'Grįšite į prisijungimo ekraną.',
     disconnectQuit: 'Atsijungti',

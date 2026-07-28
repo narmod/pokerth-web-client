@@ -623,6 +623,7 @@ export const strings = {
     logPanelTitle: 'Jurnal',
     logCopied:'Jurnal copiat', logEmpty:'Jurnalul este gol', logExportTitle:'Exportă jurnalul', chatClearTitle:'Golește chatul',
     jumpLatest:'Salt la cele mai recente',
+    chatTranslateBtn:'Traduce', winMove:'Mută', loupeToggle:'Lupă ×2',
     disconnectDialogTitle: 'Deconectezi?',
     disconnectDialogBody: 'Te vei întoarce la ecranul de autentificare.',
     disconnectQuit: 'Deconectează',

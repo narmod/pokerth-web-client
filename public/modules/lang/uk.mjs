@@ -622,6 +622,7 @@ export const strings = {
     logPanelTitle: 'Журнал',
     logCopied:'Журнал скопійовано', logEmpty:'Журнал порожній', logExportTitle:'Експортувати журнал', chatClearTitle:'Очистити чат',
     jumpLatest:'До найновіших',
+    chatTranslateBtn:'Перекласти', winMove:'Перемістити', loupeToggle:'Лупа ×2',
     disconnectDialogTitle: 'Відключитися?',
     disconnectDialogBody: 'Ви повернетеся до екрана входу.',
     disconnectQuit: 'Відключитися',

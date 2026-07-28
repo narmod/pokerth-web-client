@@ -459,6 +459,12 @@ function setLang(l) {
   document.querySelectorAll('[data-i18n-title]').forEach(function(el) {
     el.title = t(el.getAttribute('data-i18n-title'));
   });
+  // Accessible names, for controls whose visible label is an icon: the title
+  // is what a mouse sees, aria-label what a screen reader hears, and both
+  // used to drift out of the active language once set in the HTML.
+  document.querySelectorAll('[data-i18n-aria]').forEach(function(el) {
+    el.setAttribute('aria-label', t(el.getAttribute('data-i18n-aria')));
+  });
   // Placeholder attributes (e.g. the nickname and chat inputs). Single
   // mechanism: data-i18n-placeholder. (The old data-i18n-ph alias was
   // dropped — it had zero uses in the HTML.)

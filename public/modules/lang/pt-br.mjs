@@ -627,6 +627,7 @@ export const strings = {
     logPanelTitle: 'Registro',
     logCopied:'Registro copiado', logEmpty:'O registro está vazio', logExportTitle:'Exportar registro', chatClearTitle:'Limpar chat',
     jumpLatest:'Ir para o mais recente',
+    chatTranslateBtn:'Traduzir', winMove:'Mover', loupeToggle:'Lupa ×2',
     disconnectDialogTitle: 'Desconectar?',
     disconnectDialogBody: 'Você voltará à tela de login.',
     disconnectQuit: 'Desconectar',

@@ -625,6 +625,7 @@ export const strings = {
     logPanelTitle: 'Günlük',
     logCopied:'Günlük kopyalandı', logEmpty:'Günlük boş', logExportTitle:'Günlüğü dışa aktar', chatClearTitle:'Sohbeti temizle',
     jumpLatest:'En yenilere git',
+    chatTranslateBtn:'Çevir', winMove:'Taşı', loupeToggle:'Büyüteç ×2',
     disconnectDialogTitle: 'Bağlantı kesilsin mi?',
     disconnectDialogBody: 'Giriş ekranına döneceksin.',
     disconnectQuit: 'Bağlantıyı kes',

@@ -624,6 +624,7 @@ export const strings = {
     logPanelTitle: '日誌',
     logCopied:'已複製紀錄', logEmpty:'紀錄是空的', logExportTitle:'匯出紀錄', chatClearTitle:'清除聊天',
     jumpLatest:'跳至最新',
+    chatTranslateBtn:'翻譯', winMove:'移動', loupeToggle:'放大鏡 ×2',
     disconnectDialogTitle: '斷開連線？',
     disconnectDialogBody: '你將返回登入介面。',
     disconnectQuit: '斷開連線',

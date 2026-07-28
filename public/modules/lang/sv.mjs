@@ -622,6 +622,7 @@ export const strings = {
     logPanelTitle: 'Logg',
     logCopied:'Logg kopierad', logEmpty:'Loggen är tom', logExportTitle:'Exportera logg', chatClearTitle:'Rensa chatt',
     jumpLatest:'Gå till senaste',
+    chatTranslateBtn:'Översätt', winMove:'Flytta', loupeToggle:'Förstoring ×2',
     disconnectDialogTitle: 'Koppla från?',
     disconnectDialogBody: 'Du återvänder till inloggningsskärmen.',
     disconnectQuit: 'Koppla från',

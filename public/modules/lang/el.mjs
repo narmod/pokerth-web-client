@@ -623,6 +623,7 @@ export const strings = {
     logPanelTitle: 'Αρχείο',
     logCopied:'Το ιστορικό αντιγράφηκε', logEmpty:'Το ιστορικό είναι κενό', logExportTitle:'Εξαγωγή ιστορικού', chatClearTitle:'Καθαρισμός συνομιλίας',
     jumpLatest:'Μετάβαση στα πιο πρόσφατα',
+    chatTranslateBtn:'Μετάφραση', winMove:'Μετακίνηση', loupeToggle:'Μεγεθυντικός ×2',
     disconnectDialogTitle: 'Αποσύνδεση;',
     disconnectDialogBody: 'Θα επιστρέψετε στην οθόνη σύνδεσης.',
     disconnectQuit: 'Αποσύνδεση',

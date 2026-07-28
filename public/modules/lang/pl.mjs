@@ -626,6 +626,7 @@ export const strings = {
     logPanelTitle: 'Dziennik',
     logCopied:'Dziennik skopiowany', logEmpty:'Dziennik jest pusty', logExportTitle:'Eksportuj dziennik', chatClearTitle:'Wyczyść czat',
     jumpLatest:'Przejdź do najnowszych',
+    chatTranslateBtn:'Przetłumacz', winMove:'Przenieś', loupeToggle:'Lupa ×2',
     disconnectDialogTitle: 'Rozłączyć?',
     disconnectDialogBody: 'Wrócisz do ekranu logowania.',
     disconnectQuit: 'Rozłącz',

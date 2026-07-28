@@ -318,7 +318,8 @@ function addChat(sender, text, cls='', spec) {
   if (sender) {
     // Bouton de traduction aussi dans le chat LOBBY (meme mecanique que
     // le chat de partie ; visible seulement si body.chat-tr-on).
-    const _tr = (cls !== 'mine' ? '<button class="chat-tr-btn" title="Traduire" onclick="window._chatTranslate(this)" aria-label="Translate">\u{1F310}</button>' : '');
+    const _trL = t('chatTranslateBtn');
+    const _tr = (cls !== 'mine' ? '<button class="chat-tr-btn" title="' + esc(_trL) + '" data-i18n-title="chatTranslateBtn" onclick="window._chatTranslate(this)" aria-label="' + esc(_trL) + '">\u{1F310}</button>' : '');
     // Action « /me … » (parité QML LobbyHandler isAction) : « *Nom fait qqch* »
     // en italique, sans « Nom: ». Le « /me » est envoyé tel quel au serveur puis
     // reformaté à l'affichage par chaque client.

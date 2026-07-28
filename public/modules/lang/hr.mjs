@@ -623,6 +623,7 @@ export const strings = {
     logPanelTitle: 'Zapisnik',
     logCopied:'Zapisnik kopiran', logEmpty:'Zapisnik je prazan', logExportTitle:'Izvezi zapisnik', chatClearTitle:'Očisti chat',
     jumpLatest:'Skoči na najnovije',
+    chatTranslateBtn:'Prevedi', winMove:'Premjesti', loupeToggle:'Povećalo ×2',
     disconnectDialogTitle: 'Odspojiti?',
     disconnectDialogBody: 'Vratit ćete se na zaslon za prijavu.',
     disconnectQuit: 'Odspoji',

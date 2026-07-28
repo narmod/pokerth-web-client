@@ -622,6 +622,7 @@ export const strings = {
     logPanelTitle: 'ログ',
     logCopied:'ログをコピーしました', logEmpty:'ログは空です', logExportTitle:'ログをエクスポート', chatClearTitle:'チャットをクリア',
     jumpLatest:'最新へ移動',
+    chatTranslateBtn:'翻訳', winMove:'移動', loupeToggle:'拡大 ×2',
     disconnectDialogTitle: '切断しますか？',
     disconnectDialogBody: 'ログイン画面に戻ります。',
     disconnectQuit: '切断',
