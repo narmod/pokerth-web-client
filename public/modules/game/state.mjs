@@ -144,6 +144,9 @@ export const S = {
   _preActionToCall: -1,    // « à suivre » POUR MOI mémorisé au pré-armement
   _preActionOpen: false,
   _actedStreet: -1,        // nb de cartes du board quand j'ai agi (-1 = pas encore)
+  _roundEnded: false,      // manche de mise close : verrouillé jusqu'à la suivante
+  _boardDealing: false,    // cartes communes en cours de révélation
+  _inShowdown: false,      // showdown en cours (jusqu'à la main suivante)
   _modeSelBusy: false, _modeSelPendingPreview: false, _modeSelHoldTimer: null,
   _actionBarPinned: (function () {
     try { return localStorage.getItem('pth_pin_actionbar') === '1'; } catch (e) { return false; }

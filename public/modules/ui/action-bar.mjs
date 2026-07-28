@@ -147,13 +147,18 @@ window.setAssist = function(on) {
 // Barre d'action verrouillee : rien a decider pour l'instant, donc ni clic
 // ni pre-armement (comportement des clients Qt-Widgets et QML, confirme par
 // sp0ck : « buttons are deactivated until next raise or until next round »).
-// Trois cas :
+// Six cas, calques sur actionsArmed du QML :
+//   · showdown en cours   -> jusqu'a la main suivante ;
+//   · cartes communes en cours de revelation ;
+//   · manche de mise close -> jusqu'a ce que quelqu'un reprenne la parole
+//     avec les montants de la nouvelle manche ;
 //   · j'ai jete ma main   -> jusqu'a la main suivante ;
 //   · je suis a tapis     -> plus rien a decider de la main ;
 //   · j'ai deja parle sur cette street et personne ne m'a relance depuis
 //     -> jusqu'a une relance adverse (toCall repasse > 0) ou la street
 //        suivante, qui remet _actedStreet en decalage.
 function _barLocked() {
+  if (S._inShowdown || S._boardDealing || S._roundEnded) return true;
   var sd = (S.seatData && S.seatData[S.myId]) || null;
   if (!sd) return false;
   if (sd.folded) return true;

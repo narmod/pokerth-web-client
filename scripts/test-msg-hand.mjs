@@ -158,6 +158,14 @@ ok(S.commCards[3] === 48, 'onDealTurn : 4e carte');
 M.onDealRiver(subOf([[1, 0, 12], [2, 0, 3]]));
 ok(S.commCards[4] === 3, 'onDealRiver : 5e carte');
 
+// ── Frontière de manche : verrous de la barre d'action (parité actionsArmed)
+ok(S._roundEnded === true && S._boardDealing === true,
+   'un deal clôt la manche et gèle la barre pendant la révélation');
+ok(S._preAction === '' && S._actedStreet === -1,
+   'un deal efface la pré-sélection et le repère de prise de parole');
+M.onPlayersTurn(subOf([[1, 0, 12], [2, 0, 9], [3, 0, 1]]));
+ok(S._roundEnded === false, 'le tour de parole suivant lève le verrou de manche');
+
 // ── YourActionRejected : journalisé sans crash
 logs.length = 0;
 M.onYourActionRejected(subOf([[1, 0, 12], [2, 0, 1], [3, 0, 5], [4, 0, 2]]));

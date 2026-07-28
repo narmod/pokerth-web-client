@@ -287,6 +287,9 @@ function onHandStart(sub) {
     S._preActionOpen = false; // referme tout panneau "aperçu" à chaque main
     S._preAction = '';        // désarme toute pré-action à chaque nouvelle main
     S._actedStreet = -1;      // je n'ai pas encore parlé dans cette main
+    S._roundEnded = false;    // nouvelle main → verrous de manche levés
+    S._boardDealing = false;
+    S._inShowdown = false;
     // Zoom-follow : reset du suivi + restauration d'un zoom suspendu au showdown
     try { if (window._zoomHandStart) window._zoomHandStart(); } catch (_e) {}
     // Badge « main gagnante » : masqué dès la nouvelle main
@@ -586,6 +589,9 @@ function onHandStart(sub) {
 
 function onPlayersTurn(sub) {
     // PlayersTurnMessage: gameId=1, playerId=2, gameState=3
+    // Quelqu'un reprend la parole : les montants de la nouvelle manche sont
+    // à jour (équivalent de onRoundValuesReady côté QML) → verrou de manche levé.
+    S._roundEnded = false;
     S.turnPid   = Proto.u32(sub, 2);
     S.gameState = Proto.u32(sub, 3);
     // Defensive guard: if the server (older PokerTH versions, e.g.
@@ -706,7 +712,26 @@ function onPlayersActionDone(sub) {
     return;
 }
 
+// Frontière de manche : de nouvelles cartes communes closent la manche
+// précédente. Comme le QML (onPhaseTextChanged + onBoardDealingChanged) la
+// pré-sélection est effacée et la barre d'action reste verrouillée pendant la
+// révélation, puis jusqu'au premier tour de parole de la manche suivante
+// (S._roundEnded, levé par onPlayersTurn).
+function _beginStreet(dealMs) {
+    S._preAction    = '';
+    S._actedStreet  = -1;
+    S._roundEnded   = true;
+    S._boardDealing = true;
+    setTimeout(function () {
+      S._boardDealing = false;
+      // Rafraîchit l'aperçu : s'il reste verrouillé c'est que la manche n'a
+      // pas encore repris la parole, ce qui est justement le comportement voulu.
+      try { if (S.turnPid !== S.myId) window.renderGameWaiting('', true); } catch (_e) {}
+    }, dealMs);
+}
+
 function onDealFlop(sub) {
+    _beginStreet(520);   // flop échelonné 0/120/240 ms + fondu 260 ms
     // DealFlopCardsMessage : deux formats possibles selon la version proto.
     // Essai A : gameId=1, card1=2, card2=3, card3=4 (proto officiel actuel)
     // Essai B : card1=1, card2=2, card3=3 (ancienne version, sans gameId)
@@ -752,6 +777,7 @@ function onDealFlop(sub) {
 }
 
 function onDealTurn(sub) {
+    _beginStreet(280);   // turn immédiat + fondu 260 ms
     // Fix : utiliser sub[2] pour détecter la présence du champ
     const tv = sub[2] !== undefined ? Proto.u32(sub, 2) : Proto.u32(sub, 1);
     S.commCards.push(tv);
@@ -778,6 +804,7 @@ function onDealTurn(sub) {
 }
 
 function onDealRiver(sub) {
+    _beginStreet(280);   // river immédiate + fondu 260 ms
     // Fix : sub[2] présent ? utiliser field 2 ; sinon field 1
     // rv || fallback est FAUX pour rv=0 (carte 2♦)
     const rv = sub[2] !== undefined ? Proto.u32(sub, 2) : Proto.u32(sub, 1);
@@ -823,6 +850,10 @@ function onAllInShowCards(sub) {
 }
 
 function onEndOfHandShow(sub) {
+    // Showdown : la barre d'action est morte jusqu'à la main suivante, sinon on
+    // clique d'avance pour la manche d'après (parité QML « inShowdown »).
+    S._inShowdown = true;
+    S._preAction  = '';
     window._ownReveal = true; // showdown : mes cartes sont publiques, on les montre
     // Zoom-follow : suspension du zoom pour la vue d'ensemble du showdown
     try { if (window._zoomShowdownSuspend) window._zoomShowdownSuspend(); } catch (_e) {}
@@ -1061,6 +1092,7 @@ function onYourActionRejected(sub) {
 }
 
 function onAfterHandShowCards(sub) {
+    S._inShowdown = true;
     // Show volontaire d'un joueur (rediffusion serveur du
     // ShowMyCardsRequest). PlayerResult : playerId=1, resultCard1=2,
     // resultCard2=3 (moneyWon/playerMoney ignorés : déjà appliqués par

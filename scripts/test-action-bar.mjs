@@ -114,6 +114,19 @@ S.commCards = []; S._actedStreet = -1; S.highestBet = 0; S.seatData[1].bet = 0;
 A.renderMyTurnActions(true);
 ok(!ga.innerHTML.includes('no-action'), 'nouvelle main : la zone morte est levée');
 
+// 6. Les trois gardes de manche (parité actionsArmed du QML) : chacun suffit
+// à lui seul à verrouiller la barre, même quand tout le reste est jouable.
+[['_inShowdown', 'showdown en cours'],
+ ['_boardDealing', 'cartes communes en cours de révélation'],
+ ['_roundEnded', 'manche close, valeurs pas encore rafraîchies']].forEach(function (g) {
+  S[g[0]] = true;
+  A.renderMyTurnActions(true);
+  ok(ga.innerHTML.includes('no-action'), g[1] + ' : zone morte');
+  S[g[0]] = false;
+});
+A.renderMyTurnActions(true);
+ok(!ga.innerHTML.includes('no-action'), 'gardes de manche levés : la barre redevient armable');
+
 // Call avec mise à suivre + montant
 S.highestBet = 50;
 A.renderMyTurnActions();
