@@ -624,6 +624,7 @@ export const strings = {
     logCopied:'Logboek gekopieer', logEmpty:'Logboek is leeg', logExportTitle:'Voer logboek uit', chatClearTitle:'Vee klets uit',
     jumpLatest:'Spring na nuutste',
     chatTranslateBtn:'Vertaal', winMove:'Skuif', loupeToggle:'Vergrootglas ×2',
+    sendTooltip:'Stuur', resizeTooltip:'Sleep om te verstel', loadingOffline:'Laai vanlyn-modus…',
     disconnectDialogTitle: 'Ontkoppel?',
     disconnectDialogBody: 'Jy sal na die aanmeldskerm terugkeer.',
     disconnectQuit: 'Ontkoppel',

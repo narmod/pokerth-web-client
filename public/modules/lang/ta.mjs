@@ -625,6 +625,7 @@ export const strings = {
     logCopied:'பதிவு நகலெடுக்கப்பட்டது', logEmpty:'பதிவு காலியாக உள்ளது', logExportTitle:'பதிவை ஏற்றுமதி செய்', chatClearTitle:'அரட்டையை அழி',
     jumpLatest:'சமீபத்தியதற்குச் செல்',
     chatTranslateBtn:'மொழிபெயர்', winMove:'நகர்த்து', loupeToggle:'பெரிதாக்கி ×2',
+    sendTooltip:'அனுப்பு', resizeTooltip:'அளவு மாற்ற இழுக்கவும்', loadingOffline:'ஆஃப்லைன் பயன்முறை ஏற்றப்படுகிறது…',
     disconnectDialogTitle: 'துண்டிக்கவா?',
     disconnectDialogBody: 'நீங்கள் உள்நுழைவுத் திரைக்குத் திரும்புவீர்கள்.',
     disconnectQuit: 'துண்டி',

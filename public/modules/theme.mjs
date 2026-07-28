@@ -384,7 +384,7 @@ function _importSeatPackage(file){
     var plate=pick(['plate.png','plate.svg','plate.webp','plate.jpg','plate.jpeg']);
     var self =pick(['self.png','self.svg','self.webp','self.jpg','self.jpeg']);
     var prev =pick(['preview.png','preview.svg','preview.webp','preview.jpg']);
-    if(!cssText && !plate) return Promise.reject(new Error('style.css ou plate.* requis'));
+    if(!cssText && !plate) return Promise.reject(new Error('style.css or plate.* required'));
     var assets={}; [plate,self,prev].forEach(function(fn){ if(fn) assets[fn]=new Blob([files[fn]],{type:_mimeOf(fn)}); });
     var rec={ id:'imp-s-'+_uid(), type:'seat',
               name:(cfg.name&&String(cfg.name).trim())||String(file.name||'Imported seat').replace(/\.zip$/i,''),
@@ -421,12 +421,12 @@ function _importDeckPackage(file){
   return file.arrayBuffer().then(_unzip).then(function(files){
     var ext=null, exts=['svg','png','jpg','jpeg'];
     for(var e=0;e<exts.length;e++){ if(files['0.'+exts[e]]){ ext=exts[e]; break; } }
-    if(!ext) return Promise.reject(new Error('cartes 0..51 introuvables'));
+    if(!ext) return Promise.reject(new Error('cards 0..51 not found'));
     var name='Imported deck';
     for(var k in files){ if(/deckstyle\.xml$/i.test(k)){ name=_xmlVal(new TextDecoder().decode(files[k]),'StyleDescription')||name; break; } }
     var assets={}, faceCount=0;
     for(var i=0;i<52;i++){ var fn=i+'.'+ext; if(files[fn]){ assets[fn]=new Blob([files[fn]],{type:_mimeOf(fn)}); faceCount++; } }
-    if(faceCount<52) return Promise.reject(new Error('deck incomplet ('+faceCount+'/52 cartes)'));
+    if(faceCount<52) return Promise.reject(new Error('incomplete deck ('+faceCount+'/52 cards)'));
     if(files['flipside.'+ext]) assets['flipside.'+ext]=new Blob([files['flipside.'+ext]],{type:_mimeOf('x.'+ext)});
     var rec={ id:'imp-d-'+_uid(), type:'deck', name:name, meta:{ext:ext}, assets:assets };
     return _idbPut(rec).then(function(){ _galleryDecks.push(_importedDeckToGallery(rec)); try{ if(_body) _render(); }catch(e){} return rec; });
@@ -850,7 +850,7 @@ function _inflateRaw(u8){ var ds=new DecompressionStream('deflate-raw'); return 
 function _unzip(buf){
   var dv=new DataView(buf), u8=new Uint8Array(buf), n=buf.byteLength, eocd=-1;
   for(var i=n-22;i>=0 && i>=n-22-65536;i--){ if(dv.getUint32(i,true)===0x06054b50){ eocd=i; break; } }
-  if(eocd<0) return Promise.reject(new Error('ZIP invalide'));
+  if(eocd<0) return Promise.reject(new Error('invalid ZIP'));
   var cnt=dv.getUint16(eocd+10,true), cdOff=dv.getUint32(eocd+16,true), p=cdOff, tasks=[];
   for(var e=0;e<cnt;e++){
     if(dv.getUint32(p,true)!==0x02014b50) break;
@@ -908,7 +908,7 @@ function _importTablePackage(file){
       var _pp=_xmlVal(xml,'PreviewPortrait'); if(_pp) meta.previewPortrait=_pp;
     }
     var assets={}; [meta.table,meta.preview,meta.previewPortrait,meta.dealer,meta.sb,meta.bb,meta.fold,meta.call,meta.raise,meta.allin].forEach(function(fn){ if(fn&&files[fn]&&!assets[fn]) assets[fn]=new Blob([files[fn]],{type:_mimeOf(fn)}); });
-    if(!assets[meta.table]) return Promise.reject(new Error('table.png manquant'));
+    if(!assets[meta.table]) return Promise.reject(new Error('table.png missing'));
     var rec={ id:'imp-t-'+_uid(), type:'table', name:name, meta:meta, assets:assets };
     return _idbPut(rec).then(function(){ _galleryTables.push(_importedTableToGallery(rec)); try{ if(_body) _render(); }catch(e){} return rec; });
   });

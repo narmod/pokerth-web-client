@@ -624,6 +624,7 @@ export const strings = {
     logCopied:'Protokol zkopírován', logEmpty:'Protokol je prázdný', logExportTitle:'Exportovat protokol', chatClearTitle:'Vymazat chat',
     jumpLatest:'Přejít na nejnovější',
     chatTranslateBtn:'Přeložit', winMove:'Přesunout', loupeToggle:'Lupa ×2',
+    sendTooltip:'Odeslat', resizeTooltip:'Tažením změníte velikost', loadingOffline:'Načítání režimu offline…',
     disconnectDialogTitle: 'Odpojit?',
     disconnectDialogBody: 'Vrátíte se na přihlašovací obrazovku.',
     disconnectQuit: 'Odpojit',

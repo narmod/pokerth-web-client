@@ -623,6 +623,7 @@ export const strings = {
     logCopied:'Log kopieret', logEmpty:'Loggen er tom', logExportTitle:'Eksportér log', chatClearTitle:'Ryd chat',
     jumpLatest:'Gå til nyeste',
     chatTranslateBtn:'Oversæt', winMove:'Flyt', loupeToggle:'Forstørrelse ×2',
+    sendTooltip:'Send', resizeTooltip:'Træk for at ændre størrelse', loadingOffline:'Indlæser offlinetilstand…',
     disconnectDialogTitle: 'Afbryd?',
     disconnectDialogBody: 'Du vender tilbage til loginskærmen.',
     disconnectQuit: 'Afbryd',

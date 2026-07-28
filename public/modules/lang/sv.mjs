@@ -623,6 +623,7 @@ export const strings = {
     logCopied:'Logg kopierad', logEmpty:'Loggen är tom', logExportTitle:'Exportera logg', chatClearTitle:'Rensa chatt',
     jumpLatest:'Gå till senaste',
     chatTranslateBtn:'Översätt', winMove:'Flytta', loupeToggle:'Förstoring ×2',
+    sendTooltip:'Skicka', resizeTooltip:'Dra för att ändra storlek', loadingOffline:'Läser in offlineläge…',
     disconnectDialogTitle: 'Koppla från?',
     disconnectDialogBody: 'Du återvänder till inloggningsskärmen.',
     disconnectQuit: 'Koppla från',

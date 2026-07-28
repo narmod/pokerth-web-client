@@ -624,6 +624,7 @@ export const strings = {
     logCopied:'Žurnalas nukopijuotas', logEmpty:'Žurnalas tuščias', logExportTitle:'Eksportuoti žurnalą', chatClearTitle:'Išvalyti pokalbį',
     jumpLatest:'Pereiti prie naujausių',
     chatTranslateBtn:'Versti', winMove:'Perkelti', loupeToggle:'Didinamasis ×2',
+    sendTooltip:'Siųsti', resizeTooltip:'Vilkite, kad pakeistumėte dydį', loadingOffline:'Įkeliamas neprisijungus režimas…',
     disconnectDialogTitle: 'Atsijungti?',
     disconnectDialogBody: 'Grįšite į prisijungimo ekraną.',
     disconnectQuit: 'Atsijungti',

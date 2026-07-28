@@ -624,6 +624,7 @@ export const strings = {
     logCopied:'Το ιστορικό αντιγράφηκε', logEmpty:'Το ιστορικό είναι κενό', logExportTitle:'Εξαγωγή ιστορικού', chatClearTitle:'Καθαρισμός συνομιλίας',
     jumpLatest:'Μετάβαση στα πιο πρόσφατα',
     chatTranslateBtn:'Μετάφραση', winMove:'Μετακίνηση', loupeToggle:'Μεγεθυντικός ×2',
+    sendTooltip:'Αποστολή', resizeTooltip:'Σύρετε για αλλαγή μεγέθους', loadingOffline:'Φόρτωση λειτουργίας χωρίς σύνδεση…',
     disconnectDialogTitle: 'Αποσύνδεση;',
     disconnectDialogBody: 'Θα επιστρέψετε στην οθόνη σύνδεσης.',
     disconnectQuit: 'Αποσύνδεση',

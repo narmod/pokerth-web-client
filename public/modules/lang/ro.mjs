@@ -624,6 +624,7 @@ export const strings = {
     logCopied:'Jurnal copiat', logEmpty:'Jurnalul este gol', logExportTitle:'Exportă jurnalul', chatClearTitle:'Golește chatul',
     jumpLatest:'Salt la cele mai recente',
     chatTranslateBtn:'Traduce', winMove:'Mută', loupeToggle:'Lupă ×2',
+    sendTooltip:'Trimite', resizeTooltip:'Trageți pentru redimensionare', loadingOffline:'Se încarcă modul offline…',
     disconnectDialogTitle: 'Deconectezi?',
     disconnectDialogBody: 'Te vei întoarce la ecranul de autentificare.',
     disconnectQuit: 'Deconectează',

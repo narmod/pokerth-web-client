@@ -624,6 +624,7 @@ export const strings = {
     logCopied:'Đã sao chép nhật ký', logEmpty:'Nhật ký trống', logExportTitle:'Xuất nhật ký', chatClearTitle:'Xóa trò chuyện',
     jumpLatest:'Đến mục mới nhất',
     chatTranslateBtn:'Dịch', winMove:'Di chuyển', loupeToggle:'Kính lúp ×2',
+    sendTooltip:'Gửi', resizeTooltip:'Kéo để thay đổi kích thước', loadingOffline:'Đang tải chế độ ngoại tuyến…',
     disconnectDialogTitle: 'Ngắt kết nối?',
     disconnectDialogBody: 'Bạn sẽ quay về màn hình đăng nhập.',
     disconnectQuit: 'Ngắt kết nối',

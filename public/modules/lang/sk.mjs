@@ -624,6 +624,7 @@ export const strings = {
     logCopied:'Denník skopírovaný', logEmpty:'Denník je prázdny', logExportTitle:'Exportovať denník', chatClearTitle:'Vymazať chat',
     jumpLatest:'Prejsť na najnovšie',
     chatTranslateBtn:'Preložiť', winMove:'Presunúť', loupeToggle:'Lupa ×2',
+    sendTooltip:'Odoslať', resizeTooltip:'Potiahnutím zmeníte veľkosť', loadingOffline:'Načítava sa režim offline…',
     disconnectDialogTitle: 'Odpojiť?',
     disconnectDialogBody: 'Vrátite sa na prihlasovaciu obrazovku.',
     disconnectQuit: 'Odpojiť',

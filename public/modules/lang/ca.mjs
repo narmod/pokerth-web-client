@@ -624,6 +624,7 @@ export const strings = {
     logCopied:'Registre copiat', logEmpty:'El registre és buit', logExportTitle:'Exporta el registre', chatClearTitle:'Esborra el xat',
     jumpLatest:'Ves al més recent',
     chatTranslateBtn:'Tradueix', winMove:'Mou', loupeToggle:'Lupa ×2',
+    sendTooltip:'Envia', resizeTooltip:'Arrossega per redimensionar', loadingOffline:'Carregant el mode fora de línia…',
     disconnectDialogTitle: 'Vols desconnectar?',
     disconnectDialogBody: 'Tornaràs a la pantalla d\'inici de sessió.',
     disconnectQuit: 'Desconnecta',

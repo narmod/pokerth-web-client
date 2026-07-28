@@ -625,6 +625,7 @@ export const strings = {
     logCopied:'Loga air a chopaigeadh', logEmpty:'Tha an loga falamh', logExportTitle:'Às-phortaich an loga', chatClearTitle:'Falamhaich a\' chabadaich',
     jumpLatest:'Leum gun fheadhainn as ùire',
     chatTranslateBtn:'Eadar-theangaich', winMove:'Gluais', loupeToggle:'Glainne-mheudachaidh ×2',
+    sendTooltip:'Cuir', resizeTooltip:'Slaod gus meud atharrachadh', loadingOffline:'A\' luchdadh am modh far-loidhne…',
     disconnectDialogTitle: 'Dì-cheangail?',
     disconnectDialogBody: 'Tillidh tu dhan sgrìn clàraidh a-steach.',
     disconnectQuit: 'Dì-cheangail',

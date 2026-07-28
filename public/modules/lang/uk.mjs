@@ -623,6 +623,7 @@ export const strings = {
     logCopied:'Журнал скопійовано', logEmpty:'Журнал порожній', logExportTitle:'Експортувати журнал', chatClearTitle:'Очистити чат',
     jumpLatest:'До найновіших',
     chatTranslateBtn:'Перекласти', winMove:'Перемістити', loupeToggle:'Лупа ×2',
+    sendTooltip:'Надіслати', resizeTooltip:'Перетягніть, щоб змінити розмір', loadingOffline:'Завантаження автономного режиму…',
     disconnectDialogTitle: 'Відключитися?',
     disconnectDialogBody: 'Ви повернетеся до екрана входу.',
     disconnectQuit: 'Відключитися',

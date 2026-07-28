@@ -2103,7 +2103,7 @@ function openRangeGrid(name, posFilter, playersFilter) {
     modal.innerHTML = '<div class="range-card"><div class="range-head">'
       + '<span class="range-title"></span>'
       + '<span class="range-filters"></span>'
-      + '<button type="button" class="range-close" title="Fermer">✕</button></div>'
+      + '<button type="button" class="range-close" data-i18n-title="closeTooltip" title="' + _ht('closeTooltip','Close') + '">✕</button></div>'
       + '<div class="range-body"></div>'
       + '<div class="range-legend">' + _ht('hlRangeLegend','Diagonal = pairs · top-right = suited · bottom-left = offsuit') + '</div></div>';
     document.body.appendChild(modal);

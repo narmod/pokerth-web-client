@@ -623,6 +623,7 @@ export const strings = {
     logCopied:'ログをコピーしました', logEmpty:'ログは空です', logExportTitle:'ログをエクスポート', chatClearTitle:'チャットをクリア',
     jumpLatest:'最新へ移動',
     chatTranslateBtn:'翻訳', winMove:'移動', loupeToggle:'拡大 ×2',
+    sendTooltip:'送信', resizeTooltip:'ドラッグでサイズ変更', loadingOffline:'オフラインモードを読み込み中…',
     disconnectDialogTitle: '切断しますか？',
     disconnectDialogBody: 'ログイン画面に戻ります。',
     disconnectQuit: '切断',

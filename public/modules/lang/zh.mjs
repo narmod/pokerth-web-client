@@ -625,6 +625,7 @@ export const strings = {
     logCopied:'日志已复制', logEmpty:'日志为空', logExportTitle:'导出日志', chatClearTitle:'清除聊天',
     jumpLatest:'跳到最新',
     chatTranslateBtn:'翻译', winMove:'移动', loupeToggle:'放大镜 ×2',
+    sendTooltip:'发送', resizeTooltip:'拖动调整大小', loadingOffline:'正在加载离线模式…',
     disconnectDialogTitle: '断开连接？',
     disconnectDialogBody: '你将返回登录界面。',
     disconnectQuit: '断开连接',

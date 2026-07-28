@@ -631,6 +631,7 @@ export const strings = {
     logCopied:'Registro copiato', logEmpty:'Il registro è vuoto', logExportTitle:'Esporta registro', chatClearTitle:'Cancella chat',
     jumpLatest:'Vai al più recente',
     chatTranslateBtn:'Traduci', winMove:'Sposta', loupeToggle:'Lente ×2',
+    sendTooltip:'Invia', resizeTooltip:'Trascina per ridimensionare', loadingOffline:'Caricamento della modalità offline…',
     disconnectDialogTitle: 'Disconnettere?',
     disconnectDialogBody: 'Tornerai alla schermata di accesso.',
     disconnectQuit: 'Disconnetti',

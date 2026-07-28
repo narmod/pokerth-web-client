@@ -627,6 +627,7 @@ export const strings = {
     logCopied:'Dziennik skopiowany', logEmpty:'Dziennik jest pusty', logExportTitle:'Eksportuj dziennik', chatClearTitle:'Wyczyść czat',
     jumpLatest:'Przejdź do najnowszych',
     chatTranslateBtn:'Przetłumacz', winMove:'Przenieś', loupeToggle:'Lupa ×2',
+    sendTooltip:'Wyślij', resizeTooltip:'Przeciągnij, aby zmienić rozmiar', loadingOffline:'Ładowanie trybu offline…',
     disconnectDialogTitle: 'Rozłączyć?',
     disconnectDialogBody: 'Wrócisz do ekranu logowania.',
     disconnectQuit: 'Rozłącz',

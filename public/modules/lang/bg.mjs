@@ -624,6 +624,7 @@ export const strings = {
     logCopied:'Дневникът е копиран', logEmpty:'Дневникът е празен', logExportTitle:'Експортиране на дневника', chatClearTitle:'Изчисти чата',
     jumpLatest:'Към най-новото',
     chatTranslateBtn:'Преведи', winMove:'Преместване', loupeToggle:'Лупа ×2',
+    sendTooltip:'Изпрати', resizeTooltip:'Влачете за преоразмеряване', loadingOffline:'Зареждане на офлайн режим…',
     disconnectDialogTitle: 'Да прекъснете?',
     disconnectDialogBody: 'Ще се върнете към екрана за вход.',
     disconnectQuit: 'Прекъсни',

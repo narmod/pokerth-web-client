@@ -445,6 +445,7 @@ export const strings = {
     logCopied:'로그가 복사되었습니다', logEmpty:'로그가 비어 있습니다', logExportTitle:'로그 내보내기', chatClearTitle:'채팅 지우기',
     jumpLatest:'최신으로 이동',
     chatTranslateBtn:'번역', winMove:'이동', loupeToggle:'돋보기 ×2',
+    sendTooltip:'보내기', resizeTooltip:'끌어서 크기 조절', loadingOffline:'오프라인 모드 로딩 중…',
     disconnectDialogTitle:'접속을 끊을까요?',
     disconnectDialogBody:'로그인 화면으로 돌아갑니다.',
     disconnectQuit:'접속 해제',

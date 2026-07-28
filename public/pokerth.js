@@ -4880,7 +4880,7 @@ const App = (() => {
         // ── OFFLINE vs BOTS ── swap the transport for a local fake server.
         window.directWS = false;
         if (!(window.PokerOffline && window.PokerOffline.createSocket)) {
-          setStatus('Chargement du mode hors-ligne…');
+          try { setStatus(t('loadingOffline')); } catch (e) { setStatus('Loading offline mode…'); }
           import('/modules/offline/index.mjs')
             .then(function(){ App.connect(); })
             .catch(function(){ setStatus('Offline init failed', 'err'); });
@@ -5023,7 +5023,7 @@ const App = (() => {
               App && App.connect && App._reconnectContinue && App._reconnectContinue();
             };
           } catch(err) {
-            _showBanner('Erreur: ' + err.message);
+            _showBanner(t('errGeneric', { code: err.message }));
           }
         }, delay);
       };
@@ -7829,7 +7829,8 @@ function makeChatResizable(panel, msgs, onResize) {
 
   var handle = document.createElement('div');
   handle.className = 'chat-resize-handle';
-  handle.title = 'Glisser pour redimensionner';
+  try { handle.title = t('resizeTooltip'); } catch (e) { handle.title = 'Drag to resize'; }
+  handle.setAttribute('data-i18n-title', 'resizeTooltip');
   var grip = document.createElement('div');
   grip.className = 'crh-grip';
   handle.appendChild(grip);
@@ -9402,7 +9403,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.4-web.117'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.4-web.118'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

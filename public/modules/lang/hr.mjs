@@ -624,6 +624,7 @@ export const strings = {
     logCopied:'Zapisnik kopiran', logEmpty:'Zapisnik je prazan', logExportTitle:'Izvezi zapisnik', chatClearTitle:'Očisti chat',
     jumpLatest:'Skoči na najnovije',
     chatTranslateBtn:'Prevedi', winMove:'Premjesti', loupeToggle:'Povećalo ×2',
+    sendTooltip:'Pošalji', resizeTooltip:'Povucite za promjenu veličine', loadingOffline:'Učitavanje izvanmrežnog načina…',
     disconnectDialogTitle: 'Odspojiti?',
     disconnectDialogBody: 'Vratit ćete se na zaslon za prijavu.',
     disconnectQuit: 'Odspoji',

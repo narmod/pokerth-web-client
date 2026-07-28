@@ -371,7 +371,7 @@ function renderGames() {
     document.getElementById('g-count').textContent = '0 table(s)';
     document.getElementById('g-list').innerHTML = S.loaded
       ? '<div class="empty">' + t('noTablesAvailable') + '</div>'
-      : '<div class="empty">Chargement des tables<br><span class="ld"><span>●</span><span>●</span><span>●</span></span></div>';
+      : '<div class="empty">' + t('loadingTables') + '<br><span class="ld"><span>●</span><span>●</span><span>●</span></span></div>';
     return;
   }
 

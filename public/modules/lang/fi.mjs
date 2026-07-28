@@ -623,6 +623,7 @@ export const strings = {
     logCopied:'Loki kopioitu', logEmpty:'Loki on tyhjä', logExportTitle:'Vie loki', chatClearTitle:'Tyhjennä chat',
     jumpLatest:'Siirry uusimpaan',
     chatTranslateBtn:'Käännä', winMove:'Siirrä', loupeToggle:'Suurennus ×2',
+    sendTooltip:'Lähetä', resizeTooltip:'Muuta kokoa vetämällä', loadingOffline:'Ladataan offline-tilaa…',
     disconnectDialogTitle: 'Katkaistaanko yhteys?',
     disconnectDialogBody: 'Palaat kirjautumisnäyttöön.',
     disconnectQuit: 'Katkaise yhteys',

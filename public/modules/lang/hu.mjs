@@ -624,6 +624,7 @@ export const strings = {
     logCopied:'Napló másolva', logEmpty:'A napló üres', logExportTitle:'Napló exportálása', chatClearTitle:'Chat törlése',
     jumpLatest:'Ugrás a legújabbra',
     chatTranslateBtn:'Fordítás', winMove:'Áthelyezés', loupeToggle:'Nagyító ×2',
+    sendTooltip:'Küldés', resizeTooltip:'Húzza az átméretezéshez', loadingOffline:'Kapcsolat nélküli mód betöltése…',
     disconnectDialogTitle: 'Lecsatlakozol?',
     disconnectDialogBody: 'Visszatérsz a bejelentkezési képernyőre.',
     disconnectQuit: 'Lecsatlakozás',
