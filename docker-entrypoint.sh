@@ -83,8 +83,9 @@ fi
 
 # ── 2. Re-sync to origin/$GIT_BRANCH on every boot ───────────────────────────
 # Hard resync rather than merge: the container is a deploy target, not a work
-# tree, and two tracked manifests (themes.json / seats.json) are regenerated at
-# runtime, so they are routinely "locally modified". Untracked files survive.
+# tree, and the style manifests (tables/decks/themes/seats .json) are generated
+# at runtime, so the tree is routinely dirty. Untracked files survive — the
+# manifests themselves are rebuilt by proxy.js on every boot.
 # Note: options stay BEFORE the revision — `git checkout -B b REV --quiet`
 # would be parsed as a pathspec.
 if git -C "$LIVE_DIR" fetch --quiet --depth 1 origin "$GIT_BRANCH"; then

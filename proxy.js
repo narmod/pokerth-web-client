@@ -4165,9 +4165,14 @@ process.on('SIGINT',  () => _shutdown('SIGINT'));
 
 httpServer.listen(PROXY_PORT, () => {
   _listenRetries = 0;
-  // Manifest des sièges régénéré au démarrage : les packs officiels livrés
-  // par le repo (ex. public/seats/onyx-pill) sont référencés sans dépendre
-  // d'un upload, et les packs uploadés par l'admin restent listés.
-  try { regenManifest('seat'); } catch (e) {}
+  // Manifestes de styles régénérés au démarrage. Les catalogues (tables, decks,
+  // thèmes, sièges) ne sont PAS versionnés : un checkout neuf — image Docker,
+  // self-update du conteneur, clone git — n'en a aucun, et les sélecteurs ne
+  // montrent alors que les styles intégrés au code (aucun deck de galerie,
+  // aucune table importée). install.sh les régénère, l'entrypoint du conteneur
+  // non : on le fait ici pour que TOUS les chemins de déploiement soient
+  // équivalents. Coût : quelques dizaines de ms. Les packs uploadés par l'admin
+  // restent listés (les scripts scannent le disque, ils n'effacent rien).
+  try { ['deck', 'table', 'theme', 'seat'].forEach(function (k) { regenManifest(k); }); } catch (e) {}
   console.log('Ready → http://localhost:' + PROXY_PORT + '/\n');
 });
