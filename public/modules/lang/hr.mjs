@@ -894,7 +894,7 @@ export const strings = {
     jrKeepForever: "Zauvijek",
     jrKeepDays: "{n} dana",
     jrCurrent: "trenutni",
-    jrSaveAsPrompt: "Naziv datoteke",
+    jrImported:'uvezeno',jrSaveAsPrompt: "Naziv datoteke",
     jrNoSql: "PDB izvoz nije dostupan (sql.js nije učitan)",
     srvSegNet: "Internet",
     srvSegOffline: "Trening",

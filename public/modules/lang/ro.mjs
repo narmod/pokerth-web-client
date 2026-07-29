@@ -823,7 +823,7 @@ export const strings = {
     jrKeepForever: "Pentru totdeauna",
     jrKeepDays: "{n} zile",
     jrCurrent: "curent",
-    jrSaveAsPrompt: "Nume fișier",
+    jrImported:'importat',jrSaveAsPrompt: "Nume fișier",
     jrNoSql: "Export PDB indisponibil (sql.js neîncărcat)",
     srvSegNet: "Internet",
     srvSegOffline: "Antrenament",

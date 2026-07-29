@@ -830,7 +830,7 @@ export const strings = {
     jrKeepForever: "Für immer",
     jrKeepDays: "{n} Tage",
     jrCurrent: "aktuell",
-    jrSaveAsPrompt: "Dateiname",
+    jrImported:'importiert',jrSaveAsPrompt: "Dateiname",
     jrNoSql: "PDB-Export nicht verfügbar (sql.js nicht geladen)",
     srvSegNet: "Internet",
     srvSegOffline: "Training",

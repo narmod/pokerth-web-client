@@ -898,7 +898,7 @@ export const strings = {
     jrKeepForever: "Gu bràth",
     jrKeepDays: "{n} là",
     jrCurrent: "làithreach",
-    jrSaveAsPrompt: "Ainm an fhaidhle",
+    jrImported:'air ion-phortadh',jrSaveAsPrompt: "Ainm an fhaidhle",
     jrNoSql: "Chan eil às-phortadh PDB ri làimh (sql.js gun luchdachadh)",
     srvSegNet: "Eadar-lìon",
     srvSegOffline: "Trèanadh",

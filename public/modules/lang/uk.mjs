@@ -894,7 +894,7 @@ export const strings = {
     jrKeepForever: "Назавжди",
     jrKeepDays: "{n} дн.",
     jrCurrent: "поточний",
-    jrSaveAsPrompt: "Ім'я файлу",
+    jrImported:'імпортовано',jrSaveAsPrompt: "Ім'я файлу",
     jrNoSql: "Експорт PDB недоступний (sql.js не завантажено)",
     srvSegNet: "Інтернет",
     srvSegOffline: "Тренування",

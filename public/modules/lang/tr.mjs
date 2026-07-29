@@ -824,7 +824,7 @@ export const strings = {
     jrKeepForever: "Süresiz",
     jrKeepDays: "{n} gün",
     jrCurrent: "geçerli",
-    jrSaveAsPrompt: "Dosya adı",
+    jrImported:'içe aktarıldı',jrSaveAsPrompt: "Dosya adı",
     jrNoSql: "PDB dışa aktarımı yok (sql.js yüklenmedi)",
     srvSegNet: "İnternet",
     srvSegOffline: "Antrenman",

@@ -627,7 +627,7 @@ export const strings = {
     jrKeepForever: "영구",
     jrKeepDays: "{n}일",
     jrCurrent: "현재",
-    jrSaveAsPrompt: "파일 이름",
+    jrImported:'가져옴',jrSaveAsPrompt: "파일 이름",
     jrNoSql: "PDB 내보내기 불가 (sql.js 미로드)",
     srvSegNet: "인터넷",
     srvSegOffline: "연습",

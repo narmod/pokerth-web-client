@@ -819,7 +819,7 @@ export const strings = {
     jrKeepForever: "永久",
     jrKeepDays: "{n} 天",
     jrCurrent: "目前",
-    jrSaveAsPrompt: "檔案名稱",
+    jrImported:'已匯入',jrSaveAsPrompt: "檔案名稱",
     jrNoSql: "PDB 匯出無法使用（sql.js 未載入）",
     srvSegNet: "網際網路",
     srvSegOffline: "訓練",

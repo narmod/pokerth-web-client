@@ -15,7 +15,8 @@
 // window._openJournal() ; si le module n'est pas chargé, rien ne casse.
 //
 // Extras web (absents du client officiel, signalés dans l'UI) :
-//   · rétention automatique (pth_log_keep_days : 0=illimité, 7/30/90 jours)
+//   · rétention automatique (pth_log_keep_days : 0=illimité, 7/30/90/180/365
+//     jours ; les sessions importées depuis un .pdb en sont exemptées)
 //   · « Tout supprimer »
 //   · recherche/surlignage dans l'aperçu
 
@@ -111,6 +112,8 @@ async function purgeOldSessions() {
     for (const m of metas) {
       const sid = m.sessionId || '';
       if (sid === cur) continue; // jamais la session en cours
+      if (m.imported) continue;  // sessions importées : l'utilisateur les a
+                                 // demandées explicitement → jamais purgées
       const dm = sid.match(/^(\d{4})-(\d{2})-(\d{2})/);
       if (!dm) continue;
       const ts = new Date(+dm[1], +dm[2] - 1, +dm[3]).getTime();
@@ -416,7 +419,8 @@ function _ensureModal() {
       '<div class="jr-foot">' +
         '<span id="jr-keep-lbl"></span>' +
         '<div class="sel-wrap adv-sel"><select id="jr-keep">' +
-          '<option value="0"></option><option value="7"></option><option value="30"></option><option value="90"></option>' +
+          '<option value="0"></option><option value="7"></option><option value="30"></option>' +
+          '<option value="90"></option><option value="180"></option><option value="365"></option>' +
         '</select><span class="sel-arr">\u25be</span></div>' +
         '<em class="adv-webtag">web</em>' +
         '<span class="jr-spacer"></span>' +
@@ -499,6 +503,12 @@ function _renderList() {
       const em = document.createElement('span');
       em.className = 'jr-cur';
       em.textContent = '\u2022 ' + T('jrCurrent', 'current');
+      b.appendChild(em);
+    }
+    if (m.imported) {
+      const em = document.createElement('span');
+      em.className = 'jr-cur';
+      em.textContent = '\u2022 ' + T('jrImported', 'imported');
       b.appendChild(em);
     }
     b.addEventListener('click', () => { _sel = m.sessionId; _selGame = 0; _anHand = 0; _renderList(); _renderGames(); _renderRight(); });
@@ -756,7 +766,8 @@ async function _writeSession(t) {
   await new Promise((resolve, reject) => {
     const tx = db.transaction(STORES, 'readwrite');
     const sid = t.sid;
-    tx.objectStore('meta').put({ k: 'session:' + sid, session: t.session, sessionId: sid });
+    // imported:true → exemptée de la rétention automatique (purgeOldSessions).
+    tx.objectStore('meta').put({ k: 'session:' + sid, session: t.session, sessionId: sid, imported: true });
     const g = tx.objectStore('games');
     t.games.forEach((x) => g.put({ id: sid + ':' + x.uniqueGameID, sessionId: sid, ...x }));
     const p = tx.objectStore('players');

@@ -823,7 +823,7 @@ export const strings = {
     jrKeepForever: "Navždy",
     jrKeepDays: "{n} dní",
     jrCurrent: "aktuální",
-    jrSaveAsPrompt: "Název souboru",
+    jrImported:'importováno',jrSaveAsPrompt: "Název souboru",
     jrNoSql: "Export PDB není k dispozici (sql.js nenačten)",
     srvSegNet: "Internet",
     srvSegOffline: "Trénink",

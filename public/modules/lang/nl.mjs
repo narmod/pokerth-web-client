@@ -826,7 +826,7 @@ export const strings = {
     jrKeepForever: "Voor altijd",
     jrKeepDays: "{n} dagen",
     jrCurrent: "huidig",
-    jrSaveAsPrompt: "Bestandsnaam",
+    jrImported:'geïmporteerd',jrSaveAsPrompt: "Bestandsnaam",
     jrNoSql: "PDB-export niet beschikbaar (sql.js niet geladen)",
     srvSegNet: "Internet",
     srvSegOffline: "Training",

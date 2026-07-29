@@ -896,7 +896,7 @@ export const strings = {
     jrKeepForever: "Per sempre",
     jrKeepDays: "{n} dies",
     jrCurrent: "actual",
-    jrSaveAsPrompt: "Nom del fitxer",
+    jrImported:'importat',jrSaveAsPrompt: "Nom del fitxer",
     jrNoSql: "L'exportació PDB no està disponible (sql.js no carregat)",
     srvSegNet: "Internet",
     srvSegOffline: "Entrenament",

@@ -895,7 +895,7 @@ export const strings = {
     jrKeepForever: "Visam laikui",
     jrKeepDays: "{n} d.",
     jrCurrent: "dabartinis",
-    jrSaveAsPrompt: "Failo pavadinimas",
+    jrImported:'importuota',jrSaveAsPrompt: "Failo pavadinimas",
     jrNoSql: "PDB eksportas negalimas (sql.js neįkeltas)",
     srvSegNet: "Internetas",
     srvSegOffline: "Treniruotė",

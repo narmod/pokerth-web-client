@@ -822,7 +822,7 @@ export const strings = {
     jrKeepForever: "Ikuisesti",
     jrKeepDays: "{n} päivää",
     jrCurrent: "nykyinen",
-    jrSaveAsPrompt: "Tiedostonimi",
+    jrImported:'tuotu',jrSaveAsPrompt: "Tiedostonimi",
     jrNoSql: "PDB-vienti ei käytettävissä (sql.js ei ladattu)",
     srvSegNet: "Internet",
     srvSegOffline: "Harjoittelu",
