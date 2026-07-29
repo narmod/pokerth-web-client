@@ -4967,7 +4967,18 @@ const App = (() => {
 
       _beginConnecting();   // lock button for the whole attempt (anti IP-block)
       S.ws.binaryType = 'arraybuffer';
-      S.ws.onopen    = () => { S._lastRxTime = Date.now(); setStatus(t('proxyConnectedWait')); try { window._pthCountConnect && window._pthCountConnect(window.directWS ? 'pokerthnet' : ((window._offlineMode || ($('server-mode') && $('server-mode').value === 'offline')) ? 'offline' : 'lan')); } catch (e) {} };
+      // Compteur par mode : c'est le mode CHOISI par le joueur qui compte, pas le
+      // transport. Avec « Via proxy » (transport par defaut), la socket va vers
+      // NOTRE proxy dans les trois modes -> se fier a window.directWS classait
+      // toute connexion Internet/PokerTH.net en 'lan'. On lit #server-mode, dont
+      // les valeurs sont 'pokerthnet' | 'offline' | 'lan-dedi'.
+      var _cntMode = function () {
+        var sm = ($('server-mode') && $('server-mode').value) || '';
+        if (window._offlineMode || sm === 'offline') return 'offline';
+        if (window.directWS || sm === 'pokerthnet') return 'pokerthnet';
+        return 'lan';
+      };
+      S.ws.onopen    = () => { S._lastRxTime = Date.now(); setStatus(t('proxyConnectedWait')); try { window._pthCountConnect && window._pthCountConnect(_cntMode()); } catch (e) {} };
       S.ws.onerror   = () => { S._lastConnectFailed = true; _endConnecting(); setStatus(t('wsError'), 'err'); };
       S.ws.onmessage = function(e) {
         if (typeof e.data === 'string') {
@@ -9467,7 +9478,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.4-web.131'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.4-web.132'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
