@@ -4885,7 +4885,7 @@ const App = (() => {
 
       _beginConnecting();   // lock button for the whole attempt (anti IP-block)
       S.ws.binaryType = 'arraybuffer';
-      S.ws.onopen    = () => { S._lastRxTime = Date.now(); setStatus(t('proxyConnectedWait')); try { window._pthCountConnect && window._pthCountConnect(window.directWS ? 'pokerthnet' : ((window._offlineMode || ($('server-mode') && $('server-mode').value === 'offline')) ? 'offline' : 'lan')); } catch (e) {} };
+      S.ws.onopen    = () => { S._lastRxTime = Date.now(); setStatus(t('proxyConnectedWait')); try { window._pthCountConnect && window._pthCountConnect(window._pthConnMode ? window._pthConnMode() : 'lan'); } catch (e) {} };
       S.ws.onerror   = () => { S._lastConnectFailed = true; _endConnecting(); setStatus(t('wsError'), 'err'); };
       S.ws.onmessage = function(e) {
         if (typeof e.data === 'string') {
@@ -9426,7 +9426,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.4-web.117'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.4-web.118'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
@@ -9516,6 +9516,18 @@ window.BUILD_VERSION='2.1.4-web.117'; try{ var b=document.getElementById('cf-bui
   // Fires once per session per mode when a connection opens. Reports to OUR
   // proxy (/__visit) even when the game socket is a direct WSS to pokerth.net —
   // the count-ping is independent of the game transport. No IP, no PII.
+  // Which of the three entry modes is this connection? Read the mode the player
+  // actually picked (#server-mode), NOT the transport: the Internet mode routed
+  // "via proxy" (admin transport switch), or pointed at a host that is not
+  // pokerth.net, is still an Internet connection and must not be filed as LAN.
+  window._pthConnMode = function () {
+    var v = '';
+    try { var el = document.getElementById('server-mode'); v = el ? el.value : ''; } catch (e) {}
+    if (v === 'offline' || window._offlineMode) return 'offline';
+    if (v === 'pokerthnet') return 'pokerthnet';
+    if (v === 'lan-dedi') return 'lan';
+    return window.directWS ? 'pokerthnet' : 'lan';
+  };
   window._pthCountConnect = function (mode) {
     try {
       if (['pokerthnet', 'lan', 'offline'].indexOf(mode) < 0) return;
