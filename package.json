@@ -1,6 +1,6 @@
 {
   "name": "pokerth-web-client",
-  "version": "2.1.4-web.128",
+  "version": "2.1.4-web.107",
   "description": "Experimental modern web client for PokerTH using a WebSocket-to-TCP proxy.",
   "main": "proxy.js",
   "private": false,
@@ -43,15 +43,12 @@
     "test:stats": "node scripts/test-stats.mjs",
     "test:handlog": "node scripts/test-handlog.mjs",
     "test:chat": "node scripts/test-chat.mjs",
-    "test:livescroll": "node scripts/test-livescroll.mjs",
-    "test:debuglog": "node scripts/test-debuglog.mjs",
     "test:abbrev": "node scripts/test-abbrev.mjs",
     "test:player-popup": "node scripts/test-player-popup.mjs",
     "test:lobby": "node scripts/test-lobby.mjs",
     "test:showdown": "node scripts/test-showdown.mjs",
     "test:session": "node scripts/test-session.mjs",
     "test:boot": "node scripts/test-boot.mjs",
-    "test:sounds": "node scripts/test-sounds.mjs",
     "test:keynav": "node scripts/test-keynav.mjs"
   },
   "keywords": [
@@ -66,7 +63,6 @@
   "license": "AGPL-3.0-or-later",
   "dependencies": {
     "dotenv": "^17.4.2",
-    "fake-indexeddb": "^6.2.5",
     "mysql2": "^3.6.0",
     "pino": "^10.3.1",
     "rate-limiter-flexible": "^11.2.0",
