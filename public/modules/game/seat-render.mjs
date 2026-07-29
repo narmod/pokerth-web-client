@@ -133,7 +133,9 @@ function renderSeatsImmediate() {
   try {
     var _smw = window.innerWidth, _smh = window.innerHeight;
     if (_smh > _smw) SELF_BOX_MUL = 1.155;
-    else if (_smh < 600) SELF_BOX_MUL = 1.15;
+    // Paysage compact : 94/84 = 1.119 (valeur du commentaire ci-dessus ; le
+    // 1.15 qui traînait ici ne correspondait à aucun ratio QML).
+    else if (_smh < 600) SELF_BOX_MUL = 1.119;
     // STRICT QML (packs pokerth) : GamePlayerSelfBox est scalée par
     // boxScale COMME les adversaires (scale: tableZone.boxScale) — sa
     // proéminence vient de ses dimensions de BASE (avatar 52, cartes
