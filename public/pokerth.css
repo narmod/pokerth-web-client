@@ -7064,6 +7064,22 @@ html[data-seat-struct="qml"] .seat-plate {
   opacity: 0.9;
   transition: transform 0.18s ease-out;
 }
+/* PlayerBoxAccent : un tablestyle.xml peut TEINTER la boîte joueur (p. ex. le
+   bleu des consoles du style Star Trek). Parité GamePlayerBox : l'accent
+   TEINTE le dégradé et la bordure, il ne les remplace pas — la boîte reste
+   sombre et le texte lisible dessus. Forces reprises telles quelles du QML
+   (Qt.tint = composition alpha, donc équivalent à color-mix) :
+     haut 0.34 · bas 0.22 · bordure alpha 0.60
+   theme.mjs lit déjà la balise et expose --box-accent + data-box-accent ; il
+   ne restait qu'à les consommer ici. Sans accent, rien ne change : la règle
+   ci-dessus reste seule à s'appliquer (et les navigateurs sans color-mix
+   gardent eux aussi la plaque neutre plutôt qu'une couleur cassée). */
+html[data-seat-struct="qml"][data-box-accent] .seat-plate {
+  background: linear-gradient(180deg,
+    color-mix(in srgb, var(--box-accent) 34%, #434c5f),
+    color-mix(in srgb, var(--box-accent) 22%, #1d222b));
+  border-color: color-mix(in srgb, var(--box-accent) 60%, transparent);
+}
 /* AvatarCardRow QML : avatar CARRÉ = hauteur de rangée (box 84 → rangée 40 en
    wide ; box 71 → rangée 43 en narrow/portrait), radius 2, bord 1px col200,
    fond col700 opacité 0.9. Cartes : cardH == hauteur d'avatar, ratio 120:168
