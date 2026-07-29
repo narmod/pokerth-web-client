@@ -42,7 +42,8 @@ function _chatLocalCmd(text, echo) {
       '/copy — copy the last reply to the clipboard · ' +
       '/zoom — toggle the table magnifier · ' +
       '/seatdbg — seat layout metrics (game chat only). ' +
-      'All replies are shown only to you, nothing is sent.');
+      'All replies are shown only to you, nothing is sent. '
+      + 'One exception: /gn <text> sends a server-wide notice \u2014 server admins only.');
     return true;
   }
   if (cmd === '/diag') {

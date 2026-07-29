@@ -45,6 +45,7 @@ const MSG = (() => {
     69:70, 70:71, 71:72, 72:73,               // Report Avatar/Game + Acks
     73:74,                                     // Error
     76:77, 77:78,                              // AdminBanPlayer + Ack (kickban total)
+    82:83, 83:84,                              // AdminGlobalNotice + Ack (durchsage serveur)
     78:79, 79:80, 80:81, 81:82, 55:56, 56:57, 57:58, 58:59, 59:60, 60:61, 61:62,              // Spectator*
   };
 
@@ -75,6 +76,10 @@ const MSG = (() => {
     TimeoutWarning:67, ResetTimeout:68, Error:73,
     ReportAvatar:69, ReportAvatarAck:70, ReportGame:71, ReportGameAck:72,
     AdminBanPlayer:76, AdminBanPlayerAck:77,
+    // Durchsage serveur (2.1.5, sp0ck 28/07/2026) : l'admin envoie 82, le
+    // serveur répond 83 puis rediffuse le texte à tous en ChatMessage
+    // broadcast (chatType 3) — rien de neuf à la réception.
+    AdminGlobalNotice:82, AdminGlobalNoticeAck:83,
     GameListSpectatorJoined:78, GameListSpectatorLeft:79,
     // Spectators on the table we're currently in (or watching).
     // Type 80/81 — separate from the lobby-level 78/79 which track
@@ -415,6 +420,21 @@ const MSG = (() => {
   }
 
 
+  // AdminGlobalNoticeMessage (type 82, champ enveloppe 83) : noticeText=1.
+  // Durchsage à tous les clients — réservée aux admins pokerth.net, mais le
+  // client n'envoie aucun droit : le serveur seul juge (ServerLobbyThread
+  // ::HandleNetPacketAdminGlobalNotice, liste d'admins en base, comme kickban).
+  // Le serveur rediffuse le texte en ChatMessage broadcast, donc la même limite
+  // de 128 OCTETS que le chat : au-delà, le validateur de paquets rejette tout
+  // le message. On tronque donc en octets UTF-8 (pas en caractères).
+  function buildAdminGlobalNotice(text) {
+    let s = String(text == null ? '' : text).trim();
+    const enc = new TextEncoder();
+    while (s && enc.encode(s).length > 128) s = s.slice(0, -1);
+    const msg = Proto.encode([[1,2,s]]);
+    return Proto.encode([[1,0,82],[83,2,msg]]);
+  }
+
   // RejectGameInvitationMessage (type 34, env field 35): gameId=1, myRejectReason=2.
   //   reason: 0 = rejectReasonNo (polite decline), 1 = rejectReasonBusy.
   function buildRejectInvite(gameId, reason) {
@@ -427,7 +447,7 @@ const MSG = (() => {
     const msg = Proto.encode([[1,0,gameId],[2,0,playerId]]);
     return Proto.encode([[1,0,T.InvitePlayerToGame],[33,2,msg]]);
   }
-  return { T, parse, scramClientFirst, scramClientFinal, scramFindServerFirst, buildInit, buildChat, buildGameChat, buildJoin, buildJoinGame, buildRejoinGame, buildStartEventAck, buildMyAction, buildCreateGame, buildLeaveGame, buildStartWithBots, buildKickPlayer, buildShowMyCards, buildAdminBanPlayer, buildRejectInvite, buildInvitePlayer };
+  return { T, parse, scramClientFirst, scramClientFinal, scramFindServerFirst, buildInit, buildChat, buildGameChat, buildJoin, buildJoinGame, buildRejoinGame, buildStartEventAck, buildMyAction, buildCreateGame, buildLeaveGame, buildStartWithBots, buildKickPlayer, buildShowMyCards, buildAdminBanPlayer, buildAdminGlobalNotice, buildRejectInvite, buildInvitePlayer };
 })();
 
 // ─── Exports ES + alias legacy ───────────────────────────────────────────

@@ -3609,6 +3609,8 @@ const App = (() => {
 
       case T.AdminBanPlayerAck: { onAdminBanPlayerAck(sub); break; } // [9g-C3] → net/msg-lobby.mjs
 
+      case T.AdminGlobalNoticeAck: { onAdminGlobalNoticeAck(sub); break; } // → net/msg-lobby.mjs
+
       case T.Error: { onError(sub); break; } // [9g-C3] → net/msg-lobby.mjs
 
       // ── Lobby player roster (PlayerListMessage) ──
@@ -5645,6 +5647,17 @@ const App = (() => {
       }
       // ── Local diagnostic/setting commands (/help /diag /update …) — nothing
       // is sent to the server. See _chatLocalCmd and docs/DIAGNOSTIC.md.
+      // ── /gn <texte> : durchsage serveur (admins pokerth.net) ─────────
+      // Parité QML (LobbyHandler::sendChatMessage, correctif sp0ck du 29/07) :
+      // la commande part TOUJOURS au serveur, c'est lui seul qui juge les
+      // droits. Filtrer ici sur nos droits locaux enverrait la durchsage d'un
+      // admin dont le PlayerInfo n'est pas encore arrivé en chat ordinaire,
+      // visible de tous. Le résultat revient par AdminGlobalNoticeAck.
+      if (/^\/gn\s+\S/i.test(text)) {
+        try { send(MSG.buildAdminGlobalNotice(text.replace(/^\/gn\s+/i, ''))); } catch (eGn) {}
+        try { if (window._chatPushHist) window._chatPushHist(text); } catch (eGh) {}
+        return;
+      }
       if (text.charAt(0) === '/' && _chatLocalCmd(text, function (n, s2) { addGameChat(n, s2, 'mine'); })) return;
       try { if (window._chatPushHist) window._chatPushHist(text); } catch (e) {}
       send(S.gId ? MSG.buildGameChat(S.gId, text) : MSG.buildChat(text));
@@ -5657,6 +5670,18 @@ const App = (() => {
       try { send(MSG.buildShowMyCards()); } catch (e) {}
       _setCanShow(false);
     },
+    // Bouton « durchsage » du chat lobby (visible aux seuls admins) : il
+    // préremplit la commande au lieu d'ouvrir une boîte — l'admin relit son
+    // texte, garde l'historique du chat et la limite de saisie habituelle.
+    globalNoticePrompt() {
+      const input = $('chat-in');
+      if (!input) return;
+      input.value = '/gn ' + input.value.replace(/^\/gn\s*/i, '');
+      try {
+        input.focus();
+        input.setSelectionRange(input.value.length, input.value.length);
+      } catch (e) {}
+    },
     sendChat() {
       const input = $('chat-in');
       const text  = input.value.trim();
@@ -5664,6 +5689,17 @@ const App = (() => {
       input.value = '';
       // ── Local diagnostic/setting commands (/help /diag /update …) — nothing
       // is sent to the server. See _chatLocalCmd and docs/DIAGNOSTIC.md.
+      // ── /gn <texte> : durchsage serveur (admins pokerth.net) ─────────
+      // Parité QML (LobbyHandler::sendChatMessage, correctif sp0ck du 29/07) :
+      // la commande part TOUJOURS au serveur, c'est lui seul qui juge les
+      // droits. Filtrer ici sur nos droits locaux enverrait la durchsage d'un
+      // admin dont le PlayerInfo n'est pas encore arrivé en chat ordinaire,
+      // visible de tous. Le résultat revient par AdminGlobalNoticeAck.
+      if (/^\/gn\s+\S/i.test(text)) {
+        try { send(MSG.buildAdminGlobalNotice(text.replace(/^\/gn\s+/i, ''))); } catch (eGn) {}
+        try { if (window._chatPushHist) window._chatPushHist(text); } catch (eGh) {}
+        return;
+      }
       if (text.charAt(0) === '/' && _chatLocalCmd(text, function (n, s2) { addChat(n, s2, 'mine'); })) return;
       try { if (window._chatPushHist) window._chatPushHist(text); } catch (e) {}
       send(MSG.buildChat(text, 0));
@@ -7863,7 +7899,19 @@ function resetChatSize(panel, msgs) {
   msgs.style.flex = msgs._origFlex || '';
 }
 
+// Bouton durchsage : réservé aux admins pokerth.net (playerRights === 3),
+// comme le bouton kickban du popup joueur et l'icône « campaign » du client
+// QML. Le serveur revérifie de toute façon.
+function _syncGlobalNoticeBtn() {
+  var b = document.getElementById('l-gn-btn');
+  if (!b) return;
+  var mine = (S._playerRights && S.myId) ? (S._playerRights[S.myId] || 0) : 0;
+  b.style.display = (mine === 3) ? '' : 'none';
+}
+window._syncGlobalNoticeBtn = _syncGlobalNoticeBtn;
+
 function toggleLobbyChat() {
+  _syncGlobalNoticeBtn();
   // Chat intégré au lobby (colonne en wide, sous les tables en compact)
   // → plus de fenêtre flottante ni d'overlay. No-op dans les deux modes.
   return;
@@ -9378,7 +9426,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.4-web.111'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.4-web.112'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

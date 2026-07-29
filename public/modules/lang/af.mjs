@@ -621,7 +621,7 @@ export const strings = {
     quickCreateLabel: 'Spelers:',
     quickCreateBtn: 'Skep',
     logPanelTitle: 'Logboek',
-    logCopied:'Logboek gekopieer', logEmpty:'Logboek is leeg', logExportTitle:'Voer logboek uit', chatClearTitle:'Vee klets uit',
+    logCopied:'Logboek gekopieer', logEmpty:'Logboek is leeg', gnBtn:'Globale kennisgewing (admin)',gnSent:'Die globale kennisgewing is aan alle spelers gestuur.',gnRejected:'Die bediener het die globale kennisgewing geweier.',logExportTitle:'Voer logboek uit', chatClearTitle:'Vee klets uit',
     jumpLatest:'Spring na nuutste',
     chatTranslateBtn:'Vertaal', winMove:'Skuif', loupeToggle:'Vergrootglas ×2',
     sendTooltip:'Stuur', resizeTooltip:'Sleep om te verstel', loadingOffline:'Laai vanlyn-modus…',

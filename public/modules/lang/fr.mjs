@@ -376,7 +376,7 @@ export const strings = {
     quickCreateBody:'Aucune table trouv\u00e9e. Combien de joueurs\u00a0?',
     quickCreateLabel:'Joueurs',
     quickCreateBtn:'Cr\u00e9er',
-    logPanelTitle:'Journal', logCopied:'Journal copié', logEmpty:'Journal vide', logExportTitle:'Exporter le journal',
+    logPanelTitle:'Journal', logCopied:'Journal copié', logEmpty:'Journal vide', gnBtn:'Annonce globale (admin)',gnSent:'L\u2019annonce globale a été envoyée à tous les joueurs.',gnRejected:'Le serveur a refusé l\u2019annonce globale.',logExportTitle:'Exporter le journal',
     jumpLatest:'Aller au plus récent',
     chatTranslateBtn:'Traduire', winMove:'Déplacer', loupeToggle:'Loupe ×2',
     sendTooltip:'Envoyer', resizeTooltip:'Glisser pour redimensionner', loadingOffline:'Chargement du mode hors-ligne…',

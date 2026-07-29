@@ -622,7 +622,7 @@ export const strings = {
     quickCreateLabel: 'Cluicheadairean:',
     quickCreateBtn: 'Cruthaich',
     logPanelTitle: 'Loga',
-    logCopied:'Loga air a chopaigeadh', logEmpty:'Tha an loga falamh', logExportTitle:'Às-phortaich an loga', chatClearTitle:'Falamhaich a\' chabadaich',
+    logCopied:'Loga air a chopaigeadh', logEmpty:'Tha an loga falamh', gnBtn:'Brath uile-choitcheann (rianaire)',gnSent:'Chaidh am brath a chur gu gach cluicheadair.',gnRejected:'Dhiúlt am frithealaiche am brath.',logExportTitle:'Às-phortaich an loga', chatClearTitle:'Falamhaich a\' chabadaich',
     jumpLatest:'Leum gun fheadhainn as ùire',
     chatTranslateBtn:'Eadar-theangaich', winMove:'Gluais', loupeToggle:'Glainne-mheudachaidh ×2',
     sendTooltip:'Cuir', resizeTooltip:'Slaod gus meud atharrachadh', loadingOffline:'A\' luchdadh am modh far-loidhne…',

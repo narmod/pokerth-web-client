@@ -621,7 +621,7 @@ export const strings = {
     quickCreateLabel: 'Παίκτες:',
     quickCreateBtn: 'Δημιουργία',
     logPanelTitle: 'Αρχείο',
-    logCopied:'Το ιστορικό αντιγράφηκε', logEmpty:'Το ιστορικό είναι κενό', logExportTitle:'Εξαγωγή ιστορικού', chatClearTitle:'Καθαρισμός συνομιλίας',
+    logCopied:'Το ιστορικό αντιγράφηκε', logEmpty:'Το ιστορικό είναι κενό', gnBtn:'Γενική ανακοίνωση (διαχειριστής)',gnSent:'Η ανακοίνωση στάλθηκε σε όλους τους παίκτες.',gnRejected:'Ο διακομιστής απέρριψε την ανακοίνωση.',logExportTitle:'Εξαγωγή ιστορικού', chatClearTitle:'Καθαρισμός συνομιλίας',
     jumpLatest:'Μετάβαση στα πιο πρόσφατα',
     chatTranslateBtn:'Μετάφραση', winMove:'Μετακίνηση', loupeToggle:'Μεγεθυντικός ×2',
     sendTooltip:'Αποστολή', resizeTooltip:'Σύρετε για αλλαγή μεγέθους', loadingOffline:'Φόρτωση λειτουργίας χωρίς σύνδεση…',

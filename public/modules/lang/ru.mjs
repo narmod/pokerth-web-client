@@ -623,7 +623,7 @@ export const strings = {
     quickCreateLabel: 'Игроки:',
     quickCreateBtn: 'Создать',
     logPanelTitle: 'Журнал',
-    logCopied:'Журнал скопирован', logEmpty:'Журнал пуст', logExportTitle:'Экспорт журнала', chatClearTitle:'Очистить чат',
+    logCopied:'Журнал скопирован', logEmpty:'Журнал пуст', gnBtn:'Общее объявление (админ)',gnSent:'Общее объявление отправлено всем игрокам.',gnRejected:'Сервер отклонил общее объявление.',logExportTitle:'Экспорт журнала', chatClearTitle:'Очистить чат',
     jumpLatest:'К самым новым',
     chatTranslateBtn:'Перевести', winMove:'Переместить', loupeToggle:'Лупа ×2',
     sendTooltip:'Отправить', resizeTooltip:'Потяните, чтобы изменить размер', loadingOffline:'Загрузка автономного режима…',

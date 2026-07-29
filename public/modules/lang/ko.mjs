@@ -442,7 +442,7 @@ export const strings = {
     quickCreateLabel:'플레이어:',
     quickCreateBtn:'만들기',
     logPanelTitle:'로그',
-    logCopied:'로그가 복사되었습니다', logEmpty:'로그가 비어 있습니다', logExportTitle:'로그 내보내기', chatClearTitle:'채팅 지우기',
+    logCopied:'로그가 복사되었습니다', logEmpty:'로그가 비어 있습니다', gnBtn:'전체 공지 (관리자)',gnSent:'전체 공지를 모든 플레이어에게 보냈습니다.',gnRejected:'서버가 전체 공지를 거부했습니다.',logExportTitle:'로그 내보내기', chatClearTitle:'채팅 지우기',
     jumpLatest:'최신으로 이동',
     chatTranslateBtn:'번역', winMove:'이동', loupeToggle:'돋보기 ×2',
     sendTooltip:'보내기', resizeTooltip:'끌어서 크기 조절', loadingOffline:'오프라인 모드 로딩 중…',

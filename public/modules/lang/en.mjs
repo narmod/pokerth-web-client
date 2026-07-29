@@ -374,7 +374,7 @@ export const strings = {
     quickCreateBody:'No tables found. How many players?',
     quickCreateLabel:'Players:',
     quickCreateBtn:'Create',
-    logPanelTitle:'Log', logCopied:'Log copied', logEmpty:'Log is empty', logExportTitle:'Export log',
+    logPanelTitle:'Log', logCopied:'Log copied', logEmpty:'Log is empty', gnBtn:'Global notice (admin)',gnSent:'The global notice was sent to all players.',gnRejected:'The global notice was rejected by the server.',logExportTitle:'Export log',
     jumpLatest:'Jump to latest',
     chatTranslateBtn:'Translate', winMove:'Move', loupeToggle:'Magnifier ×2',
     sendTooltip:'Send', resizeTooltip:'Drag to resize', loadingOffline:'Loading offline mode…',

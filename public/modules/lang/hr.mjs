@@ -621,7 +621,7 @@ export const strings = {
     quickCreateLabel: 'Igrači:',
     quickCreateBtn: 'Stvori',
     logPanelTitle: 'Zapisnik',
-    logCopied:'Zapisnik kopiran', logEmpty:'Zapisnik je prazan', logExportTitle:'Izvezi zapisnik', chatClearTitle:'Očisti chat',
+    logCopied:'Zapisnik kopiran', logEmpty:'Zapisnik je prazan', gnBtn:'Opća obavijest (admin)',gnSent:'Opća obavijest poslana je svim igračima.',gnRejected:'Poslužitelj je odbio opću obavijest.',logExportTitle:'Izvezi zapisnik', chatClearTitle:'Očisti chat',
     jumpLatest:'Skoči na najnovije',
     chatTranslateBtn:'Prevedi', winMove:'Premjesti', loupeToggle:'Povećalo ×2',
     sendTooltip:'Pošalji', resizeTooltip:'Povucite za promjenu veličine', loadingOffline:'Učitavanje izvanmrežnog načina…',

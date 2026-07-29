@@ -620,7 +620,7 @@ export const strings = {
     quickCreateLabel: 'Spillere:',
     quickCreateBtn: 'Opret',
     logPanelTitle: 'Log',
-    logCopied:'Log kopieret', logEmpty:'Loggen er tom', logExportTitle:'Eksportér log', chatClearTitle:'Ryd chat',
+    logCopied:'Log kopieret', logEmpty:'Loggen er tom', gnBtn:'Global meddelelse (admin)',gnSent:'Den globale meddelelse blev sendt til alle spillere.',gnRejected:'Serveren afviste den globale meddelelse.',logExportTitle:'Eksportér log', chatClearTitle:'Ryd chat',
     jumpLatest:'Gå til nyeste',
     chatTranslateBtn:'Oversæt', winMove:'Flyt', loupeToggle:'Forstørrelse ×2',
     sendTooltip:'Send', resizeTooltip:'Træk for at ændre størrelse', loadingOffline:'Indlæser offlinetilstand…',

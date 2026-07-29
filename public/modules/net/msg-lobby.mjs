@@ -1,6 +1,6 @@
 // ═══════════════════════════════════════════════════════════════════
 // Handlers réseau — lobby & connexion (Announce/InitAck/AuthChallenge,
-// Error, ReportGameAck, AdminBanPlayerAck, Statistics, PlayerList,
+// Error, ReportGameAck, AdminBanPlayerAck, AdminGlobalNoticeAck, Statistics, PlayerList,
 // PlayerInfoReply, GameList*) — chantier ESM #9g-C3.
 // Chaque fonction = le corps EXACT de l'ancienne case de handleMsg,
 // signature (sub). handleMsg n'ayant AUCUN code après son switch,
@@ -225,6 +225,20 @@ function onAdminBanPlayerAck(sub) {
     return;
 }
 
+function onAdminGlobalNoticeAck(sub) {
+    // AdminGlobalNoticeAckMessage : globalNoticeResult=1
+    // (0 globalNoticeAccepted · 1 globalNoticeInvalid — droits manquants ou
+    // texte vide). La durchsage elle-même revient ensuite comme n'importe
+    // quel broadcast (chatType 3), déjà géré par onChat().
+    var _gnRes = Proto.u32(sub, 1);
+    if (_gnRes === 0) {
+      window.showToast(t('gnSent'));
+    } else {
+      window.showToast(t('gnRejected'), { tone: 'error', icon: '\u2715' });
+    }
+    return;
+}
+
 // ── « Pseudo déjà utilisé » (Error 4) : réessai automatique borné ──────
 // Après une coupure en jeu, le pseudo reste tenu quelques dizaines de
 // secondes par la session précédente : grâce du proxy (SESSION_GRACE_MS,
@@ -399,7 +413,13 @@ function onPlayerInfoReply(sub) {
     // Droits (champ 3) : 1=invité, 2=enregistré, 3=admin. Sert à ne
     // rendre cliquables que les joueurs ayant un compte pokerth.net.
     var rights = Proto.u32(info, 3);
-    if (rights) S._playerRights[pid] = rights;
+    if (rights) {
+      S._playerRights[pid] = rights;
+      // Mes propres droits viennent d'arriver → (dé)masquer la durchsage.
+      if (pid === S.myId && typeof window._syncGlobalNoticeBtn === 'function') {
+        try { window._syncGlobalNoticeBtn(); } catch (_e) {}
+      }
+    }
     S._pendingNameRequests.delete(pid); // got the reply, free for retry if needed
     // ── Step 1 (PokerTH avatar): peek for the optional AvatarData
     // sub-message (field 5). Present only for registered players who
@@ -625,7 +645,7 @@ function onGameListSpectatorLeft(sub) {
    return;
 }
 
-export { onAnnounce, onInitAck, onAuthChallenge, onReportGameAck, onAdminBanPlayerAck, onError, onPlayerList, onStatistics, onPlayerInfoReply, onGameListNew, onGameListUpdate, onGameListPlayerJoined, onGameListPlayerLeft, onGameListSpectatorJoined, onGameListSpectatorLeft };
+export { onAnnounce, onInitAck, onAuthChallenge, onReportGameAck, onAdminBanPlayerAck, onAdminGlobalNoticeAck, onError, onPlayerList, onStatistics, onPlayerInfoReply, onGameListNew, onGameListUpdate, onGameListPlayerJoined, onGameListPlayerLeft, onGameListSpectatorJoined, onGameListSpectatorLeft };
 
-for (const [k, v] of Object.entries({ onAnnounce, onInitAck, onAuthChallenge, onReportGameAck, onAdminBanPlayerAck, onError, onPlayerList, onStatistics, onPlayerInfoReply, onGameListNew, onGameListUpdate, onGameListPlayerJoined, onGameListPlayerLeft, onGameListSpectatorJoined, onGameListSpectatorLeft }))
+for (const [k, v] of Object.entries({ onAnnounce, onInitAck, onAuthChallenge, onReportGameAck, onAdminBanPlayerAck, onAdminGlobalNoticeAck, onError, onPlayerList, onStatistics, onPlayerInfoReply, onGameListNew, onGameListUpdate, onGameListPlayerJoined, onGameListPlayerLeft, onGameListSpectatorJoined, onGameListSpectatorLeft }))
   window[k] = v;

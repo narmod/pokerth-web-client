@@ -620,7 +620,7 @@ export const strings = {
     quickCreateLabel: 'プレイヤー：',
     quickCreateBtn: '作成',
     logPanelTitle: 'ログ',
-    logCopied:'ログをコピーしました', logEmpty:'ログは空です', logExportTitle:'ログをエクスポート', chatClearTitle:'チャットをクリア',
+    logCopied:'ログをコピーしました', logEmpty:'ログは空です', gnBtn:'全体アナウンス（管理者）',gnSent:'全体アナウンスを全プレイヤーに送信しました。',gnRejected:'サーバーが全体アナウンスを拒否しました。',logExportTitle:'ログをエクスポート', chatClearTitle:'チャットをクリア',
     jumpLatest:'最新へ移動',
     chatTranslateBtn:'翻訳', winMove:'移動', loupeToggle:'拡大 ×2',
     sendTooltip:'送信', resizeTooltip:'ドラッグでサイズ変更', loadingOffline:'オフラインモードを読み込み中…',
