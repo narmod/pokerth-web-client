@@ -7351,7 +7351,9 @@ html[data-seat-struct="qml"] .seat.folded:not(.me) .seat-holecards {
 html[data-seat-struct="qml"] .seat-bet {
   display: inline-flex; align-items: center; gap: var(--sp-0);
   padding: 0; background: none; border: none;
-  color: #f0f0f0; font-family: var(--ff-display);
+  /* BetChip.qml : textColor #eff1f5 (et non #f0f0f0 — écart relevé à l'audit
+     du siège contre l'AppImage 2.1.4, imperceptible mais autant être exact). */
+  color: #eff1f5; font-family: var(--ff-display);
   font-size: 14px !important; font-weight: 700;
   animation: betChipPop 0.24s ease-out;
 }
