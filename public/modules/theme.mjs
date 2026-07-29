@@ -60,8 +60,8 @@ const PALETTES = [
 // (--wallpaper, ovale transparent) · 'full' = image dans l'ovale (--table-img) ·
 // 'felt' = feutre ovale (--felt-img). id '' = PokerTH officiel fullscreen (defaut).
 const TABLES = [
-  { id: '',             key: 'tablePokerthOfficial', fallback: 'PokerTH default QML table style',      swatch: '#1d222b', feltUrl: '/table/pokerth-official-fs/felt.png', mode: 'fs',   puck: 'pokerth', btn: 'glossy' },
-  { id: 'casino',       key: 'tableCasino',          fallback: 'Green Casino', swatch: '#1e6b1e', feltUrl: '/table/casino/felt.png', preview: '/table/casino/preview.png', mode: 'fs', align: 'center', puck: 'casino',  btn: 'casino' },
+  { id: '',             key: 'tablePokerthOfficial', fallback: 'PokerTH default QML table style',      swatch: '#1d222b', feltUrl: '/table/pokerth-official-fs/felt.png', mode: 'fs',   dir: 'pokerth-official-fs', skin: true, puck: 'pokerth', btn: 'glossy' },
+  { id: 'casino',       key: 'tableCasino',          fallback: 'Green Casino', swatch: '#1e6b1e', feltUrl: '/table/casino/felt.png', preview: '/table/casino/preview.png', mode: 'fs', skin: true, align: 'center', puck: 'casino',  btn: 'casino' },
   // Tapis par defaut du client QML (data/gfx/qml/table/*, AGPL-3.0) — plein ecran.
   { id: 'danuxi', key: 'tableDanuxi', fallback: "Danuxi Blue", swatch: '#1f3a5c', feltUrl: '/table/danuxi/felt.png', preview: '/table/danuxi/preview.png', mode: 'fs', skin: true, align: 'center', zoom: 1.3 },
   { id: 'mute', key: 'tableMute', fallback: "Mute", swatch: '#2a2f38', feltUrl: '/table/mute/felt.png', preview: '/table/mute/preview.png', mode: 'fs', skin: true, align: 'center' },
@@ -77,6 +77,7 @@ const TABLES = [
   { id: 'discworld', key: 'tableDiscworld', fallback: "Discworld", swatch: '#c98d49', feltUrl: '/table/discworld/felt.png', preview: '/table/discworld/preview.png', mode: 'fs', skin: true, align: 'center', zoom: 1.3 },
 ];
 const DECKS = [
+  { id: 'default', name: 'PokerTH default QML card deck', by: 'PokerTH Development Team', swatch: '#1d6b30', ext: 'svg' },
   { id: 'casino-vert', key: 'deckCasinoVert', fallback: 'Green Casino', swatch: '#1e6b1e', ext: 'svg' },
   { id: 'pokerth', key: 'deckPokerth', fallback: 'PokerTH', swatch: '#1d6b30', ext: 'png' },
   { id: 'pokerth-1-0', key: 'deckPokerth10', fallback: 'PokerTH 1.0', swatch: '#1d6b30', ext: 'png' },
@@ -583,7 +584,9 @@ function _loadGalleryTables() {
         _galleryTables = list.filter(function (t) { return t && t.id && t.feltUrl; }).map(function (t) {
           var pk = null, pv = t.pucks;
           if (pv) { pk = {}; ['dealer','sb','bb'].forEach(function (k) { if (pv[k]) pk[k] = 'url(' + pv[k] + ')'; }); }
-          return { id: String(t.id), name: t.name || String(t.id), feltUrl: t.feltUrl, pucks: pk, preview: t.preview || (pv && pv.dealer) || null, swatch: '#1e6b1e', full: !!t.full, fs: !!t.fullscreen, align: (typeof t.align === 'string' ? t.align : null) };
+          var bt = null, bv = t.buttons;
+          if (bv) { bt = {}; ['fold','check','call','raise','allin'].forEach(function (k) { if (bv[k]) bt[k] = 'url(' + bv[k] + ')'; }); if (!Object.keys(bt).length) bt = null; }
+          return { id: String(t.id), name: t.name || String(t.id), feltUrl: t.feltUrl, pucks: pk, preview: t.preview || (pv && pv.dealer) || null, swatch: '#1e6b1e', full: !!t.full, fs: !!t.fullscreen, align: (typeof t.align === 'string' ? t.align : null), _btn: bt, _btnRadius: (typeof t.radius === 'number' ? t.radius : null) };
         }).filter(function (t) { if (_isBuiltinTable(t.id)) return false; if (_OFFICIAL_GALLERY_DUP[t.id]) return false; for (var i=0;i<_tablePkgs.length;i++) if (_tablePkgs[i].id===t.id) return false; return true; })
           .concat(_galleryTables.filter(function (t) { return t && t._imported; }));   // idem : tables importees preservees
         try { table.apply(table.get()); pucks.apply(pucks.get()); } catch (e) {}
@@ -943,7 +946,7 @@ table.apply = function(id){
     if (tb) {
       // Style officiel bundle : feutre + pucks + boutons ; mode fs/full/felt.
       _injectAxis(TABLE_TOKENS, { feltUrl: tb.feltUrl }, 'pth_table_css', true);
-      if (tb.skin) { var _bd='/table/'+tb.id+'/'; _injectButtons({ images:{ fold:'url('+_bd+'actionFold.svg)', check:'url('+_bd+'actionCall.svg)', call:'url('+_bd+'actionCall.svg)', raise:'url('+_bd+'actionRaise.svg)', allin:'url('+_bd+'actionAllIn.svg)' }, colors:{ 'btn-fold-fg':'#f0f3f8','btn-check-fg':'#f0f3f8','btn-call-fg':'#f0f3f8','btn-raise-fg':'#f0f3f8','btn-allin-fg':'#fff4ec','btn-allin-fg-b':'#ffffff' } }); }
+      if (tb.skin) { var _bd='/table/'+(tb.dir||tb.id)+'/'; _injectButtons({ images:{ fold:'url('+_bd+'actionFold.svg)', check:'url('+_bd+'actionCall.svg)', call:'url('+_bd+'actionCall.svg)', raise:'url('+_bd+'actionRaise.svg)', allin:'url('+_bd+'actionAllIn.svg)' }, colors:(tb.btn === 'casino' ? CASINO_BTN.colors : { 'btn-fold-fg':'#f0f3f8','btn-check-fg':'#f0f3f8','btn-call-fg':'#f0f3f8','btn-raise-fg':'#f0f3f8','btn-allin-fg':'#fff4ec','btn-allin-fg-b':'#ffffff' }) }); }
       else _injectButtons(tb.btn === 'casino' ? CASINO_BTN : { colors: BUTTON_GLOSSY });
       if (tb.mode === 'fs') { _applyTableFull(null); _applyTableFullscreen(tb.feltUrl, tb.align || null, tb.zoom || null); } // TableBackgroundZoom des styles officiels (danuxi/matrix/star_trek 1.3/1.25/1.3)
       else if (tb.mode === 'full') { _applyTableFullscreen(null); _applyTableFull(tb.feltUrl); }
@@ -983,7 +986,7 @@ buttons.set = buttons.apply;
 var _pkApply = pucks.apply;
 // Puck du tapis courant (built-in ou galerie) — utilise pour le mode « Auto (table) ».
 function _tablePuckSet(){ var tb=_builtinTableById(table.get());
-  if(tb&&tb.skin){ var d='/table/'+tb.id+'/'; return {dealer:'url('+d+'dealerPuck.svg)', sb:'url('+d+'smallblindPuck.svg)', bb:'url('+d+'bigblindPuck.svg)'}; }
+  if(tb&&tb.skin){ var d='/table/'+(tb.dir||tb.id)+'/'; return {dealer:'url('+d+'dealerPuck.svg)', sb:'url('+d+'smallblindPuck.svg)', bb:'url('+d+'bigblindPuck.svg)'}; }
   if(tb) return tb.puck==='casino'?CASINO_PUCKS:PUCK_SET; var gt=_galleryTableById(table.get()); if(gt&&gt.pucks) return gt.pucks; return PUCK_SET; }
 pucks.apply = function(id){ _pkApply(id); try{
   if (!id) _injectPucks(_tablePuckSet());          // Auto -> suit le tapis

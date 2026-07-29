@@ -22,7 +22,37 @@ if (!existsSync(dir)) { console.error('no such directory: ' + dir); process.exit
 
 function pick(p, names) { for (const n of names) if (existsSync(join(p, n))) return n; return null; }
 function feltFile(p) { return pick(p, ['felt.jpg', 'felt.png', 'felt.webp']); }
-function puckFile(p, base) { return pick(p, [base + '.svg', base + '.png', base + '.webp']); }
+// Pucks: QML style packs name them <role>Puck.svg (dealerPuck / smallblindPuck /
+// bigblindPuck); older web packs used the short dealer/sb/bb form. Accept both.
+const PUCK_ALIASES = { dealer: ['dealerPuck', 'dealer'], sb: ['smallblindPuck', 'sb'], bb: ['bigblindPuck', 'bb'] };
+function puckFile(p, role) {
+  const names = [];
+  for (const base of (PUCK_ALIASES[role] || [role])) for (const ext of ['svg', 'png', 'webp']) names.push(base + '.' + ext);
+  return pick(p, names);
+}
+// Action button skins (StyleProvider.foldButton & co. in the QML client).
+const BTN_FILES = { fold: 'actionFold', check: 'actionCall', call: 'actionCall', raise: 'actionRaise', allin: 'actionAllIn' };
+function buttonFiles(p, base) {
+  const out = {};
+  for (const key of Object.keys(BTN_FILES)) {
+    const f = pick(p, [BTN_FILES[key] + '.svg', BTN_FILES[key] + '.png']);
+    if (f) out[key] = base + f;
+  }
+  return Object.keys(out).length ? out : null;
+}
+// <ActionButtonBorderRadius> of the table style (QML default 9).
+function buttonRadius(p) {
+  let entries = [];
+  try { entries = readdirSync(p); } catch { return null; }
+  for (const f of entries) {
+    if (!f.toLowerCase().endsWith('.xml')) continue;
+    try {
+      const m = readFileSync(join(p, f), 'utf8').match(/ActionButtonBorderRadius[^>]*value\s*=\s*"([0-9.]+)"/i);
+      if (m) { const v = Number(m[1]); if (Number.isFinite(v)) return v; }
+    } catch { /* ignore */ }
+  }
+  return null;
+}
 function tableName(p, fallback) {
   let name = fallback, entries = [];
   try { entries = readdirSync(p); } catch { return name; }
@@ -49,13 +79,16 @@ for (const name of names) {
   const base = '/table/' + name + '/';
   const d = puckFile(p, 'dealer'), s = puckFile(p, 'sb'), b = puckFile(p, 'bb');
   const pucks = (d || s || b) ? { dealer: d ? base + d : null, sb: s ? base + s : null, bb: b ? base + b : null } : null;
+  const btns = buttonFiles(p, base), radius = buttonRadius(p);
   const entry = {
     id: name,
     name: tableName(p, name),
     feltUrl: base + felt,
     pucks: pucks,
-    preview: d ? base + d : (existsSync(join(p, 'preview.png')) ? base + 'preview.png' : null),
+    preview: existsSync(join(p, 'preview.png')) ? base + 'preview.png' : (d ? base + d : null),
   };
+  if (btns) entry.buttons = btns;
+  if (radius != null) entry.radius = radius;
   // Marqueur « image complète » : un fichier `full` (ou `.full`) dans le dossier de la
   // table => full:true => le client remplace tout le tapis CSS par cette image (contain).
   if (existsSync(join(p, 'full')) || existsSync(join(p, '.full'))) entry.full = true;
