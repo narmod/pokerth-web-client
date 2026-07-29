@@ -4891,9 +4891,22 @@ const App = (() => {
       // buffered reconnect) even when the target is pokerth.net itself.
       // 'direct' (default) keeps the historical hostname-based behavior.
       window.directWS = isPokerThDirect && targetIsPokerTH && (window._pthNetTransport !== 'proxy');
+      // Mode CHOISI par le joueur, source unique pour le compteur de trafic ET
+      // pour le ciblage des diffusions cote proxy. Ne PAS le deduire du
+      // transport : avec « Via proxy » la socket va vers notre proxy dans les
+      // trois modes, et l'hote amont peut etre un serveur manuel (pas
+      // pokerth.net) tout en etant le bouton « Internet / PokerTH.net ».
+      // #server-mode vaut 'pokerthnet' | 'offline' | 'lan-dedi'.
+      var _cntMode = function () {
+        var sm = ($('server-mode') && $('server-mode').value) || '';
+        if (window._offlineMode || sm === 'offline') return 'offline';
+        if (window.directWS || sm === 'pokerthnet') return 'pokerthnet';
+        return 'lan';
+      };
+      var _bcMode = (function () { var m = _cntMode(); return m === 'pokerthnet' ? 'pthnet' : m; })();
       const finalUrl = window.directWS
         ? 'wss://www.pokerth.net:443/pthlive'
-        : effProxyUrl + '?host=' + encodeURIComponent(host) + '&port=' + encodeURIComponent(port) + '&tls=' + tlsParam + '&sid=' + encodeURIComponent(_getSessionId());
+        : effProxyUrl + '?host=' + encodeURIComponent(host) + '&port=' + encodeURIComponent(port) + '&tls=' + tlsParam + '&sid=' + encodeURIComponent(_getSessionId()) + '&mode=' + _bcMode;
 
       setStatus(window.directWS ? t('connDirect') : t('connProxy'));
 
@@ -4967,17 +4980,6 @@ const App = (() => {
 
       _beginConnecting();   // lock button for the whole attempt (anti IP-block)
       S.ws.binaryType = 'arraybuffer';
-      // Compteur par mode : c'est le mode CHOISI par le joueur qui compte, pas le
-      // transport. Avec « Via proxy » (transport par defaut), la socket va vers
-      // NOTRE proxy dans les trois modes -> se fier a window.directWS classait
-      // toute connexion Internet/PokerTH.net en 'lan'. On lit #server-mode, dont
-      // les valeurs sont 'pokerthnet' | 'offline' | 'lan-dedi'.
-      var _cntMode = function () {
-        var sm = ($('server-mode') && $('server-mode').value) || '';
-        if (window._offlineMode || sm === 'offline') return 'offline';
-        if (window.directWS || sm === 'pokerthnet') return 'pokerthnet';
-        return 'lan';
-      };
       S.ws.onopen    = () => { S._lastRxTime = Date.now(); setStatus(t('proxyConnectedWait')); try { window._pthCountConnect && window._pthCountConnect(_cntMode()); } catch (e) {} };
       S.ws.onerror   = () => { S._lastConnectFailed = true; _endConnecting(); setStatus(t('wsError'), 'err'); };
       S.ws.onmessage = function(e) {
@@ -9478,7 +9480,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.4-web.132'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.4-web.133'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

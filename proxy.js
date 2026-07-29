@@ -3970,8 +3970,13 @@ function _attachWs(S, ws) {
   // Relay scope = the upstream this socket is bridged to. Reactions/avatars
   // only fan out to peers sharing the same host:port.
   ws._relayKey = S.host + ':' + S.port;
-  // Mode pour le ciblage des diffusions : pokerth.net via proxy = pthnet, sinon LAN.
-  ws._bcMode = (S.host && String(S.host).indexOf('pokerth.net') >= 0) ? 'pthnet' : 'lan';
+  // Mode pour le ciblage des diffusions. Le client l'annonce (&mode=) : c'est le
+  // mode QU'IL A CHOISI, seule source fiable. Le deduire de l'hote amont classait
+  // en 'lan' tous les joueurs « Internet / PokerTH.net » d'un serveur enregistre
+  // manuellement (IP ou nom autre que pokerth.net) — ils echappaient alors aux
+  // diffusions ciblees pthnet. Repli sur l'hote pour les clients pas encore
+  // rechargés (qui n'envoient pas le parametre).
+  ws._bcMode = ws._modeParam || ((S.host && String(S.host).indexOf('pokerth.net') >= 0) ? 'pthnet' : 'lan');
   _allClients.add(ws);
   // If a restart is currently scheduled, tell this freshly-attached client too.
   if (_restartAt > Date.now() && _restartNotice) { try { ws.send(_restartNotice); } catch (e) {} }
@@ -4045,6 +4050,11 @@ wss.on('connection', (ws, req) => {
   const port   = parseInt(params.get('port') || '7234', 10);
   const useTls = params.get('tls') !== '0' && !FORCE_NOTLS;
   const sid    = params.get('sid') || null;
+  // Mode CHOISI par le joueur, transmis par le client (&mode=), pour le ciblage
+  // des diffusions. Cf. _attachWs : le repli sur le nom d'hote amont reste pour
+  // les onglets ouverts avant la mise a jour du client.
+  const modeParam = (function () { const m = params.get('mode'); return (m === 'pthnet' || m === 'lan' || m === 'offline') ? m : null; })();
+  ws._modeParam = modeParam;
 
   // ── Notify-only channel (?notify=1) ──
   // Clients connectés en DIRECT à pokerth.net : leur socket de jeu ne passe
