@@ -60,21 +60,21 @@ const PALETTES = [
 // (--wallpaper, ovale transparent) · 'full' = image dans l'ovale (--table-img) ·
 // 'felt' = feutre ovale (--felt-img). id '' = PokerTH officiel fullscreen (defaut).
 const TABLES = [
-  { id: '',             key: 'tablePokerthOfficial', fallback: 'PokerTH default QML table style',      swatch: '#1d222b', feltUrl: '/table/pokerth-official-fs/felt.png', mode: 'fs',   dir: 'pokerth-official-fs', skin: true, puck: 'pokerth', btn: 'glossy' },
-  { id: 'casino',       key: 'tableCasino',          fallback: 'Green Casino', swatch: '#1e6b1e', feltUrl: '/table/casino/felt.png', preview: '/table/casino/preview.png', mode: 'fs', skin: true, align: 'center', puck: 'casino',  btn: 'casino' },
+  { id: '',             name: "PokerTH default QML table style", key: 'tablePokerthOfficial', fallback: 'PokerTH default QML table style',      swatch: '#1d222b', feltUrl: '/table/pokerth-official-fs/felt.png', mode: 'fs',   dir: 'pokerth-official-fs', skin: true, puck: 'pokerth', btn: 'glossy' },
+  { id: 'casino',       name: "Green Casino", key: 'tableCasino',          fallback: 'Green Casino', swatch: '#1e6b1e', feltUrl: '/table/casino/felt.png', preview: '/table/casino/preview.png', mode: 'fs', skin: true, align: 'center', puck: 'casino',  btn: 'casino' },
   // Tapis par defaut du client QML (data/gfx/qml/table/*, AGPL-3.0) — plein ecran.
-  { id: 'danuxi', key: 'tableDanuxi', fallback: "Danuxi Blue", swatch: '#1f3a5c', feltUrl: '/table/danuxi/felt.png', preview: '/table/danuxi/preview.png', mode: 'fs', skin: true, align: 'center', zoom: 1.3 },
-  { id: 'mute', key: 'tableMute', fallback: "Mute", swatch: '#2a2f38', feltUrl: '/table/mute/felt.png', preview: '/table/mute/preview.png', mode: 'fs', skin: true, align: 'center' },
-  { id: 'mute2', key: 'tableMute2', fallback: "Mute 02", swatch: '#1f6aa8', feltUrl: '/table/mute2/felt.png', preview: '/table/mute2/preview.png', mode: 'fs', skin: true, align: 'center' },
-  { id: 'teal', key: 'tableTeal', fallback: "Teal", swatch: '#0e5c5c', feltUrl: '/table/teal/felt.png', preview: '/table/teal/preview.png', mode: 'fs', skin: true, align: 'center bottom' },
-  { id: 'lemming', key: 'tableLemming', fallback: "Lemming", swatch: '#2e6b2e', feltUrl: '/table/lemming/felt.png', preview: '/table/lemming/preview.png', mode: 'fs', skin: true, align: 'center bottom' },
-  { id: 'matrix', key: 'tableMatrix', fallback: "Matrix", swatch: '#0b2b12', feltUrl: '/table/matrix/felt.png', preview: '/table/matrix/preview.png', mode: 'fs', skin: true, align: 'center', zoom: 1.25 },
-  { id: 'star_trek', key: 'tableStarTrek', fallback: "Star Trek", swatch: '#101826', feltUrl: '/table/star_trek/felt.png', preview: '/table/star_trek/preview.png', mode: 'fs', skin: true, align: 'center', zoom: 1.3 },
-  { id: 'tripsixes', key: 'tableTripSixes', fallback: "TripSixes", swatch: '#5a1010', feltUrl: '/table/tripsixes/felt.png', preview: '/table/tripsixes/preview.png', mode: 'fs', skin: true, align: 'center' },
-  { id: 'wanted', key: 'tableWanted', fallback: "Wanted", swatch: '#6b4a1e', feltUrl: '/table/wanted/felt.png', preview: '/table/wanted/preview.png', mode: 'fs', skin: true, align: 'center' },
-  { id: 'xanax', key: 'tableXanax', fallback: "Xanax", swatch: '#394150', feltUrl: '/table/xanax/felt.png', preview: '/table/xanax/preview.png', mode: 'fs', skin: true, align: 'center' },
-  { id: 'saloon', key: 'tableSaloon', fallback: "Saloon", swatch: '#c07f30', feltUrl: '/table/saloon/felt.png', preview: '/table/saloon/preview.png', mode: 'fs', skin: true, align: 'center' },
-  { id: 'discworld', key: 'tableDiscworld', fallback: "Discworld", swatch: '#c98d49', feltUrl: '/table/discworld/felt.png', preview: '/table/discworld/preview.png', mode: 'fs', skin: true, align: 'center', zoom: 1.3 },
+  { id: 'danuxi', name: "Danuxi Blue QML table style", key: 'tableDanuxi', fallback: "Danuxi Blue", swatch: '#1f3a5c', feltUrl: '/table/danuxi/felt.png', preview: '/table/danuxi/preview.png', mode: 'fs', skin: true, align: 'center', zoom: 1.3 },
+  { id: 'mute', name: "Mute QML table style", key: 'tableMute', fallback: "Mute", swatch: '#2a2f38', feltUrl: '/table/mute/felt.png', preview: '/table/mute/preview.png', mode: 'fs', skin: true, align: 'center' },
+  { id: 'mute2', name: "Mute 02 QML table style", key: 'tableMute2', fallback: "Mute 02", swatch: '#1f6aa8', feltUrl: '/table/mute2/felt.png', preview: '/table/mute2/preview.png', mode: 'fs', skin: true, align: 'center' },
+  { id: 'teal', name: "Teal QML table style", key: 'tableTeal', fallback: "Teal", swatch: '#0e5c5c', feltUrl: '/table/teal/felt.png', preview: '/table/teal/preview.png', mode: 'fs', skin: true, align: 'center bottom' },
+  { id: 'lemming', name: "Lemming TA01-MC QML table style", key: 'tableLemming', fallback: "Lemming", swatch: '#2e6b2e', feltUrl: '/table/lemming/felt.png', preview: '/table/lemming/preview.png', mode: 'fs', skin: true, align: 'center bottom' },
+  { id: 'matrix', name: "Matrix QML table style", key: 'tableMatrix', fallback: "Matrix", swatch: '#0b2b12', feltUrl: '/table/matrix/felt.png', preview: '/table/matrix/preview.png', mode: 'fs', skin: true, align: 'center', zoom: 1.25 },
+  { id: 'star_trek', name: "Star Trek QML table style", key: 'tableStarTrek', fallback: "Star Trek", swatch: '#101826', feltUrl: '/table/star_trek/felt.png', preview: '/table/star_trek/preview.png', mode: 'fs', skin: true, align: 'center', zoom: 1.3 },
+  { id: 'tripsixes', name: "TripSixes QML table style", key: 'tableTripSixes', fallback: "TripSixes", swatch: '#5a1010', feltUrl: '/table/tripsixes/felt.png', preview: '/table/tripsixes/preview.png', mode: 'fs', skin: true, align: 'center' },
+  { id: 'wanted', name: "Wanted QML table style", key: 'tableWanted', fallback: "Wanted", swatch: '#6b4a1e', feltUrl: '/table/wanted/felt.png', preview: '/table/wanted/preview.png', mode: 'fs', skin: true, align: 'center' },
+  { id: 'xanax', name: "Xanax 03 QML table style", key: 'tableXanax', fallback: "Xanax", swatch: '#394150', feltUrl: '/table/xanax/felt.png', preview: '/table/xanax/preview.png', mode: 'fs', skin: true, align: 'center' },
+  { id: 'saloon', name: "Saloon QML table style", key: 'tableSaloon', fallback: "Saloon", swatch: '#c07f30', feltUrl: '/table/saloon/felt.png', preview: '/table/saloon/preview.png', mode: 'fs', skin: true, align: 'center' },
+  { id: 'discworld', name: "Discworld QML table style", key: 'tableDiscworld', fallback: "Discworld", swatch: '#c98d49', feltUrl: '/table/discworld/felt.png', preview: '/table/discworld/preview.png', mode: 'fs', skin: true, align: 'center', zoom: 1.3 },
 ];
 const DECKS = [
   { id: 'default', name: 'PokerTH default QML card deck', by: 'PokerTH Development Team', swatch: '#1d6b30', ext: 'svg' },
@@ -517,8 +517,8 @@ function _cardbackExt(id) {
   return _deckExt(id);
 }
 var _STANDALONE_BACKS = [
-  { id: 'back-danuxi',      key: 'cardbackDanuxi',      fallback: 'Danuxi',              ext: 'svg' },
-  { id: 'back-matrix',      key: 'cardbackMatrix',      fallback: 'Matrix',              ext: 'svg' },
+  { id: 'back-danuxi',      name: 'Danuxi Blue QML card back', key: 'cardbackDanuxi', fallback: 'Danuxi', ext: 'svg' },
+  { id: 'back-matrix',      name: 'Matrix (QML/SVG)',          key: 'cardbackMatrix', fallback: 'Matrix', ext: 'svg' },
   { id: 'back-nobus-black', key: 'cardbackNobusBlack',  fallback: 'Nobus Classic Black', ext: 'svg' },
   { id: 'back-nobus-blue',  key: 'cardbackNobusBlue',   fallback: 'Nobus Classic Blue',  ext: 'svg' },
   { id: 'back-nobus-green', key: 'cardbackNobusGreen',  fallback: 'Nobus Classic Green', ext: 'svg' },
@@ -540,7 +540,7 @@ function _cardbackOptions() {
   // par decks-manifest, qui exige les 52 faces). Resolution via _deckBack comme
   // n'importe quel override (/cards/<id>/flipside.<ext>).
   _STANDALONE_BACKS.forEach(function (b) {
-    opts.push({ id: b.id, key: b.key, fallback: b.fallback, ext: b.ext,
+    opts.push({ id: b.id, name: b.name || null, key: b.key, fallback: b.fallback, ext: b.ext,
                 backUrl: '/cards/' + b.id + '/flipside.' + b.ext + bust });
   });
   try {
