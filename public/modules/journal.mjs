@@ -54,16 +54,42 @@ function _open() {
   });
 }
 
-async function _loadAll() {
+// Chargement en deux temps : la liste des sessions ne lit que le store 'meta',
+// et les tables de détail (games/players/hands/actions) sont lues à la demande
+// pour la seule session sélectionnée, par plage de clés « sid: » — l'ouverture
+// de la fenêtre ne dépend donc plus du volume total de mains conservées.
+async function _loadMetas() {
   const db = await _open();
-  const get = (s) => new Promise((res, rej) => {
-    const r = db.transaction([s], 'readonly').objectStore(s).getAll();
+  const metas = await new Promise((res, rej) => {
+    const r = db.transaction(['meta'], 'readonly').objectStore('meta').getAll();
     r.onsuccess = () => res(r.result || []);
     r.onerror = () => rej(r.error);
   });
-  const [metas, games, players, hands, actions] = await Promise.all(STORES.map(get));
   db.close();
-  return { metas, games, players, hands, actions };
+  return metas;
+}
+
+const DETAIL_STORES = ['games', 'players', 'hands', 'actions'];
+
+function _emptyDetail() {
+  return { games: [], players: [], hands: [], actions: [] };
+}
+
+async function _loadSession(sid) {
+  if (!sid) return _emptyDetail();
+  const db = await _open();
+  const range = IDBKeyRange.bound(sid + ':', sid + ';', false, true);
+  const get = (s) => new Promise((res, rej) => {
+    const r = db.transaction([s], 'readonly').objectStore(s).getAll(range);
+    r.onsuccess = () => res(r.result || []);
+    r.onerror = () => rej(r.error);
+  });
+  try {
+    const [games, players, hands, actions] = await Promise.all(DETAIL_STORES.map(get));
+    return { games, players, hands, actions };
+  } finally {
+    db.close();
+  }
 }
 
 // Supprime tous les enregistrements d'une session (les 5 stores).
@@ -106,7 +132,7 @@ async function purgeOldSessions() {
   const days = _keepDays();
   if (!days) return;
   try {
-    const { metas } = await _loadAll();
+    const metas = await _loadMetas();
     const cutoff = Date.now() - days * 86400000;
     const cur = (typeof window !== 'undefined' && window._handlog) ? window._handlog.sessionId : null;
     for (const m of metas) {
@@ -342,7 +368,9 @@ function _download(name, mime, content) {
 }
 
 // ── UI ────────────────────────────────────────────────────────────────────
-let _all = null;        // cache des tables (rechargé à l'ouverture)
+// metas = toutes les sessions ; games/players/hands/actions = uniquement
+// celles de la session sélectionnée (_sel), chargées par _loadSelected().
+let _all = null;
 let _sel = null;        // sessionId sélectionné
 let _selGame = 0;       // uniqueGameID filtré (0 = toutes)
 let _analyze = false;   // mode analyseur
@@ -511,7 +539,12 @@ function _renderList() {
       em.textContent = '\u2022 ' + T('jrImported', 'imported');
       b.appendChild(em);
     }
-    b.addEventListener('click', () => { _sel = m.sessionId; _selGame = 0; _anHand = 0; _renderList(); _renderGames(); _renderRight(); });
+    b.addEventListener('click', () => {
+      if (m.sessionId === _sel) return;
+      _sel = m.sessionId; _selGame = 0; _anHand = 0;
+      _renderList();
+      _loadSelected();
+    });
     list.appendChild(b);
   });
 }
@@ -838,8 +871,21 @@ async function _delAll() {
 }
 
 async function _reload() {
-  try { _all = await _loadAll(); } catch (_e) { _all = { metas: [], games: [], players: [], hands: [], actions: [] }; }
-  _renderList();
+  let metas = [];
+  try { metas = await _loadMetas(); } catch (_e) { metas = []; }
+  _all = Object.assign({ metas }, _emptyDetail());
+  _renderList();          // fixe _sel si la sélection a disparu
+  await _loadSelected();
+}
+
+// Charge les tables de détail de la session sélectionnée, puis rend la partie
+// droite. Une sélection plus récente pendant l'attente annule le rendu.
+async function _loadSelected() {
+  const sid = _sel;
+  let rows = _emptyDetail();
+  try { rows = await _loadSession(sid); } catch (_e) { rows = _emptyDetail(); }
+  if (sid !== _sel || !_all) return;
+  DETAIL_STORES.forEach((k) => { _all[k] = rows[k]; });
   _renderGames();
   _renderRight();
 }
