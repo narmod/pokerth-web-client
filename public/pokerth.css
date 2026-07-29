@@ -7318,27 +7318,24 @@ html[data-seat-struct="qml"] .seat.me.active .seat-plate::after { border-width: 
 /* Couché : 0.72 ; éliminé : la base gère déjà l'estompe (transition QML 250ms). */
 html[data-seat-struct="qml"] .seat { transition: opacity 0.25s ease-out; }
 html[data-seat-struct="qml"] .seat.folded { opacity: 0.72; }
-/* Self couché : NE PAS estomper le siège entier — l'opacité d'un parent
-   plafonne celle de ses enfants, donc les hole-cards devenaient illisibles
-   sur les thèmes clairs (narmod 2026-07-26). On estompe avatar / infos /
-   pied séparément (repère de fold conservé, ✕ compris) et MES cartes
-   restent pleinement opaques. Adversaires inchangés (parité QML). */
-html[data-seat-struct="qml"] .seat.me.folded { opacity: 1; }
-html[data-seat-struct="qml"] .seat.me.folded .seat-avatar,
-html[data-seat-struct="qml"] .seat.me.folded .seat-info,
-html[data-seat-struct="qml"] .seat.me.folded .seat-foot { opacity: 0.72; }
-/* Cartes d'un adversaire couché : parité QML 2.1.4, où seul le bloc des
-   hole-cards est estompé (SeatDelegate : `opacity: root.folded ? 0.3 : 1.0`,
-   NumberAnimation 250 ms) — l'avatar, lui, n'est jamais atténué sur un fold
-   côté officiel. Ici le siège est déjà à 0.72 et l'opacité d'un parent
-   plafonne celle de ses enfants : 0.72 × 0.42 ≈ 0.30, soit exactement la
-   valeur du client officiel. Sans ça les cartes des couchés restaient plus de
-   deux fois trop visibles et on ne voyait plus qui était encore dans le coup
-   (remarque d'un joueur sur le forum, 2026-07-28).
-   `:not(.me)` : MES cartes restent pleinement opaques (décision narmod
-   2026-07-26, cf. le bloc self juste au-dessus). */
-html[data-seat-struct="qml"] .seat.folded:not(.me) .seat-holecards {
-  opacity: 0.42;
+/* Self couché : parité totale avec le client officiel (narmod 2026-07-28,
+   révise la décision du 26/07). Source upstream qt6-qml :
+     GamePlayerBox     (adversaires) : folded → 0.72
+     GamePlayerSelfBox (self)        : folded → 0.78   ← volontairement moins
+                                       estompée que les autres, pas identique
+   Les deux boîtes animent l'opacité sur 250 ms (Easing.OutQuad). */
+html[data-seat-struct="qml"] .seat.me.folded { opacity: 0.78; }
+/* Cartes d'un joueur couché. AvatarCardRow.qml (composant PARTAGÉ par les
+   deux boîtes) : `opacity: root.folded ? 0.3 : 1.0`, animation 250 ms.
+   Cette valeur est RELATIVE à la boîte, pas absolue : Qt Quick multiplie les
+   opacités comme CSS et la rangée est imbriquée dans la boîte. Le résultat
+   officiel est donc 0.72 × 0.3 = 0.216 pour un adversaire et 0.78 × 0.3 =
+   0.234 pour soi — et non 0.30, comme je l'avais d'abord calculé.
+   Une seule règle pour tout le monde : la self est incluse (parité totale
+   demandée le 28/07), c'est déjà ce que fait le QML puisque le composant est
+   partagé et reçoit `folded: root.folded` des deux côtés. */
+html[data-seat-struct="qml"] .seat.folded .seat-holecards {
+  opacity: 0.3;
   transition: opacity 0.25s ease-out;
 }
 /* Mise (pack PokerTH) : icône jeton à gauche du montant, comme le BetChip du
