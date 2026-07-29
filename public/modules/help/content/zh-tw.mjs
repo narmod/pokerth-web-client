@@ -196,7 +196,7 @@ export const help = {
           b: ['排行榜入口開啟可按玩家搜尋的 PokerTH 官方排行榜，以及社群排行榜（BBC、WEC）。若你對排行榜不感興趣，可在進階選項 \u2192 社群中隱藏該入口。'] },
         { id: 'cups', t: '社群盃賽：BBC 與 WeCup',
           b: ['有兩個社群在 pokerth.net 上舉辦自己的比賽，各有各的網站與排名。Best Brainies Cup（BBC）是 2013 年創辦的階梯賽：從 Step 1 一路打到 Step 4，每打完一場 Step 4、頒出獎盃後，新賽季便開始。WeCup（WEC）有自己的積分表，分布寬得多——第一名 75 分，接著是 45、30、20……——它的 score 會依據你與其他成員相比的對局數，對你的平均分做正規化處理。',
-              '兩個排名都從獎盃按鈕開啟，就在 PokerTH 排名旁邊。這些比賽的牌桌設定在建立對局時以預設形式提供（BBC Step 1 至 4、WEC 與 WEC Grand Final），所以你可以在相同條件下練習。參賽需要在相應盃賽的網站上註冊。'],
+              '兩個排名都從獎盃按鈕開啟，就在 PokerTH 排名旁邊。這些比賽的牌桌設定在建立對局時以預設形式提供（BBC Step 1 至 4、WEC、WEC Monthly Final 與 WEC Grand Final），所以你可以在相同條件下練習。參賽需要在相應盃賽的網站上註冊。'],
           note: '如果你對盃賽沒有興趣，可在進階選項 → 社群中一次隱藏這些內容。' },
         { id: 'forumcups', t: '論壇盃賽與活動',
           b: ['pokerth.net 論壇還舉辦 Monthly Cup，這是一項月度系列賽：玩家被分配到 Gold、Silver 和 Bronze 牌桌，最後決出當月冠軍；此外全年還有若干特別盃賽。',
