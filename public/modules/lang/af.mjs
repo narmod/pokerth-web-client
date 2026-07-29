@@ -895,7 +895,7 @@ export const strings = {
     jrKeepForever: "Vir altyd",
     jrKeepDays: "{n} dae",
     jrCurrent: "huidige",
-    jrImported:'ingevoer',jrSaveAsPrompt: "Lêernaam",
+    jrImported:'ingevoer',jrKeepMax:'Maksimum',jrKeepAll:'Geen limiet',jrKeepLogs:'{n} logs',jrResizeList:'Verstel die lys se breedte',jrSaveAsPrompt: "Lêernaam",
     jrNoSql: "PDB-uitvoer nie beskikbaar nie (sql.js nie gelaai nie)",
     srvSegNet: "Internet",
     srvSegOffline: "Oefening",

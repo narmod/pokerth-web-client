@@ -895,7 +895,7 @@ export const strings = {
     jrKeepForever: "Заувек",
     jrKeepDays: "{n} дана",
     jrCurrent: "тренутна",
-    jrImported:'увезено',jrSaveAsPrompt: "Име датотеке",
+    jrImported:'увезено',jrKeepMax:'Највише',jrKeepAll:'Без ограничења',jrKeepLogs:'{n} записа',jrResizeList:'Промени ширину списка',jrSaveAsPrompt: "Име датотеке",
     jrNoSql: "PDB извоз није доступан (sql.js није учитан)",
     srvSegNet: "Интернет",
     srvSegOffline: "Вежбање",

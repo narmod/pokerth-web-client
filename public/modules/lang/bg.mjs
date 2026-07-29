@@ -895,7 +895,7 @@ export const strings = {
     jrKeepForever: "Завинаги",
     jrKeepDays: "{n} дни",
     jrCurrent: "текущ",
-    jrImported:'импортиран',jrSaveAsPrompt: "Име на файла",
+    jrImported:'импортиран',jrKeepMax:'Максимум',jrKeepAll:'Без ограничение',jrKeepLogs:'{n} дневника',jrResizeList:'Промяна на ширината на списъка',jrSaveAsPrompt: "Име на файла",
     jrNoSql: "Експортът PDB не е наличен (sql.js не е зареден)",
     srvSegNet: "Интернет",
     srvSegOffline: "Тренировка",

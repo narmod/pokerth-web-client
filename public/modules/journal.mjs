@@ -128,23 +128,47 @@ function _keepDays() {
   try { return parseInt(localStorage.getItem('pth_log_keep_days') || '0', 10) || 0; } catch (_e) { return 0; }
 }
 
+// Plafond en nombre de sessions (0 = illimité). Complète la durée : borne le
+// volume stocké même quand la durée est « Toujours ».
+function _keepMax() {
+  try { return parseInt(localStorage.getItem('pth_log_keep_max') || '0', 10) || 0; } catch (_e) { return 0; }
+}
+
+// Sessions candidates à la purge : ni la session en cours, ni une session
+// importée, et dont l'identifiant porte une date exploitable.
+function _purgeable(metas, cur) {
+  const out = [];
+  for (const m of metas) {
+    const sid = m.sessionId || '';
+    if (!sid || sid === cur) continue; // jamais la session en cours
+    if (m.imported) continue;          // importées : demandées explicitement
+    const dm = sid.match(/^(\d{4})-(\d{2})-(\d{2})/);
+    if (!dm) continue;
+    out.push({ sid, ts: new Date(+dm[1], +dm[2] - 1, +dm[3]).getTime() });
+  }
+  return out;
+}
+
 async function purgeOldSessions() {
   const days = _keepDays();
-  if (!days) return;
+  const max = _keepMax();
+  if (!days && !max) return;
   try {
     const metas = await _loadMetas();
-    const cutoff = Date.now() - days * 86400000;
     const cur = (typeof window !== 'undefined' && window._handlog) ? window._handlog.sessionId : null;
-    for (const m of metas) {
-      const sid = m.sessionId || '';
-      if (sid === cur) continue; // jamais la session en cours
-      if (m.imported) continue;  // sessions importées : l'utilisateur les a
-                                 // demandées explicitement → jamais purgées
-      const dm = sid.match(/^(\d{4})-(\d{2})-(\d{2})/);
-      if (!dm) continue;
-      const ts = new Date(+dm[1], +dm[2] - 1, +dm[3]).getTime();
-      if (ts < cutoff) await _deleteSession(sid);
+    const cand = _purgeable(metas, cur);
+    const doomed = new Set();
+    if (days) {
+      const cutoff = Date.now() - days * 86400000;
+      cand.forEach((c) => { if (c.ts < cutoff) doomed.add(c.sid); });
     }
+    if (max) {
+      // sessionId = « AAAA-MM-JJ_HHMMSS » → tri lexical = tri chronologique.
+      const kept = cand.filter((c) => !doomed.has(c.sid))
+        .sort((a, b) => (a.sid < b.sid ? 1 : -1));
+      kept.slice(max).forEach((c) => doomed.add(c.sid));
+    }
+    for (const sid of doomed) await _deleteSession(sid);
   } catch (_e) {}
 }
 
@@ -376,6 +400,67 @@ let _selGame = 0;       // uniqueGameID filtré (0 = toutes)
 let _analyze = false;   // mode analyseur
 let _anHand = 0;        // handID courant en analyse
 
+// ── Largeur de la colonne des sessions (poignée de redimensionnement) ─────
+// Mémorisée comme les géométries de fenêtre ; ignorée sur petit écran, où la
+// liste passe au-dessus de l'aperçu (media query).
+const LISTW_KEY = 'pth_jr_listw';
+const LISTW_MIN = 140;
+const PREVW_MIN = 240;
+
+function _listWide() {
+  try { return window.matchMedia('(min-width:600px)').matches; } catch (_e) { return true; }
+}
+
+function _setListW(px, save) {
+  const list = document.getElementById('jr-list');
+  const main = document.querySelector('#jr-modal .jr-main');
+  if (!list || !main) return;
+  const room = Math.max(LISTW_MIN, main.clientWidth - PREVW_MIN);
+  const w = Math.round(Math.min(room, Math.max(LISTW_MIN, px)));
+  list.style.flexBasis = w + 'px';
+  if (save) { try { localStorage.setItem(LISTW_KEY, String(w)); } catch (_e) {} }
+}
+
+function _applyListW() {
+  const list = document.getElementById('jr-list');
+  if (!list) return;
+  if (!_listWide()) { list.style.flexBasis = ''; return; }
+  let v = 0;
+  try { v = parseInt(localStorage.getItem(LISTW_KEY) || '0', 10) || 0; } catch (_e) {}
+  _setListW(v || list.getBoundingClientRect().width, false);
+}
+
+function _initSplit(el) {
+  if (!el) return;
+  let sx = 0, sw = 0, pid = null;
+  const width = () => {
+    const list = document.getElementById('jr-list');
+    return list ? list.getBoundingClientRect().width : 0;
+  };
+  el.addEventListener('pointerdown', (e) => {
+    if (!_listWide()) return;
+    sx = e.clientX; sw = width(); pid = e.pointerId;
+    try { el.setPointerCapture(pid); } catch (_e) {}
+    e.preventDefault();
+  });
+  el.addEventListener('pointermove', (e) => {
+    if (pid == null) return;
+    _setListW(sw + (e.clientX - sx), false);
+  });
+  const end = () => {
+    if (pid == null) return;
+    pid = null;
+    _setListW(width(), true);
+  };
+  el.addEventListener('pointerup', end);
+  el.addEventListener('pointercancel', end);
+  el.addEventListener('keydown', (e) => {
+    if (!_listWide()) return;
+    if (e.key === 'ArrowLeft') { _setListW(width() - 16, true); e.preventDefault(); }
+    else if (e.key === 'ArrowRight') { _setListW(width() + 16, true); e.preventDefault(); }
+  });
+}
+
 const CSS = `
 #jr-modal{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px}
 #jr-modal .km-backdrop{background:transparent;backdrop-filter:none;-webkit-backdrop-filter:none}
@@ -389,6 +474,8 @@ const CSS = `
 #jr-modal .jr-item{display:block;width:100%;text-align:left;padding:6px 8px;border:0;background:transparent;color:var(--text,#cdd3e0);font:inherit;font-size:.82rem;border-radius:4px;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 #jr-modal .jr-item.sel{background:#8b1a1a;color:#fff}
 #jr-modal .jr-item .jr-cur{opacity:.75;font-size:.72rem;margin-left:4px}
+#jr-modal .jr-split{flex:0 0 6px;align-self:stretch;border-radius:3px;background:var(--border,#39415066);opacity:.45;cursor:col-resize;touch-action:none}
+#jr-modal .jr-split:hover,#jr-modal .jr-split:focus-visible{opacity:1}
 #jr-modal .jr-right{flex:1;display:flex;flex-direction:column;min-width:0;min-height:0}
 #jr-modal .jr-prevlbl{font-size:.82rem;opacity:.8;margin-bottom:4px}
 #jr-modal .jr-prev{flex:1;overflow:auto;border:1px solid var(--border,#39415066);border-radius:6px;padding:8px 10px;background:var(--panel-bg,rgba(0,0,0,.14));font-size:.82rem;line-height:1.45;min-height:0}
@@ -398,7 +485,7 @@ const CSS = `
 #jr-modal .jr-foot{display:flex;flex-wrap:wrap;gap:7px;margin-top:8px;align-items:center;font-size:.8rem;opacity:.9}
 #jr-modal .jr-an-nav{display:flex;gap:6px;align-items:center;margin-bottom:6px;flex-wrap:wrap}
 #jr-modal .jr-search{min-width:110px;flex:0 1 170px}
-@media (max-width:599.98px){#jr-modal .jr-main{flex-direction:column}#jr-modal .jr-list{flex:0 0 auto;width:auto;max-height:26vh}#jr-modal .jr-card{max-height:none;height:100%}}
+@media (max-width:599.98px){#jr-modal .jr-main{flex-direction:column}#jr-modal .jr-split{display:none}#jr-modal .jr-list{flex:0 0 auto;width:auto;max-height:26vh}#jr-modal .jr-card{max-height:none;height:100%}}
 `;
 
 function _ensureModal() {
@@ -423,6 +510,7 @@ function _ensureModal() {
       '</div>' +
       '<div class="jr-main">' +
         '<div class="jr-list" id="jr-list"></div>' +
+        '<div class="jr-split" id="jr-split" role="separator" aria-orientation="vertical" tabindex="0"></div>' +
         '<div class="jr-right">' +
           '<div class="jr-an-nav" id="jr-an-nav" style="display:none">' +
             '<button type="button" class="btn-sm" id="jr-an-prev">\u2039</button>' +
@@ -449,6 +537,11 @@ function _ensureModal() {
         '<div class="sel-wrap adv-sel"><select id="jr-keep">' +
           '<option value="0"></option><option value="7"></option><option value="30"></option>' +
           '<option value="90"></option><option value="180"></option><option value="365"></option>' +
+        '</select><span class="sel-arr">\u25be</span></div>' +
+        '<span id="jr-max-lbl"></span>' +
+        '<div class="sel-wrap adv-sel"><select id="jr-max">' +
+          '<option value="0"></option><option value="20"></option><option value="50"></option>' +
+          '<option value="100"></option><option value="200"></option>' +
         '</select><span class="sel-arr">\u25be</span></div>' +
         '<em class="adv-webtag">web</em>' +
         '<span class="jr-spacer"></span>' +
@@ -478,6 +571,15 @@ function _ensureModal() {
     try { localStorage.setItem('pth_log_keep_days', $('jr-keep').value); } catch (_e) {}
     purgeOldSessions().then(() => _reload());
   });
+  $('jr-max').addEventListener('change', () => {
+    try { localStorage.setItem('pth_log_keep_max', $('jr-max').value); } catch (_e) {}
+    purgeOldSessions().then(() => _reload());
+  });
+  _initSplit($('jr-split'));
+  window.addEventListener('resize', () => {
+    const md = document.getElementById('jr-modal');
+    if (md && md.style.display !== 'none') _applyListW();
+  });
   return m;
 }
 
@@ -501,6 +603,14 @@ function _applyTexts() {
   ko[0].textContent = T('jrKeepForever', 'Forever');
   for (let i = 1; i < ko.length; i++) ko[i].textContent = T('jrKeepDays', '{n} days').replace('{n}', ko[i].value);
   $('jr-keep').value = String(_keepDays());
+  $('jr-max-lbl').textContent = T('jrKeepMax', 'Maximum');
+  const mo = $('jr-max').options;
+  mo[0].textContent = T('jrKeepAll', 'No limit');
+  for (let i = 1; i < mo.length; i++) mo[i].textContent = T('jrKeepLogs', '{n} logs').replace('{n}', mo[i].value);
+  $('jr-max').value = String(_keepMax());
+  const sp = $('jr-split');
+  sp.setAttribute('aria-label', T('jrResizeList', 'Resize the list'));
+  sp.title = T('jrResizeList', 'Resize the list');
 }
 
 function _sessions() {
@@ -938,6 +1048,7 @@ function _syncFloat(m) {
     m.classList.remove('jr-float');
     if (typeof window._disableFloating === 'function') window._disableFloating(card);
   }
+  _applyListW();
 }
 
 export function closeJournal() {

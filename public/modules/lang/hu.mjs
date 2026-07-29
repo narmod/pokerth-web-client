@@ -895,7 +895,7 @@ export const strings = {
     jrKeepForever: "Örökké",
     jrKeepDays: "{n} nap",
     jrCurrent: "aktuális",
-    jrImported:'importált',jrSaveAsPrompt: "Fájlnév",
+    jrImported:'importált',jrKeepMax:'Legfeljebb',jrKeepAll:'Nincs korlát',jrKeepLogs:'{n} napló',jrResizeList:'Lista szélességének módosítása',jrSaveAsPrompt: "Fájlnév",
     jrNoSql: "PDB-export nem érhető el (a sql.js nincs betöltve)",
     srvSegNet: "Internet",
     srvSegOffline: "Gyakorlás",

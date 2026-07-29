@@ -702,7 +702,7 @@ export const strings = {
     jrKeepForever: "हमेशा के लिए",
     jrKeepDays: "{n} दिन",
     jrCurrent: "वर्तमान",
-    jrImported:'आयातित',jrSaveAsPrompt: "फ़ाइल नाम",
+    jrImported:'आयातित',jrKeepMax:'अधिकतम',jrKeepAll:'कोई सीमा नहीं',jrKeepLogs:'{n} लॉग',jrResizeList:'सूची की चौड़ाई बदलें',jrSaveAsPrompt: "फ़ाइल नाम",
     jrNoSql: "PDB निर्यात उपलब्ध नहीं (sql.js लोड नहीं हुआ)",
     srvSegNet: "इंटरनेट",
     srvSegOffline: "अभ्यास",

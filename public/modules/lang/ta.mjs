@@ -897,7 +897,7 @@ export const strings = {
     jrKeepForever: "எப்போதும்",
     jrKeepDays: "{n} நாட்கள்",
     jrCurrent: "தற்போதைய",
-    jrImported:'இறக்குமதி',jrSaveAsPrompt: "கோப்புப் பெயர்",
+    jrImported:'இறக்குமதி',jrKeepMax:'அதிகபட்சம்',jrKeepAll:'வரம்பு இல்லை',jrKeepLogs:'{n} பதிவுகள்',jrResizeList:'பட்டியல் அகலத்தை மாற்று',jrSaveAsPrompt: "கோப்புப் பெயர்",
     jrNoSql: "PDB ஏற்றுமதி கிடைக்கவில்லை (sql.js ஏற்றப்படவில்லை)",
     srvSegNet: "இணையம்",
     srvSegOffline: "பயிற்சி",

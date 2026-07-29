@@ -819,7 +819,7 @@ export const strings = {
     jrKeepForever: "無期限",
     jrKeepDays: "{n} 日間",
     jrCurrent: "現在",
-    jrImported:'インポート済み',jrSaveAsPrompt: "ファイル名",
+    jrImported:'インポート済み',jrKeepMax:'最大',jrKeepAll:'制限なし',jrKeepLogs:'{n} 件',jrResizeList:'一覧の幅を変更',jrSaveAsPrompt: "ファイル名",
     jrNoSql: "PDB エクスポートは利用できません（sql.js が未読み込み）",
     srvSegNet: "インターネット",
     srvSegOffline: "トレーニング",

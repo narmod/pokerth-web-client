@@ -61,11 +61,10 @@ ok(/if \(sid !== _sel/.test(sel), '_loadSelected() drops a result made stale by 
 // ── 2. Retention ──────────────────────────────────────────────────────────
 const purge = body('purgeOldSessions');
 ok(/const metas = await _loadMetas\(\);/.test(purge), 'purge reads metas only');
-ok(/if \(sid === cur\) continue;/.test(purge), 'purge keeps the running session');
-ok(/if \(m\.imported\) continue;/.test(purge), 'purge keeps imported sessions');
-ok(/const cutoff = Date\.now\(\) - days \* 86400000;/.test(purge)
-  && /sid\.match\(\/\^\(\\d\{4\}\)-\(\\d\{2\}\)-\(\\d\{2\}\)\//.test(purge),
-  'purge compares the play date carried by the session id, not the import date');
+ok(/const cutoff = Date\.now\(\) - days \* 86400000;/.test(purge),
+  'purge compares against a cutoff derived from the chosen duration');
+ok(/sid\.match\(\/\^\(\\d\{4\}\)-\(\\d\{2\}\)-\(\\d\{2\}\)\//.test(body('_purgeable')),
+  'the play date carried by the session id is used, not the import date');
 
 for (const d of ['7', '30', '90', '180', '365']) {
   ok(src.includes('<option value="' + d + '">'), 'retention offers ' + d + ' days');
@@ -73,6 +72,33 @@ for (const d of ['7', '30', '90', '180', '365']) {
 ok(src.includes('<option value="0">'), 'retention offers Forever');
 
 ok(/sessionId: sid, imported: true/.test(src), 'the .pdb importer flags sessions as imported');
+
+// ── 3. Session-count cap ──────────────────────────────────────────────────
+const cand = body('_purgeable');
+ok(/if \(!sid \|\| sid === cur\) continue;/.test(cand), 'the cap never targets the running session');
+ok(/if \(m\.imported\) continue;/.test(cand), 'the cap never targets an imported session');
+ok(/if \(!days && !max\) return;/.test(purge), 'purge runs when either setting is on');
+ok(/kept\.slice\(max\)/.test(purge), 'the cap keeps exactly the newest max sessions');
+ok(/sort\(\(a, b\) => \(a\.sid < b\.sid \? 1 : -1\)\)/.test(purge), 'the cap sorts newest first');
+ok(/localStorage\.getItem\('pth_log_keep_max'/.test(body('_keepMax')), 'the cap has its own stored setting');
+for (const c of ['20', '50', '100', '200']) {
+  ok(src.includes('<option value="' + c + '">'), 'cap offers ' + c + ' logs');
+}
+
+// ── 4. Resizable session column ───────────────────────────────────────────
+ok(/id="jr-split"[^']*role="separator"/.test(src), 'the splitter is exposed as a separator');
+ok(/#jr-modal \.jr-split\{[^}]*cursor:col-resize/.test(src), 'the splitter shows a resize cursor');
+ok(/@media \(max-width:599\.98px\)\{.*#jr-modal \.jr-split\{display:none\}/.test(src),
+  'the splitter is hidden on the stacked mobile layout');
+const setw = body('_setListW');
+ok(/Math\.max\(LISTW_MIN/.test(setw) && /main\.clientWidth - PREVW_MIN/.test(setw),
+  'the width is clamped between the list minimum and the preview minimum');
+ok(/localStorage\.setItem\(LISTW_KEY/.test(setw), 'the chosen width is remembered');
+const split = body('_initSplit');
+ok(/setPointerCapture/.test(split), 'dragging captures the pointer');
+ok(/ArrowLeft/.test(split) && /ArrowRight/.test(split), 'the splitter is keyboard operable');
+ok(!/_applyListW\(\);\n  await purgeOldSessions/.test(src),
+  'the width is not applied while the card is still hidden (clientWidth would be 0)');
 
 console.log(fail ? `FAIL ${fail}/${n}` : `OK ${n}/${n}`);
 process.exit(fail ? 1 : 0);

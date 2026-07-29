@@ -822,7 +822,7 @@ export const strings = {
     jrKeepForever: "For altid",
     jrKeepDays: "{n} dage",
     jrCurrent: "aktuel",
-    jrImported:'importeret',jrSaveAsPrompt: "Filnavn",
+    jrImported:'importeret',jrKeepMax:'Maksimum',jrKeepAll:'Ingen grænse',jrKeepLogs:'{n} logfiler',jrResizeList:'Ændr listens bredde',jrSaveAsPrompt: "Filnavn",
     jrNoSql: "PDB-eksport utilgængelig (sql.js ikke indlæst)",
     srvSegNet: "Internet",
     srvSegOffline: "Træning",

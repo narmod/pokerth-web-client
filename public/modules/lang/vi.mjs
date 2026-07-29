@@ -895,7 +895,7 @@ export const strings = {
     jrKeepForever: "Mãi mãi",
     jrKeepDays: "{n} ngày",
     jrCurrent: "hiện tại",
-    jrImported:'đã nhập',jrSaveAsPrompt: "Tên tệp",
+    jrImported:'đã nhập',jrKeepMax:'Tối đa',jrKeepAll:'Không giới hạn',jrKeepLogs:'{n} nhật ký',jrResizeList:'Đổi chiều rộng danh sách',jrSaveAsPrompt: "Tên tệp",
     jrNoSql: "Không thể xuất PDB (sql.js chưa tải)",
     srvSegNet: "Internet",
     srvSegOffline: "Luyện tập",

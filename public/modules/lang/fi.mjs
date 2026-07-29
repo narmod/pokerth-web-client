@@ -822,7 +822,7 @@ export const strings = {
     jrKeepForever: "Ikuisesti",
     jrKeepDays: "{n} päivää",
     jrCurrent: "nykyinen",
-    jrImported:'tuotu',jrSaveAsPrompt: "Tiedostonimi",
+    jrImported:'tuotu',jrKeepMax:'Enintään',jrKeepAll:'Ei rajaa',jrKeepLogs:'{n} lokia',jrResizeList:'Muuta luettelon leveyttä',jrSaveAsPrompt: "Tiedostonimi",
     jrNoSql: "PDB-vienti ei käytettävissä (sql.js ei ladattu)",
     srvSegNet: "Internet",
     srvSegOffline: "Harjoittelu",

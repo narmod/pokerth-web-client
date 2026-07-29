@@ -895,7 +895,7 @@ export const strings = {
     jrKeepForever: "Για πάντα",
     jrKeepDays: "{n} ημέρες",
     jrCurrent: "τρέχον",
-    jrImported:'εισηγμένο',jrSaveAsPrompt: "Όνομα αρχείου",
+    jrImported:'εισηγμένο',jrKeepMax:'Μέγιστο',jrKeepAll:'Χωρίς όριο',jrKeepLogs:'{n} αρχεία',jrResizeList:'Αλλαγή πλάτους λίστας',jrSaveAsPrompt: "Όνομα αρχείου",
     jrNoSql: "Η εξαγωγή PDB δεν είναι διαθέσιμη (δεν φορτώθηκε το sql.js)",
     srvSegNet: "Ίντερνετ",
     srvSegOffline: "Εξάσκηση",
