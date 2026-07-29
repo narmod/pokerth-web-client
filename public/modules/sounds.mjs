@@ -136,7 +136,7 @@ function _buzz(pattern) {
   } catch(e) {}
 }
 function playTone(freq, dur, vol) {
-  if (!_soundEnabled) return;
+  if (!_muteSync()) return;
   var ctx = getAudioCtx(); if (!ctx) return;
   try {
     if (ctx.state !== 'running') { try { ctx.resume(); } catch(e) {} }
@@ -194,7 +194,7 @@ function _fetchSamples() {
 // Joue un sample s'il est pret. true si un son a demarre, false sinon (muet,
 // contexte absent, ou sample pas encore decode) -> l'appelant fait son repli.
 function _playSample(name) {
-  if (!_soundEnabled) return false;
+  if (!_muteSync()) return false;
   var ctx = getAudioCtx(); if (!ctx) return false;
   if (_decodeCtx !== ctx) { _buffers = {}; _decodeCtx = ctx; }
   var b = _buffers[name];
@@ -277,7 +277,7 @@ function notifyMyTurn() {
   // glides from 440Hz to 880Hz in 80ms. That upward chirp is the
   // hallmark of a bubble. A short exponential decay on gain provides
   // the natural "plop" envelope.
-  if (!_soundEnabled || !sndCat('actions')) return;
+  if (!_muteSync() || !sndCat('actions')) return;
   if (!_playSample('turn')) {
   var ctx = getAudioCtx(); if (!ctx) return;
   try {
@@ -341,7 +341,7 @@ function notifyBigWin() {
 function notifyChat() {
   // Même bip que le QML : sample officiel lobbychatnotify.mp3 (repli bip synthé
   // s'il n'est pas encore décodé). La vibration reste toujours jouée.
-  if (_soundEnabled && sndCat('lobby')) {
+  if (_muteSync() && sndCat('lobby')) {
     if (!_playSample('lobbychat')) playTone(880, 0.07, 0.1);
   }
   _buzz([25]);
@@ -349,20 +349,20 @@ function notifyChat() {
 // ─── Notifications réseau & lobby (samples officiels PokerTH) ─────────────
 // playerconnected.wav : un joueur rejoint la table en attente.
 function notifyPlayerConnected() {
-  if (!_soundEnabled || !sndCat('net')) return;
+  if (!_muteSync() || !sndCat('net')) return;
   if (_playSample('playerconnected')) return;
   playTone(660, 0.07, 0.12);
   setTimeout(function(){ playTone(880, 0.09, 0.12); }, 80);
 }
 // onlinegameready.wav : la partie réseau est prête à démarrer (StartEvent).
 function notifyGameReady() {
-  if (!_soundEnabled || !sndCat('net')) return;
+  if (!_muteSync() || !sndCat('net')) return;
   if (_playSample('gameready')) return;
   [523, 659, 784].forEach(function(f, i){ setTimeout(function(){ playTone(f, 0.10, 0.16); }, i * 90); });
 }
 // lobbychatnotify.wav : message reçu dans le chat du lobby.
 function notifyLobbyChat() {
-  if (!_soundEnabled || !sndCat('lobby')) return;
+  if (!_muteSync() || !sndCat('lobby')) return;
   if (_playSample('lobbychat')) return;
   playTone(880, 0.07, 0.10);
 }
@@ -398,27 +398,49 @@ function notifyTickFinal() {
   playTone(1397, 0.14, 0.20);
   _buzz(60);
 }
-// Mute state
-let _soundEnabled = (function() {
+// ─── Etat mute (cle 'pth_sound') ─────────────────────────────────────────
+// Lu au chargement PUIS RELU avant chaque son. Plusieurs fenetres du meme
+// navigateur (onglet + PWA installee, ou une table spectatee pendant qu'une
+// autre est jouee) partagent le meme localStorage mais PAS la meme memoire :
+// sans relecture, couper le son dans une fenetre laissait les autres bruyantes
+// jusqu'a leur rechargement.
+function _readMute() {
   try { return localStorage.getItem('pth_sound') !== '0'; } catch(e) { return true; }
-})();
+}
+let _soundEnabled = _readMute();
+// Relit la cle ; si l'etat a change ailleurs, rafraichit le bouton du header et
+// le popover, puis renvoie l'etat courant.
+function _muteSync() {
+  var v = _readMute();
+  if (v !== _soundEnabled) {
+    _soundEnabled = v;
+    try { _applySoundBtn(); } catch(e) {}
+    try { _syncSoundPop(); } catch(e) {}
+  }
+  return v;
+}
 
 var SND_ON_SVG = '<svg viewBox="0 0 24 24" style="display:block;width:22px;height:22px" fill="currentColor" aria-hidden="true"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>';
 var SND_OFF_SVG = '<svg viewBox="0 0 24 24" style="display:block;width:22px;height:22px" fill="currentColor" aria-hidden="true"><path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73 4.27 3zM12 4L9.91 6.09 12 8.18V4z"/></svg>';
 
+// Etat visuel du bouton du header (factorise : sert aussi quand le mute est
+// change depuis une AUTRE fenetre, via l'evenement 'storage').
+function _applySoundBtn() {
+  var btn = document.getElementById('sound-toggle-btn');
+  if (!btn) return;
+  btn.innerHTML     = _soundEnabled ? SND_ON_SVG : SND_OFF_SVG;
+  btn.style.opacity = _soundEnabled ? '' : '0.5';
+  btn.title         = _soundEnabled ? 'Mute' : 'Unmute';
+}
+
 function toggleSound() {
   _soundEnabled = !_soundEnabled;
   try { localStorage.setItem('pth_sound', _soundEnabled ? '1' : '0'); } catch(e) {}
-  var btn = document.getElementById('sound-toggle-btn');
-  if (btn) {
-    btn.innerHTML    = _soundEnabled ? SND_ON_SVG : SND_OFF_SVG;
-    btn.style.opacity = _soundEnabled ? '' : '0.5';
-    btn.title = _soundEnabled ? 'Mute' : 'Unmute';
-  }
+  _applySoundBtn();
 }
 
 function isSoundEnabled() {
-  return _soundEnabled;
+  return _muteSync();
 }
 
 // ─── Popover de réglage du son (volume + mute), ancré au bouton du header ──
@@ -547,7 +569,19 @@ function _onUnlockGesture() {
 // 2) Au retour au premier plan (changement d'onglet, app PWA ré-ouverte) on
 //    relance le contexte. Couvre le cas iOS 'interrupted' après backgrounding.
 document.addEventListener('visibilitychange', function() {
-  if (!document.hidden) _ensureRunning();
+  if (!document.hidden) { _ensureRunning(); _muteSync(); }
+});
+// 3) Mute partage entre fenetres : 'storage' n'est livre qu'aux AUTRES onglets
+//    du meme navigateur -- exactement le cas a couvrir (couper le son ici doit
+//    faire taire la fenetre restee ouverte a cote). key === null = storage vide.
+window.addEventListener('storage', function(e) {
+  if (e && e.key != null && e.key !== 'pth_sound') return;
+  _muteSync();
+  // Rafraichissement inconditionnel : si un son avait deja resynchronise l'etat
+  // en silence, _muteSync ne voit plus de changement et le bouton resterait a
+  // l'ancienne icone.
+  try { _applySoundBtn(); } catch(e2) {}
+  try { _syncSoundPop(); } catch(e2) {}
 });
 window.addEventListener('pageshow', function() { _ensureRunning(); });
 window.addEventListener('focus', function() { _ensureRunning(); });
@@ -604,7 +638,7 @@ Object.defineProperty(window, '_audioCtx', {
 });
 Object.defineProperty(window, '_soundEnabled', {
   configurable: true,
-  get() { return _soundEnabled; },
+  get() { return _muteSync(); },
   set(v) { _soundEnabled = v; },
 });
 

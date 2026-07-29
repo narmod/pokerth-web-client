@@ -1218,13 +1218,25 @@ function _cfgWebApply(o) {
   try {
     if (_achMergeIn(o)) { _cfgWebForcePush = true; _cfgSyncPushSoon(1500); }
   } catch (e) {}
+  // Même fusion que pour le config.xml : une clé modifiée ici depuis le dernier
+  // envoi (elle diffère de l'instantané poussé) n'est PAS écrasée par le
+  // serveur — elle sera repoussée. Sans instantané (1er appareil), on accepte.
+  var last = null;
+  try { last = JSON.parse(_cfgLs('pth_cfg_sync_weblast') || 'null'); } catch (e) { last = null; }
+  var heldWeb = 0;
   _CFG_WEB_SYNC_KEYS.forEach(function (k) {
     if (typeof o[k] === 'string' && o[k].length <= 20000) {
       try {
-        if (localStorage.getItem(k) !== o[k]) { localStorage.setItem(k, o[k]); changed = true; }
+        var cur = localStorage.getItem(k);
+        if (last && typeof last === 'object') {
+          var lv = last[k];
+          if (lv == null ? (cur != null) : (cur !== lv)) { heldWeb++; return; }
+        }
+        if (cur !== o[k]) { localStorage.setItem(k, o[k]); changed = true; }
       } catch (e) {}
     }
   });
+  if (heldWeb) { _cfgWebForcePush = true; _cfgSyncPushSoon(1500); }
   if (!changed) return;
   try { applyAdvOpts(); } catch (e) {}
   try { if (typeof applyTooltips === 'function') applyTooltips(); } catch (e) {}
@@ -1234,9 +1246,44 @@ function _cfgWebApply(o) {
     else if (typeof window._renderSeats === 'function') window._renderSeats();
   } catch (e) {}
 }
+// ── Réglages modifiés ICI depuis le dernier envoi réussi ───────────────────
+// La descente écrasait tout le config.xml local dès que le serveur était plus
+// récent : un réglage changé sur cet appareil (typiquement les catégories de
+// son) revenait en silence à la valeur d'un autre appareil — d'où le « je
+// coupe le son et il revient ». On mémorise donc QUELLES clés ont bougé pour
+// les protéger à la prochaine descente, puis les repousser.
+// Table adv → clé officielle : miroir exact des setB() de _cfgApplyImported.
+var PTH_CFG_ADV_KEYS = {
+  fade_losers: 'ShowFadeOutCardsAnimation', anim_cards: 'ShowFlipCardsAnimation',
+  fkeys_alt: 'AlternateFKeysUserActionMode', show_blinds: 'ShowBlindButtons',
+  own_click: 'AntiPeekMode', guard_call: 'AccidentallyCallBlocker',
+  focus_bet: 'EnableBetInputFocusSwitch', show_flag: 'ShowCountryFlagInAvatar',
+  pot_btns: 'ShowPotPercentButtons', ping_avatar: 'ShowPingStateInAvatar',
+  no_hide_ignored: 'DontHideAvatarsOfIgnored', lobby_chat: 'UseLobbyChat',
+  react_muted: 'DisableEmojiReactions', reduce_fx: 'QmlReduceEffects',
+  auto_leave: 'NetAutoLeaveGameAfterFinish', pause_hands: 'PauseBetweenHands',
+  poker_en: 'DontTranslateInternationalPokerStringsFromStyle',
+  splash: 'DisableSplashScreenOnStartup',
+  snd_actions: 'PlayGameActions', snd_lobby: 'PlayLobbyChatNotification',
+  snd_net: 'PlayNetworkGameNotification', snd_blinds: 'PlayBlindRaiseNotification'
+};
+function _cfgDirtyKeys() {
+  try { var a = JSON.parse(_cfgLs('pth_cfg_sync_dirtykeys') || '[]'); return Array.isArray(a) ? a : []; }
+  catch (e) { return []; }
+}
+function _cfgDirtyKeysAdd(key) {
+  try {
+    var a = _cfgDirtyKeys();
+    if (a.indexOf(key) >= 0) return;
+    a.push(key);
+    localStorage.setItem('pth_cfg_sync_dirtykeys', JSON.stringify(a.slice(-60)));
+  } catch (e) {}
+}
+function _cfgDirtyKeysClear() { try { localStorage.removeItem('pth_cfg_sync_dirtykeys'); } catch (e) {} }
 function _cfgSyncMark(key) {
   if (key === 'cfg_sync') return;                 // (dé)cocher la sync n'est pas une donnée à pousser
   try { localStorage.setItem('pth_cfg_sync_dirty', '1'); } catch (e) {}
+  _cfgDirtyKeysAdd(key);
   _cfgSyncPushSoon();
 }
 function _cfgSyncPushSoon(ms) {
@@ -1260,6 +1307,7 @@ function _cfgSyncPushNow(keepalive) {
       if (d && d.ok) {
         try { localStorage.setItem('pth_cfg_sync_ts', String(d.updatedAt || Date.now())); } catch (e) {}
         try { localStorage.removeItem('pth_cfg_sync_dirty'); } catch (e) {}
+        _cfgDirtyKeysClear();                    // nos valeurs sont chez le serveur
       }
     }).catch(function () {}).finally(function () { _syncBusyEnd(); });
   _syncBusyBegin();
@@ -1279,9 +1327,21 @@ function _cfgSyncPull() {
           var cfg = _cfgParseXml(d.xml);
           try { localStorage.setItem(PTH_CFG_XML_KEY, String(d.xml).slice(0, 400000)); } catch (e) {}
           Object.keys(PTH_CFG_MACHINE_KEYS).forEach(function (k) { delete cfg.scalars[k]; });
+          // Fusion : les réglages changés ici depuis le dernier envoi gagnent —
+          // on les retire de la descente et on les repousse (sinon ils étaient
+          // écrasés en silence, et le drapeau dirty effacé avec eux).
+          var held = 0;
+          _cfgDirtyKeys().forEach(function (k) {
+            var ck = PTH_CFG_ADV_KEYS[k];
+            if (ck && cfg.scalars[ck] != null) { delete cfg.scalars[ck]; held++; }
+          });
           _cfgApplyImported(cfg);
           try { localStorage.setItem('pth_cfg_sync_ts', String(d.updatedAt)); } catch (e) {}
-          try { localStorage.removeItem('pth_cfg_sync_dirty'); } catch (e) {}
+          if (held) { _cfgSyncPushSoon(1500); }   // dirty conservé : nos valeurs partent
+          else {
+            try { localStorage.removeItem('pth_cfg_sync_dirty'); } catch (e) {}
+            _cfgDirtyKeysClear();
+          }
           if (typeof showToast === 'function') showToast(t('cfgSyncApplied') || 'Settings synced from your account');
         } catch (e) {}
       } else if (!d.xml || dirty) {
@@ -9407,7 +9467,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.4-web.127'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.4-web.128'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
