@@ -160,7 +160,7 @@ export const help = {
         { id: 'reactions', t: 'Emoji reakcie',
           b: ['Tlačidlo reakcií otvorí výber 30 animovaných reakcií (\uD83C\uDF89, \uD83D\uDE02, \uD83D\uDE31, \uD83D\uDD25\u2026), ktoré sa s efektom prehrajú nad tvojím miestom a vidí ich celý stôl — vrátane hráčov na desktopovom klientovi. Reakcie možno úplne vypnúť v Pokročilých možnostiach.'] },
         { id: 'translate', t: 'Rozumieť všetkým',
-          b: ['So zapnutým prekladom chatu dostane každá správa tlačidlo prekladu, ktoré ju zobrazí v tvojom jazyku pomocou prekladača prehliadača. Bežné stolové skratky (gg, nh, utg\u2026) sa vysvetlia v bubline po nabehnutí — obe voľby nájdeš v Pokročilé možnosti \u2192 Chat.'],
+          b: ['So zapnutým prekladom chatu sa tlačidlo prekladu objaví na riadku pod ukazovateľom — alebo na riadku, na ktorý ťukneš na dotykovej obrazovke — a zobrazí správu v tvojom jazyku prekladateľom prehliadača. Dá sa trvalo zobraziť na všetkých riadkoch v Pokročilých možnostiach → Chat, kde býva aj pomôcka vysvetľujúca bežné stolové skratky (gg, nh, utg…).'],
           note: 'Preklad používa službu Google Translate a funguje v každom prehliadači — stačí pripojenie na internet. Správa sa do prekladovej služby odošle len vtedy, keď ťukneš na jej tlačidlo prekladu, nikdy automaticky.' },
         { id: 'social', t: 'Hráči: profil, pozvanie, ignorovanie',
           b: ['Ťukni na ľubovoľného hráča — pri stole alebo v zozname lobby — a otvorí sa jeho karta: profil a štatistiky, pozvanie do tvojej hry, alebo ignorovanie (jeho správy v chate sa skryjú; ignorovanie možno kedykoľvek zrušiť). Potvrdenie pred pozvaním/ignorovaním možno zapnúť v možnostiach.'] }
@@ -255,16 +255,18 @@ export const help = {
             ['F6 / F7 / F8', 'Ručný \u00b7 Auto Check/Fold \u00b7 Auto Check/Call'],
             ['Alt+M / Alt+K / Alt+F', 'Ručný \u00b7 Auto Check/Call \u00b7 Auto Check/Fold'],
             ['Alt+C / Alt+L / Alt+I', 'Chat \u00b7 História \u00b7 Panel šancí'],
+            ['Alt+S', 'Nastavenia — kdekoľvek v aplikácii, nielen v hre'],
             ['F11', 'Celá obrazovka']],
           note: 'Skratky vyžadujú fyzickú klávesnicu. Na Macu F klávesy predvolene ovládajú médiá: drž Fn (alebo v nastaveniach macOS zapni \u201ePoužívať klávesy F1, F2 atď. ako štandardné funkčné klávesy\u201c). Na iPhone je celá obrazovka obmedzená systémom iOS — inštalácia aplikácie ako PWA dá rovnaký celoobrazovkový zážitok.' },
         { id: 'webkeys', t: 'Webové písmenové klávesy',
-          b: ['Webové rozšírenie: akcie spúšťajú aj jednopísmenové klávesy a dajú sa premapovať v Pokročilé možnosti \u2192 Klávesové skratky:'],
+          b: ['Webové rozšírenie: jednopísmenové klávesy a Alt+T tiež spúšťajú akcie a všetky sa dajú premapovať v Pokročilých možnostiach → Klávesové skratky:'],
           keys: [
             ['F', 'Fold'],
             ['C', 'Check / Call'],
             ['R', 'Raise'],
             ['A', 'All-In'],
             ['1 / 2 / 3', 'Bet 1/3 \u00b7 1/2 \u00b7 Pot'],
+            ['Alt+T', 'Panel štatistík'],
             ['Esc', 'Zavrieť vrchné okno (aj tlačidlo Späť na Androide)']],
           note: 'Na Androide systémové tlačidlo/gesto Späť zatvára okná ako Esc, namiesto toho, aby opustilo hru (nastaviteľné v možnostiach). iOS obdobné systémové tlačidlo nemá — použi \u2715 každého okna.' }
       ]

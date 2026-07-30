@@ -160,7 +160,7 @@ export const help = {
         { id: 'reactions', t: 'Emoji-reaktiot',
           b: ['Reaktiopainike avaa valitsimen, jossa on 30 animoitua reaktiota (\uD83C\uDF89, \uD83D\uDE02, \uD83D\uDE31, \uD83D\uDD25\u2026). Ne toistuvat tehosteella paikkasi yläpuolella koko pöydän nähden — myös työpöytäasiakkaan pelaajien. Reaktiot voi poistaa kokonaan käytöstä Lisäasetuksista.'] },
         { id: 'translate', t: 'Ymmärrä kaikkia',
-          b: ['Kun chatin käännös on päällä, jokainen viesti saa käännöspainikkeen, joka näyttää sen sinun kielelläsi selaimen kääntäjän avulla. Yleiset pöytälyhenteet (gg, nh, utg\u2026) selitetään työkaluvihjeessä osoittaessasi niitä — molemmat asetukset löytyvät kohdasta Lisäasetukset \u2192 Chat.'],
+          b: ['Kun chatin käännös on päällä, käännöspainike ilmestyy osoittimen alla olevalle riville — tai riville, jota napautat kosketusnäytöllä — ja näyttää viestin omalla kielelläsi selaimen kääntäjällä. Sen voi näyttää pysyvästi kaikilla riveillä kohdassa Lisäasetukset → Chat, jossa asuu myös pöytälyhenteet (gg, nh, utg…) selittävä vihje.'],
           note: 'Käännös käyttää Google Translate -palvelua ja toimii kaikissa selaimissa — tarvitaan vain internetyhteys. Viesti lähetetään käännöspalveluun vain, kun napautat sen käännöspainiketta, ei koskaan automaattisesti.' },
         { id: 'social', t: 'Pelaajat: profiili, kutsu, ohitus',
           b: ['Napauta ketä tahansa pelaajaa — pöydässä tai aulan listalla — avataksesi hänen korttinsa: profiili ja tilastot, kutsu peliisi tai ohita (hänen chat-viestinsä piilotetaan; ohituksen voi perua milloin tahansa). Vahvistuksen ennen kutsua/ohitusta voi ottaa käyttöön asetuksista.'] }
@@ -255,16 +255,18 @@ export const help = {
             ['F6 / F7 / F8', 'Manuaalinen \u00b7 Auto Check/Fold \u00b7 Auto Check/Call'],
             ['Alt+M / Alt+K / Alt+F', 'Manuaalinen \u00b7 Auto Check/Call \u00b7 Auto Check/Fold'],
             ['Alt+C / Alt+L / Alt+I', 'Chat \u00b7 Loki \u00b7 Todennäköisyyspaneeli'],
+            ['Alt+S', 'Asetukset — missä tahansa sovelluksessa, ei vain pelin aikana'],
             ['F11', 'Koko näyttö']],
           note: 'Pikanäppäimet vaativat fyysisen näppäimistön. Macilla F-näppäimet ohjaavat oletuksena mediaa: pidä Fn pohjassa (tai ota macOS-asetuksista käyttöön \u201dKäytä F1-, F2- yms. näppäimiä tavallisina funktionäppäiminä\u201d). iPhonella koko näyttöä rajoittaa iOS — sovelluksen asentaminen PWA:na antaa saman koko näytön kokemuksen.' },
         { id: 'webkeys', t: 'Verkon kirjainnäppäimet',
-          b: ['Verkkolaajennus: myös yhden kirjaimen näppäimet laukaisevat toiminnot, ja ne voi sitoa uudelleen kohdasta Lisäasetukset \u2192 Pikanäppäimet:'],
+          b: ['Verkkolaajennus: yhden kirjaimen näppäimet ja Alt+T käynnistävät myös toimintoja, ja ne kaikki voi määrittää uudelleen kohdassa Lisäasetukset → Pikanäppäimet:'],
           keys: [
             ['F', 'Fold'],
             ['C', 'Check / Call'],
             ['R', 'Raise'],
             ['A', 'All-In'],
             ['1 / 2 / 3', 'Bet 1/3 \u00b7 1/2 \u00b7 Pot'],
+            ['Alt+T', 'Tilastopaneeli'],
             ['Esc', 'Sulje päällimmäinen ikkuna (myös Androidin Takaisin-painike)']],
           note: 'Androidilla järjestelmän Takaisin-painike/ele sulkee ikkunat kuten Esc sen sijaan, että poistuisi pelistä (säädettävissä asetuksista). iOS:llä ei ole vastaavaa järjestelmäpainiketta — käytä jokaisen ikkunan \u2715-merkkiä.' }
       ]
