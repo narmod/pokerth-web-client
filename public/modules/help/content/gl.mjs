@@ -160,7 +160,7 @@ export const help = {
         { id: 'reactions', t: 'Reaccións de emoji',
           b: ['O botón de reaccións abre un selector con 30 reaccións animadas (\uD83C\uDF89, \uD83D\uDE02, \uD83D\uDE31, \uD83D\uDD25\u2026) que se reproducen cun efecto sobre o teu asento, visibles para toda a mesa — incluídos os xogadores do cliente de escritorio. As reaccións pódense desactivar de todo nas Opcións avanzadas.'] },
         { id: 'translate', t: 'Entender a todos',
-          b: ['Coa tradución do chat activada, cada mensaxe recibe un botón de tradución que a amosa no teu idioma, a través do tradutor do navegador. As abreviaturas habituais de mesa (gg, nh, utg\u2026) explícanse nunha suxestión ao pasar por riba — ambas as opcións están en Opcións avanzadas \u2192 Chat.'],
+          b: ['Coa tradución do chat activada, aparece un botón de tradución na liña baixo o punteiro — ou na que toques, en pantalla táctil — e mostra a mensaxe no teu idioma co tradutor do navegador. Pode amosarse sempre en todas as liñas desde Opcións avanzadas → Chat, onde tamén vive a axuda que explica as abreviaturas de mesa (gg, nh, utg…).'],
           note: 'A tradución usa o servizo Google Translate e funciona en calquera navegador — só fai falta conexión a internet. Unha mensaxe só se envía ao servizo de tradución cando tocas o seu botón de tradución, nunca automaticamente.' },
         { id: 'social', t: 'Xogadores: perfil, convidar, ignorar',
           b: ['Toca calquera xogador — na mesa ou na lista do vestíbulo — para abrir a súa ficha: perfil e estatísticas, convidalo á túa partida, ou ignoralo (as súas mensaxes de chat agóchanse; ignorar pódese desfacer en calquera momento). Pódese activar unha confirmación antes de convidar/ignorar nas opcións.'] }
@@ -255,16 +255,18 @@ export const help = {
             ['F6 / F7 / F8', 'Manual \u00b7 Auto Check/Fold \u00b7 Auto Check/Call'],
             ['Alt+M / Alt+K / Alt+F', 'Manual \u00b7 Auto Check/Call \u00b7 Auto Check/Fold'],
             ['Alt+C / Alt+L / Alt+I', 'Chat \u00b7 Rexistro \u00b7 Panel de probabilidades'],
+            ['Alt+S', 'Configuración — en calquera parte da aplicación, non só en partida'],
             ['F11', 'Pantalla completa']],
           note: 'Os atallos requiren un teclado físico. No Mac, as teclas F controlan os multimedia por defecto: mantén Fn premida (ou activa \u00abUsar as teclas F1, F2, etc. como teclas de función estándar\u00bb nos axustes do macOS). No iPhone, a pantalla completa está limitada polo iOS — instalar a aplicación como PWA dá a mesma experiencia de pantalla completa.' },
         { id: 'webkeys', t: 'Teclas de letra web',
-          b: ['Extensión web: as teclas dunha soa letra tamén disparan as accións e pódense reasignar en Opcións avanzadas \u2192 Atallos de teclado:'],
+          b: ['Extensión web: as teclas dunha soa letra e Alt+T tamén activan accións, e todas se poden reasignar en Opcións avanzadas → Atallos de teclado:'],
           keys: [
             ['F', 'Fold'],
             ['C', 'Check / Call'],
             ['R', 'Raise'],
             ['A', 'All-In'],
             ['1 / 2 / 3', 'Bet 1/3 \u00b7 1/2 \u00b7 Pot'],
+            ['Alt+T', 'Panel de estatísticas'],
             ['Esc', 'Pecha a xanela da fronte (tamén o botón Atrás de Android)']],
           note: 'En Android, o botón/xesto Atrás do sistema pecha as xanelas coma Esc, en vez de saír da partida (configurable nas opcións). O iOS non ten ningún botón de sistema equivalente — usa o \u2715 de cada xanela.' }
       ]

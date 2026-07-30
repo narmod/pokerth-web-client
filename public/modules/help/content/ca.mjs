@@ -160,7 +160,7 @@ export const help = {
         { id: 'reactions', t: 'Reaccions d\u2019emoji',
           b: ['El botó de reaccions obre un selector amb 30 reaccions animades (\uD83C\uDF89, \uD83D\uDE02, \uD83D\uDE31, \uD83D\uDD25\u2026) que es reprodueixen amb un efecte sobre el teu seient, visibles per a tota la taula — inclosos els jugadors del client d\u2019escriptori. Les reaccions es poden desactivar del tot a les Opcions avançades.'] },
         { id: 'translate', t: 'Entendre tothom',
-          b: ['Amb la traducció del xat activada, cada missatge rep un botó de traducció que el mostra en el teu idioma, mitjançant el traductor del navegador. Les abreviacions habituals de taula (gg, nh, utg\u2026) s\u2019expliquen en un consell en passar-hi per sobre — totes dues opcions són a Opcions avançades \u2192 Xat.'],
+          b: ['Amb la traducció del xat activada, apareix un botó de traducció a la línia sota el punter — o a la que toquis, en pantalla tàctil — i mostra el missatge en la teva llengua amb el traductor del navegador. Es pot mostrar sempre a totes les línies des d’Opcions avançades → Xat, on també viu el consell que explica les abreviatures de taula (gg, nh, utg…).'],
           note: 'La traducció fa servir el servei Google Translate i funciona en qualsevol navegador — només cal connexió a Internet. Un missatge només s\u2019envia al servei de traducció quan en toques el botó de traducció, mai automàticament.' },
         { id: 'social', t: 'Jugadors: perfil, convidar, ignorar',
           b: ['Toca qualsevol jugador — a la taula o a la llista del vestíbul — per obrir-ne la fitxa: perfil i estadístiques, convidar-lo a la teva partida, o ignorar-lo (els seus missatges de xat s\u2019amaguen; ignorar es pot desfer en qualsevol moment). Es pot activar una confirmació abans de convidar/ignorar a les opcions.'] }
@@ -255,16 +255,18 @@ export const help = {
             ['F6 / F7 / F8', 'Manual \u00b7 Auto Check/Fold \u00b7 Auto Check/Call'],
             ['Alt+M / Alt+K / Alt+F', 'Manual \u00b7 Auto Check/Call \u00b7 Auto Check/Fold'],
             ['Alt+C / Alt+L / Alt+I', 'Xat \u00b7 Registre \u00b7 Panell de probabilitats'],
+            ['Alt+S', 'Configuració — arreu de l’aplicació, no només en partida'],
             ['F11', 'Pantalla completa']],
           note: 'Les dreceres requereixen un teclat físic. Al Mac, les tecles F controlen els multimèdia per defecte: mantén Fn premuda (o activa \u00abUtilitza les tecles F1, F2, etc. com a tecles de funció estàndard\u00bb als paràmetres del macOS). A l\u2019iPhone, la pantalla completa està limitada per l\u2019iOS — instal\u00b7lar l\u2019aplicació com a PWA dona la mateixa experiència de pantalla completa.' },
         { id: 'webkeys', t: 'Tecles de lletra web',
-          b: ['Extensió web: les tecles d\u2019una sola lletra també disparen les accions i es poden reassignar a Opcions avançades \u2192 Dreceres de teclat:'],
+          b: ['Extensió web: les tecles d’una sola lletra i Alt+T també activen accions, i totes es poden reassignar a Opcions avançades → Dreceres de teclat:'],
           keys: [
             ['F', 'Fold'],
             ['C', 'Check / Call'],
             ['R', 'Raise'],
             ['A', 'All-In'],
             ['1 / 2 / 3', 'Bet 1/3 \u00b7 1/2 \u00b7 Pot'],
+            ['Alt+T', 'Plafó d’estadístiques'],
             ['Esc', 'Tanca la finestra del davant (també el botó Enrere d\u2019Android)']],
           note: 'A Android, el botó/gest Enrere del sistema tanca les finestres com Esc, en comptes de sortir de la partida (configurable a les opcions). L\u2019iOS no té cap botó de sistema equivalent — fes servir la \u2715 de cada finestra.' }
       ]

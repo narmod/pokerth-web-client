@@ -160,7 +160,7 @@ export const help = {
         { id: 'reactions', t: 'Emoji-reaktioner',
           b: ['Reaktionsknappen åbner en vælger med 30 animerede reaktioner (\uD83C\uDF89, \uD83D\uDE02, \uD83D\uDE31, \uD83D\uDD25\u2026), der afspilles med en effekt over din plads, synlige for hele bordet — også spillere på skrivebordsklienten. Reaktioner kan slås helt fra i Avancerede indstillinger.'] },
         { id: 'translate', t: 'Forstå alle',
-          b: ['Med chatoversættelse slået til får hver besked en oversættelsesknap, der viser den på dit sprog via browserens oversætter. Almindelige bordforkortelser (gg, nh, utg\u2026) forklares i et værktøjstip, når du peger på dem — begge indstillinger findes i Avancerede indstillinger \u2192 Chat.'],
+          b: ['Med chatoversættelse slået til vises en oversættelsesknap på linjen under musæmarkøren — eller på den linje, du trykker på, på en trykskærm — og viser beskeden på dit sprog med browserens oversætter. Den kan vises permanent på alle linjer under Avancerede indstillinger → Chat, hvor også værktøjstippet med de almindelige bordforkortelser (gg, nh, utg…) bor.'],
           note: 'Oversættelsen bruger Google Translate-tjenesten og virker i alle browsere — der kræves kun internetforbindelse. En besked sendes kun til oversættelsestjenesten, når du trykker på dens oversættelsesknap, aldrig automatisk.' },
         { id: 'social', t: 'Spillere: profil, invitér, ignorér',
           b: ['Tryk på en hvilken som helst spiller — ved bordet eller på lobbylisten — for at åbne vedkommendes kort: profil og statistik, invitér til dit spil, eller ignorér (chatbeskederne skjules; ignorering kan altid fortrydes). En bekræftelse før invitér/ignorér kan slås til i indstillingerne.'] }
@@ -255,16 +255,18 @@ export const help = {
             ['F6 / F7 / F8', 'Manuel \u00b7 Auto Check/Fold \u00b7 Auto Check/Call'],
             ['Alt+M / Alt+K / Alt+F', 'Manuel \u00b7 Auto Check/Call \u00b7 Auto Check/Fold'],
             ['Alt+C / Alt+L / Alt+I', 'Chat \u00b7 Log \u00b7 Oddspanel'],
+            ['Alt+S', 'Indstillinger — overalt i appen, ikke kun under et spil'],
             ['F11', 'Fuld skærm']],
           note: 'Genvejene kræver et fysisk tastatur. På Mac styrer F-tasterne medier som standard: hold Fn nede (eller slå \u201cBrug F1-, F2-taster osv. som standardfunktionstaster\u201d til i macOS-indstillingerne). På iPhone er fuld skærm begrænset af iOS — at installere appen som PWA giver den samme fuldskærmsoplevelse.' },
         { id: 'webkeys', t: 'Webbogstavtaster',
-          b: ['Webudvidelse: enkeltbogstavtaster udløser også handlingerne og kan omtildeles i Avancerede indstillinger \u2192 Tastaturgenveje:'],
+          b: ['Webudvidelse: enkeltbogstavstaster og Alt+T udløser også handlinger, og de kan alle omtildeles i Avancerede indstillinger → Tastaturgenveje:'],
           keys: [
             ['F', 'Fold'],
             ['C', 'Check / Call'],
             ['R', 'Raise'],
             ['A', 'All-In'],
             ['1 / 2 / 3', 'Bet 1/3 \u00b7 1/2 \u00b7 Pot'],
+            ['Alt+T', 'Statistikpanel'],
             ['Esc', 'Luk det forreste vindue (også Androids Tilbage-knap)']],
           note: 'På Android lukker systemets Tilbage-knap/-bevægelse vinduer som Esc i stedet for at forlade spillet (kan indstilles). iOS har ingen tilsvarende systemknap — brug \u2715 i hvert vindue.' }
       ]
