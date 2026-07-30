@@ -160,7 +160,7 @@ export const help = {
         { id: 'reactions', t: 'Jaustukų reakcijos',
           b: ['Reakcijų mygtukas atidaro parinkiklį su 30 animuotų reakcijų (\uD83C\uDF89, \uD83D\uDE02, \uD83D\uDE31, \uD83D\uDD25\u2026), kurios su efektu paleidžiamos virš tavo vietos, matomos visam stalui — įskaitant darbalaukio kliento žaidėjus. Reakcijas galima visiškai išjungti Išplėstinėse parinktyse.'] },
         { id: 'translate', t: 'Suprask visus',
-          b: ['Įjungus pokalbio vertimą kiekviena žinutė gauna vertimo mygtuką, kuris ją rodo tavo kalba per naršyklės vertėją. Dažnos stalo santrumpos (gg, nh, utg\u2026) paaiškinamos patarime užvedus — abi parinktys yra Išplėstinės parinktys \u2192 Pokalbis.'],
+          b: ['Įjungus pokalbių vertimą, vertimo mygtukas atsiranda eilutėje po žymekliu — arba toje, kurią bakstelsi jutikliniame ekrane — ir parodo žinutę tavo kalba naršyklės vertėju. Jį galima nuolat rodyti visose eilutėse per Papildomas parinktis → Pokalbiai, kur gyvena ir paaiškinimas apie įprastas stalo santrumpas (gg, nh, utg…).'],
           note: 'Vertimas naudoja Google Translate paslaugą ir veikia bet kurioje naršyklėje — reikia tik interneto ryšio. Žinutė vertimo paslaugai siunčiama tik tada, kai palieti jos vertimo mygtuką, niekada automatiškai.' },
         { id: 'social', t: 'Žaidėjai: profilis, kvietimas, ignoravimas',
           b: ['Paliesk bet kurį žaidėją — prie stalo ar fojė sąraše — kad atidarytum jo kortelę: profilis ir statistika, kvietimas į tavo partiją arba ignoravimas (jo pokalbio žinutės paslepiamos; ignoravimą bet kada gali atšaukti). Patvirtinimą prieš kvietimą/ignoravimą galima įjungti parinktyse.'] }
@@ -255,16 +255,18 @@ export const help = {
             ['F6 / F7 / F8', 'Rankinis \u00b7 Auto Check/Fold \u00b7 Auto Check/Call'],
             ['Alt+M / Alt+K / Alt+F', 'Rankinis \u00b7 Auto Check/Call \u00b7 Auto Check/Fold'],
             ['Alt+C / Alt+L / Alt+I', 'Pokalbis \u00b7 Žurnalas \u00b7 Tikimybių skydelis'],
+            ['Alt+S', 'Nustatymai — bet kur programoje, ne tik žaidimo metu'],
             ['F11', 'Visas ekranas']],
           note: 'Spartiesiems klavišams reikia fizinės klaviatūros. \u201eMac\u201c F klavišai pagal numatytuosius nustatymus valdo mediją: laikyk Fn (arba macOS nustatymuose įjunk \u201eNaudoti F1, F2 ir kt. klavišus kaip standartinius funkcinius klavišus\u201c). \u201eiPhone\u201c visą ekraną riboja iOS — programėlės įdiegimas kaip PWA suteikia tą pačią viso ekrano patirtį.' },
         { id: 'webkeys', t: 'Žiniatinklio raidžių klavišai',
-          b: ['Žiniatinklio plėtinys: vienos raidės klavišai taip pat paleidžia veiksmus ir gali būti perpriskirti Išplėstinės parinktys \u2192 Spartieji klavišai:'],
+          b: ['Žiniatinklio plėtinys: vienos raidės klavišai ir Alt+T taip pat vykdo veiksmus, o visus galima perskirti Papildomose parinktyse → Sparčiieji klavišai:'],
           keys: [
             ['F', 'Fold'],
             ['C', 'Check / Call'],
             ['R', 'Raise'],
             ['A', 'All-In'],
             ['1 / 2 / 3', 'Bet 1/3 \u00b7 1/2 \u00b7 Pot'],
+            ['Alt+T', 'Statistikos skydelis'],
             ['Esc', 'Uždaryti viršutinį langą (taip pat \u201eAndroid\u201c mygtukas Atgal)']],
           note: '\u201eAndroid\u201c sistemos mygtukas/gestas Atgal uždaro langus kaip Esc, užuot palikęs partiją (nustatoma parinktyse). iOS neturi atitinkamo sistemos mygtuko — naudok kiekvieno lango \u2715.' }
       ]
