@@ -160,7 +160,7 @@ export const help = {
         { id: 'reactions', t: 'Reacții emoji',
           b: ['Butonul de reacții deschide un selector cu 30 de reacții animate (\uD83C\uDF89, \uD83D\uDE02, \uD83D\uDE31, \uD83D\uDD25\u2026) care se redau cu efect deasupra locului tău, vizibile pentru toată masa — inclusiv jucătorii de pe clientul desktop. Reacțiile pot fi dezactivate complet în Opțiuni avansate.'] },
         { id: 'translate', t: 'Înțelege-i pe toți',
-          b: ['Cu traducerea chatului activată, fiecare mesaj primește un buton de traducere care îl afișează în limba ta, prin traducătorul browserului. Abrevierile comune de masă (gg, nh, utg\u2026) sunt explicate într-un tooltip la trecerea cursorului — ambele opțiuni se află în Opțiuni avansate \u2192 Chat.'],
+          b: ['Cu traducerea chatului activată, un buton de traducere apare pe linia de sub cursor — sau pe linia atinsă, pe ecran tactil — și arată mesajul în limba ta cu traducătorul navigatorului. Poate fi afișat permanent pe toate liniile din Opțiuni avansate → Chat, unde stă și indiciul care explică abrevierile obișnuite de la masă (gg, nh, utg…).'],
           note: 'Traducerea folosește serviciul Google Translate și funcționează în orice browser — e nevoie doar de conexiune la internet. Un mesaj este trimis serviciului de traducere doar când atingi butonul lui de traducere, niciodată automat.' },
         { id: 'social', t: 'Jucători: profil, invită, ignoră',
           b: ['Atinge orice jucător — la masă sau în lista din lobby — pentru a-i deschide fișa: profil și statistici, invită-l la partida ta sau ignoră-l (mesajele lui de chat sunt ascunse; ignorarea e reversibilă oricând). O confirmare înainte de invitare/ignorare poate fi activată din opțiuni.'] }
@@ -255,16 +255,18 @@ export const help = {
             ['F6 / F7 / F8', 'Manual \u00b7 Auto Check/Fold \u00b7 Auto Check/Call'],
             ['Alt+M / Alt+K / Alt+F', 'Manual \u00b7 Auto Check/Call \u00b7 Auto Check/Fold'],
             ['Alt+C / Alt+L / Alt+I', 'Chat \u00b7 Jurnal \u00b7 Panoul de șanse'],
+            ['Alt+S', 'Setări — oriunde în aplicație, nu doar în timpul unei partide'],
             ['F11', 'Ecran complet']],
           note: 'Scurtăturile necesită o tastatură fizică. Pe Mac, tastele F controlează implicit media: ține apăsat Fn (sau activează \u201eUtilizează tastele F1, F2 etc. ca taste funcționale standard\u201d în setările macOS). Pe iPhone, ecranul complet e limitat de iOS — instalarea aplicației ca PWA oferă aceeași experiență pe tot ecranul.' },
         { id: 'webkeys', t: 'Taste literă web',
-          b: ['Extensie web: tastele cu o singură literă declanșează și ele acțiunile și pot fi reasociate în Opțiuni avansate \u2192 Scurtături de tastatură:'],
+          b: ['Extensie web: tastele de o singură literă și Alt+T declanșează de asemenea acțiuni, iar toate pot fi reatribuite în Opțiuni avansate → Scurtături de tastatură:'],
           keys: [
             ['F', 'Fold'],
             ['C', 'Check / Call'],
             ['R', 'Raise'],
             ['A', 'All-In'],
             ['1 / 2 / 3', 'Bet 1/3 \u00b7 1/2 \u00b7 Pot'],
+            ['Alt+T', 'Panoul de statistici'],
             ['Esc', 'Închide fereastra din față (și butonul Înapoi pe Android)']],
           note: 'Pe Android, butonul/gestul Înapoi al sistemului închide ferestrele ca Esc, în loc să părăsească partida (configurabil din opțiuni). iOS nu are un buton de sistem echivalent — folosește \u2715 al fiecărei ferestre.' }
       ]

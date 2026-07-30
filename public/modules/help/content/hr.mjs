@@ -160,7 +160,7 @@ export const help = {
         { id: 'reactions', t: 'Emoji reakcije',
           b: ['Gumb za reakcije otvara birač s 30 animiranih reakcija (\uD83C\uDF89, \uD83D\uDE02, \uD83D\uDE31, \uD83D\uDD25\u2026) koje se reproduciraju s efektom iznad tvog mjesta, vidljive cijelom stolu — uključujući igrače na desktop klijentu. Reakcije se mogu potpuno isključiti u Naprednim opcijama.'] },
         { id: 'translate', t: 'Razumij sve',
-          b: ['S uključenim prijevodom chata svaka poruka dobiva gumb za prijevod koji je prikazuje na tvom jeziku, putem prevoditelja preglednika. Uobičajene kratice za stolom (gg, nh, utg\u2026) objašnjavaju se u oblačiću pri prelasku mišem — obje opcije nalaze se u Napredne opcije \u2192 Chat.'],
+          b: ['S uključenim prijevodom razgovora gumb za prijevod pojavljuje se u retku ispod pokazivača — ili u retku koji dodirneš na dodirnom zaslonu — i prikazuje poruku na tvom jeziku pomoću prevoditelja preglednika. Može se trajno prikazivati u svim recima u Napredne opcije → Razgovor, gdje živi i savjet koji objašnjava uobičajene kratice za stolom (gg, nh, utg…).'],
           note: 'Prijevod koristi uslugu Google Translate i radi u svakom pregledniku — potrebna je samo internetska veza. Poruka se šalje usluzi prijevoda tek kad dodirneš njezin gumb za prijevod, nikad automatski.' },
         { id: 'social', t: 'Igrači: profil, pozivanje, ignoriranje',
           b: ['Dodirni bilo kojeg igrača — za stolom ili na popisu predvorja — da otvoriš njegovu karticu: profil i statistike, pozivanje u svoju partiju ili ignoriranje (njegove poruke u chatu se sakrivaju; ignoriranje je uvijek opozivo). Potvrda prije pozivanja/ignoriranja može se uključiti u opcijama.'] }
@@ -255,16 +255,18 @@ export const help = {
             ['F6 / F7 / F8', 'Ručni \u00b7 Auto Check/Fold \u00b7 Auto Check/Call'],
             ['Alt+M / Alt+K / Alt+F', 'Ručni \u00b7 Auto Check/Call \u00b7 Auto Check/Fold'],
             ['Alt+C / Alt+L / Alt+I', 'Chat \u00b7 Dnevnik \u00b7 Ploča izgleda'],
+            ['Alt+S', 'Postavke — bilo gdje u aplikaciji, ne samo u igri'],
             ['F11', 'Puni zaslon']],
           note: 'Prečaci zahtijevaju fizičku tipkovnicu. Na Macu tipke F prema zadanim postavkama upravljaju multimedijom: drži Fn (ili u postavkama macOS-a uključi \u201eKoristi tipke F1, F2 itd. kao standardne funkcijske tipke\u201c). Na iPhoneu je puni zaslon ograničen iOS-om — instaliranje aplikacije kao PWA daje isto iskustvo punog zaslona.' },
         { id: 'webkeys', t: 'Web slovne tipke',
-          b: ['Web proširenje: tipke s jednim slovom također pokreću akcije i mogu se ponovno dodijeliti u Napredne opcije \u2192 Tipkovnički prečaci:'],
+          b: ['Web proširenje: jednoslovne tipke i Alt+T također pokreću radnje, a sve se mogu preraspodijeliti u Napredne opcije → Tipkovni prečaci:'],
           keys: [
             ['F', 'Fold'],
             ['C', 'Check / Call'],
             ['R', 'Raise'],
             ['A', 'All-In'],
             ['1 / 2 / 3', 'Bet 1/3 \u00b7 1/2 \u00b7 Pot'],
+            ['Alt+T', 'Ploča statistike'],
             ['Esc', 'Zatvori prednji prozor (i gumb Natrag na Androidu)']],
           note: 'Na Androidu sustavski gumb/gesta Natrag zatvara prozore poput Esc, umjesto da napusti partiju (podesivo u opcijama). iOS nema ekvivalentan sustavski gumb — koristi \u2715 svakog prozora.' }
       ]

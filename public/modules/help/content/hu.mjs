@@ -160,7 +160,7 @@ export const help = {
         { id: 'reactions', t: 'Emodzsi-reakciók',
           b: ['A reakciógomb 30 animált reakció választóját nyitja meg (\uD83C\uDF89, \uD83D\uDE02, \uD83D\uDE31, \uD83D\uDD25\u2026), amelyek effekttel játszódnak le az ülésed fölött, az egész asztal számára láthatóan — az asztali kliens játékosait is beleértve. A reakciók teljesen kikapcsolhatók a Speciális beállításokban.'] },
         { id: 'translate', t: 'Érts meg mindenkit',
-          b: ['Bekapcsolt csevegésfordítással minden üzenet fordítás gombot kap, amely a böngésző fordítóján keresztül a te nyelveden mutatja. A gyakori asztali rövidítéseket (gg, nh, utg\u2026) rámutatáskor buboréksúgó magyarázza — mindkét beállítás a Speciális beállítások \u2192 Csevegés alatt van.'],
+          b: ['Bekapcsolt csevegésfordítással a fordítás gomb a mutató alatti soron jelenik meg — vagy azon a soron, amelyre érintőképernyőn rákoppintasz — és a böngésző fordítójával mutatja az üzenetet a nyelveden. A Speciális beállítások → Csevegés alatt állandóan megjeleníthető minden soron; ott lakik a gyakori asztali rövidítéseket (gg, nh, utg…) magyarázó buborék is.'],
           note: 'A fordítás a Google Translate szolgáltatást használja, és minden böngészőben működik — csak internetkapcsolat kell. Egy üzenet csak akkor kerül a fordítószolgáltatáshoz, amikor megérinted a fordítás gombját, soha nem automatikusan.' },
         { id: 'social', t: 'Játékosok: profil, meghívás, mellőzés',
           b: ['Érints meg bármely játékost — az asztalnál vagy a lobbi listáján — a kártyája megnyitásához: profil és statisztikák, meghívás a játszmádba, vagy mellőzés (a csevegőüzenetei elrejtődnek; a mellőzés bármikor visszavonható). A meghívás/mellőzés előtti megerősítés a beállításokban bekapcsolható.'] }
@@ -255,16 +255,18 @@ export const help = {
             ['F6 / F7 / F8', 'Kézi \u00b7 Auto Check/Fold \u00b7 Auto Check/Call'],
             ['Alt+M / Alt+K / Alt+F', 'Kézi \u00b7 Auto Check/Call \u00b7 Auto Check/Fold'],
             ['Alt+C / Alt+L / Alt+I', 'Csevegés \u00b7 Napló \u00b7 Esélypanel'],
+            ['Alt+S', 'Beállítások — bárhol az alkalmazásban, nem csak játék közben'],
             ['F11', 'Teljes képernyő']],
           note: 'A gyorsbillentyűkhöz fizikai billentyűzet kell. Macen az F billentyűk alapból a médiát vezérlik: tartsd lenyomva az Fn-t (vagy kapcsold be a macOS beállításaiban az \u201eF1, F2 stb. billentyűk használata szabványos funkcióbillentyűként\u201d opciót). iPhone-on a teljes képernyőt az iOS korlátozza — az alkalmazás PWA-ként való telepítése ugyanazt a teljes képernyős élményt adja.' },
         { id: 'webkeys', t: 'Webes betűbillentyűk',
-          b: ['Webes kiterjesztés: az egybetűs billentyűk is kiváltják az akciókat, és átrendelhetők a Speciális beállítások \u2192 Billentyűparancsok alatt:'],
+          b: ['Webes kiegészítés: az egybetűs billentyűk és az Alt+T is akciókat indít, és mind átrendelhető a Speciális beállítások → Gyorsbillentyűk alatt:'],
           keys: [
             ['F', 'Fold'],
             ['C', 'Check / Call'],
             ['R', 'Raise'],
             ['A', 'All-In'],
             ['1 / 2 / 3', 'Bet 1/3 \u00b7 1/2 \u00b7 Pot'],
+            ['Alt+T', 'Statisztikapanel'],
             ['Esc', 'A legfelső ablak bezárása (az Android Vissza gombja is)']],
           note: 'Androidon a rendszer Vissza gombja/mozdulata az ablakokat zárja be, mint az Esc, ahelyett hogy kilépne a játszmából (a beállításokban konfigurálható). Az iOS-nek nincs megfelelő rendszergombja — használd minden ablak \u2715 jelét.' }
       ]
