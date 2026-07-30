@@ -1423,6 +1423,15 @@ const MAX_UPLOAD = 25 * 1024 * 1024; // 25 MB
 const SAFE_PATH = '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin';
 const PM2_NAME = process.env.PM2_NAME || 'pokerth-web';
 const UPDATE_LOG = path.join(os.tmpdir(), 'pokerth-web-update.log');
+// Version du code RÉELLEMENT en cours d'exécution, figée au démarrage. Le
+// tableau de bord lisait jusqu'ici package.json à chaque requête, donc sur le
+// disque : après une mise à jour statique (fichiers servis échangés, processus
+// intact) il annonçait la nouvelle version alors que proxy.js tournait encore
+// sur l'ancienne — et rien ne signalait l'écart. On garde donc les deux.
+const BOOT_VERSION = (function () {
+  try { return (JSON.parse(fs.readFileSync(path.join(__dirname, 'package.json'), 'utf8')).version) || ''; }
+  catch (e) { return ''; }
+})();
 // ── Détection du type d'installation (pm2 / docker / plain) ──
 // Le self-update doit s'adapter : pm2 restart n'existe pas dans un conteneur,
 // et une image Docker sans git ne peut pas se `git pull` elle-même.
@@ -2205,7 +2214,7 @@ function handleAdmin(req, res, reqPathOnly, query) {
     let version = '';
     try { version = (JSON.parse(fs.readFileSync(path.join(__dirname, 'package.json'), 'utf8')).version) || ''; } catch (e) {}
     let sockets = null; try { sockets = wss.clients.size; } catch (e) {}
-    return adminJson(res, 200, { ok: true, version: version, node: process.version, uptimeSec: Math.floor(process.uptime()), installKind: installKind(), gitUpdatable: GIT_UPDATABLE, sockets: sockets, players: Object.keys(statsStore).length, resetPeriod: STATS_RESET_PERIOD, modes: appModes(), showLoginTitle: !!_adminConfig.showLoginTitle, defaultTheme: _adminConfig.defaultTheme || '', defaults: _adminConfig.defaults || {}, loginDefaults: _loginDefaults(false), proxyCfg: _adminConfig.proxyCfg || {}, logLevel: _logLevelName(), maxClients: _maxClients(), fd: _fdInfo(), tableDefaults: _adminConfig.tableDefaults || {}, tableNames: _adminConfig.tableNames || {}, serverName: _adminConfig.serverName || '', serverTagline: _adminConfig.serverTagline || '', restartAt: (_restartAt > Date.now() ? _restartAt : null), restartKind: (_restartAt > Date.now() ? _restartKind : null) });
+    return adminJson(res, 200, { ok: true, version: version, runningVersion: BOOT_VERSION, node: process.version, uptimeSec: Math.floor(process.uptime()), installKind: installKind(), gitUpdatable: GIT_UPDATABLE, sockets: sockets, players: Object.keys(statsStore).length, resetPeriod: STATS_RESET_PERIOD, modes: appModes(), showLoginTitle: !!_adminConfig.showLoginTitle, defaultTheme: _adminConfig.defaultTheme || '', defaults: _adminConfig.defaults || {}, loginDefaults: _loginDefaults(false), proxyCfg: _adminConfig.proxyCfg || {}, logLevel: _logLevelName(), maxClients: _maxClients(), fd: _fdInfo(), tableDefaults: _adminConfig.tableDefaults || {}, tableNames: _adminConfig.tableNames || {}, serverName: _adminConfig.serverName || '', serverTagline: _adminConfig.serverTagline || '', restartAt: (_restartAt > Date.now() ? _restartAt : null), restartKind: (_restartAt > Date.now() ? _restartKind : null) });
   }
   // ── Erreurs JS remontées par les clients (clé maître uniquement) ────────
   if (reqPathOnly === '/admin/errors') {

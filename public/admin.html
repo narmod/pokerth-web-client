@@ -1275,8 +1275,13 @@
       var el=$('status');
       if(!d.ok){ el.innerHTML='<div class="empty err">'+(d.error||'error')+'</div>'; return; }
       el.innerHTML='';
-      var items=[['Build version',d.version||'\u2014'],['Install',(d.installKind||'\u2014')+(d.gitUpdatable===false?' (self-update off)':'')],['Node',d.node||'\u2014'],['Uptime',fmtUptime(d.uptimeSec)],['Connected sockets',d.sockets==null?'\u2014':String(d.sockets)],['Players on board',String(d.players)],['Reset period',d.resetPeriod||'\u2014']];
-      items.forEach(function(it){ var r=document.createElement('div');r.className='srow';var s=document.createElement('span');s.textContent=it[0];var b=document.createElement('b');b.textContent=it[1];r.appendChild(s);r.appendChild(b);el.appendChild(r); });
+      // Fichiers servis vs code en cours d'exécution : après une mise à jour
+      // statique les deux diffèrent jusqu'au redémarrage, et tout ce qui touche
+      // à proxy.js reste inactif pendant ce temps. On le dit franchement.
+      var _stale=(d.runningVersion && d.version && d.runningVersion!==d.version);
+      var _vtxt=(d.version||'\u2014')+(_stale?(' \u2014 proxy still running '+d.runningVersion+', restart needed'):'');
+      var items=[['Build version',_vtxt],['Install',(d.installKind||'\u2014')+(d.gitUpdatable===false?' (self-update off)':'')],['Node',d.node||'\u2014'],['Uptime',fmtUptime(d.uptimeSec)],['Connected sockets',d.sockets==null?'\u2014':String(d.sockets)],['Players on board',String(d.players)],['Reset period',d.resetPeriod||'\u2014']];
+      items.forEach(function(it){ var r=document.createElement('div');r.className='srow';var s=document.createElement('span');s.textContent=it[0];var b=document.createElement('b');b.textContent=it[1];if(it[0]==='Build version'&&_stale)b.className='err';r.appendChild(s);r.appendChild(b);el.appendChild(r); });
       // Only explicit (re)loads sync the editable controls, so auto-refresh never
       // resets the period dropdown or modes toggles while you're using them.
       if(syncCfg){
@@ -1309,7 +1314,7 @@
   // presentation: the same numbers read as a share of the whole (donut) and as
   // an ordered list (ranking), because the two answer different questions —
   // "is anything dominant?" versus "what exactly is in the tail?".
-  var _envData={}, _envSince=0, _envView='combo';
+  var _envData={}, _envSince=0, _envView='combo', _envKnown=false;
   function _envFmt(n){ try{ return Number(n||0).toLocaleString(); }catch(e){ return String(n||0); } }
   // Palette lisible sur les deux thèmes admin; la dernière teinte sert au
   // regroupement « autres », volontairement neutre.
@@ -1370,7 +1375,16 @@
     var since=$('envSince');
     if(since) since.textContent=_envSince?('since '+new Date(_envSince).toLocaleDateString()):'';
     var r=_envSlices(_envData[_envView]);
-    if(!r.total){ box.innerHTML='<div class="empty">Nothing recorded yet \u2014 counting starts with the next visitors.</div>'; return; }
+    if(!r.total){
+      // Un vide a deux causes très différentes : le proxy ne sait pas encore
+      // enregistrer (champ absent de la réponse, donc processus antérieur à la
+      // fonctionnalité), ou il sait mais personne n'est encore passé. Les
+      // confondre coûte une demi-heure de recherche.
+      box.innerHTML = _envKnown
+        ? '<div class="empty">Nothing recorded yet — counting started here, and one ping is sent per browser session. Visits excluded by “Exclude my own visits” never appear.</div>'
+        : '<div class="empty">This proxy is not recording it yet — the running process predates the feature. Restart it (pm2 restart pokerth-web); a static update alone swaps the served files, not the process.</div>';
+      return;
+    }
     var rows=r.slices.map(function(s){
       var pc=(s.n/r.total)*100;
       return '<div class="envrow"><span class="dot" style="background:'+s.c+'"></span>'
@@ -1421,7 +1435,9 @@
         var rows=[['pokerth.net','pokerthnet'],['LAN / dedicated','lan'],['Offline (bots)','offline']];
         md.innerHTML = rows.map(function(rw){ return '<div class="srow"><span>'+rw[0]+'</span><b>'+fmt(tm[rw[1]])+' today · '+fmt(am[rw[1]])+' total</b></div>'; }).join('');
       }
-      _envData=d.env||{}; _envSince=d.envSince||0; renderEnv();
+      // Champ absent = proxy antérieur à la fonctionnalité ; objet vide = rien
+      // à compter encore. Voir renderEnv().
+      _envKnown=(d.env!==undefined); _envData=d.env||{}; _envSince=d.envSince||0; renderEnv();
       var nv=$('trafNvR');
       if(nv){
         var wins=[['Today',d.today],['Last 7 days',d.week],['Last 30 days',d.month],['All time',d.allTime]];
