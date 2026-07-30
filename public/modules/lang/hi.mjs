@@ -443,7 +443,7 @@ export const strings = {
     quickCreateLabel:'खिलाड़ी:',
     quickCreateBtn:'बनाएं',
     logPanelTitle:'लॉग',
-    logCopied:'लॉग कॉपी किया गया', logEmpty:'लॉग खाली है', gnBtn:'वैश्विक सूचना (एडमिन)',gnSent:'वैश्विक सूचना सभी खिलाड़ियों को भेज दी गई।',gnRejected:'सर्वर ने वैश्विक सूचना अस्वीकार कर दी।',advChatClearLogin:'कनेक्ट करते समय लॉबी चैट साफ़ करें', advGuardRaise:'अनुमत सीमा से बाहर की दांव राशि की पुष्टि करें', raiseAdjusted:'राशि समायोजित — पुष्टि के लिए फिर दबाएँ', advChatTrAlways:'अनुवाद बटन हमेशा दिखाएँ (अन्यथा केवल संकेतित या टैप की गई पंक्ति पर)', logExportTitle:'लॉग निर्यात करें', chatClearTitle:'चैट साफ़ करें',
+    logCopied:'लॉग कॉपी किया गया', logEmpty:'लॉग खाली है', gnBtn:'वैश्विक सूचना (एडमिन)',gnSent:'वैश्विक सूचना सभी खिलाड़ियों को भेज दी गई।',gnRejected:'सर्वर ने वैश्विक सूचना अस्वीकार कर दी।',advChatClearLogin:'कनेक्ट करते समय लॉबी चैट साफ़ करें', advGuardRaise:'अनुमत सीमा से बाहर की दांव राशि की पुष्टि करें', raiseAdjusted:'राशि समायोजित — पुष्टि के लिए फिर दबाएँ', advChatTrAlways:'अनुवाद बटन हमेशा दिखाएँ (अन्यथा केवल संकेतित या टैप की गई पंक्ति पर)', advCommunitySuggest:'मेरे सामुदायिक खेलों में खिलाड़ी सुझाएँ', suggestPlayers:'खिलाड़ी सुझाएँ', logExportTitle:'लॉग निर्यात करें', chatClearTitle:'चैट साफ़ करें',
     jumpLatest:'नवीनतम पर जाएँ',
     chatTranslateBtn:'अनुवाद करें', winMove:'ले जाएँ', loupeToggle:'आवर्धक ×2',
     sendTooltip:'भेजें', resizeTooltip:'आकार बदलने के लिए खींचें', loadingOffline:'ऑफ़लाइन मोड लोड हो रहा है…',

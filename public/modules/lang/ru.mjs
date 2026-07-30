@@ -623,7 +623,7 @@ export const strings = {
     quickCreateLabel: 'Игроки:',
     quickCreateBtn: 'Создать',
     logPanelTitle: 'Журнал',
-    logCopied:'Журнал скопирован', logEmpty:'Журнал пуст', gnBtn:'Общее объявление (админ)',gnSent:'Общее объявление отправлено всем игрокам.',gnRejected:'Сервер отклонил общее объявление.',advChatClearLogin:'Очищать чат лобби при подключении', advGuardRaise:'Подтверждать ставку вне допустимого диапазона', raiseAdjusted:'Сумма скорректирована — нажмите ещё раз для подтверждения', advChatTrAlways:'Кнопка перевода всегда видна (иначе только на строке под курсором или нажатой)', logExportTitle:'Экспорт журнала', chatClearTitle:'Очистить чат',
+    logCopied:'Журнал скопирован', logEmpty:'Журнал пуст', gnBtn:'Общее объявление (админ)',gnSent:'Общее объявление отправлено всем игрокам.',gnRejected:'Сервер отклонил общее объявление.',advChatClearLogin:'Очищать чат лобби при подключении', advGuardRaise:'Подтверждать ставку вне допустимого диапазона', raiseAdjusted:'Сумма скорректирована — нажмите ещё раз для подтверждения', advChatTrAlways:'Кнопка перевода всегда видна (иначе только на строке под курсором или нажатой)', advCommunitySuggest:'Предлагать игроков в моих играх сообщества', suggestPlayers:'Предложить игроков', logExportTitle:'Экспорт журнала', chatClearTitle:'Очистить чат',
     jumpLatest:'К самым новым',
     chatTranslateBtn:'Перевести', winMove:'Переместить', loupeToggle:'Лупа ×2',
     sendTooltip:'Отправить', resizeTooltip:'Потяните, чтобы изменить размер', loadingOffline:'Загрузка автономного режима…',

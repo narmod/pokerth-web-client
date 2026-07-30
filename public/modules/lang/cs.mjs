@@ -621,7 +621,7 @@ export const strings = {
     quickCreateLabel: 'Hráči:',
     quickCreateBtn: 'Vytvořit',
     logPanelTitle: 'Záznam',
-    logCopied:'Protokol zkopírován', logEmpty:'Protokol je prázdný', gnBtn:'Globální oznámení (admin)',gnSent:'Globální oznámení bylo odesláno všem hráčům.',gnRejected:'Server globální oznámení odmítl.',advChatClearLogin:'Při připojení vymazat chat v lobby', advGuardRaise:'Potvrdit sázku mimo povolený rozsah', raiseAdjusted:'Částka upravena — potvrďte dalším stiskem', advChatTrAlways:'Tlačítko překladu vždy viditelné (jinak jen na najetém nebo klepnutém řádku)', logExportTitle:'Exportovat protokol', chatClearTitle:'Vymazat chat',
+    logCopied:'Protokol zkopírován', logEmpty:'Protokol je prázdný', gnBtn:'Globální oznámení (admin)',gnSent:'Globální oznámení bylo odesláno všem hráčům.',gnRejected:'Server globální oznámení odmítl.',advChatClearLogin:'Při připojení vymazat chat v lobby', advGuardRaise:'Potvrdit sázku mimo povolený rozsah', raiseAdjusted:'Částka upravena — potvrďte dalším stiskem', advChatTrAlways:'Tlačítko překladu vždy viditelné (jinak jen na najetém nebo klepnutém řádku)', advCommunitySuggest:'Navrhovat hráče v mých komunitních hrách', suggestPlayers:'Navrhnout hráče', logExportTitle:'Exportovat protokol', chatClearTitle:'Vymazat chat',
     jumpLatest:'Přejít na nejnovější',
     chatTranslateBtn:'Přeložit', winMove:'Přesunout', loupeToggle:'Lupa ×2',
     sendTooltip:'Odeslat', resizeTooltip:'Tažením změníte velikost', loadingOffline:'Načítání režimu offline…',

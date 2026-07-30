@@ -355,6 +355,7 @@ function openAdvancedOptions() {
   sync('adv-communitycontent', 'community_content', true);
   sync('adv-splash', 'splash', true);          // parité QML : DisableSplashScreenOnStartup=0
   sync('adv-community', 'show_community', true);
+  sync('adv-communitysuggest', 'community_suggest', false); // defaut QML : showCommunitySuggest = false
   sync('adv-focusbet', 'focus_bet', false);
   sync('adv-noemoji', 'chat_noemoji', false);
   sync('adv-chatabbrev', 'chat_abbrev', true);   // glossaire d'abréviations (gg, nh…), actif par défaut
@@ -1110,7 +1111,7 @@ function _cfgSyncEnabled() { return _advGet('cfg_sync', true); }
 // type pth_cfg_sync_ts, jetons, caches).
 var _CFG_WEB_SYNC_KEYS = [
   // Toggles web-only (via setAdvOpt → pth_<clé>)
-  'pth_show_community', 'pth_chat_noemoji', 'pth_chat_ts', 'pth_chat_clear_login', 'pth_chat_tr_always', 'pth_guard_raise',
+  'pth_show_community', 'pth_chat_noemoji', 'pth_chat_ts', 'pth_chat_clear_login', 'pth_chat_tr_always', 'pth_guard_raise', 'pth_community_suggest',
   'pth_assist', 'pth_show_odds', 'pth_hands_btn', 'pth_voice',
   'pth_haptic', 'pth_display_bb', 'pth_table_zoom', 'pth_zoom_follow',
   'pth_community_content', 'pth_sound_vol',
@@ -6455,33 +6456,33 @@ const App = (() => {
     // de blinds (hausse au temps, toutes les 5 min) ; MC/WEC doublent après
     // N mains. delayBetweenHands = 7 pour toutes (comme le QML).
     _communityVorlagen: [
-      { name: 'BBC Step 1', startCash: 3000, firstSmallBlind: 15,
+      { name: 'BBC Step 1', suggestType: 'step1', startCash: 3000, firstSmallBlind: 15,
         raiseOnHands: false, raiseEveryHands: 11, raiseEveryMinutes: 5, playerActionTimeout: 10,
         blinds: [20, 25, 30, 40, 50, 60, 80, 100, 120, 150, 200, 250, 300, 400, 500,
                  600, 800, 1000, 1200, 1500, 2000, 2500, 3000, 4000, 5000, 6000, 8000,
                  10000, 12000, 15000] },
-      { name: 'BBC Step 2', startCash: 4000, firstSmallBlind: 20,
+      { name: 'BBC Step 2', suggestType: 'step2', startCash: 4000, firstSmallBlind: 20,
         raiseOnHands: false, raiseEveryHands: 11, raiseEveryMinutes: 5, playerActionTimeout: 10,
         blinds: [25, 30, 40, 50, 60, 80, 100, 120, 150, 200, 250, 300, 400, 500, 600,
                  800, 1000, 1200, 1500, 2000, 2500, 3000, 4000, 5000, 6000, 8000, 10000,
                  12000, 15000, 20000] },
-      { name: 'BBC Step 3', startCash: 5000, firstSmallBlind: 25,
+      { name: 'BBC Step 3', suggestType: 'step3', startCash: 5000, firstSmallBlind: 25,
         raiseOnHands: false, raiseEveryHands: 11, raiseEveryMinutes: 5, playerActionTimeout: 10,
         blinds: [30, 40, 50, 60, 80, 100, 120, 150, 200, 250, 300, 400, 500, 600, 800,
                  1000, 1200, 1500, 2000, 2500, 3000, 4000, 5000, 6000, 8000, 10000,
                  12000, 15000, 20000, 25000] },
-      { name: 'BBC Step 4', startCash: 10000, firstSmallBlind: 50,
+      { name: 'BBC Step 4', suggestType: 'step4', startCash: 10000, firstSmallBlind: 50,
         raiseOnHands: false, raiseEveryHands: 11, raiseEveryMinutes: 5, playerActionTimeout: 10,
         blinds: [60, 80, 100, 120, 150, 200, 250, 300, 400, 500, 600, 800, 1000, 1200,
                  1500, 2000, 2500, 3000, 4000, 5000, 6000, 8000, 10000, 12000, 15000,
                  20000, 25000, 30000, 40000, 50000] },
-      { name: 'Monthly Cup', startCash: 10000, firstSmallBlind: 50,
+      { name: 'Monthly Cup', titleCommand: 'mcup', startCash: 10000, firstSmallBlind: 50,
         raiseOnHands: true, raiseEveryHands: 16, raiseEveryMinutes: 5, playerActionTimeout: 10,
         blinds: [] },
-      { name: 'Monthly Cup Final', startCash: 10000, firstSmallBlind: 50,
+      { name: 'Monthly Cup Final', titleCommand: 'mcupfinal', startCash: 10000, firstSmallBlind: 50,
         raiseOnHands: true, raiseEveryHands: 22, raiseEveryMinutes: 5, playerActionTimeout: 12,
         blinds: [] },
-      { name: 'WEC', startCash: 10000, firstSmallBlind: 50,
+      { name: 'WEC', suggestType: 'wec', startCash: 10000, firstSmallBlind: 50,
         raiseOnHands: true, raiseEveryHands: 22, raiseEveryMinutes: 5, playerActionTimeout: 12,
         blinds: [] },
       // Ajouté par sp0ck dans le QML 2.1.4. Réglages officiels des finales
@@ -6492,7 +6493,7 @@ const App = (() => {
       { name: 'WEC Monthly Final', startCash: 10000, firstSmallBlind: 50,
         raiseOnHands: true, raiseEveryHands: 25, raiseEveryMinutes: 5, playerActionTimeout: 15,
         blinds: [] },
-      { name: 'WEC Grand Final', startCash: 10000, firstSmallBlind: 50,
+      { name: 'WEC Grand Final', suggestType: 'wec', startCash: 10000, firstSmallBlind: 50,
         raiseOnHands: true, raiseEveryHands: 35, raiseEveryMinutes: 5, playerActionTimeout: 25,
         blinds: [] }
     ],
@@ -6526,6 +6527,7 @@ const App = (() => {
         };
       }
       var p = this._communityVorlagen[idx - 1];
+      this._activeVorlage = p;
       var nm = g('cf-name'); if (nm) nm.value = p.name;
       var ne = g('cf-name-err'); if (ne) ne.style.display = 'none';
       setv('cf-players', 10);
@@ -6550,6 +6552,7 @@ const App = (() => {
     // Restauration des valeurs d'avant vorlage (sans resynchroniser — les
     // appelants s'en chargent pour éviter toute récursion).
     _restoreVorlage() {
+      this._activeVorlage = null;
       if (!this._vorlageSnap) return;
       var g = function(id){ return document.getElementById(id); };
       var setv = function(id, v){ var e = g(id); if (e) { e.value = v; e.dispatchEvent(new Event('input')); } };
@@ -6997,6 +7000,13 @@ const App = (() => {
         allowSpectators: allowSpec,
         password:        tablePass,
       };
+      // Parite QML 2.1.5 : le type de suggestion vient EXPLICITEMENT du preset
+      // choisi, jamais du nom de table (librement editable). Sans preset
+      // communautaire, pas de suggestion.
+      try {
+        var _av = App._activeVorlage;
+        window._botSuggest.setCreatedSuggestType((_av && _av.suggestType) ? _av.suggestType : '');
+      } catch (eSg) {}
       send(MSG.buildCreateGame(name, nplayers, blind, stack, timeout, opts));
       // Entrainement : « Creer une table » lance directement la partie —
       // startWithBots() est declenche par le hook JoinGameAck des que gId
@@ -8025,6 +8035,7 @@ window._syncGlobalNoticeBtn = _syncGlobalNoticeBtn;
 
 function toggleLobbyChat() {
   _syncGlobalNoticeBtn();
+  try { if (window._syncSuggestBtn) window._syncSuggestBtn(); } catch (e) {}
   // Chat intégré au lobby (colonne en wide, sous les tables en compact)
   // → plus de fenêtre flottante ni d'overlay. No-op dans les deux modes.
   return;
@@ -9542,7 +9553,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.5-web.9'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.5-web.10'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

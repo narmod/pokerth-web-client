@@ -137,6 +137,10 @@ function onJoinGameAck(sub) {
     if (asb) asb.style.display = S.amGameAdmin ? '' : 'none';
     var acbm = document.getElementById('admin-close-mob');
     if (acbm) acbm.style.display = S.amGameAdmin ? '' : 'none';
+    // Bouton « Suggest players » : mêmes conditions que GameWaitPage.canSuggest
+    // (voir ui/botsuggest.mjs). On resynchronise ici parce que le statut
+    // d'administrateur et le type de la partie ne sont connus qu'à ce moment.
+    try { if (window._syncSuggestBtn) window._syncSuggestBtn(); } catch (e) {}
     // Kick button: shown only to admins (server ignores non-admin
     // KickPlayerRequest anyway, but exposing it would be confusing).
     var akb = document.getElementById('admin-kick-btn');

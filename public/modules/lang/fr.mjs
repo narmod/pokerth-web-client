@@ -376,7 +376,7 @@ export const strings = {
     quickCreateBody:'Aucune table trouv\u00e9e. Combien de joueurs\u00a0?',
     quickCreateLabel:'Joueurs',
     quickCreateBtn:'Cr\u00e9er',
-    logPanelTitle:'Journal', logCopied:'Journal copié', logEmpty:'Journal vide', gnBtn:'Annonce globale (admin)',gnSent:'L\u2019annonce globale a été envoyée à tous les joueurs.',gnRejected:'Le serveur a refusé l\u2019annonce globale.',advChatClearLogin:'Vider le chat du lobby à la connexion', advGuardRaise:'Confirmer un montant de mise hors des bornes autorisées', raiseAdjusted:'Montant ajusté — appuyez à nouveau pour valider', advChatTrAlways:'Bouton de traduction toujours visible (sinon seulement sur la ligne survolée ou tapée)', logExportTitle:'Exporter le journal',
+    logPanelTitle:'Journal', logCopied:'Journal copié', logEmpty:'Journal vide', gnBtn:'Annonce globale (admin)',gnSent:'L\u2019annonce globale a été envoyée à tous les joueurs.',gnRejected:'Le serveur a refusé l\u2019annonce globale.',advChatClearLogin:'Vider le chat du lobby à la connexion', advGuardRaise:'Confirmer un montant de mise hors des bornes autorisées', raiseAdjusted:'Montant ajusté — appuyez à nouveau pour valider', advChatTrAlways:'Bouton de traduction toujours visible (sinon seulement sur la ligne survolée ou tapée)', advCommunitySuggest:'Proposer des joueurs dans mes parties communautaires', suggestPlayers:'Proposer des joueurs', logExportTitle:'Exporter le journal',
     jumpLatest:'Aller au plus récent',
     chatTranslateBtn:'Traduire', winMove:'Déplacer', loupeToggle:'Loupe ×2',
     sendTooltip:'Envoyer', resizeTooltip:'Glisser pour redimensionner', loadingOffline:'Chargement du mode hors-ligne…',

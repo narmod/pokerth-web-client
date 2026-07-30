@@ -555,6 +555,7 @@ function onAvatarImageChosen(input) {
     '/modules/ui/debuglog.mjs',
     '/modules/ui/livescroll.mjs',
     '/modules/ui/chat.mjs',
+    '/modules/ui/botsuggest.mjs',
     '/modules/chat/abbrev.mjs',
     '/modules/ui/player-popup.mjs',
     '/modules/ui/lobby.mjs',
@@ -1530,7 +1531,7 @@ function onAvatarImageChosen(input) {
 
   <!-- Lobby chat -->
   <div id="lobby-chat-panel" style="display:none;flex-direction:column;max-height:min(200px,28dvh)">
-    <div class="g-chat-panel-header"><span style="font-size:0.65rem;color:var(--gold-dim);letter-spacing:0.15em;text-transform:uppercase">Chat</span><span style="display:flex;gap:2px;align-items:center"><button type="button" id="l-gn-btn" onclick="App.globalNoticePrompt()" title="Global notice (admin)" data-i18n-title="gnBtn" aria-label="Global notice (admin)" data-i18n-aria="gnBtn" style="display:none;background:none;border:none;color:var(--gold-dim);cursor:pointer;font-size:0.9rem;padding:0 4px">📢</button><button onclick="clearChatPanel('lobby')" title="Effacer le chat" data-i18n-title="chatClearTitle" style="background:none;border:none;color:var(--gold-dim);cursor:pointer;font-size:0.9rem;padding:0 4px">🗑️</button><button onclick="toggleLobbyChat()" style="background:none;border:none;color:var(--text);cursor:pointer;font-size:0.85rem;padding:0 4px">X</button></span></div>
+    <div class="g-chat-panel-header"><span style="font-size:0.65rem;color:var(--gold-dim);letter-spacing:0.15em;text-transform:uppercase">Chat</span><span style="display:flex;gap:2px;align-items:center"><button type="button" id="l-gn-btn" onclick="App.globalNoticePrompt()" title="Global notice (admin)" data-i18n-title="gnBtn" aria-label="Global notice (admin)" data-i18n-aria="gnBtn" style="display:none;background:none;border:none;color:var(--gold-dim);cursor:pointer;font-size:0.9rem;padding:0 4px">📢</button><button type="button" id="l-suggest-btn" onclick="window._suggestPlayers()" title="Suggest players" data-i18n-title="suggestPlayers" aria-label="Suggest players" data-i18n-aria="suggestPlayers" style="display:none;background:none;border:none;color:var(--gold-dim);cursor:pointer;font-size:0.9rem;padding:0 4px">👥</button><button onclick="clearChatPanel('lobby')" title="Effacer le chat" data-i18n-title="chatClearTitle" style="background:none;border:none;color:var(--gold-dim);cursor:pointer;font-size:0.9rem;padding:0 4px">🗑️</button><button onclick="toggleLobbyChat()" style="background:none;border:none;color:var(--text);cursor:pointer;font-size:0.85rem;padding:0 4px">X</button></span></div>
     <div class="chat-msgs" id="chat" style="flex:1;min-height:50px;max-height:120px;overflow-y:auto;padding:5px 10px;background:var(--field-bg)"></div>
     <div id="l-chat-emoji-panel" class="chat-emoji-panel" style="display:none"></div>
     <div class="chat-input" style="border-top:1px solid var(--border);flex-shrink:0">
@@ -2236,6 +2237,7 @@ function onAvatarImageChosen(input) {
 <script type="module" src="modules/ui/debuglog.mjs"></script>
 <script type="module" src="modules/ui/livescroll.mjs"></script>
 <script type="module" src="modules/ui/chat.mjs"></script>
+<script type="module" src="modules/ui/botsuggest.mjs"></script>
 <script type="module" src="modules/chat/abbrev.mjs"></script>
 <script type="module" src="modules/ui/player-popup.mjs"></script>
 <script type="module" src="modules/ui/lobby.mjs"></script>
@@ -2673,6 +2675,7 @@ if ('serviceWorker' in navigator) {
       </details>
       <details class="adv-fold"><summary class="adv-sec"><span class="adv-sec-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="9" r="3"/><path d="M3.5 19a5.5 5.5 0 0 1 11 0"/><path d="M15.5 6.5a3 3 0 0 1 0 5.4M17 13.6a5.5 5.5 0 0 1 3.5 5.4"/></svg></span><span data-i18n="advSecCommunity">Community</span></summary>
       <label class="adv-row"><input type="checkbox" id="adv-community" onchange="setAdvOpt('show_community',this.checked)"><span data-i18n="advShowCommunity">Show Ranking entry</span></label>
+      <label class="adv-row"><input type="checkbox" id="adv-communitysuggest" onchange="setAdvOpt('community_suggest',this.checked);try{window._syncSuggestBtn()}catch(e){}"><span data-i18n="advCommunitySuggest">Suggest players in my own community games</span></label>
       <label class="adv-row"><input type="checkbox" id="adv-polls" onchange="setAdvOpt('polls',this.checked);try{_pollRefresh()}catch(e){}"><span data-i18n="advPolls">Take part in product polls</span><em class="adv-webtag">web</em></label>
       <div class="adv-row"><span data-i18n="advDefCommunity">Default community</span><div class="sel-wrap adv-sel"><select id="adv-defcommunity" onchange="setDefaultCommunity(this.value)"><option value="pth">PokerTH</option><option value="bbc">BBC</option><option value="wec">WEC</option></select><span class="sel-arr">▾</span></div></div>
       </details>
