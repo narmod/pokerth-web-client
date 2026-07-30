@@ -160,7 +160,7 @@ export const help = {
         { id: 'reactions', t: 'Réactions emoji',
           b: ['Le bouton de réaction ouvre un sélecteur de 30 réactions animées (\uD83C\uDF89, \uD83D\uDE02, \uD83D\uDE31, \uD83D\uDD25\u2026) qui se jouent avec un effet au-dessus de ton siège, visibles de toute la table — y compris des joueurs sur le client de bureau. Les réactions se désactivent entièrement dans les Options avancées.'] },
         { id: 'translate', t: 'Comprendre tout le monde',
-          b: ['Avec la traduction du chat activée, chaque message reçoit un bouton de traduction qui l\u2019affiche dans ta langue, via le traducteur du navigateur. Les abréviations courantes de table (gg, nh, utg\u2026) sont expliquées dans une infobulle au survol — les deux options vivent dans Options avancées \u2192 Chat.'],
+          b: ['Avec la traduction du chat activ\u00e9e, un bouton de traduction appara\u00eet sur la ligne sous le pointeur \u2014 ou sur la ligne que tu touches, sur \u00e9cran tactile \u2014 et affiche ce message dans ta langue via le traducteur du navigateur. Il peut rester visible en permanence sur toutes les lignes depuis Options avanc\u00e9es \u2192 Chat, o\u00f9 vit aussi l\u2019infobulle qui explique les abr\u00e9viations courantes de table (gg, nh, utg\u2026).'],
           note: 'La traduction utilise le service Google Translate et fonctionne dans tous les navigateurs — il faut juste une connexion internet. Un message n\u2019est envoyé au service de traduction que lorsque tu touches son bouton de traduction, jamais automatiquement.' },
         { id: 'social', t: 'Joueurs : profil, inviter, ignorer',
           b: ['Touche n\u2019importe quel joueur — à la table ou dans la liste du lobby — pour ouvrir sa fiche : profil et statistiques, l\u2019inviter à ta partie, ou l\u2019ignorer (ses messages de chat sont masqués ; ignorer est réversible à tout moment). Une confirmation avant inviter/ignorer peut être activée dans les options.'] }
@@ -255,16 +255,18 @@ export const help = {
             ['F6 / F7 / F8', 'Manuel \u00b7 Auto Check/Fold \u00b7 Auto Check/Call'],
             ['Alt+M / Alt+K / Alt+F', 'Manuel \u00b7 Auto Check/Call \u00b7 Auto Check/Fold'],
             ['Alt+C / Alt+L / Alt+I', 'Chat \u00b7 Historique \u00b7 Panneau des chances'],
+            ['Alt+S', 'R\u00e9glages \u2014 partout dans l\u2019application, pas seulement en partie'],
             ['F11', 'Plein écran']],
           note: 'Les raccourcis exigent un clavier physique. Sur Mac, les touches F pilotent les médias par défaut : maintiens Fn (ou active « Utiliser les touches F1, F2, etc. comme touches de fonction standard » dans les réglages macOS). Sur iPhone, le plein écran est limité par iOS — installer l\u2019application en PWA donne la même expérience plein écran.' },
         { id: 'webkeys', t: 'Touches lettres du web',
-          b: ['Extension web : des touches d\u2019une seule lettre déclenchent aussi les actions et se réassignent dans Options avancées \u2192 Raccourcis clavier :'],
+          b: ['Extension web : les touches d\u2019une seule lettre et Alt+T d\u00e9clenchent aussi les actions, et toutes se r\u00e9assignent dans Options avanc\u00e9es \u2192 Raccourcis clavier :'],
           keys: [
             ['F', 'Fold'],
             ['C', 'Check / Call'],
             ['R', 'Raise'],
             ['A', 'All-In'],
             ['1 / 2 / 3', 'Bet 1/3 \u00b7 1/2 \u00b7 Pot'],
+            ['Alt+T', 'Panneau de statistiques'],
             ['Échap', 'Fermer la fenêtre au premier plan (aussi le bouton Retour Android)']],
           note: 'Sur Android, le bouton/geste Retour du système ferme les fenêtres comme Échap au lieu de quitter la partie (configurable dans les options). iOS n\u2019a pas de bouton système équivalent — utilise le \u2715 de chaque fenêtre.' }
       ]

@@ -164,7 +164,7 @@ export const help = {
         { id: 'reactions', t: 'Emoji reactions',
           b: ['The reaction button opens a picker of 30 animated reactions (\uD83C\uDF89, \uD83D\uDE02, \uD83D\uDE31, \uD83D\uDD25\u2026) that play with an effect above your seat, visible to everyone at the table \u2014 including players on the desktop client. Reactions can be disabled entirely in Advanced options.'] },
         { id: 'translate', t: 'Understanding everyone',
-          b: ['With chat translation enabled, each message gets a translate button that renders it in your language, using the browser\u2019s built-in translator. Common table abbreviations (gg, nh, utg\u2026) are explained in a tooltip when you hover them \u2014 both options live in Advanced options \u2192 Chat.'],
+          b: ['With chat translation enabled, a translate button appears on the line under your pointer \u2014 or on the line you tap, on a touch screen \u2014 and renders that message in your language using the browser\u2019s built-in translator. It can be shown permanently on every line in Advanced options \u2192 Chat, where the tooltip explaining common table abbreviations (gg, nh, utg\u2026) also lives.'],
           note: 'Translation uses the Google Translate service and works in every browser \u2014 it just needs an internet connection. A message is only sent to the translation service when you tap its translate button, never automatically.' },
         { id: 'social', t: 'Players: profile, invite, ignore',
           b: ['Tap any player \u2014 at the table or in the lobby list \u2014 to open their card: profile and stats, invite them to your game, or ignore them (their chat messages are hidden; ignoring is reversible at any time). A confirmation before invite/ignore can be enabled in the options.'] }
@@ -259,16 +259,18 @@ export const help = {
             ['F6 / F7 / F8', 'Manual \u00b7 Auto Check/Fold \u00b7 Auto Check/Call'],
             ['Alt+M / Alt+K / Alt+F', 'Manual \u00b7 Auto Check/Call \u00b7 Auto Check/Fold'],
             ['Alt+C / Alt+L / Alt+I', 'Chat \u00b7 Game log \u00b7 Odds panel'],
+            ['Alt+S', 'Settings \u2014 anywhere in the app, not only during a game'],
             ['F11', 'Fullscreen']],
           note: 'Shortcuts need a physical keyboard. On a Mac, the F-keys default to media controls: hold Fn (or enable \u201cUse F1, F2, etc. as standard function keys\u201d in macOS settings). On iPhone, fullscreen is limited by iOS \u2014 installing the app as a PWA gives the same full-screen experience.' },
         { id: 'webkeys', t: 'Web letter keys',
-          b: ['As a web extension, single-letter keys also trigger actions and can be re-bound in Advanced options \u2192 Keyboard shortcuts:'],
+          b: ['As a web extension, single-letter keys and Alt+T also trigger actions, and every one of them can be re-bound in Advanced options \u2192 Keyboard shortcuts:'],
           keys: [
             ['F', 'Fold'],
             ['C', 'Check / Call'],
             ['R', 'Raise'],
             ['A', 'All-In'],
             ['1 / 2 / 3', 'Bet 1/3 \u00b7 1/2 \u00b7 Pot'],
+            ['Alt+T', 'Statistics panel'],
             ['Esc', 'Close the topmost window (also the Android Back button)']],
           note: 'On Android, the system Back button/gesture closes windows like Escape instead of leaving the game (configurable in the options). iOS has no equivalent system button \u2014 use the \u2715 of each window.' }
       ]

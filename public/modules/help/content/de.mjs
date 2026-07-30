@@ -160,7 +160,7 @@ export const help = {
         { id: 'reactions', t: 'Emoji-Reaktionen',
           b: ['Die Reaktions-Schaltfläche öffnet eine Auswahl von 30 animierten Reaktionen (\uD83C\uDF89, \uD83D\uDE02, \uD83D\uDE31, \uD83D\uDD25\u2026), die mit einem Effekt über deinem Sitz abgespielt werden, sichtbar für den ganzen Tisch — auch für Spieler am Desktop-Client. Reaktionen lassen sich in den Erweiterten Optionen komplett abschalten.'] },
         { id: 'translate', t: 'Alle verstehen',
-          b: ['Mit aktivierter Chat-Übersetzung erhält jede Nachricht eine Übersetzen-Schaltfläche, die sie über den Übersetzer des Browsers in deiner Sprache anzeigt. Gängige Tisch-Abkürzungen (gg, nh, utg\u2026) werden beim Überfahren in einem Tooltip erklärt — beide Optionen finden sich in Erweiterte Optionen \u2192 Chat.'],
+          b: ['Bei aktivierter Chat-\u00dcbersetzung erscheint das \u00dcbersetzen-Symbol auf der Zeile unter dem Mauszeiger \u2014 oder auf der Zeile, die du antippst \u2014 und zeigt die Nachricht mit dem Browser-\u00dcbersetzer in deiner Sprache. Unter Erweiterte Optionen \u2192 Chat l\u00e4sst es sich dauerhaft auf allen Zeilen einblenden; dort liegt auch der Tooltip, der die \u00fcblichen Tischk\u00fcrzel (gg, nh, utg\u2026) erkl\u00e4rt.'],
           note: 'Die Übersetzung nutzt den Google-Translate-Dienst und funktioniert in jedem Browser — sie braucht nur eine Internetverbindung. Eine Nachricht wird nur dann an den Übersetzungsdienst gesendet, wenn du ihre Übersetzen-Schaltfläche antippst, nie automatisch.' },
         { id: 'social', t: 'Spieler: Profil, Einladen, Ignorieren',
           b: ['Tippe einen beliebigen Spieler an — am Tisch oder in der Lobby-Liste — um seine Karte zu öffnen: Profil und Statistiken, ihn zu deinem Spiel einladen oder ihn ignorieren (seine Chat-Nachrichten werden ausgeblendet; Ignorieren ist jederzeit umkehrbar). Eine Bestätigung vor Einladen/Ignorieren lässt sich in den Optionen aktivieren.'] }
@@ -255,16 +255,18 @@ export const help = {
             ['F6 / F7 / F8', 'Manuell \u00b7 Auto Check/Fold \u00b7 Auto Check/Call'],
             ['Alt+M / Alt+K / Alt+F', 'Manuell \u00b7 Auto Check/Call \u00b7 Auto Check/Fold'],
             ['Alt+C / Alt+L / Alt+I', 'Chat \u00b7 Spielprotokoll \u00b7 Chancen-Panel'],
+            ['Alt+S', 'Einstellungen \u2014 \u00fcberall in der App, nicht nur im Spiel'],
             ['F11', 'Vollbild']],
           note: 'Tastenkürzel brauchen eine physische Tastatur. Auf dem Mac steuern die F-Tasten standardmäßig Medien: Halte Fn (oder aktiviere \u201eF1, F2 usw. als Standard-Funktionstasten verwenden\u201c in den macOS-Einstellungen). Auf dem iPhone ist Vollbild durch iOS eingeschränkt — die Installation als PWA liefert dieselbe Vollbild-Erfahrung.' },
         { id: 'webkeys', t: 'Web-Buchstabentasten',
-          b: ['Als Web-Erweiterung lösen auch einzelne Buchstabentasten Aktionen aus und lassen sich in Erweiterte Optionen \u2192 Tastenkürzel neu belegen:'],
+          b: ['Web-Erweiterung: Einzelbuchstaben und Alt+T l\u00f6sen ebenfalls Aktionen aus, und alle lassen sich unter Erweiterte Optionen \u2192 Tastenk\u00fcrzel neu belegen:'],
           keys: [
             ['F', 'Fold'],
             ['C', 'Check / Call'],
             ['R', 'Raise'],
             ['A', 'All-In'],
             ['1 / 2 / 3', 'Bet 1/3 \u00b7 1/2 \u00b7 Pot'],
+            ['Alt+T', 'Statistik-Panel'],
             ['Esc', 'Das oberste Fenster schließen (auch die Android-Zurück-Taste)']],
           note: 'Auf Android schließt die System-Zurück-Taste/-Geste Fenster wie Escape, statt das Spiel zu verlassen (in den Optionen einstellbar). iOS hat keine vergleichbare Systemtaste — nutze das \u2715 jedes Fensters.' }
       ]
