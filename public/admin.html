@@ -462,7 +462,9 @@
         <button id="schedCancel" class="use danger" style="display:none">Cancel scheduled restart</button>
       </div>
       <div class="card">
-        <div class="boardhead"><h2 style="margin:0">Recent logs</h2><button id="refreshLogs" class="use">Refresh</button></div>
+        <div class="boardhead"><h2 style="margin:0">Recent logs</h2><div style="display:flex;align-items:center;gap:8px"><span class="muted">Verbosity</span><select id="logQuick" style="width:130px"><option value="">(default)</option><option value="quiet">quiet</option><option value="normal">normal</option><option value="verbose">verbose</option></select><button id="refreshLogs" class="use">Refresh</button></div></div>
+        <div id="logQuickMsg" class="msg"></div>
+        <div class="muted" style="margin:2px 0 6px">quiet logs connections, disconnections and errors only — no per-message line, so far less written to disk under load. Applied live, no restart.</div>
         <pre id="logs" class="logs"></pre>
       </div>
     </div>
@@ -1184,7 +1186,8 @@
         if($('srvTagline') && typeof d.serverTagline==='string') $('srvTagline').value=d.serverTagline;
         if($('loginTitle')) $('loginTitle').value=(d.showLoginTitle?'1':'0');
         if($('discordHook') && typeof d.discordChatWebhookUrl==='string') $('discordHook').value=d.discordChatWebhookUrl;
-        if(d.proxyCfg && typeof d.proxyCfg==='object'){ var P=d.proxyCfg; if($('pxHosts'))$('pxHosts').value=(Array.isArray(P.allowedHosts)?P.allowedHosts.join('\n'):''); if($('pxGrace'))$('pxGrace').value=(typeof P.graceSec==='number'?P.graceSec:''); if($('pxGap'))$('pxGap').value=(typeof P.connGapMs==='number'?P.connGapMs:''); if($('pxPorts'))$('pxPorts').value=(Array.isArray(P.allowedPorts)?P.allowedPorts.join('\n'):''); if($('pxLog'))$('pxLog').value=(typeof P.logLevel==='string'?P.logLevel:''); if($('pxMax'))$('pxMax').value=(typeof P.maxClients==='number'?P.maxClients:''); }
+        _pxLoaded=true;
+        if(d.proxyCfg && typeof d.proxyCfg==='object'){ var P=d.proxyCfg; if($('pxHosts'))$('pxHosts').value=(Array.isArray(P.allowedHosts)?P.allowedHosts.join('\n'):''); if($('pxGrace'))$('pxGrace').value=(typeof P.graceSec==='number'?P.graceSec:''); if($('pxGap'))$('pxGap').value=(typeof P.connGapMs==='number'?P.connGapMs:''); if($('pxPorts'))$('pxPorts').value=(Array.isArray(P.allowedPorts)?P.allowedPorts.join('\n'):''); if($('pxLog'))$('pxLog').value=(typeof P.logLevel==='string'?P.logLevel:''); if($('logQuick'))$('logQuick').value=(typeof P.logLevel==='string'?P.logLevel:''); if($('pxMax'))$('pxMax').value=(typeof P.maxClients==='number'?P.maxClients:''); }
       }
       var sn=$('schedNow'), sc=$('schedCancel');
       if(sn){ if(d.restartAt){ sn.textContent='Scheduled: '+(d.restartKind==='restart'?'restart only':'update + restart')+' at '+new Date(d.restartAt).toLocaleString(); if(sc) sc.style.display=''; } else { sn.textContent='Nothing scheduled.'; if(sc) sc.style.display='none'; } }
@@ -1323,6 +1326,9 @@
   function srvTick(){ if(document.hidden||!srvOn()) return; loadStatus(false); loadLogs(); }
   function srvStart(){ srvStop(); if(srvBusy||!srvOn()) return; srvTimer=setInterval(srvTick,5000); }
   document.addEventListener('visibilitychange',function(){ if(document.hidden) srvStop(); else srvStart(); });
+  // Vrai des que /admin/status a rempli les champs du proxy : garde-fou avant
+  // toute ecriture reconstruite depuis le formulaire.
+  var _pxLoaded=false;
   function loadLogs(){ api('/admin/logs').then(function(r){return r.json();}).then(function(d){ var p=$('logs'); p.textContent=(d.lines||[]).join('\n'); p.scrollTop=p.scrollHeight; }).catch(function(){}); }
   $('refreshLogs').addEventListener('click', loadLogs);
   $('savePeriod').addEventListener('click', function(){
@@ -1366,10 +1372,31 @@
       .then(function(r){return r.json();}).then(function(d){ if(d&&d.ok){ m.textContent='Saved.'; m.className='msg ok'; } else { m.textContent='Failed: '+((d&&d.error)||'error'); m.className='msg err'; } })
       .catch(function(){ m.textContent='Network error.'; m.className='msg err'; });
   }); })();
-  (function(){ var sp=$('savePx'); if(!sp) return; sp.addEventListener('click', function(){
+  // Le serveur REMPLACE tout le bloc proxyCfg a chaque POST : un envoi partiel
+  // effacerait hotes, ports, grace, gap et max clients. Toute ecriture repart
+  // donc des champs du formulaire, y compris quand seule la verbosite change.
+  function pxPayload(){
     var hosts=($('pxHosts')?$('pxHosts').value:'').split(/[\n,]/).map(function(s){return s.trim();}).filter(Boolean);
     var ports=($('pxPorts')?$('pxPorts').value:'').split(/[\n,]/).map(function(s){return s.trim();}).filter(Boolean);
-    var P={ allowedHosts:hosts, allowedPorts:ports, graceSec:($('pxGrace')?$('pxGrace').value.trim():''), connGapMs:($('pxGap')?$('pxGap').value.trim():''), logLevel:($('pxLog')?$('pxLog').value:''), maxClients:($('pxMax')?$('pxMax').value.trim():'') };
+    return { allowedHosts:hosts, allowedPorts:ports, graceSec:($('pxGrace')?$('pxGrace').value.trim():''), connGapMs:($('pxGap')?$('pxGap').value.trim():''), logLevel:($('pxLog')?$('pxLog').value:''), maxClients:($('pxMax')?$('pxMax').value.trim():'') };
+  }
+  // Verbosite depuis l'en-tete des logs : meme reglage que Proxy > Log
+  // verbosity, applique a chaud (aucun redemarrage).
+  (function(){ var q=$('logQuick'); if(!q) return; q.addEventListener('change', function(){
+    var m=$('logQuickMsg');
+    if(!_pxLoaded){ m.textContent='Settings not loaded yet \u2014 open the panel again.'; m.className='msg err'; return; }
+    if($('pxLog')) $('pxLog').value=q.value;
+    var P=pxPayload();
+    m.textContent='Applying\u2026'; m.className='msg';
+    api('/admin/config',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({proxyCfg:P,token:tok()})})
+      .then(function(r){return r.json();}).then(function(d){
+        if(d&&d.ok){ m.textContent='Verbosity: '+(q.value||'default')+'.'; m.className='msg ok'; loadLogs(); }
+        else { m.textContent='Failed: '+((d&&d.error)||'error'); m.className='msg err'; }
+      })
+      .catch(function(){ m.textContent='Network error.'; m.className='msg err'; });
+  }); })();
+  (function(){ var sp=$('savePx'); if(!sp) return; sp.addEventListener('click', function(){
+    var P=pxPayload();
     var m=$('pxMsg');
     api('/admin/config',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({proxyCfg:P,token:tok()})})
       .then(function(r){return r.json();}).then(function(d){ if(d&&d.ok){ m.textContent='Saved.'; m.className='msg ok'; } else { m.textContent='Failed: '+((d&&d.error)||'error'); m.className='msg err'; } })
