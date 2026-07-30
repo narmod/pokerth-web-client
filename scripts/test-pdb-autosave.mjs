@@ -4,8 +4,8 @@
 // (localStorage, a fake directory handle, a fake _buildPdb) is enough to drive
 // it end to end. Mirrors the desktop client's log.cpp behaviour:
 //   LogInterval 0 = after every action, 1 = after every hand, 2 = after every
-//   game; LogOnOff cuts everything; the file is written in place when the
-//   browser supports the exclusive writable mode.
+//   game; LogOnOff cuts everything; the writer asks for an exclusive lock when
+//   the browser supports it and falls back to the default writer otherwise.
 // Run: node scripts/test-pdb-autosave.mjs
 
 const store = new Map();
@@ -124,8 +124,8 @@ ok((await M.pickFolder()) === true, 'pickFolder: accepted');
 await sleep(20);
 ok(fs.created[0] === 'pokerth-log-2026-07-30_120000.pdb', 'pickFolder: file created with the session name');
 ok(fs.opts[0] && fs.opts[0].mode === 'exclusive' && fs.opts[0].keepExistingData === true,
-   'write: exclusive mode requested first (same inode, like the SQLite connection)');
-ok(M._state.inPlace === true, 'write: in-place flag set when exclusive is supported');
+   'write: exclusive lock requested first (one writer at a time)');
+ok(M._state.exclusive === true, 'write: exclusive flag set when the lock is granted');
 ok(fs.writes[0] && fs.writes[0].type === 'write' && fs.writes[0].position === 0,
    'write: starts at offset 0');
 ok(fs.truncates[0] === 6, 'write: truncated to the exact byte length');
@@ -165,7 +165,7 @@ await M.pickFolder();
 await sleep(20);
 ok(fs.opts.length === 2 && fs.opts[1] === null,
    'fallback: retries with the standard writable when exclusive is refused');
-ok(M._state.inPlace === false, 'fallback: in-place flag cleared (atomic replace path)');
+ok(M._state.exclusive === false, 'fallback: exclusive flag cleared (default siloed writer)');
 ok(fs.closes === 1, 'fallback: still exactly one close');
 
 // 10) Action burst is coalesced, never one write per action

@@ -17,9 +17,14 @@
 // est créé dès le début d'une partie (équivalent Log::init) et un flush forcé
 // a lieu à la fermeture de l'onglet (équivalent Log::flushLog).
 //
-// Écriture en place quand le navigateur le permet (createWritable en mode
-// « exclusive » : même fichier, même inode, comme la connexion SQLite du client
-// de bureau) ; sinon repli sur le remplacement atomique par fichier temporaire.
+// Limite de plateforme : un navigateur ne sait pas modifier un fichier de
+// l'utilisateur en place. createWritable() écrit dans un fichier d'échange et
+// remplace la cible au close() — le contenu n'est donc jamais partiel, mais le
+// fichier est bien remplacé, pas complété comme le fait la connexion SQLite du
+// client de bureau. Un lecteur externe doit rouvrir le .pdb après chaque
+// changement plutôt que de le garder ouvert. Le mode « exclusive » est demandé
+// en premier : il ne change pas ce mécanisme mais garantit un seul flux
+// d'écriture (deux onglets ne s'écrasent plus).
 //
 // Options avancées : pth_pdb_auto (ON par défaut ; sans dossier choisi le
 // module reste inerte) et pth_log_on (LogOnOff : coupe toute écriture).
@@ -117,7 +122,7 @@ const _state = {
   lastName: null,     // dernier fichier écrit
   lastAt: 0,          // horodatage de la dernière écriture réussie
   err: null,          // dernière erreur (nom court)
-  inPlace: null,      // true = écriture dans le fichier cible (mode exclusive)
+  exclusive: null,    // true = flux d'écriture verrouillé (mode « exclusive »)
 };
 
 let _handle = null;         // FileSystemDirectoryHandle en cache mémoire
@@ -175,20 +180,18 @@ function _snapshot() {
   };
 }
 
-// Ouvre un flux d'écriture en privilégiant le mode « exclusive » : le
-// navigateur écrit alors DANS le fichier cible (pas de fichier temporaire, pas
-// de remplacement), donc l'inode ne change jamais — c'est ce que fait la
-// connexion SQLite du client de bureau, et c'est ce qu'attend un lecteur
-// externe qui garde le fichier ouvert. Repli silencieux sur le mode standard
-// là où l'option n'existe pas.
+// Ouvre un flux d'écriture en demandant d'abord le verrou exclusif (Chrome 121+,
+// option non standard) : un seul flux à la fois, donc deux onglets du client ne
+// peuvent plus produire deux versions concurrentes du même fichier. Repli
+// silencieux sur le mode par défaut (« siloed ») là où l'option n'existe pas.
 async function _openWritable(fh) {
   try {
     const w = await fh.createWritable({ keepExistingData: true, mode: 'exclusive' });
-    _state.inPlace = true;
+    _state.exclusive = true;
     return w;
   } catch (_e) {
     const w = await fh.createWritable();
-    _state.inPlace = false;
+    _state.exclusive = false;
     return w;
   }
 }
@@ -214,8 +217,8 @@ async function _writeNow(force) {
   const name = _fileName();
   const fh = await dir.getFileHandle(name, { create: true });
   const w = await _openWritable(fh);
-  // Écriture depuis l'offset 0 puis troncature : indispensable en mode
-  // « exclusive » où le contenu précédent est conservé et pourrait dépasser.
+  // Écriture depuis l'offset 0 puis troncature : keepExistingData conserve le
+  // contenu précédent, qui pourrait être plus long que la nouvelle base.
   await w.write({ type: 'write', position: 0, data: bytes });
   try { await w.truncate(bytes.length); } catch (_e) { /* mode standard : déjà tronqué */ }
   await w.close();
