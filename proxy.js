@@ -1961,6 +1961,23 @@ function handleAdmin(req, res, reqPathOnly, query) {
     let sockets = null; try { sockets = wss.clients.size; } catch (e) {}
     return adminJson(res, 200, { ok: true, version: version, node: process.version, uptimeSec: Math.floor(process.uptime()), installKind: installKind(), gitUpdatable: GIT_UPDATABLE, sockets: sockets, players: Object.keys(statsStore).length, resetPeriod: STATS_RESET_PERIOD, modes: appModes(), showLoginTitle: !!_adminConfig.showLoginTitle, defaultTheme: _adminConfig.defaultTheme || '', defaults: _adminConfig.defaults || {}, loginDefaults: _loginDefaults(false), proxyCfg: _adminConfig.proxyCfg || {}, logLevel: _logLevelName(), maxClients: _maxClients(), fd: _fdInfo(), tableDefaults: _adminConfig.tableDefaults || {}, tableNames: _adminConfig.tableNames || {}, serverName: _adminConfig.serverName || '', serverTagline: _adminConfig.serverTagline || '', restartAt: (_restartAt > Date.now() ? _restartAt : null), restartKind: (_restartAt > Date.now() ? _restartKind : null) });
   }
+  // ── Erreurs JS remontées par les clients (clé maître uniquement) ────────
+  if (reqPathOnly === '/admin/errors') {
+    if (req.method === 'GET') {
+      if (!adminAuthed(query)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
+      res._rlNoPenalty = true;
+      return adminJson(res, 200, _errSnapshot());
+    }
+    if (req.method === 'POST') {
+      return readJsonBody(req, function (d) {
+        if (!adminAuthed(query, d && d.token)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
+        if (d && d.sig) { _errGroups.delete(String(d.sig)); return adminJson(res, 200, { ok: true, deleted: 1 }); }
+        if (d && d.clear) { _errGroups.clear(); return adminJson(res, 200, { ok: true, cleared: true }); }
+        return adminJson(res, 400, { ok: false });
+      });
+    }
+    res.writeHead(405); res.end('Method not allowed'); return;
+  }
   // ── Inventaire des connexions en cours (clé maître uniquement) ──────────
   // Lecture seule ; POST { kick: <id> } ferme une connexion. Volontairement hors
   // des clés déléguées : on y voit des pseudos et des IP (masquées).
@@ -3566,6 +3583,42 @@ const httpServer = http.createServer((req, res) => {
     res.writeHead(404); res.end('studio.html missing'); return;
   }
 
+  // ── Remontée d'erreurs JS par les clients (public, non authentifié) ─────
+  // Envoyée par modules/errreport.mjs. Ouverte à tous par nature : une erreur
+  // de démarrage survient justement avant toute connexion. D'où les garde-fous
+  // — corps plafonné, 5 entrées par requête, 30 requêtes/heure/IP, regroupement
+  // par signature. L'IP est masquée avant d'être stockée, jamais conservée en
+  // clair. Réponse toujours 204 : le client n'a rien à en faire.
+  if (reqPathOnly === '/clienterr') {
+    if (req.method !== 'POST') { res.writeHead(405); res.end('Method not allowed'); return; }
+    const eip = clientIp(req);
+    if (!_errRateOk(eip)) { res.writeHead(429, { 'Cache-Control': 'no-store' }); res.end(); return; }
+    readRawBody(req, 8 * 1024, function (buf) {
+      res.writeHead(204, { 'Cache-Control': 'no-store' }); res.end();
+      if (!buf) return;
+      let d = null;
+      try { d = JSON.parse(buf.toString('utf8')); } catch (e) { return; }
+      if (!d || !Array.isArray(d.items)) return;
+      const meta = {
+        ver: String(d.ver || '').slice(0, 24),
+        mode: String(d.mode || '').slice(0, 24),
+        path: String(d.path || '').slice(0, 120),
+        ua: String((req.headers && req.headers['user-agent']) || '').slice(0, 180),
+        ip: _maskIp(eip),
+      };
+      d.items.slice(0, 5).forEach(function (it) {
+        if (!it || !it.msg) return;
+        _errRecord(meta, {
+          msg: String(it.msg).slice(0, 300),
+          src: String(it.src || '').slice(0, 200),
+          line: parseInt(it.line, 10) || 0,
+          col: parseInt(it.col, 10) || 0,
+          stack: String(it.stack || '').slice(0, 600),
+        });
+      });
+    });
+    return;
+  }
   // ── Version marker for the in-app update banner ──
   // Returns the newest mtime across the core assets. A deploy (git pull)
   // bumps these file mtimes, so the page can poll this cheaply and offer a
@@ -3943,6 +3996,62 @@ function _scheduleConn(fn) {
 function _heartbeat() { this.isAlive = true; }
 
 const _sessions = new Map();              // sid → S (session vivante)
+// ── Erreurs JavaScript remontées par les navigateurs (/clienterr) ─────────
+// Regroupées par signature (message + première ligne de pile) : un bug qui se
+// déclenche mille fois occupe une entrée avec un compteur, pas mille lignes.
+// En mémoire seulement, comme LOG_RING — un redémarrage repart de zéro. Ce
+// sont des indices de débogage, pas des archives.
+const ERR_MAX_GROUPS = 200;
+const _errGroups = new Map();            // signature → groupe
+// Garde-fou par IP : 30 requêtes par heure. Le client se limite déjà (5
+// signatures par session, 10 s entre deux envois) ; ceci vise le navigateur
+// trafiqué ou le script qui viendrait marteler l'endpoint, ouvert à tous.
+const ERR_RATE_MAX = 30, ERR_RATE_WINDOW = 3600000;
+const _errRate = new Map();              // ip → { n, reset }
+function _errRateOk(ip) {
+  const now = Date.now();
+  let r = _errRate.get(ip);
+  if (!r || r.reset < now) { r = { n: 0, reset: now + ERR_RATE_WINDOW }; _errRate.set(ip, r); }
+  if (_errRate.size > 5000) {            // purge paresseuse
+    _errRate.forEach(function (v, k) { if (v.reset < now) _errRate.delete(k); });
+  }
+  r.n++;
+  return r.n <= ERR_RATE_MAX;
+}
+function _errSig(it) {
+  const first = String(it.stack || '').split('\n')[1] || (it.src + ':' + it.line);
+  return String(it.msg || '').slice(0, 120) + '|' + String(first).trim().slice(0, 120);
+}
+function _errRecord(meta, it) {
+  const sig = _errSig(it);
+  let g = _errGroups.get(sig);
+  if (!g) {
+    if (_errGroups.size >= ERR_MAX_GROUPS) {   // évince le groupe le plus ancien
+      let oldestKey = null, oldest = Infinity;
+      _errGroups.forEach(function (v, k) { if (v.last < oldest) { oldest = v.last; oldestKey = k; } });
+      if (oldestKey !== null) _errGroups.delete(oldestKey);
+    }
+    g = { sig: sig, msg: it.msg, src: it.src, line: it.line, col: it.col, stack: it.stack,
+          first: Date.now(), last: 0, count: 0, vers: {}, uas: {}, ips: {}, modes: {} };
+    _errGroups.set(sig, g);
+  }
+  g.last = Date.now();
+  g.count++;
+  g.path = meta.path || g.path;
+  const bump = function (o, k) { if (!k) return; if (Object.keys(o).length < 12 || o[k]) o[k] = (o[k] || 0) + 1; };
+  bump(g.vers, meta.ver); bump(g.uas, meta.ua); bump(g.ips, meta.ip); bump(g.modes, meta.mode);
+}
+function _errSnapshot() {
+  const groups = [];
+  _errGroups.forEach(function (g) {
+    groups.push({ sig: g.sig, msg: g.msg, src: g.src, line: g.line, col: g.col, stack: g.stack,
+                  path: g.path || '', first: g.first, last: g.last, count: g.count,
+                  vers: Object.keys(g.vers), uas: Object.keys(g.uas),
+                  modes: Object.keys(g.modes), ips: Object.keys(g.ips).length });
+  });
+  groups.sort(function (a, b) { return b.last - a.last; });
+  return { ok: true, now: Date.now(), groups: groups };
+}
 // ── Registre des sessions vivantes (tableau de bord admin, /admin/sessions) ──
 // _sessions n'indexe que les sessions AVEC sid ; ce Set les contient toutes,
 // avec ou sans sid, et sert uniquement à l'inventaire et à la déconnexion

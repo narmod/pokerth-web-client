@@ -29,6 +29,41 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<script>
+/* Collecteur d'erreurs JS — volontairement le TOUT PREMIER script du document :
+   installé avant tout le reste, il attrape aussi les échecs de démarrage (module
+   manquant, erreur de syntaxe) qu'un module chargé plus bas ne verrait jamais.
+   Il n'envoie rien lui-même : il empile au plus 20 entrées dans window.__pthErrQ,
+   que modules/errreport.mjs vide et transmet — si l'option « Signaler les erreurs »
+   est active. Voir modules/errreport.mjs pour le détail de ce qui part. */
+(function () {
+  var Q = window.__pthErrQ = [];
+  function push(e) {
+    if (Q.length < 20) Q.push(e);
+    if (window.__pthErrFlush) { try { window.__pthErrFlush(); } catch (_) {} }
+  }
+  window.addEventListener('error', function (ev) {
+    if (!ev) return;
+    var t = ev.target;
+    if (t && t !== window && t.tagName) {
+      // Échec de chargement d'une ressource. Limité aux SCRIPT/LINK : une
+      // image d'avatar en 404 n'est pas un bug du client, seulement du bruit.
+      var tag = String(t.tagName).toUpperCase();
+      if (tag !== 'SCRIPT' && tag !== 'LINK') return;
+      push({ msg: 'Failed to load ' + tag.toLowerCase(), src: String(t.src || t.href || ''), line: 0, col: 0, stack: '' });
+      return;
+    }
+    push({ msg: String(ev.message || 'error'), src: String(ev.filename || ''),
+           line: ev.lineno || 0, col: ev.colno || 0,
+           stack: (ev.error && ev.error.stack) ? String(ev.error.stack) : '' });
+  }, true);
+  window.addEventListener('unhandledrejection', function (ev) {
+    var r = ev && ev.reason;
+    push({ msg: 'Unhandled rejection: ' + String((r && r.message) || r || '?'),
+           src: '', line: 0, col: 0, stack: (r && r.stack) ? String(r.stack) : '' });
+  });
+})();
+</script>
 <script>/* Palette : appliquer le thème choisi AVANT le 1er rendu (zéro flash). Voir modules/theme.mjs. */
 try{var _d=document.documentElement,_p=localStorage.getItem('pth_theme'),_tb=localStorage.getItem('pth_table'),_dk=localStorage.getItem('pth_deck'),_dx=localStorage.getItem('pth_deck_ext')||'png';if(_dk==='svg'){_dk='pokerth-new';_dx='svg';try{localStorage.setItem('pth_deck','pokerth-new');localStorage.setItem('pth_deck_ext','svg');}catch(e){}}else if(!_dk){_dk='pokerth-new';_dx='svg';}if(_p===null)_p='auto';if(_p==='auto'){_p=(window.matchMedia&&window.matchMedia('(prefers-color-scheme: light)').matches)?'pokerth-light':'pokerth';}if(_p)_d.setAttribute('data-theme',_p);var _tc=localStorage.getItem('pth_theme_css');if(_tc)_d.style.cssText+=';'+_tc;var _tt=localStorage.getItem('pth_table_css');if(_tt)_d.style.cssText+=';'+_tt;var _bt=localStorage.getItem('pth_buttons_css');if(_bt)_d.style.cssText+=';'+_bt;var _pk=localStorage.getItem('pth_pucks_css');if(_pk)_d.style.cssText+=';'+_pk;if(_tb===null)_tb='';if(_tb)_d.setAttribute('data-table',_tb);if(!_tt){try{if(_tb===''){_d.setAttribute('data-table-fs','1');_d.setAttribute('data-bg-img','1');_d.style.setProperty('--wallpaper','url(/table/pokerth-official-fs/felt.png)');}else if(_tb==='pokerth-live'){_d.setAttribute('data-table-full','1');_d.style.setProperty('--table-img','url(/table/pokerth-live/felt.png)');_d.style.setProperty('--felt-img','url(/table/pokerth-live/felt.png) center / cover no-repeat');}else{_d.style.setProperty('--felt-img','url(/table/felt-green.jpg) center / cover no-repeat');}}catch(e){}}var _tf=localStorage.getItem('pth_table_full');if(_tf==='1')_d.setAttribute('data-table-full','1');var _fsv=localStorage.getItem('pth_table_fs');if(_fsv==='1'){_d.setAttribute('data-table-fs','1');_d.setAttribute('data-bg-img','1');}var _st=localStorage.getItem('pth_seat');try{if(!localStorage.getItem('pth_seat_dmig')){if(_st==='')localStorage.removeItem('pth_seat');localStorage.setItem('pth_seat_dmig','1');_st=localStorage.getItem('pth_seat');}}catch(e){}if(_st==='pokerth-portrait'||{'':1,chip:1,plate:1,card:1,compact:1,bar:1}[_st]===1){_st='pokerth';try{localStorage.setItem('pth_seat','pokerth');}catch(e){}}if(_st===null)_st='pokerth';_d.setAttribute('data-seat-orient',(window.innerHeight>window.innerWidth)?'portrait':'landscape');_d.setAttribute('data-seat-struct','qml');if(_st)_d.setAttribute('data-seat',_st);var _sc=localStorage.getItem('pth_seat_css');if(_sc)_d.style.cssText+=';'+_sc;var _sut=localStorage.getItem('pth_seat_css_txt');var _su=localStorage.getItem('pth_seat_css_url');if(_sut){var _ssx=document.createElement('style');_ssx.id='seat-pack-style';_ssx.textContent=_sut;document.head.appendChild(_ssx);}else if(_su){var _sl=document.createElement('link');_sl.rel='stylesheet';_sl.id='seat-pack-style';_sl.href=_su;document.head.appendChild(_sl);}var _si=localStorage.getItem('pth_seat_img');if(_si==='1'||_si==='2')_d.setAttribute('data-seat-img','1');if(_si==='2')_d.setAttribute('data-seat-img-self','1');if(_dk){_d.setAttribute('data-deck',_dk);_d.setAttribute('data-deck-ext',_dx);try{_d.style.setProperty('--card-back','url(/cards/'+_dk+'/flipside.'+_dx+')');}catch(e){}}var _cb=localStorage.getItem('pth_cardback')||'';if(_cb==='custom'){var _ci=localStorage.getItem('pth_cardback_img');if(_ci)_d.style.setProperty('--card-back','url('+_ci+')');}else if(_cb){_d.style.setProperty('--card-back','url(/cards/'+_cb+'/flipside.'+(localStorage.getItem('pth_cardback_ext')||'png')+')');}if(localStorage.getItem('pth_reduce_fx')==='1')_d.classList.add('reduce-fx');}catch(e){}</script>
 <script>
@@ -542,6 +577,7 @@ function onAvatarImageChosen(input) {
   }
 
   var CRIT = ['/pokerth.css', '/chat-emotes.js', '/pokerth.js',
+    '/modules/errreport.mjs',
     '/modules/i18n.mjs', '/modules/theme.mjs', '/modules/sounds.mjs',
     '/modules/handlog.mjs',
     '/modules/pdb-autosave.mjs',
@@ -2221,6 +2257,7 @@ function onAvatarImageChosen(input) {
      are available when pokerth.js starts executing. Modules are deferred
      by default, and the main script below uses `defer` too — defer
      scripts execute in document order, so this ordering is reliable. -->
+<script type="module" src="modules/errreport.mjs"></script>
 <script type="module" src="modules/i18n.mjs"></script>
 <script type="module" src="modules/theme.mjs"></script>
 <script type="module" src="modules/sounds.mjs"></script>
@@ -2704,6 +2741,7 @@ if ('serviceWorker' in navigator) {
       <div class="adv-body adv-uipanel" data-uitab="network">
       <details class="adv-fold"><summary class="adv-sec"><span class="adv-sec-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M9 15 4.8 19.2M6.9 12.9l-1.4 1.4a3 3 0 0 0 0 4.2l.9.9a3 3 0 0 0 4.2 0l1.4-1.4z"/><path d="M15 9l4.2-4.2M17.1 11.1l1.4-1.4a3 3 0 0 0 0-4.2l-.9-.9a3 3 0 0 0-4.2 0l-1.4 1.4z"/></svg></span><span data-i18n="advSecConn">Connection</span></summary>
       <label class="adv-row"><input type="checkbox" id="adv-nickretry" onchange="setAdvOpt('nick_retry',this.checked)"><span data-i18n="advNickRetry">Retry automatically when the nickname is still in use</span><em class="adv-webtag">web</em></label>
+      <label class="adv-row"><input type="checkbox" id="adv-errreport" onchange="setAdvOpt('err_report',this.checked)"><span data-i18n="advErrReport">Report script errors to this server's admin (no personal data)</span><em class="adv-webtag">web</em></label>
       </details>
       <details class="adv-fold"><summary class="adv-sec"><span class="adv-sec-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="3.5" width="17" height="17" rx="3"/><circle cx="12" cy="10" r="2.8"/><path d="M6.8 18a5.2 5.2 0 0 1 10.4 0"/></svg></span><span data-i18n="advSecAvatars">Avatars</span></summary>
       <label class="adv-row"><input type="checkbox" id="adv-flag" onchange="setAdvOpt('show_flag',this.checked)"><span data-i18n="advFlagAvatar">Country flag on avatar</span></label>

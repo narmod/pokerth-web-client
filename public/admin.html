@@ -171,6 +171,7 @@
       <button class="tab on" data-t="server">Server</button>
       <button class="tab" data-t="traffic">Traffic</button>
       <button class="tab" data-t="sessions">Sessions</button>
+      <button class="tab" data-t="errors">Errors</button>
       <button class="tab" data-t="clients">Clients</button>
       <button class="tab" data-t="broadcast" data-scope="broadcast">Broadcasts</button>
       <button class="tab" data-t="polls" data-scope="polls">Polls</button>
@@ -247,6 +248,17 @@
       <div class="card">
         <h2 style="margin:0 0 6px">Notice channels</h2>
         <div id="seNotify"><div class="empty">Loading\u2026</div></div>
+      </div>
+    </div>
+    <div id="panel-errors" style="display:none">
+      <div class="card">
+        <div class="boardhead" style="margin-bottom:6px"><h2 style="margin:0">Client script errors</h2><div style="display:flex;gap:8px"><button id="erRefresh" class="use">Refresh</button><button id="erClear" class="use danger">Clear all</button></div></div>
+        <p class="muted" style="margin:0 0 8px">JavaScript errors reported by players' browsers, grouped by signature so one recurring bug is one line with a counter. Players can switch the reporting off in Advanced options; nothing but the error itself, the build, the device and a masked IP is ever sent. Kept in memory only \u2014 a restart clears the list.</p>
+        <div id="erSum" class="muted"></div>
+        <div id="erMsg" class="msg"></div>
+      </div>
+      <div class="card">
+        <div id="erList"><div class="empty">Loading\u2026</div></div>
       </div>
     </div>
     <div id="panel-packages" style="display:none">
@@ -892,6 +904,7 @@
     $('panel-keys').style.display=t==='keys'?'block':'none';
     $('panel-traffic').style.display=t==='traffic'?'block':'none';
     $('panel-sessions').style.display=t==='sessions'?'block':'none';
+    $('panel-errors').style.display=t==='errors'?'block':'none';
     $('panel-servers').style.display=t==='servers'?'block':'none';
     $('panel-polls').style.display=t==='polls'?'block':'none';
     if(t==='music')mzRefresh();
@@ -904,6 +917,7 @@
     if(t==='broadcast'){ loadBroadcasts(); if(_isMaster) loadWelcome(); }
     if(t==='clients'){ loadStatus(true); loadThemes(); }
     if(t==='sessions'){ seStart(); } else { seStop(); }
+    if(t==='errors') loadErrors();
     if(t==='server'){ loadServer(); srvStart(); } else { srvStop(); }
   }); });
 
@@ -1626,6 +1640,68 @@
   function bcPrevNow(){ bcGoldPreview('bcNowPrev',($('bcNowMsg').value||'').trim(),$('bcNowIcon').value); }
   ['bcMsg','bcIcon'].forEach(function(id){ if($(id)){ $(id).addEventListener('input',bcPrevSched); $(id).addEventListener('change',bcPrevSched); } });
   ['bcNowMsg','bcNowIcon'].forEach(function(id){ if($(id)){ $(id).addEventListener('input',bcPrevNow); $(id).addEventListener('change',bcPrevNow); } });
+  // -- Client script errors (master only) -------------------------------------
+  // Real-user crashes reported by /clienterr, grouped by signature. Not polled:
+  // errors are rare and the list is read, not watched.
+  function _erWhen(ts){
+    var d=new Date(ts), n=Date.now()-ts;
+    if(n<60000) return 'just now';
+    if(n<3600000) return Math.floor(n/60000)+' min ago';
+    if(n<86400000) return Math.floor(n/3600000)+' h ago';
+    return d.toLocaleString();
+  }
+  function loadErrors(){
+    return api('/admin/errors').then(function(r){return r.json();}).then(function(d){
+      var sum=$('erSum'), list=$('erList');
+      if(!d||!d.ok){ if(list) list.innerHTML='<div class="empty">Could not load errors.</div>'; return; }
+      var g=d.groups||[], tot=0; g.forEach(function(x){ tot+=x.count; });
+      if(sum) sum.textContent=g.length+' distinct error'+(g.length===1?'':'s')+' \u00b7 '+tot+' occurrence'+(tot===1?'':'s');
+      if(!list) return;
+      list.innerHTML='';
+      if(!g.length){ list.innerHTML='<div class="empty">No error reported. Enjoy it while it lasts.</div>'; return; }
+      g.forEach(function(e){
+        var row=document.createElement('div'); row.className='row'; row.style.alignItems='flex-start';
+        var nm=document.createElement('div'); nm.className='nm';
+        var where=e.src?(_annEsc(e.src.replace(/^https?:\/\/[^/]+/,''))+(e.line?(':'+e.line+(e.col?(':'+e.col):'')):'')):'';
+        var devs=(e.uas||[]).map(_seDev).filter(Boolean);
+        var meta=[ '\u00d7'+e.count,
+                   _erWhen(e.last),
+                   (e.vers&&e.vers.length)?('v'+_annEsc(e.vers.join(', v'))):'',
+                   devs.length?_annEsc(devs.slice(0,3).join(' / ')):'',
+                   e.ips?(e.ips+' IP'+(e.ips===1?'':'s')):'',
+                   (e.modes&&e.modes.length)?_annEsc(e.modes.filter(Boolean).join(', ')):''
+                 ].filter(Boolean).join(' \u00b7 ');
+        nm.innerHTML='<b style="white-space:normal">'+_annEsc(e.msg||'')+'</b>'
+          +(where?'<span style="display:block;word-break:break-all">'+where+'</span>':'')
+          +'<span style="display:block">'+meta+'</span>';
+        if(e.stack){
+          var pre=document.createElement('pre'); pre.className='logs';
+          pre.style.cssText='max-height:150px;margin:6px 0 0;font-size:.72rem;display:none';
+          pre.textContent=e.stack;
+          var tg=document.createElement('button'); tg.className='use'; tg.textContent='Stack';
+          tg.style.cssText='margin-top:6px;font-size:.72rem;padding:2px 8px';
+          tg.addEventListener('click',function(){ var open=pre.style.display!=='none'; pre.style.display=open?'none':'block'; tg.textContent=open?'Stack':'Hide'; });
+          nm.appendChild(tg); nm.appendChild(pre);
+        }
+        var del=document.createElement('button'); del.className='del'; del.textContent='Dismiss';
+        del.addEventListener('click',function(){
+          api('/admin/errors',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({sig:e.sig})})
+            .then(function(r){return r.json();}).then(function(){ loadErrors(); }).catch(function(){});
+        });
+        row.appendChild(nm); row.appendChild(del); list.appendChild(row);
+      });
+    }).catch(function(){ var l=$('erList'); if(l) l.innerHTML='<div class="empty">Network error.</div>'; });
+  }
+  (function(){
+    var b=$('erRefresh'); if(b) b.addEventListener('click',loadErrors);
+    var c=$('erClear'); if(c) c.addEventListener('click',function(){
+      if(!confirm('Clear every reported error? This cannot be undone.')) return;
+      api('/admin/errors',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({clear:1})})
+        .then(function(r){return r.json();}).then(function(d){ var m=$('erMsg'); if(m){ m.textContent=(d&&d.ok)?'Cleared.':'Failed.'; m.className=(d&&d.ok)?'msg ok':'msg err'; } loadErrors(); })
+        .catch(function(){ var m=$('erMsg'); if(m){ m.textContent='Network error.'; m.className='msg err'; } });
+    });
+  })();
+
   // -- Live connections (master only): who is connected right now -------------
   // Read-only inventory served by /admin/sessions, plus a per-connection
   // disconnect. Polled every 5 s while the tab is open (seStart/seStop) so a

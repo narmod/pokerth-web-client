@@ -433,6 +433,7 @@ function openAdvancedOptions() {
   sync('adv-pingavatar', 'ping_avatar', true); // défaut QML : ShowPingStateInAvatar=1
   sync('adv-autoleave', 'auto_leave', false);
   sync('adv-nickretry', 'nick_retry', true);   // réessai auto quand le pseudo est encore occupé
+  sync('adv-errreport', 'err_report', true);   // remontée des erreurs JS à l'admin du serveur (web) — ON par défaut, décochable
   // Barre d'état de jeu (pot-strip : H#/G#, pot+bets, phase) masquable
   try {
     var _ps = document.getElementById('pot-strip');
@@ -9615,7 +9616,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.5-web.40'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.5-web.41'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
