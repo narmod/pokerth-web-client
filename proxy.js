@@ -1421,6 +1421,67 @@ function updateCmdStatic() {
   return "cd '" + dir + "' && " + gitPullSegment();
 }
 
+// ── Historique des déploiements & retour arrière ─────────────────────────────
+// Une mise à jour est un aller simple : `git pull` avance, rien ne revient. Si
+// un déploiement casse le client, la seule sortie était jusqu'ici un accès SSH.
+// On garde donc trace des états successivement servis, ce qui suffit à revenir
+// en arrière depuis le tableau de bord.
+//
+// Le fichier vit à côté d'admin-config.json : hors git, propriété du serveur,
+// préservé par `git pull` (fichier non suivi).
+const DEPLOY_HISTORY_FILE = process.env.DEPLOY_HISTORY_FILE || path.join(__dirname, 'deploy-history.json');
+const DEPLOY_HISTORY_MAX = 20;
+let _deployHistory = [];
+try { _deployHistory = JSON.parse(fs.readFileSync(DEPLOY_HISTORY_FILE, 'utf8')) || []; } catch (e) { _deployHistory = []; }
+if (!Array.isArray(_deployHistory)) _deployHistory = [];
+function _saveDeployHistory() {
+  try { fs.writeFileSync(DEPLOY_HISTORY_FILE, JSON.stringify(_deployHistory)); }
+  catch (e) { console.error('[deploy] history write failed: ' + e.message); }
+}
+function _gitOut(args) {
+  try {
+    const r = spawnSync('git', args, { cwd: __dirname, encoding: 'utf8',
+      env: Object.assign({}, process.env, { PATH: SAFE_PATH }) });
+    return (r.status === 0) ? String(r.stdout || '').trim() : '';
+  } catch (e) { return ''; }
+}
+// Note l'état ACTUEL du checkout avant toute opération qui va le changer. Les
+// entrées décrivent donc des états qui ont réellement tourné — la liste des
+// points de retour possibles, pas un journal de commandes.
+function _deployRecord(reason) {
+  if (!GIT_UPDATABLE) return;
+  const sha = _gitOut(['rev-parse', 'HEAD']);
+  if (!/^[0-9a-f]{40}$/.test(sha)) return;
+  if (_deployHistory.length && _deployHistory[0].sha === sha) {
+    _deployHistory[0].last = Date.now();          // même état : on rafraîchit, pas de doublon
+    _saveDeployHistory();
+    return;
+  }
+  let version = '';
+  try { version = (JSON.parse(fs.readFileSync(path.join(__dirname, 'package.json'), 'utf8')).version) || ''; } catch (e) {}
+  _deployHistory.unshift({
+    sha: sha, version: version,
+    subject: _gitOut(['log', '-1', '--format=%s']).slice(0, 200),
+    committed: _gitOut(['log', '-1', '--format=%cI']),
+    seen: Date.now(), last: Date.now(), reason: String(reason || ''),
+  });
+  _deployHistory = _deployHistory.slice(0, DEPLOY_HISTORY_MAX);
+  _saveDeployHistory();
+}
+// Retour à un commit donné. Le commit peut manquer localement (checkout shallow
+// provisionné par le conteneur) : on le récupère alors à la demande — GitHub
+// sert un SHA joignable depuis une branche. `checkout -f -B` repositionne la
+// branche, donc une mise à jour ultérieure reste un fast-forward normal.
+function rollbackCmd(sha, restart) {
+  const dir = __dirname.replace(/'/g, "'\\''");
+  const clean = "git checkout -- public/themes/themes.json public/seats/seats.json 2>/dev/null || true";
+  const get = "git cat-file -e " + sha + "^{commit} 2>/dev/null || git fetch --depth 1 origin " + sha;
+  const go = "git checkout -q -f -B '" + GIT_BRANCH + "' " + sha;
+  const head = restart ? "sleep 1; cd '" + dir + "'" : "cd '" + dir + "'";
+  const tail = restart ? (" && npm install --omit=dev --no-audit --no-fund && " + restartSegment()) : "";
+  return head + " && " + clean + "; " + get + " && " + go + tail;
+}
+
 // ── Scheduled restart/update with advance notice to connected clients ──
 let _restartTimer = null;   // pending setTimeout handle (null = nothing scheduled)
 let _restartAt = 0;         // epoch ms when the action fires (0 = none)
@@ -2667,10 +2728,42 @@ function handleAdmin(req, res, reqPathOnly, query) {
       return adminJson(res, 200, { ok: true, id: r.id, title: r.title });
     });
   }
+  // ── Historique des déploiements et retour arrière (clé maître) ──────────
+  if (reqPathOnly === '/admin/deploys') {
+    if (req.method === 'GET') {
+      if (!adminAuthed(query)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
+      const head = GIT_UPDATABLE ? _gitOut(['rev-parse', 'HEAD']) : '';
+      let version = '';
+      try { version = (JSON.parse(fs.readFileSync(path.join(__dirname, 'package.json'), 'utf8')).version) || ''; } catch (e) {}
+      return adminJson(res, 200, { ok: true, gitUpdatable: GIT_UPDATABLE, installKind: installKind(),
+        head: { sha: head, version: version, subject: GIT_UPDATABLE ? _gitOut(['log', '-1', '--format=%s']).slice(0, 200) : '' },
+        history: _deployHistory });
+    }
+    if (req.method === 'POST') {
+      return readJsonBody(req, function (d) {
+        if (!adminAuthed(query, d && d.token)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
+        if (!GIT_UPDATABLE) return adminJson(res, 409, { ok: false, error: 'this install cannot roll back (' + installKind() + ': no git checkout in the app dir).' });
+        const sha = String((d && d.rollback) || '');
+        // Deux verrous, parce que ce SHA finit dans une commande shell : forme
+        // strictement hexadécimale, ET présence dans l'historique — on ne
+        // déploie que des états que ce serveur a réellement servis.
+        if (!/^[0-9a-f]{40}$/.test(sha)) return adminJson(res, 400, { ok: false, error: 'invalid sha' });
+        if (!_deployHistory.some(function (h) { return h.sha === sha; })) return adminJson(res, 404, { ok: false, error: 'sha not in deploy history' });
+        if (sha === _gitOut(['rev-parse', 'HEAD'])) return adminJson(res, 400, { ok: false, error: 'already on that commit' });
+        const restart = !!(d && d.restart);
+        _deployRecord('before rollback');
+        const started = runDetached(rollbackCmd(sha, restart), UPDATE_LOG);
+        console.log('[admin] rollback to ' + sha.slice(0, 8) + (restart ? ' (with restart)' : ' (static only)'));
+        return adminJson(res, started ? 200 : 500, { ok: started, started: started, sha: sha, restart: restart });
+      });
+    }
+    res.writeHead(405); res.end('Method not allowed'); return;
+  }
   if (reqPathOnly === '/admin/update' && req.method === 'POST') {
     return readJsonBody(req, function (d) {
       if (!adminAuthed(query, d && d.token)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
       if (!GIT_UPDATABLE && !process.env.UPDATE_CMD) return adminJson(res, 409, { ok: false, error: 'this install cannot self-update (' + installKind() + ": no git checkout in the app dir). Update from the host: docker compose pull (or build) && docker compose up -d \u2014 or set UPDATE_CMD." });
+      _deployRecord('before update');
       const started = runDetached(updateCmd(), UPDATE_LOG);
       console.log('[admin] self-update requested (' + installKind() + ': pull + deps + restart)');
       return adminJson(res, started ? 200 : 500, { ok: started, started: started });
@@ -2680,6 +2773,7 @@ function handleAdmin(req, res, reqPathOnly, query) {
     return readJsonBody(req, function (d) {
       if (!adminAuthed(query, d && d.token)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
       if (!GIT_UPDATABLE) return adminJson(res, 409, { ok: false, error: 'this install cannot self-update (' + installKind() + ': no git checkout in the app dir).' });
+      _deployRecord('before static update');
       const started = runDetached(updateCmdStatic(), UPDATE_LOG);
       console.log('[admin] static self-update requested (git pull, no restart)');
       return adminJson(res, started ? 200 : 500, { ok: started, started: started });
@@ -2699,6 +2793,7 @@ function handleAdmin(req, res, reqPathOnly, query) {
       const reached = broadcastNotice(_restartNotice);
       _restartTimer = setTimeout(function () {
         const cmd = (_restartKind === 'restart') ? restartOnlyCmd() : updateCmd();
+        if (_restartKind !== 'restart') _deployRecord('before scheduled update');
         console.log('[admin] scheduled ' + _restartKind + ' firing now');
         _restartTimer = null; _restartAt = 0; _restartNotice = '';
         runDetached(cmd, UPDATE_LOG);
@@ -3937,6 +4032,10 @@ console.log('▶ Logs  : ' + _logLevelName() + '   ▶ Max clients : ' + (_maxCl
 console.log('\nTips:');
 console.log('  • LAN server without TLS → uncheck TLS in the browser');
 console.log('  • pokerth.net            → TLS checked, registered login needed');
+// L'état servi au démarrage entre dans l'historique : après un déploiement
+// réussi, le point de retour « celui d'avant » est ainsi toujours disponible,
+// même si la mise à jour a été lancée hors du tableau de bord (install.sh, ssh).
+_deployRecord('boot');
 console.log('\nWaiting for connections...\n');
 
 // Set of all connected clients (used to relay reactions / avatars).

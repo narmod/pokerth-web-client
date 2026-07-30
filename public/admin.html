@@ -469,6 +469,14 @@
         <pre id="updlog" class="logs" style="max-height:200px"></pre>
       </div>
       <div class="card">
+        <div class="boardhead" style="margin-bottom:6px"><h2 style="margin:0">Roll back a deployment</h2><button id="rbRefresh" class="use">Refresh</button></div>
+        <p class="muted" style="margin:0 0 8px">Every state this server has actually served, newest first. Rolling back checks the chosen commit out again \u2014 the quickest way out when a deploy breaks the client. <b>Static</b> swaps the served files with no dropped connection; <b>with restart</b> also reinstalls dependencies and restarts, which is what a change to <code>proxy.js</code> needs. The state you are on now is recorded first, so you can always come back forward.</p>
+        <div class="seg" id="rbKind"><button class="on" data-k="static">Static (no restart)</button><button data-k="restart">With restart</button></div>
+        <div id="rbHead" class="muted" style="margin:8px 0"></div>
+        <div id="rbList"><div class="empty">Loading\u2026</div></div>
+        <div id="rbMsg" class="msg"></div>
+      </div>
+      <div class="card">
         <h2>Schedule a restart</h2>
         <p class="muted" style="margin:0 0 8px">Warn connected players, then act automatically after the delay. Players see a dismissible notice with the restart time, in their own language.</p>
         <div class="seg" id="schedKind"><button class="on" data-k="update">Update + restart</button><button data-k="restart">Restart only</button></div>
@@ -883,7 +891,7 @@
       $('loginErr').textContent=''; _idleLast=Date.now(); show('dash');
       if(_isMaster){
         api('/admin/pkg-list').then(function(r){return r.json();}).then(function(d){ if(d&&d.ok) renderPkgs(d); }).catch(function(){});
-        loadServer(); loadThemes(); srvStart();
+        loadServer(); loadDeploys(); loadThemes(); srvStart();
       } else {
         srvStop();
         var first=[].slice.call(document.querySelectorAll('.tab')).find(function(b){ return b.style.display!=='none'; });
@@ -918,7 +926,7 @@
     if(t==='clients'){ loadStatus(true); loadThemes(); }
     if(t==='sessions'){ seStart(); } else { seStop(); }
     if(t==='errors') loadErrors();
-    if(t==='server'){ loadServer(); srvStart(); } else { srvStop(); }
+    if(t==='server'){ loadServer(); loadDeploys(); srvStart(); } else { srvStop(); }
   }); });
 
 
@@ -1640,6 +1648,63 @@
   function bcPrevNow(){ bcGoldPreview('bcNowPrev',($('bcNowMsg').value||'').trim(),$('bcNowIcon').value); }
   ['bcMsg','bcIcon'].forEach(function(id){ if($(id)){ $(id).addEventListener('input',bcPrevSched); $(id).addEventListener('change',bcPrevSched); } });
   ['bcNowMsg','bcNowIcon'].forEach(function(id){ if($(id)){ $(id).addEventListener('input',bcPrevNow); $(id).addEventListener('change',bcPrevNow); } });
+  // -- Deployment history & rollback (master only) ----------------------------
+  // The escape hatch when a deploy goes wrong: check a previous commit out
+  // again from the dashboard instead of reaching for SSH.
+  var _rbRestart=false;
+  function _rbWhen(ts){
+    var n=Date.now()-ts;
+    if(n<3600000) return Math.max(1,Math.floor(n/60000))+' min ago';
+    if(n<86400000) return Math.floor(n/3600000)+' h ago';
+    if(n<604800000) return Math.floor(n/86400000)+' d ago';
+    return new Date(ts).toLocaleDateString();
+  }
+  function loadDeploys(){
+    return api('/admin/deploys').then(function(r){return r.json();}).then(function(d){
+      var head=$('rbHead'), list=$('rbList');
+      if(!d||!d.ok){ if(list) list.innerHTML='<div class="empty">Could not load the deployment history.</div>'; return; }
+      if(head){
+        head.innerHTML = d.gitUpdatable
+          ? ('Running <b>'+_annEsc(d.head.version||'?')+'</b> \u00b7 <code>'+_annEsc((d.head.sha||'').slice(0,8))+'</code> \u2014 '+_annEsc(d.head.subject||''))
+          : ('This install cannot roll back ('+_annEsc(d.installKind||'?')+': no git checkout in the app dir).');
+      }
+      if(!list) return;
+      list.innerHTML='';
+      var h=(d.history||[]).filter(function(x){ return x.sha!==d.head.sha; });
+      if(!d.gitUpdatable){ list.innerHTML=''; return; }
+      if(!h.length){ list.innerHTML='<div class="empty">No earlier state recorded yet. The first update made from here will add one.</div>'; return; }
+      h.forEach(function(x){
+        var row=document.createElement('div'); row.className='row'; row.style.alignItems='flex-start';
+        var nm=document.createElement('div'); nm.className='nm';
+        nm.innerHTML='<b style="white-space:normal">'+_annEsc(x.version||'?')+' \u2014 '+_annEsc(x.subject||'')+'</b>'
+          +'<span style="display:block"><code>'+_annEsc((x.sha||'').slice(0,8))+'</code> \u00b7 served until '+_rbWhen(x.last||x.seen)
+          +(x.reason?(' \u00b7 '+_annEsc(x.reason)):'')+'</span>';
+        var b=document.createElement('button'); b.className='del'; b.textContent='Roll back';
+        b.addEventListener('click',function(){ rbGo(x); });
+        row.appendChild(nm); row.appendChild(b); list.appendChild(row);
+      });
+    }).catch(function(){ var l=$('rbList'); if(l) l.innerHTML='<div class="empty">Network error.</div>'; });
+  }
+  function rbGo(x){
+    var what=_rbRestart?'reinstall dependencies and restart the server':'swap the served files with no restart';
+    if(!confirm('Roll back to '+(x.version||'?')+' ('+(x.sha||'').slice(0,8)+')?\n\nThis will '+what+'.')) return;
+    var m=$('rbMsg'); if(m){ m.textContent='Rolling back\u2026'; m.className='msg'; }
+    api('/admin/deploys',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({rollback:x.sha,restart:_rbRestart})})
+      .then(function(r){return r.json();}).then(function(d){
+        if(!m) return;
+        if(d&&d.ok){ m.textContent=_rbRestart?'Rollback started \u2014 the server restarts in a moment.':'Rollback started \u2014 the new files are live within seconds.'; m.className='msg ok'; setTimeout(loadDeploys,4000); }
+        else { m.textContent='Failed: '+((d&&d.error)||'error'); m.className='msg err'; }
+      }).catch(function(){ if(m){ m.textContent='Network error.'; m.className='msg err'; } });
+  }
+  (function(){
+    var r=$('rbRefresh'); if(r) r.addEventListener('click',loadDeploys);
+    var seg=$('rbKind');
+    if(seg) seg.querySelectorAll('button').forEach(function(b){ b.addEventListener('click',function(){
+      _rbRestart=(b.dataset.k==='restart');
+      seg.querySelectorAll('button').forEach(function(x){ x.classList.toggle('on',x===b); });
+    }); });
+  })();
+
   // -- Client script errors (master only) -------------------------------------
   // Real-user crashes reported by /clienterr, grouped by signature. Not polled:
   // errors are rare and the list is read, not watched.

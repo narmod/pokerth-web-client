@@ -22,6 +22,10 @@ stats.meta.json
 # Runtime, server-owned admin config (reset period, defaults, admin music list…)
 admin-config.json
 
+# Deployment history for the admin rollback (server-owned, untracked like
+# admin-config.json: it records the commits this instance actually served).
+deploy-history.json
+
 # Scoped delegate API keys (managed by install.sh: pokerth-web token …; chmod 600)
 scoped-tokens.json
 
