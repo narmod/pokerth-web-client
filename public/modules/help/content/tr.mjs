@@ -160,7 +160,7 @@ export const help = {
         { id: 'reactions', t: 'Emoji tepkileri',
           b: ['Tepki düğmesi, koltuğunun üzerinde efektle oynayan ve bütün masaya görünen 30 animasyonlu tepkiden (\uD83C\uDF89, \uD83D\uDE02, \uD83D\uDE31, \uD83D\uDD25\u2026) oluşan bir seçici açar — masaüstü istemcideki oyuncular dahil. Tepkiler Gelişmiş seçeneklerden tamamen kapatılabilir.'] },
         { id: 'translate', t: 'Herkesi anlamak',
-          b: ['Sohbet çevirisi açıkken her mesaja, tarayıcının çevirmeni aracılığıyla onu senin dilinde gösteren bir çeviri düğmesi eklenir. Yaygın masa kısaltmaları (gg, nh, utg\u2026) üzerine gelince bir ipucunda açıklanır — iki seçenek de Gelişmiş seçenekler \u2192 Sohbet\u2019te.'],
+          b: ['Sohbet çevirisi açıkken çeviri düğmesi imlecin altındaki satırda — ya da dokunmatik ekranda dokunduğun satırda — belirir ve iletiyi tarayıcının çevirmeniyle kendi dilinde gösterir. Gelişmiş seçenekler → Sohbet altından tüm satırlarda kalıcı gösterilebilir; yaygın masa kısaltmalarını (gg, nh, utg…) açıklayan ipucu da oradadır.'],
           note: 'Çeviri, Google Translate hizmetini kullanır ve her tarayıcıda çalışır — yalnızca internet bağlantısı gerekir. Bir mesaj, ancak onun çeviri düğmesine dokunduğunda çeviri hizmetine gönderilir, asla otomatik olarak değil.' },
         { id: 'social', t: 'Oyuncular: profil, davet, yok sayma',
           b: ['Herhangi bir oyuncuya dokun — masada veya lobi listesinde — kartı açılsın: profil ve istatistikler, oyununa davet etmek ya da yok saymak (sohbet mesajları gizlenir; yok sayma her an geri alınabilir). Davet/yok sayma öncesi onay seçeneklerden açılabilir.'] }
@@ -255,16 +255,18 @@ export const help = {
             ['F6 / F7 / F8', 'Elle \u00b7 Otomatik Check/Fold \u00b7 Otomatik Check/Call'],
             ['Alt+M / Alt+K / Alt+F', 'Elle \u00b7 Otomatik Check/Call \u00b7 Otomatik Check/Fold'],
             ['Alt+C / Alt+L / Alt+I', 'Sohbet \u00b7 Günlük \u00b7 Olasılık paneli'],
+            ['Alt+S', 'Ayarlar — uygulamanın her yerinde, yalnızca oyun sırasında değil'],
             ['F11', 'Tam ekran']],
           note: 'Kısayollar fiziksel klavye ister. Mac\u2019te F tuşları varsayılan olarak medyayı yönetir: Fn\u2019yi basılı tut (veya macOS ayarlarında \u201cF1, F2 vb. tuşları standart işlev tuşları olarak kullan\u201d seçeneğini aç). iPhone\u2019da tam ekran iOS tarafından sınırlıdır — uygulamayı PWA olarak yüklemek aynı tam ekran deneyimini verir.' },
         { id: 'webkeys', t: 'Web harf tuşları',
-          b: ['Web eklentisi: tek harfli tuşlar da aksiyonları tetikler ve Gelişmiş seçenekler \u2192 Klavye kısayollarından yeniden atanabilir:'],
+          b: ['Web eklentisi: tek harfli tuşlar ve Alt+T de eylemleri tetikler ve hepsi Gelişmiş seçenekler → Klavye kısayolları altından yeniden atanabilir:'],
           keys: [
             ['F', 'Fold'],
             ['C', 'Check / Call'],
             ['R', 'Raise'],
             ['A', 'All-In'],
             ['1 / 2 / 3', 'Bet 1/3 \u00b7 1/2 \u00b7 Pot'],
+            ['Alt+T', 'İstatistik paneli'],
             ['Esc', 'En üstteki pencereyi kapat (Android Geri tuşu da öyle)']],
           note: 'Android\u2019de sistemin Geri tuşu/hareketi oyundan çıkmak yerine pencereleri Esc gibi kapatır (seçeneklerden ayarlanabilir). iOS\u2019ta eşdeğer bir sistem tuşu yoktur — her pencerenin \u2715 işaretini kullan.' }
       ]

@@ -160,7 +160,7 @@ export const help = {
         { id: 'reactions', t: 'Phản ứng emoji',
           b: ['Nút phản ứng mở bộ chọn gồm 30 phản ứng động (\uD83C\uDF89, \uD83D\uDE02, \uD83D\uDE31, \uD83D\uDD25\u2026) được phát kèm hiệu ứng phía trên chỗ ngồi của bạn, cả bàn đều thấy — kể cả người chơi trên ứng dụng máy tính. Phản ứng có thể tắt hoàn toàn trong Tùy chọn nâng cao.'] },
         { id: 'translate', t: 'Hiểu được mọi người',
-          b: ['Khi bật dịch trò chuyện, mỗi tin nhắn có thêm một nút dịch để hiển thị nó bằng ngôn ngữ của bạn, thông qua bộ dịch của trình duyệt. Các từ viết tắt thường gặp ở bàn (gg, nh, utg\u2026) được giải thích trong chú giải khi rê chuột lên — cả hai tùy chọn nằm ở Tùy chọn nâng cao \u2192 Trò chuyện.'],
+          b: ['Khi bật dịch trò chuyện, nút dịch xuất hiện trên dòng dưới con trỏ — hoặc trên dòng bạn chạm, trên màn hình cảm ứng — và hiển thị tin nhắn bằng ngôn ngữ của bạn bằng trình dịch của trình duyệt. Có thể hiển thị vĩnh viễn trên mọi dòng trong Tùy chọn nâng cao → Trò chuyện, nơi cũng có chú giải các chữ viết tắt thường gặp (gg, nh, utg…).'],
           note: 'Việc dịch dùng dịch vụ Google Translate và chạy trên mọi trình duyệt — chỉ cần kết nối internet. Một tin nhắn chỉ được gửi tới dịch vụ dịch khi bạn chạm nút dịch của nó, không bao giờ tự động.' },
         { id: 'social', t: 'Người chơi: hồ sơ, mời, bỏ qua',
           b: ['Chạm vào bất kỳ người chơi nào — ở bàn hoặc trong danh sách sảnh — để mở thẻ của họ: hồ sơ và thống kê, mời vào ván đấu của bạn, hoặc bỏ qua (tin nhắn trò chuyện của họ bị ẩn; có thể hoàn tác bất cứ lúc nào). Có thể bật xác nhận trước khi mời/bỏ qua trong tùy chọn.'] }
@@ -255,16 +255,18 @@ export const help = {
             ['F6 / F7 / F8', 'Thủ công \u00b7 Auto Check/Fold \u00b7 Auto Check/Call'],
             ['Alt+M / Alt+K / Alt+F', 'Thủ công \u00b7 Auto Check/Call \u00b7 Auto Check/Fold'],
             ['Alt+C / Alt+L / Alt+I', 'Trò chuyện \u00b7 Nhật ký \u00b7 Bảng xác suất'],
+            ['Alt+S', 'Cài đặt — ở bất kỳ đâu trong ứng dụng, không chỉ khi đang chơi'],
             ['F11', 'Toàn màn hình']],
           note: 'Phím tắt cần bàn phím vật lý. Trên Mac, các phím F mặc định điều khiển đa phương tiện: giữ Fn (hoặc bật \u201cDùng các phím F1, F2, v.v. làm phím chức năng chuẩn\u201d trong cài đặt macOS). Trên iPhone, chế độ toàn màn hình bị iOS hạn chế — cài ứng dụng dưới dạng PWA sẽ cho trải nghiệm toàn màn hình tương đương.' },
         { id: 'webkeys', t: 'Phím chữ của bản web',
-          b: ['Phần mở rộng web: các phím một chữ cái cũng kích hoạt hành động và có thể gán lại ở Tùy chọn nâng cao \u2192 Phím tắt bàn phím:'],
+          b: ['Phần mở rộng web: các phím một chữ và Alt+T cũng kích hoạt hành động, và tất cả đều có thể gán lại trong Tùy chọn nâng cao → Phím tắt:'],
           keys: [
             ['F', 'Fold'],
             ['C', 'Check / Call'],
             ['R', 'Raise'],
             ['A', 'All-In'],
             ['1 / 2 / 3', 'Bet 1/3 \u00b7 1/2 \u00b7 Pot'],
+            ['Alt+T', 'Bảng thống kê'],
             ['Esc', 'Đóng cửa sổ trên cùng (nút Quay lại của Android cũng vậy)']],
           note: 'Trên Android, nút/cử chỉ Quay lại của hệ thống đóng cửa sổ như Esc thay vì rời ván đấu (có thể chỉnh trong tùy chọn). iOS không có nút hệ thống tương đương — hãy dùng dấu \u2715 của từng cửa sổ.' }
       ]
