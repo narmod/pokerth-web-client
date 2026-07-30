@@ -17,11 +17,17 @@
 //   · newestBottom (chats) — plain append order. Live edge = bottom.
 //     Appending does not move scrollTop by itself, so pausing simply
 //     means not forcing the scroll down.
+//
+// Resuming follows the QML client (ChatBox / GameInfoPanel autoScrollTimer):
+// the pause is not permanent. Fifteen seconds after the reader last moved,
+// the view returns to the live edge on its own. The timer is armed on every
+// scroll away from the edge and dropped as soon as the edge is reached
+// again, so it only ever fires on a reader who stopped scrolling.
 // ═══════════════════════════════════════════════════════════════════
-import { t } from '../i18n.mjs';
 
-const EPS = 4;           // px tolerance: "close enough" counts as live
-const REG = new Map();   // element -> state
+const EPS = 4;             // px tolerance: "close enough" counts as live
+const IDLE_MS = 15000;     // = autoScrollTimer.interval in the QML client
+const REG = new Map();     // element -> state
 
 function atLive(el, st) {
   return st.top ? (el.scrollTop <= EPS)
@@ -32,48 +38,34 @@ function goLive(el, st) {
   el.scrollTop = st.top ? 0 : el.scrollHeight;
 }
 
-function paint(st) {
-  if (!st.bar) return;
-  st.bar.style.display = st.live ? 'none' : '';
-  if (st.num) st.num.textContent = st.pending > 0 ? String(st.pending) : '';
+// Away from the edge: (re)arm the countdown. Back at the edge: drop it.
+// Every scroll event restarts it, so the fifteen seconds are counted from
+// the reader's last movement, not from the moment the pause began.
+function arm(el, st) {
+  if (st.timer) { clearTimeout(st.timer); st.timer = null; }
+  if (st.live) return;
+  st.timer = setTimeout(function () {
+    st.timer = null;
+    st.live = true;
+    goLive(el, st);
+  }, IDLE_MS);
 }
 
 // Attach once per scrollable element. opts.top = newest entries on top.
 function attachLiveScroll(el, opts) {
   if (!el) return null;
   if (REG.has(el)) return REG.get(el);
-  const st = { top: !!(opts && opts.top), live: true, pending: 0, bar: null, num: null };
+  const st = { top: !!(opts && opts.top), live: true, timer: null };
   REG.set(el, st);
-
-  // The bar is a convenience, not the mechanism: anchoring still works if
-  // it cannot be built (headless test stubs, exotic DOM), hence the guard.
-  try {
-    const bar = document.createElement('button');
-    bar.type = 'button';
-    bar.className = 'live-jump' + (st.top ? ' live-jump-up' : '');
-    bar.style.display = 'none';
-    bar.innerHTML = '<span class="live-jump-n"></span>' +
-                    '<span class="live-jump-t" data-i18n="jumpLatest"></span>' +
-                    '<span class="live-jump-a" aria-hidden="true">' + (st.top ? '\u25B2' : '\u25BC') + '</span>';
-    try { bar.querySelector('.live-jump-t').textContent = t('jumpLatest'); } catch (e) {}
-    bar.addEventListener('click', function () {
-      st.pending = 0; goLive(el, st); st.live = true; paint(st);
-    });
-    // Sits in the panel's flex flow rather than floating over the list:
-    // above the rows when newest is on top, below them otherwise. It never
-    // covers a line and survives panel resizing without any measuring.
-    el.parentNode.insertBefore(bar, st.top ? el : el.nextSibling);
-    st.bar = bar;
-    st.num = bar.querySelector('.live-jump-n');
-  } catch (e) {}
 
   try {
     el.addEventListener('scroll', function () {
       const live = atLive(el, st);
-      if (live === st.live) return;
-      st.live = live;
-      if (live) st.pending = 0;
-      paint(st);
+      // Restart the countdown on EVERY scroll away from the edge, not only
+      // on the transition: a reader who keeps scrolling back must not have
+      // the view pulled from under them fifteen seconds after the first move.
+      if (live !== st.live) st.live = live;
+      arm(el, st);
     }, { passive: true });
   } catch (e) {}
 
@@ -121,10 +113,10 @@ function liveAfter(el, snap, addedTop) {
   // A list that shrank without gaining anything was cleared or replaced:
   // there is nothing left to hold on to, so go back to following.
   if (grew < 0 && !(known && addedTop > 0)) {
-    st.live = true; st.pending = 0; goLive(el, st); paint(st); return;
+    st.live = true; goLive(el, st); arm(el, st); return;
   }
   if (snap.live) {
-    st.live = true; st.pending = 0; goLive(el, st);
+    st.live = true; goLive(el, st);
   } else {
     st.live = false;
     if (st.top) {
@@ -136,17 +128,16 @@ function liveAfter(el, snap, addedTop) {
       if (row && typeof row.offsetTop === 'number') el.scrollTop = Math.max(0, row.offsetTop + snap.row.d);
       else el.scrollTop = Math.max(0, el.scrollHeight - snap.anchor);
     }
-    const n = known ? addedTop : grew;
-    if (n > 0) st.pending += n;
   }
-  paint(st);
+  // New lines arriving are not a reader movement: the countdown keeps
+  // running from the last scroll, exactly as the QML timer does.
 }
 
 // Back to following, e.g. after the panel is cleared or (re)opened.
 function liveReset(el) {
   const st = el ? REG.get(el) : null;
   if (!st) return;
-  st.live = true; st.pending = 0; goLive(el, st); paint(st);
+  st.live = true; goLive(el, st); arm(el, st);
 }
 
 function boot() {

@@ -151,7 +151,36 @@ function snapCount(s) { return s.count; }
   ok(LS.liveBefore(el).live, 'shrink: an emptied list goes back to following');
 }
 
-// ── 5. Bridges ────────────────────────────────────────────────────
+// ── 5. Idle timer: the pause is not permanent (QML autoScrollTimer) ──
+{
+  const timers = [];
+  const realST = globalThis.setTimeout, realCT = globalThis.clearTimeout;
+  globalThis.setTimeout = (fn, ms) => timers.push({ fn, ms });
+  globalThis.clearTimeout = (id) => { if (id) timers[id - 1] = null; };
+
+  const el = makeEl();
+  LS.attachLiveScroll(el, { top: false });
+  fill(el, 10);                       // 200 px of content, 100 px viewport
+  el.scrollTop = 0;                   // away from the bottom → paused
+  el.fire('scroll');
+  const armed = timers.filter(Boolean).pop();
+  ok(!!armed, 'idle: countdown armed after scrolling away');
+  eq(armed && armed.ms, 15000, 'idle: fifteen seconds, as in the QML client');
+  ok(!LS.liveBefore(el).live, 'idle: still paused before it fires');
+  armed.fn();
+  eq(el.scrollTop, 200, 'idle: back at the live edge when it fires');
+  ok(LS.liveBefore(el).live, 'idle: following again');
+
+  // Reaching the edge by hand must not leave a countdown behind.
+  timers.length = 0;
+  el.scrollTop = 0;   el.fire('scroll');   // paused again → one timer
+  el.scrollTop = 200; el.fire('scroll');   // back at the edge
+  ok(timers.filter(Boolean).length === 0, 'idle: countdown dropped at the edge');
+
+  globalThis.setTimeout = realST; globalThis.clearTimeout = realCT;
+}
+
+// ── 6. Bridges ────────────────────────────────────────────────────
 ok(typeof window._liveBefore === 'function' && typeof window._liveAfter === 'function' &&
    typeof window._liveReset === 'function' && typeof window._liveAttach === 'function',
    'window.* bridges in place (used by the monolith)');
