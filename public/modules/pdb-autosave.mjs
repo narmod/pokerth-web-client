@@ -12,8 +12,17 @@
 // Une session = un fichier, exactement comme le client officiel : le nom vient
 // de window._handlog.sessionId, qui change à chaque chargement de page.
 //
-// Option avancée : pth_pdb_auto (ON par défaut ; sans dossier choisi le
-// module reste inerte).
+// Rythme d'écriture : parité `LogInterval` (log.cpp) — 0 = après chaque action,
+// 1 = après chaque main (défaut officiel), 2 = après chaque partie. Le fichier
+// est créé dès le début d'une partie (équivalent Log::init) et un flush forcé
+// a lieu à la fermeture de l'onglet (équivalent Log::flushLog).
+//
+// Écriture en place quand le navigateur le permet (createWritable en mode
+// « exclusive » : même fichier, même inode, comme la connexion SQLite du client
+// de bureau) ; sinon repli sur le remplacement atomique par fichier temporaire.
+//
+// Options avancées : pth_pdb_auto (ON par défaut ; sans dossier choisi le
+// module reste inerte) et pth_log_on (LogOnOff : coupe toute écriture).
 // Dépend de : window._handlog (recorder), window._buildPdb (handlog.mjs).
 // Aucune régression possible : si ce module n'est pas chargé, le hook
 // window._pdbAutoSave est simplement absent.
@@ -32,8 +41,38 @@ function _supported() {
 function _enabled() {
   try {
     if (typeof localStorage === 'undefined') return true;
-    return localStorage.getItem('pth_pdb_auto') !== '0';
+    if (localStorage.getItem('pth_pdb_auto') === '0') return false;
+    // Parité LogOnOff : la journalisation coupée coupe aussi le fichier.
+    if (localStorage.getItem('pth_log_on') === '0') return false;
+    return true;
   } catch (_e) { return true; }
+}
+
+// Intervalle officiel (configfile.cpp défaut « 1 ») : 0 = chaque action,
+// 1 = chaque main, 2 = chaque partie. Les anciennes valeurs texte du web
+// ('action' / 'hand') restent acceptées.
+function _intervalIdx() {
+  try {
+    if (typeof window !== 'undefined' && typeof window._getLogIntervalIdx === 'function') {
+      const n = window._getLogIntervalIdx();
+      if (n === 0 || n === 1 || n === 2) return n;
+    }
+    if (typeof localStorage === 'undefined') return 1;
+    const v = localStorage.getItem('pth_log_interval');
+    if (v === 'action') return 0;
+    if (v === 'hand') return 1;
+    const n = parseInt(v, 10);
+    return (n === 0 || n === 1 || n === 2) ? n : 1;
+  } catch (_e) { return 1; }
+}
+
+// Un événement déclenche-t-il une écriture ? Table de vérité de log.cpp :
+// 'action' → LogInterval 0 · 'hand' → logAfterHand (0 ou 1) · 'game' →
+// logAfterGame (toutes valeurs) · 'start'/'pick'/'flush' → toujours.
+function _shouldWrite(evt) {
+  if (evt === 'action') return _intervalIdx() === 0;
+  if (evt === 'hand') return _intervalIdx() <= 1;
+  return true;   // 'game', 'start', 'pick', 'flush'
 }
 
 // ── Persistance du handle de dossier (IndexedDB) ───────────────────────────
@@ -78,6 +117,7 @@ const _state = {
   lastName: null,     // dernier fichier écrit
   lastAt: 0,          // horodatage de la dernière écriture réussie
   err: null,          // dernière erreur (nom court)
+  inPlace: null,      // true = écriture dans le fichier cible (mode exclusive)
 };
 
 let _handle = null;         // FileSystemDirectoryHandle en cache mémoire
@@ -135,14 +175,36 @@ function _snapshot() {
   };
 }
 
-async function _writeNow() {
+// Ouvre un flux d'écriture en privilégiant le mode « exclusive » : le
+// navigateur écrit alors DANS le fichier cible (pas de fichier temporaire, pas
+// de remplacement), donc l'inode ne change jamais — c'est ce que fait la
+// connexion SQLite du client de bureau, et c'est ce qu'attend un lecteur
+// externe qui garde le fichier ouvert. Repli silencieux sur le mode standard
+// là où l'option n'existe pas.
+async function _openWritable(fh) {
+  try {
+    const w = await fh.createWritable({ keepExistingData: true, mode: 'exclusive' });
+    _state.inPlace = true;
+    return w;
+  } catch (_e) {
+    const w = await fh.createWritable();
+    _state.inPlace = false;
+    return w;
+  }
+}
+
+// force : autorise l'écriture d'un fichier encore sans main (création en début
+// de partie, équivalent Log::init qui pose schéma + ligne Session).
+async function _writeNow(force) {
   if (!_supported() || !_enabled()) return false;
   if (typeof window._buildPdb !== 'function') return false;
 
   const tables = _snapshot();
-  // Pas de fichier vide : le client officiel ne crée le .pdb qu'à la première
-  // écriture réelle (createLogDb), jamais pour un spectateur.
-  if (!tables || !tables.hands.length) return false;
+  if (!tables) return false;
+  // Rien tant qu'aucune partie n'a commencé : pas de fichier pour un simple
+  // passage au lobby ou un spectateur.
+  if (!force && !tables.hands.length) return false;
+  if (!tables.hands.length && !tables.games.length && !force) return false;
 
   const dir = await _getHandle();
   if (!dir) return false;
@@ -151,11 +213,11 @@ async function _writeNow() {
   const bytes = await window._buildPdb(tables);
   const name = _fileName();
   const fh = await dir.getFileHandle(name, { create: true });
-  // createWritable() écrit dans un fichier temporaire et ne remplace la cible
-  // qu'au close() : un lecteur externe (app de stats) ne verra jamais un
-  // fichier à moitié écrit.
-  const w = await fh.createWritable();
-  await w.write(bytes);
+  const w = await _openWritable(fh);
+  // Écriture depuis l'offset 0 puis troncature : indispensable en mode
+  // « exclusive » où le contenu précédent est conservé et pourrait dépasser.
+  await w.write({ type: 'write', position: 0, data: bytes });
+  try { await w.truncate(bytes.length); } catch (_e) { /* mode standard : déjà tronqué */ }
   await w.close();
 
   _state.lastName = name;
@@ -168,19 +230,44 @@ async function _writeNow() {
 // pendant une écriture sont fusionnées en une seule reprise.
 let _busy = false;
 let _again = false;
+let _againForce = false;
+let _lastWriteAt = 0;
 
-async function save() {
+// Garde-fou perf : buildPdb reconstruit toute la base et sql.js est synchrone.
+// En mode « chaque action » sur une longue session, écrire à chaque coup
+// figerait la table ; on espace donc les écritures automatiques. Un flush
+// explicite (fermeture, changement de réglage) n'est jamais retardé.
+const MIN_GAP_MS = 400;
+
+// evt : 'action' | 'hand' | 'game' | 'start' | 'pick' | 'flush'.
+// Sans argument = 'hand' (compatibilité des appels existants).
+async function save(evt) {
+  const ev = evt || 'hand';
   if (!_supported() || !_enabled()) return;
-  if (_busy) { _again = true; return; }
+  if (!_shouldWrite(ev)) return;
+  const force = (ev === 'start' || ev === 'pick' || ev === 'flush' || ev === 'game');
+  if (_busy) { _again = true; _againForce = _againForce || force; return; }
+
+  // Étalement des rafales d'actions ; on ne perd rien, la demande est
+  // simplement reprise après le délai.
+  const wait = MIN_GAP_MS - (Date.now() - _lastWriteAt);
+  if (ev === 'action' && wait > 0) {
+    if (_again) return;
+    _again = true;
+    setTimeout(() => { _again = false; save('action'); }, wait);
+    return;
+  }
+
   _busy = true;
   try {
-    await _writeNow();
+    await _writeNow(force);
+    _lastWriteAt = Date.now();
   } catch (e) {
     _state.err = (e && (e.name || e.message)) ? String(e.name || e.message) : 'error';
   } finally {
     _busy = false;
     _ui();
-    if (_again) { _again = false; setTimeout(save, 0); }
+    if (_again) { _again = false; const f = _againForce; _againForce = false; setTimeout(() => save(f ? 'flush' : 'hand'), 0); }
   }
 }
 
@@ -198,8 +285,8 @@ async function pickFolder() {
     _state.err = null;
     try { await _saveHandle(h); } catch (_e) { /* le handle reste valable pour la session */ }
     _ui();
-    // Première écriture immédiate si des mains sont déjà enregistrées.
-    save();
+    // Première écriture immédiate : le joueur voit le fichier apparaître.
+    save('pick');
     return true;
   } catch (e) {
     // AbortError = le joueur a fermé le sélecteur : ce n'est pas une erreur.
@@ -257,13 +344,28 @@ function _ready() {
   _getHandle().then(() => _ui()).catch(() => {});
 }
 
+// Flush forcé quand la page part (équivalent Log::flushLog + destructeur) : la
+// dernière main jouée ne doit pas rester dans le seul IndexedDB. pagehide est
+// le seul événement fiable sur iOS ; visibilitychange couvre le passage en
+// arrière-plan sur mobile.
+function _installFlush() {
+  if (!_supported()) return;
+  try {
+    window.addEventListener('pagehide', () => { save('flush'); });
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'hidden') save('flush');
+    });
+  } catch (_e) {}
+}
+
 if (typeof window !== 'undefined') {
-  window._pdbAutoSave = save;         // appelé par handlog.mjs à chaque main persistée
+  window._pdbAutoSave = save;         // appelé par handlog.mjs (action / main / partie)
   window._pdbAutoPick = pickFolder;   // bouton « Choisir le dossier… »
   window._pdbAutoUi = _ui;            // rafraîchissement à l'ouverture du panneau
   _ready();
+  _installFlush();
 }
 
 // Exports ESM : uniquement pour les tests déterministes. En navigateur le
 // module ne communique que par window.*.
-export { save, pickFolder, _supported, _enabled, _fileName, _state };
+export { save, pickFolder, _supported, _enabled, _intervalIdx, _shouldWrite, _fileName, _state };

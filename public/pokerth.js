@@ -272,14 +272,35 @@ window.setDefaultCommunity = setDefaultCommunity;
 // Intervalle du journal (parite QML LogInterval) : 'action' (chaque action)
 // ou 'hand' (une entree par etape de main seulement). Persiste ; lu en direct
 // par logAction via _getLogInterval.
+// Index officiel (configfile.cpp defaut "1", log.cpp) :
+//   0 = after every action · 1 = after every hand · 2 = after every game.
+// Les anciennes valeurs texte ('action'/'hand') restent lues pour ne pas
+// perdre le reglage des joueurs deja installes.
+function _getLogIntervalIdx() {
+  try {
+    var v = localStorage.getItem('pth_log_interval');
+    if (v === 'action') return 0;
+    if (v === 'hand') return 1;
+    var n = parseInt(v, 10);
+    return (n === 0 || n === 1 || n === 2) ? n : 1;
+  } catch (e) { return 1; }
+}
+window._getLogIntervalIdx = _getLogIntervalIdx;
+// Compatibilite : le journal texte ne distingue que « chaque action » du reste,
+// exactement comme guilog.cpp (LogInterval == 0).
 function _getLogInterval() {
-  // Défaut « par main » (parité QML : LogInterval=1, log.cpp 0=action/1=main).
-  try { var v = localStorage.getItem('pth_log_interval'); return (v === 'action') ? 'action' : 'hand'; }
-  catch (e) { return 'hand'; }
+  return (_getLogIntervalIdx() === 0) ? 'action' : 'hand';
 }
 window._getLogInterval = _getLogInterval;
 window.setLogInterval = function (v) {
-  try { localStorage.setItem('pth_log_interval', (v === 'hand') ? 'hand' : 'action'); } catch (e) {}
+  var idx;
+  if (v === 'action') idx = 0;
+  else if (v === 'hand') idx = 1;
+  else { idx = parseInt(v, 10); if (!(idx === 0 || idx === 1 || idx === 2)) idx = 1; }
+  try { localStorage.setItem('pth_log_interval', String(idx)); } catch (e) {}
+  // Le fichier .pdb suit le meme reglage (parite log.cpp) : on previent le
+  // module d'ecriture automatique pour qu'il reprenne au bon rythme.
+  try { if (typeof window._pdbAutoSave === 'function') window._pdbAutoSave('flush'); } catch (e) {}
 };
 // Croix de fermeture des fenetres flottantes : coupe l'option et masque.
 window.closeOddsWin = function () {
@@ -396,7 +417,7 @@ function openAdvancedOptions() {
   sync('adv-hudon', 'hud_on', false);
   sync('adv-pdbauto', 'pdb_auto', true);   // ecriture auto du .pdb dans un dossier local (web) — ON par defaut
   try { if (typeof window._pdbAutoUi === 'function') window._pdbAutoUi(); } catch (e) {}
-  try { var _li = document.getElementById('adv-loginterval'); if (_li) _li.value = _getLogInterval(); } catch (e) {}
+  try { var _li = document.getElementById('adv-loginterval'); if (_li) _li.value = String(_getLogIntervalIdx()); } catch (e) {}
   sync('adv-zoomfollow', 'zoom_follow', true); // défaut QML : suivi actif quand le zoom l'est
   sync('adv-snd-actions', 'snd_actions', true);
   sync('adv-snd-lobby', 'snd_lobby', true);
@@ -9553,7 +9574,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.5-web.31'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.5-web.32'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

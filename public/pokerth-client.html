@@ -2812,7 +2812,7 @@ if ('serviceWorker' in navigator) {
             <div class="adv-sec" data-i18n="advSecLogSettings">Log settings</div>
             <label class="adv-row"><input type="checkbox" id="adv-logon" onchange="setAdvOpt('log_on',this.checked)"><span data-i18n="advLogOn">Enable logging</span></label>
             <label class="adv-row"><input type="checkbox" id="adv-statstrack" onchange="setAdvOpt('stats_track',this.checked)"><span data-i18n="advStatsTrack">Record hand statistics</span><em class="adv-webtag">web</em></label>
-            <div class="adv-row"><span data-i18n="advLogInterval">Log interval</span><div class="sel-wrap adv-sel"><select id="adv-loginterval" onchange="setLogInterval(this.value)"><option value="action" data-i18n-opt="advLogEveryAction">Every action</option><option value="hand" data-i18n-opt="advLogEveryHand">Every hand</option></select><span class="sel-arr">▾</span></div></div>
+            <div class="adv-row"><span data-i18n="advLogInterval">Log interval</span><div class="sel-wrap adv-sel"><select id="adv-loginterval" onchange="setLogInterval(this.value)"><option value="0" data-i18n-opt="advLogEveryAction">action (high frequent disc access)</option><option value="1" data-i18n-opt="advLogEveryHand">hand (medium disc access)</option><option value="2" data-i18n-opt="advLogEveryGame">game (low disc access)</option></select><span class="sel-arr">▾</span></div></div>
             <div class="adv-sec" data-i18n="advSecStatsExport">Statistics export</div>
             <div class="adv-link-desc" data-i18n="advStatsExportDesc">Export recorded hands as a .pdb file, importable in PokerTH Tracker.</div>
             <div class="adv-row adv-export-row">
@@ -2820,7 +2820,7 @@ if ('serviceWorker' in navigator) {
               <button type="button" class="btn-sm adv-export-btn" onclick="_advExportPdb('all',this)"><span data-i18n="advStatsExportAll">Export all history</span></button>
             </div>
             <div class="adv-sec" data-i18n="advPdbAutoSec">Automatic .pdb file</div>
-            <div class="adv-link-desc" data-i18n="advPdbAutoDesc">Write the .pdb log into a folder on your computer and update it after every hand, like the desktop client. Desktop Chrome, Edge and Opera only.</div>
+            <div class="adv-link-desc" data-i18n="advPdbAutoDesc">Write the .pdb log into a folder on your computer and keep it up to date at the log interval set above, like the desktop client. Desktop Chrome, Edge and Opera only.</div>
             <label class="adv-row"><input type="checkbox" id="adv-pdbauto" onchange="setAdvOpt('pdb_auto',this.checked)"><span data-i18n="advPdbAuto">Write the .pdb file automatically</span><em class="adv-webtag">web</em></label>
             <div class="adv-row adv-export-row">
               <button type="button" class="btn-sm adv-export-btn" id="adv-pdbauto-pick" onclick="if(window._pdbAutoPick)window._pdbAutoPick()"><span data-i18n="advPdbAutoPick">Choose folder…</span></button>

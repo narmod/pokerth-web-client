@@ -66,6 +66,10 @@ class HandRecorder {
     // reste testable sans IndexedDB). Appelés au fil des événements.
     this.onGamePersist = opts.onGamePersist || null;   // (session, game, players)
     this.onHandPersist = opts.onHandPersist || null;   // (hand, actionsDeLaMain)
+    // Hooks « intervalle de log » (parite log.cpp : LogInterval 0/1/2). Purement
+    // additifs : sans eux le recorder se comporte exactement comme avant.
+    this.onActionPersist = opts.onActionPersist || null;   // () apres chaque action loggee
+    this.onGameEndPersist = opts.onGameEndPersist || null; // () a la fin d'une partie
     this.session = {
       pokerthVersion: opts.version || 'web',
       date: t.date,
@@ -318,6 +322,7 @@ class HandRecorder {
       if (!this._gameOverDone.has(gk)) {
         const seat = this._seatOfPid[gameOverPid];
         if (seat != null) { this._gameOverDone.add(gk); this._pushAction(seat, 'wins game', null); }
+        if (this.onGameEndPersist) { try { this.onGameEndPersist(); } catch (_e) {} }
       }
     }
   }
@@ -403,6 +408,7 @@ class HandRecorder {
       action,
       amount: amount == null ? null : (amount | 0),
     });
+    if (this.onActionPersist) { try { this.onActionPersist(); } catch (_e) {} }
   }
 
   // Snapshot sérialisable (pour IndexedDB / debug / tests).
@@ -2197,12 +2203,25 @@ function _renderRange(modal) {
     var store = new HandStore();
     var rec = new HandRecorder({
       version: (typeof window !== 'undefined' && window.BUILD_VERSION) ? ('web-' + window.BUILD_VERSION) : 'web',
-      onGamePersist: function (session, game, players) { store.putSession(rec.sessionId, session); store.putGame(rec.sessionId, game); store.putPlayers(rec.sessionId, players); },
+      onGamePersist: function (session, game, players) {
+        store.putSession(rec.sessionId, session); store.putGame(rec.sessionId, game); store.putPlayers(rec.sessionId, players);
+        // Parite Log::init() : le fichier .pdb existe des le debut de la partie,
+        // schema et ligne Session inclus, avant la premiere main.
+        try { if (typeof window._pdbAutoSave === 'function') window._pdbAutoSave('start'); } catch (_e) {}
+      },
       onHandPersist: function (hand, actions) {
         store.putHandBundle(rec.sessionId, hand, actions);
         try { if (typeof window._renderStats === 'function') window._renderStats(); } catch (_e) {}
         try { if (typeof window._hudRefresh === 'function') window._hudRefresh(); } catch (_e) {}
-        try { if (typeof window._pdbAutoSave === 'function') window._pdbAutoSave(); } catch (_e) {}
+        try { if (typeof window._pdbAutoSave === 'function') window._pdbAutoSave('hand'); } catch (_e) {}
+      },
+      // LogInterval 0 : flush apres chaque action loggee.
+      onActionPersist: function () {
+        try { if (typeof window._pdbAutoSave === 'function') window._pdbAutoSave('action'); } catch (_e) {}
+      },
+      // LogInterval 2 : flush a la fin de la partie (equivalent logAfterGame()).
+      onGameEndPersist: function () {
+        try { if (typeof window._pdbAutoSave === 'function') window._pdbAutoSave('game'); } catch (_e) {}
       }
     });
     if (typeof window !== 'undefined') { window._handlog = rec; window._handlogStore = store; }
