@@ -160,7 +160,7 @@ export const help = {
         { id: 'reactions', t: 'Reakcje emoji',
           b: ['Przycisk reakcji otwiera wybór 30 animowanych reakcji (\uD83C\uDF89, \uD83D\uDE02, \uD83D\uDE31, \uD83D\uDD25\u2026), które odtwarzają się z efektem nad twoim miejscem, widoczne dla całego stołu — także dla graczy na kliencie desktopowym. Reakcje wyłącza się całkiem w Opcjach zaawansowanych.'] },
         { id: 'translate', t: 'Rozumieć wszystkich',
-          b: ['Z włączonym tłumaczeniem czatu każda wiadomość dostaje przycisk tłumaczenia, który pokazuje ją w twoim języku, przez tłumacza przeglądarki. Popularne skróty stołowe (gg, nh, utg\u2026) są wyjaśniane w dymku po najechaniu — obie opcje są w Opcje zaawansowane \u2192 Czat.'],
+          b: ['Przy w\u0142\u0105czonym t\u0142umaczeniu czatu przycisk t\u0142umaczenia pojawia si\u0119 w wierszu pod wska\u017anikiem \u2014 lub w wierszu, kt\u00f3ry dotkniesz na ekranie dotykowym \u2014 i pokazuje wiadomo\u015b\u0107 w twoim j\u0119zyku przy u\u017cyciu t\u0142umacza przegl\u0105darki. Mo\u017cna go pokazywa\u0107 stale we wszystkich wierszach w Opcje zaawansowane \u2192 Czat, gdzie znajduje si\u0119 te\u017c podpowied\u017a obja\u015bniaj\u0105ca skr\u00f3ty przy stole (gg, nh, utg\u2026).'],
           note: 'Tłumaczenie korzysta z usługi Google Translate i działa w każdej przeglądarce — potrzebne jest tylko połączenie z internetem. Wiadomość trafia do usługi tłumaczenia tylko wtedy, gdy dotkniesz jej przycisku tłumaczenia, nigdy automatycznie.' },
         { id: 'social', t: 'Gracze: profil, zapraszanie, ignorowanie',
           b: ['Dotknij dowolnego gracza — przy stole lub na liście lobby — aby otworzyć jego kartę: profil i statystyki, zaproszenie do twojej gry albo ignorowanie (jego wiadomości na czacie są ukrywane; ignorowanie jest odwracalne w każdej chwili). Potwierdzenie przed zaproszeniem/ignorowaniem można włączyć w opcjach.'] }
@@ -255,16 +255,18 @@ export const help = {
             ['F6 / F7 / F8', 'Ręczny \u00b7 Auto Check/Fold \u00b7 Auto Check/Call'],
             ['Alt+M / Alt+K / Alt+F', 'Ręczny \u00b7 Auto Check/Call \u00b7 Auto Check/Fold'],
             ['Alt+C / Alt+L / Alt+I', 'Czat \u00b7 Dziennik \u00b7 Panel szans'],
+            ['Alt+S', 'Ustawienia \u2014 wsz\u0119dzie w aplikacji, nie tylko w grze'],
             ['F11', 'Pełny ekran']],
           note: 'Skróty wymagają fizycznej klawiatury. Na Macu klawisze F domyślnie sterują multimediami: przytrzymaj Fn (albo włącz \u201eUżywaj klawiszy F1, F2 itd. jako standardowych klawiszy funkcyjnych\u201d w ustawieniach macOS). Na iPhonie pełny ekran jest ograniczony przez iOS — instalacja aplikacji jako PWA daje to samo pełnoekranowe doświadczenie.' },
         { id: 'webkeys', t: 'Webowe klawisze literowe',
-          b: ['Rozszerzenie webowe: pojedyncze klawisze literowe też wyzwalają akcje i można je przypisać na nowo w Opcje zaawansowane \u2192 Skróty klawiszowe:'],
+          b: ['Rozszerzenie webowe: klawisze jednoliterowe oraz Alt+T r\u00f3wnie\u017c wyzwalaj\u0105 akcje i wszystkie mo\u017cna prze\u0142\u0105czy\u0107 w Opcje zaawansowane \u2192 Skr\u00f3ty klawiszowe:'],
           keys: [
             ['F', 'Fold'],
             ['C', 'Check / Call'],
             ['R', 'Raise'],
             ['A', 'All-In'],
             ['1 / 2 / 3', 'Bet 1/3 \u00b7 1/2 \u00b7 Pot'],
+            ['Alt+T', 'Panel statystyk'],
             ['Esc', 'Zamknij wierzchnie okno (także przycisk Wstecz Androida)']],
           note: 'Na Androidzie systemowy przycisk/gest Wstecz zamyka okna jak Esc, zamiast opuszczać grę (konfigurowalne w opcjach). iOS nie ma odpowiednika — użyj \u2715 każdego okna.' }
       ]
