@@ -1961,6 +1961,28 @@ function handleAdmin(req, res, reqPathOnly, query) {
     let sockets = null; try { sockets = wss.clients.size; } catch (e) {}
     return adminJson(res, 200, { ok: true, version: version, node: process.version, uptimeSec: Math.floor(process.uptime()), installKind: installKind(), gitUpdatable: GIT_UPDATABLE, sockets: sockets, players: Object.keys(statsStore).length, resetPeriod: STATS_RESET_PERIOD, modes: appModes(), showLoginTitle: !!_adminConfig.showLoginTitle, defaultTheme: _adminConfig.defaultTheme || '', defaults: _adminConfig.defaults || {}, loginDefaults: _loginDefaults(false), proxyCfg: _adminConfig.proxyCfg || {}, logLevel: _logLevelName(), maxClients: _maxClients(), fd: _fdInfo(), tableDefaults: _adminConfig.tableDefaults || {}, tableNames: _adminConfig.tableNames || {}, serverName: _adminConfig.serverName || '', serverTagline: _adminConfig.serverTagline || '', restartAt: (_restartAt > Date.now() ? _restartAt : null), restartKind: (_restartAt > Date.now() ? _restartKind : null) });
   }
+  // ── Inventaire des connexions en cours (clé maître uniquement) ──────────
+  // Lecture seule ; POST { kick: <id> } ferme une connexion. Volontairement hors
+  // des clés déléguées : on y voit des pseudos et des IP (masquées).
+  if (reqPathOnly === '/admin/sessions') {
+    if (req.method === 'GET') {
+      if (!adminAuthed(query)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
+      res._rlNoPenalty = true;
+      return adminJson(res, 200, _sessionsSnapshot());
+    }
+    if (req.method === 'POST') {
+      return readJsonBody(req, function (d) {
+        if (!adminAuthed(query, d && d.token)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
+        const id = d && parseInt(d.kick, 10);
+        if (!id || !isFinite(id)) return adminJson(res, 400, { ok: false, error: 'missing id' });
+        const kind = _kickSession(id);
+        if (!kind) return adminJson(res, 404, { ok: false, error: 'not found' });
+        console.log('[admin] Session ' + id + ' (' + kind + ') déconnectée depuis le tableau de bord');
+        return adminJson(res, 200, { ok: true, kicked: kind });
+      });
+    }
+    res.writeHead(405); res.end('Method not allowed'); return;
+  }
   if (reqPathOnly === '/admin/visits/export') {
     if (!adminAuthed(query)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
     const fmt = (query.format === 'csv') ? 'csv' : 'json';
@@ -3921,6 +3943,79 @@ function _scheduleConn(fn) {
 function _heartbeat() { this.isAlive = true; }
 
 const _sessions = new Map();              // sid → S (session vivante)
+// ── Registre des sessions vivantes (tableau de bord admin, /admin/sessions) ──
+// _sessions n'indexe que les sessions AVEC sid ; ce Set les contient toutes,
+// avec ou sans sid, et sert uniquement à l'inventaire et à la déconnexion
+// manuelle. Les entrées en sortent dans _destroySession().
+const _liveSessions = new Set();
+let _sessSeq = 0;                          // id court et stable côté admin
+// L'IP complète n'est jamais exposée au tableau de bord : dernier octet (v4)
+// ou 80 derniers bits (v6) masqués — assez pour distinguer deux joueurs et
+// repérer un abus, pas assez pour identifier quelqu'un.
+function _maskIp(ip) {
+  let a = String(ip || '').replace(/^::ffff:/, '');
+  if (/^\d+\.\d+\.\d+\.\d+$/.test(a)) return a.replace(/\.\d+$/, '.x');
+  if (a.indexOf(':') >= 0) { const p = a.split(':').filter(Boolean); return p.slice(0, 3).join(':') + ':…'; }
+  return a || 'unknown';
+}
+// Instantané des connexions pour /admin/sessions. Deux familles :
+//   • bridges : ponts de jeu (navigateur ⇄ proxy ⇄ serveur PokerTH)
+//   • notify  : canaux légers ?notify=1 (joueurs connectés en direct à
+//                pokerth.net ou en entraînement, qui ne reçoivent que les avis)
+function _sessionsSnapshot() {
+  const now = Date.now();
+  const bridges = [];
+  _liveSessions.forEach(function (S) {
+    bridges.push({
+      id: S.id, sid: S.sid ? String(S.sid).slice(0, 8) : '',
+      nick: S.chatNick || '', auth: !!S.isAuthLogin,
+      mode: (S.ws && S.ws._bcMode) || S.bcMode || '',
+      host: S.host, port: S.port, tls: !!S.useTls,
+      ver: S.ver || '', ua: S.ua || '', ip: _maskIp(S.ip),
+      startedAt: S.startedAt || now,
+      upstream: !!S.connected,
+      attached: !!(S.ws && S.ws.readyState === 1),
+      grace: !!S.grace,
+      bIn: S.bIn || 0, bOut: S.bOut || 0, msgs: S.n || 0,
+    });
+  });
+  const notify = [];
+  try {
+    wss.clients.forEach(function (c) {
+      if (!c._notify) return;
+      notify.push({ id: c._nid, mode: c._bcMode || '', ver: c._ver || '',
+                    ua: c._ua || '', ip: _maskIp(c._ip), startedAt: c._startedAt || now,
+                    attached: c.readyState === 1 });
+    });
+  } catch (e) {}
+  bridges.sort(function (a, b) { return a.startedAt - b.startedAt; });
+  notify.sort(function (a, b) { return a.startedAt - b.startedAt; });
+  return { ok: true, now: now, maxClients: _maxClients(), bridges: bridges, notify: notify };
+}
+// Déconnexion manuelle depuis le tableau de bord. Un pont est fermé pour de
+// bon (code 4009, PAS de délai de grâce : on détruit la session AVANT de
+// fermer la socket, sinon le on('close') la garderait en attente de
+// rebranchement et le client reviendrait aussitôt).
+function _kickSession(id) {
+  let hit = null;
+  _liveSessions.forEach(function (S) { if (S.id === id) hit = S; });
+  if (hit) {
+    const w = hit.ws;
+    hit.ws = null;
+    _destroySession(hit);
+    if (w) { try { _allClients.delete(w); } catch (e) {} try { w.close(4009, 'Disconnected by admin'); } catch (e) {} }
+    return 'bridge';
+  }
+  let done = false;
+  try {
+    wss.clients.forEach(function (c) {
+      if (done || !c._notify || c._nid !== id) return;
+      try { c.close(4009, 'Disconnected by admin'); } catch (e) {}
+      done = true;
+    });
+  } catch (e) {}
+  return done ? 'notify' : null;
+}
 const SESSION_GRACE_MS = 120000;          // garder l'amont 2 min après coupure navigateur
                                           // (un onglet mobile en arrière-plan est « gelé » par
                                           // l'OS : ni timer ni event réseau ne tournent jusqu'au
@@ -3929,6 +4024,7 @@ const SESSION_MAX_BUF  = 4 * 1024 * 1024; // plafond du tampon (octets) en atten
 
 function _destroySession(S) {
   if (S.grace) { clearTimeout(S.grace); S.grace = null; }
+  _liveSessions.delete(S);
   if (S.sid && _sessions.get(S.sid) === S) _sessions.delete(S.sid);
   try { S.sock && S.sock.destroy(); } catch (_) {}
   S.sock = null; S.buf = []; S.bufBytes = 0;
@@ -3971,6 +4067,7 @@ function _openUpstream(S) {
         : net.connect(opts, onConn);
 
       S.sock.on('data', chunk => {
+        S.bOut = (S.bOut || 0) + chunk.length;
         S.rxBuf = Buffer.concat([S.rxBuf, chunk]);
         while (S.rxBuf.length >= 4) {
           const msgLen = S.rxBuf.readUInt32BE(0);
@@ -4025,6 +4122,11 @@ function _openUpstream(S) {
 // relais des réactions, gestion de la fermeture avec délai de grâce).
 function _attachWs(S, ws) {
   S.ws = ws;
+  // Un rebranchement (même sid, nouvelle socket) peut venir d'une autre IP ou
+  // d'un client mis à jour : on suit la socket courante pour l'inventaire admin.
+  if (ws._ip) S.ip = ws._ip;
+  if (ws._ua) S.ua = ws._ua;
+  if (ws._ver) S.ver = ws._ver;
   // Relay scope = the upstream this socket is bridged to. Reactions/avatars
   // only fan out to peers sharing the same host:port.
   ws._relayKey = S.host + ':' + S.port;
@@ -4060,6 +4162,7 @@ function _attachWs(S, ws) {
     }
     if (!S.connected || !S.sock || !S.sock.writable) return;
     const buf = Buffer.from(isBinary ? data : data.toString());
+    S.bIn = (S.bIn || 0) + buf.length;
     if (buf.length >= 4) {
       const _n  = buf.readUInt32BE(0);
       const _pl = buf.slice(4, 4 + _n);
@@ -4113,6 +4216,13 @@ wss.on('connection', (ws, req) => {
   // les onglets ouverts avant la mise a jour du client.
   const modeParam = (function () { const m = params.get('mode'); return (m === 'pthnet' || m === 'lan' || m === 'offline') ? m : null; })();
   ws._modeParam = modeParam;
+  // Métadonnées purement descriptives (tableau de bord admin) : version du
+  // client web annoncée par &v=, User-Agent et IP du navigateur. Aucune n'est
+  // utilisée pour une décision — ni filtrage, ni routage.
+  ws._ver = String(params.get('v') || '').slice(0, 24);
+  ws._ua = String((req.headers && req.headers['user-agent']) || '').slice(0, 180);
+  ws._ip = clientIp(req);
+  ws._startedAt = Date.now();
 
   // ── Notify-only channel (?notify=1) ──
   // Clients connectés en DIRECT à pokerth.net : leur socket de jeu ne passe
@@ -4121,6 +4231,7 @@ wss.on('connection', (ws, req) => {
   // l'atteint sans autre modification. Le heartbeat existant la surveille.
   if (params.get('notify') === '1') {
     ws._bcMode = params.get('mode') === 'offline' ? 'offline' : 'pthnet';
+    ws._notify = true; ws._nid = ++_sessSeq;
     console.log('[i] Notify-only client attached (' + ws._bcMode + ', ' + wss.clients.size + ' ws total)');
     if (_restartAt > Date.now() && _restartNotice) { try { ws.send(_restartNotice); } catch (e) {} }
     ws.on('message', function () {});       // aucun trafic entrant attendu
@@ -4170,7 +4281,10 @@ wss.on('connection', (ws, req) => {
   console.log('──────────────────────────────────────');
   console.log('[>] ' + (useTls ? 'TLS' : 'TCP') + ' → ' + host + ':' + port + (sid ? ' (sid ' + sid.slice(0, 8) + ')' : ''));
   const S = { sid, host, port, useTls, sock: null, ws: null, connected: false,
-              rxBuf: Buffer.alloc(0), n: 0, buf: [], bufBytes: 0, grace: null };
+              rxBuf: Buffer.alloc(0), n: 0, buf: [], bufBytes: 0, grace: null,
+              id: ++_sessSeq, startedAt: Date.now(), bIn: 0, bOut: 0,
+              ip: ws._ip, ua: ws._ua, ver: ws._ver, bcMode: modeParam || '' };
+  _liveSessions.add(S);
   if (sid) _sessions.set(sid, S);
   _attachWs(S, ws);
   _openUpstream(S);

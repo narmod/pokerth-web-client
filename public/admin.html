@@ -170,6 +170,7 @@
     <div class="tabs">
       <button class="tab on" data-t="server">Server</button>
       <button class="tab" data-t="traffic">Traffic</button>
+      <button class="tab" data-t="sessions">Sessions</button>
       <button class="tab" data-t="clients">Clients</button>
       <button class="tab" data-t="broadcast" data-scope="broadcast">Broadcasts</button>
       <button class="tab" data-t="polls" data-scope="polls">Polls</button>
@@ -232,6 +233,22 @@
       </div>
     </div>
 
+    <div id="panel-sessions" style="display:none">
+      <div class="card">
+        <div class="boardhead" style="margin-bottom:6px"><h2 style="margin:0">Live connections</h2><button id="seRefresh" class="use">Refresh</button></div>
+        <p class="muted" style="margin:0 0 8px">Everyone connected right now. <b>Bridges</b> are players whose game traffic goes through this proxy; <b>notices</b> are lightweight channels (players connected straight to pokerth.net, or training) that only receive broadcasts. IP addresses are shown partially masked. Auto-refreshes every 5&nbsp;s while this tab is open.</p>
+        <div id="seSum" class="muted"></div>
+        <div id="seMsg" class="msg"></div>
+      </div>
+      <div class="card">
+        <h2 style="margin:0 0 6px">Bridges</h2>
+        <div id="seBridges"><div class="empty">Loading\u2026</div></div>
+      </div>
+      <div class="card">
+        <h2 style="margin:0 0 6px">Notice channels</h2>
+        <div id="seNotify"><div class="empty">Loading\u2026</div></div>
+      </div>
+    </div>
     <div id="panel-packages" style="display:none">
       <div class="card">
         <label>Import a package (.zip)</label>
@@ -830,7 +847,7 @@
   // the last-activity stamp; activity listeners (capture+passive) just stamp.
   var IDLE_MS=10*60*1000, _idleLast=Date.now();
   function _idleReset(){ _idleLast=Date.now(); }
-  function doLogout(reason){ srvStop(); localStorage.removeItem(TOKK); $('ltok').value=''; if($('loginErr')) $('loginErr').textContent=reason||''; show('login'); }
+  function doLogout(reason){ srvStop(); seStop(); localStorage.removeItem(TOKK); $('ltok').value=''; if($('loginErr')) $('loginErr').textContent=reason||''; show('login'); }
   function _idleCheck(){ if(tok() && dash.style.display!=='none' && Date.now()-_idleLast>IDLE_MS) doLogout('Logged out after 10 minutes of inactivity.'); }
   ['mousemove','mousedown','keydown','touchstart','scroll','click'].forEach(function(ev){ document.addEventListener(ev,_idleReset,{passive:true,capture:true}); });
   setInterval(_idleCheck, 30000);
@@ -874,6 +891,7 @@
     $('panel-music').style.display=t==='music'?'block':'none';
     $('panel-keys').style.display=t==='keys'?'block':'none';
     $('panel-traffic').style.display=t==='traffic'?'block':'none';
+    $('panel-sessions').style.display=t==='sessions'?'block':'none';
     $('panel-servers').style.display=t==='servers'?'block':'none';
     $('panel-polls').style.display=t==='polls'?'block':'none';
     if(t==='music')mzRefresh();
@@ -885,6 +903,7 @@
     if(t==='polls') loadPolls();
     if(t==='broadcast'){ loadBroadcasts(); if(_isMaster) loadWelcome(); }
     if(t==='clients'){ loadStatus(true); loadThemes(); }
+    if(t==='sessions'){ seStart(); } else { seStop(); }
     if(t==='server'){ loadServer(); srvStart(); } else { srvStop(); }
   }); });
 
@@ -1607,6 +1626,90 @@
   function bcPrevNow(){ bcGoldPreview('bcNowPrev',($('bcNowMsg').value||'').trim(),$('bcNowIcon').value); }
   ['bcMsg','bcIcon'].forEach(function(id){ if($(id)){ $(id).addEventListener('input',bcPrevSched); $(id).addEventListener('change',bcPrevSched); } });
   ['bcNowMsg','bcNowIcon'].forEach(function(id){ if($(id)){ $(id).addEventListener('input',bcPrevNow); $(id).addEventListener('change',bcPrevNow); } });
+  // -- Live connections (master only): who is connected right now -------------
+  // Read-only inventory served by /admin/sessions, plus a per-connection
+  // disconnect. Polled every 5 s while the tab is open (seStart/seStop) so a
+  // dashboard left on another tab costs nothing.
+  var _seTimer=null;
+  function _seDur(ms){
+    var s=Math.max(0,Math.floor(ms/1000));
+    if(s<60) return s+'s';
+    var m=Math.floor(s/60); if(m<60) return m+'m '+(s%60)+'s';
+    var h=Math.floor(m/60); return h+'h '+(m%60)+'m';
+  }
+  function _seBytes(n){
+    n=n||0;
+    if(n<1024) return n+' B';
+    if(n<1024*1024) return (n/1024).toFixed(1)+' KB';
+    return (n/1048576).toFixed(1)+' MB';
+  }
+  // Short, human device label from the User-Agent. Best-effort only: it labels
+  // a row, nothing depends on it.
+  function _seDev(ua){
+    ua=String(ua||''); if(!ua) return '';
+    var os = /iPhone/.test(ua)?'iPhone' : /iPad/.test(ua)?'iPad' : /Android/.test(ua)?'Android'
+           : /Windows/.test(ua)?'Windows' : /Mac OS X/.test(ua)?'Mac' : /Linux/.test(ua)?'Linux' : '';
+    var br = /Edg\//.test(ua)?'Edge' : /OPR\//.test(ua)?'Opera' : /Firefox\//.test(ua)?'Firefox'
+           : /Chrome\//.test(ua)?'Chrome' : /Safari\//.test(ua)?'Safari' : '';
+    return [os,br].filter(Boolean).join(' \u00b7 ');
+  }
+  function _seMode(m){ return m==='pthnet'?'pokerth.net' : m==='lan'?'LAN / private' : m==='offline'?'Training' : (m||'\u2014'); }
+  function _seRow(host,left,btn){
+    var row=document.createElement('div'); row.className='row';
+    var nm=document.createElement('div'); nm.className='nm'; nm.innerHTML=left;
+    row.appendChild(nm); if(btn) row.appendChild(btn); host.appendChild(row);
+  }
+  function _seKickBtn(id,label){
+    var b=document.createElement('button'); b.className='del'; b.textContent='Disconnect';
+    b.addEventListener('click',function(){
+      if(!confirm('Disconnect '+label+'? The player is dropped immediately and has to reconnect.')) return;
+      api('/admin/sessions',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({kick:id})})
+        .then(function(r){return r.json();}).then(function(d){
+          var m=$('seMsg');
+          if(d&&d.ok){ if(m){ m.textContent='Disconnected.'; m.className='msg ok'; } loadSessions(); }
+          else if(m){ m.textContent='Failed: '+((d&&d.error)||'error'); m.className='msg err'; }
+        }).catch(function(){ var m=$('seMsg'); if(m){ m.textContent='Network error.'; m.className='msg err'; } });
+    });
+    return b;
+  }
+  function loadSessions(){
+    return api('/admin/sessions').then(function(r){return r.json();}).then(function(d){
+      var sum=$('seSum'), bb=$('seBridges'), nb=$('seNotify');
+      if(!d||!d.ok){ if(bb) bb.innerHTML='<div class="empty">Could not load connections.</div>'; return; }
+      var nB=(d.bridges||[]).length, nN=(d.notify||[]).length;
+      if(sum) sum.textContent=nB+' bridge'+(nB===1?'':'s')+' \u00b7 '+nN+' notice channel'+(nN===1?'':'s')
+        +(d.maxClients? ' \u00b7 cap '+d.maxClients : ' \u00b7 no cap');
+      if(bb){ bb.innerHTML='';
+        if(!nB){ bb.innerHTML='<div class="empty">Nobody bridged right now.</div>'; }
+        (d.bridges||[]).forEach(function(b){
+          var who=b.nick?_annEsc(b.nick):'<i>anonymous</i>';
+          var badge=b.auth?' <span class="muted">(account)</span>':'';
+          var state=!b.upstream?'connecting' : b.grace?'reconnect grace' : !b.attached?'detached' : 'live';
+          var l1='<b>'+who+badge+' \u2014 '+_annEsc(_seMode(b.mode))+'</b>';
+          var l2=[_annEsc(b.host+':'+b.port+(b.tls?' TLS':'')),
+                  b.ver?('v'+_annEsc(b.ver)):'v?',
+                  _annEsc(_seDev(b.ua)),
+                  _annEsc(b.ip),
+                  _seDur(d.now-b.startedAt),
+                  '\u2191'+_seBytes(b.bIn)+' \u2193'+_seBytes(b.bOut),
+                  state].filter(Boolean).join(' \u00b7 ');
+          _seRow(bb, l1+'<span>'+l2+'</span>', _seKickBtn(b.id, b.nick||('bridge #'+b.id)));
+        });
+      }
+      if(nb){ nb.innerHTML='';
+        if(!nN){ nb.innerHTML='<div class="empty">No notice channel open.</div>'; }
+        (d.notify||[]).forEach(function(c){
+          var l1='<b>'+_annEsc(_seMode(c.mode))+'</b>';
+          var l2=[c.ver?('v'+_annEsc(c.ver)):'v?', _annEsc(_seDev(c.ua)), _annEsc(c.ip), _seDur(d.now-c.startedAt)].filter(Boolean).join(' \u00b7 ');
+          _seRow(nb, l1+'<span>'+l2+'</span>', _seKickBtn(c.id,'this notice channel'));
+        });
+      }
+    }).catch(function(){ var bb=$('seBridges'); if(bb) bb.innerHTML='<div class="empty">Network error.</div>'; });
+  }
+  function seStart(){ loadSessions(); if(_seTimer) return; _seTimer=setInterval(loadSessions,5000); }
+  function seStop(){ if(_seTimer){ clearInterval(_seTimer); _seTimer=null; } }
+  (function(){ var b=$('seRefresh'); if(b) b.addEventListener('click',function(){ var m=$('seMsg'); if(m){ m.textContent=''; m.className='msg'; } loadSessions(); }); })();
+
   // -- Delegate keys (master only): create scoped API keys per category --------
   var _kySC={broadcast:'Broadcasts',music:'Music',packages:'Packages',leaderboard:'Leaderboard',polls:'Polls'};
   function _kyLabel(s){ return _kySC[s]||s; }
