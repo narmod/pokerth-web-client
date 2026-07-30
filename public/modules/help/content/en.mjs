@@ -252,7 +252,7 @@ export const help = {
         { id: 'updates', t: 'Staying up to date',
           b: ['The client updates itself: when a new version is deployed, a banner invites you to refresh (or type /update in the chat to check manually). Occasionally a small product poll may appear to ask your opinion on a feature \u2014 taking part is optional and polls can be disabled entirely in Advanced options \u2192 Community.'] },
         { id: 'fkeys', t: 'Official keyboard shortcuts',
-          b: ['The official PokerTH function keys work during a game:'],
+          b: ['The official PokerTH function keys work during a game \u2014 Alt+S works anywhere:'],
           keys: [
             ['F1 / F2 / F3 / F4', 'Fold \u00b7 Check/Call \u00b7 Bet/Raise \u00b7 All-In (order can be reversed in the options)'],
             ['F5', 'Show your cards (when possible)'],
