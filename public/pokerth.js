@@ -632,9 +632,45 @@ function _advSyncContext() {
   try {
     var host = (window._pthNetServer && window._pthNetServer.host) ? window._pthNetServer.host : null;
     var el = modal.querySelector('#adv-srv-host');
-    if (el) el.textContent = host || (typeof window.t === 'function' ? window.t('advSrvUnknown') : '\u2014');
+    if (el) el.textContent = _advSrvDisplay(host);
   } catch (e) {}
 }
+
+// Adresse du serveur affichee dans Options avancees > Jeu internet.
+// Le client web ne parle jamais au serveur PokerTH en direct : il passe par le
+// pont proxy, et l'hote configure cote proxy est souvent une adresse d'infra
+// (10.x, 192.168.x, localhost, *.local...). Cette adresse n'apprend rien au
+// joueur et n'a pas a etre exposee : on affiche alors « Pont proxy ». Un nom
+// public reel (pokerth.net, un domaine de club) reste affiche tel quel.
+function _advSrvIsPrivate(h) {
+  if (!h) return false;
+  var s = String(h).trim().toLowerCase().replace(/^\[|\]$/g, '');
+  if (s === 'localhost' || s === '::1' || /\.(local|lan|home|internal|localdomain)$/.test(s)) return true;
+  var m = s.match(/^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$/);
+  if (m) {
+    var a = +m[1], b = +m[2];
+    if (a === 10 || a === 127 || a === 0) return true;                 // prive / loopback / non specifie
+    if (a === 192 && b === 168) return true;                            // prive
+    if (a === 172 && b >= 16 && b <= 31) return true;                   // prive
+    if (a === 169 && b === 254) return true;                            // lien-local
+    if (a === 100 && b >= 64 && b <= 127) return true;                  // CGNAT (RFC 6598)
+    return false;
+  }
+  if (/^f[cd][0-9a-f]{2}:/.test(s) || /^fe80:/.test(s)) return true;    // IPv6 ULA / lien-local
+  return false;
+}
+function _advSrvDisplay(host) {
+  var key = null;
+  if (!host) key = 'advSrvUnknown';
+  else if (_advSrvIsPrivate(host)) key = 'advSrvBridge';
+  if (!key) return host;
+  var fb = (key === 'advSrvBridge') ? 'Proxy bridge' : '\u2014';
+  try {
+    if (typeof window.t === 'function') { var v = window.t(key); if (v && v !== key) return v; }
+  } catch (e) {}
+  return fb;
+}
+window._advSrvDisplay = _advSrvDisplay;   // pont pour les tests deterministes
 
 // « Paramètres par défaut » : réinitialise options + raccourcis (avec confirmation).
 function resetAdvDefaults() {
@@ -9573,7 +9609,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.5-web.34'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.5-web.35'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

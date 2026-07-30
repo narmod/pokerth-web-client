@@ -97,5 +97,20 @@ await new Promise(r => setTimeout(r, 700));
 const last = [...srv.options].map(o => o.value).pop();
 ok(srv.value === last, 'après 700 ms le select tient toujours (' + srv.value + ')');
 
+// 7) Adresse du serveur : jamais d'adresse d'infra privée dans les options
+{
+  const disp = (h) => vm.runInContext('_advSrvDisplay(' + JSON.stringify(h) + ')', ctx);
+  const bridge = disp('10.7.7.150');
+  ok(bridge !== '10.7.7.150' && bridge.length > 0,
+     'hôte privé 10.7.7.150 → libellé, pas l\'adresse (' + bridge + ')');
+  ok(disp('10.7.7.150').indexOf('10.7.7.150') === -1, 'aucune IP privée affichée');
+  ok(disp('192.168.1.10').indexOf('192.168') === -1, '192.168.x masqué');
+  ok(disp('127.0.0.1').indexOf('127.0.0.1') === -1, 'loopback masqué');
+  ok(disp('nas.local').indexOf('nas.local') === -1, 'nom .local masqué');
+  ok(disp('pokerth.net') === 'pokerth.net', 'nom public affiché tel quel');
+  ok(disp('pokerth.ddns.net') === 'pokerth.ddns.net', 'domaine public affiché tel quel');
+  ok(disp(null) !== null && disp(null).length > 0, 'aucun hôte → libellé de repli');
+}
+
 console.log(fail ? `FAIL ${fail}/${n}` : `PASS ${n}/${n}`);
 process.exit(fail ? 1 : 0);
