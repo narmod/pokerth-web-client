@@ -152,6 +152,12 @@ use too. Items are grouped by status rather than fixed phases.
   system (old saved keys migrate automatically). A new draggable **Hand-odds (Combinaisons)** window joins them, and the
   table zoom is collapsible everywhere. On phone portrait the action bar hugs the bottom
   edge for a full-screen table.
+- Advanced options carry a **search field** (same shell as the Help window search): a
+  couple of letters list every matching setting across categories, sub-tabs and folded
+  sections; a setting is also reachable by its section name or one of its choices, and
+  picking a result opens the right panel and highlights the row. The index is read from
+  the window's own DOM, so it needs no second copy of the labels and follows the language
+  automatically.
 - Music and sound split: a dedicated **Music player** panel (with game-sound settings moved
   out to Advanced options).
 - Ranking modal (PokerTH / BBC / WEC leaderboards with seasons, All-Time, search and

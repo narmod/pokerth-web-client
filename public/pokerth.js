@@ -495,6 +495,9 @@ window.toggleAdvancedOptions = function () {
 function advSelectCat(cat) {
   var modal = document.getElementById('adv-modal');
   if (!modal) return;
+  // Une recherche en cours masque les panneaux : cliquer une categorie (ou
+  // rouvrir la fenetre, qui passe par ici) la remet a zero.
+  try { if (window._advSearchReset) window._advSearchReset(); } catch (e) {}
   var btn = modal.querySelector('.adv-cat[data-cat="' + cat + '"]');
   if (btn && btn.hasAttribute('disabled')) return;   // catégorie sans objet : on ignore
   var cats = modal.querySelectorAll('.adv-cat');
@@ -9609,7 +9612,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.5-web.36'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.5-web.37'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

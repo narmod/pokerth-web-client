@@ -27,6 +27,12 @@ because sp0ck shared them ahead of the release.
 - **Alt+S** opens the settings from anywhere, as in the official client, and
   **Alt+T** opens the statistics panel — a web addition, since the official
   client has no shortcut for it.
+- **A search field in the advanced options.** Type a couple of letters and every
+  matching setting is listed, whatever category, sub-tab or folded section it
+  sits in — a setting can also be found by the name of its section or by one of
+  its choices ("Portrait" finds "Seat placement"). Picking a result opens the
+  right panel, unfolds the section and highlights the row. Same field and same
+  behaviour as the Help window search.
 
 ### Changed
 - **The translate globe now appears on the line under the pointer**, or on the

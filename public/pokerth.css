@@ -8668,6 +8668,12 @@ html:not([data-seat-struct="qml"]) .seat:not(.me) .seat-foot { margin-top: 1px; 
 .adv-uipanel{display:none}
 .adv-uipanel.is-active{display:block}
 .adv-panels .adv-body{max-height:none;overflow:visible;margin-top:0}
+/* Recherche dans les Options avancees (modules/ui/adv-search.mjs) : le champ
+   reprend la coque de celui de l'Aide, et la liste de resultats prend la place
+   des panneaux de categories tant qu'une recherche est en cours. */
+.adv-panels.is-searching > .adv-panel.is-active{display:none}
+#adv-results{padding:2px 2px 8px}
+.adv-hit{animation:helpHit 1.5s ease;border-radius:6px}
 /* Panneaux « reliés » : description + bouton d'accès à l'UI existante. */
 .adv-link{display:flex;flex-direction:column;gap:var(--sp-5);align-items:flex-start;padding:6px 2px}
 .adv-link-desc{font-size:var(--fs-base);line-height:1.4;color:var(--text)}

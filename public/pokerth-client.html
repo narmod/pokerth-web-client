@@ -586,6 +586,7 @@ function onAvatarImageChosen(input) {
     '/modules/ui/deck.mjs',
     '/modules/net/avatar-cache.mjs',
     '/modules/ui/misc.mjs',
+    '/modules/ui/adv-search.mjs',
     '/modules/help/index.mjs',
     '/modules/music.mjs', '/modules/lang/en.mjs', '/fonts/fonts.css'];
   try {
@@ -2267,6 +2268,7 @@ function onAvatarImageChosen(input) {
 <script type="module" src="modules/ui/deck.mjs"></script>
 <script type="module" src="modules/net/avatar-cache.mjs"></script>
 <script type="module" src="modules/ui/misc.mjs"></script>
+<script type="module" src="modules/ui/adv-search.mjs"></script>
 <script type="module" src="modules/help/index.mjs"></script>
 <script type="module" src="modules/ui/keynav.mjs"></script>
 <script type="module" src="modules/ui/back-guard.mjs"></script>
@@ -2600,6 +2602,10 @@ if ('serviceWorker' in navigator) {
   <div class="km-card adv-card" role="dialog" aria-labelledby="adv-title">
     <button class="km-close" type="button" onclick="closeAdvancedOptions()" title="Fermer" data-i18n-title="closeTooltip" data-i18n-aria="closeTooltip" aria-label="Close">✕</button>
     <div class="km-title" id="adv-title"><span style="margin-right:7px">⚙️</span><span data-i18n="advTitle">Advanced options</span></div>
+    <!-- Settings search (modules/ui/adv-search.mjs): same shell as the Help
+         window search. The result list replaces the category panels while
+         typing; picking a result goes back to the setting itself. -->
+    <div class="help-search adv-search"><input id="adv-search-in" type="search" autocomplete="off" placeholder="Search settings…" data-i18n-placeholder="advSearchPh" oninput="try{window._advSearch&&window._advSearch()}catch(e){}"></div>
     <div class="adv-layout">
       <nav class="adv-nav" role="tablist" aria-label="Settings categories">
         <button type="button" class="adv-cat is-active" data-cat="ui" id="adv-cat-ui" role="tab" aria-selected="true" aria-controls="adv-panel-ui" onclick="advSelectCat('ui')"><span class="adv-cat-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/></svg></span><span class="adv-cat-lbl" data-i18n="advCatUI">User interface</span></button>
@@ -2850,6 +2856,7 @@ if ('serviceWorker' in navigator) {
             <input type="file" id="adv-backup-file" accept=".json,application/json" style="display:none">
           </div>
         </section>
+        <div class="help-body adv-results" id="adv-results" style="display:none"></div>
       </div>
     </div>
   </div>
