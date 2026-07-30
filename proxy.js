@@ -993,6 +993,7 @@ try {
     const _am = (_vs.allM && typeof _vs.allM === 'object') ? _vs.allM : {};
     visitsStore.allM   = { pokerthnet: _am.pokerthnet || 0, lan: _am.lan || 0, offline: _am.offline || 0 };
     visitsStore.env    = (_vs.env && typeof _vs.env === 'object') ? _vs.env : {};
+    visitsStore.envSince = (typeof _vs.envSince === 'number') ? _vs.envSince : 0;
   }
 } catch (e) { /* first run — start empty */ }
 let _visitsSaveTimer = null;
@@ -1062,9 +1063,15 @@ function _envBump(key, val) {
 function recordVisitEnv(ua, acceptLang, standalone) {
   try {
     ua = String(ua || '');
-    _envBump('os', _uaPick(UA_OS, ua));
-    _envBump('br', _uaPick(UA_BROWSER, ua));
+    const os = _uaPick(UA_OS, ua), br = _uaPick(UA_BROWSER, ua);
+    _envBump('os', os);
+    _envBump('br', br);
+    // Le croisement OS x navigateur est l'unite qui compte vraiment : « iPhone
+    // Safari » se teste, « Safari » tout court ne veut pas dire grand-chose
+    // quand la moitie de nos pieges connus sont propres a iOS.
+    _envBump('combo', os + ' \u00b7 ' + br);
     _envBump('pwa', standalone ? 'standalone' : 'browser');
+    if (!visitsStore.envSince) visitsStore.envSince = Date.now();
     // Premier tag de l'en-tête, tronqué à la langue de base (fr-CA → fr).
     const lg = String(acceptLang || '').split(',')[0].trim().slice(0, 12).toLowerCase().split('-')[0];
     _envBump('lang', /^[a-z]{2,3}$/.test(lg) ? lg : 'other');
@@ -1126,6 +1133,7 @@ function visitsSummary() {
     allTime: { v: visitsStore.totalV || 0, u: Object.keys(visitsStore.allU).length, nw: Object.keys(visitsStore.allU).length, rt: visitsStore.totalRet || 0, m: (function () { const am = visitsStore.allM || {}; return { pokerthnet: am.pokerthnet || 0, lan: am.lan || 0, offline: am.offline || 0 }; })() },
     series: series,
     env: visitsStore.env || {},
+    envSince: visitsStore.envSince || 0,
     db: { enabled: _dbStatus.enabled, connected: _dbStatus.connected, error: _dbStatus.error, lastWrite: _dbStatus.lastWrite, source: _dbStatus.source }
   };
 }
@@ -2269,7 +2277,7 @@ function handleAdmin(req, res, reqPathOnly, query) {
       return readJsonBody(req, function (d) {
         if (!adminAuthed(query, d && d.token)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
         if (d && d._reset) {
-          visitsStore = { days: {}, totalV: 0, totalRet: 0, allU: {}, allM: { pokerthnet: 0, lan: 0, offline: 0 }, env: {} };
+          visitsStore = { days: {}, totalV: 0, totalRet: 0, allU: {}, allM: { pokerthnet: 0, lan: 0, offline: 0 }, env: {}, envSince: 0 };
           dbClearTraffic();
           try { fs.writeFileSync(VISITS_FILE, JSON.stringify(visitsStore)); } catch (e) { console.error('[visits] reset write failed:', e.message); }
           return adminJson(res, 200, { ok: true, reset: true });

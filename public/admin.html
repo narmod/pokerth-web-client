@@ -90,6 +90,22 @@
   .prog{height:6px;border-radius:6px;background:rgba(255,255,255,.08);overflow:hidden;margin-top:10px;display:none}
   .prog.on{display:block}
   .prog>i{display:block;height:100%;width:0;background:var(--gold);transition:width .15s}
+  /* Répartition des visiteurs : anneau + classement côte à côte, empilés à l'étroit. */
+  .envwrap{display:flex;gap:18px;align-items:center;flex-wrap:wrap}
+  .envdonut{flex:0 0 168px;position:relative;display:flex;align-items:center;justify-content:center}
+  .envdonut svg{width:168px;height:168px;display:block}
+  .envdonut .ctr{position:absolute;text-align:center;font-size:.7rem;color:var(--text);line-height:1.3}
+  .envdonut .ctr b{display:block;font-size:1.15rem;color:var(--gold);font-variant-numeric:tabular-nums}
+  .envlist{flex:1;min-width:230px}
+  .envrow{display:flex;align-items:center;gap:9px;padding:5px 2px;font-size:.84rem;border-top:1px solid rgba(127,127,127,.10)}
+  .envrow:first-child{border-top:0}
+  .envrow .dot{width:10px;height:10px;border-radius:3px;flex:none}
+  .envrow .nmx{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--cream)}
+  .envrow .barx{flex:0 0 84px;height:6px;border-radius:4px;background:rgba(127,127,127,.18);overflow:hidden}
+  .envrow .barx i{display:block;height:100%;border-radius:4px}
+  .envrow .pct{flex:none;min-width:78px;text-align:right;color:var(--text);font-variant-numeric:tabular-nums;font-size:.78rem}
+  .envhi{border:1px solid var(--line);border-radius:10px;padding:9px 11px;margin-top:12px;font-size:.8rem;color:var(--cream);line-height:1.5}
+  .envhi b{color:var(--gold)}
   /* ── Light admin theme (data-admin-theme="light") ───────────── */
   :root[data-admin-theme="light"]{--panel:#ffffff;--line:rgba(28,38,58,.16);--gold:#1d222b;--cream:#1b2230;--text:#566071}
   :root[data-admin-theme="light"] body{background:radial-gradient(circle at 50% 0%,#eef1f6,#d7dde7)}
@@ -201,6 +217,18 @@
         <h2 style="margin:0 0 8px">Connections by server</h2>
         <p class="muted" style="margin:2px 0 10px">Counts a session once per entry mode it is opened with, whatever the transport: Internet games routed through this proxy still count as pokerth.net. Offline = training vs bots.</p>
         <div id="trafModes"><div class="empty">Loading…</div></div>
+      </div>
+      <div class="card">
+        <div class="boardhead" style="margin-bottom:6px"><h2 style="margin:0">What visitors run</h2><span id="envSince" class="muted" style="margin:0"></span></div>
+        <p class="muted" style="margin:2px 0 10px">From the same anonymous ping as the visit counter: system and browser read from the User-Agent, language from the request header, installed app vs browser tab reported by the client. Running totals, not a time series — what to test on, and which of the 36 languages are actually used.</p>
+        <div class="seg" id="envSeg" style="flex-wrap:wrap">
+          <button class="on" data-k="combo">Device + browser</button>
+          <button data-k="os">System</button>
+          <button data-k="br">Browser</button>
+          <button data-k="pwa">Installed</button>
+          <button data-k="lang">Language</button>
+        </div>
+        <div id="trafEnv" style="margin-top:14px"><div class="empty">Loading…</div></div>
       </div>
       <div class="card">
         <h2 style="margin:0 0 8px">New vs returning visitors</h2>
@@ -1276,6 +1304,91 @@
   function _noCount(){ try{ return localStorage.getItem('pth_no_count')==='1'; }catch(e){ return false; } }
   function _paintNoCount(){ var b=$('btnNoCount'); if(!b) return; var on=_noCount(); b.textContent=on?'Mes visites : ignorées ✓ (cliquer pour réactiver)':'Ne pas compter mes visites'; b.classList.toggle('on',on); }
   function toggleNoCount(){ try{ if(_noCount()) localStorage.removeItem('pth_no_count'); else localStorage.setItem('pth_no_count','1'); }catch(e){} _paintNoCount(); }
+  // -- What visitors run: donut + ranking, one view at a time -----------------
+  // The data is four (now five) plain counter maps. Everything below is
+  // presentation: the same numbers read as a share of the whole (donut) and as
+  // an ordered list (ranking), because the two answer different questions —
+  // "is anything dominant?" versus "what exactly is in the tail?".
+  var _envData={}, _envSince=0, _envView='combo';
+  function _envFmt(n){ try{ return Number(n||0).toLocaleString(); }catch(e){ return String(n||0); } }
+  // Palette lisible sur les deux thèmes admin; la dernière teinte sert au
+  // regroupement « autres », volontairement neutre.
+  var ENV_COLORS=['#4080d8','#7fd17f','#e0a03a','#c47ad6','#4fc3c7','#e98a8a','#9aa7bd','#6f7f99','#b58b5a','#8f8f8f'];
+  var ENV_LABELS={standalone:'Installed app',browser:'Browser tab',other:'Other'};
+  function _envLabel(k){ return ENV_LABELS[k]||k; }
+  // Un camembert de vingt parts ne se lit pas : on garde les huit premières et
+  // on replie la queue dans « autres », en gardant son décompte exact.
+  function _envSlices(map){
+    var keys=Object.keys(map||{});
+    if(!keys.length) return {total:0,slices:[]};
+    var tot=0; keys.forEach(function(k){ tot+=map[k]||0; });
+    keys.sort(function(a,b){ return (map[b]||0)-(map[a]||0); });
+    var top=keys.slice(0,8), rest=keys.slice(8);
+    var slices=top.map(function(k,i){ return {k:_envLabel(k),n:map[k]||0,c:ENV_COLORS[i]}; });
+    if(rest.length){
+      var r=0; rest.forEach(function(k){ r+=map[k]||0; });
+      slices.push({k:rest.length+' others',n:r,c:ENV_COLORS[9]});
+    }
+    return {total:tot,slices:slices};
+  }
+  // Anneau en SVG : un cercle par part, décalé par stroke-dashoffset. Pas de
+  // dépendance, et le trou central porte le total.
+  function _envDonut(slices,total){
+    var R=60, C=2*Math.PI*R, off=0, seg='';
+    slices.forEach(function(s){
+      var len=total?(s.n/total)*C:0;
+      seg+='<circle cx="84" cy="84" r="'+R+'" fill="none" stroke="'+s.c+'" stroke-width="22"'
+         + ' stroke-dasharray="'+len.toFixed(2)+' '+(C-len).toFixed(2)+'"'
+         + ' stroke-dashoffset="'+(-off).toFixed(2)+'" transform="rotate(-90 84 84)"><title>'
+         + _annEsc(s.k)+': '+s.n+'</title></circle>';
+      off+=len;
+    });
+    return '<div class="envdonut"><svg viewBox="0 0 168 168" role="img" aria-label="breakdown">'+seg+'</svg>'
+         + '<div class="ctr"><b>'+_envFmt(total)+'</b>pings</div></div>';
+  }
+  // Ligne de lecture : la part qui mérite qu'on la regarde. iOS Safari parce
+  // que c'est là que vivent la moitié de nos pièges connus, l'installation en
+  // PWA parce qu'elle change le cycle de vie (AudioContext, stockage).
+  function _envHighlight(){
+    var combo=_envData.combo||{}, pwa=_envData.pwa||{}, lang=_envData.lang||{};
+    var tot=0; Object.keys(combo).forEach(function(k){ tot+=combo[k]||0; });
+    var bits=[];
+    if(tot){
+      var ios=(combo['iPhone \u00b7 Safari']||0)+(combo['iPad \u00b7 Safari']||0);
+      bits.push('<b>'+Math.round((ios/tot)*100)+'%</b> on iOS Safari');
+      var keys=Object.keys(combo).sort(function(a,b){ return combo[b]-combo[a]; });
+      if(keys[0]) bits.push('most common: <b>'+_annEsc(keys[0])+'</b> ('+Math.round((combo[keys[0]]/tot)*100)+'%)');
+    }
+    var pt=(pwa.standalone||0)+(pwa.browser||0);
+    if(pt) bits.push('<b>'+Math.round(((pwa.standalone||0)/pt)*100)+'%</b> run it as an installed app');
+    var nl=Object.keys(lang).length;
+    if(nl) bits.push('<b>'+nl+'</b> language'+(nl===1?'':'s')+' seen, of 36 translated');
+    return bits.length?('<div class="envhi">'+bits.join(' &nbsp;·&nbsp; ')+'</div>'):'';
+  }
+  function renderEnv(){
+    var box=$('trafEnv'); if(!box) return;
+    var since=$('envSince');
+    if(since) since.textContent=_envSince?('since '+new Date(_envSince).toLocaleDateString()):'';
+    var r=_envSlices(_envData[_envView]);
+    if(!r.total){ box.innerHTML='<div class="empty">Nothing recorded yet \u2014 counting starts with the next visitors.</div>'; return; }
+    var rows=r.slices.map(function(s){
+      var pc=(s.n/r.total)*100;
+      return '<div class="envrow"><span class="dot" style="background:'+s.c+'"></span>'
+           + '<span class="nmx">'+_annEsc(s.k)+'</span>'
+           + '<span class="barx"><i style="width:'+Math.max(2,pc).toFixed(1)+'%;background:'+s.c+'"></i></span>'
+           + '<span class="pct">'+_envFmt(s.n)+' \u00b7 '+(pc<1?pc.toFixed(1):Math.round(pc))+'%</span></div>';
+    }).join('');
+    box.innerHTML='<div class="envwrap">'+_envDonut(r.slices,r.total)+'<div class="envlist">'+rows+'</div></div>'+_envHighlight();
+  }
+  (function(){
+    var seg=$('envSeg'); if(!seg) return;
+    seg.querySelectorAll('button').forEach(function(b){ b.addEventListener('click',function(){
+      _envView=b.dataset.k;
+      seg.querySelectorAll('button').forEach(function(x){ x.classList.toggle('on',x===b); });
+      renderEnv();
+    }); });
+  })();
+
   function loadTraffic(){
     if(!_trafWired){
       _trafWired = true;
@@ -1308,24 +1421,7 @@
         var rows=[['pokerth.net','pokerthnet'],['LAN / dedicated','lan'],['Offline (bots)','offline']];
         md.innerHTML = rows.map(function(rw){ return '<div class="srow"><span>'+rw[0]+'</span><b>'+fmt(tm[rw[1]])+' today · '+fmt(am[rw[1]])+' total</b></div>'; }).join('');
       }
-      var ev=$('trafEnv');
-      if(ev){
-        var env=d.env||{};
-        var groups=[['Operating system','os'],['Browser','br'],['Installed as an app','pwa'],['Language','lang']];
-        var out='';
-        groups.forEach(function(g){
-          var b=env[g[1]]||{}, keys=Object.keys(b);
-          if(!keys.length) return;
-          var tot=0; keys.forEach(function(k){ tot+=b[k]||0; });
-          keys.sort(function(x,y){ return (b[y]||0)-(b[x]||0); });
-          out+='<div class="srow" style="border-bottom:1px solid rgba(127,127,127,.18)"><span><b>'+g[0]+'</b></span><b>'+fmt(tot)+'</b></div>';
-          keys.slice(0,10).forEach(function(k){
-            var n=b[k]||0, pc=tot?Math.round((n/tot)*100):0;
-            out+='<div class="srow"><span>'+_annEsc(k)+'</span><b>'+fmt(n)+' \u00b7 '+pc+'%</b></div>';
-          });
-        });
-        ev.innerHTML = out || '<div class="empty">Nothing recorded yet.</div>';
-      }
+      _envData=d.env||{}; _envSince=d.envSince||0; renderEnv();
       var nv=$('trafNvR');
       if(nv){
         var wins=[['Today',d.today],['Last 7 days',d.week],['Last 30 days',d.month],['All time',d.allTime]];
