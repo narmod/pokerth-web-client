@@ -119,6 +119,18 @@ function onAnnounce(sub) {
 }
 
 function onInitAck(sub) {
+    // Parite QML 2.1.5 (LobbyHandler::setSession) : le chat lobby appartient a
+    // la CONNEXION, pas a l'onglet. Sans ce vidage, l'historique de la session
+    // precedente reste affiche apres un nouveau login -- avec un autre pseudo,
+    // voire sur un autre serveur.
+    // Place AVANT la branche de reprise automatique : QML vide sans exception a
+    // chaque nouvelle session (MSG_SOCK_INIT_DONE), y compris apres une coupure.
+    // Une reprise avec delai de grace reste une nouvelle session cote serveur --
+    // on s'aligne, meme si cela coute le fil du chat apres un trou reseau.
+    try {
+      if (window._advGet ? window._advGet('chat_clear_login', true) : true)
+        window.clearChatPanel && window.clearChatPanel('lobby');
+    } catch (e) {}
     S._wasAuthenticated = true;
     S._lastConnectFailed = false; // connexion réussie
     _endConnecting();           // login OK → unlock the connect button
@@ -172,17 +184,6 @@ function onInitAck(sub) {
       }
       return;   // JoinGameAck → game screen; JoinGameFailed → lobby fallback
     }
-    // Parite QML 2.1.5 (LobbyHandler::setSession) : le chat lobby appartient a
-    // la CONNEXION, pas a l'onglet. Sans ce vidage, l'historique de la session
-    // precedente reste affiche apres un nouveau login -- avec un autre pseudo,
-    // voire sur un autre serveur. On ne vide PAS sur le chemin de reprise
-    // automatique (return plus haut) : la, c'est la meme session de jeu qui
-    // continue apres une coupure reseau, et perdre le fil du chat serait une
-    // regression propre au web (QML n'a pas de reprise avec delai de grace).
-    try {
-      if (window._advGet ? window._advGet('chat_clear_login', true) : true)
-        window.clearChatPanel && window.clearChatPanel('lobby');
-    } catch (e) {}
     updateLobbyPill();
     App._resetGameState();   // ensure a clean lobby baseline (no-op on first connect)
     // Entrainement : pas d'etape lobby — le formulaire « Creer une table »
