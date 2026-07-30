@@ -1060,6 +1060,12 @@ function _envBump(key, val) {
   if (b[val] === undefined && Object.keys(b).length >= 40) { b.other = (b.other || 0) + 1; return; }
   b[val] = (b[val] || 0) + 1;
 }
+// Compteur de diagnostic : combien de pings de visite sont réellement arrivés
+// depuis le démarrage. Sans lui, une répartition vide a trois explications
+// indiscernables — code non déployé, ping jamais émis, ou personne n'est
+// passé — et on ne peut que deviner laquelle. En mémoire, non persisté : c'est
+// une mesure du processus courant, pas une statistique.
+const _pingStats = { boot: Date.now(), n: 0, nMode: 0, last: 0 };
 function recordVisitEnv(ua, acceptLang, standalone) {
   try {
     ua = String(ua || '');
@@ -1134,6 +1140,7 @@ function visitsSummary() {
     series: series,
     env: visitsStore.env || {},
     envSince: visitsStore.envSince || 0,
+    pings: { boot: _pingStats.boot, visits: _pingStats.n, modes: _pingStats.nMode, last: _pingStats.last },
     db: { enabled: _dbStatus.enabled, connected: _dbStatus.connected, error: _dbStatus.error, lastWrite: _dbStatus.lastWrite, source: _dbStatus.source }
   };
 }
@@ -4165,8 +4172,10 @@ const httpServer = http.createServer((req, res) => {
     if (req.method !== 'POST') { res.writeHead(405); res.end('Method not allowed'); return; }
     readJsonBody(req, function (d) {
       try {
-        if (d && d.mode) recordModeConnect(d.mode);
+        _pingStats.last = Date.now();
+        if (d && d.mode) { _pingStats.nMode++; recordModeConnect(d.mode); }
         else {
+          _pingStats.n++;
           recordVisit(d && d.vid);
           recordVisitEnv(req.headers && req.headers['user-agent'],
                          req.headers && req.headers['accept-language'],

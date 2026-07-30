@@ -1314,7 +1314,7 @@
   // presentation: the same numbers read as a share of the whole (donut) and as
   // an ordered list (ranking), because the two answer different questions —
   // "is anything dominant?" versus "what exactly is in the tail?".
-  var _envData={}, _envSince=0, _envView='combo', _envKnown=false;
+  var _envData={}, _envSince=0, _envView='combo', _envKnown=false, _envPings=null;
   function _envFmt(n){ try{ return Number(n||0).toLocaleString(); }catch(e){ return String(n||0); } }
   // Palette lisible sur les deux thèmes admin; la dernière teinte sert au
   // regroupement « autres », volontairement neutre.
@@ -1370,6 +1370,24 @@
     if(nl) bits.push('<b>'+nl+'</b> language'+(nl===1?'':'s')+' seen, of 36 translated');
     return bits.length?('<div class="envhi">'+bits.join(' &nbsp;·&nbsp; ')+'</div>'):'';
   }
+  function _envAgo(ts){
+    var n=Date.now()-ts;
+    if(n<60000) return Math.max(1,Math.round(n/1000))+' s ago';
+    if(n<3600000) return Math.round(n/60000)+' min ago';
+    if(n<86400000) return Math.round(n/3600000)+' h ago';
+    return new Date(ts).toLocaleDateString();
+  }
+  // Ligne de diagnostic : combien de pings sont arrivés depuis que le processus
+  // tourne. Zéro ping et zéro donnée ne veut pas dire la même chose que des
+  // pings reçus et une répartition vide — la première pointe vers le client,
+  // la seconde vers l'enregistrement.
+  function _envPingLine(){
+    if(!_envPings) return '';
+    var up=_envAgo(_envPings.boot).replace(' ago',''), v=_envPings.visits||0, m=_envPings.modes||0;
+    var txt=v+' visit ping'+(v===1?'':'s')+' and '+m+' mode ping'+(m===1?'':'s')+' received in the '+up+' since the proxy started';
+    if(_envPings.last) txt+=', last '+_envAgo(_envPings.last);
+    return '<div class="muted" style="margin-top:10px">'+txt+'.</div>';
+  }
   function renderEnv(){
     var box=$('trafEnv'); if(!box) return;
     var since=$('envSince');
@@ -1380,9 +1398,12 @@
       // enregistrer (champ absent de la réponse, donc processus antérieur à la
       // fonctionnalité), ou il sait mais personne n'est encore passé. Les
       // confondre coûte une demi-heure de recherche.
-      box.innerHTML = _envKnown
-        ? '<div class="empty">Nothing recorded yet — counting started here, and one ping is sent per browser session. Visits excluded by “Exclude my own visits” never appear.</div>'
-        : '<div class="empty">This proxy is not recording it yet — the running process predates the feature. Restart it (pm2 restart pokerth-web); a static update alone swaps the served files, not the process.</div>';
+      var why = !_envKnown
+        ? 'This proxy is not recording it yet — the running process predates the feature. Restart it (pm2 restart pokerth-web); a static update alone swaps the served files, not the process.'
+        : (_envPings && !_envPings.visits)
+          ? 'No visit ping has reached the proxy since it started. One ping is sent per browser session, and a browser where you ticked “Exclude my own visits” sends none at all — open the site in a private window to check.'
+          : 'Nothing recorded yet — counting started here, and one ping is sent per browser session.';
+      box.innerHTML='<div class="empty">'+why+'</div>'+_envPingLine();
       return;
     }
     var rows=r.slices.map(function(s){
@@ -1392,7 +1413,7 @@
            + '<span class="barx"><i style="width:'+Math.max(2,pc).toFixed(1)+'%;background:'+s.c+'"></i></span>'
            + '<span class="pct">'+_envFmt(s.n)+' \u00b7 '+(pc<1?pc.toFixed(1):Math.round(pc))+'%</span></div>';
     }).join('');
-    box.innerHTML='<div class="envwrap">'+_envDonut(r.slices,r.total)+'<div class="envlist">'+rows+'</div></div>'+_envHighlight();
+    box.innerHTML='<div class="envwrap">'+_envDonut(r.slices,r.total)+'<div class="envlist">'+rows+'</div></div>'+_envHighlight()+_envPingLine();
   }
   (function(){
     var seg=$('envSeg'); if(!seg) return;
@@ -1437,7 +1458,7 @@
       }
       // Champ absent = proxy antérieur à la fonctionnalité ; objet vide = rien
       // à compter encore. Voir renderEnv().
-      _envKnown=(d.env!==undefined); _envData=d.env||{}; _envSince=d.envSince||0; renderEnv();
+      _envKnown=(d.env!==undefined); _envData=d.env||{}; _envSince=d.envSince||0; _envPings=d.pings||null; renderEnv();
       var nv=$('trafNvR');
       if(nv){
         var wins=[['Today',d.today],['Last 7 days',d.week],['Last 30 days',d.month],['All time',d.allTime]];
