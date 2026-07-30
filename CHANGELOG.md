@@ -8,6 +8,46 @@ web counter (`2.1.5` → `2.1.5-web.0`). Granular, per-build tags are published 
 [GitHub Releases](https://github.com/narmod/pokerth-web-client/releases) page;
 this file captures what matters to players and operators.
 
+## 2.1.5-web line (2026)
+
+Opened with `v2.1.5-web.0` (2026-07-30), following the upstream **2.1.5**
+release. The whole 2.1.5 delta is covered; a few items were already in place
+because sp0ck shared them ahead of the release.
+
+### Added
+- **Community suggest.** In an invite game created from a BBC Step or WEC
+  preset, the game admin can propose eligible idle players from the lobby chat
+  header. Same selection as the legacy bbcbot, so a suggestion matches the one
+  the official client would give. The line is shown only to whoever asked and is
+  never sent. Off by default, like the official setting.
+- **Three table packs and their card backs** — Pirates, Mile High Club and
+  Terminus Hotel 2, with the portrait previews the official client uses when the
+  screen is in portrait. Upstream attribution kept: the two packs by BaShFX are
+  credited to him.
+- **Alt+S** opens the settings from anywhere, as in the official client, and
+  **Alt+T** opens the statistics panel — a web addition, since the official
+  client has no shortcut for it.
+
+### Changed
+- **The translate globe now appears on the line under the pointer**, or on the
+  line you tap on a touch screen, instead of on every line. An advanced option
+  restores the permanent button.
+- **Auto-scroll resumes by itself.** Fifteen seconds after you stop scrolling,
+  the chat and the game log return to the newest entry, as the official client
+  does. The "jump to latest" bar is gone with it.
+- **A bet amount outside the allowed range now asks for a second confirmation**
+  instead of being silently clamped — typing 300 with a 250 stack no longer
+  fires an all-in with nothing announcing it.
+- **The lobby chat is cleared on every new connection**, so the previous
+  session's history no longer lingers under a different nickname.
+- **Action buttons use their pack's own corner radius.** Fourteen of the
+  seventeen table packs declare something other than the default; they were all
+  being drawn at the default until now.
+
+### Fixed
+- The scrollbar gutter is reserved on the chat and log panels, so text no longer
+  shifts when the scrollbar appears.
+
 ## 2.1.4-web line (2026)
 
 The `2.1.4-web.N` line opened with `v2.1.4-web.0` (2026-07-22), replacing the

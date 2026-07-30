@@ -6,7 +6,7 @@ use too. Items are grouped by status rather than fixed phases.
 
 > **Tracking the official client, continuously.** The in-game screen is kept aligned
 > with PokerTH's official QML client on an ongoing basis — as the official client
-> evolves (currently the 2.1.4 build), the web client re-syncs to match. See
+> evolves (currently the 2.1.5 build), the web client re-syncs to match. See
 > *Official client (QML) tracking* below.
 
 ## ✅ Shipped
@@ -48,12 +48,15 @@ use too. Items are grouped by status rather than fixed phases.
 
 **Appearance & theming**
 - A QML-style styles window with four tabs — Table · Cards · Card back · Seats — each
-  choice saved independently. 14 table styles (PokerTH default QML table style,
+  choice saved independently. 17 table styles (PokerTH default QML table style,
   Green Casino, Danuxi Blue, Mute, Mute 02, Teal, Lemming, Matrix, Star Trek, TripSixes,
-  Wanted, Xanax, plus the two styles new in the official 2.1.4 release — Saloon and
-  Discworld), listed with a large preview, name and author ("PokerTH Development Team"
-  for the official styles) like the official picker; as in the official `StyleProvider`,
-  each table style carries its own felt, pucks and action-button skins.
+  Wanted, Xanax, Saloon and Discworld from the 2.1.4 release, plus the three new in
+  2.1.5 — Pirates, Mile High Club and Terminus Hotel 2), listed with a large preview,
+  name and author like the official picker — upstream attribution is kept, so the two
+  packs by BaShFX are credited to him rather than to the project. As in the official
+  `StyleProvider`, each table style carries its own felt, pucks and action-button skins,
+  including the pack's own `ActionButtonBorderRadius`, and the portrait preview
+  (`PreviewPortrait`) is used when the screen is in portrait.
 - UI palette (Dark / Light / Auto) follows the official *Dark Mode* setting in the
   Advanced options, matching the QML client.
 - Light/dark aware: per-theme `color-scheme` and a dynamic browser `theme-color` that
@@ -65,7 +68,8 @@ use too. Items are grouped by status rather than fixed phases.
   button, chip denominations, win bursts).
 - Official card decks: the official PokerTH decks (Bella Union, Nobus Classic, Stardust,
   Star Trek, Lemming, Xanax, and the Discworld deck new in 2.1.4) added to the deck
-  gallery, each with a live preview.
+  gallery, each with a live preview, plus the three standalone card backs new in 2.1.5
+  (Pirates, Mile High Club, Terminus Hotel 2 WoA).
 - Style import: install a table or card deck from a `.zip` (parsing the four 2.1.3 style keys), or a custom card-back image.
 - Coloured glossy action buttons (Fold red / Check-Call blue / Raise green / All-In orange)
   and an animated flaming-chip emblem on the login screen (respects reduced-motion).
@@ -165,7 +169,7 @@ use too. Items are grouped by status rather than fixed phases.
 - The in-game screen is audited feature-by-feature against PokerTH's official QML client
   (sources extracted from the official desktop AppImage and Android APK builds) and
   re-synced as that client evolves. Feature parity was first reached in the `v0.3.166`
-  series; work since has been fidelity tuning against the newer builds (currently **2.1.4**). Feature
+  series; work since has been fidelity tuning against the newer builds (currently **2.1.5**). Feature
   coverage includes:
   - F1–F8 keyboard shortcuts matching the official client (fold / check-call / bet-raise /
     all-in, alternate key order, playing-mode switches), plus F5 to show your cards after
@@ -240,8 +244,11 @@ use too. Items are grouped by status rather than fixed phases.
   (see [INSTALL_POKERTH_NET.md](INSTALL_POKERTH_NET.md)); remaining work is
   finishing the in-host route between the web proxy and the game server.
 - **Official QML client fidelity** — ongoing pixel-and-behaviour alignment of the in-game
-  screen with the official 2.1.4 QML client (action bar, mobile layouts, seat geometry);
-  with the Code-health work below up next.
+  screen with the official QML client (action bar, mobile layouts, seat geometry).
+  The 2.1.5 pass is complete: global notice, optional chat timestamps, the translate
+  globe on the hovered or tapped line, the scroll-resume model, the bet-amount guard,
+  the three new table packs and card backs, and community suggest. With the Code-health
+  work below up next.
 
 ## ⏭️ Next
 
