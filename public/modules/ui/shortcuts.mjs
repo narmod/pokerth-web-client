@@ -12,7 +12,7 @@
 // docs/ESM_PLAN.md), au verbatim. Les listeners s'enregistrent à l'exécution
 // du module (avant pokerth.js, même phase qu'avant : la capture de
 // réassignation précède toujours le handler d'action). Dépendances résolues
-// à runtime via les globaux : toggleGameChat, gipOpenTab, _advGet,
+// à runtime via les globaux : toggleGameChat, gipOpenTab, toggleStats, _advGet,
 // window.App (gardé), window._canShowCards. t() passe par le shim ci-dessous.
 // _rebindAction est partagé en écriture avec le monolithe → pont
 // defineProperty (gabarit _lang d'i18n.mjs).
@@ -111,6 +111,17 @@ document.addEventListener('keydown', function(e) {
     if (!(/^f[1-9]$|^f1[0-2]$/.test(_bk) || e.altKey || _bk === 'enter'
           || (_bk.length === 1 && /[a-z]/.test(_bk)))) return;
   }
+  // ── Alt+S : reglages — actif sur TOUTE l'application ──────────────────────
+  // Parite QML : pokerth.qml pose un ApplicationShortcut Alt+S qui ouvre la
+  // page Reglages depuis n'importe quelle page, pas seulement au tapis. Notre
+  // equivalent est la fenetre Options avancees (meme decoupage en categories
+  // que le dialogue officiel). Place AVANT la garde #s-game pour cette raison.
+  if (e.altKey && !e.ctrlKey && !e.metaKey && (e.key || '').toLowerCase() === 's') {
+    e.preventDefault();
+    try { if (window.toggleAdvancedOptions) window.toggleAdvancedOptions(); } catch (_e) {}
+    return;
+  }
+
   // C'est mon tour SSI le vrai panneau d'action interactif est present : #g-actions
   // contient la grille reelle en ENFANT DIRECT (.action-grid), ou l'apercu hors-tour
   // enveloppe dans .actions-preview, ou un message d'attente. (Les anciennes gardes
@@ -134,6 +145,11 @@ document.addEventListener('keydown', function(e) {
       // Alt+I → onglet Chances.
       if (ak === 'l') { e.preventDefault(); try { gipOpenTab('log'); } catch (_e) {} return; }
       if (ak === 'i') { e.preventDefault(); try { gipOpenTab('odds'); } catch (_e) {} return; }
+      // Alt+T : panneau de statistiques. AJOUT WEB — le client QML n'a aucun
+      // raccourci pour ses stats de table, et son Alt+S est deja pris par les
+      // reglages. « T » pour Table stats, libre des deux cotes ; re-bindable
+      // comme les autres depuis Options avancees > Raccourcis clavier.
+      if (ak === 't') { e.preventDefault(); try { toggleStats(); } catch (_e) {} return; }
     } else if (e.key === 'F5') {
       // F5 officiel = « Show » — intercepté SEULEMENT quand le bouton est
       // visible (fenêtre post-main) ; sinon F5 garde son rôle navigateur.
