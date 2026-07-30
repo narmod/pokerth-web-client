@@ -354,6 +354,12 @@
         <div id="modesmsg" class="msg"></div>
       </div>
       <div class="card">
+        <div class="boardhead" style="margin-bottom:6px"><h2 style="margin:0">Feature kill switches</h2><button id="fsSave" class="use">Save</button></div>
+        <p class="muted" style="margin:0 0 8px">Turn a feature off for <b>everyone, right now</b>, without a deployment \u2014 the way out when something ships broken. Ticking a box forces the matching option off in every client: its checkbox in Advanced options goes unticked, frozen and labelled \u201coff (admin)\u201d. Players keep their own preference stored, so it takes effect again the moment you untick here. Applies on the client's next load of the page.</p>
+        <div id="fsList" class="muted">Loading\u2026</div>
+        <div id="fsMsg" class="msg"></div>
+      </div>
+      <div class="card">
         <h2>Default theme (new visitors)</h2>
         <p class="muted" style="margin:0 0 6px">Applied on a player's first visit only. Players who already picked a theme keep theirs.</p>
         <div class="periodrow">
@@ -891,7 +897,7 @@
       $('loginErr').textContent=''; _idleLast=Date.now(); show('dash');
       if(_isMaster){
         api('/admin/pkg-list').then(function(r){return r.json();}).then(function(d){ if(d&&d.ok) renderPkgs(d); }).catch(function(){});
-        loadServer(); loadDeploys(); loadThemes(); srvStart();
+        loadServer(); loadDeploys(); loadThemes(); loadFeatureSwitches(); srvStart();
       } else {
         srvStop();
         var first=[].slice.call(document.querySelectorAll('.tab')).find(function(b){ return b.style.display!=='none'; });
@@ -923,7 +929,7 @@
     if(t==='servers') loadServers();
     if(t==='polls') loadPolls();
     if(t==='broadcast'){ loadBroadcasts(); if(_isMaster) loadWelcome(); }
-    if(t==='clients'){ loadStatus(true); loadThemes(); }
+    if(t==='clients'){ loadStatus(true); loadThemes(); loadFeatureSwitches(); }
     if(t==='sessions'){ seStart(); } else { seStop(); }
     if(t==='errors') loadErrors();
     if(t==='server'){ loadServer(); loadDeploys(); srvStart(); } else { srvStop(); }
@@ -1648,6 +1654,40 @@
   function bcPrevNow(){ bcGoldPreview('bcNowPrev',($('bcNowMsg').value||'').trim(),$('bcNowIcon').value); }
   ['bcMsg','bcIcon'].forEach(function(id){ if($(id)){ $(id).addEventListener('input',bcPrevSched); $(id).addEventListener('change',bcPrevSched); } });
   ['bcNowMsg','bcNowIcon'].forEach(function(id){ if($(id)){ $(id).addEventListener('input',bcPrevNow); $(id).addEventListener('change',bcPrevNow); } });
+  // -- Feature kill switches (master only) ------------------------------------
+  // The catalogue comes from the server (FEATURE_SWITCHES in proxy.js), which
+  // also whitelists it on save \u2014 the dashboard never invents a key.
+  function loadFeatureSwitches(){
+    return api('/admin/config').then(function(r){return r.json();}).then(function(d){ if(d&&d.ok) renderFeatureSwitches(d); })
+      .catch(function(){ var b=$('fsList'); if(b) b.textContent='Network error.'; });
+  }
+  function renderFeatureSwitches(d){
+    var box=$('fsList'); if(!box) return;
+    var list=(d&&d.featureSwitches)||[], off=(d&&d.featureOff)||[];
+    if(!list.length){ box.textContent='This server exposes no kill switch.'; return; }
+    box.innerHTML=''; box.style.cssText='display:flex;flex-wrap:wrap;gap:6px 18px';
+    list.forEach(function(f){
+      var lbl=document.createElement('label');
+      lbl.style.cssText='display:inline-flex;align-items:center;gap:6px;white-space:nowrap';
+      var cb=document.createElement('input');
+      cb.type='checkbox'; cb.value=f.key; cb.style.width='auto'; cb.checked=off.indexOf(f.key)>=0;
+      lbl.appendChild(cb); lbl.appendChild(document.createTextNode(' '+f.label));
+      box.appendChild(lbl);
+    });
+  }
+  (function(){
+    var sb=$('fsSave'); if(!sb) return;
+    sb.addEventListener('click', function(){
+      var box=$('fsList'), m=$('fsMsg');
+      var offs=[].slice.call(box.querySelectorAll('input:checked')).map(function(c){ return c.value; });
+      api('/admin/config',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({featureOff:offs,token:tok()})})
+        .then(function(r){return r.json();}).then(function(d){
+          if(d&&d.ok){ m.textContent=offs.length?('Saved \u2014 '+offs.length+' feature'+(offs.length===1?'':'s')+' off for everyone.'):'Saved \u2014 every feature enabled.'; m.className='msg ok'; renderFeatureSwitches(d); }
+          else { m.textContent='Failed: '+((d&&d.error)||'error'); m.className='msg err'; }
+        }).catch(function(){ m.textContent='Network error.'; m.className='msg err'; });
+    });
+  })();
+
   // -- Deployment history & rollback (master only) ----------------------------
   // The escape hatch when a deploy goes wrong: check a previous commit out
   // again from the dashboard instead of reaching for SSH.

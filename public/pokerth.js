@@ -125,6 +125,10 @@ function _advStripEmoji(s) {
   return s;
 }
 function _advGet(key, defOn) {
+  // Interrupteur d'arrêt admin (/app-config.featureOff) : il prime sur la
+  // préférence du joueur, qui reste écrite en localStorage et reprend effet si
+  // l'admin réouvre la fonctionnalité — on force la lecture, on n'efface rien.
+  try { if (window._pthFeatureOff && window._pthFeatureOff[key]) return false; } catch (e) {}
   try {
     var v = localStorage.getItem('pth_' + key);
     if (v === null) return !!defOn;
@@ -2990,10 +2994,42 @@ document.addEventListener("DOMContentLoaded", function() {
         .forEach(function (id) { var el = document.getElementById(id); if (el) el.style.display = on ? '' : 'none'; });
       if (!on) { var mp = document.getElementById('music-panel'); if (mp) mp.style.display = 'none'; }
     }
+    // Interrupteurs d'arrêt poussés par l'admin. La case correspondante des
+    // Options avancées est décochée, gelée et étiquetée : le joueur voit
+    // pourquoi elle ne répond pas, plutôt qu'une case qui refuse de rester
+    // cochée. On rejoue applyAdvOpts() ensuite, car /app-config arrive après.
+    function _applyFeatureOff(list) {
+      var map = {};
+      for (var i = 0; i < list.length; i++) map[String(list[i])] = true;
+      window._pthFeatureOff = map;
+      try {
+        var rows = document.querySelectorAll('.adv-row input[type=checkbox]');
+        for (var j = 0; j < rows.length; j++) {
+          var inp = rows[j], oc = inp.getAttribute('onchange') || '';
+          var m = oc.match(/setAdvOpt\('([a-z_0-9]+)'/);
+          if (!m) continue;
+          var off = !!map[m[1]];
+          inp.disabled = off;
+          if (off) inp.checked = false;
+          var row = inp.closest ? inp.closest('.adv-row') : null;
+          if (!row) continue;
+          row.classList.toggle('adv-locked', off);
+          var tag = row.querySelector('.adv-lockedtag');
+          if (off && !tag) {
+            tag = document.createElement('em');
+            tag.className = 'adv-webtag adv-lockedtag';
+            tag.setAttribute('data-i18n', 'advOffByAdmin');
+            tag.textContent = (typeof window.t === 'function') ? window.t('advOffByAdmin') : 'off (admin)';
+            row.appendChild(tag);
+          } else if (!off && tag) { tag.remove(); }
+        }
+      } catch (e) {}
+      try { applyAdvOpts(); } catch (e) {}
+    }
     function go() {
       fetch('/app-config', { cache: 'no-store' })
         .then(function (r) { return r.json(); })
-        .then(function (c) { if (c) { window._pthNetServer = (c.pokerthnetServer && c.pokerthnetServer.host) ? c.pokerthnetServer : null; window._pthNetSource = (c.pokerthnetSource === 'auto') ? 'auto' : 'manual'; window._pthNetTransport = (c.internetTransport === 'proxy') ? 'proxy' : 'direct'; } if (c && c.modes) applyModes(c.modes); if (c) _applyMusicFlag(c.musicEnabled !== false); if (c && c.loginDefaults) _applyLoginDefaults(c.loginDefaults); if (c && c.welcome && c.welcome.enabled && typeof window.maybeShowWelcome === 'function') window.maybeShowWelcome(c.welcome); if (typeof window._pollSetConfig === 'function') window._pollSetConfig(c && c.poll); if (c && typeof c.defaultTheme === 'string') _applyDefaultTheme(c.defaultTheme); if (c && typeof c.showLoginTitle === 'boolean') { try { document.body.classList.toggle('adv-show-title', c.showLoginTitle); } catch (e) {} } if (c && c.defaults) _applyDefaultSettings(c.defaults); _applyBranding(c); try { if (!window._shareLinkActive && window.App && App.onServerOrGuestChange) App.onServerOrGuestChange(); } catch (e) {} })
+        .then(function (c) { if (c) { window._pthNetServer = (c.pokerthnetServer && c.pokerthnetServer.host) ? c.pokerthnetServer : null; window._pthNetSource = (c.pokerthnetSource === 'auto') ? 'auto' : 'manual'; window._pthNetTransport = (c.internetTransport === 'proxy') ? 'proxy' : 'direct'; } if (c && c.modes) applyModes(c.modes); if (c) _applyMusicFlag(c.musicEnabled !== false); if (c && c.loginDefaults) _applyLoginDefaults(c.loginDefaults); if (c && c.welcome && c.welcome.enabled && typeof window.maybeShowWelcome === 'function') window.maybeShowWelcome(c.welcome); if (typeof window._pollSetConfig === 'function') window._pollSetConfig(c && c.poll); if (c && typeof c.defaultTheme === 'string') _applyDefaultTheme(c.defaultTheme); if (c && typeof c.showLoginTitle === 'boolean') { try { document.body.classList.toggle('adv-show-title', c.showLoginTitle); } catch (e) {} } if (c && c.defaults) _applyDefaultSettings(c.defaults); if (c && Array.isArray(c.featureOff)) _applyFeatureOff(c.featureOff); _applyBranding(c); try { if (!window._shareLinkActive && window.App && App.onServerOrGuestChange) App.onServerOrGuestChange(); } catch (e) {} })
         .catch(function () {});
     }
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', go); else go();
@@ -9616,7 +9652,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.5-web.42'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.5-web.43'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

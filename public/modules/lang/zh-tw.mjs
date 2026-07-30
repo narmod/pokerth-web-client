@@ -622,7 +622,7 @@ export const strings = {
     quickCreateLabel: '玩家：',
     quickCreateBtn: '建立',
     logPanelTitle: '日誌',
-    logCopied:'已複製紀錄', logEmpty:'紀錄是空的', gnBtn:'全域公告（管理員）',gnSent:'全域公告已發送給所有玩家。',gnRejected:'伺服器拒絕了這則全域公告。',advChatClearLogin:'連線時清空大廳聊天', advGuardRaise:'確認超出允許範圍的下注金額', raiseAdjusted:'金額已調整 — 再按一次確認', advChatTrAlways:'一律顯示翻譯按鈕（否則僅在指向或點按的那一行）', advCommunitySuggest:'在我的社群牌局中推薦玩家', suggestPlayers:'推薦玩家', kbHintExtra:'Alt+S 可在任何位置開啟設定，與官方用戶端一致。Alt+T 開啟統計面板——這是網頁版新增，官方用戶端沒有此快速鍵。', advSearchPh:'搜尋設定…', advErrReport:'將指令碼錯誤回報給伺服器管理員（不含個人資料）', logExportTitle:'匯出紀錄', chatClearTitle:'清除聊天',
+    logCopied:'已複製紀錄', logEmpty:'紀錄是空的', gnBtn:'全域公告（管理員）',gnSent:'全域公告已發送給所有玩家。',gnRejected:'伺服器拒絕了這則全域公告。',advChatClearLogin:'連線時清空大廳聊天', advGuardRaise:'確認超出允許範圍的下注金額', raiseAdjusted:'金額已調整 — 再按一次確認', advChatTrAlways:'一律顯示翻譯按鈕（否則僅在指向或點按的那一行）', advCommunitySuggest:'在我的社群牌局中推薦玩家', suggestPlayers:'推薦玩家', kbHintExtra:'Alt+S 可在任何位置開啟設定，與官方用戶端一致。Alt+T 開啟統計面板——這是網頁版新增，官方用戶端沒有此快速鍵。', advSearchPh:'搜尋設定…', advErrReport:'將指令碼錯誤回報給伺服器管理員（不含個人資料）', advOffByAdmin:'已停用（管理員）', logExportTitle:'匯出紀錄', chatClearTitle:'清除聊天',
     jumpLatest:'跳至最新',
     chatTranslateBtn:'翻譯', winMove:'移動', loupeToggle:'放大鏡 ×2',
     sendTooltip:'傳送', resizeTooltip:'拖曳調整大小', loadingOffline:'正在載入離線模式…',

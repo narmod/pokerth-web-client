@@ -296,6 +296,45 @@ function saveStatsSoon() {
 const ADMIN_CONFIG_FILE = process.env.ADMIN_CONFIG_FILE || path.join(__dirname, 'admin-config.json');
 let _adminConfig = {};
 try { _adminConfig = JSON.parse(fs.readFileSync(ADMIN_CONFIG_FILE, 'utf8')) || {}; } catch (e) { _adminConfig = {}; }
+// ── Interrupteurs d'arrêt de fonctionnalité (kill switches) ───────────────
+// Une fonctionnalité qui casse en production n'avait qu'une issue : redéployer.
+// L'admin peut ici forcer une option à OFF pour tout le monde, tout de suite,
+// sans toucher au code. Côté client, la case correspondante des Options
+// avancées passe décochée et grisée, avec la mention « désactivé par l'admin ».
+//
+// Le catalogue est la seule source de vérité : il sert à la fois de liste
+// présentée au tableau de bord et de liste blanche de validation, donc une clé
+// arbitraire ne peut jamais entrer dans la configuration.
+//
+// N'y figurent que des options de sens POSITIF (cochée = fonctionnalité active) :
+// couper une option « Désactiver X » reviendrait à activer X, l'inverse de ce
+// qu'un interrupteur d'arrêt doit faire.
+const FEATURE_SWITCHES = [
+  { key: 'err_report', label: 'Client error reporting' },
+  { key: 'polls', label: 'Product polls' },
+  { key: 'hud_on', label: 'Stats HUD on player seats' },
+  { key: 'show_odds', label: 'Odds in the Chances panel' },
+  { key: 'chat_abbrev', label: 'Chat abbreviation glossary' },
+  { key: 'anim_cards', label: 'Card animations' },
+  { key: 'table_zoom', label: 'Table zoom (magnifier buttons)' },
+  { key: 'zoom_follow', label: 'Zoom follows the active seat' },
+  { key: 'browser_zoom', label: 'Browser pinch zoom on phone / tablet' },
+  { key: 'pdb_auto', label: 'Automatic .pdb writing' },
+  { key: 'log_on', label: 'Session logging' },
+  { key: 'stats_track', label: 'Hand statistics recording' },
+  { key: 'show_community', label: 'Ranking entry' },
+  { key: 'community_content', label: 'Community content (BBC / WEC)' },
+  { key: 'community_suggest', label: 'Suggest players in community games' },
+  { key: 'lobby_chat', label: 'Lobby chat' },
+  { key: 'keynav', label: 'Esc / Enter navigation outside the table' },
+  { key: 'back_guard', label: 'Android back button guard' },
+  { key: 'splash', label: 'Splash screen on startup' },
+];
+function featureOffList() {
+  const a = _adminConfig && _adminConfig.featureOff;
+  if (!Array.isArray(a)) return [];
+  return a.filter(function (k) { return FEATURE_SWITCHES.some(function (f) { return f.key === k; }); });
+}
 function saveAdminConfig() { try { fs.writeFileSync(ADMIN_CONFIG_FILE, JSON.stringify(_adminConfig)); } catch (e) { console.error('[admin] config write failed:', e.message); } }
 
 // ── Verbosité des logs (quiet | normal | verbose) ──────────────────────────
@@ -2191,7 +2230,7 @@ function handleAdmin(req, res, reqPathOnly, query) {
   if (reqPathOnly === '/admin/config') {
     if (req.method === 'GET') {
       if (!adminAuthed(query)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
-      return adminJson(res, 200, { ok: true, resetPeriod: STATS_RESET_PERIOD, modes: appModes(), welcome: _welcomeAdmin(), showLoginTitle: !!_adminConfig.showLoginTitle, defaultTheme: _adminConfig.defaultTheme || '', defaults: _adminConfig.defaults || {}, loginDefaults: _loginDefaults(false), proxyCfg: _adminConfig.proxyCfg || {}, tableDefaults: _adminConfig.tableDefaults || {}, tableNames: _adminConfig.tableNames || {}, serverName: _adminConfig.serverName || '', serverTagline: _adminConfig.serverTagline || '', discordChatWebhookUrl: _adminConfig.discordChatWebhookUrl || '', musicEnabled: musicEnabled() });
+      return adminJson(res, 200, { ok: true, resetPeriod: STATS_RESET_PERIOD, modes: appModes(), welcome: _welcomeAdmin(), showLoginTitle: !!_adminConfig.showLoginTitle, defaultTheme: _adminConfig.defaultTheme || '', defaults: _adminConfig.defaults || {}, loginDefaults: _loginDefaults(false), proxyCfg: _adminConfig.proxyCfg || {}, tableDefaults: _adminConfig.tableDefaults || {}, tableNames: _adminConfig.tableNames || {}, serverName: _adminConfig.serverName || '', serverTagline: _adminConfig.serverTagline || '', discordChatWebhookUrl: _adminConfig.discordChatWebhookUrl || '', featureSwitches: FEATURE_SWITCHES, featureOff: featureOffList(), musicEnabled: musicEnabled() });
     }
     if (req.method === 'POST') {
       return readJsonBody(req, function (d) {
@@ -2231,6 +2270,13 @@ function handleAdmin(req, res, reqPathOnly, query) {
           var dout = {};
           DEF_KEYS.forEach(function (k) { var v = d.defaults[k]; if (v === '0' || v === '1') dout[k] = v; });
           _adminConfig.defaults = dout;
+        }
+        if (Array.isArray(d.featureOff)) {
+          // Liste blanche stricte : seules les clés du catalogue survivent.
+          _adminConfig.featureOff = d.featureOff
+            .map(function (k) { return String(k == null ? '' : k); })
+            .filter(function (k) { return FEATURE_SWITCHES.some(function (f) { return f.key === k; }); })
+            .slice(0, FEATURE_SWITCHES.length);
         }
         if (d.loginDefaults && typeof d.loginDefaults === 'object') {
           var ld = d.loginDefaults, lout = {};
@@ -2302,7 +2348,7 @@ function handleAdmin(req, res, reqPathOnly, query) {
         if (typeof d.serverTagline === 'string') _adminConfig.serverTagline = d.serverTagline.trim().slice(0, 60);
         if (typeof d.showLoginTitle === 'boolean') _adminConfig.showLoginTitle = d.showLoginTitle;
         saveAdminConfig();
-        return adminJson(res, 200, { ok: true, resetPeriod: STATS_RESET_PERIOD, modes: appModes(), welcome: _welcomeAdmin(), showLoginTitle: !!_adminConfig.showLoginTitle, defaultTheme: _adminConfig.defaultTheme || '', defaults: _adminConfig.defaults || {}, loginDefaults: _loginDefaults(false), proxyCfg: _adminConfig.proxyCfg || {}, tableDefaults: _adminConfig.tableDefaults || {}, tableNames: _adminConfig.tableNames || {}, serverName: _adminConfig.serverName || '', serverTagline: _adminConfig.serverTagline || '', discordChatWebhookUrl: _adminConfig.discordChatWebhookUrl || '', musicEnabled: musicEnabled() });
+        return adminJson(res, 200, { ok: true, resetPeriod: STATS_RESET_PERIOD, modes: appModes(), welcome: _welcomeAdmin(), showLoginTitle: !!_adminConfig.showLoginTitle, defaultTheme: _adminConfig.defaultTheme || '', defaults: _adminConfig.defaults || {}, loginDefaults: _loginDefaults(false), proxyCfg: _adminConfig.proxyCfg || {}, tableDefaults: _adminConfig.tableDefaults || {}, tableNames: _adminConfig.tableNames || {}, serverName: _adminConfig.serverName || '', serverTagline: _adminConfig.serverTagline || '', discordChatWebhookUrl: _adminConfig.discordChatWebhookUrl || '', featureSwitches: FEATURE_SWITCHES, featureOff: featureOffList(), musicEnabled: musicEnabled() });
       });
     }
     res.writeHead(405); res.end('Method not allowed'); return;
@@ -3881,7 +3927,7 @@ const httpServer = http.createServer((req, res) => {
 
   if (reqPathOnly === '/app-config') {
     res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' });
-    res.end(JSON.stringify({ ok: true, modes: appModes(), welcome: _welcomePublic(), poll: _pollPublic(), showLoginTitle: !!_adminConfig.showLoginTitle, defaultTheme: _adminConfig.defaultTheme || '', defaults: _adminConfig.defaults || {}, loginDefaults: _loginDefaults(true), tableDefaults: _adminConfig.tableDefaults || {}, tableNames: _adminConfig.tableNames || {}, serverName: _adminConfig.serverName || '', serverTagline: _adminConfig.serverTagline || '', pokerthnetServer: _activePokerthnetServer(), pokerthnetSource: _pokerthnetSource(), internetTransport: _internetTransport(), musicEnabled: musicEnabled() }));
+    res.end(JSON.stringify({ ok: true, modes: appModes(), welcome: _welcomePublic(), poll: _pollPublic(), showLoginTitle: !!_adminConfig.showLoginTitle, defaultTheme: _adminConfig.defaultTheme || '', defaults: _adminConfig.defaults || {}, loginDefaults: _loginDefaults(true), tableDefaults: _adminConfig.tableDefaults || {}, tableNames: _adminConfig.tableNames || {}, serverName: _adminConfig.serverName || '', serverTagline: _adminConfig.serverTagline || '', featureOff: featureOffList(), pokerthnetServer: _activePokerthnetServer(), pokerthnetSource: _pokerthnetSource(), internetTransport: _internetTransport(), musicEnabled: musicEnabled() }));
     return;
   }
 

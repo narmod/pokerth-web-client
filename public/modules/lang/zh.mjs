@@ -622,7 +622,7 @@ export const strings = {
     quickCreateLabel: '玩家：',
     quickCreateBtn: '创建',
     logPanelTitle: '日志',
-    logCopied:'日志已复制', logEmpty:'日志为空', gnBtn:'全局公告（管理员）',gnSent:'全局公告已发送给所有玩家。',gnRejected:'服务器拒绝了这条全局公告。',advChatClearLogin:'连接时清空大厅聊天', advGuardRaise:'确认超出允许范围的下注金额', raiseAdjusted:'金额已调整 — 再按一次确认', advChatTrAlways:'始终显示翻译按钮（否则仅在指向或点按的那一行）', advCommunitySuggest:'在我的社区牌局中推荐玩家', suggestPlayers:'推荐玩家', kbHintExtra:'Alt+S 可在任何位置打开设置，与官方客户端一致。Alt+T 打开统计面板——这是网页版新增，官方客户端没有此快捷键。', advSearchPh:'搜索设置…', advErrReport:'将脚本错误报告给服务器管理员（不含个人数据）', logExportTitle:'导出日志', chatClearTitle:'清除聊天',
+    logCopied:'日志已复制', logEmpty:'日志为空', gnBtn:'全局公告（管理员）',gnSent:'全局公告已发送给所有玩家。',gnRejected:'服务器拒绝了这条全局公告。',advChatClearLogin:'连接时清空大厅聊天', advGuardRaise:'确认超出允许范围的下注金额', raiseAdjusted:'金额已调整 — 再按一次确认', advChatTrAlways:'始终显示翻译按钮（否则仅在指向或点按的那一行）', advCommunitySuggest:'在我的社区牌局中推荐玩家', suggestPlayers:'推荐玩家', kbHintExtra:'Alt+S 可在任何位置打开设置，与官方客户端一致。Alt+T 打开统计面板——这是网页版新增，官方客户端没有此快捷键。', advSearchPh:'搜索设置…', advErrReport:'将脚本错误报告给服务器管理员（不含个人数据）', advOffByAdmin:'已禁用（管理员）', logExportTitle:'导出日志', chatClearTitle:'清除聊天',
     jumpLatest:'跳到最新',
     chatTranslateBtn:'翻译', winMove:'移动', loupeToggle:'放大镜 ×2',
     sendTooltip:'发送', resizeTooltip:'拖动调整大小', loadingOffline:'正在加载离线模式…',
