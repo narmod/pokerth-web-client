@@ -63,23 +63,23 @@ const TABLES = [
   { id: '',             name: "PokerTH default QML table style", key: 'tablePokerthOfficial', fallback: 'PokerTH default QML table style',      swatch: '#1d222b', feltUrl: '/table/pokerth-official-fs/felt.png', mode: 'fs',   dir: 'pokerth-official-fs', skin: true, puck: 'pokerth', btn: 'glossy' },
   { id: 'casino',       name: "Green Casino", key: 'tableCasino',          fallback: 'Green Casino', swatch: '#1e6b1e', feltUrl: '/table/casino/felt.png', preview: '/table/casino/preview.png', mode: 'fs', skin: true, align: 'center', puck: 'casino',  btn: 'casino' },
   // Tapis par defaut du client QML (data/gfx/qml/table/*, AGPL-3.0) — plein ecran.
-  { id: 'danuxi', name: "Danuxi Blue QML table style", key: 'tableDanuxi', fallback: "Danuxi Blue", swatch: '#1f3a5c', feltUrl: '/table/danuxi/felt.png', preview: '/table/danuxi/preview.png', mode: 'fs', skin: true, align: 'center', zoom: 1.3 },
-  { id: 'mute', name: "Mute QML table style", key: 'tableMute', fallback: "Mute", swatch: '#2a2f38', feltUrl: '/table/mute/felt.png', preview: '/table/mute/preview.png', mode: 'fs', skin: true, align: 'center' },
-  { id: 'mute2', name: "Mute 02 QML table style", key: 'tableMute2', fallback: "Mute 02", swatch: '#1f6aa8', feltUrl: '/table/mute2/felt.png', preview: '/table/mute2/preview.png', mode: 'fs', skin: true, align: 'center' },
-  { id: 'teal', name: "Teal QML table style", key: 'tableTeal', fallback: "Teal", swatch: '#0e5c5c', feltUrl: '/table/teal/felt.png', preview: '/table/teal/preview.png', mode: 'fs', skin: true, align: 'center bottom' },
-  { id: 'lemming', name: "Lemming TA01-MC QML table style", key: 'tableLemming', fallback: "Lemming", swatch: '#2e6b2e', feltUrl: '/table/lemming/felt.png', preview: '/table/lemming/preview.png', mode: 'fs', skin: true, align: 'center bottom' },
+  { id: 'danuxi', name: "Danuxi Blue QML table style", key: 'tableDanuxi', fallback: "Danuxi Blue", swatch: '#1f3a5c', feltUrl: '/table/danuxi/felt.png', preview: '/table/danuxi/preview.png', radius: 6.5, mode: 'fs', skin: true, align: 'center', zoom: 1.3 },
+  { id: 'mute', name: "Mute QML table style", key: 'tableMute', fallback: "Mute", swatch: '#2a2f38', feltUrl: '/table/mute/felt.png', preview: '/table/mute/preview.png', radius: 6.5, mode: 'fs', skin: true, align: 'center' },
+  { id: 'mute2', name: "Mute 02 QML table style", key: 'tableMute2', fallback: "Mute 02", swatch: '#1f6aa8', feltUrl: '/table/mute2/felt.png', preview: '/table/mute2/preview.png', radius: 6.5, mode: 'fs', skin: true, align: 'center' },
+  { id: 'teal', name: "Teal QML table style", key: 'tableTeal', fallback: "Teal", swatch: '#0e5c5c', feltUrl: '/table/teal/felt.png', preview: '/table/teal/preview.png', radius: 6.5, mode: 'fs', skin: true, align: 'center bottom' },
+  { id: 'lemming', name: "Lemming TA01-MC QML table style", key: 'tableLemming', fallback: "Lemming", swatch: '#2e6b2e', feltUrl: '/table/lemming/felt.png', preview: '/table/lemming/preview.png', radius: 6.5, mode: 'fs', skin: true, align: 'center bottom' },
   { id: 'matrix', name: "Matrix QML table style", key: 'tableMatrix', fallback: "Matrix", swatch: '#0b2b12', feltUrl: '/table/matrix/felt.png', preview: '/table/matrix/preview.png', mode: 'fs', skin: true, align: 'center', zoom: 1.25 },
-  { id: 'star_trek', name: "Star Trek QML table style", key: 'tableStarTrek', fallback: "Star Trek", swatch: '#101826', feltUrl: '/table/star_trek/felt.png', preview: '/table/star_trek/preview.png', mode: 'fs', skin: true, align: 'center', zoom: 1.3 },
-  { id: 'tripsixes', name: "TripSixes QML table style", key: 'tableTripSixes', fallback: "TripSixes", swatch: '#5a1010', feltUrl: '/table/tripsixes/felt.png', preview: '/table/tripsixes/preview.png', mode: 'fs', skin: true, align: 'center' },
-  { id: 'wanted', name: "Wanted QML table style", key: 'tableWanted', fallback: "Wanted", swatch: '#6b4a1e', feltUrl: '/table/wanted/felt.png', preview: '/table/wanted/preview.png', mode: 'fs', skin: true, align: 'center' },
-  { id: 'xanax', name: "Xanax 03 QML table style", key: 'tableXanax', fallback: "Xanax", swatch: '#394150', feltUrl: '/table/xanax/felt.png', preview: '/table/xanax/preview.png', mode: 'fs', skin: true, align: 'center' },
-  { id: 'saloon', name: "Saloon QML table style", key: 'tableSaloon', fallback: "Saloon", swatch: '#c07f30', feltUrl: '/table/saloon/felt.png', preview: '/table/saloon/preview.png', mode: 'fs', skin: true, align: 'center' },
-  { id: 'discworld', name: "Discworld QML table style", key: 'tableDiscworld', fallback: "Discworld", swatch: '#c98d49', feltUrl: '/table/discworld/felt.png', preview: '/table/discworld/preview.png', mode: 'fs', skin: true, align: 'center', zoom: 1.3 },
+  { id: 'star_trek', name: "Star Trek QML table style", key: 'tableStarTrek', fallback: "Star Trek", swatch: '#101826', feltUrl: '/table/star_trek/felt.png', preview: '/table/star_trek/preview.png', radius: 21.5, mode: 'fs', skin: true, align: 'center', zoom: 1.3 },
+  { id: 'tripsixes', name: "TripSixes QML table style", key: 'tableTripSixes', fallback: "TripSixes", swatch: '#5a1010', feltUrl: '/table/tripsixes/felt.png', preview: '/table/tripsixes/preview.png', radius: 6.5, mode: 'fs', skin: true, align: 'center' },
+  { id: 'wanted', name: "Wanted QML table style", key: 'tableWanted', fallback: "Wanted", swatch: '#6b4a1e', feltUrl: '/table/wanted/felt.png', preview: '/table/wanted/preview.png', radius: 6.5, mode: 'fs', skin: true, align: 'center' },
+  { id: 'xanax', name: "Xanax 03 QML table style", key: 'tableXanax', fallback: "Xanax", swatch: '#394150', feltUrl: '/table/xanax/felt.png', preview: '/table/xanax/preview.png', radius: 6.5, mode: 'fs', skin: true, align: 'center' },
+  { id: 'saloon', name: "Saloon QML table style", key: 'tableSaloon', fallback: "Saloon", swatch: '#c07f30', feltUrl: '/table/saloon/felt.png', preview: '/table/saloon/preview.png', radius: 7, mode: 'fs', skin: true, align: 'center' },
+  { id: 'discworld', name: "Discworld QML table style", key: 'tableDiscworld', fallback: "Discworld", swatch: '#c98d49', feltUrl: '/table/discworld/felt.png', preview: '/table/discworld/preview.png', radius: 7, mode: 'fs', skin: true, align: 'center', zoom: 1.3 },
   // 2.1.5 : trois packs de plus. previewPortrait = PreviewPortrait du XML amont,
   // utilise quand l'ecran est en portrait (voir _tablePreview).
-  { id: 'pirates', name: "Pirates QML table style", key: 'tablePirates', fallback: "Pirates", swatch: '#cf9a34', feltUrl: '/table/pirates/felt.png', preview: '/table/pirates/preview.png', previewPortrait: '/table/pirates/preview_portrait.png', mode: 'fs', skin: true, align: 'center', zoom: 1.33 },
-  { id: 'mile_high_club', name: "Mile High Club QML table style", key: 'tableMileHighClub', fallback: "Mile High Club", swatch: '#e7181c', feltUrl: '/table/mile_high_club/felt.png', preview: '/table/mile_high_club/preview.png', previewPortrait: '/table/mile_high_club/preview_portrait.png', mode: 'fs', skin: true, align: 'center bottom' },
-  { id: 'terminus_hotel_2', name: "Terminus Hotel 2 QML table style", key: 'tableTerminusHotel2', fallback: "Terminus Hotel 2", swatch: '#6e53a2', feltUrl: '/table/terminus_hotel_2/felt.png', preview: '/table/terminus_hotel_2/preview.png', previewPortrait: '/table/terminus_hotel_2/preview_portrait.png', mode: 'fs', skin: true, align: 'center', zoom: 1.3 },
+  { id: 'pirates', name: "Pirates QML table style", key: 'tablePirates', fallback: "Pirates", swatch: '#cf9a34', feltUrl: '/table/pirates/felt.png', preview: '/table/pirates/preview.png', previewPortrait: '/table/pirates/preview_portrait.png', radius: 4, mode: 'fs', skin: true, align: 'center', zoom: 1.33 },
+  { id: 'mile_high_club', name: "Mile High Club QML table style", key: 'tableMileHighClub', fallback: "Mile High Club", swatch: '#e7181c', feltUrl: '/table/mile_high_club/felt.png', preview: '/table/mile_high_club/preview.png', previewPortrait: '/table/mile_high_club/preview_portrait.png', radius: 6.5, mode: 'fs', skin: true, align: 'center bottom' },
+  { id: 'terminus_hotel_2', name: "Terminus Hotel 2 QML table style", key: 'tableTerminusHotel2', fallback: "Terminus Hotel 2", swatch: '#6e53a2', feltUrl: '/table/terminus_hotel_2/felt.png', preview: '/table/terminus_hotel_2/preview.png', previewPortrait: '/table/terminus_hotel_2/preview_portrait.png', radius: 6.5, mode: 'fs', skin: true, align: 'center', zoom: 1.3 },
 ];
 const DECKS = [
   { id: 'default', name: 'PokerTH default QML card deck', by: 'PokerTH Development Team', swatch: '#1d6b30', ext: 'svg' },
@@ -960,6 +960,12 @@ table.apply = function(id){
       _injectAxis(TABLE_TOKENS, { feltUrl: tb.feltUrl }, 'pth_table_css', true);
       if (tb.skin) { var _bd='/table/'+(tb.dir||tb.id)+'/'; _injectButtons({ images:{ fold:'url('+_bd+'actionFold.svg)', check:'url('+_bd+'actionCall.svg)', call:'url('+_bd+'actionCall.svg)', raise:'url('+_bd+'actionRaise.svg)', allin:'url('+_bd+'actionAllIn.svg)' }, colors:(tb.btn === 'casino' ? CASINO_BTN.colors : { 'btn-fold-fg':'#f0f3f8','btn-check-fg':'#f0f3f8','btn-call-fg':'#f0f3f8','btn-raise-fg':'#f0f3f8','btn-allin-fg':'#fff4ec','btn-allin-fg-b':'#ffffff' }) }); }
       else _injectButtons(tb.btn === 'casino' ? CASINO_BTN : { colors: BUTTON_GLOSSY });
+      // ActionButtonBorderRadius (defaut 9) : le rectangle de libelle est pose
+      // PAR-DESSUS le SVG du bouton, donc son arrondi doit etre celui dessine
+      // dans le pack, sinon les coins baillent. C'etait deja fait pour les
+      // tapis importes (branche galerie plus bas) ; les tapis integres, eux,
+      // restaient a 9 quel que soit leur XML amont.
+      try{ if(tb.radius!=null && tb.radius!==9) document.documentElement.style.setProperty('--act-btn-radius', tb.radius+'px'); }catch(e){}
       if (tb.mode === 'fs') { _applyTableFull(null); _applyTableFullscreen(tb.feltUrl, tb.align || null, tb.zoom || null); } // TableBackgroundZoom des styles officiels (danuxi/matrix/star_trek 1.3/1.25/1.3)
       else if (tb.mode === 'full') { _applyTableFullscreen(null); _applyTableFull(tb.feltUrl); }
       else { _applyTableFullscreen(null); _applyTableFull(null); }
