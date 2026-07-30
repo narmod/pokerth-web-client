@@ -248,7 +248,7 @@ export const help = {
         { id: 'updates', t: 'Rămâi la zi',
           b: ['Clientul se actualizează singur: când o versiune nouă e lansată, un banner te invită să reîncarci (sau tastează /update în chat pentru o verificare manuală). Din când în când poate apărea un mic sondaj de produs care îți cere părerea despre o funcție — participarea e opțională, iar sondajele pot fi dezactivate complet în Opțiuni avansate \u2192 Comunitate.'] },
         { id: 'fkeys', t: 'Scurtături de tastatură oficiale',
-          b: ['Tastele funcționale oficiale PokerTH funcționează în timpul unei partide:'],
+          b: ['Tastele func\u021bionale oficiale PokerTH func\u021bioneaz\u0103 \u00een timpul unei partide \u2014 Alt+S func\u021bioneaz\u0103 oriunde:'],
           keys: [
             ['F1 / F2 / F3 / F4', 'Fold \u00b7 Check/Call \u00b7 Bet/Raise \u00b7 All-In (ordinea se poate inversa din opțiuni)'],
             ['F5', 'Arată-ți cărțile (când e posibil)'],

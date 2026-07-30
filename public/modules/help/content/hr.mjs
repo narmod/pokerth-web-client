@@ -248,7 +248,7 @@ export const help = {
         { id: 'updates', t: 'Ostani ažuran',
           b: ['Klijent se ažurira sam: kad izađe nova verzija, natpis te poziva da osvježiš (ili utipkaj /update u chat za ručnu provjeru). S vremena na vrijeme može se pojaviti mala anketa o proizvodu koja pita tvoje mišljenje o nekoj funkciji — sudjelovanje je dobrovoljno, a ankete se mogu potpuno isključiti u Napredne opcije \u2192 Zajednica.'] },
         { id: 'fkeys', t: 'Službeni tipkovnički prečaci',
-          b: ['Službene funkcijske tipke PokerTH-a rade tijekom partije:'],
+          b: ['Slu\u017ebene funkcijske tipke PokerTH-a rade tijekom igre \u2014 Alt+S radi svugdje:'],
           keys: [
             ['F1 / F2 / F3 / F4', 'Fold \u00b7 Check/Call \u00b7 Bet/Raise \u00b7 All-In (redoslijed se može obrnuti u opcijama)'],
             ['F5', 'Pokaži svoje karte (kad je moguće)'],

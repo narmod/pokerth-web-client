@@ -248,7 +248,7 @@ export const help = {
         { id: 'updates', t: 'Maradj naprakész',
           b: ['A kliens magát frissíti: amikor új verzió jelenik meg, egy szalag újratöltésre hív (vagy írd be a /update parancsot a csevegésbe a kézi ellenőrzéshez). Időnként megjelenhet egy kis termékkérdőív, amely egy funkcióról kérdezi a véleményed — a részvétel önkéntes, a kérdőívek pedig teljesen kikapcsolhatók a Speciális beállítások \u2192 Közösség alatt.'] },
         { id: 'fkeys', t: 'Hivatalos billentyűparancsok',
-          b: ['A hivatalos PokerTH funkcióbillentyűk játszma közben működnek:'],
+          b: ['A hivatalos PokerTH funkci\u00f3billenty\u0171k j\u00e1t\u00e9k k\u00f6zben m\u0171k\u00f6dnek \u2014 az Alt+S mindenhol m\u0171k\u00f6dik:'],
           keys: [
             ['F1 / F2 / F3 / F4', 'Fold \u00b7 Check/Call \u00b7 Bet/Raise \u00b7 All-In (a sorrend a beállításokban megfordítható)'],
             ['F5', 'Lapjaid megmutatása (amikor lehetséges)'],
