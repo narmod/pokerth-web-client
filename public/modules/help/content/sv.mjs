@@ -248,7 +248,7 @@ export const help = {
         { id: 'updates', t: 'Håll dig uppdaterad',
           b: ['Klienten uppdaterar sig själv: när en ny version rullas ut bjuder en banner in dig att ladda om (eller skriv /update i chatten för att kontrollera manuellt). Då och då kan en liten produktundersökning dyka upp och fråga om din åsikt om en funktion — deltagande är frivilligt och undersökningar kan stängas av helt i Avancerade inställningar \u2192 Gemenskap.'] },
         { id: 'fkeys', t: 'Officiella tangentbordsgenvägar',
-          b: ['PokerTH:s officiella funktionstangenter fungerar under ett spel:'],
+          b: ['PokerTH:s officiella funktionstangenter fungerar under ett spel \u2014 Alt+S fungerar \u00f6verallt:'],
           keys: [
             ['F1 / F2 / F3 / F4', 'Fold \u00b7 Check/Call \u00b7 Bet/Raise \u00b7 All-In (ordningen kan vändas i inställningarna)'],
             ['F5', 'Visa dina kort (när det är möjligt)'],

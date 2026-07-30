@@ -248,7 +248,7 @@ export const help = {
         { id: 'updates', t: 'Mantenir-se al dia',
           b: ['El client s\u2019actualitza sol: quan es publica una versió nova, un bàner et convida a recarregar (o escriu /update al xat per comprovar-ho manualment). De tant en tant pot aparèixer una petita enquesta de producte que et demana l\u2019opinió sobre una funció — la participació és opcional, i les enquestes es poden desactivar del tot a Opcions avançades \u2192 Comunitat.'] },
         { id: 'fkeys', t: 'Dreceres de teclat oficials',
-          b: ['Les tecles de funció oficials de PokerTH funcionen durant una partida:'],
+          b: ['Les tecles de funci\u00f3 oficials de PokerTH funcionen durant una partida \u2014 Alt+S funciona arreu:'],
           keys: [
             ['F1 / F2 / F3 / F4', 'Fold \u00b7 Check/Call \u00b7 Bet/Raise \u00b7 All-In (l\u2019ordre es pot invertir a les opcions)'],
             ['F5', 'Mostra les teves cartes (quan és possible)'],
