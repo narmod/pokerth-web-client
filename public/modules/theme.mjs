@@ -528,6 +528,10 @@ var _STANDALONE_BACKS = [
   { id: 'back-nobus-blue',  key: 'cardbackNobusBlue',   fallback: 'Nobus Classic Blue',  ext: 'svg' },
   { id: 'back-nobus-green', key: 'cardbackNobusGreen',  fallback: 'Nobus Classic Green', ext: 'svg' },
   { id: 'back-nobus-red',   key: 'cardbackNobusRed',    fallback: 'Nobus Classic Red',   ext: 'svg' },
+  // 2.1.5 : les dos assortis aux trois nouveaux tapis (memes palettes).
+  { id: 'back-pirates',           name: 'Pirates (QML/SVG)',              key: 'cardbackPirates',         fallback: 'Pirates',           ext: 'svg' },
+  { id: 'back-mile-high-club',    name: 'Mile High Club (QML/SVG)',       key: 'cardbackMileHighClub',    fallback: 'Mile High Club',    ext: 'svg' },
+  { id: 'back-terminus-hotel-2',  name: 'Terminus Hotel 2 WoA (QML/SVG)', key: 'cardbackTerminusHotel2',  fallback: 'Terminus Hotel 2',  ext: 'svg' },
 ];
 // Options : Assorti au deck · dos de chaque deck connu (intégrés + galerie) ·
 // dos autonomes QML · image importée (si présente) · « Importer une image… ».

@@ -40,3 +40,17 @@ from the **PokerTH** project (`src/gui/qt6-qml/data/gfx/qml/cards/` and
 - Source: https://github.com/pokerth/pokerth (branch `stable`,
   `src/gui/qt6-qml/` data resources)
 - License: GNU Affero General Public License v3.0 (AGPL-3.0)
+
+## Standalone card backs added with PokerTH 2.1.5
+
+Three backs matching the table styles shipped in 2.1.5, each a single
+`flipside.svg` under `public/cards/back-*/` taken from
+`data/gfx/qml/backside/` and redistributed under the AGPL-3.0:
+
+- Pirates — © the PokerTH Development Team.
+- Mile High Club, Terminus Hotel 2 WoA — © BaShFX, the author credited
+  upstream in each `*backsidestyle.xml`.
+
+- Source: https://github.com/pokerth/pokerth (tag `v2.1.5`,
+  `data/gfx/qml/backside/{pirates,mile_high_club,terminus_hotel_2}/`)
+- License: GNU Affero General Public License v3.0 (AGPL-3.0)
