@@ -872,6 +872,33 @@ function renderSeatsImmediate() {
         var _oppH3 = (window._seatDimsMeasured && window._seatDimsMeasured.h > 30) ? window._seatDimsMeasured.h : 71;
         var _vHalf = 0.15 * _zH3 - _oppH3 * _seatBoxScale / 2 - 6;
         _csComm = Math.max(0.55, Math.min(1.8, (_vHalf > 0 ? _vHalf / 62 : 0.55), Math.max(0, _zW3 - 16) / 264));
+        // ── Compensation de l'autofit (portrait uniquement) ──
+        // Le QML calcule cette echelle en pixels de ZONE : ses cartes ne
+        // subissent aucune reduction globale. Cote web, #g-comm vit DANS
+        // #g-table-scaler, qui porte l'autofit — 0.74 a 0.85 en portrait
+        // etroit, pour laisser la place aux boites de sieges AUTOUR du feutre
+        // (elles sont HORS scaler, donc elles, ne le subissent pas). La rangee
+        // heritait de cette reduction et arrivait a l'ecran ~25 % plus petite
+        // que le client officiel, pot badge et pastilles compris, alors que le
+        // milieu du feutre restait vide (constate narmod, iPhone portrait).
+        // On divise donc par le seul autofit : la taille A L'ECRAN redevient
+        // celle du QML. Le zoom loupe reste au-dessus (il est applique a part,
+        // cf. autoScaleTable/_applyZoomTransforms) et n'entre pas ici.
+        try {
+          var _fit3 = window._tableAutofit;
+          if (typeof _fit3 === 'number' && _fit3 > 0.05 && _fit3 < 1) {
+            _csComm = _csComm / _fit3;
+            // Garde-fou : la rangee (264x64 en px LOCAUX) doit rester dans le
+            // feutre. Sans cela un debordement gonflerait scrollWidth/Height,
+            // donc ferait baisser l'autofit au rendu suivant, qui regonflerait
+            // l'echelle -> oscillation.
+            var _fEl4 = document.querySelector('.felt-oval');
+            if (_fEl4 && _fEl4.offsetWidth > 0) {
+              var _capIn4 = Math.min((_fEl4.offsetWidth - 12) / 264, (_fEl4.offsetHeight - 12) / 64);
+              if (_capIn4 > 0.4 && _csComm > _capIn4) _csComm = _capIn4;
+            }
+          }
+        } catch (eFit) {}
         // QML (GamePage communityArea, branche portrait) :
         // verticalCenterOffset = -height*0.0025 + 5 par rapport au centre.
         _commTargetY = _zH3 / 2 - 0.0025 * _zH3 + 5;

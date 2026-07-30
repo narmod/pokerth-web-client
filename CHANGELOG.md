@@ -51,6 +51,14 @@ because sp0ck shared them ahead of the release.
   being drawn at the default until now.
 
 ### Fixed
+- **Community cards, pot badge and felt pills were too small in phone
+  portrait.** The table is scaled down to about three quarters in narrow
+  portrait so the seat boxes have room around the felt — but the seat boxes
+  live outside that scaler, and the community row was paying the reduction
+  twice: once through the official portrait formula (which already accounts
+  for the free band between the rows) and once through the table scaler. The
+  row now reaches the size the official client gives it, and the middle of the
+  felt stops looking empty.
 - **The poker-hands window now takes the table's colours**, like the chat, the
   game log and the reactions window. It was the only in-game window still
   painted with the application palette, which made it stand out on the skinned
