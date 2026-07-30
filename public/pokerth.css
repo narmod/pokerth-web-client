@@ -9645,7 +9645,22 @@ html[data-box-accent][data-seat-struct="qml"] .seat-plate { border-color: var(--
 /* ── Traduction du chat (API navigateur, opt-in) : bouton 🌐 par message,
    visible seulement quand body.chat-tr-on (option activee ET API dispo). ── */
 .chat-tr-btn { display: none; background: none; border: none; cursor: pointer; font-size: var(--fs-xs); padding: 0 3px; margin-left: 4px; opacity: 0.45; vertical-align: baseline; line-height: 1; }
-body.chat-tr-on .msg .chat-tr-btn { display: inline; }
+body.chat-tr-on .msg .chat-tr-btn { display: inline; visibility: hidden; }
+/* Parite QML 2.1.5 : le globe n'apparait que sur la ligne sous le pointeur.
+   On masque en VISIBILITY (pas display) : la place reste reservee, donc aucun
+   reflow au survol -- QML, lui, insere/retire le symbole dans un document
+   RichText unique et doit gerer le rewrap que cela provoque. */
+@media (hover: hover) { body.chat-tr-on .msg:hover .chat-tr-btn { visibility: visible; } }
+/* Tactile : pas de survol -- un tap sur la ligne pose .tr-reveal (ui/chat.mjs),
+   repli identique a celui de QML (tap sans lien -> _updateHoverLine). */
+body.chat-tr-on .msg.tr-reveal .chat-tr-btn,
+/* Option avancee « bouton toujours visible » (chat_tr_always, defaut OFF). */
+body.chat-tr-always.chat-tr-on .msg .chat-tr-btn,
+/* Une traduction en cours / faite / en erreur reste visible sans survol. */
+body.chat-tr-on .msg .chat-tr-btn.tr-active,
+body.chat-tr-on .msg .chat-tr-btn.tr-busy,
+body.chat-tr-on .msg .chat-tr-btn.tr-err,
+body.chat-tr-on .msg .chat-tr-btn.tr-same { visibility: visible; }
 .chat-tr-btn:hover { opacity: 0.9; }
 .chat-tr-btn.tr-active { opacity: 1; filter: drop-shadow(0 0 2px var(--gold)); }
 .chat-tr-btn.tr-busy { opacity: 0.3; cursor: wait; }

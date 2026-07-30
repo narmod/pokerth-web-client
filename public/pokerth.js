@@ -364,6 +364,10 @@ function openAdvancedOptions() {
   sync('adv-ownclick', 'own_click', false);
   sync('adv-guardcall', 'guard_call', false);  // défaut web : anti-call accidentel désactivé
   sync('adv-guardraise', 'guard_raise', true);  // garde-fou montant hors bornes (parité QML 2.1.5)
+  // Globe de traduction : défaut = comportement QML 2.1.5 (ligne survolée /
+  // tapée seulement) ; coché = bouton permanent sur toutes les lignes.
+  sync('adv-chattralways', 'chat_tr_always', false);
+  try { document.body.classList.toggle('chat-tr-always', _advGet('chat_tr_always', false)); } catch (e) {}
   sync('adv-assist', 'assist', true);
   sync('adv-showodds', 'show_odds', true);
   sync('adv-handsbtn', 'hands_btn', true);
@@ -1106,7 +1110,7 @@ function _cfgSyncEnabled() { return _advGet('cfg_sync', true); }
 // type pth_cfg_sync_ts, jetons, caches).
 var _CFG_WEB_SYNC_KEYS = [
   // Toggles web-only (via setAdvOpt → pth_<clé>)
-  'pth_show_community', 'pth_chat_noemoji', 'pth_chat_ts', 'pth_chat_clear_login', 'pth_guard_raise',
+  'pth_show_community', 'pth_chat_noemoji', 'pth_chat_ts', 'pth_chat_clear_login', 'pth_chat_tr_always', 'pth_guard_raise',
   'pth_assist', 'pth_show_odds', 'pth_hands_btn', 'pth_voice',
   'pth_haptic', 'pth_display_bb', 'pth_table_zoom', 'pth_zoom_follow',
   'pth_community_content', 'pth_sound_vol',
@@ -9538,7 +9542,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.5-web.5'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.5-web.6'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

@@ -620,7 +620,7 @@ export const strings = {
     quickCreateLabel: 'Spillere:',
     quickCreateBtn: 'Opret',
     logPanelTitle: 'Log',
-    logCopied:'Log kopieret', logEmpty:'Loggen er tom', gnBtn:'Global meddelelse (admin)',gnSent:'Den globale meddelelse blev sendt til alle spillere.',gnRejected:'Serveren afviste den globale meddelelse.',advChatClearLogin:'Ryd lobbychatten ved tilslutning', advGuardRaise:'Bekræft et indsatsbeløb uden for det tilladte interval', raiseAdjusted:'Beløb justeret — tryk igen for at bekræfte', logExportTitle:'Eksportér log', chatClearTitle:'Ryd chat',
+    logCopied:'Log kopieret', logEmpty:'Loggen er tom', gnBtn:'Global meddelelse (admin)',gnSent:'Den globale meddelelse blev sendt til alle spillere.',gnRejected:'Serveren afviste den globale meddelelse.',advChatClearLogin:'Ryd lobbychatten ved tilslutning', advGuardRaise:'Bekræft et indsatsbeløb uden for det tilladte interval', raiseAdjusted:'Beløb justeret — tryk igen for at bekræfte', advChatTrAlways:'Oversættelsesknap altid synlig (ellers kun på den linje, der peges på eller trykkes på)', logExportTitle:'Eksportér log', chatClearTitle:'Ryd chat',
     jumpLatest:'Gå til nyeste',
     chatTranslateBtn:'Oversæt', winMove:'Flyt', loupeToggle:'Forstørrelse ×2',
     sendTooltip:'Send', resizeTooltip:'Træk for at ændre størrelse', loadingOffline:'Indlæser offlinetilstand…',

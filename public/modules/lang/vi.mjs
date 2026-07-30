@@ -621,7 +621,7 @@ export const strings = {
     quickCreateLabel: 'Người chơi:',
     quickCreateBtn: 'Tạo',
     logPanelTitle: 'Nhật ký',
-    logCopied:'Đã sao chép nhật ký', logEmpty:'Nhật ký trống', gnBtn:'Thông báo chung (quản trị)',gnSent:'Thông báo chung đã được gửi tới mọi người chơi.',gnRejected:'Máy chủ đã từ chối thông báo chung.',advChatClearLogin:'Xóa trò chuyện sảnh khi kết nối', advGuardRaise:'Xác nhận số tiền cược nằm ngoài phạm vi cho phép', raiseAdjusted:'Đã điều chỉnh số tiền — nhấn lại để xác nhận', logExportTitle:'Xuất nhật ký', chatClearTitle:'Xóa trò chuyện',
+    logCopied:'Đã sao chép nhật ký', logEmpty:'Nhật ký trống', gnBtn:'Thông báo chung (quản trị)',gnSent:'Thông báo chung đã được gửi tới mọi người chơi.',gnRejected:'Máy chủ đã từ chối thông báo chung.',advChatClearLogin:'Xóa trò chuyện sảnh khi kết nối', advGuardRaise:'Xác nhận số tiền cược nằm ngoài phạm vi cho phép', raiseAdjusted:'Đã điều chỉnh số tiền — nhấn lại để xác nhận', advChatTrAlways:'Nút dịch luôn hiển thị (nếu không, chỉ trên dòng đang trỏ hoặc được chạm)', logExportTitle:'Xuất nhật ký', chatClearTitle:'Xóa trò chuyện',
     jumpLatest:'Đến mục mới nhất',
     chatTranslateBtn:'Dịch', winMove:'Di chuyển', loupeToggle:'Kính lúp ×2',
     sendTooltip:'Gửi', resizeTooltip:'Kéo để thay đổi kích thước', loadingOffline:'Đang tải chế độ ngoại tuyến…',

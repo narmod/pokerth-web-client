@@ -629,7 +629,7 @@ export const strings = {
     quickCreateLabel: 'Jugadores:',
     quickCreateBtn: 'Crear',
     logPanelTitle: 'Registro',
-    logCopied:'Registro copiado', logEmpty:'El registro está vacío', gnBtn:'Aviso global (admin)',gnSent:'El aviso global se envió a todos los jugadores.',gnRejected:'El servidor rechazó el aviso global.',advChatClearLogin:'Vaciar el chat del vestíbulo al conectar', advGuardRaise:'Confirmar un importe de apuesta fuera del rango permitido', raiseAdjusted:'Importe ajustado — pulsa de nuevo para confirmar', logExportTitle:'Exportar registro', chatClearTitle:'Borrar chat',
+    logCopied:'Registro copiado', logEmpty:'El registro está vacío', gnBtn:'Aviso global (admin)',gnSent:'El aviso global se envió a todos los jugadores.',gnRejected:'El servidor rechazó el aviso global.',advChatClearLogin:'Vaciar el chat del vestíbulo al conectar', advGuardRaise:'Confirmar un importe de apuesta fuera del rango permitido', raiseAdjusted:'Importe ajustado — pulsa de nuevo para confirmar', advChatTrAlways:'Botón de traducción siempre visible (si no, solo en la línea señalada o tocada)', logExportTitle:'Exportar registro', chatClearTitle:'Borrar chat',
     jumpLatest:'Ir a lo más reciente',
     chatTranslateBtn:'Traducir', winMove:'Mover', loupeToggle:'Lupa ×2',
     sendTooltip:'Enviar', resizeTooltip:'Arrastra para redimensionar', loadingOffline:'Cargando el modo sin conexión…',

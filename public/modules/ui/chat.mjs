@@ -357,6 +357,41 @@ function addChat(sender, text, cls='', spec) {
   else el.scrollTop = el.scrollHeight;
 }
 
+// ── Globe de traduction : revelation par ligne (parite QML 2.1.5) ──────────
+// QML n'affiche plus le globe que sur la ligne sous le pointeur
+// (ChatBox._updateHoverLine). Chez nous une ligne = un element .msg, donc le
+// survol se traite en CSS : pas besoin de compter les separateurs U+2028 pour
+// retrouver l'index de ligne dans un document RichText unique.
+// Reste le tactile, ou il n'y a pas de survol : un tap sur la ligne la revele,
+// exactement comme le repli tactile de QML (tap hors lien -> _updateHoverLine).
+// Une seule ligne revelee a la fois, comme le hoveredLine unique de QML.
+// L'option avancee chat_tr_always (defaut OFF = comportement QML) remet le
+// bouton en permanence sur toutes les lignes.
+let _trRevealBound = false;
+function _bindChatTrReveal() {
+  if (_trRevealBound || typeof document === 'undefined' || !document.addEventListener) return;
+  _trRevealBound = true;
+  document.addEventListener('click', function (ev) {
+    try {
+      const b = document.body;
+      if (!b || !b.classList.contains('chat-tr-on')) return;
+      if (b.classList.contains('chat-tr-always')) return;   // bouton deja permanent
+      const tgt = ev.target;
+      if (!tgt || !tgt.closest) return;
+      // Le globe et les liens gardent leur role propre.
+      if (tgt.closest('.chat-tr-btn') || tgt.closest('a')) return;
+      const msg = tgt.closest('.msg');
+      const panel = msg && msg.closest('#chat, #g-chat-msgs');
+      if (!panel) return;
+      const others = panel.querySelectorAll('.msg.tr-reveal');
+      for (let i = 0; i < others.length; i++)
+        if (others[i] !== msg) others[i].classList.remove('tr-reveal');
+      msg.classList.toggle('tr-reveal');
+    } catch (e) {}
+  }, true);
+}
+_bindChatTrReveal();
+
 export { _chatLocalCmd, addChat };
 
 window._chatLocalCmd = _chatLocalCmd;

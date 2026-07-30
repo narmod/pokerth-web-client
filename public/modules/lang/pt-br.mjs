@@ -625,7 +625,7 @@ export const strings = {
     quickCreateLabel: 'Jogadores:',
     quickCreateBtn: 'Criar',
     logPanelTitle: 'Registro',
-    logCopied:'Registro copiado', logEmpty:'O registro está vazio', gnBtn:'Aviso global (admin)',gnSent:'O aviso global foi enviado a todos os jogadores.',gnRejected:'O servidor recusou o aviso global.',advChatClearLogin:'Limpar o bate-papo do saguão ao conectar', advGuardRaise:'Confirmar um valor de aposta fora da faixa permitida', raiseAdjusted:'Valor ajustado — pressione novamente para confirmar', logExportTitle:'Exportar registro', chatClearTitle:'Limpar chat',
+    logCopied:'Registro copiado', logEmpty:'O registro está vazio', gnBtn:'Aviso global (admin)',gnSent:'O aviso global foi enviado a todos os jogadores.',gnRejected:'O servidor recusou o aviso global.',advChatClearLogin:'Limpar o bate-papo do saguão ao conectar', advGuardRaise:'Confirmar um valor de aposta fora da faixa permitida', raiseAdjusted:'Valor ajustado — pressione novamente para confirmar', advChatTrAlways:'Botão de tradução sempre visível (senão, apenas na linha apontada ou tocada)', logExportTitle:'Exportar registro', chatClearTitle:'Limpar chat',
     jumpLatest:'Ir para o mais recente',
     chatTranslateBtn:'Traduzir', winMove:'Mover', loupeToggle:'Lupa ×2',
     sendTooltip:'Enviar', resizeTooltip:'Arraste para redimensionar', loadingOffline:'Carregando o modo off-line…',

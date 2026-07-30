@@ -2660,6 +2660,7 @@ if ('serviceWorker' in navigator) {
       <label class="adv-row"><input type="checkbox" id="adv-noemoji" onchange="setAdvOpt('chat_noemoji',this.checked)"><span data-i18n="advNoChatEmoji">Disable emojis in chat</span></label>
       <label class="adv-row"><input type="checkbox" id="adv-chatts" onchange="setAdvOpt('chat_ts',this.checked)"><span data-i18n="advChatTimestamps">Show time in chat messages</span><em class="adv-webtag">web</em></label>
       <label class="adv-row"><input type="checkbox" id="adv-chattranslate" onchange="setChatTranslate(this.checked)"><span data-i18n="advChatTranslate">Chat translation (Google Translate, per-message button)</span></label>
+      <label class="adv-row"><input type="checkbox" id="adv-chattralways" onchange="setAdvOpt('chat_tr_always',this.checked);try{document.body.classList.toggle('chat-tr-always',this.checked)}catch(e){}"><span data-i18n="advChatTrAlways">Translation button always visible (otherwise only on the hovered or tapped line)</span><em class="adv-webtag">web</em></label>
       <label class="adv-row"><input type="checkbox" id="adv-chatabbrev" onchange="setAdvOpt('chat_abbrev',this.checked)"><span data-i18n="advChatAbbrev">Explain chat abbreviations (gg, nh, utg…) on hover</span><em class="adv-webtag">web</em></label>
       <label class="adv-row"><input type="checkbox" id="adv-chatclearlogin" onchange="setAdvOpt('chat_clear_login',this.checked)"><span data-i18n="advChatClearLogin">Clear the lobby chat when connecting</span></label>
       </details>

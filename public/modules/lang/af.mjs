@@ -621,7 +621,7 @@ export const strings = {
     quickCreateLabel: 'Spelers:',
     quickCreateBtn: 'Skep',
     logPanelTitle: 'Logboek',
-    logCopied:'Logboek gekopieer', logEmpty:'Logboek is leeg', gnBtn:'Globale kennisgewing (admin)',gnSent:'Die globale kennisgewing is aan alle spelers gestuur.',gnRejected:'Die bediener het die globale kennisgewing geweier.',advChatClearLogin:'Vee die voorportaal-geselsie skoon wanneer jy koppel', advGuardRaise:'Bevestig \'n insetbedrag wat buite die toegelate reeks was', raiseAdjusted:'Bedrag aangepas — druk weer om te bevestig', logExportTitle:'Voer logboek uit', chatClearTitle:'Vee klets uit',
+    logCopied:'Logboek gekopieer', logEmpty:'Logboek is leeg', gnBtn:'Globale kennisgewing (admin)',gnSent:'Die globale kennisgewing is aan alle spelers gestuur.',gnRejected:'Die bediener het die globale kennisgewing geweier.',advChatClearLogin:'Vee die voorportaal-geselsie skoon wanneer jy koppel', advGuardRaise:'Bevestig \'n insetbedrag wat buite die toegelate reeks was', raiseAdjusted:'Bedrag aangepas — druk weer om te bevestig', advChatTrAlways:'Vertaalknoppie altyd sigbaar (anders net op die lyn onder die wyser of getik)', logExportTitle:'Voer logboek uit', chatClearTitle:'Vee klets uit',
     jumpLatest:'Spring na nuutste',
     chatTranslateBtn:'Vertaal', winMove:'Skuif', loupeToggle:'Vergrootglas ×2',
     sendTooltip:'Stuur', resizeTooltip:'Sleep om te verstel', loadingOffline:'Laai vanlyn-modus…',

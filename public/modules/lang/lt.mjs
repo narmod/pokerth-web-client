@@ -621,7 +621,7 @@ export const strings = {
     quickCreateLabel: 'Žaidėjai:',
     quickCreateBtn: 'Sukurti',
     logPanelTitle: 'Žurnalas',
-    logCopied:'Žurnalas nukopijuotas', logEmpty:'Žurnalas tuščias', gnBtn:'Bendras pranešimas (administratorius)',gnSent:'Bendras pranešimas išsiųstas visiems žaidėjams.',gnRejected:'Serveris atmetė bendrą pranešimą.',advChatClearLogin:'Prisijungiant išvalyti vestibiulio pokalbį', advGuardRaise:'Patvirtinti statymo sumą, esančią už leistinų ribų', raiseAdjusted:'Suma pakoreguota — paspauskite dar kartą patvirtinti', logExportTitle:'Eksportuoti žurnalą', chatClearTitle:'Išvalyti pokalbį',
+    logCopied:'Žurnalas nukopijuotas', logEmpty:'Žurnalas tuščias', gnBtn:'Bendras pranešimas (administratorius)',gnSent:'Bendras pranešimas išsiųstas visiems žaidėjams.',gnRejected:'Serveris atmetė bendrą pranešimą.',advChatClearLogin:'Prisijungiant išvalyti vestibiulio pokalbį', advGuardRaise:'Patvirtinti statymo sumą, esančią už leistinų ribų', raiseAdjusted:'Suma pakoreguota — paspauskite dar kartą patvirtinti', advChatTrAlways:'Vertimo mygtukas visada matomas (kitaip tik ties užvesta ar bakstelėta eilute)', logExportTitle:'Eksportuoti žurnalą', chatClearTitle:'Išvalyti pokalbį',
     jumpLatest:'Pereiti prie naujausių',
     chatTranslateBtn:'Versti', winMove:'Perkelti', loupeToggle:'Didinamasis ×2',
     sendTooltip:'Siųsti', resizeTooltip:'Vilkite, kad pakeistumėte dydį', loadingOffline:'Įkeliamas neprisijungus režimas…',
