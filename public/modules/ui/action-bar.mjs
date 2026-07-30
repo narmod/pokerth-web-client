@@ -425,12 +425,33 @@ function doRaise() {
   const minBet  = S.minRaise > 0
     ? S.minRaise
     : Math.max(S.highestBet > 0 ? S.highestBet : S.smallBlind * 2, S.smallBlind * 2);
-  let amt = parseInt((document.getElementById('raise-amt')||{}).value, 10);
-  if (!Number.isFinite(amt) || amt <= 0) amt = minBet;
+  const _fld = document.getElementById('raise-amt');
+  let amt = parseInt((_fld || {}).value, 10);
+  const _typed = amt;                       // ce que le champ contient VRAIMENT
+  if (!Number.isFinite(amt) || amt <= 0) amt = minBet;   // champ vide → mise min
   // Clamp dans [minBet, myMoney]. Si le résultat atteint le stack,
   // on bascule explicitement en All-in (action=6) — sémantiquement
   // plus juste et évite tout doute sur l'interprétation serveur.
-  amt = Math.max(minBet, Math.min(amt, myMoney));
+  const _clamped = Math.max(minBet, Math.min(amt, myMoney));
+  // ── Garde-fou « relance surprise » (parité QML 2.1.5, GameActionBar.onAccepted)
+  // Un montant saisi HORS bornes était jusqu'ici clampé en silence : taper 300
+  // avec 250 de tapis partait en All-In sans que rien ne l'annonce (rapport
+  // joueur côté QML). Désormais on corrige le champ VISIBLEMENT, on
+  // resélectionne le contenu et on ne joue PAS : c'est le second appui qui
+  // valide le montant devenu visible. Le champ vide (NaN) ne déclenche rien —
+  // c'est un raccourci volontaire vers la mise minimale.
+  if (Number.isFinite(_typed) && _typed > 0 && _typed !== _clamped
+      && (!window._advGet || window._advGet('guard_raise', true))) {
+    if (_fld) {
+      _fld.value = String(_clamped);
+      try { _fld.focus(); _fld.select(); } catch (e) {}
+    }
+    const _sl = document.getElementById('raise-slider');
+    if (_sl) _sl.value = String(_clamped);
+    try { window.showKeyHint && window.showKeyHint(t('raiseAdjusted')); } catch (e) {}
+    return;
+  }
+  amt = _clamped;
   if (amt >= myMoney) {
     doAction(6, myMoney);
   } else {

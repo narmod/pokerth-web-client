@@ -165,15 +165,32 @@ ok(sent2.length >= 1, 'doAction : action envoyée au serveur');
 ok(turnActive === false, 'doAction : setMyTurnActive(false)');
 ok(ga.innerHTML.includes('actions-preview'), 'doAction : barre conservée en mode aperçu');
 
-// doRaise : clamp du montant hors bornes → minBet ; >= stack → All-In
+// doRaise : garde-fou « relance surprise » (parité QML 2.1.5).
+// Un montant hors bornes n'est plus clampé en silence : le champ est corrigé
+// visiblement et RIEN n'est envoyé ; c'est le second appel qui joue.
 S.highestBet = 0; S.minRaise = 40;
 els['raise-amt'] = makeEl(); els['raise-amt'].value = '7';
+els['raise-slider'] = makeEl();
 const sent3 = []; S.ws.send = (d) => sent3.push(d);
 A.doRaise();
-ok(sent3.length === 1, 'doRaise : montant < min clampé et envoyé');
+ok(sent3.length === 0, 'doRaise : montant < min → rien envoyé (garde-fou)');
+ok(els['raise-amt'].value === '40', 'doRaise : champ corrigé à la mise minimale');
+A.doRaise();
+ok(sent3.length === 1, 'doRaise : 2e appel sur le montant corrigé → envoyé');
 els['raise-amt'].value = '99999';
 A.doRaise();
-ok(sent3.length === 2, 'doRaise : montant > stack → All-In envoyé');
+ok(sent3.length === 1, 'doRaise : montant > stack → rien envoyé (garde-fou)');
+ok(els['raise-amt'].value === String((S.seatData[1] || {}).money || 0),
+   'doRaise : champ corrigé au tapis');
+A.doRaise();
+ok(sent3.length === 2, 'doRaise : 2e appel → All-In envoyé');
+// Garde-fou désactivé (option avancée) : on retrouve le clamp silencieux.
+const _advSave = window._advGet;
+window._advGet = (k, d) => (k === 'guard_raise' ? false : (_advSave ? _advSave(k, d) : d));
+els['raise-amt'].value = '7';
+A.doRaise();
+ok(sent3.length === 3, 'doRaise : garde-fou off → clamp silencieux et envoi');
+window._advGet = _advSave;
 
 // confirmCall : 1er tap arme ET re-libelle le bouton « Confirm $X ? »
 // (fix 9g-B4b : les bindings sont relus via window._keyBindings())

@@ -621,7 +621,7 @@ export const strings = {
     quickCreateLabel: 'Hráči:',
     quickCreateBtn: 'Vytvoriť',
     logPanelTitle: 'Záznam',
-    logCopied:'Denník skopírovaný', logEmpty:'Denník je prázdny', gnBtn:'Globálne oznámenie (admin)',gnSent:'Globálne oznámenie bolo odoslané všetkým hráčom.',gnRejected:'Server globálne oznámenie odmietol.',advChatClearLogin:'Pri pripojení vymazať chat v lobby', logExportTitle:'Exportovať denník', chatClearTitle:'Vymazať chat',
+    logCopied:'Denník skopírovaný', logEmpty:'Denník je prázdny', gnBtn:'Globálne oznámenie (admin)',gnSent:'Globálne oznámenie bolo odoslané všetkým hráčom.',gnRejected:'Server globálne oznámenie odmietol.',advChatClearLogin:'Pri pripojení vymazať chat v lobby', advGuardRaise:'Potvrdiť stávku mimo povoleného rozsahu', raiseAdjusted:'Suma upravená — potvrďte ďalším stlačením', logExportTitle:'Exportovať denník', chatClearTitle:'Vymazať chat',
     jumpLatest:'Prejsť na najnovšie',
     chatTranslateBtn:'Preložiť', winMove:'Presunúť', loupeToggle:'Lupa ×2',
     sendTooltip:'Odoslať', resizeTooltip:'Potiahnutím zmeníte veľkosť', loadingOffline:'Načítava sa režim offline…',

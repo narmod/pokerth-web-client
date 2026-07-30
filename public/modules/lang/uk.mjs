@@ -620,7 +620,7 @@ export const strings = {
     quickCreateLabel: 'Гравці:',
     quickCreateBtn: 'Створити',
     logPanelTitle: 'Журнал',
-    logCopied:'Журнал скопійовано', logEmpty:'Журнал порожній', gnBtn:'Загальне оголошення (адмін)',gnSent:'Загальне оголошення надіслано всім гравцям.',gnRejected:'Сервер відхилив загальне оголошення.',advChatClearLogin:'Очищати чат лобі при підключенні', logExportTitle:'Експортувати журнал', chatClearTitle:'Очистити чат',
+    logCopied:'Журнал скопійовано', logEmpty:'Журнал порожній', gnBtn:'Загальне оголошення (адмін)',gnSent:'Загальне оголошення надіслано всім гравцям.',gnRejected:'Сервер відхилив загальне оголошення.',advChatClearLogin:'Очищати чат лобі при підключенні', advGuardRaise:'Підтверджувати ставку поза допустимим діапазоном', raiseAdjusted:'Суму скориговано — натисніть ще раз для підтвердження', logExportTitle:'Експортувати журнал', chatClearTitle:'Очистити чат',
     jumpLatest:'До найновіших',
     chatTranslateBtn:'Перекласти', winMove:'Перемістити', loupeToggle:'Лупа ×2',
     sendTooltip:'Надіслати', resizeTooltip:'Перетягніть, щоб змінити розмір', loadingOffline:'Завантаження автономного режиму…',

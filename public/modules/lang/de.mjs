@@ -628,7 +628,7 @@ export const strings = {
     quickCreateLabel: 'Spieler:',
     quickCreateBtn: 'Erstellen',
     logPanelTitle: 'Protokoll',
-    logCopied:'Protokoll kopiert', logEmpty:'Protokoll ist leer', gnBtn:'Globale Durchsage (Admin)',gnSent:'Die Durchsage wurde an alle Spieler gesendet.',gnRejected:'Der Server hat die Durchsage abgelehnt.',advChatClearLogin:'Lobby-Chat beim Verbinden leeren', logExportTitle:'Protokoll exportieren', chatClearTitle:'Chat leeren',
+    logCopied:'Protokoll kopiert', logEmpty:'Protokoll ist leer', gnBtn:'Globale Durchsage (Admin)',gnSent:'Die Durchsage wurde an alle Spieler gesendet.',gnRejected:'Der Server hat die Durchsage abgelehnt.',advChatClearLogin:'Lobby-Chat beim Verbinden leeren', advGuardRaise:'Einsatz außerhalb des zulässigen Bereichs bestätigen', raiseAdjusted:'Betrag angepasst — zum Bestätigen erneut drücken', logExportTitle:'Protokoll exportieren', chatClearTitle:'Chat leeren',
     jumpLatest:'Zum Neuesten springen',
     chatTranslateBtn:'Übersetzen', winMove:'Verschieben', loupeToggle:'Lupe ×2',
     sendTooltip:'Senden', resizeTooltip:'Zum Anpassen ziehen', loadingOffline:'Offline-Modus wird geladen…',
