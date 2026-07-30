@@ -3163,6 +3163,60 @@ function handleRanking(req, res, query) {
 }
 
 
+// ── Community suggest botfiles relay (parite QML 2.1.5, Config.BotSuggest) ──
+// Le client QML tire trois fichiers texte de bbc.pokerth.net et les analyse
+// lui-meme. Un navigateur ne peut pas : pas de CORS sur cet hote, et l'UA que
+// le filtre Cloudflare attend n'est pas posable en JS. On relaie donc a
+// l'identique — texte brut, aucune interpretation ici. Le parsing et le
+// classement restent cote client (modules/lobby/botsuggest.mjs), calques sur
+// BotSuggest.qml : ainsi un changement de format amont se corrige par un
+// deploiement statique, sans redemarrer le proxy.
+//
+//   GET /api/botfile?f=minidb|weclist|gameslist  -> text/plain
+//
+// Cache 15 minutes, exactement le cacheTtlMs du singleton QML.
+const BOTFILE_BASE = 'https://bbc.pokerth.net/exp3/bbcbot/';
+const BOTFILE_TTL_MS = 15 * 60 * 1000;
+const BOTFILE_NAMES = { minidb: 'minidb.txt', weclist: 'weclist.txt', gameslist: 'gameslist.txt' };
+
+function handleBotfile(req, res, query) {
+  const key = String((query && query.f) || '').toLowerCase();
+  const name = BOTFILE_NAMES[key];
+  if (!name) {
+    res.writeHead(400, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' });
+    res.end(JSON.stringify({ ok: false, error: 'unknown_file', allowed: Object.keys(BOTFILE_NAMES) }));
+    return;
+  }
+  const cacheKey = 'botfile|' + key;
+  const hit = RANKING_CACHE.get(cacheKey);
+  if (hit && (Date.now() - hit.at) < BOTFILE_TTL_MS) {
+    res.writeHead(hit.status, { 'Content-Type': 'text/plain; charset=utf-8', 'Cache-Control': 'public, max-age=300', 'X-Botfile-Cache': 'hit' });
+    res.end(hit.body);
+    return;
+  }
+  rankingFetch(BOTFILE_BASE + name).then(function (r) {
+    return r.text().then(function (body) { return { status: r.ok ? 200 : 502, body: body }; });
+  }).then(function (out) {
+    // Ne cacher qu'un succes : une page d'erreur Cloudflare mise en cache
+    // quinze minutes couperait la fonction bien apres le retablissement.
+    if (out.status === 200) RANKING_CACHE.set(cacheKey, { at: Date.now(), status: 200, body: out.body });
+    res.writeHead(out.status, { 'Content-Type': 'text/plain; charset=utf-8', 'Cache-Control': out.status === 200 ? 'public, max-age=300' : 'no-store', 'X-Botfile-Cache': 'miss' });
+    res.end(out.body);
+  }).catch(function (err) {
+    // Repli sur des donnees perimees plutot que rien, comme le fait QML quand
+    // le chargement echoue et que le cache precedent existe encore.
+    const stale = RANKING_CACHE.get(cacheKey);
+    if (stale) {
+      res.writeHead(200, { 'Content-Type': 'text/plain; charset=utf-8', 'Cache-Control': 'no-store', 'X-Botfile-Cache': 'stale' });
+      res.end(stale.body);
+      return;
+    }
+    res.writeHead(502, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' });
+    res.end(JSON.stringify({ ok: false, error: 'relay_failed', detail: String((err && err.message) || err) }));
+  });
+}
+
+
 // ── Table ranking relay (parite QML GameTableStatsPage) ────────────────────
 // Le client appelle /api/tableranking?nicks=a,b,c (sieges dans l'ordre) et on
 // relaie le POST JSON de la vue table de pokerth.net (meme endpoint que le
@@ -3593,6 +3647,10 @@ const httpServer = http.createServer((req, res) => {
   }
   if (reqPathOnly === '/api/tableranking') {
     handleTableRanking(req, res, query);
+    return;
+  }
+  if (reqPathOnly === '/api/botfile') {
+    handleBotfile(req, res, query);
     return;
   }
   if (reqPathOnly === '/api/player') {
