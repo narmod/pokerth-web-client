@@ -248,7 +248,7 @@ export const help = {
         { id: 'updates', t: 'Fuirich cùrsach',
           b: ['Ùraichidh an cliant e fhèin: nuair a thèid tionndadh ùr a sgaoileadh, iarraidh bratach ort ath-luchdachadh (no sgrìobh /update sa chabadaich airson sgrùdadh làimhe). O àm gu àm faodaidh suirbhidh bheag toraidh nochdadh a dh\u2019fhaighnicheas do bheachd air feart — tha com-pàirteachadh roghainneil, agus gabhaidh na suirbhidhean a chur dheth gu tur ann an Roghainnean adhartach \u2192 Coimhearsnachd.'] },
         { id: 'fkeys', t: 'Ath-ghoiridean meur-chlàir oifigeil',
-          b: ['Obraichidh iuchraichean gnìomh oifigeil PokerTH rè geama:'],
+          b: ['Bidh iuchraichean gn\u00ecomh oifigeil PokerTH ag obair ann an geama \u2014 tha Alt+S ag obair \u00e0ite sam bith:'],
           keys: [
             ['F1 / F2 / F3 / F4', 'Fold \u00b7 Check/Call \u00b7 Bet/Raise \u00b7 All-In (gabhaidh an t-òrdugh tionndadh sna roghainnean)'],
             ['F5', 'Seall na cairtean agad (nuair a tha e comasach)'],

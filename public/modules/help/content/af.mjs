@@ -248,7 +248,7 @@ export const help = {
         { id: 'updates', t: 'Bly op datum',
           b: ['Die kliënt werk homself by: wanneer \u2019n nuwe weergawe uitgerol word, nooi \u2019n banier jou om te herlaai (of tik /update in die klets om handmatig te kyk). Van tyd tot tyd kan \u2019n klein produkopname verskyn wat jou mening oor \u2019n funksie vra — deelname is opsioneel, en opnames kan heeltemal in Gevorderde opsies \u2192 Gemeenskap afgeskakel word.'] },
         { id: 'fkeys', t: 'Amptelike sleutelbordkortpaaie',
-          b: ['PokerTH se amptelike funksiesleutels werk tydens \u2019n spel:'],
+          b: ['Die amptelike PokerTH-funksiesleutels werk tydens \u2019n spel \u2014 Alt+S werk oral:'],
           keys: [
             ['F1 / F2 / F3 / F4', 'Fold \u00b7 Check/Call \u00b7 Bet/Raise \u00b7 All-In (volgorde kan in die opsies omgekeer word)'],
             ['F5', 'Wys jou kaarte (wanneer moontlik)'],
