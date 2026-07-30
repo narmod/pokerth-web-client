@@ -7448,7 +7448,7 @@ html[data-seat-img-self] .player-bar {
 #hands-card-inner.floating-win {
   position: fixed !important;   /* indispensable pour _placeWin/drag (l'overlay ne le centre plus) */
   padding: 0; border-top-width: 1px; max-width: none; max-height: none;
-  display: flex; flex-direction: column; background: var(--modal-bg);
+  display: flex; flex-direction: column; background: var(--chatlog-bg, var(--modal-bg));
   z-index: 201;
 }
 /* Aucun palier de taille ici : l'echelle du contenu est assuree UNIQUEMENT par
@@ -9498,6 +9498,16 @@ html[data-buttons="pokerth"] .btn-action[disabled] { filter: grayscale(0.55) bri
 #g-chat-msgs .msg .txt { color: var(--chatlog-text, var(--text-hi)); }
 #g-chat-msgs .msg.sys { color: var(--chatlog-text2, var(--chatlog-text, var(--text))); }
 #g-chat-msgs .msg .who { color: var(--box-accent, var(--gold)); }
+/* Fenetre « Combinaisons du poker » : c'est une fenetre de jeu au meme titre
+   que le chat, le journal et les reactions -> elle suit la teinte du tapis
+   (ChatLog* du tablestyle.xml) au lieu de rester sur la palette de l'app.
+   Replis = valeurs d'origine, donc aucun changement sans tapis skinne. */
+#hands-card-inner .hand-name { color: var(--chatlog-text, var(--text-hi)); }
+#hands-card-inner .hand-desc,
+#hands-card-inner .hands-legend { color: var(--chatlog-text2, var(--chatlog-text, var(--text))); }
+#hands-card-inner .hand-row:hover { background: var(--chatlog-surface, var(--inset-hi)); }
+#hands-card-inner .hand-row,
+#hands-card-inner .hands-legend { border-bottom-color: var(--chatlog-border, rgba(var(--gold-rgb), 0.07)); }
 #g-chat-msgs .msg .msg-time { color: var(--chatlog-muted, var(--text-dim, #8b93a7)); }
 #g-chat-msgs .msg.mention .txt { color: var(--box-accent, var(--gold)); font-weight: 700; }
 html[data-box-accent][data-seat-struct="qml"] .seat-plate { border-color: var(--box-accent); }

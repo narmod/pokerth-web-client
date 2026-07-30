@@ -51,6 +51,10 @@ because sp0ck shared them ahead of the release.
   being drawn at the default until now.
 
 ### Fixed
+- **The poker-hands window now takes the table's colours**, like the chat, the
+  game log and the reactions window. It was the only in-game window still
+  painted with the application palette, which made it stand out on the skinned
+  tables.
 - The scrollbar gutter is reserved on the chat and log panels, so text no longer
   shifts when the scrollbar appears.
 

@@ -8145,8 +8145,8 @@ function renderHandsHelp() {
     + '<span class="hl"><span class="hl-mini dim"></span>' + t('handsLegNo') + '</span>'
     + '<span class="hl"><span class="hl-grad"></span>' + t('handsLegForce') + '</span>'
     + '</div>';
-  inner.innerHTML = '<div class="g-chat-panel-header"><span style="font-size:0.65rem;color:var(--gold-dim);letter-spacing:0.15em;text-transform:uppercase">' + t('handsTitle') + '</span>'
-    + '<button onclick="toggleHandsHelp()" title="' + t('handsClose') + '" style="background:none;border:none;color:var(--text);cursor:pointer;font-size:0.85rem;padding:0 4px">\u2715</button></div>'
+  inner.innerHTML = '<div class="g-chat-panel-header"><span style="font-size:0.65rem;color:var(--chatlog-muted, var(--gold-dim));letter-spacing:0.15em;text-transform:uppercase">' + t('handsTitle') + '</span>'
+    + '<button onclick="toggleHandsHelp()" title="' + t('handsClose') + '" style="background:none;border:none;color:var(--chatlog-text2, var(--chatlog-text, var(--text)));cursor:pointer;font-size:0.85rem;padding:0 4px">\u2715</button></div>'
     + '<div class="hands-scroll">'
     + legend
     + rows
@@ -9612,7 +9612,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.5-web.37'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.5-web.38'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
