@@ -247,7 +247,7 @@ export const help = {
         { id: 'updates', t: '최신 상태 유지',
           b: ['클라이언트는 스스로 업데이트합니다. 새 버전이 배포되면 배너가 새로고침을 권해요(채팅에 /update를 입력해 수동 확인도 가능). 가끔 기능에 대한 의견을 묻는 작은 설문이 나타날 수 있어요 — 참여는 선택이고, 설문은 고급 옵션 \u2192 커뮤니티에서 완전히 끌 수 있습니다.'] },
         { id: 'fkeys', t: '공식 키보드 단축키',
-          b: ['PokerTH 공식 기능 키는 게임 중에 작동해요:'],
+          b: ['\uacf5\uc2dd PokerTH \uae30\ub2a5 \ud0a4\ub294 \uac8c\uc784 \uc911\uc5d0 \uc791\ub3d9\ud569\ub2c8\ub2e4 \u2014 Alt+S\ub294 \uc5b4\ub514\uc11c\ub098 \uc791\ub3d9\ud569\ub2c8\ub2e4:'],
           keys: [
             ['F1 / F2 / F3 / F4', 'Fold \u00b7 Check/Call \u00b7 Bet/Raise \u00b7 All-In (옵션에서 순서 반전 가능)'],
             ['F5', '내 카드 보여주기 (가능할 때)'],

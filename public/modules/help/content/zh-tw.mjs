@@ -247,7 +247,7 @@ export const help = {
         { id: 'updates', t: '保持最新',
           b: ['用戶端自動更新：新版本部署後，橫幅會邀請你重新整理（或在聊天中輸入 /update 手動檢查）。偶爾會出現一個小的產品問卷徵詢你對某功能的看法 — 參與自願，問卷可在進階選項 \u2192 社群中完全關閉。'] },
         { id: 'fkeys', t: '官方鍵盤快速鍵',
-          b: ['PokerTH 官方功能鍵在對局中可用：'],
+          b: ['PokerTH \u5b98\u65b9\u529f\u80fd\u9375\u5728\u724c\u5c40\u4e2d\u6709\u6548\u2014\u2014Alt+S \u5728\u4efb\u4f55\u4f4d\u7f6e\u90fd\u6709\u6548\uff1a'],
           keys: [
             ['F1 / F2 / F3 / F4', 'Fold \u00b7 Check/Call \u00b7 Bet/Raise \u00b7 All-In（可在選項中反轉順序）'],
             ['F5', '亮出你的牌（可行時）'],
