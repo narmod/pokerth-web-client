@@ -671,8 +671,13 @@ function onPlayersActionDone(sub) {
     try {
       if (window._handlog) window._handlog.onAction({ pid: pid, actionCode: action, totalBet: bet });
     } catch (_e) {}
+    // The server also emits PlayersActionDone with netActionNone (0) when the
+    // blinds are posted: there is no action to show, and the old `|| '?'`
+    // fallback printed a stray question mark under the SB/BB seats for the
+    // whole pre-flop (forum report). An empty label is the right answer for 0
+    // and for any code we do not know, exactly like voiceActionPhrase().
     const aLabels = ['','Fold','Check','Call','Bet','Raise','All-in'];
-    const aLabel  = aLabels[action] || '?';
+    const aLabel  = aLabels[action] || '';
     if (S.seatData[pid]) {
       S.seatData[pid].bet    = bet;
       S.seatData[pid].money  = money;
@@ -682,7 +687,8 @@ function onPlayersActionDone(sub) {
     S.pot = S.collectedPot;
     for (const p of S.seats) if (S.seatData[p]) S.pot += S.seatData[p].bet;
     window.setPot(S.pot);
-    window.logAction(window.getPlayerName(pid) + ': ' + aLabel + (bet ? ' ' + bet : ''), true);
+    // No log line for the blinds either: "Computer3: " says nothing.
+    if (aLabel) window.logAction(window.getPlayerName(pid) + ': ' + aLabel + (bet ? ' ' + bet : ''), true);
     speak(voiceActionPhrase(action, pid, bet));
     if (pid === S.myId) {
       // Street de ma prise de parole : la barre d'action reste inerte tant

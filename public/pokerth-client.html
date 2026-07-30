@@ -552,6 +552,8 @@ function onAvatarImageChosen(input) {
     '/modules/game/turn-timer.mjs',
     '/modules/game/stats.mjs',
     '/modules/net/petitions.mjs',
+    '/modules/ui/debuglog.mjs',
+    '/modules/ui/livescroll.mjs',
     '/modules/ui/chat.mjs',
     '/modules/chat/abbrev.mjs',
     '/modules/ui/player-popup.mjs',
@@ -1528,13 +1530,13 @@ function onAvatarImageChosen(input) {
 
   <!-- Lobby chat -->
   <div id="lobby-chat-panel" style="display:none;flex-direction:column;max-height:min(200px,28dvh)">
-    <div class="g-chat-panel-header"><span style="font-size:0.65rem;color:var(--gold-dim);letter-spacing:0.15em;text-transform:uppercase">Chat</span><span style="display:flex;gap:2px;align-items:center"><button type="button" id="l-gn-btn" onclick="App.globalNoticePrompt()" title="Global notice (admin)" data-i18n-title="gnBtn" aria-label="Global notice (admin)" style="display:none;background:none;border:none;color:var(--gold-dim);cursor:pointer;font-size:0.9rem;padding:0 4px">📢</button><button onclick="clearChatPanel('lobby')" title="Effacer le chat" data-i18n-title="chatClearTitle" style="background:none;border:none;color:var(--gold-dim);cursor:pointer;font-size:0.9rem;padding:0 4px">🗑️</button><button onclick="toggleLobbyChat()" style="background:none;border:none;color:var(--text);cursor:pointer;font-size:0.85rem;padding:0 4px">X</button></span></div>
+    <div class="g-chat-panel-header"><span style="font-size:0.65rem;color:var(--gold-dim);letter-spacing:0.15em;text-transform:uppercase">Chat</span><span style="display:flex;gap:2px;align-items:center"><button type="button" id="l-gn-btn" onclick="App.globalNoticePrompt()" title="Global notice (admin)" data-i18n-title="gnBtn" aria-label="Global notice (admin)" data-i18n-aria="gnBtn" style="display:none;background:none;border:none;color:var(--gold-dim);cursor:pointer;font-size:0.9rem;padding:0 4px">📢</button><button onclick="clearChatPanel('lobby')" title="Effacer le chat" data-i18n-title="chatClearTitle" style="background:none;border:none;color:var(--gold-dim);cursor:pointer;font-size:0.9rem;padding:0 4px">🗑️</button><button onclick="toggleLobbyChat()" style="background:none;border:none;color:var(--text);cursor:pointer;font-size:0.85rem;padding:0 4px">X</button></span></div>
     <div class="chat-msgs" id="chat" style="flex:1;min-height:50px;max-height:120px;overflow-y:auto;padding:5px 10px;background:var(--field-bg)"></div>
     <div id="l-chat-emoji-panel" class="chat-emoji-panel" style="display:none"></div>
     <div class="chat-input" style="border-top:1px solid var(--border);flex-shrink:0">
-      <button type="button" class="chat-emoji-toggle" id="l-chat-emoji-toggle" onclick="toggleChatEmojiPicker(this)" data-panel="l-chat-emoji-panel" data-input="chat-in" title="Insérer un emoji" data-i18n-title="emojiPickerTitle" aria-label="Insérer un emoji">🙂</button>
+      <button type="button" class="chat-emoji-toggle" id="l-chat-emoji-toggle" onclick="toggleChatEmojiPicker(this)" data-panel="l-chat-emoji-panel" data-input="chat-in" title="Insérer un emoji" data-i18n-title="emojiPickerTitle" data-i18n-aria="emojiPickerTitle" aria-label="Insert emoji">🙂</button>
       <input id="chat-in" maxlength="128" placeholder="Message…" data-i18n-placeholder="chatPlaceholder" onkeydown="if(event.key==='Enter') App.sendChat()">
-      <button class="chat-send" onclick="App.sendChat()" aria-label="Envoyer" title="Envoyer"><svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg></button>
+      <button class="chat-send" onclick="App.sendChat()" data-i18n-aria="sendTooltip" aria-label="Send" data-i18n-title="sendTooltip" title="Send"><svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg></button>
     </div>
     <!-- Options d'attente (case bots + Démarrer/Quitter) intégrées au bas du
          panneau central quand je suis dans ma partie non démarrée — parité
@@ -1760,7 +1762,7 @@ function onAvatarImageChosen(input) {
         <span id="g-count" style="color:var(--text)">0 <span data-i18n="tableCount">table(s)</span></span>
       </div>
       <div class="filter-bar" id="g-filter-bar">
-        <button type="button" class="fbar-players" onclick="togglePlayersPanel()" title="Joueurs en ligne" data-i18n-title="playersOnlineTitle" aria-label="Joueurs en ligne">👥</button>
+        <button type="button" class="fbar-players" onclick="togglePlayersPanel()" title="Joueurs en ligne" data-i18n-title="playersOnlineTitle" data-i18n-aria="playersOnlineTitle" aria-label="Players online">👥</button>
         <div class="sel-wrap gfilt-wrap">
           <select id="g-filter-select" onchange="App.setTableFilter(this.value)">
             <option value="0" data-i18n-opt="gfNone">No game list filter</option>
@@ -1884,7 +1886,7 @@ function onAvatarImageChosen(input) {
        so the two share styles: header with title + close button,
        scrollable body inside a fixed-height container. -->
   <div id="g-log-panel" style="display:none;flex-direction:column">
-    <div class="g-chat-panel-header"><span class="gip-grip" aria-hidden="true" title="Déplacer">⠿</span><span class="gip-tabs"><button type="button" id="gip-tab-log" class="gip-tab gip-on" onclick="gipShowTab('log')" data-i18n="gipTabLog">Historique</button><button type="button" id="gip-tab-odds" class="gip-tab" onclick="gipShowTab('odds')" data-i18n="gipTabOdds">Chances</button><button type="button" id="gip-tab-stats" class="gip-tab" onclick="gipShowTab('stats')" data-i18n="gipTabStats">Stats</button></span><span style="display:flex;gap:2px;align-items:center"><button id="gip-export" onclick="exportLog()" data-i18n-title="logExportTitle" title="Exporter le journal" style="background:none;border:none;color:var(--chatlog-muted, var(--gold-dim));cursor:pointer;font-size:0.9rem;padding:0 4px">📤</button><button onclick="toggleLog()" style="background:none;border:none;color:var(--chatlog-text2, var(--chatlog-text, var(--text)));cursor:pointer;font-size:0.85rem;padding:0 4px">✕</button></span></div>
+    <div class="g-chat-panel-header"><span class="gip-grip" aria-hidden="true" data-i18n-title="winMove" title="Move">⠿</span><span class="gip-tabs"><button type="button" id="gip-tab-log" class="gip-tab gip-on" onclick="gipShowTab('log')" data-i18n="gipTabLog">Historique</button><button type="button" id="gip-tab-odds" class="gip-tab" onclick="gipShowTab('odds')" data-i18n="gipTabOdds">Chances</button><button type="button" id="gip-tab-stats" class="gip-tab" onclick="gipShowTab('stats')" data-i18n="gipTabStats">Stats</button></span><span style="display:flex;gap:2px;align-items:center"><button id="gip-export" onclick="exportLog()" data-i18n-title="logExportTitle" title="Exporter le journal" style="background:none;border:none;color:var(--chatlog-muted, var(--gold-dim));cursor:pointer;font-size:0.9rem;padding:0 4px">📤</button><button onclick="toggleLog()" style="background:none;border:none;color:var(--chatlog-text2, var(--chatlog-text, var(--text)));cursor:pointer;font-size:0.85rem;padding:0 4px">✕</button></span></div>
     <div class="log-msgs" id="g-log-body" style="flex:1;min-height:60px;overflow-y:auto;padding:6px 12px;background:var(--chatlog-bg, var(--field-bg))"></div>
     <div id="gip-assist" style="display:none"><div class="odds-hd" data-i18n="assist">Assistance</div><span class="hs-lbl" id="hs-lbl"><span class="hs-txt"></span></span><div id="hand-strength"><span class="hs-track"><i class="hs-fill"></i></span></div><div class="hs-segs" id="hs-segs" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div>
     <div class="log-msgs" id="g-odds-body" style="display:none;flex:1;min-height:60px;overflow-y:auto;padding:6px 12px;background:var(--chatlog-bg, var(--field-bg))"></div>
@@ -1896,7 +1898,7 @@ function onAvatarImageChosen(input) {
     <div class="chat-msgs" id="g-chat-msgs" style="flex:1;min-height:60px;overflow-y:auto;padding:6px 12px;background:var(--chatlog-bg, var(--field-bg))"></div>
     <div id="g-chat-emoji-panel" class="chat-emoji-panel" style="display:none"></div>
     <div class="chat-input" style="border-top:1px solid var(--border);flex-shrink:0">
-      <button type="button" class="chat-emoji-toggle" id="g-chat-emoji-toggle" onclick="toggleChatEmojiPicker(this)" data-panel="g-chat-emoji-panel" data-input="g-chat-in" title="Insérer un emoji" data-i18n-title="emojiPickerTitle" aria-label="Insérer un emoji">😊</button>
+      <button type="button" class="chat-emoji-toggle" id="g-chat-emoji-toggle" onclick="toggleChatEmojiPicker(this)" data-panel="g-chat-emoji-panel" data-input="g-chat-in" title="Insérer un emoji" data-i18n-title="emojiPickerTitle" data-i18n-aria="emojiPickerTitle" aria-label="Insert emoji">😊</button>
       <input id="g-chat-in" maxlength="128" placeholder="Message…" data-i18n-placeholder="chatPlaceholder" onkeydown="if(event.key==='Enter')App.sendGameChat()">
       <button class="chat-send" onclick="App.sendGameChat()">▶</button>
     </div>
@@ -1966,17 +1968,17 @@ function onAvatarImageChosen(input) {
       <button class="g-felt-btn" id="react-toggle-btn" onclick="toggleReactionPanel()" title="Réactions" data-i18n-title="reactionsLabel">😊</button>
     </div>
     <div class="g-felt-corner g-felt-tr">
-      <button class="g-felt-btn" id="hands-toggle-btn" onclick="toggleHandsHelp()" title="Combinaisons du poker" data-i18n-title="handsHelpTooltip" aria-label="Combinaisons du poker">🃏</button>
+      <button class="g-felt-btn" id="hands-toggle-btn" onclick="toggleHandsHelp()" title="Combinaisons du poker" data-i18n-title="handsHelpTooltip" data-i18n-aria="handsHelpTooltip" aria-label="Poker hand rankings">🃏</button>
       <button class="g-felt-btn" id="log-toggle-btn" onclick="toggleLog()" title="Journal" data-i18n-title="logTooltip">📋</button>
     </div>
     <!-- Zoom table : bouton repliable en mobile (une touche qui déploie les autres) -->
     <div id="g-zoom-ctrl" class="zoom-ctrl">
-      <button class="zoom-btn zoom-toggle" id="g-zoom-toggle" onclick="toggleLoupe()" title="Loupe ×2 (QML)" aria-label="Loupe" aria-pressed="false">🔍</button>
-      <button class="zoom-btn" id="g-zoom-in" onclick="tableZoomStep(1)" title="Agrandir la table" data-i18n-title="zoomIn" aria-label="Agrandir la table">+</button>
-      <button class="zoom-btn" id="g-zoom-reset" onclick="tableZoomReset()" title="Réinitialiser la vue" data-i18n-title="zoomReset" aria-label="Réinitialiser la vue">↺</button>
-      <button class="zoom-btn" id="g-seat-edit" onclick="toggleSeatEdit()" title="Éditer le placement des sièges" data-i18n-title="seatEditToggle" aria-label="Éditer le placement des sièges">✎</button>
-      <button class="zoom-btn" id="g-cardzoom" onclick="toggleOwnCardZoom()" title="Agrandir mes cartes" data-i18n-title="cardZoomToggle" aria-label="Agrandir mes cartes"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="3" y="7" width="10" height="14" rx="2"/><rect x="11" y="3" width="10" height="14" rx="2"/></svg></button>
-      <button class="zoom-btn" id="g-zoom-out" onclick="tableZoomStep(-1)" title="Réduire la table" data-i18n-title="zoomOut" aria-label="Réduire la table">−</button>
+      <button class="zoom-btn zoom-toggle" id="g-zoom-toggle" onclick="toggleLoupe()" data-i18n-title="loupeToggle" title="Magnifier ×2" data-i18n-aria="loupeToggle" aria-label="Magnifier ×2" aria-pressed="false">🔍</button>
+      <button class="zoom-btn" id="g-zoom-in" onclick="tableZoomStep(1)" title="Agrandir la table" data-i18n-title="zoomIn" data-i18n-aria="zoomIn" aria-label="Enlarge table">+</button>
+      <button class="zoom-btn" id="g-zoom-reset" onclick="tableZoomReset()" title="Réinitialiser la vue" data-i18n-title="zoomReset" data-i18n-aria="zoomReset" aria-label="Reset view">↺</button>
+      <button class="zoom-btn" id="g-seat-edit" onclick="toggleSeatEdit()" title="Éditer le placement des sièges" data-i18n-title="seatEditToggle" data-i18n-aria="seatEditToggle" aria-label="Edit seat placement">✎</button>
+      <button class="zoom-btn" id="g-cardzoom" onclick="toggleOwnCardZoom()" title="Agrandir mes cartes" data-i18n-title="cardZoomToggle" data-i18n-aria="cardZoomToggle" aria-label="Enlarge my cards"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="3" y="7" width="10" height="14" rx="2"/><rect x="11" y="3" width="10" height="14" rx="2"/></svg></button>
+      <button class="zoom-btn" id="g-zoom-out" onclick="tableZoomStep(-1)" title="Réduire la table" data-i18n-title="zoomOut" data-i18n-aria="zoomOut" aria-label="Shrink table">−</button>
     </div>
     <!-- TABLE -->
     <div class="table-zone" id="g-table-zone">
@@ -2231,6 +2233,8 @@ function onAvatarImageChosen(input) {
 <script type="module" src="modules/game/turn-timer.mjs"></script>
 <script type="module" src="modules/game/stats.mjs"></script>
 <script type="module" src="modules/net/petitions.mjs"></script>
+<script type="module" src="modules/ui/debuglog.mjs"></script>
+<script type="module" src="modules/ui/livescroll.mjs"></script>
 <script type="module" src="modules/ui/chat.mjs"></script>
 <script type="module" src="modules/chat/abbrev.mjs"></script>
 <script type="module" src="modules/ui/player-popup.mjs"></script>
@@ -2407,7 +2411,7 @@ if ('serviceWorker' in navigator) {
 <div id="player-info-modal" style="display:none">
   <div class="pim-backdrop" onclick="closePlayerInfoPopup()"></div>
   <div class="pim-card" role="dialog" aria-labelledby="pim-name">
-    <button class="pim-close" type="button" onclick="closePlayerInfoPopup()" title="Fermer" data-i18n-title="closeTooltip" aria-label="Fermer">✕</button>
+    <button class="pim-close" type="button" onclick="closePlayerInfoPopup()" title="Fermer" data-i18n-title="closeTooltip" data-i18n-aria="closeTooltip" aria-label="Close">✕</button>
     <!-- Avatar : cliquable seulement pour MON profil (rôle/onclick câblés en
          JS selon le mode). Pour un adversaire il reste neutre, non cliquable. -->
     <div class="pim-avatar" id="pim-avatar"></div>
@@ -2428,7 +2432,7 @@ if ('serviceWorker' in navigator) {
 <div id="game-info-modal" style="display:none">
   <div class="gim-backdrop" onclick="closeGameInfoPopup()"></div>
   <div class="gim-card" role="dialog" aria-labelledby="gim-title">
-    <button class="gim-close" type="button" onclick="closeGameInfoPopup()" title="Fermer" data-i18n-title="closeTooltip" aria-label="Fermer">✕</button>
+    <button class="gim-close" type="button" onclick="closeGameInfoPopup()" title="Fermer" data-i18n-title="closeTooltip" data-i18n-aria="closeTooltip" aria-label="Close">✕</button>
     <div class="gim-header">
       <div class="gim-title" id="gim-title">—</div>
       <div class="gim-subtitle" id="gim-subtitle"></div>
@@ -2445,7 +2449,7 @@ if ('serviceWorker' in navigator) {
 <div id="kick-modal" style="display:none">
   <div class="km-backdrop" onclick="App.closeKickModal()"></div>
   <div class="km-card" role="dialog" aria-labelledby="km-title">
-    <button class="km-close" type="button" onclick="App.closeKickModal()" title="Fermer" data-i18n-title="closeTooltip" aria-label="Fermer">✕</button>
+    <button class="km-close" type="button" onclick="App.closeKickModal()" title="Fermer" data-i18n-title="closeTooltip" data-i18n-aria="closeTooltip" aria-label="Close">✕</button>
     <div class="km-title" id="km-title">👥 <span data-i18n="kickTooltip">Kick player</span></div>
     <div class="km-subtitle" id="km-subtitle" data-i18n="kickSubtitle">Select a player to remove from the table</div>
     <div class="km-list" id="km-list">
@@ -2457,7 +2461,7 @@ if ('serviceWorker' in navigator) {
 <div id="invite-modal" style="display:none">
   <div class="km-backdrop" onclick="App.closeInviteModal()"></div>
   <div class="km-card" role="dialog" aria-labelledby="im-title">
-    <button class="km-close" type="button" onclick="App.closeInviteModal()" title="Fermer" data-i18n-title="closeTooltip" aria-label="Fermer">✕</button>
+    <button class="km-close" type="button" onclick="App.closeInviteModal()" title="Fermer" data-i18n-title="closeTooltip" data-i18n-aria="closeTooltip" aria-label="Close">✕</button>
     <div class="km-title" id="im-title">✉️ <span data-i18n="inviteModalTitle">Inviter des joueurs</span></div>
     <div class="km-subtitle" id="im-subtitle" data-i18n="inviteSubtitle">Joueurs en ligne pas encore à la table</div>
     <div class="km-list" id="im-list">
@@ -2504,7 +2508,7 @@ if ('serviceWorker' in navigator) {
   <div id="rk-awpop" onclick="this.style.display='none'"><img alt=""></div>
   <div class="rk-backdrop" onclick="closeRankingModal()"></div>
   <div class="rk-card" role="dialog" aria-labelledby="rk-title">
-    <button class="rk-close" type="button" onclick="closeRankingModal()" title="Fermer" data-i18n-title="closeTooltip" aria-label="Fermer">✕</button>
+    <button class="rk-close" type="button" onclick="closeRankingModal()" title="Fermer" data-i18n-title="closeTooltip" data-i18n-aria="closeTooltip" aria-label="Close">✕</button>
     <div class="rk-title" id="rk-title">🏆 <span data-i18n="rankingTitle">Ranking</span></div>
     <div class="rk-tabs">
       <button type="button" class="rk-tab" data-src="pth" onclick="rankingSelect('pth')" data-i18n="rankingPth">PokerTH</button>
@@ -2547,7 +2551,7 @@ if ('serviceWorker' in navigator) {
 <div id="tableranking-modal" style="display:none">
   <div class="rk-backdrop" onclick="closeTableRanking()"></div>
   <div class="rk-card" role="dialog" aria-labelledby="trk-title">
-    <button class="rk-close" type="button" onclick="closeTableRanking()" title="Fermer" data-i18n-title="closeTooltip" aria-label="Fermer">✕</button>
+    <button class="rk-close" type="button" onclick="closeTableRanking()" title="Fermer" data-i18n-title="closeTooltip" data-i18n-aria="closeTooltip" aria-label="Close">✕</button>
     <div class="rk-title" id="trk-title">🏆 <span id="trk-title-txt">Table ranking</span></div>
     <div class="rk-tabs">
       <button type="button" class="rk-tab" data-src="pth" onclick="trSelect('pth')" data-i18n="rankingPth">PokerTH</button>
@@ -2592,7 +2596,7 @@ if ('serviceWorker' in navigator) {
 <div id="adv-modal" style="display:none">
   <div class="km-backdrop" onclick="closeAdvancedOptions()"></div>
   <div class="km-card adv-card" role="dialog" aria-labelledby="adv-title">
-    <button class="km-close" type="button" onclick="closeAdvancedOptions()" title="Fermer" data-i18n-title="closeTooltip" aria-label="Fermer">✕</button>
+    <button class="km-close" type="button" onclick="closeAdvancedOptions()" title="Fermer" data-i18n-title="closeTooltip" data-i18n-aria="closeTooltip" aria-label="Close">✕</button>
     <div class="km-title" id="adv-title"><span style="margin-right:7px">⚙️</span><span data-i18n="advTitle">Advanced options</span></div>
     <div class="adv-layout">
       <nav class="adv-nav" role="tablist" aria-label="Settings categories">
@@ -2634,7 +2638,7 @@ if ('serviceWorker' in navigator) {
       <label class="adv-row"><input type="checkbox" id="adv-blindsbadge" onchange="setAdvOpt('blinds_badge',this.checked)"><span data-i18n="advBlindsBadge">Blinds badge in the status bar</span><em class="adv-webtag">web</em></label>
       <label class="adv-row"><input type="checkbox" id="adv-connpill" onchange="setAdvOpt('conn_pill',this.checked)"><span data-i18n="advConnPill">Connection status as a pill on the felt (instead of the top banner)</span><em class="adv-webtag">web</em></label>
       <label class="adv-row"><input type="checkbox" id="adv-winnerpopup" onchange="setAdvOpt('winner_popup',this.checked)"><span data-i18n="advWinnerPopup">Winner window at end of hand</span><em class="adv-webtag">web</em></label>
-      <label class="adv-row"><input type="checkbox" id="adv-removegone" onchange="setAdvOpt('remove_gone',this.checked);try{renderSeats()}catch(e){}"><span data-i18n="advRemoveGone">Remove departed players and re-seat the table</span><em class="adv-webtag">web</em></label>
+      <label class="adv-row"><input type="checkbox" id="adv-removegone" onchange="setAdvOpt('remove_gone',this.checked);try{renderSeats()}catch(e){}"><span data-i18n="advRemoveGone">Remove departed players and re-seat the table</span></label>
       <label class="adv-row"><input type="checkbox" id="adv-confirmsocial" onchange="setAdvOpt('confirm_social',this.checked)"><span data-i18n="advConfirmSocial">Ask for confirmation before inviting or ignoring a player</span></label>
       <label class="adv-row"><input type="checkbox" id="adv-autoleave" onchange="setAdvOpt('auto_leave',this.checked)"><span data-i18n="advAutoLeave">Auto-return to lobby when the game ends</span></label>
       </details>
@@ -2797,7 +2801,7 @@ if ('serviceWorker' in navigator) {
           <div class="adv-body">
             <div class="adv-sec" data-i18n="advSecJournal">Session logs</div>
             <div class="adv-link-desc" data-i18n="advJournalDesc">Browse, export, analyse and delete session logs, like the official client.</div>
-            <div class="adv-row adv-export-row"><button type="button" class="adv-link-btn" onclick="if(window._openJournal)window._openJournal()"><span data-i18n="advJournalOpen">Manage logs…</span></button></div>
+            <div class="adv-row adv-export-row"><button type="button" class="adv-link-btn" onclick="if(window._openJournal)window._openJournal()"><span data-i18n="advJournalOpen">Manage logs…</span></button><button type="button" class="adv-link-btn" onclick="closeAdvancedOptions();if(window._openDebugLog)window._openDebugLog()"><span data-i18n="dbgLogOpen">Show debug log</span></button></div>
             <div class="adv-sec" data-i18n="advSecLogSettings">Log settings</div>
             <label class="adv-row"><input type="checkbox" id="adv-logon" onchange="setAdvOpt('log_on',this.checked)"><span data-i18n="advLogOn">Enable logging</span></label>
             <label class="adv-row"><input type="checkbox" id="adv-statstrack" onchange="setAdvOpt('stats_track',this.checked)"><span data-i18n="advStatsTrack">Record hand statistics</span><em class="adv-webtag">web</em></label>

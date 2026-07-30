@@ -388,7 +388,7 @@ function openAdvancedOptions() {
   sync('adv-logon', 'log_on', true);
   sync('adv-statstrack', 'stats_track', true);
   sync('adv-hudon', 'hud_on', false);
-  sync('adv-pdbauto', 'pdb_auto', false);   // ecriture auto du .pdb dans un dossier local (web)
+  sync('adv-pdbauto', 'pdb_auto', true);   // ecriture auto du .pdb dans un dossier local (web) — ON par defaut
   try { if (typeof window._pdbAutoUi === 'function') window._pdbAutoUi(); } catch (e) {}
   try { var _li = document.getElementById('adv-loginterval'); if (_li) _li.value = _getLogInterval(); } catch (e) {}
   sync('adv-zoomfollow', 'zoom_follow', true); // défaut QML : suivi actif quand le zoom l'est
@@ -1218,13 +1218,25 @@ function _cfgWebApply(o) {
   try {
     if (_achMergeIn(o)) { _cfgWebForcePush = true; _cfgSyncPushSoon(1500); }
   } catch (e) {}
+  // Même fusion que pour le config.xml : une clé modifiée ici depuis le dernier
+  // envoi (elle diffère de l'instantané poussé) n'est PAS écrasée par le
+  // serveur — elle sera repoussée. Sans instantané (1er appareil), on accepte.
+  var last = null;
+  try { last = JSON.parse(_cfgLs('pth_cfg_sync_weblast') || 'null'); } catch (e) { last = null; }
+  var heldWeb = 0;
   _CFG_WEB_SYNC_KEYS.forEach(function (k) {
     if (typeof o[k] === 'string' && o[k].length <= 20000) {
       try {
-        if (localStorage.getItem(k) !== o[k]) { localStorage.setItem(k, o[k]); changed = true; }
+        var cur = localStorage.getItem(k);
+        if (last && typeof last === 'object') {
+          var lv = last[k];
+          if (lv == null ? (cur != null) : (cur !== lv)) { heldWeb++; return; }
+        }
+        if (cur !== o[k]) { localStorage.setItem(k, o[k]); changed = true; }
       } catch (e) {}
     }
   });
+  if (heldWeb) { _cfgWebForcePush = true; _cfgSyncPushSoon(1500); }
   if (!changed) return;
   try { applyAdvOpts(); } catch (e) {}
   try { if (typeof applyTooltips === 'function') applyTooltips(); } catch (e) {}
@@ -1234,9 +1246,44 @@ function _cfgWebApply(o) {
     else if (typeof window._renderSeats === 'function') window._renderSeats();
   } catch (e) {}
 }
+// ── Réglages modifiés ICI depuis le dernier envoi réussi ───────────────────
+// La descente écrasait tout le config.xml local dès que le serveur était plus
+// récent : un réglage changé sur cet appareil (typiquement les catégories de
+// son) revenait en silence à la valeur d'un autre appareil — d'où le « je
+// coupe le son et il revient ». On mémorise donc QUELLES clés ont bougé pour
+// les protéger à la prochaine descente, puis les repousser.
+// Table adv → clé officielle : miroir exact des setB() de _cfgApplyImported.
+var PTH_CFG_ADV_KEYS = {
+  fade_losers: 'ShowFadeOutCardsAnimation', anim_cards: 'ShowFlipCardsAnimation',
+  fkeys_alt: 'AlternateFKeysUserActionMode', show_blinds: 'ShowBlindButtons',
+  own_click: 'AntiPeekMode', guard_call: 'AccidentallyCallBlocker',
+  focus_bet: 'EnableBetInputFocusSwitch', show_flag: 'ShowCountryFlagInAvatar',
+  pot_btns: 'ShowPotPercentButtons', ping_avatar: 'ShowPingStateInAvatar',
+  no_hide_ignored: 'DontHideAvatarsOfIgnored', lobby_chat: 'UseLobbyChat',
+  react_muted: 'DisableEmojiReactions', reduce_fx: 'QmlReduceEffects',
+  auto_leave: 'NetAutoLeaveGameAfterFinish', pause_hands: 'PauseBetweenHands',
+  poker_en: 'DontTranslateInternationalPokerStringsFromStyle',
+  splash: 'DisableSplashScreenOnStartup',
+  snd_actions: 'PlayGameActions', snd_lobby: 'PlayLobbyChatNotification',
+  snd_net: 'PlayNetworkGameNotification', snd_blinds: 'PlayBlindRaiseNotification'
+};
+function _cfgDirtyKeys() {
+  try { var a = JSON.parse(_cfgLs('pth_cfg_sync_dirtykeys') || '[]'); return Array.isArray(a) ? a : []; }
+  catch (e) { return []; }
+}
+function _cfgDirtyKeysAdd(key) {
+  try {
+    var a = _cfgDirtyKeys();
+    if (a.indexOf(key) >= 0) return;
+    a.push(key);
+    localStorage.setItem('pth_cfg_sync_dirtykeys', JSON.stringify(a.slice(-60)));
+  } catch (e) {}
+}
+function _cfgDirtyKeysClear() { try { localStorage.removeItem('pth_cfg_sync_dirtykeys'); } catch (e) {} }
 function _cfgSyncMark(key) {
   if (key === 'cfg_sync') return;                 // (dé)cocher la sync n'est pas une donnée à pousser
   try { localStorage.setItem('pth_cfg_sync_dirty', '1'); } catch (e) {}
+  _cfgDirtyKeysAdd(key);
   _cfgSyncPushSoon();
 }
 function _cfgSyncPushSoon(ms) {
@@ -1260,6 +1307,7 @@ function _cfgSyncPushNow(keepalive) {
       if (d && d.ok) {
         try { localStorage.setItem('pth_cfg_sync_ts', String(d.updatedAt || Date.now())); } catch (e) {}
         try { localStorage.removeItem('pth_cfg_sync_dirty'); } catch (e) {}
+        _cfgDirtyKeysClear();                    // nos valeurs sont chez le serveur
       }
     }).catch(function () {}).finally(function () { _syncBusyEnd(); });
   _syncBusyBegin();
@@ -1279,9 +1327,21 @@ function _cfgSyncPull() {
           var cfg = _cfgParseXml(d.xml);
           try { localStorage.setItem(PTH_CFG_XML_KEY, String(d.xml).slice(0, 400000)); } catch (e) {}
           Object.keys(PTH_CFG_MACHINE_KEYS).forEach(function (k) { delete cfg.scalars[k]; });
+          // Fusion : les réglages changés ici depuis le dernier envoi gagnent —
+          // on les retire de la descente et on les repousse (sinon ils étaient
+          // écrasés en silence, et le drapeau dirty effacé avec eux).
+          var held = 0;
+          _cfgDirtyKeys().forEach(function (k) {
+            var ck = PTH_CFG_ADV_KEYS[k];
+            if (ck && cfg.scalars[ck] != null) { delete cfg.scalars[ck]; held++; }
+          });
           _cfgApplyImported(cfg);
           try { localStorage.setItem('pth_cfg_sync_ts', String(d.updatedAt)); } catch (e) {}
-          try { localStorage.removeItem('pth_cfg_sync_dirty'); } catch (e) {}
+          if (held) { _cfgSyncPushSoon(1500); }   // dirty conservé : nos valeurs partent
+          else {
+            try { localStorage.removeItem('pth_cfg_sync_dirty'); } catch (e) {}
+            _cfgDirtyKeysClear();
+          }
           if (typeof showToast === 'function') showToast(t('cfgSyncApplied') || 'Settings synced from your account');
         } catch (e) {}
       } else if (!d.xml || dirty) {
@@ -3840,7 +3900,17 @@ const App = (() => {
   // Liste des joueurs actuellement à la table (pour le panneau stats).
   window._statsTablePlayers = function () {
     try {
-      return (S.seats || []).map(function (pid) {
+      return (S.seats || []).filter(function (pid) {
+        // Joueur éliminé (tapis à 0, encore assis) : retiré de la liste des
+        // stats — il ne joue plus, ses lignes n'apportent rien au tour en
+        // cours (demande forum). Ses mains restent dans l'historique et le
+        // .pdb ; seul l'affichage « table » l'exclut. Tant que le stack est
+        // inconnu (non transmis), on garde le joueur.
+        var _sd = S.seatData && S.seatData[pid];
+        if (!_sd) return true;
+        if (_sd.gone) return false;
+        return !(typeof _sd.money === 'number' && _sd.money === 0);
+      }).map(function (pid) {
         return {
           pid: pid,
           name: getPlayerName(pid),
@@ -4082,16 +4152,30 @@ const App = (() => {
     var fn = (typeof entry === 'function') ? entry : function(){ return entry; };
     S.actionLog.push(fn);
     if (S.actionLog.length > 500) S.actionLog.shift();
-    renderLog();
+    renderLog(1);   // une ligne de plus en tete (liste inversee) — cf. renderLog
   }
   window.logAction = logAction; // pont requis par ui/action-bar.mjs (9g-B4)
-  function renderLog() {
+  // Defilement du journal — parite client Qt-Widgets / QML : le suivi
+  // automatique se met en PAUSE des que le joueur quitte le bord « direct »
+  // pour relire une main precedente, et reprend tout seul au retour. La
+  // mecanique (ancrage + barre « aller au plus recent ») vit dans
+  // ui/livescroll.mjs ; repli sur l'ancien comportement s'il n'est pas la.
+  // `addedTop` = nombre de lignes gagnees en tete depuis le dernier rendu (1
+  // depuis logAction, 0 pour une simple retraduction). Indispensable une fois
+  // le plafond de 500 entrees atteint : chaque nouvelle ligne en chasse une en
+  // queue, le nombre de lignes ne bouge donc plus et la seule geometrie ne
+  // suffit plus a retrouver la ligne que le joueur est en train de lire.
+  function renderLog(addedTop) {
     const el = document.getElementById('g-log-body');
     if (!el) return;
+    var _n = (typeof addedTop === 'number') ? addedTop : 0;
+    var _ls = (typeof window._liveBefore === 'function') ? window._liveBefore(el) : null;
     el.innerHTML = S.actionLog.slice().reverse().map(function(fn){
       var s; try { s = fn(); } catch (_e) { s = ''; }
       return '<div class="log-line">'+esc(s)+'</div>';
     }).join('');
+    if (_ls) window._liveAfter(el, _ls, _n);
+    else el.scrollTop = 0; // le plus recent est en haut (liste inversee)
   }
   window._retranslateLog = renderLog;
   // Texte brut du journal (ordre chronologique) pour l'export.
@@ -4651,7 +4735,7 @@ const App = (() => {
         var that2 = this;
         var btn2 = document.querySelector('#s-connect .btn-primary');
         if (btn2) btn2.disabled = true;
-        setStatus('⏳ ' + (t('closingPrevious') || 'Fermeture de la connexion précédente…'));
+        setStatus('⏳ ' + (t('closingPrevious') || 'Closing previous connection…'));
         // Detach the old onclose to avoid the disconnect handler kicking in
         var prevWs = S.ws;
         prevWs.onclose = null;
@@ -4809,9 +4893,22 @@ const App = (() => {
       // buffered reconnect) even when the target is pokerth.net itself.
       // 'direct' (default) keeps the historical hostname-based behavior.
       window.directWS = isPokerThDirect && targetIsPokerTH && (window._pthNetTransport !== 'proxy');
+      // Mode CHOISI par le joueur, source unique pour le compteur de trafic ET
+      // pour le ciblage des diffusions cote proxy. Ne PAS le deduire du
+      // transport : avec « Via proxy » la socket va vers notre proxy dans les
+      // trois modes, et l'hote amont peut etre un serveur manuel (pas
+      // pokerth.net) tout en etant le bouton « Internet / PokerTH.net ».
+      // #server-mode vaut 'pokerthnet' | 'offline' | 'lan-dedi'.
+      var _cntMode = function () {
+        var sm = ($('server-mode') && $('server-mode').value) || '';
+        if (window._offlineMode || sm === 'offline') return 'offline';
+        if (window.directWS || sm === 'pokerthnet') return 'pokerthnet';
+        return 'lan';
+      };
+      var _bcMode = (function () { var m = _cntMode(); return m === 'pokerthnet' ? 'pthnet' : m; })();
       const finalUrl = window.directWS
         ? 'wss://www.pokerth.net:443/pthlive'
-        : effProxyUrl + '?host=' + encodeURIComponent(host) + '&port=' + encodeURIComponent(port) + '&tls=' + tlsParam + '&sid=' + encodeURIComponent(_getSessionId());
+        : effProxyUrl + '?host=' + encodeURIComponent(host) + '&port=' + encodeURIComponent(port) + '&tls=' + tlsParam + '&sid=' + encodeURIComponent(_getSessionId()) + '&mode=' + _bcMode;
 
       setStatus(window.directWS ? t('connDirect') : t('connProxy'));
 
@@ -4858,7 +4955,7 @@ const App = (() => {
         // ── OFFLINE vs BOTS ── swap the transport for a local fake server.
         window.directWS = false;
         if (!(window.PokerOffline && window.PokerOffline.createSocket)) {
-          setStatus('Chargement du mode hors-ligne…');
+          try { setStatus(t('loadingOffline')); } catch (e) { setStatus('Loading offline mode…'); }
           import('/modules/offline/index.mjs')
             .then(function(){ App.connect(); })
             .catch(function(){ setStatus('Offline init failed', 'err'); });
@@ -4885,7 +4982,7 @@ const App = (() => {
 
       _beginConnecting();   // lock button for the whole attempt (anti IP-block)
       S.ws.binaryType = 'arraybuffer';
-      S.ws.onopen    = () => { S._lastRxTime = Date.now(); setStatus(t('proxyConnectedWait')); try { window._pthCountConnect && window._pthCountConnect(window._pthConnMode ? window._pthConnMode() : 'lan'); } catch (e) {} };
+      S.ws.onopen    = () => { S._lastRxTime = Date.now(); setStatus(t('proxyConnectedWait')); try { window._pthCountConnect && window._pthCountConnect(_cntMode()); } catch (e) {} };
       S.ws.onerror   = () => { S._lastConnectFailed = true; _endConnecting(); setStatus(t('wsError'), 'err'); };
       S.ws.onmessage = function(e) {
         if (typeof e.data === 'string') {
@@ -5001,7 +5098,7 @@ const App = (() => {
               App && App.connect && App._reconnectContinue && App._reconnectContinue();
             };
           } catch(err) {
-            _showBanner('Erreur: ' + err.message);
+            _showBanner(t('errGeneric', { code: err.message }));
           }
         }, delay);
       };
@@ -5448,6 +5545,10 @@ const App = (() => {
       if (S.turnPid === S.myId) return;  // à notre tour : inchangé (les boutons agissent)
       if (S._amSpectator || !S._gameStarted) return;
       if (S.myCards[0] == null && S.myCards[1] == null) return; // pas de cartes
+      // Rien à décider pour l'instant (main jetée, tapis, ou j'ai déjà parlé
+      // sans être relancé) : la barre est une zone morte, comme les clients
+      // officiels.
+      if (typeof window._barLocked === 'function' && window._barLocked()) return;
       S._preAction = (S._preAction === name) ? '' : name;      // toggle
       S._preActionToCall = Math.max(0, S.highestBet - ((S.seatData[S.myId] || {}).bet || 0)); // onCallAmountChanged : MON à-suivre
       renderMyTurnActions(true);                            // re-render pour le surlignage or
@@ -5642,7 +5743,7 @@ const App = (() => {
           // cls 'mine' (et pas 'sys' : les messages systeme sont filtres
           // d'addGameChat) — affichage local uniquement, rien n'est envoye.
           addGameChat('seatdbg', JSON.stringify(_info), 'mine');
-        } catch (eDbg) { try { addGameChat('seatdbg', 'erreur: ' + eDbg, 'mine'); } catch (e2) {} }
+        } catch (eDbg) { try { addGameChat('seatdbg', 'error: ' + eDbg, 'mine'); } catch (e2) {} }
         return;
       }
       // ── Local diagnostic/setting commands (/help /diag /update …) — nothing
@@ -7008,7 +7109,10 @@ function addGameChat(sender, text, cls, spec) {
   if (sender) {
     // Traduction par message (API navigateur, opt-in Options avancees) :
     // bouton visible seulement si body.chat-tr-on (option + support).
-    var _tr = (cls !== 'mine' ? '<button class="chat-tr-btn" title="Traduire" onclick="window._chatTranslate(this)" aria-label="Translate">\u{1F310}</button>' : '');
+    // Libelle traduit ET re-traduisible : data-i18n-title suit un changement
+    // de langue, le title initial evite un survol vide avant le premier passage.
+    var _trL = 'Translate'; try { _trL = t('chatTranslateBtn'); } catch (_e) {}
+    var _tr = (cls !== 'mine' ? '<button class="chat-tr-btn" title="' + e(_trL) + '" data-i18n-title="chatTranslateBtn" onclick="window._chatTranslate(this)" aria-label="' + e(_trL) + '">\u{1F310}</button>' : '');
     // Action « /me … » (parité QML) — miroir de addChat : « *Nom fait qqch* »
     // en italique, sans « Nom: ». Le « /me » part au serveur et est reformaté
     // à l'affichage par chaque client.
@@ -7027,8 +7131,10 @@ function addGameChat(sender, text, cls, spec) {
     d.innerHTML = '<span class="txt">'+(cls === 'sys' ? e(text) : emT(text))+'</span>';
   }
   if (spec && !sender) { try { d.dataset.sys = JSON.stringify(spec); } catch(_e){} }
+  var _ls = (typeof window._liveBefore === 'function') ? window._liveBefore(el) : null;
   el.appendChild(d);
-  el.scrollTop = el.scrollHeight;
+  if (_ls) window._liveAfter(el, _ls);
+  else el.scrollTop = el.scrollHeight;
   var cBtn = document.getElementById('chat-toggle-btn');
   var cPan = document.getElementById('g-chat-panel');
   if (cBtn && cls !== 'mine' && (!cPan || cPan.style.display === 'none')) {
@@ -7844,7 +7950,8 @@ function makeChatResizable(panel, msgs, onResize) {
 
   var handle = document.createElement('div');
   handle.className = 'chat-resize-handle';
-  handle.title = 'Glisser pour redimensionner';
+  try { handle.title = t('resizeTooltip'); } catch (e) { handle.title = 'Drag to resize'; }
+  handle.setAttribute('data-i18n-title', 'resizeTooltip');
   var grip = document.createElement('div');
   grip.className = 'crh-grip';
   handle.appendChild(grip);
@@ -8654,7 +8761,7 @@ function toggleGameChat() {
     _openFloatingNearBtn(panel, btn, { key:'pth_winpos_chat', handle: panel.querySelector('.g-chat-panel-header'), resizable:true, minW:240, minH:160, defW:300, defH:280, zoom:true }, 'left');
     if (typeof clearUnreadChat === 'function') clearUnreadChat();
     var m = document.getElementById('g-chat-msgs');
-    if (m) m.scrollTop = m.scrollHeight;
+    if (m) { if (typeof window._liveReset === 'function') window._liveReset(m); else m.scrollTop = m.scrollHeight; }
     var inp = document.getElementById('g-chat-in');
     if (inp) setTimeout(function(){ inp.focus(); }, 80);
   }
@@ -8800,7 +8907,7 @@ function gipShowTab(tab) {
   var asg = document.getElementById('gip-assist');
   try { localStorage.setItem('pth_gip_tab', tab); } catch (e) {}
   if (tab === 'odds') { try { if (typeof window._renderOdds === 'function') window._renderOdds(); } catch (e) {} }
-  if (tab === 'stats') { try { if (typeof window._renderStats === 'function') window._renderStats(); } catch (e) {} }
+  if (tab === 'stats') { try { var _rs = window._renderStatsNow || window._renderStats; if (typeof _rs === 'function') _rs(); } catch (e) {} }
   try { if (typeof window._gipAssistSync === 'function') window._gipAssistSync(); } catch (e) {}
 }
 window.gipShowTab = gipShowTab;
@@ -8831,7 +8938,9 @@ function toggleLog() {
     // Poignée de redimensionnement, identique au chat (glisser pour étendre).
     _openFloatingNearBtn(panel, btn, { key:'pth_winpos_log2', handle: panel.querySelector('.g-chat-panel-header'), resizable:true, minW:240, minH:140, defW: window.innerWidth >= 1400 ? 340 : 300, defH:300, zoom:true }, 'right');
     var lb = document.getElementById('g-log-body');
-    if (lb) lb.scrollTop = 0; // le plus récent est en haut (liste inversée)
+    // Le plus récent est en haut (liste inversée) : rouvrir le panneau
+    // remet le suivi automatique en marche, même s'il était en pause.
+    if (lb) { if (typeof window._liveReset === 'function') window._liveReset(lb); else lb.scrollTop = 0; }
     // Restaurer le dernier onglet consulté (Historique par défaut).
     try { gipShowTab((function(){try{var _t=localStorage.getItem('pth_gip_tab');return (_t==='odds'||_t==='stats')?_t:'log';}catch(_e){return 'log';}})()); } catch (e) {}
   }
@@ -8875,6 +8984,7 @@ window.exportLog = exportLog;
 function clearChatPanel(which){
   var el = document.getElementById(which === 'lobby' ? 'chat' : 'g-chat-msgs');
   if (el) el.innerHTML = '';
+  if (el && typeof window._liveReset === 'function') window._liveReset(el);
 }
 window.clearChatPanel = clearChatPanel;
 
@@ -9426,7 +9536,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.4-web.118'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.4-web.134'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
@@ -9516,10 +9626,9 @@ window.BUILD_VERSION='2.1.4-web.118'; try{ var b=document.getElementById('cf-bui
   // Fires once per session per mode when a connection opens. Reports to OUR
   // proxy (/__visit) even when the game socket is a direct WSS to pokerth.net —
   // the count-ping is independent of the game transport. No IP, no PII.
-  // Which of the three entry modes is this connection? Read the mode the player
-  // actually picked (#server-mode), NOT the transport: the Internet mode routed
-  // "via proxy" (admin transport switch), or pointed at a host that is not
-  // pokerth.net, is still an Internet connection and must not be filed as LAN.
+  // Alias public du mode d'entrée (repris de e3edf9a5) : même règle que
+  // _cntMode() côté connexion — on lit le mode CHOISI (#server-mode), jamais le
+  // transport. Exposé pour les appelants externes / la console de diagnostic.
   window._pthConnMode = function () {
     var v = '';
     try { var el = document.getElementById('server-mode'); v = el ? el.value : ''; } catch (e) {}
