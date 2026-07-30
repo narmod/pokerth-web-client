@@ -247,7 +247,7 @@ export const help = {
         { id: 'updates', t: 'Zůstat aktuální',
           b: ['Klient se aktualizuje sám: když je nasazena nová verze, banner tě vyzve k obnovení (nebo napiš /update do chatu pro ruční kontrolu). Občas se může objevit malý produktový dotazník na tvůj názor na některou funkci — účast je dobrovolná a dotazníky lze úplně vypnout v Pokročilé možnosti \u2192 Komunita.'] },
         { id: 'fkeys', t: 'Oficiální klávesové zkratky',
-          b: ['Oficiální funkční klávesy PokerTH fungují během hry:'],
+          b: ['Ofici\u00e1ln\u00ed funk\u010dn\u00ed kl\u00e1vesy PokerTH funguj\u00ed ve h\u0159e \u2014 Alt+S funguje kdekoli:'],
           keys: [
             ['F1 / F2 / F3 / F4', 'Fold \u00b7 Check/Call \u00b7 Bet/Raise \u00b7 All-In (pořadí lze v možnostech obrátit)'],
             ['F5', 'Ukázat své karty (když to jde)'],

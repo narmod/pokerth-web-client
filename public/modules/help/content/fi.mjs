@@ -248,7 +248,7 @@ export const help = {
         { id: 'updates', t: 'Pysy ajan tasalla',
           b: ['Asiakasohjelma päivittyy itse: kun uusi versio julkaistaan, banneri kehottaa päivittämään (tai kirjoita /update chattiin tarkistaaksesi käsin). Silloin tällöin voi ilmestyä pieni tuotekysely, joka kysyy mielipidettäsi jostakin ominaisuudesta — osallistuminen on vapaaehtoista, ja kyselyt voi poistaa kokonaan käytöstä kohdasta Lisäasetukset \u2192 Yhteisö.'] },
         { id: 'fkeys', t: 'Viralliset pikanäppäimet',
-          b: ['PokerTH:n viralliset funktionäppäimet toimivat pelin aikana:'],
+          b: ['PokerTH:n viralliset toiminton\u00e4pp\u00e4imet toimivat pelin aikana \u2014 Alt+S toimii kaikkialla:'],
           keys: [
             ['F1 / F2 / F3 / F4', 'Fold \u00b7 Check/Call \u00b7 Bet/Raise \u00b7 All-In (järjestyksen voi kääntää asetuksista)'],
             ['F5', 'Näytä korttisi (kun mahdollista)'],
