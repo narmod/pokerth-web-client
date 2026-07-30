@@ -248,7 +248,7 @@ export const help = {
         { id: 'updates', t: 'Restare aggiornati',
           b: ['Il client si aggiorna da solo: quando viene distribuita una nuova versione, un banner ti invita ad aggiornare (o digita /update in chat per controllare manualmente). Ogni tanto può apparire un piccolo sondaggio di prodotto per chiedere la tua opinione su una funzione — partecipare è facoltativo e i sondaggi si disattivano del tutto in Opzioni avanzate \u2192 Comunità.'] },
         { id: 'fkeys', t: 'Scorciatoie da tastiera ufficiali',
-          b: ['I tasti funzione ufficiali di PokerTH funzionano durante una partita:'],
+          b: ['I tasti funzione ufficiali di PokerTH funzionano durante una partita \u2014 Alt+S funziona ovunque:'],
           keys: [
             ['F1 / F2 / F3 / F4', 'Fold \u00b7 Check/Call \u00b7 Bet/Raise \u00b7 All-In (ordine invertibile nelle opzioni)'],
             ['F5', 'Mostrare le tue carte (quando possibile)'],

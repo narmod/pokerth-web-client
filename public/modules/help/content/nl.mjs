@@ -248,7 +248,7 @@ export const help = {
         { id: 'updates', t: 'Up-to-date blijven',
           b: ['De client werkt zichzelf bij: wordt een nieuwe versie uitgerold, dan nodigt een banner je uit om te verversen (of typ /update in de chat om handmatig te controleren). Af en toe kan een kleine productenquête verschijnen om je mening over een functie te vragen — meedoen is vrijwillig en enquêtes zijn volledig uit te schakelen in Geavanceerde opties \u2192 Community.'] },
         { id: 'fkeys', t: 'Officiële sneltoetsen',
-          b: ['De officiële PokerTH-functietoetsen werken tijdens een spel:'],
+          b: ['De offici\u00eble PokerTH-functietoetsen werken tijdens een partij \u2014 Alt+S werkt overal:'],
           keys: [
             ['F1 / F2 / F3 / F4', 'Fold \u00b7 Check/Call \u00b7 Bet/Raise \u00b7 All-In (volgorde omkeerbaar in de opties)'],
             ['F5', 'Je kaarten tonen (wanneer mogelijk)'],
