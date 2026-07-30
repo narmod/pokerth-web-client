@@ -207,7 +207,7 @@ const MSG = (() => {
     const USE_CLIENT_TYPE_WEB   = false; // ← basculer à true quand sp0ck confirme 0x03
     const clientType = USE_CLIENT_TYPE_WEB ? CLIENT_TYPE_WEB : CLIENT_TYPE_QT_WIDGET;
     // buildId composite (type<<24)|(major<<16)|(minor<<8)|patch.
-    // Aujourd'hui : 0x01020104 (Qt-Widget 2.1.4 ; accepté dès serveur 2.1.3, min >= 0x01020102).
+    // Aujourd'hui : 0x01020105 (Qt-Widget 2.1.5 ; serveur 2.1.5 exige min 2.1.4 = 0x01020104).
     const BUILD_ID = ((clientType << 24) | (UPSTREAM_MAJOR << 16) | (UPSTREAM_MINOR << 8) | UPSTREAM_PATCH) >>> 0;
     const ver = Proto.encode([[1,0,major],[2,0,minor]]);
     const fields = [
