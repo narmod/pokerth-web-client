@@ -621,7 +621,7 @@ export const strings = {
     quickCreateLabel: 'Žaidėjai:',
     quickCreateBtn: 'Sukurti',
     logPanelTitle: 'Žurnalas',
-    logCopied:'Žurnalas nukopijuotas', logEmpty:'Žurnalas tuščias', gnBtn:'Bendras pranešimas (administratorius)',gnSent:'Bendras pranešimas išsiųstas visiems žaidėjams.',gnRejected:'Serveris atmetė bendrą pranešimą.',logExportTitle:'Eksportuoti žurnalą', chatClearTitle:'Išvalyti pokalbį',
+    logCopied:'Žurnalas nukopijuotas', logEmpty:'Žurnalas tuščias', gnBtn:'Bendras pranešimas (administratorius)',gnSent:'Bendras pranešimas išsiųstas visiems žaidėjams.',gnRejected:'Serveris atmetė bendrą pranešimą.',advChatClearLogin:'Prisijungiant išvalyti vestibiulio pokalbį', logExportTitle:'Eksportuoti žurnalą', chatClearTitle:'Išvalyti pokalbį',
     jumpLatest:'Pereiti prie naujausių',
     chatTranslateBtn:'Versti', winMove:'Perkelti', loupeToggle:'Didinamasis ×2',
     sendTooltip:'Siųsti', resizeTooltip:'Vilkite, kad pakeistumėte dydį', loadingOffline:'Įkeliamas neprisijungus režimas…',

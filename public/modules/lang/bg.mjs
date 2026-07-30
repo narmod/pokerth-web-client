@@ -621,7 +621,7 @@ export const strings = {
     quickCreateLabel: 'Играчи:',
     quickCreateBtn: 'Създай',
     logPanelTitle: 'Дневник',
-    logCopied:'Дневникът е копиран', logEmpty:'Дневникът е празен', gnBtn:'Глобално съобщение (админ)',gnSent:'Глобалното съобщение бе изпратено до всички играчи.',gnRejected:'Сървърът отхвърли глобалното съобщение.',logExportTitle:'Експортиране на дневника', chatClearTitle:'Изчисти чата',
+    logCopied:'Дневникът е копиран', logEmpty:'Дневникът е празен', gnBtn:'Глобално съобщение (админ)',gnSent:'Глобалното съобщение бе изпратено до всички играчи.',gnRejected:'Сървърът отхвърли глобалното съобщение.',advChatClearLogin:'Изчистване на чата в лобито при свързване', logExportTitle:'Експортиране на дневника', chatClearTitle:'Изчисти чата',
     jumpLatest:'Към най-новото',
     chatTranslateBtn:'Преведи', winMove:'Преместване', loupeToggle:'Лупа ×2',
     sendTooltip:'Изпрати', resizeTooltip:'Влачете за преоразмеряване', loadingOffline:'Зареждане на офлайн режим…',

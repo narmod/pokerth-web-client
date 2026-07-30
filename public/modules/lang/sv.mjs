@@ -620,7 +620,7 @@ export const strings = {
     quickCreateLabel: 'Spelare:',
     quickCreateBtn: 'Skapa',
     logPanelTitle: 'Logg',
-    logCopied:'Logg kopierad', logEmpty:'Loggen är tom', gnBtn:'Globalt meddelande (admin)',gnSent:'Det globala meddelandet skickades till alla spelare.',gnRejected:'Servern avvisade det globala meddelandet.',logExportTitle:'Exportera logg', chatClearTitle:'Rensa chatt',
+    logCopied:'Logg kopierad', logEmpty:'Loggen är tom', gnBtn:'Globalt meddelande (admin)',gnSent:'Det globala meddelandet skickades till alla spelare.',gnRejected:'Servern avvisade det globala meddelandet.',advChatClearLogin:'Rensa lobbychatten vid anslutning', logExportTitle:'Exportera logg', chatClearTitle:'Rensa chatt',
     jumpLatest:'Gå till senaste',
     chatTranslateBtn:'Översätt', winMove:'Flytta', loupeToggle:'Förstoring ×2',
     sendTooltip:'Skicka', resizeTooltip:'Dra för att ändra storlek', loadingOffline:'Läser in offlineläge…',

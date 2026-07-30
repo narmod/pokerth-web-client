@@ -620,7 +620,7 @@ export const strings = {
     quickCreateLabel: 'Spillere:',
     quickCreateBtn: 'Opprett',
     logPanelTitle: 'Logg',
-    logCopied:'Logg kopiert', logEmpty:'Loggen er tom', gnBtn:'Global melding (admin)',gnSent:'Den globale meldingen ble sendt til alle spillere.',gnRejected:'Serveren avviste den globale meldingen.',logExportTitle:'Eksporter logg', chatClearTitle:'Tøm chat',
+    logCopied:'Logg kopiert', logEmpty:'Loggen er tom', gnBtn:'Global melding (admin)',gnSent:'Den globale meldingen ble sendt til alle spillere.',gnRejected:'Serveren avviste den globale meldingen.',advChatClearLogin:'Tøm lobbysjatten ved tilkobling', logExportTitle:'Eksporter logg', chatClearTitle:'Tøm chat',
     jumpLatest:'Gå til nyeste',
     chatTranslateBtn:'Oversett', winMove:'Flytt', loupeToggle:'Forstørrelse ×2',
     sendTooltip:'Send', resizeTooltip:'Dra for å endre størrelse', loadingOffline:'Laster frakoblet modus…',

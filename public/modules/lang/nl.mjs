@@ -624,7 +624,7 @@ export const strings = {
     quickCreateLabel: 'Spelers:',
     quickCreateBtn: 'Maken',
     logPanelTitle: 'Logboek',
-    logCopied:'Logboek gekopieerd', logEmpty:'Logboek is leeg', gnBtn:'Globale mededeling (admin)',gnSent:'De globale mededeling is naar alle spelers gestuurd.',gnRejected:'De server heeft de globale mededeling geweigerd.',logExportTitle:'Logboek exporteren', chatClearTitle:'Chat wissen',
+    logCopied:'Logboek gekopieerd', logEmpty:'Logboek is leeg', gnBtn:'Globale mededeling (admin)',gnSent:'De globale mededeling is naar alle spelers gestuurd.',gnRejected:'De server heeft de globale mededeling geweigerd.',advChatClearLogin:'Lobbychat wissen bij verbinden', logExportTitle:'Logboek exporteren', chatClearTitle:'Chat wissen',
     jumpLatest:'Naar nieuwste',
     chatTranslateBtn:'Vertalen', winMove:'Verplaatsen', loupeToggle:'Vergrootglas ×2',
     sendTooltip:'Verzenden', resizeTooltip:'Sleep om formaat te wijzigen', loadingOffline:'Offlinemodus laden…',

@@ -624,7 +624,7 @@ export const strings = {
     quickCreateLabel: 'Gracze:',
     quickCreateBtn: 'Utwórz',
     logPanelTitle: 'Dziennik',
-    logCopied:'Dziennik skopiowany', logEmpty:'Dziennik jest pusty', gnBtn:'Ogłoszenie globalne (admin)',gnSent:'Ogłoszenie globalne zostało wysłane do wszystkich graczy.',gnRejected:'Serwer odrzucił ogłoszenie globalne.',logExportTitle:'Eksportuj dziennik', chatClearTitle:'Wyczyść czat',
+    logCopied:'Dziennik skopiowany', logEmpty:'Dziennik jest pusty', gnBtn:'Ogłoszenie globalne (admin)',gnSent:'Ogłoszenie globalne zostało wysłane do wszystkich graczy.',gnRejected:'Serwer odrzucił ogłoszenie globalne.',advChatClearLogin:'Wyczyść czat w poczekalni przy łączeniu', logExportTitle:'Eksportuj dziennik', chatClearTitle:'Wyczyść czat',
     jumpLatest:'Przejdź do najnowszych',
     chatTranslateBtn:'Przetłumacz', winMove:'Przenieś', loupeToggle:'Lupa ×2',
     sendTooltip:'Wyślij', resizeTooltip:'Przeciągnij, aby zmienić rozmiar', loadingOffline:'Ładowanie trybu offline…',

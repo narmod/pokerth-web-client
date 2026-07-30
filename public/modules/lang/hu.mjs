@@ -621,7 +621,7 @@ export const strings = {
     quickCreateLabel: 'Játékosok:',
     quickCreateBtn: 'Létrehozás',
     logPanelTitle: 'Napló',
-    logCopied:'Napló másolva', logEmpty:'A napló üres', gnBtn:'Globális közlemény (admin)',gnSent:'A globális közleményt minden játékos megkapta.',gnRejected:'A kiszolgáló elutasította a globális közleményt.',logExportTitle:'Napló exportálása', chatClearTitle:'Chat törlése',
+    logCopied:'Napló másolva', logEmpty:'A napló üres', gnBtn:'Globális közlemény (admin)',gnSent:'A globális közleményt minden játékos megkapta.',gnRejected:'A kiszolgáló elutasította a globális közleményt.',advChatClearLogin:'Az előcsarnok csevegésének törlése csatlakozáskor', logExportTitle:'Napló exportálása', chatClearTitle:'Chat törlése',
     jumpLatest:'Ugrás a legújabbra',
     chatTranslateBtn:'Fordítás', winMove:'Áthelyezés', loupeToggle:'Nagyító ×2',
     sendTooltip:'Küldés', resizeTooltip:'Húzza az átméretezéshez', loadingOffline:'Kapcsolat nélküli mód betöltése…',

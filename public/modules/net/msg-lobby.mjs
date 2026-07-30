@@ -172,6 +172,17 @@ function onInitAck(sub) {
       }
       return;   // JoinGameAck → game screen; JoinGameFailed → lobby fallback
     }
+    // Parite QML 2.1.5 (LobbyHandler::setSession) : le chat lobby appartient a
+    // la CONNEXION, pas a l'onglet. Sans ce vidage, l'historique de la session
+    // precedente reste affiche apres un nouveau login -- avec un autre pseudo,
+    // voire sur un autre serveur. On ne vide PAS sur le chemin de reprise
+    // automatique (return plus haut) : la, c'est la meme session de jeu qui
+    // continue apres une coupure reseau, et perdre le fil du chat serait une
+    // regression propre au web (QML n'a pas de reprise avec delai de grace).
+    try {
+      if (window._advGet ? window._advGet('chat_clear_login', true) : true)
+        window.clearChatPanel && window.clearChatPanel('lobby');
+    } catch (e) {}
     updateLobbyPill();
     App._resetGameState();   // ensure a clean lobby baseline (no-op on first connect)
     // Entrainement : pas d'etape lobby — le formulaire « Creer une table »

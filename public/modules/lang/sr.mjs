@@ -621,7 +621,7 @@ export const strings = {
     quickCreateLabel: 'Igrači:',
     quickCreateBtn: 'Napravi',
     logPanelTitle: 'Dnevnik',
-    logCopied:'Дневник копиран', logEmpty:'Дневник је празан', gnBtn:'Опште обавештење (админ)',gnSent:'Опште обавештење је послато свим играчима.',gnRejected:'Сервер је одбио опште обавештење.',logExportTitle:'Извези дневник', chatClearTitle:'Очисти ћаскање',
+    logCopied:'Дневник копиран', logEmpty:'Дневник је празан', gnBtn:'Опште обавештење (админ)',gnSent:'Опште обавештење је послато свим играчима.',gnRejected:'Сервер је одбио опште обавештење.',advChatClearLogin:'Обриши ћаскање у предворју при повезивању', logExportTitle:'Извези дневник', chatClearTitle:'Очисти ћаскање',
     jumpLatest:'Иди на најновије',
     chatTranslateBtn:'Преведи', winMove:'Помери', loupeToggle:'Лупа ×2',
     sendTooltip:'Пошаљи', resizeTooltip:'Повуците да промените величину', loadingOffline:'Учитавање ванмрежног режима…',

@@ -623,7 +623,7 @@ export const strings = {
     quickCreateLabel: 'Oyuncular:',
     quickCreateBtn: 'Oluştur',
     logPanelTitle: 'Günlük',
-    logCopied:'Günlük kopyalandı', logEmpty:'Günlük boş', gnBtn:'Genel duyuru (yönetici)',gnSent:'Genel duyuru tüm oyunculara gönderildi.',gnRejected:'Sunucu genel duyuruyu reddetti.',logExportTitle:'Günlüğü dışa aktar', chatClearTitle:'Sohbeti temizle',
+    logCopied:'Günlük kopyalandı', logEmpty:'Günlük boş', gnBtn:'Genel duyuru (yönetici)',gnSent:'Genel duyuru tüm oyunculara gönderildi.',gnRejected:'Sunucu genel duyuruyu reddetti.',advChatClearLogin:'Bağlanırken lobi sohbetini temizle', logExportTitle:'Günlüğü dışa aktar', chatClearTitle:'Sohbeti temizle',
     jumpLatest:'En yenilere git',
     chatTranslateBtn:'Çevir', winMove:'Taşı', loupeToggle:'Büyüteç ×2',
     sendTooltip:'Gönder', resizeTooltip:'Yeniden boyutlandırmak için sürükleyin', loadingOffline:'Çevrimdışı mod yükleniyor…',

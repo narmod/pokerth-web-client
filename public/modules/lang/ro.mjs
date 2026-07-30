@@ -621,7 +621,7 @@ export const strings = {
     quickCreateLabel: 'Jucători:',
     quickCreateBtn: 'Creează',
     logPanelTitle: 'Jurnal',
-    logCopied:'Jurnal copiat', logEmpty:'Jurnalul este gol', gnBtn:'Anunț global (admin)',gnSent:'Anunțul global a fost trimis tuturor jucătorilor.',gnRejected:'Serverul a respins anunțul global.',logExportTitle:'Exportă jurnalul', chatClearTitle:'Golește chatul',
+    logCopied:'Jurnal copiat', logEmpty:'Jurnalul este gol', gnBtn:'Anunț global (admin)',gnSent:'Anunțul global a fost trimis tuturor jucătorilor.',gnRejected:'Serverul a respins anunțul global.',advChatClearLogin:'Golește chatul din lobby la conectare', logExportTitle:'Exportă jurnalul', chatClearTitle:'Golește chatul',
     jumpLatest:'Salt la cele mai recente',
     chatTranslateBtn:'Traduce', winMove:'Mută', loupeToggle:'Lupă ×2',
     sendTooltip:'Trimite', resizeTooltip:'Trageți pentru redimensionare', loadingOffline:'Se încarcă modul offline…',
