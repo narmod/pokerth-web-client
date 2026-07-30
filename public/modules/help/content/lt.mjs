@@ -248,7 +248,7 @@ export const help = {
         { id: 'updates', t: 'Lik atnaujintas',
           b: ['Klientas atsinaujina pats: išleidus naują versiją juosta pakviečia perkrauti (arba parašyk /update pokalbyje rankiniam patikrinimui). Retkarčiais gali pasirodyti maža produkto apklausa apie tavo nuomonę dėl funkcijos — dalyvavimas savanoriškas, o apklausas galima visiškai išjungti Išplėstinės parinktys \u2192 Bendruomenė.'] },
         { id: 'fkeys', t: 'Oficialūs spartieji klavišai',
-          b: ['Oficialūs PokerTH funkciniai klavišai veikia partijos metu:'],
+          b: ['Oficial\u016bs PokerTH funkciniai klavi\u0161ai veikia \u017eaidimo metu \u2014 Alt+S veikia bet kur:'],
           keys: [
             ['F1 / F2 / F3 / F4', 'Fold \u00b7 Check/Call \u00b7 Bet/Raise \u00b7 All-In (tvarką galima apversti parinktyse)'],
             ['F5', 'Parodyti savo kortas (kai įmanoma)'],

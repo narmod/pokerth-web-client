@@ -248,7 +248,7 @@ export const help = {
         { id: 'updates', t: 'Luôn cập nhật',
           b: ['Ứng dụng tự cập nhật: khi có phiên bản mới, một dải thông báo mời bạn tải lại (hoặc gõ /update trong khung trò chuyện để kiểm tra thủ công). Thỉnh thoảng một khảo sát sản phẩm nhỏ có thể xuất hiện để hỏi ý kiến bạn về một tính năng — tham gia là tùy ý, và khảo sát có thể tắt hoàn toàn ở Tùy chọn nâng cao \u2192 Cộng đồng.'] },
         { id: 'fkeys', t: 'Phím tắt bàn phím chính thức',
-          b: ['Các phím chức năng chính thức của PokerTH hoạt động trong ván đấu:'],
+          b: ['C\u00e1c ph\u00edm ch\u1ee9c n\u0103ng ch\u00ednh th\u1ee9c c\u1ee7a PokerTH ho\u1ea1t \u0111\u1ed9ng khi \u0111ang ch\u01a1i \u2014 Alt+S ho\u1ea1t \u0111\u1ed9ng \u1edf m\u1ecdi n\u01a1i:'],
           keys: [
             ['F1 / F2 / F3 / F4', 'Fold \u00b7 Check/Call \u00b7 Bet/Raise \u00b7 All-In (thứ tự có thể đảo trong tùy chọn)'],
             ['F5', 'Lật bài của bạn (khi có thể)'],

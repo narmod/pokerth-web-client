@@ -248,7 +248,7 @@ export const help = {
         { id: 'updates', t: 'Güncel kalmak',
           b: ['İstemci kendini günceller: yeni bir sürüm yayımlandığında bir afiş yenilemeni önerir (ya da elle denetlemek için sohbete /update yaz). Ara sıra bir özellik hakkında görüşünü soran küçük bir ürün anketi çıkabilir — katılım isteğe bağlıdır ve anketler Gelişmiş seçenekler \u2192 Topluluk\u2019tan tamamen kapatılabilir.'] },
         { id: 'fkeys', t: 'Resmi klavye kısayolları',
-          b: ['Resmi PokerTH işlev tuşları oyun sırasında çalışır:'],
+          b: ['Resm\u00ee PokerTH i\u015flev tu\u015flar\u0131 oyun s\u0131ras\u0131nda \u00e7al\u0131\u015f\u0131r \u2014 Alt+S her yerde \u00e7al\u0131\u015f\u0131r:'],
           keys: [
             ['F1 / F2 / F3 / F4', 'Fold \u00b7 Check/Call \u00b7 Bet/Raise \u00b7 All-In (sıra seçeneklerden ters çevrilebilir)'],
             ['F5', 'Kartlarını göster (mümkün olduğunda)'],
