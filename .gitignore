@@ -22,6 +22,10 @@ stats.meta.json
 # Runtime, server-owned admin config (reset period, defaults, admin music list…)
 admin-config.json
 
+# Admin audit log (who changed what, master + delegate keys). Server-owned,
+# untracked, kept across updates like admin-config.json.
+admin-audit.json
+
 # Deployment history for the admin rollback (server-owned, untracked like
 # admin-config.json: it records the commits this instance actually served).
 deploy-history.json

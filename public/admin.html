@@ -243,22 +243,22 @@
       </div>
       <div class="card">
         <h2 style="margin:0 0 6px">Bridges</h2>
-        <div id="seBridges"><div class="empty">Loading\u2026</div></div>
+        <div id="seBridges"><div class="empty">Loading…</div></div>
       </div>
       <div class="card">
         <h2 style="margin:0 0 6px">Notice channels</h2>
-        <div id="seNotify"><div class="empty">Loading\u2026</div></div>
+        <div id="seNotify"><div class="empty">Loading…</div></div>
       </div>
     </div>
     <div id="panel-errors" style="display:none">
       <div class="card">
         <div class="boardhead" style="margin-bottom:6px"><h2 style="margin:0">Client script errors</h2><div style="display:flex;gap:8px"><button id="erRefresh" class="use">Refresh</button><button id="erClear" class="use danger">Clear all</button></div></div>
-        <p class="muted" style="margin:0 0 8px">JavaScript errors reported by players' browsers, grouped by signature so one recurring bug is one line with a counter. Players can switch the reporting off in Advanced options; nothing but the error itself, the build, the device and a masked IP is ever sent. Kept in memory only \u2014 a restart clears the list.</p>
+        <p class="muted" style="margin:0 0 8px">JavaScript errors reported by players' browsers, grouped by signature so one recurring bug is one line with a counter. Players can switch the reporting off in Advanced options; nothing but the error itself, the build, the device and a masked IP is ever sent. Kept in memory only — a restart clears the list.</p>
         <div id="erSum" class="muted"></div>
         <div id="erMsg" class="msg"></div>
       </div>
       <div class="card">
-        <div id="erList"><div class="empty">Loading\u2026</div></div>
+        <div id="erList"><div class="empty">Loading…</div></div>
       </div>
     </div>
     <div id="panel-packages" style="display:none">
@@ -355,8 +355,8 @@
       </div>
       <div class="card">
         <div class="boardhead" style="margin-bottom:6px"><h2 style="margin:0">Feature kill switches</h2><button id="fsSave" class="use">Save</button></div>
-        <p class="muted" style="margin:0 0 8px">Turn a feature off for <b>everyone, right now</b>, without a deployment \u2014 the way out when something ships broken. Ticking a box forces the matching option off in every client: its checkbox in Advanced options goes unticked, frozen and labelled \u201coff (admin)\u201d. Players keep their own preference stored, so it takes effect again the moment you untick here. Applies on the client's next load of the page.</p>
-        <div id="fsList" class="muted">Loading\u2026</div>
+        <p class="muted" style="margin:0 0 8px">Turn a feature off for <b>everyone, right now</b>, without a deployment — the way out when something ships broken. Ticking a box forces the matching option off in every client: its checkbox in Advanced options goes unticked, frozen and labelled “off (admin)”. Players keep their own preference stored, so it takes effect again the moment you untick here. Applies on the client's next load of the page.</p>
+        <div id="fsList" class="muted">Loading…</div>
         <div id="fsMsg" class="msg"></div>
       </div>
       <div class="card">
@@ -446,9 +446,15 @@
         <div class="boardhead"><h2 style="margin:0">Delegate keys</h2><button id="kyRefresh" class="use">Refresh</button></div>
         <div id="kyList"><div class="empty">Loading…</div></div>
       </div>
+      <div class="card">
+        <div class="boardhead" style="margin-bottom:6px"><h2 style="margin:0">Audit log</h2><div style="display:flex;gap:8px"><button id="auRefresh" class="use">Refresh</button><button id="auClear" class="use danger">Clear</button></div></div>
+        <p class="muted" style="margin:0 0 8px">Every action that <b>changed</b> something, and who did it — the master key or a named delegate key. Reads are not logged: the dashboard polls itself every few seconds and would drown everything. Kept on disk, so a restart does not erase it. Tokens themselves are never recorded, only the name they carry.</p>
+        <div id="auList"><div class="empty">Loading…</div></div>
+        <div id="auMsg" class="msg"></div>
+      </div>
     </div>
     <div id="panel-server">
-      <div class="card"><h2>Status</h2><div id="status"><div class="empty">Loading\u2026</div></div></div>
+      <div class="card"><h2>Status</h2><div id="status"><div class="empty">Loading…</div></div></div>
       <div class="card">
         <h2>Proxy</h2>
         <p class="muted" style="margin:0 0 8px">Server-side bridge settings. Always-allowed hosts: pokerth.net, www.pokerth.net, pokerth.ddns.net, localhost, 127.0.0.1, ::1. Changes apply live (no restart).</p>
@@ -475,11 +481,35 @@
         <pre id="updlog" class="logs" style="max-height:200px"></pre>
       </div>
       <div class="card">
+        <div class="boardhead" style="margin-bottom:6px"><h2 style="margin:0">Blocked &amp; banned addresses</h2><button id="ipRefresh" class="use">Refresh</button></div>
+        <p class="muted" style="margin:0 0 8px">Addresses that failed to authenticate on this panel, and addresses you have banned. Unlike the rest of the dashboard, addresses appear <b>in full</b> here: a masked address cannot be banned or unblocked. A ban refuses the WebSocket upgrade — the page still loads, but no game connection is made through this proxy — and drops any bridge already open from it. Your own address and loopback can never be banned.</p>
+        <div id="ipYou" class="muted" style="margin-bottom:6px"></div>
+        <div style="margin:8px 0 4px"><b style="font-size:.88rem">Failed sign-ins</b></div>
+        <div id="ipBlocked"><div class="empty">Loading…</div></div>
+        <div style="margin:12px 0 4px"><b style="font-size:.88rem">Banned</b></div>
+        <div id="ipBanned"><div class="empty">—</div></div>
+        <div class="periodrow" style="margin-top:8px">
+          <input id="ipBanInput" class="filter" type="text" maxlength="45" placeholder="Address to ban (e.g. 203.0.113.7)" autocomplete="off" style="margin:0">
+          <button id="ipBanBtn" class="use danger">Ban</button>
+        </div>
+        <div id="ipMsg" class="msg"></div>
+      </div>
+      <div class="card">
+        <h2 style="margin:0 0 6px">Back up &amp; restore settings</h2>
+        <p class="muted" style="margin:0 0 8px">Everything on this dashboard except the traffic figures: modes, defaults, branding, table settings, proxy settings, kill switches, bans, package and music choices. Delegate keys and database credentials are <b>not</b> included — they are secrets, and restoring a backup must not hand back access you thought you had revoked. Restoring <b>replaces</b> the current settings.</p>
+        <div class="btnrow">
+          <button id="cfgExport" class="use">Download backup</button>
+          <button id="cfgImportBtn" class="use danger">Restore from file…</button>
+          <input id="cfgImportFile" type="file" accept=".json,application/json" style="display:none">
+        </div>
+        <div id="cfgIoMsg" class="msg"></div>
+      </div>
+      <div class="card">
         <div class="boardhead" style="margin-bottom:6px"><h2 style="margin:0">Roll back a deployment</h2><button id="rbRefresh" class="use">Refresh</button></div>
-        <p class="muted" style="margin:0 0 8px">Every state this server has actually served, newest first. Rolling back checks the chosen commit out again \u2014 the quickest way out when a deploy breaks the client. <b>Static</b> swaps the served files with no dropped connection; <b>with restart</b> also reinstalls dependencies and restarts, which is what a change to <code>proxy.js</code> needs. The state you are on now is recorded first, so you can always come back forward.</p>
+        <p class="muted" style="margin:0 0 8px">Every state this server has actually served, newest first. Rolling back checks the chosen commit out again — the quickest way out when a deploy breaks the client. <b>Static</b> swaps the served files with no dropped connection; <b>with restart</b> also reinstalls dependencies and restarts, which is what a change to <code>proxy.js</code> needs. The state you are on now is recorded first, so you can always come back forward.</p>
         <div class="seg" id="rbKind"><button class="on" data-k="static">Static (no restart)</button><button data-k="restart">With restart</button></div>
         <div id="rbHead" class="muted" style="margin:8px 0"></div>
-        <div id="rbList"><div class="empty">Loading\u2026</div></div>
+        <div id="rbList"><div class="empty">Loading…</div></div>
         <div id="rbMsg" class="msg"></div>
       </div>
       <div class="card">
@@ -897,7 +927,7 @@
       $('loginErr').textContent=''; _idleLast=Date.now(); show('dash');
       if(_isMaster){
         api('/admin/pkg-list').then(function(r){return r.json();}).then(function(d){ if(d&&d.ok) renderPkgs(d); }).catch(function(){});
-        loadServer(); loadDeploys(); loadThemes(); loadFeatureSwitches(); srvStart();
+        loadServer(); loadDeploys(); loadBlocked(); loadThemes(); loadFeatureSwitches(); srvStart();
       } else {
         srvStop();
         var first=[].slice.call(document.querySelectorAll('.tab')).find(function(b){ return b.style.display!=='none'; });
@@ -922,7 +952,7 @@
     $('panel-servers').style.display=t==='servers'?'block':'none';
     $('panel-polls').style.display=t==='polls'?'block':'none';
     if(t==='music')mzRefresh();
-    if(t==='keys') loadKeys();
+    if(t==='keys'){ loadKeys(); loadAudit(); }
     if(t==='board') loadBoard();
     if(t==='packages') api('/admin/pkg-list').then(function(r){return r.json();}).then(function(d){ if(d&&d.ok) renderPkgs(d); }).catch(function(){});
     if(t==='traffic') loadTraffic();
@@ -932,7 +962,7 @@
     if(t==='clients'){ loadStatus(true); loadThemes(); loadFeatureSwitches(); }
     if(t==='sessions'){ seStart(); } else { seStop(); }
     if(t==='errors') loadErrors();
-    if(t==='server'){ loadServer(); loadDeploys(); srvStart(); } else { srvStop(); }
+    if(t==='server'){ loadServer(); loadDeploys(); loadBlocked(); srvStart(); } else { srvStop(); }
   }); });
 
 
@@ -1277,6 +1307,24 @@
         var tm=(d.today&&d.today.m)||{}, am=(d.allTime&&d.allTime.m)||{};
         var rows=[['pokerth.net','pokerthnet'],['LAN / dedicated','lan'],['Offline (bots)','offline']];
         md.innerHTML = rows.map(function(rw){ return '<div class="srow"><span>'+rw[0]+'</span><b>'+fmt(tm[rw[1]])+' today · '+fmt(am[rw[1]])+' total</b></div>'; }).join('');
+      }
+      var ev=$('trafEnv');
+      if(ev){
+        var env=d.env||{};
+        var groups=[['Operating system','os'],['Browser','br'],['Installed as an app','pwa'],['Language','lang']];
+        var out='';
+        groups.forEach(function(g){
+          var b=env[g[1]]||{}, keys=Object.keys(b);
+          if(!keys.length) return;
+          var tot=0; keys.forEach(function(k){ tot+=b[k]||0; });
+          keys.sort(function(x,y){ return (b[y]||0)-(b[x]||0); });
+          out+='<div class="srow" style="border-bottom:1px solid rgba(127,127,127,.18)"><span><b>'+g[0]+'</b></span><b>'+fmt(tot)+'</b></div>';
+          keys.slice(0,10).forEach(function(k){
+            var n=b[k]||0, pc=tot?Math.round((n/tot)*100):0;
+            out+='<div class="srow"><span>'+_annEsc(k)+'</span><b>'+fmt(n)+' \u00b7 '+pc+'%</b></div>';
+          });
+        });
+        ev.innerHTML = out || '<div class="empty">Nothing recorded yet.</div>';
       }
       var nv=$('trafNvR');
       if(nv){
@@ -1654,6 +1702,115 @@
   function bcPrevNow(){ bcGoldPreview('bcNowPrev',($('bcNowMsg').value||'').trim(),$('bcNowIcon').value); }
   ['bcMsg','bcIcon'].forEach(function(id){ if($(id)){ $(id).addEventListener('input',bcPrevSched); $(id).addEventListener('change',bcPrevSched); } });
   ['bcNowMsg','bcNowIcon'].forEach(function(id){ if($(id)){ $(id).addEventListener('input',bcPrevNow); $(id).addEventListener('change',bcPrevNow); } });
+  // -- Audit log (master only) ------------------------------------------------
+  function loadAudit(){
+    return api('/admin/audit').then(function(r){return r.json();}).then(function(d){
+      var l=$('auList'); if(!l) return;
+      if(!d||!d.ok){ l.innerHTML='<div class="empty">Could not load the audit log.</div>'; return; }
+      var e=d.entries||[];
+      if(!e.length){ l.innerHTML='<div class="empty">Nothing recorded yet.</div>'; return; }
+      l.innerHTML=e.map(function(x){
+        var when=new Date(x.at).toLocaleString();
+        var who=x.master?'master':_annEsc(x.actor||'?');
+        var st=x.ok?'':' <b class="err">'+(x.status||'')+'</b>';
+        return '<div class="srow"><span>'+_annEsc(x.action||'')+'</span><b>'+who+' \u00b7 '+_annEsc(x.ip||'')+' \u00b7 '+when+st+'</b></div>';
+      }).join('');
+    }).catch(function(){ var l=$('auList'); if(l) l.innerHTML='<div class="empty">Network error.</div>'; });
+  }
+  (function(){
+    var r=$('auRefresh'); if(r) r.addEventListener('click',loadAudit);
+    var c=$('auClear'); if(c) c.addEventListener('click',function(){
+      if(!confirm('Clear the audit log? This cannot be undone.')) return;
+      api('/admin/audit',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({clear:1,token:tok()})})
+        .then(function(r2){return r2.json();}).then(function(d){ var m=$('auMsg'); if(m){ m.textContent=(d&&d.ok)?'Cleared.':'Failed.'; m.className=(d&&d.ok)?'msg ok':'msg err'; } loadAudit(); })
+        .catch(function(){ var m=$('auMsg'); if(m){ m.textContent='Network error.'; m.className='msg err'; } });
+    });
+  })();
+
+  // -- Blocked & banned addresses (master only) -------------------------------
+  function _ipMsg(t,ok){ var m=$('ipMsg'); if(m){ m.textContent=t; m.className=ok?'msg ok':'msg err'; } }
+  function _ipAct(body,label){
+    return api('/admin/blocked',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(Object.assign({token:tok()},body))})
+      .then(function(r){return r.json();}).then(function(d){
+        if(d&&d.ok){ _ipMsg(label+((d.dropped)?(' \u2014 '+d.dropped+' live connection(s) dropped'):''),true); loadBlocked(); }
+        else _ipMsg('Failed: '+((d&&d.error)||'error'),false);
+      }).catch(function(){ _ipMsg('Network error.',false); });
+  }
+  function loadBlocked(){
+    return api('/admin/blocked').then(function(r){return r.json();}).then(function(d){
+      var bl=$('ipBlocked'), bn=$('ipBanned'), you=$('ipYou');
+      if(!d||!d.ok){ if(bl) bl.innerHTML='<div class="empty">Could not load.</div>'; return; }
+      if(you) you.textContent='You are connecting from '+(d.you||'?')+'.';
+      if(bl){
+        bl.innerHTML='';
+        if(!d.limiter){ bl.innerHTML='<div class="empty">No rate limiter installed on this server.</div>'; }
+        else if(!(d.blocked||[]).length){ bl.innerHTML='<div class="empty">No failed sign-in recorded.</div>'; }
+        else d.blocked.forEach(function(b){
+          var row=document.createElement('div'); row.className='row';
+          var nm=document.createElement('div'); nm.className='nm';
+          var state=b.until>Date.now()?('blocked for '+Math.ceil((b.until-Date.now())/60000)+' min'):'not blocked';
+          nm.innerHTML='<b>'+_annEsc(b.ip)+'</b><span>'+b.failed+' failed \u00b7 '+state+' \u00b7 last '+new Date(b.last).toLocaleString()+'</span>';
+          var un=document.createElement('button'); un.className='use'; un.textContent='Unblock';
+          un.addEventListener('click',function(){ _ipAct({unblock:b.ip},'Unblocked '+b.ip+'.'); });
+          var ba=document.createElement('button'); ba.className='del'; ba.textContent='Ban';
+          ba.addEventListener('click',function(){ if(confirm('Ban '+b.ip+'? It will no longer be able to connect to a game through this proxy.')) _ipAct({ban:b.ip},'Banned '+b.ip+'.'); });
+          row.appendChild(nm); row.appendChild(un); row.appendChild(ba); bl.appendChild(row);
+        });
+      }
+      if(bn){
+        bn.innerHTML='';
+        if(!(d.banned||[]).length){ bn.innerHTML='<div class="empty">Nobody is banned.</div>'; }
+        else d.banned.forEach(function(ip){
+          var row=document.createElement('div'); row.className='row';
+          var nm=document.createElement('div'); nm.className='nm'; nm.innerHTML='<b>'+_annEsc(ip)+'</b>';
+          var un=document.createElement('button'); un.className='use'; un.textContent='Unban';
+          un.addEventListener('click',function(){ _ipAct({unban:ip},'Unbanned '+ip+'.'); });
+          row.appendChild(nm); row.appendChild(un); bn.appendChild(row);
+        });
+      }
+    }).catch(function(){ var bl=$('ipBlocked'); if(bl) bl.innerHTML='<div class="empty">Network error.</div>'; });
+  }
+  (function(){
+    var r=$('ipRefresh'); if(r) r.addEventListener('click',loadBlocked);
+    var b=$('ipBanBtn'); if(b) b.addEventListener('click',function(){
+      var v=($('ipBanInput').value||'').trim();
+      if(!v){ _ipMsg('Enter an address first.',false); return; }
+      if(!confirm('Ban '+v+'?')) return;
+      _ipAct({ban:v},'Banned '+v+'.').then(function(){ $('ipBanInput').value=''; });
+    });
+  })();
+
+  // -- Settings backup & restore (master only) --------------------------------
+  (function(){
+    var ex=$('cfgExport');
+    if(ex) ex.addEventListener('click',function(){
+      // Le jeton voyage en query : c'est un t\u00e9l\u00e9chargement direct, pas un fetch.
+      window.location.href='/admin/config/export?token='+encodeURIComponent(tok());
+    });
+    var btn=$('cfgImportBtn'), file=$('cfgImportFile'), m=$('cfgIoMsg');
+    if(btn&&file){
+      btn.addEventListener('click',function(){ file.click(); });
+      file.addEventListener('change',function(){
+        var f=file.files&&file.files[0]; if(!f) return;
+        var rd=new FileReader();
+        rd.onload=function(){
+          var parsed=null;
+          try{ parsed=JSON.parse(rd.result); }catch(e){ m.textContent='That file is not valid JSON.'; m.className='msg err'; file.value=''; return; }
+          if(!confirm('Restore these settings? The current ones are replaced.')){ file.value=''; return; }
+          api('/admin/config/import',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({file:parsed,config:parsed.config||parsed,token:tok()})})
+            .then(function(r){return r.json();}).then(function(d){
+              if(d&&d.ok){
+                m.textContent='Restored '+d.imported.length+' setting'+(d.imported.length===1?'':'s')+(d.ignored.length?(' \u2014 '+d.ignored.length+' unknown key(s) ignored'):'')+'. Reload the page to see them.';
+                m.className='msg ok';
+              } else { m.textContent='Failed: '+((d&&d.error)||'error'); m.className='msg err'; }
+              file.value='';
+            }).catch(function(){ m.textContent='Network error.'; m.className='msg err'; file.value=''; });
+        };
+        rd.readAsText(f);
+      });
+    }
+  })();
+
   // -- Feature kill switches (master only) ------------------------------------
   // The catalogue comes from the server (FEATURE_SWITCHES in proxy.js), which
   // also whitelists it on save \u2014 the dashboard never invents a key.

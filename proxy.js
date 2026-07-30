@@ -982,7 +982,7 @@ setInterval(maybeRotateStats, 60 * 60 * 1000); // hourly boundary check
 // counter plus an all-time id set keep the "All time" figures exact too.
 const VISITS_FILE = process.env.VISITS_FILE || path.join(__dirname, 'visits.json');
 const VISIT_RETENTION_DAYS = 400; // keep per-day id sets this long (covers up to 1-year windows)
-let visitsStore = { days: {}, totalV: 0, totalRet: 0, allU: {}, allM: { pokerthnet: 0, lan: 0, offline: 0 } };
+let visitsStore = { days: {}, totalV: 0, totalRet: 0, allU: {}, allM: { pokerthnet: 0, lan: 0, offline: 0 }, env: {} };
 try {
   const _vs = JSON.parse(fs.readFileSync(VISITS_FILE, 'utf8'));
   if (_vs && typeof _vs === 'object') {
@@ -992,6 +992,7 @@ try {
     visitsStore.totalRet = (typeof _vs.totalRet === 'number') ? _vs.totalRet : 0;
     const _am = (_vs.allM && typeof _vs.allM === 'object') ? _vs.allM : {};
     visitsStore.allM   = { pokerthnet: _am.pokerthnet || 0, lan: _am.lan || 0, offline: _am.offline || 0 };
+    visitsStore.env    = (_vs.env && typeof _vs.env === 'object') ? _vs.env : {};
   }
 } catch (e) { /* first run — start empty */ }
 let _visitsSaveTimer = null;
@@ -1026,6 +1027,48 @@ function recordModeConnect(mode) {
   if (!visitsStore.allM) visitsStore.allM = {};
   visitsStore.allM[mode] = (visitsStore.allM[mode] || 0) + 1;
   saveVisitsSoon();
+}
+// ── Répartition des visiteurs (navigateur, OS, PWA, langue) ───────────────
+// Le compteur de trafic dit combien de visites ; il ne disait pas sur quoi. Ces
+// quatre répartitions servent à arbitrer : part réelle d'iOS Safari (où vivent
+// la moitié de nos pièges connus), part de l'installation PWA, et lesquelles
+// des 36 langues sont réellement utilisées.
+//
+// Ce sont des totaux cumulés, pas des séries : quatre petits dictionnaires de
+// compteurs, alimentés par le même ping anonyme que les visites. Rien de plus
+// n'est stocké — pas d'UA brut, pas d'IP.
+const UA_OS = [
+  [/iPhone/, 'iPhone'], [/iPad/, 'iPad'], [/Android/, 'Android'],
+  [/Windows NT/, 'Windows'], [/Mac OS X/, 'macOS'], [/CrOS/, 'ChromeOS'], [/Linux/, 'Linux'],
+];
+// L'ordre compte : Chrome et Edge annoncent tous deux « Safari », Edge annonce
+// « Chrome ». On teste donc du plus spécifique au plus générique.
+const UA_BROWSER = [
+  [/Edg\//, 'Edge'], [/OPR\/|Opera/, 'Opera'], [/SamsungBrowser/, 'Samsung'],
+  [/FxiOS|Firefox\//, 'Firefox'], [/CriOS/, 'Chrome'], [/Chrome\//, 'Chrome'], [/Safari\//, 'Safari'],
+];
+function _uaPick(table, ua) {
+  for (let i = 0; i < table.length; i++) if (table[i][0].test(ua)) return table[i][1];
+  return 'other';
+}
+function _envBump(key, val) {
+  if (!visitsStore.env) visitsStore.env = {};
+  const b = visitsStore.env[key] || (visitsStore.env[key] = {});
+  // Plafond de cardinalité : une valeur inconnue ne crée pas une clé de plus
+  // indéfiniment (l'en-tête Accept-Language est libre côté client).
+  if (b[val] === undefined && Object.keys(b).length >= 40) { b.other = (b.other || 0) + 1; return; }
+  b[val] = (b[val] || 0) + 1;
+}
+function recordVisitEnv(ua, acceptLang, standalone) {
+  try {
+    ua = String(ua || '');
+    _envBump('os', _uaPick(UA_OS, ua));
+    _envBump('br', _uaPick(UA_BROWSER, ua));
+    _envBump('pwa', standalone ? 'standalone' : 'browser');
+    // Premier tag de l'en-tête, tronqué à la langue de base (fr-CA → fr).
+    const lg = String(acceptLang || '').split(',')[0].trim().slice(0, 12).toLowerCase().split('-')[0];
+    _envBump('lang', /^[a-z]{2,3}$/.test(lg) ? lg : 'other');
+  } catch (e) {}
 }
 function recordVisit(rawId) {
   const day = visitDayKey();
@@ -1082,6 +1125,7 @@ function visitsSummary() {
     year: visitWindow(365),
     allTime: { v: visitsStore.totalV || 0, u: Object.keys(visitsStore.allU).length, nw: Object.keys(visitsStore.allU).length, rt: visitsStore.totalRet || 0, m: (function () { const am = visitsStore.allM || {}; return { pokerthnet: am.pokerthnet || 0, lan: am.lan || 0, offline: am.offline || 0 }; })() },
     series: series,
+    env: visitsStore.env || {},
     db: { enabled: _dbStatus.enabled, connected: _dbStatus.connected, error: _dbStatus.error, lastWrite: _dbStatus.lastWrite, source: _dbStatus.source }
   };
 }
@@ -1236,7 +1280,14 @@ initDb();
 function readJsonBody(req, cb) {
   let body = '';
   req.on('data', function (c) { body += c; if (body.length > 16384) req.destroy(); });
-  req.on('end', function () { let p; try { p = JSON.parse(body || '{}'); } catch (e) { return cb(null); } cb(p); });
+  req.on('end', function () {
+    let p; try { p = JSON.parse(body || '{}'); } catch (e) { return cb(null); }
+    // Le jeton voyage tantôt en requête, tantôt dans le corps. On garde le corps
+    // sous la main pour que le journal d'audit puisse identifier l'auteur sans
+    // instrumenter les cinquante points d'entrée un par un.
+    try { req._jsonBody = p; } catch (e2) {}
+    cb(p);
+  });
   req.on('error', function () { cb(null); });
 }
 // Absolute sanity ceiling for chip totals. This is NOT anti-cheat: the model
@@ -1695,6 +1746,93 @@ function hasScope(scope, query, bodyToken) {
   return false;
 }
 
+// ── IP bloquées (anti-force brute) et bannies (décision d'admin) ─────────
+// Le garde anti-force brute de l'admin travaillait en aveugle : on ne voyait ni
+// qui était bloqué, ni comment débloquer quelqu'un qui s'est trompé de jeton.
+// Le limiteur ne sait pas énumérer ses clés, on tient donc la liste des IP
+// ayant échoué au moins une fois et on l'interroge à l'affichage.
+//
+// Contrairement au reste du tableau de bord, les IP sont ici montrées EN CLAIR :
+// masquée, une IP ne se bannit pas et ne se débloque pas. C'est une section de
+// sécurité, pas une liste de joueurs.
+const _adminFailIps = new Map();          // ip → dernier échec (ms)
+function _noteAdminFail(ip) {
+  if (!ip) return;
+  _adminFailIps.set(ip, Date.now());
+  if (_adminFailIps.size > 2000) {        // purge des plus anciennes
+    const cut = Date.now() - 7 * 86400000;
+    _adminFailIps.forEach(function (t, k) { if (t < cut) _adminFailIps.delete(k); });
+  }
+}
+function bannedIps() {
+  const a = _adminConfig && _adminConfig.bannedIps;
+  return Array.isArray(a) ? a : [];
+}
+function isBanned(ip) {
+  const b = bannedIps();
+  return b.length > 0 && b.indexOf(String(ip || '')) >= 0;
+}
+// Jamais la boucle locale : se bannir soi-même couperait l'accès au tableau de
+// bord depuis la machine qui l'héberge, sans moyen de revenir en arrière.
+function _bannableIp(ip) {
+  ip = String(ip || '').trim();
+  if (!/^[0-9a-fA-F:.]{3,45}$/.test(ip)) return '';
+  if (/^(127\.|::1$|::ffff:127\.)/.test(ip)) return '';
+  return ip;
+}
+
+// ── Journal d'audit des actions d'administration ──────────────────────
+// Les clés déléguées permettent de confier une section à un tiers ; il ne
+// restait aucune trace de ce qu'il en faisait. On journalise donc toute requête
+// qui MODIFIE quelque chose (POST sous /admin/), avec l'auteur, l'IP masquée et
+// le résultat. Les lectures ne sont pas journalisées : le tableau de bord
+// interroge /admin/status toutes les quelques secondes, elles noieraient tout.
+//
+// Persisté sur disque : un journal d'audit qui disparaît au redémarrage ne vaut
+// pas grand-chose. Fichier non suivi, comme admin-config.json.
+const AUDIT_FILE = process.env.AUDIT_FILE || path.join(__dirname, 'admin-audit.json');
+const AUDIT_MAX = 500;
+let _audit = [];
+try { _audit = JSON.parse(fs.readFileSync(AUDIT_FILE, 'utf8')) || []; } catch (e) { _audit = []; }
+if (!Array.isArray(_audit)) _audit = [];
+let _auditTimer = null;
+function _saveAuditSoon() {
+  if (_auditTimer) return;
+  _auditTimer = setTimeout(function () {
+    _auditTimer = null;
+    try { fs.writeFileSync(AUDIT_FILE, JSON.stringify(_audit)); }
+    catch (e) { console.error('[audit] write failed: ' + e.message); }
+  }, 1500);
+}
+// Qui agit : la clé maître, une clé déléguée nommée, ou personne (403). On ne
+// journalise JAMAIS le jeton lui-même, seulement le nom qu'il porte.
+function _auditActor(query, bodyToken) {
+  if (adminAuthed(query, bodyToken)) return { name: 'master', master: true };
+  const tok = (query && query.token) || bodyToken || '';
+  if (tok) {
+    const row = _loadScopedTokens().find(function (r) { return r.token === tok; });
+    if (row) return { name: String(row.name || 'key'), master: false, scopes: row.scopes || [] };
+  }
+  return { name: 'unauthenticated', master: false };
+}
+function auditRecord(req, res, reqPathOnly, query) {
+  try {
+    const body = req._jsonBody || null;
+    const actor = _auditActor(query, body && body.token);
+    _audit.unshift({
+      at: Date.now(),
+      actor: actor.name,
+      master: !!actor.master,
+      action: String(reqPathOnly || '').replace(/^\/admin\//, ''),
+      status: res.statusCode || 0,
+      ok: (res.statusCode || 0) < 400,
+      ip: _maskIp(res._rlIp || clientIp(req)),
+    });
+    if (_audit.length > AUDIT_MAX) _audit.length = AUDIT_MAX;
+    _saveAuditSoon();
+  } catch (e) {}
+}
+
 // ── Rate limiting (optional dep: rate-limiter-flexible) ──
 // Two guards, both per client IP, both in-memory (reset on restart):
 //   • _rlAdminFail — brute-force guard on the admin panel: only FAILED auth
@@ -1731,7 +1869,7 @@ function adminJson(res, code, obj) {
   // res._rlNoPenalty marks idempotent read-only polls (dashboard auto-refresh:
   // /admin/status, /admin/logs) so a stale token in a still-open panel can't
   // rack up "failed attempts" every few seconds and lock its own IP out.
-  if (code === 403 && _rlAdminFail && res._rlIp && !res._rlNoPenalty) { _rlAdminFail.consume(res._rlIp).catch(function () {}); }
+  if (code === 403 && _rlAdminFail && res._rlIp && !res._rlNoPenalty) { _rlAdminFail.consume(res._rlIp).catch(function () {}); _noteAdminFail(res._rlIp); }
   res.writeHead(code, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' });
   res.end(JSON.stringify(obj));
 }
@@ -2131,7 +2269,7 @@ function handleAdmin(req, res, reqPathOnly, query) {
       return readJsonBody(req, function (d) {
         if (!adminAuthed(query, d && d.token)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
         if (d && d._reset) {
-          visitsStore = { days: {}, totalV: 0, totalRet: 0, allU: {}, allM: { pokerthnet: 0, lan: 0, offline: 0 } };
+          visitsStore = { days: {}, totalV: 0, totalRet: 0, allU: {}, allM: { pokerthnet: 0, lan: 0, offline: 0 }, env: {} };
           dbClearTraffic();
           try { fs.writeFileSync(VISITS_FILE, JSON.stringify(visitsStore)); } catch (e) { console.error('[visits] reset write failed:', e.message); }
           return adminJson(res, 200, { ok: true, reset: true });
@@ -2941,6 +3079,129 @@ function handleAdmin(req, res, reqPathOnly, query) {
       return adminJson(res, 200, { ok: true });
     });
   }
+  // ── Sauvegarde / restauration de la configuration (clé maître) ────────
+  // Le trafic s'exportait, la configuration non : des mois de réglages ne
+  // tenaient qu'à un fichier sur un VPS. Utile aussi pour transporter une
+  // instance vers pokerth.net, ou pour reproduire un serveur à l'identique.
+  //
+  // N'y figurent PAS : les clés déléguées (scoped-tokens.json) ni les
+  // identifiants MySQL (db-config.json). Ce sont des secrets, et une
+  // restauration ne doit pas rétablir des accès qu'on croyait révoqués.
+  if (reqPathOnly === '/admin/config/export') {
+    if (!adminAuthed(query)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
+    let v = '';
+    try { v = (JSON.parse(fs.readFileSync(path.join(__dirname, 'package.json'), 'utf8')).version) || ''; } catch (e) {}
+    const out = { schema: 'pokerth-admin-config/1', exportedAt: new Date().toISOString(), version: v, config: _adminConfig || {} };
+    res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store',
+                         'Content-Disposition': 'attachment; filename="pokerth-admin-config.json"' });
+    res.end(JSON.stringify(out, null, 2));
+    return;
+  }
+  if (reqPathOnly === '/admin/config/import' && req.method === 'POST') {
+    return readJsonBody(req, function (d) {
+      if (!adminAuthed(query, d && d.token)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
+      // On accepte aussi bien le fichier exporté entier que le seul objet de
+      // configuration — c'est le geste naturel d'un copier-coller.
+      const src = (d && d.config && typeof d.config === 'object') ? d.config
+                : (d && d.file && d.file.config && typeof d.file.config === 'object') ? d.file.config : null;
+      if (!src) return adminJson(res, 400, { ok: false, error: 'no config object found' });
+      // Liste blanche des clés de premier niveau : un fichier trafiqué ne peut
+      // pas glisser de réglage inconnu dans la configuration vivante.
+      const ALLOWED = ['resetPeriod', 'modes', 'welcome', 'defaultTheme', 'defaults', 'loginDefaults',
+                       'proxyCfg', 'tableDefaults', 'tableNames', 'serverName', 'serverTagline',
+                       'discordChatWebhookUrl', 'showLoginTitle', 'featureOff', 'bannedIps',
+                       'pkgDisabled', 'pkgFull', 'pkgFullscreen', 'pkgAlign', 'musicTracks',
+                       'musicEnabled', 'musicHidden', 'musicOrder'];
+      const next = {}, taken = [], skipped = [];
+      Object.keys(src).forEach(function (k) {
+        if (ALLOWED.indexOf(k) >= 0) { next[k] = src[k]; taken.push(k); } else skipped.push(k);
+      });
+      if (!taken.length) return adminJson(res, 400, { ok: false, error: 'nothing importable in that file' });
+      _adminConfig = next;
+      saveAdminConfig();
+      // Réglages miroirés dans des variables vivantes : à resynchroniser tout de
+      // suite, sinon l'import ne prendrait effet qu'au redémarrage.
+      if (typeof _adminConfig.resetPeriod === 'string' &&
+          ['off', 'daily', 'monthly', 'yearly'].indexOf(_adminConfig.resetPeriod) >= 0) {
+        STATS_RESET_PERIOD = _adminConfig.resetPeriod;
+      }
+      console.log('[admin] configuration imported (' + taken.length + ' setting(s), ' + skipped.length + ' ignored)');
+      return adminJson(res, 200, { ok: true, imported: taken, ignored: skipped });
+    });
+  }
+  // ── IP bloquées / bannies (clé maître uniquement) ──────────────────
+  if (reqPathOnly === '/admin/blocked') {
+    if (req.method === 'GET') {
+      if (!adminAuthed(query)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
+      if (!_rlAdminFail) return adminJson(res, 200, { ok: true, limiter: false, blocked: [], banned: bannedIps(), you: clientIp(req) });
+      const ips = Array.from(_adminFailIps.keys());
+      return Promise.all(ips.map(function (ip) {
+        return _rlAdminFail.get(ip).then(function (r) {
+          return { ip: ip, failed: r ? (r.consumedPoints || 0) : 0,
+                   until: (r && r.msBeforeNext > 0 && r.remainingPoints <= 0) ? (Date.now() + r.msBeforeNext) : 0,
+                   last: _adminFailIps.get(ip) || 0 };
+        }).catch(function () { return null; });
+      })).then(function (rows) {
+        rows = rows.filter(Boolean).sort(function (a, b) { return b.last - a.last; });
+        adminJson(res, 200, { ok: true, limiter: true, blocked: rows, banned: bannedIps(), you: clientIp(req) });
+      }).catch(function () { adminJson(res, 500, { ok: false, error: 'limiter read failed' }); });
+    }
+    if (req.method === 'POST') {
+      return readJsonBody(req, function (d) {
+        if (!adminAuthed(query, d && d.token)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
+        d = d || {};
+        if (d.unblock) {
+          const ip = String(d.unblock);
+          if (_rlAdminFail) { try { _rlAdminFail.delete(ip); } catch (e) {} }
+          _adminFailIps.delete(ip);
+          console.log('[admin] brute-force block lifted for ' + ip);
+          return adminJson(res, 200, { ok: true, unblocked: ip });
+        }
+        if (d.ban) {
+          const ip = _bannableIp(d.ban);
+          if (!ip) return adminJson(res, 400, { ok: false, error: 'invalid or protected address' });
+          if (ip === clientIp(req)) return adminJson(res, 400, { ok: false, error: 'that is your own address' });
+          const list = bannedIps().slice();
+          if (list.indexOf(ip) < 0) list.push(ip);
+          _adminConfig.bannedIps = list.slice(0, 500);
+          saveAdminConfig();
+          // Coupe aussi les ponts déjà ouverts depuis cette adresse : bannir
+          // quelqu'un qui joue déjà ne doit pas attendre sa prochaine connexion.
+          let cut = 0;
+          try {
+            _liveSessions.forEach(function (S) { if (S.ip === ip) { const w = S.ws; S.ws = null; _destroySession(S); if (w) { try { _allClients.delete(w); } catch (e) {} try { w.close(4009, 'Banned'); } catch (e) {} } cut++; } });
+            wss.clients.forEach(function (c) { if (c._notify && c._ip === ip) { try { c.close(4009, 'Banned'); } catch (e) {} cut++; } });
+          } catch (e) {}
+          console.log('[admin] banned ' + ip + (cut ? ' (' + cut + ' live connection(s) dropped)' : ''));
+          return adminJson(res, 200, { ok: true, banned: bannedIps(), dropped: cut });
+        }
+        if (d.unban) {
+          const ip = String(d.unban);
+          _adminConfig.bannedIps = bannedIps().filter(function (x) { return x !== ip; });
+          saveAdminConfig();
+          console.log('[admin] unbanned ' + ip);
+          return adminJson(res, 200, { ok: true, banned: bannedIps() });
+        }
+        return adminJson(res, 400, { ok: false });
+      });
+    }
+    res.writeHead(405); res.end('Method not allowed'); return;
+  }
+  // ── Journal d'audit (clé maître uniquement) ───────────────────────
+  if (reqPathOnly === '/admin/audit') {
+    if (req.method === 'GET') {
+      if (!adminAuthed(query)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
+      return adminJson(res, 200, { ok: true, entries: _audit.slice(0, 200), total: _audit.length });
+    }
+    if (req.method === 'POST') {
+      return readJsonBody(req, function (d) {
+        if (!adminAuthed(query, d && d.token)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
+        if (d && d.clear) { _audit = []; _saveAuditSoon(); return adminJson(res, 200, { ok: true, cleared: true }); }
+        return adminJson(res, 400, { ok: false });
+      });
+    }
+    res.writeHead(405); res.end('Method not allowed'); return;
+  }
   if (reqPathOnly === '/admin/whoami') {
     // Capability probe for the admin UI: report what the presented key may do.
     if (adminAuthed(query)) return adminJson(res, 200, { ok: true, master: true, scopes: ADMIN_SCOPES });
@@ -3696,6 +3957,7 @@ const httpServer = http.createServer((req, res) => {
       // Read-only dashboard polls (auto-refreshed on a timer) are not credential
       // submissions — never count their 403s toward the brute-force block.
       if (req.method === 'GET' && (reqPathOnly === '/admin/status' || reqPathOnly === '/admin/logs')) res._rlNoPenalty = true;
+      if (req.method === 'POST') res.on('finish', function () { auditRecord(req, res, reqPathOnly, q); });
       _rlAdminFail.get(ip).then(function (r) {
         if (r && r.remainingPoints <= 0 && r.msBeforeNext > 0) {
           res.writeHead(429, { 'Content-Type': 'application/json; charset=utf-8', 'Retry-After': String(Math.ceil(r.msBeforeNext / 1000)), 'Cache-Control': 'no-store' });
@@ -3887,7 +4149,12 @@ const httpServer = http.createServer((req, res) => {
     readJsonBody(req, function (d) {
       try {
         if (d && d.mode) recordModeConnect(d.mode);
-        else recordVisit(d && d.vid);
+        else {
+          recordVisit(d && d.vid);
+          recordVisitEnv(req.headers && req.headers['user-agent'],
+                         req.headers && req.headers['accept-language'],
+                         !!(d && d.pwa));
+        }
       } catch (e) { /* ignore a bad ping */ }
       res.writeHead(204, { 'Cache-Control': 'no-store' });
       res.end();
@@ -4053,6 +4320,9 @@ const httpServer = http.createServer((req, res) => {
 });
 
 const wss = new WebSocket.Server({ server: httpServer, verifyClient: function (info, cb) {
+  // Bannissement décidé par l'admin : refus à l'upgrade, avant tout pont. La
+  // page reste servie — c'est l'accès au JEU via ce proxy qui est coupé.
+  if (isBanned(clientIp(info.req))) return cb(false, 403, 'Forbidden');
   // Connection-storm guard: reject the upgrade with 429 BEFORE any bridge is
   // built. No limiter installed → always accept (unchanged behavior).
   if (!_rlWs) return cb(true);

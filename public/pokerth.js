@@ -9652,7 +9652,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.5-web.43'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.5-web.44'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
@@ -9723,7 +9723,12 @@ window.BUILD_VERSION='2.1.5-web.43'; try{ var b=document.getElementById('cf-buil
             : (Date.now().toString(36) + Math.random().toString(36).slice(2, 10));
         try { localStorage.setItem('pth_vid', vid); } catch (e) {}
       }
-      var body = JSON.stringify({ vid: vid });
+      // pwa : seul champ que le serveur ne peut pas déduire de l'en-tête (l'UA
+      // est identique en onglet et en app installée). OS, navigateur et langue
+      // sont dérivés côté serveur — on n'envoie rien de plus.
+      var pwa = false;
+      try { pwa = !!(window.matchMedia && matchMedia('(display-mode: standalone)').matches) || navigator.standalone === true; } catch (e) {}
+      var body = JSON.stringify({ vid: vid, pwa: pwa });
       if (navigator.sendBeacon) {
         navigator.sendBeacon('/__visit', new Blob([body], { type: 'application/json' }));
       } else {
