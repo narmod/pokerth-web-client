@@ -75,6 +75,11 @@ const TABLES = [
   { id: 'xanax', name: "Xanax 03 QML table style", key: 'tableXanax', fallback: "Xanax", swatch: '#394150', feltUrl: '/table/xanax/felt.png', preview: '/table/xanax/preview.png', mode: 'fs', skin: true, align: 'center' },
   { id: 'saloon', name: "Saloon QML table style", key: 'tableSaloon', fallback: "Saloon", swatch: '#c07f30', feltUrl: '/table/saloon/felt.png', preview: '/table/saloon/preview.png', mode: 'fs', skin: true, align: 'center' },
   { id: 'discworld', name: "Discworld QML table style", key: 'tableDiscworld', fallback: "Discworld", swatch: '#c98d49', feltUrl: '/table/discworld/felt.png', preview: '/table/discworld/preview.png', mode: 'fs', skin: true, align: 'center', zoom: 1.3 },
+  // 2.1.5 : trois packs de plus. previewPortrait = PreviewPortrait du XML amont,
+  // utilise quand l'ecran est en portrait (voir _tablePreview).
+  { id: 'pirates', name: "Pirates QML table style", key: 'tablePirates', fallback: "Pirates", swatch: '#cf9a34', feltUrl: '/table/pirates/felt.png', preview: '/table/pirates/preview.png', previewPortrait: '/table/pirates/preview_portrait.png', mode: 'fs', skin: true, align: 'center', zoom: 1.33 },
+  { id: 'mile_high_club', name: "Mile High Club QML table style", key: 'tableMileHighClub', fallback: "Mile High Club", swatch: '#e7181c', feltUrl: '/table/mile_high_club/felt.png', preview: '/table/mile_high_club/preview.png', previewPortrait: '/table/mile_high_club/preview_portrait.png', mode: 'fs', skin: true, align: 'center bottom' },
+  { id: 'terminus_hotel_2', name: "Terminus Hotel 2 QML table style", key: 'tableTerminusHotel2', fallback: "Terminus Hotel 2", swatch: '#6e53a2', feltUrl: '/table/terminus_hotel_2/felt.png', preview: '/table/terminus_hotel_2/preview.png', previewPortrait: '/table/terminus_hotel_2/preview_portrait.png', mode: 'fs', skin: true, align: 'center', zoom: 1.3 },
 ];
 const DECKS = [
   { id: 'default', name: 'PokerTH default QML card deck', by: 'PokerTH Development Team', swatch: '#1d6b30', ext: 'svg' },
@@ -836,7 +841,10 @@ var _SKIN_TINT = {
   wanted:{a:'#c08a3e',bg:'#2d2c2d',su:'#4c4b4d',bo:'#86755e',tx:'#eff1f5',se:'#cdd3e0',mu:'#86888f'},
   xanax:{a:'#4a63c8',bg:'#22283b',su:'#3b4661',bo:'#51639c',tx:'#eff1f5',se:'#cdd3e0',mu:'#6e80aa'},
   saloon:{a:'#c07f30',bg:'#17110b',su:'#251c13',bo:'#7b5b2e',tx:'#f3e6cd',se:'#d6bd93',mu:'#9b8156'},
-  discworld:{a:'#c98d49',bg:'#150e08',su:'#241811',bo:'#7a5526',tx:'#f2e2c6',se:'#d9bd90',mu:'#9c7c50'}
+  discworld:{a:'#c98d49',bg:'#150e08',su:'#241811',bo:'#7a5526',tx:'#f2e2c6',se:'#d9bd90',mu:'#9c7c50'},
+  pirates:{a:'#cf9a34',bg:'#141009',su:'#221a11',bo:'#7d5c26',tx:'#f3e8d2',se:'#d7c096',mu:'#998158'},
+  mile_high_club:{a:'#e7181c',bg:'#1c2e37',su:'#344e5c',bo:'#397c8d',tx:'#d6fcff',se:'#a8e1e6',mu:'#60a4a9'},
+  terminus_hotel_2:{a:'#1a1a1a',bg:'#28253c',su:'#444163',bo:'#6e53a2',tx:'#ead6ff',se:'#c7a8e6',mu:'#8460a9'}
 };
 function _injectTintObj(m){
   var el=document.documentElement;
@@ -1188,9 +1196,22 @@ function _row() {
 function _tableById(id) { for (var i = 0; i < TABLES.length; i++) if (TABLES[i].id === id) return TABLES[i]; return TABLES[0]; }
 function _presetById(id) { var all = PRESETS.concat(_pkgPresets); for (var i = 0; i < all.length; i++) if (all[i].id === id) return all[i]; return PRESETS[0]; }
 
+// Apercu d'un tapis : le client QML livre deux images par pack et choisit selon
+// l'orientation de l'ecran (Preview / PreviewPortrait). Les packs anterieurs a
+// 2.1.5 n'ont que le paysage — d'ou le repli, qui evite un catalogue a deux
+// vitesses. Vaut aussi pour les tapis importes : leur fiche porte deja le champ.
+function _tablePreview(t) {
+  if (!t) return null;
+  try {
+    if (t.previewPortrait && window.matchMedia
+        && window.matchMedia('(orientation: portrait)').matches) return t.previewPortrait;
+  } catch (e) {}
+  return t.preview || null;
+}
 function _feltStyle(t) {
   if (t && t.id === 'photo') return 'background:url(/table/felt-green.jpg) center/cover';
-  if (t && t.preview) return 'background:url(' + t.preview + ') center/cover';
+  var _pv = _tablePreview(t);
+  if (_pv) return 'background:url(' + _pv + ') center/cover';
   if (t && t.feltUrl) return 'background:url(' + t.feltUrl + ') center/cover';
   if (t && t.felt) return 'background:url(/themes/' + t.id + '/' + t.felt + ') center/cover';
   var sw = (t && t.swatch) || '#1e6b1e';
@@ -1387,7 +1408,8 @@ var TABLE_AUTHORS = {
   danuxi:'Daniel Hammer', mute:'mute design', mute2:'mute design', teal:'Pinboc', lemming:'lemming',
   matrix:'PokerTH Development Team', star_trek:'PokerTH Development Team', tripsixes:'TripSixes',
   wanted:'Etienne Graphic Designer', xanax:'Sebastien Kerguen',
-  saloon:'PokerTH Development Team', discworld:'PokerTH Development Team'
+  saloon:'PokerTH Development Team', discworld:'PokerTH Development Team',
+  pirates:'PokerTH Development Team', mile_high_club:'BaShFX', terminus_hotel_2:'BaShFX'
 };
 var _TABS = [
   { id:'table',    kind:'table',    titleKey:'sectionTable',    fallback:'Table' },

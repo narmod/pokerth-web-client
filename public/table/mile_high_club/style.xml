@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Mile High Club QML table style. Fullscreen wallpaper (data-table-fs). Extracted from the official
+     PokerTH QML client (data/gfx/qml/table/mile_high_club/table.png), AGPL-3.0.
+     Source: github.com/pokerth/pokerth. -->
+<PokerTH_TableStyle version="1.0">
+  <StyleDescription value="Mile High Club QML table style"/>
+  <Creator value="BaShFX"/>
+  <License value="AGPL-3.0"/>
+</PokerTH_TableStyle>
