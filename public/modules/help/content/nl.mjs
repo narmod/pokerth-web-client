@@ -160,7 +160,7 @@ export const help = {
         { id: 'reactions', t: 'Emoji-reacties',
           b: ['De reactieknop opent een kiezer met 30 geanimeerde reacties (\uD83C\uDF89, \uD83D\uDE02, \uD83D\uDE31, \uD83D\uDD25\u2026) die met een effect boven je stoel worden afgespeeld, zichtbaar voor de hele tafel — ook voor spelers op de desktopclient. Reacties zijn volledig uit te schakelen in de Geavanceerde opties.'] },
         { id: 'translate', t: 'Iedereen begrijpen',
-          b: ['Met chatvertaling ingeschakeld krijgt elk bericht een vertaalknop die het in jouw taal toont, via de vertaler van de browser. Gangbare tafelafkortingen (gg, nh, utg\u2026) worden bij aanwijzen in een tooltip uitgelegd — beide opties zitten in Geavanceerde opties \u2192 Chat.'],
+          b: ['Met chatvertaling aan verschijnt een vertaalknop op de regel onder je aanwijzer \u2014 of op de regel die je aantikt, op een aanraakscherm \u2014 en toont dat bericht in jouw taal met de vertaler van de browser. Hij kan permanent op alle regels staan via Geavanceerde opties \u2192 Chat, waar ook de tooltip woont die de gangbare tafelafkortingen (gg, nh, utg\u2026) uitlegt.'],
           note: 'De vertaling gebruikt de Google Translate-dienst en werkt in elke browser — er is alleen een internetverbinding nodig. Een bericht wordt pas naar de vertaaldienst gestuurd als je op de vertaalknop ervan tikt, nooit automatisch.' },
         { id: 'social', t: 'Spelers: profiel, uitnodigen, negeren',
           b: ['Tik op een speler — aan tafel of in de lobbylijst — om zijn kaart te openen: profiel en statistieken, hem uitnodigen voor je spel, of hem negeren (zijn chatberichten worden verborgen; negeren is op elk moment omkeerbaar). Een bevestiging vóór uitnodigen/negeren kan in de opties worden ingeschakeld.'] }
@@ -255,16 +255,18 @@ export const help = {
             ['F6 / F7 / F8', 'Handmatig \u00b7 Auto Check/Fold \u00b7 Auto Check/Call'],
             ['Alt+M / Alt+K / Alt+F', 'Handmatig \u00b7 Auto Check/Call \u00b7 Auto Check/Fold'],
             ['Alt+C / Alt+L / Alt+I', 'Chat \u00b7 Logboek \u00b7 Kansenpaneel'],
+            ['Alt+S', 'Instellingen \u2014 overal in de app, niet alleen tijdens een partij'],
             ['F11', 'Volledig scherm']],
           note: 'Sneltoetsen vereisen een fysiek toetsenbord. Op een Mac sturen de F-toetsen standaard de media aan: houd Fn ingedrukt (of zet \u201cGebruik F1-, F2-toetsen enz. als standaardfunctietoetsen\u201d aan in de macOS-instellingen). Op iPhone is volledig scherm door iOS beperkt — de app als PWA installeren geeft dezelfde schermvullende ervaring.' },
         { id: 'webkeys', t: 'Webletter-toetsen',
-          b: ['Webuitbreiding: ook toetsen van één letter activeren de acties en zijn opnieuw toe te wijzen in Geavanceerde opties \u2192 Sneltoetsen:'],
+          b: ['Webuitbreiding: losse lettertoetsen en Alt+T activeren ook acties, en ze zijn allemaal opnieuw toe te wijzen in Geavanceerde opties \u2192 Sneltoetsen:'],
           keys: [
             ['F', 'Fold'],
             ['C', 'Check / Call'],
             ['R', 'Raise'],
             ['A', 'All-In'],
             ['1 / 2 / 3', 'Bet 1/3 \u00b7 1/2 \u00b7 Pot'],
+            ['Alt+T', 'Statistiekenpaneel'],
             ['Esc', 'Het bovenste venster sluiten (ook de Android-Terug-knop)']],
           note: 'Op Android sluit de systeem-Terug-knop/-beweging vensters zoals Esc in plaats van het spel te verlaten (instelbaar in de opties). iOS heeft geen vergelijkbare systeemknop — gebruik de \u2715 van elk venster.' }
       ]

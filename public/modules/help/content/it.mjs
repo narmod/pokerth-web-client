@@ -160,7 +160,7 @@ export const help = {
         { id: 'reactions', t: 'Reazioni emoji',
           b: ['Il pulsante delle reazioni apre un selettore di 30 reazioni animate (\uD83C\uDF89, \uD83D\uDE02, \uD83D\uDE31, \uD83D\uDD25\u2026) che si riproducono con un effetto sopra il tuo posto, visibili a tutto il tavolo — compresi i giocatori sul client desktop. Le reazioni si disattivano del tutto nelle Opzioni avanzate.'] },
         { id: 'translate', t: 'Capire tutti',
-          b: ['Con la traduzione della chat attiva, ogni messaggio riceve un pulsante di traduzione che lo mostra nella tua lingua, tramite il traduttore del browser. Le abbreviazioni comuni del tavolo (gg, nh, utg\u2026) vengono spiegate in un tooltip al passaggio — entrambe le opzioni vivono in Opzioni avanzate \u2192 Chat.'],
+          b: ['Con la traduzione della chat attiva, un pulsante di traduzione compare sulla riga sotto il puntatore \u2014 o su quella che tocchi, su schermo tattile \u2014 e mostra il messaggio nella tua lingua con il traduttore del browser. Pu\u00f2 restare sempre visibile su tutte le righe da Opzioni avanzate \u2192 Chat, dove si trova anche il suggerimento che spiega le abbreviazioni da tavolo (gg, nh, utg\u2026).'],
           note: 'La traduzione usa il servizio Google Translate e funziona in ogni browser — serve solo una connessione internet. Un messaggio viene inviato al servizio di traduzione solo quando tocchi il suo pulsante di traduzione, mai automaticamente.' },
         { id: 'social', t: 'Giocatori: profilo, invitare, ignorare',
           b: ['Tocca un giocatore qualsiasi — al tavolo o nella lista della lobby — per aprire la sua scheda: profilo e statistiche, invitarlo alla tua partita, o ignorarlo (i suoi messaggi in chat vengono nascosti; ignorare è reversibile in qualsiasi momento). Una conferma prima di invitare/ignorare si può attivare nelle opzioni.'] }
@@ -255,16 +255,18 @@ export const help = {
             ['F6 / F7 / F8', 'Manuale \u00b7 Auto Check/Fold \u00b7 Auto Check/Call'],
             ['Alt+M / Alt+K / Alt+F', 'Manuale \u00b7 Auto Check/Call \u00b7 Auto Check/Fold'],
             ['Alt+C / Alt+L / Alt+I', 'Chat \u00b7 Cronologia \u00b7 Pannello delle probabilità'],
+            ['Alt+S', 'Impostazioni \u2014 ovunque nell\u2019app, non solo in partita'],
             ['F11', 'Schermo intero']],
           note: 'Le scorciatoie richiedono una tastiera fisica. Su Mac i tasti F controllano i media di default: tieni premuto Fn (o attiva «Utilizza i tasti F1, F2 ecc. come tasti funzione standard» nelle impostazioni di macOS). Su iPhone lo schermo intero è limitato da iOS — installare l\u2019app come PWA offre la stessa esperienza a schermo intero.' },
         { id: 'webkeys', t: 'Tasti lettera del web',
-          b: ['Estensione web: anche tasti di una sola lettera attivano le azioni e si riassegnano in Opzioni avanzate \u2192 Scorciatoie da tastiera:'],
+          b: ['Estensione web: i tasti a lettera singola e Alt+T attivano anch\u2019essi le azioni, e tutti si possono riassegnare in Opzioni avanzate \u2192 Scorciatoie da tastiera:'],
           keys: [
             ['F', 'Fold'],
             ['C', 'Check / Call'],
             ['R', 'Raise'],
             ['A', 'All-In'],
             ['1 / 2 / 3', 'Bet 1/3 \u00b7 1/2 \u00b7 Pot'],
+            ['Alt+T', 'Pannello statistiche'],
             ['Esc', 'Chiudere la finestra in primo piano (anche il tasto Indietro di Android)']],
           note: 'Su Android, il tasto/gesto Indietro di sistema chiude le finestre come Esc invece di lasciare la partita (configurabile nelle opzioni). iOS non ha un tasto di sistema equivalente — usa la \u2715 di ogni finestra.' }
       ]
