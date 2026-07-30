@@ -105,7 +105,34 @@ Registered pokerth.net accounts log in through the proxy with SCRAM; the passwor
 protected end-to-end (WSS on the browser leg, SCRAM challenge–response beyond), and card
 decryption for authenticated players works as with the official clients.
 
-## 6. Verify
+## 6. Exempt the proxy from the login rate limit (game server 2.1.5+)
+
+Every web player reaches the game server from the **proxy's** address, so from the server's
+point of view a single address opens all of the logins. PokerTH 2.1.5 turned the old
+"one init per lock interval" check into a token bucket — a burst of **5** inits per address,
+refilled one token per login-lock interval — and added an explicit opt-out for exactly this
+situation. In the game server's configuration:
+
+```
+ServerBruteForceProtectionExempt = 127.0.0.1
+```
+
+- Comma-separated **plain addresses**; no CIDR ranges, no wildcards. Surrounding whitespace
+  is trimmed.
+- IPv4-mapped IPv6 is handled both ways: an entry `a.b.c.d` also matches the
+  `::ffff:a.b.c.d` form a dual-stack listener reports, and vice versa.
+- Only relevant while `ServerBruteForceProtection` is enabled — with it off, nothing is
+  rate limited in the first place.
+- The value is read from the in-memory config, so **restart the game server** after changing it.
+- Set this **only for addresses you control**. On this install that is the loopback address
+  the proxy dials from — never a public address, and never a shared NAT gateway.
+
+Without the exemption, a handful of players reconnecting at once (an update banner, a mobile
+network blip, a scheduled restart) exhausts the burst and the rest are refused with
+`ERR_NET_INIT_BLOCKED` until the bucket refills. The server logs one line per address and
+lockout, not per attempt.
+
+## 7. Verify
 
 - Open the site → only the intended modes appear on the connect screen.
 - Connect as **Guest** → lobby lists the real pokerth.net tables; the status line should
@@ -115,7 +142,7 @@ decryption for authenticated players works as with the official clients.
 - Registered login: sign in with a pokerth.net account, play a hand, check your own
   cards decrypt correctly.
 
-## 7. Updating later
+## 8. Updating later
 
 ```bash
 pokerth-web update      # or: curl -sSL https://play.pokerth.net/install.sh | bash -s -- update
@@ -130,8 +157,9 @@ players at the tables.
 
 - **No open relay**: the proxy only dials allowlisted host:port pairs — on this install,
   effectively the loopback game server.
-- **The game server is unchanged**: Qt/QML clients keep connecting to the public TCP port
-  as always; the proxy is just another local client as far as it is concerned.
+- **The game server needs no code changes**: Qt/QML clients keep connecting to the public
+  TCP port as always; the proxy is just another local client as far as it is concerned. The
+  only server-side setting this install asks for is the rate-limit exemption in section 6.
 - **Longer term**: if a native WebSocket listener is ever added to the PokerTH server
   itself, the proxy could be dropped — until then, this co-hosted bridge is the
   zero-upstream-work path, and the session-grace behaviour is a feature the direct
