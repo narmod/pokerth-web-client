@@ -214,7 +214,7 @@ function applyAdvOpts() {
     try { if (typeof window._applyBrowserZoomOpt === 'function') window._applyBrowserZoomOpt(); } catch (e) {}   // zoom navigateur (option browser_zoom)
     b.classList.toggle('adv-no-lobbychat', !_advGet('lobby_chat', true)); // chat du lobby (parite QML UseLobbyChat)
     b.classList.toggle('adv-no-chatts', !_advGet('chat_ts', true)); // heure [HH:MM:SS] devant les messages de chat (demande forum, extension web)
-    b.classList.toggle('adv-no-winopen', !_advGet('win_open', true)); // bouton dore quand sa fenetre est ouverte (extension web)
+    b.classList.remove('adv-no-winopen'); // bouton dore tant que sa fenetre est ouverte : toujours actif — option retiree (narmod 2026-07-30), le CSS reste keye sur la classe
     try { if (typeof window._syncWinBtns === 'function') window._syncWinBtns(); } catch (e) {}
     b.classList.toggle('adv-no-handsbtn', !_advGet('hands_btn', true)); // icone combinaisons de poker sur le tapis (extension web)
     b.classList.toggle('adv-no-helpbtn', !_advGet('help_btn', true)); // entree « Aide » des menus des headers (extension web)
@@ -393,7 +393,6 @@ function openAdvancedOptions() {
   sync('adv-assist', 'assist', true);
   sync('adv-showodds', 'show_odds', true);
   sync('adv-handsbtn', 'hands_btn', true);
-  sync('adv-winopen', 'win_open', true);   // bouton dore tant que sa fenetre est ouverte
   sync('adv-helpbtn', 'help_btn', true);   // entree « Aide » dans les menus des headers
   sync('adv-voice', 'voice', false);
   sync('adv-haptic', 'haptic', true);
@@ -1139,7 +1138,7 @@ var _CFG_WEB_SYNC_KEYS = [
   'pth_log_on', 'pth_create_dialog', 'pth_status_bar', 'pth_blinds_badge',
   'pth_winner_popup', 'pth_remove_gone', 'pth_tooltips', 'pth_big_own_cards',
   'pth_chat_translate', 'pth_chat_abbrev', 'pth_pin_actionbar', 'pth_confirm_social',
-  'pth_win_open', 'pth_help_btn',
+  'pth_help_btn',
   // Valeurs (thème web, sièges, clavier, langue, divers)
   'pth_theme', 'pth_buttons', 'pth_pucks', 'pth_seat', 'pth_seat_layout',
   'pth_seat_custom', 'pth_keys', 'pth_lang', 'pth_offline_skill',
@@ -9574,7 +9573,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.5-web.33'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.5-web.34'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

@@ -7656,7 +7656,9 @@ body.has-keyboard .act-key { display: inline-block; }
                            les systèmes où l'icône neutre se voit mal)
      · .g-felt-btn/.zoom-btn.win-open  boutons ronds du feutre → aplat or,
                            même rendu que .active (💬 📋 😊 harmonisés)
-   Désactivable : Options avancées → body.adv-no-winopen. */
+   Toujours actif : l'option des Options avancées a été retirée le 30/07/2026
+   (comportement permanent). La règle body.adv-no-winopen est conservée, plus
+   aucune classe ne la déclenche. */
 .win-open { color: var(--sel, var(--gold, #E3C800)) !important; }
 .g-felt-btn.win-open,
 .zoom-btn.win-open {
