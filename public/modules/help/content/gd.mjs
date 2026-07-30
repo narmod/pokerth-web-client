@@ -160,7 +160,7 @@ export const help = {
         { id: 'reactions', t: 'Freagairtean emoji',
           b: ['Fosglaidh putan nam freagairtean taghadair le 30 freagairt bheòthaichte (\uD83C\uDF89, \uD83D\uDE02, \uD83D\uDE31, \uD83D\uDD25\u2026) a chluicheas le buaidh os cionn an t-suidheachain agad, ri fhaicinn don bhòrd gu lèir — a\u2019 gabhail a-steach cluicheadairean a\u2019 chliant deasg. Gabhaidh na freagairtean a chur dheth gu tur sna Roghainnean adhartach.'] },
         { id: 'translate', t: 'Tuig a h-uile duine',
-          b: ['Le eadar-theangachadh na cabadaich air, gheibh gach teachdaireachd putan eadar-theangachaidh a sheallas i nad chànan fhèin, tro eadar-theangair a\u2019 bhrabhsair. Thèid giorrachaidhean cumanta a\u2019 bhùird (gg, nh, utg\u2026) a mhìneachadh ann an gliocas nuair a chuireas tu an luchag os an cionn — tha an dà roghainn ann an Roghainnean adhartach \u2192 Cabadaich.'],
+          b: ['Le eadar-theangachadh na cabadaich air, nochdaidh putan eadar-theangachaidh air an loidhne fon tomhaire — no air an loidhne air an gnog thu, air sgrìn-suathaidh — agus seallaidh e an teachdaireachd sin nad chànan fhèin le eadar-theangair a’ bhrabhsair. Faodar a shealltainn an-còmhnaidh air a h-uile loidhne ann an Roghainnean adhartach → Cabadaich, far a bheil am moladh a mhìnicheas giorrachaidhean cumanta a’ bhòrd (gg, nh, utg…) a’ fuireach cuideachd.'],
           note: 'Cleachdaidh an t-eadar-theangachadh seirbheis Google Translate agus obraichidh e ann am brabhsair sam bith — chan fheumar ach ceangal ris an eadar-lìon. Cha tèid teachdaireachd a chur chun t-seirbheis eadar-theangachaidh ach nuair a shuathas tu am putan eadar-theangachaidh aice, cha tèid a-riamh gu fèin-obrachail.' },
         { id: 'social', t: 'Cluicheadairean: pròifil, cuireadh, leigeil seachad',
           b: ['Suath cluicheadair sam bith — aig a\u2019 bhòrd no air liosta an lobaidh — gus a chairt fhosgladh: pròifil is staitistigean, cuireadh dhan gheama agad, no a leigeil seachad (thèid na teachdaireachdan cabadaich aige fhalach; gabhaidh an leigeil seachad a thoirt air ais uair sam bith). Gabhaidh dearbhadh ro chuireadh/leigeil seachad a chur air sna roghainnean.'] }
@@ -255,16 +255,18 @@ export const help = {
             ['F6 / F7 / F8', 'Làimhe \u00b7 Auto Check/Fold \u00b7 Auto Check/Call'],
             ['Alt+M / Alt+K / Alt+F', 'Làimhe \u00b7 Auto Check/Call \u00b7 Auto Check/Fold'],
             ['Alt+C / Alt+L / Alt+I', 'Cabadaich \u00b7 Loga \u00b7 Panail nan coltasan'],
+            ['Alt+S', 'Roghainnean — àite sam bith san aplacaid, chan ann a-mhàin ann an geama'],
             ['F11', 'Làn-sgrìn']],
           note: 'Feumaidh na h-ath-ghoiridean meur-chlàr fiosaigeach. Air Mac, stiùiridh na h-iuchraichean F na meadhanan a ghnàth: cùm Fn sìos (no cuir air \u201cCleachd na h-iuchraichean F1, F2 msaa mar iuchraichean gnìomh àbhaisteach\u201d ann an roghainnean macOS). Air iPhone, tha iOS a\u2019 cuingealachadh na làn-sgrìn — bheir stàladh na h-aplacaid mar PWA an aon eòlas làn-sgrìn dhut.' },
         { id: 'webkeys', t: 'Iuchraichean litreach lìn',
-          b: ['Leudachan lìn: brosnaichidh iuchraichean aon-litreach na gnìomhan cuideachd agus gabhaidh an ath-shònrachadh ann an Roghainnean adhartach \u2192 Ath-ghoiridean meur-chlàir:'],
+          b: ['Leudachadh lìn: bidh iuchraichean aon-litreach agus Alt+T cuideachd a’ cur gnìomhan air bhog, agus gabhaidh iad uile ath-shuidheachadh ann an Roghainnean adhartach → Ath-ghoiridean:'],
           keys: [
             ['F', 'Fold'],
             ['C', 'Check / Call'],
             ['R', 'Raise'],
             ['A', 'All-In'],
             ['1 / 2 / 3', 'Bet 1/3 \u00b7 1/2 \u00b7 Pot'],
+            ['Alt+T', 'Panail nan staitistig'],
             ['Esc', 'Dùin an uinneag aghaidh (agus putan Air ais Android)']],
           note: 'Air Android, dùinidh putan/gluasad Air ais an t-siostaim uinneagan mar Esc, seach a bhith a\u2019 fàgail a\u2019 gheama (gabhaidh a rèiteachadh sna roghainnean). Chan eil putan siostaim co-ionann aig iOS — cleachd an \u2715 aig gach uinneig.' }
       ]

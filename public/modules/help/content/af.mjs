@@ -160,7 +160,7 @@ export const help = {
         { id: 'reactions', t: 'Emoji-reaksies',
           b: ['Die reaksieknoppie maak \u2019n kieser met 30 geanimeerde reaksies oop (\uD83C\uDF89, \uD83D\uDE02, \uD83D\uDE31, \uD83D\uDD25\u2026) wat met \u2019n effek bo jou sitplek speel, sigbaar vir die hele tafel — ook vir spelers op die werkskermkliënt. Reaksies kan heeltemal in Gevorderde opsies afgeskakel word.'] },
         { id: 'translate', t: 'Verstaan almal',
-          b: ['Met kletsvertaling aan kry elke boodskap \u2019n vertaalknoppie wat dit in jou taal wys, deur die blaaier se vertaler. Algemene tafelafkortings (gg, nh, utg\u2026) word in \u2019n wenk verduidelik wanneer jy daaroor beweeg — albei opsies is in Gevorderde opsies \u2192 Klets.'],
+          b: ['Met kletsvertaling aan verskyn ’n vertaalknoppie op die reël onder die wyser — of op die reël wat jy tik, op ’n raakskerm — en wys daardie boodskap in jou taal met die blaaier se vertaler. Dit kan permanent op alle reëls gewys word in Gevorderde opsies → Klets, waar die wenk wat die gewone tafelafkortings (gg, nh, utg…) verduidelik ook woon.'],
           note: 'Die vertaling gebruik die Google Translate-diens en werk in enige blaaier — al wat nodig is, is \u2019n internetverbinding. \u2019n Boodskap word slegs na die vertaaldiens gestuur wanneer jy sy vertaalknoppie tik, nooit outomaties nie.' },
         { id: 'social', t: 'Spelers: profiel, nooi, ignoreer',
           b: ['Tik enige speler — by die tafel of in die voorportaallys — om sy kaartjie oop te maak: profiel en statistieke, nooi hom na jou spel, of ignoreer hom (sy kletsboodskappe word versteek; ignoreer kan altyd ongedaan gemaak word). \u2019n Bevestiging voor nooi/ignoreer kan in die opsies aangeskakel word.'] }
@@ -255,16 +255,18 @@ export const help = {
             ['F6 / F7 / F8', 'Handmatig \u00b7 Auto Check/Fold \u00b7 Auto Check/Call'],
             ['Alt+M / Alt+K / Alt+F', 'Handmatig \u00b7 Auto Check/Call \u00b7 Auto Check/Fold'],
             ['Alt+C / Alt+L / Alt+I', 'Klets \u00b7 Log \u00b7 Kansepaneel'],
+            ['Alt+S', 'Instellings — oral in die toepassing, nie net tydens ’n spel nie'],
             ['F11', 'Volskerm']],
           note: 'Die kortpaaie vereis \u2019n fisiese sleutelbord. Op Mac beheer die F-sleutels by verstek die media: hou Fn in (of skakel \u201cGebruik F1-, F2-sleutels ens. as standaardfunksiesleutels\u201d in die macOS-instellings aan). Op iPhone word volskerm deur iOS beperk — om die program as \u2019n PWA te installeer, gee dieselfde volskermervaring.' },
         { id: 'webkeys', t: 'Webletterselsleutels',
-          b: ['Webuitbreiding: enkelletterselsleutels sneller ook die aksies en kan in Gevorderde opsies \u2192 Sleutelbordkortpaaie hertoegewys word:'],
+          b: ['Webuitbreiding: enkelletter-sleutels en Alt+T voer ook aksies uit, en almal kan in Gevorderde opsies → Sleutelbordkortpaaie hertoegeken word:'],
           keys: [
             ['F', 'Fold'],
             ['C', 'Check / Call'],
             ['R', 'Raise'],
             ['A', 'All-In'],
             ['1 / 2 / 3', 'Bet 1/3 \u00b7 1/2 \u00b7 Pot'],
+            ['Alt+T', 'Statistiekpaneel'],
             ['Esc', 'Maak die voorste venster toe (ook Android se Terug-knoppie)']],
           note: 'Op Android maak die stelsel se Terug-knoppie/gebaar vensters toe soos Esc, eerder as om die spel te verlaat (in die opsies instelbaar). iOS het geen ekwivalente stelselknoppie nie — gebruik elke venster se \u2715.' }
       ]
