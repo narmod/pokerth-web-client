@@ -197,7 +197,7 @@ const MSG = (() => {
     // ex. 2.1.4-web.0) : bumper la version de build suffit à suivre les releases
     // PokerTH (politique serveur : release courante ou précédente uniquement,
     // sinon ERR_NET_VERSION_NOT_SUPPORTED). Repli : triple en dur ci-dessous.
-    let UPSTREAM_MAJOR = 2, UPSTREAM_MINOR = 1, UPSTREAM_PATCH = 4;
+    let UPSTREAM_MAJOR = 2, UPSTREAM_MINOR = 1, UPSTREAM_PATCH = 5;
     try {
       const _bv = /^(\d+)\.(\d+)\.(\d+)-web\.\d+$/.exec(window.BUILD_VERSION || '');
       if (_bv) { UPSTREAM_MAJOR = +_bv[1]; UPSTREAM_MINOR = +_bv[2]; UPSTREAM_PATCH = +_bv[3]; }
