@@ -461,12 +461,31 @@ function _head(i, skin) {
 }
 
 // ── Full portrait ────────────────────────────────────────────────────────
-function avSvg(recipe, size) {
+// Per-axis zoom regions (square [x, y, size] in the 200x200 space) used by
+// the option chips: each vignette shows ONLY the feature being chosen
+// (mouths for the mouth row, hats for the hat row...) instead of the whole
+// portrait where a 36px difference is invisible (narmod 2026-07-31).
+const AV_CROP = {
+  face:     [52, 40, 96],
+  outfit:   [52, 104, 96],
+  marks:    [56, 48, 88],
+  hair:     [48, 16, 104],
+  beard:    [56, 72, 88],
+  eyes:     [66, 54, 68],
+  mouth:    [70, 76, 60],
+  glasses:  [58, 48, 84],
+  shoulder: [112, 112, 82],
+  ears:     [48, 74, 56],
+  hat:      [48, 12, 104]
+};
+
+function avSvg(recipe, size, crop) {
   var r = avNormalize(recipe);
   var felt = AV_FELT[r.bg], skin = AV_SKIN[r.skin], hc = AV_HAIRC[r.hairc];
   var sz = size || 200;
+  var vb = crop ? crop[0] + ' ' + crop[1] + ' ' + crop[2] + ' ' + crop[2] : '0 0 200 200';
   var cid = 'avc' + Math.floor(Math.random() * 1e9);
-  var s = '<svg viewBox="0 0 200 200" width="' + sz + '" height="' + sz + '" xmlns="http://www.w3.org/2000/svg">'
+  var s = '<svg viewBox="' + vb + '" width="' + sz + '" height="' + sz + '" xmlns="http://www.w3.org/2000/svg">'
     + '<defs><clipPath id="' + cid + '"><rect x="6" y="6" width="188" height="188"/></clipPath></defs>'
     + '<rect width="200" height="200" fill="#8f6a1d"/>'
     + '<rect x="2.5" y="2.5" width="195" height="195" fill="#c9992e"/>'
@@ -516,6 +535,6 @@ function avSwatch(axId, i) {
   return '#888';
 }
 
-export { AV_AXES, AV_DEFAULT, avSvg, avSwatch, avNormalize, avRandom, avVisible };
-for (const [k, v] of Object.entries({ AV_AXES, AV_DEFAULT, avSvg, avSwatch, avNormalize, avRandom, avVisible }))
+export { AV_AXES, AV_DEFAULT, AV_CROP, avSvg, avSwatch, avNormalize, avRandom, avVisible };
+for (const [k, v] of Object.entries({ AV_AXES, AV_DEFAULT, AV_CROP, avSvg, avSwatch, avNormalize, avRandom, avVisible }))
   window['_' + k] = v;

@@ -38,7 +38,7 @@ load('modules/ui/avatar-vector.mjs');
 // avatar-studio consumes the engine's window._-prefixed exports in the harness.
 let studio = fs.readFileSync(path.join(PUB, 'modules/ui/avatar-studio.mjs'), 'utf8');
 studio = studio.replace(/^import .*$/m,
-  'const AV_AXES = window._AV_AXES, avSvg = window._avSvg, avSwatch = window._avSwatch, avNormalize = window._avNormalize, avRandom = window._avRandom, avVisible = window._avVisible, AV_DEFAULT = window._AV_DEFAULT;');
+  'const AV_AXES = window._AV_AXES, avSvg = window._avSvg, avSwatch = window._avSwatch, avNormalize = window._avNormalize, avRandom = window._avRandom, avVisible = window._avVisible, AV_DEFAULT = window._AV_DEFAULT, AV_CROP = window._AV_CROP;');
 studio = studio.replace(/export \{[^}]*\};?/, '');
 (0, eval)(studio.replace(/^'use strict';/m, ''));
 
@@ -60,6 +60,13 @@ for (const ax of AXES) {
   }
 }
 ok(clean, 'every axis option renders a clean SVG' + (clean ? '' : ' (bad: ' + badMsg + ')'));
+
+// 2b. Crop regions: valid squares inside the canvas, chips use them
+const CROP = window._AV_CROP;
+ok(CROP && Object.keys(CROP).length >= 10, 'AV_CROP defines zoom regions');
+ok(Object.values(CROP).every(c => c.length === 3 && c[0] >= 0 && c[1] >= 0 && c[0] + c[2] <= 200 && c[1] + c[2] <= 200), 'every crop region fits the 200x200 canvas');
+const cropped = window._avSvg(window._avNormalize(null), 40, CROP.mouth);
+ok(cropped.indexOf('viewBox="70 76 60 60"') !== -1, 'avSvg applies the crop as viewBox');
 
 // 3. Recipes normalize + randomize stay in range
 const rnd = window._avRandom();

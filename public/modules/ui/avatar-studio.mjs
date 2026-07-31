@@ -17,7 +17,7 @@
 
 'use strict';
 
-import { AV_AXES, AV_DEFAULT, avSvg, avSwatch, avNormalize, avRandom, avVisible } from './avatar-vector.mjs';
+import { AV_AXES, AV_DEFAULT, AV_CROP, avSvg, avSwatch, avNormalize, avRandom, avVisible } from './avatar-vector.mjs';
 
 // Axis groups shown as chip tabs (gallery-category pattern): only the
 // active group's rows are rendered, keeping the pane short and tidy.
@@ -172,7 +172,9 @@ function _avmRender() {
           var alt = {}; for (var k in _avmState) alt[k] = _avmState[k];
           alt[ax.id] = i;
           b.className = 'avm-mini' + (sel ? ' selected' : '');
-          b.innerHTML = avSvg(alt, 36);
+          // Zoom the vignette on the feature being chosen (AV_CROP);
+          // axes without a crop region keep the full portrait.
+          b.innerHTML = avSvg(alt, 40, AV_CROP[ax.id] || null);
         }
         b.addEventListener('click', function () {
           _avmState[ax.id] = i;
