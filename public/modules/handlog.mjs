@@ -2191,6 +2191,42 @@ function _positionDetail(pop) {
 }
 
 // ── Grille de range 13×13 ───────────────────────────────────────────────────
+// Fenetre du systeme generique (meme patron que #adv-modal / #help-modal) :
+// conteneur transparent qui laisse passer les clics, carte promue en
+// .floating-win au-dessus de 600 px -> deplacable par son titre,
+// redimensionnable, geometrie memorisee, integree au z-order des fenetres.
+// En dessous du seuil : feuille plein ecran, comme les autres.
+function _rangeSetupFloat(modal) {
+  const card = modal.querySelector('.range-card');
+  if (!card) return;
+  let wide = false;
+  try { wide = window.matchMedia('(min-width:600px)').matches; } catch (_e) {}
+  if (!wide) { try { window._disableFloating(card); } catch (_e) {} return; }
+  if (typeof window._enableFloating !== 'function') return;
+  const maxW = Math.min(760, Math.round(window.innerWidth * 0.94));
+  const maxH = Math.min(720, Math.round(window.innerHeight * 0.92));
+  const openW = Math.max(360, Math.min(maxW, window.innerWidth - 16));
+  const openH = Math.max(320, Math.min(maxH, window.innerHeight - 16));
+  window._enableFloating(card, {
+    key: 'pth_win_range',
+    handle: card.querySelector('.range-title'),
+    resizable: true,
+    maxW: maxW, maxH: maxH,
+    zoom: true,
+    defW: 560, defH: 560,
+    openW: openW, openH: openH,
+    minW: 360, minH: 320,
+    defLeft: Math.max(8, Math.round((window.innerWidth - openW) / 2)),
+    defTop: Math.max(8, Math.round((window.innerHeight - openH) / 2)),
+  });
+}
+
+function _closeRange() {
+  const m = document.getElementById('range-modal');
+  if (m) m.style.display = 'none';
+  try { if (window._syncWinBtns) window._syncWinBtns(); } catch (_e) {}
+}
+
 function openRangeGrid(name, posFilter, playersFilter) {
   if (typeof document === 'undefined' || !_dataCache) return;
   let modal = document.getElementById('range-modal');
@@ -2204,16 +2240,26 @@ function openRangeGrid(name, posFilter, playersFilter) {
       + '<div class="range-body"></div>'
       + '<div class="range-legend">' + _ht('hlRangeLegend','Diagonal = pairs · top-right = suited · bottom-left = offsuit') + '</div></div>';
     document.body.appendChild(modal);
-    modal.addEventListener('click', (e) => { if (e.target === modal) modal.style.display = 'none'; });
-    modal.querySelector('.range-close').addEventListener('click', () => { modal.style.display = 'none'; });
+    // Plus de fermeture au clic exterieur : c'est une fenetre, pas une modale
+    // (coherent avec l'aide et les options avancees). Seule la croix ferme.
+    modal.querySelector('.range-close').addEventListener('click', _closeRange);
+    // Re-evaluer le seuil fenetre/feuille a chaque changement de gabarit.
+    try {
+      window.addEventListener('resize', () => {
+        const m = document.getElementById('range-modal');
+        if (m && m.style.display && m.style.display !== 'none') _rangeSetupFloat(m);
+      });
+    } catch (_e) {}
   }
   modal.style.display = 'flex';
   modal._player = name;
   modal._pos = posFilter || 'all';
   modal._pf = playersFilter || 'all';
   _renderRange(modal);
+  _rangeSetupFloat(modal);
+  try { if (window._syncWinBtns) window._syncWinBtns(); } catch (_e) {}
 }
-if (typeof window !== 'undefined') window._openRange = openRangeGrid;
+if (typeof window !== 'undefined') { window._openRange = openRangeGrid; window._closeRange = _closeRange; }
 
 function _renderRange(modal) {
   const name = modal._player;
@@ -2311,4 +2357,4 @@ function _renderRange(modal) {
 export { StatsData, StatsCalculator, RECENT_HANDS,
          _trendArrow, _TREND_MIN_BASE, _TREND_EPS,
          _refreshScopes, _scopeOf, playerStatsFor,
-         playerStyle, STYLE_MIN_HANDS };
+         playerStyle, STYLE_MIN_HANDS, _rangeSetupFloat };

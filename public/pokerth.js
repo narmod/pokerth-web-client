@@ -8159,7 +8159,7 @@ function resetWindows(){
   // Bouton reset du header (≥900px) : efface TOUTES les positions/tailles
   // memorisees et remet chaque fenetre a son etat par defaut (bandeau, ou
   // position CSS d'origine pour les fenetres flottantes).
-  ['pth_winpos_chat','pth_winpos_lobbychat','pth_winpos_log2','pth_winpos_react','pth_winpos_theme','pth_winpos_hands','pth_winpos_music','pth_odds_pos','pth_odds_w','pth_assist_pos','pth_assist_w','pth_win_adv'].forEach(function(k){ try{ localStorage.removeItem(k); }catch(e){} });
+  ['pth_winpos_chat','pth_winpos_lobbychat','pth_winpos_log2','pth_winpos_react','pth_winpos_theme','pth_winpos_hands','pth_winpos_music','pth_odds_pos','pth_odds_w','pth_assist_pos','pth_assist_w','pth_winpos_assist','pth_win_adv','pth_win_help','pth_win_jr','pth_win_range'].forEach(function(k){ try{ localStorage.removeItem(k); }catch(e){} });
   ['g-chat-panel','lobby-chat-panel','g-log-panel','g-reaction-panel','music-panel'].forEach(function(id){ var p=document.getElementById(id); if(p) _disableFloating(p); });
   // Fenetres flottantes odds/assist : retire les styles inline -> retour aux defauts CSS.
   ['odds-monitor','assist-win'].forEach(function(id){ var el=document.getElementById(id); if(el){ ['left','top','right','bottom','width'].forEach(function(pr){ el.style[pr]=''; }); el.style.removeProperty('--ws'); } });
@@ -8170,6 +8170,8 @@ function resetWindows(){
     card._winRszWired=false;
     ['position','left','top','right','bottom','width','height'].forEach(function(p){ card.style[p]=''; });
   }
+  var rg=document.querySelector('#range-modal .range-card');
+  if(rg) _disableFloating(rg);
   try{ if (typeof window.closeThemePanel==='function') window.closeThemePanel(); }catch(e){}
 }
 function makeChatResizable(panel, msgs, onResize) {
@@ -9774,7 +9776,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.5-web.82'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.5-web.83'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

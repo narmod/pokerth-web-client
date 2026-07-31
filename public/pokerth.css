@@ -9871,14 +9871,23 @@ html[data-seat-struct="qml"] .seat:not(.me) .seat-narrow .seat-holecards .pk { w
 .hud-style-lbl{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;letter-spacing:.02em}
 .hud-style-est{opacity:.5}
 
-/* Grille de range (modale centrée) */
-#range-modal{position:fixed;inset:0;z-index:9999;display:none;align-items:center;justify-content:center;
-  background:rgba(0,0,0,.6);padding:16px}
-#range-modal .range-card{background:var(--panel-hi);border:1px solid var(--border);border-radius:var(--r-lg);
+/* Fenêtre « range » — même patron que #adv-modal / #help-modal : conteneur
+   transparent qui laisse passer les clics (AUCUN voile sombre : le jeu reste
+   visible et jouable derrière), carte promue en .floating-win par
+   _rangeSetupFloat au-dessus de 600 px. */
+#range-modal{position:fixed;inset:0;z-index:1200;display:none;align-items:center;justify-content:center;
+  padding:16px;pointer-events:none}
+#range-modal .range-card{pointer-events:auto;background:var(--panel-hi);border:1px solid var(--border);border-radius:var(--r-lg);
   box-shadow:0 12px 40px rgba(0,0,0,.55);max-width:min(96vw,720px);max-height:92vh;display:flex;flex-direction:column;overflow:hidden}
 #range-modal .range-head{display:flex;align-items:center;gap:var(--sp-5);flex-wrap:wrap;
   padding:9px 12px;border-bottom:1px solid var(--border)}
 #range-modal .range-title{flex:1;min-width:120px;color:var(--gold);font-weight:700;font-size:var(--fs-base)}
+/* Barre de titre = poignée de déplacement, comme .rk-title / .km-title. */
+#range-modal .range-card.floating-win{position:fixed;margin:0;max-width:none;max-height:none}
+#range-modal .range-card.floating-win .range-title{cursor:move;touch-action:none;-webkit-user-select:none;user-select:none}
+#range-modal .range-card.floating-win .range-title.win-dragging{cursor:grabbing}
+/* En fenêtre, le corps prend la hauteur restante et défile seul. */
+#range-modal .range-card.floating-win .range-body{flex:1 1 auto;min-height:0}
 #range-modal .range-filters{display:flex;gap:10px}
 #range-modal .range-filters label{color:var(--text);font-size:var(--fs-2xs);text-transform:uppercase;letter-spacing:.08em;display:flex;align-items:center;gap:4px}
 #range-modal .range-filters select{background:var(--field-bg);color:var(--text-hi);border:1px solid var(--border);border-radius:5px;padding:1px 4px;font-size:var(--fs-xs)}
@@ -9951,15 +9960,15 @@ html[data-seat-struct="qml"] .seat:not(.me) .seat-narrow .seat-holecards .pk { w
 #hud-detail .hud-d-range:hover{background:rgba(var(--gold-rgb),.22)}
 .range-grid{border-collapse:separate;border-spacing:2px;margin:0 auto}
 .range-grid td{width:38px;height:34px;text-align:center;vertical-align:middle;border-radius:4px;
-  background:var(--field-bg);color:var(--text);font-size:9px;line-height:1.05;position:relative}
+  background:var(--field-bg);color:var(--text);font-size:var(--fs-3xs);line-height:1.05;position:relative}
 .range-grid td.filled{font-weight:700}
-.range-grid .rc-combo{display:block;font-size:9.5px}
-.range-grid .rc-count{display:block;font-size:8px;opacity:.85;font-variant-numeric:tabular-nums}
+.range-grid .rc-combo{display:block;font-size:var(--fs-2xs)}
+.range-grid .rc-count{display:block;font-size:var(--fs-3xs);opacity:.85;font-variant-numeric:tabular-nums}
 /* Mobile : HUD très compact — VPIP/PFR/AF sur une ligne, et le badge
    d'archétype réduit à son cadran (le libellé prendrait toute la largeur). */
 @media (max-width:599.98px){
-  .range-grid td{width:26px;height:26px;font-size:7.5px}
-  .range-grid .rc-combo{font-size:8px}
+  .range-grid td{width:26px;height:26px;font-size:var(--fs-3xs)}
+  .range-grid .rc-combo{font-size:var(--fs-3xs)}
   .hud-box{min-width:0;width:auto;max-width:120px;font-size:var(--fs-3xs);padding:3px 5px;border-radius:var(--r-sm);line-height:1.2}
   .hud-head{gap:4px;margin-bottom:2px}
   .hud-name{font-size:var(--fs-2xs);max-width:76px}
@@ -10064,6 +10073,13 @@ html[data-seat-struct="qml"] .seat:not(.me) .seat-narrow .seat-holecards .pk { w
 .hdr-sync svg { width: 17px; height: 17px; display: block; }
 @keyframes hdrSyncPulse { 0%, 100% { opacity: 0.32; } 50% { opacity: 1; } }
 @media (prefers-reduced-motion: reduce) { .hdr-sync.on { animation: none; opacity: 0.85; } }
+/* Portrait mobile : feuille épinglée haut/bas — miroir de la règle #adv-modal. */
+@media (max-width:599.98px){
+  #range-modal{padding:0}
+  #range-modal .range-card{width:calc(100% - 20px);max-width:none;height:calc(100% - max(28px, 2*env(safe-area-inset-top), 2*env(safe-area-inset-bottom)));margin:0}
+  #range-modal .range-body{flex:1 1 auto;min-height:0}
+}
+
 /* ── Help window (#help-modal, modules/help/index.mjs) ─────────────────────
    Entrée « Aide » des menus des 5 headers. Même patron que #adv-modal :
    aucun voile, carte adv-card (fenêtre flottante ≥600 px via _enableFloating,
