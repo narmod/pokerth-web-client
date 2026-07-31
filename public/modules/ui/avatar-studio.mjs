@@ -1,64 +1,38 @@
 // Avatar studio — tabbed avatar window (Gallery / Create / Import).
 //
-// The historical avatar popup (emoji gallery + hidden camera import) becomes
-// a 3-tab window:
-//   * Gallery : the untouched legacy grid (539 emoji + PokerTH + camera pins).
-//   * Create  : a "matrix" portrait picker. Pre-generated realistic portraits
-//     live in /avatars/people/<gender>-<age>-<glasses>.jpg ; picking axis
-//     values selects the matching file. Applying it goes through the SAME
-//     path as a photo import (96x96 canvas -> JPEG dataURL -> pth_avatar_img
-//     + '__img__'), so seats, broadcast and the PokerTH upload pipeline all
-//     work unchanged.
-//   * Import  : the camera flow made explicit (drop zone + button + hints),
-//     addressing the discoverability issue reported on Discord (neuling,
-//     2026-07-31). Reuses _processAvatarFile() from the page head.
+// Gallery: untouched legacy emoji grid. Import: explicit photo import
+// (drop zone + button), reusing _processAvatarFile() from the page head.
+// Create: VECTOR portrait generator (style validated with narmod
+// 2026-07-31) — layered SVG portraits rendered by modules/ui/avatar-vector.mjs,
+// replacing the earlier pre-generated photo matrix. Option chips are visual
+// (mini portrait previews / color swatches), so only axis labels need i18n.
+//
+// Applying a portrait rasterizes the SVG on a 96x96 canvas and goes through
+// the SAME path as a photo import (JPEG dataURL -> pth_avatar_img +
+// '__img__'), so seats, proxy broadcast and the PokerTH upload pipeline all
+// work unchanged. The recipe is persisted in pth_avatar_vec for re-editing.
 //
 // Advanced option 'avatar_create' (default ON) hides the Create tab via
 // body.adv-no-avcreate (see applyAdvOpts in pokerth.js).
-//
-// The chosen matrix recipe is persisted in localStorage pth_avatar_matrix so
-// reopening the tab restores the last selection.
 
 'use strict';
 
+import { AV_AXES, avSvg, avSwatch, avNormalize, avRandom } from './avatar-vector.mjs';
+
 function t(k, p) { return (typeof window.t === 'function') ? window.t(k, p) : k; }
 
-// Matrix catalogue: axis-key -> file (null = combination not generated yet).
-// Keys: <gender F|H> | <age jeune|adulte|senior> | <glasses avec|sans>
-const AVM_CAT = {
-  'F|jeune|avec':  'f-jeune-lunettes.jpg',
-  'F|jeune|sans':  'f-jeune-sans.jpg',
-  'F|adulte|avec': null,
-  'F|adulte|sans': 'f-adulte-sans.jpg',
-  'F|senior|avec': 'f-senior-lunettes.jpg',
-  'F|senior|sans': null,
-  'H|jeune|avec':  'h-jeune-lunettes.jpg',
-  'H|jeune|sans':  null,
-  'H|adulte|avec': 'h-adulte-lunettes.jpg',
-  'H|adulte|sans': 'h-adulte-sans.jpg',
-  'H|senior|avec': null,
-  'H|senior|sans': 'h-senior-sans.jpg'
-};
-const AVM_BASE = 'avatars/people/';
-
-// Axes: [i18n label key, state key, [[value, i18n option key], ...]]
-const AVM_AXES = [
-  ['avmGender',  'g', [['F', 'avmFemale'], ['H', 'avmMale']]],
-  ['avmAge',     'a', [['jeune', 'avmYoung'], ['adulte', 'avmAdult'], ['senior', 'avmSenior']]],
-  ['avmGlasses', 'l', [['avec', 'avmWith'], ['sans', 'avmWithout']]]
-];
-
-var _avmState = { g: 'F', a: 'jeune', l: 'avec' };
+var _avmState = avNormalize(null);
 try {
-  var _saved = JSON.parse(localStorage.getItem('pth_avatar_matrix') || 'null');
-  if (_saved && AVM_CAT.hasOwnProperty(_saved.g + '|' + _saved.a + '|' + _saved.l)) _avmState = _saved;
+  var _saved = JSON.parse(localStorage.getItem('pth_avatar_vec') || 'null');
+  if (_saved) _avmState = avNormalize(_saved);
 } catch (e) {}
 
-function _avmKey() { return _avmState.g + '|' + _avmState.a + '|' + _avmState.l; }
+function _avmPersist() {
+  try { localStorage.setItem('pth_avatar_vec', JSON.stringify(_avmState)); } catch (e) {}
+}
 
 // ── Tab switching ────────────────────────────────────────────────────────
 function avStudioTab(tab) {
-  // Create tab disabled by advanced option -> never land on it.
   if (tab === 'create' && document.body.classList.contains('adv-no-avcreate')) tab = 'gallery';
   ['gallery', 'create', 'import'].forEach(function (p) {
     var pane = document.getElementById('avp-pane-' + p);
@@ -71,11 +45,10 @@ function avStudioTab(tab) {
   if (tab === 'import') _avImportRender();
 }
 
-// Called when the popup opens (from toggleAvatarPopup) so a hidden Create
-// tab never stays active between sessions.
+// Called when the popup opens (from toggleAvatarPopup).
 function avStudioReset() { avStudioTab('gallery'); }
 
-// ── Create pane (matrix) ─────────────────────────────────────────────────
+// ── Create pane (vector generator) ───────────────────────────────────────
 function _avmRender() {
   var pane = document.getElementById('avp-pane-create');
   if (!pane) return;
@@ -84,77 +57,68 @@ function _avmRender() {
       '<div class="avm-wrap">' +
       '<div class="avm-left">' +
       '<div class="avm-preview" id="avm-preview"></div>' +
-      '<div class="avm-status" id="avm-status"></div>' +
       '<button type="button" class="avm-btn" id="avm-dice">\uD83C\uDFB2 <span></span></button>' +
       '</div>' +
       '<div class="avm-rows" id="avm-rows"></div>' +
       '</div>' +
       '<div class="avm-foot"><button type="button" class="avm-btn avm-use" id="avm-use"></button></div>';
-    document.getElementById('avm-dice').addEventListener('click', _avmRandom);
+    document.getElementById('avm-dice').addEventListener('click', function () {
+      _avmState = avRandom(); _avmPersist(); _avmRender();
+    });
     document.getElementById('avm-use').addEventListener('click', _avmApply);
   }
   document.querySelector('#avm-dice span').textContent = t('avmRandom');
   document.getElementById('avm-use').textContent = t('avmUse');
 
-  var file = AVM_CAT[_avmKey()];
-  var pv = document.getElementById('avm-preview');
-  var st = document.getElementById('avm-status');
-  var useBtn = document.getElementById('avm-use');
-  if (file) {
-    pv.innerHTML = '<img src="' + AVM_BASE + file + '" alt="" draggable="false">';
-    st.textContent = '';
-    useBtn.disabled = false;
-  } else {
-    pv.innerHTML = '<div class="avm-missing">\uD83D\uDDBC\uFE0F</div>';
-    st.textContent = t('avmMissing');
-    useBtn.disabled = true;
-  }
+  document.getElementById('avm-preview').innerHTML = avSvg(_avmState, 148);
 
   var rows = document.getElementById('avm-rows');
   rows.innerHTML = '';
-  AVM_AXES.forEach(function (ax) {
+  AV_AXES.forEach(function (ax) {
     var d = document.createElement('div');
     d.className = 'avm-axis';
     var lab = document.createElement('span');
     lab.className = 'avm-axis-label';
-    lab.textContent = t(ax[0]);
+    lab.textContent = t(ax.label);
     d.appendChild(lab);
     var line = document.createElement('div');
     line.className = 'avm-axis-opts';
-    ax[2].forEach(function (opt) {
-      var b = document.createElement('button');
-      b.type = 'button';
-      b.className = 'avm-opt' + (_avmState[ax[1]] === opt[0] ? ' selected' : '');
-      b.textContent = t(opt[1]);
-      b.addEventListener('click', function () {
-        _avmState[ax[1]] = opt[0];
-        try { localStorage.setItem('pth_avatar_matrix', JSON.stringify(_avmState)); } catch (e) {}
-        _avmRender();
-      });
-      line.appendChild(b);
-    });
+    for (var i = 0; i < ax.n; i++) {
+      (function (i) {
+        var b = document.createElement('button');
+        b.type = 'button';
+        var sel = _avmState[ax.id] === i;
+        b.setAttribute('aria-label', t(ax.label) + ' ' + (i + 1));
+        if (ax.none && i === 0) {
+          b.className = 'avm-opt avm-none-opt' + (sel ? ' selected' : '');
+          b.textContent = t('avmNone');
+        } else if (ax.kind === 'color') {
+          b.className = 'avm-swatch' + (sel ? ' selected' : '');
+          b.innerHTML = '<span style="background:' + avSwatch(ax.id, i) + '"></span>';
+        } else {
+          // Mini portrait preview with this option applied to the current
+          // recipe -- makes shape choices self-explanatory without i18n.
+          var alt = {}; for (var k in _avmState) alt[k] = _avmState[k];
+          alt[ax.id] = i;
+          b.className = 'avm-mini' + (sel ? ' selected' : '');
+          b.innerHTML = avSvg(alt, 36);
+        }
+        b.addEventListener('click', function () {
+          _avmState[ax.id] = i; _avmPersist(); _avmRender();
+        });
+        line.appendChild(b);
+      })(i);
+    }
     d.appendChild(line);
     rows.appendChild(d);
   });
 }
 
-function _avmRandom() {
-  var keys = Object.keys(AVM_CAT).filter(function (k) { return AVM_CAT[k]; });
-  var pick;
-  do { pick = keys[Math.floor(Math.random() * keys.length)]; }
-  while (keys.length > 1 && pick === _avmKey());
-  var p = pick.split('|');
-  _avmState = { g: p[0], a: p[1], l: p[2] };
-  try { localStorage.setItem('pth_avatar_matrix', JSON.stringify(_avmState)); } catch (e) {}
-  _avmRender();
-}
-
-// Apply: render the portrait to a 96x96 canvas and go through the exact
-// photo-import path (pth_avatar_img + '__img__'), so broadcast, seats and
-// the PokerTH avatar-server upload all behave as for a camera import.
+// Apply: rasterize the SVG on a 96x96 canvas and reuse the photo-import
+// path (pth_avatar_img + '__img__'): broadcast, seats and the PokerTH
+// avatar-server upload behave exactly as for a camera import.
 function _avmApply() {
-  var file = AVM_CAT[_avmKey()];
-  if (!file) return;
+  var svg = avSvg(_avmState, 96);
   var img = new Image();
   img.onload = function () {
     try {
@@ -163,7 +127,7 @@ function _avmApply() {
       cv.width = SZ; cv.height = SZ;
       var ctx = cv.getContext('2d');
       ctx.drawImage(img, 0, 0, SZ, SZ);
-      var dataUrl = cv.toDataURL('image/jpeg', 0.85);
+      var dataUrl = cv.toDataURL('image/jpeg', 0.88);
       localStorage.setItem('pth_avatar_img', dataUrl);
       localStorage.setItem('pth_avatar', '__img__');
     } catch (e) { return; }
@@ -174,7 +138,7 @@ function _avmApply() {
       if (pi && pi.style.display !== 'none' && typeof window.openPlayerInfoPopup === 'function') window.openPlayerInfoPopup();
     } catch (e) {}
   };
-  img.src = AVM_BASE + file;
+  img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
 }
 
 // ── Import pane ──────────────────────────────────────────────────────────

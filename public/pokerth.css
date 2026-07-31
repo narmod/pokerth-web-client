@@ -10147,6 +10147,19 @@ body.adv-no-avcreate #avp-tab-create { display: none !important; }
 }
 .avm-btn:hover { background: rgba(var(--gold-rgb), 0.1); }
 .avm-btn:disabled { opacity: 0.4; cursor: default; }
+.avm-swatch {
+  width: 26px; height: 26px; padding: 2px; border-radius: 50%;
+  background: none; border: 2px solid transparent; cursor: pointer; line-height: 0;
+}
+.avm-swatch span { display: block; width: 100%; height: 100%; border-radius: 50%; border: 1px solid rgba(0,0,0,0.35); }
+.avm-swatch.selected { border-color: var(--sel,var(--gold)); }
+.avm-mini {
+  padding: 1px; border-radius: 50%; line-height: 0;
+  background: none; border: 2px solid transparent; cursor: pointer;
+}
+.avm-mini.selected { border-color: var(--sel,var(--gold)); }
+.avm-mini svg { display: block; }
+.avm-none-opt { min-width: 40px; }
 .avm-foot { display: flex; justify-content: flex-end; margin-top: var(--sp-5); border-top: 1px solid var(--border); padding-top: var(--sp-4); }
 .avm-use { border-color: var(--gold-dim); color: var(--sel,var(--gold)); }
 /* ── Pane Importer ── */
