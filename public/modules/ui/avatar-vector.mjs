@@ -43,10 +43,10 @@ const AV_AXES = [
   { id: 'sex',   label: 'avmSex',       n: 2,               kind: 'shape', none: false },
   { id: 'face',  label: 'avmFace',      n: 3,               kind: 'shape', none: false },
   { id: 'bg',    label: 'avmBg',        n: AV_FELT.length,  kind: 'color', none: false },
-  { id: 'outfit',label: 'avmOutfit',    n: 9,               kind: 'shape', none: false },
+  { id: 'outfit',label: 'avmOutfit',    n: 12,              kind: 'shape', none: false },
   { id: 'skin',  label: 'avmSkin',      n: AV_SKIN.length,  kind: 'color', none: false },
   { id: 'marks', label: 'avmMarks',     n: 6,               kind: 'shape', none: true  },
-  { id: 'hair',  label: 'avmHair',      n: 17,              kind: 'shape', none: true  },
+  { id: 'hair',  label: 'avmHair',      n: 21,              kind: 'shape', none: true  },
   { id: 'hairc', label: 'avmHairColor', n: AV_HAIRC.length, kind: 'color', none: false },
   { id: 'beard', label: 'avmBeard',     n: 7,               kind: 'shape', none: true  },
   { id: 'eyes',  label: 'avmEyeShape',  n: 7,               kind: 'shape', none: false },
@@ -55,8 +55,8 @@ const AV_AXES = [
   { id: 'mouth', label: 'avmMouth',     n: 8,               kind: 'shape', none: false },
   { id: 'glasses', label: 'avmGlasses', n: 6,               kind: 'shape', none: true  },
   { id: 'shoulder', label: 'avmShoulder', n: 5,             kind: 'shape', none: true  },
-  { id: 'ears',  label: 'avmEarrings',  n: 4,               kind: 'shape', none: true  },
-  { id: 'hat',   label: 'avmHat',       n: 7,               kind: 'shape', none: true  }
+  { id: 'ears',  label: 'avmEarrings',  n: 6,               kind: 'shape', none: true  },
+  { id: 'hat',   label: 'avmHat',       n: 10,              kind: 'shape', none: true  }
 ];
 
 // Per-option silhouette tags (0 = masculine-leaning, 1 = feminine-leaning,
@@ -64,9 +64,9 @@ const AV_AXES = [
 // avVisible() lets the UI filter rows coherently with the selected sex
 // while the engine still renders any recipe (old recipes stay valid).
 const AV_SEXTAG = {
-  hair: { 2: 0, 3: 1, 5: 1, 6: 0, 7: 1, 8: 1, 9: 0, 11: 1, 12: 1, 14: 1, 16: 0 },
+  hair: { 2: 0, 3: 1, 5: 1, 6: 0, 7: 1, 8: 1, 9: 0, 11: 1, 12: 1, 14: 1, 16: 0, 19: 1 },
   mouth: { 3: 1 },
-  outfit: { 6: 1 }
+  outfit: { 6: 1, 9: 1 }
 };
 
 function avVisible(axId, i, recipe) {
@@ -98,8 +98,10 @@ function avNormalize(r) {
   return out;
 }
 
-function avRandom() {
-  var r = { sex: Math.floor(Math.random() * 2) };
+function avRandom(fixedSex) {
+  // When a silhouette is already chosen, the dice keeps it and only
+  // randomizes within compatible options (narmod 2026-07-31).
+  var r = { sex: (fixedSex === 0 || fixedSex === 1) ? fixedSex : Math.floor(Math.random() * 2) };
   var draw = function (ax) {
     var opts = [];
     for (var i = 0; i < ax.n; i++) if (avVisible(ax.id, i, r)) opts.push(i);
@@ -134,6 +136,31 @@ function _outfit(i, skin) {
       + '<path d="M50 200 q2-44 50-46 l0 46z" fill="#1a1e23"/>'
       + '<path d="M86 136 q0-8 14-8 q14 0 14 8 l0 16 q-14 6-28 0z" fill="#2c313a"/>'
       + '<path d="M86 142 l28 0 M86 147 l28 0" stroke="#22262c" stroke-width="1.4" fill="none"/>';
+  }
+  if (i === 9) { // strapless evening dress (feminine): bare shoulders
+    return '<path d="M50 200 q2-44 50-46 q48 2 50 46z" fill="' + skin[0] + '"/>'
+      + '<path d="M100 154 q48 2 50 46 l-50 0z" fill="' + skin[1] + '"/>'
+      + '<path d="M56 200 l2-26 q10-16 42-16 q32 0 42 16 l2 26z" fill="#6d1f33"/>'
+      + '<path d="M100 158 q32 0 42 16 l2 26 -44 0z" fill="#571a29"/>'
+      + '<path d="M58 174 q10-16 42-16 q32 0 42 16" fill="none" stroke="#c9992e" stroke-width="1.6"/>';
+  }
+  if (i === 10) { // rock: leather jacket, dark tee
+    return '<path d="M50 200 q2-44 50-46 q48 2 50 46z" fill="#1c1c20"/>'
+      + '<path d="M50 200 q2-44 50-46 l0 46z" fill="#141417"/>'
+      + '<path d="M84 152 q6 10 16 10 q10 0 16-10 l0 48 -32 0z" fill="#2b2b30"/>'
+      + '<path d="M100 162 q10 0 16-10 l0 48 -16 0z" fill="#242429"/>'
+      + '<path d="M84 150 l-20 12 10 38 18-34 q-6-6-8-16z" fill="#101013"/>'
+      + '<path d="M116 150 l20 12 -10 38 -18-34 q6-6 8-16z" fill="#0b0b0e"/>'
+      + '<path d="M92 166 l0 30 M108 166 l0 30" stroke="#8a8f98" stroke-width="1.4" fill="none"/>'
+      + '<g fill="#8a8f98"><circle cx="70" cy="164" r="1.3"/><circle cx="76" cy="170" r="1.3"/><circle cx="130" cy="164" r="1.3"/><circle cx="124" cy="170" r="1.3"/></g>';
+  }
+  if (i === 11) { // hoodie
+    return '<path d="M50 200 q2-44 50-46 q48 2 50 46z" fill="#4a5058"/>'
+      + '<path d="M50 200 q2-44 50-46 l0 46z" fill="#3e444b"/>'
+      + '<path d="M78 150 q-8 12-4 22 q10 8 26 8 q16 0 26-8 q4-10-4-22 q-6 12-22 12 q-16 0-22-12z" fill="#565d66"/>'
+      + '<path d="M100 162 q16 0 22-12 q8 12 4 22 q-10 8-26 8z" fill="#4a5058"/>'
+      + '<path d="M94 168 l-2 18 M106 168 l2 18" stroke="#d5d9de" stroke-width="1.8" fill="none" stroke-linecap="round"/>'
+      + '<circle cx="92" cy="187" r="1.4" fill="#d5d9de"/><circle cx="108" cy="187" r="1.4" fill="#d5d9de"/>';
   }
   if (i === 8) { // white dinner jacket, dark shirt, no tie
     return '<path d="M50 200 q2-44 50-46 q48 2 50 46z" fill="#e9e2d2"/>'
@@ -245,6 +272,23 @@ function _hair(i, hc) {
         + '<path d="M136 82 q0-8-8-10 l0 18 q7-1 8-8z" fill="' + b + '"/>'
         + '<path d="M72 72 q4-6 10-7 l-2 6 q-5 1-8 5z" fill="' + b + '" opacity="0.8"/>'
         + '<path d="M128 72 q-4-6-10-7 l2 6 q5 1 8 5z" fill="' + b + '" opacity="0.8"/>';
+    case 17: // mohawk crest
+      return '<path d="M92 58 l4-26 4 8 4-10 4 26 q-8 4-16 2z" fill="' + b + '"/>'
+        + '<path d="M96 56 l2-18 2 4 2-6 2 18z" fill="' + h + '" opacity="0.5"/>'
+        + '<path d="M70 74 q0-10 8-16 l2 8 q-6 4-6 12 q-3-1-4-4z" fill="' + b + '" opacity="0.6"/>'
+        + '<path d="M130 74 q0-10-8-16 l-2 8 q6 4 6 12 q3-1 4-4z" fill="' + b + '" opacity="0.6"/>';
+    case 18: // tousled mid-length (surfer)
+      return '<path d="M62 82 q-4-42 38-42 q42 0 38 42 l-6 14 q2-18-4-26 l-4 8 -6-10 q-8 6-18 6 q-10 0-18-6 l-6 10 -4-8 q-6 8-4 26 l-6-14z" fill="' + b + '"/>'
+        + '<path d="M72 50 q8-8 20-9 q-10 5-14 13z" fill="' + h + '" opacity="0.5"/>';
+    case 19: // pigtails (feminine)
+      return '<path d="M66 74 q-2-32 34-32 q36 0 34 32 q-2 7-5 9 q2-24-9-30 q-6 8-20 8 q-14 0-20-8 q-11 6-9 30 q-3-2-5-9z" fill="' + b + '"/>'
+        + '<g fill="' + b + '"><ellipse cx="63" cy="92" rx="7" ry="13"/><ellipse cx="137" cy="92" rx="7" ry="13"/></g>'
+        + '<g fill="' + h + '" opacity="0.5"><ellipse cx="61.5" cy="88" rx="2.4" ry="7"/><ellipse cx="135.5" cy="88" rx="2.4" ry="7"/></g>'
+        + '<circle cx="65" cy="80" r="2.6" fill="#8d1f1f"/><circle cx="135" cy="80" r="2.6" fill="#8d1f1f"/>';
+    case 20: // thin box braids
+      return '<path d="M66 72 q-2-30 34-30 q36 0 34 30 q-2 6-5 8 q1-22-9-28 q-6 8-20 8 q-14 0-20-8 q-10 6-9 28 q-3-2-5-8z" fill="' + b + '"/>'
+        + '<g fill="' + b + '"><rect x="60" y="64" width="4.5" height="40" rx="2.2"/><rect x="66" y="70" width="4.5" height="38" rx="2.2"/><rect x="72" y="74" width="4.5" height="34" rx="2.2" transform="rotate(3 74 74)"/><rect x="123.5" y="74" width="4.5" height="34" rx="2.2" transform="rotate(-3 126 74)"/><rect x="129.5" y="70" width="4.5" height="38" rx="2.2"/><rect x="135.5" y="64" width="4.5" height="40" rx="2.2"/></g>'
+        + '<g fill="' + h + '" opacity="0.4"><rect x="61.5" y="68" width="1.6" height="32" rx="0.8"/><rect x="131" y="74" width="1.6" height="30" rx="0.8"/></g>';
     default: // wavy senior sweep
       return '<path d="M66 74 q-2-32 34-32 q36 0 34 32 q-2 8-6 10 q2-22-8-28 q-6 8-20 8 q-14 0-20-8 q-10 6-8 28 q-4-2-6-10z" fill="' + b + '"/>'
            + '<path d="M74 46 q6-6 16-7 q-8 5-11 12 M104 40 q9 1 15 7 q-8-2-13-1" stroke="' + h + '" stroke-width="2.4" fill="none" stroke-linecap="round"/>';
@@ -476,6 +520,27 @@ function _hat(i) {
       + '<path d="M72 52 q0-24 28-24 q28 0 28 24 l0 2 -56 0z" fill="#e8dcbb"/>'
       + '<path d="M72 48 l56 0 0 5 -56 0z" fill="#6b2020"/>' + '</g>';
   }
+  if (i === 7) { // flat cap
+    return '<g transform="translate(0,3)">'
+      + '<path d="M66 58 q2-22 34-22 q32 0 34 22 l0 2 -68 0z" fill="#4a3b28"/>'
+      + '<path d="M100 36 q32 0 34 22 l0 2 -14 0 q2-18-20-24z" fill="#3c2f20"/>'
+      + '<path d="M100 60 l38 0 q4 0 3 4 l-41 0z" fill="#2e2418"/>'
+      + '<path d="M74 48 q10-8 26-8 M78 54 q10-7 24-7" stroke="#5c4a33" stroke-width="1.2" fill="none"/></g>';
+  }
+  if (i === 8) { // backwards cap
+    return '<g transform="translate(0,3)">'
+      + '<path d="M68 52 q0-24 32-24 q32 0 32 24 l0 4 -64 0z" fill="#1d3a6b"/>'
+      + '<path d="M100 28 q32 0 32 24 l0 4 -12 0 q4-20-20-28z" fill="#16305a"/>'
+      + '<path d="M60 52 l40 0 -3 5 -37 0 q-4 0-3-5z" fill="#12274a"/>'
+      + '<rect x="94" y="48" width="12" height="5" rx="2.5" fill="#0d1e3a"/></g>';
+  }
+  if (i === 9) { // beanie
+    return '<g transform="translate(0,2)">'
+      + '<path d="M68 62 q-2-32 32-32 q34 0 32 32 l0 2 -64 0z" fill="#6b2436"/>'
+      + '<path d="M100 30 q34 0 32 32 l0 2 -12 0 q2-26-20-32z" fill="#571d2c"/>'
+      + '<path d="M66 60 l68 0 0 8 q-34 6-68 0z" fill="#7d2b40"/>'
+      + '<path d="M74 62 l0 6 M84 63 l0 6 M94 64 l0 6 M104 64 l0 6 M114 63 l0 6 M124 62 l0 6" stroke="#571d2c" stroke-width="1.4" fill="none"/></g>';
+  }
   if (i === 6) { // bandana
     return '<path d="M68 58 q32-16 64 0 l-2 8 q-30-13-60 0z" fill="#8d1f1f"/>'
       + '<path d="M70 57 q30-13 60 0" stroke="#5c1313" stroke-width="1.6" fill="none"/>'
@@ -490,6 +555,12 @@ function _hat(i) {
 // ── Earrings ─────────────────────────────────────────────────────────────
 function _ears(i) {
   if (i === 0) return '';
+  if (i === 4) { // single hoop, left ear only
+    return '<circle cx="68" cy="103" r="4.2" fill="none" stroke="#d4a437" stroke-width="1.8"/>';
+  }
+  if (i === 5) { // single hoop, right ear only
+    return '<circle cx="132" cy="103" r="4.2" fill="none" stroke="#d4a437" stroke-width="1.8"/>';
+  }
   if (i === 3) { // gold hoops
     return '<circle cx="68" cy="103" r="4.2" fill="none" stroke="#d4a437" stroke-width="1.8"/>'
       + '<circle cx="132" cy="103" r="4.2" fill="none" stroke="#d4a437" stroke-width="1.8"/>';

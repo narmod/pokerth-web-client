@@ -107,6 +107,9 @@ ok(!vis('eyec', 1, { eyes: 2 }) && !vis('eyec', 1, { glasses: 5 }) && vis('eyec'
 ok(vis('mouth', 3, { sex: 1 }) && !vis('mouth', 3, { sex: 0 }), 'lipstick mouth is feminine-only');
 ok(vis('outfit', 6, { sex: 1 }) && !vis('outfit', 6, { sex: 0 }), 'V-neck blouse is feminine-only');
 const wholeAxisHidden = (ax, rr) => { for (let i = 0; i < ax.n; i++) if (vis(ax.id, i, rr)) return false; return true; };
+let sexKept = true;
+for (let k = 0; k < 10; k++) { if (window._avRandom(1).sex !== 1 || window._avRandom(0).sex !== 0) sexKept = false; }
+ok(sexKept, 'avRandom(fixedSex) keeps the chosen silhouette (10 draws each)');
 for (let k = 0; k < 20; k++) {
   const rr = window._avRandom();
   if (!AXES.every(ax => vis(ax.id, rr[ax.id], rr) || wholeAxisHidden(ax, rr))) { ok(false, 'random recipe respects the coherence filter'); break; }

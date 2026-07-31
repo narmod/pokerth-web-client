@@ -108,7 +108,7 @@ function _avmRender() {
       _avmGroup = (_avmGroup + 1) % AV_GROUPS.length; _avmRender(); _avmScrollTop();
     });
     document.getElementById('avm-dice').addEventListener('click', function () {
-      _avmState = avRandom(); _avmPersist(); _avmRender();
+      _avmState = avRandom(_avmState.sex); _avmPersist(); _avmRender();
     });
     document.getElementById('avm-reset').addEventListener('click', function () {
       _avmState = avNormalize(AV_DEFAULT); _avmSanitize(); _avmPersist(); _avmRender();
