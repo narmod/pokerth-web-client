@@ -10122,8 +10122,13 @@ body.adv-no-avcreate #avp-tab-create { display: none !important; }
   position: sticky; top: 0; z-index: 2;
   background: var(--panel);
   border-bottom: 1px solid var(--border);
-  margin: calc(-1 * var(--sp-5)) calc(-1 * var(--sp-5)) var(--sp-4);
+  margin: calc(-1 * var(--sp-5)) calc(-1 * var(--sp-5)) var(--sp-6);
   padding: var(--sp-3) var(--sp-5) 0;
+}
+/* En mode modal, le bloc epingle reprend exactement le fond de la carte
+   (--modal-bg) : plus de bandeau discordant, palette claire incluse. */
+#avatar-popup.avatar-popup-as-modal .avm-sticky {
+  background: var(--modal-bg);
 }
 .avm-head {
   display: flex; gap: var(--sp-5); align-items: center; justify-content: center;

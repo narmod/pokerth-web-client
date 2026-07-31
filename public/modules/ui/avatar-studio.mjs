@@ -42,6 +42,13 @@ function _avmPersist() {
   try { localStorage.setItem('pth_avatar_vec', JSON.stringify(_avmState)); } catch (e) {}
 }
 
+// Reset the pane scroll when the step changes, otherwise the new
+// category's first rows start hidden under the sticky header.
+function _avmScrollTop() {
+  var pane = document.getElementById('avp-pane-create');
+  if (pane) pane.scrollTop = 0;
+}
+
 // After a silhouette switch, any option filtered out for the new sex is
 // reset to the first visible one, keeping the recipe coherent.
 function _avmSanitize() {
@@ -95,10 +102,10 @@ function _avmRender() {
       '</div>' +
       '<div class="avm-rows" id="avm-rows"></div>';
     document.getElementById('avm-step-prev').addEventListener('click', function () {
-      _avmGroup = (_avmGroup + AV_GROUPS.length - 1) % AV_GROUPS.length; _avmRender();
+      _avmGroup = (_avmGroup + AV_GROUPS.length - 1) % AV_GROUPS.length; _avmRender(); _avmScrollTop();
     });
     document.getElementById('avm-step-next').addEventListener('click', function () {
-      _avmGroup = (_avmGroup + 1) % AV_GROUPS.length; _avmRender();
+      _avmGroup = (_avmGroup + 1) % AV_GROUPS.length; _avmRender(); _avmScrollTop();
     });
     document.getElementById('avm-dice').addEventListener('click', function () {
       _avmState = avRandom(); _avmPersist(); _avmRender();
