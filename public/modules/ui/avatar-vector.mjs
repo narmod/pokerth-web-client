@@ -461,31 +461,61 @@ function _head(i, skin) {
 }
 
 // ── Full portrait ────────────────────────────────────────────────────────
-// Per-axis zoom regions (square [x, y, size] in the 200x200 space) used by
-// the option chips: each vignette shows ONLY the feature being chosen
-// (mouths for the mouth row, hats for the hat row...) instead of the whole
-// portrait where a 36px difference is invisible (narmod 2026-07-31).
+// Frames (square [x, y, size] in the 200x200 space) for the ISOLATED-part
+// vignettes rendered by avPartSvg(): each option chip draws ONLY the layer
+// being chosen (a lone mouth, a lone hat, an outfit "on a hanger"...) over
+// the felt color, with the current recipe's palette (narmod 2026-07-31).
+// Exception: skin marks keep the bare head as canvas, they are unreadable
+// alone.
 const AV_CROP = {
-  face:     [52, 40, 96],
+  face:     [54, 40, 94],
   outfit:   [52, 104, 96],
-  marks:    [56, 48, 88],
-  hair:     [48, 16, 104],
-  beard:    [56, 72, 88],
-  eyes:     [66, 54, 68],
-  mouth:    [70, 76, 60],
-  glasses:  [58, 48, 84],
-  shoulder: [112, 112, 82],
-  ears:     [48, 74, 56],
-  hat:      [48, 12, 104]
+  marks:    [54, 40, 94],
+  hair:     [42, 12, 116],
+  beard:    [58, 82, 84],
+  eyes:     [62, 56, 76],
+  mouth:    [76, 90, 48],
+  glasses:  [56, 54, 88],
+  shoulder: [116, 116, 80],
+  ears:     [56, 88, 28],
+  hat:      [48, 16, 104]
 };
 
-function avSvg(recipe, size, crop) {
+// Isolated-part vignette: only the chosen layer, on the felt backdrop.
+function avPartSvg(axId, i, recipe, size) {
+  var r = avNormalize(recipe);
+  r[axId] = i;
+  var felt = AV_FELT[r.bg], skin = AV_SKIN[r.skin], hc = AV_HAIRC[r.hairc];
+  var vb = AV_CROP[axId];
+  if (!vb) return avSvg(r, size);
+  var body = '';
+  switch (axId) {
+    case 'face':    body = _head(i, skin); break;
+    case 'marks':   body = _head(r.face, skin) + _marks(i, skin[1]); break;
+    case 'outfit':  body = (r.sex === 1
+      ? '<g transform="translate(100,0) scale(0.86,1) translate(-100,0)">' + _outfit(i, skin) + '</g>'
+      : _outfit(i, skin)); break;
+    case 'hair':    body = _hair(i, hc); break;
+    case 'beard':   body = _beard(i, hc); break;
+    case 'eyes':    body = _eyes(i, AV_EYEC[r.eyec]); break;
+    case 'mouth':   body = _mouth(i, skin[1]); break;
+    case 'glasses': body = _glasses(i); break;
+    case 'hat':     body = _hat(i); break;
+    case 'shoulder':body = _shoulder(i); break;
+    case 'ears':    body = _ears(i); break;
+    default: return avSvg(r, size);
+  }
+  return '<svg viewBox="' + vb[0] + ' ' + vb[1] + ' ' + vb[2] + ' ' + vb[2] + '" width="' + size + '" height="' + size + '" xmlns="http://www.w3.org/2000/svg">'
+    + '<rect x="' + vb[0] + '" y="' + vb[1] + '" width="' + vb[2] + '" height="' + vb[2] + '" fill="' + felt[0] + '"/>'
+    + body + '</svg>';
+}
+
+function avSvg(recipe, size) {
   var r = avNormalize(recipe);
   var felt = AV_FELT[r.bg], skin = AV_SKIN[r.skin], hc = AV_HAIRC[r.hairc];
   var sz = size || 200;
-  var vb = crop ? crop[0] + ' ' + crop[1] + ' ' + crop[2] + ' ' + crop[2] : '0 0 200 200';
   var cid = 'avc' + Math.floor(Math.random() * 1e9);
-  var s = '<svg viewBox="' + vb + '" width="' + sz + '" height="' + sz + '" xmlns="http://www.w3.org/2000/svg">'
+  var s = '<svg viewBox="0 0 200 200" width="' + sz + '" height="' + sz + '" xmlns="http://www.w3.org/2000/svg">'
     + '<defs><clipPath id="' + cid + '"><rect x="6" y="6" width="188" height="188"/></clipPath></defs>'
     + '<rect width="200" height="200" fill="#8f6a1d"/>'
     + '<rect x="2.5" y="2.5" width="195" height="195" fill="#c9992e"/>'
@@ -535,6 +565,6 @@ function avSwatch(axId, i) {
   return '#888';
 }
 
-export { AV_AXES, AV_DEFAULT, AV_CROP, avSvg, avSwatch, avNormalize, avRandom, avVisible };
-for (const [k, v] of Object.entries({ AV_AXES, AV_DEFAULT, AV_CROP, avSvg, avSwatch, avNormalize, avRandom, avVisible }))
+export { AV_AXES, AV_DEFAULT, AV_CROP, avSvg, avPartSvg, avSwatch, avNormalize, avRandom, avVisible };
+for (const [k, v] of Object.entries({ AV_AXES, AV_DEFAULT, AV_CROP, avSvg, avPartSvg, avSwatch, avNormalize, avRandom, avVisible }))
   window['_' + k] = v;

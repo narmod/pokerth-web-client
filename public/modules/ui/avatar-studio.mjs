@@ -17,7 +17,7 @@
 
 'use strict';
 
-import { AV_AXES, AV_DEFAULT, AV_CROP, avSvg, avSwatch, avNormalize, avRandom, avVisible } from './avatar-vector.mjs';
+import { AV_AXES, AV_DEFAULT, avSvg, avPartSvg, avSwatch, avNormalize, avRandom, avVisible } from './avatar-vector.mjs';
 
 // Axis groups shown as chip tabs (gallery-category pattern): only the
 // active group's rows are rendered, keeping the pane short and tidy.
@@ -169,12 +169,10 @@ function _avmRender() {
         } else {
           // Mini portrait preview with this option applied to the current
           // recipe -- makes shape choices self-explanatory without i18n.
-          var alt = {}; for (var k in _avmState) alt[k] = _avmState[k];
-          alt[ax.id] = i;
           b.className = 'avm-mini' + (sel ? ' selected' : '');
-          // Zoom the vignette on the feature being chosen (AV_CROP);
-          // axes without a crop region keep the full portrait.
-          b.innerHTML = avSvg(alt, 40, AV_CROP[ax.id] || null);
+          // Isolated-part vignette: only the chosen layer, drawn with the
+          // current recipe's palette on the felt backdrop.
+          b.innerHTML = avPartSvg(ax.id, i, _avmState, 40);
         }
         b.addEventListener('click', function () {
           _avmState[ax.id] = i;

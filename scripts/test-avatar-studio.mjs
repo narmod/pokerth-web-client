@@ -61,12 +61,21 @@ for (const ax of AXES) {
 }
 ok(clean, 'every axis option renders a clean SVG' + (clean ? '' : ' (bad: ' + badMsg + ')'));
 
-// 2b. Crop regions: valid squares inside the canvas, chips use them
+// 2b. Isolated-part vignettes: every option of every framed axis renders
+// a clean standalone SVG containing only that layer over the felt rect.
 const CROP = window._AV_CROP;
-ok(CROP && Object.keys(CROP).length >= 10, 'AV_CROP defines zoom regions');
-ok(Object.values(CROP).every(c => c.length === 3 && c[0] >= 0 && c[1] >= 0 && c[0] + c[2] <= 200 && c[1] + c[2] <= 200), 'every crop region fits the 200x200 canvas');
-const cropped = window._avSvg(window._avNormalize(null), 40, CROP.mouth);
-ok(cropped.indexOf('viewBox="70 76 60 60"') !== -1, 'avSvg applies the crop as viewBox');
+ok(CROP && Object.keys(CROP).length >= 10, 'AV_CROP defines part frames');
+ok(Object.values(CROP).every(c => c.length === 3 && c[0] >= 0 && c[1] >= 0 && c[0] + c[2] <= 200 && c[1] + c[2] <= 200), 'every part frame fits the 200x200 canvas');
+let partsClean = true, badPart = '';
+for (const ax of AXES.filter(a => a.kind === 'shape' && a.id !== 'sex')) {
+  for (let i = 0; i < ax.n; i++) {
+    const svg = window._avPartSvg(ax.id, i, window._avNormalize(null), 40);
+    if (!svg.startsWith('<svg') || !svg.endsWith('</svg>') || svg.includes('undefined') || svg.includes('NaN')) { partsClean = false; badPart = ax.id + '#' + i; }
+  }
+}
+ok(partsClean, 'every part vignette renders clean' + (partsClean ? '' : ' (bad: ' + badPart + ')'));
+const mouthPart = window._avPartSvg('mouth', 0, window._avNormalize(null), 40);
+ok(mouthPart.indexOf('viewBox="76 90 48 48"') !== -1 && mouthPart.indexOf('<ellipse cx="100" cy="84"') === -1, 'mouth vignette is framed and contains no head');
 
 // 3. Recipes normalize + randomize stay in range
 const rnd = window._avRandom();
