@@ -50,7 +50,13 @@
       // image d'avatar en 404 n'est pas un bug du client, seulement du bruit.
       var tag = String(t.tagName).toUpperCase();
       if (tag !== 'SCRIPT' && tag !== 'LINK') return;
-      push({ msg: 'Failed to load ' + tag.toLowerCase(), src: String(t.src || t.href || ''), line: 0, col: 0, stack: '' });
+      var url = String(t.src || t.href || '');
+      // ... et limité à NOS ressources. Un script tiers coupé par un bloqueur
+      // de pub ou un DNS filtrant (analytics, CDN) n'est pas un bug du client :
+      // c'est le choix du visiteur, on ne peut rien y faire, et un seul
+      // bloqueur répandu suffirait à noyer le journal.
+      if (url && url.indexOf(location.origin + '/') !== 0) return;
+      push({ msg: 'Failed to load ' + tag.toLowerCase(), src: url, line: 0, col: 0, stack: '' });
       return;
     }
     push({ msg: String(ev.message || 'error'), src: String(ev.filename || ''),

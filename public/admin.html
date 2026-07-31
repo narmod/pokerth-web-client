@@ -2057,7 +2057,10 @@
       g.forEach(function(e){
         var row=document.createElement('div'); row.className='row'; row.style.alignItems='flex-start';
         var nm=document.createElement('div'); nm.className='nm';
-        var where=e.src?(_annEsc(e.src.replace(/^https?:\/\/[^/]+/,''))+(e.line?(':'+e.line+(e.col?(':'+e.col):'')):'')):'';
+        // On raccourcit notre propre origine, jamais celle d'un tiers : voir
+        // apparaître un hôte étranger est précisément l'information utile.
+        var _src=String(e.src||'').replace(location.origin,'');
+        var where=_src?(_annEsc(_src)+(e.line?(':'+e.line+(e.col?(':'+e.col):'')):'')):'';
         var devs=(e.uas||[]).map(_seDev).filter(Boolean);
         var meta=[ '\u00d7'+e.count,
                    _erWhen(e.last),
