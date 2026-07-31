@@ -6241,12 +6241,15 @@ const App = (() => {
       // lecture de SettingsManager dans LobbyCreateGamePage.qml) — divergence
       // assumée, dans le sens d'une régression upstream réparée.
       //
-      // Elles priment sur le dernier formulaire utilisé (pth_last_create) :
-      // enregistrer des préférences est un geste DÉLIBÉRÉ, alors que le dernier
-      // formulaire est capturé automatiquement à chaque création. Sans cette
-      // priorité le correctif serait sans effet pour quiconque a déjà créé une
-      // partie — le dernier formulaire recouvrirait toujours les préférences,
-      // et c'est précisément le cas signalé.
+      // Elles s'appliquent SOUS le dernier formulaire utilisé (pth_last_create),
+      // pas au-dessus. Chaque bouton garde ainsi son rôle et un seul :
+      //   · le joueur modifie le formulaire et lance → il retrouve ses choix à
+      //     l'ouverture suivante ; rien ne les recouvre dans son dos ;
+      //   · 💾 enregistre les réglages courants comme préférences ;
+      //   · ⭐ Mes préférences les recharge, sur demande.
+      // Les préférences servent donc de socle : elles habillent le formulaire
+      // tant qu'aucune partie n'a été créée dans ce mode, et remplissent les
+      // champs que le dernier formulaire ne couvre pas.
       //
       // Le nom est exclu : toujours frais, comme pour le dernier formulaire.
       var self = this;
@@ -6275,7 +6278,7 @@ const App = (() => {
           minHumans: 2,
           tag: 'offline',
         };
-        return skipSaved ? withAdmin(baseOffline) : withPrefs(withSaved(withAdmin(baseOffline)));
+        return skipSaved ? withAdmin(baseOffline) : withSaved(withPrefs(withAdmin(baseOffline)));
       }
       if (isPublic) {
         // Defaults for pokerth.net (guest + registered) — alignés 1:1 sur le
@@ -6296,7 +6299,7 @@ const App = (() => {
           minHumans: 5,
           tag: 'public', // for the QuickGame dialog
         };
-        return skipSaved ? withAdmin(basePublic) : withPrefs(withSaved(withAdmin(basePublic)));
+        return skipSaved ? withAdmin(basePublic) : withSaved(withPrefs(withAdmin(basePublic)));
       }
       // LAN / private-server profile (covers both the 'lan' login mode
       // and the 'unauth' private-server-guest mode). Défauts réseau QML
@@ -6315,7 +6318,7 @@ const App = (() => {
         minHumans: 2,
         tag: 'lan',
       };
-      return skipSaved ? withAdmin(baseLan) : withPrefs(withSaved(withAdmin(baseLan)));
+      return skipSaved ? withAdmin(baseLan) : withSaved(withPrefs(withAdmin(baseLan)));
     },
 
     // Apply the per-mode defaults to the create-form inputs. We only
@@ -9686,7 +9689,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.5-web.51'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.5-web.52'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
