@@ -23,7 +23,7 @@ import { AV_AXES, AV_DEFAULT, avSvg, avPartSvg, avSwatch, avNormalize, avRandom,
 // active group's rows are rendered, keeping the pane short and tidy.
 const AV_GROUPS = [
   { icon: '\uD83D\uDC65', label: 'avmGrpBody',  axes: ['sex', 'face'] },
-  { icon: '\uD83D\uDC64', label: 'avmGrpFace',  axes: ['skin', 'marks', 'eyes', 'eyec', 'mouth'] },
+  { icon: '\uD83D\uDC64', label: 'avmGrpFace',  axes: ['skin', 'marks', 'eyes', 'eyec', 'nose', 'mouth'] },
   { icon: '\uD83D\uDC87', label: 'avmGrpHair',  axes: ['hair', 'hairc', 'beard'] },
   { icon: '\uD83D\uDC54', label: 'avmGrpStyle', axes: ['outfit', 'bg'] },
   { icon: '\u2728',        label: 'avmGrpExtra', axes: ['glasses', 'hat', 'shoulder', 'ears'] }

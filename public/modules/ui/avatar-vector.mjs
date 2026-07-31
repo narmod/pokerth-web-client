@@ -49,9 +49,10 @@ const AV_AXES = [
   { id: 'hair',  label: 'avmHair',      n: 17,              kind: 'shape', none: true  },
   { id: 'hairc', label: 'avmHairColor', n: AV_HAIRC.length, kind: 'color', none: false },
   { id: 'beard', label: 'avmBeard',     n: 7,               kind: 'shape', none: true  },
-  { id: 'eyes',  label: 'avmEyeShape',  n: 4,               kind: 'shape', none: false },
+  { id: 'eyes',  label: 'avmEyeShape',  n: 7,               kind: 'shape', none: false },
   { id: 'eyec',  label: 'avmEyeColor',  n: AV_EYEC.length,  kind: 'color', none: false },
-  { id: 'mouth', label: 'avmMouth',     n: 5,               kind: 'shape', none: false },
+  { id: 'nose',  label: 'avmNose',      n: 5,               kind: 'shape', none: false },
+  { id: 'mouth', label: 'avmMouth',     n: 8,               kind: 'shape', none: false },
   { id: 'glasses', label: 'avmGlasses', n: 6,               kind: 'shape', none: true  },
   { id: 'shoulder', label: 'avmShoulder', n: 5,             kind: 'shape', none: true  },
   { id: 'ears',  label: 'avmEarrings',  n: 4,               kind: 'shape', none: true  },
@@ -86,7 +87,7 @@ function avVisible(axId, i, recipe) {
 }
 
 const AV_DEFAULT = { sex: 0, face: 0, bg: 0, outfit: 0, skin: 1, marks: 0, hair: 1, hairc: 1,
-                     beard: 0, eyes: 0, eyec: 0, mouth: 0, glasses: 0, shoulder: 1, ears: 0, hat: 0 };
+                     beard: 0, eyes: 0, eyec: 0, nose: 0, mouth: 0, glasses: 0, shoulder: 1, ears: 0, hat: 0 };
 
 function avNormalize(r) {
   var out = {};
@@ -278,6 +279,24 @@ function _beard(i, hc) {
   }
 }
 
+// ── Noses ────────────────────────────────────────────────────────────────
+function _nose(i, sh) {
+  switch (i) {
+    case 1: // straight, long
+      return '<path d="M100 80 q1 10 0 17 q-3 3-6 1" fill="none" stroke="' + sh + '" stroke-width="1.8" stroke-linecap="round"/>';
+    case 2: // upturned
+      return '<path d="M99 89 q3 4 1 7 q-2 2-5 1" fill="none" stroke="' + sh + '" stroke-width="1.8" stroke-linecap="round"/>'
+        + '<circle cx="96.5" cy="97" r="1" fill="' + sh + '"/><circle cx="102.5" cy="97" r="1" fill="' + sh + '"/>';
+    case 3: // wide
+      return '<path d="M99 86 q2 6 1 9" fill="none" stroke="' + sh + '" stroke-width="1.8" stroke-linecap="round"/>'
+        + '<path d="M93 96 q-3 3 1 5 M107 96 q3 3-1 5" fill="none" stroke="' + sh + '" stroke-width="1.8" stroke-linecap="round"/>';
+    case 4: // aquiline
+      return '<path d="M99 80 q5 8 3 14 q-2 4-7 3" fill="none" stroke="' + sh + '" stroke-width="1.8" stroke-linecap="round"/>';
+    default: // fine (historical)
+      return '<path d="M99 88 q3 6 1 10 l-4 0" fill="none" stroke="' + sh + '" stroke-width="1.8" stroke-linecap="round"/>';
+  }
+}
+
 // ── Eyes (shape x iris color) ────────────────────────────────────────────
 function _eyes(shape, ec) {
   if (shape === 2) { // closed smiling
@@ -289,6 +308,30 @@ function _eyes(shape, ec) {
       + '<circle cx="83.5" cy="80" r="1.6" fill="#1c110a"/>'
       + '<circle cx="85" cy="78.7" r="0.9" fill="#fff"/>'
       + '<path d="M109 80 q7.5-6 15 0" stroke="#3a2a1c" stroke-width="2.6" fill="none" stroke-linecap="round"/>';
+  }
+  if (shape === 4) { // wide, surprised
+    var oneW = function (cx) {
+      return '<ellipse cx="' + cx + '" cy="79" rx="8" ry="7.2" fill="#f6f1e8"/>'
+        + '<circle cx="' + cx + '" cy="79.5" r="3.8" fill="' + ec + '"/>'
+        + '<circle cx="' + cx + '" cy="79.5" r="1.8" fill="#1c110a"/>'
+        + '<circle cx="' + (cx + 1.5) + '" cy="78" r="1" fill="#fff"/>';
+    };
+    return oneW(83.5) + oneW(116.5);
+  }
+  if (shape === 5) { // heavy-lidded
+    var oneL = function (cx) {
+      return '<path d="M' + (cx - 7.5) + ' 80 q7.5-4 15 0 q-7.5 6-15 0z" fill="#f6f1e8"/>'
+        + '<circle cx="' + cx + '" cy="81" r="3" fill="' + ec + '"/>'
+        + '<circle cx="' + cx + '" cy="81" r="1.4" fill="#1c110a"/>'
+        + '<path d="M' + (cx - 7.5) + ' 78.5 q7.5-4 15 0" stroke="#3a2a1c" stroke-width="2" fill="none" stroke-linecap="round"/>';
+    };
+    return oneL(83.5) + oneL(116.5);
+  }
+  if (shape === 6) { // narrowed, determined
+    return '<path d="M76 81 l15-3 q-7 7-15 3z" fill="#f6f1e8"/>'
+      + '<circle cx="84" cy="80" r="2.6" fill="' + ec + '"/><circle cx="84" cy="80" r="1.2" fill="#1c110a"/>'
+      + '<path d="M124 81 l-15-3 q7 7 15 3z" fill="#f6f1e8"/>'
+      + '<circle cx="116" cy="80" r="2.6" fill="' + ec + '"/><circle cx="116" cy="80" r="1.2" fill="#1c110a"/>';
   }
   var ry = shape === 1 ? 4.5 : 6; // almond vs round
   function one(cx) {
@@ -311,6 +354,15 @@ function _mouth(i, skinShadow) {
     case 3: // lipstick smile
       return '<path d="M88 106 q5-4 12-1 q7-3 12 1 q-5 9-12 9 q-7 0-12-9z" fill="#a83b48"/>'
            + '<path d="M90 106 q10 5 20 0 q-10 4-20 0z" fill="#c9576a"/>';
+    case 5: // pout
+      return '<path d="M91 112 q9-6 18 0" stroke="#8a5a44" stroke-width="2.6" fill="none" stroke-linecap="round"/>';
+    case 6: // open laugh
+      return '<path d="M86 104 q14 15 28 0 q-3 13-14 13 q-11 0-14-13z" fill="#7e4034"/>'
+        + '<path d="M88 104.5 q12 5 24 0 l-2 4 q-10 3-20 0z" fill="#f6f1e8"/>'
+        + '<ellipse cx="100" cy="114" rx="6" ry="3" fill="#c96f5c"/>';
+    case 7: // small o (surprise)
+      return '<ellipse cx="100" cy="109" rx="5" ry="6" fill="#7e4034"/>'
+        + '<ellipse cx="100" cy="107.5" rx="3" ry="2.5" fill="#a85847"/>';
     case 4: // smirk
       return '<path d="M90 108 q7 3 14 1 q4-1 6-4" stroke="#8a5a44" stroke-width="2.6" fill="none" stroke-linecap="round"/>';
     default: // soft smile (validated sample)
@@ -474,6 +526,7 @@ const AV_CROP = {
   hair:     [42, 12, 116],
   beard:    [58, 82, 84],
   eyes:     [62, 56, 76],
+  nose:     [82, 76, 36],
   mouth:    [76, 90, 48],
   glasses:  [56, 54, 88],
   shoulder: [116, 116, 80],
@@ -498,6 +551,7 @@ function avPartSvg(axId, i, recipe, size) {
     case 'hair':    body = _hair(i, hc); break;
     case 'beard':   body = _beard(i, hc); break;
     case 'eyes':    body = _eyes(i, AV_EYEC[r.eyec]); break;
+    case 'nose':    body = _nose(i, skin[1]); break;
     case 'mouth':   body = _mouth(i, skin[1]); break;
     case 'glasses': body = _glasses(i); break;
     case 'hat':     body = _hat(i); break;
@@ -536,8 +590,7 @@ function avSvg(recipe, size) {
     + '<path d="M70 84 q-6-2-6 6 q0 8 7 8z" fill="' + skin[0] + '"/>'
     + '<path d="M130 84 q6-2 6 6 q0 8-7 8z" fill="' + skin[1] + '"/>'
     + _marks(r.marks, skin[1])
-    // Nose + cheeks
-    + '<path d="M99 88 q3 6 1 10 l-4 0" fill="none" stroke="' + skin[1] + '" stroke-width="1.8" stroke-linecap="round"/>'
+    + _nose(r.nose, skin[1])
     + '<ellipse cx="78" cy="98" rx="5" ry="3" fill="#dd9576" opacity="0.35"/>'
     + '<ellipse cx="122" cy="98" rx="5" ry="3" fill="#c88463" opacity="0.35"/>'
     + _mouth(r.mouth, skin[1])

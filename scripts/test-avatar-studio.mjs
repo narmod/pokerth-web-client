@@ -46,7 +46,7 @@ studio = studio.replace(/export \{[^}]*\};?/, '');
 ok(typeof window.avStudioTab === 'function', 'avStudioTab exposed');
 ok(typeof window._avSvg === 'function', 'vector engine exposed');
 const AXES = window._AV_AXES;
-ok(Array.isArray(AXES) && AXES.length === 16, '16 axes defined (' + AXES.length + ')');
+ok(Array.isArray(AXES) && AXES.length === 17, '17 axes defined (' + AXES.length + ')');
 
 // 2. Engine coherence: every option of every axis renders a clean SVG.
 let clean = true, badMsg = '';
@@ -74,6 +74,8 @@ for (const ax of AXES.filter(a => a.kind === 'shape' && a.id !== 'sex')) {
   }
 }
 ok(partsClean, 'every part vignette renders clean' + (partsClean ? '' : ' (bad: ' + badPart + ')'));
+const nosePart = window._avPartSvg('nose', 3, window._avNormalize(null), 40);
+ok(nosePart.indexOf('viewBox="82 76 36 36"') !== -1, 'nose vignette framed');
 const mouthPart = window._avPartSvg('mouth', 0, window._avNormalize(null), 40);
 ok(mouthPart.indexOf('viewBox="76 90 48 48"') !== -1 && mouthPart.indexOf('<ellipse cx="100" cy="84"') === -1, 'mouth vignette is framed and contains no head');
 
@@ -162,7 +164,7 @@ ok(persisted && persisted.sex === 1, 'clicking an option persists the recipe (pt
 
 // 7. i18n: axis label keys present in every language file
 const KEYS = ['avmSex','avmFace','avmHat','avmGrpBody','avmGrpFace','avmGrpHair','avmGrpStyle','avmGrpExtra',
-  'avmBg','avmOutfit','avmSkin','avmMarks','avmHair','avmHairColor','avmBeard',
+  'avmNose','avmBg','avmOutfit','avmSkin','avmMarks','avmHair','avmHairColor','avmBeard',
   'avmEyeShape','avmEyeColor','avmMouth','avmShoulder','avmEarrings','avmNone',
   'avTabGallery','avTabCreate','avTabImport','avmRandom','avmReset','avmUse','avmGlasses',
   'avImportDrop','avImportOr','avImportBtn','avImportHint','advAvatarCreate'];
