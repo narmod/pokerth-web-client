@@ -928,7 +928,6 @@ function _processAvatarFile(file) {
         <button type="button" class="avp-cat" data-cat="plants" onclick="avpShowCat('plants', this)" data-i18n-title="avCatPlants" title="Plantes &amp; Fleurs" aria-label="Plantes et Fleurs">🌸</button>
         <button type="button" class="avp-cat" data-cat="sport" onclick="avpShowCat('sport', this)" data-i18n-title="avCatSport" title="Sport" aria-label="Sport">⚽</button>
         <button type="button" class="avp-cat" data-cat="objects" onclick="avpShowCat('objects', this)" data-i18n-title="avCatObjects" title="Objets" aria-label="Objets">🎩</button>
-        <button type="button" class="avp-cat" data-cat="flags" onclick="avpShowCat('flags', this)" data-i18n-title="avCatFlags" title="Drapeaux" aria-label="Drapeaux">🚩</button>
       </div>
       <div class="avp-grid">
 <!-- PokerTH official avatar option. Hidden by default; shown only when
@@ -936,7 +935,7 @@ function _processAvatarFile(file) {
      an avatar (the JS toggles inline display below). The 🪪 (id card)
      glyph indicates "this is my official identity". data-av is the
      sentinel "__pth__" the JS branches on. -->
-<button type="button" class="avp-btn avp-pth avp-pin" data-av="__pth__" id="avp-btn-pth" onclick="selectAvatarPopup('__pth__')" title="Mon avatar PokerTH" data-i18n-title="avatarTooltip"><img src="/favicon.svg" alt="PokerTH" draggable="false" style="width:26px;height:26px;object-fit:contain;pointer-events:none"></button>
+<button type="button" class="avp-btn avp-pth avp-pin" data-av="__pth__" id="avp-btn-pth" onclick="selectAvatarPopup('__pth__')" title="Mon avatar PokerTH" data-i18n-title="avatarTooltip">🪪</button>
 <button type="button" class="avp-btn avp-none avp-pin" data-av="" onclick="selectAvatarPopup('')">Aa</button>
 <button type="button" class="avp-btn" data-av="🌸" data-cat="plants" style="display:none" onclick="selectAvatarPopup('🌸')">🌸</button>
 <button type="button" class="avp-btn" data-av="🌺" data-cat="plants" style="display:none" onclick="selectAvatarPopup('🌺')">🌺</button>
@@ -1226,78 +1225,6 @@ function _processAvatarFile(file) {
 <button type="button" class="avp-btn" data-av="🦞" data-cat="animals" style="display:none" onclick="selectAvatarPopup('🦞')">🦞</button>
 <button type="button" class="avp-btn" data-av="🦀" data-cat="animals" style="display:none" onclick="selectAvatarPopup('🦀')">🦀</button>
 <button type="button" class="avp-btn" data-av="🐔" data-cat="animals" style="display:none" onclick="selectAvatarPopup('🐔')">🐔</button>
-<button type="button" class="avp-btn" data-av="🇫🇷" data-cat="flags" style="display:none" onclick="selectAvatarPopup('🇫🇷')">🇫🇷</button>
-<button type="button" class="avp-btn" data-av="🇧🇪" data-cat="flags" style="display:none" onclick="selectAvatarPopup('🇧🇪')">🇧🇪</button>
-<button type="button" class="avp-btn" data-av="🇨🇭" data-cat="flags" style="display:none" onclick="selectAvatarPopup('🇨🇭')">🇨🇭</button>
-<button type="button" class="avp-btn" data-av="🇨🇦" data-cat="flags" style="display:none" onclick="selectAvatarPopup('🇨🇦')">🇨🇦</button>
-<button type="button" class="avp-btn" data-av="🇺🇸" data-cat="flags" style="display:none" onclick="selectAvatarPopup('🇺🇸')">🇺🇸</button>
-<button type="button" class="avp-btn" data-av="🇬🇧" data-cat="flags" style="display:none" onclick="selectAvatarPopup('🇬🇧')">🇬🇧</button>
-<button type="button" class="avp-btn" data-av="🇩🇪" data-cat="flags" style="display:none" onclick="selectAvatarPopup('🇩🇪')">🇩🇪</button>
-<button type="button" class="avp-btn" data-av="🇪🇸" data-cat="flags" style="display:none" onclick="selectAvatarPopup('🇪🇸')">🇪🇸</button>
-<button type="button" class="avp-btn" data-av="🇮🇹" data-cat="flags" style="display:none" onclick="selectAvatarPopup('🇮🇹')">🇮🇹</button>
-<button type="button" class="avp-btn" data-av="🇵🇹" data-cat="flags" style="display:none" onclick="selectAvatarPopup('🇵🇹')">🇵🇹</button>
-<button type="button" class="avp-btn" data-av="🇳🇱" data-cat="flags" style="display:none" onclick="selectAvatarPopup('🇳🇱')">🇳🇱</button>
-<button type="button" class="avp-btn" data-av="🇸🇪" data-cat="flags" style="display:none" onclick="selectAvatarPopup('🇸🇪')">🇸🇪</button>
-<button type="button" class="avp-btn" data-av="🇳🇴" data-cat="flags" style="display:none" onclick="selectAvatarPopup('🇳🇴')">🇳🇴</button>
-<button type="button" class="avp-btn" data-av="🇩🇰" data-cat="flags" style="display:none" onclick="selectAvatarPopup('🇩🇰')">🇩🇰</button>
-<button type="button" class="avp-btn" data-av="🇫🇮" data-cat="flags" style="display:none" onclick="selectAvatarPopup('🇫🇮')">🇫🇮</button>
-<button type="button" class="avp-btn" data-av="🇮🇪" data-cat="flags" style="display:none" onclick="selectAvatarPopup('🇮🇪')">🇮🇪</button>
-<button type="button" class="avp-btn" data-av="🇵🇱" data-cat="flags" style="display:none" onclick="selectAvatarPopup('🇵🇱')">🇵🇱</button>
-<button type="button" class="avp-btn" data-av="🇷🇺" data-cat="flags" style="display:none" onclick="selectAvatarPopup('🇷🇺')">🇷🇺</button>
-<button type="button" class="avp-btn" data-av="🇺🇦" data-cat="flags" style="display:none" onclick="selectAvatarPopup('🇺🇦')">🇺🇦</button>
-<button type="button" class="avp-btn" data-av="🇯🇵" data-cat="flags" style="display:none" onclick="selectAvatarPopup('🇯🇵')">🇯🇵</button>
-<button type="button" class="avp-btn" data-av="🇨🇳" data-cat="flags" style="display:none" onclick="selectAvatarPopup('🇨🇳')">🇨🇳</button>
-<button type="button" class="avp-btn" data-av="🇰🇷" data-cat="flags" style="display:none" onclick="selectAvatarPopup('🇰🇷')">🇰🇷</button>
-<button type="button" class="avp-btn" data-av="🇧🇷" data-cat="flags" style="display:none" onclick="selectAvatarPopup('🇧🇷')">🇧🇷</button>
-<button type="button" class="avp-btn" data-av="🇦🇷" data-cat="flags" style="display:none" onclick="selectAvatarPopup('🇦🇷')">🇦🇷</button>
-<button type="button" class="avp-btn" data-av="🇲🇽" data-cat="flags" style="display:none" onclick="selectAvatarPopup('🇲🇽')">🇲🇽</button>
-<button type="button" class="avp-btn" data-av="🇦🇺" data-cat="flags" style="display:none" onclick="selectAvatarPopup('🇦🇺')">🇦🇺</button>
-<button type="button" class="avp-btn" data-av="🇮🇳" data-cat="flags" style="display:none" onclick="selectAvatarPopup('🇮🇳')">🇮🇳</button>
-<button type="button" class="avp-btn" data-av="🇲🇦" data-cat="flags" style="display:none" onclick="selectAvatarPopup('🇲🇦')">🇲🇦</button>
-<button type="button" class="avp-btn" data-av="🇩🇿" data-cat="flags" style="display:none" onclick="selectAvatarPopup('🇩🇿')">🇩🇿</button>
-<button type="button" class="avp-btn" data-av="🇹🇳" data-cat="flags" style="display:none" onclick="selectAvatarPopup('🇹🇳')">🇹🇳</button>
-<button type="button" class="avp-btn" data-av="🇬🇷" data-cat="flags" style="display:none" onclick="selectAvatarPopup('🇬🇷')">🇬🇷</button>
-<button type="button" class="avp-btn" data-av="🇹🇷" data-cat="flags" style="display:none" onclick="selectAvatarPopup('🇹🇷')">🇹🇷</button>
-<button type="button" class="avp-btn" data-av="🇪🇬" data-cat="flags" style="display:none" onclick="selectAvatarPopup('🇪🇬')">🇪🇬</button>
-<button type="button" class="avp-btn" data-av="🇿🇦" data-cat="flags" style="display:none" onclick="selectAvatarPopup('🇿🇦')">🇿🇦</button>
-<button type="button" class="avp-btn" data-av="🇸🇳" data-cat="flags" style="display:none" onclick="selectAvatarPopup('🇸🇳')">🇸🇳</button>
-<button type="button" class="avp-btn" data-av="🇨🇮" data-cat="flags" style="display:none" onclick="selectAvatarPopup('🇨🇮')">🇨🇮</button>
-<button type="button" class="avp-btn" data-av="🇱🇺" data-cat="flags" style="display:none" onclick="selectAvatarPopup('🇱🇺')">🇱🇺</button>
-<button type="button" class="avp-btn" data-av="🇦🇹" data-cat="flags" style="display:none" onclick="selectAvatarPopup('🇦🇹')">🇦🇹</button>
-<button type="button" class="avp-btn" data-av="🇨🇿" data-cat="flags" style="display:none" onclick="selectAvatarPopup('🇨🇿')">🇨🇿</button>
-<button type="button" class="avp-btn" data-av="🇭🇺" data-cat="flags" style="display:none" onclick="selectAvatarPopup('🇭🇺')">🇭🇺</button>
-<button type="button" class="avp-btn" data-av="🇸🇰" data-cat="flags" style="display:none" onclick="selectAvatarPopup('🇸🇰')">🇸🇰</button>
-<button type="button" class="avp-btn" data-av="🇸🇮" data-cat="flags" style="display:none" onclick="selectAvatarPopup('🇸🇮')">🇸🇮</button>
-<button type="button" class="avp-btn" data-av="🇭🇷" data-cat="flags" style="display:none" onclick="selectAvatarPopup('🇭🇷')">🇭🇷</button>
-<button type="button" class="avp-btn" data-av="🇷🇸" data-cat="flags" style="display:none" onclick="selectAvatarPopup('🇷🇸')">🇷🇸</button>
-<button type="button" class="avp-btn" data-av="🇧🇬" data-cat="flags" style="display:none" onclick="selectAvatarPopup('🇧🇬')">🇧🇬</button>
-<button type="button" class="avp-btn" data-av="🇷🇴" data-cat="flags" style="display:none" onclick="selectAvatarPopup('🇷🇴')">🇷🇴</button>
-<button type="button" class="avp-btn" data-av="🇮🇸" data-cat="flags" style="display:none" onclick="selectAvatarPopup('🇮🇸')">🇮🇸</button>
-<button type="button" class="avp-btn" data-av="🏴‍☠️" data-cat="flags" style="display:none" onclick="selectAvatarPopup('🏴‍☠️')">🏴‍☠️</button>
-<button type="button" class="avp-btn" data-av="🏁" data-cat="flags" style="display:none" onclick="selectAvatarPopup('🏁')">🏁</button>
-<button type="button" class="avp-btn" data-av="🚩" data-cat="flags" style="display:none" onclick="selectAvatarPopup('🚩')">🚩</button>
-<button type="button" class="avp-btn" data-av="🏳️‍🌈" data-cat="flags" style="display:none" onclick="selectAvatarPopup('🏳️‍🌈')">🏳️‍🌈</button>
-<button type="button" class="avp-btn" data-av="🇳🇿" data-cat="flags" style="display:none" onclick="selectAvatarPopup('🇳🇿')">🇳🇿</button>
-<button type="button" class="avp-btn" data-av="🇨🇱" data-cat="flags" style="display:none" onclick="selectAvatarPopup('🇨🇱')">🇨🇱</button>
-<button type="button" class="avp-btn" data-av="🇨🇴" data-cat="flags" style="display:none" onclick="selectAvatarPopup('🇨🇴')">🇨🇴</button>
-<button type="button" class="avp-btn" data-av="🇵🇪" data-cat="flags" style="display:none" onclick="selectAvatarPopup('🇵🇪')">🇵🇪</button>
-<button type="button" class="avp-btn" data-av="🇻🇪" data-cat="flags" style="display:none" onclick="selectAvatarPopup('🇻🇪')">🇻🇪</button>
-<button type="button" class="avp-btn" data-av="🇺🇾" data-cat="flags" style="display:none" onclick="selectAvatarPopup('🇺🇾')">🇺🇾</button>
-<button type="button" class="avp-btn" data-av="🇧🇴" data-cat="flags" style="display:none" onclick="selectAvatarPopup('🇧🇴')">🇧🇴</button>
-<button type="button" class="avp-btn" data-av="🇪🇨" data-cat="flags" style="display:none" onclick="selectAvatarPopup('🇪🇨')">🇪🇨</button>
-<button type="button" class="avp-btn" data-av="🇵🇾" data-cat="flags" style="display:none" onclick="selectAvatarPopup('🇵🇾')">🇵🇾</button>
-<button type="button" class="avp-btn" data-av="🇨🇺" data-cat="flags" style="display:none" onclick="selectAvatarPopup('🇨🇺')">🇨🇺</button>
-<button type="button" class="avp-btn" data-av="🇯🇲" data-cat="flags" style="display:none" onclick="selectAvatarPopup('🇯🇲')">🇯🇲</button>
-<button type="button" class="avp-btn" data-av="🇵🇦" data-cat="flags" style="display:none" onclick="selectAvatarPopup('🇵🇦')">🇵🇦</button>
-<button type="button" class="avp-btn" data-av="🇨🇷" data-cat="flags" style="display:none" onclick="selectAvatarPopup('🇨🇷')">🇨🇷</button>
-<button type="button" class="avp-btn" data-av="🇱🇹" data-cat="flags" style="display:none" onclick="selectAvatarPopup('🇱🇹')">🇱🇹</button>
-<button type="button" class="avp-btn" data-av="🇱🇻" data-cat="flags" style="display:none" onclick="selectAvatarPopup('🇱🇻')">🇱🇻</button>
-<button type="button" class="avp-btn" data-av="🇪🇪" data-cat="flags" style="display:none" onclick="selectAvatarPopup('🇪🇪')">🇪🇪</button>
-<button type="button" class="avp-btn" data-av="🇧🇾" data-cat="flags" style="display:none" onclick="selectAvatarPopup('🇧🇾')">🇧🇾</button>
-<button type="button" class="avp-btn" data-av="🇰🇿" data-cat="flags" style="display:none" onclick="selectAvatarPopup('🇰🇿')">🇰🇿</button>
-<button type="button" class="avp-btn" data-av="🇹🇭" data-cat="flags" style="display:none" onclick="selectAvatarPopup('🇹🇭')">🇹🇭</button>
-<button type="button" class="avp-btn" data-av="🇻🇳" data-cat="flags" style="display:none" onclick="selectAvatarPopup('🇻🇳')">🇻🇳</button>
-<button type="button" class="avp-btn" data-av="🇵🇭" data-cat="flags" style="display:none" onclick="selectAvatarPopup('🇵🇭')">🇵🇭</button>
 <button type="button" class="avp-btn" data-av="⚽" data-cat="sport" style="display:none" onclick="selectAvatarPopup('⚽')">⚽</button>
 <button type="button" class="avp-btn" data-av="🏀" data-cat="sport" style="display:none" onclick="selectAvatarPopup('🏀')">🏀</button>
 <button type="button" class="avp-btn" data-av="🏈" data-cat="sport" style="display:none" onclick="selectAvatarPopup('🏈')">🏈</button>
