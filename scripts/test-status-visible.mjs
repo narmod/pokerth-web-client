@@ -26,6 +26,8 @@ function ok(cond, label) {
 
 const start = src.indexOf('function setStatus(');
 ok(start > 0, 'setStatus is still where the test expects it');
+ok(/function setStatus\(txt, cls='', key, opts\)/.test(src),
+   'setStatus takes the options argument the call sites pass');
 const body = src.slice(start, src.indexOf('\n}', start) + 2);
 
 // ── Stubs ─────────────────────────────────────────────────────────
@@ -57,6 +59,23 @@ ok(toasts.length === 1, 'an error reaches the player even from the lobby');
 ok(toasts[0].msg === '\u26a0 Game is full', 'the mirrored text is the message itself');
 ok(toasts[0].opts && toasts[0].opts.tone === 'error', 'it is shown with the error tone');
 ok(toasts[0].opts.duration >= 4000, 'it stays long enough to be read');
+
+// ── Messages qui ne parlent que de l'écran de connexion ───────────
+// « La connexion prend du temps, réessaie » n'a de sens que sous le bouton
+// CONNECT. Doublé à table, il demandait au joueur d'agir sur un écran qu'il ne
+// voit pas, à propos d'une reconnexion automatique qu'il n'a pas déclenchée --
+// un panneau gris par-dessus la barre d'actions, en pleine main.
+toasts = [];
+setStatus('Connection is taking a while\u2026 retry if needed.', 'err', null, { local: true });
+ok(el.textContent === 'Connection is taking a while\u2026 retry if needed.',
+   'a connect-screen message is still written to the status line');
+ok(toasts.length === 0, 'but it is never mirrored away from the connect screen');
+
+setStatus('\u26a0 Game is full', 'err', null, {});
+ok(toasts.length === 1, 'an empty options object changes nothing');
+
+setStatus('\u26a0 Invite-only table', 'err', null, { local: false });
+ok(toasts.length === 2, 'and local:false is the ordinary case');
 
 // ── Robustesse ────────────────────────────────────────────────────
 // L'écran de connexion peut avoir été retiré du DOM : setStatus ne doit pas

@@ -3732,6 +3732,15 @@ const App = (() => {
       // LAN après mode avion). _hideBanner() masque bandeau + pastille.
       if ((_rb && _rb.classList.contains('visible')) ||
           (_rp && _rp.style.display !== 'none')) _hideBanner();
+      // Same reasoning for the connect watchdog. _beginConnecting arms a 20 s
+      // timer that fires connectSlow ("taking a while... retry if needed");
+      // _endConnecting disarms it, but it only runs on InitAck or on close.
+      // A transparent reattach produces neither, so the timer kept firing
+      // ~20 s after a reconnection that had already succeeded -- an error
+      // toast over the action bar, in the middle of a hand. A received frame
+      // is proof the link is back: that is the acknowledgement we were
+      // waiting for.
+      if (S._preserveConnect && S._connectingNow) _endConnecting();
     } catch (e) {}
     if (typeof chunk === 'string') return; // ignore text frames
     if (window.directWS) {
@@ -4915,14 +4924,14 @@ const App = (() => {
       if (!_gateOffline && S._ipBlockUntil > now) {
         const remaining = Math.ceil((S._ipBlockUntil - now) / 1000);
         const mins = Math.floor(remaining / 60), secs = remaining % 60;
-        setStatus(t('ipBlockedWaitPrefix') + (mins > 0 ? mins + 'min ' : '') + secs + 's', 'err');
+        setStatus(t('ipBlockedWaitPrefix') + (mins > 0 ? mins + 'min ' : '') + secs + 's', 'err', null, { local: true });
         _startIpBlockCountdown();
         return;
       }
       // Rate limiter seulement après un échec (pas après une déco normale)
       if (S._lastConnectFailed && now - S._lastConnectTime < S.MIN_CONNECT_INTERVAL) {
         const wait = Math.ceil((S.MIN_CONNECT_INTERVAL - (now - S._lastConnectTime)) / 1000);
-        setStatus(t('waitBeforeRetry', { n: wait }), 'err');
+        setStatus(t('waitBeforeRetry', { n: wait }), 'err', null, { local: true });
         return;
       }
       S._lastConnectTime = now;
@@ -4978,14 +4987,14 @@ const App = (() => {
                  || ('Guest' + String(Math.floor(10000 + Math.random()*90000)));
         $('nick').value = S.myName;
       }
-      if (!S.myName) { setStatus(t('enterNick'), 'err'); return; }
+      if (!S.myName) { setStatus(t('enterNick'), 'err', null, { local: true }); return; }
       // Ré-aligne l'avatar-upload (initiale) sur le pseudo définitif AVANT l'Init.
       try { if (window.refreshMyAvatar) window.refreshMyAvatar(); } catch(e) {}
-      if (S.myName.length < 3) { setStatus(t('nickTooShort'), 'err'); return; }
-      if (!_off && (!effProxyUrl || !host)) { setStatus(t('fillFields'), 'err'); return; }
+      if (S.myName.length < 3) { setStatus(t('nickTooShort'), 'err', null, { local: true }); return; }
+      if (!_off && (!effProxyUrl || !host)) { setStatus(t('fillFields'), 'err', null, { local: true }); return; }
 
       if (!_off && loginMode === 'auth' && (!$('pass') || !$('pass').value.trim())) {
-        setStatus(t('enterPassword'), 'err');
+        setStatus(t('enterPassword'), 'err', null, { local: true });
         return;
       }
 
@@ -5123,15 +5132,19 @@ const App = (() => {
         try {
           S.ws = new WebSocket(finalUrl);
         } catch (e) {
-          setStatus(t('invalidUrl', { msg: e.message }), 'err');
+          setStatus(t('invalidUrl', { msg: e.message }), 'err', null, { local: true });
           return;
         }
       }
 
+      // A transparent reattach replays no Init, so InitAck -- the only thing
+      // that normally calls _endConnecting() -- never comes. Flag it here so
+      // the first received frame can disarm the watchdog (see onRawData).
+      S._preserveConnect = _preserve;
       _beginConnecting();   // lock button for the whole attempt (anti IP-block)
       S.ws.binaryType = 'arraybuffer';
       S.ws.onopen    = () => { S._lastRxTime = Date.now(); setStatus(t('proxyConnectedWait')); try { window._pthCountConnect && window._pthCountConnect(_cntMode()); } catch (e) {} };
-      S.ws.onerror   = () => { S._lastConnectFailed = true; _endConnecting(); setStatus(t('wsError'), 'err'); };
+      S.ws.onerror   = () => { S._lastConnectFailed = true; _endConnecting(); setStatus(t('wsError'), 'err', null, { local: true }); };
       S.ws.onmessage = function(e) {
         if (typeof e.data === 'string') {
           // Message texte = protocole proxy (réactions)
@@ -9776,7 +9789,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.5-web.85'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.5-web.86'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

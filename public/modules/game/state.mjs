@@ -119,6 +119,11 @@ export const S = {
   _connectingNow: false,   // anti double-clic (ré-entrance)
   _connectTimeout: null,   // filet : le bouton Connexion ne reste jamais bloqué
   _connectBtnLabel: null,
+  // Tentative en cours = rebranchement transparent (connect({preserve:true})).
+  // Le proxy garde la session PokerTH vivante -> aucun Init/InitAck n'est
+  // rejoue, donc rien n'appellerait _endConnecting(). La 1re frame recue fait
+  // office d'accuse de reception (voir onRawData).
+  _preserveConnect: false,
   _currentLoginMode: 'lan',
   _reconnectAttempts: 0,
   _lastRxTime: Date.now(), // watchdog liveness (dernier message reçu)

@@ -38,11 +38,12 @@ function _beginConnecting(){
     // now cleanly close+reopen (single cycle) via the lingering-WS path.
     if (!S._connectingNow) return;
     _endConnecting();
-    try { setStatus(t('connectSlow'), 'err'); } catch(e) {}
+    try { setStatus(t('connectSlow'), 'err', null, { local: true }); } catch(e) {}
   }, 20000);
 }
 function _endConnecting(){
   S._connectingNow = false;
+  S._preserveConnect = false;
   if (S._connectTimeout) { clearTimeout(S._connectTimeout); S._connectTimeout = null; }
   var b = _connectBtnEl();
   if (b) {
@@ -204,7 +205,7 @@ function _forceReconnect() {
   try { App.connect({ preserve: true }); } catch(e) {}
 }
 
-function setStatus(txt, cls='', key) {
+function setStatus(txt, cls='', key, opts) {
   // Mémorise la clé i18n du message courant (null pour les messages
   // transitoires : erreurs, « Initialisation… »), afin que _refreshConnectStatus
   // puisse le retraduire à la volée lors d'un changement de langue.
@@ -223,7 +224,15 @@ function setStatus(txt, cls='', key) {
   // Une erreur ne doit pas dépendre de l'écran où l'on se trouve : quand la
   // cible est masquée, on la double d'un toast. Limité aux erreurs — les
   // messages d'état ordinaires n'ont pas à s'imposer par-dessus l'écran.
+  //
+  // EXCEPTION `local:true` — certains messages ne parlent QUE de l'écran de
+  // connexion : « la connexion prend du temps, réessaie », « remplis les
+  // champs », « attends N s avant de réessayer ». Les doubler ailleurs, c'est
+  // demander à un joueur assis à une table d'agir sur un écran qu'il ne voit
+  // pas — et, pour une reconnexion automatique, sur un problème qu'il n'a même
+  // pas provoqué. À table, l'indicateur de lien est la pastille #g-conn-pill.
   if (cls !== 'err') return;
+  if (opts && opts.local) return;
   try {
     if (el.offsetParent !== null) return;          // visible : rien à doubler
     if (window.showToast) window.showToast(txt, { tone: 'error', icon: '\u26a0', duration: 5000 });

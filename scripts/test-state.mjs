@@ -101,6 +101,7 @@ ok(S.ws === null && S.rxBuf instanceof Uint8Array && S.rxBuf.length === 0, 'ws /
 ok(S.lastMajor === 5 && S.lastMinor === 1 && S.lastLoginType === 0, 'version login init 5.1/0');
 ok(S._lastConnectParams === null && S._lastInitMode === null && S._lastInitNick === null
    && S._lastInitTime === 0, 'derniers params de connexion init');
+ok(S._preserveConnect === false, 'reattach flag off until connect({preserve:true})');
 ok(S._connectingNow === false && S._connectTimeout === null && S._connectBtnLabel === null,
    'garde de connexion init');
 ok(S._currentLoginMode === 'lan' && S._reconnectAttempts === 0
@@ -179,7 +180,7 @@ ok(JSON.stringify(keys) === JSON.stringify(['REACT_EMOJI_MIN_GAP', 'REACT_EMOJI_
    'amGameAdmin', 'MAX_GAME_NAME',
    'ws', 'rxBuf', 'lastMajor', 'lastMinor', 'lastLoginType', '_lastConnectParams',
    '_lastInitMode', '_lastInitNick', '_lastInitTime', '_connectingNow',
-   '_connectTimeout', '_connectBtnLabel', '_currentLoginMode', '_reconnectAttempts',
+   '_connectTimeout', '_connectBtnLabel', '_preserveConnect', '_currentLoginMode', '_reconnectAttempts',
    '_lastRxTime', '_intentionalDisconnect', '_pendingRejoin', '_pendingRejoinSpec', '_rejoinNickRetries',
    '_wasAuthenticated', '_lastConnectTime', '_lastConnectFailed', '_ipBlockUntil',
    '_notifyWS', '_notifyUrl', '_notifyTimer', 'MIN_CONNECT_INTERVAL',
