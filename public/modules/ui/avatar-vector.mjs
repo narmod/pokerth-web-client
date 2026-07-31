@@ -22,7 +22,8 @@
 const AV_SKIN = [
   ['#f6d7c0', '#e3bda1'], ['#e8b48c', '#d19a72'], ['#dfa876', '#c68e5c'],
   ['#c98d5f', '#b07748'], ['#a56a3e', '#8c5730'], ['#7a4b28', '#63391c'],
-  ['#fce4d2', '#ecccb4'], ['#5c3a20', '#472a14']
+  ['#fce4d2', '#ecccb4'], ['#5c3a20', '#472a14'],
+  ['#452812', '#331c0a'], ['#2f1b0d', '#201106']
 ];
 // [base, highlight]
 const AV_HAIRC = [
@@ -42,19 +43,19 @@ const AV_AXES = [
   { id: 'sex',   label: 'avmSex',       n: 2,               kind: 'shape', none: false },
   { id: 'face',  label: 'avmFace',      n: 3,               kind: 'shape', none: false },
   { id: 'bg',    label: 'avmBg',        n: AV_FELT.length,  kind: 'color', none: false },
-  { id: 'outfit',label: 'avmOutfit',    n: 8,               kind: 'shape', none: false },
+  { id: 'outfit',label: 'avmOutfit',    n: 9,               kind: 'shape', none: false },
   { id: 'skin',  label: 'avmSkin',      n: AV_SKIN.length,  kind: 'color', none: false },
-  { id: 'marks', label: 'avmMarks',     n: 5,               kind: 'shape', none: true  },
-  { id: 'hair',  label: 'avmHair',      n: 15,              kind: 'shape', none: true  },
+  { id: 'marks', label: 'avmMarks',     n: 6,               kind: 'shape', none: true  },
+  { id: 'hair',  label: 'avmHair',      n: 17,              kind: 'shape', none: true  },
   { id: 'hairc', label: 'avmHairColor', n: AV_HAIRC.length, kind: 'color', none: false },
-  { id: 'beard', label: 'avmBeard',     n: 6,               kind: 'shape', none: true  },
-  { id: 'eyes',  label: 'avmEyeShape',  n: 3,               kind: 'shape', none: false },
+  { id: 'beard', label: 'avmBeard',     n: 7,               kind: 'shape', none: true  },
+  { id: 'eyes',  label: 'avmEyeShape',  n: 4,               kind: 'shape', none: false },
   { id: 'eyec',  label: 'avmEyeColor',  n: AV_EYEC.length,  kind: 'color', none: false },
   { id: 'mouth', label: 'avmMouth',     n: 5,               kind: 'shape', none: false },
   { id: 'glasses', label: 'avmGlasses', n: 6,               kind: 'shape', none: true  },
   { id: 'shoulder', label: 'avmShoulder', n: 5,             kind: 'shape', none: true  },
   { id: 'ears',  label: 'avmEarrings',  n: 4,               kind: 'shape', none: true  },
-  { id: 'hat',   label: 'avmHat',       n: 6,               kind: 'shape', none: true  }
+  { id: 'hat',   label: 'avmHat',       n: 7,               kind: 'shape', none: true  }
 ];
 
 // Per-option silhouette tags (0 = masculine-leaning, 1 = feminine-leaning,
@@ -62,7 +63,7 @@ const AV_AXES = [
 // avVisible() lets the UI filter rows coherently with the selected sex
 // while the engine still renders any recipe (old recipes stay valid).
 const AV_SEXTAG = {
-  hair: { 2: 0, 3: 1, 5: 1, 6: 0, 7: 1, 8: 1, 9: 0, 11: 1, 12: 1, 14: 1 },
+  hair: { 2: 0, 3: 1, 5: 1, 6: 0, 7: 1, 8: 1, 9: 0, 11: 1, 12: 1, 14: 1, 16: 0 },
   mouth: { 3: 1 },
   outfit: { 6: 1 }
 };
@@ -130,8 +131,16 @@ function _outfit(i, skin) {
   if (i === 7) { // dark turtleneck
     return '<path d="M50 200 q2-44 50-46 q48 2 50 46z" fill="#22262c"/>'
       + '<path d="M50 200 q2-44 50-46 l0 46z" fill="#1a1e23"/>'
-      + '<path d="M86 142 q0-8 14-8 q14 0 14 8 l0 10 q-14 6-28 0z" fill="#2c313a"/>'
-      + '<path d="M86 146 l28 0 M86 150 l28 0" stroke="#22262c" stroke-width="1.4" fill="none"/>';
+      + '<path d="M86 136 q0-8 14-8 q14 0 14 8 l0 16 q-14 6-28 0z" fill="#2c313a"/>'
+      + '<path d="M86 142 l28 0 M86 147 l28 0" stroke="#22262c" stroke-width="1.4" fill="none"/>';
+  }
+  if (i === 8) { // white dinner jacket, dark shirt, no tie
+    return '<path d="M50 200 q2-44 50-46 q48 2 50 46z" fill="#e9e2d2"/>'
+      + '<path d="M50 200 q2-44 50-46 l0 46z" fill="#ddd5c2"/>'
+      + '<path d="M86 150 q-2-6 3-9 l11 5 11-5 q5 3 3 9 l-14 40z" fill="#20242a"/>'
+      + '<path d="M100 146 l11-5 q5 3 3 9 l-14 36z" fill="#181c22"/>'
+      + '<path d="M84 145 l-22 10 12 45 22-40 q-9-4-12-15z" fill="#f2ecdd"/>'
+      + '<path d="M116 145 l22 10 -12 45 -22-40 q9-4 12-15z" fill="#e4dccb"/>';
   }
   if (i === 5) { // open-collar shirt, no jacket (casual)
     return '<path d="M50 200 q2-44 50-46 q48 2 50 46z" fill="#dfd8c8"/>'
@@ -226,6 +235,15 @@ function _hair(i, hc) {
     case 14: // long wavy
       return '<path d="M60 80 q-2-48 40-48 q42 0 40 48 l-2 40 q-6 8-13 3 q5-10 1-18 q4-8 0-16 q-5 7-13 8 q-15-2-26 0 q-8-1-13-8 q-4 8 0 16 q-4 8 1 18 q-7 5-13-3z" fill="' + b + '"/>'
         + '<path d="M70 52 q9-11 24-12 q-13 5-17 15 M130 52 q-9-11-24-12 q13 5 17 15" fill="' + h + '" opacity="0.45"/>';
+    case 15: // dreadlocks
+      return '<path d="M66 72 q-2-30 34-30 q36 0 34 30 q-2 6-5 8 q1-22-9-28 q-6 8-20 8 q-14 0-20-8 q-10 6-9 28 q-3-2-5-8z" fill="' + b + '"/>'
+        + '<g fill="' + b + '"><rect x="62" y="66" width="7" height="34" rx="3.5"/><rect x="72" y="72" width="7" height="30" rx="3.5" transform="rotate(4 75 72)"/><rect x="121" y="72" width="7" height="30" rx="3.5" transform="rotate(-4 125 72)"/><rect x="131" y="66" width="7" height="34" rx="3.5"/></g>'
+        + '<g fill="' + h + '" opacity="0.45"><rect x="64" y="70" width="3" height="26" rx="1.5"/><rect x="133" y="70" width="3" height="26" rx="1.5"/></g>';
+    case 16: // balding crown (masculine)
+      return '<path d="M64 82 q0-8 8-10 l0 18 q-7-1-8-8z" fill="' + b + '"/>'
+        + '<path d="M136 82 q0-8-8-10 l0 18 q7-1 8-8z" fill="' + b + '"/>'
+        + '<path d="M72 72 q4-6 10-7 l-2 6 q-5 1-8 5z" fill="' + b + '" opacity="0.8"/>'
+        + '<path d="M128 72 q-4-6-10-7 l2 6 q5 1 8 5z" fill="' + b + '" opacity="0.8"/>';
     default: // wavy senior sweep
       return '<path d="M66 74 q-2-32 34-32 q36 0 34 32 q-2 8-6 10 q2-22-8-28 q-6 8-20 8 q-14 0-20-8 q-10 6-8 28 q-4-2-6-10z" fill="' + b + '"/>'
            + '<path d="M74 46 q6-6 16-7 q-8 5-11 12 M104 40 q9 1 15 7 q-8-2-13-1" stroke="' + h + '" stroke-width="2.4" fill="none" stroke-linecap="round"/>';
@@ -249,6 +267,10 @@ function _beard(i, hc) {
       return '<g fill="' + b + '" opacity="0.35">'
         + '<path d="M72 92 q2 20 14 25 q8 4 14 4 q6 0 14-4 q12-5 14-25 q-3 14-10 17 q3-5 2-9 q-8 7-20 7 q-12 0-20-7 q-1 4 2 9 q-7-3-10-17z"/>'
         + '<path d="M100 101 q-4-5-13-2 q3 6 13 4 q10 2 13-4 q-9-3-13 2z"/></g>';
+    case 6: // long beard
+      return '<path d="M70 88 q0 30 14 40 q7 8 16 12 q9-4 16-12 q14-10 14-40 q-4 20-12 26 q4-7 2-13 q-8 8-20 8 q-12 0-20-8 q-2 6 2 13 q-8-6-12-26z" fill="' + b + '"/>'
+        + '<path d="M88 116 q6 8 12 8 q6 0 12-8 l-3 18 q-4 6-9 8 q-5-2-9-8z" fill="' + h + '" opacity="0.3"/>'
+        + '<path d="M100 101 q-4-5-13-2 q3 6 13 4 q10 2 13-4 q-9-3-13 2z" fill="' + b + '"/>';
     default: // full beard
       return '<path d="M70 88 q0 26 14 32 q8 4 16 4 q8 0 16-4 q14-6 14-32 q-4 18-12 22 q4-6 2-11 q-8 8-20 8 q-12 0-20-8 q-2 5 2 11 q-8-4-12-22z" fill="' + b + '"/>'
            + '<path d="M86 112 q6 6 14 6 q8 0 14-6 l-2 12 q-5 5-12 5 q-7 0-12-5z" fill="' + h + '" opacity="0.35"/>'
@@ -260,6 +282,13 @@ function _beard(i, hc) {
 function _eyes(shape, ec) {
   if (shape === 2) { // closed smiling
     return '<path d="M76 80 q7.5-6 15 0 M109 80 q7.5-6 15 0" stroke="#3a2a1c" stroke-width="2.6" fill="none" stroke-linecap="round"/>';
+  }
+  if (shape === 3) { // wink: left open, right closed
+    return '<path d="M76 80 q7.5-6 15 0 q-7.5 6-15 0z" fill="#f6f1e8"/>'
+      + '<circle cx="83.5" cy="80" r="3.4" fill="' + ec + '"/>'
+      + '<circle cx="83.5" cy="80" r="1.6" fill="#1c110a"/>'
+      + '<circle cx="85" cy="78.7" r="0.9" fill="#fff"/>'
+      + '<path d="M109 80 q7.5-6 15 0" stroke="#3a2a1c" stroke-width="2.6" fill="none" stroke-linecap="round"/>';
   }
   var ry = shape === 1 ? 4.5 : 6; // almond vs round
   function one(cx) {
@@ -305,6 +334,8 @@ function _marks(i, skinShadow) {
         + '<path d="M84 62 q16-4 32 0 M86 57 q14-3 28 0"/>'
         + '<path d="M72 84 q-3 3-3 6 M128 84 q3 3 3 6"/>'
         + '<path d="M88 96 q-2 4-1 7 M112 96 q2 4 1 7"/></g>';
+    case 5: // dimples
+      return '<path d="M84 108 q-2 3 0 6 M116 108 q2 3 0 6" stroke="' + skinShadow + '" stroke-width="1.4" stroke-linecap="round" fill="none"/>';
     case 4: // eyebrow scar
       return '<path d="M108 64 l6 10 M112 63 l6 10" stroke="' + skinShadow + '" stroke-width="1.6" stroke-linecap="round" fill="none"/>';
     default: return '';
@@ -347,20 +378,20 @@ function _chipStack(x, y, top, side) {
 }
 function _shoulder(i) {
   if (i === 0) return '';
-  var chips = _chipStack(140, 150, '#1d8552', '#0f5a35') + _chipStack(140, 138, '#c23434', '#8d1f1f');
+  var chips = _chipStack(147, 154, '#1d8552', '#0f5a35') + _chipStack(147, 142, '#c23434', '#8d1f1f');
   if (i === 1) return chips;
   if (i === 2) {
-    return chips + '<g transform="translate(158,146)"><circle r="11" fill="#8f6a1d"/><circle r="9" fill="#14100a"/>'
+    return chips + '<g transform="translate(164,150)"><circle r="11" fill="#8f6a1d"/><circle r="9" fill="#14100a"/>'
       + '<path d="M0-5 q3.5-5 3.5 4 q2.5 4-2.5 4 l0.8 2.5 -3.6 0 0.8-2.5 q-5 0-2.5-4 q0-9 3.5-4z" fill="#c9992e"/></g>';
   }
   if (i === 4) { // whisky tumbler
-    return '<g transform="translate(144,144)">'
+    return '<g transform="translate(149,150)">'
       + '<path d="M-11-12 l22 0 -2 24 q-9 4-18 0z" fill="#cfd8dd" opacity="0.55"/>'
       + '<path d="M-9 0 l18 0 -1.5 11 q-7.5 3-15 0z" fill="#b5651d"/>'
       + '<rect x="-5" y="-9" width="7" height="7" rx="1.5" fill="#e8f1f5" opacity="0.7" transform="rotate(12)"/>'
       + '<ellipse cx="0" cy="-12" rx="11" ry="2.6" fill="none" stroke="#e5edf1" stroke-width="1.4" opacity="0.8"/></g>';
   }
-  return '<g transform="translate(146,142) rotate(8)">'
+  return '<g transform="translate(150,148) rotate(8)">'
     + '<rect x="-20" y="-14" width="20" height="28" rx="2.5" fill="#efe9dd" stroke="#c9bfa8" stroke-width="0.8"/>'
     + '<text x="-16.5" y="-5" font-size="8" font-family="serif" fill="#1d1d1f">A</text>'
     + '<path d="M-13 2 q2.6-3.6 2.6 2.6 q1.8 3-1.8 3 l0.5 1.8 -2.6 0 0.5-1.8 q-3.6 0-1.8-3 q0-6.2 2.6-2.6z" fill="#1d1d1f"/>'
@@ -373,30 +404,35 @@ function _shoulder(i) {
 function _hat(i) {
   if (i === 0) return '';
   if (i === 1) { // cap
-    return '<path d="M68 52 q0-24 32-24 q32 0 32 24 l0 4 -64 0z" fill="#8d1f1f"/>'
+    return '<g transform="translate(0,3)">' + '<path d="M68 52 q0-24 32-24 q32 0 32 24 l0 4 -64 0z" fill="#8d1f1f"/>'
       + '<path d="M100 28 q32 0 32 24 l0 4 -12 0 q4-20-20-28z" fill="#711818"/>'
       + '<path d="M100 52 l40 0 q4 0 3 5 l-43 0z" fill="#5c1313"/>'
-      + '<circle cx="100" cy="30" r="3" fill="#5c1313"/>';
+      + '<circle cx="100" cy="30" r="3" fill="#5c1313"/>' + '</g>';
   }
   if (i === 2) { // fedora
-    return '<path d="M56 56 q0 6 12 8 q16 3 32 3 q16 0 32-3 q12-2 12-8 q0-4-8-5 l-80 0 q-8 1-8 5z" fill="#2c2620"/>'
+    return '<g transform="translate(0,3)">' + '<path d="M56 56 q0 6 12 8 q16 3 32 3 q16 0 32-3 q12-2 12-8 q0-4-8-5 l-80 0 q-8 1-8 5z" fill="#2c2620"/>'
       + '<path d="M72 51 q0-24 28-24 q28 0 28 24 l0 3 -56 0z" fill="#3a332b"/>'
-      + '<path d="M72 48 l56 0 0 5 -56 0z" fill="#1d1915"/>';
+      + '<path d="M72 48 l56 0 0 5 -56 0z" fill="#1d1915"/>' + '</g>';
   }
   if (i === 4) { // bowler
-    return '<path d="M60 58 q0 5 10 6 q15 2 30 2 q15 0 30-2 q10-1 10-6 q0-3-7-4 l-66 0 q-7 1-7 4z" fill="#17130f"/>'
+    return '<g transform="translate(0,3)">' + '<path d="M60 58 q0 5 10 6 q15 2 30 2 q15 0 30-2 q10-1 10-6 q0-3-7-4 l-66 0 q-7 1-7 4z" fill="#17130f"/>'
       + '<path d="M72 54 q1-24 28-24 q27 0 28 24z" fill="#242019"/>'
-      + '<path d="M72 50 l56 0 0 4 -56 0z" fill="#0e0b08"/>';
+      + '<path d="M72 50 l56 0 0 4 -56 0z" fill="#0e0b08"/>' + '</g>';
   }
   if (i === 5) { // panama
-    return '<path d="M56 57 q0 6 12 7 q16 2 32 2 q16 0 32-2 q12-1 12-7 q0-4-8-5 l-72 0 q-8 1-8 5z" fill="#d9cba4"/>'
+    return '<g transform="translate(0,3)">' + '<path d="M56 57 q0 6 12 7 q16 2 32 2 q16 0 32-2 q12-1 12-7 q0-4-8-5 l-72 0 q-8 1-8 5z" fill="#d9cba4"/>'
       + '<path d="M72 52 q0-24 28-24 q28 0 28 24 l0 2 -56 0z" fill="#e8dcbb"/>'
-      + '<path d="M72 48 l56 0 0 5 -56 0z" fill="#6b2020"/>';
+      + '<path d="M72 48 l56 0 0 5 -56 0z" fill="#6b2020"/>' + '</g>';
+  }
+  if (i === 6) { // bandana
+    return '<path d="M68 58 q32-16 64 0 l-2 8 q-30-13-60 0z" fill="#8d1f1f"/>'
+      + '<path d="M70 57 q30-13 60 0" stroke="#5c1313" stroke-width="1.6" fill="none"/>'
+      + '<g fill="#eee6d6" opacity="0.7"><circle cx="84" cy="56" r="1.2"/><circle cx="98" cy="53" r="1.2"/><circle cx="112" cy="54" r="1.2"/><circle cx="124" cy="58" r="1.2"/></g>'
+      + '<path d="M132 60 q8 2 9 9 q-6-1-10-5 M133 62 q5 6 4 12 q-5-3-7-8" fill="#8d1f1f"/>';
   }
   // dealer visor
   return '<path d="M66 56 q34-14 68 0 l-4 9 q-30-12-60 0z" fill="#0f5a35"/>'
-    + '<path d="M70 55 q30-11 60 0" stroke="#08341f" stroke-width="2" fill="none"/>'
-    + '<path d="M68 54 q-4 8 2 12 M132 54 q4 8-2 12" stroke="#0f5a35" stroke-width="3" fill="none"/>';
+    + '<path d="M70 55 q30-11 60 0" stroke="#08341f" stroke-width="2" fill="none"/>';
 }
 
 // ── Earrings ─────────────────────────────────────────────────────────────
