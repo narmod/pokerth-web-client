@@ -10103,3 +10103,31 @@ body.adv-no-helpbtn .help-menu-btn{display:none}
 /* Notes plateforme/navigateur de l'aide (champ note des sections). */
 .help-note{display:flex;gap:8px;align-items:flex-start;margin:8px 0;padding:7px 10px;font-size:0.78rem;line-height:1.5;color:var(--text);background:rgba(var(--gold-rgb,227,200,0),.07);border-left:3px solid var(--gold-dim);border-radius:0 6px 6px 0}
 .help-note-ic{flex:0 0 auto;color:var(--gold-dim);font-size:0.85rem;line-height:1.4}
+
+/* ── Avatar studio (fenêtre avatar à onglets : Galerie / Créer / Importer) ── */
+.avp-tabs{display:flex;gap:4px;padding:6px 8px 0;border-bottom:1px solid var(--border,#2c3e50)}
+.avp-tab{background:none;border:none;color:var(--text,#dfe6ee);padding:7px 14px;font-size:.92rem;cursor:pointer;border-radius:8px 8px 0 0;opacity:.75}
+.avp-tab.selected{background:var(--panel2,rgba(255,255,255,.07));opacity:1;font-weight:600}
+body.adv-no-avcreate #avp-tab-create{display:none!important}
+#avp-pane-create,#avp-pane-import{padding:12px}
+.avm-wrap{display:flex;gap:16px;flex-wrap:wrap;align-items:flex-start;justify-content:center}
+.avm-left{display:flex;flex-direction:column;align-items:center;gap:8px}
+.avm-preview{width:148px;height:148px;border-radius:50%;overflow:hidden;border:3px solid #b98a2e;background:#20301f;display:flex;align-items:center;justify-content:center}
+.avm-preview img{width:100%;height:100%;object-fit:cover;display:block}
+.avm-missing{font-size:2rem;opacity:.5}
+.avm-status{font-size:.78rem;opacity:.75;min-height:1em;text-align:center;max-width:150px}
+.avm-rows{flex:1 1 200px;min-width:190px;display:flex;flex-direction:column;gap:10px}
+.avm-axis-label{display:block;font-size:.8rem;opacity:.75;margin-bottom:4px}
+.avm-axis-opts{display:flex;gap:6px;flex-wrap:wrap}
+.avm-opt{background:var(--panel2,rgba(255,255,255,.07));border:1px solid transparent;color:var(--text,#dfe6ee);padding:6px 13px;border-radius:8px;font-size:.88rem;cursor:pointer}
+.avm-opt.selected{border-color:#b98a2e;background:rgba(185,138,46,.18);font-weight:600}
+.avm-btn{background:var(--panel2,rgba(255,255,255,.07));border:1px solid var(--border,#2c3e50);color:var(--text,#dfe6ee);padding:7px 14px;border-radius:8px;font-size:.88rem;cursor:pointer}
+.avm-btn:disabled{opacity:.4;cursor:default}
+.avm-foot{display:flex;justify-content:flex-end;margin-top:12px;border-top:1px solid var(--border,#2c3e50);padding-top:10px}
+.avm-use{border-color:#b98a2e}
+.avi-drop{border:2px dashed var(--border,#3a4c60);border-radius:12px;padding:22px 14px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:8px}
+.avi-drop.over{border-color:#b98a2e;background:rgba(185,138,46,.08)}
+.avi-ico{font-size:1.8rem}
+.avi-line{font-size:.92rem}
+.avi-or{font-size:.8rem;opacity:.6}
+.avi-hint{font-size:.75rem;opacity:.65;max-width:300px}

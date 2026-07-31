@@ -461,6 +461,11 @@ function pickAvatarImage() {
 }
 function onAvatarImageChosen(input) {
   var file = input && input.files && input.files[0];
+  _processAvatarFile(file);
+}
+// Shared avatar-file processing (input file OR drag-and-drop from the
+// Import tab of the avatar studio, modules/ui/avatar-studio.mjs).
+function _processAvatarFile(file) {
   if (!file) return;
   if (!/^image\//.test(file.type)) { alert("Veuillez choisir un fichier image."); return; }
   var reader = new FileReader();
@@ -606,6 +611,7 @@ function onAvatarImageChosen(input) {
     '/modules/ui/botsuggest.mjs',
     '/modules/chat/abbrev.mjs',
     '/modules/ui/player-popup.mjs',
+    '/modules/ui/avatar-studio.mjs',
     '/modules/ui/lobby.mjs',
     '/modules/game/showdown.mjs',
     '/modules/net/session.mjs',
@@ -907,6 +913,12 @@ function onAvatarImageChosen(input) {
         <span data-i18n="chooseAvatar">Choose an avatar</span>
         <button type="button" onclick="toggleAvatarPopup()" style="background:none;border:none;color:var(--text);cursor:pointer;font-size:1rem">✕</button>
       </div>
+      <div class="avp-tabs" role="tablist">
+        <button type="button" class="avp-tab selected" id="avp-tab-gallery" role="tab" aria-selected="true" onclick="avStudioTab('gallery')" data-i18n="avTabGallery">Gallery</button>
+        <button type="button" class="avp-tab" id="avp-tab-create" role="tab" aria-selected="false" onclick="avStudioTab('create')" data-i18n="avTabCreate">Create</button>
+        <button type="button" class="avp-tab" id="avp-tab-import" role="tab" aria-selected="false" onclick="avStudioTab('import')" data-i18n="avTabImport">Import</button>
+      </div>
+      <div id="avp-pane-gallery">
       <div class="avp-cats" role="tablist">
         <button type="button" class="avp-cat selected" data-cat="gallery" onclick="avpShowCat('gallery', this)" data-i18n-title="avatarGallery" title="Galerie d'avatars" aria-label="Galerie d'avatars">🖼️</button>
         <button type="button" class="avp-cat" data-cat="people" onclick="avpShowCat('people', this)" data-i18n-title="avCatPeople" title="Personnes" aria-label="Personnes">🧑</button>
@@ -1458,6 +1470,9 @@ function onAvatarImageChosen(input) {
 <button type="button" class="avp-btn" data-av="🤞" data-cat="poker" style="display:none" onclick="selectAvatarPopup('🤞')">🤞</button>
 <button type="button" class="avp-btn" data-av="🔥" data-cat="poker" style="display:none" onclick="selectAvatarPopup('🔥')">🔥</button>
       </div>
+      </div><!-- /avp-pane-gallery -->
+      <div id="avp-pane-create" style="display:none"></div>
+      <div id="avp-pane-import" style="display:none"></div>
     </div>
 
     <div class="f" id="f-pass" style="display:none">
@@ -2290,6 +2305,7 @@ function onAvatarImageChosen(input) {
 <script type="module" src="modules/ui/botsuggest.mjs"></script>
 <script type="module" src="modules/chat/abbrev.mjs"></script>
 <script type="module" src="modules/ui/player-popup.mjs"></script>
+<script type="module" src="modules/ui/avatar-studio.mjs"></script>
 <script type="module" src="modules/ui/lobby.mjs"></script>
 <script type="module" src="modules/game/showdown.mjs"></script>
 <script type="module" src="modules/net/session.mjs"></script>
@@ -2717,6 +2733,7 @@ if ('serviceWorker' in navigator) {
       <label class="adv-row"><input type="checkbox" id="adv-chatts" onchange="setAdvOpt('chat_ts',this.checked)"><span data-i18n="advChatTimestamps">Show time in chat messages</span><em class="adv-webtag">web</em></label>
       <label class="adv-row"><input type="checkbox" id="adv-chattranslate" onchange="setChatTranslate(this.checked)"><span data-i18n="advChatTranslate">Chat translation (Google Translate, per-message button)</span></label>
       <label class="adv-row"><input type="checkbox" id="adv-chattralways" onchange="setAdvOpt('chat_tr_always',this.checked);try{document.body.classList.toggle('chat-tr-always',this.checked)}catch(e){}"><span data-i18n="advChatTrAlways">Translation button always visible (otherwise only on the hovered or tapped line)</span><em class="adv-webtag">web</em></label>
+      <label class="adv-row"><input type="checkbox" id="adv-avcreate" onchange="setAdvOpt('avatar_create',this.checked)"><span data-i18n="advAvatarCreate">Show the &laquo; Create &raquo; portraits tab in the avatar window</span><em class="adv-webtag">web</em></label>
       <label class="adv-row"><input type="checkbox" id="adv-chatabbrev" onchange="setAdvOpt('chat_abbrev',this.checked)"><span data-i18n="advChatAbbrev">Explain chat abbreviations (gg, nh, utg…) on hover</span><em class="adv-webtag">web</em></label>
       <label class="adv-row"><input type="checkbox" id="adv-chatclearlogin" onchange="setAdvOpt('chat_clear_login',this.checked)"><span data-i18n="advChatClearLogin">Clear the lobby chat when connecting</span></label>
       </details>

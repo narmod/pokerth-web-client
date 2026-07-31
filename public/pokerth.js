@@ -222,6 +222,7 @@ function applyAdvOpts() {
     try { if (typeof window._syncWinBtns === 'function') window._syncWinBtns(); } catch (e) {}
     b.classList.toggle('adv-no-handsbtn', !_advGet('hands_btn', true)); // icone combinaisons de poker sur le tapis (extension web)
     b.classList.toggle('adv-no-helpbtn', !_advGet('help_btn', true)); // entree « Aide » des menus des headers (extension web)
+    b.classList.toggle('adv-no-avcreate', !_advGet('avatar_create', true)); // onglet « Créer » de la fenêtre avatar (avatar-studio)
     try { if (typeof window.applyTableZoom === 'function') window.applyTableZoom(); } catch (e) {}
     try { var _slm = localStorage.getItem('pth_seat_layout'); _slm = (_slm === 'pokerth-official' || _slm === 'pokerth-ellipse' || _slm === 'custom') ? _slm : 'auto'; document.documentElement.setAttribute('data-seat-layout', _slm); } catch (e) {}
     try { if (typeof window._refreshOwnCards === 'function') window._refreshOwnCards(); } catch (e) {}
@@ -393,6 +394,7 @@ function openAdvancedOptions() {
   // Globe de traduction : défaut = comportement QML 2.1.5 (ligne survolée /
   // tapée seulement) ; coché = bouton permanent sur toutes les lignes.
   sync('adv-chattralways', 'chat_tr_always', false);
+  sync('adv-avcreate', 'avatar_create', true);   // onglet « Créer » de la fenêtre avatar (studio matriciel, extension web)
   try { document.body.classList.toggle('chat-tr-always', _advGet('chat_tr_always', false)); } catch (e) {}
   sync('adv-assist', 'assist', true);
   sync('adv-showodds', 'show_odds', true);
@@ -1193,7 +1195,7 @@ function _cfgSyncEnabled() { return _advGet('cfg_sync', true); }
 var _CFG_WEB_SYNC_KEYS = [
   // Toggles web-only (via setAdvOpt → pth_<clé>)
   'pth_show_community', 'pth_chat_noemoji', 'pth_chat_ts', 'pth_chat_clear_login', 'pth_chat_tr_always', 'pth_guard_raise', 'pth_community_suggest',
-  'pth_assist', 'pth_show_odds', 'pth_hands_btn', 'pth_voice',
+  'pth_assist', 'pth_show_odds', 'pth_hands_btn', 'pth_voice', 'pth_avatar_create',
   'pth_haptic', 'pth_display_bb', 'pth_table_zoom', 'pth_zoom_follow',
   'pth_community_content', 'pth_sound_vol',
   'pth_log_on', 'pth_create_dialog', 'pth_status_bar', 'pth_blinds_badge',
@@ -2339,6 +2341,7 @@ window.refreshMyAvatar = function() {
   }
 
 window.toggleAvatarPopup = function() {
+  try { if (typeof window.avStudioReset === 'function') window.avStudioReset(); } catch (e) {}
   var popup = document.getElementById('avatar-popup');
   if (!popup) return;
   var isOpen = popup.style.display && popup.style.display !== 'none';
@@ -9728,7 +9731,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.5-web.55'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.5-web.56'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
