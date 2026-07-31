@@ -485,7 +485,7 @@ const AV_CROP = {
 function avPartSvg(axId, i, recipe, size) {
   var r = avNormalize(recipe);
   r[axId] = i;
-  var felt = AV_FELT[r.bg], skin = AV_SKIN[r.skin], hc = AV_HAIRC[r.hairc];
+  var skin = AV_SKIN[r.skin], hc = AV_HAIRC[r.hairc];
   var vb = AV_CROP[axId];
   if (!vb) return avSvg(r, size);
   var body = '';
@@ -505,8 +505,9 @@ function avPartSvg(axId, i, recipe, size) {
     case 'ears':    body = _ears(i); break;
     default: return avSvg(r, size);
   }
+  // No backdrop: the part floats on the chip's theme background so the
+  // vignette stays readable in every palette (narmod 2026-07-31).
   return '<svg viewBox="' + vb[0] + ' ' + vb[1] + ' ' + vb[2] + ' ' + vb[2] + '" width="' + size + '" height="' + size + '" xmlns="http://www.w3.org/2000/svg">'
-    + '<rect x="' + vb[0] + '" y="' + vb[1] + '" width="' + vb[2] + '" height="' + vb[2] + '" fill="' + felt[0] + '"/>'
     + body + '</svg>';
 }
 
@@ -544,8 +545,12 @@ function avSvg(recipe, size) {
     // Brows follow hair color
     + '<path d="M74 68 q8-5 16-1 l-1 3 q-7-3-14 0z" fill="' + hc[0] + '"/>'
     + '<path d="M110 67 q8-4 16 1 l-1 2 q-7-3-14 0z" fill="' + hc[0] + '"/>'
-    + _beard(r.beard, hc)
-    + _hair(r.hair, hc)
+    // Round face (face 1) is ~10% wider than the oval the hair and beard
+    // were drawn for: widen both around the vertical centre so they hug
+    // the head instead of floating like a too-narrow hairpiece.
+    + (r.face === 1
+        ? '<g transform="translate(100,0) scale(1.1,1) translate(-100,0)">' + _beard(r.beard, hc) + _hair(r.hair, hc) + '</g>'
+        : _beard(r.beard, hc) + _hair(r.hair, hc))
     + _glasses(r.glasses)
     + _ears(r.ears)
     + _hat(r.hat)
