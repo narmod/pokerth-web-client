@@ -6227,6 +6227,37 @@ const App = (() => {
         if (a && typeof a === 'object') ['players', 'blind', 'stack', 'timeout'].forEach(function (k) { if (a[k] != null && a[k] !== '') base[k] = a[k]; });
         return base;
       };
+      // Préférences de création du mode courant (pth_prefs_internet /
+      // pth_prefs_lan / pth_prefs_local, parité QML InternetGameSettings /
+      // NetworkGameSettings / LocalGameSettings). Elles existaient déjà —
+      // éditables champ par champ dans les Options avancées, exportées dans le
+      // .pdb — mais ne s'appliquaient qu'en cliquant la pastille ⭐ Perso. Un
+      // panneau de préférences dont les valeurs n'apparaissent nulle part n'en
+      // est pas un : elles s'appliquent maintenant à l'ouverture du formulaire.
+      //
+      // C'est aussi ce que faisait l'ancien client Qt-Widgets, dont la boîte de
+      // création s'initialisait depuis NetTimeOutPlayerAction /
+      // NetDelayBetweenHands. La réécriture QML a perdu cette liaison (aucune
+      // lecture de SettingsManager dans LobbyCreateGamePage.qml) — divergence
+      // assumée, dans le sens d'une régression upstream réparée.
+      //
+      // Elles priment sur le dernier formulaire utilisé (pth_last_create) :
+      // enregistrer des préférences est un geste DÉLIBÉRÉ, alors que le dernier
+      // formulaire est capturé automatiquement à chaque création. Sans cette
+      // priorité le correctif serait sans effet pour quiconque a déjà créé une
+      // partie — le dernier formulaire recouvrirait toujours les préférences,
+      // et c'est précisément le cas signalé.
+      //
+      // Le nom est exclu : toujours frais, comme pour le dernier formulaire.
+      var self = this;
+      var withPrefs = function (base) {
+        var pref = null;
+        try { pref = self._readCreatePrefsRaw(); } catch (e) { pref = null; }
+        if (pref && typeof pref === 'object') {
+          for (var k in pref) { if (k !== 'name' && pref[k] != null) base[k] = pref[k]; }
+        }
+        return base;
+      };
       // Mode entraînement : défauts du jeu LOCAL officiel (configfile.cpp
       // qt6-qml : StartCash 5000, GameSpeed 4, hausse toutes les 8 mains,
       // NetTimeOutPlayerAction 20). Aligné QML v0.3.686 (demande Arnaud).
@@ -6244,7 +6275,7 @@ const App = (() => {
           minHumans: 2,
           tag: 'offline',
         };
-        return skipSaved ? withAdmin(baseOffline) : withSaved(withAdmin(baseOffline));
+        return skipSaved ? withAdmin(baseOffline) : withPrefs(withSaved(withAdmin(baseOffline)));
       }
       if (isPublic) {
         // Defaults for pokerth.net (guest + registered) — alignés 1:1 sur le
@@ -6265,7 +6296,7 @@ const App = (() => {
           minHumans: 5,
           tag: 'public', // for the QuickGame dialog
         };
-        return skipSaved ? withAdmin(basePublic) : withSaved(withAdmin(basePublic));
+        return skipSaved ? withAdmin(basePublic) : withPrefs(withSaved(withAdmin(basePublic)));
       }
       // LAN / private-server profile (covers both the 'lan' login mode
       // and the 'unauth' private-server-guest mode). Défauts réseau QML
@@ -6284,7 +6315,7 @@ const App = (() => {
         minHumans: 2,
         tag: 'lan',
       };
-      return skipSaved ? withAdmin(baseLan) : withSaved(withAdmin(baseLan));
+      return skipSaved ? withAdmin(baseLan) : withPrefs(withSaved(withAdmin(baseLan)));
     },
 
     // Apply the per-mode defaults to the create-form inputs. We only
@@ -9655,7 +9686,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.5-web.50'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.5-web.51'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
