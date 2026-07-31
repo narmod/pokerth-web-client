@@ -9849,7 +9849,7 @@ html[data-seat-struct="qml"] .seat:not(.me) .seat-narrow .seat-holecards .pk { w
 /* ── HUD par siège + grille de range (thème client) ─────────────────────── */
 #hud-layer{position:absolute;inset:0;pointer-events:none;z-index:6;overflow:visible}
 .hud-box{position:absolute;pointer-events:auto;cursor:pointer;
-  min-width:120px;background:var(--panel-hi);border:1px solid var(--border-hi);border-radius:var(--r-md);
+  min-width:148px;background:var(--panel-hi);border:1px solid var(--border-hi);border-radius:var(--r-md);
   padding:4px 7px 5px;box-shadow:0 8px 26px rgba(0,0,0,.55);backdrop-filter:blur(4px);
   font-size:var(--fs-2xs);line-height:1.3;user-select:none;transition:border-color .15s}
 .hud-box:hover{border-color:rgba(var(--gold-rgb),.55)}
@@ -9863,6 +9863,13 @@ html[data-seat-struct="qml"] .seat:not(.me) .seat-narrow .seat-holecards .pk { w
 .hud-stat{display:flex;align-items:baseline;justify-content:space-between;gap:3px}
 .hud-lbl{color:var(--text);font-style:normal;font-size:var(--fs-2xs);letter-spacing:.03em;opacity:.75}
 .hud-val{color:var(--text-hi);font-weight:600;font-variant-numeric:tabular-nums;font-size:var(--fs-xs)}
+/* Badge d'archétype : cadran 2×2 (serré↔large en X, passif↔agressif en Y) et
+   libellé en toutes lettres. .hud-style-est = estimation sous 25 mains. */
+.hud-style{display:flex;align-items:center;gap:5px;margin-top:3px;padding-top:3px;
+  border-top:1px solid var(--border);color:var(--text-hi);font-size:var(--fs-2xs);line-height:1.2}
+.hud-style-ico{flex:none;display:block;color:var(--gold)}
+.hud-style-lbl{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;letter-spacing:.02em}
+.hud-style-est{opacity:.5}
 
 /* Grille de range (modale centrée) */
 #range-modal{position:fixed;inset:0;z-index:9999;display:none;align-items:center;justify-content:center;
@@ -9931,6 +9938,11 @@ html[data-seat-struct="qml"] .seat:not(.me) .seat-narrow .seat-holecards .pk { w
 #hud-detail .hud-d-t-cell b{color:var(--text);font-variant-numeric:tabular-nums}
 #hud-detail .hud-d-t-cell u{text-decoration:none;color:var(--gold);font-weight:700}
 #hud-detail .hud-d-scope{flex-shrink:0;color:var(--text-dim,#a0acc4);font-size:var(--fs-3xs,10px);opacity:.75;border:1px solid var(--border);border-radius:6px;padding:0 5px;line-height:1.5}
+#hud-detail .hud-d-style{display:flex;align-items:center;gap:var(--sp-2);margin-bottom:4px;
+  padding-bottom:4px;border-bottom:1px solid var(--border);font-size:var(--fs-xs)}
+#hud-detail .hud-d-style-k{flex:none;color:var(--text);opacity:.85}
+#hud-detail .hud-d-style-v{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+  color:var(--text-hi);font-weight:700;text-align:right}
 #hud-detail .hud-d-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px 12px}
 #hud-detail .hud-d-row{display:flex;align-items:baseline;justify-content:space-between;gap:var(--sp-2);padding:1px 0}
 #hud-detail .hud-d-lbl{color:var(--text);font-size:var(--fs-xs);opacity:.85}
@@ -9943,8 +9955,8 @@ html[data-seat-struct="qml"] .seat:not(.me) .seat-narrow .seat-holecards .pk { w
 .range-grid td.filled{font-weight:700}
 .range-grid .rc-combo{display:block;font-size:9.5px}
 .range-grid .rc-count{display:block;font-size:8px;opacity:.85;font-variant-numeric:tabular-nums}
-/* Mobile : HUD très compact — une seule ligne VPIP/PFR/AF (les 3 dernières
-   stats sont masquées pour réduire l'encombrement en portrait 9-max). */
+/* Mobile : HUD très compact — VPIP/PFR/AF sur une ligne, et le badge
+   d'archétype réduit à son cadran (le libellé prendrait toute la largeur). */
 @media (max-width:599.98px){
   .range-grid td{width:26px;height:26px;font-size:7.5px}
   .range-grid .rc-combo{font-size:8px}
@@ -9953,9 +9965,10 @@ html[data-seat-struct="qml"] .seat:not(.me) .seat-narrow .seat-holecards .pk { w
   .hud-name{font-size:var(--fs-2xs);max-width:76px}
   .hud-hands{font-size:var(--fs-3xs)}
   .hud-grid{grid-template-columns:repeat(3,auto);gap:1px 7px;justify-content:start}
-  .hud-grid .hud-stat:nth-child(n+4){display:none}
   .hud-lbl{font-size:var(--fs-3xs)}
   .hud-val{font-size:var(--fs-2xs)}
+  .hud-style{justify-content:center;gap:0;margin-top:2px;padding-top:2px}
+  .hud-style-lbl{display:none}
 }
 /* Très petits écrans (portrait étroit) : encore plus dense. */
 @media (max-width:400px){
@@ -9963,17 +9976,18 @@ html[data-seat-struct="qml"] .seat:not(.me) .seat-narrow .seat-holecards .pk { w
   .hud-name{max-width:66px}
   .hud-grid{gap:1px 6px}
 }
-/* Mobile paysage (peu de hauteur) : même compacité qu'en portrait — n'affiche
-   que VPIP/PFR/AF, indépendamment de la largeur. */
+/* Mobile paysage (peu de hauteur) : même compacité qu'en portrait,
+   indépendamment de la largeur. */
 @media (orientation:landscape) and (max-height:600px){
   .hud-box{min-width:0;width:auto;max-width:128px;font-size:var(--fs-3xs);padding:3px 5px;border-radius:var(--r-sm);line-height:1.2}
   .hud-head{gap:4px;margin-bottom:2px}
   .hud-name{font-size:var(--fs-2xs);max-width:82px}
   .hud-hands{font-size:var(--fs-3xs)}
   .hud-grid{grid-template-columns:repeat(3,auto);gap:1px 7px;justify-content:start}
-  .hud-grid .hud-stat:nth-child(n+4){display:none}
   .hud-lbl{font-size:var(--fs-3xs)}
   .hud-val{font-size:var(--fs-2xs)}
+  .hud-style{justify-content:center;gap:0;margin-top:2px;padding-top:2px}
+  .hud-style-lbl{display:none}
 }
 
 /* ── Zoom de fenêtre (demande narmod 2026-07-18) : le contenu (texte,

@@ -1576,8 +1576,69 @@ function _hudOn() {
 // Stats affichées dans chaque boîte (id → libellé court).
 const HUD_ROWS = [
   ['vpip', 'VPIP'], ['pfr', 'PFR'], ['af', 'AF'],
-  ['three_bet', '3B'], ['cbet', 'CB'], ['fold_to_3bet', 'F3B'],
 ];
+
+// ── Archetype de jeu (badge de la pastille + popover) ──────────────────────
+// Deux axes que tout le monde lit : serre/large (VPIP) et passif/agressif (AF).
+// Les quatre quadrants couvrent la quasi-totalite des joueurs ; deux extremes
+// (tres serre, hyper-agressif) sont signales en plus. En dessous de
+// STYLE_MIN_HANDS mains l'estimation reste affichee mais attenuee (.reliable
+// false) : mieux vaut une indication prudente que rien du tout.
+const STYLE_MIN_HANDS = 25;
+const _STYLE_FB = {
+  veryTight: 'Very tight', tightPassive: 'Tight-Passive', tightAggr: 'Tight-Aggressive',
+  loosePassive: 'Loose-Passive', looseAggr: 'Loose-Aggressive', hyperAggr: 'Hyper-aggressive',
+};
+function playerStyle(s) {
+  if (!s) return null;
+  const vpip = (typeof s.vpip === 'number') ? s.vpip : parseFloat(s.vpip);
+  if (vpip == null || !isFinite(vpip)) return null;
+  let af = s.af;
+  if (af === 'inf' || af === Infinity) af = Infinity;
+  else { af = (typeof af === 'number') ? af : parseFloat(af); if (af == null || isNaN(af)) af = 0; }
+  const loose = vpip >= 24;
+  const aggro = af >= 2;
+  let id;
+  if (vpip < 15) id = 'veryTight';
+  else if (loose && aggro && vpip >= 45 && af >= 3) id = 'hyperAggr';
+  else if (!loose && !aggro) id = 'tightPassive';
+  else if (!loose && aggro) id = 'tightAggr';
+  else if (loose && !aggro) id = 'loosePassive';
+  else id = 'looseAggr';
+  return {
+    id: id,
+    key: 'hlStyle' + id.charAt(0).toUpperCase() + id.slice(1),
+    loose: loose, aggro: aggro,
+    extreme: (id === 'veryTight' || id === 'hyperAggr'),
+    reliable: (s.hands || 0) >= STYLE_MIN_HANDS,
+  };
+}
+function _styleLabel(st) { return _ht(st.key, _STYLE_FB[st.id]); }
+function _styleTitle(st) {
+  const lbl = _styleLabel(st);
+  if (st.reliable) return lbl;
+  return lbl + ' \u2014 ' + _ht('hlStyleEstimate', 'Estimate \u2014 fewer than 25 hands');
+}
+
+// Cadran 2x2 : axe horizontal serre -> large, axe vertical passif (bas) ->
+// agressif (haut). Le quadrant actif est allume, les extremes recoivent en
+// plus un contour. currentColor partout : un attribut SVG ne resout PAS var().
+const _STYLE_CELLS = [
+  [0.6, 0.6, false, true], [6.4, 0.6, true, true],
+  [0.6, 6.4, false, false], [6.4, 6.4, true, false],
+];
+function _styleIcon(st) {
+  let r = '';
+  for (const [x, y, lo, ag] of _STYLE_CELLS) {
+    const on = (lo === st.loose && ag === st.aggro);
+    r += '<rect x="' + x + '" y="' + y + '" width="5" height="5" rx="1.4" fill="currentColor"'
+      + ' opacity="' + (on ? '1' : '.22') + '"'
+      + (on && st.extreme ? ' stroke="currentColor" stroke-width="1.1" stroke-opacity=".5"' : '')
+      + '/>';
+  }
+  return '<svg class="hud-style-ico" viewBox="0 0 12 12" width="11" height="11"'
+    + ' aria-hidden="true" focusable="false">' + r + '</svg>';
+}
 
 function _hudFmt(id, v) {
   if (v == null) return '–';
@@ -1798,9 +1859,15 @@ function _buildBox(pid, name, layer) {
     rows += '<span class="hud-stat"><i class="hud-lbl">' + lbl + '</i>'
       + '<b class="hud-val"' + (col ? ' style="color:' + col + '"' : '') + '>' + val + '</b></span>';
   }
+  const st = playerStyle(s);
+  const styleRow = st
+    ? '<div class="hud-style' + (st.reliable ? '' : ' hud-style-est') + '" title="'
+        + _hudEsc(_styleTitle(st)) + '">' + _styleIcon(st)
+        + '<span class="hud-style-lbl">' + _hudEsc(_styleLabel(st)) + '</span></div>'
+    : '';
   box.innerHTML = '<div class="hud-head"><span class="hud-name">' + _hudEsc(name) + '</span>'
     + '<span class="hud-hands">' + handsTxt + '</span></div>'
-    + '<div class="hud-grid">' + rows + '</div>';
+    + '<div class="hud-grid">' + rows + '</div>' + styleRow;
   return box;
 }
 
@@ -2081,8 +2148,17 @@ function openHudDetail(name, boxEl) {
       + '<span class="hud-d-t-lbl">' + _hudEsc(_ht('hlTrend', 'Trend')) + '</span>'
       + cell('vpip', 'VPIP') + cell('af', 'AF') + '</div>';
   }
+  const stD = playerStyle(s);
+  const styleRow = stD
+    ? '<div class="hud-d-style' + (stD.reliable ? '' : ' hud-style-est') + '" title="'
+        + _hudEsc(_styleTitle(stD)) + '">'
+      + '<span class="hud-d-style-k">' + _hudEsc(_ht('hlStyle', 'Style')) + '</span>'
+      + _styleIcon(stD)
+      + '<span class="hud-d-style-v">' + _hudEsc(_styleLabel(stD)) + '</span></div>'
+    : '';
   pop.innerHTML = '<div class="hud-d-head"><span class="hud-d-name">' + _hudEsc(name) + '</span>' + _scopeTag
     + '<span class="hud-d-hands">' + (s ? (s.hands + ' ' + _ht(s.hands === 1 ? 'hlHandSing' : 'hlHandPlur', s.hands === 1 ? 'hand' : 'hands')) : '—') + '</span></div>'
+    + styleRow
     + '<div class="hud-d-grid">' + rows + '</div>' + trend
     + '<button type="button" class="hud-d-range">' + _ht('hlSeeRange','See range ▸') + '</button>';
   pop.querySelector('.hud-d-range').addEventListener('click', (e) => {
@@ -2234,4 +2310,5 @@ function _renderRange(modal) {
 // ne communiquer que par window.* : ces exports n'ont aucun effet a l'execution.
 export { StatsData, StatsCalculator, RECENT_HANDS,
          _trendArrow, _TREND_MIN_BASE, _TREND_EPS,
-         _refreshScopes, _scopeOf, playerStatsFor };
+         _refreshScopes, _scopeOf, playerStatsFor,
+         playerStyle, STYLE_MIN_HANDS };
