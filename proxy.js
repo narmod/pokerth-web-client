@@ -1544,10 +1544,19 @@ function updateCmdStatic() {
 // Le fichier vit à côté d'admin-config.json : hors git, propriété du serveur,
 // préservé par `git pull` (fichier non suivi).
 const DEPLOY_HISTORY_FILE = process.env.DEPLOY_HISTORY_FILE || path.join(__dirname, 'deploy-history.json');
-const DEPLOY_HISTORY_MAX = 20;
+// Profondeur volontairement courte : au-delà de quelques déploiements, revenir
+// en arrière n'a plus de sens — la configuration, la base et le protocole ont
+// bougé entre-temps. Une liste courte est aussi une liste qu'on lit.
+const DEPLOY_HISTORY_MAX = 5;
 let _deployHistory = [];
 try { _deployHistory = JSON.parse(fs.readFileSync(DEPLOY_HISTORY_FILE, 'utf8')) || []; } catch (e) { _deployHistory = []; }
 if (!Array.isArray(_deployHistory)) _deployHistory = [];
+// Un historique déjà plus long (écrit quand la limite valait 20) est ramené à
+// la nouvelle taille dès le démarrage, sans attendre le prochain déploiement.
+if (_deployHistory.length > DEPLOY_HISTORY_MAX) {
+  _deployHistory = _deployHistory.slice(0, DEPLOY_HISTORY_MAX);
+  try { fs.writeFileSync(DEPLOY_HISTORY_FILE, JSON.stringify(_deployHistory)); } catch (e) {}
+}
 function _saveDeployHistory() {
   try { fs.writeFileSync(DEPLOY_HISTORY_FILE, JSON.stringify(_deployHistory)); }
   catch (e) { console.error('[deploy] history write failed: ' + e.message); }
