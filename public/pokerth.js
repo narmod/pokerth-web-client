@@ -549,10 +549,27 @@ window.advUiTab = advUiTab;
 // formulaire de création écrit l'instantané complet dans l'emplacement du mode
 // courant et ⭐ Perso le recharge (App._createPrefsKey). ──
 var _ADV_PREFS_KEYS = { local: 'pth_prefs_local', lan: 'pth_prefs_lan', net: 'pth_prefs_internet' };
+// Valeurs affichées tant que le joueur n'a rien réglé. Elles DOIVENT coïncider
+// avec le baseline du formulaire de création (App._getCreateDefaults) : ce
+// panneau et ce formulaire décrivent la même chose, et deux jeux de défauts
+// différents pour une même notion ne peuvent produire qu'une contradiction.
+//
+// C'est ce qui avait été signalé sur le forum : le panneau annonçait 5 s en
+// Internet (et une hausse toutes les 7 mains) là où le formulaire s'ouvrait à
+// 20 s / 8 mains. Le joueur lisait ses « préférences », voyait autre chose à la
+// création, et concluait — à raison — qu'elles étaient ignorées, alors qu'il
+// n'avait en réalité jamais rien enregistré.
+//
+// Une préférence ne pèse donc que lorsqu'elle a été VOULUE : tant qu'aucun
+// champ n'est touché, panneau et formulaire disent la même chose, celle du
+// client officiel (configfile.cpp : 3000 en réseau, 5000 en local, SB 10,
+// hausse toutes les 8 mains, 20 s, délai 7 s, vitesse 4).
+// Les valeurs stockées, elles, ne bougent pas — un joueur qui avait déjà réglé
+// ses préférences les retrouve intactes.
 function _advPrefsBaseline(mode) {
-  var b = { players: 10, stack: 3000, blind: 10, raiseEvery: 7, timeout: 15, delayHands: 7 };
-  if (mode === 'local') b.guiSpeed = 5;
-  if (mode === 'net') { b.timeout = 5; b.name = ''; b.gameType = '1'; b.allowSpectators = true; }
+  var b = { players: 10, stack: 3000, blind: 10, raiseEvery: 8, timeout: 20, delayHands: 7 };
+  if (mode === 'local') { b.stack = 5000; b.guiSpeed = 4; }
+  if (mode === 'net') { b.name = ''; b.gameType = '1'; b.allowSpectators = true; }
   return b;
 }
 function _advPrefsRead(mode) {
@@ -9689,7 +9706,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.5-web.52'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.5-web.53'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

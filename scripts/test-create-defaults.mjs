@@ -115,5 +115,40 @@ store['pth_last_create'] = JSON.stringify({ timeout: 25 });
 d = host._getCreateDefaults(false);
 ok(d.timeout === 25, 'and what the player last used wins over everything');
 
+// ── Un seul jeu de défauts ────────────────────────────────────────
+// Le panneau Options avancées (_advPrefsBaseline) et le formulaire de création
+// décrivent la même chose. Deux baselines divergentes ne peuvent produire
+// qu'une contradiction : le panneau annonce une valeur, la création en montre
+// une autre, et le joueur en conclut que ses préférences sont ignorées alors
+// qu'il n'a jamais rien enregistré. C'est le rapport du forum.
+const advStart = src.indexOf('function _advPrefsBaseline(mode) {');
+ok(advStart > 0, '_advPrefsBaseline is still where the test expects it');
+const advBody = src.slice(advStart, src.indexOf('\n}', advStart) + 2);
+globalThis._advPrefsBaseline = eval('(' + advBody.trim().replace(/^function _advPrefsBaseline/, 'function') + ')');
+
+// Le formulaire, mêmes conditions : rien d'enregistré, aucun défaut admin.
+delete store['pth_prefs_internet'];
+delete store['pth_last_create'];
+window._adminTableDefaults = null;
+
+const shared = ['players', 'stack', 'blind', 'raiseEvery', 'timeout', 'delayHands'];
+const pairs = [['net', 'auth', false], ['lan', 'lan', false], ['local', 'lan', true]];
+pairs.forEach(([advMode, loginMode, offline]) => {
+  S._currentLoginMode = loginMode;
+  window._offlineMode = offline;
+  const form = host._getCreateDefaults(false);
+  const panel = _advPrefsBaseline(advMode);
+  const off = shared.filter((k) => String(panel[k]) !== String(form[k]));
+  ok(off.length === 0,
+     advMode + ': the panel and the create form open on the same values'
+       + (off.length ? ' (differ on ' + off.map((k) => k + ' ' + panel[k] + '\u2260' + form[k]).join(', ') + ')' : ''));
+});
+S._currentLoginMode = 'auth';
+window._offlineMode = false;
+
+// Et la valeur elle-même reste celle du client officiel.
+ok(_advPrefsBaseline('net').timeout === 20 && _advPrefsBaseline('net').delayHands === 7,
+   'the Internet panel no longer announces a timeout the create form will not use');
+
 console.log(fails ? '\nFAIL ' + fails : '\nALL OK');
 process.exit(fails ? 1 : 0);
