@@ -17,7 +17,7 @@
 
 'use strict';
 
-import { AV_AXES, avSvg, avSwatch, avNormalize, avRandom, avVisible } from './avatar-vector.mjs';
+import { AV_AXES, AV_DEFAULT, avSvg, avSwatch, avNormalize, avRandom, avVisible } from './avatar-vector.mjs';
 
 // Axis groups shown as chip tabs (gallery-category pattern): only the
 // active group's rows are rendered, keeping the pane short and tidy.
@@ -83,6 +83,7 @@ function _avmRender() {
       '<div class="avm-preview" id="avm-preview"></div>' +
       '<div class="avm-head-btns">' +
       '<button type="button" class="avm-btn" id="avm-dice">\uD83C\uDFB2 <span></span></button>' +
+      '<button type="button" class="avm-btn" id="avm-reset">\u21ba</button>' +
       '<button type="button" class="avm-btn avm-use" id="avm-use"></button>' +
       '</div>' +
       '</div>' +
@@ -102,9 +103,15 @@ function _avmRender() {
     document.getElementById('avm-dice').addEventListener('click', function () {
       _avmState = avRandom(); _avmPersist(); _avmRender();
     });
+    document.getElementById('avm-reset').addEventListener('click', function () {
+      _avmState = avNormalize(AV_DEFAULT); _avmSanitize(); _avmPersist(); _avmRender();
+    });
     document.getElementById('avm-use').addEventListener('click', _avmApply);
   }
   document.querySelector('#avm-dice span').textContent = t('avmRandom');
+  var _rst = document.getElementById('avm-reset');
+  _rst.title = t('avmReset');
+  _rst.setAttribute('aria-label', t('avmReset'));
   document.getElementById('avm-use').textContent = t('avmUse');
 
   document.getElementById('avm-preview').innerHTML = avSvg(_avmState, 120);
@@ -162,7 +169,7 @@ function _avmRender() {
         }
         b.addEventListener('click', function () {
           _avmState[ax.id] = i;
-          if (ax.id === 'sex') _avmSanitize();
+          _avmSanitize();
           _avmPersist(); _avmRender();
         });
         line.appendChild(b);

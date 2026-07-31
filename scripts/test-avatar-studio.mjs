@@ -38,7 +38,7 @@ load('modules/ui/avatar-vector.mjs');
 // avatar-studio consumes the engine's window._-prefixed exports in the harness.
 let studio = fs.readFileSync(path.join(PUB, 'modules/ui/avatar-studio.mjs'), 'utf8');
 studio = studio.replace(/^import .*$/m,
-  'const AV_AXES = window._AV_AXES, avSvg = window._avSvg, avSwatch = window._avSwatch, avNormalize = window._avNormalize, avRandom = window._avRandom;');
+  'const AV_AXES = window._AV_AXES, avSvg = window._avSvg, avSwatch = window._avSwatch, avNormalize = window._avNormalize, avRandom = window._avRandom, avVisible = window._avVisible, AV_DEFAULT = window._AV_DEFAULT;');
 studio = studio.replace(/export \{[^}]*\};?/, '');
 (0, eval)(studio.replace(/^'use strict';/m, ''));
 
@@ -84,10 +84,15 @@ ok(vis('hair', 3, { sex: 1 }) && !vis('hair', 3, { sex: 0 }), 'ponytail is femin
 ok(vis('hair', 2, { sex: 0 }) && !vis('hair', 2, { sex: 1 }), 'slicked-back is masculine-only');
 ok(vis('hair', 4, { sex: 0 }) && vis('hair', 4, { sex: 1 }), 'curly is universal');
 ok(!vis('beard', 2, { sex: 1 }) && vis('beard', 2, { sex: 0 }) && vis('beard', 0, { sex: 1 }), 'beard filtered on feminine silhouette (none stays valid)');
+ok(!vis('hat', 1, { hair: 10 }) && !vis('hat', 2, { hair: 7 }) && vis('hat', 0, { hair: 10 }) && vis('hat', 1, { hair: 1 }), 'hats filtered out on afro/bun (none stays valid)');
+ok(!vis('eyec', 1, { eyes: 2 }) && !vis('eyec', 1, { glasses: 5 }) && vis('eyec', 1, { eyes: 0, glasses: 1 }), 'eye color hidden behind closed eyes or sunglasses');
+ok(vis('mouth', 3, { sex: 1 }) && !vis('mouth', 3, { sex: 0 }), 'lipstick mouth is feminine-only');
+ok(vis('outfit', 6, { sex: 1 }) && !vis('outfit', 6, { sex: 0 }), 'V-neck blouse is feminine-only');
+const wholeAxisHidden = (ax, rr) => { for (let i = 0; i < ax.n; i++) if (vis(ax.id, i, rr)) return false; return true; };
 for (let k = 0; k < 20; k++) {
   const rr = window._avRandom();
-  if (!AXES.every(ax => vis(ax.id, rr[ax.id], rr))) { ok(false, 'random recipe respects the silhouette filter'); break; }
-  if (k === 19) ok(true, 'random recipe respects the silhouette filter (20 draws)');
+  if (!AXES.every(ax => vis(ax.id, rr[ax.id], rr) || wholeAxisHidden(ax, rr))) { ok(false, 'random recipe respects the coherence filter'); break; }
+  if (k === 19) ok(true, 'random recipe respects the coherence filter (20 draws)');
 }
 
 // 5. Tabs + panes
@@ -126,6 +131,13 @@ next.click(); next.click();
 ok(document.getElementById('avm-rows').children.length === 3, 'masculine silhouette: Hair step shows 3 rows again');
 prev.click(); prev.click();
 
+// 5c. Reset button restores the default recipe
+ok(!!document.getElementById('avm-reset'), 'reset button rendered');
+document.querySelectorAll('#avm-rows .avm-axis')[0].querySelectorAll('button')[1].click(); // sex -> F
+document.getElementById('avm-reset').click();
+const afterReset = JSON.parse(localStorage.getItem('pth_avatar_vec'));
+ok(afterReset.sex === 0 && afterReset.hair === 1 && afterReset.glasses === 0, 'reset restores AV_DEFAULT');
+
 // 6. Recipe persistence
 window.avStudioTab('create');
 document.querySelectorAll('#avm-rows .avm-axis')[0].querySelectorAll('button')[1].click();
@@ -136,7 +148,7 @@ ok(persisted && persisted.sex === 1, 'clicking an option persists the recipe (pt
 const KEYS = ['avmSex','avmFace','avmHat','avmGrpBody','avmGrpFace','avmGrpHair','avmGrpStyle','avmGrpExtra',
   'avmBg','avmOutfit','avmSkin','avmMarks','avmHair','avmHairColor','avmBeard',
   'avmEyeShape','avmEyeColor','avmMouth','avmShoulder','avmEarrings','avmNone',
-  'avTabGallery','avTabCreate','avTabImport','avmRandom','avmUse','avmGlasses',
+  'avTabGallery','avTabCreate','avTabImport','avmRandom','avmReset','avmUse','avmGlasses',
   'avImportDrop','avImportOr','avImportBtn','avImportHint','advAvatarCreate'];
 const langDir = path.join(PUB, 'modules/lang');
 let langsOk = true;
