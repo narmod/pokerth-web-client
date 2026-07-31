@@ -241,6 +241,45 @@ ok(S._assistOn === true && store['pth_assist'] === '1', 'window.toggleAssist : b
 window.setAssist(false);
 ok(S._assistOn === false && store['pth_assist'] === '0', 'window.setAssist : pose l\'état exact');
 
+// ── _runPreAction : invalidation à l'exécution (bug boehmi 31/07/2026) ──
+// Scénario réel : BB arme « Check » (pré-action call, à-suivre 0), le SB part
+// all-in juste avant son tour → le check armé ne doit PAS devenir un call.
+S._playingMode = 0; S._inShowdown = false; S._boardDealing = false; S._roundEnded = false;
+S.seatData = { 1: { money: 8074, bet: 1600 }, 2: { money: 0, bet: 5826 } };
+S.highestBet = 1600; S.minRaise = 1600; S.smallBlind = 800;
+S._preAction = 'call'; S._preActionToCall = 0;          // armé quand rien à suivre
+S.highestBet = 5826;                                     // …puis all-in adverse
+const sentPre = []; S.ws.send = (d) => sentPre.push(d);
+ok(A._runPreAction() === false, '_runPreAction : call armé + relance → false (pas d\'action)');
+ok(S._preAction === '', '_runPreAction : pré-action invalidée (désarmée)');
+ok(sentPre.length === 0, '_runPreAction : rien envoyé au serveur (pas de call involontaire)');
+
+// Contrôle : montant inchangé → le call armé s'exécute (check gratuit ici)
+S.seatData = { 1: { money: 1000, bet: 0 }, 2: { money: 1000, bet: 0 } };
+S.highestBet = 0; S._preAction = 'call'; S._preActionToCall = 0;
+ok(A._runPreAction() === true, '_runPreAction : call armé, montant inchangé → exécuté');
+ok(sentPre.length === 1, '_runPreAction : action envoyée (check gratuit)');
+S._preAction = '';
+
+// Contrôle : call armé avec un vrai à-suivre inchangé → call exécuté
+S.seatData = { 1: { money: 1000, bet: 0 }, 2: { money: 900, bet: 100 } };
+S.highestBet = 100; S._preAction = 'call'; S._preActionToCall = 100;
+ok(A._runPreAction() === true && sentPre.length === 2, '_runPreAction : call 100 inchangé → exécuté');
+S._preAction = '';
+
+// Raise armé puis montant changé → invalidé aussi
+S._preAction = 'raise'; S._preActionToCall = 0; S.highestBet = 400; S.minRaise = 400;
+ok(A._runPreAction() === false && S._preAction === '' && sentPre.length === 2,
+   '_runPreAction : raise armé + relance → invalidé, rien envoyé');
+
+// Fold / All-In restent valides après une relance (indépendants du montant)
+S.seatData = { 1: { money: 1000, bet: 0 }, 2: { money: 500, bet: 500 } };
+S.highestBet = 500; S._preAction = 'fold'; S._preActionToCall = 0;
+ok(A._runPreAction() === true && sentPre.length === 3, '_runPreAction : fold armé reste valide après relance');
+S._preAction = 'allin'; S._preActionToCall = 0;
+ok(A._runPreAction() === true && sentPre.length === 4, '_runPreAction : all-in armé reste valide après relance');
+S._preAction = '';
+
 // Ponts window
 ok(window.doAction === A.doAction && window.renderMyTurnActions === A.renderMyTurnActions &&
    window._runPreAction === A._runPreAction && window._playAutoMode === A._playAutoMode &&

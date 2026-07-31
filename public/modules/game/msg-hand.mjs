@@ -702,6 +702,14 @@ function onPlayersActionDone(sub) {
       if (document.getElementById('g-mystack')) document.getElementById('g-mystack').textContent = myMon > 0 ? fmtChips(myMon) : '';
     }
     window.renderSeats();
+    // Refresh the preview action bar after every opponent action (boehmi bug
+    // 31/07/2026): the render-time invalidation of a pre-armed Check/Call or
+    // Raise (renderMyTurnActions, onCallAmountChanged parity) only runs when
+    // the preview re-renders — but a raise happening right before our turn
+    // got no PlayersTurn preview pass, so the stale gold highlight (and the
+    // stale Call amount) stayed on screen until execution. _runPreAction now
+    // also guards at execution time; this refresh keeps the UI honest.
+    try { if (pid !== S.myId && S.turnPid !== S.myId) window.renderGameWaiting('', true); } catch (_e) {}
     // Sons d'action : 6 sons PokerTH distincts (fold/check/call/bet/raise/
     // all-in) via window.playActionSound(), repli automatique sur les bips
     // synthetises si un sample n'est pas charge. La pop visuelle

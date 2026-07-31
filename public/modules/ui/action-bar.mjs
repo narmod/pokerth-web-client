@@ -178,6 +178,18 @@ function _runPreAction() {
   var myMoney = (S.seatData[S.myId] || {}).money || 0;
   var myBet   = (S.seatData[S.myId] || {}).bet   || 0;
   var toCall  = Math.max(0, S.highestBet - myBet);
+  // Execution-time invalidation (official onCallAmountChanged semantics,
+  // boehmi bug report 31/07/2026): a pre-armed Check/Call or Raise is only
+  // valid for the amount it was armed at. If someone raised (or went all-in)
+  // AFTER arming — especially the player right before us, e.g. SB shoving
+  // into the BB, where no preview re-render ever runs the render-time
+  // invalidation — the armed "Check" must NOT silently become a call of the
+  // raise. Drop the pre-action and show the live action bar instead so the
+  // player decides. Fold and All-In stay valid (amount-independent).
+  if ((pa === 'call' || pa === 'raise') && toCall !== S._preActionToCall) {
+    S._preAction = '';
+    return false;
+  }
   var canCheck = toCall === 0;
   var minBet = S.minRaise > 0 ? S.minRaise : Math.max(S.highestBet > 0 ? S.highestBet : S.smallBlind * 2, S.smallBlind * 2);
   var canRaise = myMoney > toCall && myMoney >= minBet;
