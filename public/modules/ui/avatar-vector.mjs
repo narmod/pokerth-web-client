@@ -36,8 +36,13 @@ const AV_EYEC = ['#5a3b22', '#3e6b8c', '#4e7a4a', '#6b6f75', '#8a6b3a', '#23180f
 const AV_FELT = [
   ['#223a1f', '#2b4726'], ['#1d2a44', '#26365a'], ['#4a1b20', '#5c262c'],
   ['#33234a', '#40305c'], ['#26292e', '#31353c'],
-  ['#173a38', '#1f4a47'], ['#3d2a1a', '#4d3624']
+  ['#173a38', '#1f4a47'], ['#3d2a1a', '#4d3624'],
+  ['#ffffff', '#e8e8e8'], ['#eef1f4', '#dbe2e9'], ['#f7f0dd', '#eadfc2'],
+  ['#e4edf5', '#cfdeec']
 ];
+// Index of the white background: forced by the random dice (narmod
+// 2026-07-31: random draws always land on the white backdrop).
+const AV_BG_WHITE = 7;
 
 const AV_AXES = [
   { id: 'sex',   label: 'avmSex',       n: 2,               kind: 'shape', none: false },
@@ -110,6 +115,7 @@ function avRandom(fixedSex) {
   // 'eyec' depends on 'eyes' and 'glasses': draw it last.
   AV_AXES.forEach(function (ax) { if (ax.id !== 'sex' && ax.id !== 'eyec') draw(ax); });
   draw(AV_AXES.filter(function (ax) { return ax.id === 'eyec'; })[0]);
+  r.bg = AV_BG_WHITE;
   return r;
 }
 

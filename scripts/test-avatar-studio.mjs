@@ -110,6 +110,9 @@ const wholeAxisHidden = (ax, rr) => { for (let i = 0; i < ax.n; i++) if (vis(ax.
 let sexKept = true;
 for (let k = 0; k < 10; k++) { if (window._avRandom(1).sex !== 1 || window._avRandom(0).sex !== 0) sexKept = false; }
 ok(sexKept, 'avRandom(fixedSex) keeps the chosen silhouette (10 draws each)');
+let bgWhite = true;
+for (let k = 0; k < 10; k++) if (window._avRandom().bg !== 7) bgWhite = false;
+ok(bgWhite, 'avRandom always lands on the white background (10 draws)');
 for (let k = 0; k < 20; k++) {
   const rr = window._avRandom();
   if (!AXES.every(ax => vis(ax.id, rr[ax.id], rr) || wholeAxisHidden(ax, rr))) { ok(false, 'random recipe respects the coherence filter'); break; }
