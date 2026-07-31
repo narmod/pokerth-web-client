@@ -157,6 +157,14 @@ ok(Array.isArray(S.SEAT_POS_10) && S.SEAT_POS_10.length === 10
 ok(S.SEAT_LAYOUTS_DESK[2].length === 2 && S.SEAT_LAYOUTS_MOB[2].length === 2,
    'layouts sièges 2 joueurs intacts');
 
+// Réessai auto « pseudo occupé » (Error 4) et état de main : ces clés vivaient
+// dans le périmètre sans y être déclarées — l'assertion ci-dessous les refusait.
+ok(S._nickBusyTries === 0 && S._nickBusyName === '' && S._nickBusyAuto === false,
+   'compteur de réessais « pseudo occupé » init');
+ok(S._actedStreet === -1, '_actedStreet init = -1 (je n\'ai pas encore agi)');
+ok(S._roundEnded === false && S._boardDealing === false && S._inShowdown === false,
+   'verrous de manche / board init = false');
+
 // Périmètre exact des vagues migrées (pas de fuite d'autres clés)
 const keys = Object.keys(S).sort();
 ok(JSON.stringify(keys) === JSON.stringify(['REACT_EMOJI_MIN_GAP', 'REACT_EMOJI_QUEUE_MAX',
@@ -182,6 +190,7 @@ ok(JSON.stringify(keys) === JSON.stringify(['REACT_EMOJI_MIN_GAP', 'REACT_EMOJI_
    '_lastInitMode', '_lastInitNick', '_lastInitTime', '_connectingNow',
    '_connectTimeout', '_connectBtnLabel', '_preserveConnect', '_currentLoginMode', '_reconnectAttempts',
    '_lastRxTime', '_intentionalDisconnect', '_pendingRejoin', '_pendingRejoinSpec', '_rejoinNickRetries',
+   '_nickBusyTries', '_nickBusyName', '_nickBusyAuto',
    '_wasAuthenticated', '_lastConnectTime', '_lastConnectFailed', '_ipBlockUntil',
    '_notifyWS', '_notifyUrl', '_notifyTimer', 'MIN_CONNECT_INTERVAL',
    'MODE_SWAP_MIN_GAP', '_RX_WATCHDOG_MIN_MS',
@@ -192,6 +201,7 @@ ok(JSON.stringify(keys) === JSON.stringify(['REACT_EMOJI_MIN_GAP', 'REACT_EMOJI_
    '_lastPixPos', '_potCenter', '_lastPotValue',
    'myCards', 'commCards', '_cardKey', '_cardIV', 'highestBet', 'minRaise',
    'pot', 'collectedPot', 'gameState', 'dealerPid', 'turnPid',
+   '_actedStreet', '_roundEnded', '_boardDealing', '_inShowdown',
    '_lastSbPid', '_lastBbPid',
    'seats', 'seatData', 'amInGame', 'myName', '_gameStarted', '_seatsFrozen',
    '_amSpectator', 'autoAction',
