@@ -77,6 +77,19 @@ for (const ax of AXES.filter(a => a.kind === 'shape')) {
 }
 ok(distinct, 'shape options produce visually distinct SVG');
 
+// 4b. Silhouette filtering
+const vis = window._avVisible;
+ok(typeof vis === 'function', 'avVisible exposed');
+ok(vis('hair', 3, { sex: 1 }) && !vis('hair', 3, { sex: 0 }), 'ponytail is feminine-only');
+ok(vis('hair', 2, { sex: 0 }) && !vis('hair', 2, { sex: 1 }), 'slicked-back is masculine-only');
+ok(vis('hair', 4, { sex: 0 }) && vis('hair', 4, { sex: 1 }), 'curly is universal');
+ok(!vis('beard', 2, { sex: 1 }) && vis('beard', 2, { sex: 0 }) && vis('beard', 0, { sex: 1 }), 'beard filtered on feminine silhouette (none stays valid)');
+for (let k = 0; k < 20; k++) {
+  const rr = window._avRandom();
+  if (!AXES.every(ax => vis(ax.id, rr[ax.id], rr))) { ok(false, 'random recipe respects the silhouette filter'); break; }
+  if (k === 19) ok(true, 'random recipe respects the silhouette filter (20 draws)');
+}
+
 // 5. Tabs + panes
 window.avStudioTab('create');
 ok(document.getElementById('avp-pane-create').style.display === '', 'create pane visible');
@@ -98,6 +111,17 @@ document.body.classList.add('adv-no-avcreate');
 window.avStudioTab('create');
 ok(document.getElementById('avp-pane-gallery').style.display === '', 'adv-no-avcreate falls back to gallery');
 document.body.classList.remove('adv-no-avcreate');
+
+// 5b. Feminine silhouette hides the facial-hair row in the Hair group
+document.querySelectorAll('#avm-groups .avm-group')[0].click();
+document.querySelectorAll('#avm-rows .avm-axis')[0].querySelectorAll('button')[1].click(); // sex -> F
+document.querySelectorAll('#avm-groups .avm-group')[2].click();
+ok(document.getElementById('avm-rows').children.length === 2, 'feminine silhouette: Hair group shows 2 rows (no facial hair)');
+document.querySelectorAll('#avm-groups .avm-group')[0].click();
+document.querySelectorAll('#avm-rows .avm-axis')[0].querySelectorAll('button')[0].click(); // sex -> M
+document.querySelectorAll('#avm-groups .avm-group')[2].click();
+ok(document.getElementById('avm-rows').children.length === 3, 'masculine silhouette: Hair group shows 3 rows again');
+document.querySelectorAll('#avm-groups .avm-group')[0].click();
 
 // 6. Recipe persistence
 window.avStudioTab('create');

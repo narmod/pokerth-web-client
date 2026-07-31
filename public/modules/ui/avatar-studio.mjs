@@ -17,7 +17,7 @@
 
 'use strict';
 
-import { AV_AXES, avSvg, avSwatch, avNormalize, avRandom } from './avatar-vector.mjs';
+import { AV_AXES, avSvg, avSwatch, avNormalize, avRandom, avVisible } from './avatar-vector.mjs';
 
 // Axis groups shown as chip tabs (gallery-category pattern): only the
 // active group's rows are rendered, keeping the pane short and tidy.
@@ -41,6 +41,19 @@ try {
 function _avmPersist() {
   try { localStorage.setItem('pth_avatar_vec', JSON.stringify(_avmState)); } catch (e) {}
 }
+
+// After a silhouette switch, any option filtered out for the new sex is
+// reset to the first visible one, keeping the recipe coherent.
+function _avmSanitize() {
+  AV_AXES.forEach(function (ax) {
+    if (avVisible(ax.id, _avmState[ax.id], _avmState)) return;
+    for (var i = 0; i < ax.n; i++) {
+      if (avVisible(ax.id, i, _avmState)) { _avmState[ax.id] = i; return; }
+    }
+    _avmState[ax.id] = 0;
+  });
+}
+_avmSanitize();
 
 // ── Tab switching ────────────────────────────────────────────────────────
 function avStudioTab(tab) {
@@ -105,7 +118,14 @@ function _avmRender() {
   var active = AV_GROUPS[_avmGroup].axes;
   var rows = document.getElementById('avm-rows');
   rows.innerHTML = '';
-  AV_AXES.filter(function (ax) { return active.indexOf(ax.id) !== -1; }).forEach(function (ax) {
+  AV_AXES.filter(function (ax) {
+    if (active.indexOf(ax.id) === -1) return false;
+    // Hide axes whose only remaining choice is 'none' for the current
+    // silhouette (e.g. facial hair on the feminine silhouette).
+    var visible = 0;
+    for (var i = 0; i < ax.n; i++) if (avVisible(ax.id, i, _avmState)) visible++;
+    return ax.none ? visible > 1 : visible > 0;
+  }).forEach(function (ax) {
     var d = document.createElement('div');
     d.className = 'avm-axis';
     var lab = document.createElement('span');
@@ -115,6 +135,7 @@ function _avmRender() {
     var line = document.createElement('div');
     line.className = 'avm-axis-opts';
     for (var i = 0; i < ax.n; i++) {
+      if (!avVisible(ax.id, i, _avmState)) continue;
       (function (i) {
         var b = document.createElement('button');
         b.type = 'button';
@@ -135,7 +156,9 @@ function _avmRender() {
           b.innerHTML = avSvg(alt, 36);
         }
         b.addEventListener('click', function () {
-          _avmState[ax.id] = i; _avmPersist(); _avmRender();
+          _avmState[ax.id] = i;
+          if (ax.id === 'sex') _avmSanitize();
+          _avmPersist(); _avmRender();
         });
         line.appendChild(b);
       })(i);

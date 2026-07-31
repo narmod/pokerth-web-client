@@ -42,7 +42,7 @@ const AV_AXES = [
   { id: 'outfit',label: 'avmOutfit',    n: 6,               kind: 'shape', none: false },
   { id: 'skin',  label: 'avmSkin',      n: AV_SKIN.length,  kind: 'color', none: false },
   { id: 'marks', label: 'avmMarks',     n: 4,               kind: 'shape', none: true  },
-  { id: 'hair',  label: 'avmHair',      n: 9,               kind: 'shape', none: true  },
+  { id: 'hair',  label: 'avmHair',      n: 13,              kind: 'shape', none: true  },
   { id: 'hairc', label: 'avmHairColor', n: AV_HAIRC.length, kind: 'color', none: false },
   { id: 'beard', label: 'avmBeard',     n: 5,               kind: 'shape', none: true  },
   { id: 'eyes',  label: 'avmEyeShape',  n: 3,               kind: 'shape', none: false },
@@ -53,6 +53,23 @@ const AV_AXES = [
   { id: 'ears',  label: 'avmEarrings',  n: 3,               kind: 'shape', none: true  },
   { id: 'hat',   label: 'avmHat',       n: 4,               kind: 'shape', none: true  }
 ];
+
+// Per-option silhouette tags (0 = masculine-leaning, 1 = feminine-leaning,
+// missing = universal). The 'beard' axis is masculine-only as a whole.
+// avVisible() lets the UI filter rows coherently with the selected sex
+// while the engine still renders any recipe (old recipes stay valid).
+const AV_SEXTAG = {
+  hair: { 2: 0, 3: 1, 5: 1, 6: 0, 7: 1, 8: 1, 9: 0, 11: 1, 12: 1 }
+};
+
+function avVisible(axId, i, recipe) {
+  // Option 0 of an optional axis ('none') is always a valid value --
+  // it is what recipes are sanitized to when an axis gets filtered out.
+  if (axId === 'beard') return i === 0 || !(recipe && recipe.sex === 1);
+  var tags = AV_SEXTAG[axId];
+  if (!tags || !(i in tags) || !recipe) return true;
+  return tags[i] === recipe.sex;
+}
 
 const AV_DEFAULT = { sex: 0, face: 0, bg: 0, outfit: 0, skin: 1, marks: 0, hair: 3, hairc: 1,
                      beard: 0, eyes: 0, eyec: 0, mouth: 0, glasses: 1, shoulder: 1, ears: 0, hat: 0 };
@@ -67,8 +84,13 @@ function avNormalize(r) {
 }
 
 function avRandom() {
-  var r = {};
-  AV_AXES.forEach(function (ax) { r[ax.id] = Math.floor(Math.random() * ax.n); });
+  var r = { sex: Math.floor(Math.random() * 2) };
+  AV_AXES.forEach(function (ax) {
+    if (ax.id === 'sex') return;
+    var opts = [];
+    for (var i = 0; i < ax.n; i++) if (avVisible(ax.id, i, r)) opts.push(i);
+    r[ax.id] = opts.length ? opts[Math.floor(Math.random() * opts.length)] : 0;
+  });
   return r;
 }
 
@@ -155,6 +177,22 @@ function _hair(i, hc) {
     case 8: // long, middle part
       return '<path d="M60 80 q-2-48 40-48 q42 0 40 48 l-4 44 q-7 5-12 0 q3-26 0-46 q-4 6-11 7 l-13-11 -13 11 q-7-1-11-7 q-3 20 0 46 q-5 5-12 0z" fill="' + b + '"/>'
         + '<path d="M100 34 l-11 11 q-8-2-11 5 q2-14 22-16z" fill="' + h + '" opacity="0.45"/>';
+    case 9: // undercut: tight sides, volume swept on top
+      return '<path d="M68 72 q-1-14 8-22 l0 24 q-5 1-8-2z" fill="' + b + '" opacity="0.55"/>'
+        + '<path d="M132 72 q1-14-8-22 l0 24 q5 1 8-2z" fill="' + b + '" opacity="0.55"/>'
+        + '<path d="M74 56 q-2-22 30-24 q26 2 26 20 q0 8-4 12 q0-16-10-20 q2 8-4 10 q-2-12-14-14 q-16 2-18 22 q-4-2-6-6z" fill="' + b + '"/>'
+        + '<path d="M84 38 q10-5 22-2 q-12 1-18 8z" fill="' + h + '"/>';
+    case 10: // afro
+      return '<g fill="' + b + '"><circle cx="100" cy="48" r="26"/><circle cx="76" cy="60" r="16"/><circle cx="124" cy="60" r="16"/><circle cx="86" cy="42" r="14"/><circle cx="114" cy="42" r="14"/></g>'
+        + '<g fill="' + h + '" opacity="0.4"><circle cx="90" cy="40" r="4"/><circle cx="112" cy="46" r="4"/><circle cx="78" cy="58" r="3.5"/></g>'
+        + '<path d="M70 66 q30-14 60 0 l0 6 q-30-12-60 0z" fill="' + b + '"/>';
+    case 11: // side braid over the shoulder
+      return '<path d="M63 76 q0-44 37-44 q37 0 37 44 l-3 18 q-4-32-12-38 q-7 10-22 10 q-15 0-22-10 q-8 6-12 38z" fill="' + b + '"/>'
+        + '<g fill="' + b + '"><circle cx="70" cy="96" r="7"/><circle cx="68" cy="108" r="7"/><circle cx="67" cy="120" r="7"/><circle cx="66" cy="132" r="7"/><circle cx="66" cy="143" r="6"/></g>'
+        + '<g fill="' + h + '" opacity="0.5"><circle cx="68" cy="98" r="2.4"/><circle cx="66" cy="110" r="2.4"/><circle cx="65" cy="122" r="2.4"/><circle cx="64" cy="134" r="2.2"/></g>';
+    case 12: // pixie cut with fringe
+      return '<path d="M64 78 q-2-42 36-42 q38 0 36 42 q-2 6-6 8 q3-26-8-32 q1 8-6 11 l-4-9 -6 8 -6-9 -6 9 -4-8 q-7-3-6-11 q-11 6-8 32 q-4-2-6-8z" fill="' + b + '"/>'
+        + '<path d="M72 46 q9-8 22-8 q-11 4-16 12z" fill="' + h + '"/>';
     default: // wavy senior sweep
       return '<path d="M66 74 q-2-32 34-32 q36 0 34 32 q-2 8-6 10 q2-22-8-28 q-6 8-20 8 q-14 0-20-8 q-10 6-8 28 q-4-2-6-10z" fill="' + b + '"/>'
            + '<path d="M74 46 q6-6 16-7 q-8 5-11 12 M104 40 q9 1 15 7 q-8-2-13-1" stroke="' + h + '" stroke-width="2.4" fill="none" stroke-linecap="round"/>';
@@ -373,6 +411,6 @@ function avSwatch(axId, i) {
   return '#888';
 }
 
-export { AV_AXES, AV_DEFAULT, avSvg, avSwatch, avNormalize, avRandom };
-for (const [k, v] of Object.entries({ AV_AXES, AV_DEFAULT, avSvg, avSwatch, avNormalize, avRandom }))
+export { AV_AXES, AV_DEFAULT, avSvg, avSwatch, avNormalize, avRandom, avVisible };
+for (const [k, v] of Object.entries({ AV_AXES, AV_DEFAULT, avSvg, avSwatch, avNormalize, avRandom, avVisible }))
   window['_' + k] = v;
