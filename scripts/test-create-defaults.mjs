@@ -90,13 +90,20 @@ ok(d.timeout === 20 && d.delayHands === 7, 'bare baseline is the QML 20 s / 7 s'
 store['pth_prefs_internet'] = JSON.stringify({ timeout: 5, delayHands: 5, stack: 7000, name: 'saved name' });
 d = host._getCreateDefaults(false);
 ok(d.timeout === 5 && d.delayHands === 5, 'saved preferences dress the form over the baseline');
-ok(d.name === 'fresh name', 'the table name is never restored, from either source');
+ok(d.name === 'saved name', 'the table name IS restored from the preferences');
 
 // Puis une partie est créée : les choix du joueur reprennent la main.
 store['pth_last_create'] = JSON.stringify({ timeout: 30, delayHands: 12 });
 d = host._getCreateDefaults(false);
 ok(d.timeout === 30 && d.delayHands === 12, 'what the player last used wins over the preferences');
+ok(d.name === 'saved name', 'but the name still comes from the preferences, not the last form');
 ok(d.stack === 7000, 'fields the last form does not cover still come from the preferences');
+
+// Un nom de préférence vide n'écrase pas le nom par défaut du mode.
+store['pth_prefs_internet'] = JSON.stringify({ timeout: 5, name: '   ' });
+d = host._getCreateDefaults(false);
+ok(d.name === 'fresh name', 'a blank saved name falls back to the default');
+store['pth_prefs_internet'] = JSON.stringify({ timeout: 5, delayHands: 5, stack: 7000, name: 'saved name' });
 
 // Réinitialisation.
 d = host._getCreateDefaults(true);

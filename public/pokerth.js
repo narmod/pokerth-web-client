@@ -6295,13 +6295,27 @@ const App = (() => {
       // tant qu'aucune partie n'a été créée dans ce mode, et remplissent les
       // champs que le dernier formulaire ne couvre pas.
       //
-      // Le nom est exclu : toujours frais, comme pour le dernier formulaire.
+      // Le nom de table EST restauré depuis les préférences — le bouton ⭐ le
+      // fait déjà (applyCreatePrefs), il n'y avait aucune raison que le
+      // remplissage automatique s'en écarte. Rapport forum : « mon nom de
+      // partie n'est pas mémorisé, il revient toujours à My Online Game ».
+      //
+      // Il reste exclu du DERNIER FORMULAIRE, lui : celui-ci est capturé à
+      // chaque création, donc le rejouer ferait proposer par défaut le nom
+      // d'une table souvent encore ouverte — et le serveur refuse un nom déjà
+      // pris (gameNameInUse). Un nom voulu, oui ; un nom repris machinalement,
+      // non.
       var self = this;
       var withPrefs = function (base) {
         var pref = null;
         try { pref = self._readCreatePrefsRaw(); } catch (e) { pref = null; }
         if (pref && typeof pref === 'object') {
-          for (var k in pref) { if (k !== 'name' && pref[k] != null) base[k] = pref[k]; }
+          for (var k in pref) {
+            if (pref[k] == null) continue;
+            // Un nom vide ne doit pas écraser le nom par défaut du mode.
+            if (k === 'name' && !String(pref[k]).trim()) continue;
+            base[k] = pref[k];
+          }
         }
         return base;
       };
@@ -9735,7 +9749,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.5-web.75'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.5-web.76'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
