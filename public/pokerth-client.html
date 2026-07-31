@@ -488,6 +488,11 @@ function _processAvatarFile(file) {
       selectAvatarPopup("__img__"); // met à jour trigger + sièges + barre
       // Diffuser l'image aux autres joueurs connectés au proxy.
       if (typeof window._broadcastMyAvatar === "function") window._broadcastMyAvatar("__img__");
+      // Fermer comme un choix de la galerie : en mode modal, le
+      // display:flex !important de .avatar-popup-as-modal l'emporte sur
+      // le display:'none' inline pose par selectAvatarPopup.
+      if (typeof window.closeAvatarPickerFromLobby === "function") window.closeAvatarPickerFromLobby();
+      try { if (typeof window.updateLobbyPill === "function") window.updateLobbyPill(); } catch (e) {}
       // Si le popup de profil (lobby) est ouvert, repeupler son gros avatar
       // tout de suite. Le flux emoji passe par un clic sur .avp-btn qui
       // rappelle openPlayerInfoPopup() ; le flux photo (input file) ne le

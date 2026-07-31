@@ -133,6 +133,11 @@ function _avmApply() {
     } catch (e) { return; }
     if (typeof window.selectAvatarPopup === 'function') window.selectAvatarPopup('__img__');
     if (typeof window._broadcastMyAvatar === 'function') window._broadcastMyAvatar('__img__');
+    // Close like a gallery pick: in modal mode the popup keeps
+    // display:flex !important, so the inline display:'none' set by
+    // selectAvatarPopup is not enough -- go through the modal close path.
+    if (typeof window.closeAvatarPickerFromLobby === 'function') window.closeAvatarPickerFromLobby();
+    try { if (typeof window.updateLobbyPill === 'function') window.updateLobbyPill(); } catch (e) {}
     try {
       var pi = document.getElementById('player-info-modal');
       if (pi && pi.style.display !== 'none' && typeof window.openPlayerInfoPopup === 'function') window.openPlayerInfoPopup();

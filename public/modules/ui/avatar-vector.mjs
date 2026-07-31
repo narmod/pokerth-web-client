@@ -9,6 +9,9 @@
 // AV_AXES describes every axis for the UI (id, i18n label key, option count,
 // kind 'color'|'shape', and whether option 0 means "none").
 //
+// Frame: SQUARE with a double gold border (matches the login-screen
+// avatar trigger, narmod 2026-07-31) -- also removes the black JPEG
+// corners a disc would produce when rasterized.
 // Layer order: felt -> suit motifs -> neck -> outfit -> head -> marks ->
 // nose -> mouth -> eyes -> brows -> beard -> hair -> glasses -> earrings ->
 // shoulder accessory -> gold ring.
@@ -270,10 +273,10 @@ function avSvg(recipe, size) {
   var sz = size || 200;
   var cid = 'avc' + Math.floor(Math.random() * 1e9);
   var s = '<svg viewBox="0 0 200 200" width="' + sz + '" height="' + sz + '" xmlns="http://www.w3.org/2000/svg">'
-    + '<defs><clipPath id="' + cid + '"><circle cx="100" cy="100" r="92"/></clipPath></defs>'
-    + '<circle cx="100" cy="100" r="96" fill="#8f6a1d"/>'
-    + '<circle cx="100" cy="100" r="93.5" fill="#c9992e"/>'
-    + '<circle cx="100" cy="100" r="92" fill="' + felt[0] + '"/>'
+    + '<defs><clipPath id="' + cid + '"><rect x="6" y="6" width="188" height="188"/></clipPath></defs>'
+    + '<rect width="200" height="200" fill="#8f6a1d"/>'
+    + '<rect x="2.5" y="2.5" width="195" height="195" fill="#c9992e"/>'
+    + '<rect x="6" y="6" width="188" height="188" fill="' + felt[0] + '"/>'
     + '<g clip-path="url(#' + cid + ')">'
     + _motifs(felt[1])
     // Neck (short, validated 2026-07-31) — plunges into the collar.
@@ -301,7 +304,7 @@ function avSvg(recipe, size) {
     + _ears(r.ears)
     + _shoulder(r.shoulder)
     + '</g>'
-    + '<circle cx="100" cy="100" r="92" fill="none" stroke="#8f6a1d" stroke-width="1"/>'
+    + '<rect x="6" y="6" width="188" height="188" fill="none" stroke="#8f6a1d" stroke-width="1"/>'
     + '</svg>';
   return s;
 }
