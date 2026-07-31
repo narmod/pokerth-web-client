@@ -10130,23 +10130,32 @@ body.adv-no-avcreate #avp-tab-create { display: none !important; }
   padding-bottom: var(--sp-3);
 }
 .avm-head-btns { display: flex; flex-direction: column; gap: var(--sp-3); }
-.avm-groups {
-  display: flex; flex-wrap: nowrap; gap: 3px; padding: var(--sp-2) 0 var(--sp-3);
+.avm-step {
+  display: flex; align-items: center; gap: var(--sp-2);
+  padding: var(--sp-2) 0 var(--sp-3);
   border-top: 1px solid var(--border);
-  overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none;
 }
-.avm-groups::-webkit-scrollbar { display: none; }
-.avm-group {
-  flex: 0 0 auto; display: flex; align-items: center; gap: 6px;
-  background: var(--inset); border: 1px solid transparent; color: var(--text);
-  padding: 7px 11px; border-radius: var(--r-sm); cursor: pointer; white-space: nowrap;
-  font-size: var(--fs-2xs); letter-spacing: 0.08em; text-transform: uppercase;
-  font-family: var(--ff-display);
-  transition: border-color 0.12s, background 0.12s, color 0.12s, transform 0.1s;
+.avm-step-arr {
+  flex: 0 0 auto; width: 34px; height: 34px;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--inset); border: 1px solid var(--border);
+  color: var(--sel,var(--gold)); font-size: 1.3rem; line-height: 1;
+  border-radius: var(--r-sm); cursor: pointer; padding: 0;
+  transition: background 0.12s, border-color 0.12s;
 }
-.avm-group:hover { background: rgba(var(--gold-rgb), 0.1); }
+.avm-step-arr:hover { background: rgba(var(--gold-rgb), 0.1); border-color: var(--gold-dim); }
+.avm-step-mid {
+  flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px;
+  min-width: 0;
+}
+.avm-step-name {
+  font-family: var(--ff-display); font-size: var(--fs-2xs);
+  letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--sel,var(--gold)); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.avm-step-count { font-size: var(--fs-2xs); color: var(--text); flex: 0 0 auto; }
 .avm-group-ico { font-size: 1rem; line-height: 1; }
-.avm-group.selected { border-color: var(--sel,var(--gold)); color: var(--sel,var(--gold)); background: rgba(var(--gold-rgb), 0.12); }
+.avm-sex-opt { font-size: 1.25rem; line-height: 1; padding: 5px 15px; }
 .avm-preview {
   width: 120px; height: 120px; flex: 0 0 auto; border-radius: 4px; overflow: hidden;
   background: var(--field-bg);

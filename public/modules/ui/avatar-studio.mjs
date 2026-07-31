@@ -86,9 +86,19 @@ function _avmRender() {
       '<button type="button" class="avm-btn avm-use" id="avm-use"></button>' +
       '</div>' +
       '</div>' +
-      '<div class="avm-groups" id="avm-groups" role="tablist"></div>' +
+      '<div class="avm-step">' +
+      '<button type="button" class="avm-step-arr" id="avm-step-prev" aria-label="\u2039">\u2039</button>' +
+      '<div class="avm-step-mid" id="avm-step-label"></div>' +
+      '<button type="button" class="avm-step-arr" id="avm-step-next" aria-label="\u203a">\u203a</button>' +
+      '</div>' +
       '</div>' +
       '<div class="avm-rows" id="avm-rows"></div>';
+    document.getElementById('avm-step-prev').addEventListener('click', function () {
+      _avmGroup = (_avmGroup + AV_GROUPS.length - 1) % AV_GROUPS.length; _avmRender();
+    });
+    document.getElementById('avm-step-next').addEventListener('click', function () {
+      _avmGroup = (_avmGroup + 1) % AV_GROUPS.length; _avmRender();
+    });
     document.getElementById('avm-dice').addEventListener('click', function () {
       _avmState = avRandom(); _avmPersist(); _avmRender();
     });
@@ -99,21 +109,13 @@ function _avmRender() {
 
   document.getElementById('avm-preview').innerHTML = avSvg(_avmState, 120);
 
-  // Group chip tabs.
-  var gwrap = document.getElementById('avm-groups');
-  gwrap.innerHTML = '';
-  AV_GROUPS.forEach(function (g, gi) {
-    var b = document.createElement('button');
-    b.type = 'button';
-    b.className = 'avm-group' + (gi === _avmGroup ? ' selected' : '');
-    b.setAttribute('role', 'tab');
-    b.setAttribute('aria-selected', gi === _avmGroup ? 'true' : 'false');
-    b.title = t(g.label);
-    b.setAttribute('aria-label', t(g.label));
-    b.innerHTML = '<span class="avm-group-ico">' + g.icon + '</span><span class="avm-group-lbl">' + t(g.label) + '</span>';
-    b.addEventListener('click', function () { _avmGroup = gi; _avmRender(); });
-    gwrap.appendChild(b);
-  });
+  // Step header: one category at a time, with a position counter
+  // (game-style character creation wizard, narmod 2026-07-31).
+  var g = AV_GROUPS[_avmGroup];
+  document.getElementById('avm-step-label').innerHTML =
+    '<span class="avm-group-ico">' + g.icon + '</span>' +
+    '<span class="avm-step-name">' + t(g.label) + '</span>' +
+    '<span class="avm-step-count">' + (_avmGroup + 1) + '/' + AV_GROUPS.length + '</span>';
 
   var active = AV_GROUPS[_avmGroup].axes;
   var rows = document.getElementById('avm-rows');
@@ -141,7 +143,10 @@ function _avmRender() {
         b.type = 'button';
         var sel = _avmState[ax.id] === i;
         b.setAttribute('aria-label', t(ax.label) + ' ' + (i + 1));
-        if (ax.none && i === 0) {
+        if (ax.id === 'sex') {
+          b.className = 'avm-opt avm-sex-opt' + (sel ? ' selected' : '');
+          b.textContent = i === 0 ? '\u2642' : '\u2640';
+        } else if (ax.none && i === 0) {
           b.className = 'avm-opt avm-none-opt' + (sel ? ' selected' : '');
           b.textContent = t('avmNone');
         } else if (ax.kind === 'color') {

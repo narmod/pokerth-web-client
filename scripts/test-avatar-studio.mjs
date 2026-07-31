@@ -93,15 +93,18 @@ for (let k = 0; k < 20; k++) {
 // 5. Tabs + panes
 window.avStudioTab('create');
 ok(document.getElementById('avp-pane-create').style.display === '', 'create pane visible');
-ok(document.querySelectorAll('#avm-groups .avm-group').length === 5, 'create pane renders 5 group tabs');
+ok(!!document.getElementById('avm-step-label') && document.getElementById('avm-step-label').textContent.indexOf('1/5') !== -1, 'step header shows category 1/5');
 ok(document.getElementById('avm-rows').children.length === 2, 'active group (Silhouette) renders its 2 axis rows');
-document.querySelectorAll('#avm-groups .avm-group')[2].click();
-ok(document.getElementById('avm-rows').children.length === 3, 'switching to Hair group renders 3 rows');
-document.querySelectorAll('#avm-groups .avm-group')[4].click();
-ok(document.getElementById('avm-rows').children.length === 4, 'Extras group renders 4 rows (incl. hat)');
-document.querySelectorAll('#avm-groups .avm-group')[1].click();
+const next = document.getElementById('avm-step-next'), prev = document.getElementById('avm-step-prev');
+next.click(); next.click();
+ok(document.getElementById('avm-rows').children.length === 3, 'stepping to Hair (3/5) renders 3 rows');
+next.click(); next.click();
+ok(document.getElementById('avm-rows').children.length === 4, 'Extras (5/5) renders 4 rows (incl. hat)');
+next.click();
+ok(document.getElementById('avm-step-label').textContent.indexOf('1/5') !== -1, 'next wraps around to 1/5');
+next.click();
 ok(document.querySelectorAll('#avm-rows .avm-swatch').length > 0, 'color axes render swatches (Face group)');
-document.querySelectorAll('#avm-groups .avm-group')[0].click();
+prev.click();
 ok(document.querySelectorAll('#avm-rows .avm-mini').length > 0, 'shape axes render mini previews');
 window.avStudioTab('import');
 ok(!!document.getElementById('avi-drop'), 'import drop zone rendered');
@@ -113,15 +116,15 @@ ok(document.getElementById('avp-pane-gallery').style.display === '', 'adv-no-avc
 document.body.classList.remove('adv-no-avcreate');
 
 // 5b. Feminine silhouette hides the facial-hair row in the Hair group
-document.querySelectorAll('#avm-groups .avm-group')[0].click();
 document.querySelectorAll('#avm-rows .avm-axis')[0].querySelectorAll('button')[1].click(); // sex -> F
-document.querySelectorAll('#avm-groups .avm-group')[2].click();
-ok(document.getElementById('avm-rows').children.length === 2, 'feminine silhouette: Hair group shows 2 rows (no facial hair)');
-document.querySelectorAll('#avm-groups .avm-group')[0].click();
+ok(document.querySelectorAll('#avm-rows .avm-sex-opt').length === 2, 'sex axis renders 2 pictogram chips');
+next.click(); next.click();
+ok(document.getElementById('avm-rows').children.length === 2, 'feminine silhouette: Hair step shows 2 rows (no facial hair)');
+prev.click(); prev.click();
 document.querySelectorAll('#avm-rows .avm-axis')[0].querySelectorAll('button')[0].click(); // sex -> M
-document.querySelectorAll('#avm-groups .avm-group')[2].click();
-ok(document.getElementById('avm-rows').children.length === 3, 'masculine silhouette: Hair group shows 3 rows again');
-document.querySelectorAll('#avm-groups .avm-group')[0].click();
+next.click(); next.click();
+ok(document.getElementById('avm-rows').children.length === 3, 'masculine silhouette: Hair step shows 3 rows again');
+prev.click(); prev.click();
 
 // 6. Recipe persistence
 window.avStudioTab('create');
