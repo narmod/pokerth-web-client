@@ -36,6 +36,8 @@ const AV_FELT = [
 ];
 
 const AV_AXES = [
+  { id: 'sex',   label: 'avmSex',       n: 2,               kind: 'shape', none: false },
+  { id: 'face',  label: 'avmFace',      n: 3,               kind: 'shape', none: false },
   { id: 'bg',    label: 'avmBg',        n: AV_FELT.length,  kind: 'color', none: false },
   { id: 'outfit',label: 'avmOutfit',    n: 5,               kind: 'shape', none: false },
   { id: 'skin',  label: 'avmSkin',      n: AV_SKIN.length,  kind: 'color', none: false },
@@ -51,7 +53,7 @@ const AV_AXES = [
   { id: 'ears',  label: 'avmEarrings',  n: 3,               kind: 'shape', none: true  }
 ];
 
-const AV_DEFAULT = { bg: 0, outfit: 0, skin: 1, marks: 0, hair: 3, hairc: 1,
+const AV_DEFAULT = { sex: 0, face: 0, bg: 0, outfit: 0, skin: 1, marks: 0, hair: 3, hairc: 1,
                      beard: 0, eyes: 0, eyec: 0, mouth: 0, glasses: 1, shoulder: 1, ears: 0 };
 
 function avNormalize(r) {
@@ -266,6 +268,20 @@ function _ears(i) {
   return '<circle cx="68" cy="100" r="2.4" fill="' + c + '"/><circle cx="132" cy="100" r="2.4" fill="' + c + '"/>';
 }
 
+// ── Head shapes ──────────────────────────────────────────────────────────
+function _head(i, skin) {
+  if (i === 1) { // round: wider, fuller cheeks
+    return '<ellipse cx="100" cy="85" rx="33" ry="31" fill="' + skin[0] + '"/>'
+      + '<path d="M100 54 q33 0 33 31 q0 18-13 25 q17-27 4-46 q-9-8-24-10z" fill="' + skin[1] + '"/>';
+  }
+  if (i === 2) { // square jaw
+    return '<path d="M70 78 q0-28 30-28 q30 0 30 28 l0 16 q0 22-30 22 q-30 0-30-22z" fill="' + skin[0] + '"/>'
+      + '<path d="M100 50 q30 0 30 28 l0 16 q0 16-14 20 q10-10 8-36 q-2-22-24-28z" fill="' + skin[1] + '"/>';
+  }
+  return '<ellipse cx="100" cy="84" rx="30" ry="34" fill="' + skin[0] + '"/>'
+    + '<path d="M100 50 q30 0 30 34 q0 20-12 28 q16-30 4-52 q-8-8-22-10z" fill="' + skin[1] + '"/>';
+}
+
 // ── Full portrait ────────────────────────────────────────────────────────
 function avSvg(recipe, size) {
   var r = avNormalize(recipe);
@@ -282,10 +298,13 @@ function avSvg(recipe, size) {
     // Neck (short, validated 2026-07-31) — plunges into the collar.
     + '<path d="M90 114 l20 0 1 30 -22 0z" fill="' + skin[0] + '"/>'
     + '<path d="M90 114 l20 0 0 11 q-10 8-20 0z" fill="' + skin[1] + '"/>'
-    + _outfit(r.outfit, skin)
-    // Head
-    + '<ellipse cx="100" cy="84" rx="30" ry="34" fill="' + skin[0] + '"/>'
-    + '<path d="M100 50 q30 0 30 34 q0 20-12 28 q16-30 4-52 q-8-8-22-10z" fill="' + skin[1] + '"/>'
+    // Sex axis: feminine silhouette narrows the whole outfit (shoulders,
+    // lapels, collar) around the vertical centre; everything else is shared.
+    + (r.sex === 1
+        ? '<g transform="translate(100,0) scale(0.86,1) translate(-100,0)">' + _outfit(r.outfit, skin) + '</g>'
+        : _outfit(r.outfit, skin))
+    // Head (3 face shapes: oval / round / square jaw)
+    + _head(r.face, skin)
     + '<path d="M70 84 q-6-2-6 6 q0 8 7 8z" fill="' + skin[0] + '"/>'
     + '<path d="M130 84 q6-2 6 6 q0 8-7 8z" fill="' + skin[1] + '"/>'
     + _marks(r.marks, skin[1])

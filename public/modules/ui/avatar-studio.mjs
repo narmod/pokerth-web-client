@@ -19,6 +19,16 @@
 
 import { AV_AXES, avSvg, avSwatch, avNormalize, avRandom } from './avatar-vector.mjs';
 
+// Axis groups shown as chip tabs (gallery-category pattern): only the
+// active group's rows are rendered, keeping the pane short and tidy.
+const AV_GROUPS = [
+  { icon: '\uD83D\uDC64', label: 'avmGrpFace',  axes: ['sex', 'face', 'skin', 'marks', 'eyes', 'eyec', 'mouth'] },
+  { icon: '\uD83D\uDC87', label: 'avmGrpHair',  axes: ['hair', 'hairc', 'beard'] },
+  { icon: '\uD83D\uDC54', label: 'avmGrpStyle', axes: ['outfit', 'bg'] },
+  { icon: '\u2728',        label: 'avmGrpExtra', axes: ['glasses', 'shoulder', 'ears'] }
+];
+var _avmGroup = 0;
+
 function t(k, p) { return (typeof window.t === 'function') ? window.t(k, p) : k; }
 
 var _avmState = avNormalize(null);
@@ -54,14 +64,15 @@ function _avmRender() {
   if (!pane) return;
   if (!pane.firstChild) {
     pane.innerHTML =
-      '<div class="avm-wrap">' +
-      '<div class="avm-left">' +
+      '<div class="avm-head">' +
       '<div class="avm-preview" id="avm-preview"></div>' +
+      '<div class="avm-head-btns">' +
       '<button type="button" class="avm-btn" id="avm-dice">\uD83C\uDFB2 <span></span></button>' +
+      '<button type="button" class="avm-btn avm-use" id="avm-use"></button>' +
       '</div>' +
-      '<div class="avm-rows" id="avm-rows"></div>' +
       '</div>' +
-      '<div class="avm-foot"><button type="button" class="avm-btn avm-use" id="avm-use"></button></div>';
+      '<div class="avm-groups" id="avm-groups" role="tablist"></div>' +
+      '<div class="avm-rows" id="avm-rows"></div>';
     document.getElementById('avm-dice').addEventListener('click', function () {
       _avmState = avRandom(); _avmPersist(); _avmRender();
     });
@@ -70,11 +81,28 @@ function _avmRender() {
   document.querySelector('#avm-dice span').textContent = t('avmRandom');
   document.getElementById('avm-use').textContent = t('avmUse');
 
-  document.getElementById('avm-preview').innerHTML = avSvg(_avmState, 148);
+  document.getElementById('avm-preview').innerHTML = avSvg(_avmState, 120);
 
+  // Group chip tabs.
+  var gwrap = document.getElementById('avm-groups');
+  gwrap.innerHTML = '';
+  AV_GROUPS.forEach(function (g, gi) {
+    var b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'avm-group' + (gi === _avmGroup ? ' selected' : '');
+    b.setAttribute('role', 'tab');
+    b.setAttribute('aria-selected', gi === _avmGroup ? 'true' : 'false');
+    b.title = t(g.label);
+    b.setAttribute('aria-label', t(g.label));
+    b.innerHTML = '<span class="avm-group-ico">' + g.icon + '</span><span class="avm-group-lbl">' + t(g.label) + '</span>';
+    b.addEventListener('click', function () { _avmGroup = gi; _avmRender(); });
+    gwrap.appendChild(b);
+  });
+
+  var active = AV_GROUPS[_avmGroup].axes;
   var rows = document.getElementById('avm-rows');
   rows.innerHTML = '';
-  AV_AXES.forEach(function (ax) {
+  AV_AXES.filter(function (ax) { return active.indexOf(ax.id) !== -1; }).forEach(function (ax) {
     var d = document.createElement('div');
     d.className = 'avm-axis';
     var lab = document.createElement('span');

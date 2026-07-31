@@ -46,7 +46,7 @@ studio = studio.replace(/export \{[^}]*\};?/, '');
 ok(typeof window.avStudioTab === 'function', 'avStudioTab exposed');
 ok(typeof window._avSvg === 'function', 'vector engine exposed');
 const AXES = window._AV_AXES;
-ok(Array.isArray(AXES) && AXES.length === 13, '13 axes defined (' + AXES.length + ')');
+ok(Array.isArray(AXES) && AXES.length === 15, '15 axes defined (' + AXES.length + ')');
 
 // 2. Engine coherence: every option of every axis renders a clean SVG.
 let clean = true, badMsg = '';
@@ -80,7 +80,11 @@ ok(distinct, 'shape options produce visually distinct SVG');
 // 5. Tabs + panes
 window.avStudioTab('create');
 ok(document.getElementById('avp-pane-create').style.display === '', 'create pane visible');
-ok(document.getElementById('avm-rows').children.length === 13, 'create pane renders 13 axis rows');
+ok(document.querySelectorAll('#avm-groups .avm-group').length === 4, 'create pane renders 4 group tabs');
+ok(document.getElementById('avm-rows').children.length === 7, 'active group (Face) renders its 7 axis rows');
+document.querySelectorAll('#avm-groups .avm-group')[1].click();
+ok(document.getElementById('avm-rows').children.length === 3, 'switching to Hair group renders 3 rows');
+document.querySelectorAll('#avm-groups .avm-group')[0].click();
 ok(document.querySelectorAll('#avm-rows .avm-swatch').length > 0, 'color axes render swatches');
 ok(document.querySelectorAll('#avm-rows .avm-mini').length > 0, 'shape axes render mini previews');
 window.avStudioTab('import');
@@ -94,12 +98,13 @@ document.body.classList.remove('adv-no-avcreate');
 
 // 6. Recipe persistence
 window.avStudioTab('create');
-document.querySelectorAll('#avm-rows .avm-axis')[0].querySelectorAll('button')[2].click();
+document.querySelectorAll('#avm-rows .avm-axis')[0].querySelectorAll('button')[1].click();
 const persisted = JSON.parse(localStorage.getItem('pth_avatar_vec'));
-ok(persisted && persisted.bg === 2, 'clicking an option persists the recipe (pth_avatar_vec)');
+ok(persisted && persisted.sex === 1, 'clicking an option persists the recipe (pth_avatar_vec)');
 
 // 7. i18n: axis label keys present in every language file
-const KEYS = ['avmBg','avmOutfit','avmSkin','avmMarks','avmHair','avmHairColor','avmBeard',
+const KEYS = ['avmSex','avmFace','avmGrpFace','avmGrpHair','avmGrpStyle','avmGrpExtra',
+  'avmBg','avmOutfit','avmSkin','avmMarks','avmHair','avmHairColor','avmBeard',
   'avmEyeShape','avmEyeColor','avmMouth','avmShoulder','avmEarrings','avmNone',
   'avTabGallery','avTabCreate','avTabImport','avmRandom','avmUse','avmGlasses',
   'avImportDrop','avImportOr','avImportBtn','avImportHint','advAvatarCreate'];
