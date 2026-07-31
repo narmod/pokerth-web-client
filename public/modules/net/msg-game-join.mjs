@@ -68,6 +68,8 @@ function onGameSpectatorLeft(sub) {
 
 function onJoinGameAck(sub) {
     S.gId = Proto.u32(sub, 1);
+    // Disarm the join watchdog (armed by _sendJoin in pokerth.js).
+    if (S._joinWd) { clearTimeout(S._joinWd); S._joinWd = 0; }
     // Back at the table — clear the transient pending-rejoin flag and the
     // banner, mais ÉCRIRE un marqueur durable « je suis dans la partie gId »
     // (pth_resume) : il permet de réintégrer la table après une coupure
@@ -246,6 +248,8 @@ function onJoinGameAck(sub) {
 function onJoinGameFailed(sub) {
     const failedGameId = Proto.u32(sub, 1);
     const failCode = Proto.u32(sub, 2);
+    // Disarm the join watchdog (armed by _sendJoin in pokerth.js).
+    if (S._joinWd) { clearTimeout(S._joinWd); S._joinWd = 0; }
     if (S._pendingRejoin) {
       // We were reclaiming our seat but it's gone (grace window elapsed)
       // or the rejoin was refused — drop cleanly to the lobby. Clear the

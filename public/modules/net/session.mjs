@@ -216,17 +216,21 @@ function setStatus(txt, cls='', key) {
 
 // ── RÉSEAU ──
 function send(data) {
-  if (!S.ws || S.ws.readyState !== WebSocket.OPEN) return;
+  // Returns true if the frame was handed to the WebSocket, false if the
+  // socket is gone (tab slept, network dropped). Callers on critical paths
+  // (join/spectate) use this to warn the user instead of failing silently.
+  if (!S.ws || S.ws.readyState !== WebSocket.OPEN) return false;
   if (window.directWS) {
     // Direct WSS to pokerth.net: raw protobuf, no length prefix
     S.ws.send(data);
-    return;
+    return true;
   }
   // Proxy mode: 4-byte big-endian length prefix + data
   const frame = new ArrayBuffer(4 + data.byteLength);
   new DataView(frame).setUint32(0, data.byteLength, false);
   new Uint8Array(frame).set(data, 4);
   S.ws.send(frame);
+  return true;
 }
 
 export { _connectBtnEl, _beginConnecting, _endConnecting, show, _armRejoin,

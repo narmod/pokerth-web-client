@@ -4131,6 +4131,28 @@ const App = (() => {
   // (toujours global via window.*).
 
 
+  // ── Join send guard + watchdog (fix: silent « Join button not working ») ──
+  // send() now returns false when the WebSocket is no longer open (tab put
+  // to sleep, network dropped): without this guard, clicking Join printed
+  // « Joining… » and then nothing. On failure we warn the user
+  // (errConnLost) and force a reconnect. If the frame *was* sent but neither
+  // JoinGameAck nor JoinGameFailed arrives within 6 s (network lost right
+  // after sending), the watchdog reports the missing reply (errJoinTimeout).
+  // The timer is disarmed by both handlers in net/msg-game-join.mjs.
+  function _sendJoin(data) {
+    if (!send(data)) {
+      setStatus('⚠ ' + (t('errConnLost') || 'Connection lost.'), 'err');
+      try { _forceReconnect(); } catch (e) {}
+      return false;
+    }
+    if (S._joinWd) clearTimeout(S._joinWd);
+    S._joinWd = setTimeout(function () {
+      S._joinWd = 0;
+      setStatus('⚠ ' + (t('errJoinTimeout') || 'No reply from the server — check your connection.'), 'err');
+    }, 6000);
+    return true;
+  }
+
   // ─────────────────────────────────────────────────────────────────
   // Waiting-room panel — shown between JoinGameAck and GameStartInitial.
   // Displays:
@@ -6023,7 +6045,7 @@ const App = (() => {
       // message set field 3 (autoLeave) instead, which the server did
       // not interpret as spectate, and silently dropped the request —
       // the user saw 'Joining…' but never got a JoinGameAck back.
-      send(MSG.buildJoinGame(gameId, true));
+      _sendJoin(MSG.buildJoinGame(gameId, true));
     },
 
     autoJoinOrCreate() {
@@ -6044,7 +6066,7 @@ const App = (() => {
         const btn = document.getElementById('btn-autojoin');
         if (btn) { btn.textContent = '⏳...'; btn.disabled = true; }
         addChat(null, t('autoTableFound', { n: target }), 'sys', { key: 'autoTableFound', params: { n: target } });
-        send(MSG.buildJoinGame(parseInt(target), false));
+        _sendJoin(MSG.buildJoinGame(parseInt(target), false));
       } else {
         // No table — show the player-count dialog. The actual CreateGame
         // is dispatched by confirmQuickCreate() if the user confirms.
@@ -6097,7 +6119,7 @@ const App = (() => {
       addChat(null, 'Joining "' + esc(gName) + '"...', 'sys');
       // JoinExistingGameMessage: gameId=1, password=2
       var msg = Proto.encode([[1,0,gameId],[2,2,pass||'']]);
-      send(Proto.encode([[1,0,21],[22,2,msg]]));
+      _sendJoin(Proto.encode([[1,0,21],[22,2,msg]]));
     },
     // Clic sur une ligne de partie → sélection + panneau « Infos de partie »
     // (remplace l'ancienne liste dépliable sous la ligne).
@@ -6185,7 +6207,7 @@ const App = (() => {
         return;
       }
       addChat(null, 'Joining "' + esc(g.name) + '"...', 'sys');
-      send(MSG.buildJoinGame(parseInt(gameId), false));
+      _sendJoin(MSG.buildJoinGame(parseInt(gameId), false));
     },
     setTableFilter(f) {
       var n = parseInt(f, 10); if (isNaN(n) || n < 0 || n > 5) n = 0;
@@ -9706,7 +9728,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.5-web.53'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.5-web.54'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
