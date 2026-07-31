@@ -111,7 +111,13 @@ try{var _d=document.documentElement,_p=localStorage.getItem('pth_theme'),_tb=loc
   filter:blur(10px);transform:scale(1.05)}
 :root.reduce-fx #boot-splash::before{filter:none;transform:none;inset:0}
 #boot-splash.bs-hide{opacity:0;pointer-events:none}
-#boot-splash.bs-invisible{opacity:0;pointer-events:none;transition:none}
+/* Splash désactivé par l'option : invisible, mais il continue de BLOQUER les
+   clics tant que l'app n'est pas prête. Sans ça, le formulaire est pleinement
+   cliquable pendant que pokerth.js (plus de 500 Ko, exécuté en différé) se
+   charge encore : un clic sur un bouton câblé en onclick="App.x()" lève alors
+   « App is not defined » et le geste du joueur est perdu sans le moindre
+   retour. Le laisser-passer vient de .bs-hide, posé à la révélation. */
+#boot-splash.bs-invisible{opacity:0;transition:none}
 #boot-splash .bs-card{position:relative;background:var(--modal-bg,#1d222b);opacity:.86;border-radius:5px;
   padding:12px 18px 10px;width:min(280px,calc(100vw - 40px));min-height:180px;box-sizing:border-box;
   display:flex;flex-direction:column;align-items:center;justify-content:space-between;gap:10px;
