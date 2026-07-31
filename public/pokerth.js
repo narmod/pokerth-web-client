@@ -6256,10 +6256,16 @@ const App = (() => {
       var withSaved = function (base) {
         if (saved && typeof saved === 'object') {
           for (var k in saved) {
-            // Copy every saved key except the table name (always fresh).
             // Advanced keys (raiseMode, gameType…) aren't in the baseline
             // object, so we must NOT require hasOwnProperty here.
-            if (k !== 'name' && saved[k] != null) base[k] = saved[k];
+            if (saved[k] == null) continue;
+            // Le nom de table est restauré comme le reste. Il en était exclu
+            // par crainte du refus « nom déjà pris » quand la table précédente
+            // tourne encore ; c'est désormais traité au moment de remplir le
+            // champ (_freeGameName), donc plus aucune raison de faire retaper
+            // son nom au joueur à chaque partie. Un nom vide ne recouvre rien.
+            if (k === 'name' && !String(saved[k]).trim()) continue;
+            base[k] = saved[k];
           }
         }
         return base;
@@ -6295,16 +6301,9 @@ const App = (() => {
       // tant qu'aucune partie n'a été créée dans ce mode, et remplissent les
       // champs que le dernier formulaire ne couvre pas.
       //
-      // Le nom de table EST restauré depuis les préférences — le bouton ⭐ le
-      // fait déjà (applyCreatePrefs), il n'y avait aucune raison que le
-      // remplissage automatique s'en écarte. Rapport forum : « mon nom de
-      // partie n'est pas mémorisé, il revient toujours à My Online Game ».
-      //
-      // Il reste exclu du DERNIER FORMULAIRE, lui : celui-ci est capturé à
-      // chaque création, donc le rejouer ferait proposer par défaut le nom
-      // d'une table souvent encore ouverte — et le serveur refuse un nom déjà
-      // pris (gameNameInUse). Un nom voulu, oui ; un nom repris machinalement,
-      // non.
+      // Le nom de table est restauré comme les autres champs — le bouton ⭐ le
+      // faisait déjà (applyCreatePrefs), il n'y avait aucune raison que le
+      // remplissage automatique s'en écarte.
       var self = this;
       var withPrefs = function (base) {
         var pref = null;
@@ -6383,6 +6382,32 @@ const App = (() => {
     // overwrite empty fields (or fields still holding the previous mode's
     // default) so a user who already typed a custom value isn't surprised
     // by their input being clobbered.
+    // Le nom mémorisé peut être celui d'une table encore ouverte, et le serveur
+    // refuse un nom déjà pris (gameNameInUse). Plutôt que de laisser le joueur
+    // se prendre le refus, on décale le nom tant qu'il est visible dans le
+    // lobby : « Chez Bob » → « Chez Bob 2 ». C'est ce qui permet de mémoriser
+    // le nom sans réintroduire l'ennui qu'on cherchait à éviter.
+    //
+    // Purement local : on ne consulte que la liste déjà reçue. Si elle n'est
+    // pas encore chargée, on n'invente rien — le refus reste possible, mais il
+    // est visible depuis que setStatus le double d'un toast.
+    _freeGameName(name) {
+      var base = String(name == null ? '' : name).trim();
+      if (!base) return base;
+      var taken = {};
+      try {
+        var g = (window.S && window.S.games) || {};
+        for (var k in g) { if (g[k] && g[k].name) taken[String(g[k].name).trim().toLowerCase()] = true; }
+      } catch (e) { return base; }
+      if (!taken[base.toLowerCase()]) return base;
+      // 48 caractères = maximumLength du champ QML ; on garde la place du suffixe.
+      var stem = base.slice(0, 44);
+      for (var n = 2; n <= 99; n++) {
+        var cand = stem + ' ' + n;
+        if (!taken[cand.toLowerCase()]) return cand;
+      }
+      return base;
+    },
     _applyCreateFormDefaults(force, skipSaved) {
       var d = this._getCreateDefaults(skipSaved);
       var set = function(id, val, options) {
@@ -6402,7 +6427,7 @@ const App = (() => {
         }
         el.dataset.modeDefault = isCheckbox ? (!!val) : String(val);
       };
-      set('cf-name',        d.name);
+      set('cf-name',        this._freeGameName(d.name));
       set('cf-players',     d.players);
       set('cf-blind',       d.blind);
       set('cf-stack',       d.stack);
@@ -9749,7 +9774,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.5-web.78'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.5-web.79'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

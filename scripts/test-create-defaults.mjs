@@ -93,11 +93,17 @@ ok(d.timeout === 5 && d.delayHands === 5, 'saved preferences dress the form over
 ok(d.name === 'saved name', 'the table name IS restored from the preferences');
 
 // Puis une partie est créée : les choix du joueur reprennent la main.
-store['pth_last_create'] = JSON.stringify({ timeout: 30, delayHands: 12 });
+store['pth_last_create'] = JSON.stringify({ timeout: 30, delayHands: 12, name: 'last name' });
 d = host._getCreateDefaults(false);
 ok(d.timeout === 30 && d.delayHands === 12, 'what the player last used wins over the preferences');
-ok(d.name === 'saved name', 'but the name still comes from the preferences, not the last form');
+ok(d.name === 'last name', 'the name follows the same rule: what was last used wins');
 ok(d.stack === 7000, 'fields the last form does not cover still come from the preferences');
+
+// Un nom vide, dans l'une ou l'autre mémoire, n'écrase pas le nom du mode.
+store['pth_last_create'] = JSON.stringify({ timeout: 30, name: '' });
+d = host._getCreateDefaults(false);
+ok(d.name === 'saved name', 'a blank last-used name does not wipe the saved one');
+delete store['pth_last_create'];
 
 // Un nom de préférence vide n'écrase pas le nom par défaut du mode.
 store['pth_prefs_internet'] = JSON.stringify({ timeout: 5, name: '   ' });
@@ -156,6 +162,35 @@ window._offlineMode = false;
 // Et la valeur elle-même reste celle du client officiel.
 ok(_advPrefsBaseline('net').timeout === 20 && _advPrefsBaseline('net').delayHands === 7,
    'the Internet panel no longer announces a timeout the create form will not use');
+
+// ── Nom déjà pris dans le lobby ───────────────────────────────────
+// Mémoriser le nom ne doit pas ressusciter le refus « nom déjà pris » : à
+// l'ouverture, un nom encore visible dans le lobby est décalé.
+const freeStart = src.indexOf('    _freeGameName(name) {');
+ok(freeStart > 0, '_freeGameName is still where the test expects it');
+const freeBody = src.slice(freeStart, src.indexOf('\n    },', freeStart) + 6);
+const freeName = eval('(' + freeBody.trim().replace(/^_freeGameName\s*\(/, 'function (').replace(/,$/, '') + ')');
+
+window.S = { games: {} };
+ok(freeName('Chez Bob') === 'Chez Bob', 'a free name is left alone');
+
+window.S.games = { 1: { name: 'Chez Bob' } };
+ok(freeName('Chez Bob') === 'Chez Bob 2', 'a name already on the lobby list is shifted');
+ok(freeName('chez bob') === 'chez bob 2', 'the comparison ignores case');
+
+window.S.games = { 1: { name: 'Chez Bob' }, 2: { name: 'Chez Bob 2' }, 3: { name: ' Chez Bob 3 ' } };
+ok(freeName('Chez Bob') === 'Chez Bob 4', 'it keeps counting past the ones taken, trimmed');
+
+// Le champ QML plafonne à 48 caractères : le suffixe doit tenir dedans.
+const long = 'x'.repeat(48);
+window.S.games = {};
+window.S.games[1] = { name: long };
+ok(freeName(long).length <= 48, 'the shifted name still fits the 48-character field');
+
+// Pas de lobby chargé : on n'invente rien.
+window.S = {};
+ok(freeName('Chez Bob') === 'Chez Bob', 'with no lobby list loaded the name is untouched');
+ok(freeName('') === '', 'an empty name stays empty');
 
 console.log(fails ? '\nFAIL ' + fails : '\nALL OK');
 process.exit(fails ? 1 : 0);
