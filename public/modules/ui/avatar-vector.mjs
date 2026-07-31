@@ -43,10 +43,10 @@ const AV_AXES = [
   { id: 'sex',   label: 'avmSex',       n: 2,               kind: 'shape', none: false },
   { id: 'face',  label: 'avmFace',      n: 3,               kind: 'shape', none: false },
   { id: 'bg',    label: 'avmBg',        n: AV_FELT.length,  kind: 'color', none: false },
-  { id: 'outfit',label: 'avmOutfit',    n: 12,              kind: 'shape', none: false },
+  { id: 'outfit',label: 'avmOutfit',    n: 17,              kind: 'shape', none: false },
   { id: 'skin',  label: 'avmSkin',      n: AV_SKIN.length,  kind: 'color', none: false },
   { id: 'marks', label: 'avmMarks',     n: 6,               kind: 'shape', none: true  },
-  { id: 'hair',  label: 'avmHair',      n: 21,              kind: 'shape', none: true  },
+  { id: 'hair',  label: 'avmHair',      n: 26,              kind: 'shape', none: true  },
   { id: 'hairc', label: 'avmHairColor', n: AV_HAIRC.length, kind: 'color', none: false },
   { id: 'beard', label: 'avmBeard',     n: 7,               kind: 'shape', none: true  },
   { id: 'eyes',  label: 'avmEyeShape',  n: 7,               kind: 'shape', none: false },
@@ -64,9 +64,9 @@ const AV_AXES = [
 // avVisible() lets the UI filter rows coherently with the selected sex
 // while the engine still renders any recipe (old recipes stay valid).
 const AV_SEXTAG = {
-  hair: { 2: 0, 3: 1, 5: 1, 6: 0, 7: 1, 8: 1, 9: 0, 11: 1, 12: 1, 14: 1, 16: 0, 19: 1 },
+  hair: { 2: 0, 3: 1, 5: 1, 6: 0, 7: 1, 8: 1, 9: 0, 11: 1, 12: 1, 14: 1, 16: 0, 19: 1, 21: 1, 22: 1, 23: 1, 24: 1, 25: 1 },
   mouth: { 3: 1 },
-  outfit: { 6: 1, 9: 1 }
+  outfit: { 6: 1, 9: 1, 12: 1, 13: 1, 14: 1 }
 };
 
 function avVisible(axId, i, recipe) {
@@ -136,6 +136,46 @@ function _outfit(i, skin) {
       + '<path d="M50 200 q2-44 50-46 l0 46z" fill="#1a1e23"/>'
       + '<path d="M86 136 q0-8 14-8 q14 0 14 8 l0 16 q-14 6-28 0z" fill="#2c313a"/>'
       + '<path d="M86 142 l28 0 M86 147 l28 0" stroke="#22262c" stroke-width="1.4" fill="none"/>';
+  }
+  if (i === 12) { // V-neck dress with deep neckline (feminine)
+    return '<path d="M50 200 q2-44 50-46 q48 2 50 46z" fill="#1f3a52"/>'
+      + '<path d="M50 200 q2-44 50-46 l0 46z" fill="#1a3146"/>'
+      + '<path d="M100 154 l-18 10 12 30 6-16 6 16 12-30z" fill="' + skin[0] + '"/>'
+      + '<path d="M100 154 l18 10 -12 30 -6-16z" fill="' + skin[1] + '"/>'
+      + '<path d="M82 164 q8 22 18 34 M118 164 q-8 22-18 34" stroke="#c9992e" stroke-width="1.4" fill="none"/>';
+  }
+  if (i === 13) { // halter dress, bare shoulders + neck strap (feminine)
+    return '<path d="M50 200 q2-44 50-46 q48 2 50 46z" fill="' + skin[0] + '"/>'
+      + '<path d="M100 154 q48 2 50 46 l-50 0z" fill="' + skin[1] + '"/>'
+      + '<path d="M60 200 l3-24 q12-14 37-14 q25 0 37 14 l3 24z" fill="#123a2e"/>'
+      + '<path d="M100 162 q25 0 37 14 l3 24 -40 0z" fill="#0d2e24"/>'
+      + '<path d="M92 132 l8 30 8-30" fill="none" stroke="#123a2e" stroke-width="4"/>';
+  }
+  if (i === 14) { // scoop-neck top + gold necklace (feminine)
+    return '<path d="M50 200 q2-44 50-46 q48 2 50 46z" fill="#5a2a52"/>'
+      + '<path d="M50 200 q2-44 50-46 l0 46z" fill="#4c2345"/>'
+      + '<path d="M76 158 q24 22 48 0 l-4 14 q-20 14-40 0z" fill="' + skin[0] + '"/>'
+      + '<path d="M100 172 q12-2 24-14 l-4 14 q-10 7-20 9z" fill="' + skin[1] + '"/>'
+      + '<path d="M84 158 q16 16 32 0" fill="none" stroke="#d4a437" stroke-width="1.6"/>'
+      + '<circle cx="100" cy="172" r="2.6" fill="#d4a437"/>';
+  }
+  if (i === 15) { // shirt worn open at the collar (universal)
+    return '<path d="M50 200 q2-44 50-46 q48 2 50 46z" fill="#c8d4dc"/>'
+      + '<path d="M50 200 q2-44 50-46 l0 46z" fill="#b8c6cf"/>'
+      + '<path d="M100 152 l-14 8 8 26 6-14 6 14 8-26z" fill="' + skin[0] + '"/>'
+      + '<path d="M100 152 l14 8 -8 26 -6-14z" fill="' + skin[1] + '"/>'
+      + '<path d="M86 158 q6 10 12 12 l-7 8 q-9-8-11-18z" fill="#dde6ec"/>'
+      + '<path d="M114 158 q-6 10-12 12 l7 8 q9-8 11-18z" fill="#cdd9e1"/>'
+      + '<circle cx="100" cy="188" r="1.4" fill="#8a99a5"/>';
+  }
+  if (i === 16) { // blazer + draped scarf (universal)
+    return '<path d="M50 200 q2-44 50-46 q48 2 50 46z" fill="#3a3f36"/>'
+      + '<path d="M50 200 q2-44 50-46 l0 46z" fill="#30352d"/>'
+      + '<path d="M88 146 q12 8 24 0 l2 10 q-14 8-28 0z" fill="#7a4b28"/>'
+      + '<path d="M94 154 q6 3 12 0 l4 34 -8 6 -8-6z" fill="#8c5730"/>'
+      + '<path d="M96 160 l16 0 M95 168 l17 0 M96 176 l15 0" stroke="#6b3f20" stroke-width="1.2" fill="none"/>'
+      + '<path d="M84 148 l-20 10 10 40 18-36 q-6-6-8-14z" fill="#2b3028"/>'
+      + '<path d="M116 148 l20 10 -10 40 -18-36 q6-6 8-14z" fill="#242920"/>';
   }
   if (i === 9) { // strapless evening dress (feminine): bare shoulders
     return '<path d="M50 200 q2-44 50-46 q48 2 50 46z" fill="' + skin[0] + '"/>'
@@ -289,6 +329,29 @@ function _hair(i, hc) {
       return '<path d="M66 72 q-2-30 34-30 q36 0 34 30 q-2 6-5 8 q1-22-9-28 q-6 8-20 8 q-14 0-20-8 q-10 6-9 28 q-3-2-5-8z" fill="' + b + '"/>'
         + '<g fill="' + b + '"><rect x="60" y="64" width="4.5" height="40" rx="2.2"/><rect x="66" y="70" width="4.5" height="38" rx="2.2"/><rect x="72" y="74" width="4.5" height="34" rx="2.2" transform="rotate(3 74 74)"/><rect x="123.5" y="74" width="4.5" height="34" rx="2.2" transform="rotate(-3 126 74)"/><rect x="129.5" y="70" width="4.5" height="38" rx="2.2"/><rect x="135.5" y="64" width="4.5" height="40" rx="2.2"/></g>'
         + '<g fill="' + h + '" opacity="0.4"><rect x="61.5" y="68" width="1.6" height="32" rx="0.8"/><rect x="131" y="74" width="1.6" height="30" rx="0.8"/></g>';
+    case 21: // elegant low side bun + face-framing strands
+      return '<path d="M64 76 q-2-38 36-38 q38 0 36 38 q-2 8-6 10 q3-28-10-34 q-7 9-20 9 q-13 0-20-9 q-13 6-10 34 q-4-2-6-10z" fill="' + b + '"/>'
+        + '<circle cx="132" cy="102" r="10" fill="' + b + '"/>'
+        + '<path d="M128 96 q6 2 6 9" stroke="' + h + '" stroke-width="1.8" fill="none" opacity="0.6"/>'
+        + '<path d="M68 76 q-2 14 3 26 q3-2 3-6 q-3-10-1-20z" fill="' + b + '"/>'
+        + '<path d="M132 76 q2 10 0 18 q-3-2-3-6 q2-6 0-12z" fill="' + b + '" opacity="0.9"/>';
+    case 22: // sleek asymmetric long bob, deep side part
+      return '<path d="M62 80 q-4-46 38-46 q42 0 38 46 l-3 30 q-6 5-11 0 q3-24-1-38 q-5 6-13 7 l-22-13 q-9 3-13 10 q-5 16-2 44 q-6 5-11 0z" fill="' + b + '"/>'
+        + '<path d="M75 44 q12-8 28-6 l-16 12z" fill="' + h + '" opacity="0.45"/>';
+    case 23: // long voluminous curls
+      return '<path d="M64 74 q-2-40 36-40 q38 0 36 40 q-2 6-5 8 q2-26-11-32 q-7 9-20 9 q-13 0-20-9 q-13 6-11 32 q-3-2-5-8z" fill="' + b + '"/>'
+        + '<g fill="' + b + '"><circle cx="64" cy="86" r="9"/><circle cx="60" cy="102" r="9"/><circle cx="63" cy="118" r="9"/><circle cx="60" cy="134" r="8"/><circle cx="66" cy="147" r="8"/><circle cx="136" cy="86" r="9"/><circle cx="140" cy="102" r="9"/><circle cx="137" cy="118" r="9"/><circle cx="140" cy="134" r="8"/><circle cx="134" cy="147" r="8"/></g>'
+        + '<g fill="' + h + '" opacity="0.4"><circle cx="61" cy="98" r="3"/><circle cx="60" cy="130" r="3"/><circle cx="139" cy="98" r="3"/><circle cx="138" cy="130" r="3"/></g>';
+    case 24: // low ponytail swept over one shoulder
+      return '<path d="M66 76 q-2-36 34-36 q36 0 34 36 q-2 8-5 10 q2-26-9-32 q-6 9-20 9 q-14 0-20-9 q-11 6-9 32 q-3-2-5-10z" fill="' + b + '"/>'
+        + '<path d="M126 92 q10 10 8 26 q-2 18-14 28 q-8 6-14 4 q8-8 10-18 q-6 4-12 2 q10-6 12-16 q2-14 10-26z" fill="' + b + '"/>'
+        + '<path d="M128 100 q6 10 2 24" stroke="' + h + '" stroke-width="2" fill="none" opacity="0.5" stroke-linecap="round"/>'
+        + '<path d="M122 96 q-2 4 0 8 l6-2 q-2-4 0-8z" fill="#8d1f1f"/>';
+    case 25: // vintage hollywood waves
+      return '<path d="M62 82 q-4-44 38-44 q42 0 38 44 l-4 34 q-6 5-11 1 q4-20 1-36 q-4 6-12 7 q-14-2-24 0 q-8-1-12-7 q-3 16 1 36 q-5 4-11-1z" fill="' + b + '"/>'
+        + '<path d="M68 62 q8-6 6 4 q-8 8 2 12 q-10 6-2 14" stroke="' + h + '" stroke-width="2.4" fill="none" opacity="0.55" stroke-linecap="round"/>'
+        + '<path d="M132 62 q-8-6-6 4 q8 8-2 12 q10 6 2 14" stroke="' + h + '" stroke-width="2.4" fill="none" opacity="0.55" stroke-linecap="round"/>'
+        + '<path d="M76 44 q10-7 24-6 q-12 4-17 12z" fill="' + h + '" opacity="0.4"/>';
     default: // wavy senior sweep
       return '<path d="M66 74 q-2-32 34-32 q36 0 34 32 q-2 8-6 10 q2-22-8-28 q-6 8-20 8 q-14 0-20-8 q-10 6-8 28 q-4-2-6-10z" fill="' + b + '"/>'
            + '<path d="M74 46 q6-6 16-7 q-8 5-11 12 M104 40 q9 1 15 7 q-8-2-13-1" stroke="' + h + '" stroke-width="2.4" fill="none" stroke-linecap="round"/>';
