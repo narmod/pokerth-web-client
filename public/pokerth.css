@@ -10118,27 +10118,33 @@ body.adv-no-helpbtn .help-menu-btn{display:none}
 body.adv-no-avcreate #avp-tab-create { display: none !important; }
 #avp-pane-create, #avp-pane-import { padding: var(--sp-5); }
 /* ── Pane Créer (matrice) ── */
-.avm-head {
+.avm-sticky {
   position: sticky; top: 0; z-index: 2;
-  display: flex; gap: var(--sp-5); align-items: center; justify-content: center;
-  padding: var(--sp-3) var(--sp-3) var(--sp-4);
   background: var(--panel);
   border-bottom: 1px solid var(--border);
   margin: calc(-1 * var(--sp-5)) calc(-1 * var(--sp-5)) var(--sp-4);
+  padding: var(--sp-3) var(--sp-5) 0;
+}
+.avm-head {
+  display: flex; gap: var(--sp-5); align-items: center; justify-content: center;
+  padding-bottom: var(--sp-3);
 }
 .avm-head-btns { display: flex; flex-direction: column; gap: var(--sp-3); }
 .avm-groups {
-  display: flex; gap: 3px; padding: 0 0 var(--sp-3);
-  border-bottom: 1px solid var(--border); margin-bottom: var(--sp-4);
+  display: flex; flex-wrap: nowrap; gap: 3px; padding: var(--sp-2) 0 var(--sp-3);
+  border-top: 1px solid var(--border);
   overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none;
 }
 .avm-groups::-webkit-scrollbar { display: none; }
 .avm-group {
-  flex: 1 0 auto; display: flex; align-items: center; justify-content: center; gap: 5px;
+  flex: 0 0 auto; display: flex; align-items: center; gap: 6px;
   background: var(--inset); border: 1px solid transparent; color: var(--text);
-  padding: 6px 9px; border-radius: var(--r-sm); cursor: pointer;
-  font-size: var(--fs-xs); transition: border-color 0.12s, background 0.12s, color 0.12s;
+  padding: 7px 11px; border-radius: var(--r-sm); cursor: pointer; white-space: nowrap;
+  font-size: var(--fs-2xs); letter-spacing: 0.08em; text-transform: uppercase;
+  font-family: var(--ff-display);
+  transition: border-color 0.12s, background 0.12s, color 0.12s, transform 0.1s;
 }
+.avm-group:hover { background: rgba(var(--gold-rgb), 0.1); }
 .avm-group-ico { font-size: 1rem; line-height: 1; }
 .avm-group.selected { border-color: var(--sel,var(--gold)); color: var(--sel,var(--gold)); background: rgba(var(--gold-rgb), 0.12); }
 .avm-preview {

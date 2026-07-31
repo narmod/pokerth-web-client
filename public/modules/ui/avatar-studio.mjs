@@ -64,6 +64,7 @@ function _avmRender() {
   if (!pane) return;
   if (!pane.firstChild) {
     pane.innerHTML =
+      '<div class="avm-sticky">' +
       '<div class="avm-head">' +
       '<div class="avm-preview" id="avm-preview"></div>' +
       '<div class="avm-head-btns">' +
@@ -72,6 +73,7 @@ function _avmRender() {
       '</div>' +
       '</div>' +
       '<div class="avm-groups" id="avm-groups" role="tablist"></div>' +
+      '</div>' +
       '<div class="avm-rows" id="avm-rows"></div>';
     document.getElementById('avm-dice').addEventListener('click', function () {
       _avmState = avRandom(); _avmPersist(); _avmRender();
