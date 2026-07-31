@@ -694,7 +694,10 @@ function onPlayersActionDone(sub) {
       // Street de ma prise de parole : la barre d'action reste inerte tant
       // que rien ne me redonne la parole (relance adverse ou street
       // suivante) — comportement des clients Qt-Widgets et QML.
-      S._actedStreet = (S.commCards || []).filter(function (c) { return c != null; }).length;
+      // …mais PAS pour la pose des blinds (action 0 = netActionNone) : en BB
+      // préflop le blind n'est pas une prise de parole — la barre doit rester
+      // pré-armable, la BB garde l'option check/raise (rapport forum 30/07).
+      if (action !== 0) S._actedStreet = (S.commCards || []).filter(function (c) { return c != null; }).length;
       const myMon = (S.seatData[S.myId] || {}).money || 0;
       if (document.getElementById('g-mystack')) document.getElementById('g-mystack').textContent = myMon > 0 ? fmtChips(myMon) : '';
     }

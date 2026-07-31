@@ -5195,8 +5195,11 @@ const App = (() => {
                 setTimeout(_hideBanner, 1500);
               }
             };
-            S.ws.onclose = arguments.callee.caller || function(){};
-            // Réutiliser le même handler onclose pour les tentatives suivantes
+            // Réutiliser le même handler onclose pour les tentatives suivantes.
+            // (fix 2026-07-31 : l'ancienne ligne `arguments.callee.caller`
+            // jetait une TypeError en mode strict (ESM) dès le déclenchement
+            // du timer — le vrai handler ci-dessous n'était jamais assigné,
+            // aucune reconnexion n'aboutissait ; rapport forum.)
             S.ws.onclose = function() {
               S.ws = null;
               clearTimeout(window._reconnectTimer);
@@ -9652,7 +9655,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.5-web.47'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.5-web.48'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

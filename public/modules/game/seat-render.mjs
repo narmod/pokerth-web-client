@@ -867,6 +867,7 @@ function renderSeatsImmediate() {
     } else if (window._commScalePending && _applyOfficial) {
       window._commScalePending = false;
       var _csComm, _zW3 = zRect.width, _zH3 = zRect.height;
+      var _commSkip3 = false; // garde : 0 plate adverse mesurée (voir plus bas)
       var _commTargetY = null; // centre Y cible (px zone) — parité anchors QML
       if (_forceSeatPortrait) {
         var _oppH3 = (window._seatDimsMeasured && window._seatDimsMeasured.h > 30) ? window._seatDimsMeasured.h : 71;
@@ -927,6 +928,12 @@ function renderSeatsImmediate() {
           _sumY3 += _c3; _n3++;                                 // barycentre
           _rects3.push({ t: _t3, b: _b3, l: rr3.left - _zr3.left, r: rr3.right - _zr3.left });
         });
+        // ── Garde (rapport forum 30/07, heads-up) : AUCUNE plate adverse
+        // mesurable (transition d'élimination, re-render partiel, rejoin) —
+        // le barycentre dégénérerait sur la seule self-box : rangée community
+        // au plancher d'échelle, centrée DERRIÈRE l'avatar et la main. On
+        // conserve échelle/décalage précédents (aucune écriture ce tour-ci).
+        if (_n3 <= 1) _commSkip3 = true;
         var _isCmp3 = _zH3 < 520 || window.innerHeight < 600;
         var _commC3 = _sumY3 / _n3;
         // Zuschauer (QML communityCenterY) : sans self-box l'anneau est
@@ -986,6 +993,7 @@ function renderSeatsImmediate() {
         // communityCenterY - height/2 -> centre de la rangee = barycentre.
         _commTargetY = _commC3;
       }
+      if (!_commSkip3) {
       document.documentElement.style.setProperty('--comm-scale', _csComm.toFixed(3));
       // ── Fond de table « center » (parité QML tableBackgroundImage) : image
       // agrandie pour couvrir, CENTRÉE sur (milieu zone, communityCenterY),
@@ -1033,6 +1041,7 @@ function renderSeatsImmediate() {
         }
       } catch (e5) { try { document.documentElement.style.removeProperty('--comm-shift-y'); } catch (e6) {} }
       try { window._seatDbg.commScale = _csComm; } catch (e3) {}
+      } else { try { window._seatDbg.commScale = 'skip:no-opp'; } catch (e3b) {} }
     } else if (window._commScalePending) {
       window._commScalePending = false;
       document.documentElement.style.removeProperty('--comm-scale');

@@ -77,7 +77,11 @@ window.addEventListener('error', function (e) {
 window.addEventListener('unhandledrejection', function (e) {
   push('REJECTION', [(e && e.reason) || 'unknown']);
 });
-push('INFO', ['debug log started — build ' + (window.BUILD_VERSION || '?') + ' — ' + navigator.userAgent]);
+// Header différé d'un tick : BUILD_VERSION est défini en fin de pokerth.js,
+// APRÈS l'évaluation des modules importés — sinon le log affichait « build ? ».
+setTimeout(function () {
+  push('INFO', ['debug log started — build ' + (window.BUILD_VERSION || '?') + ' — ' + navigator.userAgent]);
+}, 0);
 
 // ── Viewer ─────────────────────────────────────────────────────────
 const CSS =

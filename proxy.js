@@ -4334,6 +4334,7 @@ const httpServer = http.createServer((req, res) => {
            : ext === '.webp' ? 'image/webp'
            : ext === '.woff' ? 'font/woff'
            : ext === '.woff2'? 'font/woff2'
+           : ext === '.wasm' ? 'application/wasm'
            : 'application/octet-stream';
     // CSS/JS/MJS must always revalidate so a deploy is picked up without a
     // hard refresh; static media (images/fonts) can still be cached a day.
