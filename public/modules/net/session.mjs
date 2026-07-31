@@ -210,8 +210,24 @@ function setStatus(txt, cls='', key) {
   // puisse le retraduire à la volée lors d'un changement de langue.
   S._statusKey = key || null;
   const el = document.getElementById('cstatus');
+  if (!el) return;
   el.textContent = txt;
   el.className = 'status ' + cls;
+  // #cstatus vit sous le bouton CONNECT, donc sur l'écran de connexion. Une
+  // fois au lobby ou à table, cet écran est masqué : tout message écrit ici
+  // devient invisible. Les REFUS DE JOIN passaient par là — le serveur
+  // répondait « partie pleine », « déjà commencée », « invitation requise »,
+  // et le joueur ne voyait rien du tout. Rapport forum : « je clique Rejoindre
+  // et il ne se passe rien ».
+  //
+  // Une erreur ne doit pas dépendre de l'écran où l'on se trouve : quand la
+  // cible est masquée, on la double d'un toast. Limité aux erreurs — les
+  // messages d'état ordinaires n'ont pas à s'imposer par-dessus l'écran.
+  if (cls !== 'err') return;
+  try {
+    if (el.offsetParent !== null) return;          // visible : rien à doubler
+    if (window.showToast) window.showToast(txt, { tone: 'error', icon: '\u26a0', duration: 5000 });
+  } catch (e) {}
 }
 
 // ── RÉSEAU ──
