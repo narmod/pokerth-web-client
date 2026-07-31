@@ -23,7 +23,7 @@ globalThis.document = { readyState: 'complete', addEventListener() {},
 globalThis._enableFloating = (card, opt) => calls.push({ kind: 'enable', card, opt });
 globalThis._disableFloating = (card) => calls.push({ kind: 'disable', card });
 
-const { _rangeSetupFloat } = await import('../public/modules/handlog.mjs');
+const { _rangeSetupFloat, _styleIcon, _RANGE_ICO, openRangeGrid } = await import('../public/modules/handlog.mjs');
 
 let n = 0, fail = 0;
 function ok(cond, msg) { n++; if (!cond) { fail++; console.error('  ✗', msg); } else console.log('  ✓', msg); }
@@ -87,6 +87,48 @@ ok(calls.length === 0, 'conteneur sans carte → no-op');
   const hosts = (z.match(/^const HOSTS = '(.*)';$/m) || [])[1] || '';
   ok(hosts.split(',').includes('#range-modal'),
     '#range-modal est dans HOSTS → la dernière fenêtre touchée passe devant');
+}
+
+// ── Bouton « range » des lignes du tableau Stats ──────────────────────────
+{
+  const css = readFileSync(new URL('../public/pokerth.css', import.meta.url), 'utf8');
+  ok(/\.stats-range-btn\{[^}]*opacity:\.4/.test(css), 'discret au repos');
+  ok(/tbody tr:hover \.stats-range-btn\{opacity:1\}/.test(css), 'révélé au survol de la ligne');
+  ok(/@media \(hover:none\)\{ #g-stats-body \.stats-range-btn\{opacity:\.75\} \}/.test(css),
+    'lisible en permanence au doigt, où il n’y a pas de survol');
+  ok(/\.stats-name-txt\{[^}]*text-overflow:ellipsis/.test(css),
+    'le pseudo tronque, le bouton ne se fait pas rogner');
+
+  const src = readFileSync(new URL('../public/modules/handlog.mjs', import.meta.url), 'utf8');
+  ok(/class="stats-range-btn" data-range-name="/.test(src), 'un bouton par ligne, porteur du pseudo');
+  ok(/querySelectorAll\('\.stats-range-btn'\)/.test(src), 'les boutons sont rebranchés après chaque rendu');
+  ok(/aria-label="/.test(src.slice(src.indexOf('stats-range-btn'))), 'bouton étiqueté pour les lecteurs d’écran');
+}
+
+// ── Icônes SVG : currentColor uniquement ─────────────────────────────────
+// Piège connu : un attribut SVG ne résout PAS var(--x). Toute couleur doit
+// passer par currentColor (ou un style=), jamais par un attribut avec var().
+for (const [label, svg] of [['cadran d’archétype', _styleIcon({ loose: true, aggro: false, extreme: false })],
+                            ['icône du bouton range', _RANGE_ICO]]) {
+  ok(!/var\(/.test(svg), label + ' : aucun var() dans les attributs SVG');
+  ok(/fill="currentColor"/.test(svg), label + ' : couleur héritée via currentColor');
+  const coords = (svg.match(/(?:x|y)="([\d.]+)"/g) || []).map((m) => parseFloat(m.split('"')[1]));
+  ok(coords.length > 0 && coords.every((v) => v >= 0 && v <= 12), label + ' : coordonnées dans le viewBox');
+}
+{
+  const lit = (_RANGE_ICO.match(/opacity="\.95"/g) || []).length;
+  const cells = (_RANGE_ICO.match(/<rect /g) || []).length;
+  ok(cells === 9 && lit === 3, 'grille 3×3 dont la diagonale est allumée');
+  const dial = _styleIcon({ loose: false, aggro: true, extreme: true });
+  ok((dial.match(/<rect /g) || []).length === 4, 'cadran à 4 quadrants');
+  ok(/stroke="currentColor"/.test(dial), 'un extrême reçoit un contour');
+}
+
+// ── Ouverture sans données : silencieuse, jamais d’exception ──────────────
+{
+  let threw = false;
+  try { openRangeGrid('Alice'); } catch (_e) { threw = true; }
+  ok(!threw, 'sans journal chargé, l’ouverture échoue en silence plutôt que de lever');
 }
 
 console.log(fail ? `FAIL ${n - fail}/${n}` : `PASS ${n}/${n}`);

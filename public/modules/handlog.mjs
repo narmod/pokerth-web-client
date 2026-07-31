@@ -1173,6 +1173,21 @@ function cellCombo(row, col) {
 // (assemblés dans le même module), et des globales du client exposées :
 //   window._statsTablePlayers() → [{name}] joueurs de la table (fourni par le glue).
 
+// Icone du bouton « range » des lignes du tableau : mini grille 3x3 dont la
+// diagonale est allumee — evocation de la grille 13x13 (diagonale = paires) et
+// meme langage visuel que le cadran d'archetype. currentColor uniquement.
+const _RANGE_ICO = (function () {
+  let r = '';
+  for (let y = 0; y < 3; y++) {
+    for (let x = 0; x < 3; x++) {
+      r += '<rect x="' + (0.5 + x * 4) + '" y="' + (0.5 + y * 4) + '" width="3" height="3" rx="0.8"'
+        + ' fill="currentColor" opacity="' + (x === y ? '.95' : '.3') + '"/>';
+    }
+  }
+  return '<svg viewBox="0 0 12 12" width="11" height="11" aria-hidden="true" focusable="false">'
+    + r + '</svg>';
+})();
+
 // Rendu paresseux : ne calcule que si l'onglet Stats est visible.
 let _statsScope = 'session'; // 'session' | 'all'
 try { const v = localStorage.getItem('pth_stats_scope'); if (v === 'all' || v === 'session') _statsScope = v; } catch (_e) {}
@@ -1353,7 +1368,14 @@ async function renderStatsPanel() {
   let body = '';
   for (const name of rowsFor) {
     const s = statsByName[name];
-    body += '<tr><td class="stats-name" title="' + _esc(name) + '">' + _esc(name) + '</td>';
+    // « Voir la range ▸ » sert de libellé au bouton du popover HUD ; ici c'est
+    // une infobulle, la flèche n'aurait pas de sens.
+    const rangeTip = _ht('hlSeeRange', 'See range \u25b8').replace(/\s*\u25b8\s*$/, '');
+    body += '<tr><td class="stats-name" title="' + _esc(name) + '">'
+      + '<span class="stats-name-wrap"><span class="stats-name-txt">' + _esc(name) + '</span>'
+      + '<button type="button" class="stats-range-btn" data-range-name="' + _esc(name) + '"'
+      + ' title="' + _esc(rangeTip) + '" aria-label="' + _esc(rangeTip + ' \u2014 ' + name) + '">'
+      + _RANGE_ICO + '</button></span></td>';
     for (const [key] of COLS) {
       if (!s) { body += '<td>–</td>'; continue; }
       const col = statColor(key, s[key]);
@@ -1366,6 +1388,13 @@ async function renderStatsPanel() {
   el.innerHTML = '<div class="odds-hd">' + _ht('gipTabStats','Stats') + '</div>' + scopeBtns
     + '<div class="stats-scroll"><table class="stats-table"><thead>' + head + '</thead><tbody>' + body + '</tbody></table></div>';
 
+  // Bouton « range » de chaque ligne : ouvre la même fenêtre que le popover HUD.
+  el.querySelectorAll('.stats-range-btn').forEach((b) => {
+    b.onclick = (e) => {
+      e.stopPropagation();
+      openRangeGrid(b.getAttribute('data-range-name'));
+    };
+  });
   // Brancher les boutons de portée.
   const btns = el.querySelectorAll('.stats-scope-btn');
   btns.forEach((b) => {
@@ -2227,8 +2256,30 @@ function _closeRange() {
   try { if (window._syncWinBtns) window._syncWinBtns(); } catch (_e) {}
 }
 
+// _dataCache n'est rempli que par _computeStats (chemin HUD, toutes les 2,5 s
+// en jeu). Le tableau Stats, lui, lit le store directement : HUD desactive, le
+// bouton range de ses lignes serait reste inerte. On construit alors les tables
+// a la demande, une seule fois, puis on rouvre.
+async function _ensureRangeData() {
+  if (_dataCache) return _dataCache;
+  const store = (typeof window !== 'undefined') ? window._handlogStore : null;
+  if (!store) return null;
+  const all = await store.loadAll();
+  _dataCache = new StatsData(_nsGames({
+    games: all.games, players: all.players, hands: all.hands, actions: all.actions,
+  }));
+  return _dataCache;
+}
+
 function openRangeGrid(name, posFilter, playersFilter) {
-  if (typeof document === 'undefined' || !_dataCache) return;
+  if (typeof document === 'undefined') return;
+  if (!_dataCache) {
+    // Un seul repli possible : si les tables restent introuvables on abandonne
+    // silencieusement plutot que de boucler.
+    _ensureRangeData().then((d) => { if (d) openRangeGrid(name, posFilter, playersFilter); })
+      .catch(() => {});
+    return;
+  }
   let modal = document.getElementById('range-modal');
   if (!modal) {
     modal = document.createElement('div');
@@ -2357,4 +2408,5 @@ function _renderRange(modal) {
 export { StatsData, StatsCalculator, RECENT_HANDS,
          _trendArrow, _TREND_MIN_BASE, _TREND_EPS,
          _refreshScopes, _scopeOf, playerStatsFor,
-         playerStyle, STYLE_MIN_HANDS, _rangeSetupFloat };
+         playerStyle, STYLE_MIN_HANDS, _rangeSetupFloat,
+         _styleIcon, _RANGE_ICO, openRangeGrid };

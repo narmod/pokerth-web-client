@@ -8519,7 +8519,19 @@ html:not([data-seat-struct="qml"]) .seat:not(.me) .seat-foot { margin-top: 1px; 
 #g-stats-body .stats-table{border-collapse:collapse;width:100%;font-size:var(--fs-xs);font-variant-numeric:tabular-nums}
 #g-stats-body .stats-table th{color:var(--chatlog-muted, var(--text-dim,#9aa3b5));font-weight:700;text-align:right;padding:2px 5px;border-bottom:1px solid var(--border, rgba(255,255,255,.12));white-space:nowrap;cursor:help}
 #g-stats-body .stats-table td{text-align:right;padding:2px 5px;border-bottom:1px solid rgba(255,255,255,.05);white-space:nowrap}
-#g-stats-body .stats-table .stats-name{text-align:left;max-width:96px;overflow:hidden;text-overflow:ellipsis;color:var(--chatlog-text, var(--text));font-weight:600}
+#g-stats-body .stats-table .stats-name{text-align:left;max-width:118px;color:var(--chatlog-text, var(--text));font-weight:600}
+#g-stats-body .stats-name-wrap{display:flex;align-items:center;gap:4px;min-width:0}
+#g-stats-body .stats-name-txt{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+/* Bouton « range » de chaque ligne : discret au repos, révélé au survol de la
+   ligne. Au doigt il n'y a pas de survol → il reste lisible en permanence. */
+#g-stats-body .stats-range-btn{flex:none;display:inline-flex;align-items:center;justify-content:center;
+  width:16px;height:16px;padding:0;background:transparent;border:none;border-radius:var(--r-xs);
+  color:var(--chatlog-muted, var(--text-dim,#9aa3b5));opacity:.4;cursor:pointer;
+  transition:opacity .12s, color .12s}
+#g-stats-body .stats-table tbody tr:hover .stats-range-btn{opacity:1}
+#g-stats-body .stats-range-btn:hover,
+#g-stats-body .stats-range-btn:focus-visible{opacity:1;color:var(--gold)}
+@media (hover:none){ #g-stats-body .stats-range-btn{opacity:.75} }
 #g-stats-body .stats-table tbody tr:hover td{background:rgba(var(--gold-rgb),.06)}
 #g-stats-body .stats-empty{text-align:center;opacity:.6;padding:10px 0}
 
