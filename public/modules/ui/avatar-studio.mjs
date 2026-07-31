@@ -22,10 +22,11 @@ import { AV_AXES, avSvg, avSwatch, avNormalize, avRandom } from './avatar-vector
 // Axis groups shown as chip tabs (gallery-category pattern): only the
 // active group's rows are rendered, keeping the pane short and tidy.
 const AV_GROUPS = [
-  { icon: '\uD83D\uDC64', label: 'avmGrpFace',  axes: ['sex', 'face', 'skin', 'marks', 'eyes', 'eyec', 'mouth'] },
+  { icon: '\uD83D\uDC65', label: 'avmGrpBody',  axes: ['sex', 'face'] },
+  { icon: '\uD83D\uDC64', label: 'avmGrpFace',  axes: ['skin', 'marks', 'eyes', 'eyec', 'mouth'] },
   { icon: '\uD83D\uDC87', label: 'avmGrpHair',  axes: ['hair', 'hairc', 'beard'] },
   { icon: '\uD83D\uDC54', label: 'avmGrpStyle', axes: ['outfit', 'bg'] },
-  { icon: '\u2728',        label: 'avmGrpExtra', axes: ['glasses', 'shoulder', 'ears'] }
+  { icon: '\u2728',        label: 'avmGrpExtra', axes: ['glasses', 'hat', 'shoulder', 'ears'] }
 ];
 var _avmGroup = 0;
 

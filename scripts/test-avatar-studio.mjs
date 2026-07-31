@@ -46,7 +46,7 @@ studio = studio.replace(/export \{[^}]*\};?/, '');
 ok(typeof window.avStudioTab === 'function', 'avStudioTab exposed');
 ok(typeof window._avSvg === 'function', 'vector engine exposed');
 const AXES = window._AV_AXES;
-ok(Array.isArray(AXES) && AXES.length === 15, '15 axes defined (' + AXES.length + ')');
+ok(Array.isArray(AXES) && AXES.length === 16, '16 axes defined (' + AXES.length + ')');
 
 // 2. Engine coherence: every option of every axis renders a clean SVG.
 let clean = true, badMsg = '';
@@ -80,12 +80,15 @@ ok(distinct, 'shape options produce visually distinct SVG');
 // 5. Tabs + panes
 window.avStudioTab('create');
 ok(document.getElementById('avp-pane-create').style.display === '', 'create pane visible');
-ok(document.querySelectorAll('#avm-groups .avm-group').length === 4, 'create pane renders 4 group tabs');
-ok(document.getElementById('avm-rows').children.length === 7, 'active group (Face) renders its 7 axis rows');
-document.querySelectorAll('#avm-groups .avm-group')[1].click();
+ok(document.querySelectorAll('#avm-groups .avm-group').length === 5, 'create pane renders 5 group tabs');
+ok(document.getElementById('avm-rows').children.length === 2, 'active group (Silhouette) renders its 2 axis rows');
+document.querySelectorAll('#avm-groups .avm-group')[2].click();
 ok(document.getElementById('avm-rows').children.length === 3, 'switching to Hair group renders 3 rows');
+document.querySelectorAll('#avm-groups .avm-group')[4].click();
+ok(document.getElementById('avm-rows').children.length === 4, 'Extras group renders 4 rows (incl. hat)');
+document.querySelectorAll('#avm-groups .avm-group')[1].click();
+ok(document.querySelectorAll('#avm-rows .avm-swatch').length > 0, 'color axes render swatches (Face group)');
 document.querySelectorAll('#avm-groups .avm-group')[0].click();
-ok(document.querySelectorAll('#avm-rows .avm-swatch').length > 0, 'color axes render swatches');
 ok(document.querySelectorAll('#avm-rows .avm-mini').length > 0, 'shape axes render mini previews');
 window.avStudioTab('import');
 ok(!!document.getElementById('avi-drop'), 'import drop zone rendered');
@@ -103,7 +106,7 @@ const persisted = JSON.parse(localStorage.getItem('pth_avatar_vec'));
 ok(persisted && persisted.sex === 1, 'clicking an option persists the recipe (pth_avatar_vec)');
 
 // 7. i18n: axis label keys present in every language file
-const KEYS = ['avmSex','avmFace','avmGrpFace','avmGrpHair','avmGrpStyle','avmGrpExtra',
+const KEYS = ['avmSex','avmFace','avmHat','avmGrpBody','avmGrpFace','avmGrpHair','avmGrpStyle','avmGrpExtra',
   'avmBg','avmOutfit','avmSkin','avmMarks','avmHair','avmHairColor','avmBeard',
   'avmEyeShape','avmEyeColor','avmMouth','avmShoulder','avmEarrings','avmNone',
   'avTabGallery','avTabCreate','avTabImport','avmRandom','avmUse','avmGlasses',

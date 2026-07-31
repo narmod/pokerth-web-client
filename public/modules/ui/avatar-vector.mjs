@@ -39,10 +39,10 @@ const AV_AXES = [
   { id: 'sex',   label: 'avmSex',       n: 2,               kind: 'shape', none: false },
   { id: 'face',  label: 'avmFace',      n: 3,               kind: 'shape', none: false },
   { id: 'bg',    label: 'avmBg',        n: AV_FELT.length,  kind: 'color', none: false },
-  { id: 'outfit',label: 'avmOutfit',    n: 5,               kind: 'shape', none: false },
+  { id: 'outfit',label: 'avmOutfit',    n: 6,               kind: 'shape', none: false },
   { id: 'skin',  label: 'avmSkin',      n: AV_SKIN.length,  kind: 'color', none: false },
   { id: 'marks', label: 'avmMarks',     n: 4,               kind: 'shape', none: true  },
-  { id: 'hair',  label: 'avmHair',      n: 7,               kind: 'shape', none: true  },
+  { id: 'hair',  label: 'avmHair',      n: 9,               kind: 'shape', none: true  },
   { id: 'hairc', label: 'avmHairColor', n: AV_HAIRC.length, kind: 'color', none: false },
   { id: 'beard', label: 'avmBeard',     n: 5,               kind: 'shape', none: true  },
   { id: 'eyes',  label: 'avmEyeShape',  n: 3,               kind: 'shape', none: false },
@@ -50,11 +50,12 @@ const AV_AXES = [
   { id: 'mouth', label: 'avmMouth',     n: 4,               kind: 'shape', none: false },
   { id: 'glasses', label: 'avmGlasses', n: 5,               kind: 'shape', none: true  },
   { id: 'shoulder', label: 'avmShoulder', n: 4,             kind: 'shape', none: true  },
-  { id: 'ears',  label: 'avmEarrings',  n: 3,               kind: 'shape', none: true  }
+  { id: 'ears',  label: 'avmEarrings',  n: 3,               kind: 'shape', none: true  },
+  { id: 'hat',   label: 'avmHat',       n: 4,               kind: 'shape', none: true  }
 ];
 
 const AV_DEFAULT = { sex: 0, face: 0, bg: 0, outfit: 0, skin: 1, marks: 0, hair: 3, hairc: 1,
-                     beard: 0, eyes: 0, eyec: 0, mouth: 0, glasses: 1, shoulder: 1, ears: 0 };
+                     beard: 0, eyes: 0, eyec: 0, mouth: 0, glasses: 1, shoulder: 1, ears: 0, hat: 0 };
 
 function avNormalize(r) {
   var out = {};
@@ -83,6 +84,13 @@ function _motifs(c) {
 
 // ── Outfits (neck is drawn first by avSvg; outfits wrap it) ──────────────
 function _outfit(i, skin) {
+  if (i === 5) { // open-collar shirt, no jacket (casual)
+    return '<path d="M50 200 q2-44 50-46 q48 2 50 46z" fill="#dfd8c8"/>'
+      + '<path d="M50 200 q2-44 50-46 l0 46z" fill="#d2cab8"/>'
+      + '<path d="M88 143 q6 9 12 10 l-7 9 q-9-7-10-16z" fill="#efe9dd"/>'
+      + '<path d="M112 143 q-6 9-12 10 l7 9 q9-7 10-16z" fill="#e3dccd"/>'
+      + '<path d="M96 152 l8 0 -4 8z" fill="' + skin[1] + '"/>';
+  }
   var jacketPairs = [
     ['#23272d', '#171a1f', '#1b1f24'],
     ['#1d2942', '#141d31', '#18233a'],
@@ -140,6 +148,13 @@ function _hair(i, hc) {
     case 5: // mid-length bob
       return '<path d="M62 78 q-2-46 38-46 q40 0 38 46 l-4 34 q-8 4-12 0 q4-20 0-38 q-6 8-22 8 q-16 0-22-8 q-4 18 0 38 q-4 4-12 0z" fill="' + b + '"/>'
            + '<path d="M70 52 q8-12 24-12 q-14 4-18 16z" fill="' + h + '"/>';
+    case 7: // bun
+      return '<circle cx="100" cy="36" r="12" fill="' + b + '"/>'
+        + '<circle cx="96" cy="33" r="4" fill="' + h + '" opacity="0.6"/>'
+        + '<path d="M66 74 q-2-32 34-32 q36 0 34 32 q-2 7-5 9 q2-24-9-30 q-6 8-20 8 q-14 0-20-8 q-11 6-9 30 q-3-2-5-9z" fill="' + b + '"/>';
+    case 8: // long, middle part
+      return '<path d="M60 80 q-2-48 40-48 q42 0 40 48 l-4 44 q-7 5-12 0 q3-26 0-46 q-4 6-11 7 l-13-11 -13 11 q-7-1-11-7 q-3 20 0 46 q-5 5-12 0z" fill="' + b + '"/>'
+        + '<path d="M100 34 l-11 11 q-8-2-11 5 q2-14 22-16z" fill="' + h + '" opacity="0.45"/>';
     default: // wavy senior sweep
       return '<path d="M66 74 q-2-32 34-32 q36 0 34 32 q-2 8-6 10 q2-22-8-28 q-6 8-20 8 q-14 0-20-8 q-10 6-8 28 q-4-2-6-10z" fill="' + b + '"/>'
            + '<path d="M74 46 q6-6 16-7 q-8 5-11 12 M104 40 q9 1 15 7 q-8-2-13-1" stroke="' + h + '" stroke-width="2.4" fill="none" stroke-linecap="round"/>';
@@ -261,6 +276,26 @@ function _shoulder(i) {
     + '<path d="M6 4 c0-2.6 3.6-2.6 3.6 0 c0 0 0-2.6 3.6-1.4 c2.6 1 1 4.4-3.6 7 c-4.6-2.6-5.6-4.6-3.6-5.6z" fill="#b02525"/></g>';
 }
 
+// ── Hats (drawn over the hair) ───────────────────────────────────────────
+function _hat(i) {
+  if (i === 0) return '';
+  if (i === 1) { // cap
+    return '<path d="M68 52 q0-24 32-24 q32 0 32 24 l0 4 -64 0z" fill="#8d1f1f"/>'
+      + '<path d="M100 28 q32 0 32 24 l0 4 -12 0 q4-20-20-28z" fill="#711818"/>'
+      + '<path d="M100 52 l40 0 q4 0 3 5 l-43 0z" fill="#5c1313"/>'
+      + '<circle cx="100" cy="30" r="3" fill="#5c1313"/>';
+  }
+  if (i === 2) { // fedora
+    return '<path d="M56 56 q0 6 12 8 q16 3 32 3 q16 0 32-3 q12-2 12-8 q0-4-8-5 l-80 0 q-8 1-8 5z" fill="#2c2620"/>'
+      + '<path d="M72 51 q0-24 28-24 q28 0 28 24 l0 3 -56 0z" fill="#3a332b"/>'
+      + '<path d="M72 48 l56 0 0 5 -56 0z" fill="#1d1915"/>';
+  }
+  // dealer visor
+  return '<path d="M66 56 q34-14 68 0 l-4 9 q-30-12-60 0z" fill="#0f5a35"/>'
+    + '<path d="M70 55 q30-11 60 0" stroke="#08341f" stroke-width="2" fill="none"/>'
+    + '<path d="M68 54 q-4 8 2 12 M132 54 q4 8-2 12" stroke="#0f5a35" stroke-width="3" fill="none"/>';
+}
+
 // ── Earrings ─────────────────────────────────────────────────────────────
 function _ears(i) {
   if (i === 0) return '';
@@ -321,6 +356,7 @@ function avSvg(recipe, size) {
     + _hair(r.hair, hc)
     + _glasses(r.glasses)
     + _ears(r.ears)
+    + _hat(r.hat)
     + _shoulder(r.shoulder)
     + '</g>'
     + '<rect x="6" y="6" width="188" height="188" fill="none" stroke="#8f6a1d" stroke-width="1"/>'
