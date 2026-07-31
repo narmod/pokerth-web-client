@@ -5497,14 +5497,17 @@ html[data-table="pokerth-live"] .raise-slider { accent-color: #4CAF50; }
 }
 
 
-/* ══ SPECTATEUR : chat de partie masqué ══
-   Marqueur posé par updateSpectatorStrip : un spectateur ne doit ni envoyer
-   ni lire le chat de la table (demande sp0ck 24/07/2026). Le bouton 💬 du
-   feutre, le FAB mobile et le panneau lui-même disparaissent. Les réactions
-   emoji (bouton 😊 + animations) restent intactes. */
-body.spectator-nochat #chat-toggle-btn,
-body.spectator-nochat #gchat-fab,
-body.spectator-nochat #g-chat-panel { display: none !important; }
+/* ══ SPECTATOR SEND-LOCK ══
+   Marker set by updateSpectatorStrip (sp0ck 31/07/2026, supersedes the 24/07
+   full chat block): spectators SEE the game chat and the emoji reactions but
+   must not SEND either. Hidden: the chat input row (text field + send + emoji
+   insert), the emoji-insert panel, the 😊 reactions button and the reactions
+   panel. The chat panel itself, its 💬 button and the incoming reaction
+   animations stay fully visible. */
+body.spectator-nosend #g-chat-panel .chat-input,
+body.spectator-nosend #g-chat-emoji-panel,
+body.spectator-nosend #react-toggle-btn,
+body.spectator-nosend #g-reaction-panel { display: none !important; }
 
 /* ══ SPECTATOR BANNER ══
    Shown at the top of the game screen (just below the header,

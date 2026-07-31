@@ -3475,20 +3475,20 @@ const App = (() => {
         cnt.title = names.join('\n');
       }
     } catch (e) {}
-    // ── Chat de partie interdit aux spectateurs (demande sp0ck 24/07/2026) ──
-    // Un spectateur ne doit ni envoyer ni LIRE le chat de la table. Marqueur
-    // <body class="spectator-nochat"> : le CSS masque le bouton 💬, le FAB et
-    // le panneau ; toggleGameChat / sendGameChat / addGameChat sont gardés en
-    // JS. Les réactions emoji restent actives : elles sont interceptées dans
-    // onChat (msg-social) AVANT tout routage vers addGameChat.
+    // ── Spectator send-lock (sp0ck 31/07/2026, supersedes the 24/07 full block) ──
+    // Spectators SEE the game chat and the emoji reactions (QML parity: the
+    // upstream ChatBox / reactions have no spectator gating and the server
+    // broadcasts game chat to Spectating sessions) but must NOT SEND either —
+    // sending could be abused to annoy players at the table. Marker
+    // <body class="spectator-nosend">: the CSS hides the chat input row, the
+    // emoji-insert panel, the 😊 reactions button and the reactions panel.
+    // sendGameChat / sendReaction keep JS guards as defense in depth.
     try {
-      var _noChat = !!S._amSpectator;
-      document.body.classList.toggle('spectator-nochat', _noChat);
-      if (_noChat) {
-        var _cp = document.getElementById('g-chat-panel');
-        if (_cp && _cp.style.display !== 'none') _cp.style.display = 'none';
-        var _cm = document.getElementById('g-chat-msgs');
-        if (_cm && _cm.firstChild) _cm.innerHTML = '';
+      var _noSend = !!S._amSpectator;
+      document.body.classList.toggle('spectator-nosend', _noSend);
+      if (_noSend) {
+        var _rp = document.getElementById('g-reaction-panel');
+        if (_rp && _rp.style.display !== 'none' && _rp.style.display !== '') _rp.style.display = 'none';
       }
     } catch (e) {}
   }
@@ -5810,6 +5810,7 @@ const App = (() => {
 
     sendReaction(emoji) {
       if (window._reactMuted) return;                    // reactions coupees : on n'envoie rien
+      if (S._amSpectator) return;                        // spectators must not send reactions (sp0ck 31/07/2026)
       if (!S.ws || !S.gId) return;
       // Affichage immediat pour moi.
       handleIncomingReaction(S.myId, emoji, 'self');
@@ -5848,7 +5849,8 @@ const App = (() => {
     sendGameChat() {
       var input = document.getElementById('g-chat-in');
       if (!input) return;
-      // Spectateur : aucun envoi de chat de partie (demande sp0ck 24/07/2026).
+      // Spectators must not send game chat (sp0ck 31/07/2026) — the input row
+      // is hidden by CSS; this guard is defense in depth (Enter key, scripts).
       if (S._amSpectator) { input.value = ''; return; }
       var text = input.value.trim();
       if (!text || !S.ws) return;
@@ -7271,9 +7273,9 @@ function _chatTs() {
 }
 
 function addGameChat(sender, text, cls, spec) {
-  // Spectateur : ni envoi ni LECTURE du chat de partie (demande sp0ck 24/07).
-  // Les réactions emoji ne passent pas par ici (interceptées dans onChat).
-  try { if (window.PthState && window.PthState._amSpectator) return; } catch (e) {}
+  // Spectators DO read the game chat (sp0ck 31/07/2026 — only SENDING is
+  // blocked, see updateSpectatorStrip). Emoji reactions never reach this
+  // function (intercepted in onChat / msg-social before routing).
   if (cls === 'sys') return; // messages systeme retires du chat (demande narmod)
   if (sender && cls !== 'mine' && _isIgnored(sender)) return; // joueur ignoré
   var el = document.getElementById('g-chat-msgs');
@@ -8938,9 +8940,8 @@ function _openFloatingNearBtn(panel, btn, opt, side) {
 }
 
 function toggleGameChat() {
-  // Spectateur : panneau inaccessible (bouton/FAB masqués par le CSS, Alt+C
-  // neutralisé ici — parité QML, où le spectateur est exclu de Alt+C/L/I).
-  try { if (window.PthState && window.PthState._amSpectator) return; } catch (e) {}
+  // Spectators can open the panel read-only (sp0ck 31/07/2026): the input row
+  // is hidden by CSS (body.spectator-nosend), only sending is blocked.
   var panel = document.getElementById('g-chat-panel');
   var btn   = document.getElementById('chat-toggle-btn');
   if (!panel) return;
@@ -9050,6 +9051,9 @@ function toggleReactionPanel() {
   // Réactions actives partout, y compris pokerth.net : sendReaction() relaie
   // via la commande /emoji dans le chat de partie (interop web <-> Qt/QML).
   // L'ancien garde-fou _directWS masquait le bouton sur pokerth.net (régression).
+  // Spectators: picker unavailable (send-lock, sp0ck 31/07/2026) — button is
+  // hidden by CSS, this guard covers programmatic/keyboard paths.
+  try { if (window.PthState && window.PthState._amSpectator) return; } catch (e) {}
   var panel = document.getElementById('g-reaction-panel');
   var btn   = document.getElementById('react-toggle-btn');
   if (!panel) return;
@@ -9731,7 +9735,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.5-web.68'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.5-web.69'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
