@@ -150,6 +150,20 @@ export class OfflineTable {
     this.h.currentBet = bb; this.h.minRaise = bb;
     this.onEvent({ type:'handStart', handNum:this.handNum, sb, bb, dealerId:order[0].id,
       seats: order.map(p=>({id:p.id, stack:p.stack})), holeByPlayer: this.h.hole, sbId:sbP.id, bbId:bbP.id, level:this.level });
+    // Posted blinds are real money on the table, and a real PokerTH server says
+    // so: it emits a PlayersActionDone carrying netActionNone (0) for the small
+    // blind and then the big blind, which is how the client learns the current
+    // highest set and each player's street bet. Staying silent here left the
+    // client opening every pre-flop with highestBet = 0 and both blinds at 0,
+    // so the action bar offered Check/Bet under the gun, Call/Raise in the big
+    // blind, and a small blind whose call was quoted at the full big blind
+    // (forum report, training game). The events are emitted AFTER handStart —
+    // that message resets the client's bets and pot — and before the first
+    // turn, exactly the order a live server produces.
+    [sbP, bbP].forEach((p, i) => this.onEvent({
+      type:'blindPosted', playerId:p.id, blind: i === 0 ? 'sb' : 'bb',
+      totalStreetBet:this.h.streetCommit[p.id], stack:p.stack,
+      currentBet:this.h.currentBet, minRaise:this.h.minRaise, gameState:'preflop' }));
     // first to act
     const firstPos = n===2 ? 0 : (3 % n);   // HU: SB(button) acts first preflop; else UTG = left of BB
     this._beginStreet('preflop', order, firstPos);

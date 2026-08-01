@@ -510,6 +510,15 @@ export class FakeServer {
         spec.push([6,0,ev.dealerId]);
         this._send('HandStart', spec); break;
       }
+      // Posted blinds, announced the way the official server announces them:
+      // a PlayersActionDone carrying netActionNone (0). That message is the
+      // only thing that sets S.highestBet and each seat's street bet on the
+      // client side, so without it the action bar mislabelled the whole
+      // pre-flop and the displayed pot ignored the blinds until someone
+      // actually spoke.
+      case 'blindPosted':
+        this._send('PlayersActionDone',[[1,0,G],[2,0,ev.playerId],[3,0,GS.preflop],[4,0,0],
+          [5,0,ev.totalStreetBet],[6,0,ev.stack],[7,0,ev.currentBet],[8,0,ev.minRaise]]); break;
       case 'turn': {
         this._roAcc = 0;   // un tour signifie qu'on n'est pas en run-out
         this._clearHumanTimer();

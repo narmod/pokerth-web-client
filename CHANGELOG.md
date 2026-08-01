@@ -51,6 +51,14 @@ because sp0ck shared them ahead of the release.
   being drawn at the default until now.
 
 ### Fixed
+- **In a training game the action buttons had the wrong labels for the whole
+  pre-flop.** Blinds are money already on the table, and a real PokerTH server
+  says so with a dedicated message; the offline engine posted them in silence.
+  The client therefore opened every hand believing nobody had bet: under the
+  gun it offered Check/Bet instead of Call/Raise, in the big blind Call/Raise
+  instead of Check/Bet, and in the small blind it quoted a call worth a whole
+  big blind instead of the difference. The pot also ignored the blinds until
+  someone actually spoke. Reported on the forum.
 - **Community cards, pot badge and felt pills were too small in phone
   portrait.** The table is scaled down to about three quarters in narrow
   portrait so the seat boxes have room around the felt — but the seat boxes
