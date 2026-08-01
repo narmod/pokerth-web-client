@@ -303,15 +303,26 @@ function onGamePlayerJoined(sub) {
     // We reset it to false here because the same pid can rejoin (rare,
     // but possible if the player closes and reopens the tab fast).
     S.seatData[pid].gone = false;
-    // ── SPECTATOR LATE-ARRIVAL FIX ──
-    // When the game has already started (HandStart was processed), we
-    // append late-arriving pids straight to seats[] so they appear
-    // visually around the felt. For player mode this is a no-op
-    // (GameStartInitial populated seats[] before the first
-    // GamePlayerJoined, and the includes() check skips the duplicate).
-    // For spectator mode it's the only path that learns about
-    // newcomers after our HandStart bootstrap.
-    if (S._gameStarted && !S.seats.includes(pid)) {
+    // ── SPECTATOR LATE-ARRIVAL FIX — spectator mode ONLY ──
+    // When the game has already started, a spectator appends late-arriving
+    // pids straight to seats[] — the only path that learns about players
+    // after the HandStart bootstrap.
+    //
+    // For PLAYER mode this branch must not run at all. The old comment
+    // claimed it was a no-op there ("the includes() check skips the
+    // duplicate"), but that's false for the one case where a pid can appear
+    // mid-game: nobody joins a RUNNING game as a player except a rejoin
+    // (upstream HandleNewPlayer only accepts name+GUID matches), and the
+    // server announces the rejoiner's NEW session with a GamePlayerJoined
+    // carrying a NEW pid while his OLD pid still owns the chair
+    // (AcceptNewSession, servergamestate.cpp). Appending that pid created a
+    // second chair for the same person — two 'Hondo' boxes, doubled
+    // dealer/blind pucks, and a table crowded enough to trip the compact
+    // layout and shrink the community cards (forum report + screenshots).
+    // The chair swap belongs to PlayerIdChanged, sent at the next hand
+    // start; until then the old chair simply keeps living, like the QML
+    // client.
+    if (S._amSpectator && S._gameStarted && !S.seats.includes(pid)) {
       S.seats.push(pid);
       window.renderSeats();
     }
@@ -428,8 +439,19 @@ function onPlayerIdChanged(sub) {
     const oldPid = Proto.u32(sub, 1);
     const newPid = Proto.u32(sub, 2);
     if (!oldPid || !newPid || oldPid === newPid) return;
+    // The rejoiner's GamePlayerJoined may already have appended his NEW pid
+    // as an extra chair (spectator bootstrap above). Renaming the old chair
+    // would then seat newPid TWICE — two boxes sharing one seatData, same
+    // stack on both, doubled dealer/blind pucks (forum report). The
+    // ORIGINAL chair wins: drop any appended duplicate first, then rename.
+    const idxNew = S.seats.indexOf(newPid);
+    if (idxNew !== -1 && S.seats.indexOf(oldPid) !== -1) S.seats.splice(idxNew, 1);
     const idx = S.seats.indexOf(oldPid);
     if (idx !== -1) S.seats[idx] = newPid;
+    // Belt: seats[] feeds every layout computation — never leave the same
+    // pid seated twice, whatever the message order was. In-place (splice),
+    // some consumers hold a reference to the array.
+    for (let i = S.seats.length - 1; i > 0; i--) if (S.seats.indexOf(S.seats[i]) < i) S.seats.splice(i, 1);
     if (S.players[oldPid] !== undefined) { S.players[newPid] = S.players[oldPid]; delete S.players[oldPid]; }
     if (S.seatData[oldPid]) { S.seatData[newPid] = S.seatData[oldPid]; delete S.seatData[oldPid]; S.seatData[newPid].gone = false; }
     if (S._playerAvatars[oldPid]) { S._playerAvatars[newPid] = S._playerAvatars[oldPid]; delete S._playerAvatars[oldPid]; }

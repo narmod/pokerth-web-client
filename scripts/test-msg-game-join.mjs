@@ -82,10 +82,15 @@ wp = 0; seatsR = 0; dingJoin = 0;
 sub = subOf([[1, 0, 12], [2, 0, 9]]);
 M.onGamePlayerJoined(sub);
 ok(S.seatData[9] && !S.seatData[9].gone, 'onGamePlayerJoined : seatData initialisé');
-// Arrivée tardive pendant une partie démarrée → ajouté à seats[] (fix spectateur)
-S._gameStarted = true;
+// Arrivée tardive pendant une partie démarrée : réservée au mode SPECTATEUR
+// (bootstrap). Côté joueur, un pid inconnu en cours de partie est toujours la
+// nouvelle session d'un revenant — il ne doit PAS créer de chaise.
+S._gameStarted = true; S._amSpectator = true;
 M.onGamePlayerJoined(subOf([[1, 0, 12], [2, 0, 11]]));
-ok(S.seats.includes(11), 'onGamePlayerJoined : arrivée tardive ajoutée aux sièges');
+ok(S.seats.includes(11), 'onGamePlayerJoined (spectateur) : arrivée tardive ajoutée aux sièges');
+S._amSpectator = false;
+M.onGamePlayerJoined(subOf([[1, 0, 12], [2, 0, 13]]));
+ok(!S.seats.includes(13), 'onGamePlayerJoined (joueur) : un pid inconnu en cours de partie ne crée pas de chaise');
 S._gameStarted = false;
 ok(wp >= 1, 'onGamePlayerJoined : panneau d\'attente re-rendu');
 ok(dingJoin >= 1, 'onGamePlayerJoined : son playerconnected');
@@ -126,6 +131,40 @@ S._pendingRejoin = 12;
 sub = subOf([[1, 0, 12], [2, 0, 2]]);
 M.onJoinGameFailed(sub);
 ok(S._pendingRejoin === 0, 'onJoinGameFailed : rejoin abandonné');
+
+// ── Rejoin en cours de partie (rapport forum : « Hondo » en double, deux
+// pucks SB/BB/D). Flux serveur réel (servergamestate.cpp) : AcceptNewSession
+// envoie GamePlayerJoined(nouveauPid) pendant que l'ancien pid occupe encore
+// la chaise, puis PlayerIdChanged(ancien→nouveau) au début de la main
+// suivante. Quel que soit l'ordre, il ne doit rester qu'UNE chaise.
+S._gameStarted = true; S._amSpectator = false;
+S.seats = [1, 2, 3];
+S.seatData = { 1: { money: 500 }, 2: { money: 17150 }, 3: { money: 300 } };
+S.players = { 1: 'A', 2: 'Hondo', 3: 'C' };
+S.dealerPid = 2;
+// 1. Côté JOUEUR : l'annonce de la nouvelle session ne crée pas de chaise…
+M.onGamePlayerJoined(subOf([[1, 0, 12], [2, 0, 9]]));
+ok(!S.seats.includes(9) && S.seats.length === 3,
+   'rejoin (joueur) : le nouveau pid du revenant ne crée pas de chaise');
+// …et PlayerIdChanged renomme la chaise d'origine, stack et donneur compris.
+M.onPlayerIdChanged(subOf([[1, 0, 2], [2, 0, 9]]));
+ok(S.seats.join(',') === '1,9,3',
+   'rejoin (joueur) : PlayerIdChanged renomme la chaise d\'origine, à sa place');
+ok(S.seatData[9] && S.seatData[9].money === 17150 && !S.seatData[2],
+   'rejoin (joueur) : le stack suit le nouveau pid, l\'ancien est purgé');
+ok(S.dealerPid === 9, 'rejoin (joueur) : le bouton donneur suit');
+// 2. Côté SPECTATEUR : l'append bootstrap ajoute bien une chaise temporaire…
+S._amSpectator = true;
+M.onGamePlayerJoined(subOf([[1, 0, 12], [2, 0, 14]]));
+ok(S.seats.includes(14) && S.seats.length === 4,
+   'rejoin (spectateur) : append bootstrap conservé (chaise temporaire)');
+// …que PlayerIdChanged retire au profit de la chaise d'origine — jamais deux.
+M.onPlayerIdChanged(subOf([[1, 0, 9], [2, 0, 14]]));
+ok(S.seats.join(',') === '1,14,3',
+   'rejoin (spectateur) : la chaise ajoutée est retirée, l\'originale renommée');
+ok(S.seats.filter((p) => p === 14).length === 1,
+   'rejoin : le même pid n\'est jamais assis deux fois');
+S._gameStarted = false; S._amSpectator = false;
 
 // Ponts window
 ok(window.onJoinGameAck === M.onJoinGameAck && window.onGamePlayerJoined === M.onGamePlayerJoined &&

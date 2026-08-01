@@ -59,6 +59,16 @@ because sp0ck shared them ahead of the release.
   languages.
 
 ### Fixed
+- **A reconnecting player could end up seated twice** — two identical boxes
+  with the same name and stack, doubled dealer and blind pucks, and a table
+  crowded enough to shrink the community cards. Nobody can join a running
+  game except a rejoin, and the server announces the returning player's new
+  session while his old seat still stands, then swaps the ids at the next
+  hand. The client treated that announcement as a brand-new chair, and the
+  id swap then seated the new id twice. The original chair now wins in every
+  message order: no chair is created for a mid-game arrival (players), and
+  the id swap drops any duplicate before renaming. Reported on the forum,
+  with screenshots.
 - **After folding, the action bar kept quoting the live betting.** The buttons
   were already inert once the hand was thrown away, but their amounts went on
   following every raise, which read like an invitation to act. The bar is now
