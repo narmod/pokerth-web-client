@@ -5170,7 +5170,18 @@ const App = (() => {
         }
       } else {
         try {
-          S.ws = new WebSocket(finalUrl);
+          // App.connect() est TOUJOURS une poignée de main neuve : l'état
+          // protocolaire de la page est vierge, on attend l'Announce puis on
+          // enverra un Init. &fresh=1 le dit au proxy : s'il tient encore une
+          // session vivante sous ce sid (PWA tuée puis relancée — le sid
+          // persiste en localStorage exprès), il doit FERMER ce fantôme et
+          // ouvrir un amont neuf, pas nous y rebrancher. Un rebranchement sur
+          // un amont déjà annoncé laissait la page attendre l'Announce toute
+          // la grâce (2 min par défaut) — « Proxy connected — waiting for the
+          // PokerTH server… », rapport forum. Le paramètre n'est PAS mémorisé
+          // dans _lastConnectParams.finalUrl : le chemin de reconnexion
+          // rapide (même page, état intact) reste un pur rebranchement.
+          S.ws = new WebSocket(window.directWS ? finalUrl : finalUrl + '&fresh=1');
         } catch (e) {
           setStatus(t('invalidUrl', { msg: e.message }), 'err', null, { local: true });
           return;
@@ -9839,7 +9850,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.5-web.92'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.5-web.93'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

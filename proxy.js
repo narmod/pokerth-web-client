@@ -4771,6 +4771,9 @@ wss.on('connection', (ws, req) => {
   const port   = parseInt(params.get('port') || '7234', 10);
   const useTls = params.get('tls') !== '0' && !FORCE_NOTLS;
   const sid    = params.get('sid') || null;
+  // &fresh=1 : le client déclare une poignée de main NEUVE (page relancée,
+  // état protocolaire vierge — il attend l'Announce puis enverra un Init).
+  const fresh  = params.get('fresh') === '1';
   // Mode CHOISI par le joueur, transmis par le client (&mode=), pour le ciblage
   // des diffusions. Cf. _attachWs : le repli sur le nom d'hote amont reste pour
   // les onglets ouverts avant la mise a jour du client.
@@ -4814,7 +4817,22 @@ wss.on('connection', (ws, req) => {
   // ── Rebranchement sur une session vivante (même sid) ──
   if (sid && _sessions.has(sid)) {
     const S = _sessions.get(sid);
-    if (S.sock && !S.sock.destroyed) {
+    // Poignée de main NEUVE sur une session encore vivante : la rebrancher
+    // serait un piège — l'amont a passé l'Announce depuis longtemps, la page
+    // neuve l'attendrait pour rien jusqu'à l'expiration de la grâce (2 min
+    // par défaut), « waiting for the PokerTH server… » (rapport forum ; se
+    // débloquait en connectant le client officiel, dont le login faisait
+    // tomber le fantôme côté serveur). On fait pareil nous-mêmes : fermer le
+    // fantôme (le serveur libère le pseudo à la fermeture TCP) et ouvrir un
+    // amont neuf. La reprise du siège passe par le chemin déjà en place côté
+    // client (Error 4 → réessai du même pseudo → RejoinExistingGame).
+    if (fresh) {
+      console.log('──────────────────────────────────────');
+      console.log('[~] Fresh connect sur session vivante ' + sid.slice(0, 8) + ' — fantôme fermé, amont neuf');
+      if (S.ws && S.ws !== ws) { _allClients.delete(S.ws); try { S.ws.terminate(); } catch (_) {} }
+      _destroySession(S);
+      // …et on tombe dans « Nouvelle connexion amont » ci-dessous.
+    } else if (S.sock && !S.sock.destroyed) {
       console.log('──────────────────────────────────────');
       console.log('[~] Rebranchement session ' + sid.slice(0, 8) + ' (' + S.buf.length + ' frames en tampon)');
       if (S.grace) { clearTimeout(S.grace); S.grace = null; }
@@ -4823,8 +4841,9 @@ wss.on('connection', (ws, req) => {
       for (const f of S.buf) { if (ws.readyState === WebSocket.OPEN) ws.send(f); }
       S.buf = []; S.bufBytes = 0;
       return;
+    } else {
+      _sessions.delete(sid); // session morte → on ouvre une connexion neuve
     }
-    _sessions.delete(sid); // session morte → on ouvre une connexion neuve
   }
 
   // ── Plafond de connexions simultanées (soupape) ──

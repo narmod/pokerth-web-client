@@ -66,6 +66,19 @@ because sp0ck shared them ahead of the release.
   languages.
 
 ### Fixed
+- **Killing the app and relaunching it left the connection stuck on "waiting
+  for the PokerTH server" for minutes.** The proxy keeps a closed browser's
+  game session alive for a grace window so a wifi blip can resume seamlessly
+  — and the installed app deliberately keeps the same session id across
+  relaunches. But a relaunched page is a blank slate: it waits for the
+  server's greeting, and the kept session had greeted long ago, so the two
+  waited each other out until the grace expired (connecting the desktop
+  client happened to break the deadlock by tearing the ghost down
+  server-side). The client now tells the proxy when a connection is a brand
+  new handshake; the proxy then closes the ghost — freeing the nickname —
+  and opens a fresh line, while a genuine mid-game resume reattaches exactly
+  as before. Reconnecting right after closing the app now takes seconds, not
+  minutes. Requires a proxy restart to take effect. Reported on the forum.
 - **A reconnecting player could end up seated twice** — two identical boxes
   with the same name and stack, doubled dealer and blind pucks, and a table
   crowded enough to shrink the community cards. Nobody can join a running
