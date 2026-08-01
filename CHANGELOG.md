@@ -78,6 +78,18 @@ because sp0ck shared them ahead of the release.
   languages.
 
 ### Fixed
+- **The "My prefs" pill now works with a ranking game selected.** Ranking
+  locks the server-imposed fields, and the lock also disabled the pill that
+  loads your saved preferences — trapping anyone whose preferences ARE a
+  ranking game: they had to switch to Normal, load, and watch the pill lock
+  itself again. The pill stays usable everywhere (it also loads the name,
+  timeout and delay, which ranking leaves free, and re-applies the type);
+  the style pills stay locked as before. Reported on the forum.
+- **Recognising an auto-filled game name no longer depends on the server
+  config being loaded.** "My online game" and friends are known statically,
+  and admin names once seen are remembered, so a stale auto name saved by an
+  earlier build can never masquerade as a player's choice again — not even
+  before /app-config answers, and not even if the admin renames the default.
 - **A stale tab could keep resetting your preferences.** A sync push is a
   full settings file rebuilt from the pushing device's storage; from a tab or
   installed app left open for days it re-sent old preferences and flattened

@@ -234,6 +234,17 @@ ok(!/\bbots:\s*bots\b/.test(wBody) && !/minHumans:\s*minHuman\b/.test(wBody),
   globalThis._defaultNameForMode = () => "Hondo's table";
   ok(_isAutoGameName("Hondo's table") && _isAutoGameName('My online game'),
      'the mode default and the admin name are auto names');
+  // La reconnaissance ne dépend PAS du chargement d'/app-config : « My online
+  // game » (défaut QML / exemple canonique admin) est connu statiquement, et
+  // un nom admin déjà vu reste connu même une fois retiré côté serveur.
+  globalThis._adminNameForMode = () => null;
+  ok(_isAutoGameName('My online game') && _isAutoGameName('My online game 3'),
+     'the canonical default is recognised even without the admin config');
+  globalThis.localStorage = { getItem: (k) => k === 'pth_auto_names_seen' ? '["Friday Night Special"]' : null, setItem() {} };
+  ok(_isAutoGameName('Friday Night Special'),
+     'an admin name seen in the past stays recognised after the admin renames it');
+  globalThis.localStorage = { getItem: () => null, setItem() {} };
+  globalThis._adminNameForMode = () => 'My online game';
   ok(_isAutoGameName('My online game 2') && _isAutoGameName("Hondo's table 7"),
      'their _freeGameName variants (« … 2 ») too');
   ok(_isAutoGameName('') && _isAutoGameName('   '),
@@ -243,6 +254,15 @@ ok(!/\bbots:\s*bots\b/.test(wBody) && !/minHumans:\s*minHuman\b/.test(wBody),
   // Restauration : un auto sauvegardé laisse la main aux préférences.
   const wsGuard = /k === 'name' && \(!String\(saved\[k\]\)\.trim\(\) \|\| _isAutoGameName\(saved\[k\]\)\)/.test(src);
   ok(wsGuard, 'restore skips a saved auto name, so the prefs name shines through');
+}
+
+// ── La pastille ⭐ « Perso » reste utilisable en classé ─────────────────────
+{
+  const cStart = src.indexOf("querySelectorAll('.cf-preset[data-preset]')");
+  ok(cStart > 0, 'the style-pill lock loop is still where the test expects it');
+  const cBody = src.slice(cStart, cStart + 600);
+  ok(/data-preset'\)\s*!==\s*'perso'/.test(cBody),
+     "the lock spares the 'perso' pill — My prefs stays clickable in a ranking game");
 }
 
 console.log(fails ? '\nFAIL ' + fails : '\nALL OK');

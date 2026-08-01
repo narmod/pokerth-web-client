@@ -3458,9 +3458,30 @@ const App = (() => {
     var s = String(v == null ? '' : v).trim();
     if (!s) return true;
     var nm = S.myName || 'PokerTH';
-    var known = ['Table de ' + nm, nm + "'s table", 'Table ' + nm, 'My table'];
+    // Défauts canoniques STATIQUES : les variantes localisées connues, plus
+    // « My online game » (défaut du client QML officiel et exemple canonique
+    // du panneau admin). Statique exprès : la reconnaissance ne doit jamais
+    // dépendre du chargement asynchrone d'/app-config — sinon un vieux nom
+    // auto figé redevenait « un choix » tant que la config n'était pas là.
+    var known = ['Table de ' + nm, nm + "'s table", 'Table ' + nm, 'My table',
+                 'My online game'];
     try { var dflt = _defaultNameForMode(); if (dflt) known.push(dflt); } catch (e) {}
-    try { var adminN0 = _adminNameForMode(); if (adminN0) known.push(adminN0); } catch (e) {}
+    // Noms admin : celui d'aujourd'hui, ET ceux déjà vus (cache) — un nom
+    // admin renommé ou retiré côté serveur ne doit pas transformer ses
+    // vieilles copies figées en « choix du joueur ».
+    try {
+      var adminN0 = _adminNameForMode();
+      var seen = [];
+      try { seen = JSON.parse(localStorage.getItem('pth_auto_names_seen') || '[]'); } catch (e2) {}
+      if (adminN0) {
+        known.push(adminN0);
+        if (seen.indexOf(adminN0) < 0) {
+          seen.push(adminN0);
+          try { localStorage.setItem('pth_auto_names_seen', JSON.stringify(seen.slice(-8))); } catch (e3) {}
+        }
+      }
+      for (var j = 0; j < seen.length; j++) known.push(seen[j]);
+    } catch (e) {}
     var stem = s.replace(/ \d+$/, '');       // « Nom 2 » de _freeGameName
     for (var i = 0; i < known.length; i++) {
       var k = String(known[i]).trim();
@@ -7002,13 +7023,18 @@ const App = (() => {
       // (QML enabled: !presetActive — le classé les laisse libres).
       lockRow('cf-timeout', vorlageActive);
       lockRow('cf-delay',   vorlageActive);
-      // Pastilles de STYLE (data-preset, « Perso » inclus) : inertes tant que
-      // le classé ou une vorlage force les valeurs — les pastilles de bots
-      // (data-skill) et les chips de blinds ne sont pas concernées.
+      // Pastilles de STYLE (data-preset) : inertes tant que le classé ou une
+      // vorlage force les valeurs — SAUF « Perso » (⭐), qui reste utilisable :
+      // elle charge aussi le nom, le timeout et le délai, libres même en
+      // classé, et re-applique le type — les contraintes se resynchronisent
+      // derrière. La désactiver en classé enfermait le joueur dont les
+      // préférences SONT une partie classée (rapport forum : « the My prefs
+      // button doesn't work when Ranking game is selected »).
       var pills = document.querySelectorAll('.cf-preset[data-preset]');
       for (var i = 0; i < pills.length; i++) {
-        pills[i].disabled = fieldsLocked;
-        pills[i].classList.toggle('cf-locked', fieldsLocked);
+        var lockThis = fieldsLocked && pills[i].getAttribute('data-preset') !== 'perso';
+        pills[i].disabled = lockThis;
+        pills[i].classList.toggle('cf-locked', lockThis);
       }
     },
     applyPreset(name, btn) {
@@ -9908,7 +9934,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.5-web.98'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.5-web.99'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
