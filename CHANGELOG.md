@@ -51,6 +51,17 @@ because sp0ck shared them ahead of the release.
   being drawn at the default until now.
 
 ### Fixed
+- **The create form remembered nothing across sessions, and the game name not
+  even within one.** The snapshot taken on every game creation still referenced
+  two variables that left with the old fill-with-bots checkbox; the resulting
+  error was swallowed by the surrounding guard, so the "last form used" memory
+  was never written at all — masked for anyone with saved preferences (the disk
+  button), which restore most of the same fields. On top of that the writer
+  deliberately left the game name out, a leftover from before the name had its
+  guards (a blank name is skipped on restore, a name still open in the lobby is
+  shifted to "Name 2"). Both fixed: the snapshot is written again, name
+  included, as typed. Reported on the forum (ranking-game name lost on
+  re-login, and no training-game setting remembered).
 - **In a training game the action buttons had the wrong labels for the whole
   pre-flop.** Blinds are money already on the table, and a real PokerTH server
   says so with a dedicated message; the offline engine posted them in silence.

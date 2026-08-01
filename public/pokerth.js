@@ -7246,13 +7246,23 @@ const App = (() => {
       if (window._offlineMode) window._offlineAutoReplay = true;
       // Remember these settings so the next time the create form opens it
       // starts from what the user actually used last (not just the per-mode
-      // default). Display-only convenience; the name itself is intentionally
-      // NOT saved (it's re-generated fresh each time via _localDefaultName).
+      // default). Two things silently broke here (forum report):
+      //   1. `bots: bots, minHumans: minHuman` referenced variables that left
+      //      with the old fill-with-bots form controls (the choice now lives
+      //      on the waiting page, window._wpFillBots). In module strict mode
+      //      that's a ReferenceError — thrown INSIDE this try, swallowed by
+      //      the catch — so the snapshot was never written at all and nothing
+      //      the form remembered survived a reload.
+      //   2. The name was left out on purpose, a leftover from before its
+      //      guards existed (a blank name is skipped by the reader,
+      //      _freeGameName shifts a name still open in the lobby). It is now
+      //      saved AS TYPED (rawName).
       try {
         localStorage.setItem('pth_last_create', JSON.stringify({
+          name: rawName,
           players: nplayers, blind: blind, stack: stack, timeout: timeout,
           raiseEvery: opts.raiseEvery, guiSpeed: opts.guiSpeed,
-          delayHands: opts.delayHands, bots: bots, minHumans: minHuman,
+          delayHands: opts.delayHands,
           raiseMode: opts.raiseMode, endRaiseMode: opts.endRaiseMode,
           endRaiseValue: opts.endRaiseValue, gameType: opts.gameType,
           allowSpectators: opts.allowSpectators,
@@ -9789,7 +9799,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.5-web.87'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.5-web.88'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

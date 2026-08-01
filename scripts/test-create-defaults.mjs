@@ -192,5 +192,25 @@ window.S = {};
 ok(freeName('Chez Bob') === 'Chez Bob', 'with no lobby list loaded the name is untouched');
 ok(freeName('') === '', 'an empty name stays empty');
 
+// ── The writer side ───────────────────────────────────────────────
+// Everything above exercises the READER: given a name in pth_last_create, the
+// form restores it. The forum report ("all settings are remembered except
+// Game name") was the WRITER: createGame saved every field but the name, so
+// the reader never had one to restore. Pin the snapshot to the name as typed.
+const wStart = src.indexOf("localStorage.setItem('pth_last_create'");
+ok(wStart > 0, 'createGame still snapshots the form into pth_last_create');
+const wBody = src.slice(wStart, src.indexOf('}));', wStart));
+ok(/name:\s*rawName\b/.test(wBody),
+   'the snapshot includes the game name, as typed (rawName)');
+ok(!/name:\s*name\b/.test(wBody),
+   'and not the post-_safeGameName value, which may carry a generated default');
+// The write must also actually RUN: it used to reference two variables that
+// left with the old fill-with-bots controls, and the ReferenceError — thrown
+// inside the try, swallowed by the catch — meant the snapshot was never
+// written at all. Every identifier in the snapshot literal must resolve to
+// something declared in createGame's scope; the two ghosts must stay gone.
+ok(!/\bbots:\s*bots\b/.test(wBody) && !/minHumans:\s*minHuman\b/.test(wBody),
+   'the snapshot no longer references the removed fill-with-bots variables');
+
 console.log(fails ? '\nFAIL ' + fails : '\nALL OK');
 process.exit(fails ? 1 : 0);
