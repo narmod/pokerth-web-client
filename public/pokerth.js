@@ -3414,6 +3414,28 @@ const App = (() => {
     }
     return 'PokerTH - ' + s;               // keep the user's text, ASCII lead
   }
+  // Un nom de table est-il un nom AUTO (défaut du mode, nom admin, variantes
+  // localisées connues, suffixe « 2 »… de _freeGameName inclus) plutôt qu'un
+  // choix du joueur ? Sert à deux endroits : createGame ne doit pas figer un
+  // pré-remplissage comme si le joueur l'avait tapé (rapport forum : le
+  // défaut « My online game » enregistré une fois recouvrait pour toujours le
+  // nom réglé dans les préférences), et la restauration ne doit pas laisser
+  // un auto d'une session passée recouvrir les préférences.
+  function _isAutoGameName(v) {
+    var s = String(v == null ? '' : v).trim();
+    if (!s) return true;
+    var nm = S.myName || 'PokerTH';
+    var known = ['Table de ' + nm, nm + "'s table", 'Table ' + nm, 'My table'];
+    try { var dflt = _defaultNameForMode(); if (dflt) known.push(dflt); } catch (e) {}
+    try { var adminN0 = _adminNameForMode(); if (adminN0) known.push(adminN0); } catch (e) {}
+    var stem = s.replace(/ \d+$/, '');       // « Nom 2 » de _freeGameName
+    for (var i = 0; i < known.length; i++) {
+      var k = String(known[i]).trim();
+      if (s === k || stem === k) return true;
+    }
+    return false;
+  }
+  window._isAutoGameName = _isAutoGameName;
   // Re-localise le champ "nom de la table" au changement de langue, MAIS seulement
   // s'il est vide ou contient encore un nom par défaut connu (on ne touche jamais à
   // un nom personnalisé par l'utilisateur). Appelé depuis setLang (i18n.mjs).
@@ -3421,11 +3443,7 @@ const App = (() => {
     var el = document.getElementById('cf-name');
     if (!el) return;
     var cur = (el.value || '').trim();
-    var nm = S.myName || 'PokerTH';
-    var known = ['Table de ' + nm, nm + "'s table", 'Table ' + nm, 'My table', ''];
-    var adminN = _adminNameForMode();
-    if (adminN) known.push(adminN);
-    if (known.indexOf(cur) >= 0) el.value = _defaultNameForMode();
+    if (cur === '' || _isAutoGameName(cur)) el.value = _defaultNameForMode();
   };
   // Table-list filter (design A chips): 'all' | 'open' | 'nopass' | 'live'.
   // Persisted so the choice survives reloads, like other lobby prefs.
@@ -6327,8 +6345,12 @@ const App = (() => {
             // par crainte du refus « nom déjà pris » quand la table précédente
             // tourne encore ; c'est désormais traité au moment de remplir le
             // champ (_freeGameName), donc plus aucune raison de faire retaper
-            // son nom au joueur à chaque partie. Un nom vide ne recouvre rien.
-            if (k === 'name' && !String(saved[k]).trim()) continue;
+            // son nom au joueur à chaque partie. Un nom vide ne recouvre rien —
+            // et un nom AUTO (défaut du mode, nom admin) enregistré par une
+            // session passée n'est pas un choix : il laisse la main aux
+            // préférences (rapport forum : « My online game » figé recouvrait
+            // pour toujours le nom réglé dans les options).
+            if (k === 'name' && (!String(saved[k]).trim() || _isAutoGameName(saved[k]))) continue;
             base[k] = saved[k];
           }
         }
@@ -7310,7 +7332,10 @@ const App = (() => {
       //      saved AS TYPED (rawName).
       try {
         localStorage.setItem('pth_last_create', JSON.stringify({
-          name: rawName,
+          // Un nom AUTO (pré-rempli : défaut du mode, nom admin) n'est pas un
+          // choix du joueur — on enregistre '' pour laisser les préférences
+          // s'appliquer à la prochaine ouverture. Un nom tapé est conservé.
+          name: _isAutoGameName(rawName) ? '' : rawName,
           players: nplayers, blind: blind, stack: stack, timeout: timeout,
           raiseEvery: opts.raiseEvery, guiSpeed: opts.guiSpeed,
           delayHands: opts.delayHands,
@@ -9850,7 +9875,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.5-web.95'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.5-web.96'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

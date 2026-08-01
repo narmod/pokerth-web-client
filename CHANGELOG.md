@@ -78,6 +78,16 @@ because sp0ck shared them ahead of the release.
   languages.
 
 ### Fixed
+- **A pre-filled table name could bury the one set in the preferences.** Since
+  the create form started remembering the last game, it saved the name "as
+  typed" — including the default it had filled in itself ("My online game" on
+  servers where the admin sets one). That auto name, once saved, permanently
+  outranked the name configured in the settings panel. An auto-filled name
+  (mode default, admin name, their "… 2" variants, in any language) is no
+  longer treated as a player's choice: creating a game with it saves nothing,
+  and one saved by an earlier build is ignored on restore — the preferences
+  name shines through again. A typed name still wins, as designed. Follow-up
+  to the forum report.
 - **Killing the app and relaunching it left the connection stuck on "waiting
   for the PokerTH server" for minutes.** The proxy keeps a closed browser's
   game session alive for a grace window so a wifi blip can resume seamlessly

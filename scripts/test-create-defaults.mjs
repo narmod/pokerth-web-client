@@ -76,6 +76,15 @@ const host = {
 // _defaultNameForMode est une fonction libre de pokerth.js, pas une méthode :
 // on la fournit dans la portée globale, comme à l'exécution réelle.
 globalThis._defaultNameForMode = () => 'fresh name';
+// _isAutoGameName aussi (la restauration l'appelle depuis withSaved) : on
+// extrait la vraie implémentation plutôt qu'un bouchon, pour tester la
+// sémantique réelle plus bas.
+{
+  const iStart = src.indexOf('function _isAutoGameName(');
+  const iBody = src.slice(iStart, src.indexOf('\n  }', iStart) + 4);
+  globalThis._adminNameForMode = () => 'My online game';
+  globalThis._isAutoGameName = eval('(' + iBody.replace('function _isAutoGameName', 'function') + ')');
+}
 // La méthode est extraite telle quelle et rattachée à `host` : `this` y désigne
 // donc bien l'objet porteur, comme dans App.
 const fnSrc = body.trim().replace(/^_getCreateDefaults\s*\(/, 'function (').replace(/,$/, '');
@@ -200,10 +209,10 @@ ok(freeName('') === '', 'an empty name stays empty');
 const wStart = src.indexOf("localStorage.setItem('pth_last_create'");
 ok(wStart > 0, 'createGame still snapshots the form into pth_last_create');
 const wBody = src.slice(wStart, src.indexOf('}));', wStart));
-ok(/name:\s*rawName\b/.test(wBody),
-   'the snapshot includes the game name, as typed (rawName)');
+ok(/name:\s*_isAutoGameName\(rawName\)\s*\?\s*''\s*:\s*rawName/.test(wBody),
+   'the snapshot keeps a TYPED name and blanks an auto-filled one');
 ok(!/name:\s*name\b/.test(wBody),
-   'and not the post-_safeGameName value, which may carry a generated default');
+   'and never the post-_safeGameName value, which may carry a generated default');
 // The write must also actually RUN: it used to reference two variables that
 // left with the old fill-with-bots controls, and the ReferenceError — thrown
 // inside the try, swallowed by the catch — meant the snapshot was never
@@ -211,6 +220,30 @@ ok(!/name:\s*name\b/.test(wBody),
 // something declared in createGame's scope; the two ghosts must stay gone.
 ok(!/\bbots:\s*bots\b/.test(wBody) && !/minHumans:\s*minHuman\b/.test(wBody),
    'the snapshot no longer references the removed fill-with-bots variables');
+
+// ── L'auto-nom ne se fige jamais comme un choix (rapport forum #2) ─────────
+// Le défaut pré-rempli (« My online game » imposé par l'admin, ou le défaut
+// localisé du mode) enregistré une fois par createGame recouvrait pour
+// toujours le nom réglé dans les préférences. Deux gardes : createGame
+// enregistre '' pour un nom auto (pinné plus haut), et la restauration
+// ignore un auto d'une session passée. On extrait _isAutoGameName et on
+// vérifie sa sémantique, puis la restauration.
+{
+  ok(src.indexOf('function _isAutoGameName(') > 0, '_isAutoGameName is still where the test expects it');
+  globalThis.S.myName = 'Hondo';
+  globalThis._defaultNameForMode = () => "Hondo's table";
+  ok(_isAutoGameName("Hondo's table") && _isAutoGameName('My online game'),
+     'the mode default and the admin name are auto names');
+  ok(_isAutoGameName('My online game 2') && _isAutoGameName("Hondo's table 7"),
+     'their _freeGameName variants (« … 2 ») too');
+  ok(_isAutoGameName('') && _isAutoGameName('   '),
+     'an empty name is auto');
+  ok(!_isAutoGameName('Best Game in Town') && !_isAutoGameName('Hondo Ranking Night'),
+     'a typed name is a choice');
+  // Restauration : un auto sauvegardé laisse la main aux préférences.
+  const wsGuard = /k === 'name' && \(!String\(saved\[k\]\)\.trim\(\) \|\| _isAutoGameName\(saved\[k\]\)\)/.test(src);
+  ok(wsGuard, 'restore skips a saved auto name, so the prefs name shines through');
+}
 
 console.log(fails ? '\nFAIL ' + fails : '\nALL OK');
 process.exit(fails ? 1 : 0);
