@@ -58,6 +58,12 @@ because sp0ck shared them ahead of the release.
   dealt this hand, using the seat list the renderer publishes.
 
 ### Changed
+- **One automatic reload when a core script fails to load.** The probe added
+  in web.94 showed the pattern: a script fails while the very same URL
+  answers HTTP 200 a second later — a transient hiccup, not a broken file.
+  When that happens before the app has started, the page now reloads itself
+  once (per session), after letting the report leave; the boot guard's
+  Retry screen remains the fallback.
 - **Script load failures now carry a diagnosis.** "Failed to load script" alone
   never said why. When one of our own scripts or stylesheets fails, the page
   now probes the same URL once and reports the HTTP status — or the network

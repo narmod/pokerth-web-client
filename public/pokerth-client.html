@@ -75,6 +75,22 @@
           });
         }
       } catch (_) {}
+      // Récupération automatique : un de NOS scripts a raté alors que le
+      // réseau répond (la sonde ci-dessus l'a montré : HTTP 200 juste
+      // après) — cas type, coupure transitoire ou service worker en cours
+      // de remplacement. Un seul rechargement automatique par session
+      // (drapeau sessionStorage, levé au démarrage réussi), différé pour
+      // laisser partir le rapport, et seulement si l'app n'a pas démarré ;
+      // au-delà, l'écran « Réessayer » du garde de démarrage prend le
+      // relais.
+      try {
+        if (tag === 'SCRIPT' && !window.App && !sessionStorage.getItem('pth_autoreload')) {
+          sessionStorage.setItem('pth_autoreload', '1');
+          setTimeout(function () {
+            try { if (!window.App) location.reload(); } catch (_) {}
+          }, 1800);
+        }
+      } catch (_) {}
       return;
     }
     push({ msg: String(ev.message || 'error'), src: String(ev.filename || ''),
@@ -696,6 +712,8 @@ function _processAvatarFile(file) {
 
   function reveal() {
     if (gone) return; gone = true;
+    // Démarrage réussi : réarmer la récupération automatique (voir beacon).
+    try { sessionStorage.removeItem('pth_autoreload'); } catch (e) {}
     try { clearInterval(msgTimer); } catch (e) {}
     if (statusEl) statusEl.textContent = L.ready;
     if (fill) fill.style.width = '100%';
