@@ -123,7 +123,7 @@ export const strings = {
   advSecHelp: "Помощь", advHandsBtn: "Показывать значок покерных комбинаций на столе",
   advSecSeats: "Места",
   advSecKeys: "Горячие клавиши",
-  advAnimCards: "Анимации карт",
+  advAnimCards: "Анимации карт", advDealAnim:"Анимация раздачи (летящие карты)",
   advFadeLosers: "Затемнять проигравшие карты на вскрытии",
   advOwnClick: "Показывать мои карты по нажатию",
   advFocusBet: "Фокус на поле ставки в мой ход",

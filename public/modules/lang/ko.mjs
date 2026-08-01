@@ -121,7 +121,7 @@ export const strings = {
   advSecHelp: "도움말", advHandsBtn: "테이블에 포커 족보 아이콘 표시",
   advSecSeats: "좌석",
   advSecKeys: "키보드 단축키",
-  advAnimCards: "카드 애니메이션",
+  advAnimCards: "카드 애니메이션", advDealAnim:"카드 딜링 애니메이션 (날아가는 카드)",
   advFadeLosers: "쇼다운에서 진 카드 흐리게",
   advOwnClick: "탭하여 내 카드 표시",
   advFocusBet: "내 차례에 베팅 입력란 포커스",

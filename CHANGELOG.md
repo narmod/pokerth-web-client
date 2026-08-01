@@ -50,6 +50,13 @@ because sp0ck shared them ahead of the release.
   seventeen table packs declare something other than the default; they were all
   being drawn at the default until now.
 
+### Added
+- **The card-dealing animation can be switched off** — a new toggle in the
+  advanced options, Cards section (web, on by default), asked for on the
+  forum. In the same pass the animation stops flying cards to the chairs of
+  knocked-out or departed players: it now targets only the seats actually
+  dealt this hand, using the seat list the renderer publishes.
+
 ### Changed
 - **The disk button on the create form now says "Save prefs".** It shared its
   label with the star pill right above it — both read "My prefs" — so saving

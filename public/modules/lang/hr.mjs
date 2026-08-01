@@ -118,7 +118,7 @@ export const strings = {
   advSecHelp: "Pomoć", advHandsBtn: "Prikaži ikonu poker kombinacija na stolu",
   advSecSeats: "Mjesta",
   advSecKeys: "Tipkovni prečaci",
-  advAnimCards: "Animacije karata",
+  advAnimCards: "Animacije karata", advDealAnim:"Animacija dijeljenja (leteće karte)",
   advFadeLosers: "Zatamni gubitničke karte u showdownu",
   advOwnClick: "Prikaži moje karte dodirom",
   advFocusBet: "Fokus na polje uloga u mom potezu",

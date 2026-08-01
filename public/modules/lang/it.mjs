@@ -125,7 +125,7 @@ export const strings = {
   advSecHelp: "Aiuto", advHandsBtn: "Mostra l'icona delle combinazioni di poker",
   advSecSeats: "Posti",
   advSecKeys: "Scorciatoie da tastiera",
-  advAnimCards: "Animazioni delle carte",
+  advAnimCards: "Animazioni delle carte", advDealAnim:"Animazione della distribuzione (carte volanti)",
   advFadeLosers: "Sfuma le carte perdenti allo showdown",
   advOwnClick: "Mostra le mie carte al tocco",
   advFocusBet: "Focus sul campo puntata al mio turno",

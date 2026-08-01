@@ -1176,6 +1176,9 @@ function renderSeatsImmediate() {
     }
   } catch (e) {}
   S._lastPixPos = pixPos;
+  // Pids alignés 1:1 sur pixPos (rotation + filtre « retirer les partis ») —
+  // consommés par les animations pour ne viser que des sièges servis.
+  S._lastPixPids = rotated.slice();
   // Patcher l'avatar du joueur local immédiatement après le rendu.
   // Anti-flicker safety net: re-applies the emoji to .seat-initial
   // after a renderSeats() in case it lost it. Skipped entirely when

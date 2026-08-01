@@ -117,7 +117,7 @@ export const strings = {
   advSecHelp: "ヘルプ", advHandsBtn: "テーブルにポーカー役アイコンを表示",
   advSecSeats: "席",
   advSecKeys: "キーボードショートカット",
-  advAnimCards: "カードアニメーション",
+  advAnimCards: "カードアニメーション", advDealAnim:"カード配りアニメーション（飛ぶカード）",
   advFadeLosers: "ショーダウンで負けカードを薄くする",
   advOwnClick: "タップで自分のカードを表示",
   advFocusBet: "自分のターンでベット欄にフォーカス",

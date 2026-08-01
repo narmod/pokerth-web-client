@@ -117,7 +117,7 @@ export const strings = {
   advSecHelp: "Довідка", advHandsBtn: "Показувати значок покерних комбінацій на столі",
   advSecSeats: "Місця",
   advSecKeys: "Гарячі клавіші",
-  advAnimCards: "Анімації карт",
+  advAnimCards: "Анімації карт", advDealAnim:"Анімація роздачі (летючі карти)",
   advFadeLosers: "Затемнювати програшні карти на розкритті",
   advOwnClick: "Показувати мої карти дотиком",
   advFocusBet: "Фокус на полі ставки в мій хід",

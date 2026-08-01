@@ -118,7 +118,7 @@ export const strings = {
   advSecHelp: "Ajutor", advHandsBtn: "Afișează pictograma mâinilor de poker pe masă",
   advSecSeats: "Locuri",
   advSecKeys: "Scurtături de tastatură",
-  advAnimCards: "Animații ale cărților",
+  advAnimCards: "Animații ale cărților", advDealAnim:"Animația împărțirii cărților (cărți zburătoare)",
   advFadeLosers: "Estompează cărțile pierzătoare la showdown",
   advOwnClick: "Arată-mi cărțile la atingere",
   advFocusBet: "Focus pe câmpul de pariu la rândul meu",

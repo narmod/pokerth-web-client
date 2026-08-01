@@ -118,7 +118,7 @@ export const strings = {
   advSecHelp: "Pomocník", advHandsBtn: "Zobraziť ikonu pokrových kombinácií na stole",
   advSecSeats: "Miesta",
   advSecKeys: "Klávesové skratky",
-  advAnimCards: "Animácie kariet",
+  advAnimCards: "Animácie kariet", advDealAnim:"Animácia rozdávania (lietajúce karty)",
   advFadeLosers: "Stlmiť prehrávajúce karty pri showdowne",
   advOwnClick: "Zobraziť moje karty klepnutím",
   advFocusBet: "Zameranie poľa stávky pri mojom ťahu",

@@ -118,7 +118,7 @@ export const strings = {
   advSecHelp: "Hulp", advHandsBtn: "Wys die pokerhande-ikoon op die tafel",
   advSecSeats: "Sitplekke",
   advSecKeys: "Sleutelbordkortpaaie",
-  advAnimCards: "Kaartanimasies",
+  advAnimCards: "Kaartanimasies", advDealAnim:"Kaartuitdeel-animasie (vlieënde kaarte)",
   advFadeLosers: "Verloorkaarte vervaag by die wysing",
   advOwnClick: "Wys my kaarte met 'n tik",
   advFocusBet: "Fokus insetveld op my beurt",

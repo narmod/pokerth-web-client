@@ -118,7 +118,7 @@ export const strings = {
   advSecHelp: "Trợ giúp", advHandsBtn: "Hiện biểu tượng các bộ bài poker trên bàn",
   advSecSeats: "Chỗ ngồi",
   advSecKeys: "Phím tắt",
-  advAnimCards: "Hoạt ảnh lá bài",
+  advAnimCards: "Hoạt ảnh lá bài", advDealAnim:"Hoạt ảnh chia bài (lá bài bay)",
   advFadeLosers: "Làm mờ bài thua khi lật bài",
   advOwnClick: "Hiện bài của tôi khi chạm",
   advFocusBet: "Tập trung ô cược vào lượt của tôi",

@@ -119,7 +119,7 @@ export const strings = {
   advSecHelp: "說明", advHandsBtn: "在牌桌上顯示撲克牌型圖示",
   advSecSeats: "座位",
   advSecKeys: "鍵盤快速鍵",
-  advAnimCards: "發牌動畫",
+  advAnimCards: "發牌動畫", advDealAnim:"發牌動畫（飛行的牌）",
   advFadeLosers: "攤牌時淡化落敗的牌",
   advOwnClick: "點按顯示我的牌",
   advFocusBet: "輪到我時聚焦下注欄",

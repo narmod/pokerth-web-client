@@ -118,7 +118,7 @@ export const strings = {
   advSecHelp: "Помощ", advHandsBtn: "Показвай иконата с покер комбинациите на масата",
   advSecSeats: "Места",
   advSecKeys: "Клавишни комбинации",
-  advAnimCards: "Анимации на картите",
+  advAnimCards: "Анимации на картите", advDealAnim:"Анимация на раздаването (летящи карти)",
   advFadeLosers: "Затъмняване на губещите карти при разкриване",
   advOwnClick: "Покажи картите ми с докосване",
   advFocusBet: "Фокус върху полето за залог на моя ред",

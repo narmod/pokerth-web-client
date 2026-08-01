@@ -63,10 +63,30 @@ window._refreshOwnCards = function () {
 
 // ── Distribution des cartes ──
 function animateCardDeal() {
+  // Option avancée « Animation de la distribution » (web, défaut ON) —
+  // désactivable, demande du forum : le va-et-vient des cartes distrait.
+  try { if (localStorage.getItem('pth_deal_anim') === '0') return; } catch (e) {}
   if (!S._lastPixPos.length) return;
   var cx = S._potCenter.x, cy = S._potCenter.y;
   if (!cx) return;
-  var n = S._lastPixPos.length; // nombre de joueurs
+  // Cibles : uniquement les sièges réellement servis cette main. pixPos est
+  // aligné 1:1 sur la liste de pids publiée par le renderer (_lastPixPids) ;
+  // un siège parti, éliminé ou inactif ne reçoit pas de cartes — le même
+  // rapport signalait des cartes volant vers les places des joueurs sortis.
+  // Sans liste de pids (rendu antérieur), on garde l'ancien comportement.
+  var pids = (S._lastPixPids && S._lastPixPids.length === S._lastPixPos.length) ? S._lastPixPids : null;
+  var targets = [];
+  for (var ti = 0; ti < S._lastPixPos.length; ti++) {
+    if (pids) {
+      var sd = S.seatData[pids[ti]];
+      if (!sd || sd.gone || sd.active === false || (sd.money != null && sd.money <= 0)) continue;
+      targets.push({ pos: S._lastPixPos[ti], me: pids[ti] === S.myId });
+    } else {
+      targets.push({ pos: S._lastPixPos[ti], me: ti === 0 });
+    }
+  }
+  var n = targets.length; // nombre de joueurs servis
+  if (!n) return;
   var delay = 0;
   var STEP = 180; // ms entre chaque carte
   // 2 cartes par joueur, dealer en premier
@@ -91,7 +111,7 @@ function animateCardDeal() {
             setTimeout(function() { el.remove(); }, 200);
           }, 380);
         }, d);
-      })(S._lastPixPos[i], delay, S._lastPixPos[i] === S._lastPixPos[0]);
+      })(targets[i].pos, delay, targets[i].me);
       delay += STEP;
     }
   }

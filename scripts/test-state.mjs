@@ -128,6 +128,7 @@ ok(Object.keys(S._handResultSnapshot).length === 0 && Object.keys(S._seatStackAt
    'snapshots de main init = {}');
 ok(S._myStackAtHandStart === null && S._lastPotValue === null, 'stacks/pot mémorisés init = null');
 ok(Array.isArray(S._lastPixPos) && S._lastPixPos.length === 0
+   && Array.isArray(S._lastPixPids) && S._lastPixPids.length === 0
    && S._potCenter.x === 0 && S._potCenter.y === 0, 'géométrie pot/sièges init');
 
 // V9.2 — Cartes / mises / phases
@@ -198,7 +199,7 @@ ok(JSON.stringify(keys) === JSON.stringify(['REACT_EMOJI_MIN_GAP', 'REACT_EMOJI_
    '_modeSelBusy', '_modeSelPendingPreview', '_modeSelHoldTimer',
    '_actionBarPinned', 'FEATURE_AUTO_CHECK_FOLD',
    '_handResultSnapshot', '_seatStackAtHandStart', '_myStackAtHandStart',
-   '_lastPixPos', '_potCenter', '_lastPotValue',
+   '_lastPixPos', '_lastPixPids', '_potCenter', '_lastPotValue',
    'myCards', 'commCards', '_cardKey', '_cardIV', 'highestBet', 'minRaise',
    'pot', 'collectedPot', 'gameState', 'dealerPid', 'turnPid',
    '_actedStreet', '_roundEnded', '_boardDealing', '_inShowdown',

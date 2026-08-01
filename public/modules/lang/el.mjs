@@ -118,7 +118,7 @@ export const strings = {
   advSecHelp: "Βοήθεια", advHandsBtn: "Εμφάνιση εικονιδίου συνδυασμών πόκερ στο τραπέζι",
   advSecSeats: "Θέσεις",
   advSecKeys: "Συντομεύσεις πληκτρολογίου",
-  advAnimCards: "Κινούμενα φύλλα",
+  advAnimCards: "Κινούμενα φύλλα", advDealAnim:"Κίνηση μοιράσματος (ιπτάμενα φύλλα)",
   advFadeLosers: "Θάμπωμα χαμένων φύλλων στο showdown",
   advOwnClick: "Εμφάνιση των φύλλων μου με άγγιγμα",
   advFocusBet: "Εστίαση στο πεδίο στοιχήματος στη σειρά μου",

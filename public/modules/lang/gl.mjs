@@ -118,7 +118,7 @@ export const strings = {
   advSecHelp: "Axuda", advHandsBtn: "Mostrar a icona das mans de póker",
   advSecSeats: "Asentos",
   advSecKeys: "Atallos de teclado",
-  advAnimCards: "Animacións das cartas",
+  advAnimCards: "Animacións das cartas", advDealAnim:"Animación do reparto (cartas voando)",
   advFadeLosers: "Atenuar as cartas perdedoras no showdown",
   advOwnClick: "Amosar as miñas cartas ao tocar",
   advFocusBet: "Foco no campo de aposta na miña quenda",

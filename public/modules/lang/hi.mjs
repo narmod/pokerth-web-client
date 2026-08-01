@@ -122,7 +122,7 @@ export const strings = {
   advSecHelp: "सहायता", advHandsBtn: "टेबल पर पोकर हैंड आइकन दिखाएँ",
   advSecSeats: "सीटें",
   advSecKeys: "कीबोर्ड शॉर्टकट",
-  advAnimCards: "पत्तों के एनिमेशन",
+  advAnimCards: "पत्तों के एनिमेशन", advDealAnim:"कार्ड बाँटने का एनिमेशन (उड़ते कार्ड)",
   advFadeLosers: "शोडाउन पर हारने वाले पत्ते फीके करें",
   advOwnClick: "टैप पर मेरे पत्ते दिखाएं",
   advFocusBet: "मेरी बारी पर दांव फ़ील्ड पर फ़ोकस करें",

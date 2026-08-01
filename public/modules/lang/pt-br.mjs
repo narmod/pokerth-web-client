@@ -119,7 +119,7 @@ export const strings = {
   advSecHelp: "Ajuda", advHandsBtn: "Mostrar o ícone das mãos de pôquer",
   advSecSeats: "Lugares",
   advSecKeys: "Atalhos de teclado",
-  advAnimCards: "Animações das cartas",
+  advAnimCards: "Animações das cartas", advDealAnim:"Animação da distribuição (cartas voando)",
   advFadeLosers: "Esmaecer cartas perdedoras no showdown",
   advOwnClick: "Mostrar minhas cartas ao tocar",
   advFocusBet: "Focar o campo de aposta na minha vez",

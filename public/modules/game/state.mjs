@@ -163,6 +163,7 @@ export const S = {
   _seatStackAtHandStart: {},  // {pid: stack au début de la main}
   _myStackAtHandStart: null,  // mon stack réel au début de la main (avant blinds)
   _lastPixPos: [],            // [{top, left}] dans l'ordre de rotated
+  _lastPixPids: [],           // pids alignés 1:1 sur _lastPixPos (cibles d'anim)
   _potCenter: { x: 0, y: 0 }, // centre du pot à l'écran
   _lastPotValue: null,
 

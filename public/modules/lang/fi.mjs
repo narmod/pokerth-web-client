@@ -117,7 +117,7 @@ export const strings = {
   advSecHelp: "Ohje", advHandsBtn: "Näytä pokerikäsien kuvake pöydällä",
   advSecSeats: "Paikat",
   advSecKeys: "Pikanäppäimet",
-  advAnimCards: "Korttianimaatiot",
+  advAnimCards: "Korttianimaatiot", advDealAnim:"Jakoanimaatio (lentävät kortit)",
   advFadeLosers: "Häivytä häviävät kortit showdownissa",
   advOwnClick: "Näytä korttini napauttamalla",
   advFocusBet: "Kohdista panoskenttä vuorollani",

@@ -117,7 +117,7 @@ export const strings = {
   advSecHelp: "Hjælp", advHandsBtn: "Vis ikonet med pokerhænder på bordet",
   advSecSeats: "Pladser",
   advSecKeys: "Tastaturgenveje",
-  advAnimCards: "Kortanimationer",
+  advAnimCards: "Kortanimationer", advDealAnim:"Animation af kortuddeling (flyvende kort)",
   advFadeLosers: "Dæmp tabende kort ved showdown",
   advOwnClick: "Vis mine kort ved tryk",
   advFocusBet: "Fokus på indsatsfelt i min tur",

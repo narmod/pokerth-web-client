@@ -120,7 +120,7 @@ export const strings = {
   advSecHelp: "Yardım", advHandsBtn: "Poker el sıralaması simgesini masada göster",
   advSecSeats: "Koltuklar",
   advSecKeys: "Klavye kısayolları",
-  advAnimCards: "Kart animasyonları",
+  advAnimCards: "Kart animasyonları", advDealAnim:"Kart dağıtma animasyonu (uçan kartlar)",
   advFadeLosers: "Showdown'da kaybeden kartları soldur",
   advOwnClick: "Dokununca kartlarımı göster",
   advFocusBet: "Sıram geldiğinde bahis alanına odaklan",

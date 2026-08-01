@@ -123,7 +123,7 @@ export const strings = {
   advSecHelp: "Help", advHandsBtn: "Pictogram met pokerhanden op tafel tonen",
   advSecSeats: "Plaatsen",
   advSecKeys: "Sneltoetsen",
-  advAnimCards: "Kaartanimaties",
+  advAnimCards: "Kaartanimaties", advDealAnim:"Deelanimatie (vliegende kaarten)",
   advFadeLosers: "Verliezende kaarten vervagen bij showdown",
   advOwnClick: "Mijn kaarten tonen bij tikken",
   advFocusBet: "Focus op inzetveld bij mijn beurt",

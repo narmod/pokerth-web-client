@@ -119,7 +119,7 @@ export const strings = {
   advSecHelp: "Cobhair", advHandsBtn: "Seall ìomhaigheag làmhan a' phòcair air a' bhòrd",
   advSecSeats: "Suidheachain",
   advSecKeys: "Ath-ghoiridean meur-chlàir",
-  advAnimCards: "Beòthachadh chairtean",
+  advAnimCards: "Beòthachadh chairtean", advDealAnim:"Beòthachadh riarachaidh (cairtean ag itealaich)",
   advFadeLosers: "Lasaich cairtean a' chall aig an showdown",
   advOwnClick: "Seall mo chairtean le suathadh",
   advFocusBet: "Fòcas air raon a' gheall air mo chuairt",

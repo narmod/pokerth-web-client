@@ -376,6 +376,7 @@ function openAdvancedOptions() {
     if (el) el.checked = _advGet(key, defOn);
   };
   sync('adv-anim', 'anim_cards', true);
+  sync('adv-dealanim', 'deal_anim', true);   // animation de distribution (web) — désactivable, rapport forum
   sync('adv-blinds', 'show_blinds', true);
   sync('adv-potbtns', 'pot_btns', true);
   sync('adv-communitycontent', 'community_content', true);
@@ -1202,7 +1203,7 @@ var _CFG_WEB_SYNC_KEYS = [
   'pth_assist', 'pth_show_odds', 'pth_hands_btn', 'pth_voice', 'pth_avatar_create',
   'pth_haptic', 'pth_display_bb', 'pth_table_zoom', 'pth_zoom_follow',
   'pth_community_content', 'pth_sound_vol',
-  'pth_log_on', 'pth_create_dialog', 'pth_status_bar', 'pth_blinds_badge',
+  'pth_log_on', 'pth_create_dialog', 'pth_status_bar', 'pth_blinds_badge', 'pth_deal_anim',
   'pth_winner_popup', 'pth_remove_gone', 'pth_tooltips', 'pth_big_own_cards',
   'pth_chat_translate', 'pth_chat_abbrev', 'pth_pin_actionbar', 'pth_confirm_social',
   'pth_help_btn',
@@ -9838,7 +9839,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.5-web.91'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.5-web.92'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

@@ -125,7 +125,7 @@ export const strings = {
   advSecHelp: "Hilfe", advHandsBtn: "Symbol der Pokerblätter auf dem Tisch anzeigen",
   advSecSeats: "Plätze",
   advSecKeys: "Tastenkürzel",
-  advAnimCards: "Kartenanimationen",
+  advAnimCards: "Kartenanimationen", advDealAnim:"Austeil-Animation (fliegende Karten)",
   advFadeLosers: "Verlierende Karten beim Showdown abblenden",
   advOwnClick: "Meine Karten per Tippen zeigen",
   advFocusBet: "Einsatzfeld bei meinem Zug fokussieren",

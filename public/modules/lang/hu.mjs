@@ -118,7 +118,7 @@ export const strings = {
   advSecHelp: "Súgó", advHandsBtn: "Póker kéz-kombinációk ikonjának megjelenítése az asztalon",
   advSecSeats: "Helyek",
   advSecKeys: "Billentyűparancsok",
-  advAnimCards: "Lapanimációk",
+  advAnimCards: "Lapanimációk", advDealAnim:"Osztás animációja (repülő lapok)",
   advFadeLosers: "Vesztes lapok halványítása a showdownnál",
   advOwnClick: "Lapjaim mutatása koppintásra",
   advFocusBet: "Tétmező fókuszálása a körömben",

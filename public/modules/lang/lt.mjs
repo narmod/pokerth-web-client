@@ -118,7 +118,7 @@ export const strings = {
   advSecHelp: "Pagalba", advHandsBtn: "Rodyti pokerio kombinacijų piktogramą ant stalo",
   advSecSeats: "Vietos",
   advSecKeys: "Spartieji klavišai",
-  advAnimCards: "Kortų animacijos",
+  advAnimCards: "Kortų animacijos", advDealAnim:"Kortų dalijimo animacija (skrendančios kortos)",
   advFadeLosers: "Pritemdyti pralaiminčias kortas per showdown",
   advOwnClick: "Rodyti mano kortas palietus",
   advFocusBet: "Fokusas į statymo lauką per mano ėjimą",
