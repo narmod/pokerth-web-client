@@ -418,6 +418,37 @@ body {
 
 /* ─── SCREENS ─── */
 .screen { display: none; height: 100vh; height: 100dvh; }
+
+/* ── Installed PWA: make the layout box the WHOLE screen ──
+   On iOS, an installed web app resolves 100dvh (and 100vh) from a viewport
+   that can stay one relayout behind: when the screen content fits without
+   scrolling, the value keeps excluding the home-indicator inset. The .screen
+   then stops short of the physical bottom and the html/body background shows
+   through as a stray band under the connect / lobby / game screens (reported
+   narmod 2026-08-01, iPhone + iPad; the band vanished as soon as the music
+   player made the page overflow and forced a relayout).
+
+   position:fixed + inset:0 is resolved against the *visual* viewport, which
+   with viewport-fit=cover really is the full screen — this is why the two
+   overlays already built that way (#about-page, #privacy-page) never showed
+   the band. Anchoring body the same way and sizing .screen off it removes the
+   dependency on dvh entirely.
+
+   Scoped to the installed app on purpose: in a normal browser tab dvh is the
+   correct unit (it tracks the collapsing toolbars) and body must stay in flow. */
+@media (display-mode: fullscreen), (display-mode: standalone) {
+  body { position: fixed; inset: 0; height: auto; }
+  .screen { height: 100%; }
+
+  /* The screens now reach the physical bottom edge, so whatever sits at the
+     bottom of one must clear the home indicator itself. Fixed-position bars
+     (.player-bar, .my-zone) already do; these are in normal / absolute flow. */
+  .connect-footer { bottom: max(10px, env(safe-area-inset-bottom)); }
+  .lobby-footbar  { padding-bottom: max(8px, env(safe-area-inset-bottom)); }
+  .cp-scroll      { padding-bottom: calc(40px + env(safe-area-inset-bottom)); }
+  .pv-scroll      { padding-bottom: env(safe-area-inset-bottom); }
+  .ab-body        { padding-bottom: calc(28px + env(safe-area-inset-bottom)); }
+}
 :fullscreen            { background: var(--felt); }
 :-webkit-full-screen   { background: var(--felt); }
 :-moz-full-screen      { background: var(--felt); }
