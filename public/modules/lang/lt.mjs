@@ -618,7 +618,7 @@ export const strings = {
     presetFastName: 'Greitas',
     presetPersoName:'Mano', presetPersoDesc:'mano nustatymai',
     presetSaveName:'Mano nuostatos', presetSaveDesc:'išsaugoti šiuos nustatymus',
-    createPrefsSave:'💾 Mano nuostatos', createPrefsSaveTip:'Išsaugoti šią formą kaip asmenines nuostatas', createPrefsSaved:'Nuostatos išsaugotos', createPrefsLoaded:'Nuostatos įkeltos', createPrefsNone:'Išsaugotų nuostatų dar nėra',
+    createPrefsSave:'💾 Išsaugoti nuostatas', createPrefsSaveTip:'Išsaugoti šią formą kaip asmenines nuostatas', createPrefsSaved:'Nuostatos išsaugotos', createPrefsLoaded:'Nuostatos įkeltos', createPrefsNone:'Išsaugotų nuostatų dar nėra',
     presetFastDesc: 'greitas tempas!',
     proxyConnectedWait: 'Tarpinis serveris prijungtas — laukiama PokerTH serverio…',
     errConnLost: 'Ryšys nutrūko. Galėsite prisijungti iš naujo po kelių sekundžių.',

@@ -619,7 +619,7 @@ export const strings = {
     presetFastName: 'வேகம்',
     presetPersoName:'என்னுடையது', presetPersoDesc:'என் அமைப்புகள்',
     presetSaveName:'என் விருப்பங்கள்', presetSaveDesc:'இந்த அமைப்புகளை சேமிக்கவும்',
-    createPrefsSave:'💾 என் விருப்பங்கள்', createPrefsSaveTip:'இந்தப் படிவத்தை என் தனிப்பட்ட விருப்பங்களாக சேமிக்கவும்', createPrefsSaved:'விருப்பங்கள் சேமிக்கப்பட்டன', createPrefsLoaded:'விருப்பங்கள் ஏற்றப்பட்டன', createPrefsNone:'சேமிக்கப்பட்ட விருப்பங்கள் இன்னும் இல்லை',
+    createPrefsSave:'💾 விருப்பங்களை சேமி', createPrefsSaveTip:'இந்தப் படிவத்தை என் தனிப்பட்ட விருப்பங்களாக சேமிக்கவும்', createPrefsSaved:'விருப்பங்கள் சேமிக்கப்பட்டன', createPrefsLoaded:'விருப்பங்கள் ஏற்றப்பட்டன', createPrefsNone:'சேமிக்கப்பட்ட விருப்பங்கள் இன்னும் இல்லை',
     presetFastDesc: 'வேகமான வேகம்!',
     proxyConnectedWait: 'ப்ராக்ஸி இணைக்கப்பட்டது — PokerTH சேவையகத்திற்காக காத்திருக்கிறது…',
     errConnLost: 'இணைப்பு துண்டிக்கப்பட்டது. சில நொடிகளில் மீண்டும் இணைக்கலாம்.',

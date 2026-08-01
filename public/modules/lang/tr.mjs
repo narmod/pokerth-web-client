@@ -620,7 +620,7 @@ export const strings = {
     presetFastName: 'Hızlı',
     presetPersoName:'Benim', presetPersoDesc:'ayarlarım',
     presetSaveName:'Tercihlerim', presetSaveDesc:'bu ayarları kaydet',
-    createPrefsSave:'💾 Tercihlerim', createPrefsSaveTip:'Bu formu kişisel tercihlerim olarak kaydet', createPrefsSaved:'Tercihler kaydedildi', createPrefsLoaded:'Tercihler yüklendi', createPrefsNone:'Henüz kayıtlı tercih yok',
+    createPrefsSave:'💾 Tercihleri kaydet', createPrefsSaveTip:'Bu formu kişisel tercihlerim olarak kaydet', createPrefsSaved:'Tercihler kaydedildi', createPrefsLoaded:'Tercihler yüklendi', createPrefsNone:'Henüz kayıtlı tercih yok',
     presetFastDesc: 'hızlı tempo!',
     proxyConnectedWait: 'Proxy bağlandı — PokerTH sunucusu bekleniyor…',
     errConnLost: 'Bağlantı koptu. Birkaç saniye içinde yeniden bağlanabilirsin.',

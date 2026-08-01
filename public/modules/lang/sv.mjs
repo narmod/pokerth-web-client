@@ -617,7 +617,7 @@ export const strings = {
     presetFastName: 'Snabb',
     presetPersoName:'Mina', presetPersoDesc:'mina inställningar',
     presetSaveName:'Mina pref.', presetSaveDesc:'spara dessa inställningar',
-    createPrefsSave:'💾 Mina pref.', createPrefsSaveTip:'Spara det här formuläret som mina personliga preferenser', createPrefsSaved:'Preferenser sparade', createPrefsLoaded:'Preferenser laddade', createPrefsNone:'Inga sparade preferenser ännu',
+    createPrefsSave:'💾 Spara pref.', createPrefsSaveTip:'Spara det här formuläret som mina personliga preferenser', createPrefsSaved:'Preferenser sparade', createPrefsLoaded:'Preferenser laddade', createPrefsNone:'Inga sparade preferenser ännu',
     presetFastDesc: 'högt tempo!',
     proxyConnectedWait: 'Proxy ansluten — väntar på PokerTH-server…',
     errConnLost: 'Anslutning förlorad. Du kan återansluta om några sekunder.',

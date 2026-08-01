@@ -618,7 +618,7 @@ export const strings = {
     presetFastName: 'Γρήγορο',
     presetPersoName:'Δικό μου', presetPersoDesc:'οι ρυθμίσεις μου',
     presetSaveName:'Οι προτιμήσεις μου', presetSaveDesc:'αποθήκευση αυτών των ρυθμίσεων',
-    createPrefsSave:'💾 Οι προτιμήσεις μου', createPrefsSaveTip:'Αποθήκευση της φόρμας ως προσωπικές προτιμήσεις', createPrefsSaved:'Οι προτιμήσεις αποθηκεύτηκαν', createPrefsLoaded:'Οι προτιμήσεις φορτώθηκαν', createPrefsNone:'Δεν υπάρχουν αποθηκευμένες προτιμήσεις ακόμη',
+    createPrefsSave:'💾 Αποθήκευση προτιμήσεων', createPrefsSaveTip:'Αποθήκευση της φόρμας ως προσωπικές προτιμήσεις', createPrefsSaved:'Οι προτιμήσεις αποθηκεύτηκαν', createPrefsLoaded:'Οι προτιμήσεις φορτώθηκαν', createPrefsNone:'Δεν υπάρχουν αποθηκευμένες προτιμήσεις ακόμη',
     presetFastDesc: 'γρήγορος ρυθμός!',
     proxyConnectedWait: 'Ο διαμεσολαβητής συνδέθηκε — αναμονή για διακομιστή PokerTH…',
     errConnLost: 'Η σύνδεση χάθηκε. Μπορείτε να επανασυνδεθείτε σε λίγα δευτερόλεπτα.',

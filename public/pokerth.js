@@ -1070,9 +1070,13 @@ function _cfgApplyImported(cfg) {
     else if (S[P + 'AfterMBAlwaysDoubleBlinds'] != null) d.endRaiseMode = '1';
     if (n('AfterMBAlwaysRaiseValue') != null) d.endRaiseValue = n('AfterMBAlwaysRaiseValue');
     if (net) {
-      if (n('NetGameSpeed')           != null) d.guiSpeed   = n('NetGameSpeed');
-      if (n('NetTimeOutPlayerAction') != null) d.timeout    = n('NetTimeOutPlayerAction');
-      if (n('NetDelayBetweenHands')   != null) d.delayHands = n('NetDelayBetweenHands');
+      // n() already prepends P ('Net' here): passing the full official name
+      // read doubly-prefixed keys (NetNetGameSpeed & co) that never exist — an
+      // imported or synced config.xml silently skipped the internet speed,
+      // timeout and between-hands delay while everything around them merged.
+      if (n('GameSpeed')           != null) d.guiSpeed   = n('GameSpeed');
+      if (n('TimeOutPlayerAction') != null) d.timeout    = n('TimeOutPlayerAction');
+      if (n('DelayBetweenHands')   != null) d.delayHands = n('DelayBetweenHands');
       if (S.InternetGameName)                  d.name       = String(S.InternetGameName).slice(0, 60);
       if (S.InternetGameType != null)          d.gameType   = String(parseInt(S.InternetGameType, 10) || 1);
       if (S.InternetGameAllowSpectators != null) d.allowSpectators = S.InternetGameAllowSpectators !== '0';
@@ -1357,6 +1361,34 @@ var PTH_CFG_ADV_KEYS = {
   snd_actions: 'PlayGameActions', snd_lobby: 'PlayLobbyChatNotification',
   snd_net: 'PlayNetworkGameNotification', snd_blinds: 'PlayBlindRaiseNotification'
 };
+// The table preferences deserve the same protection as the toggles above: a
+// disk-button save (or a field edited in the advanced options) that has not
+// been pushed yet must not be flattened by a newer server config.xml — and,
+// held == 0 clearing the dirty flag, it would otherwise not just be
+// overwritten but silently dropped, never pushed at all. These are the dirty
+// marks the prefs writers leave (_cfgSyncMark('create_prefs') from the disk
+// button, the raw field names from advPrefSet)…
+var PTH_CFG_PREFS_DIRTY_MARKS = { create_prefs: 1, players: 1, stack: 1, blind: 1,
+  raiseEvery: 1, timeout: 1, delayHands: 1, guiSpeed: 1, name: 1, gameType: 1,
+  allowSpectators: 1 };
+// …and these are ALL the official keys mergePrefs can read back into
+// pth_prefs_local / pth_prefs_internet — the exact mirror of what
+// _cfgBlindsKeys and the net section of the collector write. Anything
+// mergePrefs reads must be listed here, or a dirty local save loses that
+// field on the next descent (pinned by scripts/test-cfg-sync-hold.mjs).
+var PTH_CFG_PREFS_SCALARS = (function () {
+  var both = ['NumberOfPlayers', 'StartCash', 'FirstSmallBlind',
+    'RaiseBlindsAtHands', 'RaiseBlindsAtMinutes', 'RaiseSmallBlindEveryHands',
+    'RaiseSmallBlindEveryMinutes', 'AlwaysDoubleBlinds', 'ManualBlindsOrder',
+    'AfterMBAlwaysDoubleBlinds', 'AfterMBAlwaysRaiseAbout',
+    'AfterMBStayAtLastBlind', 'AfterMBAlwaysRaiseValue',
+    'GameSpeed', 'TimeOutPlayerAction', 'DelayBetweenHands'];
+  var out = ['InternetGameName', 'InternetGameType', 'InternetGameAllowSpectators',
+    'UseInternetGamePassword', 'InternetGamePassword'];
+  both.forEach(function (k) { out.push(k); out.push('Net' + k); });
+  return out;
+})();
+var PTH_CFG_PREFS_LISTS = ['ManualBlindsList', 'NetManualBlindsList'];
 function _cfgDirtyKeys() {
   try { var a = JSON.parse(_cfgLs('pth_cfg_sync_dirtykeys') || '[]'); return Array.isArray(a) ? a : []; }
   catch (e) { return []; }
@@ -1425,6 +1457,13 @@ function _cfgSyncPull() {
             var ck = PTH_CFG_ADV_KEYS[k];
             if (ck && cfg.scalars[ck] != null) { delete cfg.scalars[ck]; held++; }
           });
+          // Table prefs edited here since the last push: hold every prefs key
+          // from the descent so mergePrefs cannot flatten the local save, and
+          // keep the dirty flag (held > 0) so our values are pushed back.
+          if (_cfgDirtyKeys().some(function (k) { return PTH_CFG_PREFS_DIRTY_MARKS[k] === 1; })) {
+            PTH_CFG_PREFS_SCALARS.forEach(function (ck) { if (cfg.scalars[ck] != null) { delete cfg.scalars[ck]; held++; } });
+            PTH_CFG_PREFS_LISTS.forEach(function (ck) { if (cfg.lists && cfg.lists[ck] != null) { delete cfg.lists[ck]; held++; } });
+          }
           _cfgApplyImported(cfg);
           try { localStorage.setItem('pth_cfg_sync_ts', String(d.updatedAt)); } catch (e) {}
           if (held) { _cfgSyncPushSoon(1500); }   // dirty conservé : nos valeurs partent
@@ -9799,7 +9838,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.5-web.88'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.5-web.89'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

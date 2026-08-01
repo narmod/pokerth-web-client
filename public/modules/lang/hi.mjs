@@ -441,7 +441,7 @@ export const strings = {
     presetFastName:'तेज़', presetFastDesc:'तेज़-गति!',
     presetPersoName:'मेरा', presetPersoDesc:'मेरी सेटिंग्स',
     presetSaveName:'मेरी प्राथमिकताएँ', presetSaveDesc:'ये सेटिंग्स सहेजें',
-    createPrefsSave:'💾 मेरी प्राथमिकताएँ', createPrefsSaveTip:'इस फ़ॉर्म को मेरी व्यक्तिगत प्राथमिकताओं के रूप में सहेजें', createPrefsSaved:'प्राथमिकताएँ सहेजी गईं', createPrefsLoaded:'प्राथमिकताएँ लोड हुईं', createPrefsNone:'अभी तक कोई सहेजी गई प्राथमिकताएँ नहीं',
+    createPrefsSave:'💾 प्राथमिकताएँ सहेजें', createPrefsSaveTip:'इस फ़ॉर्म को मेरी व्यक्तिगत प्राथमिकताओं के रूप में सहेजें', createPrefsSaved:'प्राथमिकताएँ सहेजी गईं', createPrefsLoaded:'प्राथमिकताएँ लोड हुईं', createPrefsNone:'अभी तक कोई सहेजी गई प्राथमिकताएँ नहीं',
     proxyConnectedWait:'प्रॉक्सी कनेक्टेड \u2014 PokerTH सर्वर की प्रतीक्षा\u2026',
     errConnLost:'कनेक्शन टूटा। कुछ सेकंड में पुनः कनेक्ट कर सकते हैं।',
     autoTableFound:'\u26a1 टेबल मिली \u2014 #{n} में शामिल हो रहे हैं',

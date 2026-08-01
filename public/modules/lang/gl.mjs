@@ -618,7 +618,7 @@ export const strings = {
     presetFastName: 'Rápido',
     presetPersoName:'Meu', presetPersoDesc:'os meus axustes',
     presetSaveName:'As miñas prefs', presetSaveDesc:'gardar estes axustes',
-    createPrefsSave:'💾 As miñas prefs', createPrefsSaveTip:'Gardar este formulario como preferencias persoais', createPrefsSaved:'Preferencias gardadas', createPrefsLoaded:'Preferencias cargadas', createPrefsNone:'Aínda non hai preferencias gardadas',
+    createPrefsSave:'💾 Gardar prefs', createPrefsSaveTip:'Gardar este formulario como preferencias persoais', createPrefsSaved:'Preferencias gardadas', createPrefsLoaded:'Preferencias cargadas', createPrefsNone:'Aínda non hai preferencias gardadas',
     presetFastDesc: 'ritmo rápido!',
     proxyConnectedWait: 'Proxy conectado — agardando o servidor PokerTH…',
     errConnLost: 'Conexión perdida. Podes conectarte de novo nuns segundos.',

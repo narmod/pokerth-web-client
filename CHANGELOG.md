@@ -50,7 +50,29 @@ because sp0ck shared them ahead of the release.
   seventeen table packs declare something other than the default; they were all
   being drawn at the default until now.
 
+### Changed
+- **The disk button on the create form now says "Save prefs".** It shared its
+  label with the star pill right above it — both read "My prefs" — so saving
+  and loading were two buttons with the same name, and pressing the wrong one
+  quietly loaded old settings over freshly typed ones. The star pill keeps
+  "My prefs" (it loads them); the disk button now names the action, in all 36
+  languages.
+
 ### Fixed
+- **An unpushed preferences save could be flattened by the account sync.** The
+  sync descent already protected locally-changed toggles (the "I mute the
+  sound and it comes back" fix); the table preferences had no such shield, so
+  a save made just before closing the page could be overwritten by a newer
+  server config.xml on the next login — and, worse, silently dropped, since an
+  empty hold also cleared the to-push flag. The whole table-prefs family is
+  now held from the descent when locally dirty and pushed back, like the
+  toggles. A guard test derives the covered keys from the merge code itself so
+  the two can never drift apart.
+- **Three internet table settings never merged down from a config.xml.** The
+  merge helper prepends the Net prefix itself; handing it already-prefixed
+  names made it look up doubly-prefixed keys that never exist, so the internet
+  game speed, action timeout and between-hands delay were skipped on every
+  import or sync descent while the surrounding fields merged fine.
 - **The create form remembered nothing across sessions, and the game name not
   even within one.** The snapshot taken on every game creation still referenced
   two variables that left with the old fill-with-bots checkbox; the resulting

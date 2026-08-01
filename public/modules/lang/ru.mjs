@@ -620,7 +620,7 @@ export const strings = {
     presetFastName: 'Быстрый',
     presetPersoName:'Мои', presetPersoDesc:'мои настройки',
     presetSaveName:'Мои настройки', presetSaveDesc:'сохранить эти настройки',
-    createPrefsSave:'💾 Мои настройки', createPrefsSaveTip:'Сохранить эту форму как личные настройки', createPrefsSaved:'Настройки сохранены', createPrefsLoaded:'Настройки загружены', createPrefsNone:'Сохранённых настроек пока нет',
+    createPrefsSave:'💾 Сохранить настройки', createPrefsSaveTip:'Сохранить эту форму как личные настройки', createPrefsSaved:'Настройки сохранены', createPrefsLoaded:'Настройки загружены', createPrefsNone:'Сохранённых настроек пока нет',
     presetFastDesc: 'высокий темп!',
     proxyConnectedWait: 'Прокси подключён — ожидание сервера PokerTH…',
     errConnLost: 'Соединение потеряно. Можно переподключиться через несколько секунд.',

@@ -618,7 +618,7 @@ export const strings = {
     presetFastName: 'Rýchla',
     presetPersoName:'Moje', presetPersoDesc:'moje nastavenia',
     presetSaveName:'Moje predvoľby', presetSaveDesc:'uložiť tieto nastavenia',
-    createPrefsSave:'💾 Moje predvoľby', createPrefsSaveTip:'Uložiť tento formulár ako moje osobné predvoľby', createPrefsSaved:'Predvoľby uložené', createPrefsLoaded:'Predvoľby načítané', createPrefsNone:'Zatiaľ žiadne uložené predvoľby',
+    createPrefsSave:'💾 Uložiť predvoľby', createPrefsSaveTip:'Uložiť tento formulár ako moje osobné predvoľby', createPrefsSaved:'Predvoľby uložené', createPrefsLoaded:'Predvoľby načítané', createPrefsNone:'Zatiaľ žiadne uložené predvoľby',
     presetFastDesc: 'rýchle tempo!',
     proxyConnectedWait: 'Proxy pripojená — čaká sa na server PokerTH…',
     errConnLost: 'Spojenie stratené. O pár sekúnd sa môžete znova pripojiť.',
