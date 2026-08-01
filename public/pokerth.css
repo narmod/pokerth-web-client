@@ -6841,7 +6841,13 @@ body.spectator-nosend #g-reaction-panel { display: none !important; }
      Android standalone sans notch : env() = 0, no-op. */
   #s-game .header,
   #s-lobby .header,
-  #s-connect .connect-header {
+  #s-connect .connect-header,
+  /* Full-page screens/overlays that carry their own top bar. Without these
+     the bar is drawn *under* the iOS status bar and its title/icons collide
+     with the clock, signal and battery (reported narmod 2026-08-01, iPhone
+     and iPad, installed PWA). */
+  #s-create .cp-header,
+  #privacy-page .cp-header {
     /* !important : le palier paysage telephone (max-height:500px) pose
        `.header{padding:2px 6px !important}` — un shorthand qui ecrasait ces
        longhands et supprimait les insets la ou l'encoche est sur le cote.
@@ -8905,6 +8911,16 @@ html.reduce-fx .seat-action-badge {
 .pv-body ul { padding-left:20px; }
 .pv-body li { margin:5px 0; }
 .ab-head { display:flex; align-items:center; padding:10px 10px 0; flex-shrink:0; }
+/* Installed PWA (iOS black-translucent / Android edge-to-edge): #about-page is
+   position:fixed inset:0, so it spans the whole screen and its back button
+   would sit under the status bar. Keep the 10px base when env() is 0. */
+@media (display-mode: fullscreen), (display-mode: standalone) {
+  .ab-head {
+    padding-top: max(10px, env(safe-area-inset-top));
+    padding-left: max(10px, env(safe-area-inset-left));
+    padding-right: max(10px, env(safe-area-inset-right));
+  }
+}
 .ab-back { background:none; border:none; cursor:pointer; color:var(--text-hi); font-size:1.7rem; line-height:1; padding:2px 12px; border-radius:8px; }
 .ab-back:hover { background:var(--inset-hi); }
 .ab-title { font-size:1.25rem; font-weight:700; color:var(--text-hi); padding:4px 16px 10px; flex-shrink:0; }
