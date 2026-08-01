@@ -80,6 +80,18 @@ let _mode  = 'pl';      // onglet actif de la liste : 'pl' (pistes) | 'radio' (f
 let _plOpen = false;    // liste dépliée (préservé à travers les re-rendus)
 let _fadePauseTimer = null;
 const FADE = 0.45;   // durée du fondu (s)
+// ── Network watchdog (see the _wd* block below) ──
+const WD_TICK    = 2000;                               // progress poll (ms)
+const WD_STALL   = 6000;                               // no progress for this long → recover (ms)
+const WD_MAX     = 20;                                 // give up after this many consecutive attempts
+const WD_BACKOFF = [500, 1000, 2000, 4000, 8000, 15000];
+let _wdIntent = false;  // the user asked for sound and never stopped it
+let _wdTimer  = 0;      // progress-poll interval id
+let _wdRetry  = 0;      // back-off timeout id
+let _wdPos    = 0;      // last observed playback position
+let _wdAt     = 0;      // timestamp (ms) of the last real progress
+let _wdTries  = 0;      // consecutive recovery attempts (back-off index)
+let _wdBusy   = false;  // a recovery is in flight
 // StereoPannerNode support, probed WITHOUT creating an AudioContext (iOS-safe).
 const _hasPan = (function () { var AC = window.AudioContext || window.webkitAudioContext; return !!(AC && AC.prototype && AC.prototype.createStereoPanner); })();
 
@@ -142,6 +154,9 @@ function _el() {
     // updates whatever progress row currently exists in the panel.
     ['timeupdate', 'loadedmetadata', 'durationchange', 'seeked'].forEach(function (ev) { _audio.addEventListener(ev, _renderProgress); });
     _audio.addEventListener('loadedmetadata', _probeDuration);
+    // Network watchdog: these fire when the transport dies mid-track.
+    ['stalled', 'waiting', 'suspend'].forEach(function (ev) { _audio.addEventListener(ev, function () { _wdSchedule(); }); });
+    _audio.addEventListener('playing', function () { _wdOk(); });
   }
   return _audio;
 }
@@ -152,6 +167,8 @@ function _radioElInit() {
     ['play', 'pause', 'error'].forEach(function (ev) { _radioEl.addEventListener(ev, _render); });
     _radioEl.addEventListener('ended', _onEnded);
     ['timeupdate', 'loadedmetadata', 'durationchange'].forEach(function (ev) { _radioEl.addEventListener(ev, _renderProgress); });
+    ['stalled', 'waiting', 'error'].forEach(function (ev) { _radioEl.addEventListener(ev, function () { _wdSchedule(); }); });
+    _radioEl.addEventListener('playing', function () { _wdOk(); });
   }
   return _radioEl;
 }
@@ -165,6 +182,7 @@ function _onMainError() {
     _playBypass(t);
     return;
   }
+  _wdSchedule();
   _render();
 }
 function _playBypass(t) {
@@ -184,9 +202,90 @@ function _onEnded() {
   }
   if (_repeat === 'all') { next(); return; }   // advance through the playlist (wraps)
   // 'off' — stop at the end ('one' never fires 'ended' since loop=true).
+  _wdDisarm();
   if (_audio) { try { _audio.currentTime = 0; } catch (e) {} }
   _render();
 }
+
+// ── Network watchdog: auto-resume after a drop or a Wi-Fi↔cellular handover ──
+// An <audio> element exposes no control over buffer depth: on iPhone a network
+// handover kills the in-flight HTTP request and playback stops for good, with no
+// event that recovers on its own. So we poll the real progress of currentTime and
+// restart playback ourselves — a plain play() first, then a full source reload
+// with a re-seek to the remembered position (live streams rejoin the live edge).
+function _wdMark(now) { var el = _active(); _wdPos = el ? (el.currentTime || 0) : 0; _wdAt = now || Date.now(); }
+function _wdArm() {
+  _wdIntent = true; _wdTries = 0; _wdBusy = false;
+  if (_wdRetry) { clearTimeout(_wdRetry); _wdRetry = 0; }
+  _wdMark();
+  if (!_wdTimer) _wdTimer = setInterval(function () { _wdTick(); }, WD_TICK);
+}
+function _wdDisarm() {
+  _wdIntent = false; _wdTries = 0; _wdBusy = false;
+  if (_wdTimer) { clearInterval(_wdTimer); _wdTimer = 0; }
+  if (_wdRetry) { clearTimeout(_wdRetry); _wdRetry = 0; }
+}
+function _wdOk() {
+  if (!_wdIntent) return;
+  _wdTries = 0; _wdBusy = false;
+  if (_wdRetry) { clearTimeout(_wdRetry); _wdRetry = 0; }
+  _wdMark();
+}
+function _wdTick(now) {
+  now = now || Date.now();
+  if (!_wdIntent) { _wdDisarm(); return; }
+  if (_wdBusy || _wdRetry) return;
+  var el = _active();
+  if (!el) return;
+  if (el.paused) { _wdSchedule(); return; }        // the system paused us (network drop)
+  var pos = el.currentTime || 0;
+  if (pos !== _wdPos) { _wdPos = pos; _wdAt = now; _wdTries = 0; return; }
+  if (now - _wdAt >= WD_STALL) _wdSchedule();
+}
+function _wdSchedule() {
+  if (!_wdIntent || _wdBusy || _wdRetry) return;
+  if (_wdTries >= WD_MAX) { _wdDisarm(); _render(); return; }   // hopeless (missing file, no network at all)
+  var d = WD_BACKOFF[Math.min(_wdTries, WD_BACKOFF.length - 1)];
+  _wdTries++;
+  _wdRetry = setTimeout(function () { _wdRetry = 0; _wdRecover(); }, d);
+}
+function _wdRecover() {
+  if (!_wdIntent || _wdBusy) return;
+  var t = _byId(_curId), el = _active();
+  if (!t || !el) return;
+  _wdBusy = true;
+  _resumeCtx();                                    // iOS: the context may sit in 'interrupted'
+  var stream = _isStream(t);
+  var pos  = stream ? 0 : Math.max(0, el.currentTime || 0);
+  var hard = _wdTries > 1 || !!el.error || !el.src;
+  if (hard) {                                      // soft play() already failed → new HTTP request
+    if (!stream && pos > 0) {
+      var seekBack = function () {
+        try { el.removeEventListener('loadedmetadata', seekBack); } catch (e) {}
+        try { el.currentTime = pos; } catch (e) {}
+      };
+      try { el.addEventListener('loadedmetadata', seekBack); } catch (e) {}
+    }
+    try { el.src = t.file; el.load(); } catch (e) {}
+  }
+  var done = function () { _wdBusy = false; _applyVol(getVolume()); _wdMark(); _render(); };
+  var fail = function () { _wdBusy = false; _wdSchedule(); };
+  try {
+    var p = el.play();
+    if (p && p.then) p.then(done, fail); else done();
+  } catch (e) { fail(); }
+}
+function _wdState() { return { intent: _wdIntent, tries: _wdTries, busy: _wdBusy, retry: !!_wdRetry, pos: _wdPos, at: _wdAt }; }
+// Recover as soon as the OS reports connectivity back, or when the app returns
+// to the foreground after an interruption (call, tunnel, screen lock).
+try { window.addEventListener('online', function () {
+  if (!_wdIntent) return;
+  _wdTries = 0;
+  if (_wdRetry) { clearTimeout(_wdRetry); _wdRetry = 0; }
+  _wdRecover();
+}); } catch (e) {}
+try { window.addEventListener('pageshow', function () { if (_wdIntent) { _resumeCtx(); _wdTick(); } }); } catch (e) {}
+try { document.addEventListener('visibilitychange', function () { if (!document.hidden && _wdIntent) { _resumeCtx(); _wdTick(); } }); } catch (e) {}
 
 // Route the desired volume to the gain node once the graph exists, otherwise to
 // the element directly (no-op on iOS, but the gain node takes over on first play).
@@ -303,11 +402,12 @@ async function play(id) {
   // Fondu d'entrée : gain à 0 avant lecture, puis montée vers le volume (hors bypass).
   if (!_bypass && _waReady && _gain && _ctx) { try { _gain.gain.cancelScheduledValues(_ctx.currentTime); _gain.gain.setValueAtTime(0, _ctx.currentTime); } catch (e) {} }
   else { _applyVol(getVolume()); }
-  try { await el.play(); } catch (e) { /* gesture/load issue — UI reflects paused */ }
+  try { await el.play(); _wdArm(); } catch (e) { _wdDisarm(); /* gesture/load issue — UI reflects paused */ }
   if (_bypass || !_fadeTo(getVolume(), FADE)) _applyVol(getVolume());
   _render();
 }
 function pause() {
+  _wdDisarm();
   var el = _active();
   if (!el) { _render(); return; }
   if (!_bypass && _waReady && _gain && _ctx && !el.paused) {
@@ -320,6 +420,7 @@ function pause() {
   _render();
 }
 function stop()  {
+  _wdDisarm();
   if (_fadePauseTimer) { clearTimeout(_fadePauseTimer); _fadePauseTimer = null; }
   var el = _active();
   if (el) {
@@ -871,7 +972,7 @@ const Music = {
   mount: mount
 };
 
-export { Music };
+export { Music, _wdArm, _wdDisarm, _wdOk, _wdTick, _wdSchedule, _wdRecover, _wdState };
 export default Music;
 
 // Mirror onto window so the classic main script (pokerth.js) can use it.
