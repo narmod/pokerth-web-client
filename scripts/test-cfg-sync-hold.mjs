@@ -86,15 +86,40 @@ ok(prefFields.length >= 8 && unmarked.length === 0,
    'every field advPrefSet can mark dirty triggers the hold'
      + (unmarked.length ? ' (unmarked: ' + unmarked.join(', ') + ')' : ''));
 
-// ── The hold is wired into the descent, before the apply ────────────
+// ── The hold lives in the shared descent, before the apply ──────────
+// (extracted into _cfgSyncApplyDescent so the login pull AND the
+// pre-push reconciliation run the exact same protections)
+const dStart = src.indexOf('function _cfgSyncApplyDescent(');
+ok(dStart > 0, '_cfgSyncApplyDescent is still where the test expects it');
+const dBody = src.slice(dStart, src.indexOf('\n}', dStart));
+const iHold  = dBody.indexOf('PTH_CFG_PREFS_DIRTY_MARKS');
+const iApply = dBody.indexOf('_cfgApplyImported(cfg)');
+ok(iHold > 0 && iApply > iHold, 'the prefs hold runs inside the descent, before the snapshot is applied');
+ok(/PTH_CFG_PREFS_SCALARS[\s\S]*held\+\+/.test(dBody) && /PTH_CFG_PREFS_LISTS[\s\S]*held\+\+/.test(dBody),
+   'held keys count as held — the dirty flag survives and the local values are pushed back');
+ok(dBody.indexOf('_advSyncPrefs()') > 0,
+   'the preferences panel is refreshed after a descent, so it never shows ghosts');
+
+// ── The login pull and the pre-push reconciliation share that descent ──
 const pullStart = src.indexOf('function _cfgSyncPull() {');
 ok(pullStart > 0, '_cfgSyncPull is still where the test expects it');
 const pullBody = src.slice(pullStart, src.indexOf('\n}', pullStart));
-const iHold  = pullBody.indexOf('PTH_CFG_PREFS_DIRTY_MARKS');
-const iApply = pullBody.indexOf('_cfgApplyImported(cfg)');
-ok(iHold > 0 && iApply > iHold, 'the prefs hold runs inside the descent, before the snapshot is applied');
-ok(/PTH_CFG_PREFS_SCALARS[\s\S]*held\+\+/.test(pullBody) && /PTH_CFG_PREFS_LISTS[\s\S]*held\+\+/.test(pullBody),
-   'held keys count as held — the dirty flag survives and the local values are pushed back');
+ok(pullBody.indexOf('_cfgSyncApplyDescent(d, true)') > 0, 'the login pull applies the shared descent (with the toast)');
+
+// A push is a FULL xml rebuilt from local storage: from a tab left open for
+// days it re-sent stale preferences and flattened what another device had
+// set meanwhile — the forum report's endless 'My online game'. The push must
+// therefore reconcile first: GET, apply the descent (holds protect what was
+// just edited here), then push the merged state. Keepalive (pagehide) pushes
+// have no time for a round-trip and go straight out.
+const pushStart = src.indexOf('function _cfgSyncPushNow(');
+ok(pushStart > 0, '_cfgSyncPushNow is still where the test expects it');
+const pushBody = src.slice(pushStart, src.indexOf('\n}', pushStart));
+const iRecon = pushBody.indexOf('_cfgSyncApplyDescent(d, false)');
+const iPut   = pushBody.indexOf("method: 'PUT'");
+ok(iRecon > 0 && iPut > iRecon, 'the push reconciles (silent descent) before the PUT');
+ok(/if \(!keepalive && !_cfgPushReconciled\)/.test(pushBody),
+   'keepalive pushes skip the round-trip, and the guard prevents a reconcile loop');
 
 console.log(fails ? '\nFAIL ' + fails : '\nALL OK');
 process.exit(fails ? 1 : 0);

@@ -78,6 +78,18 @@ because sp0ck shared them ahead of the release.
   languages.
 
 ### Fixed
+- **A stale tab could keep resetting your preferences.** A sync push is a
+  full settings file rebuilt from the pushing device's storage; from a tab or
+  installed app left open for days it re-sent old preferences and flattened
+  what was set elsewhere in the meantime — the endless "My online game" of
+  the forum thread. (Before web.89, a prefix bug meant the game name was the
+  only field those stale pushes could touch — hence the original "everything
+  is remembered except the game name".) A push now reconciles first: it reads
+  the server, applies anything newer — the existing holds protect what was
+  just edited locally — and then pushes the merged state. Page-close pushes
+  go straight out as before; the next regular push reconciles. The
+  preferences panel is also refreshed after every sync descent so it never
+  shows values that are no longer stored.
 - **A pre-filled table name could bury the one set in the preferences.** Since
   the create form started remembering the last game, it saved the name "as
   typed" — including the default it had filled in itself ("My online game" on

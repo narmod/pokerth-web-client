@@ -1409,6 +1409,7 @@ function _cfgSyncMark(key) {
   _cfgDirtyKeysAdd(key);
   _cfgSyncPushSoon();
 }
+var _cfgPushReconciled = false;   // garde anti-boucle de la réconciliation d'avant-poussée
 function _cfgSyncPushSoon(ms) {
   if (!_cfgSyncToken || !_cfgSyncEnabled()) return;
   _syncPendingSet(true);            // modifications en attente d'envoi
@@ -1417,7 +1418,30 @@ function _cfgSyncPushSoon(ms) {
 }
 function _cfgSyncPushNow(keepalive) {
   if (!_cfgSyncToken || !_cfgSyncEnabled()) { _syncPendingSet(false); return; }
-  var xml; try { xml = _cfgBuildXml(); } catch (e) { return; }
+  // Réconcilier AVANT de pousser : une poussée est un xml COMPLET reconstruit
+  // depuis le storage local — depuis un onglet resté ouvert des jours, elle
+  // repartait avec des préférences d'époque et écrasait ce qu'un autre
+  // appareil avait réglé entre-temps (rapport forum : le nom de table
+  // retombait sans cesse sur le défaut ; avant la correction du double
+  // préfixe Net, le nom était d'ailleurs le SEUL champ que ces poussées
+  // périmées pouvaient toucher — « tout est mémorisé sauf le nom »). On
+  // relit donc le serveur : s'il a plus récent, on applique la descente —
+  // les retenues protègent ce qui vient d'être modifié ici — puis on pousse
+  // l'état fusionné. Au pagehide (keepalive), pas le temps d'un aller-retour :
+  // poussée directe, la prochaine poussée normale réconciliera.
+  if (!keepalive && !_cfgPushReconciled) {
+    _cfgPushReconciled = true;         // un seul GET par poussée (pas de boucle)
+    fetch('/prefs', { headers: { 'Authorization': 'Bearer ' + _cfgSyncToken } })
+      .then(function (r) { return r.json(); })
+      .then(function (d) {
+        var localTs = parseInt(_cfgLs('pth_cfg_sync_ts') || '0', 10) || 0;
+        if (d && d.ok && d.xml && (d.updatedAt || 0) > localTs) _cfgSyncApplyDescent(d, false);
+      })
+      .catch(function () {})
+      .finally(function () { _cfgSyncPushNow(); _cfgPushReconciled = false; });
+    return;
+  }
+  var xml; try { xml = _cfgBuildXml(); } catch (e) { _cfgPushReconciled = false; return; }
   fetch('/prefs',
         { method: 'PUT', headers: { 'Content-Type': 'application/xml', 'Authorization': 'Bearer ' + _cfgSyncToken }, body: xml, keepalive: !!keepalive })
     .then(function (r) {
@@ -1436,6 +1460,43 @@ function _cfgSyncPushNow(keepalive) {
   _syncBusyBegin();
   _cfgWebPushNow(keepalive);
 }
+// Descente serveur → local : parse, retenues des réglages localement sales
+// (toggles + préférences de table), application, horodatage. Partagée entre
+// le pull de connexion et la réconciliation d'avant-poussée. `toast` : la
+// descente de connexion l'annonce, la réconciliation reste silencieuse.
+function _cfgSyncApplyDescent(d, toast) {
+  try {
+    var cfg = _cfgParseXml(d.xml);
+    try { localStorage.setItem(PTH_CFG_XML_KEY, String(d.xml).slice(0, 400000)); } catch (e) {}
+    Object.keys(PTH_CFG_MACHINE_KEYS).forEach(function (k) { delete cfg.scalars[k]; });
+    // Fusion : les réglages changés ici depuis le dernier envoi gagnent —
+    // on les retire de la descente et on les repousse (sinon ils étaient
+    // écrasés en silence, et le drapeau dirty effacé avec eux).
+    var held = 0;
+    _cfgDirtyKeys().forEach(function (k) {
+      var ck = PTH_CFG_ADV_KEYS[k];
+      if (ck && cfg.scalars[ck] != null) { delete cfg.scalars[ck]; held++; }
+    });
+    // Table prefs edited here since the last push: hold every prefs key
+    // from the descent so mergePrefs cannot flatten the local save, and
+    // keep the dirty flag (held > 0) so our values are pushed back.
+    if (_cfgDirtyKeys().some(function (k) { return PTH_CFG_PREFS_DIRTY_MARKS[k] === 1; })) {
+      PTH_CFG_PREFS_SCALARS.forEach(function (ck) { if (cfg.scalars[ck] != null) { delete cfg.scalars[ck]; held++; } });
+      PTH_CFG_PREFS_LISTS.forEach(function (ck) { if (cfg.lists && cfg.lists[ck] != null) { delete cfg.lists[ck]; held++; } });
+    }
+    _cfgApplyImported(cfg);
+    // Le panneau des préférences peut être déjà peuplé : refléter la
+    // descente, sinon il affiche des valeurs qui ne sont plus en storage.
+    try { _advSyncPrefs(); } catch (e) {}
+    try { localStorage.setItem('pth_cfg_sync_ts', String(d.updatedAt)); } catch (e) {}
+    if (held) { _cfgSyncPushSoon(1500); }   // dirty conservé : nos valeurs partent
+    else {
+      try { localStorage.removeItem('pth_cfg_sync_dirty'); } catch (e) {}
+      _cfgDirtyKeysClear();
+    }
+    if (toast && typeof showToast === 'function') showToast(t('cfgSyncApplied') || 'Settings synced from your account');
+  } catch (e) {}
+}
 function _cfgSyncPull() {
   if (!_cfgSyncToken || !_cfgSyncEnabled()) return;
   fetch('/prefs', { headers: { 'Authorization': 'Bearer ' + _cfgSyncToken } })
@@ -1445,35 +1506,7 @@ function _cfgSyncPull() {
       var localTs = parseInt(_cfgLs('pth_cfg_sync_ts') || '0', 10) || 0;
       var dirty = _cfgLs('pth_cfg_sync_dirty') === '1';
       if (d.xml && (d.updatedAt || 0) > localTs) {
-        // Le serveur a plus récent → appliquer ici (silencieux, pas de reload forcé).
-        try {
-          var cfg = _cfgParseXml(d.xml);
-          try { localStorage.setItem(PTH_CFG_XML_KEY, String(d.xml).slice(0, 400000)); } catch (e) {}
-          Object.keys(PTH_CFG_MACHINE_KEYS).forEach(function (k) { delete cfg.scalars[k]; });
-          // Fusion : les réglages changés ici depuis le dernier envoi gagnent —
-          // on les retire de la descente et on les repousse (sinon ils étaient
-          // écrasés en silence, et le drapeau dirty effacé avec eux).
-          var held = 0;
-          _cfgDirtyKeys().forEach(function (k) {
-            var ck = PTH_CFG_ADV_KEYS[k];
-            if (ck && cfg.scalars[ck] != null) { delete cfg.scalars[ck]; held++; }
-          });
-          // Table prefs edited here since the last push: hold every prefs key
-          // from the descent so mergePrefs cannot flatten the local save, and
-          // keep the dirty flag (held > 0) so our values are pushed back.
-          if (_cfgDirtyKeys().some(function (k) { return PTH_CFG_PREFS_DIRTY_MARKS[k] === 1; })) {
-            PTH_CFG_PREFS_SCALARS.forEach(function (ck) { if (cfg.scalars[ck] != null) { delete cfg.scalars[ck]; held++; } });
-            PTH_CFG_PREFS_LISTS.forEach(function (ck) { if (cfg.lists && cfg.lists[ck] != null) { delete cfg.lists[ck]; held++; } });
-          }
-          _cfgApplyImported(cfg);
-          try { localStorage.setItem('pth_cfg_sync_ts', String(d.updatedAt)); } catch (e) {}
-          if (held) { _cfgSyncPushSoon(1500); }   // dirty conservé : nos valeurs partent
-          else {
-            try { localStorage.removeItem('pth_cfg_sync_dirty'); } catch (e) {}
-            _cfgDirtyKeysClear();
-          }
-          if (typeof showToast === 'function') showToast(t('cfgSyncApplied') || 'Settings synced from your account');
-        } catch (e) {}
+        _cfgSyncApplyDescent(d, true);
       } else if (!d.xml || dirty) {
         _cfgSyncPushSoon(500);                    // 1er appareil, ou modifs locales hors-ligne
       }
@@ -9875,7 +9908,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.5-web.96'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.5-web.97'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
