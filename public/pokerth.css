@@ -8392,6 +8392,25 @@ body.adv-hide-pbar .my-zone{bottom:0 !important;padding-bottom:max(8px,env(safe-
     padding-bottom: calc(8px + env(safe-area-inset-bottom));
   }
 }
+/* Idem pour TOUS LES AUTRES styles de table. .my-zone reserve deja la marge du
+   home-indicator dans SON propre padding-bottom, avec le fond --panel dedans :
+   sous le cadre or de .action-grid il restait donc une bande grise pleine
+   largeur jusqu'au bord (constate narmod 2026-08-01, iPhone, feutre vert).
+   Meme remede que le cas plein ecran ci-dessus : la reserve passe DANS
+   .action-grid, dont le cadre vient alors epouser le bord bas. Le padding
+   lateral, retire de .my-zone, est repris ici pour ne pas coller les boutons
+   aux bords. Scope identique (telephone portrait, dock masque). */
+@media (orientation: portrait) and (max-width: 899px) {
+  html:not([data-table-fs="1"]) body.adv-hide-pbar .my-zone {
+    padding-left: 0 !important; padding-right: 0 !important; padding-bottom: 0 !important;
+  }
+  html:not([data-table-fs="1"]) body.adv-hide-pbar .my-zone .action-wrap { max-width: none; width: 100%; }
+  html:not([data-table-fs="1"]) body.adv-hide-pbar .my-zone .action-grid {
+    max-width: none; width: 100%; margin: 0;
+    padding: 0 12px calc(8px + env(safe-area-inset-bottom));
+    border-radius: 12px 12px 0 0;   /* coins hauts arrondis, bas droits */
+  }
+}
 /* Mode masqué (Mode PokerTH) : MA self-box (siège) affiche mes cartes ~taille tapis.
    COHERENCE PAR STYLE :
    - Style "pokerth" : on GARDE la grille native -> self-box IDENTIQUE aux adversaires,
