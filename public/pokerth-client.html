@@ -57,6 +57,24 @@
       // bloqueur répandu suffirait à noyer le journal.
       if (url && url.indexOf(location.origin + '/') !== 0) return;
       push({ msg: 'Failed to load ' + tag.toLowerCase(), src: url, line: 0, col: 0, stack: '' });
+      // Sonde de diagnostic : « failed to load » seul ne dit pas POURQUOI
+      // (404 de déploiement ? 5xx ? réseau coupé ? bloqueur ?). On re-tente
+      // la même URL en fetch et on remonte le statut HTTP — ou le nom de
+      // l'erreur réseau — plus l'état en-ligne et la présence du service
+      // worker. Une seule sonde par URL, pour ne pas boucler.
+      try {
+        var P = window.__pthErrProbed = window.__pthErrProbed || {};
+        if (url && !P[url]) {
+          P[url] = 1;
+          var ctx = (navigator.onLine === false ? ' offline' : ' online')
+                  + (navigator.serviceWorker && navigator.serviceWorker.controller ? ' sw' : ' no-sw');
+          fetch(url, { cache: 'no-store' }).then(function (r) {
+            push({ msg: 'Load-failure probe: HTTP ' + r.status + ctx, src: url, line: 0, col: 0, stack: '' });
+          }, function (e) {
+            push({ msg: 'Load-failure probe: ' + String((e && e.name) || 'network error') + ctx, src: url, line: 0, col: 0, stack: '' });
+          });
+        }
+      } catch (_) {}
       return;
     }
     push({ msg: String(ev.message || 'error'), src: String(ev.filename || ''),

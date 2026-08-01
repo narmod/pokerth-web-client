@@ -58,6 +58,12 @@ because sp0ck shared them ahead of the release.
   dealt this hand, using the seat list the renderer publishes.
 
 ### Changed
+- **Script load failures now carry a diagnosis.** "Failed to load script" alone
+  never said why. When one of our own scripts or stylesheets fails, the page
+  now probes the same URL once and reports the HTTP status — or the network
+  error name — along with the online state and service-worker presence, so the
+  error dashboard can tell a deployment 404 from a flaky connection or a
+  content blocker.
 - **The disk button on the create form now says "Save prefs".** It shared its
   label with the star pill right above it — both read "My prefs" — so saving
   and loading were two buttons with the same name, and pressing the wrong one
