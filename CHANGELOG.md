@@ -59,6 +59,12 @@ because sp0ck shared them ahead of the release.
   languages.
 
 ### Fixed
+- **After folding, the action bar kept quoting the live betting.** The buttons
+  were already inert once the hand was thrown away, but their amounts went on
+  following every raise, which read like an invitation to act. The bar is now
+  frozen exactly as it was at the moment of the fold — dead zone and figures
+  alike — until the next hand deals it back to life. The playing-mode dropdown
+  stays usable, its state is updated surgically. Reported on the forum.
 - **An unpushed preferences save could be flattened by the account sync.** The
   sync descent already protected locally-changed toggles (the "I mute the
   sound and it comes back" fix); the table preferences had no such shield, so

@@ -216,6 +216,21 @@ function renderMyTurnActions(preview) {
     window.clearSpectatorActions();
     return;
   }
+  // Main jetée : la barre reste EXACTEMENT celle de l'instant du fold. Le
+  // premier rendu replié passe — il applique .no-action et fige les montants
+  // tels qu'ils étaient — puis les suivants sont ignorés : les mises des
+  // autres continuent, mais nos boutons n'ont plus rien à en dire (rapport
+  // forum : « the action key labels continue to update after you have
+  // folded »). folded repasse à false au HandStart, ce qui rouvre le rendu.
+  // Le dropdown de mode reste utilisable : setPlayingMode met à jour sa
+  // sélection et son cadre or chirurgicalement, sans re-rendu.
+  if (preview) {
+    var _sdFz = (S.seatData && S.seatData[S.myId]) || null;
+    var _foldedNow = !!(_sdFz && _sdFz.folded);
+    var _gaFz = document.getElementById('g-actions');
+    if (_foldedNow && S._foldBarFrozen && _gaFz && _gaFz.innerHTML && _gaFz.innerHTML.indexOf('actions-preview') >= 0) return;
+    S._foldBarFrozen = _foldedNow;
+  }
   // Invalidation d'une pré-action call/raise si la mise à suivre a changé
   // depuis l'armement (comme l'officiel : onCallAmountChanged). Fold/All-In
   // restent valides (pas de dépendance au montant).

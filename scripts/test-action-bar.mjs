@@ -280,6 +280,34 @@ S._preAction = 'allin'; S._preActionToCall = 0;
 ok(A._runPreAction() === true && sentPre.length === 4, '_runPreAction : all-in armé reste valide après relance');
 S._preAction = '';
 
+// ── Gel du fold (rapport forum) : « the action key labels continue to update
+// after you have folded ». La barre doit rester EXACTEMENT celle de l'instant
+// du fold — zone morte ET montants figés — jusqu'à la main suivante.
+S.seatData = { 1: { money: 800, bet: 0, folded: false }, 2: { money: 1000, bet: 100 } };
+S.turnPid = 2; S.commCards = [10, 20, 30]; S._actedStreet = -1;
+S.highestBet = 100; S.minRaise = 100;
+S._inShowdown = false; S._boardDealing = false; S._roundEnded = false;
+S._preAction = ''; S._foldBarFrozen = false;
+A.renderMyTurnActions(true);
+ok(ga.innerHTML.includes('100') && !ga.innerHTML.includes('no-action'),
+   'gel : avant le fold, la barre vit (Call 100, armable)');
+S.seatData[1].folded = true;                 // je jette ma main
+A.renderMyTurnActions(true);                 // 1er rendu replié = celui du gel
+const frozenHtml = ga.innerHTML;
+ok(frozenHtml.includes('no-action'), 'gel : le rendu du fold applique la zone morte');
+S.highestBet = 500; S.minRaise = 400;        // la table continue sans moi
+A.renderMyTurnActions(true);
+ok(ga.innerHTML === frozenHtml,
+   'gel : foldé, les rendus suivants ne changent plus la barre (montants figés)');
+S.highestBet = 900;                          // et encore une relance
+A.renderMyTurnActions(true);
+ok(ga.innerHTML === frozenHtml, 'gel : toujours figée, quel que soit le nombre de relances');
+S.seatData[1].folded = false;                // HandStart : folded retombe
+S.highestBet = 0; S.seatData[1].bet = 0; S.commCards = [];
+A.renderMyTurnActions(true);
+ok(ga.innerHTML !== frozenHtml && !ga.innerHTML.includes('no-action'),
+   'gel : main suivante, le gel est levé et la barre revit');
+
 // Ponts window
 ok(window.doAction === A.doAction && window.renderMyTurnActions === A.renderMyTurnActions &&
    window._runPreAction === A._runPreAction && window._playAutoMode === A._playAutoMode &&
