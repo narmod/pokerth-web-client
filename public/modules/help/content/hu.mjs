@@ -58,7 +58,8 @@ export const help = {
             'Raise — emelsz egy meglévő tét fölé. A minimális emelés az előző téttel vagy emeléssel egyenlő.',
             'All-In — belerakod a teljes stackedet. A leosztásban maradsz addig az összegig, amelyet fedeztél.'] },
         { id: 'showdown', t: 'Showdown és osztott potok',
-          b: ['Ha a riveren zajló licitkör után több játékos marad, a kezek felfedésre kerülnek, és a legjobb nyer — a nyertes kombináció a közös lapok alatt jelenik meg. Ha egy játékos kevesebbel van all-in, mint a teljes tétek, mellékpotok jönnek létre: minden játékos csak a pot azon részét nyerheti el, amelyhez hozzájárult. A holtversenyben lévő kezek osztoznak a poton.'] },
+          b: ['Ha a riveren zajló licitkör után több játékos marad, a kezek felfedésre kerülnek, és a legjobb nyer — a nyertes kombináció a közös lapok alatt jelenik meg. Ha egy játékos kevesebbel van all-in, mint a teljes tétek, mellékpotok jönnek létre: minden játékos csak a pot azon részét nyerheti el, amelyhez hozzájárult. A holtversenyben lévő kezek osztoznak a poton.',
+            'Nem mindenkinek kell megmutatnia: az utolsó licitáló vagy emelő játékostól kezdve egy lap csak akkor fordul fel, ha veri azt, ami már nyitva van. Aki eldobhatja, lefordítva tartja a lapjait, és kap egy Show gombot, hogy mégis megmutassa.'] },
         { id: 'hands', t: 'A kezek rangsora',
           b: ['A leggyengébbtől a legerősebbig:'],
           list: [

@@ -58,7 +58,8 @@ export const help = {
             'Raise — verhoog bo-op \u2019n bestaande inset. Die kleinste verhoging is gelyk aan die vorige inset of verhoging.',
             'All-In — sit jou hele stapel in. Jy bly in die hand tot by die bedrag wat jy gedek het.'] },
         { id: 'showdown', t: 'Showdown en verdeelde potte',
-          b: ['As verskeie spelers ná die insetrondte op die river oorbly, word die hande gewys en die beste wen — die wenkombinasie verskyn onder die gemeenskaplike kaarte. Wanneer \u2019n speler all-in is vir minder as die volle insette, ontstaan sypotte: elke speler kan slegs die deel van die pot wen waartoe hy bygedra het. Gelykop hande deel die pot.'] },
+          b: ['As verskeie spelers ná die insetrondte op die river oorbly, word die hande gewys en die beste wen — die wenkombinasie verskyn onder die gemeenskaplike kaarte. Wanneer \u2019n speler all-in is vir minder as die volle insette, ontstaan sypotte: elke speler kan slegs die deel van die pot wen waartoe hy bygedra het. Gelykop hande deel die pot.',
+            'Nie almal moet wys nie: vanaf die laaste speler wat gewed of verhoog het, word \u2019n hand net oopgemaak as dit klop wat reeds oop lê. Wie mag muck, hou sy kaarte toe en kry \u2019n Show-knoppie om hulle tog te wys.'] },
         { id: 'hands', t: 'Rangorde van hande',
           b: ['Van die swakste tot die sterkste:'],
           list: [

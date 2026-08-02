@@ -203,6 +203,7 @@ ok(JSON.stringify(keys) === JSON.stringify(['REACT_EMOJI_MIN_GAP', 'REACT_EMOJI_
    'myCards', 'commCards', '_cardKey', '_cardIV', 'highestBet', 'minRaise',
    'pot', 'collectedPot', 'gameState', 'dealerPid', 'turnPid',
    '_actedStreet', '_roundEnded', '_boardDealing', '_inShowdown',
+   '_allInCondition', '_lastActionPid',
    '_lastSbPid', '_lastBbPid',
    'seats', 'seatData', 'amInGame', 'myName', '_gameStarted', '_seatsFrozen',
    '_amSpectator', 'autoAction',

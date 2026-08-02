@@ -58,7 +58,8 @@ export const help = {
             'Raise — keli virš esamo statymo. Mažiausias kėlimas lygus ankstesniam statymui ar kėlimui.',
             'All-In — statai visą savo krūvą. Rankoje lieki iki sumos, kurią padengei.'] },
         { id: 'showdown', t: 'Showdown ir dalinami bankai',
-          b: ['Jei po statymų rato river\u2019yje lieka keli žaidėjai, rankos parodomos ir geriausia laimi — laiminti kombinacija rodoma po bendromis kortomis. Kai žaidėjas yra all-in su mažiau nei pilni statymai, susidaro šalutiniai bankai: kiekvienas žaidėjas gali laimėti tik tą banko dalį, prie kurios prisidėjo. Lygios rankos banką dalijasi.'] },
+          b: ['Jei po statymų rato river\u2019yje lieka keli žaidėjai, rankos parodomos ir geriausia laimi — laiminti kombinacija rodoma po bendromis kortomis. Kai žaidėjas yra all-in su mažiau nei pilni statymai, susidaro šalutiniai bankai: kiekvienas žaidėjas gali laimėti tik tą banko dalį, prie kurios prisidėjo. Lygios rankos banką dalijasi.',
+            'Ne visi privalo parodyti: pradedant nuo paskutinio statymą ar pakėlimą atlikusio žaidėjo, ranka atverčiama tik tada, jei ji įveikia tai, kas jau atversta. Kas gali mesti kortas, laiko jas užverstas ir gauna mygtuką Show, kad vis tiek galėtų parodyti.'] },
         { id: 'hands', t: 'Rankų hierarchija',
           b: ['Nuo silpniausios iki stipriausios:'],
           list: [

@@ -58,7 +58,8 @@ export const help = {
             'Raise — höja ovanpå en befintlig insats. Minsta höjning motsvarar föregående insats eller höjning.',
             'All-In — satsa hela din stack. Du är kvar i handen upp till det belopp du täckt.'] },
         { id: 'showdown', t: 'Showdown och delade potter',
-          b: ['Om flera spelare är kvar efter satsningsrundan på river visas händerna och den bästa vinner — den vinnande kombinationen visas under de gemensamma korten. När en spelare är all-in för mindre än de fulla insatserna uppstår sidopotter: varje spelare kan bara vinna den del av potten som hen bidragit till. Lika händer delar potten.'] },
+          b: ['Om flera spelare är kvar efter satsningsrundan på river visas händerna och den bästa vinner — den vinnande kombinationen visas under de gemensamma korten. När en spelare är all-in för mindre än de fulla insatserna uppstår sidopotter: varje spelare kan bara vinna den del av potten som hen bidragit till. Lika händer delar potten.',
+            'Alla behöver inte visa: från den sista spelaren som satsade eller höjde vänds en hand bara upp om den slår det som redan ligger öppet. Den som får mucka behåller korten dolda och får en Show-knapp för att ändå visa dem.'] },
         { id: 'hands', t: 'Händernas rangordning',
           b: ['Från svagast till starkast:'],
           list: [

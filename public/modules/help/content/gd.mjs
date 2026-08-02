@@ -58,7 +58,8 @@ export const help = {
             'Raise — àrdaichidh tu os cionn geall a tha ann mu thràth. Tha an t-àrdachadh as lugha co-ionann ris a\u2019 gheall no an àrdachadh roimhe.',
             'All-In — cuiridh tu do chruach gu lèir a-steach. Fanaidh tu san làimh suas ris an t-suim a chòmhdaich thu.'] },
         { id: 'showdown', t: 'Showdown agus poitean roinnte',
-          b: ['Ma dh\u2019fhanas grunn chluicheadairean às dèidh na cuairt gheall air an river, thèid na làmhan a shealltainn agus buannaichidh an tè as fheàrr — nochdaidh am measgachadh buadhach fo na cairtean coitcheann. Nuair a tha cluicheadair all-in airson nas lugha na na geallan slàna, thig poitean-taobh gu bith: chan urrainn do gach cluicheadair ach am pàirt den phoit ris an do chuir e buannachadh. Roinnidh làmhan co-ionann am poit.'] },
+          b: ['Ma dh\u2019fhanas grunn chluicheadairean às dèidh na cuairt gheall air an river, thèid na làmhan a shealltainn agus buannaichidh an tè as fheàrr — nochdaidh am measgachadh buadhach fo na cairtean coitcheann. Nuair a tha cluicheadair all-in airson nas lugha na na geallan slàna, thig poitean-taobh gu bith: chan urrainn do gach cluicheadair ach am pàirt den phoit ris an do chuir e buannachadh. Roinnidh làmhan co-ionann am poit.',
+            'Chan fheum a h-uile duine sealltainn: a\u2019 tòiseachadh leis a\u2019 chluicheadair mu dheireadh a gheall no a thog, cha tèid làmh a nochdadh ach ma bhuannaicheas i air na tha mu thràth ri fhaicinn. Cumaidh an neach a dh\u2019fhaodas muck a chuid chairtean falaichte, agus gheibh e putan Show gus an sealltainn co-dhiù.'] },
         { id: 'hands', t: 'Rangachadh nan làmhan',
           b: ['On tè as laige chun tè as làidire:'],
           list: [

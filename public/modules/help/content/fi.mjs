@@ -58,7 +58,8 @@ export const help = {
             'Raise — korottaa olemassa olevan panoksen päälle. Pienin korotus vastaa edellistä panosta tai korotusta.',
             'All-In — laittaa koko pinosi peliin. Pysyt kädessä kattamaasi summaan asti.'] },
         { id: 'showdown', t: 'Showdown ja jaetut potit',
-          b: ['Jos riverin panostuskierroksen jälkeen jäljellä on useita pelaajia, kädet näytetään ja paras voittaa — voittava yhdistelmä näytetään yhteisten korttien alla. Kun pelaaja on all-in pienemmällä summalla kuin täydet panokset, syntyy sivupotteja: kukin pelaaja voi voittaa vain sen osan potista, johon on osallistunut. Tasakädet jakavat potin.'] },
+          b: ['Jos riverin panostuskierroksen jälkeen jäljellä on useita pelaajia, kädet näytetään ja paras voittaa — voittava yhdistelmä näytetään yhteisten korttien alla. Kun pelaaja on all-in pienemmällä summalla kuin täydet panokset, syntyy sivupotteja: kukin pelaaja voi voittaa vain sen osan potista, johon on osallistunut. Tasakädet jakavat potin.',
+            'Kaikkien ei tarvitse näyttää: viimeisestä panostaneesta tai korottaneesta pelaajasta alkaen käsi paljastetaan vain, jos se voittaa jo näkyvissä olevan. Se joka saa mukata, pitää korttinsa piilossa ja saa Show-painikkeen näyttääkseen ne silti.'] },
         { id: 'hands', t: 'Käsien arvojärjestys',
           b: ['Heikoimmasta vahvimpaan:'],
           list: [

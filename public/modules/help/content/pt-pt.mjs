@@ -58,7 +58,8 @@ export const help = {
             'Raise — subir sobre uma aposta existente. A subida mínima iguala a aposta ou a subida anterior.',
             'All-In — colocar todo o teu stack. Continuas na mão até ao montante que cobriste.'] },
         { id: 'showdown', t: 'Showdown e potes divididos',
-          b: ['Se vários jogadores restarem após a ronda de apostas do river, as mãos são mostradas e a melhor vence — a combinação vencedora aparece por baixo das cartas comunitárias. Quando um jogador está all-in por menos do que as apostas completas, formam-se potes laterais: cada jogador só pode ganhar a parte do pote para a qual contribuiu. Mãos empatadas dividem o pote.'] },
+          b: ['Se vários jogadores restarem após a ronda de apostas do river, as mãos são mostradas e a melhor vence — a combinação vencedora aparece por baixo das cartas comunitárias. Quando um jogador está all-in por menos do que as apostas completas, formam-se potes laterais: cada jogador só pode ganhar a parte do pote para a qual contribuiu. Mãos empatadas dividem o pote.',
+            'Nem todos têm de mostrar: a partir do último jogador que apostou ou subiu, uma mão só é revelada se vencer o que já está descoberto. Quem tem direito a fazer muck mantém as cartas tapadas e recebe um botão Show para as mostrar mesmo assim.'] },
         { id: 'hands', t: 'Classificação das mãos',
           b: ['Da mais fraca à mais forte:'],
           list: [

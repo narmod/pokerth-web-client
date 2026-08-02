@@ -58,7 +58,8 @@ export const help = {
             'Raise — navýšiť nad existujúcu stávku. Minimálne navýšenie sa rovná predchádzajúcej stávke alebo navýšeniu.',
             'All-In — vsadiť celý svoj stack. V ruke zostávaš do výšky pokrytej sumy.'] },
         { id: 'showdown', t: 'Showdown a delené banky',
-          b: ['Ak po stávkovom kole na riveri zostane viac hráčov, ruky sa odkryjú a vyhráva najlepšia — víťazná kombinácia sa ukáže pod spoločnými kartami. Keď je hráč all-in s menším množstvom, než sú plné stávky, vznikajú vedľajšie banky: každý hráč môže vyhrať len tú časť banku, do ktorej prispel. Zhodné ruky si bank delia.'] },
+          b: ['Ak po stávkovom kole na riveri zostane viac hráčov, ruky sa odkryjú a vyhráva najlepšia — víťazná kombinácia sa ukáže pod spoločnými kartami. Keď je hráč all-in s menším množstvom, než sú plné stávky, vznikajú vedľajšie banky: každý hráč môže vyhrať len tú časť banku, do ktorej prispel. Zhodné ruky si bank delia.',
+            'Nemusia ukazovať všetci: počnúc posledným hráčom, ktorý stavil alebo zvýšil, sa karty odkryjú len vtedy, ak porazia to, čo už leží lícom nahor. Kto smie zahodiť, necháva karty zakryté a dostane tlačidlo Show, aby ich aj tak ukázal.'] },
         { id: 'hands', t: 'Poradie rúk',
           b: ['Od najslabšej po najsilnejšiu:'],
           list: [

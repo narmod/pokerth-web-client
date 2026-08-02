@@ -174,7 +174,10 @@ els['raise-slider'] = makeEl();
 const sent3 = []; S.ws.send = (d) => sent3.push(d);
 A.doRaise();
 ok(sent3.length === 0, 'doRaise : montant < min → rien envoyé (garde-fou)');
-ok(els['raise-amt'].value === '40', 'doRaise : champ corrigé à la mise minimale');
+// Mise minimale = _minRaiseRel() : sans mise sur la manche (highestBet === 0)
+// c'est une OUVERTURE, donc 2 x small blind (= 20 ici), et minimumRaise n'entre
+// pas en jeu — parité GameHandler::recomputeActionState().
+ok(els['raise-amt'].value === '20', 'doRaise : champ corrigé à la mise minimale (2 x SB)');
 A.doRaise();
 ok(sent3.length === 1, 'doRaise : 2e appel sur le montant corrigé → envoyé');
 els['raise-amt'].value = '99999';
@@ -307,6 +310,29 @@ S.highestBet = 0; S.seatData[1].bet = 0; S.commCards = [];
 A.renderMyTurnActions(true);
 ok(ga.innerHTML !== frozenHtml && !ga.innerHTML.includes('no-action'),
    'gel : main suivante, le gel est levé et la barre revit');
+
+// ── _minRaiseRel() : montant RELATIF de relance minimale ──
+// Parité GameHandler::recomputeActionState (gamehandler.cpp) :
+//   highestSet == 0 -> 2 x smallBlind        (ouverture)
+//   sinon           -> (highestSet - mySet) + minimumRaise
+//   puis clamp au tapis (maxRaise = myCash)
+// MyActionRequest.myRelativeBet est relatif (le serveur fait setMySet(bet),
+// qui AJOUTE) : envoyer le seul incrément dégradait la relance en call.
+const _mr = window._minRaiseRel;
+S.smallBlind = 10; S.commCards = [];
+S.seatData[1] = { money: 1000, bet: 0, folded: false };
+S.highestBet = 0; S.minRaise = 0;
+ok(_mr() === 20, '_minRaiseRel : ouverture (aucune mise) = 2 x SB');
+S.highestBet = 20; S.minRaise = 20;
+ok(_mr() === 40, '_minRaiseRel : préflop UTG = call 20 + incrément 20');
+S.seatData[1].bet = 20;
+ok(_mr() === 20, '_minRaiseRel : option BB, déjà à 20 = incrément seul');
+S.seatData[1].bet = 0; S.highestBet = 100; S.minRaise = 100;
+ok(_mr() === 200, '_minRaiseRel : relance face à 100 = 200 (jamais 100 = un call)');
+S.seatData[1].money = 150;
+ok(_mr() === 150, '_minRaiseRel : clamp au tapis');
+S.seatData[1].money = 1000; S.highestBet = 20; S.minRaise = 0;
+ok(_mr() === 40, '_minRaiseRel : minimumRaise pas encore reçu → repli sur la BB');
 
 // Ponts window
 ok(window.doAction === A.doAction && window.renderMyTurnActions === A.renderMyTurnActions &&

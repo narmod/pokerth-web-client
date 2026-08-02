@@ -62,7 +62,8 @@ export const help = {
             'Raise — increase over an existing bet. The minimum raise equals the previous bet or raise.',
             'All-In — put your entire stack in. You stay in the hand up to the amount you covered.'] },
         { id: 'showdown', t: 'Showdown and split pots',
-          b: ['If more than one player remains after the river betting round, hands are revealed and the best hand wins \u2014 the winning combination is shown under the community cards. When a player is all-in for less than the full bets, side pots are created: each player can only win the part of the pot they contributed to. Equal hands split the pot.'] },
+          b: ['If more than one player remains after the river betting round, hands are revealed and the best hand wins \u2014 the winning combination is shown under the community cards. When a player is all-in for less than the full bets, side pots are created: each player can only win the part of the pot they contributed to. Equal hands split the pot.',
+            'Not everyone has to reveal: starting from the last player to bet or raise, a hand is only exposed if it beats what is already face up. Anyone entitled to muck keeps their cards hidden and gets a Show button to reveal them anyway.'] },
         { id: 'hands', t: 'Hand rankings',
           b: ['From weakest to strongest:'],
           list: [

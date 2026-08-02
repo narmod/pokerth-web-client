@@ -58,7 +58,8 @@ export const help = {
             'Raise — relancer par-dessus une mise existante. La relance minimale égale la mise ou la relance précédente.',
             'All-In — mettre tout ton tapis. Tu restes dans la main à hauteur du montant que tu as couvert.'] },
         { id: 'showdown', t: 'Abattage et pots partagés',
-          b: ['Si plusieurs joueurs restent après le tour d\u2019enchères de la river, les mains sont révélées et la meilleure l\u2019emporte — la combinaison gagnante est affichée sous les cartes communes. Quand un joueur est all-in pour moins que les mises complètes, des pots secondaires sont créés : chaque joueur ne peut gagner que la partie du pot à laquelle il a contribué. Les mains égales se partagent le pot.'] },
+          b: ['Si plusieurs joueurs restent après le tour d\u2019enchères de la river, les mains sont révélées et la meilleure l\u2019emporte — la combinaison gagnante est affichée sous les cartes communes. Quand un joueur est all-in pour moins que les mises complètes, des pots secondaires sont créés : chaque joueur ne peut gagner que la partie du pot à laquelle il a contribué. Les mains égales se partagent le pot.',
+            'Tout le monde ne montre pas : à partir du dernier joueur à avoir misé ou relancé, une main n\u2019est retournée que si elle bat ce qui est déjà découvert. Celui qui a le droit de mucker garde ses cartes face cachée et reçoit un bouton Show pour les montrer quand même.'] },
         { id: 'hands', t: 'Classement des mains',
           b: ['De la plus faible à la plus forte :'],
           list: [

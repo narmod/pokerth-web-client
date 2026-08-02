@@ -57,7 +57,8 @@ export const help = {
             'Raise — navýšit nad stávající sázku. Minimální navýšení se rovná předchozí sázce nebo navýšení.',
             'All-In — vsadit celý svůj stack. V ruce zůstáváš do výše pokryté částky.'] },
         { id: 'showdown', t: 'Showdown a dělené banky',
-          b: ['Pokud po sázkovém kole na riveru zůstane více hráčů, ruce se odkryjí a vyhrává nejlepší — vítězná kombinace se ukáže pod společnými kartami. Když je hráč all-in s méně, než činí plné sázky, vznikají vedlejší banky: každý hráč může vyhrát jen tu část banku, do které přispěl. Shodné ruce si bank dělí.'] },
+          b: ['Pokud po sázkovém kole na riveru zůstane více hráčů, ruce se odkryjí a vyhrává nejlepší — vítězná kombinace se ukáže pod společnými kartami. Když je hráč all-in s méně, než činí plné sázky, vznikají vedlejší banky: každý hráč může vyhrát jen tu část banku, do které přispěl. Shodné ruce si bank dělí.',
+            'Nemusí ukazovat všichni: počínaje posledním hráčem, který sázel nebo zvyšoval, se karty odkrývají jen tehdy, když porazí to, co už leží lícem nahoru. Kdo smí zahodit, nechává karty zakryté a dostane tlačítko Show, aby je přesto ukázal.'] },
         { id: 'hands', t: 'Pořadí rukou',
           b: ['Od nejslabší po nejsilnější:'],
           list: [

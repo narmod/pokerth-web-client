@@ -58,7 +58,8 @@ export const help = {
             'Raise — forhøje oven på en eksisterende indsats. Den mindste forhøjelse svarer til den forrige indsats eller forhøjelse.',
             'All-In — sætte hele din stak. Du bliver i hånden op til det beløb, du har dækket.'] },
         { id: 'showdown', t: 'Showdown og delte potter',
-          b: ['Hvis flere spillere er tilbage efter indsatsrunden på river, vises hænderne, og den bedste vinder — den vindende kombination vises under fælleskortene. Når en spiller er all-in for mindre end de fulde indsatser, opstår sidepotter: hver spiller kan kun vinde den del af potten, som vedkommende har bidraget til. Lige hænder deler potten.'] },
+          b: ['Hvis flere spillere er tilbage efter indsatsrunden på river, vises hænderne, og den bedste vinder — den vindende kombination vises under fælleskortene. Når en spiller er all-in for mindre end de fulde indsatser, opstår sidepotter: hver spiller kan kun vinde den del af potten, som vedkommende har bidraget til. Lige hænder deler potten.',
+            'Ikke alle skal vise: fra den sidste spiller der satsede eller hævede, vendes en hånd kun, hvis den slår det der allerede ligger åbent. Den der må mucke, beholder kortene skjult og får en Show-knap til alligevel at vise dem.'] },
         { id: 'hands', t: 'Hændernes rangorden',
           b: ['Fra svagest til stærkest:'],
           list: [

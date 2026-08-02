@@ -58,7 +58,8 @@ export const help = {
             'Raise — povisuješ preko postojeće oklade. Minimalno povišenje jednako je prethodnoj okladi ili povišenju.',
             'All-In — ulažeš cijeli svoj stack. Ostaješ u ruci do iznosa koji si pokrio.'] },
         { id: 'showdown', t: 'Showdown i podijeljeni potovi',
-          b: ['Ako nakon kruga klađenja na riveru ostane više igrača, ruke se pokazuju i najbolja pobjeđuje — pobjednička kombinacija prikazuje se ispod zajedničkih karata. Kad je igrač all-in s manje od punih oklada, nastaju sporedni potovi: svaki igrač može osvojiti samo dio pota kojem je pridonio. Izjednačene ruke dijele pot.'] },
+          b: ['Ako nakon kruga klađenja na riveru ostane više igrača, ruke se pokazuju i najbolja pobjeđuje — pobjednička kombinacija prikazuje se ispod zajedničkih karata. Kad je igrač all-in s manje od punih oklada, nastaju sporedni potovi: svaki igrač može osvojiti samo dio pota kojem je pridonio. Izjednačene ruke dijele pot.',
+            'Ne moraju svi pokazati: počevši od posljednjeg igrača koji je uložio ili podigao, ruka se otkriva samo ako pobjeđuje ono što je već otvoreno. Tko smije baciti karte, drži ih zatvorenima i dobiva gumb Show da ih ipak pokaže.'] },
         { id: 'hands', t: 'Redoslijed ruku',
           b: ['Od najslabije do najjače:'],
           list: [

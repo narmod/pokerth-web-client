@@ -58,7 +58,8 @@ export const help = {
             'Raise — verhogen bovenop een bestaande inzet. De minimale verhoging is gelijk aan de vorige inzet of verhoging.',
             'All-In — je hele stack inzetten. Je blijft in de hand tot het bedrag dat je hebt gedekt.'] },
         { id: 'showdown', t: 'Showdown en gedeelde potten',
-          b: ['Blijven er na de inzetronde van de river meerdere spelers over, dan worden de handen getoond en wint de beste — de winnende combinatie verschijnt onder de gemeenschappelijke kaarten. Wanneer een speler all-in is voor minder dan de volledige inzetten, ontstaan side-pots: elke speler kan alleen het deel van de pot winnen waaraan hij heeft bijgedragen. Gelijke handen delen de pot.'] },
+          b: ['Blijven er na de inzetronde van de river meerdere spelers over, dan worden de handen getoond en wint de beste — de winnende combinatie verschijnt onder de gemeenschappelijke kaarten. Wanneer een speler all-in is voor minder dan de volledige inzetten, ontstaan side-pots: elke speler kan alleen het deel van de pot winnen waaraan hij heeft bijgedragen. Gelijke handen delen de pot.',
+            'Niet iedereen hoeft te tonen: vanaf de laatste speler die inzette of verhoogde wordt een hand alleen opengelegd als die verslaat wat al open ligt. Wie mag mucken houdt zijn kaarten gedekt en krijgt een Show-knop om ze toch te laten zien.'] },
         { id: 'hands', t: 'Rangorde van de handen',
           b: ['Van zwakste naar sterkste:'],
           list: [

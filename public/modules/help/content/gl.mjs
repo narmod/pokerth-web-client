@@ -58,7 +58,8 @@ export const help = {
             'Raise — subes por riba dunha aposta existente. A suba mínima equivale á aposta ou suba anterior.',
             'All-In — pos toda a túa pila. Segues na man ata a cantidade que cubriches.'] },
         { id: 'showdown', t: 'Showdown e botes divididos',
-          b: ['Se tras a rolda de aposta do river quedan varios xogadores, amósanse as mans e gaña a mellor — a combinación gañadora aparece baixo as cartas comunitarias. Cando un xogador vai all-in por menos que as apostas completas, fórmanse botes secundarios: cada xogador só pode gañar a parte do bote á que contribuíu. As mans empatadas reparten o bote.'] },
+          b: ['Se tras a rolda de aposta do river quedan varios xogadores, amósanse as mans e gaña a mellor — a combinación gañadora aparece baixo as cartas comunitarias. Cando un xogador vai all-in por menos que as apostas completas, fórmanse botes secundarios: cada xogador só pode gañar a parte do bote á que contribuíu. As mans empatadas reparten o bote.',
+            'Non todos teñen que mostrar: a partir do último xogador que apostou ou subiu, unha man só se descobre se gaña o que xa está á vista. Quen pode facer muck mantén as cartas tapadas e recibe un botón Show para ensinalas igualmente.'] },
         { id: 'hands', t: 'Xerarquía das mans',
           b: ['Da máis feble á máis forte:'],
           list: [

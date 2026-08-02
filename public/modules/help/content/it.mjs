@@ -58,7 +58,8 @@ export const help = {
             'Raise — rilanciare sopra una puntata esistente. Il rilancio minimo eguaglia la puntata o il rilancio precedente.',
             'All-In — mettere tutto il tuo stack. Resti in mano fino all\u2019importo che hai coperto.'] },
         { id: 'showdown', t: 'Showdown e piatti divisi',
-          b: ['Se dopo il giro di puntate del river restano più giocatori, le mani vengono mostrate e vince la migliore — la combinazione vincente è visualizzata sotto le carte comuni. Quando un giocatore è all-in per meno delle puntate complete, si creano piatti secondari: ogni giocatore può vincere solo la parte di piatto a cui ha contribuito. Le mani pari si dividono il piatto.'] },
+          b: ['Se dopo il giro di puntate del river restano più giocatori, le mani vengono mostrate e vince la migliore — la combinazione vincente è visualizzata sotto le carte comuni. Quando un giocatore è all-in per meno delle puntate complete, si creano piatti secondari: ogni giocatore può vincere solo la parte di piatto a cui ha contribuito. Le mani pari si dividono il piatto.',
+            'Non tutti devono mostrare: a partire dall\u2019ultimo giocatore che ha puntato o rilanciato, una mano viene scoperta solo se batte ciò che è già scoperto. Chi ha diritto di muckare tiene le carte coperte e riceve un pulsante Show per mostrarle comunque.'] },
         { id: 'hands', t: 'Classifica delle mani',
           b: ['Dalla più debole alla più forte:'],
           list: [

@@ -58,7 +58,8 @@ export const help = {
             'Raise — mărești peste o miză existentă. Mărirea minimă este egală cu miza sau mărirea anterioară.',
             'All-In — pui tot stack-ul. Rămâi în mână până la suma pe care ai acoperit-o.'] },
         { id: 'showdown', t: 'Showdown și poturi împărțite',
-          b: ['Dacă mai mulți jucători rămân după runda de pariere de pe river, mâinile sunt arătate și cea mai bună câștigă — combinația câștigătoare apare sub cărțile comune. Când un jucător este all-in cu mai puțin decât mizele complete, se formează poturi laterale: fiecare jucător poate câștiga doar partea de pot la care a contribuit. Mâinile egale împart potul.'] },
+          b: ['Dacă mai mulți jucători rămân după runda de pariere de pe river, mâinile sunt arătate și cea mai bună câștigă — combinația câștigătoare apare sub cărțile comune. Când un jucător este all-in cu mai puțin decât mizele complete, se formează poturi laterale: fiecare jucător poate câștiga doar partea de pot la care a contribuit. Mâinile egale împart potul.',
+            'Nu toți trebuie să arate: începând cu ultimul jucător care a pariat sau a mărit, o mână este descoperită doar dacă bate ceea ce este deja la vedere. Cine are dreptul să dea muck își ține cărțile acoperite și primește un buton Show pentru a le arăta totuși.'] },
         { id: 'hands', t: 'Ierarhia mâinilor',
           b: ['De la cea mai slabă la cea mai puternică:'],
           list: [

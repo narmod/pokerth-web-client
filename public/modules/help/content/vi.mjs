@@ -58,7 +58,8 @@ export const help = {
             'Raise — nâng lên trên một khoản cược đã có. Mức nâng tối thiểu bằng khoản cược hoặc lần nâng trước đó.',
             'All-In — đặt toàn bộ chồng phỉnh. Bạn còn trong ván bài đến mức tiền mà bạn đã bù được.'] },
         { id: 'showdown', t: 'Showdown và pot chia',
-          b: ['Nếu sau vòng cược ở river vẫn còn nhiều người, các bộ bài được lật và bộ mạnh nhất thắng — bộ thắng hiện ngay dưới các lá chung. Khi một người all-in với số tiền ít hơn mức cược đầy đủ, các pot phụ hình thành: mỗi người chỉ có thể thắng phần pot mà mình đã góp. Các bộ bài ngang nhau chia đôi pot.'] },
+          b: ['Nếu sau vòng cược ở river vẫn còn nhiều người, các bộ bài được lật và bộ mạnh nhất thắng — bộ thắng hiện ngay dưới các lá chung. Khi một người all-in với số tiền ít hơn mức cược đầy đủ, các pot phụ hình thành: mỗi người chỉ có thể thắng phần pot mà mình đã góp. Các bộ bài ngang nhau chia đôi pot.',
+            'Không phải ai cũng phải lật bài: bắt đầu từ người cược hoặc tố cuối cùng, một tay bài chỉ được lật nếu thắng được những gì đã mở. Người có quyền bỏ bài úp giữ bài úp và nhận nút Show để vẫn có thể khoe bài.'] },
         { id: 'hands', t: 'Thứ bậc các bộ bài',
           b: ['Từ yếu nhất đến mạnh nhất:'],
           list: [

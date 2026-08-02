@@ -58,7 +58,8 @@ export const help = {
             'Raise — über einen bestehenden Einsatz erhöhen. Die Mindesterhöhung entspricht dem vorigen Einsatz oder der vorigen Erhöhung.',
             'All-In — den gesamten Stack setzen. Du bleibst bis zur Höhe deines gedeckten Betrags in der Hand.'] },
         { id: 'showdown', t: 'Showdown und geteilte Pots',
-          b: ['Bleiben nach der River-Setzrunde mehrere Spieler übrig, werden die Hände aufgedeckt und die beste gewinnt — die Gewinnkombination wird unter den Gemeinschaftskarten angezeigt. Ist ein Spieler mit weniger als den vollen Einsätzen All-in, entstehen Side-Pots: Jeder Spieler kann nur den Teil des Pots gewinnen, zu dem er beigetragen hat. Gleichwertige Hände teilen sich den Pot.'] },
+          b: ['Bleiben nach der River-Setzrunde mehrere Spieler übrig, werden die Hände aufgedeckt und die beste gewinnt — die Gewinnkombination wird unter den Gemeinschaftskarten angezeigt. Ist ein Spieler mit weniger als den vollen Einsätzen All-in, entstehen Side-Pots: Jeder Spieler kann nur den Teil des Pots gewinnen, zu dem er beigetragen hat. Gleichwertige Hände teilen sich den Pot.',
+            'Nicht alle müssen zeigen: ab dem letzten Spieler, der gesetzt oder erhöht hat, wird ein Blatt nur aufgedeckt, wenn es schlägt, was bereits offen liegt. Wer mucken darf, behält seine Karten verdeckt und bekommt einen Show-Knopf, um sie trotzdem zu zeigen.'] },
         { id: 'hands', t: 'Rangfolge der Hände',
           b: ['Von der schwächsten zur stärksten:'],
           list: [

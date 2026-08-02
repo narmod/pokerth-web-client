@@ -58,7 +58,8 @@ export const help = {
             'Raise — puges per sobre d\u2019una aposta existent. La pujada mínima equival a l\u2019aposta o pujada anterior.',
             'All-In — hi poses tota la teva pila. Continues a la mà fins a la quantitat que has cobert.'] },
         { id: 'showdown', t: 'Showdown i pots dividits',
-          b: ['Si després de la ronda d\u2019aposta del river queden diversos jugadors, es mostren les mans i guanya la millor — la combinació guanyadora apareix sota les cartes comunitàries. Quan un jugador va all-in per menys que les apostes senceres, es formen pots secundaris: cada jugador només pot guanyar la part del pot a la qual ha contribuït. Les mans empatades es reparteixen el pot.'] },
+          b: ['Si després de la ronda d\u2019aposta del river queden diversos jugadors, es mostren les mans i guanya la millor — la combinació guanyadora apareix sota les cartes comunitàries. Quan un jugador va all-in per menys que les apostes senceres, es formen pots secundaris: cada jugador només pot guanyar la part del pot a la qual ha contribuït. Les mans empatades es reparteixen el pot.',
+            'No tothom ha de mostrar: a partir del darrer jugador que ha apostat o pujat, una mà només es descobreix si guanya el que ja hi ha destapat. Qui té dret a fer muck manté les cartes tapades i rep un botó Show per ensenyar-les igualment.'] },
         { id: 'hands', t: 'Jerarquia de les mans',
           b: ['De la més feble a la més forta:'],
           list: [

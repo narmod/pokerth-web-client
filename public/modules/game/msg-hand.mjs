@@ -901,6 +901,32 @@ function onEndOfHandShow(sub) {
     try { if (window._zoomShowdownSuspend) window._zoomShowdownSuspend(); } catch (_e) {}
     try { renderMyCards(); } catch (e) {}
     const results = sub[2] || [];
+    // Parite QML / Qt-Widgets (gameTableImpl::postRiverRunAnimation2 +
+    // ClientState::determinePlayerNeedToShowCards) : seules les cartes des
+    // joueurs de playerNeedToShowCards sont retournees ; ceux qui ont le droit
+    // de mucker gardent leurs cartes face cachee. Le serveur envoie bien un
+    // PlayerResult pour TOUS les joueurs actifs (c'est necessaire aux mises a
+    // jour de stack), c'est donc au client de filtrer — exactement ce que fait
+    // le client officiel.
+    const _shSet = new Set();
+    try {
+      const _shRes = [];
+      for (const _rb of results) {
+        const _r = Proto.decode(_rb);
+        _shRes.push({ pid: Proto.u32(_r, 1), cardsValue: Proto.u32(_r, 7),
+                      playerMoney: Proto.u32(_r, 6), moneyWon: Proto.u32(_r, 5) });
+      }
+      for (const _p of determineShowList(buildShowCtx(_shRes))) _shSet.add(_p);
+      // Filet de securite : dans le moteur officiel un gagnant montre TOUJOURS
+      // ses cartes. Si nos donnees divergeaient on ne veut surtout pas masquer
+      // la main gagnante — le badge, l'overlay et le journal en dependent.
+      for (const _w of _shRes) if (_w.moneyWon > 0) _shSet.add(_w.pid);
+    } catch (_e) {
+      // Repli sur l'ancien comportement (tous les non-couches) plutot que de
+      // n'afficher aucune carte si quelque chose tourne mal.
+      for (const _p of (S.seats || [])) if (S.seatData[_p] && !S.seatData[_p].folded) _shSet.add(_p);
+    }
+    window._showList = _shSet;
     const winners = [];
     for (const rb of results) {
       const r   = Proto.decode(rb);
@@ -910,9 +936,12 @@ function onEndOfHandShow(sub) {
       // PlayerResult.resultCard1/2 sont *required* dans le proto — le serveur
       // les remplit aussi pour les joueurs couchés. Filtrage client sur l'état
       // folded suivi par siège (posé à chaque PlayersActionDone, action=1).
-      const _fdSD = !!(S.seatData[pid] && S.seatData[pid].folded);
-      const c1  = _fdSD ? null : Proto.u32orNull(r, 2);
-      const c2  = _fdSD ? null : Proto.u32orNull(r, 3);
+      // Mes propres cartes restent visibles POUR MOI quoi qu'il arrive (comme
+      // la box du joueur humain cote officiel) ; pour les autres, seuls les
+      // joueurs de la showList sont retournes.
+      const _shows = _shSet.has(pid) || pid === S.myId;
+      const c1  = _shows ? Proto.u32orNull(r, 2) : null;
+      const c2  = _shows ? Proto.u32orNull(r, 3) : null;
       const won = Proto.u32(r, 5);
       const cash= Proto.u32(r, 6);
       if (S.seatData[pid]) {
@@ -1004,10 +1033,10 @@ function onEndOfHandShow(sub) {
         for (var _ri = 0; _ri < results.length; _ri++) {
           var _rr = Proto.decode(results[_ri]);
           var _rpid = Proto.u32(_rr, 1);
-          // Même filtre foldé que la boucle de révélation ci-dessus.
-          var _rfd = !!(S.seatData[_rpid] && S.seatData[_rpid].folded);
-          var _rc1 = _rfd ? null : Proto.u32orNull(_rr, 2);
-          var _rc2 = _rfd ? null : Proto.u32orNull(_rr, 3);
+          // Meme filtre showList que la boucle de revelation ci-dessus.
+          var _rsh = _shSet.has(_rpid) || _rpid === S.myId;
+          var _rc1 = _rsh ? Proto.u32orNull(_rr, 2) : null;
+          var _rc2 = _rsh ? Proto.u32orNull(_rr, 3) : null;
           // champ 5 = moneyWon ; le champ 6 est playerMoney (stack final) —
           // le lire ici faisait gagner à CHAQUE joueur la valeur de son stack.
           var _rwon = Proto.u32(_rr, 5);
@@ -1057,15 +1086,7 @@ function onEndOfHandShow(sub) {
       var _shSd = S.seatData[S.myId] || null;
       var _shOk = !S._amSpectator && !window._offlineMode && !!_shSd
                   && _shSd.active !== false && !_shSd.folded && S.myCards[0] != null;
-      if (_shOk) {
-        var _shRes = [];
-        for (var _si = 0; _si < results.length; _si++) {
-          var _sr = Proto.decode(results[_si]);
-          _shRes.push({ pid: Proto.u32(_sr, 1), cardsValue: Proto.u32(_sr, 7), playerMoney: Proto.u32(_sr, 6) });
-        }
-        var _shList = determineShowList(buildShowCtx(_shRes));
-        if (_shList.indexOf(S.myId) < 0) _setCanShow(true);
-      }
+      if (_shOk && !_shSet.has(S.myId)) _setCanShow(true);
     } catch (_e) {}
     window.renderGameWaiting('Prochaine main...');
     return;

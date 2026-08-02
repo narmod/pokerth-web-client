@@ -58,7 +58,8 @@ export const help = {
             'Raise — przebić istniejącą stawkę. Minimalne przebicie równa się poprzedniej stawce lub przebiciu.',
             'All-In — postawić cały swój stack. Zostajesz w ręce do wysokości pokrytej kwoty.'] },
         { id: 'showdown', t: 'Showdown i dzielone pule',
-          b: ['Jeśli po rundzie licytacji na riverze zostaje kilku graczy, ręce są odkrywane i wygrywa najlepsza — zwycięska kombinacja jest pokazywana pod kartami wspólnymi. Gdy gracz jest all-in za mniej niż pełne stawki, powstają pule boczne: każdy gracz może wygrać tylko tę część puli, do której się dołożył. Równe ręce dzielą pulę.'] },
+          b: ['Jeśli po rundzie licytacji na riverze zostaje kilku graczy, ręce są odkrywane i wygrywa najlepsza — zwycięska kombinacja jest pokazywana pod kartami wspólnymi. Gdy gracz jest all-in za mniej niż pełne stawki, powstają pule boczne: każdy gracz może wygrać tylko tę część puli, do której się dołożył. Równe ręce dzielą pulę.',
+            'Nie wszyscy muszą pokazywać: zaczynając od ostatniego gracza, który postawił lub przebił, karty odkrywa się tylko wtedy, gdy biją to, co już leży odkryte. Kto może zrzucić, zostawia karty zakryte i dostaje przycisk Show, aby mimo to je pokazać.'] },
         { id: 'hands', t: 'Ranking rąk',
           b: ['Od najsłabszej do najsilniejszej:'],
           list: [

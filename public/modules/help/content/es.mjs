@@ -58,7 +58,8 @@ export const help = {
             'Raise — subir por encima de una apuesta existente. La subida mínima iguala la apuesta o la subida anterior.',
             'All-In — poner todas tus fichas. Sigues en la mano hasta el importe que has cubierto.'] },
         { id: 'showdown', t: 'Showdown y botes divididos',
-          b: ['Si quedan varios jugadores tras la ronda de apuestas del river, las manos se revelan y gana la mejor — la combinación ganadora se muestra bajo las cartas comunitarias. Cuando un jugador va all-in por menos que las apuestas completas, se crean botes secundarios: cada jugador solo puede ganar la parte del bote a la que contribuyó. Las manos empatadas se reparten el bote.'] },
+          b: ['Si quedan varios jugadores tras la ronda de apuestas del river, las manos se revelan y gana la mejor — la combinación ganadora se muestra bajo las cartas comunitarias. Cuando un jugador va all-in por menos que las apuestas completas, se crean botes secundarios: cada jugador solo puede ganar la parte del bote a la que contribuyó. Las manos empatadas se reparten el bote.',
+            'No todos tienen que mostrar: a partir del último jugador que apostó o subió, una mano solo se descubre si supera lo que ya está boca arriba. Quien puede hacer muck mantiene sus cartas tapadas y recibe un botón Show para enseñarlas de todos modos.'] },
         { id: 'hands', t: 'Clasificación de las manos',
           b: ['De la más débil a la más fuerte:'],
           list: [

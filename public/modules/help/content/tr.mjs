@@ -58,7 +58,8 @@ export const help = {
             'Raise — mevcut bir bahsin üzerine yükseltmek. En küçük yükseltme, önceki bahse veya yükseltmeye eşittir.',
             'All-In — bütün yığınını koymak. Karşıladığın miktara kadar elde kalırsın.'] },
         { id: 'showdown', t: 'Showdown ve bölünen potlar',
-          b: ['River bahis turundan sonra birden fazla oyuncu kaldıysa eller açılır ve en iyisi kazanır — kazanan kombinasyon ortak kartların altında gösterilir. Bir oyuncu tam bahislerden daha azıyla all-in olursa yan potlar oluşur: her oyuncu yalnızca katkıda bulunduğu pot dilimini kazanabilir. Berabere eller potu paylaşır.'] },
+          b: ['River bahis turundan sonra birden fazla oyuncu kaldıysa eller açılır ve en iyisi kazanır — kazanan kombinasyon ortak kartların altında gösterilir. Bir oyuncu tam bahislerden daha azıyla all-in olursa yan potlar oluşur: her oyuncu yalnızca katkıda bulunduğu pot dilimini kazanabilir. Berabere eller potu paylaşır.',
+            'Herkesin göstermesi gerekmez: bahis yapan veya artıran son oyuncudan başlayarak, bir el yalnızca zaten açık olanı yeniyorsa açılır. Muck etme hakkı olan kartlarını kapalı tutar ve yine de göstermek için bir Show düğmesi alır.'] },
         { id: 'hands', t: 'El sıralaması',
           b: ['En zayıftan en güçlüye:'],
           list: [
