@@ -157,6 +157,42 @@ window.setAssist = function(on) {
 //   · j'ai deja parle sur cette street et personne ne m'a relance depuis
 //     -> jusqu'a une relance adverse (toCall repasse > 0) ou la street
 //        suivante, qui remet _actedStreet en decalage.
+// Minimum RELATIVE raise amount, mirroring GameHandler::recomputeActionState()
+// in the official QML client (gamehandler.cpp):
+//
+//   preflop  : minimum = (highestSet - mySet) + minimumRaise
+//   postflop : highestSet == 0 -> minimum = 2 * smallBlind   (opening bet)
+//              otherwise       -> (highestSet - mySet) + minimumRaise
+//   minimum is then clamped to the player's stack (maxRaise = myCash).
+//
+// MyActionRequest.myRelativeBet is RELATIVE: the server does
+// player->setMySet(bet), which ADDS the amount to the player's current set.
+// The previous code sent `S.minRaise` (= BettingRound::getMinimumRaise(), the
+// raise INCREMENT only, field 8 of PlayersActionDone) and therefore omitted
+// the call portion: with mySet=0, highestSet=100, minRaise=100 it sent 100, so
+// the new set was exactly the highest set. checkMyAction() accepts that
+// (targetBet >= minimumRaise) and PerformPlayerAction() then leaves highestSet
+// untouched -> the raise silently degraded into a plain call
+// (forum bug report, 02/08/2026: "raise button only a call").
+function _minRaiseRel() {
+  const sd         = (S.seatData && S.seatData[S.myId]) || {};
+  const myMoney    = sd.money || 0;
+  const mySet      = sd.bet   || 0;
+  const highestSet = S.highestBet || 0;
+  const bb         = Math.max(1, S.smallBlind * 2);
+  let minimum;
+  if (highestSet === 0) {
+    minimum = bb;                                       // opening bet
+  } else {
+    // S.minRaise == 0 only before the first PlayersActionDone of the round;
+    // the big blind is the engine's default minimum raise in that window.
+    minimum = (highestSet - mySet) + (S.minRaise > 0 ? S.minRaise : bb);
+  }
+  if (minimum < 0) minimum = 0;
+  return Math.min(minimum, myMoney);
+}
+window._minRaiseRel = _minRaiseRel;
+
 function _barLocked() {
   if (S._inShowdown || S._boardDealing || S._roundEnded) return true;
   var sd = (S.seatData && S.seatData[S.myId]) || null;
@@ -191,7 +227,7 @@ function _runPreAction() {
     return false;
   }
   var canCheck = toCall === 0;
-  var minBet = S.minRaise > 0 ? S.minRaise : Math.max(S.highestBet > 0 ? S.highestBet : S.smallBlind * 2, S.smallBlind * 2);
+  var minBet = _minRaiseRel();
   var canRaise = myMoney > toCall && myMoney >= minBet;
   if (pa === 'fold')  { if (canCheck) doAction(2, 0); else doAction(1, 0); return true; }
   if (pa === 'call')  { if (canCheck) doAction(2, 0); else if (toCall >= myMoney) doAction(6, myMoney); else doAction(3, toCall); return true; }
@@ -260,7 +296,7 @@ function renderMyTurnActions(preview) {
     window._lastCallSeen = toCall;
     window._callConfirmArmed = false; // panneau frais : aucune confirmation en attente
   }
-  const minBet  = S.minRaise > 0 ? S.minRaise : Math.max(S.highestBet > 0 ? S.highestBet : S.smallBlind * 2, S.smallBlind * 2);
+  const minBet  = _minRaiseRel();
   const p33  = Math.min(myMoney, Math.max(minBet, Math.round(S.pot * 0.33)));
   const p50  = Math.min(myMoney, Math.max(minBet, Math.round(S.pot * 0.5)));
   const p100 = Math.min(myMoney, Math.max(minBet, S.pot));
@@ -334,7 +370,7 @@ function renderMyTurnActions(preview) {
     +   (window._canShowCards
            // Parité QML GameActionBar §5.1 : post-river, le bouton All-In
            // devient « Show » (canShowCards) — jamais pré-armable.
-           ? '<button class="btn-action btn-allin" onclick="event.stopPropagation();App.showMyCards&&App.showMyCards()" title="Show (F5)">' + t('showCards') + ' \ud83d\udc41</button>'
+           ? '<button class="btn-action btn-allin btn-show" onclick="event.stopPropagation();App.showMyCards&&App.showMyCards()" title="Show (F5)">' + t('showCards') + ' \ud83d\udc41</button>'
            : '<button class="btn-action btn-allin' + _preCls('allin') + '" onclick="' + _preClk('allin', 'App.doAction(6,' + myMoney + ')') + '" title="All-In (A)">' + window.pkTerm('allin') + '<span class="act-key">' + KB.allin.toUpperCase() + '</span></button>')
     +   modeSel
     + '</div>'
@@ -449,9 +485,7 @@ function doRaise() {
   // la soumission programmatique.
   const myMoney = (S.seatData[S.myId] || {}).money || 0;
   const myBet   = (S.seatData[S.myId] || {}).bet   || 0;
-  const minBet  = S.minRaise > 0
-    ? S.minRaise
-    : Math.max(S.highestBet > 0 ? S.highestBet : S.smallBlind * 2, S.smallBlind * 2);
+  const minBet  = _minRaiseRel();
   const _fld = document.getElementById('raise-amt');
   let amt = parseInt((_fld || {}).value, 10);
   const _typed = amt;                       // ce que le champ contient VRAIMENT

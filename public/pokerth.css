@@ -4504,6 +4504,20 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
   filter: grayscale(0.9);
   opacity: 0.4;
 }
+/* « Show » (montrer ses cartes volontairement entre deux mains) : ce bouton
+   n'existe QUE hors-tour, donc toujours dans .actions-preview, et la manche
+   vient de se terminer -> .no-action est presque toujours posée. Sans cette
+   exception il héritait de pointer-events:none et aucun clic ne passait, d'où
+   l'impossibilité de montrer ses cartes (rapport forum 02/08/2026). Il reste
+   pleinement coloré : c'est la seule action disponible à cet instant. */
+.actions-preview .btn-action.btn-show,
+.actions-preview.no-action .btn-action.btn-show,
+.actions-preview.no-action .btn-action.btn-show.prearmed {
+  pointer-events: auto;
+  filter: none;
+  opacity: 1;
+}
+
 /* Contrôles de montant : encore inactifs en aperçu (la pré-relance part au min). */
 .actions-preview .btn-pct,
 .actions-preview .raise-slider,
