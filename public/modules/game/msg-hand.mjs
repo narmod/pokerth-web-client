@@ -26,6 +26,7 @@ import { _groupThousands } from '../ui/fmt.mjs';
 import { cardName } from '../ui/deck.mjs';
 import { _fmtBlindsCountdown, _startBlindsCountdown, _stopBlindsCountdown } from '../ui/game-info.mjs';
 import { _setCanShow, renderMyCards, renderComm, animateCardDeal } from '../ui/table-cards.mjs';
+import { determineShowList, buildShowCtx, firstAfterDealer, trackLastActionPid } from './showlist.mjs';
 import { clearTurnNotif } from '../ui/action-bar.mjs';
 import { renderPreFlopStrength, renderOddsMonitor, _hsHide } from '../ui/odds-panel.mjs';
 import { autoScaleTable } from '../game/seats.mjs';
@@ -553,7 +554,17 @@ function onHandStart(sub) {
       // bare `money > 0` check was making EVERY seat look OUT.
       var __knownBust = (__sd.money != null && __sd.money <= 0);
       __sd.active = !__knownBust;
+      // getMyRoundStartCash() (clienthand.cpp): stack at the start of the hand,
+      // needed by determinePlayerNeedToShowCards() to compare how much each
+      // player put in when two hands have the same value.
+      __sd.handStartMoney = (__sd.money != null) ? __sd.money : null;
     }
+    // Showdown bookkeeping for the next hand (LocalHand ctor + LocalBoard):
+    // allInCondition starts false, and lastActionPlayerID starts at the first
+    // active player after the dealer — "first player after dealer have to show
+    // his cards first (in showdown)".
+    S._allInCondition = false;
+    try { S._lastActionPid = firstAfterDealer(); } catch (_e) { S._lastActionPid = 0; }
 
     clearTurnNotif();
     renderMyCards();
@@ -666,6 +677,7 @@ function onPlayersActionDone(sub) {
     const money  = Proto.u32(sub, 6);
     S.highestBet   = Proto.u32(sub, 7);
     S.minRaise     = Proto.u32(sub, 8);
+    try { trackLastActionPid(pid, action, bet, S.highestBet); } catch (_e) {}
     // Zoom-follow : le joueur a agi → pan en attente exécuté tout de suite
     try { if (window._zoomFollowActed) window._zoomFollowActed(); } catch (_e) {}
     try {
@@ -862,6 +874,9 @@ function onDealRiver(sub) {
 function onAllInShowCards(sub) {
     // Show cards of all-in players during the hand
     // AllInShowCardsMessage: gameId=1, playersAllIn=2 (repeated PlayerAllIn {playerId=1, allInCard1=2, allInCard2=3})
+    // ClientState: an AllInShowCards message IS the all-in condition; every
+    // player still in the hand will have to show at showdown.
+    S._allInCondition = true;
     const allIns = sub[2] || [];
     for (const ab of allIns) {
       const a   = Proto.decode(ab);
@@ -1033,6 +1048,25 @@ function onEndOfHandShow(sub) {
     window.logEliminations();
     _snapshotHandResults();
     showWinnerOverlay(winners);
+    // « Show » volontaire apres un abattage (GameHandler::onShowdown, branche
+    // nonFold > 1) : proposee au joueur actif qui n'a pas foldé ET qui n'est
+    // PAS dans playerNeedToShowCards — il a le droit de muck, donc le droit de
+    // montrer quand meme. Reseau seulement (le FakeServer offline ignore le
+    // type 51) et jamais en spectateur.
+    try {
+      var _shSd = S.seatData[S.myId] || null;
+      var _shOk = !S._amSpectator && !window._offlineMode && !!_shSd
+                  && _shSd.active !== false && !_shSd.folded && S.myCards[0] != null;
+      if (_shOk) {
+        var _shRes = [];
+        for (var _si = 0; _si < results.length; _si++) {
+          var _sr = Proto.decode(results[_si]);
+          _shRes.push({ pid: Proto.u32(_sr, 1), cardsValue: Proto.u32(_sr, 7), playerMoney: Proto.u32(_sr, 6) });
+        }
+        var _shList = determineShowList(buildShowCtx(_shRes));
+        if (_shList.indexOf(S.myId) < 0) _setCanShow(true);
+      }
+    } catch (_e) {}
     window.renderGameWaiting('Prochaine main...');
     return;
 }
@@ -1076,7 +1110,12 @@ function onEndOfHandHide(sub) {
     // « Show » volontaire : main terminée SANS abattage → mes cartes
     // n'ont pas été révélées. Réseau seulement (le FakeServer offline
     // ignore le type 51) et jamais en spectateur.
-    if (!S._amSpectator && !window._offlineMode && S.myCards[0] != null) _setCanShow(true);
+    // Parite GameHandler::onShowdown (branche nonFold == 1) : le bouton n'est
+    // propose qu'au joueur actif qui n'a PAS foldé — sans abattage c'est le
+    // gagnant, et lui seul a des cartes a montrer.
+    var _hdSd = S.seatData[S.myId] || null;
+    if (!S._amSpectator && !window._offlineMode && S.myCards[0] != null
+        && _hdSd && _hdSd.active !== false && !_hdSd.folded) _setCanShow(true);
     return;
 }
 

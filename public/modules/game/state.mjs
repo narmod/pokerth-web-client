@@ -152,6 +152,8 @@ export const S = {
   _roundEnded: false,      // manche de mise close : verrouillé jusqu'à la suivante
   _boardDealing: false,    // cartes communes en cours de révélation
   _inShowdown: false,      // showdown en cours (jusqu'à la main suivante)
+  _allInCondition: false,  // AllInShowCards reçu → tous les non-couchés montrent
+  _lastActionPid: 0,       // dernier agresseur (ordre d'abattage, cf. showlist.mjs)
   _modeSelBusy: false, _modeSelPendingPreview: false, _modeSelHoldTimer: null,
   _actionBarPinned: (function () {
     try { return localStorage.getItem('pth_pin_actionbar') === '1'; } catch (e) { return false; }
