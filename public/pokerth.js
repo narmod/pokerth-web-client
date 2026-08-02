@@ -5836,6 +5836,11 @@ const App = (() => {
       // sans être relancé) : la barre est une zone morte, comme les clients
       // officiels.
       if (typeof window._barLocked === 'function' && window._barLocked()) return;
+      // Arming a pre-action is a manual click too: like the official client
+      // (GameActionBar.qml clickAction() -> `if (playingMode !== 0) playingMode = 0`),
+      // it takes precedence over any active auto mode, which falls back to
+      // Manual. Forum report 2026-08-02.
+      if (S._playingMode !== 0) this.setPlayingMode(0);
       S._preAction = (S._preAction === name) ? '' : name;      // toggle
       S._preActionToCall = Math.max(0, S.highestBet - ((S.seatData[S.myId] || {}).bet || 0)); // onCallAmountChanged : MON à-suivre
       renderMyTurnActions(true);                            // re-render pour le surlignage or
@@ -9934,7 +9939,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.5-web.105'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.5-web.106'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
