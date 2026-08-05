@@ -522,8 +522,17 @@ function _sanitizeServer(s) {
   // presque jamais dans les SAN → ERR_TLS_CERT_ALTNAME_INVALID.
   var sni = String(s.sni || '').trim().toLowerCase().slice(0, 255);
   if (sni && !/^[a-z0-9.-]+$/.test(sni)) sni = '';
+  // Pins SPKI facultatifs (rollover / serveurs tiers auto-signés) : jusqu'à 4
+  // valeurs base64(sha256) de 44 caractères, tout le reste est ignoré.
+  var pins = [];
+  if (Array.isArray(s.pins)) {
+    for (var pi = 0; pi < s.pins.length && pins.length < 4; pi++) {
+      var pv = String(s.pins[pi] || '').trim();
+      if (/^[A-Za-z0-9+\/]{43}=$/.test(pv) && pins.indexOf(pv) < 0) pins.push(pv);
+    }
+  }
   return { id: id, name: name, host: host, port: port, tls: !!s.tls,
-           sni: sni, noverify: !!s.noverify };
+           sni: sni, noverify: !!s.noverify, pins: pins };
 }
 
 // Options TLS propres à UN serveur enregistré. Deux besoins réels :
@@ -544,6 +553,60 @@ function _serverTlsOpts(host, port) {
       return { sni: String(e.sni || ''), noverify: !!e.noverify };
   }
   return { sni: '', noverify: false };
+}
+
+// ── TLS public-key pinning (parity with PokerTH 2.1.6, src/net/tlspinning.cpp) ──
+// The official lobby certificate is self-signed (CN=pokerth.net), so a CA chain
+// check can never succeed there; upstream 2.1.6 authenticates the server through
+// a pinned SubjectPublicKeyInfo hash instead: base64(sha256(DER SPKI)). Pins come
+// from a built-in table (below) and from <TLSPin> elements of the official
+// serverlist (several pins per host allow a key rollover). When at least one pin
+// is known for a host, trust comes from the pin ALONE (rejectUnauthorized:false
+// + explicit SPKI check after the handshake, exactly like upstream's verify
+// callback which deliberately ignores `preverified`); a mismatch aborts the
+// connection. Hosts WITHOUT any known pin keep the previous behaviour untouched
+// (CA verification unless `noverify`/--insecure), so nothing regresses for
+// registry entries with ordinary CA-issued certificates.
+const BUILTIN_TLS_PINS = {
+  // pokerth.net official server (RSA 4096, valid until 2036-07-31). Same value
+  // as upstream tlspinning.cpp and serverlist <TLSPin> (sp0ck, 2026-08-03).
+  'pthsrv.pokerth.net': ['hnyHDGXvmDBFU7MN5xXuiq4OaWWrnHNzqhKlEoSuAV4=']
+};
+const _TLS_PIN_RE = /^[A-Za-z0-9+\/]{43}=$/; // base64 of a 32-byte sha256
+
+function _tlsPinsFor(host) {
+  var h = String(host || '').trim().toLowerCase();
+  var pins = (BUILTIN_TLS_PINS[h] || []).slice();
+  function add(arr) {
+    if (!Array.isArray(arr)) return;
+    for (var i = 0; i < arr.length; i++) {
+      var v = String(arr[i] || '').trim();
+      if (_TLS_PIN_RE.test(v) && pins.indexOf(v) < 0) pins.push(v);
+    }
+  }
+  var list = _serversList();
+  for (var j = 0; j < list.length; j++) {
+    var e = list[j];
+    if (e && String(e.host).toLowerCase() === h) add(e.pins);
+  }
+  var auto = (typeof _serverlistCache !== 'undefined') && _serverlistCache.server;
+  if (auto && String(auto.host).toLowerCase() === h) add(auto.pins);
+  return pins;
+}
+
+// Post-handshake SPKI check. Returns '' when the peer key matches one of the
+// pins, else a human-readable mismatch message (caller destroys the socket).
+// Node exposes the DER SubjectPublicKeyInfo directly as `pubkey` on
+// getPeerCertificate() — the very bytes upstream hashes via i2d_X509_PUBKEY.
+function _verifyTlsPin(sock, pins) {
+  try {
+    var pc = sock.getPeerCertificate();
+    var der = pc && pc.pubkey;
+    if (!der || !der.length) return 'TLS pinning: peer public key unreadable';
+    var pin = crypto.createHash('sha256').update(der).digest('base64');
+    if (pins.indexOf(pin) >= 0) return '';
+    return 'TLS pinning: server public key ' + pin + ' does not match any of the ' + pins.length + ' pinned key(s)';
+  } catch (e) { return 'TLS pinning: check failed (' + ((e && e.message) || 'error') + ')'; }
 }
 // The server the client uses for the "Internet / PokerTH.net" entry mode: a
 // pointer (activeServerId) into the registry above. Returns {name,host,port,tls}
@@ -622,8 +685,14 @@ function _parseServerlist(xml) {
   var port = parseInt(attr(b, 'ProtobufPort') || attr(b, 'Port') || '7234', 10);
   var tls = /^(on|1|true|yes)$/i.test(attr(b, 'TLS').trim());
   var name = (attr(b, 'Name') || host).trim();
+  // <TLSPin> (2.1.6+) : plusieurs éléments possibles pour un rollover de clé.
+  var pins = [], _pre = /<TLSPin\s+[^>]*?value\s*=\s*"([^"]*)"/gi, _pm;
+  while ((_pm = _pre.exec(b))) {
+    var _pv = _pm[1].trim();
+    if (/^[A-Za-z0-9+\/]{43}=$/.test(_pv) && pins.indexOf(_pv) < 0 && pins.length < 4) pins.push(_pv);
+  }
   if (!host || !/^[a-z0-9._:-]+$/.test(host) || !(port >= 1 && port <= 65535)) return null;
-  return { name: name.slice(0, 60), host: host.slice(0, 255), port: port, tls: tls };
+  return { name: name.slice(0, 60), host: host.slice(0, 255), port: port, tls: tls, pins: pins };
 }
 
 function _doFetchServerlist(u, cb, _hops) {
@@ -806,8 +875,12 @@ function lobbyProbe(host, port, useTls, cb, tlsOverride) {
     var _t = tlsOverride || _serverTlsOpts(host, port);
     var _sni = _t.sni || (/^[0-9.]+$/.test(host) ? '' : host);
     var opts = { host: host, port: port };
+    // Épinglage SPKI (2.1.6) : cert auto-signé → la confiance vient du pin seul.
+    var _pins = useTls ? _tlsPinsFor(host) : [];
     sock = useTls
-      ? tls.connect(Object.assign({ rejectUnauthorized: !(INSECURE_TLS || _t.noverify) }, (_sni ? { servername: _sni } : {}), opts), function () {})
+      ? tls.connect(Object.assign({ rejectUnauthorized: _pins.length ? false : !(INSECURE_TLS || _t.noverify) }, (_sni ? { servername: _sni } : {}), opts), function () {
+          if (_pins.length) { var _pe = _verifyTlsPin(sock, _pins); if (_pe) { console.warn('[probe] ' + _pe); return finish('tls pin mismatch'); } }
+        })
       : net.connect(opts, function () {});
     sock.setTimeout(8000);
     sock.on('data', feed);
@@ -2601,8 +2674,12 @@ function handleAdmin(req, res, reqPathOnly, query) {
         var _t = _tlsFromBody(d, host, port);
         var _sni = _t.sni || (/^[0-9.]+$/.test(host) ? '' : host);
         var opts = { host: host, port: port };
+        var _pins = useTls ? _tlsPinsFor(host) : [];
         sock = useTls
-          ? tls.connect(Object.assign({ rejectUnauthorized: !(INSECURE_TLS || _t.noverify) }, (_sni ? { servername: _sni } : {}), opts), function () { finish(true, ''); })
+          ? tls.connect(Object.assign({ rejectUnauthorized: _pins.length ? false : !(INSECURE_TLS || _t.noverify) }, (_sni ? { servername: _sni } : {}), opts), function () {
+              if (_pins.length) { var _pe = _verifyTlsPin(sock, _pins); if (_pe) { console.warn('[probe] ' + _pe); return finish(false, 'tls pin mismatch'); } }
+              finish(true, '');
+            })
           : net.connect(opts, function () { finish(true, ''); });
         sock.setTimeout(6000);
         sock.on('timeout', function () { finish(false, 'timeout'); });
@@ -4611,19 +4688,35 @@ function _openUpstream(S) {
       // certificat contre l'IP — échec de nom garanti sur toute cible TLS. Le
       // bug restait invisible tant qu'aucun serveur TLS vérifié n'était utilisé.
       const sniName = tOpt.sni || (net.isIP(S.host) ? '' : String(S.host || ''));
+      // Épinglage SPKI (parité 2.1.6, tlspinning.cpp) : dès qu'au moins un pin
+      // est connu pour cet hôte (table intégrée, serverlist <TLSPin>, registre),
+      // la confiance vient du pin SEUL — rejectUnauthorized:false (cert
+      // auto-signé, la chaîne échouerait) puis vérification SPKI explicite
+      // après le handshake ; mismatch = fermeture immédiate. Sans pin connu :
+      // comportement inchangé (vérification CA sauf noverify/--insecure).
+      const tlsPins = S.useTls ? _tlsPinsFor(S.host) : [];
       const verify = !(INSECURE_TLS || tOpt.noverify);
       const opts = { host: addr, port: S.port, ...(sniName && { servername: sniName }) };
       const onConn = () => {
+        if (tlsPins.length) {
+          const pinErr = _verifyTlsPin(S.sock, tlsPins);
+          if (pinErr) {
+            console.error('[-] ' + pinErr + ' → ' + addr + ':' + S.port + ' — closing');
+            try { S.ws && S.ws.close(1015, 'tls pin mismatch'); } catch (_) {}
+            _destroySession(S);
+            return;
+          }
+        }
         S.connected = true;
         const info = S.useTls
           ? '(TLS ' + (S.sock.getCipher() ? S.sock.getCipher().name : '?')
             + (sniName && sniName !== S.host ? ', sni=' + sniName : '')
-            + (verify ? '' : ', verify OFF') + ')'
+            + (tlsPins.length ? ', pinned ✓' : (verify ? '' : ', verify OFF')) + ')'
           : '(raw TCP)';
         console.log('[+] Connected ' + info + ' → ' + addr + ':' + S.port);
       };
       S.sock = S.useTls
-        ? tls.connect({ ...opts, rejectUnauthorized: verify }, onConn)
+        ? tls.connect({ ...opts, rejectUnauthorized: tlsPins.length ? false : verify }, onConn)
         : net.connect(opts, onConn);
 
       S.sock.on('data', chunk => {
