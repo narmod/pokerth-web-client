@@ -82,7 +82,7 @@ function renderSeatsImmediate() {
       if (!isNaN(sp)) openPlayerInfoPopup(sp);
     });
   }
-  if (!S.seats.length) { el.innerHTML = ''; return; }
+  if (!S.seats.length) { el.innerHTML = ''; window._seatDomPrev = null; return; }
   // Keep ALL original seats when computing pixel positions. Previously
   // we filtered to active-only seats here, which caused the remaining
   // players to visually rotate / re-space themselves around the felt
@@ -514,7 +514,20 @@ function renderSeatsImmediate() {
   var _ownLvl = 0; try { _ownLvl = Math.min(3, Math.max(0, parseInt(localStorage.getItem('pth_big_own_cards'), 10) || 0)); } catch (e) {} // niveau "agrandir mes cartes" 0-3 (plafond = riviere)
   let h = '';
   var _apNew = {}; // signatures pucks/drapeau/action du rendu courant (anti-replay)
+  // ── Diff DOM par siège (rapport narmod 05/08, vidéo : cartes propres,
+  // pucks D/SB/BB et cadres qui clignotent ~90 ms à chaque tour). Cause :
+  // `el.innerHTML = h` détruisait et recréait TOUS les sièges à chaque
+  // action ; les faces de cartes (background-image SVG via --cf), les pucks
+  // et avatars (<img>) repeignent alors de façon asynchrone sur iOS Safari —
+  // une poignée de frames blanches même quand RIEN n'a changé pour le siège.
+  // On collecte le HTML de chaque siège séparément (_seatHtmlArr) et, si la
+  // liste de pids du rendu précédent correspond au DOM en place, seuls les
+  // sièges dont le HTML a réellement changé sont remplacés ; les autres
+  // gardent leur DOM (images déjà décodées → zéro flash). Le QML ne
+  // reconstruit jamais ses délégués, seul leur état change — même esprit. ──
+  var _seatHtmlArr = [];
   rotated.forEach((pid, i) => {
+    var _hMark = h.length;
     const px = pixPos[i];
     const isMe = pid === S.myId;
     const sd = S.seatData[pid] || {};
@@ -604,7 +617,7 @@ function renderSeatsImmediate() {
       // Fidélité table par défaut QML : Dealer = disque crème officiel ;
       // SB reste BLEU et BB reste ROUGE (chipSvg ci-dessus) -> on ne touche
       // qu'au dealer. Un puck de thème explicite reste prioritaire.
-      if (isDealer) dealerChip = '<img class="dealer-chip" src="' + (window._pthPuck('--puck-dealer') || '/pucks/dealer.svg') + '" alt="D" width="20" height="20">';
+      if (isDealer) dealerChip = '<img class="dealer-chip" decoding="sync" src="' + (window._pthPuck('--puck-dealer') || '/pucks/dealer.svg') + '" alt="D" width="20" height="20">';
     }
     // ── Anti-replay des pops (sp0ck 2026-07-17 : « petit flicker ») :
     // renderSeats reconstruit l'innerHTML à chaque update d'état, ce qui
@@ -676,7 +689,7 @@ function renderSeatsImmediate() {
       ? 'position:relative;background:' + aColor.bg + ';border-color:' + aColor.border + ';color:' + aColor.text + ';box-shadow:0 0 0 2px ' + aColor.border + '44'
       : 'position:relative';
     const pthImg = pthAvUrl
-      ? '<img class="seat-pth-img" src="' + pthAvUrl + '" alt="" draggable="false">'
+      ? '<img class="seat-pth-img" decoding="sync" src="' + pthAvUrl + '" alt="" draggable="false">'
       : '';
     const avCls2 = avatarCls + (pthAvUrl ? ' has-pth-avatar' : '');
     h += '<div class="seat-plate">'; // pack siege : avatar + (nom/tapis) -- display:contents en classique
@@ -808,8 +821,30 @@ function renderSeatsImmediate() {
     h += cardStr;
     h += '</div>'; // ferme .seat-foot
     h += '</div>'; // ferme .seat
+    _seatHtmlArr.push({ pid: pid, html: h.slice(_hMark) });
   });
-  el.innerHTML = h;
+  // Application : patch par siège si la structure (mêmes pids, même ordre,
+  // même nombre d'enfants DOM) est inchangée depuis le rendu précédent de
+  // CETTE partie ; sinon reconstruction complète (1ᵉʳ rendu, arrivée/départ,
+  // changement d'ordre, DOM inattendu).
+  var _domPrev = (window._seatDomPrev && window._seatDomPrev.g === S.gId) ? window._seatDomPrev.list : null;
+  var _canPatch = !!_domPrev && _domPrev.length === _seatHtmlArr.length
+                  && el.children.length === _seatHtmlArr.length;
+  if (_canPatch) {
+    for (var _pi = 0; _pi < _seatHtmlArr.length; _pi++) {
+      if (_domPrev[_pi].pid !== _seatHtmlArr[_pi].pid
+          || el.children[_pi].getAttribute('data-pid') !== String(_seatHtmlArr[_pi].pid)) { _canPatch = false; break; }
+    }
+  }
+  if (_canPatch) {
+    for (var _pj = 0; _pj < _seatHtmlArr.length; _pj++) {
+      if (_domPrev[_pj].html !== _seatHtmlArr[_pj].html)
+        el.children[_pj].outerHTML = _seatHtmlArr[_pj].html;
+    }
+  } else {
+    el.innerHTML = h;
+  }
+  window._seatDomPrev = { g: S.gId, list: _seatHtmlArr };
   window._seatAnimPrev = { g: S.gId, m: _apNew }; // anti-replay : signatures de CE rendu
   // Loupe QML : suivi différé du siège actif + suspension showdown.
   try {

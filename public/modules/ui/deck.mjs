@@ -177,7 +177,7 @@ function _pthPuck(varName){
 }
 function chipSvg(label, bg, fg, edge) {
   var _pk = _pthPuck(label === 'SB' ? '--puck-sb' : (label === 'BB' ? '--puck-bb' : ''));
-  if (_pk) return '<img class="blind-chip" src="' + _pk + '" alt="' + label + '" width="20" height="20" onerror="this.outerHTML=window._pthChip(\'' + label + '\')">';
+  if (_pk) return '<img class="blind-chip" decoding="sync" src="' + _pk + '" alt="' + label + '" width="20" height="20" onerror="this.outerHTML=window._pthChip(\'' + label + '\')">';
   var notches = '';
   for (var i = 0; i < 8; i++) {
     var rot = i * 45;
@@ -197,7 +197,7 @@ function chipSvg(label, bg, fg, edge) {
 
 function dealerChipSvg() {
   var _pk = _pthPuck('--puck-dealer');
-  if (_pk) return '<img class="dealer-chip" src="' + _pk + '" alt="D" width="20" height="20" onerror="this.outerHTML=window._pthChip(\'D\')">';
+  if (_pk) return '<img class="dealer-chip" decoding="sync" src="' + _pk + '" alt="D" width="20" height="20" onerror="this.outerHTML=window._pthChip(\'D\')">';
   var notches = '';
   for (var i = 0; i < 8; i++) {
     notches += '<rect x="13" y="0.5" width="6" height="7" rx="2" fill="#c8a850"'
