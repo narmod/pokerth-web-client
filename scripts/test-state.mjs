@@ -206,6 +206,7 @@ ok(JSON.stringify(keys) === JSON.stringify(['REACT_EMOJI_MIN_GAP', 'REACT_EMOJI_
    '_allInCondition', '_lastActionPid',
    '_lastSbPid', '_lastBbPid',
    'seats', 'seatData', 'amInGame', 'myName', '_gameStarted', '_seatsFrozen',
+   '_peakSeatCount',
    '_amSpectator', 'autoAction',
    'myId', '_assistOn', '_lastWaitingMsg', '_lastWaitingIsHtml',
    '_seatsRenderPending', 'actionLog', '_eliminatedLogged',

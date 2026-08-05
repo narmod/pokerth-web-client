@@ -191,6 +191,9 @@ export const S = {
   myName: '',
   _gameStarted: false,     // vrai au GameStartInitial ; gèle le panneau d'attente
   _seatsFrozen: false,     // verrou one-way : ordre de sièges d'origine figé
+  _peakSeatCount: 0,       // QML _peakSeatCount : effectif MAX depuis le début de
+                           // la partie — la géométrie (bisection boxScale, slots,
+                           // communityScale) ne bouge pas quand un joueur saute
   _amSpectator: false,     // rejoint via « Regarder » — actions désactivées
   autoAction: false,
 

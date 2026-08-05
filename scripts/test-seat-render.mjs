@@ -112,17 +112,27 @@ ok(window.renderSeatsImmediate === M.renderSeatsImmediate && window.renderSeats 
    window.getPlayerName === M.getPlayerName && window.isBot === M.isBot,
    'ponts window.* en place');
 
-// Garde de régression : aucune mesure ne doit prendre un siège fantôme pour
-// étalon. Le CSS y masque la rangée nom/cash en display:none, donc une boîte
-// fantôme mesure bien moins haut qu'une vraie ; la bisection en déduirait des
-// boîtes trop petites et laisserait une échelle trop grande — les boîtes
-// débordent alors sur la self et les cartes communes, de plus en plus à mesure
-// que des joueurs quittent la table. Vérification sur la source : le DOM stubé
-// ici ne rejoue pas la mesure.
+// Garde de régression : une boîte fantôme mesure BIEN MOINS HAUT qu'une vraie
+// (le CSS y masque la rangée nom/cash en display:none). Prendre son rect brut
+// pour étalon fausserait la géométrie ; l'IGNORER complètement fait sauter le
+// barycentre dès qu'un joueur quitte la table, donc l'échelle des cartes
+// communes (rapport forum 05/08). La seule forme correcte : mesurer les
+// fantômes en leur substituant le gabarit médian des plates normales. On
+// vérifie donc sur la source que tout échantillon incluant les fantômes est
+// accompagné de cette normalisation. Le DOM stubé ici ne rejoue pas la mesure.
 const SRC = readFileSync(new URL('../public/modules/game/seat-render.mjs', import.meta.url), 'utf8');
-const badSel = SRC.match(/querySelector(?:All)?\('\.seat:not\(\.me\)(?!:not\(\.seat-ghost\))[^']*'\)/g);
-ok(!badSel, 'aucun échantillon de mesure ne peut tomber sur un siège fantôme'
-   + (badSel ? ' — trouvé : ' + badSel.join(', ') : ''));
+const ghostSel = SRC.match(/querySelector(?:All)?\('\.seat:not\(\.me\)(?!:not\(\.seat-ghost\))[^']*'\)/g);
+const hasNorm = /_gh3\s*&&\s*_refH3\s*>\s*4/.test(SRC) && /_refH3\s*=\s*_med3\(/.test(SRC);
+ok(!ghostSel || hasNorm,
+   'les mesures incluant les sièges fantômes normalisent leur gabarit'
+   + (ghostSel && !hasNorm ? ' — trouvé sans normalisation : ' + ghostSel.join(', ') : ''));
+
+// Garde de régression : la géométrie (bisection + slots) se cale sur le PIC
+// d'effectif de la partie (parité QML _peakSeatCount), pas sur l'effectif
+// courant — sinon les boîtes ET les cartes communes changent de taille à
+// chaque élimination.
+ok(/_officialSeatPix\(_geomSeatN,/.test(SRC) && /S\._peakSeatCount/.test(SRC),
+   'le placement officiel utilise le pic d\'effectif (_geomSeatN)');
 
 console.log(fail ? `\n${fail}/${n} ÉCHECS` : `\n${n}/${n} OK`);
 process.exit(fail ? 1 : 0);

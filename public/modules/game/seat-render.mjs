@@ -103,6 +103,22 @@ function renderSeatsImmediate() {
     if (_kept.length) rotated = _kept;
   }
   try { window._seatCount = rotated.length; } catch (e) {}
+  // ── Effectif de RÉFÉRENCE pour la géométrie (parité QML _peakSeatCount,
+  // GamePage.qml : « Maximale Spielerzahl seit Spielbeginn – wird für
+  // boxScale genutzt, damit ausscheidende Spieler die Box-Größe NICHT
+  // verändern »). Le client officiel bisecte l'échelle et dispose ses slots
+  // sur le PIC de joueurs depuis le début de la partie, jamais sur l'effectif
+  // courant : sortir un joueur ne redimensionne donc ni les boîtes ni les
+  // cartes communes. Le pic suit librement l'effectif tant que l'ordre des
+  // sièges n'est pas figé (avant la 1ʳᵉ main, et de nouveau à la partie
+  // suivante quand _seatsFrozen retombe). L'option « Retirer les joueurs
+  // partis » demande explicitement la redistribution → pas de pic dans ce cas.
+  var _geomSeatN = rotated.length;
+  try {
+    if (window._advGet('remove_gone', false) || !S._seatsFrozen) S._peakSeatCount = rotated.length;
+    else if (rotated.length > (S._peakSeatCount || 0)) S._peakSeatCount = rotated.length;
+    _geomSeatN = Math.max(rotated.length, S._peakSeatCount || 0);
+  } catch (e) { _geomSeatN = rotated.length; }
   // Position seats using actual pixel coords from getBoundingClientRect
   const oval = document.querySelector('.felt-oval');
   const zone = document.getElementById('g-table-zone');
@@ -117,7 +133,7 @@ function renderSeatsImmediate() {
   // Petits ecrans : reduire la taille des box (avatars + texte) pour qu'elles tiennent
   // autour du feutre sans le chevaucher (le client officiel fait pareil via boxScale).
   var _seatBoxScale = 1;
-  try { var _sbw = window.innerWidth, _sbh = window.innerHeight; if (Math.min(_sbw, _sbh) < 540) { var _opp = Math.max(0, rotated.length - 1); _seatBoxScale = (_sbh > _sbw) ? Math.max(0.72, 0.90 - Math.max(0, _opp - 4) * 0.026) : Math.max(0.80, 0.98 - Math.max(0, _opp - 4) * 0.022); } } catch (e) {}
+  try { var _sbw = window.innerWidth, _sbh = window.innerHeight; if (Math.min(_sbw, _sbh) < 540) { var _opp = Math.max(0, _geomSeatN - 1); _seatBoxScale = (_sbh > _sbw) ? Math.max(0.72, 0.90 - Math.max(0, _opp - 4) * 0.026) : Math.max(0.80, 0.98 - Math.max(0, _opp - 4) * 0.022); } } catch (e) {}
   // Rabot mesuré : appliqué à TOUS les modes de placement (l'officiel le
   // ré-applique après sa bisection ; classic/custom en profitent ici).
   _seatBoxScale *= (window._seatFitShave || 1);
@@ -334,7 +350,7 @@ function renderSeatsImmediate() {
   if (_applyOfficial) {
     try {
       var _layoutZoom = 1;   // la bisection travaille TOUJOURS à zoom 1
-      var _offPos = _officialSeatPix(rotated.length, _forceSeatPortrait, zRect.width, zRect.height, oCX, oCY, oRect, _seatBoxScale, _layoutZoom, myIdx < 0);
+      var _offPos = _officialSeatPix(_geomSeatN, _forceSeatPortrait, zRect.width, zRect.height, oCX, oCY, oRect, _seatBoxScale, _layoutZoom, myIdx < 0);
       // Diagnostic INCONDITIONNEL (le bloc interne peut être sauté si
       // _boxScale est NaN/absent — on veut voir pourquoi).
       try {
@@ -919,14 +935,42 @@ function renderSeatsImmediate() {
         var _n3 = 1, _minB3 = Infinity;
         var _botTop3 = -Infinity, _botC3 = -Infinity; // siege du BAS de l'anneau (spectateur)
         var _rects3 = []; // rects des plates (px zone) pour le cap horizontal community
-        el.querySelectorAll('.seat:not(.me):not(.seat-ghost) .seat-plate').forEach(function (pl3) {
+        // ── Rapport forum 05/08 (« community cards are not a constant size,
+        // they may grow or shrink when players are knocked out ») : le QML
+        // dérive topOpponentBottomY / communityCenterY des SLOTS de l'anneau
+        // (slotSeq[ringCount]), pas de ce qui est réellement peint — un siège
+        // quitté garde son slot (keepEmptySeats) et continue de compter. Ici
+        // on excluait `.seat-ghost` : dès qu'un joueur éliminé quittait la
+        // table, sa plate sortait du barycentre et l'échelle de la rangée
+        // sautait. On mesure donc TOUTES les plates adverses, fantômes
+        // compris ; leur contenu étant `display:none` (plate plus courte), on
+        // leur substitue le gabarit médian des plates normales, centré sur
+        // leur slot → un fantôme pèse exactement comme la boîte qu'il
+        // remplace, et l'échelle reste constante toute la partie. ──
+        var _liveH3 = [], _liveW3 = [];
+        el.querySelectorAll('.seat:not(.me):not(.seat-ghost) .seat-plate').forEach(function (plL3) {
+          var rL3 = plL3.getBoundingClientRect();
+          if (rL3.height > 4) { _liveH3.push(rL3.height); _liveW3.push(rL3.width); }
+        });
+        var _med3 = function (a3) {
+          if (!a3.length) return 0;
+          var b3 = a3.slice().sort(function (x3, y3) { return x3 - y3; });
+          return b3[(b3.length - 1) >> 1];
+        };
+        var _refH3 = _med3(_liveH3), _refW3 = _med3(_liveW3);
+        el.querySelectorAll('.seat:not(.me) .seat-plate').forEach(function (pl3) {
           var rr3 = pl3.getBoundingClientRect();
-          var _b3 = rr3.bottom - _zr3.top;
+          var _st3 = pl3.closest ? pl3.closest('.seat') : null;
+          var _gh3 = !!(_st3 && _st3.classList.contains('seat-ghost'));
+          var _h3v = rr3.height, _w3v = rr3.width;
+          if (_gh3 && _refH3 > 4) { _h3v = _refH3; _w3v = _refW3; }
+          var _c3 = rr3.top + rr3.height / 2 - _zr3.top;         // centre = slot (translate -50%)
+          var _cx3 = rr3.left + rr3.width / 2 - _zr3.left;
+          var _t3 = _c3 - _h3v / 2, _b3 = _c3 + _h3v / 2;
           if (_b3 < _minB3) _minB3 = _b3;                       // box la plus haute
-          var _t3 = rr3.top - _zr3.top, _c3 = _t3 + rr3.height / 2;
           if (_c3 > _botC3) { _botC3 = _c3; _botTop3 = _t3; }   // box la plus basse
           _sumY3 += _c3; _n3++;                                 // barycentre
-          _rects3.push({ t: _t3, b: _b3, l: rr3.left - _zr3.left, r: rr3.right - _zr3.left });
+          _rects3.push({ t: _t3, b: _b3, l: _cx3 - _w3v / 2, r: _cx3 + _w3v / 2 });
         });
         // ── Garde (rapport forum 30/07, heads-up) : AUCUNE plate adverse
         // mesurable (transition d'élimination, re-render partiel, rejoin) —
