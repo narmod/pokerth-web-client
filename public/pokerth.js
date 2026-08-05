@@ -9829,6 +9829,7 @@ window._getTableZoom = _getTableZoom;
 window._hideBanner = _hideBanner;
 window._isIgnored = _isIgnored;
 window._seatTraitsNow = _seatTraitsNow;
+window._setIgnoredName = _setIgnoredName;   // fix: player-popup.mjs (_toggleIgnore) called it bare -> ReferenceError
 window._showBanner = _showBanner;
 window._startIpBlockCountdown = _startIpBlockCountdown;
 window._tableZoomGate = _tableZoomGate;
@@ -9939,7 +9940,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.6-web.1'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.6-web.2'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

@@ -269,7 +269,9 @@ window._toggleIgnore = function(pid){
       if (!window.confirm(_iq)) return;
     }
   } catch (e) {}
-  _setIgnoredName(nm, _willIgnore);
+  if (typeof window._setIgnoredName !== 'function') return;
+  window._setIgnoredName(nm, _willIgnore);
+  try { if (typeof window.renderIgnoredList === 'function') window.renderIgnoredList(); } catch (e) {}
   try { if (typeof window._renderSeats === 'function') window._renderSeats(); } catch (e) {}
   try { openPlayerInfoPopup(pid); } catch (e) {}
 };
