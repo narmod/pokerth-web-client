@@ -64,6 +64,9 @@ let _lcdRemain = false; // LCD time display: false = elapsed, true = remaining (
 // element's own volume (the pre-existing behaviour, fine off iOS).
 let _ctx = null, _srcNode = null, _gain = null, _waReady = false, _waFailed = false;
 let _panner = null, _analyser = null, _vuData = null, _vuRAF = 0, _vuDead = false, _vuZeroFrames = 0;
+// Consecutive graph rebuilds after an iOS interruption (see _rebuildWebAudio).
+const WA_MAX_REBUILD = 4;
+let _waRebuilds = 0;
 let _msReady = false;
 let _shade = false;   // mode compact « windowshade »
 // ── Radios (flux live) ──
@@ -141,22 +144,29 @@ function setRepeat(m) {
   _render();
 }
 
+// Wiring for the main element, kept separate from _el() because the element is
+// rebuilt from scratch when the Web Audio graph is rebuilt (see below).
+function _wireMainEl(a) {
+  ['play', 'pause'].forEach(function (ev) { a.addEventListener(ev, _render); });
+  a.addEventListener('error', _onMainError);
+  a.addEventListener('ended', _onEnded);
+  // Progress wiring — bound ONCE on the persistent element (not per-render),
+  // updates whatever progress row currently exists in the panel.
+  ['timeupdate', 'loadedmetadata', 'durationchange', 'seeked'].forEach(function (ev) { a.addEventListener(ev, _renderProgress); });
+  a.addEventListener('loadedmetadata', _probeDuration);
+  // Network watchdog: these fire when the transport dies mid-track.
+  ['stalled', 'waiting', 'suspend'].forEach(function (ev) { a.addEventListener(ev, function () { _wdSchedule(); }); });
+  // Sound is really flowing again → the rebuild budget is refilled.
+  a.addEventListener('playing', function () { _waRebuilds = 0; _wdOk(); });
+  return a;
+}
 function _el() {
   if (!_audio) {
     _audio = new Audio();
     _audio.loop = (_repeat === 'one');
     _audio.preload = 'none';
     try { _audio.volume = getVolume(); } catch (e) {}
-    ['play', 'pause'].forEach(function (ev) { _audio.addEventListener(ev, _render); });
-    _audio.addEventListener('error', _onMainError);
-    _audio.addEventListener('ended', _onEnded);
-    // Progress wiring — bound ONCE on the persistent element (not per-render),
-    // updates whatever progress row currently exists in the panel.
-    ['timeupdate', 'loadedmetadata', 'durationchange', 'seeked'].forEach(function (ev) { _audio.addEventListener(ev, _renderProgress); });
-    _audio.addEventListener('loadedmetadata', _probeDuration);
-    // Network watchdog: these fire when the transport dies mid-track.
-    ['stalled', 'waiting', 'suspend'].forEach(function (ev) { _audio.addEventListener(ev, function () { _wdSchedule(); }); });
-    _audio.addEventListener('playing', function () { _wdOk(); });
+    _wireMainEl(_audio);
   }
   return _audio;
 }
@@ -322,8 +332,59 @@ function _ensureWebAudio() {
     return true;
   } catch (e) { _waFailed = true; return false; }
 }
+// iOS parks an AudioContext in 'interrupted' on an incoming call, Siri, another
+// app grabbing the output, or the PWA going to the background — and from there
+// resume() frequently never comes back (sounds.mjs documents the same thing and
+// simply throws its context away). The player cannot do that as cheaply, because
+// createMediaElementSource() may be called only ONCE per element: the <audio>
+// element has to be rebuilt together with the context. Left alone, the element
+// keeps playing into a dead graph, which is heard as stuttering or silence, and
+// the VU meter self-kills on the resulting run of zero-sample frames.
+//
+// Capped on purpose: every new AudioContext claims a hardware audio device on
+// iOS, so retrying forever against a device that refuses to start would make
+// things worse rather than better. The budget refills as soon as the element
+// reports 'playing' again, so only CONSECUTIVE failures count.
+function _rebuildWebAudio() {
+  if (_bypass) return false;              // radio fallback already runs outside the graph
+  if (!_waReady || _waRebuilds >= WA_MAX_REBUILD) return false;
+  _waRebuilds++;
+  var src = '', pos = 0, wasPlaying = false, loop = false;
+  var old = _audio;
+  if (old) {
+    try { src = old.currentSrc || old.src || ''; } catch (e) {}
+    try { pos = Math.max(0, old.currentTime || 0); } catch (e) {}
+    try { wasPlaying = !old.paused && !old.ended; } catch (e) {}
+    try { loop = !!old.loop; } catch (e) {}
+    try { old.pause(); old.removeAttribute('src'); old.load(); } catch (e) {}
+  }
+  [_srcNode, _gain, _analyser, _panner].forEach(function (n) {
+    if (n) { try { n.disconnect(); } catch (e) {} }
+  });
+  if (_ctx) { try { var c = _ctx.close(); if (c && c.catch) c.catch(function () {}); } catch (e) {} }
+  _ctx = null; _srcNode = null; _gain = null; _analyser = null; _panner = null;
+  _waReady = false; _waFailed = false;    // let _ensureWebAudio try again on the new element
+  _vuData = null; _vuDead = false; _vuZeroFrames = 0;   // the VU died with the old graph
+  _audio = null;                          // _el() builds AND wires a fresh element
+  var a = _el();
+  try { a.loop = loop; } catch (e) {}
+  _ensureWebAudio();                      // failure is fine: falls back to element volume
+  if (src) {
+    try { a.src = src; a.load(); } catch (e) {}
+    if (pos > 0 && !_curIsStream()) {
+      a.addEventListener('loadedmetadata', function once() {
+        a.removeEventListener('loadedmetadata', once);
+        try { a.currentTime = pos; } catch (e) {}
+      });
+    }
+    if (wasPlaying) { try { var p = a.play(); if (p && p.catch) p.catch(function () {}); } catch (e) {} }
+  }
+  _render();
+  return true;
+}
 function _resumeCtx() {
-  if (_ctx && (_ctx.state === 'suspended' || _ctx.state === 'interrupted')) {
+  if (_ctx && (_ctx.state === 'interrupted' || _ctx.state === 'closed')) _rebuildWebAudio();
+  if (_ctx && _ctx.state !== 'running' && _ctx.resume) {
     try { var p = _ctx.resume(); if (p && p.catch) p.catch(function () {}); } catch (e) {}
   }
 }
