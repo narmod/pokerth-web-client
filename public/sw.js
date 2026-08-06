@@ -23,7 +23,7 @@
  *                 Cross-origin requests and WS upgrades are left untouched.
  *                 (Fonts are now self-hosted and handled by SWR above.)
  */
-const CACHE_VERSION = 'pokerth-v2.1.6-web.3';
+const CACHE_VERSION = 'pokerth-v2.1.6-web.4';
 
 // Where navigations fall back to when the network is unavailable.
 const NAV_FALLBACK = '/pokerth-client.html';
@@ -379,6 +379,14 @@ self.addEventListener('fetch', function(e) {
   // SW cache or serve them (otherwise the package list, status, logs… show stale
   // after a change). Network only — admin is an online-only tool.
   if (/^\/admin(?:\/|$)/.test(url.pathname)) return;
+  // Media is served by the browser straight from the network: an <audio> element
+  // streams with byte-range requests, and the SWR handler below only stores
+  // status 200, so a 206 was never cacheable anyway. Every buffer chunk paid a
+  // SW round-trip plus a full background revalidation, and a cache.match() hit
+  // (which ignores Range) could answer a partial request with the whole file —
+  // both stutter playback, badly so on iOS Safari. Nothing offline is lost.
+  if (e.request.headers.get('range')) return;
+  if (/^\/music\//.test(url.pathname) && !/\.json$/.test(url.pathname)) return;
 
   if (e.request.mode === 'navigate') {
     e.respondWith(handleNavigation(e));
