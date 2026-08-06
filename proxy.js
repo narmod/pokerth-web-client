@@ -1450,7 +1450,39 @@ function sendFile(req, res, filePath, type, cacheCtl) {
     else if (/\bgzip\b/.test(ae)) enc = 'gzip';
   }
   if (!enc) {
+    // Uncompressed assets (audio, images, fonts) honour byte ranges. Safari —
+    // iOS above all — refuses to stream an <audio>/<video> element off a plain
+    // 200: it needs 206 Partial Content, otherwise it keeps refetching and
+    // playback stutters. Content-Length also lets the element report a duration
+    // and seek instead of guessing.
+    let fst;
+    try { fst = fs.statSync(filePath); } catch (e) { res.writeHead(404); res.end('Not found'); return; }
+    headers['Accept-Ranges'] = 'bytes';
+    const rg = /^bytes=(\d*)-(\d*)$/.exec(String(req.headers.range || '').trim());
+    if (rg && (rg[1] !== '' || rg[2] !== '')) {
+      let start, end;
+      if (rg[1] === '') {                       // suffix form: last N bytes
+        start = Math.max(0, fst.size - parseInt(rg[2], 10));
+        end = fst.size - 1;
+      } else {
+        start = parseInt(rg[1], 10);
+        end = rg[2] === '' ? fst.size - 1 : Math.min(parseInt(rg[2], 10), fst.size - 1);
+      }
+      if (!(start >= 0 && start <= end && start < fst.size)) {
+        res.writeHead(416, Object.assign({ 'Content-Range': 'bytes */' + fst.size }, headers));
+        res.end();
+        return;
+      }
+      headers['Content-Range'] = 'bytes ' + start + '-' + end + '/' + fst.size;
+      headers['Content-Length'] = end - start + 1;
+      res.writeHead(206, headers);
+      if (req.method === 'HEAD') { res.end(); return; }
+      fs.createReadStream(filePath, { start: start, end: end }).pipe(res);
+      return;
+    }
+    headers['Content-Length'] = fst.size;
     res.writeHead(200, headers);
+    if (req.method === 'HEAD') { res.end(); return; }
     fs.createReadStream(filePath).pipe(res);
     return;
   }
@@ -4421,6 +4453,10 @@ const httpServer = http.createServer((req, res) => {
            : ext === '.woff' ? 'font/woff'
            : ext === '.woff2'? 'font/woff2'
            : ext === '.wasm' ? 'application/wasm'
+           : ext === '.mp3'  ? 'audio/mpeg'
+           : ext === '.ogg'  ? 'audio/ogg'
+           : ext === '.m4a'  ? 'audio/mp4'
+           : ext === '.wav'  ? 'audio/wav'
            : 'application/octet-stream';
     // CSS/JS/MJS must always revalidate so a deploy is picked up without a
     // hard refresh; static media (images/fonts) can still be cached a day.
