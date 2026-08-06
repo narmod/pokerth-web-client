@@ -94,11 +94,18 @@ function _dest(ctx) {
 // arrière-plan, appel entrant, autre app qui capte la sortie audio). Ne tester
 // que 'suspended' laissait le son muet jusqu'à fermeture/réouverture de l'app.
 // Sûr à appeler souvent ; resume() est idempotent.
+// resume() RETOURNE UNE PROMESSE : un try/catch autour n'attrape pas son rejet.
+// Sur iOS le rejet est courant (« Failed to start the audio device » quand le
+// périphérique audio est pris ou le contexte interrompu) et remontait alors en
+// unhandled rejection jusqu'au rapporteur d'erreurs. On passe donc TOUJOURS par
+// ce helper, qui avale les deux formes d'échec : throw synchrone et rejet.
+function _resumeCtx(ctx) {
+  if (!ctx || ctx.state === 'running' || typeof ctx.resume !== 'function') return;
+  try { var p = ctx.resume(); if (p && p.catch) p.catch(function() {}); } catch(e) {}
+}
 function _ensureRunning() {
   var ctx = getAudioCtx();
-  if (ctx && ctx.state !== 'running' && typeof ctx.resume === 'function') {
-    try { ctx.resume(); } catch(e) {}
-  }
+  _resumeCtx(ctx);
   return ctx;
 }
 // Déverrouillage iOS « pour de vrai » : à exécuter DANS un geste utilisateur.
@@ -118,7 +125,7 @@ function _unlockAudio() {
       _audioCtx = null;
       ctx = getAudioCtx(); if (!ctx) return;
     }
-    if (ctx.state !== 'running' && ctx.resume) ctx.resume();
+    _resumeCtx(ctx);
     var buf = ctx.createBuffer(1, 1, 22050);
     var src = ctx.createBufferSource();
     src.buffer = buf; src.connect(ctx.destination); src.start(0);
@@ -139,7 +146,7 @@ function playTone(freq, dur, vol) {
   if (!_muteSync()) return;
   var ctx = getAudioCtx(); if (!ctx) return;
   try {
-    if (ctx.state !== 'running') { try { ctx.resume(); } catch(e) {} }
+    _resumeCtx(ctx);
     var o = ctx.createOscillator(), g = ctx.createGain();
     o.connect(g); g.connect(_dest(ctx));
     o.frequency.value = freq;
@@ -200,7 +207,7 @@ function _playSample(name) {
   var b = _buffers[name];
   if (!b) { _decodeOne(name); return false; }
   try {
-    if (ctx.state !== 'running') { try { ctx.resume(); } catch(e) {} }
+    _resumeCtx(ctx);
     var src = ctx.createBufferSource();
     src.buffer = b; src.connect(_dest(ctx)); src.start(0);
     return true;
@@ -281,7 +288,7 @@ function notifyMyTurn() {
   if (!_playSample('turn')) {
   var ctx = getAudioCtx(); if (!ctx) return;
   try {
-    if (ctx.state !== 'running') { try { ctx.resume(); } catch(e) {} }
+    _resumeCtx(ctx);
     var o = ctx.createOscillator(), g = ctx.createGain();
     o.type = 'sine'; // smoothest waveform, closest to a real bubble
     o.connect(g); g.connect(_dest(ctx));
