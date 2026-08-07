@@ -83,6 +83,20 @@ let _mode  = 'pl';      // onglet actif de la liste : 'pl' (pistes) | 'radio' (f
 let _plOpen = false;    // liste dépliée (préservé à travers les re-rendus)
 let _fadePauseTimer = null;
 const FADE = 0.45;   // durée du fondu (s)
+// ── Lecture hors-réseau (préchargement Blob) ──
+// Sur iPhone, un basculement Wi-Fi ↔ cellulaire tue la requête HTTP en vol et
+// l'élément <audio> ne s'en remet pas tout seul : le watchdog attend jusqu'à
+// WD_STALL (6 s) sans progression avant de réagir, ce qui s'entend comme une
+// coupure. En chargeant la piste ENTIÈRE dans un Blob et en lisant depuis un
+// object URL, plus aucune requête n'est en vol pendant la lecture : le handover
+// devient inaudible. Réservé aux pistes locales — un direct radio est par
+// nature un flux continu et ne peut pas être mis en mémoire.
+const BLOB_MAX_BYTES = 32 * 1024 * 1024;  // au-delà, on reste en streaming réseau
+const BLOB_KEEP      = 3;                 // object URLs conservés en mémoire
+const LS_PRELOAD     = 'pokerth.music.preload';
+let _blobUrl   = Object.create(null);     // id -> object URL prêt
+let _blobPend  = Object.create(null);     // id -> requête en cours (partagée)
+let _blobOrder = [];                      // ids, du plus ancien au plus récent
 // ── Network watchdog (see the _wd* block below) ──
 const WD_TICK    = 2000;                               // progress poll (ms)
 const WD_STALL   = 6000;                               // no progress for this long → recover (ms)
@@ -252,6 +266,78 @@ function _wdTick(now) {
   if (pos !== _wdPos) { _wdPos = pos; _wdAt = now; _wdTries = 0; return; }
   if (now - _wdAt >= WD_STALL) _wdSchedule();
 }
+function getPreload() {
+  try { return localStorage.getItem(LS_PRELOAD) !== '0'; } catch (e) { return true; }
+}
+function setPreload(on) {
+  try { localStorage.setItem(LS_PRELOAD, on ? '1' : '0'); } catch (e) {}
+  if (!on) _blobPurge(true);
+}
+function _blobForget(id) {
+  var u = _blobUrl[id];
+  if (u) { try { URL.revokeObjectURL(u); } catch (e) {} }
+  delete _blobUrl[id];
+  _blobOrder = _blobOrder.filter(function (x) { return x !== id; });
+}
+// Garde au plus BLOB_KEEP pistes en mémoire, sans jamais lâcher la piste courante.
+function _blobPurge(all) {
+  if (all) {
+    Object.keys(_blobUrl).forEach(_blobForget);
+    _blobPend = Object.create(null);
+    return;
+  }
+  var drop = _blobOrder.filter(function (id) { return id !== _curId; });
+  while (_blobOrder.length > BLOB_KEEP && drop.length) _blobForget(drop.shift());
+}
+// Télécharge la piste entière. Mémoïsé : play() et le préchargement de la piste
+// suivante partagent la même requête au lieu d'en lancer deux.
+function _blobFetch(t) {
+  if (!t || _isStream(t) || !getPreload()) return Promise.resolve(null);
+  if (typeof fetch !== 'function' || !window.URL || !URL.createObjectURL) return Promise.resolve(null);
+  if (_blobUrl[t.id]) return Promise.resolve(_blobUrl[t.id]);
+  if (_blobPend[t.id]) return _blobPend[t.id];
+  var p = fetch(t.file, { credentials: 'same-origin' }).then(function (r) {
+    if (!r.ok) return null;
+    var len = parseInt(r.headers.get('content-length') || '0', 10);
+    if (len > BLOB_MAX_BYTES) return null;        // trop lourd : on laisse le streaming
+    return r.blob();
+  }).then(function (b) {
+    if (!b || !b.size || b.size > BLOB_MAX_BYTES) return null;
+    var u = URL.createObjectURL(b);
+    _blobUrl[t.id] = u;
+    _blobOrder.push(t.id);
+    _blobPurge();
+    return u;
+  }).catch(function () {
+    return null;                                  // hors-ligne, 404, CORS : streaming
+  }).then(function (u) {
+    delete _blobPend[t.id];
+    return u;
+  });
+  _blobPend[t.id] = p;
+  return p;
+}
+// Bascule à chaud sur le Blob dès qu'il est prêt, position conservée. Coût : un
+// hoquet très bref au moment du swap, contre plusieurs secondes de silence au
+// prochain changement de réseau.
+function _blobSwap(id, url) {
+  if (!url || id !== _curId || _bypass) return;
+  var el = _audio;
+  if (!el) return;
+  var cur = '';
+  try { cur = el.currentSrc || el.src || ''; } catch (e) {}
+  if (!cur || cur === url || cur.indexOf('blob:') === 0) return;   // déjà hors-réseau
+  var pos = 0, playing = false;
+  try { pos = Math.max(0, el.currentTime || 0); } catch (e) {}
+  try { playing = !el.paused && !el.ended; } catch (e) {}
+  var seek = function () {
+    try { el.removeEventListener('loadedmetadata', seek); } catch (e) {}
+    try { if (pos > 0) el.currentTime = pos; } catch (e) {}
+  };
+  try { el.addEventListener('loadedmetadata', seek); } catch (e) {}
+  try { el.src = url; el.load(); } catch (e) { return; }
+  if (playing) { try { var p = el.play(); if (p && p.catch) p.catch(function () {}); } catch (e) {} }
+}
 function _wdSchedule() {
   if (!_wdIntent || _wdBusy || _wdRetry) return;
   if (_wdTries >= WD_MAX) { _wdDisarm(); _render(); return; }   // hopeless (missing file, no network at all)
@@ -276,7 +362,7 @@ function _wdRecover() {
       };
       try { el.addEventListener('loadedmetadata', seekBack); } catch (e) {}
     }
-    try { el.src = t.file; el.load(); } catch (e) {}
+    try { el.src = (!stream && _blobUrl[t.id]) || t.file; el.load(); } catch (e) {}
   }
   var done = function () { _wdBusy = false; _applyVol(getVolume()); _wdMark(); _render(); };
   var fail = function () { _wdBusy = false; _wdSchedule(); };
@@ -454,7 +540,7 @@ async function play(id) {
       _bypass = false;
       _corsTried = stream;                // erreur de chargement ⇒ _onMainError tentera le repli
       try { if (stream) a.crossOrigin = 'anonymous'; else a.removeAttribute('crossorigin'); } catch (e) {}
-      a.src = t.file;
+      a.src = _blobUrl[t.id] || t.file;
     }
   }
   var el = _active();
@@ -464,6 +550,18 @@ async function play(id) {
   if (!_bypass && _waReady && _gain && _ctx) { try { _gain.gain.cancelScheduledValues(_ctx.currentTime); _gain.gain.setValueAtTime(0, _ctx.currentTime); } catch (e) {} }
   else { _applyVol(getVolume()); }
   try { await el.play(); _wdArm(); } catch (e) { _wdDisarm(); /* gesture/load issue — UI reflects paused */ }
+  // Lecture lancée : on la met à l'abri du réseau. Le fetch part APRÈS play()
+  // pour ne pas consommer le geste utilisateur — sur iOS, attendre une promesse
+  // avant play() fait perdre l'autorisation de lecture.
+  if (!stream && !_bypass) {
+    var pid = t.id;
+    _blobFetch(t).then(function (u) { _blobSwap(pid, u); });
+    var g = _group('pl');
+    if (g.length > 1) {
+      var gi = _gIndex(pid, g);
+      if (gi >= 0) _blobFetch(g[(gi + 1) % g.length]);   // enchaînement sans réseau
+    }
+  }
   if (_bypass || !_fadeTo(getVolume(), FADE)) _applyVol(getVolume());
   _render();
 }
@@ -1030,6 +1128,8 @@ const Music = {
   getDuration: getDuration,
   getCurrentTime: getCurrentTime,
   seek: seek,
+  getPreload: getPreload,
+  setPreload: setPreload,
   mount: mount
 };
 
