@@ -204,6 +204,17 @@ function updateReactionCount(emoji) {
 // which is what the user reported hearing.
 function handleIncomingReaction(pid, emoji, via) {
   if (_reactMuted) return;                       // reactions coupees localement : aucun rendu, badge ni son
+  // Joueur ignoré → ses réactions aussi (demande forum 2026-08-08) : même
+  // filtre par nom que le chat (addChat/addGameChat). Les DEUX canaux
+  // ('chat' /emoji et 'react' REACT:) passent ici, une seule garde suffit.
+  // 'self' exclu : on ne peut pas s'ignorer soi-même. Le QML ne filtre pas
+  // (encore) — extension additive de l'Ignore, à proposer upstream.
+  try {
+    if (via !== 'self' && typeof window._isIgnored === 'function') {
+      var _inm = (window.players && window.players[pid]) || null;
+      if (_inm && window._isIgnored(_inm)) return;   // ni compteur, ni badge, ni son
+    }
+  } catch (_ie) {}
   via = via || 'react';
   // Expéditeur assis ? Sinon c'est un SPECTATEUR de notre table : parité QML
   // §10 — la réaction s'anime au centre de la table au lieu d'un siège
