@@ -449,6 +449,19 @@ body {
   .pv-scroll      { padding-bottom: env(safe-area-inset-bottom); }
   .ab-body        { padding-bottom: calc(28px + env(safe-area-inset-bottom)); }
 }
+/* Installed app, measured-viewport variant (--app-h set by an inline script
+   in pokerth-client.html; full rationale there). Explicit height everywhere
+   an element was sized with dvh — html, body and the screens — and the same
+   safe-area paddings as the media-query block above. No position:fixed and
+   no dvh in this path (both proven broken on iOS/iPadOS 26, 2026-08-08).
+   Falls back to 100dvh until the first measurement lands. */
+:root[data-pwa="1"], :root[data-pwa="1"] body { height: var(--app-h, 100dvh); }
+:root[data-pwa="1"] .screen { height: var(--app-h, 100dvh); }
+:root[data-pwa="1"] .connect-footer { bottom: max(10px, env(safe-area-inset-bottom)); }
+:root[data-pwa="1"] .lobby-footbar  { padding-bottom: max(8px, env(safe-area-inset-bottom)); }
+:root[data-pwa="1"] .cp-scroll      { padding-bottom: calc(40px + env(safe-area-inset-bottom)); }
+:root[data-pwa="1"] .pv-scroll      { padding-bottom: env(safe-area-inset-bottom); }
+:root[data-pwa="1"] .ab-body        { padding-bottom: calc(28px + env(safe-area-inset-bottom)); }
 :fullscreen            { background: var(--felt); }
 :-webkit-full-screen   { background: var(--felt); }
 :-moz-full-screen      { background: var(--felt); }

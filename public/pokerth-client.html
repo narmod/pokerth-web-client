@@ -127,6 +127,63 @@ try{var _d=document.documentElement,_p=localStorage.getItem('pth_theme'),_tb=loc
   } catch (e) {}
 })();
 </script>
+<script>
+/* Installed-app viewport fix, take 2 (--app-h) — see the "Installed PWA"
+   comment in pokerth.css (narmod 2026-08-01) for the original stray-band
+   bug: in home-screen web apps, 100dvh/100vh can stay one relayout behind
+   and the html/body background shows as a grey band under the screens.
+   Field results 2026-08-08 killed both previous strategies:
+     - @media (display-mode: standalone|fullscreen) no longer matches in
+       iPadOS 26 windowed web apps -> the fix silently turns off (band on
+       iPad, gone after a rotation = forced relayout);
+     - body{position:fixed;inset:0} hits the iOS 26 "bottom gap on
+       viewport-sized fixed containers" bug -> made the band PERMANENT on
+       iPhone (2.1.6-web.9, reverted in web.10).
+   This version measures the real height instead: visualViewport.height is
+   correct from the first frame (the fixed overlays #about-page /
+   #privacy-page never showed the band for that reason) and is mirrored
+   into --app-h on <html>, which pokerth.css uses as an explicit height for
+   html/body/.screen — no fixed container, no dvh. Scoped to installed apps
+   via <html data-pwa="1"> (navigator.standalone is the iOS/iPadOS source
+   of truth for home-screen launches and survives the windowing change);
+   Safari tabs keep the stock dvh path, which works there.
+   While a text field is focused the measurement is SKIPPED: the software
+   keyboard shrinks visualViewport.height, and a known iOS standalone bug
+   can leave it shrunk after the keyboard closes — adopting that value
+   would recreate the band. focusout re-measures once the field is left. */
+(function () {
+  try {
+    var d = document.documentElement;
+    var mm = window.matchMedia;
+    var pwa = navigator.standalone === true ||
+              (mm && (mm('(display-mode: standalone)').matches ||
+                      mm('(display-mode: fullscreen)').matches));
+    if (!pwa) return;
+    d.setAttribute('data-pwa', '1');
+    function editing() {
+      var a = document.activeElement;
+      return !!(a && (a.tagName === 'INPUT' || a.tagName === 'TEXTAREA' || a.isContentEditable));
+    }
+    function setH() {
+      try {
+        if (editing()) return;
+        var h = (window.visualViewport && window.visualViewport.height) || window.innerHeight;
+        if (h) d.style.setProperty('--app-h', Math.round(h) + 'px');
+      } catch (e) {}
+    }
+    setH();
+    window.addEventListener('resize', setH);
+    window.addEventListener('orientationchange', setH);
+    window.addEventListener('pageshow', setH);
+    if (window.visualViewport) window.visualViewport.addEventListener('resize', setH);
+    document.addEventListener('focusout', function () { setTimeout(setH, 250); });
+    /* The OS can correct a stale initial viewport without firing any event
+       (the 2026-08-01 report: the band vanished when unrelated content
+       forced a relayout). Re-measure a few times right after boot. */
+    var n = 0, t = setInterval(function () { setH(); if (++n >= 10) clearInterval(t); }, 300);
+  } catch (e) {}
+})();
+</script>
 <title>PokerTH Web Client</title>
 <link rel="stylesheet" href="fonts/fonts.css">
 <link rel="manifest" href="manifest.json">
