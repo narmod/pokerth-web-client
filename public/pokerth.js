@@ -2662,6 +2662,35 @@ _hideFullscreenIfUnsupported();
 
 /* ═══════════════════ */
 
+/* Shared nickname across modes (pth_nick), single source of truth.
+ *
+ * Declared at TOP LEVEL on purpose: it is pure localStorage plumbing with no
+ * DOM dependency, and callers such as App.onLoginModeChange() live outside the
+ * DOMContentLoaded handler. Keeping it inside that handler made it hostage to
+ * anything throwing earlier in the same handler (e.g. a bare identifier from a
+ * module that failed to load), which silently killed the handler and left
+ * window._pthNick undefined -> "Cannot read properties of undefined (reading
+ * 'get')" on the next login-mode change. Fallback order below migrates the
+ * legacy per-mode keys. The pokerth.net Guest name keeps its own rule
+ * (GuestXXXXX via pth_guest_name, read-only field) and is never synced here.
+ */
+window._pthNick = {
+  get: function () {
+    try {
+      return localStorage.getItem('pth_nick')
+          || localStorage.getItem('pth_offline_nick')
+          || localStorage.getItem('pth_lan_nick')
+          || localStorage.getItem('pth_unauth_nick')
+          || localStorage.getItem('pth_auth_login')
+          || '';
+    } catch (e) { return ''; }
+  },
+  set: function (v) {
+    if (!v) return;
+    try { localStorage.setItem('pth_nick', v); } catch (e) {}
+  }
+};
+
 document.addEventListener("DOMContentLoaded", function() {
   // Auto-fill nick
   // One-time housekeeping: scrub the legacy 'pth_pass' key in case
@@ -2683,7 +2712,7 @@ document.addEventListener("DOMContentLoaded", function() {
   try { if (typeof window._applyAssistUI === 'function') window._applyAssistUI(); } catch(e) {}
   // Restore sound button state
   var sbtn = document.getElementById('sound-toggle-btn');
-  if (sbtn && !_soundEnabled) {
+  if (sbtn && !window._soundEnabled) {
     sbtn.innerHTML = '<svg viewBox="0 0 24 24" style="display:block;width:22px;height:22px" fill="currentColor" aria-hidden="true"><path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73 4.27 3zM12 4L9.91 6.09 12 8.18V4z"/></svg>';
     sbtn.style.opacity = '0.5';
     sbtn.title = 'Unmute';
@@ -2705,27 +2734,6 @@ document.addEventListener("DOMContentLoaded", function() {
    * Falls through to a fresh random name if localStorage is unavailable
    * (private mode under some browsers, disabled storage policy, etc.).
    */
-  /* ── Pseudo PARTAGÉ entre modes (demande narmod 2026-07-18) ──
-   * Un seul pseudo (clé pth_nick) synchronisé entre entraînement, LAN,
-   * dédié et compte pokerth.net. Seul l'invité pokerth.net garde sa
-   * propre règle (GuestXXXXX via pth_guest_name, champ verrouillé).
-   * Migration : repli sur les anciennes clés par mode. */
-  window._pthNick = {
-    get: function () {
-      try {
-        return localStorage.getItem('pth_nick')
-            || localStorage.getItem('pth_offline_nick')
-            || localStorage.getItem('pth_lan_nick')
-            || localStorage.getItem('pth_unauth_nick')
-            || localStorage.getItem('pth_auth_login')
-            || '';
-      } catch (e) { return ''; }
-    },
-    set: function (v) {
-      if (!v) return;
-      try { localStorage.setItem('pth_nick', v); } catch (e) {}
-    }
-  };
 
   window.getOrCreateGuestName = function() {
     try {
@@ -9940,7 +9948,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.6-web.7'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.6-web.8'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
