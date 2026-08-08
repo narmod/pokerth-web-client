@@ -637,7 +637,7 @@ export const strings = {
     chatTranslateBtn:'Vertalen', winMove:'Verplaatsen', loupeToggle:'Vergrootglas ×2',
     sendTooltip:'Verzenden', resizeTooltip:'Sleep om formaat te wijzigen', loadingOffline:'Offlinemodus laden…',
     connectSlow:'De verbinding duurt lang… probeer het zo nodig opnieuw.', copyInviteLink:'Uitnodigingslink kopiëren', copyInviteHint:'De ontvanger komt rechtstreeks aan deze tafel.',
-    dbgLogTitle:'Foutopsporingslogboek', dbgLogOpen:'Foutopsporingslogboek tonen', dbgLogCopy:'Kopiëren', dbgLogEmpty:'Nog geen foutopsporingsuitvoer.',
+    dbgLogTitle:'Foutopsporingslogboek', dbgLogOpen:'Foutopsporingslogboek tonen', dbgLogCopy:'Kopiëren', dbgLogEmpty:'Nog geen foutopsporingsuitvoer.', dbgLogWrap:'Regels afbreken',
     disconnectDialogTitle: 'Verbinding verbreken?',
     disconnectDialogBody: 'Je keert terug naar het inlogscherm.',
     disconnectQuit: 'Verbinding verbreken',

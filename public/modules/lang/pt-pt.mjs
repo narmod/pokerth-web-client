@@ -638,7 +638,7 @@ export const strings = {
     chatTranslateBtn:'Traduzir', winMove:'Mover', loupeToggle:'Lupa ×2',
     sendTooltip:'Enviar', resizeTooltip:'Arraste para redimensionar', loadingOffline:'A carregar o modo offline…',
     connectSlow:'A ligação está a demorar… tente novamente se for preciso.', copyInviteLink:'Copiar ligação de convite', copyInviteHint:'O destinatário entrará diretamente nesta mesa.',
-    dbgLogTitle:'Registo de depuração', dbgLogOpen:'Mostrar registo de depuração', dbgLogCopy:'Copiar', dbgLogEmpty:'Ainda não há saída de depuração.',
+    dbgLogTitle:'Registo de depuração', dbgLogOpen:'Mostrar registo de depuração', dbgLogCopy:'Copiar', dbgLogEmpty:'Ainda não há saída de depuração.', dbgLogWrap:'Quebrar linhas',
     disconnectDialogTitle: 'Desligar?',
     disconnectDialogBody: 'Voltará ao ecrã de início de sessão.',
     disconnectQuit: 'Desligar',

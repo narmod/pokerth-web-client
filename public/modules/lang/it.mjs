@@ -641,7 +641,7 @@ export const strings = {
     chatTranslateBtn:'Traduci', winMove:'Sposta', loupeToggle:'Lente ×2',
     sendTooltip:'Invia', resizeTooltip:'Trascina per ridimensionare', loadingOffline:'Caricamento della modalità offline…',
     connectSlow:'La connessione sta impiegando tempo… riprova se necessario.', copyInviteLink:'Copia link d\'invito', copyInviteHint:'Il destinatario entrerà direttamente in questo tavolo.',
-    dbgLogTitle:'Registro di debug', dbgLogOpen:'Mostra il registro di debug', dbgLogCopy:'Copia', dbgLogEmpty:'Nessun output di debug per ora.',
+    dbgLogTitle:'Registro di debug', dbgLogOpen:'Mostra il registro di debug', dbgLogCopy:'Copia', dbgLogEmpty:'Nessun output di debug per ora.', dbgLogWrap:'A capo automatico',
     disconnectDialogTitle: 'Disconnettere?',
     disconnectDialogBody: 'Tornerai alla schermata di accesso.',
     disconnectQuit: 'Disconnetti',

@@ -637,7 +637,7 @@ export const strings = {
     chatTranslateBtn:'Przetłumacz', winMove:'Przenieś', loupeToggle:'Lupa ×2',
     sendTooltip:'Wyślij', resizeTooltip:'Przeciągnij, aby zmienić rozmiar', loadingOffline:'Ładowanie trybu offline…',
     connectSlow:'Łączenie trwa dłużej… w razie potrzeby spróbuj ponownie.', copyInviteLink:'Kopiuj link z zaproszeniem', copyInviteHint:'Odbiorca dołączy bezpośrednio do tego stołu.',
-    dbgLogTitle:'Dziennik debugowania', dbgLogOpen:'Pokaż dziennik debugowania', dbgLogCopy:'Kopiuj', dbgLogEmpty:'Brak danych debugowania.',
+    dbgLogTitle:'Dziennik debugowania', dbgLogOpen:'Pokaż dziennik debugowania', dbgLogCopy:'Kopiuj', dbgLogEmpty:'Brak danych debugowania.', dbgLogWrap:'Zawijanie wierszy',
     disconnectDialogTitle: 'Rozłączyć?',
     disconnectDialogBody: 'Wrócisz do ekranu logowania.',
     disconnectQuit: 'Rozłącz',

@@ -434,7 +434,12 @@ function onHandStart(sub) {
       _cdh.push(_cd); if (_cdh.length > 20) _cdh.shift();
       // Anomalie = cartes toujours nulles alors qu'on est assis avec des
       // données serveur (plain ou enc). Statut visible sur mobile.
-      if (S.myCards[0] == null && S.myCards[1] == null && (_cd.plain || _cd.enc >= 0)) {
+      // Pas une anomalie quand on vient d'être éliminé : les cartes sont
+      // volontairement vidées (force-clear ci-dessus) — le toast partait
+      // à chaque knockout (forum : « error message pops up every time I
+      // get knocked out », clr=true $=0).
+      if (S.myCards[0] == null && S.myCards[1] == null && (_cd.plain || _cd.enc >= 0)
+          && !_cd.cleared && !(_cd.money != null && _cd.money <= 0)) {
         window._pthCardDiagN = (window._pthCardDiagN || 0) + 1;
         if (window._pthCardDiagN <= 2) {
           setStatus('cards diag: plain=' + _cd.plain + ' enc=' + _cd.enc +

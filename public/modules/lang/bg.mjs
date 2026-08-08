@@ -634,7 +634,7 @@ export const strings = {
     chatTranslateBtn:'Преведи', winMove:'Преместване', loupeToggle:'Лупа ×2',
     sendTooltip:'Изпрати', resizeTooltip:'Влачете за преоразмеряване', loadingOffline:'Зареждане на офлайн режим…',
     connectSlow:'Свързването отнема време… опитайте отново при нужда.', copyInviteLink:'Копирай връзката за покана', copyInviteHint:'Получателят ще се присъедини директно към тази маса.',
-    dbgLogTitle:'Дневник за отстраняване на грешки', dbgLogOpen:'Покажи дневника за грешки', dbgLogCopy:'Копирай', dbgLogEmpty:'Все още няма изход за отстраняване на грешки.',
+    dbgLogTitle:'Дневник за отстраняване на грешки', dbgLogOpen:'Покажи дневника за грешки', dbgLogCopy:'Копирай', dbgLogEmpty:'Все още няма изход за отстраняване на грешки.', dbgLogWrap:'Пренасяне на редове',
     disconnectDialogTitle: 'Да прекъснете?',
     disconnectDialogBody: 'Ще се върнете към екрана за вход.',
     disconnectQuit: 'Прекъсни',

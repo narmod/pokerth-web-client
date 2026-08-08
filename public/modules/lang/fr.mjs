@@ -389,7 +389,7 @@ export const strings = {
     chatTranslateBtn:'Traduire', winMove:'Déplacer', loupeToggle:'Loupe ×2',
     sendTooltip:'Envoyer', resizeTooltip:'Glisser pour redimensionner', loadingOffline:'Chargement du mode hors-ligne…',
     connectSlow:'La connexion prend du temps… réessaie si besoin.', copyInviteLink:'Copier le lien d\'invitation', copyInviteHint:'Le destinataire rejoindra directement cette table.',
-    dbgLogTitle:'Journal de débogage', dbgLogOpen:'Afficher le journal de débogage', dbgLogCopy:'Copier', dbgLogEmpty:'Aucune sortie de débogage pour l\'instant.',
+    dbgLogTitle:'Journal de débogage', dbgLogOpen:'Afficher le journal de débogage', dbgLogCopy:'Copier', dbgLogEmpty:'Aucune sortie de débogage pour l\'instant.', dbgLogWrap:'Retour à la ligne',
     createPrefsSave:'💾 Enregistrer les préfs', createPrefsSaveTip:'Enregistrer ce formulaire comme mes préférences personnelles', createPrefsSaved:'Préférences enregistrées', createPrefsLoaded:'Préférences chargées', createPrefsNone:'Aucune préférence enregistrée pour l\'instant',
     advSecLocalGame:'Partie d\'entraînement', advCreateDialog:'Afficher la boîte de dialogue pour un nouveau jeu', advPauseHands:'Pause entre les mains (reprise via la fenêtre du gagnant)', nextHandBtn:'Main suivante',
     advSecTablePrefs:'Préférences de table', advTablePrefsDesc:'Valeurs par défaut des tables que tu crées dans ce mode — la pastille ⭐ du formulaire de création les charge.', advRaiseEveryHands:'Hausse des blindes toutes les N mains', advGameSpeed:'Vitesse de jeu (1–11)',

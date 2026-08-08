@@ -634,7 +634,7 @@ export const strings = {
     chatTranslateBtn:'Μετάφραση', winMove:'Μετακίνηση', loupeToggle:'Μεγεθυντικός ×2',
     sendTooltip:'Αποστολή', resizeTooltip:'Σύρετε για αλλαγή μεγέθους', loadingOffline:'Φόρτωση λειτουργίας χωρίς σύνδεση…',
     connectSlow:'Η σύνδεση αργεί… δοκιμάστε ξανά αν χρειαστεί.', copyInviteLink:'Αντιγραφή συνδέσμου πρόσκλησης', copyInviteHint:'Ο παραλήπτης θα μπει απευθείας σε αυτό το τραπέζι.',
-    dbgLogTitle:'Αρχείο εντοπισμού σφαλμάτων', dbgLogOpen:'Εμφάνιση αρχείου εντοπισμού', dbgLogCopy:'Αντιγραφή', dbgLogEmpty:'Δεν υπάρχει ακόμη έξοδος εντοπισμού.',
+    dbgLogTitle:'Αρχείο εντοπισμού σφαλμάτων', dbgLogOpen:'Εμφάνιση αρχείου εντοπισμού', dbgLogCopy:'Αντιγραφή', dbgLogEmpty:'Δεν υπάρχει ακόμη έξοδος εντοπισμού.', dbgLogWrap:'Αναδίπλωση γραμμών',
     disconnectDialogTitle: 'Αποσύνδεση;',
     disconnectDialogBody: 'Θα επιστρέψετε στην οθόνη σύνδεσης.',
     disconnectQuit: 'Αποσύνδεση',

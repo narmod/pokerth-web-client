@@ -633,7 +633,7 @@ export const strings = {
     chatTranslateBtn:'Oversæt', winMove:'Flyt', loupeToggle:'Forstørrelse ×2',
     sendTooltip:'Send', resizeTooltip:'Træk for at ændre størrelse', loadingOffline:'Indlæser offlinetilstand…',
     connectSlow:'Forbindelsen tager tid… prøv igen om nødvendigt.', copyInviteLink:'Kopiér invitationslink', copyInviteHint:'Modtageren tilslutter sig dette bord direkte.',
-    dbgLogTitle:'Fejlfindingslog', dbgLogOpen:'Vis fejlfindingslog', dbgLogCopy:'Kopiér', dbgLogEmpty:'Ingen fejlfindingsoutput endnu.',
+    dbgLogTitle:'Fejlfindingslog', dbgLogOpen:'Vis fejlfindingslog', dbgLogCopy:'Kopiér', dbgLogEmpty:'Ingen fejlfindingsoutput endnu.', dbgLogWrap:'Ombryd linjer',
     disconnectDialogTitle: 'Afbryd?',
     disconnectDialogBody: 'Du vender tilbage til loginskærmen.',
     disconnectQuit: 'Afbryd',

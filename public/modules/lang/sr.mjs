@@ -634,7 +634,7 @@ export const strings = {
     chatTranslateBtn:'Преведи', winMove:'Помери', loupeToggle:'Лупа ×2',
     sendTooltip:'Пошаљи', resizeTooltip:'Повуците да промените величину', loadingOffline:'Учитавање ванмрежног режима…',
     connectSlow:'Повезивање траје… покушајте поново ако треба.', copyInviteLink:'Копирај везу за позив', copyInviteHint:'Прималац ће се директно придружити овом столу.',
-    dbgLogTitle:'Дневник за отклањање грешака', dbgLogOpen:'Прикажи дневник за отклањање грешака', dbgLogCopy:'Копирај', dbgLogEmpty:'Још нема излаза за отклањање грешака.',
+    dbgLogTitle:'Дневник за отклањање грешака', dbgLogOpen:'Прикажи дневник за отклањање грешака', dbgLogCopy:'Копирај', dbgLogEmpty:'Још нема излаза за отклањање грешака.', dbgLogWrap:'Прелом редова',
     disconnectDialogTitle: 'Prekinuti vezu?',
     disconnectDialogBody: 'Vratićete se na ekran za prijavu.',
     disconnectQuit: 'Prekini vezu',

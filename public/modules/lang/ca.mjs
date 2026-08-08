@@ -634,7 +634,7 @@ export const strings = {
     chatTranslateBtn:'Tradueix', winMove:'Mou', loupeToggle:'Lupa ×2',
     sendTooltip:'Envia', resizeTooltip:'Arrossega per redimensionar', loadingOffline:'Carregant el mode fora de línia…',
     connectSlow:'La connexió triga… torna-ho a provar si cal.', copyInviteLink:'Copia l\'enllaç d\'invitació', copyInviteHint:'El destinatari s\'unirà directament a aquesta taula.',
-    dbgLogTitle:'Registre de depuració', dbgLogOpen:'Mostra el registre de depuració', dbgLogCopy:'Copia', dbgLogEmpty:'Encara no hi ha sortida de depuració.',
+    dbgLogTitle:'Registre de depuració', dbgLogOpen:'Mostra el registre de depuració', dbgLogCopy:'Copia', dbgLogEmpty:'Encara no hi ha sortida de depuració.', dbgLogWrap:'Ajusta les línies',
     disconnectDialogTitle: 'Vols desconnectar?',
     disconnectDialogBody: 'Tornaràs a la pantalla d\'inici de sessió.',
     disconnectQuit: 'Desconnecta',

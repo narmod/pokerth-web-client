@@ -9,15 +9,46 @@
 // and in a standalone PWA on any platform, there is no dev console at
 // all. So we keep the console output in a ring buffer instead of a file.
 //
-// Everything stays in memory: nothing is persisted, nothing is uploaded.
-// The player decides what to share, and secrets are masked on the way in
-// (see _mask) because this text is meant to end up on a public forum.
+// Like the QML client's pokerth-debug.log (opened std::ios::app in
+// loghelper_client.cpp), the log now survives restarts: the ring buffer
+// is saved to localStorage so the tail spans the last few sessions, each
+// marked by its own "debug log started" line. Same 200 KB cap as the
+// file tail the QML viewer shows. Nothing is uploaded. The player
+// decides what to share, and secrets are masked on the way in (see
+// _mask) because this text is meant to end up on a public forum.
 // ═══════════════════════════════════════════════════════════════════
 import { t } from '../i18n.mjs';
 
 const MAX_CHARS = 200000;   // same tail size as LogStore.debugLogTail
+const STORE_KEY = 'pth_debuglog';
 const LINES = [];
 let chars = 0;
+
+// ── Previous sessions (QML parity: pokerth-debug.log is append-mode) ──
+// Restore the saved tail before anything from this session is pushed.
+// Content was already masked when it was first captured.
+try {
+  const prev = localStorage.getItem(STORE_KEY);
+  if (prev) {
+    for (const l of prev.split('\n')) { LINES.push(l); chars += l.length + 1; }
+    while (chars > MAX_CHARS && LINES.length > 1) chars -= LINES.shift().length + 1;
+  }
+} catch (e) {}
+
+let _saveT = null;
+function _save() {
+  _saveT = null;
+  try { localStorage.setItem(STORE_KEY, LINES.join('\n')); } catch (e) {}
+}
+function _scheduleSave() {
+  if (_saveT == null) _saveT = setTimeout(_save, 2000);
+}
+// Flush on tab hide/close so a crash-adjacent session still leaves its
+// last lines behind — same spirit as the QML endl-flush per line.
+document.addEventListener('visibilitychange', function () {
+  if (document.visibilityState === 'hidden') { if (_saveT != null) clearTimeout(_saveT); _save(); }
+});
+window.addEventListener('pagehide', function () { if (_saveT != null) clearTimeout(_saveT); _save(); });
 
 function _mask(s) {
   // Anything that looks like a credential never reaches the buffer: the
@@ -53,6 +84,7 @@ function push(level, args) {
   // Ring buffer: drop from the front, never let the tab's memory grow
   // without bound during a long session.
   while (chars > MAX_CHARS && LINES.length > 1) chars -= LINES.shift().length + 1;
+  _scheduleSave();
 }
 
 function tail(n) {
@@ -77,11 +109,28 @@ window.addEventListener('error', function (e) {
 window.addEventListener('unhandledrejection', function (e) {
   push('REJECTION', [(e && e.reason) || 'unknown']);
 });
-// Header différé d'un tick : BUILD_VERSION est défini en fin de pokerth.js,
-// APRÈS l'évaluation des modules importés — sinon le log affichait « build ? ».
-setTimeout(function () {
-  push('INFO', ['debug log started — build ' + (window.BUILD_VERSION || '?') + ' — ' + navigator.userAgent]);
-}, 0);
+// Header de session : BUILD_VERSION est défini en fin de pokerth.js, APRÈS
+// l'évaluation des modules importés. Un setTimeout(0) perdait la course si
+// pokerth.js arrivait lentement du réseau (forum : « build ? ») → on ATTEND
+// la valeur (poll court), en gardant l'horodatage réel du démarrage.
+(function () {
+  const startedAt = _stamp();
+  let tries = 0;
+  (function waitBuild() {
+    if (window.BUILD_VERSION || ++tries > 100) {   // ~10 s max
+      LINES_pushHeader();
+    } else {
+      setTimeout(waitBuild, 100);
+    }
+  })();
+  function LINES_pushHeader() {
+    const line = _mask(startedAt + ' [INFO] debug log started — build ' +
+                       (window.BUILD_VERSION || '?') + ' — ' + navigator.userAgent);
+    LINES.push(line);
+    chars += line.length + 1;
+    _scheduleSave();
+  }
+})();
 
 // ── Viewer ─────────────────────────────────────────────────────────
 const CSS =
@@ -92,6 +141,7 @@ const CSS =
     'color:var(--chatlog-text,var(--text));background:var(--chatlog-bg,var(--field-bg));' +
     'border:1px solid var(--border);border-radius:var(--r-xs);padding:6px}' +
   '#dbg-modal .dbg-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}' +
+  '#dbg-text.dbg-wrap{white-space:pre-wrap;word-break:break-all}' +
   '#dbg-modal .dbg-sp{flex:1}';
 
 function _modal() {
@@ -113,6 +163,7 @@ function _modal() {
         '<button type="button" class="btn-sm" id="dbg-refresh"></button>' +
         '<button type="button" class="btn-sm" id="dbg-copy"></button>' +
         '<button type="button" class="btn-sm" id="dbg-save"></button>' +
+        '<label class="dbg-wrap-lbl"><input type="checkbox" id="dbg-wrap"> <span id="dbg-wrap-txt"></span></label>' +
         '<span class="dbg-sp"></span>' +
       '</div>' +
     '</div>';
@@ -125,6 +176,16 @@ function _modal() {
     if (e.key === 'Escape' && m.style.display !== 'none') close();
   });
   m.querySelector('#dbg-refresh').addEventListener('click', fill);
+  // Retour à la ligne (forum : lignes longues illisibles sans scroll
+  // horizontal sur mobile). Préférence mémorisée.
+  const wrapCb = m.querySelector('#dbg-wrap');
+  try { wrapCb.checked = localStorage.getItem('pth_debuglog_wrap') === '1'; } catch (e) {}
+  const applyWrap = function () {
+    document.getElementById('dbg-text').classList.toggle('dbg-wrap', wrapCb.checked);
+    try { localStorage.setItem('pth_debuglog_wrap', wrapCb.checked ? '1' : '0'); } catch (e) {}
+  };
+  wrapCb.addEventListener('change', applyWrap);
+  applyWrap();
   m.querySelector('#dbg-copy').addEventListener('click', function () {
     const ta = document.getElementById('dbg-text');
     const btn = document.getElementById('dbg-copy');
@@ -159,6 +220,7 @@ function openDebugLog() {
   m.querySelector('#dbg-refresh').textContent = t('refreshTooltip');
   m.querySelector('#dbg-copy').textContent = t('dbgLogCopy');
   m.querySelector('#dbg-save').textContent = t('jrSaveAs');
+  m.querySelector('#dbg-wrap-txt').textContent = t('dbgLogWrap');
   fill();
   m.style.display = 'flex';
 }

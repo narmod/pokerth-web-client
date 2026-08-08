@@ -641,7 +641,7 @@ export const strings = {
     chatTranslateBtn:'Übersetzen', winMove:'Verschieben', loupeToggle:'Lupe ×2',
     sendTooltip:'Senden', resizeTooltip:'Zum Anpassen ziehen', loadingOffline:'Offline-Modus wird geladen…',
     connectSlow:'Die Verbindung dauert… bei Bedarf erneut versuchen.', copyInviteLink:'Einladungslink kopieren', copyInviteHint:'Der Empfänger tritt direkt diesem Tisch bei.',
-    dbgLogTitle:'Debug-Log', dbgLogOpen:'Debug-Log anzeigen', dbgLogCopy:'Kopieren', dbgLogEmpty:'Noch keine Debug-Ausgabe.',
+    dbgLogTitle:'Debug-Log', dbgLogOpen:'Debug-Log anzeigen', dbgLogCopy:'Kopieren', dbgLogEmpty:'Noch keine Debug-Ausgabe.', dbgLogWrap:'Zeilen umbrechen',
     disconnectDialogTitle: 'Trennen?',
     disconnectDialogBody: 'Du wirst zum Login-Bildschirm zurückgebracht.',
     disconnectQuit: 'Trennen',

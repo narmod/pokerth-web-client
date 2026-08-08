@@ -636,7 +636,7 @@ export const strings = {
     chatTranslateBtn:'Çevir', winMove:'Taşı', loupeToggle:'Büyüteç ×2',
     sendTooltip:'Gönder', resizeTooltip:'Yeniden boyutlandırmak için sürükleyin', loadingOffline:'Çevrimdışı mod yükleniyor…',
     connectSlow:'Bağlantı uzun sürüyor… gerekirse yeniden deneyin.', copyInviteLink:'Davet bağlantısını kopyala', copyInviteHint:'Alıcı doğrudan bu masaya katılacak.',
-    dbgLogTitle:'Hata ayıklama günlüğü', dbgLogOpen:'Hata ayıklama günlüğünü göster', dbgLogCopy:'Kopyala', dbgLogEmpty:'Henüz hata ayıklama çıktısı yok.',
+    dbgLogTitle:'Hata ayıklama günlüğü', dbgLogOpen:'Hata ayıklama günlüğünü göster', dbgLogCopy:'Kopyala', dbgLogEmpty:'Henüz hata ayıklama çıktısı yok.', dbgLogWrap:'Satırları kaydır',
     disconnectDialogTitle: 'Bağlantı kesilsin mi?',
     disconnectDialogBody: 'Giriş ekranına döneceksin.',
     disconnectQuit: 'Bağlantıyı kes',

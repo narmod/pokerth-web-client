@@ -634,7 +634,7 @@ export const strings = {
     chatTranslateBtn:'Vertaal', winMove:'Skuif', loupeToggle:'Vergrootglas ×2',
     sendTooltip:'Stuur', resizeTooltip:'Sleep om te verstel', loadingOffline:'Laai vanlyn-modus…',
     connectSlow:'Verbinding neem tyd… probeer weer indien nodig.', copyInviteLink:'Kopieer uitnodigingskakel', copyInviteHint:'Die ontvanger sal direk by hierdie tafel aansluit.',
-    dbgLogTitle:'Ontfoutlogboek', dbgLogOpen:'Wys ontfoutlogboek', dbgLogCopy:'Kopieer', dbgLogEmpty:'Nog geen ontfoutuitvoer nie.',
+    dbgLogTitle:'Ontfoutlogboek', dbgLogOpen:'Wys ontfoutlogboek', dbgLogCopy:'Kopieer', dbgLogEmpty:'Nog geen ontfoutuitvoer nie.', dbgLogWrap:'Vou lyne om',
     disconnectDialogTitle: 'Ontkoppel?',
     disconnectDialogBody: 'Jy sal na die aanmeldskerm terugkeer.',
     disconnectQuit: 'Ontkoppel',

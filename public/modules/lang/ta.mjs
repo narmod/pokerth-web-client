@@ -635,7 +635,7 @@ export const strings = {
     chatTranslateBtn:'மொழிபெயர்', winMove:'நகர்த்து', loupeToggle:'பெரிதாக்கி ×2',
     sendTooltip:'அனுப்பு', resizeTooltip:'அளவு மாற்ற இழுக்கவும்', loadingOffline:'ஆஃப்லைன் பயன்முறை ஏற்றப்படுகிறது…',
     connectSlow:'இணைப்பு நேரம் எடுக்கிறது… தேவைப்பட்டால் மீண்டும் முயற்சிக்கவும்.', copyInviteLink:'அழைப்பு இணைப்பை நகலெடு', copyInviteHint:'பெறுநர் நேரடியாக இந்த மேசையில் இணைவார்.',
-    dbgLogTitle:'பிழைத்திருத்தப் பதிவு', dbgLogOpen:'பிழைத்திருத்தப் பதிவைக் காட்டு', dbgLogCopy:'நகலெடு', dbgLogEmpty:'இன்னும் பிழைத்திருத்த வெளியீடு இல்லை.',
+    dbgLogTitle:'பிழைத்திருத்தப் பதிவு', dbgLogOpen:'பிழைத்திருத்தப் பதிவைக் காட்டு', dbgLogCopy:'நகலெடு', dbgLogEmpty:'இன்னும் பிழைத்திருத்த வெளியீடு இல்லை.', dbgLogWrap:'வரிகளை மடிக்கவும்',
     disconnectDialogTitle: 'துண்டிக்கவா?',
     disconnectDialogBody: 'நீங்கள் உள்நுழைவுத் திரைக்குத் திரும்புவீர்கள்.',
     disconnectQuit: 'துண்டி',
