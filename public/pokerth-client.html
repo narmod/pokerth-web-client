@@ -127,6 +127,28 @@ try{var _d=document.documentElement,_p=localStorage.getItem('pth_theme'),_tb=loc
   } catch (e) {}
 })();
 </script>
+<script>
+/* Installed-app marker (data-pwa) for the stray-band fix (see pokerth.css,
+   "Installed PWA: make the layout box the WHOLE screen", narmod 2026-08-01).
+   That fix was scoped to @media (display-mode: standalone|fullscreen), but
+   iPadOS 26 runs home-screen web apps in windows where that media query no
+   longer matches -> the fix went inactive and the html/body background band
+   returned under the screens (narmod 2026-08-08, iPad PWA; fine in Safari).
+   navigator.standalone is the iOS/iPadOS source of truth for "launched from
+   the home screen" and is immune to the windowing change, so mirror both
+   signals onto <html data-pwa="1"> and scope the CSS fix to the attribute
+   as well as the media query. */
+(function () {
+  try {
+    var mm = window.matchMedia;
+    if (navigator.standalone === true ||
+        (mm && (mm('(display-mode: standalone)').matches ||
+                mm('(display-mode: fullscreen)').matches))) {
+      document.documentElement.setAttribute('data-pwa', '1');
+    }
+  } catch (e) {}
+})();
+</script>
 <title>PokerTH Web Client</title>
 <link rel="stylesheet" href="fonts/fonts.css">
 <link rel="manifest" href="manifest.json">

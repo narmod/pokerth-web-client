@@ -449,6 +449,19 @@ body {
   .pv-scroll      { padding-bottom: env(safe-area-inset-bottom); }
   .ab-body        { padding-bottom: calc(28px + env(safe-area-inset-bottom)); }
 }
+/* Same fix keyed on the data-pwa attribute (set by an inline script in
+   pokerth-client.html from navigator.standalone / display-mode). iPadOS 26
+   windows home-screen web apps and stops matching the display-mode media
+   query above, which silently disabled this fix and brought the band back
+   (narmod 2026-08-08). Selector duplication is deliberate: media queries
+   cannot be combined with attribute selectors in one condition. */
+:root[data-pwa="1"] body { position: fixed; inset: 0; height: auto; }
+:root[data-pwa="1"] .screen { height: 100%; }
+:root[data-pwa="1"] .connect-footer { bottom: max(10px, env(safe-area-inset-bottom)); }
+:root[data-pwa="1"] .lobby-footbar  { padding-bottom: max(8px, env(safe-area-inset-bottom)); }
+:root[data-pwa="1"] .cp-scroll      { padding-bottom: calc(40px + env(safe-area-inset-bottom)); }
+:root[data-pwa="1"] .pv-scroll      { padding-bottom: env(safe-area-inset-bottom); }
+:root[data-pwa="1"] .ab-body        { padding-bottom: calc(28px + env(safe-area-inset-bottom)); }
 :fullscreen            { background: var(--felt); }
 :-webkit-full-screen   { background: var(--felt); }
 :-moz-full-screen      { background: var(--felt); }
