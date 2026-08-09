@@ -184,12 +184,18 @@ html { touch-action: manipulation; -webkit-text-size-adjust: 100%; text-size-adj
 :root[data-theme="pokerth-light"] {
   --ff-display: 'Inter', system-ui, sans-serif;
   --ff-mono:    'Inter', system-ui, sans-serif;
-  --felt:       #f0f3f8;
-  --felt-mid:   #e6ebf3;
-  --felt-hi:    #dce2ec;
-  --modal-bg:   linear-gradient(160deg, #f0f3f8 0%, #e2e8f1 50%, #eef1f7 100%);
-  --panel:      #c8cacf;
-  --panel-hi:   #d3d5da;
+  /* Rôles de surfaces QML 2.1.6 (Theme.qml) : la page est GRISE (col700
+     passé de #f0f3f8 à #e3e8f0), les boxes de contenu / popups / dialogues
+     sont BLANCS et se détachent de la page (avant : page blanche, boxes
+     grises — rendu « sale » au lieu de hiérarchisé). Les lignes internes
+     (colorPanelRow #f5f7fb) et les champs (colorField #eaeef6) restent
+     légèrement enfoncés sur fond blanc, direction inversée vs le dark. */
+  --felt:       #e3e8f0;
+  --felt-mid:   #dce2ec;
+  --felt-hi:    #d3dae6;
+  --modal-bg:   #ffffff;
+  --panel:      #ffffff;
+  --panel-hi:   #f5f7fb;
   --gold:       #1d222b;
   --gold-rgb:   29,34,43;
   --gold-hi:    #000000;
@@ -218,7 +224,7 @@ html { touch-action: manipulation; -webkit-text-size-adjust: 100%; text-size-adj
   --ld-create-fg: #1e7e43;
   --wp-need-fg: #b35e10;
   --cream:      #1d222b;
-  --field-bg:   #ffffff;
+  --field-bg:   #eaeef6;  /* colorField QML 2.1.6 : enfoncé même sur fond blanc */
   --inset: rgba(0,0,0,0.06);
   --inset-hi: rgba(0,0,0,0.08);
   --on-gold:    #fdf6e6;
@@ -358,7 +364,7 @@ body {
     repeating-linear-gradient(45deg, transparent, transparent 3px,
       rgba(0,0,0,0.04) 3px, rgba(0,0,0,0.04) 6px);
 }
-/* Palette PokerTH claire : fond plat #f0f3f8 (QML col700 light), sans rayures. */
+/* Palette PokerTH claire : fond plat #e3e8f0 (QML col700 light 2.1.6), sans rayures. */
 :root[data-theme="pokerth-light"] body { background-image: none; }
 
 /* Fond « Fullscreen » : l'image (--wallpaper) est posee sur la ZONE DE TABLE
@@ -2021,10 +2027,11 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
    gris du panneau comme le QML — leurs styles inline mettent --field-bg blanc. */
 :root[data-theme="pokerth-light"] #players-list-body,
 :root[data-theme="pokerth-light"] #lobby-chat-panel .chat-msgs { background:transparent !important; }
-:root[data-theme="pokerth-light"] .pl-sortbar .sel-wrap select { background:#dedfe2; border-color:transparent; border-radius:var(--r-sm); color:#1d222b; }
-/* Champ Message du chat lobby : gris-bleu clair arrondi (pixel QML #d4d9e1). */
+:root[data-theme="pokerth-light"] .pl-sortbar .sel-wrap select { background:#eaeef6; border-color:transparent; border-radius:var(--r-sm); color:#1d222b; }
+/* Champ Message du chat lobby : colorField QML 2.1.6 (#eaeef6), champ
+   « enfoncé » sur la box blanche (avant : pixel 2.1.4 #d4d9e1). */
 :root[data-theme="pokerth-light"] #lobby-chat-panel .chat-input input {
-  background:#d4d9e1; border-color:transparent; border-radius:var(--r-sm); color:#1d222b;
+  background:#eaeef6; border-color:transparent; border-radius:var(--r-sm); color:#1d222b;
 }
 :root[data-theme="pokerth-light"] #lobby-chat-panel .chat-input input::placeholder { color:#687285; }
 /* Chat du LOBBY : icônes façon QML — envoi = avion en papier vert (chat send
@@ -9288,10 +9295,10 @@ html[data-buttons="pokerth"] .btn-action[disabled] { filter: grayscale(0.55) bri
 /* Palette claire : bouton gris neutre (col500 light), texte sombre (parite QML). */
 :root[data-theme="pokerth-light"] .lobby-footbar .lfb-create { background:#c0c2c6; color:#1d222b; }
 :root[data-theme="pokerth-light"] .lobby-footbar .lfb-create:hover { background:#b2b4b9; }
-/* Portrait/compact (palette claire) : barre posée sur le fond blanc QML #f0f3f8,
+/* Portrait/compact (palette claire) : barre posée sur le fond gris QML #e3e8f0 (col700 2.1.6),
    sans trait -> plus de cadre visible autour de « Joueur / Créer une partie ». */
 @media (max-width: 899.98px) {
-  :root[data-theme="pokerth-light"] .lobby-footbar { background:#f0f3f8; border-top:none; }
+  :root[data-theme="pokerth-light"] .lobby-footbar { background:#e3e8f0; border-top:none; }
 }
 /* Rejoindre : vert (identique au bouton Rejoindre des lignes) */
 .lobby-footbar .lfb-join { border-color:var(--green); background:rgba(var(--green-rgb),0.12); color:var(--green); }
