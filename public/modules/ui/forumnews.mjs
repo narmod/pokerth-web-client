@@ -182,18 +182,20 @@ function _renderList(posts) {
         a.className = 'fn-openlink';
         a.href = p.link; a.target = '_blank'; a.rel = 'noopener';
         a.textContent = (typeof window.t === 'function' ? window.t('forumOpenPost') : 'Open the post') + ' \u2197';
-        a.addEventListener('click', function (e) { e.stopPropagation(); });
+        // Lu UNIQUEMENT quand le sujet est reellement ouvert sur le forum
+        // (demande narmod 2026-08-09) — deplier l'apercu ne suffit pas.
+        a.addEventListener('click', function (e) {
+          e.stopPropagation();
+          const ids2 = _readIds(); ids2.add(p.id); _saveIds(ids2);
+          row.classList.remove('fn-unread');
+          const dot = row.querySelector('.fn-dot'); if (dot) dot.remove();
+          _updateBadge();
+        });
         ex.appendChild(a);
       }
       if (ex) ex.style.display = on ? '' : 'none';
       row.classList.toggle('fn-open', on);
       row.setAttribute('aria-expanded', on ? 'true' : 'false');
-      if (on) {
-        const ids2 = _readIds(); ids2.add(p.id); _saveIds(ids2);
-        row.classList.remove('fn-unread');
-        const dot = row.querySelector('.fn-dot'); if (dot) dot.remove();
-        _updateBadge();
-      }
     };
     row.addEventListener('click', toggle);
     row.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(); } });
