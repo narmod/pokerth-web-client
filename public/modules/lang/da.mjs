@@ -291,6 +291,7 @@ export const strings = {
     connErrNickInvalid: 'Ugyldigt kaldenavn',
     connErrMaintenance: 'Vedligeholdelse',
     connErrBlocked: 'Blokeret',
+    connErrAvatarSize:'Avatarfil for stor', connErrPacket:'Ugyldig netværkspakke (forskellige versioner?)', connErrState:'Ugyldig forbindelsestilstand (forskellige versioner?)', connErrKicked:'Du blev smidt af serveren', connErrBanned:'Du er midlertidigt udelukket fra serveren', connErrAccBlocked:'Din konto er blokeret', connErrIdle:'Afbrudt pga. inaktivitet — du er velkommen til at forbinde igen',
     ipBlockedPrefix: '⏳ IP blokeret — ',
     ipBlockedWaitPrefix: '⏳ IP blokeret — vent ',
     ipBlockedRetry: '⏳ IP blokeret — vent 5 minutter og prøv igen.',

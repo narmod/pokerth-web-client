@@ -292,6 +292,7 @@ export const strings = {
     connErrNickInvalid: 'Netinkamas slapyvardis',
     connErrMaintenance: 'Techninė priežiūra',
     connErrBlocked: 'Užblokuota',
+    connErrAvatarSize:'Avataro failas per didelis', connErrPacket:'Netinkamas tinklo paketas (skirtingos versijos?)', connErrState:'Netinkama ryšio būsena (skirtingos versijos?)', connErrKicked:'Buvai išmestas iš serverio', connErrBanned:'Esi laikinai užblokuotas serveryje', connErrAccBlocked:'Tavo paskyra užblokuota', connErrIdle:'Atjungta dėl neaktyvumo — gali prisijungti iš naujo',
     ipBlockedPrefix: '⏳ IP užblokuotas — ',
     ipBlockedWaitPrefix: '⏳ IP užblokuotas — palaukite ',
     ipBlockedRetry: '⏳ IP užblokuotas — palaukite 5 minutes ir bandykite vėl.',

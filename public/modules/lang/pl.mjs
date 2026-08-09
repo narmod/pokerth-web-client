@@ -298,6 +298,7 @@ export const strings = {
     connErrNickInvalid: 'Nieprawidłowy pseudonim',
     connErrMaintenance: 'Konserwacja',
     connErrBlocked: 'Zablokowano',
+    connErrAvatarSize:'Plik awatara jest za duży', connErrPacket:'Nieprawidłowy pakiet sieciowy (różne wersje?)', connErrState:'Nieprawidłowy stan połączenia (różne wersje?)', connErrKicked:'Zostałeś wyrzucony z serwera', connErrBanned:'Zostałeś tymczasowo zbanowany na serwerze', connErrAccBlocked:'Twoje konto jest zablokowane', connErrIdle:'Rozłączono z powodu bezczynności — możesz połączyć się ponownie',
     ipBlockedPrefix: '⏳ IP zablokowane — ',
     ipBlockedWaitPrefix: '⏳ IP zablokowane — poczekaj ',
     ipBlockedRetry: '⏳ IP zablokowane — poczekaj 5 minut i spróbuj ponownie.',

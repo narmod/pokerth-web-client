@@ -292,6 +292,7 @@ export const strings = {
     connErrNickInvalid: 'Neplatná prezývka',
     connErrMaintenance: 'Údržba',
     connErrBlocked: 'Zablokované',
+    connErrAvatarSize:'Súbor avatara je príliš veľký', connErrPacket:'Neplatný sieťový paket (rôzne verzie?)', connErrState:'Neplatný stav pripojenia (rôzne verzie?)', connErrKicked:'Bol si vyhodený zo servera', connErrBanned:'Bol si dočasne zabanovaný na serveri', connErrAccBlocked:'Tvoj účet je zablokovaný', connErrIdle:'Odpojené pre nečinnosť — môžeš sa znova pripojiť',
     ipBlockedPrefix: '⏳ IP zablokovaná — ',
     ipBlockedWaitPrefix: '⏳ IP zablokovaná — počkajte ',
     ipBlockedRetry: '⏳ IP zablokovaná — počkajte 5 minút a skúste znova.',

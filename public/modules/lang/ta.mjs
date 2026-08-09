@@ -293,6 +293,7 @@ export const strings = {
     connErrNickInvalid: 'தவறான புனைப்பெயர்',
     connErrMaintenance: 'பராமரிப்பு',
     connErrBlocked: 'தடுக்கப்பட்டது',
+    connErrAvatarSize:'அவதார் கோப்பு மிகப் பெரியது', connErrPacket:'தவறான பிணையப் பொதி (வெவ்வேறு பதிப்புகள்?)', connErrState:'தவறான இணைப்பு நிலை (வெவ்வேறு பதிப்புகள்?)', connErrKicked:'நீங்கள் சேவையகத்திலிருந்து வெளியேற்றப்பட்டீர்கள்', connErrBanned:'நீங்கள் தற்காலிகமாகச் சேவையகத்தில் தடைசெய்யப்பட்டுள்ளீர்கள்', connErrAccBlocked:'உங்கள் கணக்கு முடக்கப்பட்டுள்ளது', connErrIdle:'செயலற்ற நிலையால் துண்டிக்கப்பட்டது — மீண்டும் இணையலாம்',
     ipBlockedPrefix: '⏳ IP தடுக்கப்பட்டது — ',
     ipBlockedWaitPrefix: '⏳ IP தடுக்கப்பட்டது — காத்திருக்கவும் ',
     ipBlockedRetry: '⏳ IP தடுக்கப்பட்டது — 5 நிமிடம் காத்திருந்து மீண்டும் முயற்சிக்கவும்.',

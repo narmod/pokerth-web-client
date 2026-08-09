@@ -293,6 +293,7 @@ export const strings = {
     connErrNickInvalid: '昵称无效',
     connErrMaintenance: '维护中',
     connErrBlocked: '已被封禁',
+    connErrAvatarSize:'头像文件过大', connErrPacket:'无效的网络数据包（版本不一致？）', connErrState:'无效的连接状态（版本不一致？）', connErrKicked:'您已被踢出服务器', connErrBanned:'您已被服务器临时封禁', connErrAccBlocked:'您的账号已被封锁', connErrIdle:'因长时间未操作已断开 — 欢迎重新连接',
     ipBlockedPrefix: '⏳ IP 被封禁 — ',
     ipBlockedWaitPrefix: '⏳ IP 被封禁 — 请等待 ',
     ipBlockedRetry: '⏳ IP 被封禁 — 请等待 5 分钟后重试。',

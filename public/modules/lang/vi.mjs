@@ -292,6 +292,7 @@ export const strings = {
     connErrNickInvalid: 'Biệt danh không hợp lệ',
     connErrMaintenance: 'Bảo trì',
     connErrBlocked: 'Bị chặn',
+    connErrAvatarSize:'Tệp avatar quá lớn', connErrPacket:'Gói mạng không hợp lệ (khác phiên bản?)', connErrState:'Trạng thái kết nối không hợp lệ (khác phiên bản?)', connErrKicked:'Bạn đã bị đuổi khỏi máy chủ', connErrBanned:'Bạn bị cấm tạm thời khỏi máy chủ', connErrAccBlocked:'Tài khoản của bạn đã bị khóa', connErrIdle:'Ngắt kết nối do không hoạt động — bạn có thể kết nối lại',
     ipBlockedPrefix: '⏳ IP bị chặn — ',
     ipBlockedWaitPrefix: '⏳ IP bị chặn — chờ ',
     ipBlockedRetry: '⏳ IP bị chặn — chờ 5 phút rồi thử lại.',

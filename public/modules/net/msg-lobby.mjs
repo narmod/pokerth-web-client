@@ -322,8 +322,16 @@ window._nickBusyCancel = function () {
 function onError(sub) {
     _endConnecting();   // server rejected → free the button now
     S._lastConnectFailed = true;
+    // Enum ErrorReason COMPLET de pokerth.proto (parité QML 2.1.6,
+    // networkErrorMessage) : les codes 8–14 arrivaient jusqu'ici en
+    // « code N » nu — notamment 11 (kick), 12 (ban) et 14 (timeout de
+    // session AFK), devenus visibles depuis que le client respecte le
+    // kick AFK. Tous tombent dans la branche else → message nommé, pas
+    // de reconnexion automatique (rejet serveur, pas panne de transport).
     const codes = {1:t('connErrVersion'),2:t('connErrFull'),3:t('connErrAuth'),
-      4:t('connErrNickTaken'),5:t('connErrNickInvalid'),6:t('connErrMaintenance'),7:t('connErrBlocked')};
+      4:t('connErrNickTaken'),5:t('connErrNickInvalid'),6:t('connErrMaintenance'),7:t('connErrBlocked'),
+      8:t('connErrAvatarSize'),9:t('connErrPacket'),10:t('connErrState'),
+      11:t('connErrKicked'),12:t('connErrBanned'),13:t('connErrAccBlocked'),14:t('connErrIdle')};
     const r = Proto.u32(sub, 1);
     if (r === 3) {
       // initAuthFailure: login/password rejected by server

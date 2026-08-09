@@ -292,6 +292,7 @@ export const strings = {
     connErrNickInvalid: 'Невалиден прякор',
     connErrMaintenance: 'Поддръжка',
     connErrBlocked: 'Блокирано',
+    connErrAvatarSize:'Файлът на аватара е твърде голям', connErrPacket:'Невалиден мрежов пакет (различни версии?)', connErrState:'Невалидно състояние на връзката (различни версии?)', connErrKicked:'Бяхте изхвърлени от сървъра', connErrBanned:'Временно сте блокирани от сървъра', connErrAccBlocked:'Акаунтът ви е блокиран', connErrIdle:'Прекъснато поради неактивност — можете да се свържете отново',
     ipBlockedPrefix: '⏳ IP блокиран — ',
     ipBlockedWaitPrefix: '⏳ IP блокиран — изчакайте ',
     ipBlockedRetry: '⏳ IP блокиран — изчакайте 5 минути и опитайте отново.',

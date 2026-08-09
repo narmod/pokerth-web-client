@@ -292,6 +292,7 @@ export const strings = {
     connErrNickInvalid: 'Nevažeći nadimak',
     connErrMaintenance: 'Održavanje',
     connErrBlocked: 'Blokirano',
+    connErrAvatarSize:'Datoteka avatara je prevelika', connErrPacket:'Nevažeći mrežni paket (različite verzije?)', connErrState:'Nevažeće stanje veze (različite verzije?)', connErrKicked:'Izbačen si sa servera', connErrBanned:'Privremeno si banovan sa servera', connErrAccBlocked:'Tvoj nalog je blokiran', connErrIdle:'Veza prekinuta zbog neaktivnosti — možeš se ponovo povezati',
     ipBlockedPrefix: '⏳ IP blokiran — ',
     ipBlockedWaitPrefix: '⏳ IP blokiran — sačekajte ',
     ipBlockedRetry: '⏳ IP blokiran — sačekajte 5 minuta i pokušajte ponovo.',

@@ -292,6 +292,7 @@ export const strings = {
     connErrNickInvalid: 'Pseudonim invalid',
     connErrMaintenance: 'Mentenanță',
     connErrBlocked: 'Blocat',
+    connErrAvatarSize:'Fișierul avatarului este prea mare', connErrPacket:'Pachet de rețea nevalid (versiuni diferite?)', connErrState:'Stare de conexiune nevalidă (versiuni diferite?)', connErrKicked:'Ai fost dat afară de pe server', connErrBanned:'Ai fost banat temporar de pe server', connErrAccBlocked:'Contul tău este blocat', connErrIdle:'Deconectat din cauza inactivității — te poți reconecta',
     ipBlockedPrefix: '⏳ IP blocat — ',
     ipBlockedWaitPrefix: '⏳ IP blocat — așteaptă ',
     ipBlockedRetry: '⏳ IP blocat — așteaptă 5 minute și încearcă din nou.',

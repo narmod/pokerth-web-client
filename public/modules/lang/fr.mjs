@@ -151,6 +151,7 @@ export const strings = {
     verifyingAccount:'Vérification du compte…',
     connErrVersion:'Version incompatible', connErrFull:'Serveur plein', connErrAuth:'Échec de l\'authentification',
     connErrNickTaken:'Pseudo déjà pris', connErrNickInvalid:'Pseudo invalide', connErrMaintenance:'Maintenance', connErrBlocked:'Bloqué',
+    connErrAvatarSize:'Fichier d\'avatar trop volumineux', connErrPacket:'Paquet réseau invalide (versions différentes ?)', connErrState:'État de connexion invalide (versions différentes ?)', connErrKicked:'Vous avez été expulsé du serveur', connErrBanned:'Vous êtes temporairement banni du serveur', connErrAccBlocked:'Votre compte est bloqué', connErrIdle:'Déconnecté pour inactivité — vous pouvez vous reconnecter',
     ipBlockedPrefix:'⏳ IP bloquée — ', ipBlockedWaitPrefix:'⏳ IP bloquée — attendre encore ', ipBlockedRetry:'⏳ IP bloquée — attendez 5 minutes puis réessayez.',
     sharedTableJoining:'🔗 Table partagée trouvée — connexion…',
     timerHurry:'⏰ Délai : {s}s — jouez vite !',

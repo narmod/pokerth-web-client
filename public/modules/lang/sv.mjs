@@ -291,6 +291,7 @@ export const strings = {
     connErrNickInvalid: 'Ogiltigt smeknamn',
     connErrMaintenance: 'Underhåll',
     connErrBlocked: 'Blockerad',
+    connErrAvatarSize:'Avatarfilen är för stor', connErrPacket:'Ogiltigt nätverkspaket (olika versioner?)', connErrState:'Ogiltigt anslutningstillstånd (olika versioner?)', connErrKicked:'Du kastades ut från servern', connErrBanned:'Du är tillfälligt avstängd från servern', connErrAccBlocked:'Ditt konto är blockerat', connErrIdle:'Frånkopplad på grund av inaktivitet — du är välkommen att ansluta igen',
     ipBlockedPrefix: '⏳ IP blockerad — ',
     ipBlockedWaitPrefix: '⏳ IP blockerad — vänta ',
     ipBlockedRetry: '⏳ IP blockerad — vänta 5 minuter och försök igen.',

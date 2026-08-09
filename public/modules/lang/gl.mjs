@@ -292,6 +292,7 @@ export const strings = {
     connErrNickInvalid: 'Alcume non válido',
     connErrMaintenance: 'Mantemento',
     connErrBlocked: 'Bloqueado',
+    connErrAvatarSize:'O ficheiro do avatar é grande de máis', connErrPacket:'Paquete de rede non válido (versións diferentes?)', connErrState:'Estado de conexión non válido (versións diferentes?)', connErrKicked:'Fuches expulsado do servidor', connErrBanned:'Fuches vetado temporalmente do servidor', connErrAccBlocked:'A túa conta está bloqueada', connErrIdle:'Desconectado por inactividade — podes volver conectarte',
     ipBlockedPrefix: '⏳ IP bloqueada — ',
     ipBlockedWaitPrefix: '⏳ IP bloqueada — agarda ',
     ipBlockedRetry: '⏳ IP bloqueada — agarda 5 minutos e téntao de novo.',

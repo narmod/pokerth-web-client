@@ -299,6 +299,7 @@ export const strings = {
     connErrNickInvalid: 'Nickname non valido',
     connErrMaintenance: 'Manutenzione',
     connErrBlocked: 'Bloccato',
+    connErrAvatarSize:'File avatar troppo grande', connErrPacket:'Pacchetto di rete non valido (versioni diverse?)', connErrState:'Stato di connessione non valido (versioni diverse?)', connErrKicked:'Sei stato espulso dal server', connErrBanned:'Sei stato bandito temporaneamente dal server', connErrAccBlocked:'Il tuo account è bloccato', connErrIdle:'Disconnesso per inattività — puoi riconnetterti',
     ipBlockedPrefix: '⏳ IP bloccato — ',
     ipBlockedWaitPrefix: '⏳ IP bloccato — attendi ',
     ipBlockedRetry: '⏳ IP bloccato — attendi 5 minuti e riprova.',

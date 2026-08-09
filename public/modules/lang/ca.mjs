@@ -292,6 +292,7 @@ export const strings = {
     connErrNickInvalid: 'Sobrenom no vàlid',
     connErrMaintenance: 'Manteniment',
     connErrBlocked: 'Bloquejat',
+    connErrAvatarSize:'El fitxer de l\'avatar és massa gran', connErrPacket:'Paquet de xarxa no vàlid (versions diferents?)', connErrState:'Estat de connexió no vàlid (versions diferents?)', connErrKicked:'Has estat expulsat del servidor', connErrBanned:'Has estat bandejat temporalment del servidor', connErrAccBlocked:'El teu compte està bloquejat', connErrIdle:'Desconnectat per inactivitat — pots tornar a connectar-te',
     ipBlockedPrefix: '⏳ IP bloquejada — ',
     ipBlockedWaitPrefix: '⏳ IP bloquejada — espera ',
     ipBlockedRetry: '⏳ IP bloquejada — espera 5 minuts i torna-ho a provar.',

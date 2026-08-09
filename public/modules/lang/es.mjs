@@ -300,6 +300,7 @@ export const strings = {
     connErrNickInvalid: 'Apodo no válido',
     connErrMaintenance: 'Mantenimiento',
     connErrBlocked: 'Bloqueado',
+    connErrAvatarSize:'Archivo de avatar demasiado grande', connErrPacket:'Paquete de red no válido (¿versiones distintas?)', connErrState:'Estado de conexión no válido (¿versiones distintas?)', connErrKicked:'Has sido expulsado del servidor', connErrBanned:'Has sido baneado temporalmente del servidor', connErrAccBlocked:'Tu cuenta está bloqueada', connErrIdle:'Desconectado por inactividad — puedes volver a conectarte',
     ipBlockedPrefix: '⏳ IP bloqueada — ',
     ipBlockedWaitPrefix: '⏳ IP bloqueada — espera ',
     ipBlockedRetry: '⏳ IP bloqueada — espera 5 minutos e inténtalo de nuevo.',

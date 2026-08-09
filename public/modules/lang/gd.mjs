@@ -293,6 +293,7 @@ export const strings = {
     connErrNickInvalid: 'Far-ainm mì-dhligheach',
     connErrMaintenance: 'Obair-càraidh',
     connErrBlocked: 'Air a bhacadh',
+    connErrAvatarSize:'Tha faidhle an avatar ro mhòr', connErrPacket:'Pacaid lìonraidh mì-dhligheach (tionndaidhean eadar-dhealaichte?)', connErrState:'Staid ceangail mhì-dhligheach (tionndaidhean eadar-dhealaichte?)', connErrKicked:'Chaidh do thilgeil far an fhrithealaiche', connErrBanned:'Chaidh do thoirmeasg on fhrithealaiche rè seal', connErrAccBlocked:'Tha an cunntas agad glaiste', connErrIdle:'Chaidh an ceangal a bhriseadh ri linn dìomhanachd — faodaidh tu ceangal a-rithist',
     ipBlockedPrefix: '⏳ IP air a bhacadh — ',
     ipBlockedWaitPrefix: '⏳ IP air a bhacadh — fuirich ',
     ipBlockedRetry: '⏳ IP air a bhacadh — fuirich 5 mionaidean is feuch a-rithist.',

@@ -292,6 +292,7 @@ export const strings = {
     connErrNickInvalid: 'Μη έγκυρο ψευδώνυμο',
     connErrMaintenance: 'Συντήρηση',
     connErrBlocked: 'Αποκλεισμένο',
+    connErrAvatarSize:'Το αρχείο avatar είναι πολύ μεγάλο', connErrPacket:'Μη έγκυρο πακέτο δικτύου (διαφορετικές εκδόσεις;)', connErrState:'Μη έγκυρη κατάσταση σύνδεσης (διαφορετικές εκδόσεις;)', connErrKicked:'Αποβληθήκατε από τον διακομιστή', connErrBanned:'Αποκλειστήκατε προσωρινά από τον διακομιστή', connErrAccBlocked:'Ο λογαριασμός σας είναι αποκλεισμένος', connErrIdle:'Αποσύνδεση λόγω αδράνειας — μπορείτε να συνδεθείτε ξανά',
     ipBlockedPrefix: '⏳ IP αποκλεισμένη — ',
     ipBlockedWaitPrefix: '⏳ IP αποκλεισμένη — περιμένετε ',
     ipBlockedRetry: '⏳ IP αποκλεισμένη — περιμένετε 5 λεπτά και ξαναδοκιμάστε.',

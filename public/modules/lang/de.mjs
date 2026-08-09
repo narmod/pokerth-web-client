@@ -299,6 +299,7 @@ export const strings = {
     connErrNickInvalid: 'Ungültiger Spitzname',
     connErrMaintenance: 'Wartung',
     connErrBlocked: 'Gesperrt',
+    connErrAvatarSize:'Avatar-Datei zu groß', connErrPacket:'Ungültiges Netzwerkpaket (unterschiedliche Versionen?)', connErrState:'Ungültiger Verbindungszustand (unterschiedliche Versionen?)', connErrKicked:'Du wurdest vom Server geworfen', connErrBanned:'Du wurdest vorübergehend vom Server gebannt', connErrAccBlocked:'Dein Konto ist gesperrt', connErrIdle:'Wegen Inaktivität getrennt — du kannst dich gerne neu verbinden',
     ipBlockedPrefix: '⏳ IP gesperrt — ',
     ipBlockedWaitPrefix: '⏳ IP gesperrt — warte ',
     ipBlockedRetry: '⏳ IP gesperrt — warte 5 Minuten und versuche es erneut.',

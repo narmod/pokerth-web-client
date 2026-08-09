@@ -149,6 +149,7 @@ export const strings = {
     verifyingAccount:'Verifying account…',
     connErrVersion:'Incompatible version', connErrFull:'Server full', connErrAuth:'Authentication failed',
     connErrNickTaken:'Nickname already taken', connErrNickInvalid:'Invalid nickname', connErrMaintenance:'Maintenance', connErrBlocked:'Blocked',
+    connErrAvatarSize:'Avatar file too large', connErrPacket:'Invalid network packet (version mismatch?)', connErrState:'Invalid connection state (version mismatch?)', connErrKicked:'You were kicked from the server', connErrBanned:'You were temporarily banned from the server', connErrAccBlocked:'Your account is blocked', connErrIdle:'Disconnected after inactivity — you are welcome to reconnect',
     ipBlockedPrefix:'⏳ IP blocked — ', ipBlockedWaitPrefix:'⏳ IP blocked — wait ', ipBlockedRetry:'⏳ IP blocked — wait 5 minutes then try again.',
     sharedTableJoining:'🔗 Shared table found — joining…',
     timerHurry:'⏰ Time: {s}s — play fast!',

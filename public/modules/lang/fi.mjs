@@ -291,6 +291,7 @@ export const strings = {
     connErrNickInvalid: 'Virheellinen nimimerkki',
     connErrMaintenance: 'Huolto',
     connErrBlocked: 'Estetty',
+    connErrAvatarSize:'Avatar-tiedosto on liian suuri', connErrPacket:'Virheellinen verkkopaketti (eri versiot?)', connErrState:'Virheellinen yhteystila (eri versiot?)', connErrKicked:'Sinut potkittiin palvelimelta', connErrBanned:'Sinut on estetty palvelimelta väliaikaisesti', connErrAccBlocked:'Tilisi on estetty', connErrIdle:'Yhteys katkaistiin toimettomuuden vuoksi — voit yhdistää uudelleen',
     ipBlockedPrefix: '⏳ IP estetty — ',
     ipBlockedWaitPrefix: '⏳ IP estetty — odota ',
     ipBlockedRetry: '⏳ IP estetty — odota 5 minuuttia ja yritä uudelleen.',

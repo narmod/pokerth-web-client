@@ -297,6 +297,7 @@ export const strings = {
     connErrNickInvalid: 'Ongeldige bijnaam',
     connErrMaintenance: 'Onderhoud',
     connErrBlocked: 'Geblokkeerd',
+    connErrAvatarSize:'Avatarbestand te groot', connErrPacket:'Ongeldig netwerkpakket (verschillende versies?)', connErrState:'Ongeldige verbindingsstatus (verschillende versies?)', connErrKicked:'Je bent van de server verwijderd', connErrBanned:'Je bent tijdelijk verbannen van de server', connErrAccBlocked:'Je account is geblokkeerd', connErrIdle:'Verbroken wegens inactiviteit — je kunt opnieuw verbinden',
     ipBlockedPrefix: '⏳ IP geblokkeerd — ',
     ipBlockedWaitPrefix: '⏳ IP geblokkeerd — wacht ',
     ipBlockedRetry: '⏳ IP geblokkeerd — wacht 5 minuten en probeer opnieuw.',

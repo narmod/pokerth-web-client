@@ -291,6 +291,7 @@ export const strings = {
     connErrNickInvalid: '無効なニックネーム',
     connErrMaintenance: 'メンテナンス',
     connErrBlocked: 'ブロックされました',
+    connErrAvatarSize:'アバターファイルが大きすぎます', connErrPacket:'無効なネットワークパケット（バージョン不一致？）', connErrState:'無効な接続状態（バージョン不一致？）', connErrKicked:'サーバーからキックされました', connErrBanned:'サーバーから一時的にBANされました', connErrAccBlocked:'アカウントがブロックされています', connErrIdle:'無操作のため切断されました — 再接続できます',
     ipBlockedPrefix: '⏳ IPがブロックされました — ',
     ipBlockedWaitPrefix: '⏳ IPがブロックされました — お待ちください ',
     ipBlockedRetry: '⏳ IPがブロックされました — 5分待ってから再試行してください。',

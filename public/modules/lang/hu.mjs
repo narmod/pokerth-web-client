@@ -292,6 +292,7 @@ export const strings = {
     connErrNickInvalid: 'Érvénytelen becenév',
     connErrMaintenance: 'Karbantartás',
     connErrBlocked: 'Letiltva',
+    connErrAvatarSize:'Az avatar fájl túl nagy', connErrPacket:'Érvénytelen hálózati csomag (eltérő verziók?)', connErrState:'Érvénytelen kapcsolatállapot (eltérő verziók?)', connErrKicked:'Kirúgtak a szerverről', connErrBanned:'Ideiglenesen kitiltottak a szerverről', connErrAccBlocked:'A fiókod zárolva van', connErrIdle:'Inaktivitás miatt bontva — nyugodtan csatlakozz újra',
     ipBlockedPrefix: '⏳ IP letiltva — ',
     ipBlockedWaitPrefix: '⏳ IP letiltva — várj ',
     ipBlockedRetry: '⏳ IP letiltva — várj 5 percet, majd próbáld újra.',

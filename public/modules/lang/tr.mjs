@@ -294,6 +294,7 @@ export const strings = {
     connErrNickInvalid: 'Geçersiz takma ad',
     connErrMaintenance: 'Bakım',
     connErrBlocked: 'Engellendi',
+    connErrAvatarSize:'Avatar dosyası çok büyük', connErrPacket:'Geçersiz ağ paketi (farklı sürümler?)', connErrState:'Geçersiz bağlantı durumu (farklı sürümler?)', connErrKicked:'Sunucudan atıldın', connErrBanned:'Sunucudan geçici olarak yasaklandın', connErrAccBlocked:'Hesabın engellendi', connErrIdle:'Hareketsizlik nedeniyle bağlantı kesildi — yeniden bağlanabilirsin',
     ipBlockedPrefix: '⏳ IP engellendi — ',
     ipBlockedWaitPrefix: '⏳ IP engellendi — bekleyin ',
     ipBlockedRetry: '⏳ IP engellendi — 5 dakika bekleyip tekrar deneyin.',

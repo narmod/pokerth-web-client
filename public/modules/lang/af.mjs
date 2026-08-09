@@ -292,6 +292,7 @@ export const strings = {
     connErrNickInvalid: 'Ongeldige bynaam',
     connErrMaintenance: 'Onderhoud',
     connErrBlocked: 'Geblokkeer',
+    connErrAvatarSize:'Avatar-lêer is te groot', connErrPacket:'Ongeldige netwerkpakket (verskillende weergawes?)', connErrState:'Ongeldige verbindingstoestand (verskillende weergawes?)', connErrKicked:'Jy is van die bediener geskop', connErrBanned:'Jy is tydelik van die bediener verban', connErrAccBlocked:'Jou rekening is geblokkeer', connErrIdle:'Ontkoppel weens onaktiwiteit — jy kan gerus weer koppel',
     ipBlockedPrefix: '⏳ IP geblokkeer — ',
     ipBlockedWaitPrefix: '⏳ IP geblokkeer — wag ',
     ipBlockedRetry: '⏳ IP geblokkeer — wag 5 minute en probeer weer.',

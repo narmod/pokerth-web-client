@@ -291,6 +291,7 @@ export const strings = {
     connErrNickInvalid: 'Недійсний псевдонім',
     connErrMaintenance: 'Технічні роботи',
     connErrBlocked: 'Заблоковано',
+    connErrAvatarSize:'Файл аватара завеликий', connErrPacket:'Недійсний мережевий пакет (різні версії?)', connErrState:'Недійсний стан з\'єднання (різні версії?)', connErrKicked:'Вас вигнали з сервера', connErrBanned:'Вас тимчасово заблоковано на сервері', connErrAccBlocked:'Ваш обліковий запис заблоковано', connErrIdle:'Від\'єднано через неактивність — ви можете під\'єднатися знову',
     ipBlockedPrefix: '⏳ IP заблоковано — ',
     ipBlockedWaitPrefix: '⏳ IP заблоковано — зачекайте ',
     ipBlockedRetry: '⏳ IP заблоковано — зачекайте 5 хвилин і спробуйте знову.',

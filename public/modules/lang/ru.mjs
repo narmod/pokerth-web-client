@@ -297,6 +297,7 @@ export const strings = {
     connErrNickInvalid: 'Недопустимый никнейм',
     connErrMaintenance: 'Техобслуживание',
     connErrBlocked: 'Заблокировано',
+    connErrAvatarSize:'Файл аватара слишком большой', connErrPacket:'Недопустимый сетевой пакет (разные версии?)', connErrState:'Недопустимое состояние соединения (разные версии?)', connErrKicked:'Вас выгнали с сервера', connErrBanned:'Вы временно забанены на сервере', connErrAccBlocked:'Ваша учётная запись заблокирована', connErrIdle:'Отключено из-за неактивности — вы можете переподключиться',
     ipBlockedPrefix: '⏳ IP заблокирован — ',
     ipBlockedWaitPrefix: '⏳ IP заблокирован — подождите ',
     ipBlockedRetry: '⏳ IP заблокирован — подождите 5 минут и попробуйте снова.',
