@@ -48,7 +48,11 @@ function _showBanner(msg) {
   // Parité QML 2.1.6 (reconnectPopup) : tant que le rejoin est armé, dire au
   // joueur que son siège reste réservé (la grâce proxy tient l'upstream ~2 min).
   // Réévalué à chaque tick, comme le choix pastille/bandeau.
-  var _keep = !!S._pendingRejoin;
+  // FIX web.20 : _showBanner est HORS de l'IIFE App — `S` n'existe pas ici,
+  // seul le pont window.PthState l'est (ReferenceError qui cassait toute la
+  // reconnexion, rapport narmod 09/08). Garde défensive en prime.
+  var _st = window.PthState || {};
+  var _keep = !!_st._pendingRejoin;
   var ps = document.getElementById('g-conn-pill-sub');
   if (ps) { ps.textContent = _keep ? t('reconnSeatKept') : ''; ps.style.display = (_keep && usePill) ? 'block' : 'none'; }
   var bs = document.getElementById('reconnect-sub');
@@ -9971,7 +9975,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.6-web.19'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.6-web.20'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
