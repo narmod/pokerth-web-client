@@ -5273,7 +5273,19 @@ const App = (() => {
           // PokerTH server… », rapport forum. Le paramètre n'est PAS mémorisé
           // dans _lastConnectParams.finalUrl : le chemin de reconnexion
           // rapide (même page, état intact) reste un pur rebranchement.
-          S.ws = new WebSocket(window.directWS ? finalUrl : finalUrl + '&fresh=1');
+          // FIX web.24 (logs proxy narmod 09/08, 11:13:29) : fresh=1 SEULEMENT
+          // hors preserve. _forceReconnect (socket zombie iOS : mort sans
+          // événement close, seul le heartbeat proxy le voit) appelle
+          // connect({preserve:true}) — et le fresh inconditionnel faisait
+          // détruire la session en grâce par le proxy (« Fresh connect sur
+          // session vivante — fantôme fermé »), la table avec bots fermait,
+          // RejoinExisting → JoinGameFailed → « Reprise impossible ». En
+          // preserve, on rebranche : pas d'Announce → pas d'Init, le premier
+          // frame rejoué désarme le watchdog (S._preserveConnect) ; grâce
+          // expirée → le proxy ouvre un amont neuf, l'Announce arrive et le
+          // flux normal (Init → rejoin) reprend. fresh=1 garde son rôle
+          // d'origine : poignée de main NEUVE (clic manuel, page vierge).
+          S.ws = new WebSocket(window.directWS ? finalUrl : finalUrl + (_preserve ? '' : '&fresh=1'));
         } catch (e) {
           setStatus(t('invalidUrl', { msg: e.message }), 'err', null, { local: true });
           return;
@@ -10009,7 +10021,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.6-web.23'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.6-web.24'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
