@@ -464,6 +464,7 @@
         <p class="muted" style="margin:0 0 8px"><b>Off by default.</b> When off, every page is served with <code>noindex, nofollow</code> and <code>robots.txt</code> blocks all crawlers &mdash; a self-hosted install stays out of Google and AI search engines. Turn it on only for a public instance you want indexed: the page then gains a description, Open Graph / Twitter cards, a canonical link, structured data (JSON-LD) and a crawler-readable summary, and <code>robots.txt</code>, <code>sitemap.xml</code> and <code>llms.txt</code> are generated from the public URL below. Applies immediately (no restart needed).</p>
         <div class="defrow" style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin:5px 0"><span>Search engine indexing</span><select id="seoEnabled"><option value="0">Off (default)</option><option value="1">On</option></select></div>
         <div class="defrow" style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin:5px 0"><span style="white-space:nowrap">Public URL</span><input id="seoUrl" maxlength="200" placeholder="https://webclient.pokerth.net" autocomplete="off" style="flex:1;min-width:0"></div>
+        <div class="defrow" style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin:5px 0"><span style="white-space:nowrap">Search Console token</span><input id="seoGsv" maxlength="100" placeholder="google-site-verification (optional)" autocomplete="off" style="flex:1;min-width:0"></div>
         <div style="margin-top:8px"><button id="saveSeo" class="use">Save</button></div>
         <div id="seoMsg" class="msg"></div>
       </div>
@@ -1304,7 +1305,7 @@
         if($('srvTagline') && typeof d.serverTagline==='string') $('srvTagline').value=d.serverTagline;
         if($('loginTitle')) $('loginTitle').value=(d.showLoginTitle?'1':'0');
         if($('discordHook') && typeof d.discordChatWebhookUrl==='string') $('discordHook').value=d.discordChatWebhookUrl;
-        if(d.seo && typeof d.seo==='object'){ if($('seoEnabled'))$('seoEnabled').value=(d.seo.enabled?'1':'0'); if($('seoUrl')&&typeof d.seo.publicUrl==='string')$('seoUrl').value=d.seo.publicUrl; }
+        if(d.seo && typeof d.seo==='object'){ if($('seoEnabled'))$('seoEnabled').value=(d.seo.enabled?'1':'0'); if($('seoUrl')&&typeof d.seo.publicUrl==='string')$('seoUrl').value=d.seo.publicUrl; if($('seoGsv')&&typeof d.seo.googleVerification==='string')$('seoGsv').value=d.seo.googleVerification; }
         _pxLoaded=true;
         if(d.proxyCfg && typeof d.proxyCfg==='object'){ var P=d.proxyCfg; if($('pxHosts'))$('pxHosts').value=(Array.isArray(P.allowedHosts)?P.allowedHosts.join('\n'):''); if($('pxGrace'))$('pxGrace').value=(typeof P.graceSec==='number'?P.graceSec:''); if($('pxGap'))$('pxGap').value=(typeof P.connGapMs==='number'?P.connGapMs:''); if($('pxPorts'))$('pxPorts').value=(Array.isArray(P.allowedPorts)?P.allowedPorts.join('\n'):''); if($('pxLog'))$('pxLog').value=(typeof P.logLevel==='string'?P.logLevel:''); if($('logQuick'))$('logQuick').value=(typeof P.logLevel==='string'?P.logLevel:''); if($('pxMax'))$('pxMax').value=(typeof P.maxClients==='number'?P.maxClients:''); }
       }
@@ -1672,7 +1673,7 @@
   }); })();
   (function(){ var ss=$('saveSeo'); if(!ss) return; ss.addEventListener('click', function(){
     var m=$('seoMsg');
-    api('/admin/config',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({seo:{enabled:($('seoEnabled')?$('seoEnabled').value==='1':false),publicUrl:($('seoUrl')?$('seoUrl').value:'')},token:tok()})})
+    api('/admin/config',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({seo:{enabled:($('seoEnabled')?$('seoEnabled').value==='1':false),publicUrl:($('seoUrl')?$('seoUrl').value:''),googleVerification:($('seoGsv')?$('seoGsv').value:'')},token:tok()})})
       .then(function(r){return r.json();}).then(function(d){ if(d&&d.ok){ m.textContent='Saved. Applies immediately (no restart needed).'; m.className='msg ok'; } else { m.textContent='Failed: '+((d&&d.error)||'error'); m.className='msg err'; } })
       .catch(function(){ m.textContent='Network error.'; m.className='msg err'; });
   }); })();

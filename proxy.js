@@ -919,7 +919,14 @@ function seoPublicUrl() {
   var u = String(_seoCfg().publicUrl || '').trim().replace(/\/+$/, '');
   return /^https?:\/\/[^\s"'<>]+$/i.test(u) ? u : '';
 }
-function _seoAdmin() { var s = _seoCfg(); return { enabled: s.enabled === true, publicUrl: String(s.publicUrl || '') }; }
+function seoGsv() {
+  // Google Search Console ownership token (meta tag method). Token charset is
+  // strictly base64url-ish; anything else is dropped so the value can never
+  // break out of the attribute it is injected into.
+  var v = String(_seoCfg().googleVerification || '').trim();
+  return /^[A-Za-z0-9_-]{1,100}$/.test(v) ? v : '';
+}
+function _seoAdmin() { var s = _seoCfg(); return { enabled: s.enabled === true, publicUrl: String(s.publicUrl || ''), googleVerification: String(s.googleVerification || '') }; }
 
 var SEO_TITLE = 'PokerTH Web Client \u2014 Free Texas Hold\u2019em Poker in Your Browser';
 var SEO_DESC = 'Play PokerTH, the free open-source Texas Hold\u2019em poker game, directly in your browser. ' +
@@ -928,6 +935,8 @@ var SEO_DESC = 'Play PokerTH, the free open-source Texas Hold\u2019em poker game
 function seoHeadBlock(base) {
   var img = base ? base + '/screenshots/social-preview.png' : '';
   var out = [];
+  var gsv = seoGsv();
+  if (gsv) out.push('<meta name="google-site-verification" content="' + gsv + '">');
   out.push('<meta name="description" content="' + SEO_DESC + '">');
   if (base) out.push('<link rel="canonical" href="' + base + '/">');
   out.push('<meta property="og:type" content="website">');
@@ -1003,7 +1012,7 @@ function sendClientHtml(req, res) {
   let st;
   try { st = fs.statSync(p); } catch (e) { res.writeHead(404); res.end('Not found'); return; }
   const on = seoEnabled(), base = on ? seoPublicUrl() : '';
-  const key = st.mtimeMs + '|' + (on ? '1' : '0') + '|' + base;
+  const key = st.mtimeMs + '|' + (on ? '1' : '0') + '|' + base + '|' + (on ? seoGsv() : '');
   let ent = _seoHtmlCache.get(key);
   if (!ent) {
     _seoHtmlCache.clear();
@@ -2763,6 +2772,11 @@ function handleAdmin(req, res, reqPathOnly, query) {
             if (_su && !/^https?:\/\/[^\s"'<>]+$/i.test(_su)) return adminJson(res, 400, { ok: false, error: 'invalid public URL (expected https://\u2026)' });
             _so.publicUrl = _su;
           }
+          if (typeof d.seo.googleVerification === 'string') {
+            var _sg = d.seo.googleVerification.trim().slice(0, 100);
+            if (_sg && !/^[A-Za-z0-9_-]+$/.test(_sg)) return adminJson(res, 400, { ok: false, error: 'invalid verification token (letters, digits, - and _ only)' });
+            _so.googleVerification = _sg;
+          }
           _adminConfig.seo = _so;
           _seoHtmlCache.clear();   // re-inject on next page load
         }
@@ -4390,9 +4404,24 @@ const httpServer = http.createServer((req, res) => {
 
   // Friendly path for the pack-creator Studio, mirroring /admin -> admin.html.
   if (reqPathOnly === '/privacy' || reqPathOnly === '/privacy.html') {
+    // Same serve-time SEO policy as the client page: the file on disk stays
+    // neutral, the <!--__SEO_META__--> placeholder is resolved per request
+    // (noindex when the admin toggle is off, description + canonical when on).
+    // The page is tiny and rarely hit, so no cache/compression is needed here.
     const p = path.join(PUBLIC_DIR, 'privacy.html');
-    if (fs.existsSync(p)) return sendFile(req, res, p, 'text/html; charset=utf-8', 'no-store');
-    res.writeHead(404); res.end('privacy.html missing'); return;
+    let phtml;
+    try { phtml = fs.readFileSync(p, 'utf8'); } catch (e) { res.writeHead(404); res.end('privacy.html missing'); return; }
+    var _pOn = seoEnabled(), _pBase = _pOn ? seoPublicUrl() : '';
+    var _pMeta = _pOn
+      ? ('<meta name="description" content="Privacy policy of the PokerTH Web Client \u2014 what little data is processed, and what never leaves your browser.">' +
+         (_pBase ? '\n<link rel="canonical" href="' + _pBase + '/privacy">' : ''))
+      : '<meta name="robots" content="noindex, nofollow">';
+    phtml = phtml.replace('<!--__SEO_META__-->', _pMeta);
+    const pbuf = Buffer.from(phtml, 'utf8');
+    res.writeHead(200, Object.assign({ 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-store', 'Content-Length': pbuf.length }, SECURITY_HEADERS));
+    if (req.method === 'HEAD') { res.end(); return; }
+    res.end(pbuf);
+    return;
   }
   if (reqPathOnly === '/studio' || reqPathOnly === '/studio.html') {
     const p = path.join(PUBLIC_DIR, 'studio.html');
