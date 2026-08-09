@@ -5438,7 +5438,41 @@ const App = (() => {
       window._reconnectCountdown = setInterval(_updateBannerCountdown, 1000);
       window._reconnectTimer = setTimeout(function() {
         clearInterval(window._reconnectCountdown);
-        App.connect();
+        // FIX web.23 (rapport narmod : 5G→Wi-Fi → « Reprise impossible ») :
+        // App.connect() est une poignée de main NEUVE avec &fresh=1 — le proxy
+        // DÉTRUIT alors la session en grâce (une table où il ne reste que des
+        // bots ferme dès que notre joueur tombe) et le rejoin qui suit échoue
+        // forcément → retour au lobby. La 1re tentative (onclose) faisait déjà
+        // un pur rebranchement ; les suivantes passaient par connect() et
+        // cassaient donc la grâce dès que le réseau mettait plus de 5 s à
+        // revenir (Wi-Fi qui se ré-associe après le mode avion), d'où
+        // l'asymétrie 5G→Wi-Fi vs Wi-Fi→5G. Désormais TOUTES les tentatives
+        // sont rebind-first : même URL sans fresh. Si la grâce a expiré, le
+        // proxy ouvre un amont neuf de lui-même, l'Announce arrive et le flux
+        // normal (Init → rejoin) reprend — fresh=1 reste réservé au clic
+        // manuel (PWA relancée, état de page vierge).
+        if (S.ws || !S._lastConnectParams || S._intentionalDisconnect || window._offlineMode) return;
+        _showBanner(t('reconnInProgress'));
+        try {
+          S.ws = new WebSocket(S._lastConnectParams.finalUrl);
+          S.ws.binaryType = 'arraybuffer';
+          S.ws.onopen = function() { _showBanner(t('reauthBanner')); };
+          S.ws.onmessage = function(e) {
+            onRawData(e.data);
+            if (S._reconnectAttempts > 0) {
+              S._reconnectAttempts = 0;
+              setTimeout(_hideBanner, 1500);
+            }
+          };
+          S.ws.onclose = function() {
+            S.ws = null;
+            clearTimeout(window._reconnectTimer);
+            App && App._reconnectContinue && App._reconnectContinue();
+          };
+          S.ws.onerror = function() {};
+        } catch (err) {
+          _showBanner(t('errGeneric', { code: err.message }));
+        }
       }, delay);
     },
 
@@ -9975,7 +10009,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.6-web.22'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.6-web.23'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
