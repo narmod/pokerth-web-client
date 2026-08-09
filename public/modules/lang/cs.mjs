@@ -177,6 +177,7 @@ export const strings = {
     rankingTooltip: 'Žebříček', rankingTitle: 'Žebříček', rankingPth: 'PokerTH', rankingBbc: 'BBC', rankingWec: 'WEC',
     rankingMemberSince: 'Členem od', rankingAwards: 'Ocenění', rankingTickets: 'Vstupenky', rankingThisSeason: 'Tato sezóna', rankingThisMonth: 'Tento měsíc', rankingThisYear: 'Tento rok', rankingStep: 'Stupeň', rankingRank: 'Pořadí', rankingBack: 'Zpět',
     rankingLoading: 'Načítání…', rankingSoon: 'Žebříček bude brzy k dispozici.', rankingError: 'Žebříček se nepodařilo načíst.', rankingEmpty: 'Žádné záznamy.',
+    forumTooltip:'Fórum', forumTitle:'Novinky z fóra', forumMarkRead:'Označit vše jako přečtené', forumOpen:'Otevřít fórum', forumError:'Kanál fóra se nepodařilo načíst.', advForumNews:'Tlačítko fóra v záhlaví lobby',
     rankingSearch: 'Hledat hráče…', rankingNoMatch: 'Žádný hráč nenalezen.', rankingSeason: 'Sezóna', rankingAllTime: 'Celkově',
     rankingColRank: '#', rankingColPlayer: 'Přezdívka', rankingColScore: 'Skóre', rankingColPoints: 'Body', rankingColGames: 'Hry',
     hdrWaitingPlayers:'Čekání na hráče', hdrSpectatingWait:'Divák — čekání na další rozdání',

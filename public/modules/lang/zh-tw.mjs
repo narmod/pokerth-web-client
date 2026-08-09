@@ -178,6 +178,7 @@ export const strings = {
     rankingTooltip: '排行榜', rankingTitle: '排行榜', rankingPth: 'PokerTH', rankingBbc: 'BBC', rankingWec: 'WEC',
     rankingMemberSince: '加入於', rankingAwards: '獎項', rankingTickets: '門票', rankingThisSeason: '本賽季', rankingThisMonth: '本月', rankingThisYear: '今年', rankingStep: '階段', rankingRank: '排名', rankingBack: '返回',
     rankingLoading: '載入中…', rankingSoon: '排行榜即將推出。', rankingError: '無法載入排行榜。', rankingEmpty: '沒有項目。',
+    forumTooltip:'論壇', forumTitle:'論壇消息', forumMarkRead:'全部標為已讀', forumOpen:'開啟論壇', forumError:'無法載入論壇摘要。', advForumNews:'大廳標題列的論壇按鈕',
     rankingSearch: '搜尋玩家…', rankingNoMatch: '找不到玩家。', rankingSeason: '賽季', rankingAllTime: '歷來',
     rankingColRank: '#', rankingColPlayer: '暱稱', rankingColScore: '分數', rankingColPoints: '積分', rankingColGames: '場數',
     hdrWaitingPlayers:'等待玩家中', hdrSpectatingWait:'觀戰中 — 等待下一手牌',

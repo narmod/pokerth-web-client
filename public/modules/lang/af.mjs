@@ -177,6 +177,7 @@ export const strings = {
     rankingTooltip: 'Ranglys', rankingTitle: 'Ranglys', rankingPth: 'PokerTH', rankingBbc: 'BBC', rankingWec: 'WEC',
     rankingMemberSince: 'Lid sedert', rankingAwards: 'Toekennings', rankingTickets: 'Kaartjies', rankingThisSeason: 'Hierdie seisoen', rankingThisMonth: 'Hierdie maand', rankingThisYear: 'Hierdie jaar', rankingStep: 'Stap', rankingRank: 'Rang', rankingBack: 'Terug',
     rankingLoading: 'Laai tans…', rankingSoon: 'Ranglys binnekort beskikbaar.', rankingError: 'Kon nie die ranglys laai nie.', rankingEmpty: 'Geen inskrywings nie.',
+    forumTooltip:'Forum', forumTitle:'Forumnuus', forumMarkRead:'Merk alles as gelees', forumOpen:'Maak die forum oop', forumError:'Kon nie die forumvoer laai nie.', advForumNews:'Forum-knoppie in die lobby-kopstuk',
     rankingSearch: 'Soek \'n speler…', rankingNoMatch: 'Geen speler gevind nie.', rankingSeason: 'Seisoen', rankingAllTime: 'Alle tye',
     rankingColRank: '#', rankingColPlayer: 'Bynaam', rankingColScore: 'Telling', rankingColPoints: 'Punte', rankingColGames: 'Spele',
     hdrWaitingPlayers:'Wag vir spelers', hdrSpectatingWait:'Kyk toe — wag vir die volgende hand',

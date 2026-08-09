@@ -182,6 +182,7 @@ export const strings = {
     rankingTooltip: 'Ranglijst', rankingTitle: 'Ranglijst', rankingPth: 'PokerTH', rankingBbc: 'BBC', rankingWec: 'WEC',
     rankingMemberSince: 'Lid sinds', rankingAwards: 'Onderscheidingen', rankingTickets: 'Tickets', rankingThisSeason: 'Dit seizoen', rankingThisMonth: 'Deze maand', rankingThisYear: 'Dit jaar', rankingStep: 'Stap', rankingRank: 'Rang', rankingBack: 'Terug',
     rankingLoading: 'Laden…', rankingSoon: 'Ranglijst binnenkort beschikbaar.', rankingError: 'Kon de ranglijst niet laden.', rankingEmpty: 'Geen vermeldingen.',
+    forumTooltip:'Forum', forumTitle:'Forumnieuws', forumMarkRead:'Alles als gelezen markeren', forumOpen:'Forum openen', forumError:'De forumfeed kon niet worden geladen.', advForumNews:'Forumknop in de lobbykoptekst',
     rankingSearch: 'Zoek een speler…', rankingNoMatch: 'Geen speler gevonden.', rankingSeason: 'Seizoen', rankingAllTime: 'Aller tijden',
     rankingColRank: '#', rankingColPlayer: 'Bijnaam', rankingColScore: 'Score', rankingColPoints: 'Punten', rankingColGames: 'Spellen',
     hdrWaitingPlayers:'Wachten op spelers', hdrSpectatingWait:'Toeschouwer — wachten op de volgende hand',

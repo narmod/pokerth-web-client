@@ -212,6 +212,7 @@ function applyAdvOpts() {
     b.classList.toggle('adv-no-potbtns', !_advGet('pot_btns', true)); // quick-bets 1/3·1/2·Pot (parite ShowPotPercentButtons)
     b.classList.toggle('adv-no-communitycontent', !_advGet('community_content', true)); // contenus communaute (parite showCommunityContent)
     b.classList.toggle('adv-no-blindsbadge', !_advGet('blinds_badge', true)); // pastille blinds du bandeau (extension web)
+    b.classList.toggle('adv-no-forumnews', !_advGet('forum_news', true)); // bouton Forum du lobby (extension web)
     b.classList.toggle('adv-no-community', !_advGet('show_community', true));
     b.classList.toggle('adv-no-flag', !_advGet('show_flag', true));
     // Titre « PokerTH » de l'écran de connexion : caché par défaut (defOn
@@ -444,6 +445,7 @@ function openAdvancedOptions() {
   sync('adv-reducefx', 'reduce_fx', false);
   sync('adv-statusbar', 'status_bar', true);
   sync('adv-blindsbadge', 'blinds_badge', true);
+  sync('adv-forumnews', 'forum_news', true);   // bouton Forum + badge non-lus dans l'en-tete du lobby (web)
   sync('adv-winnerpopup', 'winner_popup', true);
   sync('adv-removegone', 'remove_gone', false);
   sync('adv-confirmsocial', 'confirm_social', true);   // confirmation avant inviter/ignorer (parité QML 2.1.4)
@@ -1216,6 +1218,7 @@ var _CFG_WEB_SYNC_KEYS = [
   'pth_haptic', 'pth_display_bb', 'pth_table_zoom', 'pth_zoom_follow',
   'pth_community_content', 'pth_sound_vol',
   'pth_log_on', 'pth_create_dialog', 'pth_status_bar', 'pth_blinds_badge', 'pth_deal_anim',
+  'pth_forum_news',
   'pth_winner_popup', 'pth_remove_gone', 'pth_tooltips', 'pth_big_own_cards',
   'pth_chat_translate', 'pth_chat_abbrev', 'pth_pin_actionbar', 'pth_confirm_social',
   'pth_help_btn',
@@ -8694,6 +8697,7 @@ function toggleHandsHelp() {
 var _WIN_BTN = [
   { win: 'ranking-modal',         mode: 'display', btns: ['ranking-btn-connect', 'ranking-btn-lobby', 'ranking-btn-create', 'ranking-btn-game'] },
   { win: 'tableranking-modal',    mode: 'display', btns: ['tableranking-btn-game'] },
+  { win: 'forum-modal',           mode: 'display', btns: ['forum-btn-lobby'] },
   { win: 'adv-modal',             mode: 'display', btns: ['adv-opts-connect-mob', 'adv-opts-lobby-mob', 'adv-opts-create-mob', 'adv-opts-mob'] },
   { win: 'music-panel',           mode: 'display', btns: ['music-toggle-connect-mob', 'music-toggle-lobby-mob', 'music-toggle-create-mob', 'music-toggle-game-mob'] },
   { win: 'g-chat-panel',          mode: 'display', btns: ['chat-toggle-btn', 'gchat-fab'] },
@@ -10021,7 +10025,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.6-web.25'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.6-web.26'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

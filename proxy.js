@@ -4225,6 +4225,78 @@ function handlePlayer(req, res, query) {
 }
 
 
+
+// ───────────────────────────────────────────────────────────────────────────
+// Forum news relay — phpBB Atom feed of www.pokerth.net exposed as
+// same-origin JSON for the web client (lobby "Forum" window). The browser
+// cannot read the feed directly (no CORS header on app.php/feed), so we
+// fetch it here with the whitelisted UA, parse the few fields the widget
+// needs (title / author / date / forum / link) and cache the JSON for
+// 10 minutes to spare the forum. The heavy HTML <content> is deliberately
+// dropped. Stale cache is served if the upstream fails (same philosophy
+// as the BBC ranking relay above).
+const FORUM_FEED_URL = 'https://www.pokerth.net/app.php/feed';
+const FORUM_TTL_MS = 10 * 60 * 1000;
+const FORUM_MAX_POSTS = 40;
+
+function forumParseAtom(xml) {
+  const posts = [];
+  const chunks = String(xml || '').split('<entry>');
+  for (let i = 1; i < chunks.length && posts.length < FORUM_MAX_POSTS; i++) {
+    const c = chunks[i];
+    const g = function (re) { const m = re.exec(c); return m ? m[1] : ''; };
+    const rawTitle = rankingDecodeHtml(g(/<title[^>]*><!\[CDATA\[([\s\S]*?)\]\]><\/title>/));
+    const link = g(/<link href="([^"]+)"\/?>/);
+    if (!rawTitle || !link) continue;
+    // phpBB titles read "Forum \u2022 Topic"; the <category term> carries the
+    // forum too — prefer it, fall back to the title prefix.
+    let forum = rankingDecodeHtml(g(/<category term="([^"]*)"/));
+    let title = rawTitle;
+    const bi = rawTitle.indexOf(' \u2022 ');
+    if (bi > 0) { if (!forum) forum = rawTitle.slice(0, bi); title = rawTitle.slice(bi + 3); }
+    posts.push({
+      id: link,
+      link: link,
+      forum: forum,
+      title: title,
+      author: g(/<author><name><!\[CDATA\[([\s\S]*?)\]\]>/),
+      date: g(/<published>([^<]+)<\/published>/) || g(/<updated>([^<]+)<\/updated>/)
+    });
+  }
+  return posts;
+}
+
+function handleForumFeed(req, res) {
+  const cacheKey = 'forumfeed';
+  const hit = RANKING_CACHE.get(cacheKey);
+  if (hit && (Date.now() - hit.at) < FORUM_TTL_MS) {
+    res.writeHead(hit.status, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'public, max-age=120', 'X-Forum-Cache': 'hit' });
+    res.end(hit.body);
+    return;
+  }
+  rankingFetch(FORUM_FEED_URL, { 'Accept': 'application/atom+xml, application/xml, text/xml, */*' }).then(function (r) {
+    if (!r.ok) throw new Error('upstream_' + r.status);
+    return r.text();
+  }).then(function (xml) {
+    const posts = forumParseAtom(xml);
+    if (!posts.length) throw new Error('parse_empty');
+    const body = JSON.stringify({ ok: true, at: Date.now(), posts: posts });
+    RANKING_CACHE.set(cacheKey, { at: Date.now(), status: 200, body: body });
+    res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'public, max-age=120', 'X-Forum-Cache': 'miss' });
+    res.end(body);
+  }).catch(function (err) {
+    const stale = RANKING_CACHE.get(cacheKey);
+    if (stale && stale.status === 200) {
+      res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store', 'X-Forum-Cache': 'stale' });
+      res.end(stale.body);
+      return;
+    }
+    res.writeHead(502, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' });
+    res.end(JSON.stringify({ ok: false, error: 'relay_failed', detail: String((err && err.message) || err) }));
+  });
+}
+
+
 const httpServer = http.createServer((req, res) => {
   // Serve the SPA shell for the root path. We strip the query string
   // before comparing so deep links like
@@ -4456,6 +4528,10 @@ const httpServer = http.createServer((req, res) => {
   }
   if (reqPathOnly === '/api/award-img') {
     handleAwardImg(req, res, query);
+    return;
+  }
+  if (reqPathOnly === '/api/forumfeed') {
+    handleForumFeed(req, res);
     return;
   }
 

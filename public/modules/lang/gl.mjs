@@ -177,6 +177,7 @@ export const strings = {
     rankingTooltip: 'Clasificación', rankingTitle: 'Clasificación', rankingPth: 'PokerTH', rankingBbc: 'BBC', rankingWec: 'WEC',
     rankingMemberSince: 'Membro desde', rankingAwards: 'Premios', rankingTickets: 'Entradas', rankingThisSeason: 'Esta tempada', rankingThisMonth: 'Este mes', rankingThisYear: 'Este ano', rankingStep: 'Paso', rankingRank: 'Rango', rankingBack: 'Atrás',
     rankingLoading: 'Cargando…', rankingSoon: 'Clasificación dispoñible en breve.', rankingError: 'Non se puido cargar a clasificación.', rankingEmpty: 'Sen entradas.',
+    forumTooltip:'Foro', forumTitle:'Novidades do foro', forumMarkRead:'Marcar todo como lido', forumOpen:'Abrir o foro', forumError:'Non se puido cargar a canle do foro.', advForumNews:'Botón do foro na cabeceira do lobby',
     rankingSearch: 'Buscar un xogador…', rankingNoMatch: 'Ningún xogador atopado.', rankingSeason: 'Tempada', rankingAllTime: 'De sempre',
     rankingColRank: '#', rankingColPlayer: 'Alcume', rankingColScore: 'Puntuación', rankingColPoints: 'Puntos', rankingColGames: 'Partidas',
     hdrWaitingPlayers:'Agardando xogadores', hdrSpectatingWait:'Espectador — agardando a próxima man',

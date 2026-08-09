@@ -176,6 +176,7 @@ export const strings = {
     rankingTooltip: 'ランキング', rankingTitle: 'ランキング', rankingPth: 'PokerTH', rankingBbc: 'BBC', rankingWec: 'WEC',
     rankingMemberSince: '登録日', rankingAwards: '受賞', rankingTickets: 'チケット', rankingThisSeason: '今シーズン', rankingThisMonth: '今月', rankingThisYear: '今年', rankingStep: 'ステップ', rankingRank: '順位', rankingBack: '戻る',
     rankingLoading: '読み込み中…', rankingSoon: 'ランキングは近日公開。', rankingError: 'ランキングを読み込めませんでした。', rankingEmpty: 'エントリーがありません。',
+    forumTooltip:'フォーラム', forumTitle:'フォーラムニュース', forumMarkRead:'すべて既読にする', forumOpen:'フォーラムを開く', forumError:'フォーラムのフィードを読み込めませんでした。', advForumNews:'ロビーヘッダーのフォーラムボタン',
     rankingSearch: 'プレイヤーを検索…', rankingNoMatch: 'プレイヤーが見つかりません。', rankingSeason: 'シーズン', rankingAllTime: '全期間',
     rankingColRank: '#', rankingColPlayer: 'ニックネーム', rankingColScore: 'スコア', rankingColPoints: 'ポイント', rankingColGames: 'ゲーム数',
     hdrWaitingPlayers:'プレイヤーを待っています', hdrSpectatingWait:'観戦中 — 次のハンドを待っています',
