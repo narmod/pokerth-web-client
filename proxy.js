@@ -902,6 +902,138 @@ function appModes() { var m = (_adminConfig && _adminConfig.modes) || {}; return
 // Lecteur MP3 : interrupteur d'instance (admin -> onglet Music). Cle absente =
 // actif, pour qu'une instance existante ne perde pas son lecteur a la mise a jour.
 function musicEnabled() { return !(_adminConfig && _adminConfig.musicEnabled === false); }
+
+// ── SEO / search-engine visibility — admin-controlled, OFF by default ──────
+// A self-hosted install must never end up in Google by accident: when the
+// option is off (default), the served HTML carries <meta name="robots"
+// noindex,nofollow> and /robots.txt disallows everything. When the operator
+// turns it on in /admin (Clients → Search engine visibility), the HTML gains
+// description / Open Graph / Twitter cards / canonical / JSON-LD plus a
+// crawler-readable text block, and /robots.txt, /sitemap.xml and /llms.txt
+// are generated from the configured public URL. Everything is injected at
+// serve time from the <!--__SEO_HEAD__--> / <!--__SEO_BODY__--> placeholders
+// in pokerth-client.html — the file on disk stays neutral.
+function _seoCfg() { var s = _adminConfig && _adminConfig.seo; return (s && typeof s === 'object') ? s : {}; }
+function seoEnabled() { return _seoCfg().enabled === true; }
+function seoPublicUrl() {
+  var u = String(_seoCfg().publicUrl || '').trim().replace(/\/+$/, '');
+  return /^https?:\/\/[^\s"'<>]+$/i.test(u) ? u : '';
+}
+function _seoAdmin() { var s = _seoCfg(); return { enabled: s.enabled === true, publicUrl: String(s.publicUrl || '') }; }
+
+var SEO_TITLE = 'PokerTH Web Client \u2014 Free Texas Hold\u2019em Poker in Your Browser';
+var SEO_DESC = 'Play PokerTH, the free open-source Texas Hold\u2019em poker game, directly in your browser. ' +
+  'No download, no registration \u2014 practice offline against bots, play on LAN or join pokerth.net. 36 languages, installable as an app (PWA).';
+
+function seoHeadBlock(base) {
+  var img = base ? base + '/screenshots/social-preview.png' : '';
+  var out = [];
+  out.push('<meta name="description" content="' + SEO_DESC + '">');
+  if (base) out.push('<link rel="canonical" href="' + base + '/">');
+  out.push('<meta property="og:type" content="website">');
+  out.push('<meta property="og:site_name" content="PokerTH">');
+  out.push('<meta property="og:title" content="' + SEO_TITLE + '">');
+  out.push('<meta property="og:description" content="' + SEO_DESC + '">');
+  if (base) out.push('<meta property="og:url" content="' + base + '/">');
+  if (img) out.push('<meta property="og:image" content="' + img + '">');
+  out.push('<meta name="twitter:card" content="summary_large_image">');
+  out.push('<meta name="twitter:title" content="' + SEO_TITLE + '">');
+  out.push('<meta name="twitter:description" content="' + SEO_DESC + '">');
+  if (img) out.push('<meta name="twitter:image" content="' + img + '">');
+  var ld = {
+    '@context': 'https://schema.org',
+    '@type': 'WebApplication',
+    name: 'PokerTH Web Client',
+    description: SEO_DESC,
+    applicationCategory: 'GameApplication',
+    operatingSystem: 'Any',
+    browserRequirements: 'Requires JavaScript',
+    inLanguage: 'en',
+    offers: { '@type': 'Offer', price: '0', priceCurrency: 'EUR' },
+    sameAs: ['https://github.com/narmod/pokerth-web-client', 'https://www.pokerth.net/']
+  };
+  if (base) ld.url = base + '/';
+  if (img) { ld.image = img; ld.screenshot = img; }
+  out.push('<script type="application/ld+json">' + JSON.stringify(ld) + '</script>');
+  return out.join('\n');
+}
+
+function seoBodyBlock() {
+  // Crawler-readable summary of what the page is. The app itself renders no
+  // static text, so search engines and AI crawlers would otherwise see an
+  // empty page. Kept off-viewport (not display:none) and aria-hidden so it
+  // never doubles up for screen-reader users.
+  return '<div id="seo-intro" aria-hidden="true" style="position:absolute;left:-9999px;top:0;width:1px;height:1px;overflow:hidden">' +
+    '<h1>' + SEO_TITLE + '</h1>' +
+    '<p>' + SEO_DESC + '</p>' +
+    '<p>PokerTH Web Client is the browser version of PokerTH, the well-known open-source poker game. ' +
+    'It runs on any modern browser \u2014 desktop, tablet or phone \u2014 and can be installed as a Progressive Web App. ' +
+    'Game modes: offline practice against computer opponents, LAN or private dedicated servers, and the official pokerth.net network with rankings.</p>' +
+    '<p>Features: full Texas Hold\u2019em rules, up to 10 players per table, 36 interface languages, voice announcements, ' +
+    'music player, customizable card decks and table styles, and complete feature parity with the official PokerTH desktop client.</p>' +
+    '<p>Free software \u2014 source code on GitHub (narmod/pokerth-web-client), based on PokerTH by the PokerTH Development Team.</p>' +
+    '</div>';
+}
+
+function seoLlmsTxt(base) {
+  var u = base || '';
+  return '# PokerTH Web Client\n\n' +
+    '> ' + SEO_DESC + '\n\n' +
+    'PokerTH Web Client is the official browser version of PokerTH, the open-source\n' +
+    'Texas Hold\u2019em poker game. It is a Progressive Web App: nothing to install, no\n' +
+    'account required, playable on desktop and mobile.\n\n' +
+    '## Game modes\n\n' +
+    '- Offline practice against computer opponents (bots)\n' +
+    '- LAN / private dedicated PokerTH servers\n' +
+    '- The official pokerth.net network, with seasonal rankings\n\n' +
+    '## Key facts\n\n' +
+    '- Free and open source (based on PokerTH by the PokerTH Development Team)\n' +
+    '- 36 interface languages; poker terms (Fold/Check/Call/Raise/All-In) stay in English\n' +
+    '- Feature parity with the official PokerTH desktop client\n' +
+    (u ? '\n## Links\n\n- Play: ' + u + '/\n' : '\n## Links\n\n') +
+    '- Source code: https://github.com/narmod/pokerth-web-client\n' +
+    '- PokerTH project: https://www.pokerth.net/\n';
+}
+
+// Injected-HTML cache: one live variant, keyed on file mtime + SEO state.
+// Compressed once (gzip + brotli, moderate quality) like _compCache does.
+const _seoHtmlCache = new Map();
+function sendClientHtml(req, res) {
+  const p = path.join(__dirname, 'public', 'pokerth-client.html');
+  let st;
+  try { st = fs.statSync(p); } catch (e) { res.writeHead(404); res.end('Not found'); return; }
+  const on = seoEnabled(), base = on ? seoPublicUrl() : '';
+  const key = st.mtimeMs + '|' + (on ? '1' : '0') + '|' + base;
+  let ent = _seoHtmlCache.get(key);
+  if (!ent) {
+    _seoHtmlCache.clear();
+    let html;
+    try { html = fs.readFileSync(p, 'utf8'); } catch (e) { res.writeHead(404); res.end('Not found'); return; }
+    html = html.replace('<!--__SEO_HEAD__-->', on ? seoHeadBlock(base) : '<meta name="robots" content="noindex, nofollow">');
+    html = html.replace('<!--__SEO_BODY__-->', on ? seoBodyBlock() : '');
+    const buf = Buffer.from(html, 'utf8');
+    ent = {
+      raw: buf,
+      gz: zlib.gzipSync(buf),
+      br: zlib.brotliCompressSync(buf, { params: { [zlib.constants.BROTLI_PARAM_QUALITY]: 5 } })
+    };
+    _seoHtmlCache.set(key, ent);
+  }
+  const headers = Object.assign({
+    'Content-Type': 'text/html; charset=utf-8',
+    'Cache-Control': 'no-store, no-cache, must-revalidate',
+    'Vary': 'Accept-Encoding'
+  }, SECURITY_HEADERS);
+  const ae = String(req.headers['accept-encoding'] || '');
+  let body = ent.raw;
+  if (/\bbr\b/.test(ae)) { body = ent.br; headers['Content-Encoding'] = 'br'; }
+  else if (/\bgzip\b/.test(ae)) { body = ent.gz; headers['Content-Encoding'] = 'gzip'; }
+  headers['Content-Length'] = body.length;
+  res.writeHead(200, headers);
+  if (req.method === 'HEAD') { res.end(); return; }
+  res.end(body);
+}
+
 // First-visit welcome / rules message (operator-authored, per language).
 function _welcomeAdmin() { var w = _adminConfig.welcome || {}; return { enabled: !!w.enabled, updatedAt: w.updatedAt || 0, 'default': w['default'] || 'fr', langs: w.langs || {} }; }
 function _welcomePublic() { var w = _adminConfig.welcome; if (!w || !w.enabled) return null; return { enabled: true, updatedAt: w.updatedAt || 0, 'default': w['default'] || 'fr', langs: w.langs || {} }; }
@@ -2506,7 +2638,7 @@ function handleAdmin(req, res, reqPathOnly, query) {
   if (reqPathOnly === '/admin/config') {
     if (req.method === 'GET') {
       if (!adminAuthed(query)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
-      return adminJson(res, 200, { ok: true, resetPeriod: STATS_RESET_PERIOD, modes: appModes(), welcome: _welcomeAdmin(), showLoginTitle: !!_adminConfig.showLoginTitle, defaultTheme: _adminConfig.defaultTheme || '', defaults: _adminConfig.defaults || {}, loginDefaults: _loginDefaults(false), proxyCfg: _adminConfig.proxyCfg || {}, tableDefaults: _adminConfig.tableDefaults || {}, tableNames: _adminConfig.tableNames || {}, serverName: _adminConfig.serverName || '', serverTagline: _adminConfig.serverTagline || '', discordChatWebhookUrl: _adminConfig.discordChatWebhookUrl || '', featureSwitches: FEATURE_SWITCHES, featureOff: featureOffList(), musicEnabled: musicEnabled() });
+      return adminJson(res, 200, { ok: true, resetPeriod: STATS_RESET_PERIOD, modes: appModes(), welcome: _welcomeAdmin(), showLoginTitle: !!_adminConfig.showLoginTitle, defaultTheme: _adminConfig.defaultTheme || '', defaults: _adminConfig.defaults || {}, loginDefaults: _loginDefaults(false), proxyCfg: _adminConfig.proxyCfg || {}, tableDefaults: _adminConfig.tableDefaults || {}, tableNames: _adminConfig.tableNames || {}, serverName: _adminConfig.serverName || '', serverTagline: _adminConfig.serverTagline || '', discordChatWebhookUrl: _adminConfig.discordChatWebhookUrl || '', featureSwitches: FEATURE_SWITCHES, featureOff: featureOffList(), musicEnabled: musicEnabled(), seo: _seoAdmin() });
     }
     if (req.method === 'POST') {
       return readJsonBody(req, function (d) {
@@ -2623,8 +2755,19 @@ function handleAdmin(req, res, reqPathOnly, query) {
         if (typeof d.serverName === 'string')    _adminConfig.serverName    = d.serverName.trim().slice(0, 40);
         if (typeof d.serverTagline === 'string') _adminConfig.serverTagline = d.serverTagline.trim().slice(0, 60);
         if (typeof d.showLoginTitle === 'boolean') _adminConfig.showLoginTitle = d.showLoginTitle;
+        if (d.seo && typeof d.seo === 'object') {
+          var _so = (_adminConfig.seo && typeof _adminConfig.seo === 'object') ? _adminConfig.seo : {};
+          if (typeof d.seo.enabled === 'boolean') _so.enabled = d.seo.enabled;
+          if (typeof d.seo.publicUrl === 'string') {
+            var _su = d.seo.publicUrl.trim().slice(0, 200).replace(/\/+$/, '');
+            if (_su && !/^https?:\/\/[^\s"'<>]+$/i.test(_su)) return adminJson(res, 400, { ok: false, error: 'invalid public URL (expected https://\u2026)' });
+            _so.publicUrl = _su;
+          }
+          _adminConfig.seo = _so;
+          _seoHtmlCache.clear();   // re-inject on next page load
+        }
         saveAdminConfig();
-        return adminJson(res, 200, { ok: true, resetPeriod: STATS_RESET_PERIOD, modes: appModes(), welcome: _welcomeAdmin(), showLoginTitle: !!_adminConfig.showLoginTitle, defaultTheme: _adminConfig.defaultTheme || '', defaults: _adminConfig.defaults || {}, loginDefaults: _loginDefaults(false), proxyCfg: _adminConfig.proxyCfg || {}, tableDefaults: _adminConfig.tableDefaults || {}, tableNames: _adminConfig.tableNames || {}, serverName: _adminConfig.serverName || '', serverTagline: _adminConfig.serverTagline || '', discordChatWebhookUrl: _adminConfig.discordChatWebhookUrl || '', featureSwitches: FEATURE_SWITCHES, featureOff: featureOffList(), musicEnabled: musicEnabled() });
+        return adminJson(res, 200, { ok: true, resetPeriod: STATS_RESET_PERIOD, modes: appModes(), welcome: _welcomeAdmin(), showLoginTitle: !!_adminConfig.showLoginTitle, defaultTheme: _adminConfig.defaultTheme || '', defaults: _adminConfig.defaults || {}, loginDefaults: _loginDefaults(false), proxyCfg: _adminConfig.proxyCfg || {}, tableDefaults: _adminConfig.tableDefaults || {}, tableNames: _adminConfig.tableNames || {}, serverName: _adminConfig.serverName || '', serverTagline: _adminConfig.serverTagline || '', discordChatWebhookUrl: _adminConfig.discordChatWebhookUrl || '', featureSwitches: FEATURE_SWITCHES, featureOff: featureOffList(), musicEnabled: musicEnabled(), seo: _seoAdmin() });
       });
     }
     res.writeHead(405); res.end('Method not allowed'); return;
@@ -4109,11 +4252,45 @@ const httpServer = http.createServer((req, res) => {
     } else handleAdmin(req, res, reqPathOnly, q);
     return;
   }
-  if (reqPathOnly === '/' || reqPathOnly === '/index.html') {
-    const p = path.join(__dirname, 'public', 'pokerth-client.html');
-    if (fs.existsSync(p)) {
-      return sendFile(req, res, p, 'text/html; charset=utf-8', 'no-store, no-cache, must-revalidate');
+  if (reqPathOnly === '/' || reqPathOnly === '/index.html' || reqPathOnly === '/pokerth-client.html') {
+    // Served through the SEO injector: <!--__SEO_HEAD__--> / <!--__SEO_BODY__-->
+    // are resolved at serve time from the admin setting (noindex when off).
+    return sendClientHtml(req, res);
+  }
+
+  // ── SEO endpoints — content follows the admin toggle (OFF by default) ──
+  if (reqPathOnly === '/robots.txt') {
+    var _rOn = seoEnabled(), _rBase = _rOn ? seoPublicUrl() : '';
+    var _rTxt;
+    if (_rOn) {
+      _rTxt = 'User-agent: *\nAllow: /\nDisallow: /admin\n\n' +
+        '# AI crawlers explicitly welcome\n' +
+        ['GPTBot', 'ClaudeBot', 'Claude-Web', 'PerplexityBot', 'Google-Extended'].map(function (b) { return 'User-agent: ' + b + '\nAllow: /\n'; }).join('\n') +
+        (_rBase ? '\nSitemap: ' + _rBase + '/sitemap.xml\n' : '');
+    } else {
+      _rTxt = 'User-agent: *\nDisallow: /\n';
     }
+    res.writeHead(200, Object.assign({ 'Content-Type': 'text/plain; charset=utf-8', 'Cache-Control': 'no-cache, must-revalidate' }, SECURITY_HEADERS));
+    res.end(_rTxt);
+    return;
+  }
+  if (reqPathOnly === '/sitemap.xml') {
+    var _sBase = seoEnabled() ? seoPublicUrl() : '';
+    if (!_sBase) { res.writeHead(404); res.end('Not found'); return; }
+    var _sXml = '<?xml version="1.0" encoding="UTF-8"?>\n' +
+      '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' +
+      '<url><loc>' + _sBase + '/</loc><changefreq>weekly</changefreq><priority>1.0</priority></url>\n' +
+      '<url><loc>' + _sBase + '/privacy</loc><changefreq>yearly</changefreq><priority>0.2</priority></url>\n' +
+      '</urlset>\n';
+    res.writeHead(200, Object.assign({ 'Content-Type': 'application/xml; charset=utf-8', 'Cache-Control': 'no-cache, must-revalidate' }, SECURITY_HEADERS));
+    res.end(_sXml);
+    return;
+  }
+  if (reqPathOnly === '/llms.txt') {
+    if (!seoEnabled()) { res.writeHead(404); res.end('Not found'); return; }
+    res.writeHead(200, Object.assign({ 'Content-Type': 'text/plain; charset=utf-8', 'Cache-Control': 'no-cache, must-revalidate' }, SECURITY_HEADERS));
+    res.end(seoLlmsTxt(seoPublicUrl()));
+    return;
   }
 
   // Friendly path for the pack-creator Studio, mirroring /admin -> admin.html.

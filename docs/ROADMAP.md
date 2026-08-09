@@ -11,6 +11,8 @@ use too. Items are grouped by status rather than fixed phases.
 
 ## ✅ Shipped
 
+- **SEO / search-engine visibility (admin option, off by default)** — `/admin` → Clients → Search engine visibility. Off: pages served with `noindex,nofollow`, `robots.txt` blocks all crawlers (self-hosted installs stay unindexed). On: meta description, Open Graph / Twitter cards, canonical, JSON-LD, crawler-readable summary block, plus generated `robots.txt` (AI crawlers welcomed), `sitemap.xml` and `llms.txt` from the configured public URL. Injected at serve time by `proxy.js` (v2.1.6-web.25).
+
 **Core gameplay**
 - Full flow: lobby, table creation, joining, betting, showdown.
 - Three connection choices (LAN / Dedicated, pokerth.net, Local / Training) + Guest-mode toggle.
