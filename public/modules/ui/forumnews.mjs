@@ -56,6 +56,24 @@ export function fnUnreadCount(posts, readIds, baseTs) {
   return n;
 }
 
+// Stable colour class for a forum badge. The big pokerth.net forums get a
+// fixed hue (BBC amber, WEC teal, Bugs red, General blue, Feature Requests
+// purple); any other/new forum falls back to a deterministic hash over 8
+// hues so every forum keeps the same colour across sessions without a
+// maintained list. Classes: .fn-c0 … .fn-c7 (pokerth.css).
+const FN_FORUM_COLORS = {
+  'bbc': 0, 'wec': 1, 'bugs': 2, 'general': 3, 'feature requests': 4,
+  'monthly cup': 5, 'newbie': 6, 'rules': 7
+};
+export function fnForumClass(name) {
+  const k = String(name || '').trim().toLowerCase();
+  if (!k) return 'fn-c7';
+  if (k in FN_FORUM_COLORS) return 'fn-c' + FN_FORUM_COLORS[k];
+  let h = 0;
+  for (let i = 0; i < k.length; i++) h = (h * 31 + k.charCodeAt(i)) >>> 0;
+  return 'fn-c' + (h % 8);
+}
+
 // ── Read state (localStorage) ──────────────────────────────────────────
 function _readBase() {
   try { return parseInt(localStorage.getItem('pth_forum_read_base') || '0', 10) || 0; } catch (e) { return 0; }
@@ -135,7 +153,7 @@ function _renderList(posts) {
     const p = posts[i];
     const unread = fnIsUnread(p, ids, base);
     html += '<div class="fn-row' + (unread ? ' fn-unread' : '') + '" data-idx="' + i + '" role="link" tabindex="0">'
-      + (p.forum ? '<span class="fn-forum">' + esc(p.forum) + '</span>' : '')
+      + (p.forum ? '<span class="fn-forum ' + fnForumClass(p.forum) + '">' + esc(p.forum) + '</span>' : '')
       + '<div class="fn-main"><div class="fn-t">' + esc(p.title) + '</div>'
       + '<div class="fn-meta">' + esc(p.author || '') + (p.author ? ' \u00b7 ' : '') + esc(_fmtDate(p.date)) + '</div></div>'
       + (unread ? '<span class="fn-dot" aria-hidden="true"></span>' : '')

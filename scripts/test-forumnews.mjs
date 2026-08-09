@@ -52,6 +52,14 @@ ok(F.fnUnreadCount(d, none, base) === 2, 'mark-all watermark hides older posts')
 ok(F.fnUnreadCount(d, new Set(['p5']), base) === 1, 'individually read ids are excluded');
 ok(F.fnIsUnread({ id: 'x', date: 'garbage' }, none, 0) === false, 'unparseable date never counts as unread');
 
+// ── 3) fnForumClass — stable colour coding ─────────────────────────────
+ok(F.fnForumClass('BBC') === 'fn-c0' && F.fnForumClass('bbc') === 'fn-c0', 'known forums map to fixed hues (case-insensitive)');
+ok(F.fnForumClass('WEC') === 'fn-c1' && F.fnForumClass('Bugs') === 'fn-c2', 'WEC teal / Bugs red');
+ok(F.fnForumClass('General') === 'fn-c3' && F.fnForumClass('Feature Requests') === 'fn-c4', 'General blue / Feature Requests purple');
+const unknown = F.fnForumClass('Something other than Poker ;-)');
+ok(/^fn-c[0-7]$/.test(unknown) && unknown === F.fnForumClass('Something other than Poker ;-)'), 'unknown forums get a stable hashed hue');
+ok(F.fnForumClass('') === 'fn-c7' && F.fnForumClass(null) === 'fn-c7', 'empty forum falls back to neutral');
+
 // ── 3) proxy forumParseAtom on a real feed slice ───────────────────────
 const proxySrc = fs.readFileSync(path.join(root, 'proxy.js'), 'utf8');
 function lift(name) {

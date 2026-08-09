@@ -8245,7 +8245,19 @@ html[data-seat-edit="1"] #g-seats .seat.seat-ghost { outline: none; cursor: defa
 /* Lignes de la liste : pastille forum + titre tronque + auteur/date. */
 .fn-row { display: flex; gap: var(--sp-3); align-items: flex-start; padding: 7px var(--sp-3); border-bottom: 1px solid var(--border); cursor: pointer; transition: background 0.12s; }
 .fn-row:hover, .fn-row:focus-visible { background: var(--inset); outline: none; }
-.fn-forum { flex-shrink: 0; margin-top: 1px; font-family: var(--ff-mono); font-size: var(--fs-3xs); letter-spacing: 0.08em; text-transform: uppercase; padding: 2px 7px; border: 1px solid var(--border); border-radius: var(--r-pill); color: var(--gold-dim); background: rgba(var(--gold-rgb), 0.08); }
+.fn-forum { flex-shrink: 0; margin-top: 1px; font-family: var(--ff-mono); font-size: var(--fs-3xs); letter-spacing: 0.08em; text-transform: uppercase; padding: 2px 7px; border: 1px solid rgba(var(--fn-c, var(--gold-rgb)), 0.40); border-radius: var(--r-pill); color: rgb(var(--fn-c, var(--gold-rgb))); background: rgba(var(--fn-c, var(--gold-rgb)), 0.12); }
+/* Code couleur des forums — teintes mi-luminance lisibles sur les themes
+   sombres ET clairs. Attribution stable cote JS (fnForumClass) : BBC amber,
+   WEC teal, Bugs rouge, General bleu, Feature Requests violet ; les autres
+   forums recoivent une teinte deterministe (hash) parmi les huit. */
+.fn-c0 { --fn-c: 201,143,31; }
+.fn-c1 { --fn-c: 42,157,143; }
+.fn-c2 { --fn-c: 208,80,80; }
+.fn-c3 { --fn-c: 77,143,208; }
+.fn-c4 { --fn-c: 157,111,208; }
+.fn-c5 { --fn-c: 93,164,93; }
+.fn-c6 { --fn-c: 200,106,154; }
+.fn-c7 { --fn-c: 138,151,168; }
 .fn-main { flex: 1; min-width: 0; }
 .fn-t { font-size: var(--fs-sm); color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .fn-meta { font-size: var(--fs-2xs); color: var(--text); opacity: 0.6; margin-top: 1px; }
