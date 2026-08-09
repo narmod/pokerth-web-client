@@ -452,7 +452,7 @@ export const strings = {
     piNoCupData:'Pas de classement de coupe pour ce joueur.',
     rankingTooltip:'Classement', rankingTitle:'Classement', rankingPth:'PokerTH', rankingBbc:'BBC', rankingWec:'WEC',
     rankingLoading:'Chargement…', rankingSoon:'Classement bientôt disponible.', rankingError:'Impossible de charger le classement.', rankingEmpty:'Aucune entrée.',
-    forumTooltip:'Forum', forumTitle:'Actualités du forum', forumMarkRead:'Tout marquer comme lu', forumOpen:'Ouvrir le forum', forumError:'Impossible de charger le flux du forum.', advForumNews:'Bouton forum dans l\'en-tête du lobby',
+    forumTooltip:'Forum', forumTitle:'Actualités du forum', forumMarkRead:'Tout marquer comme lu', forumOpen:'Ouvrir le forum', forumError:'Impossible de charger le flux du forum.', advForumNews:'Bouton forum dans l\'en-tête du lobby', forumOpenPost:'Ouvrir le message',
     rankingSearch:'Rechercher un joueur…', rankingNoMatch:'Aucun joueur trouvé.',
     rankingSeason:'Saison', rankingAllTime:'Tous les temps',
     rankingColRank:'#', rankingColPlayer:'Pseudo', rankingColScore:'Score', rankingColPoints:'Points', rankingColGames:'Parties',

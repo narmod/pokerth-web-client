@@ -177,7 +177,7 @@ export const strings = {
     rankingTooltip: 'Xếp hạng', rankingTitle: 'Xếp hạng', rankingPth: 'PokerTH', rankingBbc: 'BBC', rankingWec: 'WEC',
     rankingMemberSince: 'Thành viên từ', rankingAwards: 'Giải thưởng', rankingTickets: 'Vé', rankingThisSeason: 'Mùa này', rankingThisMonth: 'Tháng này', rankingThisYear: 'Năm nay', rankingStep: 'Bước', rankingRank: 'Hạng', rankingBack: 'Quay lại',
     rankingLoading: 'Đang tải…', rankingSoon: 'Xếp hạng sắp ra mắt.', rankingError: 'Không thể tải xếp hạng.', rankingEmpty: 'Không có mục nào.',
-    forumTooltip:'Diễn đàn', forumTitle:'Tin tức diễn đàn', forumMarkRead:'Đánh dấu tất cả là đã đọc', forumOpen:'Mở diễn đàn', forumError:'Không thể tải nguồn tin của diễn đàn.', advForumNews:'Nút diễn đàn trên tiêu đề sảnh',
+    forumTooltip:'Diễn đàn', forumTitle:'Tin tức diễn đàn', forumMarkRead:'Đánh dấu tất cả là đã đọc', forumOpen:'Mở diễn đàn', forumError:'Không thể tải nguồn tin của diễn đàn.', advForumNews:'Nút diễn đàn trên tiêu đề sảnh', forumOpenPost:'Mở bài viết',
     rankingSearch: 'Tìm người chơi…', rankingNoMatch: 'Không tìm thấy người chơi.', rankingSeason: 'Mùa', rankingAllTime: 'Mọi thời đại',
     rankingColRank: '#', rankingColPlayer: 'Biệt danh', rankingColScore: 'Điểm số', rankingColPoints: 'Điểm', rankingColGames: 'Số ván',
     hdrWaitingPlayers:'Đang chờ người chơi', hdrSpectatingWait:'Đang xem — chờ ván bài tiếp theo',

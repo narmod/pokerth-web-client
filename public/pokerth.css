@@ -8262,6 +8262,12 @@ html[data-seat-edit="1"] #g-seats .seat.seat-ghost { outline: none; cursor: defa
 .fn-t { font-size: var(--fs-sm); color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .fn-meta { font-size: var(--fs-2xs); color: var(--text); opacity: 0.6; margin-top: 1px; }
 .fn-row.fn-unread .fn-t { color: var(--text-hi); font-weight: 600; }
+/* Apercu deplie au clic : debut du message (texte brut du relais) + lien
+   « Ouvrir le message ». Le clic sur la ligne replie/deplie. */
+.fn-excerpt { font-size: var(--fs-2xs); color: var(--text); opacity: 0.85; margin-top: 5px; line-height: var(--lh-base); overflow-wrap: break-word; }
+.fn-openlink { color: var(--gold-dim); text-decoration: none; white-space: nowrap; }
+.fn-openlink:hover { color: var(--gold); text-decoration: underline; }
+.fn-row.fn-open .fn-t { white-space: normal; }
 .fn-dot { flex-shrink: 0; width: 7px; height: 7px; border-radius: 50%; background: var(--gold); margin-top: 6px; box-shadow: 0 0 4px rgba(var(--gold-rgb), 0.55); }
 /* Pied : « tout marquer lu » + « ouvrir le forum » (look .rk-tab). */
 .fn-foot { display: flex; gap: var(--sp-2); margin-top: 12px; }

@@ -177,7 +177,7 @@ export const strings = {
     rankingTooltip: 'Poredak', rankingTitle: 'Poredak', rankingPth: 'PokerTH', rankingBbc: 'BBC', rankingWec: 'WEC',
     rankingMemberSince: 'Član od', rankingAwards: 'Nagrade', rankingTickets: 'Ulaznice', rankingThisSeason: 'Ova sezona', rankingThisMonth: 'Ovaj mjesec', rankingThisYear: 'Ova godina', rankingStep: 'Korak', rankingRank: 'Rang', rankingBack: 'Natrag',
     rankingLoading: 'Učitavanje…', rankingSoon: 'Poredak uskoro dostupan.', rankingError: 'Poredak se nije mogao učitati.', rankingEmpty: 'Nema unosa.',
-    forumTooltip:'Forum', forumTitle:'Novosti s foruma', forumMarkRead:'Označi sve kao pročitano', forumOpen:'Otvori forum', forumError:'Nije moguće učitati sadržaj foruma.', advForumNews:'Gumb foruma u zaglavlju predvorja',
+    forumTooltip:'Forum', forumTitle:'Novosti s foruma', forumMarkRead:'Označi sve kao pročitano', forumOpen:'Otvori forum', forumError:'Nije moguće učitati sadržaj foruma.', advForumNews:'Gumb foruma u zaglavlju predvorja', forumOpenPost:'Otvori objavu',
     rankingSearch: 'Pretraži igrača…', rankingNoMatch: 'Nijedan igrač nije pronađen.', rankingSeason: 'Sezona', rankingAllTime: 'Svih vremena',
     rankingColRank: '#', rankingColPlayer: 'Nadimak', rankingColScore: 'Rezultat', rankingColPoints: 'Bodovi', rankingColGames: 'Igre',
     hdrWaitingPlayers:'Čekanje igrača', hdrSpectatingWait:'Gledatelj — čekanje sljedeće ruke',

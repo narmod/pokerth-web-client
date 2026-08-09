@@ -181,7 +181,7 @@ export const strings = {
     rankingTooltip: 'रैंकिंग', rankingTitle: 'रैंकिंग', rankingPth: 'PokerTH', rankingBbc: 'BBC', rankingWec: 'WEC',
     rankingMemberSince: 'सदस्य बने', rankingAwards: 'पुरस्कार', rankingTickets: 'टिकट', rankingThisSeason: 'यह सीज़न', rankingThisMonth: 'यह महीना', rankingThisYear: 'यह साल', rankingStep: 'चरण', rankingRank: 'रैंक', rankingBack: 'वापस',
     rankingLoading: 'लोड हो रहा है…', rankingSoon: 'रैंकिंग जल्द आ रही है।', rankingError: 'रैंकिंग लोड नहीं हो सकी।', rankingEmpty: 'कोई प्रविष्टि नहीं।',
-    forumTooltip:'फ़ोरम', forumTitle:'फ़ोरम समाचार', forumMarkRead:'सभी को पढ़ा हुआ चिह्नित करें', forumOpen:'फ़ोरम खोलें', forumError:'फ़ोरम फ़ीड लोड नहीं हो सकी।', advForumNews:'लॉबी हेडर में फ़ोरम बटन',
+    forumTooltip:'फ़ोरम', forumTitle:'फ़ोरम समाचार', forumMarkRead:'सभी को पढ़ा हुआ चिह्नित करें', forumOpen:'फ़ोरम खोलें', forumError:'फ़ोरम फ़ीड लोड नहीं हो सकी।', advForumNews:'लॉबी हेडर में फ़ोरम बटन', forumOpenPost:'पोस्ट खोलें',
     rankingSearch: 'खिलाड़ी खोजें…', rankingNoMatch: 'कोई खिलाड़ी नहीं मिला।', rankingSeason: 'सीज़न', rankingAllTime: 'सर्वकालिक',
     rankingColRank: '#', rankingColPlayer: 'उपनाम', rankingColScore: 'स्कोर', rankingColPoints: 'अंक', rankingColGames: 'खेल',
     hdrWaitingPlayers:'खिलाड़ियों की प्रतीक्षा', hdrSpectatingWait:'दर्शक — अगले हाथ की प्रतीक्षा',

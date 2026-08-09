@@ -184,7 +184,7 @@ export const strings = {
     rankingTooltip: 'Classifica', rankingTitle: 'Classifica', rankingPth: 'PokerTH', rankingBbc: 'BBC', rankingWec: 'WEC',
     rankingMemberSince: 'Membro dal', rankingAwards: 'Premi', rankingTickets: 'Biglietti', rankingThisSeason: 'Questa stagione', rankingThisMonth: 'Questo mese', rankingThisYear: 'Quest\'anno', rankingStep: 'Livello', rankingRank: 'Posizione', rankingBack: 'Indietro',
     rankingLoading: 'Caricamento…', rankingSoon: 'Classifica presto disponibile.', rankingError: 'Impossibile caricare la classifica.', rankingEmpty: 'Nessuna voce.',
-    forumTooltip:'Forum', forumTitle:'Novità dal forum', forumMarkRead:'Segna tutto come letto', forumOpen:'Apri il forum', forumError:'Impossibile caricare il feed del forum.', advForumNews:'Pulsante forum nell\'intestazione della lobby',
+    forumTooltip:'Forum', forumTitle:'Novità dal forum', forumMarkRead:'Segna tutto come letto', forumOpen:'Apri il forum', forumError:'Impossibile caricare il feed del forum.', advForumNews:'Pulsante forum nell\'intestazione della lobby', forumOpenPost:'Apri il messaggio',
     rankingSearch: 'Cerca un giocatore…', rankingNoMatch: 'Nessun giocatore trovato.', rankingSeason: 'Stagione', rankingAllTime: 'Di sempre',
     rankingColRank: '#', rankingColPlayer: 'Soprannome', rankingColScore: 'Punteggio', rankingColPoints: 'Punti', rankingColGames: 'Partite',
     hdrWaitingPlayers:'In attesa di giocatori', hdrSpectatingWait:'Spettatore — in attesa della prossima mano',

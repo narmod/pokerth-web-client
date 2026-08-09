@@ -152,27 +152,51 @@ function _renderList(posts) {
   for (let i = 0; i < posts.length; i++) {
     const p = posts[i];
     const unread = fnIsUnread(p, ids, base);
-    html += '<div class="fn-row' + (unread ? ' fn-unread' : '') + '" data-idx="' + i + '" role="link" tabindex="0">'
+    html += '<div class="fn-row' + (unread ? ' fn-unread' : '') + '" data-idx="' + i + '" role="button" tabindex="0" aria-expanded="false">'
       + (p.forum ? '<span class="fn-forum ' + fnForumClass(p.forum) + '">' + esc(p.forum) + '</span>' : '')
       + '<div class="fn-main"><div class="fn-t">' + esc(p.title) + '</div>'
-      + '<div class="fn-meta">' + esc(p.author || '') + (p.author ? ' \u00b7 ' : '') + esc(_fmtDate(p.date)) + '</div></div>'
+      + '<div class="fn-meta">' + esc(p.author || '') + (p.author ? ' \u00b7 ' : '') + esc(_fmtDate(p.date)) + '</div>'
+      + '<div class="fn-excerpt" style="display:none"></div></div>'
       + (unread ? '<span class="fn-dot" aria-hidden="true"></span>' : '')
       + '</div>';
   }
   list.innerHTML = html;
   list.style.display = '';
+  // Un clic DEPLIE l'apercu (debut du message, texte brut fourni par le
+  // relais) et marque le post comme lu ; le lien « Ouvrir le message » dans
+  // l'apercu ouvre le sujet complet du forum dans un nouvel onglet.
   list.querySelectorAll('.fn-row').forEach(function (row) {
-    const open = function () {
+    const toggle = function () {
       const p = posts[parseInt(row.getAttribute('data-idx'), 10)];
       if (!p) return;
-      const ids2 = _readIds(); ids2.add(p.id); _saveIds(ids2);
-      row.classList.remove('fn-unread');
-      const dot = row.querySelector('.fn-dot'); if (dot) dot.remove();
-      _updateBadge();
-      try { window.open(p.link, '_blank', 'noopener'); } catch (e) {}
+      const ex = row.querySelector('.fn-excerpt');
+      const on = ex && ex.style.display === 'none';
+      if (ex && on && !ex.childNodes.length) {
+        if (p.excerpt) {
+          const sp = document.createElement('span');
+          sp.textContent = p.excerpt;
+          ex.appendChild(sp);
+          ex.appendChild(document.createTextNode(' '));
+        }
+        const a = document.createElement('a');
+        a.className = 'fn-openlink';
+        a.href = p.link; a.target = '_blank'; a.rel = 'noopener';
+        a.textContent = (typeof window.t === 'function' ? window.t('forumOpenPost') : 'Open the post') + ' \u2197';
+        a.addEventListener('click', function (e) { e.stopPropagation(); });
+        ex.appendChild(a);
+      }
+      if (ex) ex.style.display = on ? '' : 'none';
+      row.classList.toggle('fn-open', on);
+      row.setAttribute('aria-expanded', on ? 'true' : 'false');
+      if (on) {
+        const ids2 = _readIds(); ids2.add(p.id); _saveIds(ids2);
+        row.classList.remove('fn-unread');
+        const dot = row.querySelector('.fn-dot'); if (dot) dot.remove();
+        _updateBadge();
+      }
     };
-    row.addEventListener('click', open);
-    row.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(); } });
+    row.addEventListener('click', toggle);
+    row.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(); } });
   });
 }
 

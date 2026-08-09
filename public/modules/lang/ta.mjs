@@ -178,7 +178,7 @@ export const strings = {
     rankingTooltip: 'தரவரிசை', rankingTitle: 'தரவரிசை', rankingPth: 'PokerTH', rankingBbc: 'BBC', rankingWec: 'WEC',
     rankingMemberSince: 'உறுப்பினர் முதல்', rankingAwards: 'விருதுகள்', rankingTickets: 'டிக்கெட்டுகள்', rankingThisSeason: 'இந்த சீசன்', rankingThisMonth: 'இந்த மாதம்', rankingThisYear: 'இந்த ஆண்டு', rankingStep: 'படி', rankingRank: 'தரம்', rankingBack: 'பின்செல்',
     rankingLoading: 'ஏற்றுகிறது…', rankingSoon: 'தரவரிசை விரைவில் வரும்.', rankingError: 'தரவரிசையை ஏற்ற முடியவில்லை.', rankingEmpty: 'உள்ளீடுகள் இல்லை.',
-    forumTooltip:'மன்றம்', forumTitle:'மன்றச் செய்திகள்', forumMarkRead:'அனைத்தையும் படித்ததாகக் குறி', forumOpen:'மன்றத்தைத் திற', forumError:'மன்ற ஊட்டத்தை ஏற்ற முடியவில்லை.', advForumNews:'லாபி தலைப்பில் மன்றப் பொத்தான்',
+    forumTooltip:'மன்றம்', forumTitle:'மன்றச் செய்திகள்', forumMarkRead:'அனைத்தையும் படித்ததாகக் குறி', forumOpen:'மன்றத்தைத் திற', forumError:'மன்ற ஊட்டத்தை ஏற்ற முடியவில்லை.', advForumNews:'லாபி தலைப்பில் மன்றப் பொத்தான்', forumOpenPost:'பதிவைத் திற',
     rankingSearch: 'வீரரைத் தேடு…', rankingNoMatch: 'வீரர் யாரும் இல்லை.', rankingSeason: 'பருவம்', rankingAllTime: 'எல்லா காலமும்',
     rankingColRank: '#', rankingColPlayer: 'புனைப்பெயர்', rankingColScore: 'மதிப்பெண்', rankingColPoints: 'புள்ளிகள்', rankingColGames: 'ஆட்டங்கள்',
     hdrWaitingPlayers:'வீரர்களுக்காக காத்திருக்கிறது', hdrSpectatingWait:'பார்வையாளர் — அடுத்த கைக்காக காத்திருக்கிறது',

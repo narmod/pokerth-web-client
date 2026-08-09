@@ -73,8 +73,8 @@ function lift(name) {
   throw new Error(name + ' unbalanced');
 }
 const parseAtom = new Function(
-  lift('rankingDecodeHtml') + '\n' + lift('forumParseAtom') +
-  '\nconst FORUM_MAX_POSTS = 40;\nreturn forumParseAtom;'
+  lift('rankingDecodeHtml') + '\n' + lift('forumExcerpt') + '\n' + lift('forumParseAtom') +
+  '\nconst FORUM_MAX_POSTS = 40;\nconst FORUM_EXCERPT_MAX = 280;\nreturn forumParseAtom;'
 )();
 
 const feed = `<?xml version="1.0" encoding="UTF-8"?>
@@ -110,6 +110,13 @@ ok(parsed[0].link === 'https://www.pokerth.net/viewtopic.php?p=16912#p16912', 'p
 ok(parsed[0].date === '2026-08-08T18:28:54+02:00', 'published date kept verbatim');
 ok(parsed[1].title === 'Re: "Ignore Player" improvement', 'HTML entities in titles are decoded');
 ok(parsed.every(p => !('content' in p)), 'heavy HTML content is dropped');
+ok(parsed[0].excerpt === 'Hi, thanks! long html body', 'excerpt: tags stripped, br becomes a space');
+ok(parsed[1].excerpt === 'Thanks Sp0ck', 'excerpt present on every entry');
+const longFeed = feed.replace('Hi, thanks!<br>long html body',
+  'A'.repeat(200) + ' ' + 'B'.repeat(200) + '<p>Statistics: Posted by <a href="x">narmod</a></p>');
+const longParsed = parseAtom(longFeed);
+ok(longParsed[0].excerpt.length <= 281 && longParsed[0].excerpt.endsWith('\u2026'), 'long bodies are cut at ~280 chars with an ellipsis');
+ok(longParsed[0].excerpt.indexOf('Statistics') < 0, 'the phpBB "Statistics: Posted by" footer is dropped');
 ok(parseAtom('').length === 0 && parseAtom('<feed></feed>').length === 0, 'parser tolerates empty/entry-less feeds');
 
 process.stdout.write(fails ? 'FAILED: ' + fails + '\n' : 'ALL OK\n');

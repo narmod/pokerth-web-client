@@ -4239,6 +4239,28 @@ const FORUM_FEED_URL = 'https://www.pokerth.net/app.php/feed';
 const FORUM_TTL_MS = 10 * 60 * 1000;
 const FORUM_MAX_POSTS = 40;
 
+// Plain-text excerpt of a post body: strip the phpBB HTML, decode the
+// entities, drop the "Statistics: Posted by ..." footer phpBB appends,
+// collapse whitespace and cut at a word boundary. The client shows this
+// as the click-to-expand preview; the full post stays on the forum.
+const FORUM_EXCERPT_MAX = 280;
+function forumExcerpt(html) {
+  let s = String(html || '');
+  const foot = s.indexOf('Statistics: Posted by');
+  if (foot >= 0) s = s.slice(0, foot);
+  s = s.replace(/<(?:br|\/p|\/div|\/li|hr)[^>]*>/gi, ' ')
+       .replace(/<[^>]+>/g, '')
+       .replace(/&nbsp;/gi, ' ');
+  s = rankingDecodeHtml(s).replace(/\s+/g, ' ').trim();
+  if (s.length > FORUM_EXCERPT_MAX) {
+    s = s.slice(0, FORUM_EXCERPT_MAX);
+    const sp = s.lastIndexOf(' ');
+    if (sp > FORUM_EXCERPT_MAX * 0.6) s = s.slice(0, sp);
+    s += '\u2026';
+  }
+  return s;
+}
+
 function forumParseAtom(xml) {
   const posts = [];
   const chunks = String(xml || '').split('<entry>');
@@ -4260,7 +4282,8 @@ function forumParseAtom(xml) {
       forum: forum,
       title: title,
       author: g(/<author><name><!\[CDATA\[([\s\S]*?)\]\]>/),
-      date: g(/<published>([^<]+)<\/published>/) || g(/<updated>([^<]+)<\/updated>/)
+      date: g(/<published>([^<]+)<\/published>/) || g(/<updated>([^<]+)<\/updated>/),
+      excerpt: forumExcerpt(g(/<content[^>]*><!\[CDATA\[([\s\S]*?)\]\]><\/content>/))
     });
   }
   return posts;
