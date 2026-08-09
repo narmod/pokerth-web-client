@@ -90,9 +90,15 @@ function onTimeoutWarning(sub) {
   // Si le serveur donne plus de temps que prévu, ajuster le total
   if (sec > S._timerTot) S._timerTot = sec;
   addChat(null, t('timerHurry', { s: sec }), 'sys', { key: 'timerHurry', params: { s: sec } });
-  // Auto-reset timeout
-  const rtm = Proto.encode([[1,0,68],[69,2,new Uint8Array(0)]]);
-  send(rtm);
+  // Parité QML 2.1.6 (GameHandler::eventFilter) : PAS de ResetTimeout
+  // automatique ici. L'ancienne réponse aveugle neutralisait le kick AFK du
+  // serveur — un onglet oublié gardait sa session (et son siège) pour
+  // toujours, à rebours de la politique que les clients QML/widget/Android
+  // subissent. Le reset part désormais UNIQUEMENT sur activité utilisateur
+  // réelle (_afkActivity ci-dessous). Après une warning, le prochain geste
+  // réarme immédiatement (le rate-limit est court-circuité) ; un joueur
+  // réellement absent est kické comme partout ailleurs.
+  S._afkWarned = true;
 }
 
 function onChatReject(sub) {
@@ -143,6 +149,35 @@ function onDialog(sub) {
   try { if (typeof window.showToast === 'function') window.showToast(text, { icon: '\u2139' }); } catch (e) {}
   return;
 }
+
+// ── AFK : ResetTimeout sur activité réelle (parité QML 2.1.6) ──────────────
+// Équivalent web de GameHandler::eventFilter + isUserActivityEvent : le QML
+// compte MouseButtonPress / KeyPress / Shortcut / Wheel / TouchBegin+Update.
+// Ici, des listeners document en capture couvrent nativement souris, clavier
+// (F-touches et raccourcis inclus — pas de piège QShortcutMap dans un
+// navigateur), molette et touch. Rate-limit identique au QML : 3 min
+// (kAfkResetIntervalMs). Après un TimeoutWarning (S._afkWarned), le premier
+// geste envoie le reset immédiatement, sans attendre la fenêtre.
+// Conditions d'envoi : WS ouvert, session authentifiée, pas en Training
+// (aucun serveur à rassurer — et surtout ne pas réveiller le moteur local).
+const AFK_RESET_INTERVAL_MS = 3 * 60 * 1000; // = kAfkResetIntervalMs QML
+let _afkLastReset = 0;
+function _afkActivity() {
+  try {
+    if (window._offlineMode) return;
+    if (!S.ws || S.ws.readyState !== WebSocket.OPEN || !S._wasAuthenticated) return;
+    const now = Date.now();
+    if (!S._afkWarned && now - _afkLastReset < AFK_RESET_INTERVAL_MS) return;
+    _afkLastReset = now;
+    S._afkWarned = false;
+    send(Proto.encode([[1,0,68],[69,2,new Uint8Array(0)]])); // ResetTimeoutMessage
+  } catch (e) {}
+}
+try {
+  ['pointerdown', 'keydown', 'wheel', 'touchstart'].forEach(function (ev) {
+    document.addEventListener(ev, _afkActivity, { capture: true, passive: true });
+  });
+} catch (e) {}
 
 export { onInviteNotify,
          onRejectInvNotify, onChat, onTimeoutWarning, onChatReject, onDialog };
