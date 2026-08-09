@@ -361,13 +361,25 @@ function onError(sub) {
       _nickBusyRetry();
     } else {
       // Parité QML 2.1.6 (isRecoverableTransportError) : un REJET serveur
-      // (version incompatible, serveur plein, pseudo invalide, maintenance…)
-      // n'est pas une panne de transport. Retenter automatiquement rejouerait
-      // le même Init refusé en boucle — et déclencherait le rate-limit de
-      // login du serveur (token-bucket par IP). On coupe donc le backoff de
-      // onclose ; l'utilisateur relance à la main quand il a corrigé la cause
-      // (connect() remet le drapeau à false).
-      S._intentionalDisconnect = true;
+      // (version incompatible, serveur plein, pseudo invalide, maintenance,
+      // kick, ban, compte bloqué, timeout de session) n'est pas une panne de
+      // transport. Retenter automatiquement rejouerait le même Init refusé en
+      // boucle — et déclencherait le rate-limit de login du serveur
+      // (token-bucket par IP). On coupe donc le backoff de onclose ;
+      // l'utilisateur relance à la main (connect() remet le drapeau à false).
+      //
+      // EXCEPTION (fix web.21, rapport narmod : bascule 5G→Wi-Fi iPhone) :
+      // pendant une reconnexion automatique EN COURS, les codes protocole —
+      // 9 invalidPacket, 10 invalidState, et les inconnus — ne terminent PAS
+      // le cycle. Sur une reprise de session via la grâce proxy (rebind sid),
+      // un état à cheval entre deux sockets peut produire exactement ces
+      // codes sur la première tentative ; avant web.15 ils étaient ignorés
+      // et la tentative suivante réussissait. Le QML n'a pas ce cas : il n'a
+      // pas de rebind proxy. Les vrais rejets (8, 11–14 et 1–7 plus haut)
+      // terminent la reco même en cours, comme chez lui.
+      var _protoErr = (r === 9 || r === 10 || !codes[r]);
+      var _recoActive = S._reconnectAttempts > 0;
+      if (!(_protoErr && _recoActive)) S._intentionalDisconnect = true;
       setStatus(t('errGeneric', { code: codes[r] || ('code ' + r) }), 'err');
     }
     return;
