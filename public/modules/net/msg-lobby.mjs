@@ -352,6 +352,14 @@ function onError(sub) {
       window._hideBanner();
       _nickBusyRetry();
     } else {
+      // Parité QML 2.1.6 (isRecoverableTransportError) : un REJET serveur
+      // (version incompatible, serveur plein, pseudo invalide, maintenance…)
+      // n'est pas une panne de transport. Retenter automatiquement rejouerait
+      // le même Init refusé en boucle — et déclencherait le rate-limit de
+      // login du serveur (token-bucket par IP). On coupe donc le backoff de
+      // onclose ; l'utilisateur relance à la main quand il a corrigé la cause
+      // (connect() remet le drapeau à false).
+      S._intentionalDisconnect = true;
       setStatus(t('errGeneric', { code: codes[r] || ('code ' + r) }), 'err');
     }
     return;

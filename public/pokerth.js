@@ -45,6 +45,14 @@ function _showBanner(msg) {
   var m = document.getElementById('reconnect-msg');
   if (m) m.textContent = msg;
   if (b) b.classList.toggle('visible', !usePill);
+  // Parité QML 2.1.6 (reconnectPopup) : tant que le rejoin est armé, dire au
+  // joueur que son siège reste réservé (la grâce proxy tient l'upstream ~2 min).
+  // Réévalué à chaque tick, comme le choix pastille/bandeau.
+  var _keep = !!S._pendingRejoin;
+  var ps = document.getElementById('g-conn-pill-sub');
+  if (ps) { ps.textContent = _keep ? t('reconnSeatKept') : ''; ps.style.display = (_keep && usePill) ? 'block' : 'none'; }
+  var bs = document.getElementById('reconnect-sub');
+  if (bs) { bs.textContent = _keep ? t('reconnSeatKept') : ''; bs.style.display = (_keep && !usePill) ? 'inline' : 'none'; }
 }
 function _hideBanner() {
   var b = document.getElementById('reconnect-banner');
@@ -5430,6 +5438,21 @@ const App = (() => {
       }, delay);
     },
 
+    abortReconnect() {
+      // ✕ de la pastille / « Annuler » du bandeau pendant une reconnexion
+      // automatique (parité QML 2.1.6, ServerConnectionHandler::
+      // abortAutoReconnect) : interrompt la reco en cours et termine la
+      // session proprement. On réutilise disconnect(), qui fait déjà tout —
+      // couper les timers de reco, détacher/fermer un WS de tentative
+      // naissant (code 4001 → le proxy libère le joueur immédiatement, pas
+      // de zombie), faire tourner le sid, revenir à l'écran de connexion.
+      // On désarme d'abord le rejoin (sans quoi la mention « siège
+      // réservé » pourrait réapparaître) et on affiche un statut neutre.
+      S._pendingRejoin = 0; S._rejoinNickRetries = 0;
+      this.disconnect();
+      setStatus(t('disconnected'), '');
+    },
+
     confirmDisconnect() {
       // Public entry point for the lobby ✕ button. Opens a small
       // confirmation modal — clicking 'Disconnect' then routes to the
@@ -9948,7 +9971,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.6-web.14'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.6-web.15'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

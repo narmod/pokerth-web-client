@@ -308,6 +308,7 @@ export const strings = {
     gtypeRanked: 'ランキングゲーム',
     wsError: 'WebSocketエラー。プロキシは動作していますか？',
     reconnFailed: '{n}回の試行後に再接続できませんでした。手動で再接続してください。',
+    reconnSeatKept:'テーブルの席は数分間確保されたままです。',
     tableNamePh: 'テーブル名…',
     hsRoyal: '⭐ ロイヤルフラッシュ',
     hsSF: '🃏 ストレートフラッシュ {r}',

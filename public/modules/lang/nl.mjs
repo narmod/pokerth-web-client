@@ -314,6 +314,7 @@ export const strings = {
     gtypeRanked: 'Rankingspel',
     wsError: 'WebSocket-fout. Draait de proxy?',
     reconnFailed: 'Opnieuw verbinden mislukt na {n} pogingen. Maak handmatig opnieuw verbinding.',
+    reconnSeatKept:'Je plaats aan de tafel blijft enkele minuten gereserveerd.',
     tableNamePh: 'Tafelnaam…',
     hsRoyal: '⭐ Royal Flush',
     hsSF: '🃏 Straight Flush {r}',

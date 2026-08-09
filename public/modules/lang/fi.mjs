@@ -308,6 +308,7 @@ export const strings = {
     gtypeRanked: 'Ranking-peli',
     wsError: 'WebSocket-virhe. Onko välityspalvelin käynnissä?',
     reconnFailed: 'Uudelleenyhdistäminen epäonnistui {n} yrityksen jälkeen. Yhdistä manuaalisesti.',
+    reconnSeatKept:'Paikkasi pöydässä pysyy varattuna muutaman minuutin.',
     tableNamePh: 'Pöydän nimi…',
     hsRoyal: '⭐ Värisuora ässästä',
     hsSF: '🃏 Värisuora {r}',

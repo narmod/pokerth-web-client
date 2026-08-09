@@ -315,6 +315,7 @@ export const strings = {
     gtypeRanked: 'Gra rankingowa',
     wsError: 'Błąd WebSocket. Czy proxy działa?',
     reconnFailed: 'Ponowne połączenie nieudane po {n} próbach. Połącz się ręcznie.',
+    reconnSeatKept:'Twoje miejsce przy stole pozostaje zarezerwowane przez kilka minut.',
     tableNamePh: 'Nazwa stołu…',
     hsRoyal: '⭐ Poker królewski',
     hsSF: '🃏 Strit fleszowy {r}',

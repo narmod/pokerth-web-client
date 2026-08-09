@@ -309,6 +309,7 @@ export const strings = {
     gtypeRanked: 'Ranglistás játék',
     wsError: 'WebSocket-hiba. Fut a proxy?',
     reconnFailed: 'Az újracsatlakozás {n} próbálkozás után sikertelen. Csatlakozz manuálisan.',
+    reconnSeatKept:'A helyed az asztalnál néhány percig foglalt marad.',
     tableNamePh: 'Asztal neve…',
     hsRoyal: '⭐ Royal flush',
     hsSF: '🃏 Színsor {r}',

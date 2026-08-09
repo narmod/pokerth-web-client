@@ -309,6 +309,7 @@ export const strings = {
     gtypeRanked: 'Rangirana igra',
     wsError: 'Greška WebSocketa. Da li proksi radi?',
     reconnFailed: 'Ponovno povezivanje nije uspelo nakon {n} pokušaja. Povežite se ručno.',
+    reconnSeatKept:'Tvoje mesto za stolom ostaje rezervisano nekoliko minuta.',
     tableNamePh: 'Naziv stola…',
     hsRoyal: '⭐ Rojal fleš',
     hsSF: '🃏 Skala u boji {r}',

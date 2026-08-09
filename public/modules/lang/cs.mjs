@@ -309,6 +309,7 @@ export const strings = {
     gtypeRanked: 'Hodnocená hra',
     wsError: 'Chyba WebSocketu. Běží proxy?',
     reconnFailed: 'Opětovné připojení selhalo po {n} pokusech. Připojte se ručně.',
+    reconnSeatKept:'Tvoje místo u stolu zůstává na několik minut rezervované.',
     tableNamePh: 'Název stolu…',
     hsRoyal: '⭐ Královská postupka',
     hsSF: '🃏 Postupka v barvě {r}',

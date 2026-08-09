@@ -309,6 +309,7 @@ export const strings = {
     gtypeRanked: 'Joc clasat',
     wsError: 'Eroare WebSocket. Rulează proxy-ul?',
     reconnFailed: 'Reconectarea a eșuat după {n} încercări. Conectează-te manual.',
+    reconnSeatKept:'Locul tău la masă rămâne rezervat câteva minute.',
     tableNamePh: 'Numele mesei…',
     hsRoyal: '⭐ Chintă roială',
     hsSF: '🃏 Chintă de culoare {r}',

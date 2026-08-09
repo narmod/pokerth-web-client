@@ -162,6 +162,7 @@ export const strings = {
     gtypeNormal:'Normale', gtypeRegistered:'Joueurs enregistrés uniquement', gtypeInvite:'Joueurs invités uniquement', gtypeRanked:'Partie classée',
     wsError:'Erreur WebSocket. Le proxy est-il lancé ?',
     reconnFailed:'Reconnexion échouée après {n} tentatives. Reconnectez-vous manuellement.',
+    reconnSeatKept:'Votre siège à la table reste réservé quelques minutes.',
     tableNamePh:'Nom de la table…',
     // ── Force de main : post-flop ──
     hsRoyal:'⭐ Quinte Flush Royale', hsSF:'🃏 Quinte Flush {r}', hsFour:'🟥 Carré {r}',

@@ -310,6 +310,7 @@ export const strings = {
     gtypeRanked: '排名遊戲',
     wsError: 'WebSocket 錯誤。代理是否在執行？',
     reconnFailed: '重連 {n} 次後失敗。請手動重新連線。',
+    reconnSeatKept:'您在牌桌上的座位會保留幾分鐘。',
     tableNamePh: '牌桌名稱…',
     hsRoyal: '⭐ 皇家同花順',
     hsSF: '🃏 同花順 {r}',

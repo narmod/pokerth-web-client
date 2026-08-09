@@ -1997,6 +1997,8 @@ function _processAvatarFile(file) {
   <div id="reconnect-banner">
     <div class="rc-dot"></div>
     <span id="reconnect-msg" data-i18n="reconnectInProgress">Reconnecting…</span>
+    <span class="rc-sub" id="reconnect-sub" style="display:none"></span>
+    <button class="rc-cancel" onclick="App.abortReconnect()" data-i18n="leaveCancel">Cancel</button>
   </div>
 
   <!-- ══ HANDS HELP OVERLAY ══ -->
@@ -2087,7 +2089,7 @@ function _processAvatarFile(file) {
                communes — remplace le bandeau plein écran quand la table est
                affichée. Dans #g-table-scaler → suit l'échelle générique de la
                table ; police asservie à --comm-scale (comme win-hand-badge). -->
-          <div class="conn-pill" id="g-conn-pill" style="display:none"><span class="rc-dot"></span><span id="g-conn-pill-msg"></span></div>
+          <div class="conn-pill" id="g-conn-pill" style="display:none"><span class="rc-dot"></span><span id="g-conn-pill-msg"></span><button class="cp-x" onclick="App.abortReconnect()" data-i18n-title="leaveCancel" title="Cancel">&#10005;</button><span class="cp-sub" id="g-conn-pill-sub" style="display:none"></span></div>
         </div>
       </div>
       <!-- Seats overlay: full zone, pixel-positioned by JS -->

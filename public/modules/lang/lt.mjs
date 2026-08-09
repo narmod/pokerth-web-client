@@ -309,6 +309,7 @@ export const strings = {
     gtypeRanked: 'Reitinguojamas žaidimas',
     wsError: 'WebSocket klaida. Ar veikia tarpinis serveris?',
     reconnFailed: 'Prisijungti nepavyko po {n} bandymų. Prisijunkite rankiniu būdu.',
+    reconnSeatKept:'Tavo vieta prie stalo lieka rezervuota kelias minutes.',
     tableNamePh: 'Stalo pavadinimas…',
     hsRoyal: '⭐ Karališkoji eilė',
     hsSF: '🃏 Spalvota eilė {r}',

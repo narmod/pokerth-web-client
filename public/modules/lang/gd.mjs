@@ -310,6 +310,7 @@ export const strings = {
     gtypeRanked: 'Geama rangachaidh',
     wsError: 'Mearachd WebSocket. A bheil am progsaidh a\' ruith?',
     reconnFailed: 'Dh\'fhàillig an ath-cheangal an dèidh {n} oidhirpean. Ceangail a làimh.',
+    reconnSeatKept:'Bidh do shuidheachan aig a\' bhòrd glèidhte airson beagan mhionaidean.',
     tableNamePh: 'Ainm a\' bhùird…',
     hsRoyal: '⭐ Sreath rìoghail',
     hsSF: '🃏 Sreath dhatha {r}',

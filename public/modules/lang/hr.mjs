@@ -309,6 +309,7 @@ export const strings = {
     gtypeRanked: 'Rang igra',
     wsError: 'Greška WebSocketa. Radi li proxy?',
     reconnFailed: 'Ponovno spajanje nije uspjelo nakon {n} pokušaja. Spojite se ručno.',
+    reconnSeatKept:'Tvoje mjesto za stolom ostaje rezervirano nekoliko minuta.',
     tableNamePh: 'Naziv stola…',
     hsRoyal: '⭐ Royal flush',
     hsSF: '🃏 Skala u boji {r}',

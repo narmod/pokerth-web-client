@@ -3614,6 +3614,42 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
   pointer-events: none;        /* n'intercepte jamais un tap destiné au feutre */
   animation: fadeIn 0.3s ease;
 }
+/* ── Annulation de la reconnexion (parité QML 2.1.6, abortAutoReconnect) ──
+   Bouton ✕ dans la pastille et bouton « Annuler » dans le bandeau : mêmes
+   codes visuels que leurs conteneurs (bord blanc 55 %, fond transparent,
+   police display, tailles asservies à --comm-scale pour la pastille). La
+   sous-ligne « siège réservé » passe la pastille en 2 lignes (flex-wrap)
+   uniquement quand elle est affichée (rejoin armé). */
+.conn-pill { flex-wrap: wrap; }
+.conn-pill .cp-x {
+  flex: none; cursor: pointer;
+  width: max(15px, calc(19px * var(--comm-scale, 1)));
+  height: max(15px, calc(19px * var(--comm-scale, 1)));
+  padding: 0; line-height: 1;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 50%;
+  background: transparent; color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  font-size: max(8px, calc(10px * var(--comm-scale, 1)));
+  font-family: inherit;
+}
+.conn-pill .cp-x:hover { background: rgba(255, 255, 255, 0.18); }
+.conn-pill .cp-x:active { transform: scale(0.94); }
+.conn-pill .cp-sub {
+  flex-basis: 100%; text-align: center;
+  font-size: max(8px, calc(9.5px * var(--comm-scale, 1)));
+  letter-spacing: 0.03em; opacity: 0.92;
+}
+#reconnect-banner .rc-sub { font-size: var(--fs-xs); opacity: 0.92; }
+#reconnect-banner .rc-cancel {
+  cursor: pointer; padding: 2px 10px; border-radius: var(--r-pill);
+  background: transparent; color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  font-family: var(--ff-display); letter-spacing: 0.08em;
+  font-size: var(--fs-xs);
+}
+#reconnect-banner .rc-cancel:hover { background: rgba(255, 255, 255, 0.18); }
+#reconnect-banner .rc-cancel:active { transform: scale(0.97); }
 .conn-pill .rc-dot {
   width: max(6px, calc(8px * var(--comm-scale, 1)));
   height: max(6px, calc(8px * var(--comm-scale, 1)));

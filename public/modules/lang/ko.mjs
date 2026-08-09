@@ -250,6 +250,7 @@ export const strings = {
     gtypeNormal:'일반', gtypeRegistered:'등록된 플레이어만', gtypeInvite:'초대된 플레이어만', gtypeRanked:'랭킹 게임',
     wsError:'WebSocket 오류. 프록시가 실행 중인가요?',
     reconnFailed:'{n}회 시도 후 재접속 실패. 수동으로 다시 접속하세요.',
+    reconnSeatKept:'테이블의 자리는 몇 분 동안 예약된 상태로 유지됩니다.',
     tableNamePh:'테이블 이름…',
     hsRoyal:'⭐ 로열 플러시', hsSF:'🃏 스트레이트 플러시 {r}', hsFour:'🟥 포카드 {r}',
     hsFull:'🔴 풀하우스 {a}/{b}', hsFlush:'🟠 플러시', hsStraight:'🟡 스트레이트 {r}',

@@ -316,6 +316,7 @@ export const strings = {
     gtypeRanked: 'Valida per la classifica',
     wsError: 'Errore WebSocket. Il proxy è in funzione?',
     reconnFailed: 'Riconnessione fallita dopo {n} tentativi. Riconnettiti manualmente.',
+    reconnSeatKept:'Il tuo posto al tavolo resta riservato per alcuni minuti.',
     tableNamePh: 'Nome del tavolo…',
     hsRoyal: '⭐ Scala Reale',
     hsSF: '🃏 Scala a Colore {r}',

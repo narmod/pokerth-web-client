@@ -309,6 +309,7 @@ export const strings = {
     gtypeRanked: 'Ván xếp hạng',
     wsError: 'Lỗi WebSocket. Proxy có đang chạy không?',
     reconnFailed: 'Kết nối lại thất bại sau {n} lần thử. Hãy kết nối thủ công.',
+    reconnSeatKept:'Chỗ ngồi của bạn tại bàn được giữ trong vài phút.',
     tableNamePh: 'Tên bàn…',
     hsRoyal: '⭐ Thùng phá sảnh rồng',
     hsSF: '🃏 Thùng phá sảnh {r}',

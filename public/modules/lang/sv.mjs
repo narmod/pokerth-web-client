@@ -308,6 +308,7 @@ export const strings = {
     gtypeRanked: 'Rankingspel',
     wsError: 'WebSocket-fel. Körs proxyn?',
     reconnFailed: 'Kunde inte återansluta efter {n} försök. Återanslut manuellt.',
+    reconnSeatKept:'Din plats vid bordet förblir reserverad i några minuter.',
     tableNamePh: 'Bordsnamn…',
     hsRoyal: '⭐ Royal flush',
     hsSF: '🃏 Färgstege {r}',

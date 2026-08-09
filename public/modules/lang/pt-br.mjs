@@ -310,6 +310,7 @@ export const strings = {
     gtypeRanked: 'Jogo ranqueado',
     wsError: 'Erro de WebSocket. O proxy está rodando?',
     reconnFailed: 'Falha na reconexão após {n} tentativas. Reconecte manualmente.',
+    reconnSeatKept:'Seu lugar na mesa fica reservado por alguns minutos.',
     tableNamePh: 'Nome da mesa…',
     hsRoyal: '⭐ Royal Flush',
     hsSF: '🃏 Straight Flush {r}',

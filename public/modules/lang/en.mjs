@@ -160,6 +160,7 @@ export const strings = {
     gtypeNormal:'Normal', gtypeRegistered:'Registered players only', gtypeInvite:'Invited players only', gtypeRanked:'Ranking game',
     wsError:'WebSocket error. Is the proxy running?',
     reconnFailed:'Reconnection failed after {n} attempts. Please reconnect manually.',
+    reconnSeatKept:'Your seat at the table stays reserved for a few minutes.',
     tableNamePh:'Table name…',
     // ── Hand strength: post-flop ──
     hsRoyal:'⭐ Royal Flush', hsSF:'🃏 Straight Flush {r}', hsFour:'🟥 Four {r}s',

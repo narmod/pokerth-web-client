@@ -309,6 +309,7 @@ export const strings = {
     gtypeRanked: 'Ranglysspel',
     wsError: 'WebSocket-fout. Loop die instaander?',
     reconnFailed: 'Herkoppeling het misluk ná {n} pogings. Koppel handmatig.',
+    reconnSeatKept:'Jou sitplek by die tafel bly vir \'n paar minute gereserveer.',
     tableNamePh: 'Tafelnaam…',
     hsRoyal: '⭐ Royal flush',
     hsSF: '🃏 Straight flush {r}',

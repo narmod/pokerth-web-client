@@ -311,6 +311,7 @@ export const strings = {
     gtypeRanked: 'Sıralama oyunu',
     wsError: 'WebSocket hatası. Proxy çalışıyor mu?',
     reconnFailed: '{n} denemeden sonra yeniden bağlanılamadı. Lütfen manuel bağlanın.',
+    reconnSeatKept:'Masadaki yerin birkaç dakika boyunca ayrılmış kalır.',
     tableNamePh: 'Masa adı…',
     hsRoyal: '⭐ Floş Royal',
     hsSF: '🃏 Sıralı Floş {r}',

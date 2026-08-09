@@ -316,6 +316,7 @@ export const strings = {
     gtypeRanked: 'Ranglistenspiel',
     wsError: 'WebSocket-Fehler. Läuft der Proxy?',
     reconnFailed: 'Wiederverbindung nach {n} Versuchen fehlgeschlagen. Bitte manuell neu verbinden.',
+    reconnSeatKept:'Dein Platz am Tisch bleibt für einige Minuten reserviert.',
     tableNamePh: 'Tischname…',
     hsRoyal: '⭐ Royal Flush',
     hsSF: '🃏 Straight Flush {r}',

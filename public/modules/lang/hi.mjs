@@ -251,6 +251,7 @@ export const strings = {
     gtypeNormal:'सामान्य', gtypeRegistered:'केवल पंजीकृत खिलाड़ी', gtypeInvite:'केवल आमंत्रित खिलाड़ी', gtypeRanked:'रैंकिंग गेम',
     wsError:'WebSocket त्रुटि। क्या प्रॉक्सी चल रहा है?',
     reconnFailed:'{n} प्रयासों के बाद पुनः कनेक्शन विफल। कृपया मैन्युअल रूप से पुनः कनेक्ट करें।',
+    reconnSeatKept:'टेबल पर आपकी सीट कुछ मिनटों के लिए आरक्षित रहती है।',
     tableNamePh:'टेबल का नाम…',
     hsRoyal:'⭐ Royal Flush', hsSF:'🃏 Straight Flush {r}', hsFour:'🟥 Four {r}s',
     hsFull:'🔴 Full House {a}/{b}', hsFlush:'🟠 Flush', hsStraight:'🟡 Straight {r}',
