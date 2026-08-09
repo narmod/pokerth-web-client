@@ -8273,7 +8273,9 @@ html[data-seat-edit="1"] #g-seats .seat.seat-ghost { outline: none; cursor: defa
 .fn-foot { display: flex; gap: var(--sp-2); margin-top: 12px; }
 /* Badge de non-lus sur le bouton d'en-tete (cap « 9+ » cote JS). */
 #forum-btn-lobby { position: relative; }
-.forum-unread { position: absolute; top: -3px; right: -5px; min-width: 15px; height: 15px; padding: 0 3px; border-radius: var(--r-pill); background: var(--gold); color: #1a1a10; font-size: var(--fs-3xs); font-weight: 700; line-height: 15px; text-align: center; font-family: var(--ff-mono); pointer-events: none; }
+/* Meme geometrie que .chat-badge (compteur non-lus du chat) pour que le
+   NOMBRE soit lisible — seule la couleur differe (or vs rouge du chat). */
+.forum-unread { position: absolute; top: -5px; right: -5px; min-width: 16px; height: 16px; padding: 0 4px; border-radius: 8px; background: var(--gold); color: #1a1a10; font-family: var(--ff-mono); font-size: var(--fs-2xs); font-weight: 700; line-height: 16px; text-align: center; box-shadow: 0 1px 4px rgba(0,0,0,0.5); pointer-events: none; z-index: 6; }
 /* Option avancee forum_news (ON par defaut) : coupe bouton ET fenetre. */
 body.adv-no-forumnews #forum-btn-lobby, body.adv-no-forumnews #forum-modal { display: none !important; }
 
