@@ -203,6 +203,9 @@ export const help = {
         { id: 'forumcups', t: 'Forumcups en evenementen',
           b: ['Het forum van pokerth.net herbergt ook de Monthly Cup, een maandelijkse serie waarin spelers worden verdeeld over Gold-, Silver- en Bronze-tafels voordat de kampioen van de maand wordt gekroond, plus losse speciale cups door het jaar heen.',
               'Inschrijvingen, tijden, tafelinstellingen en uitslagen worden op het forum gepubliceerd, en de spellen worden net als alle andere op de officiële server gespeeld. Een pokerth.net-account volstaat om de uitslagen te volgen; je inschrijven voor een cup gaat via het bijbehorende forumdraadje.'] },
+        { id: 'forumnews', t: 'Forumnieuws in de lobby',
+          b: ['De krantenknop in de lobbykoptekst opent de nieuwste berichten van het pokerth.net-forum, één regel per onderwerp, elk forum met een eigen kleur. De badge op de knop telt de ongelezen berichten; een bericht openen (nieuw tabblad) markeert het als gelezen, en “Alles als gelezen markeren” wist alles in één keer.',
+              'Dit is een webextra: de knop kan worden verborgen in de Geavanceerde opties (“Forumknop in de lobbykoptekst”).'] },
         { id: 'avatars', t: 'Avatars en vlaggen',
           b: ['Op pokerth.net wordt je avatar via de avatarserver naar andere spelers verspreid, en kan een kleine landvlag op de spelersvakken verschijnen. Beide zijn optioneel en instelbaar in de opties.'] }
       ]

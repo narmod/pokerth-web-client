@@ -203,6 +203,9 @@ export const help = {
         { id: 'forumcups', t: 'Copas del foro y eventos',
           b: ['El foro de pokerth.net acoge además la Monthly Cup, una serie mensual en la que los jugadores se reparten en mesas Gold, Silver y Bronze antes de coronar al campeón del mes, más copas especiales puntuales a lo largo del año.',
               'Inscripciones, horarios, ajustes de mesa y resultados se publican en el foro, y las partidas se juegan en el servidor oficial como cualquier otra. Una cuenta de pokerth.net basta para seguir los resultados; apuntarse a una copa pasa por el hilo del foro correspondiente.'] },
+        { id: 'forumnews', t: 'Novedades del foro en el lobby',
+          b: ['El botón de periódico en la cabecera del lobby abre los últimos mensajes del foro de pokerth.net, una entrada por tema y cada foro con su color. La insignia del botón cuenta los mensajes no leídos; abrir un mensaje (nueva pestaña) lo marca como leído, y «Marcar todo como leído» lo limpia todo de una vez.',
+              'Es un extra web: el botón puede ocultarse en las Opciones avanzadas («Botón del foro en la cabecera del lobby»).'] },
         { id: 'avatars', t: 'Avatares y banderas',
           b: ['En pokerth.net, tu avatar se distribuye a los demás jugadores a través del servidor de avatares, y una pequeña bandera de país puede mostrarse en las cajas de jugadores. Ambos son opcionales y configurables en las opciones.'] }
       ]

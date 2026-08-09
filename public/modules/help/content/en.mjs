@@ -207,6 +207,9 @@ export const help = {
         { id: 'forumcups', t: 'Forum cups and events',
           b: ['The pokerth.net forum also hosts the Monthly Cup, a monthly series where players are spread across Gold, Silver and Bronze tables before the champion of the month is crowned, plus one-off special cups through the year.',
               'Sign-ups, schedules, table settings and results are published on the forum, and the games are played on the official server like any other. A pokerth.net account is enough to follow the results; entering a cup goes through the matching forum thread.'] },
+        { id: 'forumnews', t: 'Forum news in the lobby',
+          b: ['The newspaper button in the lobby header opens the latest posts from the pokerth.net forum, one entry per topic, each forum with its own colour. The badge on the button counts unread posts; opening a post (new tab) marks it as read, and “Mark all as read” clears everything at once.',
+              'This is a web extra: the button can be hidden in Advanced options (“Forum button in the lobby header”).'] },
         { id: 'avatars', t: 'Avatars and flags',
           b: ['On pokerth.net your avatar is distributed to other players through the avatar server, and a small country flag can be shown on player boxes. Both are optional and configurable in the options.'] }
       ]

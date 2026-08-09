@@ -203,6 +203,9 @@ export const help = {
         { id: 'forumcups', t: 'Forumbekers en geleenthede',
           b: ['Die forum van pokerth.net huisves ook die Monthly Cup, \u2019n maandelikse reeks waar spelers oor Gold-, Silver- en Bronze-tafels versprei word voordat die kampioen van die maand gekroon word, plus los spesiale bekers deur die jaar.',
               'Inskrywings, tye, tafelinstellings en uitslae word op die forum gepubliseer, en die spele word soos enige ander op die amptelike bediener gespeel. \u2019n pokerth.net-rekening is genoeg om die uitslae te volg; om vir \u2019n beker in te skryf, loop deur die ooreenstemmende forumdraad.'] },
+        { id: 'forumnews', t: 'Forumnuus in die lobby',
+          b: ['Die koerantknoppie in die lobby-kopstuk maak die nuutste plasings van die pokerth.net-forum oop, een inskrywing per onderwerp, elke forum met sy eie kleur. Die kenteken op die knoppie tel die ongeleeste plasings; om \'n plasing oop te maak (nuwe oortjie) merk dit as gelees, en “Merk alles as gelees” vee alles in een slag uit.',
+              'Dit is \'n web-ekstra: die knoppie kan in Gevorderde opsies versteek word (“Forum-knoppie in die lobby-kopstuk”).'] },
         { id: 'avatars', t: 'Avatars en vlae',
           b: ['Op pokerth.net word jou avatar deur die avatarbediener aan ander spelers versprei, en \u2019n klein landsvlag kan op die spelerblokkies verskyn. Albei is opsioneel en in die opsies instelbaar.'] }
       ]

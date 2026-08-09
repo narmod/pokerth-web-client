@@ -203,6 +203,9 @@ export const help = {
         { id: 'forumcups', t: 'Foorumin cupit ja tapahtumat',
           b: ['pokerth.netin foorumilla pyörii myös Monthly Cup, kuukausittainen sarja, jossa pelaajat jaetaan Gold-, Silver- ja Bronze-pöytiin ennen kuun mestarin kruunaamista, ja lisäksi vuoden mittaan yksittäisiä erikoiscupeja.',
               'Ilmoittautumiset, aikataulut, pöytäasetukset ja tulokset julkaistaan foorumilla, ja pelit pelataan virallisella palvelimella kuten kaikki muutkin. Tulosten seuraamiseen riittää pokerth.net-tili; cupiin ilmoittautuminen käy vastaavan foorumiketjun kautta.'] },
+        { id: 'forumnews', t: 'Foorumin uutiset aulassa',
+          b: ['Aulan yläpalkin sanomalehtipainike avaa pokerth.net-foorumin uusimmat viestit, yksi rivi aihetta kohden, kullakin foorumilla oma värinsä. Painikkeen merkki laskee lukemattomat viestit; viestin avaaminen (uusi välilehti) merkitsee sen luetuksi, ja ”Merkitse kaikki luetuiksi” tyhjentää kaiken kerralla.',
+              'Tämä on web-lisä: painikkeen voi piilottaa lisäasetuksista (”Foorumipainike aulan yläpalkissa”).'] },
         { id: 'avatars', t: 'Avatarit ja liput',
           b: ['pokerth.netissä avatarisi jaetaan muille pelaajille avatar-palvelimen kautta, ja pelaajalaatikoissa voi näkyä pieni maan lippu. Molemmat ovat valinnaisia ja säädettävissä asetuksista.'] }
       ]

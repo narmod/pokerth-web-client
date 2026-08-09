@@ -203,6 +203,9 @@ export const help = {
         { id: 'forumcups', t: 'Copes del fòrum i esdeveniments',
           b: ['El fòrum de pokerth.net acull també la Monthly Cup, una sèrie mensual on els jugadors es reparteixen en taules Gold, Silver i Bronze abans de coronar el campió del mes, a més de copes especials puntuals al llarg de l\u2019any.',
               'Inscripcions, horaris, ajustos de taula i resultats es publiquen al fòrum, i les partides es juguen al servidor oficial com qualsevol altra. Amb un compte de pokerth.net n\u2019hi ha prou per seguir els resultats; apuntar-se a una copa passa pel fil del fòrum corresponent.'] },
+        { id: 'forumnews', t: 'Notícies del fòrum al vestíbul',
+          b: ['El botó de diari de la capçalera del vestíbul obre els darrers missatges del fòrum de pokerth.net, una entrada per tema i cada fòrum amb el seu color. La insígnia del botó compta els missatges no llegits; obrir un missatge (pestanya nova) el marca com a llegit, i «Marca-ho tot com a llegit» ho neteja tot de cop.',
+              'És un extra web: el botó es pot amagar a les Opcions avançades («Botó del fòrum a la capçalera del vestíbul»).'] },
         { id: 'avatars', t: 'Avatars i banderes',
           b: ['A pokerth.net, el teu avatar es distribueix als altres jugadors mitjançant el servidor d\u2019avatars, i pot aparèixer una petita bandera del país a les caixes de jugador. Totes dues coses són opcionals i configurables a les opcions.'] }
       ]

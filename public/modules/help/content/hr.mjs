@@ -203,6 +203,9 @@ export const help = {
         { id: 'forumcups', t: 'Kupovi foruma i događaji',
           b: ['Forum pokerth.neta ugošćuje i Monthly Cup, mjesečnu seriju u kojoj se igrači raspoređuju za stolove Gold, Silver i Bronze prije nego što se okruni prvak mjeseca, uz pojedinačne posebne kupove tijekom godine.',
               'Prijave, termini, postavke stolova i rezultati objavljuju se na forumu, a partije se igraju na službenom poslužitelju kao i sve druge. Za praćenje rezultata dovoljan je pokerth.net račun; prijava na kup ide preko odgovarajuće teme na forumu.'] },
+        { id: 'forumnews', t: 'Novosti s foruma u predvorju',
+          b: ['Gumb s novinama u zaglavlju predvorja otvara najnovije objave s foruma pokerth.net, jedan unos po temi, svaki forum sa svojom bojom. Značka na gumbu broji nepročitane objave; otvaranje objave (nova kartica) označava je pročitanom, a „Označi sve kao pročitano” briše sve odjednom.',
+              'Ovo je web dodatak: gumb se može sakriti u naprednim opcijama („Gumb foruma u zaglavlju predvorja”).'] },
         { id: 'avatars', t: 'Avatari i zastave',
           b: ['Na pokerth.net tvoj se avatar distribuira drugim igračima preko avatar-poslužitelja, a mala zastava zemlje može se prikazivati na kutijama igrača. Oboje je neobavezno i podesivo u opcijama.'] }
       ]

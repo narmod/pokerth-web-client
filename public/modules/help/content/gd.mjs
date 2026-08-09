@@ -203,6 +203,9 @@ export const help = {
         { id: 'forumcups', t: 'Cupannan an fhòraim agus tachartasan',
           b: ['Bidh fòram pokerth.net a\u2019 cumail a\u2019 Monthly Cup cuideachd, sreath mhìosail far a bheil na cluicheadairean air an sgaoileadh air bùird Gold, Silver agus Bronze mus tèid curaidh na mìosa a chrùnadh, agus cupannan sònraichte fa leth tron bhliadhna.',
               'Thèid clàraidhean, amannan, roghainnean bùird agus toraidhean fhoillseachadh air an fhòram, agus thèid na geamannan a chluich air an fhrithealaiche oifigeil mar a h-uile geama eile. Tha cunntas pokerth.net gu leòr gus na toraidhean a leantainn; thèid clàradh airson cupa tron t-snàithlean fòraim a bhuineas dha.'] },
+        { id: 'forumnews', t: 'Naidheachdan an fhòraim san lobaidh',
+          b: ['Fosglaidh putan a\' phàipeir-naidheachd ann an ceann an lobaidh na puist as ùire bho fhòram pokerth.net, aon inntrig airson gach cuspair, agus dath fhèin aig gach fòram. Cunntaidh am bràiste air a\' phutan na puist gun leughadh; ma dh\'fhosglas tu post (taba ùr) thèid a chomharrachadh mar leughte, agus glanaidh “Comharraich na h-uile mar leughte” a h-uile càil aig an aon àm.',
+              '\'S e leudachadh-lìn a th\' ann: gabhaidh am putan fhalach anns na roghainnean adhartach (“Putan an fhòraim ann an ceann an lobaidh”).'] },
         { id: 'avatars', t: 'Avataran agus brataichean',
           b: ['Air pokerth.net thèid an t-avatar agad a sgaoileadh gu cluicheadairean eile tron fhrithealaiche avatar, agus faodaidh bratach bheag dùthcha nochdadh air bogsaichean nan cluicheadairean. Tha an dà chuid roghainneil agus gan rèiteachadh sna roghainnean.'] }
       ]

@@ -203,6 +203,9 @@ export const help = {
         { id: 'forumcups', t: 'Cupele forumului și evenimente',
           b: ['Forumul pokerth.net găzduiește și Monthly Cup, o serie lunară în care jucătorii sunt împărțiți pe mese Gold, Silver și Bronze înainte de a fi încoronat campionul lunii, plus cupe speciale punctuale de-a lungul anului.',
               'Înscrierile, orarele, setările de masă și rezultatele se publică pe forum, iar partidele se joacă pe serverul oficial ca oricare altele. Un cont pokerth.net ajunge pentru a urmări rezultatele; înscrierea la o cupă trece prin firul de forum corespunzător.'] },
+        { id: 'forumnews', t: 'Noutăți de pe forum în lobby',
+          b: ['Butonul cu ziar din antetul lobby-ului deschide cele mai noi mesaje de pe forumul pokerth.net, o intrare pe subiect, fiecare forum cu propria culoare. Insigna de pe buton numără mesajele necitite; deschiderea unui mesaj (filă nouă) îl marchează drept citit, iar „Marchează tot ca citit” golește totul dintr-odată.',
+              'Este un extra web: butonul poate fi ascuns din Opțiuni avansate („Buton forum în antetul lobby-ului”).'] },
         { id: 'avatars', t: 'Avataruri și steaguri',
           b: ['Pe pokerth.net, avatarul tău este distribuit celorlalți jucători prin serverul de avataruri, iar un mic steag de țară poate apărea pe casetele jucătorilor. Ambele sunt opționale și configurabile din opțiuni.'] }
       ]

@@ -203,6 +203,9 @@ export const help = {
         { id: 'forumcups', t: 'Forumo taurės ir renginiai',
           b: ['pokerth.net forume vyksta ir Monthly Cup – mėnesinis ciklas, kuriame žaidėjai paskirstomi prie Gold, Silver ir Bronze stalų, kol išaiškinamas mėnesio čempionas, o be to per metus būna pavienių specialių taurių.',
               'Registracijos, laikai, stalo nustatymai ir rezultatai skelbiami forume, o partijos žaidžiamos oficialiame serveryje kaip ir visos kitos. Rezultatams sekti užtenka pokerth.net paskyros; į taurę registruojamasi atitinkamoje forumo gijoje.'] },
+        { id: 'forumnews', t: 'Forumo naujienos vestibiulyje',
+          b: ['Laikraščio mygtukas vestibiulio antraštėje atveria naujausius pokerth.net forumo įrašus — po vieną įrašą temai, kiekvienas forumas turi savo spalvą. Ženkliukas ant mygtuko skaičiuoja neskaitytus įrašus; atidarius įrašą (naujame skirtuke) jis pažymimas skaitytu, o „Pažymėti viską kaip skaityta“ viską išvalo iš karto.',
+              'Tai žiniatinklio priedas: mygtuką galima paslėpti išplėstinėse parinktyse („Forumo mygtukas vestibiulio antraštėje“).'] },
         { id: 'avatars', t: 'Avatarai ir vėliavos',
           b: ['pokerth.net svetainėje tavo avataras platinamas kitiems žaidėjams per avatarų serverį, o ant žaidėjų dėžučių gali būti rodoma maža šalies vėliava. Abu dalykai pasirenkami ir nustatomi parinktyse.'] }
       ]

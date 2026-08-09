@@ -203,6 +203,9 @@ export const help = {
         { id: 'forumcups', t: 'Poháre fóra a podujatia',
           b: ['Na fóre pokerth.net beží aj Monthly Cup, mesačná séria, v ktorej sa hráči rozdelia k stolom Gold, Silver a Bronze, kým sa korunuje šampión mesiaca, a k tomu jednotlivé mimoriadne poháre počas roka.',
               'Prihlášky, termíny, nastavenia stolov a výsledky sa zverejňujú na fóre a hry bežia na oficiálnom serveri ako všetky ostatné. Na sledovanie výsledkov stačí účet pokerth.net; prihlásenie do pohára ide cez zodpovedajúce vlákno fóra.'] },
+        { id: 'forumnews', t: 'Novinky z fóra v lobby',
+          b: ['Tlačidlo s novinami v záhlaví lobby otvorí najnovšie príspevky z fóra pokerth.net — jeden záznam na tému, každé fórum má svoju farbu. Odznak na tlačidle počíta neprečítané príspevky; otvorenie príspevku (nová karta) ho označí ako prečítaný a „Označiť všetko ako prečítané“ všetko naraz vymaže.',
+              'Ide o webový doplnok: tlačidlo možno skryť v pokročilých voľbách („Tlačidlo fóra v záhlaví lobby“).'] },
         { id: 'avatars', t: 'Avatary a vlajky',
           b: ['Na pokerth.net sa tvoj avatar rozosiela ostatným hráčom cez avatarový server a na hráčskych boxoch sa môže zobrazovať malá vlajka krajiny. Oboje je voliteľné a nastaviteľné v možnostiach.'] }
       ]

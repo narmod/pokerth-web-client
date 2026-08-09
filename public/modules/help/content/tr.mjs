@@ -203,6 +203,9 @@ export const help = {
         { id: 'forumcups', t: 'Forum kupaları ve etkinlikler',
           b: ['pokerth.net forumu ayrıca Monthly Cup\u2019a ev sahipliği yapar: oyuncuların Gold, Silver ve Bronze masalara dağıtıldığı ve ardından ayın şampiyonunun belirlendiği aylık bir seri, buna yıl boyunca tek seferlik özel kupalar eklenir.',
               'Kayıtlar, program, masa ayarları ve sonuçlar forumda yayımlanır, oyunlar ise diğerleri gibi resmi sunucuda oynanır. Sonuçları izlemek için bir pokerth.net hesabı yeterlidir; bir kupaya kaydolmak ilgili forum başlığından geçer.'] },
+        { id: 'forumnews', t: 'Lobide forum haberleri',
+          b: ['Lobi başlığındaki gazete düğmesi pokerth.net forumundaki en yeni gönderileri açar; konu başına bir satır, her forumun kendi rengi vardır. Düğmedeki rozet okunmamış gönderileri sayar; bir gönderiyi açmak (yeni sekme) onu okundu olarak işaretler, “Tümünü okundu olarak işaretle” ise hepsini tek seferde temizler.',
+              'Bu bir web eklentisidir: düğme Gelişmiş seçeneklerden gizlenebilir (“Lobi başlığında forum düğmesi”).'] },
         { id: 'avatars', t: 'Avatarlar ve bayraklar',
           b: ['pokerth.net\u2019te avatarın, avatar sunucusu üzerinden diğer oyunculara dağıtılır ve oyuncu kutularında küçük bir ülke bayrağı gösterilebilir. İkisi de isteğe bağlıdır ve seçeneklerden yapılandırılır.'] }
       ]

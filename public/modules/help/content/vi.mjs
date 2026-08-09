@@ -203,6 +203,9 @@ export const help = {
         { id: 'forumcups', t: 'Cúp của diễn đàn và sự kiện',
           b: ['Diễn đàn pokerth.net còn tổ chức Monthly Cup, một chuỗi hằng tháng trong đó người chơi được chia về các bàn Gold, Silver và Bronze trước khi nhà vô địch của tháng được xướng tên, cùng với những cúp đặc biệt lẻ tẻ suốt cả năm.',
               'Đăng ký, lịch thi đấu, thiết lập bàn và kết quả đều được đăng trên diễn đàn, còn các ván đấu diễn ra trên máy chủ chính thức như mọi ván khác. Một tài khoản pokerth.net là đủ để theo dõi kết quả; đăng ký dự một cúp thì qua chủ đề tương ứng trên diễn đàn.'] },
+        { id: 'forumnews', t: 'Tin tức diễn đàn trong sảnh',
+          b: ['Nút tờ báo trên tiêu đề sảnh mở các bài viết mới nhất từ diễn đàn pokerth.net, mỗi chủ đề một dòng, mỗi diễn đàn có màu riêng. Huy hiệu trên nút đếm số bài chưa đọc; mở một bài (thẻ mới) sẽ đánh dấu là đã đọc, còn “Đánh dấu tất cả là đã đọc” xóa tất cả cùng lúc.',
+              'Đây là tiện ích web: có thể ẩn nút trong Tùy chọn nâng cao (“Nút diễn đàn trên tiêu đề sảnh”).'] },
         { id: 'avatars', t: 'Ảnh đại diện và cờ',
           b: ['Trên pokerth.net, ảnh đại diện của bạn được phân phối tới người chơi khác qua máy chủ ảnh đại diện, và một lá cờ quốc gia nhỏ có thể hiện trên ô người chơi. Cả hai đều tùy chọn và cấu hình được trong tùy chọn.'] }
       ]

@@ -203,6 +203,9 @@ export const help = {
         { id: 'forumcups', t: 'Forumcuper och evenemang',
           b: ['pokerth.nets forum härbärgerar också Monthly Cup, en månatlig serie där spelarna fördelas på Gold-, Silver- och Bronze-bord innan månadens mästare koras, plus enstaka specialcuper under året.',
               'Anmälningar, tider, bordsinställningar och resultat publiceras på forumet, och matcherna spelas på den officiella servern som alla andra. Ett pokerth.net-konto räcker för att följa resultaten; att anmäla sig till en cup går via motsvarande forumtråd.'] },
+        { id: 'forumnews', t: 'Forumnyheter i lobbyn',
+          b: ['Tidningsknappen i lobbyns sidhuvud öppnar de senaste inläggen från pokerth.net-forumet, en rad per ämne, varje forum med sin egen färg. Märket på knappen räknar olästa inlägg; öppnas ett inlägg (ny flik) markeras det som läst, och “Markera allt som läst” rensar allt på en gång.',
+              'Det är ett webbtillägg: knappen kan döljas i Avancerade alternativ (“Forumknapp i lobbyns sidhuvud”).'] },
         { id: 'avatars', t: 'Avatarer och flaggor',
           b: ['På pokerth.net distribueras din avatar till andra spelare via avatarservern, och en liten landsflagga kan visas på spelarrutorna. Båda är valfria och kan ställas in i inställningarna.'] }
       ]

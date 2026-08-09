@@ -203,6 +203,9 @@ export const help = {
         { id: 'forumcups', t: 'Puchary forum i wydarzenia',
           b: ['Forum pokerth.net gości także Monthly Cup, comiesięczną serię, w której gracze rozdzielani są na stoły Gold, Silver i Bronze, zanim wyłoniony zostanie mistrz miesiąca, a do tego pojedyncze puchary specjalne w ciągu roku.',
               'Zapisy, terminy, ustawienia stołów i wyniki publikowane są na forum, a gry toczą się na oficjalnym serwerze jak wszystkie inne. Do śledzenia wyników wystarczy konto pokerth.net; zapis na puchar odbywa się w odpowiednim wątku forum.'] },
+        { id: 'forumnews', t: 'Nowości z forum w lobby',
+          b: ['Przycisk gazety w nagłówku lobby otwiera najnowsze posty z forum pokerth.net, jeden wpis na temat, każde forum w swoim kolorze. Plakietka na przycisku liczy nieprzeczytane posty; otwarcie posta (nowa karta) oznacza go jako przeczytany, a „Oznacz wszystko jako przeczytane” czyści wszystko naraz.',
+              'To dodatek webowy: przycisk można ukryć w Opcjach zaawansowanych („Przycisk forum w nagłówku lobby”).'] },
         { id: 'avatars', t: 'Awatary i flagi',
           b: ['Na pokerth.net twój awatar jest rozprowadzany do innych graczy przez serwer awatarów, a mała flaga kraju może pojawiać się na polach graczy. Oba elementy są opcjonalne i konfigurowalne w opcjach.'] }
       ]

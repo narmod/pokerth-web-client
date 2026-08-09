@@ -203,6 +203,9 @@ export const help = {
         { id: 'forumcups', t: 'Fórumkupák és események',
           b: ['A pokerth.net fóruma ad otthont a Monthly Cupnak is: havi sorozat, amelyben a játékosok Gold, Silver és Bronze asztalok között oszlanak meg, mielőtt a hónap bajnokát megkoronáznák, ezen felül az év során egy-egy különleges kupa is akad.',
               'A jelentkezések, időpontok, asztalbeállítások és eredmények a fórumon jelennek meg, a játékok pedig a hivatalos szerveren zajlanak, mint bármely másik. Az eredmények követéséhez elég egy pokerth.net-fiók; egy kupára a megfelelő fórumtémán keresztül lehet jelentkezni.'] },
+        { id: 'forumnews', t: 'Fórumhírek a lobbiban',
+          b: ['A lobbi fejlécének újság gombja megnyitja a pokerth.net fórum legfrissebb bejegyzéseit, témánként egy sorral, minden fórum saját színnel. A gombon lévő jelvény a olvasatlan bejegyzéseket számolja; egy bejegyzés megnyitása (új lap) olvasottnak jelöli, az „Összes megjelölése olvasottként” pedig egyszerre töröl mindent.',
+              'Ez webes extra: a gomb elrejthető a speciális beállításokban („Fórum gomb a lobbi fejlécében”).'] },
         { id: 'avatars', t: 'Avatárok és zászlók',
           b: ['A pokerth.net oldalon az avatárodat az avatárszerver juttatja el a többi játékoshoz, és a játékosdobozokon egy kis országzászló jelenhet meg. Mindkettő választható, és a beállításokban konfigurálható.'] }
       ]
