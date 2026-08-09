@@ -33,15 +33,24 @@ import { _hsHide, renderHandStrength, renderPreFlopStrength } from './odds-panel
 function _playAutoMode() {
   if (S._playingMode === 0 || S.turnPid !== S.myId) return false;
   if (!S.ws || S.ws.readyState !== WebSocket.OPEN) return false;
-  var myBet0    = (S.seatData[S.myId] || {}).bet || 0;
-  var toCall0   = Math.max(0, S.highestBet - myBet0);
-  var canCheck0 = toCall0 === 0;
-  var act = canCheck0 ? 2 : (S._playingMode === 1 ? 3 : 1); // 2=check, 3=call, 1=fold
-  var amt = (act === 3) ? toCall0 : 0;
   // Plus de toast (demande narmod 2026-07-18) : l'indicateur visuel du mode
   // auto est le dropdown de mode encadré d'or (.mode-sel-wrap.mode-auto).
   window.setMyTurnActive(true);
-  setTimeout(function () { doAction(act, amt); }, 60);
+  // Parité QML 2.1.6 (runAutoAction) : l'action est recalculée AU MOMENT du
+  // tir, pas à l'armement — pendant les 60 ms de délai, une relance adverse
+  // a pu arriver. Auto Check/Fold ne joue qu'un check réellement gratuit à
+  // cet instant, sinon fold (espérance 0 garantie). Auto Check/Call calle
+  // sciemment n'importe quel montant (sémantique « −1 » du QML), recalculé
+  // frais pour que la garde de doAction le laisse passer.
+  setTimeout(function () {
+    if (S._playingMode === 0 || S.turnPid !== S.myId) return; // mode coupé / tour passé
+    var _b  = (S.seatData[S.myId] || {}).bet || 0;
+    var _tc = Math.max(0, S.highestBet - _b);
+    if (_tc === 0) { doAction(2, 0); return; }                 // check gratuit
+    if (S._playingMode === 2) { doAction(1, 0); return; }      // Check/Fold → fold
+    var _m = (S.seatData[S.myId] || {}).money || 0;            // Check/Call → tout montant
+    if (_tc >= _m) doAction(6, _m); else doAction(3, _tc);
+  }, 60);
   return true;
 }
 
@@ -427,6 +436,34 @@ function renderMyTurnActions(preview) {
 // ─── Patch App with action methods ───
 
 function doAction(action, bet) {
+  // ── Garde de course Check/Call (parité QML 2.1.6, GameHandler::call) ──
+  // Le montant attaché au clic (bet) est celui que le joueur a VU sur le
+  // bouton au moment du rendu. Si un adversaire a misé/relancé/all-in dans
+  // l'intervalle (le panneau n'a pas encore re-rendu), un Check voulu
+  // deviendrait un Call du montant plein côté serveur, et un « Call 50 »
+  // un call de la relance entière. On re-valide donc ICI, au moment de
+  // l'envoi : l'action n'est exécutée que si l'engine ne demande pas plus
+  // que ce qui était affiché. Sinon : rien n'est envoyé, la pré-action est
+  // annulée et le panneau re-rendu aux nouveaux montants — c'est toujours
+  // notre tour, le joueur décide. Fold et All-In sont indépendants du
+  // montant et passent toujours ; Raise est déjà validé par doRaise et le
+  // serveur (YourActionRejected).
+  if (action === 2 || action === 3) {
+    var _gExp  = (action === 2) ? 0 : (bet || 0);
+    var _gCall = Math.max(0, S.highestBet - ((S.seatData[S.myId] || {}).bet || 0));
+    // Absorption d'un 2e tap déjà « en vol » après un rejet : pendant la
+    // courte fenêtre de blocage, un Check/Call re-cliqué ne part pas non
+    // plus (équivalent de l'AccidentallyCallBlocker du QML, actif avec la
+    // même option que l'anti-call accidentel, pth_guard_call).
+    if (window._callBlockUntil && Date.now() < window._callBlockUntil) return;
+    if (_gCall > _gExp) {
+      S._preAction = '';
+      var _gc2 = false; try { _gc2 = (localStorage.getItem('pth_guard_call') === '1'); } catch (e) {}
+      if (_gc2) window._callBlockUntil = Date.now() + 1200;
+      try { renderMyTurnActions(); } catch (e) {}
+      return;
+    }
+  }
   // Guard contre les envois sur un WebSocket fermé/en cours de fermeture.
   // Sur mobile, une micro-coupure réseau (transition Wifi/4G) peut fermer
   // le WS sans qu'on s'en rende compte avant la prochaine action. send()
