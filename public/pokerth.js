@@ -1236,6 +1236,49 @@ var _CFG_WEB_SYNC_KEYS = [
 // (on garde le déblocage le plus ancien) et maximum des compteurs.
 var _ACH_SYNC_KEYS = ['pth_ach_unlocked', 'pth_ach_hands', 'pth_ach_gamesWon',
                      'pth_ach_beatenSkills', 'pth_ach_wonStyles'];
+// Etat « lu » des actualites du forum (comptes authentifies uniquement, comme
+// tout le canal /prefs-web) : meme reconciliation par FUSION que les succes —
+// lu quelque part = lu partout (union des ids, maximum du repere
+// « tout marquer comme lu »). Jamais synchronise pour les invites : le canal
+// entier n'existe qu'avec un jeton emis sur InitAck authentifie.
+var _FORUM_SYNC_KEYS = ['pth_forum_read_base', 'pth_forum_read_ids'];
+var _FORUM_IDS_MAX = 120;   // borne partagee avec modules/ui/forumnews.mjs
+function _forumMergeIn(o) {
+  var needPush = false, changed = false;
+  try {
+    // repere « tout lu » : max des deux
+    var rawB = o ? (o.pth_forum_read_base != null ? o.pth_forum_read_base : null) : null;
+    if (typeof rawB === 'string' && rawB.length <= 32) {
+      var theirsB = parseInt(rawB, 10) || 0;
+      var mineB = parseInt(_cfgLs('pth_forum_read_base'), 10) || 0;
+      var maxB = Math.max(theirsB, mineB);
+      if (maxB > theirsB) needPush = true;
+      if (maxB !== mineB) { try { localStorage.setItem('pth_forum_read_base', String(maxB)); changed = true; } catch (e) {}
+      }
+    }
+    // ids lus individuellement : union bornee (les plus recents gardes)
+    var rawI = o ? (o.pth_forum_read_ids != null ? o.pth_forum_read_ids : null) : null;
+    if (typeof rawI === 'string' && rawI.length <= 20000) {
+      var theirs = null, mine = null;
+      try { theirs = JSON.parse(rawI); } catch (e) { theirs = null; }
+      try { mine = JSON.parse(_cfgLs('pth_forum_read_ids') || '[]'); } catch (e) { mine = null; }
+      if (Array.isArray(theirs)) {
+        if (!Array.isArray(mine)) mine = [];
+        var seen = {}, merged = [];
+        theirs.concat(mine).forEach(function (x) {
+          if (typeof x === 'string' && x && !seen[x]) { seen[x] = 1; merged.push(x); }
+        });
+        if (merged.length > _FORUM_IDS_MAX) merged = merged.slice(merged.length - _FORUM_IDS_MAX);
+        var sm = JSON.stringify(merged);
+        if (sm !== JSON.stringify(theirs)) needPush = true;   // on a plus qu'eux
+        if (sm !== _cfgLs('pth_forum_read_ids')) { try { localStorage.setItem('pth_forum_read_ids', sm); changed = true; } catch (e) {} }
+      }
+    }
+  } catch (e) {}
+  // Badge/liste rafraichis en direct si le module forum est charge.
+  if (changed) { try { if (window._forumReadSynced) window._forumReadSynced(); } catch (e) {} }
+  return needPush;
+}
 var _cfgWebForcePush = false;   // le local était plus riche : repousser après fusion
 function _achNorm(k, v) {       // sérialisation stable (comparaisons fiables)
   try {
@@ -1294,6 +1337,10 @@ function _cfgWebCollect() {
     // (les clés locales gardent leur casse d'origine).
     if (v != null && v.length <= 20000) o[k.toLowerCase()] = v;
   });
+  _FORUM_SYNC_KEYS.forEach(function (k) {
+    var v = _cfgLs(k);
+    if (v != null && v.length <= 20000) o[k] = v;   // clés déjà en minuscules
+  });
   return o;
 }
 function _cfgWebDirty() {
@@ -1327,6 +1374,9 @@ function _cfgWebApply(o) {
   var changed = false;
   try {
     if (_achMergeIn(o)) { _cfgWebForcePush = true; _cfgSyncPushSoon(1500); }
+  } catch (e) {}
+  try {
+    if (_forumMergeIn(o)) { _cfgWebForcePush = true; _cfgSyncPushSoon(1500); }
   } catch (e) {}
   // Même fusion que pour le config.xml : une clé modifiée ici depuis le dernier
   // envoi (elle diffère de l'instantané poussé) n'est PAS écrasée par le
@@ -9945,6 +9995,7 @@ function renderPlayersList() {
 // Inventaire automatisé du 2026-07-19 (31 fonctions + App ; les 8 vars
 // mutables partagées sont devenues des propriétés window à la source).
 window._advGet = _advGet;
+window._cfgSyncMark = _cfgSyncMark;   // pont pour modules/ui/forumnews.mjs (etat lu → sync compte)
 window._advStripEmoji = _advStripEmoji;
 window._chatTs = _chatTs;
 window._disableFloating = _disableFloating;
@@ -10065,7 +10116,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.6-web.36'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.6-web.37'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

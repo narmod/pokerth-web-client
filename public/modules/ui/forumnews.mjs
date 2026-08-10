@@ -24,7 +24,7 @@ import { esc } from './misc.mjs';
 const FEED_URL = '/api/forumfeed';
 const FORUM_HOME = 'https://www.pokerth.net/';
 const CLIENT_TTL_MS = 5 * 60 * 1000;   // in-page cache; the proxy caches 10 min
-const READ_IDS_MAX = 300;              // keep the read-set bounded
+const READ_IDS_MAX = 120;              // borne partagee avec la sync compte (_FORUM_IDS_MAX, pokerth.js)
 
 let _cache = null;                     // { at, posts } (deduped)
 let _fetching = null;                  // in-flight promise (dedup concurrent calls)
@@ -90,6 +90,12 @@ function _saveIds(set) {
     if (a.length > READ_IDS_MAX) a = a.slice(a.length - READ_IDS_MAX);
     localStorage.setItem('pth_forum_read_ids', JSON.stringify(a));
   } catch (e) {}
+  _syncMark();
+}
+// Etat lu → sync liee au compte (no-op pour les invites : le canal /prefs-web
+// n'existe qu'avec un login authentifie ; no-op aussi si la sync est coupee).
+function _syncMark() {
+  try { if (typeof window._cfgSyncMark === 'function') window._cfgSyncMark('forum_read'); } catch (e) {}
 }
 
 // ── Feed fetch (client side, deduped + cached) ─────────────────────────
@@ -267,6 +273,7 @@ function forumMarkRead() {
     localStorage.setItem('pth_forum_read_base', String(mx));
     localStorage.setItem('pth_forum_read_ids', '[]');
   } catch (e) {}
+  _syncMark();
   if (_cache) _renderList(_cache.posts);
   _updateBadge();
 }
@@ -288,6 +295,15 @@ setInterval(function () {
   } catch (e) {}
 }, 10 * 60 * 1000);
 
+// Descente de sync compte : l'etat lu vient de changer depuis un autre
+// appareil — rafraichir badge + liste ouverte (pokerth.js _forumMergeIn).
+window._forumReadSynced = function () {
+  _updateBadge();
+  try {
+    const m = document.getElementById('forum-modal');
+    if (m && m.style.display && m.style.display !== 'none' && _cache) _renderList(_cache.posts);
+  } catch (e) {}
+};
 window.toggleForumModal = toggleForumModal;
 window.openForumModal = openForumModal;
 window.closeForumModal = closeForumModal;
