@@ -9228,6 +9228,46 @@ function _openFloatingNearBtn(panel, btn, opt, side) {
   _enableFloating(panel, opt);
 }
 
+// ── Parite QML : le chat de table reste « actif » pendant qu'on joue ──
+// (demande neuling 2026-08-10). En HTML, cliquer un <button> lui donne le
+// focus : le champ de chat le perd et, sur mobile, le clavier se ferme —
+// il faut recliquer le chat apres chaque action. En QML les boutons ne
+// prennent pas le focus clavier, donc le chat reste saisissable.
+//  - souris : preventDefault au mousedown sur un BOUTON de la barre quand
+//    le champ de chat a le focus → le clic part, le focus ne bouge pas ;
+//  - tactile : re-focus du champ juste apres le tap (preventDefault au
+//    touchstart casserait le clic, donc on refocalise a posteriori).
+// Seuls les <button> sont concernes : champ de mise et slider gardent leur
+// comportement de focus normal (parite « focus bet input »).
+function _initChatFocusHold() {
+  var wrap = document.querySelector('#s-game .action-wrap') || document.getElementById('g-actions');
+  if (!wrap || wrap._chatHold) return;
+  wrap._chatHold = true;
+  function _chatFocused() {
+    var i = document.getElementById('g-chat-in');
+    return !!(i && document.activeElement === i);
+  }
+  wrap.addEventListener('mousedown', function (ev) {
+    var b = ev.target && ev.target.closest ? ev.target.closest('button') : null;
+    if (b && _chatFocused()) ev.preventDefault();
+  });
+  wrap.addEventListener('touchstart', function (ev) {
+    var b = ev.target && ev.target.closest ? ev.target.closest('button') : null;
+    if (b && _chatFocused()) {
+      setTimeout(function () {
+        var i = document.getElementById('g-chat-in');
+        if (!i) return;
+        var p = document.getElementById('g-chat-panel');
+        if (p && p.style.display !== 'none') {
+          try { i.focus({ preventScroll: true }); } catch (e) { try { i.focus(); } catch (e2) {} }
+        }
+      }, 60);
+    }
+  }, { passive: true });
+}
+if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', _initChatFocusHold);
+else _initChatFocusHold();
+
 function toggleGameChat() {
   // Spectators can open the panel read-only (sp0ck 31/07/2026): the input row
   // is hidden by CSS (body.spectator-nosend), only sending is blocked.
@@ -10025,7 +10065,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.6-web.35'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.6-web.36'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
