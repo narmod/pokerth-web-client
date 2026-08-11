@@ -3701,11 +3701,18 @@ function handleAdmin(req, res, reqPathOnly, query) {
       if (!src) return adminJson(res, 400, { ok: false, error: 'no config object found' });
       // Liste blanche des clés de premier niveau : un fichier trafiqué ne peut
       // pas glisser de réglage inconnu dans la configuration vivante.
+      // Every legitimate top-level key of _adminConfig must be listed here:
+      // the import REPLACES the whole config, so a key missing from this
+      // list is silently wiped by an export -> import round-trip. That is
+      // exactly what happened to 'seo' (and the server list): restoring a
+      // config reset SEO to Off. Keep in sync with the keys the code reads.
       const ALLOWED = ['resetPeriod', 'modes', 'welcome', 'defaultTheme', 'defaults', 'loginDefaults',
                        'proxyCfg', 'tableDefaults', 'tableNames', 'serverName', 'serverTagline',
                        'discordChatWebhookUrl', 'showLoginTitle', 'featureOff', 'bannedIps',
                        'pkgDisabled', 'pkgFull', 'pkgFullscreen', 'pkgAlign', 'musicTracks',
-                       'musicEnabled', 'musicHidden', 'musicOrder'];
+                       'musicEnabled', 'musicHidden', 'musicOrder',
+                       'seo', 'servers', 'activeServerId', 'pokerthnetSource',
+                       'internetTransport', 'serverlistUrl'];
       const next = {}, taken = [], skipped = [];
       Object.keys(src).forEach(function (k) {
         if (ALLOWED.indexOf(k) >= 0) { next[k] = src[k]; taken.push(k); } else skipped.push(k);
