@@ -12,7 +12,7 @@ export const meta = {
 };
 
 export const strings = {
-  gameAdminBadge: 'Admin',
+  gameAdminBadge: 'Yönetici',
   gameAdminTip: 'Oyun yöneticisi: oyunu başlatır ve oyuncuları atabilir',
   hlColHands: 'Oynanan eller',
   hlComputing: 'Hesaplanıyor…',

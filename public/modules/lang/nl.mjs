@@ -15,7 +15,7 @@ export const meta = {
 };
 
 export const strings = {
-  gameAdminBadge: 'Admin',
+  gameAdminBadge: 'Beheerder',
   gameAdminTip: 'Spelbeheerder: start het spel en kan spelers verwijderen',
   hlColHands: 'Gespeelde handen',
   hlComputing: 'Berekenen…',

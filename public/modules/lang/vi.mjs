@@ -10,7 +10,7 @@ export const meta = {
 };
 
 export const strings = {
-  gameAdminBadge: 'Admin',
+  gameAdminBadge: 'Quản trị',
   gameAdminTip: 'Quản trị viên bàn chơi: bắt đầu ván và có thể loại người chơi',
   hlColHands: 'Số ván đã chơi',
   hlComputing: 'Đang tính…',

@@ -10,7 +10,7 @@ export const meta = {
 };
 
 export const strings = {
-  gameAdminBadge: 'Admin',
+  gameAdminBadge: 'Správce',
   gameAdminTip: 'Správce hry: spouští hru a může vyhazovat hráče',
   hlColHands: 'Odehrané rozdání',
   hlComputing: 'Počítání…',

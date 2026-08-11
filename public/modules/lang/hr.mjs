@@ -10,7 +10,7 @@ export const meta = {
 };
 
 export const strings = {
-  gameAdminBadge: 'Admin',
+  gameAdminBadge: 'Administrator',
   gameAdminTip: 'Administrator igre: pokreće igru i može izbaciti igrače',
   hlColHands: 'Odigrane ruke',
   hlComputing: 'Računanje…',

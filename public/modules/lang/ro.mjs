@@ -10,7 +10,7 @@ export const meta = {
 };
 
 export const strings = {
-  gameAdminBadge: 'Admin',
+  gameAdminBadge: 'Administrator',
   gameAdminTip: 'Administratorul jocului: pornește jocul și poate exclude jucători',
   hlColHands: 'Mâini jucate',
   hlComputing: 'Se calculează…',

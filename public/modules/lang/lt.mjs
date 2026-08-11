@@ -10,7 +10,7 @@ export const meta = {
 };
 
 export const strings = {
-  gameAdminBadge: 'Admin',
+  gameAdminBadge: 'Administratorius',
   gameAdminTip: 'Žaidimo administratorius: pradeda žaidimą ir gali išmesti žaidėjus',
   hlColHands: 'Suižaisti dalijimai',
   hlComputing: 'Skaičiuojama…',

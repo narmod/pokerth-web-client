@@ -10,7 +10,7 @@ export const meta = {
 };
 
 export const strings = {
-  gameAdminBadge: 'Διαχ.',
+  gameAdminBadge: 'Διαχειριστής',
   gameAdminTip: 'Διαχειριστής παιχνιδιού: ξεκινά το παιχνίδι και μπορεί να αποβάλλει παίκτες',
   hlColHands: 'Χέρια που παίχτηκαν',
   hlComputing: 'Υπολογισμός…',

@@ -10,7 +10,7 @@ export const meta = {
 };
 
 export const strings = {
-  gameAdminBadge: 'Admin',
+  gameAdminBadge: 'Adminisztrátor',
   gameAdminTip: 'Játékadmin: elindítja a játékot és kirúghat játékosokat',
   hlColHands: 'Lejátszott leosztások',
   hlComputing: 'Számítás…',

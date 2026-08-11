@@ -9,7 +9,7 @@ export const meta = {
 };
 
 export const strings = {
-  gameAdminBadge: 'Admin',
+  gameAdminBadge: 'Administrador',
   gameAdminTip: 'Administrador do jogo: inicia o jogo e pode expulsar jogadores',
   hlColHands: 'Mãos jogadas',
   hlComputing: 'Calculando…',

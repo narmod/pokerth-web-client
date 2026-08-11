@@ -16,7 +16,7 @@ export const meta = {
 };
 
 export const strings = {
-  gameAdminBadge: 'Admin',
+  gameAdminBadge: 'Administrador',
   gameAdminTip: 'Administrador de la partida: inicia la partida y puede expulsar jugadores',
   hlColHands: 'Manos jugadas',
   hlComputing: 'Calculando…',
