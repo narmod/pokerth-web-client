@@ -9,6 +9,9 @@ export const meta = {
 };
 
 export const strings = {
+  rkCalcTitle: 'Розрахунок рейтингу:',
+  rkCalcPoints: 'Очки за місце:',
+  rkCalcFormula: 'Формула:',
   gameAdminBadge: 'Адмін',
   gameAdminTip: 'Адміністратор гри: запускає гру та може виганяти гравців',
   hlColHands: 'Зіграно роздач',

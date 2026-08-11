@@ -8375,6 +8375,13 @@ body.adv-no-forumnews [id^="forum-btn-"], body.adv-no-forumnews #forum-modal { d
 .rk-page-btn:hover:not(:disabled) { border-color: var(--gold); color: var(--gold-hi); }
 .rk-page-btn:disabled { opacity: 0.4; cursor: default; }
 .rk-page-lbl { font-family: var(--ff-mono); font-size: var(--fs-sm); color: var(--text); min-width: 56px; text-align: center; }
+/* Encart « Calcul du classement » (parité QML RankingPage, commit ea33d7a) :
+   boîte discrète sous la liste PokerTH — fond inset + bord, titre gras,
+   lignes en ton atténué, valeurs en mono. */
+.rk-calc { margin-top: 8px; padding: 8px 10px; background: var(--inset); border: 1px solid var(--border); border-radius: 4px; }
+.rk-calc-title { font-size: var(--fs-xs); font-weight: 700; color: var(--text); margin-bottom: 3px; }
+.rk-calc-row { font-size: var(--fs-xs); color: var(--chatlog-muted, var(--text-dim, #9aa3b5)); font-family: var(--ff-mono); overflow-wrap: anywhere; }
+.rk-calc-row span { font-family: inherit; }
 
 /* ═══════════════════════════════════════════════════════════════════
    Menu « liens PokerTH » (écran connect) — regroupe PokerTH.net /

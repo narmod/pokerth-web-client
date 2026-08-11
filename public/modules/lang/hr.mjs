@@ -10,6 +10,9 @@ export const meta = {
 };
 
 export const strings = {
+  rkCalcTitle: 'Izračun poretka:',
+  rkCalcPoints: 'Bodovi za plasman:',
+  rkCalcFormula: 'Formula:',
   gameAdminBadge: 'Administrator',
   gameAdminTip: 'Administrator igre: pokreće igru i može izbaciti igrače',
   hlColHands: 'Odigrane ruke',

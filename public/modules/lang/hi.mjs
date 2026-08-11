@@ -14,6 +14,9 @@ export const meta = {
 };
 
 export const strings = {
+  rkCalcTitle: 'रैंकिंग गणना:',
+  rkCalcPoints: 'स्थान अंक:',
+  rkCalcFormula: 'सूत्र:',
   gameAdminBadge: 'एडमिन',
   gameAdminTip: 'गेम एडमिन: गेम शुरू करता है और खिलाड़ियों को निकाल सकता है',
   hlColHands: 'खेले गए हाथ',

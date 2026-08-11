@@ -10,6 +10,9 @@ export const meta = {
 };
 
 export const strings = {
+  rkCalcTitle: 'Calculul clasamentului:',
+  rkCalcPoints: 'Puncte pentru plasare:',
+  rkCalcFormula: 'Formulă:',
   gameAdminBadge: 'Administrator',
   gameAdminTip: 'Administratorul jocului: pornește jocul și poate exclude jucători',
   hlColHands: 'Mâini jucate',

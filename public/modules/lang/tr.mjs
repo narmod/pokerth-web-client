@@ -12,6 +12,9 @@ export const meta = {
 };
 
 export const strings = {
+  rkCalcTitle: 'Sıralama hesabı:',
+  rkCalcPoints: 'Sıralama puanları:',
+  rkCalcFormula: 'Formül:',
   gameAdminBadge: 'Yönetici',
   gameAdminTip: 'Oyun yöneticisi: oyunu başlatır ve oyuncuları atabilir',
   hlColHands: 'Oynanan eller',

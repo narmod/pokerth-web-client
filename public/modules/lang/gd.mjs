@@ -11,6 +11,9 @@ export const meta = {
 };
 
 export const strings = {
+  rkCalcTitle: 'Àireamhachadh an rangachaidh:',
+  rkCalcPoints: 'Puingean suímh:',
+  rkCalcFormula: 'Foirmle:',
   gameAdminBadge: 'Rianaire',
   gameAdminTip: 'Rianaire a\' gheama: tòisichidh e an geama agus is urrainn dha cluicheadairean a thilgeil a-mach',
   hlColHands: 'Làmhan air an cluich',

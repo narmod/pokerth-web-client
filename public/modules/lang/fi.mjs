@@ -9,6 +9,9 @@ export const meta = {
 };
 
 export const strings = {
+  rkCalcTitle: 'Sijoituslaskenta:',
+  rkCalcPoints: 'Sijoituspisteet:',
+  rkCalcFormula: 'Kaava:',
   gameAdminBadge: 'Ylläpitäjä',
   gameAdminTip: 'Pelin ylläpitäjä: aloittaa pelin ja voi poistaa pelaajia',
   hlColHands: 'Pelatut kädet',

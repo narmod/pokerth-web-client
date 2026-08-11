@@ -15,6 +15,9 @@ export const meta = {
 };
 
 export const strings = {
+  rkCalcTitle: 'Ranglijstberekening:',
+  rkCalcPoints: 'Plaatsingspunten:',
+  rkCalcFormula: 'Formule:',
   gameAdminBadge: 'Beheerder',
   gameAdminTip: 'Spelbeheerder: start het spel en kan spelers verwijderen',
   hlColHands: 'Gespeelde handen',

@@ -10,6 +10,9 @@ export const meta = {
 };
 
 export const strings = {
+  rkCalcTitle: 'Cálculo da clasificación:',
+  rkCalcPoints: 'Puntos por posición:',
+  rkCalcFormula: 'Fórmula:',
   gameAdminBadge: 'Administrador',
   gameAdminTip: 'Administrador da partida: inicia a partida e pode expulsar xogadores',
   hlColHands: 'Mans xogadas',

@@ -2680,6 +2680,15 @@ if ('serviceWorker' in navigator) {
       <div id="rk-table-wrap" style="display:none"></div>
       <div id="rk-ach-wrap" style="display:none"></div>
       <div id="rk-pager" class="rk-pager" style="display:none"></div>
+      <!-- Calcul du classement (parité QML RankingPage, commit ea33d7a) :
+           le même encart que sous le leaderboard de pokerth.net. Valeurs
+           reprises telles quelles (non traduisibles), libellés i18n.
+           Visible uniquement pour le classement PokerTH (pas BBC/WEC). -->
+      <div id="rk-calc" class="rk-calc" style="display:none">
+        <div class="rk-calc-title" data-i18n="rkCalcTitle">Ranking calculation:</div>
+        <div class="rk-calc-row"><span data-i18n="rkCalcPoints">Placement points:</span> 1.&nbsp;=&nbsp;15 | 2.&nbsp;=&nbsp;9 | 3.&nbsp;=&nbsp;6 | 4.&nbsp;=&nbsp;4 | 5.&nbsp;=&nbsp;3 | 6.&nbsp;=&nbsp;2 | 7.&nbsp;=&nbsp;1</div>
+        <div class="rk-calc-row"><span data-i18n="rkCalcFormula">Formula:</span> 25 * average * (1 - 10000 / (10000 + games^3))</div>
+      </div>
     </div>
     <div id="rk-profile" style="display:none">
       <button type="button" class="rk-back" onclick="rankingBackToList()" title="Back" data-i18n-title="rankingBack" aria-label="Back">←</button>
@@ -3034,6 +3043,9 @@ if ('serviceWorker' in navigator) {
     });
     var tw = $('rk-table-wrap'); if (tw) tw.style.display = (which === 'table') ? '' : 'none';
     var sw = $('rk-search-wrap'); if (sw) sw.style.display = (which === 'table' || which === 'nomatch' || which === 'loading') ? '' : 'none';
+    // Encart « Calcul du classement » (parité QML RankingPage) : PokerTH
+    // uniquement — le QML l'affiche en permanence sur la page, on suit.
+    var cc = $('rk-calc'); if (cc) cc.style.display = (RK_SRC === 'pth') ? '' : 'none';
   }
 
   function rkBuildTable(rows, cols) {
@@ -3613,7 +3625,7 @@ if ('serviceWorker' in navigator) {
     rkSetView('list');
     var tabs = document.querySelectorAll('#ranking-modal .rk-tab');
     for (var i = 0; i < tabs.length; i++) tabs[i].classList.toggle('active', tabs[i].dataset.src === 'ach');
-    ['rk-controls', 'rk-search-wrap', 'rk-loading', 'rk-soon', 'rk-error', 'rk-empty', 'rk-nomatch', 'rk-table-wrap', 'rk-pager'].forEach(function (id) { var e = document.getElementById(id); if (e) e.style.display = 'none'; });
+    ['rk-controls', 'rk-search-wrap', 'rk-loading', 'rk-soon', 'rk-error', 'rk-empty', 'rk-nomatch', 'rk-table-wrap', 'rk-pager', 'rk-calc'].forEach(function (id) { var e = document.getElementById(id); if (e) e.style.display = 'none'; });
     var w = document.getElementById('rk-ach-wrap'); if (w) { w.innerHTML = rkAchRender(); w.style.display = ''; }
   };
   try {

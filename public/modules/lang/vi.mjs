@@ -10,6 +10,9 @@ export const meta = {
 };
 
 export const strings = {
+  rkCalcTitle: 'Cách tính xếp hạng:',
+  rkCalcPoints: 'Điểm theo thứ hạng:',
+  rkCalcFormula: 'Công thức:',
   gameAdminBadge: 'Quản trị',
   gameAdminTip: 'Quản trị viên bàn chơi: bắt đầu ván và có thể loại người chơi',
   hlColHands: 'Số ván đã chơi',

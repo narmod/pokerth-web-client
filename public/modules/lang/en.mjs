@@ -16,6 +16,9 @@ export const meta = {
 };
 
 export const strings = {
+  rkCalcTitle: 'Ranking calculation:',
+  rkCalcPoints: 'Placement points:',
+  rkCalcFormula: 'Formula:',
   gameAdminBadge: 'Admin',
   gameAdminTip: 'Game admin: starts the game and can kick players',
   hlColHands: 'Hands played',

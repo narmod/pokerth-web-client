@@ -10,6 +10,9 @@ export const meta = {
 };
 
 export const strings = {
+  rkCalcTitle: 'Изчисляване на класацията:',
+  rkCalcPoints: 'Точки за класиране:',
+  rkCalcFormula: 'Формула:',
   gameAdminBadge: 'Админ',
   gameAdminTip: 'Администратор на играта: стартира играта и може да изгонва играчи',
   hlColHands: 'Изиграни раздавания',

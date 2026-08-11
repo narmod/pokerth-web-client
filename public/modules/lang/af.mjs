@@ -10,6 +10,9 @@ export const meta = {
 };
 
 export const strings = {
+  rkCalcTitle: 'Ranglysberekening:',
+  rkCalcPoints: 'Plasingspunte:',
+  rkCalcFormula: 'Formule:',
   gameAdminBadge: 'Administrateur',
   gameAdminTip: 'Speladmin: begin die spel en kan spelers uitskop',
   hlColHands: 'Hande gespeel',

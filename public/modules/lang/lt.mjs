@@ -10,6 +10,9 @@ export const meta = {
 };
 
 export const strings = {
+  rkCalcTitle: 'Reitingo skaičiavimas:',
+  rkCalcPoints: 'Vietos taškai:',
+  rkCalcFormula: 'Formulė:',
   gameAdminBadge: 'Administratorius',
   gameAdminTip: 'Žaidimo administratorius: pradeda žaidimą ir gali išmesti žaidėjus',
   hlColHands: 'Suižaisti dalijimai',

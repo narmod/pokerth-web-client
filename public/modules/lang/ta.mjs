@@ -11,6 +11,9 @@ export const meta = {
 };
 
 export const strings = {
+  rkCalcTitle: 'தரவரிசை கணக்கீடு:',
+  rkCalcPoints: 'இட புள்ளிகள்:',
+  rkCalcFormula: 'சூத்திரம்:',
   gameAdminBadge: 'நிர்வாகி',
   gameAdminTip: 'விளையாட்டு நிர்வாகி: விளையாட்டைத் தொடங்குவார், வீரர்களை வெளியேற்றலாம்',
   hlColHands: 'ஆடிய கைகள்',

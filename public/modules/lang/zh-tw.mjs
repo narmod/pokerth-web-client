@@ -11,6 +11,9 @@ export const meta = {
 };
 
 export const strings = {
+  rkCalcTitle: '排名計算：',
+  rkCalcPoints: '名次積分：',
+  rkCalcFormula: '公式：',
   gameAdminBadge: '管理員',
   gameAdminTip: '遊戲管理員：開始遊戲並可踢出玩家',
   hlColHands: '已玩牌局數',

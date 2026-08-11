@@ -10,6 +10,9 @@ export const meta = {
 };
 
 export const strings = {
+  rkCalcTitle: 'Израчунавање ранг листе:',
+  rkCalcPoints: 'Поени за пласман:',
+  rkCalcFormula: 'Формула:',
   gameAdminBadge: 'Админ',
   gameAdminTip: 'Администратор игре: покреће игру и може избацити играче',
   hlColHands: 'Одигране руке',

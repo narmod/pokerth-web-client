@@ -15,6 +15,9 @@ export const meta = {
 };
 
 export const strings = {
+  rkCalcTitle: 'Punkteberechnung:',
+  rkCalcPoints: 'Platzierungspunkte:',
+  rkCalcFormula: 'Formel:',
   gameAdminBadge: 'Admin',
   gameAdminTip: 'Spiel-Admin: startet das Spiel und kann Spieler entfernen',
   hlColHands: 'Gespielte Hände',

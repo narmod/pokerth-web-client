@@ -10,6 +10,9 @@ export const meta = {
 };
 
 export const strings = {
+  rkCalcTitle: 'Υπολογισμός κατάταξης:',
+  rkCalcPoints: 'Πόντοι θέσης:',
+  rkCalcFormula: 'Τύπος:',
   gameAdminBadge: 'Διαχειριστής',
   gameAdminTip: 'Διαχειριστής παιχνιδιού: ξεκινά το παιχνίδι και μπορεί να αποβάλλει παίκτες',
   hlColHands: 'Χέρια που παίχτηκαν',

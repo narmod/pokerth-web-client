@@ -10,6 +10,9 @@ export const meta = {
 };
 
 export const strings = {
+  rkCalcTitle: 'Rangsorszámítás:',
+  rkCalcPoints: 'Helyezési pontok:',
+  rkCalcFormula: 'Képlet:',
   gameAdminBadge: 'Adminisztrátor',
   gameAdminTip: 'Játékadmin: elindítja a játékot és kirúghat játékosokat',
   hlColHands: 'Lejátszott leosztások',

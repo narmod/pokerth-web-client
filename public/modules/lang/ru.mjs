@@ -15,6 +15,9 @@ export const meta = {
 };
 
 export const strings = {
+  rkCalcTitle: 'Расчёт рейтинга:',
+  rkCalcPoints: 'Очки за место:',
+  rkCalcFormula: 'Формула:',
   gameAdminBadge: 'Админ',
   gameAdminTip: 'Администратор игры: запускает игру и может исключать игроков',
   hlColHands: 'Сыграно раздач',

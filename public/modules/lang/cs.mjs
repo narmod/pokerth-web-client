@@ -10,6 +10,9 @@ export const meta = {
 };
 
 export const strings = {
+  rkCalcTitle: 'Výpočet žebříčku:',
+  rkCalcPoints: 'Body za umístění:',
+  rkCalcFormula: 'Vzorec:',
   gameAdminBadge: 'Správce',
   gameAdminTip: 'Správce hry: spouští hru a může vyhazovat hráče',
   hlColHands: 'Odehrané rozdání',

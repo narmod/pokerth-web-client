@@ -13,6 +13,9 @@ export const meta = {
 };
 
 export const strings = {
+  rkCalcTitle: '랭킹 계산:',
+  rkCalcPoints: '순위 포인트:',
+  rkCalcFormula: '공식:',
   gameAdminBadge: '관리자',
   gameAdminTip: '게임 관리자: 게임을 시작하고 플레이어를 추방할 수 있습니다',
   hlColHands: '플레이한 펌 수',

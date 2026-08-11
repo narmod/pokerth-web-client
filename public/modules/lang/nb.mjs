@@ -9,6 +9,9 @@ export const meta = {
 };
 
 export const strings = {
+  rkCalcTitle: 'Rangeringsberegning:',
+  rkCalcPoints: 'Plasseringspoeng:',
+  rkCalcFormula: 'Formel:',
   gameAdminBadge: 'Administrator',
   gameAdminTip: 'Spilladministrator: starter spillet og kan kaste ut spillere',
   hlColHands: 'Spilte hender',

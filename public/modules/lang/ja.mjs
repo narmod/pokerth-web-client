@@ -9,6 +9,9 @@ export const meta = {
 };
 
 export const strings = {
+  rkCalcTitle: 'ランキングの計算:',
+  rkCalcPoints: '順位ポイント:',
+  rkCalcFormula: '計算式:',
   gameAdminBadge: '管理者',
   gameAdminTip: 'ゲーム管理者：ゲームを開始し、プレイヤーをキックできます',
   hlColHands: 'プレイしたハンド数',

@@ -16,6 +16,9 @@ export const meta = {
 };
 
 export const strings = {
+  rkCalcTitle: 'Obliczanie rankingu:',
+  rkCalcPoints: 'Punkty za miejsce:',
+  rkCalcFormula: 'Wzór:',
   gameAdminBadge: 'Administrator',
   gameAdminTip: 'Administrator gry: rozpoczyna grę i może wyrzucać graczy',
   hlColHands: 'Rozegrane rozdania',

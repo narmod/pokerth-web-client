@@ -16,6 +16,9 @@ export const meta = {
 };
 
 export const strings = {
+  rkCalcTitle: 'Cálculo de la clasificación:',
+  rkCalcPoints: 'Puntos por posición:',
+  rkCalcFormula: 'Fórmula:',
   gameAdminBadge: 'Administrador',
   gameAdminTip: 'Administrador de la partida: inicia la partida y puede expulsar jugadores',
   hlColHands: 'Manos jugadas',

@@ -9,6 +9,9 @@ export const meta = {
 };
 
 export const strings = {
+  rkCalcTitle: 'Cálculo do ranking:',
+  rkCalcPoints: 'Pontos por posição:',
+  rkCalcFormula: 'Fórmula:',
   gameAdminBadge: 'Administrador',
   gameAdminTip: 'Administrador do jogo: inicia o jogo e pode expulsar jogadores',
   hlColHands: 'Mãos jogadas',
