@@ -4601,8 +4601,57 @@ function forumCleanHtml(html) {
        .replace(/line-height\s*:[^;"'>]*;?/gi, '');
   // separateurs residuels en fin de post
   s = s.replace(/(?:\s|<hr\s*\/?>|<br\s*\/?>)+$/i, '');
+  // Images via le relais /api/forumimg : le hotlink direct depuis un
+  // navigateur est bloque par Cloudflare (l'AppImage passe grace a l'UA
+  // whiteliste, que le relais utilise aussi).
+  s = s.replace(/src="(https:\/\/(?:www\.)?pokerth\.net\/[^"]*)"/gi, function (all, u) {
+    return 'src="/api/forumimg?u=' + encodeURIComponent(u) + '"';
+  });
   if (s.length > FORUM_HTML_MAX) s = s.slice(0, FORUM_HTML_MAX);
   return s;
+}
+
+// ── Relais des images de posts (logos, pieces jointes du forum) ──
+// Meme modele que le relais des recompenses (handleAwardImg) : UA
+// whiteliste, cache memoire borne, Content-Type transmis. Strictement
+// limite a pokerth.net pour ne pas devenir un proxy ouvert.
+const FORUMIMG_CACHE = new Map();
+const FORUMIMG_CACHE_MAX = 24;
+const FORUMIMG_TTL_MS = 24 * 3600 * 1000;
+const FORUMIMG_MAX_BYTES = 4 * 1024 * 1024;   // au-dela : servi mais pas cache
+function handleForumImg(req, res, query) {
+  const u = String((query && query.u) || '');
+  if (!/^https:\/\/(www\.)?pokerth\.net\//i.test(u)) {
+    res.writeHead(400, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' });
+    res.end(JSON.stringify({ ok: false, error: 'bad_image_url' }));
+    return;
+  }
+  const hit = FORUMIMG_CACHE.get(u);
+  if (hit && (Date.now() - hit.at) < FORUMIMG_TTL_MS) {
+    res.writeHead(200, { 'Content-Type': hit.type, 'Cache-Control': 'public, max-age=86400', 'X-Forum-Cache': 'hit' });
+    res.end(hit.buf);
+    return;
+  }
+  rankingFetch(u, { 'Accept': 'image/*' }).then(function (r) {
+    if (!r.ok) {
+      res.writeHead(502, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' });
+      res.end(JSON.stringify({ ok: false, error: 'upstream_' + r.status }));
+      return null;
+    }
+    const type = r.headers.get('content-type') || 'image/png';
+    return r.arrayBuffer().then(function (ab) {
+      const buf = Buffer.from(ab);
+      if (buf.length <= FORUMIMG_MAX_BYTES) {
+        if (FORUMIMG_CACHE.size >= FORUMIMG_CACHE_MAX) FORUMIMG_CACHE.clear();
+        FORUMIMG_CACHE.set(u, { at: Date.now(), type: type, buf: buf });
+      }
+      res.writeHead(200, { 'Content-Type': type, 'Cache-Control': 'public, max-age=86400', 'X-Forum-Cache': 'miss' });
+      res.end(buf);
+    });
+  }).catch(function (err) {
+    res.writeHead(502, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' });
+    res.end(JSON.stringify({ ok: false, error: 'relay_failed', detail: String((err && err.message) || err) }));
+  });
 }
 function forumExcerpt(html) {
   let s = String(html || '');
@@ -4948,6 +4997,10 @@ const httpServer = http.createServer((req, res) => {
   }
   if (reqPathOnly === '/api/forumfeed') {
     handleForumFeed(req, res);
+    return;
+  }
+  if (reqPathOnly === '/api/forumimg') {
+    handleForumImg(req, res, query);
     return;
   }
 

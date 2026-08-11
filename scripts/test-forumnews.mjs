@@ -126,7 +126,7 @@ const dirtyFeed = feed.replace('Hi, thanks!<br>long html body',
 const cleaned = parseAtom(dirtyFeed)[0].html;
 ok(cleaned.indexOf('<script') < 0, 'cleanHtml strips <script> blocks');
 ok(cleaned.indexOf('onclick') < 0, 'cleanHtml strips inline handlers');
-ok(cleaned.indexOf('src="https://www.pokerth.net/images/bbc_logo.png"') >= 0, 'cleanHtml absolutizes /-relative URLs');
+ok(cleaned.indexOf('src="/api/forumimg?u=' + encodeURIComponent('https://www.pokerth.net/images/bbc_logo.png') + '"') >= 0, 'cleanHtml routes images through the relay (Cloudflare hotlink)');
 ok(cleaned.indexOf('href="https://www.pokerth.net/viewtopic.php?t=5"') >= 0, 'cleanHtml absolutizes ./-relative URLs');
 ok(cleaned.indexOf('font-family') < 0, 'cleanHtml drops font-family (app font wins)');
 ok(cleaned.indexOf('Statistics: Posted by') < 0, 'cleanHtml drops the phpBB footer');
@@ -135,6 +135,7 @@ ok(cleaned.indexOf('color:goldenrod') >= 0, 'cleanHtml keeps colors (theme adapt
 // ── 6) client-side helpers: plain text + readable colors ───────────────
 ok(F.fnPlainText('<div>Hello <b>world</b><br>x &amp; y</div>') === 'Hello world x & y', 'fnPlainText strips tags and decodes entities');
 ok(F.fnPlainText('a'.repeat(300), 100).endsWith('\u2026'), 'fnPlainText truncates with an ellipsis');
+ok(F.fnBlockText('<div>1. one</div><div>2. two</div><p>para</p>') === '1. one\n2. two\npara', 'fnBlockText keeps block structure as newlines (translation source)');
 ok(F.fnReadableColor('black', true) !== 'black' && F.fnReadableColor('black', false) === 'black', 'black is lightened on dark themes only');
 ok(F.fnReadableColor('#ffff00', false) !== '#ffff00' && F.fnReadableColor('#ffff00', true) === '#ffff00', 'light yellow is darkened on light themes only');
 ok(F.fnReadableColor('brightred', true) === 'brightred' || /^#/.test(F.fnReadableColor('brightred', true)), 'phpBB color names are understood');

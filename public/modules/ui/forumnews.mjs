@@ -67,7 +67,28 @@ export function fnForumClass(name) {
   return 'fn-c' + (h % 8);
 }
 
-// Texte brut d'un post (source de traduction) — pendant de plainText() QML.
+// Texte brut d'un post, structure preservee : les fins de blocs deviennent
+// des sauts de ligne pour que la traduction garde la mise en forme (liste de
+// resultats ligne a ligne, paragraphes). Affiche en pre-wrap cote CSS.
+export function fnBlockText(html, limit) {
+  let s = String(html || '')
+    .replace(/<(?:br|\/p|\/div|\/li|\/dt|\/dd|\/tr|hr)[^>]*>/gi, '\n')
+    .replace(/<[^>]+>/g, ' ')
+    .replace(/&nbsp;/gi, ' ')
+    .replace(/&lt;/g, '<').replace(/&gt;/g, '>')
+    .replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&amp;/g, '&');
+  s = s.split('\n').map(function (l) { return l.replace(/\s+/g, ' ').trim(); }).join('\n')
+       .replace(/\n{3,}/g, '\n\n').replace(/^\n+|\n+$/g, '');
+  if (limit && s.length > limit) {
+    s = s.slice(0, limit);
+    const cut = Math.max(s.lastIndexOf('\n'), s.lastIndexOf(' '));
+    if (cut > limit * 0.6) s = s.slice(0, cut);
+    s += '\u2026';
+  }
+  return s;
+}
+
+// Texte brut aplati (compat/tests) — pendant de plainText() QML.
 export function fnPlainText(html, limit) {
   let s = String(html || '')
     .replace(/<(?:br|\/p|\/div|\/li|hr)[^>]*>/gi, ' ')
@@ -265,12 +286,10 @@ function _showListView() {
   _curPost = null; _trState = null;
   const post = document.getElementById('fn-post');
   const lw = document.getElementById('fn-listwrap');
-  const back = document.getElementById('fn-back');
   const footL = document.getElementById('fn-foot-list');
   const footP = document.getElementById('fn-foot-post');
   if (post) post.style.display = 'none';
   if (lw) lw.style.display = '';
-  if (back) back.style.display = 'none';
   if (footL) footL.style.display = '';
   if (footP) footP.style.display = 'none';
   if (_cache) _renderList(_cache.posts);
@@ -320,13 +339,11 @@ function _openPostView(p) {
   _curPost = p; _trState = null;
   const post = document.getElementById('fn-post');
   const lw = document.getElementById('fn-listwrap');
-  const back = document.getElementById('fn-back');
   const footL = document.getElementById('fn-foot-list');
   const footP = document.getElementById('fn-foot-post');
   if (!post) return;
   if (lw) lw.style.display = 'none';
   post.style.display = '';
-  if (back) back.style.display = '';
   if (footL) footL.style.display = 'none';
   if (footP) footP.style.display = '';
   const badge = document.getElementById('fnp-badge');
@@ -385,7 +402,7 @@ function forumTranslatePost() {
     if (btn) { btn.classList.add('tr-active'); btn.title = _t('forumShowOriginal', 'Show the original post'); btn.setAttribute('aria-label', btn.title); }
   };
   if (_trState && _trState.text) { show(_trState.text); return; }
-  const source = fnPlainText(p.html || p.excerpt || '', TRANSLATE_MAX);
+  const source = fnBlockText(p.html || p.excerpt || '', TRANSLATE_MAX);
   if (!source) return;
   if (errEl) errEl.textContent = '';
   if (btn) btn.disabled = true;

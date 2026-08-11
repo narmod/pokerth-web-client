@@ -8279,7 +8279,6 @@ html[data-seat-edit="1"] #g-seats .seat.seat-ghost { outline: none; cursor: defa
 .fnp-body dl.file dt { margin: 6px 0; }
 .fnp-body.fnp-translated { font-style: italic; white-space: pre-wrap; }
 .fn-foot .fnp-error { flex: 1; align-self: center; text-align: right; font-size: var(--fs-2xs); color: var(--red); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.fn-back { right: auto; left: 10px; }
 .rk-tab.fn-btn-off, .rk-tab:disabled { opacity: 0.5; cursor: default; }
 .fn-dot { flex-shrink: 0; box-sizing: border-box; width: 8px; height: 8px; border-radius: 50%; background: var(--gold); margin-top: 6px; box-shadow: 0 0 4px rgba(var(--gold-rgb), 0.55); }
 /* Lu : anneau vide (l'inverse de la pastille pleine « non lu »). */
