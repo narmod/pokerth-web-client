@@ -981,6 +981,7 @@ function seoBodyBlock() {
     '<p>Features: full Texas Hold\u2019em rules, up to 10 players per table, 36 interface languages, voice announcements, ' +
     'music player, customizable card decks and table styles, and complete feature parity with the official PokerTH desktop client.</p>' +
     '<p>Free software \u2014 source code on GitHub (narmod/pokerth-web-client), based on PokerTH by the PokerTH Development Team.</p>' +
+    '<p><a href="/rules">Texas Hold\u2019em rules</a> \u2014 <a href="/faq">FAQ</a> \u2014 <a href="/privacy">Privacy</a></p>' +
     '</div>';
 }
 
@@ -999,9 +1000,150 @@ function seoLlmsTxt(base) {
     '- Free and open source (based on PokerTH by the PokerTH Development Team)\n' +
     '- 36 interface languages; poker terms (Fold/Check/Call/Raise/All-In) stay in English\n' +
     '- Feature parity with the official PokerTH desktop client\n' +
-    (u ? '\n## Links\n\n- Play: ' + u + '/\n' : '\n## Links\n\n') +
+    (u ? '\n## Links\n\n- Play: ' + u + '/\n- Texas Hold\u2019em rules: ' + u + '/rules\n- FAQ: ' + u + '/faq\n' : '\n## Links\n\n') +
     '- Source code: https://github.com/narmod/pokerth-web-client\n' +
     '- PokerTH project: https://www.pokerth.net/\n';
+}
+
+// ── SEO content pages — /rules and /faq, rendered server-side ──────────────
+// The app itself is an empty shell until JS boots, so these two static pages
+// carry the crawlable substance: full Texas Hold'em rules and an FAQ with
+// FAQPage JSON-LD. Same serve-time policy as /privacy: always reachable, but
+// noindex (and no canonical / JSON-LD) while the admin SEO toggle is off.
+var _SEO_PAGE_CSS = 'body{margin:0;background:#0d1117;color:#d8dde4;font:16px/1.65 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}' +
+  'main{max-width:720px;margin:0 auto;padding:28px 20px 60px}' +
+  'h1{font-size:1.7em;color:#fff;margin:.4em 0 .6em}h2{font-size:1.2em;color:#fff;margin:1.5em 0 .5em}' +
+  'a{color:#5ab0f7;text-decoration:none}a:hover{text-decoration:underline}' +
+  'nav{padding:14px 20px;background:#161b22;border-bottom:1px solid #30363d;font-size:.95em}' +
+  'nav a{margin-right:14px}ul{padding-left:1.3em}li{margin:.3em 0}' +
+  'dt{font-weight:600;color:#fff;margin-top:1.1em}dd{margin:.3em 0 0 0}' +
+  '.play{display:inline-block;margin-top:26px;padding:10px 22px;background:#1f6feb;color:#fff;border-radius:6px;font-weight:600}';
+
+function _seoPageNav() {
+  return '<nav><a href="/">\u25b6 Play now</a><a href="/rules">Rules</a><a href="/faq">FAQ</a><a href="/privacy">Privacy</a>' +
+    '<a href="https://github.com/narmod/pokerth-web-client" rel="noopener">Source</a></nav>';
+}
+
+function seoContentPage(res, method, title, desc, relPath, bodyHtml, ld) {
+  var on = seoEnabled(), base = on ? seoPublicUrl() : '';
+  var head;
+  if (on) {
+    head = '<meta name="description" content="' + desc + '">' +
+      (base ? '<link rel="canonical" href="' + base + relPath + '">' : '') +
+      '<meta property="og:type" content="article"><meta property="og:site_name" content="PokerTH">' +
+      '<meta property="og:title" content="' + title + '">' +
+      '<meta property="og:description" content="' + desc + '">' +
+      (base ? '<meta property="og:url" content="' + base + relPath + '">' : '') +
+      (ld ? '<script type="application/ld+json">' + JSON.stringify(ld) + '</script>' : '');
+  } else {
+    head = '<meta name="robots" content="noindex, nofollow">';
+  }
+  var html = '<!DOCTYPE html><html lang="en"><head><meta charset="utf-8">' +
+    '<meta name="viewport" content="width=device-width, initial-scale=1">' +
+    '<title>' + title + '</title>' + head + '<style>' + _SEO_PAGE_CSS + '</style></head><body>' +
+    _seoPageNav() + '<main>' + bodyHtml +
+    '<a class="play" href="/">Play PokerTH in your browser \u2014 free, no download</a>' +
+    '</main></body></html>';
+  var buf = Buffer.from(html, 'utf8');
+  res.writeHead(200, Object.assign({ 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-cache, must-revalidate', 'Content-Length': buf.length }, SECURITY_HEADERS));
+  if (method === 'HEAD') { res.end(); return; }
+  res.end(buf);
+}
+
+function seoRulesPage(res, method) {
+  var body = '<h1>Texas Hold\u2019em Poker Rules</h1>' +
+    '<p>PokerTH plays No-Limit Texas Hold\u2019em, the most popular poker variant in the world. ' +
+    'Each player tries to make the best five-card hand from two private cards and five shared community cards.</p>' +
+    '<h2>The deal and the blinds</h2>' +
+    '<p>Every hand starts with two forced bets: the player left of the dealer button posts the <em>small blind</em>, ' +
+    'the next player posts the <em>big blind</em>. Each player is then dealt two face-down cards (the <em>hole cards</em>). ' +
+    'The dealer button moves one seat clockwise after every hand, and in PokerTH the blinds rise at regular intervals.</p>' +
+    '<h2>The four betting rounds</h2>' +
+    '<ul>' +
+    '<li><strong>Pre-flop</strong> \u2014 after receiving their hole cards, players act in turn, starting left of the big blind.</li>' +
+    '<li><strong>Flop</strong> \u2014 three community cards are dealt face up, followed by a betting round.</li>' +
+    '<li><strong>Turn</strong> \u2014 a fourth community card is dealt, followed by another betting round.</li>' +
+    '<li><strong>River</strong> \u2014 the fifth and last community card is dealt, followed by the final betting round.</li>' +
+    '</ul>' +
+    '<h2>The actions</h2>' +
+    '<ul>' +
+    '<li><strong>Fold</strong> \u2014 give up the hand and any chips already bet.</li>' +
+    '<li><strong>Check</strong> \u2014 pass the action without betting (only if nobody has bet in the current round).</li>' +
+    '<li><strong>Call</strong> \u2014 match the current highest bet.</li>' +
+    '<li><strong>Raise</strong> \u2014 increase the current bet. In No-Limit, any amount up to your whole stack.</li>' +
+    '<li><strong>All-In</strong> \u2014 bet every chip you have. If others keep betting beyond that, side pots are created ' +
+    'so you can only win the part of the pot you contributed to.</li>' +
+    '</ul>' +
+    '<h2>The showdown</h2>' +
+    '<p>If two or more players remain after the river betting round, hands are revealed. The best five-card combination ' +
+    'out of the seven available cards (two hole cards + five community cards) wins the pot. Equal hands split the pot.</p>' +
+    '<h2>Hand rankings, from strongest to weakest</h2>' +
+    '<ol>' +
+    '<li><strong>Royal Flush</strong> \u2014 A K Q J 10, all the same suit.</li>' +
+    '<li><strong>Straight Flush</strong> \u2014 five consecutive cards of the same suit.</li>' +
+    '<li><strong>Four of a Kind</strong> \u2014 four cards of the same rank.</li>' +
+    '<li><strong>Full House</strong> \u2014 three of a kind plus a pair.</li>' +
+    '<li><strong>Flush</strong> \u2014 five cards of the same suit.</li>' +
+    '<li><strong>Straight</strong> \u2014 five consecutive cards of mixed suits.</li>' +
+    '<li><strong>Three of a Kind</strong> \u2014 three cards of the same rank.</li>' +
+    '<li><strong>Two Pair</strong> \u2014 two different pairs.</li>' +
+    '<li><strong>One Pair</strong> \u2014 two cards of the same rank.</li>' +
+    '<li><strong>High Card</strong> \u2014 none of the above; the highest card decides.</li>' +
+    '</ol>' +
+    '<h2>Tournament play in PokerTH</h2>' +
+    '<p>PokerTH games are sit-and-go style tournaments: everyone starts with the same stack, blinds increase over time, ' +
+    'and the last player holding chips wins. You can practice offline against computer opponents, play on a LAN or a ' +
+    'private server, or join the official pokerth.net network with seasonal rankings.</p>';
+  var ld = {
+    '@context': 'https://schema.org', '@type': 'Article',
+    headline: 'Texas Hold\u2019em Poker Rules \u2014 PokerTH',
+    description: 'How to play No-Limit Texas Hold\u2019em: blinds, betting rounds, actions and hand rankings, as played in PokerTH.',
+    author: { '@type': 'Organization', name: 'PokerTH Development Team' },
+    inLanguage: 'en'
+  };
+  var base = seoEnabled() ? seoPublicUrl() : '';
+  if (base) ld.mainEntityOfPage = base + '/rules';
+  seoContentPage(res, method, 'Texas Hold\u2019em Rules \u2014 PokerTH Web Client',
+    'Complete Texas Hold\u2019em rules as played in PokerTH: blinds, the four betting rounds, Fold/Check/Call/Raise/All-In, side pots and hand rankings.',
+    '/rules', body, ld);
+}
+
+var _SEO_FAQ = [
+  ['Is PokerTH free?',
+   'Yes. PokerTH is free and open-source software (GPL). There is nothing to buy, no ads and no real-money gambling \u2014 all chips are play money.'],
+  ['Do I need an account to play?',
+   'No account is needed to practice offline against computer opponents. To play online on the official pokerth.net network you need a free pokerth.net account.'],
+  ['Does it run on mobile?',
+   'Yes. The web client is a Progressive Web App: it runs in any modern browser on desktop, tablet or phone, and can be installed on the home screen like a native app.'],
+  ['Can I play against the computer?',
+   'Yes. The offline mode lets you play full tournaments against computer opponents without any internet connection once the app is loaded.'],
+  ['Is this the official PokerTH client?',
+   'It is the browser version of PokerTH, developed within the PokerTH project by the PokerTH Development Team, alongside the classic desktop client.'],
+  ['What is the difference with the desktop client?',
+   'Same game, same rules, same pokerth.net network \u2014 but it runs directly in the browser with nothing to install, on any operating system.'],
+  ['Which languages are supported?',
+   'The interface is available in 36 languages. Poker action terms (Fold, Check, Call, Raise, All-In) stay in English, as is international convention.'],
+  ['Is real money involved?',
+   'No. PokerTH is strictly a play-money game. Chips have no monetary value and cannot be bought or sold.'],
+  ['What data does the web client collect?',
+   'As little as possible: settings stay in your browser, and no tracking or advertising is used. See the privacy page for details.'],
+  ['Can I host my own server?',
+   'Yes. The PokerTH dedicated server and this web client are both open source, so you can run your own private poker server on a LAN or on the internet.']
+];
+
+function seoFaqPage(res, method) {
+  var body = '<h1>PokerTH Web Client \u2014 Frequently Asked Questions</h1><dl>';
+  var ents = [];
+  for (var i = 0; i < _SEO_FAQ.length; i++) {
+    body += '<dt>' + _SEO_FAQ[i][0] + '</dt><dd>' + _SEO_FAQ[i][1] + '</dd>';
+    ents.push({ '@type': 'Question', name: _SEO_FAQ[i][0],
+      acceptedAnswer: { '@type': 'Answer', text: _SEO_FAQ[i][1] } });
+  }
+  body += '</dl>';
+  var ld = { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: ents };
+  seoContentPage(res, method, 'FAQ \u2014 PokerTH Web Client',
+    'Frequently asked questions about the PokerTH Web Client: free play, accounts, mobile support, offline mode, languages and privacy.',
+    '/faq', body, ld);
 }
 
 // Injected-HTML cache: one live variant, keyed on file mtime + SEO state.
@@ -4389,6 +4531,8 @@ const httpServer = http.createServer((req, res) => {
     var _sXml = '<?xml version="1.0" encoding="UTF-8"?>\n' +
       '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' +
       '<url><loc>' + _sBase + '/</loc><changefreq>weekly</changefreq><priority>1.0</priority></url>\n' +
+      '<url><loc>' + _sBase + '/rules</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>\n' +
+      '<url><loc>' + _sBase + '/faq</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>\n' +
       '<url><loc>' + _sBase + '/privacy</loc><changefreq>yearly</changefreq><priority>0.2</priority></url>\n' +
       '</urlset>\n';
     res.writeHead(200, Object.assign({ 'Content-Type': 'application/xml; charset=utf-8', 'Cache-Control': 'no-cache, must-revalidate' }, SECURITY_HEADERS));
@@ -4400,6 +4544,12 @@ const httpServer = http.createServer((req, res) => {
     res.writeHead(200, Object.assign({ 'Content-Type': 'text/plain; charset=utf-8', 'Cache-Control': 'no-cache, must-revalidate' }, SECURITY_HEADERS));
     res.end(seoLlmsTxt(seoPublicUrl()));
     return;
+  }
+  if (reqPathOnly === '/rules' || reqPathOnly === '/rules.html') {
+    return seoRulesPage(res, req.method);
+  }
+  if (reqPathOnly === '/faq' || reqPathOnly === '/faq.html') {
+    return seoFaqPage(res, req.method);
   }
 
   // Friendly path for the pack-creator Studio, mirroring /admin -> admin.html.
