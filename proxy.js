@@ -5220,7 +5220,17 @@ const httpServer = http.createServer((req, res) => {
   res.writeHead(404); res.end('Not found');
 });
 
-const wss = new WebSocket.Server({ server: httpServer, verifyClient: function (info, cb) {
+// ── WS ingress hardening (proxy-side mirror of upstream PR pokerth#519) ──
+// PokerTH protobuf packets are tiny; the biggest legitimate frame is a relayed
+// AVATARIMG (<= 32 KiB). Anything bigger, malformed, or flooding is hostile.
+const MAX_WS_FRAME_BYTES     = 64 * 1024;   // ws lib closes the socket above this (1009)
+const MAX_WS_PACKET_BYTES    = 60 * 1024;   // sanity bound for one length-prefixed packet
+const MAX_WS_MALFORMED_FRAMES = 10;         // same tolerance as the native TCP receive path
+const WS_RATE_WINDOW_MS       = 1000;       // sliding window for the soft rate limit
+const MAX_WS_MSGS_PER_WINDOW  = 200;        // frames per window per connection
+const MAX_WS_BYTES_PER_WINDOW = 128 * 1024; // bytes per window per connection
+
+const wss = new WebSocket.Server({ server: httpServer, maxPayload: MAX_WS_FRAME_BYTES, verifyClient: function (info, cb) {
   // Bannissement décidé par l'admin : refus à l'upgrade, avant tout pont. La
   // page reste servie — c'est l'accès au JEU via ce proxy qui est coupé.
   if (isBanned(clientIp(info.req))) return cb(false, 403, 'Forbidden');
@@ -5605,6 +5615,17 @@ function _attachWs(S, ws) {
   else if (S.pendingTok) { try { ws.send(S.pendingTok); } catch (e) {} S.pendingTok = null; }
 
   ws.on('message', (data, isBinary) => {
+    // ── Soft per-connection rate limit (frames + bytes, sliding 1 s window).
+    // Generous for legitimate play (actions/chat are a handful of tiny frames
+    // per second); only a flooder can trip it.
+    const _rlNow = Date.now();
+    if (!ws._rlWin || _rlNow - ws._rlWin > WS_RATE_WINDOW_MS) { ws._rlWin = _rlNow; ws._rlMsgs = 0; ws._rlBytes = 0; }
+    ws._rlMsgs++; ws._rlBytes += (data && data.length) || 0;
+    if (ws._rlMsgs > MAX_WS_MSGS_PER_WINDOW || ws._rlBytes > MAX_WS_BYTES_PER_WINDOW) {
+      console.warn('[!] WS rate limit exceeded (' + ws._rlMsgs + ' msgs / ' + ws._rlBytes + 'b in ' + WS_RATE_WINDOW_MS + 'ms) — closing ' + (ws._ip || '?'));
+      try { ws.close(1008, 'rate limit'); } catch (_) {}
+      return;
+    }
     if (!isBinary) {
       const text = data.toString();
       if (text.startsWith('REACT:') || text.startsWith('AVATAR:') || text.startsWith('AVATARIMG:')) {
@@ -5621,8 +5642,29 @@ function _attachWs(S, ws) {
     }
     if (!S.connected || !S.sock || !S.sock.writable) return;
     const buf = Buffer.from(isBinary ? data : data.toString());
+    // ── Frame validation (proxy-side mirror of upstream PR pokerth#519).
+    // A frame must hold one or more COMPLETE length-prefixed packets (4-byte
+    // BE length + payload). Malformed frames are DROPPED, never relayed:
+    // garbage written to the TCP stream would desynchronize the upstream
+    // session for good. Same tolerance as the native path: 10 strikes → close.
+    let _fok = buf.length >= 4, _foff = 0;
+    while (_fok && _foff < buf.length) {
+      if (_foff + 4 > buf.length) { _fok = false; break; }
+      const _pn = buf.readUInt32BE(_foff);
+      if (_pn === 0 || _pn > MAX_WS_PACKET_BYTES || _foff + 4 + _pn > buf.length) { _fok = false; break; }
+      _foff += 4 + _pn;
+    }
+    if (!_fok) {
+      ws._badFrames = (ws._badFrames || 0) + 1;
+      console.warn('[!] Malformed WS frame (' + buf.length + 'b, ' + ws._badFrames + '/' + MAX_WS_MALFORMED_FRAMES + ') from ' + (ws._ip || '?') + ' — dropped');
+      if (ws._badFrames >= MAX_WS_MALFORMED_FRAMES) {
+        console.warn('[!] Too many malformed WS frames — closing ' + (ws._ip || '?'));
+        try { ws.close(1008, 'malformed frames'); } catch (_) {}
+      }
+      return;
+    }
     S.bIn = (S.bIn || 0) + buf.length;
-    if (buf.length >= 4) {
+    {
       const _n  = buf.readUInt32BE(0);
       const _pl = buf.slice(4, 4 + _n);
       _discordTapC2S(S, _pl);   // relais Discord du chat lobby (no-op si non configuré) — JAMAIS gated
