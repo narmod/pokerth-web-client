@@ -2168,7 +2168,7 @@ function broadcastNotice(text, target) {
   // mode (ws._bcMode : 'pthnet' | 'lan' | 'offline') correspond.
   const tgt = (target && target !== 'all') ? target : null;
   let n = 0;
-  try { wss.clients.forEach(function (c) { if (c.readyState === 1 && (!tgt || c._bcMode === tgt)) { try { c.send(text); n++; } catch (e) {} } }); } catch (e) {}
+  try { wss.clients.forEach(function (c) { if (c.readyState === 1 && (!tgt || c._bcMode === tgt) && c.bufferedAmount <= MAX_WS_SEND_QUEUE) { try { c.send(text); n++; } catch (e) {} } }); } catch (e) {}
   return n;
 }
 function clearScheduledRestart() {
@@ -5229,6 +5229,7 @@ const MAX_WS_MALFORMED_FRAMES = 10;         // same tolerance as the native TCP 
 const WS_RATE_WINDOW_MS       = 1000;       // sliding window for the soft rate limit
 const MAX_WS_MSGS_PER_WINDOW  = 200;        // frames per window per connection
 const MAX_WS_BYTES_PER_WINDOW = 128 * 1024; // bytes per window per connection
+const MAX_WS_SEND_QUEUE       = 1024 * 1024; // outbound queue cap per socket (mirror of pokerth#518)
 
 const wss = new WebSocket.Server({ server: httpServer, maxPayload: MAX_WS_FRAME_BYTES, verifyClient: function (info, cb) {
   // Bannissement décidé par l'admin : refus à l'upgrade, avant tout pont. La
@@ -5559,11 +5560,23 @@ function _openUpstream(S) {
           if (_ll >= 2 && (msgLen <= 64 || d.name.includes('Error') || d.name === '?' || d.name.includes('Flop') || d.name.includes('Turn') || d.name.includes('River') || d.name.includes('Hand')))
             console.log('      hex: ' + payload.toString('hex'));
           // Navigateur attaché → envoyer ; sinon (session en attente) → tamponner.
-          if (S.ws && S.ws.readyState === WebSocket.OPEN) {
+          // Garde de file d'envoi (miroir du PR upstream pokerth#518) : un
+          // navigateur qui ne lit plus laisse ws accumuler bufferedAmount sans
+          // borne pendant que le serveur continue d'émettre. Au-delà de 1 MiB
+          // (même plafond que l'amont), on ferme la socket — la session TCP
+          // survit via la grâce et le tampon plafonné SESSION_MAX_BUF, et un
+          // rebranchement (même sid) reprend proprement.
+          if (S.ws && S.ws.readyState === WebSocket.OPEN && S.ws.bufferedAmount <= MAX_WS_SEND_QUEUE) {
             S.ws.send(frame);
-          } else if (S.sid) {
-            S.buf.push(frame); S.bufBytes += frame.length;
-            while (S.bufBytes > SESSION_MAX_BUF && S.buf.length) { S.bufBytes -= S.buf.shift().length; }
+          } else {
+            if (S.ws && S.ws.readyState === WebSocket.OPEN) {
+              console.warn('[!] WS send queue overflow (' + S.ws.bufferedAmount + 'b) — closing browser socket' + (S.sid ? ' (session ' + S.sid.slice(0, 8) + ' kept for rebind)' : ''));
+              try { S.ws.close(1009, 'send queue overflow'); } catch (_) {}
+            }
+            if (S.sid) {
+              S.buf.push(frame); S.bufBytes += frame.length;
+              while (S.bufBytes > SESSION_MAX_BUF && S.buf.length) { S.bufBytes -= S.buf.shift().length; }
+            }
           }
         }
       });
@@ -5635,7 +5648,10 @@ function _attachWs(S, ws) {
           return;
         }
         _allClients.forEach(client => {
-          if (client !== ws && client.readyState === 1 && client._relayKey === ws._relayKey) client.send(text);
+          // Sauter les sockets engorgées (miroir pokerth#518) : les relais sont
+          // cosmétiques — on les jette plutôt que d'empiler sur un client bloqué.
+          if (client !== ws && client.readyState === 1 && client._relayKey === ws._relayKey &&
+              client.bufferedAmount <= MAX_WS_SEND_QUEUE) client.send(text);
         });
         return;
       }
