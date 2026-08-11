@@ -2436,10 +2436,21 @@ const _rlWs = (_RateLimiterMemory && !_RATE_LIMIT_OFF)
 function clientIp(req) {
   const peer = String((req && req.socket && req.socket.remoteAddress) || '');
   const localPeer = /^(::1$|::ffff:127\.|127\.|::ffff:10\.|10\.|::ffff:192\.168\.|192\.168\.|::ffff:172\.(1[6-9]|2\d|3[01])\.|172\.(1[6-9]|2\d|3[01])\.)/.test(peer);
-  const xff = req && req.headers && req.headers['x-forwarded-for'];
-  if (localPeer && xff) {
-    const first = String(xff).split(',')[0].trim();
-    if (first) return first;
+  if (localPeer) {
+    // Behind Cloudflare, CF-Connecting-IP is authoritative: Cloudflare always
+    // OVERWRITES it with the visitor address, so a client cannot forge it.
+    // X-Forwarded-For, by contrast, is APPENDED to — its first entry is
+    // client-controlled on such setups. Now that this address feeds the PROXY
+    // protocol header toward the game server (ranking same-IP check, IP bans),
+    // a forgeable value would let a player dodge the check or pin a ban on an
+    // arbitrary address; hence CF first, and both paths validated as real IPs.
+    const cf = req && req.headers && req.headers['cf-connecting-ip'];
+    if (cf && net.isIP(String(cf).trim())) return String(cf).trim();
+    const xff = req && req.headers && req.headers['x-forwarded-for'];
+    if (xff) {
+      const first = String(xff).split(',')[0].trim();
+      if (first && net.isIP(first)) return first;
+    }
   }
   return peer || 'unknown';
 }
