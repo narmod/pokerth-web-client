@@ -73,8 +73,8 @@ function lift(name) {
   throw new Error(name + ' unbalanced');
 }
 const parseAtom = new Function(
-  lift('rankingDecodeHtml') + '\n' + lift('forumExcerpt') + '\n' + lift('forumParseAtom') +
-  '\nconst FORUM_MAX_POSTS = 40;\nconst FORUM_EXCERPT_MAX = 280;\nreturn forumParseAtom;'
+  lift('rankingDecodeHtml') + '\n' + lift('forumExcerpt') + '\n' + lift('forumAbsUrl') + '\n' + lift('forumCleanHtml') + '\n' + lift('forumParseAtom') +
+  '\nconst FORUM_MAX_POSTS = 40;\nconst FORUM_EXCERPT_MAX = 280;\nconst FORUM_HTML_MAX = 30000;\nconst FORUM_SITE_BASE = "https://www.pokerth.net";\nreturn forumParseAtom;'
 )();
 
 const feed = `<?xml version="1.0" encoding="UTF-8"?>
@@ -117,6 +117,27 @@ const longFeed = feed.replace('Hi, thanks!<br>long html body',
 const longParsed = parseAtom(longFeed);
 ok(longParsed[0].excerpt.length <= 281 && longParsed[0].excerpt.endsWith('\u2026'), 'long bodies are cut at ~280 chars with an ellipsis');
 ok(longParsed[0].excerpt.indexOf('Statistics') < 0, 'the phpBB "Statistics: Posted by" footer is dropped');
+
+// ── 5) forumCleanHtml — sanitized in-window post body ──────────────────
+const dirtyFeed = feed.replace('Hi, thanks!<br>long html body',
+  '<div style="color:goldenrod;font-family:Palatino;font-size:150%">Hello</div>'
+  + '<img src="/images/bbc_logo.png"><a href="./viewtopic.php?t=5" onclick="evil()">t</a>'
+  + '<script>alert(1)<\/script><p>Statistics: Posted by <a href="x">n</a></p>');
+const cleaned = parseAtom(dirtyFeed)[0].html;
+ok(cleaned.indexOf('<script') < 0, 'cleanHtml strips <script> blocks');
+ok(cleaned.indexOf('onclick') < 0, 'cleanHtml strips inline handlers');
+ok(cleaned.indexOf('src="https://www.pokerth.net/images/bbc_logo.png"') >= 0, 'cleanHtml absolutizes /-relative URLs');
+ok(cleaned.indexOf('href="https://www.pokerth.net/viewtopic.php?t=5"') >= 0, 'cleanHtml absolutizes ./-relative URLs');
+ok(cleaned.indexOf('font-family') < 0, 'cleanHtml drops font-family (app font wins)');
+ok(cleaned.indexOf('Statistics: Posted by') < 0, 'cleanHtml drops the phpBB footer');
+ok(cleaned.indexOf('color:goldenrod') >= 0, 'cleanHtml keeps colors (theme adaptation is client-side)');
+
+// ── 6) client-side helpers: plain text + readable colors ───────────────
+ok(F.fnPlainText('<div>Hello <b>world</b><br>x &amp; y</div>') === 'Hello world x & y', 'fnPlainText strips tags and decodes entities');
+ok(F.fnPlainText('a'.repeat(300), 100).endsWith('\u2026'), 'fnPlainText truncates with an ellipsis');
+ok(F.fnReadableColor('black', true) !== 'black' && F.fnReadableColor('black', false) === 'black', 'black is lightened on dark themes only');
+ok(F.fnReadableColor('#ffff00', false) !== '#ffff00' && F.fnReadableColor('#ffff00', true) === '#ffff00', 'light yellow is darkened on light themes only');
+ok(F.fnReadableColor('brightred', true) === 'brightred' || /^#/.test(F.fnReadableColor('brightred', true)), 'phpBB color names are understood');
 ok(parseAtom('').length === 0 && parseAtom('<feed></feed>').length === 0, 'parser tolerates empty/entry-less feeds');
 
 process.stdout.write(fails ? 'FAILED: ' + fails + '\n' : 'ALL OK\n');

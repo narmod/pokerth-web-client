@@ -177,7 +177,7 @@ export const strings = {
     rankingTooltip: 'Rangsor', rankingTitle: 'Rangsor', rankingPth: 'PokerTH', rankingBbc: 'BBC', rankingWec: 'WEC',
     rankingMemberSince: 'Tag óta', rankingAwards: 'Díjak', rankingTickets: 'Jegyek', rankingThisSeason: 'Ez a szezon', rankingThisMonth: 'Ez a hónap', rankingThisYear: 'Ez az év', rankingStep: 'Lépcső', rankingRank: 'Helyezés', rankingBack: 'Vissza',
     rankingLoading: 'Betöltés…', rankingSoon: 'A rangsor hamarosan elérhető.', rankingError: 'Nem sikerült betölteni a rangsort.', rankingEmpty: 'Nincsenek bejegyzések.',
-    forumTooltip:'Fórum', forumTitle:'Fórumhírek', forumMarkRead:'Összes megjelölése olvasottként', forumOpen:'Fórum megnyitása', forumError:'A fórum hírfolyamát nem sikerült betölteni.', advForumNews:'Fórum gomb a lobbi fejlécében', forumOpenPost:'Bejegyzés megnyitása',
+    forumTooltip:'Fórum', forumTitle:'Fórumhírek', forumMarkRead:'Összes megjelölése olvasottként', forumOpen:'Fórum megnyitása', forumError:'A fórum hírfolyamát nem sikerült betölteni.', advForumNews:'Fórum gomb a lobbi fejlécében', forumOpenPost:'Bejegyzés megnyitása', forumOpenInForum:'Megnyitás a fórumon', forumTranslate:'Bejegyzés lefordítása', forumShowOriginal:'Eredeti bejegyzés megjelenítése', forumTranslateFailed:'A fordítás nem sikerült.',
     rankingSearch: 'Játékos keresése…', rankingNoMatch: 'Nem található játékos.', rankingSeason: 'Évad', rankingAllTime: 'Minden idők',
     rankingColRank: '#', rankingColPlayer: 'Becenév', rankingColScore: 'Pontszám', rankingColPoints: 'Pontok', rankingColGames: 'Játékok',
     hdrWaitingPlayers:'Várakozás játékosokra', hdrSpectatingWait:'Néző — várakozás a következő leosztásra',

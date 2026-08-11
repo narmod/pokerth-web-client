@@ -178,7 +178,7 @@ export const strings = {
     rankingTooltip:'Ranking', rankingTitle:'Ranking', rankingPth: 'PokerTH', rankingBbc: 'BBC', rankingWec: 'WEC',
     rankingMemberSince: 'Membro desde', rankingAwards: 'Prêmios', rankingTickets:'Tickets', rankingThisSeason: 'Esta temporada', rankingThisMonth: 'Este mês', rankingThisYear: 'Este ano', rankingStep: 'Etapa', rankingRank:'Posição', rankingBack: 'Voltar',
     rankingLoading: 'Carregando…', rankingSoon: 'Classificação em breve.', rankingError: 'Não foi possível carregar a classificação.', rankingEmpty: 'Nenhuma entrada.',
-    forumTooltip:'Fórum', forumTitle:'Novidades do fórum', forumMarkRead:'Marcar tudo como lido', forumOpen:'Abrir o fórum', forumError:'Não foi possível carregar o feed do fórum.', advForumNews:'Botão do fórum no cabeçalho do lobby', forumOpenPost:'Abrir a mensagem',
+    forumTooltip:'Fórum', forumTitle:'Novidades do fórum', forumMarkRead:'Marcar tudo como lido', forumOpen:'Abrir o fórum', forumError:'Não foi possível carregar o feed do fórum.', advForumNews:'Botão do fórum no cabeçalho do lobby', forumOpenPost:'Abrir a mensagem', forumOpenInForum:'Abrir no fórum', forumTranslate:'Traduzir a mensagem', forumShowOriginal:'Mostrar a mensagem original', forumTranslateFailed:'A tradução falhou.',
     rankingSearch: 'Buscar um jogador…', rankingNoMatch: 'Nenhum jogador encontrado.', rankingSeason: 'Temporada', rankingAllTime: 'De todos os tempos',
     rankingColRank: '#', rankingColPlayer: 'Apelido', rankingColScore: 'Pontuação', rankingColPoints: 'Pontos', rankingColGames: 'Jogos',
     hdrWaitingPlayers:'Aguardando jogadores', hdrSpectatingWait:'Espectador — aguardando a próxima mão',

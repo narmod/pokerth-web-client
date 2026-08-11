@@ -75,12 +75,12 @@ function show(id) {
     // dans la GameStatusBar) — masque en mode entrainement (bots sans saison).
     var _rkt = document.getElementById('tableranking-btn-game');
     if (_rkt) _rkt.style.display = (id === 's-game' && !window._offlineMode) ? '' : 'none';
-    // Bouton Forum (extension web) : lobby uniquement — la fenetre se ferme
-    // au changement d'ecran comme le classement ; le badge de non-lus se
-    // rafraichit a chaque retour au lobby (modules/ui/forumnews.mjs).
-    var _fnb = document.getElementById('forum-btn-lobby');
-    if (_fnb) _fnb.style.display = (id === 's-lobby') ? '' : 'none';
-    if (window.closeForumModal && id !== 's-lobby') window.closeForumModal();
+    // Bouton Forum : partout comme le classement (parite QML 2.1.6 — icone
+    // topbar sur toutes les pages). Les boutons connect/create/lobby sont
+    // statiquement visibles ; celui de la table suit la regle du ranking
+    // (pas en mode hors ligne). Le badge se rafraichit au retour au lobby.
+    var _fng = document.getElementById('forum-btn-game');
+    if (_fng) _fng.style.display = (id === 's-game' && !window._offlineMode) ? '' : 'none';
     if (id === 's-lobby' && window._forumLobbyShown) window._forumLobbyShown();
   } catch (e) {}
   if (window._syncOverlayTop) window._syncOverlayTop();

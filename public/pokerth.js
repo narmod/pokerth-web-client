@@ -8747,7 +8747,7 @@ function toggleHandsHelp() {
 var _WIN_BTN = [
   { win: 'ranking-modal',         mode: 'display', btns: ['ranking-btn-connect', 'ranking-btn-lobby', 'ranking-btn-create', 'ranking-btn-game'] },
   { win: 'tableranking-modal',    mode: 'display', btns: ['tableranking-btn-game'] },
-  { win: 'forum-modal',           mode: 'display', btns: ['forum-btn-lobby'] },
+  { win: 'forum-modal',           mode: 'display', btns: ['forum-btn-connect', 'forum-btn-lobby', 'forum-btn-create', 'forum-btn-game'] },
   { win: 'adv-modal',             mode: 'display', btns: ['adv-opts-connect-mob', 'adv-opts-lobby-mob', 'adv-opts-create-mob', 'adv-opts-mob'] },
   { win: 'music-panel',           mode: 'display', btns: ['music-toggle-connect-mob', 'music-toggle-lobby-mob', 'music-toggle-create-mob', 'music-toggle-game-mob'] },
   { win: 'g-chat-panel',          mode: 'display', btns: ['chat-toggle-btn', 'gchat-fab'] },
@@ -10116,7 +10116,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.6-web.41'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.6-web.42'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

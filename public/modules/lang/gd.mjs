@@ -178,7 +178,7 @@ export const strings = {
     rankingTooltip: 'Rangachadh', rankingTitle: 'Rangachadh', rankingPth: 'PokerTH', rankingBbc: 'BBC', rankingWec: 'WEC',
     rankingMemberSince: 'Ball bho', rankingAwards: 'Duaisean', rankingTickets: 'Tiocaidean', rankingThisSeason: 'An seusan seo', rankingThisMonth: 'Am mìos seo', rankingThisYear: 'Am bliadhna', rankingStep: 'Ceum', rankingRank: 'Rang', rankingBack: 'Air ais',
     rankingLoading: 'A\' luchdadh…', rankingSoon: 'Rangachadh a\' tighinn a dh\'aithghearr.', rankingError: 'Cha b\' urrainn an rangachadh a luchdadh.', rankingEmpty: 'Gun chlàran.',
-    forumTooltip:'Fòram', forumTitle:'Naidheachdan an fhòraim', forumMarkRead:'Comharraich na h-uile mar leughte', forumOpen:'Fosgail am fòram', forumError:'Cha b\' urrainn inbhir an fhòraim a luchdadh.', advForumNews:'Putan an fhòraim ann an ceann an lobaidh', forumOpenPost:'Fosgail am post',
+    forumTooltip:'Fòram', forumTitle:'Naidheachdan an fhòraim', forumMarkRead:'Comharraich na h-uile mar leughte', forumOpen:'Fosgail am fòram', forumError:'Cha b\' urrainn inbhir an fhòraim a luchdadh.', advForumNews:'Putan an fhòraim ann an ceann an lobaidh', forumOpenPost:'Fosgail am post', forumOpenInForum:'Fosgail san fhòram', forumTranslate:'Eadar-theangaich am post', forumShowOriginal:'Seall am post tùsail', forumTranslateFailed:'Dh\'fhàillig an t-eadar-theangachadh.',
     rankingSearch: 'Lorg cluicheadair…', rankingNoMatch: 'Cluicheadair gun lorg.', rankingSeason: 'Seusan', rankingAllTime: 'Fad na h-ùine',
     rankingColRank: '#', rankingColPlayer: 'Far-ainm', rankingColScore: 'Sgòr', rankingColPoints: 'Puingean', rankingColGames: 'Geamannan',
     hdrWaitingPlayers:'A\' feitheamh ri cluicheadairean', hdrSpectatingWait:'Ag amharc — a\' feitheamh ris an ath làimh',

@@ -177,7 +177,7 @@ export const strings = {
     rankingTooltip: 'Reitingas', rankingTitle: 'Reitingas', rankingPth: 'PokerTH', rankingBbc: 'BBC', rankingWec: 'WEC',
     rankingMemberSince: 'Narys nuo', rankingAwards: 'Apdovanojimai', rankingTickets: 'Bilietai', rankingThisSeason: 'Šis sezonas', rankingThisMonth: 'Šis mėnuo', rankingThisYear: 'Šie metai', rankingStep: 'Pakopa', rankingRank: 'Rangas', rankingBack: 'Atgal',
     rankingLoading: 'Įkeliama…', rankingSoon: 'Reitingas netrukus bus prieinamas.', rankingError: 'Nepavyko įkelti reitingo.', rankingEmpty: 'Įrašų nėra.',
-    forumTooltip:'Forumas', forumTitle:'Forumo naujienos', forumMarkRead:'Pažymėti viską kaip skaityta', forumOpen:'Atidaryti forumą', forumError:'Nepavyko įkelti forumo srauto.', advForumNews:'Forumo mygtukas vestibiulio antraštėje', forumOpenPost:'Atidaryti įrašą',
+    forumTooltip:'Forumas', forumTitle:'Forumo naujienos', forumMarkRead:'Pažymėti viską kaip skaityta', forumOpen:'Atidaryti forumą', forumError:'Nepavyko įkelti forumo srauto.', advForumNews:'Forumo mygtukas vestibiulio antraštėje', forumOpenPost:'Atidaryti įrašą', forumOpenInForum:'Atidaryti forume', forumTranslate:'Išversti įrašą', forumShowOriginal:'Rodyti pradinį įrašą', forumTranslateFailed:'Vertimas nepavyko.',
     rankingSearch: 'Ieškoti žaidėjo…', rankingNoMatch: 'Žaidėjų nerasta.', rankingSeason: 'Sezonas', rankingAllTime: 'Visų laikų',
     rankingColRank: '#', rankingColPlayer: 'Slapyvardis', rankingColScore: 'Rezultatas', rankingColPoints: 'Taškai', rankingColGames: 'Žaidimai',
     hdrWaitingPlayers:'Laukiama žaidėjų', hdrSpectatingWait:'Stebima — laukiama kitos rankos',

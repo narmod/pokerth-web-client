@@ -177,7 +177,7 @@ export const strings = {
     rankingTooltip: 'Κατάταξη', rankingTitle: 'Κατάταξη', rankingPth: 'PokerTH', rankingBbc: 'BBC', rankingWec: 'WEC',
     rankingMemberSince: 'Μέλος από', rankingAwards: 'Βραβεία', rankingTickets: 'Εισιτήρια', rankingThisSeason: 'Αυτή τη σεζόν', rankingThisMonth: 'Αυτόν τον μήνα', rankingThisYear: 'Φέτος', rankingStep: 'Βήμα', rankingRank: 'Κατάταξη', rankingBack: 'Πίσω',
     rankingLoading: 'Φόρτωση…', rankingSoon: 'Η κατάταξη έρχεται σύντομα.', rankingError: 'Αδυναμία φόρτωσης κατάταξης.', rankingEmpty: 'Καμία καταχώριση.',
-    forumTooltip:'Φόρουμ', forumTitle:'Νέα του φόρουμ', forumMarkRead:'Σήμανση όλων ως αναγνωσμένων', forumOpen:'Άνοιγμα του φόρουμ', forumError:'Δεν ήταν δυνατή η φόρτωση της ροής του φόρουμ.', advForumNews:'Κουμπί φόρουμ στην κεφαλίδα του λόμπι', forumOpenPost:'Άνοιγμα της δημοσίευσης',
+    forumTooltip:'Φόρουμ', forumTitle:'Νέα του φόρουμ', forumMarkRead:'Σήμανση όλων ως αναγνωσμένων', forumOpen:'Άνοιγμα του φόρουμ', forumError:'Δεν ήταν δυνατή η φόρτωση της ροής του φόρουμ.', advForumNews:'Κουμπί φόρουμ στην κεφαλίδα του λόμπι', forumOpenPost:'Άνοιγμα της δημοσίευσης', forumOpenInForum:'Άνοιγμα στο φόρουμ', forumTranslate:'Μετάφραση της δημοσίευσης', forumShowOriginal:'Εμφάνιση της αρχικής δημοσίευσης', forumTranslateFailed:'Η μετάφραση απέτυχε.',
     rankingSearch: 'Αναζήτηση παίκτη…', rankingNoMatch: 'Δεν βρέθηκε παίκτης.', rankingSeason: 'Σεζόν', rankingAllTime: 'Όλων των εποχών',
     rankingColRank: '#', rankingColPlayer: 'Ψευδώνυμο', rankingColScore: 'Σκορ', rankingColPoints: 'Πόντοι', rankingColGames: 'Παιχνίδια',
     hdrWaitingPlayers:'Αναμονή για παίκτες', hdrSpectatingWait:'Θεατής — αναμονή για το επόμενο χέρι',

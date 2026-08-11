@@ -176,7 +176,7 @@ export const strings = {
     rankingTooltip: 'Rangliste', rankingTitle: 'Rangliste', rankingPth: 'PokerTH', rankingBbc: 'BBC', rankingWec: 'WEC',
     rankingMemberSince: 'Medlem siden', rankingAwards: 'Præmier', rankingTickets: 'Billetter', rankingThisSeason: 'Denne sæson', rankingThisMonth: 'Denne måned', rankingThisYear: 'I år', rankingStep: 'Trin', rankingRank: 'Rang', rankingBack: 'Tilbage',
     rankingLoading: 'Indlæser…', rankingSoon: 'Rangliste kommer snart.', rankingError: 'Kunne ikke indlæse ranglisten.', rankingEmpty: 'Ingen poster.',
-    forumTooltip:'Forum', forumTitle:'Forumnyheder', forumMarkRead:'Markér alt som læst', forumOpen:'Åbn forummet', forumError:'Forummets feed kunne ikke indlæses.', advForumNews:'Forumknap i lobbyens topbjælke', forumOpenPost:'Åbn indlægget',
+    forumTooltip:'Forum', forumTitle:'Forumnyheder', forumMarkRead:'Markér alt som læst', forumOpen:'Åbn forummet', forumError:'Forummets feed kunne ikke indlæses.', advForumNews:'Forumknap i lobbyens topbjælke', forumOpenPost:'Åbn indlægget', forumOpenInForum:'Åbn i forummet', forumTranslate:'Oversæt indlægget', forumShowOriginal:'Vis det originale indlæg', forumTranslateFailed:'Oversættelsen mislykkedes.',
     rankingSearch: 'Søg en spiller…', rankingNoMatch: 'Ingen spiller fundet.', rankingSeason: 'Sæson', rankingAllTime: 'Alle tider',
     rankingColRank: '#', rankingColPlayer: 'Kaldenavn', rankingColScore: 'Score', rankingColPoints: 'Point', rankingColGames: 'Spil',
     hdrWaitingPlayers:'Venter på spillere', hdrSpectatingWait:'Tilskuer — venter på næste hånd',

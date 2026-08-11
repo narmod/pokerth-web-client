@@ -4560,6 +4560,50 @@ const FORUM_MAX_POSTS = 40;
 // collapse whitespace and cut at a word boundary. The client shows this
 // as the click-to-expand preview; the full post stays on the forum.
 const FORUM_EXCERPT_MAX = 280;
+const FORUM_HTML_MAX = 30000;
+const FORUM_SITE_BASE = 'https://www.pokerth.net';
+
+// Corps HTML d'un post pour l'affichage DANS la fenetre (parite QML
+// ForumPostPage). Nettoyage cote relais, le client n'insere jamais le flux
+// brut : pied phpBB retire, scripts/iframes/handlers/javascript: supprimes,
+// URLs relatives absolutisees, font-family/line-height retires (la police de
+// l'app reste). L'adaptation des couleurs au theme se fait cote client (le
+// relais ne connait pas le theme).
+function forumAbsUrl(u) {
+  const v = String(u || '').trim();
+  if (!v) return '';
+  if (/^https?:\/\//i.test(v)) return v;
+  if (v.indexOf('//') === 0) return 'https:' + v;
+  if (v.indexOf('./') === 0) return FORUM_SITE_BASE + '/' + v.slice(2);
+  if (v.charAt(0) === '/') return FORUM_SITE_BASE + v;
+  return FORUM_SITE_BASE + '/' + v;
+}
+function forumCleanHtml(html) {
+  let s = String(html || '');
+  // pied « Statistics: Posted by … » (parfois dans un <p>, parfois nu)
+  const mp = /<p[^>]*>\s*Statistics: Posted by/i.exec(s);
+  if (mp) s = s.slice(0, mp.index);
+  else { const i = s.indexOf('Statistics: Posted by'); if (i >= 0) s = s.slice(0, i); }
+  // blocs actifs et commentaires
+  s = s.replace(/<!--[\s\S]*?-->/g, '')
+       .replace(/<(script|style|iframe|object|embed|form|link|meta)\b[\s\S]*?(<\/\1>|>)/gi, '');
+  // handlers inline et URLs javascript:
+  s = s.replace(/\son\w+\s*=\s*"[^"]*"/gi, '')
+       .replace(/\son\w+\s*=\s*'[^']*'/gi, '')
+       .replace(/(href|src)\s*=\s*"\s*javascript:[^"]*"/gi, '$1="#"')
+       .replace(/(href|src)\s*=\s*'\s*javascript:[^']*'/gi, "$1='#'");
+  // URLs relatives -> absolues (le flux utilise "/images/…" et "./…")
+  s = s.replace(/(href|src)="([^"]*)"/gi, function (all, attr, val) {
+    return attr + '="' + forumAbsUrl(val) + '"';
+  });
+  // typo : la police et l'interligne de l'app priment
+  s = s.replace(/font-family\s*:[^;"'>]*;?/gi, '')
+       .replace(/line-height\s*:[^;"'>]*;?/gi, '');
+  // separateurs residuels en fin de post
+  s = s.replace(/(?:\s|<hr\s*\/?>|<br\s*\/?>)+$/i, '');
+  if (s.length > FORUM_HTML_MAX) s = s.slice(0, FORUM_HTML_MAX);
+  return s;
+}
 function forumExcerpt(html) {
   let s = String(html || '');
   const foot = s.indexOf('Statistics: Posted by');
@@ -4599,7 +4643,8 @@ function forumParseAtom(xml) {
       title: title,
       author: g(/<author><name><!\[CDATA\[([\s\S]*?)\]\]>/),
       date: g(/<published>([^<]+)<\/published>/) || g(/<updated>([^<]+)<\/updated>/),
-      excerpt: forumExcerpt(g(/<content[^>]*><!\[CDATA\[([\s\S]*?)\]\]><\/content>/))
+      excerpt: forumExcerpt(g(/<content[^>]*><!\[CDATA\[([\s\S]*?)\]\]><\/content>/)),
+      html: forumCleanHtml(g(/<content[^>]*><!\[CDATA\[([\s\S]*?)\]\]><\/content>/))
     });
   }
   return posts;

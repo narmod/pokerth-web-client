@@ -1,38 +1,36 @@
 // @ts-check
 // ═══════════════════════════════════════════════════════════════════
-// Forum news (web extension) — lobby header button + generic window.
+// Forum news (parite QML 2.1.6) — bouton d'en-tete sur TOUS les ecrans
+// (comme le classement), fenetre generique avec deux vues :
+//   liste  → derniers posts dedoublonnes par sujet, pastille pleine =
+//            non lu / anneau vide = lu, icone ↗ d'ouverture externe ;
+//   post   → lecture du post ENTIER dans la fenetre (HTML nettoye par le
+//            relais /api/forumfeed, images bornees a la colonne, couleurs
+//            du forum adaptees au theme), traduction via le meme service
+//            que le chat (globe), « Ouvrir dans le forum » en pied.
+// Ouvrir la vue post = marque lu (parite QML ForumPostPage) ; l'icone ↗
+// externe marque lu aussi. « Tout marquer comme lu » est desactive quand
+// il n'y a rien a lire. En cas d'echec de rafraichissement, les posts
+// deja affiches restent (l'erreur ne s'affiche que liste vide).
 //
-// Data path: phpBB Atom feed (www.pokerth.net/app.php/feed) relayed by
-// proxy.js as same-origin JSON (/api/forumfeed, 10-min server cache) to
-// avoid CORS and spare the forum. The window reuses the generic ranking
-// card model (rk-backdrop / rk-card, palette tokens, floating window on
-// desktop) so it looks and behaves like every other window.
-//
-// Read tracking (local only, never sent anywhere):
-//   pth_forum_read_base  ms timestamp — "mark all as read" watermark
-//   pth_forum_read_ids   JSON array of post links read individually
-// The header badge shows the number of unread posts (deduped by topic:
-// the feed is dominated by automated BBC/WEC result posts, so only the
-// latest post per topic is listed/counted).
-//
-// Everything is additive; the button is hidden by the advanced option
-// forum_news (body.adv-no-forumnews, ON by default) and only shown on
-// the lobby screen (net/session.mjs show()).
+// Suivi lu/non-lu local + sync compte (fusion, pokerth.js _forumMergeIn) :
+//   pth_forum_read_base  repere « tout marquer comme lu » (ms)
+//   pth_forum_read_ids   ids lus individuellement (borne READ_IDS_MAX)
 // ═══════════════════════════════════════════════════════════════════
 import { esc } from './misc.mjs';
 
 const FEED_URL = '/api/forumfeed';
 const FORUM_HOME = 'https://www.pokerth.net/';
-const CLIENT_TTL_MS = 5 * 60 * 1000;   // in-page cache; the proxy caches 10 min
+const CLIENT_TTL_MS = 5 * 60 * 1000;   // cache en page ; le relais cache 10 min
 const READ_IDS_MAX = 120;              // borne partagee avec la sync compte (_FORUM_IDS_MAX, pokerth.js)
+const TRANSLATE_MAX = 1800;            // texte envoye au service (parite QML)
 
-let _cache = null;                     // { at, posts } (deduped)
-let _fetching = null;                  // in-flight promise (dedup concurrent calls)
+let _cache = null;                     // { at, posts } (dedoublonnes)
+let _fetching = null;                  // promesse en vol (dedup des appels)
+let _curPost = null;                   // post affiche dans la vue post
+let _trState = null;                   // { text, shown } traduction du post courant
 
-// ── Pure helpers (exported for scripts/test-forumnews.mjs) ─────────────
-
-// Latest post per topic. Key = forum + topic title without the "Re: "
-// prefix; the feed is newest-first so the first hit wins.
+// ── Aides pures (exportees pour scripts/test-forumnews.mjs) ────────────
 export function fnDedup(posts) {
   const seen = new Set(); const out = [];
   for (const p of (posts || [])) {
@@ -56,11 +54,6 @@ export function fnUnreadCount(posts, readIds, baseTs) {
   return n;
 }
 
-// Stable colour class for a forum badge. The big pokerth.net forums get a
-// fixed hue (BBC amber, WEC teal, Bugs red, General blue, Feature Requests
-// purple); any other/new forum falls back to a deterministic hash over 8
-// hues so every forum keeps the same colour across sessions without a
-// maintained list. Classes: .fn-c0 … .fn-c7 (pokerth.css).
 const FN_FORUM_COLORS = {
   'bbc': 0, 'wec': 1, 'bugs': 2, 'general': 3, 'feature requests': 4,
   'monthly cup': 5, 'newbie': 6, 'rules': 7
@@ -74,7 +67,68 @@ export function fnForumClass(name) {
   return 'fn-c' + (h % 8);
 }
 
-// ── Read state (localStorage) ──────────────────────────────────────────
+// Texte brut d'un post (source de traduction) — pendant de plainText() QML.
+export function fnPlainText(html, limit) {
+  let s = String(html || '')
+    .replace(/<(?:br|\/p|\/div|\/li|hr)[^>]*>/gi, ' ')
+    .replace(/<[^>]+>/g, ' ')
+    .replace(/&nbsp;/gi, ' ')
+    .replace(/&lt;/g, '<').replace(/&gt;/g, '>')
+    .replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&amp;/g, '&')
+    .replace(/\s+/g, ' ').trim();
+  if (limit && s.length > limit) {
+    s = s.slice(0, limit);
+    const sp = s.lastIndexOf(' ');
+    if (sp > limit * 0.6) s = s.slice(0, sp);
+    s += '\u2026';
+  }
+  return s;
+}
+
+// Couleur inline → lisible sur le fond courant (parite QML _readableColor) :
+// trop sombre sur fond sombre (ou trop claire sur fond clair) = melangee vers
+// le pole oppose, la teinte reste. Exporte pour les tests.
+const FN_NAMED_COLORS = {
+  black:'#000000', white:'#ffffff', red:'#ff0000', brightred:'#ff0000',
+  darkred:'#8b0000', maroon:'#800000', green:'#008000', darkgreen:'#006400',
+  limegreen:'#32cd32', lime:'#00ff00', olive:'#808000', blue:'#0000ff',
+  darkblue:'#00008b', navy:'#000080', royalblue:'#4169e1', skyblue:'#87ceeb',
+  cyan:'#00ffff', aqua:'#00ffff', teal:'#008080', magenta:'#ff00ff',
+  fuchsia:'#ff00ff', purple:'#800080', violet:'#ee82ee', indigo:'#4b0082',
+  orange:'#ffa500', darkorange:'#ff8c00', yellow:'#ffff00', gold:'#ffd700',
+  goldenrod:'#daa520', brown:'#a52a2a', sienna:'#a0522d', silver:'#c0c0c0',
+  gray:'#808080', grey:'#808080', darkgray:'#a9a9a9', darkgrey:'#a9a9a9',
+  pink:'#ffc0cb', beige:'#f5f5dc', tan:'#d2b48c'
+};
+function _toRgb(value) {
+  let s = String(value || '').trim().toLowerCase();
+  if (FN_NAMED_COLORS[s] !== undefined) s = FN_NAMED_COLORS[s];
+  let m = /^#([0-9a-f])([0-9a-f])([0-9a-f])$/.exec(s);
+  if (m) return [parseInt(m[1]+m[1],16)/255, parseInt(m[2]+m[2],16)/255, parseInt(m[3]+m[3],16)/255];
+  m = /^#([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})$/.exec(s);
+  if (m) return [parseInt(m[1],16)/255, parseInt(m[2],16)/255, parseInt(m[3],16)/255];
+  m = /^rgba?\(\s*(\d+)[\s,]+(\d+)[\s,]+(\d+)/.exec(s);
+  if (m) return [parseInt(m[1],10)/255, parseInt(m[2],10)/255, parseInt(m[3],10)/255];
+  return null;
+}
+export function fnReadableColor(value, dark) {
+  const rgb = _toRgb(value);
+  if (!rgb) return value;
+  const lum = 0.2126*rgb[0] + 0.7152*rgb[1] + 0.0722*rgb[2];
+  let t = 0, target = 1;
+  if (dark && lum < 0.55) { t = (0.55 - lum) / (1 - lum); target = 1; }
+  else if (!dark && lum > 0.62) { t = 1 - 0.45 / Math.max(lum, 0.0001); target = 0; }
+  else return value;
+  t = Math.max(0, Math.min(1, t));
+  let out = '#';
+  for (let i = 0; i < 3; i++) {
+    const c = Math.round(255 * (rgb[i] * (1 - t) + target * t));
+    out += (c < 16 ? '0' : '') + c.toString(16);
+  }
+  return out;
+}
+
+// ── Etat lu (localStorage + sync compte) ───────────────────────────────
 function _readBase() {
   try { return parseInt(localStorage.getItem('pth_forum_read_base') || '0', 10) || 0; } catch (e) { return 0; }
 }
@@ -92,13 +146,17 @@ function _saveIds(set) {
   } catch (e) {}
   _syncMark();
 }
-// Etat lu → sync liee au compte (no-op pour les invites : le canal /prefs-web
-// n'existe qu'avec un login authentifie ; no-op aussi si la sync est coupee).
 function _syncMark() {
   try { if (typeof window._cfgSyncMark === 'function') window._cfgSyncMark('forum_read'); } catch (e) {}
 }
+function _markPostRead(p) {
+  const ids = _readIds();
+  if (ids.has(p.id)) return;
+  ids.add(p.id); _saveIds(ids);
+  _updateBadge();
+}
 
-// ── Feed fetch (client side, deduped + cached) ─────────────────────────
+// ── Recuperation du flux ───────────────────────────────────────────────
 function _fetchPosts(force) {
   if (!force && _cache && (Date.now() - _cache.at) < CLIENT_TTL_MS) {
     return Promise.resolve(_cache.posts);
@@ -120,21 +178,31 @@ function _advOn() {
   try { return typeof window._advGet === 'function' ? window._advGet('forum_news', true) : true; } catch (e) { return true; }
 }
 
-// ── Header badge ───────────────────────────────────────────────────────
+function _t(key, fallback) {
+  try { if (typeof window.t === 'function') { const v = window.t(key); if (v && v !== key) return v; } } catch (e) {}
+  return fallback;
+}
+
+// ── Badge d'en-tete (toutes les instances .forum-unread) ───────────────
 function _updateBadge(posts) {
-  const el = document.getElementById('forum-unread');
-  if (!el) return;
-  const n = fnUnreadCount(posts || (_cache && _cache.posts) || [], _readIds(), _readBase());
-  el.textContent = n > 9 ? '9+' : String(n);
-  el.style.display = n > 0 ? '' : 'none';
+  const list = (posts || (_cache && _cache.posts) || []);
+  const n = fnUnreadCount(list, _readIds(), _readBase());
+  const txt = n > 9 ? '9+' : String(n);
+  document.querySelectorAll('.forum-unread').forEach(function (el) {
+    el.textContent = txt;
+    el.style.display = n > 0 ? '' : 'none';
+  });
+  // « Tout marquer comme lu » n'a de sens qu'avec du non-lu (parite QML).
+  const mr = document.getElementById('fn-markread');
+  if (mr) { mr.disabled = n === 0; mr.classList.toggle('fn-btn-off', n === 0); }
 }
 
 function _refreshBadge(force) {
   if (!_advOn()) return;
-  _fetchPosts(force).then(_updateBadge).catch(function () {});
+  _fetchPosts(force).then(function (p) { _updateBadge(p); }).catch(function () {});
 }
 
-// ── Window rendering ───────────────────────────────────────────────────
+// ── Vue liste ──────────────────────────────────────────────────────────
 function _fmtDate(iso) {
   const ts = Date.parse(iso || '') || 0;
   if (!ts) return '';
@@ -158,88 +226,215 @@ function _renderList(posts) {
   for (let i = 0; i < posts.length; i++) {
     const p = posts[i];
     const unread = fnIsUnread(p, ids, base);
-    html += '<div class="fn-row' + (unread ? ' fn-unread' : '') + '" data-idx="' + i + '" role="button" tabindex="0" aria-expanded="false">'
+    html += '<div class="fn-row' + (unread ? ' fn-unread' : '') + '" data-idx="' + i + '" role="button" tabindex="0">'
       + (p.forum ? '<span class="fn-forum ' + fnForumClass(p.forum) + '">' + esc(p.forum) + '</span>' : '')
       + '<div class="fn-main"><div class="fn-t">' + esc(p.title) + '</div>'
-      + '<div class="fn-meta">' + esc(p.author || '') + (p.author ? ' \u00b7 ' : '') + esc(_fmtDate(p.date)) + '</div>'
-      + '<div class="fn-excerpt" style="display:none"></div></div>'
-      // Icone d'ouverture directe sur le forum (href pose en DOM apres coup :
-      // esc() n'echappe pas les guillemets) + pastille d'etat : pleine = non
-      // lu, anneau vide = lu.
+      + '<div class="fn-meta">' + esc(p.author || '') + (p.author ? ' \u00b7 ' : '') + esc(_fmtDate(p.date)) + '</div></div>'
+      // Icone d'ouverture externe directe (href pose en DOM : esc() n'echappe
+      // pas les guillemets) + pastille pleine (non lu) / anneau vide (lu).
       + '<a class="fn-golink" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" aria-hidden="true"><path d="M14 3h7v7h-2V6.41l-9.29 9.3-1.42-1.42 9.3-9.29H14V3zM5 5h6v2H7v10h10v-4h2v6H5V5z"/></svg></a>'
       + '<span class="fn-dot' + (unread ? '' : ' fn-dot-read') + '" aria-hidden="true"></span>'
       + '</div>';
   }
   list.innerHTML = html;
   list.style.display = '';
-  // Un clic DEPLIE l'apercu (debut du message, texte brut fourni par le
-  // relais) ; le post ne passe en « lu » que quand le sujet est reellement
-  // ouvert sur le forum (lien de l'apercu OU icone directe de la ligne).
-  function _markRowRead(row, p) {
-    const ids2 = _readIds(); ids2.add(p.id); _saveIds(ids2);
-    row.classList.remove('fn-unread');
-    const dot = row.querySelector('.fn-dot'); if (dot) dot.classList.add('fn-dot-read');
-    _updateBadge();
-  }
   list.querySelectorAll('.fn-row').forEach(function (row) {
-    const toggle = function () {
-      const p = posts[parseInt(row.getAttribute('data-idx'), 10)];
-      if (!p) return;
-      const ex = row.querySelector('.fn-excerpt');
-      const on = ex && ex.style.display === 'none';
-      if (ex && on && !ex.childNodes.length) {
-        if (p.excerpt) {
-          const sp = document.createElement('span');
-          sp.textContent = p.excerpt;
-          ex.appendChild(sp);
-          ex.appendChild(document.createTextNode(' '));
-        }
-        const a = document.createElement('a');
-        a.className = 'fn-openlink';
-        a.href = p.link; a.target = '_blank'; a.rel = 'noopener';
-        a.textContent = (typeof window.t === 'function' ? window.t('forumOpenPost') : 'Open the post') + ' \u2197';
-        // Lu UNIQUEMENT quand le sujet est reellement ouvert sur le forum
-        // (demande narmod 2026-08-09) — deplier l'apercu ne suffit pas.
-        a.addEventListener('click', function (e) { e.stopPropagation(); _markRowRead(row, p); });
-        ex.appendChild(a);
-      }
-      if (ex) ex.style.display = on ? '' : 'none';
-      row.classList.toggle('fn-open', on);
-      row.setAttribute('aria-expanded', on ? 'true' : 'false');
-    };
+    const p = posts[parseInt(row.getAttribute('data-idx'), 10)];
+    if (!p) return;
     const go = row.querySelector('.fn-golink');
     if (go) {
-      const p0 = posts[parseInt(row.getAttribute('data-idx'), 10)];
-      if (p0) {
-        go.href = p0.link;
-        go.title = (typeof window.t === 'function' ? window.t('forumOpenPost') : 'Open the post');
-        go.setAttribute('aria-label', go.title);
-        go.addEventListener('click', function (e) { e.stopPropagation(); _markRowRead(row, p0); });
-      }
+      go.href = p.link;
+      go.title = _t('forumOpenPost', 'Open the post');
+      go.setAttribute('aria-label', go.title);
+      go.addEventListener('click', function (e) {
+        e.stopPropagation();
+        _markPostRead(p);
+        row.classList.remove('fn-unread');
+        const dot = row.querySelector('.fn-dot'); if (dot) dot.classList.add('fn-dot-read');
+      });
     }
-    row.addEventListener('click', toggle);
-    row.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(); } });
+    // Un clic ouvre le post DANS la fenetre (parite QML ForumNewsPage).
+    const open = function () { _openPostView(p); };
+    row.addEventListener('click', open);
+    row.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(); } });
+  });
+  _updateBadge(posts);
+}
+
+function _showListView() {
+  _curPost = null; _trState = null;
+  const post = document.getElementById('fn-post');
+  const lw = document.getElementById('fn-listwrap');
+  const back = document.getElementById('fn-back');
+  const footL = document.getElementById('fn-foot-list');
+  const footP = document.getElementById('fn-foot-post');
+  if (post) post.style.display = 'none';
+  if (lw) lw.style.display = '';
+  if (back) back.style.display = 'none';
+  if (footL) footL.style.display = '';
+  if (footP) footP.style.display = 'none';
+  if (_cache) _renderList(_cache.posts);
+}
+
+// ── Vue post (parite QML ForumPostPage) ────────────────────────────────
+function _isDarkTheme() {
+  try {
+    const bg = getComputedStyle(document.body).backgroundColor;
+    const rgb = _toRgb(bg);
+    if (!rgb) return true;
+    return (0.2126*rgb[0] + 0.7152*rgb[1] + 0.0722*rgb[2]) < 0.5;
+  } catch (e) { return true; }
+}
+
+// Insere le HTML nettoye par le relais puis l'adapte : defense en profondeur
+// (scripts/handlers retires meme si le relais l'a deja fait), liens en nouvel
+// onglet, tailles % → px bornees, couleurs inline adaptees au theme.
+function _renderPostBody(el, html) {
+  el.innerHTML = String(html || '');
+  el.querySelectorAll('script, style, iframe, object, embed, form').forEach(function (n) { n.remove(); });
+  const dark = _isDarkTheme();
+  const basePx = 14;
+  el.querySelectorAll('*').forEach(function (n) {
+    for (let i = n.attributes.length - 1; i >= 0; i--) {
+      const a = n.attributes[i];
+      if (/^on/i.test(a.name)) n.removeAttribute(a.name);
+    }
+    if (n.tagName === 'A') {
+      const href = String(n.getAttribute('href') || '');
+      if (/^\s*javascript:/i.test(href)) n.removeAttribute('href');
+      n.target = '_blank'; n.rel = 'noopener';
+    }
+    if (n.style) {
+      const fs = n.style.fontSize || '';
+      const m = /^([0-9.]+)%$/.exec(fs);
+      if (m) {
+        const px = Math.round(basePx * parseFloat(m[1]) / 100);
+        n.style.fontSize = Math.max(11, Math.min(30, px)) + 'px';
+      }
+      if (n.style.color) n.style.color = fnReadableColor(n.style.color, dark);
+    }
   });
 }
 
+function _openPostView(p) {
+  _curPost = p; _trState = null;
+  const post = document.getElementById('fn-post');
+  const lw = document.getElementById('fn-listwrap');
+  const back = document.getElementById('fn-back');
+  const footL = document.getElementById('fn-foot-list');
+  const footP = document.getElementById('fn-foot-post');
+  if (!post) return;
+  if (lw) lw.style.display = 'none';
+  post.style.display = '';
+  if (back) back.style.display = '';
+  if (footL) footL.style.display = 'none';
+  if (footP) footP.style.display = '';
+  const badge = document.getElementById('fnp-badge');
+  if (badge) {
+    badge.className = 'fn-forum ' + fnForumClass(p.forum);
+    badge.textContent = p.forum || '';
+    badge.style.display = p.forum ? '' : 'none';
+  }
+  const ti = document.getElementById('fnp-title'); if (ti) ti.textContent = p.title || '';
+  const me = document.getElementById('fnp-meta');
+  if (me) me.textContent = (p.author || '') + (p.author ? ' \u00b7 ' : '') + _fmtDate(p.date);
+  const errEl = document.getElementById('fnp-error'); if (errEl) errEl.textContent = '';
+  const body = document.getElementById('fnp-body');
+  if (body) {
+    body.classList.remove('fnp-translated');
+    _renderPostBody(body, p.html || ('<p>' + esc(p.excerpt || '') + '</p>'));
+    body.scrollTop = 0;
+  }
+  const tb = document.getElementById('fnp-translate');
+  if (tb) {
+    tb.style.display = document.body.classList.contains('chat-tr-on') ? '' : 'none';
+    tb.classList.remove('tr-active');
+    tb.title = _t('forumTranslate', 'Translate the post');
+    tb.setAttribute('aria-label', tb.title);
+  }
+  // Vue ouverte = lu (parite QML : ouvrir la page marque le post lu).
+  _markPostRead(p);
+}
+
+// ── Traduction du post (meme service et meme reglage que le chat) ──────
+function _trTarget() {
+  let l = '';
+  try { l = String(window._lang || ''); } catch (e) {}
+  if (!l) { try { l = localStorage.getItem('pth_lang') || ''; } catch (e) {} }
+  if (!l) { try { l = document.documentElement.lang || navigator.language || 'en'; } catch (e) { l = 'en'; } }
+  return String(l).split('-')[0] || 'en';
+}
+
+function forumTranslatePost() {
+  const p = _curPost;
+  const body = document.getElementById('fnp-body');
+  const btn = document.getElementById('fnp-translate');
+  const errEl = document.getElementById('fnp-error');
+  if (!p || !body) return;
+  // 2e tap : revenir a l'original (le HTML est re-rendu depuis le cache).
+  if (body.classList.contains('fnp-translated')) {
+    body.classList.remove('fnp-translated');
+    _renderPostBody(body, p.html || '');
+    if (btn) { btn.classList.remove('tr-active'); btn.title = _t('forumTranslate', 'Translate the post'); btn.setAttribute('aria-label', btn.title); }
+    return;
+  }
+  const show = function (text) {
+    body.classList.add('fnp-translated');
+    body.textContent = text;   // texte brut, italique via CSS (parite QML)
+    body.scrollTop = 0;
+    if (btn) { btn.classList.add('tr-active'); btn.title = _t('forumShowOriginal', 'Show the original post'); btn.setAttribute('aria-label', btn.title); }
+  };
+  if (_trState && _trState.text) { show(_trState.text); return; }
+  const source = fnPlainText(p.html || p.excerpt || '', TRANSLATE_MAX);
+  if (!source) return;
+  if (errEl) errEl.textContent = '';
+  if (btn) btn.disabled = true;
+  const url = 'https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=' +
+    encodeURIComponent(_trTarget()) + '&dt=t&q=' + encodeURIComponent(source);
+  fetch(url).then(function (r) {
+    if (!r.ok) throw new Error('http ' + r.status);
+    return r.json();
+  }).then(function (data) {
+    let out = '';
+    if (data && data[0] && data[0].length) {
+      for (let i = 0; i < data[0].length; i++) {
+        if (data[0][i] && typeof data[0][i][0] === 'string') out += data[0][i][0];
+      }
+    }
+    if (!out.trim()) throw new Error('empty');
+    _trState = { text: out };
+    show(out);
+  }).catch(function () {
+    if (errEl) errEl.textContent = _t('forumTranslateFailed', 'Translation failed.');
+  }).finally(function () { if (btn) btn.disabled = false; });
+}
+
+// ── Chargement de la fenetre ───────────────────────────────────────────
 function _loadIntoWindow(force) {
   const loading = document.getElementById('fn-loading');
   const err = document.getElementById('fn-error');
   const empty = document.getElementById('fn-empty');
   const list = document.getElementById('fn-list');
-  if (loading) loading.style.display = '';
-  if (err) err.style.display = 'none';
-  if (empty) empty.style.display = 'none';
-  if (list) list.style.display = 'none';
+  const hasPosts = !!(_cache && _cache.posts && _cache.posts.length);
+  // Les posts deja affiches restent visibles pendant (et apres) un refresh.
+  if (hasPosts) _renderList(_cache.posts);
+  else {
+    if (loading) loading.style.display = '';
+    if (err) err.style.display = 'none';
+    if (empty) empty.style.display = 'none';
+    if (list) list.style.display = 'none';
+  }
   _fetchPosts(force)
-    .then(function (posts) { _renderList(posts); _updateBadge(posts); })
+    .then(function (posts) { if (!_curPost) _renderList(posts); _updateBadge(posts); })
     .catch(function () {
+      // Erreur seulement si on n'a rien a montrer (parite QML).
+      if (_cache && _cache.posts && _cache.posts.length) return;
       if (loading) loading.style.display = 'none';
       if (err) err.style.display = '';
     });
 }
 
-// ── Open / close / toggle (generic window model, floating on desktop) ──
+// ── Ouverture / fermeture (modele de fenetre generique) ────────────────
 function _winGateOk() {
   try { return !!(window._winGate && window._winGate() && typeof window._enableFloating === 'function'); } catch (e) { return false; }
 }
@@ -247,6 +442,7 @@ function _winGateOk() {
 function openForumModal() {
   const m = document.getElementById('forum-modal'); if (!m) return;
   m.style.display = 'flex';
+  _showListView();
   const card = m.querySelector('.rk-card');
   if (card && _winGateOk()) {
     m.classList.add('rk-floating');
@@ -271,6 +467,7 @@ function closeForumModal() {
   }
   m.classList.remove('rk-floating');
   m.style.display = 'none';
+  _showListView();
 }
 
 function toggleForumModal() {
@@ -278,6 +475,8 @@ function toggleForumModal() {
   if (m && m.style.display && m.style.display !== 'none') { closeForumModal(); return; }
   openForumModal();
 }
+
+function forumBackToList() { _showListView(); }
 
 function forumMarkRead() {
   try {
@@ -288,7 +487,7 @@ function forumMarkRead() {
     localStorage.setItem('pth_forum_read_ids', '[]');
   } catch (e) {}
   _syncMark();
-  if (_cache) _renderList(_cache.posts);
+  if (_cache && !_curPost) _renderList(_cache.posts);
   _updateBadge();
 }
 
@@ -296,26 +495,27 @@ function forumOpenSite() {
   try { window.open(FORUM_HOME, '_blank', 'noopener'); } catch (e) {}
 }
 
-// Called by net/session.mjs show() whenever the lobby screen appears:
-// refresh the unread badge (cheap — proxy caches 10 min).
+function forumOpenCurrent() {
+  if (_curPost) { try { window.open(_curPost.link, '_blank', 'noopener'); } catch (e) {} }
+}
+
+// Rafraichissement du badge a l'entree du lobby (net/session.mjs show()).
 function _forumLobbyShown() { _refreshBadge(false); }
 
-// Slow background refresh so the badge follows new posts during a long
-// lobby session. Gated: option on + lobby screen active.
-setInterval(function () {
-  try {
-    const sl = document.getElementById('s-lobby');
-    if (sl && sl.classList.contains('active')) _refreshBadge(true);
-  } catch (e) {}
-}, 10 * 60 * 1000);
+// Rafraichissement lent de fond (parite QML : 15 min, sur tous les ecrans
+// puisque le bouton est desormais visible partout).
+setInterval(function () { _refreshBadge(true); }, 15 * 60 * 1000);
+// Premier remplissage du badge au chargement (le bouton est visible des
+// l'ecran de connexion).
+if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', function () { _refreshBadge(false); });
+else _refreshBadge(false);
 
-// Descente de sync compte : l'etat lu vient de changer depuis un autre
-// appareil — rafraichir badge + liste ouverte (pokerth.js _forumMergeIn).
+// Descente de sync compte : etat lu modifie depuis un autre appareil.
 window._forumReadSynced = function () {
   _updateBadge();
   try {
     const m = document.getElementById('forum-modal');
-    if (m && m.style.display && m.style.display !== 'none' && _cache) _renderList(_cache.posts);
+    if (m && m.style.display && m.style.display !== 'none' && _cache && !_curPost) _renderList(_cache.posts);
   } catch (e) {}
 };
 window.toggleForumModal = toggleForumModal;
@@ -323,4 +523,7 @@ window.openForumModal = openForumModal;
 window.closeForumModal = closeForumModal;
 window.forumMarkRead = forumMarkRead;
 window.forumOpenSite = forumOpenSite;
+window.forumOpenCurrent = forumOpenCurrent;
+window.forumBackToList = forumBackToList;
+window.forumTranslatePost = forumTranslatePost;
 window._forumLobbyShown = _forumLobbyShown;
