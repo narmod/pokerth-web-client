@@ -163,14 +163,24 @@ function _renderList(posts) {
       + '<div class="fn-main"><div class="fn-t">' + esc(p.title) + '</div>'
       + '<div class="fn-meta">' + esc(p.author || '') + (p.author ? ' \u00b7 ' : '') + esc(_fmtDate(p.date)) + '</div>'
       + '<div class="fn-excerpt" style="display:none"></div></div>'
-      + (unread ? '<span class="fn-dot" aria-hidden="true"></span>' : '')
+      // Icone d'ouverture directe sur le forum (href pose en DOM apres coup :
+      // esc() n'echappe pas les guillemets) + pastille d'etat : pleine = non
+      // lu, anneau vide = lu.
+      + '<a class="fn-golink" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" aria-hidden="true"><path d="M14 3h7v7h-2V6.41l-9.29 9.3-1.42-1.42 9.3-9.29H14V3zM5 5h6v2H7v10h10v-4h2v6H5V5z"/></svg></a>'
+      + '<span class="fn-dot' + (unread ? '' : ' fn-dot-read') + '" aria-hidden="true"></span>'
       + '</div>';
   }
   list.innerHTML = html;
   list.style.display = '';
   // Un clic DEPLIE l'apercu (debut du message, texte brut fourni par le
-  // relais) et marque le post comme lu ; le lien « Ouvrir le message » dans
-  // l'apercu ouvre le sujet complet du forum dans un nouvel onglet.
+  // relais) ; le post ne passe en « lu » que quand le sujet est reellement
+  // ouvert sur le forum (lien de l'apercu OU icone directe de la ligne).
+  function _markRowRead(row, p) {
+    const ids2 = _readIds(); ids2.add(p.id); _saveIds(ids2);
+    row.classList.remove('fn-unread');
+    const dot = row.querySelector('.fn-dot'); if (dot) dot.classList.add('fn-dot-read');
+    _updateBadge();
+  }
   list.querySelectorAll('.fn-row').forEach(function (row) {
     const toggle = function () {
       const p = posts[parseInt(row.getAttribute('data-idx'), 10)];
@@ -190,19 +200,23 @@ function _renderList(posts) {
         a.textContent = (typeof window.t === 'function' ? window.t('forumOpenPost') : 'Open the post') + ' \u2197';
         // Lu UNIQUEMENT quand le sujet est reellement ouvert sur le forum
         // (demande narmod 2026-08-09) — deplier l'apercu ne suffit pas.
-        a.addEventListener('click', function (e) {
-          e.stopPropagation();
-          const ids2 = _readIds(); ids2.add(p.id); _saveIds(ids2);
-          row.classList.remove('fn-unread');
-          const dot = row.querySelector('.fn-dot'); if (dot) dot.remove();
-          _updateBadge();
-        });
+        a.addEventListener('click', function (e) { e.stopPropagation(); _markRowRead(row, p); });
         ex.appendChild(a);
       }
       if (ex) ex.style.display = on ? '' : 'none';
       row.classList.toggle('fn-open', on);
       row.setAttribute('aria-expanded', on ? 'true' : 'false');
     };
+    const go = row.querySelector('.fn-golink');
+    if (go) {
+      const p0 = posts[parseInt(row.getAttribute('data-idx'), 10)];
+      if (p0) {
+        go.href = p0.link;
+        go.title = (typeof window.t === 'function' ? window.t('forumOpenPost') : 'Open the post');
+        go.setAttribute('aria-label', go.title);
+        go.addEventListener('click', function (e) { e.stopPropagation(); _markRowRead(row, p0); });
+      }
+    }
     row.addEventListener('click', toggle);
     row.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(); } });
   });

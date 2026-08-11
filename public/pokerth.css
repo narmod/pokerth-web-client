@@ -8265,10 +8265,18 @@ html[data-seat-edit="1"] #g-seats .seat.seat-ghost { outline: none; cursor: defa
 /* Apercu deplie au clic : debut du message (texte brut du relais) + lien
    « Ouvrir le message ». Le clic sur la ligne replie/deplie. */
 .fn-excerpt { font-size: var(--fs-2xs); color: var(--text); opacity: 0.85; margin-top: 5px; line-height: var(--lh-base); overflow-wrap: break-word; }
-.fn-openlink { color: var(--gold-dim); text-decoration: none; white-space: nowrap; }
-.fn-openlink:hover { color: var(--gold); text-decoration: underline; }
+/* Lien « Ouvrir le message » : petit bouton-pilule sur sa propre ligne pour
+   se distinguer nettement du texte de l'apercu. */
+.fn-openlink { display: inline-block; margin-top: 6px; padding: 2px 10px; border: 1px solid var(--gold-dim); border-radius: var(--r-pill); color: var(--gold); text-decoration: none; white-space: nowrap; font-size: var(--fs-2xs); }
+.fn-openlink:hover { background: rgba(var(--gold-rgb), 0.12); text-decoration: none; }
+/* Icone d'ouverture directe (a gauche de la pastille) : discrete au repos,
+   or au survol. */
+.fn-golink { flex-shrink: 0; display: flex; align-items: center; margin-top: 3px; padding: 2px; color: var(--text); opacity: 0.5; }
+.fn-golink:hover, .fn-golink:focus-visible { color: var(--gold); opacity: 1; outline: none; }
 .fn-row.fn-open .fn-t { white-space: normal; }
-.fn-dot { flex-shrink: 0; width: 7px; height: 7px; border-radius: 50%; background: var(--gold); margin-top: 6px; box-shadow: 0 0 4px rgba(var(--gold-rgb), 0.55); }
+.fn-dot { flex-shrink: 0; box-sizing: border-box; width: 8px; height: 8px; border-radius: 50%; background: var(--gold); margin-top: 6px; box-shadow: 0 0 4px rgba(var(--gold-rgb), 0.55); }
+/* Lu : anneau vide (l'inverse de la pastille pleine « non lu »). */
+.fn-dot.fn-dot-read { background: transparent; border: 1.5px solid var(--gold-dim); box-shadow: none; opacity: 0.55; }
 /* Pied : « tout marquer lu » + « ouvrir le forum » (look .rk-tab). */
 .fn-foot { display: flex; gap: var(--sp-2); margin-top: 12px; }
 /* Badge de non-lus sur le bouton d'en-tete (cap « 9+ » cote JS). */
