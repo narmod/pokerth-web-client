@@ -9523,7 +9523,7 @@ html[data-buttons="pokerth"] .btn-action[disabled] { filter: grayscale(0.55) bri
 
   /* Chat intégré sous les tables (plus de fenêtre flottante ni d'overlay) */
   #s-lobby .lobby-grid > #lobby-chat-panel {
-    order:3; position:static !important; inset:auto !important; transform:none !important;
+    order:3; position:static !important; inset:auto !important; top:auto !important; right:auto !important; bottom:auto !important; left:auto !important; transform:none !important;
     display:flex !important; width:auto !important; flex:1 1 0; min-height:140px;
     max-height:none !important; box-shadow:none; z-index:auto;
     border:1px solid var(--border); border-radius:8px;

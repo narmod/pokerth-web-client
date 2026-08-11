@@ -82,6 +82,9 @@ function show(id) {
     var _fng = document.getElementById('forum-btn-game');
     if (_fng) _fng.style.display = (id === 's-game' && !window._offlineMode) ? '' : 'none';
     if (id === 's-lobby' && window._forumLobbyShown) window._forumLobbyShown();
+    // Mise en page lobby v2 : re-sync a chaque entree (chat docke sous les
+    // tables en compact — parite QML ChatBox ; auto-reparation du reparent).
+    if (id === 's-lobby' && window._lobby3Sync) window._lobby3Sync();
   } catch (e) {}
   if (window._syncOverlayTop) window._syncOverlayTop();
   // Keep the screen awake only while at the table.
