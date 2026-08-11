@@ -81,6 +81,71 @@ function _pthCachePut(hashHex, type, dataUrl) {
   }
 }
 
+// ── Decode-bomb guard (mirror of upstream PR pokerth#521) ──────────────
+// A tiny PNG/GIF/JPEG file can DECLARE huge dimensions (e.g. 20000x20000);
+// handing it to <img> makes the browser allocate the full bitmap — enough
+// to kill an iOS Safari tab. Sniff the declared dimensions from the file
+// header BEFORE any browser decode and refuse anything above 1 Mpx (same
+// cap as upstream MAX_AVATAR_PIXELS). Unknown formats are refused too,
+// like upstream IsValidAvatarFileType.
+const PTH_AV_MAX_PIXELS = 1024 * 1024;
+
+function _pthImageDimsSafe(b) {
+  try {
+    if (!b || b.length < 12) return false;
+    let w = 0, h = 0;
+    if (b[0] === 0x89 && b[1] === 0x50 && b[2] === 0x4E && b[3] === 0x47) {
+      // PNG: IHDR width/height, big-endian 32-bit at offsets 16/20.
+      if (b.length < 24) return false;
+      w = ((b[16] << 24) | (b[17] << 16) | (b[18] << 8) | b[19]) >>> 0;
+      h = ((b[20] << 24) | (b[21] << 16) | (b[22] << 8) | b[23]) >>> 0;
+    } else if (b[0] === 0x47 && b[1] === 0x49 && b[2] === 0x46) {
+      // GIF: logical screen width/height, little-endian 16-bit at 6/8.
+      w = b[6] | (b[7] << 8);
+      h = b[8] | (b[9] << 8);
+    } else if (b[0] === 0xFF && b[1] === 0xD8) {
+      // JPEG: walk the segments to the first SOF frame header.
+      let p = 2;
+      while (p < b.length) {
+        while (p < b.length && b[p] === 0xFF) p++;
+        if (p >= b.length) return false;
+        const m = b[p++];
+        if (m === 0x00 || m === 0x01 || m === 0xD8 || m === 0xD9) continue;
+        if (m === 0xDA) return false; // start of scan before any frame header
+        if (p + 2 > b.length) return false;
+        const seg = (b[p] << 8) | b[p + 1];
+        p += 2;
+        if (seg < 2 || seg - 2 > b.length - p) return false;
+        const sof = (m >= 0xC0 && m <= 0xC3) || (m >= 0xC5 && m <= 0xC7) ||
+                    (m >= 0xC9 && m <= 0xCB) || (m >= 0xCD && m <= 0xCF);
+        if (sof) {
+          if (seg < 7) return false;
+          h = (b[p + 1] << 8) | b[p + 2];
+          w = (b[p + 3] << 8) | b[p + 4];
+          break;
+        }
+        p += seg - 2;
+      }
+      if (!w || !h) return false;
+    } else {
+      return false;
+    }
+    return w > 0 && h > 0 && w * h <= PTH_AV_MAX_PIXELS;
+  } catch (e) { return false; }
+}
+
+// Same check, starting from a data: URL (AVATARIMG relay path).
+function _pthDataUrlDimsSafe(dataUrl) {
+  try {
+    const i = dataUrl.indexOf(';base64,');
+    if (i < 0) return false;
+    const bin = atob(dataUrl.slice(i + 8));
+    const b = new Uint8Array(bin.length);
+    for (let k = 0; k < bin.length; k++) b[k] = bin.charCodeAt(k);
+    return _pthImageDimsSafe(b);
+  } catch (e) { return false; }
+}
+
 // Concatenate the per-request Uint8Array chunks and convert to a
 // data: URL the browser can render directly as <img src>.
 function _pthAssembleDataUrl(chunks, type) {
@@ -94,6 +159,9 @@ function _pthAssembleDataUrl(chunks, type) {
   }
   // btoa needs a binary string. Build it in batches to avoid the
   // "Maximum call stack size exceeded" trap on String.fromCharCode(...arr).
+  // Refuse decode bombs before the browser ever sees the image
+  // (declared dimensions capped at 1 Mpx — see _pthImageDimsSafe above).
+  if (!_pthImageDimsSafe(merged)) throw new Error('unsafe avatar dimensions');
   let bin = '';
   const STEP = 4096;
   for (let i = 0; i < merged.length; i += STEP) {
@@ -105,12 +173,14 @@ function _pthAssembleDataUrl(chunks, type) {
 }
 
 // ─── Exports ES + alias legacy ───────────────────────────────────────────
-export { _pthLoadLruList, _pthSaveLruList, _pthCacheGet, _pthCachePut, _pthAssembleDataUrl };
+export { _pthLoadLruList, _pthSaveLruList, _pthCacheGet, _pthCachePut, _pthAssembleDataUrl, _pthImageDimsSafe, _pthDataUrlDimsSafe };
 if (typeof window !== 'undefined') {
   window._pthLoadLruList = _pthLoadLruList;
   window._pthSaveLruList = _pthSaveLruList;
   window._pthCacheGet = _pthCacheGet;
   window._pthCachePut = _pthCachePut;
   window._pthAssembleDataUrl = _pthAssembleDataUrl;
+  window._pthImageDimsSafe = _pthImageDimsSafe;
+  window._pthDataUrlDimsSafe = _pthDataUrlDimsSafe;
   window.AvatarCache = { get: _pthCacheGet, put: _pthCachePut, assemble: _pthAssembleDataUrl };
 }

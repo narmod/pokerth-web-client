@@ -5373,7 +5373,18 @@ const App = (() => {
               var imgPid = parseInt(imgRest.slice(0, imgSep), 10);
               var imgUrl = imgRest.slice(imgSep + 1);
               if (imgPid && imgPid !== S.myId) {
-                if (imgUrl && imgUrl.slice(0, 5) === 'data:') S._playerImgAvatars[imgPid] = imgUrl;
+                if (imgUrl && imgUrl.slice(0, 5) === 'data:') {
+                  // Bombe de décompression : refuser toute image dont l'en-tête
+                  // déclare > 1 Mpx AVANT de la donner au navigateur (miroir du
+                  // PR upstream pokerth#521 côté QML). Repli permissif si le
+                  // module avatar-cache n'est pas encore chargé : la garde est
+                  // présente dès que les modules ESM sont prêts.
+                  if (typeof window._pthDataUrlDimsSafe === 'function' && !window._pthDataUrlDimsSafe(imgUrl)) {
+                    console.warn('[avatar] AVATARIMG rejeté (dimensions déclarées non sûres) pid=' + imgPid);
+                  } else {
+                    S._playerImgAvatars[imgPid] = imgUrl;
+                  }
+                }
                 else delete S._playerImgAvatars[imgPid]; // vide = effacer l'image
                 if (typeof renderSeats === 'function' && S.seats.length) renderSeats();
               }
@@ -10118,7 +10129,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.6-web.56'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.6-web.57'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

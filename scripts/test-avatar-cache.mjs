@@ -65,19 +65,45 @@ ok(store.get('pthAv:quota-test') === '1|data:x,q', 'quota: retry après évictio
 ok(lru().length <= 101, 'quota: environ la moitié évincée (' + lru().length + ')');
 globalThis.localStorage.setItem = origSet; quotaFull = false;
 
-// 6) _pthAssembleDataUrl : chunks -> data:URL, MIME par type, gros volume
-const c1 = new Uint8Array([137, 80, 78, 71]);          // en-tête PNG
-const c2 = new Uint8Array([13, 10, 26, 10]);
+// 6) _pthAssembleDataUrl : chunks -> data:URL, MIME par type, gros volume.
+// Depuis la garde anti-bombe (miroir PR pokerth#521), les fixtures doivent
+// être des en-têtes d'images VALIDES aux dimensions sûres.
+function _pngHdr(w, h) {           // 24 o : signature + IHDR partiel (w/h)
+  const b = new Uint8Array(24);
+  [137, 80, 78, 71, 13, 10, 26, 10, 0, 0, 0, 13, 73, 72, 68, 82].forEach((v, i) => { b[i] = v; });
+  b[16] = w >>> 24; b[17] = (w >>> 16) & 255; b[18] = (w >>> 8) & 255; b[19] = w & 255;
+  b[20] = h >>> 24; b[21] = (h >>> 16) & 255; b[22] = (h >>> 8) & 255; b[23] = h & 255;
+  return b;
+}
+const _jpg1x1 = new Uint8Array([0xFF, 0xD8, 0xFF, 0xC0, 0, 9, 8, 0, 1, 0, 1, 0, 0]); // SOF0 1x1
+const _gif1x1 = new Uint8Array([71, 73, 70, 56, 57, 97, 1, 0, 1, 0, 0, 0, 0]);       // GIF89a 1x1
+const _png1x1 = _pngHdr(1, 1);
+const c1 = _png1x1.slice(0, 12);
+const c2 = _png1x1.slice(12);
 const url = M._pthAssembleDataUrl([c1, c2], 1);
 ok(url.startsWith('data:image/png;base64,'), 'assemble: MIME png (type 1)');
-ok(Buffer.from(url.split(',')[1], 'base64').equals(Buffer.from([137, 80, 78, 71, 13, 10, 26, 10])),
+ok(Buffer.from(url.split(',')[1], 'base64').equals(Buffer.from(_png1x1)),
    'assemble: chunks concaténés dans l\'ordre, octets exacts');
-ok(M._pthAssembleDataUrl([c1], 2).startsWith('data:image/jpeg') &&
-   M._pthAssembleDataUrl([c1], 3).startsWith('data:image/gif'), 'assemble: MIME jpeg/gif (types 2/3)');
+ok(M._pthAssembleDataUrl([_jpg1x1], 2).startsWith('data:image/jpeg') &&
+   M._pthAssembleDataUrl([_gif1x1], 3).startsWith('data:image/gif'), 'assemble: MIME jpeg/gif (types 2/3)');
 const big = new Uint8Array(100000).fill(65);           // > lot de 4096
+big.set(_pngHdr(100, 100), 0);                         // en-tête valide, corps quelconque
 const bigUrl = M._pthAssembleDataUrl([big], 1);
 ok(Buffer.from(bigUrl.split(',')[1], 'base64').length === 100000,
    'assemble: 100 Ko en lots de 4096 sans débordement de pile');
+
+// 7) Garde anti-bombe de décompression (miroir PR pokerth#521)
+ok(M._pthImageDimsSafe(_png1x1) === true, 'dims: png 1x1 accepté');
+ok(M._pthImageDimsSafe(_pngHdr(1024, 1024)) === true, 'dims: 1 Mpx pile accepté');
+ok(M._pthImageDimsSafe(_pngHdr(1025, 1024)) === false, 'dims: au-delà de 1 Mpx refusé');
+ok(M._pthImageDimsSafe(new Uint8Array(16).fill(3)) === false, 'dims: format inconnu refusé');
+let _bombThrew = false;
+try { M._pthAssembleDataUrl([_pngHdr(20000, 20000)], 1); } catch (e) { _bombThrew = true; }
+ok(_bombThrew, 'assemble: bombe 20000x20000 refusée (throw)');
+const _b64 = 'data:image/png;base64,' + Buffer.from(_png1x1).toString('base64');
+ok(M._pthDataUrlDimsSafe(_b64) === true, 'dataUrl: png 1x1 accepté');
+ok(M._pthDataUrlDimsSafe('data:image/png;base64,' + Buffer.from(_pngHdr(9999, 9999)).toString('base64')) === false,
+   'dataUrl: bombe refusée');
 
 // 7) Storage HS : tout retombe silencieusement
 globalThis.localStorage.getItem = () => { throw new Error('disabled'); };

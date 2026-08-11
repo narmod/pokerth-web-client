@@ -5224,7 +5224,7 @@ const httpServer = http.createServer((req, res) => {
 // PokerTH protobuf packets are tiny; the biggest legitimate frame is a relayed
 // AVATARIMG (<= 32 KiB). Anything bigger, malformed, or flooding is hostile.
 const MAX_WS_FRAME_BYTES     = 64 * 1024;   // ws lib closes the socket above this (1009)
-const MAX_WS_PACKET_BYTES    = 60 * 1024;   // sanity bound for one length-prefixed packet
+const MAX_WS_PACKET_BYTES    = 512;         // native MAX_PACKET_SIZE is 384; every legit C->S packet fits
 const MAX_WS_MALFORMED_FRAMES = 10;         // same tolerance as the native TCP receive path
 const WS_RATE_WINDOW_MS       = 1000;       // sliding window for the soft rate limit
 const MAX_WS_MSGS_PER_WINDOW  = 200;        // frames per window per connection

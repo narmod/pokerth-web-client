@@ -53,16 +53,20 @@ S._pthAvatarReqIdToHash = { 7: 'aabbcc' };
 S._pthAvatarsByHash = { aabbcc: { status: 'pending', type: 1, expectedSize: 0, chunks: [], received: 0 } };
 S._pthDataUrls = {}; S._openTables = new Set();
 
-sub = subOf([[1, 0, T.AvatarHeader], [9, 2, Proto.encode([[1, 0, 7], [2, 0, 2], [3, 0, 8]])]]);
+sub = subOf([[1, 0, T.AvatarHeader], [9, 2, Proto.encode([[1, 0, 7], [2, 0, 2], [3, 0, 24]])]]);
 M.onAvatarHeader(sub);
 const entry = S._pthAvatarsByHash.aabbcc;
-ok(entry.expectedSize === 8 && entry.type === 2, 'onAvatarHeader : taille attendue + type corrigé');
+ok(entry.expectedSize === 24 && entry.type === 2, 'onAvatarHeader : taille attendue + type corrigé');
 
-for (const part of [[137, 80, 78, 71], [13, 10, 26, 10]]) { // signature PNG en 2 morceaux
+// PNG 1x1 valide (24 o) en 2 morceaux : depuis la garde anti-bombe
+// (miroir PR pokerth#521), l'assemblage refuse les en-têtes invalides.
+const _png1x1 = [137, 80, 78, 71, 13, 10, 26, 10, 0, 0, 0, 13, 73, 72, 68, 82,
+                 0, 0, 0, 1, 0, 0, 0, 1];
+for (const part of [_png1x1.slice(0, 12), _png1x1.slice(12)]) {
   sub = subOf([[1, 0, T.AvatarData], [10, 2, Proto.encode([[1, 0, 7], [2, 2, new Uint8Array(part)]])]]);
   M.onAvatarData(sub);
 }
-ok(entry.chunks.length === 2 && entry.received === 8, 'onAvatarData : 2 chunks accumulés (8 o)');
+ok(entry.chunks.length === 2 && entry.received === 24, 'onAvatarData : 2 chunks accumulés (24 o)');
 
 sub = subOf([[1, 0, T.AvatarEnd], [11, 2, Proto.encode([[1, 0, 7]])]]);
 M.onAvatarEnd(sub);
