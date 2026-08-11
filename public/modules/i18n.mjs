@@ -314,6 +314,20 @@ let _lang = (function(){
     // the larger Portuguese-speaking audience.
     var alias = { no: 'nb', nn: 'nb', pt: 'pt-BR' };
     try {
+        // 0. Explicit ?lang= in the URL — hreflang landing links from
+        //    localized search results. Wins for this load only: it is NOT
+        //    persisted, so a manually saved choice (pth_lang) survives the
+        //    visit and applies again on the next normal navigation.
+        var qp = '';
+        try { qp = String(new URLSearchParams(window.location.search).get('lang') || ''); } catch (e2) {}
+        if (qp) {
+            if (avail.indexOf(qp) !== -1) return qp;
+            var ql = qp.toLowerCase();
+            if (regionAlias[ql] && avail.indexOf(regionAlias[ql]) !== -1) return regionAlias[ql];
+            var qb = ql.split('-')[0];
+            if (avail.indexOf(qb) !== -1) return qb;
+            if (alias[qb] && avail.indexOf(alias[qb]) !== -1) return alias[qb];
+        }
         // 1. The user has manually picked a language before — respect it
         //    (only if that language is still available). A legacy saved
         //    code (e.g. the former single 'pt') is mapped forward.

@@ -932,36 +932,107 @@ var SEO_TITLE = 'PokerTH Web Client \u2014 Free Texas Hold\u2019em Poker in Your
 var SEO_DESC = 'Play PokerTH, the free open-source Texas Hold\u2019em poker game, directly in your browser. ' +
   'No download, no registration \u2014 practice offline against bots, play on LAN or join pokerth.net. 36 languages, installable as an app (PWA).';
 
-function seoHeadBlock(base) {
+
+// ── hreflang — localized <title> + description for the 36 UI languages ────
+// Each language variant lives at /?lang=<code>: the client applies the URL
+// parameter at boot (without overwriting a manually saved choice), so a
+// visitor landing from a localized search result gets the matching UI.
+// Google requirements honoured: every variant self-canonicalizes and carries
+// the full alternate set; 'en' folds onto the bare / URL (no /?lang=en
+// duplicate). Codes are the catalogue codes of public/modules/lang/*.mjs.
+var SEO_I18N = {
+  en: { t: SEO_TITLE, d: SEO_DESC },
+  fr: { t: 'PokerTH Web \u2014 Poker Texas Hold\u2019em gratuit dans votre navigateur', d: 'Jouez \u00e0 PokerTH, le jeu de poker Texas Hold\u2019em libre et gratuit, directement dans votre navigateur. Sans t\u00e9l\u00e9chargement ni inscription \u2014 entra\u00eenez-vous hors ligne contre des bots, jouez en LAN ou sur pokerth.net.' },
+  de: { t: 'PokerTH Web-Client \u2014 Kostenloses Texas Hold\u2019em Poker im Browser', d: 'Spiele PokerTH, das freie Open-Source-Texas-Hold\u2019em-Pokerspiel, direkt im Browser. Kein Download, keine Registrierung \u2014 offline gegen Bots \u00fcben, im LAN spielen oder pokerth.net beitreten.' },
+  es: { t: 'PokerTH Web \u2014 P\u00f3ker Texas Hold\u2019em gratis en tu navegador', d: 'Juega a PokerTH, el juego de p\u00f3ker Texas Hold\u2019em libre y gratuito, directamente en tu navegador. Sin descargas ni registro: practica sin conexi\u00f3n contra bots, juega en LAN o \u00fanete a pokerth.net.' },
+  it: { t: 'PokerTH Web \u2014 Poker Texas Hold\u2019em gratuito nel browser', d: 'Gioca a PokerTH, il gioco di poker Texas Hold\u2019em libero e gratuito, direttamente nel browser. Nessun download, nessuna registrazione: allenati offline contro i bot, gioca in LAN o su pokerth.net.' },
+  'pt-BR': { t: 'PokerTH Web \u2014 P\u00f4quer Texas Hold\u2019em gr\u00e1tis no seu navegador', d: 'Jogue PokerTH, o jogo de p\u00f4quer Texas Hold\u2019em livre e gratuito, direto no navegador. Sem download e sem cadastro: treine offline contra bots, jogue em LAN ou entre no pokerth.net.' },
+  'pt-PT': { t: 'PokerTH Web \u2014 P\u00f3quer Texas Hold\u2019em gr\u00e1tis no navegador', d: 'Jogue PokerTH, o jogo de p\u00f3quer Texas Hold\u2019em livre e gratuito, diretamente no navegador. Sem transfer\u00eancias nem registo: pratique offline contra bots, jogue em LAN ou junte-se ao pokerth.net.' },
+  nl: { t: 'PokerTH Web \u2014 Gratis Texas Hold\u2019em poker in je browser', d: 'Speel PokerTH, het gratis opensource Texas Hold\u2019em-pokerspel, direct in je browser. Geen download, geen registratie \u2014 oefen offline tegen bots, speel via LAN of op pokerth.net.' },
+  pl: { t: 'PokerTH Web \u2014 Darmowy poker Texas Hold\u2019em w przegl\u0105darce', d: 'Graj w PokerTH, darmow\u0105 otwarto\u017ar\u00f3d\u0142ow\u0105 gr\u0119 w pokera Texas Hold\u2019em, bezpo\u015brednio w przegl\u0105darce. Bez pobierania i rejestracji \u2014 trenuj offline z botami, graj w sieci LAN lub na pokerth.net.' },
+  ru: { t: 'PokerTH Web \u2014 \u0431\u0435\u0441\u043f\u043b\u0430\u0442\u043d\u044b\u0439 \u043f\u043e\u043a\u0435\u0440 Texas Hold\u2019em \u0432 \u0431\u0440\u0430\u0443\u0437\u0435\u0440\u0435', d: '\u0418\u0433\u0440\u0430\u0439\u0442\u0435 \u0432 PokerTH \u2014 \u0431\u0435\u0441\u043f\u043b\u0430\u0442\u043d\u0443\u044e \u043f\u043e\u043a\u0435\u0440\u043d\u0443\u044e \u0438\u0433\u0440\u0443 Texas Hold\u2019em \u0441 \u043e\u0442\u043a\u0440\u044b\u0442\u044b\u043c \u043a\u043e\u0434\u043e\u043c \u043f\u0440\u044f\u043c\u043e \u0432 \u0431\u0440\u0430\u0443\u0437\u0435\u0440\u0435. \u0411\u0435\u0437 \u0437\u0430\u0433\u0440\u0443\u0437\u043a\u0438 \u0438 \u0440\u0435\u0433\u0438\u0441\u0442\u0440\u0430\u0446\u0438\u0438: \u0442\u0440\u0435\u043d\u0438\u0440\u0443\u0439\u0442\u0435\u0441\u044c \u043e\u0444\u043b\u0430\u0439\u043d \u0441 \u0431\u043e\u0442\u0430\u043c\u0438, \u0438\u0433\u0440\u0430\u0439\u0442\u0435 \u043f\u043e LAN \u0438\u043b\u0438 \u043d\u0430 pokerth.net.' },
+  zh: { t: 'PokerTH \u7f51\u9875\u7248 \u2014 \u5728\u6d4f\u89c8\u5668\u4e2d\u514d\u8d39\u73a9\u5fb7\u5dde\u6251\u514b', d: '\u5728\u6d4f\u89c8\u5668\u4e2d\u76f4\u63a5\u7545\u73a9 PokerTH\uff0c\u514d\u8d39\u5f00\u6e90\u7684\u5fb7\u5dde\u6251\u514b\u6e38\u620f\u3002\u65e0\u9700\u4e0b\u8f7d\u3001\u65e0\u9700\u6ce8\u518c\uff1a\u79bb\u7ebf\u4e0e\u7535\u8111\u5bf9\u6218\u3001\u5c40\u57df\u7f51\u5bf9\u5c40\uff0c\u6216\u52a0\u5165 pokerth.net\u3002' },
+  tr: { t: 'PokerTH Web \u2014 Taray\u0131c\u0131da \u00fccretsiz Texas Hold\u2019em poker', d: '\u00dccretsiz ve a\u00e7\u0131k kaynakl\u0131 Texas Hold\u2019em poker oyunu PokerTH\u2019yi do\u011frudan taray\u0131c\u0131n\u0131zda oynay\u0131n. \u0130ndirme yok, kay\u0131t yok \u2014 botlara kar\u015f\u0131 \u00e7evrimd\u0131\u015f\u0131 pratik yap\u0131n, LAN\u2019da oynay\u0131n veya pokerth.net\u2019e kat\u0131l\u0131n.' },
+  uk: { t: 'PokerTH Web \u2014 \u0431\u0435\u0437\u043a\u043e\u0448\u0442\u043e\u0432\u043d\u0438\u0439 \u043f\u043e\u043a\u0435\u0440 Texas Hold\u2019em \u0443 \u0431\u0440\u0430\u0443\u0437\u0435\u0440\u0456', d: '\u0413\u0440\u0430\u0439\u0442\u0435 \u0432 PokerTH \u2014 \u0431\u0435\u0437\u043a\u043e\u0448\u0442\u043e\u0432\u043d\u0443 \u043f\u043e\u043a\u0435\u0440\u043d\u0443 \u0433\u0440\u0443 Texas Hold\u2019em \u0437 \u0432\u0456\u0434\u043a\u0440\u0438\u0442\u0438\u043c \u043a\u043e\u0434\u043e\u043c \u043f\u0440\u043e\u0441\u0442\u043e \u0443 \u0431\u0440\u0430\u0443\u0437\u0435\u0440\u0456. \u0411\u0435\u0437 \u0437\u0430\u0432\u0430\u043d\u0442\u0430\u0436\u0435\u043d\u043d\u044f \u0442\u0430 \u0440\u0435\u0454\u0441\u0442\u0440\u0430\u0446\u0456\u0457: \u0442\u0440\u0435\u043d\u0443\u0439\u0442\u0435\u0441\u044f \u043e\u0444\u043b\u0430\u0439\u043d \u0437 \u0431\u043e\u0442\u0430\u043c\u0438, \u0433\u0440\u0430\u0439\u0442\u0435 \u0432 LAN \u0430\u0431\u043e \u043d\u0430 pokerth.net.' },
+  ja: { t: 'PokerTH \u30a6\u30a7\u30d6\u7248 \u2014 \u30d6\u30e9\u30a6\u30b6\u3067\u7121\u6599\u30c6\u30ad\u30b5\u30b9\u30db\u30fc\u30eb\u30c7\u30e0\u30dd\u30fc\u30ab\u30fc', d: '\u7121\u6599\u30fb\u30aa\u30fc\u30d7\u30f3\u30bd\u30fc\u30b9\u306e\u30c6\u30ad\u30b5\u30b9\u30db\u30fc\u30eb\u30c7\u30e0\u30dd\u30fc\u30ab\u30fc\u300cPokerTH\u300d\u3092\u30d6\u30e9\u30a6\u30b6\u3067\u305d\u306e\u307e\u307e\u30d7\u30ec\u30a4\u3002\u30c0\u30a6\u30f3\u30ed\u30fc\u30c9\u3082\u767b\u9332\u3082\u4e0d\u8981\u3002\u30aa\u30d5\u30e9\u30a4\u30f3\u3067\u30dc\u30c3\u30c8\u3068\u5bfe\u6226\u3001LAN \u5bfe\u6226\u3001pokerth.net \u3078\u306e\u53c2\u52a0\u3082\u53ef\u80fd\u3002' },
+  sv: { t: 'PokerTH Web \u2014 Gratis Texas Hold\u2019em-poker i webbl\u00e4saren', d: 'Spela PokerTH, det fria Texas Hold\u2019em-pokerspelet med \u00f6ppen k\u00e4llkod, direkt i webbl\u00e4saren. Ingen nedladdning, ingen registrering \u2014 tr\u00e4na offline mot bottar, spela via LAN eller p\u00e5 pokerth.net.' },
+  nb: { t: 'PokerTH Web \u2014 Gratis Texas Hold\u2019em-poker i nettleseren', d: 'Spill PokerTH, det frie Texas Hold\u2019em-pokerspillet med \u00e5pen kildekode, rett i nettleseren. Ingen nedlasting, ingen registrering \u2014 \u00f8v offline mot botter, spill via LAN eller p\u00e5 pokerth.net.' },
+  da: { t: 'PokerTH Web \u2014 Gratis Texas Hold\u2019em-poker i browseren', d: 'Spil PokerTH, det gratis open source Texas Hold\u2019em-pokerspil, direkte i browseren. Ingen download, ingen registrering \u2014 \u00f8v offline mod botter, spil via LAN eller p\u00e5 pokerth.net.' },
+  fi: { t: 'PokerTH Web \u2014 Ilmainen Texas Hold\u2019em -pokeri selaimessa', d: 'Pelaa PokerTH:ta, ilmaista avoimen l\u00e4hdekoodin Texas Hold\u2019em -pokeripeli\u00e4, suoraan selaimessa. Ei latausta, ei rekister\u00f6itymist\u00e4 \u2014 harjoittele offline-tilassa botteja vastaan, pelaa LAN-verkossa tai liity pokerth.netiin.' },
+  cs: { t: 'PokerTH Web \u2014 Texas Hold\u2019em poker zdarma v prohl\u00ed\u017ee\u010di', d: 'Hrajte PokerTH, bezplatnou open source pokerovou hru Texas Hold\u2019em, p\u0159\u00edmo v prohl\u00ed\u017ee\u010di. Bez stahov\u00e1n\u00ed a registrace \u2014 tr\u00e9nujte offline proti bot\u016fm, hrajte po LAN nebo na pokerth.net.' },
+  sk: { t: 'PokerTH Web \u2014 Texas Hold\u2019em poker zadarmo v prehliada\u010di', d: 'Hrajte PokerTH, bezplatn\u00fa open source pokrov\u00fa hru Texas Hold\u2019em, priamo v prehliada\u010di. Bez s\u0165ahovania a registr\u00e1cie \u2014 tr\u00e9nujte offline proti botom, hrajte cez LAN alebo na pokerth.net.' },
+  ro: { t: 'PokerTH Web \u2014 Poker Texas Hold\u2019em gratuit \u00een browser', d: 'Joac\u0103 PokerTH, jocul de poker Texas Hold\u2019em gratuit \u0219i open source, direct \u00een browser. F\u0103r\u0103 desc\u0103rcare, f\u0103r\u0103 \u00eenregistrare \u2014 exerseaz\u0103 offline contra bo\u021bilor, joac\u0103 \u00een LAN sau pe pokerth.net.' },
+  hu: { t: 'PokerTH Web \u2014 Ingyenes Texas Hold\u2019em p\u00f3ker a b\u00f6ng\u00e9sz\u0151ben', d: 'J\u00e1tssz a PokerTH-val, az ingyenes, ny\u00edlt forr\u00e1sk\u00f3d\u00fa Texas Hold\u2019em p\u00f3kerj\u00e1t\u00e9kkal, k\u00f6zvetlen\u00fcl a b\u00f6ng\u00e9sz\u0151ben. Nincs let\u00f6lt\u00e9s, nincs regisztr\u00e1ci\u00f3 \u2014 gyakorolj offline botok ellen, j\u00e1tssz LAN-on vagy a pokerth.net-en.' },
+  el: { t: 'PokerTH Web \u2014 \u0394\u03c9\u03c1\u03b5\u03ac\u03bd \u03c0\u03cc\u03ba\u03b5\u03c1 Texas Hold\u2019em \u03c3\u03c4\u03bf\u03bd browser', d: '\u03a0\u03b1\u03af\u03be\u03c4\u03b5 PokerTH, \u03c4\u03bf \u03b4\u03c9\u03c1\u03b5\u03ac\u03bd \u03c0\u03b1\u03b9\u03c7\u03bd\u03af\u03b4\u03b9 \u03c0\u03cc\u03ba\u03b5\u03c1 Texas Hold\u2019em \u03b1\u03bd\u03bf\u03b9\u03ba\u03c4\u03bf\u03cd \u03ba\u03ce\u03b4\u03b9\u03ba\u03b1, \u03b1\u03c0\u03b5\u03c5\u03b8\u03b5\u03af\u03b1\u03c2 \u03c3\u03c4\u03bf\u03bd browser. \u03a7\u03c9\u03c1\u03af\u03c2 \u03bb\u03ae\u03c8\u03b7, \u03c7\u03c9\u03c1\u03af\u03c2 \u03b5\u03b3\u03b3\u03c1\u03b1\u03c6\u03ae \u2014 \u03b5\u03be\u03b1\u03c3\u03ba\u03b7\u03b8\u03b5\u03af\u03c4\u03b5 offline \u03bc\u03b5 bots, \u03c0\u03b1\u03af\u03be\u03c4\u03b5 \u03c3\u03b5 LAN \u03ae \u03c3\u03c4\u03bf pokerth.net.' },
+  bg: { t: 'PokerTH Web \u2014 \u0411\u0435\u0437\u043f\u043b\u0430\u0442\u0435\u043d \u043f\u043e\u043a\u0435\u0440 Texas Hold\u2019em \u0432 \u0431\u0440\u0430\u0443\u0437\u044a\u0440\u0430', d: '\u0418\u0433\u0440\u0430\u0439\u0442\u0435 PokerTH \u2014 \u0431\u0435\u0437\u043f\u043b\u0430\u0442\u043d\u0430\u0442\u0430 \u043f\u043e\u043a\u0435\u0440 \u0438\u0433\u0440\u0430 Texas Hold\u2019em \u0441 \u043e\u0442\u0432\u043e\u0440\u0435\u043d \u043a\u043e\u0434, \u043d\u0430\u043f\u0440\u0430\u0432\u043e \u0432 \u0431\u0440\u0430\u0443\u0437\u044a\u0440\u0430. \u0411\u0435\u0437 \u0438\u0437\u0442\u0435\u0433\u043b\u044f\u043d\u0435 \u0438 \u0440\u0435\u0433\u0438\u0441\u0442\u0440\u0430\u0446\u0438\u044f \u2014 \u0442\u0440\u0435\u043d\u0438\u0440\u0430\u0439\u0442\u0435 \u043e\u0444\u043b\u0430\u0439\u043d \u0441\u0440\u0435\u0449\u0443 \u0431\u043e\u0442\u043e\u0432\u0435, \u0438\u0433\u0440\u0430\u0439\u0442\u0435 \u0432 LAN \u0438\u043b\u0438 \u043d\u0430 pokerth.net.' },
+  hr: { t: 'PokerTH Web \u2014 Besplatan Texas Hold\u2019em poker u pregledniku', d: 'Igrajte PokerTH, besplatnu Texas Hold\u2019em poker igru otvorenog koda, izravno u pregledniku. Bez preuzimanja i registracije \u2014 vje\u017ebajte offline protiv botova, igrajte na LAN-u ili na pokerth.net.' },
+  sr: { t: 'PokerTH Web \u2014 \u0411\u0435\u0441\u043f\u043b\u0430\u0442\u0430\u043d Texas Hold\u2019em \u043f\u043e\u043a\u0435\u0440 \u0443 \u043f\u0440\u0435\u0433\u043b\u0435\u0434\u0430\u0447\u0443', d: '\u0418\u0433\u0440\u0430\u0458\u0442\u0435 PokerTH, \u0431\u0435\u0441\u043f\u043b\u0430\u0442\u043d\u0443 Texas Hold\u2019em \u043f\u043e\u043a\u0435\u0440 \u0438\u0433\u0440\u0443 \u043e\u0442\u0432\u043e\u0440\u0435\u043d\u043e\u0433 \u043a\u043e\u0434\u0430, \u0434\u0438\u0440\u0435\u043a\u0442\u043d\u043e \u0443 \u043f\u0440\u0435\u0433\u043b\u0435\u0434\u0430\u0447\u0443. \u0411\u0435\u0437 \u043f\u0440\u0435\u0443\u0437\u0438\u043c\u0430\u045a\u0430 \u0438 \u0440\u0435\u0433\u0438\u0441\u0442\u0440\u0430\u0446\u0438\u0458\u0435 \u2014 \u0432\u0435\u0436\u0431\u0430\u0458\u0442\u0435 \u043e\u0444\u043b\u0430\u0458\u043d \u043f\u0440\u043e\u0442\u0438\u0432 \u0431\u043e\u0442\u043e\u0432\u0430, \u0438\u0433\u0440\u0430\u0458\u0442\u0435 \u043d\u0430 LAN-\u0443 \u0438\u043b\u0438 \u043d\u0430 pokerth.net.' },
+  af: { t: 'PokerTH Web \u2014 Gratis Texas Hold\u2019em-poker in jou blaaier', d: 'Speel PokerTH, die gratis oopbron-Texas Hold\u2019em-pokerspel, direk in jou blaaier. Geen aflaai, geen registrasie nie \u2014 oefen vanlyn teen botte, speel oor LAN of sluit by pokerth.net aan.' },
+  ca: { t: 'PokerTH Web \u2014 P\u00f2quer Texas Hold\u2019em gratu\u00eft al navegador', d: 'Juga a PokerTH, el joc de p\u00f2quer Texas Hold\u2019em lliure i gratu\u00eft, directament al navegador. Sense desc\u00e0rregues ni registre: practica fora de l\u00ednia contra bots, juga en LAN o uneix-te a pokerth.net.' },
+  gl: { t: 'PokerTH Web \u2014 P\u00f3ker Texas Hold\u2019em gratu\u00edto no navegador', d: 'Xoga a PokerTH, o xogo de p\u00f3ker Texas Hold\u2019em libre e gratu\u00edto, directamente no navegador. Sen descargas nin rexistro: practica sen conexi\u00f3n contra bots, xoga en LAN ou \u00fanete a pokerth.net.' },
+  gd: { t: 'PokerTH Web \u2014 P\u00f2car Texas Hold\u2019em an-asgaidh sa bhrabhsair', d: 'Cluich PokerTH, an geama p\u00f2cair Texas Hold\u2019em saor le c\u00f2d fosgailte, sa bhrabhsair agad fh\u00e8in. Gun luchdachadh a-nuas, gun chl\u00e0radh \u2014 d\u00e8an cleachdadh far loidhne an aghaidh botaichean, cluich air LAN no air pokerth.net.' },
+  lt: { t: 'PokerTH Web \u2014 Nemokamas Texas Hold\u2019em pokeris nar\u0161ykl\u0117je', d: '\u017daiskite PokerTH \u2014 nemokam\u0105 atvirojo kodo Texas Hold\u2019em pokerio \u017eaidim\u0105 tiesiai nar\u0161ykl\u0117je. Be atsisiuntimo ir registracijos \u2014 treniruokit\u0117s neprisijung\u0119 prie\u0161 botus, \u017eaiskite LAN tinkle arba pokerth.net.' },
+  ta: { t: 'PokerTH Web \u2014 \u0b89\u0bb2\u0bbe\u0bb5\u0bbf\u0baf\u0bbf\u0bb2\u0bcd \u0b87\u0bb2\u0bb5\u0b9a Texas Hold\u2019em \u0baa\u0bcb\u0b95\u0bcd\u0b95\u0bb0\u0bcd', d: '\u0b87\u0bb2\u0bb5\u0b9a \u0ba4\u0bbf\u0bb1\u0bae\u0bc2\u0bb2 Texas Hold\u2019em \u0baa\u0bcb\u0b95\u0bcd\u0b95\u0bb0\u0bcd \u0bb5\u0bbf\u0bb3\u0bc8\u0baf\u0bbe\u0b9f\u0bcd\u0b9f\u0bbe\u0ba9 PokerTH-\u0b90 \u0b89\u0b99\u0bcd\u0b95\u0bb3\u0bcd \u0b89\u0bb2\u0bbe\u0bb5\u0bbf\u0baf\u0bbf\u0bb2\u0bc7\u0baf\u0bc7 \u0bb5\u0bbf\u0bb3\u0bc8\u0baf\u0bbe\u0b9f\u0bc1\u0b99\u0bcd\u0b95\u0bb3\u0bcd. \u0baa\u0ba4\u0bbf\u0bb5\u0bbf\u0bb1\u0b95\u0bcd\u0b95\u0bae\u0bcb \u0baa\u0ba4\u0bbf\u0bb5\u0bcb \u0ba4\u0bc7\u0bb5\u0bc8\u0baf\u0bbf\u0bb2\u0bcd\u0bb2\u0bc8 \u2014 \u0baa\u0bbe\u0b9f\u0bcd\u0b95\u0bb3\u0bc1\u0b9f\u0ba9\u0bcd \u0b86\u0b83\u0baa\u0bcd\u0bb2\u0bc8\u0ba9\u0bbf\u0bb2\u0bcd \u0baa\u0baf\u0bbf\u0bb1\u0bcd\u0b9a\u0bbf, LAN-\u0b87\u0bb2\u0bcd \u0b85\u0bb2\u0bcd\u0bb2\u0ba4\u0bc1 pokerth.net-\u0b87\u0bb2\u0bcd \u0bb5\u0bbf\u0bb3\u0bc8\u0baf\u0bbe\u0b9f\u0bb2\u0bbe\u0bae\u0bcd.' },
+  vi: { t: 'PokerTH Web \u2014 Poker Texas Hold\u2019em mi\u1ec5n ph\u00ed tr\u00ean tr\u00ecnh duy\u1ec7t', d: 'Ch\u01a1i PokerTH, tr\u00f2 ch\u01a1i poker Texas Hold\u2019em m\u00e3 ngu\u1ed3n m\u1edf mi\u1ec5n ph\u00ed, ngay tr\u00ean tr\u00ecnh duy\u1ec7t. Kh\u00f4ng c\u1ea7n t\u1ea3i v\u1ec1, kh\u00f4ng c\u1ea7n \u0111\u0103ng k\u00fd \u2014 luy\u1ec7n t\u1eadp ngo\u1ea1i tuy\u1ebfn v\u1edbi bot, ch\u01a1i qua LAN ho\u1eb7c tham gia pokerth.net.' },
+  ko: { t: 'PokerTH \uc6f9 \u2014 \ube0c\ub77c\uc6b0\uc800\uc5d0\uc11c \uc990\uae30\ub294 \ubb34\ub8cc \ud14d\uc0ac\uc2a4 \ud640\ub364 \ud3ec\ucee4', d: '\ubb34\ub8cc \uc624\ud508\uc18c\uc2a4 \ud14d\uc0ac\uc2a4 \ud640\ub364 \ud3ec\ucee4 \uac8c\uc784 PokerTH\ub97c \ube0c\ub77c\uc6b0\uc800\uc5d0\uc11c \ubc14\ub85c \uc990\uae30\uc138\uc694. \ub2e4\uc6b4\ub85c\ub4dc\ub3c4 \uac00\uc785\ub3c4 \ud544\uc694 \uc5c6\uc2b5\ub2c8\ub2e4 \u2014 \uc624\ud504\ub77c\uc778 \ubd07 \ub300\uc804, LAN \ud50c\ub808\uc774, pokerth.net \ucc38\uc5ec\uae4c\uc9c0.' },
+  'zh-TW': { t: 'PokerTH \u7db2\u9801\u7248 \u2014 \u5728\u700f\u89bd\u5668\u4e2d\u514d\u8cbb\u73a9\u5fb7\u5dde\u64b2\u514b', d: '\u5728\u700f\u89bd\u5668\u4e2d\u76f4\u63a5\u66a2\u73a9 PokerTH\uff0c\u514d\u8cbb\u958b\u6e90\u7684\u5fb7\u5dde\u64b2\u514b\u904a\u6232\u3002\u7121\u9700\u4e0b\u8f09\u3001\u7121\u9700\u8a3b\u518a\uff1a\u96e2\u7dda\u8207\u96fb\u8166\u5c0d\u6230\u3001\u5340\u57df\u7db2\u8def\u5c0d\u5c40\uff0c\u6216\u52a0\u5165 pokerth.net\u3002' },
+  hi: { t: 'PokerTH \u0935\u0947\u092c \u2014 \u092c\u094d\u0930\u093e\u0909\u091c\u093c\u0930 \u092e\u0947\u0902 \u092e\u0941\u092b\u093c\u094d\u0924 Texas Hold\u2019em \u092a\u094b\u0915\u0930', d: '\u092e\u0941\u092b\u093c\u094d\u0924 \u0913\u092a\u0928-\u0938\u094b\u0930\u094d\u0938 Texas Hold\u2019em \u092a\u094b\u0915\u0930 \u0917\u0947\u092e PokerTH \u0938\u0940\u0927\u0947 \u0905\u092a\u0928\u0947 \u092c\u094d\u0930\u093e\u0909\u091c\u093c\u0930 \u092e\u0947\u0902 \u0916\u0947\u0932\u0947\u0902\u0964 \u0928 \u0921\u093e\u0909\u0928\u0932\u094b\u0921, \u0928 \u092a\u0902\u091c\u0940\u0915\u0930\u0923 \u2014 \u092c\u0949\u091f\u094d\u0938 \u0915\u0947 \u0935\u093f\u0930\u0941\u0926\u094d\u0927 \u0911\u092b\u093c\u0932\u093e\u0907\u0928 \u0905\u092d\u094d\u092f\u093e\u0938 \u0915\u0930\u0947\u0902, LAN \u092a\u0930 \u0916\u0947\u0932\u0947\u0902 \u092f\u093e pokerth.net \u0938\u0947 \u091c\u0941\u0921\u093c\u0947\u0902\u0964' }
+};
+
+// Resolve the ?lang= query parameter onto a SEO_I18N code (case-insensitive).
+// Returns '' for missing, unknown, or 'en' (English folds onto the bare /).
+function seoLangFromQuery(reqUrl) {
+  var m = /[?&]lang=([A-Za-z-]{2,7})/.exec(String(reqUrl || ''));
+  if (!m) return '';
+  var q = m[1].toLowerCase();
+  if (q === 'en') return '';
+  for (var code in SEO_I18N) { if (code.toLowerCase() === q) return code; }
+  return '';
+}
+
+// The full alternate set — identical on every language variant, as Google
+// requires. 'en' and x-default point at the bare /.
+function seoAlternates(base) {
+  var out = ['<link rel="alternate" hreflang="x-default" href="' + base + '/">'];
+  for (var code in SEO_I18N) {
+    out.push('<link rel="alternate" hreflang="' + code + '" href="' + base + (code === 'en' ? '/' : '/?lang=' + code) + '">');
+  }
+  return out;
+}
+
+function seoHeadBlock(base, lang) {
+  var loc = (lang && SEO_I18N[lang]) || SEO_I18N.en;
+  var canon = base ? (base + (lang ? '/?lang=' + lang : '/')) : '';
   var img = base ? base + '/screenshots/social-preview.png' : '';
   var out = [];
   var gsv = seoGsv();
   if (gsv) out.push('<meta name="google-site-verification" content="' + gsv + '">');
-  out.push('<meta name="description" content="' + SEO_DESC + '">');
-  if (base) out.push('<link rel="canonical" href="' + base + '/">');
+  out.push('<meta name="description" content="' + loc.d + '">');
+  if (canon) out.push('<link rel="canonical" href="' + canon + '">');
+  if (base) out = out.concat(seoAlternates(base));
   out.push('<meta property="og:type" content="website">');
   out.push('<meta property="og:site_name" content="PokerTH">');
-  out.push('<meta property="og:title" content="' + SEO_TITLE + '">');
-  out.push('<meta property="og:description" content="' + SEO_DESC + '">');
-  if (base) out.push('<meta property="og:url" content="' + base + '/">');
+  out.push('<meta property="og:title" content="' + loc.t + '">');
+  out.push('<meta property="og:description" content="' + loc.d + '">');
+  if (canon) out.push('<meta property="og:url" content="' + canon + '">');
   if (img) out.push('<meta property="og:image" content="' + img + '">');
   out.push('<meta name="twitter:card" content="summary_large_image">');
-  out.push('<meta name="twitter:title" content="' + SEO_TITLE + '">');
-  out.push('<meta name="twitter:description" content="' + SEO_DESC + '">');
+  out.push('<meta name="twitter:title" content="' + loc.t + '">');
+  out.push('<meta name="twitter:description" content="' + loc.d + '">');
   if (img) out.push('<meta name="twitter:image" content="' + img + '">');
   var ld = {
     '@context': 'https://schema.org',
     '@type': 'WebApplication',
     name: 'PokerTH Web Client',
-    description: SEO_DESC,
+    description: loc.d,
     applicationCategory: 'GameApplication',
     operatingSystem: 'Any',
     browserRequirements: 'Requires JavaScript',
-    inLanguage: 'en',
+    inLanguage: lang || 'en',
     offers: { '@type': 'Offer', price: '0', priceCurrency: 'EUR' },
     sameAs: ['https://github.com/narmod/pokerth-web-client', 'https://www.pokerth.net/']
   };
-  if (base) ld.url = base + '/';
+  if (canon) ld.url = canon;
   if (img) { ld.image = img; ld.screenshot = img; }
   out.push('<script type="application/ld+json">' + JSON.stringify(ld) + '</script>');
   return out.join('\n');
@@ -1149,19 +1220,31 @@ function seoFaqPage(res, method) {
 // Injected-HTML cache: one live variant, keyed on file mtime + SEO state.
 // Compressed once (gzip + brotli, moderate quality) like _compCache does.
 const _seoHtmlCache = new Map();
+let _seoHtmlGen = '';
 function sendClientHtml(req, res) {
   const p = path.join(__dirname, 'public', 'pokerth-client.html');
   let st;
   try { st = fs.statSync(p); } catch (e) { res.writeHead(404); res.end('Not found'); return; }
   const on = seoEnabled(), base = on ? seoPublicUrl() : '';
-  const key = st.mtimeMs + '|' + (on ? '1' : '0') + '|' + base + '|' + (on ? seoGsv() : '');
+  // One cached variant per language (?lang=xx) within the current generation
+  // (mtime + SEO state). A generation change flushes everything; a new
+  // language within the same generation just adds one entry (37 max).
+  const lang = on ? seoLangFromQuery(req.url) : '';
+  const gen = st.mtimeMs + '|' + (on ? '1' : '0') + '|' + base + '|' + (on ? seoGsv() : '');
+  if (_seoHtmlGen !== gen) { _seoHtmlCache.clear(); _seoHtmlGen = gen; }
+  const key = lang || '_';
   let ent = _seoHtmlCache.get(key);
   if (!ent) {
-    _seoHtmlCache.clear();
     let html;
     try { html = fs.readFileSync(p, 'utf8'); } catch (e) { res.writeHead(404); res.end('Not found'); return; }
-    html = html.replace('<!--__SEO_HEAD__-->', on ? seoHeadBlock(base) : '<meta name="robots" content="noindex, nofollow">');
+    html = html.replace('<!--__SEO_HEAD__-->', on ? seoHeadBlock(base, lang) : '<meta name="robots" content="noindex, nofollow">');
     html = html.replace('<!--__SEO_BODY__-->', on ? seoBodyBlock() : '');
+    if (lang) {
+      // Localized variant: matching <html lang> and <title>. The i18n module
+      // re-syncs <html lang> at boot anyway; this is for crawlers.
+      html = html.replace('<html lang="en">', '<html lang="' + lang + '">');
+      html = html.replace('<title>PokerTH Web Client</title>', '<title>' + SEO_I18N[lang].t + '</title>');
+    }
     const buf = Buffer.from(html, 'utf8');
     ent = {
       raw: buf,
