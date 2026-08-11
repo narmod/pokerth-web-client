@@ -10,6 +10,8 @@ export const meta = {
 };
 
 export const strings = {
+  gameAdminBadge: 'Διαχ.',
+  gameAdminTip: 'Διαχειριστής παιχνιδιού: ξεκινά το παιχνίδι και μπορεί να αποβάλλει παίκτες',
   hlColHands: 'Χέρια που παίχτηκαν',
   hlComputing: 'Υπολογισμός…',
   helpTitle:'Βοήθεια', helpSearchPh:'Αναζήτηση στη βοήθεια…', helpWip:'Αυτό το κεφάλαιο γράφεται ακόμη.', helpNoResults:'Κανένα αποτέλεσμα', advHelpBtn:'Εμφάνιση της επιλογής Βοήθεια στα μενού',

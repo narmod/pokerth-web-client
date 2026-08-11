@@ -9,6 +9,8 @@ export const meta = {
 };
 
 export const strings = {
+  gameAdminBadge: 'Адмін',
+  gameAdminTip: 'Адміністратор гри: запускає гру та може виганяти гравців',
   hlColHands: 'Зіграно роздач',
   hlComputing: 'Обчислення…',
   helpTitle:'Довідка', helpSearchPh:'Пошук у довідці…', helpWip:'Цей розділ ще пишеться.', helpNoResults:'Нічого не знайдено', advHelpBtn:'Показувати пункт «Довідка» в меню',

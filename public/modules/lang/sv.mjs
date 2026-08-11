@@ -9,6 +9,8 @@ export const meta = {
 };
 
 export const strings = {
+  gameAdminBadge: 'Admin',
+  gameAdminTip: 'Speladministratör: startar spelet och kan sparka spelare',
   hlColHands: 'Spelade händer',
   hlComputing: 'Beräknar…',
   helpTitle:'Hjälp', helpSearchPh:'Sök i hjälpen…', helpWip:'Det här kapitlet skrivs just nu.', helpNoResults:'Inga resultat', advHelpBtn:'Visa Hjälp-posten i menyerna',

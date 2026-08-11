@@ -10,6 +10,8 @@ export const meta = {
 };
 
 export const strings = {
+  gameAdminBadge: 'Admin',
+  gameAdminTip: 'Quản trị viên bàn chơi: bắt đầu ván và có thể loại người chơi',
   hlColHands: 'Số ván đã chơi',
   hlComputing: 'Đang tính…',
   helpTitle:'Trợ giúp', helpSearchPh:'Tìm trong trợ giúp…', helpWip:'Chương này đang được biên soạn.', helpNoResults:'Không có kết quả', advHelpBtn:'Hiện mục Trợ giúp trong các menu',

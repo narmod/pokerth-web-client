@@ -10,6 +10,8 @@ export const meta = {
 };
 
 export const strings = {
+  gameAdminBadge: 'Админ',
+  gameAdminTip: 'Администратор на играта: стартира играта и може да изгонва играчи',
   hlColHands: 'Изиграни раздавания',
   hlComputing: 'Изчисляване…',
   helpTitle:'Помощ', helpSearchPh:'Търсене в помощта…', helpWip:'Тази глава се пише в момента.', helpNoResults:'Няма резултати', advHelpBtn:'Показвай елемента „Помощ“ в менютата',

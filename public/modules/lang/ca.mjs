@@ -10,6 +10,8 @@ export const meta = {
 };
 
 export const strings = {
+  gameAdminBadge: 'Admin',
+  gameAdminTip: 'Administrador de la partida: inicia la partida i pot expulsar jugadors',
   hlColHands: 'Mans jugades',
   hlComputing: 'Calculant…',
   helpTitle:'Ajuda', helpSearchPh:'Cerca a l\'ajuda…', helpWip:'Aquest capítol s\'està escrivint.', helpNoResults:'Cap resultat', advHelpBtn:'Mostra l\'entrada Ajuda als menús',

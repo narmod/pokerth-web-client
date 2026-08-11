@@ -544,6 +544,22 @@ function onPlayerInfoReply(sub) {
 // doit repeindre la liste, sinon elle reste figée jusqu'à un autre événement
 // (rapport forum : joueur listé idle mais présent dans une partie, ou sorti
 // d'une partie mais absent de la vue idle).
+// GameListAdminChangedMessage (type 17) : l'admin d'une table a change
+// (depart de l'ancien hote). On met a jour games[id].admin puis on
+// re-rend liste + panneaux pour deplacer le badge « Admin » (parite QML
+// lobbyhandler UpdateGameInfoAdmin / gameListRevision).
+function onGameListAdminChanged(sub) {
+    const id  = Proto.u32(sub, 1);
+    const pid = Proto.u32(sub, 2);
+    const g = S.games[id];
+    if (g) g.admin = pid;
+    if (S._openTables.size || S._selectedGame === id) renderGames();
+    _refreshPlayersPanelIfOpen();
+    // Ma table en attente : le panneau central (Infos) porte la liste.
+    try { if (S.gId === id && !S._gameStarted && window.renderWaitingPanel) window.renderWaitingPanel(); } catch (e) {}
+    return;
+}
+
 function _refreshPlayersPanelIfOpen() {
   const _pp = document.getElementById('players-panel');
   if (_pp && _pp.style.display !== 'none' && typeof window.renderPlayersList === 'function') window.renderPlayersList();
@@ -554,6 +570,10 @@ function onGameListNew(sub) {
     const mode = Proto.u32(sub, 2); // 1=created,2=started,3=closed
     const priv = Proto.u32(sub, 3);
     const gi   = Proto.sub(sub, 6); // NetGameInfo
+    // GameListNewMessage.adminPlayerId (champ 5) : admin de table (createur/
+    // hote). Sert au badge « Admin » des listes de joueurs (parite QML
+    // GameAdminBadge, commit upstream 12f5eaf du 09/08/2026).
+    const gadm = Proto.u32(sub, 5) || 0;
     const name = Proto.str(gi, 1) || `#${id}`;
     const gtype= Proto.u32(gi, 2);
     const maxp = Proto.u32(gi, 3);
@@ -617,7 +637,8 @@ function onGameListNew(sub) {
     S.games[id] = { name, mode, players:pc, seats:_seats, maxPlayers:maxp, type:gtype, priv:!!priv,
                   timeout: _gto || 15, startMoney: _gsm || 3000, delay: _gdelay,
                   raiseMode: _grmode, raiseHands: _grhands, raiseMins: _grmins, smallBlind: _gsb,
-                  endRaiseMode: _germode, endRaiseValue: _gerval, manualBlinds: _gmb };
+                  endRaiseMode: _germode, endRaiseValue: _gerval, manualBlinds: _gmb,
+                  admin: gadm };
     if (!S.loaded) { S.loaded = true; }
     renderGames();
     _refreshPlayersPanelIfOpen();
@@ -693,7 +714,7 @@ function onGameListSpectatorLeft(sub) {
    return;
 }
 
-export { onAnnounce, onInitAck, onAuthChallenge, onReportGameAck, onAdminBanPlayerAck, onAdminGlobalNoticeAck, onError, onPlayerList, onStatistics, onPlayerInfoReply, onGameListNew, onGameListUpdate, onGameListPlayerJoined, onGameListPlayerLeft, onGameListSpectatorJoined, onGameListSpectatorLeft };
+export { onAnnounce, onInitAck, onAuthChallenge, onReportGameAck, onAdminBanPlayerAck, onAdminGlobalNoticeAck, onError, onPlayerList, onStatistics, onPlayerInfoReply, onGameListNew, onGameListUpdate, onGameListPlayerJoined, onGameListPlayerLeft, onGameListAdminChanged, onGameListSpectatorJoined, onGameListSpectatorLeft };
 
-for (const [k, v] of Object.entries({ onAnnounce, onInitAck, onAuthChallenge, onReportGameAck, onAdminBanPlayerAck, onAdminGlobalNoticeAck, onError, onPlayerList, onStatistics, onPlayerInfoReply, onGameListNew, onGameListUpdate, onGameListPlayerJoined, onGameListPlayerLeft, onGameListSpectatorJoined, onGameListSpectatorLeft }))
+for (const [k, v] of Object.entries({ onAnnounce, onInitAck, onAuthChallenge, onReportGameAck, onAdminBanPlayerAck, onAdminGlobalNoticeAck, onError, onPlayerList, onStatistics, onPlayerInfoReply, onGameListNew, onGameListUpdate, onGameListPlayerJoined, onGameListPlayerLeft, onGameListAdminChanged, onGameListSpectatorJoined, onGameListSpectatorLeft }))
   window[k] = v;

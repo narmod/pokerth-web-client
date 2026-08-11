@@ -9,6 +9,8 @@ export const meta = {
 };
 
 export const strings = {
+  gameAdminBadge: 'Admin',
+  gameAdminTip: 'Spilladministrator: starter spillet og kan kaste ut spillere',
   hlColHands: 'Spilte hender',
   hlComputing: 'Beregner…',
   helpTitle:'Hjelp', helpSearchPh:'Søk i hjelpen…', helpWip:'Dette kapittelet er under arbeid.', helpNoResults:'Ingen treff', advHelpBtn:'Vis Hjelp-oppføringen i menyene',

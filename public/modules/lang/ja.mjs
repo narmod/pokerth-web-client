@@ -9,6 +9,8 @@ export const meta = {
 };
 
 export const strings = {
+  gameAdminBadge: '管理者',
+  gameAdminTip: 'ゲーム管理者：ゲームを開始し、プレイヤーをキックできます',
   hlColHands: 'プレイしたハンド数',
   hlComputing: '計算中…',
   helpTitle:'ヘルプ', helpSearchPh:'ヘルプを検索…', helpWip:'この章は執筆中です。', helpNoResults:'結果なし', advHelpBtn:'メニューにヘルプ項目を表示',

@@ -11,6 +11,8 @@ export const meta = {
 };
 
 export const strings = {
+  gameAdminBadge: 'Admin',
+  gameAdminTip: 'Rianaire a\' gheama: tòisichidh e an geama agus is urrainn dha cluicheadairean a thilgeil a-mach',
   hlColHands: 'Làmhan air an cluich',
   hlComputing: 'A’ tomhas…',
   helpTitle:'Cobhair', helpSearchPh:'Lorg sa chobhair…', helpWip:'Tha an caibideil seo ga sgrìobhadh fhathast.', helpNoResults:'Gun toradh', advHelpBtn:'Seall an t-inntrigeadh Cobhair sna clàran-taice',

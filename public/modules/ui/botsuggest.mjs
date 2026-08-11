@@ -172,10 +172,15 @@ function _buildMessage(headline, idleScored, busyScored, limit, emptyText) {
 }
 
 function _suggestStep(step, idleNames, playingPlayers) {
+  // Parite QML/widget (commit upstream 1c29025 du 11/08/2026) : au step 1
+  // le ticket vaut 1 → quasi tout joueur de la base se qualifie ; ne pas
+  // proposer en plus les joueurs « playing », sinon la liste devient trop
+  // longue. Ils reapparaissent a partir du step 2.
+  const busy = step === 1 ? [] : _scoreStep(playingPlayers, step);
   return _buildMessage(
     'I suggest the following players for step ' + step + ': ',
     _scoreStep(_asCandidates(idleNames), step),
-    _scoreStep(playingPlayers, step),
+    busy,
     12,
     'Sorry, no player found to suggest');
 }

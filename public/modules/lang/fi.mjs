@@ -9,6 +9,8 @@ export const meta = {
 };
 
 export const strings = {
+  gameAdminBadge: 'Admin',
+  gameAdminTip: 'Pelin ylläpitäjä: aloittaa pelin ja voi poistaa pelaajia',
   hlColHands: 'Pelatut kädet',
   hlComputing: 'Lasketaan…',
   helpTitle:'Ohje', helpSearchPh:'Etsi ohjeesta…', helpWip:'Tätä lukua kirjoitetaan parhaillaan.', helpNoResults:'Ei tuloksia', advHelpBtn:'Näytä Ohje-kohta valikoissa',

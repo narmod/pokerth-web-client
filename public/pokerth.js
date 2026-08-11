@@ -4033,6 +4033,8 @@ const App = (() => {
       case T.GameListPlayerLeft: { onGameListPlayerLeft(sub); break; } // [9g-C3] → net/msg-lobby.mjs
       case T.GameListSpectatorJoined: { onGameListSpectatorJoined(sub); break; } // [9g-C3] → net/msg-lobby.mjs
       case T.GameListSpectatorLeft: { onGameListSpectatorLeft(sub); break; } // [9g-C3] → net/msg-lobby.mjs
+      // L'admin d'une table a change (badge « Admin », parite QML GameAdminBadge)
+      case T.GameListAdminChanged: { onGameListAdminChanged(sub); break; } // → net/msg-lobby.mjs
 
       // ── Spectator events SCOPED to the current game ──
       // Type 80/81. The lobby-level 78/79 above are different (they
@@ -10116,7 +10118,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.6-web.44'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.6-web.45'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

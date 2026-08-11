@@ -120,11 +120,19 @@ function _refreshFilterChips(entries) {
 // (champ 4, playerIds) — pas leur position de siège — donc on liste
 // qui est présent et on demande à la volée les pseudos inconnus
 // (même déduplication que le roster des joueurs en ligne).
+// Pastille « Admin » de table (parite QML GameAdminBadge, commit 12f5eaf) :
+// marque le createur/hote dans la liste depliee et le panneau Infos. Le
+// libelle et l'infobulle sont i18n ; la ligne porteuse recoit en plus une
+// teinte verte (equivalent Theme.colorGameAdminRow).
+function _adminBadgeHtml() {
+  return '<span class="gp-admin" data-i18n="gameAdminBadge" data-i18n-title="gameAdminTip" title="' + t('gameAdminTip') + '">' + t('gameAdminBadge') + '</span>';
+}
 function renderTablePlayers(gid) {
   const g = S.games[gid];
   if (!g) return '';
   const _gseats = (g.seats || []);
   if (!_gseats.length) return '<div class="gp-empty">' + t('tablePlayersEmpty') + '</div>';
+  const _adm = g.admin || 0; // admin de table → badge (parite QML GameListItem)
   return _gseats.map(function(pid){
     const nm = S.players[pid];
     if (!nm && !S._pendingNameRequests.has(pid)) {
@@ -134,7 +142,8 @@ function renderTablePlayers(gid) {
     const flag = _ccToFlag(S._playerCountries[pid], 'gp-flag');
     const label = nm ? esc(nm) : '#' + pid;
     const av = _avatarChipHtml(pid, label, 'gp-av');
-    return '<span class="gp-player' + (nm ? '' : ' gp-pending') + '">' + av + '<span class="gp-name">' + label + '</span>' + flag + '</span>';
+    const isAdm = _adm && pid === _adm;
+    return '<span class="gp-player' + (nm ? '' : ' gp-pending') + (isAdm ? ' gp-adminrow' : '') + '">' + av + '<span class="gp-name">' + label + '</span>' + flag + (isAdm ? _adminBadgeHtml() : '') + '</span>';
   }).join('');
 }
 
@@ -145,20 +154,7 @@ function _renderInfoPlayerRows(gid) {
   var g = S.games[gid]; if (!g) return '';
   var _gseats = g.seats || [];
   if (!_gseats.length) return '<div class="lgi-pempty">' + t('tablePlayersEmpty') + '</div>';
-  return _gseats.map(function(pid){
-    var nm = S.players[pid];
-    if (!nm && !S._pendingNameRequests.has(pid)) {
-      S._pendingNameRequests.add(pid);
-      try { window.send(Proto.encode([[1,0,MSG.T.PlayerInfoRequest],[19,2,Proto.encode([[1,0,pid]])]])); } catch(e) {}
-    }
-    var flag  = _ccToFlag(S._playerCountries[pid], 'gp-flag');
-    var label = nm ? esc(nm) : '#' + pid;
-    var av    = _avatarChipHtml(pid, label, 'gp-av');
-    return '<div class="lgi-prow lgi-click' + (nm ? '' : ' lgi-pending') + '" role="button" tabindex="0"'
-         + ' onclick="window.openPlayerInfoPopup(' + pid + ')"'
-         + ' onkeydown="if(event.key===\'Enter\')window.openPlayerInfoPopup(' + pid + ')">'
-         + av + flag + '<span class="lgi-pname">' + label + '</span></div>';
-  }).join('');
+  return _renderInfoRowsFromPids(_gseats, g.admin || 0);
 }
 // pids présents à MA table pendant l'attente : seatData non 'gone' + moi si
 // absent (le serveur n'écho pas toujours mon propre join, surtout créateur).
@@ -169,8 +165,9 @@ function _gamePresentPids() {
 }
 // Rendu des lignes joueurs depuis une liste de pids arbitraire (pour ma
 // partie en attente, où games[gId].seats peut être vide/en retard).
-function _renderInfoRowsFromPids(pids) {
+function _renderInfoRowsFromPids(pids, adminPid) {
   if (!pids || !pids.length) return '<div class="lgi-pempty">' + t('tablePlayersEmpty') + '</div>';
+  var _adm = adminPid || 0; // admin de table → badge + teinte (parite QML LobbyPage/GameWaitPage)
   return pids.map(function(pid){
     var nm = S.players[pid];
     if (!nm && pid === S.myId) nm = (document.getElementById('nick') ? document.getElementById('nick').value : '') || S.myName;
@@ -181,10 +178,11 @@ function _renderInfoRowsFromPids(pids) {
     var flag  = _ccToFlag(S._playerCountries[pid], 'gp-flag');
     var label = nm ? esc(nm) : '#' + pid;
     var av    = _avatarChipHtml(pid, label, 'gp-av');
-    return '<div class="lgi-prow lgi-click' + (nm ? '' : ' lgi-pending') + '" role="button" tabindex="0"'
+    var isAdm = _adm && pid === _adm;
+    return '<div class="lgi-prow lgi-click' + (nm ? '' : ' lgi-pending') + (isAdm ? ' lgi-adminrow' : '') + '" role="button" tabindex="0"'
          + ' onclick="window.openPlayerInfoPopup(' + pid + ')"'
          + ' onkeydown="if(event.key===\'Enter\')window.openPlayerInfoPopup(' + pid + ')">'
-         + av + flag + '<span class="lgi-pname">' + label + '</span></div>';
+         + av + flag + '<span class="lgi-pname">' + label + '</span>' + (isAdm ? _adminBadgeHtml() : '') + '</div>';
   }).join('');
 }
 function renderGameInfoPanel(gid) {
@@ -216,7 +214,7 @@ function renderGameInfoPanel(gid) {
   // (seatData) au lieu de g.seats qui peut être vide sur une table fraîche.
   var _pids   = _mine ? _gamePresentPids() : (g.seats || []);
   var _count  = _pids.length;
-  var _rows   = _mine ? _renderInfoRowsFromPids(_pids) : _renderInfoPlayerRows(gid);
+  var _rows   = _mine ? _renderInfoRowsFromPids(_pids, (g.admin || (S.amGameAdmin ? S.myId : 0))) : _renderInfoPlayerRows(gid);
   var _blUp = (g.raiseMode === 2) ? (g.raiseMins > 0 ? t('blindsUpMins', { n: g.raiseMins }) : '') : (g.raiseHands > 0 ? t('blindsUpHands', { n: g.raiseHands }) : '');
   // Ordre manuel des blinds (NetGameInfo champ 14) : afficher la structure
   // complète, comme le Game Info du client officiel.

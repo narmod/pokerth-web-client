@@ -424,7 +424,12 @@ function onGameAdminChanged(sub) {
     const newAdminId = Proto.u32(sub, 2);
     if (newAdminId !== S.myId) S.amGameAdmin = false;
     else S.amGameAdmin = true;
+    // Badge « Admin » (parite QML GameAdminBadge) : suivre AUSSI l'admin
+    // quand ce n'est pas nous — le badge se deplace dans la liste des
+    // joueurs du panneau d'attente apres un depart de l'ancien hote.
+    try { if (S.gId && S.games[S.gId]) S.games[S.gId].admin = newAdminId; } catch (e) {}
     try { _updateGameHeader(); } catch(e) {}
+    try { if (!S._gameStarted && window.renderWaitingPanel) window.renderWaitingPanel(); } catch (e) {}
     return;
 }
 

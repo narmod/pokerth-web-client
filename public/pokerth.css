@@ -6871,6 +6871,15 @@ body.spectator-nosend #g-reaction-panel { display: none !important; }
 }
 .gp-player .gp-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .gp-player.gp-pending { opacity: 0.55; }
+/* Badge « Admin » de table (parite QML GameAdminBadge, commit 12f5eaf) :
+   pastille verte (Theme.colorGameAdmin = colorStatusOpen) + ligne teintee
+   (Theme.colorGameAdminRow). --green/--green-rgb suivent deja le mode
+   clair/sombre des themes. */
+.gp-admin { display:inline-block; flex:0 0 auto; margin-left:2px; padding:1px 6px;
+  border-radius:8px; font-size:10px; font-weight:700; line-height:14px; white-space:nowrap;
+  color:var(--green); background:rgba(var(--green-rgb), .22); border:1px solid rgba(var(--green-rgb), .7); }
+.gp-player.gp-adminrow { background:rgba(var(--green-rgb), .14); border-color:rgba(var(--green-rgb), .45); }
+.lgi-prow.lgi-adminrow { background:rgba(var(--green-rgb), .14); border-color:rgba(var(--green-rgb), .45); }
 .cc-flag.gp-flag { width: 18px; height: auto; border-radius: 2px; flex: 0 0 auto; }
 .gp-av {
   display: inline-flex;

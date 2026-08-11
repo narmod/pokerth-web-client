@@ -14,6 +14,8 @@ export const meta = {
 };
 
 export const strings = {
+  gameAdminBadge: 'एडमिन',
+  gameAdminTip: 'गेम एडमिन: गेम शुरू करता है और खिलाड़ियों को निकाल सकता है',
   hlColHands: 'खेले गए हाथ',
   hlComputing: 'गणना जारी…',
   helpTitle:'सहायता', helpSearchPh:'सहायता में खोजें…', helpWip:'यह अध्याय अभी लिखा जा रहा है।', helpNoResults:'कोई परिणाम नहीं', advHelpBtn:'मेनू में सहायता विकल्प दिखाएँ',

@@ -11,6 +11,8 @@ export const meta = {
 };
 
 export const strings = {
+  gameAdminBadge: 'நிர்வாகி',
+  gameAdminTip: 'விளையாட்டு நிர்வாகி: விளையாட்டைத் தொடங்குவார், வீரர்களை வெளியேற்றலாம்',
   hlColHands: 'ஆடிய கைகள்',
   hlComputing: 'கணக்கிடுகிறது…',
   helpTitle:'உதவி', helpSearchPh:'உதவியில் தேடுக…', helpWip:'இந்த அத்தியாயம் எழுதப்பட்டு வருகிறது.', helpNoResults:'முடிவுகள் இல்லை', advHelpBtn:'மெனுக்களில் உதவி உருப்படியைக் காட்டு',

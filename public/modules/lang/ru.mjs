@@ -15,6 +15,8 @@ export const meta = {
 };
 
 export const strings = {
+  gameAdminBadge: 'Админ',
+  gameAdminTip: 'Администратор игры: запускает игру и может исключать игроков',
   hlColHands: 'Сыграно раздач',
   hlComputing: 'Вычисление…',
   helpTitle:'Справка', helpSearchPh:'Поиск по справке…', helpWip:'Эта глава ещё пишется.', helpNoResults:'Ничего не найдено', advHelpBtn:'Показывать пункт «Справка» в меню',

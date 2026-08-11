@@ -11,6 +11,8 @@ export const meta = {
 };
 
 export const strings = {
+  gameAdminBadge: '管理員',
+  gameAdminTip: '遊戲管理員：開始遊戲並可踢出玩家',
   hlColHands: '已玩牌局數',
   hlComputing: '計算中…',
   helpTitle:'說明', helpSearchPh:'搜尋說明…', helpWip:'本章節撰寫中。', helpNoResults:'沒有結果', advHelpBtn:'在選單中顯示「說明」項目',

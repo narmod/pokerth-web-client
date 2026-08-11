@@ -13,6 +13,8 @@ export const meta = {
 };
 
 export const strings = {
+  gameAdminBadge: '관리자',
+  gameAdminTip: '게임 관리자: 게임을 시작하고 플레이어를 추방할 수 있습니다',
   hlColHands: '플레이한 펌 수',
   hlComputing: '계산 중…',
   helpTitle:'도움말', helpSearchPh:'도움말 검색…', helpWip:'이 장은 작성 중입니다.', helpNoResults:'결과 없음', advHelpBtn:'메뉴에 도움말 항목 표시',

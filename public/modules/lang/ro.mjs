@@ -10,6 +10,8 @@ export const meta = {
 };
 
 export const strings = {
+  gameAdminBadge: 'Admin',
+  gameAdminTip: 'Administratorul jocului: pornește jocul și poate exclude jucători',
   hlColHands: 'Mâini jucate',
   hlComputing: 'Se calculează…',
   helpTitle:'Ajutor', helpSearchPh:'Caută în ajutor…', helpWip:'Acest capitol este în curs de redactare.', helpNoResults:'Niciun rezultat', advHelpBtn:'Afișează intrarea Ajutor în meniuri',

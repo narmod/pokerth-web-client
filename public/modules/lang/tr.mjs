@@ -12,6 +12,8 @@ export const meta = {
 };
 
 export const strings = {
+  gameAdminBadge: 'Admin',
+  gameAdminTip: 'Oyun yöneticisi: oyunu başlatır ve oyuncuları atabilir',
   hlColHands: 'Oynanan eller',
   hlComputing: 'Hesaplanıyor…',
   helpTitle:'Yardım', helpSearchPh:'Yardımda ara…', helpWip:'Bu bölüm henüz yazılıyor.', helpNoResults:'Sonuç yok', advHelpBtn:'Menülerde Yardım öğesini göster',

@@ -9,6 +9,8 @@ export const meta = {
 };
 
 export const strings = {
+  gameAdminBadge: 'Admin',
+  gameAdminTip: 'Administrador do jogo: inicia o jogo e pode expulsar jogadores',
   hlColHands: 'Mãos jogadas',
   hlComputing: 'A calcular…',
   helpTitle:'Ajuda', helpSearchPh:'Pesquisar na ajuda…', helpWip:'Este capítulo está a ser escrito.', helpNoResults:'Sem resultados', advHelpBtn:'Mostrar a entrada Ajuda nos menus',

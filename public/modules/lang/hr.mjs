@@ -10,6 +10,8 @@ export const meta = {
 };
 
 export const strings = {
+  gameAdminBadge: 'Admin',
+  gameAdminTip: 'Administrator igre: pokreće igru i može izbaciti igrače',
   hlColHands: 'Odigrane ruke',
   hlComputing: 'Računanje…',
   helpTitle:'Pomoć', helpSearchPh:'Pretraži pomoć…', helpWip:'Ovo se poglavlje još piše.', helpNoResults:'Nema rezultata', advHelpBtn:'Prikaži stavku Pomoć u izbornicima',

@@ -10,6 +10,8 @@ export const meta = {
 };
 
 export const strings = {
+  gameAdminBadge: 'Admin',
+  gameAdminTip: 'Správca hry: spúšťa hru a môže vyhodiť hráčov',
   hlColHands: 'Odohrané rozdania',
   hlComputing: 'Počíta sa…',
   helpTitle:'Pomocník', helpSearchPh:'Hľadať v pomocníkovi…', helpWip:'Táto kapitola sa práve píše.', helpNoResults:'Žiadne výsledky', advHelpBtn:'Zobraziť položku Pomocník v ponukách',

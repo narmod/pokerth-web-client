@@ -10,6 +10,8 @@ export const meta = {
 };
 
 export const strings = {
+  gameAdminBadge: 'Admin',
+  gameAdminTip: 'Žaidimo administratorius: pradeda žaidimą ir gali išmesti žaidėjus',
   hlColHands: 'Suižaisti dalijimai',
   hlComputing: 'Skaičiuojama…',
   helpTitle:'Žinynas', helpSearchPh:'Ieškoti žinyne…', helpWip:'Šis skyrius dar rašomas.', helpNoResults:'Rezultatų nėra', advHelpBtn:'Rodyti Žinyno įrašą meniu',
