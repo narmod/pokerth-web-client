@@ -1071,7 +1071,12 @@ function seoHeadBlock(base, lang) {
   out.push('<meta property="og:title" content="' + loc.t + '">');
   out.push('<meta property="og:description" content="' + loc.d + '">');
   if (canon) out.push('<meta property="og:url" content="' + canon + '">');
-  if (img) out.push('<meta property="og:image" content="' + img + '">');
+  if (img) {
+    out.push('<meta property="og:image" content="' + img + '">');
+    out.push('<meta property="og:image:width" content="1200">');
+    out.push('<meta property="og:image:height" content="630">');
+    out.push('<meta property="og:image:alt" content="' + SEO_TITLE + '">');
+  }
   out.push('<meta name="twitter:card" content="summary_large_image">');
   out.push('<meta name="twitter:title" content="' + loc.t + '">');
   out.push('<meta name="twitter:description" content="' + loc.d + '">');
