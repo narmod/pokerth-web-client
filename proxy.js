@@ -926,7 +926,13 @@ function seoGsv() {
   var v = String(_seoCfg().googleVerification || '').trim();
   return /^[A-Za-z0-9_-]{1,100}$/.test(v) ? v : '';
 }
-function _seoAdmin() { var s = _seoCfg(); return { enabled: s.enabled === true, publicUrl: String(s.publicUrl || ''), googleVerification: String(s.googleVerification || '') }; }
+function seoBingv() {
+  // Bing Webmaster Tools ownership token (msvalidate.01 meta tag method).
+  // Same strict charset policy as seoGsv().
+  var v = String(_seoCfg().bingVerification || '').trim();
+  return /^[A-Za-z0-9_-]{1,100}$/.test(v) ? v : '';
+}
+function _seoAdmin() { var s = _seoCfg(); return { enabled: s.enabled === true, publicUrl: String(s.publicUrl || ''), googleVerification: String(s.googleVerification || ''), bingVerification: String(s.bingVerification || ''), indexNowKey: String(s.indexNowKey || '') }; }
 
 var SEO_TITLE = 'PokerTH Web Client \u2014 Free Texas Hold\u2019em Poker in Your Browser';
 var SEO_DESC = 'Play PokerTH, the free open-source Texas Hold\u2019em poker game, directly in your browser. ' +
@@ -1000,6 +1006,54 @@ function seoAlternates(base) {
   return out;
 }
 
+// ── IndexNow — instant URL submission to Bing / Seznam / Naver / Yandex ────
+// Protocol: https://www.indexnow.org/ — the site proves key ownership by
+// serving /<key>.txt containing the key. Ours is auto-generated the first
+// time SEO is enabled with a public URL, persisted in the admin config, and
+// pinged fire-and-forget (failures only log, never block a request).
+function seoIndexNowKey() {
+  var k = String(_seoCfg().indexNowKey || '');
+  return /^[a-f0-9]{32}$/.test(k) ? k : '';
+}
+function _seoEnsureIndexNowKey() {
+  var s = _seoCfg();
+  if (!/^[a-f0-9]{32}$/.test(String(s.indexNowKey || ''))) {
+    s.indexNowKey = crypto.randomBytes(16).toString('hex');
+    _adminConfig.seo = s;
+  }
+  return s.indexNowKey;
+}
+function seoIndexNowUrls(base) {
+  var urls = [base + '/', base + '/rules', base + '/faq', base + '/privacy'];
+  for (var code in SEO_I18N) { if (code !== 'en') urls.push(base + '/?lang=' + code); }
+  return urls;
+}
+var _indexNowLast = 0;
+function seoIndexNowPing(force) {
+  if (!seoEnabled()) return;
+  var base = seoPublicUrl(); if (!base) return;
+  var key = seoIndexNowKey(); if (!key) return;
+  var now = Date.now();
+  if (!force && now - _indexNowLast < 3600 * 1000) return;
+  _indexNowLast = now;
+  var host = '';
+  try { host = new URL(base).host; } catch (e) { return; }
+  var urls = seoIndexNowUrls(base);
+  var body = JSON.stringify({ host: host, key: key, keyLocation: base + '/' + key + '.txt', urlList: urls });
+  try {
+    var rq = https.request({ hostname: 'api.indexnow.org', path: '/indexnow', method: 'POST', headers: { 'Content-Type': 'application/json; charset=utf-8', 'Content-Length': Buffer.byteLength(body) }, timeout: 10000 }, function (r) {
+      console.log('[seo] IndexNow ping: HTTP ' + r.statusCode + ' (' + urls.length + ' URLs)');
+      r.resume();
+    });
+    rq.on('error', function (e) { console.warn('[seo] IndexNow ping failed:', e.message); });
+    rq.on('timeout', function () { rq.destroy(new Error('timeout')); });
+    rq.end(body);
+  } catch (e) { console.warn('[seo] IndexNow ping failed:', e.message); }
+}
+// One ping shortly after boot when SEO is already enabled, so a restarted
+// proxy re-announces itself without waiting for an admin save.
+setTimeout(function () { try { seoIndexNowPing(true); } catch (e) {} }, 15000);
+
 function seoHeadBlock(base, lang) {
   var loc = (lang && SEO_I18N[lang]) || SEO_I18N.en;
   var canon = base ? (base + (lang ? '/?lang=' + lang : '/')) : '';
@@ -1007,6 +1061,8 @@ function seoHeadBlock(base, lang) {
   var out = [];
   var gsv = seoGsv();
   if (gsv) out.push('<meta name="google-site-verification" content="' + gsv + '">');
+  var bgv = seoBingv();
+  if (bgv) out.push('<meta name="msvalidate.01" content="' + bgv + '">');
   out.push('<meta name="description" content="' + loc.d + '">');
   if (canon) out.push('<link rel="canonical" href="' + canon + '">');
   if (base) out = out.concat(seoAlternates(base));
@@ -1230,7 +1286,7 @@ function sendClientHtml(req, res) {
   // (mtime + SEO state). A generation change flushes everything; a new
   // language within the same generation just adds one entry (37 max).
   const lang = on ? seoLangFromQuery(req.url) : '';
-  const gen = st.mtimeMs + '|' + (on ? '1' : '0') + '|' + base + '|' + (on ? seoGsv() : '');
+  const gen = st.mtimeMs + '|' + (on ? '1' : '0') + '|' + base + '|' + (on ? seoGsv() : '') + '|' + (on ? seoBingv() : '');
   if (_seoHtmlGen !== gen) { _seoHtmlCache.clear(); _seoHtmlGen = gen; }
   const key = lang || '_';
   let ent = _seoHtmlCache.get(key);
@@ -3002,8 +3058,17 @@ function handleAdmin(req, res, reqPathOnly, query) {
             if (_sg && !/^[A-Za-z0-9_-]+$/.test(_sg)) return adminJson(res, 400, { ok: false, error: 'invalid verification token (letters, digits, - and _ only)' });
             _so.googleVerification = _sg;
           }
+          if (typeof d.seo.bingVerification === 'string') {
+            var _sb = d.seo.bingVerification.trim().slice(0, 100);
+            if (_sb && !/^[A-Za-z0-9_-]+$/.test(_sb)) return adminJson(res, 400, { ok: false, error: 'invalid Bing verification token (letters, digits, - and _ only)' });
+            _so.bingVerification = _sb;
+          }
           _adminConfig.seo = _so;
           _seoHtmlCache.clear();   // re-inject on next page load
+          if (_so.enabled === true && _so.publicUrl) {
+            _seoEnsureIndexNowKey();   // persisted by the saveAdminConfig() below
+            setImmediate(function () { try { seoIndexNowPing(true); } catch (e) {} });
+          }
         }
         saveAdminConfig();
         return adminJson(res, 200, { ok: true, resetPeriod: STATS_RESET_PERIOD, modes: appModes(), welcome: _welcomeAdmin(), showLoginTitle: !!_adminConfig.showLoginTitle, defaultTheme: _adminConfig.defaultTheme || '', defaults: _adminConfig.defaults || {}, loginDefaults: _loginDefaults(false), proxyCfg: _adminConfig.proxyCfg || {}, tableDefaults: _adminConfig.tableDefaults || {}, tableNames: _adminConfig.tableNames || {}, serverName: _adminConfig.serverName || '', serverTagline: _adminConfig.serverTagline || '', discordChatWebhookUrl: _adminConfig.discordChatWebhookUrl || '', featureSwitches: FEATURE_SWITCHES, featureOff: featureOffList(), musicEnabled: musicEnabled(), seo: _seoAdmin() });
@@ -4627,6 +4692,15 @@ const httpServer = http.createServer((req, res) => {
     res.writeHead(200, Object.assign({ 'Content-Type': 'text/plain; charset=utf-8', 'Cache-Control': 'no-cache, must-revalidate' }, SECURITY_HEADERS));
     res.end(seoLlmsTxt(seoPublicUrl()));
     return;
+  }
+  // IndexNow key file — /<key>.txt proves ownership of the submitted host.
+  if (seoEnabled()) {
+    var _inKey = seoIndexNowKey();
+    if (_inKey && reqPathOnly === '/' + _inKey + '.txt') {
+      res.writeHead(200, Object.assign({ 'Content-Type': 'text/plain; charset=utf-8', 'Cache-Control': 'no-cache, must-revalidate' }, SECURITY_HEADERS));
+      res.end(_inKey);
+      return;
+    }
   }
   if (reqPathOnly === '/rules' || reqPathOnly === '/rules.html') {
     return seoRulesPage(res, req.method);
