@@ -647,6 +647,22 @@ function _pokerthnetSource() { var s = _adminConfig && _adminConfig.pokerthnetSo
 // reconnect). Default 'direct' so existing installs keep their behavior.
 function _internetTransport() { var t = _adminConfig && _adminConfig.internetTransport; return t === 'proxy' ? 'proxy' : 'direct'; }
 function _serverlistUrl() { var u = _adminConfig && _adminConfig.serverlistUrl; u = String(u || '').trim(); return u || DEFAULT_SERVERLIST_URL; }
+// PROXY protocol v1 (haproxy) toward the game server: when enabled, every
+// upstream connection starts with a "PROXY TCP4 <client> <server> ..." line
+// carrying the REAL browser IP, sent before TLS and before any PokerTH frame.
+// The game server must be configured to expect it — otherwise the line is
+// garbage to it and every connection dies. Hence: explicit toggle, default OFF.
+function _proxyProtocolOn() { return !!(_adminConfig && _adminConfig.proxyProtocol); }
+function _ppNorm(ip) { var s = String(ip || '').trim(); var m = s.match(/^::ffff:(\d+\.\d+\.\d+\.\d+)$/i); return m ? m[1] : s; }
+function _ppHeader(S, dstAddr) {
+  var srcA = _ppNorm(S.ip), dstA = _ppNorm(dstAddr);
+  var sf = net.isIP(srcA), df = net.isIP(dstA);
+  // v1 spec: both addresses must be valid and of the same family; otherwise
+  // announce UNKNOWN (server then falls back to the socket address).
+  if (!sf || !df || sf !== df) return 'PROXY UNKNOWN\r\n';
+  var sp = (S.ipPort > 0 && S.ipPort < 65536) ? S.ipPort : 0;
+  return 'PROXY ' + (sf === 6 ? 'TCP6' : 'TCP4') + ' ' + srcA + ' ' + dstA + ' ' + sp + ' ' + S.port + '\r\n';
+}
 
 // ── LAN / dedicated server policy (admin -> "Default login form") ──────────
 // lanMode 'auto'   : the client keeps the address it remembers (falling back to
@@ -3093,7 +3109,7 @@ function handleAdmin(req, res, reqPathOnly, query) {
       _serversList().forEach(function (s) { if (_hosts.indexOf(s.host) < 0) _hosts.push(s.host); if (_ports.indexOf(s.port) < 0) _ports.push(s.port); });
       var _autoSrv = _serverlistCache.server;
       if (_autoSrv) { if (_hosts.indexOf(_autoSrv.host) < 0) _hosts.push(_autoSrv.host); if (_ports.indexOf(_autoSrv.port) < 0) _ports.push(_autoSrv.port); }
-      return adminJson(res, 200, { ok: true, servers: _serversList(), activeServerId: (_adminConfig.activeServerId || ''), source: _pokerthnetSource(), transport: _internetTransport(), serverlistUrl: _serverlistUrl(), serverlist: { server: _serverlistCache.server, fetchedAt: _serverlistCache.fetchedAt, error: _serverlistCache.error }, allowlist: { hosts: _hosts, ports: _ports }, effective: _effectiveTarget() });
+      return adminJson(res, 200, { ok: true, servers: _serversList(), activeServerId: (_adminConfig.activeServerId || ''), source: _pokerthnetSource(), transport: _internetTransport(), proxyProtocol: _proxyProtocolOn(), serverlistUrl: _serverlistUrl(), serverlist: { server: _serverlistCache.server, fetchedAt: _serverlistCache.fetchedAt, error: _serverlistCache.error }, allowlist: { hosts: _hosts, ports: _ports }, effective: _effectiveTarget() });
     }
     return readJsonBody(req, function (d) {
       if (!adminAuthed(query, d && d.token)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
@@ -3121,6 +3137,9 @@ function handleAdmin(req, res, reqPathOnly, query) {
       if (typeof d.transport !== 'undefined') {
         _adminConfig.internetTransport = (String(d.transport || '') === 'proxy') ? 'proxy' : 'direct';
       }
+      if (typeof d.proxyProtocol !== 'undefined') {
+        _adminConfig.proxyProtocol = !!d.proxyProtocol;
+      }
       if (typeof d.serverlistUrl !== 'undefined') {
         var _u = String(d.serverlistUrl || '').trim().slice(0, 300);
         var _changed = _u !== (_adminConfig.serverlistUrl || '');
@@ -3128,7 +3147,7 @@ function handleAdmin(req, res, reqPathOnly, query) {
         if (_changed && _pokerthnetSource() === 'auto') { _serverlistCache.fetchedAt = 0; setTimeout(maybeRefreshServerlist, 0); }
       }
       saveAdminConfig();
-      return adminJson(res, 200, { ok: true, servers: out, activeServerId: (_adminConfig.activeServerId || ''), source: _pokerthnetSource(), transport: _internetTransport(), serverlistUrl: _serverlistUrl() });
+      return adminJson(res, 200, { ok: true, servers: out, activeServerId: (_adminConfig.activeServerId || ''), source: _pokerthnetSource(), transport: _internetTransport(), proxyProtocol: _proxyProtocolOn(), serverlistUrl: _serverlistUrl() });
     });
   }
   if (reqPathOnly === '/admin/servers/serverlist' && req.method === 'POST') {
@@ -3712,7 +3731,7 @@ function handleAdmin(req, res, reqPathOnly, query) {
                        'pkgDisabled', 'pkgFull', 'pkgFullscreen', 'pkgAlign', 'musicTracks',
                        'musicEnabled', 'musicHidden', 'musicOrder',
                        'seo', 'servers', 'activeServerId', 'pokerthnetSource',
-                       'internetTransport', 'serverlistUrl'];
+                       'internetTransport', 'proxyProtocol', 'serverlistUrl'];
       const next = {}, taken = [], skipped = [];
       Object.keys(src).forEach(function (k) {
         if (ALLOWED.indexOf(k) >= 0) { next[k] = src[k]; taken.push(k); } else skipped.push(k);
@@ -5473,9 +5492,27 @@ function _openUpstream(S) {
           : '(raw TCP)';
         console.log('[+] Connected ' + info + ' → ' + addr + ':' + S.port);
       };
-      S.sock = S.useTls
-        ? tls.connect({ ...opts, rejectUnauthorized: tlsPins.length ? false : verify }, onConn)
-        : net.connect(opts, onConn);
+      if (_proxyProtocolOn()) {
+        // PROXY protocol : socket TCP nu d'abord, header en tout premier octet,
+        // puis (si TLS) handshake par-dessus le même socket. L'écouteur du
+        // header est enregistré AVANT le wrap TLS → il part avant le ClientHello.
+        const raw = net.connect({ host: addr, port: S.port });
+        raw.once('connect', () => { try { raw.write(_ppHeader(S, addr)); } catch (_) {} });
+        if (S.useTls) {
+          S.sock = tls.connect({ socket: raw, ...(sniName && { servername: sniName }), rejectUnauthorized: tlsPins.length ? false : verify }, onConn);
+          // Une erreur du socket sous-jacent (ECONNREFUSED…) ne remonte pas
+          // toujours au TLSSocket : on la relaie (double émission inoffensive,
+          // _destroySession est idempotent).
+          raw.once('error', (e) => { try { S.sock && S.sock.emit('error', e); } catch (_) {} });
+        } else {
+          S.sock = raw;
+          raw.once('connect', onConn);
+        }
+      } else {
+        S.sock = S.useTls
+          ? tls.connect({ ...opts, rejectUnauthorized: tlsPins.length ? false : verify }, onConn)
+          : net.connect(opts, onConn);
+      }
 
       S.sock.on('data', chunk => {
         S.bOut = (S.bOut || 0) + chunk.length;
@@ -5636,6 +5673,7 @@ wss.on('connection', (ws, req) => {
   ws._ver = String(params.get('v') || '').slice(0, 24);
   ws._ua = String((req.headers && req.headers['user-agent']) || '').slice(0, 180);
   ws._ip = clientIp(req);
+  ws._port = (req.socket && req.socket.remotePort) || 0;
   ws._startedAt = Date.now();
 
   // ── Notify-only channel (?notify=1) ──
@@ -5713,7 +5751,7 @@ wss.on('connection', (ws, req) => {
   const S = { sid, host, port, useTls, sock: null, ws: null, connected: false,
               rxBuf: Buffer.alloc(0), n: 0, buf: [], bufBytes: 0, grace: null,
               id: ++_sessSeq, startedAt: Date.now(), bIn: 0, bOut: 0,
-              ip: ws._ip, ua: ws._ua, ver: ws._ver, bcMode: modeParam || '' };
+              ip: ws._ip, ipPort: ws._port || 0, ua: ws._ua, ver: ws._ver, bcMode: modeParam || '' };
   _liveSessions.add(S);
   if (sid) _sessions.set(sid, S);
   _attachWs(S, ws);
