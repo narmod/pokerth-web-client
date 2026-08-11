@@ -64,6 +64,12 @@
   .trafchart .bar{flex:1;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;height:100%;min-width:0}
   .trafchart .bar i{display:block;width:100%;background:linear-gradient(180deg,#4080d8,#1a3d8b);border-radius:3px 3px 0 0;min-height:2px}
   .trafchart .bar span{font-size:.58rem;color:var(--text);margin-top:3px;white-space:nowrap}
+  .trafchart .bar i.nw{background:linear-gradient(180deg,#3fae6a,#1c6b3e);border-radius:0 0 0 0}
+  .trafchart .bar i.rt{background:linear-gradient(180deg,#4080d8,#1a3d8b);border-radius:3px 3px 0 0}
+  .traflegend{display:flex;gap:14px;font-size:.7rem;color:var(--text);margin:6px 0 0}
+  .traflegend em{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:5px;vertical-align:-1px;font-style:normal}
+  .traflegend .nw em{background:#3fae6a}
+  .traflegend .rt em{background:#4080d8}
   .boardhead{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
   .row{display:flex;align-items:center;gap:10px;padding:8px 4px;border-top:1px solid rgba(255,255,255,.06)}
   .row:first-of-type{border-top:0}
@@ -233,7 +239,9 @@
       <div class="card">
         <h2 style="margin:0 0 8px">New vs returning visitors</h2>
         <p class="muted" style="margin:2px 0 10px">Based on an anonymous per-device id — no names. A session is “new” the first time a device is ever seen, otherwise “returning”.</p>
-        <div id="trafNvR"><div class="empty">Loading…</div></div>
+        <div id="trafNvRChart" class="trafchart" style="display:none"></div>
+        <div id="trafNvRLegend" class="traflegend" style="display:none"><span class="nw"><em></em>New</span><span class="rt"><em></em>Returning</span></div>
+        <div id="trafNvR" style="margin-top:10px"><div class="empty">Loading…</div></div>
       </div>
       <div class="card">
         <h2 style="margin:0 0 8px">Database (MySQL mirror)</h2>
@@ -1471,6 +1479,19 @@
       // Champ absent = proxy antérieur à la fonctionnalité ; objet vide = rien
       // à compter encore. Voir renderEnv().
       _envKnown=(d.env!==undefined); _envData=d.env||{}; _envSince=d.envSince||0; _envPings=d.pings||null; renderEnv();
+      var nvc=$('trafNvRChart'), nvl=$('trafNvRLegend');
+      // Champ nw absent de la série = proxy pas encore redémarré sur cette version.
+      if(nvc && s.length && s[0].nw!==undefined){
+        var nmax=1;
+        s.forEach(function(x){ var t=(x.nw||0)+(x.rt||0); if(t>nmax) nmax=t; });
+        nvc.innerHTML = s.map(function(x){
+          var hn=Math.round(((x.nw||0)/nmax)*100), hr=Math.round(((x.rt||0)/nmax)*100);
+          var lab=(x.date||'').slice(5);
+          return '<div class="bar" title="'+x.date+': '+(x.nw||0)+' new, '+(x.rt||0)+' returning"><i class="rt" style="height:'+hr+'%"></i><i class="nw" style="height:'+hn+'%"></i><span>'+lab+'</span></div>';
+        }).join('');
+        nvc.style.display='';
+        if(nvl) nvl.style.display='';
+      }
       var nv=$('trafNvR');
       if(nv){
         var wins=[['Today',d.today],['Last 7 days',d.week],['Last 30 days',d.month],['All time',d.allTime]];

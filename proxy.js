@@ -1626,7 +1626,7 @@ function visitsSummary() {
     d.setDate(now.getDate() - i);
     const k = visitDayKey(d);
     const b = visitsStore.days[k];
-    series.push({ date: k, v: b ? (b.v || 0) : 0, u: (b && b.ids) ? Object.keys(b.ids).length : 0 });
+    series.push({ date: k, v: b ? (b.v || 0) : 0, u: (b && b.ids) ? Object.keys(b.ids).length : 0, nw: b ? (b.nw || 0) : 0, rt: b ? (b.rt || 0) : 0 });
   }
   return {
     ok: true,
