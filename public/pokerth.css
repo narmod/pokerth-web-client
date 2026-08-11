@@ -2528,8 +2528,15 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
    flottantes. Tant qu'un menu est ouvert, son header monte juste AU-DESSUS de
    la bande (391) puis redescend a la fermeture (:has ne matche plus). Les
    modales/toasts/bannieres (950+) restent prioritaires. */
-.header:not(.connect-header):has([id$="-overflow-menu"].open) { position: relative; z-index: 391; }
-.connect-header:has([id$="-overflow-menu"].open), .connect-header:has(.cl-menu.open) { z-index: 391; }
+.header:not(.connect-header):has([id$="-overflow-menu"].open),
+.header:not(.connect-header):has(.cl-links[open]) { position: relative; z-index: 391; }
+/* Header connect : la regle de base #s-connect .connect-header porte deja
+   z-index:20 avec une specificite id+classe — il faut au moins l'egaler,
+   sinon la levee a 391 ne s'applique jamais (bug web.52). Le menu hamburger
+   est un <details class="cl-links"> : l'etat ouvert est l'attribut [open],
+   pas une classe .open. */
+#s-connect .connect-header:has([id$="-overflow-menu"].open),
+#s-connect .connect-header:has(.cl-links[open]) { z-index: 391; }
   #g-overflow-menu .btn-sm, #l-overflow-menu .btn-sm, #cr-overflow-menu .btn-sm, #pv-overflow-menu .btn-sm { font-size: var(--fs-md) !important; padding: 9px 32px 9px 14px !important; }
 
   /* ══ Fenetres d'informations ══ */
