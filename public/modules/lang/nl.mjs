@@ -15,6 +15,8 @@ export const meta = {
 };
 
 export const strings = {
+  abClTabWeb: 'Webclient',
+  abClTabUpstream: 'Andere clients',
   abTabChangelog: 'Wijzigingslogboek',
   abClLoading: 'Laden…',
   abClError: 'Het wijzigingslogboek is niet beschikbaar.',

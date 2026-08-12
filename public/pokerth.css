@@ -9154,15 +9154,20 @@ html.reduce-fx .seat-action-badge {
 .ab-suits .r { color:#c0392b; }
 .ab-vername { font-weight:700; font-size:var(--fs-lg); margin-top:8px; color:var(--text-hi); }
 .ab-feats { margin:14px 0; color:var(--text-hi); font-size:var(--fs-md); line-height:1.75; }
-/* Onglet Changelog (parité widget/QML) : texte brut mono, entêtes de
-   version en or, défilement dans le pane. */
-.ab-cl { font-family: var(--ff-mono); font-size: var(--fs-xs); line-height: 1.45; overflow-wrap: anywhere; direction: ltr; text-align: left; }
-.ab-cl-src { font-size: var(--fs-sm); font-weight: 700; color: var(--text); border-bottom: 1px solid var(--border); padding-bottom: 3px; margin: 14px 0 6px; }
-.ab-cl-src:first-child { margin-top: 0; }
-.ab-cl-ver { color: var(--gold, #d4af37); font-weight: 700; margin: 10px 0 4px; }
+/* Onglet Changelog : même typographie que les autres onglets (--fs-md,
+   police héritée), entêtes de version en or, contenu anglais forcé LTR.
+   Les sous-onglets Client web | Autres clients sont une déclinaison
+   réduite des .ab-tab. */
+.ab-cl-tabs { display: flex; gap: 2px; margin-bottom: 12px; }
+.ab-cl-tab { flex: 0 1 auto; border: none; cursor: pointer; padding: 6px 16px; font-size: var(--fs-sm); color: var(--text-hi); background: var(--inset); font-family: var(--ff-display); white-space: nowrap; }
+.ab-cl-tab.active { background: var(--panel-hi); font-weight: 600; }
+:root[data-theme="pokerth-light"] .ab-cl-tab { background: #dfe3ea; }
+:root[data-theme="pokerth-light"] .ab-cl-tab.active { background: #a9b2c6; }
+.ab-cl { font-size: var(--fs-md); line-height: 1.6; overflow-wrap: anywhere; direction: ltr; text-align: left; color: var(--text-hi); max-width: 980px; }
+.ab-cl-ver { color: var(--gold, #d4af37); font-weight: 700; margin: 12px 0 4px; }
 .ab-cl-ver:first-child { margin-top: 0; }
-.ab-cl-line { color: var(--chatlog-muted, var(--text-dim, #9aa3b5)); }
-.ab-cl-gap { height: 6px; }
+.ab-cl-line { color: var(--text-hi); }
+.ab-cl-gap { height: 8px; }
 .ab-copy { color:var(--text); font-size:var(--fs-base); margin-top:10px; }
 .ab-net { text-align:right; margin-top:16px; }
 .ab-pane a { color:var(--info,#2a6fb0); }

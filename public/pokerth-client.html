@@ -2228,7 +2228,16 @@ function _processAvatarFile(file) {
          upstream, copie embarquée /ChangeLog épinglée à la release livrée,
          chargée à la première ouverture de l'onglet (abLoadChangelog). -->
     <div class="ab-pane" id="ab-pane-5" style="display:none">
-      <div id="ab-cl" class="ab-cl"><span data-i18n="abClLoading">Chargement…</span></div>
+      <!-- Deux sous-onglets : le journal du client web, puis celui des
+           autres clients (fichier ChangeLog upstream). -->
+      <div class="ab-cl-tabs" role="tablist">
+        <button class="ab-cl-tab active" id="ab-cl-tab-web" type="button" role="tab" onclick="window.abClShowSub('web')" data-i18n="abClTabWeb">Client web</button>
+        <button class="ab-cl-tab" id="ab-cl-tab-up" type="button" role="tab" onclick="window.abClShowSub('up')" data-i18n="abClTabUpstream">Autres clients</button>
+      </div>
+      <div id="ab-cl" class="ab-cl">
+        <div id="ab-cl-web"><span data-i18n="abClLoading">Chargement…</span></div>
+        <div id="ab-cl-up" style="display:none"><span data-i18n="abClLoading">Chargement…</span></div>
+      </div>
     </div>
   </div>
 </div>

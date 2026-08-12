@@ -14,6 +14,8 @@ export const meta = {
 };
 
 export const strings = {
+  abClTabWeb: 'वेब क्लाइंट',
+  abClTabUpstream: 'अन्य क्लाइंट',
   abTabChangelog: 'परिवर्तन सूची',
   abClLoading: 'लोड हो रहा है…',
   abClError: 'परिवर्तन सूची उपलब्ध नहीं है।',

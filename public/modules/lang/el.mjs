@@ -10,6 +10,8 @@ export const meta = {
 };
 
 export const strings = {
+  abClTabWeb: 'Πελάτης web',
+  abClTabUpstream: 'Άλλοι πελάτες',
   abTabChangelog: 'Ιστορικό αλλαγών',
   abClLoading: 'Φόρτωση…',
   abClError: 'Το ιστορικό αλλαγών δεν είναι διαθέσιμο.',

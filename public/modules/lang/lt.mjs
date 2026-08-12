@@ -10,6 +10,8 @@ export const meta = {
 };
 
 export const strings = {
+  abClTabWeb: 'Žiniatinklio klientas',
+  abClTabUpstream: 'Kiti klientai',
   abTabChangelog: 'Pakeitimų žurnalas',
   abClLoading: 'Įkeliama…',
   abClError: 'Pakeitimų žurnalas nepasiekiamas.',

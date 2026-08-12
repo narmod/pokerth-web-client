@@ -14,6 +14,8 @@ export const meta = {
 };
 
 export const strings = {
+  abClTabWeb: 'לקוח הווב',
+  abClTabUpstream: 'לקוחות אחרים',
   abTabChangelog: 'יומן שינויים',
   abClLoading: 'טוען…',
   abClError: 'יומן השינויים אינו זמין.',

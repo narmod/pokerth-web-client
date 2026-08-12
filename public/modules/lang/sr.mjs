@@ -10,6 +10,8 @@ export const meta = {
 };
 
 export const strings = {
+  abClTabWeb: 'Веб клијент',
+  abClTabUpstream: 'Остали клијенти',
   abTabChangelog: 'Списак измена',
   abClLoading: 'Учитавање…',
   abClError: 'Списак измена није доступан.',

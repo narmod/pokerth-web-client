@@ -10,6 +10,8 @@ export const meta = {
 };
 
 export const strings = {
+  abClTabWeb: 'Webový klient',
+  abClTabUpstream: 'Ostatní klienti',
   abTabChangelog: 'Seznam změn',
   abClLoading: 'Načítání…',
   abClError: 'Seznam změn není k dispozici.',

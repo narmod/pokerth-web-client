@@ -10,6 +10,8 @@ export const meta = {
 };
 
 export const strings = {
+  abClTabWeb: 'Ứng dụng web',
+  abClTabUpstream: 'Các ứng dụng khác',
   abTabChangelog: 'Nhật ký thay đổi',
   abClLoading: 'Đang tải…',
   abClError: 'Nhật ký thay đổi không khả dụng.',

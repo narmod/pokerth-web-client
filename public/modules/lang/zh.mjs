@@ -11,6 +11,8 @@ export const meta = {
 };
 
 export const strings = {
+  abClTabWeb: '网页客户端',
+  abClTabUpstream: '其他客户端',
   abTabChangelog: '更新日志',
   abClLoading: '加载中…',
   abClError: '更新日志不可用。',

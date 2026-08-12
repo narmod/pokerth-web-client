@@ -9,6 +9,8 @@ export const meta = {
 };
 
 export const strings = {
+  abClTabWeb: 'Веб-клієнт',
+  abClTabUpstream: 'Інші клієнти',
   abTabChangelog: 'Список змін',
   abClLoading: 'Завантаження…',
   abClError: 'Список змін недоступний.',

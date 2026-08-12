@@ -9,6 +9,8 @@ export const meta = {
 };
 
 export const strings = {
+  abClTabWeb: 'Webクライアント',
+  abClTabUpstream: 'その他のクライアント',
   abTabChangelog: '変更履歴',
   abClLoading: '読み込み中…',
   abClError: '変更履歴を利用できません。',

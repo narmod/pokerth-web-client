@@ -10,6 +10,8 @@ export const meta = {
 };
 
 export const strings = {
+  abClTabWeb: 'Client web',
+  abClTabUpstream: 'Alți clienți',
   abTabChangelog: 'Jurnal de modificări',
   abClLoading: 'Se încarcă…',
   abClError: 'Jurnalul de modificări nu este disponibil.',

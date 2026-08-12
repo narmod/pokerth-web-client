@@ -16,6 +16,8 @@ export const meta = {
 };
 
 export const strings = {
+  abClTabWeb: 'Web client',
+  abClTabUpstream: 'Other clients',
   abTabChangelog: 'Changelog',
   abClLoading: 'Loading…',
   abClError: 'Changelog unavailable.',

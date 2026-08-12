@@ -9,6 +9,8 @@ export const meta = {
 };
 
 export const strings = {
+  abClTabWeb: 'Cliente web',
+  abClTabUpstream: 'Outros clientes',
   abTabChangelog: 'Registro de alterações',
   abClLoading: 'Carregando…',
   abClError: 'O registro de alterações não está disponível.',

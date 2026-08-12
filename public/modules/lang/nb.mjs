@@ -9,6 +9,8 @@ export const meta = {
 };
 
 export const strings = {
+  abClTabWeb: 'Webklient',
+  abClTabUpstream: 'Andre klienter',
   abTabChangelog: 'Endringslogg',
   abClLoading: 'Laster…',
   abClError: 'Endringsloggen er ikke tilgjengelig.',

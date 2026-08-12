@@ -10081,25 +10081,35 @@ function renderPlayersList() {
     });
     return out.join('');
   }
+  // Sous-onglets du changelog : « Client web » | « Autres clients »
+  window.abClShowSub = function(which){
+    var tw = document.getElementById('ab-cl-tab-web'), tu = document.getElementById('ab-cl-tab-up');
+    var cw = document.getElementById('ab-cl-web'),    cu = document.getElementById('ab-cl-up');
+    var web = (which !== 'up');
+    if (tw) tw.classList.toggle('active', web);
+    if (tu) tu.classList.toggle('active', !web);
+    if (cw) cw.style.display = web ? '' : 'none';
+    if (cu) cu.style.display = web ? 'none' : '';
+  };
   function _abLoadChangelog(){
     if (_abClLoaded) return;
-    var el = document.getElementById('ab-cl'); if (!el) return;
+    var cw = document.getElementById('ab-cl-web'), cu = document.getElementById('ab-cl-up');
+    if (!cw || !cu) return;
     _abClLoaded = true;
-    // Les deux journaux : celui du client web d'abord, puis l'upstream
-    // PokerTH — chacun sous un intitulé (noms propres, non traduits, comme
-    // abCopy). Un fichier manquant n'empêche pas l'autre de s'afficher.
+    // Deux journaux, un par sous-onglet : /ChangeLog-web (ce client) et
+    // /ChangeLog (upstream — clients widget/QML). Un fichier manquant
+    // n'empêche pas l'autre de s'afficher.
+    var errTxt = function(){ var t = (window.I18N && window.I18N.t) ? window.I18N.t('abClError') : null; return (t && t !== 'abClError') ? t : 'Changelog unavailable.'; };
     var one = function(u){ return fetch(u, { cache: 'no-cache' }).then(function(r){ return r.ok ? r.text() : null; }).catch(function(){ return null; }); };
     Promise.all([one('/ChangeLog-web'), one('/ChangeLog')]).then(function(res){
       var web = res[0], up = res[1];
       if (web == null && up == null) throw new Error('none');
-      var h = '';
-      if (web != null) h += '<div class="ab-cl-src">PokerTH Web Client</div>' + _abClRender(web);
-      if (up != null)  h += '<div class="ab-cl-src">PokerTH</div>' + _abClRender(up);
-      el.innerHTML = h;
+      if (web != null) cw.innerHTML = _abClRender(web); else cw.textContent = errTxt();
+      if (up != null)  cu.innerHTML = _abClRender(up);  else cu.textContent = errTxt();
     }).catch(function(){
       _abClLoaded = false; // réessai possible au prochain clic
-      var t = (window.I18N && window.I18N.t) ? window.I18N.t('abClError') : null;
-      el.textContent = (t && t !== 'abClError') ? t : 'Changelog unavailable.';
+      var t = errTxt();
+      cw.textContent = t; cu.textContent = t;
     });
   }
   document.addEventListener('keydown', function(e){
@@ -10302,7 +10312,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.6-web.67'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.6-web.68'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

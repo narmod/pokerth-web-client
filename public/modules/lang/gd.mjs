@@ -11,6 +11,8 @@ export const meta = {
 };
 
 export const strings = {
+  abClTabWeb: 'Cliaìant-lìn',
+  abClTabUpstream: 'Cliaìantan eile',
   abTabChangelog: 'Loga nan atharrachaidhean',
   abClLoading: '’Ga luchdadh…',
   abClError: 'Chan eil loga nan atharrachaidhean ri fhaighinn.',

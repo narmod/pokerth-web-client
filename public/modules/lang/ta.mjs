@@ -11,6 +11,8 @@ export const meta = {
 };
 
 export const strings = {
+  abClTabWeb: 'இணைய கிளையன்',
+  abClTabUpstream: 'பிற கிளையன்கள்',
   abTabChangelog: 'மாற்றப் பதிவு',
   abClLoading: 'ஏற்றப்படுகிறது…',
   abClError: 'மாற்றப் பதிவு கிடைக்கவில்லை.',

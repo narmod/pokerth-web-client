@@ -15,6 +15,8 @@ export const meta = {
 };
 
 export const strings = {
+  abClTabWeb: 'Client web',
+  abClTabUpstream: 'Altri client',
   abTabChangelog: 'Registro delle modifiche',
   abClLoading: 'Caricamento…',
   abClError: 'Il registro delle modifiche non è disponibile.',

@@ -10,6 +10,8 @@ export const meta = {
 };
 
 export const strings = {
+  abClTabWeb: 'Webes kliens',
+  abClTabUpstream: 'Többi kliens',
   abTabChangelog: 'Változásnapló',
   abClLoading: 'Betöltés…',
   abClError: 'A változásnapló nem érhető el.',
