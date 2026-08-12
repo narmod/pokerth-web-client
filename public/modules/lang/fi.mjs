@@ -10,7 +10,7 @@ export const meta = {
 
 export const strings = {
   abClTabWeb: 'Web-asiakas',
-  abClTabUpstream: 'Muut asiakkaat',
+  abClTabUpstream: 'Asennettavat asiakkaat',
   abTabChangelog: 'Muutosloki',
   abClLoading: 'Ladataan…',
   abClError: 'Muutosloki ei ole saatavilla.',

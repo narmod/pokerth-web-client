@@ -11,7 +11,7 @@ export const meta = {
 
 export const strings = {
   abClTabWeb: 'Webkliënt',
-  abClTabUpstream: 'Ander kliënte',
+  abClTabUpstream: 'Installeerbare kliënte',
   abTabChangelog: 'Veranderingslys',
   abClLoading: 'Laai tans…',
   abClError: 'Veranderingslys nie beskikbaar nie.',

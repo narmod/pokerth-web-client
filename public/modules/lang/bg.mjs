@@ -11,7 +11,7 @@ export const meta = {
 
 export const strings = {
   abClTabWeb: 'Уеб клиент',
-  abClTabUpstream: 'Други клиенти',
+  abClTabUpstream: 'Инсталируеми клиенти',
   abTabChangelog: 'Списък с промени',
   abClLoading: 'Зареждане…',
   abClError: 'Списъкът с промени не е наличен.',

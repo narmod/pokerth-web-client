@@ -12,7 +12,7 @@ export const meta = {
 
 export const strings = {
   abClTabWeb: '網頁客戶端',
-  abClTabUpstream: '其他客戶端',
+  abClTabUpstream: '可安裝客戶端',
   abTabChangelog: '更新日誌',
   abClLoading: '載入中…',
   abClError: '更新日誌無法使用。',

@@ -15,7 +15,7 @@ export const meta = {
 
 export const strings = {
   abClTabWeb: 'کلاینت وب',
-  abClTabUpstream: 'سایر کلاینت‌ها',
+  abClTabUpstream: 'کلاینت‌های قابل نصب',
   abTabChangelog: 'تاریخچه تغییرات',
   abClLoading: 'در حال بارگذاری…',
   abClError: 'تاریخچه تغییرات در دسترس نیست.',

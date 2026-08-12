@@ -16,7 +16,7 @@ export const meta = {
 
 export const strings = {
   abClTabWeb: 'Web-Client',
-  abClTabUpstream: 'Andere Clients',
+  abClTabUpstream: 'Installierbare Clients',
   abTabChangelog: 'Änderungsprotokoll',
   abClLoading: 'Wird geladen…',
   abClError: 'Das Änderungsprotokoll ist nicht verfügbar.',

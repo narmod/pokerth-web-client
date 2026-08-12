@@ -15,7 +15,7 @@ export const meta = {
 
 export const strings = {
   abClTabWeb: 'ویب کلائنٹ',
-  abClTabUpstream: 'دیگر کلائنٹس',
+  abClTabUpstream: 'انسٹال کے قابل کلائنٹس',
   abTabChangelog: 'تبدیلیوں کا ریکارڈ',
   abClLoading: 'لوڈ ہو رہا ہے…',
   abClError: 'تبدیلیوں کا ریکارڈ دستیاب نہیں۔',

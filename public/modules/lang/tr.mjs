@@ -13,7 +13,7 @@ export const meta = {
 
 export const strings = {
   abClTabWeb: 'Web istemcisi',
-  abClTabUpstream: 'Diğer istemciler',
+  abClTabUpstream: 'Kurulabilir istemciler',
   abTabChangelog: 'Değişiklik günlüğü',
   abClLoading: 'Yükleniyor…',
   abClError: 'Değişiklik günlüğü kullanılamıyor.',

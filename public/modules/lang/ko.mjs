@@ -14,7 +14,7 @@ export const meta = {
 
 export const strings = {
   abClTabWeb: '웹 클라이언트',
-  abClTabUpstream: '기타 클라이언트',
+  abClTabUpstream: '설치형 클라이언트',
   abTabChangelog: '변경 사항',
   abClLoading: '불러오는 중…',
   abClError: '변경 사항을 사용할 수 없습니다.',

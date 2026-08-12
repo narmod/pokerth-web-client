@@ -18,7 +18,7 @@ export const meta = {
 
 export const strings = {
   abClTabWeb: 'عميل الويب',
-  abClTabUpstream: 'العملاء الآخرون',
+  abClTabUpstream: 'العملاء القابلون للتثبيت',
   abTabChangelog: 'سجل التغييرات',
   abClLoading: 'جارٍ التحميل…',
   abClError: 'سجل التغييرات غير متوفر.',

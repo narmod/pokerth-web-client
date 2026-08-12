@@ -17,7 +17,7 @@ export const meta = {
 
 export const strings = {
   abClTabWeb: 'Client web',
-  abClTabUpstream: 'Autres clients',
+  abClTabUpstream: 'Clients installables',
   abTabChangelog: 'Journal des modifications',
   abClLoading: 'Chargement…',
   abClError: 'Journal des modifications indisponible.',

@@ -10,7 +10,7 @@ export const meta = {
 
 export const strings = {
   abClTabWeb: 'Веб-клієнт',
-  abClTabUpstream: 'Інші клієнти',
+  abClTabUpstream: 'Встановлювані клієнти',
   abTabChangelog: 'Список змін',
   abClLoading: 'Завантаження…',
   abClError: 'Список змін недоступний.',

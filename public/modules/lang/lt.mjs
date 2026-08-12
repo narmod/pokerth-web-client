@@ -11,7 +11,7 @@ export const meta = {
 
 export const strings = {
   abClTabWeb: 'Žiniatinklio klientas',
-  abClTabUpstream: 'Kiti klientai',
+  abClTabUpstream: 'Įdiegiami klientai',
   abTabChangelog: 'Pakeitimų žurnalas',
   abClLoading: 'Įkeliama…',
   abClError: 'Pakeitimų žurnalas nepasiekiamas.',

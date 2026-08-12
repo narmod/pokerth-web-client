@@ -10,7 +10,7 @@ export const meta = {
 
 export const strings = {
   abClTabWeb: 'Cliente web',
-  abClTabUpstream: 'Outros clientes',
+  abClTabUpstream: 'Clientes instaláveis',
   abTabChangelog: 'Registro de alterações',
   abClLoading: 'Carregando…',
   abClError: 'O registro de alterações não está disponível.',

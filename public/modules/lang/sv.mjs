@@ -10,7 +10,7 @@ export const meta = {
 
 export const strings = {
   abClTabWeb: 'Webbklient',
-  abClTabUpstream: 'Övriga klienter',
+  abClTabUpstream: 'Installerbara klienter',
   abTabChangelog: 'Ändringslogg',
   abClLoading: 'Läser in…',
   abClError: 'Ändringsloggen är inte tillgänglig.',

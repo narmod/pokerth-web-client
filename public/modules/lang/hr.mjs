@@ -11,7 +11,7 @@ export const meta = {
 
 export const strings = {
   abClTabWeb: 'Web klijent',
-  abClTabUpstream: 'Ostali klijenti',
+  abClTabUpstream: 'Klijenti za instalaciju',
   abTabChangelog: 'Popis promjena',
   abClLoading: 'Učitavanje…',
   abClError: 'Popis promjena nije dostupan.',
