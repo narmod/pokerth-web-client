@@ -838,6 +838,10 @@ function _effectiveTarget() {
 let PROTO = null;
 (function () {
   try {
+    // Le bundle derive son BUILD_ID de globalThis.BUILD_VERSION (comme le
+    // client derive le sien de window.BUILD_VERSION) : les probes annoncent
+    // ainsi la meme version upstream que les vraies connexions de jeu.
+    try { globalThis.BUILD_VERSION = require('./package.json').version; } catch (e) {}
     var _u = require('url').pathToFileURL(path.join(__dirname, 'public', 'proto', 'index.mjs')).href;
     import(_u).then(function (m) { PROTO = m; }).catch(function (e) { console.warn('[servers] proto bundle load failed:', e && e.message); });
   } catch (e) { console.warn('[servers] proto setup failed:', e && e.message); }

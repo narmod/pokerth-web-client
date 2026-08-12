@@ -40,11 +40,22 @@ export const ErrorReason = pb.ErrorMessage.ErrorReason;            // initAuthFa
 // PokerTH build id composite : (clientType<<24)|(major<<16)|(minor<<8)|patch.
 // ⚠ SOURCE DE VERITE : public/modules/net/proto.mjs + net/messages.mjs
 // (buildInit y definit le BUILD_ID reellement envoye au serveur). Cette
-// facade protobuf.js n'est PAS utilisee par le client en production —
-// seulement par /proto/test.html. On la garde alignee pour eviter deux
-// verites divergentes (elle affichait 2.0.6 alors que le client emettait
-// 2.1.3, source de confusion en audit).
-export const BUILD_ID = 0x01020103; // 16908547 = Qt-Widget 2.1.3 (= net/messages.mjs)
+// facade est utilisee par /proto/test.html ET par le lobbyProbe du proxy
+// (bouton « Check » + rafraichissement de l'onglet Server de /admin) : ses
+// Init invités apparaissent dans les logs du serveur de jeu. Une valeur
+// figee ici derive donc a chaque release (le serveur affichait « 2.1.3 »
+// pour les probes alors que le client emettait 2.1.6 — confusion du
+// 12/08/2026). Derivation identique a messages.mjs : BUILD_VERSION
+// ('MAJ.MIN.PATCH-web.N') — posee par pokerth.js dans le navigateur et par
+// proxy.js (version de package.json) cote Node. Repli : release courante.
+export const BUILD_ID = (() => {
+  let M = 2, N = 1, P = 6; // repli : release upstream courante
+  try {
+    const m = /^(\d+)\.(\d+)\.(\d+)-web\.\d+$/.exec(String(globalThis.BUILD_VERSION || ''));
+    if (m) { M = +m[1]; N = +m[2]; P = +m[3]; }
+  } catch (e) {}
+  return ((0x01 << 24) | (M << 16) | (N << 8) | P) >>> 0; // Qt-Widget M.N.P
+})();
 
 // ─────────────────────────────────────────────────────────────────────────
 // Encoders — drop-in replacements for the manual builders in pokerth.js
