@@ -954,9 +954,9 @@ function seoBingv() {
 }
 function _seoAdmin() { var s = _seoCfg(); return { enabled: s.enabled === true, publicUrl: String(s.publicUrl || ''), googleVerification: String(s.googleVerification || ''), bingVerification: String(s.bingVerification || ''), indexNowKey: String(s.indexNowKey || '') }; }
 
-var SEO_TITLE = 'PokerTH Web Client \u2014 Free Texas Hold\u2019em Poker in Your Browser';
-var SEO_DESC = 'Play PokerTH, the free open-source Texas Hold\u2019em poker game, directly in your browser. ' +
-  'No download, no registration \u2014 practice offline against bots, play on LAN or join pokerth.net. 40 languages, installable as an app (PWA).';
+var SEO_TITLE = 'PokerTH Web Client \u2014 Play Free Texas Hold\u2019em Poker in Your Browser';
+var SEO_DESC = 'Play Texas Hold\u2019em poker free in your browser with PokerTH, the open-source poker game. ' +
+  'No download, no ads, no registration \u2014 practice offline against bots, play on LAN or join pokerth.net. 40 languages, installable as an app (PWA).';
 
 
 // ── hreflang — localized <title> + description for the 40 UI languages ────
@@ -968,7 +968,7 @@ var SEO_DESC = 'Play PokerTH, the free open-source Texas Hold\u2019em poker game
 // duplicate). Codes are the catalogue codes of public/modules/lang/*.mjs.
 var SEO_I18N = {
   en: { t: SEO_TITLE, d: SEO_DESC },
-  fr: { t: 'PokerTH Web \u2014 Poker Texas Hold\u2019em gratuit dans votre navigateur', d: 'Jouez \u00e0 PokerTH, le jeu de poker Texas Hold\u2019em libre et gratuit, directement dans votre navigateur. Sans t\u00e9l\u00e9chargement ni inscription \u2014 entra\u00eenez-vous hors ligne contre des bots, jouez en LAN ou sur pokerth.net.' },
+  fr: { t: 'PokerTH Web \u2014 Poker Texas Hold\u2019em gratuit dans votre navigateur', d: 'Jouez \u00e0 PokerTH, le jeu de poker Texas Hold\u2019em libre et gratuit, directement dans votre navigateur. Sans t\u00e9l\u00e9chargement, sans publicit\u00e9, sans inscription \u2014 entra\u00eenez-vous hors ligne contre des bots, jouez en LAN ou sur pokerth.net.' },
   de: { t: 'PokerTH Web-Client \u2014 Kostenloses Texas Hold\u2019em Poker im Browser', d: 'Spiele PokerTH, das freie Open-Source-Texas-Hold\u2019em-Pokerspiel, direkt im Browser. Kein Download, keine Registrierung \u2014 offline gegen Bots \u00fcben, im LAN spielen oder pokerth.net beitreten.' },
   es: { t: 'PokerTH Web \u2014 P\u00f3ker Texas Hold\u2019em gratis en tu navegador', d: 'Juega a PokerTH, el juego de p\u00f3ker Texas Hold\u2019em libre y gratuito, directamente en tu navegador. Sin descargas ni registro: practica sin conexi\u00f3n contra bots, juega en LAN o \u00fanete a pokerth.net.' },
   it: { t: 'PokerTH Web \u2014 Poker Texas Hold\u2019em gratuito nel browser', d: 'Gioca a PokerTH, il gioco di poker Texas Hold\u2019em libero e gratuito, direttamente nel browser. Nessun download, nessuna registrazione: allenati offline contro i bot, gioca in LAN o su pokerth.net.' },
@@ -1136,6 +1136,7 @@ function seoBodyBlock() {
     'Game modes: offline practice against computer opponents, LAN or private dedicated servers, and the official pokerth.net network with rankings.</p>' +
     '<p>Features: full Texas Hold\u2019em rules, up to 10 players per table, 40 interface languages, voice announcements, ' +
     'music player, customizable card decks and table styles, and complete feature parity with the official PokerTH desktop client.</p>' +
+    '<p>Completely free: no ads, no in-app purchases, no real-money gambling \u2014 just play-money poker in your browser.</p>' +
     '<p>Free software \u2014 source code on GitHub (narmod/pokerth-web-client), based on PokerTH by the PokerTH Development Team.</p>' +
     '<p><a href="/rules">Texas Hold\u2019em rules</a> \u2014 <a href="/faq">FAQ</a> \u2014 <a href="/privacy">Privacy</a></p>' +
     '</div>';
@@ -1148,7 +1149,7 @@ function seoFooterBlock() {
   // only when the admin SEO toggle is on - self-hosted installs keep
   // the stock footer, and the file on disk stays neutral.
   return '<div class="connect-footer-line" id="cf-seo" style="opacity:0.75">' +
-    'Free open-source Texas Hold\u2019em poker in your browser \u2014 no download, no signup \u00b7 ' +
+    'Free open-source Texas Hold\u2019em poker in your browser \u2014 no download, no ads, no signup \u00b7 ' +
     '<a href="/rules">Poker rules</a> \u00b7 <a href="/faq">FAQ</a></div>';
 }
 
@@ -1278,6 +1279,12 @@ function seoRulesPage(res, method) {
 var _SEO_FAQ = [
   ['Is PokerTH free?',
    'Yes. PokerTH is free and open-source software (GPL). There is nothing to buy, no ads and no real-money gambling \u2014 all chips are play money.'],
+  ['Can I play poker without downloading anything?',
+   'Yes. The PokerTH web client runs entirely in your browser \u2014 no download, no installation. Open the site and you are at the table; you can optionally add it to your home screen as an app (PWA).'],
+  ['Is it really free, with no ads?',
+   'Yes. PokerTH shows no ads, has no in-app purchases and no hidden costs. It is open-source software developed by volunteers, and all chips are play money.'],
+  ['Can I play Texas Hold\u2019em in my browser against other people?',
+   'Yes. Join the official pokerth.net network to play live Texas Hold\u2019em against players worldwide, or send an invite link so friends land directly at your table \u2014 everything inside the browser.'],
   ['Do I need an account to play?',
    'No account is needed to practice offline against computer opponents. To play online on the official pokerth.net network you need a free pokerth.net account.'],
   ['Does it run on mobile?',
@@ -1309,7 +1316,7 @@ function seoFaqPage(res, method) {
   body += '</dl>';
   var ld = { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: ents };
   seoContentPage(res, method, 'FAQ \u2014 PokerTH Web Client',
-    'Frequently asked questions about the PokerTH Web Client: free play, accounts, mobile support, offline mode, languages and privacy.',
+    'Frequently asked questions about the PokerTH Web Client: free poker with no ads, playing Texas Hold\u2019em in your browser without any download, accounts, mobile support, offline mode, languages and privacy.',
     '/faq', body, ld);
 }
 
