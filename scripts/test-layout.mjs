@@ -143,6 +143,19 @@ function overlapsAny(boxes, s) {
 // heads-up (2 joueurs) spectateur : l'unique adversaire est en haut, pas de remontée parasite
 const spHU = _qmlLandscapeLayout(1, 1280, 620, false, 1, true);
 ok(spHU.slots.length === 1 && spHU.slots[0].y < 0.5 * 620, 'spectateur heads-up: adversaire en haut, intact');
+// ── Recentrage vertical du ring spectateur (QML stable) : marges haut/bas
+// égales sur le ring fini (perle + sièges), à ±1 px. ──
+[[7, 1920, 900, false], [9, 1920, 900, false], [5, 1366, 700, false], [7, 844, 390, true]].forEach(function (cfg) {
+  const N = cfg[0], W = cfg[1], H = cfg[2], C = cfg[3];
+  const sp = _qmlLandscapeLayout(N, W, H, C, 1, true);
+  const half = oppBH * sp.s / 2;
+  const all = [sp.seat0].concat(sp.slots);
+  let mn = Infinity, mx = -Infinity;
+  all.forEach(function (p) { if (p.y < mn) mn = p.y; if (p.y > mx) mx = p.y; });
+  const topM = mn - half, botM = H - (mx + half);
+  ok(близко(topM, botM, 1), 'spectateur N=' + N + ' @' + W + 'x' + H + ': ring recentré (marges ' +
+     topM.toFixed(1) + '/' + botM.toFixed(1) + ')');
+});
 
 if (fails) { console.error(fails + ' test(s) failed'); process.exit(1); }
 console.log('All layout tests passed.');

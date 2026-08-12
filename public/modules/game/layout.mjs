@@ -331,6 +331,30 @@ function _qmlLandscapeLayout(oppCnt, zW, zH, compact, zoomMul, spectating) {
       if (_s2 && _yLift < _s2.y) _s2.y = _yLift;
     }
   }
+  // ── Recentrage vertical du ring spectateur (QML stable 2.1.5+, GamePage
+  // slotPos) : sideGravity/lowerGravity tirent l'anneau vers le bas — avec
+  // self-box c'est voulu (le ring se referme autour d'elle), mais en
+  // spectateur le siège du bas colle au bord de la fenêtre pendant qu'un
+  // grand vide reste en haut (« Bodensitz am Fensterrand klebt »). Fix QML
+  // verbatim : le ring FINI (perle du bas + tous les sièges, remontée web
+  // incluse) est translaté verticalement pour égaliser les marges haut/bas.
+  // Translation pure : paires, bisection et distance sièges↔community
+  // (mesurée sur les plates peintes) suivent sans changement. ──
+  if (spectating) {
+    var _halfHc = oppBaseH * sFin / 2;
+    var _allC = seat0 ? [seat0].concat(slots) : slots.slice();
+    var _minYc = Infinity, _maxYc = -Infinity;
+    for (var _ci = 0; _ci < _allC.length; _ci++) {
+      var _cy2 = _allC[_ci].y;
+      if (_cy2 < _minYc) _minYc = _cy2;
+      if (_cy2 > _maxYc) _maxYc = _cy2;
+    }
+    if (_minYc < Infinity) {
+      var _shiftYc = ((zH - (_maxYc + _halfHc)) - (_minYc - _halfHc)) / 2;
+      for (var _sic = 0; _sic < _allC.length; _sic++) _allC[_sic].y += _shiftYc;
+      for (var _rac = 0; _rac < raw.length; _rac++) raw[_rac].y += _shiftYc;
+    }
+  }
   return { s: sFin, slots: slots, raw: raw, seat0: seat0,
            // Ancre de la selfBox : QML = anchors.bottomMargin 12 en paysage
            // (wide) ; ajustement WEB (demande narmod 2026-07-17) : marge
