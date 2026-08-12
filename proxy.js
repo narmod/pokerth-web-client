@@ -4780,7 +4780,12 @@ const httpServer = http.createServer((req, res) => {
       res._rlIp = ip;
       // Read-only dashboard polls (auto-refreshed on a timer) are not credential
       // submissions — never count their 403s toward the brute-force block.
-      if (req.method === 'GET' && (reqPathOnly === '/admin/status' || reqPathOnly === '/admin/logs')) res._rlNoPenalty = true;
+      // /admin/sessions refreshes every 5 s: with a stale token it alone used
+      // to rack up 10 penalized 403s in 50 s and lock the admin's own IP out.
+      // Online brute force through these GETs is unrealistic anyway: the token
+      // is a high-entropy value from the environment, not a guessable password.
+      if (req.method === 'GET' && (reqPathOnly === '/admin/status' || reqPathOnly === '/admin/logs'
+          || reqPathOnly === '/admin/sessions' || reqPathOnly === '/admin/broadcasts')) res._rlNoPenalty = true;
       if (req.method === 'POST') res.on('finish', function () { auditRecord(req, res, reqPathOnly, q); });
       _rlAdminFail.get(ip).then(function (r) {
         if (r && r.remainingPoints <= 0 && r.msBeforeNext > 0) {

@@ -732,10 +732,11 @@
   // otherwise the auto-refresh loops keep hammering /admin — which renews the
   // 15-min IP block forever and the panel never recovers without closing the tab.
   var _authDeadGuard=false;
-  var _POLL_PATHS=/^\/admin\/(status|logs)\b/;
+  var _POLL_PATHS=/^\/admin\/(status|logs|sessions|broadcasts)\b/;
   function _authDead(status){
     if(_authDeadGuard) return; _authDeadGuard=true;
     try{ srvStop(); }catch(e){}
+    try{ seStop(); }catch(e){}
     doLogout(status===429
       ? 'Trop de tentatives — attends ~15 min puis reconnecte-toi.'
       : 'Session admin expirée — reconnecte-toi.');
