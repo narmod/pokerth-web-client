@@ -10063,7 +10063,7 @@ function renderPlayersList() {
       if (tb) tb.classList.toggle('active', k === i);
       if (pn) pn.style.display = (k === i) ? 'block' : 'none';
     }
-    if (i === 5) _abLoadChangelog();
+    if (i === 5) _abLoadChangelog(); else _abClLoaded = false; // relecture en ligne au retour
   };
   // Onglet Changelog (demande sp0ck 12/08/2026, parité widget/QML) : le
   // fichier ChangeLog upstream, embarqué dans /ChangeLog (épinglé à la
@@ -10096,12 +10096,27 @@ function renderPlayersList() {
     var cw = document.getElementById('ab-cl-web'), cu = document.getElementById('ab-cl-up');
     if (!cw || !cu) return;
     _abClLoaded = true;
-    // Deux journaux, un par sous-onglet : /ChangeLog-web (ce client) et
-    // /ChangeLog (upstream — clients widget/QML). Un fichier manquant
-    // n'empêche pas l'autre de s'afficher.
+    // Deux journaux, un par sous-onglet. Chaque source est lue EN LIGNE
+    // d'abord (GitHub raw — un push chez narmod ou sp0ck est visible
+    // immédiatement, ~5 min de cache CDN au pire, 6 s de délai maxi),
+    // puis en repli la copie embarquée précachée (hors-ligne / GitHub
+    // inaccessible). Un journal manquant n'empêche pas l'autre.
     var errTxt = function(){ var t = (window.I18N && window.I18N.t) ? window.I18N.t('abClError') : null; return (t && t !== 'abClError') ? t : 'Changelog unavailable.'; };
-    var one = function(u){ return fetch(u, { cache: 'no-cache' }).then(function(r){ return r.ok ? r.text() : null; }).catch(function(){ return null; }); };
-    Promise.all([one('/ChangeLog-web'), one('/ChangeLog')]).then(function(res){
+    var fetchTxt = function(u, ms){
+      var ctl = null, tm = null;
+      try { ctl = new AbortController(); tm = setTimeout(function(){ try { ctl.abort(); } catch (e) {} }, ms || 6000); } catch (e) {}
+      return fetch(u, ctl ? { cache: 'no-cache', signal: ctl.signal } : { cache: 'no-cache' })
+        .then(function(r){ return r.ok ? r.text() : null; })
+        .catch(function(){ return null; })
+        .finally(function(){ if (tm) clearTimeout(tm); });
+    };
+    var one = function(liveUrl, localUrl){
+      return fetchTxt(liveUrl).then(function(t){ return t != null ? t : fetchTxt(localUrl); });
+    };
+    Promise.all([
+      one('https://raw.githubusercontent.com/narmod/pokerth-web-client/main/public/ChangeLog-web', '/ChangeLog-web'),
+      one('https://raw.githubusercontent.com/pokerth/pokerth/stable/ChangeLog', '/ChangeLog')
+    ]).then(function(res){
       var web = res[0], up = res[1];
       if (web == null && up == null) throw new Error('none');
       if (web != null) cw.innerHTML = _abClRender(web); else cw.textContent = errTxt();
@@ -10312,7 +10327,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.6-web.70'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.6-web.71'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
