@@ -659,6 +659,21 @@ function onGameListNew(sub) {
         try { if (App && App.joinGame) App.joinGame(_aj); } catch(e) {}
       }, 150);
     }
+    // \u2500\u2500 Auto-join by game NAME (invite links #join=<name>) \u2500\u2500
+    // Set by parseShareLink() from the canonical invite format (also
+    // emitted by App.shareTableLink and shareable with the QML client).
+    // Name matching because the numeric id is meaningless to the
+    // invitee and changes if the table is re-created. A password-
+    // protected table falls through to joinGame()'s password prompt
+    // \u2014 the link never carries the password.
+    if (window._pendingAutoJoinName && name === window._pendingAutoJoinName && !S.amInGame) {
+      window._pendingAutoJoinName = '';
+      addChat(null, t('sharedTableJoining'), 'sys', { key: 'sharedTableJoining' });
+      var _ajn = id;
+      setTimeout(function(){
+        try { if (App && App.joinGame) App.joinGame(_ajn); } catch(e) {}
+      }, 150);
+    }
     return;
 }
 

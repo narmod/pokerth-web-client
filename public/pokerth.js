@@ -454,7 +454,8 @@ function openAdvancedOptions() {
   sync('adv-pingavatar', 'ping_avatar', true); // défaut QML : ShowPingStateInAvatar=1
   sync('adv-autoleave', 'auto_leave', false);
   sync('adv-nickretry', 'nick_retry', true);   // réessai auto quand le pseudo est encore occupé
-  sync('adv-errreport', 'err_report', true);   // remontée des erreurs JS à l'admin du serveur (web) — ON par défaut, décochable
+  sync('adv-errreport', 'err_report', true);
+  sync('adv-invitelink', 'invite_link', true); // bouton \u00ab Inviter des amis \u00bb du salon d'attente (web)   // remontée des erreurs JS à l'admin du serveur (web) — ON par défaut, décochable
   // Barre d'état de jeu (pot-strip : H#/G#, pot+bets, phase) masquable
   try {
     var _ps = document.getElementById('pot-strip');
@@ -2867,6 +2868,58 @@ document.addEventListener("DOMContentLoaded", function() {
         if (lm && lm.value === 'auth') { /* keep credentialed if chosen */ }
         else if (lm) { lm.value = 'unauth'; if (App && App.onLoginModeChange) App.onLoginModeChange(); }
       }
+      // ── Invite links (#join=<name>&s=<target>[&tls=1]) ──────────
+      // Canonical share format (also parseable by the QML client): the
+      // game NAME (stable while the table exists, unlike the numeric
+      // gameId) plus the target server. Carried in the URL FRAGMENT so
+      // it never reaches server/CDN logs. The password is NEVER part of
+      // the link \u2014 joinGame() prompts for it if the table is protected.
+      var joinName = '', joinSrv = '', joinTls = null;
+      try {
+        var hp = new URLSearchParams(String(window.location.hash || '').replace(/^#/, ''));
+        joinName = hp.get('join') || '';
+        joinSrv  = hp.get('s') || '';
+        joinTls  = hp.get('tls');
+      } catch(eH) {}
+      if (joinName) {
+        // Published on window (this block runs at GLOBAL scope, outside
+        // the App IIFE) \u2014 consumed by onGameListNew in msg-lobby.mjs.
+        window._pendingAutoJoinName = joinName;
+        // Route the login wizard onto the mode matching the target:
+        // 's=pokerth.net' \u2192 Internet (saved account if any, guest
+        // otherwise) ; 's=<host[:port]>' \u2192 LAN / dedicated, prefilled.
+        var _jMode = (!joinSrv || joinSrv === 'pokerth.net') ? 'pokerthnet' : 'lan-dedi';
+        if (_jMode === 'lan-dedi') {
+          var _jhp = joinSrv.split(':');
+          var _jh = document.getElementById('host'); if (_jh) _jh.value = _jhp[0] || '';
+          var _jp = document.getElementById('port'); if (_jp && _jhp[1]) _jp.value = _jhp[1];
+          var _jt = document.getElementById('use-tls'); if (_jt && joinTls !== null) _jt.checked = (joinTls === '1');
+        }
+        var _jsm = document.getElementById('server-mode');
+        if (_jsm) { _jsm.value = _jMode; _jsm.dispatchEvent(new Event('change', { bubbles: true })); }
+        // Jump the 2-step wizard straight to that mode's form \u2014 same
+        // path as a manual card tap (keeps back-bar icon/label in sync).
+        try {
+          var _jcard = document.querySelector('.login-card[onclick*="' + _jMode + '"]');
+          if (_jcard && typeof loginPickMode === 'function') loginPickMode(_jcard, _jMode);
+        } catch(eC) {}
+        window._shareLinkActive = true;
+        // If the shared table never shows up in the lobby list (already
+        // finished, wrong server\u2026), tell the user instead of waiting
+        // silently forever. Only once actually connected (PthState.loaded)
+        // so a slow login never cancels a still-valid pending join.
+        setTimeout(function(){
+          try {
+            var _S2 = window.PthState;
+            if (window._pendingAutoJoinName && _S2 && _S2.loaded) {
+              window._pendingAutoJoinName = '';
+              if (typeof window.showKeyHint === 'function')
+                window.showKeyHint((window.t || function(k){ return k; })('sharedTableNotFound'));
+            }
+          } catch(eN) {}
+        }, 20000);
+        try { window.history.replaceState({}, '', window.location.pathname); } catch(eR) {}
+      }
       if (h || p || table || go) {
         // Only treat as a "share link" (which suppresses saved-prefs
         // restore of host/port/mode) when a server/table was actually
@@ -3313,6 +3366,13 @@ document.addEventListener("DOMContentLoaded", function() {
           if (nickEl) { nickEl.focus(); }
           return;
         }
+        // Invite link \u2192 pokerth.net with a registered account
+        // selected but no saved password: don't fire a doomed connect;
+        // focus the password field instead (the pending auto-join
+        // survives until the user hits Connect).
+        var _lmEl = document.getElementById('login-mode');
+        var _pwEl = document.getElementById('pass');
+        if (_lmEl && _lmEl.value === 'auth' && _pwEl && !_pwEl.value) { _pwEl.focus(); return; }
         if (App && typeof App.connect === 'function') {
           App.connect();
         }
@@ -6323,6 +6383,68 @@ const App = (() => {
           done(!!ok);
         } catch(e) { done(false); }
       }
+    },
+
+    // ── Share an invite link to the current table ───────────────
+    // Canonical format (the QML client can emit/parse the same one):
+    //   https://<thispage>/#join=<gameName>&s=pokerth.net
+    //   https://<thispage>/#join=<gameName>&s=<host[:port]>[&tls=1]
+    // Game NAME rather than the ephemeral numeric id; target derived
+    // from how *I* am connected (never hard-coded, so every install \u2014
+    // pokerth.net, a ddns test server, a LAN box \u2014 emits links that
+    // point at itself). The password is NEVER in the link: joinGame()
+    // prompts the invitee if the table is protected. Native share
+    // sheet when available (phones), clipboard otherwise.
+    shareTableLink() {
+      if (!S.gId) { if (typeof showKeyHint === 'function') showKeyHint(t('noActiveTable')); return; }
+      var g = S.games[S.gId] || {};
+      var name = g.name || (S._gameMeta && S._gameMeta.name) || '';
+      if (!name) { if (typeof showKeyHint === 'function') showKeyHint(t('noActiveTable')); return; }
+      var mode = S._currentLoginMode || '';
+      var target, tlsFrag = '';
+      if (mode === 'guest' || mode === 'auth') {
+        // 'pokerth.net' is a symbolic token: the receiving install
+        // resolves it onto its own configured Internet server.
+        target = 'pokerth.net';
+      } else {
+        var host = '', port = '';
+        try { host = (document.getElementById('host') || {}).value || ''; } catch(e) {}
+        try { port = (document.getElementById('port') || {}).value || ''; } catch(e) {}
+        host = String(host).trim(); port = String(port).trim();
+        target = host + (port ? ':' + port : '');
+        try { if (document.getElementById('use-tls') && document.getElementById('use-tls').checked) tlsFrag = '&tls=1'; } catch(e) {}
+      }
+      var url = window.location.origin + window.location.pathname +
+        '#join=' + encodeURIComponent(name) + '&s=' + encodeURIComponent(target) + tlsFrag;
+      var self = this;
+      if (navigator.share) {
+        // AbortError = user closed the share sheet \u2014 not a failure,
+        // don't surprise them with a clipboard write.
+        navigator.share({ title: 'PokerTH', text: name, url: url })
+          .catch(function(err){ if (!err || err.name !== 'AbortError') self._copyInviteUrl(url); });
+        return;
+      }
+      this._copyInviteUrl(url);
+    },
+    _copyInviteUrl(url) {
+      function done(ok) {
+        if (typeof showKeyHint === 'function') showKeyHint(ok ? t('linkCopied') : t('linkCopyFailed'));
+        if (!ok) { try { window.prompt(t('copyThisLink'), url); } catch(e) {} }
+      }
+      function legacyCopy() {
+        try {
+          var ta = document.createElement('textarea');
+          ta.value = url; ta.style.position = 'fixed'; ta.style.opacity = '0';
+          document.body.appendChild(ta); ta.focus(); ta.select();
+          var ok = document.execCommand('copy'); document.body.removeChild(ta);
+          done(!!ok);
+        } catch(e) { done(false); }
+      }
+      try {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(url).then(function(){ done(true); }, legacyCopy);
+        } else legacyCopy();
+      } catch(e) { legacyCopy(); }
     },
 
     spectateGame(gameId) {
@@ -10129,7 +10251,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.6-web.62'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.6-web.63'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

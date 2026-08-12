@@ -298,11 +298,18 @@ function _renderLobbyWaitActions() {
     ? '<label class="wp-fillbots"><input type="checkbox" id="wp-fillbots-cb"' + (window._wpFillBots ? ' checked' : '') + ' onchange="window._wpSetFillBots(this.checked)"><span>' + t('wpFillBots') + '</span></label>'
     : '';
   var leaveBtn = '<button class="wp-btn wp-btn-leave" onclick="App.confirmLeaveGame()">' + t('wpLeaveGame') + '</button>';
+  // Bouton \u00ab Inviter des amis \u00bb (lien #join=\u2026, voir App.shareTableLink)
+  // \u2014 pour tout joueur assis d'une partie en ligne. Pas en entra\u00eenement
+  // local (aucun destinataire possible) ni pour un spectateur. D\u00e9cochable
+  // dans Options avanc\u00e9es (invite_link).
+  var inviteBtn = (!window._offlineMode && !S._amSpectator && (!window._advGet || window._advGet('invite_link', true)))
+    ? '<button class="wp-btn wp-btn-invite" onclick="App.shareTableLink()">' + t('wpInvite') + '</button>'
+    : '';
   var startBtn = isHost
     ? '<button class="wp-btn wp-btn-start" onclick="App.startFromWait()"' + (canStart ? '' : ' disabled') + ' title="' + t('wpStartHumansTip') + '">' + t('wpStartGame') + '</button>'
     : '';
   var hint = isHost ? '' : '<div class="lfb-waithint">' + t(S._amSpectator ? 'waitingHintSpectator' : 'waitingHintGuest') + '</div>';
-  bar.innerHTML = fillRow + '<div class="wp-actions">' + leaveBtn + startBtn + '</div>' + hint;
+  bar.innerHTML = fillRow + '<div class="wp-actions">' + leaveBtn + inviteBtn + startBtn + '</div>' + hint;
   bar.style.display = 'flex';
   if (create) create.style.display = 'none';
   try { _updateFootJoin(); } catch(e){}
