@@ -16,6 +16,9 @@ export const meta = {
 };
 
 export const strings = {
+  abTabChangelog: 'Journal des modifications',
+  abClLoading: 'Chargement…',
+  abClError: 'Journal des modifications indisponible.',
   rkCalcTitle: 'Calcul du classement :',
   rkCalcPoints: 'Points de place :',
   rkCalcFormula: 'Formule :',

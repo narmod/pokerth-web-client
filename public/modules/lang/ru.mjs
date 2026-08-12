@@ -15,6 +15,9 @@ export const meta = {
 };
 
 export const strings = {
+  abTabChangelog: 'Список изменений',
+  abClLoading: 'Загрузка…',
+  abClError: 'Список изменений недоступен.',
   rkCalcTitle: 'Расчёт рейтинга:',
   rkCalcPoints: 'Очки за место:',
   rkCalcFormula: 'Формула:',

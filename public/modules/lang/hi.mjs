@@ -14,6 +14,9 @@ export const meta = {
 };
 
 export const strings = {
+  abTabChangelog: 'परिवर्तन सूची',
+  abClLoading: 'लोड हो रहा है…',
+  abClError: 'परिवर्तन सूची उपलब्ध नहीं है।',
   rkCalcTitle: 'रैंकिंग गणना:',
   rkCalcPoints: 'स्थान अंक:',
   rkCalcFormula: 'सूत्र:',

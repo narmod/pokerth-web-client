@@ -12,6 +12,9 @@ export const meta = {
 };
 
 export const strings = {
+  abTabChangelog: 'Değişiklik günlüğü',
+  abClLoading: 'Yükleniyor…',
+  abClError: 'Değişiklik günlüğü kullanılamıyor.',
   rkCalcTitle: 'Sıralama hesabı:',
   rkCalcPoints: 'Sıralama puanları:',
   rkCalcFormula: 'Formül:',

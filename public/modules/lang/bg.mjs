@@ -10,6 +10,9 @@ export const meta = {
 };
 
 export const strings = {
+  abTabChangelog: 'Списък с промени',
+  abClLoading: 'Зареждане…',
+  abClError: 'Списъкът с промени не е наличен.',
   rkCalcTitle: 'Изчисляване на класацията:',
   rkCalcPoints: 'Точки за класиране:',
   rkCalcFormula: 'Формула:',

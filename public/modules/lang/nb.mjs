@@ -9,6 +9,9 @@ export const meta = {
 };
 
 export const strings = {
+  abTabChangelog: 'Endringslogg',
+  abClLoading: 'Laster…',
+  abClError: 'Endringsloggen er ikke tilgjengelig.',
   rkCalcTitle: 'Rangeringsberegning:',
   rkCalcPoints: 'Plasseringspoeng:',
   rkCalcFormula: 'Formel:',

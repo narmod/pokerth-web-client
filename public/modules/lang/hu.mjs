@@ -10,6 +10,9 @@ export const meta = {
 };
 
 export const strings = {
+  abTabChangelog: 'Változásnapló',
+  abClLoading: 'Betöltés…',
+  abClError: 'A változásnapló nem érhető el.',
   rkCalcTitle: 'Rangsorszámítás:',
   rkCalcPoints: 'Helyezési pontok:',
   rkCalcFormula: 'Képlet:',

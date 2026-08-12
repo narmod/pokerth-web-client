@@ -10,6 +10,9 @@ export const meta = {
 };
 
 export const strings = {
+  abTabChangelog: 'Zoznam zmien',
+  abClLoading: 'Načítava sa…',
+  abClError: 'Zoznam zmien nie je k dispozícii.',
   rkCalcTitle: 'Výpočet rebríčka:',
   rkCalcPoints: 'Body za umiestnenie:',
   rkCalcFormula: 'Vzorec:',

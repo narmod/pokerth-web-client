@@ -16,6 +16,9 @@ export const meta = {
 };
 
 export const strings = {
+  abTabChangelog: 'Lista zmian',
+  abClLoading: 'Ładowanie…',
+  abClError: 'Lista zmian jest niedostępna.',
   rkCalcTitle: 'Obliczanie rankingu:',
   rkCalcPoints: 'Punkty za miejsce:',
   rkCalcFormula: 'Wzór:',

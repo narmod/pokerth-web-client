@@ -10,6 +10,9 @@ export const meta = {
 };
 
 export const strings = {
+  abTabChangelog: 'Seznam změn',
+  abClLoading: 'Načítání…',
+  abClError: 'Seznam změn není k dispozici.',
   rkCalcTitle: 'Výpočet žebříčku:',
   rkCalcPoints: 'Body za umístění:',
   rkCalcFormula: 'Vzorec:',

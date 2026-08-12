@@ -10,6 +10,9 @@ export const meta = {
 };
 
 export const strings = {
+  abTabChangelog: 'Popis promjena',
+  abClLoading: 'Učitavanje…',
+  abClError: 'Popis promjena nije dostupan.',
   rkCalcTitle: 'Izračun poretka:',
   rkCalcPoints: 'Bodovi za plasman:',
   rkCalcFormula: 'Formula:',

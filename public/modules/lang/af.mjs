@@ -10,6 +10,9 @@ export const meta = {
 };
 
 export const strings = {
+  abTabChangelog: 'Veranderingslys',
+  abClLoading: 'Laai tans…',
+  abClError: 'Veranderingslys nie beskikbaar nie.',
   rkCalcTitle: 'Ranglysberekening:',
   rkCalcPoints: 'Plasingspunte:',
   rkCalcFormula: 'Formule:',

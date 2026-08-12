@@ -1,0 +1,658 @@
+2026-08-05 version 2.1.6:
+- new: the lobby connection verifies the server certificate now - the server list carries a pinned public key per entry, so a network attacker can no longer impersonate a lobby server (client & server, issue #515)
+- new: default4c card deck - four coloured suits (QML)
+- new: two more table themes with matching card backsides - mile high club, terminus hotel 2 (by BaShFX) (widget)
+- new: card backsides are a style category of their own now and can be picked in the settings (widget)
+- new: community suggest and the BBC and WEC invite templates are available in the widget client too, behind a single option (widget)
+- new: a finished local game reports its winner and offers to start over with the same settings (QML)
+- improvement: re-connect and re-join after a lost connection fine-tuned, in particular when Android suspends the app (QML)
+- improvement: connection problems are shown as readable messages instead of raw error codes (QML)
+- improvement: light mode fine-tuned across pages and components (QML)
+- improvement: F-key shortcuts fine-tuned on the game, game-wait and local-game pages (QML)
+- improvement: AFK timeout fine-tuned (QML)
+- improvement: third party library list on the about page extended (QML & widget)
+- bugfix: an intended check could turn into a call of the full amount when an opponent raised or went all-in in the very same moment - check/call now never puts in more chips than the button showed (QML)
+- bugfix: chat text colors in light and dark mode (QML)
+- bugfix: local game settings were not applied to the started game (QML)
+- bugfix: wrong and missing entries in the showdown log (QML)
+- bugfix: pulling the window open at its bottom edge on Windows showed a stale frame, which made the clickable zones appear offset (QML)
+- server: blacklisted avatars were only reset after the session had been initialised
+- server: a single WebSocket message could make a connection buffer up to 32 MB - the transport size is capped now
+- server: chat cleaner connection admission hardened - loopback by default, shared secret required for remote peers, and a timeout for clients that never authenticate
+- android: the server list download accepted any TLS certificate - it uses the system trust store now, with a root certificate bundle shipped as fallback (issue #516)
+- android: connection foreground service restored
+- android: manifest is generated from the build template again, which restores the service and permission entries
+- android: the Play Store bundle targets SDK 36 (Android 16) now
+
+2026-07-30 version 2.1.5:
+- new: community suggest in the game-wait page - proposes idle, eligible players for BBC step and WEC invite games, using the same selection logic as the legacy bot (QML)
+- new: global notice - PokerTH admins can broadcast a message to all connected clients, including a command line tool for sending it (QML & server)
+- new: pirates table theme and matching card backside (QML)
+- new: two more table themes with matching card backsides - mile high club, terminus hotel 2 (by BaShFX) (QML)
+- new: optional timestamps in chat (QML)
+- new: debug log view on the logs page (QML)
+- improvement: in-game action buttons hardened - button states now follow the betting round more reliably (QML)
+- improvement: chat scrolling and chatbox behaviour fine-tuned (QML)
+- improvement: translation globe icon only appears on the hovered chat line now (widget & QML)
+- improvement: F11 fullscreen works on every page, Alt+L toggles the log panel also when docked (QML)
+- improvement: browse button for the log directory is wired up now (QML)
+- improvement: external link opening hardened (QML & widget)
+- bugfix: manual bet input while the input field is focussed (QML)
+- bugfix: focus issues in the action bar (QML)
+- bugfix: own country flag missing on the game table, plus several broken flag graphics (QML)
+- bugfix: lobby button styling with the Win10 theme while in game (widget)
+- server: send and disconnect hardening
+- server: disconnected players could still appear in the lobby
+- server: seats invalidated by a kick or an AFK timeout could be rejoined with an empty stack
+- android: additional APK build workflow and build script fine-tuning
+- macOS: universal (arm64 and x86_64) DMG build workflow, including a version and content check of the finished DMG
+- packaging: ZIP binary deploy for the global notice admin tool
+
+2026-07-22 version 2.1.4:
+- new: in-chat message translation via a globe button (widget & QML)
+- new: confirmation popups for context-menu actions such as invite and kick (QML)
+- new: optional placeholder for players who left or disconnected, keeping seat positions stable (QML)
+- new: two more table themes - discworld, saloon (QML)
+- new: discworld card deck (QML)
+- improvement: trophy icon for ranking pages (QML)
+- improvement: chat and emoji handling fine-tuned (QML)
+- improvement: chatbox and logbox can resize over empty placeholder player boxes (QML)
+- improvement: settings font sizes and various styling fine-tuned (QML)
+- bugfix: language setting is now persisted correctly (QML)
+- bugfix: folded players appearing in the showdown (QML)
+- bugfix: several spectating issues - empty log entries, spectator display and lobby status (QML)
+- bugfix: Enter key handling in chat (QML)
+- bugfix: bet input focus issues (QML)
+- bugfix: own country flag not shown (QML)
+- bugfix: game-table context menu width (QML)
+- bugfix: local PokerTH directory creation could fail on some setups (Error 25) (QML)
+- android: more robust asset handling and a Play Store AAB build workflow
+- iOS: layout fine-tuning for iPhone mini (portrait and landscape), TCP socket hardening, and an initial build workflow
+- packaging: deploy scripts fine-tuning
+
+2026-07-11 version 2.1.3:
+- new: spectating running games (QML)
+- new: four more table themes - lemming, matrix, star trek, greencasino (by narmod) (QML)
+- new: three more card decks - lemming, star trek, stardust (light & dark), plus a matrix card backside (QML)
+- improvement: theming fine-tuned - accent colors, button border radius, better theme previews (QML)
+- bugfix: game settings were not applied correctly when creating a game (QML)
+- bugfix: several settings were not wired up to their controls (QML)
+- packaging: distinct menu names for the widget and the QML client (desktop files)
+- packaging: Flatpak no longer uses the QML disk cache, which could go stale across updates
+
+2026-07-08 version 2.1.2:
+- new: two more card decks ported - nobus 4c classic, xanax (QML)
+- new: import/export of themes as ZIP (QML)
+- new: ranking pages with column sorting (QML)
+- new: option to pre-select the default community for stats and ranking pages (QML)
+- improvement: PokerTH and community player statistics pages refined (QML)
+- improvement: more compact odds display with less scrolling (QML)
+- improvement: show-cards handling at showdown (QML)
+- bugfix: chatbox colors in light mode (QML)
+- bugfix: double quotes in chat messages (QML)
+- bugfix: log interval setting (QML)
+
+2026-07-06 version 2.1.1:
+- QML client now runs in production mode: it identifies itself to the server with its own client type and version
+- new: player statistics page with switch between local and community stats (QML)
+- new: player info page on the game table (QML)
+- new: emote shortcodes in chat (widget & QML)
+- new: avatar selection on Android (QML)
+- new: table admin can kick players from the game-wait page in custom games (QML)
+- new: re-join running games after a disconnect (QML)
+- bugfix: stale default bet amount after round transition, e.g. 2x big blind offered at the flop (QML)
+- bugfix: AFK timeout warning popup could stay open forever after a disconnect (QML)
+- bugfix: possible fix for emoji font rendering on Windows (widget)
+- follow-up: game creation dialog fine-tuned (QML)
+- follow-up: ignore-players hardening (QML)
+- android: better disconnect handling, app-resume hardening, more robust network send/receive buffers
+- packaging: Snap fine-tuning
+
+2026-07-03 version 2.1.0:
+- new QML client now stable, shipped alongside the Widget client
+- bugfix: LAN game server profiles were never actually saved/loaded (widget)
+- bugfix: emoji reactions in chat could be confused with typed text messages (widget)
+- bugfix: emoji rendering as white boxes on some Linux distros (widget)
+- bugfix: file dialogs (log export, avatar, settings) crashing/misbehaving in AppImage builds (widget)
+- bugfix: Windows 10 start-window buttons ignored custom styling (widget)
+- follow-up: player-left log message now distinguishes kicked/disconnected/left (widget)
+- audio: Linux/AppImage now uses the software mixer by default, fixing stutter from per-sound paplay/pw-play processes (widget)
+- new: option to disable emoji reactions (widget & QML)
+- build: fixed protobuf codegen conflicts between Desktop and Android builds
+- packaging: Windows, Linux (Ubuntu 24.04 base), macOS, deb and Snap builds now ship Widget and QML client combined
+
+2026-05-08 version 2.0.7:
+- bugfix: ERR_NO_WINNER crash – unclaimed side-pots are now carried over instead of crashing
+- bugfix: LAN games
+- bugfix: empty game table name crashes client
+- bugfix: player listed twice in finished ranking game
+- bugfix: sql queries
+- follow-up: side-pot handling
+- follow-up: player list
+- closing a game table window now shows a dedicated warning message
+- server: AFK timeout reduced to 20 min, absent players removed faster
+- server: discord webhook for lobby
+- server: improved logging for disconnect debugging
+- CI: automated deb, flatpak and snap builds via GitHub Actions
+- macOS and Windows build fixes
+
+2026-03-03 version 2.0.6:
+- hardening win client disconnects over wifi
+- hardening spinbox and slider in game
+- hardening sql queries
+- bugfix: admin actions functional again
+- follow-up Zorin OS minimize lobby
+- follow-up unwanted table style change
+- follow-up linux audio and headsets
+- versioning for Qt Widget and QML Client with minimum client version for server connects
+- bugfix: chatcleaner load config
+
+2026-02-27 version 2.0.5
+- possible bugfix: win client disconnects over wifi
+- bugfix: AFK Timeout proper server disconnect, ingame timeout increase to 30 minutes
+- bugfix: game admin state in custom games in lobby
+
+2026-02-25 version 2.0.4
+- possible bugfix: win client disconnects over wifi
+- audio output improved for linux and macOS
+- bugfix: minimize Lobby for Zorin OS
+- bugfix: pasting too long text into chat causes disconnects
+- bugfix: appimage can open links clicked in chat messages now
+- bugfix: changing sound settings also changed table style to danuxi
+
+2026-02-24 version 2.0.3
+- android bugfixes - functional universal apk
+- AFK timeout bugfix
+- Windows audio output improvements
+- sidepot follow-up
+
+2026-02-21 version 2.0.2
+- macOS GUI fix
+- AFK timeout fix
+- lobby playerlist fix
+
+2026-02-20 version 2.0.1
+- several bugfixes for linux and windows audio output
+- hibernate/suspend fixes for GUI scaling
+- minor sidepot issue fixed
+- TCP keep-alive added
+- universal apk build for arm64-v8a and armeabi-v7a
+- AFK timeout re-enabled
+
+2026-02-09 version 2.0
+- port from qmake to cmake
+- port from Qt5 to Qt6.9.2 LTS
+- port to libboost >=1.83
+- removed mysqplpp dependency
+- removed curl dependency
+- removed tinyxml dependency
+- removed sqlite3 dependency
+- removed gsasl dependency
+- removed libSDL dependency
+- implemented TLS for websocket-Server
+- implemented TLS for game-server & client
+- new feature: dark-/light-/auto (system) appearance mode with settings option and translations
+- replaced gsasl auth mechanism with plain text auth (encrypted in combination with TLS!)
+- macOS: several bugfixes, functional build for macOS Monterey as minimum OS version
+- android: Qt Widget GUI adapted to qt6 - no more fixed Width/Height values in ui files
+- removed QtSingleApplication dependency
+- reproducable docker build environments for linux, windows and android build
+- reproducable build_macos.sh Script for easy build & deploy on macOS
+- new feature: 33%, 50%, 100% pot bet sizes with settings option and translations
+- server heartbeat to handle former silent client disconnects
+
+2017-09-01 version 1.1.2
+- PokerTH is now fully compatible with c++11 compilation mode 
+- Upgraded to websockets 0.7 
+- BUGFIX: SQL errors are saved to server log (partly #324) 
+- BUGFIX: Players deliberately preventing start of play (#304) 
+- BUGFIX: Rating feature didn't work for special usernames (#319) 
+- BUGFIX: Ignore feature only works after restart (#320) 
+- BUGFIX: Shorten too long usernames on the table gui (#326)
+- BUGFIX: "accidentally call" blocker now for working for FKey presses (#330)
+
+2014-01-10 version 1.1.1
+- BUGFIX: Fixed crash when the first action in the first game times out (#258)
+- BUGFIX: Properly refresh the game table graphics after changing settings (#253)
+- BUGFIX: The menu on the game table was not clickable sometimes (#242)
+
+2013-12-22 version 1.1
+- New web-based spectator mode on http://www.pokerth.net/live (#37)
+- New option to allow/disallow spectators when creating a game (#215)
+- Show list of spectators in the lobby and on the game table (#196)
+- Support for WebSocket connections was integrated in the server
+- Show server ping ("application layer ping") in the client (#239)
+- Added option to disable emoticons in the chat (#172)
+- Avatars are no longer displayed for players which are on the ignore list (#187)
+- New option to "unignore" a player in the context menu (#56)
+- BUGFIX: context menu in connected player list was fixed (#183)
+- BUGFIX: "display idle players" in the lobby was fixed (#136)
+- BUGFIX: No longer beep if ignored player uses nickname in chat (#221)
+- translation updates
+
+2013-12-01 version 1.1 beta4
+- Updated several translations
+- New icon for spectator list on table (#217)
+- Display the number of spectators next to the spectator icon (#206)
+- BUGFIX: Correct sound is now played when joining a game (#230)
+- BUGFIX: No longer beep if ignored player uses nickname in chat (#221)
+
+2013-11-02 version 1.1 beta3
+- New option to allow/disallow spectators when creating a game (#215)
+
+2013-10-12 version 1.1 beta2
+- BUGFIX: Now you are able to click the menu buttons during a local game again (#203)
+- BUGFIX: Idle players are shown correctly if they join YOUR game (#198)
+- Updating websocket++ to latest github release (0.3 alpha4)
+
+2013-10-06 version 1.1 beta1
+- New web-based spectator mode on http://www.pokerth.net/live (#37)
+- Show list of spectators in the lobby and on the game table (#196)
+- Support for WebSocket connections was integrated in the server
+- Added option to disable emoticons in the chat (#172)
+- Avatars are no longer displayed for players which are on the ignore list (#187)
+- BUGFIX: context menu in connected player list was fixed (#183)
+- BUGFIX: "display idle players" in the lobby was fixed (#136)
+- translation updates
+
+2013-04-07 version 1.0.1
+- New Galician (gl) translation
+- Client settings dialog option for connecting to a private, password protected server (#178)
+- Fix in cards value for a special case in straight flush (#177)
+- Workaround for Qt moc problems with boost 1.53 (#180)
+
+2013-01-01 version 1.0
+- Online log file analysis tool
+- Support for higher Android screen resolutions
+- Sound support for Android
+- Support for Windows 8 (desktop mode)
+- License change: OpenSSL exception (for Windows 8 support, because gcrypt currently crashes on Windows 8)
+- Server refactoring using google protocol buffers which basically enables use of html5 clients
+- Emoticons for the chat
+- Online game name in window title
+- New card deck version which supports changes of the action label position
+- Extra column in lobby game list for timeouts
+- Updated country flags
+- Enable activating the "accidentally call after big raise" blocker by default
+- Chatbot whitelist for poker expressions
+- new startwindow gfx for 1.0 final (thx to danuxi)
+- translation updates
+- several bugfixes
+
+2012-12-25 version 1.0-beta2
+- Support for Windows 8
+- License change: OpenSSL exception (for Windows 8 support, because gcrypt currently crashes on Windows 8)
+- Call logfile dialog from startwindow via button now
+- BUGFIX: resolution switched to 800x480 when applying settings on android tablets with bigger screens
+- BUGFIX: rejoin dialog not translatable
+- BUGFIX: desktop settings dialog does not close, settings not saved on android (#162)
+
+2012-12-23 version 1.0-beta1
+- Support for higher android screen resolutions (enhancement #160)
+- Android sound support (enhancement #156)
+- Game name in window title (enhancement #155)
+- New card deck version which supports changes of the action label position (enhancement #154)
+- Emoticons for the chat (enhancement #153)
+- Online log file analysis tool (enhancement #146)
+- Show only one game in the log preview (enhancement #145)
+- Extra column in lobby game list for timeouts (enhancement #140)
+- Updated country flags (enhancement #137)
+- Enable activating the "accidentally call after big raise" blocker by default (enhancement #131)
+- Server refactoring using google protocol buffers which basically enables use of html5 clients
+- Chatbot whitelist for poker expressions
+- BUGFIX: Chip Miscalculation fixed (bug #152)
+- BUGFIX: IPv6 settings are now correctly grayed out (bug #148)
+- BUGFIX: Fixing rejoin after synchronization error (bug #147)
+- BUGFIX: Rich AI players raise although opponents are all-in (bug #4)
+- BUGFIX: In rare case, winner doesn't win, money disappears (bug #3)
+
+2012-06-21 version 0.9.5
+- First experimental Android release (#80)
+- Add a minimize button to the Lobby window (#59)
+- Fixed crash when trying to connect to non existing network game (#138)
+- Ignore additional join game messages if the player already joined a game (#134)
+- Double game invite no longer leads to kick (#135)
+
+2012-04-09 version 0.9.4
+- New report bad-game-name system (right-click on a game in the lobby) (#129)
+- Raise-blind sound is now optional (#127)
+- Delete log files with the Del button of the keyboard (#122)
+- Chat bot and admin bot improvements (#114, #115, #128)
+
+2012-02-11 version 0.9.3
+- Maemo support was updated in this source release
+- Logs can now be stored for more than 7 days (#18)
+- Logos are shown in the log preview (#101)
+- "multiline" game names are now prevented in the lobby, also on server side (#116)
+- Several log files can now be deleted at once (select with CTRL + left click) (#110)
+- The behaviour of the "Display idle players" sorting menu was slightly changed (#112)
+- The serverlist is only downloaded once per day (and if an error occurs) (#119)
+
+2012-01-28 version 0.9.2
+- Show card symbols in the log preview and in html export (#101)
+- Implement optional "accidentally call" blocker (#35)
+- BUGFIX: Rejoin a new game when previous game is still running (#108)
+- BUGFIX: Incorrect descriptions of hands in log (#97)
+- BUGFIX: Setting different log path (#99)
+- BUGFIX: Warning that a change of log directory is only active after restart (#102)
+- BUGFIX: Default file extension when exporting log is incorrect (#98)
+- BUGFIX: "Show player stats" item doesn't work in game info field (#100)
+
+2012-01-09 version 0.9.1
+- New game log format with export function (now active)
+- The chat bot in games no longer kicks players, instead they are muted
+- Configuration can now be reset to default settings
+- Admin kick no longer happens in ranking games (#93)
+- BUGFIX: Rating stars are now shown correctly on Windows XP (#91)
+- BUGFIX: Several problems with the server list download were solved (#95)
+- Several additional bugfixes
+
+2012-01-04 version 0.9
+- Players are able to rejoin internet games after being disconnected
+- The chat bot is now also present in ranking games
+- Tooltip and rating system for other players
+- Linking connected players in the game info box to poker-heroes player data
+- Country flag name is displayed in a tooltip
+- New game list filter (show only ranking games)
+- Show cards chances also after fold
+- Private messages in the lobby chat are possible (use /msg command)
+- Automatically leave the table after the game finished (optional)
+- After a certain timeout, players are switched to an "autofold" state
+- Maximum limit for highest set and minimum raise
+- Automatic notifications before server restart
+- Ensure that the ranking data is stored even if the DB server is not available
+- Support single internet server password
+- Optional unlimited thinking time in network games
+- Performance improvements in network code
+- Sound when blinds increase
+- Several small bugfixes
+
+2012-01-02 version 0.9-rc1
+- New game log format with export function
+- BUGFIX: "stars" on the game table are displayed correctly on Windows and MacOS
+- BUGFIX: Message "Waiting for next hand to rejoin" did not appear sometimes
+- BUGFIX: Leave game button now correctly enabled after end of game (really :-) )
+- BUGFIX: Creating a network game is now possible again (#90)
+
+2011-12-30 version 0.9-beta6
+- New start window and splash screen
+- BUGFIX: Ranking calculation corrected for players which rejoin (#86)
+- BUGFIX: Timeout warning within game occurs even after sitting out (#87)
+- BUGFIX: Error "the server referred to an unknown player" directly after rejoin (#88)
+- BUGFIX: Leave game button now correctly enabled after end of game
+- BUGFIX: Choosing preaction is no longer possible during autofold-state
+
+2011-12-27 version 0.9-beta5
+- BUGFIX: Behaviour is now correct if someone is all in due to blinds (blind-of-death)
+- BUGFIX: Fixed admin-timeout (in non-ranking games)
+- BUGFIX: Players rejoining the lobby are no longer kicked directly after login (#81)
+- BUGFIX: Seat state is now displayed correctly after rejoin
+
+2011-12-26 version 0.9-beta4
+- Sound when blinds increase (#83)
+- BUGFIX: Could not open the server list MD5 file (#85)
+- BUGFIX: Server crash when reactivating an unknown player
+- BUGFIX: Use correct timeout message
+
+2011-12-23 version 0.9-beta3
+- After a certain timeout, players are switched to an "autofold" state
+- Players no longer stay as "ghosts" after leaving the table (#82), they are kicked after some time
+- Several fixes regarding the new rejoin feature
+- BUGFIX: close login dialog after error message
+
+2011-11-15 version 0.9-beta2
+- Fixing nasty crash when a player left a game which was not running
+- add a tableview-link for each nick on the table instead of calling every single profile page
+
+2011-11-13 version 0.9-beta1
+- add aditional log message for rejoined players
+- disable rejoin for players who have been kicked
+- BUGFIX: Country flag name is displayed in a tooltip (#9)
+- BUGFIX: prevent delayed begin of logging in network games
+- BUGFIX: close an information gap in server-client-communication
+- BUGFIX: player is now shown as "active" after rejoin
+
+2011-10-29 version 0.9-alpha
+- Players are able to rejoin internet games after being disconnected (#5)
+- The chat bot is now also present in ranking games (#1)
+- Tooltip and rating system for other players (#36)
+- Linking connected players in the game info box to poker-heroes player data (#63)
+- Country flag name is displayed in a tooltip (#9)
+- New game list filter (show only ranking games) (#6)
+- Show cards chances also after fold (#79)
+- Private messages in the lobby chat are possible (use /msg command) (#12)
+- Automatically leave the table after the game finished (optional) (#2)
+- Maximum limit for highest set and minimum raise (#61)
+- Automatic notifications before server restart (#47)
+- Ensure that the ranking data is stored even if the DB server is not available (#51, #14, #66)
+- Support single internet server password (#76)
+- Optional unlimited thinking time in network games (#24, #71)
+- Performance improvements in network code (#52)
+- BUGFIX: There are games without a name (#75)
+- BUGFIX: More than 10 players are sometimes assigned to a game in the database (#74)
+
+2011-01-16 version 0.8.3:
+- Fixed a crash which sometimes occurs when other players leave a game (bug 0000021)
+- Updated language files
+
+2011-01-03 version 0.8.2:
+- Report bad avatar function to tell the admins about illegal avatar pictures (right click on players avatar on the table)
+- Optional add country flag to avatar feature
+- /me messages supported in lobby-chat now
+- Bugfixes (e.g. 0000022, 0000024)
+
+2010-10-09 version 0.8.1:
+(this is a bugfix release)
+- Fixed a bug where "large small blinds" could cause freezing of the client in network games
+- Fixed a bug concerning auto start timer of invite-only games
+- Two players with the same IP address are no longer allowed to join a single ranking game (server)
+- Block guest chat in lobby on server side
+- New experimental Windows x64 release
+
+2010-09-25 version 0.8:
+- See beta releases below for changes from version 0.7
+- User profile links on the game table to the online ranking system
+- Improved slider behaviour on the game table
+- Updated language files (adding Lituania translation)
+- Small fixes
+
+2010-09-05 version 0.8-beta3:
+- All ranking games require 10 players now
+- Lobby: sort by country or filter idle players
+- Lobby: countdown when internet game starts automatically
+- Store all places for every ranking game in the database (server)
+- Encrypt own cards which are sent at the beginning of the hand - only applicable to registered users
+- AFK players are now kicked from ranking games after some timeouts if they do not enable autocheck/fold.
+- Bad game names can now be blocked (server)
+- Bugfixes
+
+2010-08-15 version 0.8-beta2:
+- Allow to show own cards if human player is the last not folded player (also without showdown)
+- Disallow any kind of kicking in ranking games
+- Caseinsensitive sorting and string search function for lobby nick list
+- Store all players of each game in the database (Server)
+- Store date/time when the game ends (Server)
+- Bugfixes
+
+2010-07-23 version 0.8-beta1:
+- New login/registration system: Players can register their nicks for internet games via an online registration system. It is still possible to play as guest, but certain restrictions apply.
+- Online player ranking: Registered players can join "ranking games" toimprove their rank.
+- The country flag of players is optionally displayed in the lobby (based on voluntary registration information).
+- Custom game names are now possible.
+- Internet or LAN games can be automatically started when the maximum number of players is reached.
+- Invite-only game mode for internet games: In order to invite a player to an invite-only game, right click on the player's nick in  the lobby.
+- Display "Player xyz plays in game xyz" in the context menu for a nick in the lobby.
+- Ignore list for chat messages and game invitations from "unfriendly" players. Right click on a player's nick in the lobby to place the player on the ignore list.
+- Only players who really have to show cards actually show them after postriver. Everyone else who did not fold is now able to show the cards by choice.
+- New chat system with admin bot (no longer IRC).
+- Completely new network protocol, including a secure authentication mechanism
+- Bugfix: 0000001: Full bet rule is not implemented - BUGFIX: 0000016: Join network game without giving address = crash
+- Bugfix: 0000018: Removing avatar can become a bit complicated
+- Bugfix: 0000020: Ability to start a vote not restored when leaving a game
+
+2009-06-25 version 0.7.1:
+- internet lobby window size adjusted for netbook resolution 1024x600
+- bigger window icon
+- pokerth.desktop translation update
+- Bugfix: compatibility fix for qt 4.4.3
+
+2009-06-19 version 0.7.1-beta:
+- Refactored the network engine using boost::asio to improve scalability of the server
+- Reduced per-game memory usage of the server, which enables playing with several hundred players on a low-end vserver
+- New internet games list filter to just show e.g. open games, password-free games etc.
+- New large chip count delimiter: 1000000 --> 1.000.000
+- New "join any game" button behaviour - joins the game with the most players connected
+- Styles handling enhancements (e.g. no activation needed anymore)
+- Readd the option to hide splashscreen
+- IP address bans now automatically expire
+- Bugfix: incorrect handling of maximum number of players in network games
+
+2009-05-03 version 0.7:
+- enabled sorting of private/public games in the internet game lobby
+- size of the lobby dialog was decreased for netbook resolution 1024x600
+- default action pictures were adjusted for better readable card index
+- portuguese (portuguese) translation was added
+- bugfix: bet input lenght was adjusted
+
+2009-04-25 version 0.7-beta2:
+- Fixed problems with paths which contain special (non-ascii) characters
+- Timeout animation moved so it no longer hides sets
+- Improved bet slider handling for higher start cash like $1000000
+- Minimum blinds adjusted for higher start cash
+- Remember last styles directory 
+- New stay-on-table animation when a user is inactive but not disconnected
+- Avatar uploads are logged (because of possible legal issues)
+
+2009-04-15 version 0.7-beta1: 
+- Supporting up to 10 players on a table
+- Easily choose different table and card styles
+- Create your own style in simple steps
+- Online style gallery
+- Netbook support with minimum 1024x600
+- Automatically restore game table geometry (including fullscreen)
+- Server IP-address bans and nick bans based on regular expressions
+- Server list supports multiple server entries
+- bugfix(#0000009): No pause after first hand when starting a fresh local game
+- bugfix(#0000010): Strange side pot behaviour after all-in
+
+2009-03-22 version 0.6.4:
+- enhanced server performance
+- optional external avatar system to improve scalability
+- feature-request(#0000008): sorting of columns in the gamelist of the lobby is saved
+- bugfix(#0000007): Improved highlighting of the cards on split pot
+- bugfix(#0000003): Correctly pick low straight flush (with A)
+- bugfix: doubleclicking "join game" in the lobby no longer causes an error
+
+2008-12-22 version 0.6.3: 
+- new start dialog, separated from game table
+- new chance tab shows current chance to get a certain hand
+- users can be kicked by vote from within a game (right click on avatar)
+- game creators are no longer allowed to kick when the game is running
+- server irc bot automatically reconnects every day
+- 18 translations now (danish and finnish added)
+
+2008-05-21 version 0.6.2:
+- more flexible internet server connection (automatic download of server list)
+- fixed DNS problems, IPv6 and SCTP are fully available now
+- reduced bandwidth usage in internet games
+- use GnuTLS instead of OpenSSL
+- extended server logging
+
+2008-03-11 version 0.6.1:
+ - new timeout system for internet-game-lobby to improve the game-flow
+ - 2 new translations (greek and chinese)
+
+2007-12-13 version 0.6-final:
+ - bugfixes
+ - gui improvements (hover for bet/call/fold)
+ - translation updates (14 languages now!)
+
+2007-12-07 version 0.6-rc2:
+ - bugfixes (closeable-windows, chat-nick-highlighting) 
+ - gui improvements (gfx & fonts)
+ - translation updates
+ - Qt-4.3.3 update
+ 
+2007-12-03 version 0.6-rc: 
+ - bugfixes 
+ - dmg available for MacOSX
+ - new "join any game"-button
+ - gui improvements
+ - translation updates
+ - improve blind logging
+
+2007-11-18 version 0.6-beta5:
+- bugfixes (dedicated server, anti-peek-mode, sidepot logging)
+- bet/raise redesign 
+- improve actions-preselection
+- gui improvements (e.g. scrollbars, new handranking-gfx) 
+- support for password-protected irc-channels
+- admin irc channel for server
+
+2007-11-11 version 0.6-beta4:
+- bugfixes (ingame-kick; cards background scale distortion; pre-actions during allIn)
+
+2007-11-07 version 0.6-beta3:
+- bugfixes
+- new Back-to-Lobby button
+- irc-nick-cleaning to avoid connection troubles
+
+2007-11-01 version 0.6-beta2:
+- bugfixes (avatars are enabled in internet-game again)
+- avatars preview in internet-game-lobby
+
+2007-10-31 version 0.6-beta:
+- Internet Game - Play online games easy on PokerTH-dedicated-Server (no ip addresses or port-fowarding needed anymore)
+- New Input Field (You can now pre-select your wanted action which will be done if it is your turn)
+- Avatars were shown in Network-/Internetgame
+- Lobby-Chat
+- Computer-Players could be added in Network-/Internetgame
+- Blinds values and blinds order completly adjustable
+- Auto-check/fold and Auto-check/call-any options for temporary away situations.
+- New kicker-card-detection for log
+- Improved distribution of the pot
+
+2007-06-17 version 0.5:
+- Play network games with up to 7 people all over the world
+- Internationalization - PokerTH is now available in different languages (German, Dutch, Spanish, Russian and Norwegian)
+- New avatar gallery
+- Sound effects
+- Minimized disc access, optimized speed
+
+2007-04-04 version 0.4:
+- feature: settings menu (to do a lot of settings and save preferences)
+- feature: set player names and avatars for computer opponents
+- feature: switch to fullscreen mode
+- feature: cards animation (show winning hand, flip cards)
+- feature: set you own card-flipside picture 
+- feature: log-window and log-files
+- feature: start-stop button (for break between hands)
+- feature: game-speed slider (for changing speed during game)
+- feature: graphical handranking overview
+- feature: keyboard shortcuts (e.g. for human player action)
+- change: now you can play against up to 6 opponents
+- change: complete new gui (gfx by tranberry)
+- change: complete new engine design
+- bugfix: a lot of bugfixes
+
+2006-10-16 version 0.3:
+- change: some changes on game-speed and game-rhythm. game-speed delay near 0 is possible ;)
+- change: gui-language changed from german to english
+- change: some ai-engine changes
+- change: now POT-distribution works better (especially for multible All-In situation and split-pot)
+- change: switched to Qt-4.2
+- change: some GUI-changes (e.g. killed the "Next Round"-Button --> task #131930)
+- bugfix: #1572742 - "bet-loop"
+- tasks: new published tasks #131988, #131980, #131987, #131978, #131992, #132018
+
+2006-10-04 version 0.2.1:
+- bugfix: fix the Bug that causes freeze average all 52 rounds. It was a problem with random-number-generation
+
+2006-10-04 version 0.2:
+- first public release
+- feature: now you can play preflop, flop, turn and river
+- change: its nearly complete portet to qt4
+
+2006-05-18 version 0.1:
+- first release
+- feature: you can play preflop and river

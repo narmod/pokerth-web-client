@@ -16,6 +16,9 @@ export const meta = {
 };
 
 export const strings = {
+  abTabChangelog: 'Changelog',
+  abClLoading: 'Loading…',
+  abClError: 'Changelog unavailable.',
   rkCalcTitle: 'Ranking calculation:',
   rkCalcPoints: 'Placement points:',
   rkCalcFormula: 'Formula:',

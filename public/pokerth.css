@@ -9154,6 +9154,13 @@ html.reduce-fx .seat-action-badge {
 .ab-suits .r { color:#c0392b; }
 .ab-vername { font-weight:700; font-size:var(--fs-lg); margin-top:8px; color:var(--text-hi); }
 .ab-feats { margin:14px 0; color:var(--text-hi); font-size:var(--fs-md); line-height:1.75; }
+/* Onglet Changelog (parité widget/QML) : texte brut mono, entêtes de
+   version en or, défilement dans le pane. */
+.ab-cl { font-family: var(--ff-mono); font-size: var(--fs-xs); line-height: 1.45; overflow-wrap: anywhere; }
+.ab-cl-ver { color: var(--gold, #d4af37); font-weight: 700; margin: 10px 0 4px; }
+.ab-cl-ver:first-child { margin-top: 0; }
+.ab-cl-line { color: var(--chatlog-muted, var(--text-dim, #9aa3b5)); }
+.ab-cl-gap { height: 6px; }
 .ab-copy { color:var(--text); font-size:var(--fs-base); margin-top:10px; }
 .ab-net { text-align:right; margin-top:16px; }
 .ab-pane a { color:var(--info,#2a6fb0); }

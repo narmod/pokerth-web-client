@@ -15,6 +15,9 @@ export const meta = {
 };
 
 export const strings = {
+  abTabChangelog: 'Wijzigingslogboek',
+  abClLoading: 'Laden…',
+  abClError: 'Het wijzigingslogboek is niet beschikbaar.',
   rkCalcTitle: 'Ranglijstberekening:',
   rkCalcPoints: 'Plaatsingspunten:',
   rkCalcFormula: 'Formule:',

@@ -9,6 +9,9 @@ export const meta = {
 };
 
 export const strings = {
+  abTabChangelog: '変更履歴',
+  abClLoading: '読み込み中…',
+  abClError: '変更履歴を利用できません。',
   rkCalcTitle: 'ランキングの計算:',
   rkCalcPoints: '順位ポイント:',
   rkCalcFormula: '計算式:',

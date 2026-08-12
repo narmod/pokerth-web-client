@@ -10,6 +10,9 @@ export const meta = {
 };
 
 export const strings = {
+  abTabChangelog: 'Jurnal de modificări',
+  abClLoading: 'Se încarcă…',
+  abClError: 'Jurnalul de modificări nu este disponibil.',
   rkCalcTitle: 'Calculul clasamentului:',
   rkCalcPoints: 'Puncte pentru plasare:',
   rkCalcFormula: 'Formulă:',

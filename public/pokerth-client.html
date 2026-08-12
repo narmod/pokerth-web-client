@@ -2153,6 +2153,7 @@ function _processAvatarFile(file) {
     <button class="ab-tab" id="ab-tab-2" type="button" role="tab" onclick="window.abShowTab(2)" data-i18n="abTabThanks">Remerciements à</button>
     <button class="ab-tab" id="ab-tab-3" type="button" role="tab" onclick="window.abShowTab(3)" data-i18n="abTabLicense">Licence</button>
     <button class="ab-tab" id="ab-tab-4" type="button" role="tab" onclick="window.abShowTab(4)" data-i18n="abTabLibs">Bibliothèques tierces</button>
+    <button class="ab-tab" id="ab-tab-5" type="button" role="tab" onclick="window.abShowTab(5)" data-i18n="abTabChangelog">Journal des modifications</button>
   </div>
   <div class="ab-body">
     <div class="ab-pane" id="ab-pane-0">
@@ -2222,6 +2223,12 @@ function _processAvatarFile(file) {
         <li>Node.js &amp; ws — <span data-i18n="abLibProxy">proxy WebSocket</span> (MIT)</li>
         <li>Google Translate — <span data-i18n="abLibChatTr">traduction du chat (service en ligne de Google)</span></li>
       </ul>
+    </div>
+    <!-- Changelog (demande sp0ck, parité widget/QML) : le fichier ChangeLog
+         upstream, copie embarquée /ChangeLog épinglée à la release livrée,
+         chargée à la première ouverture de l'onglet (abLoadChangelog). -->
+    <div class="ab-pane" id="ab-pane-5" style="display:none">
+      <div id="ab-cl" class="ab-cl"><span data-i18n="abClLoading">Chargement…</span></div>
     </div>
   </div>
 </div>

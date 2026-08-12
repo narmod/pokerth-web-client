@@ -9,6 +9,9 @@ export const meta = {
 };
 
 export const strings = {
+  abTabChangelog: 'Список змін',
+  abClLoading: 'Завантаження…',
+  abClError: 'Список змін недоступний.',
   rkCalcTitle: 'Розрахунок рейтингу:',
   rkCalcPoints: 'Очки за місце:',
   rkCalcFormula: 'Формула:',

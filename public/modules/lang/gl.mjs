@@ -10,6 +10,9 @@ export const meta = {
 };
 
 export const strings = {
+  abTabChangelog: 'Rexistro de cambios',
+  abClLoading: 'Cargando…',
+  abClError: 'O rexistro de cambios non está dispoñible.',
   rkCalcTitle: 'Cálculo da clasificación:',
   rkCalcPoints: 'Puntos por posición:',
   rkCalcFormula: 'Fórmula:',

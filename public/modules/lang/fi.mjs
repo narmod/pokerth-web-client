@@ -9,6 +9,9 @@ export const meta = {
 };
 
 export const strings = {
+  abTabChangelog: 'Muutosloki',
+  abClLoading: 'Ladataan…',
+  abClError: 'Muutosloki ei ole saatavilla.',
   rkCalcTitle: 'Sijoituslaskenta:',
   rkCalcPoints: 'Sijoituspisteet:',
   rkCalcFormula: 'Kaava:',

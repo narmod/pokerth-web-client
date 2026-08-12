@@ -10,6 +10,9 @@ export const meta = {
 };
 
 export const strings = {
+  abTabChangelog: 'Nhật ký thay đổi',
+  abClLoading: 'Đang tải…',
+  abClError: 'Nhật ký thay đổi không khả dụng.',
   rkCalcTitle: 'Cách tính xếp hạng:',
   rkCalcPoints: 'Điểm theo thứ hạng:',
   rkCalcFormula: 'Công thức:',

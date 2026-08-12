@@ -15,6 +15,9 @@ export const meta = {
 };
 
 export const strings = {
+  abTabChangelog: 'Änderungsprotokoll',
+  abClLoading: 'Wird geladen…',
+  abClError: 'Das Änderungsprotokoll ist nicht verfügbar.',
   rkCalcTitle: 'Punkteberechnung:',
   rkCalcPoints: 'Platzierungspunkte:',
   rkCalcFormula: 'Formel:',

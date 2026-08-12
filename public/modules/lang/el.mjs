@@ -10,6 +10,9 @@ export const meta = {
 };
 
 export const strings = {
+  abTabChangelog: 'Ιστορικό αλλαγών',
+  abClLoading: 'Φόρτωση…',
+  abClError: 'Το ιστορικό αλλαγών δεν είναι διαθέσιμο.',
   rkCalcTitle: 'Υπολογισμός κατάταξης:',
   rkCalcPoints: 'Πόντοι θέσης:',
   rkCalcFormula: 'Τύπος:',

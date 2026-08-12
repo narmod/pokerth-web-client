@@ -11,6 +11,9 @@ export const meta = {
 };
 
 export const strings = {
+  abTabChangelog: 'மாற்றப் பதிவு',
+  abClLoading: 'ஏற்றப்படுகிறது…',
+  abClError: 'மாற்றப் பதிவு கிடைக்கவில்லை.',
   rkCalcTitle: 'தரவரிசை கணக்கீடு:',
   rkCalcPoints: 'இட புள்ளிகள்:',
   rkCalcFormula: 'சூத்திரம்:',

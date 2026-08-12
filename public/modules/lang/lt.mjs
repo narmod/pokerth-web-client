@@ -10,6 +10,9 @@ export const meta = {
 };
 
 export const strings = {
+  abTabChangelog: 'Pakeitimų žurnalas',
+  abClLoading: 'Įkeliama…',
+  abClError: 'Pakeitimų žurnalas nepasiekiamas.',
   rkCalcTitle: 'Reitingo skaičiavimas:',
   rkCalcPoints: 'Vietos taškai:',
   rkCalcFormula: 'Formulė:',

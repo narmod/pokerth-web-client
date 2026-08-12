@@ -10,6 +10,9 @@ export const meta = {
 };
 
 export const strings = {
+  abTabChangelog: 'Списак измена',
+  abClLoading: 'Учитавање…',
+  abClError: 'Списак измена није доступан.',
   rkCalcTitle: 'Израчунавање ранг листе:',
   rkCalcPoints: 'Поени за пласман:',
   rkCalcFormula: 'Формула:',
