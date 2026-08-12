@@ -4821,9 +4821,24 @@ const httpServer = http.createServer((req, res) => {
   if (reqPathOnly === '/sitemap.xml') {
     var _sBase = seoEnabled() ? seoPublicUrl() : '';
     if (!_sBase) { res.writeHead(404); res.end('Not found'); return; }
+    // Language variants of / carry the full hreflang alternate set via
+    // xhtml:link, per Google's sitemap guidance for multilingual sites
+    // (https://developers.google.com/search/docs/specialty/international/localized-versions#sitemap).
+    // The set is derived from SEO_I18N so new languages propagate automatically.
+    var _sAlt = '';
+    for (var _sc in SEO_I18N) {
+      _sAlt += '<xhtml:link rel="alternate" hreflang="' + _sc + '" href="' + _sBase + (_sc === 'en' ? '/' : '/?lang=' + _sc) + '"/>';
+    }
+    _sAlt += '<xhtml:link rel="alternate" hreflang="x-default" href="' + _sBase + '/"/>';
+    var _sVariants = '';
+    for (var _sc2 in SEO_I18N) {
+      if (_sc2 === 'en') continue;
+      _sVariants += '<url><loc>' + _sBase + '/?lang=' + _sc2 + '</loc>' + _sAlt + '<changefreq>weekly</changefreq><priority>0.8</priority></url>\n';
+    }
     var _sXml = '<?xml version="1.0" encoding="UTF-8"?>\n' +
-      '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' +
-      '<url><loc>' + _sBase + '/</loc><changefreq>weekly</changefreq><priority>1.0</priority></url>\n' +
+      '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">\n' +
+      '<url><loc>' + _sBase + '/</loc>' + _sAlt + '<changefreq>weekly</changefreq><priority>1.0</priority></url>\n' +
+      _sVariants +
       '<url><loc>' + _sBase + '/rules</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>\n' +
       '<url><loc>' + _sBase + '/faq</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>\n' +
       '<url><loc>' + _sBase + '/privacy</loc><changefreq>yearly</changefreq><priority>0.2</priority></url>\n' +
