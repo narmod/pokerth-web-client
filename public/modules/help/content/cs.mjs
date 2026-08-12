@@ -18,7 +18,7 @@ export const help = {
         { id: 'famboard', t: 'Rodinný žebříček',
           b: ['Jen na soukromých serverech a v LAN hrách si klient vede souhrnné statistiky podle přezdívek — odehrané a vyhrané ruce i partie, největší výhra, nejlepší série — a sdílí je přes server, takže každé zařízení u stolu vidí stejný žebříček. Hry na pokerth.net se takto nikdy nesledují a statistiky tréninkového režimu zůstávají zcela oddělené.'] },
         { id: 'language', t: 'Jazyk',
-          b: ['Rozhraní je k dispozici ve 36 jazycích. Kdykoli ho změníš v Pokročilých možnostech (menu s ozubeným kolem), kategorie Uživatelské rozhraní. Pokerové akční termíny (Fold, Check, Call, Bet, Raise, All-In) zůstávají podle konvence anglicky, přesně jako v desktopovém klientu.'] },
+          b: ['Rozhraní je k dispozici ve 40 jazycích. Kdykoli ho změníš v Pokročilých možnostech (menu s ozubeným kolem), kategorie Uživatelské rozhraní. Pokerové akční termíny (Fold, Check, Call, Bet, Raise, All-In) zůstávají podle konvence anglicky, přesně jako v desktopovém klientu.'] },
         { id: 'pwa', t: 'Instalace jako aplikace',
           b: ['Tento klient je Progressive Web App: můžeš ho nainstalovat z menu prohlížeče (nebo tlačítkem instalace v záhlaví) a získat celoobrazovkovou aplikaci s vlastní ikonou. Po instalaci startuje okamžitě a tréninkový režim funguje zcela offline.'],
           note: 'Na Androidu a v desktopovém Chrome/Edge zařídí vše tlačítko instalace. Na iPhonu/iPadu Apple povoluje instalaci jen přes Safari: tlačítko Sdílet \u2192 \u201ePřidat na plochu\u201c — klient tyto kroky v případě potřeby zobrazí. Po instalaci aplikace tlačítko zmizí.' },

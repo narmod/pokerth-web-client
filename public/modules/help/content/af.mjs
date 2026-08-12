@@ -19,7 +19,7 @@ export const help = {
         { id: 'famboard', t: 'Gesinsranglys',
           b: ['Slegs op private bedieners en in LAN-spelle hou die kliënt saamgestelde statistieke per bynaam — hande en spelle wat gespeel en gewen is, grootste wins, beste reeks — en deel dit deur die bediener, sodat elke toestel om die tafel dieselfde ranglys sien. pokerth.net-spelle word nooit so nagespoor nie, en die oefenmodus se statistieke bly heeltemal apart.'] },
         { id: 'language', t: 'Taal',
-          b: ['Die koppelvlak is in 36 tale beskikbaar. Verander dit enige tyd in Gevorderde opsies (die ratkieslys), kategorie Gebruikerskoppelvlak. Poker se aksieterme (Fold, Check, Call, Bet, Raise, All-In) bly volgens konvensie Engels, presies soos in die werkskermkliënt.'] },
+          b: ['Die koppelvlak is in 40 tale beskikbaar. Verander dit enige tyd in Gevorderde opsies (die ratkieslys), kategorie Gebruikerskoppelvlak. Poker se aksieterme (Fold, Check, Call, Bet, Raise, All-In) bly volgens konvensie Engels, presies soos in die werkskermkliënt.'] },
         { id: 'pwa', t: 'Installeer as \u2019n program',
           b: ['Hierdie kliënt is \u2019n Progressive Web App: jy kan dit vanuit die blaaier se kieslys installeer (of met die installeerknoppie in die kopstuk) en \u2019n volskermprogram met sy eie ikoon kry. Nadat dit geïnstalleer is, begin dit onmiddellik, en die oefenmodus werk heeltemal vanlyn.'],
           note: 'Op Android en op werkskerm-Chrome/Edge doen die installeerknoppie alles. Op iPhone/iPad laat Apple installasie slegs deur Safari toe: Deel-knoppie \u2192 \u201cVoeg by tuisskerm\u201d — die kliënt wys hierdie stappe wanneer nodig. Die knoppie verdwyn sodra die program geïnstalleer is.' },

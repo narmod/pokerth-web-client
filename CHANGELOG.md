@@ -8,6 +8,21 @@ web counter (`2.1.5` → `2.1.5-web.0`). Granular, per-build tags are published 
 [GitHub Releases](https://github.com/narmod/pokerth-web-client/releases) page;
 this file captures what matters to players and operators.
 
+## 2.1.6-web line (2026)
+
+Opened with `v2.1.6-web.0`, following the upstream **2.1.6** release. Granular,
+per-build changes for this line are on the
+[GitHub Releases](https://github.com/narmod/pokerth-web-client/releases) page;
+highlights below.
+
+### Added
+- **Four right-to-left languages** — Arabic (`ar`), Persian (`fa`), Hebrew
+  (`he`) and Urdu (`ur`) — bringing the client to **40 languages**
+  (`web.58`/`web.59`). Full UI catalogues and help corpora; like the official
+  QML client, the interface layout stays LTR and the browser renders the RTL
+  text runs natively. Poker action terms stay in English, as everywhere else.
+  Localised hreflang metadata added for the four languages (`web.60`).
+
 ## 2.1.5-web line (2026)
 
 Opened with `v2.1.5-web.0` (2026-07-30), following the upstream **2.1.5**

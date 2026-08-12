@@ -19,7 +19,7 @@ export const help = {
         { id: 'famboard', t: 'Obiteljska ljestvica',
           b: ['Samo na privatnim poslužiteljima i u LAN igrama klijent čuva kumulativne statistike po nadimku — odigrane i dobivene ruke i partije, najveći dobitak, najbolji niz — i dijeli ih preko poslužitelja, tako da svaki uređaj oko stola vidi istu ljestvicu. Igre na pokerth.net nikad se ne prate na taj način, a statistike trening načina drže se potpuno odvojeno.'] },
         { id: 'language', t: 'Jezik',
-          b: ['Sučelje je dostupno na 36 jezika. Promijeni ga bilo kada u Naprednim opcijama (izbornik sa zupčanikom), kategorija Korisničko sučelje. Pokerski izrazi za akcije (Fold, Check, Call, Bet, Raise, All-In) ostaju na engleskom prema konvenciji, točno kao u desktop klijentu.'] },
+          b: ['Sučelje je dostupno na 40 jezika. Promijeni ga bilo kada u Naprednim opcijama (izbornik sa zupčanikom), kategorija Korisničko sučelje. Pokerski izrazi za akcije (Fold, Check, Call, Bet, Raise, All-In) ostaju na engleskom prema konvenciji, točno kao u desktop klijentu.'] },
         { id: 'pwa', t: 'Instaliraj kao aplikaciju',
           b: ['Ovaj klijent je Progressive Web App: možeš ga instalirati iz izbornika preglednika (ili gumbom za instalaciju u zaglavlju) i dobiti aplikaciju preko cijelog zaslona s vlastitom ikonom. Nakon instalacije pokreće se trenutačno, a trening način radi potpuno offline.'],
           note: 'Na Androidu i u Chromeu/Edgeu na računalu gumb za instalaciju obavlja sve. Na iPhoneu/iPadu Apple dopušta instalaciju samo kroz Safari: gumb Dijeli \u2192 \u201eDodaj na početni zaslon\u201c — klijent prikazuje te korake kad je potrebno. Gumb nestaje čim je aplikacija instalirana.' },

@@ -19,7 +19,7 @@ export const help = {
         { id: 'famboard', t: 'Familieranglijst',
           b: ['Alleen op privéservers en in LAN-spellen houdt de client langetermijnstatistieken per bijnaam bij — gespeelde en gewonnen handen en partijen, grootste winst, beste reeks — en deelt ze via de server, zodat elk apparaat rond de tafel dezelfde ranglijst ziet. pokerth.net-spellen worden nooit op deze manier bijgehouden, en de statistieken van de trainingsmodus blijven volledig gescheiden.'] },
         { id: 'language', t: 'Taal',
-          b: ['De interface is beschikbaar in 36 talen. Wijzig hem op elk moment in de Geavanceerde opties (tandwielmenu), categorie Gebruikersinterface. De pokeractietermen (Fold, Check, Call, Bet, Raise, All-In) blijven per conventie Engels, precies zoals in de desktopclient.'] },
+          b: ['De interface is beschikbaar in 40 talen. Wijzig hem op elk moment in de Geavanceerde opties (tandwielmenu), categorie Gebruikersinterface. De pokeractietermen (Fold, Check, Call, Bet, Raise, All-In) blijven per conventie Engels, precies zoals in de desktopclient.'] },
         { id: 'pwa', t: 'Installeren als app',
           b: ['Deze client is een Progressive Web App: je kunt hem installeren via het browsermenu (of de installatieknop in de header) voor een schermvullende app met eigen pictogram. Eenmaal geïnstalleerd start hij direct en werkt de trainingsmodus volledig offline.'],
           note: 'Op Android en desktop-Chrome/Edge doet de installatieknop alles. Op iPhone/iPad staat Apple installatie alleen toe via Safari: Deel-knop \u2192 \u201cZet op beginscherm\u201d — de client toont deze stappen wanneer nodig. De knop verdwijnt zodra de app geïnstalleerd is.' },

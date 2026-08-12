@@ -19,7 +19,7 @@ export const help = {
         { id: 'famboard', t: 'Clasamentul familiei',
           b: ['Doar pe serverele private și în partidele LAN, clientul păstrează statistici cumulate pe pseudonim — mâini și partide jucate și câștigate, cel mai mare câștig, cea mai bună serie — și le partajează prin server, astfel încât fiecare dispozitiv de la masă vede același clasament. Partidele de pe pokerth.net nu sunt niciodată urmărite astfel, iar statisticile modului de antrenament rămân complet separate.'] },
         { id: 'language', t: 'Limba',
-          b: ['Interfața este disponibilă în 36 de limbi. Schimb-o oricând în Opțiuni avansate (meniul cu rotiță), categoria Interfață utilizator. Termenii de acțiune din poker (Fold, Check, Call, Bet, Raise, All-In) rămân în engleză prin convenție, exact ca în clientul desktop.'] },
+          b: ['Interfața este disponibilă în 40 de limbi. Schimb-o oricând în Opțiuni avansate (meniul cu rotiță), categoria Interfață utilizator. Termenii de acțiune din poker (Fold, Check, Call, Bet, Raise, All-In) rămân în engleză prin convenție, exact ca în clientul desktop.'] },
         { id: 'pwa', t: 'Instalează ca aplicație',
           b: ['Acest client este o Progressive Web App: o poți instala din meniul browserului (sau cu butonul de instalare din antet) și obții o aplicație pe tot ecranul, cu propria pictogramă. Odată instalată, pornește instantaneu, iar modul de antrenament funcționează complet offline.'],
           note: 'Pe Android și în Chrome/Edge pe desktop, butonul de instalare face totul. Pe iPhone/iPad, Apple permite instalarea doar prin Safari: butonul Partajează \u2192 \u201eAdaugă la ecranul principal\u201d — clientul arată acești pași când e nevoie. Butonul dispare după ce aplicația e instalată.' },

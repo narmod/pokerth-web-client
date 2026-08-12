@@ -19,7 +19,7 @@ export const help = {
         { id: 'famboard', t: 'Familien-Rangliste',
           b: ['Nur auf privaten Servern und in LAN-Spielen führt der Client Langzeitstatistiken pro Spitzname — gespielte und gewonnene Hände und Partien, größter Gewinn, beste Serie — und teilt sie über den Server, sodass jedes Gerät am Tisch dieselbe Rangliste sieht. pokerth.net-Spiele werden auf diese Weise nie erfasst, und die Statistiken des Trainingsmodus bleiben vollständig getrennt.'] },
         { id: 'language', t: 'Sprache',
-          b: ['Die Oberfläche ist in 36 Sprachen verfügbar. Ändere sie jederzeit in den Erweiterten Optionen (Zahnrad-Menü) unter Benutzeroberfläche. Die Poker-Aktionsbegriffe (Fold, Check, Call, Bet, Raise, All-In) bleiben per Konvention englisch, genau wie im Desktop-Client.'] },
+          b: ['Die Oberfläche ist in 40 Sprachen verfügbar. Ändere sie jederzeit in den Erweiterten Optionen (Zahnrad-Menü) unter Benutzeroberfläche. Die Poker-Aktionsbegriffe (Fold, Check, Call, Bet, Raise, All-In) bleiben per Konvention englisch, genau wie im Desktop-Client.'] },
         { id: 'pwa', t: 'Als App installieren',
           b: ['Dieser Client ist eine Progressive Web App: Du kannst ihn über das Browser-Menü (oder den Installieren-Knopf im Header) installieren und bekommst eine Vollbild-App mit eigenem Symbol. Einmal installiert startet sie sofort, und der Trainingsmodus funktioniert vollständig offline.'],
           note: 'Auf Android und in Desktop-Chrome/Edge erledigt der Installieren-Knopf alles. Auf iPhone/iPad erlaubt Apple die Installation nur über Safari: Teilen-Knopf \u2192 \u201eZum Home-Bildschirm\u201c — der Client zeigt diese Schritte bei Bedarf an. Der Knopf verschwindet, sobald die App installiert ist.' },

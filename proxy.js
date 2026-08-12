@@ -952,10 +952,10 @@ function _seoAdmin() { var s = _seoCfg(); return { enabled: s.enabled === true, 
 
 var SEO_TITLE = 'PokerTH Web Client \u2014 Free Texas Hold\u2019em Poker in Your Browser';
 var SEO_DESC = 'Play PokerTH, the free open-source Texas Hold\u2019em poker game, directly in your browser. ' +
-  'No download, no registration \u2014 practice offline against bots, play on LAN or join pokerth.net. 36 languages, installable as an app (PWA).';
+  'No download, no registration \u2014 practice offline against bots, play on LAN or join pokerth.net. 40 languages, installable as an app (PWA).';
 
 
-// ── hreflang — localized <title> + description for the 36 UI languages ────
+// ── hreflang — localized <title> + description for the 40 UI languages ────
 // Each language variant lives at /?lang=<code>: the client applies the URL
 // parameter at boot (without overwriting a manually saved choice), so a
 // visitor landing from a localized search result gets the matching UI.
@@ -998,7 +998,11 @@ var SEO_I18N = {
   vi: { t: 'PokerTH Web \u2014 Poker Texas Hold\u2019em mi\u1ec5n ph\u00ed tr\u00ean tr\u00ecnh duy\u1ec7t', d: 'Ch\u01a1i PokerTH, tr\u00f2 ch\u01a1i poker Texas Hold\u2019em m\u00e3 ngu\u1ed3n m\u1edf mi\u1ec5n ph\u00ed, ngay tr\u00ean tr\u00ecnh duy\u1ec7t. Kh\u00f4ng c\u1ea7n t\u1ea3i v\u1ec1, kh\u00f4ng c\u1ea7n \u0111\u0103ng k\u00fd \u2014 luy\u1ec7n t\u1eadp ngo\u1ea1i tuy\u1ebfn v\u1edbi bot, ch\u01a1i qua LAN ho\u1eb7c tham gia pokerth.net.' },
   ko: { t: 'PokerTH \uc6f9 \u2014 \ube0c\ub77c\uc6b0\uc800\uc5d0\uc11c \uc990\uae30\ub294 \ubb34\ub8cc \ud14d\uc0ac\uc2a4 \ud640\ub364 \ud3ec\ucee4', d: '\ubb34\ub8cc \uc624\ud508\uc18c\uc2a4 \ud14d\uc0ac\uc2a4 \ud640\ub364 \ud3ec\ucee4 \uac8c\uc784 PokerTH\ub97c \ube0c\ub77c\uc6b0\uc800\uc5d0\uc11c \ubc14\ub85c \uc990\uae30\uc138\uc694. \ub2e4\uc6b4\ub85c\ub4dc\ub3c4 \uac00\uc785\ub3c4 \ud544\uc694 \uc5c6\uc2b5\ub2c8\ub2e4 \u2014 \uc624\ud504\ub77c\uc778 \ubd07 \ub300\uc804, LAN \ud50c\ub808\uc774, pokerth.net \ucc38\uc5ec\uae4c\uc9c0.' },
   'zh-TW': { t: 'PokerTH \u7db2\u9801\u7248 \u2014 \u5728\u700f\u89bd\u5668\u4e2d\u514d\u8cbb\u73a9\u5fb7\u5dde\u64b2\u514b', d: '\u5728\u700f\u89bd\u5668\u4e2d\u76f4\u63a5\u66a2\u73a9 PokerTH\uff0c\u514d\u8cbb\u958b\u6e90\u7684\u5fb7\u5dde\u64b2\u514b\u904a\u6232\u3002\u7121\u9700\u4e0b\u8f09\u3001\u7121\u9700\u8a3b\u518a\uff1a\u96e2\u7dda\u8207\u96fb\u8166\u5c0d\u6230\u3001\u5340\u57df\u7db2\u8def\u5c0d\u5c40\uff0c\u6216\u52a0\u5165 pokerth.net\u3002' },
-  hi: { t: 'PokerTH \u0935\u0947\u092c \u2014 \u092c\u094d\u0930\u093e\u0909\u091c\u093c\u0930 \u092e\u0947\u0902 \u092e\u0941\u092b\u093c\u094d\u0924 Texas Hold\u2019em \u092a\u094b\u0915\u0930', d: '\u092e\u0941\u092b\u093c\u094d\u0924 \u0913\u092a\u0928-\u0938\u094b\u0930\u094d\u0938 Texas Hold\u2019em \u092a\u094b\u0915\u0930 \u0917\u0947\u092e PokerTH \u0938\u0940\u0927\u0947 \u0905\u092a\u0928\u0947 \u092c\u094d\u0930\u093e\u0909\u091c\u093c\u0930 \u092e\u0947\u0902 \u0916\u0947\u0932\u0947\u0902\u0964 \u0928 \u0921\u093e\u0909\u0928\u0932\u094b\u0921, \u0928 \u092a\u0902\u091c\u0940\u0915\u0930\u0923 \u2014 \u092c\u0949\u091f\u094d\u0938 \u0915\u0947 \u0935\u093f\u0930\u0941\u0926\u094d\u0927 \u0911\u092b\u093c\u0932\u093e\u0907\u0928 \u0905\u092d\u094d\u092f\u093e\u0938 \u0915\u0930\u0947\u0902, LAN \u092a\u0930 \u0916\u0947\u0932\u0947\u0902 \u092f\u093e pokerth.net \u0938\u0947 \u091c\u0941\u0921\u093c\u0947\u0902\u0964' }
+  hi: { t: 'PokerTH \u0935\u0947\u092c \u2014 \u092c\u094d\u0930\u093e\u0909\u091c\u093c\u0930 \u092e\u0947\u0902 \u092e\u0941\u092b\u093c\u094d\u0924 Texas Hold\u2019em \u092a\u094b\u0915\u0930', d: '\u092e\u0941\u092b\u093c\u094d\u0924 \u0913\u092a\u0928-\u0938\u094b\u0930\u094d\u0938 Texas Hold\u2019em \u092a\u094b\u0915\u0930 \u0917\u0947\u092e PokerTH \u0938\u0940\u0927\u0947 \u0905\u092a\u0928\u0947 \u092c\u094d\u0930\u093e\u0909\u091c\u093c\u0930 \u092e\u0947\u0902 \u0916\u0947\u0932\u0947\u0902\u0964 \u0928 \u0921\u093e\u0909\u0928\u0932\u094b\u0921, \u0928 \u092a\u0902\u091c\u0940\u0915\u0930\u0923 \u2014 \u092c\u0949\u091f\u094d\u0938 \u0915\u0947 \u0935\u093f\u0930\u0941\u0926\u094d\u0927 \u0911\u092b\u093c\u0932\u093e\u0907\u0928 \u0905\u092d\u094d\u092f\u093e\u0938 \u0915\u0930\u0947\u0902, LAN \u092a\u0930 \u0916\u0947\u0932\u0947\u0902 \u092f\u093e pokerth.net \u0938\u0947 \u091c\u0941\u0921\u093c\u0947\u0902\u0964' },
+  ar: { t: 'PokerTH Web \u2014 \u0628\u0648\u0643\u0631 \u062a\u0643\u0633\u0627\u0633 \u0647\u0648\u0644\u062f\u0645 \u0645\u062c\u0627\u0646\u064a \u0641\u064a \u0645\u062a\u0635\u0641\u062d\u0643', d: '\u0627\u0644\u0639\u0628 PokerTH\u060c \u0644\u0639\u0628\u0629 \u0628\u0648\u0643\u0631 \u062a\u0643\u0633\u0627\u0633 \u0647\u0648\u0644\u062f\u0645 \u0627\u0644\u062d\u0631\u0629 \u0648\u0627\u0644\u0645\u062c\u0627\u0646\u064a\u0629\u060c \u0645\u0628\u0627\u0634\u0631\u0629 \u0641\u064a \u0645\u062a\u0635\u0641\u062d\u0643. \u0628\u0644\u0627 \u062a\u0646\u0632\u064a\u0644 \u0648\u0644\u0627 \u062a\u0633\u062c\u064a\u0644 \u2014 \u062a\u062f\u0631\u0651\u0628 \u062f\u0648\u0646 \u0627\u062a\u0635\u0627\u0644 \u0636\u062f \u0627\u0644\u0631\u0648\u0628\u0648\u062a\u0627\u062a\u060c \u0627\u0644\u0639\u0628 \u0639\u0628\u0631 LAN \u0623\u0648 \u0627\u0646\u0636\u0645 \u0625\u0644\u0649 pokerth.net.' },
+  fa: { t: 'PokerTH Web \u2014 \u067e\u0648\u06a9\u0631 \u062a\u06af\u0632\u0627\u0633 \u0647\u0648\u0644\u062f\u0645 \u0631\u0627\u06cc\u06af\u0627\u0646 \u062f\u0631 \u0645\u0631\u0648\u0631\u06af\u0631 \u0634\u0645\u0627', d: 'PokerTH\u060c \u0628\u0627\u0632\u06cc \u067e\u0648\u06a9\u0631 \u062a\u06af\u0632\u0627\u0633 \u0647\u0648\u0644\u062f\u0645 \u0622\u0632\u0627\u062f \u0648 \u0631\u0627\u06cc\u06af\u0627\u0646 \u0631\u0627 \u0645\u0633\u062a\u0642\u06cc\u0645 \u062f\u0631 \u0645\u0631\u0648\u0631\u06af\u0631 \u062e\u0648\u062f \u0628\u0627\u0632\u06cc \u06a9\u0646\u06cc\u062f. \u0628\u062f\u0648\u0646 \u062f\u0627\u0646\u0644\u0648\u062f \u0648 \u0628\u062f\u0648\u0646 \u062b\u0628\u062a\u200c\u0646\u0627\u0645 \u2014 \u0622\u0641\u0644\u0627\u06cc\u0646 \u0628\u0627 \u0631\u0628\u0627\u062a\u200c\u0647\u0627 \u062a\u0645\u0631\u06cc\u0646 \u06a9\u0646\u06cc\u062f\u060c \u062f\u0631 LAN \u0628\u0627\u0632\u06cc \u06a9\u0646\u06cc\u062f \u06cc\u0627 \u0628\u0647 pokerth.net \u0628\u067e\u06cc\u0648\u0646\u062f\u06cc\u062f.' },
+  he: { t: 'PokerTH Web \u2014 \u05e4\u05d5\u05e7\u05e8 \u05d8\u05e7\u05e1\u05e1 \u05d4\u05d5\u05dc\u05d3\u05dd \u05d7\u05d9\u05e0\u05dd \u05d1\u05d3\u05e4\u05d3\u05e4\u05df \u05e9\u05dc\u05da', d: '\u05e9\u05d7\u05e7\u05d5 \u05d1-PokerTH, \u05de\u05e9\u05d7\u05e7 \u05e4\u05d5\u05e7\u05e8 \u05d8\u05e7\u05e1\u05e1 \u05d4\u05d5\u05dc\u05d3\u05dd \u05d7\u05d5\u05e4\u05e9\u05d9 \u05d5\u05d7\u05d9\u05e0\u05de\u05d9, \u05d9\u05e9\u05d9\u05e8\u05d5\u05ea \u05d1\u05d3\u05e4\u05d3\u05e4\u05df. \u05d1\u05dc\u05d9 \u05d4\u05d5\u05e8\u05d3\u05d4 \u05d5\u05d1\u05dc\u05d9 \u05d4\u05e8\u05e9\u05de\u05d4 \u2014 \u05d4\u05ea\u05d0\u05de\u05e0\u05d5 \u05dc\u05d0 \u05de\u05e7\u05d5\u05d5\u05df \u05de\u05d5\u05dc \u05d1\u05d5\u05d8\u05d9\u05dd, \u05e9\u05d7\u05e7\u05d5 \u05d1-LAN \u05d0\u05d5 \u05d4\u05e6\u05d8\u05e8\u05e4\u05d5 \u05dc-pokerth.net.' },
+  ur: { t: 'PokerTH Web \u2014 \u0628\u0631\u0627\u0624\u0632\u0631 \u0645\u06cc\u06ba \u0645\u0641\u062a \u0679\u06cc\u06a9\u0633\u0627\u0633 \u06c1\u0648\u0644\u0688\u0645 \u067e\u0648\u06a9\u0631', d: 'PokerTH\u060c \u0622\u0632\u0627\u062f \u0627\u0648\u0631 \u0645\u0641\u062a \u0679\u06cc\u06a9\u0633\u0627\u0633 \u06c1\u0648\u0644\u0688\u0645 \u067e\u0648\u06a9\u0631 \u06af\u06cc\u0645\u060c \u0628\u0631\u0627\u06c1\u0650 \u0631\u0627\u0633\u062a \u0627\u067e\u0646\u06d2 \u0628\u0631\u0627\u0624\u0632\u0631 \u0645\u06cc\u06ba \u06a9\u06be\u06cc\u0644\u06cc\u06ba\u06d4 \u0646\u06c1 \u0688\u0627\u0624\u0646 \u0644\u0648\u0688 \u0646\u06c1 \u0631\u062c\u0633\u0679\u0631\u06cc\u0634\u0646 \u2014 \u0628\u0648\u0679\u0633 \u06a9\u06d2 \u062e\u0644\u0627\u0641 \u0622\u0641 \u0644\u0627\u0626\u0646 \u0645\u0634\u0642 \u06a9\u0631\u06cc\u06ba\u060c LAN \u067e\u0631 \u06a9\u06be\u06cc\u0644\u06cc\u06ba \u06cc\u0627 pokerth.net \u0645\u06cc\u06ba \u0634\u0627\u0645\u0644 \u06c1\u0648\u06ba\u06d4' },
 };
 
 // Resolve the ?lang= query parameter onto a SEO_I18N code (case-insensitive).
@@ -1126,7 +1130,7 @@ function seoBodyBlock() {
     '<p>PokerTH Web Client is the browser version of PokerTH, the well-known open-source poker game. ' +
     'It runs on any modern browser \u2014 desktop, tablet or phone \u2014 and can be installed as a Progressive Web App. ' +
     'Game modes: offline practice against computer opponents, LAN or private dedicated servers, and the official pokerth.net network with rankings.</p>' +
-    '<p>Features: full Texas Hold\u2019em rules, up to 10 players per table, 36 interface languages, voice announcements, ' +
+    '<p>Features: full Texas Hold\u2019em rules, up to 10 players per table, 40 interface languages, voice announcements, ' +
     'music player, customizable card decks and table styles, and complete feature parity with the official PokerTH desktop client.</p>' +
     '<p>Free software \u2014 source code on GitHub (narmod/pokerth-web-client), based on PokerTH by the PokerTH Development Team.</p>' +
     '<p><a href="/rules">Texas Hold\u2019em rules</a> \u2014 <a href="/faq">FAQ</a> \u2014 <a href="/privacy">Privacy</a></p>' +
@@ -1146,7 +1150,7 @@ function seoLlmsTxt(base) {
     '- The official pokerth.net network, with seasonal rankings\n\n' +
     '## Key facts\n\n' +
     '- Free and open source (based on PokerTH by the PokerTH Development Team)\n' +
-    '- 36 interface languages; poker terms (Fold/Check/Call/Raise/All-In) stay in English\n' +
+    '- 40 interface languages; poker terms (Fold/Check/Call/Raise/All-In) stay in English\n' +
     '- Feature parity with the official PokerTH desktop client\n' +
     (u ? '\n## Links\n\n- Play: ' + u + '/\n- Texas Hold\u2019em rules: ' + u + '/rules\n- FAQ: ' + u + '/faq\n' : '\n## Links\n\n') +
     '- Source code: https://github.com/narmod/pokerth-web-client\n' +
@@ -1270,7 +1274,7 @@ var _SEO_FAQ = [
   ['What is the difference with the desktop client?',
    'Same game, same rules, same pokerth.net network \u2014 but it runs directly in the browser with nothing to install, on any operating system.'],
   ['Which languages are supported?',
-   'The interface is available in 36 languages. Poker action terms (Fold, Check, Call, Raise, All-In) stay in English, as is international convention.'],
+   'The interface is available in 40 languages. Poker action terms (Fold, Check, Call, Raise, All-In) stay in English, as is international convention.'],
   ['Is real money involved?',
    'No. PokerTH is strictly a play-money game. Chips have no monetary value and cannot be bought or sold.'],
   ['What data does the web client collect?',
@@ -1549,7 +1553,7 @@ function recordModeConnect(mode) {
 // Le compteur de trafic dit combien de visites ; il ne disait pas sur quoi. Ces
 // quatre répartitions servent à arbitrer : part réelle d'iOS Safari (où vivent
 // la moitié de nos pièges connus), part de l'installation PWA, et lesquelles
-// des 36 langues sont réellement utilisées.
+// des 40 langues sont réellement utilisées.
 //
 // Ce sont des totaux cumulés, pas des séries : quatre petits dictionnaires de
 // compteurs, alimentés par le même ping anonyme que les visites. Rien de plus

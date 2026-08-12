@@ -19,7 +19,7 @@ export const help = {
         { id: 'famboard', t: 'Familierangliste',
           b: ['Kun på private servere og i LAN-spil gemmer klienten samlede statistikker pr. kaldenavn — spillede og vundne hænder og partier, største gevinst, bedste stime — og deler dem via serveren, så alle enheder rundt om bordet ser den samme rangliste. pokerth.net-spil registreres aldrig på denne måde, og træningstilstandens statistikker holdes helt adskilt.'] },
         { id: 'language', t: 'Sprog',
-          b: ['Grænsefladen findes på 36 sprog. Skift det når som helst i Avancerede indstillinger (tandhjulsmenuen), kategorien Brugergrænseflade. Pokerens handlingstermer (Fold, Check, Call, Bet, Raise, All-In) forbliver på engelsk efter konventionen, nøjagtigt som i skrivebordsklienten.'] },
+          b: ['Grænsefladen findes på 40 sprog. Skift det når som helst i Avancerede indstillinger (tandhjulsmenuen), kategorien Brugergrænseflade. Pokerens handlingstermer (Fold, Check, Call, Bet, Raise, All-In) forbliver på engelsk efter konventionen, nøjagtigt som i skrivebordsklienten.'] },
         { id: 'pwa', t: 'Installér som app',
           b: ['Denne klient er en Progressive Web App: du kan installere den fra browserens menu (eller installationsknappen i headeren) og få en fuldskærmsapp med sit eget ikon. Når den er installeret, starter den øjeblikkeligt, og træningstilstanden virker helt offline.'],
           note: 'På Android og i Chrome/Edge til computer klarer installationsknappen det hele. På iPhone/iPad tillader Apple kun installation via Safari: Del-knappen \u2192 \u201cFøj til hjemmeskærm\u201d — klienten viser disse trin, når det er nødvendigt. Knappen forsvinder, når appen er installeret.' },

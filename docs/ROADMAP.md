@@ -46,7 +46,7 @@ use too. Items are grouped by status rather than fixed phases.
   on strong draws, and barrelling that carries the story across streets — value bets on made
   hands, busted-draw bluffs and medium-hand check-downs on the river — with barrel frequency
   and give-up tuned by difficulty and archetype.
-- **Achievements / Trophies.** A **Trophées** tab in the ranking window (Training mode only, once connected) with 27 achievements across Progress, Skill, Play-style, Fun and PokerTH formats — hand and game milestones, win-streaks, comeback, heads-up, patience, bluff, all-in, "the three schools", a completionist meta, and PokerTH-format wins (Ranking / WeCup / BBC / Triple Crown / Blitz / rising blinds). Locked entries greyed out, a 👥 badge for player-count requirements, an unlock toast, and an "X/27" counter on the profile card and end-of-game screen. Localised in all 36 languages. Built as a mode-agnostic module (`public/modules/achievements/`) consuming the engine's event stream.
+- **Achievements / Trophies.** A **Trophées** tab in the ranking window (Training mode only, once connected) with 27 achievements across Progress, Skill, Play-style, Fun and PokerTH formats — hand and game milestones, win-streaks, comeback, heads-up, patience, bluff, all-in, "the three schools", a completionist meta, and PokerTH-format wins (Ranking / WeCup / BBC / Triple Crown / Blitz / rising blinds). Locked entries greyed out, a 👥 badge for player-count requirements, an unlock toast, and an "X/27" counter on the profile card and end-of-game screen. Localised in all 40 languages. Built as a mode-agnostic module (`public/modules/achievements/`) consuming the engine's event stream.
 
 **Appearance & theming**
 - A QML-style styles window with four tabs — Table · Cards · Card back · Seats — each
@@ -63,7 +63,7 @@ use too. Items are grouped by status rather than fixed phases.
   Advanced options, matching the QML client.
 - Light/dark aware: per-theme `color-scheme` and a dynamic browser `theme-color` that
   follows the active theme.
-- Theme panel fully localised in all 36 languages, with live switching and a live preview
+- Theme panel fully localised in all 40 languages, with live switching and a live preview
   of each deck.
 - Semantic-colour system so the whole UI recolours consistently per theme — gold uses the
   official QML accent (`#E3C800`) and is kept only for deliberate game assets (dealer
@@ -171,7 +171,7 @@ use too. Items are grouped by status rather than fixed phases.
   option to strip emojis from received chat.
 - Lobby game cards show player counts, status, and each table's blind level and raise schedule.
 - Sound effects for every action.
-- Internationalisation in 36 languages, auto-detected and switchable on the fly.
+- Internationalisation in 40 languages, auto-detected and switchable on the fly.
 
 **Official client (QML) tracking — kept aligned on an ongoing basis**
 - The in-game screen is audited feature-by-feature against PokerTH's official QML client

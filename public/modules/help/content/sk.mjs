@@ -19,7 +19,7 @@ export const help = {
         { id: 'famboard', t: 'Rodinný rebríček',
           b: ['Len na súkromných serveroch a v LAN hrách si klient vedie súhrnné štatistiky podľa prezývok — odohrané a vyhrané ruky aj partie, najväčšia výhra, najlepšia séria — a zdieľa ich cez server, takže každé zariadenie pri stole vidí rovnaký rebríček. Hry na pokerth.net sa takto nikdy nesledujú a štatistiky tréningového režimu zostávajú úplne oddelené.'] },
         { id: 'language', t: 'Jazyk',
-          b: ['Rozhranie je k dispozícii v 36 jazykoch. Kedykoľvek ho zmeníš v Pokročilých možnostiach (menu s ozubeným kolieskom), kategória Používateľské rozhranie. Pokrové akčné termíny (Fold, Check, Call, Bet, Raise, All-In) zostávajú podľa konvencie po anglicky, presne ako v desktopovom klientovi.'] },
+          b: ['Rozhranie je k dispozícii v 40 jazykoch. Kedykoľvek ho zmeníš v Pokročilých možnostiach (menu s ozubeným kolieskom), kategória Používateľské rozhranie. Pokrové akčné termíny (Fold, Check, Call, Bet, Raise, All-In) zostávajú podľa konvencie po anglicky, presne ako v desktopovom klientovi.'] },
         { id: 'pwa', t: 'Inštalácia ako aplikácia',
           b: ['Tento klient je Progressive Web App: môžeš ho nainštalovať z menu prehliadača (alebo tlačidlom inštalácie v hlavičke) a získať celoobrazovkovú aplikáciu s vlastnou ikonou. Po inštalácii sa spúšťa okamžite a tréningový režim funguje úplne offline.'],
           note: 'Na Androide a v desktopovom Chrome/Edge zariadi všetko tlačidlo inštalácie. Na iPhone/iPade Apple povoľuje inštaláciu len cez Safari: tlačidlo Zdieľať \u2192 \u201ePridať na plochu\u201c — klient tieto kroky v prípade potreby zobrazí. Po inštalácii aplikácie tlačidlo zmizne.' },
