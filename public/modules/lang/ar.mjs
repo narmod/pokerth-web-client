@@ -17,6 +17,9 @@ export const meta = {
 };
 
 export const strings = {
+  abTabChangelog: 'سجل التغييرات',
+  abClLoading: 'جارٍ التحميل…',
+  abClError: 'سجل التغييرات غير متوفر.',
   rkCalcTitle: 'حساب التصنيف:',
   rkCalcPoints: 'نقاط الترتيب:',
   rkCalcFormula: 'المعادلة:',

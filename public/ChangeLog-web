@@ -1,0 +1,40 @@
+2026-08-05 version 2.1.6-web (current series):
+- new: forum news window in the lobby - the latest pokerth.net forum posts are readable in the app, with an unread counter; read state is synced across devices for authenticated accounts
+- new: the table admin of a game is shown in the game list, the lobby player lists and the waiting room (QML parity)
+- new: the ranking page explains how the PokerTH ranking is calculated (QML parity)
+- new: changelog tab on the About page - the one you are reading
+- new: default4c card deck - four coloured suits (PokerTH 2.1.6)
+- new: table invite links - an "Invite friends" button in the waiting room
+- new: opt-in PROXY protocol header, so the game server sees each web player's real address instead of the proxy's
+- new: Arabic, Persian, Hebrew and Urdu interface languages - 40 languages in total
+- improvement: reconnection after a lost connection fine-tuned - cancel button, seat-reserved notice, readable error reasons, and every retry resumes the old session first (QML 2.1.6 parity)
+- improvement: the AFK timeout is reset on real user activity only (QML 2.1.6 parity)
+- improvement: ignoring a player also hides their emoji reactions
+- improvement: light mode surfaces aligned with PokerTH 2.1.6 - grey page, white content boxes
+- improvement: music and sounds survive iOS audio interruptions and network handovers
+- improvement: proxy hardening mirroring the upstream server fixes - bounded send queues, ingress validation, avatar decode limits, TLS public-key pinning
+- improvement: optional search-engine layer (admin-controlled, off by default) with server-rendered rules and FAQ pages
+- bugfix: an intended check could turn into a call when a raise arrived at the same moment (QML 2.1.6 parity)
+- bugfix: a pre-armed Check/Call no longer fires as an unintended call after a late raise
+- bugfix: connecting in training mode no longer overwrites the remembered LAN server settings
+- bugfix: stray background bands in the installed PWA on iOS and iPadOS
+
+2026-07-30 version 2.1.5-web:
+- new: vector avatar creator - a step-by-step wizard with a silhouette-coherent catalogue of faces, hair, outfits and accessories
+- new: avatar studio window with Gallery, Create and Import tabs
+- new: playing-style quadrant on the HUD seat badge; a player's range grid opens straight from their row in the stats table
+- improvement: the create-game form is seeded from the player's own preferences and remembers the last table name actually typed
+- improvement: join failures are surfaced clearly, with a watchdog for silent WebSocket deaths
+- improvement: spectators are view-only - chat and emoji reactions are locked while watching
+- bugfix: forum-reported bugs - reconnection, big-blind pre-actions, heads-up board layout
+
+2026-07-22 version 2.1.4-web.0:
+- first release under the upstream-aligned version scheme (major.minor.patch follows the PokerTH release, -web.N counts web deployments)
+- new: in-app multilingual help - ten chapters covering the whole client, translated into every interface language
+- new: in-app debug log view like the QML client's, and hand-log upload through the official pokerth.net analysis pipeline
+- new: music playlist and live web radios; stats HUD with ATS and FTS, automatic .pdb hand-log saving
+- improvement: QML parity pass on seats (geometry, fold opacity, accents), the action bar (F1-F4 pre-actions, round gates, themed radii) and game-log scrollback
+- improvement: full i18n sweep - the last hard-coded strings replaced by translated catalogue entries
+
+Before 2026-07-22 (0.3.x beta series):
+- initial development of the web client - game engine bridge, lobby, tables, offline training against bots, PWA shell, style packs and the WebSocket-to-TCP proxy

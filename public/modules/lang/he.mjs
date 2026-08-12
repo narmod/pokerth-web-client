@@ -14,6 +14,9 @@ export const meta = {
 };
 
 export const strings = {
+  abTabChangelog: 'יומן שינויים',
+  abClLoading: 'טוען…',
+  abClError: 'יומן השינויים אינו זמין.',
   rkCalcTitle: 'חישוב הדירוג:',
   rkCalcPoints: 'נקודות מיקום:',
   rkCalcFormula: 'נוסחה:',

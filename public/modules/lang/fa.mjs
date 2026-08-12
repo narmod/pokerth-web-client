@@ -14,6 +14,9 @@ export const meta = {
 };
 
 export const strings = {
+  abTabChangelog: 'تاریخچه تغییرات',
+  abClLoading: 'در حال بارگذاری…',
+  abClError: 'تاریخچه تغییرات در دسترس نیست.',
   rkCalcTitle: 'محاسبهٔ رتبه‌بندی:',
   rkCalcPoints: 'امتیاز جایگاه:',
   rkCalcFormula: 'فرمول:',

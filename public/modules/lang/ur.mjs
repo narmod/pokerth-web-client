@@ -14,6 +14,9 @@ export const meta = {
 };
 
 export const strings = {
+  abTabChangelog: 'تبدیلیوں کا ریکارڈ',
+  abClLoading: 'لوڈ ہو رہا ہے…',
+  abClError: 'تبدیلیوں کا ریکارڈ دستیاب نہیں۔',
   rkCalcTitle: 'درجہ بندی کا حساب:',
   rkCalcPoints: 'پوزیشن پوائنٹس:',
   rkCalcFormula: 'فارمولا:',

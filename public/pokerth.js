@@ -10070,23 +10070,32 @@ function renderPlayersList() {
   // release livrée — à rafraîchir à chaque bump de release). Chargé une
   // seule fois, rendu texte échappé avec les entêtes de version en évidence.
   var _abClLoaded = false;
+  function _abClRender(txt){
+    var esc = function(s){ return String(s).replace(/[&<>]/g, function(c){ return { '&':'&amp;', '<':'&lt;', '>':'&gt;' }[c]; }); };
+    var out = [];
+    String(txt).split('\n').forEach(function(line){
+      // Entête de version (« 2026-08-05 version 2.1.6: » ou « Before… ») en évidence
+      if (/^\d{4}-\d{2}-\d{2}\s+version\s/i.test(line) || /^Before\s+\d{4}-\d{2}-\d{2}/i.test(line)) out.push('<div class="ab-cl-ver">' + esc(line) + '</div>');
+      else if (line.trim() === '') out.push('<div class="ab-cl-gap"></div>');
+      else out.push('<div class="ab-cl-line">' + esc(line) + '</div>');
+    });
+    return out.join('');
+  }
   function _abLoadChangelog(){
     if (_abClLoaded) return;
     var el = document.getElementById('ab-cl'); if (!el) return;
     _abClLoaded = true;
-    fetch('/ChangeLog', { cache: 'no-cache' }).then(function(r){
-      if (!r.ok) throw new Error('HTTP ' + r.status);
-      return r.text();
-    }).then(function(txt){
-      var esc = function(s){ return String(s).replace(/[&<>]/g, function(c){ return { '&':'&amp;', '<':'&lt;', '>':'&gt;' }[c]; }); };
-      var out = [];
-      String(txt).split('\n').forEach(function(line){
-        // Entête de version (« 2026-08-05 version 2.1.6: ») mis en évidence
-        if (/^\d{4}-\d{2}-\d{2}\s+version\s/i.test(line)) out.push('<div class="ab-cl-ver">' + esc(line) + '</div>');
-        else if (line.trim() === '') out.push('<div class="ab-cl-gap"></div>');
-        else out.push('<div class="ab-cl-line">' + esc(line) + '</div>');
-      });
-      el.innerHTML = out.join('');
+    // Les deux journaux : celui du client web d'abord, puis l'upstream
+    // PokerTH — chacun sous un intitulé (noms propres, non traduits, comme
+    // abCopy). Un fichier manquant n'empêche pas l'autre de s'afficher.
+    var one = function(u){ return fetch(u, { cache: 'no-cache' }).then(function(r){ return r.ok ? r.text() : null; }).catch(function(){ return null; }); };
+    Promise.all([one('/ChangeLog-web'), one('/ChangeLog')]).then(function(res){
+      var web = res[0], up = res[1];
+      if (web == null && up == null) throw new Error('none');
+      var h = '';
+      if (web != null) h += '<div class="ab-cl-src">PokerTH Web Client</div>' + _abClRender(web);
+      if (up != null)  h += '<div class="ab-cl-src">PokerTH</div>' + _abClRender(up);
+      el.innerHTML = h;
     }).catch(function(){
       _abClLoaded = false; // réessai possible au prochain clic
       var t = (window.I18N && window.I18N.t) ? window.I18N.t('abClError') : null;
@@ -10293,7 +10302,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.6-web.66'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.6-web.67'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

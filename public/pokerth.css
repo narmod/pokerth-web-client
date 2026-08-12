@@ -9156,7 +9156,9 @@ html.reduce-fx .seat-action-badge {
 .ab-feats { margin:14px 0; color:var(--text-hi); font-size:var(--fs-md); line-height:1.75; }
 /* Onglet Changelog (parité widget/QML) : texte brut mono, entêtes de
    version en or, défilement dans le pane. */
-.ab-cl { font-family: var(--ff-mono); font-size: var(--fs-xs); line-height: 1.45; overflow-wrap: anywhere; }
+.ab-cl { font-family: var(--ff-mono); font-size: var(--fs-xs); line-height: 1.45; overflow-wrap: anywhere; direction: ltr; text-align: left; }
+.ab-cl-src { font-size: var(--fs-sm); font-weight: 700; color: var(--text); border-bottom: 1px solid var(--border); padding-bottom: 3px; margin: 14px 0 6px; }
+.ab-cl-src:first-child { margin-top: 0; }
 .ab-cl-ver { color: var(--gold, #d4af37); font-weight: 700; margin: 10px 0 4px; }
 .ab-cl-ver:first-child { margin-top: 0; }
 .ab-cl-line { color: var(--chatlog-muted, var(--text-dim, #9aa3b5)); }
