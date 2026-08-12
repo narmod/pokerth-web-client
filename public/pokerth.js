@@ -3103,6 +3103,13 @@ document.addEventListener("DOMContentLoaded", function() {
       try {
         var lm = document.getElementById('login-mode');
         if (!lm || (lm.value !== 'lan' && lm.value !== 'unauth')) return;
+        // Garde-fou : le mode entraînement force login-mode='unauth' alors que les
+        // champs serveur (masqués) gardent les valeurs du mode précédent (ex.
+        // Internet, TLS coché). Sans ce test, un Connect en entraînement les
+        // persistait comme préférences LAN — au retour en LAN, hôte/port changés
+        // et TLS coché. Seul le mode LAN / dédié VISIBLE peut mémoriser.
+        var smR = document.getElementById('server-mode');
+        if (!smR || smR.value !== 'lan-dedi') return;
         var d = window._pthLanDefaults ? window._pthLanDefaults() : null;
         if (!d) return;
         var put = function (k, v, dflt) {
@@ -5185,6 +5192,11 @@ const App = (() => {
       // Sauvegarder le serveur préféré
       try {
         var lm2 = $('login-mode'); var hv = $('host'); var pv = $('port'); var xv = $('proxy');
+        // En entraînement, les champs serveur sont masqués et contiennent les
+        // valeurs résiduelles du mode précédent : ne rien persister (ni le
+        // login-mode, forcé à 'unauth' par la branche offline).
+        var _offSave = !!($('server-mode') && $('server-mode').value === 'offline');
+        if (!_offSave) {
         if (lm2) localStorage.setItem('pth_login_mode', lm2.value);
         if (hv)  localStorage.setItem('pth_host',  hv.value.trim());
         if (pv)  localStorage.setItem('pth_port',  pv.value.trim());
@@ -5193,6 +5205,7 @@ const App = (() => {
         // pth_host / pth_port, eux, suivent tous les modes sans condition.
         if (window._pthLanRemember) window._pthLanRemember();
         if (xv)  localStorage.setItem('pth_proxy', xv.value.trim());
+        }
         // Auto-save the nickname per-mode (no Remember-me checkbox
         // needed — silent persistence is the new default). Guest is
         // skipped because it manages its own pth_guest_name key, and
@@ -10251,7 +10264,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.6-web.64'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.6-web.65'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
