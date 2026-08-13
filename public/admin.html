@@ -226,7 +226,7 @@
       </div>
       <div class="card">
         <div class="boardhead" style="margin-bottom:6px"><h2 style="margin:0">What visitors run</h2><span id="envSince" class="muted" style="margin:0"></span></div>
-        <p class="muted" style="margin:2px 0 10px">From the same anonymous ping as the visit counter: system and browser read from the User-Agent, language from the request header, installed app vs browser tab reported by the client. Running totals, not a time series — what to test on, and which of the 36 languages are actually used.</p>
+        <p class="muted" style="margin:2px 0 10px">From the same anonymous ping as the visit counter: system and browser read from the User-Agent, language from the request header, installed app vs browser tab reported by the client. Running totals, not a time series — what to test on, and which of the 40 languages are actually used.</p>
         <div class="seg" id="envSeg" style="flex-wrap:wrap">
           <button class="on" data-k="combo">Device + browser</button>
           <button data-k="os">System</button>
@@ -2290,7 +2290,7 @@
   setInterval(function(){ if(document.visibilityState==='visible' && tok() && $('panel-broadcast') && $('panel-broadcast').style.display!=='none') loadBroadcasts(); }, 30000);
 
   // ── Welcome / first-visit message (per language) ────────────────────────
-  var WC_LANGS=['af','bg','ca','cs','da','de','el','en','es','fi','fr','gd','gl','hi','hr','hu','it','ja','ko','lt','nb','nl','pl','pt-br','pt-pt','ro','ru','sk','sr','sv','ta','tr','uk','vi','zh','zh-tw'];
+  var WC_LANGS=['af','ar','bg','ca','cs','da','de','el','en','es','fa','fi','fr','gd','gl','he','hi','hr','hu','it','ja','ko','lt','nb','nl','pl','pt-br','pt-pt','ro','ru','sk','sr','sv','ta','tr','uk','ur','vi','zh','zh-tw'];
   var welcomeState={ enabled:false, 'default':'fr', langs:{} };
   var wcEdit='fr'; // language currently shown in the editor
   (function(){ var a=$('wcLang'), b=$('wcDefault'); if(a&&b){ WC_LANGS.forEach(function(c){ var o1=document.createElement('option'); o1.value=c; o1.textContent=c; a.appendChild(o1); var o2=document.createElement('option'); o2.value=c; o2.textContent=c; b.appendChild(o2); }); a.value='fr'; b.value='fr'; } })();

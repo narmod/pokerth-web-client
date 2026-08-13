@@ -112,7 +112,7 @@ const _DISPLAYCHIPS_I18N = {
 for (const _c in _DISPLAYBB_I18N) { if (LANG[_c]) LANG[_c].displayBB = _DISPLAYBB_I18N[_c]; }
 for (const _c in _DISPLAYCHIPS_I18N) { if (LANG[_c]) LANG[_c].displayChips = _DISPLAYCHIPS_I18N[_c]; }
 // ── Clé 'advLanguage' : libellé « Langue » de la ligne Langue dans Options
-// avancées → Interface. Traduite dans les 36 langues (source unique ici).
+// avancées → Interface. Traduite dans les 40 langues (source unique ici).
 const _ADVLANG_I18N = {
   en: 'Language', fr: 'Langue', de: 'Sprache', es: 'Idioma', it: 'Lingua',
   'pt-BR': 'Idioma', 'pt-PT': 'Idioma', nl: 'Taal', pl: 'Język', ru: 'Язык',
@@ -125,7 +125,7 @@ const _ADVLANG_I18N = {
 };
 for (const _c in _ADVLANG_I18N) { if (LANG[_c]) LANG[_c].advLanguage = _ADVLANG_I18N[_c]; }
 // ── Contrôle « Mode sombre » d'Options avancées (label + 3 options) traduit
-// dans les 36 langues (source unique ici ; ces clés n'étaient qu'en/fr).
+// dans les 40 langues (source unique ici ; ces clés n'étaient qu'en/fr).
 const _DARKMODE_I18N = {
   en: 'Dark mode', fr: 'Mode sombre', de: 'Dunkelmodus', es: 'Modo oscuro', it: 'Modalità scura',
   'pt-BR': 'Modo escuro', 'pt-PT': 'Modo escuro', nl: 'Donkere modus', pl: 'Tryb ciemny', ru: 'Тёмная тема',

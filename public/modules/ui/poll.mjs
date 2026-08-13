@@ -63,7 +63,7 @@ function _vid() {
 }
 
 // Meme cascade de repli que t() : langue active → racine ('pt-br' → 'pt') →
-// anglais → premiere langue redigee. L'admin n'ecrit pas les 36 langues.
+// anglais → premiere langue redigee. L'admin n'ecrit pas les 40 langues.
 function _pick(map) {
   if (!map) return '';
   let l = 'en';

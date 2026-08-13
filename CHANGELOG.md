@@ -18,6 +18,10 @@ release.
   the upstream 2.1.7 release (`web.1`).
 
 ### Fixed
+- **Admin panel caught up with the 40-language catalogue.** The welcome-message
+  and poll editors were missing the four newest languages (Arabic, Persian,
+  Hebrew, Urdu), so those messages could not be written for them; the
+  environment-stats blurb also still said "36 languages" (`web.2`).
 - **Two web players can now sit at the same table.** The server refuses two
   players joining a table from the same IP address (anti-collusion check), and
   every web player used to reach the server with the proxy's address — so any
