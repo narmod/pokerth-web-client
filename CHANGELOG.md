@@ -8,6 +8,20 @@ web counter (`2.1.5` → `2.1.5-web.0`). Granular, per-build tags are published 
 [GitHub Releases](https://github.com/narmod/pokerth-web-client/releases) page;
 this file captures what matters to players and operators.
 
+## 2.1.7-web line (2026)
+
+Opened with `v2.1.7-web.0` (2026-08-13), following the upstream **2.1.7**
+release.
+
+### Fixed
+- **Two web players can now sit at the same table.** The server refuses two
+  players joining a table from the same IP address (anti-collusion check), and
+  every web player used to reach the server with the proxy's address — so any
+  two web players collided ("IP address blocked"). The proxy now forwards each
+  player's real address to the server (PROXY protocol v1, trusted-proxy setup
+  on the official server side with the 2.1.7 deployment), and the ranking no
+  longer treats all web players as a single player.
+
 ## 2.1.6-web line (2026)
 
 Opened with `v2.1.6-web.0`, following the upstream **2.1.6** release. Granular,
