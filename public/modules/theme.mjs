@@ -80,6 +80,8 @@ const TABLES = [
   { id: 'pirates', name: "Pirates QML table style", key: 'tablePirates', fallback: "Pirates", swatch: '#cf9a34', feltUrl: '/table/pirates/felt.png', preview: '/table/pirates/preview.png', previewPortrait: '/table/pirates/preview_portrait.png', radius: 4, mode: 'fs', skin: true, align: 'center', zoom: 1.33 },
   { id: 'mile_high_club', name: "Mile High Club QML table style", key: 'tableMileHighClub', fallback: "Mile High Club", swatch: '#e7181c', feltUrl: '/table/mile_high_club/felt.png', preview: '/table/mile_high_club/preview.png', previewPortrait: '/table/mile_high_club/preview_portrait.png', radius: 6.5, mode: 'fs', skin: true, align: 'center bottom' },
   { id: 'terminus_hotel_2', name: "Terminus Hotel 2 QML table style", key: 'tableTerminusHotel2', fallback: "Terminus Hotel 2", swatch: '#6e53a2', feltUrl: '/table/terminus_hotel_2/felt.png', preview: '/table/terminus_hotel_2/preview.png', previewPortrait: '/table/terminus_hotel_2/preview_portrait.png', radius: 6.5, mode: 'fs', skin: true, align: 'center', zoom: 1.3 },
+  // 2.1.7 : BBC Anthem (BaShFX). TableBackgroundAlign=bottom dans le XML amont.
+  { id: 'bbc_anthem', name: "BBC Anthem QML table style", key: 'tableBbcAnthem', fallback: "BBC Anthem", swatch: '#252626', feltUrl: '/table/bbc_anthem/felt.png', preview: '/table/bbc_anthem/preview.png', previewPortrait: '/table/bbc_anthem/preview_portrait.png', radius: 6.5, mode: 'fs', skin: true, align: 'center bottom' },
 ];
 const DECKS = [
   { id: 'default', name: 'PokerTH default QML card deck', by: 'PokerTH Development Team', swatch: '#1d6b30', ext: 'svg' },
@@ -532,6 +534,8 @@ var _STANDALONE_BACKS = [
   { id: 'back-pirates',           name: 'Pirates (QML/SVG)',              key: 'cardbackPirates',         fallback: 'Pirates',           ext: 'svg' },
   { id: 'back-mile-high-club',    name: 'Mile High Club (QML/SVG)',       key: 'cardbackMileHighClub',    fallback: 'Mile High Club',    ext: 'svg' },
   { id: 'back-terminus-hotel-2',  name: 'Terminus Hotel 2 WoA (QML/SVG)', key: 'cardbackTerminusHotel2',  fallback: 'Terminus Hotel 2',  ext: 'svg' },
+  // 2.1.7 : dos assorti au tapis BBC Anthem.
+  { id: 'back-bbc-anthem',        name: 'BBC Anthem (QML/SVG)',           key: 'cardbackBbcAnthem',       fallback: 'BBC Anthem',        ext: 'svg' },
 ];
 // Options : Assorti au deck · dos de chaque deck connu (intégrés + galerie) ·
 // dos autonomes QML · image importée (si présente) · « Importer une image… ».
@@ -848,7 +852,8 @@ var _SKIN_TINT = {
   discworld:{a:'#c98d49',bg:'#150e08',su:'#241811',bo:'#7a5526',tx:'#f2e2c6',se:'#d9bd90',mu:'#9c7c50'},
   pirates:{a:'#cf9a34',bg:'#141009',su:'#221a11',bo:'#7d5c26',tx:'#f3e8d2',se:'#d7c096',mu:'#998158'},
   mile_high_club:{a:'#e7181c',bg:'#1c2e37',su:'#344e5c',bo:'#397c8d',tx:'#d6fcff',se:'#a8e1e6',mu:'#60a4a9'},
-  terminus_hotel_2:{a:'#1a1a1a',bg:'#28253c',su:'#444163',bo:'#6e53a2',tx:'#ead6ff',se:'#c7a8e6',mu:'#8460a9'}
+  terminus_hotel_2:{a:'#1a1a1a',bg:'#28253c',su:'#444163',bo:'#6e53a2',tx:'#ead6ff',se:'#c7a8e6',mu:'#8460a9'},
+  bbc_anthem:{a:'#252626',bg:'#1c2e37',su:'#344e5c',bo:'#397c8d',tx:'#d6fcff',se:'#a8e1e6',mu:'#60a4a9'}
 };
 function _injectTintObj(m){
   var el=document.documentElement;
@@ -1419,7 +1424,8 @@ var TABLE_AUTHORS = {
   matrix:'PokerTH Development Team', star_trek:'PokerTH Development Team', tripsixes:'TripSixes',
   wanted:'Etienne Graphic Designer', xanax:'Sebastien Kerguen',
   saloon:'PokerTH Development Team', discworld:'PokerTH Development Team',
-  pirates:'PokerTH Development Team', mile_high_club:'BaShFX', terminus_hotel_2:'BaShFX'
+  pirates:'PokerTH Development Team', mile_high_club:'BaShFX', terminus_hotel_2:'BaShFX',
+  bbc_anthem:'BaShFX'
 };
 var _TABS = [
   { id:'table',    kind:'table',    titleKey:'sectionTable',    fallback:'Table' },

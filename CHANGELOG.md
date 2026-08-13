@@ -13,6 +13,10 @@ this file captures what matters to players and operators.
 Opened with `v2.1.7-web.0` (2026-08-13), following the upstream **2.1.7**
 release.
 
+### Added
+- **BBC Anthem table theme and its matching card back** (by BaShFX), following
+  the upstream 2.1.7 release (`web.1`).
+
 ### Fixed
 - **Two web players can now sit at the same table.** The server refuses two
   players joining a table from the same IP address (anti-collusion check), and

@@ -1,4 +1,5 @@
 2026-08-13 version 2.1.7-web (current series):
+- new: bbc anthem table theme and matching card backside (by BaShFX)
 - bugfix: "IP address blocked" when two web players joined the same table - the server used to see every web player with the proxy's address; it now receives each player's real address (PROXY protocol, active on the official server since the 2.1.7 deployment), and the ranking no longer treats all web players as one
 
 2026-08-05 version 2.1.6-web:
