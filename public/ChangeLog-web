@@ -1,4 +1,7 @@
-2026-08-05 version 2.1.6-web (current series):
+2026-08-13 version 2.1.7-web (current series):
+- bugfix: "IP address blocked" when two web players joined the same table - the server used to see every web player with the proxy's address; it now receives each player's real address (PROXY protocol, active on the official server since the 2.1.7 deployment), and the ranking no longer treats all web players as one
+
+2026-08-05 version 2.1.6-web:
 - new: forum news window in the lobby - the latest pokerth.net forum posts are readable in the app, with an unread counter; read state is synced across devices for authenticated accounts
 - new: the table admin of a game is shown in the game list, the lobby player lists and the waiting room (QML parity)
 - new: the ranking page explains how the PokerTH ranking is calculated (QML parity)
