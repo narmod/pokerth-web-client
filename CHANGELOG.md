@@ -17,6 +17,18 @@ release.
 - **BBC Anthem table theme and its matching card back** (by BaShFX), following
   the upstream 2.1.7 release (`web.1`).
 
+### Security
+- **Proxy hardened against connection floods** (`web.3`). Two new guards in
+  `proxy.js`, complementing the existing per-IP upgrade rate limit and
+  per-connection frame limits:
+  - *Per-IP concurrent socket cap* — one IP may hold at most 20 open
+    WebSockets (game bridges + notify channels); further upgrades are refused
+    with 429 before any upstream bridge is built. Configurable via
+    `PROXY_MAX_WS_PER_IP` (0 disables).
+  - *First-packet timeout* — a bridge whose client sends no data within 20 s
+    is closed and its upstream TCP connection destroyed immediately (no
+    reconnect grace), so mute-connection floods cannot pin resources.
+
 ### Fixed
 - **Admin panel caught up with the 40-language catalogue.** The welcome-message
   and poll editors were missing the four newest languages (Arabic, Persian,

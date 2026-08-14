@@ -2457,6 +2457,19 @@ const _rlAdminFail = (_RateLimiterMemory && !_RATE_LIMIT_OFF)
   ? new _RateLimiterMemory({ points: 10, duration: 900, blockDuration: 900 }) : null;
 const _rlWs = (_RateLimiterMemory && !_RATE_LIMIT_OFF)
   ? new _RateLimiterMemory({ points: 30, duration: 60 }) : null;
+// ── Per-IP concurrent WebSocket cap ──
+// _rlWs bounds the RATE of new upgrades; this bounds how many sockets one IP
+// may HOLD OPEN at once (game bridges + notify channels). Slow sustained
+// opening (30/min kept open for 20 min = 600 bridges, one upstream TCP each)
+// is otherwise unbounded per IP. 20 covers heavy legitimate use — the count
+// is per REAL visitor address (clientIp(), CF-Connecting-IP behind
+// Cloudflare), and only rare carrier-grade NAT setups share one IP across
+// many web players. PROXY_MAX_WS_PER_IP overrides; 0 = off.
+const MAX_WS_PER_IP = (function () {
+  var v = parseInt(process.env.PROXY_MAX_WS_PER_IP || '', 10);
+  return isNaN(v) ? 20 : v;
+})();
+const _ipConns = new Map();  // ip → nombre de sockets WS actuellement ouvertes
 // Client IP: trust the first X-Forwarded-For entry ONLY when the direct peer is
 // loopback/private (i.e. a local reverse proxy such as nginx). A public peer
 // could forge the header, so in that case its socket address wins.
@@ -5282,6 +5295,9 @@ const wss = new WebSocket.Server({ server: httpServer, maxPayload: MAX_WS_FRAME_
   // Bannissement décidé par l'admin : refus à l'upgrade, avant tout pont. La
   // page reste servie — c'est l'accès au JEU via ce proxy qui est coupé.
   if (isBanned(clientIp(info.req))) return cb(false, 403, 'Forbidden');
+  // Per-IP held-connection cap (MAX_WS_PER_IP) : compté à 'connection',
+  // libéré à 'close' — vérifié ici pour refuser l'upgrade avant tout pont.
+  if (MAX_WS_PER_IP > 0 && (_ipConns.get(clientIp(info.req)) || 0) >= MAX_WS_PER_IP) return cb(false, 429, 'Too Many Connections');
   // Connection-storm guard: reject the upgrade with 429 BEFORE any bridge is
   // built. No limiter installed → always accept (unchanged behavior).
   if (!_rlWs) return cb(true);
@@ -5792,6 +5808,15 @@ wss.on('connection', (ws, req) => {
   ws._port = (req.socket && req.socket.remotePort) || 0;
   ws._startedAt = Date.now();
 
+  // ── Comptage des sockets par IP (plafond appliqué à l'upgrade, cf. verifyClient) ──
+  if (ws._ip && ws._ip !== 'unknown') {
+    _ipConns.set(ws._ip, (_ipConns.get(ws._ip) || 0) + 1);
+    ws.once('close', function () {
+      var n = (_ipConns.get(ws._ip) || 1) - 1;
+      if (n <= 0) _ipConns.delete(ws._ip); else _ipConns.set(ws._ip, n);
+    });
+  }
+
   // ── Notify-only channel (?notify=1) ──
   // Clients connectés en DIRECT à pokerth.net : leur socket de jeu ne passe
   // pas par ce proxy. Ce canal léger n'ouvre AUCUN pont amont — la socket
@@ -5872,6 +5897,20 @@ wss.on('connection', (ws, req) => {
   if (sid) _sessions.set(sid, S);
   _attachWs(S, ws);
   _openUpstream(S);
+
+  // ── Délai de premier paquet ──
+  // Pont ouvert mais client muet (aucun octet C→S en 20 s) : un client
+  // légitime envoie son Init dès l'Announce (< 2 s). Sans ce délai, un flood
+  // de connexions muettes retiendrait un TCP amont par socket (le heartbeat ne
+  // tue que les sockets qui ne répondent plus au ping). Fermeture + destruction
+  // immédiate de la session : pas de grâce pour un pont qui n'a jamais parlé.
+  setTimeout(function () {
+    if (S.ws === ws && !(S.bIn > 0)) {
+      console.warn('[!] Mute bridge (no client data in 20s) — closing ' + (ws._ip || '?'));
+      try { ws.close(4408, 'init timeout'); } catch (_) {}
+      _destroySession(S);
+    }
+  }, 20000);
 });
 
 const HEARTBEAT_MS = 10000; // ping toutes les 10 s
