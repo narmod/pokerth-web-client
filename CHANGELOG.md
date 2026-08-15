@@ -30,6 +30,11 @@ release.
     reconnect grace), so mute-connection floods cannot pin resources.
 
 ### Fixed
+- **White launch screen on iOS home-screen app** (`web.4`). iOS ignores the
+  manifest `background_color` and showed a plain white screen while the PWA
+  booted. Dedicated `apple-touch-startup-image` launch screens (dark
+  background + logo, one per device size and orientation) now cover the boot
+  phase, matching the in-app boot splash.
 - **Admin panel caught up with the 40-language catalogue.** The welcome-message
   and poll editors were missing the four newest languages (Arabic, Persian,
   Hebrew, Urdu), so those messages could not be written for them; the
