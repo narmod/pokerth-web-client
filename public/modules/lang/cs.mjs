@@ -990,6 +990,11 @@ export const strings = {
     "backupExported": "Záloha exportována",
     "backupImported": "Záloha importována",
     "backupImportErr": "Import selhal — neplatný soubor zálohy",
+    "advBakAutoSec": "Automatická záloha",
+    "advBakAutoDesc": "Udržuje soubor úplné zálohy aktuální ve složce v počítači a nabídne jeho obnovení, když je úložiště prohlížeče prázdné. Pouze Chrome, Edge a Opera na počítači.",
+    "advBakAuto": "Zapisovat soubor zálohy automaticky",
+    "bakRestoreQ": "Vaše nastavení vypadá prázdné. Obnovit je ze složky se zálohou?",
+    "bakRestoreBtn": "Obnovit",
     "syncBusy": "Synchronizace…",
 };
 

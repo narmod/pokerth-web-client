@@ -993,6 +993,11 @@ export const strings = {
     "backupExported": "Sicherung exportiert",
     "backupImported": "Sicherung importiert",
     "backupImportErr": "Import fehlgeschlagen — keine gültige Sicherungsdatei",
+    "advBakAutoSec": "Automatische Sicherung",
+    "advBakAutoDesc": "Hält die vollständige Sicherungsdatei in einem Ordner auf deinem Rechner aktuell und bietet die Wiederherstellung an, wenn der Browserspeicher leer ist. Nur Chrome, Edge und Opera am Desktop.",
+    "advBakAuto": "Sicherungsdatei automatisch schreiben",
+    "bakRestoreQ": "Deine Einstellungen scheinen leer zu sein. Aus dem Sicherungsordner wiederherstellen?",
+    "bakRestoreBtn": "Wiederherstellen",
     "syncBusy": "Synchronisierung…",
 };
 

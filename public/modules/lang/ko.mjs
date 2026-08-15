@@ -794,6 +794,11 @@ export const strings = {
     "backupExported": "백업을 내보냈습니다",
     "backupImported": "백업을 가져왔습니다",
     "backupImportErr": "가져오기 실패 — 올바른 백업 파일이 아닙니다",
+    "advBakAutoSec": "자동 백업",
+    "advBakAutoDesc": "전체 백업 파일을 컴퓨터의 폴더에 항상 최신 상태로 유지하고, 브라우저 저장소가 비어 있으면 복원을 제안합니다. 데스크톱 Chrome, Edge, Opera 전용.",
+    "advBakAuto": "백업 파일을 자동으로 쓰기",
+    "bakRestoreQ": "설정이 비어 있는 것 같습니다. 백업 폴더에서 복원할까요?",
+    "bakRestoreBtn": "복원",
     "syncBusy": "동기화 중…",
 };
 

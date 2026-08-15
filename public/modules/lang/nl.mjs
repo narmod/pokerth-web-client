@@ -993,6 +993,11 @@ export const strings = {
     "backupExported": "Back-up geëxporteerd",
     "backupImported": "Back-up geïmporteerd",
     "backupImportErr": "Import mislukt — geen geldig back-upbestand",
+    "advBakAutoSec": "Automatische back-up",
+    "advBakAutoDesc": "Houdt het volledige back-upbestand actueel in een map op je computer en biedt herstel aan wanneer de browseropslag leeg blijkt. Alleen Chrome, Edge en Opera op desktop.",
+    "advBakAuto": "Back-upbestand automatisch schrijven",
+    "bakRestoreQ": "Je instellingen lijken leeg. Herstellen vanuit je back-upmap?",
+    "bakRestoreBtn": "Herstellen",
     "syncBusy": "Synchroniseren…",
 };
 

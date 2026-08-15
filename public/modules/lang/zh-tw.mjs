@@ -986,6 +986,11 @@ export const strings = {
     "backupExported": "備份已匯出",
     "backupImported": "備份已匯入",
     "backupImportErr": "匯入失敗 — 備份檔案無效",
+    "advBakAutoSec": "自動備份",
+    "advBakAutoDesc": "在你電腦的資料夾中持續更新完整備份檔，並在瀏覽器儲存空間為空時提議還原。僅限桌面版 Chrome、Edge 和 Opera。",
+    "advBakAuto": "自動寫入備份檔",
+    "bakRestoreQ": "你的設定看起來是空的。要從備份資料夾還原嗎？",
+    "bakRestoreBtn": "還原",
     "syncBusy": "正在同步…",
 };
 

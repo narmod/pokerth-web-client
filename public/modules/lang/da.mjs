@@ -989,6 +989,11 @@ export const strings = {
     "backupExported": "Sikkerhedskopi eksporteret",
     "backupImported": "Sikkerhedskopi importeret",
     "backupImportErr": "Import mislykkedes — ugyldig sikkerhedskopifil",
+    "advBakAutoSec": "Automatisk sikkerhedskopi",
+    "advBakAutoDesc": "Holder den fulde sikkerhedskopifil opdateret i en mappe på din computer og tilbyder at gendanne den, når browserlageret er tomt. Kun Chrome, Edge og Opera på computer.",
+    "advBakAuto": "Skriv sikkerhedskopifilen automatisk",
+    "bakRestoreQ": "Dine indstillinger ser tomme ud. Gendan dem fra din sikkerhedskopimappe?",
+    "bakRestoreBtn": "Gendan",
     "syncBusy": "Synkroniserer…",
 };
 

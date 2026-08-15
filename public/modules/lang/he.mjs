@@ -619,6 +619,11 @@ export const strings = {
     "backupExported": "הגיבוי יוצא",
     "backupImported": "הגיבוי יובא",
     "backupImportErr": "הייבוא נכשל — אינו קובץ גיבוי תקין",
+    "advBakAutoSec": "גיבוי אוטומטי",
+    "advBakAutoDesc": "שומר את קובץ הגיבוי המלא מעודכן בתיקייה במחשב שלך, ומציע לשחזר אותו כשאחסון הדפדפן ריק. רק Chrome, Edge ו-Opera בשולחן העבודה.",
+    "advBakAuto": "כתיבת קובץ הגיבוי באופן אוטומטי",
+    "bakRestoreQ": "ההגדרות שלך נראות ריקות. לשחזר אותן מתיקיית הגיבוי?",
+    "bakRestoreBtn": "שחזור",
     "syncBusy": "מסנכרן…",
 };
 

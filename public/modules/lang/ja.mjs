@@ -986,6 +986,11 @@ export const strings = {
     "backupExported": "バックアップを書き出しました",
     "backupImported": "バックアップを読み込みました",
     "backupImportErr": "読み込み失敗 — 有効なバックアップファイルではありません",
+    "advBakAutoSec": "自動バックアップ",
+    "advBakAutoDesc": "完全バックアップファイルをパソコンのフォルダーに常に最新の状態で保存し、ブラウザーの保存領域が空のときに復元を提案します。デスクトップ版 Chrome・Edge・Opera のみ。",
+    "advBakAuto": "バックアップファイルを自動的に書き込む",
+    "bakRestoreQ": "設定が空のようです。バックアップフォルダーから復元しますか？",
+    "bakRestoreBtn": "復元",
     "syncBusy": "同期中…",
 };
 

@@ -991,6 +991,11 @@ export const strings = {
     "backupExported": "Yedek dışa aktarıldı",
     "backupImported": "Yedek içe aktarıldı",
     "backupImportErr": "İçe aktarma başarısız — geçersiz yedek dosyası",
+    "advBakAutoSec": "Otomatik yedekleme",
+    "advBakAutoDesc": "Tam yedek dosyasını bilgisayarınızdaki bir klasörde güncel tutar ve tarayıcı depolaması boş olduğunda geri yüklemeyi önerir. Yalnızca masaüstü Chrome, Edge ve Opera.",
+    "advBakAuto": "Yedek dosyasını otomatik yaz",
+    "bakRestoreQ": "Ayarlarınız boş görünüyor. Yedek klasörünüzden geri yüklensin mi?",
+    "bakRestoreBtn": "Geri yükle",
     "syncBusy": "Eşitleniyor…",
 };
 

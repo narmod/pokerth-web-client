@@ -727,6 +727,7 @@ function _processAvatarFile(file) {
     '/modules/i18n.mjs', '/modules/theme.mjs', '/modules/sounds.mjs',
     '/modules/handlog.mjs',
     '/modules/pdb-autosave.mjs',
+    '/modules/backup-autosave.mjs',
     '/modules/journal.mjs',
     '/modules/game/state.mjs',
     '/modules/ui/fmt.mjs',
@@ -2373,6 +2374,7 @@ function _processAvatarFile(file) {
 <script defer src="vendor/sql-wasm.js"></script>
 <script type="module" src="modules/handlog.mjs"></script>
 <script type="module" src="modules/pdb-autosave.mjs"></script>
+<script type="module" src="modules/backup-autosave.mjs"></script>
 <script type="module" src="modules/journal.mjs"></script>
 <script type="module" src="modules/game/state.mjs"></script>
 <script type="module" src="modules/ui/fmt.mjs"></script>
@@ -3056,6 +3058,13 @@ if ('serviceWorker' in navigator) {
               <button type="button" class="adv-link-btn" onclick="importWebBackupPick()"><span data-i18n="advBackupImport">Import backup</span></button>
             </div>
             <input type="file" id="adv-backup-file" accept=".json,application/json" style="display:none">
+            <div class="adv-sec" data-i18n="advBakAutoSec">Automatic backup</div>
+            <div class="adv-ign-desc" data-i18n="advBakAutoDesc">Keep the full backup file up to date in a folder on your computer, and offer to restore it when the browser storage comes up empty. Desktop Chrome, Edge and Opera only.</div>
+            <label class="adv-row"><input type="checkbox" id="adv-bakauto" onchange="setAdvOpt('bak_auto',this.checked)"><span data-i18n="advBakAuto">Write the backup file automatically</span><em class="adv-webtag">web</em></label>
+            <div class="adv-row adv-export-row">
+              <button type="button" class="btn-sm adv-export-btn" id="adv-bakauto-pick" onclick="if(window._bakAutoPick)window._bakAutoPick()"><span data-i18n="advPdbAutoPick">Choose folder…</span></button>
+            </div>
+            <div class="adv-link-desc" id="adv-bakauto-status"></div>
           </div>
         </section>
         <div class="help-body adv-results" id="adv-results" style="display:none"></div>

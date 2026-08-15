@@ -990,6 +990,11 @@ export const strings = {
     "backupExported": "Backup exportado",
     "backupImported": "Backup importado",
     "backupImportErr": "Falha na importação — arquivo de backup inválido",
+    "advBakAutoSec": "Backup automático",
+    "advBakAutoDesc": "Mantém o arquivo de backup completo atualizado em uma pasta do seu computador e oferece restaurá-lo quando o armazenamento do navegador estiver vazio. Somente Chrome, Edge e Opera para desktop.",
+    "advBakAuto": "Gravar o arquivo de backup automaticamente",
+    "bakRestoreQ": "Suas configurações parecem vazias. Restaurá-las da pasta de backup?",
+    "bakRestoreBtn": "Restaurar",
     "syncBusy": "Sincronizando…",
 };
 

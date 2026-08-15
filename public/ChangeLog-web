@@ -1,4 +1,6 @@
 2026-08-13 version 2.1.7-web (current series):
+- new: automatic backup - pick a folder once and the app keeps your full backup file up to date there; if the browser storage was wiped, the app offers to restore everything in one click (desktop Chrome, Edge and Opera)
+- improvement: the app now asks the browser for persistent storage, so your settings, trophies and stats are protected against automatic cleanup
 - bugfix: on iphone/ipad, the app installed on the home screen opened on a white screen - it now shows a dark launch screen with the pokerth logo
 - improvement: the game proxy now protects itself against connection floods (per-address connection cap, silent-connection timeout) - regular play is unaffected
 - new: bbc anthem table theme and matching card backside (by BaShFX)

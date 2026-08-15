@@ -990,6 +990,11 @@ export const strings = {
     "backupExported": "Đã xuất bản sao",
     "backupImported": "Đã nhập bản sao",
     "backupImportErr": "Nhập thất bại — tệp sao lưu không hợp lệ",
+    "advBakAutoSec": "Sao lưu tự động",
+    "advBakAutoDesc": "Luôn cập nhật tệp sao lưu đầy đủ trong một thư mục trên máy tính của bạn và đề nghị khôi phục khi bộ nhớ trình duyệt trống. Chỉ dành cho Chrome, Edge và Opera trên máy tính.",
+    "advBakAuto": "Tự động ghi tệp sao lưu",
+    "bakRestoreQ": "Cài đặt của bạn có vẻ trống. Khôi phục từ thư mục sao lưu?",
+    "bakRestoreBtn": "Khôi phục",
     "syncBusy": "Đang đồng bộ…",
 };
 

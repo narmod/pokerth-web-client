@@ -990,6 +990,11 @@ export const strings = {
     "backupExported": "Rugsteun uitgevoer",
     "backupImported": "Rugsteun ingevoer",
     "backupImportErr": "Invoer het misluk — ongeldige rugsteunlêer",
+    "advBakAutoSec": "Outomatiese rugsteun",
+    "advBakAutoDesc": "Hou die volledige rugsteunlêer op datum in 'n gids op jou rekenaar, en bied aan om dit te herstel wanneer die blaaierberging leeg is. Slegs Chrome, Edge en Opera op die lessenaar.",
+    "advBakAuto": "Skryf die rugsteunlêer outomaties",
+    "bakRestoreQ": "Jou instellings lyk leeg. Herstel hulle uit jou rugsteungids?",
+    "bakRestoreBtn": "Herstel",
     "syncBusy": "Sinchroniseer…",
 };
 

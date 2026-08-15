@@ -990,6 +990,11 @@ export const strings = {
     "backupExported": "Copie exportată",
     "backupImported": "Copie importată",
     "backupImportErr": "Import eșuat — fișier de copie nevalid",
+    "advBakAutoSec": "Copie de rezervă automată",
+    "advBakAutoDesc": "Menține actualizat fișierul copiei de rezervă complete într-un dosar de pe computerul tău și propune restaurarea lui când stocarea browserului este goală. Doar Chrome, Edge și Opera pentru desktop.",
+    "advBakAuto": "Scrie automat fișierul copiei de rezervă",
+    "bakRestoreQ": "Setările tale par goale. Le restaurezi din dosarul de copii de rezervă?",
+    "bakRestoreBtn": "Restaurează",
     "syncBusy": "Se sincronizează…",
 };
 

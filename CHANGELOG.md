@@ -16,6 +16,14 @@ release.
 ### Added
 - **BBC Anthem table theme and its matching card back** (by BaShFX), following
   the upstream 2.1.7 release (`web.1`).
+- **Automatic backup to a local folder** (`web.5`) — the full web backup file
+  (`pokerth-web-backup.json`) is kept up to date in a folder picked once via
+  the File System Access API (same mechanism as the automatic `.pdb` log). If
+  the browser storage comes up empty at startup while a folder is remembered,
+  a banner offers a one-click restore. Desktop Chrome, Edge and Opera only;
+  the manual export/import path is unchanged everywhere else. The client also
+  now requests **persistent storage** (`navigator.storage.persist()`), so
+  settings, achievements and stats survive the browser's automatic cleanup.
 
 ### Security
 - **Proxy hardened against connection floods** (`web.3`). Two new guards in

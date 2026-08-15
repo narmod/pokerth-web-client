@@ -994,6 +994,11 @@ export const strings = {
     "backupExported": "Backup esportato",
     "backupImported": "Backup importato",
     "backupImportErr": "Importazione fallita — file di backup non valido",
+    "advBakAutoSec": "Backup automatico",
+    "advBakAutoDesc": "Mantiene aggiornato il file di backup completo in una cartella del tuo computer e propone di ripristinarlo quando l'archiviazione del browser risulta vuota. Solo Chrome, Edge e Opera desktop.",
+    "advBakAuto": "Scrivi automaticamente il file di backup",
+    "bakRestoreQ": "Le tue impostazioni sembrano vuote. Ripristinarle dalla cartella di backup?",
+    "bakRestoreBtn": "Ripristina",
     "syncBusy": "Sincronizzazione…",
 };
 

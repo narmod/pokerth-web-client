@@ -990,6 +990,11 @@ export const strings = {
     "backupExported": "Mentés exportálva",
     "backupImported": "Mentés importálva",
     "backupImportErr": "Az importálás sikertelen — érvénytelen mentésfájl",
+    "advBakAutoSec": "Automatikus biztonsági mentés",
+    "advBakAutoDesc": "Naprakészen tartja a teljes biztonságimentés-fájlt a számítógéped egyik mappájában, és felajánlja a visszaállítást, ha a böngésző tárolója üres. Csak asztali Chrome, Edge és Opera.",
+    "advBakAuto": "A biztonsági mentés fájl automatikus írása",
+    "bakRestoreQ": "A beállításaid üresnek tűnnek. Visszaállítod őket a biztonsági mentés mappából?",
+    "bakRestoreBtn": "Visszaállítás",
     "syncBusy": "Szinkronizálás…",
 };
 

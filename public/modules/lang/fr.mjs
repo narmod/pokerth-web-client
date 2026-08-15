@@ -624,6 +624,11 @@ export const strings = {
     "backupExported": "Sauvegarde exportée",
     "backupImported": "Sauvegarde importée",
     "backupImportErr": "Échec de l'import — fichier de sauvegarde invalide",
+    "advBakAutoSec": "Sauvegarde automatique",
+    "advBakAutoDesc": "Tient à jour le fichier de sauvegarde complète dans un dossier de ton ordinateur, et propose de le restaurer quand le stockage du navigateur est vide. Chrome, Edge et Opera de bureau uniquement.",
+    "advBakAuto": "Écrire le fichier de sauvegarde automatiquement",
+    "bakRestoreQ": "Tes réglages semblent vides. Les restaurer depuis ton dossier de sauvegarde ?",
+    "bakRestoreBtn": "Restaurer",
     "syncBusy": "Synchronisation…",
 };
 

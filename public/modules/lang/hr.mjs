@@ -989,6 +989,11 @@ export const strings = {
     "backupExported": "Kopija izvezena",
     "backupImported": "Kopija uvezena",
     "backupImportErr": "Uvoz nije uspio — neispravna datoteka kopije",
+    "advBakAutoSec": "Automatska sigurnosna kopija",
+    "advBakAutoDesc": "Održava datoteku pune sigurnosne kopije ažurnom u mapi na vašem računalu i nudi vraćanje kada je pohrana preglednika prazna. Samo Chrome, Edge i Opera na računalu.",
+    "advBakAuto": "Automatski zapisuj datoteku sigurnosne kopije",
+    "bakRestoreQ": "Vaše postavke izgledaju prazne. Vratiti ih iz mape sigurnosnih kopija?",
+    "bakRestoreBtn": "Vrati",
     "syncBusy": "Sinkronizacija…",
 };
 

@@ -991,6 +991,11 @@ export const strings = {
     "backupExported": "Copia exportada",
     "backupImported": "Copia importada",
     "backupImportErr": "Fallou a importación — ficheiro de copia non válido",
+    "advBakAutoSec": "Copia de seguranza automática",
+    "advBakAutoDesc": "Mantén actualizado o ficheiro de copia de seguranza completa nun cartafol do teu ordenador e ofrece restauralo cando o almacenamento do navegador está baleiro. Só Chrome, Edge e Opera de escritorio.",
+    "advBakAuto": "Escribir o ficheiro de copia de seguranza automaticamente",
+    "bakRestoreQ": "A túa configuración parece baleira. Restaurala desde o cartafol de copias de seguranza?",
+    "bakRestoreBtn": "Restaurar",
     "syncBusy": "Sincronizando…",
 };
 

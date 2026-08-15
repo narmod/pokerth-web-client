@@ -436,6 +436,8 @@ function openAdvancedOptions() {
   sync('adv-hudon', 'hud_on', false);
   sync('adv-pdbauto', 'pdb_auto', true);   // ecriture auto du .pdb dans un dossier local (web) — ON par defaut
   try { if (typeof window._pdbAutoUi === 'function') window._pdbAutoUi(); } catch (e) {}
+  sync('adv-bakauto', 'bak_auto', true);   // ecriture auto de la sauvegarde web dans un dossier local (web) — ON par defaut
+  try { if (typeof window._bakAutoUi === 'function') window._bakAutoUi(); } catch (e) {}
   try { var _li = document.getElementById('adv-loginterval'); if (_li) _li.value = String(_getLogIntervalIdx()); } catch (e) {}
   sync('adv-zoomfollow', 'zoom_follow', true); // défaut QML : suivi actif quand le zoom l'est
   sync('adv-snd-actions', 'snd_actions', true);
@@ -942,7 +944,9 @@ var _BACKUP_SKIP = {
   pth_auth_login: 1, pth_pass: 1, pth_sid: 1, pth_vid: 1, pth_resume: 1,
   pth_cfg_sync_dirty: 1, pth_cfg_sync_ts: 1, pth_cfg_sync_weblast: 1, pth_cfg_sync_webts: 1
 };
-function exportWebBackup() {
+// Construit l'enregistrement de sauvegarde sans le télécharger : partagé entre
+// l'export manuel ci-dessous et l'écriture automatique (backup-autosave.mjs).
+function _webBackupRecord() {
   var keys = {}, n = 0;
   try {
     for (var i = 0; i < localStorage.length; i++) {
@@ -958,6 +962,11 @@ function exportWebBackup() {
   };
   // config.xml officiel conservé tel quel : la sauvegarde reste un sur-ensemble.
   try { var x = localStorage.getItem(PTH_CFG_XML_KEY); if (x) rec.xml = x; } catch (e) {}
+  return { rec: rec, n: n };
+}
+window._webBackupRecord = _webBackupRecord;
+function exportWebBackup() {
+  var b = _webBackupRecord(), rec = b.rec, n = b.n;
   try {
     var blob = new Blob([JSON.stringify(rec)], { type: 'application/json' });
     var a = document.createElement('a');
@@ -972,6 +981,36 @@ function exportWebBackup() {
   if (typeof showToast === 'function') showToast((t('backupExported') || 'Backup exported') + ' (' + n + ')');
 }
 window.exportWebBackup = exportWebBackup;
+// Applique un enregistrement de sauvegarde déjà parsé à l'état local. Retourne
+// le nombre de clés écrites, ou -1 si l'enregistrement est invalide. Partagé
+// entre l'import manuel ci-dessous et la restauration automatique
+// (backup-autosave.mjs).
+function _applyWebBackupRec(rec) {
+  if (!rec || rec.format !== 'pokerth-web-client' || !rec.keys || typeof rec.keys !== 'object') return -1;
+  var n = 0;
+  // Succès : FUSION cumulative — importer une vieille sauvegarde ne doit
+  // jamais faire reculer la progression déjà acquise sur cet appareil.
+  try { _achMergeIn(rec.keys); } catch (e) {}
+  try {
+    Object.keys(rec.keys).forEach(function (k) {
+      if (!/^pth_[A-Za-z0-9_]{1,60}$/.test(k) || _BACKUP_SKIP[k]) return;
+      if (_ACH_SYNC_KEYS.indexOf(k) >= 0) return;            // déjà fusionné
+      var v = rec.keys[k];
+      if (typeof v !== 'string') return;
+      try { localStorage.setItem(k, v); n++; } catch (e) {}
+    });
+  } catch (e) { return -1; }
+  // config.xml embarqué : même chemin que l'import config.xml classique.
+  try {
+    if (typeof rec.xml === 'string' && rec.xml.indexOf('<PokerTH') >= 0) {
+      localStorage.setItem(PTH_CFG_XML_KEY, rec.xml.slice(0, 400000));
+      _cfgApplyImported(_cfgParseXml(rec.xml));
+    }
+  } catch (e) {}
+  try { localStorage.setItem('pth_cfg_sync_dirty', '1'); _cfgSyncPushSoon(1500); } catch (e) {}
+  return n;
+}
+window._applyWebBackupRec = _applyWebBackupRec;
 function importWebBackupPick() {
   var inp = document.getElementById('adv-backup-file');
   if (!inp) return;
@@ -987,28 +1026,8 @@ function importWebBackupPick() {
     r.onload = function () {
       var rec = null;
       try { rec = JSON.parse(String(r.result || '')); } catch (e) {}
-      if (!rec || rec.format !== 'pokerth-web-client' || !rec.keys || typeof rec.keys !== 'object') return fail();
-      var n = 0;
-      // Succès : FUSION cumulative — importer une vieille sauvegarde ne doit
-      // jamais faire reculer la progression déjà acquise sur cet appareil.
-      try { _achMergeIn(rec.keys); } catch (e) {}
-      try {
-        Object.keys(rec.keys).forEach(function (k) {
-          if (!/^pth_[A-Za-z0-9_]{1,60}$/.test(k) || _BACKUP_SKIP[k]) return;
-          if (_ACH_SYNC_KEYS.indexOf(k) >= 0) return;            // déjà fusionné
-          var v = rec.keys[k];
-          if (typeof v !== 'string') return;
-          try { localStorage.setItem(k, v); n++; } catch (e) {}
-        });
-      } catch (e) { return fail(); }
-      // config.xml embarqué : même chemin que l'import config.xml classique.
-      try {
-        if (typeof rec.xml === 'string' && rec.xml.indexOf('<PokerTH') >= 0) {
-          localStorage.setItem(PTH_CFG_XML_KEY, rec.xml.slice(0, 400000));
-          _cfgApplyImported(_cfgParseXml(rec.xml));
-        }
-      } catch (e) {}
-      try { localStorage.setItem('pth_cfg_sync_dirty', '1'); _cfgSyncPushSoon(1500); } catch (e) {}
+      var n = _applyWebBackupRec(rec);
+      if (n < 0) return fail();
       var msg = (t('backupImported') || 'Backup imported') + ' (' + n + ')';
       if (typeof showToast === 'function') showToast(msg);
       setTimeout(function () {
@@ -1022,6 +1041,16 @@ function importWebBackupPick() {
   inp.click();
 }
 window.importWebBackupPick = importWebBackupPick;
+// ── Stockage persistant ──────────────────────────────────────────────────────
+// Demande au navigateur de marquer l'origine comme persistante : l'éviction
+// automatique (nettoyage d'espace disque, purge d'inactivité) ne peut alors
+// plus vider localStorage/IndexedDB sans action explicite du joueur. Sans
+// effet là où l'API n'existe pas ; un refus est silencieux et sans conséquence.
+try {
+  if (navigator.storage && typeof navigator.storage.persist === 'function') {
+    navigator.storage.persist().catch(function () {});
+  }
+} catch (e) {}
 // Import : applique les clés mappées à l'état web, conserve le XML complet
 // pour le round-trip, puis propose de recharger (comme le redémarrage demandé
 // par l'officiel après un reset).
@@ -1229,7 +1258,7 @@ var _CFG_WEB_SYNC_KEYS = [
   'pth_log_interval', 'pth_avatar', 'pth_ignored', 'pth_prefs_lan',
   // Web-only sans equivalent config.xml : elles appelaient _cfgSyncMark() mais
   // n'etaient collectees par aucun canal (donc jamais synchronisees).
-  'pth_conn_pill', 'pth_stats_track', 'pth_pdb_auto'
+  'pth_conn_pill', 'pth_stats_track', 'pth_pdb_auto', 'pth_bak_auto'
 ];
 // Succès (mode entraînement) : mêmes transport et compte que les réglages, mais
 // réconciliation par FUSION et non par écrasement — la progression est cumulative,
@@ -10327,7 +10356,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.7-web.4'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.7-web.5'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

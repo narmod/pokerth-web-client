@@ -992,6 +992,11 @@ export const strings = {
     "backupExported": "Kopia wyeksportowana",
     "backupImported": "Kopia zaimportowana",
     "backupImportErr": "Import nieudany — nieprawidłowy plik kopii",
+    "advBakAutoSec": "Automatyczna kopia zapasowa",
+    "advBakAutoDesc": "Utrzymuje aktualny plik pełnej kopii zapasowej w folderze na Twoim komputerze i proponuje jego przywrócenie, gdy pamięć przeglądarki jest pusta. Tylko Chrome, Edge i Opera na komputerze.",
+    "advBakAuto": "Zapisuj plik kopii zapasowej automatycznie",
+    "bakRestoreQ": "Twoje ustawienia wyglądają na puste. Przywrócić je z folderu kopii zapasowych?",
+    "bakRestoreBtn": "Przywróć",
     "syncBusy": "Synchronizowanie…",
 };
 

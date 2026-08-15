@@ -986,6 +986,11 @@ export const strings = {
     "backupExported": "备份已导出",
     "backupImported": "备份已导入",
     "backupImportErr": "导入失败 — 备份文件无效",
+    "advBakAutoSec": "自动备份",
+    "advBakAutoDesc": "在你电脑的文件夹中持续更新完整备份文件，并在浏览器存储为空时建议恢复。仅限桌面版 Chrome、Edge 和 Opera。",
+    "advBakAuto": "自动写入备份文件",
+    "bakRestoreQ": "你的设置看起来是空的。要从备份文件夹恢复吗？",
+    "bakRestoreBtn": "恢复",
     "syncBusy": "正在同步…",
 };
 

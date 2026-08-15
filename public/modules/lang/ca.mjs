@@ -991,6 +991,11 @@ export const strings = {
     "backupExported": "Còpia exportada",
     "backupImported": "Còpia importada",
     "backupImportErr": "Ha fallat la importació — fitxer de còpia no vàlid",
+    "advBakAutoSec": "Còpia de seguretat automàtica",
+    "advBakAutoDesc": "Manté actualitzat el fitxer de còpia de seguretat completa en una carpeta de l'ordinador i ofereix restaurar-lo quan l'emmagatzematge del navegador és buit. Només Chrome, Edge i Opera d'escriptori.",
+    "advBakAuto": "Escriu el fitxer de còpia de seguretat automàticament",
+    "bakRestoreQ": "La configuració sembla buida. Vols restaurar-la des de la carpeta de còpies de seguretat?",
+    "bakRestoreBtn": "Restaura",
     "syncBusy": "Sincronitzant…",
 };
 

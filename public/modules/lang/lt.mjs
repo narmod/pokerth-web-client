@@ -990,6 +990,11 @@ export const strings = {
     "backupExported": "Kopija eksportuota",
     "backupImported": "Kopija importuota",
     "backupImportErr": "Importas nepavyko — netinkamas kopijos failas",
+    "advBakAutoSec": "Automatinė atsarginė kopija",
+    "advBakAutoDesc": "Nuolat atnaujina visos atsarginės kopijos failą jūsų kompiuterio aplanke ir pasiūlo jį atkurti, kai naršyklės saugykla tuščia. Tik darbalaukio Chrome, Edge ir Opera.",
+    "advBakAuto": "Automatiškai rašyti atsarginės kopijos failą",
+    "bakRestoreQ": "Jūsų nustatymai atrodo tušti. Atkurti juos iš atsarginių kopijų aplanko?",
+    "bakRestoreBtn": "Atkurti",
     "syncBusy": "Sinchronizuojama…",
 };
 

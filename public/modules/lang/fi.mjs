@@ -989,6 +989,11 @@ export const strings = {
     "backupExported": "Varmuuskopio viety",
     "backupImported": "Varmuuskopio tuotu",
     "backupImportErr": "Tuonti epäonnistui — virheellinen varmuuskopiotiedosto",
+    "advBakAutoSec": "Automaattinen varmuuskopio",
+    "advBakAutoDesc": "Pitää täyden varmuuskopiotiedoston ajan tasalla tietokoneesi kansiossa ja tarjoaa palautusta, kun selaimen tallennustila on tyhjä. Vain työpöydän Chrome, Edge ja Opera.",
+    "advBakAuto": "Kirjoita varmuuskopiotiedosto automaattisesti",
+    "bakRestoreQ": "Asetuksesi näyttävät tyhjiltä. Palautetaanko ne varmuuskopiokansiosta?",
+    "bakRestoreBtn": "Palauta",
     "syncBusy": "Synkronoidaan…",
 };
 

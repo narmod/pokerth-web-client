@@ -621,6 +621,11 @@ export const strings = {
     "backupExported": "Backup exported",
     "backupImported": "Backup imported",
     "backupImportErr": "Import failed — not a valid backup file",
+    "advBakAutoSec": "Automatic backup",
+    "advBakAutoDesc": "Keep the full backup file up to date in a folder on your computer, and offer to restore it when the browser storage comes up empty. Desktop Chrome, Edge and Opera only.",
+    "advBakAuto": "Write the backup file automatically",
+    "bakRestoreQ": "Your settings look empty. Restore them from your backup folder?",
+    "bakRestoreBtn": "Restore",
     "syncBusy": "Syncing…",
 };
 

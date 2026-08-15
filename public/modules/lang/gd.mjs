@@ -993,6 +993,11 @@ export const strings = {
     "backupExported": "Chaidh an lethbhreac às-phortadh",
     "backupImported": "Chaidh an lethbhreac ion-phortadh",
     "backupImportErr": "Dh'fhàillig an ion-phortadh — faidhle mì-dhligheach",
+    "advBakAutoSec": "Lethbhreac-glèidhidh fèin-obrachail",
+    "advBakAutoDesc": "Cumaidh seo faidhle a' lethbhric-ghlèidhidh shlàin cho ùr 's a ghabhas ann am pasgan air a' choimpiutair agad, agus tairgidh e aiseag nuair a bhios stòras a' bhrabhsair falamh. Chrome, Edge is Opera deasg a-mhàin.",
+    "advBakAuto": "Sgrìobh faidhle an lethbhric-ghlèidhidh gu fèin-obrachail",
+    "bakRestoreQ": "Tha coltas falamh air na roghainnean agad. An aisig sinn iad on phasgan lethbhreac-glèidhidh agad?",
+    "bakRestoreBtn": "Aisig",
     "syncBusy": "A' sioncronachadh…",
 };
 
