@@ -1340,7 +1340,7 @@
   // presentation: the same numbers read as a share of the whole (donut) and as
   // an ordered list (ranking), because the two answer different questions —
   // "is anything dominant?" versus "what exactly is in the tail?".
-  var _envData={}, _envSince=0, _envView='combo', _envKnown=false, _envPings=null;
+  var _envData={}, _envSince=0, _envView='combo', _envKnown=false, _envPings=null, _envExpanded=false, _trafSeries=[];
   function _envFmt(n){ try{ return Number(n||0).toLocaleString(); }catch(e){ return String(n||0); } }
   // Palette lisible sur les deux thèmes admin; la dernière teinte sert au
   // regroupement « autres », volontairement neutre.
@@ -1349,18 +1349,21 @@
   function _envLabel(k){ return ENV_LABELS[k]||k; }
   // Un camembert de vingt parts ne se lit pas : on garde les huit premières et
   // on replie la queue dans « autres », en gardant son décompte exact.
-  function _envSlices(map){
+  function _envSlices(map,all){
     var keys=Object.keys(map||{});
-    if(!keys.length) return {total:0,slices:[]};
+    if(!keys.length) return {total:0,slices:[],rest:0};
     var tot=0; keys.forEach(function(k){ tot+=map[k]||0; });
     keys.sort(function(a,b){ return (map[b]||0)-(map[a]||0); });
+    if(all){ // liste dépliée : toutes les entrées, couleurs cycliques (le donut, lui, reste replié)
+      return {total:tot,slices:keys.map(function(k,i){ return {k:_envLabel(k),n:map[k]||0,c:ENV_COLORS[i%9]}; }),rest:0};
+    }
     var top=keys.slice(0,8), rest=keys.slice(8);
     var slices=top.map(function(k,i){ return {k:_envLabel(k),n:map[k]||0,c:ENV_COLORS[i]}; });
     if(rest.length){
       var r=0; rest.forEach(function(k){ r+=map[k]||0; });
       slices.push({k:rest.length+' others',n:r,c:ENV_COLORS[9]});
     }
-    return {total:tot,slices:slices};
+    return {total:tot,slices:slices,rest:rest.length};
   }
   // Anneau en SVG : un cercle par part, décalé par stroke-dashoffset. Pas de
   // dépendance, et le trou central porte le total.
@@ -1393,7 +1396,7 @@
     var pt=(pwa.standalone||0)+(pwa.browser||0);
     if(pt) bits.push('<b>'+Math.round(((pwa.standalone||0)/pt)*100)+'%</b> run it as an installed app');
     var nl=Object.keys(lang).length;
-    if(nl) bits.push('<b>'+nl+'</b> language'+(nl===1?'':'s')+' seen, of 36 translated');
+    if(nl) bits.push('<b>'+nl+'</b> language'+(nl===1?'':'s')+' seen, of 40 translated');
     return bits.length?('<div class="envhi">'+bits.join(' &nbsp;·&nbsp; ')+'</div>'):'';
   }
   function _envAgo(ts){
@@ -1414,6 +1417,42 @@
     if(_envPings.last) txt+=', last '+_envAgo(_envPings.last);
     return '<div class="muted" style="margin-top:10px">'+txt+'.</div>';
   }
+  // Évolution des langues dans le temps : barres empilées par jour sur la
+  // même fenêtre de 14 jours que le trafic. Donnée quotidienne enregistrée
+  // depuis cette version du proxy seulement — le graphe se remplit jour après
+  // jour, le cumul au-dessus reste la vue longue.
+  function _envLangChart(){
+    if(_envView!=='lang') return '';
+    var s=_trafSeries||[], has=false;
+    s.forEach(function(x){ if(x.lg&&Object.keys(x.lg).length) has=true; });
+    if(!has) return '<div class="muted" style="margin-top:12px">Per-day language history starts with this proxy version \u2014 the chart fills in as days pass.</div>';
+    var tot={};
+    s.forEach(function(x){ if(x.lg) for(var k in x.lg) tot[k]=(tot[k]||0)+(x.lg[k]||0); });
+    var keys=Object.keys(tot).sort(function(a,b){ return tot[b]-tot[a]; });
+    var top=keys.slice(0,6), restK=keys.slice(6);
+    var max=1;
+    s.forEach(function(x){ var t=0; if(x.lg) for(var k in x.lg) t+=x.lg[k]||0; if(t>max) max=t; });
+    var bars=s.map(function(x){
+      var lg=x.lg||{}, restN=0;
+      restK.forEach(function(k){ restN+=lg[k]||0; });
+      var stack=top.map(function(k,i){ return {k:k,n:lg[k]||0,c:ENV_COLORS[i]}; });
+      if(restK.length) stack.push({k:'other',n:restN,c:ENV_COLORS[9]});
+      var tip=stack.filter(function(sg){ return sg.n; }).map(function(sg){ return sg.k+': '+sg.n; }).join(', ');
+      // flex column justify-end : le dernier <i> rendu est en bas → on inverse
+      // pour garder la langue dominante à la base de la pile.
+      var segs='';
+      stack.slice().reverse().forEach(function(sg){
+        if(!sg.n) return;
+        segs+='<i style="height:'+Math.round((sg.n/max)*100)+'%;background:'+sg.c+';border-radius:0"></i>';
+      });
+      return '<div class="bar" title="'+x.date+(tip?': '+tip:': no data')+'">'+segs+'<span>'+(x.date||'').slice(5)+'</span></div>';
+    }).join('');
+    var leg=top.map(function(k,i){ return '<span><em style="background:'+ENV_COLORS[i]+'"></em>'+_annEsc(k)+'</span>'; }).join('')
+          +(restK.length?'<span><em style="background:'+ENV_COLORS[9]+'"></em>other</span>':'');
+    return '<div class="muted" style="margin:14px 0 4px">Languages per day \u2014 last 14 days</div>'
+         + '<div class="trafchart">'+bars+'</div>'
+         + '<div class="traflegend" style="flex-wrap:wrap">'+leg+'</div>';
+  }
   function renderEnv(){
     var box=$('trafEnv'); if(!box) return;
     var since=$('envSince');
@@ -1432,19 +1471,27 @@
       box.innerHTML='<div class="empty">'+why+'</div>'+_envPingLine();
       return;
     }
-    var rows=r.slices.map(function(s){
-      var pc=(s.n/r.total)*100;
+    // Le donut reste toujours replié (top 8 + autres) — vingt parts ne se
+    // lisent pas ; seule la liste se déplie à la demande.
+    var rl=_envExpanded?_envSlices(_envData[_envView],true):r;
+    var rows=rl.slices.map(function(s){
+      var pc=(s.n/rl.total)*100;
       return '<div class="envrow"><span class="dot" style="background:'+s.c+'"></span>'
            + '<span class="nmx">'+_annEsc(s.k)+'</span>'
            + '<span class="barx"><i style="width:'+Math.max(2,pc).toFixed(1)+'%;background:'+s.c+'"></i></span>'
            + '<span class="pct">'+_envFmt(s.n)+' \u00b7 '+(pc<1?pc.toFixed(1):Math.round(pc))+'%</span></div>';
     }).join('');
-    box.innerHTML='<div class="envwrap">'+_envDonut(r.slices,r.total)+'<div class="envlist">'+rows+'</div></div>'+_envHighlight()+_envPingLine();
+    var more='';
+    if(r.rest||_envExpanded){
+      more='<button id="envMoreBtn" class="use" style="margin-top:8px">'+(_envExpanded?'Show top 8':'Show all '+(r.rest+8)+' entries')+'</button>';
+    }
+    box.innerHTML='<div class="envwrap">'+_envDonut(r.slices,r.total)+'<div class="envlist">'+rows+more+'</div></div>'+_envLangChart()+_envHighlight()+_envPingLine();
+    var mb=$('envMoreBtn'); if(mb) mb.addEventListener('click',function(){ _envExpanded=!_envExpanded; renderEnv(); });
   }
   (function(){
     var seg=$('envSeg'); if(!seg) return;
     seg.querySelectorAll('button').forEach(function(b){ b.addEventListener('click',function(){
-      _envView=b.dataset.k;
+      _envView=b.dataset.k; _envExpanded=false;
       seg.querySelectorAll('button').forEach(function(x){ x.classList.toggle('on',x===b); });
       renderEnv();
     }); });
@@ -1470,6 +1517,7 @@
       function tile(lbl,o){ return '<div class="tstat"><div class="lbl">'+lbl+'</div><div class="big">'+fmt(o&&o.v)+'</div><div class="sub">'+fmt(o&&o.u)+' unique</div></div>'; }
       if(g) g.innerHTML = tile('Today',d.today)+tile('Last 7 days',d.week)+tile('Last 30 days',d.month)+tile('Last 90 days',d.quarter)+tile('Last 180 days',d.semester)+tile('Last 365 days',d.year)+tile('All time',d.allTime);
       var c=$('trafChart'), s=(d.series||[]), max=1;
+      _trafSeries=s;
       s.forEach(function(x){ if((x.v||0)>max) max=x.v; });
       if(c) c.innerHTML = s.map(function(x){
         var h=Math.round(((x.v||0)/max)*100);

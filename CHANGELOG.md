@@ -14,6 +14,13 @@ Opened with `v2.1.7-web.0` (2026-08-13), following the upstream **2.1.7**
 release.
 
 ### Added
+- **Admin traffic breakdowns: expand + language trend** (`web.6`) — a
+  "Show all" button unfolds the full ranking (all languages / systems /
+  browsers) behind the top-8 view, and the Language view gains a per-day
+  stacked chart over the last 14 days. The proxy now records a per-day
+  language counter alongside the cumulative one (same anonymous ping, same
+  retention and cardinality cap); history starts when the proxy restarts on
+  this version.
 - **BBC Anthem table theme and its matching card back** (by BaShFX), following
   the upstream 2.1.7 release (`web.1`).
 - **Automatic backup to a local folder** (`web.5`) — the full web backup file

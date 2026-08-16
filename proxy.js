@@ -1623,7 +1623,18 @@ function recordVisitEnv(ua, acceptLang, standalone) {
     if (!visitsStore.envSince) visitsStore.envSince = Date.now();
     // Premier tag de l'en-tête, tronqué à la langue de base (fr-CA → fr).
     const lg = String(acceptLang || '').split(',')[0].trim().slice(0, 12).toLowerCase().split('-')[0];
-    _envBump('lang', /^[a-z]{2,3}$/.test(lg) ? lg : 'other');
+    const lgv = /^[a-z]{2,3}$/.test(lg) ? lg : 'other';
+    _envBump('lang', lgv);
+    // Série quotidienne par langue : le cumul dit lesquelles, pas quand. Un
+    // petit dictionnaire par jour (même seau que les visites, même rétention,
+    // même plafond de cardinalité) suffit à tracer l'évolution dans le temps.
+    const day = visitDayKey();
+    let bucket = visitsStore.days[day];
+    if (!bucket) { bucket = visitsStore.days[day] = { v: 0, ids: {} }; pruneVisitDays(); }
+    if (!bucket.lg) bucket.lg = {};
+    if (bucket.lg[lgv] === undefined && Object.keys(bucket.lg).length >= 40) bucket.lg.other = (bucket.lg.other || 0) + 1;
+    else bucket.lg[lgv] = (bucket.lg[lgv] || 0) + 1;
+    saveVisitsSoon();
   } catch (e) {}
 }
 function recordVisit(rawId) {
@@ -1669,7 +1680,7 @@ function visitsSummary() {
     d.setDate(now.getDate() - i);
     const k = visitDayKey(d);
     const b = visitsStore.days[k];
-    series.push({ date: k, v: b ? (b.v || 0) : 0, u: (b && b.ids) ? Object.keys(b.ids).length : 0, nw: b ? (b.nw || 0) : 0, rt: b ? (b.rt || 0) : 0 });
+    series.push({ date: k, v: b ? (b.v || 0) : 0, u: (b && b.ids) ? Object.keys(b.ids).length : 0, nw: b ? (b.nw || 0) : 0, rt: b ? (b.rt || 0) : 0, lg: (b && b.lg) ? b.lg : undefined });
   }
   return {
     ok: true,
