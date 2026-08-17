@@ -1360,6 +1360,23 @@
   var ENV_COLORS=['#4080d8','#7fd17f','#e0a03a','#c47ad6','#4fc3c7','#e98a8a','#9aa7bd','#6f7f99','#b58b5a','#8f8f8f'];
   var ENV_LABELS={standalone:'Installed app',browser:'Browser tab',other:'Other'};
   function _envLabel(k){ return ENV_LABELS[k]||k; }
+  // Une couleur par CLÉ, pas par rang dans la série qu'on est en train de
+  // dessiner : le classement (cumul depuis le début) et la courbe (14 derniers
+  // jours) n'ordonnent pas les langues pareil, et deux teintes différentes pour
+  // la même langue rendent les deux vues illisibles ensemble. Le rang de
+  // référence est celui du classement — c'est lui que l'œil lit en premier.
+  var _envColorCache=null;
+  function _envColorReset(){ _envColorCache=null; }
+  function _envColorOf(view,k){
+    if(!_envColorCache) _envColorCache={};
+    if(!_envColorCache[view]){
+      var m=_envData[view]||{}, idx={};
+      Object.keys(m).sort(function(a,b){ return (m[b]||0)-(m[a]||0); })
+        .forEach(function(x,i){ idx[x]=ENV_COLORS[i%9]; });
+      _envColorCache[view]=idx;
+    }
+    return _envColorCache[view][k]||ENV_COLORS[9];
+  }
   // Un camembert de vingt parts ne se lit pas : on garde les huit premières et
   // on replie la queue dans « autres », en gardant son décompte exact.
   function _envSlices(map,all){
@@ -1371,7 +1388,7 @@
       return {total:tot,slices:keys.map(function(k,i){ return {k:_envLabel(k),n:map[k]||0,c:ENV_COLORS[i%9]}; }),rest:0};
     }
     var top=keys.slice(0,8), rest=keys.slice(8);
-    var slices=top.map(function(k,i){ return {k:_envLabel(k),n:map[k]||0,c:ENV_COLORS[i]}; });
+    var slices=top.map(function(k,i){ return {k:_envLabel(k),n:map[k]||0,c:ENV_COLORS[i%9]}; });
     if(rest.length){
       var r=0; rest.forEach(function(k){ r+=map[k]||0; });
       slices.push({k:rest.length+' others',n:r,c:ENV_COLORS[9]});
@@ -1491,16 +1508,29 @@
     var max=1;
     s.forEach(function(x){ var t=0; if(x.lg) for(var k in x.lg) t+=x.lg[k]||0; if(t>max) max=t; });
     var llabs=s.map(function(x){ return (x.date||'').slice(5); });
-    var lls=top.map(function(k,i){
-      return {k:k,c:ENV_COLORS[i],vals:s.map(function(x){ return (x.lg&&x.lg[k])||0; })};
+    var lls=top.map(function(k){
+      return {key:k,k:_envLabel(k),c:_envColorOf('lang',k),vals:s.map(function(x){ return (x.lg&&x.lg[k])||0; })};
     });
+    // La palette ne compte que neuf teintes : deux langues assez loin dans le
+    // classement peuvent retomber sur la même. Les huit premières gardent la
+    // leur (c'est celle du classement, visible juste au-dessus) ; une suivante
+    // qui entrerait en collision prend la première teinte encore libre.
+    var _taken={}, _rank=Object.keys(_envData.lang||{}).sort(function(a,b){ var m=_envData.lang; return (m[b]||0)-(m[a]||0); });
+    lls.forEach(function(l){ if(_rank.indexOf(l.key)<8) _taken[l.c]=1; });
+    lls.forEach(function(l){
+      if(_rank.indexOf(l.key)<8){ return; }
+      if(!_taken[l.c]){ _taken[l.c]=1; return; }
+      for(var i=0;i<9;i++){ if(!_taken[ENV_COLORS[i]]){ l.c=ENV_COLORS[i]; break; } }
+      _taken[l.c]=1;
+    });
+    // « N others », comme dans le classement : une langue réellement déclarée
+    // « other » existe dans les données, deux légendes « other » se confondraient.
     if(restK.length){
-      lls.push({k:'other',c:ENV_COLORS[9],vals:s.map(function(x){
+      lls.push({k:restK.length+' others',c:ENV_COLORS[9],vals:s.map(function(x){
         var lg=x.lg||{},r=0; restK.forEach(function(k){ r+=lg[k]||0; }); return r;
       })});
     }
-    var leg=top.map(function(k,i){ return '<span><em style="background:'+ENV_COLORS[i]+'"></em>'+_annEsc(k)+'</span>'; }).join('')
-          +(restK.length?'<span><em style="background:'+ENV_COLORS[9]+'"></em>other</span>':'');
+    var leg=lls.map(function(l){ return '<span><em style="background:'+l.c+'"></em>'+_annEsc(l.k)+'</span>'; }).join('');
     return '<div class="muted" style="margin:14px 0 4px">Languages per day \u2014 last 14 days</div>'
          + _lineChart(llabs,lls,150)
          + '<div class="traflegend" style="flex-wrap:wrap">'+leg+'</div>';
@@ -1588,7 +1618,7 @@
       }
       // Champ absent = proxy antérieur à la fonctionnalité ; objet vide = rien
       // à compter encore. Voir renderEnv().
-      _envKnown=(d.env!==undefined); _envData=d.env||{}; _envSince=d.envSince||0; _envPings=d.pings||null; renderEnv();
+      _envKnown=(d.env!==undefined); _envData=d.env||{}; _envColorReset(); _envSince=d.envSince||0; _envPings=d.pings||null; renderEnv();
       var nvc=$('trafNvRChart'), nvl=$('trafNvRLegend');
       // Champ nw absent de la série = proxy pas encore redémarré sur cette version.
       if(nvc && s.length && s[0].nw!==undefined){

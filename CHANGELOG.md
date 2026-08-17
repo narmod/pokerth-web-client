@@ -14,6 +14,14 @@ Opened with `v2.1.7-web.0` (2026-08-13), following the upstream **2.1.7**
 release.
 
 ### Changed
+- **Admin traffic: one colour per language** (`web.18`) — the ranking is
+  ordered by the running total and the per-day chart by the last 14 days, so
+  the same language used to get two different hues. Colours are now keyed by
+  language code from the ranking order; a tail language that would collide
+  takes the first free hue instead, and the grouped line is labelled
+  "N others" like the list (a language literally reported as "other" exists,
+  and two "other" legends read as one).
+### Changed
 - **Language count refreshed everywhere** (`web.16`) — the help chapter
   "Language" in all 40 original catalogues, plus README, ROADMAP, the
   server-rendered FAQ page (/faq) and the default SEO description, now
