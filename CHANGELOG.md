@@ -13,6 +13,11 @@ this file captures what matters to players and operators.
 Opened with `v2.1.7-web.0` (2026-08-13), following the upstream **2.1.7**
 release.
 
+### Added
+- **Indonesian language (id)** (`web.11`) — 41st interface language:
+  full UI catalogue and complete in-app help corpus in Bahasa Indonesia,
+  registered in the language picker and precached for offline use.
+
 ### Changed
 - **Admin traffic charts: bars → line charts** (`web.10`) — the three
   per-day charts (visits, new vs returning, languages) are now SVG line
