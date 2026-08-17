@@ -16,6 +16,7 @@ export const meta = {
 };
 
 export const strings = {
+  invScanQr: 'Scan to join', invCopyLink: 'Copy link', invShareVia: 'Share…', invitedBanner: 'You are invited to join the table',
   abClTabWeb: 'Web client',
   abClTabUpstream: 'Installable clients',
   abTabChangelog: 'Changelog',

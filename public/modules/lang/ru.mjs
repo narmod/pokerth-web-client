@@ -15,6 +15,7 @@ export const meta = {
 };
 
 export const strings = {
+  invScanQr: 'Отсканируйте, чтобы присоединиться', invCopyLink: 'Копировать ссылку', invShareVia: 'Поделиться…', invitedBanner: 'Вас пригласили за стол',
   abClTabWeb: 'Веб-клиент',
   abClTabUpstream: 'Устанавливаемые клиенты',
   abTabChangelog: 'Список изменений',

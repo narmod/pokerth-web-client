@@ -9,6 +9,7 @@ export const meta = {
 };
 
 export const strings = {
+  invScanQr: 'Liity skannaamalla', invCopyLink: 'Kopioi linkki', invShareVia: 'Jaa…', invitedBanner: 'Sinut on kutsuttu pöytään',
   abClTabWeb: 'Web-asiakas',
   abClTabUpstream: 'Asennettavat asiakkaat',
   abTabChangelog: 'Muutosloki',

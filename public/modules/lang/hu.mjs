@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+  invScanQr: 'Olvasd be a csatlakozáshoz', invCopyLink: 'Link másolása', invShareVia: 'Megosztás…', invitedBanner: 'Meghívtak az asztalhoz',
   abClTabWeb: 'Webes kliens',
   abClTabUpstream: 'Telepíthető kliensek',
   abTabChangelog: 'Változásnapló',

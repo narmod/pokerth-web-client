@@ -9,6 +9,7 @@ export const meta = {
 };
 
 export const strings = {
+  invScanQr: 'Skanna för att gå med', invCopyLink: 'Kopiera länk', invShareVia: 'Dela…', invitedBanner: 'Du är inbjuden till bordet',
   abClTabWeb: 'Webbklient',
   abClTabUpstream: 'Installerbara klienter',
   abTabChangelog: 'Ändringslogg',

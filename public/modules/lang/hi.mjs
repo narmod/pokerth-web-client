@@ -14,6 +14,7 @@ export const meta = {
 };
 
 export const strings = {
+  invScanQr: 'शामिल होने के लिए स्कैन करें', invCopyLink: 'लिंक कॉपी करें', invShareVia: 'साझा करें…', invitedBanner: 'आपको टेबल पर आमंत्रित किया गया है',
   abClTabWeb: 'वेब क्लाइंट',
   abClTabUpstream: 'इंस्टॉल किए जाने वाले क्लाइंट',
   abTabChangelog: 'परिवर्तन सूची',

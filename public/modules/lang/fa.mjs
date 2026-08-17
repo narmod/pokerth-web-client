@@ -14,6 +14,7 @@ export const meta = {
 };
 
 export const strings = {
+  invScanQr: 'برای پیوستن اسکن کنید', invCopyLink: 'کپی پیوند', invShareVia: 'اشتراک‌گذاری…', invitedBanner: 'شما به میز دعوت شده‌اید',
   abClTabWeb: 'کلاینت وب',
   abClTabUpstream: 'کلاینت‌های قابل نصب',
   abTabChangelog: 'تاریخچه تغییرات',

@@ -9,6 +9,7 @@ export const meta = {
 };
 
 export const strings = {
+  invScanQr: 'Digitalize para entrar', invCopyLink: 'Copiar ligação', invShareVia: 'Partilhar…', invitedBanner: 'Foi convidado a juntar-se à mesa',
   abClTabWeb: 'Cliente web',
   abClTabUpstream: 'Clientes instaláveis',
   abTabChangelog: 'Registo de alterações',

@@ -11,6 +11,7 @@ export const meta = {
 };
 
 export const strings = {
+  invScanQr: '掃碼加入', invCopyLink: '複製連結', invShareVia: '分享…', invitedBanner: '您已被邀請加入牌桌',
   abClTabWeb: '網頁客戶端',
   abClTabUpstream: '可安裝客戶端',
   abTabChangelog: '更新日誌',

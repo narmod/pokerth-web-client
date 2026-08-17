@@ -751,6 +751,7 @@ function _processAvatarFile(file) {
     '/modules/ui/assist-pane.mjs',
     '/modules/ui/back-guard.mjs',
     '/modules/ui/z-order.mjs',
+    '/modules/ui/invite.mjs',
     '/modules/ui/table-cards.mjs',
     '/modules/ui/action-bar.mjs',
     '/modules/net/msg-avatars.mjs',
@@ -910,6 +911,10 @@ function _processAvatarFile(file) {
     <!-- ÉTAPE 1 — choix du mode (cartes empilées). Chaque carte écrit la
          valeur de #server-mode (source de vérité) puis affiche l'étape 2.
          Palette : tokens du thème (QML). Textes : i18n. -->
+    <!-- Invite landing banner: filled by the #join link parser in
+         pokerth.js when the page was opened from a share link — shows
+         the invitee WHICH table the link points at before login. -->
+    <div id="invite-banner" style="display:none">🎉 <span data-i18n="invitedBanner">You are invited to join the table</span> «&nbsp;<span id="invite-banner-name"></span>&nbsp;»</div>
     <div id="login-step1">
       <p class="login-lead" data-i18n="loginLead">How do you want to play?</p>
       <p class="login-lead-sub" data-i18n="loginLeadSub">Pick a mode to continue.</p>
@@ -2423,6 +2428,7 @@ function _processAvatarFile(file) {
 <script type="module" src="modules/ui/keynav.mjs"></script>
 <script type="module" src="modules/ui/back-guard.mjs"></script>
 <script type="module" src="modules/ui/z-order.mjs"></script>
+<script type="module" src="modules/ui/invite.mjs"></script>
 <!-- Quit-game confirmation dialog: 2 buttons (Quit / Cancel).
      Shown when the user clicks the ✕ button in the header from inside
      a game. Driven by App.confirmLeaveGame() (open) and
@@ -2443,6 +2449,29 @@ function _processAvatarFile(file) {
     <div class="ld-buttons">
       <button class="ld-btn ld-create" onclick="App.confirmQuickCreate()" data-kn-primary data-i18n="quickCreateBtn">Create</button>
       <button class="ld-btn ld-cancel" onclick="App.cancelQuickCreate()"  data-i18n="leaveCancel">Cancel</button>
+    </div>
+  </div>
+</div>
+<!-- Invite-friends dialog: opened by App.shareTableLink() via
+     modules/ui/invite.mjs. QR code + copy button + messenger shortcuts
+     + native share sheet (phones). Same ld-card family as the other
+     dialogs. The password is never part of the link. -->
+<div id="invite-dialog" style="display:none" onclick="if(event.target===this)InviteUI.close()">
+  <div class="ld-card inv-card">
+    <div class="ld-title inv-title"><span data-i18n="wpInvite">Invite friends</span><button type="button" class="inv-close" onclick="InviteUI.close()" aria-label="Close" data-i18n-title="closeTooltip">✕</button></div>
+    <div class="inv-table" id="inv-table-name"></div>
+    <canvas id="inv-qr-canvas" class="inv-qr" width="190" height="190" aria-hidden="true"></canvas>
+    <div class="inv-scan" data-i18n="invScanQr">Scan to join</div>
+    <div class="inv-linkrow">
+      <div class="inv-link" id="inv-link"></div>
+      <button type="button" class="ld-btn inv-copy" onclick="InviteUI.copy()" data-i18n="invCopyLink">Copy link</button>
+    </div>
+    <div class="inv-share">
+      <button type="button" class="inv-sbtn" onclick="InviteUI.shareWhatsApp()">WhatsApp</button>
+      <button type="button" class="inv-sbtn" onclick="InviteUI.shareTelegram()">Telegram</button>
+      <button type="button" class="inv-sbtn" onclick="InviteUI.shareEmail()">E-mail</button>
+      <button type="button" class="inv-sbtn" onclick="InviteUI.shareSms()">SMS</button>
+      <button type="button" class="inv-sbtn inv-native" id="inv-share-native" onclick="InviteUI.shareNative()" style="display:none" data-i18n="invShareVia">Share…</button>
     </div>
   </div>
 </div>

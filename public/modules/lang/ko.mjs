@@ -13,6 +13,7 @@ export const meta = {
 };
 
 export const strings = {
+  invScanQr: '스캔하여 참가', invCopyLink: '링크 복사', invShareVia: '공유…', invitedBanner: '테이블에 초대되었습니다',
   abClTabWeb: '웹 클라이언트',
   abClTabUpstream: '설치형 클라이언트',
   abTabChangelog: '변경 사항',

@@ -9,6 +9,7 @@ export const meta = {
 };
 
 export const strings = {
+  invScanQr: 'スキャンして参加', invCopyLink: 'リンクをコピー', invShareVia: '共有…', invitedBanner: 'テーブルに招待されています',
   abClTabWeb: 'Webクライアント',
   abClTabUpstream: 'インストール版クライアント',
   abTabChangelog: '変更履歴',

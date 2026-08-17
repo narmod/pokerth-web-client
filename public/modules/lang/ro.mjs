@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+  invScanQr: 'Scanează pentru a te alătura', invCopyLink: 'Copiază linkul', invShareVia: 'Distribuie…', invitedBanner: 'Ești invitat la masa',
   abClTabWeb: 'Client web',
   abClTabUpstream: 'Clienți instalabili',
   abTabChangelog: 'Jurnal de modificări',

@@ -11,6 +11,7 @@ export const meta = {
 };
 
 export const strings = {
+  invScanQr: '扫码加入', invCopyLink: '复制链接', invShareVia: '分享…', invitedBanner: '您已被邀请加入牌桌',
   abClTabWeb: '网页客户端',
   abClTabUpstream: '可安装客户端',
   abTabChangelog: '更新日志',

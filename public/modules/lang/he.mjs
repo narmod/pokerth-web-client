@@ -14,6 +14,7 @@ export const meta = {
 };
 
 export const strings = {
+  invScanQr: 'סרקו כדי להצטרף', invCopyLink: 'העתק קישור', invShareVia: 'שיתוף…', invitedBanner: 'הוזמנת לשולחן',
   abClTabWeb: 'לקוח הווב',
   abClTabUpstream: 'לקוחות ניתנים להתקנה',
   abTabChangelog: 'יומן שינויים',

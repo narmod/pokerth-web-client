@@ -1,4 +1,6 @@
 2026-08-13 version 2.1.7-web (current series):
+- new: "invite friends" now opens a share window: QR code to scan, copy button, whatsapp/telegram/e-mail/sms shortcuts, and the phone share sheet
+- improvement: opening an invite link now shows which table you are invited to, right on the login screen, with the name field ready to type
 - new: admin traffic page - a "show all" button expands the visitor breakdowns (all languages, systems, browsers) instead of the top-8 list
 - new: admin traffic page - the language view now shows a per-day stacked chart of the last 14 days, so language trends are visible over time (history starts with this update)
 - new: automatic backup - pick a folder once and the app keeps your full backup file up to date there; if the browser storage was wiped, the app offers to restore everything in one click (desktop Chrome, Edge and Opera)

@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+  invScanQr: 'Naskenujte a pripojte sa', invCopyLink: 'Kopírovať odkaz', invShareVia: 'Zdieľať…', invitedBanner: 'Ste pozvaní k stolu',
   abClTabWeb: 'Webový klient',
   abClTabUpstream: 'Inštalovateľní klienti',
   abTabChangelog: 'Zoznam zmien',

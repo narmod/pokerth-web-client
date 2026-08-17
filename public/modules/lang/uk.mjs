@@ -9,6 +9,7 @@ export const meta = {
 };
 
 export const strings = {
+  invScanQr: 'Відскануйте, щоб приєднатися', invCopyLink: 'Копіювати посилання', invShareVia: 'Поділитися…', invitedBanner: 'Вас запрошено до столу',
   abClTabWeb: 'Веб-клієнт',
   abClTabUpstream: 'Встановлювані клієнти',
   abTabChangelog: 'Список змін',

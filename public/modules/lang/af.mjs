@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+  invScanQr: 'Skandeer om aan te sluit', invCopyLink: 'Kopieer skakel', invShareVia: 'Deel…', invitedBanner: 'Jy is genooi na die tafel',
   abClTabWeb: 'Webkliënt',
   abClTabUpstream: 'Installeerbare kliënte',
   abTabChangelog: 'Veranderingslys',

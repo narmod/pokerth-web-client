@@ -12,6 +12,7 @@ export const meta = {
 };
 
 export const strings = {
+  invScanQr: 'Katılmak için tarayın', invCopyLink: 'Bağlantıyı kopyala', invShareVia: 'Paylaş…', invitedBanner: 'Masaya davet edildiniz',
   abClTabWeb: 'Web istemcisi',
   abClTabUpstream: 'Kurulabilir istemciler',
   abTabChangelog: 'Değişiklik günlüğü',

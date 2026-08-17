@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+  invScanQr: 'Nuskaitykite, kad prisijungtumėte', invCopyLink: 'Kopijuoti nuorodą', invShareVia: 'Bendrinti…', invitedBanner: 'Jūs pakviesti prie stalo',
   abClTabWeb: 'Žiniatinklio klientas',
   abClTabUpstream: 'Įdiegiami klientai',
   abTabChangelog: 'Pakeitimų žurnalas',

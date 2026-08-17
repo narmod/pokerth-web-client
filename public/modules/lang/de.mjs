@@ -15,6 +15,7 @@ export const meta = {
 };
 
 export const strings = {
+  invScanQr: 'Zum Beitreten scannen', invCopyLink: 'Link kopieren', invShareVia: 'Teilen…', invitedBanner: 'Du bist eingeladen, dem Tisch beizutreten',
   abClTabWeb: 'Web-Client',
   abClTabUpstream: 'Installierbare Clients',
   abTabChangelog: 'Änderungsprotokoll',

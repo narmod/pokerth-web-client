@@ -14,6 +14,14 @@ Opened with `v2.1.7-web.0` (2026-08-13), following the upstream **2.1.7**
 release.
 
 ### Added
+- **Invite-friends dialog + invite landing** (`web.7`) — the waiting-room
+  "Invite friends" button now opens a share dialog with a QR code (scan
+  across the room), the link with a copy button, WhatsApp / Telegram /
+  e-mail / SMS shortcuts, and the native share sheet on phones (vendored
+  MIT `qrcode-generator`, lazy-loaded). On the invitee side, opening a
+  share link shows a banner on the login screen naming the table and
+  pre-focuses the nickname field. The password is still never part of
+  the link.
 - **Admin traffic breakdowns: expand + language trend** (`web.6`) — a
   "Show all" button unfolds the full ranking (all languages / systems /
   browsers) behind the top-8 view, and the Language view gains a per-day

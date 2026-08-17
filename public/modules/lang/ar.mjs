@@ -17,6 +17,7 @@ export const meta = {
 };
 
 export const strings = {
+  invScanQr: 'امسح للانضمام', invCopyLink: 'نسخ الرابط', invShareVia: 'مشاركة…', invitedBanner: 'أنت مدعو للانضمام إلى الطاولة',
   abClTabWeb: 'عميل الويب',
   abClTabUpstream: 'العملاء القابلون للتثبيت',
   abTabChangelog: 'سجل التغييرات',

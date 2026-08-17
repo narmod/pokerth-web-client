@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+  invScanQr: 'Skenirajte da se pridružite', invCopyLink: 'Kopiraj vezu', invShareVia: 'Podeli…', invitedBanner: 'Pozvani ste za sto',
   abClTabWeb: 'Веб клијент',
   abClTabUpstream: 'Клијенти за инсталацију',
   abTabChangelog: 'Списак измена',

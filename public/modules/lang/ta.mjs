@@ -11,6 +11,7 @@ export const meta = {
 };
 
 export const strings = {
+  invScanQr: 'சேர ஸ்கேன் செய்யவும்', invCopyLink: 'இணைப்பை நகலெடு', invShareVia: 'பகிர்…', invitedBanner: 'மேசைக்கு நீங்கள் அழைக்கப்பட்டுள்ளீர்கள்',
   abClTabWeb: 'இணைய கிளையன்',
   abClTabUpstream: 'நிறுவக்கூடிய கிளையன்கள்',
   abTabChangelog: 'மாற்றப் பதிவு',

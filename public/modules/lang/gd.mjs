@@ -11,6 +11,7 @@ export const meta = {
 };
 
 export const strings = {
+  invScanQr: 'Sganaich gus pàirt a ghabhail', invCopyLink: 'Dèan lethbhreac dhen cheangal', invShareVia: 'Co-roinn…', invitedBanner: 'Fhuair thu cuireadh dhan bhòrd',
   abClTabWeb: 'Cliaìant-lìn',
   abClTabUpstream: 'Cliaìantan a ghabhas stàlaidh',
   abTabChangelog: 'Loga nan atharrachaidhean',

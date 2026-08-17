@@ -2932,6 +2932,23 @@ document.addEventListener("DOMContentLoaded", function() {
           var _jcard = document.querySelector('.login-card[onclick*="' + _jMode + '"]');
           if (_jcard && typeof loginPickMode === 'function') loginPickMode(_jcard, _jMode);
         } catch(eC) {}
+        // Invite landing (web): show WHICH table the link points at on
+        // the login screen and pre-focus the nickname field \u2014 the
+        // invitee only types a name and connects. Static text is
+        // translated via data-i18n (the catalogue may not be loaded yet
+        // when this global code runs); only the table name is injected.
+        try {
+          var _jbn = document.getElementById('invite-banner-name');
+          if (_jbn) _jbn.textContent = joinName;
+          var _jbb = document.getElementById('invite-banner');
+          if (_jbb) _jbb.style.display = '';
+          setTimeout(function(){
+            try {
+              var _jn = document.getElementById('nick');
+              if (_jn && _jn.offsetParent && !_jn.value) _jn.focus();
+            } catch(eF) {}
+          }, 400);
+        } catch(eB) {}
         window._shareLinkActive = true;
         // If the shared table never shows up in the lobby list (already
         // finished, wrong server\u2026), tell the user instead of waiting
@@ -6458,6 +6475,13 @@ const App = (() => {
       }
       var url = window.location.origin + window.location.pathname +
         '#join=' + encodeURIComponent(name) + '&s=' + encodeURIComponent(target) + tlsFrag;
+      // Rich share dialog (QR code + copy + messenger shortcuts, see
+      // modules/ui/invite.mjs) when available; direct native share /
+      // clipboard kept as fallback for a stale cached page.
+      if (window.InviteUI && document.getElementById('invite-dialog')) {
+        window.InviteUI.open(url, name);
+        return;
+      }
       var self = this;
       if (navigator.share) {
         // AbortError = user closed the share sheet \u2014 not a failure,
@@ -10356,7 +10380,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.7-web.6'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.7-web.7'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

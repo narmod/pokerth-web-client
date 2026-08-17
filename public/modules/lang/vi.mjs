@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+  invScanQr: 'Quét để tham gia', invCopyLink: 'Sao chép liên kết', invShareVia: 'Chia sẻ…', invitedBanner: 'Bạn được mời vào bàn',
   abClTabWeb: 'Ứng dụng web',
   abClTabUpstream: 'Ứng dụng cài đặt được',
   abTabChangelog: 'Nhật ký thay đổi',

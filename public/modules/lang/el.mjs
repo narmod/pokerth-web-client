@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+  invScanQr: 'Σαρώστε για συμμετοχή', invCopyLink: 'Αντιγραφή συνδέσμου', invShareVia: 'Κοινοποίηση…', invitedBanner: 'Είστε προσκεκλημένοι στο τραπέζι',
   abClTabWeb: 'Πελάτης web',
   abClTabUpstream: 'Εγκαταστάσιμοι πελάτες',
   abTabChangelog: 'Ιστορικό αλλαγών',
