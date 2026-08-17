@@ -21,7 +21,7 @@ export const help = {
         { id: 'famboard', t: 'Papan peringkat keluarga',
           b: ['Hanya di server pribadi dan permainan LAN, klien menyimpan statistik seumur hidup per nama panggilan \u2014 tangan dan permainan yang dimainkan dan dimenangkan, kemenangan terbesar, rentetan terbaik \u2014 dan membagikannya lewat server sehingga setiap perangkat di sekitar meja melihat papan peringkat yang sama. Permainan pokerth.net tidak pernah dilacak seperti ini, dan statistik mode latihan disimpan sepenuhnya terpisah.'] },
         { id: 'language', t: 'Bahasa',
-          b: ['Antarmuka tersedia dalam 41 bahasa. Ubah kapan saja di Opsi lanjutan (menu roda gigi) di bawah Antarmuka pengguna. Istilah aksi poker (Fold, Check, Call, Bet, Raise, All-In) tetap dalam bahasa Inggris sesuai konvensi, persis seperti klien desktop.'] },
+          b: ['Antarmuka tersedia dalam 42 bahasa. Ubah kapan saja di Opsi lanjutan (menu roda gigi) di bawah Antarmuka pengguna. Istilah aksi poker (Fold, Check, Call, Bet, Raise, All-In) tetap dalam bahasa Inggris sesuai konvensi, persis seperti klien desktop.'] },
         { id: 'pwa', t: 'Instal sebagai aplikasi',
           b: ['Klien ini adalah Progressive Web App: Anda dapat menginstalnya dari menu peramban (atau tombol instal di kepala halaman) untuk mendapatkan aplikasi layar penuh dengan ikonnya sendiri. Setelah terinstal, aplikasi langsung terbuka dan mode latihan berfungsi sepenuhnya offline.'],
           note: 'Di Android dan Chrome/Edge desktop, tombol instal melakukan semuanya. Di iPhone/iPad, Apple hanya mengizinkan instalasi lewat Safari: tombol Bagikan \u2192 \u201cTambah ke Layar Utama\u201d \u2014 klien menampilkan langkah-langkah ini saat diperlukan. Tombol hilang setelah aplikasi terinstal.' },

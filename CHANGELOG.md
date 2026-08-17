@@ -14,6 +14,9 @@ Opened with `v2.1.7-web.0` (2026-08-13), following the upstream **2.1.7**
 release.
 
 ### Added
+- **Thai language (th)** (`web.12`) — 42nd interface language: full UI
+  catalogue, complete in-app help corpus, SEO variant (localized
+  title/description, hreflang, sitemap) and offline precache.
 - **Indonesian language (id)** (`web.11`) — 41st interface language:
   full UI catalogue and complete in-app help corpus in Bahasa Indonesia,
   registered in the language picker and precached for offline use.
