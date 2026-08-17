@@ -14,7 +14,10 @@ Opened with `v2.1.7-web.0` (2026-08-13), following the upstream **2.1.7**
 release.
 
 ### Added
-- **Invite-friends dialog + invite landing** (`web.7`) — the waiting-room
+- **Invite-friends dialog + invite landing** (`web.7`; `web.8` ships the
+  dialog stylesheet that was missing from the `web.7` push, plus inline
+  critical styles and a native-share fallback so the dialog can never
+  again fail invisibly) — the waiting-room
   "Invite friends" button now opens a share dialog with a QR code (scan
   across the room), the link with a copy button, WhatsApp / Telegram /
   e-mail / SMS shortcuts, and the native share sheet on phones (vendored

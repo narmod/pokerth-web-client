@@ -6479,8 +6479,10 @@ const App = (() => {
       // modules/ui/invite.mjs) when available; direct native share /
       // clipboard kept as fallback for a stale cached page.
       if (window.InviteUI && document.getElementById('invite-dialog')) {
-        window.InviteUI.open(url, name);
-        return;
+        // If the dialog module throws for any reason, fall through to the
+        // native share sheet instead of silently doing nothing.
+        try { window.InviteUI.open(url, name); return; }
+        catch(eInv) { try { console.error('[invite] dialog failed, falling back', eInv); } catch(e2){} }
       }
       var self = this;
       if (navigator.share) {
@@ -10380,7 +10382,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.7-web.7'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.7-web.8'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

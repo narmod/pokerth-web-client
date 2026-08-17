@@ -82,6 +82,15 @@ function open(url, name) {
   // Native share button only where the API exists (phones mostly).
   const nb = _el('inv-share-native');
   if (nb) nb.style.display = (navigator.share ? '' : 'none');
+  // Belt and braces: force the critical overlay styles inline so the
+  // dialog is visible and centred even under a stale cached stylesheet
+  // that predates the #invite-dialog rules.
+  dlg.style.position = 'fixed';
+  dlg.style.inset = '0';
+  dlg.style.zIndex = '1300';
+  dlg.style.alignItems = 'center';
+  dlg.style.justifyContent = 'center';
+  dlg.style.background = 'rgba(0,0,0,0.7)';
   dlg.style.display = 'flex';
   _drawQr(_curUrl);
 }

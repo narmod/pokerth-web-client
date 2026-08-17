@@ -1,4 +1,5 @@
 2026-08-13 version 2.1.7-web (current series):
+- bugfix: the "invite friends" share window opened invisibly at the bottom of the page (missing styles) - it now always appears centred on top
 - new: "invite friends" now opens a share window: QR code to scan, copy button, whatsapp/telegram/e-mail/sms shortcuts, and the phone share sheet
 - improvement: opening an invite link now shows which table you are invited to, right on the login screen, with the name field ready to type
 - new: admin traffic page - a "show all" button expands the visitor breakdowns (all languages, systems, browsers) instead of the top-8 list

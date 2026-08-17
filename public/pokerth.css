@@ -10528,3 +10528,62 @@ body.adv-no-avcreate #avp-tab-create { display: none !important; }
   border-bottom-right-radius: 8px;
   -webkit-overflow-scrolling: touch;
 }
+
+/* ══ INVITE-FRIENDS DIALOG (#invite-dialog — modules/ui/invite.mjs) ══
+   Opened by App.shareTableLink(): QR code + copy row + messenger
+   shortcut buttons + native share sheet on phones. Same card family
+   (.ld-card) as the confirmation dialogs. z-index 1300: the waiting-room
+   bar lives in the LOBBY view, whose panels stack up to ~900 and whose
+   modals (ranking/forum) sit at 1200 — at the game-dialog level (120)
+   this dialog would open BEHIND the lobby UI. Kept below toasts (10000). */
+#invite-dialog {
+  position: fixed; inset: 0; z-index: 1300;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(0,0,0,0.7);
+  backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px);
+  animation: ldFade 0.25s ease-out;
+}
+.inv-card { max-width: 370px; text-align: center; }
+.inv-title { display: flex; align-items: center; justify-content: space-between; }
+.inv-close {
+  background: none; border: none; color: var(--cream);
+  font-size: 1.05rem; line-height: 1; cursor: pointer; padding: 2px 6px;
+}
+.inv-close:hover { color: var(--text-hi); }
+.inv-table {
+  font-family: var(--ff-display); font-weight: 700;
+  color: var(--text-hi); margin-bottom: 12px; word-break: break-word;
+}
+.inv-qr { display: block; margin: 0 auto 6px; border-radius: 8px; background: #fff; }
+.inv-scan { font-size: var(--fs-sm); color: var(--cream); opacity: 0.75; margin-bottom: 14px; }
+.inv-linkrow { display: flex; gap: 8px; align-items: stretch; margin-bottom: 14px; }
+.inv-link {
+  flex: 1 1 auto; min-width: 0;
+  font-size: 0.72rem; color: var(--cream);
+  background: var(--inset); border: 1px solid var(--border);
+  border-radius: var(--r-md); padding: 8px 10px;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  text-align: left; direction: ltr;
+  display: flex; align-items: center;
+}
+.inv-copy { flex: 0 0 auto; letter-spacing: 0.04em; }
+.inv-share { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
+.inv-sbtn {
+  padding: 8px 12px;
+  background: var(--inset); border: 1px solid var(--border);
+  border-radius: var(--r-md); color: var(--cream);
+  font-size: var(--fs-sm); cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+.inv-sbtn:hover { border-color: var(--border-hi); }
+
+/* ══ INVITE LANDING BANNER (login screen — filled by the #join parser) ══ */
+#invite-banner {
+  margin: 10px auto 4px; padding: 10px 14px; max-width: 420px;
+  background: var(--inset);
+  border: 1px solid var(--border-hi);
+  border-radius: var(--r-md);
+  color: var(--text-hi); font-size: var(--fs-md);
+  text-align: center; line-height: 1.4;
+}
+#invite-banner-name { font-weight: 700; }
