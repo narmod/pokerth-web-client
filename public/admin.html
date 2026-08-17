@@ -61,6 +61,10 @@
   .tstat .big{font-size:1.5rem;font-weight:800;color:var(--gold);margin-top:4px;font-variant-numeric:tabular-nums}
   .tstat .sub{font-size:.78rem;color:var(--text);margin-top:2px}
   .trafchart{display:flex;align-items:flex-end;gap:4px;height:120px;padding-top:6px}
+  /* Courbes : SVG fluide, l'axe Y porte les valeurs (lisible sans survol —
+     les tooltips title= n'existent pas au tactile). */
+  .linechart{padding-top:6px}
+  .linechart svg{width:100%;height:auto;display:block}
   .trafchart .bar{flex:1;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;height:100%;min-width:0}
   .trafchart .bar i{display:block;width:100%;background:linear-gradient(180deg,#4080d8,#1a3d8b);border-radius:3px 3px 0 0;min-height:2px}
   .trafchart .bar span{font-size:.58rem;color:var(--text);margin-top:3px;white-space:nowrap}
@@ -1425,6 +1429,47 @@
   // même fenêtre de 14 jours que le trafic. Donnée quotidienne enregistrée
   // depuis cette version du proxy seulement — le graphe se remplit jour après
   // jour, le cumul au-dessus reste la vue longue.
+  // Courbe multi-séries en SVG nu : axe Y gradué (max arrondi à 1/2/5×10^k),
+  // grille, labels de dates éclairciés (~7 max), points porteurs d'un title=
+  // en bonus desktop. var() CSS ne se résout pas dans les attributs SVG →
+  // tout passe par style= (piège connu).
+  function _lineNiceMax(m){
+    if(m<=4) return Math.max(1,m);
+    var p=Math.pow(10,Math.floor(Math.log(m)/Math.LN10));
+    var u=m/p;
+    var n=(u<=1?1:u<=2?2:u<=5?5:10)*p;
+    return n;
+  }
+  function _lineChart(labels,lines,H){
+    var n=labels.length; if(!n) return '';
+    H=H||170;
+    var W=700,padL=38,padR=10,padT=10,padB=20;
+    var max=1; lines.forEach(function(l){ l.vals.forEach(function(v){ if((v||0)>max) max=v||0; }); });
+    max=_lineNiceMax(max);
+    var iw=W-padL-padR, ih=H-padT-padB;
+    function X(i){ return n===1?padL+iw/2:padL+(i*iw)/(n-1); }
+    function Y(v){ return padT+(1-(v||0)/max)*ih; }
+    var g='';
+    var steps=4;
+    for(var s=0;s<=steps;s++){
+      var vv=Math.round((max*s)/steps), yy=Y(vv);
+      g+='<line x1="'+padL+'" y1="'+yy.toFixed(1)+'" x2="'+(W-padR)+'" y2="'+yy.toFixed(1)+'" style="stroke:rgba(127,127,127,.18);stroke-width:1"/>'
+        +'<text x="'+(padL-5)+'" y="'+(yy+3).toFixed(1)+'" text-anchor="end" style="fill:var(--text);font-size:9px;font-variant-numeric:tabular-nums">'+vv+'</text>';
+    }
+    var step=Math.max(1,Math.ceil(n/7));
+    for(var i=0;i<n;i++){
+      if(i%step!==0&&i!==n-1) continue;
+      g+='<text x="'+X(i).toFixed(1)+'" y="'+(H-6)+'" text-anchor="middle" style="fill:var(--text);font-size:9px">'+_annEsc(labels[i])+'</text>';
+    }
+    lines.forEach(function(l){
+      var pts=l.vals.map(function(v,i){ return X(i).toFixed(1)+','+Y(v).toFixed(1); }).join(' ');
+      g+='<polyline points="'+pts+'" style="fill:none;stroke:'+l.c+';stroke-width:2;stroke-linejoin:round;stroke-linecap:round"/>';
+      l.vals.forEach(function(v,i){
+        g+='<circle cx="'+X(i).toFixed(1)+'" cy="'+Y(v).toFixed(1)+'" r="2.6" style="fill:'+l.c+'"><title>'+_annEsc(labels[i])+' \u00b7 '+_annEsc(l.k)+': '+(v||0)+'</title></circle>';
+      });
+    });
+    return '<div class="linechart"><svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="trend">'+g+'</svg></div>';
+  }
   function _envLangChart(){
     if(_envView!=='lang') return '';
     var s=_trafSeries||[], has=false;
@@ -1436,25 +1481,19 @@
     var top=keys.slice(0,6), restK=keys.slice(6);
     var max=1;
     s.forEach(function(x){ var t=0; if(x.lg) for(var k in x.lg) t+=x.lg[k]||0; if(t>max) max=t; });
-    var bars=s.map(function(x){
-      var lg=x.lg||{}, restN=0;
-      restK.forEach(function(k){ restN+=lg[k]||0; });
-      var stack=top.map(function(k,i){ return {k:k,n:lg[k]||0,c:ENV_COLORS[i]}; });
-      if(restK.length) stack.push({k:'other',n:restN,c:ENV_COLORS[9]});
-      var tip=stack.filter(function(sg){ return sg.n; }).map(function(sg){ return sg.k+': '+sg.n; }).join(', ');
-      // flex column justify-end : le dernier <i> rendu est en bas → on inverse
-      // pour garder la langue dominante à la base de la pile.
-      var segs='';
-      stack.slice().reverse().forEach(function(sg){
-        if(!sg.n) return;
-        segs+='<i style="height:'+Math.round((sg.n/max)*100)+'%;background:'+sg.c+';border-radius:0"></i>';
-      });
-      return '<div class="bar" title="'+x.date+(tip?': '+tip:': no data')+'">'+segs+'<span>'+(x.date||'').slice(5)+'</span></div>';
-    }).join('');
+    var llabs=s.map(function(x){ return (x.date||'').slice(5); });
+    var lls=top.map(function(k,i){
+      return {k:k,c:ENV_COLORS[i],vals:s.map(function(x){ return (x.lg&&x.lg[k])||0; })};
+    });
+    if(restK.length){
+      lls.push({k:'other',c:ENV_COLORS[9],vals:s.map(function(x){
+        var lg=x.lg||{},r=0; restK.forEach(function(k){ r+=lg[k]||0; }); return r;
+      })});
+    }
     var leg=top.map(function(k,i){ return '<span><em style="background:'+ENV_COLORS[i]+'"></em>'+_annEsc(k)+'</span>'; }).join('')
           +(restK.length?'<span><em style="background:'+ENV_COLORS[9]+'"></em>other</span>':'');
     return '<div class="muted" style="margin:14px 0 4px">Languages per day \u2014 last 14 days</div>'
-         + '<div class="trafchart">'+bars+'</div>'
+         + _lineChart(llabs,lls,150)
          + '<div class="traflegend" style="flex-wrap:wrap">'+leg+'</div>';
   }
   function renderEnv(){
@@ -1523,11 +1562,15 @@
       var c=$('trafChart'), s=(d.series||[]), max=1;
       _trafSeries=s;
       s.forEach(function(x){ if((x.v||0)>max) max=x.v; });
-      if(c) c.innerHTML = s.map(function(x){
-        var h=Math.round(((x.v||0)/max)*100);
-        var lab=(x.date||'').slice(5);
-        return '<div class="bar" title="'+x.date+': '+(x.v||0)+' visits, '+(x.u||0)+' unique"><i style="height:'+h+'%"></i><span>'+lab+'</span></div>';
-      }).join('');
+      if(c){
+        var labs=s.map(function(x){ return (x.date||'').slice(5); });
+        c.className='linechart';
+        c.innerHTML=_lineChart(labs,[
+          {k:'visits',c:'#4080d8',vals:s.map(function(x){ return x.v||0; })},
+          {k:'unique',c:'#7fd17f',vals:s.map(function(x){ return x.u||0; })}
+        ])
+        +'<div class="traflegend"><span><em style="background:#4080d8"></em>Visits</span><span><em style="background:#7fd17f"></em>Unique</span></div>';
+      }
       var md=$('trafModes');
       if(md){
         var tm=(d.today&&d.today.m)||{}, am=(d.allTime&&d.allTime.m)||{};
@@ -1542,11 +1585,12 @@
       if(nvc && s.length && s[0].nw!==undefined){
         var nmax=1;
         s.forEach(function(x){ var t=(x.nw||0)+(x.rt||0); if(t>nmax) nmax=t; });
-        nvc.innerHTML = s.map(function(x){
-          var hn=Math.round(((x.nw||0)/nmax)*100), hr=Math.round(((x.rt||0)/nmax)*100);
-          var lab=(x.date||'').slice(5);
-          return '<div class="bar" title="'+x.date+': '+(x.nw||0)+' new, '+(x.rt||0)+' returning"><i class="rt" style="height:'+hr+'%"></i><i class="nw" style="height:'+hn+'%"></i><span>'+lab+'</span></div>';
-        }).join('');
+        var nlabs=s.map(function(x){ return (x.date||'').slice(5); });
+        nvc.className='linechart';
+        nvc.innerHTML=_lineChart(nlabs,[
+          {k:'new',c:'#3fae6a',vals:s.map(function(x){ return x.nw||0; })},
+          {k:'returning',c:'#4080d8',vals:s.map(function(x){ return x.rt||0; })}
+        ]);
         nvc.style.display='';
         if(nvl) nvl.style.display='';
       }

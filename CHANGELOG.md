@@ -13,6 +13,14 @@ this file captures what matters to players and operators.
 Opened with `v2.1.7-web.0` (2026-08-13), following the upstream **2.1.7**
 release.
 
+### Changed
+- **Admin traffic charts: bars → line charts** (`web.10`) — the three
+  per-day charts (visits, new vs returning, languages) are now SVG line
+  charts with a numbered vertical axis and gridlines, so the trend reads
+  in figures at a glance — especially on phones, where the old
+  hover-tooltips never worked. Date labels thin out automatically on
+  narrow screens; points keep desktop tooltips as a bonus.
+
 ### Added
 - **Admin traffic: bot-noise estimate** (`web.9`) — each visit ping is
   classified bot-like (automated user-agent, or no usable
