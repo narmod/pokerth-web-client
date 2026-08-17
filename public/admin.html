@@ -1397,6 +1397,10 @@
     if(pt) bits.push('<b>'+Math.round(((pwa.standalone||0)/pt)*100)+'%</b> run it as an installed app');
     var nl=Object.keys(lang).length;
     if(nl) bits.push('<b>'+nl+'</b> language'+(nl===1?'':'s')+' seen, of 40 translated');
+    // Noise floor: pings with an automated user-agent or no usable language
+    // header. An estimate to scale the other numbers by — nothing is filtered.
+    var nz=_envData.noise||{}, nzT=(nz['bot-like']||0)+(nz.clean||0);
+    if(nzT) bits.push('~<b>'+Math.round(((nz['bot-like']||0)/nzT)*100)+'%</b> bot-like pings (noise estimate)');
     return bits.length?('<div class="envhi">'+bits.join(' &nbsp;·&nbsp; ')+'</div>'):'';
   }
   function _envAgo(ts){

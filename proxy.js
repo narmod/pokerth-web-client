@@ -1591,6 +1591,11 @@ const UA_BROWSER = [
   [/Edg\//, 'Edge'], [/OPR\/|Opera/, 'Opera'], [/SamsungBrowser/, 'Samsung'],
   [/FxiOS|Firefox\//, 'Firefox'], [/CriOS/, 'Chrome'], [/Chrome\//, 'Chrome'], [/Safari\//, 'Safari'],
 ];
+// Bot-likeness (mesure, jamais filtre) : UA d'automate connu. Combiné plus
+// bas avec « en-tête de langue inexploitable » pour estimer la part de bruit
+// dans les pings — un ordre de grandeur pour lire les autres répartitions.
+// Sous-estime : beaucoup de bots envoient un Accept-Language valide (en-US).
+const UA_BOT = /bot|spider|crawl|slurp|curl|wget|python|java\/|go-http|node-fetch|axios|httpclient|headless|phantom|scrapy|libwww|okhttp/i;
 function _uaPick(table, ua) {
   for (let i = 0; i < table.length; i++) if (table[i][0].test(ua)) return table[i][1];
   return 'other';
@@ -1625,6 +1630,9 @@ function recordVisitEnv(ua, acceptLang, standalone) {
     const lg = String(acceptLang || '').split(',')[0].trim().slice(0, 12).toLowerCase().split('-')[0];
     const lgv = /^[a-z]{2,3}$/.test(lg) ? lg : 'other';
     _envBump('lang', lgv);
+    // Estimation du bruit : UA d'automate OU langue inexploitable. Compté à
+    // part dans env.noise ; les compteurs de visites restent intacts.
+    _envBump('noise', (UA_BOT.test(ua) || lgv === 'other') ? 'bot-like' : 'clean');
     // Série quotidienne par langue : le cumul dit lesquelles, pas quand. Un
     // petit dictionnaire par jour (même seau que les visites, même rétention,
     // même plafond de cardinalité) suffit à tracer l'évolution dans le temps.

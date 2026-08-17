@@ -14,6 +14,11 @@ Opened with `v2.1.7-web.0` (2026-08-13), following the upstream **2.1.7**
 release.
 
 ### Added
+- **Admin traffic: bot-noise estimate** (`web.9`) — each visit ping is
+  classified bot-like (automated user-agent, or no usable
+  `Accept-Language` header) or clean, into a separate counter; the
+  "What visitors run" highlight line shows the share as a noise-floor
+  estimate. Nothing is filtered — visit counters are unchanged.
 - **Invite-friends dialog + invite landing** (`web.7`; `web.8` ships the
   dialog stylesheet that was missing from the `web.7` push, plus inline
   critical styles and a native-share fallback so the dialog can never
