@@ -19,7 +19,7 @@ export const help = {
         { id: 'famboard', t: 'Bảng xếp hạng gia đình',
           b: ['Chỉ trên máy chủ riêng và ván LAN, ứng dụng mới lưu thống kê tích lũy theo biệt danh — số ván bài và ván đấu đã chơi và đã thắng, khoản thắng lớn nhất, chuỗi thắng tốt nhất — rồi chia sẻ qua máy chủ, để mọi thiết bị quanh bàn đều thấy cùng một bảng xếp hạng. Các ván trên pokerth.net không bao giờ được ghi nhận theo cách này, và thống kê của chế độ luyện tập được giữ hoàn toàn riêng biệt.'] },
         { id: 'language', t: 'Ngôn ngữ',
-          b: ['Giao diện có sẵn ở 40 ngôn ngữ. Hãy đổi bất cứ lúc nào trong Tùy chọn nâng cao (menu bánh răng), mục Giao diện người dùng. Các thuật ngữ hành động của poker (Fold, Check, Call, Bet, Raise, All-In) vẫn giữ tiếng Anh theo quy ước, đúng như ứng dụng máy tính để bàn.'] },
+          b: ['Giao diện có sẵn ở 45 ngôn ngữ. Hãy đổi bất cứ lúc nào trong Tùy chọn nâng cao (menu bánh răng), mục Giao diện người dùng. Các thuật ngữ hành động của poker (Fold, Check, Call, Bet, Raise, All-In) vẫn giữ tiếng Anh theo quy ước, đúng như ứng dụng máy tính để bàn.'] },
         { id: 'pwa', t: 'Cài đặt như một ứng dụng',
           b: ['Ứng dụng này là một Progressive Web App: bạn có thể cài từ menu của trình duyệt (hoặc nút cài đặt trên thanh tiêu đề) để có một ứng dụng toàn màn hình với biểu tượng riêng. Sau khi cài, nó khởi động tức thì và chế độ luyện tập chạy hoàn toàn ngoại tuyến.'],
           note: 'Trên Android và Chrome/Edge máy tính, nút cài đặt lo hết mọi thứ. Trên iPhone/iPad, Apple chỉ cho phép cài qua Safari: nút Chia sẻ \u2192 \u201cThêm vào Màn hình chính\u201d — ứng dụng sẽ hiện các bước này khi cần. Nút biến mất ngay khi đã cài xong.' },

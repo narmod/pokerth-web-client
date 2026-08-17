@@ -23,7 +23,7 @@ export const help = {
         { id: 'famboard', t: 'Family leaderboard',
           b: ['On private servers and LAN games only, the client keeps lifetime statistics per nickname \u2014 hands and games played and won, biggest win, best streak \u2014 and shares them through the server so every device around the table sees the same leaderboard. pokerth.net games are never tracked this way, and training-mode stats are kept completely separate.'] },
         { id: 'language', t: 'Language',
-          b: ['The interface is available in 40 languages. Change it any time in Advanced options (gear menu) under User interface. Poker action terms (Fold, Check, Call, Bet, Raise, All-In) stay in English by convention, exactly like the desktop client.'] },
+          b: ['The interface is available in 45 languages. Change it any time in Advanced options (gear menu) under User interface. Poker action terms (Fold, Check, Call, Bet, Raise, All-In) stay in English by convention, exactly like the desktop client.'] },
         { id: 'pwa', t: 'Install as an app',
           b: ['This client is a Progressive Web App: you can install it from your browser menu (or the install button in the header) to get a full-screen app with its own icon. Once installed it starts instantly and the training mode works fully offline.'],
           note: 'On Android and desktop Chrome/Edge, the install button does everything. On iPhone/iPad, Apple only allows installation through Safari: Share button \u2192 \u201cAdd to Home Screen\u201d \u2014 the client shows these steps when needed. The button disappears once the app is installed.' },

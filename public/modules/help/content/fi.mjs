@@ -19,7 +19,7 @@ export const help = {
         { id: 'famboard', t: 'Perheen sijoituslista',
           b: ['Vain yksityisillä palvelimilla ja LAN-peleissä asiakasohjelma pitää nimimerkkikohtaisia kokonaistilastoja — pelatut ja voitetut kädet ja pelit, suurin voitto, paras putki — ja jakaa ne palvelimen kautta, joten jokainen pöydän ääressä oleva laite näkee saman listan. pokerth.net-pelejä ei koskaan seurata näin, ja harjoittelutilan tilastot pysyvät täysin erillään.'] },
         { id: 'language', t: 'Kieli',
-          b: ['Käyttöliittymä on saatavilla 40 kielellä. Vaihda se milloin tahansa Lisäasetuksista (ratasvalikko), kohdasta Käyttöliittymä. Pokerin toimintotermit (Fold, Check, Call, Bet, Raise, All-In) pysyvät käytännön mukaan englanniksi, aivan kuten työpöytäasiakkaassa.'] },
+          b: ['Käyttöliittymä on saatavilla 45 kielellä. Vaihda se milloin tahansa Lisäasetuksista (ratasvalikko), kohdasta Käyttöliittymä. Pokerin toimintotermit (Fold, Check, Call, Bet, Raise, All-In) pysyvät käytännön mukaan englanniksi, aivan kuten työpöytäasiakkaassa.'] },
         { id: 'pwa', t: 'Asenna sovellukseksi',
           b: ['Tämä asiakasohjelma on Progressive Web App: voit asentaa sen selaimen valikosta (tai yläpalkin asennuspainikkeesta) ja saada koko näytön sovelluksen omalla kuvakkeella. Asennuksen jälkeen se käynnistyy heti, ja harjoittelutila toimii täysin offline-tilassa.'],
           note: 'Androidilla ja työpöydän Chromessa/Edgessä asennuspainike hoitaa kaiken. iPhonella/iPadilla Apple sallii asennuksen vain Safarin kautta: Jaa-painike \u2192 \u201dLisää Koti-valikkoon\u201d — asiakasohjelma näyttää nämä vaiheet tarvittaessa. Painike katoaa, kun sovellus on asennettu.' },

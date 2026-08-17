@@ -19,7 +19,7 @@ export const help = {
         { id: 'famboard', t: 'Šeimos reitingas',
           b: ['Tik privačiuose serveriuose ir LAN žaidimuose klientas saugo suvestinę statistiką pagal slapyvardį — sužaistos ir laimėtos rankos bei partijos, didžiausias laimėjimas, geriausia serija — ir dalijasi ja per serverį, tad kiekvienas įrenginys prie stalo mato tą patį reitingą. pokerth.net žaidimai taip niekada nesekami, o treniruotės režimo statistika laikoma visiškai atskirai.'] },
         { id: 'language', t: 'Kalba',
-          b: ['Sąsaja prieinama 40 kalbomis. Keisk ją bet kada Išplėstinėse parinktyse (krumpliaračio meniu), kategorijoje Naudotojo sąsaja. Pokerio veiksmų terminai (Fold, Check, Call, Bet, Raise, All-In) pagal susitarimą lieka anglų kalba, lygiai kaip darbalaukio kliente.'] },
+          b: ['Sąsaja prieinama 45 kalbomis. Keisk ją bet kada Išplėstinėse parinktyse (krumpliaračio meniu), kategorijoje Naudotojo sąsaja. Pokerio veiksmų terminai (Fold, Check, Call, Bet, Raise, All-In) pagal susitarimą lieka anglų kalba, lygiai kaip darbalaukio kliente.'] },
         { id: 'pwa', t: 'Įdiek kaip programėlę',
           b: ['Šis klientas yra Progressive Web App: gali jį įdiegti iš naršyklės meniu (ar diegimo mygtuku antraštėje) ir gauti viso ekrano programėlę su sava piktograma. Įdiegus paleidžiama akimirksniu, o treniruotės režimas veikia visiškai neprisijungus.'],
           note: '\u201eAndroid\u201c ir darbalaukio \u201eChrome\u201c/\u201eEdge\u201c diegimo mygtukas padaro viską. \u201eiPhone\u201c/\u201eiPad\u201c įrenginiuose \u201eApple\u201c leidžia diegti tik per \u201eSafari\u201c: mygtukas Bendrinti \u2192 \u201ePridėti prie pagrindinio ekrano\u201c — klientas prireikus parodo šiuos žingsnius. Mygtukas dingsta, kai tik programėlė įdiegta.' },

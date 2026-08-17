@@ -35,7 +35,7 @@
 - 🃏 **Full Texas Hold'em** — flying card deals, sliding chips, 3D card flips, emoji reactions, in-game chat and a hand log
 - 🎨 **Deep theming** — a QML-style styles window: table felt × card deck × card back × seats (buttons & pucks follow the table style)
 - ☁️ **Settings that follow you** — sign in with a registered account on your dedicated server and **every** option syncs automatically across your devices: the official settings travel as a standard PokerTH `config.xml`, and the web-only extras (theme, seats, keyboard, voice…) as a separate blob — on by default, one tap to turn off
-- 🌍 **40 languages**
+- 🌍 **45 languages**
 - 🤝 **Tracks the official QML client** — F-key shortcuts, admin tools, sounds, full chat and more, kept in sync as the official client evolves (currently the 2.1.4 build)
 
 <p align="center">
@@ -224,7 +224,7 @@ This project is a **web frontend** that connects to any PokerTH server straight 
 - Lobby chat
 - **Waiting room** — while a table fills up, your details and chat sit centre-stage with the game list beside them on desktop, an animated "waiting for players" status, and a tap-to-expand accordion listing each table's seated players
 - **🏆 Ranking** — a leaderboard modal (🏆 button on the connect screen and in the lobby) covering **PokerTH, BBC and WEC** rankings, with a season picker, an All-Time toggle, and — on the PokerTH source — live search and pagination; results are cached briefly client-side. Tapping a player opens their **profile card** (member since, last login, current-season rank/score, last 5 games) fetched live from the same relay
-- **🏆 Trophées (Training mode)** — a fourth tab in the ranking window, shown only in Training mode once connected, with 27 achievements grouped by Progress · Skill · Play-style · Fun · PokerTH formats. Locked ones are greyed out, a 👥 badge marks achievements that need a set number of players, and unlocking one pops a toast; an "X/27" counter also appears on your profile card and the end-of-game screen. Localised in all 40 languages
+- **🏆 Trophées (Training mode)** — a fourth tab in the ranking window, shown only in Training mode once connected, with 27 achievements grouped by Progress · Skill · Play-style · Fun · PokerTH formats. Locked ones are greyed out, a 👥 badge marks achievements that need a set number of players, and unlocking one pops a toast; an "X/27" counter also appears on your profile card and the end-of-game screen. Localised in all 45 languages
 - **Invite a player** to your table from the lobby players list — reaches the invited player instantly, including on the official desktop/mobile clients
 - **Country flag on avatar** — an optional badge showing each player's country, sourced from the server
 
@@ -264,7 +264,7 @@ A full appearance system, reached from the **Theme** button — a styles window 
 - **Seat styles** — seat "packs", switchable like decks. The built-in **PokerTH** pack is a faithful render of the official QML player boxes, in a single pack whose landscape/portrait variant follows the screen orientation automatically; more packs (**Onyx Pill**, **Boardwalk**, **High Roller**…) come from the gallery and can be imported from a `.zip`. Pack names stay in English across all languages (like the poker terms); an explicit choice is saved in `localStorage`
 - **Light & dark aware**: every theme carries its own `color-scheme`, and the browser status-bar `theme-color` follows the active theme
 - **Glossy coloured action buttons** (Fold red / Check-Call blue / Raise green / All-In orange) and a live preview of each card deck right in the panel
-- Fully **localized in all 40 languages** and switchable instantly, with no reload
+- Fully **localized in all 45 languages** and switchable instantly, with no reload
 - **Official accent** — gold uses PokerTH's QML accent `#E3C800`, kept only for deliberate game assets (dealer button, chip denominations, win bursts)
 - **Import a style** — add a table or card deck from a local `.zip` (parses the official 2.1.3 style keys), or a custom card-back image
 - Operators can set a **default theme** for first-time visitors (see [the admin panel](#admin-panel))
@@ -297,7 +297,7 @@ A full appearance system, reached from the **Theme** button — a styles window 
 - Sound effects: distinct sounds for fold / check / call / raise / all-in / shuffle / drumroll / bad-beat / win fanfare, plus urgent-timer warning
 - **Background music player** — a built-in MP3 player with its own track list (curated by the operator in the admin panel): pick a track and loop it, loop the whole playlist, or play it once
 - **Separate volume for sound effects and music** — adjust each independently *(on iOS the music volume can't be changed — a WebKit limitation — though the game sound effects still can)*
-- **Full i18n in 40 languages**, switchable on the fly and auto-detected from the browser locale — the complete official PokerTH language set plus community additions (Ukrainian, Romanian, Croatian, Serbian and more), with Brazilian and European Portuguese shipped as separate catalogues (pt-BR / pt-PT)
+- **Full i18n in 45 languages**, switchable on the fly and auto-detected from the browser locale — the complete official PokerTH language set plus community additions (Ukrainian, Romanian, Croatian, Serbian and more), with Brazilian and European Portuguese shipped as separate catalogues (pt-BR / pt-PT)
 - Fullscreen mode on all screens
 - **On-felt panels** — chat, emoji, hand log and a new **Hand-odds (Combinaisons)** window open as compact, movable and resizable floating windows anchored under their round on-felt button (on every device, instead of taking over the screen); a **↺** button in the header snaps every panel back to its docked spot, and the table zoom is collapsible everywhere. Window positions are remembered. On phone portrait the action bar hugs the bottom edge for a full-screen table.
 - **Built-in diagnostics via chat commands** — type `/help` in any chat for local commands (`/diag`, `/update`, `/netdbg`, `/carddbg`, `/msglog`, `/audiodbg`, `/storage`, `/logdump`, `/fps`, `/table`, `/lang`, `/sound`, `/zoom`, `/copy`, `/clear`…); replies are shown only to you (see [docs/DIAGNOSTIC.md](docs/DIAGNOSTIC.md))
@@ -358,7 +358,7 @@ the work since has been fidelity tuning against the newer builds (currently **2.
 
 ### PWA
 - `manifest.json` + Service Worker (`sw.js`) with a versioned **network-first** cache; the app shell is **precached asset by asset (with retries)** on install, so a network hiccup can't leave the offline cache incomplete
-- **Startup loading screen** matching the login look (theme-aware, 40 languages) that preloads the critical assets, retries on a flaky connection, and offers a **Retry** button instead of silently loading a broken UI
+- **Startup loading screen** matching the login look (theme-aware, 45 languages) that preloads the critical assets, retries on a flaky connection, and offers a **Retry** button instead of silently loading a broken UI
 - New-version notification: the page tells the user when an updated service worker is ready and applies the update on the next reload
 - Installable on mobile and desktop ("Add to Home Screen")
 - ⚠️ **Offline needs HTTPS.** A Service Worker — and therefore the offline cache — only registers over **HTTPS** or `localhost`. On a plain `http://` server the game still works online, but there is **no offline cache** (an installed PWA then shows the browser's "no internet" error offline). Serve the app over `https://` to play Training mode with no connection
@@ -442,14 +442,14 @@ pokerth-web-client/
 │   ├── manifest.json        # PWA manifest
 │   ├── sw.js                # Service Worker (versioned cache)
 │   ├── modules/             # ES modules
-│   │   ├── i18n.mjs         #   internationalisation (40 languages)
+│   │   ├── i18n.mjs         #   internationalisation (45 languages)
 │   │   ├── sounds.mjs       #   sound effects
 │   │   ├── theme.mjs        #   theming engine (tables, decks, card backs, seats)
 │   │   ├── music.mjs        #   background-music player
 │   │   ├── net/             #   protocol, session, message handlers
 │   │   ├── game/            #   state, seat rendering, hand flow, showdown
 │   │   ├── ui/              #   action bar, chat, panels, player popups
-│   │   ├── lang/            #   40 language catalogues
+│   │   ├── lang/            #   45 language catalogues
 │   │   ├── offline/         #   local game engine + bots (Training mode)
 │   │   └── achievements/    #   training-mode achievements (mode-agnostic)
 │   ├── proto/               # Protobuf bundle & helpers
@@ -1097,7 +1097,7 @@ Please include the `pthDiag()` output, your browser/OS and the displayed build n
 - Spectator mode works but lacks a few quality-of-life touches (e.g. you cannot see other players' cards at showdown the same way the native client does).
 - **Training-mode bots are a solid practice opponent, not a top pro.** They use Monte-Carlo equity against the real number of opponents, play five distinct archetypes (Rock, TAG, LAG, Calling-station, Maniac), and add position-aware pre-flop play plus multi-street aggression — continuation bets, semi-bluffs, and turn/river barrelling that value-bets, bluffs busted draws and checks medium hands down, tuned by difficulty and archetype — great for learning the flow, practising the interface, or playing offline with no server, but they still won’t read and adapt to you like a strong human.
 - **PWA features (install to home screen, offline Service Worker, background notifications) require a *secure context*** — i.e. HTTPS, or `localhost`. Over plain `http://` on a LAN IP (e.g. `192.168.1.10:8080`) the game plays perfectly, but the browser disables those three features by design. To get them on a LAN, serve the client over HTTPS — e.g. [`mkcert`](https://github.com/FiloSottile/mkcert) for a locally-trusted certificate, a self-signed cert, a real domain with Let's Encrypt, or a tunnel such as Cloudflare Tunnel / Tailscale.
-- **Translations are not yet natively reviewed.** The 40 language catalogues were produced with care but are largely machine-assisted, so some wordings — especially poker-specific terms — may be imperfect, the less common languages (e.g. Scottish Gaelic, Tamil) most of all. Corrections via issue or pull request are very welcome.
+- **Translations are not yet natively reviewed.** The 45 language catalogues were produced with care but are largely machine-assisted, so some wordings — especially poker-specific terms — may be imperfect, the less common languages (e.g. Scottish Gaelic, Tamil) most of all. Corrections via issue or pull request are very welcome.
 
 ---
 

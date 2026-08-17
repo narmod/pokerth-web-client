@@ -13,6 +13,11 @@ this file captures what matters to players and operators.
 Opened with `v2.1.7-web.0` (2026-08-13), following the upstream **2.1.7**
 release.
 
+### Changed
+- **Language count refreshed everywhere** (`web.16`) — the help chapter
+  "Language" in all 40 original catalogues, plus README and ROADMAP, now
+  states 45 languages (was 40).
+
 ### Added
 - **Swahili language (sw)** (`web.15`) — 45th interface language and first
   East-African language: full UI catalogue, complete in-app help corpus,
