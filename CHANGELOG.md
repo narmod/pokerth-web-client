@@ -14,6 +14,9 @@ Opened with `v2.1.7-web.0` (2026-08-13), following the upstream **2.1.7**
 release.
 
 ### Added
+- **Swahili language (sw)** (`web.15`) — 45th interface language and first
+  East-African language: full UI catalogue, complete in-app help corpus,
+  SEO variant and offline precache.
 - **Bengali language (bn)** (`web.14`) — 44th interface language: full UI
   catalogue, complete in-app help corpus, SEO variant and offline precache.
 - **Filipino language (fil)** (`web.13`) — 43rd interface language: full UI

@@ -23,7 +23,7 @@
  *                 Cross-origin requests and WS upgrades are left untouched.
  *                 (Fonts are now self-hosted and handled by SWR above.)
  */
-const CACHE_VERSION = 'pokerth-v2.1.7-web.14';
+const CACHE_VERSION = 'pokerth-v2.1.7-web.15';
 
 // Where navigations fall back to when the network is unavailable.
 const NAV_FALLBACK = '/pokerth-client.html';
@@ -149,6 +149,7 @@ const ASSETS = [
   '/modules/help/content/th.mjs',
   '/modules/help/content/fil.mjs',
   '/modules/help/content/bn.mjs',
+  '/modules/help/content/sw.mjs',
   '/modules/offline/engine.mjs',
   '/modules/offline/bots.mjs',
   '/modules/offline/proto.mjs',
@@ -200,6 +201,7 @@ const ASSETS = [
   '/modules/lang/th.mjs',
   '/modules/lang/fil.mjs',
   '/modules/lang/bn.mjs',
+  '/modules/lang/sw.mjs',
   '/modules/sounds.mjs',
   '/modules/music.mjs',
   // Sons de jeu PokerTH (MP3, AGPL-3.0)
