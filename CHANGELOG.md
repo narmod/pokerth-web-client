@@ -14,6 +14,8 @@ Opened with `v2.1.7-web.0` (2026-08-13), following the upstream **2.1.7**
 release.
 
 ### Added
+- **Filipino language (fil)** (`web.13`) — 43rd interface language: full UI
+  catalogue, complete in-app help corpus, SEO variant and offline precache.
 - **Thai language (th)** (`web.12`) — 42nd interface language: full UI
   catalogue, complete in-app help corpus, SEO variant (localized
   title/description, hreflang, sitemap) and offline precache.
