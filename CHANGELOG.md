@@ -20,6 +20,20 @@ release.
   states 45 languages (was 40).
 
 ### Added
+- **Automatic updates** (`web.17`) — opt-in switch in the admin *Maintenance*
+  card. The server polls its own branch every 15 min (`git fetch` +
+  `git diff --name-only HEAD FETCH_HEAD`); a changeset that only touches
+  `public/` (or documentation) is deployed immediately through the existing
+  static path, with no restart and no dropped connection. Anything touching
+  `proxy.js`, dependencies or scripts waits for a **completely idle** server
+  (zero WebSocket), then arms the regular restart notice (60 s by default,
+  10–3600); if a client connects before the deadline, the action is called off
+  and retried later, so an open connection is never cut this way. New routes
+  `/admin/update-check` (cached, `?force=1` to poll) and `/admin/auto-update`
+  (GET/POST); the cached result and the toggle are also exposed in
+  `/admin/status`. Nothing runs during the first 5 minutes of uptime, and
+  `autoUpdate` is part of the settings backup. Covered by
+  `scripts/test-autoupdate.mjs`.
 - **Swahili language (sw)** (`web.15`) — 45th interface language and first
   East-African language: full UI catalogue, complete in-app help corpus,
   SEO variant and offline precache.

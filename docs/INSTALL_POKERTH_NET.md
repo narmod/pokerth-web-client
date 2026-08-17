@@ -153,6 +153,11 @@ need `pm2 restart pokerth-web` — the admin panel's *Server* tab can do a one-c
 with or without restart, including a scheduled restart with a countdown banner shown to
 players at the tables.
 
+The *Maintenance* card also offers **Update automatically**: the server polls its branch
+every 15 minutes, applies client-only changes straight away (nothing is disconnected), and
+holds back anything that needs a restart until **no client at all** is connected — then
+acts after a short notice, calling it off if someone connects in the meantime.
+
 ## Notes & scope
 
 - **No open relay**: the proxy only dials allowlisted host:port pairs — on this install,
@@ -164,3 +169,4 @@ players at the tables.
   itself, the proxy could be dropped — until then, this co-hosted bridge is the
   zero-upstream-work path, and the session-grace behaviour is a feature the direct
   `/pthlive` endpoint does not provide.
+

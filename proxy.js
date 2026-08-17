@@ -2209,6 +2209,7 @@ let _restartTimer = null;   // pending setTimeout handle (null = nothing schedul
 let _restartAt = 0;         // epoch ms when the action fires (0 = none)
 let _restartKind = '';      // 'update' | 'restart'
 let _restartNotice = '';    // the NOTICE:… frame, replayed to clients that join the window
+let _autoArmed = false;     // the pending action was armed by the automatic updater, not by a human
 function restartOnlyCmd() {
   return "sleep 1; " + restartSegment();
 }
@@ -2226,6 +2227,131 @@ function clearScheduledRestart() {
   if (_restartTimer) { clearTimeout(_restartTimer); _restartTimer = null; }
   _restartAt = 0; _restartKind = ''; _restartNotice = '';
 }
+
+// ── Mise à jour automatique (option, cochée depuis /admin) ───────────────────
+// Le tableau de bord savait déjà déployer à la demande. Ce qui manquait : savoir
+// qu'il y a quelque chose à déployer, et le faire au bon moment.
+//   · sondage périodique de la branche suivie (git fetch + comparaison) ;
+//   · un changement qui ne touche que des fichiers servis part TOUT DE SUITE :
+//     un pull statique ne coupe aucune connexion ;
+//   · un changement qui exige un redémarrage (proxy.js, dépendances) attend que
+//     le serveur soit VIDE — zéro WebSocket. Un préavis est diffusé quand même,
+//     rejoué à qui arriverait pendant la fenêtre ; si quelqu'un est encore là à
+//     l'échéance, on annule et on retentera plus tard. Une connexion ouverte n'est
+//     jamais coupée par cette voie.
+// Rien ne bouge tant que la case n'est pas cochée (_adminConfig.autoUpdate).
+const AUTO_UPDATE_POLL_MS = 15 * 60 * 1000;   // fréquence du sondage amont
+const AUTO_UPDATE_TICK_MS = 60 * 1000;        // battement du planificateur
+const AUTO_UPDATE_MIN_UP_MS = 5 * 60 * 1000;  // pas de déploiement auto dans les 5 min qui suivent un démarrage : le temps de constater une casse
+function _autoUpdateCfg() {
+  const a = (_adminConfig && _adminConfig.autoUpdate) || {};
+  const n = Math.floor(Number(a.noticeSec));
+  return { enabled: !!a.enabled, noticeSec: (n >= 10 && n <= 3600) ? n : 60 };
+}
+// Dernier résultat connu du sondage. C'est lui que lit le tableau de bord : le
+// statut est interrogé toutes les quelques secondes, pas question d'aller sur le
+// réseau à chaque fois.
+let _upd = { checking: false, checkedAt: 0, available: false, local: '', remote: '',
+             subject: '', files: 0, needsRestart: false, error: '', lastAction: '' };
+function _updPublic() {
+  return { checkedAt: _upd.checkedAt, checking: _upd.checking, available: _upd.available,
+           local: _upd.local, remote: _upd.remote, subject: _upd.subject, files: _upd.files,
+           needsRestart: _upd.needsRestart, error: _upd.error, lastAction: _upd.lastAction };
+}
+// Un chemin qui n'est ni un fichier servi ni de la documentation, c'est du code
+// serveur ou des dépendances : redémarrage obligatoire.
+function _pathNeedsRestart(f) {
+  if (/^public\//.test(f)) return false;
+  return !/^(docs\/|claude\/|\.github\/|README|CHANGELOG|LICENSE|\.gitignore|\.editorconfig)/.test(f);
+}
+// git fetch + comparaison, en asynchrone : un spawnSync bloquerait la boucle
+// d'événements pendant tout un aller-retour réseau.
+function updateCheck(cb) {
+  cb = cb || function () {};
+  if (!GIT_UPDATABLE) { _upd.error = 'no git checkout (' + installKind() + ')'; return cb(_upd); }
+  if (_upd.checking) return cb(_upd);
+  _upd.checking = true;
+  const dir = __dirname.replace(/'/g, "'\\''");
+  const depth = GIT_SHALLOW ? '--depth 1 ' : '';   // ne jamais tronquer un clone complet
+  const cmd = "cd '" + dir + "' && git fetch -q " + depth + "origin '" + GIT_BRANCH + "'" +
+              " && git rev-parse HEAD && git rev-parse FETCH_HEAD" +
+              " && git log -1 --format=%s FETCH_HEAD && echo '--'" +
+              " && git diff --name-only HEAD FETCH_HEAD";
+  let out = '', err = '';
+  try {
+    const child = spawn('sh', ['-c', cmd], { env: Object.assign({}, process.env, { PATH: SAFE_PATH }) });
+    const killer = setTimeout(function () { try { child.kill('SIGKILL'); } catch (e) {} }, 120000);
+    child.stdout.on('data', function (b) { if (out.length < 200000) out += b.toString('utf8'); });
+    child.stderr.on('data', function (b) { if (err.length < 4000) err += b.toString('utf8'); });
+    child.on('close', function (code) {
+      clearTimeout(killer);
+      _upd.checking = false; _upd.checkedAt = Date.now();
+      if (code !== 0) {
+        _upd.error = String(err || '').trim().split('\n').pop().slice(0, 200) || ('git exited ' + code);
+        return cb(_upd);
+      }
+      const lines = out.split('\n');
+      const local = String(lines.shift() || '').trim();
+      const remote = String(lines.shift() || '').trim();
+      const subject = String(lines.shift() || '').trim();
+      while (lines.length && lines[0].trim() !== '--') lines.shift();   // sujet multi-ligne : on avance jusqu'au séparateur
+      lines.shift();
+      const files = lines.map(function (x) { return x.trim(); }).filter(Boolean);
+      _upd.error = ''; _upd.local = local; _upd.remote = remote;
+      _upd.available = /^[0-9a-f]{40}$/.test(remote) && /^[0-9a-f]{40}$/.test(local) && remote !== local;
+      _upd.subject = _upd.available ? subject.slice(0, 200) : '';
+      _upd.files = _upd.available ? files.length : 0;
+      _upd.needsRestart = _upd.available && files.some(_pathNeedsRestart);
+      return cb(_upd);
+    });
+  } catch (e) { _upd.checking = false; _upd.error = e.message; return cb(_upd); }
+}
+// Applique ce qui est applicable maintenant, vu l'état des lieux.
+function _autoUpdateApply() {
+  const cfg = _autoUpdateCfg();
+  if (!cfg.enabled || !_upd.available) return;
+  if (_restartAt > 0) return;                                   // une action est déjà planifiée : on ne double pas
+  if (process.uptime() * 1000 < AUTO_UPDATE_MIN_UP_MS) return;  // trop tôt après un démarrage
+  if (!_upd.needsRestart) {
+    _deployRecord('before auto static update');
+    runDetached(updateCmdStatic(), UPDATE_LOG);
+    _upd.lastAction = new Date().toISOString() + ' — static deploy ' + _upd.remote.slice(0, 8);
+    _upd.available = false;                                     // le prochain sondage confirmera
+    console.log('[auto-update] static deploy ' + _upd.remote.slice(0, 8) + ' (' + _upd.files + ' file(s), no restart)');
+    return;
+  }
+  let sockets = 0; try { sockets = wss.clients.size; } catch (e) {}
+  if (sockets > 0) return;                                      // serveur occupé : on repassera au prochain battement
+  _restartAt = Date.now() + cfg.noticeSec * 1000;
+  _restartKind = 'update';
+  _restartNotice = 'NOTICE:RESTART:' + _restartAt + ':update:';
+  _autoArmed = true;
+  _restartTimer = setTimeout(function () {
+    _restartTimer = null; _restartAt = 0; _restartNotice = ''; _autoArmed = false;
+    let n = 0; try { n = wss.clients.size; } catch (e) {}
+    if (n > 0) {                                                // quelqu'un est arrivé pendant le préavis : on lui laisse la place
+      broadcastNotice('NOTICE:CANCEL');
+      console.log('[auto-update] window closed (' + n + ' client(s) connected) — postponed');
+      return;
+    }
+    _deployRecord('before auto update');
+    _upd.lastAction = new Date().toISOString() + ' — update + restart ' + _upd.remote.slice(0, 8);
+    console.log('[auto-update] deploying ' + _upd.remote.slice(0, 8) + ' + restart (server idle)');
+    runDetached(updateCmd(), UPDATE_LOG);
+  }, cfg.noticeSec * 1000);
+  console.log('[auto-update] server idle — update ' + _upd.remote.slice(0, 8) + ' armed in ' + cfg.noticeSec + 's');
+}
+function autoUpdateTick() {
+  const cfg = _autoUpdateCfg();
+  if (!cfg.enabled || !GIT_UPDATABLE) return;
+  // Mise à jour déjà repérée et en attente d'une fenêtre libre : inutile de
+  // retourner sur le réseau, il suffit de regarder si le serveur s'est vidé.
+  if (_upd.available) return _autoUpdateApply();
+  if (Date.now() - _upd.checkedAt < AUTO_UPDATE_POLL_MS) return;
+  updateCheck(function () { _autoUpdateApply(); });
+}
+const _autoUpdateTimer = setInterval(autoUpdateTick, AUTO_UPDATE_TICK_MS);
+if (_autoUpdateTimer.unref) _autoUpdateTimer.unref();
 
 // ── Information broadcast scheduler ─────────────────────────────────────────
 const _BC_ICONS = ['', '\u2139\ufe0f', '\ud83d\udce2', '\u26a0\ufe0f', '\ud83c\udf89']; // '' ℹ️ 📢 ⚠️ 🎉
@@ -2853,7 +2979,7 @@ function handleAdmin(req, res, reqPathOnly, query) {
     let version = '';
     try { version = (JSON.parse(fs.readFileSync(path.join(__dirname, 'package.json'), 'utf8')).version) || ''; } catch (e) {}
     let sockets = null; try { sockets = wss.clients.size; } catch (e) {}
-    return adminJson(res, 200, { ok: true, version: version, runningVersion: BOOT_VERSION, node: process.version, uptimeSec: Math.floor(process.uptime()), installKind: installKind(), gitUpdatable: GIT_UPDATABLE, sockets: sockets, players: Object.keys(statsStore).length, resetPeriod: STATS_RESET_PERIOD, modes: appModes(), showLoginTitle: !!_adminConfig.showLoginTitle, defaultTheme: _adminConfig.defaultTheme || '', defaults: _adminConfig.defaults || {}, loginDefaults: _loginDefaults(false), proxyCfg: _adminConfig.proxyCfg || {}, logLevel: _logLevelName(), maxClients: _maxClients(), fd: _fdInfo(), tableDefaults: _adminConfig.tableDefaults || {}, tableNames: _adminConfig.tableNames || {}, serverName: _adminConfig.serverName || '', serverTagline: _adminConfig.serverTagline || '', discordChatWebhookUrl: _adminConfig.discordChatWebhookUrl || '', seo: _seoAdmin(), restartAt: (_restartAt > Date.now() ? _restartAt : null), restartKind: (_restartAt > Date.now() ? _restartKind : null) });
+    return adminJson(res, 200, { ok: true, version: version, runningVersion: BOOT_VERSION, node: process.version, uptimeSec: Math.floor(process.uptime()), installKind: installKind(), gitUpdatable: GIT_UPDATABLE, sockets: sockets, players: Object.keys(statsStore).length, resetPeriod: STATS_RESET_PERIOD, modes: appModes(), showLoginTitle: !!_adminConfig.showLoginTitle, defaultTheme: _adminConfig.defaultTheme || '', defaults: _adminConfig.defaults || {}, loginDefaults: _loginDefaults(false), proxyCfg: _adminConfig.proxyCfg || {}, logLevel: _logLevelName(), maxClients: _maxClients(), fd: _fdInfo(), tableDefaults: _adminConfig.tableDefaults || {}, tableNames: _adminConfig.tableNames || {}, serverName: _adminConfig.serverName || '', serverTagline: _adminConfig.serverTagline || '', discordChatWebhookUrl: _adminConfig.discordChatWebhookUrl || '', seo: _seoAdmin(), restartAt: (_restartAt > Date.now() ? _restartAt : null), restartKind: (_restartAt > Date.now() ? _restartKind : null), autoUpdate: _autoUpdateCfg(), autoArmed: !!(_autoArmed && _restartAt > Date.now()), update: _updPublic() });
   }
   // ── Erreurs JS remontées par les clients (clé maître uniquement) ────────
   if (reqPathOnly === '/admin/errors') {
@@ -3651,6 +3777,52 @@ function handleAdmin(req, res, reqPathOnly, query) {
       return adminJson(res, started ? 200 : 500, { ok: started, started: started });
     });
   }
+  // État du sondage amont. Sans ?force=1 on rend le dernier résultat connu —
+  // gratuit, donc consultable en continu par le tableau de bord.
+  if (reqPathOnly === '/admin/update-check') {
+    if (!adminAuthed(query)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
+    if (!GIT_UPDATABLE) return adminJson(res, 409, { ok: false, error: 'this install cannot check for updates (' + installKind() + ': no git checkout in the app dir).' });
+    if (query.force === '1' || query.force === 'true') {
+      return updateCheck(function (u) {
+        return adminJson(res, 200, { ok: !u.error, error: u.error || '', branch: GIT_BRANCH, state: _updPublic() });
+      });
+    }
+    return adminJson(res, 200, { ok: true, branch: GIT_BRANCH, state: _updPublic() });
+  }
+  if (reqPathOnly === '/admin/auto-update') {
+    if (req.method === 'GET') {
+      if (!adminAuthed(query)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
+      const cfg = _autoUpdateCfg();
+      return adminJson(res, 200, { ok: true, enabled: cfg.enabled, noticeSec: cfg.noticeSec,
+        gitUpdatable: GIT_UPDATABLE, installKind: installKind(), branch: GIT_BRANCH,
+        armed: (_autoArmed && _restartAt > Date.now()) ? _restartAt : null, state: _updPublic() });
+    }
+    if (req.method === 'POST') {
+      return readJsonBody(req, function (d) {
+        if (!adminAuthed(query, d && d.token)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
+        const c = (_adminConfig.autoUpdate && typeof _adminConfig.autoUpdate === 'object') ? _adminConfig.autoUpdate : {};
+        if (d && d.noticeSec !== undefined) {
+          const n = Math.floor(Number(d.noticeSec) || 0);
+          if (!(n >= 10 && n <= 3600)) return adminJson(res, 400, { ok: false, error: 'noticeSec must be between 10 and 3600' });
+          c.noticeSec = n;
+        }
+        if (d && d.enabled !== undefined) c.enabled = !!d.enabled;
+        _adminConfig.autoUpdate = c;
+        saveAdminConfig();
+        const cfg = _autoUpdateCfg();
+        // Décocher pendant un préavis armé automatiquement doit l'annuler : sinon
+        // le redémarrage tomberait après que l'opérateur a dit non.
+        if (!cfg.enabled && _autoArmed && _restartAt > Date.now()) {
+          clearScheduledRestart();
+          broadcastNotice('NOTICE:CANCEL');
+          console.log('[auto-update] disabled — armed update cancelled');
+        }
+        console.log('[auto-update] ' + (cfg.enabled ? 'enabled' : 'disabled') + ' (notice ' + cfg.noticeSec + 's)');
+        return adminJson(res, 200, { ok: true, enabled: cfg.enabled, noticeSec: cfg.noticeSec });
+      });
+    }
+    res.writeHead(405); res.end('Method not allowed'); return;
+  }
   if (reqPathOnly === '/admin/schedule-restart' && req.method === 'POST') {
     return readJsonBody(req, function (d) {
       if (!adminAuthed(query, d && d.token)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
@@ -3806,7 +3978,7 @@ function handleAdmin(req, res, reqPathOnly, query) {
                        'pkgDisabled', 'pkgFull', 'pkgFullscreen', 'pkgAlign', 'musicTracks',
                        'musicEnabled', 'musicHidden', 'musicOrder',
                        'seo', 'servers', 'activeServerId', 'pokerthnetSource',
-                       'internetTransport', 'proxyProtocol', 'serverlistUrl'];
+                       'internetTransport', 'proxyProtocol', 'serverlistUrl', 'autoUpdate'];
       const next = {}, taken = [], skipped = [];
       Object.keys(src).forEach(function (k) {
         if (ALLOWED.indexOf(k) >= 0) { next[k] = src[k]; taken.push(k); } else skipped.push(k);

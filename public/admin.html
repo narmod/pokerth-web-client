@@ -528,6 +528,15 @@
           <button id="btnClearLogs" class="use">Clear logs</button>
         </div>
         <div id="maintmsg" class="msg"></div>
+        <div style="margin-top:12px;padding-top:10px;border-top:1px solid rgba(255,255,255,.12)">
+          <label class="muted" style="display:flex;align-items:center;gap:8px;margin:0 0 6px"><input type="checkbox" id="autoUpd" style="width:auto"> <b style="font-size:.88rem;color:inherit">Update automatically</b></label>
+          <p class="muted" style="margin:0 0 8px">Checks this server&#39;s branch every 15 minutes. Changes that only touch client files go live at once — nobody is disconnected. Anything needing a restart (proxy, dependencies) waits until <b>no one at all</b> is connected, then acts after a short notice; if someone connects in the meantime, it is called off and retried later. An open connection is never cut this way.</p>
+          <div class="periodrow" style="margin:0">
+            <input id="autoUpdSec" class="filter" type="number" min="10" max="3600" placeholder="Notice seconds (60)" style="margin:0;width:170px">
+            <button id="btnUpdCheck" class="use">Check now</button>
+          </div>
+          <div id="autoUpdMsg" class="msg"></div>
+        </div>
         <div class="boardhead" style="margin-top:10px"><h2 style="margin:0;font-size:.92rem">Last action log</h2><button id="btnUpdLog" class="use">Refresh</button></div>
         <pre id="updlog" class="logs" style="max-height:200px"></pre>
       </div>
@@ -1668,7 +1677,7 @@
         else dbSetState('Failed: '+((d&&d.error)||'forbidden'),'err');
       }).catch(function(){ dbSetState('Network error.','err'); });
   }
-  function loadServer(){ loadStatus(true); loadLogs(); loadUpdateLog(); }
+  function loadServer(){ loadStatus(true); loadLogs(); loadUpdateLog(); autoUpdLoad(); }
   // Theme presets shown in the default-theme dropdown = built-in presets (static
   // options) + installed theme packages (palette/table/felt) fetched live.
   function loadThemes(){
@@ -1826,7 +1835,7 @@
   }
 
   // ── Maintenance: update / restart / clear logs (server restarts briefly) ──
-  function maintBusy(b){ srvBusy=b; if(b) srvStop(); else srvStart(); ['btnUpdate','btnRestart','btnClearLogs'].forEach(function(id){ var e=$(id); if(e) e.disabled=b; }); }
+  function maintBusy(b){ srvBusy=b; if(b) srvStop(); else srvStart(); ['btnUpdate','btnRestart','btnClearLogs','btnUpdCheck'].forEach(function(id){ var e=$(id); if(e) e.disabled=b; }); }
   function pollBack(label){
     var msg=$('maintmsg'), tries=0; msg.textContent=label+' \u2014 server restarting, reconnecting\u2026'; msg.className='msg';
     var iv=setInterval(function(){
@@ -1869,6 +1878,45 @@
   if($('btnRestart')) $('btnRestart').addEventListener('click', doRestart);
   if($('btnClearLogs')) $('btnClearLogs').addEventListener('click', clearLogs);
   if($('btnUpdLog')) $('btnUpdLog').addEventListener('click', loadUpdateLog);
+  // ── Automatic updates (opt-in; acts only when the server is empty) ───────
+  function autoUpdSay(txt,c){ var m=$('autoUpdMsg'); if(m){ m.textContent=txt; m.className='msg '+(c||''); } }
+  function autoUpdDesc(d){
+    var s=(d&&d.state)||{}, bits=[];
+    if(d&&d.installKind) bits.push(d.installKind+(d.branch?' \u00b7 branch '+d.branch:''));
+    if(d&&!d.gitUpdatable) bits.push('this install cannot self-update');
+    else if(s.error) bits.push('last check failed: '+s.error);
+    else if(s.available) bits.push('update available: '+String(s.remote||'').slice(0,8)+' \u2014 '+(s.subject||'')+' ('+s.files+' file(s), '+(s.needsRestart?'needs a restart \u2014 waiting for an empty server':'client files only \u2014 applied without restart')+')');
+    else if(s.checkedAt) bits.push('up to date (checked '+new Date(s.checkedAt).toLocaleTimeString()+')');
+    else bits.push('not checked yet');
+    if(d&&d.armed) bits.push('restart armed for '+new Date(d.armed).toLocaleTimeString());
+    if(s.lastAction) bits.push('last automatic action: '+s.lastAction);
+    autoUpdSay(bits.join(' \u00b7 '));
+  }
+  function autoUpdLoad(){
+    api('/admin/auto-update',{cache:'no-store'}).then(function(r){return r.json();}).then(function(d){
+      if(!d||!d.ok) return;
+      if($('autoUpd')) $('autoUpd').checked=!!d.enabled;
+      if($('autoUpdSec') && !$('autoUpdSec').value) $('autoUpdSec').value=d.noticeSec||60;
+      autoUpdDesc(d);
+    }).catch(function(){});
+  }
+  function autoUpdSave(){
+    var body={enabled:!!($('autoUpd')&&$('autoUpd').checked),token:tok()};
+    var n=Number(($('autoUpdSec')&&$('autoUpdSec').value)||0); if(n) body.noticeSec=Math.floor(n);
+    api('/admin/auto-update',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)})
+      .then(function(r){return r.json();}).then(function(d){
+        if(d&&d.ok){ autoUpdSay(d.enabled?'Automatic updates on \u2014 notice '+d.noticeSec+'s.':'Automatic updates off.','ok'); setTimeout(autoUpdLoad,600); }
+        else autoUpdSay('Failed: '+((d&&d.error)||'error'),'err');
+      }).catch(function(){ autoUpdSay('Failed \u2014 network error.','err'); });
+  }
+  if($('autoUpd')) $('autoUpd').addEventListener('change', autoUpdSave);
+  if($('autoUpdSec')) $('autoUpdSec').addEventListener('change', autoUpdSave);
+  if($('btnUpdCheck')) $('btnUpdCheck').addEventListener('click', function(){
+    autoUpdSay('Checking\u2026');
+    api('/admin/update-check?force=1',{cache:'no-store'}).then(function(r){return r.json();}).then(function(d){
+      if(d&&d.error) autoUpdSay('Check failed: '+d.error,'err'); else autoUpdDesc(d);
+    }).catch(function(){ autoUpdSay('Check failed \u2014 network error.','err'); });
+  });
   // ── Schedule a restart (warns connected players, then acts after the delay) ──
   var schedKind='update';
   document.querySelectorAll('#schedKind button').forEach(function(b){ b.addEventListener('click',function(){ schedKind=b.dataset.k; document.querySelectorAll('#schedKind button').forEach(function(x){x.classList.toggle('on',x===b);}); }); });
