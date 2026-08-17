@@ -15,7 +15,8 @@ release.
 
 ### Changed
 - **Language count refreshed everywhere** (`web.16`) — the help chapter
-  "Language" in all 40 original catalogues, plus README and ROADMAP, now
+  "Language" in all 40 original catalogues, plus README, ROADMAP, the
+  server-rendered FAQ page (/faq) and the default SEO description, now
   states 45 languages (was 40).
 
 ### Added

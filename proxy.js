@@ -956,7 +956,7 @@ function _seoAdmin() { var s = _seoCfg(); return { enabled: s.enabled === true, 
 
 var SEO_TITLE = 'PokerTH Web Client \u2014 Play Free Texas Hold\u2019em Poker in Your Browser';
 var SEO_DESC = 'Play Texas Hold\u2019em poker free in your browser with PokerTH, the open-source poker game. ' +
-  'No download, no ads, no registration \u2014 practice offline against bots, play on LAN or join pokerth.net. 40 languages, installable as an app (PWA).';
+  'No download, no ads, no registration \u2014 practice offline against bots, play on LAN or join pokerth.net. 45 languages, installable as an app (PWA).';
 
 
 // ── hreflang — localized <title> + description for the 45 UI languages ────
@@ -1301,7 +1301,7 @@ var _SEO_FAQ = [
   ['What is the difference with the desktop client?',
    'Same game, same rules, same pokerth.net network \u2014 but it runs directly in the browser with nothing to install, on any operating system.'],
   ['Which languages are supported?',
-   'The interface is available in 40 languages. Poker action terms (Fold, Check, Call, Raise, All-In) stay in English, as is international convention.'],
+   'The interface is available in 45 languages. Poker action terms (Fold, Check, Call, Raise, All-In) stay in English, as is international convention.'],
   ['Is real money involved?',
    'No. PokerTH is strictly a play-money game. Chips have no monetary value and cannot be bought or sold.'],
   ['What data does the web client collect?',
@@ -1581,7 +1581,7 @@ function recordModeConnect(mode) {
 // Le compteur de trafic dit combien de visites ; il ne disait pas sur quoi. Ces
 // quatre répartitions servent à arbitrer : part réelle d'iOS Safari (où vivent
 // la moitié de nos pièges connus), part de l'installation PWA, et lesquelles
-// des 40 langues sont réellement utilisées.
+// des 45 langues sont réellement utilisées.
 //
 // Ce sont des totaux cumulés, pas des séries : quatre petits dictionnaires de
 // compteurs, alimentés par le même ping anonyme que les visites. Rien de plus
