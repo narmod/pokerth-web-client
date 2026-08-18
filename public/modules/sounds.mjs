@@ -170,6 +170,8 @@ const SAMPLE_FILES = {
   playerconnected: 'playerconnected', gameready: 'onlinegameready', lobbychat: 'lobbychatnotify'
 };
 var _rawBytes = {};     // nom logique -> ArrayBuffer brut (conserve pour re-decodage)
+var _userBytes = {};    // nom logique -> ArrayBuffer importe par le joueur (prioritaire)
+var _userMeta = {};     // nom logique -> { file, size, mime } (affichage UI)
 var _buffers = {};      // nom logique -> AudioBuffer decode
 var _decodeCtx = null;  // contexte ayant servi a decoder _buffers
 var _fetchStarted = false;
@@ -179,9 +181,10 @@ var _blindRaiseCount = 0;  // escalade montee de blinds (reset au GameStartIniti
 function _decodeOne(name) {
   var ctx = getAudioCtx(); if (!ctx) return;
   if (_decodeCtx !== ctx) { _buffers = {}; _decodeCtx = ctx; } // ctx recree (iOS) -> re-decoder
-  if (_buffers[name] || !_rawBytes[name]) return;
+  var src = _userBytes[name] || _rawBytes[name];  // son importe prioritaire sur l'original
+  if (_buffers[name] || !src) return;
   try {
-    var copy = _rawBytes[name].slice(0); // decodeAudioData DETACHE son entree
+    var copy = src.slice(0); // decodeAudioData DETACHE son entree
     ctx.decodeAudioData(copy, function(b) { _buffers[name] = b; }, function() {});
   } catch(e) {}
 }
@@ -212,6 +215,114 @@ function _playSample(name) {
     src.buffer = b; src.connect(_dest(ctx)); src.start(0);
     return true;
   } catch(e) { return false; }
+}
+
+// ─── Sons personnalises (import local) ─────────────────────────
+// Parite « remplacer data/sounds/default/ » du client de bureau : chacun des
+// echantillons ci-dessus peut etre remplace par un fichier audio du joueur.
+// Les octets vivent dans IndexedDB 'pth_imports' (MEME base que les packs de
+// style importes de theme.mjs, store 'items'), sous l'id 'snd-<nom logique>'.
+// Le decodage emprunte exactement le meme chemin que les sons d'origine : le
+// volume maitre, le mute global et les 4 categories s'appliquent sans rien
+// changer. Un fichier que le navigateur ne sait pas decoder est REFUSE a
+// l'import ; si un buffer venait a manquer, on retombe sur l'echantillon
+// d'origine puis sur le bip synthetise (aucun son ne disparait jamais).
+const CUSTOM_MAX_BYTES = 2 * 1024 * 1024;   // 2 Mo par son
+
+function _cidb() {
+  return new Promise(function(res, rej) {
+    try {
+      var r = indexedDB.open('pth_imports', 1);
+      r.onupgradeneeded = function() { try { r.result.createObjectStore('items', { keyPath: 'id' }); } catch(e) {} };
+      r.onsuccess = function() { res(r.result); };
+      r.onerror = function() { rej(r.error); };
+    } catch(e) { rej(e); }
+  });
+}
+function _cidbPut(rec) { return _cidb().then(function(db) { return new Promise(function(res, rej) { var tx = db.transaction('items', 'readwrite'); tx.objectStore('items').put(rec); tx.oncomplete = function() { res(); }; tx.onerror = function() { rej(tx.error); }; }); }); }
+function _cidbAll() { return _cidb().then(function(db) { return new Promise(function(res, rej) { var tx = db.transaction('items', 'readonly'); var rq = tx.objectStore('items').getAll(); rq.onsuccess = function() { res(rq.result || []); }; rq.onerror = function() { rej(rq.error); }; }); }); }
+function _cidbDel(id) { return _cidb().then(function(db) { return new Promise(function(res, rej) { var tx = db.transaction('items', 'readwrite'); tx.objectStore('items').delete(id); tx.oncomplete = function() { res(); }; tx.onerror = function() { rej(tx.error); }; }); }); }
+
+// Liste des noms logiques remplacables (ordre d'affichage de l'UI).
+function sampleNames() { return Object.keys(SAMPLE_FILES); }
+// { file, size, mime } si un son perso est en place, null sinon.
+function customSampleInfo(name) { return (name && _userMeta[name]) ? _userMeta[name] : null; }
+function hasCustomSample(name) { return !!_userBytes[name]; }
+
+function _applyCustom(name, ab, meta) {
+  _userBytes[name] = ab; _userMeta[name] = meta || {};
+  delete _buffers[name]; _decodeOne(name);
+}
+function _dropCustom(name) {
+  delete _userBytes[name]; delete _userMeta[name];
+  delete _buffers[name]; _decodeOne(name);   // re-decode l'echantillon d'origine
+}
+
+// Verifie que le navigateur sait decoder le fichier AVANT de le stocker : un
+// .txt renomme .mp3 doit echouer a l'import, pas rester silencieux en jeu.
+function _decodeTest(ab) {
+  var ctx = _ensureRunning();
+  if (!ctx) return Promise.resolve(true);   // pas encore de contexte : on fait confiance
+  return new Promise(function(res) {
+    try { ctx.decodeAudioData(ab.slice(0), function() { res(true); }, function() { res(false); }); }
+    catch(e) { res(false); }
+  });
+}
+
+// Remplace l'echantillon `name` par un File/Blob local.
+// Rejette : nom inconnu ('unknown sound'), fichier trop gros ('too big'),
+// audio non decodable ('bad audio').
+function setCustomSample(name, file) {
+  if (!SAMPLE_FILES[name]) return Promise.reject(new Error('unknown sound'));
+  if (!file) return Promise.reject(new Error('no file'));
+  if (file.size > CUSTOM_MAX_BYTES) return Promise.reject(new Error('too big'));
+  return file.arrayBuffer().then(function(ab) {
+    return _decodeTest(ab).then(function(ok) {
+      if (!ok) throw new Error('bad audio');
+      var meta = { file: String(file.name || ''), size: ab.byteLength, mime: String(file.type || '') };
+      var rec = { id: 'snd-' + name, type: 'sound', snd: name, meta: meta,
+                  blob: new Blob([ab], { type: file.type || 'audio/mpeg' }) };
+      return _cidbPut(rec).then(function() { _applyCustom(name, ab, meta); return meta; });
+    });
+  });
+}
+function clearCustomSample(name) {
+  if (!SAMPLE_FILES[name]) return Promise.resolve();
+  return _cidbDel('snd-' + name).catch(function() {}).then(function() { _dropCustom(name); });
+}
+function clearAllCustomSamples() {
+  var names = Object.keys(_userBytes);
+  return Promise.all(names.map(function(n) { return _cidbDel('snd-' + n).catch(function() {}); }))
+    .then(function() { names.forEach(_dropCustom); });
+}
+// Ecoute d'un echantillon (bouton test des options) : ignore volontairement le
+// mute et les categories, l'appui sur ▶ est deja un choix explicite. Retourne
+// false si le buffer n'est pas encore decode -> l'UI reessaie apres un instant.
+function previewSample(name) {
+  var ctx = _ensureRunning(); if (!ctx) return false;
+  if (_decodeCtx !== ctx) { _buffers = {}; _decodeCtx = ctx; }
+  var b = _buffers[name];
+  if (!b) { _decodeOne(name); return false; }
+  try {
+    var s = ctx.createBufferSource();
+    s.buffer = b; s.connect(_dest(ctx)); s.start(0);
+    return true;
+  } catch(e) { return false; }
+}
+// Restauration au demarrage. Asynchrone : les sons d'origine jouent tant que
+// la base n'a pas repondu, puis _applyCustom bascule sans rechargement.
+function _loadCustomSamples() {
+  return _cidbAll().then(function(recs) {
+    return Promise.all((recs || [])
+      .filter(function(r) { return r && r.type === 'sound' && SAMPLE_FILES[r.snd]; })
+      .map(function(r) {
+        var b = r.blob;
+        if (!b || typeof b.arrayBuffer !== 'function') return null;
+        return b.arrayBuffer()
+          .then(function(ab) { _applyCustom(r.snd, ab, r.meta || {}); })
+          .catch(function() {});
+      }));
+  }).catch(function() {});
 }
 
 // Dispatch d'une action de siege selon le code serveur (PlayersActionDone).
@@ -596,6 +707,8 @@ window.addEventListener('focus', function() { _ensureRunning(); });
 // Precharge les samples PokerTH des le chargement du module (decodage differe
 // au 1er geste). Repli synthe tant qu'un sample n'est pas pret / indisponible.
 _fetchSamples();
+// Sons personnalises deja importes : restaures depuis IndexedDB (asynchrone).
+_loadCustomSamples();
 
 // ─── Modern ES module exports ───────────────────────────────────────────
 export {
@@ -605,6 +718,8 @@ export {
   notifyPlayerConnected, notifyGameReady, notifyLobbyChat,
   notifyTick, notifyTickFinal,
   toggleSound, isSoundEnabled,
+  sampleNames, hasCustomSample, customSampleInfo,
+  setCustomSample, clearCustomSample, clearAllCustomSamples, previewSample,
 };
 
 // ─── Legacy global compatibility ────────────────────────────────────────
@@ -651,6 +766,8 @@ Object.defineProperty(window, '_soundEnabled', {
 
 // Single namespaced entry point for migration-aware code.
 window.SOUNDS = {
+  sampleNames, hasCustomSample, customSampleInfo,
+  setCustomSample, clearCustomSample, clearAllCustomSamples, previewSample,
   getAudioCtx, playTone, playActionSound, resetBlindRaises,
   notifyCard, notifyAction, notifyFold, notifyRaise, notifyAllIn,
   notifyMyTurn, notifyWinner, notifyBigWin, notifyChat, notifyBlindsUp,

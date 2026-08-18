@@ -2971,6 +2971,12 @@ if ('serviceWorker' in navigator) {
           <label class="adv-row"><input type="checkbox" id="adv-snd-lobby" onchange="setAdvOpt('snd_lobby',this.checked)"><span data-i18n="advSndLobby">Lobby chat notification</span></label>
           <label class="adv-row"><input type="checkbox" id="adv-snd-net" onchange="setAdvOpt('snd_net',this.checked)"><span data-i18n="advSndNet">Network game notifications (player joined, game ready)</span></label>
           <label class="adv-row"><input type="checkbox" id="adv-snd-blinds" onchange="setAdvOpt('snd_blinds',this.checked)"><span data-i18n="advSndBlinds">Blind raise notification</span></label>
+          <div class="adv-sec" data-i18n="advSecSndCustom">Custom sounds</div>
+          <div class="adv-ign-desc" data-i18n="advSndCustomDesc">Replace any game sound with your own audio file (MP3, WAV, OGG…, 2 MB max). Files stay in this browser and are never uploaded. ▶ plays the current sound, ↺ restores the original.</div>
+          <!-- Liste remplie par modules/ui/sound-import.mjs, charge a la demande
+               par advSelectCat('sound') (rien a telecharger tant que l'onglet
+               Son n'est pas ouvert). -->
+          <div id="adv-snd-custom-host"></div>
           </div>
         </section>
         <section class="adv-panel" data-cat="local" id="adv-panel-local" role="tabpanel" aria-labelledby="adv-cat-local">

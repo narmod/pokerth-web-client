@@ -13,6 +13,23 @@ this file captures what matters to players and operators.
 Opened with `v2.1.7-web.0` (2026-08-13), following the upstream **2.1.7**
 release.
 
+### Added
+- **Custom sounds** (`web.19`) — every one of the 14 game samples (fold,
+  check, call, bet, raise, all-in, dealing, your turn, the three blind-raise
+  levels, player connected, game ready, lobby chat) can be replaced with the
+  player's own audio file, the browser equivalent of swapping the files in
+  `data/sounds/default/` on the desktop client. New list in *Advanced
+  options → Sound*: preview (▶), import, restore one, restore all. Files are
+  checked with `decodeAudioData` at import time (an unreadable file is
+  refused, not silently mute), capped at 2 MB each, and kept in IndexedDB
+  `pth_imports` — the same store as the imported style packs — so nothing is
+  ever uploaded. Playback goes through the existing path, so the master
+  volume, the mute button and the four sound categories keep working
+  unchanged; a missing custom buffer falls back to the original sample and
+  then to the synthesised beep. UI lives in the new lazily-loaded
+  `modules/ui/sound-import.mjs` (nothing is downloaded until the Sound tab is
+  opened).
+
 ### Changed
 - **Admin traffic: one colour per language** (`web.18`) — the ranking is
   ordered by the running total and the per-day chart by the last 14 days, so

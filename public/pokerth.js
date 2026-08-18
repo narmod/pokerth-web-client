@@ -537,6 +537,16 @@ function advSelectCat(cat) {
   }
   try { var pn = modal.querySelector('.adv-panels'); if (pn) pn.scrollTop = 0; } catch (e) {}
   try { if (cat === 'style' && window.renderThemeInto) window.renderThemeInto(document.getElementById('adv-theme-host')); } catch (e) {}
+  // Liste des sons personnalisables : module charge a la demande (personne ne
+  // paie son telechargement tant que l'onglet Son n'est pas ouvert).
+  try {
+    if (cat === 'sound') {
+      var _sh = document.getElementById('adv-snd-custom-host');
+      if (_sh) import('/modules/ui/sound-import.mjs')
+        .then(function (m) { try { m.mount(_sh); } catch (e) {} })
+        .catch(function () {});
+    }
+  } catch (e) {}
   try { localStorage.setItem('pth_adv_cat', cat); } catch (e) {}  // réouverture au même endroit
 }
 window.advSelectCat = advSelectCat;
@@ -10382,7 +10392,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.7-web.18'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.7-web.19'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
