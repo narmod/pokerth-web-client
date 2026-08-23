@@ -14,6 +14,20 @@ Opened with `v2.1.7-web.0` (2026-08-13), following the upstream **2.1.7**
 release.
 
 ### Changed
+- **Localized crawler text for all 45 languages** (`web.44`) — every language
+  variant served an English `<h1>` and an English body under its own
+  `<html lang>`, so a search engine reading `/?lang=zh` found Chinese metadata
+  wrapped around English prose and could reasonably treat the page as a
+  near-duplicate of the English one. `seoBodyBlock` and `seoFooterBlock` now
+  take the language. The heading and lead paragraph reuse the already
+  translated `SEO_I18N` title and description; a new `SEO_BODY_I18N` table
+  carries only what was missing — how you play, the free/open-source line, and
+  the two link labels. The English output is byte-identical to before, since
+  changing visible footer text was not the point of this. `og:image:alt` is
+  localized too. The GitHub attribution line stays English: it is mostly
+  proper nouns.
+
+### Changed
 - **Open Graph locale and language count** (`web.43`) — shared links now carry
   `og:locale`. Facebook, LINE and WeChat read that property to pick the preview
   language and fall back to `en_US` when it is absent, so a link posted to a
