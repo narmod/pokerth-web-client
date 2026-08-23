@@ -14,6 +14,14 @@ Opened with `v2.1.7-web.0` (2026-08-13), following the upstream **2.1.7**
 release.
 
 ### Added
+- **`/rules` in Italian, Polish, Dutch and Turkish** (`web.49`) — third batch,
+  thirteen languages live. Two false friends worth naming: in Italian
+  *poker* is four of a kind, not the game, so the royal flush is *scala reale*
+  and quads are *poker*; in Polish *poker królewski* is the royal flush while
+  a plain *poker* is the straight flush. Translating either from English
+  one-to-one would have produced a page that reads wrong to a player.
+
+### Added
 - **`/rules` in German, Russian, Brazilian Portuguese and Japanese**
   (`web.48`) — second batch, nine languages live. Hand names follow local
   usage rather than a literal gloss: German keeps *Royal Flush* and *Full
