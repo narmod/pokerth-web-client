@@ -110,8 +110,12 @@ function _html(min, max) {
     + '</div>'
     + '<div class="kp-grid" id="kp-grid">' + g + '</div>'
     + '<div class="kp-foot">'
-    +   '<button type="button" class="kp-cancel" id="kp-cancel">' + _esc(t('cancelBtn')) + '</button>'
-    +   '<button type="button" class="kp-ok" id="kp-ok">' + raiseWord + ' <b id="kp-ok-amt"></b></button>'
+    // Les deux boutons du pied portent les VRAIES classes de la barre
+    // (.btn-action / .btn-raise) : ils heritent ainsi de la forme, des
+    // couleurs et des images de boutons du theme en vigueur, sans
+    // qu'aucune regle n'ait a etre dupliquee ici.
+    +   '<button type="button" class="btn-action kp-cancel" id="kp-cancel">' + _esc(t('cancelBtn')) + '</button>'
+    +   '<button type="button" class="btn-action btn-raise kp-ok" id="kp-ok">' + raiseWord + ' <b id="kp-ok-amt"></b></button>'
     + '</div>'
     + '</div>';
 }

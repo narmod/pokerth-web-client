@@ -37,6 +37,15 @@ release.
   `GameActionBar.qml` (`#1b5e20` / `#4CAF50` / hover `#388e3c` / press
   `#2e7d32`) and deliberately not themable — and the confirm button reuses
   `.btn-raise`, down to `--ff-display` and the `brightness(1.15)` hover.
+  The keypad follows the active theme (`web.60`): its footer buttons now carry
+  the real `.btn-action` / `.btn-raise` classes rather than copies, so shape,
+  colours, disabled state and animations all come from the bar's own rules;
+  key corners use `--act-btn-radius`; and under `data-btn-img` the digit keys
+  take `--btn-raise-img` and cancel takes `--btn-fold-img` (without which the
+  generic `data-btn-img` rule would render them transparent). The keypad
+  button next to the field is now shown only where tapping the field does not
+  already open the keypad — fine-pointer touch devices — instead of on every
+  touch-capable device, where it was redundant on phones.
 
 ### Changed
 - **Bet slider granularity now matches the desktop client** (`web.58`) — the web

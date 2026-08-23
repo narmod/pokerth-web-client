@@ -5065,7 +5065,7 @@ body:not(.in-game) .my-zone {
 .kp-range { font-family: var(--ff-mono); font-size: var(--fs-xs); color: var(--text); }
 .kp-grid { display: grid; grid-template-columns: repeat(3, 1fr) 1.25fr; gap: 5px; }
 .kp-grid button {
-  height: 42px; min-height: 42px; border-radius: 7px; cursor: pointer;
+  height: 42px; min-height: 42px; border-radius: var(--act-btn-radius, 7px); cursor: pointer;
   background: var(--field-bg); border: 1px solid var(--btn-raise-bg, #4CAF50);
   color: var(--btn-raise-bg, #4CAF50);
   font-family: var(--ff-mono); font-size: 1rem; font-weight: 700;
@@ -5081,24 +5081,32 @@ body:not(.in-game) .my-zone {
 .kp-grid .kp-s:hover  { background: #388e3c; filter: none; }
 .kp-grid .kp-s:active { background: #2e7d32; }
 .kp-foot { display: flex; gap: 5px; margin-top: 6px; }
-.kp-foot button {
-  height: 40px; border-radius: var(--act-btn-radius, 9px); cursor: pointer;
-  transition: filter 0.12s, transform 0.08s;
-}
-.kp-foot button:active { transform: scale(0.96); }
-.kp-foot button:hover  { filter: brightness(1.15); }
+/* Le pied porte .btn-action / .btn-raise : forme, couleurs, images de boutons
+   du theme, etat desactive et animations viennent donc des regles existantes
+   de la barre. On ne pose ici que la repartition et le cas d'Annuler, qui n'a
+   pas d'equivalent dans la barre. */
+.kp-foot .btn-action { min-height: 40px; min-width: 0; padding: 8px 10px; }
 .kp-foot .kp-cancel {
-  flex: 1; background: transparent; border: 1px solid var(--btn-raise-bg, #4CAF50);
-  color: var(--text); font-family: var(--ff-display); font-size: var(--fs-xs);
-  font-weight: 700; letter-spacing: 0.08em;
+  flex: 1; background: transparent;
+  border: 1px solid var(--btn-fold-bg, #6b2020); color: var(--btn-fold-fg, #ffd0d0);
 }
-.kp-foot .kp-ok {
-  flex: 1.7; background: var(--btn-raise-bg, var(--gold));
-  color: var(--btn-raise-fg, var(--on-gold)); border: none;
-  font-family: var(--ff-display); font-size: var(--fs-xs);
-  font-weight: 700; letter-spacing: 0.08em;
-}
+.kp-foot .kp-ok { flex: 1.7; }
 .kp-foot .kp-ok b { font-family: var(--ff-mono); }
+/* Themes a images de boutons : les touches prennent la forme du bouton
+   Relancer (le pave appartient a la zone de mise) et Annuler celle du bouton
+   Se coucher, faute de quoi la regle generique de data-btn-img les rendrait
+   transparents et donc invisibles. Les raccourcis Min/1-2/Pot/All-In gardent
+   le vert dur des mises rapides : comme .btn-pct, ils ne sont pas themables
+   dans le client officiel. */
+:root[data-btn-img] .kp-grid .kp-k {
+  border: 9px solid transparent; background: transparent; padding: 0;
+  border-image: var(--btn-raise-img) 9 fill / 9px / 0 stretch;
+  color: var(--btn-raise-fg, #fff);
+}
+:root[data-btn-img] .kp-foot .kp-cancel {
+  border-image: var(--btn-fold-img) 9 fill / 9px / 0 stretch;
+  color: var(--btn-fold-fg, #fff);
+}
 /* Slider au doigt : on AGRANDIT LA ZONE TACTILE (hauteur de la boite) sans
    toucher au rendu natif — la piste et la poignee restent celles du QML
    (poignee 18 px, accent-color), qu'un ::-webkit-slider-thumb custom aurait

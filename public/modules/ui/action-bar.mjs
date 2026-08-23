@@ -360,7 +360,10 @@ function renderMyTurnActions(preview) {
   // Pointeur fin tactile (PC a ecran tactile) : le champ garde son clavier
   // physique, le pave reste accessible par le bouton a cote.
   const _coarse = isCoarsePointer();
-  const _kpAvail = keypadAvailable();
+  // Le bouton pave ne sert QUE la ou un tap sur le champ n'ouvre pas deja le
+  // pave : PC et tablettes tactiles a pointeur fin. Sur telephone (pointeur
+  // grossier) le champ EST le declencheur, l'icone faisait doublon.
+  const _kpAvail = keypadAvailable() && !_coarse;
   const _fldAttrs = _coarse
     ? ' readonly inputmode="none" onclick="App.openBetKeypad()"'
     : ' inputmode="numeric" pattern="[0-9]*" enterkeyhint="done" autocomplete="off" onfocus="this.select()"';
