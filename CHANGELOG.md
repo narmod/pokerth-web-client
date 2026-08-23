@@ -22,6 +22,18 @@ release.
   exactly alike.
 
 ### Changed
+- **Audit log stops at ten entries** (`web.36`) — the rest is one scroll away
+  instead of pushing the page down. The cut is measured rather than assumed
+  from a line height, because an entry takes one line on a wide screen and two
+  on a phone; it is re-measured when the screen turns, and a hidden list is
+  never measured, so an existing cap is not lost.
+
+### Fixed
+- **Card header rows overflowed on a phone** (`web.36`) — the row could not
+  wrap, so *Recent logs* broke its title across two lines while its Refresh
+  button ran off the side of the screen. Actions now drop below the title when
+  they no longer fit, take the full width there, and the verbosity selector
+  stops being cramped.
 - **Identity & reach moved to the Server family** (`web.35`) — server name,
   Discord relay and SEO describe the server itself, not what players are
   offered.

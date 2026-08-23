@@ -89,7 +89,19 @@
   .traflegend em{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:5px;vertical-align:-1px;font-style:normal}
   .traflegend .nw em{background:#3fae6a}
   .traflegend .rt em{background:#4080d8}
-  .boardhead{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+  /* Le titre garde sa ligne, les actions passent dessous quand elles ne
+     tiennent plus : sans le retour, « Recent logs » se coupait en deux et le
+     bouton Refresh sortait de l'ecran sur un telephone. */
+  .boardhead{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:6px}
+  .boardhead>h2{white-space:nowrap}
+  .bhact{display:flex;align-items:center;gap:8px;flex-wrap:wrap;min-width:0}
+  .bhact select{width:130px}
+  @media(max-width:600px){
+    /* Une fois descendues, les actions occupent la largeur : les cibles
+       tactiles y gagnent, et le selecteur de verbosite cesse d'etre serre. */
+    .bhact{flex:1 1 100%}
+    .bhact select{flex:1 1 auto;width:auto;min-width:0}
+  }
   /* Un titre en tete de carte, aligne avec son bouton : sa marge est portee
      par la rangee, pas par lui. Elle etait ecrite a la main quinze fois. */
   .boardhead h2{margin:0}
@@ -98,6 +110,10 @@
      d'ou les trente-cinq marges recopiees dans le HTML, en six valeurs
      differentes. */
   .card p.muted{margin:0 0 9px}
+  /* Liste plafonnee a un nombre d'entrees : la hauteur exacte est posee par
+     capRows(), qui mesure, car une entree occupe une ligne sur un ecran large
+     et deux sur un telephone. */
+  .scrollcap{overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
   /* Note posee APRES le contenu d'une carte, et non en chapeau. */
   .card p.muted.note{margin:8px 0 0}
   /* Rangee d'actions posee sous un bloc de reglages. */
@@ -601,7 +617,7 @@
         <div id="kyList"><div class="empty">Loading…</div></div>
       </div>
       <div class="card">
-        <div class="boardhead"><h2>Audit log</h2><div style="display:flex;gap:8px"><button id="auRefresh" class="use">Refresh</button><button id="auClear" class="use danger">Clear</button></div></div>
+        <div class="boardhead"><h2>Audit log</h2><div class="bhact"><button id="auRefresh" class="use">Refresh</button><button id="auClear" class="use danger">Clear</button></div></div>
         <p class="muted">Every action that <b>changed</b> something, and who did it — the master key or a named delegate key. Reads are not logged: the dashboard polls itself every few seconds and would drown everything. Kept on disk, so a restart does not erase it. Tokens themselves are never recorded, only the name they carry.</p>
         <div id="auList"><div class="empty">Loading…</div></div>
         <div id="auMsg" class="msg"></div>
@@ -610,7 +626,7 @@
     <div id="panel-server">
       <div class="card"><h2>Status</h2><div id="status"><div class="empty">Loading…</div></div></div>
       <div class="card">
-        <div class="boardhead"><h2>Recent logs</h2><div style="display:flex;align-items:center;gap:8px"><span class="muted">Verbosity</span><select id="logQuick" style="width:130px"><option value="">(default)</option><option value="quiet">quiet</option><option value="normal">normal</option><option value="verbose">verbose</option></select><button id="logsCopy" class="use">Copy</button><button id="refreshLogs" class="use">Refresh</button></div></div>
+        <div class="boardhead"><h2>Recent logs</h2><div class="bhact"><span class="muted">Verbosity</span><select id="logQuick"><option value="">(default)</option><option value="quiet">quiet</option><option value="normal">normal</option><option value="verbose">verbose</option></select><button id="logsCopy" class="use">Copy</button><button id="refreshLogs" class="use">Refresh</button></div></div>
         <div id="logQuickMsg" class="msg"></div>
         <div class="muted" style="margin:2px 0 6px">quiet logs connections, disconnections and errors only — no per-message line, so far less written to disk under load. Applied live, no restart.</div>
         <pre id="logs" class="logs"></pre>
@@ -1144,6 +1160,7 @@
       t.addEventListener('scroll', tabsFade, {passive:true});
     });
     window.addEventListener('resize', tabsFade);
+    window.addEventListener('resize', function(){ capRows($('auList'), 10); });
     setTimeout(tabsFade, 0);
   })();
   // Affiche la famille g. pick=true choisit sa premiere section visible, ce
@@ -2307,6 +2324,23 @@
   function bcPrevNow(){ bcGoldPreview('bcNowPrev',($('bcNowMsg').value||'').trim(),$('bcNowIcon').value); }
   ['bcMsg','bcIcon'].forEach(function(id){ if($(id)){ $(id).addEventListener('input',bcPrevSched); $(id).addEventListener('change',bcPrevSched); } });
   ['bcNowMsg','bcNowIcon'].forEach(function(id){ if($(id)){ $(id).addEventListener('input',bcPrevNow); $(id).addEventListener('change',bcPrevNow); } });
+  // Limite une liste a ses n premieres entrees, le reste au defilement. On
+  // mesure le haut de la (n+1)e plutot que de multiplier une hauteur de ligne
+  // supposee : selon la largeur, une entree tient sur une ligne ou sur deux.
+  function capRows(el, n){
+    // offsetParent vaut null quand un ancetre est masque : on ne mesure rien
+    // dans ce cas, et surtout on ne defait pas un plafond deja pose.
+    if(!el || !el.offsetParent) return;
+    el.classList.remove('scrollcap');
+    el.style.maxHeight='';
+    var rows=el.children;
+    if(rows.length<=n) return;
+    var cut=rows[n].offsetTop-rows[0].offsetTop;
+    if(cut<=0) return;
+    el.style.maxHeight=cut+'px';
+    el.classList.add('scrollcap');
+  }
+
   // -- Audit log (master only) ------------------------------------------------
   function loadAudit(){
     return api('/admin/audit').then(function(r){return r.json();}).then(function(d){
@@ -2320,6 +2354,7 @@
         var st=x.ok?'':' <b class="err">'+(x.status||'')+'</b>';
         return '<div class="srow"><span>'+_annEsc(x.action||'')+'</span><b>'+who+' \u00b7 '+_annEsc(x.ip||'')+' \u00b7 '+when+st+'</b></div>';
       }).join('');
+      capRows(l, 10);
     }).catch(function(){ var l=$('auList'); if(l) l.innerHTML='<div class="empty">Network error.</div>'; });
   }
   (function(){

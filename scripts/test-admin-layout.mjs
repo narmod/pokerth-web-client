@@ -150,6 +150,31 @@ for (const id of ['panel-proxy', 'panel-deploy', 'panel-access', 'panel-defaults
 ok(/#panel-defaults[^{]*\{columns:2/.test(admin), 'the five defaults cards use both columns');
 ok(!/#panel-server,/.test(admin), 'a two-card panel no longer asks for two columns');
 
+// ── Card header rows ──────────────────────────────────────────────────────
+// "Recent logs" broke across two lines while its Refresh button ran off the
+// side of the phone: the header row could not wrap, so everything fought for
+// one line.
+ok(/\.boardhead\{[^}]*flex-wrap:wrap/.test(admin), 'a header row can wrap');
+ok(/\.boardhead>h2\{white-space:nowrap\}/.test(admin), 'and the title is not the thing that breaks');
+ok(/\.bhact\{display:flex/.test(admin), 'the action group is a class, not an inline style');
+ok(!/<div style="display:flex;align-items:center;gap:8px"><span class="muted">Verbosity/.test(admin),
+  'the verbosity row uses it');
+ok(/\.bhact\{flex:1 1 100%\}/.test(small), 'once wrapped on a phone the actions take the width');
+ok(/\.bhact select\{flex:1 1 auto;width:auto/.test(small), 'and the select stops being cramped');
+
+// ── Capped lists ──────────────────────────────────────────────────────────
+const cap = body(admin, 'capRows');
+ok(/!el\.offsetParent/.test(cap),
+  'a hidden list is not measured, and an existing cap is not undone');
+ok(/rows\[n\]\.offsetTop-rows\[0\]\.offsetTop/.test(cap),
+  'the height is measured, not guessed from an assumed line height');
+ok(/rows\.length<=n/.test(cap), 'a short list is left alone entirely');
+ok(/capRows\(l, 10\)/.test(admin), 'the audit log stops at ten entries');
+ok(/addEventListener\('resize', function\(\)\{ capRows\(\$\('auList'\), 10\); \}\)/.test(admin),
+  'and is re-measured when the screen turns');
+ok(/\.scrollcap\{overflow-y:auto/.test(admin), 'the rest is reachable by scrolling');
+ok(/overscroll-behavior:contain/.test(admin), 'scrolling it does not drag the page along');
+
 // ── Copying a log ─────────────────────────────────────────────────────────
 // navigator.clipboard needs a secure context, which a panel served over plain
 // http on a LAN is not — hence the selection fallback.
