@@ -260,11 +260,15 @@ use too. Items are grouped by status rather than fixed phases.
 
 ## ⏭️ Next
 
-- **Translating `/rules` and `/faq`** — the plumbing is in place (`web.46`): both
-  pages are served per language and advertise only the languages they exist in.
-  What remains is the text, roughly 870 words per language, filled into
-  `SEO_RULES_I18N` and `SEO_FAQ_I18N` in batches of about eight languages,
-  highest-traffic first (zh, zh-TW, es, pt-BR, de, ru, fr, ja).
+- **Translating `/faq`** — `/rules` is done in all 45 languages (`web.55`).
+  `/faq` has the same shape: thirteen question-and-answer pairs per language,
+  filled into `SEO_FAQ_I18N` in batches. Until an entry lands, that language
+  falls back to English and is not advertised, so the live site is never in a
+  half-finished state.
+- **Native review of the smaller languages** — the `/rules` translations for
+  Hindi, Urdu, Bengali, Tamil and Scottish Gaelic were written without an
+  established poker vocabulary to lean on. Worth a pass from a native speaker
+  before they are treated as settled.
 
 
 - **Code health**

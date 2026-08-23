@@ -30,6 +30,19 @@ release.
   and never carried to another device. Reported on the forum by *il Buono*.
 
 ### Added
+- **`/rules` is complete: all 45 languages** (`web.55`) — final batch adds
+  Hindi, Urdu, Bengali, Tamil, Filipino, Swahili, Bulgarian and Scottish
+  Gaelic. Bulgarian had been skipped in an earlier batch; a check now compares
+  the table against `SEO_I18N`, so a gap cannot pass unnoticed again. Every
+  variant self-canonicalizes, carries 91 hreflang links and appears in the
+  sitemap.
+  Caveat worth recording: for Hindi, Urdu, Bengali, Tamil and especially
+  Scottish Gaelic there is no settled poker vocabulary to draw on, so the hand
+  names mix transliteration with description (*ceathrar co-ionann* for four of
+  a kind in Gaelic). Those five deserve a native reader before being treated
+  as final; the other forty are on firmer ground.
+
+### Added
 - **`/rules` in Korean, Vietnamese, Thai, Arabic, Hebrew and Persian**
   (`web.53`) — seventh batch, thirty-seven languages live, 8 to go. Vietnamese
   uses its own vocabulary for hands (*tứ quý*, *cù lũ*, *mậu thầu*), which has
