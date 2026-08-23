@@ -14,6 +14,17 @@ Opened with `v2.1.7-web.0` (2026-08-13), following the upstream **2.1.7**
 release.
 
 ### Changed
+- **Admin dashboard: shorter titles under *Defaults for new visitors*** (`web.32`)
+  — five cards each repeated what the section heading above them already said.
+  They are now *Theme*, *In-game settings*, *Login form*, *Table settings* and
+  *Table name (per mode)*.
+
+### Fixed
+- **A renamed card lost its default fold** (`web.32`) — the collapse state is
+  keyed on the title text, so renaming a card (or adding one) produced a key
+  the store had never seen, and the card opened wide instead of following
+  `DEFAULT_FOLDED`. An unknown key now falls back to the default, which is what
+  keeps *In-game settings* folded through the rename above.
 - **Admin dashboard: the two crowded panels get sub-sections** (`web.31`) —
   Overview carried eight cards and Settings ten, in whatever order they had
   been written. Overview now reads *Health & logs*, *Bridge settings*,

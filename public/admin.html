@@ -486,7 +486,7 @@
       </div>
       <h3 class="sect">Defaults for new visitors</h3>
       <div class="card">
-        <h2>Default theme (new visitors)</h2>
+        <h2>Theme</h2>
         <p class="muted" style="margin:0 0 6px">Applied on a player's first visit only. Players who already picked a theme keep theirs.</p>
         <div class="periodrow">
           <select id="defTheme">
@@ -500,7 +500,7 @@
         <div id="themeMsg" class="msg"></div>
       </div>
       <div class="card">
-        <h2>Default in-game settings (new visitors)</h2>
+        <h2>In-game settings</h2>
         <p class="muted" style="margin:0 0 8px">Applied on a player's first visit only; a setting a player has already changed is never touched.</p>
         <div class="defrow fld"><span>Vibration</span><select id="defHaptic"><option value="">App default (on)</option><option value="1">On</option><option value="0">Off</option></select></div>
         <div class="defrow fld"><span>Voice announce</span><select id="defVoice"><option value="">App default (off)</option><option value="1">On</option><option value="0">Off</option></select></div>
@@ -510,7 +510,7 @@
         <div id="defaultsMsg" class="msg"></div>
       </div>
       <div class="card">
-        <h2>Default login form (new visitors)</h2>
+        <h2>Login form</h2>
         <p class="muted" style="margin:0 0 8px">Default entry screen for new visitors, plus (for LAN / dedicated) which server to connect to. The mode applies on a first visit only. <b>LAN server</b> sets the <i>default</i> server fields, never a lock: <i>Automatic</i> uses the page's own address (port 7234, no TLS), <i>Forced</i> uses the host, port and TLS set below. In both cases a player can edit the fields and the server they last connected to is remembered, so only players who never picked one of their own follow a change made here. With <i>Forced</i>, the proxy auto-follows the host and is rebuilt on every reconnect, so the client always reconnects. A forced proxy URL (ws:// or wss://) is pushed to every client and locks the field; hiding the field removes it and its label from the login form. All of this applies to the LAN / dedicated mode only — the Internet (pokerth.net) mode is never affected.</p>
         <div class="defrow fld"><span>Default mode</span><select id="defMode"><option value="">App default</option><option value="offline">Training (bots)</option><option value="lan-dedi">LAN / private server</option><option value="pokerthnet">pokerth.net</option></select></div>
         <div class="defrow fld"><span>LAN server <span class="muted">(LAN / dedicated only)</span></span><select id="defLanMode"><option value="auto">Automatic (page address)</option><option value="forced">Forced (use the values below)</option></select></div>
@@ -523,7 +523,7 @@
         <div id="loginMsg" class="msg"></div>
       </div>
       <div class="card">
-        <h2>Default table settings (new visitors)</h2>
+        <h2>Table settings</h2>
         <p class="muted" style="margin:0 0 8px">Starting values when a player opens the “create a table” form. A returning player keeps their last-used settings; leave a field blank to keep the app default. Players can change them per table.</p>
         <div class="defrow fld"><span>Max players <span class="muted">(2–10)</span></span><input id="tdPlayers" type="number" min="2" max="10" placeholder="10"></div>
         <div class="defrow fld"><span>Small blind <span class="muted">(1–1000000)</span></span><input id="tdBlind" type="number" min="1" max="1000000" placeholder="10"></div>
@@ -533,7 +533,7 @@
         <div id="tableMsg" class="msg"></div>
       </div>
       <div class="card">
-        <h2>Default table name (per mode)</h2>
+        <h2>Table name (per mode)</h2>
         <p class="muted" style="margin:0 0 8px">Pre-fills the table name in the &ldquo;create a table&rdquo; form, per connection mode. &ldquo;Automatic&rdquo; keeps the localized default (&ldquo;X&rsquo;s table&rdquo;); pick &ldquo;Custom&rdquo; to set a fixed name. Players can still rename their table. Max 48 characters.</p>
         <div class="defrow fld left"><span style="white-space:nowrap">pokerth.net</span><select id="tnNetMode" style="flex:none"><option value="auto">Automatic</option><option value="custom">Custom</option></select><input id="tnNetName" maxlength="48" placeholder="e.g. My online game" autocomplete="off" style="flex:1;min-width:0;display:none"></div>
         <div class="defrow fld left"><span style="white-space:nowrap">LAN / private</span><select id="tnLanMode" style="flex:none"><option value="auto">Automatic</option><option value="custom">Custom</option></select><input id="tnLanName" maxlength="48" placeholder="custom table name" autocomplete="off" style="flex:1;min-width:0;display:none"></div>
@@ -2827,7 +2827,7 @@
     var STORE='pth_admin_collapsed', saved=null;
     try{ saved=JSON.parse(localStorage.getItem(STORE)||'null'); }catch(e){}
     var state = saved || {}, firstRun = !saved;
-    var DEFAULT_FOLDED = ['Default in-game settings','Schedule a restart','Schedule a recurring message','Welcome / rules message'];
+    var DEFAULT_FOLDED = ['In-game settings','Schedule a restart','Schedule a recurring message','Welcome / rules message'];
     function slug(s){ return (s||'').trim().replace(/[^a-z0-9]+/gi,'_').replace(/^_+|_+$/g,'').toLowerCase().slice(0,48); }
     document.querySelectorAll('.card').forEach(function(card){
       var h2s = card.querySelectorAll('h2');
@@ -2840,7 +2840,8 @@
       h2.classList.add('collap-h'); h2.setAttribute('role','button'); h2.tabIndex=0;
       var k = slug(h2.textContent);
       var txt = (h2.textContent||'').trim();
-      var folded = firstRun ? DEFAULT_FOLDED.some(function(t){ return txt.indexOf(t)===0; }) : !!state[k];
+      var known = Object.prototype.hasOwnProperty.call(state, k);
+      var folded = (firstRun || !known) ? DEFAULT_FOLDED.some(function(t){ return txt.indexOf(t)===0; }) : !!state[k];
       function setFold(f, anim){
         h2.classList.toggle('collapsed', f);
         if(!anim){ body.style.height = f ? '0px' : 'auto'; return; }

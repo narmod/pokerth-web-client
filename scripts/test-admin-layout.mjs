@@ -144,6 +144,16 @@ for (const t of ['App modes (login screen)', 'Feature kill switches', 'Discord c
   ok(pClients.includes('>' + t + '<'), 'Settings kept ' + t);
 }
 
+// Five card titles each repeated what their section already says.
+for (const t of ['Theme', 'In-game settings', 'Login form', 'Table settings', 'Table name (per mode)']) {
+  ok(pClients.includes('<h2>' + t + '</h2>'), 'the defaults card is titled ' + t);
+}
+ok(!/\(new visitors\)<\/h2>/.test(admin), 'no card repeats "(new visitors)" in its title');
+ok(/DEFAULT_FOLDED = \['In-game settings'/.test(admin),
+  'the fold-by-default list follows the rename, or that card would open wide');
+ok(/\(firstRun \|\| !known\)/.test(admin),
+  'a title never seen before falls back to its default fold instead of opening wide');
+
 // ── Settings rows ─────────────────────────────────────────────────────────
 // The same flex declaration used to be retyped in 51 style= attributes, with
 // control widths hard-coded in the tags — and an inline style beats the sheet,
