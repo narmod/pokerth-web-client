@@ -46,6 +46,15 @@ release.
   button next to the field is now shown only where tapping the field does not
   already open the keypad — fine-pointer touch devices — instead of on every
   touch-capable device, where it was redundant on phones.
+  The keypad now enforces the bar's own guards (`web.61`): the confirm button
+  greys out — through the existing `.btn-action:disabled` rule — whenever the
+  amount is empty, below the minimum raise or above the stack, and Enter is no
+  longer a way around it. Above all the amount is written **as typed** rather
+  than pre-clamped: clamping in the keypad short-circuited `doRaise()`'s
+  `guard_raise`, so typing 300 with a 250 stack went all-in silently, the very
+  surprise that guard exists to prevent. The keypad also refuses to open over
+  a frozen bar (`.no-action`), on a closed socket, or when the turn has moved
+  on — it must not become a side door onto a bar that refuses clicks.
 
 ### Changed
 - **Bet slider granularity now matches the desktop client** (`web.58`) — the web

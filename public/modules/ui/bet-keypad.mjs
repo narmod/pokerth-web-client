@@ -130,18 +130,31 @@ function _value() {
   return Number.isFinite(n) ? n : 0;
 }
 
+// An amount is valid exactly when the action bar would accept it: something
+// typed, at least the minimum raise, no more than the stack.
+function _valid() {
+  const n = _value();
+  return _buf !== '' && n >= _min && n <= _max;
+}
+
 function _paint() {
-  const n   = _value();
-  const amt = document.getElementById('kp-amt');
-  const ok  = document.getElementById('kp-ok-amt');
+  const n    = _value();
+  const good = _valid();
+  const amt  = document.getElementById('kp-amt');
+  const okA  = document.getElementById('kp-ok-amt');
+  const okB  = document.getElementById('kp-ok');
   if (amt) {
     amt.textContent = fmtChips(n);
-    // Out-of-range is shown, not silently corrected: the player sees what
-    // the clamp will do before pressing OK (same spirit as guard_raise).
-    if (_buf === '' || n < _min || n > _max) amt.classList.add('kp-bad');
-    else amt.classList.remove('kp-bad');
+    // Out of range is SHOWN, never silently corrected.
+    if (good) amt.classList.remove('kp-bad');
+    else      amt.classList.add('kp-bad');
   }
-  if (ok) ok.textContent = fmtChips(Math.max(_min, Math.min(n || _min, _max)));
+  // The confirm button always shows what was actually typed, and greys out
+  // while that amount is unplayable — same guard as the bar, where Bet/Raise
+  // is disabled whenever a raise is not available. Showing a clamped amount
+  // here would contradict the greyed-out state and hide the real problem.
+  if (okA) okA.textContent = fmtChips(n);
+  if (okB) okB.disabled = !good;
 }
 
 // ─── Open / close ──────────────────────────────────────────────────
@@ -150,8 +163,16 @@ function openBetKeypad() {
   const fld  = _field();
   if (!grid || !fld || fld.disabled) return;
   if (document.getElementById('bet-keypad')) return;
-  // Never open over the out-of-turn preview: nothing there is actionable.
+  // Same preconditions as the bar itself. The out-of-turn preview is inert,
+  // and a frozen bar (.no-action, e.g. after folding) must stay frozen — the
+  // keypad cannot become a side door onto a bar that refuses clicks.
   if (grid.closest('.actions-preview')) return;
+  if (grid.closest('.no-action')) return;
+  // A closed socket makes any action pointless; doAction would only show the
+  // "connection lost" panel. Better not to open a keypad over it.
+  if (!S.ws || S.ws.readyState !== 1) return;
+  // Not my turn any more: the panel is about to be re-rendered anyway.
+  if (S.turnPid !== S.myId) return;
   _min = parseInt(fld.getAttribute('min'), 10) || 0;
   _max = parseInt(fld.getAttribute('max'), 10) || 0;
   if (_max <= 0) return;
@@ -237,10 +258,18 @@ function _onKeyDown(e) {
 function _commit() {
   const fld = _field();
   if (!fld) { closeBetKeypad(); return; }
-  const v = Math.max(_min, Math.min(_value() || _min, _max));
+  // Nothing leaves the keypad while the amount is unplayable: the confirm
+  // button is disabled, and Enter must not be a way around it.
+  if (!_valid()) return;
+  // The amount is written AS TYPED, never pre-clamped. Clamping here would
+  // short-circuit doRaise()'s guard_raise check — typing 300 with a 250 stack
+  // would have gone all-in silently, exactly the surprise that guard exists
+  // to prevent. doRaise() re-reads the live minimum and stack at send time,
+  // so a raise that arrived while the keypad was open is still caught.
+  const v = _value();
   fld.value = String(v);
   const sl = document.getElementById('raise-slider');
-  if (sl) sl.value = String(v);
+  if (sl) sl.value = String(Math.max(_min, Math.min(v, _max)));
   if (window._syncRaiseBtnAmt) window._syncRaiseBtnAmt();
   closeBetKeypad();
   // Passe par App.doRaise : un appui manuel doit aussi repasser le mode de
