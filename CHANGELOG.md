@@ -33,6 +33,8 @@ release.
   entry and `Shift` + click takes a range, both switching the mode on by
   themselves, file-explorer style. Leaving the mode (or closing the window)
   clears the ticks. Five new i18n keys, translated in all 45 catalogues.
+  The help corpus describes the batch deletion and both keyboard shortcuts
+  in all 45 languages (`web.22`).
 - **Custom sounds** (`web.19`) — every one of the 14 game samples (fold,
   check, call, bet, raise, all-in, dealing, your turn, the three blind-raise
   levels, player connected, game ready, lobby chat) can be replaced with the
