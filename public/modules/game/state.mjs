@@ -131,6 +131,12 @@ export const S = {
   _pendingRejoin: 0,       // gameId à rejoindre après reconnexion (0 = aucun)
   _pendingRejoinSpec: false, // true = on était SPECTATEUR → re-spectater (pas de siège à réclamer)
   _rejoinNickRetries: 0,
+  // Session GUID handed out by the server (InitAck field 1, 16 bytes). Played
+  // back in InitMessage.myLastSessionId on reconnect: it is the ONLY proof the
+  // server accepts before handing a seat back to a player who dropped mid-game
+  // (servergamestate.cpp, AbstractServerGameStateRunning::HandleNewPlayer).
+  // Persisted base64 inside pth_resume by onJoinGameAck.
+  _sessionGuid: null,
   _nickBusyTries: 0,      // réessais auto « pseudo occupé » (Error 4) déjà consommés
   _nickBusyName: '',      // pseudo pour lequel le compteur ci-dessus a été armé
   _nickBusyAuto: false,   // true = le prochain connect() vient du réessai auto (garde le compteur)

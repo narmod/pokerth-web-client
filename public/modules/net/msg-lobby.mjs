@@ -110,11 +110,24 @@ function onAnnounce(sub) {
         }
       } catch (e) {}
     }
+    // Previous session GUID, replayed as InitMessage.myLastSessionId. Source:
+    // S._sessionGuid when the page survived the drop, otherwise the base64 copy
+    // kept in pth_resume (full reload / iOS cold start after the PWA was killed
+    // in the background). Same 5 min window as the rejoin marker, matching the
+    // server's SERVER_OFFLINE_RECONNECT_TIMEOUT_SEC = 300.
+    let _lastSid = S._sessionGuid || null;
+    if (!_lastSid && !window._offlineMode) {
+      try {
+        var _rk = JSON.parse(localStorage.getItem('pth_resume') || 'null');
+        if (_rk && _rk.k && _rk.n === S.myName && (Date.now() - _rk.t) < 5 * 60 * 1000)
+          _lastSid = MSG.b64ToBytes(_rk.k);
+      } catch (e) { _lastSid = null; }
+    }
     // Mot de passe serveur (optionnel, masqué sous « plus d'options »).
     // Trimmé ; vide → null donc omis de l'InitMessage. Lu directement ici
     // (comme authPass) pour couvrir aussi les reconnexions automatiques.
     const srvPass = (document.getElementById('server-pass') ? document.getElementById('server-pass').value.trim() : '') || null;
-    send(MSG.buildInit(S.myName, pMaj, pMin, loginType, authPass, srvPass));
+    send(MSG.buildInit(S.myName, pMaj, pMin, loginType, authPass, srvPass, _lastSid));
     return;
 }
 
@@ -136,6 +149,11 @@ function onInitAck(sub) {
     _endConnecting();           // login OK → unlock the connect button
     S._reconnectAttempts = 0;
     S.myId = Proto.u32(sub, 2);
+    // GUID of THIS session (InitAck field 1), kept for the next InitMessage.
+    // Only written to pth_resume once we are actually seated (onJoinGameAck) --
+    // same timing as the QML client, where WriteSessionGuidToFile() is called
+    // from ClientThread::InitGame() rather than at login.
+    S._sessionGuid = Proto.raw(sub, 1);
     S._rejoinNickRetries = 0;
     _nickBusyReset();           // pseudo accepté → compteur de réessais à zéro
     // Demander NOTRE PROPRE PlayerInfo : le serveur n'écho pas toujours
@@ -152,7 +170,13 @@ function onInitAck(sub) {
     // Auto-rejoin the table we dropped from, if any. Source: the in-memory
     // flag (transient drop) or a recent persisted marker (full reload).
     // Same nickname required so we don't hijack another player's seat.
-    var _rt = S._pendingRejoin;
+    // The server has the final word: InitAck.rejoinGameId (field 4) is only
+    // sent when a seat really is waiting for us -- same name, same GUID, cash
+    // still above zero (serverlobbythread.cpp:2755). It outranks our local
+    // markers, which cannot know whether the seat was invalidated meanwhile.
+    var _srvRt = Proto.u32orNull(sub, 4);
+    if (_srvRt) S._pendingRejoinSpec = false;   // a real seat is never a spectator slot
+    var _rt = _srvRt || S._pendingRejoin;
     if (window._offlineMode) {
       // Entraînement : aucune partie ne survit au rechargement — on ignore et
       // on purge tout marqueur de reprise (y compris hérité d'avant correctif).

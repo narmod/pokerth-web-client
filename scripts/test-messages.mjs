@@ -22,6 +22,28 @@ ok(Proto.str(pi.sub, 6) === 'Tester', 'buildInit: nick roundtrip');
 const ver = Proto.sub(pi.sub, 1);
 ok(Proto.u32(ver, 1) === 5 && Proto.u32(ver, 2) === 1, 'buildInit: requestedVersion 5.1');
 
+// 1b) buildInit: myLastSessionId (field 3, bytes) — the seat-recovery proof.
+// The server refuses to hand a seat back to a client whose OldGuid is empty,
+// so an absent or empty GUID must stay OMITTED rather than be sent as "".
+const _guid = new Uint8Array([0x00,0x91,0x2f,0xff,0x10,0x20,0x30,0x40,
+                              0x7f,0x80,0xfe,0x01,0x02,0x03,0x04,0x05]);
+ok(Proto.raw(pi.sub, 3) === null, 'buildInit: no GUID -> field 3 omitted');
+const initG = MSG.parse(MSG.buildInit('Tester', 5, 1, 0, null, null, _guid));
+const backG = Proto.raw(initG.sub, 3);
+ok(!!backG && backG.length === 16 && _guid.every((b, i) => b === backG[i]),
+   'buildInit: myLastSessionId roundtrip byte-for-byte (16 bytes, NUL-safe)');
+ok(Proto.raw(MSG.parse(MSG.buildInit('T', 5, 1, 0, null, null, new Uint8Array(0))).sub, 3) === null,
+   'buildInit: empty GUID -> field 3 omitted');
+const initGP = MSG.parse(MSG.buildInit('T', 5, 1, 2, null, 'srvpw', _guid));
+ok(Proto.str(initGP.sub, 4) === 'srvpw' && Proto.raw(initGP.sub, 3).length === 16,
+   'buildInit: authServerPassword (4) and myLastSessionId (3) coexist');
+
+// 1c) base64 helpers: pth_resume stores the GUID as text, so the roundtrip must
+// survive NUL and high bytes untouched.
+const _b64 = MSG.bytesToB64(_guid), _rt = MSG.b64ToBytes(_b64);
+ok(_rt.length === 16 && _guid.every((b, i) => b === _rt[i]),
+   'bytesToB64/b64ToBytes: binary roundtrip');
+
 // 2) buildMyAction -> parse roundtrip, including bet 0 default
 const act = MSG.parse(MSG.buildMyAction(42, 7, 3, 5, 800));
 ok(act.type === MSG.T.MyActionRequest, 'buildMyAction: type = T.MyActionRequest');

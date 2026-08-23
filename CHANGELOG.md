@@ -13,6 +13,22 @@ this file captures what matters to players and operators.
 Opened with `v2.1.7-web.0` (2026-08-13), following the upstream **2.1.7**
 release.
 
+### Fixed
+- **Rejoining a running game after a disconnect** (`web.54`) — a player thrown
+  off mid-game could never get back to the table, even within the five minutes
+  the server holds the seat (`SERVER_OFFLINE_RECONNECT_TIMEOUT_SEC`). The web
+  client had its own rejoin path (`pth_resume` → `RejoinExistingGameMessage`)
+  but never sent `InitMessage.myLastSessionId`, so the server saw an empty
+  `OldGuid` and refused every attempt with `removedAlreadyRunning`
+  (`servergamestate.cpp`, `AbstractServerGameStateRunning::HandleNewPlayer` —
+  whose comment names this client explicitly). The session GUID from
+  `InitAck` field 1 is now kept and replayed, mirroring the QML client's
+  `guid.tmp`; `InitAck.rejoinGameId` (field 4) is honoured as the authoritative
+  offer, outranking the local marker, which cannot know whether the seat was
+  invalidated meanwhile. The GUID lives inside `pth_resume`, so it inherits
+  that key's handling: kept across a factory reset, never exported to a backup
+  and never carried to another device. Reported on the forum by *il Buono*.
+
 ### Added
 - **`/rules` in Korean, Vietnamese, Thai, Arabic, Hebrew and Persian**
   (`web.53`) — seventh batch, thirty-seven languages live, 8 to go. Vietnamese

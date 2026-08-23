@@ -1,4 +1,5 @@
 2026-08-13 version 2.1.7-web (current series):
+- bugfix: losing your connection during a running game no longer cost you your seat - the client now proves to the server that the seat is yours and sits back down at the next hand, within the five minutes the server holds it. Rejoining still only works from the same device and the same browser you were playing on
 - new: admin page - the shared leaderboard can now reset every week, alongside daily, monthly and yearly
 - bugfix: the app sometimes offered an update that was already installed - the version marker was being read from the offline cache instead of the server
 - bugfix: a newly imported seat pack only showed up after the offline cache renewed itself - the seat list is now read from the server like the table, card and music lists

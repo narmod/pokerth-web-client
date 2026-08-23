@@ -190,7 +190,7 @@ const MSG = (() => {
   // Auth (loginType=1) : password en clair dans clientUserData (tag 7),
   //   sécurisé par TLS (mandatory côté serveur v2.0+).
   //   Ref: pokerth/src/net/clientstate.cpp:1465-1469 + serverlobbythread.cpp:1255-1256
-  function buildInit(nick, major, minor, loginType, password, serverPass) {
+  function buildInit(nick, major, minor, loginType, password, serverPass, lastSessionId) {
     loginType = loginType !== undefined ? loginType : 0;
     // --- Identification client auprès du serveur --------------------------
     // Version upstream annoncée = dérivée de BUILD_VERSION ('MAJ.MIN.PATCH-web.N',
@@ -217,6 +217,16 @@ const MSG = (() => {
       [5,0,loginType], // login: 0=guestLogin, 1=authenticatedLogin, 2=unauthenticatedLogin
       [6,2,nick],      // nickName (utilisé aussi pour authenticated login)
     ];
+    // Seat recovery after a drop (InitMessage.myLastSessionId, field 3, bytes).
+    // The server compares this GUID against the one stored on the seat; without
+    // it GetOldGuid() stays empty and rejoining a RUNNING game is refused with
+    // removedAlreadyRunning -- see serverlobbythread.cpp:1315 and
+    // servergamestate.cpp:943. Mirrors the QML client (guid.tmp,
+    // clientstate.cpp:1380). Omitted when absent: a first login has nothing to
+    // replay, and an empty value would never match a live seat anyway.
+    if (lastSessionId && lastSessionId.length) {
+      fields.push([3, 2, lastSessionId]); // myLastSessionId
+    }
     // Mot de passe SERVEUR (authServerPassword, champ 4, string). Le serveur
     // le vérifie pour TOUS les types de login sur un build non-officiel
     // (config ServerPassword) — cf. serverlobbythread.cpp HandleNetPacketInit,
@@ -448,7 +458,7 @@ const MSG = (() => {
     const msg = Proto.encode([[1,0,gameId],[2,0,playerId]]);
     return Proto.encode([[1,0,T.InvitePlayerToGame],[33,2,msg]]);
   }
-  return { T, parse, scramClientFirst, scramClientFinal, scramFindServerFirst, buildInit, buildChat, buildGameChat, buildJoin, buildJoinGame, buildRejoinGame, buildStartEventAck, buildMyAction, buildCreateGame, buildLeaveGame, buildStartWithBots, buildKickPlayer, buildShowMyCards, buildAdminBanPlayer, buildAdminGlobalNotice, buildRejectInvite, buildInvitePlayer };
+  return { T, parse, b64ToBytes: _scB64ToBytes, bytesToB64: _scBytesToB64, scramClientFirst, scramClientFinal, scramFindServerFirst, buildInit, buildChat, buildGameChat, buildJoin, buildJoinGame, buildRejoinGame, buildStartEventAck, buildMyAction, buildCreateGame, buildLeaveGame, buildStartWithBots, buildKickPlayer, buildShowMyCards, buildAdminBanPlayer, buildAdminGlobalNotice, buildRejectInvite, buildInvitePlayer };
 })();
 
 // ─── Exports ES + alias legacy ───────────────────────────────────────────

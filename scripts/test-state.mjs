@@ -191,6 +191,7 @@ ok(JSON.stringify(keys) === JSON.stringify(['REACT_EMOJI_MIN_GAP', 'REACT_EMOJI_
    '_lastInitMode', '_lastInitNick', '_lastInitTime', '_connectingNow',
    '_connectTimeout', '_connectBtnLabel', '_preserveConnect', '_currentLoginMode', '_reconnectAttempts',
    '_lastRxTime', '_intentionalDisconnect', '_pendingRejoin', '_pendingRejoinSpec', '_rejoinNickRetries',
+   '_sessionGuid',
    '_nickBusyTries', '_nickBusyName', '_nickBusyAuto',
    '_wasAuthenticated', '_lastConnectTime', '_lastConnectFailed', '_ipBlockUntil',
    '_notifyWS', '_notifyUrl', '_notifyTimer', 'MIN_CONNECT_INTERVAL',

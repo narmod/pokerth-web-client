@@ -83,7 +83,14 @@ function onJoinGameAck(sub) {
     if (!window._offlineMode) {
       // s:1 = session spectateur → au resume on re-spectatera au lieu de
       // réclamer un siège (voir onInitAck / _armRejoin).
-      try { localStorage.setItem('pth_resume', JSON.stringify({ n: S.myName, g: S.gId, t: Date.now(), s: S._amSpectator ? 1 : 0 })); } catch(e) {}
+      // k = session GUID (base64). This is the proof the server requires before
+      // giving the seat back after a drop; without it, rejoining a RUNNING game
+      // is refused. Rewritten on every JoinGameAck, so also right after a
+      // successful rejoin -- the server rebinds the seat to the NEW GUID at
+      // that point (servergamestate.cpp:1573).
+      var _k = '';
+      try { if (S._sessionGuid) _k = MSG.bytesToB64(S._sessionGuid); } catch(e) {}
+      try { localStorage.setItem('pth_resume', JSON.stringify({ n: S.myName, g: S.gId, t: Date.now(), s: S._amSpectator ? 1 : 0, k: _k })); } catch(e) {}
     }
     window._hideBanner();
     // Fresh game = empty spectator set. The server will replay
