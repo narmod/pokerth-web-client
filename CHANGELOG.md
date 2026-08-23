@@ -61,6 +61,14 @@ release.
   (`--btn-allin-img`). It now carries `.btn-action .btn-allin` and is excluded
   from the keypad's local styling, so it stays orange — or whatever the active
   theme makes it — exactly as in the action row.
+- **Keypad cancel was barely visible on skinned tables** (`web.63`) — reported
+  on Star Trek. Cancel was outlined with `var(--btn-fold-bg, #6b2020)`, but
+  `_injectButtons()` *removes* every button token before re-applying only what
+  the theme supplies, and skinned tables supply foreground colours alone. So
+  `--btn-fold-bg` was undefined and the outline fell back to a dark red that
+  disappeared against a night-blue felt. Cancel now takes the keypad keys'
+  own styling (`--field-bg` with a `--btn-raise-bg` border, `--btn-raise-img`
+  under `data-btn-img`), which depends on no token a theme can remove.
 
 ### Changed
 - **Bet slider granularity now matches the desktop client** (`web.58`) — the web

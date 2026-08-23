@@ -5097,9 +5097,16 @@ body:not(.in-game) .my-zone {
    de la barre. On ne pose ici que la repartition et le cas d'Annuler, qui n'a
    pas d'equivalent dans la barre. */
 .kp-foot .btn-action { min-height: 40px; min-width: 0; padding: 8px 10px; }
+/* Annuler prend l'habillage des touches, PAS celui de Se coucher : les themes
+   a skin (_injectButtons) SUPPRIMENT --btn-fold-bg et ne reposent que les
+   couleurs de texte, si bien qu'un contour var(--btn-fold-bg, #6b2020)
+   retombait sur un rouge sombre par defaut — illisible sur un fond nuit comme
+   Star Trek. Les touches, elles, ne dependent d'aucun token qu'un theme
+   puisse retirer. */
 .kp-foot .kp-cancel {
-  flex: 1; background: transparent;
-  border: 1px solid var(--btn-fold-bg, #6b2020); color: var(--btn-fold-fg, #ffd0d0);
+  flex: 1;
+  background: var(--field-bg); border: 1px solid var(--btn-raise-bg, #4CAF50);
+  color: var(--btn-raise-bg, #4CAF50); font-size: var(--fs-xs);
 }
 .kp-foot .kp-ok { flex: 1.7; }
 .kp-foot .kp-ok b { font-family: var(--ff-mono); }
@@ -5115,8 +5122,9 @@ body:not(.in-game) .my-zone {
   color: var(--btn-raise-fg, #fff);
 }
 :root[data-btn-img] .kp-foot .kp-cancel {
-  border-image: var(--btn-fold-img) 9 fill / 9px / 0 stretch;
-  color: var(--btn-fold-fg, #fff);
+  border: 9px solid transparent; background: transparent;
+  border-image: var(--btn-raise-img) 9 fill / 9px / 0 stretch;
+  color: var(--btn-raise-fg, #fff);
 }
 /* Slider au doigt : on AGRANDIT LA ZONE TACTILE (hauteur de la boite) sans
    toucher au rendu natif — la piste et la poignee restent celles du QML
