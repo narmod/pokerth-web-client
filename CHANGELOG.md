@@ -55,6 +55,12 @@ release.
   surprise that guard exists to prevent. The keypad also refuses to open over
   a frozen bar (`.no-action`), on a closed socket, or when the turn has moved
   on — it must not become a side door onto a bar that refuses clicks.
+  All-In is themed like the bar (`web.62`): it was wearing the quick-bet green
+  along with Min / 1-2 / Pot, but in the bar it is a full action button with
+  its own colour (`--btn-allin-bg`) and its own themed image
+  (`--btn-allin-img`). It now carries `.btn-action .btn-allin` and is excluded
+  from the keypad's local styling, so it stays orange — or whatever the active
+  theme makes it — exactly as in the action row.
 
 ### Changed
 - **Bet slider granularity now matches the desktop client** (`web.58`) — the web

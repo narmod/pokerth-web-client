@@ -5066,20 +5066,31 @@ body:not(.in-game) .my-zone {
 .kp-grid { display: grid; grid-template-columns: repeat(3, 1fr) 1.25fr; gap: 5px; }
 .kp-grid button {
   height: 42px; min-height: 42px; border-radius: var(--act-btn-radius, 7px); cursor: pointer;
-  background: var(--field-bg); border: 1px solid var(--btn-raise-bg, #4CAF50);
-  color: var(--btn-raise-bg, #4CAF50);
-  font-family: var(--ff-mono); font-size: 1rem; font-weight: 700;
   transition: filter 0.12s, transform 0.08s;
   -webkit-tap-highlight-color: transparent; touch-action: manipulation;
 }
+/* All-In est exclu de l'habillage local : il porte .btn-allin et doit donc
+   garder l'orange (ou l'image) que le theme lui donne dans la barre. */
+.kp-grid button:not(.btn-allin) {
+  background: var(--field-bg); border: 1px solid var(--btn-raise-bg, #4CAF50);
+  color: var(--btn-raise-bg, #4CAF50);
+  font-family: var(--ff-mono); font-size: 1rem; font-weight: 700;
+}
 .kp-grid button:hover  { filter: brightness(1.15); }
 .kp-grid button:active { transform: scale(0.96); }
-.kp-grid .kp-s {
+.kp-grid .kp-s:not(.btn-allin) {
   background: #1b5e20; border-color: #4CAF50; color: #fff;
   font-family: inherit; font-size: var(--fs-xs); font-weight: 700;
 }
-.kp-grid .kp-s:hover  { background: #388e3c; filter: none; }
-.kp-grid .kp-s:active { background: #2e7d32; }
+.kp-grid .kp-s:not(.btn-allin):hover  { background: #388e3c; filter: none; }
+.kp-grid .kp-s:not(.btn-allin):active { background: #2e7d32; }
+/* .btn-action impose min-width: 80px et un padding pense pour la rangee
+   d'actions : a l'etroit dans une colonne de grille, on les neutralise sans
+   toucher aux couleurs. */
+.kp-grid .btn-allin {
+  min-width: 0; padding: 0 4px; font-size: var(--fs-3xs, 0.62rem);
+  letter-spacing: 0.04em; white-space: nowrap; overflow: hidden;
+}
 .kp-foot { display: flex; gap: 5px; margin-top: 6px; }
 /* Le pied porte .btn-action / .btn-raise : forme, couleurs, images de boutons
    du theme, etat desactive et animations viennent donc des regles existantes

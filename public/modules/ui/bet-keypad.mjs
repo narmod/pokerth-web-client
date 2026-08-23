@@ -81,7 +81,11 @@ function _quickPicks(min, max) {
     const m = /setPct\((\d+)\)/.exec(b.getAttribute('onclick') || '');
     if (m) picks.push({ label: want[k].label, value: Math.max(min, Math.min(parseInt(m[1], 10), max)) });
   }
-  picks.push({ label: window.pkTerm ? window.pkTerm('allin') : 'All-In', value: max });
+  // All-In n'est PAS une mise rapide : dans la barre c'est un bouton d'action
+  // a part entiere (.btn-allin), avec sa propre couleur et sa propre image de
+  // theme. Il porte donc ses vraies classes ici aussi, au lieu du vert des
+  // mises rapides que portent Min / 1-2 / Pot.
+  picks.push({ label: window.pkTerm ? window.pkTerm('allin') : 'All-In', value: max, cls: 'btn-action btn-allin' });
   return picks;
 }
 
@@ -122,7 +126,8 @@ function _html(min, max) {
 
 function _pickBtn(p) {
   if (!p) return '<span></span>';
-  return '<button type="button" class="kp-s" data-set="' + p.value + '">' + _esc(p.label) + '</button>';
+  return '<button type="button" class="kp-s' + (p.cls ? ' ' + p.cls : '') + '" data-set="' + p.value + '">'
+    + _esc(p.label) + '</button>';
 }
 
 function _value() {
