@@ -906,7 +906,7 @@ export const strings = {
     jrSaveAs: "Anomena i desa…",
     jrSelect: "Selecciona…",
     jrSelectCancel: "Cancel·la la selecció",
-    jrSelectHint: "Tria diversos registres per esborrar-los de cop — Ctrl (⌘) + clic per afegir-ne un, Maj + clic per a un interval",
+    jrSelectHint: "Tria diversos registres per esborrar-los de cop — Ctrl (⌘) + clic per afegir-ne un, Maj + clic per a un interval, Maj + ↑/↓ des del teclat",
     jrDeleteN: "Esborra ({n})",
     jrConfirmDeleteN: "Voleu esborrar {n} registres? L'acció no es pot desfer.",
     jrDelete: "Elimina",

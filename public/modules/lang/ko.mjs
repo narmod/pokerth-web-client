@@ -637,7 +637,7 @@ export const strings = {
     jrSaveAs: "다른 이름으로 저장…",
     jrSelect: "선택…",
     jrSelectCancel: "선택 취소",
-    jrSelectHint: "여러 기록을 한 번에 삭제하도록 고르기 — Ctrl(⌘) + 클릭으로 하나 추가, Shift + 클릭으로 범위 선택",
+    jrSelectHint: "여러 기록을 한 번에 삭제하도록 고르기 — Ctrl(⌘) + 클릭으로 하나 추가, Shift + 클릭으로 범위 선택, 키보드에서는 Shift + ↑/↓",
     jrDeleteN: "삭제 ({n})",
     jrConfirmDeleteN: "기록 {n}개를 삭제할까요? 되돌릴 수 없습니다.",
     jrDelete: "삭제",

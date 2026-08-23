@@ -831,7 +831,7 @@ export const strings = {
     jrSaveAs: "Lagre som…",
     jrSelect: "Velg…",
     jrSelectCancel: "Avbryt utvalget",
-    jrSelectHint: "Velg flere logger og slett dem samtidig — Ctrl (⌘) + klikk legger til én, Skift + klikk velger et område",
+    jrSelectHint: "Velg flere logger og slett dem samtidig — Ctrl (⌘) + klikk legger til én, Skift + klikk velger et område, Skift + ↑/↓ fra tastaturet",
     jrDeleteN: "Slett ({n})",
     jrConfirmDeleteN: "Slette {n} logger? Dette kan ikke angres.",
     jrDelete: "Slett",

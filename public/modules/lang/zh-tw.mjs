@@ -829,7 +829,7 @@ export const strings = {
     jrSaveAs: "另存為…",
     jrSelect: "選擇…",
     jrSelectCancel: "取消選擇",
-    jrSelectHint: "一次刪除多筆記錄 — Ctrl（⌘）+ 點按可加入一項，Shift + 點按可選擇範圍",
+    jrSelectHint: "一次刪除多筆記錄 — Ctrl（⌘）+ 點按可加入一項，Shift + 點按可選擇範圍，鍵盤上則是 Shift + ↑/↓",
     jrDeleteN: "刪除 ({n})",
     jrConfirmDeleteN: "刪除 {n} 筆記錄？此動作無法復原。",
     jrDelete: "刪除",

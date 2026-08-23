@@ -905,7 +905,7 @@ export const strings = {
     jrSaveAs: "Lưu thành…",
     jrSelect: "Chọn…",
     jrSelectCancel: "Hủy chọn",
-    jrSelectHint: "Chọn nhiều nhật ký để xóa cùng lúc — Ctrl (⌘) + nhấp để thêm một mục, Shift + nhấp để chọn một dải",
+    jrSelectHint: "Chọn nhiều nhật ký để xóa cùng lúc — Ctrl (⌘) + nhấp để thêm một mục, Shift + nhấp để chọn một dải, Shift + ↑/↓ trên bàn phím",
     jrDeleteN: "Xóa ({n})",
     jrConfirmDeleteN: "Xóa {n} nhật ký? Không thể hoàn tác.",
     jrDelete: "Xóa",

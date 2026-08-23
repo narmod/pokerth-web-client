@@ -834,7 +834,7 @@ export const strings = {
     jrSaveAs: "Farklı kaydet…",
     jrSelect: "Seç…",
     jrSelectCancel: "Seçimi iptal et",
-    jrSelectHint: "Birden fazla günlüğü seçip tek seferde silin — Ctrl (⌘) + tıklama bir tane ekler, Shift + tıklama bir aralık seçer",
+    jrSelectHint: "Birden fazla günlüğü seçip tek seferde silin — Ctrl (⌘) + tıklama bir tane ekler, Shift + tıklama bir aralık seçer, klavyede Shift + ↑/↓",
     jrDeleteN: "Sil ({n})",
     jrConfirmDeleteN: "{n} günlük silinsin mi? Bu işlem geri alınamaz.",
     jrDelete: "Sil",

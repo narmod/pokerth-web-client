@@ -840,7 +840,7 @@ export const strings = {
     jrSaveAs: "Speichern unter…",
     jrSelect: "Auswählen…",
     jrSelectCancel: "Auswahl abbrechen",
-    jrSelectHint: "Mehrere Protokolle auf einmal löschen — Strg (⌘) + Klick fügt eines hinzu, Umschalt + Klick wählt einen Bereich",
+    jrSelectHint: "Mehrere Protokolle auf einmal löschen — Strg (⌘) + Klick fügt eines hinzu, Umschalt + Klick wählt einen Bereich, Umschalt + ↑/↓ über die Tastatur",
     jrDeleteN: "Löschen ({n})",
     jrConfirmDeleteN: "{n} Protokolle löschen? Dies kann nicht rückgängig gemacht werden.",
     jrDelete: "Löschen",

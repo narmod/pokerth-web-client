@@ -832,7 +832,7 @@ export const strings = {
     jrSaveAs: "Gem som…",
     jrSelect: "Vælg…",
     jrSelectCancel: "Annullér markering",
-    jrSelectHint: "Vælg flere logfiler, og slet dem på én gang — Ctrl (⌘) + klik tilføjer én, Skift + klik vælger et interval",
+    jrSelectHint: "Vælg flere logfiler, og slet dem på én gang — Ctrl (⌘) + klik tilføjer én, Skift + klik vælger et interval, Skift + ↑/↓ fra tastaturet",
     jrDeleteN: "Slet ({n})",
     jrConfirmDeleteN: "Slet {n} logfiler? Dette kan ikke fortrydes.",
     jrDelete: "Slet",

@@ -573,6 +573,7 @@ function _ensureModal() {
   $('jr-saveas').addEventListener('click', _saveAsPdb);
   $('jr-import').addEventListener('click', _importPdbs);
   $('jr-select').addEventListener('click', () => _setMulti(!_multi));
+  $('jr-list').addEventListener('keydown', _onListKey);
   $('jr-del').addEventListener('click', _delSelected);
   $('jr-delall').addEventListener('click', _delAll);
   $('jr-analyze').addEventListener('click', () => { _analyze = !_analyze; _anHand = 0; _renderRight(); });
@@ -700,6 +701,52 @@ function _renderList() {
     list.appendChild(b);
   });
   _syncSelBtns();
+}
+
+// Déplace le focus sur la n-ième entrée après un redessin (les boutons sont
+// recréés à chaque _renderList, donc le focus doit être reposé à la main).
+function _focusItem(i) {
+  const items = document.querySelectorAll('#jr-list .jr-item');
+  const it = items[Math.max(0, Math.min(items.length - 1, i))];
+  if (!it) return;
+  it.focus();
+  try { it.scrollIntoView({ block: 'nearest' }); } catch (e) {}
+}
+
+// Clavier dans la liste : Haut/Bas se déplacent d'une entrée, Maj + Haut/Bas
+// étend la sélection depuis l'ancre — le pendant de Maj + clic pour qui ne
+// quitte pas le clavier. En mode sélection, Haut/Bas déplacent le focus sans
+// rien cocher : c'est Espace (le clic natif du bouton) qui coche.
+function _onListKey(ev) {
+  const dir = ev.key === 'ArrowDown' ? 1 : (ev.key === 'ArrowUp' ? -1 : 0);
+  if (!dir || ev.ctrlKey || ev.metaKey || ev.altKey) return;
+  const items = Array.from(document.querySelectorAll('#jr-list .jr-item'));
+  if (!items.length) return;
+  const ids = _sessions().map((m) => m.sessionId);
+  let from = items.indexOf(document.activeElement);
+  if (from < 0) from = Math.max(0, ids.indexOf(_sel));
+  const to = Math.max(0, Math.min(items.length - 1, from + dir));
+  ev.preventDefault();
+  if (to === from && !ev.shiftKey) { _focusItem(to); return; }
+  const sid = ids[to];
+  if (ev.shiftKey) {
+    if (!_multi) {
+      // L'ancre est l'entrée d'où l'on part, qui n'est pas forcément celle en
+      // aperçu : en mode sélection le focus se promène tout seul.
+      _multi = true;
+      const a0 = ids[from];
+      if (a0) { _marked.add(a0); _anchor = a0; }
+    }
+    _markRange(sid);
+    _renderList();
+  } else if (_multi) {
+    // Le focus se promène, la sélection ne bouge pas.
+  } else if (sid !== _sel) {
+    _sel = sid; _selGame = 0; _anHand = 0;
+    _renderList();
+    _loadSelected();
+  }
+  _focusItem(to);
 }
 
 // Coche la plage entre l'ancre (dernier log cliqué, sinon l'aperçu) et sid.

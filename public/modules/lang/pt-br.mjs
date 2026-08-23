@@ -837,7 +837,7 @@ export const strings = {
     jrSaveAs: "Salvar como…",
     jrSelect: "Selecionar…",
     jrSelectCancel: "Cancelar seleção",
-    jrSelectHint: "Escolha vários registros para excluir de uma vez — Ctrl (⌘) + clique para adicionar um, Shift + clique para um intervalo",
+    jrSelectHint: "Escolha vários registros para excluir de uma vez — Ctrl (⌘) + clique para adicionar um, Shift + clique para um intervalo, Shift + ↑/↓ pelo teclado",
     jrDeleteN: "Excluir ({n})",
     jrConfirmDeleteN: "Excluir {n} registros? Não é possível desfazer.",
     jrDelete: "Excluir",

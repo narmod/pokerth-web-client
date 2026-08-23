@@ -904,7 +904,7 @@ export const strings = {
     jrSaveAs: "Spremi kao…",
     jrSelect: "Odaberi…",
     jrSelectCancel: "Otkaži odabir",
-    jrSelectHint: "Odaberite više zapisa i obrišite ih odjednom — Ctrl (⌘) + klik dodaje jedan, Shift + klik odabire raspon",
+    jrSelectHint: "Odaberite više zapisa i obrišite ih odjednom — Ctrl (⌘) + klik dodaje jedan, Shift + klik odabire raspon, Shift + ↑/↓ s tipkovnice",
     jrDeleteN: "Obriši ({n})",
     jrConfirmDeleteN: "Obrisati {n} zapisa? Radnja se ne može poništiti.",
     jrDelete: "Izbriši",

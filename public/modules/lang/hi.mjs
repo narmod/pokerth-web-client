@@ -712,7 +712,7 @@ export const strings = {
     jrSaveAs: "इस रूप में सहेजें…",
     jrSelect: "चुनें…",
     jrSelectCancel: "चयन रद्द करें",
-    jrSelectHint: "एक साथ हटाने के लिए कई लॉग चुनें — Ctrl (⌘) + क्लिक एक जोड़ता है, Shift + क्लिक एक श्रेणी चुनता है",
+    jrSelectHint: "एक साथ हटाने के लिए कई लॉग चुनें — Ctrl (⌘) + क्लिक एक जोड़ता है, Shift + क्लिक एक श्रेणी चुनता है, कीबोर्ड से Shift + ↑/↓",
     jrDeleteN: "हटाएँ ({n})",
     jrConfirmDeleteN: "{n} लॉग हटाएँ? इसे पूर्ववत नहीं किया जा सकता।",
     jrDelete: "हटाएँ",

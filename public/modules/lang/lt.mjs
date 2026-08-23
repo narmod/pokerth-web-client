@@ -905,7 +905,7 @@ export const strings = {
     jrSaveAs: "Įrašyti kaip…",
     jrSelect: "Pasirinkti…",
     jrSelectCancel: "Atšaukti pasirinkimą",
-    jrSelectHint: "Pasirinkite kelis žurnalus ir ištrinkite juos iš karto — Ctrl (⌘) + spustelėjimas prideda vieną, Lyg2 (Shift) + spustelėjimas pažymi sritį",
+    jrSelectHint: "Pasirinkite kelis žurnalus ir ištrinkite juos iš karto — Ctrl (⌘) + spustelėjimas prideda vieną, Lyg2 (Shift) + spustelėjimas pažymi sritį, Lyg2 (Shift) + ↑/↓ klaviatūra",
     jrDeleteN: "Ištrinti ({n})",
     jrConfirmDeleteN: "Ištrinti {n} žurnalus? Šio veiksmo anuliuoti negalima.",
     jrDelete: "Šalinti",

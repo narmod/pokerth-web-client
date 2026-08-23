@@ -841,7 +841,7 @@ export const strings = {
     jrSaveAs: "Salva con nome…",
     jrSelect: "Seleziona…",
     jrSelectCancel: "Annulla selezione",
-    jrSelectHint: "Scegli più registri da eliminare in una volta — Ctrl (⌘) + clic per aggiungerne uno, Maiusc + clic per un intervallo",
+    jrSelectHint: "Scegli più registri da eliminare in una volta — Ctrl (⌘) + clic per aggiungerne uno, Maiusc + clic per un intervallo, Maiusc + ↑/↓ da tastiera",
     jrDeleteN: "Elimina ({n})",
     jrConfirmDeleteN: "Eliminare {n} registri? L'operazione è irreversibile.",
     jrDelete: "Elimina",

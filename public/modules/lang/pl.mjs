@@ -835,7 +835,7 @@ export const strings = {
     jrSaveAs: "Zapisz jako…",
     jrSelect: "Zaznacz…",
     jrSelectCancel: "Anuluj zaznaczenie",
-    jrSelectHint: "Wybierz kilka dzienników, aby usunąć je naraz — Ctrl (⌘) + kliknięcie dodaje jeden, Shift + kliknięcie zaznacza zakres",
+    jrSelectHint: "Wybierz kilka dzienników, aby usunąć je naraz — Ctrl (⌘) + kliknięcie dodaje jeden, Shift + kliknięcie zaznacza zakres, Shift + ↑/↓ z klawiatury",
     jrDeleteN: "Usuń ({n})",
     jrConfirmDeleteN: "Usunąć {n} dzienników? Tej operacji nie można cofnąć.",
     jrDelete: "Usuń",

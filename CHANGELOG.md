@@ -25,6 +25,14 @@ release.
   were already correct.
 
 ### Added
+- **Keyboard selection in the session logs** (`web.24`) — the list had no
+  arrow-key navigation at all, only Tab. `Up`/`Down` now move from entry to
+  entry, and `Shift` + `Up`/`Down` extends the selection from the anchor, the
+  keyboard counterpart of `Shift` + click. In selection mode the arrows move
+  the focus without ticking anything; `Space` ticks, as it already did. The
+  anchor is the focused entry rather than the previewed one, since the two
+  part company as soon as the focus moves. Arrows carrying `Ctrl`, `Cmd` or
+  `Alt` are left to the browser. `jrSelectHint` updated in all 45 languages.
 - **Music play counter** (`web.23`) — the dashboard could say what visitors
   run but not what they listen to. The music player now posts an anonymous
   `POST /__music {id}` beacon each time a track *starts* (a resume after a

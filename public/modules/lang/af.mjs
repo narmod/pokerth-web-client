@@ -905,7 +905,7 @@ export const strings = {
     jrSaveAs: "Stoor as…",
     jrSelect: "Kies…",
     jrSelectCancel: "Kanselleer keuse",
-    jrSelectHint: "Kies verskeie logboeke om gelyktydig te skrap — Ctrl (⌘) + klik voeg een by, Shift + klik kies 'n reeks",
+    jrSelectHint: "Kies verskeie logboeke om gelyktydig te skrap — Ctrl (⌘) + klik voeg een by, Shift + klik kies 'n reeks, Shift + ↑/↓ met die sleutelbord",
     jrDeleteN: "Skrap ({n})",
     jrConfirmDeleteN: "Skrap {n} logboeke? Dit kan nie ongedaan gemaak word nie.",
     jrDelete: "Vee uit",

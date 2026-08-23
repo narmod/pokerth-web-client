@@ -829,7 +829,7 @@ export const strings = {
     jrSaveAs: "名前を付けて保存…",
     jrSelect: "選択…",
     jrSelectCancel: "選択を解除",
-    jrSelectHint: "複数のログをまとめて削除できます — Ctrl（⌘）+ クリックで 1 件追加、Shift + クリックで範囲選択",
+    jrSelectHint: "複数のログをまとめて削除できます — Ctrl（⌘）+ クリックで 1 件追加、Shift + クリックで範囲選択、キーボードでは Shift + ↑/↓",
     jrDeleteN: "削除 ({n})",
     jrConfirmDeleteN: "{n} 件のログを削除しますか？元に戻せません。",
     jrDelete: "削除",

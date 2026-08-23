@@ -832,7 +832,7 @@ export const strings = {
     jrSaveAs: "Tallenna nimellä…",
     jrSelect: "Valitse…",
     jrSelectCancel: "Peruuta valinta",
-    jrSelectHint: "Valitse useita lokeja ja poista ne kerralla — Ctrl (⌘) + napsautus lisää yhden, Vaihto + napsautus valitsee alueen",
+    jrSelectHint: "Valitse useita lokeja ja poista ne kerralla — Ctrl (⌘) + napsautus lisää yhden, Vaihto + napsautus valitsee alueen, Vaihto + ↑/↓ näppäimistöltä",
     jrDeleteN: "Poista ({n})",
     jrConfirmDeleteN: "Poistetaanko {n} lokia? Tätä ei voi kumota.",
     jrDelete: "Poista",

@@ -905,7 +905,7 @@ export const strings = {
     jrSaveAs: "Mentés másként…",
     jrSelect: "Kijelölés…",
     jrSelectCancel: "Kijelölés megszüntetése",
-    jrSelectHint: "Több napló kijelölése egyszerre törléshez — Ctrl (⌘) + kattintás hozzáad egyet, Shift + kattintás tartományt jelöl ki",
+    jrSelectHint: "Több napló kijelölése egyszerre törléshez — Ctrl (⌘) + kattintás hozzáad egyet, Shift + kattintás tartományt jelöl ki, Shift + ↑/↓ a billentyűzetről",
     jrDeleteN: "Törlés ({n})",
     jrConfirmDeleteN: "Töröl {n} naplót? A művelet nem vonható vissza.",
     jrDelete: "Törlés",

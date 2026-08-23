@@ -833,7 +833,7 @@ export const strings = {
     jrSaveAs: "Uložit jako…",
     jrSelect: "Vybrat…",
     jrSelectCancel: "Zrušit výběr",
-    jrSelectHint: "Vyberte několik záznamů a smažte je najednou — Ctrl (⌘) + kliknutí přidá jeden, Shift + kliknutí vybere rozsah",
+    jrSelectHint: "Vyberte několik záznamů a smažte je najednou — Ctrl (⌘) + kliknutí přidá jeden, Shift + kliknutí vybere rozsah, Shift + ↑/↓ z klávesnice",
     jrDeleteN: "Smazat ({n})",
     jrConfirmDeleteN: "Smazat {n} záznamů? Tuto akci nelze vrátit zpět.",
     jrDelete: "Smazat",

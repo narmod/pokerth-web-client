@@ -831,7 +831,7 @@ export const strings = {
     jrSaveAs: "Spara som…",
     jrSelect: "Välj…",
     jrSelectCancel: "Avbryt markeringen",
-    jrSelectHint: "Välj flera loggar och ta bort dem på en gång — Ctrl (⌘) + klick lägger till en, Skift + klick markerar ett intervall",
+    jrSelectHint: "Välj flera loggar och ta bort dem på en gång — Ctrl (⌘) + klick lägger till en, Skift + klick markerar ett intervall, Skift + ↑/↓ från tangentbordet",
     jrDeleteN: "Ta bort ({n})",
     jrConfirmDeleteN: "Ta bort {n} loggar? Det går inte att ångra.",
     jrDelete: "Radera",

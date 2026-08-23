@@ -836,7 +836,7 @@ export const strings = {
     jrSaveAs: "Opslaan als…",
     jrSelect: "Selecteren…",
     jrSelectCancel: "Selectie annuleren",
-    jrSelectHint: "Kies meerdere logboeken om in één keer te verwijderen — Ctrl (⌘) + klik voegt er één toe, Shift + klik selecteert een reeks",
+    jrSelectHint: "Kies meerdere logboeken om in één keer te verwijderen — Ctrl (⌘) + klik voegt er één toe, Shift + klik selecteert een reeks, Shift + ↑/↓ met het toetsenbord",
     jrDeleteN: "Verwijderen ({n})",
     jrConfirmDeleteN: "{n} logboeken verwijderen? Dit kan niet ongedaan worden gemaakt.",
     jrDelete: "Verwijderen",

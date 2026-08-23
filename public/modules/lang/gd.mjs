@@ -908,7 +908,7 @@ export const strings = {
     jrSaveAs: "Sàbhail mar…",
     jrSelect: "Tagh…",
     jrSelectCancel: "Sguir den taghadh",
-    jrSelectHint: "Tagh grunn logaichean gus an sguabadh às còmhla — Ctrl (⌘) + briogadh gus fear a chur ris, Shift + briogadh airson raon",
+    jrSelectHint: "Tagh grunn logaichean gus an sguabadh às còmhla — Ctrl (⌘) + briogadh gus fear a chur ris, Shift + briogadh airson raon, Shift + ↑/↓ air a’ mheur-chlàr",
     jrDeleteN: "Sguab às ({n})",
     jrConfirmDeleteN: "A bheil thu airson {n} logaichean a sguabadh às? Cha ghabh seo a neo-dhèanamh.",
     jrDelete: "Sguab às",

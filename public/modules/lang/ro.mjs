@@ -833,7 +833,7 @@ export const strings = {
     jrSaveAs: "Salvează ca…",
     jrSelect: "Selectează…",
     jrSelectCancel: "Anulează selecția",
-    jrSelectHint: "Alege mai multe jurnale pentru a le șterge dintr-o dată — Ctrl (⌘) + clic adaugă unul, Shift + clic selectează un interval",
+    jrSelectHint: "Alege mai multe jurnale pentru a le șterge dintr-o dată — Ctrl (⌘) + clic adaugă unul, Shift + clic selectează un interval, Shift + ↑/↓ de la tastatură",
     jrDeleteN: "Șterge ({n})",
     jrConfirmDeleteN: "Ștergi {n} jurnale? Acțiunea nu poate fi anulată.",
     jrDelete: "Șterge",

@@ -129,6 +129,20 @@ const sync = body('_syncSelBtns');
 ok(/jrDeleteN/.test(sync) && /String\(n\)/.test(sync), 'the Delete button carries the count');
 ok(/db\.disabled = _multi && !n/.test(sync), 'Delete is disabled while nothing is ticked');
 
+const keys = body('_onListKey');
+ok(/ArrowDown/.test(keys) && /ArrowUp/.test(keys), 'Up and Down move through the list');
+ok(/ev\.ctrlKey \|\| ev\.metaKey \|\| ev\.altKey/.test(keys),
+  'a modified arrow (Ctrl, Cmd, Alt) is left to the browser');
+ok(/ev\.preventDefault\(\)/.test(keys), 'the arrows do not scroll the list underneath');
+ok(/if \(ev\.shiftKey\)/.test(keys) && /_markRange\(sid\)/.test(keys),
+  'Shift + arrow extends the selection, like Shift + click');
+ok(/const a0 = ids\[from\]/.test(keys),
+  'the range anchors on the focused entry, which is not always the previewed one');
+ok(/_focusItem\(to\)/.test(keys), 'the focus follows the arrow across the redraw');
+ok(/scrollIntoView/.test(body('_focusItem')), 'moving past the fold scrolls the entry into view');
+ok(/jr-list'\)\.addEventListener\('keydown', _onListKey\)/.test(src),
+  'the handler is wired once on the list, not per entry');
+
 const en = readFileSync(join(here, '..', 'public', 'modules', 'lang', 'en.mjs'), 'utf8');
 for (const k of ['jrSelect', 'jrSelectCancel', 'jrSelectHint', 'jrDeleteN', 'jrConfirmDeleteN']) {
   ok(new RegExp('\\b' + k + '\\s*:').test(en), 'en.mjs carries ' + k);
