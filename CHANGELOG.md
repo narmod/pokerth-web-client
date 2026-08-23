@@ -14,6 +14,16 @@ Opened with `v2.1.7-web.0` (2026-08-13), following the upstream **2.1.7**
 release.
 
 ### Added
+- **`/rules` in French, Spanish and Chinese** (`web.47`) — first translation
+  batch: `fr`, `es`, `zh` and `zh-TW`, each with its own title, meta
+  description and JSON-LD. The action names stay in English
+  (`Fold`, `Check`, `Call`, `Raise`, `All-In`) per project convention, with a
+  gloss in parentheses for the Chinese variants; hand rankings are translated,
+  since 德州扑克规则 and *quinte flush royale* are what people actually search
+  for. The English page is unchanged except that it now advertises the four
+  variants, which is the point. 40 languages to go.
+
+### Added
 - **`/rules` and `/faq` can be served per language** (`web.46`) — both pages
   now take a language, self-canonicalize on `?lang=`, carry `<html lang>`,
   `og:locale` and their own hreflang set, and appear in the sitemap once per
