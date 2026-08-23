@@ -47,6 +47,13 @@
   .tabs{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 14px}
   .tab{flex:0 0 auto;white-space:nowrap;padding:9px 14px;border-radius:8px 8px 0 0;border:1px solid var(--line);border-bottom:none;background:rgba(255,255,255,.03);color:var(--text);cursor:pointer;font-size:.84rem}
   .tab.on{background:var(--panel);color:var(--gold);font-weight:700;border-color:var(--gold)}
+  /* Douze onglets a plat melangeaient trois natures de reglages. La famille se
+     choisit en haut, la section dedans : la barre du bas ne montre alors que
+     ce qui appartient a la famille courante. */
+  .gtabs{margin:0 0 8px}
+  .gtab{flex:0 0 auto;white-space:nowrap;padding:9px 20px;border-radius:9px;border:1px solid var(--line);background:rgba(255,255,255,.03);color:var(--text);cursor:pointer;font-size:.9rem}
+  .gtab.on{background:var(--gold);color:#10151c;border-color:var(--gold);font-weight:700}
+  .subtabs{margin:0 0 14px}
   .seg{display:flex;gap:8px;margin:10px 0}
   .seg button{flex:1;padding:9px;border-radius:8px;border:1px solid var(--line);background:rgba(255,255,255,.03);color:var(--cream);cursor:pointer;font-size:.86rem}
   .seg button.on{background:var(--gold);color:#10151c;border-color:var(--gold);font-weight:700}
@@ -153,6 +160,7 @@
   :root[data-admin-theme="light"] .use,
   :root[data-admin-theme="light"] .ghost{background:rgba(29,34,43,.05)}
   :root[data-admin-theme="light"] .tab.on{background:var(--panel)}
+  :root[data-admin-theme="light"] .gtab{background:rgba(29,34,43,.04)}
   :root[data-admin-theme="light"] .drop.hot{background:rgba(29,34,43,.06)}
   :root[data-admin-theme="light"] .logs{background:#f3f5f9;color:#2b3340}
   :root[data-admin-theme="light"] .prog{background:rgba(29,34,43,.1)}
@@ -230,19 +238,28 @@
         <button id="logoutBtn" class="ghost">Log out</button>
       </div>
     </div>
-    <div class="tabs">
-      <button class="tab on" data-t="server">Server</button>
+    <div class="tabs gtabs" id="tabGroups">
+      <button class="gtab on" data-g="server">Server</button>
+      <button class="gtab" data-g="client">Client</button>
+      <button class="gtab" data-g="data">Data</button>
+    </div>
+    <div class="tabs subtabs" data-g="server">
+      <button class="tab on" data-t="server">Overview</button>
+      <button class="tab" data-t="servers">Game servers</button>
+      <button class="tab" data-t="keys">Keys</button>
+    </div>
+    <div class="tabs subtabs" data-g="client" style="display:none">
+      <button class="tab" data-t="clients">Settings</button>
+      <button class="tab" data-t="packages" data-scope="packages">Packages</button>
+      <button class="tab" data-t="music" data-scope="music">Music</button>
+      <button class="tab" data-t="broadcast" data-scope="broadcast">Broadcasts</button>
+      <button class="tab" data-t="polls" data-scope="polls">Polls</button>
+    </div>
+    <div class="tabs subtabs" data-g="data" style="display:none">
       <button class="tab" data-t="traffic">Traffic</button>
       <button class="tab" data-t="sessions">Sessions</button>
       <button class="tab" data-t="errors">Errors</button>
-      <button class="tab" data-t="clients">Clients</button>
-      <button class="tab" data-t="broadcast" data-scope="broadcast">Broadcasts</button>
-      <button class="tab" data-t="polls" data-scope="polls">Polls</button>
       <button class="tab" data-t="board" data-scope="leaderboard">Leaderboard</button>
-      <button class="tab" data-t="packages" data-scope="packages">Packages</button>
-      <button class="tab" data-t="music" data-scope="music">Music</button>
-      <button class="tab" data-t="keys">Keys</button>
-      <button class="tab" data-t="servers">Game servers</button>
     </div>
 
     <div id="panel-traffic" style="display:none">
@@ -1027,8 +1044,19 @@
       b.style.display = ok ? '' : 'none';
     });
     document.querySelectorAll('[data-master]').forEach(function(el){ el.style.display = master ? '' : 'none'; });
-    // La barre vient peut-être d'être révélée (écran de connexion) ou raccourcie
-    // d'un ou deux onglets : sa largeur utile n'est connue qu'après ce passage.
+    // Une famille dont plus aucune section n'est accessible disparait : mieux
+    // vaut pas de bouton qu'un bouton qui n'ouvre rien.
+    var live=null;
+    document.querySelectorAll('.gtab').forEach(function(gb){
+      var bar=document.querySelector('.subtabs[data-g="'+gb.dataset.g+'"]');
+      var any=bar && [].slice.call(bar.querySelectorAll('.tab')).some(function(t){ return t.style.display!=='none'; });
+      gb.style.display = any ? '' : 'none';
+      if(any && !live) live=gb.dataset.g;
+      if(!any && gb.classList.contains('on')) gb.classList.remove('on');
+    });
+    if(live && !document.querySelector('.gtab.on')) setGroup(live, true);
+    // Les barres viennent peut-être d'être révélées (écran de connexion) ou
+    // raccourcies : leur largeur utile n'est connue qu'après ce passage.
     setTimeout(tabsFade, 0);
   }
   function enter(){
@@ -1052,19 +1080,43 @@
   // redimensionnement et à chaque changement d'onglet, parce qu'afficher ou
   // masquer un onglet change la largeur totale.
   function tabsFade(){
-    var t=document.querySelector('.tabs'); if(!t) return;
-    var over=t.scrollWidth-t.clientWidth;
-    t.classList.toggle('sc-l', over>1 && t.scrollLeft>1);
-    t.classList.toggle('sc-r', over>1 && t.scrollLeft<over-1);
+    document.querySelectorAll('.tabs').forEach(function(t){
+      var over=t.scrollWidth-t.clientWidth;
+      t.classList.toggle('sc-l', over>1 && t.scrollLeft>1);
+      t.classList.toggle('sc-r', over>1 && t.scrollLeft<over-1);
+    });
   }
   (function(){
-    var t=document.querySelector('.tabs'); if(!t) return;
-    t.addEventListener('scroll', tabsFade, {passive:true});
+    document.querySelectorAll('.tabs').forEach(function(t){
+      t.addEventListener('scroll', tabsFade, {passive:true});
+    });
     window.addEventListener('resize', tabsFade);
     setTimeout(tabsFade, 0);
   })();
+  // Affiche la famille g. pick=true choisit sa premiere section visible, ce
+  // qu'il faut quand l'operateur change de famille ; pick=false sert quand une
+  // section a deja ete choisie et qu'on ne fait que suivre.
+  function setGroup(g, pick){
+    if(!g) return;
+    document.querySelectorAll('.gtab').forEach(function(b){ b.classList.toggle('on', b.dataset.g===g); });
+    document.querySelectorAll('.subtabs').forEach(function(d){ d.style.display = d.dataset.g===g ? '' : 'none'; });
+    if(pick){
+      var bar=document.querySelector('.subtabs[data-g="'+g+'"]');
+      var on=bar && bar.querySelector('.tab.on');
+      if(!on || on.style.display==='none'){
+        var first=bar && [].slice.call(bar.querySelectorAll('.tab')).find(function(b){ return b.style.display!=='none'; });
+        if(first) first.click();
+      }
+    }
+    setTimeout(tabsFade, 0);
+  }
+  document.querySelectorAll('.gtab').forEach(function(b){
+    b.addEventListener('click', function(){ setGroup(b.dataset.g, true); });
+  });
   document.querySelectorAll('.tab').forEach(function(b){ b.addEventListener('click', function(){
     document.querySelectorAll('.tab').forEach(function(x){x.classList.toggle('on',x===b);});
+    var bar=b.parentElement;
+    if(bar && bar.classList.contains('subtabs')) setGroup(bar.dataset.g, false);
     // L'onglet choisi peut être à moitié hors champ sur téléphone.
     try{ b.scrollIntoView({block:'nearest',inline:'nearest',behavior:'smooth'}); }catch(e){}
     setTimeout(tabsFade, 320);

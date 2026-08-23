@@ -14,6 +14,16 @@ Opened with `v2.1.7-web.0` (2026-08-13), following the upstream **2.1.7**
 release.
 
 ### Changed
+- **Admin dashboard: tabs grouped into three families** (`web.29`) — twelve
+  flat tabs mixed three unrelated kinds of settings. The family is now picked
+  on the top row and the section inside it: **Server** (Overview, Game servers,
+  Keys), **Client** — everything players see — (Settings, Packages, Music,
+  Broadcasts, Polls) and **Data** (Traffic, Sessions, Errors, Leaderboard).
+  Every `data-t` and every `data-scope` came across unchanged, so no panel and
+  no scoped key lost its way in; a family left with nothing a scoped key may
+  open hides itself rather than offering a button that opens nothing, and such
+  a key lands on a family it can actually use. Two tabs were renamed for the
+  new shape: *Server* became *Overview* and *Clients* became *Settings*.
 - **Admin dashboard: settings rows are a style, not a copy-paste** (`web.28`) —
   the same flex declaration had been retyped into 51 `style=` attributes with
   no CSS rule behind it, so every panel drifted a little. It is one class now.

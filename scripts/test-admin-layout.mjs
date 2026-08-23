@@ -14,6 +14,19 @@ const admin = readFileSync(join(dirname(fileURLToPath(import.meta.url)), '..', '
 let n = 0, fail = 0;
 function ok(cond, msg) { n++; if (!cond) { fail++; console.error('  ✗', msg); } else console.log('  ✓', msg); }
 
+// Body of a named function, braces balanced — steadier than a fixed-width
+// window, which silently stops matching the day the function grows.
+function body(src, name) {
+  const head = src.indexOf('function ' + name + '(');
+  if (head < 0) return '';
+  let i = src.indexOf('{', head), depth = 0;
+  for (let j = i; j < src.length; j++) {
+    if (src[j] === '{') depth++;
+    else if (src[j] === '}') { depth--; if (!depth) return src.slice(i, j + 1); }
+  }
+  return '';
+}
+
 // The @media block that opens the second column.
 const wide = (admin.match(/@media\(min-width:1100px\)\{[\s\S]*?\n  \}/) || [''])[0];
 // Every mobile block, concatenated: the phone rules are written in more than
@@ -38,7 +51,7 @@ ok(/scrollWidth-t\.clientWidth/.test(admin), 'the fade is driven by real overflo
 ok(/over>1 && t\.scrollLeft>1/.test(admin), 'no fade at all when every tab fits');
 ok(/addEventListener\('scroll', tabsFade/.test(admin), 'the fade follows the scroll');
 ok(/addEventListener\('resize', tabsFade\)/.test(admin), 'and the window size');
-ok(/applyScopeVisibility[\s\S]{0,600}setTimeout\(tabsFade, 0\)/.test(admin),
+ok(/setTimeout\(tabsFade, 0\)/.test(body(admin, 'applyScopeVisibility')),
   'hiding tabs for a scoped key recomputes the overflow');
 ok(/scrollIntoView\(\{block:'nearest',inline:'nearest'/.test(admin),
   'picking a tab brings it into view without scrolling the page');
@@ -55,6 +68,32 @@ for (const id of ['trafChart', 'trafNvRChart', 'trafMusic', 'trafEnv', 'trafCard
   ok(new RegExp('#' + id + '\\)').test(wide), id + ' is not squeezed into half a column');
 }
 ok(!/columns:2/.test(small), 'nothing changes on a phone');
+
+// ── Tab families ──────────────────────────────────────────────────────────
+// Twelve flat tabs mixed three kinds of settings. The family is picked on top,
+// the section inside it. Every original section must survive the move: a lost
+// data-t is a panel nobody can reach any more.
+for (const t of ['server', 'servers', 'keys', 'clients', 'packages', 'music',
+                 'broadcast', 'polls', 'traffic', 'sessions', 'errors', 'board']) {
+  ok(new RegExp('data-t="' + t + '"').test(admin), 'section ' + t + ' is still reachable');
+}
+for (const sc of ['packages', 'music', 'broadcast', 'polls', 'leaderboard']) {
+  ok(new RegExp('data-scope="' + sc + '"').test(admin), 'scope ' + sc + ' survived the regroup');
+}
+ok((admin.match(/class="tabs subtabs"/g) || []).length === 3, 'three families');
+ok(/class="gtab on" data-g="server"/.test(admin), 'the dashboard opens on Server');
+ok(/function setGroup\(g, pick\)/.test(admin), 'setGroup exists');
+ok(/\.gtab'\)\.forEach/.test(admin), 'family buttons are wired');
+ok(/bar\.classList\.contains\('subtabs'\)\) setGroup\(bar\.dataset\.g, false\)/.test(admin),
+  'reaching a section from code reveals its family, without re-picking one');
+const scope = body(admin, 'applyScopeVisibility');
+ok(/gb\.style\.display = any/.test(scope), 'a family with nothing left in it disappears');
+ok(/if\(live && !document\.querySelector\('\.gtab\.on'\)\) setGroup\(live, true\)/.test(scope),
+  'a scoped key lands on a family it can actually open');
+ok(/querySelectorAll\('\.tab'\)/.test(scope) && !/querySelectorAll\('\.gtab, \.tab'\)/.test(scope),
+  'family buttons carry no data-scope of their own');
+ok(/document\.querySelectorAll\('\.tabs'\)\.forEach/.test(body(admin, 'tabsFade')),
+  'the edge fade now covers every bar, not just the first');
 
 // ── Settings rows ─────────────────────────────────────────────────────────
 // The same flex declaration used to be retyped in 51 style= attributes, with
