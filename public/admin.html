@@ -44,8 +44,8 @@
   .primary{margin-top:10px;width:100%;padding:10px;border-radius:8px;border:1px solid var(--gold);background:var(--gold);color:#10151c;font-weight:700;cursor:pointer;font-size:.9rem}
   .ghost,.appbtn{padding:7px 11px;border-radius:8px;border:1px solid var(--line);background:rgba(255,255,255,.04);color:var(--cream);text-decoration:none;font-size:.8rem;white-space:nowrap;cursor:pointer}
   .appbtn{border-color:var(--gold);background:rgba(239,241,245,.12);color:var(--gold)}
-  .tabs{display:flex;gap:6px;margin:0 0 14px}
-  .tab{flex:1;padding:9px;border-radius:8px 8px 0 0;border:1px solid var(--line);border-bottom:none;background:rgba(255,255,255,.03);color:var(--text);cursor:pointer;font-size:.84rem}
+  .tabs{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 14px}
+  .tab{flex:0 0 auto;white-space:nowrap;padding:9px 14px;border-radius:8px 8px 0 0;border:1px solid var(--line);border-bottom:none;background:rgba(255,255,255,.03);color:var(--text);cursor:pointer;font-size:.84rem}
   .tab.on{background:var(--panel);color:var(--gold);font-weight:700;border-color:var(--gold)}
   .seg{display:flex;gap:8px;margin:10px 0}
   .seg button{flex:1;padding:9px;border-radius:8px;border:1px solid var(--line);background:rgba(255,255,255,.03);color:var(--cream);cursor:pointer;font-size:.86rem}
@@ -154,12 +154,27 @@
     #login{max-width:440px;margin:0 auto}
     input[type=password]{max-width:480px}
   }
+  /* Sous 1100 px rien ne change : une colonne, comme avant. Au-delà, la colonne
+     de 820 px laissait un tiers de l'écran vide alors que les panneaux les plus
+     fournis obligent à défiler longuement. Leurs cartes se répartissent sur deux
+     colonnes de hauteur équilibrée ; celles qui portent un graphique ou une
+     grille reprennent toute la largeur, où elles seraient illisibles. */
+  @media(min-width:1100px){
+    .wrap{max-width:1180px}
+    #panel-server,#panel-traffic,#panel-clients,#panel-broadcast{columns:2;column-gap:16px}
+    #panel-server>.card,#panel-traffic>.card,#panel-clients>.card,#panel-broadcast>.card{break-inside:avoid;-webkit-column-break-inside:avoid;margin-bottom:16px}
+    .card:has(#trafCards),.card:has(#trafChart),.card:has(#trafNvRChart),.card:has(#trafMusic),.card:has(#trafEnv){column-span:all}
+  }
   @media(max-width:600px){
     body{padding:12px}
     .top{flex-wrap:wrap}
     .topbtns{flex-wrap:wrap}
     .tabs{overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;gap:4px}
     .tabs::-webkit-scrollbar{display:none}
+    .tabs{flex-wrap:nowrap}
+    .tabs.sc-r{-webkit-mask-image:linear-gradient(90deg,#000 0,#000 calc(100% - 26px),transparent 100%);mask-image:linear-gradient(90deg,#000 0,#000 calc(100% - 26px),transparent 100%)}
+    .tabs.sc-l{-webkit-mask-image:linear-gradient(90deg,transparent 0,#000 26px,#000 100%);mask-image:linear-gradient(90deg,transparent 0,#000 26px,#000 100%)}
+    .tabs.sc-l.sc-r{-webkit-mask-image:linear-gradient(90deg,transparent 0,#000 26px,#000 calc(100% - 26px),transparent 100%);mask-image:linear-gradient(90deg,transparent 0,#000 26px,#000 calc(100% - 26px),transparent 100%)}
     .tab{flex:0 0 auto;white-space:nowrap;padding:8px 11px;font-size:.8rem}
     .gsrow .sfield{flex-wrap:wrap}
     .gsrow .sfield>span{min-width:100%}
@@ -990,6 +1005,9 @@
       b.style.display = ok ? '' : 'none';
     });
     document.querySelectorAll('[data-master]').forEach(function(el){ el.style.display = master ? '' : 'none'; });
+    // La barre vient peut-être d'être révélée (écran de connexion) ou raccourcie
+    // d'un ou deux onglets : sa largeur utile n'est connue qu'après ce passage.
+    setTimeout(tabsFade, 0);
   }
   function enter(){
     if(!tok()){ show('login'); return; }
@@ -1008,8 +1026,26 @@
     }).catch(function(){ $('loginErr').textContent='Network error'; show('login'); });
   }
 
+  // État de débordement de la barre d'onglets. Appelé au défilement, au
+  // redimensionnement et à chaque changement d'onglet, parce qu'afficher ou
+  // masquer un onglet change la largeur totale.
+  function tabsFade(){
+    var t=document.querySelector('.tabs'); if(!t) return;
+    var over=t.scrollWidth-t.clientWidth;
+    t.classList.toggle('sc-l', over>1 && t.scrollLeft>1);
+    t.classList.toggle('sc-r', over>1 && t.scrollLeft<over-1);
+  }
+  (function(){
+    var t=document.querySelector('.tabs'); if(!t) return;
+    t.addEventListener('scroll', tabsFade, {passive:true});
+    window.addEventListener('resize', tabsFade);
+    setTimeout(tabsFade, 0);
+  })();
   document.querySelectorAll('.tab').forEach(function(b){ b.addEventListener('click', function(){
     document.querySelectorAll('.tab').forEach(function(x){x.classList.toggle('on',x===b);});
+    // L'onglet choisi peut être à moitié hors champ sur téléphone.
+    try{ b.scrollIntoView({block:'nearest',inline:'nearest',behavior:'smooth'}); }catch(e){}
+    setTimeout(tabsFade, 320);
     var t=b.dataset.t;
     $('panel-packages').style.display=t==='packages'?'block':'none';
     $('panel-board').style.display=t==='board'?'block':'none';

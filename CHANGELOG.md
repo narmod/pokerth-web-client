@@ -14,6 +14,17 @@ Opened with `v2.1.7-web.0` (2026-08-13), following the upstream **2.1.7**
 release.
 
 ### Changed
+- **Admin dashboard: wider layout and a tab bar that behaves** (`web.27`) —
+  past 1100px the page widens to 1180px and the four busiest panels (Server,
+  Traffic, Clients, Broadcasts) lay their cards out in two balanced columns,
+  instead of leaving a third of the screen empty while the operator scrolls.
+  Cards are never cut across the break, and the ones carrying a chart or a
+  grid span both columns. Tabs now size to their label, so *Game servers* no
+  longer wraps onto a second line and grows the whole strip; on a phone the
+  bar still scrolls, but a fade at the edge says there is more, the fade
+  appears only when something is actually out of view, and picking a tab
+  scrolls it into view. Nothing changes below 1100px. 24 guards in
+  `scripts/test-admin-layout.mjs`.
 - **Play counts moved next to the track titles** (`web.26`) — the ranked list
   in the traffic tab answered "which tracks are popular" but not "how is *this*
   track doing", which is the question you have while looking at the library.
