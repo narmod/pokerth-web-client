@@ -96,6 +96,26 @@ ok(sent2.some((b) => MSG.parse(b).type === rj),
    'onInitAck : _pendingRejoin → RejoinExistingGame (sortie anticipée break→return)');
 S._pendingRejoin = 0;
 
+// ── Battement serveur : c'est lui qui arme (ou non) le watchdog du lobby.
+// Un serveur < 2.1.0 n'en envoie aucun — il ne faut alors JAMAIS armer, sinon
+// un lobby calme se ferait reconnecter en boucle.
+S._hbCount = 0; S._hbLast = 0; S._hbInterval = 0;
+function hbSub() { return subOf([[1, 2, Proto.encode([[1, 0, 1], [2, 0, 7]])]]); }
+M.onStatistics(hbSub());
+ok(S._hbCount === 1 && S._hbLast > 0 && S._hbInterval === 0,
+   "onStatistics : 1er battement compté, pas encore d'intervalle");
+S._hbLast -= 45000;                       // simule 45 s écoulées
+M.onStatistics(hbSub());
+ok(S._hbCount === 2 && S._hbInterval >= 45000,
+   'onStatistics : intervalle mesuré sur le 2e battement (pas supposé)');
+ok(S._lobbyPlayerCount === 7, 'onStatistics : compte de joueurs toujours appliqué');
+
+// Nouvelle session = peut-être un autre serveur : le compteur DOIT repartir de
+// zéro, sinon on armerait le watchdog sur un serveur muet.
+M.onInitAck(subOf([[1, 0, 1], [2, 0, 42]]));
+ok(S._hbCount === 0 && S._hbLast === 0 && S._hbInterval === 0,
+   'onInitAck : suivi du battement remis à zéro');
+
 // ── onPlayerList : ajout et retrait
 sub = subOf([[1, 0, 9], [2, 0, 0]]); // pid 9, notification=ADD(0)
 S._lobbyPids = new Set(); S._lobbyPlayerCount = 0;

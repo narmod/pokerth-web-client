@@ -196,6 +196,7 @@ ok(JSON.stringify(keys) === JSON.stringify(['REACT_EMOJI_MIN_GAP', 'REACT_EMOJI_
    '_wasAuthenticated', '_lastConnectTime', '_lastConnectFailed', '_ipBlockUntil',
    '_notifyWS', '_notifyUrl', '_notifyTimer', 'MIN_CONNECT_INTERVAL',
    'MODE_SWAP_MIN_GAP', '_RX_WATCHDOG_MIN_MS',
+   '_hbCount', '_hbLast', '_hbInterval', '_HB_WATCHDOG_MIN_MS',
    '_playingMode', '_preAction', '_preActionToCall', '_preActionOpen',
    '_modeSelBusy', '_modeSelPendingPreview', '_modeSelHoldTimer',
    '_actionBarPinned', 'FEATURE_AUTO_CHECK_FOLD',

@@ -3891,10 +3891,29 @@ const App = (() => {
     if (document.hidden) return;                                            // arrière-plan : timers gelés
     if (typeof navigator.onLine === 'boolean' && !navigator.onLine) return; // hors-ligne géré ailleurs
     var sg = document.getElementById('s-game');
-    if (!(sg && sg.classList.contains('active'))) return;                   // seulement à une table
+    var sl = document.getElementById('s-lobby');
+    var _inGame  = !!(sg && sg.classList.contains('active'));
+    var _inLobby = !!(sl && sl.classList.contains('active'));
+    if (!_inGame && !_inLobby) return;                                      // ni table ni lobby
     if (!S.ws || S.ws.readyState !== WebSocket.OPEN) return;                    // sinon déjà géré
-    var _tt  = (typeof S.gameTimeout === 'number' && S.gameTimeout > 0) ? S.gameTimeout : 15;
-    var _thr = Math.max(S._RX_WATCHDOG_MIN_MS, (_tt + 20) * 1000);            // > timeout d'action de la table
+    var _thr;
+    if (_inGame) {
+      var _tt = (typeof S.gameTimeout === 'number' && S.gameTimeout > 0) ? S.gameTimeout : 15;
+      _thr = Math.max(S._RX_WATCHDOG_MIN_MS, (_tt + 20) * 1000);              // > timeout d'action de la table
+    } else {
+      // LOBBY. Le watchdog ne couvrait que la table : un socket zombie
+      // (readyState OPEN, TCP mort — coupure serveur derrière le proxy, bascule
+      // réseau) ne déclenchait donc aucun onclose et le lobby restait affiché
+      // indéfiniment, liste de tables figée. Rapport forum : « le client se
+      // déconnecte du lobby et reste sur le lobby ».
+      // Le seuil ne peut PAS être celui de la table : un lobby calme est
+      // légitimement muet, sauf pour le battement serveur (45 s). On s'y adosse,
+      // en mesurant l'intervalle réel plutôt qu'en le supposant.
+      // Deux battements exigés avant d'armer : un serveur antérieur à la 2.1.0
+      // n'en envoie aucun, et l'y armer le ferait reconnecter en boucle.
+      if (S._hbCount < 2 || !S._hbInterval) return;
+      _thr = Math.max(S._HB_WATCHDOG_MIN_MS, Math.round(S._hbInterval * 2.5));
+    }
     if (Date.now() - S._lastRxTime > _thr) _forceReconnect();
   }, 5000);
 
@@ -10396,7 +10415,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.7-web.56'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.7-web.57'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

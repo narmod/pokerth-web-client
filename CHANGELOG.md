@@ -13,6 +13,25 @@ this file captures what matters to players and operators.
 Opened with `v2.1.7-web.0` (2026-08-13), following the upstream **2.1.7**
 release.
 
+### Fixed
+- **Dead lobby connection went unnoticed** (`web.57`) — the RX watchdog only
+  ran at a table (`s-game`). A zombie socket in the lobby — `readyState` still
+  `OPEN` while the TCP underneath is gone, which is what happens when the server
+  closes the session behind the proxy, or on a network switch — fired no
+  `onclose`, so nothing reconnected and the lobby sat there indefinitely with a
+  frozen table list. Reported on the forum.
+  The table threshold could not simply be reused: a quiet lobby is legitimately
+  silent. It is now anchored on the server's own heartbeat — since 2.1.0 a
+  `StatisticsMessage` goes to every session every 45 s
+  (`SERVER_SAVE_STATISTICS_INTERVAL_SEC`, upstream comment: *keeps NAT alive,
+  feeds client connection monitor*). The interval is measured rather than
+  assumed, so the client follows the server if it ever changes, and the
+  threshold is `max(110 s, 2.5 × interval)`.
+  Crucially, the lobby watchdog only arms after **two observed heartbeats**: a
+  pre-2.1.0 server sends none, and arming there would have had a quiet lobby
+  reconnect in a loop. The counter resets on every `InitAck`, since the next
+  session may be a different server. The table path is untouched.
+
 ### Changed
 - **Inactivity warning as a real dialog** (`web.56`) — the server warns 60 s
   before dropping an idle session (`SERVER_TIMEOUT_WARNING_REMAINING_SEC`), and

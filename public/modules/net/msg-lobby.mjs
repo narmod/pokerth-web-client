@@ -154,6 +154,11 @@ function onInitAck(sub) {
     // same timing as the QML client, where WriteSessionGuidToFile() is called
     // from ClientThread::InitGame() rather than at login.
     S._sessionGuid = Proto.raw(sub, 1);
+    // Nouvelle session : le compteur de battements repart de zero. Il peut
+    // s'agir d'un AUTRE serveur (2.0.x, sans heartbeat) — garder l'ancien
+    // compte armerait le watchdog lobby sur un serveur muet, qui se ferait alors
+    // reconnecter en boucle dans un lobby calme.
+    S._hbCount = 0; S._hbLast = 0; S._hbInterval = 0;
     S._rejoinNickRetries = 0;
     _nickBusyReset();           // pseudo accepté → compteur de réessais à zéro
     // Demander NOTRE PROPRE PlayerInfo : le serveur n'écho pas toujours
@@ -449,6 +454,16 @@ function onPlayerList(sub) {
 }
 
 function onStatistics(sub) {
+    // Every StatisticsMessage doubles as the server's heartbeat (one every 45 s
+    // to every session). Record it: in a quiet lobby it is the only traffic
+    // there is, so it is what tells the RX watchdog whether the socket is still
+    // alive -- and, by its mere presence, whether this server sends heartbeats
+    // at all. Measured rather than assumed, so the client follows the server if
+    // the interval ever changes.
+    const _now = Date.now();
+    if (S._hbLast) S._hbInterval = _now - S._hbLast;
+    S._hbLast = _now;
+    S._hbCount++;
     const arr = sub[1] || [];
     for (const d of arr) {
       const s = Proto.decode(d);

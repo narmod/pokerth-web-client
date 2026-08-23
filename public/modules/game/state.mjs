@@ -148,6 +148,18 @@ export const S = {
   MIN_CONNECT_INTERVAL: 1500,
   MODE_SWAP_MIN_GAP: 3000,
   _RX_WATCHDOG_MIN_MS: 45000,
+  // Heartbeat serveur : depuis la 2.1.0 le serveur diffuse un StatisticsMessage
+  // a TOUTES les sessions toutes les 45 s (SERVER_SAVE_STATISTICS_INTERVAL_SEC,
+  // commente en amont « keeps NAT alive, feeds client connection monitor »).
+  // C'est le seul trafic garanti dans un lobby calme, donc la seule base fiable
+  // pour y detecter un socket mort. Un serveur 2.0.x n'en envoie AUCUN : d'ou le
+  // compteur, qui n'arme le watchdog lobby qu'apres deux battements observes.
+  _hbCount: 0,
+  _hbLast: 0,        // horodatage du dernier battement
+  _hbInterval: 0,    // dernier intervalle mesure (ms) — suit le serveur s'il change
+  // Plancher du watchdog lobby : deux battements manques + marge. En dessous, un
+  // simple a-coup reseau suffirait a declencher une reconnexion inutile.
+  _HB_WATCHDOG_MIN_MS: 110000,
 
   // ── V8 · Barre d'action / pré-sélection (domaine G) ──
   _playingMode: 0,         // 0 = Manuel · 1 = Auto Check/Call · 2 = Auto Check/Fold
