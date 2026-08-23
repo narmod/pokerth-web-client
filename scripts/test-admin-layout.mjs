@@ -154,6 +154,21 @@ ok(/<button class="tab on" data-t="server">/.test(admin), 'which is the tab mark
 ok(/#panel-defaults[^{]*\{columns:2/.test(admin), 'the five defaults cards use both columns');
 ok(!/#panel-server,/.test(admin), 'a two-card panel no longer asks for two columns');
 
+// ── Language names ────────────────────────────────────────────────────────
+// A code has to be decoded; a name reads. Intl covers whatever arrives in
+// Accept-Language, so there is no 45-entry table to keep in step.
+const lab = body(admin, '_langLabel');
+ok(/Intl\.DisplayNames/.test(admin), 'names come from Intl, not from a hand-kept table');
+ok(/\^\[a-z\]\{2,3\}/.test(lab),
+  'only something shaped like a language code is looked up, so "ios" stays "ios"');
+ok(/n\.toLowerCase\(\)!==k\.toLowerCase\(\)/.test(lab),
+  'an unknown code falls back to itself rather than showing twice');
+ok(/catch\(e\)/.test(lab), 'a browser without Intl.DisplayNames still shows the codes');
+ok(/_envView==='lang' \? _langLabel\(k\) : k/.test(body(admin, '_envLabel')),
+  'the lookup only applies to the language view');
+ok(/\{key:k,k:_envLabel\(k\)/.test(admin), 'the raw code is kept alongside the label');
+ok(/s\.key&&s\.key!==s\.k\?' title="'/.test(admin), 'and shown on hover, where it does not crowd the row');
+
 // ── Log timestamps ────────────────────────────────────────────────────────
 // The proxy writes ISO UTC, which is right for a file and unreadable on
 // screen — and two hours off from whoever is looking at it.

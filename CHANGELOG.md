@@ -42,6 +42,13 @@ release.
   boundaries and the count of changes across a full year.
 
 ### Changed
+- **Languages shown by name** (`web.41`) — *What visitors run* listed `en`,
+  `zh`, `nl`, which have to be decoded. They now read English, Chinese, Dutch,
+  in the language of whoever is looking, from `Intl.DisplayNames` rather than a
+  45-entry table that would drift. Only keys shaped like a language code are
+  looked up, so `ios` in another view stays `ios`; a code Intl does not know
+  stays as it is, and a browser without `Intl.DisplayNames` still shows codes.
+  The raw code moves to the hover title, where it does not crowd the row.
 - **Proxy sits after Deployment** (`web.39`) — the Server sections now run
   Health & logs, Deployment, Proxy, Access & backup, Identity & reach, Game
   servers, Keys. A guard pins the whole order rather than the position of one

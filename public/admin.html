@@ -1553,7 +1553,27 @@
   // regroupement « autres », volontairement neutre.
   var ENV_COLORS=['#4080d8','#7fd17f','#e0a03a','#c47ad6','#4fc3c7','#e98a8a','#9aa7bd','#6f7f99','#b58b5a','#8f8f8f'];
   var ENV_LABELS={standalone:'Installed app',browser:'Browser tab',other:'Other'};
-  function _envLabel(k){ return ENV_LABELS[k]||k; }
+  // Un nom de langue se lit, un code se devine : « en » et « nl » ne disent
+  // rien a qui n'a pas la liste en tete. Intl.DisplayNames couvre n'importe
+  // quel code arrivant de l'en-tete Accept-Language, sans table a tenir a jour,
+  // et rend le nom dans la langue de qui regarde le tableau de bord.
+  var _langNames=(function(){
+    try{ return new Intl.DisplayNames(undefined,{type:'language'}); }catch(e){ return null; }
+  })();
+  function _langLabel(k){
+    // Filtre de forme d'abord : ailleurs que dans la vue des langues, une cle
+    // comme « ios » ne doit pas etre prise pour un code de langue.
+    if(!_langNames || !/^[a-z]{2,3}(-[A-Za-z0-9]{2,8})*$/.test(k)) return k;
+    try{
+      var n=_langNames.of(k);
+      if(n && n.toLowerCase()!==k.toLowerCase()) return n;   // inconnu : Intl renvoie le code
+    }catch(e){}
+    return k;
+  }
+  function _envLabel(k){
+    if(ENV_LABELS[k]) return ENV_LABELS[k];
+    return _envView==='lang' ? _langLabel(k) : k;
+  }
   // Une couleur par CLÉ, pas par rang dans la série qu'on est en train de
   // dessiner : le classement (cumul depuis le début) et la courbe (14 derniers
   // jours) n'ordonnent pas les langues pareil, et deux teintes différentes pour
@@ -1579,10 +1599,10 @@
     var tot=0; keys.forEach(function(k){ tot+=map[k]||0; });
     keys.sort(function(a,b){ return (map[b]||0)-(map[a]||0); });
     if(all){ // liste dépliée : toutes les entrées, couleurs cycliques (le donut, lui, reste replié)
-      return {total:tot,slices:keys.map(function(k,i){ return {k:_envLabel(k),n:map[k]||0,c:ENV_COLORS[i%9]}; }),rest:0};
+      return {total:tot,slices:keys.map(function(k,i){ return {key:k,k:_envLabel(k),n:map[k]||0,c:ENV_COLORS[i%9]}; }),rest:0};
     }
     var top=keys.slice(0,8), rest=keys.slice(8);
-    var slices=top.map(function(k,i){ return {k:_envLabel(k),n:map[k]||0,c:ENV_COLORS[i%9]}; });
+    var slices=top.map(function(k,i){ return {key:k,k:_envLabel(k),n:map[k]||0,c:ENV_COLORS[i%9]}; });
     if(rest.length){
       var r=0; rest.forEach(function(k){ r+=map[k]||0; });
       slices.push({k:rest.length+' others',n:r,c:ENV_COLORS[9]});
@@ -1794,7 +1814,7 @@
     var rows=rl.slices.map(function(s){
       var pc=(s.n/rl.total)*100;
       return '<div class="envrow"><span class="dot" style="background:'+s.c+'"></span>'
-           + '<span class="nmx">'+_annEsc(s.k)+'</span>'
+           + '<span class="nmx"'+(s.key&&s.key!==s.k?' title="'+_annEsc(s.key)+'"':'')+'>'+_annEsc(s.k)+'</span>'
            + '<span class="barx"><i style="width:'+Math.max(2,pc).toFixed(1)+'%;background:'+s.c+'"></i></span>'
            + '<span class="pct">'+_envFmt(s.n)+' \u00b7 '+(pc<1?pc.toFixed(1):Math.round(pc))+'%</span></div>';
     }).join('');
