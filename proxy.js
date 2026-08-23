@@ -1014,6 +1014,23 @@ var SEO_I18N = {
   sw: { t: 'PokerTH Web \u2014 Poker ya Texas Hold\u2019em bure kwenye kivinjari chako', d: 'Cheza PokerTH, mchezo wa bure na wa chanzo huria wa poker wa Texas Hold\u2019em, moja kwa moja kwenye kivinjari chako. Hakuna upakuaji, hakuna usajili \u2014 fanya mazoezi nje ya mtandao dhidi ya boti, cheza kwenye LAN au jiunge na pokerth.net.' },
 };
 
+// og:locale — Open Graph territory codes for the SEO_I18N languages. Facebook,
+// LINE and WeChat read this when a link is shared and fall back to en_US when
+// it is missing or malformed, so a bare language subtag ('zh', 'fr') is not
+// usable here: the property is defined as language_TERRITORY. One entry per
+// SEO_I18N key; anything unmapped simply emits no og:locale.
+var OG_LOCALE = {
+  en: 'en_US', fr: 'fr_FR', de: 'de_DE', es: 'es_ES', it: 'it_IT',
+  'pt-BR': 'pt_BR', 'pt-PT': 'pt_PT', nl: 'nl_NL', pl: 'pl_PL', ru: 'ru_RU',
+  zh: 'zh_CN', tr: 'tr_TR', uk: 'uk_UA', ja: 'ja_JP', sv: 'sv_SE',
+  nb: 'nb_NO', da: 'da_DK', fi: 'fi_FI', cs: 'cs_CZ', sk: 'sk_SK',
+  ro: 'ro_RO', hu: 'hu_HU', el: 'el_GR', bg: 'bg_BG', hr: 'hr_HR',
+  sr: 'sr_RS', af: 'af_ZA', ca: 'ca_ES', gl: 'gl_ES', gd: 'gd_GB',
+  lt: 'lt_LT', ta: 'ta_IN', vi: 'vi_VN', ko: 'ko_KR', 'zh-TW': 'zh_TW',
+  hi: 'hi_IN', ar: 'ar_AR', fa: 'fa_IR', he: 'he_IL', ur: 'ur_PK',
+  id: 'id_ID', th: 'th_TH', fil: 'fil_PH', bn: 'bn_IN', sw: 'sw_KE',
+};
+
 // Resolve the ?lang= query parameter onto a SEO_I18N code (case-insensitive).
 // Returns '' for missing, unknown, or 'en' (English folds onto the bare /).
 function seoLangFromQuery(reqUrl) {
@@ -1097,6 +1114,8 @@ function seoHeadBlock(base, lang) {
   if (base) out = out.concat(seoAlternates(base));
   out.push('<meta property="og:type" content="website">');
   out.push('<meta property="og:site_name" content="PokerTH">');
+  var ogl = OG_LOCALE[lang || 'en'];
+  if (ogl) out.push('<meta property="og:locale" content="' + ogl + '">');
   out.push('<meta property="og:title" content="' + loc.t + '">');
   out.push('<meta property="og:description" content="' + loc.d + '">');
   if (canon) out.push('<meta property="og:url" content="' + canon + '">');
@@ -1139,7 +1158,7 @@ function seoBodyBlock() {
     '<p>PokerTH Web Client is the browser version of PokerTH, the well-known open-source poker game. ' +
     'It runs on any modern browser \u2014 desktop, tablet or phone \u2014 and can be installed as a Progressive Web App. ' +
     'Game modes: offline practice against computer opponents, LAN or private dedicated servers, and the official pokerth.net network with rankings.</p>' +
-    '<p>Features: full Texas Hold\u2019em rules, up to 10 players per table, 40 interface languages, voice announcements, ' +
+    '<p>Features: full Texas Hold\u2019em rules, up to 10 players per table, 45 interface languages, voice announcements, ' +
     'music player, customizable card decks and table styles, and complete feature parity with the official PokerTH desktop client.</p>' +
     '<p>Completely free: no ads, no in-app purchases, no real-money gambling \u2014 just play-money poker in your browser.</p>' +
     '<p>Free software \u2014 source code on GitHub (narmod/pokerth-web-client), based on PokerTH by the PokerTH Development Team.</p>' +
@@ -1171,7 +1190,7 @@ function seoLlmsTxt(base) {
     '- The official pokerth.net network, with seasonal rankings\n\n' +
     '## Key facts\n\n' +
     '- Free and open source (based on PokerTH by the PokerTH Development Team)\n' +
-    '- 40 interface languages; poker terms (Fold/Check/Call/Raise/All-In) stay in English\n' +
+    '- 45 interface languages; poker terms (Fold/Check/Call/Raise/All-In) stay in English\n' +
     '- Feature parity with the official PokerTH desktop client\n' +
     (u ? '\n## Links\n\n- Play: ' + u + '/\n- Texas Hold\u2019em rules: ' + u + '/rules\n- FAQ: ' + u + '/faq\n' : '\n## Links\n\n') +
     '- Source code: https://github.com/narmod/pokerth-web-client\n' +

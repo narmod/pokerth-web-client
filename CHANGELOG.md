@@ -13,6 +13,17 @@ this file captures what matters to players and operators.
 Opened with `v2.1.7-web.0` (2026-08-13), following the upstream **2.1.7**
 release.
 
+### Changed
+- **Open Graph locale and language count** (`web.43`) — shared links now carry
+  `og:locale`. Facebook, LINE and WeChat read that property to pick the preview
+  language and fall back to `en_US` when it is absent, so a link posted to a
+  Taiwanese or Hong Kong group previewed in English however Chinese the page
+  itself was. The property is defined as `language_TERRITORY`, which a bare
+  `zh` or `fr` does not satisfy, so the mapping is an explicit table with one
+  entry per `SEO_I18N` language rather than a transformation of the hreflang
+  code. The crawler text block and `llms.txt` also claimed 40 interface
+  languages; there are 45.
+
 ### Added
 - **Copy a log to the clipboard** (`web.35`) — *Recent logs* and *Last action
   log* each get a Copy button. `navigator.clipboard` needs a secure context,
