@@ -13,6 +13,17 @@ this file captures what matters to players and operators.
 Opened with `v2.1.7-web.0` (2026-08-13), following the upstream **2.1.7**
 release.
 
+### Fixed
+- **Stale language counts** (`web.20`) — the admin traffic card still read
+  "of 40 translated" and "which of the 40 languages are actually used", while
+  `CONTRIBUTING.md`, `docs/PROJECT.md`, the `docker-compose.yml` service
+  description and the avatar-studio test label were stuck at 36 or 40. All of
+  them now say 45, matching the 45 catalogues in `public/modules/lang/`. The
+  inline dictionaries in `i18n.mjs` that only cover part of the catalogue no
+  longer claim a count at all, since the missing languages fall back to
+  English through `t()`. README, ROADMAP, the help corpus and the FAQ page
+  were already correct.
+
 ### Added
 - **Custom sounds** (`web.19`) — every one of the 14 game samples (fold,
   check, call, bet, raise, all-in, dealing, your turn, the three blind-raise

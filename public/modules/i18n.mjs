@@ -73,7 +73,7 @@ for (const code in LANG_MODULES) {
   LANG_META[code] = LANG_MODULES[code].meta;
 }
 // ── Clé 'assist' (bouton activer/désactiver l'aide « force de la main »).
-// Ajoutée ici pour les 33 langues en un seul endroit plutôt que d'éditer
+// Ajoutée ici pour les langues couvertes, en un seul endroit plutôt que d'éditer
 // chaque ./lang/*.mjs. Toute langue absente retombe sur l'anglais via t().
 const _ASSIST_I18N = {
   en: 'Assistance', fr: 'Assistance', de: 'Hilfe', es: 'Ayuda', it: 'Aiuto',
@@ -87,7 +87,7 @@ const _ASSIST_I18N = {
 for (const _c in _ASSIST_I18N) { if (LANG[_c]) LANG[_c].assist = _ASSIST_I18N[_c]; }
 // ── Clés 'displayBB' / 'displayChips' : message clair du toast quand on
 // bascule l'unité d'affichage (grosses blindes ↔ jetons). Ajoutées ici pour
-// les 33 langues. Repli EN automatique via t().
+// les langues couvertes ici. Repli EN automatique via t().
 const _DISPLAYBB_I18N = {
   en: 'Amounts in big blinds', fr: 'Montants en grosses blindes', de: 'Beträge in Big Blinds',
   es: 'Cantidades en ciegas grandes', it: 'Importi in big blind', 'pt-BR': 'Valores em big blinds',
@@ -117,7 +117,7 @@ const _DISPLAYCHIPS_I18N = {
 for (const _c in _DISPLAYBB_I18N) { if (LANG[_c]) LANG[_c].displayBB = _DISPLAYBB_I18N[_c]; }
 for (const _c in _DISPLAYCHIPS_I18N) { if (LANG[_c]) LANG[_c].displayChips = _DISPLAYCHIPS_I18N[_c]; }
 // ── Clé 'advLanguage' : libellé « Langue » de la ligne Langue dans Options
-// avancées → Interface. Traduite dans les 40 langues (source unique ici).
+// avancées → Interface. Traduite ici pour les langues couvertes (source unique).
 const _ADVLANG_I18N = {
   en: 'Language', fr: 'Langue', de: 'Sprache', es: 'Idioma', it: 'Lingua',
   'pt-BR': 'Idioma', 'pt-PT': 'Idioma', nl: 'Taal', pl: 'Język', ru: 'Язык',
@@ -130,7 +130,7 @@ const _ADVLANG_I18N = {
 };
 for (const _c in _ADVLANG_I18N) { if (LANG[_c]) LANG[_c].advLanguage = _ADVLANG_I18N[_c]; }
 // ── Contrôle « Mode sombre » d'Options avancées (label + 3 options) traduit
-// dans les 40 langues (source unique ici ; ces clés n'étaient qu'en/fr).
+// dans les langues couvertes ici (source unique ; ces clés n'étaient qu'en/fr).
 const _DARKMODE_I18N = {
   en: 'Dark mode', fr: 'Mode sombre', de: 'Dunkelmodus', es: 'Modo oscuro', it: 'Modalità scura',
   'pt-BR': 'Modo escuro', 'pt-PT': 'Modo escuro', nl: 'Donkere modus', pl: 'Tryb ciemny', ru: 'Тёмная тема',

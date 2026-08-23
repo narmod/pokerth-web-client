@@ -230,7 +230,7 @@
       </div>
       <div class="card">
         <div class="boardhead" style="margin-bottom:6px"><h2 style="margin:0">What visitors run</h2><span id="envSince" class="muted" style="margin:0"></span></div>
-        <p class="muted" style="margin:2px 0 10px">From the same anonymous ping as the visit counter: system and browser read from the User-Agent, language from the request header, installed app vs browser tab reported by the client. Running totals, not a time series — what to test on, and which of the 40 languages are actually used.</p>
+        <p class="muted" style="margin:2px 0 10px">From the same anonymous ping as the visit counter: system and browser read from the User-Agent, language from the request header, installed app vs browser tab reported by the client. Running totals, not a time series — what to test on, and which of the 45 languages are actually used.</p>
         <div class="seg" id="envSeg" style="flex-wrap:wrap">
           <button class="on" data-k="combo">Device + browser</button>
           <button data-k="os">System</button>
@@ -1426,7 +1426,7 @@
     var pt=(pwa.standalone||0)+(pwa.browser||0);
     if(pt) bits.push('<b>'+Math.round(((pwa.standalone||0)/pt)*100)+'%</b> run it as an installed app');
     var nl=Object.keys(lang).length;
-    if(nl) bits.push('<b>'+nl+'</b> language'+(nl===1?'':'s')+' seen, of 40 translated');
+    if(nl) bits.push('<b>'+nl+'</b> language'+(nl===1?'':'s')+' seen, of 45 translated');
     // Noise floor: pings with an automated user-agent or no usable language
     // header. An estimate to scale the other numbers by — nothing is filtered.
     var nz=_envData.noise||{}, nzT=(nz['bot-like']||0)+(nz.clean||0);

@@ -65,7 +65,7 @@ async function _drawQr(url) {
 
 function _shareText() {
   // Human line above the URL in messengers / e-mail. Reuse the invited-
-  // banner sentence so it is already translated in all 40 languages.
+  // banner sentence so it is already translated in all 45 languages.
   return _t('invitedBanner', 'You are invited to join the table') + ' \u00ab ' + _curName + ' \u00bb';
 }
 

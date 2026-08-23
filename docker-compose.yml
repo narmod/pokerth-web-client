@@ -102,11 +102,11 @@ x-casaos:
     en_us: >-
       Modern web client for the open-source poker game PokerTH. Bridges browser
       WebSockets to any PokerTH server (pokerth.net by default), with offline
-      bot training, 36 languages, themes, achievements and a family leaderboard.
+      bot training, 45 languages, themes, achievements and a family leaderboard.
     fr_fr: >-
       Client web moderne pour le jeu de poker open source PokerTH. Relie le
       navigateur à n'importe quel serveur PokerTH (pokerth.net par défaut),
-      avec entraînement hors ligne contre des bots, 36 langues, thèmes,
+      avec entraînement hors ligne contre des bots, 45 langues, thèmes,
       trophées et classement familial.
   scheme: http
   port_map: "8080"

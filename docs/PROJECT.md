@@ -65,7 +65,7 @@ Browser  ⇄  in-memory FakeServer + local engine + bots   (Training mode: no pr
 - **Web client** (`public/`) — Vanilla JavaScript, no framework. The application
   logic is split into focused ES modules under `public/modules/` — `net`
   (protocol, session, message handlers), `game` (state, seat rendering, hand
-  flow, showdown), `ui` (action bar, chat, panels), `i18n` (40 languages),
+  flow, showdown), `ui` (action bar, chat, panels), `i18n` (45 languages),
   `theme` (multi-axis theming + presets), `sounds`, `music`, and the offline
   engine + bots — with `pokerth.js` reduced to a thin orchestrator loaded as a
   native `type="module"`.
@@ -107,7 +107,7 @@ The core is mature and in active use. The full gameplay loop works end to end �
 lobby, table creation, joining, betting, and showdown — across guest, registered
 (`pokerth.net`), and LAN/dedicated connections, with TLS, auto-reconnect
 (including Wi-Fi ↔ cellular hand-off), and spectator mode. The offline Training
-mode, 40-language i18n, multi-axis theming, PWA install, shared leaderboard, and
+mode, 45-language i18n, multi-axis theming, PWA install, shared leaderboard, and
 the admin console are all shipped.
 
 Current focus and what's next (see [ROADMAP.md](ROADMAP.md) for detail):

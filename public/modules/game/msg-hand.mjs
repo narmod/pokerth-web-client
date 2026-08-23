@@ -956,7 +956,7 @@ function onEndOfHandShow(sub) {
         S.seatData[pid].action = won ? '🏆 +' + won : '';
       }
       // Abattage : cartes révélées + nom de la combinaison. Le label vient
-      // de evaluateBestHand (clés hs* déjà traduites dans les 40 langues).
+      // de evaluateBestHand (clés hs* déjà traduites dans les 45 langues).
       // Joueurs couchés avant l'abattage : c1/c2 == null → pas de ligne.
       if (c1 != null && c2 != null) {
         const _bd = S.commCards.slice(); // fige le board de CETTE main

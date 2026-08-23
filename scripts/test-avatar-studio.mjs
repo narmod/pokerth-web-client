@@ -180,7 +180,7 @@ for (const f of fs.readdirSync(langDir).filter(f => f.endsWith('.mjs'))) {
   const ls = fs.readFileSync(path.join(langDir, f), 'utf8');
   for (const k of KEYS) if (!ls.includes(k + ':')) { langsOk = false; console.log('    missing ' + k + ' in ' + f); }
 }
-ok(langsOk, 'all avatar keys present in all 36 language files');
+ok(langsOk, 'all avatar keys present in all 45 language files');
 
 console.log(fail === 0 ? 'ALL OK (' + pass + ')' : 'FAIL ' + fail + '/' + (pass + fail));
 process.exit(fail === 0 ? 0 : 1);
