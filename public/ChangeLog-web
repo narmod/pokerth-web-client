@@ -1,4 +1,5 @@
 2026-08-13 version 2.1.7-web (current series):
+- new: session logs - a "Select…" button lets you tick several logs and delete them in one go; on a computer you can also Ctrl (⌘) + click to pick logs one by one, or Shift + click to take a whole range
 - new: custom sounds - in advanced options / sound you can now replace any game sound (fold, check, call, bet, raise, all-in, dealing, your turn, blind raises, player connected, game ready, lobby chat) with your own audio file; play it back, restore one sound or all of them at any time. Files stay in your browser and are never uploaded
 - bugfix: admin traffic page - a language had one colour in the ranking and another in the per-day chart; both views now share the same colour per language
 - new: admin maintenance - an "update automatically" switch: the server checks its branch every 15 minutes, puts client-only changes live at once, and waits until nobody at all is connected before anything that needs a restart

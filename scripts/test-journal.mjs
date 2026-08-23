@@ -100,5 +100,39 @@ ok(/ArrowLeft/.test(split) && /ArrowRight/.test(split), 'the splitter is keyboar
 ok(!/_applyListW\(\);\n  await purgeOldSessions/.test(src),
   'the width is not applied while the card is still hidden (clientWidth would be 0)');
 
+// ── 5. Multi-select deletion ──────────────────────────────────────────────
+ok(/id="jr-select"/.test(src), 'the Select\u2026 button is in the action bar');
+const multi = body('_setMulti');
+ok(/_marked\.clear\(\)/.test(multi) && /_anchor = null/.test(multi),
+  'leaving the selection mode clears the ticks and the range anchor');
+ok(/_multi = false; _anchor = null; _marked\.clear\(\);/.test(body('closeJournal')),
+  'closing the window leaves the selection mode');
+const range = body('_markRange');
+ok(/Math\.min\(a, b\)/.test(range) && /Math\.max\(a, b\)/.test(range),
+  'Shift + click ticks the whole range, whichever way it was dragged');
+ok(/_anchor == null \? _sel : _anchor/.test(range),
+  'the range starts at the last clicked entry, or at the previewed one');
+const del = body('_delSelected');
+ok(/if \(_multi && _marked\.size\)/.test(del), 'Delete removes the ticked batch when there is one');
+ok((del.match(/confirm\(/g) || []).length === 2,
+  'one confirmation for the batch, one for the single log \u2014 never one per entry');
+ok(/for \(const sid of ids\) await _deleteSession\(sid\)/.test(del),
+  'every ticked session is deleted');
+ok(/_marked\.clear\(\)/.test(del), 'the ticks are dropped once the batch is gone');
+const list = body('_renderList');
+ok(/ev\.ctrlKey \|\| ev\.metaKey/.test(list) && /ev\.shiftKey/.test(list),
+  'Ctrl/Cmd + click and Shift + click are honoured on the desktop');
+ok(/alive\.has\(id\)/.test(list), 'ticks pointing at vanished sessions are dropped on redraw');
+ok(/aria-checked/.test(list) && /role', 'checkbox'/.test(list),
+  'entries expose their ticked state to assistive technology');
+const sync = body('_syncSelBtns');
+ok(/jrDeleteN/.test(sync) && /String\(n\)/.test(sync), 'the Delete button carries the count');
+ok(/db\.disabled = _multi && !n/.test(sync), 'Delete is disabled while nothing is ticked');
+
+const en = readFileSync(join(here, '..', 'public', 'modules', 'lang', 'en.mjs'), 'utf8');
+for (const k of ['jrSelect', 'jrSelectCancel', 'jrSelectHint', 'jrDeleteN', 'jrConfirmDeleteN']) {
+  ok(new RegExp('\\b' + k + '\\s*:').test(en), 'en.mjs carries ' + k);
+}
+
 console.log(fail ? `FAIL ${fail}/${n}` : `OK ${n}/${n}`);
 process.exit(fail ? 1 : 0);

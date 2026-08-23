@@ -25,6 +25,14 @@ release.
   were already correct.
 
 ### Added
+- **Multi-select in the session logs** (`web.21`) — deleting old logs one by
+  one was the only option (community request from *Spitessbir* on the forum).
+  The log window now has a **Select…** button that reveals a checkbox on every
+  entry; `Delete` then turns into `Delete (n)` and removes the whole batch
+  after a single confirmation. On desktop, `Ctrl`/`Cmd` + click toggles one
+  entry and `Shift` + click takes a range, both switching the mode on by
+  themselves, file-explorer style. Leaving the mode (or closing the window)
+  clears the ticks. Five new i18n keys, translated in all 45 catalogues.
 - **Custom sounds** (`web.19`) — every one of the 14 game samples (fold,
   check, call, bet, raise, all-in, dealing, your turn, the three blind-raise
   levels, player connected, game ready, lobby chat) can be replaced with the

@@ -400,6 +400,14 @@ let _selGame = 0;       // uniqueGameID filtré (0 = toutes)
 let _analyze = false;   // mode analyseur
 let _anHand = 0;        // handID courant en analyse
 
+// ── Multi-sélection ───────────────────────────────────────────────────────
+// Deux entrées : le bouton « Select… » (tactile, montre les cases à cocher)
+// et, sur desktop, Ctrl/Cmd+clic (bascule un log) ou Maj+clic (plage), qui
+// activent le mode à la volée comme dans un explorateur de fichiers.
+let _multi = false;         // mode sélection multiple actif
+let _anchor = null;         // ancre de plage pour Maj+clic
+const _marked = new Set();  // sessionIds cochés
+
 // ── Largeur de la colonne des sessions (poignée de redimensionnement) ─────
 // Mémorisée comme les géométries de fenêtre ; ignorée sur petit écran, où la
 // liste passe au-dessus de l'aperçu (media query).
@@ -472,6 +480,9 @@ const CSS = `
 #jr-modal .jr-main{display:flex;gap:10px;flex:1;min-height:0;overflow:hidden}
 #jr-modal .jr-list{flex:0 0 220px;min-width:140px;overflow:auto;border:1px solid var(--border,#39415066);border-radius:6px;padding:3px}
 #jr-modal .jr-item{display:block;width:100%;text-align:left;padding:6px 8px;border:0;background:transparent;color:var(--text,#cdd3e0);font:inherit;font-size:.82rem;border-radius:4px;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#jr-modal .jr-item .jr-ck{display:inline-block;width:12px;height:12px;line-height:11px;text-align:center;margin-right:6px;border:1px solid var(--border,#394150aa);border-radius:3px;font-size:.68rem;vertical-align:-1px}
+#jr-modal .jr-item.mk{background:rgba(139,26,26,.34)}
+#jr-modal .jr-item.mk .jr-ck{background:#8b1a1a;border-color:#8b1a1a;color:#fff}
 #jr-modal .jr-item.sel{background:#8b1a1a;color:#fff}
 #jr-modal .jr-item .jr-cur{opacity:.75;font-size:.72rem;margin-left:4px}
 #jr-modal .jr-split{flex:0 0 6px;align-self:stretch;border-radius:3px;background:var(--border,#39415066);opacity:.45;cursor:col-resize;touch-action:none}
@@ -481,6 +492,7 @@ const CSS = `
 #jr-modal .jr-prev{flex:1;overflow:auto;border:1px solid var(--border,#39415066);border-radius:6px;padding:8px 10px;background:var(--panel-bg,rgba(0,0,0,.14));font-size:.82rem;line-height:1.45;min-height:0}
 #jr-modal .jr-prev mark{background:#E3C800;color:#1d222b;border-radius:2px}
 #jr-modal .jr-btns{display:flex;flex-wrap:wrap;gap:7px;margin-top:10px;align-items:center}
+#jr-modal .jr-btns button[disabled]{opacity:.45;cursor:default}
 #jr-modal .jr-spacer{flex:1}
 #jr-modal .jr-foot{display:flex;flex-wrap:wrap;gap:7px;margin-top:8px;align-items:center;font-size:.8rem;opacity:.9}
 #jr-modal .jr-an-nav{display:flex;gap:6px;align-items:center;margin-bottom:6px;flex-wrap:wrap}
@@ -527,6 +539,7 @@ function _ensureModal() {
         '<button type="button" class="btn-sm" id="jr-exp-txt"></button>' +
         '<button type="button" class="btn-sm" id="jr-saveas"></button>' +
         '<button type="button" class="btn-sm" id="jr-import"></button>' +
+        '<button type="button" class="btn-sm" id="jr-select" aria-pressed="false"></button>' +
         '<button type="button" class="btn-sm" id="jr-del"></button>' +
         '<span class="jr-spacer"></span>' +
         '<button type="button" class="btn-sm" id="jr-analyze"></button>' +
@@ -559,6 +572,7 @@ function _ensureModal() {
   $('jr-exp-txt').addEventListener('click', () => _export(2));
   $('jr-saveas').addEventListener('click', _saveAsPdb);
   $('jr-import').addEventListener('click', _importPdbs);
+  $('jr-select').addEventListener('click', () => _setMulti(!_multi));
   $('jr-del').addEventListener('click', _delSelected);
   $('jr-delall').addEventListener('click', _delAll);
   $('jr-analyze').addEventListener('click', () => { _analyze = !_analyze; _anHand = 0; _renderRight(); });
@@ -593,7 +607,7 @@ function _applyTexts() {
   $('jr-exp-txt').textContent = T('jrExportTxt', 'Export as txt');
   $('jr-saveas').textContent = T('jrSaveAs', 'Save as\u2026');
   $('jr-import').textContent = T('jrImport', 'Import .pdb\u2026');
-  $('jr-del').textContent = T('jrDelete', 'Delete');
+  _syncSelBtns();
   $('jr-delall').textContent = T('jrDeleteAll', 'Delete all');
   $('jr-analyze').textContent = T('jrAnalyze', 'Analyse log file\u2026');
   $('jr-upload').textContent = T('jrUploadNet', 'Analyse on pokerth.net\u2026');
@@ -629,14 +643,29 @@ function _renderList() {
     d.style.cssText = 'padding:8px;font-size:.8rem;opacity:.75';
     d.textContent = T('jrEmpty', 'No logs yet. Play a hand and the session will appear here.');
     list.appendChild(d);
+    _marked.clear();
+    _syncSelBtns();
     return;
   }
   if (!_sel || !ss.some((m) => m.sessionId === _sel)) _sel = ss[0].sessionId;
+  if (_marked.size) {
+    const alive = new Set(ss.map((m) => m.sessionId));
+    Array.from(_marked).forEach((id) => { if (!alive.has(id)) _marked.delete(id); });
+  }
   ss.forEach((m) => {
     const b = document.createElement('button');
     b.type = 'button';
-    b.className = 'jr-item' + (m.sessionId === _sel ? ' sel' : '');
-    b.textContent = _fileBase(m.session, m.sessionId);
+    const mk = _marked.has(m.sessionId);
+    b.className = 'jr-item' + (mk ? ' mk' : '') + (m.sessionId === _sel ? ' sel' : '');
+    if (_multi) {
+      b.setAttribute('role', 'checkbox');
+      b.setAttribute('aria-checked', mk ? 'true' : 'false');
+      const ck = document.createElement('span');
+      ck.className = 'jr-ck';
+      ck.textContent = mk ? '\u2713' : '';
+      b.appendChild(ck);
+    }
+    b.appendChild(document.createTextNode(_fileBase(m.session, m.sessionId)));
     if (m.sessionId === cur) {
       const em = document.createElement('span');
       em.className = 'jr-cur';
@@ -649,7 +678,20 @@ function _renderList() {
       em.textContent = '\u2022 ' + T('jrImported', 'imported');
       b.appendChild(em);
     }
-    b.addEventListener('click', () => {
+    b.addEventListener('click', (ev) => {
+      const range = !!(ev && ev.shiftKey);
+      const toggle = !!(ev && (ev.ctrlKey || ev.metaKey));
+      if (_multi || range || toggle) {
+        if (!_multi) {
+          _multi = true;
+          if (_sel) { _marked.add(_sel); _anchor = _sel; }
+        }
+        if (range) _markRange(m.sessionId);
+        else if (_marked.has(m.sessionId)) { _marked.delete(m.sessionId); _anchor = m.sessionId; }
+        else { _marked.add(m.sessionId); _anchor = m.sessionId; }
+        _renderList();
+        return;
+      }
       if (m.sessionId === _sel) return;
       _sel = m.sessionId; _selGame = 0; _anHand = 0;
       _renderList();
@@ -657,6 +699,38 @@ function _renderList() {
     });
     list.appendChild(b);
   });
+  _syncSelBtns();
+}
+
+// Coche la plage entre l'ancre (dernier log cliqué, sinon l'aperçu) et sid.
+function _markRange(sid) {
+  const ids = _sessions().map((m) => m.sessionId);
+  const a = ids.indexOf(_anchor == null ? _sel : _anchor);
+  const b = ids.indexOf(sid);
+  if (a < 0 || b < 0) { _marked.add(sid); return; }
+  for (let i = Math.min(a, b); i <= Math.max(a, b); i++) _marked.add(ids[i]);
+}
+
+function _setMulti(on) {
+  _multi = !!on;
+  if (!_multi) { _marked.clear(); _anchor = null; }
+  _renderList();
+}
+
+// Libellés et état des deux boutons liés à la sélection.
+function _syncSelBtns() {
+  const sb = document.getElementById('jr-select');
+  const db = document.getElementById('jr-del');
+  const n = _multi ? _marked.size : 0;
+  if (sb) {
+    sb.textContent = _multi ? T('jrSelectCancel', 'Cancel selection') : T('jrSelect', 'Select\u2026');
+    sb.setAttribute('aria-pressed', _multi ? 'true' : 'false');
+    sb.title = T('jrSelectHint', 'Pick several logs to delete at once \u2014 Ctrl (\u2318) + click to add one, Shift + click for a range');
+  }
+  if (db) {
+    db.textContent = n ? T('jrDeleteN', 'Delete ({n})').replace('{n}', String(n)) : T('jrDelete', 'Delete');
+    db.disabled = _multi && !n;
+  }
 }
 
 function _renderGames() {
@@ -966,6 +1040,16 @@ function _importPdbs() {
 }
 
 async function _delSelected() {
+  if (_multi && _marked.size) {
+    const ids = Array.from(_marked);
+    const msg = T('jrConfirmDeleteN', 'Delete {n} logs? This cannot be undone.').replace('{n}', String(ids.length));
+    if (!confirm(msg)) return;
+    for (const sid of ids) await _deleteSession(sid);
+    if (ids.indexOf(_sel) >= 0) _sel = null;
+    _multi = false; _anchor = null; _marked.clear();
+    await _reload();
+    return;
+  }
   if (!_sel) return;
   if (!confirm(T('jrConfirmDelete', 'Delete this log?'))) return;
   await _deleteSession(_sel);
@@ -977,6 +1061,7 @@ async function _delAll() {
   if (!confirm(T('jrConfirmDeleteAll', 'Delete ALL logs?'))) return;
   await _deleteAll();
   _sel = null;
+  _multi = false; _anchor = null; _marked.clear();
   await _reload();
 }
 
@@ -1054,6 +1139,7 @@ function _syncFloat(m) {
 export function closeJournal() {
   const m = document.getElementById('jr-modal');
   if (m) m.style.display = 'none';
+  _multi = false; _anchor = null; _marked.clear();
 }
 
 if (typeof window !== 'undefined') {
