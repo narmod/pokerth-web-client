@@ -14,6 +14,13 @@ Opened with `v2.1.7-web.0` (2026-08-13), following the upstream **2.1.7**
 release.
 
 ### Added
+- **`/rules` in European Portuguese, Catalan, Galician, Lithuanian, Serbian
+  and Afrikaans** (`web.52`) — sixth batch, thirty-one languages live, 14 to
+  go. `pt-PT` is not a copy of `pt-BR`: *ronda* not *rodada*, *póquer* not
+  *pôquer*, and quads are *poker* there as in Catalan and Galician. Serbian is
+  written in Cyrillic to match its interface translation.
+
+### Added
 - **`/rules` in Danish, Finnish, Norwegian, Slovak, Croatian and Indonesian**
   (`web.51`) — fifth batch, twenty-five languages live, 20 to go. Croatian
   joins the *poker means quads* group. Finnish keeps the native hand names
