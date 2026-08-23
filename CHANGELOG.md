@@ -14,6 +14,15 @@ Opened with `v2.1.7-web.0` (2026-08-13), following the upstream **2.1.7**
 release.
 
 ### Added
+- **`/rules` in German, Russian, Brazilian Portuguese and Japanese**
+  (`web.48`) — second batch, nine languages live. Hand names follow local
+  usage rather than a literal gloss: German keeps *Royal Flush* and *Full
+  House* as they are used at the table but translates *Vierling* and *Straße*,
+  Russian uses the borrowed *флеш-рояль* and *каре*, Japanese the katakana
+  forms. Same structural check as the first batch — every translation carries
+  the same tag counts as the English page.
+
+### Added
 - **`/rules` in French, Spanish and Chinese** (`web.47`) — first translation
   batch: `fr`, `es`, `zh` and `zh-TW`, each with its own title, meta
   description and JSON-LD. The action names stay in English
