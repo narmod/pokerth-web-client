@@ -286,7 +286,7 @@ function saveStatsSoon() {
 }
 
 // ── Leaderboard reset policy ──
-// STATS_RESET_PERIOD = off | daily | monthly | yearly (default: monthly).
+// STATS_RESET_PERIOD = off | daily | weekly | monthly | yearly (default: monthly).
 // At startup and hourly, the current period (server local time) is compared to
 // the marker persisted in stats.meta.json; when it rolls over, the shared
 // leaderboard is wiped. Per-device session stats (browser localStorage) are
@@ -1491,12 +1491,30 @@ function saveStatsMeta() {
   try { fs.writeFileSync(STATS_META_FILE, JSON.stringify(statsMeta)); }
   catch (e) { console.error('[stats] meta write failed:', e.message); }
 }
+// ISO-8601 week key, e.g. 2026-W34. The week starts on Monday and belongs to
+// the year of its Thursday, which is what stops 1 January from landing in week
+// 1 of the wrong year: 2027-01-01 is a Friday and belongs to 2026-W53. Without
+// that rule the marker would flip twice in a row at every new year and wipe the
+// leaderboard a week early.
+function isoWeekKey(when) {
+  const t = new Date(when.getFullYear(), when.getMonth(), when.getDate());
+  const dayIdx = (t.getDay() + 6) % 7;                 // Monday = 0
+  t.setDate(t.getDate() - dayIdx + 3);                 // the Thursday of that week
+  const isoYear = t.getFullYear();
+  const jan4 = new Date(isoYear, 0, 4);                // always in week 1
+  const jan4Idx = (jan4.getDay() + 6) % 7;
+  const week1Monday = new Date(isoYear, 0, 4 - jan4Idx);
+  // Rounding absorbs the hour a daylight-saving change adds or removes.
+  const week = 1 + Math.round((t - week1Monday) / 604800000);
+  return isoYear + '-W' + String(week).padStart(2, '0');
+}
 function statsPeriodKey() {
   const d = new Date();
   const y = d.getFullYear();
   const m = String(d.getMonth() + 1).padStart(2, '0');
   const day = String(d.getDate()).padStart(2, '0');
   if (STATS_RESET_PERIOD === 'daily')   return y + '-' + m + '-' + day;
+  if (STATS_RESET_PERIOD === 'weekly')  return isoWeekKey(d);
   if (STATS_RESET_PERIOD === 'monthly') return y + '-' + m;
   if (STATS_RESET_PERIOD === 'yearly')  return String(y);
   return null; // 'off' or unknown → no scheduled reset
@@ -3206,7 +3224,7 @@ function handleAdmin(req, res, reqPathOnly, query) {
         d = d || {};
         if (d.resetPeriod !== undefined) {
           const per = String(d.resetPeriod || '').toLowerCase();
-          if (['off', 'daily', 'monthly', 'yearly'].indexOf(per) < 0) return adminJson(res, 400, { ok: false, error: 'invalid period (off|daily|monthly|yearly)' });
+          if (['off', 'daily', 'weekly', 'monthly', 'yearly'].indexOf(per) < 0) return adminJson(res, 400, { ok: false, error: 'invalid period (off|daily|weekly|monthly|yearly)' });
           STATS_RESET_PERIOD = per; _adminConfig.resetPeriod = per;
           try { statsMeta.period = statsPeriodKey(); saveStatsMeta(); } catch (e) {}
         }
@@ -4039,7 +4057,7 @@ function handleAdmin(req, res, reqPathOnly, query) {
       // Réglages miroirés dans des variables vivantes : à resynchroniser tout de
       // suite, sinon l'import ne prendrait effet qu'au redémarrage.
       if (typeof _adminConfig.resetPeriod === 'string' &&
-          ['off', 'daily', 'monthly', 'yearly'].indexOf(_adminConfig.resetPeriod) >= 0) {
+          ['off', 'daily', 'weekly', 'monthly', 'yearly'].indexOf(_adminConfig.resetPeriod) >= 0) {
         STATS_RESET_PERIOD = _adminConfig.resetPeriod;
       }
       console.log('[admin] configuration imported (' + taken.length + ' setting(s), ' + skipped.length + ' ignored)');

@@ -29,6 +29,18 @@ release.
   `panel-server`, so it was the one on screen until the first tab click. Only
   the panel the active tab points at is open now, and a guard counts them.
 
+### Added
+- **Weekly leaderboard reset** (`web.40`) — `STATS_RESET_PERIOD` now takes
+  `weekly` next to `off`, `daily`, `monthly` and `yearly`, and the Leaderboard
+  card offers it. Weeks follow ISO-8601: Monday to Sunday, belonging to the
+  year of their Thursday. That rule is the whole point — 1 January 2027 is a
+  Friday and belongs to `2026-W53`, so a naive week number would roll the
+  marker over twice at the turn of the year and wipe real scores a week early.
+  Keys read `2026-W34` and sort as text. Updated in both server-side
+  validations, `install.sh` and the README; 24 guards in
+  `scripts/test-reset-period.mjs` covering the week boundaries, both year
+  boundaries and the count of changes across a full year.
+
 ### Changed
 - **Proxy sits after Deployment** (`web.39`) — the Server sections now run
   Health & logs, Deployment, Proxy, Access & backup, Identity & reach, Game

@@ -572,7 +572,7 @@ When run without a terminal (CI / automation) the installer is fully non-interac
 | `APP_NAME` | `pokerth-web` | PM2 process name |
 | `SETUP_FIREWALL` | _(unset)_ | set to `1` to open the port in `ufw` |
 | `ASSUME_YES` | _(unset)_ | set to `1` to skip the confirmation prompt |
-| `STATS_RESET_PERIOD` | `monthly` | leaderboard auto-reset: `off` / `daily` / `monthly` / `yearly` |
+| `STATS_RESET_PERIOD` | `monthly` | leaderboard auto-reset: `off` / `daily` / `weekly` / `monthly` / `yearly` |
 | `STATS_ADMIN_TOKEN` | _(unset)_ | token enabling the remote leaderboard-reset endpoint |
 
 Example:
@@ -672,7 +672,7 @@ These configure the **proxy** at runtime (read by `proxy.js`). They are separate
 | `ALLOWED_HOSTS` | _(core hosts)_ | **Extra** upstream servers the proxy may dial, comma-separated. **Added to** the always-allowed core hosts (`pokerth.net`, `www.pokerth.net`, `pokerth.ddns.net`, `localhost`, `127.0.0.1`, `::1`) — it no longer replaces them. Set it only to **add your own server** (anti open-relay). |
 | `ALLOWED_PORTS` | `7234` | Comma-separated allowlist of upstream **ports** (anti-SSRF). Set only for a non-standard PokerTH port. |
 | `ADMIN_ENABLED` | _enabled_ | Serve the `/admin` console. Set to `0` / `false` / `off` / `no` to hide it (every `/admin/*` route returns `404`). The `pokerth-web admin on`/`off` command is the persistent way to set this. |
-| `STATS_RESET_PERIOD` | `monthly` | Leaderboard auto-reset: `off` / `daily` / `monthly` / `yearly`. |
+| `STATS_RESET_PERIOD` | `monthly` | Leaderboard auto-reset: `off` / `daily` / `weekly` / `monthly` / `yearly`. |
 | `STATS_ADMIN_TOKEN` | _(unset)_ | Token that unlocks the admin panel and the remote `/stats` reset; with no token, both are off. |
 | `MYSQL_HOST` · `MYSQL_PORT` · `MYSQL_USER` · `MYSQL_PASSWORD` · `MYSQL_DATABASE` | _(unset)_ · `3306` | Optional **MySQL/MariaDB mirror**. Set `MYSQL_HOST` + `MYSQL_DATABASE` to enable; these override the admin-panel / `db-config` settings. See [Optional MySQL mirror](#mysql-mirror). |
 | `PM2_NAME` | `pokerth-web` | PM2 process name the proxy targets for its self-update / restart actions. |
@@ -903,7 +903,7 @@ After a first install, a `pokerth-web` command is available to manage everything
 ```bash
 sudo pokerth-web update              # pull the latest version, reinstall deps, restart
 pokerth-web status                   # show the PM2 status
-sudo pokerth-web set-period yearly   # leaderboard auto-reset: off | daily | monthly | yearly
+sudo pokerth-web set-period yearly   # leaderboard auto-reset: off | daily | weekly | monthly | yearly
 sudo pokerth-web reset-stats         # wipe the family leaderboard now
 sudo pokerth-web set-token SECRET    # admin token: unlocks the admin panel + remote reset (no token = both off)
 sudo pokerth-web token add NAME broadcast,music  # mint a scoped delegate key (categories: broadcast,music,packages,leaderboard)
@@ -981,12 +981,12 @@ Both the admin form and the CLI write to **`db-config.json`** in the install dir
 
 The shared leaderboard (per-nickname **lifetime** stats) lives in `stats.json` on the server. Per-device **session** stats stay in each browser and are never touched by any of this.
 
-**Automatic reset.** The `STATS_RESET_PERIOD` environment variable controls how often the leaderboard wipes itself — `off`, `daily`, `monthly` (**default**) or `yearly`. The boundary is the server's local time, and the current period is remembered, so a restart never triggers a false reset.
+**Automatic reset.** The `STATS_RESET_PERIOD` environment variable controls how often the leaderboard wipes itself — `off`, `daily`, `weekly`, `monthly` (**default**) or `yearly`. The boundary is the server's local time, and the current period is remembered, so a restart never triggers a false reset. Weeks follow ISO-8601: they run Monday to Sunday and belong to the year of their Thursday, so the turn of the year does not cut a week in two.
 
 With the one-liner installer, set it with a single command — it's saved and re-applied automatically on every update and reboot:
 
 ```bash
-sudo pokerth-web set-period yearly     # off | daily | monthly | yearly
+sudo pokerth-web set-period yearly     # off | daily | weekly | monthly | yearly
 ```
 
 You can also choose it at install time: `curl -sSL .../install.sh | STATS_RESET_PERIOD=yearly bash`.

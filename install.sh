@@ -435,7 +435,7 @@ SUMMARY
     sudo pokerth-web uninstall   # remove the service
     pokerth-web status           # show status
     sudo pokerth-web reset-stats # reset the family leaderboard
-    sudo pokerth-web set-period yearly   # off | daily | monthly | yearly
+    sudo pokerth-web set-period yearly   # off | daily | weekly | monthly | yearly
 
   ${C_YELLOW}Recommended:${C_RESET} put Nginx + Let's Encrypt in front for HTTPS (many mobile
   browsers block plain ws://). See the README 'Manual installation' section.
@@ -585,8 +585,8 @@ do_reset_stats() {
 do_set_period() {
   local val="${1:-}"
   case "$val" in
-    off|daily|monthly|yearly) ;;
-    *) errln "Usage: pokerth-web set-period <off|daily|monthly|yearly>"; exit 1 ;;
+    off|daily|weekly|monthly|yearly) ;;
+    *) errln "Usage: pokerth-web set-period <off|daily|weekly|monthly|yearly>"; exit 1 ;;
   esac
   load_state
   [ -n "$RUN_USER" ] || RUN_USER="$(id -un)"
@@ -1189,7 +1189,7 @@ Commands:
   uninstall   Stop and remove the service
   status      Show the current status
   reset-stats Reset the shared family leaderboard (stats.json)
-  set-period  Set auto-reset period: off | daily | monthly | yearly
+  set-period  Set auto-reset period: off | daily | weekly | monthly | yearly
   log-level   Set proxy log verbosity: quiet | normal | verbose
   max-clients Set the max concurrent game bridges (0 = unlimited)
   fd-limit    Raise the file-descriptor limit (default 65536; more players)
