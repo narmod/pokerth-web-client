@@ -1,4 +1,7 @@
 2026-08-13 version 2.1.7-web (current series):
+- new: bet keypad on touch devices - tapping the bet amount now opens a keypad right inside the action bar instead of the system keyboard, so the table stays visible and nothing jumps around while you type. Min, 1/2, Pot and All-In are one tap away, and a small keypad button next to the field opens it on touch-screen computers too
+- improvement: the bet slider is far easier to use with a finger - it now moves in the same steps as the desktop client (10, 50, 500 or 5000 chips depending on your stack) and has a much taller touch area, and dragging it no longer scrolls the page by mistake
+- improvement: typing a bet amount with a keyboard now replaces the old amount instead of appending to it
 - bugfix: the lobby could stay on screen, table list frozen, long after the connection had actually died - the client now notices the silence and reconnects on its own, as it already did at a table
 - improvement: the server's inactivity warning now opens a proper dialog with a countdown, a sound and an "OK" button, instead of a chat line that was easy to miss - clicking OK tells the server you are still there and stops the countdown
 - bugfix: losing your connection during a running game no longer cost you your seat - the client now proves to the server that the seat is yours and sits back down at the next hand, within the five minutes the server holds it. Rejoining still only works from the same device and the same browser you were playing on

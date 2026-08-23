@@ -6740,6 +6740,10 @@ const App = (() => {
     doAction(action, bet) { if (S._playingMode !== 0) this.setPlayingMode(0); doAction(action, bet); },
     confirmCall(action, amount) { if (S._playingMode !== 0) this.setPlayingMode(0); confirmCall(action, amount); },
     doRaise() { if (S._playingMode !== 0) this.setPlayingMode(0); doRaise(); },
+    // Pave numerique de mise (ui/bet-keypad.mjs) et arrondi du slider :
+    // ponts pour les handlers inline de la barre d'action.
+    openBetKeypad() { if (window.openBetKeypad) window.openBetKeypad(); },
+    _roundRaise(v, min, max) { return window._roundRaise ? window._roundRaise(v, min, max) : v; },
 
     // ── Per-login-mode CreateGame defaults ───────────────────────────────
     //
@@ -10415,7 +10419,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.7-web.57'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.7-web.58'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

@@ -13,6 +13,44 @@ this file captures what matters to players and operators.
 Opened with `v2.1.7-web.0` (2026-08-13), following the upstream **2.1.7**
 release.
 
+### Added
+- **Bet keypad on touch devices** (`web.58`) — reported through Discord: the web
+  client is *"usable, but not so nice for typing numbers"* on a phone. The bet
+  field is a bare `type="number"` input, so tapping it summons the OS keyboard,
+  which covers half the table and — on iOS — reflows the whole layout while the
+  turn timer runs. On a coarse pointer the field now goes `readonly` with
+  `inputmode="none"`, so the OS keyboard is never summoned; a tap opens an
+  in-bar keypad instead. The keypad takes the place of the `.mid-row` and
+  `.act-buttons-row` (class `kp-open` on `.action-grid`), keeping the overall
+  bar height constant so the table above never moves. Its fourth column carries
+  Min / 1/2 / Pot / All-In, with the two middle amounts read back from the
+  existing `.btn-pct` buttons so both paths can never disagree. Validating
+  writes the amount into `#raise-amt` and calls `App.doRaise()`, so every
+  existing guard (clamp, `guard_raise`, all-in routing, manual-mode reset)
+  still applies unchanged. Touch-capable desktops keep their physical keyboard
+  and reach the keypad through a small keypad button next to the field.
+  New module `public/modules/ui/bet-keypad.mjs`; one new i18n key
+  (`betKeypad`) translated across all 45 languages.
+
+### Changed
+- **Bet slider granularity now matches the desktop client** (`web.58`) — the web
+  slider ran on `step="1"`, a divergence from
+  `GameActionBar.qml::raiseStepFor()`, which steps by 10 / 50 / 500 / 5000
+  depending on the maximum. At step 1 on a 4 px track, hitting a chosen amount
+  with a finger is impossible — which is why the pot-percentage buttons were the
+  only practical input on mobile. The QML helpers `raiseStepFor()` and
+  `roundedRaiseAmount()` are ported verbatim; rounding is applied to the
+  **slider only** (floor to the step, maximum kept exact so the top of the
+  travel is a true all-in), while the field and the keypad stay accurate to the
+  chip.
+- **Bet field and slider are usable with a finger** (`web.58`) — the slider box
+  grows to 26 px on coarse pointers (touch target only: the native track and
+  18 px handle are untouched, preserving QML parity and `accent-color`) and gets
+  `touch-action: none` so a drag no longer scrolls the page. The field carries
+  `inputmode="numeric" pattern="[0-9]*" enterkeyhint="done"` as a fallback for
+  Bluetooth keyboards, and `onfocus="this.select()"` so typing replaces the
+  amount instead of appending to it.
+
 ### Fixed
 - **Dead lobby connection went unnoticed** (`web.57`) — the RX watchdog only
   ran at a table (`s-game`). A zombie socket in the lobby — `readyState` still

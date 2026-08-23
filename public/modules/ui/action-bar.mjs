@@ -27,6 +27,8 @@ import { Proto } from '../net/proto.mjs';
 import { MSG } from '../net/messages.mjs';
 import { send } from '../net/session.mjs';
 import { _hsHide, renderHandStrength, renderPreFlopStrength } from './odds-panel.mjs';
+import { raiseStepFor, roundedRaiseAmount, isCoarsePointer, keypadAvailable,
+         openBetKeypad, closeBetKeypad } from './bet-keypad.mjs';
 
 // Joue l'action du mode auto courant a NOTRE tour (sans afficher les boutons).
 // Retourne true si une action auto a ete declenchee.
@@ -246,6 +248,9 @@ function _runPreAction() {
 }
 
 function renderMyTurnActions(preview) {
+  // Le panneau est reconstruit : un pave de mise encore ouvert porterait des
+  // bornes perimees (une relance adverse a pu passer). On le ferme d'abord.
+  try { closeBetKeypad(); } catch (e) {}
   // iOS/Android : ne pas detruire #mode-sel pendant que l'utilisateur le
   // manipule (le picker natif se fermerait). On differe le rafraichissement
   // de l'apercu hors-tour jusqu'a la fin de l'interaction (voir _modeSelHold).
@@ -343,11 +348,34 @@ function renderMyTurnActions(preview) {
   const allInOnly = myMoney <= toCall;    // ne peut que call ou all-in
 
   var KB = window._keyBindings(); // touches liées (badges des boutons)
+  // Parite QML GameActionBar : le slider avance par paliers raiseStepFor(max)
+  // (10 / 50 / 500 / 5000 selon le tapis) et non au jeton pres — c'est ce qui
+  // le rend visable au doigt. La sortie passe par roundedRaiseAmount, le
+  // maximum restant exact pour que le haut du slider soit un vrai all-in. La
+  // SAISIE (champ et pave) reste, elle, precise au jeton.
+  const _step = raiseStepFor(myMoney);
+  // Pointeur grossier : le champ passe en lecture seule avec inputmode="none"
+  // — le clavier systeme n'est jamais convoque (il masquait la table et
+  // repoussait toute la mise en page sur iOS), un tap ouvre le pave integre.
+  // Pointeur fin tactile (PC a ecran tactile) : le champ garde son clavier
+  // physique, le pave reste accessible par le bouton a cote.
+  const _coarse = isCoarsePointer();
+  const _kpAvail = keypadAvailable();
+  const _fldAttrs = _coarse
+    ? ' readonly inputmode="none" onclick="App.openBetKeypad()"'
+    : ' inputmode="numeric" pattern="[0-9]*" enterkeyhint="done" autocomplete="off" onfocus="this.select()"';
   const betRowHtml = '<div class="bet-row">'
-    + '<input class="raise-amt-field" id="raise-amt" type="number" min="' + minBet + '" max="' + myMoney + '" value="' + minBet + '"' + da
+    + '<input class="raise-amt-field" id="raise-amt" type="number" min="' + minBet + '" max="' + myMoney + '" value="' + minBet + '"' + da + _fldAttrs
     + ' oninput="var s=document.getElementById(\'raise-slider\');if(s)s.value=this.value">'
-    + '<input class="raise-slider" id="raise-slider" type="range" min="' + minBet + '" max="' + myMoney + '" value="' + minBet + '" step="1"' + da
-    + ' oninput="var a=document.getElementById(\'raise-amt\');if(a)a.value=this.value">'
+    + (_kpAvail
+        ? '<button type="button" class="kp-open-btn"' + da + ' onclick="App.openBetKeypad()" title="' + esc(t('betKeypad')) + '" aria-label="' + esc(t('betKeypad')) + '">'
+          + '<svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true" fill="currentColor">'
+          + '<circle cx="6" cy="5.5" r="1.7"/><circle cx="12" cy="5.5" r="1.7"/><circle cx="18" cy="5.5" r="1.7"/>'
+          + '<circle cx="6" cy="12" r="1.7"/><circle cx="12" cy="12" r="1.7"/><circle cx="18" cy="12" r="1.7"/>'
+          + '<rect x="4" y="17" width="16" height="2.6" rx="1.3"/></svg></button>'
+        : '')
+    + '<input class="raise-slider" id="raise-slider" type="range" min="' + minBet + '" max="' + myMoney + '" value="' + minBet + '" step="' + _step + '"' + da
+    + ' oninput="var a=document.getElementById(\'raise-amt\');if(a)a.value=App._roundRaise(this.value,' + minBet + ',' + myMoney + ')">'
     + '</div>';
 
   // Sélecteur de mode PERSISTANT (remplace l'ancien bouton AUTO, même emplacement) :
@@ -557,12 +585,16 @@ function doRaise() {
   }
 }
 
+// Pont pour les handlers inline du slider (App._roundRaise).
+function _roundRaise(v, min, max) { return roundedRaiseAmount(parseInt(v, 10), min, max); }
+
 export { _playAutoMode, _updatePinBtn, _renderPreActionPanel,
          _closePreActionPanel, notifyMyTurnVisuals, clearTurnNotif,
          _applyAssistUI, _runPreAction, renderMyTurnActions,
-         doAction, confirmCall, doRaise };
+         doAction, confirmCall, doRaise, _roundRaise };
 
 for (const [k, v] of Object.entries({ _playAutoMode, _updatePinBtn,
   _renderPreActionPanel, _closePreActionPanel, notifyMyTurnVisuals,
   clearTurnNotif, _applyAssistUI, _runPreAction, renderMyTurnActions,
-  doAction, confirmCall, doRaise })) window[k] = v;
+  doAction, confirmCall, doRaise, _roundRaise,
+  openBetKeypad, closeBetKeypad })) window[k] = v;
