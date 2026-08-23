@@ -90,6 +90,18 @@
   .traflegend .nw em{background:#3fae6a}
   .traflegend .rt em{background:#4080d8}
   .boardhead{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+  /* Un titre en tete de carte, aligne avec son bouton : sa marge est portee
+     par la rangee, pas par lui. Elle etait ecrite a la main quinze fois. */
+  .boardhead h2{margin:0}
+  /* Le chapeau d'une carte. .muted ne fixe que la marge du haut, si bien que
+     sans cette regle chaque paragraphe retombait sur le 1em du navigateur --
+     d'ou les trente-cinq marges recopiees dans le HTML, en six valeurs
+     differentes. */
+  .card p.muted{margin:0 0 9px}
+  /* Note posee APRES le contenu d'une carte, et non en chapeau. */
+  .card p.muted.note{margin:8px 0 0}
+  /* Rangee d'actions posee sous un bloc de reglages. */
+  .rowtop{margin-top:8px}
   .row{display:flex;align-items:center;gap:10px;padding:8px 4px;border-top:1px solid rgba(255,255,255,.06)}
   .row:first-of-type{border-top:0}
   .row .nm{flex:1;min-width:0}.row .nm b{display:block;font-size:.88rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -288,27 +300,27 @@
 
     <div id="panel-traffic" style="display:none">
       <div class="card">
-        <div class="boardhead" style="margin-bottom:6px"><h2 style="margin:0">Traffic</h2><button id="btnTrafRefresh" class="use">Refresh</button></div>
-        <p class="muted" style="margin:2px 0 10px">Anonymous footfall — no IP is ever stored. “Visits” counts browser sessions; “Unique visitors” counts distinct devices.</p>
+        <div class="boardhead"><h2>Traffic</h2><button id="btnTrafRefresh" class="use">Refresh</button></div>
+        <p class="muted">Anonymous footfall — no IP is ever stored. “Visits” counts browser sessions; “Unique visitors” counts distinct devices.</p>
         <div class="trafgrid" id="trafCards"><div class="empty">Loading…</div></div>
       </div>
       <div class="card">
-        <h2 style="margin:0 0 8px">Exclure mes propres visites</h2>
-        <p class="muted" style="margin:2px 0 10px">Sur CE navigateur, empêche le client d'être compté dans les visites (pratique quand tu testes le site). Réglage local à cet appareil ; il n'affecte que ce navigateur.</p>
+        <h2>Exclure mes propres visites</h2>
+        <p class="muted">Sur CE navigateur, empêche le client d'être compté dans les visites (pratique quand tu testes le site). Réglage local à cet appareil ; il n'affecte que ce navigateur.</p>
         <button id="btnNoCount" class="use">Ne pas compter mes visites</button>
       </div>
       <div class="card">
-        <h2 style="margin:0 0 8px">Last 14 days</h2>
+        <h2>Last 14 days</h2>
         <div id="trafChart" class="trafchart"><div class="empty">Loading…</div></div>
       </div>
       <div class="card">
-        <h2 style="margin:0 0 8px">Connections by server</h2>
-        <p class="muted" style="margin:2px 0 10px">Counts a session once per entry mode it is opened with, whatever the transport: Internet games routed through this proxy still count as pokerth.net. Offline = training vs bots.</p>
+        <h2>Connections by server</h2>
+        <p class="muted">Counts a session once per entry mode it is opened with, whatever the transport: Internet games routed through this proxy still count as pokerth.net. Offline = training vs bots.</p>
         <div id="trafModes"><div class="empty">Loading…</div></div>
       </div>
       <div class="card">
-        <div class="boardhead" style="margin-bottom:6px"><h2 style="margin:0">What visitors run</h2><span id="envSince" class="muted" style="margin:0"></span></div>
-        <p class="muted" style="margin:2px 0 10px">From the same anonymous ping as the visit counter: system and browser read from the User-Agent, language from the request header, installed app vs browser tab reported by the client. Running totals, not a time series — what to test on, and which of the 45 languages are actually used.</p>
+        <div class="boardhead"><h2>What visitors run</h2><span id="envSince" class="muted" style="margin:0"></span></div>
+        <p class="muted">From the same anonymous ping as the visit counter: system and browser read from the User-Agent, language from the request header, installed app vs browser tab reported by the client. Running totals, not a time series — what to test on, and which of the 45 languages are actually used.</p>
         <div class="seg" id="envSeg" style="flex-wrap:wrap">
           <button class="on" data-k="combo">Device + browser</button>
           <button data-k="os">System</button>
@@ -319,20 +331,20 @@
         <div id="trafEnv" style="margin-top:14px"><div class="empty">Loading…</div></div>
       </div>
       <div class="card">
-        <div class="boardhead" style="margin-bottom:6px"><h2 style="margin:0">Most played tracks</h2><span id="musSince" class="muted" style="margin:0"></span></div>
-        <p class="muted" style="margin:2px 0 10px">Counts a play each time a track starts in the players’ music panel — resuming after a pause is not a new play. No visitor id, no listening time. Radio stations are not measured: a live stream has no track end, so “a play” would mean nothing there. Per-track totals sit next to each title in the Music tab.</p>
+        <div class="boardhead"><h2>Most played tracks</h2><span id="musSince" class="muted" style="margin:0"></span></div>
+        <p class="muted">Counts a play each time a track starts in the players’ music panel — resuming after a pause is not a new play. No visitor id, no listening time. Radio stations are not measured: a live stream has no track end, so “a play” would mean nothing there. Per-track totals sit next to each title in the Music tab.</p>
         <div id="trafMusic"><div class="empty">Loading…</div></div>
       </div>
       <div class="card">
-        <h2 style="margin:0 0 8px">New vs returning visitors</h2>
-        <p class="muted" style="margin:2px 0 10px">Based on an anonymous per-device id — no names. A session is “new” the first time a device is ever seen, otherwise “returning”.</p>
+        <h2>New vs returning visitors</h2>
+        <p class="muted">Based on an anonymous per-device id — no names. A session is “new” the first time a device is ever seen, otherwise “returning”.</p>
         <div id="trafNvRChart" class="trafchart" style="display:none"></div>
         <div id="trafNvRLegend" class="traflegend" style="display:none"><span class="nw"><em></em>New</span><span class="rt"><em></em>Returning</span></div>
         <div id="trafNvR" style="margin-top:10px"><div class="empty">Loading…</div></div>
       </div>
       <div class="card">
-        <h2 style="margin:0 0 8px">Database (MySQL mirror)</h2>
-        <p class="muted" style="margin:2px 0 10px">Mirrors when enabled: traffic_daily, leaderboard, broadcasts. Configure below, or with the CLI: pokerth-web db-config.</p>
+        <h2>Database (MySQL mirror)</h2>
+        <p class="muted">Mirrors when enabled: traffic_daily, leaderboard, broadcasts. Configure below, or with the CLI: pokerth-web db-config.</p>
         <div id="trafDb"><div class="empty">Loading…</div></div>
         <div class="defrow fld gap"><span>Host</span><input id="dbHost" maxlength="255" placeholder="127.0.0.1" autocomplete="off"></div>
         <div class="defrow fld"><span>Port</span><input id="dbPort" type="number" min="1" max="65535" placeholder="3306" autocomplete="off"></div>
@@ -341,17 +353,17 @@
         <div class="defrow fld"><span>Database</span><input id="dbDatabase" maxlength="128" placeholder="pokerth" autocomplete="off"></div>
         <div class="defrow fld"><span>Enabled</span><input id="dbEnabled" type="checkbox"></div>
         <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px"><button id="dbTestBtn" class="use">Test connection</button><button id="dbSaveBtn" class="use">Save &amp; connect</button></div>
-        <div id="dbState" class="msg" style="margin-top:8px"></div>
+        <div id="dbState" class="msg"></div>
       </div>
       <div class="card">
-        <h2 style="margin:0 0 8px">Export / backup</h2>
-        <p class="muted" style="margin:2px 0 10px">Download the raw data for backup or import into a database. CSV = one row per day (date, visits, unique, per-server connections). JSON = full backup (restorable to visits.json).</p>
+        <h2>Export / backup</h2>
+        <p class="muted">Download the raw data for backup or import into a database. CSV = one row per day (date, visits, unique, per-server connections). JSON = full backup (restorable to visits.json).</p>
         <div style="display:flex;gap:8px;flex-wrap:wrap"><button id="btnTrafCsv" class="use">Download CSV</button><button id="btnTrafJson" class="use">Download JSON</button></div>
         <div id="trafExpMsg" class="msg"></div>
       </div>
       <div class="card">
         <h2>Reset traffic stats</h2>
-        <p class="muted" style="margin:6px 0 10px">⚠ This permanently deletes ALL visit data — today, history and totals. This cannot be undone.</p>
+        <p class="muted">⚠ This permanently deletes ALL visit data — today, history and totals. This cannot be undone.</p>
         <button id="btnTrafReset" class="use danger">Reset all traffic stats</button>
         <div id="trafMsg" class="msg"></div>
       </div>
@@ -359,24 +371,24 @@
 
     <div id="panel-sessions" style="display:none">
       <div class="card">
-        <div class="boardhead" style="margin-bottom:6px"><h2 style="margin:0">Live connections</h2><button id="seRefresh" class="use">Refresh</button></div>
-        <p class="muted" style="margin:0 0 8px">Everyone connected right now. <b>Bridges</b> are players whose game traffic goes through this proxy; <b>notices</b> are lightweight channels (players connected straight to pokerth.net, or training) that only receive broadcasts. IP addresses are shown partially masked. Auto-refreshes every 5&nbsp;s while this tab is open.</p>
+        <div class="boardhead"><h2>Live connections</h2><button id="seRefresh" class="use">Refresh</button></div>
+        <p class="muted">Everyone connected right now. <b>Bridges</b> are players whose game traffic goes through this proxy; <b>notices</b> are lightweight channels (players connected straight to pokerth.net, or training) that only receive broadcasts. IP addresses are shown partially masked. Auto-refreshes every 5&nbsp;s while this tab is open.</p>
         <div id="seSum" class="muted"></div>
         <div id="seMsg" class="msg"></div>
       </div>
       <div class="card">
-        <h2 style="margin:0 0 6px">Bridges</h2>
+        <h2>Bridges</h2>
         <div id="seBridges"><div class="empty">Loading…</div></div>
       </div>
       <div class="card">
-        <h2 style="margin:0 0 6px">Notice channels</h2>
+        <h2>Notice channels</h2>
         <div id="seNotify"><div class="empty">Loading…</div></div>
       </div>
     </div>
     <div id="panel-errors" style="display:none">
       <div class="card">
-        <div class="boardhead" style="margin-bottom:6px"><h2 style="margin:0">Client script errors</h2><div style="display:flex;gap:8px"><button id="erRefresh" class="use">Refresh</button><button id="erClear" class="use danger">Clear all</button></div></div>
-        <p class="muted" style="margin:0 0 8px">JavaScript errors reported by players' browsers, grouped by signature so one recurring bug is one line with a counter. Players can switch the reporting off in Advanced options; nothing but the error itself, the build, the device and a masked IP is ever sent. Kept in memory only — a restart clears the list.</p>
+        <div class="boardhead"><h2>Client script errors</h2><div style="display:flex;gap:8px"><button id="erRefresh" class="use">Refresh</button><button id="erClear" class="use danger">Clear all</button></div></div>
+        <p class="muted">JavaScript errors reported by players' browsers, grouped by signature so one recurring bug is one line with a counter. Players can switch the reporting off in Advanced options; nothing but the error itself, the build, the device and a masked IP is ever sent. Kept in memory only — a restart clears the list.</p>
         <div id="erSum" class="muted"></div>
         <div id="erMsg" class="msg"></div>
       </div>
@@ -406,9 +418,9 @@
       <div class="card">
         <h2>Music player</h2>
         <div class="defrow fld"><span>Available to players</span><select id="mzEnabled"><option value="1">On</option><option value="0">Off</option></select></div>
-        <div style="margin-top:8px"><button id="mzSaveEnabled" class="use">Save</button></div>
+        <div class="rowtop"><button id="mzSaveEnabled" class="use">Save</button></div>
         <div id="mzEnMsg" class="msg"></div>
-        <p class="muted" style="margin:8px 0 0">Off removes the 🎵 entry from every player menu and makes <code>/music/*</code> answer 404 (manifest and MP3s). The track list below stays fully editable. Players already in a session keep the player until they reload.</p>
+        <p class="muted note">Off removes the 🎵 entry from every player menu and makes <code>/music/*</code> answer 404 (manifest and MP3s). The track list below stays fully editable. Players already in a session keep the player until they reload.</p>
       </div>
       <div class="card">
         <h2>Add to the library</h2>
@@ -426,7 +438,7 @@
         <div class="defrow fld gap"><span>…or URL</span><input id="mzUrl" maxlength="500" placeholder="https://…/track.mp3 (server downloads it — bypasses upload size limits)" autocomplete="off"><button id="mzImportBtn" class="use">Import</button></div>
         <div id="mzProg" class="prog"><i></i></div>
         <div id="mzMsg" class="msg"></div>
-        <p class="muted" style="margin:8px 0 0">The track appears in players’ music panel automatically the next time they open it. Please make sure you have the right to share the file and that the author is credited.</p>
+        <p class="muted note">The track appears in players’ music panel automatically the next time they open it. Please make sure you have the right to share the file and that the author is credited.</p>
         </div>
         <div id="mzAddRadio" style="display:none">
         <div class="defrow fld"><span>Name</span><input id="mzrTitle" maxlength="120" placeholder="Station name (required)" autocomplete="off"></div>
@@ -434,11 +446,11 @@
         <div class="defrow fld"><span>Stream URL</span><input id="mzrUrl" maxlength="500" placeholder="https://…/stream.mp3 (Icecast/Shoutcast — https only)" autocomplete="off"></div>
         <div class="defrow fld"><span>Credit</span><input id="mzrCredit" maxlength="300" placeholder="Credit line shown in-app (auto-filled if blank)" autocomplete="off"></div>
         <div class="defrow fld"><span>License URL</span><input id="mzrLicenseUrl" maxlength="300" placeholder="https://… (optional — makes the credit a link)" autocomplete="off"></div>
-        <div style="margin-top:8px"><button id="mzrAddBtn" class="use">Add radio</button></div>
+        <div class="rowtop"><button id="mzrAddBtn" class="use">Add radio</button></div>
         <div class="defrow fld gap"><span>…or M3U</span><button id="mzrM3uBtn" class="use" style="flex:1">Import an .m3u / .m3u8 playlist…</button></div>
         <input id="mzrM3uFile" type="file" accept=".m3u,.m3u8,audio/x-mpegurl,application/vnd.apple.mpegurl" style="display:none">
         <div id="mzrMsg" class="msg"></div>
-        <p class="muted" style="margin:8px 0 0">The station appears in the Radios tab of the players’ music panel. Use royalty-free stations (Creative Commons or artist-permission) and keep the credit line accurate. http:// streams are rejected — the app is served over HTTPS and browsers block mixed content.</p>
+        <p class="muted note">The station appears in the Radios tab of the players’ music panel. Use royalty-free stations (Creative Commons or artist-permission) and keep the credit line accurate. http:// streams are rejected — the app is served over HTTPS and browsers block mixed content.</p>
         </div>
       </div>
       <div class="card">
@@ -473,13 +485,13 @@
     <div id="panel-clients">
       <div class="card">
         <h2>App modes (login screen)</h2>
-        <p class="muted" style="margin:0 0 4px">Show or hide entry modes offered to players.</p>
+        <p class="muted">Show or hide entry modes offered to players.</p>
         <div id="modes"></div>
         <div id="modesmsg" class="msg"></div>
       </div>
       <div class="card">
-        <div class="boardhead" style="margin-bottom:6px"><h2 style="margin:0">Feature kill switches</h2><button id="fsSave" class="use">Save</button></div>
-        <p class="muted" style="margin:0 0 8px">Turn a feature off for <b>everyone, right now</b>, without a deployment — the way out when something ships broken. Ticking a box forces the matching option off in every client: its checkbox in Advanced options goes unticked, frozen and labelled “off (admin)”. Players keep their own preference stored, so it takes effect again the moment you untick here. Applies on the client's next load of the page.</p>
+        <div class="boardhead"><h2>Feature kill switches</h2><button id="fsSave" class="use">Save</button></div>
+        <p class="muted">Turn a feature off for <b>everyone, right now</b>, without a deployment — the way out when something ships broken. Ticking a box forces the matching option off in every client: its checkbox in Advanced options goes unticked, frozen and labelled “off (admin)”. Players keep their own preference stored, so it takes effect again the moment you untick here. Applies on the client's next load of the page.</p>
         <div id="fsList" class="muted">Loading…</div>
         <div id="fsMsg" class="msg"></div>
       </div>
@@ -488,7 +500,7 @@
     <div id="panel-defaults" style="display:none">
       <div class="card">
         <h2>Theme</h2>
-        <p class="muted" style="margin:0 0 6px">Applied on a player's first visit only. Players who already picked a theme keep theirs.</p>
+        <p class="muted">Applied on a player's first visit only. Players who already picked a theme keep theirs.</p>
         <div class="periodrow">
           <select id="defTheme">
             <option value="">No default (app default)</option>
@@ -502,17 +514,17 @@
       </div>
       <div class="card">
         <h2>In-game settings</h2>
-        <p class="muted" style="margin:0 0 8px">Applied on a player's first visit only; a setting a player has already changed is never touched.</p>
+        <p class="muted">Applied on a player's first visit only; a setting a player has already changed is never touched.</p>
         <div class="defrow fld"><span>Vibration</span><select id="defHaptic"><option value="">App default (on)</option><option value="1">On</option><option value="0">Off</option></select></div>
         <div class="defrow fld"><span>Voice announce</span><select id="defVoice"><option value="">App default (off)</option><option value="1">On</option><option value="0">Off</option></select></div>
         <div class="defrow fld"><span>Assistance (hand strength)</span><select id="defAssist"><option value="">App default (on)</option><option value="1">On</option><option value="0">Off</option></select></div>
         <div class="defrow fld"><span>Chip display</span><select id="defBB"><option value="">App default (¥)</option><option value="1">BB</option><option value="0">¥</option></select></div>
-        <div style="margin-top:8px"><button id="saveDefaults" class="use">Save</button></div>
+        <div class="rowtop"><button id="saveDefaults" class="use">Save</button></div>
         <div id="defaultsMsg" class="msg"></div>
       </div>
       <div class="card">
         <h2>Login form</h2>
-        <p class="muted" style="margin:0 0 8px">Default entry screen for new visitors, plus (for LAN / dedicated) which server to connect to. The mode applies on a first visit only. <b>LAN server</b> sets the <i>default</i> server fields, never a lock: <i>Automatic</i> uses the page's own address (port 7234, no TLS), <i>Forced</i> uses the host, port and TLS set below. In both cases a player can edit the fields and the server they last connected to is remembered, so only players who never picked one of their own follow a change made here. With <i>Forced</i>, the proxy auto-follows the host and is rebuilt on every reconnect, so the client always reconnects. A forced proxy URL (ws:// or wss://) is pushed to every client and locks the field; hiding the field removes it and its label from the login form. All of this applies to the LAN / dedicated mode only — the Internet (pokerth.net) mode is never affected.</p>
+        <p class="muted">Default entry screen for new visitors, plus (for LAN / dedicated) which server to connect to. The mode applies on a first visit only. <b>LAN server</b> sets the <i>default</i> server fields, never a lock: <i>Automatic</i> uses the page's own address (port 7234, no TLS), <i>Forced</i> uses the host, port and TLS set below. In both cases a player can edit the fields and the server they last connected to is remembered, so only players who never picked one of their own follow a change made here. With <i>Forced</i>, the proxy auto-follows the host and is rebuilt on every reconnect, so the client always reconnects. A forced proxy URL (ws:// or wss://) is pushed to every client and locks the field; hiding the field removes it and its label from the login form. All of this applies to the LAN / dedicated mode only — the Internet (pokerth.net) mode is never affected.</p>
         <div class="defrow fld"><span>Default mode</span><select id="defMode"><option value="">App default</option><option value="offline">Training (bots)</option><option value="lan-dedi">LAN / private server</option><option value="pokerthnet">pokerth.net</option></select></div>
         <div class="defrow fld"><span>LAN server <span class="muted">(LAN / dedicated only)</span></span><select id="defLanMode"><option value="auto">Automatic (page address)</option><option value="forced">Forced (use the values below)</option></select></div>
         <div class="defrow fld"><span>Server host</span><input id="defHost" placeholder="(page address)" maxlength="120" autocomplete="off"></div>
@@ -520,26 +532,26 @@
         <div class="defrow fld"><span>Server uses TLS</span><select id="defLanTls"><option value="0">No</option><option value="1">Yes</option></select></div>
         <div class="defrow fld"><span>Force WebSocket proxy URL <span class="muted">(LAN / dedicated only)</span></span><input id="defProxyUrl" placeholder="(auto: page address)" maxlength="180" autocomplete="off"></div>
         <div class="defrow fld"><span>Hide the proxy URL field <span class="muted">(LAN / dedicated only)</span></span><select id="defHideProxy"><option value="0">No</option><option value="1">Yes</option></select></div>
-        <div style="margin-top:8px"><button id="saveLogin" class="use">Save</button></div>
+        <div class="rowtop"><button id="saveLogin" class="use">Save</button></div>
         <div id="loginMsg" class="msg"></div>
       </div>
       <div class="card">
         <h2>Table settings</h2>
-        <p class="muted" style="margin:0 0 8px">Starting values when a player opens the “create a table” form. A returning player keeps their last-used settings; leave a field blank to keep the app default. Players can change them per table.</p>
+        <p class="muted">Starting values when a player opens the “create a table” form. A returning player keeps their last-used settings; leave a field blank to keep the app default. Players can change them per table.</p>
         <div class="defrow fld"><span>Max players <span class="muted">(2–10)</span></span><input id="tdPlayers" type="number" min="2" max="10" placeholder="10"></div>
         <div class="defrow fld"><span>Small blind <span class="muted">(1–1000000)</span></span><input id="tdBlind" type="number" min="1" max="1000000" placeholder="10"></div>
         <div class="defrow fld"><span>Starting stack <span class="muted">(500–1000000)</span></span><input id="tdStack" type="number" min="500" max="1000000" placeholder="3000"></div>
         <div class="defrow fld"><span>Action timer <span class="muted">(seconds, 5–120)</span></span><input id="tdTimeout" type="number" min="5" max="120" placeholder="15"></div>
-        <div style="margin-top:8px"><button id="saveTable" class="use">Save</button></div>
+        <div class="rowtop"><button id="saveTable" class="use">Save</button></div>
         <div id="tableMsg" class="msg"></div>
       </div>
       <div class="card">
         <h2>Table name (per mode)</h2>
-        <p class="muted" style="margin:0 0 8px">Pre-fills the table name in the &ldquo;create a table&rdquo; form, per connection mode. &ldquo;Automatic&rdquo; keeps the localized default (&ldquo;X&rsquo;s table&rdquo;); pick &ldquo;Custom&rdquo; to set a fixed name. Players can still rename their table. Max 48 characters.</p>
+        <p class="muted">Pre-fills the table name in the &ldquo;create a table&rdquo; form, per connection mode. &ldquo;Automatic&rdquo; keeps the localized default (&ldquo;X&rsquo;s table&rdquo;); pick &ldquo;Custom&rdquo; to set a fixed name. Players can still rename their table. Max 48 characters.</p>
         <div class="defrow fld left"><span style="white-space:nowrap">pokerth.net</span><select id="tnNetMode" style="flex:none"><option value="auto">Automatic</option><option value="custom">Custom</option></select><input id="tnNetName" maxlength="48" placeholder="e.g. My online game" autocomplete="off" style="flex:1;min-width:0;display:none"></div>
         <div class="defrow fld left"><span style="white-space:nowrap">LAN / private</span><select id="tnLanMode" style="flex:none"><option value="auto">Automatic</option><option value="custom">Custom</option></select><input id="tnLanName" maxlength="48" placeholder="custom table name" autocomplete="off" style="flex:1;min-width:0;display:none"></div>
         <div class="defrow fld left"><span style="white-space:nowrap">Offline (bots)</span><select id="tnOffMode" style="flex:none"><option value="auto">Automatic</option><option value="custom">Custom</option></select><input id="tnOffName" maxlength="48" placeholder="custom table name" autocomplete="off" style="flex:1;min-width:0;display:none"></div>
-        <div style="margin-top:8px"><button id="saveTableName" class="use">Save</button></div>
+        <div class="rowtop"><button id="saveTableName" class="use">Save</button></div>
         <div id="tableNameMsg" class="msg"></div>
       </div>
     </div>
@@ -547,29 +559,29 @@
     <div id="panel-identity" style="display:none">
       <div class="card">
         <h2>Server identity (login screen)</h2>
-        <p class="muted" style="margin:0 0 8px">Shown to everyone on the login screen, regardless of theme. Leave blank for the defaults (“PokerTH” / “Web Client”).</p>
+        <p class="muted">Shown to everyone on the login screen, regardless of theme. Leave blank for the defaults (“PokerTH” / “Web Client”).</p>
         <div class="defrow fld"><span>Server name</span><input id="srvName" maxlength="40" placeholder="PokerTH" autocomplete="off"></div>
         <div class="defrow fld"><span>Banner / tagline</span><input id="srvTagline" maxlength="60" placeholder="Web Client" autocomplete="off"></div>
         <div class="defrow fld"><span>PokerTH title</span><select id="loginTitle"><option value="0">Hidden (default)</option><option value="1">Shown</option></select></div>
-        <div style="margin-top:8px"><button id="saveIdent" class="use">Save</button></div>
+        <div class="rowtop"><button id="saveIdent" class="use">Save</button></div>
         <div id="identMsg" class="msg"></div>
       </div>
       <div class="card">
         <h2>Discord chat relay</h2>
-        <p class="muted" style="margin:0 0 8px">Official-server parity (<code>DiscordChatWebhookUrl</code>): lobby chat messages sent by players through this proxy are forwarded to a Discord channel as <b>Player:</b> message. Game chat and private messages are never relayed. Leave blank to disable. One post per message — no duplicates however many clients are connected.</p>
+        <p class="muted">Official-server parity (<code>DiscordChatWebhookUrl</code>): lobby chat messages sent by players through this proxy are forwarded to a Discord channel as <b>Player:</b> message. Game chat and private messages are never relayed. Leave blank to disable. One post per message — no duplicates however many clients are connected.</p>
         <div class="defrow fld"><span style="white-space:nowrap">Webhook URL</span><input id="discordHook" maxlength="200" placeholder="https://discord.com/api/webhooks/…" autocomplete="off"></div>
-        <div style="margin-top:8px"><button id="saveDiscord" class="use">Save</button></div>
+        <div class="rowtop"><button id="saveDiscord" class="use">Save</button></div>
         <div id="discordMsg" class="msg"></div>
       </div>
       <div class="card">
         <h2>Search engine visibility (SEO)</h2>
-        <p class="muted" style="margin:0 0 8px"><b>Off by default.</b> When off, every page is served with <code>noindex, nofollow</code> and <code>robots.txt</code> blocks all crawlers &mdash; a self-hosted install stays out of Google and AI search engines. Turn it on only for a public instance you want indexed: the page then gains a description, Open Graph / Twitter cards, a canonical link, structured data (JSON-LD) and a crawler-readable summary, and <code>robots.txt</code>, <code>sitemap.xml</code> and <code>llms.txt</code> are generated from the public URL below. Applies immediately (no restart needed).</p>
+        <p class="muted"><b>Off by default.</b> When off, every page is served with <code>noindex, nofollow</code> and <code>robots.txt</code> blocks all crawlers &mdash; a self-hosted install stays out of Google and AI search engines. Turn it on only for a public instance you want indexed: the page then gains a description, Open Graph / Twitter cards, a canonical link, structured data (JSON-LD) and a crawler-readable summary, and <code>robots.txt</code>, <code>sitemap.xml</code> and <code>llms.txt</code> are generated from the public URL below. Applies immediately (no restart needed).</p>
         <div class="defrow fld"><span>Search engine indexing</span><select id="seoEnabled"><option value="0">Off (default)</option><option value="1">On</option></select></div>
         <div class="defrow fld"><span style="white-space:nowrap">Public URL</span><input id="seoUrl" maxlength="200" placeholder="https://webclient.pokerth.net" autocomplete="off"></div>
         <div class="defrow fld"><span style="white-space:nowrap">Search Console token</span><input id="seoGsv" maxlength="100" placeholder="google-site-verification (optional)" autocomplete="off"></div>
         <div class="defrow fld"><span style="white-space:nowrap">Bing Webmaster token</span><input id="seoBing" maxlength="100" placeholder="msvalidate.01 (optional)" autocomplete="off"></div>
         <div class="defrow fld"><span style="white-space:nowrap">IndexNow key</span><span id="seoIndexNow" style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;opacity:.8;font-family:monospace;font-size:.85em">generated when indexing is enabled</span></div>
-        <div style="margin-top:8px"><button id="saveSeo" class="use">Save</button></div>
+        <div class="rowtop"><button id="saveSeo" class="use">Save</button></div>
         <div id="seoMsg" class="msg"></div>
       </div>
     </div>
@@ -577,20 +589,20 @@
 <div id="panel-keys" style="display:none">
       <div class="card">
         <h2>Create a delegate key</h2>
-        <p class="muted" style="margin:0 0 8px">Give a third party access to only some sections. Pick a name and the categories they may manage. The full key is shown <b>once</b> at creation — copy it then. A lost key cannot be recovered (revoke and create a new one).</p>
+        <p class="muted">Give a third party access to only some sections. Pick a name and the categories they may manage. The full key is shown <b>once</b> at creation — copy it then. A lost key cannot be recovered (revoke and create a new one).</p>
         <div class="defrow fld left"><span style="white-space:nowrap">Name</span><input id="kyName" maxlength="64" placeholder="e.g. music-partner" autocomplete="off"></div>
         <div class="defrow" style="margin:8px 0"><div id="kyScopes" style="display:flex;flex-wrap:wrap;gap:6px 16px"></div></div>
-        <div style="margin-top:8px"><button id="kyCreate" class="use">Create key</button></div>
+        <div class="rowtop"><button id="kyCreate" class="use">Create key</button></div>
         <div id="kyNew" style="display:none;margin-top:10px"></div>
         <div id="kyMsg" class="msg"></div>
       </div>
       <div class="card">
-        <div class="boardhead"><h2 style="margin:0">Delegate keys</h2><button id="kyRefresh" class="use">Refresh</button></div>
+        <div class="boardhead"><h2>Delegate keys</h2><button id="kyRefresh" class="use">Refresh</button></div>
         <div id="kyList"><div class="empty">Loading…</div></div>
       </div>
       <div class="card">
-        <div class="boardhead" style="margin-bottom:6px"><h2 style="margin:0">Audit log</h2><div style="display:flex;gap:8px"><button id="auRefresh" class="use">Refresh</button><button id="auClear" class="use danger">Clear</button></div></div>
-        <p class="muted" style="margin:0 0 8px">Every action that <b>changed</b> something, and who did it — the master key or a named delegate key. Reads are not logged: the dashboard polls itself every few seconds and would drown everything. Kept on disk, so a restart does not erase it. Tokens themselves are never recorded, only the name they carry.</p>
+        <div class="boardhead"><h2>Audit log</h2><div style="display:flex;gap:8px"><button id="auRefresh" class="use">Refresh</button><button id="auClear" class="use danger">Clear</button></div></div>
+        <p class="muted">Every action that <b>changed</b> something, and who did it — the master key or a named delegate key. Reads are not logged: the dashboard polls itself every few seconds and would drown everything. Kept on disk, so a restart does not erase it. Tokens themselves are never recorded, only the name they carry.</p>
         <div id="auList"><div class="empty">Loading…</div></div>
         <div id="auMsg" class="msg"></div>
       </div>
@@ -598,7 +610,7 @@
     <div id="panel-server">
       <div class="card"><h2>Status</h2><div id="status"><div class="empty">Loading…</div></div></div>
       <div class="card">
-        <div class="boardhead"><h2 style="margin:0">Recent logs</h2><div style="display:flex;align-items:center;gap:8px"><span class="muted">Verbosity</span><select id="logQuick" style="width:130px"><option value="">(default)</option><option value="quiet">quiet</option><option value="normal">normal</option><option value="verbose">verbose</option></select><button id="refreshLogs" class="use">Refresh</button></div></div>
+        <div class="boardhead"><h2>Recent logs</h2><div style="display:flex;align-items:center;gap:8px"><span class="muted">Verbosity</span><select id="logQuick" style="width:130px"><option value="">(default)</option><option value="quiet">quiet</option><option value="normal">normal</option><option value="verbose">verbose</option></select><button id="refreshLogs" class="use">Refresh</button></div></div>
         <div id="logQuickMsg" class="msg"></div>
         <div class="muted" style="margin:2px 0 6px">quiet logs connections, disconnections and errors only — no per-message line, so far less written to disk under load. Applied live, no restart.</div>
         <pre id="logs" class="logs"></pre>
@@ -608,14 +620,14 @@
     <div id="panel-proxy" style="display:none">
       <div class="card">
         <h2>Proxy</h2>
-        <p class="muted" style="margin:0 0 8px">Server-side bridge settings. Always-allowed hosts: pokerth.net, www.pokerth.net, pokerth.ddns.net, localhost, 127.0.0.1, ::1. Changes apply live (no restart).</p>
+        <p class="muted">Server-side bridge settings. Always-allowed hosts: pokerth.net, www.pokerth.net, pokerth.ddns.net, localhost, 127.0.0.1, ::1. Changes apply live (no restart).</p>
         <div style="margin:5px 0"><div style="margin-bottom:3px">Extra allowed hosts <span class="muted">(one per line — required before a default-login host can connect)</span></div><textarea id="pxHosts" rows="3" placeholder="game.example.com&#10;192.168.1.50" autocomplete="off" style="width:100%;box-sizing:border-box;resize:vertical"></textarea></div>
         <div style="margin:5px 0"><div style="margin-bottom:3px">Extra allowed ports <span class="muted">(one per line — 1–65535; 7234 is always allowed)</span></div><textarea id="pxPorts" rows="2" placeholder="7234" autocomplete="off" style="width:100%;box-sizing:border-box;resize:vertical"></textarea></div>
         <div class="defrow fld"><span>Session grace <span class="muted">(seconds, 10–900)</span></span><input id="pxGrace" type="number" min="10" max="900" placeholder="120"></div>
         <div class="defrow fld"><span>Connection gap <span class="muted">(ms, 0–30000)</span></span><input id="pxGap" type="number" min="0" max="30000" placeholder="5000"></div>
         <div class="defrow fld"><span>Log verbosity <span class="muted">(quiet = least CPU under load)</span></span><select id="pxLog"><option value="">(default)</option><option value="quiet">quiet</option><option value="normal">normal</option><option value="verbose">verbose</option></select></div>
         <div class="defrow fld"><span>Max clients <span class="muted">(concurrent bridges, 0 = unlimited)</span></span><input id="pxMax" type="number" min="0" max="100000" placeholder="0"></div>
-        <div style="margin-top:8px"><button id="savePx" class="use">Save</button></div>
+        <div class="rowtop"><button id="savePx" class="use">Save</button></div>
         <div id="pxMsg" class="msg"></div>
       </div>
     </div>
@@ -623,7 +635,7 @@
     <div id="panel-deploy" style="display:none">
       <div class="card">
         <h2>Maintenance</h2>
-        <p class="muted" style="margin:0 0 8px">“Update (no restart)” pushes new client files live instantly without dropping connections; the other actions restart the server briefly — this page reconnects on its own.</p>
+        <p class="muted">“Update (no restart)” pushes new client files live instantly without dropping connections; the other actions restart the server briefly — this page reconnects on its own.</p>
         <div class="btnrow">
           <button id="btnUpdateNr" class="use">Update (no restart)</button>
           <button id="btnUpdate" class="use danger">Update &amp; restart</button>
@@ -633,19 +645,19 @@
         <div id="maintmsg" class="msg"></div>
         <div style="margin-top:12px;padding-top:10px;border-top:1px solid rgba(255,255,255,.12)">
           <label class="muted" style="display:flex;align-items:center;gap:8px;margin:0 0 6px"><input type="checkbox" id="autoUpd" style="width:auto"> <b style="font-size:.88rem;color:inherit">Update automatically</b></label>
-          <p class="muted" style="margin:0 0 8px">Checks this server&#39;s branch every 15 minutes. Changes that only touch client files go live at once — nobody is disconnected. Anything needing a restart (proxy, dependencies) waits until <b>no one at all</b> is connected, then acts after a short notice; if someone connects in the meantime, it is called off and retried later. An open connection is never cut this way.</p>
+          <p class="muted">Checks this server&#39;s branch every 15 minutes. Changes that only touch client files go live at once — nobody is disconnected. Anything needing a restart (proxy, dependencies) waits until <b>no one at all</b> is connected, then acts after a short notice; if someone connects in the meantime, it is called off and retried later. An open connection is never cut this way.</p>
           <div class="periodrow" style="margin:0">
             <input id="autoUpdSec" class="filter" type="number" min="10" max="3600" placeholder="Notice seconds (60)" style="margin:0;width:170px">
             <button id="btnUpdCheck" class="use">Check now</button>
           </div>
           <div id="autoUpdMsg" class="msg"></div>
         </div>
-        <div class="boardhead" style="margin-top:10px"><h2 style="margin:0;font-size:.92rem">Last action log</h2><button id="btnUpdLog" class="use">Refresh</button></div>
+        <div class="boardhead" style="margin-top:10px"><h2 style="font-size:.92rem">Last action log</h2><button id="btnUpdLog" class="use">Refresh</button></div>
         <pre id="updlog" class="logs" style="max-height:200px"></pre>
       </div>
       <div class="card">
         <h2>Schedule a restart</h2>
-        <p class="muted" style="margin:0 0 8px">Warn connected players, then act automatically after the delay. Players see a dismissible notice with the restart time, in their own language.</p>
+        <p class="muted">Warn connected players, then act automatically after the delay. Players see a dismissible notice with the restart time, in their own language.</p>
         <div class="seg" id="schedKind"><button class="on" data-k="update">Update + restart</button><button data-k="restart">Restart only</button></div>
         <div class="btnrow" id="schedDelays">
           <button class="use" data-secs="120">2 min</button>
@@ -666,8 +678,8 @@
         <button id="schedCancel" class="use danger" style="display:none">Cancel scheduled restart</button>
       </div>
       <div class="card">
-        <div class="boardhead" style="margin-bottom:6px"><h2 style="margin:0">Roll back a deployment</h2><button id="rbRefresh" class="use">Refresh</button></div>
-        <p class="muted" style="margin:0 0 8px">Every state this server has actually served, newest first. Rolling back checks the chosen commit out again — the quickest way out when a deploy breaks the client. <b>Static</b> swaps the served files with no dropped connection; <b>with restart</b> also reinstalls dependencies and restarts, which is what a change to <code>proxy.js</code> needs. The state you are on now is recorded first, so you can always come back forward.</p>
+        <div class="boardhead"><h2>Roll back a deployment</h2><button id="rbRefresh" class="use">Refresh</button></div>
+        <p class="muted">Every state this server has actually served, newest first. Rolling back checks the chosen commit out again — the quickest way out when a deploy breaks the client. <b>Static</b> swaps the served files with no dropped connection; <b>with restart</b> also reinstalls dependencies and restarts, which is what a change to <code>proxy.js</code> needs. The state you are on now is recorded first, so you can always come back forward.</p>
         <div class="seg" id="rbKind"><button class="on" data-k="static">Static (no restart)</button><button data-k="restart">With restart</button></div>
         <div id="rbHead" class="muted" style="margin:8px 0"></div>
         <div id="rbList"><div class="empty">Loading…</div></div>
@@ -677,8 +689,8 @@
 
     <div id="panel-access" style="display:none">
       <div class="card">
-        <div class="boardhead" style="margin-bottom:6px"><h2 style="margin:0">Blocked &amp; banned addresses</h2><button id="ipRefresh" class="use">Refresh</button></div>
-        <p class="muted" style="margin:0 0 8px">Addresses that failed to authenticate on this panel, and addresses you have banned. Unlike the rest of the dashboard, addresses appear <b>in full</b> here: a masked address cannot be banned or unblocked. A ban refuses the WebSocket upgrade — the page still loads, but no game connection is made through this proxy — and drops any bridge already open from it. Your own address and loopback can never be banned.</p>
+        <div class="boardhead"><h2>Blocked &amp; banned addresses</h2><button id="ipRefresh" class="use">Refresh</button></div>
+        <p class="muted">Addresses that failed to authenticate on this panel, and addresses you have banned. Unlike the rest of the dashboard, addresses appear <b>in full</b> here: a masked address cannot be banned or unblocked. A ban refuses the WebSocket upgrade — the page still loads, but no game connection is made through this proxy — and drops any bridge already open from it. Your own address and loopback can never be banned.</p>
         <div id="ipYou" class="muted" style="margin-bottom:6px"></div>
         <div style="margin:8px 0 4px"><b style="font-size:.88rem">Failed sign-ins</b></div>
         <div id="ipBlocked"><div class="empty">Loading…</div></div>
@@ -691,8 +703,8 @@
         <div id="ipMsg" class="msg"></div>
       </div>
       <div class="card">
-        <h2 style="margin:0 0 6px">Back up &amp; restore settings</h2>
-        <p class="muted" style="margin:0 0 8px">Everything on this dashboard except the traffic figures: modes, defaults, branding, table settings, proxy settings, kill switches, bans, package and music choices. Delegate keys and database credentials are <b>not</b> included — they are secrets, and restoring a backup must not hand back access you thought you had revoked. Restoring <b>replaces</b> the current settings.</p>
+        <h2>Back up &amp; restore settings</h2>
+        <p class="muted">Everything on this dashboard except the traffic figures: modes, defaults, branding, table settings, proxy settings, kill switches, bans, package and music choices. Delegate keys and database credentials are <b>not</b> included — they are secrets, and restoring a backup must not hand back access you thought you had revoked. Restoring <b>replaces</b> the current settings.</p>
         <div class="btnrow">
           <button id="cfgExport" class="use">Download backup</button>
           <button id="cfgImportBtn" class="use danger">Restore from file…</button>
@@ -705,7 +717,7 @@
 <div id="panel-broadcast" style="display:none">
       <div class="card">
         <h2>Send a message now</h2>
-        <p class="muted" style="margin:0 0 8px">Broadcast an information message to everyone currently connected. Shown as a gold dismissible banner.</p>
+        <p class="muted">Broadcast an information message to everyone currently connected. Shown as a gold dismissible banner.</p>
         <textarea id="bcNowMsg" class="filter" rows="2" maxlength="500" placeholder="Your message…" style="width:100%;resize:vertical"></textarea>
         <div class="muted" style="font-size:.78rem;margin-top:4px">Tip: paste a URL, or write <code>[label](https://example.com)</code> for a clickable link (opens in a new tab).</div>
         <div class="periodrow" style="margin-top:8px">
@@ -762,12 +774,12 @@
         <div id="bcAddState" class="msg"></div>
       </div>
       <div class="card">
-        <div class="boardhead"><h2 style="margin:0">Scheduled messages</h2><button id="bcRefresh" class="use">Refresh</button></div>
+        <div class="boardhead"><h2>Scheduled messages</h2><button id="bcRefresh" class="use">Refresh</button></div>
         <div id="bcList"></div>
       </div>
       <div class="card" data-master="1">
         <h2>Welcome / rules message (first visit)</h2>
-        <p class="muted" style="margin:0 0 8px">Shown once in a centered popup the first time someone opens the app, and again whenever you edit it. Each visitor sees the version matching their language (fallback below). Players dismiss it with “I understand”.</p>
+        <p class="muted">Shown once in a centered popup the first time someone opens the app, and again whenever you edit it. Each visitor sees the version matching their language (fallback below). Players dismiss it with “I understand”.</p>
         <label class="muted" style="display:flex;align-items:center;gap:8px;margin:0 0 8px"><input type="checkbox" id="wcEnabled" style="width:auto"> Enabled</label>
         <div class="periodrow" style="margin-bottom:8px">
           <label class="muted">Edit language <select id="wcLang" class="filter" style="margin:0;flex:none;width:auto"></select></label>
@@ -785,8 +797,8 @@
 
     <div id="panel-polls" style="display:none">
       <div class="card">
-        <div class="boardhead" style="margin-bottom:6px"><h2 style="margin:0" id="plFormTitle">New poll</h2><button id="plNew" class="use">+ New poll</button></div>
-        <p class="muted" style="margin:2px 0 10px">Ask the players what to build next. Only clients that opted in (Advanced options &rarr; “Product polls”) see the active poll, as a lobby card, and answer once per device. The counts stay hidden until they have answered, so the figures on screen cannot sway the vote. One poll is live at a time: activating a poll retires the previous one.</p>
+        <div class="boardhead"><h2 id="plFormTitle">New poll</h2><button id="plNew" class="use">+ New poll</button></div>
+        <p class="muted">Ask the players what to build next. Only clients that opted in (Advanced options &rarr; “Product polls”) see the active poll, as a lobby card, and answer once per device. The counts stay hidden until they have answered, so the figures on screen cannot sway the vote. One poll is live at a time: activating a poll retires the previous one.</p>
         <div class="periodrow" style="margin-bottom:8px">
           <label class="muted">Edit language <select id="plLang" class="filter" style="margin:0;flex:none;width:auto"></select></label>
           <label class="muted">Fallback <select id="plDefault" class="filter" style="margin:0;flex:none;width:auto"></select></label>
@@ -798,15 +810,15 @@
         <div id="plState" class="msg"></div>
       </div>
       <div class="card">
-        <div class="boardhead"><h2 style="margin:0">Polls</h2><button id="plRefresh" class="use">Refresh</button></div>
+        <div class="boardhead"><h2>Polls</h2><button id="plRefresh" class="use">Refresh</button></div>
         <div id="plList"><div class="empty">Loading…</div></div>
       </div>
     </div>
 
     <div id="panel-servers" style="display:none">
       <div class="card">
-        <div class="boardhead" style="margin-bottom:6px"><h2 style="margin:0">Game servers</h2><button id="srvAddBtn" class="use">+ Add server</button></div>
-        <p class="muted" style="margin:2px 0 10px">Where the <b>Internet / PokerTH.net</b> button of the login page connects. Three choices below — the banner always shows the result. The proxy is only a relay; it never runs the game server itself.</p>
+        <div class="boardhead"><h2>Game servers</h2><button id="srvAddBtn" class="use">+ Add server</button></div>
+        <p class="muted">Where the <b>Internet / PokerTH.net</b> button of the login page connects. Three choices below — the banner always shows the result. The proxy is only a relay; it never runs the game server itself.</p>
         <div id="srvEff" class="srveff"><span class="muted">Loading…</span></div>
         <div class="card" style="margin:0 0 10px;padding:10px">
           <div style="margin-bottom:6px"><b>1 · Which server?</b> <span class="muted" style="font-weight:normal">(source)</span></div>
@@ -829,8 +841,8 @@
         <div id="srvState" class="msg"></div>
       </div>
       <div class="card">
-        <h2 style="margin:0 0 8px">Effective dial allowlist</h2>
-        <p class="muted" style="margin:2px 0 8px">Hosts &amp; ports the proxy currently accepts to dial (built-in defaults + env + the servers above). Anti-relay guard — shown for reference.</p>
+        <h2>Effective dial allowlist</h2>
+        <p class="muted">Hosts &amp; ports the proxy currently accepts to dial (built-in defaults + env + the servers above). Anti-relay guard — shown for reference.</p>
         <div id="srvAllow" class="muted" style="font-size:.82rem"><div class="empty">Loading…</div></div>
       </div>
     </div>

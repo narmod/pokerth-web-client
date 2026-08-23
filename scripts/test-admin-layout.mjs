@@ -150,6 +150,25 @@ for (const id of ['panel-proxy', 'panel-deploy', 'panel-access', 'panel-defaults
 ok(/#panel-defaults[^{]*\{columns:2/.test(admin), 'the five defaults cards use both columns');
 ok(!/#panel-server,/.test(admin), 'a two-card panel no longer asks for two columns');
 
+// ── Visual rhythm ─────────────────────────────────────────────────────────
+// Card titles and lead paragraphs carried their spacing in the tags, in six
+// different values, so no two cards breathed quite alike. `.muted` only sets a
+// top margin, which is why every lead paragraph had to spell out a bottom one
+// or fall back on the browser's 1em.
+ok(/\.boardhead h2\{margin:0\}/.test(admin), 'a title in a header row is spaced by the row');
+ok(!/<h2 style="margin:0"/.test(admin), 'and no longer says so itself, fifteen times over');
+ok(/\.card p\.muted\{margin:0 0 9px\}/.test(admin), 'lead paragraphs share one margin');
+ok(!/<p class="muted" style="margin:/.test(admin), 'none of the 35 spells its own out');
+ok(/\.card p\.muted\.note\{margin:8px 0 0\}/.test(admin),
+  'a note sitting after the content keeps its own spacing, by class');
+ok(!/<h2 style="margin:0 0 [68]px">/.test(admin), 'card titles use the common margin');
+ok(!/<div class="boardhead" style="margin-bottom:6px">/.test(admin),
+  'no header row repeats the margin the sheet already gives it');
+ok(/\.rowtop\{margin-top:8px\}/.test(admin), 'action rows share one spacing');
+ok(!/<div style="margin-top:8px">/.test(admin), 'written once rather than eleven times');
+ok(!/id="dbState" class="msg" style=/.test(admin),
+  'the database message lines up with every other message on the page');
+
 // ── Settings rows ─────────────────────────────────────────────────────────
 // The same flex declaration used to be retyped in 51 style= attributes, with
 // control widths hard-coded in the tags — and an inline style beats the sheet,

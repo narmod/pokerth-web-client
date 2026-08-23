@@ -14,6 +14,15 @@ Opened with `v2.1.7-web.0` (2026-08-13), following the upstream **2.1.7**
 release.
 
 ### Changed
+- **Admin dashboard: one spacing, not six** (`web.34`) — card titles and lead
+  paragraphs carried their margins in the tags, in six different values, so no
+  two cards breathed quite alike. `.muted` only sets a *top* margin, which is
+  why all 35 lead paragraphs had to spell out a bottom one or fall back on the
+  browser's 1em — that is now a single rule. Sixteen header-row titles, eleven
+  header rows repeating a margin the sheet already gave them, eleven action
+  rows and one message box that sat 2px off every other message on the page
+  followed. 86 `style=` attributes left the HTML (287 → 201); no id, title or
+  control changed, and the document still parses with balanced tags.
 - **Admin dashboard: one section per subject, not a wall of cards** (`web.33`)
   — Overview held eight cards and Settings ten, which stayed hard to read even
   once grouped by heading. Each group is a section of its own now. **Server**
