@@ -101,6 +101,11 @@ html { touch-action: manipulation; -webkit-text-size-adjust: 100%; text-size-adj
   --gold-dim:   #b09a00;
   --cream:      #ede8dc;
   --field-bg:   #0c1e0e;
+  /* Texte du bouton All-In des packs a image CREUSE (Green Casino : un simple
+     cadre rouge, fill="none") : c'est le fond de la barre qu'on voit dedans,
+     donc la couleur doit suivre la palette et non le pack. */
+  --allin-hollow-fg:   #e88a8a;
+  --allin-hollow-fg-b: #f4b0b0;
   --inset: rgba(255,255,255,0.05);
   --inset-hi: rgba(255,255,255,0.08);
   --on-gold:    #110900;
@@ -225,6 +230,10 @@ html { touch-action: manipulation; -webkit-text-size-adjust: 100%; text-size-adj
   --wp-need-fg: #b35e10;
   --cream:      #1d222b;
   --field-bg:   #eaeef6;  /* colorField QML 2.1.6 : enfoncé même sur fond blanc */
+  /* Sur --panel blanc, le rose du pack casino tombe a ~2,4:1. On reprend le
+     rouge du cadre du SVG lui-meme (~5,1:1), cadre et texte s'accordent. */
+  --allin-hollow-fg:   #c0392b;
+  --allin-hollow-fg-b: #a4302a;
   --inset: rgba(0,0,0,0.06);
   --inset-hi: rgba(0,0,0,0.08);
   --on-gold:    #fdf6e6;

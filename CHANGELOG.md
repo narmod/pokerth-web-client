@@ -69,6 +69,17 @@ release.
   disappeared against a night-blue felt. Cancel now takes the keypad keys'
   own styling (`--field-bg` with a `--btn-raise-bg` border, `--btn-raise-img`
   under `data-btn-img`), which depends on no token a theme can remove.
+- **Green Casino All-In unreadable in light mode** (`web.64`) — reported from
+  the keypad, but the bar had it too. `actionAllIn.svg` is the only action
+  asset in the whole gallery drawn hollow (`fill="none"`, a `#c0392b` outline);
+  every other table's All-In is filled. Under `data-btn-img` the bar forces
+  `background: transparent !important`, so what shows through the frame is
+  `.my-zone`'s `--panel` — pure white in light mode — behind the casino pack's
+  `#e88a8a` label, around 2.4:1. The pack now hands `--btn-allin-fg` a
+  variable, `--allin-hollow-fg`, which the palette resolves: the pink stays in
+  dark mode, light mode gets the SVG outline's own `#c0392b` (~5.1:1), so
+  frame and label match. No migration needed — `AXES.forEach(ax.apply)` on load
+  rewrites the cached `pth_buttons_css`.
 
 ### Changed
 - **Bet slider granularity now matches the desktop client** (`web.58`) — the web
