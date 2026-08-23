@@ -14,6 +14,15 @@ Opened with `v2.1.7-web.0` (2026-08-13), following the upstream **2.1.7**
 release.
 
 ### Changed
+- **Admin dashboard: the two crowded panels get sub-sections** (`web.31`) —
+  Overview carried eight cards and Settings ten, in whatever order they had
+  been written. Overview now reads *Health & logs*, *Bridge settings*,
+  *Deployment*, *Access & backup*; Settings reads *What players can use*,
+  *Defaults for new visitors*, *Identity & reach*. Cards were re-ordered to
+  match, which is only safe because the collapse state is keyed on the title
+  text rather than on position — so every folded card stays folded. Headings
+  span both columns on a wide screen, otherwise they would float above one
+  column and stop saying what they cover.
 - **Admin dashboard: the families now read as navigation** (`web.30`) — they
   looked like four more buttons under the header ones. The three share the
   width (capped at 520px on desktop, full width on a phone, one tap target per

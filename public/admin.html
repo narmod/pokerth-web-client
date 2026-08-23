@@ -53,6 +53,11 @@
   /* Les trois familles se partagent la largeur : elles se lisent alors comme
      la navigation de la page, et non comme quatre boutons de plus sous ceux de
      l'en-tete. Le plafond les empeche de devenir absurdes sur un grand ecran. */
+  /* En-tete de sous-section. Dans un panneau sur deux colonnes il reprend
+     toute la largeur, sinon il flotterait au-dessus d'une seule d'entre elles
+     et ne dirait plus a quoi il s'applique. */
+  .sect{column-span:all;margin:22px 0 10px;font-size:.72rem;letter-spacing:.09em;text-transform:uppercase;color:var(--text);font-weight:700;border-bottom:1px solid var(--line);padding-bottom:6px}
+  .sect:first-child{margin-top:2px}
   .gtabs{margin:16px 0 10px;gap:8px;max-width:520px}
   .gtab{flex:1 1 0;min-width:0;white-space:nowrap;padding:11px 18px;border-radius:10px;border:1px solid var(--line);background:rgba(255,255,255,.04);color:var(--text);cursor:pointer;font-size:.95rem}
   .gtab.on{background:var(--gold);color:#10151c;border-color:var(--gold);font-weight:700}
@@ -466,6 +471,7 @@
     </div>
 
     <div id="panel-clients" style="display:none">
+      <h3 class="sect">What players can use</h3>
       <div class="card">
         <h2>App modes (login screen)</h2>
         <p class="muted" style="margin:0 0 4px">Show or hide entry modes offered to players.</p>
@@ -478,6 +484,7 @@
         <div id="fsList" class="muted">Loading…</div>
         <div id="fsMsg" class="msg"></div>
       </div>
+      <h3 class="sect">Defaults for new visitors</h3>
       <div class="card">
         <h2>Default theme (new visitors)</h2>
         <p class="muted" style="margin:0 0 6px">Applied on a player's first visit only. Players who already picked a theme keep theirs.</p>
@@ -534,6 +541,7 @@
         <div style="margin-top:8px"><button id="saveTableName" class="use">Save</button></div>
         <div id="tableNameMsg" class="msg"></div>
       </div>
+      <h3 class="sect">Identity &amp; reach</h3>
       <div class="card">
         <h2>Server identity (login screen)</h2>
         <p class="muted" style="margin:0 0 8px">Shown to everyone on the login screen, regardless of theme. Leave blank for the defaults (“PokerTH” / “Web Client”).</p>
@@ -584,7 +592,15 @@
       </div>
     </div>
     <div id="panel-server">
+      <h3 class="sect">Health &amp; logs</h3>
       <div class="card"><h2>Status</h2><div id="status"><div class="empty">Loading…</div></div></div>
+      <div class="card">
+        <div class="boardhead"><h2 style="margin:0">Recent logs</h2><div style="display:flex;align-items:center;gap:8px"><span class="muted">Verbosity</span><select id="logQuick" style="width:130px"><option value="">(default)</option><option value="quiet">quiet</option><option value="normal">normal</option><option value="verbose">verbose</option></select><button id="refreshLogs" class="use">Refresh</button></div></div>
+        <div id="logQuickMsg" class="msg"></div>
+        <div class="muted" style="margin:2px 0 6px">quiet logs connections, disconnections and errors only — no per-message line, so far less written to disk under load. Applied live, no restart.</div>
+        <pre id="logs" class="logs"></pre>
+      </div>
+      <h3 class="sect">Bridge settings</h3>
       <div class="card">
         <h2>Proxy</h2>
         <p class="muted" style="margin:0 0 8px">Server-side bridge settings. Always-allowed hosts: pokerth.net, www.pokerth.net, pokerth.ddns.net, localhost, 127.0.0.1, ::1. Changes apply live (no restart).</p>
@@ -597,6 +613,7 @@
         <div style="margin-top:8px"><button id="savePx" class="use">Save</button></div>
         <div id="pxMsg" class="msg"></div>
       </div>
+      <h3 class="sect">Deployment</h3>
       <div class="card">
         <h2>Maintenance</h2>
         <p class="muted" style="margin:0 0 8px">“Update (no restart)” pushes new client files live instantly without dropping connections; the other actions restart the server briefly — this page reconnects on its own.</p>
@@ -618,38 +635,6 @@
         </div>
         <div class="boardhead" style="margin-top:10px"><h2 style="margin:0;font-size:.92rem">Last action log</h2><button id="btnUpdLog" class="use">Refresh</button></div>
         <pre id="updlog" class="logs" style="max-height:200px"></pre>
-      </div>
-      <div class="card">
-        <div class="boardhead" style="margin-bottom:6px"><h2 style="margin:0">Blocked &amp; banned addresses</h2><button id="ipRefresh" class="use">Refresh</button></div>
-        <p class="muted" style="margin:0 0 8px">Addresses that failed to authenticate on this panel, and addresses you have banned. Unlike the rest of the dashboard, addresses appear <b>in full</b> here: a masked address cannot be banned or unblocked. A ban refuses the WebSocket upgrade — the page still loads, but no game connection is made through this proxy — and drops any bridge already open from it. Your own address and loopback can never be banned.</p>
-        <div id="ipYou" class="muted" style="margin-bottom:6px"></div>
-        <div style="margin:8px 0 4px"><b style="font-size:.88rem">Failed sign-ins</b></div>
-        <div id="ipBlocked"><div class="empty">Loading…</div></div>
-        <div style="margin:12px 0 4px"><b style="font-size:.88rem">Banned</b></div>
-        <div id="ipBanned"><div class="empty">—</div></div>
-        <div class="periodrow" style="margin-top:8px">
-          <input id="ipBanInput" class="filter" type="text" maxlength="45" placeholder="Address to ban (e.g. 203.0.113.7)" autocomplete="off" style="margin:0">
-          <button id="ipBanBtn" class="use danger">Ban</button>
-        </div>
-        <div id="ipMsg" class="msg"></div>
-      </div>
-      <div class="card">
-        <h2 style="margin:0 0 6px">Back up &amp; restore settings</h2>
-        <p class="muted" style="margin:0 0 8px">Everything on this dashboard except the traffic figures: modes, defaults, branding, table settings, proxy settings, kill switches, bans, package and music choices. Delegate keys and database credentials are <b>not</b> included — they are secrets, and restoring a backup must not hand back access you thought you had revoked. Restoring <b>replaces</b> the current settings.</p>
-        <div class="btnrow">
-          <button id="cfgExport" class="use">Download backup</button>
-          <button id="cfgImportBtn" class="use danger">Restore from file…</button>
-          <input id="cfgImportFile" type="file" accept=".json,application/json" style="display:none">
-        </div>
-        <div id="cfgIoMsg" class="msg"></div>
-      </div>
-      <div class="card">
-        <div class="boardhead" style="margin-bottom:6px"><h2 style="margin:0">Roll back a deployment</h2><button id="rbRefresh" class="use">Refresh</button></div>
-        <p class="muted" style="margin:0 0 8px">Every state this server has actually served, newest first. Rolling back checks the chosen commit out again — the quickest way out when a deploy breaks the client. <b>Static</b> swaps the served files with no dropped connection; <b>with restart</b> also reinstalls dependencies and restarts, which is what a change to <code>proxy.js</code> needs. The state you are on now is recorded first, so you can always come back forward.</p>
-        <div class="seg" id="rbKind"><button class="on" data-k="static">Static (no restart)</button><button data-k="restart">With restart</button></div>
-        <div id="rbHead" class="muted" style="margin:8px 0"></div>
-        <div id="rbList"><div class="empty">Loading…</div></div>
-        <div id="rbMsg" class="msg"></div>
       </div>
       <div class="card">
         <h2>Schedule a restart</h2>
@@ -674,10 +659,37 @@
         <button id="schedCancel" class="use danger" style="display:none">Cancel scheduled restart</button>
       </div>
       <div class="card">
-        <div class="boardhead"><h2 style="margin:0">Recent logs</h2><div style="display:flex;align-items:center;gap:8px"><span class="muted">Verbosity</span><select id="logQuick" style="width:130px"><option value="">(default)</option><option value="quiet">quiet</option><option value="normal">normal</option><option value="verbose">verbose</option></select><button id="refreshLogs" class="use">Refresh</button></div></div>
-        <div id="logQuickMsg" class="msg"></div>
-        <div class="muted" style="margin:2px 0 6px">quiet logs connections, disconnections and errors only — no per-message line, so far less written to disk under load. Applied live, no restart.</div>
-        <pre id="logs" class="logs"></pre>
+        <div class="boardhead" style="margin-bottom:6px"><h2 style="margin:0">Roll back a deployment</h2><button id="rbRefresh" class="use">Refresh</button></div>
+        <p class="muted" style="margin:0 0 8px">Every state this server has actually served, newest first. Rolling back checks the chosen commit out again — the quickest way out when a deploy breaks the client. <b>Static</b> swaps the served files with no dropped connection; <b>with restart</b> also reinstalls dependencies and restarts, which is what a change to <code>proxy.js</code> needs. The state you are on now is recorded first, so you can always come back forward.</p>
+        <div class="seg" id="rbKind"><button class="on" data-k="static">Static (no restart)</button><button data-k="restart">With restart</button></div>
+        <div id="rbHead" class="muted" style="margin:8px 0"></div>
+        <div id="rbList"><div class="empty">Loading…</div></div>
+        <div id="rbMsg" class="msg"></div>
+      </div>
+      <h3 class="sect">Access &amp; backup</h3>
+      <div class="card">
+        <div class="boardhead" style="margin-bottom:6px"><h2 style="margin:0">Blocked &amp; banned addresses</h2><button id="ipRefresh" class="use">Refresh</button></div>
+        <p class="muted" style="margin:0 0 8px">Addresses that failed to authenticate on this panel, and addresses you have banned. Unlike the rest of the dashboard, addresses appear <b>in full</b> here: a masked address cannot be banned or unblocked. A ban refuses the WebSocket upgrade — the page still loads, but no game connection is made through this proxy — and drops any bridge already open from it. Your own address and loopback can never be banned.</p>
+        <div id="ipYou" class="muted" style="margin-bottom:6px"></div>
+        <div style="margin:8px 0 4px"><b style="font-size:.88rem">Failed sign-ins</b></div>
+        <div id="ipBlocked"><div class="empty">Loading…</div></div>
+        <div style="margin:12px 0 4px"><b style="font-size:.88rem">Banned</b></div>
+        <div id="ipBanned"><div class="empty">—</div></div>
+        <div class="periodrow" style="margin-top:8px">
+          <input id="ipBanInput" class="filter" type="text" maxlength="45" placeholder="Address to ban (e.g. 203.0.113.7)" autocomplete="off" style="margin:0">
+          <button id="ipBanBtn" class="use danger">Ban</button>
+        </div>
+        <div id="ipMsg" class="msg"></div>
+      </div>
+      <div class="card">
+        <h2 style="margin:0 0 6px">Back up &amp; restore settings</h2>
+        <p class="muted" style="margin:0 0 8px">Everything on this dashboard except the traffic figures: modes, defaults, branding, table settings, proxy settings, kill switches, bans, package and music choices. Delegate keys and database credentials are <b>not</b> included — they are secrets, and restoring a backup must not hand back access you thought you had revoked. Restoring <b>replaces</b> the current settings.</p>
+        <div class="btnrow">
+          <button id="cfgExport" class="use">Download backup</button>
+          <button id="cfgImportBtn" class="use danger">Restore from file…</button>
+          <input id="cfgImportFile" type="file" accept=".json,application/json" style="display:none">
+        </div>
+        <div id="cfgIoMsg" class="msg"></div>
       </div>
     </div>
     <div id="panel-broadcast" style="display:none">

@@ -113,6 +113,37 @@ ok(/light"\] \.gtab\.on\{color:#f4f6fb\}/.test(admin),
 ok(/\.gtabs\{max-width:none/.test(small), 'on a phone the families take the full width');
 ok(/\.gtabs\{[^}]*overflow:visible/.test(small), 'three of them never need to scroll');
 
+// ── Sub-sections inside the two crowded panels ────────────────────────────
+// Overview carried eight cards and Settings ten, in the order they happened to
+// be written. Re-ordering them is only safe because the collapse state is keyed
+// on the title text, not on position — so the guards here check that not one
+// card went missing in the move, and that none sits outside a section.
+function panel(id, next) {
+  const a = admin.indexOf('<div id="' + id + '"'), b = admin.indexOf('<div id="' + next + '"');
+  return a < 0 || b < 0 ? '' : admin.slice(a, b);
+}
+const pServer = panel('panel-server', 'panel-broadcast');
+const pClients = panel('panel-clients', 'panel-keys');
+
+ok(/\.sect\{column-span:all/.test(admin),
+  'a section heading spans both columns, or it would not say what it covers');
+ok(/\.sect:first-child\{margin-top:2px\}/.test(admin), 'the first heading does not push the panel down');
+
+ok((pServer.match(/<h3 class="sect">/g) || []).length === 4, 'Overview is in four sections');
+ok((pClients.match(/<h3 class="sect">/g) || []).length === 3, 'Settings is in three sections');
+ok((pServer.match(/<div class="card"/g) || []).length === 8, 'all eight Overview cards are still there');
+ok((pClients.match(/<div class="card"/g) || []).length === 10, 'all ten Settings cards are still there');
+for (const [seg, name] of [[pServer, 'Overview'], [pClients, 'Settings']]) {
+  const first = seg.search(/<h3 class="sect">/), card = seg.search(/<div class="card"/);
+  ok(first > 0 && first < card, name + ' opens on a section heading, no orphan card above it');
+}
+for (const t of ['Status', 'Proxy', 'Maintenance', 'Recent logs', 'Schedule a restart']) {
+  ok(pServer.includes('>' + t + '<'), 'Overview kept ' + t);
+}
+for (const t of ['App modes (login screen)', 'Feature kill switches', 'Discord chat relay']) {
+  ok(pClients.includes('>' + t + '<'), 'Settings kept ' + t);
+}
+
 // ── Settings rows ─────────────────────────────────────────────────────────
 // The same flex declaration used to be retyped in 51 style= attributes, with
 // control widths hard-coded in the tags — and an inline style beats the sheet,
