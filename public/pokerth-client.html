@@ -2683,6 +2683,23 @@ if ('serviceWorker' in navigator) {
   </div>
 </div>
 
+<!-- Server timeout warning (parity with the QML timeoutWarningPopup in
+     pokerth.qml). The server warns 60 s before dropping an idle session; a
+     chat line goes unnoticed in the lobby, so this is a global modal with a
+     live countdown and an OK button that sends ResetTimeout. No click-outside
+     dismissal: the QML popup only allows Escape. -->
+<div id="timeout-warn-modal" style="display:none">
+  <div class="km-backdrop"></div>
+  <div class="kcm-card" role="alertdialog" aria-labelledby="tow-title" aria-describedby="tow-msg">
+    <div class="kcm-title" id="tow-title" data-i18n="timeoutWarnTitle">Timeout Warning</div>
+    <div class="kcm-msg" id="tow-msg">—</div>
+    <div class="kcm-msg" id="tow-hint" data-i18n="timeoutWarnHint">Please click "OK" to stop the countdown!</div>
+    <div class="kcm-btns">
+      <button class="kcm-confirm" type="button" id="tow-ok" onclick="window._timeoutWarnAck()" data-i18n="timeoutWarnOk">OK</button>
+    </div>
+  </div>
+</div>
+
 <!-- Ranking modal (connect screen) — PokerTH / BBC / WEC leaderboards via the
      same-origin /api/ranking relay (proxy.js). Entry: 🏆 button next to the
      corner globe. BBC supports a season dropdown + All-Time (season 0) like the

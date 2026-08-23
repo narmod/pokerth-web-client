@@ -16,6 +16,8 @@ export const meta = {
 };
 
 export const strings = {
+    // Server timeout warning popup (parity: timeoutWarningPopup, pokerth.qml).
+    timeoutWarnTitle:'Onyo la kutotumika', timeoutWarnIdle:'Muunganisho wako utakatwa kwa sababu ya kutotumika baada ya sekunde {s}.', timeoutWarnAdmin:'Wewe ni msimamizi wa mchezo ulio wazi utakaoisha baada ya sekunde {s}.', timeoutWarnAfk:'Hujacheza kwa muda. Utaondolewa kwenye mchezo baada ya sekunde {s}.', timeoutWarnExpired:'Muda umeisha. Utakatwa muunganisho.', timeoutWarnExpiredGame:'Muda umeisha. Unaondolewa kwenye mchezo.', timeoutWarnHint:'Bofya \u201cSawa\u201d kusimamisha kuhesabu!', timeoutWarnOk:'Sawa',
   invScanQr: 'Skani ili kujiunga', invCopyLink: 'Nakili kiungo', invShareVia: 'Shiriki…', invitedBanner: 'Umealikwa kujiunga na meza',
   abClTabWeb: 'Kiteja cha wavuti',
   abClTabUpstream: 'Viteja vilivyosakinishwa',

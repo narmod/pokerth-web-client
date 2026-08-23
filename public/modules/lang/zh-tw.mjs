@@ -11,6 +11,8 @@ export const meta = {
 };
 
 export const strings = {
+    // Server timeout warning popup (parity: timeoutWarningPopup, pokerth.qml).
+    timeoutWarnTitle:'\u903e\u6642\u8b66\u544a', timeoutWarnIdle:'\u56e0\u70ba\u9577\u6642\u9593\u672a\u64cd\u4f5c\uff0c\u9023\u7dda\u5c07\u5728 {s} \u79d2\u5f8c\u4e2d\u65b7\u3002', timeoutWarnAdmin:'\u4f60\u662f\u4e00\u500b\u958b\u653e\u724c\u5c40\u7684\u7ba1\u7406\u54e1\uff0c\u8a72\u724c\u5c40\u5c07\u5728 {s} \u79d2\u5f8c\u5931\u6548\u3002', timeoutWarnAfk:'\u4f60\u5df2\u4e00\u6bb5\u6642\u9593\u672a\u884c\u52d5\uff0c\u5c07\u5728 {s} \u79d2\u5f8c\u88ab\u79fb\u51fa\u724c\u5c40\u3002', timeoutWarnExpired:'\u6642\u9593\u5df2\u5230\uff0c\u9023\u7dda\u5c07\u88ab\u4e2d\u65b7\u3002', timeoutWarnExpiredGame:'\u6642\u9593\u5df2\u5230\uff0c\u4f60\u6b63\u88ab\u79fb\u51fa\u724c\u5c40\u3002', timeoutWarnHint:'\u8acb\u9ede\u64ca\u300cOK\u300d\u505c\u6b62\u5012\u6578\uff01', timeoutWarnOk:'OK',
   invScanQr: '掃碼加入', invCopyLink: '複製連結', invShareVia: '分享…', invitedBanner: '您已被邀請加入牌桌',
   abClTabWeb: '網頁客戶端',
   abClTabUpstream: '可安裝客戶端',

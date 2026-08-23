@@ -16,6 +16,8 @@ export const meta = {
 };
 
 export const strings = {
+    // Server timeout warning popup (parity: timeoutWarningPopup, pokerth.qml).
+    timeoutWarnTitle:'Timeout Warning', timeoutWarnIdle:'Your connection is about to time out due to inactivity in {s} seconds.', timeoutWarnAdmin:'You are game-admin of an open game which will time out in {s} seconds.', timeoutWarnAfk:'You did not act in the game recently. You will be removed from the game in {s} seconds.', timeoutWarnExpired:'Timeout expired. You will be disconnected.', timeoutWarnExpiredGame:'Timeout expired. You are being removed from the game.', timeoutWarnHint:'Please click \u201cOK\u201d to stop the countdown!', timeoutWarnOk:'OK',
   invScanQr: 'Scan to join', invCopyLink: 'Copy link', invShareVia: 'Share…', invitedBanner: 'You are invited to join the table',
   abClTabWeb: 'Web client',
   abClTabUpstream: 'Installable clients',

@@ -96,13 +96,34 @@ ok(els['chat'].children.length === beforeR, 'onChat : /emoji intercepté (aucune
 M.onChat(chatSub(5, 1, '[R]🔥'));
 ok(els['chat'].children.length === beforeR, 'onChat : écho [R] de ma réaction ignoré');
 
-// ── TimeoutWarning : sync du timer + message système + keepalive
+// ── TimeoutWarning : sync du timer + popup modal, SANS keepalive automatique
+// (le reset ne part que sur activité réelle — sinon un onglet oublié garderait
+// sa session pour toujours, cf. commentaire de onTimeoutWarning).
 S._timerSec = 0; S._timerTot = 10;
 const sent = []; S.ws.send = (f) => sent.push(f);
-sub = subOf([[1, 0, 1], [2, 0, 15]]);
+els['timeout-warn-modal'] = makeEl();
+els['tow-msg'] = makeEl(); els['tow-hint'] = makeEl(); els['tow-ok'] = makeEl();
+sub = subOf([[1, 0, 1], [2, 0, 15]]);   // reason 1 = admin d'une partie ouverte
 M.onTimeoutWarning(sub);
 ok(S._timerSec === 15 && S._timerTot === 15, 'onTimeoutWarning : timer resynchronisé (15 s > total)');
-ok(sent.length === 1, 'onTimeoutWarning : keepalive auto envoyé');
+ok(sent.length === 0, 'onTimeoutWarning : AUCUN keepalive automatique');
+ok(els['timeout-warn-modal'].style.display === 'flex', 'onTimeoutWarning : popup ouvert');
+ok(els['tow-msg'].textContent.includes('15'), 'onTimeoutWarning : compte à rebours affiché');
+ok(S._afkWarned === true, 'onTimeoutWarning : prochain geste = reset immédiat');
+
+// Le bouton OK ferme le popup ET envoie ResetTimeout (S._afkWarned court-circuite
+// la fenêtre de 3 min). C'est le pendant de Lobby.resetNetworkTimeout() en QML.
+S._wasAuthenticated = true;
+window._timeoutWarnAck();
+ok(els['timeout-warn-modal'].style.display === 'none', 'OK : popup fermé');
+ok(sent.length === 1, 'OK : ResetTimeout envoyé');
+ok(S._afkWarned === false, 'OK : avertissement consommé');
+
+// Fermeture d'autorité à la mort du socket : pas de compte à rebours orphelin.
+M.onTimeoutWarning(subOf([[1, 0, 0], [2, 0, 30]]));
+ok(els['timeout-warn-modal'].style.display === 'flex', 'nouvel avertissement : popup réouvert');
+window._timeoutWarnClose();
+ok(els['timeout-warn-modal'].style.display === 'none', 'onclose : popup fermé');
 
 // ── ChatReject : réaction rejetée en LAN → note locale discrète, pas de chat
 S._lastMsgWasReaction = true; S._chatRejectShown = false; S._currentLoginMode = 'lan';

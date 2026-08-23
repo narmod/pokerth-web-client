@@ -85,6 +85,11 @@ function onChat(sub) {
 }
 
 function onTimeoutWarning(sub) {
+  // timeoutReason (field 1): 0 = no data received (idle connection),
+  // 1 = admin of an open game that is about to expire, 2 = did not act in the
+  // game and is about to be removed. Each one gets its own wording, as in the
+  // QML popup -- the three situations have very different consequences.
+  const reason = Proto.u32(sub, 1);
   const sec = Proto.u32(sub, 2);
   S._timerSec = sec; // Sync avec le serveur
   // Si le serveur donne plus de temps que prévu, ajuster le total
@@ -99,7 +104,81 @@ function onTimeoutWarning(sub) {
   // réarme immédiatement (le rate-limit est court-circuité) ; un joueur
   // réellement absent est kické comme partout ailleurs.
   S._afkWarned = true;
+  // A chat line is easy to miss, especially in the lobby where nobody is
+  // watching the log -- reported on the forum as "the client disconnects from
+  // the lobby and just stays there". The QML client plays a sound and opens a
+  // modal countdown on top of every page; we now do the same. The chat line
+  // stays: it leaves a trace in the log once the popup is gone.
+  try { window.notifyMyTurn && window.notifyMyTurn(); } catch (e) {}
+  _towShow(reason, sec);
 }
+
+// ── Timeout warning popup (parity: timeoutWarningPopup, pokerth.qml) ─────
+// Counts down once per second, then switches to the "expired" wording and
+// disables OK -- at that point the server has already made its decision and a
+// ResetTimeout would be pointless. Escape closes without resetting anything
+// (QML: closePolicy CloseOnEscape), so dismissing the popup is not the same as
+// answering it.
+let _towTimer = 0;
+
+function _towText(reason, sec, expired) {
+  if (expired) return reason === 2 ? t('timeoutWarnExpiredGame') : t('timeoutWarnExpired');
+  if (reason === 1) return t('timeoutWarnAdmin', { s: sec });
+  if (reason === 2) return t('timeoutWarnAfk', { s: sec });
+  return t('timeoutWarnIdle', { s: sec });
+}
+
+function _towClose() {
+  if (_towTimer) { clearInterval(_towTimer); _towTimer = 0; }
+  const modal = document.getElementById('timeout-warn-modal');
+  if (modal) modal.style.display = 'none';
+}
+
+function _towShow(reason, sec) {
+  const modal = document.getElementById('timeout-warn-modal');
+  const msgEl = document.getElementById('tow-msg');
+  if (!modal || !msgEl) return;
+  const hintEl = document.getElementById('tow-hint');
+  const okEl = document.getElementById('tow-ok');
+  let left = sec > 0 ? sec : 0;
+  if (_towTimer) { clearInterval(_towTimer); _towTimer = 0; }
+  const paint = function (expired) {
+    msgEl.textContent = _towText(reason, left, expired);
+    if (hintEl) hintEl.style.display = expired ? 'none' : '';
+    if (okEl) okEl.disabled = !!expired;
+  };
+  paint(left <= 0);
+  modal.style.display = 'flex';
+  if (left > 0) {
+    _towTimer = setInterval(function () {
+      left--;
+      if (left <= 0) { clearInterval(_towTimer); _towTimer = 0; paint(true); }
+      else paint(false);
+    }, 1000);
+  }
+}
+
+// OK: the deliberate "I am still here" click. Routed through _afkActivity so
+// there is a single place that emits ResetTimeout; S._afkWarned is set, which
+// short-circuits the 3 min rate limit, so the packet really does leave now.
+function _timeoutWarnAck() {
+  _towClose();
+  _afkActivity();
+}
+
+try {
+  document.addEventListener('keydown', function (ev) {
+    if (ev.key !== 'Escape') return;
+    const m = document.getElementById('timeout-warn-modal');
+    if (m && m.style.display === 'flex') _towClose();
+  });
+} catch (e) {}
+
+window._timeoutWarnAck = _timeoutWarnAck;
+// Called from the socket's onclose: the warning belongs to a session that no
+// longer exists, and leaving a dead countdown on screen would be worse than
+// the silence it was meant to fix (QML does the same in onConnectionFailed).
+window._timeoutWarnClose = _towClose;
 
 function onChatReject(sub) {
   const rejText = Proto.str(sub, 1);

@@ -10,6 +10,8 @@ export const meta = {
 };
 
 export const strings = {
+    // Server timeout warning popup (parity: timeoutWarningPopup, pokerth.qml).
+    timeoutWarnTitle:'C\u1ea3nh b\u00e1o kh\u00f4ng ho\u1ea1t \u0111\u1ed9ng', timeoutWarnIdle:'K\u1ebft n\u1ed1i c\u1ee7a b\u1ea1n s\u1ebd b\u1ecb ng\u1eaft do kh\u00f4ng ho\u1ea1t \u0111\u1ed9ng sau {s} gi\u00e2y.', timeoutWarnAdmin:'B\u1ea1n l\u00e0 qu\u1ea3n tr\u1ecb m\u1ed9t v\u00e1n \u0111ang m\u1edf s\u1ebd h\u1ebft h\u1ea1n sau {s} gi\u00e2y.', timeoutWarnAfk:'B\u1ea1n \u0111\u00e3 l\u00e2u kh\u00f4ng ra quy\u1ebft \u0111\u1ecbnh. B\u1ea1n s\u1ebd b\u1ecb lo\u1ea1i kh\u1ecfi v\u00e1n sau {s} gi\u00e2y.', timeoutWarnExpired:'H\u1ebft th\u1eddi gian. B\u1ea1n s\u1ebd b\u1ecb ng\u1eaft k\u1ebft n\u1ed1i.', timeoutWarnExpiredGame:'H\u1ebft th\u1eddi gian. B\u1ea1n \u0111ang b\u1ecb lo\u1ea1i kh\u1ecfi v\u00e1n.', timeoutWarnHint:'Nh\u1ea5p \u201cOK\u201d \u0111\u1ec3 d\u1eebng \u0111\u1ebfm ng\u01b0\u1ee3c!', timeoutWarnOk:'OK',
   invScanQr: 'Quét để tham gia', invCopyLink: 'Sao chép liên kết', invShareVia: 'Chia sẻ…', invitedBanner: 'Bạn được mời vào bàn',
   abClTabWeb: 'Ứng dụng web',
   abClTabUpstream: 'Ứng dụng cài đặt được',

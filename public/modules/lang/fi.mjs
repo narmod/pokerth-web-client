@@ -9,6 +9,8 @@ export const meta = {
 };
 
 export const strings = {
+    // Server timeout warning popup (parity: timeoutWarningPopup, pokerth.qml).
+    timeoutWarnTitle:'Aikakatkaisuvaroitus', timeoutWarnIdle:'Yhteytesi katkaistaan toimettomuuden vuoksi {s} sekunnin kuluttua.', timeoutWarnAdmin:'Olet avoimen pelin yll\u00e4pit\u00e4j\u00e4, joka p\u00e4\u00e4ttyy {s} sekunnin kuluttua.', timeoutWarnAfk:'Et ole pelannut hetkeen. Sinut poistetaan pelist\u00e4 {s} sekunnin kuluttua.', timeoutWarnExpired:'Aika loppui. Yhteytesi katkaistaan.', timeoutWarnExpiredGame:'Aika loppui. Sinut poistetaan pelist\u00e4.', timeoutWarnHint:'Pys\u00e4yt\u00e4 laskuri napsauttamalla \u201dOK\u201d!', timeoutWarnOk:'OK',
   invScanQr: 'Liity skannaamalla', invCopyLink: 'Kopioi linkki', invShareVia: 'Jaa…', invitedBanner: 'Sinut on kutsuttu pöytään',
   abClTabWeb: 'Web-asiakas',
   abClTabUpstream: 'Asennettavat asiakkaat',

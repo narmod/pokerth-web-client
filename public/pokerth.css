@@ -6368,6 +6368,26 @@ body.spectator-nosend #g-reaction-panel { display: none !important; }
   padding: 18px;
 }
 
+/* ── Server timeout warning ── global alert dialog.
+   Sits above every other surface: it can fire while the help window, the
+   options or a ranking modal is open, and missing it costs the connection.
+   Mirrors the QML popup, which lives on Overlay.overlay. */
+#timeout-warn-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 10050;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--sp-6);
+}
+/* Secondary line, quieter than the countdown itself (QML: secondary.col300). */
+#tow-hint {
+  font-size: var(--fs-sm);
+  color: var(--gold-dim);
+}
+#tow-ok:disabled { opacity: 0.5; cursor: default; }
+
 /* ── Kick-confirm modal ── small nested alert dialog */
 .kcm-card {
   position: relative;

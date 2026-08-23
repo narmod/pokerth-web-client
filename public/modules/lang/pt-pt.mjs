@@ -9,6 +9,8 @@ export const meta = {
 };
 
 export const strings = {
+    // Server timeout warning popup (parity: timeoutWarningPopup, pokerth.qml).
+    timeoutWarnTitle:'Aviso de inatividade', timeoutWarnIdle:'A sua liga\u00e7\u00e3o vai ser terminada por inatividade dentro de {s} segundos.', timeoutWarnAdmin:'\u00c9 o administrador de um jogo aberto que expira dentro de {s} segundos.', timeoutWarnAfk:'H\u00e1 algum tempo que n\u00e3o joga. Vai ser removido do jogo dentro de {s} segundos.', timeoutWarnExpired:'Tempo esgotado. Vai ser desligado.', timeoutWarnExpiredGame:'Tempo esgotado. Est\u00e1 a ser removido do jogo.', timeoutWarnHint:'Clique em \u00abOK\u00bb para parar a contagem decrescente!', timeoutWarnOk:'OK',
   invScanQr: 'Digitalize para entrar', invCopyLink: 'Copiar ligação', invShareVia: 'Partilhar…', invitedBanner: 'Foi convidado a juntar-se à mesa',
   abClTabWeb: 'Cliente web',
   abClTabUpstream: 'Clientes instaláveis',

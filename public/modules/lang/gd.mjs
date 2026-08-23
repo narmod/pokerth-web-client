@@ -11,6 +11,8 @@ export const meta = {
 };
 
 export const strings = {
+    // Server timeout warning popup (parity: timeoutWarningPopup, pokerth.qml).
+    timeoutWarnTitle:'Rabhadh mu neo-ghn\u00ecomhachd', timeoutWarnIdle:'Th\u00e8id an ceangal agad a bhriseadh air sg\u00e0th neo-ghn\u00ecomhachd an ceann {s} diog.', timeoutWarnAdmin:'\u2019S tusa rianaire geama fosgailte a th\u00e8id \u00e0 bith an ceann {s} diog.', timeoutWarnAfk:'Cha do chluich thu o chionn greis. Th\u00e8id do thoirt \u00e0s a\u2019 gheama an ceann {s} diog.', timeoutWarnExpired:'Dh\u2019fhalbh an \u00f9ine. Th\u00e8id do cheangal a bhriseadh.', timeoutWarnExpiredGame:'Dh\u2019fhalbh an \u00f9ine. Tha thu \u2019gad thoirt \u00e0s a\u2019 gheama.', timeoutWarnHint:'Briog air \u201cOK\u201d gus an cunntas-s\u00ecos a stad!', timeoutWarnOk:'OK',
   invScanQr: 'Sganaich gus pàirt a ghabhail', invCopyLink: 'Dèan lethbhreac dhen cheangal', invShareVia: 'Co-roinn…', invitedBanner: 'Fhuair thu cuireadh dhan bhòrd',
   abClTabWeb: 'Cliaìant-lìn',
   abClTabUpstream: 'Cliaìantan a ghabhas stàlaidh',

@@ -10,6 +10,8 @@ export const meta = {
 };
 
 export const strings = {
+    // Server timeout warning popup (parity: timeoutWarningPopup, pokerth.qml).
+    timeoutWarnTitle:'Inaktivit\u00e1si figyelmeztet\u00e9s', timeoutWarnIdle:'A kapcsolat inaktivit\u00e1s miatt {s} m\u00e1sodperc m\u00falva megszakad.', timeoutWarnAdmin:'Egy nyitott j\u00e1t\u00e9k adminisztr\u00e1tora vagy, amely {s} m\u00e1sodperc m\u00falva lej\u00e1r.', timeoutWarnAfk:'Egy ideje nem l\u00e9pt\u00e9l. {s} m\u00e1sodperc m\u00falva kiker\u00fclsz a j\u00e1t\u00e9kb\u00f3l.', timeoutWarnExpired:'Az id\u0151 lej\u00e1rt. A kapcsolat megszakad.', timeoutWarnExpiredGame:'Az id\u0151 lej\u00e1rt. Kiker\u00fclsz a j\u00e1t\u00e9kb\u00f3l.', timeoutWarnHint:'Kattints az \u201eOK\u201d gombra a visszasz\u00e1ml\u00e1l\u00e1s le\u00e1ll\u00edt\u00e1s\u00e1hoz!', timeoutWarnOk:'OK',
   invScanQr: 'Olvasd be a csatlakozáshoz', invCopyLink: 'Link másolása', invShareVia: 'Megosztás…', invitedBanner: 'Meghívtak az asztalhoz',
   abClTabWeb: 'Webes kliens',
   abClTabUpstream: 'Telepíthető kliensek',

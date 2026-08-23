@@ -10,6 +10,8 @@ export const meta = {
 };
 
 export const strings = {
+    // Server timeout warning popup (parity: timeoutWarningPopup, pokerth.qml).
+    timeoutWarnTitle:'Avertisment de inactivitate', timeoutWarnIdle:'Conexiunea va fi \u00eenchis\u0103 din cauza inactivit\u0103\u021bii \u00een {s} secunde.', timeoutWarnAdmin:'E\u0219ti administratorul unui joc deschis care expir\u0103 \u00een {s} secunde.', timeoutWarnAfk:'Nu ai jucat de ceva timp. Vei fi scos din joc \u00een {s} secunde.', timeoutWarnExpired:'Timpul a expirat. Vei fi deconectat.', timeoutWarnExpiredGame:'Timpul a expirat. E\u0219ti scos din joc.', timeoutWarnHint:'Apas\u0103 \u201eOK\u201d pentru a opri num\u0103r\u0103toarea invers\u0103!', timeoutWarnOk:'OK',
   invScanQr: 'Scanează pentru a te alătura', invCopyLink: 'Copiază linkul', invShareVia: 'Distribuie…', invitedBanner: 'Ești invitat la masa',
   abClTabWeb: 'Client web',
   abClTabUpstream: 'Clienți instalabili',

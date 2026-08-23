@@ -13,6 +13,8 @@ export const meta = {
 };
 
 export const strings = {
+    // Server timeout warning popup (parity: timeoutWarningPopup, pokerth.qml).
+    timeoutWarnTitle:'\uc2dc\uac04 \ucd08\uacfc \uacbd\uace0', timeoutWarnIdle:'\ud65c\ub3d9\uc774 \uc5c6\uc5b4 {s}\ucd08 \ud6c4 \uc5f0\uacb0\uc774 \ub04a\uae41\ub2c8\ub2e4.', timeoutWarnAdmin:'\uacf5\uac1c \uac8c\uc784\uc758 \uad00\ub9ac\uc790\uc785\ub2c8\ub2e4. \uc774 \uac8c\uc784\uc740 {s}\ucd08 \ud6c4 \uc885\ub8cc\ub429\ub2c8\ub2e4.', timeoutWarnAfk:'\ud55c\ub3d9\uc548 \ud589\ub3d9\ud558\uc9c0 \uc54a\uc558\uc2b5\ub2c8\ub2e4. {s}\ucd08 \ud6c4 \uac8c\uc784\uc5d0\uc11c \uc81c\uc678\ub429\ub2c8\ub2e4.', timeoutWarnExpired:'\uc2dc\uac04\uc774 \ub05d\ub0ac\uc2b5\ub2c8\ub2e4. \uc5f0\uacb0\uc774 \ub04a\uae41\ub2c8\ub2e4.', timeoutWarnExpiredGame:'\uc2dc\uac04\uc774 \ub05d\ub0ac\uc2b5\ub2c8\ub2e4. \uac8c\uc784\uc5d0\uc11c \uc81c\uc678\ub418\uace0 \uc788\uc2b5\ub2c8\ub2e4.', timeoutWarnHint:'\uce74\uc6b4\ud2b8\ub2e4\uc6b4\uc744 \uba48\ucd94\ub824\uba74 \u201cOK\u201d\ub97c \ud074\ub9ad\ud558\uc138\uc694!', timeoutWarnOk:'OK',
   invScanQr: '스캔하여 참가', invCopyLink: '링크 복사', invShareVia: '공유…', invitedBanner: '테이블에 초대되었습니다',
   abClTabWeb: '웹 클라이언트',
   abClTabUpstream: '설치형 클라이언트',

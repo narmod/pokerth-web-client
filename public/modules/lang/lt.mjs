@@ -10,6 +10,8 @@ export const meta = {
 };
 
 export const strings = {
+    // Server timeout warning popup (parity: timeoutWarningPopup, pokerth.qml).
+    timeoutWarnTitle:'\u012esp\u0117jimas apie neveiklum\u0105', timeoutWarnIdle:'D\u0117l neveiklumo ry\u0161ys bus nutrauktas po {s} sek.', timeoutWarnAdmin:'Esate atviro \u017eaidimo administratorius; jis baigsis po {s} sek.', timeoutWarnAfk:'Kur\u012f laik\u0105 ne\u017eaid\u0117te. B\u016bsite pa\u0161alintas i\u0161 \u017eaidimo po {s} sek.', timeoutWarnExpired:'Laikas baig\u0117si. B\u016bsite atjungtas.', timeoutWarnExpiredGame:'Laikas baig\u0117si. Esate \u0161alinamas i\u0161 \u017eaidimo.', timeoutWarnHint:'Spustel\u0117kite \u201eOK\u201c, kad sustabdytum\u0117te atgalin\u0119 atskait\u0105!', timeoutWarnOk:'OK',
   invScanQr: 'Nuskaitykite, kad prisijungtumėte', invCopyLink: 'Kopijuoti nuorodą', invShareVia: 'Bendrinti…', invitedBanner: 'Jūs pakviesti prie stalo',
   abClTabWeb: 'Žiniatinklio klientas',
   abClTabUpstream: 'Įdiegiami klientai',

@@ -13,6 +13,22 @@ this file captures what matters to players and operators.
 Opened with `v2.1.7-web.0` (2026-08-13), following the upstream **2.1.7**
 release.
 
+### Changed
+- **Inactivity warning as a real dialog** (`web.56`) — the server warns 60 s
+  before dropping an idle session (`SERVER_TIMEOUT_WARNING_REMAINING_SEC`), and
+  only deliberate packets reset the clock: `PlayerInfoRequest` and
+  `AvatarRequest` are explicitly excluded server-side, so watching a busy lobby
+  does not keep a session alive. We rendered that warning as a chat line, which
+  goes unnoticed in the lobby — the player simply found himself disconnected
+  with the lobby still on screen. It is now a modal countdown above every page,
+  with a sound, wording per `timeoutReason` (idle connection / open-game admin /
+  did not act in the game), and an OK button that sends `ResetTimeout` through
+  the existing `_afkActivity` path, so there is still a single place emitting
+  that packet. Escape dismisses without answering, as in QML, and the socket's
+  `onclose` closes the popup so no dead countdown outlives its session. The chat
+  line stays — it leaves a trace in the log. Parity with `timeoutWarningPopup`
+  in `pokerth.qml`. Eight new keys, all 45 languages.
+
 ### Fixed
 - **Rejoining a running game after a disconnect** (`web.54`) — a player thrown
   off mid-game could never get back to the table, even within the five minutes

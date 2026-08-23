@@ -16,6 +16,8 @@ export const meta = {
 };
 
 export const strings = {
+    // Server timeout warning popup (parity: timeoutWarningPopup, pokerth.qml).
+    timeoutWarnTitle:'Peringatan tidak aktif', timeoutWarnIdle:'Koneksi Anda akan diputus karena tidak aktif dalam {s} detik.', timeoutWarnAdmin:'Anda admin sebuah permainan terbuka yang akan berakhir dalam {s} detik.', timeoutWarnAfk:'Anda sudah lama tidak bermain. Anda akan dikeluarkan dari permainan dalam {s} detik.', timeoutWarnExpired:'Waktu habis. Koneksi Anda akan diputus.', timeoutWarnExpiredGame:'Waktu habis. Anda dikeluarkan dari permainan.', timeoutWarnHint:'Klik \u201cOK\u201d untuk menghentikan hitung mundur!', timeoutWarnOk:'OK',
   invScanQr: 'Pindai untuk bergabung', invCopyLink: 'Salin tautan', invShareVia: 'Bagikan…', invitedBanner: 'Anda diundang untuk bergabung ke meja',
   abClTabWeb: 'Klien web',
   abClTabUpstream: 'Klien yang dapat diinstal',

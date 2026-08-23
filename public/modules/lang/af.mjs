@@ -10,6 +10,8 @@ export const meta = {
 };
 
 export const strings = {
+    // Server timeout warning popup (parity: timeoutWarningPopup, pokerth.qml).
+    timeoutWarnTitle:'Waarskuwing oor onaktiwiteit', timeoutWarnIdle:'Jou verbinding word oor {s} sekondes weens onaktiwiteit verbreek.', timeoutWarnAdmin:'Jy is administrateur van \u2019n oop spel wat oor {s} sekondes verval.', timeoutWarnAfk:'Jy het \u2019n ruk laas gespeel. Jy word oor {s} sekondes uit die spel verwyder.', timeoutWarnExpired:'Die tyd is om. Jou verbinding word verbreek.', timeoutWarnExpiredGame:'Die tyd is om. Jy word uit die spel verwyder.', timeoutWarnHint:'Klik \u201cOK\u201d om die aftelling te stop!', timeoutWarnOk:'OK',
   invScanQr: 'Skandeer om aan te sluit', invCopyLink: 'Kopieer skakel', invShareVia: 'Deel…', invitedBanner: 'Jy is genooi na die tafel',
   abClTabWeb: 'Webkliënt',
   abClTabUpstream: 'Installeerbare kliënte',

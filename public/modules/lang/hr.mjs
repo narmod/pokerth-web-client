@@ -10,6 +10,8 @@ export const meta = {
 };
 
 export const strings = {
+    // Server timeout warning popup (parity: timeoutWarningPopup, pokerth.qml).
+    timeoutWarnTitle:'Upozorenje o neaktivnosti', timeoutWarnIdle:'Veza \u0107e biti prekinuta zbog neaktivnosti za {s} s.', timeoutWarnAdmin:'Administrator ste otvorene igre koja istje\u010de za {s} s.', timeoutWarnAfk:'Neko vrijeme niste igrali. Bit \u0107ete uklonjeni iz igre za {s} s.', timeoutWarnExpired:'Vrijeme je isteklo. Bit \u0107ete odspojeni.', timeoutWarnExpiredGame:'Vrijeme je isteklo. Uklanjaju vas iz igre.', timeoutWarnHint:'Kliknite \u201eOK\u201d za zaustavljanje odbrojavanja!', timeoutWarnOk:'OK',
   invScanQr: 'Skenirajte za pridruživanje', invCopyLink: 'Kopiraj poveznicu', invShareVia: 'Podijeli…', invitedBanner: 'Pozvani ste za stol',
   abClTabWeb: 'Web klijent',
   abClTabUpstream: 'Klijenti za instalaciju',

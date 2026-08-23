@@ -5545,6 +5545,10 @@ const App = (() => {
       };
       S.ws.onclose = function(e) {
         _endConnecting();   // free the connect button on any close
+        // Une alerte de timeout appartient a la session qui vient de mourir :
+        // laisser un compte a rebours mort a l'ecran serait pire que le silence
+        // qu'il corrige (parite QML : onConnectionFailed ferme le popup).
+        try { window._timeoutWarnClose && window._timeoutWarnClose(); } catch (e2) {}
         S.ws = null;
         clearTimeout(window._reconnectTimer);
         clearInterval(window._reconnectCountdown);
@@ -10392,7 +10396,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.7-web.55'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.7-web.56'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

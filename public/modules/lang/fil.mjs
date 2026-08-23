@@ -16,6 +16,8 @@ export const meta = {
 };
 
 export const strings = {
+    // Server timeout warning popup (parity: timeoutWarningPopup, pokerth.qml).
+    timeoutWarnTitle:'Babala sa kawalan ng aktibidad', timeoutWarnIdle:'Puputulin ang koneksyon mo dahil sa kawalan ng aktibidad sa loob ng {s} segundo.', timeoutWarnAdmin:'Ikaw ang admin ng bukas na laro na magtatapos sa loob ng {s} segundo.', timeoutWarnAfk:'Matagal ka nang hindi kumikilos. Aalisin ka sa laro sa loob ng {s} segundo.', timeoutWarnExpired:'Ubos na ang oras. Madidiskonekta ka.', timeoutWarnExpiredGame:'Ubos na ang oras. Inaalis ka sa laro.', timeoutWarnHint:'I-click ang \u201cOK\u201d para ihinto ang countdown!', timeoutWarnOk:'OK',
   invScanQr: 'I-scan para sumali', invCopyLink: 'Kopyahin ang link', invShareVia: 'Ibahagi…', invitedBanner: 'Inimbitahan kang sumali sa mesa',
   abClTabWeb: 'Web client',
   abClTabUpstream: 'Mga nai-install na client',
