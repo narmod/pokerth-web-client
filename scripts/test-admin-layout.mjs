@@ -95,6 +95,24 @@ ok(/querySelectorAll\('\.tab'\)/.test(scope) && !/querySelectorAll\('\.gtab, \.t
 ok(/document\.querySelectorAll\('\.tabs'\)\.forEach/.test(body(admin, 'tabsFade')),
   'the edge fade now covers every bar, not just the first');
 
+// ── Family bar stands out ─────────────────────────────────────────────────
+ok(/\.gtab\{flex:1 1 0/.test(admin),
+  'the three families share the width, reading as the page navigation');
+ok(/\.gtabs\{[^}]*max-width:520px/.test(admin), 'and stop short of absurd on a wide screen');
+ok(/\.subtabs \.tab\{background:transparent;border-color:transparent\}/.test(admin),
+  'unopened sections are plain text, so the two rows do not look alike');
+ok(/\.subtabs \.tab\.on\{background:var\(--panel\);border-color:var\(--gold\)\}/.test(admin),
+  'the open section still carries its frame');
+// --gold is dark in the light theme: a plain `.gtab` rule outranks `.gtab.on`
+// (0,2,1 against 0,2,0) and used to repaint the active family's background,
+// leaving dark text on a dark fill.
+ok(/light"\] \.gtab:not\(\.on\)\{/.test(admin),
+  'the light-theme fill spares the active family');
+ok(/light"\] \.gtab\.on\{color:#f4f6fb\}/.test(admin),
+  'and the active family keeps a readable text colour there');
+ok(/\.gtabs\{max-width:none/.test(small), 'on a phone the families take the full width');
+ok(/\.gtabs\{[^}]*overflow:visible/.test(small), 'three of them never need to scroll');
+
 // ── Settings rows ─────────────────────────────────────────────────────────
 // The same flex declaration used to be retyped in 51 style= attributes, with
 // control widths hard-coded in the tags — and an inline style beats the sheet,

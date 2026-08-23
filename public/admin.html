@@ -50,10 +50,18 @@
   /* Douze onglets a plat melangeaient trois natures de reglages. La famille se
      choisit en haut, la section dedans : la barre du bas ne montre alors que
      ce qui appartient a la famille courante. */
-  .gtabs{margin:0 0 8px}
-  .gtab{flex:0 0 auto;white-space:nowrap;padding:9px 20px;border-radius:9px;border:1px solid var(--line);background:rgba(255,255,255,.03);color:var(--text);cursor:pointer;font-size:.9rem}
+  /* Les trois familles se partagent la largeur : elles se lisent alors comme
+     la navigation de la page, et non comme quatre boutons de plus sous ceux de
+     l'en-tete. Le plafond les empeche de devenir absurdes sur un grand ecran. */
+  .gtabs{margin:16px 0 10px;gap:8px;max-width:520px}
+  .gtab{flex:1 1 0;min-width:0;white-space:nowrap;padding:11px 18px;border-radius:10px;border:1px solid var(--line);background:rgba(255,255,255,.04);color:var(--text);cursor:pointer;font-size:.95rem}
   .gtab.on{background:var(--gold);color:#10151c;border-color:var(--gold);font-weight:700}
+  /* Les sections passent au second plan : seule celle qui est ouverte porte un
+     cadre, les autres ne sont que du texte. Sans ce contraste les deux rangees
+     se ressemblent et la hierarchie ne se voit plus. */
   .subtabs{margin:0 0 14px}
+  .subtabs .tab{background:transparent;border-color:transparent}
+  .subtabs .tab.on{background:var(--panel);border-color:var(--gold)}
   .seg{display:flex;gap:8px;margin:10px 0}
   .seg button{flex:1;padding:9px;border-radius:8px;border:1px solid var(--line);background:rgba(255,255,255,.03);color:var(--cream);cursor:pointer;font-size:.86rem}
   .seg button.on{background:var(--gold);color:#10151c;border-color:var(--gold);font-weight:700}
@@ -160,7 +168,12 @@
   :root[data-admin-theme="light"] .use,
   :root[data-admin-theme="light"] .ghost{background:rgba(29,34,43,.05)}
   :root[data-admin-theme="light"] .tab.on{background:var(--panel)}
-  :root[data-admin-theme="light"] .gtab{background:rgba(29,34,43,.04)}
+  :root[data-admin-theme="light"] .gtab:not(.on){background:rgba(29,34,43,.04)}
+  /* --gold est sombre en theme clair : sans cette ligne, la famille active
+     ecrivait du texte sombre sur un fond sombre. */
+  :root[data-admin-theme="light"] .gtab.on{color:#f4f6fb}
+  :root[data-admin-theme="light"] .subtabs .tab{background:transparent}
+  :root[data-admin-theme="light"] .subtabs .tab.on{background:var(--panel)}
   :root[data-admin-theme="light"] .drop.hot{background:rgba(29,34,43,.06)}
   :root[data-admin-theme="light"] .logs{background:#f3f5f9;color:#2b3340}
   :root[data-admin-theme="light"] .prog{background:rgba(29,34,43,.1)}
@@ -202,6 +215,12 @@
     .tabs{overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;gap:4px}
     .tabs::-webkit-scrollbar{display:none}
     .tabs{flex-wrap:nowrap}
+    /* Trois familles tiennent toujours sur une ligne : pleine largeur, une
+       cible tactile par tiers d'ecran, et rien qui defile. Seules les sections
+       defilent, et le fondu de bord le dit. */
+    .gtabs{max-width:none;margin:12px 0 8px;overflow:visible}
+    .gtab{padding:11px 6px;font-size:.92rem}
+    .subtabs .tab{padding:8px 12px}
     .tabs.sc-r{-webkit-mask-image:linear-gradient(90deg,#000 0,#000 calc(100% - 26px),transparent 100%);mask-image:linear-gradient(90deg,#000 0,#000 calc(100% - 26px),transparent 100%)}
     .tabs.sc-l{-webkit-mask-image:linear-gradient(90deg,transparent 0,#000 26px,#000 100%);mask-image:linear-gradient(90deg,transparent 0,#000 26px,#000 100%)}
     .tabs.sc-l.sc-r{-webkit-mask-image:linear-gradient(90deg,transparent 0,#000 26px,#000 calc(100% - 26px),transparent 100%);mask-image:linear-gradient(90deg,transparent 0,#000 26px,#000 calc(100% - 26px),transparent 100%)}

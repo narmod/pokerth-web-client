@@ -14,6 +14,17 @@ Opened with `v2.1.7-web.0` (2026-08-13), following the upstream **2.1.7**
 release.
 
 ### Changed
+- **Admin dashboard: the families now read as navigation** (`web.30`) — they
+  looked like four more buttons under the header ones. The three share the
+  width (capped at 520px on desktop, full width on a phone, one tap target per
+  third of the screen and no scrolling), while the sections behind them drop
+  to plain text until opened, so the two rows no longer look alike.
+
+### Fixed
+- **Active family invisible in the light theme** (`web.30`) — `--gold` is dark
+  there, and a plain `.gtab` rule outranked `.gtab.on` (0,2,1 against 0,2,0),
+  repainting the active family's background and leaving dark text on a dark
+  fill. The fill now spares the active family, which gets a light text colour.
 - **Admin dashboard: tabs grouped into three families** (`web.29`) — twelve
   flat tabs mixed three unrelated kinds of settings. The family is now picked
   on the top row and the section inside it: **Server** (Overview, Game servers,
