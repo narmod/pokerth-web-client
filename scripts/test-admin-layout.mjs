@@ -142,11 +142,15 @@ ok(/pn\.style\.display = \(pn\.id === 'panel-' \+ t\)/.test(admin),
   'the switch derives the panel id instead of listing every panel by hand');
 ok(/querySelectorAll\('\[id\^="panel-"\]'\)/.test(admin), 'and reaches every one of them');
 ok(!/class="sect"/.test(admin), 'the old sub-section headings are gone, the tab carries the title');
-// Only the first panel of a family is visible at load.
-ok(/<div id="panel-server">/.test(admin), 'Health & logs opens by default');
-for (const id of ['panel-proxy', 'panel-deploy', 'panel-access', 'panel-defaults', 'panel-identity']) {
-  ok(new RegExp('<div id="' + id + '" style="display:none">').test(admin), id + ' starts hidden');
-}
+// Exactly one panel is open at load — the one the active tab points at.
+// panel-clients is the first of ITS family, but Server is the family that
+// opens, and panel-clients comes earlier in the document: left open, it was
+// what you actually saw under the Health & logs tab.
+const openAtLoad = [...admin.matchAll(/<div id="(panel-[a-z]+)"(?! style="display:none")[^>]*>/g)]
+  .map(m => m[1]);
+ok(openAtLoad.length === 1, 'exactly one panel is open at load, not ' + openAtLoad.length);
+ok(openAtLoad[0] === 'panel-server', 'and it is the one the active tab points at');
+ok(/<button class="tab on" data-t="server">/.test(admin), 'which is the tab marked active');
 ok(/#panel-defaults[^{]*\{columns:2/.test(admin), 'the five defaults cards use both columns');
 ok(!/#panel-server,/.test(admin), 'a two-card panel no longer asks for two columns');
 

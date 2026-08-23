@@ -21,6 +21,14 @@ release.
   copy, or refused — since otherwise a successful copy and a dead click look
   exactly alike.
 
+### Fixed
+- **Wrong panel on opening the dashboard** (`web.38`) — the Server family and
+  its *Health & logs* tab were correctly marked active, but the page showed
+  *Modes & features*. Splitting the panels in `web.33` left the first panel of
+  *each* family open, and `panel-clients` sits earlier in the document than
+  `panel-server`, so it was the one on screen until the first tab click. Only
+  the panel the active tab points at is open now, and a guard counts them.
+
 ### Changed
 - **Readable times in the logs** (`web.37`) — the proxy stamps lines in ISO
   UTC (`2026-08-23T15:53:16.364Z`), which is right for a file and unreadable
