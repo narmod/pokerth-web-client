@@ -30,6 +30,10 @@ release.
   the panel the active tab points at is open now, and a guard counts them.
 
 ### Changed
+- **Proxy sits after Deployment** (`web.39`) — the Server sections now run
+  Health & logs, Deployment, Proxy, Access & backup, Identity & reach, Game
+  servers, Keys. A guard pins the whole order rather than the position of one
+  tab.
 - **Readable times in the logs** (`web.37`) — the proxy stamps lines in ISO
   UTC (`2026-08-23T15:53:16.364Z`), which is right for a file and unreadable
   on screen, on top of being off by the reader's own offset. Both logs now

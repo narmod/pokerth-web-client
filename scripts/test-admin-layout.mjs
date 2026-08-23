@@ -214,6 +214,9 @@ function bar(g) {
   const a = admin.indexOf('class="tabs subtabs" data-g="' + g + '"');
   return a < 0 ? '' : admin.slice(a, admin.indexOf('</div>', a));
 }
+ok(JSON.stringify([...bar('server').matchAll(/data-t="([a-z]+)"/g)].map(m => m[1]))
+   === JSON.stringify(['server', 'deploy', 'proxy', 'access', 'identity', 'servers', 'keys']),
+  'the Server sections run in their intended order');
 ok(/data-t="identity"/.test(bar('server')), 'Identity & reach sits in the Server family');
 ok(!/data-t="identity"/.test(bar('client')), 'and no longer in the Client one');
 ok(/data-t="clients"/.test(bar('client')), 'the Client family kept its own sections');
