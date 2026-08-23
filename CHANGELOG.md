@@ -14,6 +14,13 @@ Opened with `v2.1.7-web.0` (2026-08-13), following the upstream **2.1.7**
 release.
 
 ### Added
+- **`/rules` in Ukrainian, Czech, Swedish, Romanian, Hungarian and Greek**
+  (`web.50`) — fourth batch, nineteen languages live, 26 to go. Hungarian is
+  the third language after Italian and Polish where *póker* names four of a
+  kind rather than the game; Greek uses the transliterated ρουαγιάλ φλος and
+  καρέ, which is what players there actually write.
+
+### Added
 - **`/rules` in Italian, Polish, Dutch and Turkish** (`web.49`) — third batch,
   thirteen languages live. Two false friends worth naming: in Italian
   *poker* is four of a kind, not the game, so the royal flush is *scala reale*
