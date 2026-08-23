@@ -31,6 +31,12 @@ release.
   and reach the keypad through a small keypad button next to the field.
   New module `public/modules/ui/bet-keypad.mjs`; one new i18n key
   (`betKeypad`) translated across all 45 languages.
+  The keypad wears the action bar's own palette (`web.59`): the digit keys
+  reuse the bet field's colours (`--field-bg`, `var(--btn-raise-bg, #4CAF50)`),
+  the shortcut column reuses the quick-bet buttons' green — hard-coded in
+  `GameActionBar.qml` (`#1b5e20` / `#4CAF50` / hover `#388e3c` / press
+  `#2e7d32`) and deliberately not themable — and the confirm button reuses
+  `.btn-raise`, down to `--ff-display` and the `brightness(1.15)` hover.
 
 ### Changed
 - **Bet slider granularity now matches the desktop client** (`web.58`) — the web

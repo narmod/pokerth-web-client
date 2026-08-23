@@ -5042,32 +5042,61 @@ body:not(.in-game) .my-zone {
 .bet-row .kp-open-btn:disabled { opacity: 0.3; cursor: not-allowed; filter: grayscale(0.6); }
 .action-grid.kp-open > .mid-row,
 .action-grid.kp-open > .act-buttons-row { display: none; }
+/* Palette : celle de la barre d'action, a l'identique.
+   · touches de saisie  = celle du champ de mise (.raise-amt-field) :
+     fond --field-bg, bord et texte var(--btn-raise-bg, #4CAF50)
+   · colonne raccourcis = celle des mises rapides (.btn-pct), codees EN DUR
+     dans GameActionBar QML (#1b5e20 / #4CAF50 / hover #388e3c / press
+     #2e7d32) et non themables — un tapis importe les affiche vertes aussi
+   · bouton de validation = celui de Relancer (.btn-raise), donc
+     var(--btn-raise-bg, var(--gold)) et police d'affichage
+   Les deux valeurs de repli de --btn-raise-bg different volontairement :
+   c'est la convention deja en place entre .raise-amt-field et .btn-raise. */
 .bet-keypad {
-  border: 1px solid var(--border-hi); border-radius: 8px;
+  border: 1px solid var(--btn-raise-bg, #4CAF50); border-radius: 8px;
   background: var(--panel); padding: 7px;
 }
 .kp-head { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; margin-bottom: 7px; }
-.kp-amt { font-family: var(--ff-mono); font-size: 1.3rem; font-weight: 700; color: var(--gold, rgb(var(--gold-rgb))); }
+.kp-amt {
+  font-family: var(--ff-mono); font-size: 1.3rem; font-weight: 700;
+  color: var(--btn-raise-bg, #4CAF50);
+}
 .kp-amt.kp-bad { color: #e74c3c; }
 .kp-range { font-family: var(--ff-mono); font-size: var(--fs-xs); color: var(--text); }
 .kp-grid { display: grid; grid-template-columns: repeat(3, 1fr) 1.25fr; gap: 5px; }
 .kp-grid button {
-  height: 42px; min-height: 42px; border-radius: 6px; cursor: pointer;
-  border: 1px solid var(--border); background: var(--field-bg); color: var(--text-hi);
+  height: 42px; min-height: 42px; border-radius: 7px; cursor: pointer;
+  background: var(--field-bg); border: 1px solid var(--btn-raise-bg, #4CAF50);
+  color: var(--btn-raise-bg, #4CAF50);
   font-family: var(--ff-mono); font-size: 1rem; font-weight: 700;
+  transition: filter 0.12s, transform 0.08s;
   -webkit-tap-highlight-color: transparent; touch-action: manipulation;
 }
-.kp-grid button:active { background: var(--panel-hi); }
+.kp-grid button:hover  { filter: brightness(1.15); }
+.kp-grid button:active { transform: scale(0.96); }
 .kp-grid .kp-s {
+  background: #1b5e20; border-color: #4CAF50; color: #fff;
   font-family: inherit; font-size: var(--fs-xs); font-weight: 700;
-  color: var(--gold, rgb(var(--gold-rgb))); border-color: var(--border-hi);
 }
+.kp-grid .kp-s:hover  { background: #388e3c; filter: none; }
+.kp-grid .kp-s:active { background: #2e7d32; }
 .kp-foot { display: flex; gap: 5px; margin-top: 6px; }
-.kp-foot button { height: 40px; border-radius: 6px; cursor: pointer; font-weight: 700; touch-action: manipulation; }
-.kp-foot .kp-cancel { flex: 1; background: transparent; border: 1px solid var(--border); color: var(--text); font-size: var(--fs-xs); }
+.kp-foot button {
+  height: 40px; border-radius: var(--act-btn-radius, 9px); cursor: pointer;
+  transition: filter 0.12s, transform 0.08s;
+}
+.kp-foot button:active { transform: scale(0.96); }
+.kp-foot button:hover  { filter: brightness(1.15); }
+.kp-foot .kp-cancel {
+  flex: 1; background: transparent; border: 1px solid var(--btn-raise-bg, #4CAF50);
+  color: var(--text); font-family: var(--ff-display); font-size: var(--fs-xs);
+  font-weight: 700; letter-spacing: 0.08em;
+}
 .kp-foot .kp-ok {
-  flex: 1.7; background: var(--btn-raise-bg, #4CAF50); border: 1px solid var(--btn-raise-bg, #4CAF50);
-  color: #fff; font-size: var(--fs-sm);
+  flex: 1.7; background: var(--btn-raise-bg, var(--gold));
+  color: var(--btn-raise-fg, var(--on-gold)); border: none;
+  font-family: var(--ff-display); font-size: var(--fs-xs);
+  font-weight: 700; letter-spacing: 0.08em;
 }
 .kp-foot .kp-ok b { font-family: var(--ff-mono); }
 /* Slider au doigt : on AGRANDIT LA ZONE TACTILE (hauteur de la boite) sans
