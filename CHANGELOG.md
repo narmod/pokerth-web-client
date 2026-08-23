@@ -14,6 +14,17 @@ Opened with `v2.1.7-web.0` (2026-08-13), following the upstream **2.1.7**
 release.
 
 ### Added
+- **`/rules` and `/faq` can be served per language** (`web.46`) — both pages
+  now take a language, self-canonicalize on `?lang=`, carry `<html lang>`,
+  `og:locale` and their own hreflang set, and appear in the sitemap once per
+  language. The text itself is still English everywhere: `SEO_RULES_I18N` and
+  `SEO_FAQ_I18N` ship empty and are filled in batches. A language is
+  advertised only once its entry exists — publishing 44 URLs that all serve
+  the same English text would be duplicate content, which costs more than it
+  earns, so an empty table produces exactly the sitemap and the markup we had
+  before. The English page is byte-identical apart from the new `og:locale`.
+
+### Added
 - **Regional hreflang aliases** (`web.45`) — 45 aliases mapping onto the
   existing language variants, so `zh-Hant`, `es-MX`, `fr-CA`, `pt`, `no` and
   the rest resolve instead of falling through. No new URLs and no new

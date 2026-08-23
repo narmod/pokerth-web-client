@@ -1411,25 +1411,67 @@ function _seoPageNav() {
     '<a href="https://github.com/narmod/pokerth-web-client" rel="noopener">Source</a></nav>';
 }
 
-function seoContentPage(res, method, title, desc, relPath, bodyHtml, ld) {
+// Translations for the standalone /rules and /faq pages. Only the languages
+// present here are advertised: publishing 44 URLs that all serve the same
+// English text would be duplicate content, which costs more than it earns.
+// A language appears in the page hreflang set and in the sitemap the moment
+// its entry lands, and not before. English lives in the page functions
+// themselves and is the fallback for everything else.
+//   rules: { h1, lead, secDeal, ... }  faq: [[question, answer], ...]
+// Both are filled in batches; see docs/ROADMAP.md.
+var SEO_RULES_I18N = {};
+var SEO_FAQ_I18N = {};
+
+// Languages a given content page is actually available in, English first.
+function seoPageLangs(table) {
+  var out = ['en'];
+  for (var code in table) { if (code !== 'en' && SEO_I18N[code]) out.push(code); }
+  return out;
+}
+
+// hreflang set for a content page, restricted to the languages it exists in.
+// Returns '' for an English-only page: a single-language page advertising
+// nothing is correct, whereas a self-referencing hreflang of one is noise.
+function seoPageAlternates(base, relPath, langs) {
+  if (!base || langs.length < 2) return '';
+  var href = function (c) { return base + relPath + (c === 'en' ? '' : '?lang=' + c); };
+  var out = '<link rel="alternate" hreflang="x-default" href="' + href('en') + '">';
+  for (var i = 0; i < langs.length; i++) {
+    out += '<link rel="alternate" hreflang="' + langs[i] + '" href="' + href(langs[i]) + '">';
+  }
+  for (var a in SEO_HREFLANG_ALIAS) {
+    var t = SEO_HREFLANG_ALIAS[a] || 'en';
+    if (langs.indexOf(t) !== -1) out += '<link rel="alternate" hreflang="' + a + '" href="' + href(t) + '">';
+  }
+  return out;
+}
+
+function seoContentPage(res, method, title, desc, relPath, bodyHtml, ld, lang, langs) {
   var on = seoEnabled(), base = on ? seoPublicUrl() : '';
+  lang = lang || '';
+  langs = langs || ['en'];
+  // Self-canonical: the language variant points at itself, never at English,
+  // or the variants would be de-indexed in favour of the page they alias.
+  var url = base ? base + relPath + (lang ? '?lang=' + lang : '') : '';
   var head;
   if (on) {
     head = '<meta name="description" content="' + desc + '">' +
-      (base ? '<link rel="canonical" href="' + base + relPath + '">' : '') +
+      (url ? '<link rel="canonical" href="' + url + '">' : '') +
+      seoPageAlternates(base, relPath, langs) +
       '<meta property="og:type" content="article"><meta property="og:site_name" content="PokerTH">' +
       '<meta property="og:title" content="' + title + '">' +
       '<meta property="og:description" content="' + desc + '">' +
-      (base ? '<meta property="og:url" content="' + base + relPath + '">' : '') +
+      (url ? '<meta property="og:url" content="' + url + '">' : '') +
+      (OG_LOCALE[lang || 'en'] ? '<meta property="og:locale" content="' + OG_LOCALE[lang || 'en'] + '">' : '') +
       (ld ? '<script type="application/ld+json">' + JSON.stringify(ld) + '</script>' : '');
   } else {
     head = '<meta name="robots" content="noindex, nofollow">';
   }
-  var html = '<!DOCTYPE html><html lang="en"><head><meta charset="utf-8">' +
+  var html = '<!DOCTYPE html><html lang="' + (lang || 'en') + '"><head><meta charset="utf-8">' +
     '<meta name="viewport" content="width=device-width, initial-scale=1">' +
     '<title>' + title + '</title>' + head + '<style>' + _SEO_PAGE_CSS + '</style></head><body>' +
     _seoPageNav() + '<main>' + bodyHtml +
-    '<a class="play" href="/">Play PokerTH in your browser \u2014 free, no download</a>' +
+    '<a class="play" href="/' + (lang ? '?lang=' + lang : '') + '">Play PokerTH in your browser \u2014 free, no download</a>' +
     '</main></body></html>';
   var buf = Buffer.from(html, 'utf8');
   res.writeHead(200, Object.assign({ 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-cache, must-revalidate', 'Content-Length': buf.length }, SECURITY_HEADERS));
@@ -1437,7 +1479,34 @@ function seoContentPage(res, method, title, desc, relPath, bodyHtml, ld) {
   res.end(buf);
 }
 
-function seoRulesPage(res, method) {
+// Sitemap entries for a content page and each language it exists in. The
+// xhtml:link set matches the one the page itself serves, per Google's rule
+// that the two must agree.
+function _seoPageUrls(base, relPath, langs, freq, prio) {
+  var href = function (c) { return base + relPath + (c === 'en' ? '' : '?lang=' + c); };
+  var alt = '';
+  if (langs.length > 1) {
+    alt = '<xhtml:link rel="alternate" hreflang="x-default" href="' + href('en') + '"/>';
+    for (var i = 0; i < langs.length; i++) {
+      alt += '<xhtml:link rel="alternate" hreflang="' + langs[i] + '" href="' + href(langs[i]) + '"/>';
+    }
+    for (var a in SEO_HREFLANG_ALIAS) {
+      var t = SEO_HREFLANG_ALIAS[a] || 'en';
+      if (langs.indexOf(t) !== -1) alt += '<xhtml:link rel="alternate" hreflang="' + a + '" href="' + href(t) + '"/>';
+    }
+  }
+  var out = '';
+  for (var k = 0; k < langs.length; k++) {
+    out += '<url><loc>' + href(langs[k]) + '</loc>' + alt + '<changefreq>' + freq + '</changefreq><priority>' + prio + '</priority></url>\n';
+  }
+  return out;
+}
+
+function seoRulesPage(res, method, lang) {
+  // Only English exists so far; a translated language falls back to it until
+  // its SEO_RULES_I18N entry lands, and is not advertised in the meantime.
+  var langs = seoPageLangs(SEO_RULES_I18N);
+  if (langs.indexOf(lang) === -1) lang = '';
   var body = '<h1>Texas Hold\u2019em Poker Rules</h1>' +
     '<p>PokerTH plays No-Limit Texas Hold\u2019em, the most popular poker variant in the world. ' +
     'Each player tries to make the best five-card hand from two private cards and five shared community cards.</p>' +
@@ -1489,10 +1558,11 @@ function seoRulesPage(res, method) {
     inLanguage: 'en'
   };
   var base = seoEnabled() ? seoPublicUrl() : '';
-  if (base) ld.mainEntityOfPage = base + '/rules';
+  if (base) ld.mainEntityOfPage = base + '/rules' + (lang ? '?lang=' + lang : '');
+  if (lang) ld.inLanguage = lang;
   seoContentPage(res, method, 'Texas Hold\u2019em Rules \u2014 PokerTH Web Client',
     'Complete Texas Hold\u2019em rules as played in PokerTH: blinds, the four betting rounds, Fold/Check/Call/Raise/All-In, side pots and hand rankings.',
-    '/rules', body, ld);
+    '/rules', body, ld, lang, langs);
 }
 
 var _SEO_FAQ = [
@@ -1524,7 +1594,9 @@ var _SEO_FAQ = [
    'Yes. The PokerTH dedicated server and this web client are both open source, so you can run your own private poker server on a LAN or on the internet.']
 ];
 
-function seoFaqPage(res, method) {
+function seoFaqPage(res, method, lang) {
+  var langs = seoPageLangs(SEO_FAQ_I18N);
+  if (langs.indexOf(lang) === -1) lang = '';
   var body = '<h1>PokerTH Web Client \u2014 Frequently Asked Questions</h1><dl>';
   var ents = [];
   for (var i = 0; i < _SEO_FAQ.length; i++) {
@@ -1536,7 +1608,7 @@ function seoFaqPage(res, method) {
   var ld = { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: ents };
   seoContentPage(res, method, 'FAQ \u2014 PokerTH Web Client',
     'Frequently asked questions about the PokerTH Web Client: free poker with no ads, playing Texas Hold\u2019em in your browser without any download, accounts, mobile support, offline mode, languages and privacy.',
-    '/faq', body, ld);
+    '/faq', body, ld, lang, langs);
 }
 
 // Injected-HTML cache: one live variant, keyed on file mtime + SEO state.
@@ -5352,8 +5424,8 @@ const httpServer = http.createServer((req, res) => {
       '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">\n' +
       '<url><loc>' + _sBase + '/</loc>' + _sAlt + '<changefreq>weekly</changefreq><priority>1.0</priority></url>\n' +
       _sVariants +
-      '<url><loc>' + _sBase + '/rules</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>\n' +
-      '<url><loc>' + _sBase + '/faq</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>\n' +
+      _seoPageUrls(_sBase, '/rules', seoPageLangs(SEO_RULES_I18N), 'monthly', '0.6') +
+      _seoPageUrls(_sBase, '/faq', seoPageLangs(SEO_FAQ_I18N), 'monthly', '0.5') +
       '<url><loc>' + _sBase + '/privacy</loc><changefreq>yearly</changefreq><priority>0.2</priority></url>\n' +
       '</urlset>\n';
     res.writeHead(200, Object.assign({ 'Content-Type': 'application/xml; charset=utf-8', 'Cache-Control': 'no-cache, must-revalidate' }, SECURITY_HEADERS));
@@ -5376,10 +5448,10 @@ const httpServer = http.createServer((req, res) => {
     }
   }
   if (reqPathOnly === '/rules' || reqPathOnly === '/rules.html') {
-    return seoRulesPage(res, req.method);
+    return seoRulesPage(res, req.method, seoEnabled() ? seoLangFromQuery(req.url) : '');
   }
   if (reqPathOnly === '/faq' || reqPathOnly === '/faq.html') {
-    return seoFaqPage(res, req.method);
+    return seoFaqPage(res, req.method, seoEnabled() ? seoLangFromQuery(req.url) : '');
   }
 
   // Friendly path for the pack-creator Studio, mirroring /admin -> admin.html.

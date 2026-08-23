@@ -260,6 +260,13 @@ use too. Items are grouped by status rather than fixed phases.
 
 ## ⏭️ Next
 
+- **Translating `/rules` and `/faq`** — the plumbing is in place (`web.46`): both
+  pages are served per language and advertise only the languages they exist in.
+  What remains is the text, roughly 870 words per language, filled into
+  `SEO_RULES_I18N` and `SEO_FAQ_I18N` in batches of about eight languages,
+  highest-traffic first (zh, zh-TW, es, pt-BR, de, ru, fr, ja).
+
+
 - **Code health**
   - Add linting and formatting (the module split and an automated test suite are done — see
     *Code & architecture* under Shipped).
