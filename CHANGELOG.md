@@ -14,6 +14,13 @@ Opened with `v2.1.7-web.0` (2026-08-13), following the upstream **2.1.7**
 release.
 
 ### Added
+- **`/rules` in Danish, Finnish, Norwegian, Slovak, Croatian and Indonesian**
+  (`web.51`) — fifth batch, twenty-five languages live, 20 to go. Croatian
+  joins the *poker means quads* group. Finnish keeps the native hand names
+  (*värisuora*, *neloset*, *täyskäsi*, and *hai* for high card) rather than
+  the English borrowings, which is what Finnish players use.
+
+### Added
 - **`/rules` in Ukrainian, Czech, Swedish, Romanian, Hungarian and Greek**
   (`web.50`) — fourth batch, nineteen languages live, 26 to go. Hungarian is
   the third language after Italian and Polish where *póker* names four of a
