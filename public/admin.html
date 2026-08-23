@@ -83,6 +83,28 @@
   .del{padding:6px 10px;border-radius:7px;border:1px solid rgba(184,52,52,.5);background:rgba(184,52,52,.12);color:#e98a8a;cursor:pointer;font-size:.78rem}
   .empty{color:var(--text);font-size:.8rem;padding:6px 4px}
   .muted{color:var(--text);font-size:.72rem;margin-top:6px}
+  /* Une ligne de reglage : libelle a gauche, controle a droite. Le meme bloc
+     de style etait recopie a la main dans 50 attributs style= ; il vit ici.
+     max-width evite que le controle parte a l'autre bout d'un ecran large,
+     ou l'oeil ne fait plus le lien avec son libelle, et garde les controles
+     de lignes successives alignes entre eux. */
+  .fld{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px 12px;margin:5px 0;max-width:560px}
+  .fld>span:first-child{flex:1 1 auto;min-width:0}
+  .fld.left{justify-content:flex-start}
+  .fld.gap{margin:10px 0 5px}
+  /* Largeur des controles courts, jadis ecrite en dur dans chaque balise. */
+  /* Un champ texte occupe la place qui reste ; un champ court garde sa taille. */
+  .fld>input[type=text],.fld>input[type=password],.fld>input:not([type]){flex:1 1 auto;min-width:0}
+  .fld>input[type=number]{width:110px}
+  .fld>select{width:130px}
+  .fld>input,.fld>select{margin:0}
+  @media(max-width:600px){
+    /* Sur telephone, un champ de 110 px colle au bord droit est penible a
+       viser : libelle sur une ligne, controle pleine largeur en dessous. */
+    .fld{max-width:none;gap:3px}
+    .fld>span:first-child{flex:1 1 100%}
+    .fld>input,.fld>select,.fld>textarea{flex:1 1 100%;width:100%;min-width:0}
+  }
   .srow{display:flex;justify-content:space-between;gap:10px;padding:6px 2px;border-top:1px solid rgba(255,255,255,.06);font-size:.85rem}
   .srow:first-child{border-top:0}.srow span{color:var(--text)}.srow b{color:var(--cream);text-align:right}
   .periodrow{display:flex;gap:8px;align-items:center;margin-top:4px}
@@ -271,12 +293,12 @@
         <h2 style="margin:0 0 8px">Database (MySQL mirror)</h2>
         <p class="muted" style="margin:2px 0 10px">Mirrors when enabled: traffic_daily, leaderboard, broadcasts. Configure below, or with the CLI: pokerth-web db-config.</p>
         <div id="trafDb"><div class="empty">Loading…</div></div>
-        <div class="defrow" style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin:10px 0 5px"><span>Host</span><input id="dbHost" maxlength="255" placeholder="127.0.0.1" autocomplete="off" style="flex:1;min-width:0"></div>
-        <div class="defrow" style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin:5px 0"><span>Port</span><input id="dbPort" type="number" min="1" max="65535" placeholder="3306" autocomplete="off" style="flex:1;min-width:0"></div>
-        <div class="defrow" style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin:5px 0"><span>User</span><input id="dbUser" maxlength="128" placeholder="root" autocomplete="off" style="flex:1;min-width:0"></div>
-        <div class="defrow" style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin:5px 0"><span>Password</span><input id="dbPass" type="password" maxlength="255" placeholder="(unchanged)" autocomplete="new-password" style="flex:1;min-width:0"></div>
-        <div class="defrow" style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin:5px 0"><span>Database</span><input id="dbDatabase" maxlength="128" placeholder="pokerth" autocomplete="off" style="flex:1;min-width:0"></div>
-        <div class="defrow" style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin:5px 0"><span>Enabled</span><input id="dbEnabled" type="checkbox"></div>
+        <div class="defrow fld gap"><span>Host</span><input id="dbHost" maxlength="255" placeholder="127.0.0.1" autocomplete="off"></div>
+        <div class="defrow fld"><span>Port</span><input id="dbPort" type="number" min="1" max="65535" placeholder="3306" autocomplete="off"></div>
+        <div class="defrow fld"><span>User</span><input id="dbUser" maxlength="128" placeholder="root" autocomplete="off"></div>
+        <div class="defrow fld"><span>Password</span><input id="dbPass" type="password" maxlength="255" placeholder="(unchanged)" autocomplete="new-password"></div>
+        <div class="defrow fld"><span>Database</span><input id="dbDatabase" maxlength="128" placeholder="pokerth" autocomplete="off"></div>
+        <div class="defrow fld"><span>Enabled</span><input id="dbEnabled" type="checkbox"></div>
         <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px"><button id="dbTestBtn" class="use">Test connection</button><button id="dbSaveBtn" class="use">Save &amp; connect</button></div>
         <div id="dbState" class="msg" style="margin-top:8px"></div>
       </div>
@@ -342,7 +364,7 @@
         <div id="panel-music" style="display:none">
       <div class="card">
         <h2>Music player</h2>
-        <div class="defrow" style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin:5px 0"><span>Available to players</span><select id="mzEnabled"><option value="1">On</option><option value="0">Off</option></select></div>
+        <div class="defrow fld"><span>Available to players</span><select id="mzEnabled"><option value="1">On</option><option value="0">Off</option></select></div>
         <div style="margin-top:8px"><button id="mzSaveEnabled" class="use">Save</button></div>
         <div id="mzEnMsg" class="msg"></div>
         <p class="muted" style="margin:8px 0 0">Off removes the 🎵 entry from every player menu and makes <code>/music/*</code> answer 404 (manifest and MP3s). The track list below stays fully editable. Players already in a session keep the player until they reload.</p>
@@ -354,25 +376,25 @@
           <button id="mzSegRadio" type="button">📻 Radio (live stream)</button>
         </div>
         <div id="mzAddTrack">
-        <div class="defrow" style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin:5px 0"><span>Title</span><input id="mzTitle" maxlength="120" placeholder="Track title (required)" autocomplete="off" style="flex:1;min-width:0"></div>
-        <div class="defrow" style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin:5px 0"><span>Artist</span><input id="mzArtist" maxlength="120" placeholder="Artist / composer" autocomplete="off" style="flex:1;min-width:0"></div>
-        <div class="defrow" style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin:5px 0"><span>Credit</span><input id="mzCredit" maxlength="300" placeholder="Credit line shown in-app (auto-filled if blank)" autocomplete="off" style="flex:1;min-width:0"></div>
-        <div class="defrow" style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin:5px 0"><span>License URL</span><input id="mzLicenseUrl" maxlength="300" placeholder="https://… (optional — makes the credit a link)" autocomplete="off" style="flex:1;min-width:0"></div>
+        <div class="defrow fld"><span>Title</span><input id="mzTitle" maxlength="120" placeholder="Track title (required)" autocomplete="off"></div>
+        <div class="defrow fld"><span>Artist</span><input id="mzArtist" maxlength="120" placeholder="Artist / composer" autocomplete="off"></div>
+        <div class="defrow fld"><span>Credit</span><input id="mzCredit" maxlength="300" placeholder="Credit line shown in-app (auto-filled if blank)" autocomplete="off"></div>
+        <div class="defrow fld"><span>License URL</span><input id="mzLicenseUrl" maxlength="300" placeholder="https://… (optional — makes the credit a link)" autocomplete="off"></div>
         <div id="mzDrop" class="drop">Drop an <b>.mp3</b> here, or click to choose</div>
         <input id="mzFile" type="file" accept=".mp3,audio/mpeg" style="display:none">
-        <div class="defrow" style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin:10px 0 5px"><span>…or URL</span><input id="mzUrl" maxlength="500" placeholder="https://…/track.mp3 (server downloads it — bypasses upload size limits)" autocomplete="off" style="flex:1;min-width:0"><button id="mzImportBtn" class="use">Import</button></div>
+        <div class="defrow fld gap"><span>…or URL</span><input id="mzUrl" maxlength="500" placeholder="https://…/track.mp3 (server downloads it — bypasses upload size limits)" autocomplete="off"><button id="mzImportBtn" class="use">Import</button></div>
         <div id="mzProg" class="prog"><i></i></div>
         <div id="mzMsg" class="msg"></div>
         <p class="muted" style="margin:8px 0 0">The track appears in players’ music panel automatically the next time they open it. Please make sure you have the right to share the file and that the author is credited.</p>
         </div>
         <div id="mzAddRadio" style="display:none">
-        <div class="defrow" style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin:5px 0"><span>Name</span><input id="mzrTitle" maxlength="120" placeholder="Station name (required)" autocomplete="off" style="flex:1;min-width:0"></div>
-        <div class="defrow" style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin:5px 0"><span>Genre</span><input id="mzrGenre" maxlength="120" placeholder="Genre / description (shown after the name)" autocomplete="off" style="flex:1;min-width:0"></div>
-        <div class="defrow" style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin:5px 0"><span>Stream URL</span><input id="mzrUrl" maxlength="500" placeholder="https://…/stream.mp3 (Icecast/Shoutcast — https only)" autocomplete="off" style="flex:1;min-width:0"></div>
-        <div class="defrow" style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin:5px 0"><span>Credit</span><input id="mzrCredit" maxlength="300" placeholder="Credit line shown in-app (auto-filled if blank)" autocomplete="off" style="flex:1;min-width:0"></div>
-        <div class="defrow" style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin:5px 0"><span>License URL</span><input id="mzrLicenseUrl" maxlength="300" placeholder="https://… (optional — makes the credit a link)" autocomplete="off" style="flex:1;min-width:0"></div>
+        <div class="defrow fld"><span>Name</span><input id="mzrTitle" maxlength="120" placeholder="Station name (required)" autocomplete="off"></div>
+        <div class="defrow fld"><span>Genre</span><input id="mzrGenre" maxlength="120" placeholder="Genre / description (shown after the name)" autocomplete="off"></div>
+        <div class="defrow fld"><span>Stream URL</span><input id="mzrUrl" maxlength="500" placeholder="https://…/stream.mp3 (Icecast/Shoutcast — https only)" autocomplete="off"></div>
+        <div class="defrow fld"><span>Credit</span><input id="mzrCredit" maxlength="300" placeholder="Credit line shown in-app (auto-filled if blank)" autocomplete="off"></div>
+        <div class="defrow fld"><span>License URL</span><input id="mzrLicenseUrl" maxlength="300" placeholder="https://… (optional — makes the credit a link)" autocomplete="off"></div>
         <div style="margin-top:8px"><button id="mzrAddBtn" class="use">Add radio</button></div>
-        <div class="defrow" style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin:10px 0 5px"><span>…or M3U</span><button id="mzrM3uBtn" class="use" style="flex:1">Import an .m3u / .m3u8 playlist…</button></div>
+        <div class="defrow fld gap"><span>…or M3U</span><button id="mzrM3uBtn" class="use" style="flex:1">Import an .m3u / .m3u8 playlist…</button></div>
         <input id="mzrM3uFile" type="file" accept=".m3u,.m3u8,audio/x-mpegurl,application/vnd.apple.mpegurl" style="display:none">
         <div id="mzrMsg" class="msg"></div>
         <p class="muted" style="margin:8px 0 0">The station appears in the Radios tab of the players’ music panel. Use royalty-free stations (Creative Commons or artist-permission) and keep the credit line accurate. http:// streams are rejected — the app is served over HTTPS and browsers block mixed content.</p>
@@ -437,69 +459,69 @@
       <div class="card">
         <h2>Default in-game settings (new visitors)</h2>
         <p class="muted" style="margin:0 0 8px">Applied on a player's first visit only; a setting a player has already changed is never touched.</p>
-        <div class="defrow" style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin:5px 0"><span>Vibration</span><select id="defHaptic"><option value="">App default (on)</option><option value="1">On</option><option value="0">Off</option></select></div>
-        <div class="defrow" style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin:5px 0"><span>Voice announce</span><select id="defVoice"><option value="">App default (off)</option><option value="1">On</option><option value="0">Off</option></select></div>
-        <div class="defrow" style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin:5px 0"><span>Assistance (hand strength)</span><select id="defAssist"><option value="">App default (on)</option><option value="1">On</option><option value="0">Off</option></select></div>
-        <div class="defrow" style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin:5px 0"><span>Chip display</span><select id="defBB"><option value="">App default (¥)</option><option value="1">BB</option><option value="0">¥</option></select></div>
+        <div class="defrow fld"><span>Vibration</span><select id="defHaptic"><option value="">App default (on)</option><option value="1">On</option><option value="0">Off</option></select></div>
+        <div class="defrow fld"><span>Voice announce</span><select id="defVoice"><option value="">App default (off)</option><option value="1">On</option><option value="0">Off</option></select></div>
+        <div class="defrow fld"><span>Assistance (hand strength)</span><select id="defAssist"><option value="">App default (on)</option><option value="1">On</option><option value="0">Off</option></select></div>
+        <div class="defrow fld"><span>Chip display</span><select id="defBB"><option value="">App default (¥)</option><option value="1">BB</option><option value="0">¥</option></select></div>
         <div style="margin-top:8px"><button id="saveDefaults" class="use">Save</button></div>
         <div id="defaultsMsg" class="msg"></div>
       </div>
       <div class="card">
         <h2>Default login form (new visitors)</h2>
         <p class="muted" style="margin:0 0 8px">Default entry screen for new visitors, plus (for LAN / dedicated) which server to connect to. The mode applies on a first visit only. <b>LAN server</b> sets the <i>default</i> server fields, never a lock: <i>Automatic</i> uses the page's own address (port 7234, no TLS), <i>Forced</i> uses the host, port and TLS set below. In both cases a player can edit the fields and the server they last connected to is remembered, so only players who never picked one of their own follow a change made here. With <i>Forced</i>, the proxy auto-follows the host and is rebuilt on every reconnect, so the client always reconnects. A forced proxy URL (ws:// or wss://) is pushed to every client and locks the field; hiding the field removes it and its label from the login form. All of this applies to the LAN / dedicated mode only — the Internet (pokerth.net) mode is never affected.</p>
-        <div class="defrow" style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin:5px 0"><span>Default mode</span><select id="defMode"><option value="">App default</option><option value="offline">Training (bots)</option><option value="lan-dedi">LAN / private server</option><option value="pokerthnet">pokerth.net</option></select></div>
-        <div class="defrow" style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin:5px 0"><span>LAN server <span class="muted">(LAN / dedicated only)</span></span><select id="defLanMode"><option value="auto">Automatic (page address)</option><option value="forced">Forced (use the values below)</option></select></div>
-        <div class="defrow" style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin:5px 0"><span>Server host</span><input id="defHost" placeholder="(page address)" maxlength="120" autocomplete="off" style="flex:1;min-width:0"></div>
-        <div class="defrow" style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin:5px 0"><span>Server port <span class="muted">(blank = 7234)</span></span><input id="defLanPort" type="number" min="1" max="65535" placeholder="7234" autocomplete="off" style="width:110px"></div>
-        <div class="defrow" style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin:5px 0"><span>Server uses TLS</span><select id="defLanTls"><option value="0">No</option><option value="1">Yes</option></select></div>
-        <div class="defrow" style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin:5px 0"><span>Force WebSocket proxy URL <span class="muted">(LAN / dedicated only)</span></span><input id="defProxyUrl" placeholder="(auto: page address)" maxlength="180" autocomplete="off" style="flex:1;min-width:0"></div>
-        <div class="defrow" style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin:5px 0"><span>Hide the proxy URL field <span class="muted">(LAN / dedicated only)</span></span><select id="defHideProxy"><option value="0">No</option><option value="1">Yes</option></select></div>
+        <div class="defrow fld"><span>Default mode</span><select id="defMode"><option value="">App default</option><option value="offline">Training (bots)</option><option value="lan-dedi">LAN / private server</option><option value="pokerthnet">pokerth.net</option></select></div>
+        <div class="defrow fld"><span>LAN server <span class="muted">(LAN / dedicated only)</span></span><select id="defLanMode"><option value="auto">Automatic (page address)</option><option value="forced">Forced (use the values below)</option></select></div>
+        <div class="defrow fld"><span>Server host</span><input id="defHost" placeholder="(page address)" maxlength="120" autocomplete="off"></div>
+        <div class="defrow fld"><span>Server port <span class="muted">(blank = 7234)</span></span><input id="defLanPort" type="number" min="1" max="65535" placeholder="7234" autocomplete="off"></div>
+        <div class="defrow fld"><span>Server uses TLS</span><select id="defLanTls"><option value="0">No</option><option value="1">Yes</option></select></div>
+        <div class="defrow fld"><span>Force WebSocket proxy URL <span class="muted">(LAN / dedicated only)</span></span><input id="defProxyUrl" placeholder="(auto: page address)" maxlength="180" autocomplete="off"></div>
+        <div class="defrow fld"><span>Hide the proxy URL field <span class="muted">(LAN / dedicated only)</span></span><select id="defHideProxy"><option value="0">No</option><option value="1">Yes</option></select></div>
         <div style="margin-top:8px"><button id="saveLogin" class="use">Save</button></div>
         <div id="loginMsg" class="msg"></div>
       </div>
       <div class="card">
         <h2>Default table settings (new visitors)</h2>
         <p class="muted" style="margin:0 0 8px">Starting values when a player opens the “create a table” form. A returning player keeps their last-used settings; leave a field blank to keep the app default. Players can change them per table.</p>
-        <div class="defrow" style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin:5px 0"><span>Max players <span class="muted">(2–10)</span></span><input id="tdPlayers" type="number" min="2" max="10" placeholder="10" style="width:110px"></div>
-        <div class="defrow" style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin:5px 0"><span>Small blind <span class="muted">(1–1000000)</span></span><input id="tdBlind" type="number" min="1" max="1000000" placeholder="10" style="width:110px"></div>
-        <div class="defrow" style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin:5px 0"><span>Starting stack <span class="muted">(500–1000000)</span></span><input id="tdStack" type="number" min="500" max="1000000" placeholder="3000" style="width:110px"></div>
-        <div class="defrow" style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin:5px 0"><span>Action timer <span class="muted">(seconds, 5–120)</span></span><input id="tdTimeout" type="number" min="5" max="120" placeholder="15" style="width:110px"></div>
+        <div class="defrow fld"><span>Max players <span class="muted">(2–10)</span></span><input id="tdPlayers" type="number" min="2" max="10" placeholder="10"></div>
+        <div class="defrow fld"><span>Small blind <span class="muted">(1–1000000)</span></span><input id="tdBlind" type="number" min="1" max="1000000" placeholder="10"></div>
+        <div class="defrow fld"><span>Starting stack <span class="muted">(500–1000000)</span></span><input id="tdStack" type="number" min="500" max="1000000" placeholder="3000"></div>
+        <div class="defrow fld"><span>Action timer <span class="muted">(seconds, 5–120)</span></span><input id="tdTimeout" type="number" min="5" max="120" placeholder="15"></div>
         <div style="margin-top:8px"><button id="saveTable" class="use">Save</button></div>
         <div id="tableMsg" class="msg"></div>
       </div>
       <div class="card">
         <h2>Default table name (per mode)</h2>
         <p class="muted" style="margin:0 0 8px">Pre-fills the table name in the &ldquo;create a table&rdquo; form, per connection mode. &ldquo;Automatic&rdquo; keeps the localized default (&ldquo;X&rsquo;s table&rdquo;); pick &ldquo;Custom&rdquo; to set a fixed name. Players can still rename their table. Max 48 characters.</p>
-        <div class="defrow" style="display:flex;align-items:center;gap:10px;margin:5px 0"><span style="white-space:nowrap">pokerth.net</span><select id="tnNetMode" style="flex:none"><option value="auto">Automatic</option><option value="custom">Custom</option></select><input id="tnNetName" maxlength="48" placeholder="e.g. My online game" autocomplete="off" style="flex:1;min-width:0;display:none"></div>
-        <div class="defrow" style="display:flex;align-items:center;gap:10px;margin:5px 0"><span style="white-space:nowrap">LAN / private</span><select id="tnLanMode" style="flex:none"><option value="auto">Automatic</option><option value="custom">Custom</option></select><input id="tnLanName" maxlength="48" placeholder="custom table name" autocomplete="off" style="flex:1;min-width:0;display:none"></div>
-        <div class="defrow" style="display:flex;align-items:center;gap:10px;margin:5px 0"><span style="white-space:nowrap">Offline (bots)</span><select id="tnOffMode" style="flex:none"><option value="auto">Automatic</option><option value="custom">Custom</option></select><input id="tnOffName" maxlength="48" placeholder="custom table name" autocomplete="off" style="flex:1;min-width:0;display:none"></div>
+        <div class="defrow fld left"><span style="white-space:nowrap">pokerth.net</span><select id="tnNetMode" style="flex:none"><option value="auto">Automatic</option><option value="custom">Custom</option></select><input id="tnNetName" maxlength="48" placeholder="e.g. My online game" autocomplete="off" style="flex:1;min-width:0;display:none"></div>
+        <div class="defrow fld left"><span style="white-space:nowrap">LAN / private</span><select id="tnLanMode" style="flex:none"><option value="auto">Automatic</option><option value="custom">Custom</option></select><input id="tnLanName" maxlength="48" placeholder="custom table name" autocomplete="off" style="flex:1;min-width:0;display:none"></div>
+        <div class="defrow fld left"><span style="white-space:nowrap">Offline (bots)</span><select id="tnOffMode" style="flex:none"><option value="auto">Automatic</option><option value="custom">Custom</option></select><input id="tnOffName" maxlength="48" placeholder="custom table name" autocomplete="off" style="flex:1;min-width:0;display:none"></div>
         <div style="margin-top:8px"><button id="saveTableName" class="use">Save</button></div>
         <div id="tableNameMsg" class="msg"></div>
       </div>
       <div class="card">
         <h2>Server identity (login screen)</h2>
         <p class="muted" style="margin:0 0 8px">Shown to everyone on the login screen, regardless of theme. Leave blank for the defaults (“PokerTH” / “Web Client”).</p>
-        <div class="defrow" style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin:5px 0"><span>Server name</span><input id="srvName" maxlength="40" placeholder="PokerTH" autocomplete="off" style="flex:1;min-width:0"></div>
-        <div class="defrow" style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin:5px 0"><span>Banner / tagline</span><input id="srvTagline" maxlength="60" placeholder="Web Client" autocomplete="off" style="flex:1;min-width:0"></div>
-        <div class="defrow" style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin:5px 0"><span>PokerTH title</span><select id="loginTitle"><option value="0">Hidden (default)</option><option value="1">Shown</option></select></div>
+        <div class="defrow fld"><span>Server name</span><input id="srvName" maxlength="40" placeholder="PokerTH" autocomplete="off"></div>
+        <div class="defrow fld"><span>Banner / tagline</span><input id="srvTagline" maxlength="60" placeholder="Web Client" autocomplete="off"></div>
+        <div class="defrow fld"><span>PokerTH title</span><select id="loginTitle"><option value="0">Hidden (default)</option><option value="1">Shown</option></select></div>
         <div style="margin-top:8px"><button id="saveIdent" class="use">Save</button></div>
         <div id="identMsg" class="msg"></div>
       </div>
       <div class="card">
         <h2>Discord chat relay</h2>
         <p class="muted" style="margin:0 0 8px">Official-server parity (<code>DiscordChatWebhookUrl</code>): lobby chat messages sent by players through this proxy are forwarded to a Discord channel as <b>Player:</b> message. Game chat and private messages are never relayed. Leave blank to disable. One post per message — no duplicates however many clients are connected.</p>
-        <div class="defrow" style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin:5px 0"><span style="white-space:nowrap">Webhook URL</span><input id="discordHook" maxlength="200" placeholder="https://discord.com/api/webhooks/…" autocomplete="off" style="flex:1;min-width:0"></div>
+        <div class="defrow fld"><span style="white-space:nowrap">Webhook URL</span><input id="discordHook" maxlength="200" placeholder="https://discord.com/api/webhooks/…" autocomplete="off"></div>
         <div style="margin-top:8px"><button id="saveDiscord" class="use">Save</button></div>
         <div id="discordMsg" class="msg"></div>
       </div>
       <div class="card">
         <h2>Search engine visibility (SEO)</h2>
         <p class="muted" style="margin:0 0 8px"><b>Off by default.</b> When off, every page is served with <code>noindex, nofollow</code> and <code>robots.txt</code> blocks all crawlers &mdash; a self-hosted install stays out of Google and AI search engines. Turn it on only for a public instance you want indexed: the page then gains a description, Open Graph / Twitter cards, a canonical link, structured data (JSON-LD) and a crawler-readable summary, and <code>robots.txt</code>, <code>sitemap.xml</code> and <code>llms.txt</code> are generated from the public URL below. Applies immediately (no restart needed).</p>
-        <div class="defrow" style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin:5px 0"><span>Search engine indexing</span><select id="seoEnabled"><option value="0">Off (default)</option><option value="1">On</option></select></div>
-        <div class="defrow" style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin:5px 0"><span style="white-space:nowrap">Public URL</span><input id="seoUrl" maxlength="200" placeholder="https://webclient.pokerth.net" autocomplete="off" style="flex:1;min-width:0"></div>
-        <div class="defrow" style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin:5px 0"><span style="white-space:nowrap">Search Console token</span><input id="seoGsv" maxlength="100" placeholder="google-site-verification (optional)" autocomplete="off" style="flex:1;min-width:0"></div>
-        <div class="defrow" style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin:5px 0"><span style="white-space:nowrap">Bing Webmaster token</span><input id="seoBing" maxlength="100" placeholder="msvalidate.01 (optional)" autocomplete="off" style="flex:1;min-width:0"></div>
-        <div class="defrow" style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin:5px 0"><span style="white-space:nowrap">IndexNow key</span><span id="seoIndexNow" style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;opacity:.8;font-family:monospace;font-size:.85em">generated when indexing is enabled</span></div>
+        <div class="defrow fld"><span>Search engine indexing</span><select id="seoEnabled"><option value="0">Off (default)</option><option value="1">On</option></select></div>
+        <div class="defrow fld"><span style="white-space:nowrap">Public URL</span><input id="seoUrl" maxlength="200" placeholder="https://webclient.pokerth.net" autocomplete="off"></div>
+        <div class="defrow fld"><span style="white-space:nowrap">Search Console token</span><input id="seoGsv" maxlength="100" placeholder="google-site-verification (optional)" autocomplete="off"></div>
+        <div class="defrow fld"><span style="white-space:nowrap">Bing Webmaster token</span><input id="seoBing" maxlength="100" placeholder="msvalidate.01 (optional)" autocomplete="off"></div>
+        <div class="defrow fld"><span style="white-space:nowrap">IndexNow key</span><span id="seoIndexNow" style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;opacity:.8;font-family:monospace;font-size:.85em">generated when indexing is enabled</span></div>
         <div style="margin-top:8px"><button id="saveSeo" class="use">Save</button></div>
         <div id="seoMsg" class="msg"></div>
       </div>
@@ -508,7 +530,7 @@
       <div class="card">
         <h2>Create a delegate key</h2>
         <p class="muted" style="margin:0 0 8px">Give a third party access to only some sections. Pick a name and the categories they may manage. The full key is shown <b>once</b> at creation — copy it then. A lost key cannot be recovered (revoke and create a new one).</p>
-        <div class="defrow" style="display:flex;align-items:center;gap:10px;margin:5px 0"><span style="white-space:nowrap">Name</span><input id="kyName" maxlength="64" placeholder="e.g. music-partner" autocomplete="off" style="flex:1;min-width:0"></div>
+        <div class="defrow fld left"><span style="white-space:nowrap">Name</span><input id="kyName" maxlength="64" placeholder="e.g. music-partner" autocomplete="off"></div>
         <div class="defrow" style="margin:8px 0"><div id="kyScopes" style="display:flex;flex-wrap:wrap;gap:6px 16px"></div></div>
         <div style="margin-top:8px"><button id="kyCreate" class="use">Create key</button></div>
         <div id="kyNew" style="display:none;margin-top:10px"></div>
@@ -532,10 +554,10 @@
         <p class="muted" style="margin:0 0 8px">Server-side bridge settings. Always-allowed hosts: pokerth.net, www.pokerth.net, pokerth.ddns.net, localhost, 127.0.0.1, ::1. Changes apply live (no restart).</p>
         <div style="margin:5px 0"><div style="margin-bottom:3px">Extra allowed hosts <span class="muted">(one per line — required before a default-login host can connect)</span></div><textarea id="pxHosts" rows="3" placeholder="game.example.com&#10;192.168.1.50" autocomplete="off" style="width:100%;box-sizing:border-box;resize:vertical"></textarea></div>
         <div style="margin:5px 0"><div style="margin-bottom:3px">Extra allowed ports <span class="muted">(one per line — 1–65535; 7234 is always allowed)</span></div><textarea id="pxPorts" rows="2" placeholder="7234" autocomplete="off" style="width:100%;box-sizing:border-box;resize:vertical"></textarea></div>
-        <div class="defrow" style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin:5px 0"><span>Session grace <span class="muted">(seconds, 10–900)</span></span><input id="pxGrace" type="number" min="10" max="900" placeholder="120" style="width:110px"></div>
-        <div class="defrow" style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin:5px 0"><span>Connection gap <span class="muted">(ms, 0–30000)</span></span><input id="pxGap" type="number" min="0" max="30000" placeholder="5000" style="width:110px"></div>
-        <div class="defrow" style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin:5px 0"><span>Log verbosity <span class="muted">(quiet = least CPU under load)</span></span><select id="pxLog" style="width:120px"><option value="">(default)</option><option value="quiet">quiet</option><option value="normal">normal</option><option value="verbose">verbose</option></select></div>
-        <div class="defrow" style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin:5px 0"><span>Max clients <span class="muted">(concurrent bridges, 0 = unlimited)</span></span><input id="pxMax" type="number" min="0" max="100000" placeholder="0" style="width:110px"></div>
+        <div class="defrow fld"><span>Session grace <span class="muted">(seconds, 10–900)</span></span><input id="pxGrace" type="number" min="10" max="900" placeholder="120"></div>
+        <div class="defrow fld"><span>Connection gap <span class="muted">(ms, 0–30000)</span></span><input id="pxGap" type="number" min="0" max="30000" placeholder="5000"></div>
+        <div class="defrow fld"><span>Log verbosity <span class="muted">(quiet = least CPU under load)</span></span><select id="pxLog"><option value="">(default)</option><option value="quiet">quiet</option><option value="normal">normal</option><option value="verbose">verbose</option></select></div>
+        <div class="defrow fld"><span>Max clients <span class="muted">(concurrent bridges, 0 = unlimited)</span></span><input id="pxMax" type="number" min="0" max="100000" placeholder="0"></div>
         <div style="margin-top:8px"><button id="savePx" class="use">Save</button></div>
         <div id="pxMsg" class="msg"></div>
       </div>
@@ -733,7 +755,7 @@
           <label class="muted" style="display:block;margin:3px 0"><input type="radio" name="srvSource" class="srcManual"> <b>Manual</b> — the server marked <b>Active</b> in the list (step 3)</label>
           <label class="muted" style="display:block;margin:3px 0"><input type="radio" name="srvSource" class="srcAuto"> <b>Auto</b> — follow the official serverlist (auto-updates if PokerTH moves; the list below is ignored)</label>
           <div class="srcAutoBox" style="display:none;margin:6px 0 0">
-            <div class="defrow" style="display:flex;gap:10px;align-items:center;margin:4px 0"><span style="white-space:nowrap">Serverlist URL</span><input id="srvSlUrl" maxlength="300" placeholder="https://pokerth.net/serverlist.xml.z" autocomplete="off" style="flex:1;min-width:0"></div>
+            <div class="defrow fld left"><span style="white-space:nowrap">Serverlist URL</span><input id="srvSlUrl" maxlength="300" placeholder="https://pokerth.net/serverlist.xml.z" autocomplete="off"></div>
             <div class="periodrow" style="margin:4px 0"><button id="srvSlCheck" class="use" type="button">Check serverlist</button></div>
             <div id="srvSlStat" class="msg" style="margin:4px 0 0"></div>
           </div>

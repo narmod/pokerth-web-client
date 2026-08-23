@@ -16,8 +16,10 @@ function ok(cond, msg) { n++; if (!cond) { fail++; console.error('  ✗', msg); 
 
 // The @media block that opens the second column.
 const wide = (admin.match(/@media\(min-width:1100px\)\{[\s\S]*?\n  \}/) || [''])[0];
-// The mobile block.
-const small = (admin.match(/@media\(max-width:600px\)\{[\s\S]*?\n  \}/) || [''])[0];
+// Every mobile block, concatenated: the phone rules are written in more than
+// one place, and a guard that reads only the first would pass or fail on where
+// a rule happens to sit rather than on whether it exists.
+const small = (admin.match(/@media\(max-width:600px\)\{[\s\S]*?\n  \}/g) || []).join('\n');
 
 // ── Tab bar ───────────────────────────────────────────────────────────────
 ok(/\.tab\{flex:0 0 auto;white-space:nowrap/.test(admin),
@@ -53,6 +55,28 @@ for (const id of ['trafChart', 'trafNvRChart', 'trafMusic', 'trafEnv', 'trafCard
   ok(new RegExp('#' + id + '\\)').test(wide), id + ' is not squeezed into half a column');
 }
 ok(!/columns:2/.test(small), 'nothing changes on a phone');
+
+// ── Settings rows ─────────────────────────────────────────────────────────
+// The same flex declaration used to be retyped in 51 style= attributes, with
+// control widths hard-coded in the tags — and an inline style beats the sheet,
+// so those widths quietly defeated the mobile rule.
+ok(/\n  \.fld\{display:flex/.test(admin), 'the settings row is a class now');
+ok(/max-width:560px/.test(admin),
+  'the control stays near its label instead of drifting to the far edge');
+ok(!/class="defrow" style="display:flex/.test(admin), 'no settings row carries the flex inline any more');
+ok((admin.match(/class="defrow fld/g) || []).length === 51, 'all 51 rows use it');
+ok(/\.fld\.left\{justify-content:flex-start\}/.test(admin), 'the left-aligned variant survives');
+ok(/\.fld\.gap\{margin:10px 0 5px\}/.test(admin), 'so does the wider-margin variant');
+ok(/\.fld>input\[type=number\]\{width:110px\}/.test(admin), 'short control widths live in the sheet');
+ok(!/<input[^>]*style="width:110px"/.test(admin), 'and not in the tags, where they would win over it');
+
+const fldSmall = (small.match(/\.fld\{[\s\S]*?\}\s*\.fld>input,\.fld>select,\.fld>textarea\{[^}]*\}/) || [''])[0];
+ok(/flex:1 1 100%/.test(fldSmall), 'on a phone label and control stack full width');
+ok(/max-width:none/.test(fldSmall), 'the desktop width cap is lifted there');
+for (const id of ['pxGrace', 'pxGap', 'pxMax', 'tdBlind', 'tdStack']) {
+  const tag = (admin.match(new RegExp('<input id="' + id + '"[^>]*>')) || [''])[0];
+  ok(tag && !/style="width/.test(tag), id + ' can go full width on a phone');
+}
 
 console.log(fail ? `FAIL ${fail}/${n}` : `OK ${n}/${n}`);
 process.exit(fail ? 1 : 0);

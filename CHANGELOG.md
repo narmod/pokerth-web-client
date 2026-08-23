@@ -14,6 +14,16 @@ Opened with `v2.1.7-web.0` (2026-08-13), following the upstream **2.1.7**
 release.
 
 ### Changed
+- **Admin dashboard: settings rows are a style, not a copy-paste** (`web.28`) —
+  the same flex declaration had been retyped into 51 `style=` attributes with
+  no CSS rule behind it, so every panel drifted a little. It is one class now.
+  On a wide screen the control keeps to 560px instead of drifting to the far
+  edge away from its label, and controls on consecutive rows line up. On a
+  phone label and control stack full width, which needed the hard-coded widths
+  (`width:110px`, `flex:1`) out of the tags first: an inline style beats the
+  sheet, so those 34 attributes had quietly defeated every mobile rule written
+  against them. No id, handler or control changed. 15 more guards in
+  `scripts/test-admin-layout.mjs`.
 - **Admin dashboard: wider layout and a tab bar that behaves** (`web.27`) —
   past 1100px the page widens to 1180px and the four busiest panels (Server,
   Traffic, Clients, Broadcasts) lay their cards out in two balanced columns,
