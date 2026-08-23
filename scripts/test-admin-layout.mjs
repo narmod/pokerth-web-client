@@ -150,6 +150,31 @@ for (const id of ['panel-proxy', 'panel-deploy', 'panel-access', 'panel-defaults
 ok(/#panel-defaults[^{]*\{columns:2/.test(admin), 'the five defaults cards use both columns');
 ok(!/#panel-server,/.test(admin), 'a two-card panel no longer asks for two columns');
 
+// ── Copying a log ─────────────────────────────────────────────────────────
+// navigator.clipboard needs a secure context, which a panel served over plain
+// http on a LAN is not — hence the selection fallback.
+const copy = body(admin, 'copyText');
+ok(/window\.isSecureContext/.test(copy), 'the modern path is only taken where it works');
+ok(/execCommand\('copy'\)/.test(copy), 'and there is a fallback for everywhere else');
+ok(/document\.body\.removeChild\(ta\)/.test(copy), 'the scratch textarea is always taken back out');
+const wire = body(admin, 'wireCopy');
+ok(/Nothing to copy/.test(wire), 'an empty log says so instead of pretending to copy');
+ok(/Copy failed/.test(wire), 'a refused copy says so too');
+ok(/setTimeout\(function\(\)\{ b\.textContent='Copy'/.test(wire), 'the button goes back to Copy');
+ok(/wireCopy\('logsCopy','logs'\)/.test(admin) && /wireCopy\('updlogCopy','updlog'\)/.test(admin),
+  'both logs on the page can be copied');
+ok(/id="logsCopy"/.test(admin) && /id="updlogCopy"/.test(admin), 'both buttons exist');
+
+// Identity & reach belongs to the server, not to the client.
+// The family buttons carry data-g too, so anchor on the bar itself.
+function bar(g) {
+  const a = admin.indexOf('class="tabs subtabs" data-g="' + g + '"');
+  return a < 0 ? '' : admin.slice(a, admin.indexOf('</div>', a));
+}
+ok(/data-t="identity"/.test(bar('server')), 'Identity & reach sits in the Server family');
+ok(!/data-t="identity"/.test(bar('client')), 'and no longer in the Client one');
+ok(/data-t="clients"/.test(bar('client')), 'the Client family kept its own sections');
+
 // ── Visual rhythm ─────────────────────────────────────────────────────────
 // Card titles and lead paragraphs carried their spacing in the tags, in six
 // different values, so no two cards breathed quite alike. `.muted` only sets a

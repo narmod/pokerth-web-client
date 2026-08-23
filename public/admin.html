@@ -279,13 +279,13 @@
       <button class="tab" data-t="proxy">Proxy</button>
       <button class="tab" data-t="deploy">Deployment</button>
       <button class="tab" data-t="access">Access &amp; backup</button>
+      <button class="tab" data-t="identity">Identity &amp; reach</button>
       <button class="tab" data-t="servers">Game servers</button>
       <button class="tab" data-t="keys">Keys</button>
     </div>
     <div class="tabs subtabs" data-g="client" style="display:none">
       <button class="tab" data-t="clients">Modes &amp; features</button>
       <button class="tab" data-t="defaults">Defaults</button>
-      <button class="tab" data-t="identity">Identity &amp; reach</button>
       <button class="tab" data-t="packages" data-scope="packages">Packages</button>
       <button class="tab" data-t="music" data-scope="music">Music</button>
       <button class="tab" data-t="broadcast" data-scope="broadcast">Broadcasts</button>
@@ -610,7 +610,7 @@
     <div id="panel-server">
       <div class="card"><h2>Status</h2><div id="status"><div class="empty">Loading…</div></div></div>
       <div class="card">
-        <div class="boardhead"><h2>Recent logs</h2><div style="display:flex;align-items:center;gap:8px"><span class="muted">Verbosity</span><select id="logQuick" style="width:130px"><option value="">(default)</option><option value="quiet">quiet</option><option value="normal">normal</option><option value="verbose">verbose</option></select><button id="refreshLogs" class="use">Refresh</button></div></div>
+        <div class="boardhead"><h2>Recent logs</h2><div style="display:flex;align-items:center;gap:8px"><span class="muted">Verbosity</span><select id="logQuick" style="width:130px"><option value="">(default)</option><option value="quiet">quiet</option><option value="normal">normal</option><option value="verbose">verbose</option></select><button id="logsCopy" class="use">Copy</button><button id="refreshLogs" class="use">Refresh</button></div></div>
         <div id="logQuickMsg" class="msg"></div>
         <div class="muted" style="margin:2px 0 6px">quiet logs connections, disconnections and errors only — no per-message line, so far less written to disk under load. Applied live, no restart.</div>
         <pre id="logs" class="logs"></pre>
@@ -652,7 +652,7 @@
           </div>
           <div id="autoUpdMsg" class="msg"></div>
         </div>
-        <div class="boardhead" style="margin-top:10px"><h2 style="font-size:.92rem">Last action log</h2><button id="btnUpdLog" class="use">Refresh</button></div>
+        <div class="boardhead" style="margin-top:10px"><h2 style="font-size:.92rem">Last action log</h2><button id="updlogCopy" class="use">Copy</button><button id="btnUpdLog" class="use">Refresh</button></div>
         <pre id="updlog" class="logs" style="max-height:200px"></pre>
       </div>
       <div class="card">
@@ -1951,6 +1951,40 @@
   // toute ecriture reconstruite depuis le formulaire.
   var _pxLoaded=false;
   function loadLogs(){ api('/admin/logs').then(function(r){return r.json();}).then(function(d){ var p=$('logs'); p.textContent=(d.lines||[]).join('\n'); p.scrollTop=p.scrollHeight; }).catch(function(){}); }
+  // Copier un journal. navigator.clipboard exige un contexte securise, ce qui
+  // exclut un panneau servi en http sur un reseau local : d'ou le repli par
+  // selection, qui marche partout. Le bouton dit ce qui s'est passe, sans quoi
+  // rien ne distingue une copie reussie d'un clic sans effet.
+  function copyText(txt){
+    if(navigator.clipboard && window.isSecureContext) return navigator.clipboard.writeText(txt);
+    return new Promise(function(res, rej){
+      var ta=document.createElement('textarea');
+      ta.value=txt; ta.setAttribute('readonly','');
+      ta.style.cssText='position:fixed;top:-1000px;opacity:0';
+      document.body.appendChild(ta); ta.select();
+      var ok=false;
+      try{ ok=document.execCommand('copy'); }catch(e){}
+      document.body.removeChild(ta);
+      ok ? res() : rej(new Error('copy refused'));
+    });
+  }
+  function wireCopy(btnId, preId){
+    var b=$(btnId), pre=$(preId);
+    if(!b || !pre) return;
+    b.addEventListener('click', function(){
+      var txt=pre.textContent||'';
+      if(!txt.trim()){ b.textContent='Nothing to copy'; setTimeout(function(){ b.textContent='Copy'; }, 1600); return; }
+      copyText(txt).then(function(){
+        b.textContent='Copied \u2713';
+      }).catch(function(){
+        b.textContent='Copy failed';
+      }).then(function(){
+        setTimeout(function(){ b.textContent='Copy'; }, 1600);
+      });
+    });
+  }
+  wireCopy('logsCopy','logs');
+  wireCopy('updlogCopy','updlog');
   $('refreshLogs').addEventListener('click', loadLogs);
   $('savePeriod').addEventListener('click', function(){
     var per=$('period').value, m=$('periodmsg');

@@ -13,7 +13,18 @@ this file captures what matters to players and operators.
 Opened with `v2.1.7-web.0` (2026-08-13), following the upstream **2.1.7**
 release.
 
+### Added
+- **Copy a log to the clipboard** (`web.35`) — *Recent logs* and *Last action
+  log* each get a Copy button. `navigator.clipboard` needs a secure context,
+  which a panel served over plain http on a LAN is not, so there is a selection
+  fallback for those. The button reports what happened — copied, nothing to
+  copy, or refused — since otherwise a successful copy and a dead click look
+  exactly alike.
+
 ### Changed
+- **Identity & reach moved to the Server family** (`web.35`) — server name,
+  Discord relay and SEO describe the server itself, not what players are
+  offered.
 - **Admin dashboard: one spacing, not six** (`web.34`) — card titles and lead
   paragraphs carried their margins in the tags, in six different values, so no
   two cards breathed quite alike. `.muted` only sets a *top* margin, which is
