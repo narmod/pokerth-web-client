@@ -14,6 +14,18 @@ Opened with `v2.1.7-web.0` (2026-08-13), following the upstream **2.1.7**
 release.
 
 ### Changed
+- **Admin dashboard: one section per subject, not a wall of cards** (`web.33`)
+  — Overview held eight cards and Settings ten, which stayed hard to read even
+  once grouped by heading. Each group is a section of its own now. **Server**
+  offers *Health & logs*, *Proxy*, *Deployment*, *Access & backup*, Game
+  servers, Keys; **Client** offers *Modes & features*, *Defaults*, *Identity &
+  reach*, Packages, Music, Broadcasts, Polls. Every card kept its title and
+  its id, and the whole document still parses with balanced tags.
+- **Panel switching derives the id** (`web.33`) — it listed all twelve panels
+  by hand, so a new one stayed invisible until someone remembered to add a
+  line. It now matches `panel-<data-t>` across every panel on the page. Two
+  columns follow the new split: the five *Defaults* cards use them, the
+  two-card panels no longer ask for them.
 - **Admin dashboard: shorter titles under *Defaults for new visitors*** (`web.32`)
   — five cards each repeated what the section heading above them already said.
   They are now *Theme*, *In-game settings*, *Login form*, *Table settings* and

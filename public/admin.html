@@ -53,11 +53,6 @@
   /* Les trois familles se partagent la largeur : elles se lisent alors comme
      la navigation de la page, et non comme quatre boutons de plus sous ceux de
      l'en-tete. Le plafond les empeche de devenir absurdes sur un grand ecran. */
-  /* En-tete de sous-section. Dans un panneau sur deux colonnes il reprend
-     toute la largeur, sinon il flotterait au-dessus d'une seule d'entre elles
-     et ne dirait plus a quoi il s'applique. */
-  .sect{column-span:all;margin:22px 0 10px;font-size:.72rem;letter-spacing:.09em;text-transform:uppercase;color:var(--text);font-weight:700;border-bottom:1px solid var(--line);padding-bottom:6px}
-  .sect:first-child{margin-top:2px}
   .gtabs{margin:16px 0 10px;gap:8px;max-width:520px}
   .gtab{flex:1 1 0;min-width:0;white-space:nowrap;padding:11px 18px;border-radius:10px;border:1px solid var(--line);background:rgba(255,255,255,.04);color:var(--text);cursor:pointer;font-size:.95rem}
   .gtab.on{background:var(--gold);color:#10151c;border-color:var(--gold);font-weight:700}
@@ -209,8 +204,8 @@
      grille reprennent toute la largeur, où elles seraient illisibles. */
   @media(min-width:1100px){
     .wrap{max-width:1180px}
-    #panel-server,#panel-traffic,#panel-clients,#panel-broadcast{columns:2;column-gap:16px}
-    #panel-server>.card,#panel-traffic>.card,#panel-clients>.card,#panel-broadcast>.card{break-inside:avoid;-webkit-column-break-inside:avoid;margin-bottom:16px}
+    #panel-traffic,#panel-broadcast,#panel-defaults,#panel-deploy,#panel-access,#panel-identity{columns:2;column-gap:16px}
+    #panel-traffic>.card,#panel-broadcast>.card,#panel-defaults>.card,#panel-deploy>.card,#panel-access>.card,#panel-identity>.card{break-inside:avoid;-webkit-column-break-inside:avoid;margin-bottom:16px}
     .card:has(#trafCards),.card:has(#trafChart),.card:has(#trafNvRChart),.card:has(#trafMusic),.card:has(#trafEnv){column-span:all}
   }
   @media(max-width:600px){
@@ -268,12 +263,17 @@
       <button class="gtab" data-g="data">Data</button>
     </div>
     <div class="tabs subtabs" data-g="server">
-      <button class="tab on" data-t="server">Overview</button>
+      <button class="tab on" data-t="server">Health &amp; logs</button>
+      <button class="tab" data-t="proxy">Proxy</button>
+      <button class="tab" data-t="deploy">Deployment</button>
+      <button class="tab" data-t="access">Access &amp; backup</button>
       <button class="tab" data-t="servers">Game servers</button>
       <button class="tab" data-t="keys">Keys</button>
     </div>
     <div class="tabs subtabs" data-g="client" style="display:none">
-      <button class="tab" data-t="clients">Settings</button>
+      <button class="tab" data-t="clients">Modes &amp; features</button>
+      <button class="tab" data-t="defaults">Defaults</button>
+      <button class="tab" data-t="identity">Identity &amp; reach</button>
       <button class="tab" data-t="packages" data-scope="packages">Packages</button>
       <button class="tab" data-t="music" data-scope="music">Music</button>
       <button class="tab" data-t="broadcast" data-scope="broadcast">Broadcasts</button>
@@ -470,8 +470,7 @@
       </div>
     </div>
 
-    <div id="panel-clients" style="display:none">
-      <h3 class="sect">What players can use</h3>
+    <div id="panel-clients">
       <div class="card">
         <h2>App modes (login screen)</h2>
         <p class="muted" style="margin:0 0 4px">Show or hide entry modes offered to players.</p>
@@ -484,7 +483,9 @@
         <div id="fsList" class="muted">Loading…</div>
         <div id="fsMsg" class="msg"></div>
       </div>
-      <h3 class="sect">Defaults for new visitors</h3>
+    </div>
+
+    <div id="panel-defaults" style="display:none">
       <div class="card">
         <h2>Theme</h2>
         <p class="muted" style="margin:0 0 6px">Applied on a player's first visit only. Players who already picked a theme keep theirs.</p>
@@ -541,7 +542,9 @@
         <div style="margin-top:8px"><button id="saveTableName" class="use">Save</button></div>
         <div id="tableNameMsg" class="msg"></div>
       </div>
-      <h3 class="sect">Identity &amp; reach</h3>
+    </div>
+
+    <div id="panel-identity" style="display:none">
       <div class="card">
         <h2>Server identity (login screen)</h2>
         <p class="muted" style="margin:0 0 8px">Shown to everyone on the login screen, regardless of theme. Leave blank for the defaults (“PokerTH” / “Web Client”).</p>
@@ -570,7 +573,8 @@
         <div id="seoMsg" class="msg"></div>
       </div>
     </div>
-    <div id="panel-keys" style="display:none">
+
+<div id="panel-keys" style="display:none">
       <div class="card">
         <h2>Create a delegate key</h2>
         <p class="muted" style="margin:0 0 8px">Give a third party access to only some sections. Pick a name and the categories they may manage. The full key is shown <b>once</b> at creation — copy it then. A lost key cannot be recovered (revoke and create a new one).</p>
@@ -592,7 +596,6 @@
       </div>
     </div>
     <div id="panel-server">
-      <h3 class="sect">Health &amp; logs</h3>
       <div class="card"><h2>Status</h2><div id="status"><div class="empty">Loading…</div></div></div>
       <div class="card">
         <div class="boardhead"><h2 style="margin:0">Recent logs</h2><div style="display:flex;align-items:center;gap:8px"><span class="muted">Verbosity</span><select id="logQuick" style="width:130px"><option value="">(default)</option><option value="quiet">quiet</option><option value="normal">normal</option><option value="verbose">verbose</option></select><button id="refreshLogs" class="use">Refresh</button></div></div>
@@ -600,7 +603,9 @@
         <div class="muted" style="margin:2px 0 6px">quiet logs connections, disconnections and errors only — no per-message line, so far less written to disk under load. Applied live, no restart.</div>
         <pre id="logs" class="logs"></pre>
       </div>
-      <h3 class="sect">Bridge settings</h3>
+    </div>
+
+    <div id="panel-proxy" style="display:none">
       <div class="card">
         <h2>Proxy</h2>
         <p class="muted" style="margin:0 0 8px">Server-side bridge settings. Always-allowed hosts: pokerth.net, www.pokerth.net, pokerth.ddns.net, localhost, 127.0.0.1, ::1. Changes apply live (no restart).</p>
@@ -613,7 +618,9 @@
         <div style="margin-top:8px"><button id="savePx" class="use">Save</button></div>
         <div id="pxMsg" class="msg"></div>
       </div>
-      <h3 class="sect">Deployment</h3>
+    </div>
+
+    <div id="panel-deploy" style="display:none">
       <div class="card">
         <h2>Maintenance</h2>
         <p class="muted" style="margin:0 0 8px">“Update (no restart)” pushes new client files live instantly without dropping connections; the other actions restart the server briefly — this page reconnects on its own.</p>
@@ -666,7 +673,9 @@
         <div id="rbList"><div class="empty">Loading…</div></div>
         <div id="rbMsg" class="msg"></div>
       </div>
-      <h3 class="sect">Access &amp; backup</h3>
+    </div>
+
+    <div id="panel-access" style="display:none">
       <div class="card">
         <div class="boardhead" style="margin-bottom:6px"><h2 style="margin:0">Blocked &amp; banned addresses</h2><button id="ipRefresh" class="use">Refresh</button></div>
         <p class="muted" style="margin:0 0 8px">Addresses that failed to authenticate on this panel, and addresses you have banned. Unlike the rest of the dashboard, addresses appear <b>in full</b> here: a masked address cannot be banned or unblocked. A ban refuses the WebSocket upgrade — the page still loads, but no game connection is made through this proxy — and drops any bridge already open from it. Your own address and loopback can never be banned.</p>
@@ -692,7 +701,8 @@
         <div id="cfgIoMsg" class="msg"></div>
       </div>
     </div>
-    <div id="panel-broadcast" style="display:none">
+
+<div id="panel-broadcast" style="display:none">
       <div class="card">
         <h2>Send a message now</h2>
         <p class="muted" style="margin:0 0 8px">Broadcast an information message to everyone currently connected. Shown as a gold dismissible banner.</p>
@@ -1152,18 +1162,11 @@
     try{ b.scrollIntoView({block:'nearest',inline:'nearest',behavior:'smooth'}); }catch(e){}
     setTimeout(tabsFade, 320);
     var t=b.dataset.t;
-    $('panel-packages').style.display=t==='packages'?'block':'none';
-    $('panel-board').style.display=t==='board'?'block':'none';
-    $('panel-server').style.display=t==='server'?'block':'none';
-    $('panel-clients').style.display=t==='clients'?'block':'none';
-    $('panel-broadcast').style.display=t==='broadcast'?'block':'none';
-    $('panel-music').style.display=t==='music'?'block':'none';
-    $('panel-keys').style.display=t==='keys'?'block':'none';
-    $('panel-traffic').style.display=t==='traffic'?'block':'none';
-    $('panel-sessions').style.display=t==='sessions'?'block':'none';
-    $('panel-errors').style.display=t==='errors'?'block':'none';
-    $('panel-servers').style.display=t==='servers'?'block':'none';
-    $('panel-polls').style.display=t==='polls'?'block':'none';
+    // Un panneau par section, nomme panel-<data-t> : la liste etait recopiee a
+    // la main et un panneau ajoute restait invisible tant qu'on l'y oubliait.
+    document.querySelectorAll('[id^="panel-"]').forEach(function(pn){
+      pn.style.display = (pn.id === 'panel-' + t) ? 'block' : 'none';
+    });
     if(t==='music')mzRefresh();
     if(t==='keys'){ loadKeys(); loadAudit(); }
     if(t==='board') loadBoard();

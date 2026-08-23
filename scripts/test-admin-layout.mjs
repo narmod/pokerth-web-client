@@ -113,46 +113,42 @@ ok(/light"\] \.gtab\.on\{color:#f4f6fb\}/.test(admin),
 ok(/\.gtabs\{max-width:none/.test(small), 'on a phone the families take the full width');
 ok(/\.gtabs\{[^}]*overflow:visible/.test(small), 'three of them never need to scroll');
 
-// ── Sub-sections inside the two crowded panels ────────────────────────────
-// Overview carried eight cards and Settings ten, in the order they happened to
-// be written. Re-ordering them is only safe because the collapse state is keyed
-// on the title text, not on position — so the guards here check that not one
-// card went missing in the move, and that none sits outside a section.
-function panel(id, next) {
-  const a = admin.indexOf('<div id="' + id + '"'), b = admin.indexOf('<div id="' + next + '"');
-  return a < 0 || b < 0 ? '' : admin.slice(a, b);
+// ── One section per panel ─────────────────────────────────────────────────
+// Overview held eight cards and Settings ten, which read as a wall. Each group
+// is a section of its own now. The panels are named panel-<data-t>, and the
+// switch derives the id rather than listing them, so a new one can no longer
+// be added and left invisible.
+function panel(id) {
+  const a = admin.indexOf('<div id="' + id + '"');
+  if (a < 0) return '';
+  const b = admin.indexOf('<div id="panel-', a + 10);
+  return admin.slice(a, b < 0 ? undefined : b);
 }
-const pServer = panel('panel-server', 'panel-broadcast');
-const pClients = panel('panel-clients', 'panel-keys');
-
-ok(/\.sect\{column-span:all/.test(admin),
-  'a section heading spans both columns, or it would not say what it covers');
-ok(/\.sect:first-child\{margin-top:2px\}/.test(admin), 'the first heading does not push the panel down');
-
-ok((pServer.match(/<h3 class="sect">/g) || []).length === 4, 'Overview is in four sections');
-ok((pClients.match(/<h3 class="sect">/g) || []).length === 3, 'Settings is in three sections');
-ok((pServer.match(/<div class="card"/g) || []).length === 8, 'all eight Overview cards are still there');
-ok((pClients.match(/<div class="card"/g) || []).length === 10, 'all ten Settings cards are still there');
-for (const [seg, name] of [[pServer, 'Overview'], [pClients, 'Settings']]) {
-  const first = seg.search(/<h3 class="sect">/), card = seg.search(/<div class="card"/);
-  ok(first > 0 && first < card, name + ' opens on a section heading, no orphan card above it');
+const PANELS = {
+  'panel-server': 2, 'panel-proxy': 1, 'panel-deploy': 3, 'panel-access': 2,
+  'panel-clients': 2, 'panel-defaults': 5, 'panel-identity': 3,
+};
+for (const [id, count] of Object.entries(PANELS)) {
+  const seg = panel(id);
+  ok(seg !== '', id + ' exists');
+  ok((seg.match(/<div class="card"/g) || []).length === count,
+    id + ' carries its ' + count + ' card' + (count === 1 ? '' : 's'));
 }
-for (const t of ['Status', 'Proxy', 'Maintenance', 'Recent logs', 'Schedule a restart']) {
-  ok(pServer.includes('>' + t + '<'), 'Overview kept ' + t);
+for (const t of ['proxy', 'deploy', 'access', 'defaults', 'identity']) {
+  ok(new RegExp('data-t="' + t + '"').test(admin), 'a tab opens ' + t);
+  ok(admin.includes('<div id="panel-' + t + '"'), 'and panel-' + t + ' answers to it');
 }
-for (const t of ['App modes (login screen)', 'Feature kill switches', 'Discord chat relay']) {
-  ok(pClients.includes('>' + t + '<'), 'Settings kept ' + t);
+ok(/pn\.style\.display = \(pn\.id === 'panel-' \+ t\)/.test(admin),
+  'the switch derives the panel id instead of listing every panel by hand');
+ok(/querySelectorAll\('\[id\^="panel-"\]'\)/.test(admin), 'and reaches every one of them');
+ok(!/class="sect"/.test(admin), 'the old sub-section headings are gone, the tab carries the title');
+// Only the first panel of a family is visible at load.
+ok(/<div id="panel-server">/.test(admin), 'Health & logs opens by default');
+for (const id of ['panel-proxy', 'panel-deploy', 'panel-access', 'panel-defaults', 'panel-identity']) {
+  ok(new RegExp('<div id="' + id + '" style="display:none">').test(admin), id + ' starts hidden');
 }
-
-// Five card titles each repeated what their section already says.
-for (const t of ['Theme', 'In-game settings', 'Login form', 'Table settings', 'Table name (per mode)']) {
-  ok(pClients.includes('<h2>' + t + '</h2>'), 'the defaults card is titled ' + t);
-}
-ok(!/\(new visitors\)<\/h2>/.test(admin), 'no card repeats "(new visitors)" in its title');
-ok(/DEFAULT_FOLDED = \['In-game settings'/.test(admin),
-  'the fold-by-default list follows the rename, or that card would open wide');
-ok(/\(firstRun \|\| !known\)/.test(admin),
-  'a title never seen before falls back to its default fold instead of opening wide');
+ok(/#panel-defaults[^{]*\{columns:2/.test(admin), 'the five defaults cards use both columns');
+ok(!/#panel-server,/.test(admin), 'a two-card panel no longer asks for two columns');
 
 // ── Settings rows ─────────────────────────────────────────────────────────
 // The same flex declaration used to be retyped in 51 style= attributes, with
