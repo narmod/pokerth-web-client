@@ -628,7 +628,7 @@
       <div class="card">
         <div class="boardhead"><h2>Recent logs</h2><div class="bhact"><span class="muted">Verbosity</span><select id="logQuick"><option value="">(default)</option><option value="quiet">quiet</option><option value="normal">normal</option><option value="verbose">verbose</option></select><button id="logsCopy" class="use">Copy</button><button id="refreshLogs" class="use">Refresh</button></div></div>
         <div id="logQuickMsg" class="msg"></div>
-        <div class="muted" style="margin:2px 0 6px">quiet logs connections, disconnections and errors only — no per-message line, so far less written to disk under load. Applied live, no restart.</div>
+        <div class="muted" style="margin:2px 0 6px">Times are shown in your own time zone; the log files keep UTC. quiet logs connections, disconnections and errors only — no per-message line, so far less written to disk under load. Applied live, no restart.</div>
         <pre id="logs" class="logs"></pre>
       </div>
     </div>
@@ -1967,7 +1967,27 @@
   // Vrai des que /admin/status a rempli les champs du proxy : garde-fou avant
   // toute ecriture reconstruite depuis le formulaire.
   var _pxLoaded=false;
-  function loadLogs(){ api('/admin/logs').then(function(r){return r.json();}).then(function(d){ var p=$('logs'); p.textContent=(d.lines||[]).join('\n'); p.scrollTop=p.scrollHeight; }).catch(function(){}); }
+  // Les journaux sont horodates en ISO UTC : parfait dans un fichier, illisible
+  // a l'ecran, et decale du fuseau de qui regarde. On le rend en heure locale a
+  // l'affichage seulement -- le disque et pm2 gardent l'ISO, qui reste la
+  // reference non ambigue. La date n'apparait que si la ligne n'est pas du
+  // jour, sinon elle occupe la moitie de la largeur sur un telephone.
+  var LOG_TS=/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?Z/g;
+  function fmtLogTimes(txt){
+    if(!txt) return txt;
+    var today=new Date().toDateString();
+    return txt.replace(LOG_TS, function(iso){
+      var d=new Date(iso);
+      if(isNaN(d)) return iso;                       // horodatage douteux : intact
+      // 24 h a largeur fixe : dans une police a chasse fixe, les horodatages
+      // s'alignent en colonne et l'oeil suit la suite des evenements. Le mois
+      // en lettres evite l'ambiguite entre 08/20 et 20/08 selon la locale.
+      var t=d.toLocaleTimeString(undefined,{hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false});
+      return d.toDateString()===today ? t
+        : d.toLocaleDateString(undefined,{day:'2-digit',month:'short'})+' '+t;
+    });
+  }
+  function loadLogs(){ api('/admin/logs').then(function(r){return r.json();}).then(function(d){ var p=$('logs'); p.textContent=fmtLogTimes((d.lines||[]).join('\n')); p.scrollTop=p.scrollHeight; }).catch(function(){}); }
   // Copier un journal. navigator.clipboard exige un contexte securise, ce qui
   // exclut un panneau servi en http sur un reseau local : d'ou le repli par
   // selection, qui marche partout. Le bouton dit ce qui s'est passe, sans quoi
@@ -2172,7 +2192,7 @@
     api('/admin/clear-logs',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({token:tok()})})
       .then(function(r){return r.json();}).then(function(d){ var m=$('maintmsg'); if(d&&d.ok){ m.textContent='Logs cleared.'; m.className='msg ok'; loadLogs(); } else { m.textContent='Failed.'; m.className='msg err'; } }).catch(function(){ var m=$('maintmsg'); m.textContent='Clear logs failed \u2014 network error.'; m.className='msg err'; });
   }
-  function loadUpdateLog(){ api('/admin/update-log',{cache:'no-store'}).then(function(r){return r.json();}).then(function(d){ if(d&&d.ok) $('updlog').textContent=d.log||'(empty)'; }).catch(function(){}); }
+  function loadUpdateLog(){ api('/admin/update-log',{cache:'no-store'}).then(function(r){return r.json();}).then(function(d){ if(d&&d.ok) $('updlog').textContent=fmtLogTimes(d.log)||'(empty)'; }).catch(function(){}); }
   if($('btnUpdateNr')) $('btnUpdateNr').addEventListener('click', doUpdateNr);
   if($('btnUpdate')) $('btnUpdate').addEventListener('click', doUpdate);
   if($('btnRestart')) $('btnRestart').addEventListener('click', doRestart);

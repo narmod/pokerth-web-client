@@ -22,6 +22,15 @@ release.
   exactly alike.
 
 ### Changed
+- **Readable times in the logs** (`web.37`) — the proxy stamps lines in ISO
+  UTC (`2026-08-23T15:53:16.364Z`), which is right for a file and unreadable
+  on screen, on top of being off by the reader's own offset. Both logs now
+  render `17:53:16` in the viewer's time zone, on a 24-hour clock at a fixed
+  width so the stamps line up as a column in the monospace font. A line from
+  another day gets `20 Aug` in front, with the month in letters since 08/20
+  and 20/08 both read as dates. Display only: the files and pm2 keep ISO UTC,
+  which stays the unambiguous reference, and the panel says which zone it is
+  showing so the times don't look wrong next to the file.
 - **Audit log stops at ten entries** (`web.36`) — the rest is one scroll away
   instead of pushing the page down. The cut is measured rather than assumed
   from a line height, because an entry takes one line on a wide screen and two

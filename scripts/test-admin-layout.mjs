@@ -150,6 +150,20 @@ for (const id of ['panel-proxy', 'panel-deploy', 'panel-access', 'panel-defaults
 ok(/#panel-defaults[^{]*\{columns:2/.test(admin), 'the five defaults cards use both columns');
 ok(!/#panel-server,/.test(admin), 'a two-card panel no longer asks for two columns');
 
+// ── Log timestamps ────────────────────────────────────────────────────────
+// The proxy writes ISO UTC, which is right for a file and unreadable on
+// screen — and two hours off from whoever is looking at it.
+const fmt = body(admin, 'fmtLogTimes');
+ok(/hour12:false/.test(fmt), 'a 24-hour clock, so the columns line up in a monospace font');
+ok(/hour:'2-digit',minute:'2-digit',second:'2-digit'/.test(fmt), 'at a fixed width');
+ok(/month:'short'/.test(fmt), 'a month in letters, since 08/20 and 20/08 both read as dates');
+ok(/d\.toDateString\(\)===today/.test(fmt), "today's lines carry no date, which would eat the width");
+ok(/isNaN\(d\)\) return iso/.test(fmt), 'a timestamp that will not parse is left untouched');
+ok(/fmtLogTimes\(\(d\.lines\|\|\[\]\)\.join/.test(admin), 'Recent logs goes through it');
+ok(/fmtLogTimes\(d\.log\)/.test(admin), 'and so does the action log');
+ok(/Times are shown in your own time zone/.test(admin),
+  'the panel says so, or the times look wrong next to the file');
+
 // ── Card header rows ──────────────────────────────────────────────────────
 // "Recent logs" broke across two lines while its Refresh button ran off the
 // side of the phone: the header row could not wrap, so everything fought for
