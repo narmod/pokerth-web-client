@@ -14,6 +14,14 @@ Opened with `v2.1.7-web.0` (2026-08-13), following the upstream **2.1.7**
 release.
 
 ### Added
+- **`/rules` in Korean, Vietnamese, Thai, Arabic, Hebrew and Persian**
+  (`web.53`) — seventh batch, thirty-seven languages live, 8 to go. Vietnamese
+  uses its own vocabulary for hands (*tứ quý*, *cù lũ*, *mậu thầu*), which has
+  nothing to do with the English terms; Korean and Thai use the established
+  transliterations. The right-to-left variants were checked for stray Latin
+  words beyond the action names, which stay English by convention.
+
+### Added
 - **`/rules` in European Portuguese, Catalan, Galician, Lithuanian, Serbian
   and Afrikaans** (`web.52`) — sixth batch, thirty-one languages live, 14 to
   go. `pt-PT` is not a copy of `pt-BR`: *ronda* not *rodada*, *póquer* not
