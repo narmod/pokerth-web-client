@@ -1530,7 +1530,7 @@ setInterval(maybeRotateStats, 60 * 60 * 1000); // hourly boundary check
 // counter plus an all-time id set keep the "All time" figures exact too.
 const VISITS_FILE = process.env.VISITS_FILE || path.join(__dirname, 'visits.json');
 const VISIT_RETENTION_DAYS = 400; // keep per-day id sets this long (covers up to 1-year windows)
-let visitsStore = { days: {}, totalV: 0, totalRet: 0, allU: {}, allM: { pokerthnet: 0, lan: 0, offline: 0 }, env: {} };
+let visitsStore = { days: {}, totalV: 0, totalRet: 0, allU: {}, allM: { pokerthnet: 0, lan: 0, offline: 0 }, env: {}, music: {} };
 try {
   const _vs = JSON.parse(fs.readFileSync(VISITS_FILE, 'utf8'));
   if (_vs && typeof _vs === 'object') {
@@ -1542,6 +1542,8 @@ try {
     visitsStore.allM   = { pokerthnet: _am.pokerthnet || 0, lan: _am.lan || 0, offline: _am.offline || 0 };
     visitsStore.env    = (_vs.env && typeof _vs.env === 'object') ? _vs.env : {};
     visitsStore.envSince = (typeof _vs.envSince === 'number') ? _vs.envSince : 0;
+    visitsStore.music  = (_vs.music && typeof _vs.music === 'object') ? _vs.music : {};
+    visitsStore.musicSince = (typeof _vs.musicSince === 'number') ? _vs.musicSince : 0;
   }
 } catch (e) { /* first run — start empty */ }
 let _visitsSaveTimer = null;
@@ -1577,6 +1579,49 @@ function recordModeConnect(mode) {
   visitsStore.allM[mode] = (visitsStore.allM[mode] || 0) + 1;
   saveVisitsSoon();
 }
+// ── Lectures de musique ───────────────────────────────────────────────────
+// Le lecteur poste POST /__music { id } chaque fois qu'une piste DÉMARRE — pas
+// de reprise après pause, pas de temps d'écoute, pas d'identifiant de visiteur.
+// C'est un simple compteur par morceau : ce qu'il faut pour savoir quoi garder
+// dans la playlist, et rien de plus.
+//
+// Les radios sont hors mesure : un flux n'a pas de fin de piste, donc « une
+// lecture » n'y voudrait rien dire. L'identifiant est validé contre le
+// catalogue servi aux joueurs, ce qui borne la cardinalité sans avoir à
+// plafonner quoi que ce soit : un id inventé ne crée jamais de clé.
+function musicCountable(id) {
+  if (typeof id !== 'string' || !/^[A-Za-z0-9_-]{1,64}$/.test(id)) return false;
+  try {
+    const list = musicListForClient();
+    for (let i = 0; i < list.length; i++) if (list[i].id === id && !list[i].stream) return true;
+  } catch (e) {}
+  return false;
+}
+function recordMusicPlay(id) {
+  if (!musicCountable(id)) return;
+  if (!visitsStore.music) visitsStore.music = {};
+  visitsStore.music[id] = (visitsStore.music[id] || 0) + 1;
+  if (!visitsStore.musicSince) visitsStore.musicSince = Date.now();
+  // Série quotidienne, dans le même seau que les visites : même rétention,
+  // même purge, un seul fichier à écrire.
+  const day = visitDayKey();
+  let bucket = visitsStore.days[day];
+  if (!bucket) { bucket = visitsStore.days[day] = { v: 0, ids: {} }; pruneVisitDays(); }
+  if (!bucket.mu) bucket.mu = {};
+  bucket.mu[id] = (bucket.mu[id] || 0) + 1;
+  saveVisitsSoon();
+}
+// Titres à afficher en face des identifiants dans le tableau de bord. Une
+// piste retirée du catalogue garde ses écoutes mais perd son titre : on
+// retombe alors sur l'identifiant, jamais sur une ligne vide.
+function musicPlayTitles() {
+  const out = {};
+  try {
+    musicListForClient().forEach(function (t) { if (t && t.id && !t.stream) out[t.id] = t.title || t.id; });
+  } catch (e) {}
+  return out;
+}
+
 // ── Répartition des visiteurs (navigateur, OS, PWA, langue) ───────────────
 // Le compteur de trafic dit combien de visites ; il ne disait pas sur quoi. Ces
 // quatre répartitions servent à arbitrer : part réelle d'iOS Safari (où vivent
@@ -1618,7 +1663,7 @@ function _envBump(key, val) {
 // indiscernables — code non déployé, ping jamais émis, ou personne n'est
 // passé — et on ne peut que deviner laquelle. En mémoire, non persisté : c'est
 // une mesure du processus courant, pas une statistique.
-const _pingStats = { boot: Date.now(), n: 0, nMode: 0, last: 0 };
+const _pingStats = { boot: Date.now(), n: 0, nMode: 0, nMusic: 0, last: 0 };
 function recordVisitEnv(ua, acceptLang, standalone) {
   try {
     ua = String(ua || '');
@@ -1693,7 +1738,7 @@ function visitsSummary() {
     d.setDate(now.getDate() - i);
     const k = visitDayKey(d);
     const b = visitsStore.days[k];
-    series.push({ date: k, v: b ? (b.v || 0) : 0, u: (b && b.ids) ? Object.keys(b.ids).length : 0, nw: b ? (b.nw || 0) : 0, rt: b ? (b.rt || 0) : 0, lg: (b && b.lg) ? b.lg : undefined });
+    series.push({ date: k, v: b ? (b.v || 0) : 0, u: (b && b.ids) ? Object.keys(b.ids).length : 0, nw: b ? (b.nw || 0) : 0, rt: b ? (b.rt || 0) : 0, lg: (b && b.lg) ? b.lg : undefined, mu: (b && b.mu) ? b.mu : undefined });
   }
   return {
     ok: true,
@@ -1707,7 +1752,10 @@ function visitsSummary() {
     series: series,
     env: visitsStore.env || {},
     envSince: visitsStore.envSince || 0,
-    pings: { boot: _pingStats.boot, visits: _pingStats.n, modes: _pingStats.nMode, last: _pingStats.last },
+    music: visitsStore.music || {},
+    musicTitles: musicPlayTitles(),
+    musicSince: visitsStore.musicSince || 0,
+    pings: { boot: _pingStats.boot, visits: _pingStats.n, modes: _pingStats.nMode, music: _pingStats.nMusic, last: _pingStats.last },
     db: { enabled: _dbStatus.enabled, connected: _dbStatus.connected, error: _dbStatus.error, lastWrite: _dbStatus.lastWrite, source: _dbStatus.source }
   };
 }
@@ -5307,6 +5355,22 @@ const httpServer = http.createServer((req, res) => {
                          req.headers && req.headers['accept-language'],
                          !!(d && d.pwa));
         }
+      } catch (e) { /* ignore a bad ping */ }
+      res.writeHead(204, { 'Cache-Control': 'no-store' });
+      res.end();
+    });
+    return;
+  }
+
+  // ── Music play ping (anonymous per-track counter) ──
+  // One beacon per track START: { id:"<track id>" }. No visitor id, no
+  // listening time, radios excluded. Unknown ids are dropped, so the stored
+  // key set can never grow past the catalogue. 204 reply, like /__visit.
+  if (reqPathOnly === '/__music') {
+    if (req.method !== 'POST') { res.writeHead(405); res.end('Method not allowed'); return; }
+    readJsonBody(req, function (d) {
+      try {
+        if (musicEnabled() && d && d.id) { _pingStats.nMusic++; _pingStats.last = Date.now(); recordMusicPlay(d.id); }
       } catch (e) { /* ignore a bad ping */ }
       res.writeHead(204, { 'Cache-Control': 'no-store' });
       res.end();

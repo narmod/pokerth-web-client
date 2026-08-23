@@ -241,6 +241,11 @@
         <div id="trafEnv" style="margin-top:14px"><div class="empty">Loading…</div></div>
       </div>
       <div class="card">
+        <div class="boardhead" style="margin-bottom:6px"><h2 style="margin:0">Most played tracks</h2><span id="musSince" class="muted" style="margin:0"></span></div>
+        <p class="muted" style="margin:2px 0 10px">Counts a play each time a track starts in the players’ music panel — resuming after a pause is not a new play. No visitor id, no listening time. Radio stations are not measured: a live stream has no track end, so “a play” would mean nothing there.</p>
+        <div id="trafMusic"><div class="empty">Loading…</div></div>
+      </div>
+      <div class="card">
         <h2 style="margin:0 0 8px">New vs returning visitors</h2>
         <p class="muted" style="margin:2px 0 10px">Based on an anonymous per-device id — no names. A session is “new” the first time a device is ever seen, otherwise “returning”.</p>
         <div id="trafNvRChart" class="trafchart" style="display:none"></div>
@@ -1354,6 +1359,7 @@
   // an ordered list (ranking), because the two answer different questions —
   // "is anything dominant?" versus "what exactly is in the tail?".
   var _envData={}, _envSince=0, _envView='combo', _envKnown=false, _envPings=null, _envExpanded=false, _trafSeries=[];
+  var _musData={}, _musTitles={}, _musSince=0, _musKnown=false, _musExpanded=false;
   function _envFmt(n){ try{ return Number(n||0).toLocaleString(); }catch(e){ return String(n||0); } }
   // Palette lisible sur les deux thèmes admin; la dernière teinte sert au
   // regroupement « autres », volontairement neutre.
@@ -1535,6 +1541,61 @@
          + _lineChart(llabs,lls,150)
          + '<div class="traflegend" style="flex-wrap:wrap">'+leg+'</div>';
   }
+  // Un titre retiré du catalogue garde ses lectures : on retombe alors sur son
+  // identifiant plutôt que d'afficher une ligne sans nom.
+  function _musName(id){ return _musTitles[id]||id; }
+  // Historique par jour, même forme que celui des langues : les six premiers
+  // titres nommément, le reste regroupé.
+  function _musChart(keys){
+    var s=_trafSeries||[], has=false;
+    s.forEach(function(x){ if(x.mu&&Object.keys(x.mu).length) has=true; });
+    if(!has) return '<div class="muted" style="margin-top:12px">Per-day history starts with this proxy version — the chart fills in as days pass.</div>';
+    var top=keys.slice(0,6), restK=keys.slice(6);
+    var labs=s.map(function(x){ return (x.date||'').slice(5); });
+    var lls=top.map(function(k,i){
+      return {k:_musName(k),c:ENV_COLORS[i%ENV_COLORS.length],vals:s.map(function(x){ return (x.mu&&x.mu[k])||0; })};
+    });
+    if(restK.length){
+      lls.push({k:restK.length+' others',c:ENV_COLORS[9],vals:s.map(function(x){
+        var mu=x.mu||{},r=0; restK.forEach(function(k){ r+=mu[k]||0; }); return r;
+      })});
+    }
+    var leg=lls.map(function(l){ return '<span><em style="background:'+l.c+'"></em>'+_annEsc(l.k)+'</span>'; }).join('');
+    return '<div class="muted" style="margin:14px 0 4px">Plays per day — last 14 days</div>'
+         + _lineChart(labs,lls,150)
+         + '<div class="traflegend" style="flex-wrap:wrap">'+leg+'</div>';
+  }
+  function renderMusic(){
+    var box=$('trafMusic'); if(!box) return;
+    var since=$('musSince');
+    if(since) since.textContent=_musSince?('since '+new Date(_musSince).toLocaleDateString()):'';
+    var keys=Object.keys(_musData).sort(function(a,b){ return (_musData[b]||0)-(_musData[a]||0); });
+    var total=0; keys.forEach(function(k){ total+=_musData[k]||0; });
+    if(!total){
+      // Comme pour les répartitions de visiteurs : un vide qui ne dit pas
+      // laquelle de ses trois causes s'applique coûte une demi-heure.
+      var why = !_musKnown
+        ? 'This proxy is not recording it yet — the running process predates the feature. Restart it (pm2 restart pokerth-web); a static update alone swaps the served files, not the process.'
+        : 'Nothing recorded yet — counting started here, and a play is only counted when a track actually starts.';
+      box.innerHTML='<div class="empty">'+why+'</div>';
+      return;
+    }
+    var shown=_musExpanded?keys:keys.slice(0,10);
+    var max=_musData[keys[0]]||1;
+    var rows=shown.map(function(k,i){
+      var n=_musData[k]||0;
+      return '<div class="envrow"><span class="dot" style="background:'+ENV_COLORS[i%ENV_COLORS.length]+'"></span>'
+           + '<span class="nmx">'+_annEsc(_musName(k))+'</span>'
+           + '<span class="barx"><i style="width:'+Math.max(2,(n/max)*100).toFixed(1)+'%;background:'+ENV_COLORS[i%ENV_COLORS.length]+'"></i></span>'
+           + '<span class="pct">'+_envFmt(n)+' play'+(n===1?'':'s')+'</span></div>';
+    }).join('');
+    var more='';
+    if(keys.length>10) more='<button id="musMoreBtn" class="use" style="margin-top:8px">'+(_musExpanded?'Show top 10':'Show all '+keys.length+' tracks')+'</button>';
+    box.innerHTML='<div class="envlist">'+rows+more+'</div>'
+                + '<div class="muted" style="margin-top:10px">'+_envFmt(total)+' plays across '+keys.length+' track'+(keys.length===1?'':'s')+'.</div>'
+                + _musChart(keys);
+    var mb=$('musMoreBtn'); if(mb) mb.addEventListener('click',function(){ _musExpanded=!_musExpanded; renderMusic(); });
+  }
   function renderEnv(){
     var box=$('trafEnv'); if(!box) return;
     var since=$('envSince');
@@ -1619,6 +1680,7 @@
       // Champ absent = proxy antérieur à la fonctionnalité ; objet vide = rien
       // à compter encore. Voir renderEnv().
       _envKnown=(d.env!==undefined); _envData=d.env||{}; _envColorReset(); _envSince=d.envSince||0; _envPings=d.pings||null; renderEnv();
+      _musKnown=(d.music!==undefined); _musData=d.music||{}; _musTitles=d.musicTitles||{}; _musSince=d.musicSince||0; renderMusic();
       var nvc=$('trafNvRChart'), nvl=$('trafNvRLegend');
       // Champ nw absent de la série = proxy pas encore redémarré sur cette version.
       if(nvc && s.length && s[0].nw!==undefined){

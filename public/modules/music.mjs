@@ -516,6 +516,24 @@ function setMode(m) {
 }
 function _byId(id)   { var i = _index(id); return i >= 0 ? _tracks[i] : null; }
 
+// Comptage anonyme des lectures : un ping sans identifiant de visiteur quand
+// une piste DÉMARRE, pour que le tableau de bord admin sache quels morceaux
+// gardent leur place dans la playlist. Une reprise après pause ne compte pas
+// (la source est déjà chargée), les radios non plus — un flux n'a pas de fin
+// de piste. Envoi au mieux : un échec est ignoré, la lecture prime.
+function _countPlay(t) {
+  if (!t || _isStream(t)) return;
+  try {
+    var body = JSON.stringify({ id: t.id });
+    if (navigator.sendBeacon) {
+      navigator.sendBeacon('/__music', new Blob([body], { type: 'application/json' }));
+      return;
+    }
+    fetch('/__music', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: body, keepalive: true })
+      .catch(function () {});
+  } catch (e) {}
+}
+
 async function play(id) {
   await loadManifest();
   var t = id ? _byId(id) : (_byId(_curId) || _group()[0] || _tracks[0]);
@@ -526,7 +544,8 @@ async function play(id) {
     try { localStorage.setItem(LS_MODE, _mode); } catch (e) {}
   }
   var a = _el();
-  if (_curId !== t.id || !_active().src) {
+  var fresh = (_curId !== t.id) || !_active().src;   // nouvelle piste, ou source à (re)charger
+  if (fresh) {
     _curId = t.id;
     _durProbed = stream;  // pas de sonde de durée sur un direct (durée = Infinity)
     _probedDur = 0;
@@ -549,7 +568,7 @@ async function play(id) {
   // Fondu d'entrée : gain à 0 avant lecture, puis montée vers le volume (hors bypass).
   if (!_bypass && _waReady && _gain && _ctx) { try { _gain.gain.cancelScheduledValues(_ctx.currentTime); _gain.gain.setValueAtTime(0, _ctx.currentTime); } catch (e) {} }
   else { _applyVol(getVolume()); }
-  try { await el.play(); _wdArm(); } catch (e) { _wdDisarm(); /* gesture/load issue — UI reflects paused */ }
+  try { await el.play(); _wdArm(); if (fresh) _countPlay(t); } catch (e) { _wdDisarm(); /* gesture/load issue — UI reflects paused */ }
   // Lecture lancée : on la met à l'abri du réseau. Le fetch part APRÈS play()
   // pour ne pas consommer le geste utilisateur — sur iOS, attendre une promesse
   // avant play() fait perdre l'autorisation de lecture.

@@ -25,6 +25,15 @@ release.
   were already correct.
 
 ### Added
+- **Music play counter** (`web.23`) — the dashboard could say what visitors
+  run but not what they listen to. The music player now posts an anonymous
+  `POST /__music {id}` beacon each time a track *starts* (a resume after a
+  pause is not a play), and the traffic tab ranks tracks by plays with a
+  14-day per-day chart. No visitor id, no listening time, no caller address:
+  the id is validated against the served catalogue, so unknown ids create no
+  key and `visits.json` can never grow past the playlist. Radio stations are
+  excluded — a live stream has no track end. Counting stops while the music
+  player is switched off. 30 guards in `scripts/test-music-stats.mjs`.
 - **Multi-select in the session logs** (`web.21`) — deleting old logs one by
   one was the only option (community request from *Spitessbir* on the forum).
   The log window now has a **Select…** button that reveals a checkbox on every
