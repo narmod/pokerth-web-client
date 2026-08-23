@@ -1184,17 +1184,63 @@ function seoLangFromQuery(reqUrl) {
   var q = m[1].toLowerCase();
   if (q === 'en') return '';
   for (var code in SEO_I18N) { if (code.toLowerCase() === q) return code; }
+  // A regional alias we advertise in hreflang can also be requested directly,
+  // by a browser sending its own locale or by anyone editing the URL. Without
+  // this it would silently fall through to English.
+  for (var a in SEO_HREFLANG_ALIAS) {
+    if (a.toLowerCase() === q) { var t = SEO_HREFLANG_ALIAS[a]; return t === 'en' ? '' : t; }
+  }
   return '';
+}
+
+// Regional hreflang aliases. A bare subtag does not claim a region, so
+// 'es' never surfaces for a Mexican query the way 'es-MX' does, and 'zh'
+// leaves the script ambiguous. Each alias points at the variant that already
+// exists — no new URLs, no new translations — which is exactly what Google's
+// spec allows: several hreflang values may resolve to the same page. Kept to
+// regions where the search demand is real; adding one is one line.
+// A value of 'en' resolves to the bare / URL.
+var SEO_HREFLANG_ALIAS = {
+  // Chinese: script tags plus the regions that do not read zh-TW as their own
+  'zh-Hans': 'zh', 'zh-CN': 'zh', 'zh-SG': 'zh', 'zh-MY': 'zh',
+  'zh-Hant': 'zh-TW', 'zh-HK': 'zh-TW', 'zh-MO': 'zh-TW',
+  // Spanish: Latin America is the larger half of the audience
+  'es-419': 'es', 'es-MX': 'es', 'es-AR': 'es', 'es-CO': 'es', 'es-CL': 'es', 'es-US': 'es',
+  // Portuguese: the bare 'pt' subtag had no target at all
+  'pt': 'pt-PT', 'pt-AO': 'pt-PT', 'pt-MZ': 'pt-PT',
+  'fr-CA': 'fr', 'fr-BE': 'fr', 'fr-CH': 'fr',
+  'en-GB': 'en', 'en-US': 'en', 'en-CA': 'en', 'en-AU': 'en', 'en-IN': 'en', 'en-IE': 'en',
+  'de-AT': 'de', 'de-CH': 'de',
+  'nl-BE': 'nl',
+  'it-CH': 'it',
+  // 'no' is the macrolanguage tag most Norwegian browsers still send
+  'no': 'nb',
+  'ar-SA': 'ar', 'ar-EG': 'ar', 'ar-AE': 'ar', 'ar-MA': 'ar', 'ar-DZ': 'ar',
+  'bn-BD': 'bn', 'ta-LK': 'ta', 'ta-SG': 'ta',
+  'sw-KE': 'sw', 'sw-TZ': 'sw',
+  'ur-IN': 'ur', 'fa-AF': 'fa',
+  // Legacy ISO codes that older clients and directories still emit
+  'iw': 'he', 'in': 'id', 'tl': 'fil',
+};
+
+// Every hreflang pair, [code, href] — the single source of truth for the
+// <link rel="alternate"> set in the head AND the xhtml:link set in the
+// sitemap. The two must match: a crawler that sees different alternate sets
+// for the same page treats neither as authoritative.
+function seoHreflangPairs(base) {
+  var out = [['x-default', base + '/']];
+  var href = function (code) { return base + (code === 'en' ? '/' : '/?lang=' + code); };
+  for (var code in SEO_I18N) out.push([code, href(code)]);
+  for (var a in SEO_HREFLANG_ALIAS) out.push([a, href(SEO_HREFLANG_ALIAS[a])]);
+  return out;
 }
 
 // The full alternate set — identical on every language variant, as Google
 // requires. 'en' and x-default point at the bare /.
 function seoAlternates(base) {
-  var out = ['<link rel="alternate" hreflang="x-default" href="' + base + '/">'];
-  for (var code in SEO_I18N) {
-    out.push('<link rel="alternate" hreflang="' + code + '" href="' + base + (code === 'en' ? '/' : '/?lang=' + code) + '">');
-  }
-  return out;
+  return seoHreflangPairs(base).map(function (p) {
+    return '<link rel="alternate" hreflang="' + p[0] + '" href="' + p[1] + '">';
+  });
 }
 
 // ── IndexNow — instant URL submission to Bing / Seznam / Naver / Yandex ────
@@ -5292,12 +5338,11 @@ const httpServer = http.createServer((req, res) => {
     // Language variants of / carry the full hreflang alternate set via
     // xhtml:link, per Google's sitemap guidance for multilingual sites
     // (https://developers.google.com/search/docs/specialty/international/localized-versions#sitemap).
-    // The set is derived from SEO_I18N so new languages propagate automatically.
-    var _sAlt = '';
-    for (var _sc in SEO_I18N) {
-      _sAlt += '<xhtml:link rel="alternate" hreflang="' + _sc + '" href="' + _sBase + (_sc === 'en' ? '/' : '/?lang=' + _sc) + '"/>';
-    }
-    _sAlt += '<xhtml:link rel="alternate" hreflang="x-default" href="' + _sBase + '/"/>';
+    // The set comes from seoHreflangPairs, the same helper the <head> uses,
+    // so the two can never drift apart.
+    var _sAlt = seoHreflangPairs(_sBase).map(function (p) {
+      return '<xhtml:link rel="alternate" hreflang="' + p[0] + '" href="' + p[1] + '"/>';
+    }).join('');
     var _sVariants = '';
     for (var _sc2 in SEO_I18N) {
       if (_sc2 === 'en') continue;

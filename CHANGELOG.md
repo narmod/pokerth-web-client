@@ -13,6 +13,24 @@ this file captures what matters to players and operators.
 Opened with `v2.1.7-web.0` (2026-08-13), following the upstream **2.1.7**
 release.
 
+### Added
+- **Regional hreflang aliases** (`web.45`) — 45 aliases mapping onto the
+  existing language variants, so `zh-Hant`, `es-MX`, `fr-CA`, `pt`, `no` and
+  the rest resolve instead of falling through. No new URLs and no new
+  translations: several hreflang values may point at the same page, which is
+  what the spec is for. `pt` had no target at all, since the catalogue only
+  held `pt-BR` and `pt-PT`. The legacy ISO codes `iw`, `in` and `tl` are
+  mapped too, as older clients and directories still emit them.
+  `?lang=` resolves aliases as well — advertising a code we then ignore would
+  send those visitors to the English page.
+
+### Changed
+- **Single source for the hreflang set** (`web.45`) — the `<head>` alternates
+  and the sitemap's `xhtml:link` set were built by two separate loops over
+  `SEO_I18N`. They agreed only by luck, and a crawler that sees two different
+  alternate sets for one page trusts neither. Both now come from
+  `seoHreflangPairs`.
+
 ### Changed
 - **Localized crawler text for all 45 languages** (`web.44`) — every language
   variant served an English `<h1>` and an English body under its own
