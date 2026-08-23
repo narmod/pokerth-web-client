@@ -14,6 +14,21 @@ Opened with `v2.1.7-web.0` (2026-08-13), following the upstream **2.1.7**
 release.
 
 ### Fixed
+- **Update banner shown for an update already applied** (`web.25`) — the
+  service worker routed `/__ver` through its stale-while-revalidate handler, so
+  the marker driving the in-app update check was answered from Cache Storage.
+  `cache: 'no-store'` on the page and `Cache-Control: no-store` on the proxy
+  response are both ignored once a cached entry is returned, so the first poll
+  after a deploy read the *previous* marker, the background revalidation stored
+  the fresh one, and the next poll saw a change and prompted for an update the
+  page had already loaded (HTML and code are network-first). `/__ver` and the
+  other live-state endpoints (`/__visit`, `/__music`, `/__poll-vote`, `/prefs`,
+  `/prefs-web`, `/stats`, `/api/*`) are now left untouched by the SW, the same
+  way `/admin` already was.
+- **Newly imported seat packs invisible until the cache renewed** (`web.25`) —
+  `/seats/seats.json` was missing from the network-first manifest list, which
+  already covered `table/tables`, `cards/decks`, `themes/themes` and
+  `music/tracks`, so the seat gallery was served stale after an import.
 - **Stale language counts** (`web.20`) — the admin traffic card still read
   "of 40 translated" and "which of the 40 languages are actually used", while
   `CONTRIBUTING.md`, `docs/PROJECT.md`, the `docker-compose.yml` service

@@ -23,7 +23,7 @@
  *                 Cross-origin requests and WS upgrades are left untouched.
  *                 (Fonts are now self-hosted and handled by SWR above.)
  */
-const CACHE_VERSION = 'pokerth-v2.1.7-web.24';
+const CACHE_VERSION = 'pokerth-v2.1.7-web.25';
 
 // Where navigations fall back to when the network is unavailable.
 const NAV_FALLBACK = '/pokerth-client.html';
@@ -400,6 +400,14 @@ self.addEventListener('fetch', function(e) {
   // SW cache or serve them (otherwise the package list, status, logs… show stale
   // after a change). Network only — admin is an online-only tool.
   if (/^\/admin(?:\/|$)/.test(url.pathname)) return;
+  // Live state endpoints served by the proxy: never cached, never served from
+  // Cache Storage. `cache:'no-store'` on the page and `Cache-Control: no-store`
+  // on the response are both ignored once the SW answers from a cache entry, so
+  // the only way to keep them fresh is to leave them alone here. /__ver in
+  // particular drives the update banner: served stale, it made the page compare
+  // the previous deploy's marker against the fresh one and prompt for an update
+  // that was already applied.
+  if (/^\/(?:__ver|__visit|__music|__poll-vote|prefs|prefs-web|stats|api)(?:\/|$)/.test(url.pathname)) return;
   // Media is served by the browser straight from the network: an <audio> element
   // streams with byte-range requests, and the SWR handler below only stores
   // status 200, so a 206 was never cacheable anyway. Every buffer chunk paid a
@@ -411,7 +419,7 @@ self.addEventListener('fetch', function(e) {
 
   if (e.request.mode === 'navigate') {
     e.respondWith(handleNavigation(e));
-  } else if (/\.(?:js|mjs|css)$/.test(url.pathname) || /^\/(?:table\/tables|cards\/decks|themes\/themes|music\/tracks)\.json$/.test(url.pathname) || url.pathname === '/app-config') {
+  } else if (/\.(?:js|mjs|css)$/.test(url.pathname) || /^\/(?:table\/tables|cards\/decks|themes\/themes|seats\/seats|music\/tracks)\.json$/.test(url.pathname) || url.pathname === '/app-config') {
     // Code, the runtime gallery manifests, AND the live /app-config are
     // network-first: a freshly imported package or a changed admin default must
     // be visible on the next load, never served stale from the SW cache.
