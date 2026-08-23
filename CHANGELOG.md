@@ -41,6 +41,12 @@ release.
   `scripts/test-reset-period.mjs` covering the week boundaries, both year
   boundaries and the count of changes across a full year.
 
+### Fixed
+- **Language names followed the browser locale** (`web.42`) — `web.41` asked
+  `Intl.DisplayNames` for the visitor's own locale, so a French browser read
+  *chinois*, *anglais*, *allemand* in a dashboard written entirely in English.
+  They are now asked for in English, whatever the browser is set to.
+
 ### Changed
 - **Languages shown by name** (`web.41`) — *What visitors run* listed `en`,
   `zh`, `nl`, which have to be decoded. They now read English, Chinese, Dutch,

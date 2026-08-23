@@ -1555,10 +1555,12 @@
   var ENV_LABELS={standalone:'Installed app',browser:'Browser tab',other:'Other'};
   // Un nom de langue se lit, un code se devine : « en » et « nl » ne disent
   // rien a qui n'a pas la liste en tete. Intl.DisplayNames couvre n'importe
-  // quel code arrivant de l'en-tete Accept-Language, sans table a tenir a jour,
-  // et rend le nom dans la langue de qui regarde le tableau de bord.
+  // quel code arrivant de l'en-tete Accept-Language, sans table a tenir a jour.
+  // Force en anglais : le tableau de bord l'est entierement, et « chinois » au
+  // milieu de « What visitors run » detonne. C'est la langue du panneau qui
+  // compte ici, pas celle du navigateur.
   var _langNames=(function(){
-    try{ return new Intl.DisplayNames(undefined,{type:'language'}); }catch(e){ return null; }
+    try{ return new Intl.DisplayNames(['en'],{type:'language'}); }catch(e){ return null; }
   })();
   function _langLabel(k){
     // Filtre de forme d'abord : ailleurs que dans la vue des langues, une cle

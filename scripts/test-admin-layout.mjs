@@ -159,6 +159,11 @@ ok(!/#panel-server,/.test(admin), 'a two-card panel no longer asks for two colum
 // Accept-Language, so there is no 45-entry table to keep in step.
 const lab = body(admin, '_langLabel');
 ok(/Intl\.DisplayNames/.test(admin), 'names come from Intl, not from a hand-kept table');
+// Passing undefined here takes the browser's locale, which put "chinois" and
+// "anglais" in the middle of an English dashboard.
+ok(/new Intl\.DisplayNames\(\['en'\]/.test(admin),
+  'names are asked for in English, the language the whole panel is written in');
+ok(!/new Intl\.DisplayNames\(undefined/.test(admin), 'not in the browser locale');
 ok(/\^\[a-z\]\{2,3\}/.test(lab),
   'only something shaped like a language code is looked up, so "ios" stays "ios"');
 ok(/n\.toLowerCase\(\)!==k\.toLowerCase\(\)/.test(lab),
