@@ -13,6 +13,16 @@ this file captures what matters to players and operators.
 Opened with `v2.1.7-web.0` (2026-08-13), following the upstream **2.1.7**
 release.
 
+### Changed
+- **Play counts moved next to the track titles** (`web.26`) — the ranked list
+  in the traffic tab answered "which tracks are popular" but not "how is *this*
+  track doing", which is the question you have while looking at the library.
+  `/admin/music-list` now carries the counts, and each row in the Music tab
+  shows them beside the title. Radios show nothing (they are not measured), and
+  a proxy too old to count shows nothing rather than a misleading zero — a
+  track that *is* counted but never played shows `0 plays`, which is real
+  information. The traffic tab keeps the 14-day chart and drops the list.
+
 ### Fixed
 - **Update banner shown for an update already applied** (`web.25`) — the
   service worker routed `/__ver` through its stale-while-revalidate handler, so

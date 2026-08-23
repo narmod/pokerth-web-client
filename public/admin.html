@@ -242,7 +242,7 @@
       </div>
       <div class="card">
         <div class="boardhead" style="margin-bottom:6px"><h2 style="margin:0">Most played tracks</h2><span id="musSince" class="muted" style="margin:0"></span></div>
-        <p class="muted" style="margin:2px 0 10px">Counts a play each time a track starts in the players’ music panel — resuming after a pause is not a new play. No visitor id, no listening time. Radio stations are not measured: a live stream has no track end, so “a play” would mean nothing there.</p>
+        <p class="muted" style="margin:2px 0 10px">Counts a play each time a track starts in the players’ music panel — resuming after a pause is not a new play. No visitor id, no listening time. Radio stations are not measured: a live stream has no track end, so “a play” would mean nothing there. Per-track totals sit next to each title in the Music tab.</p>
         <div id="trafMusic"><div class="empty">Loading…</div></div>
       </div>
       <div class="card">
@@ -364,6 +364,7 @@
         </div>
       </div>
       <div class="card">
+        <style>.mzplays{margin-left:8px;font-size:.72rem;font-weight:600;opacity:.65;white-space:nowrap;vertical-align:1px}</style>
         <h2>Library</h2>
         <div class="seg" id="mzListSeg">
           <button id="mzLibTracks" class="on" type="button">Tracks <span id="mzCntT" class="muted"></span></button>
@@ -1100,6 +1101,7 @@
 
   // leaderboard
   // ── Music (background tracks) ──
+  var mzPlays={}, mzPlaysKnown=false;
   function mzSay(t,cls){ var m=$('mzMsg'); if(m){ m.textContent=t; m.className='msg '+(cls||''); } }
   function mzProg(f){ var p=$('mzProg'); if(p){ p.classList.add('on'); p.firstElementChild.style.width=Math.round((f||0)*100)+'%'; } }
   function mzProgHide(){ var p=$('mzProg'); if(p){ p.classList.remove('on'); p.firstElementChild.style.width='0'; } }
@@ -1205,6 +1207,18 @@
       .then(function(r){return r.json();}).then(function(d){ if(d.ok)mzRefresh(); else mzSay('Reorder: '+(d.error||'error'),'err'); }).catch(function(){ mzSay('Reorder failed - network error.','err'); });
   }
   var mzAll=[], mzLib='tracks';
+  // Nombre de lectures affiché en face de chaque titre. mzPlaysKnown sépare
+  // « ce proxy ne compte pas encore » (rien à montrer) de « il compte, mais
+  // cette piste n'a pas encore été jouée » (0 lecture, qui est une information).
+  function mzPlayBadge(p){
+    if(!mzPlaysKnown || p.stream) return null;
+    var n=mzPlays[p.id]||0;
+    var b=document.createElement('span');
+    b.className='mzplays';
+    b.textContent=n+' play'+(n===1?'':'s');
+    b.title='Times this track was started by players. Resuming after a pause is not counted, and nothing about who listened is recorded.';
+    return b;
+  }
   function mzRenderList(all){ var el=$('mzList'); if(!el)return; mzAll=all||[];
     var ct=$('mzCntT'), cr=$('mzCntR');
     var nT=mzAll.filter(function(p){return !p.stream;}).length, nR=mzAll.length-nT;
@@ -1216,6 +1230,7 @@
       if(!on)row.style.opacity='0.55';
       row.innerHTML='<div class="nm"><b></b><span></span></div>';
       row.querySelector('b').textContent=p.title||p.id; row.querySelector('span').textContent=(p.artist||'')+(p.artist?' \u00b7 ':'')+p.id+(p.stream?' \u00b7 \ud83d\udcfb LIVE':'')+(p.builtin?' \u00b7 built-in':'');
+      var pb=mzPlayBadge(p); if(pb) row.querySelector('.nm b').insertAdjacentElement('afterend',pb);
       var tg=document.createElement('button'); tg.className='toggle '+(on?'on':'off'); tg.textContent=on?'On':'Off'; tg.title=on?'Audible to players \u2014 tap to hide':'Hidden \u2014 tap to show'; tg.addEventListener('click',function(){mzToggle(p.id,on);});
       row.appendChild(tg);
       var up=document.createElement('button'); up.className='use'; up.textContent='\u25B2'; up.title='Move up'; up.style.cssText='padding:6px 9px'; if(pi===0)up.disabled=true; up.addEventListener('click',function(){ mzMove(p.id,-1,arr); }); row.appendChild(up);
@@ -1223,7 +1238,7 @@
       // (les déplacements restent DANS l'onglet affiché ; l'ordre global est préservé)
       if(!p.builtin){ var ed=document.createElement('button'); ed.className='use'; ed.textContent='Edit'; ed.addEventListener('click',function(){ mzEditId=p.id; mzRenderList(mzAll); }); row.appendChild(ed); var del=document.createElement('button'); del.className='del'; del.textContent='Remove'; del.addEventListener('click',function(){mzRemove(p.id,p.title||p.id);}); row.appendChild(del); }
       el.appendChild(row); }); }
-  function mzRefresh(){ api('/admin/music-list?t='+Date.now()).then(function(r){return r.json();}).then(function(d){ if($('mzEnabled')&&d&&typeof d.enabled==='boolean')$('mzEnabled').value=d.enabled?'1':'0'; if(d.ok)mzRenderList(d.tracks); else mzRenderList([]); }).catch(function(){ var el=$('mzList'); if(el)el.innerHTML='<div class="empty">Could not load tracks.</div>'; }); }
+  function mzRefresh(){ api('/admin/music-list?t='+Date.now()).then(function(r){return r.json();}).then(function(d){ if($('mzEnabled')&&d&&typeof d.enabled==='boolean')$('mzEnabled').value=d.enabled?'1':'0'; mzPlaysKnown=(d&&d.plays!==undefined); mzPlays=(d&&d.plays)||{}; if(d.ok)mzRenderList(d.tracks); else mzRenderList([]); }).catch(function(){ var el=$('mzList'); if(el)el.innerHTML='<div class="empty">Could not load tracks.</div>'; }); }
   (function(){ var d=$('mzDrop'), f=$('mzFile'); if(d&&f){ d.addEventListener('click',function(){f.click();}); d.addEventListener('dragover',function(e){e.preventDefault();d.classList.add('hot');}); d.addEventListener('dragleave',function(){d.classList.remove('hot');}); d.addEventListener('drop',function(e){e.preventDefault();d.classList.remove('hot');if(e.dataTransfer.files[0])mzUpload(e.dataTransfer.files[0]);}); f.addEventListener('change',function(){if(f.files[0])mzUpload(f.files[0]);}); } })();
 
   (function(){ // segmentés : formulaire d'ajout (Track|Radio) et bibliothèque (Tracks|Radios)
@@ -1359,7 +1374,7 @@
   // an ordered list (ranking), because the two answer different questions —
   // "is anything dominant?" versus "what exactly is in the tail?".
   var _envData={}, _envSince=0, _envView='combo', _envKnown=false, _envPings=null, _envExpanded=false, _trafSeries=[];
-  var _musData={}, _musTitles={}, _musSince=0, _musKnown=false, _musExpanded=false;
+  var _musData={}, _musTitles={}, _musSince=0, _musKnown=false;
   function _envFmt(n){ try{ return Number(n||0).toLocaleString(); }catch(e){ return String(n||0); } }
   // Palette lisible sur les deux thèmes admin; la dernière teinte sert au
   // regroupement « autres », volontairement neutre.
@@ -1561,7 +1576,7 @@
       })});
     }
     var leg=lls.map(function(l){ return '<span><em style="background:'+l.c+'"></em>'+_annEsc(l.k)+'</span>'; }).join('');
-    return '<div class="muted" style="margin:14px 0 4px">Plays per day — last 14 days</div>'
+    return '<div class="muted" style="margin:2px 0 4px">Plays per day — last 14 days</div>'
          + _lineChart(labs,lls,150)
          + '<div class="traflegend" style="flex-wrap:wrap">'+leg+'</div>';
   }
@@ -1573,28 +1588,14 @@
     var total=0; keys.forEach(function(k){ total+=_musData[k]||0; });
     if(!total){
       // Comme pour les répartitions de visiteurs : un vide qui ne dit pas
-      // laquelle de ses trois causes s'applique coûte une demi-heure.
+      // laquelle de ses causes s'applique coûte une demi-heure.
       var why = !_musKnown
         ? 'This proxy is not recording it yet — the running process predates the feature. Restart it (pm2 restart pokerth-web); a static update alone swaps the served files, not the process.'
         : 'Nothing recorded yet — counting started here, and a play is only counted when a track actually starts.';
       box.innerHTML='<div class="empty">'+why+'</div>';
       return;
     }
-    var shown=_musExpanded?keys:keys.slice(0,10);
-    var max=_musData[keys[0]]||1;
-    var rows=shown.map(function(k,i){
-      var n=_musData[k]||0;
-      return '<div class="envrow"><span class="dot" style="background:'+ENV_COLORS[i%ENV_COLORS.length]+'"></span>'
-           + '<span class="nmx">'+_annEsc(_musName(k))+'</span>'
-           + '<span class="barx"><i style="width:'+Math.max(2,(n/max)*100).toFixed(1)+'%;background:'+ENV_COLORS[i%ENV_COLORS.length]+'"></i></span>'
-           + '<span class="pct">'+_envFmt(n)+' play'+(n===1?'':'s')+'</span></div>';
-    }).join('');
-    var more='';
-    if(keys.length>10) more='<button id="musMoreBtn" class="use" style="margin-top:8px">'+(_musExpanded?'Show top 10':'Show all '+keys.length+' tracks')+'</button>';
-    box.innerHTML='<div class="envlist">'+rows+more+'</div>'
-                + '<div class="muted" style="margin-top:10px">'+_envFmt(total)+' plays across '+keys.length+' track'+(keys.length===1?'':'s')+'.</div>'
-                + _musChart(keys);
-    var mb=$('musMoreBtn'); if(mb) mb.addEventListener('click',function(){ _musExpanded=!_musExpanded; renderMusic(); });
+    box.innerHTML=_musChart(keys);
   }
   function renderEnv(){
     var box=$('trafEnv'); if(!box) return;

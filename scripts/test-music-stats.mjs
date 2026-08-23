@@ -71,14 +71,28 @@ ok(/mu: \(b && b\.mu\) \? b\.mu : undefined/.test(proxy), 'the 14-day series car
 ok(/music: _pingStats\.nMusic/.test(proxy), 'the ping diagnostic counts music pings separately');
 
 // ── 3. What the dashboard shows ───────────────────────────────────────────
-ok(/id="trafMusic"/.test(admin), 'the traffic tab has a music card');
+ok(/plays: visitsStore\.music \|\| \{\}/.test(proxy), 'the track list carries the per-track counts');
+
+const badge = body(admin, 'mzPlayBadge');
+ok(/p\.stream/.test(badge), 'a radio never gets a play count next to its name');
+ok(/!mzPlaysKnown/.test(badge),
+  'a proxy that does not count shows nothing, rather than a misleading zero');
+ok(/mzPlays\[p\.id\]\|\|0/.test(badge), 'a track that counts but was never played shows 0');
+ok(/n===1\?'':'s'/.test(badge), 'the singular is not "1 plays"');
+ok(/mzPlayBadge\(p\)/.test(body(admin, 'mzRenderList')), 'the badge is placed by the library rows');
+ok(/insertAdjacentElement\('afterend',pb\)/.test(body(admin, 'mzRenderList')),
+  'the count sits right after the title, not in the id line');
+ok(/mzPlaysKnown=\(d&&d\.plays!==undefined\)/.test(admin), 'the badge is wired to the track list payload');
+ok(/\.mzplays\{/.test(admin), 'the badge has its own style');
+
+ok(/id="trafMusic"/.test(admin), 'the traffic tab keeps the per-day chart');
 const render = body(admin, 'renderMusic');
-ok(/_musKnown/.test(render), 'an empty card distinguishes "proxy too old" from "nothing yet"');
+ok(/_musKnown/.test(render), 'an empty chart distinguishes "proxy too old" from "nothing yet"');
 ok(/pm2 restart pokerth-web/.test(render), 'the too-old case tells the operator what to do');
-ok(/keys\.slice\(0,10\)/.test(render), 'the list is capped at the top 10 until expanded');
-ok(/musMoreBtn/.test(render), 'the full list is one click away');
-ok(/_musName/.test(render), 'a track pulled from the catalogue still shows under its id');
-ok(/_musKnown=\(d\.music!==undefined\)/.test(admin), 'the card is wired to the traffic payload');
+ok(/box\.innerHTML=_musChart\(keys\);/.test(render),
+  'the traffic card is the chart alone \u2014 per-track totals live in the Music tab');
+ok(!/envrow|musMoreBtn/.test(render), 'the ranked list is gone from the traffic tab');
+ok(/_musKnown=\(d\.music!==undefined\)/.test(admin), 'the chart is wired to the traffic payload');
 
 console.log(fail ? `FAIL ${fail}/${n}` : `OK ${n}/${n}`);
 process.exit(fail ? 1 : 0);

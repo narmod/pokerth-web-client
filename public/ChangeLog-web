@@ -2,7 +2,7 @@
 - bugfix: the app sometimes offered an update that was already installed - the version marker was being read from the offline cache instead of the server
 - bugfix: a newly imported seat pack only showed up after the offline cache renewed itself - the seat list is now read from the server like the table, card and music lists
 - improvement: session logs - the arrow keys now move through the list, and Shift + up/down extends the selection just like Shift + click
-- new: admin traffic page - a "most played tracks" card ranks the music by number of plays, with a per-day chart of the last 14 days; nothing about who listened is recorded, and radio stations are not measured
+- new: admin page - each track in the music library shows how many times players started it, and the traffic tab charts the plays of the last 14 days; nothing about who listened is recorded, and radio stations are not measured
 - new: session logs - a "Select…" button lets you tick several logs and delete them in one go; on a computer you can also Ctrl (⌘) + click to pick logs one by one, or Shift + click to take a whole range
 - new: custom sounds - in advanced options / sound you can now replace any game sound (fold, check, call, bet, raise, all-in, dealing, your turn, blind raises, player connected, game ready, lobby chat) with your own audio file; play it back, restore one sound or all of them at any time. Files stay in your browser and are never uploaded
 - bugfix: admin traffic page - a language had one colour in the ranking and another in the per-day chart; both views now share the same colour per language

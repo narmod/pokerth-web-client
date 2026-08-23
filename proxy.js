@@ -3541,7 +3541,9 @@ function handleAdmin(req, res, reqPathOnly, query) {
   }
   if (reqPathOnly === '/admin/music-list') {
     if (!hasScope('music', query)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
-    return adminJson(res, 200, { ok: true, enabled: musicEnabled(), tracks: musicListForAdmin() });
+    // plays : compteur par piste, affiche en face de chaque titre dans la
+    // bibliotheque. Les radios n'y figurent jamais (elles ne sont pas mesurees).
+    return adminJson(res, 200, { ok: true, enabled: musicEnabled(), tracks: musicListForAdmin(), plays: visitsStore.music || {} });
   }
   // Interrupteur global du lecteur. Portee 'music' : un token delegue a la musique
   // peut couper le lecteur sans avoir le token maitre.
