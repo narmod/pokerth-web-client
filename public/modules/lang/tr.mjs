@@ -1004,6 +1004,10 @@ export const strings = {
     "advBakAuto": "Yedek dosyasını otomatik yaz",
     "bakRestoreQ": "Ayarlarınız boş görünüyor. Yedek klasörünüzden geri yüklensin mi?",
     "bakRestoreBtn": "Geri yükle",
+    "bakRestoreBusy": "Geri yükleniyor…",
+    "bakRestoreNoFile": "Bu klasörde yedek dosyası yok.",
+    "bakRestoreNoPerm": "Klasör erişimi verilmedi — klasörü yeniden seç.",
+    "bakRestoreEmpty": "Yedek dosyası boş — geri yüklenecek bir şey yok.",
     "syncBusy": "Eşitleniyor…",
 };
 

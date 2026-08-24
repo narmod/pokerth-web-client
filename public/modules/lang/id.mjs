@@ -629,6 +629,10 @@ export const strings = {
     "advBakAuto": "Tulis berkas cadangan secara otomatis",
     "bakRestoreQ": "Pengaturan Anda tampak kosong. Pulihkan dari folder cadangan Anda?",
     "bakRestoreBtn": "Pulihkan",
+    "bakRestoreBusy": "Memulihkan…",
+    "bakRestoreNoFile": "Tidak ada berkas cadangan di folder ini.",
+    "bakRestoreNoPerm": "Akses folder tidak diberikan — pilih folder lagi.",
+    "bakRestoreEmpty": "Berkas cadangan kosong — tidak ada yang bisa dipulihkan.",
     "syncBusy": "Menyinkronkan…",
 };
 

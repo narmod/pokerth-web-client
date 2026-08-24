@@ -7,7 +7,8 @@
 //   - writes only when the content signature (keys + xml, exportedAt ignored)
 //     actually changed;
 //   - picking a folder triggers an immediate first write;
-//   - the fresh-storage detector ignores boot keys and reacts to identity keys.
+//   - the fresh-storage detector ignores boot keys and reacts to identity keys;
+//   - the restore path reports an explicit code for every failure mode.
 // Run: node scripts/test-backup-autosave.mjs
 
 const store = new Map();
@@ -131,6 +132,47 @@ check('change: embedded xml is part of the signature', fs.writes.length === 3);
 check('state: folder name recorded', mod._state.dirName === 'pokerth-backups');
 check('state: last write timestamp set', mod._state.lastAt > 0);
 check('state: no error recorded', mod._state.err === null);
+
+// ── Gel d'écriture ─────────────────────────────────────────────────────────
+// Au boot le stockage est vierge, mais aucun dossier n'est mémorisé (pas d'IDB
+// dans les tests) : le gel doit retomber, sinon plus aucune sauvegarde ne
+// serait jamais écrite pour un joueur qui démarre à neuf.
+check('hold: released when no folder is remembered', mod._holdState() === false);
+
+// ── Restauration depuis la bannière ────────────────────────────────────────
+// Chaque échec doit remonter un CODE explicite : la bannière s'en sert pour
+// dire au joueur ce qui bloque (le toast, lui, est masqué par la bannière).
+let fileText = null;                       // null = fichier absent du dossier
+handle = {
+  name: 'pokerth-backups',
+  getFileHandle: async (name, opts) => {
+    if (opts && opts.create) {
+      return { createWritable: async () => ({ write() {}, truncate() {}, close() {} }) };
+    }
+    if (fileText === null) { const e = new Error('missing'); e.name = 'NotFoundError'; throw e; }
+    return { getFile: async () => ({ text: async () => fileText }) };
+  },
+};
+globalThis.location = { reload: () => {} };
+
+check('restore: missing file => nofile', (await mod.pickForRestore()) === 'nofile');
+
+fileText = '{not json';
+check('restore: unreadable file => bad', (await mod.pickForRestore()) === 'bad');
+
+fileText = JSON.stringify({ format: 'pokerth-web-client', keys: {} });
+globalThis._applyWebBackupRec = () => -1;
+check('restore: invalid record => bad', (await mod.pickForRestore()) === 'bad');
+
+globalThis._applyWebBackupRec = () => 0;
+check('restore: empty backup => empty (no reload)', (await mod.pickForRestore()) === 'empty');
+
+globalThis._applyWebBackupRec = () => 7;
+check('restore: valid backup => ok', (await mod.pickForRestore()) === 'ok');
+
+// L'annulation du sélecteur de dossier n'est pas une erreur.
+globalThis.showDirectoryPicker = async () => { const e = new Error('x'); e.name = 'AbortError'; throw e; };
+check('restore: cancelled folder picker => abort', (await mod.pickForRestore()) === 'abort');
 
 if (failures) { console.error(failures + ' failure(s)'); process.exit(1); }
 console.log('All backup-autosave tests passed.');

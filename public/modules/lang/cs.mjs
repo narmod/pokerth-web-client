@@ -1003,6 +1003,10 @@ export const strings = {
     "advBakAuto": "Zapisovat soubor zálohy automaticky",
     "bakRestoreQ": "Vaše nastavení vypadá prázdné. Obnovit je ze složky se zálohou?",
     "bakRestoreBtn": "Obnovit",
+    "bakRestoreBusy": "Obnovování…",
+    "bakRestoreNoFile": "V této složce není žádný soubor zálohy.",
+    "bakRestoreNoPerm": "Přístup ke složce nebyl povolen — vyberte složku znovu.",
+    "bakRestoreEmpty": "Soubor zálohy je prázdný — není co obnovit.",
     "syncBusy": "Synchronizace…",
 };
 

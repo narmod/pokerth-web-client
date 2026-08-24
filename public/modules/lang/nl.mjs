@@ -1006,6 +1006,10 @@ export const strings = {
     "advBakAuto": "Back-upbestand automatisch schrijven",
     "bakRestoreQ": "Je instellingen lijken leeg. Herstellen vanuit je back-upmap?",
     "bakRestoreBtn": "Herstellen",
+    "bakRestoreBusy": "Bezig met herstellen…",
+    "bakRestoreNoFile": "Geen back-upbestand in deze map.",
+    "bakRestoreNoPerm": "Geen toegang tot de map — kies de map opnieuw.",
+    "bakRestoreEmpty": "Het back-upbestand is leeg — niets om te herstellen.",
     "syncBusy": "Synchroniseren…",
 };
 

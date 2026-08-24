@@ -629,6 +629,10 @@ export const strings = {
     "advBakAuto": "Andika faili la hifadhi kiotomatiki",
     "bakRestoreQ": "Mipangilio yako inaonekana tupu. Urejeshe kutoka folda yako ya hifadhi?",
     "bakRestoreBtn": "Rejesha",
+    "bakRestoreBusy": "Inarejesha…",
+    "bakRestoreNoFile": "Hakuna faili la nakala rudufu katika folda hii.",
+    "bakRestoreNoPerm": "Ufikiaji wa folda haukuruhusiwa — chagua folda tena.",
+    "bakRestoreEmpty": "Faili la nakala rudufu ni tupu — hakuna cha kurejesha.",
     "syncBusy": "Inasawazisha…",
 };
 

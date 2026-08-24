@@ -1007,6 +1007,10 @@ export const strings = {
     "advBakAuto": "Escribir el archivo de copia de seguridad automáticamente",
     "bakRestoreQ": "Tu configuración parece vacía. ¿Restaurarla desde tu carpeta de copias de seguridad?",
     "bakRestoreBtn": "Restaurar",
+    "bakRestoreBusy": "Restaurando…",
+    "bakRestoreNoFile": "No hay ningún archivo de copia de seguridad en esta carpeta.",
+    "bakRestoreNoPerm": "No se concedió acceso a la carpeta — elige la carpeta de nuevo.",
+    "bakRestoreEmpty": "El archivo de copia de seguridad está vacío — no hay nada que restaurar.",
     "syncBusy": "Sincronizando…",
 };
 

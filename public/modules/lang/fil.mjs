@@ -629,6 +629,10 @@ export const strings = {
     "advBakAuto": "Awtomatikong isulat ang backup file",
     "bakRestoreQ": "Mukhang walang laman ang mga setting mo. I-restore mula sa iyong backup folder?",
     "bakRestoreBtn": "I-restore",
+    "bakRestoreBusy": "Ibinabalik…",
+    "bakRestoreNoFile": "Walang backup file sa folder na ito.",
+    "bakRestoreNoPerm": "Hindi ibinigay ang access sa folder — piliin muli ang folder.",
+    "bakRestoreEmpty": "Walang laman ang backup file — walang maibabalik.",
     "syncBusy": "Nagsi-sync…",
 };
 

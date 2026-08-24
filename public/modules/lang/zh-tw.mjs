@@ -999,6 +999,10 @@ export const strings = {
     "advBakAuto": "自動寫入備份檔",
     "bakRestoreQ": "你的設定看起來是空的。要從備份資料夾還原嗎？",
     "bakRestoreBtn": "還原",
+    "bakRestoreBusy": "正在還原…",
+    "bakRestoreNoFile": "此資料夾中沒有備份檔案。",
+    "bakRestoreNoPerm": "未授予資料夾存取權限 — 請重新選擇資料夾。",
+    "bakRestoreEmpty": "備份檔案是空的 — 沒有可還原的內容。",
     "syncBusy": "正在同步…",
 };
 

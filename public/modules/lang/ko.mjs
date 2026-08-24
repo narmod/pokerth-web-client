@@ -807,6 +807,10 @@ export const strings = {
     "advBakAuto": "백업 파일을 자동으로 쓰기",
     "bakRestoreQ": "설정이 비어 있는 것 같습니다. 백업 폴더에서 복원할까요?",
     "bakRestoreBtn": "복원",
+    "bakRestoreBusy": "복원 중…",
+    "bakRestoreNoFile": "이 폴더에 백업 파일이 없습니다.",
+    "bakRestoreNoPerm": "폴더 접근 권한이 없습니다 — 폴더를 다시 선택하세요.",
+    "bakRestoreEmpty": "백업 파일이 비어 있습니다 — 복원할 항목이 없습니다.",
     "syncBusy": "동기화 중…",
 };
 

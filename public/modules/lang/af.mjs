@@ -1003,6 +1003,10 @@ export const strings = {
     "advBakAuto": "Skryf die rugsteunlêer outomaties",
     "bakRestoreQ": "Jou instellings lyk leeg. Herstel hulle uit jou rugsteungids?",
     "bakRestoreBtn": "Herstel",
+    "bakRestoreBusy": "Herstel tans…",
+    "bakRestoreNoFile": "Geen rugsteunlêer in hierdie vouer nie.",
+    "bakRestoreNoPerm": "Toegang tot die vouer is nie toegestaan nie — kies die vouer weer.",
+    "bakRestoreEmpty": "Die rugsteunlêer is leeg — niks om te herstel nie.",
     "syncBusy": "Sinchroniseer…",
 };
 

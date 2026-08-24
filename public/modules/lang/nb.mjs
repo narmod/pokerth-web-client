@@ -1001,6 +1001,10 @@ export const strings = {
     "advBakAuto": "Skriv sikkerhetskopifilen automatisk",
     "bakRestoreQ": "Innstillingene dine ser tomme ut. Gjenopprette dem fra sikkerhetskopimappen?",
     "bakRestoreBtn": "Gjenopprett",
+    "bakRestoreBusy": "Gjenoppretter…",
+    "bakRestoreNoFile": "Ingen sikkerhetskopi i denne mappen.",
+    "bakRestoreNoPerm": "Ingen tilgang til mappen — velg mappen på nytt.",
+    "bakRestoreEmpty": "Sikkerhetskopien er tom — ingenting å gjenopprette.",
     "syncBusy": "Synkroniserer…",
 };
 

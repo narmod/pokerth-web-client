@@ -1003,6 +1003,10 @@ export const strings = {
     "advBakAuto": "A biztonsági mentés fájl automatikus írása",
     "bakRestoreQ": "A beállításaid üresnek tűnnek. Visszaállítod őket a biztonsági mentés mappából?",
     "bakRestoreBtn": "Visszaállítás",
+    "bakRestoreBusy": "Visszaállítás…",
+    "bakRestoreNoFile": "Nincs mentésfájl ebben a mappában.",
+    "bakRestoreNoPerm": "A mappához nincs hozzáférés — válaszd ki újra a mappát.",
+    "bakRestoreEmpty": "A mentésfájl üres — nincs mit visszaállítani.",
     "syncBusy": "Szinkronizálás…",
 };
 

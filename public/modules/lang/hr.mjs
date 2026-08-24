@@ -1002,6 +1002,10 @@ export const strings = {
     "advBakAuto": "Automatski zapisuj datoteku sigurnosne kopije",
     "bakRestoreQ": "Vaše postavke izgledaju prazne. Vratiti ih iz mape sigurnosnih kopija?",
     "bakRestoreBtn": "Vrati",
+    "bakRestoreBusy": "Vraćanje…",
+    "bakRestoreNoFile": "U ovoj mapi nema datoteke sigurnosne kopije.",
+    "bakRestoreNoPerm": "Pristup mapi nije odobren — ponovno odaberi mapu.",
+    "bakRestoreEmpty": "Datoteka sigurnosne kopije je prazna — nema se što vratiti.",
     "syncBusy": "Sinkronizacija…",
 };
 

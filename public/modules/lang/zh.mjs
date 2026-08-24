@@ -999,6 +999,10 @@ export const strings = {
     "advBakAuto": "自动写入备份文件",
     "bakRestoreQ": "你的设置看起来是空的。要从备份文件夹恢复吗？",
     "bakRestoreBtn": "恢复",
+    "bakRestoreBusy": "正在恢复…",
+    "bakRestoreNoFile": "此文件夹中没有备份文件。",
+    "bakRestoreNoPerm": "未授予文件夹访问权限 — 请重新选择文件夹。",
+    "bakRestoreEmpty": "备份文件为空 — 没有可恢复的内容。",
     "syncBusy": "正在同步…",
 };
 

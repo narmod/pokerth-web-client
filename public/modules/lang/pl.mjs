@@ -1005,6 +1005,10 @@ export const strings = {
     "advBakAuto": "Zapisuj plik kopii zapasowej automatycznie",
     "bakRestoreQ": "Twoje ustawienia wyglądają na puste. Przywrócić je z folderu kopii zapasowych?",
     "bakRestoreBtn": "Przywróć",
+    "bakRestoreBusy": "Przywracanie…",
+    "bakRestoreNoFile": "Brak pliku kopii zapasowej w tym folderze.",
+    "bakRestoreNoPerm": "Brak dostępu do folderu — wybierz folder ponownie.",
+    "bakRestoreEmpty": "Plik kopii zapasowej jest pusty — nie ma czego przywracać.",
     "syncBusy": "Synchronizowanie…",
 };
 

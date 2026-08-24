@@ -1,4 +1,7 @@
 2026-08-13 version 2.1.7-web (current series):
+- bugfix: the "restore your settings" banner did nothing when you clicked Restore - the reason for the failure was shown in a message that appeared behind the banner itself, so nothing seemed to happen. The banner now says what is wrong right where you are looking: no backup file in that folder, folder access not granted, an empty or unreadable file
+- new: the "restore your settings" banner shows which folder and file it is talking about, and carries a "Choose folder…" button so you can point it at the right folder - or grant access again after your browser forgot it - without going through advanced options
+- bugfix: automatic backups could overwrite your backup file with an empty one before you had a chance to restore it. Writing is now held back until you either restore or dismiss the banner
 - new: the "your turn" notification now carries Fold and Check/Call buttons, so you can play a hand from the notification itself without switching back to the app
 - new: open with PokerTH - a style pack (.zip), a backup file (.json) or a desktop config.xml can now be opened straight from your file manager into the installed app
 - new: share to PokerTH - send a style pack, a backup or a config.xml to the app from any share menu, and it is imported on arrival; an invitation link shared the same way opens the table directly

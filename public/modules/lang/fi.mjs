@@ -1002,6 +1002,10 @@ export const strings = {
     "advBakAuto": "Kirjoita varmuuskopiotiedosto automaattisesti",
     "bakRestoreQ": "Asetuksesi näyttävät tyhjiltä. Palautetaanko ne varmuuskopiokansiosta?",
     "bakRestoreBtn": "Palauta",
+    "bakRestoreBusy": "Palautetaan…",
+    "bakRestoreNoFile": "Tässä kansiossa ei ole varmuuskopiotiedostoa.",
+    "bakRestoreNoPerm": "Kansioon ei myönnetty käyttöoikeutta — valitse kansio uudelleen.",
+    "bakRestoreEmpty": "Varmuuskopiotiedosto on tyhjä — ei mitään palautettavaa.",
     "syncBusy": "Synkronoidaan…",
 };
 

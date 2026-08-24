@@ -1003,6 +1003,10 @@ export const strings = {
     "advBakAuto": "Gravar o arquivo de backup automaticamente",
     "bakRestoreQ": "Suas configurações parecem vazias. Restaurá-las da pasta de backup?",
     "bakRestoreBtn": "Restaurar",
+    "bakRestoreBusy": "Restaurando…",
+    "bakRestoreNoFile": "Nenhum arquivo de backup nesta pasta.",
+    "bakRestoreNoPerm": "Acesso à pasta não concedido — escolha a pasta novamente.",
+    "bakRestoreEmpty": "O arquivo de backup está vazio — nada para restaurar.",
     "syncBusy": "Sincronizando…",
 };
 

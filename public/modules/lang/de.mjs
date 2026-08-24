@@ -1006,6 +1006,10 @@ export const strings = {
     "advBakAuto": "Sicherungsdatei automatisch schreiben",
     "bakRestoreQ": "Deine Einstellungen scheinen leer zu sein. Aus dem Sicherungsordner wiederherstellen?",
     "bakRestoreBtn": "Wiederherstellen",
+    "bakRestoreBusy": "Wird wiederhergestellt…",
+    "bakRestoreNoFile": "Keine Sicherungsdatei in diesem Ordner.",
+    "bakRestoreNoPerm": "Kein Zugriff auf den Ordner — wähle den Ordner erneut.",
+    "bakRestoreEmpty": "Die Sicherungsdatei ist leer — nichts wiederherzustellen.",
     "syncBusy": "Synchronisierung…",
 };
 

@@ -629,6 +629,10 @@ export const strings = {
     "advBakAuto": "Write the backup file automatically",
     "bakRestoreQ": "Your settings look empty. Restore them from your backup folder?",
     "bakRestoreBtn": "Restore",
+    "bakRestoreBusy": "Restoring…",
+    "bakRestoreNoFile": "No backup file in this folder.",
+    "bakRestoreNoPerm": "Folder access was not granted — pick the folder again.",
+    "bakRestoreEmpty": "The backup file is empty — nothing to restore.",
     "syncBusy": "Syncing…",
 };
 

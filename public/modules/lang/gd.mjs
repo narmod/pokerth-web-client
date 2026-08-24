@@ -1006,6 +1006,10 @@ export const strings = {
     "advBakAuto": "Sgrìobh faidhle an lethbhric-ghlèidhidh gu fèin-obrachail",
     "bakRestoreQ": "Tha coltas falamh air na roghainnean agad. An aisig sinn iad on phasgan lethbhreac-glèidhidh agad?",
     "bakRestoreBtn": "Aisig",
+    "bakRestoreBusy": "Ga aiseag…",
+    "bakRestoreNoFile": "Chan eil faidhle lethbhreac-glèidhidh sa phasgan seo.",
+    "bakRestoreNoPerm": "Cha deach cead a thoirt dhan phasgan — tagh am pasgan a-rithist.",
+    "bakRestoreEmpty": "Tha faidhle an lethbhreac-glèidhidh falamh — chan eil dad ri aiseag.",
     "syncBusy": "A' sioncronachadh…",
 };
 

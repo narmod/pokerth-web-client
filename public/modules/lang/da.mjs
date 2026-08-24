@@ -1002,6 +1002,10 @@ export const strings = {
     "advBakAuto": "Skriv sikkerhedskopifilen automatisk",
     "bakRestoreQ": "Dine indstillinger ser tomme ud. Gendan dem fra din sikkerhedskopimappe?",
     "bakRestoreBtn": "Gendan",
+    "bakRestoreBusy": "Gendanner…",
+    "bakRestoreNoFile": "Ingen sikkerhedskopi i denne mappe.",
+    "bakRestoreNoPerm": "Der blev ikke givet adgang til mappen — vælg mappen igen.",
+    "bakRestoreEmpty": "Sikkerhedskopien er tom — intet at gendanne.",
     "syncBusy": "Synkroniserer…",
 };
 

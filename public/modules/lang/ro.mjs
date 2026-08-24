@@ -1003,6 +1003,10 @@ export const strings = {
     "advBakAuto": "Scrie automat fișierul copiei de rezervă",
     "bakRestoreQ": "Setările tale par goale. Le restaurezi din dosarul de copii de rezervă?",
     "bakRestoreBtn": "Restaurează",
+    "bakRestoreBusy": "Se restaurează…",
+    "bakRestoreNoFile": "Niciun fișier de rezervă în acest folder.",
+    "bakRestoreNoPerm": "Accesul la folder nu a fost acordat — alege din nou folderul.",
+    "bakRestoreEmpty": "Fișierul de rezervă este gol — nu este nimic de restaurat.",
     "syncBusy": "Se sincronizează…",
 };
 

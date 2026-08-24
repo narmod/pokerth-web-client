@@ -1004,6 +1004,10 @@ export const strings = {
     "advBakAuto": "Escriu el fitxer de còpia de seguretat automàticament",
     "bakRestoreQ": "La configuració sembla buida. Vols restaurar-la des de la carpeta de còpies de seguretat?",
     "bakRestoreBtn": "Restaura",
+    "bakRestoreBusy": "S'està restaurant…",
+    "bakRestoreNoFile": "No hi ha cap fitxer de còpia de seguretat en aquesta carpeta.",
+    "bakRestoreNoPerm": "No s'ha concedit accés a la carpeta — torna a triar la carpeta.",
+    "bakRestoreEmpty": "El fitxer de còpia de seguretat és buit — no hi ha res a restaurar.",
     "syncBusy": "Sincronitzant…",
 };
 

@@ -632,6 +632,10 @@ export const strings = {
     "advBakAuto": "Écrire le fichier de sauvegarde automatiquement",
     "bakRestoreQ": "Tes réglages semblent vides. Les restaurer depuis ton dossier de sauvegarde ?",
     "bakRestoreBtn": "Restaurer",
+    "bakRestoreBusy": "Restauration…",
+    "bakRestoreNoFile": "Aucun fichier de sauvegarde dans ce dossier.",
+    "bakRestoreNoPerm": "Accès au dossier non accordé — choisis le dossier à nouveau.",
+    "bakRestoreEmpty": "Le fichier de sauvegarde est vide — rien à restaurer.",
     "syncBusy": "Synchronisation…",
 };
 

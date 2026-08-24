@@ -999,6 +999,10 @@ export const strings = {
     "advBakAuto": "バックアップファイルを自動的に書き込む",
     "bakRestoreQ": "設定が空のようです。バックアップフォルダーから復元しますか？",
     "bakRestoreBtn": "復元",
+    "bakRestoreBusy": "復元中…",
+    "bakRestoreNoFile": "このフォルダーにバックアップファイルがありません。",
+    "bakRestoreNoPerm": "フォルダーへのアクセスが許可されていません — フォルダーを選び直してください。",
+    "bakRestoreEmpty": "バックアップファイルが空です — 復元するものがありません。",
     "syncBusy": "同期中…",
 };
 

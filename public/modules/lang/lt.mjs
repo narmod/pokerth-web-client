@@ -1003,6 +1003,10 @@ export const strings = {
     "advBakAuto": "Automatiškai rašyti atsarginės kopijos failą",
     "bakRestoreQ": "Jūsų nustatymai atrodo tušti. Atkurti juos iš atsarginių kopijų aplanko?",
     "bakRestoreBtn": "Atkurti",
+    "bakRestoreBusy": "Atkuriama…",
+    "bakRestoreNoFile": "Šiame aplanke nėra atsarginės kopijos failo.",
+    "bakRestoreNoPerm": "Prieiga prie aplanko nesuteikta — pasirinkite aplanką iš naujo.",
+    "bakRestoreEmpty": "Atsarginės kopijos failas tuščias — nėra ką atkurti.",
     "syncBusy": "Sinchronizuojama…",
 };
 

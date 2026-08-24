@@ -66,6 +66,15 @@ function _looksFresh() {
 
 const _FRESH_AT_BOOT = _looksFresh();
 
+// Gel d'écriture : si le stockage est vierge ET qu'un dossier est mémorisé, la
+// bannière de restauration est proposée. Tant que le joueur n'a pas tranché,
+// AUCUNE écriture n'est permise — sinon l'écriture périodique (ou celle des
+// 8 s après le boot) écraserait le fichier de sauvegarde par un état vide, et
+// la restauration ne rendrait plus rien. Le gel tombe dès que le stockage
+// cesse d'être vierge (le joueur a saisi un pseudo / s'est connecté), quand la
+// restauration a réussi, ou quand la bannière est refusée.
+let _hold = _FRESH_AT_BOOT;
+
 // ── Persistance du handle de dossier (IndexedDB) ───────────────────────────
 
 const DB_NAME = 'pth_bakauto';
@@ -159,6 +168,7 @@ async function _openWritable(fh) {
 
 async function _writeNow() {
   if (!_supported() || !_enabled()) return false;
+  if (_hold && _looksFresh()) return false;   // décision de restauration en attente
   if (typeof window._webBackupRecord !== 'function') return false;
 
   const b = window._webBackupRecord();
@@ -245,25 +255,76 @@ function _toast(msg, opts) {
   try { if (typeof window.showToast === 'function') window.showToast(msg, opts); } catch (_e) {}
 }
 
+// Retourne un CODE, jamais un booléen : la bannière doit pouvoir dire au joueur
+// POURQUOI ça n'a pas marché. Historiquement le seul retour d'erreur était un
+// toast — or .app-toast est en z-index 950 / bottom 28px, donc rendu DERRIÈRE
+// la bannière (z-index 99999, bottom 18px) : l'échec était invisible et le clic
+// semblait sans effet.
+//   'ok' · 'nofolder' · 'noperm' · 'nofile' · 'bad' · 'empty'
 async function _restoreFromFolder() {
-  const dir = await _getHandle();
-  if (!dir) return false;
+  // _handle d'abord : éviter un aller-retour IndexedDB ferait perdre
+  // l'activation utilisateur nécessaire à requestPermission().
+  const dir = _handle || (await _getHandle());
+  if (!dir) return 'nofolder';
   // Geste utilisateur (clic sur la bannière) : la demande de permission
   // interactive est autorisée ici.
-  if (!(await _ensurePerm(dir, true))) return false;
-  const fh = await dir.getFileHandle(FILE_NAME);      // sans create : absent → throw
-  const file = await fh.getFile();
-  const rec = JSON.parse(await file.text());
-  if (typeof window._applyWebBackupRec !== 'function') return false;
+  if (!(await _ensurePerm(dir, true))) return 'noperm';
+  let file;
+  try {
+    const fh = await dir.getFileHandle(FILE_NAME);    // sans create : absent → throw
+    file = await fh.getFile();
+  } catch (_e) { return 'nofile'; }
+  let rec = null;
+  try { rec = JSON.parse(await file.text()); } catch (_e) { return 'bad'; }
+  if (typeof window._applyWebBackupRec !== 'function') return 'bad';
   const n = window._applyWebBackupRec(rec);
-  if (n < 0) return false;
+  if (n < 0) return 'bad';
+  // 0 clé écrite : le fichier est syntaxiquement valable mais ne contient rien
+  // d'utile. Recharger donnerait un écran identique — l'impression exacte que
+  // « rien ne se passe ». On le dit au lieu de recharger.
+  if (n === 0) return 'empty';
+  _hold = false;
   _toast((_t('backupImported', 'Backup imported')) + ' (' + n + ')');
   // Rechargement : applique thème, langue, options — même finalité que la
   // proposition de rechargement de l'import manuel, sans question puisque le
   // joueur vient de demander la restauration.
   setTimeout(() => { try { location.reload(); } catch (_e) {} }, 800);
-  return true;
+  return 'ok';
 }
+
+// Chemin de secours de la bannière : re-choisir le dossier puis restaurer dans
+// la foulée. Volontairement SÉPARÉ de pickFolder() — celui-ci écrit le fichier
+// immédiatement (save('pick')), ce qui écraserait la sauvegarde par l'état
+// vierge en cours. Ici on ne fait que lire.
+async function pickForRestore() {
+  if (!_supported()) return 'nofolder';
+  let h;
+  try {
+    h = await window.showDirectoryPicker({ id: 'pokerth-backup', mode: 'readwrite' });
+  } catch (e) {
+    if (e && e.name === 'AbortError') return 'abort';
+    return 'bad';
+  }
+  if (!h) return 'abort';
+  if (!(await _ensurePerm(h, true))) return 'noperm';
+  _handle = h;
+  _handleLoaded = true;
+  _state.dirName = h.name || null;
+  _state.err = null;
+  try { await _saveHandle(h); } catch (_e) { /* le handle reste valable pour la session */ }
+  _ui();
+  return _restoreFromFolder();
+}
+
+// Message affiché pour chaque code d'échec, DANS la bannière (le toast serait
+// masqué par elle).
+const _WHY = {
+  nofolder: ['bakRestoreNoFile', 'No backup file in this folder.'],
+  nofile:   ['bakRestoreNoFile', 'No backup file in this folder.'],
+  noperm:   ['bakRestoreNoPerm', 'Folder access was not granted — pick the folder again.'],
+  empty:    ['bakRestoreEmpty', 'The backup file is empty — nothing to restore.'],
+  bad:      ['backupImportErr', 'Import failed'],
+};
 
 function _showRestoreBanner() {
   try {
@@ -274,39 +335,90 @@ function _showRestoreBanner() {
     el.style.cssText = 'position:fixed;left:50%;transform:translateX(-50%);bottom:18px;' +
       'z-index:99999;background:#1c2733;color:#fff;padding:10px 14px;border-radius:10px;' +
       'box-shadow:0 4px 18px rgba(0,0,0,.45);display:flex;gap:10px;align-items:center;' +
-      'max-width:min(92vw,560px);font-size:14px;line-height:1.35';
-    const txt = document.createElement('span');
+      'flex-wrap:wrap;max-width:min(92vw,620px);font-size:14px;line-height:1.35';
+
+    // Colonne de texte : la question, puis le chemin visé (dossier / fichier) —
+    // sans lui, le joueur ne sait pas de quoi la bannière parle — puis la zone
+    // d'état, vide tant qu'il ne s'est rien passé.
+    const col = document.createElement('div');
+    col.style.cssText = 'flex:1 1 240px;min-width:0';
+    const txt = document.createElement('div');
     txt.textContent = _t('bakRestoreQ', 'Your settings look empty. Restore them from your backup folder?');
+    const sub = document.createElement('div');
+    sub.style.cssText = 'color:#9fb0c0;font-size:12px;margin-top:2px;word-break:break-all';
+    sub.textContent = (_state.dirName ? _state.dirName + ' / ' : '') + FILE_NAME;
+    const msg = document.createElement('div');
+    msg.style.cssText = 'font-size:12px;margin-top:4px;display:none';
+    col.appendChild(txt); col.appendChild(sub); col.appendChild(msg);
+
     const ok = document.createElement('button');
     ok.type = 'button';
     ok.textContent = _t('bakRestoreBtn', 'Restore');
     ok.style.cssText = 'background:#2e7d32;color:#fff;border:0;border-radius:8px;' +
       'padding:6px 12px;font-size:14px;cursor:pointer;white-space:nowrap';
+    const pick = document.createElement('button');
+    pick.type = 'button';
+    pick.textContent = _t('advPdbAutoPick', 'Choose folder…');
+    pick.style.cssText = 'background:transparent;color:#cfe0ef;border:1px solid #3d5061;' +
+      'border-radius:8px;padding:6px 12px;font-size:14px;cursor:pointer;white-space:nowrap';
     const no = document.createElement('button');
     no.type = 'button';
     no.setAttribute('aria-label', 'Dismiss');
     no.textContent = '\u2715';
     no.style.cssText = 'background:transparent;color:#9fb0c0;border:0;font-size:15px;' +
       'cursor:pointer;padding:4px 6px';
-    ok.addEventListener('click', () => {
-      ok.disabled = true;
-      _restoreFromFolder().then((done) => {
-        if (done) { try { el.remove(); } catch (_e) {} }
-        else { ok.disabled = false; _toast(_t('backupImportErr', 'Import failed'), { tone: 'error' }); }
-      }).catch(() => {
-        ok.disabled = false;
-        _toast(_t('backupImportErr', 'Import failed'), { tone: 'error' });
+
+    function setMsg(text, isErr) {
+      msg.textContent = text || '';
+      msg.style.color = isErr ? '#ff8a65' : '#9fb0c0';
+      msg.style.display = text ? '' : 'none';
+    }
+    function setSub() {
+      sub.textContent = (_state.dirName ? _state.dirName + ' / ' : '') + FILE_NAME;
+    }
+
+    let busy = false;
+    function run(fn) {
+      if (busy) return;
+      busy = true; ok.disabled = true; pick.disabled = true;
+      setMsg(_t('bakRestoreBusy', 'Restoring…'), false);
+      // fn() est appelé dans le même tick que le clic : showDirectoryPicker()
+      // et requestPermission() exigent une activation utilisateur fraîche.
+      let p;
+      try { p = fn(); } catch (e) { p = Promise.reject(e); }
+      Promise.resolve(p).then((why) => {
+        if (why === 'ok') { setMsg(_t('backupImported', 'Backup imported'), false); return; }
+        busy = false; ok.disabled = false; pick.disabled = false;
+        setSub();
+        if (why === 'abort') { setMsg('', false); return; }
+        const k = _WHY[why] || _WHY.bad;
+        setMsg(_t(k[0], k[1]), true);
+      }).catch((e) => {
+        busy = false; ok.disabled = false; pick.disabled = false;
+        const d = (e && (e.name || e.message)) ? String(e.name || e.message) : '';
+        setMsg(_t('backupImportErr', 'Import failed') + (d ? ' — ' + d : ''), true);
       });
-    });
-    no.addEventListener('click', () => { try { el.remove(); } catch (_e) {} });
-    el.appendChild(txt); el.appendChild(ok); el.appendChild(no);
+    }
+
+    ok.addEventListener('click', () => run(_restoreFromFolder));
+    pick.addEventListener('click', () => run(pickForRestore));
+    // Refus explicite : le joueur repart de zéro, l'écriture automatique peut
+    // reprendre son cours.
+    no.addEventListener('click', () => { _hold = false; try { el.remove(); } catch (_e) {} });
+
+    el.appendChild(col); el.appendChild(ok); el.appendChild(pick); el.appendChild(no);
     document.body.appendChild(el);
   } catch (_e) {}
 }
 
+// Lecture seule du gel d'écriture (tests déterministes).
+function _holdState() { return _hold; }
+
 function _maybeOfferRestore() {
-  if (!_supported() || !_enabled() || !_FRESH_AT_BOOT) return;
-  _getHandle().then((h) => { if (h) _showRestoreBanner(); }).catch(() => {});
+  if (!_supported() || !_enabled() || !_FRESH_AT_BOOT) { _hold = false; return; }
+  _getHandle()
+    .then((h) => { if (h) _showRestoreBanner(); else _hold = false; })
+    .catch(() => { _hold = false; });
 }
 
 // ── UI (panneau Options avancées) ──────────────────────────────────────────
@@ -378,4 +490,4 @@ if (typeof window !== 'undefined') {
 
 // Exports ESM : uniquement pour les tests déterministes. En navigateur le
 // module ne communique que par window.*.
-export { save, pickFolder, _supported, _enabled, _looksFresh, _sigOf, _writeNow, _state };
+export { save, pickFolder, pickForRestore, _supported, _enabled, _looksFresh, _sigOf, _writeNow, _state, _holdState };

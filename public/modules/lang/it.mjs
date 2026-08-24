@@ -1007,6 +1007,10 @@ export const strings = {
     "advBakAuto": "Scrivi automaticamente il file di backup",
     "bakRestoreQ": "Le tue impostazioni sembrano vuote. Ripristinarle dalla cartella di backup?",
     "bakRestoreBtn": "Ripristina",
+    "bakRestoreBusy": "Ripristino…",
+    "bakRestoreNoFile": "Nessun file di backup in questa cartella.",
+    "bakRestoreNoPerm": "Accesso alla cartella non concesso — scegli di nuovo la cartella.",
+    "bakRestoreEmpty": "Il file di backup è vuoto — niente da ripristinare.",
     "syncBusy": "Sincronizzazione…",
 };
 

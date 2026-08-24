@@ -13,7 +13,38 @@ this file captures what matters to players and operators.
 Opened with `v2.1.7-web.0` (2026-08-13), following the upstream **2.1.7**
 release.
 
+### Fixed
+- **Backup restore banner: silent failures, and an autosave that could erase the
+  backup** (`web.67`) — `_restoreFromFolder()` reported every failure through
+  `showToast(..., {tone:'error'})`, but `.app-toast` sits at `z-index: 950` /
+  `bottom: 28px` while the banner is at `z-index: 99999` / `bottom: 18px`: the
+  toast rendered *behind* the banner, so a failed restore looked like a dead
+  button. The function now returns an explicit code (`ok` · `nofolder` ·
+  `noperm` · `nofile` · `bad` · `empty` · `abort`) and the banner renders the
+  matching message in its own status line, together with the target path
+  (`<folder> / pokerth-web-backup.json`) so the player can see what it is
+  talking about. `n === 0` is reported as `empty` instead of reloading into an
+  identical screen. Second, more serious half: with fresh storage and a
+  remembered folder, the periodic writer (`save('boot')` at +8 s, then every
+  60 s) would happily write the empty current state over the backup file
+  *while the banner was still on screen*, after which restoring returned
+  nothing. Writes are now held (`_hold`) until the player restores, dismisses
+  the banner, or the storage stops looking fresh.
+
 ### Added
+- **Backup restore banner: "Choose folder…" button** (`web.67`) — a second
+  action next to Restore, wired to a new `pickForRestore()` that is
+  deliberately *not* `pickFolder()`: the latter ends with `save('pick')`, which
+  would overwrite the backup with the blank state being restored from. The new
+  path only remembers the handle and reads. It covers both the folder moved/
+  renamed case and the common one where Chrome has dropped the persisted
+  `readwrite` grant between sessions, and it runs in the click's own tick so
+  `showDirectoryPicker()` keeps its user activation. Four new i18n keys
+  (`bakRestoreBusy`, `bakRestoreNoFile`, `bakRestoreNoPerm`,
+  `bakRestoreEmpty`) across all 45 languages; the button reuses the existing
+  `advPdbAutoPick`. `scripts/test-backup-autosave.mjs` covers every return code
+  and the hold release.
+
 - **PWA integration: protocol handler, share target, file handlers** (`web.66`) —
   four new manifest entries plus the code that answers them, so the installed
   app behaves like a native one on the desktop and on Android.

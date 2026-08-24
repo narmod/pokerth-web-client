@@ -1003,6 +1003,10 @@ export const strings = {
     "advBakAuto": "Tự động ghi tệp sao lưu",
     "bakRestoreQ": "Cài đặt của bạn có vẻ trống. Khôi phục từ thư mục sao lưu?",
     "bakRestoreBtn": "Khôi phục",
+    "bakRestoreBusy": "Đang khôi phục…",
+    "bakRestoreNoFile": "Không có tệp sao lưu trong thư mục này.",
+    "bakRestoreNoPerm": "Chưa cấp quyền truy cập thư mục — hãy chọn lại thư mục.",
+    "bakRestoreEmpty": "Tệp sao lưu trống — không có gì để khôi phục.",
     "syncBusy": "Đang đồng bộ…",
 };
 

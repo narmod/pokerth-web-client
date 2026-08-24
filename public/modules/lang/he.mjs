@@ -627,6 +627,10 @@ export const strings = {
     "advBakAuto": "כתיבת קובץ הגיבוי באופן אוטומטי",
     "bakRestoreQ": "ההגדרות שלך נראות ריקות. לשחזר אותן מתיקיית הגיבוי?",
     "bakRestoreBtn": "שחזור",
+    "bakRestoreBusy": "משחזר…",
+    "bakRestoreNoFile": "אין קובץ גיבוי בתיקייה הזו.",
+    "bakRestoreNoPerm": "הגישה לתיקייה לא אושרה — בחר את התיקייה שוב.",
+    "bakRestoreEmpty": "קובץ הגיבוי ריק — אין מה לשחזר.",
     "syncBusy": "מסנכרן…",
 };
 

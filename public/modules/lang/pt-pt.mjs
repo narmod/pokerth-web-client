@@ -1003,6 +1003,10 @@ export const strings = {
     "advBakAuto": "Escrever o ficheiro de cópia de segurança automaticamente",
     "bakRestoreQ": "As tuas definições parecem vazias. Restaurá-las a partir da pasta de cópias de segurança?",
     "bakRestoreBtn": "Restaurar",
+    "bakRestoreBusy": "A restaurar…",
+    "bakRestoreNoFile": "Não há ficheiro de cópia de segurança nesta pasta.",
+    "bakRestoreNoPerm": "Acesso à pasta não concedido — escolhe a pasta novamente.",
+    "bakRestoreEmpty": "O ficheiro de cópia de segurança está vazio — nada para restaurar.",
     "syncBusy": "A sincronizar…",
 };
 
