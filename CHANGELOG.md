@@ -14,6 +14,14 @@ Opened with `v2.1.7-web.0` (2026-08-13), following the upstream **2.1.7**
 release.
 
 ### Added
+- **App shortcut icons in the web manifest** (`web.65`) — groundwork for a
+  Trusted Web Activity (TWA) packaging of the PWA for the Play Store. Bubblewrap
+  maps `shortcuts[]` to Android app shortcuts, but silently drops any entry that
+  carries no `icons` array. The two existing shortcuts (`/?go=play`,
+  `/?go=create`) now declare the 192×192 `any` and `maskable` icons already
+  shipped for the app itself, so they survive the conversion and also render in
+  the Chrome/Edge desktop jump list. No new assets, no runtime change.
+
 - **Bet keypad on touch devices** (`web.58`) — reported through Discord: the web
   client is *"usable, but not so nice for typing numbers"* on a phone. The bet
   field is a bare `type="number"` input, so tapping it summons the OS keyboard,
