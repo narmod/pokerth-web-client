@@ -1021,33 +1021,37 @@ function _applyWebBackupRec(rec) {
   return n;
 }
 window._applyWebBackupRec = _applyWebBackupRec;
+// Traitement d'UN fichier de sauvegarde, quelle que soit sa provenance : le
+// selecteur ci-dessous, un « ouvrir avec » du gestionnaire de fichiers
+// (file_handlers) ou un partage entrant (share_target).
+function _importWebBackupFile(f) {
+  if (!f) return;
+  var fail = function () {
+    if (typeof showToast === 'function') showToast(t('backupImportErr') || 'Import failed', { tone: 'error' });
+  };
+  if (f.size > 8 * 1024 * 1024) return fail();
+  var r = new FileReader();
+  r.onload = function () {
+    var rec = null;
+    try { rec = JSON.parse(String(r.result || '')); } catch (e) {}
+    var n = _applyWebBackupRec(rec);
+    if (n < 0) return fail();
+    var msg = (t('backupImported') || 'Backup imported') + ' (' + n + ')';
+    if (typeof showToast === 'function') showToast(msg);
+    setTimeout(function () {
+      var q = t('cfgXmlReload') || 'Reload now to apply everything?';
+      if (window.confirm(msg + '\n\n' + q)) { try { location.reload(); } catch (e) {} }
+    }, 300);
+  };
+  r.onerror = fail;
+  r.readAsText(f);
+}
+window._importWebBackupFile = _importWebBackupFile;
 function importWebBackupPick() {
   var inp = document.getElementById('adv-backup-file');
   if (!inp) return;
   inp.value = '';
-  inp.onchange = function () {
-    var f = inp.files && inp.files[0];
-    if (!f) return;
-    var fail = function () {
-      if (typeof showToast === 'function') showToast(t('backupImportErr') || 'Import failed', { tone: 'error' });
-    };
-    if (f.size > 8 * 1024 * 1024) return fail();
-    var r = new FileReader();
-    r.onload = function () {
-      var rec = null;
-      try { rec = JSON.parse(String(r.result || '')); } catch (e) {}
-      var n = _applyWebBackupRec(rec);
-      if (n < 0) return fail();
-      var msg = (t('backupImported') || 'Backup imported') + ' (' + n + ')';
-      if (typeof showToast === 'function') showToast(msg);
-      setTimeout(function () {
-        var q = t('cfgXmlReload') || 'Reload now to apply everything?';
-        if (window.confirm(msg + '\n\n' + q)) { try { location.reload(); } catch (e) {} }
-      }, 300);
-    };
-    r.onerror = fail;
-    r.readAsText(f);
-  };
+  inp.onchange = function () { _importWebBackupFile(inp.files && inp.files[0]); };
   inp.click();
 }
 window.importWebBackupPick = importWebBackupPick;
@@ -1145,41 +1149,151 @@ function _cfgApplyImported(cfg) {
   mergePrefs('pth_prefs_local', false);
   mergePrefs('pth_prefs_internet', true);
 }
+function _importPokerthConfigFile(f) {
+  if (!f) return;
+  if (f.size > 512 * 1024) { if (typeof showToast === 'function') showToast(t('cfgXmlImportErr') || 'Import failed', { tone: 'error' }); return; }
+  var r = new FileReader();
+  r.onload = function () {
+    try {
+      var text = String(r.result || '');
+      var cfg = _cfgParseXml(text);
+      // Round-trip : garder le fichier ENTIER, machine-keys comprises (elles
+      // seront réécrites telles quelles ; l'officiel corrige AppDataDir seul).
+      try { localStorage.setItem(PTH_CFG_XML_KEY, text.slice(0, 400000)); } catch (e) {}
+      Object.keys(PTH_CFG_MACHINE_KEYS).forEach(function (k) { delete cfg.scalars[k]; });
+      _cfgApplyImported(cfg);
+      var msg = t('cfgXmlImported') || 'config.xml imported';
+      if (typeof showToast === 'function') showToast(msg);
+      // Comme le « redémarre PokerTH » de l'officiel : proposer un rechargement
+      // pour appliquer thèmes/decks et resynchroniser toute l'UI.
+      setTimeout(function () {
+        var q = t('cfgXmlReload') || 'Reload now to apply everything?';
+        if (window.confirm(msg + '\n\n' + q)) { try { location.reload(); } catch (e) {} }
+      }, 150);
+    } catch (e) {
+      if (typeof showToast === 'function') showToast((t('cfgXmlImportErr') || 'Import failed') + ' — ' + e.message, { tone: 'error' });
+    }
+  };
+  r.readAsText(f);
+}
+window._importPokerthConfigFile = _importPokerthConfigFile;
 function importPokerthConfigPick() {
   var inp = document.getElementById('adv-cfgxml-file');
   if (!inp) return;
   inp.value = '';
-  inp.onchange = function () {
-    var f = inp.files && inp.files[0];
-    if (!f) return;
-    if (f.size > 512 * 1024) { if (typeof showToast === 'function') showToast(t('cfgXmlImportErr') || 'Import failed', { tone: 'error' }); return; }
-    var r = new FileReader();
-    r.onload = function () {
-      try {
-        var text = String(r.result || '');
-        var cfg = _cfgParseXml(text);
-        // Round-trip : garder le fichier ENTIER, machine-keys comprises (elles
-        // seront réécrites telles quelles ; l'officiel corrige AppDataDir seul).
-        try { localStorage.setItem(PTH_CFG_XML_KEY, text.slice(0, 400000)); } catch (e) {}
-        Object.keys(PTH_CFG_MACHINE_KEYS).forEach(function (k) { delete cfg.scalars[k]; });
-        _cfgApplyImported(cfg);
-        var msg = t('cfgXmlImported') || 'config.xml imported';
-        if (typeof showToast === 'function') showToast(msg);
-        // Comme le « redémarre PokerTH » de l'officiel : proposer un rechargement
-        // pour appliquer thèmes/decks et resynchroniser toute l'UI.
-        setTimeout(function () {
-          var q = t('cfgXmlReload') || 'Reload now to apply everything?';
-          if (window.confirm(msg + '\n\n' + q)) { try { location.reload(); } catch (e) {} }
-        }, 150);
-      } catch (e) {
-        if (typeof showToast === 'function') showToast((t('cfgXmlImportErr') || 'Import failed') + ' — ' + e.message, { tone: 'error' });
-      }
-    };
-    r.readAsText(f);
-  };
+  inp.onchange = function () { _importPokerthConfigFile(inp.files && inp.files[0]); };
   inp.click();
 }
 window.importPokerthConfigPick = importPokerthConfigPick;
+
+// ── Fichiers et liens entrants (file_handlers · share_target · protocole) ────
+// Trois portes, un seul aiguillage. Le type est deduit de l'extension : .zip =
+// pack de style (tapis / jeu de cartes / sieges), .json = sauvegarde web,
+// .xml = config.xml du client officiel. Tout le reste est ignore silencieusement.
+function _pthHandleIncomingFile(file) {
+  if (!file) return Promise.resolve(false);
+  var name = String(file.name || '').toLowerCase();
+  var fail = function (e) {
+    if (typeof showToast === 'function')
+      showToast((t('importError') || 'Import failed') + (e && e.message ? ' \u2014 ' + e.message : ''), { tone: 'error' });
+    return false;
+  };
+  try {
+    if (/\.zip$/.test(name)) {
+      if (typeof window._pthImportPackZip !== 'function') return Promise.resolve(fail());
+      return window._pthImportPackZip(file).then(function (rec) {
+        if (typeof showToast === 'function') showToast((rec && rec.name) || file.name);
+        return true;
+      }).catch(fail);
+    }
+    if (/\.json$/.test(name)) { _importWebBackupFile(file); return Promise.resolve(true); }
+    if (/\.xml$/.test(name))  { _importPokerthConfigFile(file); return Promise.resolve(true); }
+  } catch (e) { return Promise.resolve(fail(e)); }
+  return Promise.resolve(false);
+}
+window._pthHandleIncomingFile = _pthHandleIncomingFile;
+
+// Un lien d'invitation partage depuis une autre application (messagerie, mail)
+// arrive comme du TEXTE : on y repeche l'URL et on relance l'application dessus,
+// ce qui reutilise tel quel le chemin d'invitation deja en place (#join=…).
+// Jamais pendant une main : recharger couperait la partie en cours.
+function _pthApplySharedLink(text) {
+  var m = String(text || '').match(/(https?:\/\/[^\s]+|web\+pokerth:\/\/[^\s]+)/);
+  if (!m) return false;
+  var raw = m[1], dest = '';
+  try {
+    if (raw.indexOf('web+pokerth:') === 0) dest = '/?proto=' + encodeURIComponent(raw);
+    else {
+      var u = new URL(raw);
+      if (!/[#?](?:.*&)?(?:join|table|host)=/.test(u.hash + u.search)) return false;
+      dest = u.pathname + u.search + u.hash;   // toujours notre propre origine
+    }
+  } catch (e) { return false; }
+  var S = window.PthState;
+  if (S && S.gameId) {
+    if (typeof showToast === 'function') showToast(raw);
+    return false;
+  }
+  try { location.replace(dest); } catch (e) {}
+  return true;
+}
+
+// Vide la boite aux lettres remplie par le service worker (voir sw.js,
+// handleShareTarget). Appele au demarrage et a chaque relance entrante.
+function _pthDrainShare() {
+  if (!window.caches) return;
+  var C = null;
+  caches.open('pokerth-share').then(function (c) {
+    C = c;
+    return c.match('/__share/index.json');
+  }).then(function (r) {
+    if (!r) return null;
+    return r.json();
+  }).then(function (idx) {
+    if (!idx) return null;
+    var txt = [idx.url, idx.text, idx.title].filter(Boolean).join(' ');
+    var seq = Promise.resolve();
+    (idx.files || []).forEach(function (f) {
+      seq = seq.then(function () {
+        return C.match(f.path).then(function (rf) {
+          if (!rf) return;
+          return rf.blob().then(function (b) {
+            return _pthHandleIncomingFile(new File([b], f.name, { type: f.type || b.type || '' }));
+          });
+        });
+      });
+    });
+    return seq.then(function () {
+      return Promise.all(['/__share/index.json', '/__share/0', '/__share/1',
+                          '/__share/2', '/__share/3'].map(function (k) { return C.delete(k); }));
+    }).then(function () {
+      // Le lien en dernier : il peut recharger la page, les fichiers sont deja
+      // ranges et la boite videe, donc rien ne sera rejoue au retour.
+      if (txt) _pthApplySharedLink(txt);
+    });
+  }).catch(function () {});
+}
+window._pthDrainShare = _pthDrainShare;
+
+// « Ouvrir avec » depuis le gestionnaire de fichiers (manifest file_handlers) et
+// relances entrantes de l'application deja ouverte (launch_handler focus-existing :
+// pas de rechargement, donc le drain doit repasser ici).
+try {
+  if ('launchQueue' in window && window.launchQueue &&
+      typeof LaunchParams !== 'undefined' && 'files' in LaunchParams.prototype) {
+    window.launchQueue.setConsumer(function (params) {
+      try { _pthDrainShare(); } catch (e) {}
+      if (!params || !params.files || !params.files.length) return;
+      var seq = Promise.resolve();
+      params.files.slice(0, 4).forEach(function (h) {
+        seq = seq.then(function () { return h.getFile(); })
+                 .then(_pthHandleIncomingFile)
+                 .catch(function () {});
+      });
+    });
+  }
+} catch (e) {}
+try { _pthDrainShare(); } catch (e) {}
 
 // ── Phase 2 : synchronisation du config.xml liée au COMPTE (opt-in) ─────────
 // Réservée aux logins AUTHENTIFIÉS (compte pokerth enregistré) : le proxy
@@ -2920,6 +3034,21 @@ document.addEventListener("DOMContentLoaded", function() {
         joinSrv  = hp.get('s') || '';
         joinTls  = hp.get('tls');
       } catch(eH) {}
+      // Lien protocolaire web+pokerth://join?name=<table>&s=<serveur>[&tls=1],
+      // enregistre par manifest.protocol_handlers : le systeme nous passe
+      // l'URL entiere dans ?proto=. Repli seulement (le #join= reste maitre).
+      if (!joinName) {
+        try {
+          var _pr = sp.get('proto');
+          if (_pr) {
+            var _pu = decodeURIComponent(_pr), _pq = _pu.indexOf('?');
+            var _pp = new URLSearchParams(_pq >= 0 ? _pu.slice(_pq + 1) : '');
+            joinName = _pp.get('name') || _pp.get('join') || '';
+            joinSrv  = _pp.get('s') || _pp.get('server') || '';
+            joinTls  = _pp.get('tls');
+          }
+        } catch (eP) {}
+      }
       if (joinName) {
         // Published on window (this block runs at GLOBAL scope, outside
         // the App IIFE) \u2014 consumed by onGameListNew in msg-lobby.mjs.
@@ -2976,7 +3105,7 @@ document.addEventListener("DOMContentLoaded", function() {
         }, 20000);
         try { window.history.replaceState({}, '', window.location.pathname); } catch(eR) {}
       }
-      if (h || p || table || go) {
+      if (h || p || table || go || sp.get('proto') || sp.get('share') || sp.get('open')) {
         // Only treat as a "share link" (which suppresses saved-prefs
         // restore of host/port/mode) when a server/table was actually
         // encoded. A bare ?go= shortcut must keep the user's saved server.
@@ -10419,7 +10548,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.7-web.65'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.7-web.66'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

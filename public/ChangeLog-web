@@ -1,4 +1,8 @@
 2026-08-13 version 2.1.7-web (current series):
+- new: the "your turn" notification now carries Fold and Check/Call buttons, so you can play a hand from the notification itself without switching back to the app
+- new: open with PokerTH - a style pack (.zip), a backup file (.json) or a desktop config.xml can now be opened straight from your file manager into the installed app
+- new: share to PokerTH - send a style pack, a backup or a config.xml to the app from any share menu, and it is imported on arrival; an invitation link shared the same way opens the table directly
+- new: invitation links now open in the installed app instead of a browser tab, including the new web+pokerth:// links
 - bugfix: on the Green Casino table in light mode, the All-In button was hard to read - its label was a pale pink meant for a dark felt, while the button itself is only an outline. The label now uses the same red as that outline
 - new: bet keypad on touch devices - tapping the bet amount now opens a keypad right inside the action bar instead of the system keyboard, so the table stays visible and nothing jumps around while you type. Min, 1/2, Pot and All-In are one tap away, and a small keypad button next to the field opens it on touch-screen computers too
 - improvement: the bet slider is far easier to use with a finger - it now moves in the same steps as the desktop client (10, 50, 500 or 5000 chips depending on your stack) and has a much taller touch area, and dragging it no longer scrolls the page by mistake

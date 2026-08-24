@@ -953,6 +953,16 @@ function _pickTableImport(){
   inp.onchange=function(){ var f=inp.files&&inp.files[0]; if(f){ _importTablePackage(f).catch(function(err){ try{ alert((_t('importError','Import failed'))+' : '+((err&&err.message)||err)); }catch(e){} }); } };
   inp.click();
 }
+// Un .zip qui arrive de l'exterieur (partage OS, « ouvrir avec ») n'annonce pas
+// quel genre de pack il contient : on tente les trois formats officiels du plus
+// strict au plus permissif (deck = 52 faces, tapis = table.png, sieges =
+// style.css/plate). Le premier qui accepte gagne, sinon l'erreur remonte a
+// l'appelant (pokerth.js) qui affiche le toast d'echec.
+window._pthImportPackZip = function (file) {
+  return _importDeckPackage(file)
+    .catch(function () { return _importTablePackage(file); })
+    .catch(function () { return _importSeatPackage(file); });
+};
 try { _loadImportedTables(); _loadImportedDecks(); _loadImportedSeats(); } catch (e) {}
 table.apply = function(id){
   _tblApply(id);   // pose data-table + persiste pth_table

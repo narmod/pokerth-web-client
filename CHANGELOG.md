@@ -14,6 +14,38 @@ Opened with `v2.1.7-web.0` (2026-08-13), following the upstream **2.1.7**
 release.
 
 ### Added
+- **PWA integration: protocol handler, share target, file handlers** (`web.66`) —
+  four new manifest entries plus the code that answers them, so the installed
+  app behaves like a native one on the desktop and on Android.
+  `protocol_handlers` registers `web+pokerth://join?name=<table>&s=<server>`,
+  read back in `parseShareLink()` as a fallback source for the existing
+  `#join=` flow (the fragment stays authoritative). `share_target` posts to
+  `/share-target`, a route no server answers: the service worker *is* the
+  endpoint, parks the multipart payload in a dedicated `pokerth-share` cache
+  (kept out of the `CACHE_VERSION` sweep) and answers `303` to `/?share=1`;
+  the page drains it on boot and on every incoming launch. `file_handlers`
+  declares `.zip`/`.json`/`.xml` and feeds `launchQueue` into the same
+  dispatcher, `window._pthHandleIncomingFile()`, which routes by extension:
+  style pack (`_pthImportPackZip()` in `theme.mjs`, trying deck → table → seat,
+  strictest first), web backup, or desktop `config.xml`. The two existing
+  pickers were split so the per-`File` half is reusable
+  (`_importWebBackupFile()`, `_importPokerthConfigFile()`); no picker behaviour
+  changed. `handle_links: "preferred"` captures in-scope links, and
+  `scope_extensions` claims `pokerth.net` — inert until sp0ck serves
+  `/.well-known/web-app-origin-association` there. No new i18n key.
+- **Fold / Check-Call buttons in the turn notification** (`web.66`) — only a
+  service worker registration can carry notification actions, so
+  `notifyMyTurnVisuals()` now goes through `_showTurnNotification()`, which
+  uses `registration.showNotification()` when available and falls back to the
+  plain `new Notification()` everywhere else (Safari, worker not ready): the
+  alert itself is unchanged in either case. A `notificationclick` handler in
+  the worker focuses the window and posts `NOTIF_ACTION`; the page re-checks
+  `S.turnPid === S.myId` and recomputes the amount at fire time — the same
+  discipline as auto-play — so a raise landing in between turns a stale Call
+  into a re-render rather than a wrong bet. `clearTurnNotif()` closes any
+  worker-owned notification so its buttons never outlive the turn. Action
+  labels stay English, per project convention.
+
 - **App shortcut icons in the web manifest** (`web.65`) — groundwork for a
   Trusted Web Activity (TWA) packaging of the PWA for the Play Store. Bubblewrap
   maps `shortcuts[]` to Android app shortcuts, but silently drops any entry that

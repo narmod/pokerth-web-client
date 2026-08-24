@@ -23,7 +23,10 @@
  *                 Cross-origin requests and WS upgrades are left untouched.
  *                 (Fonts are now self-hosted and handled by SWR above.)
  */
-const CACHE_VERSION = 'pokerth-v2.1.7-web.65';
+const CACHE_VERSION = 'pokerth-v2.1.7-web.66';
+// Share Target payload park (see handleShareTarget). Kept OUT of CACHE_VERSION
+// so an update sweep never eats a share that arrived seconds earlier.
+const SHARE_CACHE = 'pokerth-share';
 
 // Where navigations fall back to when the network is unavailable.
 const NAV_FALLBACK = '/pokerth-client.html';
@@ -284,7 +287,7 @@ self.addEventListener('activate', function(e) {
     caches.keys().then(function(keys) {
       return Promise.all(
         keys
-          .filter(function(k) { return k !== CACHE_VERSION; })
+          .filter(function(k) { return k !== CACHE_VERSION && k !== SHARE_CACHE; })
           .map(function(k) {
             console.log('[SW] Dropping old cache:', k);
             return caches.delete(k);
@@ -391,8 +394,65 @@ function handleCode(e) {
   })();
 }
 
+// ── Notification actions ──
+// The turn notification carries Fold / Check-Call buttons (see action-bar.mjs).
+// Only a service worker can own those buttons, so the click lands here: we
+// focus the game window and hand the chosen action over to the page, which
+// re-validates that it is still the player's turn before sending anything.
+// A click on the notification body (no action) only focuses the window.
+self.addEventListener('notificationclick', function(e) {
+  var act = e.action || '';
+  e.notification.close();
+  e.waitUntil(
+    self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then(function(list) {
+      var client = (list && list[0]) || null;
+      if (!client) return self.clients.openWindow('/');
+      if (act) client.postMessage({ type: 'NOTIF_ACTION', action: act });
+      return client.focus ? client.focus() : null;
+    })
+  );
+});
+
+// ── Web Share Target (POST, multipart) ──
+// The manifest points share_target at /share-target, but nothing on the server
+// answers that route: the service worker IS the endpoint. The OS posts the
+// shared text/URL and files here; we park the payload in a dedicated cache and
+// redirect to the app, which drains it on boot (window._pthDrainShare).
+function handleShareTarget(e) {
+  return (async function() {
+    var idx = { ts: Date.now(), title: '', text: '', url: '', files: [] };
+    try {
+      var form = await e.request.formData();
+      idx.title = String(form.get('title') || '');
+      idx.text  = String(form.get('text')  || '');
+      idx.url   = String(form.get('url')   || '');
+      var cache = await caches.open(SHARE_CACHE);
+      var files = form.getAll('files') || [];
+      for (var i = 0; i < files.length && i < 4; i++) {
+        var f = files[i];
+        if (!f || typeof f.name !== 'string') continue;
+        var path = '/__share/' + i;
+        await cache.put(new Request(path), new Response(f, {
+          headers: { 'Content-Type': f.type || 'application/octet-stream' }
+        }));
+        idx.files.push({ path: path, name: f.name, type: f.type || '' });
+      }
+      await cache.put(new Request('/__share/index.json'), new Response(JSON.stringify(idx), {
+        headers: { 'Content-Type': 'application/json' }
+      }));
+    } catch (err) {}
+    // 303: turns the POST into a GET navigation, so a reload never re-posts.
+    return Response.redirect('/?share=1', 303);
+  })();
+}
+
 // ── Fetch : route by request type ──
 self.addEventListener('fetch', function(e) {
+  if (e.request.method === 'POST' &&
+      new URL(e.request.url).pathname === '/share-target') {
+    e.respondWith(handleShareTarget(e));
+    return;
+  }
   if (e.request.method !== 'GET') return;
   var url = new URL(e.request.url);
   // Don't intercept WebSocket upgrades or cross-origin requests (fonts etc.)

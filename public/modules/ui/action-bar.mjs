@@ -97,7 +97,7 @@ function notifyMyTurnVisuals() {
   if (window.refreshAppBadge) window.refreshAppBadge();
   // Notification navigateur (si onglet en arrière-plan)
   if (document.hidden && 'Notification' in window && Notification.permission === 'granted') {
-    try { new Notification(msg, { body: sub, icon: '/favicon.ico', tag: 'pokerth-turn', silent: false, vibrate: S._hapticEnabled ? [90, 50, 90] : [] }); } catch(e) {}
+    _showTurnNotification(msg, sub);
   }
   // Titre d'onglet dynamique + clignotement
   clearInterval(S._titleBlinkID);
@@ -117,11 +117,88 @@ function notifyMyTurnVisuals() {
   });
 }
 
+// La notification de tour porte deux boutons — Fold et Check/Call — pour jouer
+// sans revenir dans l'application. Seul un service worker peut poser des
+// boutons (showNotification), donc on passe par lui quand il est disponible et
+// on retombe sur la notification simple sinon (Safari, SW pas encore prêt) :
+// dans tous les cas le joueur voit exactement la même alerte qu'avant.
+// Libellés en anglais comme partout ailleurs pour les actions de poker.
+function _turnNotifOptions() {
+  var toCall = 0, money = 0;
+  try {
+    var sd = S.seatData[S.myId] || {};
+    toCall = Math.max(0, (S.highestBet || 0) - (sd.bet || 0));
+    money  = sd.money || 0;
+  } catch (e) {}
+  var second = (toCall === 0) ? 'Check'
+             : (toCall >= money ? 'All-In' : 'Call ' + toCall);
+  return { toCall: toCall, actions: [
+    { action: 'fold', title: 'Fold' },
+    { action: 'checkcall', title: second }
+  ] };
+}
+function _showTurnNotification(msg, sub) {
+  var base = { body: sub, icon: '/icon-192.png', badge: '/icon-192.png',
+               tag: 'pokerth-turn', renotify: true, silent: false,
+               vibrate: S._hapticEnabled ? [90, 50, 90] : [] };
+  var sw = null;
+  try { sw = navigator.serviceWorker; } catch (e) {}
+  if (sw && sw.ready && typeof Notification !== 'undefined' && 'actions' in Notification.prototype) {
+    var opt = _turnNotifOptions();
+    base.actions = opt.actions;
+    sw.ready.then(function (reg) {
+      // Le tour a pu passer pendant que le worker se réveillait.
+      if (S.turnPid !== S.myId) return;
+      return reg.showNotification(msg, base);
+    }).catch(function () {
+      try { new Notification(msg, base); } catch (e) {}
+    });
+    return;
+  }
+  try { new Notification(msg, base); } catch (e) {}
+}
+
+// Action choisie depuis la notification (message posté par le service worker).
+// Rien n'est envoyé à l'aveugle : le tour est revérifié ici, et les montants
+// sont recalculés au moment du tir comme le fait le mode automatique — une
+// relance adverse arrivée entre-temps transforme un Call périmé en simple
+// re-rendu par la garde de doAction.
+function _runNotifAction(which) {
+  if (S.turnPid !== S.myId) return;
+  if (which === 'fold') { doAction(1, 0); }
+  else if (which === 'checkcall') {
+    var sd = S.seatData[S.myId] || {};
+    var tc = Math.max(0, (S.highestBet || 0) - (sd.bet || 0));
+    var money = sd.money || 0;
+    if (tc === 0) doAction(2, 0);
+    else if (tc >= money) doAction(6, money);
+    else doAction(3, tc);
+  }
+  try { clearTurnNotif(); } catch (e) {}
+}
+try {
+  if (navigator.serviceWorker && navigator.serviceWorker.addEventListener) {
+    navigator.serviceWorker.addEventListener('message', function (ev) {
+      var d = ev && ev.data;
+      if (d && d.type === 'NOTIF_ACTION') _runNotifAction(d.action);
+    });
+  }
+} catch (e) {}
+
 function clearTurnNotif() {
   clearInterval(S._titleBlinkID);
   document.title = S._origTitle;
   window._badgeTurn = false;
   if (window.refreshAppBadge) window.refreshAppBadge();
+  // Une notification posée par le service worker survit au tour : la retirer,
+  // sinon ses boutons resteraient offerts alors que la main a avancé.
+  try {
+    navigator.serviceWorker.ready.then(function (reg) {
+      return reg.getNotifications({ tag: 'pokerth-turn' });
+    }).then(function (list) {
+      (list || []).forEach(function (n) { try { n.close(); } catch (e) {} });
+    }).catch(function () {});
+  } catch (e) {}
 }
 
 // ── Assistance (aide « force de la main ») : entrée du menu •••  ──
@@ -593,11 +670,12 @@ function _roundRaise(v, min, max) { return roundedRaiseAmount(parseInt(v, 10), m
 
 export { _playAutoMode, _updatePinBtn, _renderPreActionPanel,
          _closePreActionPanel, notifyMyTurnVisuals, clearTurnNotif,
+         _showTurnNotification, _runNotifAction,
          _applyAssistUI, _runPreAction, renderMyTurnActions,
          doAction, confirmCall, doRaise, _roundRaise };
 
 for (const [k, v] of Object.entries({ _playAutoMode, _updatePinBtn,
   _renderPreActionPanel, _closePreActionPanel, notifyMyTurnVisuals,
-  clearTurnNotif, _applyAssistUI, _runPreAction, renderMyTurnActions,
+  clearTurnNotif, _runNotifAction, _applyAssistUI, _runPreAction, renderMyTurnActions,
   doAction, confirmCall, doRaise, _roundRaise,
   openBetKeypad, closeBetKeypad })) window[k] = v;
