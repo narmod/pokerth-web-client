@@ -13,6 +13,13 @@ this file captures what matters to players and operators.
 Opened with `v2.1.7-web.0` (2026-08-13), following the upstream **2.1.7**
 release.
 
+### Changed
+- **`backup-autosave.mjs`: comments translated to English** (`web.68`) — the
+  module and its test script were the last files commented in French; the code
+  itself is byte-for-byte unchanged (verified by stripping comments from both
+  revisions and comparing). Served file, so the version is bumped for the
+  cache; nothing changes for players.
+
 ### Fixed
 - **Backup restore banner: silent failures, and an autosave that could erase the
   backup** (`web.67`) — `_restoreFromFolder()` reported every failure through

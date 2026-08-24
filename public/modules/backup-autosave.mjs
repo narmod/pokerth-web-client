@@ -1,30 +1,29 @@
-// PokerTH web client — Écriture automatique de la sauvegarde complète (backup
-// web) dans un dossier local, et proposition de restauration au démarrage.
+// PokerTH web client — writes the full web backup to a local folder on its own,
+// and offers to restore it at startup.
 //
-// Problème visé : le stockage navigateur (localStorage/IndexedDB) peut être
-// purgé entre deux sessions (nettoyage, éviction). Le joueur devait alors
-// réimporter sa sauvegarde à la main avant chaque connexion. Ici, le fichier
-// « pokerth-web-backup.json » est tenu à jour automatiquement dans un dossier
-// choisi UNE fois (File System Access API, même mécanique que pdb-autosave :
-// handle conservé en IndexedDB et réutilisé aux sessions suivantes). Si au
-// démarrage le stockage semble vierge alors qu'un dossier est mémorisé, une
-// bannière propose de tout restaurer en un clic.
+// The problem: browser storage (localStorage/IndexedDB) can be wiped between
+// sessions (cleanup, eviction). Players then had to re-import their backup by
+// hand before every connection. Here "pokerth-web-backup.json" is kept up to
+// date automatically inside a folder picked ONCE (File System Access API, same
+// mechanics as pdb-autosave: the handle is kept in IndexedDB and reused in
+// later sessions). If storage looks blank at startup while a folder is
+// remembered, a banner offers to restore everything in one click.
 //
-// Support : Chrome / Edge / Opera de bureau. Partout ailleurs le module reste
-// inerte et l'export/import manuel (options avancées) demeure le seul chemin.
+// Support: desktop Chrome / Edge / Opera. Everywhere else the module stays
+// inert and the manual export/import (advanced options) remains the only path.
 //
-// Contenu du fichier : exactement celui de l'export manuel — construit par
-// window._webBackupRecord (pokerth.js) ; la restauration passe par
-// window._applyWebBackupRec, le même chemin que l'import manuel (fusion des
-// succès, config.xml embarqué, jamais d'identifiants ni de session).
+// File contents: exactly what the manual export produces — built by
+// window._webBackupRecord (pokerth.js); restoring goes through
+// window._applyWebBackupRec, the same path as the manual import (achievements
+// merged, embedded config.xml, never credentials nor session data).
 //
-// Rythme d'écriture : vérification périodique (60 s) — écrit seulement si le
-// contenu a changé (signature clés+xml, l'horodatage d'export est ignoré) —
-// plus un flush forcé à la fermeture de l'onglet et au passage en arrière-plan.
+// Write cadence: a periodic check (60 s) — writing only when the contents
+// actually changed (keys+xml signature, the export timestamp is ignored) —
+// plus a forced flush when the tab closes or goes to the background.
 //
-// Options avancées : pth_bak_auto (ON par défaut ; sans dossier choisi le
-// module reste inerte). Aucune régression possible : si ce module n'est pas
-// chargé, les hooks window._bakAuto* sont simplement absents.
+// Advanced options: pth_bak_auto (ON by default; with no folder picked the
+// module stays inert). No regression is possible: if this module is not
+// loaded, the window._bakAuto* hooks are simply absent.
 
 // ── Support & option ───────────────────────────────────────────────────────
 
@@ -34,8 +33,8 @@ function _supported() {
     && typeof window.indexedDB !== 'undefined');
 }
 
-// ON par défaut : rien n'est écrit tant que le joueur n'a pas choisi un
-// dossier (l'API navigateur l'exige). '0' = désactivé explicitement.
+// ON by default: nothing is written until the player has picked a folder (the
+// browser API requires it). '0' = explicitly disabled.
 function _enabled() {
   try {
     if (typeof localStorage === 'undefined') return true;
@@ -44,12 +43,11 @@ function _enabled() {
   } catch (_e) { return true; }
 }
 
-// ── Détection « stockage vierge » (au chargement du module) ────────────────
-// Les modules s'exécutent avant les gestionnaires DOMContentLoaded de
-// pokerth.js : les clés d'identité ci-dessous ne peuvent pas encore avoir été
-// écrites par l'app elle-même. Le boot inline du thème (pokerth-client.html)
-// écrit pth_deck / pth_seat même pour un premier passage, d'où une liste de
-// clés d'identité plutôt qu'un simple comptage des pth_*.
+// ── "Blank storage" detection (at module load) ─────────────────────────────
+// Modules run before the DOMContentLoaded handlers in pokerth.js: the identity
+// keys below cannot have been written by the app itself yet. The inline theme
+// boot (pokerth-client.html) writes pth_deck / pth_seat even on a first visit,
+// hence a list of identity keys rather than a plain count of pth_* entries.
 const _IDENTITY_KEYS = ['pth_nick', 'pth_auth_login', 'pth_avatar',
   'pth_avatar_img', 'pth_host', 'pth_offline_nick', 'pth_lan_nick',
   'pth_unauth_nick'];
@@ -66,16 +64,16 @@ function _looksFresh() {
 
 const _FRESH_AT_BOOT = _looksFresh();
 
-// Gel d'écriture : si le stockage est vierge ET qu'un dossier est mémorisé, la
-// bannière de restauration est proposée. Tant que le joueur n'a pas tranché,
-// AUCUNE écriture n'est permise — sinon l'écriture périodique (ou celle des
-// 8 s après le boot) écraserait le fichier de sauvegarde par un état vide, et
-// la restauration ne rendrait plus rien. Le gel tombe dès que le stockage
-// cesse d'être vierge (le joueur a saisi un pseudo / s'est connecté), quand la
-// restauration a réussi, ou quand la bannière est refusée.
+// Write hold: when storage is blank AND a folder is remembered, the restore
+// banner is offered. Until the player decides, NO write is allowed — otherwise
+// the periodic writer (or the one 8 s after boot) would overwrite the backup
+// file with an empty state, and restoring would then return nothing. The hold
+// is released as soon as storage stops looking blank (the player typed a
+// nickname / logged in), when a restore succeeded, or when the banner is
+// dismissed.
 let _hold = _FRESH_AT_BOOT;
 
-// ── Persistance du handle de dossier (IndexedDB) ───────────────────────────
+// ── Folder handle persistence (IndexedDB) ──────────────────────────────────
 
 const DB_NAME = 'pth_bakauto';
 const DB_VERSION = 1;
@@ -108,13 +106,13 @@ function _idb(mode, fn) {
 function _saveHandle(h) { return _idb('readwrite', (st) => st.put(h, KEY)); }
 function _readHandle() { return _idb('readonly', (st) => st.get(KEY)); }
 
-// ── État courant (pour l'UI des options avancées) ──────────────────────────
+// ── Current state (for the advanced-options UI) ────────────────────────────
 
 const _state = {
-  dirName: null,      // nom du dossier choisi
-  needPerm: false,    // handle présent mais permission à re-accorder
-  lastAt: 0,          // horodatage de la dernière écriture réussie
-  err: null,          // dernière erreur (nom court)
+  dirName: null,      // name of the picked folder
+  needPerm: false,    // handle present but permission must be granted again
+  lastAt: 0,          // timestamp of the last successful write
+  err: null,          // last error (short name)
 };
 
 let _handle = null;
@@ -127,12 +125,12 @@ async function _getHandle() {
   try {
     const h = await _readHandle();
     if (h) { _handle = h; _state.dirName = h.name || null; }
-  } catch (_e) { /* pas de handle mémorisé */ }
+  } catch (_e) { /* no handle remembered */ }
   return _handle;
 }
 
-// interactive=true → peut ouvrir la demande de permission du navigateur
-// (exige un geste utilisateur) ; false → simple interrogation, jamais de popup.
+// interactive=true → may open the browser permission prompt (requires a user
+// gesture); false → query only, never a popup.
 async function _ensurePerm(h, interactive) {
   try {
     if (typeof h.queryPermission !== 'function') return true;
@@ -148,10 +146,10 @@ async function _ensurePerm(h, interactive) {
   } catch (_e) { _state.needPerm = true; return false; }
 }
 
-// ── Écriture ───────────────────────────────────────────────────────────────
+// ── Writing ────────────────────────────────────────────────────────────────
 
-// Signature du contenu utile : les clés et le config.xml embarqué, mais pas
-// l'horodatage d'export (il change à chaque construction).
+// Signature of the meaningful contents: the keys and the embedded config.xml,
+// but not the export timestamp (it changes on every build).
 function _sigOf(rec) {
   try { return JSON.stringify([rec.keys, rec.xml || '']); } catch (_e) { return null; }
 }
@@ -168,13 +166,13 @@ async function _openWritable(fh) {
 
 async function _writeNow() {
   if (!_supported() || !_enabled()) return false;
-  if (_hold && _looksFresh()) return false;   // décision de restauration en attente
+  if (_hold && _looksFresh()) return false;   // restore decision still pending
   if (typeof window._webBackupRecord !== 'function') return false;
 
   const b = window._webBackupRecord();
   if (!b || !b.rec) return false;
   const sig = _sigOf(b.rec);
-  if (sig !== null && sig === _lastSig) return false;   // rien de neuf
+  if (sig !== null && sig === _lastSig) return false;   // nothing new
 
   const dir = await _getHandle();
   if (!dir) return false;
@@ -184,7 +182,7 @@ async function _writeNow() {
   const fh = await dir.getFileHandle(FILE_NAME, { create: true });
   const w = await _openWritable(fh);
   await w.write({ type: 'write', position: 0, data: bytes });
-  try { await w.truncate(bytes.length); } catch (_e) { /* mode standard : déjà tronqué */ }
+  try { await w.truncate(bytes.length); } catch (_e) { /* standard mode: already truncated */ }
   await w.close();
 
   _lastSig = sig;
@@ -193,8 +191,8 @@ async function _writeNow() {
   return true;
 }
 
-// Sérialisation : une écriture à la fois, une demande reçue pendant une
-// écriture est reprise ensuite.
+// Serialisation: one write at a time; a request received during a write is
+// replayed afterwards.
 let _busy = false;
 let _again = false;
 
@@ -213,7 +211,7 @@ async function save(_evt) {
   }
 }
 
-// ── Choix du dossier (geste utilisateur) ───────────────────────────────────
+// ── Folder picking (user gesture) ──────────────────────────────────────────
 
 async function pickFolder() {
   if (!_supported()) return false;
@@ -225,9 +223,9 @@ async function pickFolder() {
     _handleLoaded = true;
     _state.dirName = h.name || null;
     _state.err = null;
-    try { await _saveHandle(h); } catch (_e) { /* le handle reste valable pour la session */ }
+    try { await _saveHandle(h); } catch (_e) { /* the handle stays valid for this session */ }
     _ui();
-    // Première écriture immédiate : le joueur voit le fichier apparaître.
+    // Immediate first write: the player sees the file appear.
     save('pick');
     return true;
   } catch (e) {
@@ -239,7 +237,7 @@ async function pickFolder() {
   }
 }
 
-// ── Restauration (bannière au démarrage) ───────────────────────────────────
+// ── Restoring (startup banner) ─────────────────────────────────────────────
 
 function _t(key, fallback) {
   try {
@@ -255,23 +253,23 @@ function _toast(msg, opts) {
   try { if (typeof window.showToast === 'function') window.showToast(msg, opts); } catch (_e) {}
 }
 
-// Retourne un CODE, jamais un booléen : la bannière doit pouvoir dire au joueur
-// POURQUOI ça n'a pas marché. Historiquement le seul retour d'erreur était un
-// toast — or .app-toast est en z-index 950 / bottom 28px, donc rendu DERRIÈRE
-// la bannière (z-index 99999, bottom 18px) : l'échec était invisible et le clic
-// semblait sans effet.
+// Returns a CODE, never a boolean: the banner has to be able to tell the player
+// WHY it did not work. Historically the only error feedback was a toast — but
+// .app-toast sits at z-index 950 / bottom 28px, so it rendered BEHIND the
+// banner (z-index 99999, bottom 18px): the failure was invisible and the click
+// looked like it did nothing.
 //   'ok' · 'nofolder' · 'noperm' · 'nofile' · 'bad' · 'empty'
 async function _restoreFromFolder() {
-  // _handle d'abord : éviter un aller-retour IndexedDB ferait perdre
-  // l'activation utilisateur nécessaire à requestPermission().
+  // _handle first: an IndexedDB round trip would burn the user activation that
+  // requestPermission() needs.
   const dir = _handle || (await _getHandle());
   if (!dir) return 'nofolder';
-  // Geste utilisateur (clic sur la bannière) : la demande de permission
-  // interactive est autorisée ici.
+  // User gesture (click on the banner): the interactive permission prompt is
+  // allowed here.
   if (!(await _ensurePerm(dir, true))) return 'noperm';
   let file;
   try {
-    const fh = await dir.getFileHandle(FILE_NAME);    // sans create : absent → throw
+    const fh = await dir.getFileHandle(FILE_NAME);    // no create: missing → throw
     file = await fh.getFile();
   } catch (_e) { return 'nofile'; }
   let rec = null;
@@ -279,23 +277,23 @@ async function _restoreFromFolder() {
   if (typeof window._applyWebBackupRec !== 'function') return 'bad';
   const n = window._applyWebBackupRec(rec);
   if (n < 0) return 'bad';
-  // 0 clé écrite : le fichier est syntaxiquement valable mais ne contient rien
-  // d'utile. Recharger donnerait un écran identique — l'impression exacte que
-  // « rien ne se passe ». On le dit au lieu de recharger.
+  // 0 keys written: the file parses but holds nothing useful. Reloading would
+  // land on an identical screen — exactly the "nothing happens" impression.
+  // Say so instead of reloading.
   if (n === 0) return 'empty';
   _hold = false;
   _toast((_t('backupImported', 'Backup imported')) + ' (' + n + ')');
-  // Rechargement : applique thème, langue, options — même finalité que la
-  // proposition de rechargement de l'import manuel, sans question puisque le
-  // joueur vient de demander la restauration.
+  // Reload: applies theme, language, options — same purpose as the reload
+  // prompt of the manual import, without asking since the player just asked
+  // for the restore.
   setTimeout(() => { try { location.reload(); } catch (_e) {} }, 800);
   return 'ok';
 }
 
-// Chemin de secours de la bannière : re-choisir le dossier puis restaurer dans
-// la foulée. Volontairement SÉPARÉ de pickFolder() — celui-ci écrit le fichier
-// immédiatement (save('pick')), ce qui écraserait la sauvegarde par l'état
-// vierge en cours. Ici on ne fait que lire.
+// Banner fallback path: pick the folder again, then restore straight away.
+// Deliberately SEPARATE from pickFolder() — that one writes the file
+// immediately (save('pick')), which would overwrite the backup with the blank
+// state being restored from. This path only reads.
 async function pickForRestore() {
   if (!_supported()) return 'nofolder';
   let h;
@@ -311,13 +309,13 @@ async function pickForRestore() {
   _handleLoaded = true;
   _state.dirName = h.name || null;
   _state.err = null;
-  try { await _saveHandle(h); } catch (_e) { /* le handle reste valable pour la session */ }
+  try { await _saveHandle(h); } catch (_e) { /* the handle stays valid for this session */ }
   _ui();
   return _restoreFromFolder();
 }
 
-// Message affiché pour chaque code d'échec, DANS la bannière (le toast serait
-// masqué par elle).
+// Message shown for each failure code, INSIDE the banner (a toast would be
+// hidden behind it).
 const _WHY = {
   nofolder: ['bakRestoreNoFile', 'No backup file in this folder.'],
   nofile:   ['bakRestoreNoFile', 'No backup file in this folder.'],
@@ -337,9 +335,9 @@ function _showRestoreBanner() {
       'box-shadow:0 4px 18px rgba(0,0,0,.45);display:flex;gap:10px;align-items:center;' +
       'flex-wrap:wrap;max-width:min(92vw,620px);font-size:14px;line-height:1.35';
 
-    // Colonne de texte : la question, puis le chemin visé (dossier / fichier) —
-    // sans lui, le joueur ne sait pas de quoi la bannière parle — puis la zone
-    // d'état, vide tant qu'il ne s'est rien passé.
+    // Text column: the question, then the target path (folder / file) —
+    // without it the player cannot tell what the banner is talking about —
+    // then the status line, empty until something happens.
     const col = document.createElement('div');
     col.style.cssText = 'flex:1 1 240px;min-width:0';
     const txt = document.createElement('div');
@@ -382,8 +380,8 @@ function _showRestoreBanner() {
       if (busy) return;
       busy = true; ok.disabled = true; pick.disabled = true;
       setMsg(_t('bakRestoreBusy', 'Restoring…'), false);
-      // fn() est appelé dans le même tick que le clic : showDirectoryPicker()
-      // et requestPermission() exigent une activation utilisateur fraîche.
+      // fn() is called in the click's own tick: showDirectoryPicker() and
+      // requestPermission() require a fresh user activation.
       let p;
       try { p = fn(); } catch (e) { p = Promise.reject(e); }
       Promise.resolve(p).then((why) => {
@@ -402,8 +400,8 @@ function _showRestoreBanner() {
 
     ok.addEventListener('click', () => run(_restoreFromFolder));
     pick.addEventListener('click', () => run(pickForRestore));
-    // Refus explicite : le joueur repart de zéro, l'écriture automatique peut
-    // reprendre son cours.
+    // Explicit dismissal: the player starts fresh, automatic writing may
+    // resume.
     no.addEventListener('click', () => { _hold = false; try { el.remove(); } catch (_e) {} });
 
     el.appendChild(col); el.appendChild(ok); el.appendChild(pick); el.appendChild(no);
@@ -411,7 +409,7 @@ function _showRestoreBanner() {
   } catch (_e) {}
 }
 
-// Lecture seule du gel d'écriture (tests déterministes).
+// Read-only view of the write hold (deterministic tests).
 function _holdState() { return _hold; }
 
 function _maybeOfferRestore() {
@@ -421,7 +419,7 @@ function _maybeOfferRestore() {
     .catch(() => { _hold = false; });
 }
 
-// ── UI (panneau Options avancées) ──────────────────────────────────────────
+// ── UI (advanced-options panel) ────────────────────────────────────────────
 
 function _ui() {
   try {
@@ -450,7 +448,7 @@ function _ui() {
   } catch (_e) {}
 }
 
-// ── Démarrage ──────────────────────────────────────────────────────────────
+// ── Startup ────────────────────────────────────────────────────────────────
 
 const TICK_MS = 60000;
 
@@ -458,14 +456,13 @@ function _ready() {
   if (!_supported()) return;
   _getHandle().then(() => { _ui(); _maybeOfferRestore(); }).catch(() => {});
   try { setInterval(() => save('tick'), TICK_MS); } catch (_e) {}
-  // Première écriture peu après le chargement : couvre les changements faits
-  // pendant que l'onglet était fermé côté serveur (synchro compte) et pose la
-  // signature de référence.
+  // First write shortly after load: covers changes made server-side while the
+  // tab was closed (account sync) and establishes the reference signature.
   try { setTimeout(() => save('boot'), 8000); } catch (_e) {}
 }
 
-// Flush forcé quand la page part : pagehide est le seul événement fiable sur
-// mobile ; visibilitychange couvre le passage en arrière-plan.
+// Forced flush when the page goes away: pagehide is the only reliable event on
+// mobile; visibilitychange covers going to the background.
 function _installFlush() {
   if (!_supported()) return;
   try {
@@ -477,9 +474,9 @@ function _installFlush() {
 }
 
 if (typeof window !== 'undefined') {
-  window._bakAutoSave = save;         // écriture à la demande (facultatif)
-  window._bakAutoPick = pickFolder;   // bouton « Choisir le dossier… »
-  window._bakAutoUi = _ui;            // rafraîchissement à l'ouverture du panneau
+  window._bakAutoSave = save;         // on-demand write (optional)
+  window._bakAutoPick = pickFolder;   // "Choose folder…" button
+  window._bakAutoUi = _ui;            // refresh when the panel is opened
   if (typeof document !== 'undefined' && document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => { _ready(); });
   } else {
@@ -488,6 +485,6 @@ if (typeof window !== 'undefined') {
   _installFlush();
 }
 
-// Exports ESM : uniquement pour les tests déterministes. En navigateur le
-// module ne communique que par window.*.
+// ESM exports: for the deterministic tests only. In the browser the module
+// talks through window.* exclusively.
 export { save, pickFolder, pickForRestore, _supported, _enabled, _looksFresh, _sigOf, _writeNow, _state, _holdState };

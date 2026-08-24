@@ -27,7 +27,7 @@ globalThis.document = {
   visibilityState: 'visible',
 };
 globalThis.addEventListener = () => {};
-globalThis.setInterval = () => 0;          // pas de timers réels dans les tests
+globalThis.setInterval = () => 0;          // no real timers in the tests
 globalThis.indexedDB = { open: () => { throw new Error('no idb in tests'); } };
 globalThis.showDirectoryPicker = null;     // replaced per test
 
@@ -53,7 +53,7 @@ function makeDir() {
 let handle = makeDir();
 globalThis.showDirectoryPicker = async () => handle;
 
-// Builder stub : le contenu utile change quand on modifie `keys`.
+// Builder stub: the meaningful contents change when `keys` is modified.
 let fakeKeys = { pth_nick: 'neuling', pth_theme: 'pokerth' };
 let fakeXml = '';
 globalThis._webBackupRecord = () => ({
@@ -76,7 +76,7 @@ function check(name, cond) {
 
 // ── _looksFresh ────────────────────────────────────────────────────────────
 store.clear();
-store.set('pth_deck', 'pokerth-new');       // clé de boot : ne compte pas
+store.set('pth_deck', 'pokerth-new');       // boot key: does not count
 store.set('pth_seat_dmig', '1');
 check('fresh: boot keys only => fresh', mod._looksFresh() === true);
 store.set('pth_nick', 'neuling');
@@ -86,7 +86,7 @@ store.set('pth_avatar', '🙂');
 check('fresh: avatar counts as identity', mod._looksFresh() === false);
 store.delete('pth_avatar');
 
-// ── _sigOf : l'horodatage d'export est ignoré ──────────────────────────────
+// ── _sigOf: the export timestamp is ignored ────────────────────────────────
 const r1 = globalThis._webBackupRecord().rec;
 await new Promise((r) => setTimeout(r, 5));
 const r2 = globalThis._webBackupRecord().rec;
@@ -95,7 +95,7 @@ check('sig: same content, different exportedAt => same signature',
 const r3 = Object.assign({}, r1, { keys: { pth_nick: 'other' } });
 check('sig: different keys => different signature', mod._sigOf(r1) !== mod._sigOf(r3));
 
-// ── Option coupée : rien n'est écrit ───────────────────────────────────────
+// ── Option turned off: nothing is written ──────────────────────────────────
 store.set('pth_bak_auto', '0');
 await mod.save('test');
 check('disabled: no write when pth_bak_auto=0', fs.writes.length === 0);
@@ -103,7 +103,7 @@ store.delete('pth_bak_auto');
 
 // ── pick => première écriture immédiate ────────────────────────────────────
 const picked = await mod.pickFolder();
-await new Promise((r) => setTimeout(r, 20));   // save('pick') est asynchrone
+await new Promise((r) => setTimeout(r, 20));   // save('pick') is asynchronous
 check('pick: folder accepted', picked === true);
 check('pick: file created with the expected name',
   fs.created.length >= 1 && fs.created.every((n) => n === 'pokerth-web-backup.json'));
@@ -114,7 +114,7 @@ const payload = JSON.parse(new TextDecoder().decode(fs.writes[0].data));
 check('pick: payload is the backup record',
   payload.format === 'pokerth-web-client' && payload.keys.pth_nick === 'neuling');
 
-// ── Dédoublonnage : même contenu => pas de réécriture ──────────────────────
+// ── Dedupe: unchanged contents => no rewrite ───────────────────────────────
 await mod.save('tick');
 check('dedupe: unchanged content is not rewritten', fs.writes.length === 1);
 
@@ -123,26 +123,26 @@ fakeKeys = Object.assign({}, fakeKeys, { pth_theme: 'pokerth-light' });
 await mod.save('tick');
 check('change: modified keys are written', fs.writes.length === 2);
 
-// ── config.xml embarqué compte dans la signature ───────────────────────────
+// ── The embedded config.xml is part of the signature ───────────────────────
 fakeXml = '<PokerTH/>';
 await mod.save('tick');
 check('change: embedded xml is part of the signature', fs.writes.length === 3);
 
-// ── État exposé pour l'UI ──────────────────────────────────────────────────
+// ── State exposed to the UI ────────────────────────────────────────────────
 check('state: folder name recorded', mod._state.dirName === 'pokerth-backups');
 check('state: last write timestamp set', mod._state.lastAt > 0);
 check('state: no error recorded', mod._state.err === null);
 
-// ── Gel d'écriture ─────────────────────────────────────────────────────────
-// Au boot le stockage est vierge, mais aucun dossier n'est mémorisé (pas d'IDB
-// dans les tests) : le gel doit retomber, sinon plus aucune sauvegarde ne
-// serait jamais écrite pour un joueur qui démarre à neuf.
+// ── Write hold ─────────────────────────────────────────────────────────────
+// At boot storage is blank, but no folder is remembered (no IDB in the tests):
+// the hold must be released, otherwise no backup would ever be written again
+// for a player starting fresh.
 check('hold: released when no folder is remembered', mod._holdState() === false);
 
-// ── Restauration depuis la bannière ────────────────────────────────────────
-// Chaque échec doit remonter un CODE explicite : la bannière s'en sert pour
-// dire au joueur ce qui bloque (le toast, lui, est masqué par la bannière).
-let fileText = null;                       // null = fichier absent du dossier
+// ── Restoring from the banner ──────────────────────────────────────────────
+// Every failure must surface an explicit CODE: the banner uses it to tell the
+// player what is in the way (a toast would be hidden behind the banner).
+let fileText = null;                       // null = file missing from the folder
 handle = {
   name: 'pokerth-backups',
   getFileHandle: async (name, opts) => {
@@ -170,7 +170,7 @@ check('restore: empty backup => empty (no reload)', (await mod.pickForRestore())
 globalThis._applyWebBackupRec = () => 7;
 check('restore: valid backup => ok', (await mod.pickForRestore()) === 'ok');
 
-// L'annulation du sélecteur de dossier n'est pas une erreur.
+// Cancelling the folder picker is not an error.
 globalThis.showDirectoryPicker = async () => { const e = new Error('x'); e.name = 'AbortError'; throw e; };
 check('restore: cancelled folder picker => abort', (await mod.pickForRestore()) === 'abort');
 
