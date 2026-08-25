@@ -64,9 +64,11 @@ ok(/#panel-server|#panel-traffic|#panel-clients|#panel-broadcast/.test(wide),
 ok(/break-inside:avoid/.test(wide), 'a card is never cut across the column break');
 ok(/-webkit-column-break-inside:avoid/.test(wide), 'with the WebKit spelling alongside');
 ok(/column-span:all/.test(wide), 'charts and grids take the full width back');
-for (const id of ['trafChart', 'trafNvRChart', 'trafMusic', 'trafEnv', 'trafCards']) {
+for (const id of ['trafChart', 'trafMusic', 'trafEnv', 'trafCards']) {
   ok(new RegExp('#' + id + '\\)').test(wide), id + ' is not squeezed into half a column');
 }
+ok(/#panel-traffic>\.cardrow\{column-span:all\}|,#panel-traffic>\.cardrow\{column-span:all\}/.test(wide),
+  'a paired row of cards keeps the full width instead of being split again');
 ok(!/columns:2/.test(small), 'nothing changes on a phone');
 
 // ── Tab families ──────────────────────────────────────────────────────────

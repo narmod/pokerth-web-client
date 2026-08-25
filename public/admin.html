@@ -16,6 +16,12 @@
   .top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
   .topbtns{display:flex;gap:8px;margin-top:4px;flex:none}
   .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px;margin:0 0 14px}
+  /* Deux tableaux courts se lisent mieux cote a cote qu'empiles : le duo
+     « connexions par serveur » / « nouveaux vs recurrents » tient sur une seule
+     ligne des 760 px, et repasse en pile sur telephone. */
+  .cardrow{display:grid;grid-template-columns:1fr;gap:14px;margin:0 0 14px}
+  .cardrow>.card{margin:0}
+  @media(min-width:760px){.cardrow{grid-template-columns:1fr 1fr}}
   /* Onglet Game servers : grille qui se replie proprement sur mobile. Les
      largeurs fixes + flex sans wrap faisaient déborder Port/TLS/Check hors
      de la carte, et éloignaient « TLS name » de son champ. */
@@ -234,7 +240,7 @@
     .wrap{max-width:1180px}
     #panel-traffic,#panel-broadcast,#panel-defaults,#panel-deploy,#panel-access,#panel-identity{columns:2;column-gap:16px}
     #panel-traffic>.card,#panel-broadcast>.card,#panel-defaults>.card,#panel-deploy>.card,#panel-access>.card,#panel-identity>.card{break-inside:avoid;-webkit-column-break-inside:avoid;margin-bottom:16px}
-    .card:has(#trafCards),.card:has(#trafChart),.card:has(#trafNvRChart),.card:has(#trafMusic),.card:has(#trafEnv){column-span:all}
+    .card:has(#trafCards),.card:has(#trafChart),.card:has(#trafMusic),.card:has(#trafEnv),#panel-traffic>.cardrow{column-span:all}
   }
   @media(max-width:600px){
     body{padding:12px}
@@ -329,10 +335,17 @@
         <h2>Last 14 days</h2>
         <div id="trafChart" class="trafchart"><div class="empty">Loading…</div></div>
       </div>
-      <div class="card">
-        <h2>Connections by server</h2>
-        <p class="muted">Counts a session once per entry mode it is opened with, whatever the transport: Internet games routed through this proxy still count as pokerth.net. Offline = training vs bots.</p>
-        <div id="trafModes"><div class="empty">Loading…</div></div>
+      <div class="cardrow">
+        <div class="card">
+          <h2>Connections by server</h2>
+          <p class="muted">Counts a session once per entry mode it is opened with, whatever the transport: Internet games routed through this proxy still count as pokerth.net. Offline = training vs bots.</p>
+          <div id="trafModes"><div class="empty">Loading…</div></div>
+        </div>
+        <div class="card">
+          <h2>New vs returning visitors</h2>
+          <p class="muted">Based on an anonymous per-device id — no names. A session is “new” the first time a device is ever seen, otherwise “returning”. The day-by-day curves are in the chart above.</p>
+          <div id="trafNvR"><div class="empty">Loading…</div></div>
+        </div>
       </div>
       <div class="card">
         <div class="boardhead"><h2>What visitors run</h2><span id="envSince" class="muted" style="margin:0"></span></div>
@@ -350,13 +363,6 @@
         <div class="boardhead"><h2>Most played tracks</h2><span id="musSince" class="muted" style="margin:0"></span></div>
         <p class="muted">Counts a play each time a track starts in the players’ music panel — resuming after a pause is not a new play. No visitor id, no listening time. Radio stations are not measured: a live stream has no track end, so “a play” would mean nothing there. Per-track totals sit next to each title in the Music tab.</p>
         <div id="trafMusic"><div class="empty">Loading…</div></div>
-      </div>
-      <div class="card">
-        <h2>New vs returning visitors</h2>
-        <p class="muted">Based on an anonymous per-device id — no names. A session is “new” the first time a device is ever seen, otherwise “returning”.</p>
-        <div id="trafNvRChart" class="trafchart" style="display:none"></div>
-        <div id="trafNvRLegend" class="traflegend" style="display:none"><span class="nw"><em></em>New</span><span class="rt"><em></em>Returning</span></div>
-        <div id="trafNvR" style="margin-top:10px"><div class="empty">Loading…</div></div>
       </div>
       <div class="card">
         <h2>Database (MySQL mirror)</h2>
@@ -1860,12 +1866,22 @@
       s.forEach(function(x){ if((x.v||0)>max) max=x.v; });
       if(c){
         var labs=s.map(function(x){ return (x.date||'').slice(5); });
-        c.className='linechart';
-        c.innerHTML=_lineChart(labs,[
+        // Quatre courbes sur la meme fenetre : le detail nouveaux/recurrents se
+        // lit contre le total, au lieu de vivre dans un second graphe. Le champ
+        // nw manque si le proxy tourne encore sur une version anterieure.
+        var lines=[
           {k:'visits',c:'#4080d8',vals:s.map(function(x){ return x.v||0; })},
           {k:'unique',c:'#7fd17f',vals:s.map(function(x){ return x.u||0; })}
-        ])
-        +'<div class="traflegend"><span><em style="background:#4080d8"></em>Visits</span><span><em style="background:#7fd17f"></em>Unique</span></div>';
+        ];
+        var leg='<span><em style="background:#4080d8"></em>Visits</span><span><em style="background:#7fd17f"></em>Unique</span>';
+        if(s.length && s[0].nw!==undefined){
+          lines.push({k:'new',c:'#e0b050',vals:s.map(function(x){ return x.nw||0; })});
+          lines.push({k:'returning',c:'#c08ae0',vals:s.map(function(x){ return x.rt||0; })});
+          leg+='<span><em style="background:#e0b050"></em>New</span><span><em style="background:#c08ae0"></em>Returning</span>';
+        }
+        c.className='linechart';
+        c.innerHTML=_lineChart(labs,lines)
+        +'<div class="traflegend" style="flex-wrap:wrap">'+leg+'</div>';
       }
       var md=$('trafModes');
       if(md){
@@ -1877,20 +1893,6 @@
       // à compter encore. Voir renderEnv().
       _envKnown=(d.env!==undefined); _envData=d.env||{}; _envColorReset(); _envSince=d.envSince||0; _envPings=d.pings||null; renderEnv();
       _musKnown=(d.music!==undefined); _musData=d.music||{}; _musTitles=d.musicTitles||{}; _musSince=d.musicSince||0; renderMusic();
-      var nvc=$('trafNvRChart'), nvl=$('trafNvRLegend');
-      // Champ nw absent de la série = proxy pas encore redémarré sur cette version.
-      if(nvc && s.length && s[0].nw!==undefined){
-        var nmax=1;
-        s.forEach(function(x){ var t=(x.nw||0)+(x.rt||0); if(t>nmax) nmax=t; });
-        var nlabs=s.map(function(x){ return (x.date||'').slice(5); });
-        nvc.className='linechart';
-        nvc.innerHTML=_lineChart(nlabs,[
-          {k:'new',c:'#3fae6a',vals:s.map(function(x){ return x.nw||0; })},
-          {k:'returning',c:'#4080d8',vals:s.map(function(x){ return x.rt||0; })}
-        ]);
-        nvc.style.display='';
-        if(nvl) nvl.style.display='';
-      }
       var nv=$('trafNvR');
       if(nv){
         var wins=[['Today',d.today],['Last 7 days',d.week],['Last 30 days',d.month],['All time',d.allTime]];

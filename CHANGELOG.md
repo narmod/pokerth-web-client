@@ -14,6 +14,14 @@ Opened with `v2.1.7-web.0` (2026-08-13), following the upstream **2.1.7**
 release.
 
 ### Changed
+- **Admin · Traffic: new vs returning folded into the 14-day chart** (`web.69`) —
+  the panel drew the same fourteen days twice, once for visits/unique and once
+  for new/returning, so comparing a spike against its make-up meant scrolling
+  between two graphs. The second chart is gone; its two series now sit on the
+  main *Last 14 days* chart (amber = new, mauve = returning, distinct from the
+  blue/green pair already there) and appear only when the proxy reports the
+  field. The short totals table moves up next to *Connections by server* in a
+  new two-column row that stacks back on a phone.
 - **`backup-autosave.mjs`: comments translated to English** (`web.68`) — the
   module and its test script were the last files commented in French; the code
   itself is byte-for-byte unchanged (verified by stripping comments from both
