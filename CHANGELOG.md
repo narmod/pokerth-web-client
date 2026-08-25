@@ -13,6 +13,36 @@ this file captures what matters to players and operators.
 Opened with `v2.1.7-web.0` (2026-08-13), following the upstream **2.1.7**
 release.
 
+### Added
+- **The SEO panel stops being five fields and a hope** (`web.81`) — the section
+  could be switched on and given a URL, and that was all: everything else was
+  compiled in, and nothing told the operator whether any of it worked. It now
+  carries the rest. **AI crawlers** can be refused — an explicit `Disallow` for
+  GPTBot, ClaudeBot, PerplexityBot, Google-Extended, CCBot, Bytespider and the
+  others, with `llms.txt` returning 404 to match, because staying silent under a
+  blanket `Allow: /` reads as consent; allowed stays the default, so no existing
+  install changes behaviour. **Site name, title and description overrides** and a
+  **custom social card image** let a self-hosted server appear under its own
+  name instead of "PokerTH Web Client" — deliberately blunt: an override
+  replaces the translated string in all 45 languages, which is the operator's
+  call to make, and the panel says so. Width and height are announced only for
+  the bundled image, since we do not know a custom one's dimensions and claiming
+  1200×630 for something else breaks the card everywhere. **Yandex
+  verification** joins Google and Bing. **Use this address** fills the public URL
+  from the address bar. **Submit URLs now** forces an IndexNow submission past
+  the hourly throttle and reports the HTTP status, and the key line shows when
+  the last one went out and whether it was accepted — a ping that silently failed
+  used to look exactly like one that worked. **Check configuration** runs a dozen
+  local checks (indexing state, URL scheme, whether the public URL matches the
+  host you are actually on, placeholders present in the served page, social image
+  reachable, IndexNow key served, translation coverage of /rules and /faq) and
+  colour-codes them; everything is answered from local state, because a proxy
+  behind Cloudflare frequently cannot reach its own public URL and a failed
+  self-fetch would report a problem that does not exist. Every operator-typed
+  value is HTML-escaped at emission rather than filtered on input, and the whole
+  SEO block now keys the served-HTML cache, so a new field can never quietly
+  serve stale pages.
+
 ### Changed
 - **Search-engine plumbing: freshness, link previews and richer results**
   (`web.80`) — four gaps in the SEO layer, none of them visible in the app.

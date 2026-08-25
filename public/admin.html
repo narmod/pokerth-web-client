@@ -672,12 +672,21 @@
         <h2>Search engine visibility (SEO)</h2>
         <p class="muted"><b>Off by default.</b> When off, every page is served with <code>noindex, nofollow</code> and <code>robots.txt</code> blocks all crawlers &mdash; a self-hosted install stays out of Google and AI search engines. Turn it on only for a public instance you want indexed: the page then gains a description, Open Graph / Twitter cards, a canonical link, structured data (JSON-LD) and a crawler-readable summary, and <code>robots.txt</code>, <code>sitemap.xml</code> and <code>llms.txt</code> are generated from the public URL below. Applies immediately (no restart needed).</p>
         <div class="defrow fld"><span>Search engine indexing</span><select id="seoEnabled"><option value="0">Off (default)</option><option value="1">On</option></select></div>
-        <div class="defrow fld"><span style="white-space:nowrap">Public URL</span><input id="seoUrl" maxlength="200" placeholder="https://webclient.pokerth.net" autocomplete="off"></div>
+        <div class="defrow fld"><span style="white-space:nowrap">Public URL</span><input id="seoUrl" maxlength="200" placeholder="https://webclient.pokerth.net" autocomplete="off"><button id="seoUrlHere" class="use" style="flex:none;white-space:nowrap">Use this address</button></div>
         <div class="defrow fld"><span style="white-space:nowrap">Search Console token</span><input id="seoGsv" maxlength="100" placeholder="google-site-verification (optional)" autocomplete="off"></div>
         <div class="defrow fld"><span style="white-space:nowrap">Bing Webmaster token</span><input id="seoBing" maxlength="100" placeholder="msvalidate.01 (optional)" autocomplete="off"></div>
+        <div class="defrow fld"><span style="white-space:nowrap">Yandex token</span><input id="seoYandex" maxlength="100" placeholder="yandex-verification (optional)" autocomplete="off"></div>
+        <p class="muted" style="margin-top:14px"><b>Branding.</b> Leave these blank on an official instance &mdash; the title and description are already translated into every interface language, and an override replaces the translation in <i>all</i> of them with the single line you write here. They exist so a self-hosted server can appear under its own name.</p>
+        <div class="defrow fld"><span style="white-space:nowrap">Site name</span><input id="seoSiteName" maxlength="60" placeholder="PokerTH (used in link previews)" autocomplete="off"></div>
+        <div class="defrow fld"><span style="white-space:nowrap">Title override</span><input id="seoTitle" maxlength="70" placeholder="blank = translated default (max ~60 characters)" autocomplete="off"></div>
+        <div class="defrow fld"><span style="white-space:nowrap">Description override</span><input id="seoDesc" maxlength="200" placeholder="blank = translated default (max ~155 characters)" autocomplete="off"></div>
+        <div class="defrow fld"><span style="white-space:nowrap">Social card image</span><input id="seoImage" maxlength="300" placeholder="blank = bundled 1200&times;630 image, or https://&hellip; or /path.png" autocomplete="off"></div>
+        <p class="muted" style="margin-top:14px"><b>AI crawlers.</b> Allowed by default. Refused writes an explicit <code>Disallow</code> for GPTBot, ClaudeBot, PerplexityBot, Google-Extended, CCBot and the others, and <code>llms.txt</code> stops being served &mdash; staying silent under a blanket <code>Allow</code> reads as consent. It is a request, not a wall: well-behaved crawlers honour it, others do not.</p>
+        <div class="defrow fld"><span style="white-space:nowrap">AI crawlers</span><select id="seoAi"><option value="1">Allowed (default)</option><option value="0">Refused</option></select></div>
         <div class="defrow fld"><span style="white-space:nowrap">IndexNow key</span><span id="seoIndexNow" style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;opacity:.8;font-family:monospace;font-size:.85em">generated when indexing is enabled</span></div>
-        <div class="rowtop"><button id="saveSeo" class="use">Save</button></div>
+        <div class="rowtop"><button id="saveSeo" class="use">Save</button> <button id="seoPing" class="use">Submit URLs now</button> <button id="seoCheck" class="use">Check configuration</button></div>
         <div id="seoMsg" class="msg"></div>
+        <div id="seoChecks" style="margin-top:10px"></div>
       </div>
     </div>
 
@@ -1637,7 +1646,7 @@
         if($('srvTagline') && typeof d.serverTagline==='string') $('srvTagline').value=d.serverTagline;
         if($('loginTitle')) $('loginTitle').value=(d.showLoginTitle?'1':'0');
         if($('discordHook') && typeof d.discordChatWebhookUrl==='string') $('discordHook').value=d.discordChatWebhookUrl;
-        if(d.seo && typeof d.seo==='object'){ if($('seoEnabled'))$('seoEnabled').value=(d.seo.enabled?'1':'0'); if($('seoUrl')&&typeof d.seo.publicUrl==='string')$('seoUrl').value=d.seo.publicUrl; if($('seoGsv')&&typeof d.seo.googleVerification==='string')$('seoGsv').value=d.seo.googleVerification; if($('seoBing')&&typeof d.seo.bingVerification==='string')$('seoBing').value=d.seo.bingVerification; if($('seoIndexNow')&&typeof d.seo.indexNowKey==='string'&&d.seo.indexNowKey)$('seoIndexNow').textContent=d.seo.indexNowKey+'  (served at /'+d.seo.indexNowKey+'.txt, pinged on save)'; }
+        if(d.seo && typeof d.seo==='object'){ if($('seoEnabled'))$('seoEnabled').value=(d.seo.enabled?'1':'0'); if($('seoUrl')&&typeof d.seo.publicUrl==='string')$('seoUrl').value=d.seo.publicUrl; if($('seoGsv')&&typeof d.seo.googleVerification==='string')$('seoGsv').value=d.seo.googleVerification; if($('seoBing')&&typeof d.seo.bingVerification==='string')$('seoBing').value=d.seo.bingVerification; if($('seoYandex')&&typeof d.seo.yandexVerification==='string')$('seoYandex').value=d.seo.yandexVerification; if($('seoSiteName')&&typeof d.seo.siteName==='string')$('seoSiteName').value=d.seo.siteName; if($('seoTitle')&&typeof d.seo.title==='string')$('seoTitle').value=d.seo.title; if($('seoDesc')&&typeof d.seo.description==='string')$('seoDesc').value=d.seo.description; if($('seoImage')&&typeof d.seo.image==='string')$('seoImage').value=d.seo.image; if($('seoAi'))$('seoAi').value=(d.seo.aiCrawlers===false?'0':'1'); if($('seoIndexNow')&&typeof d.seo.indexNowKey==='string'&&d.seo.indexNowKey){ var _ik=d.seo.indexNowKey+'  (served at /'+d.seo.indexNowKey+'.txt, pinged on save)'; var _in=d.seo.indexNow; if(_in&&_in.at){ var _d=new Date(_in.at); _ik+=' \u2014 last submission '+_d.toISOString().replace('T',' ').slice(0,16)+' UTC, '+_in.count+' URLs'+(_in.error?' ('+_in.error+')':' accepted'); } $('seoIndexNow').textContent=_ik; } }
         _pxLoaded=true;
         if(d.proxyCfg && typeof d.proxyCfg==='object'){ var P=d.proxyCfg; if($('pxHosts'))$('pxHosts').value=(Array.isArray(P.allowedHosts)?P.allowedHosts.join('\n'):''); if($('pxGrace'))$('pxGrace').value=(typeof P.graceSec==='number'?P.graceSec:''); if($('pxGap'))$('pxGap').value=(typeof P.connGapMs==='number'?P.connGapMs:''); if($('pxPorts'))$('pxPorts').value=(Array.isArray(P.allowedPorts)?P.allowedPorts.join('\n'):''); if($('pxLog'))$('pxLog').value=(typeof P.logLevel==='string'?P.logLevel:''); if($('logQuick'))$('logQuick').value=(typeof P.logLevel==='string'?P.logLevel:''); if($('pxMax'))$('pxMax').value=(typeof P.maxClients==='number'?P.maxClients:''); }
       }
@@ -2531,9 +2540,41 @@
   }); })();
   (function(){ var ss=$('saveSeo'); if(!ss) return; ss.addEventListener('click', function(){
     var m=$('seoMsg');
-    api('/admin/config',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({seo:{enabled:($('seoEnabled')?$('seoEnabled').value==='1':false),publicUrl:($('seoUrl')?$('seoUrl').value:''),googleVerification:($('seoGsv')?$('seoGsv').value:''),bingVerification:($('seoBing')?$('seoBing').value:'')},token:tok()})})
-      .then(function(r){return r.json();}).then(function(d){ if(d&&d.ok){ m.textContent='Saved. Applies immediately (no restart needed).'; m.className='msg ok'; } else { m.textContent='Failed: '+((d&&d.error)||'error'); m.className='msg err'; } })
+    api('/admin/config',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({seo:{enabled:($('seoEnabled')?$('seoEnabled').value==='1':false),publicUrl:($('seoUrl')?$('seoUrl').value:''),googleVerification:($('seoGsv')?$('seoGsv').value:''),bingVerification:($('seoBing')?$('seoBing').value:''),yandexVerification:($('seoYandex')?$('seoYandex').value:''),siteName:($('seoSiteName')?$('seoSiteName').value:''),title:($('seoTitle')?$('seoTitle').value:''),description:($('seoDesc')?$('seoDesc').value:''),image:($('seoImage')?$('seoImage').value:''),aiCrawlers:($('seoAi')?$('seoAi').value==='1':true)},token:tok()})})
+      .then(function(r){return r.json();}).then(function(d){ if(d&&d.ok){ m.textContent='Saved. Applies immediately (no restart needed).'; m.className='msg ok'; if(d.seo&&d.seo.indexNowKey&&$('seoIndexNow'))$('seoIndexNow').textContent=d.seo.indexNowKey+'  (served at /'+d.seo.indexNowKey+'.txt, pinged on save)'; } else { m.textContent='Failed: '+((d&&d.error)||'error'); m.className='msg err'; } })
       .catch(function(){ m.textContent='Network error.'; m.className='msg err'; });
+  }); })();
+  // "Use this address" — the panel is being viewed on the very host crawlers
+  // should be pointed at, far more often than not.
+  (function(){ var b=$('seoUrlHere'); if(!b) return; b.addEventListener('click', function(){
+    if($('seoUrl')) $('seoUrl').value=location.origin;
+    var m=$('seoMsg'); if(m){ m.textContent='Filled in from the address bar \u2014 press Save to apply.'; m.className='msg'; }
+  }); })();
+  (function(){ var b=$('seoPing'); if(!b) return; b.addEventListener('click', function(){
+    var m=$('seoMsg'); if(m){ m.textContent='Submitting\u2026'; m.className='msg'; }
+    b.disabled=true;
+    api('/admin/seo/ping',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({token:tok()})})
+      .then(function(r){return r.json();}).then(function(d){ b.disabled=false; if(!m) return;
+        if(d&&d.ok){ m.textContent='Submitted '+d.count+' URLs to IndexNow (Bing, Seznam, Naver, Yandex) \u2014 HTTP '+d.status+'.'; m.className='msg ok'; }
+        else { m.textContent='Not submitted: '+((d&&d.error)||'error'); m.className='msg err'; } })
+      .catch(function(){ b.disabled=false; if(m){ m.textContent='Network error.'; m.className='msg err'; } });
+  }); })();
+  (function(){ var b=$('seoCheck'); if(!b) return; b.addEventListener('click', function(){
+    var box=$('seoChecks'); if(box) box.textContent='Checking\u2026';
+    api('/admin/seo/check').then(function(r){return r.json();}).then(function(d){
+      if(!box) return;
+      if(!d||!d.ok||!d.checks){ box.textContent='Check failed: '+((d&&d.error)||'error'); return; }
+      box.innerHTML='';
+      d.checks.forEach(function(c){
+        var col=c.level==='err'?'#e06c6c':(c.level==='warn'?'#d6a54a':'#6fbf73');
+        var sym=c.level==='err'?'\u2717':(c.level==='warn'?'!':'\u2713');
+        var row=document.createElement('div');
+        row.style.cssText='display:flex;gap:8px;align-items:flex-start;padding:3px 0;font-size:.92em';
+        var i=document.createElement('span'); i.textContent=sym; i.style.cssText='color:'+col+';flex:none;width:1em;font-weight:700';
+        var t=document.createElement('span'); t.textContent=c.text; t.style.minWidth='0';
+        row.appendChild(i); row.appendChild(t); box.appendChild(row);
+      });
+    }).catch(function(){ if(box) box.textContent='Network error.'; });
   }); })();
 
   // app modes (login-screen entry modes)

@@ -952,7 +952,49 @@ function seoBingv() {
   var v = String(_seoCfg().bingVerification || '').trim();
   return /^[A-Za-z0-9_-]{1,100}$/.test(v) ? v : '';
 }
-function _seoAdmin() { var s = _seoCfg(); return { enabled: s.enabled === true, publicUrl: String(s.publicUrl || ''), googleVerification: String(s.googleVerification || ''), bingVerification: String(s.bingVerification || ''), indexNowKey: String(s.indexNowKey || '') }; }
+function seoYandex() {
+  // Same strict charset policy as seoGsv().
+  var v = String(_seoCfg().yandexVerification || '').trim();
+  return /^[A-Za-z0-9_-]+$/.test(v) ? v : '';
+}
+// Operator branding. A self-hosted instance is not "PokerTH Web Client" in a
+// search result, and until now it had no way to say otherwise: the title and
+// description were compiled in. An override replaces the localized string in
+// EVERY language — the operator writes one line, in one language, and it is
+// their call. Empty means "keep the translated default", which is what
+// pokerth.net wants.
+function seoSiteName() { var v = String(_seoCfg().siteName || '').trim(); return v || 'PokerTH'; }
+function seoTitleOverride() { return String(_seoCfg().title || '').trim(); }
+function seoDescOverride() { return String(_seoCfg().description || '').trim(); }
+// Social card image. A custom one is taken at face value: we do not know its
+// dimensions, so og:image:width/height are emitted only for the bundled file,
+// where we do. Announcing 1200×630 for an image that is not would make the
+// card render wrong everywhere.
+function seoImage(base) {
+  var v = String(_seoCfg().image || '').trim();
+  if (v) {
+    if (/^https?:\/\//i.test(v)) return { url: v, sized: false };
+    if (v.charAt(0) === '/') return base ? { url: base + v, sized: false } : { url: '', sized: false };
+    return { url: '', sized: false };
+  }
+  return base ? { url: base + '/screenshots/social-preview.png', sized: true } : { url: '', sized: false };
+}
+// AI crawlers. Default true — the behaviour every existing install already
+// has. Off writes an explicit Disallow for each named agent rather than
+// staying silent, because silence under "User-agent: *  Allow: /" reads as
+// consent.
+function seoAiCrawlers() { return _seoCfg().aiCrawlers !== false; }
+var SEO_AI_BOTS = ['GPTBot', 'OAI-SearchBot', 'ChatGPT-User', 'ClaudeBot', 'Claude-Web',
+  'anthropic-ai', 'PerplexityBot', 'Google-Extended', 'Applebot-Extended', 'CCBot',
+  'Bytespider', 'Meta-ExternalAgent', 'Amazonbot', 'cohere-ai'];
+// Everything the operator can type ends up inside an HTML attribute. Escaping
+// at emission, not at validation, is the version that cannot be forgotten when
+// a new field is added.
+function _seoAttr(v) {
+  return String(v == null ? '' : v).replace(/&/g, '&amp;').replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+function _seoAdmin() { var s = _seoCfg(); return { enabled: s.enabled === true, publicUrl: String(s.publicUrl || ''), googleVerification: String(s.googleVerification || ''), bingVerification: String(s.bingVerification || ''), yandexVerification: String(s.yandexVerification || ''), siteName: String(s.siteName || ''), title: String(s.title || ''), description: String(s.description || ''), image: String(s.image || ''), aiCrawlers: s.aiCrawlers !== false, indexNowKey: String(s.indexNowKey || ''), indexNow: (function () { var i = _indexNowStat || {}; return { at: i.at || 0, status: i.status || 0, count: i.count || 0, error: i.error || '' }; })() }; }
 
 var SEO_TITLE = 'PokerTH Web Client \u2014 Play Free Texas Hold\u2019em Poker in Your Browser';
 var SEO_DESC = 'Play Texas Hold\u2019em poker free in your browser with PokerTH, the open-source poker game. ' +
@@ -1271,12 +1313,16 @@ function seoIndexNowUrls(base) {
   return urls;
 }
 var _indexNowLast = 0;
-function seoIndexNowPing(force) {
-  if (!seoEnabled()) return;
-  var base = seoPublicUrl(); if (!base) return;
-  var key = seoIndexNowKey(); if (!key) return;
+// Last submission, surfaced in the admin panel: a ping that silently failed
+// (wrong key file, unreachable host) looked exactly like one that worked.
+var _indexNowStat = { at: 0, status: 0, count: 0, error: '' };
+function seoIndexNowPing(force, cb) {
+  var done = function (o) { if (cb) { try { cb(o); } catch (e) {} } };
+  if (!seoEnabled()) return done({ ok: false, error: 'indexing is off' });
+  var base = seoPublicUrl(); if (!base) return done({ ok: false, error: 'no public URL set' });
+  var key = seoIndexNowKey(); if (!key) return done({ ok: false, error: 'no IndexNow key' });
   var now = Date.now();
-  if (!force && now - _indexNowLast < 3600 * 1000) return;
+  if (!force && now - _indexNowLast < 3600 * 1000) return done({ ok: false, error: 'throttled (once per hour)' });
   _indexNowLast = now;
   var host = '';
   try { host = new URL(base).host; } catch (e) { return; }
@@ -1285,12 +1331,22 @@ function seoIndexNowPing(force) {
   try {
     var rq = https.request({ hostname: 'api.indexnow.org', path: '/indexnow', method: 'POST', headers: { 'Content-Type': 'application/json; charset=utf-8', 'Content-Length': Buffer.byteLength(body) }, timeout: 10000 }, function (r) {
       console.log('[seo] IndexNow ping: HTTP ' + r.statusCode + ' (' + urls.length + ' URLs)');
+      _indexNowStat = { at: Date.now(), status: r.statusCode || 0, count: urls.length, error: (r.statusCode >= 200 && r.statusCode < 300) ? '' : ('HTTP ' + r.statusCode) };
+      done({ ok: r.statusCode >= 200 && r.statusCode < 300, status: r.statusCode, count: urls.length });
       r.resume();
     });
-    rq.on('error', function (e) { console.warn('[seo] IndexNow ping failed:', e.message); });
+    rq.on('error', function (e) {
+      console.warn('[seo] IndexNow ping failed:', e.message);
+      _indexNowStat = { at: Date.now(), status: 0, count: urls.length, error: e.message };
+      done({ ok: false, error: e.message });
+    });
     rq.on('timeout', function () { rq.destroy(new Error('timeout')); });
     rq.end(body);
-  } catch (e) { console.warn('[seo] IndexNow ping failed:', e.message); }
+  } catch (e) {
+    console.warn('[seo] IndexNow ping failed:', e.message);
+    _indexNowStat = { at: Date.now(), status: 0, count: 0, error: e.message };
+    done({ ok: false, error: e.message });
+  }
 }
 // One ping shortly after boot when SEO is already enabled, so a restarted
 // proxy re-announces itself without waiting for an admin save.
@@ -1315,7 +1371,10 @@ if (_seoDeployTimer.unref) _seoDeployTimer.unref();
 function seoHeadBlock(base, lang) {
   var loc = (lang && SEO_I18N[lang]) || SEO_I18N.en;
   var canon = base ? (base + (lang ? '/?lang=' + lang : '/')) : '';
-  var img = base ? base + '/screenshots/social-preview.png' : '';
+  var ti = _seoAttr(seoTitleOverride() || loc.t);
+  var de = _seoAttr(seoDescOverride() || loc.d);
+  var site = _seoAttr(seoSiteName());
+  var im = seoImage(base), img = im.url;
   var out = [];
   // Explicit positive directive. Without max-snippet / max-image-preview
   // Google caps the snippet and shows only a thumbnail in Discover and in the
@@ -1325,31 +1384,35 @@ function seoHeadBlock(base, lang) {
   if (gsv) out.push('<meta name="google-site-verification" content="' + gsv + '">');
   var bgv = seoBingv();
   if (bgv) out.push('<meta name="msvalidate.01" content="' + bgv + '">');
-  out.push('<meta name="description" content="' + loc.d + '">');
+  var ydx = seoYandex();
+  if (ydx) out.push('<meta name="yandex-verification" content="' + ydx + '">');
+  out.push('<meta name="description" content="' + de + '">');
   if (canon) out.push('<link rel="canonical" href="' + canon + '">');
   if (base) out = out.concat(seoAlternates(base));
   out.push('<meta property="og:type" content="website">');
-  out.push('<meta property="og:site_name" content="PokerTH">');
+  out.push('<meta property="og:site_name" content="' + site + '">');
   var ogl = OG_LOCALE[lang || 'en'];
   if (ogl) out.push('<meta property="og:locale" content="' + ogl + '">');
-  out.push('<meta property="og:title" content="' + loc.t + '">');
-  out.push('<meta property="og:description" content="' + loc.d + '">');
+  out.push('<meta property="og:title" content="' + ti + '">');
+  out.push('<meta property="og:description" content="' + de + '">');
   if (canon) out.push('<meta property="og:url" content="' + canon + '">');
   if (img) {
-    out.push('<meta property="og:image" content="' + img + '">');
-    out.push('<meta property="og:image:width" content="1200">');
-    out.push('<meta property="og:image:height" content="630">');
-    out.push('<meta property="og:image:alt" content="' + loc.t + '">');
+    out.push('<meta property="og:image" content="' + _seoAttr(img) + '">');
+    if (im.sized) {
+      out.push('<meta property="og:image:width" content="1200">');
+      out.push('<meta property="og:image:height" content="630">');
+    }
+    out.push('<meta property="og:image:alt" content="' + ti + '">');
   }
-  out.push('<meta name="twitter:card" content="summary_large_image">');
-  out.push('<meta name="twitter:title" content="' + loc.t + '">');
-  out.push('<meta name="twitter:description" content="' + loc.d + '">');
-  if (img) out.push('<meta name="twitter:image" content="' + img + '">');
+  out.push('<meta name="twitter:card" content="' + (img ? 'summary_large_image' : 'summary') + '">');
+  out.push('<meta name="twitter:title" content="' + ti + '">');
+  out.push('<meta name="twitter:description" content="' + de + '">');
+  if (img) out.push('<meta name="twitter:image" content="' + _seoAttr(img) + '">');
   var ld = {
     '@context': 'https://schema.org',
     '@type': 'WebApplication',
-    name: 'PokerTH Web Client',
-    description: loc.d,
+    name: seoTitleOverride() || 'PokerTH Web Client',
+    description: seoDescOverride() || loc.d,
     applicationCategory: 'GameApplication',
     operatingSystem: 'Any',
     browserRequirements: 'Requires JavaScript',
@@ -1376,8 +1439,8 @@ function seoBodyBlock(lang) {
   var loc = (lang && SEO_I18N[lang]) || SEO_I18N.en;
   var b = (lang && SEO_BODY_I18N[lang]) || SEO_BODY_I18N.en;
   return '<div id="seo-intro" aria-hidden="true" style="position:absolute;left:-9999px;top:0;width:1px;height:1px;overflow:hidden">' +
-    '<h1>' + loc.t + '</h1>' +
-    '<p>' + loc.d + '</p>' +
+    '<h1>' + _seoAttr(seoTitleOverride() || loc.t) + '</h1>' +
+    '<p>' + _seoAttr(seoDescOverride() || loc.d) + '</p>' +
     '<p>' + b.m + '</p>' +
     '<p>' + b.g + '</p>' +
     '<p>Free software \u2014 source code on GitHub (narmod/pokerth-web-client), based on PokerTH by the PokerTH Development Team.</p>' +
@@ -1394,7 +1457,8 @@ function seoFooterBlock(lang) {
   // left exactly as it was; localized variants use the SEO_I18N title, which
   // already carries the keywords a speaker of that language would search for.
   var b = (lang && SEO_BODY_I18N[lang]) || SEO_BODY_I18N.en;
-  var lead = (lang && SEO_I18N[lang])
+  var lead = seoTitleOverride() ? _seoAttr(seoTitleOverride())
+    : (lang && SEO_I18N[lang])
     ? SEO_I18N[lang].t
     : 'Free open-source Texas Hold\u2019em poker in your browser \u2014 no download, no ads, no signup';
   return '<div class="connect-footer-line" id="cf-seo" style="opacity:0.75">' +
@@ -1786,7 +1850,7 @@ function seoContentPage(res, method, title, desc, relPath, bodyHtml, ld, lang, l
   // Self-canonical: the language variant points at itself, never at English,
   // or the variants would be de-indexed in favour of the page they alias.
   var url = base ? base + relPath + (lang ? '?lang=' + lang : '') : '';
-  var img = base ? base + '/screenshots/social-preview.png' : '';
+  var _im = seoImage(base), img = _im.url;
   var head;
   if (on) {
     // Breadcrumbs: Google renders the trail in place of the raw URL, and it
@@ -1803,21 +1867,21 @@ function seoContentPage(res, method, title, desc, relPath, bodyHtml, ld, lang, l
       '<meta name="description" content="' + desc + '">' +
       (url ? '<link rel="canonical" href="' + url + '">' : '') +
       seoPageAlternates(base, relPath, langs) +
-      '<meta property="og:type" content="article"><meta property="og:site_name" content="PokerTH">' +
+      '<meta property="og:type" content="article"><meta property="og:site_name" content="' + _seoAttr(seoSiteName()) + '">' +
       '<meta property="og:title" content="' + title + '">' +
       '<meta property="og:description" content="' + desc + '">' +
       (url ? '<meta property="og:url" content="' + url + '">' : '') +
       (OG_LOCALE[lang || 'en'] ? '<meta property="og:locale" content="' + OG_LOCALE[lang || 'en'] + '">' : '') +
       // Without these a shared /rules or /faq link showed as a bare URL in
       // Discord, WhatsApp and X — the home page had cards, these did not.
-      (img ? '<meta property="og:image" content="' + img + '">' +
-             '<meta property="og:image:width" content="1200">' +
-             '<meta property="og:image:height" content="630">' +
+      (img ? '<meta property="og:image" content="' + _seoAttr(img) + '">' +
+             (_im.sized ? '<meta property="og:image:width" content="1200">' +
+                          '<meta property="og:image:height" content="630">' : '') +
              '<meta property="og:image:alt" content="' + title + '">' : '') +
       '<meta name="twitter:card" content="' + (img ? 'summary_large_image' : 'summary') + '">' +
       '<meta name="twitter:title" content="' + title + '">' +
       '<meta name="twitter:description" content="' + desc + '">' +
-      (img ? '<meta name="twitter:image" content="' + img + '">' : '') +
+      (img ? '<meta name="twitter:image" content="' + _seoAttr(img) + '">' : '') +
       (ld ? '<script type="application/ld+json">' + JSON.stringify(ld) + '</script>' : '') +
       (crumbs ? '<script type="application/ld+json">' + JSON.stringify(crumbs) + '</script>' : '');
   } else {
@@ -1987,7 +2051,10 @@ function sendClientHtml(req, res) {
   // (mtime + SEO state). A generation change flushes everything; a new
   // language within the same generation just adds one entry (37 max).
   const lang = on ? seoLangFromQuery(req.url) : '';
-  const gen = st.mtimeMs + '|' + (on ? '1' : '0') + '|' + base + '|' + (on ? seoGsv() : '') + '|' + (on ? seoBingv() : '');
+  // Every SEO field is baked into the served HTML, so the whole block keys the
+  // cache — listing fields one by one is how a new one silently serves stale
+  // pages until the next deploy.
+  const gen = st.mtimeMs + '|' + (on ? '1' : '0') + '|' + (on ? JSON.stringify(_seoAdmin()) : '');
   if (_seoHtmlGen !== gen) { _seoHtmlCache.clear(); _seoHtmlGen = gen; }
   const key = lang || '_';
   let ent = _seoHtmlCache.get(key);
@@ -2001,7 +2068,9 @@ function sendClientHtml(req, res) {
       // Localized variant: matching <html lang> and <title>. The i18n module
       // re-syncs <html lang> at boot anyway; this is for crawlers.
       html = html.replace('<html lang="en">', '<html lang="' + lang + '">');
-      html = html.replace('<title>PokerTH Web Client</title>', '<title>' + SEO_I18N[lang].t + '</title>');
+      html = html.replace('<title>PokerTH Web Client</title>', '<title>' + _seoAttr(seoTitleOverride() || SEO_I18N[lang].t) + '</title>');
+    } else if (on && seoTitleOverride()) {
+      html = html.replace('<title>PokerTH Web Client</title>', '<title>' + _seoAttr(seoTitleOverride()) + '</title>');
     }
     const buf = Buffer.from(html, 'utf8');
     ent = {
@@ -4144,6 +4213,20 @@ function handleAdmin(req, res, reqPathOnly, query) {
             if (_sb && !/^[A-Za-z0-9_-]+$/.test(_sb)) return adminJson(res, 400, { ok: false, error: 'invalid Bing verification token (letters, digits, - and _ only)' });
             _so.bingVerification = _sb;
           }
+          if (typeof d.seo.yandexVerification === 'string') {
+            var _sy = d.seo.yandexVerification.trim().slice(0, 100);
+            if (_sy && !/^[A-Za-z0-9_-]+$/.test(_sy)) return adminJson(res, 400, { ok: false, error: 'invalid Yandex verification token (letters, digits, - and _ only)' });
+            _so.yandexVerification = _sy;
+          }
+          if (typeof d.seo.siteName === 'string')    _so.siteName    = d.seo.siteName.trim().slice(0, 60);
+          if (typeof d.seo.title === 'string')       _so.title       = d.seo.title.trim().slice(0, 70);
+          if (typeof d.seo.description === 'string') _so.description = d.seo.description.trim().slice(0, 200);
+          if (typeof d.seo.image === 'string') {
+            var _si = d.seo.image.trim().slice(0, 300);
+            if (_si && !/^(https?:\/\/[^\s"'<>]+|\/[^\s"'<>]*)$/i.test(_si)) return adminJson(res, 400, { ok: false, error: 'invalid image (expected https://\u2026 or a path starting with /)' });
+            _so.image = _si;
+          }
+          if (typeof d.seo.aiCrawlers === 'boolean') _so.aiCrawlers = d.seo.aiCrawlers;
           _adminConfig.seo = _so;
           _seoHtmlCache.clear();   // re-inject on next page load
           if (_so.enabled === true && _so.publicUrl) {
@@ -5098,6 +5181,73 @@ function handleAdmin(req, res, reqPathOnly, query) {
       return adminJson(res, 200, { ok: true });
     });
   }
+  // Submit every known URL to IndexNow now, bypassing the hourly throttle.
+  if (reqPathOnly === '/admin/seo/ping' && req.method === 'POST') {
+    return readJsonBody(req, function (d) {
+      if (!adminAuthed(query, d && d.token)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
+      var answered = false, guard = null;
+      var reply = function (o) {
+        if (answered) return; answered = true;
+        if (guard) clearTimeout(guard);
+        return adminJson(res, 200, { ok: !!o.ok, status: o.status || 0, count: o.count || 0, error: o.error || '', indexNow: _seoAdmin().indexNow });
+      };
+      // IndexNow answers in well under ten seconds or not at all; the request
+      // itself already carries a 10 s timeout, this is the belt to its braces.
+      guard = setTimeout(function () { reply({ ok: false, error: 'no answer within 12 s — check the log' }); }, 12000);
+      try { seoIndexNowPing(true, reply); } catch (e) { reply({ ok: false, error: e.message }); }
+    });
+  }
+  // Configuration check. Everything here is answered from local state: a proxy
+  // behind Cloudflare often cannot reach its own public URL, so a failed
+  // self-fetch would report a problem that does not exist.
+  if (reqPathOnly === '/admin/seo/check') {
+    if (!adminAuthed(query)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
+    var _ck = [];
+    var _add = function (level, text) { _ck.push({ level: level, text: text }); };
+    var _on = seoEnabled(), _base = seoPublicUrl();
+    if (!_on) _add('warn', 'Indexing is off — every page is served noindex and robots.txt blocks all crawlers.');
+    else _add('ok', 'Indexing is on.');
+    if (!_base) _add(_on ? 'err' : 'warn', 'No public URL set — canonical links, sitemap.xml and llms.txt cannot be generated.');
+    else {
+      _add('ok', 'Public URL: ' + _base);
+      if (/^http:\/\//i.test(_base)) _add('warn', 'The public URL is http:// — search engines treat https as a ranking signal, and the app needs it anyway.');
+      var _hh = String(req.headers['x-forwarded-host'] || req.headers.host || '').split(',')[0].trim().toLowerCase();
+      var _bh = '';
+      try { _bh = _base.replace(/^https?:\/\//i, '').split('/')[0].toLowerCase(); } catch (e) {}
+      if (_hh && _bh && _hh !== _bh) _add('warn', 'You are viewing this page on ' + _hh + ' but the public URL says ' + _bh + '. If that is not deliberate, crawlers are being pointed at the wrong host.');
+    }
+    try {
+      var _hp = path.join(__dirname, 'public', 'pokerth-client.html');
+      var _hs = fs.readFileSync(_hp, 'utf8');
+      if (_hs.indexOf('<!--__SEO_HEAD__-->') === -1) _add('err', 'pokerth-client.html has no <!--__SEO_HEAD__--> placeholder — no SEO tags can be injected.');
+      else _add('ok', 'SEO placeholders found in the served page.');
+    } catch (e) { _add('err', 'pokerth-client.html could not be read.'); }
+    var _imc = seoImage(_base);
+    if (_imc.sized) {
+      try { fs.statSync(path.join(__dirname, 'public', 'screenshots', 'social-preview.png')); _add('ok', 'Social card image present (bundled 1200×630).'); }
+      catch (e) { _add('err', 'screenshots/social-preview.png is missing — shared links will have no preview image.'); }
+    } else if (_imc.url) _add('ok', 'Custom social card image: ' + _imc.url + ' (make sure it is around 1200×630 and publicly reachable).');
+    else _add('warn', 'The custom social image is neither an absolute URL nor a path starting with / — it is being ignored.');
+    var _ink = String(_seoCfg().indexNowKey || '');
+    if (_on && _base) {
+      if (/^[a-f0-9]{32}$/.test(_ink)) {
+        _add('ok', 'IndexNow key served at /' + _ink + '.txt.');
+        if (_indexNowStat.at) {
+          _add(_indexNowStat.error ? 'warn' : 'ok', 'Last IndexNow submission: ' + new Date(_indexNowStat.at).toISOString().replace('T', ' ').slice(0, 19) + ' UTC, ' + _indexNowStat.count + ' URLs' + (_indexNowStat.error ? ' — ' + _indexNowStat.error : ' — accepted'));
+        } else _add('warn', 'No IndexNow submission yet in this process.');
+      } else _add('warn', 'No IndexNow key yet — it is generated on the next save with indexing on.');
+    }
+    if (!seoGsv()) _add('warn', 'No Google Search Console token — optional, but without it you cannot see how the site actually performs.');
+    if (!seoBingv()) _add('warn', 'No Bing Webmaster token (optional).');
+    var _rl = seoPageLangs(SEO_RULES_I18N).length, _fl = seoPageLangs(SEO_FAQ_I18N).length, _tot = 0;
+    for (var _c in SEO_I18N) _tot++;
+    _add(_rl ? 'ok' : 'warn', '/rules translated into ' + _rl + ' of ' + (_tot - 1) + ' non-English languages.');
+    _add(_fl ? 'ok' : 'warn', '/faq translated into ' + _fl + ' of ' + (_tot - 1) + ' non-English languages.');
+    _add(seoAiCrawlers() ? 'ok' : 'warn', seoAiCrawlers() ? 'AI crawlers are allowed and llms.txt is served.' : 'AI crawlers are refused in robots.txt and llms.txt returns 404.');
+    var _urlCount = _base ? seoIndexNowUrls(_base).length : 0;
+    if (_urlCount) _add('ok', 'sitemap.xml advertises ' + _urlCount + ' URLs.');
+    return adminJson(res, 200, { ok: true, checks: _ck, indexNow: _seoAdmin().indexNow });
+  }
   if (reqPathOnly === '/admin/update-log') {
     if (!adminAuthed(query)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
     let log = '';
@@ -5900,9 +6050,10 @@ const httpServer = http.createServer((req, res) => {
     var _rOn = seoEnabled(), _rBase = _rOn ? seoPublicUrl() : '';
     var _rTxt;
     if (_rOn) {
+      var _rAi = seoAiCrawlers();
       _rTxt = 'User-agent: *\nAllow: /\nDisallow: /admin\n\n' +
-        '# AI crawlers explicitly welcome\n' +
-        ['GPTBot', 'ClaudeBot', 'Claude-Web', 'PerplexityBot', 'Google-Extended'].map(function (b) { return 'User-agent: ' + b + '\nAllow: /\n'; }).join('\n') +
+        (_rAi ? '# AI crawlers explicitly welcome\n' : '# AI crawlers refused by the operator\n') +
+        SEO_AI_BOTS.map(function (b) { return 'User-agent: ' + b + '\n' + (_rAi ? 'Allow: /' : 'Disallow: /') + '\n'; }).join('\n') +
         (_rBase ? '\nSitemap: ' + _rBase + '/sitemap.xml\n' : '');
     } else {
       _rTxt = 'User-agent: *\nDisallow: /\n';
@@ -5944,7 +6095,9 @@ const httpServer = http.createServer((req, res) => {
     return;
   }
   if (reqPathOnly === '/llms.txt') {
-    if (!seoEnabled()) { res.writeHead(404); res.end('Not found'); return; }
+    // The file exists to brief AI crawlers. Serving it while robots.txt tells
+    // those same crawlers to stay out would be talking out of both sides.
+    if (!seoEnabled() || !seoAiCrawlers()) { res.writeHead(404); res.end('Not found'); return; }
     res.writeHead(200, Object.assign({ 'Content-Type': 'text/plain; charset=utf-8', 'Cache-Control': 'no-cache, must-revalidate' }, SECURITY_HEADERS));
     res.end(seoLlmsTxt(seoPublicUrl()));
     return;
