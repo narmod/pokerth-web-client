@@ -80,8 +80,11 @@ ok(/!mzPlaysKnown/.test(badge),
 ok(/mzPlays\[p\.id\]\|\|0/.test(badge), 'a track that counts but was never played shows 0');
 ok(/n===1\?'':'s'/.test(badge), 'the singular is not "1 plays"');
 ok(/mzPlayBadge\(p\)/.test(body(admin, 'mzRenderList')), 'the badge is placed by the library rows');
-ok(/insertAdjacentElement\('afterend',pb\)/.test(body(admin, 'mzRenderList')),
-  'the count sits right after the title, not in the id line');
+// Le compteur a quitté la ligne meta (web.70) : collé après le titre, il se
+// heurtait à l'identifiant de la piste (« 5 playspokerth-jingle »). Il est
+// désormais posé en fin de rangée, à côté des contrôles.
+ok(/row\.appendChild\(pb\)/.test(body(admin, 'mzRenderList')),
+  'the count sits at the end of the row, not on the meta line next to the track id');
 ok(/mzPlaysKnown=\(d&&d\.plays!==undefined\)/.test(admin), 'the badge is wired to the track list payload');
 ok(/\.mzplays\{/.test(admin), 'the badge has its own style');
 
