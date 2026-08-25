@@ -96,6 +96,7 @@ export const strings = {
   footJoin: `Gabh pàirt`,
   spectatingBadge: `Neach-amhairc`,
   reportGameTitle: `Aithris ainm cluicheadair mì-iomchaidh`, reportGameConfirm: `Aithris`, reportGameMsg: `A bheil thu cinnteach gu bheil thu airson ainm a' gheama: "{name}" aithris mar mhì-iomchaidh?`, reportGameAccepted: `Ghabh am frithealaiche ris an aithris air ainm a' gheama. Mòran taing.`, reportGameDup: `Chaidh ainm a' gheama seo aithris le cluicheadair eile mu thràth.`, reportGameError: `Thachair mearachd le aithris air ainm a' gheama.`,
+  reportAvatarTitle: `Dèan aithris air avatar mì-iomchaidh`, reportAvatarMsg: `A bheil thu cinnteach gu bheil thu airson aithris a dhèanamh air avatar "{name}" mar rud mì-iomchaidh?`, reportAvatarAccepted: `Ghabh am frithealaiche ris an aithris mun avatar. Tapadh leat.`, reportAvatarDup: `Rinn cluicheadair eile aithris air an avatar seo mu thràth.`, reportAvatarError: `Thachair mearachd fhad ’s a bha thu ag aithris air an avatar.`, piReportAvatar: `Dèan aithris air an avatar`,
   filterRanked: 'Rangaichte', plSortAZ: 'Seòrsaich A–Z', plSortCountry: 'Seòrsaich a rèir dùthcha',
   plInGame: 'Ann an geama', plLobby: 'San lobaidh',
   buttonsPokerth: 'PokerTH',

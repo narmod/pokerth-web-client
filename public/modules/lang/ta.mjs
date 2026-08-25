@@ -96,6 +96,7 @@ export const strings = {
   footJoin: `சேர்`,
   spectatingBadge: `பார்வையாளர்`,
   reportGameTitle: `பொருத்தமற்ற விளையாட்டுப் பெயரைப் புகாரளி`, reportGameConfirm: `புகாரளி`, reportGameMsg: `விளையாட்டுப் பெயர் "{name}" பொருத்தமற்றது என்று புகாரளிக்க விரும்புகிறீர்களா?`, reportGameAccepted: `விளையாட்டுப் பெயர் பற்றிய புகார் சேவையகத்தால் ஏற்கப்பட்டது. நன்றி.`, reportGameDup: `இந்த விளையாட்டுப் பெயர் ஏற்கனவே மற்றொரு வீரரால் புகாரளிக்கப்பட்டுள்ளது.`, reportGameError: `விளையாட்டுப் பெயரைப் புகாரளிக்கும்போது பிழை ஏற்பட்டது.`,
+  reportAvatarTitle: `பொருத்தமற்ற அவதாரத்தைப் புகாரளிக்கவும்`, reportAvatarMsg: `"{name}" இன் அவதாரத்தைப் பொருத்தமற்றது எனப் புகாரளிக்க வேண்டுமா?`, reportAvatarAccepted: `அவதாரப் புகாரைச் சேவையகம் ஏற்றுக்கொண்டது. நன்றி.`, reportAvatarDup: `இந்த அவதாரத்தை ஏற்கனவே மற்றொரு வீரர் புகாரளித்துள்ளார்.`, reportAvatarError: `அவதாரத்தைப் புகாரளிக்கும்போது பிழை ஏற்பட்டது.`, piReportAvatar: `அவதாரைப் புகாரளி`,
   filterRanked: 'தரவரிசை', plSortAZ: 'A–Z வரிசை', plSortCountry: 'நாடு வாரியாக வரிசைப்படுத்து',
   plInGame: 'ஆட்டத்தில்', plLobby: 'லாபியில்',
   buttonsPokerth: 'PokerTH',

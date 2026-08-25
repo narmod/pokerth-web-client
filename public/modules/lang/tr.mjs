@@ -97,6 +97,7 @@ export const strings = {
   footJoin: `Katıl`,
   spectatingBadge: `İzleyici`,
   reportGameTitle: `Uygunsuz oyun adını bildir`, reportGameConfirm: `Bildir`, reportGameMsg: `"{name}" oyun adını uygunsuz olarak bildirmek istediğinize emin misiniz?`, reportGameAccepted: `Oyun adı bildirimi sunucu tarafından kabul edildi. Teşekkürler.`, reportGameDup: `Bu oyun adı zaten başka bir oyuncu tarafından bildirilmiş.`, reportGameError: `Oyun adı bildirilirken bir hata oluştu.`,
+  reportAvatarTitle: `Uygunsuz avatarı bildir`, reportAvatarMsg: `"{name}" adlı oyuncunun avatarını uygunsuz olarak bildirmek istediğinize emin misiniz?`, reportAvatarAccepted: `Sunucu avatar bildirimini kabul etti. Teşekkürler.`, reportAvatarDup: `Bu avatar başka bir oyuncu tarafından zaten bildirildi.`, reportAvatarError: `Avatar bildirilirken bir hata oluştu.`, piReportAvatar: `Avatarı bildir`,
   filterRanked: 'Dereceli', plSortAZ: 'A–Z sırala', plSortCountry: 'Ülkeye göre sırala',
   plInGame: 'Oyunda', plLobby: 'Lobide',
   buttonsPokerth: 'PokerTH',

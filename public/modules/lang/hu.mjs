@@ -95,6 +95,7 @@ export const strings = {
   footJoin: `Csatlakozás`,
   spectatingBadge: `Néző`,
   reportGameTitle: `Nem megfelelő játéknév jelentése`, reportGameConfirm: `Jelentés`, reportGameMsg: `Biztosan jelenteni szeretné a(z) „{name}” játéknevet nem megfelelőként?`, reportGameAccepted: `A szerver elfogadta a játéknév jelentését. Köszönjük.`, reportGameDup: `Ezt a játéknevet már jelentette egy másik játékos.`, reportGameError: `Hiba történt a játéknév jelentése közben.`,
+  reportAvatarTitle: `Nem megfelelő avatár jelentése`, reportAvatarMsg: `"{name}" avatárját valóban nem megfelelőként szeretné jelenteni?`, reportAvatarAccepted: `A kiszolgáló elfogadta az avatár jelentését. Köszönjük.`, reportAvatarDup: `Ezt az avatárt már jelentette egy másik játékos.`, reportAvatarError: `Hiba történt az avatár jelentése közben.`, piReportAvatar: `Avatár jelentése`,
   filterRanked: 'Rangsorolt', plSortAZ: 'Rendezés A–Z', plSortCountry: 'Rendezés ország szerint',
   plInGame: 'Játékban', plLobby: 'A lobbiban',
   buttonsPokerth: 'PokerTH',

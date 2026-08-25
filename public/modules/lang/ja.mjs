@@ -94,6 +94,7 @@ export const strings = {
   footJoin: `参加`,
   spectatingBadge: `観戦中`,
   reportGameTitle: `不適切なゲーム名を報告`, reportGameConfirm: `報告`, reportGameMsg: `ゲーム名「{name}」を不適切として報告してもよろしいですか？`, reportGameAccepted: `ゲーム名の報告がサーバーに受理されました。ありがとうございます。`, reportGameDup: `このゲーム名は既に他のプレイヤーによって報告されています。`, reportGameError: `ゲーム名の報告中にエラーが発生しました。`,
+  reportAvatarTitle: `不適切なアバターを報告`, reportAvatarMsg: `「{name}」のアバターを不適切として報告しますか？`, reportAvatarAccepted: `アバターの報告がサーバーに受理されました。ありがとうございます。`, reportAvatarDup: `このアバターは既に別のプレイヤーが報告しています。`, reportAvatarError: `アバターの報告中にエラーが発生しました。`, piReportAvatar: `アバターを報告`,
   filterRanked: 'ランク戦', plSortAZ: 'A–Z順', plSortCountry: '国別に並べ替え',
   plInGame: '対戦中', plLobby: 'ロビー',
   buttonsPokerth: 'PokerTH',

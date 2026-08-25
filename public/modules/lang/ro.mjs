@@ -95,6 +95,7 @@ export const strings = {
   footJoin: `Intră`,
   spectatingBadge: `Spectator`,
   reportGameTitle: `Raportează un nume de joc nepotrivit`, reportGameConfirm: `Raportează`, reportGameMsg: `Sigur doriți să raportați numele jocului „{name}” ca nepotrivit?`, reportGameAccepted: `Raportarea numelui jocului a fost acceptată de server. Mulțumim.`, reportGameDup: `Acest nume de joc a fost deja raportat de un alt jucător.`, reportGameError: `A apărut o eroare la raportarea numelui jocului.`,
+  reportAvatarTitle: `Raportează un avatar nepotrivit`, reportAvatarMsg: `Sigur vrei să raportezi avatarul lui „{name}” ca fiind nepotrivit?`, reportAvatarAccepted: `Serverul a acceptat raportarea avatarului. Mulțumim.`, reportAvatarDup: `Acest avatar a fost deja raportat de alt jucător.`, reportAvatarError: `A apărut o eroare la raportarea avatarului.`, piReportAvatar: `Raportează avatarul`,
   filterRanked: 'Clasate', plSortAZ: 'Sortare A–Z', plSortCountry: 'Sortare după țară',
   plInGame: 'În joc', plLobby: 'În lobby',
   buttonsPokerth: 'PokerTH',

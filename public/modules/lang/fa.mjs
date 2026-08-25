@@ -103,6 +103,7 @@ export const strings = {
   footJoin: 'پیوستن',
   spectatingBadge: 'تماشا',
   reportGameTitle: 'گزارش نام نامناسب بازی', reportGameConfirm: 'گزارش', reportGameMsg: 'آیا مطمئنید می‌خواهید نام بازی «{name}» را به‌عنوان نامناسب گزارش کنید؟', reportGameAccepted: 'سرور گزارش نام بازی را پذیرفت. سپاسگزاریم.', reportGameDup: 'این نام بازی را بازیکن دیگری قبلاً گزارش کرده است.', reportGameError: 'در گزارش نام بازی خطایی رخ داد.',
+  reportAvatarTitle: `گزارش آواتار نامناسب`, reportAvatarMsg: `آیا مطمئن هستید که می‌خواهید آواتار «{name}» را نامناسب گزارش کنید؟`, reportAvatarAccepted: `سرور گزارش آواتار را پذیرفت. سپاسگزاریم.`, reportAvatarDup: `این آواتار قبلاً توسط بازیکن دیگری گزارش شده است.`, reportAvatarError: `هنگام گزارش آواتار خطایی رخ داد.`, piReportAvatar: `گزارش آواتار`,
   buttonsPokerth: 'PokerTH',
   hdrWaitingPlayers:'در انتظار بازیکنان', hdrSpectatingWait:'تماشا — در انتظار دست بعدی', wpWaitingPlayers:'در انتظار بازیکنان…', wpFillBots:'پرکردن با بازیکنان رایانه‌ای', wpStartGame:'شروع بازی', wpLeaveGame:'ترک بازی', wpInvite:'دعوت از دوستان', advInviteLink:'نمایش دکمه «دعوت از دوستان» در اتاق انتظار', sharedTableNotFound:'🔗 میز اشتراک‌گذاری‌شده پیدا نشد — شاید بازی قبلاً تمام شده باشد.',
   assist:'دستیار',assistPopOut:'جداکردن در پنجرهٔ مستقل',assistDock:'بازگرداندن به پنل',advCatUI:'رابط کاربری',advCatStyle:'ظاهر',advCatSound:'صدا',advCatLocal:'بازی محلی',advCatNetwork:'بازی شبکه‌ای',advCatInternet:'بازی اینترنتی',advCatAvatar:'نام‌های مستعار / آواتارها',advCatLog:'پیام‌های گزارش',advCatReset:'بازگردانی پیش‌فرض‌ها',

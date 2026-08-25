@@ -57,7 +57,7 @@ ok(typeof S._invSent === 'object' && Object.keys(S._invSent).length === 0, '_inv
 ok(S._lastMsgWasReaction === false && S._chatRejectShown === false, 'drapeaux chat init = false');
 ok(Array.isArray(S._reactEmojiQueue) && S._reactEmojiQueue.length === 0
    && S._reactEmojiTimer === null && S._reactEmojiLastSent === 0, 'file /emoji vierge');
-ok(S.REACT_EMOJI_MIN_GAP === 1500 && S.REACT_EMOJI_QUEUE_MAX === 4, 'constantes /emoji');
+ok(S.REACT_EMOJI_MIN_GAP === 250 && S.REACT_EMOJI_QUEUE_MAX === 4, 'constantes /emoji');
 ok(S._statusKey === null && S._origTitle === 'PokerTH Web' && S._titleBlinkID === null,
    'status bar / titre init');
 

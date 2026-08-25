@@ -249,6 +249,21 @@ function onReportGameAck(sub) {
     return;
 }
 
+// ReportAvatarAckMessage : reportedPlayerId=1, reportAvatarResult=2
+// (0 accepté · 1 déjà signalé · 2 invalide). Mêmes trois issues que le
+// signalement de nom de partie, d'où des toasts construits à l'identique.
+function onReportAvatarAck(sub) {
+    var _raRes = Proto.u32(sub, 2);
+    if (_raRes === 0) {
+      window.showToast(t('reportAvatarAccepted'), { icon: '\u2713' });
+    } else if (_raRes === 1) {
+      window.showToast(t('reportAvatarDup'), { icon: '\u2139' });
+    } else {
+      window.showToast(t('reportAvatarError'), { tone: 'error', icon: '\u2715' });
+    }
+    return;
+}
+
 function onAdminBanPlayerAck(sub) {
     // AdminBanPlayerAckMessage : banPlayerId=1, banPlayerResult=2
     // (0 accepté · 1 en attente · 2 pas de BDD · 3 erreur BDD · 4 invalide)
@@ -768,7 +783,7 @@ function onGameListSpectatorLeft(sub) {
    return;
 }
 
-export { onAnnounce, onInitAck, onAuthChallenge, onReportGameAck, onAdminBanPlayerAck, onAdminGlobalNoticeAck, onError, onPlayerList, onStatistics, onPlayerInfoReply, onGameListNew, onGameListUpdate, onGameListPlayerJoined, onGameListPlayerLeft, onGameListAdminChanged, onGameListSpectatorJoined, onGameListSpectatorLeft };
+export { onAnnounce, onInitAck, onAuthChallenge, onReportGameAck, onReportAvatarAck, onAdminBanPlayerAck, onAdminGlobalNoticeAck, onError, onPlayerList, onStatistics, onPlayerInfoReply, onGameListNew, onGameListUpdate, onGameListPlayerJoined, onGameListPlayerLeft, onGameListAdminChanged, onGameListSpectatorJoined, onGameListSpectatorLeft };
 
-for (const [k, v] of Object.entries({ onAnnounce, onInitAck, onAuthChallenge, onReportGameAck, onAdminBanPlayerAck, onAdminGlobalNoticeAck, onError, onPlayerList, onStatistics, onPlayerInfoReply, onGameListNew, onGameListUpdate, onGameListPlayerJoined, onGameListPlayerLeft, onGameListAdminChanged, onGameListSpectatorJoined, onGameListSpectatorLeft }))
+for (const [k, v] of Object.entries({ onAnnounce, onInitAck, onAuthChallenge, onReportGameAck, onReportAvatarAck, onAdminBanPlayerAck, onAdminGlobalNoticeAck, onError, onPlayerList, onStatistics, onPlayerInfoReply, onGameListNew, onGameListUpdate, onGameListPlayerJoined, onGameListPlayerLeft, onGameListAdminChanged, onGameListSpectatorJoined, onGameListSpectatorLeft }))
   window[k] = v;

@@ -105,6 +105,7 @@ export const strings = {
   footJoin: `เข้าร่วม`,
   spectatingBadge: `กำลังชม`,
   reportGameTitle: `รายงานชื่อเกมที่ไม่เหมาะสม`, reportGameConfirm: `รายงาน`, reportGameMsg: `แน่ใจหรือไม่ว่าต้องการรายงานชื่อเกม "{name}" ว่าไม่เหมาะสม?`, reportGameAccepted: `เซิร์ฟเวอร์รับรายงานชื่อเกมแล้ว ขอบคุณ`, reportGameDup: `ชื่อเกมนี้ถูกผู้เล่นคนอื่นรายงานไปแล้ว`, reportGameError: `เกิดข้อผิดพลาดขณะรายงานชื่อเกม`,
+  reportAvatarTitle: `รายงานรูปประจำตัวที่ไม่เหมาะสม`, reportAvatarMsg: `ต้องการรายงานรูปประจำตัวของ "{name}" ว่าไม่เหมาะสมหรือไม่?`, reportAvatarAccepted: `เซิร์ฟเวอร์รับรายงานรูปประจำตัวแล้ว ขอบคุณ`, reportAvatarDup: `ผู้เล่นคนอื่นรายงานรูปประจำตัวนี้ไปแล้ว`, reportAvatarError: `เกิดข้อผิดพลาดขณะรายงานรูปประจำตัว`, piReportAvatar: `รายงานรูปประจำตัว`,
   buttonsPokerth: 'PokerTH',
   hdrWaitingPlayers:'กำลังรอผู้เล่น', hdrSpectatingWait:'กำลังชม \u2014 รอมือถัดไป', wpWaitingPlayers:'กำลังรอผู้เล่น …', wpFillBots:'เติมด้วยผู้เล่นคอมพิวเตอร์', wpStartGame:'เริ่มเกม', wpLeaveGame:'ออกจากเกม', wpInvite:'เชิญเพื่อน', advInviteLink:'แสดงปุ่ม “เชิญเพื่อน” ในห้องรอ', sharedTableNotFound:'🔗 ไม่พบโต๊ะที่แชร์ — อาจจบไปแล้ว',
   assist:'ตัวช่วย',assistPopOut:'แยกเป็นหน้าต่างต่างหาก',assistDock:'กลับเข้าแผงเดิม',advCatUI:'ส่วนติดต่อผู้ใช้',advCatStyle:'สไตล์',advCatSound:'เสียง',advCatLocal:'เกมในเครื่อง',advCatNetwork:'เกมเครือข่าย',advCatInternet:'เกมอินเทอร์เน็ต',advCatAvatar:'ชื่อเล่น / อวาตาร์',advCatLog:'ข้อความบันทึก',advCatReset:'คืนค่าเริ่มต้น',

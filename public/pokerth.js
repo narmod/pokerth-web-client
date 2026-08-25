@@ -4261,6 +4261,7 @@ const App = (() => {
       case T.AuthChallenge: { onAuthChallenge(sub); break; } // [9g-C3] → net/msg-lobby.mjs
 
       case T.ReportGameAck: { onReportGameAck(sub); break; } // [9g-C3] → net/msg-lobby.mjs
+      case T.ReportAvatarAck: { onReportAvatarAck(sub); break; } // → net/msg-lobby.mjs
 
       case T.AdminBanPlayerAck: { onAdminBanPlayerAck(sub); break; } // [9g-C3] → net/msg-lobby.mjs
 
@@ -6808,23 +6809,62 @@ const App = (() => {
       renderGames();
     },
 
-    // ── Signaler le nom de la partie (parité officielle) ──
-    reportGameName(gid) {
-      var g = S.games[gid]; if (!g) return;
-      this._reportGid = gid;
+    // ── Signalements officiels : nom de partie et avatar ─────────────
+    // Deux motifs, un seul modal de confirmation (#report-confirm-modal) :
+    // _reportKind dit lequel est en cours et doReport() aiguille. Le titre est
+    // réécrit à chaque ouverture, data-i18n compris, sinon un changement de
+    // langue ferait réapparaître le libellé de l'autre motif.
+    _reportKind: null,
+    _reportGid: null,
+    _reportPid: null,
+    _openReportModal(kind, titleKey, msgText) {
+      this._reportKind = kind;
+      var ttl = document.getElementById('rcm-title');
+      if (ttl) { ttl.setAttribute('data-i18n', titleKey); ttl.textContent = t(titleKey); }
       var msg = document.getElementById('rcm-msg');
-      if (msg) msg.textContent = t('reportGameMsg', { name: g.name || ('#' + gid) });
+      if (msg) msg.textContent = msgText;
       var modal = document.getElementById('report-confirm-modal');
       if (modal) modal.style.display = 'flex';
     },
-    cancelReportGame() {
+    reportGameName(gid) {
+      var g = S.games[gid]; if (!g) return;
+      this._reportGid = gid;
+      this._openReportModal('game', 'reportGameTitle',
+        t('reportGameMsg', { name: g.name || ('#' + gid) }));
+    },
+    // Signaler l'avatar d'un joueur — parité GamePlayerBox.qml (entrée
+    // « Report inappropriate avatar » du menu contextuel). Le QML n'expose ce
+    // menu qu'en mode desktop ; ici l'action vit dans le popup joueur, donc
+    // elle reste atteignable au doigt (choix web, cf. ROADMAP).
+    reportAvatar(pid) {
+      if (pid == null || pid === S.myId) return;
+      var h = S._pthAvatarHashes[pid];
+      if (!h || !h.hashHex) return;   // pas d'avatar chargé → rien à signaler
+      this._reportPid = pid;
+      var nm = (typeof window.getPlayerName === 'function') ? window.getPlayerName(pid) : '';
+      this._openReportModal('avatar', 'reportAvatarTitle',
+        t('reportAvatarMsg', { name: nm || ('#' + pid) }));
+    },
+    cancelReport() {
       var modal = document.getElementById('report-confirm-modal');
       if (modal) modal.style.display = 'none';
-      this._reportGid = null;
+      this._reportKind = null; this._reportGid = null; this._reportPid = null;
     },
-    doReportGame() {
-      var gid = this._reportGid;
-      this.cancelReportGame();
+    doReport() {
+      var kind = this._reportKind, gid = this._reportGid, pid = this._reportPid;
+      this.cancelReport();
+      if (kind === 'avatar') {
+        if (pid == null) return;
+        var h = S._pthAvatarHashes[pid];
+        // Envoi réel du ReportAvatarMessage (type 69) : le serveur enregistre
+        // une entrée de modération sur le hash et répond par un
+        // ReportAvatarAck (accepté / déjà signalé / erreur) → toast.
+        try {
+          var _ra = MSG.buildReportAvatar(pid >>> 0, MSG.hexToMd5Bytes(h && h.hashHex));
+          if (_ra) send(_ra);
+        } catch(e) {}
+        return;
+      }
       if (gid == null) return;
       // Envoi réel du ReportGameMessage (type 71) : le serveur crée une
       // entrée de modération (créateur + nom de table) et répond par un
@@ -6836,6 +6876,9 @@ const App = (() => {
       var btn = document.querySelector('#lobby-gameinfo .lgi-report');
       if (btn) { var o = btn.textContent; btn.textContent = '✅'; setTimeout(function(){ btn.textContent = o; }, 1800); }
     },
+    // Alias historiques : du code et des tests appellent encore ces noms.
+    cancelReportGame() { return this.cancelReport(); },
+    doReportGame() { return this.doReport(); },
     joinGame(gameId) {
       const g = S.games[gameId];
       if (!g) return;
@@ -10552,7 +10595,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.7-web.71'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.7-web.72'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

@@ -95,6 +95,7 @@ export const strings = {
   footJoin: `Влез`,
   spectatingBadge: `Наблюдател`,
   reportGameTitle: `Докладване на неподходящо име на игра`, reportGameConfirm: `Докладвай`, reportGameMsg: `Наистина ли искате да докладвате името на играта „{name}“ като неподходящо?`, reportGameAccepted: `Докладът за името на играта беше приет от сървъра. Благодарим ви.`, reportGameDup: `Това име на игра вече беше докладвано от друг играч.`, reportGameError: `Възникна грешка при докладването на името на играта.`,
+  reportAvatarTitle: `Докладване на неподходящ аватар`, reportAvatarMsg: `Наистина ли искате да докладвате аватара на „{name}“ като неподходящ?`, reportAvatarAccepted: `Сървърът прие доклада за аватара. Благодарим ви.`, reportAvatarDup: `Този аватар вече е докладван от друг играч.`, reportAvatarError: `Възникна грешка при докладването на аватара.`, piReportAvatar: `Докладвай аватара`,
   filterRanked: 'Класирани', plSortAZ: 'Сортиране А–Я', plSortCountry: 'Сортиране по държава',
   plInGame: 'В игра', plLobby: 'В лобито',
   buttonsPokerth: 'PokerTH',

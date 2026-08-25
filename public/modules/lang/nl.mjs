@@ -100,6 +100,7 @@ export const strings = {
   footJoin: `Meedoen`,
   spectatingBadge: `Toeschouwer`,
   reportGameTitle: `Ongepaste spelnaam melden`, reportGameConfirm: `Melden`, reportGameMsg: `Weet je zeker dat je de spelnaam "{name}" als ongepast wilt melden?`, reportGameAccepted: `De melding van de spelnaam is door de server geaccepteerd. Bedankt.`, reportGameDup: `Deze spelnaam is al door een andere speler gemeld.`, reportGameError: `Er is een fout opgetreden bij het melden van de spelnaam.`,
+  reportAvatarTitle: `Ongepaste avatar melden`, reportAvatarMsg: `Weet je zeker dat je de avatar van "{name}" als ongepast wilt melden?`, reportAvatarAccepted: `De avatarmelding is door de server aanvaard. Bedankt.`, reportAvatarDup: `Deze avatar is al door een andere speler gemeld.`, reportAvatarError: `Er is een fout opgetreden bij het melden van de avatar.`, piReportAvatar: `Avatar melden`,
   filterRanked: 'Gerangschikt', plSortAZ: 'Sorteren A–Z', plSortCountry: 'Sorteren op land',
   plInGame: 'In een spel', plLobby: 'In de lobby',
   buttonsPokerth: 'PokerTH',

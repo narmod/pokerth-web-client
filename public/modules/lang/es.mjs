@@ -103,6 +103,7 @@ export const strings = {
   footJoin: `Unirse`,
   spectatingBadge: `Espectador`,
   reportGameTitle: `Informar de nombre de partida inapropiado`, reportGameConfirm: `Informar`, reportGameMsg: `¿Está seguro de que desea informar de que el nombre "{name}" es inapropiado?`, reportGameAccepted: `El informe sobre el nombre ha sido aceptado. Gracias.`, reportGameDup: `Otro jugador ya ha informado sobre el nombre de esta partida.`, reportGameError: `Ha ocurrido un error al informar sobre el nombre.`,
+  reportAvatarTitle: `Denunciar avatar inapropiado`, reportAvatarMsg: `¿Seguro que quieres denunciar el avatar de «{name}» como inapropiado?`, reportAvatarAccepted: `El servidor ha aceptado la denuncia del avatar. Gracias.`, reportAvatarDup: `Otro jugador ya ha denunciado este avatar.`, reportAvatarError: `Se ha producido un error al denunciar el avatar.`, piReportAvatar: `Denunciar avatar`,
   filterRanked: 'Clasificadas', plSortAZ: 'Ordenar A–Z', plSortCountry: 'Ordenar por país',
   plInGame: 'En partida', plLobby: 'En el lobby',
   buttonsPokerth: 'PokerTH',

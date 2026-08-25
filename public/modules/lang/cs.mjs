@@ -95,6 +95,7 @@ export const strings = {
   footJoin: `Připojit se`,
   spectatingBadge: `Divák`,
   reportGameTitle: `Nahlásit nevhodný název hry`, reportGameConfirm: `Nahlásit`, reportGameMsg: `Opravdu chcete nahlásit název hry: "{name}", jako nevhodný?`, reportGameAccepted: `Hlášení o nevhodném názvu hry bylo přijato. Děkujeme.`, reportGameDup: `Tento název hry byl již nahlášen jiným hráčem.`, reportGameError: `Při nahlašování názvu hry se vyskytla chyba.`,
+  reportAvatarTitle: `Nahlásit nevhodný avatar`, reportAvatarMsg: `Opravdu chcete nahlásit avatar hráče „{name}“ jako nevhodný?`, reportAvatarAccepted: `Server přijal nahlášení avatara. Děkujeme.`, reportAvatarDup: `Tento avatar už nahlásil jiný hráč.`, reportAvatarError: `Při nahlašování avatara došlo k chybě.`, piReportAvatar: `Nahlásit avatar`,
   filterRanked: 'Hodnocené', plSortAZ: 'Řadit A–Z', plSortCountry: 'Řadit podle země',
   plInGame: 'Ve hře', plLobby: 'V lobby',
   buttonsPokerth: 'PokerTH',

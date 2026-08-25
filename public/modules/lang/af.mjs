@@ -95,6 +95,7 @@ export const strings = {
   footJoin: `Sluit aan`,
   spectatingBadge: `Toeskouer`,
   reportGameTitle: `Rapporteer onvanpaste spelnaam`, reportGameConfirm: `Rapporteer`, reportGameMsg: `Is jy seker jy wil die spelnaam "{name}" as onvanpas rapporteer?`, reportGameAccepted: `Die spelnaamrapport is deur die bediener aanvaar. Dankie.`, reportGameDup: `Hierdie spelnaam is reeds deur 'n ander speler gerapporteer.`, reportGameError: `'n Interne fout het voorgekom toe spelnaam gerapporteer is.`,
+  reportAvatarTitle: `Rapporteer ongepaste avatar`, reportAvatarMsg: `Wil jy regtig die avatar van "{name}" as ongepas rapporteer?`, reportAvatarAccepted: `Die bediener het die avatar-verslag aanvaar. Dankie.`, reportAvatarDup: `Hierdie avatar is reeds deur ’n ander speler gerapporteer.`, reportAvatarError: `’n Fout het voorgekom tydens die rapportering van die avatar.`, piReportAvatar: `Rapporteer avatar`,
   filterRanked: 'Ranglys', plSortAZ: 'Sorteer A–Z', plSortCountry: 'Sorteer volgens land',
   plInGame: 'In \'n spel', plLobby: 'In die voorportaal',
   buttonsPokerth: 'PokerTH',

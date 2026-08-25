@@ -1,4 +1,5 @@
 2026-08-13 version 2.1.7-web (current series):
+- new: you can now report an inappropriate avatar. Open a player's profile and the option sits under Ignore - the same report the desktop client sends, and it lands in the same moderation queue. Available on phones too, where the desktop client offers no such menu
 - improvement: emoji reactions now reach the table almost instantly. They used to be held back by about a second and a half - a safety margin set before we knew the server's real limit, which turned out to be far more generous
 - bugfix: the "restore your settings" banner did nothing when you clicked Restore - the reason for the failure was shown in a message that appeared behind the banner itself, so nothing seemed to happen. The banner now says what is wrong right where you are looking: no backup file in that folder, folder access not granted, an empty or unreadable file
 - new: the "restore your settings" banner shows which folder and file it is talking about, and carries a "Choose folder…" button so you can point it at the right folder - or grant access again after your browser forgot it - without going through advanced options

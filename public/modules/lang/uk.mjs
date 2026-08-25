@@ -94,6 +94,7 @@ export const strings = {
   footJoin: `Приєднатися`,
   spectatingBadge: `Спостерігач`,
   reportGameTitle: `Поскаржитися на неприйнятну назву гри`, reportGameConfirm: `Поскаржитися`, reportGameMsg: `Ви впевнені, що хочете поскаржитися на назву гри «{name}» як неприйнятну?`, reportGameAccepted: `Сервер прийняв скаргу на назву гри. Дякуємо.`, reportGameDup: `На цю назву гри вже поскаржився інший гравець.`, reportGameError: `Під час надсилання скарги на назву гри сталася помилка.`,
+  reportAvatarTitle: `Поскаржитися на аватар`, reportAvatarMsg: `Ви справді хочете поскаржитися на аватар гравця «{name}»?`, reportAvatarAccepted: `Сервер прийняв скаргу на аватар. Дякуємо.`, reportAvatarDup: `На цей аватар уже поскаржився інший гравець.`, reportAvatarError: `Під час надсилання скарги на аватар сталася помилка.`, piReportAvatar: `Поскаржитися на аватар`,
   filterRanked: 'Рейтингові', plSortAZ: 'Сортування А–Я', plSortCountry: 'Сортування за країною',
   plInGame: 'У грі', plLobby: 'У лобі',
   buttonsPokerth: 'PokerTH',

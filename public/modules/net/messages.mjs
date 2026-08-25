@@ -430,6 +430,33 @@ const MSG = (() => {
     return Proto.encode([[1,0,76],[77,2,msg]]);
   }
 
+  // ReportAvatarMessage (type 69, champ enveloppe 70) : reportedPlayerId=1,
+  // reportedAvatarHash=2. Le hash est le MD5 BRUT sur 16 octets, jamais sa
+  // forme hexadécimale — ClientThread::SendReportAvatar passe par MD5Buf
+  // ::FromString puis set_reportedavatarhash(data, MD5_DATA_SIZE). Le client
+  // officiel refuse aussi d'émettre sur un hash nul (MD5Buf::IsZero), d'où le
+  // garde ci-dessous : un avatar absent ou un hash tout à zéro n'est pas
+  // signalable. Réponse : ReportAvatarAck (0 accepté · 1 déjà signalé ·
+  // 2 invalide).
+  function buildReportAvatar(playerId, hashBytes) {
+    if (!hashBytes || hashBytes.length !== 16) return null;
+    let allZero = true;
+    for (let i = 0; i < 16; i++) { if (hashBytes[i] !== 0) { allZero = false; break; } }
+    if (allZero) return null;
+    const msg = Proto.encode([[1,0,playerId],[2,2,hashBytes]]);
+    return Proto.encode([[1,0,69],[70,2,msg]]);
+  }
+
+  // Hex (32 caractères) → Uint8Array de 16 octets. S._pthAvatarHashes stocke
+  // le hash sous forme hexadécimale (lisible dans les journaux) ; le protocole
+  // veut les octets. Renvoie null sur toute entrée mal formée.
+  function hexToMd5Bytes(hex) {
+    if (typeof hex !== 'string' || !/^[0-9a-fA-F]{32}$/.test(hex)) return null;
+    const out = new Uint8Array(16);
+    for (let i = 0; i < 16; i++) out[i] = parseInt(hex.substr(i * 2, 2), 16);
+    return out;
+  }
+
 
   // AdminGlobalNoticeMessage (type 82, champ enveloppe 83) : noticeText=1.
   // Durchsage à tous les clients — réservée aux admins pokerth.net, mais le
@@ -458,7 +485,7 @@ const MSG = (() => {
     const msg = Proto.encode([[1,0,gameId],[2,0,playerId]]);
     return Proto.encode([[1,0,T.InvitePlayerToGame],[33,2,msg]]);
   }
-  return { T, parse, b64ToBytes: _scB64ToBytes, bytesToB64: _scBytesToB64, scramClientFirst, scramClientFinal, scramFindServerFirst, buildInit, buildChat, buildGameChat, buildJoin, buildJoinGame, buildRejoinGame, buildStartEventAck, buildMyAction, buildCreateGame, buildLeaveGame, buildStartWithBots, buildKickPlayer, buildShowMyCards, buildAdminBanPlayer, buildAdminGlobalNotice, buildRejectInvite, buildInvitePlayer };
+  return { T, parse, b64ToBytes: _scB64ToBytes, bytesToB64: _scBytesToB64, scramClientFirst, scramClientFinal, scramFindServerFirst, buildInit, buildChat, buildGameChat, buildJoin, buildJoinGame, buildRejoinGame, buildStartEventAck, buildMyAction, buildCreateGame, buildLeaveGame, buildStartWithBots, buildKickPlayer, buildShowMyCards, buildAdminBanPlayer, buildAdminGlobalNotice, buildRejectInvite, buildInvitePlayer, buildReportAvatar, hexToMd5Bytes };
 })();
 
 // ─── Exports ES + alias legacy ───────────────────────────────────────────

@@ -255,6 +255,13 @@ function openPlayerInfoPopup(pid, autoStats) {
 window._plOpenStats = function (pid) {
   openPlayerInfoPopup((pid == null || pid === '') ? null : pid, true);
 };
+// Signaler l'avatar d'un joueur : on referme le popup profil avant d'ouvrir la
+// confirmation, sinon les deux couches se superposent (le modal de signalement
+// n'est pas empilé au-dessus du popup joueur dans l'ordre z).
+window._reportAvatar = function(pid){
+  try { closePlayerInfoPopup(); } catch (e) {}
+  try { if (window.App && typeof window.App.reportAvatar === 'function') window.App.reportAvatar(pid); } catch (e) {}
+};
 // Basculer l'ignorance d'un joueur (par nom) puis rafraîchir sièges + popup.
 window._toggleIgnore = function(pid){
   var nm = (typeof window.getPlayerName === 'function') ? window.getPlayerName(pid) : null;
@@ -382,6 +389,18 @@ function _otherPlayerInfoHtml(pid) {
   html += '<button type="button" class="pim-ignore-btn" onclick="window._toggleIgnore(' + pid + ')" '
         + 'style="display:block;width:100%;margin-top:10px;padding:8px 0;border:1px solid var(--border-hi,rgba(200,168,74,.4));border-radius:8px;cursor:pointer;background:transparent;color:var(--text,#eff1f5);font-weight:600">'
         + (window._isIgnored(_ignNm) ? '🔔 ' + esc(tt('piUnignore', 'Unignore')) : '🔕 ' + esc(tt('piIgnore', 'Ignore'))) + '</button>';
+  // Signaler un avatar inapproprié — parité GamePlayerBox.qml (entrée
+  // « Report inappropriate avatar »). Mêmes gardes que le client officiel :
+  // jamais sur soi, jamais sur un bot, et seulement si le joueur a réellement
+  // un avatar (le QML teste seatData.avatar, nous la présence du hash reçu
+  // avec le PlayerInfo — c'est la même condition vue du protocole). Le QML
+  // réserve son menu contextuel au desktop ; ici l'action vit dans le popup
+  // joueur, donc elle reste accessible au doigt.
+  if (!window.isBot(pid) && pid !== S.myId && S._pthAvatarHashes[pid] && S._pthAvatarHashes[pid].hashHex) {
+    html += '<button type="button" class="pim-report-avatar-btn" onclick="window._reportAvatar(' + pid + ')" '
+          + 'style="display:block;width:100%;margin-top:8px;padding:8px 0;border:1px solid var(--border-hi,rgba(200,168,74,.4));border-radius:8px;cursor:pointer;background:transparent;color:var(--text,#eff1f5);font-weight:600">'
+          + '\uD83D\uDEA9 ' + esc(tt('piReportAvatar', 'Report avatar')) + '</button>';
+  }
   // Kickban total — visible UNIQUEMENT si JE suis admin pokerth.net
   // (playerRights=3), jamais sur soi ni sur un bot. Marteau (gavel), comme
   // le PlayerListItem du client QML officiel.

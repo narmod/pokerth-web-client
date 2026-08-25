@@ -101,6 +101,7 @@ export const strings = {
   footJoin: `Dołącz`,
   spectatingBadge: `Obserwator`,
   reportGameTitle: `Zgłoś nieodpowiednią nazwę gry`, reportGameConfirm: `Zgłoś`, reportGameMsg: `Czy na pewno chcesz zgłosić nieodpowiednią nazwę gracza: "{name}"?`, reportGameAccepted: `Zgłoszenie nieodpowiedniej nazwy gry zostało przyjęte. Dziękujemy.`, reportGameDup: `Ta nazwa gra została już uprzednio zgłoszona przez innego gracza.`, reportGameError: `Wystąpił błąd podczas zgłaszania nieodpowiedniej nazwy gry.`,
+  reportAvatarTitle: `Zgłoś nieodpowiedni awatar`, reportAvatarMsg: `Czy na pewno chcesz zgłosić awatar gracza "{name}" jako nieodpowiedni?`, reportAvatarAccepted: `Serwer przyjął zgłoszenie awatara. Dziękujemy.`, reportAvatarDup: `Ten awatar został już zgłoszony przez innego gracza.`, reportAvatarError: `Wystąpił błąd podczas zgłaszania awatara.`, piReportAvatar: `Zgłoś awatar`,
   filterRanked: 'Rankingowe', plSortAZ: 'Sortuj A–Z', plSortCountry: 'Sortuj według kraju',
   plInGame: 'W grze', plLobby: 'W lobby',
   buttonsPokerth: 'PokerTH',

@@ -94,6 +94,7 @@ export const strings = {
   footJoin: `Liity`,
   spectatingBadge: `Katsoja`,
   reportGameTitle: `Ilmoita sopimattomasta pelin nimestä`, reportGameConfirm: `Ilmoita`, reportGameMsg: `Haluatko varmasti ilmoittaa pelin nimen "{name}" sopimattomaksi?`, reportGameAccepted: `Palvelin hyväksyi ilmoituksen pelin nimestä. Kiitos.`, reportGameDup: `Toinen pelaaja on jo ilmoittanut tästä pelin nimestä.`, reportGameError: `Pelin nimen ilmoittamisessa tapahtui virhe.`,
+  reportAvatarTitle: `Ilmoita sopimattomasta avatarista`, reportAvatarMsg: `Haluatko varmasti ilmoittaa pelaajan "{name}" avatarin sopimattomaksi?`, reportAvatarAccepted: `Palvelin hyväksyi avatar-ilmoituksen. Kiitos.`, reportAvatarDup: `Toinen pelaaja on jo ilmoittanut tästä avatarista.`, reportAvatarError: `Avatarin ilmoittamisessa tapahtui virhe.`, piReportAvatar: `Ilmoita avatar`,
   filterRanked: 'Rankatut', plSortAZ: 'Lajittele A–Z', plSortCountry: 'Lajittele maittain',
   plInGame: 'Pelissä', plLobby: 'Aulassa',
   buttonsPokerth: 'PokerTH',

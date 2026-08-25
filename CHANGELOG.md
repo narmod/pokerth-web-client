@@ -13,7 +13,29 @@ this file captures what matters to players and operators.
 Opened with `v2.1.7-web.0` (2026-08-13), following the upstream **2.1.7**
 release.
 
+### Added
+- **Report an inappropriate avatar** (`web.72`) — the official clients let you
+  report a player's avatar to the pokerth.net moderation queue, and the web
+  client only ever offered the game-name half of that pair. The action now sits
+  in the player popup, under *Ignore*: it opens the same confirmation the QML
+  shows (`GamePlayerBox.qml`), and sends `ReportAvatarMessage` (type 69). The
+  wire format needs care — `reportedAvatarHash` carries the raw 16-byte MD5,
+  not its hex form, and the official client refuses to emit on an all-zero
+  hash; `buildReportAvatar` enforces both. The reply (`ReportAvatarAck`) maps
+  to the same three outcomes as the game-name report: accepted, already
+  reported, error. Shown for other players only, never bots, and only when the
+  player actually has an avatar loaded — the same guards the QML applies.
+  Unlike the QML, which hides its whole context menu on mobile, the action
+  lives in the player popup and stays reachable by touch. Translated in all 45
+  languages; German, Spanish, French, Italian and both Portuguese variants
+  reuse the official Qt translations word for word.
+
 ### Changed
+- **Report confirmation modal is now shared** (`web.72`) — `report-confirm-modal`
+  had its buttons wired straight to `doReportGame`. It now carries a
+  `_reportKind` and rewrites its own title (including `data-i18n`, so switching
+  language mid-dialog can't bring back the other motive's label).
+  `cancelReportGame` and `doReportGame` are kept as aliases.
 - **Reactions: aligned with the official chat rate limit** (`web.71`) — upstream
   now limits broadcast chat to 5 messages per second per connection
   (`SessionData::AcquireChatToken`, commit `771384d4`, live on pokerth.net since

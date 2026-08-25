@@ -95,6 +95,7 @@ export const strings = {
   footJoin: `Entra`,
   spectatingBadge: `Espectador`,
   reportGameTitle: `Reporteu un nom de joc no apropiat`, reportGameConfirm: `Reporta`, reportGameMsg: `Esteu segur que voleu reportar el nom de joc: "{name}" com a no apropriat?`, reportGameAccepted: `L'informe del nom de joc ha sigut acceptat pel servidor. Gràcies.`, reportGameDup: `Aquest informe de nom de joc ja ha estat reportat per un altre jugador.`, reportGameError: `S'ha produït un error quan s'estava reportant el nom de joc.`,
+  reportAvatarTitle: `Denuncia un avatar inadequat`, reportAvatarMsg: `Segur que voleu denunciar l'avatar de «{name}» com a inadequat?`, reportAvatarAccepted: `El servidor ha acceptat la denúncia de l'avatar. Gràcies.`, reportAvatarDup: `Un altre jugador ja ha denunciat aquest avatar.`, reportAvatarError: `S'ha produït un error en denunciar l'avatar.`, piReportAvatar: `Denuncia l'avatar`,
   filterRanked: 'Classificades', plSortAZ: 'Ordena A–Z', plSortCountry: 'Ordena per país',
   plInGame: 'En partida', plLobby: 'Al vestíbul',
   buttonsPokerth: 'PokerTH',

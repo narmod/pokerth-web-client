@@ -95,6 +95,7 @@ export const strings = {
   footJoin: `Είσοδος`,
   spectatingBadge: `Θεατής`,
   reportGameTitle: `Αναφορά ακατάλληλου ονόματος παιχνιδιού`, reportGameConfirm: `Αναφορά`, reportGameMsg: `Είστε βέβαιοι ότι θέλετε να αναφέρετε το όνομα παιχνιδιού «{name}» ως ακατάλληλο;`, reportGameAccepted: `Η αναφορά του ονόματος παιχνιδιού έγινε δεκτή από τον διακομιστή. Ευχαριστούμε.`, reportGameDup: `Αυτό το όνομα παιχνιδιού έχει ήδη αναφερθεί από άλλον παίκτη.`, reportGameError: `Παρουσιάστηκε σφάλμα κατά την αναφορά του ονόματος παιχνιδιού.`,
+  reportAvatarTitle: `Αναφορά ακατάλληλου άβαταρ`, reportAvatarMsg: `Θέλετε σίγουρα να αναφέρετε το άβαταρ του «{name}» ως ακατάλληλο;`, reportAvatarAccepted: `Ο διακομιστής δέχτηκε την αναφορά του άβαταρ. Ευχαριστούμε.`, reportAvatarDup: `Αυτό το άβαταρ έχει ήδη αναφερθεί από άλλον παίκτη.`, reportAvatarError: `Παρουσιάστηκε σφάλμα κατά την αναφορά του άβαταρ.`, piReportAvatar: `Αναφορά άβαταρ`,
   filterRanked: 'Βαθμολογημένα', plSortAZ: 'Ταξινόμηση Α–Ω', plSortCountry: 'Ταξινόμηση ανά χώρα',
   plInGame: 'Σε παιχνίδι', plLobby: 'Στο λόμπι',
   buttonsPokerth: 'PokerTH',
