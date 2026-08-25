@@ -14,6 +14,19 @@ Opened with `v2.1.7-web.0` (2026-08-13), following the upstream **2.1.7**
 release.
 
 ### Changed
+- **Reactions: aligned with the official chat rate limit** (`web.71`) — upstream
+  now limits broadcast chat to 5 messages per second per connection
+  (`SessionData::AcquireChatToken`, commit `771384d4`, live on pokerth.net since
+  the 2026-08-25 restart). Our `/emoji` queue had been spacing sends 1.5 s apart,
+  a cautious guess made before the real threshold was known — roughly seven times
+  stricter than the server requires. The gap is now 250 ms. The official client
+  (`GamePage.qml::sendReaction`) applies no throttle at all; its only brake is
+  that the picker closes after each reaction, which the web client already
+  mirrors, so in normal use the queue is never reached and reactions are simply
+  more responsive. It is kept as a safety net for non-UI send paths. The chat
+  budget is shared across `/emoji`, `/kick` and ordinary chat, all of which ride
+  `ChatRequest`. No throttle was added to ordinary chat: the official client has
+  none, and adding one would be a divergence in the opposite direction.
 - **Admin · Music: play count in a badge, and a typed rank** (`web.70`) — the
   play count was appended after the title, which put it on the meta line where
   it ran straight into the track id (`5 playspokerth-jingle`). It is now a

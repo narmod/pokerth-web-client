@@ -4102,15 +4102,19 @@ const App = (() => {
   };
 
   // ── Régulation d'envoi des réactions /emoji ──────────────────────────
-  // Le chat de partie du serveur PokerTH applique un anti-flood : en envoyant
-  // plusieurs /emoji trop vite, le serveur les rejette (ChatReject) et les
-  // AUTRES clients ne reçoivent plus nos réactions (le badge local, lui, reste
-  // affiché car purement côté client). Sur pokerth.net il n'y a pas de proxy :
-  // les réactions passent UNIQUEMENT par /emoji, donc soumises au throttle. On
-  // espace donc les envois /emoji via une petite file. Le badge local et le
-  // canal proxy REACT (web↔web, qui contourne le throttle) restent immédiats —
-  // seule la trame /emoji serveur est régulée. NB : doit vivre DANS l'IIFE App
-  // pour voir ws/gId/send/MSG/S._lastMsgWasReaction (cf. avertissement en tête).
+  // Le serveur limite le chat diffusé à 5 messages/seconde PAR CONNEXION
+  // (SessionData::AcquireChatToken, upstream 771384d4 du 25/08/2026). En lobby
+  // le dépassement renvoie un ChatReject ; en partie le message est abandonné
+  // SANS notification — nos réactions disparaîtraient alors sans que personne
+  // ne le sache. Le client officiel (GamePage.qml::sendReaction) n'applique
+  // aucun throttle : son seul frein est ergonomique, le picker se referme après
+  // chaque réaction. On réplique ce frein (cf. toggleReactionPanel) et la file
+  // ci-dessous n'est plus qu'un filet de sécurité pour les chemins non-UI —
+  // d'où un écart minimal de 250 ms (soit 4 msg/s, sous le budget serveur), et
+  // non plus le bridage prudent de 1,5 s d'avant la connaissance du seuil réel.
+  // Le badge local et le canal proxy REACT (web↔web, qui contourne le chat
+  // serveur) restent immédiats. NB : doit vivre DANS l'IIFE App pour voir
+  // ws/gId/send/MSG/S._lastMsgWasReaction (cf. avertissement en tête).
 
   function _flushReactEmoji() {
     S._reactEmojiTimer = null;
@@ -10548,7 +10552,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.7-web.70'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.7-web.71'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

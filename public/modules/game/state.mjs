@@ -50,7 +50,7 @@ export const S = {
   _reactEmojiQueue: [],
   _reactEmojiTimer: null,
   _reactEmojiLastSent: 0,
-  REACT_EMOJI_MIN_GAP: 1500,  // ms minimum entre deux /emoji (sous le seuil serveur)
+  REACT_EMOJI_MIN_GAP: 250,   // ms minimum entre deux /emoji (serveur : 5 msg/s par connexion)
   REACT_EMOJI_QUEUE_MAX: 4,   // file bornée : au-delà on abandonne l'envoi réseau
   _statusKey: null,
   _origTitle: 'PokerTH Web',
