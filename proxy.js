@@ -1263,6 +1263,11 @@ function _seoEnsureIndexNowKey() {
 function seoIndexNowUrls(base) {
   var urls = [base + '/', base + '/rules', base + '/faq', base + '/privacy'];
   for (var code in SEO_I18N) { if (code !== 'en') urls.push(base + '/?lang=' + code); }
+  // Localized content pages exist only in the languages that actually have a
+  // translation table. Submitting a variant we do not serve would point the
+  // crawler at the English fallback under a URL we never advertise.
+  seoPageLangs(SEO_RULES_I18N).forEach(function (c) { urls.push(base + '/rules?lang=' + c); });
+  seoPageLangs(SEO_FAQ_I18N).forEach(function (c) { urls.push(base + '/faq?lang=' + c); });
   return urls;
 }
 var _indexNowLast = 0;
@@ -1290,12 +1295,32 @@ function seoIndexNowPing(force) {
 // One ping shortly after boot when SEO is already enabled, so a restarted
 // proxy re-announces itself without waiting for an admin save.
 setTimeout(function () { try { seoIndexNowPing(true); } catch (e) {} }, 15000);
+// Deploy detection. A static update swaps the served files without restarting
+// this process, so without this nothing would ever tell the search engines the
+// site changed — the boot ping above only fires on a restart. Watch the same
+// mtime the update banner uses and submit once per deploy.
+var _seoDeployMtime = 0;
+try { _seoDeployMtime = newestAssetMtime(); } catch (e) {}
+var _seoDeployTimer = setInterval(function () {
+  try {
+    var m = newestAssetMtime();
+    if (!m || m <= _seoDeployMtime) return;
+    var first = !_seoDeployMtime;
+    _seoDeployMtime = m;
+    if (!first) seoIndexNowPing(true);
+  } catch (e) {}
+}, 5 * 60 * 1000);
+if (_seoDeployTimer.unref) _seoDeployTimer.unref();
 
 function seoHeadBlock(base, lang) {
   var loc = (lang && SEO_I18N[lang]) || SEO_I18N.en;
   var canon = base ? (base + (lang ? '/?lang=' + lang : '/')) : '';
   var img = base ? base + '/screenshots/social-preview.png' : '';
   var out = [];
+  // Explicit positive directive. Without max-snippet / max-image-preview
+  // Google caps the snippet and shows only a thumbnail in Discover and in the
+  // European result pages; the defaults are conservative, not neutral.
+  out.push('<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">');
   var gsv = seoGsv();
   if (gsv) out.push('<meta name="google-site-verification" content="' + gsv + '">');
   var bgv = seoBingv();
@@ -1330,8 +1355,12 @@ function seoHeadBlock(base, lang) {
     browserRequirements: 'Requires JavaScript',
     inLanguage: lang || 'en',
     offers: { '@type': 'Offer', price: '0', priceCurrency: 'EUR' },
+    isAccessibleForFree: true,
     sameAs: ['https://github.com/narmod/pokerth-web-client', 'https://www.pokerth.net/']
   };
+  // The running version, not the one on disk: after a static update the two
+  // can differ, and announcing a version we are not serving would be a lie.
+  if (BOOT_VERSION) ld.softwareVersion = BOOT_VERSION;
   if (canon) ld.url = canon;
   if (img) { ld.image = img; ld.screenshot = img; }
   out.push('<script type="application/ld+json">' + JSON.stringify(ld) + '</script>');
@@ -1370,6 +1399,45 @@ function seoFooterBlock(lang) {
     : 'Free open-source Texas Hold\u2019em poker in your browser \u2014 no download, no ads, no signup';
   return '<div class="connect-footer-line" id="cf-seo" style="opacity:0.75">' +
     lead + ' \u00b7 <a href="/rules">' + b.r + '</a> \u00b7 <a href="/faq">FAQ</a></div>';
+}
+
+// ── Freshness signals — <lastmod> and deploy detection ─────────────────
+// A sitemap without <lastmod> gives a crawler nothing to budget on, so it
+// falls back to its own heuristics and revisits far less often. The app has
+// no per-page publication date, so the honest answer is "when the files
+// behind this page last changed": the newest mtime among the served client
+// assets for /, and this file for the server-rendered pages (/rules, /faq,
+// /privacy) whose text lives here.
+var _SEO_ASSET_FILES = ['pokerth.js', 'pokerth.css', 'pokerth-client.html',
+  'modules/i18n.mjs', 'modules/sounds.mjs', 'sw.js'];
+function newestAssetMtime() {
+  var newest = 0;
+  _SEO_ASSET_FILES.forEach(function (f) {
+    try {
+      var s = fs.statSync(path.join(__dirname, 'public', f));
+      if (s.mtimeMs > newest) newest = s.mtimeMs;
+    } catch (e) { /* missing file — ignore */ }
+  });
+  // Per-language catalogue files live in modules/lang/ — fold their mtimes in
+  // too, so a translation-only deploy still counts as a change.
+  try {
+    var langDir = path.join(__dirname, 'public', 'modules', 'lang');
+    fs.readdirSync(langDir).forEach(function (f) {
+      try {
+        var st = fs.statSync(path.join(langDir, f));
+        if (st.mtimeMs > newest) newest = st.mtimeMs;
+      } catch (e) { /* ignore */ }
+    });
+  } catch (e) { /* no lang dir yet — ignore */ }
+  return newest;
+}
+function _seoIsoDay(ms) {
+  var d = new Date(ms || Date.now());
+  return isNaN(d.getTime()) ? '' : d.toISOString().slice(0, 10);
+}
+function seoLastModApp() { return _seoIsoDay(newestAssetMtime()); }
+function seoLastModSelf() {
+  try { return _seoIsoDay(fs.statSync(__filename).mtimeMs); } catch (e) { return _seoIsoDay(0); }
 }
 
 function seoLlmsTxt(base) {
@@ -1718,9 +1786,21 @@ function seoContentPage(res, method, title, desc, relPath, bodyHtml, ld, lang, l
   // Self-canonical: the language variant points at itself, never at English,
   // or the variants would be de-indexed in favour of the page they alias.
   var url = base ? base + relPath + (lang ? '?lang=' + lang : '') : '';
+  var img = base ? base + '/screenshots/social-preview.png' : '';
   var head;
   if (on) {
-    head = '<meta name="description" content="' + desc + '">' +
+    // Breadcrumbs: Google renders the trail in place of the raw URL, and it
+    // is the only structured hint that these pages belong to the app rather
+    // than floating on their own.
+    var crumbs = url ? {
+      '@context': 'https://schema.org', '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'PokerTH Web Client', item: base + '/' + (lang ? '?lang=' + lang : '') },
+        { '@type': 'ListItem', position: 2, name: title, item: url }
+      ]
+    } : null;
+    head = '<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">' +
+      '<meta name="description" content="' + desc + '">' +
       (url ? '<link rel="canonical" href="' + url + '">' : '') +
       seoPageAlternates(base, relPath, langs) +
       '<meta property="og:type" content="article"><meta property="og:site_name" content="PokerTH">' +
@@ -1728,7 +1808,18 @@ function seoContentPage(res, method, title, desc, relPath, bodyHtml, ld, lang, l
       '<meta property="og:description" content="' + desc + '">' +
       (url ? '<meta property="og:url" content="' + url + '">' : '') +
       (OG_LOCALE[lang || 'en'] ? '<meta property="og:locale" content="' + OG_LOCALE[lang || 'en'] + '">' : '') +
-      (ld ? '<script type="application/ld+json">' + JSON.stringify(ld) + '</script>' : '');
+      // Without these a shared /rules or /faq link showed as a bare URL in
+      // Discord, WhatsApp and X — the home page had cards, these did not.
+      (img ? '<meta property="og:image" content="' + img + '">' +
+             '<meta property="og:image:width" content="1200">' +
+             '<meta property="og:image:height" content="630">' +
+             '<meta property="og:image:alt" content="' + title + '">' : '') +
+      '<meta name="twitter:card" content="' + (img ? 'summary_large_image' : 'summary') + '">' +
+      '<meta name="twitter:title" content="' + title + '">' +
+      '<meta name="twitter:description" content="' + desc + '">' +
+      (img ? '<meta name="twitter:image" content="' + img + '">' : '') +
+      (ld ? '<script type="application/ld+json">' + JSON.stringify(ld) + '</script>' : '') +
+      (crumbs ? '<script type="application/ld+json">' + JSON.stringify(crumbs) + '</script>' : '');
   } else {
     head = '<meta name="robots" content="noindex, nofollow">';
   }
@@ -1749,6 +1840,9 @@ function seoContentPage(res, method, title, desc, relPath, bodyHtml, ld, lang, l
 // that the two must agree.
 function _seoPageUrls(base, relPath, langs, freq, prio) {
   var href = function (c) { return base + relPath + (c === 'en' ? '' : '?lang=' + c); };
+  // These pages are rendered from tables inside proxy.js, so its mtime is
+  // exactly when their text last changed.
+  var lm = seoLastModSelf();
   var alt = '';
   if (langs.length > 1) {
     alt = '<xhtml:link rel="alternate" hreflang="x-default" href="' + href('en') + '"/>';
@@ -1762,7 +1856,7 @@ function _seoPageUrls(base, relPath, langs, freq, prio) {
   }
   var out = '';
   for (var k = 0; k < langs.length; k++) {
-    out += '<url><loc>' + href(langs[k]) + '</loc>' + alt + '<changefreq>' + freq + '</changefreq><priority>' + prio + '</priority></url>\n';
+    out += '<url><loc>' + href(langs[k]) + '</loc>' + (lm ? '<lastmod>' + lm + '</lastmod>' : '') + alt + '<changefreq>' + freq + '</changefreq><priority>' + prio + '</priority></url>\n';
   }
   return out;
 }
@@ -5828,18 +5922,22 @@ const httpServer = http.createServer((req, res) => {
     var _sAlt = seoHreflangPairs(_sBase).map(function (p) {
       return '<xhtml:link rel="alternate" hreflang="' + p[0] + '" href="' + p[1] + '"/>';
     }).join('');
+    // <lastmod> — the app pages date from the newest served asset, the
+    // server-rendered pages from proxy.js itself.
+    var _sModApp = seoLastModApp(), _sModSelf = seoLastModSelf();
+    var _sLm = function (d) { return d ? '<lastmod>' + d + '</lastmod>' : ''; };
     var _sVariants = '';
     for (var _sc2 in SEO_I18N) {
       if (_sc2 === 'en') continue;
-      _sVariants += '<url><loc>' + _sBase + '/?lang=' + _sc2 + '</loc>' + _sAlt + '<changefreq>weekly</changefreq><priority>0.8</priority></url>\n';
+      _sVariants += '<url><loc>' + _sBase + '/?lang=' + _sc2 + '</loc>' + _sLm(_sModApp) + _sAlt + '<changefreq>weekly</changefreq><priority>0.8</priority></url>\n';
     }
     var _sXml = '<?xml version="1.0" encoding="UTF-8"?>\n' +
       '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">\n' +
-      '<url><loc>' + _sBase + '/</loc>' + _sAlt + '<changefreq>weekly</changefreq><priority>1.0</priority></url>\n' +
+      '<url><loc>' + _sBase + '/</loc>' + _sLm(_sModApp) + _sAlt + '<changefreq>weekly</changefreq><priority>1.0</priority></url>\n' +
       _sVariants +
       _seoPageUrls(_sBase, '/rules', seoPageLangs(SEO_RULES_I18N), 'monthly', '0.6') +
       _seoPageUrls(_sBase, '/faq', seoPageLangs(SEO_FAQ_I18N), 'monthly', '0.5') +
-      '<url><loc>' + _sBase + '/privacy</loc><changefreq>yearly</changefreq><priority>0.2</priority></url>\n' +
+      '<url><loc>' + _sBase + '/privacy</loc>' + _sLm(_sModSelf) + '<changefreq>yearly</changefreq><priority>0.2</priority></url>\n' +
       '</urlset>\n';
     res.writeHead(200, Object.assign({ 'Content-Type': 'application/xml; charset=utf-8', 'Cache-Control': 'no-cache, must-revalidate' }, SECURITY_HEADERS));
     res.end(_sXml);
@@ -5935,25 +6033,9 @@ const httpServer = http.createServer((req, res) => {
   // bumps these file mtimes, so the page can poll this cheaply and offer a
   // one-tap reload when it changes. Never cached.
   if (reqPathOnly === '/__ver') {
-    let newest = 0;
-    ['pokerth.js', 'pokerth.css', 'pokerth-client.html',
-     'modules/i18n.mjs', 'modules/sounds.mjs', 'sw.js'].forEach(function (f) {
-      try {
-        const s = fs.statSync(path.join(__dirname, 'public', f));
-        if (s.mtimeMs > newest) newest = s.mtimeMs;
-      } catch (e) { /* missing file — ignore */ }
-    });
-    // Per-language catalogue files live in modules/lang/ — fold their mtimes
-    // in too, so a translation-only deploy still bumps the update banner.
-    try {
-      const langDir = path.join(__dirname, 'public', 'modules', 'lang');
-      fs.readdirSync(langDir).forEach(function (f) {
-        try {
-          const s = fs.statSync(path.join(langDir, f));
-          if (s.mtimeMs > newest) newest = s.mtimeMs;
-        } catch (e) { /* ignore */ }
-      });
-    } catch (e) { /* no lang dir yet — ignore */ }
+    // Same asset set the sitemap's <lastmod> and the deploy watcher use —
+    // one helper so the update banner and the crawlers never disagree.
+    const newest = newestAssetMtime();
     res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' });
     res.end(JSON.stringify({ v: Math.floor(newest) }));
     return;

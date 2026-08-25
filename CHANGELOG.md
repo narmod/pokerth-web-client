@@ -14,6 +14,25 @@ Opened with `v2.1.7-web.0` (2026-08-13), following the upstream **2.1.7**
 release.
 
 ### Changed
+- **Search-engine plumbing: freshness, link previews and richer results**
+  (`web.80`) — four gaps in the SEO layer, none of them visible in the app.
+  The sitemap now carries `<lastmod>` on every URL, dated from the newest served
+  asset for the app pages and from `proxy.js` for the server-rendered ones, so a
+  crawler can budget its revisits instead of guessing. IndexNow submits the
+  localized `/rules` and `/faq` variants, not just the home page and its
+  language versions, and a background watcher notices a static deploy — which
+  swaps the served files without restarting the process — and re-submits once
+  per deploy, where until now only a restart announced anything. `/rules`,
+  `/faq` and `/privacy` gained `og:image` and Twitter cards: sharing one of
+  those links in Discord, WhatsApp or X showed a bare URL while the home page
+  showed a card. Both the app and the content pages now send an explicit
+  `index, follow, max-snippet:-1, max-image-preview:large` directive rather than
+  relying on defaults that quietly cap snippets and previews, the content pages
+  carry `BreadcrumbList` structured data, and the app's `WebApplication` block
+  announces `isAccessibleForFree` and the *running* version (`BOOT_VERSION`, not
+  the one on disk, which can differ after a static update). The asset-mtime scan
+  behind `/__ver` is now a shared helper, so the update banner and the sitemap
+  can never disagree about when the site last changed.
 - **Six cards on the Traffic tab, not one** (`web.79`) — collapsing the panel
   into a single card of sections fixed the fifteen-frame stack and overshot: one
   card holding counters, five charts, two rankings and a conclusion is a wall,

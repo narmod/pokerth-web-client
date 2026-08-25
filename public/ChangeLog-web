@@ -1,4 +1,6 @@
 2026-08-13 version 2.1.7-web (current series):
+- improvement: sharing a link to the poker rules or the FAQ now shows a proper preview card with a picture, the title and a summary, the way the home page already did - in Discord, WhatsApp, X or anywhere else that unfurls links
+- improvement: search engines are told sooner when the site changes, and are allowed to show a full summary and a large picture instead of the short, cropped one they default to
 - improvement: choosing a photo as your avatar is lighter on memory, which matters most on phones - a large picture used to be copied and held in memory twice before being shrunk, and could take the tab down with it. Pictures over 30 MB are now turned away with a clear message instead
 - bugfix: the three errors you can hit when importing an avatar photo were always shown in French, whatever your language. They are now translated
 - new: you can now report an inappropriate avatar. Open a player's profile and the option sits under Ignore - the same report the desktop client sends, and it lands in the same moderation queue. Available on phones too, where the desktop client offers no such menu
