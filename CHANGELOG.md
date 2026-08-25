@@ -14,6 +14,14 @@ Opened with `v2.1.7-web.0` (2026-08-13), following the upstream **2.1.7**
 release.
 
 ### Added
+- **FAQ translations, batch three** (`web.86`) — Japanese, Korean, Simplified
+  and Traditional Chinese, Vietnamese, Thai and Indonesian; `/faq` now covers 21
+  of 44 languages. Written as real Unicode and escaped programmatically rather
+  than by hand, which is how batch two picked up three typos a syntax check
+  could never have caught (a capital С inside Частые, a Czech ř in a Slovak
+  sentence, and a Polish żetony spelt with the wrong z).
+
+### Added
 - **FAQ translations, batch two** (`web.85`) — Polish, Russian, Ukrainian,
   Czech, Slovak, Turkish and Greek, bringing `/faq` to 14 of 44 languages.
   Fourteen sitemap entries and a hreflang set that grows with them.
