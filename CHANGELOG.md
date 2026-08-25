@@ -14,6 +14,11 @@ Opened with `v2.1.7-web.0` (2026-08-13), following the upstream **2.1.7**
 release.
 
 ### Added
+- **FAQ translations, batch two** (`web.85`) — Polish, Russian, Ukrainian,
+  Czech, Slovak, Turkish and Greek, bringing `/faq` to 14 of 44 languages.
+  Fourteen sitemap entries and a hreflang set that grows with them.
+
+### Added
 - **The FAQ page starts speaking other languages** (`web.84`) — `/rules` has
   been translated into all 44 languages for a while; `/faq` was still English
   only, and the table meant to hold its translations had never been wired up at
