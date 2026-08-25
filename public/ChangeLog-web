@@ -1,4 +1,5 @@
 2026-08-13 version 2.1.7-web (current series):
+- bugfix: the Arabic, Hebrew, Persian and Urdu versions of the rules and help pages were laid out left to right, which put the punctuation on the wrong side of every sentence. They now read right to left as they should
 - new: three new pages you can read without opening the app or installing anything - the poker hand rankings with examples and the odds of being dealt each one, a step-by-step guide to getting from a blank tab to a hand, and a glossary of fifty-five poker terms. They sit next to the existing rules and FAQ pages
 - new: admin page - the search engine section can now refuse AI crawlers, carry your own site name, title, description and preview image, verify with Yandex, submit every page to IndexNow on demand, and run a configuration check that tells you what is set up and what is missing
 - improvement: sharing a link to the poker rules or the FAQ now shows a proper preview card with a picture, the title and a summary, the way the home page already did - in Discord, WhatsApp, X or anywhere else that unfurls links

@@ -13,6 +13,21 @@ this file captures what matters to players and operators.
 Opened with `v2.1.7-web.0` (2026-08-13), following the upstream **2.1.7**
 release.
 
+### Fixed
+- **The right-to-left pages were being laid out left-to-right** (`web.88`) —
+  `/rules` has been served in Arabic, Hebrew, Persian and Urdu for some time
+  with nothing but `<html lang>`, which is not enough: without `dir="rtl"` the
+  browser lays the page out the wrong way round, punctuation lands on the wrong
+  side of the sentence and list markers sit opposite their text. The four
+  languages now get `dir="rtl"` on every server-rendered page and on the app
+  shell, and the page stylesheet mirrors the paddings that assumed
+  left-to-right. Nobody had reported it; it surfaced while adding the Arabic
+  FAQ.
+
+### Added
+- **FAQ translations, batch five** (`web.88`) — Arabic, Hebrew, Persian, Urdu,
+  Hindi, Bengali and Tamil; `/faq` now covers 35 of 44 languages.
+
 ### Added
 - **FAQ translations, batch four** (`web.87`) — Swedish, Danish, Norwegian
   Bokmål, Finnish, Hungarian, Romanian and Bulgarian; `/faq` now covers 28 of 44
