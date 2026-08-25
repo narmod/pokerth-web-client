@@ -335,6 +335,23 @@ ok(/#traf48\)/.test(wide) && /#trafHours\)/.test(wide), 'both hourly cards keep 
 ok(traf.indexOf('id="traf48"') < traf.indexOf('id="trafKpis"'),
   'the last 48 hours sit right under the counters, where the eye lands first');
 
+// -- Coming back -----------------------------------------------------------
+// The one number the panel never had. Three states again, and one rule that
+// matters more than the charts: a verdict is stated only where it was measured.
+ok(/function _trafCohorts\(d\)/.test(admin), 'the cohort view lives in one function');
+ok(/var retLine=_trafCohorts\(d\);/.test(body(admin, '_trafInsights')), 'called from the reading pass');
+ok(/if\(d\.cohorts===undefined\)/.test(admin), 'a proxy that predates it says so');
+ok(/if\(!c\.known\)/.test(admin), 'and a store with nothing dated yet says something else again');
+ok(/too recent/.test(admin), 'a cohort too young to judge is named, not shown as 0%');
+ok(/_retVerdict=!!d7\.n;/.test(admin), 'the verdict is claimed only when a 7-day cohort exists');
+ok(/\(_retVerdict\? '\.' :/.test(body(admin, '_trafInsights')),
+  'and the volume-based guess steps aside exactly then, so the panel never states two');
+ok(/pc\(d7\.back,d7\.n\)<40\?'retention':'acquisition'/.test(admin), 'the verdict reads the return rate');
+for (const id of ['trafRet', 'trafRetNote']) ok(traf.includes('id="' + id + '"'), id + ' has a home in the panel');
+ok(/#trafRet\)/.test(wide), 'the cohort card keeps the full width');
+ok(traf.indexOf('id="trafRet"') < traf.indexOf('id="trafBottom"'),
+  'and sits before the conclusion it feeds');
+
 // -- One language on screen ------------------------------------------------
 // The dashboard is written in English; a French card in the middle of it was a
 // leftover, not a choice.

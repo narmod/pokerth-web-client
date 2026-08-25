@@ -14,6 +14,27 @@ Opened with `v2.1.7-web.0` (2026-08-13), following the upstream **2.1.7**
 release.
 
 ### Added
+- **Return rates: who comes back, and on how many days** (`web.76`) — the
+  new/returning split said a device had been seen before; it never said whether
+  a newcomer came back *after* their first visit, which is the only question a
+  lobby turns on. `visitsStore.allU` held a `1` per device and now holds the day
+  of the first visit, so a cohort can be rebuilt against the daily id buckets —
+  no new measurement, the same anonymous hash, one integer instead of another.
+  `/admin/visits` gained `cohorts`: return rates at day 1, 3 and 7, the
+  distribution of active days among newcomers, and the average for the
+  established base over the same window. The three rates are measured against
+  three different totals, and that is the point — yesterday's newcomers cannot
+  appear in a seven-day rate, so a cohort too young to judge is shown as "too
+  recent" rather than as 0%. Devices already known before this build carry no
+  first-seen date (`1`, told apart by a sentinel since a real index has run past
+  twenty thousand since 2024): they are left out of the rates and serve as the
+  established-base comparison instead of being dropped. One consequence worth
+  expecting: right after the restart every known device predates the measure, so
+  the card says so and fills in as newcomers arrive. The closing paragraph now
+  states the acquisition/retention verdict from the measured 7-day rate, and the
+  older volume-based guess steps aside exactly when that happens — the panel
+  never states two verdicts, and states none at all while nothing has been
+  measured. Requires a proxy restart.
 - **The Traffic tab knows what hour it is** (`web.75`) — the counters could say
   how many visits a day brought and never when they landed, so the two questions
   a lobby actually turns on — is anyone here right now, and do first-timers

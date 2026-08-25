@@ -2135,6 +2135,22 @@ function visitDayKey(d) {
   d = d || new Date();
   return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
 }
+// Le meme decoupage de journee que visitDayKey, en entier: pratique pour
+// comparer deux dates ou compter des jours d'ecart sans repasser par des
+// chaines. Les composants sont locaux, l'arithmetique se fait en UTC, donc un
+// changement d'heure ne cree ni ne supprime de journee.
+function visitDayIndex(d) {
+  d = d || new Date();
+  return Math.floor(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()) / 86400000);
+}
+function visitDayKeyFromIndex(i) {
+  const d = new Date(i * 86400000);
+  return d.getUTCFullYear() + '-' + String(d.getUTCMonth() + 1).padStart(2, '0') + '-' + String(d.getUTCDate()).padStart(2, '0');
+}
+// Un identifiant enregistre avant que la date de premiere venue ne soit tenue
+// vaut 1: c'est un appareil deja connu, dont on ne saura jamais quand il est
+// arrive. Un vrai index vaut plus de vingt mille depuis 2024, d'ou le seuil.
+const VISIT_FIRST_UNKNOWN = 1000;
 function pruneVisitDays() {
   const keys = Object.keys(visitsStore.days);
   if (keys.length <= VISIT_RETENTION_DAYS) return;
@@ -2287,10 +2303,14 @@ function recordVisit(rawId) {
   if (!visitsStore.hourSince) visitsStore.hourSince = Date.now();
   if (rawId) {
     const h = crypto.createHash('sha256').update(String(rawId)).digest('hex').slice(0, 16);
-    const seenBefore = !!visitsStore.allU[h]; // returning device, or brand new?
+    const seenBefore = visitsStore.allU[h] !== undefined; // returning device, or brand new?
     if (!bucket.ids) bucket.ids = {};
     bucket.ids[h] = 1;
-    visitsStore.allU[h] = 1;
+    // La valeur porte desormais le jour de la premiere venue, ce qui suffit a
+    // reconstituer une cohorte: les seaux journaliers disent qui est revenu et
+    // quand. Un appareil deja inscrit garde sa valeur — la reecrire ferait
+    // passer un habitue pour un nouveau venu du jour.
+    if (!seenBefore) visitsStore.allU[h] = visitDayIndex();
     if (seenBefore) { bucket.rt = (bucket.rt || 0) + 1; visitsStore.totalRet = (visitsStore.totalRet || 0) + 1; }
     else {
       bucket.nw = (bucket.nw || 0) + 1;
@@ -2355,6 +2375,62 @@ function visitHourProfile(daysBack) {
   }
   return { v: v, nw: nw, days: Math.round(days * 100) / 100 };
 }
+// ── Cohortes : qui revient, et combien de jours ───────────────────────────
+// Le compteur nouveaux/recurrents dit qu'un appareil est deja venu, jamais
+// s'il est revenu APRES sa premiere fois — ce qui est la seule question qui
+// compte pour une salle. La date de premiere venue vit dans allU, la presence
+// jour par jour dans les seaux : le croisement des deux donne une retention
+// exacte, sans mesure supplementaire.
+//
+// Une cohorte n'est comptee que si elle a eu le temps de revenir : les nouveaux
+// d'hier ne peuvent pas figurer dans un « revenu sous 7 jours ». Les
+// denominateurs des trois mesures sont donc differents, et c'est voulu.
+function visitCohorts(windowDays) {
+  const today = visitDayIndex();
+  const from = today - windowDays + 1;
+  const firsts = visitsStore.allU || {};
+  const seen = {};            // index de jour -> identifiants vus ce jour-la
+  const activeIn = {};        // identifiant -> jours actifs dans la fenetre
+  for (let i = from - 7; i <= today; i++) {
+    const b = visitsStore.days[visitDayKeyFromIndex(i)];
+    if (!b || !b.ids) continue;
+    seen[i] = b.ids;
+    if (i >= from) for (const k in b.ids) activeIn[k] = (activeIn[k] || 0) + 1;
+  }
+  function cameBack(h, a, b2) {
+    for (let i = a; i <= b2; i++) { const d = seen[i]; if (d && d[h]) return true; }
+    return false;
+  }
+  const out = {
+    window: windowDays, known: 0, since: 0,
+    d1: { n: 0, back: 0 }, d3: { n: 0, back: 0 }, d7: { n: 0, back: 0 },
+    active: [0, 0, 0, 0, 0, 0, 0, 0],
+    newTotal: 0, newDays: 0, estTotal: 0, estDays: 0
+  };
+  for (const h in firsts) {
+    const f = firsts[h];
+    // Anterieur a la mesure : la date manque, mais l'appareil est par
+    // definition un habitue — il sert de terme de comparaison, pas de cohorte.
+    const dated = (typeof f === 'number' && f >= VISIT_FIRST_UNKNOWN);
+    if (dated) {
+      out.known++;
+      if (!out.since || f < out.since) out.since = f;
+    }
+    if (dated && f >= from && f <= today) {
+      if (f <= today - 1) { out.d1.n++; if (cameBack(h, f + 1, f + 1)) out.d1.back++; }
+      if (f <= today - 3) { out.d3.n++; if (cameBack(h, f + 1, f + 3)) out.d3.back++; }
+      if (f <= today - 7) { out.d7.n++; if (cameBack(h, f + 1, f + 7)) out.d7.back++; }
+      const d = activeIn[h] || 1;
+      out.active[Math.min(d, 8) - 1]++;
+      out.newTotal++; out.newDays += d;
+    } else {
+      const d = activeIn[h] || 0;
+      if (d) { out.estTotal++; out.estDays += d; }
+    }
+  }
+  if (out.since) out.since = visitDayKeyFromIndex(out.since);
+  return out;
+}
 function visitsSummary() {
   const now = new Date();
   const series = [];
@@ -2378,6 +2454,7 @@ function visitsSummary() {
     hours48: visitHourSeries(48),
     hourProfile: visitHourProfile(30),
     hourSince: visitsStore.hourSince || 0,
+    cohorts: visitCohorts(30),
     env: visitsStore.env || {},
     envSince: visitsStore.envSince || 0,
     music: visitsStore.music || {},
