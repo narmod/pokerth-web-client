@@ -671,6 +671,8 @@
       <div class="card">
         <h2>Search engine visibility (SEO)</h2>
         <p class="muted"><b>Off by default.</b> When off, every page is served with <code>noindex, nofollow</code> and <code>robots.txt</code> blocks all crawlers &mdash; a self-hosted install stays out of Google and AI search engines. Turn it on only for a public instance you want indexed: the page then gains a description, Open Graph / Twitter cards, a canonical link, structured data (JSON-LD) and a crawler-readable summary, and <code>robots.txt</code>, <code>sitemap.xml</code> and <code>llms.txt</code> are generated from the public URL below. Applies immediately (no restart needed).</p>
+        <p class="muted" style="margin-top:14px">Running the official instance? <b>Fill in pokerth.net settings</b> puts every field back to what <code>webclient.pokerth.net</code> uses: indexing on, the public URL, <code>PokerTH</code> as the site name, AI crawlers allowed, and the branding overrides left empty so each language keeps its own translated title and description. Your Search Console, Bing and Yandex tokens are not touched &mdash; they belong to your accounts, not to the preset. Nothing is written until you press Save.</p>
+        <div class="rowtop"><button id="seoPreset" class="use">Fill in pokerth.net settings</button></div>
         <div class="defrow fld"><span>Search engine indexing</span><select id="seoEnabled"><option value="0">Off (default)</option><option value="1">On</option></select></div>
         <div class="defrow fld"><span style="white-space:nowrap">Public URL</span><input id="seoUrl" maxlength="200" placeholder="https://webclient.pokerth.net" autocomplete="off"><button id="seoUrlHere" class="use" style="flex:none;white-space:nowrap">Use this address</button></div>
         <div class="defrow fld"><span style="white-space:nowrap">Search Console token</span><input id="seoGsv" maxlength="100" placeholder="google-site-verification (optional)" autocomplete="off"></div>
@@ -2549,6 +2551,20 @@
   (function(){ var b=$('seoUrlHere'); if(!b) return; b.addEventListener('click', function(){
     if($('seoUrl')) $('seoUrl').value=location.origin;
     var m=$('seoMsg'); if(m){ m.textContent='Filled in from the address bar \u2014 press Save to apply.'; m.className='msg'; }
+  }); })();
+  // The official-instance preset. It fills the form and stops there: the
+  // operator still presses Save, so a mis-click costs nothing. Verification
+  // tokens are deliberately left alone.
+  (function(){ var b=$('seoPreset'); if(!b) return; b.addEventListener('click', function(){
+    var set=function(id,v){ if($(id)) $(id).value=v; };
+    set('seoEnabled','1');
+    set('seoUrl','https://webclient.pokerth.net');
+    set('seoSiteName','PokerTH');
+    set('seoTitle','');
+    set('seoDesc','');
+    set('seoImage','');
+    set('seoAi','1');
+    var m=$('seoMsg'); if(m){ m.textContent='Filled in with the pokerth.net settings \u2014 verification tokens left as they were. Press Save to apply.'; m.className='msg'; }
   }); })();
   (function(){ var b=$('seoPing'); if(!b) return; b.addEventListener('click', function(){
     var m=$('seoMsg'); if(m){ m.textContent='Submitting\u2026'; m.className='msg'; }

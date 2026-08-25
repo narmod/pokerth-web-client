@@ -14,6 +14,18 @@ Opened with `v2.1.7-web.0` (2026-08-13), following the upstream **2.1.7**
 release.
 
 ### Added
+- **"Fill in pokerth.net settings" in the SEO panel** (`web.83`) — the section
+  grew from five fields to eleven, and the official instance now has to be
+  described rather than assumed. One button restores exactly what
+  `webclient.pokerth.net` runs: indexing on, the public URL, `PokerTH` as the
+  site name, AI crawlers allowed, and the three branding overrides left empty so
+  every language keeps its own translated title and description — which is the
+  behaviour that existed before the overrides were added. Search Console, Bing
+  and Yandex tokens are deliberately untouched: they belong to the operator's
+  accounts, not to a preset. It fills the form and stops there, so a mis-click
+  costs nothing until Save is pressed.
+
+### Added
 - **Three new pages: /hand-rankings, /how-to-play and /glossary** (`web.82`) —
   the app is an empty shell to a crawler, so everything a search engine can
   actually read lives on the server-rendered pages, and there were two of them.
