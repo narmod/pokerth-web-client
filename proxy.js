@@ -1831,7 +1831,239 @@ var SEO_RULES_I18N = {
     ldDesc: "Mar a chluicheas tu Texas Hold\u2019em gun chr\u00ecoch: dall-gheallan, cuairtean gheallan, gluasadan agus rangachadh nan l\u00e0mhan, mar a tha ann am PokerTH.",
     body: "<h1>Riaghailtean p\u00f2cair Texas Hold\u2019em</h1><p>Ann am PokerTH thathar a\u2019 cluich Texas Hold\u2019em gun chr\u00ecoch, an se\u00f2rsa p\u00f2cair as motha a chluichear air feadh an t-saoghail. Feuchaidh gach cluicheadair ris an l\u00e0mh as fhe\u00e0rr de ch\u00f2ig cairtean a chur ri ch\u00e8ile bho dh\u00e0 chairt phr\u00ecobhaideach agus c\u00f2ig cairtean coitcheann.</p><h2>An roinneadh agus na dall-gheallan</h2><p>T\u00f2isichidh gach l\u00e0mh le d\u00e0 gheall \u00e8igneachail: cuiridh an cluicheadair air taobh cl\u00ec putan an neach-roinnidh an <em>dall-gheall beag</em>, agus an ath fhear an <em>dall-gheall m\u00f2r</em>. An uair sin gheibh gach cluicheadair d\u00e0 chairt fo ch\u00f2mhdach (na <em>cairtean pr\u00ecobhaideach</em>). Gluaisidh am putan aon \u00e0ite deiseil \u00e0s d\u00e8idh gach l\u00e0imhe, agus ann am PokerTH \u00e8iridh na dall-gheallan aig amannan cunbhalach.</p><h2>Na ceithir cuairtean gheallan</h2><ul><li><strong>Pre-flop</strong> \u2014 an d\u00e8idh dhaibh na cairtean pr\u00ecobhaideach fhaighinn, cluichidh na cluicheadairean mun cuairt, a\u2019 t\u00f2iseachadh air taobh cl\u00ec an dall-ghill mh\u00f2ir.</li><li><strong>Flop</strong> \u2014 cuirear tr\u00ec cairtean coitcheann s\u00ecos fosgailte, agus an uair sin bidh cuairt gheallan ann.</li><li><strong>Turn</strong> \u2014 th\u00e8id ceathramh cairt choitcheann a roinn, agus cuairt gheallan eile \u00e0s a d\u00e8idh.</li><li><strong>River</strong> \u2014 th\u00e8id a\u2019 ch\u00f2igeamh cairt choitcheann, an t\u00e8 mu dheireadh, a roinn, agus an cuairt gheallan dheireannach \u00e0s a d\u00e8idh.</li></ul><h2>Na gluasadan</h2><ul><li><strong>Fold</strong> \u2014 an l\u00e0mh a leigeil seachad, agus na sliseagan a chaidh a chur a-steach mar-th\u00e0.</li><li><strong>Check</strong> \u2014 an cothrom a chur air adhart gun gheall (d\u00ecreach mura do chuir duine geall sa chuairt seo).</li><li><strong>Call</strong> \u2014 an geall as \u00e0irde a th\u2019 ann an-dr\u00e0sta a fhreagairt.</li><li><strong>Raise</strong> \u2014 an geall l\u00e0ithreach \u00e0rdachadh. Gun chr\u00ecoch, le suim sam bith suas ris na sliseagan agad uile.</li><li><strong>All-In</strong> \u2014 na sliseagan agad uile a chur a-steach. Ma chumas c\u00e0ch orra a\u2019 cur gheallan os cionn sin, th\u00e8id poitean-taobh a chruthachadh, agus mar sin chan urrainn dhut ach am p\u00e0irt dhen phoit a chuir thu fh\u00e8in ris a bhuannachadh.</li></ul><h2>An sealltainn</h2><p>Ma tha dithis chluicheadairean no barrachd air fh\u00e0gail \u00e0s d\u00e8idh na cuairte gheallan air an river, th\u00e8id na l\u00e0mhan a nochdadh. Buannaichidh an cur-ri-ch\u00e8ile as fhe\u00e0rr de ch\u00f2ig cairtean \u00e0s na seachd a tha ri l\u00e0imh (d\u00e0 chairt phr\u00ecobhaideach + c\u00f2ig cairtean coitcheann) a\u2019 phoit. Roinnidh l\u00e0mhan co-ionann a\u2019 phoit eatarra.</p><h2>Rangachadh nan l\u00e0mhan, bhon fhear as l\u00e0idire chun an fhir as laige</h2><ol><li><strong>Royal flush</strong> \u2014 A K Q J 10, uile dhen aon dath.</li><li><strong>Straight flush</strong> \u2014 c\u00f2ig cairtean an sreath dhen aon dath.</li><li><strong>Ceathrar co-ionann</strong> \u2014 ceithir cairtean dhen aon luach.</li><li><strong>Full house</strong> \u2014 tri\u00f9ir cho-ionann agus paidhir.</li><li><strong>Flush</strong> \u2014 c\u00f2ig cairtean dhen aon dath.</li><li><strong>Sreath</strong> \u2014 c\u00f2ig cairtean an sreath ann an dathan measgaichte.</li><li><strong>Tri\u00f9ir cho-ionann</strong> \u2014 tr\u00ec cairtean dhen aon luach.</li><li><strong>D\u00e0 phaidhir</strong> \u2014 d\u00e0 phaidhir eadar-dhealaichte.</li><li><strong>Aon phaidhir</strong> \u2014 d\u00e0 chairt dhen aon luach.</li><li><strong>Cairt \u00e0rd</strong> \u2014 chan eil gin dhiubh sin ann; is i a\u2019 chairt as \u00e0irde a n\u00ec an co-dh\u00f9nadh.</li></ol><h2>Farpaisean ann am PokerTH</h2><p>\u2019S e farpaisean ann an stoidhle sit-and-go a th\u2019 anns na geamannan ann am PokerTH: t\u00f2isichidh a h-uile duine leis an aon stac, \u00e8iridh na dall-gheallan thar \u00f9ine, agus buannaichidh an cluicheadair mu dheireadh aig a bheil sliseagan. \u2019S urrainn dhut cleachdadh far loidhne an aghaidh luchd-d\u00f9bhlain a\u2019 choimpiutair, cluich thairis air LAN no air frithealaiche pr\u00ecobhaideach, no a dhol c\u00f2mhla ris an l\u00econra oifigeil pokerth.net leis na rangachaidhean r\u00e0itheil aige.</p>" },
 };
-var SEO_FAQ_I18N = {};
+var SEO_FAQ_I18N = {
+  fr: {
+    title: "FAQ \u2014 Client web PokerTH",
+    desc: "Questions fr\u00e9quentes sur le client web PokerTH : poker gratuit sans publicit\u00e9, jouer au Texas Hold\u2019em dans le navigateur sans rien installer, comptes, mobile, mode hors ligne, langues et vie priv\u00e9e.",
+    h1: "Client web PokerTH \u2014 Questions fr\u00e9quentes",
+    qa: [
+      ["PokerTH est-il gratuit ?",
+       "Oui. PokerTH est un logiciel libre et gratuit (GPL). Rien \u00e0 acheter, aucune publicit\u00e9 et aucun jeu d\u2019argent \u2014 tous les jetons sont fictifs."],
+      ["Peut-on jouer au poker sans rien t\u00e9l\u00e9charger ?",
+       "Oui. Le client web PokerTH fonctionne enti\u00e8rement dans le navigateur \u2014 aucun t\u00e9l\u00e9chargement, aucune installation. Ouvrez le site et vous \u00eates \u00e0 la table ; vous pouvez aussi l\u2019ajouter \u00e0 votre \u00e9cran d\u2019accueil comme une application (PWA)."],
+      ["Est-ce vraiment gratuit, sans publicit\u00e9 ?",
+       "Oui. PokerTH n\u2019affiche aucune publicit\u00e9, ne propose aucun achat int\u00e9gr\u00e9 et ne cache aucun co\u00fbt. C\u2019est un logiciel libre d\u00e9velopp\u00e9 par des b\u00e9n\u00e9voles, et tous les jetons sont fictifs."],
+      ["Puis-je jouer au Texas Hold\u2019em contre d\u2019autres personnes dans mon navigateur ?",
+       "Oui. Rejoignez le r\u00e9seau officiel pokerth.net pour affronter des joueurs du monde entier, ou envoyez un lien d\u2019invitation pour que vos amis arrivent directement \u00e0 votre table \u2014 le tout dans le navigateur."],
+      ["Faut-il un compte pour jouer ?",
+       "Aucun compte n\u2019est n\u00e9cessaire pour s\u2019entra\u00eener hors ligne contre l\u2019ordinateur. Pour jouer en ligne sur le r\u00e9seau officiel pokerth.net, il faut un compte pokerth.net, gratuit."],
+      ["Est-ce que \u00e7a marche sur mobile ?",
+       "Oui. Le client web est une Progressive Web App : il fonctionne dans tout navigateur moderne sur ordinateur, tablette ou t\u00e9l\u00e9phone, et peut s\u2019installer sur l\u2019\u00e9cran d\u2019accueil comme une application native."],
+      ["Puis-je jouer contre l\u2019ordinateur ?",
+       "Oui. Le mode hors ligne permet de disputer des tournois complets contre des adversaires g\u00e9r\u00e9s par l\u2019ordinateur, sans aucune connexion une fois l\u2019application charg\u00e9e."],
+      ["Est-ce le client PokerTH officiel ?",
+       "C\u2019est la version navigateur de PokerTH, d\u00e9velopp\u00e9e au sein du projet PokerTH par la PokerTH Development Team, aux c\u00f4t\u00e9s du client de bureau classique."],
+      ["Quelle diff\u00e9rence avec le client de bureau ?",
+       "M\u00eame jeu, m\u00eames r\u00e8gles, m\u00eame r\u00e9seau pokerth.net \u2014 mais il s\u2019ex\u00e9cute directement dans le navigateur, sans rien installer, sur n\u2019importe quel syst\u00e8me d\u2019exploitation."],
+      ["Quelles langues sont disponibles ?",
+       "L\u2019interface existe en 45 langues. Les termes d\u2019action du poker (Fold, Check, Call, Raise, All-In) restent en anglais, comme le veut l\u2019usage international."],
+      ["Y a-t-il de l\u2019argent r\u00e9el en jeu ?",
+       "Non. PokerTH se joue strictement en argent fictif. Les jetons n\u2019ont aucune valeur mon\u00e9taire et ne peuvent \u00eatre ni achet\u00e9s ni vendus."],
+      ["Quelles donn\u00e9es le client web collecte-t-il ?",
+       "Le moins possible : vos r\u00e9glages restent dans votre navigateur, et il n\u2019y a ni pistage ni publicit\u00e9. La page de confidentialit\u00e9 donne le d\u00e9tail."],
+      ["Puis-je h\u00e9berger mon propre serveur ?",
+       "Oui. Le serveur d\u00e9di\u00e9 PokerTH et ce client web sont tous deux libres : vous pouvez faire tourner votre propre serveur de poker priv\u00e9, sur un r\u00e9seau local ou sur Internet."],
+    ]
+  },
+  es: {
+    title: "Preguntas frecuentes \u2014 Cliente web de PokerTH",
+    desc: "Preguntas frecuentes sobre el cliente web de PokerTH: p\u00f3quer gratis y sin anuncios, jugar al Texas Hold\u2019em en el navegador sin descargar nada, cuentas, m\u00f3vil, modo sin conexi\u00f3n, idiomas y privacidad.",
+    h1: "Cliente web de PokerTH \u2014 Preguntas frecuentes",
+    qa: [
+      ["\u00bfPokerTH es gratis?",
+       "S\u00ed. PokerTH es software libre y gratuito (GPL). No hay nada que comprar, ni anuncios, ni juego con dinero real: todas las fichas son de juego."],
+      ["\u00bfPuedo jugar al p\u00f3quer sin descargar nada?",
+       "S\u00ed. El cliente web de PokerTH funciona por completo en el navegador: sin descargas ni instalaci\u00f3n. Abres el sitio y ya est\u00e1s en la mesa; si quieres, puedes a\u00f1adirlo a la pantalla de inicio como una aplicaci\u00f3n (PWA)."],
+      ["\u00bfDe verdad es gratis y sin anuncios?",
+       "S\u00ed. PokerTH no muestra anuncios, no tiene compras integradas ni costes ocultos. Es software libre desarrollado por voluntarios, y todas las fichas son de juego."],
+      ["\u00bfPuedo jugar al Texas Hold\u2019em contra otras personas desde el navegador?",
+       "S\u00ed. \u00danete a la red oficial pokerth.net para jugar contra jugadores de todo el mundo, o env\u00eda un enlace de invitaci\u00f3n para que tus amigos lleguen directamente a tu mesa, todo dentro del navegador."],
+      ["\u00bfHace falta una cuenta para jugar?",
+       "No hace falta ninguna cuenta para practicar sin conexi\u00f3n contra el ordenador. Para jugar en l\u00ednea en la red oficial pokerth.net necesitas una cuenta gratuita de pokerth.net."],
+      ["\u00bfFunciona en el m\u00f3vil?",
+       "S\u00ed. El cliente web es una Progressive Web App: funciona en cualquier navegador moderno en ordenador, tableta o tel\u00e9fono, y puede instalarse en la pantalla de inicio como una aplicaci\u00f3n nativa."],
+      ["\u00bfPuedo jugar contra el ordenador?",
+       "S\u00ed. El modo sin conexi\u00f3n permite disputar torneos completos contra rivales controlados por el ordenador, sin ninguna conexi\u00f3n a internet una vez cargada la aplicaci\u00f3n."],
+      ["\u00bfEs este el cliente oficial de PokerTH?",
+       "Es la versi\u00f3n para navegador de PokerTH, desarrollada dentro del proyecto PokerTH por el PokerTH Development Team, junto al cl\u00e1sico cliente de escritorio."],
+      ["\u00bfEn qu\u00e9 se diferencia del cliente de escritorio?",
+       "Mismo juego, mismas reglas, misma red pokerth.net, pero se ejecuta directamente en el navegador, sin instalar nada y en cualquier sistema operativo."],
+      ["\u00bfQu\u00e9 idiomas est\u00e1n disponibles?",
+       "La interfaz est\u00e1 disponible en 45 idiomas. Los t\u00e9rminos de acci\u00f3n del p\u00f3quer (Fold, Check, Call, Raise, All-In) se mantienen en ingl\u00e9s, como es convenci\u00f3n internacional."],
+      ["\u00bfHay dinero real de por medio?",
+       "No. PokerTH es estrictamente un juego con dinero ficticio. Las fichas no tienen valor monetario y no se pueden comprar ni vender."],
+      ["\u00bfQu\u00e9 datos recopila el cliente web?",
+       "Los m\u00ednimos posibles: tus ajustes se quedan en tu navegador y no se usa ning\u00fan sistema de seguimiento ni publicidad. La p\u00e1gina de privacidad lo detalla."],
+      ["\u00bfPuedo alojar mi propio servidor?",
+       "S\u00ed. Tanto el servidor dedicado de PokerTH como este cliente web son de c\u00f3digo abierto, as\u00ed que puedes montar tu propio servidor privado de p\u00f3quer, en una red local o en internet."],
+    ]
+  },
+  de: {
+    title: "FAQ \u2014 PokerTH Web-Client",
+    desc: "H\u00e4ufige Fragen zum PokerTH Web-Client: kostenloses Poker ohne Werbung, Texas Hold\u2019em im Browser spielen ohne Download, Konten, Mobilger\u00e4te, Offline-Modus, Sprachen und Datenschutz.",
+    h1: "PokerTH Web-Client \u2014 H\u00e4ufige Fragen",
+    qa: [
+      ["Ist PokerTH kostenlos?",
+       "Ja. PokerTH ist freie und quelloffene Software (GPL). Es gibt nichts zu kaufen, keine Werbung und kein Gl\u00fccksspiel um echtes Geld \u2014 alle Chips sind Spielgeld."],
+      ["Kann ich Poker spielen, ohne etwas herunterzuladen?",
+       "Ja. Der PokerTH Web-Client l\u00e4uft vollst\u00e4ndig im Browser \u2014 kein Download, keine Installation. Seite \u00f6ffnen und du sitzt am Tisch; auf Wunsch l\u00e4sst er sich als App (PWA) zum Startbildschirm hinzuf\u00fcgen."],
+      ["Ist es wirklich kostenlos und werbefrei?",
+       "Ja. PokerTH zeigt keine Werbung, hat keine In-App-K\u00e4ufe und keine versteckten Kosten. Es ist quelloffene Software, entwickelt von Freiwilligen, und alle Chips sind Spielgeld."],
+      ["Kann ich im Browser Texas Hold\u2019em gegen andere Menschen spielen?",
+       "Ja. Tritt dem offiziellen Netzwerk pokerth.net bei, um gegen Spieler aus aller Welt anzutreten, oder verschicke einen Einladungslink, mit dem Freunde direkt an deinem Tisch landen \u2014 alles im Browser."],
+      ["Brauche ich ein Konto zum Spielen?",
+       "F\u00fcr das Offline-Training gegen Computergegner wird kein Konto ben\u00f6tigt. F\u00fcr das Onlinespiel im offiziellen Netzwerk pokerth.net brauchst du ein kostenloses pokerth.net-Konto."],
+      ["L\u00e4uft es auf dem Handy?",
+       "Ja. Der Web-Client ist eine Progressive Web App: Er l\u00e4uft in jedem modernen Browser auf Computer, Tablet oder Telefon und l\u00e4sst sich wie eine native App auf dem Startbildschirm installieren."],
+      ["Kann ich gegen den Computer spielen?",
+       "Ja. Im Offline-Modus spielst du komplette Turniere gegen Computergegner, ganz ohne Internetverbindung, sobald die App geladen ist."],
+      ["Ist das der offizielle PokerTH-Client?",
+       "Es ist die Browser-Version von PokerTH, entwickelt innerhalb des PokerTH-Projekts vom PokerTH Development Team, neben dem klassischen Desktop-Client."],
+      ["Was ist der Unterschied zum Desktop-Client?",
+       "Gleiches Spiel, gleiche Regeln, gleiches pokerth.net-Netzwerk \u2014 nur l\u00e4uft es direkt im Browser, ohne Installation, auf jedem Betriebssystem."],
+      ["Welche Sprachen werden unterst\u00fctzt?",
+       "Die Oberfl\u00e4che gibt es in 45 Sprachen. Die Poker-Aktionsbegriffe (Fold, Check, Call, Raise, All-In) bleiben englisch, wie international \u00fcblich."],
+      ["Geht es um echtes Geld?",
+       "Nein. PokerTH ist ausschlie\u00dflich ein Spielgeld-Spiel. Chips haben keinen Geldwert und k\u00f6nnen weder gekauft noch verkauft werden."],
+      ["Welche Daten erhebt der Web-Client?",
+       "So wenige wie m\u00f6glich: Einstellungen bleiben in deinem Browser, und es gibt weder Tracking noch Werbung. Einzelheiten stehen auf der Datenschutzseite."],
+      ["Kann ich einen eigenen Server betreiben?",
+       "Ja. Der dedizierte PokerTH-Server und dieser Web-Client sind beide quelloffen \u2014 du kannst also deinen eigenen privaten Pokerserver im LAN oder im Internet betreiben."],
+    ]
+  },
+  it: {
+    title: "FAQ \u2014 Client web PokerTH",
+    desc: "Domande frequenti sul client web di PokerTH: poker gratuito e senza pubblicit\u00e0, giocare a Texas Hold\u2019em nel browser senza scaricare nulla, account, mobile, modalit\u00e0 offline, lingue e privacy.",
+    h1: "Client web PokerTH \u2014 Domande frequenti",
+    qa: [
+      ["PokerTH \u00e8 gratuito?",
+       "S\u00ec. PokerTH \u00e8 software libero e gratuito (GPL). Non c\u2019\u00e8 nulla da comprare, nessuna pubblicit\u00e0 e nessun gioco con denaro reale: tutte le fiche sono virtuali."],
+      ["Posso giocare a poker senza scaricare nulla?",
+       "S\u00ec. Il client web di PokerTH funziona interamente nel browser: nessun download, nessuna installazione. Apri il sito e sei al tavolo; volendo puoi aggiungerlo alla schermata iniziale come app (PWA)."],
+      ["\u00c8 davvero gratuito e senza pubblicit\u00e0?",
+       "S\u00ec. PokerTH non mostra pubblicit\u00e0, non ha acquisti in-app n\u00e9 costi nascosti. \u00c8 software libero sviluppato da volontari, e tutte le fiche sono virtuali."],
+      ["Posso giocare a Texas Hold\u2019em contro altre persone dal browser?",
+       "S\u00ec. Entra nella rete ufficiale pokerth.net per sfidare giocatori di tutto il mondo, oppure invia un link d\u2019invito perch\u00e9 gli amici arrivino direttamente al tuo tavolo: tutto dentro il browser."],
+      ["Serve un account per giocare?",
+       "Per allenarsi offline contro il computer non serve alcun account. Per giocare online sulla rete ufficiale pokerth.net serve un account pokerth.net, gratuito."],
+      ["Funziona su smartphone?",
+       "S\u00ec. Il client web \u00e8 una Progressive Web App: funziona in qualsiasi browser moderno su computer, tablet o telefono e pu\u00f2 essere installato nella schermata iniziale come un\u2019app nativa."],
+      ["Posso giocare contro il computer?",
+       "S\u00ec. La modalit\u00e0 offline permette di disputare tornei completi contro avversari gestiti dal computer, senza alcuna connessione una volta caricata l\u2019applicazione."],
+      ["Questo \u00e8 il client ufficiale di PokerTH?",
+       "\u00c8 la versione per browser di PokerTH, sviluppata all\u2019interno del progetto PokerTH dal PokerTH Development Team, accanto al classico client desktop."],
+      ["Che differenza c\u2019\u00e8 con il client desktop?",
+       "Stesso gioco, stesse regole, stessa rete pokerth.net \u2014 ma gira direttamente nel browser, senza installare nulla, su qualsiasi sistema operativo."],
+      ["Quali lingue sono supportate?",
+       "L\u2019interfaccia \u00e8 disponibile in 45 lingue. I termini d\u2019azione del poker (Fold, Check, Call, Raise, All-In) restano in inglese, come vuole la convenzione internazionale."],
+      ["C\u2019\u00e8 di mezzo denaro reale?",
+       "No. PokerTH \u00e8 rigorosamente un gioco con denaro virtuale. Le fiche non hanno alcun valore monetario e non possono essere comprate n\u00e9 vendute."],
+      ["Quali dati raccoglie il client web?",
+       "Il minimo possibile: le impostazioni restano nel tuo browser e non viene usato alcun tracciamento n\u00e9 pubblicit\u00e0. La pagina sulla privacy spiega i dettagli."],
+      ["Posso ospitare un mio server?",
+       "S\u00ec. Il server dedicato PokerTH e questo client web sono entrambi open source: puoi far girare il tuo server di poker privato, su una rete locale o su internet."],
+    ]
+  },
+  'pt-BR': {
+    title: "Perguntas frequentes \u2014 Cliente web do PokerTH",
+    desc: "Perguntas frequentes sobre o cliente web do PokerTH: p\u00f4quer gr\u00e1tis e sem an\u00fancios, jogar Texas Hold\u2019em no navegador sem baixar nada, contas, celular, modo offline, idiomas e privacidade.",
+    h1: "Cliente web do PokerTH \u2014 Perguntas frequentes",
+    qa: [
+      ["O PokerTH \u00e9 gratuito?",
+       "Sim. O PokerTH \u00e9 software livre e gratuito (GPL). N\u00e3o h\u00e1 nada para comprar, nem an\u00fancios, nem aposta com dinheiro real \u2014 todas as fichas s\u00e3o de brincadeira."],
+      ["D\u00e1 para jogar p\u00f4quer sem baixar nada?",
+       "Sim. O cliente web do PokerTH roda inteiramente no navegador \u2014 sem download, sem instala\u00e7\u00e3o. Abra o site e voc\u00ea j\u00e1 est\u00e1 na mesa; se quiser, d\u00e1 para adicion\u00e1-lo \u00e0 tela inicial como um aplicativo (PWA)."],
+      ["\u00c9 realmente gr\u00e1tis, sem an\u00fancios?",
+       "Sim. O PokerTH n\u00e3o exibe an\u00fancios, n\u00e3o tem compras no aplicativo nem custos escondidos. \u00c9 software livre feito por volunt\u00e1rios, e todas as fichas s\u00e3o de brincadeira."],
+      ["Posso jogar Texas Hold\u2019em contra outras pessoas pelo navegador?",
+       "Sim. Entre na rede oficial pokerth.net para enfrentar jogadores do mundo todo, ou envie um link de convite para que seus amigos caiam direto na sua mesa \u2014 tudo dentro do navegador."],
+      ["Preciso de uma conta para jogar?",
+       "Nenhuma conta \u00e9 necess\u00e1ria para treinar offline contra o computador. Para jogar online na rede oficial pokerth.net, \u00e9 preciso uma conta pokerth.net, gratuita."],
+      ["Funciona no celular?",
+       "Sim. O cliente web \u00e9 um Progressive Web App: funciona em qualquer navegador moderno no computador, tablet ou celular, e pode ser instalado na tela inicial como um aplicativo nativo."],
+      ["Posso jogar contra o computador?",
+       "Sim. O modo offline permite disputar torneios completos contra advers\u00e1rios controlados pelo computador, sem nenhuma conex\u00e3o com a internet depois que o aplicativo carrega."],
+      ["Este \u00e9 o cliente oficial do PokerTH?",
+       "\u00c9 a vers\u00e3o para navegador do PokerTH, desenvolvida dentro do projeto PokerTH pelo PokerTH Development Team, ao lado do cl\u00e1ssico cliente para computador."],
+      ["Qual a diferen\u00e7a para o cliente de desktop?",
+       "Mesmo jogo, mesmas regras, mesma rede pokerth.net \u2014 mas roda direto no navegador, sem instalar nada, em qualquer sistema operacional."],
+      ["Quais idiomas s\u00e3o suportados?",
+       "A interface est\u00e1 dispon\u00edvel em 45 idiomas. Os termos de a\u00e7\u00e3o do p\u00f4quer (Fold, Check, Call, Raise, All-In) permanecem em ingl\u00eas, como manda a conven\u00e7\u00e3o internacional."],
+      ["Envolve dinheiro real?",
+       "N\u00e3o. O PokerTH \u00e9 estritamente um jogo com fichas de brincadeira. As fichas n\u00e3o t\u00eam valor em dinheiro e n\u00e3o podem ser compradas nem vendidas."],
+      ["Quais dados o cliente web coleta?",
+       "O m\u00ednimo poss\u00edvel: suas configura\u00e7\u00f5es ficam no seu navegador, e n\u00e3o h\u00e1 rastreamento nem publicidade. A p\u00e1gina de privacidade traz os detalhes."],
+      ["Posso hospedar meu pr\u00f3prio servidor?",
+       "Sim. O servidor dedicado do PokerTH e este cliente web s\u00e3o ambos de c\u00f3digo aberto, ent\u00e3o voc\u00ea pode rodar seu pr\u00f3prio servidor de p\u00f4quer privado, numa rede local ou na internet."],
+    ]
+  },
+  'pt-PT': {
+    title: "Perguntas frequentes \u2014 Cliente web do PokerTH",
+    desc: "Perguntas frequentes sobre o cliente web do PokerTH: p\u00f3quer gratuito e sem publicidade, jogar Texas Hold\u2019em no navegador sem transferir nada, contas, telem\u00f3vel, modo offline, idiomas e privacidade.",
+    h1: "Cliente web do PokerTH \u2014 Perguntas frequentes",
+    qa: [
+      ["O PokerTH \u00e9 gratuito?",
+       "Sim. O PokerTH \u00e9 software livre e gratuito (GPL). N\u00e3o h\u00e1 nada para comprar, nem publicidade, nem jogo a dinheiro real \u2014 todas as fichas s\u00e3o fict\u00edcias."],
+      ["Posso jogar p\u00f3quer sem transferir nada?",
+       "Sim. O cliente web do PokerTH funciona inteiramente no navegador \u2014 sem transfer\u00eancias, sem instala\u00e7\u00e3o. Abra o site e est\u00e1 na mesa; se quiser, pode adicion\u00e1-lo ao ecr\u00e3 principal como uma aplica\u00e7\u00e3o (PWA)."],
+      ["\u00c9 mesmo gratuito, sem publicidade?",
+       "Sim. O PokerTH n\u00e3o mostra publicidade, n\u00e3o tem compras na aplica\u00e7\u00e3o nem custos escondidos. \u00c9 software livre desenvolvido por volunt\u00e1rios, e todas as fichas s\u00e3o fict\u00edcias."],
+      ["Posso jogar Texas Hold\u2019em contra outras pessoas no navegador?",
+       "Sim. Junte-se \u00e0 rede oficial pokerth.net para defrontar jogadores de todo o mundo, ou envie uma liga\u00e7\u00e3o de convite para que os seus amigos cheguem diretamente \u00e0 sua mesa \u2014 tudo dentro do navegador."],
+      ["\u00c9 preciso ter conta para jogar?",
+       "N\u00e3o \u00e9 precisa qualquer conta para treinar offline contra o computador. Para jogar online na rede oficial pokerth.net \u00e9 necess\u00e1ria uma conta pokerth.net, gratuita."],
+      ["Funciona no telem\u00f3vel?",
+       "Sim. O cliente web \u00e9 uma Progressive Web App: funciona em qualquer navegador moderno em computador, tablet ou telem\u00f3vel, e pode ser instalado no ecr\u00e3 principal como uma aplica\u00e7\u00e3o nativa."],
+      ["Posso jogar contra o computador?",
+       "Sim. O modo offline permite disputar torneios completos contra advers\u00e1rios controlados pelo computador, sem qualquer liga\u00e7\u00e3o \u00e0 Internet depois de a aplica\u00e7\u00e3o carregar."],
+      ["Este \u00e9 o cliente oficial do PokerTH?",
+       "\u00c9 a vers\u00e3o para navegador do PokerTH, desenvolvida dentro do projeto PokerTH pela PokerTH Development Team, a par do cl\u00e1ssico cliente para computador."],
+      ["Qual a diferen\u00e7a para o cliente de computador?",
+       "Mesmo jogo, mesmas regras, mesma rede pokerth.net \u2014 mas corre diretamente no navegador, sem instalar nada, em qualquer sistema operativo."],
+      ["Que idiomas s\u00e3o suportados?",
+       "A interface est\u00e1 dispon\u00edvel em 45 idiomas. Os termos de a\u00e7\u00e3o do p\u00f3quer (Fold, Check, Call, Raise, All-In) mant\u00eam-se em ingl\u00eas, como \u00e9 conven\u00e7\u00e3o internacional."],
+      ["H\u00e1 dinheiro real envolvido?",
+       "N\u00e3o. O PokerTH \u00e9 estritamente um jogo com fichas fict\u00edcias. As fichas n\u00e3o t\u00eam valor monet\u00e1rio e n\u00e3o podem ser compradas nem vendidas."],
+      ["Que dados recolhe o cliente web?",
+       "O m\u00ednimo poss\u00edvel: as suas defini\u00e7\u00f5es ficam no seu navegador e n\u00e3o h\u00e1 qualquer rastreio ou publicidade. A p\u00e1gina de privacidade explica os detalhes."],
+      ["Posso alojar o meu pr\u00f3prio servidor?",
+       "Sim. O servidor dedicado do PokerTH e este cliente web s\u00e3o ambos de c\u00f3digo aberto, pelo que pode manter o seu pr\u00f3prio servidor de p\u00f3quer privado, numa rede local ou na Internet."],
+    ]
+  },
+  nl: {
+    title: "Veelgestelde vragen \u2014 PokerTH webclient",
+    desc: "Veelgestelde vragen over de PokerTH webclient: gratis poker zonder reclame, Texas Hold\u2019em spelen in je browser zonder iets te downloaden, accounts, mobiel, offlinemodus, talen en privacy.",
+    h1: "PokerTH webclient \u2014 Veelgestelde vragen",
+    qa: [
+      ["Is PokerTH gratis?",
+       "Ja. PokerTH is vrije en gratis software (GPL). Er valt niets te kopen, er is geen reclame en er wordt niet om echt geld gespeeld \u2014 alle fiches zijn speelgeld."],
+      ["Kan ik poker spelen zonder iets te downloaden?",
+       "Ja. De PokerTH webclient draait volledig in je browser \u2014 geen download, geen installatie. Open de site en je zit aan tafel; desgewenst voeg je hem als app (PWA) toe aan je beginscherm."],
+      ["Is het echt gratis, zonder reclame?",
+       "Ja. PokerTH toont geen reclame, kent geen in-app-aankopen en geen verborgen kosten. Het is opensourcesoftware gemaakt door vrijwilligers, en alle fiches zijn speelgeld."],
+      ["Kan ik in mijn browser Texas Hold\u2019em tegen andere mensen spelen?",
+       "Ja. Sluit je aan bij het offici\u00eble netwerk pokerth.net om het tegen spelers wereldwijd op te nemen, of stuur een uitnodigingslink zodat vrienden meteen aan jouw tafel belanden \u2014 allemaal in de browser."],
+      ["Heb ik een account nodig om te spelen?",
+       "Voor offline oefenen tegen de computer is geen account nodig. Om online te spelen op het offici\u00eble netwerk pokerth.net heb je een gratis pokerth.net-account nodig."],
+      ["Werkt het op mobiel?",
+       "Ja. De webclient is een Progressive Web App: hij werkt in elke moderne browser op computer, tablet of telefoon en is als een native app op het beginscherm te installeren."],
+      ["Kan ik tegen de computer spelen?",
+       "Ja. In de offlinemodus speel je volledige toernooien tegen computertegenstanders, zonder internetverbinding zodra de app geladen is."],
+      ["Is dit de offici\u00eble PokerTH-client?",
+       "Het is de browserversie van PokerTH, binnen het PokerTH-project ontwikkeld door het PokerTH Development Team, naast de klassieke desktopclient."],
+      ["Wat is het verschil met de desktopclient?",
+       "Hetzelfde spel, dezelfde regels, hetzelfde pokerth.net-netwerk \u2014 maar het draait rechtstreeks in de browser, zonder installatie, op elk besturingssysteem."],
+      ["Welke talen worden ondersteund?",
+       "De interface is beschikbaar in 45 talen. De pokertermen voor acties (Fold, Check, Call, Raise, All-In) blijven Engels, zoals internationaal gebruikelijk is."],
+      ["Gaat het om echt geld?",
+       "Nee. PokerTH is strikt een spel om speelgeld. Fiches hebben geen geldwaarde en kunnen niet gekocht of verkocht worden."],
+      ["Welke gegevens verzamelt de webclient?",
+       "Zo weinig mogelijk: je instellingen blijven in je browser, en er wordt niet gevolgd of geadverteerd. De privacypagina legt het in detail uit."],
+      ["Kan ik zelf een server draaien?",
+       "Ja. Zowel de speciale PokerTH-server als deze webclient zijn opensource, dus je kunt je eigen priv\u00e9-pokerserver draaien, op een lokaal netwerk of op internet."],
+    ]
+  },
+};
 
 // Languages a given content page is actually available in, English first.
 function seoPageLangs(table) {
@@ -2038,17 +2270,24 @@ var _SEO_FAQ = [
 function seoFaqPage(res, method, lang) {
   var langs = seoPageLangs(SEO_FAQ_I18N);
   if (langs.indexOf(lang) === -1) lang = '';
-  var body = '<h1>PokerTH Web Client \u2014 Frequently Asked Questions</h1><dl>';
+  var tr = lang ? SEO_FAQ_I18N[lang] : null;
+  // Visible text and FAQPage structured data are both generated from the same
+  // question/answer list, so a translation can never say one thing to the
+  // reader and another to the crawler \u2014 which is the failure Google
+  // penalises hardest on this page type.
+  var qa = (tr && tr.qa) || _SEO_FAQ;
+  var body = '<h1>' + ((tr && tr.h1) || 'PokerTH Web Client \u2014 Frequently Asked Questions') + '</h1><dl>';
   var ents = [];
-  for (var i = 0; i < _SEO_FAQ.length; i++) {
-    body += '<dt>' + _SEO_FAQ[i][0] + '</dt><dd>' + _SEO_FAQ[i][1] + '</dd>';
-    ents.push({ '@type': 'Question', name: _SEO_FAQ[i][0],
-      acceptedAnswer: { '@type': 'Answer', text: _SEO_FAQ[i][1] } });
+  for (var i = 0; i < qa.length; i++) {
+    body += '<dt>' + qa[i][0] + '</dt><dd>' + qa[i][1] + '</dd>';
+    ents.push({ '@type': 'Question', name: qa[i][0],
+      acceptedAnswer: { '@type': 'Answer', text: qa[i][1] } });
   }
   body += '</dl>';
-  var ld = { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: ents };
-  seoContentPage(res, method, 'FAQ \u2014 PokerTH Web Client',
-    'Frequently asked questions about the PokerTH Web Client: free poker with no ads, playing Texas Hold\u2019em in your browser without any download, accounts, mobile support, offline mode, languages and privacy.',
+  var ld = { '@context': 'https://schema.org', '@type': 'FAQPage', inLanguage: lang || 'en', mainEntity: ents };
+  seoContentPage(res, method,
+    (tr && tr.title) || 'FAQ \u2014 PokerTH Web Client',
+    (tr && tr.desc) || 'Frequently asked questions about the PokerTH Web Client: free poker with no ads, playing Texas Hold\u2019em in your browser without any download, accounts, mobile support, offline mode, languages and privacy.',
     '/faq', body, ld, lang, langs);
 }
 

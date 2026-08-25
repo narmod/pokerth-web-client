@@ -14,6 +14,19 @@ Opened with `v2.1.7-web.0` (2026-08-13), following the upstream **2.1.7**
 release.
 
 ### Added
+- **The FAQ page starts speaking other languages** (`web.84`) — `/rules` has
+  been translated into all 44 languages for a while; `/faq` was still English
+  only, and the table meant to hold its translations had never been wired up at
+  all. It is now, and the first seven landed: French, Spanish, German, Italian,
+  Brazilian and European Portuguese, and Dutch. The visible text and the
+  `FAQPage` structured data are generated from one and the same
+  question/answer list, so a translation cannot say one thing to the reader and
+  another to the crawler — the discrepancy Google penalises hardest on exactly
+  this page type. A language joins the hreflang set and the sitemap the moment
+  its entry lands and not before, so the remaining 37 are simply absent rather
+  than pointing at English under a URL we advertise.
+
+### Added
 - **"Fill in pokerth.net settings" in the SEO panel** (`web.83`) — the section
   grew from five fields to eleven, and the official instance now has to be
   described rather than assumed. One button restores exactly what
