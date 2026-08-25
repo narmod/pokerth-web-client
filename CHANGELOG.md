@@ -14,6 +14,13 @@ Opened with `v2.1.7-web.0` (2026-08-13), following the upstream **2.1.7**
 release.
 
 ### Added
+- **FAQ translations, batch four** (`web.87`) — Swedish, Danish, Norwegian
+  Bokmål, Finnish, Hungarian, Romanian and Bulgarian; `/faq` now covers 28 of 44
+  languages. A script-consistency check runs over each batch before it is
+  written, and earned its keep immediately by catching two Chinese ideographs
+  that had drifted into a Bulgarian sentence.
+
+### Added
 - **FAQ translations, batch three** (`web.86`) — Japanese, Korean, Simplified
   and Traditional Chinese, Vietnamese, Thai and Indonesian; `/faq` now covers 21
   of 44 languages. Written as real Unicode and escaped programmatically rather
