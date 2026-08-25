@@ -14,6 +14,27 @@ Opened with `v2.1.7-web.0` (2026-08-13), following the upstream **2.1.7**
 release.
 
 ### Added
+- **Three new pages: /hand-rankings, /how-to-play and /glossary** (`web.82`) —
+  the app is an empty shell to a crawler, so everything a search engine can
+  actually read lives on the server-rendered pages, and there were two of them.
+  **/hand-rankings** lists all ten hands strongest first with an example, how
+  often each is dealt across seven cards, how kickers and ties are settled, and
+  the five things people reliably get wrong (the ace plays high or low but never
+  wraps, four to a flush is nothing, set versus trips, only the best five count).
+  **/how-to-play** is the path from a blank tab to a hand in six steps, plus
+  what playing on a phone and playing with friends actually involve.
+  **/glossary** defines fifty-five terms, from all-in to the wheel. Structured
+  data suited to each: an `ItemList` alongside the `Article` for the rankings,
+  `HowTo` with numbered steps for the guide, `DefinedTermSet` for the glossary.
+  All three join the nav, the sitemap (at priority 0.7, 0.7 and 0.5), the
+  IndexNow submission set, `llms.txt` and the crawler-readable block on the home
+  page, and each has its own empty translation table ready to be filled in
+  batches like `SEO_RULES_I18N`. Also fixed while checking the coverage report
+  it feeds: `seoPageLangs()` always carries English, which is the page itself
+  and not a translation, so the panel had been claiming "/rules translated into
+  45 of 44 languages".
+
+### Added
 - **The SEO panel stops being five fields and a hope** (`web.81`) — the section
   could be switched on and given a URL, and that was all: everything else was
   compiled in, and nothing told the operator whether any of it worked. It now

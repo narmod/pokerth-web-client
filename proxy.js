@@ -1303,13 +1303,17 @@ function _seoEnsureIndexNowKey() {
   return s.indexNowKey;
 }
 function seoIndexNowUrls(base) {
-  var urls = [base + '/', base + '/rules', base + '/faq', base + '/privacy'];
+  var urls = [base + '/', base + '/rules', base + '/hand-rankings', base + '/how-to-play',
+    base + '/glossary', base + '/faq', base + '/privacy'];
   for (var code in SEO_I18N) { if (code !== 'en') urls.push(base + '/?lang=' + code); }
   // Localized content pages exist only in the languages that actually have a
   // translation table. Submitting a variant we do not serve would point the
   // crawler at the English fallback under a URL we never advertise.
   seoPageLangs(SEO_RULES_I18N).forEach(function (c) { urls.push(base + '/rules?lang=' + c); });
   seoPageLangs(SEO_FAQ_I18N).forEach(function (c) { urls.push(base + '/faq?lang=' + c); });
+  seoPageLangs(SEO_HANDS_I18N).forEach(function (c) { urls.push(base + '/hand-rankings?lang=' + c); });
+  seoPageLangs(SEO_HOWTO_I18N).forEach(function (c) { urls.push(base + '/how-to-play?lang=' + c); });
+  seoPageLangs(SEO_GLOSSARY_I18N).forEach(function (c) { urls.push(base + '/glossary?lang=' + c); });
   return urls;
 }
 var _indexNowLast = 0;
@@ -1444,7 +1448,9 @@ function seoBodyBlock(lang) {
     '<p>' + b.m + '</p>' +
     '<p>' + b.g + '</p>' +
     '<p>Free software \u2014 source code on GitHub (narmod/pokerth-web-client), based on PokerTH by the PokerTH Development Team.</p>' +
-    '<p><a href="/rules">' + b.r + '</a> \u2014 <a href="/faq">FAQ</a> \u2014 <a href="/privacy">' + b.pv + '</a></p>' +
+    '<p><a href="/rules">' + b.r + '</a> \u2014 <a href="/hand-rankings">Poker hand rankings</a> \u2014 ' +
+    '<a href="/how-to-play">How to play</a> \u2014 <a href="/glossary">Glossary</a> \u2014 ' +
+    '<a href="/faq">FAQ</a> \u2014 <a href="/privacy">' + b.pv + '</a></p>' +
     '</div>';
 }
 
@@ -1519,7 +1525,9 @@ function seoLlmsTxt(base) {
     '- Free and open source (based on PokerTH by the PokerTH Development Team)\n' +
     '- 45 interface languages; poker terms (Fold/Check/Call/Raise/All-In) stay in English\n' +
     '- Feature parity with the official PokerTH desktop client\n' +
-    (u ? '\n## Links\n\n- Play: ' + u + '/\n- Texas Hold\u2019em rules: ' + u + '/rules\n- FAQ: ' + u + '/faq\n' : '\n## Links\n\n') +
+    (u ? '\n## Links\n\n- Play: ' + u + '/\n- Texas Hold\u2019em rules: ' + u + '/rules\n' +
+         '- Poker hand rankings: ' + u + '/hand-rankings\n- How to play, step by step: ' + u + '/how-to-play\n' +
+         '- Poker glossary: ' + u + '/glossary\n- FAQ: ' + u + '/faq\n' : '\n## Links\n\n') +
     '- Source code: https://github.com/narmod/pokerth-web-client\n' +
     '- PokerTH project: https://www.pokerth.net/\n';
 }
@@ -1536,10 +1544,16 @@ var _SEO_PAGE_CSS = 'body{margin:0;background:#0d1117;color:#d8dde4;font:16px/1.
   'nav{padding:14px 20px;background:#161b22;border-bottom:1px solid #30363d;font-size:.95em}' +
   'nav a{margin-right:14px}ul{padding-left:1.3em}li{margin:.3em 0}' +
   'dt{font-weight:600;color:#fff;margin-top:1.1em}dd{margin:.3em 0 0 0}' +
+  'table{border-collapse:collapse;width:100%;margin:.6em 0;font-size:.95em}' +
+  'th,td{text-align:left;padding:7px 10px;border-bottom:1px solid #30363d;vertical-align:top}' +
+  'th{color:#fff;font-weight:600}td.n{white-space:nowrap;text-align:right;color:#9aa4b0}' +
+  '.cards{font-size:1.05em;letter-spacing:.06em;white-space:nowrap}.rd{color:#e5837f}' +
+  'ol.hr{padding-left:1.3em}ol.hr>li{margin:.9em 0}' +
   '.play{display:inline-block;margin-top:26px;padding:10px 22px;background:#1f6feb;color:#fff;border-radius:6px;font-weight:600}';
 
 function _seoPageNav() {
-  return '<nav><a href="/">\u25b6 Play now</a><a href="/rules">Rules</a><a href="/faq">FAQ</a><a href="/privacy">Privacy</a>' +
+  return '<nav><a href="/">\u25b6 Play now</a><a href="/rules">Rules</a><a href="/hand-rankings">Hand rankings</a>' +
+    '<a href="/how-to-play">How to play</a><a href="/glossary">Glossary</a><a href="/faq">FAQ</a><a href="/privacy">Privacy</a>' +
     '<a href="https://github.com/narmod/pokerth-web-client" rel="noopener">Source</a></nav>';
 }
 
@@ -2036,6 +2050,280 @@ function seoFaqPage(res, method, lang) {
   seoContentPage(res, method, 'FAQ \u2014 PokerTH Web Client',
     'Frequently asked questions about the PokerTH Web Client: free poker with no ads, playing Texas Hold\u2019em in your browser without any download, accounts, mobile support, offline mode, languages and privacy.',
     '/faq', body, ld, lang, langs);
+}
+
+// ── /hand-rankings, /how-to-play, /glossary ───────────────────────
+// Three more server-rendered pages, same policy as /rules and /faq: always
+// reachable, noindex while the admin toggle is off. They exist because the app
+// is an empty shell to a crawler and because "poker hand rankings" is a
+// question people actually type — answering it properly is worth more than any
+// amount of tuning on a page with no text. Each has its own translation table,
+// empty for now, filled in batches exactly like SEO_RULES_I18N.
+var SEO_HANDS_I18N = {};
+var SEO_HOWTO_I18N = {};
+var SEO_GLOSSARY_I18N = {};
+
+// Suit symbols. Red suits get a class rather than a hard-coded colour so the
+// page CSS stays the single place that decides what red means.
+function _sd(t) { return '<span class="cards">' + t.replace(/([\u2665\u2666])/g, '<span class="rd">$1</span>') + '</span>'; }
+
+var _SEO_HANDS = [
+  ['Royal Flush', 'A K Q J 10, all of the same suit. The best possible hand; it cannot be beaten, only tied.',
+   'A\u2660 K\u2660 Q\u2660 J\u2660 10\u2660', '0.0032%'],
+  ['Straight Flush', 'Five cards in sequence, all of the same suit. Between two straight flushes the higher top card wins.',
+   '9\u2665 8\u2665 7\u2665 6\u2665 5\u2665', '0.0279%'],
+  ['Four of a Kind', 'Four cards of the same rank. The fifth card (the kicker) settles the rare tie between two identical quads on the board.',
+   'Q\u2660 Q\u2665 Q\u2666 Q\u2663 7\u2660', '0.168%'],
+  ['Full House', 'Three of a kind plus a pair. The three-card set is compared first, then the pair.',
+   'K\u2660 K\u2665 K\u2666 4\u2663 4\u2660', '2.60%'],
+  ['Flush', 'Five cards of the same suit, not in sequence. Compared card by card from the top; no suit outranks another.',
+   'A\u2666 J\u2666 8\u2666 6\u2666 3\u2666', '3.03%'],
+  ['Straight', 'Five cards in sequence, mixed suits. The ace plays high (10-J-Q-K-A) or low (A-2-3-4-5), never both at once.',
+   '10\u2663 9\u2666 8\u2660 7\u2665 6\u2663', '4.62%'],
+  ['Three of a Kind', 'Three cards of the same rank, plus two unrelated cards.',
+   '8\u2660 8\u2665 8\u2663 K\u2666 4\u2660', '4.83%'],
+  ['Two Pair', 'Two different pairs plus a fifth card. The higher pair is compared first, then the lower, then the kicker.',
+   'J\u2660 J\u2666 5\u2663 5\u2665 A\u2660', '23.5%'],
+  ['One Pair', 'Two cards of the same rank plus three unrelated cards, compared in order.',
+   '10\u2665 10\u2660 A\u2666 8\u2663 3\u2665', '43.8%'],
+  ['High Card', 'None of the above. The highest card decides, then the next, and so on.',
+   'A\u2663 Q\u2666 9\u2660 6\u2665 2\u2663', '17.4%']
+];
+
+function seoHandsPage(res, method, lang) {
+  var langs = seoPageLangs(SEO_HANDS_I18N);
+  if (langs.indexOf(lang) === -1) lang = '';
+  var tr = lang ? SEO_HANDS_I18N[lang] : null;
+  var rows = '';
+  for (var i = 0; i < _SEO_HANDS.length; i++) {
+    var h = _SEO_HANDS[i];
+    rows += '<li><strong>' + h[0] + '</strong> \u2014 ' + h[1] +
+      '<br>' + _sd(h[2]) + ' <span style="opacity:.6">\u00b7 dealt in ' + h[3] + ' of seven-card hands</span></li>';
+  }
+  var body = '<h1>Poker Hand Rankings</h1>' +
+    '<p>Texas Hold\u2019em hands are ranked from strongest to weakest as follows. Every hand is exactly five cards, ' +
+    'chosen from the seven you can see: your two hole cards and the five community cards. You are never obliged to ' +
+    'use your own cards \u2014 if the board itself makes the best five, that is your hand too.</p>' +
+    '<ol class="hr">' + rows + '</ol>' +
+    '<h2>How ties are settled</h2>' +
+    '<p>Compare the category first: any flush beats any straight, whatever the cards. Within the same category, ' +
+    'compare rank by rank from the top. What is left over after the combination is called the <em>kicker</em>, and it ' +
+    'decides more hands than beginners expect: A\u2660 K\u2666 and A\u2663 7\u2665 both make a pair of aces on an ' +
+    'A-9-4 board, but the king outkicks the seven. Suits never break a tie in Hold\u2019em \u2014 two players with the ' +
+    'same five ranks split the pot, down to the last chip.</p>' +
+    '<h2>Points people get wrong</h2>' +
+    '<ul>' +
+    '<li>The ace is both the highest and the lowest card for a straight: A-K-Q-J-10 is the best one, A-2-3-4-5 (the ' +
+    '<em>wheel</em>) is the worst. It does not wrap around \u2014 Q-K-A-2-3 is nothing at all.</li>' +
+    '<li>A flush is five cards of one suit, not four. Four hearts in your hand and on the board is worth nothing on ' +
+    'its own.</li>' +
+    '<li>Three of a kind made from a pair in your hand plus one on the board is a <em>set</em>; made from one card in ' +
+    'your hand plus a pair on the board it is <em>trips</em>. Same ranking, very different strength, because trips ' +
+    'are visible to everyone.</li>' +
+    '<li>Only the best five count. Holding two pair and a third pair on the board gives you two pair, not three.</li>' +
+    '<li>The percentages above are how often each hand appears by the river across seven cards, not how often it ' +
+    'wins. Two pair looks common and is still ahead of most of what it meets.</li>' +
+    '</ul>' +
+    '<h2>Seeing it at the table</h2>' +
+    '<p>PokerTH names your current best hand under the board while you play, so you never have to work it out under ' +
+    'time pressure, and shows every revealed hand at showdown with the five cards that counted highlighted. Practising ' +
+    'offline against the computer opponents is the fastest way to get the rankings into your fingers.</p>';
+  var title = 'Poker Hand Rankings \u2014 Texas Hold\u2019em Order of Hands';
+  var desc = 'All ten Texas Hold\u2019em poker hands ranked from royal flush to high card, with examples, the odds of ' +
+    'making each one, and how kickers and ties are settled.';
+  var headline = 'Poker Hand Rankings \u2014 Texas Hold\u2019em';
+  var ldDesc = 'The ten Texas Hold\u2019em hand rankings in order, with examples, frequencies and tie-break rules.';
+  if (tr) { body = tr.body; title = tr.title; desc = tr.desc; headline = tr.ldHeadline; ldDesc = tr.ldDesc; }
+  var base = seoEnabled() ? seoPublicUrl() : '';
+  var art = {
+    '@context': 'https://schema.org', '@type': 'Article',
+    headline: headline, description: ldDesc,
+    author: { '@type': 'Organization', name: 'PokerTH Development Team' },
+    inLanguage: lang || 'en'
+  };
+  if (base) art.mainEntityOfPage = base + '/hand-rankings' + (lang ? '?lang=' + lang : '');
+  // The list itself, so the ranking can be understood without parsing prose.
+  // English names only: the ordering is the data, and a translated label adds
+  // nothing a crawler can use.
+  var list = {
+    '@context': 'https://schema.org', '@type': 'ItemList',
+    name: 'Texas Hold\u2019em hand rankings, strongest first',
+    itemListOrder: 'https://schema.org/ItemListOrderDescending',
+    numberOfItems: _SEO_HANDS.length,
+    itemListElement: _SEO_HANDS.map(function (h, n) {
+      return { '@type': 'ListItem', position: n + 1, name: h[0], description: h[1] };
+    })
+  };
+  seoContentPage(res, method, title, desc, '/hand-rankings', body, [art, list], lang, langs);
+}
+
+var _SEO_HOWTO = [
+  ['Open the site \u2014 there is nothing to install',
+   'PokerTH runs in the browser. No download, no account, no plugin. On a phone you can add it to the home screen ' +
+   'from the browser menu and it opens like an app, full screen and offline-capable.'],
+  ['Choose where you want to play',
+   'Three modes. <strong>Offline practice</strong> deals you a table of computer opponents straight away and needs no ' +
+   'connection at all \u2014 the place to learn. <strong>pokerth.net</strong> is the official network: real opponents, ' +
+   'seasonal rankings, a free nickname you register once. <strong>LAN / private server</strong> connects to a ' +
+   'dedicated PokerTH server, yours or someone else\u2019s.'],
+  ['Sit down at a table',
+   'In the lobby you either join a table from the list or create your own. Creating one lets you set the number of ' +
+   'seats, the starting stack, how fast the blinds rise and whether the table is password-protected. Share the ' +
+   'invitation link and a friend lands directly at your table, in their browser, without registering anything.'],
+  ['Play the hand',
+   'You are dealt two private cards. Betting goes round the table before the flop, and again after the flop, the turn ' +
+   'and the river. When it is your turn the action bar lights up and offers only what is legal: Fold, Check or Call, ' +
+   'Raise or All-In. The bet amount can be typed, dragged on the slider, or set with one tap from Min, half the pot, ' +
+   'the pot or your whole stack.'],
+  ['Read the table',
+   'Your best current hand is named under the board as the cards come out. The pot, every stack and the blind level ' +
+   'are on screen at all times, the dealer button shows who acts last, and a countdown shows how long you have. At ' +
+   'showdown the five cards that made each hand are highlighted.'],
+  ['Win the tournament',
+   'PokerTH games are sit-and-go tournaments: everyone starts with the same stack, the blinds rise on a timer, and ' +
+   'players are knocked out until one holds every chip. Nothing costs money and no chips can be bought \u2014 it is all ' +
+   'play money, so the only thing at stake is the game itself.']
+];
+
+function seoHowToPage(res, method, lang) {
+  var langs = seoPageLangs(SEO_HOWTO_I18N);
+  if (langs.indexOf(lang) === -1) lang = '';
+  var tr = lang ? SEO_HOWTO_I18N[lang] : null;
+  var steps = '';
+  for (var i = 0; i < _SEO_HOWTO.length; i++) {
+    steps += '<h2>' + (i + 1) + '. ' + _SEO_HOWTO[i][0] + '</h2><p>' + _SEO_HOWTO[i][1] + '</p>';
+  }
+  var body = '<h1>How to Play Poker Online, Free, in Your Browser</h1>' +
+    '<p>This is the short version of getting from a blank tab to a hand of Texas Hold\u2019em in PokerTH. If you want ' +
+    'the rules themselves \u2014 blinds, betting rounds, what beats what \u2014 read the <a href="/rules">rules page</a> ' +
+    'and the <a href="/hand-rankings">hand rankings</a> first.</p>' +
+    steps +
+    '<h2>Playing on a phone</h2>' +
+    '<p>The table is built for a touch screen as much as a desktop: tapping the bet field opens a keypad inside the ' +
+    'action bar instead of the system keyboard, so the table never jumps around, and the slider moves in the same ' +
+    'steps as the desktop client. Turn notifications can reach you with Fold and Check/Call buttons on them, so a ' +
+    'hand can be played without switching back to the tab.</p>' +
+    '<h2>Playing with friends</h2>' +
+    '<p>Create a table, set a password if you want it private, and send the invitation link. It opens the table ' +
+    'directly \u2014 in the installed app if they have added it to their home screen, in a browser tab otherwise. ' +
+    'Nobody needs to install anything or hand over an email address.</p>' +
+    '<h2>Common questions</h2>' +
+    '<p>No money is ever involved, in any mode. Your settings, style packs and offline progress stay on your own ' +
+    'device. The interface is available in 45 languages, while the five action words \u2014 Fold, Check, Call, Raise, ' +
+    'All-In \u2014 stay in English, as they are at every table in the world. More in the <a href="/faq">FAQ</a>.</p>';
+  var title = 'How to Play Poker Online Free \u2014 PokerTH Web Client';
+  var desc = 'Step by step: play free Texas Hold\u2019em poker in your browser with no download and no account \u2014 ' +
+    'offline against bots, on the official pokerth.net network, or at a private table with friends.';
+  var headline = 'How to play free Texas Hold\u2019em poker in your browser';
+  var ldDesc = 'A step-by-step guide to playing free Texas Hold\u2019em in the PokerTH web client.';
+  if (tr) { body = tr.body; title = tr.title; desc = tr.desc; headline = tr.ldHeadline; ldDesc = tr.ldDesc; }
+  var base = seoEnabled() ? seoPublicUrl() : '';
+  var ld = {
+    '@context': 'https://schema.org', '@type': 'HowTo',
+    name: headline, description: ldDesc,
+    totalTime: 'PT3M',
+    estimatedCost: { '@type': 'MonetaryAmount', currency: 'EUR', value: '0' },
+    inLanguage: lang || 'en',
+    step: _SEO_HOWTO.map(function (st, n) {
+      return {
+        '@type': 'HowToStep', position: n + 1, name: st[0],
+        // Structured data wants prose, not markup.
+        text: st[1].replace(/<[^>]+>/g, '')
+      };
+    })
+  };
+  if (base) ld.url = base + '/how-to-play' + (lang ? '?lang=' + lang : '');
+  seoContentPage(res, method, title, desc, '/how-to-play', body, ld, lang, langs);
+}
+
+var _SEO_GLOSSARY = [
+  ['All-In', 'Betting every chip you have. You can still win only the part of the pot you paid into; the rest goes to a side pot.'],
+  ['Ante', 'A small forced bet paid by every player before the deal, on top of the blinds. Used in the later levels of some tournaments.'],
+  ['Backdoor', 'A draw that needs both the turn and the river to complete, such as two more hearts for a flush.'],
+  ['Bad beat', 'Losing a hand you were heavily favoured to win.'],
+  ['Big blind', 'The larger of the two forced bets, posted two seats left of the dealer button. Tournament stacks are usually counted in big blinds.'],
+  ['Blinds', 'The two forced bets that start every hand and give the players something to fight over. In PokerTH they rise on a timer.'],
+  ['Board', 'The five community cards, shared by everyone.'],
+  ['Bubble', 'The point in a tournament just before the paid or ranked places begin.'],
+  ['Button', 'The disc marking the nominal dealer. The player on the button acts last after the flop, which is the best seat at the table.'],
+  ['Call', 'Matching the current bet, no more.'],
+  ['Check', 'Passing the action without betting. Only possible when nobody has bet in the current round.'],
+  ['Check-raise', 'Checking, then raising after someone else bets. A way of building a pot with a strong hand.'],
+  ['Community cards', 'The five face-up cards every player may use, dealt as the flop, the turn and the river.'],
+  ['Connectors', 'Two hole cards of consecutive rank, such as 8-9. Suited connectors share a suit as well.'],
+  ['Draw', 'An incomplete hand that needs one or more cards to become strong \u2014 four to a flush, four to a straight.'],
+  ['Drawing dead', 'Holding a draw that cannot win even if it completes.'],
+  ['Equity', 'Your share of the pot given the cards still to come \u2014 in effect, how often you win from here.'],
+  ['Flop', 'The first three community cards, dealt at once.'],
+  ['Fold', 'Giving up the hand, and with it every chip already bet.'],
+  ['Freeroll', 'A tournament that costs nothing to enter. In PokerTH every table is one, since there is no money anywhere.'],
+  ['Heads-up', 'A hand, or a tournament stage, with only two players left.'],
+  ['Hole cards', 'Your two private cards. Also called pocket cards.'],
+  ['Kicker', 'The highest card left over after the combination itself, used to break ties between hands of the same rank.'],
+  ['Limp', 'Entering the pot before the flop by calling the big blind rather than raising.'],
+  ['Muck', 'To discard a hand face down at showdown rather than reveal it.'],
+  ['Nuts', 'The best hand possible given the board. It cannot be beaten, only tied.'],
+  ['Offsuit', 'Two hole cards of different suits.'],
+  ['Outs', 'The cards still in the deck that would give you the winning hand. Nine outs remain for a four-card flush.'],
+  ['Overpair', 'A pocket pair higher than any card on the board.'],
+  ['Pocket pair', 'Two hole cards of the same rank.'],
+  ['Pot', 'The chips at stake in the current hand.'],
+  ['Pot odds', 'The price the pot is offering you: what you must call, against what you stand to win.'],
+  ['Preflop', 'The first betting round, before any community card is dealt.'],
+  ['Rainbow', 'A flop of three different suits, which makes an immediate flush draw impossible.'],
+  ['Raise', 'Increasing the current bet. In No-Limit, by any amount up to your whole stack.'],
+  ['Re-raise', 'Raising a raise.'],
+  ['River', 'The fifth and final community card, and the betting round that follows it.'],
+  ['Set', 'Three of a kind made from a pocket pair plus one matching card on the board \u2014 well hidden, unlike trips.'],
+  ['Short stack', 'A stack small relative to the blinds, leaving little room to do anything but fold or move all-in.'],
+  ['Showdown', 'Revealing the remaining hands after the last betting round to decide who wins.'],
+  ['Side pot', 'A separate pot created when a player is all-in and the others keep betting beyond that amount.'],
+  ['Sit and go', 'A tournament that starts as soon as the seats are full, rather than at a fixed time. Every PokerTH game is one.'],
+  ['Slow play', 'Playing a strong hand weakly to keep opponents in the pot.'],
+  ['Small blind', 'The smaller forced bet, posted immediately left of the dealer button.'],
+  ['Split pot', 'A pot shared between hands of equal strength. Suits never break the tie in Hold\u2019em.'],
+  ['Stack', 'The chips a player has in front of them.'],
+  ['Straddle', 'An optional blind raise posted before the deal. Not used in PokerTH.'],
+  ['Suited', 'Two hole cards of the same suit.'],
+  ['Tilt', 'Playing badly because of frustration, usually after a bad beat.'],
+  ['Trips', 'Three of a kind made from one hole card and a pair on the board. Everyone can see two of the three.'],
+  ['Turn', 'The fourth community card, and the betting round that follows it.'],
+  ['Under the gun', 'The seat that acts first before the flop, immediately left of the big blind.'],
+  ['Value bet', 'A bet made to be called by a worse hand, rather than to make anyone fold.'],
+  ['Wheel', 'The straight A-2-3-4-5, in which the ace plays low. The weakest straight there is.']
+];
+
+function seoGlossaryPage(res, method, lang) {
+  var langs = seoPageLangs(SEO_GLOSSARY_I18N);
+  if (langs.indexOf(lang) === -1) lang = '';
+  var tr = lang ? SEO_GLOSSARY_I18N[lang] : null;
+  var dl = '<dl>';
+  for (var i = 0; i < _SEO_GLOSSARY.length; i++) {
+    dl += '<dt>' + _SEO_GLOSSARY[i][0] + '</dt><dd>' + _SEO_GLOSSARY[i][1] + '</dd>';
+  }
+  dl += '</dl>';
+  var body = '<h1>Poker Glossary \u2014 Texas Hold\u2019em Terms Explained</h1>' +
+    '<p>The words you will meet at a Hold\u2019em table, in the chat and in PokerTH itself. The five action words \u2014 ' +
+    'Fold, Check, Call, Raise and All-In \u2014 stay in English in every one of the 45 interface languages, because ' +
+    'they do at every table in the world.</p>' + dl +
+    '<p style="margin-top:1.6em">Still unclear on how a hand actually runs? The <a href="/rules">rules</a> cover it ' +
+    'from the blinds to the showdown, and the <a href="/hand-rankings">hand rankings</a> list what beats what.</p>';
+  var title = 'Poker Glossary \u2014 Texas Hold\u2019em Terms \u2014 PokerTH';
+  var desc = 'What poker terms mean, from all-in to the wheel: blinds, kickers, outs, pot odds, sets and trips, ' +
+    'side pots and showdowns, explained in plain language.';
+  var headline = 'Poker glossary \u2014 Texas Hold\u2019em terms explained';
+  var ldDesc = 'A glossary of Texas Hold\u2019em poker terms, from all-in to the wheel.';
+  if (tr) { body = tr.body; title = tr.title; desc = tr.desc; headline = tr.ldHeadline; ldDesc = tr.ldDesc; }
+  var base = seoEnabled() ? seoPublicUrl() : '';
+  var ld = {
+    '@context': 'https://schema.org', '@type': 'DefinedTermSet',
+    name: headline, description: ldDesc, inLanguage: lang || 'en',
+    hasDefinedTerm: _SEO_GLOSSARY.map(function (g) {
+      return { '@type': 'DefinedTerm', name: g[0], description: g[1].replace(/<[^>]+>/g, '') };
+    })
+  };
+  if (base) ld.url = base + '/glossary' + (lang ? '?lang=' + lang : '');
+  seoContentPage(res, method, title, desc, '/glossary', body, ld, lang, langs);
 }
 
 // Injected-HTML cache: one live variant, keyed on file mtime + SEO state.
@@ -5241,8 +5529,14 @@ function handleAdmin(req, res, reqPathOnly, query) {
     if (!seoBingv()) _add('warn', 'No Bing Webmaster token (optional).');
     var _rl = seoPageLangs(SEO_RULES_I18N).length, _fl = seoPageLangs(SEO_FAQ_I18N).length, _tot = 0;
     for (var _c in SEO_I18N) _tot++;
-    _add(_rl ? 'ok' : 'warn', '/rules translated into ' + _rl + ' of ' + (_tot - 1) + ' non-English languages.');
-    _add(_fl ? 'ok' : 'warn', '/faq translated into ' + _fl + ' of ' + (_tot - 1) + ' non-English languages.');
+    var _cov = [['/rules', _rl], ['/faq', _fl], ['/hand-rankings', seoPageLangs(SEO_HANDS_I18N).length],
+      ['/how-to-play', seoPageLangs(SEO_HOWTO_I18N).length], ['/glossary', seoPageLangs(SEO_GLOSSARY_I18N).length]];
+    _cov.forEach(function (c) {
+      // seoPageLangs() always carries 'en', which is the page itself, not a
+      // translation — counting it would have claimed 45 of 44.
+      var _n = Math.max(0, c[1] - 1);
+      _add(_n ? 'ok' : 'warn', c[0] + ' translated into ' + _n + ' of ' + (_tot - 1) + ' non-English languages.');
+    });
     _add(seoAiCrawlers() ? 'ok' : 'warn', seoAiCrawlers() ? 'AI crawlers are allowed and llms.txt is served.' : 'AI crawlers are refused in robots.txt and llms.txt returns 404.');
     var _urlCount = _base ? seoIndexNowUrls(_base).length : 0;
     if (_urlCount) _add('ok', 'sitemap.xml advertises ' + _urlCount + ' URLs.');
@@ -6088,6 +6382,9 @@ const httpServer = http.createServer((req, res) => {
       _sVariants +
       _seoPageUrls(_sBase, '/rules', seoPageLangs(SEO_RULES_I18N), 'monthly', '0.6') +
       _seoPageUrls(_sBase, '/faq', seoPageLangs(SEO_FAQ_I18N), 'monthly', '0.5') +
+      _seoPageUrls(_sBase, '/hand-rankings', seoPageLangs(SEO_HANDS_I18N), 'monthly', '0.7') +
+      _seoPageUrls(_sBase, '/how-to-play', seoPageLangs(SEO_HOWTO_I18N), 'monthly', '0.7') +
+      _seoPageUrls(_sBase, '/glossary', seoPageLangs(SEO_GLOSSARY_I18N), 'monthly', '0.5') +
       '<url><loc>' + _sBase + '/privacy</loc>' + _sLm(_sModSelf) + '<changefreq>yearly</changefreq><priority>0.2</priority></url>\n' +
       '</urlset>\n';
     res.writeHead(200, Object.assign({ 'Content-Type': 'application/xml; charset=utf-8', 'Cache-Control': 'no-cache, must-revalidate' }, SECURITY_HEADERS));
@@ -6116,6 +6413,15 @@ const httpServer = http.createServer((req, res) => {
   }
   if (reqPathOnly === '/faq' || reqPathOnly === '/faq.html') {
     return seoFaqPage(res, req.method, seoEnabled() ? seoLangFromQuery(req.url) : '');
+  }
+  if (reqPathOnly === '/hand-rankings' || reqPathOnly === '/hand-rankings.html') {
+    return seoHandsPage(res, req.method, seoEnabled() ? seoLangFromQuery(req.url) : '');
+  }
+  if (reqPathOnly === '/how-to-play' || reqPathOnly === '/how-to-play.html') {
+    return seoHowToPage(res, req.method, seoEnabled() ? seoLangFromQuery(req.url) : '');
+  }
+  if (reqPathOnly === '/glossary' || reqPathOnly === '/glossary.html') {
+    return seoGlossaryPage(res, req.method, seoEnabled() ? seoLangFromQuery(req.url) : '');
   }
 
   // Friendly path for the pack-creator Studio, mirroring /admin -> admin.html.
