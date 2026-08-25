@@ -356,13 +356,21 @@
     <div id="panel-traffic" style="display:none">
       <div class="card">
         <div class="boardhead"><h2>Traffic</h2><span id="trafRange" class="headnote"></span><button id="btnTrafRefresh" class="use">Refresh</button></div>
-        <p class="muted">Anonymous footfall — no IP is ever stored. “Visits” counts browser sessions; “Unique visitors” counts distinct devices. Everything below reads the same anonymous ping; nothing here identifies a person.</p>
+        <p class="muted">Anonymous footfall — no IP is ever stored. “Visits” counts browser sessions; “Unique visitors” counts distinct devices. Everything on this tab reads the same anonymous ping; nothing here identifies a person.</p>
         <div class="trafgrid" id="trafCards"><div class="empty">Loading…</div></div>
         <div class="kpirow" id="trafKpis"><div class="empty">Loading…</div></div>
         <div class="tsec">
           <div class="boardhead"><h3>Recent activity (last 48 h)</h3><span id="traf48Note" class="headnote"></span></div>
           <div id="traf48" class="barchart"><div class="empty">Loading…</div></div>
         </div>
+        <div class="tsec">
+          <h3>Where sessions open</h3>
+          <p class="muted">Counts a session once per entry mode it is opened with, whatever the transport: Internet games routed through this proxy still count as pokerth.net. Offline = training vs bots.</p>
+          <div id="trafModes"><div class="empty">Loading…</div></div>
+        </div>
+      </div>
+      <div class="card">
+        <h2>Trends</h2>
         <div class="tsec">
           <div class="boardhead"><h3>Daily visits</h3><span id="trafTrendNote" class="headnote"></span></div>
           <div id="trafChart" class="trafchart"><div class="empty">Loading…</div></div>
@@ -372,6 +380,9 @@
           <p class="muted">A device is counted once, the first time it is ever seen. The horizontal marks are the average over each half of the window — the comparison acquisition is actually judged on.</p>
           <div id="trafNew" class="barchart"><div class="empty">Loading…</div></div>
         </div>
+      </div>
+      <div class="card">
+        <h2>Retention</h2>
         <div class="tsec">
           <div class="boardhead"><h3>Coming back</h3><span id="trafRetNote" class="headnote"></span></div>
           <p class="muted">Of the devices seen for the very first time in the last 30 days, how many returned afterwards — and on how many separate days they showed up. A cohort only counts once it has had the time to come back, so the three rates are measured against different totals, and that is deliberate. Devices already known before this build carry no first-seen date; they are left out of the rates and serve as the established-base comparison instead.</p>
@@ -382,11 +393,9 @@
           <p class="muted">An average day, hour by hour, over the last 30 days — server local time. On the left, when people come; on the right, whether the ones arriving at that hour are new out of proportion with the traffic (1.0 = exactly in proportion). A quiet hour is ordinary; a quiet hour that still draws first-time visitors is where they find an empty lobby.</p>
           <div id="trafHours" class="hourduo"><div class="empty">Loading…</div></div>
         </div>
-        <div class="tsec">
-          <h3>Where sessions open</h3>
-          <p class="muted">Counts a session once per entry mode it is opened with, whatever the transport: Internet games routed through this proxy still count as pokerth.net. Offline = training vs bots.</p>
-          <div id="trafModes"><div class="empty">Loading…</div></div>
-        </div>
+      </div>
+      <div class="card">
+        <h2>Who visits</h2>
         <div class="tsec">
   <div class="boardhead"><h3>What visitors run</h3><span id="envSince" class="muted" style="margin:0"></span></div>
           <p class="muted">From the same anonymous ping as the visit counter: system and browser read from the User-Agent, language from the request header, installed app vs browser tab reported by the client. Running totals, not a time series — what to test on, and which of the 45 languages are actually used.</p>
@@ -404,10 +413,11 @@
           <p class="muted">Counts a play each time a track starts in the players’ music panel — resuming after a pause is not a new play. No visitor id, no listening time. Radio stations are not measured: a live stream has no track end, so “a play” would mean nothing there. Per-track totals sit next to each title in the Music tab.</p>
           <div id="trafMusic"><div class="empty">Loading…</div></div>
         </div>
-        <div class="tsec">
-          <h3>Bottom line</h3>
-          <div id="trafBottom" class="botline"><div class="empty">Loading…</div></div>
-        </div>
+      </div>
+      <div class="card">
+        <h2>Bottom line</h2>
+        <p class="muted">What the figures above add up to, stated in plain words. Each line is derived, not written by hand — a claim disappears when the measurement behind it is missing.</p>
+        <div id="trafBottom" class="botline"><div class="empty">Loading…</div></div>
       </div>
       <div class="card">
         <h2>Data &amp; settings</h2>

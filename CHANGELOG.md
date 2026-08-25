@@ -14,6 +14,18 @@ Opened with `v2.1.7-web.0` (2026-08-13), following the upstream **2.1.7**
 release.
 
 ### Changed
+- **Six cards on the Traffic tab, not one** (`web.79`) — collapsing the panel
+  into a single card of sections fixed the fifteen-frame stack and overshot: one
+  card holding counters, five charts, two rankings and a conclusion is a wall,
+  and everything arrives at once. The sections are unchanged; they are now
+  spread over six cards, each on one subject and each about a screenful —
+  **Traffic** (counters, analytic tiles, last 48 h, where sessions open),
+  **Trends** (daily visits, new devices per day), **Retention** (coming back,
+  time of day), **Who visits** (systems and browsers, played tracks), **Bottom
+  line**, and **Data & settings**. The order still carries the argument: figures,
+  the charts that detail them, the conclusion, then the controls. The retention
+  card is headed "Retention" rather than "Coming back" so it does not repeat the
+  name of its own first section.
 - **The Traffic tab is two cards instead of fifteen** (`web.78`) — three lots of
   additions had left the panel as a stack of fifteen framed boxes, which reads
   as fifteen unrelated things rather than one page about one subject. What is

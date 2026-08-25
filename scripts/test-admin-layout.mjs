@@ -349,13 +349,17 @@ for (const id of ['trafRet', 'trafRetNote']) ok(traf.includes('id="' + id + '"')
 ok(traf.indexOf('id="trafRet"') < traf.indexOf('id="trafBottom"'),
   'the cohorts sit before the conclusion they feed');
 
-// -- Two cards, not fifteen ------------------------------------------------
-// Fifteen stacked frames read as fifteen unrelated things. What is read now
-// sits in one card, split into sections; what is set sits in the other. The
-// order carries the rest: counters, the charts that detail them, the
-// conclusion, then the controls.
+// -- Six cards, not fifteen and not one ------------------------------------
+// Fifteen stacked frames read as fifteen unrelated things; one card holding
+// all of it is a wall. Six, each on a subject and each about a screenful, is
+// the middle: counters, trends, retention, who visits, the conclusion, the
+// controls. The order still carries the argument.
 const trafCards = (traf.match(/<div class="card"/g) || []).length;
-ok(trafCards === 2, 'the traffic panel is two cards, not ' + trafCards);
+ok(trafCards === 6, 'the traffic panel is six cards, not ' + trafCards);
+for (const h of ['Traffic', 'Trends', 'Retention', 'Who visits', 'Bottom line', 'Data &amp; settings']) {
+  ok(traf.includes('<h2>' + h + '</h2>'), 'a card is headed ' + h);
+}
+ok(!/<h2>Coming back<\/h2>/.test(traf), 'and no card repeats the name of its own first section');
 ok(!/class="cardrow"/.test(traf), 'and no paired row survives inside it');
 ok(/\.tsec\{margin-top:20px;padding-top:16px;border-top:1px solid var\(--line\)\}/.test(admin),
   'a section is separated by a rule and some air, not by another frame');
@@ -363,8 +367,9 @@ ok(/\.card>h2\+\.tsec\{border-top:0/.test(admin),
   'except the first one, which has nothing above it to separate from');
 ok(/\.tsec \.boardhead>h3\{[^}]*white-space:nowrap/.test(admin),
   'a section title does not break, so its note can take the slack');
-ok((traf.match(/<div class="tsec">/g) || []).length >= 12, 'every former card became a section');
-ok(/<h2>Data &amp; settings<\/h2>/.test(traf), 'the controls are gathered under one heading');
+ok((traf.match(/<div class="tsec">/g) || []).length === 12, 'twelve sections spread across them');
+ok(traf.indexOf('<h2>Data &amp; settings</h2>') > traf.indexOf('<h2>Bottom line</h2>'),
+  'the controls come last, after everything that is read');
 for (const id of ['btnNoCount', 'dbHost', 'btnTrafCsv', 'btnTrafReset', 'trafModes', 'trafEnv', 'trafMusic']) {
   ok(traf.includes('id="' + id + '"'), id + ' survived the merge');
 }
