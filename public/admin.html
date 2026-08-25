@@ -95,6 +95,24 @@
   .traflegend em{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:5px;vertical-align:-1px;font-style:normal}
   .traflegend .nw em{background:#3fae6a}
   .traflegend .rt em{background:#4080d8}
+  /* Traffic read as trends, not just totals. Same frame as .tstat so the two
+     rows of tiles read as one family; the wider minmax leaves room for a
+     sentence under the figure instead of a bare unit. */
+  .kpirow{display:grid;grid-template-columns:repeat(auto-fit,minmax(198px,1fr));gap:12px}
+  @media(max-width:560px){.kpirow{grid-template-columns:1fr}}
+  .kpi{background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:10px;padding:13px}
+  .kpi .lbl{font-size:.68rem;color:var(--text);text-transform:uppercase;letter-spacing:.06em}
+  .kpi .big{font-size:1.75rem;font-weight:800;color:var(--gold);margin-top:5px;line-height:1.15;font-variant-numeric:tabular-nums}
+  .kpi .sub{font-size:.74rem;color:var(--text);margin-top:5px;line-height:1.4}
+  /* A note that qualifies the chart belongs beside its title, not under it:
+     it takes the slack in the header row and stays out of the way. */
+  .headnote{flex:1 1 120px;min-width:0;text-align:right;font-size:.73rem;color:var(--text)}
+  .barchart svg{width:100%;height:auto;display:block}
+  .botline{background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:10px;padding:13px}
+  .botline p{margin:0 0 9px;font-size:.85rem;line-height:1.55;color:var(--text)}
+  .botline p:last-child{margin:0}
+  .botline b{color:var(--cream);font-weight:600}
+  .botline .nu{color:#4080d8;font-variant-numeric:tabular-nums;font-weight:600}
   /* Le titre garde sa ligne, les actions passent dessous quand elles ne
      tiennent plus : sans le retour, « Recent logs » se coupait en deux et le
      bouton Refresh sortait de l'ecran sur un telephone. */
@@ -240,7 +258,8 @@
     .wrap{max-width:1180px}
     #panel-traffic,#panel-broadcast,#panel-defaults,#panel-deploy,#panel-access,#panel-identity{columns:2;column-gap:16px}
     #panel-traffic>.card,#panel-broadcast>.card,#panel-defaults>.card,#panel-deploy>.card,#panel-access>.card,#panel-identity>.card{break-inside:avoid;-webkit-column-break-inside:avoid;margin-bottom:16px}
-    .card:has(#trafCards),.card:has(#trafChart),.card:has(#trafMusic),.card:has(#trafEnv),#panel-traffic>.cardrow{column-span:all}
+    .card:has(#trafCards),.card:has(#trafChart),.card:has(#trafMusic),.card:has(#trafEnv),
+    .card:has(#trafKpis),.card:has(#trafNew),.card:has(#trafBottom),#panel-traffic>.cardrow{column-span:all}
   }
   @media(max-width:600px){
     body{padding:12px}
@@ -322,18 +341,27 @@
 
     <div id="panel-traffic" style="display:none">
       <div class="card">
-        <div class="boardhead"><h2>Traffic</h2><button id="btnTrafRefresh" class="use">Refresh</button></div>
+        <div class="boardhead"><h2>Traffic</h2><span id="trafRange" class="headnote"></span><button id="btnTrafRefresh" class="use">Refresh</button></div>
         <p class="muted">Anonymous footfall — no IP is ever stored. “Visits” counts browser sessions; “Unique visitors” counts distinct devices.</p>
         <div class="trafgrid" id="trafCards"><div class="empty">Loading…</div></div>
       </div>
       <div class="card">
-        <h2>Exclure mes propres visites</h2>
-        <p class="muted">Sur CE navigateur, empêche le client d'être compté dans les visites (pratique quand tu testes le site). Réglage local à cet appareil ; il n'affecte que ce navigateur.</p>
-        <button id="btnNoCount" class="use">Ne pas compter mes visites</button>
+        <h2>Reading the last two weeks</h2>
+        <p class="muted">The same figures read as trends rather than totals: what an average day looks like, which way it is moving, and whether that movement is bigger than the day-to-day noise.</p>
+        <div class="kpirow" id="trafKpis"><div class="empty">Loading…</div></div>
       </div>
       <div class="card">
-        <h2>Last 14 days</h2>
+        <div class="boardhead"><h2>Last 14 days</h2><span id="trafTrendNote" class="headnote"></span></div>
         <div id="trafChart" class="trafchart"><div class="empty">Loading…</div></div>
+      </div>
+      <div class="card">
+        <div class="boardhead"><h2>New devices per day</h2><span id="trafNewNote" class="headnote"></span></div>
+        <p class="muted">A device is counted once, the first time it is ever seen. The horizontal marks are the average over each half of the window — the comparison acquisition is actually judged on.</p>
+        <div id="trafNew" class="barchart"><div class="empty">Loading…</div></div>
+      </div>
+      <div class="card">
+        <h2>Bottom line</h2>
+        <div id="trafBottom" class="botline"><div class="empty">Loading…</div></div>
       </div>
       <div class="cardrow">
         <div class="card">
@@ -376,6 +404,11 @@
         <div class="defrow fld"><span>Enabled</span><input id="dbEnabled" type="checkbox"></div>
         <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px"><button id="dbTestBtn" class="use">Test connection</button><button id="dbSaveBtn" class="use">Save &amp; connect</button></div>
         <div id="dbState" class="msg"></div>
+      </div>
+      <div class="card">
+        <h2>Exclude my own visits</h2>
+        <p class="muted">On THIS browser, keeps the client out of the visit counter — handy while testing the site. The setting is local to this device and affects no other browser.</p>
+        <button id="btnNoCount" class="use">Do not count my visits</button>
       </div>
       <div class="card">
         <h2>Export / backup</h2>
@@ -1586,7 +1619,7 @@
   // Owner self-exclusion: pth_no_count lives in the SAME origin as the client,
   // so pokerth.js reads it before firing the /__visit beacon. Per-device.
   function _noCount(){ try{ return localStorage.getItem('pth_no_count')==='1'; }catch(e){ return false; } }
-  function _paintNoCount(){ var b=$('btnNoCount'); if(!b) return; var on=_noCount(); b.textContent=on?'Mes visites : ignorées ✓ (cliquer pour réactiver)':'Ne pas compter mes visites'; b.classList.toggle('on',on); }
+  function _paintNoCount(){ var b=$('btnNoCount'); if(!b) return; var on=_noCount(); b.textContent=on?'My visits: ignored ✓ (click to count them again)':'Do not count my visits'; b.classList.toggle('on',on); }
   function toggleNoCount(){ try{ if(_noCount()) localStorage.removeItem('pth_no_count'); else localStorage.setItem('pth_no_count','1'); }catch(e){} _paintNoCount(); }
   // -- What visitors run: donut + ranking, one view at a time -----------------
   // The data is four (now five) plain counter maps. Everything below is
@@ -1729,6 +1762,60 @@
     var n=(u<=1?1:u<=2?2:u<=5?5:10)*p;
     return n;
   }
+  // -- Petites statistiques de lecture ---------------------------------------
+  // Une moyenne dit ou on en est, une pente dit ou on va, et r dit s'il faut y
+  // croire : sur quatorze points, une hausse peut n'etre que du bruit. Les
+  // trois vont donc toujours ensemble, jamais la pente seule.
+  function _mean(a){ if(!a.length) return 0; var t=0; a.forEach(function(v){ t+=(v||0); }); return t/a.length; }
+  function _linreg(vals){
+    var n=vals.length; if(n<2) return {a:0,b:vals[0]||0,r:0,sd:0};
+    var mx=(n-1)/2, my=_mean(vals), sxy=0, sxx=0, syy=0;
+    for(var i=0;i<n;i++){ var dx=i-mx, dy=(vals[i]||0)-my; sxy+=dx*dy; sxx+=dx*dx; syy+=dy*dy; }
+    var a=sxx?sxy/sxx:0, b=my-a*mx;
+    var r=(sxx&&syy)?sxy/Math.sqrt(sxx*syy):0;
+    var res=0; for(var j=0;j<n;j++){ var e=(vals[j]||0)-(a*j+b); res+=e*e; }
+    return {a:a,b:b,r:r,sd:Math.sqrt(res/n)};
+  }
+  function _round1(x){ return (Math.round(x*10)/10).toFixed(1); }
+  // -- Histogramme --------------------------------------------------------
+  // Meme grille et memes couleurs de texte que _lineChart, pour que les deux
+  // graphes du panneau se lisent comme une seule planche. Les repères sont des
+  // moyennes par tranche : c'est la comparaison qui porte l'information, pas la
+  // hauteur d'une barre isolee.
+  function _barChart(labels,vals,opt){
+    var n=labels.length; if(!n) return '';
+    opt=opt||{};
+    var col=opt.c||'#e0a03a', H=opt.H||170;
+    var W=700,padL=32,padR=10,padT=16,padB=20;
+    var max=1; vals.forEach(function(v){ if((v||0)>max) max=v||0; });
+    max=_lineNiceMax(max);
+    var iw=W-padL-padR, ih=H-padT-padB, slot=iw/n, bw=Math.max(3,slot*0.62);
+    function Y(v){ return padT+(1-(v||0)/max)*ih; }
+    function CX(i){ return padL+slot*i+slot/2; }
+    var g='', s2;
+    for(s2=0;s2<=4;s2++){
+      var vv=Math.round((max*s2)/4), yy=Y(vv);
+      g+='<line x1="'+padL+'" y1="'+yy.toFixed(1)+'" x2="'+(W-padR)+'" y2="'+yy.toFixed(1)+'" style="stroke:rgba(127,127,127,.18);stroke-width:1"/>'
+        +'<text x="'+(padL-5)+'" y="'+(yy+3).toFixed(1)+'" text-anchor="end" style="fill:var(--text);font-size:9px;font-variant-numeric:tabular-nums">'+vv+'</text>';
+    }
+    vals.forEach(function(v,i){
+      var y=Y(v), h=Math.max(1,padT+ih-y);
+      g+='<rect x="'+(CX(i)-bw/2).toFixed(1)+'" y="'+y.toFixed(1)+'" width="'+bw.toFixed(1)+'" height="'+h.toFixed(1)+'" rx="2" style="fill:'+col+'"><title>'+_annEsc(labels[i])+': '+(v||0)+'</title></rect>';
+      if(n<=20) g+='<text x="'+CX(i).toFixed(1)+'" y="'+(y-4).toFixed(1)+'" text-anchor="middle" style="fill:var(--text);font-size:8.5px;font-variant-numeric:tabular-nums">'+(v||0)+'</text>';
+    });
+    var step=Math.max(1,Math.ceil(n/7));
+    for(var i2=0;i2<n;i2++){
+      if(i2%step!==0&&i2!==n-1) continue;
+      g+='<text x="'+CX(i2).toFixed(1)+'" y="'+(H-6)+'" text-anchor="middle" style="fill:var(--text);font-size:9px">'+_annEsc(labels[i2])+'</text>';
+    }
+    (opt.segs||[]).forEach(function(sg){
+      var part=vals.slice(sg.from,sg.to+1); if(!part.length) return;
+      var av=_mean(part), y=Y(av);
+      g+='<line x1="'+(CX(sg.from)-slot/2+2).toFixed(1)+'" y1="'+y.toFixed(1)+'" x2="'+(CX(sg.to)+slot/2-2).toFixed(1)+'" y2="'+y.toFixed(1)+'" style="stroke:var(--cream);stroke-width:1.5;opacity:.75"/>'
+        +'<text x="'+CX(Math.round((sg.from+sg.to)/2)).toFixed(1)+'" y="'+(y-4).toFixed(1)+'" text-anchor="middle" style="fill:var(--cream);font-size:9px;font-weight:700">avg '+_round1(av)+'</text>';
+    });
+    return '<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="daily bars">'+g+'</svg>';
+  }
   function _lineChart(labels,lines,H){
     var n=labels.length; if(!n) return '';
     H=H||170;
@@ -1752,7 +1839,11 @@
     }
     lines.forEach(function(l){
       var pts=l.vals.map(function(v,i){ return X(i).toFixed(1)+','+Y(v).toFixed(1); }).join(' ');
-      g+='<polyline points="'+pts+'" style="fill:none;stroke:'+l.c+';stroke-width:2;stroke-linejoin:round;stroke-linecap:round"/>';
+      // Une droite de tendance n'est pas une mesure : trait fin, pointille, et
+      // pas de marqueur — rien a survoler, il n'y a pas de valeur du jour la.
+      var st=l.dash? ';stroke-width:1.5;stroke-dasharray:6 5;opacity:.85' : ';stroke-width:2;stroke-linejoin:round;stroke-linecap:round';
+      g+='<polyline points="'+pts+'" style="fill:none;stroke:'+l.c+st+'"/>';
+      if(l.dash) return;
       l.vals.forEach(function(v,i){
         g+='<circle cx="'+X(i).toFixed(1)+'" cy="'+Y(v).toFixed(1)+'" r="2.6" style="fill:'+l.c+'"><title>'+_annEsc(labels[i])+' \u00b7 '+_annEsc(l.k)+': '+(v||0)+'</title></circle>';
       });
@@ -1920,10 +2011,19 @@
           lines.push({k:'returning',c:'#c08ae0',vals:s.map(function(x){ return x.rt||0; })});
           leg+='<span><em style="background:#e0b050"></em>New</span><span><em style="background:#c08ae0"></em>Returning</span>';
         }
+        // La droite de tendance est ajoutee en dernier pour passer au-dessus
+        // des courbes, et ne rejoint la legende que si la fenetre est pleine :
+        // deux points ne font pas une tendance.
+        var _rg=_linreg(lines[0].vals);
+        if(s.length>=5){
+          lines.push({k:'trend',c:'#9aa7bd',dash:true,vals:s.map(function(_,i){ return Math.max(0,_rg.a*i+_rg.b); })});
+          leg+='<span><em style="background:#9aa7bd"></em>Trend</span>';
+        }
         c.className='linechart';
         c.innerHTML=_lineChart(labs,lines)
         +'<div class="traflegend" style="flex-wrap:wrap">'+leg+'</div>';
       }
+      _trafInsights(d,s);
       var md=$('trafModes');
       if(md){
         var tm=(d.today&&d.today.m)||{}, am=(d.allTime&&d.allTime.m)||{};
@@ -1953,6 +2053,71 @@
         dbx.innerHTML=html;
       }
     }).catch(function(){ var g=$('trafCards'); if(g) g.innerHTML='<div class="empty err">Could not load.</div>'; });
+  }
+  // -- Lecture analytique du trafic ------------------------------------------
+  // Les tuiles du haut donnent des totaux ; ce bloc donne le sens : moyenne par
+  // jour, direction, part de recurrents, et une conclusion en clair. Tout est
+  // derive de la meme reponse /admin/visits — aucune mesure supplementaire
+  // n'est collectee, seulement lue autrement.
+  function _trafInsights(d,s){
+    function fmt(n){ try{return Number(n||0).toLocaleString();}catch(e){return String(n||0);} }
+    function pct(a,b){ return b? Math.round((a/b)*100) : 0; }
+    var n=s.length;
+    var rg=$('trafRange');
+    if(rg) rg.textContent = n ? (s[0].date+' \u2192 '+s[n-1].date+' \u00b7 '+fmt(d.allTime&&d.allTime.v)+' visits all time') : '';
+    if(!n) return;
+    var vv=s.map(function(x){ return x.v||0; });
+    var nwv=s.map(function(x){ return x.nw||0; });
+    var rtv=s.map(function(x){ return x.rt||0; });
+    var reg=_linreg(vv), week=reg.a*7;
+    var half=Math.floor(n/2);
+    var firstH=_mean(vv.slice(0,half)), lastH=_mean(vv.slice(half));
+    var month=d.month||{}, all=d.allTime||{};
+    var idSess=(month.nw||0)+(month.rt||0);
+    // r au carre sous 0.1 : la pente n'explique presque rien, on le dit plutot
+    // que d'afficher une fleche qui ferait croire a un mouvement.
+    var solid=Math.abs(reg.r)>=0.32;
+    var dir = !solid ? 'flat' : (week>0 ? 'up' : 'down');
+    var k=$('trafKpis');
+    if(k){
+      function tile(lbl,big,sub){ return '<div class="kpi"><div class="lbl">'+lbl+'</div><div class="big">'+big+'</div><div class="sub">'+sub+'</div></div>'; }
+      var trendTxt = dir==='flat'
+        ? 'no clear direction (r='+(Math.round(Math.abs(reg.r)*100)/100)+')'
+        : (week>0?'+':'\u2212')+_round1(Math.abs(week))+'/week (r='+(Math.round(Math.abs(reg.r)*100)/100)+')';
+      k.innerHTML =
+        tile('Visits / day', _round1(_mean(vv)), 'mean over '+n+' days \u00b7 '+trendTxt)
+       +tile('Unique devices / 30 d', fmt(month.u), (all.u? pct(month.u,all.u):0)+'% of the '+fmt(all.u)+' ever seen')
+       +tile('New share / 30 d', (idSess? pct(month.nw,idSess):0)+'%', fmt(month.nw)+' new of '+fmt(idSess)+' identified sessions')
+       +tile('Returning / day', _round1(_mean(rtv)), 'first half '+_round1(_mean(rtv.slice(0,half)))+' \u2192 second half '+_round1(_mean(rtv.slice(half))));
+    }
+    var tn=$('trafTrendNote');
+    if(tn) tn.textContent = (dir==='flat'?'flat':(dir==='up'?'rising':'falling'))
+      +' \u2014 r='+(Math.round(Math.abs(reg.r)*100)/100)+' against day-to-day noise (sd '+_round1(reg.sd)+')';
+    var nb=$('trafNew');
+    if(nb){
+      nb.innerHTML=_barChart(s.map(function(x){ return (x.date||'').slice(5); }), nwv,
+        { c:'#e0a03a', segs:[{from:0,to:half-1},{from:half,to:n-1}] });
+    }
+    var nn=$('trafNewNote');
+    if(nn){
+      var f=_mean(nwv.slice(0,half)), l=_mean(nwv.slice(half));
+      nn.textContent = (!f && !l) ? 'no new device in the window'
+        : (!f ? 'first half was empty' : (l>=f? 'up ':'down ')+_round1(l/f)+'x the first half');
+    }
+    var bl=$('trafBottom');
+    if(bl){
+      var m=(all.m)||{}, tot=(m.pokerthnet||0)+(m.lan||0)+(m.offline||0);
+      var lines=[];
+      lines.push('Footfall is <b>'+(dir==='flat'?'holding steady':(dir==='up'?'rising':'slipping'))+'</b> \u2014 '
+        +'<span class="nu">'+_round1(firstH)+'</span> \u2192 <span class="nu">'+_round1(lastH)+'</span> visits/day between the two halves of the window'
+        +(solid?'':', though the day-to-day spread (sd '+_round1(reg.sd)+') is wide enough that the slope may be noise')+'.');
+      lines.push('<span class="nu">'+fmt(month.u)+'</span> distinct devices over 30 days, <span class="nu">'+(all.u?pct(month.u,all.u):0)+'%</span> of the '
+        +'<span class="nu">'+fmt(all.u)+'</span> ever seen. Returning devices carry <span class="nu">'+(idSess?pct(month.rt,idSess):0)+'%</span> of identified sessions \u2014 '
+        +'the lever is <b>'+((idSess && month.rt>=month.nw)?'acquisition':'retention')+'</b>.');
+      if(tot) lines.push('Sessions open on pokerth.net <span class="nu">'+pct(m.pokerthnet,tot)+'%</span> of the time, '
+        +'against <span class="nu">'+pct(m.offline,tot)+'%</span> in offline training and <span class="nu">'+pct(m.lan,tot)+'%</span> on LAN or a dedicated server.');
+      bl.innerHTML=lines.map(function(x){ return '<p>'+x+'</p>'; }).join('');
+    }
   }
   function exportTraffic(fmt){
     var m=$('trafExpMsg');

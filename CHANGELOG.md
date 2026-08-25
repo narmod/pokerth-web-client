@@ -14,6 +14,26 @@ Opened with `v2.1.7-web.0` (2026-08-13), following the upstream **2.1.7**
 release.
 
 ### Changed
+- **The Traffic tab reads the numbers instead of only counting them** (`web.74`) —
+  the panel answered "how many" and stopped there: seven totals, one chart, no
+  sense of direction. It now opens with the date range and the all-time total
+  beside the title, and carries a row of analytic tiles under the counters —
+  visits per day with the weekly slope and its correlation, unique devices over
+  thirty days as a share of the all-time base, the new/returning split, and the
+  returning average compared between the two halves of the window. The fourteen-
+  day chart gained a dashed trend line and a note saying whether the movement
+  survives the day-to-day noise (`r` against the spread around the line, not
+  around the mean); a correlation under 0.32 is reported as flat rather than
+  dressed up as a direction. New devices per day get a chart of their own, with
+  the average over each half drawn across it, and a closing "Bottom line" states
+  the reading in plain words. Everything is derived from the same
+  `/admin/visits` response — no new measurement is collected, and the proxy is
+  untouched. Two limits follow from that and are worth naming: the window is
+  fixed at fourteen days because that is what the endpoint returns, and there is
+  no hour-of-day or cohort-retention view because neither is recorded. The
+  French opt-out card ("Exclure mes propres visites") was translated and moved
+  down with the other settings, where a control belongs, instead of sitting
+  between two charts.
 - **Importing an avatar photo no longer builds a base64 copy first** (`web.73`) —
   `_processAvatarFile` read the file through `FileReader.readAsDataURL`, which
   produces a base64 string about 1.33× the file size and keeps it alive for the

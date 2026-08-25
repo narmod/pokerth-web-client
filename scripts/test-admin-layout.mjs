@@ -284,5 +284,41 @@ for (const id of ['pxGrace', 'pxGap', 'pxMax', 'tdBlind', 'tdStack']) {
   ok(tag && !/style="width/.test(tag), id + ' can go full width on a phone');
 }
 
+// -- Traffic read as trends ------------------------------------------------
+// The panel used to answer "how many" and stop there. The analytic row, the
+// trend line and the closing paragraph all derive from the SAME /admin/visits
+// response - if one of them ever needs a field the proxy does not send, that
+// is a proxy change, not a front-end one.
+const traf = panel('panel-traffic');
+ok(/function _linreg\(vals\)/.test(admin), 'the slope and its correlation are computed, not eyeballed');
+ok(/var r=\(sxx&&syy\)\?sxy\/Math\.sqrt\(sxx\*syy\)/.test(admin), 'r comes out of the same pass as the slope');
+ok(/Math\.sqrt\(res\/n\)/.test(admin), 'and the noise is the spread around the line, not around the mean');
+ok(/function _barChart\(labels,vals,opt\)/.test(admin), 'daily bars have a helper of their own');
+ok(/\(opt\.segs\|\|\[\]\)\.forEach/.test(admin), 'with per-half averages drawn over them');
+ok(/function _trafInsights\(d,s\)/.test(admin), 'the reading of the numbers lives in one place');
+ok(/_trafInsights\(d,s\);/.test(body(admin, 'loadTraffic')), 'and loadTraffic calls it');
+ok(/l\.dash\? ';stroke-width:1\.5;stroke-dasharray/.test(admin), 'the trend line is dashed');
+ok(/if\(l\.dash\) return;/.test(admin), 'and carries no dot, since no day was measured there');
+ok(/if\(s\.length>=5\)/.test(admin), 'two points do not make a trend, so a short window shows none');
+ok(/Math\.abs\(reg\.r\)>=0\.32/.test(admin), 'a weak correlation is reported as flat rather than as a direction');
+for (const id of ['trafRange', 'trafKpis', 'trafTrendNote', 'trafNew', 'trafNewNote', 'trafBottom']) {
+  ok(traf.includes('id="' + id + '"'), id + ' has a home in the panel');
+}
+ok(/#trafKpis\)/.test(wide) && /#trafNew\)/.test(wide) && /#trafBottom\)/.test(wide),
+  'the analytic cards take the full width back instead of being halved');
+ok(/\.headnote\{flex:1 1 120px/.test(admin), 'a chart note sits beside its title and takes the slack');
+ok(/\.kpi \.big\{/.test(admin) && /\.kpi \.sub\{/.test(admin), 'the analytic tile has a figure and a sentence');
+ok(/rgba\(255,255,255,\.03\)/.test((admin.match(/\.kpi\{[^}]*\}/) || [''])[0]),
+  'and the same frame as the older tiles, so the two rows read as one family');
+
+// -- One language on screen ------------------------------------------------
+// The dashboard is written in English; a French card in the middle of it was a
+// leftover, not a choice.
+ok(!/Exclure mes propres visites|Ne pas compter mes visites/.test(admin),
+  'no French left in the traffic panel');
+ok(/<h2>Exclude my own visits<\/h2>/.test(traf), 'the opt-out card is in English');
+ok(traf.indexOf('id="trafBottom"') < traf.indexOf('id="btnNoCount"'),
+  'and sits with the settings at the foot, not between two charts');
+
 console.log(fail ? `FAIL ${fail}/${n}` : `OK ${n}/${n}`);
 process.exit(fail ? 1 : 0);
