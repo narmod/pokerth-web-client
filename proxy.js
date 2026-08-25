@@ -2117,6 +2117,7 @@ try {
     visitsStore.envSince = (typeof _vs.envSince === 'number') ? _vs.envSince : 0;
     visitsStore.music  = (_vs.music && typeof _vs.music === 'object') ? _vs.music : {};
     visitsStore.musicSince = (typeof _vs.musicSince === 'number') ? _vs.musicSince : 0;
+    visitsStore.hourSince = (typeof _vs.hourSince === 'number') ? _vs.hourSince : 0;
   }
 } catch (e) { /* first run — start empty */ }
 let _visitsSaveTimer = null;
@@ -2274,6 +2275,16 @@ function recordVisit(rawId) {
   if (!bucket) { bucket = visitsStore.days[day] = { v: 0, ids: {} }; pruneVisitDays(); }
   bucket.v++;
   visitsStore.totalV = (visitsStore.totalV || 0) + 1;
+  // Heure locale du serveur, une case par heure du jour. Deux compteurs et non
+  // un seul : `h` dit quand on vient, `hn` quand on vient POUR LA PREMIERE
+  // FOIS. Le creux de la nuit est banal ; un creux ou les nouveaux venus sont
+  // malgre tout sur-representes ne l'est pas, et seul le rapport des deux le
+  // dit. Aucun horodatage n'est conserve, seulement le total de la case : on ne
+  // peut pas remonter d'ici a une visite en particulier.
+  const hr = new Date().getHours();
+  if (!bucket.h) bucket.h = {};
+  bucket.h[hr] = (bucket.h[hr] || 0) + 1;
+  if (!visitsStore.hourSince) visitsStore.hourSince = Date.now();
   if (rawId) {
     const h = crypto.createHash('sha256').update(String(rawId)).digest('hex').slice(0, 16);
     const seenBefore = !!visitsStore.allU[h]; // returning device, or brand new?
@@ -2281,7 +2292,11 @@ function recordVisit(rawId) {
     bucket.ids[h] = 1;
     visitsStore.allU[h] = 1;
     if (seenBefore) { bucket.rt = (bucket.rt || 0) + 1; visitsStore.totalRet = (visitsStore.totalRet || 0) + 1; }
-    else            { bucket.nw = (bucket.nw || 0) + 1; }
+    else {
+      bucket.nw = (bucket.nw || 0) + 1;
+      if (!bucket.hn) bucket.hn = {};
+      bucket.hn[hr] = (bucket.hn[hr] || 0) + 1;
+    }
   }
   saveVisitsSoon();
 }
@@ -2303,6 +2318,43 @@ function visitWindow(daysBack) {
   }
   return { v: v, u: Object.keys(u).length, m: m, nw: nw, rt: rt };
 }
+// Les 48 dernieres heures, dans l'ordre. La derniere case est l'heure en cours
+// et n'est donc pas finie : le tableau de bord la dessine quand meme, mais elle
+// ne doit jamais servir de reference pour une comparaison.
+function visitHourSeries(nHours) {
+  const out = [];
+  const now = new Date();
+  now.setMinutes(0, 0, 0);
+  for (let i = nHours - 1; i >= 0; i--) {
+    const d = new Date(now.getTime() - i * 3600000);
+    const b = visitsStore.days[visitDayKey(d)];
+    const hh = d.getHours();
+    out.push({ t: visitDayKey(d) + 'T' + String(hh).padStart(2, '0'), v: (b && b.h) ? (b.h[hh] || 0) : 0, nw: (b && b.hn) ? (b.hn[hh] || 0) : 0 });
+  }
+  return out;
+}
+// Profil moyen d'une journee. `days` compte les jours qui ont VRAIMENT des
+// donnees horaires, le jour en cours pour la fraction ecoulee : diviser par un
+// nombre de jours entier alors que la journee n'est qu'a moitie faite ecraserait
+// tout le profil vers le bas. Un jour anterieur au deploiement n'a pas de seau
+// et ne compte donc pas du tout, plutot que de compter comme un jour a zero.
+function visitHourProfile(daysBack) {
+  const v = new Array(24).fill(0), nw = new Array(24).fill(0);
+  const now = new Date();
+  let days = 0;
+  for (let i = 0; i < daysBack; i++) {
+    const d = new Date(now);
+    d.setDate(now.getDate() - i);
+    const b = visitsStore.days[visitDayKey(d)];
+    if (!b || !b.h) continue;
+    days += (i === 0) ? (now.getHours() + 1) / 24 : 1;
+    for (let k = 0; k < 24; k++) {
+      v[k] += b.h[k] || 0;
+      if (b.hn) nw[k] += b.hn[k] || 0;
+    }
+  }
+  return { v: v, nw: nw, days: Math.round(days * 100) / 100 };
+}
 function visitsSummary() {
   const now = new Date();
   const series = [];
@@ -2323,6 +2375,9 @@ function visitsSummary() {
     year: visitWindow(365),
     allTime: { v: visitsStore.totalV || 0, u: Object.keys(visitsStore.allU).length, nw: Object.keys(visitsStore.allU).length, rt: visitsStore.totalRet || 0, m: (function () { const am = visitsStore.allM || {}; return { pokerthnet: am.pokerthnet || 0, lan: am.lan || 0, offline: am.offline || 0 }; })() },
     series: series,
+    hours48: visitHourSeries(48),
+    hourProfile: visitHourProfile(30),
+    hourSince: visitsStore.hourSince || 0,
     env: visitsStore.env || {},
     envSince: visitsStore.envSince || 0,
     music: visitsStore.music || {},

@@ -13,6 +13,33 @@ this file captures what matters to players and operators.
 Opened with `v2.1.7-web.0` (2026-08-13), following the upstream **2.1.7**
 release.
 
+### Added
+- **The Traffic tab knows what hour it is** (`web.75`) — the counters could say
+  how many visits a day brought and never when they landed, so the two questions
+  a lobby actually turns on — is anyone here right now, and do first-timers
+  arrive when nobody is — had no answer. `recordVisit` now drops each visit into
+  an hour bucket (`h`) and, when the device has never been seen before, into a
+  second one (`hn`); `/admin/visits` gained `hours48`, `hourProfile` (a 30-day
+  average day) and `hourSince`. Two buckets rather than one is the whole point:
+  a quiet night is ordinary, a quiet night that still draws newcomers is not,
+  and only the ratio of the two says which is which. The dashboard shows the
+  last 48 hours under the counters, with the hour in progress drawn apart so it
+  is not read as a drop, and an average day as a pair of charts — visits per
+  hour, and the first-time share against traffic where 1.0 means exactly in
+  proportion. The quietest four-hour stretch is found circularly, since the
+  night straddles midnight, shaded on both charts, and stated in the closing
+  paragraph when newcomers are over-represented there. No timestamp is kept,
+  only the bucket total: nothing here can be walked back to a single visit. A
+  day with no bucket — anything before this build — is skipped rather than
+  counted as a day of zero, and today counts as the fraction of it that has
+  elapsed, so a half-finished day cannot drag the average down. Requires a proxy
+  restart; until then the panel says so instead of drawing an empty day.
+- `scripts/test-visit-hours.mjs` — the two readers are lifted out of the proxy
+  by name and run against a synthetic store: series length, the hour in
+  progress, days missing their bucket, the elapsed-fraction rule, the
+  over-representation the second bucket exists to catch, and an empty store
+  answering with zeros rather than `NaN`.
+
 ### Changed
 - **The Traffic tab reads the numbers instead of only counting them** (`web.74`) —
   the panel answered "how many" and stopped there: seven totals, one chart, no

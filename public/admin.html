@@ -108,6 +108,11 @@
      it takes the slack in the header row and stays out of the way. */
   .headnote{flex:1 1 120px;min-width:0;text-align:right;font-size:.73rem;color:var(--text)}
   .barchart svg{width:100%;height:auto;display:block}
+  /* Deux lectures d'une meme journee, cote a cote : « quand vient-on » et
+     « quand vient-on pour la premiere fois ». Separees, la comparaison se perd. */
+  .hourduo{display:grid;grid-template-columns:1fr;gap:14px}
+  @media(min-width:900px){.hourduo{grid-template-columns:1fr 1fr}}
+  .hourduo>div>h3{font-size:.78rem;color:var(--text);font-weight:600;margin:0 0 4px}
   .botline{background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:10px;padding:13px}
   .botline p{margin:0 0 9px;font-size:.85rem;line-height:1.55;color:var(--text)}
   .botline p:last-child{margin:0}
@@ -259,7 +264,8 @@
     #panel-traffic,#panel-broadcast,#panel-defaults,#panel-deploy,#panel-access,#panel-identity{columns:2;column-gap:16px}
     #panel-traffic>.card,#panel-broadcast>.card,#panel-defaults>.card,#panel-deploy>.card,#panel-access>.card,#panel-identity>.card{break-inside:avoid;-webkit-column-break-inside:avoid;margin-bottom:16px}
     .card:has(#trafCards),.card:has(#trafChart),.card:has(#trafMusic),.card:has(#trafEnv),
-    .card:has(#trafKpis),.card:has(#trafNew),.card:has(#trafBottom),#panel-traffic>.cardrow{column-span:all}
+    .card:has(#trafKpis),.card:has(#trafNew),.card:has(#trafBottom),
+    .card:has(#traf48),.card:has(#trafHours),#panel-traffic>.cardrow{column-span:all}
   }
   @media(max-width:600px){
     body{padding:12px}
@@ -346,6 +352,10 @@
         <div class="trafgrid" id="trafCards"><div class="empty">Loading…</div></div>
       </div>
       <div class="card">
+        <div class="boardhead"><h2>Recent activity (last 48 h)</h2><span id="traf48Note" class="headnote"></span></div>
+        <div id="traf48" class="barchart"><div class="empty">Loading…</div></div>
+      </div>
+      <div class="card">
         <h2>Reading the last two weeks</h2>
         <p class="muted">The same figures read as trends rather than totals: what an average day looks like, which way it is moving, and whether that movement is bigger than the day-to-day noise.</p>
         <div class="kpirow" id="trafKpis"><div class="empty">Loading…</div></div>
@@ -358,6 +368,11 @@
         <div class="boardhead"><h2>New devices per day</h2><span id="trafNewNote" class="headnote"></span></div>
         <p class="muted">A device is counted once, the first time it is ever seen. The horizontal marks are the average over each half of the window — the comparison acquisition is actually judged on.</p>
         <div id="trafNew" class="barchart"><div class="empty">Loading…</div></div>
+      </div>
+      <div class="card">
+        <div class="boardhead"><h2>Time of day</h2><span id="trafHoursNote" class="headnote"></span></div>
+        <p class="muted">An average day, hour by hour, over the last 30 days — server local time. On the left, when people come; on the right, whether the ones arriving at that hour are new out of proportion with the traffic (1.0 = exactly in proportion). A quiet hour is ordinary; a quiet hour that still draws first-time visitors is where they find an empty lobby.</p>
+        <div id="trafHours" class="hourduo"><div class="empty">Loading…</div></div>
       </div>
       <div class="card">
         <h2>Bottom line</h2>
@@ -1793,6 +1808,13 @@
     function Y(v){ return padT+(1-(v||0)/max)*ih; }
     function CX(i){ return padL+slot*i+slot/2; }
     var g='', s2;
+    // La bande est peinte avant la grille : elle situe une plage horaire, elle
+    // ne doit pas passer par-dessus les valeurs qu'on vient y lire.
+    if(opt.hi && opt.hi.to>=opt.hi.from){
+      var hx=padL+slot*opt.hi.from, hw=slot*(opt.hi.to-opt.hi.from+1);
+      g+='<rect x="'+hx.toFixed(1)+'" y="'+padT+'" width="'+hw.toFixed(1)+'" height="'+ih+'" style="fill:'+(opt.hiC||'#e0a03a')+';opacity:.10"/>';
+      if(opt.hiLabel) g+='<text x="'+(hx+hw/2).toFixed(1)+'" y="'+(padT+9)+'" text-anchor="middle" style="fill:var(--text);font-size:9px;font-weight:700">'+_annEsc(opt.hiLabel)+'</text>';
+    }
     for(s2=0;s2<=4;s2++){
       var vv=Math.round((max*s2)/4), yy=Y(vv);
       g+='<line x1="'+padL+'" y1="'+yy.toFixed(1)+'" x2="'+(W-padR)+'" y2="'+yy.toFixed(1)+'" style="stroke:rgba(127,127,127,.18);stroke-width:1"/>'
@@ -1800,13 +1822,18 @@
     }
     vals.forEach(function(v,i){
       var y=Y(v), h=Math.max(1,padT+ih-y);
-      g+='<rect x="'+(CX(i)-bw/2).toFixed(1)+'" y="'+y.toFixed(1)+'" width="'+bw.toFixed(1)+'" height="'+h.toFixed(1)+'" rx="2" style="fill:'+col+'"><title>'+_annEsc(labels[i])+': '+(v||0)+'</title></rect>';
+      var bc=opt.colFn? opt.colFn(v,i) : col;
+      g+='<rect x="'+(CX(i)-bw/2).toFixed(1)+'" y="'+y.toFixed(1)+'" width="'+bw.toFixed(1)+'" height="'+h.toFixed(1)+'" rx="2" style="fill:'+bc+'"><title>'+_annEsc(labels[i])+': '+(v||0)+'</title></rect>';
       if(n<=20) g+='<text x="'+CX(i).toFixed(1)+'" y="'+(y-4).toFixed(1)+'" text-anchor="middle" style="fill:var(--text);font-size:8.5px;font-variant-numeric:tabular-nums">'+(v||0)+'</text>';
     });
     var step=Math.max(1,Math.ceil(n/7));
     for(var i2=0;i2<n;i2++){
       if(i2%step!==0&&i2!==n-1) continue;
       g+='<text x="'+CX(i2).toFixed(1)+'" y="'+(H-6)+'" text-anchor="middle" style="fill:var(--text);font-size:9px">'+_annEsc(labels[i2])+'</text>';
+    }
+    if(opt.ref!==undefined && opt.ref<=max){
+      var ry=Y(opt.ref);
+      g+='<line x1="'+padL+'" y1="'+ry.toFixed(1)+'" x2="'+(W-padR)+'" y2="'+ry.toFixed(1)+'" style="stroke:var(--cream);stroke-width:1.2;stroke-dasharray:5 4;opacity:.65"/>';
     }
     (opt.segs||[]).forEach(function(sg){
       var part=vals.slice(sg.from,sg.to+1); if(!part.length) return;
@@ -2059,12 +2086,88 @@
   // jour, direction, part de recurrents, et une conclusion en clair. Tout est
   // derive de la meme reponse /admin/visits — aucune mesure supplementaire
   // n'est collectee, seulement lue autrement.
+  // -- L'heure du jour -------------------------------------------------------
+  // Deux seaux horaires cotes serveur, rien de plus : combien de visites par
+  // heure, et combien d'entre elles sont une premiere venue. Un proxy anterieur
+  // ne les envoie pas du tout — le champ manquant est dit tel quel, plutot que
+  // dessine comme une journee vide, ce qui serait un mensonge par graphique.
+  // Renvoie la phrase a joindre a la conclusion, ou '' s'il n'y a rien a dire.
+  function _trafHours(d){
+    var box=$('trafHours'), b48=$('traf48'), n48=$('traf48Note'), nh=$('trafHoursNote');
+    var known=(d.hours48!==undefined);
+    if(!known){
+      var msg='<div class="empty">Hour-by-hour data needs a proxy restart \u2014 this build collects it, the running one does not.</div>';
+      if(box) box.innerHTML=msg; if(b48) b48.innerHTML=msg;
+      if(n48) n48.textContent=''; if(nh) nh.textContent='';
+      return '';
+    }
+    var h48=d.hours48||[], prof=d.hourProfile||{v:[],nw:[],days:0}, days=prof.days||0;
+    var tot48=0; h48.forEach(function(x){ tot48+=x.v||0; });
+    if(b48){
+      if(!tot48){
+        b48.innerHTML='<div class="empty">Nothing recorded yet \u2014 the first hours appear as soon as visits come in.</div>';
+      } else {
+        // La derniere case est l'heure en cours, donc incomplete : elle est
+        // dessinee plus pale pour qu'on ne la compare pas aux autres.
+        b48.innerHTML=_barChart(h48.map(function(x){ return x.t.slice(8,10)+'.'+x.t.slice(5,7)+' '+x.t.slice(11)+'h'; }),
+          h48.map(function(x){ return x.v||0; }),
+          { c:'#4080d8', H:150, colFn:function(v,i){ return i===h48.length-1 ? '#2c5896' : '#4080d8'; } });
+      }
+    }
+    if(n48) n48.textContent = tot48 ? (tot48.toLocaleString()+' visits \u00b7 last bar is the hour in progress') : '';
+    var V=0,N=0;
+    for(var i=0;i<24;i++){ V+=prof.v[i]||0; N+=prof.nw[i]||0; }
+    if(!box) return '';
+    if(!V || days<0.5){
+      box.innerHTML='<div class="empty">An average day needs at least a full day of hourly data \u2014 come back tomorrow.</div>';
+      if(nh) nh.textContent='';
+      return '';
+    }
+    // Fenetre de 4 h consecutives la plus creuse, cherchee en circulaire : le
+    // creux de la nuit chevauche minuit, une recherche lineaire le couperait en
+    // deux et ne trouverait jamais la vraie plage.
+    var lowAt=0, lowSum=Infinity;
+    for(var a=0;a<24;a++){
+      var sum=0; for(var k=0;k<4;k++) sum+=prof.v[(a+k)%24]||0;
+      if(sum<lowSum){ lowSum=sum; lowAt=a; }
+    }
+    var lowLbl=String(lowAt).padStart(2,'0')+':00\u2013'+String((lowAt+4)%24).padStart(2,'0')+':00';
+    var labs=[]; for(var q=0;q<24;q++) labs.push(String(q).padStart(2,'0'));
+    var perH=prof.v.map(function(v){ return Math.round((v/days)*10)/10; });
+    // Index : part des premieres venues a cette heure divisee par la part du
+    // trafic a cette heure. 1.0 = exactement proportionnel. Une heure sans
+    // trafic n'a pas d'index du tout ; faute de mieux elle est posee a zero,
+    // mais dans une teinte neutre (colFn) pour ne pas se lire « aucun nouveau ».
+    var idx=prof.v.map(function(v,i){ return (v && N && V) ? Math.round(((prof.nw[i]/N)/(v/V))*100)/100 : 0; });
+    var wrapHi=(lowAt+4<=24)? {from:lowAt,to:lowAt+3} : null;
+    box.innerHTML=
+      '<div><h3>Visits per hour (daily mean)</h3>'
+      +_barChart(labs,perH,{ c:'#4080d8', H:150, hi:wrapHi, hiLabel:wrapHi?lowLbl:'' })+'</div>'
+      +'<div><h3>New-device share vs traffic (1.0 = proportional)</h3>'
+      +_barChart(labs,idx,{ c:'#9aa7bd', H:150, ref:1, hi:wrapHi, hiLabel:wrapHi?lowLbl:'',
+          colFn:function(v){ return v>1.2?'#e0a03a':(v?'#9aa7bd':'#6f7f99'); } })+'</div>';
+    var lowShare=Math.round((lowSum/V)*100);
+    var lowIdxV=0, lowIdxN=0;
+    for(var z=0;z<4;z++){ lowIdxV+=prof.v[(lowAt+z)%24]||0; lowIdxN+=prof.nw[(lowAt+z)%24]||0; }
+    var lowIdx=(lowIdxV && N && V)? ((lowIdxN/N)/(lowIdxV/V)) : 0;
+    if(nh) nh.textContent='quietest stretch '+lowLbl+' \u2014 '+lowShare+'% of all visits'
+      +(lowIdx?(', first-time share '+(Math.round(lowIdx*100)/100)+'x proportional'):'')
+      +' \u00b7 '+_round1(days)+' days of data';
+    if(lowIdx>1.15) return 'The quietest stretch is <b>'+lowLbl+'</b> \u2014 only <span class="nu">'+lowShare
+      +'%</span> of visits land there, yet first-time devices arrive <span class="nu">'+(Math.round(lowIdx*100)/100)
+      +'x</span> more often than the traffic would suggest: newcomers meeting an empty lobby.';
+    return 'Traffic bottoms out over <b>'+lowLbl+'</b> (<span class="nu">'+lowShare
+      +'%</span> of all visits), and first-time devices are not over-represented there.';
+  }
   function _trafInsights(d,s){
     function fmt(n){ try{return Number(n||0).toLocaleString();}catch(e){return String(n||0);} }
     function pct(a,b){ return b? Math.round((a/b)*100) : 0; }
     var n=s.length;
     var rg=$('trafRange');
     if(rg) rg.textContent = n ? (s[0].date+' \u2192 '+s[n-1].date+' \u00b7 '+fmt(d.allTime&&d.allTime.v)+' visits all time') : '';
+    // Les vues horaires ne dependent pas de la serie quotidienne : elles sont
+    // rendues meme si celle-ci est vide, sinon elles resteraient sur « Loading ».
+    var hourLine=_trafHours(d);
     if(!n) return;
     var vv=s.map(function(x){ return x.v||0; });
     var nwv=s.map(function(x){ return x.nw||0; });
@@ -2116,6 +2219,7 @@
         +'the lever is <b>'+((idSess && month.rt>=month.nw)?'acquisition':'retention')+'</b>.');
       if(tot) lines.push('Sessions open on pokerth.net <span class="nu">'+pct(m.pokerthnet,tot)+'%</span> of the time, '
         +'against <span class="nu">'+pct(m.offline,tot)+'%</span> in offline training and <span class="nu">'+pct(m.lan,tot)+'%</span> on LAN or a dedicated server.');
+      if(hourLine) lines.push(hourLine);
       bl.innerHTML=lines.map(function(x){ return '<p>'+x+'</p>'; }).join('');
     }
   }

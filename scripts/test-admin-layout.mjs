@@ -311,6 +311,30 @@ ok(/\.kpi \.big\{/.test(admin) && /\.kpi \.sub\{/.test(admin), 'the analytic til
 ok(/rgba\(255,255,255,\.03\)/.test((admin.match(/\.kpi\{[^}]*\}/) || [''])[0]),
   'and the same frame as the older tiles, so the two rows read as one family');
 
+// -- The hour of the day ---------------------------------------------------
+// Two hourly buckets, and three states to survive: a proxy that does not send
+// them at all, one that sends them empty, and one with real data. The first is
+// the one that matters - drawing an empty day there would be a lie told with a
+// chart.
+ok(/function _trafHours\(d\)/.test(admin), 'the hourly views live in one function');
+ok(/var hourLine=_trafHours\(d\);/.test(body(admin, '_trafInsights')), 'called from the reading pass');
+ok(/var known=\(d\.hours48!==undefined\)/.test(admin), 'a missing field is detected, not treated as zero');
+ok(/needs a proxy restart/.test(admin), 'and says plainly that the running proxy predates it');
+ok(/if\(!V \|\| days<0\.5\)/.test(admin), 'an average day is not drawn from half a day of data');
+ok(/for\(var a=0;a<24;a\+\+\)/.test(admin) && /\(a\+k\)%24/.test(admin),
+  'the quiet stretch is searched circularly, since the night straddles midnight');
+ok(/opt\.hi && opt\.hi\.to>=opt\.hi\.from/.test(admin), 'a chart can shade a span of hours');
+ok(/opt\.ref!==undefined/.test(admin), 'and carry a reference line, which is what 1.0 means here');
+ok(/colFn:function\(v,i\)\{ return i===h48\.length-1/.test(admin),
+  'the hour in progress is drawn apart, so it is not read as a drop');
+ok(/last bar is the hour in progress/.test(admin), 'and the note says so');
+for (const id of ['traf48', 'traf48Note', 'trafHours', 'trafHoursNote']) {
+  ok(traf.includes('id="' + id + '"'), id + ' has a home in the panel');
+}
+ok(/#traf48\)/.test(wide) && /#trafHours\)/.test(wide), 'both hourly cards keep the full width');
+ok(traf.indexOf('id="traf48"') < traf.indexOf('id="trafKpis"'),
+  'the last 48 hours sit right under the counters, where the eye lands first');
+
 // -- One language on screen ------------------------------------------------
 // The dashboard is written in English; a French card in the middle of it was a
 // leftover, not a choice.
