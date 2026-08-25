@@ -22,6 +22,22 @@ release.
   `SEO_RULES_I18N` rather than introducing a second script for one page.
 
 ### Fixed
+- **Translation was dead in the installed iOS app** (`web.90`) — chat messages
+  and forum posts could not be translated from a home-screen web app on iPhone,
+  while the very same request succeeded in a Safari tab and on desktop. WebKit
+  refuses the cross-origin `fetch` to the gtx endpoint in standalone mode; the
+  endpoint itself, the outgoing IP and the quota were never the problem. Both
+  call sites now share `window._gtxTranslate`, which still calls gtx directly
+  first — so the player's own IP keeps carrying the quota, as in the QML client
+  — and falls back to a new `POST /api/translate` relay on the proxy only when
+  the browser refuses. The relay caps the text at 5 000 characters and keeps a
+  bounded one-hour cache. Nothing changes on a platform where the direct call
+  works.
+- **A forum post ignored the regional translation target** (`web.90`) — the
+  post view derived its target language on its own and stripped the region, so
+  a player reading in Traditional Chinese or European Portuguese got the
+  simplified or Brazilian variant. It now reuses the chat's own resolver, which
+  maps `zh-TW`, `zh-CN` and `pt-PT` explicitly.
 - **The right-to-left pages were being laid out left-to-right** (`web.88`) —
   `/rules` has been served in Arabic, Hebrew, Persian and Urdu for some time
   with nothing but `<html lang>`, which is not enough: without `dir="rtl"` the

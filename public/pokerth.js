@@ -1867,6 +1867,45 @@ function _chatTrTarget() {
   if (low === 'pt-pt') return 'pt-PT'; // gtx : pt = pt-BR
   return low.split('-')[0];
 }
+// Une seule porte pour la traduction (chat ET post du forum) : appel direct
+// gtx d'abord — le quota reste porté par l'IP du joueur, comme dans le client
+// QML — puis repli sur le relais serveur /api/translate si le navigateur
+// refuse l'appel cross-origin. C'est le cas d'une PWA installée sur iOS : en
+// mode standalone WebKit rejette le fetch alors que la même URL répond dans un
+// onglet Safari. Résout par { text, src } ; rejette si les deux voies échouent.
+window._gtxTranslate = function (text, target) {
+  var q = String(text || '');
+  var tl = String(target || 'en');
+  var take = function (data) {
+    var out = '';
+    if (data && data[0] && data[0].length) {
+      for (var i = 0; i < data[0].length; i++) {
+        if (data[0][i] && typeof data[0][i][0] === 'string') out += data[0][i][0];
+      }
+    }
+    if (!out.trim()) throw new Error('empty');
+    return { text: out, src: (data && typeof data[2] === 'string') ? data[2] : '' };
+  };
+  var direct = 'https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=' +
+    encodeURIComponent(tl) + '&dt=t&q=' + encodeURIComponent(q);
+  return fetch(direct).then(function (r) {
+    if (!r.ok) throw new Error('http ' + r.status);
+    return r.json();
+  }).then(take).catch(function () {
+    return fetch('/api/translate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ tl: tl, q: q })
+    }).then(function (r) {
+      if (!r.ok) throw new Error('relay ' + r.status);
+      return r.json();
+    }).then(function (d) {
+      if (!d || !d.ok || !String(d.text || '').trim()) throw new Error('relay_empty');
+      return { text: String(d.text), src: String(d.src || '') };
+    });
+  });
+};
+window._chatTrTarget = _chatTrTarget;
 function _applyChatTranslateFlag() {
   // ACTIVE par defaut (demande narmod) : seul un '0' explicite desactive.
   var on = true;
@@ -1903,24 +1942,13 @@ window._chatTranslate = function (btn) {
   // no-op si le module chat/abbrev.mjs n'est pas chargé.
   var forTr = orig;
   try { if (typeof window._expandAbbrev === 'function') forTr = window._expandAbbrev(orig); } catch (_ex) {}
-  var url = 'https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=' +
-    encodeURIComponent(tgt) + '&dt=t&q=' + encodeURIComponent(forTr);
-  fetch(url).then(function (r) {
-    if (!r.ok) throw new Error('http ' + r.status);
-    return r.json();
-  }).then(function (data) {
-    // Réponse gtx : [ [[traduit, original, ...], ...], null, langueDétectée, ... ]
-    var src = (data && typeof data[2] === 'string') ? data[2].split('-')[0] : '';
+  window._gtxTranslate(forTr, tgt).then(function (res) {
+    var src = String(res.src || '').split('-')[0];
     if (src && src === tgt) { // deja dans la langue du client
       btn.classList.add('tr-same');
       return;
     }
-    var out = '';
-    if (data && data[0] && data[0].length) {
-      for (var i = 0; i < data[0].length; i++) {
-        if (data[0][i] && typeof data[0][i][0] === 'string') out += data[0][i][0];
-      }
-    }
+    var out = res.text;
     if (out && out.trim()) {
       msg.dataset.trText = out;
       if (!msg.dataset.origHtml) msg.dataset.origHtml = span.innerHTML;
@@ -10595,7 +10623,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.7-web.89'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.7-web.90'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

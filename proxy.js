@@ -7772,6 +7772,72 @@ function handleForumFeed(req, res) {
 }
 
 
+// ── Translation relay (POST /api/translate) ──────────────────────────────
+// The client calls the gtx endpoint directly first, so the player's own IP
+// carries the quota — the method the QML client uses, and the reason nothing
+// had to be installed server-side. That direct call fails inside an installed
+// iOS home-screen web app: WebKit refuses the cross-origin fetch in standalone
+// mode, while the very same URL answers normally in a Safari tab. Chat and
+// forum translation were therefore dead on installed iPhone apps. This relay
+// is the fallback for exactly that case — same endpoint, same reply shape,
+// fetched from the server instead of the browser. It is never the first
+// choice, so the quota stays on the player wherever the direct call works.
+const TRANSLATE_MAX_CHARS = 5000;       // gtx refuses much beyond this
+const TRANSLATE_TTL_MS = 60 * 60 * 1000;
+const TRANSLATE_CACHE_MAX = 500;
+const TRANSLATE_CACHE = new Map();      // 'tl\u0000text' -> { at, body }
+
+function handleTranslate(req, res) {
+  const fail = function (status, code) {
+    res.writeHead(status, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' });
+    res.end(JSON.stringify({ ok: false, error: code }));
+  };
+  if (req.method !== 'POST') { fail(405, 'method_not_allowed'); return; }
+  readJsonBody(req, function (d) {
+    if (!d) { fail(400, 'bad_body'); return; }
+    let q = String(d.q == null ? '' : d.q);
+    const tl = (String(d.tl == null ? '' : d.tl).replace(/[^A-Za-z-]/g, '').slice(0, 8)) || 'en';
+    if (!q.trim()) { fail(400, 'empty_text'); return; }
+    if (q.length > TRANSLATE_MAX_CHARS) q = q.slice(0, TRANSLATE_MAX_CHARS);
+    const key = tl + '\u0000' + q;
+    const hit = TRANSLATE_CACHE.get(key);
+    if (hit && (Date.now() - hit.at) < TRANSLATE_TTL_MS) {
+      res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store', 'X-Translate-Cache': 'hit' });
+      res.end(hit.body);
+      return;
+    }
+    const target = 'https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=' +
+      encodeURIComponent(tl) + '&dt=t&q=' + encodeURIComponent(q);
+    rankingFetch(target).then(function (r) {
+      if (!r.ok) throw new Error('upstream_' + r.status);
+      return r.json();
+    }).then(function (data) {
+      // gtx reply: [ [[translated, original, …], …], null, detectedLanguage, … ]
+      let out = '';
+      if (data && data[0] && data[0].length) {
+        for (let i = 0; i < data[0].length; i++) {
+          if (data[0][i] && typeof data[0][i][0] === 'string') out += data[0][i][0];
+        }
+      }
+      if (!out.trim()) throw new Error('empty_reply');
+      const src = (data && typeof data[2] === 'string') ? data[2] : '';
+      const body = JSON.stringify({ ok: true, text: out, src: src });
+      // Bounded cache, oldest entry first (Map keeps insertion order).
+      if (TRANSLATE_CACHE.size >= TRANSLATE_CACHE_MAX) {
+        const oldest = TRANSLATE_CACHE.keys().next();
+        if (!oldest.done) TRANSLATE_CACHE.delete(oldest.value);
+      }
+      TRANSLATE_CACHE.set(key, { at: Date.now(), body: body });
+      res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store', 'X-Translate-Cache': 'miss' });
+      res.end(body);
+    }).catch(function (err) {
+      res.writeHead(502, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' });
+      res.end(JSON.stringify({ ok: false, error: 'relay_failed', detail: String((err && err.message) || err) }));
+    });
+  });
+}
+
+
 const httpServer = http.createServer((req, res) => {
   // Serve the SPA shell for the root path. We strip the query string
   // before comparing so deep links like
@@ -8065,6 +8131,10 @@ const httpServer = http.createServer((req, res) => {
   }
   if (reqPathOnly === '/api/forumimg') {
     handleForumImg(req, res, query);
+    return;
+  }
+  if (reqPathOnly === '/api/translate') {
+    handleTranslate(req, res);
     return;
   }
 

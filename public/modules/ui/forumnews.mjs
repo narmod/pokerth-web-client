@@ -375,6 +375,14 @@ function _openPostView(p) {
 
 // ── Traduction du post (meme service et meme reglage que le chat) ──────
 function _trTarget() {
+  // Meme cible que le chat quand elle est disponible : _chatTrTarget distingue
+  // zh-CN/zh-TW et pt-BR/pt-PT, que gtx ne devine pas depuis le code court.
+  try {
+    if (typeof window._chatTrTarget === 'function') {
+      const c = window._chatTrTarget();
+      if (c) return c;
+    }
+  } catch (e) {}
   let l = '';
   try { l = String(window._lang || ''); } catch (e) {}
   if (!l) { try { l = localStorage.getItem('pth_lang') || ''; } catch (e) {} }
@@ -406,18 +414,9 @@ function forumTranslatePost() {
   if (!source) return;
   if (errEl) errEl.textContent = '';
   if (btn) btn.disabled = true;
-  const url = 'https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=' +
-    encodeURIComponent(_trTarget()) + '&dt=t&q=' + encodeURIComponent(source);
-  fetch(url).then(function (r) {
-    if (!r.ok) throw new Error('http ' + r.status);
-    return r.json();
-  }).then(function (data) {
-    let out = '';
-    if (data && data[0] && data[0].length) {
-      for (let i = 0; i < data[0].length; i++) {
-        if (data[0][i] && typeof data[0][i][0] === 'string') out += data[0][i][0];
-      }
-    }
+  // Meme porte que le chat : direct gtx puis repli sur le relais serveur.
+  window._gtxTranslate(source, _trTarget()).then(function (res) {
+    const out = res.text;
     if (!out.trim()) throw new Error('empty');
     _trState = { text: out };
     show(out);

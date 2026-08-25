@@ -1,4 +1,6 @@
 2026-08-13 version 2.1.7-web (current series):
+- bugfix: translating a chat message or a forum post did nothing on an iPhone when the app had been installed to the home screen, while the same translation worked in a normal Safari tab and on a computer. The app now routes the request through the PokerTH server when the browser refuses to make it directly, so translation works again everywhere
+- bugfix: translating a forum post into Chinese or Portuguese ignored your regional choice - traditional Chinese came out simplified and European Portuguese came out Brazilian. The post view now follows the same rule the chat already did
 - new: the FAQ page is now translated into all 45 interface languages, like the rules page - so a search for how to play free poker in your own language finds an answer written in it
 - bugfix: the Arabic, Hebrew, Persian and Urdu versions of the rules and help pages were laid out left to right, which put the punctuation on the wrong side of every sentence. They now read right to left as they should
 - new: three new pages you can read without opening the app or installing anything - the poker hand rankings with examples and the odds of being dealt each one, a step-by-step guide to getting from a blank tab to a hand, and a glossary of fifty-five poker terms. They sit next to the existing rules and FAQ pages
