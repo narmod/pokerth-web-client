@@ -13,6 +13,14 @@ this file captures what matters to players and operators.
 Opened with `v2.1.7-web.0` (2026-08-13), following the upstream **2.1.7**
 release.
 
+### Added
+- **FAQ translations complete: all 44 languages** (`web.89`) — the last batch
+  brings Croatian, Serbian, Lithuanian, Catalan, Galician, Afrikaans, Swahili,
+  Filipino and Scottish Gaelic, and `/faq` now matches `/rules` exactly: the same
+  44 languages, no page advertising a variant the other cannot serve. 45 `/faq`
+  URLs in the sitemap, 139 in total. Serbian follows the Cyrillic already used by
+  `SEO_RULES_I18N` rather than introducing a second script for one page.
+
 ### Fixed
 - **The right-to-left pages were being laid out left-to-right** (`web.88`) —
   `/rules` has been served in Arabic, Hebrew, Persian and Urdu for some time
