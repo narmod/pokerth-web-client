@@ -13,6 +13,17 @@ this file captures what matters to players and operators.
 Opened with `v2.1.7-web.0` (2026-08-13), following the upstream **2.1.7**
 release.
 
+### Fixed
+- **"Reset all traffic stats" left some of them standing** (`web.77`) — the
+  button promises to delete every visit figure, and did delete the days, the
+  totals, the device set and the environment split. It listed its fields by
+  hand, though, and that list had drifted from the one used at startup: track
+  play counts (`music`, `musicSince`) and the date the hourly buckets began
+  (`hourSince`) survived the wipe. A play counter that restarts carrying the old
+  total is worse than one that is merely wrong, because nothing says so. Both
+  now come from a single `emptyVisitsStore()`, so the two shapes can no longer
+  disagree, and a guard fails the build if a hand-written one reappears.
+
 ### Added
 - **Return rates: who comes back, and on how many days** (`web.76`) — the
   new/returning split said a device had been seen before; it never said whether

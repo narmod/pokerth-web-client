@@ -139,5 +139,21 @@ const none = cohortScope({ days: {}, allU: {} }, 1000).visitCohorts(30);
 ok(none.known === 0 && none.d1.n === 0 && none.newTotal === 0,
   'an empty store answers with zeros, not with a rate over nothing');
 
+// -- Wiping means wiping ---------------------------------------------------
+// The reset listed its fields by hand and the list had drifted from the one
+// used at startup: music, musicSince and hourSince survived a "delete
+// everything". One definition now serves both, so the two cannot disagree.
+ok(/function emptyVisitsStore\(\)/.test(src), 'the empty store has a single definition');
+ok(/let visitsStore = emptyVisitsStore\(\);/.test(src), 'startup uses it');
+ok(/if \(d && d\._reset\) \{\s*\n\s*visitsStore = emptyVisitsStore\(\);/.test(src), 'and so does the reset');
+ok(!/visitsStore = \{ days: \{\}/.test(src),
+  'and no hand-written store shape is left anywhere to drift again');
+const wiped = new Function(fn('emptyVisitsStore') + '\nreturn emptyVisitsStore();')();
+for (const k of ['days', 'totalV', 'totalRet', 'allU', 'allM', 'env', 'envSince', 'music', 'musicSince', 'hourSince']) {
+  ok(k in wiped, 'a wipe clears ' + k);
+}
+ok(wiped.music && Object.keys(wiped.music).length === 0, 'play counts really do go back to zero');
+ok(wiped.hourSince === 0, 'and so does the date the hourly buckets started');
+
 console.log(fail ? `FAIL ${fail}/${n}` : `OK ${n}/${n}`);
 process.exit(fail ? 1 : 0);

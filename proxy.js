@@ -2103,7 +2103,19 @@ setInterval(maybeRotateStats, 60 * 60 * 1000); // hourly boundary check
 // counter plus an all-time id set keep the "All time" figures exact too.
 const VISITS_FILE = process.env.VISITS_FILE || path.join(__dirname, 'visits.json');
 const VISIT_RETENTION_DAYS = 400; // keep per-day id sets this long (covers up to 1-year windows)
-let visitsStore = { days: {}, totalV: 0, totalRet: 0, allU: {}, allM: { pokerthnet: 0, lan: 0, offline: 0 }, env: {}, music: {} };
+// Une seule definition du magasin vide, utilisee au demarrage ET par la remise
+// a zero. Les deux listes avaient diverge: la remise a zero omettait music,
+// musicSince et hourSince, qui survivaient donc a un « efface tout » — un
+// compteur de lectures qui repart avec l'ancien total est pire qu'un compteur
+// qui se trompe, parce que rien ne le signale.
+function emptyVisitsStore() {
+  return {
+    days: {}, totalV: 0, totalRet: 0, allU: {},
+    allM: { pokerthnet: 0, lan: 0, offline: 0 },
+    env: {}, envSince: 0, music: {}, musicSince: 0, hourSince: 0
+  };
+}
+let visitsStore = emptyVisitsStore();
 try {
   const _vs = JSON.parse(fs.readFileSync(VISITS_FILE, 'utf8'));
   if (_vs && typeof _vs === 'object') {
@@ -3804,7 +3816,7 @@ function handleAdmin(req, res, reqPathOnly, query) {
       return readJsonBody(req, function (d) {
         if (!adminAuthed(query, d && d.token)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
         if (d && d._reset) {
-          visitsStore = { days: {}, totalV: 0, totalRet: 0, allU: {}, allM: { pokerthnet: 0, lan: 0, offline: 0 }, env: {}, envSince: 0 };
+          visitsStore = emptyVisitsStore();
           dbClearTraffic();
           try { fs.writeFileSync(VISITS_FILE, JSON.stringify(visitsStore)); } catch (e) { console.error('[visits] reset write failed:', e.message); }
           return adminJson(res, 200, { ok: true, reset: true });
