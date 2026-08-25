@@ -13,6 +13,25 @@ this file captures what matters to players and operators.
 Opened with `v2.1.7-web.0` (2026-08-13), following the upstream **2.1.7**
 release.
 
+### Changed
+- **The Traffic tab is two cards instead of fifteen** (`web.78`) — three lots of
+  additions had left the panel as a stack of fifteen framed boxes, which reads
+  as fifteen unrelated things rather than one page about one subject. What is
+  *read* now sits in a single card cut into sections — a rule and some air
+  between two subjects separates them as well as a full border, without framing
+  what is already framed — and what is *set* sits in a second one, "Data &
+  settings", gathering the opt-out, the MySQL mirror, the export and the reset.
+  The order carries the argument: counters, then the charts that detail them,
+  then the closing paragraph, then the controls. Three deliberate removals: the
+  seven window tiles are down to Today / 7 days / 30 days / All time, since 90,
+  180 and 365 days repeat "All time" to the unit until the site has a year
+  behind it (they remain in the CSV and JSON exports); "New vs returning
+  visitors" is gone, because the New share tile and the whole Coming back
+  section each say it better; and the panel's two-column layout goes with them,
+  along with the `column-span:all` exception every chart needed to win its width
+  back — a panel fighting its own rules. Nothing that was measured is measured
+  any less.
+
 ### Fixed
 - **"Reset all traffic stats" left some of them standing** (`web.77`) — the
   button promises to delete every visit figure, and did delete the days, the

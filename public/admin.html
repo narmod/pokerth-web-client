@@ -98,7 +98,7 @@
   /* Traffic read as trends, not just totals. Same frame as .tstat so the two
      rows of tiles read as one family; the wider minmax leaves room for a
      sentence under the figure instead of a bare unit. */
-  .kpirow{display:grid;grid-template-columns:repeat(auto-fit,minmax(198px,1fr));gap:12px}
+  .kpirow{display:grid;grid-template-columns:repeat(auto-fit,minmax(198px,1fr));gap:12px;margin-top:12px}
   @media(max-width:560px){.kpirow{grid-template-columns:1fr}}
   .kpi{background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:10px;padding:13px}
   .kpi .lbl{font-size:.68rem;color:var(--text);text-transform:uppercase;letter-spacing:.06em}
@@ -113,6 +113,15 @@
   .hourduo{display:grid;grid-template-columns:1fr;gap:14px}
   @media(min-width:900px){.hourduo{grid-template-columns:1fr 1fr}}
   .hourduo>div>h3{font-size:.78rem;color:var(--text);font-weight:600;margin:0 0 4px}
+  /* Le panneau tenait dans quinze cadres empiles ; il tient maintenant dans
+     deux, decoupes en sections. Un filet et une respiration separent deux
+     sujets aussi bien qu'une bordure complete, sans re-encadrer ce qui est
+     deja encadre. */
+  .tsec{margin-top:20px;padding-top:16px;border-top:1px solid var(--line)}
+  .tsec>h3{font-size:.9rem;color:var(--gold);font-weight:700;margin:0 0 7px}
+  .tsec .boardhead>h3{font-size:.9rem;color:var(--gold);font-weight:700;margin:0;white-space:nowrap}
+  /* Une section qui suit immediatement le titre de la carte n'a rien a separer. */
+  .card>h2+.tsec{border-top:0;margin-top:10px;padding-top:0}
   .botline{background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:10px;padding:13px}
   .botline p{margin:0 0 9px;font-size:.85rem;line-height:1.55;color:var(--text)}
   .botline p:last-child{margin:0}
@@ -261,11 +270,10 @@
      grille reprennent toute la largeur, où elles seraient illisibles. */
   @media(min-width:1100px){
     .wrap{max-width:1180px}
-    #panel-traffic,#panel-broadcast,#panel-defaults,#panel-deploy,#panel-access,#panel-identity{columns:2;column-gap:16px}
-    #panel-traffic>.card,#panel-broadcast>.card,#panel-defaults>.card,#panel-deploy>.card,#panel-access>.card,#panel-identity>.card{break-inside:avoid;-webkit-column-break-inside:avoid;margin-bottom:16px}
-    .card:has(#trafCards),.card:has(#trafChart),.card:has(#trafMusic),.card:has(#trafEnv),
-    .card:has(#trafKpis),.card:has(#trafNew),.card:has(#trafBottom),
-    .card:has(#traf48),.card:has(#trafHours),.card:has(#trafRet),#panel-traffic>.cardrow{column-span:all}
+    #panel-broadcast,#panel-defaults,#panel-deploy,#panel-access,#panel-identity{columns:2;column-gap:16px}
+    #panel-broadcast>.card,#panel-defaults>.card,#panel-deploy>.card,#panel-access>.card,#panel-identity>.card{break-inside:avoid;-webkit-column-break-inside:avoid;margin-bottom:16px}
+    /* Le panneau Traffic n'a plus qu'une carte de lecture : rien a rattraper
+       sur toute la largeur, puisque rien n'est reparti en colonnes. */
   }
   @media(max-width:600px){
     body{padding:12px}
@@ -348,99 +356,91 @@
     <div id="panel-traffic" style="display:none">
       <div class="card">
         <div class="boardhead"><h2>Traffic</h2><span id="trafRange" class="headnote"></span><button id="btnTrafRefresh" class="use">Refresh</button></div>
-        <p class="muted">Anonymous footfall — no IP is ever stored. “Visits” counts browser sessions; “Unique visitors” counts distinct devices.</p>
+        <p class="muted">Anonymous footfall — no IP is ever stored. “Visits” counts browser sessions; “Unique visitors” counts distinct devices. Everything below reads the same anonymous ping; nothing here identifies a person.</p>
         <div class="trafgrid" id="trafCards"><div class="empty">Loading…</div></div>
-      </div>
-      <div class="card">
-        <div class="boardhead"><h2>Recent activity (last 48 h)</h2><span id="traf48Note" class="headnote"></span></div>
-        <div id="traf48" class="barchart"><div class="empty">Loading…</div></div>
-      </div>
-      <div class="card">
-        <h2>Reading the last two weeks</h2>
-        <p class="muted">The same figures read as trends rather than totals: what an average day looks like, which way it is moving, and whether that movement is bigger than the day-to-day noise.</p>
         <div class="kpirow" id="trafKpis"><div class="empty">Loading…</div></div>
-      </div>
-      <div class="card">
-        <div class="boardhead"><h2>Last 14 days</h2><span id="trafTrendNote" class="headnote"></span></div>
-        <div id="trafChart" class="trafchart"><div class="empty">Loading…</div></div>
-      </div>
-      <div class="card">
-        <div class="boardhead"><h2>New devices per day</h2><span id="trafNewNote" class="headnote"></span></div>
-        <p class="muted">A device is counted once, the first time it is ever seen. The horizontal marks are the average over each half of the window — the comparison acquisition is actually judged on.</p>
-        <div id="trafNew" class="barchart"><div class="empty">Loading…</div></div>
-      </div>
-      <div class="card">
-        <div class="boardhead"><h2>Time of day</h2><span id="trafHoursNote" class="headnote"></span></div>
-        <p class="muted">An average day, hour by hour, over the last 30 days — server local time. On the left, when people come; on the right, whether the ones arriving at that hour are new out of proportion with the traffic (1.0 = exactly in proportion). A quiet hour is ordinary; a quiet hour that still draws first-time visitors is where they find an empty lobby.</p>
-        <div id="trafHours" class="hourduo"><div class="empty">Loading…</div></div>
-      </div>
-      <div class="card">
-        <div class="boardhead"><h2>Coming back</h2><span id="trafRetNote" class="headnote"></span></div>
-        <p class="muted">Of the devices seen for the very first time in the last 30 days, how many returned afterwards — and on how many separate days they showed up. A cohort only counts once it has had the time to come back, so the three rates are measured against different totals, and that is deliberate. Devices already known before this build carry no first-seen date; they are left out of the rates and serve as the established-base comparison instead.</p>
-        <div id="trafRet" class="hourduo"><div class="empty">Loading…</div></div>
-      </div>
-      <div class="card">
-        <h2>Bottom line</h2>
-        <div id="trafBottom" class="botline"><div class="empty">Loading…</div></div>
-      </div>
-      <div class="cardrow">
-        <div class="card">
-          <h2>Connections by server</h2>
+        <div class="tsec">
+          <div class="boardhead"><h3>Recent activity (last 48 h)</h3><span id="traf48Note" class="headnote"></span></div>
+          <div id="traf48" class="barchart"><div class="empty">Loading…</div></div>
+        </div>
+        <div class="tsec">
+          <div class="boardhead"><h3>Daily visits</h3><span id="trafTrendNote" class="headnote"></span></div>
+          <div id="trafChart" class="trafchart"><div class="empty">Loading…</div></div>
+        </div>
+        <div class="tsec">
+          <div class="boardhead"><h3>New devices per day</h3><span id="trafNewNote" class="headnote"></span></div>
+          <p class="muted">A device is counted once, the first time it is ever seen. The horizontal marks are the average over each half of the window — the comparison acquisition is actually judged on.</p>
+          <div id="trafNew" class="barchart"><div class="empty">Loading…</div></div>
+        </div>
+        <div class="tsec">
+          <div class="boardhead"><h3>Coming back</h3><span id="trafRetNote" class="headnote"></span></div>
+          <p class="muted">Of the devices seen for the very first time in the last 30 days, how many returned afterwards — and on how many separate days they showed up. A cohort only counts once it has had the time to come back, so the three rates are measured against different totals, and that is deliberate. Devices already known before this build carry no first-seen date; they are left out of the rates and serve as the established-base comparison instead.</p>
+          <div id="trafRet" class="hourduo"><div class="empty">Loading…</div></div>
+        </div>
+        <div class="tsec">
+          <div class="boardhead"><h3>Time of day</h3><span id="trafHoursNote" class="headnote"></span></div>
+          <p class="muted">An average day, hour by hour, over the last 30 days — server local time. On the left, when people come; on the right, whether the ones arriving at that hour are new out of proportion with the traffic (1.0 = exactly in proportion). A quiet hour is ordinary; a quiet hour that still draws first-time visitors is where they find an empty lobby.</p>
+          <div id="trafHours" class="hourduo"><div class="empty">Loading…</div></div>
+        </div>
+        <div class="tsec">
+          <h3>Where sessions open</h3>
           <p class="muted">Counts a session once per entry mode it is opened with, whatever the transport: Internet games routed through this proxy still count as pokerth.net. Offline = training vs bots.</p>
           <div id="trafModes"><div class="empty">Loading…</div></div>
         </div>
-        <div class="card">
-          <h2>New vs returning visitors</h2>
-          <p class="muted">Based on an anonymous per-device id — no names. A session is “new” the first time a device is ever seen, otherwise “returning”. The day-by-day curves are in the chart above.</p>
-          <div id="trafNvR"><div class="empty">Loading…</div></div>
+        <div class="tsec">
+  <div class="boardhead"><h3>What visitors run</h3><span id="envSince" class="muted" style="margin:0"></span></div>
+          <p class="muted">From the same anonymous ping as the visit counter: system and browser read from the User-Agent, language from the request header, installed app vs browser tab reported by the client. Running totals, not a time series — what to test on, and which of the 45 languages are actually used.</p>
+          <div class="seg" id="envSeg" style="flex-wrap:wrap">
+            <button class="on" data-k="combo">Device + browser</button>
+            <button data-k="os">System</button>
+            <button data-k="br">Browser</button>
+            <button data-k="pwa">Installed</button>
+            <button data-k="lang">Language</button>
+          </div>
+          <div id="trafEnv" style="margin-top:14px"><div class="empty">Loading…</div></div>
+        </div>
+        <div class="tsec">
+  <div class="boardhead"><h3>Most played tracks</h3><span id="musSince" class="muted" style="margin:0"></span></div>
+          <p class="muted">Counts a play each time a track starts in the players’ music panel — resuming after a pause is not a new play. No visitor id, no listening time. Radio stations are not measured: a live stream has no track end, so “a play” would mean nothing there. Per-track totals sit next to each title in the Music tab.</p>
+          <div id="trafMusic"><div class="empty">Loading…</div></div>
+        </div>
+        <div class="tsec">
+          <h3>Bottom line</h3>
+          <div id="trafBottom" class="botline"><div class="empty">Loading…</div></div>
         </div>
       </div>
       <div class="card">
-        <div class="boardhead"><h2>What visitors run</h2><span id="envSince" class="muted" style="margin:0"></span></div>
-        <p class="muted">From the same anonymous ping as the visit counter: system and browser read from the User-Agent, language from the request header, installed app vs browser tab reported by the client. Running totals, not a time series — what to test on, and which of the 45 languages are actually used.</p>
-        <div class="seg" id="envSeg" style="flex-wrap:wrap">
-          <button class="on" data-k="combo">Device + browser</button>
-          <button data-k="os">System</button>
-          <button data-k="br">Browser</button>
-          <button data-k="pwa">Installed</button>
-          <button data-k="lang">Language</button>
+        <h2>Data &amp; settings</h2>
+        <div class="tsec">
+          <h3>Exclude my own visits</h3>
+          <p class="muted">On THIS browser, keeps the client out of the visit counter — handy while testing the site. The setting is local to this device and affects no other browser.</p>
+          <button id="btnNoCount" class="use">Do not count my visits</button>
         </div>
-        <div id="trafEnv" style="margin-top:14px"><div class="empty">Loading…</div></div>
-      </div>
-      <div class="card">
-        <div class="boardhead"><h2>Most played tracks</h2><span id="musSince" class="muted" style="margin:0"></span></div>
-        <p class="muted">Counts a play each time a track starts in the players’ music panel — resuming after a pause is not a new play. No visitor id, no listening time. Radio stations are not measured: a live stream has no track end, so “a play” would mean nothing there. Per-track totals sit next to each title in the Music tab.</p>
-        <div id="trafMusic"><div class="empty">Loading…</div></div>
-      </div>
-      <div class="card">
-        <h2>Database (MySQL mirror)</h2>
-        <p class="muted">Mirrors when enabled: traffic_daily, leaderboard, broadcasts. Configure below, or with the CLI: pokerth-web db-config.</p>
-        <div id="trafDb"><div class="empty">Loading…</div></div>
-        <div class="defrow fld gap"><span>Host</span><input id="dbHost" maxlength="255" placeholder="127.0.0.1" autocomplete="off"></div>
-        <div class="defrow fld"><span>Port</span><input id="dbPort" type="number" min="1" max="65535" placeholder="3306" autocomplete="off"></div>
-        <div class="defrow fld"><span>User</span><input id="dbUser" maxlength="128" placeholder="root" autocomplete="off"></div>
-        <div class="defrow fld"><span>Password</span><input id="dbPass" type="password" maxlength="255" placeholder="(unchanged)" autocomplete="new-password"></div>
-        <div class="defrow fld"><span>Database</span><input id="dbDatabase" maxlength="128" placeholder="pokerth" autocomplete="off"></div>
-        <div class="defrow fld"><span>Enabled</span><input id="dbEnabled" type="checkbox"></div>
-        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px"><button id="dbTestBtn" class="use">Test connection</button><button id="dbSaveBtn" class="use">Save &amp; connect</button></div>
-        <div id="dbState" class="msg"></div>
-      </div>
-      <div class="card">
-        <h2>Exclude my own visits</h2>
-        <p class="muted">On THIS browser, keeps the client out of the visit counter — handy while testing the site. The setting is local to this device and affects no other browser.</p>
-        <button id="btnNoCount" class="use">Do not count my visits</button>
-      </div>
-      <div class="card">
-        <h2>Export / backup</h2>
-        <p class="muted">Download the raw data for backup or import into a database. CSV = one row per day (date, visits, unique, per-server connections). JSON = full backup (restorable to visits.json).</p>
-        <div style="display:flex;gap:8px;flex-wrap:wrap"><button id="btnTrafCsv" class="use">Download CSV</button><button id="btnTrafJson" class="use">Download JSON</button></div>
-        <div id="trafExpMsg" class="msg"></div>
-      </div>
-      <div class="card">
-        <h2>Reset traffic stats</h2>
-        <p class="muted">⚠ This permanently deletes ALL visit data — today, history and totals. This cannot be undone.</p>
-        <button id="btnTrafReset" class="use danger">Reset all traffic stats</button>
-        <div id="trafMsg" class="msg"></div>
+        <div class="tsec">
+          <h3>Database (MySQL mirror)</h3>
+  <p class="muted">Mirrors when enabled: traffic_daily, leaderboard, broadcasts. Configure below, or with the CLI: pokerth-web db-config.</p>
+          <div id="trafDb"><div class="empty">Loading…</div></div>
+          <div class="defrow fld gap"><span>Host</span><input id="dbHost" maxlength="255" placeholder="127.0.0.1" autocomplete="off"></div>
+          <div class="defrow fld"><span>Port</span><input id="dbPort" type="number" min="1" max="65535" placeholder="3306" autocomplete="off"></div>
+          <div class="defrow fld"><span>User</span><input id="dbUser" maxlength="128" placeholder="root" autocomplete="off"></div>
+          <div class="defrow fld"><span>Password</span><input id="dbPass" type="password" maxlength="255" placeholder="(unchanged)" autocomplete="new-password"></div>
+          <div class="defrow fld"><span>Database</span><input id="dbDatabase" maxlength="128" placeholder="pokerth" autocomplete="off"></div>
+          <div class="defrow fld"><span>Enabled</span><input id="dbEnabled" type="checkbox"></div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px"><button id="dbTestBtn" class="use">Test connection</button><button id="dbSaveBtn" class="use">Save &amp; connect</button></div>
+          <div id="dbState" class="msg"></div>
+        </div>
+        <div class="tsec">
+          <h3>Export / backup</h3>
+          <p class="muted">Download the raw data for backup or import into a database. CSV = one row per day (date, visits, unique, per-server connections). JSON = full backup (restorable to visits.json).</p>
+          <div style="display:flex;gap:8px;flex-wrap:wrap"><button id="btnTrafCsv" class="use">Download CSV</button><button id="btnTrafJson" class="use">Download JSON</button></div>
+          <div id="trafExpMsg" class="msg"></div>
+        </div>
+        <div class="tsec">
+          <h3>Reset traffic stats</h3>
+          <p class="muted">⚠ This permanently deletes ALL visit data — today, history, totals, track play counts. This cannot be undone.</p>
+          <button id="btnTrafReset" class="use danger">Reset all traffic stats</button>
+          <div id="trafMsg" class="msg"></div>
+        </div>
       </div>
     </div>
 
@@ -2024,7 +2024,10 @@
       if(!d || !d.ok){ if(g) g.innerHTML='<div class="empty err">'+((d&&d.error)||'error')+'</div>'; return; }
       function fmt(n){ try{return Number(n||0).toLocaleString();}catch(e){return String(n||0);} }
       function tile(lbl,o){ return '<div class="tstat"><div class="lbl">'+lbl+'</div><div class="big">'+fmt(o&&o.v)+'</div><div class="sub">'+fmt(o&&o.u)+' unique</div></div>'; }
-      if(g) g.innerHTML = tile('Today',d.today)+tile('Last 7 days',d.week)+tile('Last 30 days',d.month)+tile('Last 90 days',d.quarter)+tile('Last 180 days',d.semester)+tile('Last 365 days',d.year)+tile('All time',d.allTime);
+      // Sept fenetres pour quatre questions : tant que le site n'a pas un an de
+      // recul, 90, 180 et 365 jours repetent « All time » au chiffre pres. Les
+      // trois restent dans l'export, elles ne prennent plus la place a l'ecran.
+      if(g) g.innerHTML = tile('Today',d.today)+tile('Last 7 days',d.week)+tile('Last 30 days',d.month)+tile('All time',d.allTime);
       var c=$('trafChart'), s=(d.series||[]), max=1;
       _trafSeries=s;
       s.forEach(function(x){ if((x.v||0)>max) max=x.v; });
@@ -2066,11 +2069,6 @@
       // à compter encore. Voir renderEnv().
       _envKnown=(d.env!==undefined); _envData=d.env||{}; _envColorReset(); _envSince=d.envSince||0; _envPings=d.pings||null; renderEnv();
       _musKnown=(d.music!==undefined); _musData=d.music||{}; _musTitles=d.musicTitles||{}; _musSince=d.musicSince||0; renderMusic();
-      var nv=$('trafNvR');
-      if(nv){
-        var wins=[['Today',d.today],['Last 7 days',d.week],['Last 30 days',d.month],['All time',d.allTime]];
-        nv.innerHTML = wins.map(function(w){ var o=w[1]||{}; return '<div class="srow"><span>'+w[0]+'</span><b>'+fmt(o.nw)+' new · '+fmt(o.rt)+' returning</b></div>'; }).join('');
-      }
       var dbx=$('trafDb');
       if(dbx){
         var db=d.db||{};

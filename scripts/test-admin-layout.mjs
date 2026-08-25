@@ -63,12 +63,13 @@ ok(/#panel-server|#panel-traffic|#panel-clients|#panel-broadcast/.test(wide),
   'the split is opt-in per panel, not global');
 ok(/break-inside:avoid/.test(wide), 'a card is never cut across the column break');
 ok(/-webkit-column-break-inside:avoid/.test(wide), 'with the WebKit spelling alongside');
-ok(/column-span:all/.test(wide), 'charts and grids take the full width back');
-for (const id of ['trafChart', 'trafMusic', 'trafEnv', 'trafCards']) {
-  ok(new RegExp('#' + id + '\\)').test(wide), id + ' is not squeezed into half a column');
-}
-ok(/#panel-traffic>\.cardrow\{column-span:all\}|,#panel-traffic>\.cardrow\{column-span:all\}/.test(wide),
-  'a paired row of cards keeps the full width instead of being split again');
+// Traffic used to be a column layout with a column-span:all exception on every
+// chart, which is the shape of a panel fighting its own rules. It is one card
+// now, so both the split and its exceptions are gone.
+ok(!/#panel-traffic/.test(wide), 'the traffic panel no longer asks for two columns');
+ok(!/#trafChart|#trafCards|#trafEnv|#trafMusic/.test(wide),
+  'and needs no per-chart exception to win its width back');
+ok(/columns:2/.test(wide), 'the panels that still split into two columns keep doing so');
 ok(!/columns:2/.test(small), 'nothing changes on a phone');
 
 // ── Tab families ──────────────────────────────────────────────────────────
@@ -304,8 +305,6 @@ ok(/Math\.abs\(reg\.r\)>=0\.32/.test(admin), 'a weak correlation is reported as 
 for (const id of ['trafRange', 'trafKpis', 'trafTrendNote', 'trafNew', 'trafNewNote', 'trafBottom']) {
   ok(traf.includes('id="' + id + '"'), id + ' has a home in the panel');
 }
-ok(/#trafKpis\)/.test(wide) && /#trafNew\)/.test(wide) && /#trafBottom\)/.test(wide),
-  'the analytic cards take the full width back instead of being halved');
 ok(/\.headnote\{flex:1 1 120px/.test(admin), 'a chart note sits beside its title and takes the slack');
 ok(/\.kpi \.big\{/.test(admin) && /\.kpi \.sub\{/.test(admin), 'the analytic tile has a figure and a sentence');
 ok(/rgba\(255,255,255,\.03\)/.test((admin.match(/\.kpi\{[^}]*\}/) || [''])[0]),
@@ -331,9 +330,8 @@ ok(/last bar is the hour in progress/.test(admin), 'and the note says so');
 for (const id of ['traf48', 'traf48Note', 'trafHours', 'trafHoursNote']) {
   ok(traf.includes('id="' + id + '"'), id + ' has a home in the panel');
 }
-ok(/#traf48\)/.test(wide) && /#trafHours\)/.test(wide), 'both hourly cards keep the full width');
-ok(traf.indexOf('id="traf48"') < traf.indexOf('id="trafKpis"'),
-  'the last 48 hours sit right under the counters, where the eye lands first');
+ok(traf.indexOf('id="trafKpis"') < traf.indexOf('id="traf48"'),
+  'the figures are read before the charts that detail them');
 
 // -- Coming back -----------------------------------------------------------
 // The one number the panel never had. Three states again, and one rule that
@@ -348,18 +346,52 @@ ok(/\(_retVerdict\? '\.' :/.test(body(admin, '_trafInsights')),
   'and the volume-based guess steps aside exactly then, so the panel never states two');
 ok(/pc\(d7\.back,d7\.n\)<40\?'retention':'acquisition'/.test(admin), 'the verdict reads the return rate');
 for (const id of ['trafRet', 'trafRetNote']) ok(traf.includes('id="' + id + '"'), id + ' has a home in the panel');
-ok(/#trafRet\)/.test(wide), 'the cohort card keeps the full width');
 ok(traf.indexOf('id="trafRet"') < traf.indexOf('id="trafBottom"'),
-  'and sits before the conclusion it feeds');
+  'the cohorts sit before the conclusion they feed');
+
+// -- Two cards, not fifteen ------------------------------------------------
+// Fifteen stacked frames read as fifteen unrelated things. What is read now
+// sits in one card, split into sections; what is set sits in the other. The
+// order carries the rest: counters, the charts that detail them, the
+// conclusion, then the controls.
+const trafCards = (traf.match(/<div class="card"/g) || []).length;
+ok(trafCards === 2, 'the traffic panel is two cards, not ' + trafCards);
+ok(!/class="cardrow"/.test(traf), 'and no paired row survives inside it');
+ok(/\.tsec\{margin-top:20px;padding-top:16px;border-top:1px solid var\(--line\)\}/.test(admin),
+  'a section is separated by a rule and some air, not by another frame');
+ok(/\.card>h2\+\.tsec\{border-top:0/.test(admin),
+  'except the first one, which has nothing above it to separate from');
+ok(/\.tsec \.boardhead>h3\{[^}]*white-space:nowrap/.test(admin),
+  'a section title does not break, so its note can take the slack');
+ok((traf.match(/<div class="tsec">/g) || []).length >= 12, 'every former card became a section');
+ok(/<h2>Data &amp; settings<\/h2>/.test(traf), 'the controls are gathered under one heading');
+for (const id of ['btnNoCount', 'dbHost', 'btnTrafCsv', 'btnTrafReset', 'trafModes', 'trafEnv', 'trafMusic']) {
+  ok(traf.includes('id="' + id + '"'), id + ' survived the merge');
+}
+ok(traf.indexOf('id="trafEnv"') < traf.indexOf('id="trafBottom"'),
+  'what visitors run is read before the conclusion, not after it');
+ok(traf.indexOf('id="trafMusic"') < traf.indexOf('id="trafBottom"'), 'and so are the play counts');
+ok(traf.indexOf('id="trafBottom"') < traf.indexOf('Data &amp; settings'),
+  'the conclusion closes the reading, and the controls follow it');
+
+// -- Four windows, not seven -----------------------------------------------
+// 90, 180 and 365 days repeat "All time" to the unit until the site has a year
+// behind it. They stay in the export; they no longer take the space.
+ok(/tile\('Today',d\.today\)\+tile\('Last 7 days',d\.week\)\+tile\('Last 30 days',d\.month\)\+tile\('All time',d\.allTime\)/.test(admin),
+  'four windows are shown');
+ok(!/Last 90 days/.test(admin) && !/Last 180 days/.test(admin) && !/Last 365 days/.test(admin),
+  'and the middle three are gone from the screen');
+ok(!/trafNvR/.test(admin),
+  'new-vs-returning is gone: the New share tile and the cohorts each said it better');
 
 // -- One language on screen ------------------------------------------------
 // The dashboard is written in English; a French card in the middle of it was a
 // leftover, not a choice.
 ok(!/Exclure mes propres visites|Ne pas compter mes visites/.test(admin),
   'no French left in the traffic panel');
-ok(/<h2>Exclude my own visits<\/h2>/.test(traf), 'the opt-out card is in English');
+ok(/<h3>Exclude my own visits<\/h3>/.test(traf), 'the opt-out section is in English');
 ok(traf.indexOf('id="trafBottom"') < traf.indexOf('id="btnNoCount"'),
-  'and sits with the settings at the foot, not between two charts');
+  'and sits with the settings, after everything that is read rather than set');
 
 console.log(fail ? `FAIL ${fail}/${n}` : `OK ${n}/${n}`);
 process.exit(fail ? 1 : 0);
