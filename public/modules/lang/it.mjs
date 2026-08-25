@@ -103,6 +103,7 @@ export const strings = {
   spectatingBadge: `Spettatore`,
   reportGameTitle: `Segnala nome di partita offensivo`, reportGameConfirm: `Segnala`, reportGameMsg: `Sei sicuro di voler segnalare il nome della partita: "{name}" come offensivo?`, reportGameAccepted: `La segnalazione sul nome della partita è stata accettata dal server. Grazie.`, reportGameDup: `Questo nome di partita è già stato segnalato da un altro giocatore.`, reportGameError: `Si è verificato un errore durante la segnalazione del nome di partita.`,
   reportAvatarTitle: `Segnala avatar non appropriato`, reportAvatarMsg: `Vuoi davvero segnalare l'avatar di «{name}» come non appropriato?`, reportAvatarAccepted: `La segnalazione dell'avatar è stata accettata dal server. Grazie.`, reportAvatarDup: `Questo avatar è già stato segnalato da un altro giocatore.`, reportAvatarError: `Si è verificato un errore durante la segnalazione dell'avatar.`, piReportAvatar: `Segnala avatar`,
+  avImgNotImage: `Scegli un file immagine.`, avImgTooLarge: `Questa immagine è troppo grande. Scegline una più piccola.`, avImgInvalid: `Immagine non valida.`, avImgFailed: `Non è stato possibile elaborare questa immagine.`,
   filterRanked: 'Classificate', plSortAZ: 'Ordina A–Z', plSortCountry:'Ordina per nazionalità',
   plInGame: 'In partita', plLobby: 'Nella lobby',
   buttonsPokerth: 'PokerTH',

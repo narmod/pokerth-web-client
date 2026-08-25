@@ -95,6 +95,7 @@ export const strings = {
   spectatingBadge: `Tilskuer`,
   reportGameTitle: `Rapporter upassende spillnavn`, reportGameConfirm: `Rapporter`, reportGameMsg: `Er du sikker på at du vil rapportere spillnavnet «{name}» som upassende?`, reportGameAccepted: `Rapporten om spillnavnet ble godtatt av serveren. Takk.`, reportGameDup: `Dette spillnavnet er allerede rapportert av en annen spiller.`, reportGameError: `Det oppstod en feil under rapportering av spillnavnet.`,
   reportAvatarTitle: `Rapporter upassende avatar`, reportAvatarMsg: `Vil du virkelig rapportere avataren til "{name}" som upassende?`, reportAvatarAccepted: `Serveren tok imot rapporten om avataren. Takk.`, reportAvatarDup: `Denne avataren er allerede rapportert av en annen spiller.`, reportAvatarError: `Det oppsto en feil under rapporteringen av avataren.`, piReportAvatar: `Rapporter avatar`,
+  avImgNotImage: `Velg en bildefil.`, avImgTooLarge: `Dette bildet er for stort. Velg et mindre.`, avImgInvalid: `Ugyldig bilde.`, avImgFailed: `Bildet kunne ikke behandles.`,
   filterRanked: 'Rangerte', plSortAZ: 'Sorter A–Z', plSortCountry: 'Sorter etter land',
   plInGame: 'I spill', plLobby: 'I lobbyen',
   buttonsPokerth: 'PokerTH',

@@ -97,6 +97,7 @@ export const strings = {
   spectatingBadge: `A assistir`,
   reportGameTitle: `Reportar nome de jogo inapropriado`, reportGameConfirm: `Reportar`, reportGameMsg: `Tens a certeza de que queres reportar o nome do jogo: "{name}" como inapropriado?`, reportGameAccepted: `O reporte do nome do jogo foi aceite pelo servidor. Obrigado.`, reportGameDup: `Este nome de jogo já foi reportado por outro jogador.`, reportGameError: `Ocorreu um erro ao reportar o nome do jogo.`,
   reportAvatarTitle: `Denunciar avatar impróprio`, reportAvatarMsg: `Tem a certeza de que deseja denunciar o avatar de «{name}» como impróprio?`, reportAvatarAccepted: `O servidor aceitou a denúncia do avatar. Obrigado.`, reportAvatarDup: `Este avatar já foi denunciado por outro jogador.`, reportAvatarError: `Ocorreu um erro ao denunciar o avatar.`, piReportAvatar: `Denunciar avatar`,
+  avImgNotImage: `Escolha um ficheiro de imagem.`, avImgTooLarge: `Esta imagem é demasiado grande. Escolha uma mais pequena.`, avImgInvalid: `Imagem inválida.`, avImgFailed: `Não foi possível processar esta imagem.`,
   filterRanked: 'Classificadas', plSortAZ: 'Ordenar A–Z', plSortCountry: 'Ordenar por país',
   plInGame: 'Em jogo', plLobby: 'No lobby',
   buttonsPokerth: 'PokerTH',

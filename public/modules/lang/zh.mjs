@@ -97,6 +97,7 @@ export const strings = {
   spectatingBadge: `观战中`,
   reportGameTitle: `举报不当的游戏名称`, reportGameConfirm: `举报`, reportGameMsg: `确定要将游戏名称"{name}"举报为不当内容吗？`, reportGameAccepted: `服务器已接受该游戏名称的举报。谢谢。`, reportGameDup: `该游戏名称已被其他玩家举报。`, reportGameError: `举报游戏名称时发生错误。`,
   reportAvatarTitle: `举报不当头像`, reportAvatarMsg: `确定要举报“{name}”的头像为不当内容吗？`, reportAvatarAccepted: `服务器已受理该头像举报，谢谢。`, reportAvatarDup: `该头像已被其他玩家举报。`, reportAvatarError: `举报头像时发生错误。`, piReportAvatar: `举报头像`,
+  avImgNotImage: `请选择图片文件。`, avImgTooLarge: `该图片过大，请选择较小的图片。`, avImgInvalid: `图片无效。`, avImgFailed: `无法处理该图片。`,
   filterRanked: '排名对局', plSortAZ: '按 A–Z 排序', plSortCountry: '按国家排序',
   plInGame: '对局中', plLobby: '大厅中',
   buttonsPokerth: 'PokerTH',

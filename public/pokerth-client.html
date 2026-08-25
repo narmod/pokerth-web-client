@@ -588,49 +588,103 @@ function onAvatarImageChosen(input) {
 }
 // Shared avatar-file processing (input file OR drag-and-drop from the
 // Import tab of the avatar studio, modules/ui/avatar-studio.mjs).
+//
+// Mémoire : une photo de téléphone se décompresse à largeur × hauteur × 4
+// octets AVANT d'être ramenée à 96×96 — 48 Mo pour un 12 Mpx, bien plus pour
+// un capteur récent. Deux précautions, l'une et l'autre indispensables sur
+// iPhone où l'onglet est tué sans avertissement :
+//   · createImageBitmap(file) décode le Blob DIRECTEMENT, sans passer par une
+//     data-URL. L'ancien FileReader.readAsDataURL fabriquait une chaîne base64
+//     de 1,33× le fichier, gardée vivante pendant tout le décodage, puis
+//     confiée au ramasse-miettes à une date inconnue. bmp.close() libère, lui,
+//     de façon déterministe. Repli objectURL + Image() pour les navigateurs
+//     sans createImageBitmap (révoqué dès le dessin terminé).
+//   · un garde-fou sur la TAILLE DU FICHIER, seul contrôle possible avant tout
+//     décodage : au-delà, on refuse proprement plutôt que de risquer le
+//     plantage. Le pic de décodage lui-même reste inévitable dès qu'on veut
+//     l'image ; on le borne, on ne le supprime pas.
+var _AV_MAX_FILE_BYTES = 30 * 1024 * 1024;
+function _avMsg(key, fallback) {
+  try { var v = (typeof t === 'function') ? t(key) : null; if (v && v !== key) return v; } catch (e) {}
+  return fallback;
+}
+function _avWarn(key, fallback) {
+  var m = _avMsg(key, fallback);
+  try { if (typeof window.showToast === 'function') { window.showToast(m, { tone: 'error', icon: '\u2715' }); return; } } catch (e) {}
+  alert(m);
+}
 function _processAvatarFile(file) {
   if (!file) return;
-  if (!/^image\//.test(file.type)) { alert("Veuillez choisir un fichier image."); return; }
-  var reader = new FileReader();
-  reader.onload = function(e) {
+  if (!/^image\//.test(file.type)) { _avWarn('avImgNotImage', 'Please choose an image file.'); return; }
+  if (file.size > _AV_MAX_FILE_BYTES) { _avWarn('avImgTooLarge', 'This image is too large. Please choose a smaller one.'); return; }
+
+  // Dessine la source (ImageBitmap ou HTMLImageElement) en 96×96 « cover »,
+  // puis poursuit le flux commun. `release` libère la ressource sous-jacente.
+  function draw(src, w, h, release) {
+    var dataUrl;
+    try {
+      var S = 96; // avatar carré, suffisant pour les sièges
+      var canvas = document.createElement("canvas");
+      canvas.width = S; canvas.height = S;
+      var ctx = canvas.getContext("2d");
+      var scale = Math.max(S / w, S / h); // cover
+      var dw = w * scale, dh = h * scale;
+      ctx.drawImage(src, (S - dw) / 2, (S - dh) / 2, dw, dh);
+      dataUrl = canvas.toDataURL("image/jpeg", 0.85);
+      localStorage.setItem("pth_avatar_img", dataUrl);
+      localStorage.setItem("pth_avatar", "__img__");
+    } catch (err) {
+      try { release && release(); } catch (e) {}
+      _avWarn('avImgFailed', 'This image could not be processed.');
+      return;
+    }
+    try { release && release(); } catch (e) {}
+    selectAvatarPopup("__img__"); // met à jour trigger + sièges + barre
+    // Diffuser l'image aux autres joueurs connectés au proxy.
+    if (typeof window._broadcastMyAvatar === "function") window._broadcastMyAvatar("__img__");
+    // Fermer comme un choix de la galerie : en mode modal, le
+    // display:flex !important de .avatar-popup-as-modal l'emporte sur
+    // le display:'none' inline pose par selectAvatarPopup.
+    if (typeof window.closeAvatarPickerFromLobby === "function") window.closeAvatarPickerFromLobby();
+    try { if (typeof window.updateLobbyPill === "function") window.updateLobbyPill(); } catch (e) {}
+    // Si le popup de profil (lobby) est ouvert, repeupler son gros avatar
+    // tout de suite. Le flux emoji passe par un clic sur .avp-btn qui
+    // rappelle openPlayerInfoPopup() ; le flux photo (input file) ne le
+    // déclenche pas, d'où l'avatar figé jusqu'à réouverture du popup.
+    try {
+      var _pi = document.getElementById("player-info-modal");
+      if (_pi && _pi.style.display !== "none" && typeof window.openPlayerInfoPopup === "function") {
+        window.openPlayerInfoPopup();
+      }
+    } catch (e) {}
+  }
+
+  // Repli : objectURL + Image(). Toujours moins coûteux que la data-URL, et
+  // révoqué dès le dessin terminé.
+  function viaImage() {
+    var url;
+    try { url = URL.createObjectURL(file); } catch (e) { _avWarn('avImgInvalid', 'Invalid image.'); return; }
     var img = new Image();
-    img.onload = function() {
-      var dataUrl;
-      try {
-        var S = 96; // avatar carré, suffisant pour les sièges
-        var canvas = document.createElement("canvas");
-        canvas.width = S; canvas.height = S;
-        var ctx = canvas.getContext("2d");
-        var scale = Math.max(S / img.width, S / img.height); // cover
-        var w = img.width * scale, h = img.height * scale;
-        ctx.drawImage(img, (S - w) / 2, (S - h) / 2, w, h);
-        dataUrl = canvas.toDataURL("image/jpeg", 0.85);
-        localStorage.setItem("pth_avatar_img", dataUrl);
-        localStorage.setItem("pth_avatar", "__img__");
-      } catch (err) { alert("Impossible de traiter cette image."); return; }
-      selectAvatarPopup("__img__"); // met à jour trigger + sièges + barre
-      // Diffuser l'image aux autres joueurs connectés au proxy.
-      if (typeof window._broadcastMyAvatar === "function") window._broadcastMyAvatar("__img__");
-      // Fermer comme un choix de la galerie : en mode modal, le
-      // display:flex !important de .avatar-popup-as-modal l'emporte sur
-      // le display:'none' inline pose par selectAvatarPopup.
-      if (typeof window.closeAvatarPickerFromLobby === "function") window.closeAvatarPickerFromLobby();
-      try { if (typeof window.updateLobbyPill === "function") window.updateLobbyPill(); } catch (e) {}
-      // Si le popup de profil (lobby) est ouvert, repeupler son gros avatar
-      // tout de suite. Le flux emoji passe par un clic sur .avp-btn qui
-      // rappelle openPlayerInfoPopup() ; le flux photo (input file) ne le
-      // déclenche pas, d'où l'avatar figé jusqu'à réouverture du popup.
-      try {
-        var _pi = document.getElementById("player-info-modal");
-        if (_pi && _pi.style.display !== "none" && typeof window.openPlayerInfoPopup === "function") {
-          window.openPlayerInfoPopup();
-        }
-      } catch (e) {}
+    img.onload = function () {
+      draw(img, img.width, img.height, function () {
+        try { img.src = ''; } catch (e) {}
+        try { URL.revokeObjectURL(url); } catch (e) {}
+      });
     };
-    img.onerror = function() { alert("Image invalide."); };
-    img.src = e.target.result;
-  };
-  reader.readAsDataURL(file);
+    img.onerror = function () {
+      try { URL.revokeObjectURL(url); } catch (e) {}
+      _avWarn('avImgInvalid', 'Invalid image.');
+    };
+    img.src = url;
+  }
+
+  if (typeof createImageBitmap === 'function') {
+    createImageBitmap(file).then(function (bmp) {
+      draw(bmp, bmp.width, bmp.height, function () { try { bmp.close(); } catch (e) {} });
+    }).catch(function () { viaImage(); });
+  } else {
+    viaImage();
+  }
 }
 
 </script>

@@ -101,6 +101,7 @@ export const strings = {
   spectatingBadge: `Наблюдатель`,
   reportGameTitle: `Сообщить о недопустимом названии игры`, reportGameConfirm: `Сообщить`, reportGameMsg: `Вы действительно хотите сообщить, что название игры "{name}" является недопустимым?`, reportGameAccepted: `Сообщение о названии игры было принято сервером. Спасибо.`, reportGameDup: `Об этом названии игры уже сообщалось другим игроком.`, reportGameError: `Произошла ошибка при сообщении о названии игры.`,
   reportAvatarTitle: `Пожаловаться на аватар`, reportAvatarMsg: `Вы действительно хотите пожаловаться на аватар игрока «{name}»?`, reportAvatarAccepted: `Сервер принял жалобу на аватар. Спасибо.`, reportAvatarDup: `На этот аватар уже пожаловался другой игрок.`, reportAvatarError: `При отправке жалобы на аватар произошла ошибка.`, piReportAvatar: `Пожаловаться на аватар`,
+  avImgNotImage: `Выберите файл изображения.`, avImgTooLarge: `Это изображение слишком большое. Выберите поменьше.`, avImgInvalid: `Недопустимое изображение.`, avImgFailed: `Не удалось обработать это изображение.`,
   filterRanked: 'Рейтинговые', plSortAZ: 'Сортировка А–Я', plSortCountry: 'Сортировка по стране',
   plInGame: 'В игре', plLobby: 'В лобби',
   buttonsPokerth: 'PokerTH',

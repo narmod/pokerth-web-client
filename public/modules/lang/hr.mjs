@@ -96,6 +96,7 @@ export const strings = {
   spectatingBadge: `Gledatelj`,
   reportGameTitle: `Prijavi neprikladan naziv igre`, reportGameConfirm: `Prijavi`, reportGameMsg: `Jeste li sigurni da želite prijaviti naziv igre "{name}" kao neprikladan?`, reportGameAccepted: `Poslužitelj je prihvatio prijavu naziva igre. Hvala.`, reportGameDup: `Ovaj naziv igre već je prijavio drugi igrač.`, reportGameError: `Došlo je do pogreške pri prijavi naziva igre.`,
   reportAvatarTitle: `Prijavi neprikladan avatar`, reportAvatarMsg: `Želite li stvarno prijaviti avatar igrača „{name}” kao neprikladan?`, reportAvatarAccepted: `Poslužitelj je prihvatio prijavu avatara. Hvala.`, reportAvatarDup: `Ovaj je avatar već prijavio drugi igrač.`, reportAvatarError: `Došlo je do pogreške pri prijavi avatara.`, piReportAvatar: `Prijavi avatar`,
+  avImgNotImage: `Odaberite datoteku slike.`, avImgTooLarge: `Ova je slika prevelika. Odaberite manju.`, avImgInvalid: `Nevaljana slika.`, avImgFailed: `Ovu sliku nije bilo moguće obraditi.`,
   filterRanked: 'Rangirane', plSortAZ: 'Sortiraj A–Z', plSortCountry: 'Sortiraj po državi',
   plInGame: 'U igri', plLobby: 'U lobbyju',
   buttonsPokerth: 'PokerTH',

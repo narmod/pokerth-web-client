@@ -1,4 +1,6 @@
 2026-08-13 version 2.1.7-web (current series):
+- improvement: choosing a photo as your avatar is lighter on memory, which matters most on phones - a large picture used to be copied and held in memory twice before being shrunk, and could take the tab down with it. Pictures over 30 MB are now turned away with a clear message instead
+- bugfix: the three errors you can hit when importing an avatar photo were always shown in French, whatever your language. They are now translated
 - new: you can now report an inappropriate avatar. Open a player's profile and the option sits under Ignore - the same report the desktop client sends, and it lands in the same moderation queue. Available on phones too, where the desktop client offers no such menu
 - improvement: emoji reactions now reach the table almost instantly. They used to be held back by about a second and a half - a safety margin set before we knew the server's real limit, which turned out to be far more generous
 - bugfix: the "restore your settings" banner did nothing when you clicked Restore - the reason for the failure was shown in a message that appeared behind the banner itself, so nothing seemed to happen. The banner now says what is wrong right where you are looking: no backup file in that folder, folder access not granted, an empty or unreadable file

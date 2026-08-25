@@ -96,6 +96,7 @@ export const strings = {
   spectatingBadge: `Đang xem`,
   reportGameTitle: `Thông báo cho ban quản trị về tên của màn chơi vi phạm luật`, reportGameConfirm: `Tố cáo`, reportGameMsg: `Bạn có chắc rằng bạn muốn tố cáo tên màn game : "{name}" vì lý do không hợp lệ hay không?`, reportGameAccepted: `Thông báo về tên màn chơi đã được máy chủ ghi nhận. Cảm ơn bạn.`, reportGameDup: `Tên của màn chơi này hiện đã bị một người dùng khác thông báo rằng bạn đã vi phạm luật.`, reportGameError: `Một lỗi đã xảy ra khi tiến hành gửi thông báo vi phạm tên màn chơi.`,
   reportAvatarTitle: `Báo cáo ảnh đại diện không phù hợp`, reportAvatarMsg: `Bạn có chắc muốn báo cáo ảnh đại diện của "{name}" là không phù hợp?`, reportAvatarAccepted: `Máy chủ đã tiếp nhận báo cáo ảnh đại diện. Cảm ơn bạn.`, reportAvatarDup: `Ảnh đại diện này đã được người chơi khác báo cáo.`, reportAvatarError: `Đã xảy ra lỗi khi báo cáo ảnh đại diện.`, piReportAvatar: `Báo cáo ảnh đại diện`,
+  avImgNotImage: `Vui lòng chọn một tệp hình ảnh.`, avImgTooLarge: `Hình ảnh này quá lớn. Vui lòng chọn hình nhỏ hơn.`, avImgInvalid: `Hình ảnh không hợp lệ.`, avImgFailed: `Không thể xử lý hình ảnh này.`,
   filterRanked: 'Xếp hạng', plSortAZ: 'Sắp xếp A–Z', plSortCountry: 'Sắp xếp theo quốc gia',
   plInGame: 'Đang chơi', plLobby: 'Ở sảnh',
   buttonsPokerth: 'PokerTH',

@@ -95,6 +95,7 @@ export const strings = {
   spectatingBadge: `観戦中`,
   reportGameTitle: `不適切なゲーム名を報告`, reportGameConfirm: `報告`, reportGameMsg: `ゲーム名「{name}」を不適切として報告してもよろしいですか？`, reportGameAccepted: `ゲーム名の報告がサーバーに受理されました。ありがとうございます。`, reportGameDup: `このゲーム名は既に他のプレイヤーによって報告されています。`, reportGameError: `ゲーム名の報告中にエラーが発生しました。`,
   reportAvatarTitle: `不適切なアバターを報告`, reportAvatarMsg: `「{name}」のアバターを不適切として報告しますか？`, reportAvatarAccepted: `アバターの報告がサーバーに受理されました。ありがとうございます。`, reportAvatarDup: `このアバターは既に別のプレイヤーが報告しています。`, reportAvatarError: `アバターの報告中にエラーが発生しました。`, piReportAvatar: `アバターを報告`,
+  avImgNotImage: `画像ファイルを選択してください。`, avImgTooLarge: `この画像は大きすぎます。もっと小さいものを選んでください。`, avImgInvalid: `無効な画像です。`, avImgFailed: `この画像は処理できませんでした。`,
   filterRanked: 'ランク戦', plSortAZ: 'A–Z順', plSortCountry: '国別に並べ替え',
   plInGame: '対戦中', plLobby: 'ロビー',
   buttonsPokerth: 'PokerTH',

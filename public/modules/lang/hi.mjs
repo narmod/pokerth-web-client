@@ -100,6 +100,7 @@ export const strings = {
   spectatingBadge: `दर्शक`,
   reportGameTitle: `अनुचित गेम नाम की रिपोर्ट करें`, reportGameConfirm: `रिपोर्ट करें`, reportGameMsg: `क्या आप वाकई गेम नाम "{name}" को अनुचित के रूप में रिपोर्ट करना चाहते हैं?`, reportGameAccepted: `गेम नाम की रिपोर्ट सर्वर द्वारा स्वीकार कर ली गई। धन्यवाद।`, reportGameDup: `इस गेम नाम की रिपोर्ट पहले ही किसी अन्य खिलाड़ी द्वारा की जा चुकी है।`, reportGameError: `गेम नाम की रिपोर्ट करते समय एक त्रुटि हुई।`,
   reportAvatarTitle: `अनुचित अवतार की रिपोर्ट करें`, reportAvatarMsg: `क्या आप वाकई "{name}" के अवतार को अनुचित बताकर रिपोर्ट करना चाहते हैं?`, reportAvatarAccepted: `सर्वर ने अवतार की रिपोर्ट स्वीकार कर ली है। धन्यवाद।`, reportAvatarDup: `इस अवतार की रिपोर्ट पहले ही किसी अन्य खिलाड़ी ने कर दी है।`, reportAvatarError: `अवतार की रिपोर्ट करते समय त्रुटि हुई।`, piReportAvatar: `अवतार की रिपोर्ट करें`,
+  avImgNotImage: `कृपया एक छवि फ़ाइल चुनें।`, avImgTooLarge: `यह छवि बहुत बड़ी है। कृपया छोटी छवि चुनें।`, avImgInvalid: `अमान्य छवि।`, avImgFailed: `इस छवि को संसाधित नहीं किया जा सका।`,
   filterRanked: 'रैंक वाली', plSortAZ: 'A–Z क्रम', plSortCountry: 'देश के अनुसार क्रमबद्ध करें',
   plInGame: 'खेल में', plLobby: 'लॉबी में',
   buttonsPokerth: 'PokerTH',

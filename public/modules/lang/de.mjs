@@ -103,6 +103,7 @@ export const strings = {
   spectatingBadge: `Zuschauen`,
   reportGameTitle: `Unangemessenen Spielnamen melden`, reportGameConfirm: `Melden`, reportGameMsg: `Möchten Sie den Spielnamen wirklich als unangemessen melden: "{name}"?`, reportGameAccepted: `Die Meldung des Spielnamens wurde vom Server angenommen. Vielen Dank.`, reportGameDup: `Dieser Spielname wurde bereits von einem anderen Spieler gemeldet.`, reportGameError: `Beim Melden des Spielnamens ist ein Fehler aufgetreten.`,
   reportAvatarTitle: `Unpassenden Avatar melden`, reportAvatarMsg: `Möchten Sie den Avatar von „{name}“ wirklich als unangemessen melden?`, reportAvatarAccepted: `Die Avatar-Meldung wurde vom Server angenommen. Danke.`, reportAvatarDup: `Dieser Avatar wurde bereits von einem anderen Spieler gemeldet.`, reportAvatarError: `Beim Melden des Avatars ist ein Fehler aufgetreten.`, piReportAvatar: `Avatar melden`,
+  avImgNotImage: `Bitte wählen Sie eine Bilddatei.`, avImgTooLarge: `Dieses Bild ist zu groß. Bitte wählen Sie ein kleineres.`, avImgInvalid: `Ungültiges Bild.`, avImgFailed: `Dieses Bild konnte nicht verarbeitet werden.`,
   filterRanked: 'Gewertet', plSortAZ: 'Sortieren A–Z', plSortCountry: 'Nach Land sortieren',
   plInGame: 'Im Spiel', plLobby: 'In der Lobby',
   buttonsPokerth: 'PokerTH',

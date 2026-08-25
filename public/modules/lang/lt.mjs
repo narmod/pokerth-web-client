@@ -96,6 +96,7 @@ export const strings = {
   spectatingBadge: `Stebėtojas`,
   reportGameTitle: `Pranešti apie netinkamą žaidimo pavadinimą`, reportGameConfirm: `Pranešti`, reportGameMsg: `Ar tikrai norite pranešti apie žaidimo pavadinimą „{name}“ kaip netinkamą?`, reportGameAccepted: `Serveris priėmė pranešimą apie žaidimo pavadinimą. Ačiū.`, reportGameDup: `Apie šį žaidimo pavadinimą jau pranešė kitas žaidėjas.`, reportGameError: `Pranešant apie žaidimo pavadinimą įvyko klaida.`,
   reportAvatarTitle: `Pranešti apie netinkamą avatarą`, reportAvatarMsg: `Ar tikrai norite pranešti apie žaidėjo „{name}“ avatarą kaip netinkamą?`, reportAvatarAccepted: `Serveris priėmė pranešimą apie avatarą. Ačiū.`, reportAvatarDup: `Apie šį avatarą jau pranešė kitas žaidėjas.`, reportAvatarError: `Pranešant apie avatarą įvyko klaida.`, piReportAvatar: `Pranešti apie avatarą`,
+  avImgNotImage: `Pasirinkite vaizdo failą.`, avImgTooLarge: `Šis vaizdas per didelis. Pasirinkite mažesnį.`, avImgInvalid: `Netinkamas vaizdas.`, avImgFailed: `Nepavyko apdoroti šio vaizdo.`,
   filterRanked: 'Reitinguoti', plSortAZ: 'Rikiuoti A–Z', plSortCountry: 'Rikiuoti pagal šalį',
   plInGame: 'Žaidime', plLobby: 'Vestibiulyje',
   buttonsPokerth: 'PokerTH',

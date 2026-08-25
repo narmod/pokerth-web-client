@@ -13,6 +13,25 @@ this file captures what matters to players and operators.
 Opened with `v2.1.7-web.0` (2026-08-13), following the upstream **2.1.7**
 release.
 
+### Changed
+- **Importing an avatar photo no longer builds a base64 copy first** (`web.73`) —
+  `_processAvatarFile` read the file through `FileReader.readAsDataURL`, which
+  produces a base64 string about 1.33× the file size and keeps it alive for the
+  whole decode, then hands it to the garbage collector at an unknown time. A
+  phone photo also decompresses to width × height × 4 bytes before being
+  reduced to 96×96 — 48 MB for a 12 Mpx shot, considerably more on a recent
+  sensor. On iOS the tab is killed without warning when that adds up. The file
+  is now decoded straight from the Blob via `createImageBitmap`, released
+  deterministically with `bmp.close()`, and the fallback path uses an object
+  URL revoked as soon as the draw completes. Files above 30 MB are refused up
+  front, that being the only check possible before any decoding. The decode
+  peak itself is unavoidable once the image is wanted; this bounds it rather
+  than removing it.
+- **Avatar import errors are translated** (`web.73`) — the three failure paths
+  raised a French `alert()` hardcoded in the HTML, in a client shipping 45
+  languages. They now go through `showToast` with translated strings, falling
+  back to `alert` only if the toast helper isn't up yet.
+
 ### Added
 - **Report an inappropriate avatar** (`web.72`) — the official clients let you
   report a player's avatar to the pokerth.net moderation queue, and the web

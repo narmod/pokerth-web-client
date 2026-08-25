@@ -104,6 +104,7 @@ export const strings = {
   spectatingBadge: 'צפייה',
   reportGameTitle: 'דיווח על שם משחק לא הולם', reportGameConfirm: 'דיווח', reportGameMsg: 'לדווח על שם המשחק "{name}" כלא הולם?', reportGameAccepted: 'השרת קיבל את הדיווח על שם המשחק. תודה.', reportGameDup: 'שחקן אחר כבר דיווח על שם המשחק הזה.', reportGameError: 'אירעה שגיאה בדיווח על שם המשחק.',
   reportAvatarTitle: `דיווח על אווטאר לא הולם`, reportAvatarMsg: `האם אתה בטוח שברצונך לדווח על האווטאר של "{name}" כלא הולם?`, reportAvatarAccepted: `השרת קיבל את הדיווח על האווטאר. תודה.`, reportAvatarDup: `שחקן אחר כבר דיווח על האווטאר הזה.`, reportAvatarError: `אירעה שגיאה בעת הדיווח על האווטאר.`, piReportAvatar: `דיווח על האווטאר`,
+  avImgNotImage: `בחר קובץ תמונה.`, avImgTooLarge: `התמונה הזו גדולה מדי. בחר תמונה קטנה יותר.`, avImgInvalid: `תמונה לא חוקית.`, avImgFailed: `לא ניתן היה לעבד את התמונה הזו.`,
   buttonsPokerth: 'PokerTH',
   hdrWaitingPlayers:'ממתין לשחקנים', hdrSpectatingWait:'צפייה — ממתין ליד הבאה', wpWaitingPlayers:'ממתין לשחקנים…', wpFillBots:'מילוי בשחקני מחשב', wpStartGame:'התחלת משחק', wpLeaveGame:'עזיבת המשחק', wpInvite:'הזמנת חברים', advInviteLink:'הצג את כפתור “הזמנת חברים” בחדר ההמתנה', sharedTableNotFound:'🔗 השולחן המשותף לא נמצא — ייתכן שהמשחק כבר הסתיים.',
   assist:'עזר',assistPopOut:'ניתוק לחלון נפרד',assistDock:'עגינה חזרה בלוח',advCatUI:'ממשק משתמש',advCatStyle:'סגנון',advCatSound:'צליל',advCatLocal:'משחק מקומי',advCatNetwork:'משחק רשת',advCatInternet:'משחק אינטרנט',advCatAvatar:'כינויים / אווטארים',advCatLog:'הודעות יומן',advCatReset:'שחזור ברירות מחדל',
