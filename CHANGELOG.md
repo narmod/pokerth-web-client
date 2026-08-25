@@ -22,6 +22,14 @@ release.
   `SEO_RULES_I18N` rather than introducing a second script for one page.
 
 ### Fixed
+- **The announced build id fell back to 2.1.6 after the 2.1.7 release**
+  (`web.91`) — both `proto/index.mjs` and `net/messages.mjs` derive the upstream
+  triple from `BUILD_VERSION` at runtime, but their hard-coded fallbacks (used
+  when `BUILD_VERSION` is absent or malformed) were never bumped past 2.1.6.
+  `test-build-id` had been failing since the 2.1.7 line opened. Both fallbacks
+  now read 2.1.7, and the buildId comment states the current server floor
+  (2.1.7 requires at least 2.1.6 = `0x01020106`). The runtime derivation is
+  untouched, so nothing changes on a normally loaded client.
 - **Translation was dead in the installed iOS app** (`web.90`) — chat messages
   and forum posts could not be translated from a home-screen web app on iPhone,
   while the very same request succeeded in a Safari tab and on desktop. WebKit

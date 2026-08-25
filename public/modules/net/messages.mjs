@@ -197,7 +197,7 @@ const MSG = (() => {
     // ex. 2.1.4-web.0) : bumper la version de build suffit à suivre les releases
     // PokerTH (politique serveur : release courante ou précédente uniquement,
     // sinon ERR_NET_VERSION_NOT_SUPPORTED). Repli : triple en dur ci-dessous.
-    let UPSTREAM_MAJOR = 2, UPSTREAM_MINOR = 1, UPSTREAM_PATCH = 6;
+    let UPSTREAM_MAJOR = 2, UPSTREAM_MINOR = 1, UPSTREAM_PATCH = 7;
     try {
       const _bv = /^(\d+)\.(\d+)\.(\d+)-web\.\d+$/.exec(window.BUILD_VERSION || '');
       if (_bv) { UPSTREAM_MAJOR = +_bv[1]; UPSTREAM_MINOR = +_bv[2]; UPSTREAM_PATCH = +_bv[3]; }
@@ -207,8 +207,8 @@ const MSG = (() => {
     const USE_CLIENT_TYPE_WEB   = false; // ← basculer à true quand sp0ck confirme 0x03
     const clientType = USE_CLIENT_TYPE_WEB ? CLIENT_TYPE_WEB : CLIENT_TYPE_QT_WIDGET;
     // buildId composite (type<<24)|(major<<16)|(minor<<8)|patch.
-    // Aujourd'hui : 0x01020106 (Qt-Widget 2.1.6 ; serveur 2.1.6 exige min 2.1.5 = 0x01020105,
-    // cf. game_defs.h MIN_BUILD_ID_QT_WIDGET a la release 2.1.6).
+    // Aujourd'hui : 0x01020107 (Qt-Widget 2.1.7 ; serveur 2.1.7 exige min 2.1.6 = 0x01020106,
+    // cf. game_defs.h MIN_BUILD_ID_QT_WIDGET a la release 2.1.7).
     const BUILD_ID = ((clientType << 24) | (UPSTREAM_MAJOR << 16) | (UPSTREAM_MINOR << 8) | UPSTREAM_PATCH) >>> 0;
     const ver = Proto.encode([[1,0,major],[2,0,minor]]);
     const fields = [

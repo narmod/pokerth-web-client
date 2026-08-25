@@ -49,7 +49,7 @@ export const ErrorReason = pb.ErrorMessage.ErrorReason;            // initAuthFa
 // ('MAJ.MIN.PATCH-web.N') — posee par pokerth.js dans le navigateur et par
 // proxy.js (version de package.json) cote Node. Repli : release courante.
 export const BUILD_ID = (() => {
-  let M = 2, N = 1, P = 6; // repli : release upstream courante
+  let M = 2, N = 1, P = 7; // repli : release upstream courante
   try {
     const m = /^(\d+)\.(\d+)\.(\d+)-web\.\d+$/.exec(String(globalThis.BUILD_VERSION || ''));
     if (m) { M = +m[1]; N = +m[2]; P = +m[3]; }
