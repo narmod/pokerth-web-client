@@ -14,6 +14,14 @@ Opened with `v2.1.7-web.0` (2026-08-13), following the upstream **2.1.7**
 release.
 
 ### Changed
+- **Admin · Music: play count in a badge, and a typed rank** (`web.70`) — the
+  play count was appended after the title, which put it on the meta line where
+  it ran straight into the track id (`5 playspokerth-jingle`). It is now a
+  pill at the end of the row, next to the controls. Each row also gets a
+  number field showing its rank in the list: type a position, press Enter, and
+  the entry moves there — the ▲/▼ buttons stay for one-step nudges. Reordering
+  was rewritten to rewrite the shown group into its own slots in the global
+  list, so moving a track can no longer disturb the radios.
 - **Admin · Traffic: new vs returning folded into the 14-day chart** (`web.69`) —
   the panel drew the same fourteen days twice, once for visits/unique and once
   for new/returning, so comparing a spike against its make-up meant scrolling

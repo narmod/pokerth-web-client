@@ -476,7 +476,17 @@
         </div>
       </div>
       <div class="card">
-        <style>.mzplays{margin-left:8px;font-size:.72rem;font-weight:600;opacity:.65;white-space:nowrap;vertical-align:1px}</style>
+        <style>
+          /* Le compte de lectures etait pose apres le titre, donc sur la ligne
+             de la meta (artiste · id) : il s'y collait et se lisait comme une
+             partie de l'identifiant. Il devient une pastille posee au bout de
+             la ligne, avec les commandes. */
+          .mzplays{display:inline-flex;align-items:center;flex:none;padding:3px 9px;border-radius:12px;border:1px solid var(--line);background:transparent;color:var(--cream);font-size:.7rem;font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap;opacity:.85}
+          /* Rang saisissable : les fleches deplacent d'un cran, ce champ envoie
+             directement a la place voulue (21 pistes = 20 clics autrement). */
+          .mzpos{flex:none;width:46px;text-align:center;padding:5px 4px;border-radius:7px;border:1px solid var(--line);background:transparent;color:var(--cream);font-size:.78rem;font-family:inherit;font-variant-numeric:tabular-nums;-moz-appearance:textfield;appearance:textfield}
+          .mzpos::-webkit-outer-spin-button,.mzpos::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+        </style>
         <h2>Library</h2>
         <div class="seg" id="mzListSeg">
           <button id="mzLibTracks" class="on" type="button">Tracks <span id="mzCntT" class="muted"></span></button>
@@ -1376,17 +1386,39 @@
     api('/admin/music-edit',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id:id,token:tok(),title:title,artist:(inputs.artist.value||'').trim(),credit:(inputs.credit.value||'').trim(),licenseUrl:(inputs.licenseUrl.value||'').trim(),url:inputs.url?(inputs.url.value||'').trim():undefined})})
       .then(function(r){return r.json();}).then(function(d){ if(d.ok){ mzEditId=null; mzSay('Saved.','ok'); mzRefresh(); } else mzSay('Save: '+(d.error||'error'),'err'); }).catch(function(){ mzSay('Save failed - network error.','err'); });
   }
-  function mzMove(id,dir,grp){
-    var gi=-1; for(var k=0;k<grp.length;k++){ if(grp[k].id===id){ gi=k; break; } }
-    if(gi<0) return; var gj=gi+(dir<0?-1:1); if(gj<0||gj>=grp.length) return;
+  // Pistes et radios partagent une seule liste ordonnee cote serveur, mais on
+  // n'en montre qu'une moitie a la fois. Le groupe affiche occupe des
+  // emplacements fixes dans cette liste : on reordonne le groupe, puis on
+  // reecrit ses ids dans ces memes emplacements. L'autre groupe ne bouge pas.
+  function mzApplyGroupOrder(grpIds){
     var ids=mzAll.map(function(x){return x.id;});
-    var i=ids.indexOf(grp[gi].id), j=ids.indexOf(grp[gj].id);
-    if(i<0||j<0) return; var tmp=ids[i]; ids[i]=ids[j]; ids[j]=tmp;
+    var slots=[];
+    for(var i=0;i<ids.length;i++){ if(grpIds.indexOf(ids[i])>=0) slots.push(i); }
+    if(slots.length!==grpIds.length) return;
+    for(var k=0;k<slots.length;k++){ ids[slots[k]]=grpIds[k]; }
     api('/admin/music-order',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({order:ids,token:tok()})})
       .then(function(r){return r.json();}).then(function(d){ if(d.ok)mzRefresh(); else mzSay('Reorder: '+(d.error||'error'),'err'); }).catch(function(){ mzSay('Reorder failed - network error.','err'); });
   }
+  function mzIndexIn(grp,id){ for(var k=0;k<grp.length;k++){ if(grp[k].id===id) return k; } return -1; }
+  function mzMove(id,dir,grp){
+    var gi=mzIndexIn(grp,id); if(gi<0) return;
+    var gj=gi+(dir<0?-1:1); if(gj<0||gj>=grp.length) return;
+    var ids=grp.map(function(x){return x.id;});
+    var tmp=ids[gi]; ids[gi]=ids[gj]; ids[gj]=tmp;
+    mzApplyGroupOrder(ids);
+  }
+  // Saisie d'un rang : hors bornes ou inchange, on redessine simplement pour
+  // que le champ revienne a la position reelle plutot que de garder un chiffre
+  // qui ne correspond a rien.
+  function mzMoveTo(id,pos,grp){
+    var gi=mzIndexIn(grp,id); if(gi<0) return;
+    if(!isFinite(pos)||pos<1||pos>grp.length||pos-1===gi){ mzRenderList(mzAll); return; }
+    var ids=grp.map(function(x){return x.id;});
+    ids.splice(gi,1); ids.splice(pos-1,0,id);
+    mzApplyGroupOrder(ids);
+  }
   var mzAll=[], mzLib='tracks';
-  // Nombre de lectures affiché en face de chaque titre. mzPlaysKnown sépare
+  // Nombre de lectures, en pastille au bout de la ligne. mzPlaysKnown sépare
   // « ce proxy ne compte pas encore » (rien à montrer) de « il compte, mais
   // cette piste n'a pas encore été jouée » (0 lecture, qui est une information).
   function mzPlayBadge(p){
@@ -1409,7 +1441,16 @@
       if(!on)row.style.opacity='0.55';
       row.innerHTML='<div class="nm"><b></b><span></span></div>';
       row.querySelector('b').textContent=p.title||p.id; row.querySelector('span').textContent=(p.artist||'')+(p.artist?' \u00b7 ':'')+p.id+(p.stream?' \u00b7 \ud83d\udcfb LIVE':'')+(p.builtin?' \u00b7 built-in':'');
-      var pb=mzPlayBadge(p); if(pb) row.querySelector('.nm b').insertAdjacentElement('afterend',pb);
+      if(arr.length>1){
+        var np=document.createElement('input');
+        np.type='number'; np.min='1'; np.max=String(arr.length); np.step='1';
+        np.value=String(pi+1); np.className='mzpos'; np.inputMode='numeric'; np.autocomplete='off';
+        np.title='Position in the list \u2014 type a number and press Enter to move this entry there';
+        np.addEventListener('keydown',function(e){ if(e.key==='Enter'){ e.preventDefault(); np.blur(); } });
+        np.addEventListener('change',function(){ mzMoveTo(p.id,parseInt(np.value,10),arr); });
+        row.insertBefore(np,row.firstChild);
+      }
+      var pb=mzPlayBadge(p); if(pb) row.appendChild(pb);
       var tg=document.createElement('button'); tg.className='toggle '+(on?'on':'off'); tg.textContent=on?'On':'Off'; tg.title=on?'Audible to players \u2014 tap to hide':'Hidden \u2014 tap to show'; tg.addEventListener('click',function(){mzToggle(p.id,on);});
       row.appendChild(tg);
       var up=document.createElement('button'); up.className='use'; up.textContent='\u25B2'; up.title='Move up'; up.style.cssText='padding:6px 9px'; if(pi===0)up.disabled=true; up.addEventListener('click',function(){ mzMove(p.id,-1,arr); }); row.appendChild(up);
