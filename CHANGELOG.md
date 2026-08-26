@@ -98,6 +98,18 @@ release.
   `SEO_RULES_I18N` rather than introducing a second script for one page.
 
 ### Fixed
+- **Action icons drifted out of their columns** (`web.101`) — `.pl-acts` is
+  right-aligned (`justify-self: end`), so a row carrying fewer chips than the
+  track reserves shifts every icon one slot right. `web.92` added a spacer for a
+  missing envelope but `web.100` added no equivalent for the hammer, so an admin
+  saw their own row (no envelope, no hammer) land a slot off. Each row now emits
+  exactly as many slots as the track reserves — chip or spacer — and the admin
+  flag is read once per render rather than per row, so every row agrees even if
+  rights changed mid-loop.
+  New `scripts/test-pl-cols.mjs` renders the real list through
+  `renderPlayersList` in jsdom (reusing the `test-boot` harness rather than
+  reimplementing the logic) and checks slot parity, the grid track and hammer
+  visibility in both modes; it reports `[3,4,4]` on `web.100`.
 - **Players list rendered empty** (`web.98`) — regression from `web.96`. The
   `canSendPm` parity check read `S.games` and `S._currentLoginMode` directly, but
   `S` is scoped to the `App` IIFE and does not exist where `renderPlayersList`

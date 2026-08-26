@@ -10361,6 +10361,11 @@ function renderPlayersList() {
   var _invMode = _plWaitingMode() && (typeof App !== 'undefined') && App._inviteEligiblePids;
   var _invElig = {};
   if (_invMode) { try { App._inviteEligiblePids().forEach(function(p){ _invElig[p] = 1; }); } catch(e) { _invMode = false; } }
+  // Admin ? decide le nombre d'emplacements de la colonne d'actions ; lu une
+  // fois par rendu et non par ligne, pour que toutes les lignes s'accordent
+  // meme si les droits changeaient au milieu d'une boucle.
+  var _actsAdmin = false;
+  try { _actsAdmin = !!(window._amServerAdmin && window._amServerAdmin()); } catch (e) {}
   var rowHtml = function(r) {
     var esc = function(s) { return String(s).replace(/[<>&"]/g, function(c){return {'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'}[c];}); };
     // Avatar chip via the unified helper (same priority order as
@@ -10389,11 +10394,16 @@ function renderPlayersList() {
     var _ign  = _isIgnored(r.name);
     // Le 🚫 de ma propre ligne est conservé tel quel : le retirer serait un
     // changement visible à part entière (accord narmod 26/08).
+    // La cellule porte TOUJOURS le meme nombre d'emplacements que la piste
+    // reserve (3, ou 4 en admin) : une pastille absente laisse une cale de
+    // meme largeur. Sans elle, .pl-acts etant aligne a droite, une ligne
+    // depourvue d'enveloppe ou de marteau glissait d'un cran et ses icones
+    // ne tombaient plus sous la bonne pastille d'en-tete.
     var _acts = '<span class="pl-acts">'
       + (_plCanSendPm(r) ? '<button type="button" class="pl-act pl-act-pm" title="' + _tt('pmBtn','Private message') + '" data-i18n-title="pmBtn" aria-label="' + _tt('pmBtn','Private message') + '" onclick="event.stopPropagation();window._plOpenPm(' + r.pid + ')">' + _PL_MAIL_SVG + '</button>' : '<span class="pl-act-gap"></span>')
       + '<button type="button" class="pl-act pl-act-ban' + (_ign ? ' on' : '') + '" title="' + _tt('plIgnore','Ignore') + '" data-i18n-title="plIgnore" aria-label="' + _tt('plIgnore','Ignore') + '" onclick="event.stopPropagation();window._plToggleIgnore(' + r.pid + ')">' + _PL_BAN_SVG + '</button>'
       + '<button type="button" class="pl-act pl-act-stats" title="' + _tt('plStats','Stats') + '" data-i18n-title="plStats" aria-label="' + _tt('plStats','Stats') + '" onclick="event.stopPropagation();window._plOpenStats(' + _ppArg + ')">' + _PL_BAR_SVG + '</button>'
-      + (_plCanKickban(r) ? '<button type="button" class="pl-act pl-act-gavel" title="' + _tt('piKickban','Total kickban') + '" data-i18n-title="piKickban" aria-label="' + _tt('piKickban','Total kickban') + '" onclick="event.stopPropagation();window._adminBanPlayer(' + r.pid + ')">' + _PL_GAVEL_SVG + '</button>' : '')
+      + (_actsAdmin ? (_plCanKickban(r) ? '<button type="button" class="pl-act pl-act-gavel" title="' + _tt('piKickban','Total kickban') + '" data-i18n-title="piKickban" aria-label="' + _tt('piKickban','Total kickban') + '" onclick="event.stopPropagation();window._adminBanPlayer(' + r.pid + ')">' + _PL_GAVEL_SVG + '</button>' : '<span class="pl-act-gap"></span>') : '')
       + '</span>';
     var _plCell = function (k) {
       switch (k) {
@@ -10740,7 +10750,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.7-web.100'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.7-web.101'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
