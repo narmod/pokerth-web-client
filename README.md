@@ -36,7 +36,7 @@
 - 🎨 **Deep theming** — a QML-style styles window: table felt × card deck × card back × seats (buttons & pucks follow the table style)
 - ☁️ **Settings that follow you** — sign in with a registered account on your dedicated server and **every** option syncs automatically across your devices: the official settings travel as a standard PokerTH `config.xml`, and the web-only extras (theme, seats, keyboard, voice…) as a separate blob — on by default, one tap to turn off
 - 🌍 **45 languages**
-- 🤝 **Tracks the official QML client** — F-key shortcuts, admin tools, sounds, full chat and more, kept in sync as the official client evolves (currently the 2.1.4 build)
+- 🤝 **Tracks the official QML client** — F-key shortcuts, admin tools, sounds, full chat and more, kept in sync as the official client evolves
 
 <p align="center">
   <img src="docs/screenshots/20-desktop-game-saloon.png" alt="In-game desktop view — full ten-seat table on a custom felt, status bar, action bar and hand log" width="860"/>
@@ -230,7 +230,7 @@ This project is a **web frontend** that connects to any PokerTH server straight 
 
 ### Poker table
 - Seats positioned according to server order, **locked after the first deal** (no mid-game layout jumps)
-- **Responsive seat layout** — on phones and tablets the seats tighten around the felt so players stay close to the table; desktop keeps the wider layout. Portrait offers four seat renderings — automatic ring, official fixed slots, elliptical "necklace", and a free drag-and-drop custom layout — with seat geometry tuned to the official 2.1.3 client (self-weight 0.3 wide / 0.5 compact, fill-cap 1.9 / 2.3)
+- **Responsive seat layout** — on phones and tablets the seats tighten around the felt so players stay close to the table; desktop keeps the wider layout. Portrait offers four seat renderings — automatic ring, official fixed slots, elliptical "necklace", and a free drag-and-drop custom layout — with seat geometry tuned to the official client (self-weight 0.3 wide / 0.5 compact, fill-cap 1.9 / 2.3)
 - **Table zoom** — the base layout is always the faithful QML bisection (zoom 1); zoom is a uniform magnifier layered on top. On desktop, **+ / −** buttons enlarge or shrink the felt, community cards and opponents together (your own bar and the action bar stay put, the level is remembered, and the maximum is capped so the whole table stays on screen). On touch phones a **loupe button** toggles the official ×2 magnifier (QML `zoomLayer` parity): pan with a finger, auto-follow of the active seat, and automatic zoom-out at showdown
 - Casino-style chip tokens: SB 🔵, BB 🔴, Dealer ⚫ gold — with `chipPop` animation
 - SVG arc timer around the active player's avatar + seconds badge below
@@ -257,8 +257,8 @@ Plus a full **Advanced options** panel (sectioned: cards, betting, table, seats,
 
 ### Themes & customization
 A full appearance system, reached from the **Theme** button — a styles window modelled on the official client's *Style* settings, with four tabs (each choice remembered in `localStorage`):
-- **Table** — 14 table styles listed with a large preview, name and author, exactly like the official QML style picker: PokerTH (default), Green Casino, Danuxi Blue, Mute, Mute 02, Teal, Lemming, Matrix, Star Trek, TripSixes, Wanted, Xanax, and the two styles new in the official 2.1.4 release — Saloon and Discworld. Like the official `StyleProvider`, each table style carries its own felt, pucks and action-button skins — buttons and pucks are no longer separate axes
-- **Cards** — four built-in decks (PokerTH, PokerTH 1.0, **PokerTH Royal Classic** — the default, the official QML client's own deck — and Green Casino) plus the official PokerTH decks in the gallery, including the **Discworld** deck new in 2.1.4
+- **Table** — 14 table styles listed with a large preview, name and author, exactly like the official QML style picker: PokerTH (default), Green Casino, Danuxi Blue, Mute, Mute 02, Teal, Lemming, Matrix, Star Trek, TripSixes, Wanted, Xanax, and the more recent upstream additions Saloon and Discworld. Like the official `StyleProvider`, each table style carries its own felt, pucks and action-button skins — buttons and pucks are no longer separate axes
+- **Cards** — four built-in decks (PokerTH, PokerTH 1.0, **PokerTH Royal Classic** — the default, the official QML client's own deck — and Green Casino) plus the official PokerTH decks in the gallery, including the more recent **Discworld** deck
 - **Card back** — its own axis, independent from the deck, with an *Import an image…* option
 - **UI palette** (Dark / Light / Auto) follows the official *Dark Mode* setting in the Advanced options, matching the QML client
 - **Seat styles** — seat "packs", switchable like decks. The built-in **PokerTH** pack is a faithful render of the official QML player boxes, in a single pack whose landscape/portrait variant follows the screen orientation automatically; more packs (**Onyx Pill**, **Boardwalk**, **High Roller**…) come from the gallery and can be imported from a `.zip`. Pack names stay in English across all languages (like the poker terms); an explicit choice is saved in `localStorage`
@@ -266,7 +266,7 @@ A full appearance system, reached from the **Theme** button — a styles window 
 - **Glossy coloured action buttons** (Fold red / Check-Call blue / Raise green / All-In orange) and a live preview of each card deck right in the panel
 - Fully **localized in all 45 languages** and switchable instantly, with no reload
 - **Official accent** — gold uses PokerTH's QML accent `#E3C800`, kept only for deliberate game assets (dealer button, chip denominations, win bursts)
-- **Import a style** — add a table or card deck from a local `.zip` (parses the official 2.1.3 style keys), or a custom card-back image
+- **Import a style** — add a table or card deck from a local `.zip` (parses the official style keys), or a custom card-back image
 - Operators can set a **default theme** for first-time visitors (see [the admin panel](#admin-panel))
 
 ### Player experience
@@ -304,7 +304,7 @@ A full appearance system, reached from the **Theme** button — a styles window 
 - Poker hand reference overlay (? button)
 - **Resilient reconnection** — exponential-backoff auto-reconnect with a live countdown,
   plus automatic resume when the tab returns to the foreground or the network path
-  changes (Wi-Fi ↔ cellular, airplane mode). Hardened in the `v0.3.927–931` series:
+  changes (Wi-Fi ↔ cellular, airplane mode). Hardened over several iterations:
   the liveness watchdog never fires in Training mode (it used to destroy the local
   game), a healthy socket is no longer presumed dead after background throttling,
   concurrent resume attempts can't race each other into a double login (which made
@@ -319,8 +319,8 @@ A full appearance system, reached from the **Theme** button — a styles window 
 ### Official client (QML) tracking
 The in-game screen is audited feature-by-feature against PokerTH's official QML client
 (sources extracted from the official desktop AppImage and Android APK builds) and kept
-aligned as that client evolves. Feature parity was first reached in the `v0.3.166` series;
-the work since has been fidelity tuning against the newer builds (currently **2.1.4**):
+aligned as that client evolves. Feature parity was reached early on; the work since
+has been continuous fidelity tuning against each new upstream build:
 - **Keyboard shortcuts**: F1–F8 mirror the official client (fold / check-call / bet-raise /
   all-in, alternate key order, playing-mode switches), plus **F5** to show your cards
   after a hand that ended with no showdown
@@ -345,7 +345,7 @@ the work since has been fidelity tuning against the newer builds (currently **2.
   icons in the win-probability panel
 - **Ping indicator** on your own avatar, and an optional **auto-return to the lobby**
   when a game ends
-- **Fidelity pass against 2.1.3**:
+- **Fidelity pass against the official client**:
   - Action bar matched to the official layout — localized *Suivre \$X / Relancer \$X*
     labels, a compact All-In / *Tapis* button (~52 px, no amount), quick-bet
     1/3 · 1/2 · Pot buttons in the official dark green with no amount labels, the official
@@ -354,7 +354,7 @@ the work since has been fidelity tuning against the newer builds (currently **2.
   - App chrome matched to the official client — a unified header banner across the connect,
     lobby and in-game screens (topBar height 38 px, 30 px in landscape-compact) with
     frameless monochrome SVG icons and floating drop-down menus
-  - Seat geometry tuned to 2.1.3 (self-weight 0.3 wide / 0.5 compact, fill-cap 1.9 / 2.3)
+  - Seat geometry tuned to the official client (self-weight 0.3 wide / 0.5 compact, fill-cap 1.9 / 2.3)
 
 ### PWA
 - `manifest.json` + Service Worker (`sw.js`) with a versioned **network-first** cache; the app shell is **precached asset by asset (with retries)** on install, so a network hiccup can't leave the offline cache incomplete
@@ -1104,7 +1104,7 @@ Please include the `pthDiag()` output, your browser/OS and the displayed build n
 <a id="roadmap"></a>
 ## Roadmap / Suggested next steps
 
-Development is tracked in **[`docs/ROADMAP.md`](docs/ROADMAP.md)**, grouped as *Shipped · Now · Next · Later*. The in-game screen **tracks the official QML client continuously** — feature parity was first reached in the `v0.3.166` series and the work since has been fidelity tuning against the newer builds (currently 2.1.4) (see [Official client (QML) tracking](#official-client-qml-tracking) above). Current focus: the official deployment at [webclient.pokerth.net](https://webclient.pokerth.net/) and code-health work — adding linting, and moving the remaining hand-written Protobuf paths onto the generated bundle in `public/proto/` (the module split and an automated test suite are done). Further out: local multiplayer over WebRTC, a streamer-friendly read-only embed, and a native review of the machine-assisted translations.
+Development is tracked in **[`docs/ROADMAP.md`](docs/ROADMAP.md)**, grouped as *Shipped · Now · Next · Later*. The in-game screen **tracks the official QML client continuously** — feature parity was reached early on and the work since has been fidelity tuning against each new upstream build (see [Official client (QML) tracking](#official-client-qml-tracking) above). Current focus: the official deployment at [webclient.pokerth.net](https://webclient.pokerth.net/) and code-health work — adding linting, and moving the remaining hand-written Protobuf paths onto the generated bundle in `public/proto/` (the module split and an automated test suite are done). Further out: local multiplayer over WebRTC, a streamer-friendly read-only embed, and a native review of the machine-assisted translations.
 
 ---
 
