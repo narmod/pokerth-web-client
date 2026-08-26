@@ -81,6 +81,18 @@ release.
   `SEO_RULES_I18N` rather than introducing a second script for one page.
 
 ### Fixed
+- **Players list rendered empty** (`web.98`) — regression from `web.96`. The
+  `canSendPm` parity check read `S.games` and `S._currentLoginMode` directly, but
+  `S` is scoped to the `App` IIFE and does not exist where `renderPlayersList`
+  lives; every other access there goes through the `window._read*` bridges for
+  exactly that reason. `rowHtml` threw a `ReferenceError` on each row, so
+  `body.innerHTML` was never assigned and the list stayed on the dash from the
+  first (empty) render — while the header count, written earlier in the function,
+  kept updating. Hence a list showing "—" under "15 players online".
+  Replaced by two bridges declared inside the IIFE, `window._playerInRunningGame`
+  and `window._amGuestMode`. New `scripts/test-pl-scope.mjs` fails on any bare
+  `S.` in that region; it was verified to flag the three offending lines of
+  `web.97`.
 - **Opening a private message dialogue created a permanent conversation**
   (`web.95`) — `store.ensure()` wrote a conversation row on every envelope click,
   so the partner strip accumulated every player ever clicked, most of them since

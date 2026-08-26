@@ -4883,6 +4883,23 @@ const App = (() => {
     } catch (e) {}
     return '';
   };
+  // Parite QML isPlayerInRunningGame : partie DEMARREE seulement (mode 2 =
+  // netGameStarted). _playerActivity ci-dessus ne distingue pas une partie
+  // ouverte d'une partie lancee, et le serveur ne refuse les messages prives
+  // que vers une table en cours.
+  window._playerInRunningGame = function (pid) {
+    try {
+      for (var id in S.games) {
+        var g = S.games[id];
+        if (g && g.mode === 2 && g.seats && g.seats.indexOf(pid) !== -1) return true;
+      }
+    } catch (e) {}
+    return false;
+  };
+  // Suis-je connecte en invite ? Le serveur refuse tout chat des invites.
+  window._amGuestMode = function () {
+    try { return S._currentLoginMode === 'guest'; } catch (e) { return false; }
+  };
   window._chatNicks = function (gameScope) {
     try {
       if (gameScope && S.seats.length) {
@@ -10149,22 +10166,15 @@ var _PL_MAIL_SVG = '<svg viewBox="0 0 24 24" width="14" height="14" fill="curren
 // Parite QML canSendPm (PlayerListItem.qml) : pas d'enveloppe sur ma propre
 // ligne, pas d'enveloppe si je suis invite (le serveur refuse tout chat des
 // invites), et pas d'enveloppe vers un joueur assis a une partie EN COURS
-// (isPlayerInRunningGame) -- le serveur ne lui delivrerait rien. mode 2 =
-// netGameStarted ; _playerActivity ne distingue pas les parties ouvertes des
-// parties lancees, d'ou ce test dedie.
-function _plInRunningGame(pid) {
-  try {
-    for (var id in S.games) {
-      var g = S.games[id];
-      if (g && g.mode === 2 && g.seats && g.seats.indexOf(pid) !== -1) return true;
-    }
-  } catch (e) {}
-  return false;
-}
+// (isPlayerInRunningGame) -- le serveur ne lui delivrerait rien.
+// NB : `S` est prive a l'IIFE App et n'existe PAS ici ; comme tout le reste
+// de renderPlayersList, on passe par les ponts window.* (un acces direct
+// levait un ReferenceError qui vidait la liste entiere).
 function _plCanSendPm(r) {
   if (r.isMe) return false;
-  if (S._currentLoginMode === 'guest') return false;
-  return !_plInRunningGame(r.pid);
+  try { if (window._amGuestMode && window._amGuestMode()) return false; } catch (e) {}
+  try { return !(window._playerInRunningGame && window._playerInRunningGame(r.pid)); }
+  catch (e) { return true; }
 }
 window._plOpenPm = function(pid){
   var nm = (typeof window.getPlayerName === 'function') ? window.getPlayerName(pid) : null;
@@ -10693,7 +10703,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.7-web.97'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.7-web.98'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
