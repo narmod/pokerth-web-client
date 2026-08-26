@@ -966,7 +966,10 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: var(--sp-6);
+  /* Idem : marge d'au moins var(--sp-6), davantage si l'appareil declare des
+     zones sures. */
+  padding: max(var(--sp-6), env(safe-area-inset-top)) max(var(--sp-6), env(safe-area-inset-right))
+           max(var(--sp-6), env(safe-area-inset-bottom)) max(var(--sp-6), env(safe-area-inset-left));
   pointer-events: none;
 }
 #game-info-modal .gim-card { pointer-events: auto; }
@@ -1090,6 +1093,10 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
   align-items: center;
   justify-content: center;
   pointer-events: none;
+  /* Zones sures : plus haute que l'ecran, la carte se collait au bord et
+     passait sous la barre d'etat / l'encoche sur iPhone. */
+  padding: max(8px, env(safe-area-inset-top)) max(8px, env(safe-area-inset-right))
+           max(8px, env(safe-area-inset-bottom)) max(8px, env(safe-area-inset-left));
 }
 #player-info-modal .pim-card { pointer-events: auto; }
 .pim-backdrop { display: none; }
@@ -1101,8 +1108,9 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
   padding: 24px 20px 18px;
   min-width: 260px;
   max-width: 320px;
-  max-height: calc(100vh - 32px);
-  max-height: calc(100dvh - 32px);
+  /* 100% du conteneur, qui est deja retreci par les zones sures ci-dessus :
+     un calc() sur 100dvh les ignorerait et rendrait le padding inoperant. */
+  max-height: 100%;
   overflow-y: auto;
   box-shadow: 0 8px 32px rgba(0,0,0,0.6);
   display: flex;
@@ -8536,7 +8544,11 @@ body.adv-no-forumnews [id^="forum-btn-"], body.adv-no-forumnews #forum-modal { d
 .rk-last5 { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
 .rk-last5-l { font-size: var(--fs-2xs); color: var(--text-dim); }
 .rk-l5 { display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; border-radius: 12px; background: var(--inset); color: var(--text-hi); font-family: var(--ff-mono); font-size: var(--fs-2xs); font-weight: 700; }
-.rk-l5.win { background: var(--gold); color: #101010; }
+/* Vert de la 1re place (RK_PLACE_COLORS[0]), pas var(--gold) : le theme clair
+   redefinit --gold en quasi-noir (#1d222b), ce qui donnait du texte noir sur
+   fond noir -- exactement le piege deja documente pour .forum-unread. Le vert
+   est en dur, comme la legende et le camembert qui l'emploient deja. */
+.rk-l5.win { background: #56e289; color: #101010; }
 /* Parties recentes : liste courte qui defile seule. */
 .rk-games { max-height: 190px; overflow-y: auto; border: 1px solid var(--border); border-radius: var(--r-xs); background: var(--field-bg); }
 .rk-game { display: flex; align-items: center; gap: 8px; padding: 5px 8px; border-bottom: 1px solid var(--border); font-size: var(--fs-2xs); }

@@ -1,4 +1,7 @@
 2026-08-13 version 2.1.7-web (current series):
+- bugfix: a first place among the last five results was unreadable in light mode - a black number on a black circle
+- bugfix: on iPhone, the player card and the game info card could slide up under the status bar and the notch. They now keep clear of the safe areas
+- improvement: the player card opens wider again
 - bugfix: in the player card, the avatar sat against the left edge instead of being centred once the card was opened as a window
 - improvement: the player card can now be widened much further - up to almost the full width of the screen - so the cup charts have all the room they need
 - bugfix: the player card and the game info card now open in the middle of the screen at a comfortable size, and can actually be widened. They were stuck narrow and pinned to the top-left corner

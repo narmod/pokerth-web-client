@@ -96,6 +96,25 @@ ok(small.w <= 420 && small.left >= 8, 'reste dans l ecran sur petite fenetre (' 
 const src = readFileSync('public/modules/ui/player-popup.mjs', 'utf8');
 const mw = (src.match(/maxW = Math\.min\((\d+)/) || [])[1];
 ok(Number(mw) >= 1200, 'plafond d agrandissement large (' + mw + 'px)');
+ok(geom.w >= Math.round(1600 * 0.55), 'ouverture assez large (' + geom.w + 'px sur 1600)');
+
+// ── Zones sures (iOS) ──
+// La carte peut etre plus haute que l'ecran : sans marge de zone sure elle se
+// colle au bord et passe sous la barre d'etat / l'encoche.
+for (const [nm, sel] of [['carte joueur','#player-info-modal'], ['infos de partie','#game-info-modal']]) {
+  const r = (cssAll.match(new RegExp(sel + ' \\{[^}]*\\}')) || [''])[0];
+  ok(/padding:[^;]*env\(safe-area-inset-top\)/.test(r), nm + ' : marge haute de zone sure');
+  ok(/env\(safe-area-inset-bottom\)/.test(r), nm + ' : marge basse de zone sure');
+}
+const pimCardRule = (cssAll.match(/\n\.pim-card \{[^}]*\}/) || [''])[0];
+ok(!/max-height:\s*calc\(100dvh/.test(pimCardRule),
+   'carte joueur : hauteur bornee au conteneur, pas au viewport (sinon le padding est ignore)');
+
+// ── Badge « 1re place » lisible dans tous les themes ──
+const l5win = (cssAll.match(/\.rk-l5\.win \{[^}]*\}/) || [''])[0];
+ok(!/var\(--gold\)/.test(l5win),
+   '5 dernieres : la 1re place n utilise pas --gold (quasi-noir en theme clair)');
+ok(/#56e289/.test(l5win), '5 dernieres : vert de la 1re place, comme la legende');
 // Sur un grand ecran, le plafond doit vraiment suivre la largeur disponible.
 const big = new Function('window', geomSrc + '\nreturn _pimGeom;')({ innerWidth: 2560, innerHeight: 1440 })();
 ok(big.maxW >= 1400, 'agrandissement possible jusqu a ' + big.maxW + 'px sur un 2560px');

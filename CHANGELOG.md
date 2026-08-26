@@ -140,6 +140,21 @@ release.
   `SEO_RULES_I18N` rather than introducing a second script for one page.
 
 ### Fixed
+- **First place invisible in the last-five badges** (`web.108`) —
+  `.rk-l5.win` used `background: var(--gold); color: #101010`, and the light
+  theme redefines `--gold` to `#1d222b`: black text on a black disc. This is the
+  exact pitfall already documented a few lines above for `.forum-unread`, and I
+  walked into it anyway. Now the first-place green `#56e289`, hard-coded like the
+  legend and pie that already use it.
+- **Cards ran under the iOS status bar and notch** (`web.108`) — the card can be
+  taller than the screen, and the centring container had no safe-area margin, so
+  it sat flush against the top edge. Both containers now pad with
+  `max(…, env(safe-area-inset-*))`. `.pim-card`'s `max-height` moved from
+  `calc(100dvh - 32px)` to `100%` — measuring against the viewport would have
+  ignored that padding and reintroduced the overlap.
+- **Player card opening width** (`web.108`) — 46 % → 58 % of the viewport
+  (928 px on a 1600 px screen).
+  `test-pim-drag` covers all three; eight assertions fail on `web.107`.
 - **Avatar off-centre in the player window** (`web.107`) — `web.104` set
   `align-items: stretch` on `.pim-card.floating-win`. Every wide block in the
   card (buttons, stats, info, cups) already carries `width: 100%`, so the stretch

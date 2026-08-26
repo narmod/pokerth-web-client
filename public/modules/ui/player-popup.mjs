@@ -157,7 +157,7 @@ function _pimGeom() {
   // de l'ecran plutot que d'imposer une borne arbitraire.
   var maxW = Math.min(1400, Math.round(vw * 0.96));
   var maxH = Math.min(1000, Math.round(vh * 0.94));
-  var w = Math.max(320, Math.min(maxW, Math.round(vw * 0.46)));
+  var w = Math.max(320, Math.min(maxW, Math.round(vw * 0.58)));
   var h = Math.max(340, Math.min(maxH, Math.round(vh * 0.82)));
   return { w: w, h: h, maxW: maxW, maxH: maxH,
            left: Math.max(8, Math.round((vw - w) / 2)),
