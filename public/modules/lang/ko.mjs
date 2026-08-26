@@ -13,6 +13,8 @@ export const meta = {
 };
 
 export const strings = {
+    // Player profile window (parity: QML PokerthPlayerPage).
+    rankingAvg:'평균', rankingLast5:'최근 5:', rankingRecentGames:'최근 게임', rankingSeasons:'시즌', rankingLastLogin:'마지막 로그인', ppOpen:'플레이어 프로필', ppTitle:'플레이어 프로필',
     // Private messages (parity: QML "Messages prives", 2.1.7+).
     pmTitle:'개인 메시지', pmTooltip:'개인 메시지', pmBtn:'개인 메시지', pmSend:'보내기', pmPlaceholder:'메시지…', pmDelete:'이 대화 삭제', pmDeleteConfirm:'{name}님과의 대화를 삭제할까요?', pmEmpty:'아직 대화가 없습니다.', pmNoConv:'대화를 선택하세요.', pmNoMsg:'아직 메시지가 없습니다.', pmMe:'나', pmNotFound:'플레이어를 찾을 수 없습니다', pmSelf:'자신에게는 개인 메시지를 보낼 수 없습니다.', pmOffline:'서버에 연결되지 않음', pmUsage:'사용법: /msg <닉네임> <메시지>', pmAtTable:'테이블에서는 개인 메시지를 사용할 수 없습니다.', pmRejected:'개인 메시지를 전달하지 못했습니다.', pmOfflinePartner:'현재 로비에 없음', pmGuest:'게스트는 메시지를 보낼 수 없습니다', pmNotInLobby:'로비에 없음',
     // Server timeout warning popup (parity: timeoutWarningPopup, pokerth.qml).

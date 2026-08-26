@@ -10,6 +10,8 @@ export const meta = {
 };
 
 export const strings = {
+    // Player profile window (parity: QML PokerthPlayerPage).
+    rankingAvg:'Gem', rankingLast5:'Laaste 5:', rankingRecentGames:'Onlangse spele', rankingSeasons:'Seisoene', rankingLastLogin:'Laaste aanmelding', ppOpen:'Spelerprofiel', ppTitle:'Spelerprofiel',
     // Private messages (parity: QML "Messages prives", 2.1.7+).
     pmTitle:'Privaat boodskappe', pmTooltip:'Privaat boodskappe', pmBtn:'Privaat boodskap', pmSend:'Stuur', pmPlaceholder:'Boodskap…', pmDelete:'Vee hierdie gesprek uit', pmDeleteConfirm:'Vee die gesprek met {name} uit?', pmEmpty:'Nog geen gesprekke nie.', pmNoConv:'Kies ’n gesprek.', pmNoMsg:'Nog geen boodskappe nie.', pmMe:'Ek', pmNotFound:'Speler nie gevind nie', pmSelf:'Jy kan nie vir jouself ’n privaat boodskap stuur nie.', pmOffline:'Nie aan die bediener gekoppel nie', pmUsage:'Gebruik: /msg <bynaam> <boodskap>', pmAtTable:'Privaat boodskappe is nie by die tafel beskikbaar nie.', pmRejected:'Die privaat boodskap kon nie afgelewer word nie.', pmOfflinePartner:'Nie tans in die voorportaal nie', pmGuest:'Gaste kan nie boodskappe stuur nie', pmNotInLobby:'nie in die voorportaal nie',
     // Server timeout warning popup (parity: timeoutWarningPopup, pokerth.qml).

@@ -10,6 +10,8 @@ export const meta = {
 };
 
 export const strings = {
+    // Player profile window (parity: QML PokerthPlayerPage).
+    rankingAvg:'Átl', rankingLast5:'Utolsó 5:', rankingRecentGames:'Legutóbbi játékok', rankingSeasons:'Szezonok', rankingLastLogin:'Utolsó belépés', ppOpen:'Játékos profil', ppTitle:'Játékos profil',
     // Private messages (parity: QML "Messages prives", 2.1.7+).
     pmTitle:'Privát üzenetek', pmTooltip:'Privát üzenetek', pmBtn:'Privát üzenet', pmSend:'Küldés', pmPlaceholder:'Üzenet…', pmDelete:'Beszélgetés törlése', pmDeleteConfirm:'Törlöd a beszélgetést vele: {name}?', pmEmpty:'Még nincs beszélgetés.', pmNoConv:'Válassz beszélgetést.', pmNoMsg:'Még nincs üzenet.', pmMe:'Én', pmNotFound:'A játékos nem található', pmSelf:'Nem küldhetsz privát üzenetet saját magadnak.', pmOffline:'Nincs kapcsolat a szerverrel', pmUsage:'Használat: /msg <becenév> <üzenet>', pmAtTable:'A privát üzenetek az asztalnál nem érhetők el.', pmRejected:'A privát üzenetet nem sikerült kézbesíteni.', pmOfflinePartner:'Jelenleg nincs a lobbiban', pmGuest:'A vendégek nem küldhetnek üzenetet', pmNotInLobby:'nincs a lobbiban',
     // Server timeout warning popup (parity: timeoutWarningPopup, pokerth.qml).

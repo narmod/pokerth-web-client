@@ -12,6 +12,8 @@ export const meta = {
 };
 
 export const strings = {
+    // Player profile window (parity: QML PokerthPlayerPage).
+    rankingAvg:'Ort', rankingLast5:'Son 5:', rankingRecentGames:'Son oyunlar', rankingSeasons:'Sezonlar', rankingLastLogin:'Son giriş', ppOpen:'Oyuncu profili', ppTitle:'Oyuncu profili',
     // Private messages (parity: QML "Messages prives", 2.1.7+).
     pmTitle:'Özel mesajlar', pmTooltip:'Özel mesajlar', pmBtn:'Özel mesaj', pmSend:'Gönder', pmPlaceholder:'Mesaj…', pmDelete:'Bu sohbeti sil', pmDeleteConfirm:'{name} ile olan sohbet silinsin mi?', pmEmpty:'Henüz sohbet yok.', pmNoConv:'Bir sohbet seçin.', pmNoMsg:'Henüz mesaj yok.', pmMe:'Ben', pmNotFound:'Oyuncu bulunamadı', pmSelf:'Kendine özel mesaj gönderemezsin.', pmOffline:'Sunucuya bağlı değil', pmUsage:'Kullanım: /msg <takma ad> <mesaj>', pmAtTable:'Masada özel mesajlar kullanılamaz.', pmRejected:'Özel mesaj iletilemedi.', pmOfflinePartner:'Şu anda lobide değil', pmGuest:'Misafirler mesaj gönderemez', pmNotInLobby:'lobide değil',
     // Server timeout warning popup (parity: timeoutWarningPopup, pokerth.qml).

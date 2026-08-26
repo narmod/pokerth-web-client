@@ -10,6 +10,8 @@ export const meta = {
 };
 
 export const strings = {
+    // Player profile window (parity: QML PokerthPlayerPage).
+    rankingAvg:'Priem', rankingLast5:'Posledných 5:', rankingRecentGames:'Nedávne hry', rankingSeasons:'Sezóny', rankingLastLogin:'Posledné prihlásenie', ppOpen:'Profil hráča', ppTitle:'Profil hráča',
     // Private messages (parity: QML "Messages prives", 2.1.7+).
     pmTitle:'Súkromné správy', pmTooltip:'Súkromné správy', pmBtn:'Súkromná správa', pmSend:'Odoslať', pmPlaceholder:'Správa…', pmDelete:'Odstrániť túto konverzáciu', pmDeleteConfirm:'Odstrániť konverzáciu s {name}?', pmEmpty:'Zatiaľ žiadne konverzácie.', pmNoConv:'Vyberte konverzáciu.', pmNoMsg:'Zatiaľ žiadne správy.', pmMe:'Ja', pmNotFound:'Hráč sa nenašiel', pmSelf:'Nemôžete poslať súkromnú správu sám sebe.', pmOffline:'Nepripojené k serveru', pmUsage:'Použitie: /msg <prezývka> <správa>', pmAtTable:'Súkromné správy nie sú pri stole k dispozícii.', pmRejected:'Súkromnú správu sa nepodarilo doručiť.', pmOfflinePartner:'Momentálne nie je v lobby', pmGuest:'Hostia nemôžu posielať správy', pmNotInLobby:'nie je v lobby',
     // Server timeout warning popup (parity: timeoutWarningPopup, pokerth.qml).

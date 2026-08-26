@@ -9,6 +9,8 @@ export const meta = {
 };
 
 export const strings = {
+    // Player profile window (parity: QML PokerthPlayerPage).
+    rankingAvg:'Méd', rankingLast5:'Últimas 5:', rankingRecentGames:'Jogos recentes', rankingSeasons:'Épocas', rankingLastLogin:'Última ligação', ppOpen:'Perfil do jogador', ppTitle:'Perfil do jogador',
     // Private messages (parity: QML "Messages prives", 2.1.7+).
     pmTitle:'Mensagens privadas', pmTooltip:'Mensagens privadas', pmBtn:'Mensagem privada', pmSend:'Enviar', pmPlaceholder:'Mensagem…', pmDelete:'Eliminar esta conversa', pmDeleteConfirm:'Eliminar a conversa com {name}?', pmEmpty:'Ainda sem conversas.', pmNoConv:'Seleciona uma conversa.', pmNoMsg:'Ainda sem mensagens.', pmMe:'Eu', pmNotFound:'Jogador não encontrado', pmSelf:'Não podes enviar uma mensagem privada a ti próprio.', pmOffline:'Sem ligação ao servidor', pmUsage:'Utilização: /msg <nome> <mensagem>', pmAtTable:'As mensagens privadas não estão disponíveis na mesa.', pmRejected:'Não foi possível entregar a mensagem privada.', pmOfflinePartner:'Não está no lobby de momento', pmGuest:'Os convidados não podem enviar mensagens', pmNotInLobby:'não está no lobby',
     // Server timeout warning popup (parity: timeoutWarningPopup, pokerth.qml).

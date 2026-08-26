@@ -14,6 +14,8 @@ export const meta = {
 };
 
 export const strings = {
+    // Player profile window (parity: QML PokerthPlayerPage).
+    rankingAvg:'ממוצע', rankingLast5:'5 האחרונים:', rankingRecentGames:'משחקים אחרונים', rankingSeasons:'עונות', rankingLastLogin:'כניסה אחרונה', ppOpen:'פרופיל שחקן', ppTitle:'פרופיל שחקן',
     // Private messages (parity: QML "Messages prives", 2.1.7+).
     pmTitle:'הודעות פרטיות', pmTooltip:'הודעות פרטיות', pmBtn:'הודעה פרטית', pmSend:'שלח', pmPlaceholder:'הודעה…', pmDelete:'מחק שיחה זו', pmDeleteConfirm:'למחוק את השיחה עם {name}?', pmEmpty:'אין עדיין שיחות.', pmNoConv:'בחר שיחה.', pmNoMsg:'אין עדיין הודעות.', pmMe:'אני', pmNotFound:'השחקן לא נמצא', pmSelf:'אי אפשר לשלוח הודעה פרטית לעצמך.', pmOffline:'אין חיבור לשרת', pmUsage:'שימוש: /msg <כינוי> <הודעה>', pmAtTable:'הודעות פרטיות אינן זמינות ליד השולחן.', pmRejected:'לא ניתן היה למסור את ההודעה הפרטית.', pmOfflinePartner:'לא נמצא כעת בלובי', pmGuest:'אורחים לא יכולים לשלוח הודעות', pmNotInLobby:'לא בלובי',
     // Server timeout warning popup (parity: timeoutWarningPopup, pokerth.qml).

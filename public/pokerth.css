@@ -8467,6 +8467,44 @@ body.adv-no-forumnews [id^="forum-btn-"], body.adv-no-forumnews #forum-modal { d
    la hauteur ajoutee au body faisait apparaitre une barre de defilement qui
    revelait #gchat-fab, un bouton sans regle CSS vivant sous la ligne de
    flottaison. */
+/* ── Fenetre « Profil joueur » (parite QML PokerthPlayerPage) ────────────
+   Carcasse generique identique aux autres fenetres ; le contenu reutilise
+   les rendus rk* de la carte profil du classement. */
+#pp-modal { position: fixed; inset: 0; z-index: 1200; align-items: center; justify-content: center; pointer-events: none; }
+#pp-modal .rk-card { pointer-events: auto; width: min(480px, calc(100vw - 32px)); height: min(85vh, 600px); }
+#pp-modal.rk-floating { pointer-events: none; }
+#pp-modal.rk-floating .rk-backdrop { display: none; }
+#pp-modal.rk-floating .rk-card { pointer-events: auto; }
+#pp-modal .rk-card.floating-win {
+  position: fixed; margin: 0; max-height: none;
+  border: 1px solid var(--gold-dim); border-radius: var(--r-bar);
+  box-shadow: 0 14px 36px rgba(0,0,0,0.62); overflow: hidden;
+}
+#pp-modal .rk-card.floating-win .rk-title { cursor: move; touch-action: none; -webkit-user-select: none; user-select: none; }
+#pp-modal .rk-card.floating-win .rk-title.win-dragging { cursor: grabbing; }
+/* 5 dernieres places : la 1re ressort en accent (parite colorAccent). */
+.rk-last5 { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
+.rk-last5-l { font-size: var(--fs-2xs); color: var(--text-dim); }
+.rk-l5 { display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; border-radius: 12px; background: var(--inset); color: var(--text-hi); font-family: var(--ff-mono); font-size: var(--fs-2xs); font-weight: 700; }
+.rk-l5.win { background: var(--gold); color: #101010; }
+/* Parties recentes : liste courte qui defile seule. */
+.rk-games { max-height: 190px; overflow-y: auto; border: 1px solid var(--border); border-radius: var(--r-xs); background: var(--field-bg); }
+.rk-game { display: flex; align-items: center; gap: 8px; padding: 5px 8px; border-bottom: 1px solid var(--border); font-size: var(--fs-2xs); }
+.rk-game:last-child { border-bottom: none; }
+.rk-game-p { flex: 0 0 34px; font-family: var(--ff-mono); color: var(--text-dim); }
+.rk-game-p.win { color: var(--gold); font-weight: 700; }
+.rk-game-n { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--text-hi); }
+.rk-game-d { flex: 0 0 auto; font-family: var(--ff-mono); color: var(--text-dim); }
+/* Saisons : une ligne par saison, depliable a la demande. */
+.rk-seasons { display: flex; flex-direction: column; gap: 5px; }
+.rk-season-h { display: flex; align-items: center; gap: 8px; width: 100%; text-align: left; background: var(--inset); border: 1px solid var(--border); border-radius: var(--r-xs); color: var(--text); font: inherit; font-size: var(--fs-sm); padding: 7px 10px; cursor: pointer; }
+.rk-season-h:hover { border-color: var(--border-hi); }
+.rk-season-t { flex: 1; font-weight: 700; color: var(--text-hi); }
+.rk-season-r { font-family: var(--ff-mono); font-size: var(--fs-2xs); color: var(--text-dim); }
+.rk-season-r b { color: var(--gold); }
+.rk-season-c { color: var(--text-dim); transition: transform 0.15s; }
+.rk-season.open .rk-season-c { transform: rotate(90deg); }
+.rk-season-b { padding: 6px 2px 2px; }
 #pm-modal { position: fixed; inset: 0; z-index: 1200; align-items: center; justify-content: center; pointer-events: none; }
 #pm-modal .rk-card { pointer-events: auto; width: min(600px, calc(100vw - 32px)); height: min(85vh, 520px); padding: 14px 16px 12px; }
 #pm-modal.rk-floating { pointer-events: none; }

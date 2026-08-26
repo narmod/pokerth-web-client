@@ -10,6 +10,8 @@ export const meta = {
 };
 
 export const strings = {
+    // Player profile window (parity: QML PokerthPlayerPage).
+    rankingAvg:'Μ.Ο.', rankingLast5:'Τελευταίες 5:', rankingRecentGames:'Πρόσφατα παιχνίδια', rankingSeasons:'Σεζόν', rankingLastLogin:'Τελευταία σύνδεση', ppOpen:'Προφίλ παίκτη', ppTitle:'Προφίλ παίκτη',
     // Private messages (parity: QML "Messages prives", 2.1.7+).
     pmTitle:'Ιδιωτικά μηνύματα', pmTooltip:'Ιδιωτικά μηνύματα', pmBtn:'Ιδιωτικό μήνυμα', pmSend:'Αποστολή', pmPlaceholder:'Μήνυμα…', pmDelete:'Διαγραφή αυτής της συνομιλίας', pmDeleteConfirm:'Διαγραφή της συνομιλίας με {name};', pmEmpty:'Δεν υπάρχουν συνομιλίες ακόμη.', pmNoConv:'Επέλεξε μια συνομιλία.', pmNoMsg:'Δεν υπάρχουν μηνύματα ακόμη.', pmMe:'Εγώ', pmNotFound:'Ο παίκτης δεν βρέθηκε', pmSelf:'Δεν μπορείς να στείλεις ιδιωτικό μήνυμα στον εαυτό σου.', pmOffline:'Δεν υπάρχει σύνδεση με τον διακομιστή', pmUsage:'Χρήση: /msg <ψευδώνυμο> <μήνυμα>', pmAtTable:'Τα ιδιωτικά μηνύματα δεν είναι διαθέσιμα στο τραπέζι.', pmRejected:'Το ιδιωτικό μήνυμα δεν μπόρεσε να παραδοθεί.', pmOfflinePartner:'Δεν είναι στο λόμπι αυτή τη στιγμή', pmGuest:'Οι επισκέπτες δεν μπορούν να στέλνουν μηνύματα', pmNotInLobby:'δεν είναι στο λόμπι',
     // Server timeout warning popup (parity: timeoutWarningPopup, pokerth.qml).

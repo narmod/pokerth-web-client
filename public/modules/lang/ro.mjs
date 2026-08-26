@@ -10,6 +10,8 @@ export const meta = {
 };
 
 export const strings = {
+    // Player profile window (parity: QML PokerthPlayerPage).
+    rankingAvg:'Med', rankingLast5:'Ultimele 5:', rankingRecentGames:'Jocuri recente', rankingSeasons:'Sezoane', rankingLastLogin:'Ultima conectare', ppOpen:'Profilul jucătorului', ppTitle:'Profilul jucătorului',
     // Private messages (parity: QML "Messages prives", 2.1.7+).
     pmTitle:'Mesaje private', pmTooltip:'Mesaje private', pmBtn:'Mesaj privat', pmSend:'Trimite', pmPlaceholder:'Mesaj…', pmDelete:'Șterge această conversație', pmDeleteConfirm:'Ștergi conversația cu {name}?', pmEmpty:'Încă nicio conversație.', pmNoConv:'Selectează o conversație.', pmNoMsg:'Încă niciun mesaj.', pmMe:'Eu', pmNotFound:'Jucătorul nu a fost găsit', pmSelf:'Nu îți poți trimite un mesaj privat ție însuți.', pmOffline:'Neconectat la server', pmUsage:'Utilizare: /msg <pseudonim> <mesaj>', pmAtTable:'Mesajele private nu sunt disponibile la masă.', pmRejected:'Mesajul privat nu a putut fi livrat.', pmOfflinePartner:'Nu este în lobby momentan', pmGuest:'Invitații nu pot trimite mesaje', pmNotInLobby:'nu este în lobby',
     // Server timeout warning popup (parity: timeoutWarningPopup, pokerth.qml).

@@ -10,6 +10,8 @@ export const meta = {
 };
 
 export const strings = {
+    // Player profile window (parity: QML PokerthPlayerPage).
+    rankingAvg:'Pros', rankingLast5:'Zadnjih 5:', rankingRecentGames:'Nedavne igre', rankingSeasons:'Sezone', rankingLastLogin:'Zadnja prijava', ppOpen:'Profil igrača', ppTitle:'Profil igrača',
     // Private messages (parity: QML "Messages prives", 2.1.7+).
     pmTitle:'Privatne poruke', pmTooltip:'Privatne poruke', pmBtn:'Privatna poruka', pmSend:'Pošalji', pmPlaceholder:'Poruka…', pmDelete:'Obriši ovaj razgovor', pmDeleteConfirm:'Obrisati razgovor s {name}?', pmEmpty:'Još nema razgovora.', pmNoConv:'Odaberi razgovor.', pmNoMsg:'Još nema poruka.', pmMe:'Ja', pmNotFound:'Igrač nije pronađen', pmSelf:'Ne možeš poslati privatnu poruku samom sebi.', pmOffline:'Nema veze s poslužiteljem', pmUsage:'Upotreba: /msg <nadimak> <poruka>', pmAtTable:'Privatne poruke nisu dostupne za stolom.', pmRejected:'Privatnu poruku nije bilo moguće isporučiti.', pmOfflinePartner:'Trenutno nije u predvorju', pmGuest:'Gosti ne mogu slati poruke', pmNotInLobby:'nije u predvorju',
     // Server timeout warning popup (parity: timeoutWarningPopup, pokerth.qml).

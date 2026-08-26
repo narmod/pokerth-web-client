@@ -9,6 +9,8 @@ export const meta = {
 };
 
 export const strings = {
+    // Player profile window (parity: QML PokerthPlayerPage).
+    rankingAvg:'Snitt', rankingLast5:'Siste 5:', rankingRecentGames:'Siste spill', rankingSeasons:'Sesonger', rankingLastLogin:'Siste innlogging', ppOpen:'Spillerprofil', ppTitle:'Spillerprofil',
     // Private messages (parity: QML "Messages prives", 2.1.7+).
     pmTitle:'Private meldinger', pmTooltip:'Private meldinger', pmBtn:'Privat melding', pmSend:'Send', pmPlaceholder:'Melding…', pmDelete:'Slett denne samtalen', pmDeleteConfirm:'Slette samtalen med {name}?', pmEmpty:'Ingen samtaler ennå.', pmNoConv:'Velg en samtale.', pmNoMsg:'Ingen meldinger ennå.', pmMe:'Meg', pmNotFound:'Spilleren ble ikke funnet', pmSelf:'Du kan ikke sende en privat melding til deg selv.', pmOffline:'Ikke koblet til serveren', pmUsage:'Bruk: /msg <kallenavn> <melding>', pmAtTable:'Private meldinger er ikke tilgjengelige ved bordet.', pmRejected:'Den private meldingen kunne ikke leveres.', pmOfflinePartner:'Ikke i lobbyen akkurat nå', pmGuest:'Gjester kan ikke sende meldinger', pmNotInLobby:'ikke i lobbyen',
     // Server timeout warning popup (parity: timeoutWarningPopup, pokerth.qml).

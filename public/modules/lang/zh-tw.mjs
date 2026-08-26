@@ -11,6 +11,8 @@ export const meta = {
 };
 
 export const strings = {
+    // Player profile window (parity: QML PokerthPlayerPage).
+    rankingAvg:'均分', rankingLast5:'最近5場：', rankingRecentGames:'最近對局', rankingSeasons:'賽季', rankingLastLogin:'上次登入', ppOpen:'玩家資料', ppTitle:'玩家資料',
     // Private messages (parity: QML "Messages prives", 2.1.7+).
     pmTitle:'私訊', pmTooltip:'私訊', pmBtn:'私訊', pmSend:'傳送', pmPlaceholder:'訊息…', pmDelete:'刪除此對話', pmDeleteConfirm:'刪除與 {name} 的對話？', pmEmpty:'還沒有對話。', pmNoConv:'請選擇一個對話。', pmNoMsg:'還沒有訊息。', pmMe:'我', pmNotFound:'找不到玩家', pmSelf:'你不能傳私訊給自己。', pmOffline:'尚未連線到伺服器', pmUsage:'用法：/msg <暱稱> <訊息>', pmAtTable:'在牌桌上無法使用私訊。', pmRejected:'私訊傳送失敗。', pmOfflinePartner:'目前不在大廳', pmGuest:'訪客無法傳送訊息', pmNotInLobby:'不在大廳',
     // Server timeout warning popup (parity: timeoutWarningPopup, pokerth.qml).

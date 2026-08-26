@@ -10,6 +10,8 @@ export const meta = {
 };
 
 export const strings = {
+    // Player profile window (parity: QML PokerthPlayerPage).
+    rankingAvg:'Vid', rankingLast5:'Paskutinių 5:', rankingRecentGames:'Naujausi žaidimai', rankingSeasons:'Sezonai', rankingLastLogin:'Paskutinis prisijungimas', ppOpen:'Žaidėjo profilis', ppTitle:'Žaidėjo profilis',
     // Private messages (parity: QML "Messages prives", 2.1.7+).
     pmTitle:'Privačios žinutės', pmTooltip:'Privačios žinutės', pmBtn:'Privati žinutė', pmSend:'Siųsti', pmPlaceholder:'Žinutė…', pmDelete:'Ištrinti šį pokalbį', pmDeleteConfirm:'Ištrinti pokalbį su {name}?', pmEmpty:'Kol kas pokalbių nėra.', pmNoConv:'Pasirinkite pokalbį.', pmNoMsg:'Kol kas žinučių nėra.', pmMe:'Aš', pmNotFound:'Žaidėjas nerastas', pmSelf:'Negalite išsiųsti privačios žinutės sau.', pmOffline:'Nėra ryšio su serveriu', pmUsage:'Naudojimas: /msg <slapyvardis> <žinutė>', pmAtTable:'Prie stalo privačios žinutės negalimos.', pmRejected:'Privačios žinutės pristatyti nepavyko.', pmOfflinePartner:'Šiuo metu ne vestibiulyje', pmGuest:'Svečiai negali siųsti žinučių', pmNotInLobby:'ne vestibiulyje',
     // Server timeout warning popup (parity: timeoutWarningPopup, pokerth.qml).

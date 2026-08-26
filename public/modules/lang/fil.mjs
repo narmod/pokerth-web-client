@@ -16,6 +16,8 @@ export const meta = {
 };
 
 export const strings = {
+    // Player profile window (parity: QML PokerthPlayerPage).
+    rankingAvg:'Ave', rankingLast5:'Huling 5:', rankingRecentGames:'Kamakailang laro', rankingSeasons:'Mga season', rankingLastLogin:'Huling pag-log in', ppOpen:'Profile ng manlalaro', ppTitle:'Profile ng manlalaro',
     // Private messages (parity: QML "Messages prives", 2.1.7+).
     pmTitle:'Mga pribadong mensahe', pmTooltip:'Mga pribadong mensahe', pmBtn:'Pribadong mensahe', pmSend:'Ipadala', pmPlaceholder:'Mensahe…', pmDelete:'Burahin ang usapang ito', pmDeleteConfirm:'Burahin ang usapan kay {name}?', pmEmpty:'Wala pang usapan.', pmNoConv:'Pumili ng usapan.', pmNoMsg:'Wala pang mensahe.', pmMe:'Ako', pmNotFound:'Hindi natagpuan ang manlalaro', pmSelf:'Hindi ka maaaring magpadala ng pribadong mensahe sa sarili mo.', pmOffline:'Hindi nakakonekta sa server', pmUsage:'Paggamit: /msg <palayaw> <mensahe>', pmAtTable:'Hindi available ang pribadong mensahe sa mesa.', pmRejected:'Hindi naipadala ang pribadong mensahe.', pmOfflinePartner:'Wala sa lobby sa ngayon', pmGuest:'Hindi makapagpadala ng mensahe ang mga bisita', pmNotInLobby:'wala sa lobby',
     // Server timeout warning popup (parity: timeoutWarningPopup, pokerth.qml).

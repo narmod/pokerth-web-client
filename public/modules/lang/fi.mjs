@@ -9,6 +9,8 @@ export const meta = {
 };
 
 export const strings = {
+    // Player profile window (parity: QML PokerthPlayerPage).
+    rankingAvg:'Ka', rankingLast5:'Viimeiset 5:', rankingRecentGames:'Viimeisimmät pelit', rankingSeasons:'Kaudet', rankingLastLogin:'Viimeisin kirjautuminen', ppOpen:'Pelaajaprofiili', ppTitle:'Pelaajaprofiili',
     // Private messages (parity: QML "Messages prives", 2.1.7+).
     pmTitle:'Yksityisviestit', pmTooltip:'Yksityisviestit', pmBtn:'Yksityisviesti', pmSend:'Lähetä', pmPlaceholder:'Viesti…', pmDelete:'Poista tämä keskustelu', pmDeleteConfirm:'Poistetaanko keskustelu pelaajan {name} kanssa?', pmEmpty:'Ei vielä keskusteluja.', pmNoConv:'Valitse keskustelu.', pmNoMsg:'Ei vielä viestejä.', pmMe:'Minä', pmNotFound:'Pelaajaa ei löytynyt', pmSelf:'Et voi lähettää yksityisviestiä itsellesi.', pmOffline:'Ei yhteyttä palvelimeen', pmUsage:'Käyttö: /msg <nimimerkki> <viesti>', pmAtTable:'Yksityisviestit eivät ole käytettävissä pöydässä.', pmRejected:'Yksityisviestiä ei voitu toimittaa.', pmOfflinePartner:'Ei tällä hetkellä aulassa', pmGuest:'Vieraat eivät voi lähettää viestejä', pmNotInLobby:'ei aulassa',
     // Server timeout warning popup (parity: timeoutWarningPopup, pokerth.qml).

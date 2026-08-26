@@ -11,6 +11,8 @@ export const meta = {
 };
 
 export const strings = {
+    // Player profile window (parity: QML PokerthPlayerPage).
+    rankingAvg:'சராசரி', rankingLast5:'கடைசி 5:', rankingRecentGames:'சமீபத்திய ஆட்டங்கள்', rankingSeasons:'பருவங்கள்', rankingLastLogin:'கடைசி உள்நுழைவு', ppOpen:'விளையாடுநர் சுயவிவரம்', ppTitle:'விளையாடுநர் சுயவிவரம்',
     // Private messages (parity: QML "Messages prives", 2.1.7+).
     pmTitle:'தனிப்பட்ட செய்திகள்', pmTooltip:'தனிப்பட்ட செய்திகள்', pmBtn:'தனிப்பட்ட செய்தி', pmSend:'அன்புப்ப', pmPlaceholder:'செய்தி…', pmDelete:'இந்த உரையாடலை நீக்கு', pmDeleteConfirm:'{name} உடனான உரையாடலை நீக்கவா?', pmEmpty:'இன்னும் உரையாடல் இல்லை.', pmNoConv:'ஒரு உரையாடலைத் தேர்ந்தெடுக்கவும்.', pmNoMsg:'இன்னும் செய்திகள் இல்லை.', pmMe:'நான்', pmNotFound:'விளையாடுபவர் கிடைக்கவில்லை', pmSelf:'உங்களுக்கே தனிப்பட்ட செய்தி அன்ப்ப முடியாது.', pmOffline:'சேவையகத்துடன் இணைப்பு இல்லை', pmUsage:'பயன்பாடு: /msg <பெயர்> <செய்தி>', pmAtTable:'மேஜையில் தனிப்பட்ட செய்திகள் கிடையாது.', pmRejected:'தனிப்பட்ட செய்தியை அன்ப்ப முடியவில்லை.', pmOfflinePartner:'தற்போது லாபியில் இல்லை', pmGuest:'விருந்தினர்கள் செய்தி அன்ப்ப முடியாது', pmNotInLobby:'லாபியில் இல்லை',
     // Server timeout warning popup (parity: timeoutWarningPopup, pokerth.qml).

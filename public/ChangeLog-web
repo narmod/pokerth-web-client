@@ -1,4 +1,5 @@
 2026-08-13 version 2.1.7-web (current series):
+- new: player profiles now show what the desktop client shows. A player's card has a "Player profile" button that opens a window with the current season - rank, score, average, games and points - the last five finishes, the placement breakdown with its pie and bars, the most recent games, and every past season. A season only loads when you unfold it, and seasons the player never entered simply do not appear
 - bugfix: in the players list, the action icons of a row that had fewer of them than the others - your own line, or a player already at a table - slid one place to the right and no longer lined up under their column headings
 - new: server admins now have the kickban hammer directly in the players list, next to the other actions, instead of having to open each player's card. The actions column widens to make room for it, and stays as it is for everyone else
 - improvement: the little disk that appears while your settings are being saved to the server now sits to the left of the private messages envelope in the lobby, instead of next to the settings wheel

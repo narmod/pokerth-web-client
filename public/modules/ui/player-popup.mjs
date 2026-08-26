@@ -313,7 +313,14 @@ function _cupsBlockHtml(pid) {
   if (!nm) return '';
   // Coupes À LA DEMANDE : aucun réseau à l'ouverture. Le bouton déclenche
   // window._pimLoadCups(pid) → rkLoadPlayerCups remplit #pim-cups (1 fois).
-  return '<button type="button" id="pim-cups-btn" class="pim-cups-btn" onclick="window._pimLoadCups(' + pid + ')">🏆 '
+  // Profil complet dans SA fenetre (parite QML PokerthPlayerPage) : saison en
+  // cours, 5 dernieres, repartition des places, parties recentes et historique
+  // par saison -- bien plus que ce que le popup peut tenir. Le bloc « coupes »
+  // ci-dessous reste tel quel : il resume les TROIS classements, la fenetre
+  // profil ne montre que pokerth.net.
+  return '<button type="button" class="pim-cups-btn" onclick="window.openPlayerProfile(' + JSON.stringify(nm) + ')">\uD83D\uDC64 '
+       + esc(tt('ppOpen', 'Player profile')) + '</button>'
+       + '<button type="button" id="pim-cups-btn" class="pim-cups-btn" onclick="window._pimLoadCups(' + pid + ')">🏆 '
        + esc(tt('piShowCups', 'Show cups')) + '</button>'
        + '<div id="pim-cups" class="pim-cups" data-shown="0" style="display:none"></div>'
        + '<a class="pim-profile-link" href="https://www.pokerth.net/app.php/player?u='

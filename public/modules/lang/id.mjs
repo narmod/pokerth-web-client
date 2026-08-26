@@ -16,6 +16,8 @@ export const meta = {
 };
 
 export const strings = {
+    // Player profile window (parity: QML PokerthPlayerPage).
+    rankingAvg:'Rata', rankingLast5:'5 terakhir:', rankingRecentGames:'Permainan terbaru', rankingSeasons:'Musim', rankingLastLogin:'Masuk terakhir', ppOpen:'Profil pemain', ppTitle:'Profil pemain',
     // Private messages (parity: QML "Messages prives", 2.1.7+).
     pmTitle:'Pesan pribadi', pmTooltip:'Pesan pribadi', pmBtn:'Pesan pribadi', pmSend:'Kirim', pmPlaceholder:'Pesan…', pmDelete:'Hapus percakapan ini', pmDeleteConfirm:'Hapus percakapan dengan {name}?', pmEmpty:'Belum ada percakapan.', pmNoConv:'Pilih sebuah percakapan.', pmNoMsg:'Belum ada pesan.', pmMe:'Saya', pmNotFound:'Pemain tidak ditemukan', pmSelf:'Anda tidak dapat mengirim pesan pribadi kepada diri sendiri.', pmOffline:'Tidak terhubung ke server', pmUsage:'Penggunaan: /msg <nama> <pesan>', pmAtTable:'Pesan pribadi tidak tersedia di meja.', pmRejected:'Pesan pribadi tidak dapat dikirimkan.', pmOfflinePartner:'Sedang tidak berada di lobi', pmGuest:'Tamu tidak dapat mengirim pesan', pmNotInLobby:'tidak di lobi',
     // Server timeout warning popup (parity: timeoutWarningPopup, pokerth.qml).

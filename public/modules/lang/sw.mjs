@@ -16,6 +16,8 @@ export const meta = {
 };
 
 export const strings = {
+    // Player profile window (parity: QML PokerthPlayerPage).
+    rankingAvg:'Wastani', rankingLast5:'5 za mwisho:', rankingRecentGames:'Michezo ya hivi karibuni', rankingSeasons:'Misimu', rankingLastLogin:'Kuingia mara ya mwisho', ppOpen:'Wasifu wa mchezaji', ppTitle:'Wasifu wa mchezaji',
     // Private messages (parity: QML "Messages prives", 2.1.7+).
     pmTitle:'Ujumbe wa faragha', pmTooltip:'Ujumbe wa faragha', pmBtn:'Ujumbe wa faragha', pmSend:'Tuma', pmPlaceholder:'Ujumbe…', pmDelete:'Futa mazungumzo haya', pmDeleteConfirm:'Futa mazungumzo na {name}?', pmEmpty:'Bado hakuna mazungumzo.', pmNoConv:'Chagua mazungumzo.', pmNoMsg:'Bado hakuna ujumbe.', pmMe:'Mimi', pmNotFound:'Mchezaji hakupatikana', pmSelf:'Huwezi kujitumia ujumbe wa faragha.', pmOffline:'Hujaunganishwa na seva', pmUsage:'Matumizi: /msg <jina> <ujumbe>', pmAtTable:'Ujumbe wa faragha haupatikani mezani.', pmRejected:'Ujumbe wa faragha haukuweza kufikishwa.', pmOfflinePartner:'Hayupo kwenye lobi kwa sasa', pmGuest:'Wageni hawawezi kutuma ujumbe', pmNotInLobby:'hayupo kwenye lobi',
     // Server timeout warning popup (parity: timeoutWarningPopup, pokerth.qml).

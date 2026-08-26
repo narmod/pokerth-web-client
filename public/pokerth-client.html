@@ -2772,6 +2772,19 @@ if ('serviceWorker' in navigator) {
      10 min). Meme modele de fenetre generique que le classement (rk-card,
      palette, fenetre flottante desktop). Logique : modules/ui/forumnews.mjs
      (dedoublonnage par sujet, suivi lu/non-lu local, badge d'en-tete). -->
+<!-- Profil joueur (parite QML PokerthPlayerPage) : fenetre generique, PAS une
+     page plein ecran (demande narmod 26/08). Meme carcasse que le classement,
+     le forum et les messages prives ; le contenu est produit par les memes
+     rendus rk* que la carte profil du classement, source unique de verite. -->
+<div id="pp-modal" style="display:none">
+  <div class="rk-backdrop" id="pp-backdrop"></div>
+  <div class="rk-card" role="dialog" aria-labelledby="pp-title">
+    <button class="rk-close" type="button" id="pp-close" title="Close" data-i18n-title="closeTooltip" data-i18n-aria="closeTooltip" aria-label="Close">&#10005;</button>
+    <div class="rk-title" id="pp-title"><svg viewBox="0 0 24 24" style="display:inline-block;width:15px;height:15px;vertical-align:-2px;margin-right:6px" fill="currentColor" aria-hidden="true"><path d="M12 12a5 5 0 1 0-5-5 5 5 0 0 0 5 5Zm0 2.2c-4.4 0-8 2.2-8 5V21h16v-1.8c0-2.8-3.6-5-8-5Z"/></svg><span data-i18n="ppTitle">Player profile</span></div>
+    <div class="rk-body" id="pp-body"></div>
+  </div>
+</div>
+
 <!-- Messages prives (parite QML "Messages prives", PokerTH 2.1.7+) :
      dialogue PERSISTANT, pas une popup - la fermeture ne perd rien, tout
      l'historique vit en IndexedDB (modules/pm/store.mjs). Bande des
@@ -3474,6 +3487,7 @@ if ('serviceWorker' in navigator) {
     return '<div class="rk-tiles">'
       + rkTile(rank, rkT('rankingRank', 'Rank'))
       + rkTile(b.score != null ? b.score : '\u2014', rkColLabel('score'))
+      + (b.avg != null ? rkTile(b.avg, rkT('rankingAvg', 'Avg')) : '')
       + rkTile(b.games != null ? b.games : '\u2014', rkColLabel('games'))
       + rkTile(b.points != null ? b.points : '\u2014', rkColLabel('points'))
       + '</div>';
@@ -3597,6 +3611,87 @@ if ('serviceWorker' in navigator) {
     return rkSection(title, inner);
   }
 
+  // ── Blocs de la page profil QML (PokerthPlayerPage) ──────────────────────
+  // Pastilles des 5 dernieres places : la 1re place ressort en accent, comme
+  // le Rectangle colorAccent du QML.
+  function rkLast5(a) {
+    if (!a || !a.length) return '';
+    var h = '<div class="rk-last5"><span class="rk-last5-l">' + rkEsc(rkT('rankingLast5', 'Last 5:')) + '</span>';
+    for (var i = 0; i < a.length; i++) {
+      var v = Number(a[i]) || 0;
+      h += '<span class="rk-l5' + (v === 1 ? ' win' : '') + '">' + rkEsc(v) + '</span>';
+    }
+    return h + '</div>';
+  }
+  // Parties recentes : place, nom de table, date. Liste courte qui defile
+  // toute seule plutot que d'etirer la fenetre (parite ListView maxRows 6).
+  function rkRecentGames(a) {
+    if (!a || !a.length) return '';
+    var h = '<div class="rk-games">';
+    for (var i = 0; i < a.length; i++) {
+      var g = a[i] || {};
+      var pl = (g.place != null) ? ('#' + g.place) : '';
+      h += '<div class="rk-game"><span class="rk-game-p' + (g.place === 1 ? ' win' : '') + '">' + rkEsc(pl) + '</span>'
+         + '<span class="rk-game-n">' + rkEsc(g.name || '') + '</span>'
+         + '<span class="rk-game-d">' + rkEsc(g.date || '') + '</span></div>';
+    }
+    return rkSection(rkT('rankingRecentGames', 'Recent games'), h + '</div>');
+  }
+  // "2026_2" -> "2026 Q2" ; format inconnu laisse tel quel (parite seasonLabel).
+  function rkSeasonLabel(sn) {
+    var m = /^([0-9]{4})_([1-4])$/.exec(String(sn || ''));
+    return m ? (m[1] + ' Q' + m[2]) : String(sn || '');
+  }
+  // Liste des saisons. La liste renvoyee par l'API est GLOBALE (toutes les
+  // saisons cotees, identique pour chaque joueur) : on ne sait qu'apres coup
+  // si CE joueur y a un resultat. Chaque ligne se charge donc a la demande et
+  // se retire d'elle-meme si la saison n'a pas ete jouee -- exactement ce que
+  // fait PlayerSeasonCard, et la raison pour laquelle rien n'est prefetche.
+  function rkSeasons(pid, list) {
+    if (!pid || !list || !list.length) return '';
+    var h = '<div class="rk-seasons">';
+    for (var i = 0; i < list.length; i++) {
+      h += '<div class="rk-season" data-season="' + rkEsc(list[i]) + '" data-pid="' + rkEsc(pid) + '">'
+         + '<button type="button" class="rk-season-h" onclick="rkSeasonToggle(this)">'
+         + '<span class="rk-season-t">' + rkEsc(rkSeasonLabel(list[i])) + '</span>'
+         + '<span class="rk-season-r"></span><span class="rk-season-c">\u203a</span></button>'
+         + '<div class="rk-season-b" style="display:none"></div></div>';
+    }
+    return rkSection(rkT('rankingSeasons', 'Seasons'), h + '</div>');
+  }
+  var RK_SEASON_CACHE = {};
+  window.rkSeasonToggle = function (btn) {
+    var row = btn && btn.parentNode; if (!row) return;
+    var body = row.querySelector('.rk-season-b');
+    var open = row.classList.toggle('open');
+    if (body) body.style.display = open ? '' : 'none';
+    if (!open || row.getAttribute('data-loaded')) return;
+    row.setAttribute('data-loaded', '1');
+    var pid = row.getAttribute('data-pid'), sn = row.getAttribute('data-season');
+    var ck = pid + '|' + sn;
+    function paint(d) {
+      if (!d || d.ok === false || !d.played) {
+        // Saison non jouee : la ligne disparait au lieu d'afficher un vide.
+        row.style.display = 'none';
+        return;
+      }
+      var rk = row.querySelector('.rk-season-r');
+      if (rk) rk.innerHTML = '<b>' + rkEsc(d.rank != null ? ('#' + d.rank) : '') + '</b> '
+        + rkEsc(d.score != null ? d.score : '');
+      if (body) {
+        body.innerHTML = rkStatTiles(d) + (d.placement ? rkSeasonStats(d.placement) : '');
+        rkPaintPies(body);
+      }
+    }
+    var c = RK_SEASON_CACHE[ck];
+    if (c) { paint(c); return; }
+    if (body) body.innerHTML = '<div class="rk-msg">' + rkEsc(rkT('rankingLoading', 'Loading\u2026')) + '</div>';
+    fetch('/api/player-season?id=' + encodeURIComponent(pid) + '&season=' + encodeURIComponent(sn), { headers: { 'Accept': 'application/json' } })
+      .then(function (r) { return r.text(); })
+      .then(function (t) { var d; try { d = JSON.parse(t); } catch (e) { d = null; } RK_SEASON_CACHE[ck] = d; paint(d); })
+      .catch(function () { if (body) body.innerHTML = '<div class="rk-msg">' + rkEsc(rkT('rankingError', 'Could not load the ranking.')) + '</div>'; });
+  };
+
   var RK_STAT_FB = { rankingThisSeason: 'This season', rankingThisMonth: 'This month', rankingThisYear: 'This year', rankingAllTime: 'All-Time' };
   // Profile body (awards → tickets → stats). Shared by the ranking profile card
   // and the per-cup panes of the player popup so both render identically.
@@ -3622,16 +3717,21 @@ if ('serviceWorker' in navigator) {
     if (d.stats && d.stats.length) {
       for (var j = 0; j < d.stats.length; j++) {
         var blk = d.stats[j];
-        h += rkSection(rkT(blk.label, RK_STAT_FB[blk.label] || blk.label), rkStatTiles(blk));
+        h += rkSection(rkT(blk.label, RK_STAT_FB[blk.label] || blk.label), rkStatTiles(blk) + (j === 0 ? rkLast5(d.last5) : ''));
         h += rkResultsForBlock(blk);
       }
     }
     if (d.placement) h += rkSeasonStats(d.placement);
+    // Parties recentes + saisons : seul pokerth.net les fournit (BBC/WEC sont
+    // scrapes en HTML et n'ont ni l'un ni l'autre).
+    h += rkRecentGames(d.games);
+    h += rkSeasons(d.playerId, d.seasons);
     return h;
   }
   function rkRenderProfile(d) {
     var h = '<div class="rk-prof-head"><div class="rk-prof-name">' + rkEsc(d.nickname) + '</div>';
     if (d.memberSince) h += '<div class="rk-prof-since">' + rkEsc(rkT('rankingMemberSince', 'Member since')) + ' ' + rkEsc(d.memberSince) + '</div>';
+    if (d.lastLogin) h += '<div class="rk-prof-since">' + rkEsc(rkT('rankingLastLogin', 'Last login')) + ' ' + rkEsc(d.lastLogin) + '</div>';
     h += '</div>';
     return h + rkProfileBody(d);
   }
@@ -3654,6 +3754,67 @@ if ('serviceWorker' in navigator) {
       })
       .catch(function () { pb.innerHTML = '<div class="rk-msg">' + rkEsc(rkT('rankingError', 'Could not load the ranking.')) + '</div>'; });
   };
+
+  // ── Fenetre « Profil joueur » (parite QML PokerthPlayerPage) ─────────────
+  // Fenetre generique comme le classement / le forum / les messages prives :
+  // conteneur fixe qui centre la carte, mode flottant au-dessus du seuil
+  // _winGate. Le contenu vient de rkRenderProfile -- meme rendu que la carte
+  // profil du classement, pour qu'il n'y ait qu'un seul endroit a corriger.
+  function ppWinGateOk() {
+    try { return !!(window._winGate && window._winGate() && typeof window._enableFloating === 'function'); }
+    catch (e) { return false; }
+  }
+  window.openPlayerProfile = function (nick) {
+    var m = $('pp-modal'), body = $('pp-body');
+    if (!m || !body) return;
+    nick = String(nick == null ? '' : nick).trim();
+    if (!nick) return;
+    m.style.display = 'flex';
+    var card = m.querySelector('.rk-card');
+    if (card && ppWinGateOk()) {
+      m.classList.add('rk-floating');
+      try {
+        window._enableFloating(card, {
+          handle: $('pp-title'), resizable: true,
+          maxW: Math.min(760, Math.round(window.innerWidth * 0.92)),
+          maxH: Math.min(720, Math.round(window.innerHeight * 0.90)),
+          zoom: true, key: 'pth-pp-win', defW: 480, defH: 600,
+          minW: 320, minH: 320, defLeft: 140, defTop: 60
+        });
+      } catch (e) {}
+    }
+    body.innerHTML = '<div class="rk-msg">' + rkEsc(rkT('rankingLoading', 'Loading\u2026')) + '</div>';
+    var ck = 'pth|' + nick.toLowerCase();
+    var c = RK_PROF_CACHE[ck];
+    if (c && (Date.now() - c.at) < RK_TTL) { body.innerHTML = rkRenderProfile(c.data); rkPaintPies(body); return; }
+    fetch('/api/player?src=pth&nick=' + encodeURIComponent(nick), { headers: { 'Accept': 'application/json' } })
+      .then(function (r) { return r.text(); })
+      .then(function (t) {
+        var d; try { d = JSON.parse(t); } catch (e) { d = null; }
+        if (!d || d.ok === false) { body.innerHTML = '<div class="rk-msg">' + rkEsc(rkT('rankingError', 'Could not load the ranking.')) + '</div>'; return; }
+        RK_PROF_CACHE[ck] = { at: Date.now(), data: d };
+        body.innerHTML = rkRenderProfile(d); rkPaintPies(body);
+      })
+      .catch(function () { body.innerHTML = '<div class="rk-msg">' + rkEsc(rkT('rankingError', 'Could not load the ranking.')) + '</div>'; });
+  };
+  window.closePlayerProfile = function () {
+    var m = $('pp-modal'); if (!m) return;
+    var card = m.querySelector('.rk-card');
+    if (card && card.classList.contains('floating-win') && typeof window._disableFloating === 'function') {
+      try { window._disableFloating(card); } catch (e) {}
+    }
+    m.classList.remove('rk-floating');
+    m.style.display = 'none';
+  };
+  (function () {
+    var c = $('pp-close'); if (c) c.addEventListener('click', window.closePlayerProfile);
+    var b = $('pp-backdrop'); if (b) b.addEventListener('click', window.closePlayerProfile);
+    document.addEventListener('keydown', function (e) {
+      if (e.key !== 'Escape') return;
+      var m = $('pp-modal');
+      if (m && m.style.display && m.style.display !== 'none') window.closePlayerProfile();
+    });
+  })();
 
   // ── Cups summary for the player popup (pokerth.js → openPlayerInfoPopup) ──
   // Fetches the player's profile on each cup (PokerTH / BBC / WEC) via the same

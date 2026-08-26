@@ -11,6 +11,8 @@ export const meta = {
 };
 
 export const strings = {
+    // Player profile window (parity: QML PokerthPlayerPage).
+    rankingAvg:'Cuibh', rankingLast5:'Na 5 mu dheireadh:', rankingRecentGames:'Geamannan o chionn ghoirid', rankingSeasons:'Seusanan', rankingLastLogin:'An clàradh a-steach mu dheireadh', ppOpen:'Pròifil a’ chluicheadair', ppTitle:'Pròifil a’ chluicheadair',
     // Private messages (parity: QML "Messages prives", 2.1.7+).
     pmTitle:'Teachdaireachdan prìobhaideach', pmTooltip:'Teachdaireachdan prìobhaideach', pmBtn:'Teachdaireachd phrìobhaideach', pmSend:'Cuir', pmPlaceholder:'Teachdaireachd…', pmDelete:'Sguab às an còmhradh seo', pmDeleteConfirm:'A bheil thu airson an còmhradh le {name} a sguabadh às?', pmEmpty:'Chan eil còmhradh ann fhathast.', pmNoConv:'Tagh còmhradh.', pmNoMsg:'Chan eil teachdaireachd ann fhathast.', pmMe:'Mise', pmNotFound:'Cha deach an cluicheadair a lorg', pmSelf:'Chan urrainn dhut teachdaireachd phrìobhaideach a chur thugad fhèin.', pmOffline:'Gun cheangal ris an fhrithealaiche', pmUsage:'Cleachdadh: /msg <far-ainm> <teachdaireachd>', pmAtTable:'Chan eil teachdaireachdan prìobhaideach ri làimh aig a’ bhòrd.', pmRejected:'Cha b’ urrainn an teachdaireachd phrìobhaideach a libhrigeadh.', pmOfflinePartner:'Chan eil e san lòbaidh an-dràsta', pmGuest:'Chan urrainn do dh’aoighean teachdaireachdan a chur', pmNotInLobby:'chan eil e san lòbaidh',
     // Server timeout warning popup (parity: timeoutWarningPopup, pokerth.qml).

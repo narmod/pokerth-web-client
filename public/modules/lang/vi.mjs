@@ -10,6 +10,8 @@ export const meta = {
 };
 
 export const strings = {
+    // Player profile window (parity: QML PokerthPlayerPage).
+    rankingAvg:'TB', rankingLast5:'5 gần nhất:', rankingRecentGames:'Ván gần đây', rankingSeasons:'Mùa giải', rankingLastLogin:'Đăng nhập lần cuối', ppOpen:'Hồ sơ người chơi', ppTitle:'Hồ sơ người chơi',
     // Private messages (parity: QML "Messages prives", 2.1.7+).
     pmTitle:'Tin nhắn riêng', pmTooltip:'Tin nhắn riêng', pmBtn:'Tin nhắn riêng', pmSend:'Gửi', pmPlaceholder:'Tin nhắn…', pmDelete:'Xoá cuộc trò chuyện này', pmDeleteConfirm:'Xoá cuộc trò chuyện với {name}?', pmEmpty:'Chưa có cuộc trò chuyện nào.', pmNoConv:'Chọn một cuộc trò chuyện.', pmNoMsg:'Chưa có tin nhắn nào.', pmMe:'Tôi', pmNotFound:'Không tìm thấy người chơi', pmSelf:'Bạn không thể gửi tin nhắn riêng cho chính mình.', pmOffline:'Chưa kết nối máy chủ', pmUsage:'Cách dùng: /msg <biệt danh> <tin nhắn>', pmAtTable:'Không thể nhắn riêng khi đang ở bàn.', pmRejected:'Không thể gửi tin nhắn riêng.', pmOfflinePartner:'Hiện không có trong sảnh', pmGuest:'Khách không thể gửi tin nhắn', pmNotInLobby:'không có trong sảnh',
     // Server timeout warning popup (parity: timeoutWarningPopup, pokerth.qml).

@@ -16,6 +16,8 @@ export const meta = {
 };
 
 export const strings = {
+    // Player profile window (parity: QML PokerthPlayerPage).
+    rankingAvg:'গড়', rankingLast5:'শেষ ৫:', rankingRecentGames:'সাম্প্রতিক খেলা', rankingSeasons:'সিজন', rankingLastLogin:'শেষ লগইন', ppOpen:'খেলোয়াড় প্রোফাইল', ppTitle:'খেলোয়াড় প্রোফাইল',
     // Private messages (parity: QML "Messages prives", 2.1.7+).
     pmTitle:'ব্যক্তিগত বার্তা', pmTooltip:'ব্যক্তিগত বার্তা', pmBtn:'ব্যক্তিগত বার্তা', pmSend:'পাঠান', pmPlaceholder:'বার্তা…', pmDelete:'এই কথোপকথন মুছুন', pmDeleteConfirm:'{name} এর সঙ্গে কথোপকথন মুছবেন?', pmEmpty:'এখনো কোনো কথোপকথন নেই।', pmNoConv:'একটি কথোপকথন বেছে নিন।', pmNoMsg:'এখনো কোনো বার্তা নেই।', pmMe:'আমি', pmNotFound:'খেলোয়াড় পাওয়া যায়নি', pmSelf:'আপনি নিজেকে ব্যক্তিগত বার্তা পাঠাতে পারবেন না।', pmOffline:'সার্ভারের সঙ্গে সংযোগ নেই', pmUsage:'ব্যবহার: /msg <ডাকনাম> <বার্তা>', pmAtTable:'টেবিলে ব্যক্তিগত বার্তা পাওয়া যায় না।', pmRejected:'ব্যক্তিগত বার্তাটি পাঠানো যায়নি।', pmOfflinePartner:'এই মুহূর্তে লবিতে নেই', pmGuest:'অতিথিরা বার্তা পাঠাতে পারবেন না', pmNotInLobby:'লবিতে নেই',
     // Server timeout warning popup (parity: timeoutWarningPopup, pokerth.qml).

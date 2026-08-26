@@ -14,6 +14,27 @@ Opened with `v2.1.7-web.0` (2026-08-13), following the upstream **2.1.7**
 release.
 
 ### Added
+- **Player profile window** (`web.102`) — pass 2, the UI on top of the relay
+  work. Parity with `PokerthPlayerPage.qml`, but as a **generic window**
+  (`#pp-modal`: fixed container, `rk-floating` + `_enableFloating` above
+  `_winGate`, geometry under `pth-pp-win`), not a full-screen page — per narmod.
+  - Rendering reuses the existing `rk*` helpers rather than duplicating them, so
+    the ranking profile card and the popup cup panes gain the same blocks: an
+    `Avg` tile (fifth KPI), `Last 5` badges with first place accented, `Recent
+    games`, `Seasons`, and `Last login` in the header.
+  - Seasons load **lazily**, one fetch per unfold (`/api/player-season`), because
+    the season list from the API is global — a row whose season the player never
+    entered (`played: false`) removes itself, as `PlayerSeasonCard` does.
+  - Entry point: a "Player profile" button in the player card. The existing cups
+    block is untouched — it summarises all three rankings, the profile window
+    covers pokerth.net only.
+  - 7 new keys across all 45 catalogues. Note `ppTitle` looked taken: a substring
+    check matched `advShowAppTitle`. The insertion script now tests with word
+    boundaries, and anchors on `export const strings = {` — `rankingMemberSince`,
+    the first anchor tried, exists in only 11 of the 45 files.
+  - New `scripts/test-pp-window.mjs`: markup, z-order registration, fixed-position
+    container (the `web.94` defect), and the three new renderers against a
+    realistic payload, escaping included.
 - **Player profile relay: the fields the QML page shows** (proxy only, no
   version bump — no served file changes) — groundwork for the profile window.
   `playerParsePth` was dropping most of what `/pthranking/player/show` returns;
