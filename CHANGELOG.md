@@ -59,6 +59,16 @@ release.
   `SEO_RULES_I18N` rather than introducing a second script for one page.
 
 ### Fixed
+- **Opening a private message dialogue created a permanent conversation**
+  (`web.95`) — `store.ensure()` wrote a conversation row on every envelope click,
+  so the partner strip accumulated every player ever clicked, most of them since
+  gone from the lobby, none with a single message exchanged. `ensure()` is
+  replaced by a UI-only `_draft`: the dialogue shows somewhere to type, but the
+  conversation is created by `append()` alone, when a message is actually sent or
+  received. Closing the window drops the draft. `store.prune()` runs once on load
+  to clear rows earlier versions left behind. Partners no longer in the lobby are
+  dimmed (`.pm-partner.off`), since history outlives a session and sending to
+  them would fail.
 - **Private message window behaved unlike every other window** (`web.94`) — no
   container rule had been written for `#pm-modal`, so `display: ''` fell back to
   the element default (`block`) instead of the `flex` the other modals get from

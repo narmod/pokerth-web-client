@@ -26,6 +26,13 @@ import * as store from '../pm/store.mjs';
 const MAX_BYTES = 128;   // server-side chat limit, same as the lobby input
 
 let _current = '';       // selected partner, '' when nothing is selected
+// Partner whose dialogue is open but with whom nothing has been exchanged
+// yet. It shows in the strip so there is somewhere to type, but it is never
+// written to disk: a conversation only exists once a message is actually
+// sent or received. Without this, opening a dialogue out of curiosity left a
+// permanent empty entry behind, and the strip filled up with every player
+// whose envelope had ever been clicked.
+let _draft = '';
 
 function $(id) { return document.getElementById(id); }
 
@@ -83,6 +90,10 @@ function _renderPartners() {
   const strip = $('pm-partners');
   if (!strip) return;
   const list = store.partners();
+  // The draft sits at the front until it earns a place of its own.
+  if (_draft && !list.some(function (p) { return p.name === _draft; })) {
+    list.unshift({ name: _draft, unread: 0, last: 0 });
+  }
   if (!list.length) {
     strip.innerHTML = '<span class="pm-nopart">' + _esc(_tt('pmEmpty', 'No conversations yet.')) + '</span>';
     return;
@@ -91,7 +102,12 @@ function _renderPartners() {
     const badge = p.unread
       ? '<span class="pm-pbadge">' + (p.unread > 99 ? '99+' : p.unread) + '</span>'
       : '';
-    return '<button type="button" class="pm-partner' + (p.name === _current ? ' active' : '') + '"'
+    // History outlives a session, so a partner may well have left the lobby.
+    // Dimming them says so before the player types a message that cannot be
+    // delivered.
+    const off = playerIdByName(p.name) ? '' : ' off';
+    return '<button type="button" class="pm-partner' + (p.name === _current ? ' active' : '') + off + '"'
+      + ' title="' + _esc(off ? _tt('pmOfflinePartner', 'Not in the lobby at the moment') : p.name) + '"'
       + ' data-name="' + _esc(p.name) + '">' + _esc(p.name) + badge + '</button>';
   }).join('');
   try {
@@ -168,7 +184,9 @@ function open(name) {
   if (!modal) return;
   store.ready().then(function () {
     if (name) {
-      store.ensure(name).then(function () { select(name); });
+      // Not persisted: the dialogue is a draft until a message travels.
+      _draft = name;
+      select(name);
     } else {
       // No partner given (header button): fall back to the most recent
       // conversation, or none if the player never exchanged a message.
@@ -206,6 +224,7 @@ function close() {
   }
   modal.classList.remove('rk-floating');
   modal.style.display = 'none';
+  _draft = '';
 }
 
 function toggle() {
@@ -355,6 +374,7 @@ function deleteCurrent() {
   let go = true;
   try { go = window.confirm(q); } catch (e) {}
   if (!go) return;
+  if (_draft === name) _draft = '';
   store.remove(name).then(function () {
     const list = store.partners();
     _current = list.length ? list[0].name : '';
@@ -390,7 +410,11 @@ function _init() {
     const m = $('pm-modal');
     if (m && m.style.display !== 'none') close();
   });
-  store.ready().then(refreshBadge);
+  store.ready().then(function () {
+    // Versions up to 2.1.7-web.94 wrote an empty conversation as soon as a
+    // dialogue was opened; clear those out once, on load.
+    return store.prune().then(refreshBadge);
+  });
 }
 
 if (typeof document !== 'undefined') {

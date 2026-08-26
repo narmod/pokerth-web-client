@@ -8489,6 +8489,11 @@ body.adv-no-forumnews [id^="forum-btn-"], body.adv-no-forumnews #forum-modal { d
 .pm-partner { position: relative; flex: 0 0 auto; background: none; border: 1px solid var(--border); border-radius: var(--r-xs); color: var(--text); font: inherit; font-size: var(--fs-sm); padding: 3px 10px; cursor: pointer; white-space: nowrap; transition: border-color 0.15s, color 0.15s; }
 .pm-partner:hover { border-color: var(--border-hi); color: var(--text-hi); }
 .pm-partner.active { background: rgba(var(--sel-rgb,var(--gold-rgb)), 0.18); border-color: var(--sel,var(--gold)); color: var(--sel-hi,var(--gold-hi)); }
+/* Partenaire absent du lobby : l'historique survit a la session, le nom peut
+   donc etre celui d'un joueur parti. Attenue -- reste selectionnable pour
+   relire la conversation, mais l'envoi echouera. */
+.pm-partner.off { color: var(--text-dim); border-style: dashed; }
+.pm-partner.off.active { color: var(--sel-hi,var(--gold-hi)); }
 .pm-pbadge { display: inline-block; margin-left: 6px; min-width: 15px; height: 15px; padding: 0 4px; border-radius: 8px; background: var(--red); color: #fff; font-family: var(--ff-mono); font-size: var(--fs-2xs); font-weight: 700; line-height: 15px; text-align: center; }
 .pm-nopart { align-self: center; font-size: var(--fs-sm); color: var(--text-dim); }
 .pm-body { display: flex; flex-direction: column; overflow: hidden; }

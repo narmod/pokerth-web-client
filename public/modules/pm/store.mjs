@@ -137,16 +137,25 @@ function conversation(name) {
   return a.map(function (m) { return { text: m.text, mine: !!m.mine, ts: m.ts }; });
 }
 
-// Create an empty conversation so it shows up in the partner list before
-// a single message has been exchanged (parity: ensurePrivateConversation,
-// called when the user opens a dialogue from the player list).
-function ensure(name) {
-  if (!name) return Promise.resolve(false);
-  if (!_mem.conv[name]) _mem.conv[name] = { name: name, unread: 0, last: Date.now() };
-  const row = _mem.conv[name];
-  return ready().then(function () {
-    return _tx('readwrite', [ST_CONV], function (tx) { tx.objectStore(ST_CONV).put(row); });
+// Drop conversation rows that carry no message at all. Opening a dialogue
+// with somebody used to write an empty row straight away, so every player
+// whose envelope was ever clicked stayed in the partner list for good --
+// including players long gone from the lobby. A conversation now only comes
+// into existence when a message is actually exchanged (append), and this
+// clears out what earlier versions left behind.
+function prune() {
+  const dead = Object.keys(_mem.conv).filter(function (k) {
+    const a = _mem.msg[k];
+    return !a || !a.length;
   });
+  if (!dead.length) return Promise.resolve(0);
+  dead.forEach(function (k) { delete _mem.conv[k]; });
+  return ready().then(function () {
+    return _tx('readwrite', [ST_CONV], function (tx) {
+      const st = tx.objectStore(ST_CONV);
+      dead.forEach(function (k) { st.delete(k); });
+    });
+  }).then(function () { return dead.length; });
 }
 
 // Append one message. `mine` marks our own outgoing text: the server never
@@ -249,5 +258,5 @@ function unreadFor(name) {
 // than silently losing history at the next reload.
 function isEphemeral() { return _broken || !_db; }
 
-export { ready, partners, conversation, ensure, append, dropLast, markRead,
+export { ready, partners, conversation, prune, append, dropLast, markRead,
          remove, unreadCount, unreadFor, isEphemeral };
