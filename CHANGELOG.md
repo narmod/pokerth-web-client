@@ -14,6 +14,40 @@ Opened with `v2.1.7-web.0` (2026-08-13), following the upstream **2.1.7**
 release.
 
 ### Added
+- **Community suggest opens to every BBC admin** (`web.121`) — parity with
+  upstream `422f5fe4`, the client half of `web.120`. The button used to be the
+  creator's alone, because only their client knew which preset the table came
+  from. A joining player has no such knowledge: the protocol carries no template
+  type, and the table name is freely editable and therefore worthless as a
+  source. The type is now fingerprinted from the settings instead —
+  `startMoney` + `firstSmallBlind` + the full manual blind list identify a BBC
+  Step unambiguously. Templates with no fixed blind list (Monthly Cup, WEC) are
+  deliberately skipped: doubling blinds at 10000/50 is no signature and would
+  match arbitrary tables, so those stay with the creator.
+  - `bbcadmins.txt` (same one-nickname-per-line format as `weclist.txt`, hence
+    `_parseWec` → `_parseNameList`) is fetched **only** once the local
+    fingerprint already says "BBC Step", so every other table costs zero
+    requests. Failures are throttled like upstream, since the answer drives
+    button visibility and would otherwise re-fetch on every join/leave. A late
+    answer is pinned to the game id it was asked for, so it cannot light the
+    button up on a table joined since.
+  - The preset table moved from `App._communityVorlagen` (`pokerth.js`) into
+    `botsuggest.mjs` as the exported `presets`, mirroring the move to
+    `Config.BotSuggest` upstream: it now serves both the create form and the
+    fingerprint, and two copies would diverge on the first added template.
+    `pokerth.js` reads it through a getter on `window._botSuggest.presets`;
+    verified byte-identical to the table it replaces.
+  - `scripts/test-botsuggest.mjs` gains fingerprint, `bbcadmins` and
+    foreign-table visibility cases. One existing case was adjusted: it clicked
+    the button with `S.games = {}`, a state that cannot occur now that
+    `suggestPlayers()` goes through `effectiveSuggestType()` — same guard as
+    `runSuggest()` upstream.
+  - Upstream left the option's own label ("Suggest players in your own community
+    games") untouched in `422f5fe4` even though the feature is no longer limited
+    to one's own tables. Left as-is here too rather than diverging; worth raising
+    with sp0ck.
+
+### Added
 - **`bbcadmins.txt` added to the botfile relay** (`web.120`) — groundwork for
   upstream `422f5fe4`. `/api/botfile?f=` now accepts a fourth key alongside
   `minidb`, `weclist` and `gameslist`; the whitelist stays strict, the 15-minute

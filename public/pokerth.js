@@ -7458,7 +7458,7 @@ const App = (() => {
       if (sel) sel.classList.add('active');
     },
 
-    // ── Vorlagen communautaires (parité QML communityPresets, verbatim) ──
+    // ── Vorlagen communautaires ─────────────────────────────────────────
     // Réglages officiels des tournois pokerth.net. Visibles seulement pour
     // « Joueurs invités uniquement » ; remplissent ET verrouillent le
     // formulaire — SAUF le nom : pré-rempli mais éditable (suffixe d'heure
@@ -7466,48 +7466,18 @@ const App = (() => {
     // restaure les valeurs d'avant. Les BBC Steps imposent une liste fixe de 30 paliers
     // de blinds (hausse au temps, toutes les 5 min) ; MC/WEC doublent après
     // N mains. delayBetweenHands = 7 pour toutes (comme le QML).
-    _communityVorlagen: [
-      { name: 'BBC Step 1', suggestType: 'step1', startCash: 3000, firstSmallBlind: 15,
-        raiseOnHands: false, raiseEveryHands: 11, raiseEveryMinutes: 5, playerActionTimeout: 10,
-        blinds: [20, 25, 30, 40, 50, 60, 80, 100, 120, 150, 200, 250, 300, 400, 500,
-                 600, 800, 1000, 1200, 1500, 2000, 2500, 3000, 4000, 5000, 6000, 8000,
-                 10000, 12000, 15000] },
-      { name: 'BBC Step 2', suggestType: 'step2', startCash: 4000, firstSmallBlind: 20,
-        raiseOnHands: false, raiseEveryHands: 11, raiseEveryMinutes: 5, playerActionTimeout: 10,
-        blinds: [25, 30, 40, 50, 60, 80, 100, 120, 150, 200, 250, 300, 400, 500, 600,
-                 800, 1000, 1200, 1500, 2000, 2500, 3000, 4000, 5000, 6000, 8000, 10000,
-                 12000, 15000, 20000] },
-      { name: 'BBC Step 3', suggestType: 'step3', startCash: 5000, firstSmallBlind: 25,
-        raiseOnHands: false, raiseEveryHands: 11, raiseEveryMinutes: 5, playerActionTimeout: 10,
-        blinds: [30, 40, 50, 60, 80, 100, 120, 150, 200, 250, 300, 400, 500, 600, 800,
-                 1000, 1200, 1500, 2000, 2500, 3000, 4000, 5000, 6000, 8000, 10000,
-                 12000, 15000, 20000, 25000] },
-      { name: 'BBC Step 4', suggestType: 'step4', startCash: 10000, firstSmallBlind: 50,
-        raiseOnHands: false, raiseEveryHands: 11, raiseEveryMinutes: 5, playerActionTimeout: 10,
-        blinds: [60, 80, 100, 120, 150, 200, 250, 300, 400, 500, 600, 800, 1000, 1200,
-                 1500, 2000, 2500, 3000, 4000, 5000, 6000, 8000, 10000, 12000, 15000,
-                 20000, 25000, 30000, 40000, 50000] },
-      { name: 'Monthly Cup', titleCommand: 'mcup', startCash: 10000, firstSmallBlind: 50,
-        raiseOnHands: true, raiseEveryHands: 16, raiseEveryMinutes: 5, playerActionTimeout: 10,
-        blinds: [] },
-      { name: 'Monthly Cup Final', titleCommand: 'mcupfinal', startCash: 10000, firstSmallBlind: 50,
-        raiseOnHands: true, raiseEveryHands: 22, raiseEveryMinutes: 5, playerActionTimeout: 12,
-        blinds: [] },
-      { name: 'WEC', suggestType: 'wec', startCash: 10000, firstSmallBlind: 50,
-        raiseOnHands: true, raiseEveryHands: 22, raiseEveryMinutes: 5, playerActionTimeout: 12,
-        blinds: [] },
-      // Ajouté par sp0ck dans le QML 2.1.4. Réglages officiels des finales
-      // mensuelles WeC (fil « WEC Monthly and Yearly Grand Finals », encore en
-      // vigueur pour les finales 2026) : 10 000 / SB 50 / action 15 s /
-      // doublement toutes les 25 mains. Le délai entre les mains (7 s) est posé
-      // pour toutes les vorlagen par applyVorlage().
-      { name: 'WEC Monthly Final', startCash: 10000, firstSmallBlind: 50,
-        raiseOnHands: true, raiseEveryHands: 25, raiseEveryMinutes: 5, playerActionTimeout: 15,
-        blinds: [] },
-      { name: 'WEC Grand Final', suggestType: 'wec', startCash: 10000, firstSmallBlind: 50,
-        raiseOnHands: true, raiseEveryHands: 35, raiseEveryMinutes: 5, playerActionTimeout: 25,
-        blinds: [] }
-    ],
+    //
+    // La TABLE elle-même vit dans modules/ui/botsuggest.mjs : depuis l'amont
+    // 422f5fe4 elle sert aussi d'empreinte pour reconnaître le type d'un tapis
+    // qu'on n'a pas créé, et deux copies divergeraient au premier ajout de
+    // vorlage. Elle est lue à l'usage (le module est chargé en <script
+    // type="module"> et applyVorlage() ne tourne que sur action de
+    // l'utilisateur, donc bien après) ; repli sur liste vide, qui rend
+    // simplement le combo inopérant au lieu de jeter.
+    get _communityVorlagen() {
+      try { return (window._botSuggest && window._botSuggest.presets) || []; }
+      catch (e) { return []; }
+    },
     // Handler du combo « Modèle communautaire ». idx 0 = Paramètres
     // personnalisés (restauration) ; 1..9 = vorlage (remplit + verrouille).
     applyVorlage() {
@@ -10756,7 +10726,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.7-web.120'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.7-web.121'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

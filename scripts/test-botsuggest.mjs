@@ -24,6 +24,7 @@ const FILES = {
     'short\t1\t2\t3'                  // too few columns -> dropped
   ].join('\n'),
   weclist: ['Carol', 'dave', ''].join('\n'),
+  bbcadmins: ['Referee', 'alice', ''].join('\n'),
   gameslist: ['// comment', '#mcup#g#July Cup#', '#mcupfinal#g#July Cup Final#', 'junk'].join('\n')
 };
 let fetched = [];
@@ -159,12 +160,95 @@ const done = () => new Promise((r) => setTimeout(r, 0));
   window.addChat = (sender, text, cls) => shown.push({ sender, text, cls });
   B.setCreatedSuggestType('step2');
   S._lobbyPids = new Set([1]); S.players = { 1: 'alice' }; S._playerRights = { 1: 2 };
-  S.games = {}; S.gId = 0;
+  // Une table valide : suggestPlayers() passe desormais par
+  // effectiveSuggestType(), qui exige une partie « sur invitation » — comme
+  // runSuggest() en amont. Cliquer hors table ne peut pas arriver, le bouton
+  // n'etant visible que quand un type est utilisable.
+  S.games = { 9: { type: 3, seats: [], name: 'BBC Step 2' } }; S.gId = 9;
+  S.amGameAdmin = true;
   B.suggestPlayers();
   await done();
   eq(shown.length, 1, 'suggestPlayers: one local line');
   eq(shown[0].sender, null, 'suggestPlayers: no sender -> local note, not a chat message');
   ok(shown[0].text.indexOf('alice') !== -1, 'suggestPlayers: the suggestion reached the panel');
+}
+
+// ── 11. Table fingerprint: the type of a table we did not create ──────
+// Le nom de table est librement editable, le protocole ne transporte aucun
+// type : seuls capital + premiere petite blind + la suite manuelle complete
+// identifient un BBC Step (amont 422f5fe4).
+{
+  const step1 = B.presets[0];
+  eq(B.suggestTypeForGame({ startMoney: step1.startCash, smallBlind: step1.firstSmallBlind,
+                            manualBlinds: step1.blinds.slice() }), 'step1',
+     'fingerprint: exact settings identify BBC Step 1');
+  const step4 = B.presets[3];
+  eq(B.suggestTypeForGame({ startMoney: step4.startCash, smallBlind: step4.firstSmallBlind,
+                            manualBlinds: step4.blinds.slice() }), 'step4',
+     'fingerprint: exact settings identify BBC Step 4');
+  const off = step1.blinds.slice(); off[7] = off[7] + 5;
+  eq(B.suggestTypeForGame({ startMoney: step1.startCash, smallBlind: step1.firstSmallBlind,
+                            manualBlinds: off }), '',
+     'fingerprint: a single altered blind is no longer a match');
+  eq(B.suggestTypeForGame({ startMoney: step1.startCash, smallBlind: step1.firstSmallBlind,
+                            manualBlinds: step1.blinds.slice(0, -1) }), '',
+     'fingerprint: a truncated blind list is no longer a match');
+  eq(B.suggestTypeForGame({ startMoney: 10000, smallBlind: 50, manualBlinds: [] }), '',
+     'fingerprint: doubling blinds is no signature (Monthly Cup / WEC skipped)');
+  eq(B.suggestTypeForGame(null), '', 'fingerprint: no game info -> no type');
+  // Le nom ne doit jouer aucun role.
+  eq(B.suggestTypeForGame({ name: 'BBC Step 1', startMoney: 3000, smallBlind: 15,
+                            manualBlinds: [] }), '',
+     'fingerprint: the table name is never a source');
+}
+
+// ── 12. bbcadmins.txt decides who may suggest on a foreign Step table ──
+{
+  fetched = [];
+  let got = null;
+  B.isBbcAdmin('alice', (v) => { got = v; });
+  await done();
+  eq(got, true, 'bbcadmin: a listed nickname is recognised');
+  ok(fetched.length === 1 && fetched[0].indexOf('f=bbcadmins') !== -1,
+     'bbcadmin: bbcadmins.txt fetched through the relay');
+  fetched = [];
+  B.isBbcAdmin('REFEREE', (v) => { got = v; });
+  await done();
+  eq(got, true, 'bbcadmin: the match is case-insensitive');
+  eq(fetched.length, 0, 'bbcadmin: a fresh cache answers without a request');
+  B.isBbcAdmin('mallory', (v) => { got = v; });
+  await done();
+  eq(got, false, 'bbcadmin: an unlisted nickname is refused');
+  B.isBbcAdmin('', (v) => { got = v; });
+  await done();
+  eq(got, false, 'bbcadmin: an empty nickname is refused without a request');
+}
+
+// ── 13. The button opens to a BBC admin on a foreign Step table ────────
+{
+  const btn = els['l-suggest-btn'] = { style: {} };
+  window._advGet = (k, d) => (k === 'community_content' ? true : (k === 'community_suggest' ? true : d));
+  const step3 = B.presets[2];
+  S.myId = 1; S.players = { 1: 'alice' }; S._playerRights = { 1: 2 };
+  S.amGameAdmin = false;                      // table de quelqu'un d'autre
+  B.setCreatedSuggestType('');                // on ne l'a pas creee
+  S.games = { 7: { type: 3, seats: [], name: 'whatever', startMoney: step3.startCash,
+                   smallBlind: step3.firstSmallBlind, manualBlinds: step3.blinds.slice() } };
+  S.gId = 7;
+  B.syncSuggestBtn();
+  eq(btn.style.display, 'none', 'foreign Step table: hidden until bbcadmins.txt answers');
+  await done();
+  B.syncSuggestBtn();
+  eq(btn.style.display, '', 'foreign Step table: a BBC admin gets the button');
+  eq(B.effectiveSuggestType(), 'step3', 'foreign Step table: the type comes from the settings');
+
+  // Table non-Step d'un autre : ni empreinte, ni requete.
+  fetched = [];
+  S.games[8] = { type: 3, seats: [], name: 'BBC Step 1', manualBlinds: [] };
+  S.gId = 8;
+  B.syncSuggestBtn();
+  eq(btn.style.display, 'none', 'foreign non-Step table: no button');
+  eq(fetched.length, 0, 'foreign non-Step table: bbcadmins.txt is never requested');
 }
 
 console.log(fails ? '\nFAIL ' + fails : '\nALL OK');

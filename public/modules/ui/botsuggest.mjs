@@ -19,10 +19,11 @@ import { S } from '../game/state.mjs';
 const BASE = '/api/botfile?f=';
 const CACHE_TTL_MS = 15 * 60 * 1000;      // = cacheTtlMs du singleton QML
 
-const KINDS = ['minidb', 'weclist', 'gameslist'];
-const _cache = { minidb: { data: null, ts: 0 }, weclist: { data: null, ts: 0 }, gameslist: { data: null, ts: 0 } };
-const _queues = { minidb: [], weclist: [], gameslist: [] };
-const _inflight = { minidb: false, weclist: false, gameslist: false };
+const KINDS = ['minidb', 'weclist', 'gameslist', 'bbcadmins'];
+const _cache = { minidb: { data: null, ts: 0 }, weclist: { data: null, ts: 0 },
+                 gameslist: { data: null, ts: 0 }, bbcadmins: { data: null, ts: 0 } };
+const _queues = { minidb: [], weclist: [], gameslist: [], bbcadmins: [] };
+const _inflight = { minidb: false, weclist: false, gameslist: false, bbcadmins: false };
 
 // Type de suggestion du spiel qu'on vient de créer. Comme en QML depuis
 // 2.1.5, il vient EXPLICITEMENT du preset et jamais du nom de table :
@@ -32,6 +33,115 @@ let createdSuggestType = '';
 function setCreatedSuggestType(t) { createdSuggestType = String(t || ''); }
 function getCreatedSuggestType() { return createdSuggestType; }
 function isSuggestType(t) { return t === 'wec' || /^step[1-4]$/.test(t || ''); }
+
+// ── Modeles communautaires ────────────────────────────────────────────
+// La table vit ICI et non plus dans le formulaire de creation, parce qu'elle
+// a deux emplois : remplir les champs a la creation ET servir d'empreinte
+// pour reconnaitre le type d'un tapis qu'on n'a pas cree (voir
+// suggestTypeForGame). Les deux doivent lire la meme source, sinon elles
+// divergent au premier ajout de vorlage. Parite amont 422f5fe4, qui a fait
+// le meme deplacement vers Config.BotSuggest.
+// App._communityVorlagen (pokerth.js) n'est plus qu'une lecture de PRESETS.
+const PRESETS = [
+  { name: 'BBC Step 1', suggestType: 'step1', startCash: 3000, firstSmallBlind: 15,
+    raiseOnHands: false, raiseEveryHands: 11, raiseEveryMinutes: 5, playerActionTimeout: 10,
+    blinds: [20, 25, 30, 40, 50, 60, 80, 100, 120, 150, 200, 250, 300, 400, 500,
+             600, 800, 1000, 1200, 1500, 2000, 2500, 3000, 4000, 5000, 6000, 8000,
+             10000, 12000, 15000] },
+  { name: 'BBC Step 2', suggestType: 'step2', startCash: 4000, firstSmallBlind: 20,
+    raiseOnHands: false, raiseEveryHands: 11, raiseEveryMinutes: 5, playerActionTimeout: 10,
+    blinds: [25, 30, 40, 50, 60, 80, 100, 120, 150, 200, 250, 300, 400, 500, 600,
+             800, 1000, 1200, 1500, 2000, 2500, 3000, 4000, 5000, 6000, 8000, 10000,
+             12000, 15000, 20000] },
+  { name: 'BBC Step 3', suggestType: 'step3', startCash: 5000, firstSmallBlind: 25,
+    raiseOnHands: false, raiseEveryHands: 11, raiseEveryMinutes: 5, playerActionTimeout: 10,
+    blinds: [30, 40, 50, 60, 80, 100, 120, 150, 200, 250, 300, 400, 500, 600, 800,
+             1000, 1200, 1500, 2000, 2500, 3000, 4000, 5000, 6000, 8000, 10000,
+             12000, 15000, 20000, 25000] },
+  { name: 'BBC Step 4', suggestType: 'step4', startCash: 10000, firstSmallBlind: 50,
+    raiseOnHands: false, raiseEveryHands: 11, raiseEveryMinutes: 5, playerActionTimeout: 10,
+    blinds: [60, 80, 100, 120, 150, 200, 250, 300, 400, 500, 600, 800, 1000, 1200,
+             1500, 2000, 2500, 3000, 4000, 5000, 6000, 8000, 10000, 12000, 15000,
+             20000, 25000, 30000, 40000, 50000] },
+  { name: 'Monthly Cup', titleCommand: 'mcup', startCash: 10000, firstSmallBlind: 50,
+    raiseOnHands: true, raiseEveryHands: 16, raiseEveryMinutes: 5, playerActionTimeout: 10,
+    blinds: [] },
+  { name: 'Monthly Cup Final', titleCommand: 'mcupfinal', startCash: 10000, firstSmallBlind: 50,
+    raiseOnHands: true, raiseEveryHands: 22, raiseEveryMinutes: 5, playerActionTimeout: 12,
+    blinds: [] },
+  { name: 'WEC', suggestType: 'wec', startCash: 10000, firstSmallBlind: 50,
+    raiseOnHands: true, raiseEveryHands: 22, raiseEveryMinutes: 5, playerActionTimeout: 12,
+    blinds: [] },
+  // Ajouté par sp0ck dans le QML 2.1.4. Réglages officiels des finales
+  // mensuelles WeC (fil « WEC Monthly and Yearly Grand Finals », encore en
+  // vigueur pour les finales 2026) : 10 000 / SB 50 / action 15 s /
+  // doublement toutes les 25 mains. Le délai entre les mains (7 s) est posé
+  // pour toutes les vorlagen par applyVorlage().
+  { name: 'WEC Monthly Final', startCash: 10000, firstSmallBlind: 50,
+    raiseOnHands: true, raiseEveryHands: 25, raiseEveryMinutes: 5, playerActionTimeout: 15,
+    blinds: [] },
+  { name: 'WEC Grand Final', suggestType: 'wec', startCash: 10000, firstSmallBlind: 50,
+    raiseOnHands: true, raiseEveryHands: 35, raiseEveryMinutes: 5, playerActionTimeout: 25,
+    blinds: [] }
+];
+
+// ── Reconnaissance du type d'un tapis etranger ────────────────────────
+// Un joueur qui rejoint ne connait pas createdSuggestType : il ne vit que
+// dans le client du createur et le protocole ne transporte aucun type de
+// vorlage. Le nom de table ne vaut PAS comme source — il est librement
+// editable. On compare donc les reglages reels : capital de depart + premiere
+// petite blind + la suite manuelle complete identifient un BBC Step sans
+// ambiguite.
+//
+// Les vorlagen SANS liste fixe (Monthly Cup, WEC) sont volontairement
+// ignorees : « blinds doublees » en 10000/50 n'est pas une signature, ca
+// matcherait n'importe quel tapis etranger. Pour celles-la, seul le
+// createdSuggestType explicite du createur ouvre le bouton.
+//
+// g : une entree de S.games (champs startMoney, smallBlind, manualBlinds).
+// Retour : 'step1'..'step4' ou '' (non reconnu).
+function suggestTypeForGame(g) {
+  if (!g) return '';
+  const blinds = g.manualBlinds || [];
+  if (!blinds.length) return '';
+  for (let i = 0; i < PRESETS.length; i++) {
+    const p = PRESETS[i];
+    if (!p.suggestType || !p.blinds || !p.blinds.length) continue;
+    if (p.startCash !== g.startMoney || p.firstSmallBlind !== g.smallBlind) continue;
+    if (p.blinds.length !== blinds.length) continue;
+    let same = true;
+    for (let b = 0; b < p.blinds.length; b++) {
+      if (p.blinds[b] !== blinds[b]) { same = false; break; }
+    }
+    if (same) return p.suggestType;
+  }
+  return '';
+}
+
+// ── Verification « admin BBC » ────────────────────────────────────────
+// bbcadmins.txt (meme format que weclist.txt) dit qui a le droit de proposer
+// des joueurs sur un tapis BBC Step qu'il n'a pas cree. A n'appeler QUE si
+// l'empreinte locale dit deja « BBC Step » : ailleurs, la fonction ne coute
+// pas une seule requete.
+// onResult(isAdmin) : false aussi quand le fichier n'est pas (encore)
+// joignable — le bouton reste alors cache, comme sans la fonction.
+let _bbcAdminLastTry = 0;
+
+function isBbcAdmin(nick, onResult) {
+  if (!nick) { onResult(false); return; }
+  // Brider aussi les ECHECS : la reponse commande la visibilite du bouton, qui
+  // est re-evaluee a chaque changement de la liste des joueurs. Sans ce garde-
+  // fou, un fichier absent declencherait un telechargement par join/leave. Un
+  // cache encore frais repond de toute facon sans reseau (_ensure).
+  const c = _cache.bbcadmins;
+  const fresh = c.data !== null && (Date.now() - c.ts) < CACHE_TTL_MS;
+  if (!fresh && (Date.now() - _bbcAdminLastTry) < CACHE_TTL_MS) { onResult(false); return; }
+  if (!fresh) _bbcAdminLastTry = Date.now();
+  _ensure('bbcadmins', function (ok) {
+    const set = ok ? _cache.bbcadmins.data : null;
+    onResult(!!(set && set[String(nick).toLowerCase()] !== undefined));
+  });
+}
 
 // ── Chargement + cache ────────────────────────────────────────────────
 function _ensure(kind, done) {
@@ -61,7 +171,7 @@ function _ensure(kind, done) {
 }
 
 function _parse(kind, text) {
-  if (kind === 'weclist') return _parseWec(text);
+  if (kind === 'weclist' || kind === 'bbcadmins') return _parseNameList(text);
   if (kind === 'gameslist') return _parseGameslist(text);
   return _parseDb(text);
 }
@@ -83,8 +193,9 @@ function _parseGameslist(text) {
   return map;
 }
 
-// weclist.txt : un pseudo par ligne → { minuscule: nom d'origine }.
-function _parseWec(text) {
+// weclist.txt / bbcadmins.txt : un pseudo par ligne → { minuscule: nom
+// d'origine }. Les deux botfiles partagent ce format.
+function _parseNameList(text) {
   const set = {};
   const lines = String(text).split(/\r?\n/);
   for (let i = 0; i < lines.length; i++) {
@@ -269,11 +380,73 @@ function playingPlayerEntries() {
   return out;
 }
 
+// ── Qui a le droit de proposer ────────────────────────────────────────
+// Deux publics, dans une partie « sur invitation » (type 3) et seulement si
+// les contenus communautaires sont actifs (parité GameWaitPage.canSuggest) :
+//   • le CRÉATEUR de sa propre table — son type vient EXPLICITEMENT du preset
+//     choisi à la création (createdSuggestType), jamais du nom de table ;
+//   • tout ADMIN BBC sur une table BBC Step montée par quelqu'un d'autre — là
+//     le type n'est connu de personne et se déduit des réglages
+//     (suggestTypeForGame).
+// Résultat du dernier contrôle bbcadmins.txt, épinglé à la table concernée :
+// une réponse tardive arrivant après un changement de table ne doit pas
+// allumer le bouton sur la nouvelle.
+let _bbcAdmin = false;
+let _bbcAdminForGame = null;
+
+function _communityEnabled() {
+  try {
+    const adv = window._advGet || function (k, d) { return d; };
+    const g = (S.games && S.gId) ? S.games[S.gId] : null;
+    return !!(adv('community_content', true) && adv('community_suggest', false)
+              && g && g.type === 3);
+  } catch (e) { return false; }
+}
+
+// Type venant du preset choisi à la création (créateur uniquement).
+function _ownSuggestType() {
+  return (S.amGameAdmin && isSuggestType(createdSuggestType)) ? createdSuggestType : '';
+}
+
+// Type déduit des réglages de la table courante.
+function _tableSuggestType() {
+  try { return suggestTypeForGame((S.games && S.gId) ? S.games[S.gId] : null); }
+  catch (e) { return ''; }
+}
+
+// Le type réellement utilisable ici et maintenant, '' si rien.
+function effectiveSuggestType() {
+  if (!_communityEnabled()) return '';
+  const own = _ownSuggestType();
+  if (own) return own;
+  const table = _tableSuggestType();
+  return (_bbcAdmin && _bbcAdminForGame === S.gId) ? table : '';
+}
+
+// Lance le contrôle bbcadmins.txt, mais UNIQUEMENT sur une table BBC Step
+// étrangère : partout ailleurs la fonction ne coûte aucune requête. Les
+// invités ne peuvent pas chatter, donc pas de contrôle non plus pour eux.
+function _resolveBbcAdmin() {
+  if (!_communityEnabled() || _ownSuggestType()) return;
+  if (!/^step[1-4]$/.test(_tableSuggestType())) return;
+  if (((S._playerRights && S._playerRights[S.myId]) || 0) === 1) return;
+  if (_bbcAdminForGame === S.gId) return;   // déjà tranché pour cette table
+  const nick = (S.players && S.players[S.myId]) || '';
+  if (!nick) return;
+  const gid = S.gId;
+  isBbcAdmin(nick, function (ok) {
+    if (S.gId !== gid) return;              // table quittée entre-temps
+    _bbcAdmin = !!ok;
+    _bbcAdminForGame = gid;
+    syncSuggestBtn();                        // la réponse rouvre le bouton
+  });
+}
+
 // ── Action du bouton ──────────────────────────────────────────────────
 let _busy = false;
 function suggestPlayers() {
   if (_busy) return;
-  const type = createdSuggestType;
+  const type = effectiveSuggestType();
   if (!isSuggestType(type)) return;
   _busy = true;
   try { const b = document.getElementById('l-suggest-btn'); if (b) b.style.opacity = '0.5'; } catch (e) {}
@@ -285,28 +458,33 @@ function suggestPlayers() {
   });
 }
 
-// Visibilité : les cinq conditions de GameWaitPage.canSuggest — contenus
-// communautaires, option activée, admin de la partie, type « sur invitation »
-// (3), et un preset porteur d'un type de suggestion.
+// Visibilité : exactement GameWaitPage.canSuggest — contenus communautaires,
+// option activée, type « sur invitation » (3), et un type de suggestion
+// utilisable (preset du créateur OU admin BBC sur une table Step étrangère).
+// Le contrôle bbcadmins.txt étant asynchrone, le bouton reste caché jusqu'à
+// la réponse ; celle-ci rappelle cette fonction.
 function syncSuggestBtn() {
   const b = document.getElementById('l-suggest-btn');
   if (!b) return;
   let on = false;
   try {
-    const adv = window._advGet || function (k, d) { return d; };
-    const g = (S.games && S.gId) ? S.games[S.gId] : null;
-    on = !!(adv('community_content', true) && adv('community_suggest', false)
-            && S.amGameAdmin && g && g.type === 3 && isSuggestType(createdSuggestType));
+    on = !!effectiveSuggestType();
+    if (!on) _resolveBbcAdmin();
   } catch (e) { on = false; }
   b.style.display = on ? '' : 'none';
 }
 
 export { suggestPlayers, syncSuggestBtn, suggestForType, gameTitlePrefix,
          isSuggestType, setCreatedSuggestType, getCreatedSuggestType,
-         idlePlayerNames, playingPlayerEntries };
+         idlePlayerNames, playingPlayerEntries,
+         PRESETS as presets, suggestTypeForGame, isBbcAdmin, effectiveSuggestType };
 
 window._suggestPlayers = suggestPlayers;
 window._syncSuggestBtn = syncSuggestBtn;
+// presets : source unique des vorlagen communautaires. pokerth.js
+// (App._communityVorlagen) les lit ICI — voir le commentaire sur PRESETS.
 window._botSuggest = { suggestForType, gameTitlePrefix, isSuggestType,
                        setCreatedSuggestType, getCreatedSuggestType,
-                       idlePlayerNames, playingPlayerEntries };
+                       idlePlayerNames, playingPlayerEntries,
+                       presets: PRESETS, suggestTypeForGame, isBbcAdmin,
+                       effectiveSuggestType };
