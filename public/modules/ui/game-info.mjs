@@ -105,9 +105,34 @@ function _resetGameHeader() {
   var pb = document.getElementById('g-public-badge'); if (pb) pb.style.display = 'none';
 }
 
+
+// ── Mode fenetre generique ─────────────────────────────────────────────────
+// Au-dessus du seuil _winGate, la carte devient une vraie fenetre du lobby :
+// deplacable par son en-tete, redimensionnable, position memorisee. En
+// dessous elle reste centree. Le voile noir a disparu (CSS) : la fermeture
+// passe donc par la croix et par Echap, plus par un clic a l'exterieur.
+function _winGateOk() {
+  try { return !!(window._winGate && window._winGate() && typeof window._enableFloating === 'function'); }
+  catch (e) { return false; }
+}
+
 function openGameInfoPopup() {
   var modal = document.getElementById('game-info-modal');
   if (!modal) return;
+  var _card = modal.querySelector('.gim-card');
+  if (_card && _winGateOk()) {
+    try {
+      window._enableFloating(_card, {
+        handle: modal.querySelector('.gim-header'), resizable: true,
+        maxW: Math.min(560, Math.round(window.innerWidth * 0.92)),
+        maxH: Math.min(760, Math.round(window.innerHeight * 0.90)),
+        zoom: true, key: 'pth-gim-win',
+        defW: Math.max(300, Math.min(420, Math.round(window.innerWidth * 0.30))),
+        defH: Math.max(300, Math.min(600, Math.round(window.innerHeight * 0.70))),
+        minW: 260, minH: 240, defLeft: 120, defTop: 90
+      });
+    } catch (e) {}
+  }
   var titleEl = document.getElementById('gim-title');
   var subEl   = document.getElementById('gim-subtitle');
   var bodyEl  = document.getElementById('gim-body');
@@ -285,7 +310,20 @@ function openGameInfoPopup() {
 
 function closeGameInfoPopup() {
   var modal = document.getElementById('game-info-modal');
-  if (modal) modal.style.display = 'none';
+  if (!modal) return;
+  var card = modal.querySelector('.gim-card');
+  if (card && card.classList.contains('floating-win') && typeof window._disableFloating === 'function') {
+    try { window._disableFloating(card); } catch (e) {}
+  }
+  modal.style.display = 'none';
+}
+// Echap ferme, puisqu'il n'y a plus de voile a cliquer.
+if (typeof document !== 'undefined') {
+  document.addEventListener('keydown', function (e) {
+    if (e.key !== 'Escape') return;
+    var m = document.getElementById('game-info-modal');
+    if (m && m.style.display && m.style.display !== 'none') closeGameInfoPopup();
+  });
 }
 
 export { _stopBlindsCountdown, _fmtBlindsCountdown, _startBlindsCountdown,

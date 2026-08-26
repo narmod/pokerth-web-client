@@ -327,6 +327,23 @@ release.
   serve stale pages.
 
 ### Changed
+- **Stats cards converted to the generic window model** (`web.104`) —
+  `#player-info-modal` and `#game-info-modal` were the last two surfaces still on
+  the old modal pattern: a full-screen `rgba(0,0,0,0.65)` veil, `z-index: 9999`
+  outside the band `z-order.mjs` manages, centred and immovable. They now match
+  the ranking / forum / private messages windows.
+  - Backdrops set to `display: none`; container `pointer-events: none` with the
+    card `auto`, so the lobby stays visible *and* usable behind them.
+  - `z-index` dropped from 9999 to 1200 — at 9999 either card would sit in front
+    of every other window regardless of what was touched last.
+  - `_enableFloating` above `_winGate` (drag by `#pim-name` / `.gim-header`,
+    resizable, geometry under `pth-pim-win` / `pth-gim-win`), `_disableFloating`
+    on close; below the threshold they stay centred.
+  - `z-order` watches `.pim-card` / `.gim-card` for the class flip, which it
+    previously only did for `.rk-card` / `.km-card`.
+  - **Behaviour change**: clicking outside no longer closes them — there is no
+    veil left to click. The cross remains and Escape now closes both.
+  - New `scripts/test-win-generic.mjs`, 25 checks; 23 of them fail on `web.103`.
 - **Profile window sizes to the screen** (`web.103`) — it opened at a fixed
   480 px, which cramped a ten-column placement table, a pie and a ten-bar chart
   on displays with room to spare. The card is now

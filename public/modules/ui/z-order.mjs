@@ -33,7 +33,7 @@ const SEL = [
 // leur priorité de dialogue. #jr-modal (Gérer les logs) suit la même règle —
 // sans lui, son z CSS 9999 écrasait toujours les autres fenêtres flottantes
 // (rapport forum : la dernière ouverte/touchée doit passer devant).
-const HOSTS = '#ranking-modal,#tableranking-modal,#forum-modal,#pm-modal,#pp-modal,#adv-modal,#jr-modal,#help-modal,#range-modal';
+const HOSTS = '#ranking-modal,#tableranking-modal,#forum-modal,#pm-modal,#pp-modal,#player-info-modal,#game-info-modal,#adv-modal,#jr-modal,#help-modal,#range-modal';
 
 const BASE = 300, TOP = 390;
 let _z = BASE;
@@ -168,7 +168,7 @@ export function initZOrder() {
   // on surveille aussi sa classe pour réagir au basculement exact.
   try {
     document.querySelectorAll(HOSTS).forEach(function (h) {
-      h.querySelectorAll('.rk-card,.km-card').forEach(function (c) {
+      h.querySelectorAll('.rk-card,.km-card,.pim-card,.gim-card').forEach(function (c) {
         if (c._zWatched) return;
         c._zWatched = true;
         _obs.observe(c, { attributes: true, attributeFilter: ['class'] });

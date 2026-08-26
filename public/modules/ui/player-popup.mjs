@@ -136,9 +136,34 @@ function _ccToFlag(cc, cls) {
 // Player-info modal -- shows the local player's avatar + name,
 // plus a 'Change avatar' button that opens the avatar picker.
 // ──────────────────────────────────────────────────────────────
+
+// ── Mode fenetre generique ─────────────────────────────────────────────────
+// Au-dessus du seuil _winGate, la carte devient une vraie fenetre du lobby :
+// deplacable par son en-tete, redimensionnable, position memorisee. En
+// dessous elle reste centree. Le voile noir a disparu (CSS) : la fermeture
+// passe donc par la croix et par Echap, plus par un clic a l'exterieur.
+function _winGateOk() {
+  try { return !!(window._winGate && window._winGate() && typeof window._enableFloating === 'function'); }
+  catch (e) { return false; }
+}
+
 function openPlayerInfoPopup(pid, autoStats) {
   var modal = document.getElementById('player-info-modal');
   if (!modal) return;
+  var _card = modal.querySelector('.pim-card');
+  if (_card && _winGateOk()) {
+    try {
+      window._enableFloating(_card, {
+        handle: document.getElementById('pim-name'), resizable: true,
+        maxW: Math.min(560, Math.round(window.innerWidth * 0.92)),
+        maxH: Math.min(820, Math.round(window.innerHeight * 0.90)),
+        zoom: true, key: 'pth-pim-win',
+        defW: Math.max(300, Math.min(420, Math.round(window.innerWidth * 0.30))),
+        defH: Math.max(340, Math.min(680, Math.round(window.innerHeight * 0.78))),
+        minW: 260, minH: 260, defLeft: 90, defTop: 70
+      });
+    } catch (e) {}
+  }
   // pid omis (ou === moi) → MON profil (comportement historique : stats +
   // changer d'avatar). Sinon → profil en LECTURE d'un adversaire.
   var targetPid = (pid == null) ? S.myId : pid;
@@ -452,7 +477,20 @@ function _renderProfileStats() {
 
 function closePlayerInfoPopup() {
   var modal = document.getElementById('player-info-modal');
-  if (modal) modal.style.display = 'none';
+  if (!modal) return;
+  var card = modal.querySelector('.pim-card');
+  if (card && card.classList.contains('floating-win') && typeof window._disableFloating === 'function') {
+    try { window._disableFloating(card); } catch (e) {}
+  }
+  modal.style.display = 'none';
+}
+// Echap ferme, puisqu'il n'y a plus de voile a cliquer.
+if (typeof document !== 'undefined') {
+  document.addEventListener('keydown', function (e) {
+    if (e.key !== 'Escape') return;
+    var m = document.getElementById('player-info-modal');
+    if (m && m.style.display && m.style.display !== 'none') closePlayerInfoPopup();
+  });
 }
 
 // Coupes à la demande : appelé par le bouton « Voir les coupes » du popup.

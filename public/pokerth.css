@@ -957,22 +957,20 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
    Centered card with backdrop. The card holds a title (table name)
    + a subtitle (admin/private badges), and a body filled by JS with
    a 2-column grid of label/value rows grouped by section. */
+/* Meme bascule que #player-info-modal ci-dessus : fenetre generique, pas de
+   voile noir, z-index dans la bande geree. */
 #game-info-modal {
   position: fixed;
   inset: 0;
-  z-index: 9999;
+  z-index: 1200;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: var(--sp-6);
+  pointer-events: none;
 }
-.gim-backdrop {
-  position: absolute;
-  inset: 0;
-  background: rgba(0,0,0,0.65);
-  backdrop-filter: blur(2px);
-  -webkit-backdrop-filter: blur(2px);
-}
+#game-info-modal .gim-card { pointer-events: auto; }
+.gim-backdrop { display: none; }
 .gim-card {
   position: relative;
   background: var(--modal-bg);
@@ -1078,21 +1076,23 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
    Centered card with backdrop. The pim-card is sized so it fits
    comfortably on phones; the avatar is big (~96px) so the user
    can clearly see what they have. */
+/* Modele de fenetre generique (comme le classement, le forum, les messages
+   prives) : plus de voile noir plein ecran, le lobby reste lisible et
+   utilisable derriere ; z-index dans la bande geree par z-order.mjs (1200) au
+   lieu de 9999, sinon la carte passerait devant toutes les autres fenetres
+   quoi qu'il arrive. pointer-events: none sur le conteneur pour que seul le
+   panneau intercepte les clics. */
 #player-info-modal {
   position: fixed;
   inset: 0;
-  z-index: 9999;
+  z-index: 1200;
   display: flex;
   align-items: center;
   justify-content: center;
+  pointer-events: none;
 }
-.pim-backdrop {
-  position: absolute;
-  inset: 0;
-  background: rgba(0,0,0,0.65);
-  backdrop-filter: blur(2px);
-  -webkit-backdrop-filter: blur(2px);
-}
+#player-info-modal .pim-card { pointer-events: auto; }
+.pim-backdrop { display: none; }
 .pim-card {
   position: relative;
   background: var(--modal-bg);
@@ -8467,6 +8467,20 @@ body.adv-no-forumnews [id^="forum-btn-"], body.adv-no-forumnews #forum-modal { d
    la hauteur ajoutee au body faisait apparaitre une barre de defilement qui
    revelait #gchat-fab, un bouton sans regle CSS vivant sous la ligne de
    flottaison. */
+/* Mode fenetre flottante des deux cartes converties (popup joueur, infos de
+   partie) : deplacables par leur en-tete, redimensionnables, position
+   memorisee -- exactement comme les autres fenetres du lobby. */
+#player-info-modal .pim-card.floating-win,
+#game-info-modal .gim-card.floating-win {
+  position: fixed; margin: 0; max-width: none;
+  border: 1px solid var(--gold-dim); border-radius: var(--r-bar);
+  box-shadow: 0 14px 36px rgba(0,0,0,0.62);
+}
+#player-info-modal .pim-card.floating-win { align-items: stretch; }
+.pim-card.floating-win .pim-name,
+.gim-card.floating-win .gim-header { cursor: move; touch-action: none; -webkit-user-select: none; user-select: none; }
+.pim-card.floating-win .pim-name.win-dragging,
+.gim-card.floating-win .gim-header.win-dragging { cursor: grabbing; }
 /* ── Fenetre « Profil joueur » (parite QML PokerthPlayerPage) ────────────
    Carcasse generique identique aux autres fenetres ; le contenu reutilise
    les rendus rk* de la carte profil du classement. */
