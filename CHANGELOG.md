@@ -13,6 +13,14 @@ this file captures what matters to players and operators.
 Opened with `v2.1.7-web.0` (2026-08-13), following the upstream **2.1.7**
 release.
 
+### Fixed
+- **Private message input row collapsed** (`web.118`) — the bubble footer added
+  in `web.117` reused the `.pm-foot` class that already belonged to the dialogue
+  footer (input + counter + Send). Being later in `pokerth.css`, the bubble rule
+  won on source order and applied `align-self: flex-end` to the input row, which
+  shrank it to its content and pinned it to the right edge of the window. The
+  bubble footer is now `.pm-bfoot`; the dialogue footer keeps `.pm-foot`.
+
 ### Added
 - **Translation globe in private messages** (`web.117`) — the 🌐 button that
   already sits on lobby and game chat lines is now offered on incoming private

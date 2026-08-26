@@ -209,7 +209,7 @@ function _renderConversation() {
     return '<div class="pm-line' + (m.mine ? ' mine' : '') + '"' + attrs + '>'
       + '<span class="pm-bub">'
       + '<span class="pm-text">' + _esc(shown ? cached.text : m.text) + '</span>'
-      + '<span class="pm-foot"><span class="pm-ts">' + _esc(_time(m.ts)) + '</span>'
+      + '<span class="pm-bfoot"><span class="pm-ts">' + _esc(_time(m.ts)) + '</span>'
       + btn + '</span>'
       + '</span></div>';
   }).join('');
