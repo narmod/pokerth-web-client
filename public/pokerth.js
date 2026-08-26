@@ -1316,15 +1316,26 @@ function _syncBadgeMount() {
     // Un .hdr-ovf-wrap par header (connexion, lobby, creation, jeu, confidentialite).
     var wraps = document.querySelectorAll('.hdr-ovf-wrap');
     for (var i = 0; i < wraps.length; i++) {
-      var w = wraps[i], prev = w.previousElementSibling;
-      if (prev && prev.classList && prev.classList.contains('hdr-sync')) continue;
-      var el = document.createElement('span');
-      el.className = 'hdr-sync';
-      el.setAttribute('role', 'status');
-      el.innerHTML = _SYNC_ICON;
+      var w = wraps[i], hdr = w.parentNode;
+      if (!hdr) continue;
+      // Place : a GAUCHE de l'enveloppe des messages prives quand ce header en
+      // porte une (demande narmod 26/08) ; les autres headers n'en ont pas, la
+      // disquette y reste donc a gauche du menu « Plus » comme avant.
+      var anchor = hdr.querySelector('[id^="pm-btn-"]') || w;
+      var el = hdr.querySelector(':scope > .hdr-sync');
+      if (!el) {
+        el = document.createElement('span');
+        el.className = 'hdr-sync';
+        el.setAttribute('role', 'status');
+        el.innerHTML = _SYNC_ICON;
+        if (_syncBusy > 0) el.classList.add('on');
+      }
       try { el.title = t('syncBusy') || 'Syncing\u2026'; } catch (e) { el.title = 'Syncing\u2026'; }
-      if (_syncBusy > 0) el.classList.add('on');
-      w.parentNode.insertBefore(el, w);
+      // Deja au bon endroit : ne pas toucher au DOM. Re-inserer le noeud
+      // relancerait l'animation de pulsation a chaque montage, et _syncBadgeMount
+      // est appele a chaque debut d'echange.
+      if (el.parentNode !== hdr || el.nextElementSibling !== anchor)
+        hdr.insertBefore(el, anchor);
     }
   } catch (e) {}
 }
@@ -10703,7 +10714,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.7-web.98'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.7-web.99'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

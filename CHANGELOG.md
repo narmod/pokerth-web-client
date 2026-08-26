@@ -256,6 +256,15 @@ release.
   serve stale pages.
 
 ### Changed
+- **Sync indicator moved** (`web.99`) — `.hdr-sync` (the disk shown while a
+  settings sync is in flight) was inserted before `.hdr-ovf-wrap`, i.e. next to
+  the settings wheel. It now anchors to the left of the private messages envelope
+  where a header carries one; the other four headers have no envelope, so it
+  keeps its previous position there. `_syncBadgeMount` also reuses an existing
+  node instead of recreating it — it runs at the start of every exchange, and
+  re-inserting the node restarted the pulse animation each time. New
+  `scripts/test-sync-badge.mjs` checks the anchor in all five headers and that a
+  repeated mount neither duplicates nor moves it; verified to fail on `web.98`.
 - **Private message window matched to the upstream QML dialogue (visual)**
   (`web.97`) — second half of the alignment begun in `web.96`, now against
   `PrivateMessageDialog.qml` itself.
