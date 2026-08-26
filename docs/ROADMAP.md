@@ -258,10 +258,10 @@ use too. Items are grouped by status rather than fixed phases.
 
 - **Official QML client fidelity** — ongoing pixel-and-behaviour alignment of the in-game
   screen with the official QML client (action bar, mobile layouts, seat geometry).
-  The 2.1.5 pass is complete: global notice, optional chat timestamps, the translate
-  globe on the hovered or tapped line, the scroll-resume model, the bet-amount guard,
-  the three new table packs and card backs, and community suggest. With the Code-health
-  work below up next.
+  Each upstream release gets its own pass, driven by the QML sources extracted from the
+  official AppImage and APK builds; the pass for the series the client currently tracks is
+  complete, and what it covered is listed release by release in `CHANGELOG.md`. The
+  Code-health work below is up next.
 
 ## ⏭️ Next
 
