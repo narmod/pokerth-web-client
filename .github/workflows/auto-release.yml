@@ -1,12 +1,15 @@
 name: Auto release
 
-# Cuts a release automatically once the PWA cache counter in public/sw.js has
-# advanced by at least 10 since the last release on the same MAJOR.MINOR line.
+# Cuts a release automatically once the web deploy counter in public/sw.js has
+# advanced by at least 10 since the last release on the same upstream line, or
+# as soon as a new upstream line opens.
 #
-# Versioning scheme (see public/sw.js): CACHE_VERSION = 'pokerth-v{MAJOR}.{MINOR}.{N}'
-# where {N} is a monotonic deploy counter that doubles as the patch number. A
-# release tag equals that string without the 'pokerth-' prefix
-# (cache pokerth-v0.2.91  <->  tag v0.2.91).
+# Versioning scheme (see public/sw.js):
+#   CACHE_VERSION = 'pokerth-v{MAJOR}.{MINOR}.{PATCH}-web.{N}'
+# where MAJOR.MINOR.PATCH is the PokerTH release the client tracks and {N} is the
+# web deploy counter, reset to 0 by every new upstream release. It is {N} that
+# drives this workflow, not {PATCH}. A release tag equals that string without the
+# 'pokerth-' prefix (cache pokerth-v2.1.7-web.124  <->  tag v2.1.7-web.124).
 #
 # The Docker image is built INLINE here on purpose: a tag/release created with
 # the built-in GITHUB_TOKEN does not re-trigger docker-publish.yml (GitHub's
@@ -38,21 +41,17 @@ jobs:
         id: decide
         run: |
           set -euo pipefail
-          # Le suffixe de phase (-beta, -rc.1...) fait partie de la version : il
-          # doit se retrouver dans le tag (convention projet : le tag vaut la
-          # valeur exacte des 3 fichiers de version, suffixe inclus).
+          # Le tag vaut la valeur EXACTE des 3 fichiers de version, suffixe
+          # inclus : 2.1.7-web.124 -> v2.1.7-web.124.
           CACHE=$(grep -E "^const CACHE_VERSION" public/sw.js | grep -oE "pokerth-v[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.]+)?" | head -1 || true)
           if [ -z "${CACHE}" ]; then
-            echo "::warning::CACHE_VERSION not in 'pokerth-v{MAJOR}.{MINOR}.{N}[-suffix]' format — skipping."
+            echo "::warning::CACHE_VERSION not in 'pokerth-v{MAJOR}.{MINOR}.{PATCH}[-suffix]' format — skipping."
             echo "release=false" >> "$GITHUB_OUTPUT"; exit 0
           fi
-          VER=${CACHE#pokerth-v}                 # e.g. 0.3.1002-beta
-          MAJOR=$(echo "$VER" | cut -d. -f1)
-          MINOR=$(echo "$VER" | cut -d. -f2)
-          PATCH=$(echo "$VER" | cut -d. -f3-)    # 1002-beta
-          N=${PATCH%%-*}                         # 1002  (compteur numerique seul)
-          SUFFIX=${PATCH#"$N"}                   # -beta (vide si absent)
-          TAG="v${MAJOR}.${MINOR}.${N}${SUFFIX}"
+          VER=${CACHE#pokerth-v}                 # e.g. 2.1.7-web.124
+          TAG="v${VER}"
+          BASE=${VER%%-*}                        # 2.1.7  (ligne upstream)
+          SUFFIX=${VER#"$BASE"}                  # -web.124 (vide si absent)
           echo "Cache version: ${VER}  (candidate tag ${TAG})"
 
           if git rev-parse -q --verify "refs/tags/${TAG}" >/dev/null; then
@@ -60,22 +59,43 @@ jobs:
             echo "release=false" >> "$GITHUB_OUTPUT"; exit 0
           fi
 
-          # Highest patch already released on this MAJOR.MINOR line (0 if none).
-          LAST_N=$(git tag -l "v${MAJOR}.${MINOR}.*" \
-            | sed -E "s/^v${MAJOR}\.${MINOR}\.([0-9]+).*/\1/" \
-            | grep -E '^[0-9]+$' | sort -n | tail -1 || true)
-          LAST_N=${LAST_N:-0}
-          echo "Last released N on ${MAJOR}.${MINOR}: ${LAST_N}"
+          # Le compteur qui declenche est N (apres -web.), jamais le PATCH
+          # upstream : celui-ci ne bouge qu'une fois par release PokerTH.
+          case "${SUFFIX}" in
+            -web.*) N=${SUFFIX#-web.} ;;
+            *)
+              echo "::warning::version '${VER}' carries no -web.{N} counter — skipping."
+              echo "release=false" >> "$GITHUB_OUTPUT"; exit 0 ;;
+          esac
+          if ! echo "${N}" | grep -qE '^[0-9]+$'; then
+            echo "::warning::web counter '${N}' is not a plain number — skipping."
+            echo "release=false" >> "$GITHUB_OUTPUT"; exit 0
+          fi
 
-          if [ $(( N - LAST_N )) -ge 10 ]; then
+          # Plus grand N deja publie sur CETTE ligne upstream (vide si aucun).
+          LAST_N=$(git tag -l "v${BASE}-web.*" \
+            | sed -E "s/^v[0-9]+\.[0-9]+\.[0-9]+-web\.([0-9]+).*/\1/" \
+            | grep -E '^[0-9]+$' | sort -n | tail -1 || true)
+          echo "Last released N on the ${BASE} line: ${LAST_N:-none}"
+
+          if [ -z "${LAST_N}" ]; then
+            echo "New upstream line ${BASE} — releasing ${TAG}."
+            RELEASE=true
+          elif [ $(( N - LAST_N )) -ge 10 ]; then
             echo "Threshold reached (${N} - ${LAST_N} >= 10) — releasing ${TAG}."
+            RELEASE=true
+          else
+            echo "Threshold not reached (${N} - ${LAST_N} < 10) — skipping."
+            RELEASE=false
+          fi
+
+          if [ "${RELEASE}" = true ]; then
             {
               echo "release=true"
               echo "tag=${TAG}"
               echo "ver=${VER}"
             } >> "$GITHUB_OUTPUT"
           else
-            echo "Threshold not reached (${N} - ${LAST_N} < 10) — skipping."
             echo "release=false" >> "$GITHUB_OUTPUT"
           fi
 
