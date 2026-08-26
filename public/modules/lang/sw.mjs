@@ -16,6 +16,7 @@ export const meta = {
 };
 
 export const strings = {
+    ppMyStats:'Takwimu zangu',
     // Session stats, behind a button on the player card.
     piShowStats:'Onyesha takwimu', piHideStats:'Ficha takwimu',
     // Player profile window (parity: QML PokerthPlayerPage).

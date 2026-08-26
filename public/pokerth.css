@@ -8540,6 +8540,11 @@ body.adv-no-forumnews [id^="forum-btn-"], body.adv-no-forumnews #forum-modal { d
    les rendus rk* de la carte profil du classement. */
 /* Nom du joueur a cote du titre de la fenetre de statistiques. */
 .pp-who { margin-left: 8px; color: var(--gold-hi); font-weight: 700; }
+/* Carte des stats de session dans la fenetre de statistiques : encadree pour
+   la separer nettement du bloc coupes, qui vient du serveur alors que
+   celles-ci sont des mesures locales de ma partie en cours. */
+.pp-sec { border: 1px solid var(--border); border-radius: var(--r-xs); background: var(--inset); padding: 10px 12px; margin-bottom: 14px; }
+.pp-sec .rk-cups-h { margin-top: 0; }
 #pp-modal { position: fixed; inset: 0; z-index: 1200; align-items: center; justify-content: center; pointer-events: none; }
 /* Largeur suivant l'ecran : le contenu porte un tableau de dix colonnes, un
    camembert et un histogramme de dix barres. A 480px fixes, tout se tassait

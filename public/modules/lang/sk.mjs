@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+    ppMyStats:'Moje štatistiky',
     // Session stats, behind a button on the player card.
     piShowStats:'Zobraziť štatistiky', piHideStats:'Skryť štatistiky',
     // Player profile window (parity: QML PokerthPlayerPage).

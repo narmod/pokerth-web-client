@@ -437,6 +437,13 @@ release.
   serve stale pages.
 
 ### Changed
+- **Session stats given their own card** (`web.114`) — in `#pp-modal` they ran
+  straight into the cups block with nothing between them, so there was no telling
+  where local measurements of the current session ended and the server's rankings
+  began. Now wrapped in a bordered `.pp-sec` with a `📊 My statistics` heading in
+  the same visual family as `🏆 Cups`. New key `ppMyStats` across all 45
+  catalogues. `test-pim-parity` checks the card, its heading and that the heading
+  is translated rather than a raw key; five assertions fail on `web.113`.
 - **Statistics split out of the player card** (`web.112`) — clicking a name opens
   the card (identity + actions); statistics live in `#pp-modal`.
   - The card no longer renders the cups block or the session stats inline, and

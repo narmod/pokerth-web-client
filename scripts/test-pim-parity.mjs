@@ -132,6 +132,20 @@ ok(w.document.getElementById('pp-session') === null,
 w._plOpenStats(1);
 ok(w.document.getElementById('pp-session') !== null,
    'fenetre (moi) : mes stats de session sont presentes');
+// Elles doivent etre VISUELLEMENT distinctes du bloc coupes : encadrees et
+// coiffees d'un titre. Melangees, on ne voyait plus ou finissaient les
+// mesures locales et ou commencaient les classements du serveur.
+const sessSec = w.document.querySelector('#pp-body .pp-sec');
+ok(sessSec !== null, 'fenetre (moi) : les stats de session ont leur propre carte');
+ok(sessSec && sessSec.contains(w.document.getElementById('pp-session')),
+   'fenetre (moi) : la carte contient bien le bloc de stats');
+ok(sessSec && sessSec.querySelector('.rk-cups-h') !== null,
+   'fenetre (moi) : la carte porte un en-tete');
+const hdr = sessSec && sessSec.querySelector('.rk-cups-h');
+ok(hdr && hdr.textContent.trim().length > 2 && !/ppMyStats/.test(hdr.textContent),
+   'fenetre (moi) : en-tete traduit, pas la cle brute (' + (hdr ? hdr.textContent.trim() : '') + ')');
+const cssTxt = readFileSync('public/pokerth.css', 'utf8');
+ok(/\.pp-sec \{[^}]*border:/.test(cssTxt), 'css : la carte des stats est encadree');
 ok(typeof w._pimRenderSessionStats === 'function',
    'rendu des stats de session adressable a un conteneur au choix');
 

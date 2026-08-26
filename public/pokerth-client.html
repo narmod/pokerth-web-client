@@ -3813,8 +3813,15 @@ if ('serviceWorker' in navigator) {
     // ensuite (reseau).
     var isSelf = false;
     try { isSelf = (pid != null && window.PthState && pid === window.PthState.myId); } catch (e) {}
-    body.innerHTML = (isSelf ? '<div id="pp-session"></div>' : '')
-                   + '<div id="pp-cups"></div>';
+    // Mes stats de session dans LEUR carte, avec un en-tete : melangees au
+    // bloc coupes juste en dessous, on ne voyait plus ou finissaient les
+    // mesures locales et ou commencaient les classements du serveur.
+    body.innerHTML = (isSelf
+        ? '<div class="pp-sec"><div class="rk-cups-h">\uD83D\uDCCA '
+          + rkEsc(rkT('ppMyStats', 'My statistics'))
+          + '</div><div id="pp-session"></div></div>'
+        : '')
+      + '<div id="pp-cups"></div>';
     if (isSelf && typeof window._pimRenderSessionStats === 'function') {
       try { window._pimRenderSessionStats('pp-session'); } catch (e) {}
     }

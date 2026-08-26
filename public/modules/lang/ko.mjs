@@ -13,6 +13,7 @@ export const meta = {
 };
 
 export const strings = {
+    ppMyStats:'내 통계',
     // Session stats, behind a button on the player card.
     piShowStats:'통계 보기', piHideStats:'통계 숨기기',
     // Player profile window (parity: QML PokerthPlayerPage).

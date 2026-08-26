@@ -11,6 +11,7 @@ export const meta = {
 };
 
 export const strings = {
+    ppMyStats:'Na staitistigean agam',
     // Session stats, behind a button on the player card.
     piShowStats:'Seall na staitistigean', piHideStats:'Falaich na staitistigean',
     // Player profile window (parity: QML PokerthPlayerPage).

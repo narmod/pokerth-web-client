@@ -1,4 +1,5 @@
 2026-08-13 version 2.1.7-web (current series):
+- improvement: in the statistics window, your own session figures - hands played, wins, net result, last hands - now sit in their own titled card, clearly separated from the cup rankings below
 - bugfix: the "Player profile" button really did nothing when clicked - the player's name was inserted into the button in a way that cut the instruction in half. It works now
 - new: the "Show cups" button is back on the player card, and opens the statistics window
 - improvement: statistics have moved out of the player card and into a window of their own. Clicking a name still opens the card - avatar, country, status, in-game details and the actions - while the cups of all three rankings, and your own session statistics, open in a separate window. The chart button in the players list now goes straight there
