@@ -499,31 +499,46 @@ pokerth-web-client/
 | Method | Path | Purpose |
 |---|---|---|
 | `GET` | `/` | Web client |
+| `GET` | `/studio` | Style studio — the design tool for decks, tables, themes and seat packs |
 | `GET` | `/privacy` | Privacy page (what the analytics do and don't collect) |
+| `GET` | `/faq` · `/rules` · `/how-to-play` · `/hand-rankings` · `/glossary` | Server-rendered content pages, localised and linked from the sitemap |
+| `GET` | `/sitemap.xml` · `/robots.txt` · `/llms.txt` | Crawler files (the sitemap lists every language variant of the pages above) |
 | `GET` | `/__ver` | Newest static-asset mtime — drives the client's "new version" banner |
 | `GET` | `/app-config` | Operator's client defaults (login modes, default theme & settings, server identity, welcome message) |
-| `GET` | `/cards/decks.json` · `/table/tables.json` · `/themes/themes.json` | Content manifests, filtered to the enabled packages |
+| `GET` | `/cards/decks.json` · `/table/tables.json` · `/themes/themes.json` · `/seats/seats.json` | Content manifests, filtered to the enabled packages |
 | `GET` | `/music/tracks.json` | Background-music playlist |
 | `GET` | `/api/ranking` | Same-origin relay for the PokerTH / BBC / WEC ranking leaderboards (params: `src`, `season`, `q`, `page`) |
 | `GET` | `/api/player` | Same-origin relay for a single player's profile card (params: `src`, `nick`) |
+| `GET` | `/api/player-season` | One season of a player's history, fetched only when that row is expanded |
+| `GET` | `/api/tableranking` | Current-season scores for the players seated at a table |
+| `GET` | `/api/award-img` | Cached relay for the ranking award images |
+| `GET` | `/api/forumfeed` · `/api/forumimg` | pokerth.net forum news (feed and inline images), cached server-side |
+| `GET` | `/api/botfile` | Relay for the upstream community files (`minidb`, `weclist`, `gameslist`, `bbcadmins`), 15-minute cache like the official client |
+| `POST` | `/api/translate` | Server-side fallback for chat / private-message translation, used when the browser call is blocked |
 | `GET` / `POST` | `/stats` | `GET` reads the shared leaderboard; `POST` submits a result (and — with the master token or a **leaderboard**-scoped key — resets the board or removes a player) |
 | `GET` / `PUT` | `/prefs` | Account settings sync — official `config.xml` blob (`GET` also returns the web-only blob). Requires the per-session sync token (`Authorization: Bearer`) issued after a server-verified registered login |
 | `PUT` | `/prefs-web` | Account settings sync — web-only settings blob (JSON). Same token; writes are rate-limited (1 / 5 s) and atomic |
+| `POST` | `/pdb-analyse` | Relays an uploaded PokerTH `.pdb` hand database to the official log-analysis service |
 | `POST` | `/__visit` | Records one anonymous visit (privacy-friendly analytics) |
+| `POST` | `/__music` | Counts one background-music play (feeds the admin music statistics) |
+| `POST` | `/__poll-vote` | Casts a vote in the operator's current poll |
+| `POST` | `/clienterr` | Client-side error report (rate-limited per IP), surfaced in the admin *Errors* tab |
 
 **Admin** — every route needs an `Authorization: Bearer <token>` header, and the whole tree returns a plain `404` when the panel is disabled. Grouped by area:
 
 | Area | Endpoints |
 |---|---|
-| Console & status | `GET /admin`, `GET /admin/status`, `GET`/`POST` `/admin/config` |
-| Logs | `GET /admin/logs`, `POST /admin/clear-logs` |
-| Analytics | `GET /admin/visits`, `GET /admin/visits/export` |
-| Packages | `GET /admin/pkg-list`, `POST /admin/pkg-{upload,remove,toggle,full}` |
-| Music | `GET /admin/music-list`, `POST /admin/music-{upload,remove,toggle,edit,order}` |
-| Update & restart | `POST /admin/update`, `POST /admin/update-nr`, `GET /admin/update-log`, `POST /admin/{schedule,cancel}-restart`, `POST /admin/restart` |
+| Console & status | `GET /admin`, `GET /admin/status`, `GET`/`POST` `/admin/config`, `GET /admin/config/export`, `POST /admin/config/import`, `GET /admin/whoami` |
+| Logs, errors & audit | `GET /admin/logs`, `POST /admin/clear-logs`, `GET /admin/errors`, `GET /admin/audit`, `GET /admin/blocked` |
+| Sessions & analytics | `GET /admin/sessions`, `GET /admin/visits`, `GET /admin/visits/export` |
+| Packages | `GET /admin/pkg-list`, `POST /admin/pkg-{upload,remove,toggle,full,align}` |
+| Music | `GET /admin/music-list`, `POST /admin/music-{enable,upload,remove,toggle,edit,order,import}`, `POST /admin/music-radio-{add,import}`, `POST /admin/music-upload-{begin,chunk,finish}` |
+| Game servers | `GET /admin/servers`, `POST /admin/servers/{serverlist,probe,lobby}` |
+| Update, deploys & restart | `POST /admin/update`, `POST /admin/update-nr`, `GET /admin/update-check`, `GET /admin/update-log`, `GET`/`POST` `/admin/auto-update`, `GET /admin/deploys`, `POST /admin/{schedule,cancel}-restart`, `POST /admin/restart` |
 | Database | `GET`/`POST` `/admin/db`, `POST /admin/db/test` |
-| Broadcasts | `GET`/`POST` `/admin/broadcasts`, `POST /admin/broadcast-now`, `POST /admin/broadcasts/{delete,toggle,fire}` |
-| Delegate keys | `GET`/`POST` `/admin/tokens`, `POST /admin/tokens/delete`, `GET /admin/whoami` |
+| Broadcasts & polls | `GET`/`POST` `/admin/broadcasts`, `POST /admin/broadcast-now`, `POST /admin/broadcasts/{delete,toggle,fire}`, `GET`/`POST` `/admin/polls`, `POST /admin/polls/{activate,reset,delete}` |
+| Search engines | `POST /admin/seo/ping` (IndexNow submission), `GET /admin/seo/check` |
+| Delegate keys | `GET`/`POST` `/admin/tokens`, `POST /admin/tokens/delete` |
 
 Most sections require the master token; the **Broadcasts**, **Music**, **Packages** and **Leaderboard** routes (and the `/stats` reset / remove) also accept a matching **scoped delegate key** — see the **Keys** tab.
 
