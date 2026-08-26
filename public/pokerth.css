@@ -8486,7 +8486,12 @@ body.adv-no-forumnews [id^="forum-btn-"], body.adv-no-forumnews #forum-modal { d
 /* La largeur en mode fenetre vient de l'attribut style (posé par
    _enableFloating / le redimensionnement), pas de la feuille. */
 #game-info-modal .gim-card.floating-win { width: auto !important; }
-#player-info-modal .pim-card.floating-win { align-items: stretch; }
+/* Surtout PAS align-items:stretch ici : la carte est une colonne flex centree
+   (align-items:center), et tous les blocs larges — boutons, stats, infos,
+   coupes — portent deja width:100%. Passer en stretch ne les elargissait donc
+   pas d'un pixel, mais decalait l'avatar (112 px fixes) contre le bord
+   gauche. */
+#player-info-modal .pim-card.floating-win { align-items: center; }
 /* Barre de prehension de la carte joueur : rien en mode centre (la carte ne
    se deplace pas), bandeau discret avec trois points en mode fenetre. Elle
    couvre toute la largeur du haut, la croix passant par-dessus. */

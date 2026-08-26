@@ -140,6 +140,17 @@ release.
   `SEO_RULES_I18N` rather than introducing a second script for one page.
 
 ### Fixed
+- **Avatar off-centre in the player window** (`web.107`) — `web.104` set
+  `align-items: stretch` on `.pim-card.floating-win`. Every wide block in the
+  card (buttons, stats, info, cups) already carries `width: 100%`, so the stretch
+  widened nothing at all — it only pushed the fixed 112 px avatar against the
+  left edge. Back to `align-items: center`.
+- **Player card capped too low** (`web.107`) — `maxW` raised from
+  `min(900, 92vw)` to `min(1400, 96vw)`, opening width from 42 % to 46 % of the
+  viewport. The window is hand-resizable and the cups block holds a ten-column
+  table plus two charts; an arbitrary ceiling served no purpose.
+  `test-pim-drag` now also checks the centring rule and that the ceiling really
+  follows a 2560 px viewport. Four assertions fail on `web.106`.
 - **Player card could not be widened, and opened in the corner** (`web.106`) —
   two independent causes, which is why raising `maxW` in `web.105` changed
   nothing.

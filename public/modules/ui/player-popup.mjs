@@ -151,9 +151,13 @@ function _winGateOk() {
 function _pimGeom() {
   var vw = 1024, vh = 768;
   try { vw = window.innerWidth || vw; vh = window.innerHeight || vh; } catch (e) {}
-  var maxW = Math.min(900, Math.round(vw * 0.92));
-  var maxH = Math.min(880, Math.round(vh * 0.92));
-  var w = Math.max(320, Math.min(maxW, Math.round(vw * 0.42)));
+  // Plafond volontairement genereux : le bloc coupes tient un tableau de dix
+  // colonnes, un camembert et un histogramme de dix barres, et la fenetre est
+  // redimensionnable a la main — autant laisser aller jusqu'a la quasi-totalite
+  // de l'ecran plutot que d'imposer une borne arbitraire.
+  var maxW = Math.min(1400, Math.round(vw * 0.96));
+  var maxH = Math.min(1000, Math.round(vh * 0.94));
+  var w = Math.max(320, Math.min(maxW, Math.round(vw * 0.46)));
   var h = Math.max(340, Math.min(maxH, Math.round(vh * 0.82)));
   return { w: w, h: h, maxW: maxW, maxH: maxH,
            left: Math.max(8, Math.round((vw - w) / 2)),

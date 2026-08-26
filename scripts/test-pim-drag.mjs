@@ -72,6 +72,12 @@ ok(/max-width:\s*none\s*!important/.test(floatRule),
    'css : max-width neutralise en !important (bat la regle du media desktop)');
 ok(/max-width:\s*400px\s*!important/.test(cssAll),
    'css : la regle bloquante existe bien (sinon ce garde-fou ne sert a rien)');
+// L'avatar fait 112px de large dans une colonne flex : si la carte passe en
+// align-items:stretch, il se colle au bord gauche. Tous les blocs larges
+// portent deja width:100%, le stretch n'apportait donc rien.
+const alignRule = (cssAll.match(/#player-info-modal \.pim-card\.floating-win \{[^}]*\}/) || [''])[0];
+ok(/align-items:\s*center/.test(alignRule), 'css : contenu centre en mode fenetre (avatar compris)');
+ok(!/align-items:\s*stretch/.test(alignRule), 'css : pas de stretch (decalerait l avatar)');
 
 const srcPim = readFileSync('public/modules/ui/player-popup.mjs', 'utf8');
 ok(/key:\s*'pth-pim-win2'/.test(srcPim),
@@ -89,7 +95,10 @@ ok(small.w <= 420 && small.left >= 8, 'reste dans l ecran sur petite fenetre (' 
 // Le plafond d'agrandissement doit laisser de la place au bloc coupes.
 const src = readFileSync('public/modules/ui/player-popup.mjs', 'utf8');
 const mw = (src.match(/maxW = Math\.min\((\d+)/) || [])[1];
-ok(Number(mw) >= 800, 'plafond d agrandissement large (' + mw + 'px)');
+ok(Number(mw) >= 1200, 'plafond d agrandissement large (' + mw + 'px)');
+// Sur un grand ecran, le plafond doit vraiment suivre la largeur disponible.
+const big = new Function('window', geomSrc + '\nreturn _pimGeom;')({ innerWidth: 2560, innerHeight: 1440 })();
+ok(big.maxW >= 1400, 'agrandissement possible jusqu a ' + big.maxW + 'px sur un 2560px');
 ok(/handle:\s*document\.getElementById\('pim-grip'\)/.test(src), 'poignee = le bandeau, pas le nom du joueur');
 
 console.log(fail ? `\n${fail}/${n} \u00c9CHECS` : `\n${n}/${n} OK`);
