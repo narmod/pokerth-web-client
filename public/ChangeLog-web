@@ -1,4 +1,5 @@
 2026-08-13 version 2.1.7-web (current series):
+- improvement: writing to a guest is now closed off, the way it is in the desktop client: the server never delivers a private message to a guest account, so the conversation stays readable but the input tells you why nothing can be sent
 - bugfix: in the private messages window, the box where you type your message was squashed to the width of the Send button and pushed against the right edge, instead of stretching across the window
 - new: private messages now have the same translation globe as the chat. Hover a message you received - or tap it on a touch screen - and click the globe to read it in your own language; click again to go back to the original
 - improvement: the player card keeps a single button to the statistics. "Show cups" led to exactly the same window, which already contains the cups of all three rankings

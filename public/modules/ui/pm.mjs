@@ -223,15 +223,17 @@ function _renderCounter() {
   // than letting the player type a message that would be refused (parity:
   // the guest / atTable notice above the input in PrivateMessageDialog.qml).
   const guest = _amGuest(), mine = _meAtRunningTable();
+  const pguest = _partnerIsGuest(playerIdByName(_current));
   const note = $('pm-note');
   if (note) {
     const txt = mine ? _tt('pmAtTable', 'Private messages are not available at the table.')
               : guest ? _tt('pmGuest', 'Guests cannot send chat messages')
+              : pguest ? _tt('pmPartnerGuest', 'Guests cannot receive private messages.')
               : '';
     note.textContent = txt;
     note.style.display = txt ? '' : 'none';
   }
-  const blocked = guest || mine;
+  const blocked = guest || mine || pguest;
   inp.disabled = blocked || !_current;
   const n = _bytes(inp.value);
   if (cnt) cnt.textContent = n + '/' + MAX_BYTES;
@@ -362,6 +364,22 @@ function _amGuest() {
   try { return S._currentLoginMode === 'guest'; } catch (e) { return false; }
 }
 
+// Is the PARTNER a guest? Guests are refused every ChatRequest by the server,
+// which means they can neither send nor receive a private message -- writing to
+// one is shouting into a void. Upstream added the check in `985a64bd`
+// (`partnerIsGuest` in PrivateMessageDialog.qml): the history stays readable,
+// but the input is closed and a notice says why.
+//
+// The rights come from PlayerInfoReply field 3 (netPlayerRightsGuest = 1),
+// already stored in S._playerRights by msg-lobby.mjs -- a PlayerInfoRequest is
+// fired for every player entering the lobby, so the flag is there by the time a
+// conversation can be opened. Unknown rights (0) are treated as not-guest: a
+// missing reply must not lock a conversation with a registered player.
+function _partnerIsGuest(pid) {
+  if (!pid) return false;   // absent from the lobby: nothing to tell
+  try { return S._playerRights[pid] === 1; } catch (e) { return false; }
+}
+
 // Is that player sitting at a RUNNING table? The server refuses a private
 // message in exactly that case (ServerLobbyThread::HandleNetPacketChatRequest
 // checks `tmpGame->IsRunning()`), and its refusal carries no reason -- a bare
@@ -425,6 +443,7 @@ function sendTo(name, text) {
     return 'self';
   }
   if (_amGuest()) return 'guest';
+  if (_partnerIsGuest(pid)) return 'partnerGuest';
   if (_meAtRunningTable()) return 'meAtTable';
   if (_atRunningTable(pid)) return 'atTable';
   let ok = false;
@@ -446,6 +465,8 @@ function _errText(code, name) {
   if (code === 'atTable' || code === 'meAtTable')
     return _tt('pmAtTable', 'Private messages are not available at the table.');
   if (code === 'guest')    return _tt('pmGuest', 'Guests cannot send chat messages');
+  if (code === 'partnerGuest')
+    return _tt('pmPartnerGuest', 'Guests cannot receive private messages.');
   if (code === 'offline')  return _tt('pmOffline', 'Not connected to server');
   if (code === 'self')     return _tt('pmSelf', 'You cannot send a private message to yourself.');
   return '';

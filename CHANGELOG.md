@@ -13,6 +13,18 @@ this file captures what matters to players and operators.
 Opened with `v2.1.7-web.0` (2026-08-13), following the upstream **2.1.7**
 release.
 
+### Changed
+- **Private messages to a guest are blocked** (`web.119`) — parity with upstream
+  `985a64bd` (`partnerIsGuest`, `PrivateMessageDialog.qml`). The server refuses
+  every `ChatRequest` involving a guest account, so a private message to one is
+  never delivered and the bare `ChatRejectMessage` gives no reason. The rights
+  already arrive in `PlayerInfoReply` field 3 (`netPlayerRightsGuest = 1`) and
+  are stored in `S._playerRights`, so the check is local: the history stays
+  readable, the input closes, and the notice above it says why. `/msg` reports
+  the same wording. Unknown rights are treated as not-guest, so a missing reply
+  cannot lock a conversation. New i18n key `pmPartnerGuest`, translated in all
+  45 languages.
+
 ### Fixed
 - **Private message input row collapsed** (`web.118`) — the bubble footer added
   in `web.117` reused the `.pm-foot` class that already belonged to the dialogue
