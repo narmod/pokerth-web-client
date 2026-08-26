@@ -422,6 +422,28 @@ release.
   serve stale pages.
 
 ### Changed
+- **Statistics split out of the player card** (`web.112`) — clicking a name opens
+  the card (identity + actions); statistics live in `#pp-modal`.
+  - The card no longer renders the cups block or the session stats inline, and
+    carries a **single** button to the window instead of the two overlapping ones
+    it had grown.
+  - The window now holds the cups of all three rankings (`rkLoadPlayerCups`) plus,
+    for oneself, the session stats. The PokerTH-only profile view it used to show
+    was strictly redundant: the PokerTH cup pane already carries the season,
+    last five, placement breakdown, recent games and season history.
+    That settles the "what is this button for" question raised twice.
+  - `_plOpenStats` (the 📊 chip) opens the window directly rather than the card,
+    falling back to the card for players without a usable nickname (bots, LAN).
+  - `_renderProfileStats` takes a container id, remembered in `S._pimStatsBox` so
+    the Session/Lifetime/Board tabs repaint the right element. The
+    `piShowStats`/`piHideStats` toggle from `web.111` is gone with the inline
+    block; the keys stay, unused.
+  - Window key bumped to `pth-pp-win2`, re-centred on every open, opening width
+    58 % of the viewport.
+  - Two existing tests asserted the old shape (`_pimLoadCups`, `pth-pp-win`) and
+    were rewritten against the new intent rather than deleted. `test-pim-parity`
+    also now executes the page's inline scripts, without which
+    `openPlayerProfile` did not exist and the harness measured a crippled client.
 - **Stats cards converted to the generic window model** (`web.104`) —
   `#player-info-modal` and `#game-info-modal` were the last two surfaces still on
   the old modal pattern: a full-screen `rgba(0,0,0,0.65)` veil, `z-index: 9999`

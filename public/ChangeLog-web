@@ -1,4 +1,5 @@
 2026-08-13 version 2.1.7-web (current series):
+- improvement: statistics have moved out of the player card and into a window of their own. Clicking a name still opens the card - avatar, country, status, in-game details and the actions - while the cups of all three rankings, and your own session statistics, open in a separate window. The chart button in the players list now goes straight there
 - bugfix: the "Player profile" button appeared to do nothing - the window did open, but behind the player card, which hid it completely
 - improvement: your session statistics are now behind a button on your own card, like the cups, instead of being unfolded every time you open it
 - bugfix: your own player card did not show your status - guest, registered or admin - while everyone else's card did. It is now shown on both, so you can check what the server actually recognised you as

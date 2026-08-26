@@ -54,14 +54,19 @@ S.players = { 7: 'Alice' };
 const html = P._otherPlayerInfoHtml(7);
 ok(html.includes('_toggleIgnore(7)'), '_otherPlayerInfoHtml câble le bouton ignorer');
 
-// _cupsBlockHtml : mes coupes doivent être rendues comme celles des autres
+// _cupsBlockHtml : mon accès aux coupes doit être rendu comme celui des autres
 // (bug remonté 23/07 : mon popup n'affichait que les stats de session).
+// Depuis 2.1.7-web.112 le bloc n'est plus rendu en ligne dans la carte : le
+// bouton ouvre la fenêtre de statistiques. L'intention testée est la même —
+// ma carte doit offrir le même chemin que celle des autres.
 els['login-mode'].value = 'auth';
 S.myId = 3; S.myName = 'narmod';
 S._playerRights = { 3: 2, 7: 2, 8: 1, 901: 2 };
 const mine = P._cupsBlockHtml(3);
-ok(mine.includes('pim-cups-btn') && mine.includes('_pimLoadCups(3)'),
-   '_cupsBlockHtml : bouton « coupes » rendu pour MOI (joueur enregistré)');
+ok(mine.includes('pim-cups-btn') && mine.includes('openPlayerProfile("narmod",3)'),
+   '_cupsBlockHtml : accès aux statistiques rendu pour MOI (joueur enregistré)');
+ok(!mine.includes('id="pim-cups"'),
+   '_cupsBlockHtml : plus de bloc coupes en ligne dans la carte');
 ok(mine.includes('player?u=narmod'),
    '_cupsBlockHtml : le lien profil utilise S.myName (absent de getPlayerName)');
 ok(P._cupsBlockHtml(7).includes('player?u=Alice'),

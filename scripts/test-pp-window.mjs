@@ -32,7 +32,7 @@ ok(/width:\s*clamp\(/.test(cardCss), 'css : largeur en clamp (suit l ecran)');
 ok(/max-width:\s*calc\(100vw/.test(cardCss), 'css : bornee a la fenetre sur petit ecran');
 ok(!/width:\s*min\(\d+px/.test(cardCss), 'css : plus de largeur figee en px');
 // Taille d ouverture de la fenetre flottante : calculee, pas constante.
-const openCall = (html.match(/key: 'pth-pp-win',[\s\S]{0,400}/) || [''])[0];
+const openCall = (html.match(/key: 'pth-pp-win2',[\s\S]{0,400}/) || [''])[0];
 ok(/defW:\s*Math\./.test(openCall), 'fenetre : largeur d ouverture calculee');
 ok(/innerWidth/.test(openCall), 'fenetre : calculee depuis la taille d ecran');
 ok(/Math\.max\(\s*\d+/.test(openCall) && /Math\.min\(\s*\d+/.test(openCall),

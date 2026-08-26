@@ -2786,7 +2786,7 @@ if ('serviceWorker' in navigator) {
   <div class="rk-backdrop" id="pp-backdrop"></div>
   <div class="rk-card" role="dialog" aria-labelledby="pp-title">
     <button class="rk-close" type="button" id="pp-close" title="Close" data-i18n-title="closeTooltip" data-i18n-aria="closeTooltip" aria-label="Close">&#10005;</button>
-    <div class="rk-title" id="pp-title"><svg viewBox="0 0 24 24" style="display:inline-block;width:15px;height:15px;vertical-align:-2px;margin-right:6px" fill="currentColor" aria-hidden="true"><path d="M12 12a5 5 0 1 0-5-5 5 5 0 0 0 5 5Zm0 2.2c-4.4 0-8 2.2-8 5V21h16v-1.8c0-2.8-3.6-5-8-5Z"/></svg><span data-i18n="ppTitle">Player profile</span></div>
+    <div class="rk-title" id="pp-title"><svg viewBox="0 0 24 24" style="display:inline-block;width:15px;height:15px;vertical-align:-2px;margin-right:6px" fill="currentColor" aria-hidden="true"><path d="M12 12a5 5 0 1 0-5-5 5 5 0 0 0 5 5Zm0 2.2c-4.4 0-8 2.2-8 5V21h16v-1.8c0-2.8-3.6-5-8-5Z"/></svg><span data-i18n="ppTitle">Player profile</span><span class="pp-who" id="pp-who"></span></div>
     <div class="rk-body" id="pp-body"></div>
   </div>
 </div>
@@ -3770,7 +3770,13 @@ if ('serviceWorker' in navigator) {
     try { return !!(window._winGate && window._winGate() && typeof window._enableFloating === 'function'); }
     catch (e) { return false; }
   }
-  window.openPlayerProfile = function (nick) {
+  // Fenetre UNIQUE des statistiques d'un joueur. Contenu : mes stats de
+  // session (seulement pour moi — ce sont des mesures locales), puis les
+  // coupes des TROIS classements (PokerTH / BBC / WEC) en onglets. Le pane
+  // PokerTH porte deja la saison en cours, les 5 dernieres, la repartition
+  // des places, les parties recentes et l'historique par saison : la vue
+  // « profil PokerTH seul » qui existait ici en doublon a donc ete retiree.
+  window.openPlayerProfile = function (nick, pid) {
     var m = $('pp-modal'), body = $('pp-body');
     if (!m || !body) return;
     nick = String(nick == null ? '' : nick).trim();
@@ -3782,38 +3788,39 @@ if ('serviceWorker' in navigator) {
       try {
         window._enableFloating(card, {
           handle: $('pp-title'), resizable: true,
-          maxW: Math.min(900, Math.round(window.innerWidth * 0.92)),
-          maxH: Math.min(820, Math.round(window.innerHeight * 0.90)),
-          // Taille d'ouverture proportionnelle a l'ecran, bornee des deux
-          // cotes : le tableau des places (dix colonnes) et l'histogramme
-          // demandent de la largeur, mais l'etaler sur un tres grand ecran
-          // rendrait les lignes de texte illisibles.
-          zoom: true, key: 'pth-pp-win',
-          defW: Math.max(360, Math.min(780, Math.round(window.innerWidth * 0.62))),
-          defH: Math.max(360, Math.min(700, Math.round(window.innerHeight * 0.82))),
+          maxW: Math.min(1400, Math.round(window.innerWidth * 0.96)),
+          maxH: Math.min(1000, Math.round(window.innerHeight * 0.94)),
+          zoom: true, key: 'pth-pp-win2',
+          defW: Math.max(360, Math.min(1400, Math.round(window.innerWidth * 0.58))),
+          defH: Math.max(360, Math.min(1000, Math.round(window.innerHeight * 0.82))),
           minW: 320, minH: 320, defLeft: 140, defTop: 60
         });
       } catch (e) {}
+      // Recentrage a chaque ouverture, meme raison que pour la carte joueur :
+      // _restoreWin rejoue la derniere position et ignore defLeft.
+      if (typeof window._placeWin === 'function') {
+        var _w = card.offsetWidth || 700, _h = card.offsetHeight || 600;
+        window._placeWin(card, Math.round((window.innerWidth - _w) / 2),
+                               Math.round((window.innerHeight - _h) / 2));
+      }
     }
-    // Passer DEVANT. Depuis que la carte joueur est elle aussi une fenetre
-    // geree (2.1.7-web.104), z-order la remonte des qu'on la touche : le
-    // bouton « Profil du joueur » ouvrait donc cette fenetre-ci DERRIERE
-    // elle, ou elle etait entierement masquee — d'ou l'impression que le
-    // bouton ne faisait rien.
+    // Passer DEVANT : la carte joueur est elle aussi une fenetre geree, que
+    // z-order remonte des qu'on la touche.
     try { if (window.zRaise) window.zRaise(m); } catch (e) {}
-    body.innerHTML = '<div class="rk-msg">' + rkEsc(rkT('rankingLoading', 'Loading\u2026')) + '</div>';
-    var ck = 'pth|' + nick.toLowerCase();
-    var c = RK_PROF_CACHE[ck];
-    if (c && (Date.now() - c.at) < RK_TTL) { body.innerHTML = rkRenderProfile(c.data); rkPaintPies(body); return; }
-    fetch('/api/player?src=pth&nick=' + encodeURIComponent(nick), { headers: { 'Accept': 'application/json' } })
-      .then(function (r) { return r.text(); })
-      .then(function (t) {
-        var d; try { d = JSON.parse(t); } catch (e) { d = null; }
-        if (!d || d.ok === false) { body.innerHTML = '<div class="rk-msg">' + rkEsc(rkT('rankingError', 'Could not load the ranking.')) + '</div>'; return; }
-        RK_PROF_CACHE[ck] = { at: Date.now(), data: d };
-        body.innerHTML = rkRenderProfile(d); rkPaintPies(body);
-      })
-      .catch(function () { body.innerHTML = '<div class="rk-msg">' + rkEsc(rkT('rankingError', 'Could not load the ranking.')) + '</div>'; });
+    var titleEl = $('pp-who');
+    if (titleEl) titleEl.textContent = nick;
+    // Mes stats de session d'abord (locales, instantanees), les coupes
+    // ensuite (reseau).
+    var isSelf = false;
+    try { isSelf = (pid != null && window.PthState && pid === window.PthState.myId); } catch (e) {}
+    body.innerHTML = (isSelf ? '<div id="pp-session"></div>' : '')
+                   + '<div id="pp-cups"></div>';
+    if (isSelf && typeof window._pimRenderSessionStats === 'function') {
+      try { window._pimRenderSessionStats('pp-session'); } catch (e) {}
+    }
+    if (typeof window.rkLoadPlayerCups === 'function') {
+      try { window.rkLoadPlayerCups(nick, 'pp-cups'); } catch (e) {}
+    }
   };
   window.closePlayerProfile = function () {
     var m = $('pp-modal'); if (!m) return;

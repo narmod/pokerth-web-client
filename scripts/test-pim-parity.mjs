@@ -26,8 +26,18 @@ for (const k of Object.getOwnPropertyNames(w)) { if (k === 'performance' || k in
 const ctx = dom.getInternalVMContext();
 vm.runInContext(readFileSync('public/chat-emotes.js', 'utf8'), ctx, { filename: 'chat-emotes.js' });
 vm.runInContext("(function(){'use strict';\n" + readFileSync('public/pokerth.js', 'utf8') + "\n})();", ctx, { filename: 'pokerth.js' });
+// Les <script> INLINE de la page (classement, coupes, fenetre de stats...)
+// ne sont pas executes par jsdom en mode outside-only : sans eux
+// window.openPlayerProfile et rkLoadPlayerCups n'existent pas et le test
+// mesurerait un client amputé.
+for (const m of html.matchAll(/<script(?![^>]*\ssrc=)(?![^>]*type="module")[^>]*>([\s\S]*?)<\/script>/g)) {
+  try { vm.runInContext(m[1], ctx, { filename: 'inline.js' }); } catch (e) {}
+}
+for (const k of Object.getOwnPropertyNames(w)) { if (k === 'performance' || k in globalThis) continue; try { globalThis[k] = w[k]; } catch (e) {} }
 w.document.dispatchEvent(new w.Event('DOMContentLoaded', { bubbles: true }));
 await new Promise(r => setTimeout(r, 40));
+// Mode reseau : _cupsBlockHtml ne rend son bouton que sur pokerth.net.
+try { w.document.getElementById('login-mode').value = 'auth'; } catch (e) {}
 
 let n = 0, fail = 0;
 const ok = (c, m) => { n++; if (!c) { fail++; console.error('  \u2717', m); } else console.log('  \u2713', m); };
@@ -61,33 +71,45 @@ S._playerRights[1] = 1;
 w.openPlayerInfoPopup();
 ok(roleOf() === 'Guest', 'MA fiche : invite reconnu');
 
-// ── Stats de session derriere un bouton ──
-S._pimStatsShown = false;
-w.openPlayerInfoPopup();
+// ── Separation carte / fenetre de statistiques ──
+// Cliquer le NOM ouvre la carte (identite + actions) ; les statistiques
+// vivent dans leur propre fenetre. La carte ne doit donc plus rendre ni les
+// stats de session ni le bloc coupes.
+// Les assertions de role ci-dessus ont laisse mes droits sur « invite » ;
+// _cupsBlockHtml n'emet rien pour un invite (a raison). On repasse
+// enregistre avant d'examiner les boutons.
+S._playerRights[1] = 2;
+w.openPlayerInfoPopup();   // re-rendu maintenant que login-mode = auth
 const statsBox = w.document.getElementById('pim-stats');
-ok(/piShowStats|Show session stats|Voir mes statistiques/.test(statsBox.innerHTML)
-   || statsBox.querySelector('.pim-cups-btn') !== null,
-   'MA fiche : les stats sont repliees derriere un bouton');
-// Assertion robuste : les onglets sont absents quand le compte n'est pas
-// eligible, le corps des stats non — c'est donc lui qu'il faut regarder.
-const statsShown = () => statsBox.querySelector('.stats-body, .stats-tabs') !== null;
-ok(!statsShown(), 'MA fiche : le corps des stats n est pas rendu d office');
-if (typeof w._pimToggleStats !== 'function') {
-  ok(false, 'bascule des stats disponible (window._pimToggleStats)');
-} else {
-  w._pimToggleStats();
-  ok(statsShown(), 'apres ouverture : les stats apparaissent');
-  ok(statsBox.querySelector('.pim-cups-btn') !== null,
-     'apres ouverture : le bouton reste (il sert a replier)');
-  w._pimToggleStats();
-  ok(!statsShown(), 'repli : les stats disparaissent');
-}
+ok(statsBox.innerHTML === '' && statsBox.style.display === 'none',
+   'carte : plus de stats de session en ligne');
+ok(w.document.getElementById('pim-cups') === null,
+   'carte : plus de bloc coupes en ligne');
+const infoBox = w.document.getElementById('pim-info');
+const _nb = (infoBox.innerHTML.match(/pim-cups-btn/g) || []).length;
+ok(_nb === 1, 'carte : un SEUL bouton vers les statistiques (trouve ' + _nb + ')');
+ok(/openPlayerProfile/.test(infoBox.innerHTML), 'carte : ce bouton ouvre la fenetre');
 
-// ── Le bouton « Profil du joueur » doit passer DEVANT la carte ──
-const ppSrc = readFileSync('public/pokerth-client.html', 'utf8');
-const openFn = (ppSrc.match(/window\.openPlayerProfile = function[\s\S]*?\n  \};/) || [''])[0];
-ok(/zRaise/.test(openFn),
-   'profil : la fenetre est remontee devant (sinon masquee par la carte joueur)');
+// La pastille de la liste mene directement a la fenetre, pas a la carte.
+w.document.getElementById('player-info-modal').style.display = 'none';
+w.document.getElementById('pp-modal').style.display = 'none';
+w._plOpenStats(2);
+ok(w.document.getElementById('pp-modal').style.display === 'flex',
+   'pastille stats : ouvre la fenetre de statistiques');
+ok(w.document.getElementById('player-info-modal').style.display !== 'flex',
+   'pastille stats : n ouvre PAS la carte');
+ok((w.document.getElementById('pp-who') || {}).textContent === 'autre',
+   'fenetre : le nom du joueur est repris dans le titre');
+ok(w.document.getElementById('pp-cups') !== null, 'fenetre : conteneur des coupes');
+ok(w.document.getElementById('pp-session') === null,
+   'fenetre (autre joueur) : pas de stats de session — elles sont locales a moi');
+
+// Pour MOI, la fenetre porte en plus mes stats de session.
+w._plOpenStats(1);
+ok(w.document.getElementById('pp-session') !== null,
+   'fenetre (moi) : mes stats de session sont presentes');
+ok(typeof w._pimRenderSessionStats === 'function',
+   'rendu des stats de session adressable a un conteneur au choix');
 
 // Une seule source pour les deux branches.
 const src = readFileSync('public/modules/ui/player-popup.mjs', 'utf8');

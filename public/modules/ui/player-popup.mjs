@@ -282,16 +282,9 @@ function openPlayerInfoPopup(pid, autoStats) {
     // Mon profil : stats de session locales, PUIS mes coupes pokerth.net —
     // #pim-info est placé après #pim-stats dans le DOM, l'ordre est donc
     // « ma partie en cours » avant « ma saison ». Vide hors réseau / invité.
-    // Stats de session A LA DEMANDE, comme les coupes (demande narmod 26/08) :
-    // la carte s'ouvrait avec les onglets Session / A vie / Tableau deployes,
-    // ce qui la rallongeait alors que l'on vient souvent y chercher autre
-    // chose. Le bouton reste en place et remplace son libelle une fois ouvert.
-    if (statsEl) {
-      statsEl.style.display = '';
-      S._pimTab = 'session';
-      if (S._pimStatsShown) _renderProfileStats();
-      else statsEl.innerHTML = _statsToggleBtnHtml(false);
-    }
+    // Les stats de session sont parties dans la fenetre de statistiques : la
+    // carte ne les rend plus du tout.
+    if (statsEl) { statsEl.style.display = 'none'; statsEl.innerHTML = ''; }
     if (infoEl) {
       // Mêmes infos en jeu + stats de comportement que pour un adversaire,
       // PUIS les coupes (demande narmod 26/07 : parité self/adversaires).
@@ -326,6 +319,15 @@ function openPlayerInfoPopup(pid, autoStats) {
 // deux cas — sinon mon propre bouton ouvrait le popup sans charger mes coupes,
 // contrairement a celui des autres joueurs (remonte narmod).
 window._plOpenStats = function (pid) {
+  // La pastille 📊 de la liste mene DIRECTEMENT aux statistiques (demande
+  // narmod 26/08) : cliquer le NOM ouvre la carte joueur, cliquer 📊 ouvre la
+  // fenetre de stats. Avant, les deux ouvraient la carte.
+  var _p = (pid == null || pid === '') ? S.myId : pid;
+  var nm = _pimNameFor(_p);
+  if (nm && typeof window.openPlayerProfile === 'function') {
+    try { window.openPlayerProfile(nm, _p); return; } catch (e) {}
+  }
+  // Repli : joueur sans nom exploitable (bot, hors reseau) -> la carte.
   openPlayerInfoPopup((pid == null || pid === '') ? null : pid, true);
 };
 // Signaler l'avatar d'un joueur : on referme le popup profil avant d'ouvrir la
@@ -384,18 +386,13 @@ function _cupsBlockHtml(pid) {
   if (window.isBot(pid) || !onNet || (rg !== 2 && rg !== 3)) return '';
   var nm = _pimNameFor(pid);
   if (!nm) return '';
-  // Coupes À LA DEMANDE : aucun réseau à l'ouverture. Le bouton déclenche
-  // window._pimLoadCups(pid) → rkLoadPlayerCups remplit #pim-cups (1 fois).
-  // Profil complet dans SA fenetre (parite QML PokerthPlayerPage) : saison en
-  // cours, 5 dernieres, repartition des places, parties recentes et historique
-  // par saison -- bien plus que ce que le popup peut tenir. Le bloc « coupes »
-  // ci-dessous reste tel quel : il resume les TROIS classements, la fenetre
-  // profil ne montre que pokerth.net.
-  return '<button type="button" class="pim-cups-btn" onclick="window.openPlayerProfile(' + JSON.stringify(nm) + ')">\uD83D\uDC64 '
+  // Toutes les statistiques vivent dans LEUR fenetre (demande narmod 26/08) :
+  // la carte joueur garde l'identite (avatar, drapeau, role, infos en jeu) et
+  // les actions, la fenetre porte les coupes des trois classements et, pour
+  // moi, mes stats de session. Un seul bouton mene a l'une comme a l'autre —
+  // il y en avait deux qui ouvraient des vues largement redondantes.
+  return '<button type="button" class="pim-cups-btn" onclick="window.openPlayerProfile(' + JSON.stringify(nm) + ',' + pid + ')">\uD83D\uDCCA '
        + esc(tt('ppOpen', 'Player profile')) + '</button>'
-       + '<button type="button" id="pim-cups-btn" class="pim-cups-btn" onclick="window._pimLoadCups(' + pid + ')">🏆 '
-       + esc(tt('piShowCups', 'Show cups')) + '</button>'
-       + '<div id="pim-cups" class="pim-cups" data-shown="0" style="display:none"></div>'
        + '<a class="pim-profile-link" href="https://www.pokerth.net/app.php/player?u='
        + encodeURIComponent(nm) + '" target="_blank" rel="noopener noreferrer">'
        + esc(tt('piViewProfile', 'View pokerth.net profile')) + '</a>';
@@ -507,26 +504,19 @@ function _otherPlayerInfoHtml(pid) {
 // serveur privé, S._statsEligible) : sur pokerth.net direct, seul SESSION.
 // Réutilise _statsBodySession / _statsBodyLife / renderBoard pour rester
 // strictement identique au jeu (y compris le reset).
-function _pimSetTab(tab) { S._pimTab = tab; _renderProfileStats(); }
+function _pimSetTab(tab) { S._pimTab = tab; _renderProfileStats(S._pimStatsBox); }
 
-// Bouton d'ouverture/fermeture des stats de session. Meme allure que le
-// bouton des coupes, pour que les deux blocs repliables se ressemblent.
-function _statsToggleBtnHtml(shown) {
-  function tt(k, fb) { var v = (typeof t === 'function') ? t(k) : null; return (v && v !== k) ? v : fb; }
-  return '<button type="button" class="pim-cups-btn" onclick="window._pimToggleStats()">\uD83D\uDCCA '
-       + esc(shown ? tt('piHideStats', 'Hide session stats') : tt('piShowStats', 'Show session stats'))
-       + '</button>';
-}
-window._pimToggleStats = function () {
-  S._pimStatsShown = !S._pimStatsShown;
-  var box = document.getElementById('pim-stats');
-  if (!box) return;
-  if (S._pimStatsShown) _renderProfileStats();
-  else box.innerHTML = _statsToggleBtnHtml(false);
+// Rendu des stats de session DANS la fenetre de statistiques. Appele par
+// openPlayerProfile ; le conteneur est memorise pour que les onglets
+// (Session / A vie / Tableau) repeignent le bon element.
+window._pimRenderSessionStats = function (containerId) {
+  S._pimStatsBox = containerId;
+  S._pimTab = 'session';
+  _renderProfileStats(containerId);
 };
 
-function _renderProfileStats() {
-  var box = document.getElementById('pim-stats');
+function _renderProfileStats(boxId) {
+  var box = document.getElementById(boxId || S._pimStatsBox || 'pim-stats');
   if (!box) return;
   var eligible = S._statsEligible;
   var board    = S._boardEligible;
@@ -543,8 +533,7 @@ function _renderProfileStats() {
   if (S._pimTab === 'life')       body = window._statsBodyLife();
   else if (S._pimTab === 'board') body = '<div id="pim-board-body" class="stats-body"><div class="stat-empty">…</div></div>';
   else                          body = window._statsBodySession();
-  // Le bouton reste EN TETE du bloc : il sert aussi a replier.
-  box.innerHTML = _statsToggleBtnHtml(true) + tabs + body;
+  box.innerHTML = tabs + body;
   if (S._pimTab === 'board') window.renderBoard('pim-board-body');
   if (window._offlineMode && typeof window._achMountBadge === 'function') { try { window._achMountBadge(box, 'profile'); } catch (e) {} }
 }
