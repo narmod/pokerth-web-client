@@ -34,6 +34,11 @@ let _current = '';       // selected partner, '' when nothing is selected
 // whose envelope had ever been clicked.
 let _draft = '';
 
+// Translations already fetched in this session, keyed by the original text.
+// The conversation is rebuilt from scratch on every new message, so without
+// this cache a bubble translated a moment ago would silently revert.
+const _pmTr = new Map();
+
 function $(id) { return document.getElementById(id); }
 
 function _esc(s) {
@@ -173,11 +178,39 @@ function _renderConversation() {
   // side left and plain, timestamp inside at the bottom (parity: the
   // conversation delegate in PrivateMessageDialog.qml). The sender name is
   // redundant in a two-person thread, so it is dropped.
+  // Translation globe, same mechanics as the lobby and game chat: incoming
+  // bubbles only, revealed on hover (or on tap when there is no pointer),
+  // handled by the shared window._chatTranslate. Harvest what is on screen
+  // first so translations survive the rebuild.
+  try {
+    box.querySelectorAll('.pm-line[data-tr-text]').forEach(function (el) {
+      _pmTr.set(el.getAttribute('data-orig') || '', {
+        text: el.getAttribute('data-tr-text') || '',
+        shown: el.getAttribute('data-tr-shown') === '1'
+      });
+    });
+  } catch (e) {}
+  const trL = _tt('chatTranslateBtn', 'Translate');
   box.innerHTML = msgs.map(function (m) {
-    return '<div class="pm-line' + (m.mine ? ' mine' : '') + '">'
+    const cached = m.mine ? null : _pmTr.get(m.text);
+    const shown  = !!(cached && cached.shown && cached.text);
+    // data-orig-html is escaped twice on purpose: the attribute has to carry
+    // the *markup* of the untranslated bubble so the toggle can restore it.
+    const attrs = m.mine ? '' : (' data-orig="' + _esc(m.text) + '"'
+      + (cached && cached.text
+          ? ' data-tr-text="' + _esc(cached.text) + '"'
+            + ' data-tr-shown="' + (shown ? '1' : '0') + '"'
+            + ' data-orig-html="' + _esc(_esc(m.text)) + '"'
+          : ''));
+    const btn = m.mine ? '' : ('<button class="chat-tr-btn' + (shown ? ' tr-active' : '')
+      + '" title="' + _esc(trL) + '" data-i18n-title="chatTranslateBtn"'
+      + ' aria-label="' + _esc(trL) + '"'
+      + ' onclick="window._chatTranslate(this)">\u{1F310}</button>');
+    return '<div class="pm-line' + (m.mine ? ' mine' : '') + '"' + attrs + '>'
       + '<span class="pm-bub">'
-      + '<span class="pm-text">' + _esc(m.text) + '</span>'
-      + '<span class="pm-ts">' + _esc(_time(m.ts)) + '</span>'
+      + '<span class="pm-text">' + _esc(shown ? cached.text : m.text) + '</span>'
+      + '<span class="pm-foot"><span class="pm-ts">' + _esc(_time(m.ts)) + '</span>'
+      + btn + '</span>'
       + '</span></div>';
   }).join('');
   try { box.scrollTop = box.scrollHeight; } catch (e) {}

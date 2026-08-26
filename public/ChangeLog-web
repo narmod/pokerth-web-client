@@ -1,4 +1,5 @@
 2026-08-13 version 2.1.7-web (current series):
+- new: private messages now have the same translation globe as the chat. Hover a message you received - or tap it on a touch screen - and click the globe to read it in your own language; click again to go back to the original
 - improvement: the player card keeps a single button to the statistics. "Show cups" led to exactly the same window, which already contains the cups of all three rankings
 - bugfix: the player card opened shorter than its own contents, so the last buttons were cut off and it had to be resized by hand every time. It now opens at the height its contents need, up to the height of your screen
 - improvement: in the statistics window, your own session figures - hands played, wins, net result, last hands - now sit in their own titled card, clearly separated from the cup rankings below

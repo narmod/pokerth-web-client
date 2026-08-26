@@ -1929,8 +1929,9 @@ function setChatTranslate(on) {
 }
 window.setChatTranslate = setChatTranslate;
 window._chatTranslate = function (btn) {
-  var msg = btn && btn.closest ? btn.closest('.msg') : null;
-  var span = msg ? msg.querySelector('.txt') : null;
+  // .msg/.txt = lobby and game chat; .pm-line/.pm-text = private messages.
+  var msg = btn && btn.closest ? btn.closest('.msg, .pm-line') : null;
+  var span = msg ? msg.querySelector('.txt, .pm-text') : null;
   if (!msg || !span) return;
   // Toggle retour a l'original
   if (msg.dataset.trShown === '1') {
@@ -10755,7 +10756,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.7-web.116'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.7-web.117'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

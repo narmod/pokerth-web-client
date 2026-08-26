@@ -380,10 +380,11 @@ function _bindChatTrReveal() {
       if (!tgt || !tgt.closest) return;
       // Le globe et les liens gardent leur role propre.
       if (tgt.closest('.chat-tr-btn') || tgt.closest('a')) return;
-      const msg = tgt.closest('.msg');
-      const panel = msg && msg.closest('#chat, #g-chat-msgs');
+      // .pm-line/#pm-msgs : private messages use bubbles, same reveal rule.
+      const msg = tgt.closest('.msg, .pm-line');
+      const panel = msg && msg.closest('#chat, #g-chat-msgs, #pm-msgs');
       if (!panel) return;
-      const others = panel.querySelectorAll('.msg.tr-reveal');
+      const others = panel.querySelectorAll('.msg.tr-reveal, .pm-line.tr-reveal');
       for (let i = 0; i < others.length; i++)
         if (others[i] !== msg) others[i].classList.remove('tr-reveal');
       msg.classList.toggle('tr-reveal');

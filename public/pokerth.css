@@ -10260,6 +10260,18 @@ body.chat-tr-on .msg .chat-tr-btn.tr-same { visibility: visible; }
 .chat-tr-btn.tr-busy { opacity: 0.3; cursor: wait; }
 .chat-tr-btn.tr-err { opacity: 0.7; filter: grayscale(1); }
 .chat-tr-btn.tr-same { opacity: 0.25; cursor: default; }
+/* Same globe in private messages (#pm-msgs): a bubble replaces the chat line,
+   so the button sits next to the timestamp inside the bubble footer. */
+.pm-foot { display: flex; align-items: center; gap: 2px; align-self: flex-end; margin-top: 2px; }
+.pm-foot .pm-ts { margin-top: 0; }
+body.chat-tr-on .pm-line .chat-tr-btn { display: inline; visibility: hidden; }
+@media (hover: hover) { body.chat-tr-on .pm-line:hover .chat-tr-btn { visibility: visible; } }
+body.chat-tr-on .pm-line.tr-reveal .chat-tr-btn,
+body.chat-tr-always.chat-tr-on .pm-line .chat-tr-btn,
+body.chat-tr-on .pm-line .chat-tr-btn.tr-active,
+body.chat-tr-on .pm-line .chat-tr-btn.tr-busy,
+body.chat-tr-on .pm-line .chat-tr-btn.tr-err,
+body.chat-tr-on .pm-line .chat-tr-btn.tr-same { visibility: visible; }
 /* Abréviations de chat (gg, nh, utg…) : soulignement pointillé discret + bulle
    native au survol (title = sens localisé). Voir modules/chat/abbrev.mjs. */
 .chat-abbr { border-bottom: 1px dotted currentColor; cursor: help; }

@@ -14,6 +14,14 @@ Opened with `v2.1.7-web.0` (2026-08-13), following the upstream **2.1.7**
 release.
 
 ### Added
+- **Translation globe in private messages** (`web.117`) — the 🌐 button that
+  already sits on lobby and game chat lines is now offered on incoming private
+  messages too. `window._chatTranslate` was generalised
+  (`.msg`/`.txt` → `.msg, .pm-line` / `.txt, .pm-text`) instead of duplicated,
+  and the tap-to-reveal binding in `ui/chat.mjs` now covers `#pm-msgs`. The
+  button lives in a new `.pm-foot` row next to the timestamp, and translations
+  are cached per conversation so they survive the panel rebuild that every new
+  message triggers. No new i18n key: `chatTranslateBtn` is reused.
 - **Player profile window** (`web.102`) — pass 2, the UI on top of the relay
   work. Parity with `PokerthPlayerPage.qml`, but as a **generic window**
   (`#pp-modal`: fixed container, `rk-floating` + `_enableFloating` above
