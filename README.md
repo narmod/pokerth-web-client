@@ -431,47 +431,60 @@ Beyond bridging WebSocket frames to the server's raw TCP/TLS stream, `proxy.js` 
 
 ```text
 pokerth-web-client/
-├── proxy.js                 # WS→TCP/TLS proxy + static HTTP server
+├── proxy.js                 # WS→TCP/TLS proxy, static HTTP server & JSON API
+├── install.sh               # Installer / updater / uninstaller (one-liner)
 ├── public/
 │   ├── pokerth-client.html  # HTML shell + inline head scripts
 │   ├── admin.html           # Maintainer console (served at /admin)
-│   ├── privacy.html         # Privacy page (served at /privacy)
 │   ├── studio.html          # Style studio — design tool for decks, tables, themes and seat packs
+│   ├── privacy.html         # Privacy page (served at /privacy)
 │   ├── pokerth.js           # App orchestrator (loaded as an ES module)
 │   ├── pokerth.css          # Styles
+│   ├── chat-emotes.js       # Emote shortcode table (`:fire:` → 🔥) + ASCII emoticons
 │   ├── manifest.json        # PWA manifest
 │   ├── sw.js                # Service Worker (versioned cache)
+│   ├── ChangeLog-web        # Player-facing changelog (About → Changelog tab)
+│   ├── ChangeLog            # Upstream PokerTH changelog, shown next to it
 │   ├── modules/             # ES modules
-│   │   ├── i18n.mjs         #   internationalisation (45 languages)
-│   │   ├── sounds.mjs       #   sound effects
-│   │   ├── theme.mjs        #   theming engine (tables, decks, card backs, seats)
-│   │   ├── music.mjs        #   background-music player
-│   │   ├── net/             #   protocol, session, message handlers
-│   │   ├── game/            #   state, seat rendering, hand flow, showdown
-│   │   ├── ui/              #   action bar, chat, panels, player popups
-│   │   ├── lang/            #   45 language catalogues
-│   │   ├── offline/         #   local game engine + bots (Training mode)
-│   │   └── achievements/    #   training-mode achievements (mode-agnostic)
-│   ├── proto/               # Protobuf bundle & helpers
-│   ├── cards/  table/  themes/  music/   # Deck / felt / theme / music asset packs
-│   └── favicon-*.png        # PWA icons
+│   │   ├── i18n.mjs                 internationalisation (45 languages)
+│   │   ├── theme.mjs                theming engine (tables, decks, card backs, seats)
+│   │   ├── sounds.mjs · music.mjs   sound effects · background-music player
+│   │   ├── handlog.mjs · journal.mjs        hand log · session journal
+│   │   ├── errreport.mjs            client-side error reporting
+│   │   ├── backup-autosave.mjs · pdb-autosave.mjs   settings & hand-database autosave
+│   │   ├── net/             protocol, session, crypto, message handlers, invitations
+│   │   ├── game/            state, seat rendering, hand flow, showdown, statistics
+│   │   ├── ui/              action bar, chat, private messages, lobby, floating panels,
+│   │   │                    player popups, polls, forum news, avatar studio
+│   │   ├── chat/ · pm/      chat abbreviations · private-message store
+│   │   ├── offline/         local game engine + bots (Training mode)
+│   │   ├── achievements/    training-mode achievements (mode-agnostic)
+│   │   ├── help/            in-app help corpus, one file per language
+│   │   └── lang/            45 language catalogues
+│   ├── proto/               # Protobuf bundle, `.proto` source & helpers
+│   ├── vendor/              # Third-party libraries (hand evaluator, QR codes, SQLite/WASM)
+│   ├── cards/ table/ themes/ seats/ pucks/   # Deck / felt / theme / seat / puck asset packs
+│   ├── img/ flags/ fonts/ sounds/ music/     # Official avatars, country flags, webfonts, audio
+│   ├── labs/                # Experiments (Vue island proof-of-concept)
+│   └── icon-*.png · splash/ · favicon-*      # PWA icons & iOS splash screens
 ├── docs/
-│   ├── DIAGNOSTIC.md
-│   ├── PROJECT.md
-│   ├── ROADMAP.md
-│   ├── SECURITY.md
+│   ├── PROJECT.md · ROADMAP.md · SECURITY.md
+│   ├── DIAGNOSTIC.md        # Chat diagnostic commands
+│   ├── INSTALL_POKERTH_NET.md · CASAOS.md    # Deployment guides
+│   ├── DESIGN_TOKENS.md · ESM_PLAN.md        # Design tokens · module-split plan
 │   └── screenshots/         # Screenshots used in this README
 ├── scripts/
 │   ├── build-proto.mjs      # Regenerates the protobuf bundle from .proto
 │   ├── *-manifest.mjs       # Generate deck / table / theme / seat manifests
-│   └── reset-stats.mjs      # Clears the family leaderboard (npm run stats:reset)
-├── install.sh               # Installer / updater / uninstaller (one-liner)
-├── CHANGELOG.md             # Player/operator-facing change summary
+│   ├── reset-stats.mjs      # Clears the family leaderboard (npm run stats:reset)
+│   └── test-*.mjs           # ~85 deterministic test suites (npm run test:*)
+├── .github/                 # Issue & PR templates, Docker and release workflows
+├── CHANGELOG.md             # Developer-facing history (Keep a Changelog)
 ├── CONTRIBUTING.md · CODE_OF_CONDUCT.md
 ├── .env.example             # Environment-variable template
-├── Dockerfile               # Multi-arch image (node:20-alpine base)
-├── docker-compose.yml       # One-shot self-host config
-├── package.json
+├── Dockerfile · docker-entrypoint.sh    # Multi-arch image (node:20-alpine base)
+├── docker-compose*.yml      # Self-host, pokerth.net and self-update configurations
+├── package.json · jsconfig.json
 ├── LICENSE                  # AGPL-3.0-or-later
 └── README.md
 ```
