@@ -1131,7 +1131,7 @@ Please include the `pthDiag()` output, your browser/OS and the displayed build n
 
 - The Protobuf protocol is still handled by a small hand-written encoder/decoder rather than generated classes.
 - The client is split into ES modules (network, protocol, game, UI, offline engine + bots, chat, achievements, i18n, sounds…) with `pokerth.js` as the orchestrator — but that orchestrator is still large, and some modules still talk to it through `window.*` bridges rather than direct imports. Replacing those bridges is ongoing.
-- More automated protocol tests are needed before calling the client production-ready.
+- Around 85 deterministic test suites run before every deploy (engine, bots, message handlers, UI, boot), but protocol coverage is still the thinnest part of that set.
 - Spectator mode works but lacks a few quality-of-life touches (e.g. you cannot see other players' cards at showdown the same way the native client does).
 - **Training-mode bots are a solid practice opponent, not a top pro.** They use Monte-Carlo equity against the real number of opponents, play five distinct archetypes (Rock, TAG, LAG, Calling-station, Maniac), and add position-aware pre-flop play plus multi-street aggression — continuation bets, semi-bluffs, and turn/river barrelling that value-bets, bluffs busted draws and checks medium hands down, tuned by difficulty and archetype — great for learning the flow, practising the interface, or playing offline with no server, but they still won’t read and adapt to you like a strong human.
 - **PWA features (install to home screen, offline Service Worker, background notifications) require a *secure context*** — i.e. HTTPS, or `localhost`. Over plain `http://` on a LAN IP (e.g. `192.168.1.10:8080`) the game plays perfectly, but the browser disables those three features by design. To get them on a LAN, serve the client over HTTPS — e.g. [`mkcert`](https://github.com/FiloSottile/mkcert) for a locally-trusted certificate, a self-signed cert, a real domain with Let's Encrypt, or a tunnel such as Cloudflare Tunnel / Tailscale.
@@ -1142,7 +1142,13 @@ Please include the `pthDiag()` output, your browser/OS and the displayed build n
 <a id="roadmap"></a>
 ## Roadmap / Suggested next steps
 
-Development is tracked in **[`docs/ROADMAP.md`](docs/ROADMAP.md)**, grouped as *Shipped · Now · Next · Later*. The in-game screen **tracks the official QML client continuously** — feature parity was reached early on and the work since has been fidelity tuning against each new upstream build (see [Official client (QML) tracking](#official-client-qml-tracking) above). Current focus: the official deployment at [webclient.pokerth.net](https://webclient.pokerth.net/) and code-health work — adding linting, and moving the remaining hand-written Protobuf paths onto the generated bundle in `public/proto/` (the module split and an automated test suite are done). Further out: local multiplayer over WebRTC, a streamer-friendly read-only embed, and a native review of the machine-assisted translations.
+Development is tracked in **[`docs/ROADMAP.md`](docs/ROADMAP.md)**, grouped as *Shipped · Now · Next · Later*.
+
+**Now** — the client runs on the official infrastructure at [webclient.pokerth.net](https://webclient.pokerth.net/) (see [`docs/INSTALL_POKERTH_NET.md`](docs/INSTALL_POKERTH_NET.md)), and the in-game screen **tracks the official QML client continuously**: each upstream release gets its own fidelity pass (see [Official client (QML) tracking](#official-client-qml-tracking) above).
+
+**Next** — finishing the localisation of the content pages, a native review of the languages with no established poker vocabulary, and code health: linting and formatting, replacing the remaining `window.*` bridges with direct ES imports, and moving the hand-written Protobuf paths onto generated classes.
+
+**Later** — local multiplayer over WebRTC with QR-code signalling, voice chat at the table, alternative table shapes, and tournaments / multi-table play.
 
 ---
 
