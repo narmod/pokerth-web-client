@@ -14,6 +14,8 @@ export const meta = {
 };
 
 export const strings = {
+    // Session stats, behind a button on the player card.
+    piShowStats:'आँकड़े देखें', piHideStats:'आँकड़े छिपाएँ',
     // Player profile window (parity: QML PokerthPlayerPage).
     rankingAvg:'औसत', rankingLast5:'पिछले 5:', rankingRecentGames:'हालिया खेल', rankingSeasons:'सीज़न', rankingLastLogin:'अंतिम लॉगिन', ppOpen:'खिलाड़ी प्रोफ़ाइल', ppTitle:'खिलाड़ी प्रोफ़ाइल',
     // Private messages (parity: QML "Messages prives", 2.1.7+).

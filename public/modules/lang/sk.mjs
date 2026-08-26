@@ -10,6 +10,8 @@ export const meta = {
 };
 
 export const strings = {
+    // Session stats, behind a button on the player card.
+    piShowStats:'Zobraziť štatistiky', piHideStats:'Skryť štatistiky',
     // Player profile window (parity: QML PokerthPlayerPage).
     rankingAvg:'Priem', rankingLast5:'Posledných 5:', rankingRecentGames:'Nedávne hry', rankingSeasons:'Sezóny', rankingLastLogin:'Posledné prihlásenie', ppOpen:'Profil hráča', ppTitle:'Profil hráča',
     // Private messages (parity: QML "Messages prives", 2.1.7+).

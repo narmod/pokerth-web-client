@@ -10,6 +10,8 @@ export const meta = {
 };
 
 export const strings = {
+    // Session stats, behind a button on the player card.
+    piShowStats:'Xem thống kê', piHideStats:'Ẩn thống kê',
     // Player profile window (parity: QML PokerthPlayerPage).
     rankingAvg:'TB', rankingLast5:'5 gần nhất:', rankingRecentGames:'Ván gần đây', rankingSeasons:'Mùa giải', rankingLastLogin:'Đăng nhập lần cuối', ppOpen:'Hồ sơ người chơi', ppTitle:'Hồ sơ người chơi',
     // Private messages (parity: QML "Messages prives", 2.1.7+).

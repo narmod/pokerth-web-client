@@ -11,6 +11,8 @@ export const meta = {
 };
 
 export const strings = {
+    // Session stats, behind a button on the player card.
+    piShowStats:'Seall na staitistigean', piHideStats:'Falaich na staitistigean',
     // Player profile window (parity: QML PokerthPlayerPage).
     rankingAvg:'Cuibh', rankingLast5:'Na 5 mu dheireadh:', rankingRecentGames:'Geamannan o chionn ghoirid', rankingSeasons:'Seusanan', rankingLastLogin:'An clàradh a-steach mu dheireadh', ppOpen:'Pròifil a’ chluicheadair', ppTitle:'Pròifil a’ chluicheadair',
     // Private messages (parity: QML "Messages prives", 2.1.7+).

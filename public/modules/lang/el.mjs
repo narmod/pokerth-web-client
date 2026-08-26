@@ -10,6 +10,8 @@ export const meta = {
 };
 
 export const strings = {
+    // Session stats, behind a button on the player card.
+    piShowStats:'Εμφάνιση στατιστικών', piHideStats:'Απόκρυψη στατιστικών',
     // Player profile window (parity: QML PokerthPlayerPage).
     rankingAvg:'Μ.Ο.', rankingLast5:'Τελευταίες 5:', rankingRecentGames:'Πρόσφατα παιχνίδια', rankingSeasons:'Σεζόν', rankingLastLogin:'Τελευταία σύνδεση', ppOpen:'Προφίλ παίκτη', ppTitle:'Προφίλ παίκτη',
     // Private messages (parity: QML "Messages prives", 2.1.7+).

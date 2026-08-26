@@ -11,6 +11,8 @@ export const meta = {
 };
 
 export const strings = {
+    // Session stats, behind a button on the player card.
+    piShowStats:'查看统计', piHideStats:'隐藏统计',
     // Player profile window (parity: QML PokerthPlayerPage).
     rankingAvg:'均分', rankingLast5:'最近5场：', rankingRecentGames:'最近对局', rankingSeasons:'赛季', rankingLastLogin:'上次登录', ppOpen:'玩家资料', ppTitle:'玩家资料',
     // Private messages (parity: QML "Messages prives", 2.1.7+).

@@ -282,9 +282,16 @@ function openPlayerInfoPopup(pid, autoStats) {
     // Mon profil : stats de session locales, PUIS mes coupes pokerth.net —
     // #pim-info est placé après #pim-stats dans le DOM, l'ordre est donc
     // « ma partie en cours » avant « ma saison ». Vide hors réseau / invité.
-    if (statsEl)   statsEl.style.display = '';
-    S._pimTab = 'session';
-    _renderProfileStats();
+    // Stats de session A LA DEMANDE, comme les coupes (demande narmod 26/08) :
+    // la carte s'ouvrait avec les onglets Session / A vie / Tableau deployes,
+    // ce qui la rallongeait alors que l'on vient souvent y chercher autre
+    // chose. Le bouton reste en place et remplace son libelle une fois ouvert.
+    if (statsEl) {
+      statsEl.style.display = '';
+      S._pimTab = 'session';
+      if (S._pimStatsShown) _renderProfileStats();
+      else statsEl.innerHTML = _statsToggleBtnHtml(false);
+    }
     if (infoEl) {
       // Mêmes infos en jeu + stats de comportement que pour un adversaire,
       // PUIS les coupes (demande narmod 26/07 : parité self/adversaires).
@@ -502,6 +509,22 @@ function _otherPlayerInfoHtml(pid) {
 // strictement identique au jeu (y compris le reset).
 function _pimSetTab(tab) { S._pimTab = tab; _renderProfileStats(); }
 
+// Bouton d'ouverture/fermeture des stats de session. Meme allure que le
+// bouton des coupes, pour que les deux blocs repliables se ressemblent.
+function _statsToggleBtnHtml(shown) {
+  function tt(k, fb) { var v = (typeof t === 'function') ? t(k) : null; return (v && v !== k) ? v : fb; }
+  return '<button type="button" class="pim-cups-btn" onclick="window._pimToggleStats()">\uD83D\uDCCA '
+       + esc(shown ? tt('piHideStats', 'Hide session stats') : tt('piShowStats', 'Show session stats'))
+       + '</button>';
+}
+window._pimToggleStats = function () {
+  S._pimStatsShown = !S._pimStatsShown;
+  var box = document.getElementById('pim-stats');
+  if (!box) return;
+  if (S._pimStatsShown) _renderProfileStats();
+  else box.innerHTML = _statsToggleBtnHtml(false);
+};
+
 function _renderProfileStats() {
   var box = document.getElementById('pim-stats');
   if (!box) return;
@@ -520,7 +543,8 @@ function _renderProfileStats() {
   if (S._pimTab === 'life')       body = window._statsBodyLife();
   else if (S._pimTab === 'board') body = '<div id="pim-board-body" class="stats-body"><div class="stat-empty">…</div></div>';
   else                          body = window._statsBodySession();
-  box.innerHTML = tabs + body;
+  // Le bouton reste EN TETE du bloc : il sert aussi a replier.
+  box.innerHTML = _statsToggleBtnHtml(true) + tabs + body;
   if (S._pimTab === 'board') window.renderBoard('pim-board-body');
   if (window._offlineMode && typeof window._achMountBadge === 'function') { try { window._achMountBadge(box, 'profile'); } catch (e) {} }
 }

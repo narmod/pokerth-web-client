@@ -16,6 +16,8 @@ export const meta = {
 };
 
 export const strings = {
+    // Session stats, behind a button on the player card.
+    piShowStats:'ดูสถิติ', piHideStats:'ซ่อนสถิติ',
     // Player profile window (parity: QML PokerthPlayerPage).
     rankingAvg:'เฉลี่ย', rankingLast5:'5 ล่าสุด:', rankingRecentGames:'เกมล่าสุด', rankingSeasons:'ฤดูกาล', rankingLastLogin:'เข้าสู่ระบบล่าสุด', ppOpen:'โปรไฟล์ผู้เล่น', ppTitle:'โปรไฟล์ผู้เล่น',
     // Private messages (parity: QML "Messages prives", 2.1.7+).

@@ -9,6 +9,8 @@ export const meta = {
 };
 
 export const strings = {
+    // Session stats, behind a button on the player card.
+    piShowStats:'統計を表示', piHideStats:'統計を隠す',
     // Player profile window (parity: QML PokerthPlayerPage).
     rankingAvg:'平均', rankingLast5:'直近5試合:', rankingRecentGames:'最近のゲーム', rankingSeasons:'シーズン', rankingLastLogin:'最終ログイン', ppOpen:'プレイヤープロフィール', ppTitle:'プレイヤープロフィール',
     // Private messages (parity: QML "Messages prives", 2.1.7+).

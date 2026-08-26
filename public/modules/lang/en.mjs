@@ -16,6 +16,8 @@ export const meta = {
 };
 
 export const strings = {
+    // Session stats, behind a button on the player card.
+    piShowStats:'Show session stats', piHideStats:'Hide session stats',
     // Player profile window (parity: QML PokerthPlayerPage).
     rankingAvg:'Avg', rankingLast5:'Last 5:', rankingRecentGames:'Recent games', rankingSeasons:'Seasons', rankingLastLogin:'Last login', ppOpen:'Player profile', ppTitle:'Player profile',
     // Private messages (parity: QML "Messages prives", 2.1.7+).

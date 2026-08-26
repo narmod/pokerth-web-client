@@ -61,6 +61,34 @@ S._playerRights[1] = 1;
 w.openPlayerInfoPopup();
 ok(roleOf() === 'Guest', 'MA fiche : invite reconnu');
 
+// ── Stats de session derriere un bouton ──
+S._pimStatsShown = false;
+w.openPlayerInfoPopup();
+const statsBox = w.document.getElementById('pim-stats');
+ok(/piShowStats|Show session stats|Voir mes statistiques/.test(statsBox.innerHTML)
+   || statsBox.querySelector('.pim-cups-btn') !== null,
+   'MA fiche : les stats sont repliees derriere un bouton');
+// Assertion robuste : les onglets sont absents quand le compte n'est pas
+// eligible, le corps des stats non — c'est donc lui qu'il faut regarder.
+const statsShown = () => statsBox.querySelector('.stats-body, .stats-tabs') !== null;
+ok(!statsShown(), 'MA fiche : le corps des stats n est pas rendu d office');
+if (typeof w._pimToggleStats !== 'function') {
+  ok(false, 'bascule des stats disponible (window._pimToggleStats)');
+} else {
+  w._pimToggleStats();
+  ok(statsShown(), 'apres ouverture : les stats apparaissent');
+  ok(statsBox.querySelector('.pim-cups-btn') !== null,
+     'apres ouverture : le bouton reste (il sert a replier)');
+  w._pimToggleStats();
+  ok(!statsShown(), 'repli : les stats disparaissent');
+}
+
+// ── Le bouton « Profil du joueur » doit passer DEVANT la carte ──
+const ppSrc = readFileSync('public/pokerth-client.html', 'utf8');
+const openFn = (ppSrc.match(/window\.openPlayerProfile = function[\s\S]*?\n  \};/) || [''])[0];
+ok(/zRaise/.test(openFn),
+   'profil : la fenetre est remontee devant (sinon masquee par la carte joueur)');
+
 // Une seule source pour les deux branches.
 const src = readFileSync('public/modules/ui/player-popup.mjs', 'utf8');
 ok((src.match(/piRoleAdmin/g) || []).length === 1,

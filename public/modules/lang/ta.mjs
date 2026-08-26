@@ -11,6 +11,8 @@ export const meta = {
 };
 
 export const strings = {
+    // Session stats, behind a button on the player card.
+    piShowStats:'புள்ளிவிவரங்களைக் காட்டு', piHideStats:'புள்ளிவிவரங்களை மறை',
     // Player profile window (parity: QML PokerthPlayerPage).
     rankingAvg:'சராசரி', rankingLast5:'கடைசி 5:', rankingRecentGames:'சமீபத்திய ஆட்டங்கள்', rankingSeasons:'பருவங்கள்', rankingLastLogin:'கடைசி உள்நுழைவு', ppOpen:'விளையாடுநர் சுயவிவரம்', ppTitle:'விளையாடுநர் சுயவிவரம்',
     // Private messages (parity: QML "Messages prives", 2.1.7+).

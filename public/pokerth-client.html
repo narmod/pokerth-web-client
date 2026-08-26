@@ -3795,6 +3795,12 @@ if ('serviceWorker' in navigator) {
         });
       } catch (e) {}
     }
+    // Passer DEVANT. Depuis que la carte joueur est elle aussi une fenetre
+    // geree (2.1.7-web.104), z-order la remonte des qu'on la touche : le
+    // bouton « Profil du joueur » ouvrait donc cette fenetre-ci DERRIERE
+    // elle, ou elle etait entierement masquee — d'ou l'impression que le
+    // bouton ne faisait rien.
+    try { if (window.zRaise) window.zRaise(m); } catch (e) {}
     body.innerHTML = '<div class="rk-msg">' + rkEsc(rkT('rankingLoading', 'Loading\u2026')) + '</div>';
     var ck = 'pth|' + nick.toLowerCase();
     var c = RK_PROF_CACHE[ck];

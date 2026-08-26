@@ -140,6 +140,18 @@ release.
   `SEO_RULES_I18N` rather than introducing a second script for one page.
 
 ### Fixed
+- **"Player profile" button appeared inert** (`web.111`) — it worked, but since
+  `web.104` made the player card a managed window, `z-order` raises that card on
+  pointerdown; the profile window then opened *underneath* it and was completely
+  hidden. `openPlayerProfile` now calls `window.zRaise` on its container. A
+  regression caused by an earlier change in this same series, not by the button.
+- **Session stats unfolded on every open** (`web.111`) — the Session / Lifetime /
+  Board tabs rendered immediately on one's own card, lengthening it even when
+  opened for something else. Now behind a `📊 Show session stats` button, matching
+  the cups block; the button stays in place and folds them back. State kept in
+  `S._pimStatsShown`. New keys `piShowStats` / `piHideStats` across all 45
+  catalogues.
+  `test-pim-parity` covers both; four assertions fail on `web.110`.
 - **Own player card missing the role line** (`web.110`) — the Bot / Admin /
   Registered / Guest badge was emitted only by `_otherPlayerInfoHtml`; the self
   branch built its block from `_inGameInfoHtml + _cupsBlockHtml` alone, so one

@@ -1,4 +1,6 @@
 2026-08-13 version 2.1.7-web (current series):
+- bugfix: the "Player profile" button appeared to do nothing - the window did open, but behind the player card, which hid it completely
+- improvement: your session statistics are now behind a button on your own card, like the cups, instead of being unfolded every time you open it
 - bugfix: your own player card did not show your status - guest, registered or admin - while everyone else's card did. It is now shown on both, so you can check what the server actually recognised you as
 - bugfix: on a wide player card, the buttons stretched across the whole window. They now keep a sensible width and stay centred - only the tables and charts use the full width
 - bugfix: the player card reopened against the left edge once it had been moved or resized. It now opens in the middle every time, while keeping the size you chose

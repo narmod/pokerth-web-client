@@ -10,6 +10,8 @@ export const meta = {
 };
 
 export const strings = {
+    // Session stats, behind a button on the player card.
+    piShowStats:'Statisztikák mutatása', piHideStats:'Statisztikák elrejtése',
     // Player profile window (parity: QML PokerthPlayerPage).
     rankingAvg:'Átl', rankingLast5:'Utolsó 5:', rankingRecentGames:'Legutóbbi játékok', rankingSeasons:'Szezonok', rankingLastLogin:'Utolsó belépés', ppOpen:'Játékos profil', ppTitle:'Játékos profil',
     // Private messages (parity: QML "Messages prives", 2.1.7+).

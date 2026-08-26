@@ -13,6 +13,8 @@ export const meta = {
 };
 
 export const strings = {
+    // Session stats, behind a button on the player card.
+    piShowStats:'통계 보기', piHideStats:'통계 숨기기',
     // Player profile window (parity: QML PokerthPlayerPage).
     rankingAvg:'평균', rankingLast5:'최근 5:', rankingRecentGames:'최근 게임', rankingSeasons:'시즌', rankingLastLogin:'마지막 로그인', ppOpen:'플레이어 프로필', ppTitle:'플레이어 프로필',
     // Private messages (parity: QML "Messages prives", 2.1.7+).
