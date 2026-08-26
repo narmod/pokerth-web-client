@@ -6580,6 +6580,8 @@ const App = (() => {
         var _pmErr = (typeof window._pmSendTo === 'function') ? window._pmSendTo(_pmTo, _pmBody) : 'offline';
         if (_pmErr === 'notFound')
           addChat(null, t('pmNotFound'), 'sys', { force: true, key: 'pmNotFound' });
+        else if (_pmErr === 'atTable')
+          addChat(null, t('pmAtTable'), 'sys', { force: true, key: 'pmAtTable' });
         else if (_pmErr === 'self')
           addChat(null, t('pmSelf'), 'sys', { force: true, key: 'pmSelf' });
         else if (_pmErr === 'offline')
@@ -10667,7 +10669,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.7-web.92'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.7-web.93'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

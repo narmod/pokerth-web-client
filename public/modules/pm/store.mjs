@@ -169,6 +169,39 @@ function append(name, text, mine) {
   });
 }
 
+// Undo the last outgoing line of a conversation. The sent line is written
+// optimistically (the server never echoes it back), so a message the server
+// then refuses would otherwise sit in the history for ever as if it had been
+// delivered. Only removes an outgoing message whose text matches, so a
+// crossing incoming message can never be dropped by mistake.
+function dropLast(name, text) {
+  const a = _mem.msg[name];
+  if (!a || !a.length) return Promise.resolve(false);
+  let i = -1;
+  for (let k = a.length - 1; k >= 0; k--) {
+    if (a[k].mine && a[k].text === text) { i = k; break; }
+  }
+  if (i < 0) return Promise.resolve(false);
+  const ts = a[i].ts;
+  a.splice(i, 1);
+  const c = _mem.conv[name];
+  if (c) c.last = a.length ? a[a.length - 1].ts : c.last;
+  return ready().then(function () {
+    return _tx('readwrite', [ST_CONV, ST_MSG], function (tx) {
+      const idx = tx.objectStore(ST_MSG).index('name');
+      const req = idx.openCursor(IDBKeyRange.only(name));
+      req.onsuccess = function () {
+        const cur = req.result;
+        if (!cur) return;
+        const v = cur.value;
+        if (v.mine && v.text === text && v.ts === ts) { cur.delete(); return; }
+        cur.continue();
+      };
+      if (c) tx.objectStore(ST_CONV).put(c);
+    });
+  });
+}
+
 function markRead(name) {
   const c = _mem.conv[name];
   if (!c || !c.unread) return Promise.resolve(false);
@@ -216,5 +249,5 @@ function unreadFor(name) {
 // than silently losing history at the next reload.
 function isEphemeral() { return _broken || !_db; }
 
-export { ready, partners, conversation, ensure, append, markRead, remove,
-         unreadCount, unreadFor, isEphemeral };
+export { ready, partners, conversation, ensure, append, dropLast, markRead,
+         remove, unreadCount, unreadFor, isEphemeral };

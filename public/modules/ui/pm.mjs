@@ -201,6 +201,56 @@ function playerIdByName(name) {
   return 0;
 }
 
+// Is that player sitting at a RUNNING table? The server refuses a private
+// message in exactly that case (ServerLobbyThread::HandleNetPacketChatRequest
+// checks `tmpGame->IsRunning()`), and its refusal carries no reason -- a bare
+// ChatRejectMessage looks the same whether the target is playing, gone, or we
+// are a guest. We know the game modes locally (netGameStarted = 2), so the
+// check is done here: the player gets the precise wording the desktop client
+// shows instead of a guess, and no message is written to the history that was
+// never going to arrive.
+function _atRunningTable(pid) {
+  try {
+    const games = S.games || {};
+    for (const id in games) {
+      const g = games[id];
+      if (g && g.mode === 2 && g.seats && g.seats.indexOf(pid) !== -1) return true;
+    }
+  } catch (e) {}
+  return false;
+}
+
+// Messages sent but not yet known to have been accepted. The server stays
+// silent on success and answers ChatRejectMessage on failure, so an entry
+// that is never matched simply expires.
+const _pending = [];
+
+function _pendAdd(name, text) {
+  _pending.push({ name: name, text: text, at: Date.now() });
+  // Anything older than 30 s was accepted (or the connection is long gone).
+  const cut = Date.now() - 30000;
+  while (_pending.length && _pending[0].at < cut) _pending.shift();
+}
+
+// Called from onChatReject. Returns true when the rejected text was one of
+// our private messages, so the caller can skip the generic chat warning.
+function onReject(text) {
+  for (let i = _pending.length - 1; i >= 0; i--) {
+    if (_pending[i].text !== text) continue;
+    const name = _pending[i].name;
+    _pending.splice(i, 1);
+    store.dropLast(name, text).then(function () {
+      if (_current === name) _renderConversation();
+      _renderPartners();
+    });
+    try {
+      if (window.showToast) window.showToast(_tt('pmRejected', 'The private message could not be delivered.'), { tone: 'error', icon: '\u26a0', duration: 5000 });
+    } catch (e) {}
+    return true;
+  }
+  return false;
+}
+
 // Send to a nickname. Returns an error key when it could not be sent, so
 // both the modal and the /msg command report the same wording.
 function sendTo(name, text) {
@@ -213,9 +263,11 @@ function sendTo(name, text) {
     // with oneself is not something the desktop client can produce.
     return 'self';
   }
+  if (_atRunningTable(pid)) return 'atTable';
   let ok = false;
   try { ok = send(MSG.buildPrivateChat(pid, msg)); } catch (e) { ok = false; }
   if (!ok) return 'offline';
+  _pendAdd(name, msg);
   // The server does not echo our own private messages back, so the sent
   // line exists only because we persist it here (parity:
   // pushPrivateMessageSentLine).
@@ -228,6 +280,7 @@ function sendTo(name, text) {
 
 function _errText(code, name) {
   if (code === 'notFound') return _tt('pmNotFound', 'Player not found');
+  if (code === 'atTable')  return _tt('pmAtTable', 'Private messages are not available at the table.');
   if (code === 'offline')  return _tt('pmOffline', 'Not connected to server');
   if (code === 'self')     return _tt('pmSelf', 'You cannot send a private message to yourself.');
   return '';
@@ -323,9 +376,10 @@ if (typeof window !== 'undefined') {
   window.togglePmModal = toggle;
   window._pmOnIncoming = onIncoming;
   window._pmSendTo     = sendTo;
+  window._pmOnReject   = onReject;
   window._pmBadge      = refreshBadge;
   window._pmPlayerId   = playerIdByName;
 }
 
-export { open, close, toggle, select, sendTo, onIncoming, refreshBadge,
-         playerIdByName, deleteCurrent };
+export { open, close, toggle, select, sendTo, onIncoming, onReject,
+         refreshBadge, playerIdByName, deleteCurrent };

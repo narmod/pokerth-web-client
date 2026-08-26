@@ -41,7 +41,15 @@ release.
     players list is omitted on one's own row.
   - The server never echoes our own private messages back, so the sent line exists
     only because it is persisted locally (parity: `pushPrivateMessageSentLine`).
-  - 16 new i18n keys across all 45 catalogues.
+  - Refusals (`web.93`): the server answers a bare `ChatRejectMessage` with no
+    reason, indistinguishable from a refused lobby line, so the "target is at a
+    running table" case is detected client-side instead — game modes are known
+    locally (`netGameStarted = 2`), so the player gets the desktop client's exact
+    wording before the message is sent rather than a guess afterwards. Any other
+    refusal is matched against the pending-send list and the optimistic line is
+    pulled back out of the history (`store.dropLast`), which otherwise would have
+    shown an undelivered message as sent for ever.
+  - 17 new i18n keys across all 45 catalogues.
 
 - **FAQ translations complete: all 44 languages** (`web.89`) — the last batch
   brings Croatian, Serbian, Lithuanian, Catalan, Galician, Afrikaans, Swahili,

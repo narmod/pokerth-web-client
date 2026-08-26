@@ -197,6 +197,18 @@ window._timeoutWarnClose = _towClose;
 
 function onChatReject(sub) {
   const rejText = Proto.str(sub, 1);
+  // Message privé refusé : le serveur renvoie un ChatReject NU (aucun motif),
+  // identique à celui d'un chat lobby refusé. Le module PM sait s'il attendait
+  // une réponse pour ce texte exact ; si oui il retire la ligne écrite en
+  // optimiste (le serveur n'accuse jamais réception d'un PM accepté, la ligne
+  // ne peut donc pas rester dans l'historique comme si elle était partie) et
+  // prévient lui-même. Rien à ajouter dans le chat dans ce cas.
+  try {
+    if (typeof window._pmOnReject === 'function' && window._pmOnReject(rejText)) {
+      S._lastMsgWasReaction = false;
+      return;
+    }
+  } catch (_e) {}
   if (S._lastMsgWasReaction) {
     // Réaction rejetée (mode LAN/invité) — afficher badge local uniquement
     S._lastMsgWasReaction = false;
