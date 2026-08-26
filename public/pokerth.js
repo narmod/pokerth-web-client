@@ -9226,6 +9226,7 @@ var _WIN_BTN = [
   { win: 'ranking-modal',         mode: 'display', btns: ['ranking-btn-connect', 'ranking-btn-lobby', 'ranking-btn-create', 'ranking-btn-game'] },
   { win: 'tableranking-modal',    mode: 'display', btns: ['tableranking-btn-game'] },
   { win: 'forum-modal',           mode: 'display', btns: ['forum-btn-connect', 'forum-btn-lobby', 'forum-btn-create', 'forum-btn-game'] },
+  { win: 'pm-modal',              mode: 'display', btns: ['pm-btn-lobby'] },
   { win: 'adv-modal',             mode: 'display', btns: ['adv-opts-connect-mob', 'adv-opts-lobby-mob', 'adv-opts-create-mob', 'adv-opts-mob'] },
   { win: 'music-panel',           mode: 'display', btns: ['music-toggle-connect-mob', 'music-toggle-lobby-mob', 'music-toggle-create-mob', 'music-toggle-game-mob'] },
   { win: 'g-chat-panel',          mode: 'display', btns: ['chat-toggle-btn', 'gchat-fab'] },
@@ -10131,7 +10132,11 @@ window._plToggleIgnore = function(pid){
 // activables/désactivables depuis l'en-tête (#pl-colhead). Choix persisté
 // dans localStorage 'pth_pl_cols' = liste des colonnes MASQUÉES (une
 // nouvelle colonne future est donc visible par défaut).
-var _PL_TRACK = { av:'22px', name:'minmax(0,1fr)', status:'22px', flag:'48px', star:'16px', inv:'26px', acts:'48px' };
+// acts : 48px suffisaient pour deux pastilles (message prive + ignorer +
+// stats en fait trois depuis 2.1.7-web.92). La piste doit suivre, sinon
+// l'en-tete -- qui utilise le gabarit COMPLET -- ne s'aligne plus sur la
+// colonne des lignes. 3 x 20px (icone 14 + padding 3) + 2 gouttieres.
+var _PL_TRACK = { av:'22px', name:'minmax(0,1fr)', status:'22px', flag:'48px', star:'16px', inv:'26px', acts:'70px' };
 var _PL_COL_ORDER   = ['av','name','star','status','flag','inv','acts'];
 var _PL_TOGGLE_COLS = ['av','status','flag','star','acts']; // 'name' et 'inv' exclus
 // Colonne « Inviter à la partie » (parité PlayerListItem QML) : présente
@@ -10669,7 +10674,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.7-web.93'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.7-web.94'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

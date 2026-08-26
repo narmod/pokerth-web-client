@@ -8460,7 +8460,25 @@ body.adv-no-forumnews [id^="forum-btn-"], body.adv-no-forumnews #forum-modal { d
    le pied de saisie avec son compteur d'octets. */
 #pm-btn-lobby { position: relative; }
 .pm-unread { position: absolute; top: -5px; right: -5px; min-width: 16px; height: 16px; padding: 0 4px; border-radius: 8px; background: var(--red); color: #fff; border: 1.5px solid var(--panel); font-family: var(--ff-mono); font-size: var(--fs-2xs); font-weight: 700; line-height: 13px; text-align: center; box-shadow: 0 1px 4px rgba(0,0,0,0.5); pointer-events: none; z-index: 6; }
+/* Meme carcasse de fenetre que le classement et le forum : conteneur fixe
+   plein ecran qui centre la carte, et mode fenetre flottante (deplacable,
+   redimensionnable) au-dessus du seuil _winGate. Sans la regle de conteneur
+   la carte retombait dans le flux du document -- posee en bas a gauche, et
+   la hauteur ajoutee au body faisait apparaitre une barre de defilement qui
+   revelait #gchat-fab, un bouton sans regle CSS vivant sous la ligne de
+   flottaison. */
+#pm-modal { position: fixed; inset: 0; z-index: 1200; align-items: center; justify-content: center; pointer-events: none; }
 #pm-modal .rk-card { pointer-events: auto; height: min(80vh, 620px); }
+#pm-modal.rk-floating { pointer-events: none; }
+#pm-modal.rk-floating .rk-backdrop { display: none; }
+#pm-modal.rk-floating .rk-card { pointer-events: auto; }
+#pm-modal .rk-card.floating-win {
+  position: fixed; margin: 0; max-height: none;
+  border: 1px solid var(--gold-dim); border-radius: var(--r-bar);
+  box-shadow: 0 14px 36px rgba(0,0,0,0.62); overflow: hidden;
+}
+#pm-modal .rk-card.floating-win .rk-title { cursor: move; touch-action: none; -webkit-user-select: none; user-select: none; }
+#pm-modal .rk-card.floating-win .rk-title.win-dragging { cursor: grabbing; }
 /* Corbeille : a gauche de la croix, rouge (parite QML). */
 .pm-del { position: absolute; top: 8px; right: 36px; background: none; border: none; color: var(--red); cursor: pointer; padding: 2px; line-height: 0; transition: opacity 0.15s; }
 .pm-del:hover { opacity: 0.75; }

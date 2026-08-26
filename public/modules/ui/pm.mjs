@@ -152,6 +152,14 @@ function select(name) {
   if (inp) { try { inp.focus(); } catch (e) {} }
 }
 
+// Above the _winGate threshold the dialogue becomes a real window --
+// draggable by its title, resizable, position remembered -- exactly like
+// the ranking and forum windows. Below it, it stays a centred modal.
+function _winGateOk() {
+  try { return !!(window._winGate && window._winGate() && typeof window._enableFloating === 'function'); }
+  catch (e) { return false; }
+}
+
 // Open on a given partner, creating the conversation if it does not exist
 // yet (parity: ensurePrivateConversation when the dialogue is opened from
 // the player list).
@@ -167,15 +175,37 @@ function open(name) {
       const list = store.partners();
       select(list.length ? list[0].name : '');
     }
+    // 'flex' rather than '' : the container centres its card with flexbox,
+    // and an empty string would fall back to the element default (block),
+    // which drops the card into the document flow.
     // z-order.mjs watches #pm-modal and brings it to the front on its own
     // when it becomes visible; nothing to raise by hand here.
-    modal.style.display = '';
+    modal.style.display = 'flex';
+    const card = modal.querySelector('.rk-card');
+    if (card && _winGateOk()) {
+      modal.classList.add('rk-floating');
+      try {
+        window._enableFloating(card, {
+          handle: $('pm-title'), resizable: true,
+          maxW: Math.min(680, Math.round(window.innerWidth * 0.92)),
+          maxH: Math.min(680, Math.round(window.innerHeight * 0.90)),
+          zoom: true, key: 'pth-pm-win', defW: 420, defH: 520,
+          minW: 300, minH: 300, defLeft: 110, defTop: 110
+        });
+      } catch (e) {}
+    }
   });
 }
 
 function close() {
   const modal = $('pm-modal');
-  if (modal) modal.style.display = 'none';
+  if (!modal) return;
+  const card = modal.querySelector('.rk-card');
+  if (card && card.classList.contains('floating-win') && typeof window._disableFloating === 'function') {
+    try { window._disableFloating(card); } catch (e) {}
+  }
+  modal.classList.remove('rk-floating');
+  modal.style.display = 'none';
 }
 
 function toggle() {

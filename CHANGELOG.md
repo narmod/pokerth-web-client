@@ -59,6 +59,24 @@ release.
   `SEO_RULES_I18N` rather than introducing a second script for one page.
 
 ### Fixed
+- **Private message window behaved unlike every other window** (`web.94`) — no
+  container rule had been written for `#pm-modal`, so `display: ''` fell back to
+  the element default (`block`) instead of the `flex` the other modals get from
+  `position: fixed; inset: 0`. The card landed in the document flow at the bottom
+  left, never centred, and never entered floating-window mode. It now mirrors
+  `#forum-modal` exactly: fixed full-screen container, `rk-floating` above the
+  `_winGate` threshold with `_enableFloating` (drag by title, resizable, position
+  remembered under `pth-pm-win`), and `_disableFloating` on close. Registered in
+  `_WIN_BTN` so the header button reflects the open state.
+  - Side effect that made it visible: the in-flow card gave the body scrollable
+    height, which exposed `#gchat-fab` — a body-level button with no CSS rule at
+    all, living below the fold and normally never reachable. Fixing the container
+    puts it back out of sight; the orphan button itself is left untouched.
+- **Players list column header no longer aligned** (`web.94`) — the `acts` grid
+  track was pinned at `48px`, sized for two chips; the envelope added in `web.92`
+  made three. The header uses the *full* template by design, so the mismatch
+  showed up as a drift between the header chips and the buttons below. Track
+  widened to `70px` (3 × 20px + gutters).
 - **The announced build id fell back to 2.1.6 after the 2.1.7 release**
   (`web.91`) — both `proto/index.mjs` and `net/messages.mjs` derive the upstream
   triple from `BUILD_VERSION` at runtime, but their hard-coded fallbacks (used
