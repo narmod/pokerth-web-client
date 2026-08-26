@@ -140,6 +140,20 @@ release.
   `SEO_RULES_I18N` rather than introducing a second script for one page.
 
 ### Fixed
+- **Player card opened shorter than its contents** (`web.115`) — window mode was
+  entered at the *top* of `openPlayerInfoPopup`, before the card was filled, so
+  the height came from a fixed fraction of the viewport and never matched the
+  content; the lower buttons were cut off and the window had to be resized by
+  hand on every open. Moved to the end (`_pimEnterWindowMode`), after the content
+  and `display: flex`, where the height is measured from `scrollHeight` — released
+  to `auto` first — and clamped to `_pimGeom().maxH`. Beyond that the card scrolls
+  as before.
+  `test-pim-drag` now asserts the ordering *and* the behaviour: it feeds a 520 px
+  and a 1400 px content height and checks the window follows, then caps. The
+  expected ceiling is derived from `_pimGeom` itself rather than copied — the
+  copy in the test had silently gone stale at `web.107` and produced a false
+  failure here. Six assertions fail on `web.114`, where the height is a constant
+  630 px regardless of content.
 - **"Player profile" button genuinely inert** (`web.113`) — the real cause,
   present since `web.102`: `JSON.stringify(nm)` was interpolated into an
   `onclick="…"` attribute, so its double quotes **closed the attribute**. The

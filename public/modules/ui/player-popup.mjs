@@ -167,44 +167,6 @@ function _pimGeom() {
 function openPlayerInfoPopup(pid, autoStats) {
   var modal = document.getElementById('player-info-modal');
   if (!modal) return;
-  var _card = modal.querySelector('.pim-card');
-  if (_card && _winGateOk()) {
-    try {
-      window._enableFloating(_card, {
-        // Poignee : le bandeau du haut, pas le nom du joueur -- celui-ci est
-        // une ligne centree au milieu de la carte, impossible a deviner.
-        handle: document.getElementById('pim-grip'), resizable: true,
-        // La carte porte desormais le bloc coupes complet (tableau de dix
-        // colonnes, camembert, histogramme) : 560 px de plafond etaient trop
-        // etroits pour l'agrandir utilement.
-        maxW: _pimGeom().maxW,
-        maxH: _pimGeom().maxH,
-        // Cle CHANGEE (…-win2) : les versions 104/105 ont pu memoriser une
-        // geometrie etroite, coincee en haut a gauche, que _restoreWin
-        // reappliquait a chaque ouverture en ignorant defW/defLeft. Repartir
-        // d'une cle neuve est le seul moyen de rendre la nouvelle taille
-        // d'ouverture effective sans effacer les reglages des autres fenetres.
-        zoom: true, key: 'pth-pim-win2',
-        defW: _pimGeom().w, defH: _pimGeom().h,
-        minW: 260, minH: 260,
-        // Centree a l'ouverture (demande narmod) plutot qu'ancree en haut a
-        // gauche.
-        defLeft: _pimGeom().left, defTop: _pimGeom().top
-      });
-      // Recentrage a CHAQUE ouverture. _enableFloating ne pose defLeft/defTop
-      // que la premiere fois : ensuite _restoreWin rejoue la derniere position,
-      // si bien qu'une fenetre deplacee ou elargie une fois rouvrait
-      // indefiniment collee au bord gauche. On garde la TAILLE memorisee et on
-      // recalcule seulement la position, apres coup pour mesurer la carte
-      // telle qu'elle est reellement.
-      if (typeof window._placeWin === 'function') {
-        var _w = _card.offsetWidth || _pimGeom().w;
-        var _h = _card.offsetHeight || _pimGeom().h;
-        window._placeWin(_card, Math.round((window.innerWidth - _w) / 2),
-                                Math.round((window.innerHeight - _h) / 2));
-      }
-    } catch (e) {}
-  }
   // pid omis (ou === moi) → MON profil (comportement historique : stats +
   // changer d'avatar). Sinon → profil en LECTURE d'un adversaire.
   var targetPid = (pid == null) ? S.myId : pid;
@@ -312,6 +274,47 @@ function openPlayerInfoPopup(pid, autoStats) {
     try { _pimLoadCups(targetPid); } catch (e) {}
   }
   modal.style.display = 'flex';
+  // Mode fenetre EN DERNIER : tant que la carte est vide, sa hauteur ne veut
+  // rien dire. En l'activant avant le remplissage (ce que faisait 2.1.7-web.104
+  // a 114) la fenetre s'ouvrait plus courte que son contenu et il fallait la
+  // redimensionner a la main a chaque fois.
+  _pimEnterWindowMode();
+}
+
+// Passe la carte en fenetre et l'ajuste a SON CONTENU.
+function _pimEnterWindowMode() {
+  var modal = document.getElementById('player-info-modal');
+  var card = modal && modal.querySelector('.pim-card');
+  if (!card || !_winGateOk()) return;
+  var g = _pimGeom();
+  try {
+    window._enableFloating(card, {
+      handle: document.getElementById('pim-grip'), resizable: true,
+      maxW: g.maxW, maxH: g.maxH,
+      zoom: true, key: 'pth-pim-win2',
+      defW: g.w, defH: g.h, minW: 260, minH: 260,
+      defLeft: g.left, defTop: g.top
+    });
+  } catch (e) { return; }
+  // Hauteur ajustee au contenu. La carte a overflow-y:auto, donc scrollHeight
+  // porte la totalite du contenu meme quand la fenetre est plus courte : on
+  // relache la hauteur, on mesure, puis on borne. Au-dela du plafond la carte
+  // defile, comme avant.
+  try {
+    var prev = card.style.height;
+    card.style.height = 'auto';
+    var need = card.scrollHeight;
+    card.style.height = (need > 0 ? Math.max(260, Math.min(g.maxH, need + 2)) : parseFloat(prev) || g.h) + 'px';
+  } catch (e) {}
+  // Recentrage a chaque ouverture : _restoreWin rejoue la derniere position et
+  // ignore defLeft, si bien qu'une carte deplacee une fois y restait collee.
+  if (typeof window._placeWin === 'function') {
+    try {
+      var w = card.offsetWidth || g.w, h = card.offsetHeight || g.h;
+      window._placeWin(card, Math.round((window.innerWidth - w) / 2),
+                             Math.round((window.innerHeight - h) / 2));
+    } catch (e) {}
+  }
 }
 // Bouton 📊 de la liste : ouvre le popup et charge directement les stats de
 // saison. Sans pid -> mon profil. La liste passe '' pour moi (_ppArg dans

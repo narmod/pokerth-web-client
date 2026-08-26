@@ -98,6 +98,46 @@ const mw = (src.match(/maxW = Math\.min\((\d+)/) || [])[1];
 ok(Number(mw) >= 1200, 'plafond d agrandissement large (' + mw + 'px)');
 ok(geom.w >= Math.round(1600 * 0.55), 'ouverture assez large (' + geom.w + 'px sur 1600)');
 
+// ── Hauteur ajustee au CONTENU ──
+// Le mode fenetre doit etre active APRES le remplissage de la carte : active
+// avant, la hauteur est calculee sur une carte vide et la fenetre s'ouvre trop
+// courte (2.1.7-web.104 a 114), obligeant a la redimensionner a chaque fois.
+const srcPim2 = readFileSync('public/modules/ui/player-popup.mjs', 'utf8');
+const openBody = (srcPim2.match(/function openPlayerInfoPopup\([\s\S]*?\n\}/) || [''])[0];
+const iFloat = openBody.indexOf('_pimEnterWindowMode');
+const iFill  = openBody.indexOf("modal.style.display = 'flex'");
+ok(iFloat > 0 && iFill > 0 && iFloat > iFill,
+   'mode fenetre active APRES le remplissage de la carte');
+const winFn = (srcPim2.match(/function _pimEnterWindowMode\(\) \{[\s\S]*?\n\}/) || [''])[0];
+ok(/scrollHeight/.test(winFn), 'hauteur mesuree sur le contenu reel (scrollHeight)');
+ok(/height = 'auto'/.test(winFn), 'hauteur relachee avant de mesurer');
+ok(/Math\.min\(g\.maxH/.test(winFn), 'hauteur bornee au plafond (au-dela la carte defile)');
+// Verification COMPORTEMENTALE : jsdom ne fait pas de layout, on simule donc
+// un scrollHeight puis on ouvre reellement la carte et on lit la hauteur posee.
+const cardEl = w.document.querySelector('#player-info-modal .pim-card');
+if (cardEl.classList.contains('floating-win')) w._disableFloating(cardEl);
+w.PthState.myId = 1; w.PthState.myName = 'moi';
+w.PthState.players = { 1: 'moi' };
+w.PthState._playerRights = { 1: 2 };
+w.PthState._playerCountries = {}; w.PthState._playerAvatars = {};
+w.PthState._playerImgAvatars = {}; w.PthState._pthAvatarHashes = {};
+w.getPlayerName = (p) => w.PthState.players[p];
+w.isBot = () => false; w._isIgnored = () => false;
+for (const need of [520, 1400]) {
+  Object.defineProperty(cardEl, 'scrollHeight', { value: need, configurable: true });
+  if (cardEl.classList.contains('floating-win')) w._disableFloating(cardEl);
+  w.openPlayerInfoPopup();
+  const got = parseFloat(cardEl.style.height);
+  // Plafond derive de _pimGeom LUI-MEME, pas recopie : une formule dupliquee
+  // dans le test devient fausse des que le code change (elle datait de
+  // web.106, le code etait passe a 0.94 en web.107).
+  const cap = new Function('window', geomSrc + '\nreturn _pimGeom;')(
+      { innerWidth: w.innerWidth, innerHeight: w.innerHeight })().maxH;
+  const want = Math.max(260, Math.min(cap, need + 2));
+  ok(Math.abs(got - want) <= 2,
+     'hauteur suit un contenu de ' + need + 'px -> ' + got + 'px (attendu ' + want + ')');
+}
+
 // ── Recentrage a CHAQUE ouverture ──
 // _restoreWin rejoue la derniere position : une fenetre deplacee une fois
 // rouvrait collee au bord. On simule une geometrie memorisee a gauche puis on
