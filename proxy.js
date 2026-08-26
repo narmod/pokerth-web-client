@@ -7478,15 +7478,85 @@ function playerParsePth(json, base) {
   const _percents = [];
   for (let _p = 1; _p <= 10; _p++) _percents.push(_pctObj && _pctObj[_p] != null ? String(_pctObj[_p]) : '');
   const placement = _counts.some(function (n) { return n > 0; }) ? { counts: _counts, percents: _percents } : null;
+  // Champs supplementaires de la page profil QML (PokerthPlayerPage) que
+  // l'ancien parseur laissait tomber. Tous facultatifs cote client : absents,
+  // les blocs correspondants ne s'affichent simplement pas.
+  //  · avg      -> 5e carte « Moy » (ranking.average_score, meme echelle /100)
+  //  · last5    -> pastilles des 5 dernieres places (tableau d'entiers)
+  //  · games    -> parties recentes : place, nom de table, date
+  //  · seasons  -> liste GLOBALE des saisons cotees ("2026_2"), identique pour
+  //    tous les joueurs ; c'est /api/player-season qui dira, saison par saison,
+  //    si CE joueur y a un resultat.
+  block.avg = sc(r.average_score);
+  const _l5 = [];
+  if (Array.isArray(json.last5)) {
+    for (let i = 0; i < json.last5.length && i < 5; i++) {
+      const v = Number(json.last5[i]);
+      if (Number.isFinite(v) && v > 0) _l5.push(v);
+    }
+  }
+  const _games = [];
+  if (Array.isArray(json.games)) {
+    for (let i = 0; i < json.games.length && i < 20; i++) {
+      const g = json.games[i];
+      if (!g) continue;
+      _games.push({
+        place: (Number(g.place) || null),
+        name: (g.game && g.game.name != null) ? String(g.game.name).slice(0, 80) : '',
+        date: (g.start_time ? String(g.start_time).slice(0, 10) : null)
+      });
+    }
+  }
+  const _seasons = [];
+  if (Array.isArray(json.seasons)) {
+    for (let i = 0; i < json.seasons.length && i < 60; i++) {
+      const sn = String(json.seasons[i] || '');
+      if (/^[0-9]{4}_[1-4]$/.test(sn)) _seasons.push(sn);
+    }
+  }
   return {
     ok: true,
     source: 'PTH',
     nickname: p.username,
+    playerId: (p.id != null ? Number(p.id) : null),
     memberSince: (p.created ? String(p.created).slice(0, 10) : null),
+    lastLogin: (p.last_login ? String(p.last_login).slice(0, 10) : null),
     tickets: null,
     awards: [],
     stats: hasStats ? [block] : [],
-    placement: placement
+    placement: placement,
+    last5: _l5,
+    games: _games,
+    seasons: _seasons
+  };
+}
+
+// ── Une saison precise d'un joueur ──────────────────────────────────────────
+// GET /pthranking/player/season/get/<playerId>/<season> (pas de CSRF), meme
+// forme de reponse que player/show mais restreinte a la saison demandee.
+// La liste `seasons` renvoyee ci-dessus est GLOBALE : c'est ici qu'on decouvre
+// si le joueur a reellement joue cette saison-la (status faux ou ranking nul
+// => rien a afficher, la carte se masque d'elle-meme, comme PlayerSeasonCard).
+function playerSeasonParsePth(json) {
+  if (!json || !json.status) return { ok: true, played: false };
+  const r = (json.player && json.player.ranking) ? json.player.ranking : null;
+  function sc(v) { return (v == null) ? null : (Number(v) / 100).toFixed(2); }
+  const _bs = Array.isArray(json.bar_stats) ? json.bar_stats : [];
+  const _counts = [];
+  for (let i = 0; i < 10; i++) _counts.push(Number(_bs[i]) || 0);
+  const _pctObj = (json.stats && json.stats.length > 1 && json.stats[1] && typeof json.stats[1] === 'object') ? json.stats[1] : null;
+  const _percents = [];
+  for (let i = 1; i <= 10; i++) _percents.push(_pctObj && _pctObj[i] != null ? String(_pctObj[i]) : '');
+  const played = !!(r || _counts.some(function (n) { return n > 0; }));
+  return {
+    ok: true,
+    played: played,
+    rank: (json.pos != null && json.pos > 0 ? json.pos : null),
+    score: r ? sc(r.final_score) : null,
+    avg: r ? sc(r.average_score) : null,
+    games: r && r.season_games != null ? r.season_games : null,
+    points: r && r.points_sum != null ? r.points_sum : null,
+    placement: _counts.some(function (n) { return n > 0; }) ? { counts: _counts, percents: _percents } : null
   };
 }
 
@@ -7583,6 +7653,53 @@ function handlePlayer(req, res, query) {
 }
 
 
+
+// GET /api/player-season?id=<playerId>&season=<YYYY_Q>
+// Chargement PARESSEUX d'une saison : la page profil n'appelle ceci que
+// lorsque le joueur deplie la ligne, pour ne pas lancer vingt requetes a
+// l'ouverture (parite PlayerSeasonCard, qui charge sur expansion).
+function handlePlayerSeason(req, res, query) {
+  const id = parseInt(String((query && query.id) || ''), 10);
+  const season = String((query && query.season) || '');
+  if (!Number.isFinite(id) || id <= 0) {
+    res.writeHead(400, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' });
+    res.end(JSON.stringify({ ok: false, error: 'missing_id' }));
+    return;
+  }
+  // Format strict : c'est ce qui part dans le chemin de l'URL amont.
+  if (!/^[0-9]{4}_[1-4]$/.test(season)) {
+    res.writeHead(400, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' });
+    res.end(JSON.stringify({ ok: false, error: 'bad_season' }));
+    return;
+  }
+  const cacheKey = 'pseason|' + id + '|' + season;
+  const hit = RANKING_CACHE.get(cacheKey);
+  if (hit && (Date.now() - hit.at) < RANKING_TTL_MS) {
+    res.writeHead(hit.status, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'public, max-age=300', 'X-Ranking-Cache': 'hit' });
+    res.end(hit.body);
+    return;
+  }
+  const targetUrl = PLAYER_SOURCES.pth.base + '/pthranking/player/season/get/' + id + '/' + season;
+  rankingFetch(targetUrl).then(function (r) {
+    return r.text().then(function (body) {
+      let out;
+      if (!r.ok) out = { status: 502, body: JSON.stringify({ ok: false, error: 'upstream_' + r.status }) };
+      else {
+        try { out = { status: 200, body: JSON.stringify(playerSeasonParsePth(JSON.parse(body))) }; }
+        catch (e) { out = { status: 502, body: JSON.stringify({ ok: false, error: 'parse_failed' }) }; }
+      }
+      // Une saison close ne bouge plus : cache long cote relais comme cote
+      // navigateur. La saison en cours est de toute facon rechargee au
+      // prochain passage (TTL du relais).
+      if (out.status === 200) RANKING_CACHE.set(cacheKey, { at: Date.now(), status: out.status, body: out.body });
+      res.writeHead(out.status, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'public, max-age=300', 'X-Ranking-Cache': 'miss' });
+      res.end(out.body);
+    });
+  }).catch(function (err) {
+    res.writeHead(502, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' });
+    res.end(JSON.stringify({ ok: false, error: 'relay_failed', detail: String((err && err.message) || err) }));
+  });
+}
 
 // ───────────────────────────────────────────────────────────────────────────
 // Forum news relay — phpBB Atom feed of www.pokerth.net exposed as
@@ -8119,6 +8236,10 @@ const httpServer = http.createServer((req, res) => {
   }
   if (reqPathOnly === '/api/player') {
     handlePlayer(req, res, query);
+    return;
+  }
+  if (reqPathOnly === '/api/player-season') {
+    handlePlayerSeason(req, res, query);
     return;
   }
   if (reqPathOnly === '/api/award-img') {

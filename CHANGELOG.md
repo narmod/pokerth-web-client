@@ -14,6 +14,27 @@ Opened with `v2.1.7-web.0` (2026-08-13), following the upstream **2.1.7**
 release.
 
 ### Added
+- **Player profile relay: the fields the QML page shows** (proxy only, no
+  version bump — no served file changes) — groundwork for the profile window.
+  `playerParsePth` was dropping most of what `/pthranking/player/show` returns;
+  it now forwards what `PokerthPlayerPage.qml` actually renders:
+  - `avg` (`ranking.average_score`, same /100 scale) — the fifth KPI tile;
+  - `last5` — the coloured placement badges;
+  - `games` — recent games, flattened to `{place, name, date}`;
+  - `seasons` — note this list is *global* (every rated season, identical for
+    every player), not the player's participations; which ones they actually
+    played is only known per season;
+  - `playerId` and `lastLogin`, both needed by the header and the per-season
+    lookup.
+  - New `GET /api/player-season?id=&season=` relaying
+    `/pthranking/player/season/get/<id>/<season>` for lazy per-season loading, so
+    opening a profile does not fire twenty requests. `season` is matched against
+    `^[0-9]{4}_[1-4]$` before it reaches the upstream path, and a missing result
+    comes back as `played: false` rather than an error — the row hides itself, as
+    `PlayerSeasonCard` does.
+  - New `scripts/test-player-parse.mjs`: 33 checks over a realistic payload, an
+    empty one and a malformed one (non-numeric placements, null games, path
+    traversal in a season id).
 - **Kickban hammer in the players list** (`web.100`) — parity with the QML
   `PlayerListItem`, where the gavel is a row action (`canAdminModerate`) rather
   than something buried in the player card. Shown only when I am a server admin
