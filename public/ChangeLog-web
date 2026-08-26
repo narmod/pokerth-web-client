@@ -1,5 +1,4 @@
 2026-08-13 version 2.1.7-web (current series):
-- improvement: in the private messages window, the list of conversations on the left is now shown from the very first one, instead of only appearing once a second person had written to you. The window keeps the same shape whatever the number of conversations
 - bugfix: the private messages window opened a little too narrow for the list of conversations on the left to be shown, so it stayed hidden even when several people had written to you. It now opens at the same size as the desktop client, and the list appears as soon as there is more than one conversation
 - new: on a BBC Step table you did not create yourself, the "suggest players" button now appears if you are on the BBC admin list. It used to be reserved to whoever set the table up
 - improvement: writing to a guest is now closed off, the way it is in the desktop client: the server never delivers a private message to a guest account, so the conversation stays readable but the input tells you why nothing can be sent

@@ -14,13 +14,13 @@ Opened with `v2.1.7-web.0` (2026-08-13), following the upstream **2.1.7**
 release.
 
 ### Changed
-- **Private messages: the partner column is there from the first conversation**
-  (`web.123`) — a deliberate step away from upstream, which gates the column on
-  `wideLayout && partners.length > 1` and therefore reshapes the dialogue under
-  the player the moment a second partner writes in. `showCol` now only asks for
-  a wide window and a non-empty list. The narrow layout keeps the upstream rule
-  for its drop-down: a picker offering a single choice is no help, and the
-  partner name already sits above the history.
+- **Private messages: the partner column follows upstream again** (`web.124`) —
+  `web.123` had dropped the `partners.length > 1` gate so the column showed from
+  the first conversation. Reverted: the rule is once more the one in
+  `PrivateMessageDialog.qml`, `wideLayout && partners.length > 1`, so a single
+  conversation shows the partner name above the history and no column. The
+  window sizing fixed in `web.122` stays — that was the actual defect, and the
+  column now really does appear as soon as a second partner writes in.
 
 ### Fixed
 - **Private messages: the partner column could never appear** (`web.122`) — the
