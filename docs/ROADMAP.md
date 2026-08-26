@@ -231,11 +231,20 @@ use too. Items are grouped by status rather than fixed phases.
   the server limit, a player's current table shown in the lobby players list, and the
   players-remaining counter above.
 - Client kept compatible with server-side PokerTH 2.1.0 (build-ID check).
+- Persistent hand logs and export: every hand is recorded locally in the official `.pdb`
+  model (session / game / player / hand / action) by `handlog.mjs`, and the **Logs** window
+  (`journal.mjs`) ports the desktop client's log manager line for line — preview with search
+  and highlighting, HTML and text export (`exportLogPdbToHtml/Txt`), import of a `.pdb` file
+  and upload to the official log-analysis service. Web-only extras on top: automatic
+  retention (7 → 365 days or unlimited, imported sessions exempt) and *delete everything*.
 
 **Platform**
 - Installable PWA (mobile and desktop; works offline in Training mode).
 - Versioned, network-first Service Worker with a "new version" banner.
 - Docker image (multi-arch) + one-liner installer / updater / uninstaller.
+- Live on the official infrastructure at [webclient.pokerth.net](https://webclient.pokerth.net/),
+  including the in-host route between the web proxy and the game server
+  (see [INSTALL_POKERTH_NET.md](INSTALL_POKERTH_NET.md)).
 
 **Code & architecture**
 - Modularised the former single-file client: the application logic is now split into
@@ -247,10 +256,6 @@ use too. Items are grouped by status rather than fixed phases.
 
 ## 🔨 Now (in progress)
 
-- **Official pokerth.net deployment** — the client is live on the official
-  infrastructure at [webclient.pokerth.net](https://webclient.pokerth.net/)
-  (see [INSTALL_POKERTH_NET.md](INSTALL_POKERTH_NET.md)); remaining work is
-  finishing the in-host route between the web proxy and the game server.
 - **Official QML client fidelity** — ongoing pixel-and-behaviour alignment of the in-game
   screen with the official QML client (action bar, mobile layouts, seat geometry).
   The 2.1.5 pass is complete: global notice, optional chat timestamps, the translate
@@ -284,7 +289,6 @@ use too. Items are grouped by status rather than fixed phases.
   QR-code signalling, no server needed.
 - **Voice chat** at the table (WebRTC).
 - Alternative table shapes (e.g. a D-shaped / trapezoidal table).
-- Persistent hand history and export (beyond the current last-5-hands view).
 - Tournaments / multi-table.
 - Native translation passes for languages currently falling back to English.
 - Continued polish toward a wider community release (regular tagged releases).
