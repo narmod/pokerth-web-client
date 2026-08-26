@@ -11,6 +11,8 @@ export const meta = {
 };
 
 export const strings = {
+    // Private messages (parity: QML "Messages prives", 2.1.7+).
+    pmTitle:'私信', pmTooltip:'私信', pmBtn:'私信', pmSend:'发送', pmPlaceholder:'消息…', pmDelete:'删除此对话', pmDeleteConfirm:'删除与 {name} 的对话？', pmEmpty:'还没有对话。', pmNoConv:'请选择一个对话。', pmNoMsg:'还没有消息。', pmMe:'我', pmNotFound:'未找到玩家', pmSelf:'你不能给自己发私信。', pmOffline:'未连接到服务器', pmUsage:'用法：/msg <昵称> <消息>', pmAtTable:'在牌桌上无法使用私信。',
     // Server timeout warning popup (parity: timeoutWarningPopup, pokerth.qml).
     timeoutWarnTitle:'\u8d85\u65f6\u8b66\u544a', timeoutWarnIdle:'\u56e0\u4e3a\u957f\u65f6\u95f4\u65e0\u64cd\u4f5c\uff0c\u8fde\u63a5\u5c06\u5728 {s} \u79d2\u540e\u65ad\u5f00\u3002', timeoutWarnAdmin:'\u4f60\u662f\u4e00\u4e2a\u5f00\u653e\u724c\u5c40\u7684\u7ba1\u7406\u5458\uff0c\u8be5\u724c\u5c40\u5c06\u5728 {s} \u79d2\u540e\u5931\u6548\u3002', timeoutWarnAfk:'\u4f60\u5df2\u4e00\u6bb5\u65f6\u95f4\u672a\u884c\u52a8\uff0c\u5c06\u5728 {s} \u79d2\u540e\u88ab\u79fb\u51fa\u724c\u5c40\u3002', timeoutWarnExpired:'\u65f6\u95f4\u5df2\u5230\uff0c\u8fde\u63a5\u5c06\u88ab\u65ad\u5f00\u3002', timeoutWarnExpiredGame:'\u65f6\u95f4\u5df2\u5230\uff0c\u4f60\u6b63\u88ab\u79fb\u51fa\u724c\u5c40\u3002', timeoutWarnHint:'\u8bf7\u70b9\u51fb\u201cOK\u201d\u505c\u6b62\u5012\u8ba1\u65f6\uff01', timeoutWarnOk:'OK',
   invScanQr: '扫码加入', invCopyLink: '复制链接', invShareVia: '分享…', invitedBanner: '您已被邀请加入牌桌',

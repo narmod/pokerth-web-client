@@ -1681,6 +1681,7 @@ function _processAvatarFile(file) {
     </div>
     <button class="btn-sm btn-icon" id="fs-btn-lobby" onclick="toggleFullscreen()" title="Fullscreen" data-i18n-title="fullscreenTooltip">⛶</button>
     <button class="btn-sm btn-icon" id="lobby-chat-btn" onclick="toggleLobbyChat()" title="Chat" data-i18n-title="chatTooltip"><svg viewBox="0 0 24 24" style="display:block;width:22px;height:22px" fill="currentColor" aria-hidden="true"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg></button>
+    <button class="btn-sm btn-icon" id="pm-btn-lobby" onclick="togglePmModal()" title="Private messages" data-i18n-title="pmTooltip" aria-label="Private messages"><svg viewBox="0 0 24 24" style="display:block;width:22px;height:22px" fill="currentColor" aria-hidden="true"><path d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2Zm0 4.24-8 4.76-8-4.76V6l8 4.76L20 6v2.24Z"/></svg><span class="pm-unread" style="display:none" aria-hidden="true">0</span></button>
     <button class="btn-sm btn-icon" id="forum-btn-lobby" onclick="toggleForumModal()" title="Forum" data-i18n-title="forumTooltip" aria-label="Forum"><svg viewBox="0 0 24 24" style="display:block;width:22px;height:22px" fill="currentColor" aria-hidden="true"><path d="M22 3l-1.67 1.67L18.67 3 17 4.67 15.33 3l-1.66 1.67L12 3l-1.67 1.67L8.67 3 7 4.67 5.33 3 3.67 4.67 2 3v16c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V3zM11 19H4v-6h7v6zm9 0h-7v-2h7v2zm0-4h-7v-2h7v2zm0-4H4V8h16v3z"/></svg><span class="forum-unread" style="display:none" aria-hidden="true">0</span></button>
     <button class="btn-sm btn-icon" id="ranking-btn-lobby" onclick="toggleRankingModal()" title="Ranking" data-i18n-title="rankingTooltip" aria-label="Ranking" style="display:none"><svg class="rk-trophy" viewBox="0 0 24 24" style="display:block;width:22px;height:22px" fill="currentColor" aria-hidden="true"><path d="M19 5h-2V3H7v2H5C3.9 5 3 5.9 3 7v1c0 2.55 1.92 4.63 4.39 4.94.63 1.5 1.98 2.63 3.61 2.96V19H7v2h10v-2h-4v-3.1c1.63-.33 2.98-1.46 3.61-2.96C19.08 12.63 21 10.55 21 8V7c0-1.1-.9-2-2-2zM5 8V7h2v3.82C5.84 10.4 5 9.3 5 8zm14 0c0 1.3-.84 2.4-2 2.82V7h2v1z"/></svg></button>
     <span class="hdr-ovf-wrap"><button class="btn-sm btn-icon" id="l-overflow-btn" onclick="toggleLobbyOverflow(event)" title="Plus" data-i18n-title="moreTooltip"><svg viewBox="0 0 24 24" style="display:block;width:22px;height:22px" fill="currentColor" aria-hidden="true"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58a.49.49 0 0 0 .12-.61l-1.92-3.32a.488.488 0 0 0-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54a.484.484 0 0 0-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58a.49.49 0 0 0-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg></button>
@@ -2452,6 +2453,7 @@ function _processAvatarFile(file) {
 <script type="module" src="modules/ui/avatar-studio.mjs"></script>
 <script type="module" src="modules/ui/lobby.mjs"></script>
 <script type="module" src="modules/ui/forumnews.mjs"></script>
+<script type="module" src="modules/ui/pm.mjs"></script>
 <script type="module" src="modules/game/showdown.mjs"></script>
 <script type="module" src="modules/net/session.mjs"></script>
 <script type="module" src="modules/ui/game-info.mjs"></script>
@@ -2770,6 +2772,29 @@ if ('serviceWorker' in navigator) {
      10 min). Meme modele de fenetre generique que le classement (rk-card,
      palette, fenetre flottante desktop). Logique : modules/ui/forumnews.mjs
      (dedoublonnage par sujet, suivi lu/non-lu local, badge d'en-tete). -->
+<!-- Messages prives (parite QML "Messages prives", PokerTH 2.1.7+) :
+     dialogue PERSISTANT, pas une popup - la fermeture ne perd rien, tout
+     l'historique vit en IndexedDB (modules/pm/store.mjs). Bande des
+     partenaires en haut, conversation au centre, saisie 128 octets en bas.
+     Logique : modules/ui/pm.mjs -->
+<div id="pm-modal" style="display:none">
+  <div class="rk-backdrop" id="pm-backdrop"></div>
+  <div class="rk-card" role="dialog" aria-labelledby="pm-title">
+    <button class="rk-close" type="button" id="pm-close" title="Close" data-i18n-title="closeTooltip" data-i18n-aria="closeTooltip" aria-label="Close">&#10005;</button>
+    <button class="pm-del" type="button" id="pm-del" title="Delete this conversation" data-i18n-title="pmDelete" data-i18n-aria="pmDelete" aria-label="Delete this conversation" disabled><svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor" aria-hidden="true"><path d="M6 19a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V7H6v12ZM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4Z"/></svg></button>
+    <div class="rk-title" id="pm-title"><svg viewBox="0 0 24 24" style="display:inline-block;width:15px;height:15px;vertical-align:-2px;margin-right:6px" fill="currentColor" aria-hidden="true"><path d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2Zm0 4.24-8 4.76-8-4.76V6l8 4.76L20 6v2.24Z"/></svg><span data-i18n="pmTitle">Private messages</span></div>
+    <div class="pm-partners" id="pm-partners"></div>
+    <div class="rk-body pm-body">
+      <div class="pm-msgs" id="pm-msgs"></div>
+    </div>
+    <div class="pm-foot">
+      <input id="pm-in" class="pm-input" maxlength="128" placeholder="Message&#8230;" data-i18n-placeholder="pmPlaceholder" autocomplete="off">
+      <span class="pm-count" id="pm-count">0/128</span>
+      <button type="button" class="rk-tab pm-send" id="pm-send" disabled><span data-i18n="pmSend">Send</span></button>
+    </div>
+  </div>
+</div>
+
 <div id="forum-modal" style="display:none">
   <div class="rk-backdrop" onclick="closeForumModal()"></div>
   <div class="rk-card" role="dialog" aria-labelledby="fn-title">

@@ -6556,6 +6556,38 @@ const App = (() => {
         try { if (window._chatPushHist) window._chatPushHist(text); } catch (eGh) {}
         return;
       }
+      // ── /msg <pseudo> <texte> : message privé ────────────────────────
+      // Parité QML (LobbyHandler::sendChatMessage + parsePrivateMessageTarget) :
+      // pseudo simple, ou entre guillemets s'il contient des espaces. Le texte
+      // est tronqué à 128 octets UTF-8 par _pmSendTo. Rien ne part en chat
+      // public : sans cette interception la commande serait diffusée telle
+      // quelle à tout le lobby.
+      if (/^\/msg\s+\S/i.test(text)) {
+        var _pmRest = text.replace(/^\/msg\s+/i, '');
+        var _pmTo = '', _pmBody = '';
+        var _pmQ = _pmRest.match(/^"([^"]+)"\s*([\s\S]*)$/);
+        if (_pmQ) { _pmTo = _pmQ[1]; _pmBody = _pmQ[2]; }
+        else {
+          var _pmSp = _pmRest.indexOf(' ');
+          if (_pmSp > 0) { _pmTo = _pmRest.slice(0, _pmSp); _pmBody = _pmRest.slice(_pmSp + 1); }
+        }
+        _pmTo = _pmTo.trim(); _pmBody = _pmBody.trim();
+        try { if (window._chatPushHist) window._chatPushHist(text); } catch (ePh) {}
+        if (!_pmTo || !_pmBody) {
+          addChat(null, t('pmUsage'), 'sys', { force: true, key: 'pmUsage' });
+          return;
+        }
+        var _pmErr = (typeof window._pmSendTo === 'function') ? window._pmSendTo(_pmTo, _pmBody) : 'offline';
+        if (_pmErr === 'notFound')
+          addChat(null, t('pmNotFound'), 'sys', { force: true, key: 'pmNotFound' });
+        else if (_pmErr === 'self')
+          addChat(null, t('pmSelf'), 'sys', { force: true, key: 'pmSelf' });
+        else if (_pmErr === 'offline')
+          addChat(null, t('pmOffline'), 'sys', { force: true, key: 'pmOffline' });
+        else if (!_pmErr)
+          addChat(_pmTo, _pmBody, 'mine pm');
+        return;
+      }
       if (text.charAt(0) === '/' && _chatLocalCmd(text, function (n, s2) { addChat(n, s2, 'mine'); })) return;
       try { if (window._chatPushHist) window._chatPushHist(text); } catch (e) {}
       send(MSG.buildChat(text, 0));
@@ -10104,6 +10136,14 @@ var _PL_TOGGLE_COLS = ['av','status','flag','star','acts']; // 'name' et 'inv' e
 // UNIQUEMENT sur la page d'attente de démarrage (s-lobby.lobby-waiting).
 // Réutilise la mécanique du modal d'invitation : App._inviteEligiblePids()
 // pour l'éligibilité et App.sendInvite(pid) pour l'envoi.
+// Enveloppe : ouvre la conversation privée avec ce joueur (parité QML,
+// icône ✉ de la liste des joueurs connectés).
+var _PL_MAIL_SVG = '<svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" aria-hidden="true"><path d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2Zm0 4.24-8 4.76-8-4.76V6l8 4.76L20 6v2.24Z"/></svg>';
+window._plOpenPm = function(pid){
+  var nm = (typeof window.getPlayerName === 'function') ? window.getPlayerName(pid) : null;
+  if (!nm) return;
+  try { if (typeof window.openPmModal === 'function') window.openPmModal(nm); } catch (e) {}
+};
 var _PL_INVITE_SVG = '<svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" aria-hidden="true"><path d="M15 12a4 4 0 1 0-4-4 4 4 0 0 0 4 4Zm0 1.8c-3.5 0-6.3 1.8-6.3 4V19h12.6v-1.2c0-2.2-2.8-4-6.3-4ZM6 9V6.6H4.4V9H2v1.6h2.4V13H6v-2.4h2.4V9H6Z"/></svg>';
 function _plWaitingMode() { var s = document.getElementById('s-lobby'); return !!(s && s.classList.contains('lobby-waiting')); }
 function _plColOrder() { return _plWaitingMode() ? _PL_COL_ORDER : _PL_COL_ORDER.filter(function(k){ return k !== 'inv'; }); }
@@ -10274,7 +10314,11 @@ function renderPlayersList() {
     // joueur est dans une partie, éteinte sinon). Plus de nom de partie sous le pseudo.
     var _status = '<span class="pl-status' + (r.act ? ' on' : '') + '" title="' + (r.act ? esc(r.act) : _tt('plNotPlaying','Not playing')) + '"' + (r.act ? '' : ' data-i18n-title="plNotPlaying"') + '>' + _PL_PAD_SVG + '</span>';
     var _ign  = _isIgnored(r.name);
+    // Parité QML : l'enveloppe ne concerne que les AUTRES joueurs (on ne
+    // s'écrit pas à soi-même). Le 🚫 de ma propre ligne est conservé tel
+    // quel : le retirer serait un changement visible à part entière.
     var _acts = '<span class="pl-acts">'
+      + (r.isMe ? '' : '<button type="button" class="pl-act pl-act-pm" title="' + _tt('pmBtn','Private message') + '" data-i18n-title="pmBtn" aria-label="' + _tt('pmBtn','Private message') + '" onclick="event.stopPropagation();window._plOpenPm(' + r.pid + ')">' + _PL_MAIL_SVG + '</button>')
       + '<button type="button" class="pl-act pl-act-ban' + (_ign ? ' on' : '') + '" title="' + _tt('plIgnore','Ignore') + '" data-i18n-title="plIgnore" aria-label="' + _tt('plIgnore','Ignore') + '" onclick="event.stopPropagation();window._plToggleIgnore(' + r.pid + ')">' + _PL_BAN_SVG + '</button>'
       + '<button type="button" class="pl-act pl-act-stats" title="' + _tt('plStats','Stats') + '" data-i18n-title="plStats" aria-label="' + _tt('plStats','Stats') + '" onclick="event.stopPropagation();window._plOpenStats(' + _ppArg + ')">' + _PL_BAR_SVG + '</button>'
       + '</span>';
@@ -10623,7 +10667,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.7-web.91'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.7-web.92'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

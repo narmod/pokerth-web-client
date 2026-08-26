@@ -10,6 +10,8 @@ export const meta = {
 };
 
 export const strings = {
+    // Private messages (parity: QML "Messages prives", 2.1.7+).
+    pmTitle:'Súkromné správy', pmTooltip:'Súkromné správy', pmBtn:'Súkromná správa', pmSend:'Odoslať', pmPlaceholder:'Správa…', pmDelete:'Odstrániť túto konverzáciu', pmDeleteConfirm:'Odstrániť konverzáciu s {name}?', pmEmpty:'Zatiaľ žiadne konverzácie.', pmNoConv:'Vyberte konverzáciu.', pmNoMsg:'Zatiaľ žiadne správy.', pmMe:'Ja', pmNotFound:'Hráč sa nenašiel', pmSelf:'Nemôžete poslať súkromnú správu sám sebe.', pmOffline:'Nepripojené k serveru', pmUsage:'Použitie: /msg <prezývka> <správa>', pmAtTable:'Súkromné správy nie sú pri stole k dispozícii.',
     // Server timeout warning popup (parity: timeoutWarningPopup, pokerth.qml).
     timeoutWarnTitle:'Upozornenie na ne\u010dinnos\u0165', timeoutWarnIdle:'Va\u0161e pripojenie bude pre ne\u010dinnos\u0165 ukon\u010den\u00e9 o {s} s.', timeoutWarnAdmin:'Ste spr\u00e1vcom otvorenej hry, ktor\u00e1 vypr\u0161\u00ed o {s} s.', timeoutWarnAfk:'Ur\u010dit\u00fd \u010das ste nehrali. O {s} s budete z hry odstr\u00e1nen\u00fd.', timeoutWarnExpired:'\u010cas vypr\u0161al. Budete odpojen\u00fd.', timeoutWarnExpiredGame:'\u010cas vypr\u0161al. Ste odstra\u0148ovan\u00fd z hry.', timeoutWarnHint:'Kliknite na \u201eOK\u201c a zastav\u00edte odpo\u010det!', timeoutWarnOk:'OK',
   invScanQr: 'Naskenujte a pripojte sa', invCopyLink: 'Kopírovať odkaz', invShareVia: 'Zdieľať…', invitedBanner: 'Ste pozvaní k stolu',

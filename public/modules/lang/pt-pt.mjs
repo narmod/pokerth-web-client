@@ -9,6 +9,8 @@ export const meta = {
 };
 
 export const strings = {
+    // Private messages (parity: QML "Messages prives", 2.1.7+).
+    pmTitle:'Mensagens privadas', pmTooltip:'Mensagens privadas', pmBtn:'Mensagem privada', pmSend:'Enviar', pmPlaceholder:'Mensagem…', pmDelete:'Eliminar esta conversa', pmDeleteConfirm:'Eliminar a conversa com {name}?', pmEmpty:'Ainda sem conversas.', pmNoConv:'Seleciona uma conversa.', pmNoMsg:'Ainda sem mensagens.', pmMe:'Eu', pmNotFound:'Jogador não encontrado', pmSelf:'Não podes enviar uma mensagem privada a ti próprio.', pmOffline:'Sem ligação ao servidor', pmUsage:'Utilização: /msg <nome> <mensagem>', pmAtTable:'As mensagens privadas não estão disponíveis na mesa.',
     // Server timeout warning popup (parity: timeoutWarningPopup, pokerth.qml).
     timeoutWarnTitle:'Aviso de inatividade', timeoutWarnIdle:'A sua liga\u00e7\u00e3o vai ser terminada por inatividade dentro de {s} segundos.', timeoutWarnAdmin:'\u00c9 o administrador de um jogo aberto que expira dentro de {s} segundos.', timeoutWarnAfk:'H\u00e1 algum tempo que n\u00e3o joga. Vai ser removido do jogo dentro de {s} segundos.', timeoutWarnExpired:'Tempo esgotado. Vai ser desligado.', timeoutWarnExpiredGame:'Tempo esgotado. Est\u00e1 a ser removido do jogo.', timeoutWarnHint:'Clique em \u00abOK\u00bb para parar a contagem decrescente!', timeoutWarnOk:'OK',
   invScanQr: 'Digitalize para entrar', invCopyLink: 'Copiar ligação', invShareVia: 'Partilhar…', invitedBanner: 'Foi convidado a juntar-se à mesa',

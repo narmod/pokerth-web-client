@@ -159,6 +159,12 @@ export const help = {
             ['/diag \u00b7 /netdbg \u00b7 /fps', 'Diagnostics d\u2019état du client, du réseau et de la fluidité'],
             ['/carddbg \u00b7 /msglog \u00b7 /audiodbg \u00b7 /storage \u00b7 /logdump \u00b7 /seatdbg', 'Débogage avancé (cartes, protocole, audio, stockage, sièges)'],
             ['/copy', 'Copier la dernière réponse de commande dans le presse-papiers']] },
+        { id: 'privatemsg', t: 'Messages privés',
+          b: ['Écrire à un joueur sans que tout le lobby lise par-dessus l\u2019épaule. L\u2019enveloppe à côté d\u2019un nom dans la liste des joueurs ouvre une conversation avec lui ; celle de l\u2019en-tête du lobby rouvre la dernière. Les conversations sont conservées sur cet appareil et s\u2019y retrouvent au retour, si bien qu\u2019une discussion reprise des jours plus tard garde son historique \u2014 un compteur rouge sur l\u2019enveloppe indique ce qui n\u2019a pas été lu, et la corbeille du titre supprime une conversation définitivement.'],
+          keys: [
+            ['/msg <pseudo> <texte>', 'Envoyer un message privé depuis le chat du lobby'],
+            ['/msg "<pseudo avec espaces>" <texte>', 'Idem lorsque le pseudo contient des espaces']],
+          note: 'Les messages sont limités à 128 caractères. Le serveur ne délivre pas de message privé à un joueur assis à une table en cours, et l\u2019historique reste dans ce navigateur \u2014 il ne suit pas sur un autre appareil.' },
         { id: 'reactions', t: 'Réactions emoji',
           b: ['Le bouton de réaction ouvre un sélecteur de 30 réactions animées (\uD83C\uDF89, \uD83D\uDE02, \uD83D\uDE31, \uD83D\uDD25\u2026) qui se jouent avec un effet au-dessus de ton siège, visibles de toute la table — y compris des joueurs sur le client de bureau. Les réactions se désactivent entièrement dans les Options avancées.'] },
         { id: 'translate', t: 'Comprendre tout le monde',

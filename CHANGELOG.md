@@ -14,6 +14,35 @@ Opened with `v2.1.7-web.0` (2026-08-13), following the upstream **2.1.7**
 release.
 
 ### Added
+- **Private messages** (`web.92`) — full parity with the QML client's private
+  message dialogue (upstream `LobbyHandler`, PokerTH 2.1.7+). A persistent
+  conversation window replaces nothing: the lobby chat still shows the incoming
+  line as `Name(pm): text`, exactly as `onPrivateChatMessage` does upstream.
+  - `modules/pm/store.mjs` — IndexedDB (`pth_pm`, stores `conv` + `msg`) standing
+    in for the desktop client's SQLite file. API mirrors the Q_INVOKABLE surface
+    one for one: `partners` / `conversation` / `ensure` / `append` / `markRead` /
+    `remove` / `unreadCount`. Scope is the browser profile, not the account, and
+    there is no retention cap — `remove()` is the only path that drops data, as
+    upstream only offers a manual "delete conversation". A memory mirror keeps the
+    UI synchronous; without IndexedDB every call still resolves and the session
+    simply is not persisted.
+  - `modules/ui/pm.mjs` — the dialogue itself: partner strip with per-conversation
+    unread badges, history, and a footer capped at 128 **UTF-8 bytes** (`maxlength`
+    counts UTF-16 units, which would let an emoji-heavy line through that the
+    server then rejects). Truncation reproduces the upstream `chop(1)` loop.
+  - `net/messages.mjs` — `buildPrivateChat(playerId, text)`: `ChatRequestMessage`
+    with `targetPlayerId` (field 2) and no `targetGameId`.
+  - `net/msg-social.mjs` — `chatTypePrivate` (4) is persisted and rendered instead
+    of falling through the "everything else → lobby" branch; the lobby chat
+    notification sound now covers it too.
+  - `pokerth.js` — `/msg <nick> <text>` and `/msg "nick with spaces" <text>` are
+    intercepted before `send`. Without this the command was broadcast verbatim to
+    the whole lobby (observed on the live client). The envelope button in the
+    players list is omitted on one's own row.
+  - The server never echoes our own private messages back, so the sent line exists
+    only because it is persisted locally (parity: `pushPrivateMessageSentLine`).
+  - 16 new i18n keys across all 45 catalogues.
+
 - **FAQ translations complete: all 44 languages** (`web.89`) — the last batch
   brings Croatian, Serbian, Lithuanian, Catalan, Galician, Afrikaans, Swahili,
   Filipino and Scottish Gaelic, and `/faq` now matches `/rules` exactly: the same

@@ -10,6 +10,8 @@ export const meta = {
 };
 
 export const strings = {
+    // Private messages (parity: QML "Messages prives", 2.1.7+).
+    pmTitle:'Privačios žinutės', pmTooltip:'Privačios žinutės', pmBtn:'Privati žinutė', pmSend:'Siųsti', pmPlaceholder:'Žinutė…', pmDelete:'Ištrinti šį pokalbį', pmDeleteConfirm:'Ištrinti pokalbį su {name}?', pmEmpty:'Kol kas pokalbių nėra.', pmNoConv:'Pasirinkite pokalbį.', pmNoMsg:'Kol kas žinučių nėra.', pmMe:'Aš', pmNotFound:'Žaidėjas nerastas', pmSelf:'Negalite išsiųsti privačios žinutės sau.', pmOffline:'Nėra ryšio su serveriu', pmUsage:'Naudojimas: /msg <slapyvardis> <žinutė>', pmAtTable:'Prie stalo privačios žinutės negalimos.',
     // Server timeout warning popup (parity: timeoutWarningPopup, pokerth.qml).
     timeoutWarnTitle:'\u012esp\u0117jimas apie neveiklum\u0105', timeoutWarnIdle:'D\u0117l neveiklumo ry\u0161ys bus nutrauktas po {s} sek.', timeoutWarnAdmin:'Esate atviro \u017eaidimo administratorius; jis baigsis po {s} sek.', timeoutWarnAfk:'Kur\u012f laik\u0105 ne\u017eaid\u0117te. B\u016bsite pa\u0161alintas i\u0161 \u017eaidimo po {s} sek.', timeoutWarnExpired:'Laikas baig\u0117si. B\u016bsite atjungtas.', timeoutWarnExpiredGame:'Laikas baig\u0117si. Esate \u0161alinamas i\u0161 \u017eaidimo.', timeoutWarnHint:'Spustel\u0117kite \u201eOK\u201c, kad sustabdytum\u0117te atgalin\u0119 atskait\u0105!', timeoutWarnOk:'OK',
   invScanQr: 'Nuskaitykite, kad prisijungtumėte', invCopyLink: 'Kopijuoti nuorodą', invShareVia: 'Bendrinti…', invitedBanner: 'Jūs pakviesti prie stalo',

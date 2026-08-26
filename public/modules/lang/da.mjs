@@ -9,6 +9,8 @@ export const meta = {
 };
 
 export const strings = {
+    // Private messages (parity: QML "Messages prives", 2.1.7+).
+    pmTitle:'Private beskeder', pmTooltip:'Private beskeder', pmBtn:'Privat besked', pmSend:'Send', pmPlaceholder:'Besked…', pmDelete:'Slet denne samtale', pmDeleteConfirm:'Slet samtalen med {name}?', pmEmpty:'Ingen samtaler endnu.', pmNoConv:'Vælg en samtale.', pmNoMsg:'Ingen beskeder endnu.', pmMe:'Mig', pmNotFound:'Spilleren blev ikke fundet', pmSelf:'Du kan ikke sende en privat besked til dig selv.', pmOffline:'Ikke forbundet til serveren', pmUsage:'Brug: /msg <kaldenavn> <besked>', pmAtTable:'Private beskeder er ikke tilgængelige ved bordet.',
     // Server timeout warning popup (parity: timeoutWarningPopup, pokerth.qml).
     timeoutWarnTitle:'Advarsel om inaktivitet', timeoutWarnIdle:'Din forbindelse afbrydes p\u00e5 grund af inaktivitet om {s} sekunder.', timeoutWarnAdmin:'Du er administrator for et \u00e5bent spil, der udl\u00f8ber om {s} sekunder.', timeoutWarnAfk:'Du har ikke spillet i et stykke tid. Du fjernes fra spillet om {s} sekunder.', timeoutWarnExpired:'Tiden er udl\u00f8bet. Du bliver afbrudt.', timeoutWarnExpiredGame:'Tiden er udl\u00f8bet. Du fjernes fra spillet.', timeoutWarnHint:'Klik p\u00e5 \u201dOK\u201d for at stoppe nedt\u00e6llingen!', timeoutWarnOk:'OK',
   invScanQr: 'Scan for at deltage', invCopyLink: 'Kopiér link', invShareVia: 'Del…', invitedBanner: 'Du er inviteret til bordet',

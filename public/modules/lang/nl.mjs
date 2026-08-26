@@ -15,6 +15,8 @@ export const meta = {
 };
 
 export const strings = {
+    // Private messages (parity: QML "Messages prives", 2.1.7+).
+    pmTitle:'Privéberichten', pmTooltip:'Privéberichten', pmBtn:'Privébericht', pmSend:'Versturen', pmPlaceholder:'Bericht…', pmDelete:'Dit gesprek verwijderen', pmDeleteConfirm:'Gesprek met {name} verwijderen?', pmEmpty:'Nog geen gesprekken.', pmNoConv:'Kies een gesprek.', pmNoMsg:'Nog geen berichten.', pmMe:'Ik', pmNotFound:'Speler niet gevonden', pmSelf:'Je kunt jezelf geen privébericht sturen.', pmOffline:'Niet verbonden met de server', pmUsage:'Gebruik: /msg <bijnaam> <bericht>', pmAtTable:'Privéberichten zijn niet beschikbaar aan tafel.',
     // Server timeout warning popup (parity: timeoutWarningPopup, pokerth.qml).
     timeoutWarnTitle:'Time-outwaarschuwing', timeoutWarnIdle:'Je verbinding wordt over {s} seconden verbroken wegens inactiviteit.', timeoutWarnAdmin:'Je bent beheerder van een open spel dat over {s} seconden verloopt.', timeoutWarnAfk:'Je hebt al even niet gespeeld. Je wordt over {s} seconden uit het spel verwijderd.', timeoutWarnExpired:'Tijd verstreken. Je wordt losgekoppeld.', timeoutWarnExpiredGame:'Tijd verstreken. Je wordt uit het spel verwijderd.', timeoutWarnHint:'Klik op \u201cOK\u201d om het aftellen te stoppen!', timeoutWarnOk:'OK',
   invScanQr: 'Scan om mee te doen', invCopyLink: 'Link kopiëren', invShareVia: 'Delen…', invitedBanner: 'Je bent uitgenodigd voor de tafel',

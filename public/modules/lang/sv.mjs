@@ -9,6 +9,8 @@ export const meta = {
 };
 
 export const strings = {
+    // Private messages (parity: QML "Messages prives", 2.1.7+).
+    pmTitle:'Privata meddelanden', pmTooltip:'Privata meddelanden', pmBtn:'Privat meddelande', pmSend:'Skicka', pmPlaceholder:'Meddelande…', pmDelete:'Ta bort den här konversationen', pmDeleteConfirm:'Ta bort konversationen med {name}?', pmEmpty:'Inga konversationer än.', pmNoConv:'Välj en konversation.', pmNoMsg:'Inga meddelanden än.', pmMe:'Jag', pmNotFound:'Spelaren hittades inte', pmSelf:'Du kan inte skicka ett privat meddelande till dig själv.', pmOffline:'Inte ansluten till servern', pmUsage:'Användning: /msg <smeknamn> <meddelande>', pmAtTable:'Privata meddelanden är inte tillgängliga vid bordet.',
     // Server timeout warning popup (parity: timeoutWarningPopup, pokerth.qml).
     timeoutWarnTitle:'Varning om inaktivitet', timeoutWarnIdle:'Din anslutning bryts p\u00e5 grund av inaktivitet om {s} sekunder.', timeoutWarnAdmin:'Du \u00e4r administrat\u00f6r f\u00f6r ett \u00f6ppet spel som l\u00f6per ut om {s} sekunder.', timeoutWarnAfk:'Du har inte spelat p\u00e5 ett tag. Du tas bort fr\u00e5n spelet om {s} sekunder.', timeoutWarnExpired:'Tiden \u00e4r ute. Du kopplas fr\u00e5n.', timeoutWarnExpiredGame:'Tiden \u00e4r ute. Du tas bort fr\u00e5n spelet.', timeoutWarnHint:'Klicka p\u00e5 \u201dOK\u201d f\u00f6r att stoppa nedr\u00e4kningen!', timeoutWarnOk:'OK',
   invScanQr: 'Skanna för att gå med', invCopyLink: 'Kopiera länk', invShareVia: 'Dela…', invitedBanner: 'Du är inbjuden till bordet',

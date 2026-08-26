@@ -163,6 +163,12 @@ export const help = {
             ['/diag \u00b7 /netdbg \u00b7 /fps', 'Client state, network and framerate diagnostics'],
             ['/carddbg \u00b7 /msglog \u00b7 /audiodbg \u00b7 /storage \u00b7 /logdump \u00b7 /seatdbg', 'Advanced debugging (cards, protocol, audio, storage, seats)'],
             ['/copy', 'Copy the last command reply to the clipboard']] },
+        { id: 'privatemsg', t: 'Private messages',
+          b: ['Write to one player without the whole lobby reading along. The envelope next to a name in the players list opens a conversation with them; the envelope in the lobby header reopens the last one. Conversations are kept on this device and are still there when you come back, so a chat picked up days later carries its own history \u2014 a red count on the envelope shows what you have not read yet, and the bin in the window title deletes a conversation for good.'],
+          keys: [
+            ['/msg <nickname> <text>', 'Send a private message from the lobby chat'],
+            ['/msg "<nickname with spaces>" <text>', 'Same, when the nickname contains spaces']],
+          note: 'Messages are limited to 128 characters. The server does not deliver a private message to a player who is sitting at a running table, and history is stored in this browser only \u2014 it does not follow you to another device.' },
         { id: 'reactions', t: 'Emoji reactions',
           b: ['The reaction button opens a picker of 30 animated reactions (\uD83C\uDF89, \uD83D\uDE02, \uD83D\uDE31, \uD83D\uDD25\u2026) that play with an effect above your seat, visible to everyone at the table \u2014 including players on the desktop client. Reactions can be disabled entirely in Advanced options.'] },
         { id: 'translate', t: 'Understanding everyone',

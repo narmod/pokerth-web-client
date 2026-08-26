@@ -66,7 +66,7 @@ function onChat(sub) {
     // assis à une table, le panneau lobby n'est pas visible, le son n'avait
     // donc aucun référent à l'écran (remonté narmod 22/07). Le chat de partie
     // et les broadcasts (ctype 1 / 3) ne passent pas par ici.
-    if (ctype === 0 && pid && pid !== S.myId && !_inGameScreen()) {
+    if ((ctype === 0 || ctype === 4) && pid && pid !== S.myId && !_inGameScreen()) {
       try { if (typeof notifyLobbyChat === 'function') notifyLobbyChat(); } catch (_e) {}
     }
     // Mon propre message : déjà affiché en optimiste à l'envoi (classe 'mine').
@@ -75,8 +75,23 @@ function onChat(sub) {
     // ── Routage par chatType (parité QML LobbyHandler ↔ GameHandler) ──
     //   0 lobby → panneau lobby seul · 1 partie → chat de partie seul ·
     //   2 bot → chat de partie si gameId présent (field 1), sinon lobby ·
-    //   3 broadcast → les deux panneaux · autres (privé…) → lobby.
+    //   3 broadcast → les deux panneaux · 4 privé → conversation + lobby ·
+    //   autres → lobby.
     const gid    = Proto.u32(sub, 1);
+    // chatTypePrivate (4) : stocké dans la conversation persistante ET
+    // affiché dans le chat du lobby en « Nom(pm): texte » — le client QML
+    // fait les deux (LobbyHandler::onPrivateChatMessage pousse la ligne
+    // dans le log en plus de la persister). Le nom du partenaire est celui
+    // de l'expéditeur ; un pid inconnu (#123) ne peut pas servir de clé de
+    // conversation, on ne persiste alors rien et la ligne reste seule.
+    if (ctype === 4) {
+      const _pmName = (who && String(who).charAt(0) !== '#') ? who : '';
+      if (_pmName) {
+        try { if (typeof window._pmOnIncoming === 'function') window._pmOnIncoming(_pmName, text); } catch (_e) {}
+      }
+      addChat(who, text, (cls ? cls + ' ' : '') + 'pm');
+      return;
+    }
     const toGame = ctype === 1 || ctype === 3 || (ctype === 2 && gid > 0);
     const toLobby = !toGame || ctype === 3;
     if (toGame && typeof window.addGameChat === 'function') window.addGameChat(who, text, cls);

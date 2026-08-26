@@ -8454,6 +8454,43 @@ html[data-seat-edit="1"] #g-seats .seat.seat-ghost { outline: none; cursor: defa
 /* Option avancee forum_news (ON par defaut) : coupe bouton ET fenetre. */
 body.adv-no-forumnews [id^="forum-btn-"], body.adv-no-forumnews #forum-modal { display: none !important; }
 
+/* ── Messages prives (parite QML « Messages prives ») ────────────────────
+   Reutilise la carcasse .rk-card / .rk-body / .rk-tab des autres fenetres.
+   Specifique ici : la bande des partenaires, la corbeille de l'en-tete et
+   le pied de saisie avec son compteur d'octets. */
+#pm-btn-lobby { position: relative; }
+.pm-unread { position: absolute; top: -5px; right: -5px; min-width: 16px; height: 16px; padding: 0 4px; border-radius: 8px; background: var(--red); color: #fff; border: 1.5px solid var(--panel); font-family: var(--ff-mono); font-size: var(--fs-2xs); font-weight: 700; line-height: 13px; text-align: center; box-shadow: 0 1px 4px rgba(0,0,0,0.5); pointer-events: none; z-index: 6; }
+#pm-modal .rk-card { pointer-events: auto; height: min(80vh, 620px); }
+/* Corbeille : a gauche de la croix, rouge (parite QML). */
+.pm-del { position: absolute; top: 8px; right: 36px; background: none; border: none; color: var(--red); cursor: pointer; padding: 2px; line-height: 0; transition: opacity 0.15s; }
+.pm-del:hover { opacity: 0.75; }
+.pm-del:disabled { opacity: 0.3; cursor: default; }
+/* Bande des partenaires : defile horizontalement quand il y en a beaucoup,
+   plutot que de repousser la conversation vers le bas. */
+.pm-partners { display: flex; gap: var(--sp-2); overflow-x: auto; overflow-y: hidden; padding-bottom: 6px; margin-bottom: 8px; min-height: 26px; }
+.pm-partner { position: relative; flex: 0 0 auto; background: none; border: 1px solid var(--border); border-radius: var(--r-xs); color: var(--text); font: inherit; font-size: var(--fs-sm); padding: 3px 10px; cursor: pointer; white-space: nowrap; transition: border-color 0.15s, color 0.15s; }
+.pm-partner:hover { border-color: var(--border-hi); color: var(--text-hi); }
+.pm-partner.active { background: rgba(var(--sel-rgb,var(--gold-rgb)), 0.18); border-color: var(--sel,var(--gold)); color: var(--sel-hi,var(--gold-hi)); }
+.pm-pbadge { display: inline-block; margin-left: 6px; min-width: 15px; height: 15px; padding: 0 4px; border-radius: 8px; background: var(--red); color: #fff; font-family: var(--ff-mono); font-size: var(--fs-2xs); font-weight: 700; line-height: 15px; text-align: center; }
+.pm-nopart { align-self: center; font-size: var(--fs-sm); color: var(--text-dim); }
+.pm-body { display: flex; flex-direction: column; overflow: hidden; }
+.pm-msgs { flex: 1; min-height: 0; overflow-y: auto; background: var(--field-bg); border: 1px solid var(--border); border-radius: var(--r-xs); padding: 8px 10px; font-size: var(--fs-sm); }
+.pm-hint { color: var(--text-dim); font-size: var(--fs-sm); }
+.pm-line { margin-bottom: 3px; word-break: break-word; }
+.pm-ts { font-family: var(--ff-mono); font-size: var(--fs-2xs); color: var(--text-dim); }
+.pm-line .pm-who { color: var(--gold-dim); }
+.pm-line.mine .pm-who { color: var(--gold-hi); }
+.pm-foot { display: flex; align-items: center; gap: var(--sp-2); margin-top: 12px; }
+.pm-input { flex: 1; min-width: 0; background: var(--field-bg); border: 1px solid var(--border); border-radius: var(--r-xs); color: var(--text); font: inherit; font-size: var(--fs-sm); padding: 6px 9px; }
+.pm-input:focus { outline: none; border-color: var(--sel,var(--gold)); }
+.pm-count { flex: 0 0 auto; font-family: var(--ff-mono); font-size: var(--fs-2xs); color: var(--text-dim); }
+.pm-send { flex: 0 0 auto; }
+/* Marqueur « (pm) » sur la ligne du chat lobby : le client QML ecrit
+   « Nom(pm): texte », on l'obtient sans toucher au nom passe a addChat
+   (sinon liste d'ignores et surlignage du pseudo cassent). */
+.msg.pm .who::after { content: "(pm)"; font-size: var(--fs-2xs); opacity: 0.75; }
+.msg.pm .txt { font-style: italic; opacity: 0.9; }
+
 /* ── Player profile (clicking a name in the ranking) ─────────────────────── */
 .rk-name { background: none; border: none; padding: 0; margin: 0; font: inherit; letter-spacing: inherit; color: var(--gold-hi); cursor: pointer; }
 .rk-name:hover { color: var(--gold); }

@@ -12,6 +12,8 @@ export const meta = {
 };
 
 export const strings = {
+    // Private messages (parity: QML "Messages prives", 2.1.7+).
+    pmTitle:'Özel mesajlar', pmTooltip:'Özel mesajlar', pmBtn:'Özel mesaj', pmSend:'Gönder', pmPlaceholder:'Mesaj…', pmDelete:'Bu sohbeti sil', pmDeleteConfirm:'{name} ile olan sohbet silinsin mi?', pmEmpty:'Henüz sohbet yok.', pmNoConv:'Bir sohbet seçin.', pmNoMsg:'Henüz mesaj yok.', pmMe:'Ben', pmNotFound:'Oyuncu bulunamadı', pmSelf:'Kendine özel mesaj gönderemezsin.', pmOffline:'Sunucuya bağlı değil', pmUsage:'Kullanım: /msg <takma ad> <mesaj>', pmAtTable:'Masada özel mesajlar kullanılamaz.',
     // Server timeout warning popup (parity: timeoutWarningPopup, pokerth.qml).
     timeoutWarnTitle:'Zaman a\u015f\u0131m\u0131 uyar\u0131s\u0131', timeoutWarnIdle:'Hareketsizlik nedeniyle ba\u011flant\u0131n\u0131z {s} saniye i\u00e7inde kesilecek.', timeoutWarnAdmin:'{s} saniye i\u00e7inde sona erecek a\u00e7\u0131k bir oyunun y\u00f6neticisisiniz.', timeoutWarnAfk:'Bir s\u00fcredir hamle yapmad\u0131n\u0131z. {s} saniye i\u00e7inde oyundan \u00e7\u0131kar\u0131lacaks\u0131n\u0131z.', timeoutWarnExpired:'S\u00fcre doldu. Ba\u011flant\u0131n\u0131z kesilecek.', timeoutWarnExpiredGame:'S\u00fcre doldu. Oyundan \u00e7\u0131kar\u0131l\u0131yorsunuz.', timeoutWarnHint:'Geri say\u0131m\u0131 durdurmak i\u00e7in \u201cTamam\u201d\u2019a t\u0131klay\u0131n!', timeoutWarnOk:'Tamam',
   invScanQr: 'Katılmak için tarayın', invCopyLink: 'Bağlantıyı kopyala', invShareVia: 'Paylaş…', invitedBanner: 'Masaya davet edildiniz',

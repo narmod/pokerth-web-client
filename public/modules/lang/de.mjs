@@ -15,6 +15,8 @@ export const meta = {
 };
 
 export const strings = {
+    // Private messages (parity: QML "Messages prives", 2.1.7+).
+    pmTitle:'Private Nachrichten', pmTooltip:'Private Nachrichten', pmBtn:'Private Nachricht', pmSend:'Senden', pmPlaceholder:'Nachricht…', pmDelete:'Diese Unterhaltung löschen', pmDeleteConfirm:'Unterhaltung mit {name} löschen?', pmEmpty:'Noch keine Unterhaltungen.', pmNoConv:'Wähle eine Unterhaltung.', pmNoMsg:'Noch keine Nachrichten.', pmMe:'Ich', pmNotFound:'Spieler nicht gefunden', pmSelf:'Du kannst dir selbst keine private Nachricht schicken.', pmOffline:'Nicht mit dem Server verbunden', pmUsage:'Verwendung: /msg <Spielername> <Nachricht>', pmAtTable:'Private Nachrichten sind am Tisch nicht verfügbar.',
     // Server timeout warning popup (parity: timeoutWarningPopup, pokerth.qml).
     timeoutWarnTitle:'Timeout-Warnung', timeoutWarnIdle:'Ihre Verbindung wird wegen Inaktivit\u00e4t in {s} Sekunden getrennt.', timeoutWarnAdmin:'Sie sind Spielleiter eines offenen Spiels, das in {s} Sekunden abl\u00e4uft.', timeoutWarnAfk:'Sie haben zuletzt nicht gehandelt. Sie werden in {s} Sekunden aus dem Spiel entfernt.', timeoutWarnExpired:'Zeit abgelaufen. Sie werden getrennt.', timeoutWarnExpiredGame:'Zeit abgelaufen. Sie werden aus dem Spiel entfernt.', timeoutWarnHint:'Bitte auf \u201eOK\u201c klicken, um den Countdown zu stoppen!', timeoutWarnOk:'OK',
   invScanQr: 'Zum Beitreten scannen', invCopyLink: 'Link kopieren', invShareVia: 'Teilen…', invitedBanner: 'Du bist eingeladen, dem Tisch beizutreten',
