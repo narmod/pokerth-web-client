@@ -8503,6 +8503,13 @@ body.adv-no-forumnews [id^="forum-btn-"], body.adv-no-forumnews #forum-modal { d
 .pm-ts { font-family: var(--ff-mono); font-size: var(--fs-2xs); color: var(--text-dim); }
 .pm-line .pm-who { color: var(--gold-dim); }
 .pm-line.mine .pm-who { color: var(--gold-hi); }
+/* Avis « invite » / « a la table » : remplace la saisie quand rien ne peut
+   partir (parite PrivateMessageDialog.qml). */
+/* Enveloppe absente (moi, invite, joueur a une table en cours) : une cale de
+   meme largeur garde les deux autres pastilles alignees d'une ligne a l'autre. */
+.pl-act-gap { display: inline-block; width: 20px; }
+.pm-note { margin-top: 10px; font-size: var(--fs-2xs); color: var(--text-dim); }
+.pm-input:disabled { opacity: 0.5; cursor: not-allowed; }
 .pm-foot { display: flex; align-items: center; gap: var(--sp-2); margin-top: 12px; }
 .pm-input { flex: 1; min-width: 0; background: var(--field-bg); border: 1px solid var(--border); border-radius: var(--r-xs); color: var(--text); font: inherit; font-size: var(--fs-sm); padding: 6px 9px; }
 .pm-input:focus { outline: none; border-color: var(--sel,var(--gold)); }

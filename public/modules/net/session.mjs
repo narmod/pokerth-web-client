@@ -65,6 +65,11 @@ function show(id) {
   if (window.closeRankingModal) window.closeRankingModal();
   if (window._pollOnScreen) window._pollOnScreen(id);
   if (window.closeTableRanking) window.closeTableRanking();
+  // Messages prives : la fenetre se ferme des qu'on arrive au feutre. Parite
+  // QML (PrivateMessageDialog, onAtTableChanged: if (atTable) close()) : a une
+  // table en cours, les PM sont volontairement coupes -- risque d'entente
+  // entre joueurs -- et le serveur ne les delivre de toute facon pas.
+  if (id === 's-game' && window.closePmModal) { try { window.closePmModal(); } catch (e) {} }
   try {
     var _rkb = document.getElementById('ranking-btn-lobby');
     if (_rkb) _rkb.style.display = (id === 's-lobby') ? '' : 'none';

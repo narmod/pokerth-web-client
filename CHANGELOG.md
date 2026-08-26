@@ -14,6 +14,28 @@ Opened with `v2.1.7-web.0` (2026-08-13), following the upstream **2.1.7**
 release.
 
 ### Added
+- **Private messages aligned with the upstream QML dialogue** (`web.96`) — sp0ck
+  published `PrivateMessageDialog.qml` on 2026-08-25 (`39f91719`, plus follow-ups
+  `d8d63b5c` / `e7db45b0`), so the behaviour can now be matched against a real
+  reference instead of inferred from the `LobbyHandler` API. This pass covers
+  behaviour only; the visual alignment follows separately.
+  - **Blocked while *I* am at a running table.** Upstream gates on
+    `atRunningTable` (= `m_gameRunning`, my own state) and states the reason as
+    collusion prevention — two players at one table must not talk out of sight.
+    Our check only covered the *target*, which is what the server enforces; both
+    now apply. `show('s-game')` closes the window, matching
+    `onAtTableChanged: if (atTable) close()`.
+  - **Guests.** `canSendPm` requires `!isMyPlayerGuest`; the envelope is now
+    hidden for guests and a notice replaces the input, since the server drops
+    every `ChatRequest` they send.
+  - **Envelope visibility** follows `canSendPm` fully: not on my own row, not for
+    guests, and not toward a player in a *running* game (`mode === 2`;
+    `_playerActivity` does not distinguish open from started games, hence a
+    dedicated `_plInRunningGame`). A spacer keeps the remaining chips aligned.
+  - Confirms `web.95`: upstream's `ensurePrivateConversation` is explicitly not
+    persisted (*"Bewusst NICHT speichern … Die erste Nachricht legt die Zeile
+    an."*), which is what we had already switched to.
+  - New key `pmGuest` across all 45 catalogues (19 `pm*` keys).
 - **Private messages** (`web.92`) — full parity with the QML client's private
   message dialogue (upstream `LobbyHandler`, PokerTH 2.1.7+). A persistent
   conversation window replaces nothing: the lobby chat still shows the incoming

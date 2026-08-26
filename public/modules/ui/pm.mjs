@@ -142,9 +142,23 @@ function _renderConversation() {
 function _renderCounter() {
   const inp = $('pm-in'), cnt = $('pm-count'), btn = $('pm-send');
   if (!inp) return;
+  // A notice replaces the input whenever nothing can be sent at all, rather
+  // than letting the player type a message that would be refused (parity:
+  // the guest / atTable notice above the input in PrivateMessageDialog.qml).
+  const guest = _amGuest(), mine = _meAtRunningTable();
+  const note = $('pm-note');
+  if (note) {
+    const txt = mine ? _tt('pmAtTable', 'Private messages are not available at the table.')
+              : guest ? _tt('pmGuest', 'Guests cannot send chat messages')
+              : '';
+    note.textContent = txt;
+    note.style.display = txt ? '' : 'none';
+  }
+  const blocked = guest || mine;
+  inp.disabled = blocked || !_current;
   const n = _bytes(inp.value);
   if (cnt) cnt.textContent = n + '/' + MAX_BYTES;
-  if (btn) btn.disabled = !_current || !inp.value.trim();
+  if (btn) btn.disabled = blocked || !_current || !inp.value.trim();
   const del = $('pm-del');
   if (del) del.disabled = !_current;
 }
@@ -250,6 +264,22 @@ function playerIdByName(name) {
   return 0;
 }
 
+// Am I myself sitting at a running table? Upstream blocks private messages
+// there on purpose -- `atRunningTable` in PrivateMessageDialog.qml, with the
+// reasoning spelled out as collusion prevention ("Absprachen"): two players
+// at the same table must not be able to talk out of sight. The server would
+// not deliver them anyway, but the block is ours to make, not its.
+function _meAtRunningTable() {
+  try { return !!(S.amInGame && S._gameStarted); } catch (e) { return false; }
+}
+
+// Guests cannot chat at all (the server drops every ChatRequest from them),
+// so upstream hides the envelope entirely and shows a notice instead of the
+// input (`canSendPm` requires `!isMyPlayerGuest`).
+function _amGuest() {
+  try { return S._currentLoginMode === 'guest'; } catch (e) { return false; }
+}
+
 // Is that player sitting at a RUNNING table? The server refuses a private
 // message in exactly that case (ServerLobbyThread::HandleNetPacketChatRequest
 // checks `tmpGame->IsRunning()`), and its refusal carries no reason -- a bare
@@ -312,6 +342,8 @@ function sendTo(name, text) {
     // with oneself is not something the desktop client can produce.
     return 'self';
   }
+  if (_amGuest()) return 'guest';
+  if (_meAtRunningTable()) return 'meAtTable';
   if (_atRunningTable(pid)) return 'atTable';
   let ok = false;
   try { ok = send(MSG.buildPrivateChat(pid, msg)); } catch (e) { ok = false; }
@@ -329,7 +361,9 @@ function sendTo(name, text) {
 
 function _errText(code, name) {
   if (code === 'notFound') return _tt('pmNotFound', 'Player not found');
-  if (code === 'atTable')  return _tt('pmAtTable', 'Private messages are not available at the table.');
+  if (code === 'atTable' || code === 'meAtTable')
+    return _tt('pmAtTable', 'Private messages are not available at the table.');
+  if (code === 'guest')    return _tt('pmGuest', 'Guests cannot send chat messages');
   if (code === 'offline')  return _tt('pmOffline', 'Not connected to server');
   if (code === 'self')     return _tt('pmSelf', 'You cannot send a private message to yourself.');
   return '';

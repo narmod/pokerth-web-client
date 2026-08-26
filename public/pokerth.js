@@ -10146,6 +10146,26 @@ var _PL_TOGGLE_COLS = ['av','status','flag','star','acts']; // 'name' et 'inv' e
 // Enveloppe : ouvre la conversation privée avec ce joueur (parité QML,
 // icône ✉ de la liste des joueurs connectés).
 var _PL_MAIL_SVG = '<svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" aria-hidden="true"><path d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2Zm0 4.24-8 4.76-8-4.76V6l8 4.76L20 6v2.24Z"/></svg>';
+// Parite QML canSendPm (PlayerListItem.qml) : pas d'enveloppe sur ma propre
+// ligne, pas d'enveloppe si je suis invite (le serveur refuse tout chat des
+// invites), et pas d'enveloppe vers un joueur assis a une partie EN COURS
+// (isPlayerInRunningGame) -- le serveur ne lui delivrerait rien. mode 2 =
+// netGameStarted ; _playerActivity ne distingue pas les parties ouvertes des
+// parties lancees, d'ou ce test dedie.
+function _plInRunningGame(pid) {
+  try {
+    for (var id in S.games) {
+      var g = S.games[id];
+      if (g && g.mode === 2 && g.seats && g.seats.indexOf(pid) !== -1) return true;
+    }
+  } catch (e) {}
+  return false;
+}
+function _plCanSendPm(r) {
+  if (r.isMe) return false;
+  if (S._currentLoginMode === 'guest') return false;
+  return !_plInRunningGame(r.pid);
+}
 window._plOpenPm = function(pid){
   var nm = (typeof window.getPlayerName === 'function') ? window.getPlayerName(pid) : null;
   if (!nm) return;
@@ -10321,11 +10341,10 @@ function renderPlayersList() {
     // joueur est dans une partie, éteinte sinon). Plus de nom de partie sous le pseudo.
     var _status = '<span class="pl-status' + (r.act ? ' on' : '') + '" title="' + (r.act ? esc(r.act) : _tt('plNotPlaying','Not playing')) + '"' + (r.act ? '' : ' data-i18n-title="plNotPlaying"') + '>' + _PL_PAD_SVG + '</span>';
     var _ign  = _isIgnored(r.name);
-    // Parité QML : l'enveloppe ne concerne que les AUTRES joueurs (on ne
-    // s'écrit pas à soi-même). Le 🚫 de ma propre ligne est conservé tel
-    // quel : le retirer serait un changement visible à part entière.
+    // Le 🚫 de ma propre ligne est conservé tel quel : le retirer serait un
+    // changement visible à part entière (accord narmod 26/08).
     var _acts = '<span class="pl-acts">'
-      + (r.isMe ? '' : '<button type="button" class="pl-act pl-act-pm" title="' + _tt('pmBtn','Private message') + '" data-i18n-title="pmBtn" aria-label="' + _tt('pmBtn','Private message') + '" onclick="event.stopPropagation();window._plOpenPm(' + r.pid + ')">' + _PL_MAIL_SVG + '</button>')
+      + (_plCanSendPm(r) ? '<button type="button" class="pl-act pl-act-pm" title="' + _tt('pmBtn','Private message') + '" data-i18n-title="pmBtn" aria-label="' + _tt('pmBtn','Private message') + '" onclick="event.stopPropagation();window._plOpenPm(' + r.pid + ')">' + _PL_MAIL_SVG + '</button>' : '<span class="pl-act-gap"></span>')
       + '<button type="button" class="pl-act pl-act-ban' + (_ign ? ' on' : '') + '" title="' + _tt('plIgnore','Ignore') + '" data-i18n-title="plIgnore" aria-label="' + _tt('plIgnore','Ignore') + '" onclick="event.stopPropagation();window._plToggleIgnore(' + r.pid + ')">' + _PL_BAN_SVG + '</button>'
       + '<button type="button" class="pl-act pl-act-stats" title="' + _tt('plStats','Stats') + '" data-i18n-title="plStats" aria-label="' + _tt('plStats','Stats') + '" onclick="event.stopPropagation();window._plOpenStats(' + _ppArg + ')">' + _PL_BAR_SVG + '</button>'
       + '</span>';
@@ -10674,7 +10693,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.7-web.95'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.7-web.96'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
