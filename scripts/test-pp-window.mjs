@@ -26,6 +26,17 @@ ok(/HOSTS *=[^;]*#pp-modal/.test(zo), 'z-order : #pp-modal enregistre');
 const css = readFileSync('public/pokerth.css', 'utf8');
 ok(/#pp-modal \{[^}]*position: fixed/.test(css), 'css : conteneur position:fixed');
 ok(/#pp-modal\.rk-floating/.test(css), 'css : mode fenetre flottante');
+// Largeur suivant l'ecran : ni figee en px, ni sans borne haute.
+const cardCss = (css.match(/#pp-modal \.rk-card \{[^}]*\}/) || [''])[0];
+ok(/width:\s*clamp\(/.test(cardCss), 'css : largeur en clamp (suit l ecran)');
+ok(/max-width:\s*calc\(100vw/.test(cardCss), 'css : bornee a la fenetre sur petit ecran');
+ok(!/width:\s*min\(\d+px/.test(cardCss), 'css : plus de largeur figee en px');
+// Taille d ouverture de la fenetre flottante : calculee, pas constante.
+const openCall = (html.match(/key: 'pth-pp-win',[\s\S]{0,400}/) || [''])[0];
+ok(/defW:\s*Math\./.test(openCall), 'fenetre : largeur d ouverture calculee');
+ok(/innerWidth/.test(openCall), 'fenetre : calculee depuis la taille d ecran');
+ok(/Math\.max\(\s*\d+/.test(openCall) && /Math\.min\(\s*\d+/.test(openCall),
+   'fenetre : bornee des deux cotes');
 
 // ── Rendus extraits du script inline ──
 const grab = (re, what) => { const m = html.match(re); if (!m) { console.error('NOT FOUND: ' + what); process.exit(1); } return m[0]; };

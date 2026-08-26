@@ -327,6 +327,14 @@ release.
   serve stale pages.
 
 ### Changed
+- **Profile window sizes to the screen** (`web.103`) — it opened at a fixed
+  480 px, which cramped a ten-column placement table, a pie and a ten-bar chart
+  on displays with room to spare. The card is now
+  `clamp(300px, 68vw, 780px)` with `max-width: calc(100vw - 32px)`, and the
+  floating window's opening size is derived from `innerWidth`/`innerHeight`,
+  bounded at both ends — a floor so it stays readable on a phone, a ceiling so
+  text lines don't stretch across a 4K panel. `test-pp-window` now fails on a
+  hard-coded pixel width; verified against `web.102`.
 - **Sync indicator moved** (`web.99`) — `.hdr-sync` (the disk shown while a
   settings sync is in flight) was inserted before `.hdr-ovf-wrap`, i.e. next to
   the settings wheel. It now anchors to the left of the private messages envelope

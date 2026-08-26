@@ -8471,7 +8471,12 @@ body.adv-no-forumnews [id^="forum-btn-"], body.adv-no-forumnews #forum-modal { d
    Carcasse generique identique aux autres fenetres ; le contenu reutilise
    les rendus rk* de la carte profil du classement. */
 #pp-modal { position: fixed; inset: 0; z-index: 1200; align-items: center; justify-content: center; pointer-events: none; }
-#pp-modal .rk-card { pointer-events: auto; width: min(480px, calc(100vw - 32px)); height: min(85vh, 600px); }
+/* Largeur suivant l'ecran : le contenu porte un tableau de dix colonnes, un
+   camembert et un histogramme de dix barres. A 480px fixes, tout se tassait
+   sur un grand ecran alors que la place ne manquait pas. On prend une part de
+   la largeur disponible, bornee -- plancher pour rester lisible sur un
+   telephone, plafond pour ne pas etaler le texte sur un 4K. */
+#pp-modal .rk-card { pointer-events: auto; width: clamp(300px, 68vw, 780px); max-width: calc(100vw - 32px); height: min(88vh, 700px); }
 #pp-modal.rk-floating { pointer-events: none; }
 #pp-modal.rk-floating .rk-backdrop { display: none; }
 #pp-modal.rk-floating .rk-card { pointer-events: auto; }

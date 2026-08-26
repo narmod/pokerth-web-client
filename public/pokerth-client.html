@@ -3776,9 +3776,15 @@ if ('serviceWorker' in navigator) {
       try {
         window._enableFloating(card, {
           handle: $('pp-title'), resizable: true,
-          maxW: Math.min(760, Math.round(window.innerWidth * 0.92)),
-          maxH: Math.min(720, Math.round(window.innerHeight * 0.90)),
-          zoom: true, key: 'pth-pp-win', defW: 480, defH: 600,
+          maxW: Math.min(900, Math.round(window.innerWidth * 0.92)),
+          maxH: Math.min(820, Math.round(window.innerHeight * 0.90)),
+          // Taille d'ouverture proportionnelle a l'ecran, bornee des deux
+          // cotes : le tableau des places (dix colonnes) et l'histogramme
+          // demandent de la largeur, mais l'etaler sur un tres grand ecran
+          // rendrait les lignes de texte illisibles.
+          zoom: true, key: 'pth-pp-win',
+          defW: Math.max(360, Math.min(780, Math.round(window.innerWidth * 0.62))),
+          defH: Math.max(360, Math.min(700, Math.round(window.innerHeight * 0.82))),
           minW: 320, minH: 320, defLeft: 140, defTop: 60
         });
       } catch (e) {}
