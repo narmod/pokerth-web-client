@@ -123,7 +123,12 @@ function ready() {
 function partners() {
   return Object.keys(_mem.conv).map(function (name) {
     const c = _mem.conv[name];
-    return { name: name, unread: c.unread || 0, last: c.last || 0 };
+    // lastText / fromMe feed the one-line preview under each partner name
+    // (parity: privateConversationPartners, which carries the same fields).
+    const a = _mem.msg[name] || [];
+    const m = a.length ? a[a.length - 1] : null;
+    return { name: name, unread: c.unread || 0, last: c.last || 0,
+             lastText: m ? m.text : '', fromMe: m ? !!m.mine : false };
   }).sort(function (a, b) {
     if (b.last !== a.last) return b.last - a.last;
     return a.name.localeCompare(b.name);

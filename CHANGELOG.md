@@ -244,6 +244,29 @@ release.
   serve stale pages.
 
 ### Changed
+- **Private message window matched to the upstream QML dialogue (visual)**
+  (`web.97`) — second half of the alignment begun in `web.96`, now against
+  `PrivateMessageDialog.qml` itself.
+  - **Partner column** replaces the horizontal chip strip: 160 px down the left,
+    each row carrying the name (bold when unread), a one-line preview of the last
+    message, and an unread badge capped at `9+`. Hidden below two conversations
+    (the name already shows above the history) and, below a 430 px card, folded
+    into a drop-down — parity `wideLayout`. The card is resizable in floating
+    mode, so a `ResizeObserver` on the card drives that switch rather than the
+    viewport, and only re-renders when the mode actually flips.
+  - **Message bubbles** replace `[hh:mm:ss] Name: text` lines: mine right-aligned
+    and tinted, the other side left and plain, timestamp inside at the bottom.
+    The sender name is dropped — it is redundant in a two-person thread.
+  - **Timestamps** follow `privateMessageDisplayTime`: `HH:mm` for today,
+    `dd.MM. HH:mm` for anything older.
+  - **`not in the lobby`** now shows as a muted label beside the active partner
+    name, as upstream does, on top of the dimmed row in the list.
+  - Card widened to 600 × 520 (upstream `min(parent * 0.92, 600)`), so the
+    partner column has room; the drop-down covers narrower windows.
+  - The drop-down sits in the conversation header rather than the title bar:
+    the title is the drag handle for floating mode, and a `select` there would be
+    unusable.
+  - New key `pmNotInLobby` across all 45 catalogues (20 `pm*` keys).
 - **Search-engine plumbing: freshness, link previews and richer results**
   (`web.80`) — four gaps in the SEO layer, none of them visible in the app.
   The sitemap now carries `<lastmod>` on every URL, dated from the newest served

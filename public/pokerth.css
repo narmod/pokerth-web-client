@@ -8468,7 +8468,7 @@ body.adv-no-forumnews [id^="forum-btn-"], body.adv-no-forumnews #forum-modal { d
    revelait #gchat-fab, un bouton sans regle CSS vivant sous la ligne de
    flottaison. */
 #pm-modal { position: fixed; inset: 0; z-index: 1200; align-items: center; justify-content: center; pointer-events: none; }
-#pm-modal .rk-card { pointer-events: auto; height: min(80vh, 620px); }
+#pm-modal .rk-card { pointer-events: auto; width: min(600px, calc(100vw - 32px)); height: min(85vh, 520px); padding: 14px 16px 12px; }
 #pm-modal.rk-floating { pointer-events: none; }
 #pm-modal.rk-floating .rk-backdrop { display: none; }
 #pm-modal.rk-floating .rk-card { pointer-events: auto; }
@@ -8483,38 +8483,46 @@ body.adv-no-forumnews [id^="forum-btn-"], body.adv-no-forumnews #forum-modal { d
 .pm-del { position: absolute; top: 8px; right: 36px; background: none; border: none; color: var(--red); cursor: pointer; padding: 2px; line-height: 0; transition: opacity 0.15s; }
 .pm-del:hover { opacity: 0.75; }
 .pm-del:disabled { opacity: 0.3; cursor: default; }
-/* Bande des partenaires : defile horizontalement quand il y en a beaucoup,
-   plutot que de repousser la conversation vers le bas. */
-.pm-partners { display: flex; gap: var(--sp-2); overflow-x: auto; overflow-y: hidden; padding-bottom: 6px; margin-bottom: 8px; min-height: 26px; }
-.pm-partner { position: relative; flex: 0 0 auto; background: none; border: 1px solid var(--border); border-radius: var(--r-xs); color: var(--text); font: inherit; font-size: var(--fs-sm); padding: 3px 10px; cursor: pointer; white-space: nowrap; transition: border-color 0.15s, color 0.15s; }
-.pm-partner:hover { border-color: var(--border-hi); color: var(--text-hi); }
-.pm-partner.active { background: rgba(var(--sel-rgb,var(--gold-rgb)), 0.18); border-color: var(--sel,var(--gold)); color: var(--sel-hi,var(--gold-hi)); }
-/* Partenaire absent du lobby : l'historique survit a la session, le nom peut
-   donc etre celui d'un joueur parti. Attenue -- reste selectionnable pour
-   relire la conversation, mais l'envoi echouera. */
-.pm-partner.off { color: var(--text-dim); border-style: dashed; }
-.pm-partner.off.active { color: var(--sel-hi,var(--gold-hi)); }
-.pm-pbadge { display: inline-block; margin-left: 6px; min-width: 15px; height: 15px; padding: 0 4px; border-radius: 8px; background: var(--red); color: #fff; font-family: var(--ff-mono); font-size: var(--fs-2xs); font-weight: 700; line-height: 15px; text-align: center; }
+/* Corps : colonne des partenaires a gauche, conversation a droite. */
+.pm-main { flex: 1; min-height: 0; display: flex; gap: 10px; }
+.pm-partners { flex: 0 0 160px; min-width: 0; overflow-y: auto; overflow-x: hidden; background: var(--panel-row, var(--inset)); border: 1px solid var(--border); border-radius: var(--r-xs); padding: 4px; display: flex; flex-direction: column; gap: 2px; }
+.pm-partner { display: flex; align-items: center; gap: 5px; width: 100%; text-align: left; background: none; border: none; border-radius: 4px; color: var(--text); font: inherit; padding: 5px 7px; cursor: pointer; transition: background 0.12s; }
+.pm-partner:hover, .pm-partner.active { background: var(--inset-hi, rgba(var(--gold-rgb),0.12)); }
+.pm-pmain { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.pm-pname { font-size: var(--fs-sm); color: var(--text-hi); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pm-pname.unread { font-weight: 700; }
+.pm-plast { font-size: var(--fs-2xs); color: var(--text-dim); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pm-partner.off .pm-pname { color: var(--text-dim); font-style: italic; }
+.pm-pbadge { flex: 0 0 auto; min-width: 14px; height: 14px; padding: 0 4px; border-radius: 7px; background: var(--red); color: #fff; font-family: var(--ff-mono); font-size: var(--fs-2xs); font-weight: 700; line-height: 14px; text-align: center; }
 .pm-nopart { align-self: center; font-size: var(--fs-sm); color: var(--text-dim); }
-.pm-body { display: flex; flex-direction: column; overflow: hidden; }
-.pm-msgs { flex: 1; min-height: 0; overflow-y: auto; background: var(--field-bg); border: 1px solid var(--border); border-radius: var(--r-xs); padding: 8px 10px; font-size: var(--fs-sm); }
+/* Conversation. */
+.pm-conv { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.pm-head { display: flex; align-items: center; gap: 7px; padding-bottom: 6px; }
+.pm-select { max-width: 170px; background: var(--field-bg); border: 1px solid var(--border); border-radius: var(--r-xs); color: var(--text); font: inherit; font-size: var(--fs-2xs); padding: 2px 5px; }
+.pm-cur { font-size: var(--fs-sm); font-weight: 700; color: var(--text-hi); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pm-offlbl { font-size: var(--fs-2xs); color: var(--text-dim); flex: 0 0 auto; }
+.pm-msgs { flex: 1; min-height: 0; overflow-y: auto; background: var(--field-bg); border: 1px solid var(--border); border-radius: var(--r-xs); padding: 8px; display: flex; flex-direction: column; gap: 6px; }
 .pm-hint { color: var(--text-dim); font-size: var(--fs-sm); }
-.pm-line { margin-bottom: 3px; word-break: break-word; }
-.pm-ts { font-family: var(--ff-mono); font-size: var(--fs-2xs); color: var(--text-dim); }
-.pm-line .pm-who { color: var(--gold-dim); }
-.pm-line.mine .pm-who { color: var(--gold-hi); }
+/* Bulles : les miennes a droite et teintees, celles d'en face a gauche. */
+.pm-line { display: flex; }
+.pm-line.mine { justify-content: flex-end; }
+.pm-bub { display: flex; flex-direction: column; max-width: 85%; padding: 6px 9px; border-radius: 8px; border: 1px solid var(--border); background: var(--panel-row, var(--inset)); }
+.pm-line.mine .pm-bub { background: rgba(var(--gold-rgb), 0.16); border-color: var(--gold-dim); }
+.pm-text { font-size: var(--fs-sm); color: var(--text-hi); overflow-wrap: break-word; white-space: pre-wrap; }
+.pm-ts { align-self: flex-end; font-family: var(--ff-mono); font-size: var(--fs-3xs, var(--fs-2xs)); color: var(--text-dim); margin-top: 2px; }
+.pm-line.mine .pm-ts { color: var(--gold-dim); }
 /* Avis « invite » / « a la table » : remplace la saisie quand rien ne peut
    partir (parite PrivateMessageDialog.qml). */
-/* Enveloppe absente (moi, invite, joueur a une table en cours) : une cale de
-   meme largeur garde les deux autres pastilles alignees d'une ligne a l'autre. */
-.pl-act-gap { display: inline-block; width: 20px; }
-.pm-note { margin-top: 10px; font-size: var(--fs-2xs); color: var(--text-dim); }
+.pm-note { margin-top: 8px; font-size: var(--fs-2xs); color: var(--text-dim); }
 .pm-input:disabled { opacity: 0.5; cursor: not-allowed; }
-.pm-foot { display: flex; align-items: center; gap: var(--sp-2); margin-top: 12px; }
+.pm-foot { display: flex; align-items: center; gap: var(--sp-2); margin-top: 10px; }
 .pm-input { flex: 1; min-width: 0; background: var(--field-bg); border: 1px solid var(--border); border-radius: var(--r-xs); color: var(--text); font: inherit; font-size: var(--fs-sm); padding: 6px 9px; }
 .pm-input:focus { outline: none; border-color: var(--sel,var(--gold)); }
 .pm-count { flex: 0 0 auto; font-family: var(--ff-mono); font-size: var(--fs-2xs); color: var(--text-dim); }
 .pm-send { flex: 0 0 auto; }
+/* Enveloppe absente (moi, invite, joueur a une table en cours) : une cale de
+   meme largeur garde les deux autres pastilles alignees d'une ligne a l'autre. */
+.pl-act-gap { display: inline-block; width: 20px; }
 /* Marqueur « (pm) » sur la ligne du chat lobby : le client QML ecrit
    « Nom(pm): texte », on l'obtient sans toucher au nom passe a addChat
    (sinon liste d'ignores et surlignage du pseudo cassent). */

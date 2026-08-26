@@ -2783,15 +2783,28 @@ if ('serviceWorker' in navigator) {
     <button class="rk-close" type="button" id="pm-close" title="Close" data-i18n-title="closeTooltip" data-i18n-aria="closeTooltip" aria-label="Close">&#10005;</button>
     <button class="pm-del" type="button" id="pm-del" title="Delete this conversation" data-i18n-title="pmDelete" data-i18n-aria="pmDelete" aria-label="Delete this conversation" disabled><svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor" aria-hidden="true"><path d="M6 19a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V7H6v12ZM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4Z"/></svg></button>
     <div class="rk-title" id="pm-title"><svg viewBox="0 0 24 24" style="display:inline-block;width:15px;height:15px;vertical-align:-2px;margin-right:6px" fill="currentColor" aria-hidden="true"><path d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2Zm0 4.24-8 4.76-8-4.76V6l8 4.76L20 6v2.24Z"/></svg><span data-i18n="pmTitle">Private messages</span></div>
-    <div class="pm-partners" id="pm-partners"></div>
-    <div class="rk-body pm-body">
-      <div class="pm-msgs" id="pm-msgs"></div>
-    </div>
-    <div class="pm-note" id="pm-note" style="display:none"></div>
-    <div class="pm-foot">
-      <input id="pm-in" class="pm-input" maxlength="128" placeholder="Message&#8230;" data-i18n-placeholder="pmPlaceholder" autocomplete="off">
-      <span class="pm-count" id="pm-count">0/128</span>
-      <button type="button" class="rk-tab pm-send" id="pm-send" disabled><span data-i18n="pmSend">Send</span></button>
+    <div class="pm-main">
+      <!-- Colonne des partenaires : masquee tant qu'il n'y a qu'une seule
+           conversation, et remplacee par un deroulant sur fenetre etroite
+           (parite wideLayout, PrivateMessageDialog.qml). -->
+      <div class="pm-partners" id="pm-partners"></div>
+      <div class="pm-conv">
+        <div class="pm-head">
+          <!-- Le deroulant vit ici et non dans le titre : le titre est la
+               poignee de deplacement de la fenetre, un select y serait
+               inutilisable. -->
+          <select class="pm-select" id="pm-partner-select" style="display:none" aria-label="Conversation"></select>
+          <span class="pm-cur" id="pm-partner-name"></span>
+          <span class="pm-offlbl" id="pm-offlbl" style="display:none" data-i18n="pmNotInLobby">not in the lobby</span>
+        </div>
+        <div class="pm-msgs" id="pm-msgs"></div>
+        <div class="pm-note" id="pm-note" style="display:none"></div>
+        <div class="pm-foot">
+          <input id="pm-in" class="pm-input" maxlength="128" placeholder="Message&#8230;" data-i18n-placeholder="pmPlaceholder" autocomplete="off">
+          <span class="pm-count" id="pm-count">0/128</span>
+          <button type="button" class="rk-tab pm-send" id="pm-send" disabled><span data-i18n="pmSend">Send</span></button>
+        </div>
+      </div>
     </div>
   </div>
 </div>

@@ -64,12 +64,31 @@ function _fit(s) {
   return out;
 }
 
+// Same rule as privateMessageDisplayTime upstream: bare time for today,
+// day and month prefixed for anything older. A conversation resumed days
+// later needs the date; today's does not.
 function _time(ts) {
   try {
     const d = new Date(ts);
     const p = function (n) { return (n < 10 ? '0' : '') + n; };
-    return p(d.getHours()) + ':' + p(d.getMinutes()) + ':' + p(d.getSeconds());
+    const hm = p(d.getHours()) + ':' + p(d.getMinutes());
+    const now = new Date();
+    const sameDay = d.getFullYear() === now.getFullYear()
+                 && d.getMonth() === now.getMonth()
+                 && d.getDate() === now.getDate();
+    return sameDay ? hm : (p(d.getDate()) + '.' + p(d.getMonth() + 1) + '. ' + hm);
   } catch (e) { return ''; }
+}
+
+// Below this card width the partner column gives way to a drop-down
+// (parity: wideLayout, PrivateMessageDialog.qml).
+const WIDE_MIN = 430;
+
+function _isWide() {
+  try {
+    const card = document.querySelector('#pm-modal .rk-card');
+    return !card || card.offsetWidth > WIDE_MIN;
+  } catch (e) { return true; }
 }
 
 // ── Header badge (every .pm-unread instance, as forumnews.mjs does) ─────
@@ -88,27 +107,48 @@ function refreshBadge() {
 
 function _renderPartners() {
   const strip = $('pm-partners');
+  const sel   = $('pm-partner-select');
   if (!strip) return;
   const list = store.partners();
   // The draft sits at the front until it earns a place of its own.
   if (_draft && !list.some(function (p) { return p.name === _draft; })) {
-    list.unshift({ name: _draft, unread: 0, last: 0 });
+    list.unshift({ name: _draft, unread: 0, last: 0, lastText: '', fromMe: false });
   }
-  if (!list.length) {
-    strip.innerHTML = '<span class="pm-nopart">' + _esc(_tt('pmEmpty', 'No conversations yet.')) + '</span>';
-    return;
+  // One conversation needs no picker at all: the name already shows above
+  // the history (parity: the partner list is hidden below two entries).
+  const wide = _isWide();
+  const showCol  = wide && list.length > 1;
+  const showDrop = !wide && list.length > 1;
+  strip.style.display = showCol ? '' : 'none';
+  if (sel) sel.style.display = showDrop ? '' : 'none';
+
+  if (showDrop && sel) {
+    sel.innerHTML = list.map(function (p) {
+      const lbl = p.unread ? (p.name + ' (' + p.unread + ')') : p.name;
+      return '<option value="' + _esc(p.name) + '"'
+        + (p.name === _current ? ' selected' : '') + '>' + _esc(lbl) + '</option>';
+    }).join('');
   }
+  if (!showCol) return;
+
   strip.innerHTML = list.map(function (p) {
     const badge = p.unread
-      ? '<span class="pm-pbadge">' + (p.unread > 99 ? '99+' : p.unread) + '</span>'
+      ? '<span class="pm-pbadge">' + (p.unread > 9 ? '9+' : p.unread) + '</span>'
       : '';
     // History outlives a session, so a partner may well have left the lobby.
     // Dimming them says so before the player types a message that cannot be
     // delivered.
     const off = playerIdByName(p.name) ? '' : ' off';
+    // One line of the last message under the name, so a busy inbox can be
+    // read at a glance without opening each conversation in turn.
+    const prev = p.lastText
+      ? '<span class="pm-plast">' + _esc(p.lastText) + '</span>'
+      : '';
     return '<button type="button" class="pm-partner' + (p.name === _current ? ' active' : '') + off + '"'
       + ' title="' + _esc(off ? _tt('pmOfflinePartner', 'Not in the lobby at the moment') : p.name) + '"'
-      + ' data-name="' + _esc(p.name) + '">' + _esc(p.name) + badge + '</button>';
+      + ' data-name="' + _esc(p.name) + '">'
+      + '<span class="pm-pmain"><span class="pm-pname' + (p.unread ? ' unread' : '') + '">'
+      + _esc(p.name) + '</span>' + prev + '</span>' + badge + '</button>';
   }).join('');
   try {
     strip.querySelectorAll('.pm-partner').forEach(function (b) {
@@ -129,12 +169,16 @@ function _renderConversation() {
     box.innerHTML = '<div class="pm-hint">' + _esc(_tt('pmNoMsg', 'No messages yet.')) + '</div>';
     return;
   }
+  // Bubbles rather than chat lines: mine on the right and tinted, the other
+  // side left and plain, timestamp inside at the bottom (parity: the
+  // conversation delegate in PrivateMessageDialog.qml). The sender name is
+  // redundant in a two-person thread, so it is dropped.
   box.innerHTML = msgs.map(function (m) {
-    const who = m.mine ? (S.myName || _tt('pmMe', 'Me')) : _current;
     return '<div class="pm-line' + (m.mine ? ' mine' : '') + '">'
-      + '<span class="pm-ts">[' + _time(m.ts) + ']</span> '
-      + '<b class="pm-who">' + _esc(who) + ':</b> '
-      + '<span class="pm-text">' + _esc(m.text) + '</span></div>';
+      + '<span class="pm-bub">'
+      + '<span class="pm-text">' + _esc(m.text) + '</span>'
+      + '<span class="pm-ts">' + _esc(_time(m.ts)) + '</span>'
+      + '</span></div>';
   }).join('');
   try { box.scrollTop = box.scrollHeight; } catch (e) {}
 }
@@ -167,7 +211,12 @@ function _render() {
   _renderPartners();
   _renderConversation();
   const nm = $('pm-partner-name');
-  if (nm) nm.textContent = _current || '';
+  if (nm) nm.textContent = _current || _tt('pmNoConv', 'No conversation yet');
+  // "not in the lobby" next to the active name: the partner is stored but
+  // absent, so nothing can be sent to them right now (parity: the muted
+  // label beside the partner name upstream).
+  const off = $('pm-offlbl');
+  if (off) off.style.display = (_current && !playerIdByName(_current)) ? '' : 'none';
   _renderCounter();
   refreshBadge();
 }
@@ -435,6 +484,22 @@ function _init() {
   if (btn) btn.addEventListener('click', _doSend);
   const del = $('pm-del');
   if (del) del.addEventListener('click', deleteCurrent);
+  const sel = $('pm-partner-select');
+  if (sel) sel.addEventListener('change', function () { select(sel.value); });
+  // The card is resizable in floating mode, so the wide/narrow decision has
+  // to follow the card, not the viewport.
+  try {
+    const card = document.querySelector('#pm-modal .rk-card');
+    if (card && typeof ResizeObserver === 'function') {
+      let wasWide = null;
+      new ResizeObserver(function () {
+        const w = _isWide();
+        if (w === wasWide) return;   // only re-render when the mode flips
+        wasWide = w;
+        _renderPartners();
+      }).observe(card);
+    }
+  } catch (e) {}
   const cls = $('pm-close');
   if (cls) cls.addEventListener('click', close);
   const bd = $('pm-backdrop');
