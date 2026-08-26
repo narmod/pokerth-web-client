@@ -521,6 +521,12 @@ function onPlayerInfoReply(sub) {
       if (pid === S.myId && typeof window._syncGlobalNoticeBtn === 'function') {
         try { window._syncGlobalNoticeBtn(); } catch (_e) {}
       }
+      // …et repeindre la liste des joueurs : la pastille marteau (kickban) et
+      // la largeur de la colonne d'actions dependent de MES droits, qui
+      // arrivent apres le premier rendu de la liste.
+      if (pid === S.myId && typeof window.renderPlayersList === 'function') {
+        try { window.renderPlayersList(); } catch (_e2) {}
+      }
     }
     S._pendingNameRequests.delete(pid); // got the reply, free for retry if needed
     // ── Step 1 (PokerTH avatar): peek for the optional AvatarData

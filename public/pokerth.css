@@ -9904,6 +9904,9 @@ html[data-buttons="pokerth"] .btn-action[disabled] { filter: grayscale(0.55) bri
 .pl-act-inv.sent { opacity:.45; cursor:default; }
 .pl-act:hover { color:var(--gold); background:rgba(var(--gold-rgb),0.12); }
 .pl-act.pl-act-ban.on { color:var(--red,#e05050); }
+/* Marteau (kickban admin) : rouge, comme le bouton du popup joueur. */
+.pl-act-gavel { color:var(--red,#e05050); }
+.pl-act-gavel:hover { color:var(--red,#e05050); background:rgba(224,80,80,0.14); }
 
 /* Déroulant de tri en bas de la colonne Joueurs connectés (parité officielle) */
 .pl-sortbar { flex:0 0 auto; padding:6px 8px; border-top:1px solid var(--border); background:var(--chrome-tint,var(--panel)); }

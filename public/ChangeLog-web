@@ -1,4 +1,5 @@
 2026-08-13 version 2.1.7-web (current series):
+- new: server admins now have the kickban hammer directly in the players list, next to the other actions, instead of having to open each player's card. The actions column widens to make room for it, and stays as it is for everyone else
 - improvement: the little disk that appears while your settings are being saved to the server now sits to the left of the private messages envelope in the lobby, instead of next to the settings wheel
 - bugfix: the list of players online was empty, showing only a dash, while the counter above it still announced the right number
 - improvement: the private message window now looks like the one in the desktop client. Conversations are listed down the left side with the first line of the last message under each name, so a busy inbox can be read at a glance; messages appear as bubbles, yours on the right, with the time in the corner. On a narrow window the list folds into a drop-down, and with a single conversation it disappears entirely. Times show as the hour for today and gain the date for older messages

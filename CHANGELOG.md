@@ -14,6 +14,23 @@ Opened with `v2.1.7-web.0` (2026-08-13), following the upstream **2.1.7**
 release.
 
 ### Added
+- **Kickban hammer in the players list** (`web.100`) — parity with the QML
+  `PlayerListItem`, where the gavel is a row action (`canAdminModerate`) rather
+  than something buried in the player card. Shown only when I am a server admin
+  (`playerRights === 3`), never on my own row nor on a bot, and placed last as
+  upstream does (mail · invite · ignore · stats · gavel).
+  - The `acts` grid track is now **computed** rather than fixed: 70px for three
+    chips, 90px for four. The header uses the *full* template by design, so a
+    frozen track drifts from the rows — the exact defect seen when the envelope
+    took the column from two chips to three. `_plTrack()` reads it on every
+    template build, so gaining or losing admin rights mid-session re-lays the
+    column out without a reload.
+  - `PlayerInfoReply` re-renders the list when *my own* rights arrive: they land
+    after the list has already been drawn once.
+  - Bridges `window._amServerAdmin` declared inside the `App` IIFE, per
+    `test-pl-scope`.
+  - New `scripts/test-pl-acts.mjs` covers both widths, the three visibility rules
+    and the mid-session switch.
 - **Private messages aligned with the upstream QML dialogue** (`web.96`) — sp0ck
   published `PrivateMessageDialog.qml` on 2026-08-25 (`39f91719`, plus follow-ups
   `d8d63b5c` / `e7db45b0`), so the behaviour can now be matched against a real

@@ -4907,6 +4907,12 @@ const App = (() => {
     } catch (e) {}
     return false;
   };
+  // Suis-je admin pokerth.net (playerRights = 3) ? Parite QML
+  // isCurrentPlayerAdmin, qui conditionne l'icone marteau de la liste.
+  window._amServerAdmin = function () {
+    try { return ((S._playerRights && S.myId) ? (S._playerRights[S.myId] || 0) : 0) === 3; }
+    catch (e) { return false; }
+  };
   // Suis-je connecte en invite ? Le serveur refuse tout chat des invites.
   window._amGuestMode = function () {
     try { return S._currentLoginMode === 'guest'; } catch (e) { return false; }
@@ -10160,11 +10166,22 @@ window._plToggleIgnore = function(pid){
 // activables/désactivables depuis l'en-tête (#pl-colhead). Choix persisté
 // dans localStorage 'pth_pl_cols' = liste des colonnes MASQUÉES (une
 // nouvelle colonne future est donc visible par défaut).
-// acts : 48px suffisaient pour deux pastilles (message prive + ignorer +
-// stats en fait trois depuis 2.1.7-web.92). La piste doit suivre, sinon
-// l'en-tete -- qui utilise le gabarit COMPLET -- ne s'aligne plus sur la
-// colonne des lignes. 3 x 20px (icone 14 + padding 3) + 2 gouttieres.
+// acts : largeur VARIABLE, contrairement aux autres pistes. Une pastille fait
+// 20px (icone 14 + padding 3), plus les gouttieres. Trois pastilles pour tout
+// le monde (message prive, ignorer, stats) ; une quatrieme, le marteau, quand
+// je suis admin serveur. La piste doit suivre le nombre reellement affiche :
+// l'en-tete utilise le gabarit COMPLET, une piste figee le desalignerait de la
+// colonne des lignes (c'etait le cas au passage de deux a trois pastilles).
+var _PL_ACTS_W = { 3: '70px', 4: '90px' };
+function _plActsTrack() {
+  var admin = false;
+  try { admin = !!(window._amServerAdmin && window._amServerAdmin()); } catch (e) {}
+  return _PL_ACTS_W[admin ? 4 : 3];
+}
 var _PL_TRACK = { av:'22px', name:'minmax(0,1fr)', status:'22px', flag:'48px', star:'16px', inv:'26px', acts:'70px' };
+// Lu a CHAQUE construction de gabarit (en-tete comme lignes) pour que le
+// passage admin / non-admin se voie sans rechargement.
+function _plTrack(k) { return (k === 'acts') ? _plActsTrack() : _PL_TRACK[k]; }
 var _PL_COL_ORDER   = ['av','name','star','status','flag','inv','acts'];
 var _PL_TOGGLE_COLS = ['av','status','flag','star','acts']; // 'name' et 'inv' exclus
 // Colonne « Inviter à la partie » (parité PlayerListItem QML) : présente
@@ -10186,6 +10203,14 @@ function _plCanSendPm(r) {
   try { if (window._amGuestMode && window._amGuestMode()) return false; } catch (e) {}
   try { return !(window._playerInRunningGame && window._playerInRunningGame(r.pid)); }
   catch (e) { return true; }
+}
+// Marteau (gavel) : kickban total, parite QML canAdminModerate -- visible
+// seulement si JE suis admin serveur, jamais sur ma propre ligne ni sur un bot.
+var _PL_GAVEL_SVG = '<svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" aria-hidden="true"><path d="M2.3 19.3 8.6 13l2.4 2.4-6.3 6.3a1.7 1.7 0 0 1-2.4-2.4Zm10.1-6.6-1.4-1.4 6.4-6.4 1.4 1.4-6.4 6.4ZM15.9 2l6.1 6.1-1.8 1.8-6.1-6.1L15.9 2ZM9.8 8.1l6.1 6.1-1.8 1.8-6.1-6.1 1.8-1.8Z"/></svg>';
+function _plCanKickban(r) {
+  if (r.isMe) return false;
+  try { if (window.isBot && window.isBot(r.pid)) return false; } catch (e) {}
+  try { return !!(window._amServerAdmin && window._amServerAdmin()); } catch (e) { return false; }
 }
 window._plOpenPm = function(pid){
   var nm = (typeof window.getPlayerName === 'function') ? window.getPlayerName(pid) : null;
@@ -10263,7 +10288,7 @@ function renderPlayersList() {
   // rester cliquable colonne masquée ou non ; en tout-visible les deux
   // gabarits coïncident → pastilles alignées 1:1 sur les colonnes.
   var _visCols = _plVisibleCols();
-  var _fullTmpl = _plColOrder().map(function (k) { return _PL_TRACK[k]; }).join(' ');
+  var _fullTmpl = _plColOrder().map(_plTrack).join(' ');
   var _headHtml = '<div class="pl-colhead" style="grid-template-columns:' + _fullTmpl + '">'
                 + _plColHeadHtml() + '</div>';
   try { body.style.setProperty('--pl-cols', _fullTmpl); } catch (e) {}
@@ -10368,6 +10393,7 @@ function renderPlayersList() {
       + (_plCanSendPm(r) ? '<button type="button" class="pl-act pl-act-pm" title="' + _tt('pmBtn','Private message') + '" data-i18n-title="pmBtn" aria-label="' + _tt('pmBtn','Private message') + '" onclick="event.stopPropagation();window._plOpenPm(' + r.pid + ')">' + _PL_MAIL_SVG + '</button>' : '<span class="pl-act-gap"></span>')
       + '<button type="button" class="pl-act pl-act-ban' + (_ign ? ' on' : '') + '" title="' + _tt('plIgnore','Ignore') + '" data-i18n-title="plIgnore" aria-label="' + _tt('plIgnore','Ignore') + '" onclick="event.stopPropagation();window._plToggleIgnore(' + r.pid + ')">' + _PL_BAN_SVG + '</button>'
       + '<button type="button" class="pl-act pl-act-stats" title="' + _tt('plStats','Stats') + '" data-i18n-title="plStats" aria-label="' + _tt('plStats','Stats') + '" onclick="event.stopPropagation();window._plOpenStats(' + _ppArg + ')">' + _PL_BAR_SVG + '</button>'
+      + (_plCanKickban(r) ? '<button type="button" class="pl-act pl-act-gavel" title="' + _tt('piKickban','Total kickban') + '" data-i18n-title="piKickban" aria-label="' + _tt('piKickban','Total kickban') + '" onclick="event.stopPropagation();window._adminBanPlayer(' + r.pid + ')">' + _PL_GAVEL_SVG + '</button>' : '')
       + '</span>';
     var _plCell = function (k) {
       switch (k) {
@@ -10714,7 +10740,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.7-web.99'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.7-web.100'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
