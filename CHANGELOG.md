@@ -13,6 +13,15 @@ this file captures what matters to players and operators.
 Opened with `v2.1.7-web.0` (2026-08-13), following the upstream **2.1.7**
 release.
 
+### Added
+- **`bbcadmins.txt` added to the botfile relay** (`web.120`) — groundwork for
+  upstream `422f5fe4`. `/api/botfile?f=` now accepts a fourth key alongside
+  `minidb`, `weclist` and `gameslist`; the whitelist stays strict, the 15-minute
+  cache and the stale-fallback are shared. Server-side only: this needs the
+  proxy to be redeployed (`docker compose pull && up -d` on pokerth.net) before
+  the client half can use it. Until then the client simply keeps the button
+  hidden, exactly as it does today.
+
 ### Changed
 - **Private messages to a guest are blocked** (`web.119`) — parity with upstream
   `985a64bd` (`partnerIsGuest`, `PrivateMessageDialog.qml`). The server refuses

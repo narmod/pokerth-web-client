@@ -7248,7 +7248,7 @@ function handleRanking(req, res, query) {
 
 
 // ── Community suggest botfiles relay (parite QML 2.1.5, Config.BotSuggest) ──
-// Le client QML tire trois fichiers texte de bbc.pokerth.net et les analyse
+// Le client QML tire quatre fichiers texte de bbc.pokerth.net et les analyse
 // lui-meme. Un navigateur ne peut pas : pas de CORS sur cet hote, et l'UA que
 // le filtre Cloudflare attend n'est pas posable en JS. On relaie donc a
 // l'identique — texte brut, aucune interpretation ici. Le parsing et le
@@ -7256,12 +7256,18 @@ function handleRanking(req, res, query) {
 // BotSuggest.qml : ainsi un changement de format amont se corrige par un
 // deploiement statique, sans redemarrer le proxy.
 //
-//   GET /api/botfile?f=minidb|weclist|gameslist  -> text/plain
+//   GET /api/botfile?f=minidb|weclist|gameslist|bbcadmins  -> text/plain
+//
+// bbcadmins.txt (format de weclist.txt : un pseudo par ligne) dit qui a le
+// droit de proposer des joueurs sur un tapis BBC Step qu'il n'a pas cree
+// lui-meme — amont 422f5fe4. Le client ne le demande QUE lorsque l'empreinte
+// locale du tapis dit deja « BBC Step », donc ce relais reste peu sollicite.
 //
 // Cache 15 minutes, exactement le cacheTtlMs du singleton QML.
 const BOTFILE_BASE = 'https://bbc.pokerth.net/exp3/bbcbot/';
 const BOTFILE_TTL_MS = 15 * 60 * 1000;
-const BOTFILE_NAMES = { minidb: 'minidb.txt', weclist: 'weclist.txt', gameslist: 'gameslist.txt' };
+const BOTFILE_NAMES = { minidb: 'minidb.txt', weclist: 'weclist.txt', gameslist: 'gameslist.txt',
+                        bbcadmins: 'bbcadmins.txt' };
 
 function handleBotfile(req, res, query) {
   const key = String((query && query.f) || '').toLowerCase();
