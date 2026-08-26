@@ -87,14 +87,16 @@ ok(w.document.getElementById('pim-cups') === null,
    'carte : plus de bloc coupes en ligne');
 const infoBox = w.document.getElementById('pim-info');
 const _nb = (infoBox.innerHTML.match(/pim-cups-btn/g) || []).length;
-ok(_nb === 2, 'carte : deux boutons (profil + coupes), trouve ' + _nb);
+// UN seul bouton : « Voir les coupes » menait au meme endroit que « Profil du
+// joueur », la fenetre contenant deja les coupes des trois classements.
+ok(_nb === 1, 'carte : un seul bouton vers les statistiques, trouve ' + _nb);
 
 // CLIC REEL sur chacun. Une assertion de sous-chaine sur innerHTML ne prouve
 // RIEN : jusqu'a 2.1.7-web.112 le nom etait interpole en JSON dans l'attribut
 // onclick, dont les guillemets doubles fermaient l'attribut — le navigateur ne
 // gardait que « window.openPlayerProfile( » et le bouton etait inerte, alors
 // que la chaine attendue etait bel et bien presente dans le HTML.
-for (const [idx, label] of [[0, 'profil'], [1, 'coupes']]) {
+for (const [idx, label] of [[0, 'profil']]) {
   w.document.getElementById('pp-modal').style.display = 'none';
   const btns = infoBox.querySelectorAll('.pim-cups-btn');
   const b = btns[idx];

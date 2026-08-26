@@ -70,6 +70,8 @@ ok(mine.includes('pim-cups-btn') && mine.includes('_pimOpenStats(3)'),
 const _onclicks = [...mine.matchAll(/onclick="([^"]*)"/g)].map((m) => m[1]);
 ok(_onclicks.length > 0 && _onclicks.every((c) => /^[\w.$]+\([^"]*\)$/.test(c)),
    '_cupsBlockHtml : chaque onclick est un appel complet [' + _onclicks.join(' | ') + ']');
+ok(_onclicks.length === 1,
+   '_cupsBlockHtml : un seul bouton (le second menait au meme endroit)');
 ok(!mine.includes('id="pim-cups"'),
    '_cupsBlockHtml : plus de bloc coupes en ligne dans la carte');
 ok(mine.includes('player?u=narmod'),
@@ -82,25 +84,26 @@ els['login-mode'].value = 'lan-dedi';
 ok(P._cupsBlockHtml(3) === '', '_cupsBlockHtml : hors réseau pokerth.net → aucun bloc');
 els['login-mode'].value = 'auth';
 
-// Bouton 📊 de la liste : la liste passe '' pour moi — mes coupes doivent
-// quand meme se charger, comme pour les autres joueurs.
+// Pastille 📊 de la liste : depuis 2.1.7-web.112 elle ouvre la FENETRE de
+// statistiques (qui charge les coupes) au lieu de les injecter dans la carte.
+// L'intention testee est inchangee : la liste passe '' pour moi, mes coupes
+// doivent s'ouvrir comme celles des autres.
+let statsFor = null;
+window.openPlayerProfile = (nm, pid) => { statsFor = nm; };
+statsFor = null;
+window._plOpenStats('');
+ok(statsFor === 'narmod', "_plOpenStats('') : ouvre MES statistiques (pastille 📊)");
+statsFor = null;
+window._plOpenStats(7);
+ok(statsFor === 'Alice', '_plOpenStats(pid) : ouvre les statistiques de l\'adversaire');
+
+// La carte elle-meme ne charge plus jamais les coupes : elles vivent dans la
+// fenetre. autoStats ne doit donc plus rien declencher cote reseau.
 let cupsFor = null;
 window.rkLoadPlayerCups = (nm) => { cupsFor = nm; };
 cupsFor = null;
-window._plOpenStats('');
-ok(cupsFor === 'narmod', "_plOpenStats('') : charge MES coupes (bouton 📊 de la liste)");
-cupsFor = null;
-window._plOpenStats(7);
-ok(cupsFor === 'Alice', '_plOpenStats(pid) : charge les coupes de l\'adversaire');
-
-// Avatar de la table : seat-render appelle openPlayerInfoPopup(pid, true) —
-// les classements doivent se charger sans passer par le bouton 🏆.
-cupsFor = null;
 P.openPlayerInfoPopup(7, true);
-ok(cupsFor === 'Alice', 'popup depuis un avatar de la table : coupes chargées directement');
-cupsFor = null;
-P.openPlayerInfoPopup(7);
-ok(cupsFor === null, 'popup sans autoStats : rien n\'est chargé (bouton 🏆 requis)');
+ok(cupsFor === null, 'carte : aucun chargement de coupes, meme avec autoStats');
 
 // _pimSetTab pilote l'onglet du popup
 S._statsEligible = true; S._pimTab = 'session';

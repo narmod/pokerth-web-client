@@ -265,13 +265,11 @@ function openPlayerInfoPopup(pid, autoStats) {
   // Stats de comportement (VPIP/PFR/AF…) : locales et légères → chargées à
   // CHAQUE ouverture dès que le conteneur existe, self compris. Les coupes de
   // saison (réseau pokerth.net, rallongent le popup) ne se chargent QUE sur
-  // demande explicite : bouton 🏆, ou bouton 📊 de la liste (autoStats) —
-  // plus jamais automatiquement depuis la table (revirement narmod 26/07).
+  // demande explicite : le bouton de la carte ou la pastille 📊 de la liste
+  // ouvrent la fenetre de statistiques — plus jamais automatiquement depuis
+  // la table (revirement narmod 26/07).
   if (document.getElementById('pim-stats-hud')) {
     try { _pimLoadPlayerStats(targetPid); } catch (e) {}
-  }
-  if (autoStats && document.getElementById('pim-cups-btn')) {
-    try { _pimLoadCups(targetPid); } catch (e) {}
   }
   modal.style.display = 'flex';
   // Mode fenetre EN DERNIER : tant que la carte est vide, sa hauteur ne veut
@@ -400,14 +398,16 @@ function _cupsBlockHtml(pid) {
   // les actions, la fenetre porte les coupes des trois classements et, pour
   // moi, mes stats de session. Un seul bouton mene a l'une comme a l'autre —
   // il y en avait deux qui ouvraient des vues largement redondantes.
+  // UN SEUL bouton : « Voir les coupes » menait exactement au meme endroit
+  // (_pimOpenStats), la fenetre de statistiques contenant deja les coupes des
+  // trois classements. Deux libelles pour une seule destination n'apportaient
+  // rien (constat narmod 26/08).
   // On ne passe QUE le pid dans l'attribut. JSON.stringify(nm) y injectait des
   // guillemets doubles, qui fermaient l'attribut onclick lui-meme : le
   // navigateur ne gardait que « window.openPlayerProfile( » et le clic ne
   // faisait rien. Le nom est resolu cote JS, ou aucun echappement n'est requis.
   return '<button type="button" class="pim-cups-btn" onclick="window._pimOpenStats(' + pid + ')">\uD83D\uDCCA '
        + esc(tt('ppOpen', 'Player profile')) + '</button>'
-       + '<button type="button" class="pim-cups-btn" onclick="window._pimOpenStats(' + pid + ')">\uD83C\uDFC6 '
-       + esc(tt('piShowCups', 'Show cups')) + '</button>'
        + '<a class="pim-profile-link" href="https://www.pokerth.net/app.php/player?u='
        + encodeURIComponent(nm) + '" target="_blank" rel="noopener noreferrer">'
        + esc(tt('piViewProfile', 'View pokerth.net profile')) + '</a>';
@@ -650,32 +650,6 @@ function _pimLoadPlayerStats(pid) {
 }
 window._pimLoadPlayerStats = _pimLoadPlayerStats;
 
-// Bouton BASCULE : les coupes rallongent beaucoup le popup, on doit pouvoir
-// les replier apres les avoir consultees. Le chargement reseau reste fait UNE
-// SEULE fois (marqueur data-loaded) ; les bascules suivantes ne touchent qu'au
-// display.
-function _pimLoadCups(pid) {
-  var box = document.getElementById('pim-cups');
-  var btn = document.getElementById('pim-cups-btn');
-  if (!box) return;
-  function tt(k, fb) { var v = (typeof t === 'function') ? t(k) : null; return (v && v !== k) ? v : fb; }
-  var shown = box.getAttribute('data-shown') === '1';
-  if (shown) {
-    box.style.display = 'none';
-    box.setAttribute('data-shown', '0');
-    if (btn) btn.innerHTML = '\uD83C\uDFC6 ' + esc(tt('piShowCups', 'Show cups'));
-    return;
-  }
-  box.style.display = '';
-  box.setAttribute('data-shown', '1');
-  if (btn) btn.innerHTML = '\uD83C\uDFC6 ' + esc(tt('piHideCups', 'Hide cups'));
-  if (box.getAttribute('data-loaded') === '1') return;
-  box.setAttribute('data-loaded', '1');
-  if (typeof window.rkLoadPlayerCups === 'function') {
-    try { window.rkLoadPlayerCups(_pimNameFor(pid), 'pim-cups'); } catch (e) {}
-  }
-}
-window._pimLoadCups = _pimLoadCups;
 
 // ──────────────────────────────────────────────────────────────
 // Open the existing avatar-popup as a floating modal, from the
@@ -780,13 +754,13 @@ function closeAvatarPickerFromLobby() {
 
 export { _pthAvatarFor, _myAvatarDisplay, _myAvatarToBroadcast, _avatarChipHtml,
          _ccToFlag, openPlayerInfoPopup, _otherPlayerInfoHtml, _cupsBlockHtml, _pimSetTab,
-         _renderProfileStats, closePlayerInfoPopup, _pimLoadCups,
+         _renderProfileStats, closePlayerInfoPopup,
          _pimLoadPlayerStats, _pimRenderPlayerStats,
          openAvatarPickerFromLobby, closeAvatarPickerFromLobby };
 
 for (const [k, v] of Object.entries({ _pthAvatarFor, _myAvatarDisplay,
   _myAvatarToBroadcast, _avatarChipHtml, _ccToFlag, openPlayerInfoPopup,
   _otherPlayerInfoHtml, _cupsBlockHtml, _pimSetTab, _renderProfileStats, closePlayerInfoPopup,
-  _pimLoadCups, _pimLoadPlayerStats, _pimRenderPlayerStats,
+  _pimLoadPlayerStats, _pimRenderPlayerStats,
   openAvatarPickerFromLobby, closeAvatarPickerFromLobby }))
   window[k] = v;

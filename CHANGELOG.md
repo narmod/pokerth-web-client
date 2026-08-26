@@ -451,6 +451,18 @@ release.
   serve stale pages.
 
 ### Changed
+- **Single button to the statistics** (`web.116`) — "Show cups", restored in
+  `web.113` on request, called `_pimOpenStats(pid)` exactly like "Player profile"
+  and opened the same window, which already holds the cups of all three rankings.
+  Two labels for one destination; the cups button is gone again. I should have
+  said so when it was asked for.
+  - Removed the dead `_pimLoadCups` with it: it targeted `#pim-cups`, which left
+    the card in `web.112`, and nothing else called it. `node --check` caught the
+    two orphaned exports.
+  - Three assertions in `test-player-popup` still checked that the 📊 chip loaded
+    cups *into the card*. The intent — my chip must surface my cups like anyone
+    else's — is kept, retargeted at the window; and a new one asserts the card
+    never triggers a cups fetch, even with `autoStats`.
 - **Session stats given their own card** (`web.114`) — in `#pp-modal` they ran
   straight into the cups block with nothing between them, so there was no telling
   where local measurements of the current session ended and the server's rankings
