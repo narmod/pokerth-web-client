@@ -140,6 +140,17 @@ release.
   `SEO_RULES_I18N` rather than introducing a second script for one page.
 
 ### Fixed
+- **Own player card missing the role line** (`web.110`) — the Bot / Admin /
+  Registered / Guest badge was emitted only by `_otherPlayerInfoHtml`; the self
+  branch built its block from `_inGameInfoHtml + _cupsBlockHtml` alone, so one
+  could never see what the server had recognised one as. Extracted into a shared
+  `_roleHtml(pid)` used by both branches, in the same position, so they cannot
+  drift apart again. `#pim-info` is now always shown for self — the role line is
+  never empty, unlike the blocks that previously gated it.
+  New `scripts/test-pim-parity.mjs` opens the real popup in jsdom for self and
+  for another player and compares what is rendered, including that the role
+  tracks *my* rights rather than the last player viewed. Four assertions fail on
+  `web.109`.
 - **Controls stretched across a wide player card** (`web.109`) — an "Ignore"
   button 1300 px wide. The action column is now capped at 380 px and centred
   (`.pim-cups-btn`, ignore, report-avatar, kickban, profile link, cup tabs, stats

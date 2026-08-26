@@ -288,9 +288,9 @@ function openPlayerInfoPopup(pid, autoStats) {
     if (infoEl) {
       // Mêmes infos en jeu + stats de comportement que pour un adversaire,
       // PUIS les coupes (demande narmod 26/07 : parité self/adversaires).
-      var _selfInfo = _inGameInfoHtml(targetPid) + _cupsBlockHtml(targetPid);
+      var _selfInfo = _roleHtml(targetPid) + _inGameInfoHtml(targetPid) + _cupsBlockHtml(targetPid);
       infoEl.innerHTML = _selfInfo;
-      infoEl.style.display = _selfInfo ? '' : 'none';
+      infoEl.style.display = '';   // _roleHtml n'est jamais vide
     }
   } else {
     // Adversaire : rôle + infos en jeu, pas de stats ni de bouton avatar.
@@ -439,10 +439,14 @@ function _inGameInfoHtml(pid) {
   return html;
 }
 
-function _otherPlayerInfoHtml(pid) {
+// Rôle du joueur (Bot / Admin / Enregistré / Invité). EXTRAIT ici parce qu'il
+// n'était rendu que pour les adversaires : sur mon propre profil la ligne
+// manquait purement et simplement, alors que rien ne le justifie — je peux
+// vouloir vérifier que le serveur m'a bien reconnu comme enregistré ou admin
+// (remonté narmod 26/08). Les deux branches passent désormais par ici, elles
+// ne peuvent donc plus diverger.
+function _roleHtml(pid) {
   function tt(k, fb) { var v = (typeof t === 'function') ? t(k) : null; return (v && v !== k) ? v : fb; }
-  var html = '';
-  // Rôle
   var roleTxt;
   if (window.isBot(pid)) {
     roleTxt = '🤖 ' + tt('piRoleBot', 'Bot');
@@ -452,7 +456,12 @@ function _otherPlayerInfoHtml(pid) {
             : (rg === 2) ? tt('piRoleRegistered', 'Registered')
             : tt('piRoleGuest', 'Guest');
   }
-  html += '<div class="pim-role">' + esc(roleTxt) + '</div>';
+  return '<div class="pim-role">' + esc(roleTxt) + '</div>';
+}
+
+function _otherPlayerInfoHtml(pid) {
+  function tt(k, fb) { var v = (typeof t === 'function') ? t(k) : null; return (v && v !== k) ? v : fb; }
+  var html = _roleHtml(pid);
   // Infos en jeu + conteneur des stats de comportement (partagés avec la
   // self-box, cf. _inGameInfoHtml).
   html += _inGameInfoHtml(pid);
