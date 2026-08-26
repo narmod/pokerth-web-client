@@ -115,6 +115,18 @@ function _winGateOk() {
   try { return !!(window._winGate && window._winGate() && typeof window._enableFloating === 'function'); }
   catch (e) { return false; }
 }
+// Geometrie d'ouverture : centree, comme la carte joueur.
+function _gimGeom() {
+  var vw = 1024, vh = 768;
+  try { vw = window.innerWidth || vw; vh = window.innerHeight || vh; } catch (e) {}
+  var maxW = Math.min(760, Math.round(vw * 0.92));
+  var maxH = Math.min(820, Math.round(vh * 0.92));
+  var w = Math.max(300, Math.min(maxW, Math.round(vw * 0.34)));
+  var h = Math.max(300, Math.min(maxH, Math.round(vh * 0.72)));
+  return { w: w, h: h, maxW: maxW, maxH: maxH,
+           left: Math.max(8, Math.round((vw - w) / 2)),
+           top:  Math.max(8, Math.round((vh - h) / 2)) };
+}
 
 function openGameInfoPopup() {
   var modal = document.getElementById('game-info-modal');
@@ -124,12 +136,12 @@ function openGameInfoPopup() {
     try {
       window._enableFloating(_card, {
         handle: modal.querySelector('.gim-header'), resizable: true,
-        maxW: Math.min(760, Math.round(window.innerWidth * 0.92)),
-        maxH: Math.min(820, Math.round(window.innerHeight * 0.92)),
-        zoom: true, key: 'pth-gim-win',
-        defW: Math.max(300, Math.min(420, Math.round(window.innerWidth * 0.30))),
-        defH: Math.max(300, Math.min(600, Math.round(window.innerHeight * 0.70))),
-        minW: 260, minH: 240, defLeft: 120, defTop: 90
+        maxW: _gimGeom().maxW, maxH: _gimGeom().maxH,
+        // Cle changee comme pour la carte joueur : meme raison.
+        zoom: true, key: 'pth-gim-win2',
+        defW: _gimGeom().w, defH: _gimGeom().h,
+        minW: 260, minH: 240,
+        defLeft: _gimGeom().left, defTop: _gimGeom().top
       });
     } catch (e) {}
   }

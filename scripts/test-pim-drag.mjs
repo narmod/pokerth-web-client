@@ -62,9 +62,33 @@ const after = { left: card.style.left, top: card.style.top };
 ok(after.left !== before.left || after.top !== before.top,
    'la carte a BOUGE en tirant la poignee (' + before.left + ',' + before.top + ' -> ' + after.left + ',' + after.top + ')');
 
+// ── Ouverture : centree, et large ──
+// Le media desktop impose `.pim-card { max-width: 400px !important }` : sans
+// neutralisation explicite en mode fenetre, la carte refuse de s'elargir quel
+// que soit le maxW passe a _enableFloating.
+const cssAll = readFileSync('public/pokerth.css', 'utf8');
+const floatRule = (cssAll.match(/#player-info-modal \.pim-card\.floating-win,[\s\S]*?\}/) || [''])[0];
+ok(/max-width:\s*none\s*!important/.test(floatRule),
+   'css : max-width neutralise en !important (bat la regle du media desktop)');
+ok(/max-width:\s*400px\s*!important/.test(cssAll),
+   'css : la regle bloquante existe bien (sinon ce garde-fou ne sert a rien)');
+
+const srcPim = readFileSync('public/modules/ui/player-popup.mjs', 'utf8');
+ok(/key:\s*'pth-pim-win2'/.test(srcPim),
+   'cle de geometrie changee (une geometrie etroite memorisee ecraserait defW)');
+// Geometrie calculee : centree horizontalement et verticalement.
+const geomSrc = (srcPim.match(/function _pimGeom\(\) \{[\s\S]*?\n\}/) || [''])[0];
+ok(!!geomSrc, 'geometrie d ouverture calculee');
+const geom = new Function('window', geomSrc + '\nreturn _pimGeom;')({ innerWidth: 1600, innerHeight: 900 })();
+ok(geom.left === Math.round((1600 - geom.w) / 2), 'ouverture centree horizontalement (left=' + geom.left + ')');
+ok(geom.top === Math.round((900 - geom.h) / 2), 'ouverture centree verticalement (top=' + geom.top + ')');
+ok(geom.w >= 560, 'ouverture large sur 1600px (' + geom.w + 'px)');
+const small = new Function('window', geomSrc + '\nreturn _pimGeom;')({ innerWidth: 420, innerHeight: 700 })();
+ok(small.w <= 420 && small.left >= 8, 'reste dans l ecran sur petite fenetre (' + small.w + 'px @' + small.left + ')');
+
 // Le plafond d'agrandissement doit laisser de la place au bloc coupes.
 const src = readFileSync('public/modules/ui/player-popup.mjs', 'utf8');
-const mw = (src.match(/maxW:\s*Math\.min\((\d+)/) || [])[1];
+const mw = (src.match(/maxW = Math\.min\((\d+)/) || [])[1];
 ok(Number(mw) >= 800, 'plafond d agrandissement large (' + mw + 'px)');
 ok(/handle:\s*document\.getElementById\('pim-grip'\)/.test(src), 'poignee = le bandeau, pas le nom du joueur');
 

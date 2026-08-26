@@ -146,6 +146,19 @@ function _winGateOk() {
   try { return !!(window._winGate && window._winGate() && typeof window._enableFloating === 'function'); }
   catch (e) { return false; }
 }
+// Geometrie d'ouverture : large et centree. Calculee a chaque ouverture pour
+// suivre la taille de la fenetre du navigateur.
+function _pimGeom() {
+  var vw = 1024, vh = 768;
+  try { vw = window.innerWidth || vw; vh = window.innerHeight || vh; } catch (e) {}
+  var maxW = Math.min(900, Math.round(vw * 0.92));
+  var maxH = Math.min(880, Math.round(vh * 0.92));
+  var w = Math.max(320, Math.min(maxW, Math.round(vw * 0.42)));
+  var h = Math.max(340, Math.min(maxH, Math.round(vh * 0.82)));
+  return { w: w, h: h, maxW: maxW, maxH: maxH,
+           left: Math.max(8, Math.round((vw - w) / 2)),
+           top:  Math.max(8, Math.round((vh - h) / 2)) };
+}
 
 function openPlayerInfoPopup(pid, autoStats) {
   var modal = document.getElementById('player-info-modal');
@@ -160,12 +173,19 @@ function openPlayerInfoPopup(pid, autoStats) {
         // La carte porte desormais le bloc coupes complet (tableau de dix
         // colonnes, camembert, histogramme) : 560 px de plafond etaient trop
         // etroits pour l'agrandir utilement.
-        maxW: Math.min(900, Math.round(window.innerWidth * 0.92)),
-        maxH: Math.min(880, Math.round(window.innerHeight * 0.92)),
-        zoom: true, key: 'pth-pim-win',
-        defW: Math.max(320, Math.min(560, Math.round(window.innerWidth * 0.34))),
-        defH: Math.max(340, Math.min(720, Math.round(window.innerHeight * 0.80))),
-        minW: 260, minH: 260, defLeft: 90, defTop: 70
+        maxW: _pimGeom().maxW,
+        maxH: _pimGeom().maxH,
+        // Cle CHANGEE (…-win2) : les versions 104/105 ont pu memoriser une
+        // geometrie etroite, coincee en haut a gauche, que _restoreWin
+        // reappliquait a chaque ouverture en ignorant defW/defLeft. Repartir
+        // d'une cle neuve est le seul moyen de rendre la nouvelle taille
+        // d'ouverture effective sans effacer les reglages des autres fenetres.
+        zoom: true, key: 'pth-pim-win2',
+        defW: _pimGeom().w, defH: _pimGeom().h,
+        minW: 260, minH: 260,
+        // Centree a l'ouverture (demande narmod) plutot qu'ancree en haut a
+        // gauche.
+        defLeft: _pimGeom().left, defTop: _pimGeom().top
       });
     } catch (e) {}
   }

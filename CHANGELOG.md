@@ -140,6 +140,25 @@ release.
   `SEO_RULES_I18N` rather than introducing a second script for one page.
 
 ### Fixed
+- **Player card could not be widened, and opened in the corner** (`web.106`) —
+  two independent causes, which is why raising `maxW` in `web.105` changed
+  nothing.
+  - The desktop media query carries `.pim-card { max-width: 400px !important }`
+    (and a `width: … !important` for `.gim-card`). `!important` beats any
+    specificity, so the `max-width: none` on `.floating-win` never applied and no
+    `maxW` passed to `_enableFloating` could have helped. Both are now neutralised
+    with `!important` in window mode only.
+  - `_restoreWin` reapplies remembered geometry and *skips* `defW`/`defLeft`
+    entirely, so anyone who opened the card under `web.104`/`105` kept the cramped
+    size and corner position for good. The storage keys are now `pth-pim-win2` /
+    `pth-gim-win2`, which discards the bad geometry without touching any other
+    window's settings.
+  - Opening geometry is computed per open and **centred** (42 % of viewport width
+    for the card, 34 % for game info, clamped and never off-screen).
+  - `test-pim-drag` extended: it asserts the blocking `!important` rule still
+    exists (otherwise the guard is meaningless), that it is neutralised, that the
+    key changed, and that the computed geometry is centred at both a 1600 px and
+    a 420 px viewport. Three of these fail on `web.105`.
 - **Player card was not draggable in practice** (`web.105`) — `web.104` wired the
   drag handle to `#pim-name`, a centred line of text in the middle of a card that
   has no header at all; the mechanism worked, the target was undiscoverable.

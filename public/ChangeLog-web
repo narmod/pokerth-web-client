@@ -1,4 +1,5 @@
 2026-08-13 version 2.1.7-web (current series):
+- bugfix: the player card and the game info card now open in the middle of the screen at a comfortable size, and can actually be widened. They were stuck narrow and pinned to the top-left corner
 - bugfix: the player card could not be moved in practice - the only spot that dragged it was the player's name, in the middle of the card. It now has a grip bar across the top, and it can be made considerably wider so the cup charts have room
 - improvement: the player card and the game info card no longer black out the whole screen. They are ordinary windows now, like the ranking and the forum: the lobby stays readable and usable behind them, and on a large enough screen you can move them, resize them, and they reopen where you left them. Closing is done with the cross or the Escape key
 - improvement: the player profile window now sizes itself to your screen instead of always opening narrow, so the placement table and the charts have room to breathe on a large display and still fit on a phone

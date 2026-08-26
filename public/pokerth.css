@@ -8470,12 +8470,22 @@ body.adv-no-forumnews [id^="forum-btn-"], body.adv-no-forumnews #forum-modal { d
 /* Mode fenetre flottante des deux cartes converties (popup joueur, infos de
    partie) : deplacables par leur en-tete, redimensionnables, position
    memorisee -- exactement comme les autres fenetres du lobby. */
+/* !important obligatoire ici : le media desktop (min-width:900px) impose
+   `.pim-card { max-width: 400px !important }` et `.gim-card { width: ... 
+   !important }`, qui gagnent sur n'importe quelle specificite. Sans cette
+   neutralisation la fenetre refusait de s'elargir au-dela de 400 px, quel
+   que soit le maxW passe a _enableFloating. */
 #player-info-modal .pim-card.floating-win,
 #game-info-modal .gim-card.floating-win {
-  position: fixed; margin: 0; max-width: none;
+  position: fixed; margin: 0;
+  max-width: none !important; min-width: 0 !important;
+  max-height: none !important;
   border: 1px solid var(--gold-dim); border-radius: var(--r-bar);
   box-shadow: 0 14px 36px rgba(0,0,0,0.62);
 }
+/* La largeur en mode fenetre vient de l'attribut style (posé par
+   _enableFloating / le redimensionnement), pas de la feuille. */
+#game-info-modal .gim-card.floating-win { width: auto !important; }
 #player-info-modal .pim-card.floating-win { align-items: stretch; }
 /* Barre de prehension de la carte joueur : rien en mode centre (la carte ne
    se deplace pas), bandeau discret avec trois points en mode fenetre. Elle
