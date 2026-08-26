@@ -8500,6 +8500,21 @@ body.adv-no-forumnews [id^="forum-btn-"], body.adv-no-forumnews #forum-modal { d
    pas d'un pixel, mais decalait l'avatar (112 px fixes) contre le bord
    gauche. */
 #player-info-modal .pim-card.floating-win { align-items: center; }
+/* Une fenetre large ne doit pas etirer les COMMANDES : un bouton « Ignorer »
+   de 1 300 px de long est absurde. On plafonne la colonne d'actions et on la
+   centre ; seuls les blocs de donnees (tableau des places, camembert,
+   histogramme) profitent vraiment de la largeur. Le !important est requis :
+   ces boutons portent un style inline width:100% pose par le module. */
+.pim-card.floating-win .pim-cups-btn,
+.pim-card.floating-win .pim-ignore-btn,
+.pim-card.floating-win .pim-report-avatar-btn,
+.pim-card.floating-win .pim-kickban-btn,
+.pim-card.floating-win .pim-profile-link,
+.pim-card.floating-win .rk-cups-tabs,
+.pim-card.floating-win .stats-tabs {
+  max-width: 380px !important;
+  margin-left: auto !important; margin-right: auto !important;
+}
 /* Barre de prehension de la carte joueur : rien en mode centre (la carte ne
    se deplace pas), bandeau discret avec trois points en mode fenetre. Elle
    couvre toute la largeur du haut, la croix passant par-dessus. */

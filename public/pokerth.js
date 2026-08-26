@@ -10632,6 +10632,11 @@ window._advGet = _advGet;
 window._cfgSyncMark = _cfgSyncMark;   // pont pour modules/ui/forumnews.mjs (etat lu → sync compte)
 window._advStripEmoji = _advStripEmoji;
 window._chatTs = _chatTs;
+// Recentrage explicite d'une fenetre : _enableFloating ne place la fenetre
+// que lors de la PREMIERE ouverture (ensuite _restoreWin reapplique la
+// position memorisee). Les cartes de stats veulent s'ouvrir centrees a chaque
+// fois tout en conservant la TAILLE choisie par le joueur.
+window._placeWin = _placeWin;
 window._disableFloating = _disableFloating;
 window._enableFloating = _enableFloating;
 window._winGate = _winGate;   // fix: rkWinGate/trWinGate testent window._winGate (sinon classement jamais flottant -> non redimensionnable)
@@ -10750,7 +10755,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.7-web.108'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.7-web.109'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

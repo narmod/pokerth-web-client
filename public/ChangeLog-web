@@ -1,4 +1,6 @@
 2026-08-13 version 2.1.7-web (current series):
+- bugfix: on a wide player card, the buttons stretched across the whole window. They now keep a sensible width and stay centred - only the tables and charts use the full width
+- bugfix: the player card reopened against the left edge once it had been moved or resized. It now opens in the middle every time, while keeping the size you chose
 - bugfix: a first place among the last five results was unreadable in light mode - a black number on a black circle
 - bugfix: on iPhone, the player card and the game info card could slide up under the status bar and the notch. They now keep clear of the safe areas
 - improvement: the player card opens wider again

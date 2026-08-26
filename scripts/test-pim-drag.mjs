@@ -98,6 +98,32 @@ const mw = (src.match(/maxW = Math\.min\((\d+)/) || [])[1];
 ok(Number(mw) >= 1200, 'plafond d agrandissement large (' + mw + 'px)');
 ok(geom.w >= Math.round(1600 * 0.55), 'ouverture assez large (' + geom.w + 'px sur 1600)');
 
+// ── Recentrage a CHAQUE ouverture ──
+// _restoreWin rejoue la derniere position : une fenetre deplacee une fois
+// rouvrait collee au bord. On simule une geometrie memorisee a gauche puis on
+// ouvre, et on verifie que la carte est revenue au centre.
+ok(typeof w._placeWin === 'function', '_placeWin expose (necessaire au recentrage)');
+try { w.localStorage.setItem('pth-pim-win2', JSON.stringify({ left: 4, top: 4, width: 700, height: 500 })); } catch (e) {}
+const card2 = w.document.querySelector('#player-info-modal .pim-card');
+if (card2.classList.contains('floating-win')) w._disableFloating(card2);
+// Mesures stables : jsdom ne fait pas de layout.
+Object.defineProperty(card2, 'offsetWidth',  { value: 700, configurable: true });
+Object.defineProperty(card2, 'offsetHeight', { value: 500, configurable: true });
+w.document.getElementById('player-info-modal').style.display = 'flex';
+w.openPlayerInfoPopup(4242);
+const left2 = parseFloat(card2.style.left), top2 = parseFloat(card2.style.top);
+const wantL = Math.round((w.innerWidth - 700) / 2), wantT = Math.round((w.innerHeight - 500) / 2);
+ok(Math.abs(left2 - wantL) <= 4,
+   'recentree malgre une position memorisee a gauche (left=' + left2 + ', attendu ~' + wantL + ')');
+ok(Math.abs(top2 - wantT) <= 4, 'recentree verticalement (top=' + top2 + ', attendu ~' + wantT + ')');
+
+// ── Les commandes ne s'etirent pas sur une fenetre large ──
+const capRule = (cssAll.match(/\.pim-card\.floating-win \.pim-cups-btn,[\s\S]*?\}/) || [''])[0];
+ok(/max-width:\s*\d+px\s*!important/.test(capRule), 'boutons : largeur plafonnee en mode fenetre');
+ok(/margin-left:\s*auto\s*!important/.test(capRule), 'boutons : centres');
+ok(/\.pim-kickban-btn/.test(capRule) && /\.rk-cups-tabs/.test(capRule),
+   'boutons : kickban et onglets des coupes couverts');
+
 // ── Zones sures (iOS) ──
 // La carte peut etre plus haute que l'ecran : sans marge de zone sure elle se
 // colle au bord et passe sous la barre d'etat / l'encoche.

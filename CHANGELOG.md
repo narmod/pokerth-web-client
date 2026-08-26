@@ -140,6 +140,19 @@ release.
   `SEO_RULES_I18N` rather than introducing a second script for one page.
 
 ### Fixed
+- **Controls stretched across a wide player card** (`web.109`) — an "Ignore"
+  button 1300 px wide. The action column is now capped at 380 px and centred
+  (`.pim-cups-btn`, ignore, report-avatar, kickban, profile link, cup tabs, stats
+  tabs); only the placement table and the charts use the full width. `!important`
+  is required — those buttons carry an inline `width: 100%` written by the module.
+- **Card reopened against the left edge** (`web.109`) — `_enableFloating` applies
+  `defLeft`/`defTop` on the *first* open only; afterwards `_restoreWin` replays
+  the last position, so a card moved or resized once stayed pinned there for good.
+  The card is now re-centred on every open, keeping the remembered *size* —
+  measured after `_enableFloating` so the real dimensions are used.
+  `_placeWin` is exposed on `window` for this.
+  `test-pim-drag` seeds a left-pinned geometry in localStorage, opens the card and
+  asserts it comes back centred; six assertions fail on `web.108`.
 - **First place invisible in the last-five badges** (`web.108`) —
   `.rk-l5.win` used `background: var(--gold); color: #101010`, and the light
   theme redefines `--gold` to `#1d222b`: black text on a black disc. This is the

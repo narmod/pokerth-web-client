@@ -191,6 +191,18 @@ function openPlayerInfoPopup(pid, autoStats) {
         // gauche.
         defLeft: _pimGeom().left, defTop: _pimGeom().top
       });
+      // Recentrage a CHAQUE ouverture. _enableFloating ne pose defLeft/defTop
+      // que la premiere fois : ensuite _restoreWin rejoue la derniere position,
+      // si bien qu'une fenetre deplacee ou elargie une fois rouvrait
+      // indefiniment collee au bord gauche. On garde la TAILLE memorisee et on
+      // recalcule seulement la position, apres coup pour mesurer la carte
+      // telle qu'elle est reellement.
+      if (typeof window._placeWin === 'function') {
+        var _w = _card.offsetWidth || _pimGeom().w;
+        var _h = _card.offsetHeight || _pimGeom().h;
+        window._placeWin(_card, Math.round((window.innerWidth - _w) / 2),
+                                Math.round((window.innerHeight - _h) / 2));
+      }
     } catch (e) {}
   }
   // pid omis (ou === moi) → MON profil (comportement historique : stats +
