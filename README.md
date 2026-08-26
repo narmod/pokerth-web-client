@@ -227,6 +227,9 @@ This project is a **web frontend** that connects to any PokerTH server straight 
 - **🏆 Trophées (Training mode)** — a fourth tab in the ranking window, shown only in Training mode once connected, with 27 achievements grouped by Progress · Skill · Play-style · Fun · PokerTH formats. Locked ones are greyed out, a 👥 badge marks achievements that need a set number of players, and unlocking one pops a toast; an "X/27" counter also appears on your profile card and the end-of-game screen. Localised in all 45 languages
 - **Invite a player** to your table from the lobby players list — reaches the invited player instantly, including on the official desktop/mobile clients
 - **Country flag on avatar** — an optional badge showing each player's country, sourced from the server
+- **Private messages** — a persistent conversation window (parity with the official *Private messages* dialog): partner strip, history, 128-character input with a live counter, and a bin to drop a conversation. Conversations are kept locally in IndexedDB, so closing the window loses nothing; received messages carry the same 🌐 translate button as the chat. Lobby-only, because the server itself refuses a private message aimed at a player seated at a running table
+- **Forum news** — the latest pokerth.net forum posts, with an unread counter in the header and the full post readable inside the app (images and forum colours adapted to the theme), plus *open in the forum* and *mark all as read*. Read/unread state follows a synced account across devices
+- **Operator polls** — a short poll the operator writes in the admin panel, shown once on arrival in the lobby. One answer per device, results revealed only after voting, and switchable off in Advanced options → Community
 
 ### Poker table
 - Seats positioned according to server order, **locked after the first deal** (no mid-game layout jumps)
@@ -276,6 +279,7 @@ A full appearance system, reached from the **Theme** button — a styles window 
 - **Avatars also reach the official clients** — your chosen avatar (emoji, image, or initial) is uploaded over PokerTH's native avatar protocol, so it appears for players on the official desktop/mobile clients too, not just other web players
 - Anti-flicker cache so avatars survive seat re-renders
 - Bots always show 🤖
+- **Report an inappropriate avatar** — a 🚩 button in the player card sends the official `ReportAvatar` request to the server, exactly like the desktop client
 - **Session statistics** panel (click your avatar): hands played, wins, win rate, net gain/loss, best/worst hand, last 5 hands with card history
 - **Family leaderboard** (LAN / private server): a shared per-nickname ranking persisted on the server, **sortable** (net winnings, ¥ per 100 hands, hands played…), with a configurable automatic reset (off / daily / monthly / yearly) plus on-demand reset
 - **Win streak badge** on seats for players on a hot run
@@ -295,12 +299,15 @@ A full appearance system, reached from the **Theme** button — a styles window 
 - Tab title flashes: ⚡ YOUR TURN — PokerTH
 - Keyboard shortcuts: **F** = Fold, **C** / Space = Call, **R** = Raise, **A** = All-in, plus **1 / 2 / 3** to arm a ⅓ / ½ / pot bet (then **R** to confirm) — the bet buttons show these keycaps on desktop. Every letter is **re-bindable** (Advanced options → Keyboard: tap a key, press the new one, Reset to restore), and the **official PokerTH keys work too**: F1–F4 actions (with the reverse-order option), F5 = Show, F6/F7/F8 playing modes, Alt+M/K/F, Alt+C chat, Alt+L log, Alt+I odds
 - Sound effects: distinct sounds for fold / check / call / raise / all-in / shuffle / drumroll / bad-beat / win fanfare, plus urgent-timer warning
-- **Background music player** — a built-in MP3 player with its own track list (curated by the operator in the admin panel): pick a track and loop it, loop the whole playlist, or play it once
+- **Background music player** — a built-in MP3 player with its own track list (curated by the operator in the admin panel): pick a track and loop it, loop the whole playlist, or play it once, plus a **Radios** tab for live streams the operator adds
 - **Separate volume for sound effects and music** — adjust each independently *(on iOS the music volume can't be changed — a WebKit limitation — though the game sound effects still can)*
 - **Full i18n in 45 languages**, switchable on the fly and auto-detected from the browser locale — the complete official PokerTH language set plus community additions (Ukrainian, Romanian, Croatian, Serbian and more), with Brazilian and European Portuguese shipped as separate catalogues (pt-BR / pt-PT)
 - Fullscreen mode on all screens
 - **On-felt panels** — chat, emoji, hand log and a new **Hand-odds (Combinaisons)** window open as compact, movable and resizable floating windows anchored under their round on-felt button (on every device, instead of taking over the screen); a **↺** button in the header snaps every panel back to its docked spot, and the table zoom is collapsible everywhere. Window positions are remembered. On phone portrait the action bar hugs the bottom edge for a full-screen table.
 - **Built-in diagnostics via chat commands** — type `/help` in any chat for local commands (`/diag`, `/update`, `/netdbg`, `/carddbg`, `/msglog`, `/audiodbg`, `/storage`, `/logdump`, `/fps`, `/table`, `/lang`, `/sound`, `/zoom`, `/copy`, `/clear`…); replies are shown only to you (see [docs/DIAGNOSTIC.md](docs/DIAGNOSTIC.md))
+- **Hand logs** — every hand is recorded locally in the official `.pdb` model (session / game / player / hand / action), and the **Logs** window ports the desktop client's log manager: preview with search and highlighting, HTML and text export, upload to the official log-analysis service, plus web-only extras (automatic retention, *delete everything*)
+- **In-app help** — a chaptered user guide built into the client (getting started, the lobby, the table, options, troubleshooting…), with its own catalogue in each of the 45 languages
+- **Content pages** — `/how-to-play`, `/hand-rankings`, `/rules`, `/glossary` and `/faq` are server-rendered, localised pages that also work as an entry point for search engines
 - Poker hand reference overlay (? button)
 - **Resilient reconnection** — exponential-backoff auto-reconnect with a live countdown,
   plus automatic resume when the tab returns to the foreground or the network path
@@ -424,6 +431,9 @@ Beyond bridging WebSocket frames to the server's raw TCP/TLS stream, `proxy.js` 
 | `AVATARIMG:pid:dataURL` | Custom image-avatar update |
 
 - **Connection allowlist** — for anti-open-relay safety the proxy only dials servers on a configured allowlist (see the deployment section below).
+- **TLS public-key pinning** — parity with the official client's `tlspinning.cpp`: when the server list publishes a `<TLSPin>`, the upstream certificate's public key (base64 SHA-256 of the DER SPKI) must match one of the pinned keys or the connection is refused.
+- **PROXY protocol v1** — optional (default off). When the game server is configured to expect it, each upstream connection is prefixed with a `PROXY TCP4 …` line carrying the **real browser IP**, so the server sees players rather than the proxy for bans and statistics.
+- **Client error reports** — uncaught JavaScript errors are collected in the browser (deduplicated, capped and rate-limited) and posted to `/clienterr`, where the admin *Errors* tab groups them by signature. No nickname, game content or chat is sent, and the player can switch it off.
 - **Follows the official PokerTH serverlist** — the proxy periodically reads PokerTH's published `serverlist.xml.z`, so the *Internet / PokerTH.net* target tracks the official server automatically if it moves. Default is **Auto**; an operator can pin a **Manual** server from the admin *Game servers* tab. The resolved host/port is auto-added to the dial allowlist. (The browser can't fetch it itself — CORS + zlib — so the proxy does.)
 - **HTTP / JSON API** — beyond the client, the proxy exposes a handful of small JSON endpoints (version check, client config, content manifests, leaderboard, music) plus a token-gated `/admin/*` API used by the [admin panel](#admin-panel). See [**HTTP endpoints**](#http-endpoints) below for the full list.
 
