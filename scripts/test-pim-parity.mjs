@@ -87,8 +87,32 @@ ok(w.document.getElementById('pim-cups') === null,
    'carte : plus de bloc coupes en ligne');
 const infoBox = w.document.getElementById('pim-info');
 const _nb = (infoBox.innerHTML.match(/pim-cups-btn/g) || []).length;
-ok(_nb === 1, 'carte : un SEUL bouton vers les statistiques (trouve ' + _nb + ')');
-ok(/openPlayerProfile/.test(infoBox.innerHTML), 'carte : ce bouton ouvre la fenetre');
+ok(_nb === 2, 'carte : deux boutons (profil + coupes), trouve ' + _nb);
+
+// CLIC REEL sur chacun. Une assertion de sous-chaine sur innerHTML ne prouve
+// RIEN : jusqu'a 2.1.7-web.112 le nom etait interpole en JSON dans l'attribut
+// onclick, dont les guillemets doubles fermaient l'attribut — le navigateur ne
+// gardait que « window.openPlayerProfile( » et le bouton etait inerte, alors
+// que la chaine attendue etait bel et bien presente dans le HTML.
+for (const [idx, label] of [[0, 'profil'], [1, 'coupes']]) {
+  w.document.getElementById('pp-modal').style.display = 'none';
+  const btns = infoBox.querySelectorAll('.pim-cups-btn');
+  const b = btns[idx];
+  if (!b) { ok(false, 'bouton ' + label + ' present'); continue; }
+  const attr = b.getAttribute('onclick') || '';
+  ok(/\)\s*$/.test(attr.trim()),
+     'bouton ' + label + ' : onclick complet, non tronque par un guillemet (' + attr + ')');
+  ok(b.getAttributeNames().every((a) => /^(type|class|onclick|title|aria-label|data-i18n-title)$/.test(a)),
+     'bouton ' + label + ' : pas d attribut parasite issu d un guillemet mal echappe');
+  // jsdom ne compile pas les attributs onclick en mode outside-only : on
+  // evalue l'attribut tel que le navigateur le ferait. Sur la version cassee
+  // c'est « window.openPlayerProfile( » -> SyntaxError, donc echec net.
+  let clickErr = null;
+  try { vm.runInContext(attr, ctx, { filename: 'onclick.js' }); } catch (e) { clickErr = e; }
+  ok(!clickErr, 'bouton ' + label + ' : l onclick s execute (' + (clickErr ? clickErr.message : 'ok') + ')');
+  ok(w.document.getElementById('pp-modal').style.display === 'flex',
+     'bouton ' + label + ' : ouvre reellement la fenetre');
+}
 
 // La pastille de la liste mene directement a la fenetre, pas a la carte.
 w.document.getElementById('player-info-modal').style.display = 'none';

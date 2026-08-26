@@ -140,6 +140,21 @@ release.
   `SEO_RULES_I18N` rather than introducing a second script for one page.
 
 ### Fixed
+- **"Player profile" button genuinely inert** (`web.113`) — the real cause,
+  present since `web.102`: `JSON.stringify(nm)` was interpolated into an
+  `onclick="…"` attribute, so its double quotes **closed the attribute**. The
+  browser kept `window.openPlayerProfile(` and parsed the rest as a stray
+  attribute. The `zRaise` fix in `web.111` addressed a symptom that never
+  existed. Both entry points now go through `window._pimOpenStats(pid)` — only a
+  number reaches the attribute, and the nickname is resolved in JS where no
+  escaping is needed.
+- **"Show cups" button restored** (`web.113`) — removed in `web.112`; it is back
+  on the card and opens the statistics window, alongside the profile button.
+  Testing note: `test-pim-parity` asserted the expected string was *present in
+  innerHTML*, which it was — in a broken attribute. It now extracts each
+  `onclick`, checks it is a complete call with no stray attributes, and
+  **evaluates it in the VM context** (jsdom does not compile inline handlers in
+  `outside-only` mode). On `web.112` this reports `Unexpected end of input`.
 - **"Player profile" button appeared inert** (`web.111`) — it worked, but since
   `web.104` made the player card a managed window, `z-order` raises that card on
   pointerdown; the profile window then opened *underneath* it and was completely

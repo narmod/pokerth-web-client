@@ -63,8 +63,13 @@ els['login-mode'].value = 'auth';
 S.myId = 3; S.myName = 'narmod';
 S._playerRights = { 3: 2, 7: 2, 8: 1, 901: 2 };
 const mine = P._cupsBlockHtml(3);
-ok(mine.includes('pim-cups-btn') && mine.includes('openPlayerProfile("narmod",3)'),
+ok(mine.includes('pim-cups-btn') && mine.includes('_pimOpenStats(3)'),
    '_cupsBlockHtml : accès aux statistiques rendu pour MOI (joueur enregistré)');
+// Chaque onclick doit etre un appel COMPLET : un guillemet double interpole
+// dedans fermerait l'attribut et tronquerait l'appel (bug 2.1.7-web.112).
+const _onclicks = [...mine.matchAll(/onclick="([^"]*)"/g)].map((m) => m[1]);
+ok(_onclicks.length > 0 && _onclicks.every((c) => /^[\w.$]+\([^"]*\)$/.test(c)),
+   '_cupsBlockHtml : chaque onclick est un appel complet [' + _onclicks.join(' | ') + ']');
 ok(!mine.includes('id="pim-cups"'),
    '_cupsBlockHtml : plus de bloc coupes en ligne dans la carte');
 ok(mine.includes('player?u=narmod'),

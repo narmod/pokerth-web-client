@@ -318,15 +318,21 @@ function openPlayerInfoPopup(pid, autoStats) {
 // renderPlayerList) : on normalise en null, mais autoStats reste VRAI dans les
 // deux cas — sinon mon propre bouton ouvrait le popup sans charger mes coupes,
 // contrairement a celui des autres joueurs (remonte narmod).
+// Ouvre la fenetre de statistiques pour un pid. Point d'entree unique du
+// bouton de la carte ET de la pastille de la liste : le nom est resolu ici,
+// jamais interpole dans un attribut HTML.
+window._pimOpenStats = function (pid) {
+  var nm = _pimNameFor(pid);
+  if (!nm || typeof window.openPlayerProfile !== 'function') return false;
+  try { window.openPlayerProfile(nm, pid); return true; } catch (e) { return false; }
+};
+
 window._plOpenStats = function (pid) {
   // La pastille 📊 de la liste mene DIRECTEMENT aux statistiques (demande
   // narmod 26/08) : cliquer le NOM ouvre la carte joueur, cliquer 📊 ouvre la
   // fenetre de stats. Avant, les deux ouvraient la carte.
   var _p = (pid == null || pid === '') ? S.myId : pid;
-  var nm = _pimNameFor(_p);
-  if (nm && typeof window.openPlayerProfile === 'function') {
-    try { window.openPlayerProfile(nm, _p); return; } catch (e) {}
-  }
+  if (window._pimOpenStats(_p)) return;
   // Repli : joueur sans nom exploitable (bot, hors reseau) -> la carte.
   openPlayerInfoPopup((pid == null || pid === '') ? null : pid, true);
 };
@@ -391,8 +397,14 @@ function _cupsBlockHtml(pid) {
   // les actions, la fenetre porte les coupes des trois classements et, pour
   // moi, mes stats de session. Un seul bouton mene a l'une comme a l'autre —
   // il y en avait deux qui ouvraient des vues largement redondantes.
-  return '<button type="button" class="pim-cups-btn" onclick="window.openPlayerProfile(' + JSON.stringify(nm) + ',' + pid + ')">\uD83D\uDCCA '
+  // On ne passe QUE le pid dans l'attribut. JSON.stringify(nm) y injectait des
+  // guillemets doubles, qui fermaient l'attribut onclick lui-meme : le
+  // navigateur ne gardait que « window.openPlayerProfile( » et le clic ne
+  // faisait rien. Le nom est resolu cote JS, ou aucun echappement n'est requis.
+  return '<button type="button" class="pim-cups-btn" onclick="window._pimOpenStats(' + pid + ')">\uD83D\uDCCA '
        + esc(tt('ppOpen', 'Player profile')) + '</button>'
+       + '<button type="button" class="pim-cups-btn" onclick="window._pimOpenStats(' + pid + ')">\uD83C\uDFC6 '
+       + esc(tt('piShowCups', 'Show cups')) + '</button>'
        + '<a class="pim-profile-link" href="https://www.pokerth.net/app.php/player?u='
        + encodeURIComponent(nm) + '" target="_blank" rel="noopener noreferrer">'
        + esc(tt('piViewProfile', 'View pokerth.net profile')) + '</a>';
