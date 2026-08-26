@@ -108,9 +108,9 @@ So I sat down and built one.
 
 It started as a very simple interface, just enough to deal a hand around the table. But every family game brought new feedback — *"I can't tell the suits apart on my phone"*, *"whose turn is it?"*, *"can we have avatars?"* — and little by little those suggestions turned a bare-bones prototype into something far more complete. I put it on GitHub, figuring that if I wanted a web client, someone else probably did too.
 
-Then something wonderful happened: I showed the project to the PokerTH team. They liked the idea, and **I'm now part of the PokerTH development team**, working on this client so it can become an **official PokerTH client**. The project changed shape — the layout is now based on the team's next-generation **QML client**, and the goal is a faithful web clone of that app: same seat placement, same action bar, same colors, same behaviour, kept in sync as the official client evolves.
+Then something wonderful happened: I showed the project to the PokerTH team. They liked the idea, **I joined the PokerTH development team**, and this is now an **official PokerTH client**, running on the project's own infrastructure at **[webclient.pokerth.net](https://webclient.pokerth.net/)**. The project changed shape along the way — the layout follows the team's next-generation **QML client**, and the goal is a faithful web clone of that app: same seat placement, same action bar, same colours, same behaviour, kept in sync as the official client evolves.
 
-This project is a **web frontend** that connects to any PokerTH server straight from the browser, with no app to install. It's built to work well on phones and tablets, so a family **PokerTH** night is only ever a URL away.
+It has stayed what it set out to be: a **web frontend** that connects to any PokerTH server straight from the browser, with no app to install. It's built to work well on phones and tablets, so a family **PokerTH** night is only ever a URL away.
 
 ---
 
