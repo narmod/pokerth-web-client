@@ -13,6 +13,15 @@ this file captures what matters to players and operators.
 Opened with `v2.1.7-web.0` (2026-08-13), following the upstream **2.1.7**
 release.
 
+### Changed
+- **Private messages: the partner column is there from the first conversation**
+  (`web.123`) — a deliberate step away from upstream, which gates the column on
+  `wideLayout && partners.length > 1` and therefore reshapes the dialogue under
+  the player the moment a second partner writes in. `showCol` now only asks for
+  a wide window and a non-empty list. The narrow layout keeps the upstream rule
+  for its drop-down: a picker offering a single choice is no help, and the
+  partner name already sits above the history.
+
 ### Fixed
 - **Private messages: the partner column could never appear** (`web.122`) — the
   floating window opened at `defW: 420`, just under the `WIDE_MIN` threshold of

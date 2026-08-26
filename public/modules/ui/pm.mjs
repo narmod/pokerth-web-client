@@ -119,10 +119,16 @@ function _renderPartners() {
   if (_draft && !list.some(function (p) { return p.name === _draft; })) {
     list.unshift({ name: _draft, unread: 0, last: 0, lastText: '', fromMe: false });
   }
-  // One conversation needs no picker at all: the name already shows above
-  // the history (parity: the partner list is hidden below two entries).
+  // The column stays put as soon as there is a conversation at all, which is
+  // a deliberate step away from upstream: PrivateMessageDialog.qml hides it
+  // below two entries (`wideLayout && partners.length > 1`), so the dialogue
+  // changes shape under the player as soon as a second partner writes in. A
+  // column of one costs a strip of window and buys a layout that never moves.
+  // The drop-down of the narrow layout keeps the upstream rule: a picker with
+  // a single choice really is useless, and the name already shows above the
+  // history.
   const wide = _isWide();
-  const showCol  = wide && list.length > 1;
+  const showCol  = wide && list.length > 0;
   const showDrop = !wide && list.length > 1;
   strip.style.display = showCol ? '' : 'none';
   if (sel) sel.style.display = showDrop ? '' : 'none';
