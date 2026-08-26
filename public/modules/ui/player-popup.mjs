@@ -154,12 +154,17 @@ function openPlayerInfoPopup(pid, autoStats) {
   if (_card && _winGateOk()) {
     try {
       window._enableFloating(_card, {
-        handle: document.getElementById('pim-name'), resizable: true,
-        maxW: Math.min(560, Math.round(window.innerWidth * 0.92)),
-        maxH: Math.min(820, Math.round(window.innerHeight * 0.90)),
+        // Poignee : le bandeau du haut, pas le nom du joueur -- celui-ci est
+        // une ligne centree au milieu de la carte, impossible a deviner.
+        handle: document.getElementById('pim-grip'), resizable: true,
+        // La carte porte desormais le bloc coupes complet (tableau de dix
+        // colonnes, camembert, histogramme) : 560 px de plafond etaient trop
+        // etroits pour l'agrandir utilement.
+        maxW: Math.min(900, Math.round(window.innerWidth * 0.92)),
+        maxH: Math.min(880, Math.round(window.innerHeight * 0.92)),
         zoom: true, key: 'pth-pim-win',
-        defW: Math.max(300, Math.min(420, Math.round(window.innerWidth * 0.30))),
-        defH: Math.max(340, Math.min(680, Math.round(window.innerHeight * 0.78))),
+        defW: Math.max(320, Math.min(560, Math.round(window.innerWidth * 0.34))),
+        defH: Math.max(340, Math.min(720, Math.round(window.innerHeight * 0.80))),
         minW: 260, minH: 260, defLeft: 90, defTop: 70
       });
     } catch (e) {}

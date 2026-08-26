@@ -140,6 +140,20 @@ release.
   `SEO_RULES_I18N` rather than introducing a second script for one page.
 
 ### Fixed
+- **Player card was not draggable in practice** (`web.105`) — `web.104` wired the
+  drag handle to `#pim-name`, a centred line of text in the middle of a card that
+  has no header at all; the mechanism worked, the target was undiscoverable.
+  A `.pim-grip` bar now spans the top of the card in window mode (the close
+  button keeps its exact position on top of it — `makeWinDraggable` ignores
+  pointerdown on a button). Hidden in centred mode, where the card does not move.
+- **Player card could not be widened enough** (`web.105`) — `maxW` was 560 px
+  while the card now carries the full cups block: a ten-column table, a pie and a
+  ten-bar chart. Raised to `min(900, 92vw)`, with the opening width up from 420
+  to 560; game info raised to 760 for consistency.
+  New `scripts/test-pim-drag.mjs` boots the client in jsdom, switches the card to
+  window mode and **simulates an actual pointer drag**, asserting the card moved —
+  rather than merely checking a handle was passed, which is what let `web.104`
+  through.
 - **Action icons drifted out of their columns** (`web.101`) — `.pl-acts` is
   right-aligned (`justify-self: end`), so a row carrying fewer chips than the
   track reserves shifts every icon one slot right. `web.92` added a spacer for a

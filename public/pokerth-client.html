@@ -2651,6 +2651,12 @@ if ('serviceWorker' in navigator) {
 <div id="player-info-modal" style="display:none">
   <div class="pim-backdrop" onclick="closePlayerInfoPopup()"></div>
   <div class="pim-card" role="dialog" aria-labelledby="pim-name">
+    <!-- Barre de prehension : la carte n'a pas d'en-tete, et prendre le nom du
+         joueur (centre au milieu) comme poignee etait introuvable. Bandeau
+         plein en haut de la carte ; la croix, en position absolue, reste
+         exactement ou elle etait et par-dessus (makeWinDraggable ignore les
+         clics sur un bouton). Visible seulement en mode fenetre. -->
+    <div class="pim-grip" id="pim-grip" aria-hidden="true"></div>
     <button class="pim-close" type="button" onclick="closePlayerInfoPopup()" title="Fermer" data-i18n-title="closeTooltip" data-i18n-aria="closeTooltip" aria-label="Close">✕</button>
     <!-- Avatar : cliquable seulement pour MON profil (rôle/onclick câblés en
          JS selon le mode). Pour un adversaire il reste neutre, non cliquable. -->

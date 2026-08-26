@@ -124,8 +124,8 @@ function openGameInfoPopup() {
     try {
       window._enableFloating(_card, {
         handle: modal.querySelector('.gim-header'), resizable: true,
-        maxW: Math.min(560, Math.round(window.innerWidth * 0.92)),
-        maxH: Math.min(760, Math.round(window.innerHeight * 0.90)),
+        maxW: Math.min(760, Math.round(window.innerWidth * 0.92)),
+        maxH: Math.min(820, Math.round(window.innerHeight * 0.92)),
         zoom: true, key: 'pth-gim-win',
         defW: Math.max(300, Math.min(420, Math.round(window.innerWidth * 0.30))),
         defH: Math.max(300, Math.min(600, Math.round(window.innerHeight * 0.70))),

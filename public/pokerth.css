@@ -8477,9 +8477,25 @@ body.adv-no-forumnews [id^="forum-btn-"], body.adv-no-forumnews #forum-modal { d
   box-shadow: 0 14px 36px rgba(0,0,0,0.62);
 }
 #player-info-modal .pim-card.floating-win { align-items: stretch; }
-.pim-card.floating-win .pim-name,
+/* Barre de prehension de la carte joueur : rien en mode centre (la carte ne
+   se deplace pas), bandeau discret avec trois points en mode fenetre. Elle
+   couvre toute la largeur du haut, la croix passant par-dessus. */
+.pim-grip { display: none; }
+.pim-card.floating-win .pim-grip {
+  display: block; position: absolute; top: 0; left: 0; right: 0; height: 26px;
+  border-bottom: 1px solid var(--border);
+  border-radius: var(--r-bar) var(--r-bar) 0 0;
+  background: var(--inset);
+}
+.pim-card.floating-win .pim-grip::after {
+  content: "\00b7\00b7\00b7"; display: block; text-align: center;
+  color: var(--text-dim); font-size: var(--fs-md); line-height: 20px; letter-spacing: 3px;
+}
+/* La carte demarre sous le bandeau une fois en fenetre. */
+.pim-card.floating-win { padding-top: 34px; }
+.pim-card.floating-win .pim-grip,
 .gim-card.floating-win .gim-header { cursor: move; touch-action: none; -webkit-user-select: none; user-select: none; }
-.pim-card.floating-win .pim-name.win-dragging,
+.pim-card.floating-win .pim-grip.win-dragging,
 .gim-card.floating-win .gim-header.win-dragging { cursor: grabbing; }
 /* ── Fenetre « Profil joueur » (parite QML PokerthPlayerPage) ────────────
    Carcasse generique identique aux autres fenetres ; le contenu reutilise
