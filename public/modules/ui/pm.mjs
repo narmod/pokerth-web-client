@@ -305,7 +305,14 @@ function open(name) {
           handle: $('pm-title'), resizable: true,
           maxW: Math.min(680, Math.round(window.innerWidth * 0.92)),
           maxH: Math.min(680, Math.round(window.innerHeight * 0.90)),
-          zoom: true, key: 'pth-pm-win', defW: 420, defH: 520,
+          // Opening size mirrors the QML dialogue, which is
+          // `Math.min(parent.width * 0.92, 600)` by `Math.min(parent.height *
+          // 0.85, 520)`. It used to open at 420, i.e. just under the WIDE_MIN
+          // threshold of 430, so the partner column could never show itself on
+          // a freshly opened window however many conversations were waiting.
+          zoom: true, key: 'pth-pm-win',
+          defW: Math.max(320, Math.min(600, Math.round(window.innerWidth * 0.92))),
+          defH: Math.max(300, Math.min(520, Math.round(window.innerHeight * 0.85))),
           minW: 300, minH: 300, defLeft: 110, defTop: 110
         });
       } catch (e) {}

@@ -13,6 +13,19 @@ this file captures what matters to players and operators.
 Opened with `v2.1.7-web.0` (2026-08-13), following the upstream **2.1.7**
 release.
 
+### Fixed
+- **Private messages: the partner column could never appear** (`web.122`) — the
+  floating window opened at `defW: 420`, just under the `WIDE_MIN` threshold of
+  430 that gates the left-hand conversation list, so `showCol` was false on
+  every fresh window no matter how many conversations were waiting. The opening
+  size now mirrors `PrivateMessageDialog.qml`, which sizes itself as
+  `Math.min(parent.width * 0.92, 600)` by `Math.min(parent.height * 0.85, 520)`.
+  The visibility rule itself is unchanged and stays at upstream parity —
+  `wideLayout && partners.length > 1` — so a single conversation still shows the
+  partner name above the history rather than a one-row column. Windows already
+  resized by hand keep their stored size (`localStorage['pth-pm-win']`), by
+  design.
+
 ### Added
 - **Community suggest opens to every BBC admin** (`web.121`) — parity with
   upstream `422f5fe4`, the client half of `web.120`. The button used to be the
