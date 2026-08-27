@@ -3563,9 +3563,12 @@ function seoFaqPage(res, method, lang) {
 // each of the three, which would have added about a megabyte to a file that
 // already weighs one. Nothing else changes: seoPageLangs() still decides which
 // languages are advertised, and English still lives in the page functions.
-var SEO_HANDS_I18N = {};   // built below, once _SEO_HANDS and _sd exist
-var SEO_HOWTO_I18N = require('./seo-i18n/howto.js').build();
-var SEO_GLOSSARY_I18N = require('./seo-i18n/glossary.js').build();
+// Declared here, built at the end of this section: the modules assemble their
+// page bodies once at load and need the language-neutral data below, plus a
+// resolver for the internal links those bodies contain.
+var SEO_HANDS_I18N = {};
+var SEO_HOWTO_I18N = {};
+var SEO_GLOSSARY_I18N = {};
 
 // Suit symbols. Red suits get a class rather than a hard-coded colour so the
 // page CSS stays the single place that decides what red means.
@@ -3593,8 +3596,6 @@ var _SEO_HANDS = [
   ['High Card', 'None of the above. The highest card decides, then the next, and so on.',
    'A\u2663 Q\u2666 9\u2660 6\u2665 2\u2663', '17.4%']
 ];
-
-SEO_HANDS_I18N = require('./seo-i18n/hands.js').build(_SEO_HANDS, _sd);
 
 function seoHandsPage(res, method, lang) {
   var langs = seoPageLangs(SEO_HANDS_I18N);
@@ -3798,6 +3799,25 @@ var _SEO_GLOSSARY = [
   ['Value bet', 'A bet made to be called by a worse hand, rather than to make anyone fold.'],
   ['Wheel', 'The straight A-2-3-4-5, in which the ace plays low. The weakest straight there is.']
 ];
+
+// A page body is assembled once per language, so the internal links it carries
+// have to be resolved at that moment rather than left as bare English URLs: a
+// French reader following "voir les règles" from the French page should land on
+// the French rules. The builders get this resolver, which applies the same rule
+// as the nav — carry ?lang= only where the target page exists in that language.
+function _seoPageHref(page, lang) {
+  if (page === 'rules') return _seoLangHref('/rules', SEO_RULES_I18N, lang);
+  if (page === 'hands') return _seoLangHref('/hand-rankings', SEO_HANDS_I18N, lang);
+  if (page === 'howto') return _seoLangHref('/how-to-play', SEO_HOWTO_I18N, lang);
+  if (page === 'glossary') return _seoLangHref('/glossary', SEO_GLOSSARY_I18N, lang);
+  if (page === 'faq') return _seoLangHref('/faq', SEO_FAQ_I18N, lang);
+  return '/';
+}
+
+// Order matters: each table must exist before another body links into it.
+SEO_HANDS_I18N = require('./seo-i18n/hands.js').build(_SEO_HANDS, _sd);
+SEO_HOWTO_I18N = require('./seo-i18n/howto.js').build(_SEO_HOWTO, _seoPageHref);
+SEO_GLOSSARY_I18N = require('./seo-i18n/glossary.js').build(_SEO_GLOSSARY, _seoPageHref);
 
 function seoGlossaryPage(res, method, lang) {
   var langs = seoPageLangs(SEO_GLOSSARY_I18N);

@@ -51,6 +51,17 @@ highlights below.
   `InitAck` lands. Covered by `scripts/test-reconnect-backoff.mjs`.
 
 ### Added
+- **`/how-to-play` starts translating, with language-aware internal links**
+  (`web.135`). First batch: `fr`, `de`, `es`, `pt-BR`, `it`, `pl`, `ru`, `zh`.
+  This page links to the rules, the hand rankings and the FAQ, and a page body
+  is assembled once per language at load, so those links had to be resolved at
+  that moment rather than left as bare English URLs — otherwise a French
+  reader following “la page des règles” would land on the English rules and the
+  language chain would break silently. `_seoPageHref(page, lang)` now resolves
+  them with the same rule as the nav, and the three tables are built in
+  dependency order so a body can link into a table that already exists.
+  `scripts/test-seo-howto-i18n.mjs` builds with a recording resolver and fails
+  on any link that did not come through it. 112 assertions.
 - **`/hand-rankings` complete in all 45 languages** (`web.134`). The last
   fourteen — `pt-PT`, `zh-TW`, `el`, `bg`, `hr`, `sr`, `ca`, `gl`, `af`,
   `fil`, `gd`, `lt`, `sw`, `ta` — close the page: 44 translations plus the
