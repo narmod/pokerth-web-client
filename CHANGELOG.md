@@ -51,6 +51,8 @@ highlights below.
   `InitAck` lands. Covered by `scripts/test-reconnect-backoff.mjs`.
 
 ### Added
+- **`/glossary` in five more languages** (`web.145`). `hr`, `sr`, `ca`, `gl`
+  and `lt`, bringing the page to 35 of 45. 522 assertions.
 - **`/glossary` in six more languages** (`web.144`). `el`, `bg`, `sv`, `da`,
   `nb` and `fi`, bringing the page to 30 of 45. 447 assertions.
 - **`/glossary` in the four RTL languages** (`web.143`). `ar`, `fa`, `he` and
