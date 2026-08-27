@@ -51,6 +51,11 @@ highlights below.
   `InitAck` lands. Covered by `scripts/test-reconnect-backoff.mjs`.
 
 ### Added
+- **`/glossary` in four more languages** (`web.140`). `nl`, `pl`, `ru` and
+  `pt-PT`, bringing the page to 10 of 45. Russian shows a local equivalent on
+  53 of the 54 entries and German on seven — the same page, two very
+  different relationships with the English vocabulary, which is exactly what
+  the format is meant to show. 134 assertions.
 - **`/glossary` starts translating** (`web.139`). First batch: `fr`, `de`,
   `es`, `pt-BR`, `it`. The headword is not translated away — what a player
   meets in the chat is the English term, so each entry keys on it and adds the
