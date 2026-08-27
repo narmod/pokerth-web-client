@@ -1,4 +1,5 @@
 2026-08-13 version 2.1.7-web (current series):
+- bugfix: on the rules, hand rankings, how-to-play, glossary and FAQ pages, the links at the top always went to the English version. Reading the rules in your own language and clicking "FAQ" put you back in English. Every link now keeps the language you are reading in, whenever that page exists in it
 - bugfix: when the game server refused the connection straight after answering, the client kept retrying every five seconds without ever slowing down, and the server ended up blocking the address. Retries now space themselves out properly (5s, 15s, 30s) and stop, as they were always meant to
 - bugfix: the private messages window opened a little too narrow for the list of conversations on the left to be shown, so it stayed hidden even when several people had written to you. It now opens at the same size as the desktop client, and the list appears as soon as there is more than one conversation
 - new: on a BBC Step table you did not create yourself, the "suggest players" button now appears if you are on the BBC admin list. It used to be reserved to whoever set the table up

@@ -16,6 +16,15 @@ release. Granular, per-build changes for this line are on the
 highlights below.
 
 ### Fixed
+- **Content pages keep the reader’s language** (`web.128`). The nav on the
+  server-rendered pages, the crawler block on `/` and the connect-screen footer
+  line all emitted bare hrefs, so a reader on `/rules?lang=fr` was thrown back
+  to English on the next click and the 40 translated pages looked as if they
+  did not exist. A single `_seoLangHref(relPath, table, lang)` now builds every
+  internal link, appending `?lang=` only when the target page has that
+  translation — `/glossary`, `/hand-rankings` and `/how-to-play` are still
+  English-only and are linked bare, so no link points at a URL that
+  canonicalises elsewhere. Covered by `scripts/test-seo-nav-lang.mjs`.
 - **Reconnect backoff no longer resets on the server Announce** (`web.125`).
   A PokerTH server sends its `AnnounceMessage` the instant the socket opens,
   and both reconnect paths cleared `S._reconnectAttempts` from `ws.onmessage`.

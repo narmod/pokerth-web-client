@@ -1448,9 +1448,12 @@ function seoBodyBlock(lang) {
     '<p>' + b.m + '</p>' +
     '<p>' + b.g + '</p>' +
     '<p>Free software \u2014 source code on GitHub (narmod/pokerth-web-client), based on PokerTH by the PokerTH Development Team.</p>' +
-    '<p><a href="/rules">' + b.r + '</a> \u2014 <a href="/hand-rankings">Poker hand rankings</a> \u2014 ' +
-    '<a href="/how-to-play">How to play</a> \u2014 <a href="/glossary">Glossary</a> \u2014 ' +
-    '<a href="/faq">FAQ</a> \u2014 <a href="/privacy">' + b.pv + '</a></p>' +
+    '<p><a href="' + _seoLangHref('/rules', SEO_RULES_I18N, lang) + '">' + b.r + '</a> \u2014 ' +
+    '<a href="' + _seoLangHref('/hand-rankings', SEO_HANDS_I18N, lang) + '">Poker hand rankings</a> \u2014 ' +
+    '<a href="' + _seoLangHref('/how-to-play', SEO_HOWTO_I18N, lang) + '">How to play</a> \u2014 ' +
+    '<a href="' + _seoLangHref('/glossary', SEO_GLOSSARY_I18N, lang) + '">Glossary</a> \u2014 ' +
+    '<a href="' + _seoLangHref('/faq', SEO_FAQ_I18N, lang) + '">FAQ</a> \u2014 ' +
+    '<a href="/privacy">' + b.pv + '</a></p>' +
     '</div>';
 }
 
@@ -1468,7 +1471,8 @@ function seoFooterBlock(lang) {
     ? SEO_I18N[lang].t
     : 'Free open-source Texas Hold\u2019em poker in your browser \u2014 no download, no ads, no signup';
   return '<div class="connect-footer-line" id="cf-seo" style="opacity:0.75">' +
-    lead + ' \u00b7 <a href="/rules">' + b.r + '</a> \u00b7 <a href="/faq">FAQ</a></div>';
+    lead + ' \u00b7 <a href="' + _seoLangHref('/rules', SEO_RULES_I18N, lang) + '">' + b.r + '</a>' +
+    ' \u00b7 <a href="' + _seoLangHref('/faq', SEO_FAQ_I18N, lang) + '">FAQ</a></div>';
 }
 
 // ── Freshness signals — <lastmod> and deploy detection ─────────────────
@@ -1562,9 +1566,25 @@ var _SEO_PAGE_CSS = 'body{margin:0;background:#0d1117;color:#d8dde4;font:16px/1.
 var SEO_RTL_LANGS = ['ar', 'he', 'fa', 'ur'];
 function _seoIsRtl(lang) { return SEO_RTL_LANGS.indexOf(String(lang || '')) !== -1; }
 
-function _seoPageNav() {
-  return '<nav><a href="/">\u25b6 Play now</a><a href="/rules">Rules</a><a href="/hand-rankings">Hand rankings</a>' +
-    '<a href="/how-to-play">How to play</a><a href="/glossary">Glossary</a><a href="/faq">FAQ</a><a href="/privacy">Privacy</a>' +
+// Internal links carry the current language forward, but only to a page that
+// actually exists in it. A nav that drops ?lang= sent a reader of any of the
+// 40 translated languages back to English on the very next click, which is
+// what made the translated pages look absent; keeping ?lang= blindly would be
+// no better, since it would link to URLs that canonicalise to English.
+function _seoLangHref(relPath, table, lang) {
+  return (lang && SEO_I18N[lang] && table && table[lang]) ? relPath + '?lang=' + lang : relPath;
+}
+
+function _seoPageNav(lang) {
+  lang = lang || '';
+  return '<nav><a href="' + _seoLangHref('/', SEO_I18N, lang) + '">\u25b6 Play now</a>' +
+    '<a href="' + _seoLangHref('/rules', SEO_RULES_I18N, lang) + '">Rules</a>' +
+    '<a href="' + _seoLangHref('/hand-rankings', SEO_HANDS_I18N, lang) + '">Hand rankings</a>' +
+    '<a href="' + _seoLangHref('/how-to-play', SEO_HOWTO_I18N, lang) + '">How to play</a>' +
+    '<a href="' + _seoLangHref('/glossary', SEO_GLOSSARY_I18N, lang) + '">Glossary</a>' +
+    '<a href="' + _seoLangHref('/faq', SEO_FAQ_I18N, lang) + '">FAQ</a>' +
+    // /privacy is a static English-only page: it has no ?lang= variant.
+    '<a href="/privacy">Privacy</a>' +
     '<a href="https://github.com/narmod/pokerth-web-client" rel="noopener">Source</a></nav>';
 }
 
@@ -3368,7 +3388,7 @@ function seoContentPage(res, method, title, desc, relPath, bodyHtml, ld, lang, l
   var html = '<!DOCTYPE html><html lang="' + (lang || 'en') + '"' + (_seoIsRtl(lang) ? ' dir="rtl"' : '') + '><head><meta charset="utf-8">' +
     '<meta name="viewport" content="width=device-width, initial-scale=1">' +
     '<title>' + title + '</title>' + head + '<style>' + _SEO_PAGE_CSS + '</style></head><body>' +
-    _seoPageNav() + '<main>' + bodyHtml +
+    _seoPageNav(lang) + '<main>' + bodyHtml +
     '<a class="play" href="/' + (lang ? '?lang=' + lang : '') + '">Play PokerTH in your browser \u2014 free, no download</a>' +
     '</main></body></html>';
   var buf = Buffer.from(html, 'utf8');
