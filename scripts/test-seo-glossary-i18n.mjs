@@ -104,7 +104,10 @@ for (const code of codes) {
     // around a rank sequence, and its tag names are not untranslated prose.
     const text = t[1].replace(/<[^>]+>/g, '');
     if (!NON_LATIN.test(text)) return;
-    (text.match(/[A-Za-z][A-Za-z-]{2,}/g) || []).forEach(w => {
+    // Trailing hyphens are not part of the word: Bengali and Tamil attach case
+    // endings to a Latin name with one (PokerTH-এ, PokerTH-இல்), which would
+    // otherwise read as an unknown word rather than as PokerTH.
+    (text.match(/[A-Za-z][A-Za-z-]*[A-Za-z]/g) || []).filter(w => w.length >= 3).forEach(w => {
       if (!JARGON.test(w)) leaks.push(`${TERMS[i][0]}: ${w}`);
     });
   });

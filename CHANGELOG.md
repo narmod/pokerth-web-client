@@ -51,6 +51,15 @@ highlights below.
   `InitAck` lands. Covered by `scripts/test-reconnect-backoff.mjs`.
 
 ### Added
+- **`/glossary` complete, and with it every content page** (`web.146`). The
+  last ten — `id`, `vi`, `th`, `hi`, `bn`, `ta`, `af`, `sw`, `gd`, `fil` —
+  close the glossary at 45 of 45. All five server-rendered pages are now fully
+  translated: `/rules`, `/hand-rankings`, `/how-to-play`, `/glossary` and
+  `/faq`. Every hreflang alternate any of them advertises resolves to a page
+  actually written in that language, and the sitemap carries 45 URLs per page
+  instead of one. The leak guard needed one fix along the way: Bengali and
+  Tamil attach case endings to a Latin name with a hyphen (PokerTH-এ), which
+  it read as an unknown English word. 672 assertions.
 - **`/glossary` in five more languages** (`web.145`). `hr`, `sr`, `ca`, `gl`
   and `lt`, bringing the page to 35 of 45. 522 assertions.
 - **`/glossary` in six more languages** (`web.144`). `el`, `bg`, `sv`, `da`,
