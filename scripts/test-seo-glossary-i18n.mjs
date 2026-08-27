@@ -100,12 +100,30 @@ const NON_LATIN = /[\u0400-\u04FF\u0590-\u05FF\u0600-\u06FF\u0900-\u097F\u0980-\
 for (const code of codes) {
   const leaks = [];
   PARTS[code].terms.forEach((t, i) => {
-    if (!NON_LATIN.test(t[1])) return;
-    (t[1].match(/[A-Za-z][A-Za-z-]{2,}/g) || []).forEach(w => {
+    // Strip markup first: a definition may legitimately carry <span class="ltr">
+    // around a rank sequence, and its tag names are not untranslated prose.
+    const text = t[1].replace(/<[^>]+>/g, '');
+    if (!NON_LATIN.test(text)) return;
+    (text.match(/[A-Za-z][A-Za-z-]{2,}/g) || []).forEach(w => {
       if (!JARGON.test(w)) leaks.push(`${TERMS[i][0]}: ${w}`);
     });
   });
   ok(leaks.length === 0, `${code}: no English left untranslated in a definition${leaks.length ? ' — ' + leaks.slice(0, 3).join(', ') : ''}`);
+}
+
+// Right-to-left languages: a rank sequence dropped into an Arabic or Hebrew
+// definition gets reordered by the bidi algorithm at its boundaries, so
+// A-2-3-4-5 reads backwards and the entry for the wheel teaches the wrong
+// straight. The English headword is isolated by the builder; sequences inside
+// a definition have to be wrapped by the translation itself.
+const RTL = ['ar', 'fa', 'he', 'ur'];
+const SEQ = /(?:10|[AKQJ2-9])(?:-(?:10|[AKQJ2-9])){2,}/g;
+for (const code of RTL) {
+  if (!(code in built)) continue;
+  const stripped = built[code].body.replace(/<span class="(?:ltr|en)">[\s\S]*?<\/span>/g, '');
+  const loose = stripped.match(SEQ) || [];
+  ok(loose.length === 0,
+    `${code}: rank sequences in definitions are isolated from bidi reordering${loose.length ? ' — ' + loose.join(', ') : ''}`);
 }
 
 ok(/SEO_GLOSSARY_I18N = require\('\.\/seo-i18n\/glossary\.js'\)\.build\(_SEO_GLOSSARY, _seoPageHref\);/.test(proxy),

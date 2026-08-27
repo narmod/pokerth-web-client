@@ -51,6 +51,14 @@ highlights below.
   `InitAck` lands. Covered by `scripts/test-reconnect-backoff.mjs`.
 
 ### Added
+- **`/glossary` in the four RTL languages** (`web.143`). `ar`, `fa`, `he` and
+  `ur`, bringing the page to 24 of 45, each with a local equivalent on all 54
+  entries. The builder already isolated the English headword, but the wheel
+  entry carries `A-2-3-4-5` inside its definition, where the bidi algorithm
+  reversed it — the entry would have taught the wrong straight. Wrapped in
+  `.ltr` and guarded by a new assertion. The leak guard added in `web.142`
+  also had to learn to strip markup before reading, or it reported the tag
+  names of that very fix as untranslated English. 357 assertions.
 - **`/glossary` in four more languages, and a leak guard** (`web.142`). `zh`,
   `zh-TW`, `ja` and `ko`, bringing the page to 20 of 45. All four carry a
   local equivalent on every one of the 54 entries. Writing them turned up an
