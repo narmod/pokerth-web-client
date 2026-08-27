@@ -3548,11 +3548,17 @@ function seoFaqPage(res, method, lang) {
 // reachable, noindex while the admin toggle is off. They exist because the app
 // is an empty shell to a crawler and because "poker hand rankings" is a
 // question people actually type — answering it properly is worth more than any
-// amount of tuning on a page with no text. Each has its own translation table,
-// empty for now, filled in batches exactly like SEO_RULES_I18N.
-var SEO_HANDS_I18N = {};
-var SEO_HOWTO_I18N = {};
-var SEO_GLOSSARY_I18N = {};
+// amount of tuning on a page with no text.
+//
+// Their translation tables live in seo-i18n/, one module per page, filled in
+// batches exactly like SEO_RULES_I18N. They are not inlined here because a
+// translated page is ~3 KB of prose and there are 44 languages to write for
+// each of the three, which would have added about a megabyte to a file that
+// already weighs one. Nothing else changes: seoPageLangs() still decides which
+// languages are advertised, and English still lives in the page functions.
+var SEO_HANDS_I18N = {};   // built below, once _SEO_HANDS and _sd exist
+var SEO_HOWTO_I18N = require('./seo-i18n/howto.js').build();
+var SEO_GLOSSARY_I18N = require('./seo-i18n/glossary.js').build();
 
 // Suit symbols. Red suits get a class rather than a hard-coded colour so the
 // page CSS stays the single place that decides what red means.
@@ -3580,6 +3586,8 @@ var _SEO_HANDS = [
   ['High Card', 'None of the above. The highest card decides, then the next, and so on.',
    'A\u2663 Q\u2666 9\u2660 6\u2665 2\u2663', '17.4%']
 ];
+
+SEO_HANDS_I18N = require('./seo-i18n/hands.js').build(_SEO_HANDS, _sd);
 
 function seoHandsPage(res, method, lang) {
   var langs = seoPageLangs(SEO_HANDS_I18N);

@@ -36,6 +36,16 @@ highlights below.
   `InitAck` lands. Covered by `scripts/test-reconnect-backoff.mjs`.
 
 ### Added
+- **`/hand-rankings` starts speaking other languages** (`web.129`). The three
+  newest content pages had empty translation tables, so `?lang=` was ignored on
+  all of them. The tables now live in `seo-i18n/` — one module per page,
+  keeping ~3 KB of prose × 44 languages × 3 pages out of a `proxy.js` that
+  already weighs 1.1 MB — and each builds its page body once at load, so
+  `seoPageLangs()`, the hreflang set and the sitemap work unchanged. First
+  batch for `/hand-rankings`: `fr`, `de`, `es`, `pt-BR`, `it`, `nl`. Hand names
+  are checked against the client’s own `h1n`…`h10n` catalogue by
+  `scripts/test-seo-hands-i18n.mjs`, so the page and the table never disagree
+  on what a full house is called.
 - **Admin Traffic tiles read at a glance** (`web.126`). The four period tiles
   now show the number of new devices under the unique count, and colour the
   main figure green or red when it moves 10 % or more against the previous
