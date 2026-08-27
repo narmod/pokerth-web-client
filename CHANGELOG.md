@@ -51,6 +51,13 @@ highlights below.
   `InitAck` lands. Covered by `scripts/test-reconnect-backoff.mjs`.
 
 ### Added
+- **`/how-to-play` complete in all 45 languages** (`web.138`). The last
+  twenty-two, in two batches: `pt-PT`, `zh-TW`, `sv`, `da`, `nb`, `fi`, `cs`,
+  `sk`, `ro`, `hu`, then `el`, `bg`, `hr`, `sr`, `ca`, `gl`, `lt`, `af`, `fil`,
+  `sw`, `gd`, `ta`. Both `/hand-rankings` and `/how-to-play` are now fully
+  translated; every hreflang alternate either page advertises resolves to a
+  page written in that language, and each carries 45 sitemap URLs instead of
+  one. 624 assertions.
 - **`/how-to-play` in seven more languages** (`web.137`). `ar`, `fa`, `he`,
   `ur`, `hi`, `th` and `bn`, bringing the page to 23 of 45. Unlike
   `/hand-rankings`, this page carries no card examples or rank sequences, so
