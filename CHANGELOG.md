@@ -15,6 +15,17 @@ release. Granular, per-build changes for this line are on the
 [GitHub Releases](https://github.com/narmod/pokerth-web-client/releases) page;
 highlights below.
 
+### Fixed
+- **Reconnect backoff no longer resets on the server Announce** (`web.125`).
+  A PokerTH server sends its `AnnounceMessage` the instant the socket opens,
+  and both reconnect paths cleared `S._reconnectAttempts` from `ws.onmessage`.
+  Against a target that hung up right after the Announce (server-side
+  anti-brute-force, PROXY-protocol mismatch, ban) the backoff never advanced
+  past its first step: the client retried every 5 s indefinitely until the
+  server replied `blockedByServer`. An attempt now only counts as successful
+  once the socket has stayed open for 10 s (`_armReconnectStable`) or an
+  `InitAck` lands. Covered by `scripts/test-reconnect-backoff.mjs`.
+
 ### Added
 - **Private messages**, aligned with the upstream `PrivateMessageDialog.qml`
   (`web.96` onwards). A persistent conversation window: partner list, history,

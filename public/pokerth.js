@@ -3633,6 +3633,26 @@ document.addEventListener("DOMContentLoaded", function() {
 const App = (() => {
   const S = window.PthState; // état partagé — modules/game/state.mjs (ESM #9e)
   const $ = id => document.getElementById(id); // restauré (hotfix 0.3.849 — avalé par le segment 9f-10)
+
+  // ── Reconnect backoff: what counts as a successful attempt ────────────
+  // A PokerTH server sends its Announce the instant the socket opens, so
+  // "some bytes arrived" proves nothing about the connection being usable.
+  // A target that hangs up right after the Announce (server-side
+  // anti-brute-force, PROXY-protocol mismatch, ban) therefore used to reset
+  // the attempt counter on every try: the backoff never grew past its first
+  // step and the client hammered the server every 5 s forever, which is what
+  // earns the "blockedByServer" reply in the end. An attempt now only counts
+  // as successful once the socket has STAYED open for a few seconds (or once
+  // an InitAck lands, which resets the counter from msg-lobby.mjs).
+  const RECONNECT_STABLE_MS = 10000;
+  function _armReconnectStable() {
+    clearTimeout(window._reconnectStableTimer);
+    const w = S.ws;
+    window._reconnectStableTimer = setTimeout(function () {
+      if (S.ws === w && S.ws && S.ws.readyState === WebSocket.OPEN)
+        S._reconnectAttempts = 0;
+    }, RECONNECT_STABLE_MS);
+  }
   // ── Game state ──
 
   // ── Blind-raise schedule (forum: "better notification of blind increases") ──
@@ -5768,6 +5788,7 @@ const App = (() => {
         S.ws = null;
         clearTimeout(window._reconnectTimer);
         clearInterval(window._reconnectCountdown);
+        clearTimeout(window._reconnectStableTimer);
         _hideBanner();
 
         // User asked to leave (clicked ✕ / disconnect): do NOT auto-reconnect.
@@ -5805,6 +5826,7 @@ const App = (() => {
             S.ws.binaryType = 'arraybuffer';
             S.ws.onopen = function() {
               _showBanner(t('reauthBanner'));
+              _armReconnectStable();
             };
             S.ws.onerror = function() {
               S.ws = null;
@@ -5814,11 +5836,9 @@ const App = (() => {
             };
             S.ws.onmessage = function(e) {
               onRawData(e.data);
-              // Si on reçoit des données, la connexion est OK
-              if (S._reconnectAttempts > 0) {
-                S._reconnectAttempts = 0;
-                setTimeout(_hideBanner, 1500);
-              }
+              // Le compteur n'est PAS remis à zéro ici : voir _armReconnectStable.
+              // La bannière, elle, disparaît toujours dès la première trame.
+              if (S._reconnectAttempts > 0) setTimeout(_hideBanner, 1500);
             };
             // Réutiliser le même handler onclose pour les tentatives suivantes.
             // (fix 2026-07-31 : l'ancienne ligne `arguments.callee.caller`
@@ -5883,13 +5903,11 @@ const App = (() => {
         try {
           S.ws = new WebSocket(S._lastConnectParams.finalUrl);
           S.ws.binaryType = 'arraybuffer';
-          S.ws.onopen = function() { _showBanner(t('reauthBanner')); };
+          S.ws.onopen = function() { _showBanner(t('reauthBanner')); _armReconnectStable(); };
           S.ws.onmessage = function(e) {
             onRawData(e.data);
-            if (S._reconnectAttempts > 0) {
-              S._reconnectAttempts = 0;
-              setTimeout(_hideBanner, 1500);
-            }
+            // Idem : la remise à zéro vient de _armReconnectStable / InitAck.
+            if (S._reconnectAttempts > 0) setTimeout(_hideBanner, 1500);
           };
           S.ws.onclose = function() {
             S.ws = null;
@@ -10726,7 +10744,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.7-web.124'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.7-web.125'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
