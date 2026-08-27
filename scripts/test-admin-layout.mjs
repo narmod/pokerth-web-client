@@ -11,6 +11,7 @@ import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 
 const admin = readFileSync(join(dirname(fileURLToPath(import.meta.url)), '..', 'public', 'admin.html'), 'utf8');
+const proxy = readFileSync(join(dirname(fileURLToPath(import.meta.url)), '..', 'proxy.js'), 'utf8');
 let n = 0, fail = 0;
 function ok(cond, msg) { n++; if (!cond) { fail++; console.error('  ✗', msg); } else console.log('  ✓', msg); }
 
@@ -271,7 +272,7 @@ ok(/\n  \.fld\{display:flex/.test(admin), 'the settings row is a class now');
 ok(/max-width:560px/.test(admin),
   'the control stays near its label instead of drifting to the far edge');
 ok(!/class="defrow" style="display:flex/.test(admin), 'no settings row carries the flex inline any more');
-ok((admin.match(/class="defrow fld/g) || []).length === 51, 'all 51 rows use it');
+ok((admin.match(/class="defrow fld/g) || []).length === 57, 'all 57 rows use it');
 ok(/\.fld\.left\{justify-content:flex-start\}/.test(admin), 'the left-aligned variant survives');
 ok(/\.fld\.gap\{margin:10px 0 5px\}/.test(admin), 'so does the wider-margin variant');
 ok(/\.fld>input\[type=number\]\{width:110px\}/.test(admin), 'short control widths live in the sheet');
@@ -382,8 +383,21 @@ ok(traf.indexOf('id="trafBottom"') < traf.indexOf('Data &amp; settings'),
 // -- Four windows, not seven -----------------------------------------------
 // 90, 180 and 365 days repeat "All time" to the unit until the site has a year
 // behind it. They stay in the export; they no longer take the space.
-ok(/tile\('Today',d\.today\)\+tile\('Last 7 days',d\.week\)\+tile\('Last 30 days',d\.month\)\+tile\('All time',d\.allTime\)/.test(admin),
-  'four windows are shown');
+ok(/tile\('Today',d\.today,pv\.todayToHour,'yesterday at this hour'\)\s*\+tile\('Last 7 days',d\.week,pv\.week,'previous 7 days'\)\s*\+tile\('Last 30 days',d\.month,pv\.month,'previous 30 days'\)\s*\+tile\('All time',d\.allTime\)/.test(admin),
+  'four windows are shown, the first three against their previous period');
+// -- Read at a glance --------------------------------------------------------
+// New devices under the unique count; green / red only past a 10 % move, and
+// only where a reference exists. All time has none, so it takes no colour.
+ok(/fmt\(o&&o\.nw\)\+' new<\/div>'/.test(admin), 'each window shows its new devices under the unique count');
+ok(/dl>=0\.10\?'up':\(dl<=-0\.10\?'dn':''\)/.test(admin), 'colour needs a move of ten percent either way');
+ok(/\(ref&&ref>0\)\? \(cur-ref\)\/ref : null/.test(admin), 'and no reference means no colour rather than red');
+ok(/var pv=d\.prev\|\|\{\};/.test(admin), 'an older proxy without prev leaves every tile neutral');
+ok(/\.tstat \.big\.up,\.kpi \.big\.up\{color:#7fd17f\}/.test(admin) && /\.tstat \.big\.dn,\.kpi \.big\.dn\{color:#e8735c\}/.test(admin),
+  'the main figure carries the colour on both kinds of tile');
+ok(/prev: \{ todayToHour: visitYesterdayToHour\(\), yesterday: visitWindow\(1, 1\), week: visitWindow\(7, 7\), month: visitWindow\(30, 30\) \}/.test(proxy),
+  'the proxy serves the previous windows the tiles compare against');
+ok(/for \(let i = offset; i < offset \+ daysBack; i\+\+\)/.test(proxy), 'visitWindow shifts by an offset instead of duplicating the loop');
+ok(/if \(!b \|\| !b\.h\) return null;/.test(proxy), 'yesterday without hour buckets yields no reference for today');
 ok(!/Last 90 days/.test(admin) && !/Last 180 days/.test(admin) && !/Last 365 days/.test(admin),
   'and the middle three are gone from the screen');
 ok(!/trafNvR/.test(admin),

@@ -81,6 +81,16 @@
   .tstat .lbl{font-size:.72rem;color:var(--text);text-transform:uppercase;letter-spacing:.04em}
   .tstat .big{font-size:1.5rem;font-weight:800;color:var(--gold);margin-top:4px;font-variant-numeric:tabular-nums}
   .tstat .sub{font-size:.78rem;color:var(--text);margin-top:2px}
+  /* Vert / rouge contre la periode precedente ; l'or reste la couleur du
+     neutre et de l'incomparable, pour que l'oeil ne cherche une couleur que
+     la ou elle dit quelque chose. */
+  .tstat .big.up,.kpi .big.up{color:#7fd17f}
+  .tstat .big.dn,.kpi .big.dn{color:#e8735c}
+  .tstat.up,.kpi.up{border-color:rgba(127,209,127,.45)}
+  .tstat.dn,.kpi.dn{border-color:rgba(232,115,92,.45)}
+  .delta{font-size:.72rem;margin-top:4px;color:var(--text);opacity:.85}
+  .delta.up{color:#7fd17f;opacity:1}
+  .delta.dn{color:#e8735c;opacity:1}
   .trafchart{display:flex;align-items:flex-end;gap:4px;height:120px;padding-top:6px}
   /* Courbes : SVG fluide, l'axe Y porte les valeurs (lisible sans survol —
      les tooltips title= n'existent pas au tactile). */
@@ -356,7 +366,7 @@
     <div id="panel-traffic" style="display:none">
       <div class="card">
         <div class="boardhead"><h2>Traffic</h2><span id="trafRange" class="headnote"></span><button id="btnTrafRefresh" class="use">Refresh</button></div>
-        <p class="muted">Anonymous footfall — no IP is ever stored. “Visits” counts browser sessions; “Unique visitors” counts distinct devices. Everything on this tab reads the same anonymous ping; nothing here identifies a person.</p>
+        <p class="muted">Anonymous footfall — no IP is ever stored. “Visits” counts browser sessions; “Unique” counts distinct devices; “New” counts devices seen for the first time. Green or red marks a move of 10&nbsp;% or more against the previous period (today is compared with yesterday up to the same hour); gold means flat or nothing to compare. Everything on this tab reads the same anonymous ping; nothing here identifies a person.</p>
         <div class="trafgrid" id="trafCards"><div class="empty">Loading…</div></div>
         <div class="kpirow" id="trafKpis"><div class="empty">Loading…</div></div>
         <div class="tsec">
@@ -2044,11 +2054,31 @@
       var g=$('trafCards');
       if(!d || !d.ok){ if(g) g.innerHTML='<div class="empty err">'+((d&&d.error)||'error')+'</div>'; return; }
       function fmt(n){ try{return Number(n||0).toLocaleString();}catch(e){return String(n||0);} }
-      function tile(lbl,o){ return '<div class="tstat"><div class="lbl">'+lbl+'</div><div class="big">'+fmt(o&&o.v)+'</div><div class="sub">'+fmt(o&&o.u)+' unique</div></div>'; }
+      // Sous 10 % d'ecart on ne colore pas : sur une journee a 50 visites,
+      // c'est cinq personnes, pas un mouvement. Reference absente (proxy
+      // anterieur, hier sans cases horaires) : neutre, sans fleche.
+      function _dl(cur,ref){ return (ref&&ref>0)? (cur-ref)/ref : null; }
+      function _tone(dl){ return dl==null?'':(dl>=0.10?'up':(dl<=-0.10?'dn':'')); }
+      function _dtxt(dl,lbl){
+        if(dl==null) return '';
+        var p=Math.round(dl*100);
+        return '<div class="delta '+_tone(dl)+'">'+(p>0?'\u25b2 +':(p<0?'\u25bc \u2212':'\u2248 '))+Math.abs(p)+'% vs '+lbl+'</div>';
+      }
+      function tile(lbl,o,ref,refLbl){
+        var dl=_dl(o&&o.v, ref&&ref.v), t=_tone(dl);
+        return '<div class="tstat '+t+'"><div class="lbl">'+lbl+'</div><div class="big '+t+'">'+fmt(o&&o.v)+'</div>'
+          +'<div class="sub">'+fmt(o&&o.u)+' unique</div>'
+          +'<div class="sub">'+fmt(o&&o.nw)+' new</div>'
+          +_dtxt(dl,refLbl)+'</div>';
+      }
       // Sept fenetres pour quatre questions : tant que le site n'a pas un an de
       // recul, 90, 180 et 365 jours repetent « All time » au chiffre pres. Les
       // trois restent dans l'export, elles ne prennent plus la place a l'ecran.
-      if(g) g.innerHTML = tile('Today',d.today)+tile('Last 7 days',d.week)+tile('Last 30 days',d.month)+tile('All time',d.allTime);
+      var pv=d.prev||{};
+      if(g) g.innerHTML = tile('Today',d.today,pv.todayToHour,'yesterday at this hour')
+        +tile('Last 7 days',d.week,pv.week,'previous 7 days')
+        +tile('Last 30 days',d.month,pv.month,'previous 30 days')
+        +tile('All time',d.allTime);
       var c=$('trafChart'), s=(d.series||[]), max=1;
       _trafSeries=s;
       s.forEach(function(x){ if((x.v||0)>max) max=x.v; });
@@ -2259,15 +2289,19 @@
     var dir = !solid ? 'flat' : (week>0 ? 'up' : 'down');
     var k=$('trafKpis');
     if(k){
-      function tile(lbl,big,sub){ return '<div class="kpi"><div class="lbl">'+lbl+'</div><div class="big">'+big+'</div><div class="sub">'+sub+'</div></div>'; }
+      function tile(lbl,big,sub,t){ t=t||''; return '<div class="kpi '+t+'"><div class="lbl">'+lbl+'</div><div class="big '+t+'">'+big+'</div><div class="sub">'+sub+'</div></div>'; }
+      // Meme seuil de 10 % que les tuiles du haut ; la pente n'est coloree que
+      // si elle sort du bruit (r), les moities que si l'ecart est franc.
+      var rtF=_mean(rtv.slice(0,half)), rtL=_mean(rtv.slice(half));
+      var rtT = !(rtF>0) ? '' : (rtL/rtF>=1.10?'up':(rtL/rtF<=0.90?'dn':''));
       var trendTxt = dir==='flat'
         ? 'no clear direction (r='+(Math.round(Math.abs(reg.r)*100)/100)+')'
         : (week>0?'+':'\u2212')+_round1(Math.abs(week))+'/week (r='+(Math.round(Math.abs(reg.r)*100)/100)+')';
       k.innerHTML =
-        tile('Visits / day', _round1(_mean(vv)), 'mean over '+n+' days \u00b7 '+trendTxt)
+        tile('Visits / day', _round1(_mean(vv)), 'mean over '+n+' days \u00b7 '+trendTxt, dir==='flat'?'':dir)
        +tile('Unique devices / 30 d', fmt(month.u), (all.u? pct(month.u,all.u):0)+'% of the '+fmt(all.u)+' ever seen')
        +tile('New share / 30 d', (idSess? pct(month.nw,idSess):0)+'%', fmt(month.nw)+' new of '+fmt(idSess)+' identified sessions')
-       +tile('Returning / day', _round1(_mean(rtv)), 'first half '+_round1(_mean(rtv.slice(0,half)))+' \u2192 second half '+_round1(_mean(rtv.slice(half))));
+       +tile('Returning / day', _round1(_mean(rtv)), 'first half '+_round1(rtF)+' \u2192 second half '+_round1(rtL), rtT);
     }
     var tn=$('trafTrendNote');
     if(tn) tn.textContent = (dir==='flat'?'flat':(dir==='up'?'rising':'falling'))

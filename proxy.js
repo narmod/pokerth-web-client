@@ -4254,12 +4254,17 @@ function recordVisit(rawId) {
   }
   saveVisitsSoon();
 }
-function visitWindow(daysBack) {
+// `offset` decale la fenetre vers le passe : visitWindow(7, 7) = les 7 jours
+// qui precedent les 7 derniers. Sert de reference « periode precedente » aux
+// tuiles de l'admin, qui n'ont ainsi pas a reconstituer une union d'appareils
+// a partir de la serie journaliere.
+function visitWindow(daysBack, offset) {
   const now = new Date();
+  offset = offset || 0;
   let v = 0, nw = 0, rt = 0;
   const u = {};
   const m = { pokerthnet: 0, lan: 0, offline: 0 };
-  for (let i = 0; i < daysBack; i++) {
+  for (let i = offset; i < offset + daysBack; i++) {
     const d = new Date(now);
     d.setDate(now.getDate() - i);
     const b = visitsStore.days[visitDayKey(d)];
@@ -4271,6 +4276,20 @@ function visitWindow(daysBack) {
     if (b.m) for (const mk in m) if (b.m[mk]) m[mk] += b.m[mk];
   }
   return { v: v, u: Object.keys(u).length, m: m, nw: nw, rt: rt };
+}
+// Hier, arrete a l'heure courante : comparer un « aujourd'hui » de 13h a un
+// hier complet ferait voir rouge chaque matin. Faute de cases horaires (jour
+// anterieur au comptage horaire), la reference n'existe pas et la tuile reste
+// neutre plutot que de mentir.
+function visitYesterdayToHour() {
+  const now = new Date();
+  const d = new Date(now); d.setDate(now.getDate() - 1);
+  const b = visitsStore.days[visitDayKey(d)];
+  if (!b || !b.h) return null;
+  const hh = now.getHours();
+  let v = 0, nw = 0;
+  for (let i = 0; i <= hh; i++) { v += b.h[i] || 0; if (b.hn) nw += b.hn[i] || 0; }
+  return { v: v, nw: nw };
 }
 // Les 48 dernieres heures, dans l'ordre. La derniere case est l'heure en cours
 // et n'est donc pas finie : le tableau de bord la dessine quand meme, mais elle
@@ -4383,6 +4402,7 @@ function visitsSummary() {
     quarter: visitWindow(90),
     semester: visitWindow(180),
     year: visitWindow(365),
+    prev: { todayToHour: visitYesterdayToHour(), yesterday: visitWindow(1, 1), week: visitWindow(7, 7), month: visitWindow(30, 30) },
     allTime: { v: visitsStore.totalV || 0, u: Object.keys(visitsStore.allU).length, nw: Object.keys(visitsStore.allU).length, rt: visitsStore.totalRet || 0, m: (function () { const am = visitsStore.allM || {}; return { pokerthnet: am.pokerthnet || 0, lan: am.lan || 0, offline: am.offline || 0 }; })() },
     series: series,
     hours48: visitHourSeries(48),

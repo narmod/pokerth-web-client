@@ -27,6 +27,14 @@ highlights below.
   `InitAck` lands. Covered by `scripts/test-reconnect-backoff.mjs`.
 
 ### Added
+- **Admin Traffic tiles read at a glance** (`web.126`). The four period tiles
+  now show the number of new devices under the unique count, and colour the
+  main figure green or red when it moves 10 % or more against the previous
+  period — yesterday up to the same hour, the previous 7 days, the previous
+  30 days — with the delta spelled out under the tile. The `/admin/visits`
+  reply carries a `prev` block for those references; an older proxy simply
+  leaves the tiles gold. Visits/day and Returning/day pick up the same colours
+  from their existing trend and half-window comparisons.
 - **Private messages**, aligned with the upstream `PrivateMessageDialog.qml`
   (`web.96` onwards). A persistent conversation window: partner list, history,
   128-character input with a live counter, and a bin to drop a conversation.
