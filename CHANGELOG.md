@@ -26,20 +26,20 @@ highlights below.
   (`TimeoutMsgBoxImpl`); `_afkActivity` (`modules/net/msg-social.mjs`) is
   now the single sender on the web side, rate-limited to 3 min like
   `kAfkResetIntervalMs`. Guarded by `scripts/test-afk-single-sender.mjs`.
-- **`scripts/test-action-bar.mjs`**: four assertions were passing or failing
-  for the wrong reason. A stale `S.highestBet` left over from the pre-action
-  test made the Check/Call race guard reject the `doAction` calls before they
-  reached what was under test, and "action sent to the server" was really
-  counting the keepalive above. 70/70 again.
+
+  Fixing it also exposed four assertions in `scripts/test-action-bar.mjs`
+  that were passing for the wrong reason: "action sent to the server" was
+  really counting the keepalive above, and a stale `S.highestBet` made the
+  Check/Call race guard reject the `doAction` calls before they reached what
+  was under test.
 - **Content pages keep the reader’s language** (`web.128`). The nav on the
   server-rendered pages, the crawler block on `/` and the connect-screen footer
   line all emitted bare hrefs, so a reader on `/rules?lang=fr` was thrown back
-  to English on the next click and the 40 translated pages looked as if they
-  did not exist. A single `_seoLangHref(relPath, table, lang)` now builds every
-  internal link, appending `?lang=` only when the target page has that
-  translation — `/glossary`, `/hand-rankings` and `/how-to-play` are still
-  English-only and are linked bare, so no link points at a URL that
-  canonicalises elsewhere. Covered by `scripts/test-seo-nav-lang.mjs`.
+  to English on the next click and the translated pages looked as if they did
+  not exist. `_seoLangHref(relPath, table, lang)` now builds every internal
+  link and appends `?lang=` only where the target page has that translation,
+  so no link points at a URL that canonicalises elsewhere. Covered by
+  `scripts/test-seo-nav-lang.mjs`.
 - **Reconnect backoff no longer resets on the server Announce** (`web.125`).
   A PokerTH server sends its `AnnounceMessage` the instant the socket opens,
   and both reconnect paths cleared `S._reconnectAttempts` from `ws.onmessage`.
@@ -51,121 +51,43 @@ highlights below.
   `InitAck` lands. Covered by `scripts/test-reconnect-backoff.mjs`.
 
 ### Added
-- **`/glossary` complete, and with it every content page** (`web.146`). The
-  last ten — `id`, `vi`, `th`, `hi`, `bn`, `ta`, `af`, `sw`, `gd`, `fil` —
-  close the glossary at 45 of 45. All five server-rendered pages are now fully
-  translated: `/rules`, `/hand-rankings`, `/how-to-play`, `/glossary` and
-  `/faq`. Every hreflang alternate any of them advertises resolves to a page
-  actually written in that language, and the sitemap carries 45 URLs per page
-  instead of one. The leak guard needed one fix along the way: Bengali and
-  Tamil attach case endings to a Latin name with a hyphen (PokerTH-এ), which
-  it read as an unknown English word. 672 assertions.
-- **`/glossary` in five more languages** (`web.145`). `hr`, `sr`, `ca`, `gl`
-  and `lt`, bringing the page to 35 of 45. 522 assertions.
-- **`/glossary` in six more languages** (`web.144`). `el`, `bg`, `sv`, `da`,
-  `nb` and `fi`, bringing the page to 30 of 45. 447 assertions.
-- **`/glossary` in the four RTL languages** (`web.143`). `ar`, `fa`, `he` and
-  `ur`, bringing the page to 24 of 45, each with a local equivalent on all 54
-  entries. The builder already isolated the English headword, but the wheel
-  entry carries `A-2-3-4-5` inside its definition, where the bidi algorithm
-  reversed it — the entry would have taught the wrong straight. Wrapped in
-  `.ltr` and guarded by a new assertion. The leak guard added in `web.142`
-  also had to learn to strip markup before reading, or it reported the tag
-  names of that very fix as untranslated English. 357 assertions.
-- **`/glossary` in four more languages, and a leak guard** (`web.142`). `zh`,
-  `zh-TW`, `ja` and `ko`, bringing the page to 20 of 45. All four carry a
-  local equivalent on every one of the 54 entries. Writing them turned up an
-  untranslated `players` sitting inside a Japanese definition: in a
-  Latin-script language a stray English word is visible on sight, in Japanese
-  it disappears into the surrounding script and survived a read-through.
-  `scripts/test-seo-glossary-i18n.mjs` now flags any Latin word in a
-  non-Latin definition that is not deliberate jargon. 293 assertions.
-- **`/glossary` in six more languages** (`web.141`). `tr`, `uk`, `cs`, `sk`,
-  `hu` and `ro`, bringing the page to 16 of 45. 218 assertions.
-- **`/glossary` in four more languages** (`web.140`). `nl`, `pl`, `ru` and
-  `pt-PT`, bringing the page to 10 of 45. Russian shows a local equivalent on
-  53 of the 54 entries and German on seven — the same page, two very
-  different relationships with the English vocabulary, which is exactly what
-  the format is meant to show. 134 assertions.
-- **`/glossary` starts translating** (`web.139`). First batch: `fr`, `de`,
-  `es`, `pt-BR`, `it`. The headword is not translated away — what a player
-  meets in the chat is the English term, so each entry keys on it and adds the
-  local equivalent in parentheses where the language actually has one, which
-  is also what someone searching in their own language types. The builder
-  drops an equivalent that only differs in case, so no entry reads “Ante
-  (ante)”; German consequently shows seven, since its poker vocabulary is
-  largely borrowed. `scripts/test-seo-glossary-i18n.mjs` checks index
-  alignment specifically: a translation is a positional array of 54 entries,
-  and one missing entry would shift every definition after it onto the wrong
-  headword while still rendering a valid page. 78 assertions.
-- **`/how-to-play` complete in all 45 languages** (`web.138`). The last
-  twenty-two, in two batches: `pt-PT`, `zh-TW`, `sv`, `da`, `nb`, `fi`, `cs`,
-  `sk`, `ro`, `hu`, then `el`, `bg`, `hr`, `sr`, `ca`, `gl`, `lt`, `af`, `fil`,
-  `sw`, `gd`, `ta`. Both `/hand-rankings` and `/how-to-play` are now fully
-  translated; every hreflang alternate either page advertises resolves to a
-  page written in that language, and each carries 45 sitemap URLs instead of
-  one. 624 assertions.
-- **`/how-to-play` in seven more languages** (`web.137`). `ar`, `fa`, `he`,
-  `ur`, `hi`, `th` and `bn`, bringing the page to 23 of 45. Unlike
-  `/hand-rankings`, this page carries no card examples or rank sequences, so
-  the RTL languages needed no bidi isolation: the only Latin runs are the
-  action words and `pokerth.net`, which the bidi algorithm places correctly
-  on its own. `scripts/test-seo-howto-i18n.mjs` gains a guard that the five
-  action words stay in English in every language — translating them is the
-  natural instinct of anyone working through the file, and would leave the
-  guide describing buttons that do not exist. 316 assertions.
-- **`/how-to-play` in seven more languages** (`web.136`). `nl`, `tr`, `uk`,
-  `ja`, `ko`, `id` and `vi`, bringing the page to 16 of 45. 203 assertions.
-- **`/how-to-play` starts translating, with language-aware internal links**
-  (`web.135`). First batch: `fr`, `de`, `es`, `pt-BR`, `it`, `pl`, `ru`, `zh`.
-  This page links to the rules, the hand rankings and the FAQ, and a page body
-  is assembled once per language at load, so those links had to be resolved at
-  that moment rather than left as bare English URLs — otherwise a French
-  reader following “la page des règles” would land on the English rules and the
-  language chain would break silently. `_seoPageHref(page, lang)` now resolves
-  them with the same rule as the nav, and the three tables are built in
-  dependency order so a body can link into a table that already exists.
-  `scripts/test-seo-howto-i18n.mjs` builds with a recording resolver and fails
-  on any link that did not come through it. 112 assertions.
-- **`/hand-rankings` complete in all 45 languages** (`web.134`). The last
-  fourteen — `pt-PT`, `zh-TW`, `el`, `bg`, `hr`, `sr`, `ca`, `gl`, `af`,
-  `fil`, `gd`, `lt`, `sw`, `ta` — close the page: 44 translations plus the
-  English original in `seoHandsPage()`. Every hreflang alternate the page
-  advertises now resolves to a page actually written in that language, and the
-  sitemap carries 45 URLs for it instead of one. Hand names come from each
-  language’s own client catalogue throughout, so the page and the in-game hand
-  list never disagree. 631 assertions.
-- **`/hand-rankings` in eight more languages** (`web.133`). `sv`, `da`, `nb`,
-  `fi`, `cs`, `sk`, `ro` and `hu`, bringing the page to 31 of 45. Hand names
-  again come from each language’s own client catalogue, which is why the page
-  says Kåk in Swedish and Fullt hus in Norwegian rather than a single
-  borrowed term. 435 assertions.
-- **`/hand-rankings` in eight more languages, and a bidi fix** (`web.131`).
-  `vi`, `th`, `hi`, `bn`, `ar`, `fa`, `ur` and `he`, bringing the page to 22 of
-  45. Adding the four RTL languages surfaced a real bug: inside an Arabic or
-  Hebrew paragraph the bidi algorithm reorders `A♠ K♦` and `10-J-Q-K-A` at
-  their boundaries, so a worked example rendered backwards — wrong, not merely
-  ugly. `.cards` now carries `direction:ltr;unicode-bidi:isolate` and a new
-  `.ltr` class isolates rank sequences in prose; both are no-ops in LTR. The
-  hand-name check compares in NFC, since Devanagari `फ़` exists precomposed
-  and as base + nukta and the two are the same word. 323 assertions.
-- **`/hand-rankings` in eight more languages** (`web.130`). `pl`, `ru`, `tr`,
-  `uk`, `zh`, `ja`, `ko` and `id`, bringing the page to 14 of 45. The module
-  also drops `\uXXXX` escapes for plain UTF-8: it is a translation corpus, and
-  a reviewer should not have to decode it character by character. The length
-  assertions in `scripts/test-seo-hands-i18n.mjs` now measure display width
-  rather than characters — a search result truncates on a pixel budget, and a
-  correctly sized Chinese description was being flagged as too short.
-- **`/hand-rankings` starts speaking other languages** (`web.129`). The three
-  newest content pages had empty translation tables, so `?lang=` was ignored on
-  all of them. The tables now live in `seo-i18n/` — one module per page,
-  keeping ~3 KB of prose × 44 languages × 3 pages out of a `proxy.js` that
-  already weighs 1.1 MB — and each builds its page body once at load, so
-  `seoPageLangs()`, the hreflang set and the sitemap work unchanged. First
-  batch for `/hand-rankings`: `fr`, `de`, `es`, `pt-BR`, `it`, `nl`. Hand names
-  are checked against the client’s own `h1n`…`h10n` catalogue by
-  `scripts/test-seo-hands-i18n.mjs`, so the page and the table never disagree
-  on what a full house is called.
+- **Every content page written in all 45 languages** (`web.129`–`web.146`).
+  `/rules` and `/faq` were already translated; `/hand-rankings`, `/how-to-play`
+  and `/glossary` shipped with empty tables, so `?lang=` was ignored on all
+  three and every reader got English. All five are now complete — each
+  hreflang alternate resolves to a page actually written in that language, and
+  each page carries 45 sitemap URLs instead of one.
+
+  The tables live in `seo-i18n/`, one module per page: inlined they would have
+  added 836 KB to a `proxy.js` that already weighs 1.1 MB. Each module
+  assembles its page bodies once at load from language-neutral data handed in
+  by `proxy.js`, so `seoPageLangs()`, the hreflang set and the sitemap work
+  unchanged, and English stays in the page functions as the fallback.
+
+  Terminology follows the client rather than the translator. Hand names come
+  from each language’s own `h1n`…`h10n` catalogue, so the page says Kåk in
+  Swedish and 葫芦 in Chinese and never disagrees with the in-game hand list.
+  The glossary keys every entry on the English headword — what a player
+  actually meets in the chat — and adds the local equivalent only where the
+  language has one, which is why Russian carries 53 of them and German seven.
+  The five action words stay in English everywhere, as they do at every table
+  in the world.
+
+  Three bugs surfaced along the way, each invisible in a Latin-script
+  language. The bidi algorithm reverses `A♠ K♦` and `10-J-Q-K-A` inside an
+  Arabic or Hebrew paragraph, so a worked example rendered backwards — wrong,
+  not merely ugly; `.cards` and a new `.ltr` class now isolate them, at no
+  cost in LTR. An untranslated `players` sat unnoticed inside a Japanese
+  definition. And Devanagari `फ़` exists both precomposed and as base + nukta,
+  which made an identical Hindi hand name compare as different.
+
+  `scripts/test-seo-hands-i18n.mjs`, `test-seo-howto-i18n.mjs`,
+  `test-seo-glossary-i18n.mjs` and `test-seo-nav-lang.mjs` guard the result:
+  entry completeness, index alignment against the English source, terminology
+  against the client catalogue, internal links resolving in the reader’s
+  language, action words left in English, bidi isolation, and `<title>` and
+  `<meta description>` measured in display width rather than characters, since
+  a search result truncates on a pixel budget.
 - **Admin Traffic tiles read at a glance** (`web.126`). The four period tiles
   now show the number of new devices under the unique count, and colour the
   main figure green or red when it moves 10 % or more against the previous
