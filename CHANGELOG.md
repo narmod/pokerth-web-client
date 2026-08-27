@@ -51,6 +51,8 @@ highlights below.
   `InitAck` lands. Covered by `scripts/test-reconnect-backoff.mjs`.
 
 ### Added
+- **`/how-to-play` in seven more languages** (`web.136`). `nl`, `tr`, `uk`,
+  `ja`, `ko`, `id` and `vi`, bringing the page to 16 of 45. 203 assertions.
 - **`/how-to-play` starts translating, with language-aware internal links**
   (`web.135`). First batch: `fr`, `de`, `es`, `pt-BR`, `it`, `pl`, `ru`, `zh`.
   This page links to the rules, the hand rankings and the FAQ, and a page body
