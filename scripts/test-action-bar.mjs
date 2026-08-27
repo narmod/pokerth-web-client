@@ -63,7 +63,11 @@ ok(ga.innerHTML.includes('>Check<span') || ga.innerHTML.includes('Check'), 'live
 ok(ga.innerHTML.includes('Fold') && ga.innerHTML.includes('All-In'), 'live : Fold + All-In présents');
 ok(ga.innerHTML.includes('mode-sel'), 'live : dropdown de mode présent');
 ok(bottomLayouts > 0, 'live : updateBottomLayout appelé');
-ok(sent.length === 1, 'live : keepalive serveur envoyé');
+// renderMyTurnActions ne parle PAS au serveur : il tourne tout seul à chaque
+// tour, donc y répondre « je suis là » neutralisait le kick AFK du serveur
+// (onglet abandonné = siège gardé pour toujours). Le ResetTimeout ne part
+// plus que sur activité réelle, via _afkActivity (modules/net/msg-social.mjs).
+ok(sent.length === 0, 'live : aucun envoi serveur depuis le rendu');
 
 // Aperçu : boutons pré-armables + classe actions-preview
 S.turnPid = 2;
@@ -151,6 +155,9 @@ A.renderMyTurnActions(true);
 ok(S._preAction === '', 'pré-action call invalidée (toCall a changé)');
 
 // doAction : WS fermé → message d'erreur + logAction, rien d'envoyé
+// (remise à zéro du montant à suivre laissé par le test de pré-action ci-dessus :
+//  sinon la garde Check/Call rejette l'action avant d'atteindre ce qu'on teste)
+S.highestBet = 0; S.seatData[1].bet = 0;
 S.ws = { readyState: 3, send() { throw new Error('ne doit pas envoyer'); } };
 A.doAction(3, 50);
 ok(ga.innerHTML.includes('waiting-msg'), 'doAction : WS fermé → message d\'avertissement');

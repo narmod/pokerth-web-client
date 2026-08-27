@@ -16,6 +16,21 @@ release. Granular, per-build changes for this line are on the
 highlights below.
 
 ### Fixed
+- **The client no longer defeats the server-side AFK kick** (`web.132`).
+  `renderMyTurnActions()` sent a `ResetTimeoutMessage` on every render, and
+  the client calls it on its own each time the turn comes round: an
+  abandoned tab answered "still here" hand after hand, its session never
+  timed out and its seat was never freed, while a QML client in the same
+  spot is kicked. Upstream only ever sends a reset from real input
+  (`GameHandler::eventFilter`) or from the OK button of the timeout popup
+  (`TimeoutMsgBoxImpl`); `_afkActivity` (`modules/net/msg-social.mjs`) is
+  now the single sender on the web side, rate-limited to 3 min like
+  `kAfkResetIntervalMs`. Guarded by `scripts/test-afk-single-sender.mjs`.
+- **`scripts/test-action-bar.mjs`**: four assertions were passing or failing
+  for the wrong reason. A stale `S.highestBet` left over from the pre-action
+  test made the Check/Call race guard reject the `doAction` calls before they
+  reached what was under test, and "action sent to the server" was really
+  counting the keepalive above. 70/70 again.
 - **Content pages keep the reader’s language** (`web.128`). The nav on the
   server-rendered pages, the crawler block on `/` and the connect-screen footer
   line all emitted bare hrefs, so a reader on `/rules?lang=fr` was thrown back

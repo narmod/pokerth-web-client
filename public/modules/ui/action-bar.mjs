@@ -5,7 +5,7 @@
 // exécution des pré-actions et du mode auto, notifications « mon
 // tour », panneau d'assistance — chantier ESM #9g-B4.
 // Fonctions déplacées telles quelles depuis l'IIFE App. Adaptations :
-// t/esc/fmtChips/hapticBuzz/speak/stopTurnTimer/Proto/MSG/send/
+// t/esc/fmtChips/hapticBuzz/speak/stopTurnTimer/MSG/send/
 // _hsHide/renderHandStrength/renderPreFlopStrength importés ;
 // window.* pour les globaux du script : pkTerm (8×), _keyBindings,
 // setMyTurnActive (2×), getPlayerName (2×), logAction,
@@ -23,7 +23,6 @@ import { esc } from './misc.mjs';
 import { fmtChips } from './fmt.mjs';
 import { hapticBuzz, speak } from './media.mjs';
 import { stopTurnTimer } from '../game/turn-timer.mjs';
-import { Proto } from '../net/proto.mjs';
 import { MSG } from '../net/messages.mjs';
 import { send } from '../net/session.mjs';
 import { _hsHide, renderHandStrength, renderPreFlopStrength } from './odds-panel.mjs';
@@ -536,9 +535,16 @@ function renderMyTurnActions(preview) {
   if (typeof window.notifyMyTurn === 'function') window.notifyMyTurn();
   if (typeof notifyMyTurnVisuals === 'function') notifyMyTurnVisuals();
   hapticBuzz([90, 50, 90]); // "your turn" double-buzz (mobile only)
-  // Tell server we're alive (avoid timeout)
-  const rtm = Proto.encode([[1,0,68],[69,2,new Uint8Array(0)]]);
-  send(rtm);
+  // NO ResetTimeoutMessage here. This function runs on its own every time the
+  // turn comes round, so answering "still here" from it told the server a
+  // player was present when nobody was: an abandoned tab kept its seat for
+  // ever, auto-folded hand after hand, and the table never freed up. That is
+  // exactly what the server-side AFK kick exists to prevent, and a QML client
+  // in the same spot IS kicked. Upstream only ever sends a reset from real
+  // input (GameHandler::eventFilter) or from the OK button of the timeout
+  // popup (TimeoutMsgBoxImpl) -- never on "it is my turn". Tapping an action
+  // button is real input and is already covered by _afkActivity in
+  // modules/net/msg-social.mjs, which is the single sender on the web side.
 }
 
 // ─── Patch App with action methods ───
