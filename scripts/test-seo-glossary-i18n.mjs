@@ -90,6 +90,24 @@ for (const code of codes) {
   ok(dw >= 80 && dw <= 320, `${code}: the description is a usable length (width ${dw})`);
 }
 
+// Untranslated English leaking into a definition. In a Latin-script language
+// a stray English word is visible on sight; in Japanese, Russian or Arabic it
+// sits unnoticed inside a wall of another script — "players" survived a full
+// read-through of one of these entries. Anything in a non-Latin definition
+// that is not deliberate jargon is flagged.
+const JARGON = /^(PokerTH|No-Limit|Fold|Check|Call|Raise|All-In|all-in|set|trips|wheel|LAN|PWA)$/;
+const NON_LATIN = /[\u0400-\u04FF\u0590-\u05FF\u0600-\u06FF\u0900-\u097F\u0980-\u09FF\u0B80-\u0BFF\u0E00-\u0E7F\u3040-\u30FF\u4E00-\u9FFF\uAC00-\uD7A3]/;
+for (const code of codes) {
+  const leaks = [];
+  PARTS[code].terms.forEach((t, i) => {
+    if (!NON_LATIN.test(t[1])) return;
+    (t[1].match(/[A-Za-z][A-Za-z-]{2,}/g) || []).forEach(w => {
+      if (!JARGON.test(w)) leaks.push(`${TERMS[i][0]}: ${w}`);
+    });
+  });
+  ok(leaks.length === 0, `${code}: no English left untranslated in a definition${leaks.length ? ' — ' + leaks.slice(0, 3).join(', ') : ''}`);
+}
+
 ok(/SEO_GLOSSARY_I18N = require\('\.\/seo-i18n\/glossary\.js'\)\.build\(_SEO_GLOSSARY, _seoPageHref\);/.test(proxy),
   'proxy.js builds SEO_GLOSSARY_I18N from the module');
 ok(proxy.indexOf("SEO_GLOSSARY_I18N = require('./seo-i18n/glossary.js')") > proxy.indexOf('var _SEO_GLOSSARY = ['),

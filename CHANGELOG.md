@@ -51,6 +51,14 @@ highlights below.
   `InitAck` lands. Covered by `scripts/test-reconnect-backoff.mjs`.
 
 ### Added
+- **`/glossary` in four more languages, and a leak guard** (`web.142`). `zh`,
+  `zh-TW`, `ja` and `ko`, bringing the page to 20 of 45. All four carry a
+  local equivalent on every one of the 54 entries. Writing them turned up an
+  untranslated `players` sitting inside a Japanese definition: in a
+  Latin-script language a stray English word is visible on sight, in Japanese
+  it disappears into the surrounding script and survived a read-through.
+  `scripts/test-seo-glossary-i18n.mjs` now flags any Latin word in a
+  non-Latin definition that is not deliberate jargon. 293 assertions.
 - **`/glossary` in six more languages** (`web.141`). `tr`, `uk`, `cs`, `sk`,
   `hu` and `ro`, bringing the page to 16 of 45. 218 assertions.
 - **`/glossary` in four more languages** (`web.140`). `nl`, `pl`, `ru` and
