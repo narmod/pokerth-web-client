@@ -51,6 +51,11 @@ highlights below.
   `InitAck` lands. Covered by `scripts/test-reconnect-backoff.mjs`.
 
 ### Added
+- **`/hand-rankings` in eight more languages** (`web.133`). `sv`, `da`, `nb`,
+  `fi`, `cs`, `sk`, `ro` and `hu`, bringing the page to 31 of 45. Hand names
+  again come from each language’s own client catalogue, which is why the page
+  says Kåk in Swedish and Fullt hus in Norwegian rather than a single
+  borrowed term. 435 assertions.
 - **`/hand-rankings` in eight more languages, and a bidi fix** (`web.131`).
   `vi`, `th`, `hi`, `bn`, `ar`, `fa`, `ur` and `he`, bringing the page to 22 of
   45. Adding the four RTL languages surfaced a real bug: inside an Arabic or

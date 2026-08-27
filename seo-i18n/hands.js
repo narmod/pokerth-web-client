@@ -799,6 +799,286 @@ var PARTS = {
     ],
     seeH2: "לראות את זה בשולחן",
     seeP: "במהלך המשחק PokerTH מציג את שם היד הטובה ביותר שלכם מתחת לשולחן, כך שלעולם אינכם צריכים להרכיב אותה בעצמכם בלחץ הזמן, ובשואודאון הוא מדגיש בכל יד חשופה בדיוק את חמשת הקלפים שנספרו. אימון לא־מקוון מול יריבי המחשב הוא הדרך המהירה ביותר להטמיע את הסדר הזה."
+  },
+
+  sv: {
+    title: "Pokerhänder — handordningen i Texas Hold’em",
+    desc: "Alla tio pokerhänder i Texas Hold’em från royal flush till högt kort, med exempel, sannolikheten för varje hand och hur kickers och lika händer avgörs.",
+    ldHeadline: "Pokerhänder — Texas Hold’em",
+    ldDesc: "De tio händerna i Texas Hold’em i ordning, med exempel, frekvenser och regler vid lika hand.",
+    h1: "Pokerhänder",
+    lead: "I Texas Hold’em rangordnas händerna från starkast till svagast så här. En hand är alltid exakt fem kort, valda bland de sju du ser: dina två hålkort och de fem gemensamma korten. Du måste aldrig använda dina egna kort — om bordet i sig utgör de bästa fem är det också din hand.",
+    names: ["Royal flush", "Färgstege", "Fyrtal", "Kåk", "Färg", "Stege", "Triss", "Två par", "Par", "Högt kort"],
+    texts: [
+      "A K Q J 10 i samma färg. Den bästa möjliga handen: den kan inte slås, bara delas.",
+      "Fem kort i följd i samma färg. Mellan två färgstegar vinner den med högsta toppkort.",
+      "Fyra kort av samma valör. Det femte kortet (kickern) avgör det sällsynta läget då fyrtalet ligger på bordet.",
+      "Triss plus ett par. Först jämförs trissen, därefter paret.",
+      "Fem kort i samma färg, inte i följd. Jämförs kort för kort uppifrån; ingen färg går före någon annan.",
+      "Fem kort i följd i blandade färger. Esset spelar högt (10-J-Q-K-A) eller lågt (A-2-3-4-5), aldrig båda samtidigt.",
+      "Tre kort av samma valör, plus två kort utan samband.",
+      "Två olika par plus ett femte kort. Först jämförs det höga paret, sedan det låga, sedan kickern.",
+      "Två kort av samma valör plus tre kort utan samband, jämförda i tur och ordning.",
+      "Inget av ovanstående. Det högsta kortet avgör, sedan nästa, och så vidare."
+    ],
+    dealt: "förekommer i %s av alla sjukortshänder",
+    tiesH2: "Hur lika händer avgörs",
+    tiesP: "Jämför kategorin först: vilken färg som helst slår vilken stege som helst, oavsett kort. Inom samma kategori jämförs valör för valör uppifrån. Det som blir över efter kombinationen kallas <em>kicker</em>, och den avgör fler händer än nybörjare tror: A♠ K♦ och A♣ 7♥ ger båda ess i par på ett bord med A-9-4, men kungen slår sjuan. Färger avgör aldrig i Hold’em — två spelare med samma fem valörer delar potten, in i sista marker.",
+    wrongH2: "Vanliga missuppfattningar",
+    wrong: [
+      "Esset är både det högsta och det lägsta kortet i en stege: A-K-Q-J-10 är den bästa, A-2-3-4-5 (så kallad <em>wheel</em>) den svagaste. Följden går inte runt — Q-K-A-2-3 är ingenting alls.",
+      "En färg är fem kort i samma färg, inte fyra. Fyra hjärter mellan handen och bordet är i sig värdelöst.",
+      "En triss byggd på ett par på handen plus ett kort på bordet kallas <em>set</em>; byggd på ett kort på handen plus ett par på bordet kallas den <em>trips</em>. Samma rang, mycket olika styrka, eftersom trips syns för alla.",
+      "Bara de bästa fem räknas. Två par på handen och ett tredje par på bordet ger två par, inte tre.",
+      "Procenttalen ovan visar hur ofta varje hand över huvud taget uppstår fram till river över sju kort, inte hur ofta den vinner. Två par ser vardagligt ut och ligger ändå före det mesta det möter."
+    ],
+    seeH2: "Se det vid bordet",
+    seeP: "PokerTH skriver ut din just nu bästa hand under bordet medan du spelar, så du aldrig behöver räkna ut den under tidspress, och vid showdown visas varje uppvisad hand med de fem kort som faktiskt räknades markerade. Att träna offline mot datamotståndarna är det snabbaste sättet att få ordningen i fingrarna."
+  },
+
+  da: {
+    title: "Pokerhænder — rækkefølgen af hænder i Texas Hold’em",
+    desc: "Alle ti pokerhænder i Texas Hold’em fra royal flush til højt kort, med eksempler, sandsynligheden for hver hånd og hvordan kickers og lige hænder afgøres.",
+    ldHeadline: "Pokerhænder — Texas Hold’em",
+    ldDesc: "De ti hænder i Texas Hold’em i rækkefølge, med eksempler, hyppigheder og regler ved lige hænder.",
+    h1: "Pokerhænder",
+    lead: "I Texas Hold’em rangordnes hænderne fra stærkest til svagest sådan her. En hånd er altid præcis fem kort, valgt blandt de syv du kan se: dine to lukkede kort og de fem fælleskort. Du er aldrig tvunget til at bruge dine egne kort — hvis bordet alene udgør de bedste fem, er det også din hånd.",
+    names: ["Royal flush", "Straight flush", "Fire ens", "Fuldt hus", "Flush", "Straight", "Tre ens", "To par", "Et par", "Højt kort"],
+    texts: [
+      "A K Q J 10 i samme kulør. Den bedst mulige hånd: den kan ikke slås, kun deles.",
+      "Fem kort i træk i samme kulør. Mellem to straight flushes vinder den med det højeste topkort.",
+      "Fire kort af samme værdi. Det femte kort (kickeren) afgør det sjældne tilfælde, hvor de fire ligger på bordet.",
+      "Tre ens plus et par. Først sammenlignes de tre ens, derefter parret.",
+      "Fem kort i samme kulør, ikke i træk. Sammenlignes kort for kort oppefra; ingen kulør går forud for en anden.",
+      "Fem kort i træk i blandede kulører. Esset spiller højt (10-J-Q-K-A) eller lavt (A-2-3-4-5), aldrig begge dele på én gang.",
+      "Tre kort af samme værdi plus to kort uden sammenhæng.",
+      "To forskellige par plus et femte kort. Først sammenlignes det høje par, så det lave, så kickeren.",
+      "To kort af samme værdi plus tre kort uden sammenhæng, sammenlignet i rækkefølge.",
+      "Ingen af ovenstående. Det højeste kort afgør, derefter det næste, og så videre."
+    ],
+    dealt: "forekommer i %s af alle syvkortshænder",
+    tiesH2: "Hvordan lige hænder afgøres",
+    tiesP: "Sammenlign kategorien først: enhver flush slår enhver straight, uanset kortene. Inden for samme kategori sammenlignes værdi for værdi oppefra. Det, der er tilbage efter kombinationen, kaldes <em>kickeren</em>, og den afgør flere hænder, end begyndere regner med: A♠ K♦ og A♣ 7♥ giver begge et par esser på et bord med A-9-4, men kongen slår syveren. Kulører afgør aldrig noget i Hold’em — to spillere med de samme fem værdier deler puljen, helt ned til sidste jeton.",
+    wrongH2: "De typiske misforståelser",
+    wrong: [
+      "Esset er både det højeste og det laveste kort i en straight: A-K-Q-J-10 er den bedste, A-2-3-4-5 (kaldet <em>wheel</em>) den svageste. Rækken går ikke rundt — Q-K-A-2-3 er ingenting.",
+      "En flush er fem kort i samme kulør, ikke fire. Fire hjerter mellem hånd og bord er i sig selv intet værd.",
+      "Tre ens dannet af et par på hånden plus et kort på bordet kaldes et <em>set</em>; dannet af ét kort på hånden plus et par på bordet kaldes det <em>trips</em>. Samme rangering, meget forskellig styrke, for trips kan alle se.",
+      "Kun de bedste fem tæller. To par på hånden og et tredje par på bordet giver to par, ikke tre.",
+      "Procenterne ovenfor viser, hvor ofte hver hånd overhovedet opstår frem til river over syv kort, ikke hvor ofte den vinder. To par ser dagligdags ud og ligger alligevel foran det meste, det møder."
+    ],
+    seeH2: "Se det ved bordet",
+    seeP: "PokerTH skriver navnet på din bedste hånd lige nu under bordet, mens du spiller, så du aldrig skal regne den ud under tidspres, og ved showdown vises hver åbnet hånd med de fem kort, der rent faktisk talte, fremhævet. At træne offline mod computermodstanderne er den hurtigste vej til at få rækkefølgen ind i fingrene."
+  },
+
+  nb: {
+    title: "Pokerhender — rekkefølgen på hender i Texas Hold’em",
+    desc: "Alle ti pokerhender i Texas Hold’em fra royal flush til høyt kort, med eksempler, sannsynligheten for hver hånd og hvordan kickere og like hender avgjøres.",
+    ldHeadline: "Pokerhender — Texas Hold’em",
+    ldDesc: "De ti hendene i Texas Hold’em i rekkefølge, med eksempler, hyppighet og regler ved like hender.",
+    h1: "Pokerhender",
+    lead: "I Texas Hold’em rangeres hendene fra sterkest til svakest slik. En hånd er alltid nøyaktig fem kort, valgt blant de sju du ser: dine to lukkede kort og de fem felleskortene. Du må aldri bruke dine egne kort — hvis bordet alene utgjør de fem beste, er det også din hånd.",
+    names: ["Royal flush", "Fargestige", "Firtall", "Fullt hus", "Farge", "Stige", "Tress", "To par", "Par", "Høyt kort"],
+    texts: [
+      "A K Q J 10 i samme farge. Den beste hånden som finnes: den kan ikke slås, bare deles.",
+      "Fem kort på rad i samme farge. Mellom to fargestiger vinner den med høyest toppkort.",
+      "Fire kort av samme verdi. Det femte kortet (kickeren) avgjør det sjeldne tilfellet der firtallet ligger på bordet.",
+      "Tress pluss et par. Først sammenlignes tressen, deretter paret.",
+      "Fem kort i samme farge, ikke på rad. Sammenlignes kort for kort ovenfra; ingen farge går foran en annen.",
+      "Fem kort på rad i blandede farger. Esset spiller høyt (10-J-Q-K-A) eller lavt (A-2-3-4-5), aldri begge deler samtidig.",
+      "Tre kort av samme verdi, pluss to kort uten sammenheng.",
+      "To ulike par pluss et femte kort. Først sammenlignes det høye paret, så det lave, så kickeren.",
+      "To kort av samme verdi pluss tre kort uten sammenheng, sammenlignet i rekkefølge.",
+      "Ingen av delene over. Det høyeste kortet avgjør, deretter det neste, og så videre."
+    ],
+    dealt: "forekommer i %s av alle sjukortshender",
+    tiesH2: "Hvordan like hender avgjøres",
+    tiesP: "Sammenlign kategorien først: en hvilken som helst farge slår en hvilken som helst stige, uansett kort. Innenfor samme kategori sammenlignes verdi for verdi ovenfra. Det som blir igjen etter kombinasjonen, kalles <em>kicker</em>, og den avgjør flere hender enn nybegynnere venter seg: A♠ K♦ og A♣ 7♥ gir begge et par ess på et bord med A-9-4, men kongen slår sjueren. Farger avgjør aldri i Hold’em — to spillere med de samme fem verdiene deler potten, ned til siste sjetong.",
+    wrongH2: "Det folk oftest tar feil av",
+    wrong: [
+      "Esset er både det høyeste og det laveste kortet i en stige: A-K-Q-J-10 er den beste, A-2-3-4-5 (kalt <em>wheel</em>) den svakeste. Rekken går ikke rundt — Q-K-A-2-3 er ingenting.",
+      "En farge er fem kort i samme farge, ikke fire. Fire hjerter mellom hånden og bordet er i seg selv verdiløst.",
+      "En tress bygget på et par på hånden pluss ett kort på bordet kalles <em>set</em>; bygget på ett kort på hånden pluss et par på bordet kalles den <em>trips</em>. Samme rangering, svært ulik styrke, for trips ser alle.",
+      "Bare de fem beste teller. To par på hånden og et tredje par på bordet gir to par, ikke tre.",
+      "Prosentene over viser hvor ofte hver hånd i det hele tatt oppstår fram til river over sju kort, ikke hvor ofte den vinner. To par ser hverdagslig ut og ligger likevel foran det meste den møter."
+    ],
+    seeH2: "Se det ved bordet",
+    seeP: "PokerTH skriver navnet på den beste hånden du har akkurat nå under bordet mens du spiller, så du aldri trenger å regne den ut under tidspress, og ved showdown vises hver åpnet hånd med de fem kortene som faktisk talte, uthevet. Å trene offline mot datamotstanderne er den raskeste måten å få rekkefølgen inn i fingrene på."
+  },
+
+  fi: {
+    title: "Pokerikädet — käsien järjestys Texas Hold’emissa",
+    desc: "Texas Hold’emin kaikki kymmenen pokerikättä värisuorasta ässästä korkeimpaan korttiin, esimerkkeineen, kunkin käden todennäköisyys sekä kickerin ja tasatilanteiden ratkaisu.",
+    ldHeadline: "Pokerikädet — Texas Hold’em",
+    ldDesc: "Texas Hold’emin kymmenen kättä järjestyksessä, esimerkit, yleisyydet ja tasatilanteiden säännöt.",
+    h1: "Pokerikädet",
+    lead: "Texas Hold’emissa kädet asettuvat vahvimmasta heikoimpaan näin. Käsi on aina täsmälleen viisi korttia, jotka valitaan näkemästäsi seitsemästä: kahdesta omasta korttistasi ja viidestä yhteisestä kortista. Omia korttejasi ei ole pakko käyttää — jos pöytä yksin muodostaa parhaan viisikon, se on myös sinun kätesi.",
+    names: ["Värisuora ässästä", "Värisuora", "Neloset", "Täyskäsi", "Väri", "Suora", "Kolmoset", "Kaksi paria", "Pari", "Korkein kortti"],
+    texts: [
+      "A K Q J 10 samaa maata. Paras mahdollinen käsi: sitä ei voi voittaa, vain tasata.",
+      "Viisi peräkkäistä korttia samaa maata. Kahdesta värisuorasta voittaa se, jonka ylin kortti on korkeampi.",
+      "Neljä samanarvoista korttia. Viides kortti (kicker) ratkaisee harvinaisen tasatilanteen, jossa neloset ovat pöydässä.",
+      "Kolmoset ja pari. Ensin verrataan kolmosia, sitten paria.",
+      "Viisi samaa maata olevaa korttia, ei peräkkäin. Vertaillaan kortti kerrallaan ylhäältä alas; mikään maa ei ole toista arvokkaampi.",
+      "Viisi peräkkäistä korttia sekamaissa. Ässä pelaa ylhäällä (10-J-Q-K-A) tai alhaalla (A-2-3-4-5), ei koskaan molemmissa yhtä aikaa.",
+      "Kolme samanarvoista korttia sekä kaksi irrallista korttia.",
+      "Kaksi eri paria ja viides kortti. Ensin verrataan korkeampi pari, sitten matalampi, sitten kicker.",
+      "Kaksi samanarvoista korttia ja kolme irrallista korttia, joita verrataan järjestyksessä.",
+      "Ei mikään edellisistä. Korkein kortti ratkaisee, sitten seuraava, ja niin edelleen."
+    ],
+    dealt: "syntyy %s:ssa seitsemän kortin käsistä",
+    tiesH2: "Miten tasatilanteet ratkaistaan",
+    tiesP: "Ensin verrataan kategoriaa: mikä tahansa väri voittaa minkä tahansa suoran, korteista riippumatta. Saman kategorian sisällä verrataan arvo kerrallaan ylhäältä alas. Yhdistelmän jälkeen jäävää korttia kutsutaan <em>kickeriksi</em>, ja se ratkaisee useampia käsiä kuin aloittelija odottaa: pöydässä A-9-4 sekä A♠ K♦ että A♣ 7♥ muodostavat ässäparin, mutta kuningas voittaa seiskan. Maat eivät koskaan ratkaise tasatilannetta Hold’emissa — kaksi pelaajaa samoilla viidellä arvolla jakavat potin viimeistä pelimerkkiä myöten.",
+    wrongH2: "Yleisimmät väärinkäsitykset",
+    wrong: [
+      "Ässä on suoralle sekä korkein että matalin kortti: A-K-Q-J-10 on paras, A-2-3-4-5 (niin sanottu <em>wheel</em>) heikoin. Sarja ei kierrä ympäri — Q-K-A-2-3 ei ole yhtään mitään.",
+      "Väri on viisi samaa maata olevaa korttia, ei neljä. Neljä hertta kädessä ja pöydässä yhteensä ei ole itsessään minkään arvoinen.",
+      "Kädessä olevasta parista ja yhdestä pöydän kortista syntyvää kolmosta kutsutaan nimellä <em>set</em>; yhdestä käden kortista ja pöydän parista syntyvää nimellä <em>trips</em>. Sama sija, hyvin eri vahvuus, sillä trips näkyy kaikille.",
+      "Vain viisi parasta korttia lasketaan. Kaksi paria kädessä ja kolmas pari pöydässä antaa kaksi paria, ei kolmea.",
+      "Yllä olevat prosentit kertovat, kuinka usein kukin käsi ylipäätään syntyy riveriin mennessä seitsemästä kortista, ei kuinka usein se voittaa. Kaksi paria näyttää arkiselta ja on silti edellä useimpia vastaantulijoita."
+    ],
+    seeH2: "Näin se näkyy pöydässä",
+    seeP: "PokerTH kertoo pelin aikana pöydän alla, mikä on tällä hetkellä paras kätesi, joten sitä ei tarvitse koskaan koota itse kellon käydessä, ja showdownissa jokaisesta avatusta kädestä korostetaan ne viisi korttia, jotka todella ratkaisivat. Offline-harjoittelu tietokonevastustajia vastaan on nopein tapa saada järjestys sormiin."
+  },
+
+  cs: {
+    title: "Pokerové kombinace — pořadí karet v Texas Hold’em",
+    desc: "Všech deset pokerových kombinací Texas Hold’em od královské postupky po vysokou kartu, s příklady, pravděpodobností každé z nich a pravidly pro kickera a shodné kombinace.",
+    ldHeadline: "Pokerové kombinace — Texas Hold’em",
+    ldDesc: "Deset kombinací Texas Hold’em popořadě, s příklady, četností a pravidly pro shodu.",
+    h1: "Pokerové kombinace",
+    lead: "V Texas Hold’em jsou kombinace seřazeny od nejsilnější po nejslabší takto. Kombinace je vždy přesně pět karet vybraných ze sedmi, které vidíte: vašich dvou vlastních karet a pěti společných. Vlastní karty použít nemusíte — pokud nejlepší pětici tvoří samotný stůl, je to také vaše kombinace.",
+    names: ["Královská postupka", "Postupka v barvě", "Čtveřice", "Full house", "Barva", "Postupka", "Trojice", "Dvě dvojice", "Pár", "Vysoká karta"],
+    texts: [
+      "A K Q J 10 v jedné barvě. Nejlepší možná kombinace: nelze ji porazit, jen jí vyrovnat.",
+      "Pět karet za sebou v jedné barvě. Ze dvou postupek v barvě vyhrává ta s vyšší horní kartou.",
+      "Čtyři karty stejné hodnoty. Pátá karta (kicker) rozhoduje vzácnou shodu, kdy čtveřice leží přímo na stole.",
+      "Trojice a k tomu pár. Nejprve se porovnává trojice, potom pár.",
+      "Pět karet jedné barvy, které nejdou za sebou. Porovnávají se po jedné odshora; žádná barva není nad jinou.",
+      "Pět karet za sebou v různých barvách. Eso hraje nahoře (10-J-Q-K-A) nebo dole (A-2-3-4-5), nikdy obojí zároveň.",
+      "Tři karty stejné hodnoty a dvě nesouvisející karty.",
+      "Dvě různé dvojice a pátá karta. Nejprve se porovná vyšší pár, pak nižší, pak kicker.",
+      "Dvě karty stejné hodnoty a tři nesouvisející karty, porovnávané popořadě.",
+      "Nic z výše uvedeného. Rozhoduje nejvyšší karta, pak další, a tak dál."
+    ],
+    dealt: "vznikne v %s sedmikartových kombinací",
+    tiesH2: "Jak se rozhoduje shoda",
+    tiesP: "Nejprve se porovná kategorie: jakákoli barva porazí jakoukoli postupku, ať jsou karty jakékoli. V rámci téže kategorie se porovnává hodnota po hodnotě odshora. Tomu, co po kombinaci zbude, se říká <em>kicker</em>, a rozhoduje víc rozdání, než začátečníci čekají: na stole A-9-4 tvoří A♠ K♦ i A♣ 7♥ pár es, ale král přebíjí sedmičku. Barvy v Hold’em shodu nikdy nerozhodují — dva hráči se stejnými pěti hodnotami si bank rozdělí do posledního žetonu.",
+    wrongH2: "Co si lidé vykládají špatně",
+    wrong: [
+      "Eso je pro postupku zároveň nejvyšší i nejnižší karta: A-K-Q-J-10 je nejlepší, A-2-3-4-5 (takzvané <em>wheel</em>) nejslabší. Řada se neuzavírá — Q-K-A-2-3 není vůbec nic.",
+      "Barva je pět karet jedné barvy, ne čtyři. Čtyři srdce mezi rukou a stolem samy o sobě nemají žádnou cenu.",
+      "Trojici složené z páru v ruce a jedné karty na stole se říká <em>set</em>; složené z jedné karty v ruce a páru na stole <em>trips</em>. Stejné pořadí, velmi odlišná síla, protože trips vidí všichni.",
+      "Počítá se jen nejlepších pět karet. Dvě dvojice v ruce a třetí pár na stole dávají dvě dvojice, ne tři.",
+      "Procenta výše říkají, jak často každá kombinace do riveru ze sedmi karet vůbec vznikne, ne jak často vyhraje. Dvě dvojice vypadají všedně a přesto jsou před většinou toho, co potkají."
+    ],
+    seeH2: "Jak to vidíte u stolu",
+    seeP: "PokerTH během hry pod stolem pojmenuje vaši aktuálně nejlepší kombinaci, takže ji nikdy nemusíte skládat pod časovým tlakem, a při showdownu u každé odkryté kombinace zvýrazní právě těch pět karet, které se počítaly. Trénink offline proti počítačovým soupeřům je nejrychlejší způsob, jak si pořadí zafixovat."
+  },
+
+  sk: {
+    title: "Pokerové kombinácie — poradie kariet v Texas Hold’em",
+    desc: "Všetkých desať pokerových kombinácií Texas Hold’em od kráľovskej postupky po vysokú kartu, s príkladmi, pravdepodobnosťou každej z nich a pravidlami pre kickera a zhodu.",
+    ldHeadline: "Pokerové kombinácie — Texas Hold’em",
+    ldDesc: "Desať kombinácií Texas Hold’em po poradí, s príkladmi, početnosťou a pravidlami pri zhode.",
+    h1: "Pokerové kombinácie",
+    lead: "V Texas Hold’em sú kombinácie zoradené od najsilnejšej po najslabšiu takto. Kombinácia je vždy presne päť kariet vybraných zo siedmich, ktoré vidíte: vašich dvoch vlastných a piatich spoločných. Vlastné karty použiť nemusíte — ak najlepšiu päticu tvorí samotný stôl, je to takisto vaša kombinácia.",
+    names: ["Kráľovská postupka", "Farebná postupka", "Štvorica", "Full house", "Farba", "Postupka", "Trojica", "Dve dvojice", "Pár", "Vysoká karta"],
+    texts: [
+      "A K Q J 10 v jednej farbe. Najlepšia možná kombinácia: poraziť sa nedá, len vyrovnať.",
+      "Päť kariet za sebou v jednej farbe. Z dvoch farebných postupiek vyhráva tá s vyššou hornou kartou.",
+      "Štyri karty rovnakej hodnoty. Piata karta (kicker) rozhoduje zriedkavú zhodu, keď štvorica leží priamo na stole.",
+      "Trojica a k tomu pár. Najprv sa porovnáva trojica, potom pár.",
+      "Päť kariet jednej farby, ktoré nejdú za sebou. Porovnávajú sa po jednej zhora; žiadna farba nie je nad inou.",
+      "Päť kariet za sebou v rôznych farbách. Eso hrá hore (10-J-Q-K-A) alebo dole (A-2-3-4-5), nikdy oboje naraz.",
+      "Tri karty rovnakej hodnoty a dve nesúvisiace karty.",
+      "Dve rôzne dvojice a piata karta. Najprv sa porovná vyšší pár, potom nižší, potom kicker.",
+      "Dve karty rovnakej hodnoty a tri nesúvisiace karty, porovnávané po poradí.",
+      "Nič z uvedeného. Rozhoduje najvyššia karta, potom ďalšia, a tak ďalej."
+    ],
+    dealt: "vznikne v %s sedemkartových kombinácií",
+    tiesH2: "Ako sa rozhoduje zhoda",
+    tiesP: "Najprv sa porovná kategória: hocijaká farba porazí hocijakú postupku, nech sú karty akékoľvek. V rámci tej istej kategórie sa porovnáva hodnota po hodnote zhora. Tomu, čo po kombinácii zostane, sa hovorí <em>kicker</em>, a rozhoduje viac rozdaní, než začiatočníci čakajú: na stole A-9-4 tvoria A♠ K♦ aj A♣ 7♥ pár es, ale kráľ prebíja sedmičku. Farby v Hold’em zhodu nikdy nerozhodujú — dvaja hráči s rovnakými piatimi hodnotami si bank rozdelia do posledného žetónu.",
+    wrongH2: "Čo si ľudia vykladajú zle",
+    wrong: [
+      "Eso je pre postupku zároveň najvyššia aj najnižšia karta: A-K-Q-J-10 je najlepšia, A-2-3-4-5 (takzvané <em>wheel</em>) najslabšia. Rad sa neuzatvára — Q-K-A-2-3 nie je vôbec nič.",
+      "Farba je päť kariet jednej farby, nie štyri. Štyri srdcia medzi rukou a stolom samy osebe nemajú žiadnu cenu.",
+      "Trojici zloženej z páru v ruke a jednej karty na stole sa hovorí <em>set</em>; zloženej z jednej karty v ruke a páru na stole <em>trips</em>. Rovnaké poradie, veľmi odlišná sila, lebo trips vidia všetci.",
+      "Počíta sa len najlepších päť kariet. Dve dvojice v ruke a tretí pár na stole dávajú dve dvojice, nie tri.",
+      "Percentá vyššie hovoria, ako často každá kombinácia do riveru zo siedmich kariet vôbec vznikne, nie ako často vyhrá. Dve dvojice vyzerajú všedne a napriek tomu sú pred väčšinou toho, čo stretnú."
+    ],
+    seeH2: "Ako to vidíte pri stole",
+    seeP: "PokerTH počas hry pod stolom pomenuje vašu aktuálne najlepšiu kombináciu, takže ju nikdy nemusíte skladať pod časovým tlakom, a pri showdowne pri každej odkrytej kombinácii zvýrazní práve tých päť kariet, ktoré sa rátali. Tréning offline proti počítačovým súperom je najrýchlejší spôsob, ako si poradie zafixovať."
+  },
+
+  ro: {
+    title: "Combinații la poker — ordinea mâinilor la Texas Hold’em",
+    desc: "Toate cele zece combinații de poker Texas Hold’em, de la chinta roială la carte mare, cu exemple, probabilitatea fiecăreia și modul în care se departajează kickerul și egalitățile.",
+    ldHeadline: "Combinații la poker — Texas Hold’em",
+    ldDesc: "Cele zece combinații de la Texas Hold’em în ordine, cu exemple, frecvențe și reguli de departajare.",
+    h1: "Combinații la poker",
+    lead: "La Texas Hold’em mâinile se clasează de la cea mai puternică la cea mai slabă astfel. O mână înseamnă întotdeauna exact cinci cărți, alese dintre cele șapte pe care le vezi: cele două cărți proprii și cele cinci cărți comune. Nu ești obligat să îți folosești propriile cărți — dacă masa singură formează cele mai bune cinci, aceea este și mâna ta.",
+    names: ["Chintă roială", "Chintă de culoare", "Careu", "Full house", "Culoare", "Chintă", "Trei de un fel", "Două perechi", "Pereche", "Carte mare"],
+    texts: [
+      "A K Q J 10 în aceeași culoare. Cea mai bună mână posibilă: nu poate fi bătută, doar egalată.",
+      "Cinci cărți consecutive în aceeași culoare. Între două chinte de culoare câștigă cea cu cartea de sus mai mare.",
+      "Patru cărți de aceeași valoare. A cincea carte (kickerul) departajează cazul rar în care careul se află chiar pe masă.",
+      "Trei de un fel plus o pereche. Se compară întâi cele trei, apoi perechea.",
+      "Cinci cărți de aceeași culoare, fără să fie consecutive. Se compară una câte una de sus în jos; nicio culoare nu este mai mare decât alta.",
+      "Cinci cărți consecutive, cu culori amestecate. Asul joacă sus (10-J-Q-K-A) sau jos (A-2-3-4-5), niciodată în ambele sensuri deodată.",
+      "Trei cărți de aceeași valoare, plus două cărți fără legătură.",
+      "Două perechi diferite plus o a cincea carte. Se compară întâi perechea mare, apoi cea mică, apoi kickerul.",
+      "Două cărți de aceeași valoare plus trei cărți fără legătură, comparate în ordine.",
+      "Niciuna dintre cele de mai sus. Decide cartea cea mai mare, apoi următoarea, și tot așa."
+    ],
+    dealt: "apare în %s dintre mâinile de șapte cărți",
+    tiesH2: "Cum se departajează egalitățile",
+    tiesP: "Se compară întâi categoria: orice culoare bate orice chintă, indiferent de cărți. În aceeași categorie se compară valoare cu valoare, de sus în jos. Ce rămâne după combinație se numește <em>kicker</em> și decide mult mai multe mâini decât se așteaptă începătorii: pe o masă A-9-4, atât A♠ K♦ cât și A♣ 7♥ formează o pereche de ași, dar regele întrece șeptarul. La Hold’em culorile nu departajează niciodată — doi jucători cu aceleași cinci valori împart potul, până la ultima fisă.",
+    wrongH2: "Ce se înțelege cel mai des greșit",
+    wrong: [
+      "Asul este în același timp cea mai mare și cea mai mică carte a unei chinte: A-K-Q-J-10 este cea mai bună, A-2-3-4-5 (numită <em>wheel</em>) cea mai slabă. Șirul nu se închide în cerc — Q-K-A-2-3 nu înseamnă nimic.",
+      "O culoare înseamnă cinci cărți de aceeași culoare, nu patru. Patru cupe între mâna ta și masă nu valorează nimic prin ele însele.",
+      "Trei de un fel formate dintr-o pereche din mână plus o carte de pe masă se numesc <em>set</em>; formate dintr-o carte din mână plus o pereche de pe masă se numesc <em>trips</em>. Aceeași clasare, putere foarte diferită, fiindcă trips se vede de către toată lumea.",
+      "Contează doar cele mai bune cinci cărți. Două perechi în mână și a treia pereche pe masă înseamnă tot două perechi, nu trei.",
+      "Procentele de mai sus arată cât de des se formează fiecare mână până la river din șapte cărți, nu cât de des câștigă. Două perechi par banale și totuși sunt înaintea celor mai multe mâini pe care le întâlnesc."
+    ],
+    seeH2: "Cum se vede la masă",
+    seeP: "În timpul jocului, PokerTH scrie sub masă numele celei mai bune mâini pe care o ai în acel moment, așa că nu trebuie să o calculezi niciodată cu ceasul pornit, iar la showdown evidențiază, pentru fiecare mână descoperită, exact cele cinci cărți care au contat. Antrenamentul offline împotriva adversarilor controlați de calculator este cea mai rapidă cale de a-ți intra ordinea în reflexe."
+  },
+
+  hu: {
+    title: "Póker kézsorrend — a lapok rangsora Texas Hold’emben",
+    desc: "A Texas Hold’em mind a tíz póker kombinációja a royal flushtől a magas lapig, példákkal, az egyes kezek valószínűségével, valamint a kicker és a döntetlen eldöntésének szabályaival.",
+    ldHeadline: "Póker kézsorrend — Texas Hold’em",
+    ldDesc: "A Texas Hold’em tíz kombinációja sorrendben, példákkal, gyakoriságokkal és a döntetlen szabályaival.",
+    h1: "Póker kézsorrend",
+    lead: "Texas Hold’emben a kezek a legerősebbtől a leggyengébbig így rangsorolódnak. Egy kéz mindig pontosan öt lap, amelyet a látható hétből választasz ki: a két saját lapodból és az öt közös lapból. A saját lapjaidat nem kötelező használni — ha maga az asztal adja ki a legjobb ötöst, az is a te kezed.",
+    names: ["Royal flush", "Színsor", "Póker", "Full", "Szín", "Sor", "Drill", "Két pár", "Pár", "Magas lap"],
+    texts: [
+      "A K Q J 10 azonos színben. A lehető legjobb kéz: nem lehet megverni, csak holtversenyt elérni vele.",
+      "Öt egymást követő lap azonos színben. Két színsor közül a magasabb felső lapú nyer.",
+      "Négy azonos értékű lap. Az ötödik lap (a kicker) azt a ritka holtversenyt dönti el, amikor a négyes maga az asztalon fekszik.",
+      "Egy drill és egy pár. Először a drillt hasonlítjuk össze, utána a párt.",
+      "Öt azonos színű lap, nem egymás után. Felülről lapról lapra hasonlítjuk össze; egyik szín sem előzi meg a másikat.",
+      "Öt egymást követő lap vegyes színben. Az ász felül (10-J-Q-K-A) vagy alul (A-2-3-4-5) játszik, sosem mindkét helyen egyszerre.",
+      "Három azonos értékű lap, plusz két össze nem tartozó lap.",
+      "Két különböző pár és egy ötödik lap. Először a magasabb párt hasonlítjuk össze, aztán az alacsonyabbat, aztán a kickert.",
+      "Két azonos értékű lap és három össze nem tartozó lap, sorrendben összehasonlítva.",
+      "A fentiek egyike sem. A legmagasabb lap dönt, aztán a következő, és így tovább."
+    ],
+    dealt: "a hétlapos kezek %s-ában jön ki",
+    tiesH2: "Hogyan dől el a holtverseny",
+    tiesP: "Először a kategóriát hasonlítjuk össze: bármelyik szín veri bármelyik sort, akármik is a lapok. Azonos kategórián belül felülről lefelé, értékről értékre haladunk. Amit a kombináció után megmarad, azt <em>kickernek</em> hívjuk, és sokkal több leosztást dönt el, mint a kezdők gondolnák: A-9-4 asztalon az A♠ K♦ és az A♣ 7♥ is ászpárt ad, de a király veri a hetest. Hold’emben a színek soha nem döntenek holtversenyt — két azonos öt értékkel rendelkező játékos az utolsó zsetonig megosztozik a poton.",
+    wrongH2: "Amit a legtöbben félreértenek",
+    wrong: [
+      "Az ász a sorban egyszerre a legmagasabb és a legalacsonyabb lap: A-K-Q-J-10 a legjobb, A-2-3-4-5 (az úgynevezett <em>wheel</em>) a leggyengébb. A sorozat nem fordul körbe — Q-K-A-2-3 az égvilágon semmi.",
+      "A szín öt azonos színű lap, nem négy. Négy kőr a kezed és az asztal között önmagában semmit sem ér.",
+      "A kézben lévő párból és egy asztali lapból összeálló drillt <em>setnek</em> hívják; a kézben lévő egy lapból és az asztali párból összeállót <em>tripsnek</em>. Ugyanaz a rang, egészen más erő, mert a tripset mindenki látja.",
+      "Csak a legjobb öt lap számít. Ha két párod van, és az asztalon ott egy harmadik pár, a kezed akkor is két pár, nem három.",
+      "A fenti százalékok azt mutatják, milyen gyakran jön össze egyáltalán az adott kéz a riverig hét lapból, nem azt, milyen gyakran nyer. A két pár hétköznapinak tűnik, mégis a legtöbb szembejövő kéz előtt jár."
+    ],
+    seeH2: "Így látszik az asztalnál",
+    seeP: "A PokerTH játék közben az asztal alatt kiírja az éppen legjobb kezed nevét, így soha nem kell időzavarban fejben összeraknod, a showdownnál pedig minden felfedett kéznél kiemeli azt az öt lapot, amelyik ténylegesen számított. A gép ellenfelek elleni offline gyakorlás a leggyorsabb módja annak, hogy a sorrend az ujjaidba álljon."
   }
 };
 
