@@ -1,4 +1,6 @@
 2026-08-13 version 2.1.7-web (current series):
+- new: the poker hand rankings page is now also written in Vietnamese, Thai, Hindi, Bengali, Arabic, Persian, Urdu and Hebrew. Twenty-two of the forty-five languages are done
+- bugfix: on the right-to-left versions of the content pages, card examples and card sequences such as A-K-Q-J-10 were being displayed back to front, which turned a worked example into a wrong one. They now always read left to right, whatever the language around them
 - new: the poker hand rankings page is now also written in Polish, Russian, Turkish, Ukrainian, Chinese, Japanese, Korean and Indonesian, on top of the six languages added just before. Fourteen of the forty-five are done; the rest are on the way
 - new: the poker hand rankings page is now written in French, German, Spanish, Brazilian Portuguese, Italian and Dutch, with the same hand names the game itself uses. More languages are being added
 - bugfix: on the rules, hand rankings, how-to-play, glossary and FAQ pages, the links at the top always went to the English version. Reading the rules in your own language and clicking "FAQ" put you back in English. Every link now keeps the language you are reading in, whenever that page exists in it

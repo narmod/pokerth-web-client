@@ -36,6 +36,15 @@ highlights below.
   `InitAck` lands. Covered by `scripts/test-reconnect-backoff.mjs`.
 
 ### Added
+- **`/hand-rankings` in eight more languages, and a bidi fix** (`web.131`).
+  `vi`, `th`, `hi`, `bn`, `ar`, `fa`, `ur` and `he`, bringing the page to 22 of
+  45. Adding the four RTL languages surfaced a real bug: inside an Arabic or
+  Hebrew paragraph the bidi algorithm reorders `A♠ K♦` and `10-J-Q-K-A` at
+  their boundaries, so a worked example rendered backwards — wrong, not merely
+  ugly. `.cards` now carries `direction:ltr;unicode-bidi:isolate` and a new
+  `.ltr` class isolates rank sequences in prose; both are no-ops in LTR. The
+  hand-name check compares in NFC, since Devanagari `फ़` exists precomposed
+  and as base + nukta and the two are the same word. 323 assertions.
 - **`/hand-rankings` in eight more languages** (`web.130`). `pl`, `ru`, `tr`,
   `uk`, `zh`, `ja`, `ko` and `id`, bringing the page to 14 of 45. The module
   also drops `\uXXXX` escapes for plain UTF-8: it is a translation corpus, and

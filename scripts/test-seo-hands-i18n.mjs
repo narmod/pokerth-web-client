@@ -65,8 +65,13 @@ for (const code of codes) {
     const m = new RegExp(`h${i}n:\\s*(['"])((?:\\\\.|(?!\\1).)*)\\1`).exec(src);
     app.push(m ? m[2] : null);
   }
-  const same = app.every((name, i) => name === PARTS[code].names[i]);
-  const diff = app.map((name, i) => name === PARTS[code].names[i] ? null : `${name} ≠ ${PARTS[code].names[i]}`)
+  // Compared in NFC: Devanagari फ़ exists both precomposed (U+095E) and as
+  // base + nukta. The two render identically and mean the same thing, so a
+  // normalisation difference must not fail the check — a real mismatch still
+  // does.
+  const eq = (a, b) => a != null && a.normalize('NFC') === b.normalize('NFC');
+  const same = app.every((name, i) => eq(name, PARTS[code].names[i]));
+  const diff = app.map((name, i) => eq(name, PARTS[code].names[i]) ? null : `${name} ≠ ${PARTS[code].names[i]}`)
     .filter(Boolean);
   ok(same, `${code}: hand names match the client${same ? '' : ' — ' + diff.join(', ')}`);
 }
@@ -94,12 +99,29 @@ for (const code of codes) {
   ok(dw >= 80 && dw <= 320, `${code}: the description is a usable length (width ${dw})`);
 }
 
+// Right-to-left languages: a rank sequence or a card example dropped into an
+// Arabic or Hebrew paragraph gets reordered by the bidi algorithm at its
+// boundaries — A♠ K♦ shown as K♦ A♠, 10-J-Q-K-A read backwards — which turns a
+// worked example into a wrong one. The page CSS isolates .cards and .ltr; this
+// checks that every sequence in the prose actually carries one of them.
+const RTL = ['ar', 'fa', 'ur', 'he'];
+const SEQ = /(?:10|[AKQJ2-9])(?:-(?:10|[AKQJ2-9])){2,}/g;
+for (const code of RTL) {
+  if (!(code in built)) continue;
+  const stripped = built[code].body.replace(/<span class="(?:ltr|cards)">[\s\S]*?<\/span>/g, '');
+  const loose = stripped.match(SEQ) || [];
+  ok(loose.length === 0, `${code}: rank sequences are isolated from bidi reordering${loose.length ? ' — ' + loose.join(', ') : ''}`);
+  ok(built[code].body.indexOf('class="ltr"') !== -1, `${code}: the isolating span is actually used`);
+}
+
 // And proxy.js has to read the module rather than its own empty object.
 const proxy = readFileSync(join(root, 'proxy.js'), 'utf8');
 ok(/SEO_HANDS_I18N = require\('\.\/seo-i18n\/hands\.js'\)\.build\(_SEO_HANDS, _sd\);/.test(proxy),
   'proxy.js builds SEO_HANDS_I18N from the module');
 ok(proxy.indexOf("SEO_HANDS_I18N = require('./seo-i18n/hands.js')") > proxy.indexOf('var _SEO_HANDS = ['),
   'and does so after _SEO_HANDS is assigned');
+ok(/\.ltr\{direction:ltr;unicode-bidi:isolate/.test(proxy), 'the page CSS defines the isolating class');
+ok(/\.cards\{[^}]*unicode-bidi:isolate/.test(proxy), 'and isolates the card examples too');
 
 console.log(fail ? `\n${fail}/${n} failed` : `\n${n}/${n} passed`);
 process.exit(fail ? 1 : 0);

@@ -1555,7 +1555,14 @@ var _SEO_PAGE_CSS = 'body{margin:0;background:#0d1117;color:#d8dde4;font:16px/1.
   'table{border-collapse:collapse;width:100%;margin:.6em 0;font-size:.95em}' +
   'th,td{text-align:left;padding:7px 10px;border-bottom:1px solid #30363d;vertical-align:top}' +
   'th{color:#fff;font-weight:600}td.n{white-space:nowrap;text-align:right;color:#9aa4b0}' +
-  '.cards{font-size:1.05em;letter-spacing:.06em;white-space:nowrap}.rd{color:#e5837f}' +
+  // Card examples and rank sequences read left to right in every language.
+  // Inside an Arabic, Hebrew, Persian or Urdu paragraph the bidi algorithm
+  // would otherwise reorder them at the boundaries — A\u2660 K\u2666 flipping
+  // to K\u2666 A\u2660, and 10-J-Q-K-A reading backwards — which turns a
+  // worked example into a wrong one. Isolating them costs nothing in LTR.
+  '.cards{font-size:1.05em;letter-spacing:.06em;white-space:nowrap;direction:ltr;unicode-bidi:isolate}' +
+  '.ltr{direction:ltr;unicode-bidi:isolate;white-space:nowrap}' +
+  '.rd{color:#e5837f}' +
   'ol.hr{padding-left:1.3em}ol.hr>li{margin:.9em 0}' +
   '.play{display:inline-block;margin-top:26px;padding:10px 22px;background:#1f6feb;color:#fff;border-radius:6px;font-weight:600}';
 
