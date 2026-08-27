@@ -89,6 +89,19 @@ for (const code of codes) {
   ok(dw >= 80 && dw <= 320, `${code}: the description is a usable length (width ${dw})`);
 }
 
+// The five action words stay in English in every language — the same
+// convention the client itself follows, and what a player sees on the action
+// bar. Translating them here would be the natural instinct of anyone working
+// through this file, and would leave the guide describing buttons that do not
+// exist.
+const ACTIONS = ['Fold', 'Check', 'Call', 'Raise', 'All-In'];
+for (const code of codes) {
+  const b = built[code].body;
+  const missing = ACTIONS.filter(a => b.indexOf(a) === -1);
+  ok(missing.length === 0,
+    `${code}: the action words are left in English${missing.length ? ' — missing ' + missing.join(', ') : ''}`);
+}
+
 // And proxy.js has to wire the module up, after the data it needs exists.
 ok(/SEO_HOWTO_I18N = require\('\.\/seo-i18n\/howto\.js'\)\.build\(_SEO_HOWTO, _seoPageHref\);/.test(proxy),
   'proxy.js builds SEO_HOWTO_I18N from the module');

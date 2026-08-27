@@ -51,6 +51,15 @@ highlights below.
   `InitAck` lands. Covered by `scripts/test-reconnect-backoff.mjs`.
 
 ### Added
+- **`/how-to-play` in seven more languages** (`web.137`). `ar`, `fa`, `he`,
+  `ur`, `hi`, `th` and `bn`, bringing the page to 23 of 45. Unlike
+  `/hand-rankings`, this page carries no card examples or rank sequences, so
+  the RTL languages needed no bidi isolation: the only Latin runs are the
+  action words and `pokerth.net`, which the bidi algorithm places correctly
+  on its own. `scripts/test-seo-howto-i18n.mjs` gains a guard that the five
+  action words stay in English in every language — translating them is the
+  natural instinct of anyone working through the file, and would leave the
+  guide describing buttons that do not exist. 316 assertions.
 - **`/how-to-play` in seven more languages** (`web.136`). `nl`, `tr`, `uk`,
   `ja`, `ko`, `id` and `vi`, bringing the page to 16 of 45. 203 assertions.
 - **`/how-to-play` starts translating, with language-aware internal links**
