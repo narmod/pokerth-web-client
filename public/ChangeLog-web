@@ -1,4 +1,5 @@
 2026-08-13 version 2.1.7-web (current series):
+- new: the poker hand rankings page is now available in all 45 interface languages. Whatever language you read the site in, the page speaks it - and it uses the same hand names as the game itself, so what you read there matches what you see under the table
 - new: the poker hand rankings page is now also written in Swedish, Danish, Norwegian, Finnish, Czech, Slovak, Romanian and Hungarian. Thirty-one of the forty-five languages are done; fourteen to go
 - bugfix: a player who walked away from a table kept their seat for ever. Every time their turn came round, the client told the server they were still there, so the inactivity timer never ran out and the chair was never freed. Seats are now released after the usual delay, exactly as with the desktop client. If you are watching a table without playing, the countdown warning will appear as it should - click OK and you keep your seat
 - new: the poker hand rankings page is now also written in Vietnamese, Thai, Hindi, Bengali, Arabic, Persian, Urdu and Hebrew. Twenty-two of the forty-five languages are done

@@ -1079,6 +1079,496 @@ var PARTS = {
     ],
     seeH2: "Így látszik az asztalnál",
     seeP: "A PokerTH játék közben az asztal alatt kiírja az éppen legjobb kezed nevét, így soha nem kell időzavarban fejben összeraknod, a showdownnál pedig minden felfedett kéznél kiemeli azt az öt lapot, amelyik ténylegesen számított. A gép ellenfelek elleni offline gyakorlás a leggyorsabb módja annak, hogy a sorrend az ujjaidba álljon."
+  },
+
+  'pt-PT': {
+    title: "Mãos do póquer — ordem das mãos no Texas Hold’em",
+    desc: "As dez mãos do póquer Texas Hold’em por ordem, do royal flush à carta alta, com exemplos, a probabilidade de cada uma e a forma como kickers e empates são resolvidos.",
+    ldHeadline: "Mãos do póquer — Texas Hold’em",
+    ldDesc: "As dez mãos do Texas Hold’em por ordem, com exemplos, frequências e regras de desempate.",
+    h1: "Mãos do póquer",
+    lead: "No Texas Hold’em as mãos são ordenadas da mais forte para a mais fraca da seguinte forma. Uma mão tem sempre exactamente cinco cartas, escolhidas entre as sete que vê: as suas duas cartas fechadas e as cinco cartas comuns. Não é obrigado a usar as suas — se a mesa sozinha formar as melhores cinco, essa é também a sua mão.",
+    names: ["Royal Flush", "Straight Flush", "Quadra", "Full House", "Flush", "Sequência", "Trinca", "Dois Pares", "Par", "Carta Alta"],
+    texts: [
+      "A K Q J 10, todas do mesmo naipe. A melhor mão possível: não pode ser batida, apenas empatada.",
+      "Cinco cartas seguidas, todas do mesmo naipe. Entre dois straight flushes ganha o que tiver a carta de topo mais alta.",
+      "Quatro cartas do mesmo valor. A quinta carta (o kicker) resolve o raro empate em que a quadra está na própria mesa.",
+      "Uma trinca acompanhada de um par. Compara-se primeiro a trinca e depois o par.",
+      "Cinco cartas do mesmo naipe, sem serem seguidas. Comparadas uma a uma a partir da mais alta; nenhum naipe vale mais do que outro.",
+      "Cinco cartas seguidas, com naipes misturados. O ás joga em cima (10-J-Q-K-A) ou em baixo (A-2-3-4-5), nunca dos dois lados ao mesmo tempo.",
+      "Três cartas do mesmo valor, mais duas cartas sem relação.",
+      "Dois pares diferentes mais uma quinta carta. Compara-se primeiro o par mais alto, depois o mais baixo e depois o kicker.",
+      "Duas cartas do mesmo valor mais três cartas sem relação, comparadas por ordem.",
+      "Nenhuma das anteriores. Decide a carta mais alta, depois a seguinte, e assim sucessivamente."
+    ],
+    dealt: "aparece em %s das mãos de sete cartas",
+    tiesH2: "Como se resolvem os empates",
+    tiesP: "Compara-se primeiro a categoria: qualquer flush ganha a qualquer sequência, sejam quais forem as cartas. Dentro da mesma categoria, compara-se valor a valor de cima para baixo. O que sobra depois da combinação chama-se <em>kicker</em>, e decide muito mais mãos do que os principiantes supõem: numa mesa A-9-4, tanto A♠ K♦ como A♣ 7♥ formam um par de ases, mas o rei supera o sete. No Hold’em os naipes nunca desempatam — dois jogadores com os mesmos cinco valores dividem o pote até à última ficha.",
+    wrongH2: "O que se costuma perceber mal",
+    wrong: [
+      "O ás é ao mesmo tempo a carta mais alta e a mais baixa de uma sequência: A-K-Q-J-10 é a melhor, A-2-3-4-5 (a chamada <em>roda</em>) é a mais fraca. A sequência não dá a volta — Q-K-A-2-3 não vale nada.",
+      "Um flush são cinco cartas de um naipe, não quatro. Quatro copas entre a sua mão e a mesa não valem nada por si só.",
+      "Uma trinca formada por um par na mão mais uma carta da mesa chama-se <em>set</em>; formada por uma carta da mão mais um par na mesa chama-se <em>trips</em>. A mesma classificação, força muito diferente, porque a trips está à vista de todos.",
+      "Só contam as melhores cinco cartas. Ter dois pares e um terceiro par na mesa continua a ser dois pares, não três.",
+      "As percentagens acima indicam com que frequência cada mão se forma até ao river a partir de sete cartas, e não com que frequência ganha. Dois pares parecem banais e ainda assim estão à frente da maior parte do que encontram."
+    ],
+    seeH2: "Ver isto na mesa",
+    seeP: "Durante o jogo, o PokerTH escreve por baixo da mesa o nome da sua melhor mão nesse momento, para que nunca tenha de a montar com o relógio a correr, e no showdown mostra cada mão revelada com as cinco cartas que realmente contaram em destaque. Treinar offline contra os adversários do computador é a forma mais rápida de fixar esta ordem."
+  },
+
+  'zh-TW': {
+    title: "撲克牌型大小 — 德州撲克牌型排名",
+    desc: "德州撲克全部十種牌型從皇家同花順到高牌的排序，附範例、每種牌型出現的機率，以及踢腳牌與平手的判定方式。",
+    ldHeadline: "撲克牌型大小 — 德州撲克",
+    ldDesc: "德州撲克十種牌型依序排列，附範例、出現頻率與平手判定規則。",
+    h1: "撲克牌型大小",
+    lead: "德州撲克的牌型由大到小排列如下。一手牌永遠正好是五張，從你看得到的七張中選出：你的兩張底牌和五張公共牌。你並不一定要用自己的底牌——如果公共牌本身就湊成最好的五張，那同樣是你的牌。",
+    names: ["皇家同花順", "同花順", "四條", "葫蘆", "同花", "順子", "三條", "兩對", "一對", "高牌"],
+    texts: [
+      "同花色的 A K Q J 10。可能出現的最大牌型：無法被擊敗，只能打平。",
+      "同花色的五張連續牌。兩副同花順相比，最大的那張牌較大者獲勝。",
+      "四張相同點數的牌。第五張牌（踢腳牌）用來判定四條出現在公共牌上的罕見平手。",
+      "三條加一對。先比三條，再比對子。",
+      "五張同花色但不連續的牌。從最大的一張開始逐張比較；花色之間沒有大小之分。",
+      "五張連續但花色不一致的牌。A 可以當最大（10-J-Q-K-A）或最小（A-2-3-4-5），但不能同時兼顧。",
+      "三張相同點數的牌，加兩張無關的牌。",
+      "兩組不同的對子加第五張牌。先比大對，再比小對，最後比踢腳牌。",
+      "兩張相同點數的牌加三張無關的牌，依序比較。",
+      "以上皆非。由最大的一張牌決定，接著是下一張，依此類推。"
+    ],
+    dealt: "在七張牌中出現的機率為 %s",
+    tiesH2: "平手如何判定",
+    tiesP: "先比牌型類別：無論牌面為何，任何同花都大過任何順子。同一類別之內，由大到小逐個點數比較。組成牌型之後剩下的牌稱為<em>踢腳牌</em>，它決定的牌局遠比初學者想像的多：在 A-9-4 的公共牌上，A♠ K♦ 和 A♣ 7♥ 都是一對 A，但 K 壓過 7。德州撲克中花色從不用來判定大小——五張點數完全相同的兩名玩家平分底池，直到最後一枚籌碼。",
+    wrongH2: "常見的誤解",
+    wrong: [
+      "組成順子時，A 既是最大的牌也是最小的牌：A-K-Q-J-10 最大，A-2-3-4-5（即<em>輪子</em>）最小。順序不會首尾相接——Q-K-A-2-3 什麼都不是。",
+      "同花是五張同花色的牌，不是四張。手牌加公共牌一共四張紅心，本身毫無價值。",
+      "用手中的一對加公共牌上的一張組成的三條叫 <em>set</em>；用手中的一張加公共牌上的一對組成的叫 <em>trips</em>。牌型相同，強度卻大不一樣，因為 trips 所有人都看得見。",
+      "只有最好的五張才算數。手上兩對、公共牌上還有第三對，你的牌仍然是兩對，而不是三對。",
+      "上面的百分比表示每種牌型在七張牌中到河牌為止出現的頻率，而不是它獲勝的頻率。兩對看起來很普通，卻依然領先於它所遇到的大部分牌。"
+    ],
+    seeH2: "在牌桌上看到它",
+    seeP: "遊戲過程中，PokerTH 會在公共牌下方標出你目前的最佳牌型，你不必在時間壓力下自己去湊；攤牌時則會把每一手亮出的牌連同真正生效的那五張一起高亮顯示。離線對戰電腦對手是把這套牌型大小練成本能的最快方式。"
+  },
+
+  el: {
+    title: "Κατάταξη χεριών στο πόκερ — η σειρά των χεριών στο Texas Hold’em",
+    desc: "Και τα δέκα χέρια του πόκερ Texas Hold’em με τη σειρά, από το ρουαγιάλ φλος ως το υψηλό φύλλο, με παραδείγματα, την πιθανότητα κάθε χεριού και τον τρόπο που κρίνονται το κίκερ και οι ισοπαλίες.",
+    ldHeadline: "Κατάταξη χεριών στο πόκερ — Texas Hold’em",
+    ldDesc: "Τα δέκα χέρια του Texas Hold’em με τη σειρά, με παραδείγματα, συχνότητες και κανόνες ισοπαλίας.",
+    h1: "Κατάταξη χεριών στο πόκερ",
+    lead: "Στο Texas Hold’em τα χέρια κατατάσσονται από το ισχυρότερο στο ασθενέστερο ως εξής. Ένα χέρι είναι πάντα ακριβώς πέντε φύλλα, επιλεγμένα ανάμεσα στα εφτά που βλέπετε: τα δύο κλειστά σας φύλλα και τα πέντε κοινά. Δεν είστε υποχρεωμένοι να χρησιμοποιήσετε τα δικά σας — αν το τραπέζι από μόνο του σχηματίζει την καλύτερη πεντάδα, αυτό είναι επίσης το χέρι σας.",
+    names: ["Ρουαγιάλ φλος", "Κέντα φλος", "Καρέ", "Φουλ", "Φλος", "Κέντα", "Τριάδα", "Δύο ζευγάρια", "Ζευγάρι", "Υψηλό φύλλο"],
+    texts: [
+      "A K Q J 10 στο ίδιο χρώμα. Το καλύτερο δυνατό χέρι: δεν νικιέται, μόνο ισοφαρίζεται.",
+      "Πέντε συνεχόμενα φύλλα στο ίδιο χρώμα. Ανάμεσα σε δύο κέντες φλος κερδίζει αυτή με το υψηλότερο πάνω φύλλο.",
+      "Τέσσερα φύλλα ίδιας αξίας. Το πέμπτο φύλλο (το κίκερ) κρίνει τη σπάνια ισοπαλία όταν το καρέ βρίσκεται στο ίδιο το τραπέζι.",
+      "Μια τριάδα μαζί με ένα ζευγάρι. Πρώτα συγκρίνεται η τριάδα και μετά το ζευγάρι.",
+      "Πέντε φύλλα ίδιου χρώματος, χωρίς να είναι συνεχόμενα. Συγκρίνονται ένα προς ένα από το υψηλότερο· κανένα χρώμα δεν υπερέχει άλλου.",
+      "Πέντε συνεχόμενα φύλλα με ανάμεικτα χρώματα. Ο άσος παίζει ψηλά (10-J-Q-K-A) ή χαμηλά (A-2-3-4-5), ποτέ και στα δύο μαζί.",
+      "Τρία φύλλα ίδιας αξίας, συν δύο άσχετα φύλλα.",
+      "Δύο διαφορετικά ζευγάρια συν ένα πέμπτο φύλλο. Συγκρίνεται πρώτα το ψηλό ζευγάρι, μετά το χαμηλό, μετά το κίκερ.",
+      "Δύο φύλλα ίδιας αξίας συν τρία άσχετα φύλλα, που συγκρίνονται με τη σειρά.",
+      "Τίποτα από τα παραπάνω. Κρίνει το υψηλότερο φύλλο, μετά το επόμενο, και ούτω καθεξής."
+    ],
+    dealt: "εμφανίζεται στο %s των χεριών των εφτά φύλλων",
+    tiesH2: "Πώς κρίνονται οι ισοπαλίες",
+    tiesP: "Πρώτα συγκρίνεται η κατηγορία: οποιοδήποτε φλος νικά οποιαδήποτε κέντα, όποια κι αν είναι τα φύλλα. Μέσα στην ίδια κατηγορία η σύγκριση γίνεται αξία προς αξία από πάνω προς τα κάτω. Ό,τι περισσεύει μετά τον συνδυασμό λέγεται <em>κίκερ</em>, και κρίνει πολύ περισσότερα χέρια απ’ όσο περιμένουν οι αρχάριοι: σε τραπέζι A-9-4 τόσο το A♠ K♦ όσο και το A♣ 7♥ δίνουν ζευγάρι άσων, αλλά ο ρήγας υπερτερεί του εφτά. Στο Hold’em τα χρώματα δεν λύνουν ποτέ ισοπαλία — δύο παίκτες με τις ίδιες πέντε αξίες μοιράζονται το πότ ως την τελευταία μάρκα.",
+    wrongH2: "Τα πιο συνηθισμένα λάθη",
+    wrong: [
+      "Ο άσος είναι ταυτόχρονα το υψηλότερο και το χαμηλότερο φύλλο μιας κέντας: A-K-Q-J-10 η καλύτερη, A-2-3-4-5 (η λεγόμενη <em>wheel</em>) η ασθενέστερη. Η σειρά δεν κλείνει κύκλο — το Q-K-A-2-3 δεν είναι απολύτως τίποτα.",
+      "Το φλος είναι πέντε φύλλα ενός χρώματος, όχι τέσσερα. Τέσσερα κούπα ανάμεσα στο χέρι σας και στο τραπέζι δεν αξίζουν από μόνα τους τίποτα.",
+      "Η τριάδα από ζευγάρι στο χέρι συν ένα φύλλο στο τραπέζι λέγεται <em>set</em>· από ένα φύλλο στο χέρι συν ζευγάρι στο τραπέζι λέγεται <em>trips</em>. Ίδια κατάταξη, πολύ διαφορετική δύναμη, γιατί το trips το βλέπουν όλοι.",
+      "Μετρούν μόνο τα πέντε καλύτερα φύλλα. Δύο ζευγάρια στο χέρι και τρίτο ζευγάρι στο τραπέζι δίνουν δύο ζευγάρια, όχι τρία.",
+      "Τα παραπάνω ποσοστά δείχνουν πόσο συχνά σχηματίζεται κάθε χέρι ως το ριβέρ μέσα σε εφτά φύλλα, όχι πόσο συχνά κερδίζει. Τα δύο ζευγάρια μοιάζουν κοινότοπα κι όμως προηγούνται των περισσότερων που συναντούν."
+    ],
+    seeH2: "Πώς φαίνεται στο τραπέζι",
+    seeP: "Κατά τη διάρκεια του παιχνιδιού το PokerTH γράφει κάτω από το τραπέζι το όνομα του καλύτερου χεριού σας εκείνη τη στιγμή, ώστε να μη χρειάζεται να το συνθέσετε μόνοι σας με τον χρόνο να τρέχει, και στο σόουνταουν δείχνει κάθε αποκαλυμμένο χέρι με τονισμένα τα πέντε φύλλα που πράγματι μέτρησαν. Η προπόνηση εκτός σύνδεσης απέναντι στους αντιπάλους του υπολογιστή είναι ο γρηγορότερος τρόπος να εμπεδώσετε αυτή τη σειρά."
+  },
+
+  bg: {
+    title: "Комбинации в покера — подредба на ръцете в Тексас Холдем",
+    desc: "Всичките десет покер комбинации в Тексас Холдем по ред, от роял флъш до висока карта, с примери, вероятността за всяка и правилата за кикер и равенство.",
+    ldHeadline: "Комбинации в покера — Тексас Холдем",
+    ldDesc: "Десетте комбинации в Тексас Холдем по ред, с примери, честота и правила при равенство.",
+    h1: "Комбинации в покера",
+    lead: "В Тексас Холдем ръцете се подреждат от най-силната към най-слабата така. Ръката винаги е точно пет карти, избрани измежду седемте, които виждате: вашите две закрити карти и петте общи. Не сте длъжни да използвате своите — ако само бордът образува най-добрите пет, това също е вашата ръка.",
+    names: ["Роял флъш", "Стрейт флъш", "Каре", "Фул хаус", "Флъш", "Стрейт", "Тройка", "Два чифта", "Чифт", "Висока карта"],
+    texts: [
+      "A K Q J 10 от една боя. Възможно най-добрата ръка: не може да бъде победена, само изравнена.",
+      "Пет последователни карти от една боя. Между два стрейт флъша печели този с по-високата горна карта.",
+      "Четири карти с еднаква стойност. Петата карта (кикерът) решава редкия случай, в който карето лежи на самия борд.",
+      "Тройка заедно с чифт. Първо се сравнява тройката, после чифтът.",
+      "Пет карти от една боя, без да са последователни. Сравняват се една по една отгоре надолу; никоя боя не стои над друга.",
+      "Пет последователни карти в смесени бои. Асото играе горе (10-J-Q-K-A) или долу (A-2-3-4-5), но никога и двете едновременно.",
+      "Три карти с еднаква стойност плюс две несвързани карти.",
+      "Два различни чифта плюс пета карта. Първо се сравнява високият чифт, после ниският, после кикерът.",
+      "Две карти с еднаква стойност плюс три несвързани карти, сравнявани по ред.",
+      "Нищо от изброеното. Решава най-високата карта, после следващата, и така нататък."
+    ],
+    dealt: "се получава в %s от ръцете със седем карти",
+    tiesH2: "Как се решава равенството",
+    tiesP: "Първо се сравнява категорията: всеки флъш бие всеки стрейт, каквито и да са картите. В рамките на една категория се сравнява стойност по стойност отгоре надолу. Онова, което остава след комбинацията, се нарича <em>кикер</em> и решава далеч повече ръце, отколкото очакват начинаещите: на борд A-9-4 и A♠ K♦, и A♣ 7♥ дават чифт аса, но попът бие седмицата. В Холдем боите никога не решават равенство — двама играчи с едни и същи пет стойности си делят пота до последния чип.",
+    wrongH2: "Най-честите заблуди",
+    wrong: [
+      "Асото е едновременно най-високата и най-ниската карта на стрейта: A-K-Q-J-10 е най-добрият, A-2-3-4-5 (така нареченото <em>колело</em>) е най-слабият. Редицата не се затваря в кръг — Q-K-A-2-3 не е абсолютно нищо.",
+      "Флъшът е пет карти от една боя, не четири. Четири купи между ръката ви и борда сами по себе си не струват нищо.",
+      "Тройка, съставена от чифт в ръката плюс една карта на борда, се нарича <em>set</em>; съставена от една карта в ръката плюс чифт на борда — <em>trips</em>. Същата категория, съвсем различна сила, защото trips се вижда от всички.",
+      "Броят се само най-добрите пет карти. Два чифта в ръката и трети чифт на борда пак дават два чифта, не три.",
+      "Процентите по-горе показват колко често всяка комбинация изобщо се получава до ривъра от седем карти, а не колко често печели. Двата чифта изглеждат обикновени и въпреки това изпреварват повечето от онова, което срещат."
+    ],
+    seeH2: "Как изглежда на масата",
+    seeP: "По време на игра PokerTH изписва под борда името на текущата ви най-добра комбинация, така че никога не се налага да я подреждате наум под напрежение, а на разкриването показва всяка отворена ръка с осветени тъкмо онези пет карти, които са се броили. Тренировката офлайн срещу компютърните съперници е най-бързият начин подредбата да ви влезе в ръцете."
+  },
+
+  hr: {
+    title: "Jačina kombinacija u pokeru — redoslijed ruku u Texas Hold’emu",
+    desc: "Svih deset poker kombinacija u Texas Hold’emu, od royal flusha do visoke karte, s primjerima, vjerojatnošću svake i pravilima za kicker i izjednačene ruke.",
+    ldHeadline: "Jačina kombinacija u pokeru — Texas Hold’em",
+    ldDesc: "Deset kombinacija Texas Hold’ema redom, s primjerima, učestalošću i pravilima kod izjednačenja.",
+    h1: "Jačina kombinacija u pokeru",
+    lead: "U Texas Hold’emu ruke se rangiraju od najjače do najslabije ovako. Ruka je uvijek točno pet karata, odabranih između sedam koje vidite: vaše dvije zatvorene i pet zajedničkih. Ne morate koristiti svoje karte — ako sam stol tvori najboljih pet, to je također vaša ruka.",
+    names: ["Royal flush", "Skala u boji", "Četvorka", "Full house", "Boja", "Skala", "Trojka", "Dva para", "Par", "Visoka karta"],
+    texts: [
+      "A K Q J 10 u istoj boji. Najbolja moguća ruka: ne može se pobijediti, samo izjednačiti.",
+      "Pet uzastopnih karata u istoj boji. Između dvije skale u boji pobjeđuje ona s višom gornjom kartom.",
+      "Četiri karte iste vrijednosti. Peta karta (kicker) rješava rijedak slučaj u kojem četvorka leži na samom stolu.",
+      "Trojka uz par. Prvo se uspoređuje trojka, zatim par.",
+      "Pet karata iste boje, ali ne uzastopnih. Uspoređuju se jedna po jedna odozgo; nijedna boja nije jača od druge.",
+      "Pet uzastopnih karata u miješanim bojama. As igra gore (10-J-Q-K-A) ili dolje (A-2-3-4-5), nikad oboje istodobno.",
+      "Tri karte iste vrijednosti, uz dvije nepovezane karte.",
+      "Dva različita para uz petu kartu. Prvo se uspoređuje viši par, zatim niži, pa kicker.",
+      "Dvije karte iste vrijednosti uz tri nepovezane karte, koje se uspoređuju redom.",
+      "Ništa od navedenoga. Odlučuje najviša karta, zatim sljedeća, i tako dalje."
+    ],
+    dealt: "pojavljuje se u %s ruku od sedam karata",
+    tiesH2: "Kako se rješava izjednačenje",
+    tiesP: "Prvo se uspoređuje kategorija: bilo koja boja pobjeđuje bilo koju skalu, kakve god karte bile. Unutar iste kategorije uspoređuje se vrijednost po vrijednost odozgo. Ono što ostane nakon kombinacije zove se <em>kicker</em> i odlučuje mnogo više ruku nego što početnici očekuju: na stolu A-9-4 i A♠ K♦ i A♣ 7♥ daju par asova, ali kralj nadjačava sedmicu. U Hold’emu boje nikada ne rješavaju izjednačenje — dva igrača s istih pet vrijednosti dijele pot do zadnjeg žetona.",
+    wrongH2: "Što se najčešće krivo shvaća",
+    wrong: [
+      "As je za skalu istodobno i najviša i najniža karta: A-K-Q-J-10 je najbolja, A-2-3-4-5 (takozvani <em>wheel</em>) najslabija. Niz se ne zatvara u krug — Q-K-A-2-3 nije baš ništa.",
+      "Boja je pet karata iste boje, ne četiri. Četiri herca između vaše ruke i stola sama po sebi ne vrijede ništa.",
+      "Trojka složena od para u ruci i jedne karte na stolu zove se <em>set</em>; složena od jedne karte u ruci i para na stolu zove se <em>trips</em>. Isti rang, vrlo različita snaga, jer trips vide svi.",
+      "Broji se samo najboljih pet karata. Dva para u ruci i treći par na stolu i dalje su dva para, ne tri.",
+      "Postoci iznad govore koliko se često svaka ruka uopće sastavi do rivera od sedam karata, a ne koliko često pobjeđuje. Dva para djeluju obično, a ipak su ispred većine onoga na što naiđu."
+    ],
+    seeH2: "Kako to izgleda za stolom",
+    seeP: "Tijekom igre PokerTH ispod stola ispisuje naziv vaše trenutačno najbolje ruke, pa je nikada ne morate slagati u glavi dok vrijeme istječe, a na otvaranju karata svaku otkrivenu ruku prikazuje s istaknutih pet karata koje su doista vrijedile. Vježbanje offline protiv računalnih protivnika najbrži je način da vam redoslijed uđe u prste."
+  },
+
+  sr: {
+    title: "Jačina kombinacija u pokeru — redosled ruku u Teksas Holdemu",
+    desc: "Svih deset poker kombinacija u Teksas Holdemu, od rojal fleša do visoke karte, sa primerima, verovatnoćom svake i pravilima za kiker i izjednačene ruke.",
+    ldHeadline: "Jačina kombinacija u pokeru — Teksas Holdem",
+    ldDesc: "Deset kombinacija Teksas Holdema redom, sa primerima, učestalošću i pravilima kod izjednačenja.",
+    h1: "Jačina kombinacija u pokeru",
+    lead: "U Teksas Holdemu ruke se rangiraju od najjače do najslabije ovako. Ruka je uvek tačno pet karata, izabranih između sedam koje vidite: vaše dve zatvorene i pet zajedničkih. Ne morate da koristite svoje karte — ako sam sto čini najboljih pet, to je takođe vaša ruka.",
+    names: ["Rojal fleš", "Skala u boji", "Kare", "Ful", "Fleš", "Kenta", "Triling", "Dva para", "Par", "Visoka karta"],
+    texts: [
+      "A K Q J 10 u istoj boji. Najbolja moguća ruka: ne može se pobediti, samo izjednačiti.",
+      "Pet uzastopnih karata u istoj boji. Između dve skale u boji pobeđuje ona sa višom gornjom kartom.",
+      "Četiri karte iste vrednosti. Peta karta (kiker) rešava redak slučaj u kome kare leži na samom stolu.",
+      "Triling uz par. Prvo se poredi triling, zatim par.",
+      "Pet karata iste boje, ali ne uzastopnih. Porede se jedna po jedna odozgo; nijedna boja nije jača od druge.",
+      "Pet uzastopnih karata u mešanim bojama. As igra gore (10-J-Q-K-A) ili dole (A-2-3-4-5), nikada oboje istovremeno.",
+      "Tri karte iste vrednosti, uz dve nepovezane karte.",
+      "Dva različita para uz petu kartu. Prvo se poredi viši par, zatim niži, pa kiker.",
+      "Dve karte iste vrednosti uz tri nepovezane karte, koje se porede redom.",
+      "Ništa od navedenog. Odlučuje najviša karta, zatim sledeća, i tako dalje."
+    ],
+    dealt: "pojavljuje se u %s ruku od sedam karata",
+    tiesH2: "Kako se rešava izjednačenje",
+    tiesP: "Prvo se poredi kategorija: bilo koji fleš pobeđuje bilo koju kentu, kakve god karte bile. Unutar iste kategorije poredi se vrednost po vrednost odozgo. Ono što ostane posle kombinacije zove se <em>kiker</em> i odlučuje mnogo više ruku nego što početnici očekuju: na stolu A-9-4 i A♠ K♦ i A♣ 7♥ daju par asova, ali kralj nadjačava sedmicu. U Holdemu boje nikada ne rešavaju izjednačenje — dva igrača sa istih pet vrednosti dele pot do poslednjeg žetona.",
+    wrongH2: "Šta se najčešće pogrešno shvata",
+    wrong: [
+      "As je za kentu istovremeno i najviša i najniža karta: A-K-Q-J-10 je najbolja, A-2-3-4-5 (takozvani <em>wheel</em>) najslabija. Niz se ne zatvara u krug — Q-K-A-2-3 nije baš ništa.",
+      "Fleš je pet karata iste boje, ne četiri. Četiri herca između vaše ruke i stola sama po sebi ne vrede ništa.",
+      "Triling složen od para u ruci i jedne karte na stolu zove se <em>set</em>; složen od jedne karte u ruci i para na stolu zove se <em>trips</em>. Isti rang, veoma različita snaga, jer triling na stolu vide svi.",
+      "Broji se samo najboljih pet karata. Dva para u ruci i treći par na stolu i dalje su dva para, ne tri.",
+      "Procenti iznad govore koliko često se svaka ruka uopšte sastavi do rivera od sedam karata, a ne koliko često pobeđuje. Dva para deluju obično, a ipak su ispred većine onoga na šta naiđu."
+    ],
+    seeH2: "Kako to izgleda za stolom",
+    seeP: "Tokom igre PokerTH ispod stola ispisuje naziv vaše trenutno najbolje ruke, pa je nikada ne morate slagati u glavi dok vreme ističe, a pri otvaranju karata svaku otkrivenu ruku prikazuje sa istaknutih pet karata koje su zaista vredele. Vežbanje oflajn protiv računarskih protivnika najbrži je način da vam redosled uđe u prste."
+  },
+
+  ca: {
+    title: "Jugades de pòquer — ordre de les mans al Texas Hold’em",
+    desc: "Les deu jugades de pòquer del Texas Hold’em ordenades de l’escala reial a la carta alta, amb exemples, la probabilitat de cadascuna i com es resolen els kickers i els empats.",
+    ldHeadline: "Jugades de pòquer — Texas Hold’em",
+    ldDesc: "Les deu jugades del Texas Hold’em per ordre, amb exemples, freqüències i regles de desempat.",
+    h1: "Jugades de pòquer",
+    lead: "Al Texas Hold’em les mans s’ordenen de la més forta a la més fluixa d’aquesta manera. Una mà són sempre exactament cinc cartes, triades entre les set que veus: les teves dues cartes tapades i les cinc comunitàries. No estàs obligat a fer servir les teves — si la taula tota sola forma les cinc millors, aquesta també és la teva mà.",
+    names: ["Escala reial", "Escala de color", "Pòquer", "Full", "Color", "Escala", "Trio", "Dobles parelles", "Parella", "Carta alta"],
+    texts: [
+      "A K Q J 10 del mateix pal. La millor mà possible: no es pot guanyar, només empatar.",
+      "Cinc cartes consecutives del mateix pal. Entre dues escales de color guanya la que té la carta de dalt més alta.",
+      "Quatre cartes del mateix valor. La cinquena carta (el kicker) resol l’empat rar en què el pòquer és a la mateixa taula.",
+      "Un trio acompanyat d’una parella. Primer es compara el trio i després la parella.",
+      "Cinc cartes del mateix pal, sense ser consecutives. Es comparen una a una començant per la més alta; cap pal no val més que un altre.",
+      "Cinc cartes consecutives de pals barrejats. L’as juga a dalt (10-J-Q-K-A) o a baix (A-2-3-4-5), mai les dues coses alhora.",
+      "Tres cartes del mateix valor, més dues cartes sense relació.",
+      "Dues parelles diferents més una cinquena carta. Primer es compara la parella alta, després la baixa i després el kicker.",
+      "Dues cartes del mateix valor més tres cartes sense relació, comparades per ordre.",
+      "Cap de les anteriors. Decideix la carta més alta, després la següent, i així successivament."
+    ],
+    dealt: "apareix en el %s de les mans de set cartes",
+    tiesH2: "Com es resolen els empats",
+    tiesP: "Primer es compara la categoria: qualsevol color guanya qualsevol escala, siguin quines siguin les cartes. Dins la mateixa categoria es compara valor per valor començant per dalt. El que sobra després de la jugada s’anomena <em>kicker</em>, i decideix moltes més mans de les que esperen els principiants: en una taula A-9-4, tant A♠ K♦ com A♣ 7♥ fan parella d’asos, però el rei supera el set. Al Hold’em els pals no desempaten mai — dos jugadors amb els mateixos cinc valors es reparteixen el pot fins a l’última fitxa.",
+    wrongH2: "El que sovint s’entén malament",
+    wrong: [
+      "L’as és alhora la carta més alta i la més baixa d’una escala: A-K-Q-J-10 és la millor, A-2-3-4-5 (l’anomenada <em>roda</em>) la més fluixa. La seqüència no dona la volta — Q-K-A-2-3 no és absolutament res.",
+      "Un color són cinc cartes d’un pal, no quatre. Quatre cors entre la teva mà i la taula no valen res per si sols.",
+      "Un trio format per una parella a la mà més una carta de la taula s’anomena <em>set</em>; format per una carta a la mà més una parella a la taula s’anomena <em>trips</em>. La mateixa classificació, una força molt diferent, perquè el trips el veu tothom.",
+      "Només compten les cinc millors cartes. Tenir dues parelles i una tercera parella a la taula segueix sent dobles parelles, no tres.",
+      "Els percentatges de dalt indiquen amb quina freqüència es forma cada jugada fins al river a partir de set cartes, no amb quina freqüència guanya. Les dobles parelles semblen corrents i tot i així van per davant de la major part del que es troben."
+    ],
+    seeH2: "Veure-ho a la taula",
+    seeP: "Mentre jugues, el PokerTH escriu sota la taula el nom de la teva millor jugada del moment, de manera que mai no l’has de muntar tu amb el rellotge corrent, i a l’obertura de cartes mostra cada mà revelada amb les cinc cartes que realment han comptat destacades. Practicar fora de línia contra els oponents de l’ordinador és la manera més ràpida de tenir l’ordre a la punta dels dits."
+  },
+
+  gl: {
+    title: "Xogadas de póker — orde das mans no Texas Hold’em",
+    desc: "As dez xogadas de póker do Texas Hold’em ordenadas da escaleira real á carta alta, con exemplos, a probabilidade de cada unha e como se resolven os kickers e os empates.",
+    ldHeadline: "Xogadas de póker — Texas Hold’em",
+    ldDesc: "As dez xogadas do Texas Hold’em por orde, con exemplos, frecuencias e regras de desempate.",
+    h1: "Xogadas de póker",
+    lead: "No Texas Hold’em as mans ordénanse da máis forte á máis feble deste xeito. Unha man son sempre exactamente cinco cartas, escollidas entre as sete que ves: as túas dúas cartas tapadas e as cinco comunitarias. Non estás obrigado a usar as túas — se a mesa soa forma as cinco mellores, esa tamén é a túa man.",
+    names: ["Escaleira real", "Escaleira de cor", "Póker", "Full", "Cor", "Escaleira", "Trío", "Dobre parella", "Parella", "Carta alta"],
+    texts: [
+      "A K Q J 10 do mesmo pau. A mellor man posible: non se pode gañar, só empatar.",
+      "Cinco cartas consecutivas do mesmo pau. Entre dúas escaleiras de cor gaña a que ten a carta de arriba máis alta.",
+      "Catro cartas do mesmo valor. A quinta carta (o kicker) resolve o raro empate no que o póker está na propia mesa.",
+      "Un trío acompañado dunha parella. Primeiro compárase o trío e despois a parella.",
+      "Cinco cartas do mesmo pau, sen seren consecutivas. Compáranse unha a unha comezando pola máis alta; ningún pau vale máis ca outro.",
+      "Cinco cartas consecutivas de paus mesturados. O as xoga arriba (10-J-Q-K-A) ou abaixo (A-2-3-4-5), nunca as dúas cousas á vez.",
+      "Tres cartas do mesmo valor, máis dúas cartas sen relación.",
+      "Dúas parellas diferentes máis unha quinta carta. Primeiro compárase a parella alta, despois a baixa e despois o kicker.",
+      "Dúas cartas do mesmo valor máis tres cartas sen relación, comparadas por orde.",
+      "Ningunha das anteriores. Decide a carta máis alta, despois a seguinte, e así sucesivamente."
+    ],
+    dealt: "aparece no %s das mans de sete cartas",
+    tiesH2: "Como se resolven os empates",
+    tiesP: "Primeiro compárase a categoría: calquera cor gaña calquera escaleira, sexan cales sexan as cartas. Dentro da mesma categoría compárase valor por valor comezando por arriba. O que sobra despois da xogada chámase <em>kicker</em>, e decide moitas máis mans das que esperan os principiantes: nunha mesa A-9-4, tanto A♠ K♦ como A♣ 7♥ fan parella de ases, pero o rei supera o sete. No Hold’em os paus non desempatan nunca — dous xogadores cos mesmos cinco valores reparten o bote ata a última ficha.",
+    wrongH2: "O que máis veces se entende mal",
+    wrong: [
+      "O as é á vez a carta máis alta e a máis baixa dunha escaleira: A-K-Q-J-10 é a mellor, A-2-3-4-5 (a chamada <em>roda</em>) a máis feble. A secuencia non dá a volta — Q-K-A-2-3 non é nada en absoluto.",
+      "Unha cor son cinco cartas dun pau, non catro. Catro corazóns entre a túa man e a mesa non valen nada por si sós.",
+      "Un trío formado por unha parella na man máis unha carta da mesa chámase <em>set</em>; formado por unha carta na man máis unha parella na mesa chámase <em>trips</em>. A mesma clasificación, unha forza moi diferente, porque o trips véo todo o mundo.",
+      "Só contan as cinco mellores cartas. Ter dúas parellas e unha terceira parella na mesa segue a ser dobre parella, non tres.",
+      "As porcentaxes de arriba indican con que frecuencia se forma cada xogada ata o river a partir de sete cartas, non con que frecuencia gaña. A dobre parella parece corrente e aínda así vai por diante da maior parte do que atopa."
+    ],
+    seeH2: "Velo na mesa",
+    seeP: "Mentres xogas, o PokerTH escribe debaixo da mesa o nome da túa mellor xogada nese momento, así nunca tes que montala ti co reloxo a correr, e na apertura de cartas amosa cada man revelada coas cinco cartas que realmente contaron destacadas. Practicar sen conexión contra os adversarios do ordenador é a forma máis rápida de ter a orde na punta dos dedos."
+  },
+
+  af: {
+    title: "Pokerhande — die rangorde van hande in Texas Hold’em",
+    desc: "Al tien pokerhande in Texas Hold’em van royal flush tot hoë kaart, met voorbeelde, die kans op elke hand en hoe kickers en gelykopuitslae besleg word.",
+    ldHeadline: "Pokerhande — Texas Hold’em",
+    ldDesc: "Die tien hande van Texas Hold’em in volgorde, met voorbeelde, frekwensies en reëls by gelykop.",
+    h1: "Pokerhande",
+    lead: "In Texas Hold’em word hande soos volg van sterkste tot swakste gerangskik. ’n Hand is altyd presies vyf kaarte, gekies uit die sewe wat jy sien: jou twee toe kaarte en die vyf gemeenskaplike kaarte. Jy hoef nooit jou eie kaarte te gebruik nie — as die tafel alleen die beste vyf vorm, is dit ook jou hand.",
+    names: ["Royal flush", "Straight flush", "Vier eenders", "Volhuis", "Flush", "Straight", "Drie eenders", "Twee pare", "Paar", "Hoë kaart"],
+    texts: [
+      "A K Q J 10, almal van dieselfde kleur. Die beste moontlike hand: dit kan nie geklop word nie, net gelykgemaak.",
+      "Vyf opeenvolgende kaarte van dieselfde kleur. Tussen twee straight flushes wen die een met die hoër boonste kaart.",
+      "Vier kaarte van dieselfde waarde. Die vyfde kaart (die kicker) besleg die skaars geval waar al vier op die tafel lê.",
+      "Drie eenders plus ’n paar. Eers word die drie vergelyk, daarna die paar.",
+      "Vyf kaarte van dieselfde kleur, nie opeenvolgend nie. Kaart vir kaart van bo af vergelyk; geen kleur staan bo ’n ander nie.",
+      "Vyf opeenvolgende kaarte van gemengde kleure. Die aas speel bo (10-J-Q-K-A) of onder (A-2-3-4-5), nooit albei tegelyk nie.",
+      "Drie kaarte van dieselfde waarde, plus twee kaarte sonder verband.",
+      "Twee verskillende pare plus ’n vyfde kaart. Eers word die hoë paar vergelyk, dan die lae, dan die kicker.",
+      "Twee kaarte van dieselfde waarde plus drie kaarte sonder verband, in volgorde vergelyk.",
+      "Niks van bogenoemde nie. Die hoogste kaart beslis, dan die volgende, en so aan."
+    ],
+    dealt: "kom in %s van sewekaarthande voor",
+    tiesH2: "Hoe gelykop besleg word",
+    tiesP: "Vergelyk eers die kategorie: enige flush klop enige straight, wat die kaarte ook al is. Binne dieselfde kategorie word waarde vir waarde van bo af vergelyk. Wat na die kombinasie oorbly, heet die <em>kicker</em>, en dit beslis meer hande as wat beginners verwag: op ’n tafel met A-9-4 maak A♠ K♦ sowel as A♣ 7♥ ’n paar aase, maar die heer klop die sewe. Kleure beslis nooit in Hold’em nie — twee spelers met dieselfde vyf waardes deel die pot, tot die laaste fiche.",
+    wrongH2: "Wat mense die meeste verkeerd het",
+    wrong: [
+      "Die aas is vir ’n straight terselfdertyd die hoogste en die laagste kaart: A-K-Q-J-10 is die beste, A-2-3-4-5 (die sogenaamde <em>wheel</em>) die swakste. Die ry loop nie om nie — Q-K-A-2-3 is glad niks.",
+      "’n Flush is vyf kaarte van een kleur, nie vier nie. Vier harte tussen jou hand en die tafel is op sigself niks werd nie.",
+      "Drie eenders wat uit ’n paar in die hand plus een kaart op die tafel kom, heet ’n <em>set</em>; uit een kaart in die hand plus ’n paar op die tafel heet dit <em>trips</em>. Dieselfde rang, baie verskillende sterkte, want trips sien almal.",
+      "Net die beste vyf tel. Twee pare in die hand en ’n derde paar op die tafel gee twee pare, nie drie nie.",
+      "Die persentasies hierbo sê hoe dikwels elke hand teen die river uit sewe kaarte gevorm word, nie hoe dikwels dit wen nie. Twee pare lyk alledaags en is nogtans voor die meeste van wat dit teëkom."
+    ],
+    seeH2: "Om dit by die tafel te sien",
+    seeP: "Terwyl jy speel, skryf PokerTH die naam van jou beste hand op daardie oomblik onder die tafel, sodat jy dit nooit onder tyddruk self hoef uit te werk nie, en by die showdown word elke oop hand gewys met die vyf kaarte wat werklik getel het, uitgelig. Om aflyn teen die rekenaarteenstanders te oefen is die vinnigste manier om die volgorde in jou vingers te kry."
+  },
+
+  fil: {
+    title: "Ranggo ng mga kamay sa poker — pagkakasunod-sunod sa Texas Hold’em",
+    desc: "Lahat ng sampung kamay sa poker na Texas Hold’em mula royal flush hanggang high card, may mga halimbawa, ang tsansa ng bawat isa, at kung paano tinutukoy ang kicker at tabla.",
+    ldHeadline: "Ranggo ng mga kamay sa poker — Texas Hold’em",
+    ldDesc: "Ang sampung kamay ng Texas Hold’em ayon sa ranggo, may mga halimbawa, dalas, at panuntunan sa tabla.",
+    h1: "Ranggo ng mga kamay sa poker",
+    lead: "Sa Texas Hold’em, ganito nakaayos ang mga kamay mula sa pinakamalakas hanggang sa pinakamahina. Laging eksaktong limang baraha ang isang kamay, pinipili mula sa pitong nakikita mo: ang dalawang saradong baraha mo at ang limang baraha sa mesa. Hindi mo kailangang gamitin ang sarili mong baraha — kung ang mesa mismo ang bumubuo ng pinakamagandang lima, iyon din ang kamay mo.",
+    names: ["Royal Flush", "Straight Flush", "Four of a Kind", "Full House", "Flush", "Straight", "Three of a Kind", "Two Pair", "One Pair", "High Card"],
+    texts: [
+      "A K Q J 10, iisa ang palo. Ang pinakamalakas na posibleng kamay: hindi ito matatalo, matatabla lang.",
+      "Limang magkakasunod na baraha sa iisang palo. Sa dalawang straight flush, panalo ang may mas mataas na pinakaitaas na baraha.",
+      "Apat na barahang magkakapareho ang halaga. Ang panlimang baraha (ang kicker) ang tumutukoy sa bihirang tabla kapag nasa mesa mismo ang apat.",
+      "Tatlong magkakapareho kasama ang isang pares. Una ang tatlo ang pinaghahambing, saka ang pares.",
+      "Limang baraha ng iisang palo, hindi magkakasunod. Isa-isang inihahambing mula sa pinakamataas; walang palong mas mataas kaysa sa iba.",
+      "Limang magkakasunod na baraha na magkakaiba ang palo. Ang alas ay puwedeng nasa itaas (10-J-Q-K-A) o nasa ibaba (A-2-3-4-5), hindi kailanman pareho nang sabay.",
+      "Tatlong barahang magkakapareho ang halaga, kasama ang dalawang walang kaugnayan.",
+      "Dalawang magkaibang pares kasama ang panlimang baraha. Una ang mataas na pares, saka ang mababa, saka ang kicker.",
+      "Dalawang barahang magkapareho ang halaga kasama ang tatlong walang kaugnayan, inihahambing nang sunod-sunod.",
+      "Wala sa mga nabanggit. Ang pinakamataas na baraha ang magpapasya, saka ang sumunod, at ganoon nang ganoon."
+    ],
+    dealt: "lumalabas sa %s ng mga kamay na pitong baraha",
+    tiesH2: "Paano tinutukoy ang tabla",
+    tiesP: "Unahin ang uri: talo ng kahit anong flush ang kahit anong straight, anuman ang baraha. Sa loob ng iisang uri, halaga sa halaga ang paghahambing mula sa itaas. Ang natitira matapos mabuo ang kamay ay tinatawag na <em>kicker</em>, at mas marami itong napagpapasyahang kamay kaysa sa inaakala ng baguhan: sa mesang A-9-4, parehong pares ng alas ang A♠ K♦ at ang A♣ 7♥, pero mas mataas ang hari kaysa sa pito. Sa Hold’em ay hindi kailanman ang palo ang nagpapasya sa tabla — dalawang manlalarong may parehong limang halaga ang naghahati sa pot hanggang sa huling chip.",
+    wrongH2: "Ang madalas na mali ang pagkakaintindi",
+    wrong: [
+      "Ang alas ay parehong pinakamataas at pinakamababang baraha sa isang straight: A-K-Q-J-10 ang pinakamalakas, A-2-3-4-5 (ang tinatawag na <em>wheel</em>) ang pinakamahina. Hindi umiikot ang pagkakasunod — walang kuwenta ang Q-K-A-2-3.",
+      "Limang baraha ng iisang palo ang flush, hindi apat. Ang apat na hearts sa kamay mo at sa mesa ay walang halaga sa sarili nito.",
+      "Ang tatlong magkakapareho na galing sa pares sa kamay at isang baraha sa mesa ay tinatawag na <em>set</em>; kung galing sa isang baraha sa kamay at pares sa mesa, <em>trips</em> ang tawag. Pareho ang ranggo, malayo ang lakas, dahil nakikita ng lahat ang trips.",
+      "Ang pinakamagandang lima lang ang binibilang. Kung may dalawang pares ka at may pangatlong pares sa mesa, two pair pa rin ang kamay mo, hindi tatlo.",
+      "Ipinapakita ng mga porsyento sa itaas kung gaano kadalas nabubuo ang bawat kamay hanggang river mula sa pitong baraha, hindi kung gaano kadalas ito nananalo. Mukhang pangkaraniwan ang two pair pero nangunguna pa rin ito sa karamihan ng nakakasalubong nito."
+    ],
+    seeH2: "Makikita mo ito sa mesa",
+    seeP: "Habang naglalaro, isinusulat ng PokerTH sa ilalim ng mesa ang pangalan ng pinakamalakas mong kamay sa sandaling iyon, kaya hindi mo na kailangang isipin ito habang tumatakbo ang oras, at sa showdown ay itinatampok nito sa bawat bukás na kamay ang limang barahang talagang nagsilbi. Ang pagsasanay offline laban sa mga kalaban ng kompyuter ang pinakamabilis na paraan para maisaulo ang pagkakasunod-sunod na ito."
+  },
+
+  gd: {
+    title: "Rangachadh làmhan puicear — òrdugh nan làmhan an Texas Hold’em",
+    desc: "Na deich làmhan puicear an Texas Hold’em bhon t-sreath rìoghail chun na cairt àrd, le eisimpleirean, an teans air gach tè agus mar a thèid an kicker agus co-ionannachd a rèiteach.",
+    ldHeadline: "Rangachadh làmhan puicear — Texas Hold’em",
+    ldDesc: "Na deich làmhan an Texas Hold’em an òrdugh, le eisimpleirean, tricead agus riaghailtean co-ionannachd.",
+    h1: "Rangachadh làmhan puicear",
+    lead: "An Texas Hold’em tha na làmhan air an rangachadh bhon tè as làidire chun tè as laige mar seo. ’S e còig cairtean a th’ ann an làmh an-còmhnaidh, air an taghadh às na seachd a chì thu: an dà chairt dhùinte agad agus na còig cairtean coitcheann. Chan fheum thu na cairtean agad fhèin a chleachdadh — ma tha am bòrd leis fhèin a’ dèanamh nan còig as fheàrr, ’s e sin do làmh cuideachd.",
+    names: ["Sreath rìoghail", "Sreath dhatha", "Ceithir co-ionann", "Taigh làn", "Aon dath", "Sreath", "Trì co-ionann", "Dà phaidhir", "Paidhir", "Cairt àrd"],
+    texts: [
+      "A K Q J 10, uile den aon dath. An làmh as fheàrr a ghabhas a bhith ann: cha ghabh a ceannsachadh, dìreach a co-ionannachadh.",
+      "Còig cairtean an sreath, uile den aon dath. Eadar dà shreath dhatha, buannaichidh an tè leis a’ chairt as àirde aig a’ mhullach.",
+      "Ceithir cairtean den aon luach. Rèitichidh a’ chòigeamh cairt (an kicker) an t-suidheachadh ainneamh far a bheil na ceithir air a’ bhòrd fhèin.",
+      "Trì co-ionann agus paidhir còmhla riutha. Thèid na trì a choimeas an toiseach, agus an uair sin am paidhir.",
+      "Còig cairtean den aon dath, gun a bhith an sreath. Thèid an coimeas tè mu seach bhon mhullach; chan eil dath sam bith os cionn dath eile.",
+      "Còig cairtean an sreath le dathan measgaichte. Cluichidh an t-àsa aig a’ mhullach (10-J-Q-K-A) no aig a’ bhonn (A-2-3-4-5), ach cha chluich e an dà chuid còmhla.",
+      "Trì cairtean den aon luach, agus dà chairt gun cheangal riutha.",
+      "Dà phaidhir eadar-dhealaichte agus còigeamh cairt. Thèid am paidhir as àirde a choimeas an toiseach, an uair sin an tè as ìsle, an uair sin an kicker.",
+      "Dà chairt den aon luach agus trì cairtean gun cheangal, air an coimeas a rèir òrduigh.",
+      "Chan e gin dhiubh sin. Cuiridh a’ chairt as àirde crìoch air, agus an uair sin an ath thè, agus mar sin air adhart."
+    ],
+    dealt: "a’ nochdadh ann an %s de làmhan seachd cairtean",
+    tiesH2: "Mar a thèid co-ionannachd a rèiteach",
+    tiesP: "Coimeas an seòrsa an toiseach: buannaichidh dath sam bith an aghaidh sreath sam bith, ge b’ e dè na cairtean. Am broinn an aon seòrsa, thèid luach an dèidh luach a choimeas bhon mhullach. ’S e <em>kicker</em> a chanar ris na tha air fhàgail às dèidh na làimhe, agus rèitichidh e barrachd làmhan na tha luchd-tòiseachaidh an dùil: air bòrd A-9-4, tha A♠ K♦ agus A♣ 7♥ le chèile a’ dèanamh paidhir àsaichean, ach tha an rìgh os cionn an t-seachd. Cha rèitich na dathan co-ionannachd a-riamh an Hold’em — roinnidh dithis chluicheadairean leis na h-aon chòig luachan am poit, sìos chun an t-slise mu dheireadh.",
+    wrongH2: "Na rudan a thathar a’ tuigsinn ceàrr",
+    wrong: [
+      "’S e an t-àsa a’ chairt as àirde agus as ìsle aig an aon àm ann an sreath: ’s e A-K-Q-J-10 an tè as fheàrr, agus A-2-3-4-5 (ris an canar an <em>wheel</em>) an tè as laige. Cha tèid an t-sreath timcheall — chan eil Q-K-A-2-3 na rud sam bith.",
+      "’S e còig cairtean den aon dath a th’ ann an dath, chan e ceithir. Chan eil ceithir cridheachan eadar do làmh agus am bòrd fiù ’s luach sam bith leotha fhèin.",
+      "’S e <em>set</em> a chanar ri trì co-ionann a thig bho phaidhir nad làimh agus aon chairt air a’ bhòrd; ’s e <em>trips</em> a chanar riutha ma thig iad bho aon chairt nad làimh agus paidhir air a’ bhòrd. An aon rangachadh, neart gu tur eadar-dhealaichte, oir chì a h-uile duine trips.",
+      "Chan eil ach na còig as fheàrr gan cunntadh. Dà phaidhir nad làimh agus treas paidhir air a’ bhòrd — ’s e dà phaidhir a th’ agad fhathast, chan e trì.",
+      "Tha na ceudadan gu h-àrd ag innse dè cho tric ’s a thig gach làmh ri chèile ron river à seachd cairtean, chan e dè cho tric ’s a bhuannaicheas i. Tha coltas cumanta air dà phaidhir agus tha i fhathast air thoiseach air a’ mhòr-chuid de na thachras rithe."
+    ],
+    seeH2: "Ga fhaicinn aig a’ bhòrd",
+    seeP: "Fhad ’s a bhios tu a’ cluich, sgrìobhaidh PokerTH ainm na làimhe as fheàrr a th’ agad fon bhòrd, agus mar sin cha leig thu leas a cur ri chèile fhad ’s a tha an ùine a’ ruith, agus aig an showdown seallaidh e gach làmh fhosgailte leis na còig cairtean a bha gu diofar air an comharrachadh. ’S e cleachdadh far-loidhne an aghaidh nan co-fharpaiseach coimpiutair an dòigh as luaithe air an t-òrdugh seo a chur nad chorragan."
+  },
+
+  lt: {
+    title: "Pokerio derinių eiliškumas — rankų tvarka Texas Hold’em",
+    desc: "Visi dešimt Texas Hold’em pokerio derinių nuo karališkosios eilės iki aukščiausios kortos, su pavyzdžiais, kiekvieno tikimybe ir taisyklėmis dėl kikerio bei lygiųjų.",
+    ldHeadline: "Pokerio derinių eiliškumas — Texas Hold’em",
+    ldDesc: "Dešimt Texas Hold’em derinių iš eilės, su pavyzdžiais, dažniu ir lygiųjų taisyklėmis.",
+    h1: "Pokerio derinių eiliškumas",
+    lead: "Texas Hold’em rankos rikiuojamos nuo stipriausios iki silpniausios štai taip. Ranką visada sudaro lygiai penkios kortos, parinktos iš septynių, kurias matote: dviejų savo uždarų ir penkių bendrųjų. Savo kortų naudoti neprivalote — jei geriausias penketas susidaro vien iš stalo, tai irgi jūsų ranka.",
+    names: ["Karališkoji eilė", "Spalvota eilė", "Ketvertas", "Pilnas namas", "Spalva", "Eilė", "Trejetas", "Dvi poros", "Pora", "Aukščiausia korta"],
+    texts: [
+      "A K Q J 10 tos pačios rūšies. Geriausia įmanoma ranka: jos nugalėti negalima, tik susilyginti.",
+      "Penkios iš eilės einančios tos pačios rūšies kortos. Iš dviejų spalvotų eilių laimi ta, kurios viršutinė korta aukštesnė.",
+      "Keturios tos pačios vertės kortos. Penktoji korta (kikeris) išsprendžia retą atvejį, kai ketvertas guli ant paties stalo.",
+      "Trejetas su pora. Pirmiausia lyginamas trejetas, paskui pora.",
+      "Penkios tos pačios rūšies kortos, ne iš eilės. Lyginamos po vieną nuo aukščiausios; nė viena rūšis nėra už kitą aukštesnė.",
+      "Penkios iš eilės einančios skirtingų rūšių kortos. Tūzas eina viršuje (10-J-Q-K-A) arba apačioje (A-2-3-4-5), niekada abiejose vietose iškart.",
+      "Trys tos pačios vertės kortos ir dvi nesusijusios kortos.",
+      "Dvi skirtingos poros ir penktoji korta. Pirmiausia lyginama aukštesnė pora, paskui žemesnė, paskui kikeris.",
+      "Dvi tos pačios vertės kortos ir trys nesusijusios kortos, lyginamos iš eilės.",
+      "Nė vienas iš pirmiau išvardytų. Sprendžia aukščiausia korta, paskui kita, ir taip toliau."
+    ],
+    dealt: "susidaro %s septynių kortų rankų",
+    tiesH2: "Kaip sprendžiamos lygiosios",
+    tiesP: "Pirmiausia lyginama kategorija: bet kokia spalva įveikia bet kokią eilę, kad ir kokios būtų kortos. Toje pačioje kategorijoje lyginama vertė po vertės nuo viršaus. Tai, kas lieka sudarius derinį, vadinama <em>kikeriu</em>, ir jis nulemia kur kas daugiau rankų, nei tikisi pradedantieji: ant stalo A-9-4 ir A♠ K♦, ir A♣ 7♥ sudaro tūzų porą, bet karalius pranoksta septynetą. Hold’em rūšys lygiųjų nesprendžia niekada — du žaidėjai su tomis pačiomis penkiomis vertėmis pasidalija banką iki paskutinės žetono dalies.",
+    wrongH2: "Ką dažniausiai supranta klaidingai",
+    wrong: [
+      "Tūzas eilei yra kartu ir aukščiausia, ir žemiausia korta: A-K-Q-J-10 yra geriausia, o A-2-3-4-5 (vadinamasis <em>wheel</em>) — silpniausia. Seka nesusijungia į ratą — Q-K-A-2-3 nėra visiškai niekas.",
+      "Spalva — tai penkios vienos rūšies kortos, ne keturios. Keturios širdys tarp jūsų rankos ir stalo pačios savaime nieko nevertos.",
+      "Trejetas, sudarytas iš poros rankoje ir vienos kortos ant stalo, vadinamas <em>set</em>; sudarytas iš vienos kortos rankoje ir poros ant stalo — <em>trips</em>. Ta pati vieta eilėje, visai kitokia jėga, nes trips mato visi.",
+      "Skaičiuojamos tik penkios geriausios kortos. Dvi poros rankoje ir trečia pora ant stalo vis tiek yra dvi poros, o ne trys.",
+      "Pirmiau pateikti procentai rodo, kaip dažnai kiekvienas derinys apskritai susidaro iki riverio iš septynių kortų, o ne kaip dažnai jis laimi. Dvi poros atrodo kasdieniškai ir vis dėlto pranoksta didžiąją dalį to, ką sutinka."
+    ],
+    seeH2: "Kaip tai matyti prie stalo",
+    seeP: "Žaidžiant PokerTH po stalu parašo dabartinės geriausios jūsų rankos pavadinimą, tad jos niekada nereikia dėliotis mintyse spaudžiant laikui, o atskleidžiant kortas kiekvienoje atverstoje rankoje išryškina būtent tas penkias kortas, kurios iš tikrųjų buvo skaičiuojamos. Treniruotis neprisijungus prieš kompiuterio varžovus — greičiausias būdas šį eiliškumą įsiminti."
+  },
+
+  sw: {
+    title: "Mpangilio wa mikono ya poka — daraja la mikono katika Texas Hold’em",
+    desc: "Mikono yote kumi ya poka ya Texas Hold’em kuanzia royal flush hadi karata ya juu, ikiwa na mifano, uwezekano wa kila mmoja, na jinsi kicker na sare zinavyoamuliwa.",
+    ldHeadline: "Mpangilio wa mikono ya poka — Texas Hold’em",
+    ldDesc: "Mikono kumi ya Texas Hold’em kwa mpangilio, ikiwa na mifano, mara ngapi hutokea, na kanuni za sare.",
+    h1: "Mpangilio wa mikono ya poka",
+    lead: "Katika Texas Hold’em mikono hupangwa kutoka yenye nguvu zaidi hadi dhaifu zaidi hivi. Mkono daima ni karata tano hasa, zilizochaguliwa kutoka saba unazoziona: karata zako mbili zilizofichwa na karata tano za pamoja. Huna lazima ya kutumia karata zako mwenyewe — kama meza pekee inaunda tano bora, huo pia ni mkono wako.",
+    names: ["Royal Flush", "Straight Flush", "Four of a Kind", "Full House", "Flush", "Straight", "Three of a Kind", "Two Pair", "One Pair", "High Card"],
+    texts: [
+      "A K Q J 10, zote za rangi moja. Mkono bora zaidi unaowezekana: hauwezi kushindwa, waweza tu kusawazishwa.",
+      "Karata tano mfululizo za rangi moja. Kati ya straight flush mbili, inayoshinda ni ile yenye karata ya juu kubwa zaidi.",
+      "Karata nne za thamani moja. Karata ya tano (kicker) huamua sare adimu pale zote nne zikiwa mezani.",
+      "Tatu zinazofanana pamoja na jozi. Kwanza hulinganishwa zile tatu, kisha jozi.",
+      "Karata tano za rangi moja, bila kufuatana. Hulinganishwa moja baada ya nyingine kuanzia ya juu; hakuna rangi iliyo juu ya nyingine.",
+      "Karata tano mfululizo za rangi mchanganyiko. Ace hucheza juu (10-J-Q-K-A) au chini (A-2-3-4-5), kamwe si pande zote mbili kwa wakati mmoja.",
+      "Karata tatu za thamani moja, pamoja na karata mbili zisizohusiana.",
+      "Jozi mbili tofauti pamoja na karata ya tano. Kwanza hulinganishwa jozi kubwa, kisha ndogo, kisha kicker.",
+      "Karata mbili za thamani moja pamoja na karata tatu zisizohusiana, zinazolinganishwa kwa mpangilio.",
+      "Hakuna kati ya hizo hapo juu. Karata ya juu zaidi huamua, kisha inayofuata, na kadhalika."
+    ],
+    dealt: "hutokea katika %s ya mikono ya karata saba",
+    tiesH2: "Jinsi sare zinavyoamuliwa",
+    tiesP: "Kwanza linganisha aina: flush yoyote hushinda straight yoyote, karata ziwe zipi. Ndani ya aina moja, hulinganishwa thamani baada ya thamani kuanzia juu. Kinachobaki baada ya mkono kuundwa huitwa <em>kicker</em>, nayo huamua mikono mingi zaidi kuliko wanaoanza wanavyodhani: kwenye meza ya A-9-4, A♠ K♦ na A♣ 7♥ zote zinaunda jozi ya ace, lakini king inashinda saba. Katika Hold’em rangi hazivunji sare kamwe — wachezaji wawili wenye thamani zilezile tano hugawana pot hadi chipu ya mwisho.",
+    wrongH2: "Yale yanayoeleweka vibaya mara nyingi",
+    wrong: [
+      "Ace ni karata ya juu na ya chini kabisa ya straight kwa wakati mmoja: A-K-Q-J-10 ndiyo bora, A-2-3-4-5 (inayoitwa <em>wheel</em>) ndiyo dhaifu zaidi. Mfululizo haurudi mzunguko — Q-K-A-2-3 si kitu hata kidogo.",
+      "Flush ni karata tano za rangi moja, si nne. Hearts nne kati ya mkono wako na meza hazina thamani yoyote peke yake.",
+      "Tatu zinazofanana zilizoundwa na jozi mkononi mwako pamoja na karata moja mezani huitwa <em>set</em>; zilizoundwa na karata moja mkononi pamoja na jozi mezani huitwa <em>trips</em>. Daraja moja, nguvu tofauti sana, kwa sababu trips kila mtu anaiona.",
+      "Karata tano bora pekee ndizo huhesabiwa. Kuwa na jozi mbili na jozi ya tatu mezani bado ni jozi mbili, si tatu.",
+      "Asilimia zilizo hapo juu zinaonyesha ni mara ngapi kila mkono huundwa hadi river kutoka karata saba, si mara ngapi hushinda. Jozi mbili zinaonekana za kawaida na bado ziko mbele ya mengi zinayokutana nayo."
+    ],
+    seeH2: "Kuiona mezani",
+    seeP: "Wakati unacheza, PokerTH huandika chini ya meza jina la mkono wako bora kwa wakati huo, hivyo huhitaji kamwe kuuunda kichwani huku saa ikienda, na wakati wa showdown huonyesha kila mkono uliofunuliwa ukiangazia karata tano zilizohesabiwa kweli. Kufanya mazoezi nje ya mtandao dhidi ya wapinzani wa kompyuta ndiyo njia ya haraka zaidi ya kuweka mpangilio huu vidoleni."
+  },
+
+  ta: {
+    title: "போக்கர் சீட்டுக் கோர்வைகள் — டெக்சாஸ் ஹோல்டெம் வரிசை",
+    desc: "டெக்சாஸ் ஹோல்டெம் போக்கரின் பத்து கோர்வைகளும் அரச வரிசை முதல் உயர் சீட்டு வரை, எடுத்துக்காட்டுகள், ஒவ்வொன்றும் வர வாய்ப்பு, கிக்கர் மற்றும் சமநிலை தீர்வு விதிகளுடன்.",
+    ldHeadline: "போக்கர் சீட்டுக் கோர்வைகள் — டெக்சாஸ் ஹோல்டெம்",
+    ldDesc: "டெக்சாஸ் ஹோல்டெம்மின் பத்து கோர்வைகள் வரிசைப்படி, எடுத்துக்காட்டுகள், அடிக்கடி வரும் விகிதம், சமநிலை விதிகளுடன்.",
+    h1: "போக்கர் சீட்டுக் கோர்வைகள்",
+    lead: "டெக்சாஸ் ஹோல்டெம்மில் கோர்வைகள் வலிமையான ஒன்றிலிருந்து பலவீனமானது வரை இப்படி வரிசைப்படுத்தப்படுகின்றன. ஒரு கை எப்போதும் சரியாக ஐந்து சீட்டுகள்; நீங்கள் காணும் ஏழிலிருந்து தேர்ந்தெடுக்கப்படுகிறது: உங்கள் இரு மறைமுக சீட்டுகள் மற்றும் ஐந்து பொது சீட்டுகள். உங்கள் சொந்த சீட்டுகளைப் பயன்படுத்த வேண்டிய கட்டாயம் இல்லை — மேசையிலுள்ளவை மட்டுமே சிறந்த ஐந்தை உருவாக்கினால், அதுவும் உங்கள் கைதான்.",
+    names: ["அரச வரிசை", "ஒரே நிற வரிசை", "நான்மை", "முழு வீடு", "ஒரே நிறம்", "வரிசை", "மும்மை", "இரட்டை ஜோடி", "ஜோடி", "உயர் சீட்டு"],
+    texts: [
+      "ஒரே நிறத்தில் A K Q J 10. சாத்தியமான சிறந்த கை: இதை வெல்ல முடியாது, சமன் செய்ய மட்டுமே முடியும்.",
+      "ஒரே நிறத்தில் தொடர்ச்சியான ஐந்து சீட்டுகள். இரு ஒரே நிற வரிசைகளில் மேல் சீட்டு பெரியது வெல்லும்.",
+      "ஒரே மதிப்புள்ள நான்கு சீட்டுகள். நான்கும் மேசையிலேயே இருக்கும் அரிய சமநிலையை ஐந்தாவது சீட்டு (கிக்கர்) தீர்க்கிறது.",
+      "ஒரு மும்மையுடன் ஒரு ஜோடி. முதலில் மும்மை ஒப்பிடப்படும், பிறகு ஜோடி.",
+      "ஒரே நிறத்தில் ஐந்து சீட்டுகள், தொடர்ச்சியாக இல்லாமல். மேலிருந்து ஒவ்வொன்றாக ஒப்பிடப்படும்; எந்த நிறமும் மற்றொன்றை விட உயர்ந்ததல்ல.",
+      "தொடர்ச்சியான ஐந்து சீட்டுகள், நிறங்கள் கலந்து. ஏஸ் மேலே (10-J-Q-K-A) அல்லது கீழே (A-2-3-4-5) செயல்படும், ஒருபோதும் இரண்டிலும் ஒரே நேரத்தில் அல்ல.",
+      "ஒரே மதிப்புள்ள மூன்று சீட்டுகள், உடன் தொடர்பற்ற இரண்டு சீட்டுகள்.",
+      "வெவ்வேறு இரு ஜோடிகள் உடன் ஐந்தாவது சீட்டு. முதலில் உயர் ஜோடி, பிறகு தாழ் ஜோடி, பிறகு கிக்கர் ஒப்பிடப்படும்.",
+      "ஒரே மதிப்புள்ள இரு சீட்டுகள் உடன் தொடர்பற்ற மூன்று சீட்டுகள், வரிசைப்படி ஒப்பிடப்படும்.",
+      "மேற்கண்ட எதுவும் இல்லை. மிக உயர்ந்த சீட்டு முடிவு செய்யும், பிறகு அடுத்தது, அப்படியே தொடரும்."
+    ],
+    dealt: "ஏழு சீட்டுக் கைகளில் %s அளவில் வருகிறது",
+    tiesH2: "சமநிலை எப்படித் தீர்க்கப்படுகிறது",
+    tiesP: "முதலில் வகை ஒப்பிடப்படுகிறது: சீட்டுகள் எதுவாக இருந்தாலும் எந்த ஒரே நிறமும் எந்த வரிசையையும் வெல்லும். ஒரே வகைக்குள் மேலிருந்து கீழாக மதிப்பு வாரியாக ஒப்பிடப்படும். கோர்வை அமைந்த பிறகு எஞ்சுவது <em>கிக்கர்</em> எனப்படும், தொடக்கநிலையாளர்கள் நினைப்பதை விட அதிக கைகளை அதுவே தீர்மானிக்கிறது: A-9-4 மேசையில் A♠ K♦ மற்றும் A♣ 7♥ இரண்டுமே ஏஸ் ஜோடி தருகின்றன, ஆனால் ராஜா ஏழை மிஞ்சுகிறது. ஹோல்டெம்மில் நிறம் ஒருபோதும் சமநிலையை உடைப்பதில்லை — ஒரே ஐந்து மதிப்புகள் கொண்ட இரு வீரர்கள் கடைசி சில்லு வரை பானைப் பங்கிட்டுக் கொள்வர்.",
+    wrongH2: "பொதுவாகத் தவறாகப் புரிந்துகொள்ளப்படுவது",
+    wrong: [
+      "வரிசைக்கு ஏஸ் ஒரே நேரத்தில் மிக உயர்ந்த மற்றும் மிகத் தாழ்ந்த சீட்டு: A-K-Q-J-10 சிறந்தது, A-2-3-4-5 (<em>wheel</em> எனப்படுவது) மிகப் பலவீனமானது. வரிசை சுற்றி வருவதில்லை — Q-K-A-2-3 என்பது ஒன்றுமே இல்லை.",
+      "ஒரே நிறம் என்பது ஒரே நிறத்தில் ஐந்து சீட்டுகள், நான்கு அல்ல. உங்கள் கையிலும் மேசையிலும் சேர்ந்து நான்கு ஹார்ட்ஸ் இருப்பது தனியே எந்தப் பயனும் அளிக்காது.",
+      "கையிலுள்ள ஜோடியுடன் மேசையின் ஒரு சீட்டு சேர்ந்து அமையும் மும்மை <em>set</em> எனப்படும்; கையிலுள்ள ஒரு சீட்டுடன் மேசையின் ஜோடி சேர்ந்தால் <em>trips</em>. வரிசை ஒன்றே, வலிமை மிகவும் வேறு, ஏனெனில் trips அனைவருக்கும் தெரியும்.",
+      "சிறந்த ஐந்து சீட்டுகள் மட்டுமே கணக்கிடப்படும். கையில் இரு ஜோடிகளும் மேசையில் மூன்றாவது ஜோடியும் இருந்தாலும் உங்கள் கை இரட்டை ஜோடிதான், மூன்று அல்ல.",
+      "மேலுள்ள சதவீதங்கள் ஏழு சீட்டுகளில் ரிவர் வரை ஒவ்வொரு கையும் எத்தனை முறை அமைகிறது என்பதைக் காட்டுகின்றன, எத்தனை முறை வெல்கிறது என்பதை அல்ல. இரட்டை ஜோடி சாதாரணமாகத் தோன்றினாலும் அது எதிர்கொள்ளும் பெரும்பாலானவற்றை விட முன்னிலையிலேயே இருக்கிறது."
+    ],
+    seeH2: "மேசையில் இதைப் பார்ப்பது",
+    seeP: "விளையாடும்போது PokerTH உங்கள் தற்போதைய சிறந்த கையின் பெயரை மேசைக்குக் கீழே காட்டுகிறது, எனவே நேரம் ஓடும் அழுத்தத்தில் அதை நீங்களே கணக்கிட வேண்டியதில்லை; சீட்டு திறக்கும்போது வெளிப்படுத்தப்பட்ட ஒவ்வொரு கையிலும் உண்மையில் கணக்கில் வந்த ஐந்து சீட்டுகள் தனித்துக் காட்டப்படும். கணினி எதிரிகளுடன் இணையம் இல்லாமல் பயிற்சி செய்வதே இந்த வரிசையை மனதில் பதிய வைக்கும் விரைவான வழி."
   }
 };
 

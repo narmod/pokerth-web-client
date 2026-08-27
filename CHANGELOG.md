@@ -51,6 +51,14 @@ highlights below.
   `InitAck` lands. Covered by `scripts/test-reconnect-backoff.mjs`.
 
 ### Added
+- **`/hand-rankings` complete in all 45 languages** (`web.134`). The last
+  fourteen — `pt-PT`, `zh-TW`, `el`, `bg`, `hr`, `sr`, `ca`, `gl`, `af`,
+  `fil`, `gd`, `lt`, `sw`, `ta` — close the page: 44 translations plus the
+  English original in `seoHandsPage()`. Every hreflang alternate the page
+  advertises now resolves to a page actually written in that language, and the
+  sitemap carries 45 URLs for it instead of one. Hand names come from each
+  language’s own client catalogue throughout, so the page and the in-game hand
+  list never disagree. 631 assertions.
 - **`/hand-rankings` in eight more languages** (`web.133`). `sv`, `da`, `nb`,
   `fi`, `cs`, `sk`, `ro` and `hu`, bringing the page to 31 of 45. Hand names
   again come from each language’s own client catalogue, which is why the page
