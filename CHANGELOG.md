@@ -51,6 +51,17 @@ highlights below.
   `InitAck` lands. Covered by `scripts/test-reconnect-backoff.mjs`.
 
 ### Added
+- **`/glossary` starts translating** (`web.139`). First batch: `fr`, `de`,
+  `es`, `pt-BR`, `it`. The headword is not translated away — what a player
+  meets in the chat is the English term, so each entry keys on it and adds the
+  local equivalent in parentheses where the language actually has one, which
+  is also what someone searching in their own language types. The builder
+  drops an equivalent that only differs in case, so no entry reads “Ante
+  (ante)”; German consequently shows seven, since its poker vocabulary is
+  largely borrowed. `scripts/test-seo-glossary-i18n.mjs` checks index
+  alignment specifically: a translation is a positional array of 54 entries,
+  and one missing entry would shift every definition after it onto the wrong
+  headword while still rendering a valid page. 78 assertions.
 - **`/how-to-play` complete in all 45 languages** (`web.138`). The last
   twenty-two, in two batches: `pt-PT`, `zh-TW`, `sv`, `da`, `nb`, `fi`, `cs`,
   `sk`, `ro`, `hu`, then `el`, `bg`, `hr`, `sr`, `ca`, `gl`, `lt`, `af`, `fil`,

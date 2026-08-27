@@ -1552,6 +1552,12 @@ var _SEO_PAGE_CSS = 'body{margin:0;background:#0d1117;color:#d8dde4;font:16px/1.
   '[dir=rtl] dd{margin:.3em 0 0 0}' +
   '[dir=rtl] th,[dir=rtl] td{text-align:right}[dir=rtl] td.n{text-align:left}' +
   'dt{font-weight:600;color:#fff;margin-top:1.1em}dd{margin:.3em 0 0 0}' +
+  // Glossary entries carry the English term — which is what turns up in
+  // the chat — followed by the local equivalent where the language has
+  // one. The equivalent is set lighter so the entry still scans as one
+  // headword rather than two competing ones. Kept LTR-safe: the English
+  // term is a Latin run inside an Arabic or Hebrew line.
+  'dt .loc{font-weight:400;color:#9aa4b0}dt .en{direction:ltr;unicode-bidi:isolate}' +
   'table{border-collapse:collapse;width:100%;margin:.6em 0;font-size:.95em}' +
   'th,td{text-align:left;padding:7px 10px;border-bottom:1px solid #30363d;vertical-align:top}' +
   'th{color:#fff;font-weight:600}td.n{white-space:nowrap;text-align:right;color:#9aa4b0}' +
