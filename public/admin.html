@@ -420,7 +420,7 @@
         </div>
         <div class="tsec">
   <div class="boardhead"><h3>Most played tracks</h3><span id="musSince" class="muted" style="margin:0"></span></div>
-          <p class="muted">Counts a play each time a track starts in the players’ music panel — resuming after a pause is not a new play. No visitor id, no listening time. Radio stations are not measured: a live stream has no track end, so “a play” would mean nothing there. Per-track totals sit next to each title in the Music tab.</p>
+          <p class="muted">Counts a play each time a track starts in the players’ music panel — resuming after a pause is not a new play. No visitor id, no listening time. Radio stations are not measured: a live stream has no track end, so “a play” would mean nothing there. The ranking is all-time since counting started; the bars stack the top five titles by day, with the rest grouped.</p>
           <div id="trafMusic"><div class="empty">Loading…</div></div>
         </div>
       </div>
@@ -1879,6 +1879,42 @@
     });
     return '<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="daily bars">'+g+'</svg>';
   }
+  // Barres empilees : une colonne par jour, une couche par serie, la premiere
+  // serie en bas. A faible volume, une pile se lit la ou sept courbes se
+  // superposent au zero ; le total du jour est ecrit au sommet.
+  function _stackChart(labels,series,H){
+    var n=labels.length; if(!n||!series.length) return '';
+    H=H||170;
+    var W=700,padL=32,padR=10,padT=16,padB=20;
+    var tot=labels.map(function(_,i){ var t=0; series.forEach(function(s){ t+=s.vals[i]||0; }); return t; });
+    var max=1; tot.forEach(function(t){ if(t>max) max=t; });
+    max=_lineNiceMax(max);
+    var iw=W-padL-padR, ih=H-padT-padB, slot=iw/n, bw=Math.max(3,slot*0.62);
+    function Y(v){ return padT+(1-(v||0)/max)*ih; }
+    function CX(i){ return padL+slot*i+slot/2; }
+    var g='', s2;
+    for(s2=0;s2<=4;s2++){
+      var vv=Math.round((max*s2)/4), yy=Y(vv);
+      g+='<line x1="'+padL+'" y1="'+yy.toFixed(1)+'" x2="'+(W-padR)+'" y2="'+yy.toFixed(1)+'" style="stroke:rgba(127,127,127,.18);stroke-width:1"/>'
+        +'<text x="'+(padL-5)+'" y="'+(yy+3).toFixed(1)+'" text-anchor="end" style="fill:var(--text);font-size:9px;font-variant-numeric:tabular-nums">'+vv+'</text>';
+    }
+    labels.forEach(function(lab,i){
+      var acc=0;
+      series.forEach(function(s){
+        var v=s.vals[i]||0; if(!v) return;
+        var y1=Y(acc+v), h=Y(acc)-y1;
+        g+='<rect x="'+(CX(i)-bw/2).toFixed(1)+'" y="'+y1.toFixed(1)+'" width="'+bw.toFixed(1)+'" height="'+Math.max(0.5,h).toFixed(1)+'" style="fill:'+s.c+'"><title>'+_annEsc(lab)+' \u00b7 '+_annEsc(s.k)+': '+v+'</title></rect>';
+        acc+=v;
+      });
+      if(tot[i] && n<=20) g+='<text x="'+CX(i).toFixed(1)+'" y="'+(Y(tot[i])-4).toFixed(1)+'" text-anchor="middle" style="fill:var(--text);font-size:8.5px;font-variant-numeric:tabular-nums">'+tot[i]+'</text>';
+    });
+    var step=Math.max(1,Math.ceil(n/7));
+    for(var i2=0;i2<n;i2++){
+      if(i2%step!==0&&i2!==n-1) continue;
+      g+='<text x="'+CX(i2).toFixed(1)+'" y="'+(H-6)+'" text-anchor="middle" style="fill:var(--text);font-size:9px">'+_annEsc(labels[i2])+'</text>';
+    }
+    return '<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="stacked daily bars">'+g+'</svg>';
+  }
   function _lineChart(labels,lines,H){
     var n=labels.length; if(!n) return '';
     H=H||170;
@@ -1955,25 +1991,62 @@
   // Un titre retiré du catalogue garde ses lectures : on retombe alors sur son
   // identifiant plutôt que d'afficher une ligne sans nom.
   function _musName(id){ return _musTitles[id]||id; }
-  // Historique par jour, même forme que celui des langues : les six premiers
-  // titres nommément, le reste regroupé.
+  // Le classement d'abord : c'est la question posee par le titre de la
+  // section, et la seule reponse lisible a ce volume. La couleur d'une ligne
+  // est celle de sa couche dans la pile (cinq titres), le reste est gris.
+  var MUS_TOP=10, MUS_STACK=5;
+  function _musRank(keys,total){
+    var rows=keys.slice(0,MUS_TOP).map(function(k,i){
+      var n=_musData[k]||0, pc=total? n*100/total : 0;
+      var c=i<MUS_STACK?ENV_COLORS[i]:ENV_COLORS[9], gone=!_musTitles[k];
+      return '<div class="envrow"><span class="dot" style="background:'+c+'"></span>'
+        + '<span class="nmx"'+(gone?' style="opacity:.6;font-style:italic" title="removed from the catalogue"':'')+'>'+_annEsc(_musName(k))+'</span>'
+        + '<span class="barx"><i style="width:'+Math.max(2,pc).toFixed(1)+'%;background:'+c+'"></i></span>'
+        + '<span class="pct">'+n+' \u00b7 '+(pc<1?pc.toFixed(1):Math.round(pc))+'%</span></div>';
+    }).join('');
+    var rest=keys.length-MUS_TOP;
+    if(rest>0){
+      var rn=0; keys.slice(MUS_TOP).forEach(function(k){ rn+=_musData[k]||0; });
+      rows+='<div class="muted" style="margin-top:6px">'+rest+' more title'+(rest>1?'s':'')+' \u00b7 '+rn+' play'+(rn>1?'s':'')+' \u00b7 '+(total?Math.round(rn*100/total):0)+'%</div>';
+    }
+    return rows;
+  }
+  // La fenetre commence au jour du premier comptage : des jours vides avant
+  // ne disent rien sur la musique, seulement sur l'age de la fonction.
+  function _musDays(){
+    var s=_trafSeries||[];
+    if(!_musSince) return s;
+    var d=new Date(_musSince), key=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+    return s.filter(function(x){ return (x.date||'')>=key; });
+  }
+  // Une lecture pour cent visites : l'adoption du panneau musique, la seule
+  // tendance qui tienne quand le total du jour se compte sur les doigts.
+  function _musContext(keys,total){
+    var days=_musDays(); if(!days.length) return '';
+    var pl=0, vis=0;
+    days.forEach(function(x){ var mu=x.mu||{}; for(var k in mu) pl+=mu[k]||0; vis+=x.v||0; });
+    var per=vis? pl*100/vis : 0;
+    return '<div class="envhi"><b>'+total+'</b> play'+(total>1?'s':'')+' across <b>'+keys.length+'</b> title'+(keys.length>1?'s':'')
+      +' \u2014 <b>'+_round1(pl/days.length)+'</b> plays/day over '+days.length+' day'+(days.length>1?'s':'')
+      +(vis?', <b>'+(per<10?per.toFixed(1):Math.round(per))+'</b> plays per 100 visits':'')+'.</div>';
+  }
   function _musChart(keys){
-    var s=_trafSeries||[], has=false;
+    var s=_musDays(), has=false;
     s.forEach(function(x){ if(x.mu&&Object.keys(x.mu).length) has=true; });
-    if(!has) return '<div class="muted" style="margin-top:12px">Per-day history starts with this proxy version — the chart fills in as days pass.</div>';
-    var top=keys.slice(0,6), restK=keys.slice(6);
+    if(!has) return '<div class="muted" style="margin-top:12px">Per-day history starts with this proxy version \u2014 the chart fills in as days pass.</div>';
+    var top=keys.slice(0,MUS_STACK), restK=keys.slice(MUS_STACK);
     var labs=s.map(function(x){ return (x.date||'').slice(5); });
     var lls=top.map(function(k,i){
-      return {k:_musName(k),c:ENV_COLORS[i%ENV_COLORS.length],vals:s.map(function(x){ return (x.mu&&x.mu[k])||0; })};
+      return {k:_musName(k),c:ENV_COLORS[i],vals:s.map(function(x){ return (x.mu&&x.mu[k])||0; })};
     });
     if(restK.length){
-      lls.push({k:restK.length+' others',c:ENV_COLORS[9],vals:s.map(function(x){
+      lls.push({k:restK.length+' other'+(restK.length>1?'s':''),c:ENV_COLORS[9],vals:s.map(function(x){
         var mu=x.mu||{},r=0; restK.forEach(function(k){ r+=mu[k]||0; }); return r;
       })});
     }
     var leg=lls.map(function(l){ return '<span><em style="background:'+l.c+'"></em>'+_annEsc(l.k)+'</span>'; }).join('');
-    return '<div class="muted" style="margin:2px 0 4px">Plays per day — last 14 days</div>'
-         + _lineChart(labs,lls,150)
+    return '<div class="muted" style="margin:14px 0 4px">Plays per day \u2014 since '+_annEsc(s[0].date||'')+'</div>'
+         + _stackChart(labs,lls,160)
          + '<div class="traflegend" style="flex-wrap:wrap">'+leg+'</div>';
   }
   function renderMusic(){
@@ -1991,7 +2064,7 @@
       box.innerHTML='<div class="empty">'+why+'</div>';
       return;
     }
-    box.innerHTML=_musChart(keys);
+    box.innerHTML=_musRank(keys,total)+_musContext(keys,total)+_musChart(keys);
   }
   function renderEnv(){
     var box=$('trafEnv'); if(!box) return;

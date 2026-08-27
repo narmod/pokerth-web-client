@@ -74,6 +74,14 @@ highlights below.
   (`web.40`), both operator-controlled.
 
 ### Changed
+- **Most played tracks is a ranking first** (`web.127`). The section opens
+  with the top ten titles as horizontal bars (plays and share; titles removed
+  from the catalogue shown in italics), then one context line — plays per day
+  and plays per hundred visits, the music panel's adoption — and a stacked
+  daily bar chart of the top five titles with the rest grouped. The window
+  starts on the day counting began instead of padding fourteen days with
+  empty ones. The previous seven-line chart put the "others" sum above every
+  named title and pinned the rest to the zero line.
 - **The admin dashboard reorganised** (`web.27`–`web.38`) — tabs grouped into
   three families that read as navigation, one section per subject instead of a
   wall of cards, sub-sections in the crowded panels, and settings rows as a
