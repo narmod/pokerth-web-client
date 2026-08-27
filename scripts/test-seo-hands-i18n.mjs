@@ -20,6 +20,15 @@ const hands = require(join(root, 'seo-i18n', 'hands.js'));
 let n = 0, fail = 0;
 function ok(cond, msg) { n++; if (!cond) { fail++; console.error('  ✗', msg); } else console.log('  ✓', msg); }
 
+// Display width: CJK ideographs, kana and Hangul are full-width, everything
+// else counts as one. Rough, but it is the right axis for a length budget.
+const WIDE = /[\u1100-\u115F\u2E80-\u303E\u3041-\u33FF\u3400-\u4DBF\u4E00-\u9FFF\uA000-\uA4CF\uAC00-\uD7A3\uF900-\uFAFF\uFE30-\uFE4F\uFF00-\uFF60\uFFE0-\uFFE6]/;
+function width(s) {
+  let w = 0;
+  for (const ch of s) w += WIDE.test(ch) ? 2 : 1;
+  return w;
+}
+
 const PARTS = hands.PARTS;
 const codes = Object.keys(PARTS);
 ok(codes.length > 0, `${codes.length} language(s) translated`);
@@ -76,8 +85,13 @@ for (const code of codes) {
   // A stray unclosed tag would break the page layout for that language only.
   ok((b.body.match(/<em>/g) || []).length === (b.body.match(/<\/em>/g) || []).length, `${code}: <em> tags balance`);
   ok((b.body.match(/<li>/g) || []).length === (b.body.match(/<\/li>/g) || []).length, `${code}: <li> tags balance`);
-  ok(b.title.length <= 70, `${code}: the title stays within what search results show (${b.title.length})`);
-  ok(b.desc.length >= 80 && b.desc.length <= 320, `${code}: the description is a usable length (${b.desc.length})`);
+  // Measured in display width, not characters: what a search result truncates
+  // is a pixel budget, and one CJK ideograph fills roughly two Latin letters.
+  // Counting characters would flag a perfectly sized Chinese description as
+  // too short and let an oversized one through.
+  const tw = width(b.title), dw = width(b.desc);
+  ok(tw <= 70, `${code}: the title stays within what search results show (width ${tw})`);
+  ok(dw >= 80 && dw <= 320, `${code}: the description is a usable length (width ${dw})`);
 }
 
 // And proxy.js has to read the module rather than its own empty object.

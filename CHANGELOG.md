@@ -36,6 +36,13 @@ highlights below.
   `InitAck` lands. Covered by `scripts/test-reconnect-backoff.mjs`.
 
 ### Added
+- **`/hand-rankings` in eight more languages** (`web.130`). `pl`, `ru`, `tr`,
+  `uk`, `zh`, `ja`, `ko` and `id`, bringing the page to 14 of 45. The module
+  also drops `\uXXXX` escapes for plain UTF-8: it is a translation corpus, and
+  a reviewer should not have to decode it character by character. The length
+  assertions in `scripts/test-seo-hands-i18n.mjs` now measure display width
+  rather than characters — a search result truncates on a pixel budget, and a
+  correctly sized Chinese description was being flagged as too short.
 - **`/hand-rankings` starts speaking other languages** (`web.129`). The three
   newest content pages had empty translation tables, so `?lang=` was ignored on
   all of them. The tables now live in `seo-i18n/` — one module per page,
