@@ -3411,6 +3411,14 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
    l'attribut [hidden] (style UA) → on le rétablit ici, sinon TOUTES les
    pages s'affichent en même temps (bug constaté 2026-08-28). */
 .react-grid[hidden] { display: none !important; }
+/* Glissement discret de la page entrante (flèches et swipe tactile). */
+@keyframes rpInLeft  { from { transform: translateX(24px);  opacity: 0.4; } to { transform: none; opacity: 1; } }
+@keyframes rpInRight { from { transform: translateX(-24px); opacity: 0.4; } to { transform: none; opacity: 1; } }
+.react-grid.rp-in-left  { animation: rpInLeft 0.18s ease-out; }
+.react-grid.rp-in-right { animation: rpInRight 0.18s ease-out; }
+@media (prefers-reduced-motion: reduce) {
+  .react-grid.rp-in-left, .react-grid.rp-in-right { animation: none; }
+}
 .react-panel-title .react-pager {
   display: inline-flex; align-items: center; gap: 4px;
   letter-spacing: normal; text-transform: none;

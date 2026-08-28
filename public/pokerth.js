@@ -6503,7 +6503,7 @@ const App = (() => {
 
     // Pagination du panneau réactions : flèches ‹ › (l'indicateur N/3 est passif).
     reactPage(i) { setReactionPage(i); },
-    reactPageStep(d) { setReactionPage(_reactPageCurrent() + (d || 0)); },
+    reactPageStep(d) { setReactionPage(_reactPageCurrent() + (d || 0), d > 0 ? 'left' : 'right'); },
 
     sendGameChat() {
       var input = document.getElementById('g-chat-in');
@@ -9942,7 +9942,7 @@ function _fitReactGrid(panel){
 // Pager compact dans la barre de titre : ‹ [N/3] › ; chaque page est une .react-grid,
 // seule la page active est visible ([hidden] sur les autres) et _fitReactGrid
 // ne mesure qu'elle. Dernière page mémorisée (pth_react_page).
-function setReactionPage(i){
+function setReactionPage(i, dir){
   var panel = document.getElementById('g-reaction-panel');
   if (!panel) return;
   var grids = panel.querySelectorAll('.react-grid');
@@ -9953,10 +9953,47 @@ function setReactionPage(i){
     if (k === i) grids[k].removeAttribute('hidden');
     else grids[k].setAttribute('hidden', '');
   }
+  // Glissement directionnel discret de la page entrante (flèches ET swipe) ;
+  // neutralisé par prefers-reduced-motion côté CSS.
+  if (dir === 'left' || dir === 'right'){
+    var g = grids[i];
+    g.classList.remove('rp-in-left', 'rp-in-right');
+    void g.offsetWidth;                        // redémarre l'animation
+    g.classList.add(dir === 'left' ? 'rp-in-left' : 'rp-in-right');
+  }
   var ind = document.getElementById('react-page-ind');
   if (ind) ind.textContent = (i + 1) + '/' + n;
   try { localStorage.setItem('pth_react_page', String(i)); } catch (e) {}
   _fitReactGrid(panel);
+}
+
+// ── Swipe horizontal tactile sur les pages de réactions (2026-08-28) ──
+// Un balayage franc (≥ 48 px, nettement horizontal, < 600 ms) change de page.
+// Écouteurs passifs : le défilement vertical de la grille (petites fenêtres)
+// et le tap des boutons restent intacts — un tap qui glisse au-delà du seuil
+// n'émet de toute façon plus de click (comportement navigateur standard).
+// La barre de titre est exclue : elle sert déjà à déplacer la fenêtre.
+function _attachReactSwipe(panel){
+  if (panel._reactSwipe) return;
+  panel._reactSwipe = true;
+  var x0 = 0, y0 = 0, t0 = 0, armed = false;
+  panel.addEventListener('touchstart', function(e){
+    if (!e.touches || e.touches.length !== 1) { armed = false; return; }
+    var tg = e.target;
+    if (tg && tg.closest && tg.closest('.react-panel-title')) { armed = false; return; }
+    armed = true;
+    x0 = e.touches[0].clientX; y0 = e.touches[0].clientY; t0 = Date.now();
+  }, { passive: true });
+  panel.addEventListener('touchend', function(e){
+    if (!armed) return;
+    armed = false;
+    var t = e.changedTouches && e.changedTouches[0];
+    if (!t) return;
+    if (Date.now() - t0 > 600) return;                       // geste lent = pas un swipe
+    var dx = t.clientX - x0, dy = t.clientY - y0;
+    if (Math.abs(dx) < 48 || Math.abs(dx) < Math.abs(dy) * 1.5) return;
+    setReactionPage(_reactPageCurrent() + (dx < 0 ? 1 : -1), dx < 0 ? 'left' : 'right');
+  }, { passive: true });
 }
 function _reactPageCurrent(){
   var v = 0;
@@ -9986,6 +10023,7 @@ function toggleReactionPanel() {
       panel._reactFitRO.observe(panel);
     }
     setReactionPage(_reactPageCurrent());  // restaure la page + _fitReactGrid
+    _attachReactSwipe(panel);              // pages au doigt sur tactile
   }
   if (btn) {
     btn.style.background  = open ? 'rgba(var(--gold-rgb),0.2)' : '';
@@ -10790,7 +10828,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.7-web.156'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.7-web.157'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
