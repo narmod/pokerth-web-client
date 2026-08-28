@@ -78,7 +78,12 @@ highlights below.
   dominantly-horizontal threshold). The smoke break asked for by sp0ck
   lands as 🚬 with slow-rising 💨 curls (`web.160`), replacing 💤 —
   the third sleep emoji after 😴 and 🥱 (Unicode has no joint emoji;
-  the cigarette is the closest universal glyph). The last page is persisted
+  the cigarette is the closest universal glyph). The revolver asked for
+  by sp0ck lands as 🔫 replacing the redundant firecracker (`web.162`),
+  with a dedicated 16th animation `recoil` (double kick-back) and a new
+  `gunshot` particle preset — muzzle flash, tracer bullet flying left
+  (the glyph points left, and renders as a toy water pistol on all major
+  platforms since 2018), spark trail and ejected casing. The last page is persisted
   (`pth_react_page`); the auto-fitting grid, mute and pin behaviours apply
   per page. Eight new emoji choreographies join the seven existing ones
   (launch, drop, wobble, flip, zoomout, heartbeat, shiver, tilt — 15 total)

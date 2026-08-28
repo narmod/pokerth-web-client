@@ -26,6 +26,7 @@ All rise to ~-150% of their start position and fade out; duration 1.4-1.7 s.
 | `heartbeat` | fast double-thump pairs (boom-boom) while rising |
 | `shiver` | high-frequency ±2% horizontal jitter while rising |
 | `tilt` | leans progressively then spirals (560°) while rising |
+| `recoil` | double sideways kick-back with rotation (gunfire recoil), settles, rises |
 
 ## Particle presets
 
@@ -35,6 +36,7 @@ All rise to ~-150% of their start position and fade out; duration 1.4-1.7 s.
 | `shock` | expanding ring + 💥✦ burst |
 | `confetti` | 24 colored paper pieces with gravity |
 | `boom` | 420 ms delay (bomb lands first), then TWO orange shockwave rings (2nd delayed 120 ms) + 14× 💥🔥✦ burst, dist 95 |
+| `gunshot` | muzzle flash 💥 at the barrel, one tracer bullet flying LEFT ~170 px with a ✦ spark trail, ejected casing arcing up-right (the emoji points left on Apple/Google/Twemoji) |
 
 ## Per-emoji table
 
@@ -140,7 +142,7 @@ life ms, rot = random rotation.
 | 81 | 🎩 | `flip` | `{chars:['✨'],count:7,size:12,a0:0,a1:360,dist:54,life:800}` |
 | 82 | 🧊 | `shiver` | `{chars:['❄️'],count:7,size:12,a0:0,a1:360,dist:52,life:850}` |
 | 83 | 🌪️ | `tilt` | `{chars:['🍃','💨'],count:10,size:13,a0:0,a1:360,dist:74,life:950,rot:1}` |
-| 84 | 🧨 | `shake` | `'shock'` |
+| 84 | 🔫 | `recoil` | `'gunshot'` |
 | 85 | 📈 | `launch` | `{count:8,color:'#7ee37e',size:6,a0:-120,a1:-60,dist:62,g:-30,life:850}` |
 | 86 | 📉 | `drop` | `{count:8,color:'#e05252',size:6,a0:60,a1:120,dist:58,g:70,life:850}` |
 | 87 | 🔮 | `shine` | `{chars:['✨','✦'],count:8,size:13,a0:0,a1:360,dist:60,life:900,rot:1}` |

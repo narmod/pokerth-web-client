@@ -64,14 +64,14 @@ const missingFx = REACT_EMOJIS.filter((e) => !REACTION_FX[e]);
 ok(missingFx.length === 0, 'REACTION_FX covers all 90 emojis' + (missingFx.length ? ' (missing ' + missingFx.join(' ') + ')' : ''));
 const css = readFileSync(new URL('../public/pokerth.css', import.meta.url), 'utf8');
 const anims = [...new Set(Object.values(REACTION_FX).map((f) => f.a))].sort();
-ok(anims.length === 15, '15 distinct animations in use (' + anims.length + ')');
+ok(anims.length === 16, '16 distinct animations in use (' + anims.length + ')');
 for (const a of anims) {
   const cls = '.rfx-anim-' + a;
   const kf = '@keyframes rfx' + a.charAt(0).toUpperCase() + a.slice(1);
   ok(css.includes(cls), 'CSS class ' + cls + ' exists');
   ok(css.includes(kf), 'CSS ' + kf + ' exists');
 }
-const KNOWN_PRESETS = new Set(['sparkle', 'shock', 'confetti', 'boom']);
+const KNOWN_PRESETS = new Set(['sparkle', 'shock', 'confetti', 'boom', 'gunshot']);
 const badPresets = Object.entries(REACTION_FX)
   .filter(([, f]) => typeof f.p === 'string' && !KNOWN_PRESETS.has(f.p));
 ok(badPresets.length === 0, 'all string presets are known (sparkle/shock/confetti/boom)');

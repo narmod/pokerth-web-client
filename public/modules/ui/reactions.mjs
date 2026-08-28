@@ -50,7 +50,7 @@ var REACT_EMOJIS = [
   // page 2 👏
   '😎','🤩','🤡','😈','🫠','🥶','🥵','🎉','🥳','🍿','👏','🙌','💪','👍','👎','🤝','👊','🙏','🤞','🫵','🫡','🤫','🤦','🚬','⏳','🍺','☕','💣','🚀','⚡',
   // page 3 ♠️
-  '💰','🤑','💵','💎','🎰','🍀','🃏','♠️','🎲','🎯','🏆','🥇','💸','🪤','👑','🔥','💀','🦈','🐟','🐔','🫏','🎩','🧊','🌪️','🧨','📈','📉','🔮','💯','⭐'
+  '💰','🤑','💵','💎','🎰','🍀','🃏','♠️','🎲','🎯','🏆','🥇','💸','🪤','👑','🔥','💀','🦈','🐟','🐔','🫏','🎩','🧊','🌪️','🔫','📈','📉','🔮','💯','⭐'
 ];
 
 // ── Catalogue des effets animés par réaction ──
@@ -146,7 +146,7 @@ var REACTION_FX = {
   '🎩':{a:'flip',p:{chars:['✨'],count:7,size:12,a0:0,a1:360,dist:54,life:800}},
   '🧊':{a:'shiver',p:{chars:['❄️'],count:7,size:12,a0:0,a1:360,dist:52,life:850}},
   '🌪️':{a:'tilt',p:{chars:['🍃','💨'],count:10,size:13,a0:0,a1:360,dist:74,life:950,rot:1}},
-  '🧨':{a:'shake',p:'shock'},
+  '🔫':{a:'recoil',p:'gunshot'},
   '📈':{a:'launch',p:{count:8,color:'#7ee37e',size:6,a0:-120,a1:-60,dist:62,g:-30,life:850}},
   '📉':{a:'drop',p:{count:8,color:'#e05252',size:6,a0:60,a1:120,dist:58,g:70,life:850}},
   '🔮':{a:'shine',p:{chars:['✨','✦'],count:8,size:13,a0:0,a1:360,dist:60,life:900,rot:1}},
@@ -169,6 +169,33 @@ function _rfxSpawn(c, spec){
       setTimeout(function(){ r1.remove(); r2.remove(); }, 1150);
       _rfxSpawn(c, {chars:['💥','🔥','✦'],count:14,size:18,a0:0,a1:360,dist:95,life:950,rot:1});
     }, 420);
+    return;
+  }
+  if (spec === 'gunshot'){
+    // 🔫 : éclair de bouche, balle traçante filant à GAUCHE (le glyphe pointe
+    // à gauche sur Apple/Google/Twemoji), traînée d'étincelles, douille
+    // éjectée en cloche vers la droite. L'emoji lui-même joue l'anim 'recoil'.
+    var fl = document.createElement('span'); fl.className = 'rfx-pt';
+    fl.textContent = '💥'; fl.style.fontSize = '20px';
+    c.appendChild(fl);
+    fl.animate([
+      {transform:'translate(calc(-50% - 20px), -50%) scale(.4)', opacity:0, offset:0},
+      {transform:'translate(calc(-50% - 26px), -50%) scale(1.25)', opacity:1, offset:.35},
+      {transform:'translate(calc(-50% - 30px), -50%) scale(.7)', opacity:0, offset:1}
+    ], {duration:240, easing:'ease-out'});
+    setTimeout(function(){ fl.remove(); }, 300);
+    var b = document.createElement('span'); b.className = 'rfx-pt';
+    b.style.width = '7px'; b.style.height = '7px';
+    b.style.background = 'var(--gold)'; b.style.borderRadius = '50%';
+    c.appendChild(b);
+    b.animate([
+      {transform:'translate(calc(-50% - 24px), -50%)', opacity:1, offset:0},
+      {transform:'translate(calc(-50% - 170px), calc(-50% + 6px))', opacity:1, offset:.8},
+      {transform:'translate(calc(-50% - 195px), calc(-50% + 10px))', opacity:0, offset:1}
+    ], {duration:420, easing:'cubic-bezier(.1,.8,.3,1)'});
+    setTimeout(function(){ b.remove(); }, 480);
+    _rfxSpawn(c, {chars:['✦'], count:5, size:9, a0:172, a1:188, dist:120, life:420});
+    _rfxSpawn(c, {chars:['✨'], count:2, size:10, a0:-110, a1:-60, dist:40, g:55, life:650});
     return;
   }
   if (spec === 'shock'){

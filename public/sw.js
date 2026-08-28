@@ -23,7 +23,7 @@
  *                 Cross-origin requests and WS upgrades are left untouched.
  *                 (Fonts are now self-hosted and handled by SWR above.)
  */
-const CACHE_VERSION = 'pokerth-v2.1.7-web.161';
+const CACHE_VERSION = 'pokerth-v2.1.7-web.162';
 // Share Target payload park (see handleShareTarget). Kept OUT of CACHE_VERSION
 // so an update sweep never eats a share that arrived seconds earlier.
 const SHARE_CACHE = 'pokerth-share';
