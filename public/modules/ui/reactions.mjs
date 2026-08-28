@@ -2,7 +2,7 @@
 // ─────────────────────────────────────────────────────────────────────────
 // public/modules/ui/reactions.mjs
 //
-// Réactions emoji en jeu : compteurs par emoji, dé-duplication d'une même
+// Réactions emoji en jeu (90, 3 pages) : compteurs par emoji, dé-duplication d'une même
 // réaction reçue par deux canaux (REACT: legacy + convention /emoji partagée
 // avec le client QML de sp0ck — fenêtre 1,5 s), rendu flottant/siège,
 // presets de particules (playReactionFx), mute (parité DisableEmojiReactions)
@@ -40,27 +40,118 @@ function _applyReactPinUI() {
   }
 }
 
+// ── Catalogue canonique des 90 réactions (3 pages × 30 — ordre = rcp-N) ──
+// Doit rester synchronisé avec les grilles de pokerth-client.html ;
+// scripts/test-reactions-catalog.mjs vérifie l'ordre, la couverture FX et
+// la présence des keyframes CSS de chaque animation.
+var REACT_EMOJIS = [
+  // page 1 😀
+  '😂','🤣','😅','😭','🥺','😢','😉','😏','🙄','😳','🤪','😇','😍','🥰','😘','😬','😴','🤔','👀','😮','😱','🤯','😡','😤','🤢','🥴','😰','🙃','🤭','🫣',
+  // page 2 👏
+  '🎉','🥳','🎊','👏','🙌','💪','👍','👎','🤝','👊','🙏','🤞','🫵','🫡','🤫','🤦','😎','🤩','💤','⏳','🍺','☕','🤡','😈','💣','🚀','⚡','🫠','🥶','🥵',
+  // page 3 ♠️
+  '💰','🤑','💵','💎','🎰','🍀','🃏','♠️','🎲','🎯','🏆','🥇','🥈','🥉','👑','🔥','💀','🦈','🐟','🐔','🫏','🎩','🧊','🌪️','🧨','📈','📉','🚨','💯','⭐'
+];
+
 // ── Catalogue des effets animés par réaction ──
-// a = animation de l'emoji ; p = particules (objet, ou preset 'sparkle'/'shock'/'confetti')
+// a = animation de l'emoji (keyframes rfx* de pokerth.css) ; p = particules
+// (objet, ou preset 'sparkle'/'shock'/'confetti'/'boom'). 15 animations :
+// pop, shake, beat, shine, spin, fire, flex + launch, drop, wobble, flip,
+// zoomout, heartbeat, shiver, tilt (2026-08-28).
 var REACTION_FX = {
-  '🎉':{a:'pop',p:'confetti'}, '🥳':{a:'pop',p:'confetti'}, '🎊':{a:'pop',p:'confetti'},
-  '🔥':{a:'fire',p:{chars:['🔥','✦'],count:9,size:14,a0:-150,a1:-30,dist:70,g:-24,life:1000,rot:1}},
-  '💰':{a:'pop',p:{chars:['🪙','💵','✦'],count:12,size:16,a0:-170,a1:-10,dist:72,g:90,life:1200,rot:1}},
-  '🤑':{a:'pop',p:{chars:['🪙','💵'],count:10,size:16,a0:-170,a1:-10,dist:70,g:90,life:1100,rot:1}},
-  '💎':{a:'shine',p:{chars:['✨','✦'],count:9,size:13,a0:0,a1:360,dist:64,life:850,rot:1}},
-  '🤩':{a:'shine',p:{chars:['✨'],count:8,size:13,a0:0,a1:360,dist:60,life:800,rot:1}},
+  // ── page 1 😀 ──
   '😂':{a:'shake',p:{chars:['💧'],count:7,size:13,a0:-30,a1:210,dist:55,g:36,life:850}},
   '🤣':{a:'shake',p:{chars:['💧'],count:7,size:13,a0:-30,a1:210,dist:55,g:36,life:850}},
+  '😅':{a:'shake',p:{chars:['💧'],count:5,size:12,a0:-40,a1:220,dist:48,g:40,life:800}},
+  '😭':{a:'shake',p:{chars:['💧'],count:11,size:14,a0:-20,a1:200,dist:60,g:70,life:1000}},
+  '🥺':{a:'heartbeat',p:{chars:['✨','💖'],count:8,size:13,a0:0,a1:360,dist:56,life:850}},
+  '😢':{a:'wobble',p:{chars:['💧'],count:6,size:13,a0:-30,a1:210,dist:50,g:55,life:900}},
+  '😉':{a:'pop',p:'sparkle'},
+  '😏':{a:'pop',p:'sparkle'},
+  '🙄':{a:'tilt',p:{chars:['✦'],count:5,size:11,a0:0,a1:360,dist:44,life:650}},
+  '😳':{a:'zoomout',p:'sparkle'},
+  '🤪':{a:'wobble',p:{chars:['✦','✧'],count:8,size:12,a0:0,a1:360,dist:58,life:800,rot:1}},
+  '😇':{a:'shine',p:{chars:['✨'],count:8,color:'var(--gold)',size:13,a0:-160,a1:-20,dist:58,g:-26,life:900}},
+  '😍':{a:'heartbeat',p:{chars:['❤️','💖'],count:8,size:16,a0:-160,a1:-20,dist:64,g:-30,life:1100}},
+  '🥰':{a:'heartbeat',p:{chars:['💕','💖'],count:9,size:15,a0:-170,a1:-10,dist:62,g:-28,life:1050}},
+  '😘':{a:'heartbeat',p:{chars:['💋','❤️'],count:7,size:15,a0:-150,a1:-30,dist:60,g:-32,life:1000}},
+  '😬':{a:'shiver',p:{chars:['💦'],count:4,size:11,a0:-120,a1:-60,dist:40,g:44,life:700}},
+  '😴':{a:'drop',p:{chars:['💤'],count:5,size:14,a0:-120,a1:-60,dist:52,g:-40,life:1100}},
+  '🤔':{a:'wobble',p:{chars:['✦'],count:5,size:11,a0:0,a1:360,dist:42,life:650}},
+  '👀':{a:'zoomout',p:'sparkle'},
+  '😮':{a:'zoomout',p:{chars:['✦'],count:6,size:12,a0:0,a1:360,dist:50,life:700}},
+  '😱':{a:'shake',p:{chars:['💦'],count:6,size:12,a0:-120,a1:-60,dist:48,g:50,life:780}},
+  '🤯':{a:'tilt',p:'shock'},
+  '😡':{a:'shiver',p:{chars:['💢','🔥'],count:7,size:13,a0:0,a1:360,dist:54,life:800}},
+  '😤':{a:'flex',p:{chars:['💨'],count:6,size:14,a0:-190,a1:10,dist:52,life:750}},
+  '🤢':{a:'wobble',p:{count:8,color:'#7ee37e',size:7,a0:0,a1:360,dist:50,life:750}},
+  '🥴':{a:'wobble',p:{chars:['🌀','✦'],count:6,size:12,a0:0,a1:360,dist:52,life:850,rot:1}},
+  '😰':{a:'shiver',p:{chars:['💦'],count:6,size:12,a0:-130,a1:-50,dist:46,g:48,life:780}},
+  '🙃':{a:'flip',p:'sparkle'},
+  '🤭':{a:'pop',p:'sparkle'},
+  '🫣':{a:'pop',p:{chars:['✦'],count:5,size:11,a0:0,a1:360,dist:44,life:650}},
+  // ── page 2 👏 ──
+  '🎉':{a:'pop',p:'confetti'},
+  '🥳':{a:'pop',p:'confetti'},
+  '🎊':{a:'pop',p:'confetti'},
   '👏':{a:'beat',p:{chars:['✦','✧'],count:9,color:'var(--gold)',size:13,a0:0,a1:360,dist:60,life:750}},
   '🙌':{a:'beat',p:{chars:['✦','✧'],count:9,color:'var(--gold)',size:13,a0:0,a1:360,dist:62,life:780}},
   '💪':{a:'flex',p:{chars:['✦'],count:6,color:'var(--gold)',size:13,a0:0,a1:360,dist:50,life:700}},
-  '😱':{a:'shake',p:{chars:['💦'],count:6,size:12,a0:-120,a1:-60,dist:48,g:50,life:780}},
-  '🤯':{a:'pop',p:'shock'},
-  '🍀':{a:'spin',p:{chars:['✨','🍀'],count:8,color:'#7ee37e',size:13,a0:0,a1:360,dist:62,life:950,rot:1}},
+  '👍':{a:'beat',p:'sparkle'},
+  '👎':{a:'drop',p:{count:7,color:'#9aa0a6',size:6,a0:20,a1:160,dist:48,g:60,life:800}},
+  '🤝':{a:'pop',p:'sparkle'},
+  '👊':{a:'flex',p:'shock'},
+  '🙏':{a:'shine',p:{chars:['✨'],count:9,color:'var(--gold)',size:13,a0:-160,a1:-20,dist:60,g:-24,life:950}},
+  '🤞':{a:'beat',p:{chars:['🍀','✨'],count:8,size:13,a0:0,a1:360,dist:58,life:850,rot:1}},
+  '🫵':{a:'zoomout',p:'sparkle'},
+  '🫡':{a:'pop',p:'sparkle'},
+  '🤫':{a:'pop',p:{chars:['✦'],count:4,size:10,a0:0,a1:360,dist:38,life:600}},
+  '🤦':{a:'drop',p:{chars:['💧'],count:4,size:12,a0:-120,a1:-60,dist:42,g:46,life:700}},
+  '😎':{a:'pop',p:'sparkle'},
+  '🤩':{a:'shine',p:{chars:['✨'],count:8,size:13,a0:0,a1:360,dist:60,life:800,rot:1}},
+  '💤':{a:'drop',p:{chars:['💤'],count:6,size:15,a0:-130,a1:-50,dist:56,g:-44,life:1200}},
+  '⏳':{a:'flip',p:{chars:['✦'],count:6,size:11,a0:0,a1:360,dist:48,life:700}},
+  '🍺':{a:'wobble',p:{chars:['🫧'],count:9,size:12,a0:-140,a1:-40,dist:58,g:-50,life:1100}},
+  '☕':{a:'pop',p:{chars:['💨'],count:5,size:13,a0:-120,a1:-60,dist:50,g:-40,life:1000}},
+  '🤡':{a:'wobble',p:'confetti'},
+  '😈':{a:'tilt',p:{chars:['🔥','✦'],count:8,size:13,a0:0,a1:360,dist:58,life:850,rot:1}},
+  '💣':{a:'drop',p:'boom'},
+  '🚀':{a:'launch',p:{chars:['🔥','✨'],count:10,size:13,a0:60,a1:120,dist:80,g:60,life:900}},
+  '⚡':{a:'zoomout',p:{chars:['⚡','✦'],count:8,size:14,a0:0,a1:360,dist:66,life:750,rot:1}},
+  '🫠':{a:'wobble',p:{chars:['💧'],count:6,size:12,a0:40,a1:140,dist:44,g:70,life:950}},
+  '🥶':{a:'shiver',p:{chars:['❄️','🧊'],count:8,size:13,a0:0,a1:360,dist:56,life:900,rot:1}},
+  '🥵':{a:'fire',p:{chars:['🔥','💦'],count:8,size:13,a0:-160,a1:-20,dist:60,g:-20,life:900}},
+  // ── page 3 ♠️ ──
+  '💰':{a:'pop',p:{chars:['🪙','💵','✦'],count:12,size:16,a0:-170,a1:-10,dist:72,g:90,life:1200,rot:1}},
+  '🤑':{a:'pop',p:{chars:['🪙','💵'],count:10,size:16,a0:-170,a1:-10,dist:70,g:90,life:1100,rot:1}},
+  '💵':{a:'drop',p:{chars:['💵','🪙'],count:10,size:15,a0:-170,a1:-10,dist:70,g:85,life:1150,rot:1}},
+  '💎':{a:'shine',p:{chars:['✨','✦'],count:9,size:13,a0:0,a1:360,dist:64,life:850,rot:1}},
   '🎰':{a:'spin',p:{chars:['✨','🪙'],count:9,size:14,a0:0,a1:360,dist:66,life:950,rot:1}},
+  '🍀':{a:'spin',p:{chars:['✨','🍀'],count:8,color:'#7ee37e',size:13,a0:0,a1:360,dist:62,life:950,rot:1}},
+  '🃏':{a:'flip',p:'sparkle'},
+  '♠️':{a:'flip',p:{chars:['♠️','♥️','♦️','♣️'],count:8,size:14,a0:0,a1:360,dist:62,life:900,rot:1}},
+  '🎲':{a:'spin',p:{chars:['✦','✧'],count:8,size:12,a0:0,a1:360,dist:58,life:800,rot:1}},
+  '🎯':{a:'zoomout',p:'sparkle'},
+  '🏆':{a:'shine',p:{chars:['⭐','✨'],count:10,color:'var(--gold)',size:14,a0:0,a1:360,dist:68,life:1000,rot:1}},
+  '🥇':{a:'shine',p:{chars:['✨'],count:8,color:'var(--gold)',size:13,a0:0,a1:360,dist:60,life:900}},
+  '🥈':{a:'shine',p:{count:9,color:'#c9ced6',size:7,a0:0,a1:360,dist:58,life:850}},
+  '🥉':{a:'shine',p:{count:9,color:'#d09a5b',size:7,a0:0,a1:360,dist:58,life:850}},
   '👑':{a:'shine',p:{chars:['✨','⭐'],count:10,color:'var(--gold)',size:14,a0:0,a1:360,dist:70,life:1000,rot:1}},
-  '😎':{a:'pop',p:'sparkle'}, '👍':{a:'beat',p:'sparkle'}, '🫡':{a:'pop',p:'sparkle'},
-  '😍':{a:'beat',p:{chars:['❤️','💖'],count:8,size:16,a0:-160,a1:-20,dist:64,g:-30,life:1100}}
+  '🔥':{a:'fire',p:{chars:['🔥','✦'],count:9,size:14,a0:-150,a1:-30,dist:70,g:-24,life:1000,rot:1}},
+  '💀':{a:'shiver',p:{count:8,color:'#9aa0a6',size:6,a0:0,a1:360,dist:52,life:800}},
+  '🦈':{a:'pop',p:{chars:['💦','🌊'],count:8,size:14,a0:-170,a1:-10,dist:62,g:40,life:900}},
+  '🐟':{a:'wobble',p:{chars:['🫧'],count:9,size:12,a0:-140,a1:-40,dist:58,g:-52,life:1150}},
+  '🐔':{a:'shake',p:{chars:['🪶'],count:8,size:14,a0:-30,a1:210,dist:56,g:60,life:1200,rot:1}},
+  '🫏':{a:'wobble',p:{chars:['✦'],count:6,size:11,a0:0,a1:360,dist:48,life:750}},
+  '🎩':{a:'flip',p:{chars:['✨'],count:7,size:12,a0:0,a1:360,dist:54,life:800}},
+  '🧊':{a:'shiver',p:{chars:['❄️'],count:7,size:12,a0:0,a1:360,dist:52,life:850}},
+  '🌪️':{a:'tilt',p:{chars:['🍃','💨'],count:10,size:13,a0:0,a1:360,dist:74,life:950,rot:1}},
+  '🧨':{a:'shake',p:'shock'},
+  '📈':{a:'launch',p:{count:8,color:'#7ee37e',size:6,a0:-120,a1:-60,dist:62,g:-30,life:850}},
+  '📉':{a:'drop',p:{count:8,color:'#e05252',size:6,a0:60,a1:120,dist:58,g:70,life:850}},
+  '🚨':{a:'zoomout',p:{count:10,color:'#e05252',size:7,a0:0,a1:360,dist:64,life:800}},
+  '💯':{a:'zoomout',p:{chars:['✦','💯'],count:6,size:13,a0:0,a1:360,dist:56,life:800}},
+  '⭐':{a:'shine',p:{chars:['⭐','✨'],count:9,size:13,a0:0,a1:360,dist:62,life:900,rot:1}}
 };
 function _rfxDefault(){ return { a:'pop', p:'sparkle' }; }
 
@@ -68,6 +159,18 @@ function _rfxDefault(){ return { a:'pop', p:'sparkle' }; }
 function _rfxSpawn(c, spec){
   if (spec === 'sparkle') spec = {chars:['✦','✧'],count:7,color:'var(--gold)',size:12,a0:0,a1:360,dist:54,life:700};
   if (spec === 'confetti'){ _rfxConfetti(c); return; }
+  if (spec === 'boom'){
+    // 💣 (demande Kai 2026-08-28) : la bombe tombe (anim 'drop'), PUIS explose
+    // à l'atterrissage (~420 ms) — double onde de choc orange + gerbe 💥🔥✦.
+    setTimeout(function(){
+      if (!c.parentNode) return;
+      var r1 = document.createElement('div'); r1.className = 'rfx-ring rfx-ring-boom'; c.appendChild(r1);
+      var r2 = document.createElement('div'); r2.className = 'rfx-ring rfx-ring-boom'; r2.style.animationDelay = '0.12s'; c.appendChild(r2);
+      setTimeout(function(){ r1.remove(); r2.remove(); }, 1150);
+      _rfxSpawn(c, {chars:['💥','🔥','✦'],count:14,size:18,a0:0,a1:360,dist:95,life:950,rot:1});
+    }, 420);
+    return;
+  }
   if (spec === 'shock'){
     var r = document.createElement('div'); r.className = 'rfx-ring';
     c.appendChild(r); setTimeout(function(){ r.remove(); }, 800);
@@ -175,7 +278,7 @@ function showTableCenterReaction(emoji) {
 
 // Mettre à jour les compteurs affichés sur les boutons
 function updateReactionCount(emoji) {
-  var EMOJIS = ["🎉", "🥳", "👏", "🙌", "💪", "🤣", "😂", "😬", "🤦", "😴", "👍", "😎", "🤩", "👀", "🤔", "😱", "😡", "😤", "🔥", "😮", "💰", "💎", "🎰", "🍀", "🃏", "💀", "🤑", "🫵", "🫡", "🤫"];
+  var EMOJIS = REACT_EMOJIS;
   var idx = EMOJIS.indexOf(emoji);
   if (idx < 0) return;
   var count = _reactionCounts[emoji] || 0;
@@ -241,8 +344,8 @@ function handleIncomingReaction(pid, emoji, via) {
 
 // Reflete l'etat "couper les reactions" : bouton barre + grille grisee/inerte.
 function _applyReactMuteUI() {
-  var grid = document.querySelector('#g-reaction-panel .react-grid');
-  if (grid) grid.classList.toggle('react-muted', _reactMuted);
+  var grids = document.querySelectorAll('#g-reaction-panel .react-grid');
+  for (var gi = 0; gi < grids.length; gi++) grids[gi].classList.toggle('react-muted', _reactMuted);
   var btn = document.getElementById('react-mute-toggle');
   if (btn) {
     btn.classList.toggle('muted', _reactMuted);
@@ -262,7 +365,7 @@ function setReactMuted(on) {
 window.setReactMuted = setReactMuted;
 
 // ─── Exports ES + alias legacy ───────────────────────────────────────────
-export { handleIncomingReaction, setReactMuted, playReactionFx, showFloatingReaction };
+export { handleIncomingReaction, setReactMuted, playReactionFx, showFloatingReaction, REACT_EMOJIS, REACTION_FX };
 if (typeof window !== 'undefined') {
   // setReactMuted est déjà attaché par le bloc lui-même (verbatim).
   window.handleIncomingReaction = handleIncomingReaction;
@@ -278,5 +381,6 @@ if (typeof window !== 'undefined') {
     get() { return _reactPinned; },
     set(v) { _reactPinned = v; },
   });
-  window.Reactions = { handleIncomingReaction, setReactMuted, playReactionFx };
+  window.REACT_EMOJIS = REACT_EMOJIS;
+  window.Reactions = { handleIncomingReaction, setReactMuted, playReactionFx, EMOJIS: REACT_EMOJIS };
 }

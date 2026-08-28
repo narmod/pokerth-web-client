@@ -6501,6 +6501,10 @@ const App = (() => {
       _applyReactPinUI();
     },
 
+    // Pagination du panneau réactions : onglet direct (😀/👏/♠️) ou flèches ‹ ›.
+    reactPage(i) { setReactionPage(i); },
+    reactPageStep(d) { setReactionPage(_reactPageCurrent() + (d || 0)); },
+
     sendGameChat() {
       var input = document.getElementById('g-chat-in');
       if (!input) return;
@@ -9888,7 +9892,7 @@ function toggleMusicPanel() {
 window.toggleMusicPanel = toggleMusicPanel;
 
 // ── Grille de réactions auto-adaptative (fenêtre flottante) ──
-// Les 30 émojis restent TOUS visibles : à chaque redimensionnement on choisit
+// Les 30 émojis de la PAGE ACTIVE restent tous visibles : à chaque redimensionnement on choisit
 // le découpage colonnes × lignes qui maximise la taille de case carrée, puis
 // on borne la case entre 32 px (en dessous → la grille défile, très petites
 // fenêtres) et 84 px (au-delà → cases plafonnées et grille centrée). La taille
@@ -9896,13 +9900,19 @@ window.toggleMusicPanel = toggleMusicPanel;
 function _fitReactGrid(panel){
   panel = panel || document.getElementById('g-reaction-panel');
   if (!panel) return;
-  var grid = panel.querySelector('.react-grid');
+  // 3 pages depuis 2026-08-28 : on ne mesure que la grille VISIBLE (page active).
+  var grid = panel.querySelector('.react-grid:not([hidden])') || panel.querySelector('.react-grid');
   if (!grid) return;
   if (!panel.classList.contains('floating-win')){
-    // Retour bandeau (resetWindows) : rendre la main aux règles CSS.
-    grid.style.gridTemplateColumns=''; grid.style.gridAutoRows='';
-    grid.style.gap=''; grid.style.justifyContent=''; grid.style.alignContent='';
-    grid.style.removeProperty('--react-cell');
+    // Retour bandeau (resetWindows) : rendre la main aux règles CSS — sur
+    // TOUTES les pages, pas seulement la page active.
+    var _rgs = panel.querySelectorAll('.react-grid');
+    for (var _ri = 0; _ri < _rgs.length; _ri++){
+      var _rg = _rgs[_ri];
+      _rg.style.gridTemplateColumns=''; _rg.style.gridAutoRows='';
+      _rg.style.gap=''; _rg.style.justifyContent=''; _rg.style.alignContent='';
+      _rg.style.removeProperty('--react-cell');
+    }
     return;
   }
   if (panel.style.display === 'none') return;
@@ -9928,6 +9938,32 @@ function _fitReactGrid(panel){
   grid.style.setProperty('--react-cell', cell + 'px');
 }
 
+// ── Pagination du panneau réactions (3 pages thématiques × 30, 2026-08-28) ──
+// Onglets-icônes 😀/👏/♠️ + flèches ‹ › ; chaque page est une .react-grid,
+// seule la page active est visible ([hidden] sur les autres) et _fitReactGrid
+// ne mesure qu'elle. Dernière page mémorisée (pth_react_page).
+function setReactionPage(i){
+  var panel = document.getElementById('g-reaction-panel');
+  if (!panel) return;
+  var grids = panel.querySelectorAll('.react-grid');
+  if (!grids.length) return;
+  var n = grids.length;
+  i = ((i % n) + n) % n;                       // les flèches bouclent (page 3 → 1)
+  for (var k = 0; k < n; k++){
+    if (k === i) grids[k].removeAttribute('hidden');
+    else grids[k].setAttribute('hidden', '');
+  }
+  var tabs = panel.querySelectorAll('.react-pg-tab');
+  for (var t = 0; t < tabs.length; t++) tabs[t].classList.toggle('active', t === i);
+  try { localStorage.setItem('pth_react_page', String(i)); } catch (e) {}
+  _fitReactGrid(panel);
+}
+function _reactPageCurrent(){
+  var v = 0;
+  try { v = parseInt(localStorage.getItem('pth_react_page') || '0', 10) || 0; } catch (e) {}
+  return v;
+}
+
 function toggleReactionPanel() {
   // Réactions actives partout, y compris pokerth.net : sendReaction() relaie
   // via la commande /emoji dans le chat de partie (interop web <-> Qt/QML).
@@ -9942,14 +9978,14 @@ function toggleReactionPanel() {
   panel.style.display = open ? 'flex' : 'none';
   if (open) { _applyReactMuteUI(); try { _applyReactPinUI(); } catch (e) {} }
   if (open) {
-    // minW/minH relevés : au minimum de fenêtre, les 30 émojis tiennent encore
+    // minW/minH relevés : au minimum de fenêtre, les 30 émojis de la page active tiennent encore
     // à la borne basse de case (32 px) sans défilement.
     _openFloatingNearBtn(panel, btn, { key:'pth_winpos_react', handle: panel.querySelector('.react-panel-title'), resizable:true, minW:280, minH:230, maxW:760, maxH:520, defW:330, defH:340 }, 'left');
     if (!panel._reactFitRO && typeof ResizeObserver !== 'undefined'){
       panel._reactFitRO = new ResizeObserver(function(){ _fitReactGrid(panel); });
       panel._reactFitRO.observe(panel);
     }
-    _fitReactGrid(panel);
+    setReactionPage(_reactPageCurrent());  // restaure la page + _fitReactGrid
   }
   if (btn) {
     btn.style.background  = open ? 'rgba(var(--gold-rgb),0.2)' : '';
@@ -10754,7 +10790,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.7-web.150'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.7-web.151'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

@@ -15,6 +15,21 @@ release. Granular, per-build changes for this line are on the
 [GitHub Releases](https://github.com/narmod/pokerth-web-client/releases) page;
 highlights below.
 
+### Added
+- **90 emoji reactions across three themed pages** (`web.151`). The reaction
+  picker grows from 30 to 90 emojis, split into three pages of 30 — Emotions,
+  Mood & gestures, Poker & luck — navigated with `‹ ›` arrows and three
+  icon tabs (pictograms only: no new i18n keys). The last page is persisted
+  (`pth_react_page`); the auto-fitting grid, mute and pin behaviours apply
+  per page. Eight new emoji choreographies join the seven existing ones
+  (launch, drop, wobble, flip, zoomout, heartbeat, shiver, tilt — 15 total)
+  plus a `boom` particle preset: the 💣 requested by sp0ck drops onto the
+  table and explodes with a double orange shockwave. The wire protocol is
+  unchanged (`/emoji <char>`); `docs/REACTIONS_FX.md` documents every
+  animation and per-emoji effect for the QML port. Catalog integrity
+  (order, FX coverage, CSS keyframes) is guarded by
+  `scripts/test-reactions-catalog.mjs`.
+
 ### Fixed
 - **The client no longer defeats the server-side AFK kick** (`web.132`).
   `renderMyTurnActions()` sent a `ResetTimeoutMessage` on every render, and
