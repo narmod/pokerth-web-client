@@ -9995,6 +9995,7 @@ function _fitReactGrid(panel){
       var _rg = _rgs[_ri];
       _rg.style.gridTemplateColumns=''; _rg.style.gridAutoRows='';
       _rg.style.gap=''; _rg.style.justifyContent=''; _rg.style.alignContent='';
+      _rg.style.padding='';
       _rg.style.removeProperty('--react-cell');
     }
     return;
@@ -10005,20 +10006,31 @@ function _fitReactGrid(panel){
   var GAP = 4, MIN = 32, MAX = 84;
   var W = grid.clientWidth, H = grid.clientHeight;
   if (W < MIN || H < MIN) return;
+  // PAD : marge interne réservée au zoom de survol (scale 1.2 → +10 % de case
+  //   de chaque côté). Sans elle, les boutons de bord débordent la zone
+  //   overflow:auto au survol et une barre de défilement clignote
+  //   (bug constaté 2026-08-28). Intégrée en forme close au calcul :
+  //   cell*cols + GAP*(cols-1) + 2*(0.12*cell) = W  ⇔
+  //   cell = (W - GAP*(cols-1)) / (cols + 0.24) — idem verticalement.
+  //   clientWidth inclut le padding que NOUS posons : la mesure reste stable
+  //   d'un appel à l'autre (la taille de la grille est fixée par le flex).
+  var PADR = 0.12;
   var bestCols = 1, bestCell = 0;
   for (var cols = 1; cols <= n; cols++){
     var rows = Math.ceil(n / cols);
-    var cell = Math.min((W - GAP*(cols-1))/cols, (H - GAP*(rows-1))/rows);
+    var cell = Math.min((W - GAP*(cols-1))/(cols + 2*PADR), (H - GAP*(rows-1))/(rows + 2*PADR));
     if (cell > bestCell){ bestCell = cell; bestCols = cols; }
   }
   var cell = Math.floor(Math.max(MIN, Math.min(MAX, bestCell)));
   var rows = Math.ceil(n / bestCols);
+  var pad = Math.ceil(cell * PADR);
   grid.style.gridTemplateColumns = 'repeat(' + bestCols + ', ' + cell + 'px)';
   grid.style.gridAutoRows = cell + 'px';
   grid.style.gap = GAP + 'px';
+  grid.style.padding = pad + 'px';
   grid.style.justifyContent = 'center';
   // Centré verticalement quand tout tient ; ancré en haut si ça défile.
-  grid.style.alignContent = (rows*(cell+GAP)-GAP > H) ? 'start' : 'center';
+  grid.style.alignContent = (rows*(cell+GAP)-GAP > H - 2*pad) ? 'start' : 'center';
   grid.style.setProperty('--react-cell', cell + 'px');
 }
 
@@ -10912,7 +10924,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.7-web.163'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.7-web.164'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

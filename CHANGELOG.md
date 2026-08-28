@@ -94,7 +94,11 @@ highlights below.
   with a dedicated 16th animation `recoil` (double kick-back) and a new
   `gunshot` particle preset — muzzle flash, tracer bullet flying left
   (the glyph points left, and renders as a toy water pistol on all major
-  platforms since 2018), spark trail and ejected casing. The last page is persisted
+  platforms since 2018), spark trail and ejected casing. The
+  auto-fit maths now reserve a hover margin inside the scroll area
+  (`web.164`): the 1.2× hover zoom of edge buttons was extending the
+  grid's scrollable overflow, flashing a scrollbar; cells are solved in
+  closed form with a 12 %-of-cell padding on each side. The last page is persisted
   (`pth_react_page`); the auto-fitting grid, mute and pin behaviours apply
   per page. Eight new emoji choreographies join the seven existing ones
   (launch, drop, wobble, flip, zoomout, heartbeat, shiver, tilt — 15 total)
