@@ -5114,7 +5114,7 @@ body:not(.in-game) .my-zone {
    iOS). Le pave prend la place des rangees du milieu et des actions — meme
    hauteur totale, donc AUCUN reflow de la table pendant la saisie. */
 .bet-row .kp-open-btn {
-  flex: 0 0 auto; width: 34px; height: 34px; padding: 0;
+  flex: 0 0 auto; width: 34px; align-self: stretch; height: auto; min-height: 0; padding: 0;
   display: flex; align-items: center; justify-content: center;
   background: var(--field-bg); border: 1px solid var(--btn-raise-bg, #4CAF50);
   border-radius: 7px; color: var(--btn-raise-bg, #4CAF50); cursor: pointer;
@@ -5123,6 +5123,28 @@ body:not(.in-game) .my-zone {
 .bet-row .kp-open-btn:disabled { opacity: 0.3; cursor: not-allowed; filter: grayscale(0.6); }
 .action-grid.kp-open > .mid-row,
 .action-grid.kp-open > .act-buttons-row { display: none; }
+/* ── Pave FLOTTANT (pointeur fin / desktop) ────────────────────────────────
+   La barre d'action reste entierement visible et en place : le pave s'ouvre
+   en surimpression juste au-dessus du panneau, compact (touches 34 px), avec
+   un court fondu. Clic en dehors = Annuler (gere en JS). Le mode tactile
+   (.kp-open) garde le remplacement in-place, seul a eviter le clavier OS. */
+.action-grid.kp-open-float { position: relative; }
+.action-grid.kp-open-float > .bet-keypad.kp-float {
+  position: absolute; left: 0; right: 0; bottom: calc(100% + 8px);
+  z-index: 40;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.5);
+  transform-origin: bottom center;
+  animation: kpFloatIn 0.14s ease-out;
+}
+.action-grid.kp-open-float > .bet-keypad.kp-float .kp-grid button { height: 34px; min-height: 34px; }
+.action-grid.kp-open-float > .bet-keypad.kp-float .kp-foot .btn-action { min-height: 34px; padding: 6px 10px; }
+@keyframes kpFloatIn {
+  from { opacity: 0; transform: translateY(6px) scale(0.98); }
+  to   { opacity: 1; transform: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .action-grid.kp-open-float > .bet-keypad.kp-float { animation: none; }
+}
 /* Palette : celle de la barre d'action, a l'identique.
    · touches de saisie  = celle du champ de mise (.raise-amt-field) :
      fond --field-bg, bord et texte var(--btn-raise-bg, #4CAF50)

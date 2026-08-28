@@ -15,6 +15,18 @@ release. Granular, per-build changes for this line are on the
 [GitHub Releases](https://github.com/narmod/pokerth-web-client/releases) page;
 highlights below.
 
+### Changed
+- **Floating bet keypad on desktop** (`web.159`). On fine-pointer devices the
+  web-only bet keypad no longer swaps out the middle and action rows: it now
+  opens as a compact overlay (34 px keys) floating just above the action
+  panel, with a short fade-in, so the whole bar — Fold/Call/Raise, slider,
+  quick bets — stays visible and active and the game view does not move at
+  all. A click anywhere outside the keypad cancels it; the click then reaches
+  the bar normally. Touch devices keep the in-place replacement, which
+  remains the only way to avoid the OS keyboard and table reflow. The small
+  keypad-open button also now stretches to the exact height of the bet amount
+  field at every bar scale, instead of a fixed 34 px.
+
 ### Added
 - **Bet display setting — bet inside the player box** (`web.158`). Parity with
   upstream QML commit `414a89c` (`config/SeatStyle.qml` + `PlayerBetStrip.qml`):

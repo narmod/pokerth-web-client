@@ -49,6 +49,8 @@ let _min   = 0;
 let _max   = 0;
 let _keyH  = null;   // physical-keyboard handler while the keypad is open
 let _open  = false;  // guard: close() must be a no-op when nothing is open
+let _float = false;  // fine-pointer mode: keypad floats OVER the bar, rows stay
+let _outH  = null;   // outside-click handler while floating
 
 function _actionGrid() { return document.querySelector('#g-actions .action-grid'); }
 function _field()      { return document.getElementById('raise-amt'); }
@@ -186,7 +188,30 @@ function openBetKeypad() {
   const row = grid.querySelector('.bet-row');
   if (!row) return;
   row.insertAdjacentHTML('afterend', _html(_min, _max));
-  grid.classList.add('kp-open');
+  // Pointeur fin (desktop) : le pave FLOTTE au-dessus de la barre, qui reste
+  // entierement visible et active — la vue de jeu ne bouge pas d'un pixel.
+  // Pointeur grossier : remplacement in-place inchange (pas de clavier OS,
+  // pas de reflow de la table).
+  _float = !isCoarsePointer();
+  if (_float) {
+    const el = document.getElementById('bet-keypad');
+    if (el) el.classList.add('kp-float');
+    grid.classList.add('kp-open-float');
+    // Un clic hors du pave = Annuler. pointerdown en capture : le pave se
+    // ferme AVANT que le clic n'atteigne un bouton de la barre, qui garde
+    // donc son comportement normal dans la foulee.
+    _outH = function (e) {
+      const kp = document.getElementById('bet-keypad');
+      if (!kp) { closeBetKeypad(); return; }
+      const t2 = e.target;
+      if (kp.contains(t2)) return;
+      if (t2 && t2.closest && t2.closest('.kp-open-btn')) return;
+      closeBetKeypad();
+    };
+    document.addEventListener('pointerdown', _outH, true);
+  } else {
+    grid.classList.add('kp-open');
+  }
   try { fld.blur(); } catch (e) {}
   const kg = document.getElementById('kp-grid');
   if (kg) kg.addEventListener('click', _onGridClick);
@@ -207,11 +232,13 @@ function closeBetKeypad() {
   const el = document.getElementById('bet-keypad');
   if (el && el.parentNode) el.parentNode.removeChild(el);
   const grid = _actionGrid();
-  if (grid) grid.classList.remove('kp-open');
+  if (grid) { grid.classList.remove('kp-open'); grid.classList.remove('kp-open-float'); }
   // The grid may already have been wiped by a re-render; the class lives on
   // the removed node in that case, so nothing else to clean there.
-  const anyGrid = document.querySelector('#g-actions .kp-open');
-  if (anyGrid) anyGrid.classList.remove('kp-open');
+  const anyGrid = document.querySelector('#g-actions .kp-open, #g-actions .kp-open-float');
+  if (anyGrid) { anyGrid.classList.remove('kp-open'); anyGrid.classList.remove('kp-open-float'); }
+  if (_outH) { document.removeEventListener('pointerdown', _outH, true); _outH = null; }
+  _float = false;
   if (_keyH) { document.removeEventListener('keydown', _keyH, true); _keyH = null; }
   if (el) { try { if (window.updateBottomLayout) window.updateBottomLayout(); } catch (e) {} }
 }
