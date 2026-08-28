@@ -19,7 +19,10 @@ highlights below.
 - **90 emoji reactions across three themed pages** (`web.151`). The reaction
   picker grows from 30 to 90 emojis, split into three pages of 30 — Emotions,
   Mood & gestures, Poker & luck — navigated with `‹ ›` arrows and three
-  icon tabs (pictograms only: no new i18n keys). The last page is persisted
+  numbered tabs (no new i18n keys; `web.152` — numbers instead of icon
+  tabs, taller arrows, and hidden pages are now really hidden:
+  `.react-grid { display:grid }` was overriding the `[hidden]` UA style,
+  showing all three pages at once). The last page is persisted
   (`pth_react_page`); the auto-fitting grid, mute and pin behaviours apply
   per page. Eight new emoji choreographies join the seven existing ones
   (launch, drop, wobble, flip, zoomout, heartbeat, shiver, tilt — 15 total)

@@ -3405,19 +3405,24 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
 }
 /* Grille grisee + inerte quand les reactions sont coupees */
 /* ── Pagination du panneau réactions (3 pages thématiques, 2026-08-28) ──
-   Flèches ‹ › + onglets-icônes 😀/👏/♠️ (pictogrammes : aucune clé i18n).
-   L'onglet actif est doré, comme les boutons de barre actifs. */
+   Flèches ‹ › + onglets numérotés 1/2/3 (le thème est dans le title —
+   aucune clé i18n). L'onglet actif est doré, comme les boutons actifs.
+   IMPORTANT : .react-grid { display:grid } écrase le display:none de
+   l'attribut [hidden] (style UA) → on le rétablit ici, sinon TOUTES les
+   pages s'affichent en même temps (bug constaté 2026-08-28). */
+.react-grid[hidden] { display: none !important; }
 .react-pager {
-  display: flex; align-items: center; justify-content: center;
+  display: flex; align-items: stretch; justify-content: center;
   gap: 6px; padding: 0 8px 8px; flex-shrink: 0;
 }
 .react-pg-arrow, .react-pg-tab {
   background: var(--inset); border: 1px solid var(--border); border-radius: 6px;
   color: var(--text-dim); cursor: pointer; line-height: 1;
-  font-size: var(--fs-md); padding: 4px 10px;
+  font-size: var(--fs-md); padding: 6px 14px; min-height: 30px;
+  display: inline-flex; align-items: center; justify-content: center;
   transition: background 0.15s, border-color 0.15s, color 0.15s;
 }
-.react-pg-arrow { font-size: var(--fs-lg); padding: 2px 10px 4px; }
+.react-pg-arrow { font-size: var(--fs-lg); padding: 6px 16px; }
 .react-pg-arrow:hover, .react-pg-tab:hover { border-color: var(--gold-dim); color: var(--gold); }
 .react-pg-tab.active { background: rgba(var(--gold-rgb),0.18); border-color: var(--gold-dim); color: var(--gold); }
 .react-grid.react-muted { filter: grayscale(1); opacity: 0.4; }

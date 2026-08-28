@@ -6501,7 +6501,7 @@ const App = (() => {
       _applyReactPinUI();
     },
 
-    // Pagination du panneau réactions : onglet direct (😀/👏/♠️) ou flèches ‹ ›.
+    // Pagination du panneau réactions : onglet direct (1/2/3) ou flèches ‹ ›.
     reactPage(i) { setReactionPage(i); },
     reactPageStep(d) { setReactionPage(_reactPageCurrent() + (d || 0)); },
 
@@ -9939,7 +9939,7 @@ function _fitReactGrid(panel){
 }
 
 // ── Pagination du panneau réactions (3 pages thématiques × 30, 2026-08-28) ──
-// Onglets-icônes 😀/👏/♠️ + flèches ‹ › ; chaque page est une .react-grid,
+// Onglets numérotés 1/2/3 (thème dans le title) + flèches ‹ › ; chaque page est une .react-grid,
 // seule la page active est visible ([hidden] sur les autres) et _fitReactGrid
 // ne mesure qu'elle. Dernière page mémorisée (pth_react_page).
 function setReactionPage(i){
@@ -10790,7 +10790,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.7-web.151'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.7-web.152'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
