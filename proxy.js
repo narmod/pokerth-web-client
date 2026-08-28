@@ -8035,8 +8035,62 @@ function handleTranslate(req, res) {
       res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store', 'X-Translate-Cache': 'miss' });
       res.end(body);
     }).catch(function (err) {
-      res.writeHead(502, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' });
-      res.end(JSON.stringify({ ok: false, error: 'relay_failed', detail: String((err && err.message) || err) }));
+      // Parity with upstream 69ec0824 ("translation fallback hardening"):
+      // Google throttles the gtx endpoint per IP (HTTP 429) and this relay
+      // concentrates every player on the server's single IP, so it is the
+      // FIRST address to get blocked. Second try via MyMemory, with the
+      // same shape ({ok,text,src}) so the client cannot tell the services
+      // apart. Autodetect: a hardcoded "en" would translate every
+      // non-English message as English (the pre-69ec0824 upstream bug).
+      // MyMemory caps a request at ~500 bytes — longer texts (forum posts)
+      // fail over to the plain error below.
+      if (q.length > 480) {
+        res.writeHead(502, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' });
+        res.end(JSON.stringify({ ok: false, error: 'relay_failed', detail: String((err && err.message) || err) }));
+        return;
+      }
+      const mmUrl = 'https://api.mymemory.translated.net/get?q=' + encodeURIComponent(q) +
+        '&langpair=' + encodeURIComponent('Autodetect|' + tl);
+      rankingFetch(mmUrl).then(function (r) {
+        if (!r.ok) throw new Error('mm_' + r.status);
+        return r.json();
+      }).then(function (d) {
+        // responseStatus MUST be checked: on errors (invalid pair, free
+        // daily quota exhausted) MyMemory answers HTTP 200 with the warning
+        // IN UPPERCASE inside translatedText — unchecked, that warning
+        // would be served as the "translation". The field comes sometimes
+        // as a number (200), sometimes as a string ("403").
+        let status = 0, out = '', det = '';
+        if (d) {
+          status = parseInt(d.responseStatus, 10) || 0;
+          if (d.responseData) {
+            out = String(d.responseData.translatedText || '');
+            det = String(d.responseData.detectedLanguage || '');
+          }
+        }
+        if (status !== 200) {
+          // source == target: 403 "PLEASE SELECT TWO DISTINCT LANGUAGES" —
+          // the message already is in the client's language; hand the
+          // original back with src = target, exactly what gtx does.
+          if (/DISTINCT LANGUAGES/i.test(out)) return { text: q, src: tl };
+          throw new Error('mm_status_' + status);
+        }
+        if (!out.trim()) throw new Error('mm_empty');
+        return { text: out, src: det ? det.toLowerCase() : '' };
+      }).then(function (res2) {
+        const body = JSON.stringify({ ok: true, text: res2.text, src: res2.src });
+        if (TRANSLATE_CACHE.size >= TRANSLATE_CACHE_MAX) {
+          const oldest = TRANSLATE_CACHE.keys().next();
+          if (!oldest.done) TRANSLATE_CACHE.delete(oldest.value);
+        }
+        TRANSLATE_CACHE.set(key, { at: Date.now(), body: body });
+        res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store', 'X-Translate-Cache': 'miss' });
+        res.end(body);
+      }).catch(function (err2) {
+        res.writeHead(502, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' });
+        res.end(JSON.stringify({ ok: false, error: 'relay_failed',
+          detail: String((err && err.message) || err) + ' / ' + String((err2 && err2.message) || err2) }));
+      });
     });
   });
 }

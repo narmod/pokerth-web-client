@@ -16,6 +16,17 @@ release. Granular, per-build changes for this line are on the
 highlights below.
 
 ### Changed
+- **Translation fallback hardening** (`web.163`). Parity with upstream commit
+  `69ec0824` ("qml/widget: translation fallback hardening"): Google throttles
+  the gtx endpoint per IP (HTTP 429, VPN users first), so the chain is now
+  gtx direct → MyMemory direct (player's IP) → server relay, and the relay
+  itself falls back gtx → MyMemory (the server's single shared IP is the
+  first to get blocked). MyMemory is queried as `Autodetect|target`, its
+  `responseStatus` is checked (it answers HTTP 200 with an UPPERCASE warning
+  in `translatedText` on quota/pair errors), and the source==target 403 hands
+  the original back like gtx does. When every service fails, a toast
+  (existing `chatTranslateFailed` key, throttled 60 s) replaces the silent
+  hourglass. New suite `scripts/test-translate-fallback.mjs`.
 - **Per-account private messages** (`web.161`). Parity with upstream commit
   `9bccf3a` ("qml: pm dialog persistence fine-tuning"): the PM history now
   belongs to the logged-in nickname instead of the whole browser profile.

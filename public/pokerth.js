@@ -1903,6 +1903,13 @@ window._gtxTranslate = function (text, target) {
     if (!r.ok) throw new Error('http ' + r.status);
     return r.json();
   }).then(take).catch(function () {
+    // Parite QML 69ec0824 (« translation fallback hardening ») : Google
+    // drossele l'endpoint gtx PAR IP (HTTP 429) — vu chez les joueurs sous
+    // VPN. Deuxieme essai depuis l'IP DU JOUEUR via MyMemory, avant de
+    // rabattre tout le monde sur l'IP du serveur (le relais), qui concentre
+    // les appels et se fait throttler d'autant plus vite.
+    return window._mmTranslate(q, tl);
+  }).catch(function () {
     return fetch('/api/translate', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -1914,6 +1921,45 @@ window._gtxTranslate = function (text, target) {
       if (!d || !d.ok || !String(d.text || '').trim()) throw new Error('relay_empty');
       return { text: String(d.text), src: String(d.src || '') };
     });
+  });
+};
+// Repli MyMemory (parite QML 69ec0824, chattranslatorcore.cpp) : meme appel
+// que startFallback upstream — « Autodetect|cible » (un « en » code en dur
+// traduisait tout le non-anglais comme de l'anglais et privait les clients
+// anglais de TOUT repli). responseStatus DOIT etre verifie : en erreur
+// (paire invalide, quota gratuit epuise) MyMemory repond HTTP 200 avec
+// l'avertissement EN MAJUSCULES dans translatedText — sans ce test, cet
+// avertissement s'affichait comme « traduction ». Le champ arrive tantot en
+// nombre (200), tantot en chaine (« 403 »), d'ou le parseInt. Cas special
+// source == cible : 403 « PLEASE SELECT TWO DISTINCT LANGUAGES » — le
+// message est deja dans la langue du client, on rend l'original avec
+// src = cible (le globe affichera « deja dans ta langue »), comme gtx.
+// Limite MyMemory : ~500 octets par requete — au-dela (posts de forum), on
+// passe directement au relais.
+window._mmTranslate = function (text, target) {
+  var q = String(text || '');
+  var tl = String(target || 'en');
+  if (!q.trim() || q.length > 480) return Promise.reject(new Error('mm_skip'));
+  var u = 'https://api.mymemory.translated.net/get?q=' + encodeURIComponent(q) +
+    '&langpair=' + encodeURIComponent('Autodetect|' + tl);
+  return fetch(u).then(function (r) {
+    if (!r.ok) throw new Error('mm_http ' + r.status);
+    return r.json();
+  }).then(function (d) {
+    var status = 0, out = '', det = '';
+    if (d) {
+      status = parseInt(d.responseStatus, 10) || 0;
+      if (d.responseData) {
+        out = String(d.responseData.translatedText || '');
+        det = String(d.responseData.detectedLanguage || '');
+      }
+    }
+    if (status !== 200) {
+      if (/DISTINCT LANGUAGES/i.test(out)) return { text: q, src: tl };
+      throw new Error('mm_status ' + status);
+    }
+    if (!out.trim()) throw new Error('mm_empty');
+    return { text: out, src: det ? det.toLowerCase() : '' };
   });
 };
 window._chatTrTarget = _chatTrTarget;
@@ -1970,6 +2016,17 @@ window._chatTranslate = function (btn) {
   }).catch(function (e) {
     btn.classList.add('tr-err');
     try { btn.title = t('chatTranslateFailed'); } catch (_e) {}
+    // Parite QML 69ec0824 (postFailureNote) : sans note, la sanduhr clignote
+    // et il ne se passe rien — indiscernable d'une fonction cassee. Throttle
+    // 60 s pour que plusieurs clics pendant la panne ne repetent pas le
+    // meme message. Cle existante (deja traduite en 45 langues).
+    try {
+      var _now = Date.now();
+      if (!window._trFailNoteAt || (_now - window._trFailNoteAt) >= 60000) {
+        window._trFailNoteAt = _now;
+        if (window.showToast) window.showToast(t('chatTranslateFailed'), { tone: 'error', icon: '\u26a0', duration: 4000 });
+      }
+    } catch (_e2) {}
   }).finally(function () {
     btn.disabled = false; btn.classList.remove('tr-busy');
   });
@@ -10855,7 +10912,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.7-web.162'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.7-web.163'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
