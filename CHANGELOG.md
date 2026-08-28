@@ -16,6 +16,19 @@ release. Granular, per-build changes for this line are on the
 highlights below.
 
 ### Changed
+- **Frozen avatar upload bytes** (`web.166`). sp0ck reported the same avatar
+  reaching the server under several hashes (e.g. one player's photo avatar).
+  Cause: the picked image was re-encoded (canvas → PNG via `toBlob`) on
+  every session, and PNG encoders / JPEG decoders differ per browser,
+  browser version and OS — same pixels, new bytes, new MD5, one server
+  duplicate per environment. The encoded PNG is now persisted at pick time
+  (`pth_avatar_up`, base64) and re-served byte for byte by
+  `_pthRefreshUpload`; re-encoding only happens when the avatar actually
+  changes (all `pth_avatar_img` writers purge the frozen record). Emoji and
+  initial-letter avatars freeze per choice too, so system-font drift no
+  longer mints new hashes. `pth_avatar_up` joins the factory-reset keep
+  list next to the image itself. Mirrors the desktop principle of hashing
+  the file's bytes once. New suite `scripts/test-avatar-frozen.mjs`.
 - **Translation fallback hardening** (`web.163`). Parity with upstream commit
   `69ec0824` ("qml/widget: translation fallback hardening"): Google throttles
   the gtx endpoint per IP (HTTP 429, VPN users first), so the chain is now

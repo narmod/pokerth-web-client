@@ -203,6 +203,9 @@ function _avmApply() {
       var dataUrl = cv.toDataURL('image/jpeg', 0.88);
       localStorage.setItem('pth_avatar_img', dataUrl);
       localStorage.setItem('pth_avatar', '__img__');
+      // Nouvelle image = nouveaux octets d'upload a geler (pth_avatar_up,
+      // voir _pthCanvasToUpload dans pokerth.js) : purger l'ancien gel.
+      localStorage.removeItem('pth_avatar_up');
     } catch (e) { return; }
     if (typeof window.selectAvatarPopup === 'function') window.selectAvatarPopup('__img__');
     if (typeof window._broadcastMyAvatar === 'function') window._broadcastMyAvatar('__img__');

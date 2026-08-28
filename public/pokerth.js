@@ -745,7 +745,7 @@ function resetAdvDefaults() {
     pth_auth_login: 1, pth_pass: 1, pth_sid: 1, pth_vid: 1, pth_resume: 1,
     pth_host: 1, pth_port: 1, pth_proxy: 1, pth_server_mode: 1, pth_login_mode: 1,
     pth_nick: 1, pth_lan_nick: 1, pth_lan_host: 1, pth_lan_port: 1, pth_lan_tls: 1, pth_unauth_nick: 1, pth_offline_nick: 1,
-    pth_avatar: 1, pth_avatar_img: 1
+    pth_avatar: 1, pth_avatar_img: 1, pth_avatar_up: 1
   };
   try {
     var doomed = [];
@@ -2668,16 +2668,7 @@ window.refreshMyAvatar = function() {
         var s = Math.min(img.width, img.height) || SZ;
         var sx = (img.width - s) / 2, sy = (img.height - s) / 2;
         ctx.drawImage(img, sx, sy, s, s, 0, 0, SZ, SZ);
-        cv.toBlob(function(blob) {
-          if (!blob) { _pthClearMyUpload(); return; }
-          blob.arrayBuffer().then(function(ab) {
-            var bytes = new Uint8Array(ab);
-            // PokerTH server limits: MIN_AVATAR_FILE_SIZE=32, MAX_AVATAR_FILE_SIZE=30720.
-            // Outside that range the server rejects -> only announce when valid.
-            if (bytes.length < 32 || bytes.length > 30720) { _pthClearMyUpload(); return; }
-            window._pthMyUpload = { bytes: bytes, hashBytes: _md5bytes(bytes), type: 1, size: bytes.length };
-          }).catch(function() { _pthClearMyUpload(); });
-        }, 'image/png');
+        _pthCanvasToUpload(cv, 'img');
       } catch(e) { _pthClearMyUpload(); }
     };
     img.onerror = function() { _pthClearMyUpload(); };
@@ -2689,15 +2680,50 @@ window.refreshMyAvatar = function() {
   // as PNG, enforce the server's size window [32, 30720], compute the MD5 and
   // publish window._pthMyUpload (consumed by buildInit + the AvatarRequest
   // handler). Out-of-range -> no announce (never a broken connection).
-  function _pthCanvasToUpload(cv) {
+  //
+  // FROZEN BYTES (rapport sp0ck 28/08 : le meme avatar arrivait au serveur
+  // sous PLUSIEURS hashes) : le PNG encode ici est PERSISTE tel quel
+  // (pth_avatar_up, base64) et resservi octet pour octet aux sessions
+  // suivantes par _pthRefreshUpload. Auparavant l'image etait RE-encodee a
+  // chaque session — or toBlob/toDataURL dependent de l'encodeur PNG et du
+  // decodeur JPEG du navigateur DU JOUR : une mise a jour de Firefox, un
+  // autre moteur, et les memes pixels donnaient d'autres octets, donc un
+  // autre MD5 — le serveur accumulait un doublon par environnement. Le
+  // desktop QML hashe les octets du FICHIER une fois pour toutes ; geler
+  // notre PNG a l'encodage est l'equivalent web : un choix d'avatar = un
+  // hash, stable a travers sessions et mises a jour.
+  function _pthCanvasToUpload(cv, key) {
     cv.toBlob(function(blob) {
       if (!blob) { _pthClearMyUpload(); return; }
       blob.arrayBuffer().then(function(ab) {
         var bytes = new Uint8Array(ab);
         if (bytes.length < 32 || bytes.length > 30720) { _pthClearMyUpload(); return; }
         window._pthMyUpload = { bytes: bytes, hashBytes: _md5bytes(bytes), type: 1, size: bytes.length };
+        if (key) {
+          try {
+            var b64 = '', i;
+            for (i = 0; i < bytes.length; i++) b64 += String.fromCharCode(bytes[i]);
+            localStorage.setItem('pth_avatar_up', JSON.stringify({ k: key, b64: btoa(b64) }));
+          } catch (e) {} // stockage plein : on retombe sur le re-encodage d'avant, sans casser l'upload
+        }
       }).catch(function() { _pthClearMyUpload(); });
     }, 'image/png');
+  }
+  // Recharge les octets geles si (et seulement si) ils correspondent au choix
+  // courant. true = _pthMyUpload restaure, rien a re-encoder.
+  function _pthLoadFrozenUpload(key) {
+    try {
+      var raw = localStorage.getItem('pth_avatar_up');
+      if (!raw) return false;
+      var rec = JSON.parse(raw);
+      if (!rec || rec.k !== key || !rec.b64) return false;
+      var bin = atob(rec.b64);
+      var bytes = new Uint8Array(bin.length);
+      for (var i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+      if (bytes.length < 32 || bytes.length > 30720) return false;
+      window._pthMyUpload = { bytes: bytes, hashBytes: _md5bytes(bytes), type: 1, size: bytes.length };
+      return true;
+    } catch (e) { return false; }
   }
   // Render an EMOJI avatar to a PNG (dark PokerTH disc + the emoji centered),
   // so official clients see the same thing shown on the web seat.
@@ -2711,7 +2737,7 @@ window.refreshMyAvatar = function() {
       ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
       ctx.font = "60px 'Apple Color Emoji','Segoe UI Emoji','Noto Color Emoji','Twemoji Mozilla',sans-serif";
       ctx.fillText(emoji, SZ/2, SZ/2 + 2);
-      _pthCanvasToUpload(cv);
+      _pthCanvasToUpload(cv, 'emoji:' + emoji);
     } catch(e) { _pthClearMyUpload(); }
   }
   // Render the INITIAL-letter avatar to a PNG (dark disc + gold bold letter).
@@ -2726,7 +2752,7 @@ window.refreshMyAvatar = function() {
       ctx.fillStyle = '#E3C800';
       ctx.font = "bold 52px system-ui,'Segoe UI',Roboto,Helvetica,Arial,sans-serif";
       ctx.fillText(letter, SZ/2, SZ/2 + 4);
-      _pthCanvasToUpload(cv);
+      _pthCanvasToUpload(cv, 'letter:' + letter);
     } catch(e) { _pthClearMyUpload(); }
   }
   // Dispatcher: prepare the upload for WHATEVER avatar is selected.
@@ -2735,23 +2761,33 @@ window.refreshMyAvatar = function() {
   // De-duped by key so we don't re-render on every avatar refresh.
   function _pthRefreshUpload(stored, name) {
     try {
+      // Chaque branche recharge d'abord les octets GELES du choix courant
+      // (pth_avatar_up) : re-encoder ne se produit qu'au premier passage ou
+      // apres un changement d'avatar (les writers de pth_avatar_img effacent
+      // pth_avatar_up). C'est ce qui garde le hash serveur stable.
       if (stored === '__img__') {
         var url = null; try { url = localStorage.getItem('pth_avatar_img') || null; } catch(e) {}
         if (!url) { _pthClearMyUpload(); return; }
         var ki = 'img:' + url;
         if (ki === _pthUploadKey && window._pthMyUpload) return;
-        _pthUploadKey = ki; _pthPrepareMyUpload(url);
+        _pthUploadKey = ki;
+        if (_pthLoadFrozenUpload('img')) return;
+        _pthPrepareMyUpload(url);
       } else if (stored === '__pth__') {
         _pthClearMyUpload();
       } else if (stored) {
         var ke = 'emoji:' + stored;
         if (ke === _pthUploadKey && window._pthMyUpload) return;
-        _pthUploadKey = ke; _pthPrepareEmojiUpload(stored);
+        _pthUploadKey = ke;
+        if (_pthLoadFrozenUpload(ke)) return;
+        _pthPrepareEmojiUpload(stored);
       } else {
         var letter = ((name && name.charAt(0)) || '?').toUpperCase();
         var kl = 'letter:' + letter;
         if (kl === _pthUploadKey && window._pthMyUpload) return;
-        _pthUploadKey = kl; _pthPrepareLetterUpload(letter);
+        _pthUploadKey = kl;
+        if (_pthLoadFrozenUpload(kl)) return;
+        _pthPrepareLetterUpload(letter);
       }
     } catch(e) { _pthClearMyUpload(); }
   }
@@ -10924,7 +10960,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.7-web.165'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.7-web.166'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
