@@ -29,7 +29,9 @@ highlights below.
   emojis were re-picked for the poker context (`web.153`): 😐 poker face,
   🥱 slowroll and 🙈 can't-watch join page 1 (replacing near-duplicates
   😉 🤭 😰), 🎊→🍿 popcorn, 🥈→💸 money-flies-away, 🥉→🪤 trap,
-  🚨→🔮 soul read. The last page is persisted
+  🚨→🔮 soul read. All 37 face emojis now
+  lead the catalog (`web.156`): the seven faces that lived on page 2
+  (😎 🤩 🤡 😈 🫠 🥶 🥵) open that page, before gestures and objects. The last page is persisted
   (`pth_react_page`); the auto-fitting grid, mute and pin behaviours apply
   per page. Eight new emoji choreographies join the seven existing ones
   (launch, drop, wobble, flip, zoomout, heartbeat, shiver, tilt — 15 total)

@@ -81,36 +81,36 @@ life ms, rot = random rotation.
 
 | # | emoji | anim | particles |
 |---|---|---|---|
-| 30 | 🎉 | `pop` | `'confetti'` |
-| 31 | 🥳 | `pop` | `'confetti'` |
-| 32 | 🍿 | `beat` | `{chars:['🍿'],count:9,size:13,a0:-160,a1:-20,dist:60,g:70,life:1000,rot:1}` |
-| 33 | 👏 | `beat` | `{chars:['✦','✧'],count:9,color:'var(--gold)',size:13,a0:0,a1:360,dist:60,life:750}` |
-| 34 | 🙌 | `beat` | `{chars:['✦','✧'],count:9,color:'var(--gold)',size:13,a0:0,a1:360,dist:62,life:780}` |
-| 35 | 💪 | `flex` | `{chars:['✦'],count:6,color:'var(--gold)',size:13,a0:0,a1:360,dist:50,life:700}` |
-| 36 | 👍 | `beat` | `'sparkle'` |
-| 37 | 👎 | `drop` | `{count:7,color:'#9aa0a6',size:6,a0:20,a1:160,dist:48,g:60,life:800}` |
-| 38 | 🤝 | `pop` | `'sparkle'` |
-| 39 | 👊 | `flex` | `'shock'` |
-| 40 | 🙏 | `shine` | `{chars:['✨'],count:9,color:'var(--gold)',size:13,a0:-160,a1:-20,dist:60,g:-24,life:950}` |
-| 41 | 🤞 | `beat` | `{chars:['🍀','✨'],count:8,size:13,a0:0,a1:360,dist:58,life:850,rot:1}` |
-| 42 | 🫵 | `zoomout` | `'sparkle'` |
-| 43 | 🫡 | `pop` | `'sparkle'` |
-| 44 | 🤫 | `pop` | `{chars:['✦'],count:4,size:10,a0:0,a1:360,dist:38,life:600}` |
-| 45 | 🤦 | `drop` | `{chars:['💧'],count:4,size:12,a0:-120,a1:-60,dist:42,g:46,life:700}` |
-| 46 | 😎 | `pop` | `'sparkle'` |
-| 47 | 🤩 | `shine` | `{chars:['✨'],count:8,size:13,a0:0,a1:360,dist:60,life:800,rot:1}` |
-| 48 | 💤 | `drop` | `{chars:['💤'],count:6,size:15,a0:-130,a1:-50,dist:56,g:-44,life:1200}` |
-| 49 | ⏳ | `flip` | `{chars:['✦'],count:6,size:11,a0:0,a1:360,dist:48,life:700}` |
-| 50 | 🍺 | `wobble` | `{chars:['🫧'],count:9,size:12,a0:-140,a1:-40,dist:58,g:-50,life:1100}` |
-| 51 | ☕ | `pop` | `{chars:['💨'],count:5,size:13,a0:-120,a1:-60,dist:50,g:-40,life:1000}` |
-| 52 | 🤡 | `wobble` | `'confetti'` |
-| 53 | 😈 | `tilt` | `{chars:['🔥','✦'],count:8,size:13,a0:0,a1:360,dist:58,life:850,rot:1}` |
-| 54 | 💣 | `drop` | `'boom'` |
-| 55 | 🚀 | `launch` | `{chars:['🔥','✨'],count:10,size:13,a0:60,a1:120,dist:80,g:60,life:900}` |
-| 56 | ⚡ | `zoomout` | `{chars:['⚡','✦'],count:8,size:14,a0:0,a1:360,dist:66,life:750,rot:1}` |
-| 57 | 🫠 | `wobble` | `{chars:['💧'],count:6,size:12,a0:40,a1:140,dist:44,g:70,life:950}` |
-| 58 | 🥶 | `shiver` | `{chars:['❄️','🧊'],count:8,size:13,a0:0,a1:360,dist:56,life:900,rot:1}` |
-| 59 | 🥵 | `fire` | `{chars:['🔥','💦'],count:8,size:13,a0:-160,a1:-20,dist:60,g:-20,life:900}` |
+| 30 | 😎 | `pop` | `'sparkle'` |
+| 31 | 🤩 | `shine` | `{chars:['✨'],count:8,size:13,a0:0,a1:360,dist:60,life:800,rot:1}` |
+| 32 | 🤡 | `wobble` | `'confetti'` |
+| 33 | 😈 | `tilt` | `{chars:['🔥','✦'],count:8,size:13,a0:0,a1:360,dist:58,life:850,rot:1}` |
+| 34 | 🫠 | `wobble` | `{chars:['💧'],count:6,size:12,a0:40,a1:140,dist:44,g:70,life:950}` |
+| 35 | 🥶 | `shiver` | `{chars:['❄️','🧊'],count:8,size:13,a0:0,a1:360,dist:56,life:900,rot:1}` |
+| 36 | 🥵 | `fire` | `{chars:['🔥','💦'],count:8,size:13,a0:-160,a1:-20,dist:60,g:-20,life:900}` |
+| 37 | 🎉 | `pop` | `'confetti'` |
+| 38 | 🥳 | `pop` | `'confetti'` |
+| 39 | 🍿 | `beat` | `{chars:['🍿'],count:9,size:13,a0:-160,a1:-20,dist:60,g:70,life:1000,rot:1}` |
+| 40 | 👏 | `beat` | `{chars:['✦','✧'],count:9,color:'var(--gold)',size:13,a0:0,a1:360,dist:60,life:750}` |
+| 41 | 🙌 | `beat` | `{chars:['✦','✧'],count:9,color:'var(--gold)',size:13,a0:0,a1:360,dist:62,life:780}` |
+| 42 | 💪 | `flex` | `{chars:['✦'],count:6,color:'var(--gold)',size:13,a0:0,a1:360,dist:50,life:700}` |
+| 43 | 👍 | `beat` | `'sparkle'` |
+| 44 | 👎 | `drop` | `{count:7,color:'#9aa0a6',size:6,a0:20,a1:160,dist:48,g:60,life:800}` |
+| 45 | 🤝 | `pop` | `'sparkle'` |
+| 46 | 👊 | `flex` | `'shock'` |
+| 47 | 🙏 | `shine` | `{chars:['✨'],count:9,color:'var(--gold)',size:13,a0:-160,a1:-20,dist:60,g:-24,life:950}` |
+| 48 | 🤞 | `beat` | `{chars:['🍀','✨'],count:8,size:13,a0:0,a1:360,dist:58,life:850,rot:1}` |
+| 49 | 🫵 | `zoomout` | `'sparkle'` |
+| 50 | 🫡 | `pop` | `'sparkle'` |
+| 51 | 🤫 | `pop` | `{chars:['✦'],count:4,size:10,a0:0,a1:360,dist:38,life:600}` |
+| 52 | 🤦 | `drop` | `{chars:['💧'],count:4,size:12,a0:-120,a1:-60,dist:42,g:46,life:700}` |
+| 53 | 💤 | `drop` | `{chars:['💤'],count:6,size:15,a0:-130,a1:-50,dist:56,g:-44,life:1200}` |
+| 54 | ⏳ | `flip` | `{chars:['✦'],count:6,size:11,a0:0,a1:360,dist:48,life:700}` |
+| 55 | 🍺 | `wobble` | `{chars:['🫧'],count:9,size:12,a0:-140,a1:-40,dist:58,g:-50,life:1100}` |
+| 56 | ☕ | `pop` | `{chars:['💨'],count:5,size:13,a0:-120,a1:-60,dist:50,g:-40,life:1000}` |
+| 57 | 💣 | `drop` | `'boom'` |
+| 58 | 🚀 | `launch` | `{chars:['🔥','✨'],count:10,size:13,a0:60,a1:120,dist:80,g:60,life:900}` |
+| 59 | ⚡ | `zoomout` | `{chars:['⚡','✦'],count:8,size:14,a0:0,a1:360,dist:66,life:750,rot:1}` |
 
 ### Page 3 — ♠️ Poker & luck
 

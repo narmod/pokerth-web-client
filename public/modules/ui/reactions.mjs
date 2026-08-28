@@ -48,7 +48,7 @@ var REACT_EMOJIS = [
   // page 1 😀
   '😂','🤣','😅','😭','🥺','😢','😏','🙄','😳','🤪','😇','😍','🥰','😘','😬','😴','🤔','👀','😮','😱','🤯','😡','😤','🤢','🥴','🙃','🫣','😐','🥱','🙈',
   // page 2 👏
-  '🎉','🥳','🍿','👏','🙌','💪','👍','👎','🤝','👊','🙏','🤞','🫵','🫡','🤫','🤦','😎','🤩','💤','⏳','🍺','☕','🤡','😈','💣','🚀','⚡','🫠','🥶','🥵',
+  '😎','🤩','🤡','😈','🫠','🥶','🥵','🎉','🥳','🍿','👏','🙌','💪','👍','👎','🤝','👊','🙏','🤞','🫵','🫡','🤫','🤦','💤','⏳','🍺','☕','💣','🚀','⚡',
   // page 3 ♠️
   '💰','🤑','💵','💎','🎰','🍀','🃏','♠️','🎲','🎯','🏆','🥇','💸','🪤','👑','🔥','💀','🦈','🐟','🐔','🫏','🎩','🧊','🌪️','🧨','📈','📉','🔮','💯','⭐'
 ];
@@ -91,6 +91,13 @@ var REACTION_FX = {
   '🥱':{a:'wobble',p:{chars:['💤'],count:5,size:14,a0:-130,a1:-50,dist:52,g:-42,life:1100}},
   '🙈':{a:'shake',p:{chars:['✦'],count:6,size:11,a0:0,a1:360,dist:48,life:700}},
   // ── page 2 👏 ──
+  '😎':{a:'pop',p:'sparkle'},
+  '🤩':{a:'shine',p:{chars:['✨'],count:8,size:13,a0:0,a1:360,dist:60,life:800,rot:1}},
+  '🤡':{a:'wobble',p:'confetti'},
+  '😈':{a:'tilt',p:{chars:['🔥','✦'],count:8,size:13,a0:0,a1:360,dist:58,life:850,rot:1}},
+  '🫠':{a:'wobble',p:{chars:['💧'],count:6,size:12,a0:40,a1:140,dist:44,g:70,life:950}},
+  '🥶':{a:'shiver',p:{chars:['❄️','🧊'],count:8,size:13,a0:0,a1:360,dist:56,life:900,rot:1}},
+  '🥵':{a:'fire',p:{chars:['🔥','💦'],count:8,size:13,a0:-160,a1:-20,dist:60,g:-20,life:900}},
   '🎉':{a:'pop',p:'confetti'},
   '🥳':{a:'pop',p:'confetti'},
   '🍿':{a:'beat',p:{chars:['🍿'],count:9,size:13,a0:-160,a1:-20,dist:60,g:70,life:1000,rot:1}},
@@ -107,20 +114,13 @@ var REACTION_FX = {
   '🫡':{a:'pop',p:'sparkle'},
   '🤫':{a:'pop',p:{chars:['✦'],count:4,size:10,a0:0,a1:360,dist:38,life:600}},
   '🤦':{a:'drop',p:{chars:['💧'],count:4,size:12,a0:-120,a1:-60,dist:42,g:46,life:700}},
-  '😎':{a:'pop',p:'sparkle'},
-  '🤩':{a:'shine',p:{chars:['✨'],count:8,size:13,a0:0,a1:360,dist:60,life:800,rot:1}},
   '💤':{a:'drop',p:{chars:['💤'],count:6,size:15,a0:-130,a1:-50,dist:56,g:-44,life:1200}},
   '⏳':{a:'flip',p:{chars:['✦'],count:6,size:11,a0:0,a1:360,dist:48,life:700}},
   '🍺':{a:'wobble',p:{chars:['🫧'],count:9,size:12,a0:-140,a1:-40,dist:58,g:-50,life:1100}},
   '☕':{a:'pop',p:{chars:['💨'],count:5,size:13,a0:-120,a1:-60,dist:50,g:-40,life:1000}},
-  '🤡':{a:'wobble',p:'confetti'},
-  '😈':{a:'tilt',p:{chars:['🔥','✦'],count:8,size:13,a0:0,a1:360,dist:58,life:850,rot:1}},
   '💣':{a:'drop',p:'boom'},
   '🚀':{a:'launch',p:{chars:['🔥','✨'],count:10,size:13,a0:60,a1:120,dist:80,g:60,life:900}},
   '⚡':{a:'zoomout',p:{chars:['⚡','✦'],count:8,size:14,a0:0,a1:360,dist:66,life:750,rot:1}},
-  '🫠':{a:'wobble',p:{chars:['💧'],count:6,size:12,a0:40,a1:140,dist:44,g:70,life:950}},
-  '🥶':{a:'shiver',p:{chars:['❄️','🧊'],count:8,size:13,a0:0,a1:360,dist:56,life:900,rot:1}},
-  '🥵':{a:'fire',p:{chars:['🔥','💦'],count:8,size:13,a0:-160,a1:-20,dist:60,g:-20,life:900}},
   // ── page 3 ♠️ ──
   '💰':{a:'pop',p:{chars:['🪙','💵','✦'],count:12,size:16,a0:-170,a1:-10,dist:72,g:90,life:1200,rot:1}},
   '🤑':{a:'pop',p:{chars:['🪙','💵'],count:10,size:16,a0:-170,a1:-10,dist:70,g:90,life:1100,rot:1}},
