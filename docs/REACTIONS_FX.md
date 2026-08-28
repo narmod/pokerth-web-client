@@ -104,7 +104,7 @@ life ms, rot = random rotation.
 | 50 | 🫡 | `pop` | `'sparkle'` |
 | 51 | 🤫 | `pop` | `{chars:['✦'],count:4,size:10,a0:0,a1:360,dist:38,life:600}` |
 | 52 | 🤦 | `drop` | `{chars:['💧'],count:4,size:12,a0:-120,a1:-60,dist:42,g:46,life:700}` |
-| 53 | 💤 | `drop` | `{chars:['💤'],count:6,size:15,a0:-130,a1:-50,dist:56,g:-44,life:1200}` |
+| 53 | 🚬 | `wobble` | `{chars:['💨'],count:7,size:14,a0:-130,a1:-50,dist:64,g:-46,life:1400,rot:1}` |
 | 54 | ⏳ | `flip` | `{chars:['✦'],count:6,size:11,a0:0,a1:360,dist:48,life:700}` |
 | 55 | 🍺 | `wobble` | `{chars:['🫧'],count:9,size:12,a0:-140,a1:-40,dist:58,g:-50,life:1100}` |
 | 56 | ☕ | `pop` | `{chars:['💨'],count:5,size:13,a0:-120,a1:-60,dist:50,g:-40,life:1000}` |

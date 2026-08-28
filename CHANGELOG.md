@@ -64,7 +64,10 @@ highlights below.
   (`web.157`), with a small directional slide-in shared with the arrows
   (disabled under `prefers-reduced-motion`); vertical grid scrolling and
   button taps are untouched (passive listeners, 48 px / 600 ms
-  dominantly-horizontal threshold). The last page is persisted
+  dominantly-horizontal threshold). The smoke break asked for by sp0ck
+  lands as 🚬 with slow-rising 💨 curls (`web.160`), replacing 💤 —
+  the third sleep emoji after 😴 and 🥱 (Unicode has no joint emoji;
+  the cigarette is the closest universal glyph). The last page is persisted
   (`pth_react_page`); the auto-fitting grid, mute and pin behaviours apply
   per page. Eight new emoji choreographies join the seven existing ones
   (launch, drop, wobble, flip, zoomout, heartbeat, shiver, tilt — 15 total)
