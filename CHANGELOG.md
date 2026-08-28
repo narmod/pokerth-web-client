@@ -50,6 +50,17 @@ highlights below.
   once the socket has stayed open for 10 s (`_armReconnectStable`) or an
   `InitAck` lands. Covered by `scripts/test-reconnect-backoff.mjs`.
 
+### Changed
+- **PM dialog sends with a paper-plane icon** (`web.148`). QML-parity with
+  upstream `PrivateMessageDialog` fine-tuning (stable, 2026-08-27): the wide
+  labeled "Send" button is replaced by the same square paper-plane icon button
+  the lobby and table chats use, sized to the input row. A mouse click no
+  longer steals focus from the input (`onmousedown` preventDefault, the web
+  equivalent of QML's `focusPolicy: NoFocus`), so the next message goes out
+  with Enter right away. Same `sendTooltip` i18n key as the chat button; the
+  `pmSend` key stays in the tables but is no longer referenced. Guarded by
+  `scripts/test-pm-send-icon.mjs`.
+
 ### Added
 - **"Playing in …" info in the players list** (`web.147`). QML-parity with
   upstream `PlayerListItem` (stable, 2026-08-27): hovering a player's name in

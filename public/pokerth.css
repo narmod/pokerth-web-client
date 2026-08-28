@@ -8641,7 +8641,19 @@ body.adv-no-forumnews [id^="forum-btn-"], body.adv-no-forumnews #forum-modal { d
 .pm-input { flex: 1; min-width: 0; background: var(--field-bg); border: 1px solid var(--border); border-radius: var(--r-xs); color: var(--text); font: inherit; font-size: var(--fs-sm); padding: 6px 9px; }
 .pm-input:focus { outline: none; border-color: var(--sel,var(--gold)); }
 .pm-count { flex: 0 0 auto; font-family: var(--ff-mono); font-size: var(--fs-2xs); color: var(--text-dim); }
-.pm-send { flex: 0 0 auto; }
+/* Bouton d'envoi du PM : icône avion façon chat lobby (parité QML be3c43c) —
+   carré à hauteur du champ, sans chrome ; mêmes verts par thème que
+   #lobby-chat-panel .chat-send. Désactivé = atténué, comme l'opacité QML. */
+.pm-send {
+  flex: 0 0 auto; display: flex; align-items: center; justify-content: center;
+  width: 32px; height: 32px; padding: 0;
+  background: none; border: none; border-radius: var(--r-sm);
+  color: var(--green); cursor: pointer;
+}
+.pm-send:hover:not(:disabled) { background: var(--inset-hi); }
+.pm-send:disabled { opacity: .5; cursor: default; }
+:root[data-theme="pokerth"] .pm-send { color: #4ade80; }
+:root[data-theme="pokerth-light"] .pm-send { color: #16a34a; }
 /* Enveloppe absente (moi, invite, joueur a une table en cours) : une cale de
    meme largeur garde les deux autres pastilles alignees d'une ligne a l'autre. */
 .pl-act-gap { display: inline-block; width: 20px; }

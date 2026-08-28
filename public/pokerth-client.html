@@ -2821,7 +2821,12 @@ if ('serviceWorker' in navigator) {
         <div class="pm-foot">
           <input id="pm-in" class="pm-input" maxlength="128" placeholder="Message&#8230;" data-i18n-placeholder="pmPlaceholder" autocomplete="off">
           <span class="pm-count" id="pm-count">0/128</span>
-          <button type="button" class="rk-tab pm-send" id="pm-send" disabled><span data-i18n="pmSend">Send</span></button>
+          <!-- Envoi comme dans le chat lobby/table (ChatBox) : bouton-icone avion
+               carre a hauteur du champ (parite QML be3c43c, 27/08/2026). Le gros
+               bouton texte 160x48 debordait la moitie de la ligne de saisie.
+               onmousedown preventDefault = focusPolicy NoFocus du QML : un envoi a
+               la souris laisse le curseur dans le champ, Enter enchaine direct. -->
+          <button type="button" class="pm-send" id="pm-send" disabled onmousedown="event.preventDefault()" title="Send" data-i18n-title="sendTooltip" aria-label="Send" data-i18n-aria="sendTooltip"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg></button>
         </div>
       </div>
     </div>
