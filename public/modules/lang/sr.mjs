@@ -990,7 +990,7 @@ export const strings = {
     musicExpand: "Прошири",
     musicMoveUp: "Нагоре",
     musicMoveDown: "Надоле", musicRadios: "Радио-станице",
-    importSeat: "Увези пакет седишта (.zip)",
+    betDisplayTitle:'Приказ улога:', betDisplayInset:'Улог у оквиру играча', betDisplayClassic:'Улог поред оквира играча', importSeat: "Увези пакет седишта (.zip)",
     plColumns: "Колоне",
     plColAvatar: "Аватар",
     plColName: "Име",

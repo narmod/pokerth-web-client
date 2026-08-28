@@ -921,7 +921,7 @@ export const strings = {
     musicExpand: "Uitklappen",
     musicMoveUp: "Omhoog",
     musicMoveDown: "Omlaag", musicRadios: "Radio's",
-    importSeat: "Een zetelpakket (.zip) importeren",
+    betDisplayTitle:'Weergave van de inzet:', betDisplayInset:'Inzet in het spelersvak', betDisplayClassic:'Inzet naast het spelersvak', importSeat: "Een zetelpakket (.zip) importeren",
     plColumns: "Kolommen",
     plColAvatar: "Avatar",
     plColName: "Naam",

@@ -989,7 +989,7 @@ export const strings = {
     musicExpand: "Proširi",
     musicMoveUp: "Pomakni gore",
     musicMoveDown: "Pomakni dolje", musicRadios: "Radio postaje",
-    importSeat: "Uvezi paket mjesta (.zip)",
+    betDisplayTitle:'Prikaz uloga:', betDisplayInset:'Ulog u okviru igrača', betDisplayClassic:'Ulog pored okvira igrača', importSeat: "Uvezi paket mjesta (.zip)",
     plColumns: "Stupci",
     plColAvatar: "Avatar",
     plColName: "Ime",

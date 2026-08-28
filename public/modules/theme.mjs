@@ -1528,6 +1528,42 @@ function _render(){
   var tab = _TABS[0]; for (var t=0;t<_TABS.length;t++) if (_TABS[t].id===_activeTab) tab=_TABS[t];
   var info = _tabItems(_activeTab);
   var list = document.createElement('div'); list.style.cssText = 'display:flex;flex-direction:column;gap:7px';
+  // ── Affichage de la mise (onglet Sièges) — parité QML StyleSettings
+  // « Einsatzanzeige » (upstream 414a89c) : socle DANS la boîte ('inset') ou
+  // jeton À CÔTÉ ('classic'). pth_bet_style vide = défaut plateforme, résolu
+  // par window._betStyleVariant (pokerth.js) ; bascule LIVE sur la table via
+  // window._applyBetStyle, comme applySeatStyle côté QML.
+  if (_activeTab === 'seat') {
+    var _bsCur = (typeof window._betStyleVariant === 'function') ? window._betStyleVariant() : 'inset';
+    var bsTitle = document.createElement('div');
+    bsTitle.textContent = _t('betDisplayTitle', 'Bet display:');
+    bsTitle.style.cssText = 'font-size:0.8rem;font-weight:700;color:var(--cream,#f0e6d2);margin:1px 0 0';
+    list.appendChild(bsTitle);
+    [['inset', 'betDisplayInset', 'Bet inside the player box'],
+     ['classic', 'betDisplayClassic', 'Bet next to the player box']].forEach(function (o) {
+      var act = _bsCur === o[0];
+      var row = document.createElement('div');
+      row.style.cssText = 'display:flex;align-items:center;gap:9px;padding:7px 10px;cursor:pointer;border-radius:9px;font-size:0.85rem;color:var(--cream,#f0e6d2);'
+        + (act ? 'background:rgba(var(--sel-rgb,227,200,0),0.12);box-shadow:inset 0 0 0 1.5px var(--sel,#E3C800);'
+               : 'border:1px solid var(--border,rgba(200,168,74,0.18));background:rgba(255,255,255,0.02);');
+      row.innerHTML = '<span style="font-size:0.8rem;color:' + (act ? 'var(--sel,#E3C800)' : 'var(--text,#9aaa92)') + '">'
+        + (act ? '\u25c9' : '\u25cb') + '</span>' + _t(o[1], o[2]);
+      if (!act) {
+        row.addEventListener('mouseenter', function () { row.style.background = 'var(--inset-hi,rgba(255,255,255,0.06))'; });
+        row.addEventListener('mouseleave', function () { row.style.background = 'rgba(255,255,255,0.02)'; });
+      }
+      row.addEventListener('click', function (e) {
+        e.stopPropagation();
+        try { localStorage.setItem('pth_bet_style', o[0]); } catch (err) {}
+        try { if (typeof window._applyBetStyle === 'function') window._applyBetStyle(); } catch (err) {}
+        _render();
+      });
+      list.appendChild(row);
+    });
+    var bsSep = document.createElement('div');
+    bsSep.style.cssText = 'height:1px;background:var(--border,rgba(200,168,74,0.18));margin:5px 0 3px';
+    list.appendChild(bsSep);
+  }
   info.opts.forEach(function(it){
     var name = it.name || _t(it.key, it.fallback);
     var author = _styleAuthor(tab.kind, it);

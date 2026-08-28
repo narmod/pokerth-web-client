@@ -919,7 +919,7 @@ export const strings = {
     musicExpand: "Genişlet",
     musicMoveUp: "Yukarı taşı",
     musicMoveDown: "Aşağı taşı", musicRadios: "Radyolar",
-    importSeat: "Koltuk paketi (.zip) içe aktar",
+    betDisplayTitle:'Bahis gösterimi:', betDisplayInset:'Bahis oyuncu kutusunun içinde', betDisplayClassic:'Bahis oyuncu kutusunun yanında', importSeat: "Koltuk paketi (.zip) içe aktar",
     plColumns: "Sütunlar",
     plColAvatar: "Avatar",
     plColName: "Ad",

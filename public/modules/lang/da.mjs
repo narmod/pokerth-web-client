@@ -917,7 +917,7 @@ export const strings = {
     musicExpand: "Udvid",
     musicMoveUp: "Flyt op",
     musicMoveDown: "Flyt ned", musicRadios: "Radioer",
-    importSeat: "Importér en sædepakke (.zip)",
+    betDisplayTitle:'Visning af indsats:', betDisplayInset:'Indsats i spillerboksen', betDisplayClassic:'Indsats ved siden af spillerboksen', importSeat: "Importér en sædepakke (.zip)",
     plColumns: "Kolonner",
     plColAvatar: "Avatar",
     plColName: "Navn",

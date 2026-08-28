@@ -917,7 +917,7 @@ export const strings = {
     musicExpand: "Laajenna",
     musicMoveUp: "Siirrä ylös",
     musicMoveDown: "Siirrä alas", musicRadios: "Radiot",
-    importSeat: "Tuo paikkapaketti (.zip)",
+    betDisplayTitle:'Panoksen näyttö:', betDisplayInset:'Panos pelaajan ruudussa', betDisplayClassic:'Panos pelaajan ruudun vieressä', importSeat: "Tuo paikkapaketti (.zip)",
     plColumns: "Sarakkeet",
     plColAvatar: "Avatar",
     plColName: "Nimi",

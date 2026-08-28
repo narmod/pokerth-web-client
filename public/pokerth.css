@@ -7687,6 +7687,55 @@ html[data-seat-struct="qml"] .seat.betside-b .seat-bet { top: calc(100% + var(--
 /* Self : sa mise est dans la barre d'action -> pas de jeton de siège (officiel). */
 html[data-seat-struct="qml"] .seat.me .seat-bet { display: none; }
 
+/* ── Style de mise « inset » (SeatStyle/PlayerBetStrip QML, upstream 414a89c) :
+   la mise est posée dans un SOCLE en bas de la boîte, À L'INTÉRIEUR du cadre.
+   html[data-bet="inset|classic"] est posé par _applyBetStyle (pokerth.js)
+   selon pth_bet_style ; vide = défaut plateforme (desktop inset, mobile
+   classic — Qt.platform.os côté QML, pointer:coarse côté web). La PLACE du
+   socle est réservée en PERMANENCE sous la boîte (padding-bottom sur .seat,
+   rendu quand le socle s'ouvre) : comme la réservation tableZone.betStripH du
+   QML, l'ouverture ne déplace ni les voisins ni l'autofit — la hauteur totale
+   du siège reste constante, seul le corps visible grandit. Dépli 140 ms
+   ease-out (Behavior on height, Easing.OutQuad). Le puck D/SB/BB reste HORS
+   de la boîte dans les DEUX styles (la classe betside-* reste posée). */
+html[data-seat-struct="qml"][data-bet="inset"] .seat {
+  padding-bottom: 20px;
+  transition: padding-bottom 0.14s ease-out;
+}
+html[data-seat-struct="qml"][data-bet="inset"] .seat.socle-open { padding-bottom: 0; }
+/* Socle (PlayerBetStrip) : pleine largeur de la plaque (grille 2 colonnes),
+   rejoint le cadre à 1 px près (padding plate 3px 5px → marges -4/-2), fond
+   rgba(0,0,0,0.26), trait de séparation 1 px blanc 10 %, coins bas arrondis
+   sous le rayon de la plaque. Hauteur QML betStripHeight = 20 (le trait est
+   DANS ces 20 px : box-sizing border-box). */
+html[data-seat-struct="qml"] .seat-bet-socle {
+  grid-column: 1 / -1;
+  box-sizing: border-box;
+  height: 20px; overflow: hidden;
+  margin: 0 -4px -2px;
+  background: rgba(0, 0, 0, 0.26);
+  border-top: 1px solid rgba(255, 255, 255, 0.10);
+  border-bottom-left-radius: calc(var(--r-sm, 4px) - 1px);
+  border-bottom-right-radius: calc(var(--r-sm, 4px) - 1px);
+  display: flex; align-items: center; justify-content: center;
+  animation: socleOpen 0.14s ease-out;
+}
+@keyframes socleOpen { from { height: 0; margin-bottom: 18px; } to { height: 20px; margin-bottom: -2px; } }
+/* Anti-replay : la mise change sans être apparue -> pas de ré-animation du
+   dépli (le pop du BetChip garde sa propre garde .no-pop). */
+html[data-seat-struct="qml"] .seat-bet-socle.no-open { animation: none; }
+/* BetChip du socle : icône 15, texte 13 (BetChip.iconSize/fontSize dans
+   PlayerBetStrip), position STATIQUE (annule le positionnement betside
+   absolu, la classe betside-* restant posée pour les pucks) et visible aussi
+   pour la self-box (annule .seat.me .seat-bet { display: none }). */
+html[data-seat-struct="qml"] .seat .seat-bet-socle .seat-bet,
+html[data-seat-struct="qml"] .seat.me .seat-bet-socle .seat-bet {
+  position: static; transform: none; margin: 0;
+  display: inline-flex;
+  font-size: 13px !important;
+}
+html[data-seat-struct="qml"] .seat .seat-bet-socle .seat-bet::before { width: 15px; height: 15px; }
+
 /* Pucks D/SB/BB (packs PokerTH) : sortis de l'avatar (JS), posés sur le CÔTÉ de
    la boîte (même betSide que le jeton), un peu plus bas pour ne pas chevaucher la
    mise. On remet à plat le positionnement coin-avatar des chips (qui utilise

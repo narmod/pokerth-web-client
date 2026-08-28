@@ -126,6 +126,15 @@ function renderSeatsImmediate() {
   // Traits du pack de sièges actif (descripteur de pack, étape 3) —
   // résolus UNE fois par rendu ; remplacent les tests en dur sur l'id.
   var _seatTr = window._seatTraitsNow();
+  // Style de mise « inset » (parité QML SeatStyle/PlayerBetStrip, upstream
+  // 414a89c) : la mise dans un socle EN BAS de la boîte au lieu du jeton
+  // betside. Résolu par window._betStyleVariant (pokerth.js : pth_bet_style,
+  // vide = défaut plateforme desktop inset / mobile classic). Ne concerne que
+  // les packs à politique betside QML (trait betOut) ; la classe betside-*
+  // reste posée dans les deux styles (les pucks D/SB/BB s'en servent et
+  // restent HORS boîte, comme le QML).
+  var _betInset = !!(_seatTr.betOut && typeof window._betStyleVariant === 'function'
+                     && window._betStyleVariant() === 'inset');
   // Echelle de zoom courante (tablette/desktop) : chaque siege est reduit du
   // meme facteur que le feutre -> zoom uniforme. Mobile / zoom 1 -> 1 (no-op).
   var _seatZoom = 1;
@@ -580,7 +589,8 @@ function renderSeatsImmediate() {
                  sd.folded && !isGone ? 'folded' : '',
                  isOut && !isGone ? 'seat-out' : '',
                  _seatNarrow ? 'seat-narrow' : '',
-                 isGone ? 'seat-ghost' : '', _betSideCls].filter(Boolean).join(' ');
+                 isGone ? 'seat-ghost' : '', _betSideCls,
+                 _betInset && sd.bet > 0 ? 'socle-open' : ''].filter(Boolean).join(' ');
     var _ignHide = !isMe && window._isIgnored(getPlayerName(pid)) && !window._advGet('no_hide_ignored', false);
     const initial    = _ignHide ? ((getPlayerName(pid) || '?').charAt(0).toUpperCase() || '?') : getPlayerInitial(pid);
     const typeBadge  = getPlayerTypeBadge(pid);
@@ -779,6 +789,15 @@ function renderSeatsImmediate() {
       h += '<div class="seat-money">' + moneyStr + '</div>';
     }
     h += '</div>';   // ferme .seat-info
+    // Socle de mise (PlayerBetStrip QML) : rendu UNIQUEMENT quand le style
+    // « inset » est actif ET qu'une mise est posée — la boîte s'ouvre alors
+    // vers le bas dans la place réservée par .seat (padding-bottom, cf.
+    // pokerth.css). Même anti-replay que le jeton (.no-open : pas de
+    // ré-animation du dépli quand la mise change sans être apparue).
+    if (_betInset && sd.bet > 0) {
+      var _socleNoAnim = (_apPrev && _apPrev.b > 0) ? ' no-open' : '';
+      h += '<div class="seat-bet-socle' + _socleNoAnim + '"><div class="seat-bet' + _betNoPop + '">' + fmtChips(sd.bet) + '</div></div>';
+    }
     h += '</div>';   // ferme .seat-plate
     // PlayerWinnerOverlay QML : badge « WINNER » (pilule or/vert sombre) ancré
     // au-dessus de la boîte (au-dessous via .winner-below pour la plus haute).
@@ -795,7 +814,10 @@ function renderSeatsImmediate() {
     // (sp0ck 2026-07-17, aligné QML 2.1.4 : les cartes propres restent
     // lisibles). La barre de décompte reste centrée sur les cartes.
     if (_seatTr.selfStrip && isMe) {
-      var _stripBet = (sd.bet > 0) ? '<div class="seat-bet strip-bet' + _betNoPop + '">' + fmtChips(sd.bet) + '</div>' : '';
+      // Style « inset » : la mise self quitte le strip pour le socle DANS la
+      // boîte (GamePlayerSelfBox QML : le BetChip du strip part dans le
+      // PlayerBetStrip).
+      var _stripBet = (sd.bet > 0 && !_betInset) ? '<div class="seat-bet strip-bet' + _betNoPop + '">' + fmtChips(sd.bet) + '</div>' : '';
       // UNIQUEMENT pour les packs à structure pokerth/QML (badgeOnCards) :
       // c'est le badge qui était sur les cartes que sp0ck a déplacé vers le
       // strip. Les autres packs gardent leur badge dans le pied du siège
@@ -809,7 +831,7 @@ function renderSeatsImmediate() {
     }
     if (_seatTr.pucksSide && (blindBadge || dealerChip)) h += '<div class="seat-pucks">' + blindBadge + dealerChip + '</div>';
     h += '<div class="seat-foot">'; // pied : mise / action / cartes
-    if (sd.bet) h += '<div class="seat-bet' + _betNoPop + '">' + fmtChips(sd.bet) + '</div>';
+    if (sd.bet && !_betInset) h += '<div class="seat-bet' + _betNoPop + '">' + fmtChips(sd.bet) + '</div>';
     // Action → badge préparé plus haut (posé sur les cartes en pack pokerth,
     // sinon ici dans le pied). Le texte non-action (gains au showdown,
     // '+X'/'🏆') garde le libellé simple.

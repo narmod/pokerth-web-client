@@ -990,7 +990,7 @@ export const strings = {
     musicExpand: "Разгъни",
     musicMoveUp: "Нагоре",
     musicMoveDown: "Надолу", musicRadios: "Радиостанции",
-    importSeat: "Импортиране на пакет с места (.zip)",
+    betDisplayTitle:'Показване на залога:', betDisplayInset:'Залог в рамката на играча', betDisplayClassic:'Залог до рамката на играча', importSeat: "Импортиране на пакет с места (.zip)",
     plColumns: "Колони",
     plColAvatar: "Аватар",
     plColName: "Име",

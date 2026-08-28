@@ -922,7 +922,7 @@ export const strings = {
     musicExpand: "Espandi",
     musicMoveUp: "Sposta su",
     musicMoveDown: "Sposta giù", musicRadios: "Radio",
-    importSeat: "Importa un pacchetto posti (.zip)",
+    betDisplayTitle:'Visualizzazione della puntata:', betDisplayInset:'Puntata dentro il riquadro del giocatore', betDisplayClassic:'Puntata accanto al riquadro del giocatore', importSeat: "Importa un pacchetto posti (.zip)",
     plColumns: "Colonne",
     plColAvatar: "Avatar",
     plColName: "Nome",

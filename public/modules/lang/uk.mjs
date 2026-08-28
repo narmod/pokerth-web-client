@@ -989,7 +989,7 @@ export const strings = {
     musicExpand: "Розгорнути",
     musicMoveUp: "Угору",
     musicMoveDown: "Униз", musicRadios: "Радіостанції",
-    importSeat: "Імпортувати пакет місць (.zip)",
+    betDisplayTitle:'Відображення ставки:', betDisplayInset:'Ставка всередині рамки гравця', betDisplayClassic:'Ставка поруч із рамкою гравця', importSeat: "Імпортувати пакет місць (.zip)",
     plColumns: "Стовпці",
     plColAvatar: "Аватар",
     plColName: "Ім'я",

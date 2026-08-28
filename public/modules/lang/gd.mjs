@@ -993,7 +993,7 @@ export const strings = {
     musicExpand: "Leudaich",
     musicMoveUp: "Gluais suas",
     musicMoveDown: "Gluais sìos", musicRadios: "Rèidiothan",
-    importSeat: "Ion-phortaich pasgan shuidheachan (.zip)",
+    betDisplayTitle:"Taisbeanadh a' gheall:", betDisplayInset:"Geall am broinn bogsa a' chluicheadair", betDisplayClassic:"Geall ri taobh bogsa a' chluicheadair", importSeat: "Ion-phortaich pasgan shuidheachan (.zip)",
     plColumns: "Colbhan",
     plColAvatar: "Avatar",
     plColName: "Ainm",

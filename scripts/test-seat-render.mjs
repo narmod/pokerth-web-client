@@ -112,6 +112,36 @@ ok(window.renderSeatsImmediate === M.renderSeatsImmediate && window.renderSeats 
    window.getPlayerName === M.getPlayerName && window.isBot === M.isBot,
    'ponts window.* en place');
 
+// ── Style de mise « inset » (parité QML SeatStyle/PlayerBetStrip 414a89c) ──
+// Pack à politique betside (betOut) + variante 'inset' -> socle .seat-bet-socle
+// dans la plaque + classe .socle-open sur les sièges avec mise ; pas de jeton
+// .seat-bet dans le pied. Variante 'classic' -> aucun socle, jeton du pied
+// inchangé. Ne s'applique PAS aux packs sans le trait betOut.
+S._amSpectator = false; S.seats = [9, 5, 11, 13];
+window._seatTraitsNow = () => ({ betOut: true, qmlStruct: true, pucksSide: true, selfStrip: true });
+window._betStyleVariant = () => 'inset';
+window._seatDomPrev = null; window._seatAnimPrev = null;
+threw = null;
+try { M.renderSeatsImmediate(); } catch (e) { threw = e; }
+const insetHtml = els['g-seats'].innerHTML || '';
+ok(!threw, 'inset : rendu sans exception' + (threw ? ' — ' + threw.message : ''));
+ok(insetHtml.includes('seat-bet-socle'), 'inset : socle rendu pour les mises');
+ok(insetHtml.includes('socle-open'), 'inset : classe socle-open posée sur le siège misant');
+ok(!/seat-foot"><div class="seat-bet/.test(insetHtml), 'inset : plus de jeton de mise dans le pied');
+window._betStyleVariant = () => 'classic';
+window._seatDomPrev = null; window._seatAnimPrev = null;
+M.renderSeatsImmediate();
+const classicHtml = els['g-seats'].innerHTML || '';
+ok(!classicHtml.includes('seat-bet-socle') && !classicHtml.includes('socle-open'),
+   'classic : aucun socle, aucune classe socle-open');
+window._seatTraitsNow = () => ({});
+window._seatDomPrev = null; window._seatAnimPrev = null;
+window._betStyleVariant = () => 'inset';
+M.renderSeatsImmediate();
+ok(!(els['g-seats'].innerHTML || '').includes('seat-bet-socle'),
+   'pack sans betOut : le style inset est sans effet');
+window._betStyleVariant = undefined;
+
 // Garde de régression : une boîte fantôme mesure BIEN MOINS HAUT qu'une vraie
 // (le CSS y masque la rangée nom/cash en display:none). Prendre son rect brut
 // pour étalon fausserait la géométrie ; l'IGNORER complètement fait sauter le

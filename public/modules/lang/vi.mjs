@@ -990,7 +990,7 @@ export const strings = {
     musicExpand: "Mở rộng",
     musicMoveUp: "Chuyển lên",
     musicMoveDown: "Chuyển xuống", musicRadios: "Đài radio",
-    importSeat: "Nhập gói chỗ ngồi (.zip)",
+    betDisplayTitle:'Hiển thị tiền cược:', betDisplayInset:'Tiền cược trong khung người chơi', betDisplayClassic:'Tiền cược bên cạnh khung người chơi', importSeat: "Nhập gói chỗ ngồi (.zip)",
     plColumns: "Cột",
     plColAvatar: "Ảnh đại diện",
     plColName: "Tên",

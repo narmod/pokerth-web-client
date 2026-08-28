@@ -1976,6 +1976,33 @@ window._chatTranslate = function (btn) {
 };
 try { _applyChatTranslateFlag(); } catch (e) {}
 window._applySeatOrient = _applySeatOrient;
+// ── Style de mise (parité QML config/SeatStyle.qml, upstream 414a89c) ──────
+// 'inset' = la mise dans un SOCLE en bas, À L'INTÉRIEUR de la boîte joueur
+// (PlayerBetStrip QML) ; 'classic' = jeton betside À CÔTÉ de la boîte (état
+// historique). pth_bet_style vide => défaut de la plateforme, comme le QML
+// (QmlSeatStyle vide) : desktop = inset, mobile = classic. Côté QML le mobile
+// est Qt.platform.os android/ios ; côté web on suit la convention maison
+// « isMobile web = pointer:coarse » (cf. calibrage des boutons d'action).
+// Ne s'applique qu'aux packs à politique betside QML (trait betOut) — les
+// packs qui posent déjà la mise dans le pied ne sont pas concernés.
+function _betStyleVariant() {
+  var v = '';
+  try { v = localStorage.getItem('pth_bet_style') || ''; } catch (e) {}
+  if (v === 'inset' || v === 'classic') return v;
+  var coarse = false;
+  try { coarse = !!(window.matchMedia && window.matchMedia('(pointer: coarse)').matches); } catch (e) {}
+  return coarse ? 'classic' : 'inset';
+}
+// Pose html[data-bet="inset|classic"] (consommé par pokerth.css : réservation
+// de la place du socle sous .seat) puis re-rend les sièges si une partie est
+// affichée — la bascule des réglages est donc LIVE, comme applySeatStyle QML.
+function _applyBetStyle() {
+  try { document.documentElement.setAttribute('data-bet', _betStyleVariant()); } catch (e) {}
+  try { if (typeof window._renderSeats === 'function') window._renderSeats(); } catch (e) {}
+}
+window._betStyleVariant = _betStyleVariant;
+window._applyBetStyle = _applyBetStyle;
+try { _applyBetStyle(); } catch (e) {}
 // ── Descripteur de pack de sièges (étape 3) ────────────────────────────────
 // Traits comportementaux du pack actif, résolus par le module theme
 // (window._seatPackTraits : packs intégrés + "traits" du seat.json des packs
@@ -10828,7 +10855,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.7-web.157'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.7-web.158'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

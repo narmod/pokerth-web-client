@@ -797,7 +797,7 @@ export const strings = {
     musicExpand: "विस्तृत करें",
     musicMoveUp: "ऊपर ले जाएँ",
     musicMoveDown: "नीचे ले जाएँ", musicRadios: "रेडियो",
-    importSeat: "सीट पैक (.zip) आयात करें",
+    betDisplayTitle:'बेट प्रदर्शन:', betDisplayInset:'बेट खिलाड़ी के बॉक्स के अंदर', betDisplayClassic:'बेट खिलाड़ी के बॉक्स के बगल में', importSeat: "सीट पैक (.zip) आयात करें",
     plColumns: "स्तंभ",
     plColAvatar: "अवतार",
     plColName: "नाम",

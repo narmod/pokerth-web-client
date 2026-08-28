@@ -921,7 +921,7 @@ export const strings = {
     musicExpand: "Erweitern",
     musicMoveUp: "Nach oben",
     musicMoveDown: "Nach unten", musicRadios: "Radios",
-    importSeat: "Sitz-Paket (.zip) importieren",
+    betDisplayTitle:'Einsatzanzeige:', betDisplayInset:'Einsatz in der Spielerbox', betDisplayClassic:'Einsatz neben der Spielerbox', importSeat: "Sitz-Paket (.zip) importieren",
     plColumns: "Spalten",
     plColAvatar: "Avatar",
     plColName: "Name",

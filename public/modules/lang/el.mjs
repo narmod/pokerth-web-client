@@ -990,7 +990,7 @@ export const strings = {
     musicExpand: "Ανάπτυξη",
     musicMoveUp: "Μετακίνηση πάνω",
     musicMoveDown: "Μετακίνηση κάτω", musicRadios: "Ραδιόφωνα",
-    importSeat: "Εισαγωγή πακέτου θέσεων (.zip)",
+    betDisplayTitle:'Εμφάνιση ποντάρισματος:', betDisplayInset:'Ποντάρισμα μέσα στο πλαίσιο του παίκτη', betDisplayClassic:'Ποντάρισμα δίπλα στο πλαίσιο του παίκτη', importSeat: "Εισαγωγή πακέτου θέσεων (.zip)",
     plColumns: "Στήλες",
     plColAvatar: "Άβαταρ",
     plColName: "Όνομα",

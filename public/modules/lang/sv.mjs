@@ -916,7 +916,7 @@ export const strings = {
     musicExpand: "Expandera",
     musicMoveUp: "Flytta upp",
     musicMoveDown: "Flytta ned", musicRadios: "Radiokanaler",
-    importSeat: "Importera ett platspaket (.zip)",
+    betDisplayTitle:'Visning av insats:', betDisplayInset:'Insats i spelarrutan', betDisplayClassic:'Insats bredvid spelarrutan', importSeat: "Importera ett platspaket (.zip)",
     plColumns: "Kolumner",
     plColAvatar: "Avatar",
     plColName: "Namn",

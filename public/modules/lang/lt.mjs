@@ -990,7 +990,7 @@ export const strings = {
     musicExpand: "Išplėsti",
     musicMoveUp: "Aukštyn",
     musicMoveDown: "Žemyn", musicRadios: "Radijo stotys",
-    importSeat: "Importuoti vietų paketą (.zip)",
+    betDisplayTitle:'Statymo rodymas:', betDisplayInset:'Statymas žaidėjo langelyje', betDisplayClassic:'Statymas šalia žaidėjo langelio', importSeat: "Importuoti vietų paketą (.zip)",
     plColumns: "Stulpeliai",
     plColAvatar: "Avataras",
     plColName: "Vardas",

@@ -914,7 +914,7 @@ export const strings = {
     musicExpand: "展開",
     musicMoveUp: "上移",
     musicMoveDown: "下移", musicRadios: "電台",
-    importSeat: "匯入座位包（.zip）",
+    betDisplayTitle:'下注顯示：', betDisplayInset:'下注顯示在玩家框內', betDisplayClassic:'下注顯示在玩家框旁', importSeat: "匯入座位包（.zip）",
     plColumns: "欄",
     plColAvatar: "頭像",
     plColName: "名稱",

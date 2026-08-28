@@ -918,7 +918,7 @@ export const strings = {
     musicExpand: "Expandir",
     musicMoveUp: "Subir",
     musicMoveDown: "Descer", musicRadios: "Rádios",
-    importSeat: "Importar um pacote de lugares (.zip)",
+    betDisplayTitle:'Apresentação da aposta:', betDisplayInset:'Aposta dentro da caixa do jogador', betDisplayClassic:'Aposta ao lado da caixa do jogador', importSeat: "Importar um pacote de lugares (.zip)",
     plColumns: "Colunas",
     plColAvatar: "Avatar",
     plColName: "Nome",

@@ -992,7 +992,7 @@ export const strings = {
     musicExpand: "விரிவாக்கு",
     musicMoveUp: "மேலே நகர்த்து",
     musicMoveDown: "கீழே நகர்த்து", musicRadios: "வானொலிகள்",
-    importSeat: "இருக்கைத் தொகுப்பை (.zip) இறக்குமதி செய்",
+    betDisplayTitle:'பந்தயக் காட்சி:', betDisplayInset:'பந்தயம் வீரர் பெட்டிக்குள்', betDisplayClassic:'பந்தயம் வீரர் பெட்டிக்கு அருகில்', importSeat: "இருக்கைத் தொகுப்பை (.zip) இறக்குமதி செய்",
     plColumns: "நெடுவரிசைகள்",
     plColAvatar: "அவதாரம்",
     plColName: "பெயர்",

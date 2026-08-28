@@ -922,7 +922,7 @@ export const strings = {
     musicExpand: "Expandir",
     musicMoveUp: "Subir",
     musicMoveDown: "Bajar", musicRadios: "Radios",
-    importSeat: "Importar un paquete de asientos (.zip)",
+    betDisplayTitle:'Visualización de la apuesta:', betDisplayInset:'Apuesta dentro del recuadro del jugador', betDisplayClassic:'Apuesta junto al recuadro del jugador', importSeat: "Importar un paquete de asientos (.zip)",
     plColumns: "Columnas",
     plColAvatar: "Avatar",
     plColName: "Nombre",

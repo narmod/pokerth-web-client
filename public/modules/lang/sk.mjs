@@ -918,7 +918,7 @@ export const strings = {
     musicExpand: "Rozbaliť",
     musicMoveUp: "Posunúť nahor",
     musicMoveDown: "Posunúť nadol", musicRadios: "Rádiá",
-    importSeat: "Importovať balík miest (.zip)",
+    betDisplayTitle:'Zobrazenie stávky:', betDisplayInset:'Stávka v rámčeku hráča', betDisplayClassic:'Stávka vedľa rámčeka hráča', importSeat: "Importovať balík miest (.zip)",
     plColumns: "Stĺpce",
     plColAvatar: "Avatar",
     plColName: "Meno",

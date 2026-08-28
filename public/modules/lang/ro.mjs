@@ -918,7 +918,7 @@ export const strings = {
     musicExpand: "Extinde",
     musicMoveUp: "Mută în sus",
     musicMoveDown: "Mută în jos", musicRadios: "Radiouri",
-    importSeat: "Importă un pachet de locuri (.zip)",
+    betDisplayTitle:'Afișarea mizei:', betDisplayInset:'Miza în caseta jucătorului', betDisplayClassic:'Miza lângă caseta jucătorului', importSeat: "Importă un pachet de locuri (.zip)",
     plColumns: "Coloane",
     plColAvatar: "Avatar",
     plColName: "Nume",

@@ -16,6 +16,22 @@ release. Granular, per-build changes for this line are on the
 highlights below.
 
 ### Added
+- **Bet display setting — bet inside the player box** (`web.158`). Parity with
+  upstream QML commit `414a89c` (`config/SeatStyle.qml` + `PlayerBetStrip.qml`):
+  a new "Bet display" radio group in Settings → Styles → Seats chooses between
+  `inset` (the bet sits in a 20 px tray that folds out at the bottom of the
+  player box, inside the frame — the new platform default on desktop, matching
+  the QML desktop default) and `classic` (bet chip next to the box, unchanged —
+  still the default on touch devices, like Android/iOS in QML). Stored in
+  `localStorage` `pth_bet_style` (empty = platform default, resolved via
+  `pointer: coarse`), applied as `html[data-bet]` and switchable live on an
+  open table. The tray's space is permanently reserved below the seat
+  (`padding-bottom`, released when the tray opens) so opening it moves neither
+  neighbours nor the autofit — mirroring the QML `tableZone.betStripH`
+  reservation. Dealer/blind pucks stay outside the box in both variants. Only
+  packs following the QML betside policy (`betOut` trait) are affected. Three
+  new i18n keys across all 45 languages (de/es/it/pt translations taken
+  verbatim from the upstream `.ts` files).
 - **90 emoji reactions across three themed pages** (`web.151`). The reaction
   picker grows from 30 to 90 emojis, split into three pages of 30 — Emotions,
   Mood & gestures, Poker & luck — navigated with `‹ ›` arrows and three

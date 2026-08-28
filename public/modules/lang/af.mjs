@@ -990,7 +990,7 @@ export const strings = {
     musicExpand: "Vou uit",
     musicMoveUp: "Skuif op",
     musicMoveDown: "Skuif af", musicRadios: "Radio's",
-    importSeat: "Voer 'n sitplekpakket (.zip) in",
+    betDisplayTitle:'Weddenskapvertoning:', betDisplayInset:'Weddenskap binne die spelerkassie', betDisplayClassic:'Weddenskap langs die spelerkassie', importSeat: "Voer 'n sitplekpakket (.zip) in",
     plColumns: "Kolomme",
     plColAvatar: "Avatar",
     plColName: "Naam",

@@ -990,7 +990,7 @@ export const strings = {
     musicExpand: "Kibontás",
     musicMoveUp: "Fel",
     musicMoveDown: "Le", musicRadios: "Rádiók",
-    importSeat: "Ülőhelycsomag (.zip) importálása",
+    betDisplayTitle:'Tét megjelenítése:', betDisplayInset:'Tét a játékos dobozában', betDisplayClassic:'Tét a játékos doboza mellett', importSeat: "Ülőhelycsomag (.zip) importálása",
     plColumns: "Oszlopok",
     plColAvatar: "Avatár",
     plColName: "Név",
