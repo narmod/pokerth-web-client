@@ -16,6 +16,17 @@ release. Granular, per-build changes for this line are on the
 highlights below.
 
 ### Changed
+- **Per-account private messages** (`web.161`). Parity with upstream commit
+  `9bccf3a` ("qml: pm dialog persistence fine-tuning"): the PM history now
+  belongs to the logged-in nickname instead of the whole browser profile.
+  IndexedDB `pth_pm` migrates to v2 (composite `(owner, partner)` key,
+  mirroring the SQLite `owner` column upstream); ownerless rows from before
+  the split are adopted by the first account that logs in. The inbox is
+  empty and nothing is persisted while nobody is logged in (owner set on
+  our own PlayerInfoReply, cleared on InitAck — the web analogue of
+  `setMyPlayerInfo` / `setSession`), and a selected conversation that
+  disappears with an account switch falls back to the first partner.
+  New deterministic suite `scripts/test-pm-owner.mjs`.
 - **Floating bet keypad on desktop** (`web.159`). On fine-pointer devices the
   web-only bet keypad no longer swaps out the middle and action rows: it now
   opens as a compact overlay (34 px keys) floating just above the action

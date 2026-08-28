@@ -144,6 +144,11 @@ function onInitAck(sub) {
       if (window._advGet ? window._advGet('chat_clear_login', true) : true)
         window.clearChatPanel && window.clearChatPanel('lobby');
     } catch (e) {}
+    // Parite QML 9bccf3a (setSession) : le carnet de messages prives
+    // appartient a un compte ; tant que le login de CETTE session n'est pas
+    // confirme (PlayerInfoReply sur soi-meme, plus bas), personne n'est
+    // connu — boite vide, rien n'est persiste.
+    try { window._pmSetOwner && window._pmSetOwner(''); } catch (e) {}
     S._wasAuthenticated = true;
     S._lastConnectFailed = false; // connexion réussie
     _endConnecting();           // login OK → unlock the connect button
@@ -499,6 +504,12 @@ function onPlayerInfoReply(sub) {
     const info = Proto.sub(sub, 2);
     const name = Proto.str(info, 1);
     if (name) S.players[pid] = name;
+    // Premier point apres le login ou notre pseudo canonique est confirme :
+    // c'est le carnet de messages prives de CE compte qui s'applique
+    // (parite QML 9bccf3a : setMyPlayerInfo -> setPrivateMessageOwner).
+    if (pid === S.myId && name) {
+      try { window._pmSetOwner && window._pmSetOwner(name); } catch (e) {}
+    }
     // Rafraîchir un panneau « joueurs à cette table » en attente de ce pseudo.
     if (name && S._openTables.size && window._tableHasPid(pid)) renderGames();
     // Code pays (champ 4, optionnel) — présent surtout sur pokerth.net.

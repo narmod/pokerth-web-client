@@ -494,6 +494,28 @@ function _doSend() {
   _renderCounter();
 }
 
+// ── Account switch (called from msg-lobby.mjs via the window bridge) ────
+
+// The inbox belongs to the logged-in account: log in with another user and
+// the previous user's conversations are gone — a still-selected one must
+// not linger either (parity: onPartnersChanged in PrivateMessageDialog.qml,
+// upstream 9bccf3a). Empty name = nobody logged in, empty inbox.
+function setOwner(name) {
+  store.setOwner(name).then(function (changed) {
+    if (!changed) return;
+    if (name) {
+      // One-shot cleanup of empty rows left behind by early versions,
+      // now that we know whose rows they are.
+      store.prune();
+    }
+    _draft = '';
+    const list = store.partners();
+    if (_current && !list.some(function (p) { return p.name === _current; }))
+      _current = list.length ? list[0].name : '';
+    _render();
+  });
+}
+
 // ── Incoming message (called from msg-social.mjs) ───────────────────────
 
 function onIncoming(name, text) {
@@ -571,11 +593,11 @@ function _init() {
     const m = $('pm-modal');
     if (m && m.style.display !== 'none') close();
   });
-  store.ready().then(function () {
-    // Versions up to 2.1.7-web.94 wrote an empty conversation as soon as a
-    // dialogue was opened; clear those out once, on load.
-    return store.prune().then(refreshBadge);
-  });
+  // The store is per-account and empty before login (parity upstream
+  // 9bccf3a): there is nothing to read or prune here — setOwner() does
+  // both once a login says whose inbox applies. Opening the database
+  // early just hides its latency behind the connect handshake.
+  store.ready().then(refreshBadge);
 }
 
 if (typeof document !== 'undefined') {
@@ -593,8 +615,9 @@ if (typeof window !== 'undefined') {
   window._pmSendTo     = sendTo;
   window._pmOnReject   = onReject;
   window._pmBadge      = refreshBadge;
+  window._pmSetOwner   = setOwner;
   window._pmPlayerId   = playerIdByName;
 }
 
-export { open, close, toggle, select, sendTo, onIncoming, onReject,
-         refreshBadge, playerIdByName, deleteCurrent };
+export { open, close, toggle, select, setOwner, sendTo, onIncoming,
+         onReject, refreshBadge, playerIdByName, deleteCurrent };
