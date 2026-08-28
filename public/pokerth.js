@@ -6501,7 +6501,7 @@ const App = (() => {
       _applyReactPinUI();
     },
 
-    // Pagination du panneau réactions : onglet direct (1/2/3) ou flèches ‹ ›.
+    // Pagination du panneau réactions : flèches ‹ › (l'indicateur N/3 est passif).
     reactPage(i) { setReactionPage(i); },
     reactPageStep(d) { setReactionPage(_reactPageCurrent() + (d || 0)); },
 
@@ -9939,7 +9939,7 @@ function _fitReactGrid(panel){
 }
 
 // ── Pagination du panneau réactions (3 pages thématiques × 30, 2026-08-28) ──
-// Onglets numérotés 1/2/3 (thème dans le title) + flèches ‹ › ; chaque page est une .react-grid,
+// Pager compact dans la barre de titre : ‹ [N/3] › ; chaque page est une .react-grid,
 // seule la page active est visible ([hidden] sur les autres) et _fitReactGrid
 // ne mesure qu'elle. Dernière page mémorisée (pth_react_page).
 function setReactionPage(i){
@@ -9953,8 +9953,8 @@ function setReactionPage(i){
     if (k === i) grids[k].removeAttribute('hidden');
     else grids[k].setAttribute('hidden', '');
   }
-  var tabs = panel.querySelectorAll('.react-pg-tab');
-  for (var t = 0; t < tabs.length; t++) tabs[t].classList.toggle('active', t === i);
+  var ind = document.getElementById('react-page-ind');
+  if (ind) ind.textContent = (i + 1) + '/' + n;
   try { localStorage.setItem('pth_react_page', String(i)); } catch (e) {}
   _fitReactGrid(panel);
 }
@@ -10790,7 +10790,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.7-web.153'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.7-web.154'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

@@ -57,7 +57,7 @@ for (let i = 0; i < found.length; i++) {
 }
 ok(orderOk, 'HTML button order + rcp-N ids match REACT_EMOJIS');
 ok((html.match(/class="react-grid"/g) || []).length === 3, 'HTML has 3 react-grid pages');
-ok((html.match(/class="react-pg-tab/g) || []).length === 3, 'HTML has 3 pager tabs');
+ok((html.match(/id="react-page-ind"/g) || []).length === 1, 'HTML has the single page indicator in the title bar');
 
 // 3) FX coverage: one entry per emoji; anims present in CSS; presets known.
 const missingFx = REACT_EMOJIS.filter((e) => !REACTION_FX[e]);
