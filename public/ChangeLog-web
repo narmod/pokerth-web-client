@@ -1,4 +1,5 @@
 2026-08-13 version 2.1.7-web (current series):
+- improvement: on narrow screens and in languages with long words, the tabs of the About window and the labels of the create-table form now wrap onto a second line instead of being cut off with "..."
 - improvement: the private message window now sends with the same little paper-plane button as the chat, right next to the text field - and after sending with the mouse, the cursor stays in the field so you can keep typing
 - new: the players list now tells you where someone is playing. On desktop, rest your mouse on a player's name to read "X is playing in ...". On phones and tablets, open the player's card - the same line is written there, in your language
 - new: the poker glossary is now available in all 45 interface languages. With it, all five content pages - rules, hand rankings, how to play, glossary and FAQ - are fully translated: whatever language you read the site in, every page speaks it

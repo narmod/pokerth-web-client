@@ -1878,7 +1878,11 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
 .cf-name-wrap .cf input { width: 100%; box-sizing: border-box; }
 .cf { display: flex; flex-direction: column; gap: 3px; }
 .cf-sm { min-width: 80px; }
-.cf label { font-size: var(--fs-3xs); color: var(--gold-dim); letter-spacing: 0.1em; text-transform: uppercase; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+/* Libellés du formulaire de création : retour à la ligne au lieu d'une
+   troncature « … » quand la traduction dépasse la colonne (parité QML
+   Local/NetworkGameSettings, stable 27/08/2026 — wrapMode WordWrap ajouté
+   sur chaque Label). Les rangées sont en flex : elles grandissent avec. */
+.cf label { font-size: var(--fs-3xs); color: var(--gold-dim); letter-spacing: 0.1em; text-transform: uppercase; white-space: normal; overflow-wrap: break-word; }
 .cf input, .cf select { background: var(--field-bg); border: 1px solid var(--border); border-radius: 2px; color: var(--cream); padding: 5px 7px; font-family: var(--ff-mono); font-size: var(--fs-base); outline: none; width: 100%; }
 .cf input:focus, .cf select:focus { border-color: var(--gold); }
 
@@ -9491,7 +9495,12 @@ html.reduce-fx .seat-action-badge {
 .ab-back:hover { background:var(--inset-hi); }
 .ab-title { font-size:1.25rem; font-weight:700; color:var(--text-hi); padding:4px 16px 10px; flex-shrink:0; }
 .ab-tabs { display:flex; margin:0 16px; flex-shrink:0; }
-.ab-tab { flex:1 1 0; min-width:0; border:none; cursor:pointer; padding:8px 6px; font-size:var(--fs-base); color:var(--text-hi); background:var(--inset); font-family:var(--ff-display); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+/* Libellé trop long pour la largeur de l'onglet (portrait étroit, langues
+   longues) : retour à la ligne sur 2 lignes max au lieu d'une troncature
+   (« Bibliothèques tie… ») ; la barre grandit avec (parité QML CustomTabBar,
+   stable 27/08/2026 — wrapMode WordWrap + maximumLineCount 2). Le clamp
+   -webkit- couvre tous les moteurs actuels, Firefox inclus. */
+.ab-tab { flex:1 1 0; min-width:0; border:none; cursor:pointer; padding:8px 6px; font-size:var(--fs-base); color:var(--text-hi); background:var(--inset); font-family:var(--ff-display); white-space:normal; overflow-wrap:break-word; overflow:hidden; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; text-align:center; }
 .ab-tab.active { background:var(--panel-hi); font-weight:600; }
 :root[data-theme="pokerth-light"] .ab-tab { background:#dfe3ea; }
 :root[data-theme="pokerth-light"] .ab-tab.active { background:#a9b2c6; }

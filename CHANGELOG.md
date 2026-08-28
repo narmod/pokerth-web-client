@@ -51,6 +51,14 @@ highlights below.
   `InitAck` lands. Covered by `scripts/test-reconnect-backoff.mjs`.
 
 ### Changed
+- **Long labels wrap instead of truncating** (`web.149`). QML-parity with the
+  upstream portrait fine-tuning (stable, 2026-08-27): the About dialog tabs
+  now wrap onto a second line and the bar grows with them, instead of cutting
+  the label off ("Third party li…") in narrow portrait windows or long
+  translations (`CustomTabBar`: WordWrap + `maximumLineCount: 2`, mirrored
+  with a 2-line `-webkit-line-clamp`). The create-table form labels likewise
+  wrap freely (`Local`/`NetworkGameSettings`: WordWrap on every Label).
+  Guarded by `scripts/test-portrait-wrap.mjs`.
 - **PM dialog sends with a paper-plane icon** (`web.148`). QML-parity with
   upstream `PrivateMessageDialog` fine-tuning (stable, 2026-08-27): the wide
   labeled "Send" button is replaced by the same square paper-plane icon button
