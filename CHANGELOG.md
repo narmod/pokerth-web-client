@@ -23,7 +23,9 @@ highlights below.
   tabs, taller arrows, and hidden pages are now really hidden:
   `.react-grid { display:grid }` was overriding the `[hidden]` UA style,
   showing all three pages at once). The pager is a compact `‹ N/3 ›` group in the
-  title bar between the label and the pin (`web.154`), and seven
+  title bar between the label and the pin (`web.154`; `web.155` — arrows
+  and counter use `var(--text)` like the close button, because some theme
+  packs redefine `--gold`/`--text-dim` too dark to read), and seven
   emojis were re-picked for the poker context (`web.153`): 😐 poker face,
   🥱 slowroll and 🙈 can't-watch join page 1 (replacing near-duplicates
   😉 🤭 😰), 🎊→🍿 popcorn, 🥈→💸 money-flies-away, 🥉→🪤 trap,
