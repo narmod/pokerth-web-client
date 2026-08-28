@@ -46,11 +46,11 @@ function _applyReactPinUI() {
 // la présence des keyframes CSS de chaque animation.
 var REACT_EMOJIS = [
   // page 1 😀
-  '😂','🤣','😅','😭','🥺','😢','😉','😏','🙄','😳','🤪','😇','😍','🥰','😘','😬','😴','🤔','👀','😮','😱','🤯','😡','😤','🤢','🥴','😰','🙃','🤭','🫣',
+  '😂','🤣','😅','😭','🥺','😢','😏','🙄','😳','🤪','😇','😍','🥰','😘','😬','😴','🤔','👀','😮','😱','🤯','😡','😤','🤢','🥴','🙃','🫣','😐','🥱','🙈',
   // page 2 👏
-  '🎉','🥳','🎊','👏','🙌','💪','👍','👎','🤝','👊','🙏','🤞','🫵','🫡','🤫','🤦','😎','🤩','💤','⏳','🍺','☕','🤡','😈','💣','🚀','⚡','🫠','🥶','🥵',
+  '🎉','🥳','🍿','👏','🙌','💪','👍','👎','🤝','👊','🙏','🤞','🫵','🫡','🤫','🤦','😎','🤩','💤','⏳','🍺','☕','🤡','😈','💣','🚀','⚡','🫠','🥶','🥵',
   // page 3 ♠️
-  '💰','🤑','💵','💎','🎰','🍀','🃏','♠️','🎲','🎯','🏆','🥇','🥈','🥉','👑','🔥','💀','🦈','🐟','🐔','🫏','🎩','🧊','🌪️','🧨','📈','📉','🚨','💯','⭐'
+  '💰','🤑','💵','💎','🎰','🍀','🃏','♠️','🎲','🎯','🏆','🥇','💸','🪤','👑','🔥','💀','🦈','🐟','🐔','🫏','🎩','🧊','🌪️','🧨','📈','📉','🔮','💯','⭐'
 ];
 
 // ── Catalogue des effets animés par réaction ──
@@ -66,7 +66,6 @@ var REACTION_FX = {
   '😭':{a:'shake',p:{chars:['💧'],count:11,size:14,a0:-20,a1:200,dist:60,g:70,life:1000}},
   '🥺':{a:'heartbeat',p:{chars:['✨','💖'],count:8,size:13,a0:0,a1:360,dist:56,life:850}},
   '😢':{a:'wobble',p:{chars:['💧'],count:6,size:13,a0:-30,a1:210,dist:50,g:55,life:900}},
-  '😉':{a:'pop',p:'sparkle'},
   '😏':{a:'pop',p:'sparkle'},
   '🙄':{a:'tilt',p:{chars:['✦'],count:5,size:11,a0:0,a1:360,dist:44,life:650}},
   '😳':{a:'zoomout',p:'sparkle'},
@@ -86,14 +85,15 @@ var REACTION_FX = {
   '😤':{a:'flex',p:{chars:['💨'],count:6,size:14,a0:-190,a1:10,dist:52,life:750}},
   '🤢':{a:'wobble',p:{count:8,color:'#7ee37e',size:7,a0:0,a1:360,dist:50,life:750}},
   '🥴':{a:'wobble',p:{chars:['🌀','✦'],count:6,size:12,a0:0,a1:360,dist:52,life:850,rot:1}},
-  '😰':{a:'shiver',p:{chars:['💦'],count:6,size:12,a0:-130,a1:-50,dist:46,g:48,life:780}},
   '🙃':{a:'flip',p:'sparkle'},
-  '🤭':{a:'pop',p:'sparkle'},
   '🫣':{a:'pop',p:{chars:['✦'],count:5,size:11,a0:0,a1:360,dist:44,life:650}},
+  '😐':{a:'pop',p:{chars:['✦'],count:3,size:10,a0:0,a1:360,dist:36,life:600}},
+  '🥱':{a:'wobble',p:{chars:['💤'],count:5,size:14,a0:-130,a1:-50,dist:52,g:-42,life:1100}},
+  '🙈':{a:'shake',p:{chars:['✦'],count:6,size:11,a0:0,a1:360,dist:48,life:700}},
   // ── page 2 👏 ──
   '🎉':{a:'pop',p:'confetti'},
   '🥳':{a:'pop',p:'confetti'},
-  '🎊':{a:'pop',p:'confetti'},
+  '🍿':{a:'beat',p:{chars:['🍿'],count:9,size:13,a0:-160,a1:-20,dist:60,g:70,life:1000,rot:1}},
   '👏':{a:'beat',p:{chars:['✦','✧'],count:9,color:'var(--gold)',size:13,a0:0,a1:360,dist:60,life:750}},
   '🙌':{a:'beat',p:{chars:['✦','✧'],count:9,color:'var(--gold)',size:13,a0:0,a1:360,dist:62,life:780}},
   '💪':{a:'flex',p:{chars:['✦'],count:6,color:'var(--gold)',size:13,a0:0,a1:360,dist:50,life:700}},
@@ -134,8 +134,8 @@ var REACTION_FX = {
   '🎯':{a:'zoomout',p:'sparkle'},
   '🏆':{a:'shine',p:{chars:['⭐','✨'],count:10,color:'var(--gold)',size:14,a0:0,a1:360,dist:68,life:1000,rot:1}},
   '🥇':{a:'shine',p:{chars:['✨'],count:8,color:'var(--gold)',size:13,a0:0,a1:360,dist:60,life:900}},
-  '🥈':{a:'shine',p:{count:9,color:'#c9ced6',size:7,a0:0,a1:360,dist:58,life:850}},
-  '🥉':{a:'shine',p:{count:9,color:'#d09a5b',size:7,a0:0,a1:360,dist:58,life:850}},
+  '💸':{a:'launch',p:{chars:['💵','🪙'],count:10,size:14,a0:-150,a1:-30,dist:75,g:-40,life:1100,rot:1}},
+  '🪤':{a:'drop',p:'shock'},
   '👑':{a:'shine',p:{chars:['✨','⭐'],count:10,color:'var(--gold)',size:14,a0:0,a1:360,dist:70,life:1000,rot:1}},
   '🔥':{a:'fire',p:{chars:['🔥','✦'],count:9,size:14,a0:-150,a1:-30,dist:70,g:-24,life:1000,rot:1}},
   '💀':{a:'shiver',p:{count:8,color:'#9aa0a6',size:6,a0:0,a1:360,dist:52,life:800}},
@@ -149,7 +149,7 @@ var REACTION_FX = {
   '🧨':{a:'shake',p:'shock'},
   '📈':{a:'launch',p:{count:8,color:'#7ee37e',size:6,a0:-120,a1:-60,dist:62,g:-30,life:850}},
   '📉':{a:'drop',p:{count:8,color:'#e05252',size:6,a0:60,a1:120,dist:58,g:70,life:850}},
-  '🚨':{a:'zoomout',p:{count:10,color:'#e05252',size:7,a0:0,a1:360,dist:64,life:800}},
+  '🔮':{a:'shine',p:{chars:['✨','✦'],count:8,size:13,a0:0,a1:360,dist:60,life:900,rot:1}},
   '💯':{a:'zoomout',p:{chars:['✦','💯'],count:6,size:13,a0:0,a1:360,dist:56,life:800}},
   '⭐':{a:'shine',p:{chars:['⭐','✨'],count:9,size:13,a0:0,a1:360,dist:62,life:900,rot:1}}
 };

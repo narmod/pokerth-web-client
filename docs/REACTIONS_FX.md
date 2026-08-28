@@ -52,30 +52,30 @@ life ms, rot = random rotation.
 | 3 | 😭 | `shake` | `{chars:['💧'],count:11,size:14,a0:-20,a1:200,dist:60,g:70,life:1000}` |
 | 4 | 🥺 | `heartbeat` | `{chars:['✨','💖'],count:8,size:13,a0:0,a1:360,dist:56,life:850}` |
 | 5 | 😢 | `wobble` | `{chars:['💧'],count:6,size:13,a0:-30,a1:210,dist:50,g:55,life:900}` |
-| 6 | 😉 | `pop` | `'sparkle'` |
-| 7 | 😏 | `pop` | `'sparkle'` |
-| 8 | 🙄 | `tilt` | `{chars:['✦'],count:5,size:11,a0:0,a1:360,dist:44,life:650}` |
-| 9 | 😳 | `zoomout` | `'sparkle'` |
-| 10 | 🤪 | `wobble` | `{chars:['✦','✧'],count:8,size:12,a0:0,a1:360,dist:58,life:800,rot:1}` |
-| 11 | 😇 | `shine` | `{chars:['✨'],count:8,color:'var(--gold)',size:13,a0:-160,a1:-20,dist:58,g:-26,life:900}` |
-| 12 | 😍 | `heartbeat` | `{chars:['❤️','💖'],count:8,size:16,a0:-160,a1:-20,dist:64,g:-30,life:1100}` |
-| 13 | 🥰 | `heartbeat` | `{chars:['💕','💖'],count:9,size:15,a0:-170,a1:-10,dist:62,g:-28,life:1050}` |
-| 14 | 😘 | `heartbeat` | `{chars:['💋','❤️'],count:7,size:15,a0:-150,a1:-30,dist:60,g:-32,life:1000}` |
-| 15 | 😬 | `shiver` | `{chars:['💦'],count:4,size:11,a0:-120,a1:-60,dist:40,g:44,life:700}` |
-| 16 | 😴 | `drop` | `{chars:['💤'],count:5,size:14,a0:-120,a1:-60,dist:52,g:-40,life:1100}` |
-| 17 | 🤔 | `wobble` | `{chars:['✦'],count:5,size:11,a0:0,a1:360,dist:42,life:650}` |
-| 18 | 👀 | `zoomout` | `'sparkle'` |
-| 19 | 😮 | `zoomout` | `{chars:['✦'],count:6,size:12,a0:0,a1:360,dist:50,life:700}` |
-| 20 | 😱 | `shake` | `{chars:['💦'],count:6,size:12,a0:-120,a1:-60,dist:48,g:50,life:780}` |
-| 21 | 🤯 | `tilt` | `'shock'` |
-| 22 | 😡 | `shiver` | `{chars:['💢','🔥'],count:7,size:13,a0:0,a1:360,dist:54,life:800}` |
-| 23 | 😤 | `flex` | `{chars:['💨'],count:6,size:14,a0:-190,a1:10,dist:52,life:750}` |
-| 24 | 🤢 | `wobble` | `{count:8,color:'#7ee37e',size:7,a0:0,a1:360,dist:50,life:750}` |
-| 25 | 🥴 | `wobble` | `{chars:['🌀','✦'],count:6,size:12,a0:0,a1:360,dist:52,life:850,rot:1}` |
-| 26 | 😰 | `shiver` | `{chars:['💦'],count:6,size:12,a0:-130,a1:-50,dist:46,g:48,life:780}` |
-| 27 | 🙃 | `flip` | `'sparkle'` |
-| 28 | 🤭 | `pop` | `'sparkle'` |
-| 29 | 🫣 | `pop` | `{chars:['✦'],count:5,size:11,a0:0,a1:360,dist:44,life:650}` |
+| 6 | 😏 | `pop` | `'sparkle'` |
+| 7 | 🙄 | `tilt` | `{chars:['✦'],count:5,size:11,a0:0,a1:360,dist:44,life:650}` |
+| 8 | 😳 | `zoomout` | `'sparkle'` |
+| 9 | 🤪 | `wobble` | `{chars:['✦','✧'],count:8,size:12,a0:0,a1:360,dist:58,life:800,rot:1}` |
+| 10 | 😇 | `shine` | `{chars:['✨'],count:8,color:'var(--gold)',size:13,a0:-160,a1:-20,dist:58,g:-26,life:900}` |
+| 11 | 😍 | `heartbeat` | `{chars:['❤️','💖'],count:8,size:16,a0:-160,a1:-20,dist:64,g:-30,life:1100}` |
+| 12 | 🥰 | `heartbeat` | `{chars:['💕','💖'],count:9,size:15,a0:-170,a1:-10,dist:62,g:-28,life:1050}` |
+| 13 | 😘 | `heartbeat` | `{chars:['💋','❤️'],count:7,size:15,a0:-150,a1:-30,dist:60,g:-32,life:1000}` |
+| 14 | 😬 | `shiver` | `{chars:['💦'],count:4,size:11,a0:-120,a1:-60,dist:40,g:44,life:700}` |
+| 15 | 😴 | `drop` | `{chars:['💤'],count:5,size:14,a0:-120,a1:-60,dist:52,g:-40,life:1100}` |
+| 16 | 🤔 | `wobble` | `{chars:['✦'],count:5,size:11,a0:0,a1:360,dist:42,life:650}` |
+| 17 | 👀 | `zoomout` | `'sparkle'` |
+| 18 | 😮 | `zoomout` | `{chars:['✦'],count:6,size:12,a0:0,a1:360,dist:50,life:700}` |
+| 19 | 😱 | `shake` | `{chars:['💦'],count:6,size:12,a0:-120,a1:-60,dist:48,g:50,life:780}` |
+| 20 | 🤯 | `tilt` | `'shock'` |
+| 21 | 😡 | `shiver` | `{chars:['💢','🔥'],count:7,size:13,a0:0,a1:360,dist:54,life:800}` |
+| 22 | 😤 | `flex` | `{chars:['💨'],count:6,size:14,a0:-190,a1:10,dist:52,life:750}` |
+| 23 | 🤢 | `wobble` | `{count:8,color:'#7ee37e',size:7,a0:0,a1:360,dist:50,life:750}` |
+| 24 | 🥴 | `wobble` | `{chars:['🌀','✦'],count:6,size:12,a0:0,a1:360,dist:52,life:850,rot:1}` |
+| 25 | 🙃 | `flip` | `'sparkle'` |
+| 26 | 🫣 | `pop` | `{chars:['✦'],count:5,size:11,a0:0,a1:360,dist:44,life:650}` |
+| 27 | 😐 | `pop` | `{chars:['✦'],count:3,size:10,a0:0,a1:360,dist:36,life:600}` |
+| 28 | 🥱 | `wobble` | `{chars:['💤'],count:5,size:14,a0:-130,a1:-50,dist:52,g:-42,life:1100}` |
+| 29 | 🙈 | `shake` | `{chars:['✦'],count:6,size:11,a0:0,a1:360,dist:48,life:700}` |
 
 ### Page 2 — 👏 Mood & gestures
 
@@ -83,7 +83,7 @@ life ms, rot = random rotation.
 |---|---|---|---|
 | 30 | 🎉 | `pop` | `'confetti'` |
 | 31 | 🥳 | `pop` | `'confetti'` |
-| 32 | 🎊 | `pop` | `'confetti'` |
+| 32 | 🍿 | `beat` | `{chars:['🍿'],count:9,size:13,a0:-160,a1:-20,dist:60,g:70,life:1000,rot:1}` |
 | 33 | 👏 | `beat` | `{chars:['✦','✧'],count:9,color:'var(--gold)',size:13,a0:0,a1:360,dist:60,life:750}` |
 | 34 | 🙌 | `beat` | `{chars:['✦','✧'],count:9,color:'var(--gold)',size:13,a0:0,a1:360,dist:62,life:780}` |
 | 35 | 💪 | `flex` | `{chars:['✦'],count:6,color:'var(--gold)',size:13,a0:0,a1:360,dist:50,life:700}` |
@@ -128,8 +128,8 @@ life ms, rot = random rotation.
 | 69 | 🎯 | `zoomout` | `'sparkle'` |
 | 70 | 🏆 | `shine` | `{chars:['⭐','✨'],count:10,color:'var(--gold)',size:14,a0:0,a1:360,dist:68,life:1000,rot:1}` |
 | 71 | 🥇 | `shine` | `{chars:['✨'],count:8,color:'var(--gold)',size:13,a0:0,a1:360,dist:60,life:900}` |
-| 72 | 🥈 | `shine` | `{count:9,color:'#c9ced6',size:7,a0:0,a1:360,dist:58,life:850}` |
-| 73 | 🥉 | `shine` | `{count:9,color:'#d09a5b',size:7,a0:0,a1:360,dist:58,life:850}` |
+| 72 | 💸 | `launch` | `{chars:['💵','🪙'],count:10,size:14,a0:-150,a1:-30,dist:75,g:-40,life:1100,rot:1}` |
+| 73 | 🪤 | `drop` | `'shock'` |
 | 74 | 👑 | `shine` | `{chars:['✨','⭐'],count:10,color:'var(--gold)',size:14,a0:0,a1:360,dist:70,life:1000,rot:1}` |
 | 75 | 🔥 | `fire` | `{chars:['🔥','✦'],count:9,size:14,a0:-150,a1:-30,dist:70,g:-24,life:1000,rot:1}` |
 | 76 | 💀 | `shiver` | `{count:8,color:'#9aa0a6',size:6,a0:0,a1:360,dist:52,life:800}` |
@@ -143,7 +143,7 @@ life ms, rot = random rotation.
 | 84 | 🧨 | `shake` | `'shock'` |
 | 85 | 📈 | `launch` | `{count:8,color:'#7ee37e',size:6,a0:-120,a1:-60,dist:62,g:-30,life:850}` |
 | 86 | 📉 | `drop` | `{count:8,color:'#e05252',size:6,a0:60,a1:120,dist:58,g:70,life:850}` |
-| 87 | 🚨 | `zoomout` | `{count:10,color:'#e05252',size:7,a0:0,a1:360,dist:64,life:800}` |
+| 87 | 🔮 | `shine` | `{chars:['✨','✦'],count:8,size:13,a0:0,a1:360,dist:60,life:900,rot:1}` |
 | 88 | 💯 | `zoomout` | `{chars:['✦','💯'],count:6,size:13,a0:0,a1:360,dist:56,life:800}` |
 | 89 | ⭐ | `shine` | `{chars:['⭐','✨'],count:9,size:13,a0:0,a1:360,dist:62,life:900,rot:1}` |
 

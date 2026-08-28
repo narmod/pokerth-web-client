@@ -22,7 +22,11 @@ highlights below.
   numbered tabs (no new i18n keys; `web.152` — numbers instead of icon
   tabs, taller arrows, and hidden pages are now really hidden:
   `.react-grid { display:grid }` was overriding the `[hidden]` UA style,
-  showing all three pages at once). The last page is persisted
+  showing all three pages at once). Tabs read `1/3 2/3 3/3` and seven
+  emojis were re-picked for the poker context (`web.153`): 😐 poker face,
+  🥱 slowroll and 🙈 can't-watch join page 1 (replacing near-duplicates
+  😉 🤭 😰), 🎊→🍿 popcorn, 🥈→💸 money-flies-away, 🥉→🪤 trap,
+  🚨→🔮 soul read. The last page is persisted
   (`pth_react_page`); the auto-fitting grid, mute and pin behaviours apply
   per page. Eight new emoji choreographies join the seven existing ones
   (launch, drop, wobble, flip, zoomout, heartbeat, shiver, tilt — 15 total)
