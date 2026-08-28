@@ -726,7 +726,7 @@ export const strings = {
     piStatusEliminated:'已淘汰',
     piViewProfile:'查看 pokerth.net 资料',
     modeManual:'手动',
-    plIgnore:'忽略', plStats:'玩家统计', plNotPlaying:'当前未在游戏中', plSortAlpha:'按字母排序', plShowIdle:'显示空闲玩家', plHideIdle:'隐藏空闲玩家', gameTimeLabel:'时间', visRanked:'排名', infoBlindsUp:'盲注提高',
+    plIgnore:'忽略', plStats:'玩家统计', plNotPlaying:'当前未在游戏中', plPlayingInFull:'%1 正在“%2”中进行游戏。', plNotPlayingFull:'%1 目前没有在游戏中。', plSortAlpha:'按字母排序', plShowIdle:'显示空闲玩家', plHideIdle:'隐藏空闲玩家', gameTimeLabel:'时间', visRanked:'排名', infoBlindsUp:'盲注提高',
     spectatorBtn:'观战',
     // v0.3.522–528 : blinds manuelles · dialogue de réglages · config.xml · sync compte
     blindsOrderLbl:'盲注提升顺序', blindsAlwaysDouble:'始终加倍盲注', blindsManualOrder:'手动盲注顺序', blindsAddBtn:'+ 添加', blindsRemoveTip:'移除此盲注', blindsAfterLbl:'之后：', blindsAfterDouble:'加倍盲注', blindsAfterRaiseBy:'盲注每次增加', blindsAfterKeep:'保持最后盲注', infoBlindsManual:'手动盲注',

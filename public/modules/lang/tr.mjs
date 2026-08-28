@@ -727,7 +727,7 @@ export const strings = {
     piStatusEliminated:'Elendi',
     piViewProfile:'pokerth.net profilini gör',
     modeManual:'Manuel',
-    plIgnore:'Yoksay', plStats:'Oyuncu istatistikleri', plNotPlaying:'Şu anda oynamıyor', plSortAlpha:'Alfabetik sırala', plShowIdle:'Boşta oyuncuları göster', plHideIdle:'Boşta oyuncuları gizle', gameTimeLabel:'Süre', visRanked:'Sıralama', infoBlindsUp:'Blind artışı',
+    plIgnore:'Yoksay', plStats:'Oyuncu istatistikleri', plNotPlaying:'Şu anda oynamıyor', plPlayingInFull:'%1 şu anda "%2" masasında oynuyor.', plNotPlayingFull:'%1 şu anda oynamıyor.', plSortAlpha:'Alfabetik sırala', plShowIdle:'Boşta oyuncuları göster', plHideIdle:'Boşta oyuncuları gizle', gameTimeLabel:'Süre', visRanked:'Sıralama', infoBlindsUp:'Blind artışı',
     spectatorBtn:'İzleyici',
     // v0.3.522–528 : blinds manuelles · dialogue de réglages · config.xml · sync compte
     blindsOrderLbl:'Blind artırma sırası', blindsAlwaysDouble:'blindleri her zaman ikiye katla', blindsManualOrder:'manuel blind sırası', blindsAddBtn:'+ Ekle', blindsRemoveTip:'Bu blindi kaldır', blindsAfterLbl:'Sonrasında:', blindsAfterDouble:'blindleri ikiye katla', blindsAfterRaiseBy:'blindleri şu kadar artır', blindsAfterKeep:'son blindi koru', infoBlindsManual:'Manuel blindler',

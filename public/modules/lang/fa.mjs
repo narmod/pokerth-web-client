@@ -481,7 +481,7 @@ export const strings = {
     gfNone:'بدون فیلتر فهرست بازی‌ها', gfOpen:'نمایش بازی‌های باز', gfOpenNF:'نمایش بازی‌های باز و غیرپر', gfOpenNFNP:'نمایش باز و غیرپر و غیرخصوصی', gfOpenNFP:'نمایش باز و غیرپر و خصوصی', gfOpenNFR:'نمایش باز و غیرپر و بازی‌های رتبه‌بندی',
     infoTypeLabel:'نوع', infoCapitalLabel:'سرمایه', infoPlayersInGame:'بازیکنان در بازی', plIgnore:'نادیده‌گیری', plStats:'آمار بازیکن',
     plSortAlpha:'مرتب‌سازی الفبایی', plShowIdle:'نمایش بازیکنان بی‌کار', plHideIdle:'نهفتن بازیکنان بی‌کار',
-    plNotPlaying:'بازی نمی‌کند',
+    plNotPlaying:'بازی نمی‌کند', plPlayingInFull:'%1 در حال حاضر در «%2» بازی می‌کند.', plNotPlayingFull:'%1 در حال حاضر بازی نمی‌کند.',
     plColumns:'ستون‌ها', plColAvatar:'آواتار', plColName:'نام', plColStatus:'در بازی', plColCountry:'کشور', plColMe:'من', plColActions:'کنش‌ها',
     gameTimeLabel:'زمان', visRanked:'رتبه‌بندی', infoBlindsUp:'افزایش بلایند',
     spectatorBtn:'تماشا',

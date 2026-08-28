@@ -725,7 +725,7 @@ export const strings = {
     piStatusEliminated:'Eliminado',
     piViewProfile:'Ver o perfil de pokerth.net',
     modeManual:'Manual',
-    plIgnore:'Ignorar', plStats:'Estatísticas do xogador', plNotPlaying:'Non está xogando', plSortAlpha:'Ordenar alfabeticamente', plShowIdle:'Amosar xogadores inactivos', plHideIdle:'Agochar xogadores inactivos', gameTimeLabel:'Tempo', visRanked:'Clasificación', infoBlindsUp:'Suba das cegas',
+    plIgnore:'Ignorar', plStats:'Estatísticas do xogador', plNotPlaying:'Non está xogando', plPlayingInFull:'%1 está a xogar en "%2".', plNotPlayingFull:'%1 non está a xogar neste momento.', plSortAlpha:'Ordenar alfabeticamente', plShowIdle:'Amosar xogadores inactivos', plHideIdle:'Agochar xogadores inactivos', gameTimeLabel:'Tempo', visRanked:'Clasificación', infoBlindsUp:'Suba das cegas',
     spectatorBtn:'Espectador',
     // v0.3.522–528 : blinds manuelles · dialogue de réglages · config.xml · sync compte
     blindsOrderLbl:'Orde de suba das cegas', blindsAlwaysDouble:'dobrar sempre as cegas', blindsManualOrder:'orde manual das cegas', blindsAddBtn:'+ Engadir', blindsRemoveTip:'Quitar esta cega', blindsAfterLbl:'Despois:', blindsAfterDouble:'dobrar as cegas', blindsAfterRaiseBy:'aumentar as cegas en', blindsAfterKeep:'manter a última cega', infoBlindsManual:'Cegas manuais',

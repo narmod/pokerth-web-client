@@ -483,7 +483,7 @@ export const strings = {
     gfNone:'গেম তালিকায় ফিল্টার নেই', gfOpen:'খোলা গেম দেখান', gfOpenNF:'খোলা ও অপূর্ণ গেম দেখান', gfOpenNFNP:'খোলা, অপূর্ণ ও অ-ব্যক্তিগত গেম দেখান', gfOpenNFP:'খোলা, অপূর্ণ ও ব্যক্তিগত গেম দেখান', gfOpenNFR:'খোলা, অপূর্ণ ও র‍্যাংকিং গেম দেখান',
     infoTypeLabel:'ধরন', infoCapitalLabel:'পুঁজি', infoPlayersInGame:'গেমের খেলোয়াড়', plIgnore:'উপেক্ষা', plStats:'খেলোয়াড়ের পরিসংখ্যান',
     plSortAlpha:'বর্ণানুক্রমে সাজান', plShowIdle:'নিষ্ক্রিয় খেলোয়াড় দেখান', plHideIdle:'নিষ্ক্রিয় খেলোয়াড় লুকান',
-    plNotPlaying:'খেলছেন না',
+    plNotPlaying:'খেলছেন না', plPlayingInFull:'%1 এখন "%2"-এ খেলছেন।', plNotPlayingFull:'%1 এই মুহূর্তে খেলছেন না।',
     plColumns:'কলাম', plColAvatar:'অবতার', plColName:'নাম', plColStatus:'গেমে', plColCountry:'দেশ', plColMe:'আমি', plColActions:'অ্যাকশন',
     gameTimeLabel:'সময়', visRanked:'র‍্যাংকড', infoBlindsUp:'ব্লাইন্ড বেড়েছে',
     spectatorBtn:'দেখুন',

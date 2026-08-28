@@ -483,7 +483,7 @@ export const strings = {
     gfNone:'ไม่กรองรายการเกม', gfOpen:'แสดงเกมที่เปิด', gfOpenNF:'แสดงเกมที่เปิดและไม่เต็ม', gfOpenNFNP:'แสดงเกมที่เปิด ไม่เต็ม และไม่ส่วนตัว', gfOpenNFP:'แสดงเกมที่เปิด ไม่เต็ม และส่วนตัว', gfOpenNFR:'แสดงเกมที่เปิด ไม่เต็ม และจัดอันดับ',
     infoTypeLabel:'ประเภท', infoCapitalLabel:'ทุน', infoPlayersInGame:'ผู้เล่นในเกม', plIgnore:'เพิกเฉย', plStats:'สถิติผู้เล่น',
     plSortAlpha:'เรียงตามตัวอักษร', plShowIdle:'แสดงผู้เล่นที่ว่าง', plHideIdle:'ซ่อนผู้เล่นที่ว่าง',
-    plNotPlaying:'ไม่ได้เล่น',
+    plNotPlaying:'ไม่ได้เล่น', plPlayingInFull:'%1 กำลังเล่นอยู่ใน "%2"', plNotPlayingFull:'%1 ไม่ได้เล่นอยู่ในขณะนี้',
     plColumns:'คอลัมน์', plColAvatar:'อวาตาร์', plColName:'ชื่อ', plColStatus:'ในเกม', plColCountry:'ประเทศ', plColMe:'ฉัน', plColActions:'การกระทำ',
     gameTimeLabel:'เวลา', visRanked:'จัดอันดับ', infoBlindsUp:'บลายด์เพิ่ม',
     spectatorBtn:'ชม',

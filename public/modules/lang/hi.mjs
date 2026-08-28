@@ -534,7 +534,7 @@ export const strings = {
     piStatusEliminated:'बाहर हो गए',
     piViewProfile:'pokerth.net प्रोफ़ाइल देखें',
     modeManual:'मैनुअल',
-    plIgnore:'अनदेखा करें', plStats:'खिलाड़ी के आँकड़े', plNotPlaying:'अभी नहीं खेल रहा', plSortAlpha:'वर्णानुक्रम में क्रमबद्ध करें', plShowIdle:'निष्क्रिय खिलाड़ी दिखाएँ', plHideIdle:'निष्क्रिय खिलाड़ी छिपाएँ', gameTimeLabel:'समय', visRanked:'रैंकिंग', infoBlindsUp:'ब्लाइंड्स बढ़ना',
+    plIgnore:'अनदेखा करें', plStats:'खिलाड़ी के आँकड़े', plNotPlaying:'अभी नहीं खेल रहा', plPlayingInFull:'%1 अभी "%2" में खेल रहे हैं।', plNotPlayingFull:'%1 इस समय नहीं खेल रहे हैं।', plSortAlpha:'वर्णानुक्रम में क्रमबद्ध करें', plShowIdle:'निष्क्रिय खिलाड़ी दिखाएँ', plHideIdle:'निष्क्रिय खिलाड़ी छिपाएँ', gameTimeLabel:'समय', visRanked:'रैंकिंग', infoBlindsUp:'ब्लाइंड्स बढ़ना',
     spectatorBtn:'दर्शक',
     // v0.3.522–528 : blinds manuelles · dialogue de réglages · config.xml · sync compte
     blindsOrderLbl:'ब्लाइंड्स बढ़ाने का क्रम', blindsAlwaysDouble:'ब्लाइंड्स हमेशा दोगुने करें', blindsManualOrder:'मैनुअल ब्लाइंड्स क्रम', blindsAddBtn:'+ जोड़ें', blindsRemoveTip:'यह ब्लाइंड हटाएँ', blindsAfterLbl:'इसके बाद:', blindsAfterDouble:'ब्लाइंड्स दोगुने करें', blindsAfterRaiseBy:'ब्लाइंड्स इतने से बढ़ाएँ', blindsAfterKeep:'अंतिम ब्लाइंड बनाए रखें', infoBlindsManual:'मैनुअल ब्लाइंड्स',

@@ -724,7 +724,7 @@ export const strings = {
     piStatusEliminated:'Pudonnut',
     piViewProfile:'Näytä pokerth.net-profiili',
     modeManual:'Manuaalinen',
-    plIgnore:'Ohita', plStats:'Pelaajan tilastot', plNotPlaying:'Ei pelaa juuri nyt', plSortAlpha:'Järjestä aakkosjärjestykseen', plShowIdle:'Näytä joutilaat pelaajat', plHideIdle:'Piilota joutilaat pelaajat', gameTimeLabel:'Aika', visRanked:'Sijoituslista', infoBlindsUp:'Blindien nosto',
+    plIgnore:'Ohita', plStats:'Pelaajan tilastot', plNotPlaying:'Ei pelaa juuri nyt', plPlayingInFull:'%1 pelaa parhaillaan pelissä "%2".', plNotPlayingFull:'%1 ei pelaa tällä hetkellä.', plSortAlpha:'Järjestä aakkosjärjestykseen', plShowIdle:'Näytä joutilaat pelaajat', plHideIdle:'Piilota joutilaat pelaajat', gameTimeLabel:'Aika', visRanked:'Sijoituslista', infoBlindsUp:'Blindien nosto',
     spectatorBtn:'Katso',
     // v0.3.522–528 : blinds manuelles · dialogue de réglages · config.xml · sync compte
     blindsOrderLbl:'Blindien korotusjärjestys', blindsAlwaysDouble:'tuplaa blindit aina', blindsManualOrder:'manuaalinen blindijärjestys', blindsAddBtn:'+ Lisää', blindsRemoveTip:'Poista tämä blindi', blindsAfterLbl:'Sen jälkeen:', blindsAfterDouble:'tuplaa blindit', blindsAfterRaiseBy:'korota blindejä määrällä', blindsAfterKeep:'säilytä viimeinen blindi', infoBlindsManual:'Manuaaliset blindit',

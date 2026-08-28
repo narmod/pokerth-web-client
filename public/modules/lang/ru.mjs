@@ -727,7 +727,7 @@ export const strings = {
     piStatusEliminated:'Выбыл',
     piViewProfile:'Профиль на pokerth.net',
     modeManual:'Вручную',
-    plIgnore:'Игнорировать', plStats:'Статистика игрока', plNotPlaying:'Сейчас не играет', plSortAlpha:'Сортировать по алфавиту', plShowIdle:'Показать неактивных игроков', plHideIdle:'Скрыть неактивных игроков', gameTimeLabel:'Время', visRanked:'Рейтинг', infoBlindsUp:'Повышение блайндов',
+    plIgnore:'Игнорировать', plStats:'Статистика игрока', plNotPlaying:'Сейчас не играет', plPlayingInFull:'%1 сейчас играет в «%2».', plNotPlayingFull:'%1 сейчас не играет.', plSortAlpha:'Сортировать по алфавиту', plShowIdle:'Показать неактивных игроков', plHideIdle:'Скрыть неактивных игроков', gameTimeLabel:'Время', visRanked:'Рейтинг', infoBlindsUp:'Повышение блайндов',
     spectatorBtn:'Наблюдать',
     // v0.3.522–528 : blinds manuelles · dialogue de réglages · config.xml · sync compte
     blindsOrderLbl:'Порядок повышения блайндов', blindsAlwaysDouble:'всегда удваивать блайнды', blindsManualOrder:'ручной порядок блайндов', blindsAddBtn:'+ Добавить', blindsRemoveTip:'Удалить этот блайнд', blindsAfterLbl:'Затем:', blindsAfterDouble:'удваивать блайнды', blindsAfterRaiseBy:'повышать блайнды на', blindsAfterKeep:'сохранять последний блайнд', infoBlindsManual:'Ручные блайнды',

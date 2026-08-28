@@ -481,7 +481,7 @@ export const strings = {
     gfNone:'گیم فہرست پر کوئی فلٹر نہیں', gfOpen:'کھلی گیمز دکھائیں', gfOpenNF:'کھلی اور غیر بھری گیمز دکھائیں', gfOpenNFNP:'کھلی، غیر بھری اور غیر نجی دکھائیں', gfOpenNFP:'کھلی، غیر بھری اور نجی دکھائیں', gfOpenNFR:'کھلی، غیر بھری اور درجہ بندی گیمز دکھائیں',
     infoTypeLabel:'قسم', infoCapitalLabel:'سرمایہ', infoPlayersInGame:'گیم میں کھلاڑی', plIgnore:'نظر انداز', plStats:'کھلاڑی کے اعداد و شمار',
     plSortAlpha:'حروف تہجی سے ترتیب', plShowIdle:'غیر فعال کھلاڑی دکھائیں', plHideIdle:'غیر فعال کھلاڑی چھپائیں',
-    plNotPlaying:'نہیں کھیل رہا',
+    plNotPlaying:'نہیں کھیل رہا', plPlayingInFull:'%1 اس وقت "%2" میں کھیل رہا ہے۔', plNotPlayingFull:'%1 اس وقت نہیں کھیل رہا۔',
     plColumns:'کالم', plColAvatar:'اوتار', plColName:'نام', plColStatus:'گیم میں', plColCountry:'ملک', plColMe:'میں', plColActions:'اعمال',
     gameTimeLabel:'وقت', visRanked:'درجہ بند', infoBlindsUp:'بلائنڈز میں اضافہ',
     spectatorBtn:'تماشا',

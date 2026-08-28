@@ -483,7 +483,7 @@ export const strings = {
     gfNone:'Walang filter sa listahan ng laro', gfOpen:'Ipakita ang mga bukas na laro', gfOpenNF:'Ipakita ang bukas at hindi punong mga laro', gfOpenNFNP:'Ipakita ang bukas, hindi puno at hindi pribadong mga laro', gfOpenNFP:'Ipakita ang bukas, hindi puno at pribadong mga laro', gfOpenNFR:'Ipakita ang bukas, hindi puno at ranking na mga laro',
     infoTypeLabel:'Uri', infoCapitalLabel:'Kapital', infoPlayersInGame:'Mga manlalaro sa laro', plIgnore:'I-ignore', plStats:'Stats ng manlalaro',
     plSortAlpha:'Ayusin ayon sa alpabeto', plShowIdle:'Ipakita ang mga idle na manlalaro', plHideIdle:'Itago ang mga idle na manlalaro',
-    plNotPlaying:'Hindi naglalaro',
+    plNotPlaying:'Hindi naglalaro', plPlayingInFull:'Si %1 ay kasalukuyang naglalaro sa "%2".', plNotPlayingFull:'Si %1 ay hindi naglalaro sa ngayon.',
     plColumns:'Mga column', plColAvatar:'Avatar', plColName:'Pangalan', plColStatus:'Nasa laro', plColCountry:'Bansa', plColMe:'Ako', plColActions:'Mga aksyon',
     gameTimeLabel:'Oras', visRanked:'Ranked', infoBlindsUp:'Tumaas ang mga blind',
     spectatorBtn:'Manood',

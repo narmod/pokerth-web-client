@@ -724,7 +724,7 @@ export const strings = {
     piStatusEliminated:'Slått ut',
     piViewProfile:'Vis pokerth.net-profil',
     modeManual:'Manuell',
-    plIgnore:'Ignorer', plStats:'Spillerstatistikk', plNotPlaying:'Spiller ikke akkurat nå', plSortAlpha:'Sorter alfabetisk', plShowIdle:'Vis inaktive spillere', plHideIdle:'Skjul inaktive spillere', gameTimeLabel:'Tid', visRanked:'Rangering', infoBlindsUp:'Blinds øker',
+    plIgnore:'Ignorer', plStats:'Spillerstatistikk', plNotPlaying:'Spiller ikke akkurat nå', plPlayingInFull:'%1 spiller for øyeblikket i "%2".', plNotPlayingFull:'%1 spiller ikke for øyeblikket.', plSortAlpha:'Sorter alfabetisk', plShowIdle:'Vis inaktive spillere', plHideIdle:'Skjul inaktive spillere', gameTimeLabel:'Tid', visRanked:'Rangering', infoBlindsUp:'Blinds øker',
     spectatorBtn:'Tilskuer',
     // v0.3.522–528 : blinds manuelles · dialogue de réglages · config.xml · sync compte
     blindsOrderLbl:'Rekkefølge for blindsøkning', blindsAlwaysDouble:'doble alltid blinds', blindsManualOrder:'manuell blindsrekkefølge', blindsAddBtn:'+ Legg til', blindsRemoveTip:'Fjern denne blinden', blindsAfterLbl:'Deretter:', blindsAfterDouble:'doble blinds', blindsAfterRaiseBy:'øk blinds med', blindsAfterKeep:'behold siste blind', infoBlindsManual:'Manuelle blinds',

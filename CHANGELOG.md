@@ -51,6 +51,14 @@ highlights below.
   `InitAck` lands. Covered by `scripts/test-reconnect-backoff.mjs`.
 
 ### Added
+- **"Playing in …" info in the players list** (`web.147`). QML-parity with
+  upstream `PlayerListItem` (stable, 2026-08-27): hovering a player's name in
+  the lobby players panel now shows the full sentence *"X is playing in
+  "Y"."* / *"X is not playing at the moment."*. On touch — where there is no
+  hover — the same line appears in the player popup, our equivalent of the
+  QML expanded row. Same data source as the existing status LED
+  (`_playerActivity`); two new i18n keys (`plPlayingInFull`,
+  `plNotPlayingFull`) translated across all 45 languages.
 - **Every content page written in all 45 languages** (`web.129`–`web.146`).
   `/rules` and `/faq` were already translated; `/hand-rankings`, `/how-to-play`
   and `/glossary` shipped with empty tables, so `?lang=` was ignored on all

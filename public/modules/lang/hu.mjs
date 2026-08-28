@@ -725,7 +725,7 @@ export const strings = {
     piStatusEliminated:'Kiesett',
     piViewProfile:'pokerth.net-profil megtekintése',
     modeManual:'Kézi',
-    plIgnore:'Mellőzés', plStats:'Játékos statisztikái', plNotPlaying:'Jelenleg nem játszik', plSortAlpha:'Rendezés ábécésorrendbe', plShowIdle:'Inaktív játékosok megjelenítése', plHideIdle:'Inaktív játékosok elrejtése', gameTimeLabel:'Idő', visRanked:'Ranglista', infoBlindsUp:'Vakok emelése',
+    plIgnore:'Mellőzés', plStats:'Játékos statisztikái', plNotPlaying:'Jelenleg nem játszik', plPlayingInFull:'%1 jelenleg itt játszik: „%2”.', plNotPlayingFull:'%1 jelenleg nem játszik.', plSortAlpha:'Rendezés ábécésorrendbe', plShowIdle:'Inaktív játékosok megjelenítése', plHideIdle:'Inaktív játékosok elrejtése', gameTimeLabel:'Idő', visRanked:'Ranglista', infoBlindsUp:'Vakok emelése',
     spectatorBtn:'Néző',
     // v0.3.522–528 : blinds manuelles · dialogue de réglages · config.xml · sync compte
     blindsOrderLbl:'Vakok emelési sorrendje', blindsAlwaysDouble:'mindig duplázza a vakokat', blindsManualOrder:'kézi vaksorrend', blindsAddBtn:'+ Hozzáadás', blindsRemoveTip:'E vak eltávolítása', blindsAfterLbl:'Ezután:', blindsAfterDouble:'vakok duplázása', blindsAfterRaiseBy:'vakok emelése ennyivel', blindsAfterKeep:'utolsó vak megtartása', infoBlindsManual:'Kézi vakok',

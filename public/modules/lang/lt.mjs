@@ -725,7 +725,7 @@ export const strings = {
     piStatusEliminated:'Iškrito',
     piViewProfile:'Žiūrėti pokerth.net profilį',
     modeManual:'Rankinis',
-    plIgnore:'Ignoruoti', plStats:'Žaidėjo statistika', plNotPlaying:'Šiuo metu nežaidžia', plSortAlpha:'Rikiuoti pagal abėcėlę', plShowIdle:'Rodyti neaktyvius žaidėjus', plHideIdle:'Slėpti neaktyvius žaidėjus', gameTimeLabel:'Laikas', visRanked:'Reitingas', infoBlindsUp:'Blaindų didinimas',
+    plIgnore:'Ignoruoti', plStats:'Žaidėjo statistika', plNotPlaying:'Šiuo metu nežaidžia', plPlayingInFull:'%1 šiuo metu žaidžia „%2“.', plNotPlayingFull:'%1 šiuo metu nežaidžia.', plSortAlpha:'Rikiuoti pagal abėcėlę', plShowIdle:'Rodyti neaktyvius žaidėjus', plHideIdle:'Slėpti neaktyvius žaidėjus', gameTimeLabel:'Laikas', visRanked:'Reitingas', infoBlindsUp:'Blaindų didinimas',
     spectatorBtn:'Stebėti',
     // v0.3.522–528 : blinds manuelles · dialogue de réglages · config.xml · sync compte
     blindsOrderLbl:'Blaindų didinimo tvarka', blindsAlwaysDouble:'visada dvigubinti blaindus', blindsManualOrder:'rankinė blaindų tvarka', blindsAddBtn:'+ Pridėti', blindsRemoveTip:'Pašalinti šį blaindą', blindsAfterLbl:'Po to:', blindsAfterDouble:'dvigubinti blaindus', blindsAfterRaiseBy:'didinti blaindus po', blindsAfterKeep:'išlaikyti paskutinį blaindą', infoBlindsManual:'Rankiniai blaindai',

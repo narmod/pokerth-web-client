@@ -481,7 +481,7 @@ export const strings = {
     gfNone:'ללא מסנן רשימת משחקים', gfOpen:'הצגת משחקים פתוחים', gfOpenNF:'הצגת משחקים פתוחים ולא מלאים', gfOpenNFNP:'הצגת פתוחים, לא מלאים ולא פרטיים', gfOpenNFP:'הצגת פתוחים, לא מלאים ופרטיים', gfOpenNFR:'הצגת פתוחים, לא מלאים ומשחקי דירוג',
     infoTypeLabel:'סוג', infoCapitalLabel:'הון', infoPlayersInGame:'שחקנים במשחק', plIgnore:'התעלמות', plStats:'סטטיסטיקות שחקן',
     plSortAlpha:'מיון אלפביתי', plShowIdle:'הצגת שחקנים לא פעילים', plHideIdle:'הסתרת שחקנים לא פעילים',
-    plNotPlaying:'לא משחק',
+    plNotPlaying:'לא משחק', plPlayingInFull:'%1 משחק כעת ב-"%2".', plNotPlayingFull:'%1 אינו משחק כרגע.',
     plColumns:'עמודות', plColAvatar:'אווטאר', plColName:'שם', plColStatus:'במשחק', plColCountry:'מדינה', plColMe:'אני', plColActions:'פעולות',
     gameTimeLabel:'זמן', visRanked:'מדורג', infoBlindsUp:'עליית בליינדים',
     spectatorBtn:'צפייה',

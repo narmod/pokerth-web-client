@@ -725,7 +725,7 @@ export const strings = {
     piStatusEliminated:'Vyradený',
     piViewProfile:'Zobraziť profil pokerth.net',
     modeManual:'Ručne',
-    plIgnore:'Ignorovať', plStats:'Štatistiky hráča', plNotPlaying:'Momentálne nehrá', plSortAlpha:'Zoradiť podľa abecedy', plShowIdle:'Zobraziť neaktívnych hráčov', plHideIdle:'Skryť neaktívnych hráčov', gameTimeLabel:'Čas', visRanked:'Rebríček', infoBlindsUp:'Zvýšenie blindov',
+    plIgnore:'Ignorovať', plStats:'Štatistiky hráča', plNotPlaying:'Momentálne nehrá', plPlayingInFull:'%1 práve hrá v hre "%2".', plNotPlayingFull:'%1 momentálne nehrá.', plSortAlpha:'Zoradiť podľa abecedy', plShowIdle:'Zobraziť neaktívnych hráčov', plHideIdle:'Skryť neaktívnych hráčov', gameTimeLabel:'Čas', visRanked:'Rebríček', infoBlindsUp:'Zvýšenie blindov',
     spectatorBtn:'Sledovať',
     // v0.3.522–528 : blinds manuelles · dialogue de réglages · config.xml · sync compte
     blindsOrderLbl:'Poradie zvyšovania blindov', blindsAlwaysDouble:'vždy zdvojnásobiť blindy', blindsManualOrder:'ručné poradie blindov', blindsAddBtn:'+ Pridať', blindsRemoveTip:'Odstrániť tento blind', blindsAfterLbl:'Potom:', blindsAfterDouble:'zdvojnásobiť blindy', blindsAfterRaiseBy:'zvýšiť blindy o', blindsAfterKeep:'ponechať posledný blind', infoBlindsManual:'Ručné blindy',

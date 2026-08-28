@@ -728,7 +728,7 @@ export const strings = {
     piStatusEliminated:'Uitgeschakeld',
     piViewProfile:'pokerth.net-profiel bekijken',
     modeManual:'Handmatig',
-    plIgnore:'Negeren', plStats:'Spelersstatistieken', plNotPlaying:'Speelt momenteel niet', plSortAlpha:'Alfabetisch sorteren', plShowIdle:'Inactieve spelers tonen', plHideIdle:'Inactieve spelers verbergen', gameTimeLabel:'Tijd', visRanked:'Ranglijst', infoBlindsUp:'Blinds verhogen',
+    plIgnore:'Negeren', plStats:'Spelersstatistieken', plNotPlaying:'Speelt momenteel niet', plPlayingInFull:'%1 speelt momenteel in "%2".', plNotPlayingFull:'%1 speelt op dit moment niet.', plSortAlpha:'Alfabetisch sorteren', plShowIdle:'Inactieve spelers tonen', plHideIdle:'Inactieve spelers verbergen', gameTimeLabel:'Tijd', visRanked:'Ranglijst', infoBlindsUp:'Blinds verhogen',
     spectatorBtn:'Toeschouwer',
     // v0.3.522–528 : blinds manuelles · dialogue de réglages · config.xml · sync compte
     blindsOrderLbl:'Volgorde van blindsverhoging', blindsAlwaysDouble:'blinds altijd verdubbelen', blindsManualOrder:'handmatige blindsvolgorde', blindsAddBtn:'+ Toevoegen', blindsRemoveTip:'Deze blind verwijderen', blindsAfterLbl:'Daarna:', blindsAfterDouble:'blinds verdubbelen', blindsAfterRaiseBy:'blinds verhogen met', blindsAfterKeep:'laatste blind behouden', infoBlindsManual:'Handmatige blinds',

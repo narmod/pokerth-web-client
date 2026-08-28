@@ -724,7 +724,7 @@ export const strings = {
     piStatusEliminated:'敗退',
     piViewProfile:'pokerth.net プロフィールを見る',
     modeManual:'手動',
-    plIgnore:'無視', plStats:'プレイヤー統計', plNotPlaying:'現在プレイしていません', plSortAlpha:'アルファベット順に並べ替え', plShowIdle:'待機中のプレイヤーを表示', plHideIdle:'待機中のプレイヤーを非表示', gameTimeLabel:'時間', visRanked:'ランキング', infoBlindsUp:'ブラインドの上昇',
+    plIgnore:'無視', plStats:'プレイヤー統計', plNotPlaying:'現在プレイしていません', plPlayingInFull:'%1は現在「%2」でプレイ中です。', plNotPlayingFull:'%1は現在プレイしていません。', plSortAlpha:'アルファベット順に並べ替え', plShowIdle:'待機中のプレイヤーを表示', plHideIdle:'待機中のプレイヤーを非表示', gameTimeLabel:'時間', visRanked:'ランキング', infoBlindsUp:'ブラインドの上昇',
     spectatorBtn:'観戦',
     // v0.3.522–528 : blinds manuelles · dialogue de réglages · config.xml · sync compte
     blindsOrderLbl:'ブラインド上昇の順序', blindsAlwaysDouble:'常にブラインドを倍にする', blindsManualOrder:'手動ブラインド順序', blindsAddBtn:'+ 追加', blindsRemoveTip:'このブラインドを削除', blindsAfterLbl:'その後：', blindsAfterDouble:'ブラインドを倍にする', blindsAfterRaiseBy:'ブラインドの増加額', blindsAfterKeep:'最後のブラインドを維持', infoBlindsManual:'手動ブラインド',

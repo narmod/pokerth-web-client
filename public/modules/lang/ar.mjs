@@ -484,7 +484,7 @@ export const strings = {
     gfNone:'بلا مرشّح لقائمة الألعاب', gfOpen:'عرض الألعاب المفتوحة', gfOpenNF:'عرض الألعاب المفتوحة وغير الممتلئة', gfOpenNFNP:'عرض المفتوحة وغير الممتلئة وغير الخاصة', gfOpenNFP:'عرض المفتوحة وغير الممتلئة والخاصة', gfOpenNFR:'عرض المفتوحة وغير الممتلئة وألعاب التصنيف',
     infoTypeLabel:'النوع', infoCapitalLabel:'رأس المال', infoPlayersInGame:'اللاعبون في اللعبة', plIgnore:'تجاهل', plStats:'إحصاءات اللاعب',
     plSortAlpha:'ترتيب أبجدي', plShowIdle:'عرض اللاعبين الخاملين', plHideIdle:'إخفاء اللاعبين الخاملين',
-    plNotPlaying:'لا يلعب',
+    plNotPlaying:'لا يلعب', plPlayingInFull:'%1 يلعب حاليًا في "%2".', plNotPlayingFull:'%1 لا يلعب حاليًا.',
     plColumns:'الأعمدة', plColAvatar:'الأفاتار', plColName:'الاسم', plColStatus:'في اللعبة', plColCountry:'البلد', plColMe:'أنا', plColActions:'إجراءات',
     gameTimeLabel:'الوقت', visRanked:'مصنّفة', infoBlindsUp:'رفع الرهانات',
     spectatorBtn:'مشاهدة',

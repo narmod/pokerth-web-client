@@ -725,7 +725,7 @@ export const strings = {
     piStatusEliminated:'Елиминиран',
     piViewProfile:'Виж профила в pokerth.net',
     modeManual:'Ръчно',
-    plIgnore:'Игнориране', plStats:'Статистика на играча', plNotPlaying:'Не играе в момента', plSortAlpha:'Подреждане по азбучен ред', plShowIdle:'Показване на неактивните играчи', plHideIdle:'Скриване на неактивните играчи', gameTimeLabel:'Време', visRanked:'Класиране', infoBlindsUp:'Повишаване на блайндовете',
+    plIgnore:'Игнориране', plStats:'Статистика на играча', plNotPlaying:'Не играе в момента', plPlayingInFull:'%1 в момента играе в „%2“.', plNotPlayingFull:'%1 не играе в момента.', plSortAlpha:'Подреждане по азбучен ред', plShowIdle:'Показване на неактивните играчи', plHideIdle:'Скриване на неактивните играчи', gameTimeLabel:'Време', visRanked:'Класиране', infoBlindsUp:'Повишаване на блайндовете',
     spectatorBtn:'Наблюдавай',
     // v0.3.522–528 : blinds manuelles · dialogue de réglages · config.xml · sync compte
     blindsOrderLbl:'Ред на повишаване на блайндовете', blindsAlwaysDouble:'винаги удвоявай блайндовете', blindsManualOrder:'ръчен ред на блайндовете', blindsAddBtn:'+ Добави', blindsRemoveTip:'Премахни този блайнд', blindsAfterLbl:'След това:', blindsAfterDouble:'удвоявай блайндовете', blindsAfterRaiseBy:'повишавай блайндовете с', blindsAfterKeep:'запази последния блайнд', infoBlindsManual:'Ръчни блайндове',

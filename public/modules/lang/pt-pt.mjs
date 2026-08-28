@@ -729,7 +729,7 @@ export const strings = {
     piStatusEliminated:'Eliminado',
     piViewProfile:'Ver perfil pokerth.net',
     modeManual:'Manual',
-    plIgnore:'Ignorar', plStats:'Estatísticas do jogador', plNotPlaying:'Não está a jogar', plSortAlpha:'Ordenar alfabeticamente', plShowIdle:'Exibir jogadores inativos', plHideIdle:'Ocultar jogadores inativos', gameTimeLabel:'Tempo', visRanked:'Classificação', infoBlindsUp:'Aumento das blinds',
+    plIgnore:'Ignorar', plStats:'Estatísticas do jogador', plNotPlaying:'Não está a jogar', plPlayingInFull:'%1 está a jogar em "%2".', plNotPlayingFull:'%1 não está a jogar de momento.', plSortAlpha:'Ordenar alfabeticamente', plShowIdle:'Exibir jogadores inativos', plHideIdle:'Ocultar jogadores inativos', gameTimeLabel:'Tempo', visRanked:'Classificação', infoBlindsUp:'Aumento das blinds',
     spectatorBtn:'Espectador',
     // v0.3.522–528 : blinds manuelles · dialogue de réglages · config.xml · sync compte
     blindsOrderLbl:'Ordem de Aumento dos Blinds', blindsAlwaysDouble:'Duplicar sempre os Blinds', blindsManualOrder:'"blinds" manuais', blindsAddBtn:'+ Adicionar', blindsRemoveTip:'Eliminar', blindsAfterLbl:'Depois:', blindsAfterDouble:'Duplicar sempre os Blinds', blindsAfterRaiseBy:'Aumentar sempre em:', blindsAfterKeep:'Manter o último Blind', infoBlindsManual:'Blinds manuais',

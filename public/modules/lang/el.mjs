@@ -725,7 +725,7 @@ export const strings = {
     piStatusEliminated:'Αποκλείστηκε',
     piViewProfile:'Προβολή προφίλ pokerth.net',
     modeManual:'Χειροκίνητο',
-    plIgnore:'Αγνόηση', plStats:'Στατιστικά παίκτη', plNotPlaying:'Δεν παίζει αυτή τη στιγμή', plSortAlpha:'Ταξινόμηση αλφαβητικά', plShowIdle:'Εμφάνιση ανενεργών παικτών', plHideIdle:'Απόκρυψη ανενεργών παικτών', gameTimeLabel:'Χρόνος', visRanked:'Κατάταξη', infoBlindsUp:'Αύξηση τυφλών',
+    plIgnore:'Αγνόηση', plStats:'Στατιστικά παίκτη', plNotPlaying:'Δεν παίζει αυτή τη στιγμή', plPlayingInFull:'%1 παίζει τώρα στο "%2".', plNotPlayingFull:'%1 δεν παίζει αυτή τη στιγμή.', plSortAlpha:'Ταξινόμηση αλφαβητικά', plShowIdle:'Εμφάνιση ανενεργών παικτών', plHideIdle:'Απόκρυψη ανενεργών παικτών', gameTimeLabel:'Χρόνος', visRanked:'Κατάταξη', infoBlindsUp:'Αύξηση τυφλών',
     spectatorBtn:'Παρακολούθηση',
     // v0.3.522–528 : blinds manuelles · dialogue de réglages · config.xml · sync compte
     blindsOrderLbl:'Σειρά αύξησης των τυφλών', blindsAlwaysDouble:'πάντα διπλασιασμός των τυφλών', blindsManualOrder:'χειροκίνητη σειρά τυφλών', blindsAddBtn:'+ Προσθήκη', blindsRemoveTip:'Αφαίρεση αυτής της τυφλής', blindsAfterLbl:'Έπειτα:', blindsAfterDouble:'διπλασιασμός των τυφλών', blindsAfterRaiseBy:'αύξηση των τυφλών κατά', blindsAfterKeep:'διατήρηση της τελευταίας τυφλής', infoBlindsManual:'Χειροκίνητες τυφλές',

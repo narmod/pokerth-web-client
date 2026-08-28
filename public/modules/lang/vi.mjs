@@ -725,7 +725,7 @@ export const strings = {
     piStatusEliminated:'Bị loại',
     piViewProfile:'Xem hồ sơ pokerth.net',
     modeManual:'Thủ công',
-    plIgnore:'Bỏ qua', plStats:'Thống kê người chơi', plNotPlaying:'Hiện không chơi', plSortAlpha:'Sắp xếp theo bảng chữ cái', plShowIdle:'Hiển thị người chơi rảnh', plHideIdle:'Ẩn người chơi rảnh', gameTimeLabel:'Thời gian', visRanked:'Xếp hạng', infoBlindsUp:'Tăng tiền mù',
+    plIgnore:'Bỏ qua', plStats:'Thống kê người chơi', plNotPlaying:'Hiện không chơi', plPlayingInFull:'%1 đang chơi trong "%2".', plNotPlayingFull:'%1 hiện không chơi.', plSortAlpha:'Sắp xếp theo bảng chữ cái', plShowIdle:'Hiển thị người chơi rảnh', plHideIdle:'Ẩn người chơi rảnh', gameTimeLabel:'Thời gian', visRanked:'Xếp hạng', infoBlindsUp:'Tăng tiền mù',
     spectatorBtn:'Xem',
     // v0.3.522–528 : blinds manuelles · dialogue de réglages · config.xml · sync compte
     blindsOrderLbl:'Thứ tự tăng tiền mù', blindsAlwaysDouble:'luôn nhân đôi tiền mù', blindsManualOrder:'thứ tự tiền mù thủ công', blindsAddBtn:'+ Thêm', blindsRemoveTip:'Xóa mức mù này', blindsAfterLbl:'Sau đó:', blindsAfterDouble:'nhân đôi tiền mù', blindsAfterRaiseBy:'tăng tiền mù thêm', blindsAfterKeep:'giữ mức mù cuối', infoBlindsManual:'Tiền mù thủ công',

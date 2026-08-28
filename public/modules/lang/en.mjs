@@ -483,7 +483,7 @@ export const strings = {
     gfNone:'No game list filter', gfOpen:'Show open games', gfOpenNF:'Show open & non-full games', gfOpenNFNP:'Show open & non-full & non-private games', gfOpenNFP:'Show open & non-full & private games', gfOpenNFR:'Show open & non-full & ranking games',
     infoTypeLabel:'Type', infoCapitalLabel:'Capital', infoPlayersInGame:'Players in game', plIgnore:'Ignore', plStats:'Player stats',
     plSortAlpha:'Sort alphabetically', plShowIdle:'Display idle players', plHideIdle:'Hide idle players',
-    plNotPlaying:'Not playing',
+    plNotPlaying:'Not playing', plPlayingInFull:'%1 is playing in "%2".', plNotPlayingFull:'%1 is not playing at the moment.',
     plColumns:'Columns', plColAvatar:'Avatar', plColName:'Name', plColStatus:'In game', plColCountry:'Country', plColMe:'Me', plColActions:'Actions',
     gameTimeLabel:'Time', visRanked:'Ranked', infoBlindsUp:'Blinds up',
     spectatorBtn:'Spectate',

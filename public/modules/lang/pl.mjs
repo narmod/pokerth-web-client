@@ -728,7 +728,7 @@ export const strings = {
     piStatusEliminated:'Wyeliminowany',
     piViewProfile:'Zobacz profil pokerth.net',
     modeManual:'Ręcznie',
-    plIgnore:'Ignoruj', plStats:'Statystyki gracza', plNotPlaying:'Obecnie nie gra', plSortAlpha:'Sortuj alfabetycznie', plShowIdle:'Pokaż nieaktywnych graczy', plHideIdle:'Ukryj nieaktywnych graczy', gameTimeLabel:'Czas', visRanked:'Ranking', infoBlindsUp:'Wzrost ciemnych',
+    plIgnore:'Ignoruj', plStats:'Statystyki gracza', plNotPlaying:'Obecnie nie gra', plPlayingInFull:'%1 gra obecnie w "%2".', plNotPlayingFull:'%1 obecnie nie gra.', plSortAlpha:'Sortuj alfabetycznie', plShowIdle:'Pokaż nieaktywnych graczy', plHideIdle:'Ukryj nieaktywnych graczy', gameTimeLabel:'Czas', visRanked:'Ranking', infoBlindsUp:'Wzrost ciemnych',
     spectatorBtn:'Obserwuj',
     // v0.3.522–528 : blinds manuelles · dialogue de réglages · config.xml · sync compte
     blindsOrderLbl:'Kolejność podnoszenia ciemnych', blindsAlwaysDouble:'zawsze podwajaj ciemne', blindsManualOrder:'ręczna kolejność ciemnych', blindsAddBtn:'+ Dodaj', blindsRemoveTip:'Usuń tę ciemną', blindsAfterLbl:'Następnie:', blindsAfterDouble:'podwajaj ciemne', blindsAfterRaiseBy:'podnoś ciemne o', blindsAfterKeep:'zachowaj ostatnią ciemną', infoBlindsManual:'Ciemne ręczne',

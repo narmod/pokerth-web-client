@@ -725,7 +725,7 @@ export const strings = {
     piStatusEliminated:'Ispao',
     piViewProfile:'Prikaži pokerth.net profil',
     modeManual:'Ručno',
-    plIgnore:'Zanemari', plStats:'Statistika igrača', plNotPlaying:'Trenutno ne igra', plSortAlpha:'Poredaj abecedno', plShowIdle:'Prikaži neaktivne igrače', plHideIdle:'Sakrij neaktivne igrače', gameTimeLabel:'Vrijeme', visRanked:'Poredak', infoBlindsUp:'Povećanje blindova',
+    plIgnore:'Zanemari', plStats:'Statistika igrača', plNotPlaying:'Trenutno ne igra', plPlayingInFull:'%1 trenutno igra u „%2“.', plNotPlayingFull:'%1 trenutno ne igra.', plSortAlpha:'Poredaj abecedno', plShowIdle:'Prikaži neaktivne igrače', plHideIdle:'Sakrij neaktivne igrače', gameTimeLabel:'Vrijeme', visRanked:'Poredak', infoBlindsUp:'Povećanje blindova',
     spectatorBtn:'Gledaj',
     // v0.3.522–528 : blinds manuelles · dialogue de réglages · config.xml · sync compte
     blindsOrderLbl:'Redoslijed povećanja blindova', blindsAlwaysDouble:'uvijek udvostruči blindove', blindsManualOrder:'ručni redoslijed blindova', blindsAddBtn:'+ Dodaj', blindsRemoveTip:'Ukloni ovaj blind', blindsAfterLbl:'Zatim:', blindsAfterDouble:'udvostruči blindove', blindsAfterRaiseBy:'povećaj blindove za', blindsAfterKeep:'zadrži zadnji blind', infoBlindsManual:'Ručni blindovi',

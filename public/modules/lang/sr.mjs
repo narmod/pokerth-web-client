@@ -725,7 +725,7 @@ export const strings = {
     piStatusEliminated:'Ispao',
     piViewProfile:'Prikaži pokerth.net profil',
     modeManual:'Ручно',
-    plIgnore:'Игнориши', plStats:'Статистика играча', plNotPlaying:'Тренутно не игра', plSortAlpha:'Сортирај по азбуци', plShowIdle:'Прикажи неактивне играче', plHideIdle:'Сакриј неактивне играче', gameTimeLabel:'Време', visRanked:'Ранг-листа', infoBlindsUp:'Повећање блиндова',
+    plIgnore:'Игнориши', plStats:'Статистика играча', plNotPlaying:'Тренутно не игра', plPlayingInFull:'%1 тренутно игра у „%2“.', plNotPlayingFull:'%1 тренутно не игра.', plSortAlpha:'Сортирај по азбуци', plShowIdle:'Прикажи неактивне играче', plHideIdle:'Сакриј неактивне играче', gameTimeLabel:'Време', visRanked:'Ранг-листа', infoBlindsUp:'Повећање блиндова',
     spectatorBtn:'Гледај',
     // v0.3.522–528 : blinds manuelles · dialogue de réglages · config.xml · sync compte
     blindsOrderLbl:'Редослед повећања блиндова', blindsAlwaysDouble:'увек удвостручи блиндове', blindsManualOrder:'ручни редослед блиндова', blindsAddBtn:'+ Додај', blindsRemoveTip:'Уклони овај блинд', blindsAfterLbl:'Затим:', blindsAfterDouble:'удвостручи блиндове', blindsAfterRaiseBy:'повећај блиндове за', blindsAfterKeep:'задржи последњи блинд', infoBlindsManual:'Ручни блиндови',

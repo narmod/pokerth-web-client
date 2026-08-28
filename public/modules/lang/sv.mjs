@@ -724,7 +724,7 @@ export const strings = {
     piStatusEliminated:'Utslagen',
     piViewProfile:'Visa pokerth.net-profil',
     modeManual:'Manuell',
-    plIgnore:'Ignorera', plStats:'Spelarstatistik', plNotPlaying:'Spelar inte just nu', plSortAlpha:'Sortera alfabetiskt', plShowIdle:'Visa inaktiva spelare', plHideIdle:'Dölj inaktiva spelare', gameTimeLabel:'Tid', visRanked:'Ranking', infoBlindsUp:'Höjning av blinds',
+    plIgnore:'Ignorera', plStats:'Spelarstatistik', plNotPlaying:'Spelar inte just nu', plPlayingInFull:'%1 spelar just nu i "%2".', plNotPlayingFull:'%1 spelar inte just nu.', plSortAlpha:'Sortera alfabetiskt', plShowIdle:'Visa inaktiva spelare', plHideIdle:'Dölj inaktiva spelare', gameTimeLabel:'Tid', visRanked:'Ranking', infoBlindsUp:'Höjning av blinds',
     spectatorBtn:'Åskådare',
     // v0.3.522–528 : blinds manuelles · dialogue de réglages · config.xml · sync compte
     blindsOrderLbl:'Ordning för blindshöjning', blindsAlwaysDouble:'dubbla alltid blinds', blindsManualOrder:'manuell blindsordning', blindsAddBtn:'+ Lägg till', blindsRemoveTip:'Ta bort denna blind', blindsAfterLbl:'Därefter:', blindsAfterDouble:'dubbla blinds', blindsAfterRaiseBy:'höj blinds med', blindsAfterKeep:'behåll sista blinden', infoBlindsManual:'Manuella blinds',

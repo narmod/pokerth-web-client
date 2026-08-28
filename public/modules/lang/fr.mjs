@@ -485,7 +485,7 @@ export const strings = {
     gfNone:'Aucun filtre', gfOpen:'Jeux ouverts', gfOpenNF:'Jeux ouverts et non complets', gfOpenNFNP:'Jeux ouverts, non complets, non privés', gfOpenNFP:'Jeux ouverts, non complets, privés', gfOpenNFR:'Jeux ouverts, non complets, classés',
     infoTypeLabel:'Type', infoCapitalLabel:'Capital', infoPlayersInGame:'Joueurs dans la partie', plIgnore:'Ignorer', plStats:'Statistiques du joueur',
     plSortAlpha:'Trier par ordre alphabétique', plShowIdle:'Afficher les joueurs inactifs', plHideIdle:'Masquer les joueurs inactifs',
-    plNotPlaying:'Ne joue pas actuellement',
+    plNotPlaying:'Ne joue pas actuellement', plPlayingInFull:'%1 joue actuellement dans « %2 ».', plNotPlayingFull:'%1 ne joue pas en ce moment.',
     plColumns:'Colonnes', plColAvatar:'Avatar', plColName:'Nom', plColStatus:'En jeu', plColCountry:'Pays', plColMe:'Moi', plColActions:'Actions',
     gameTimeLabel:'Temps', visRanked:'Classement', infoBlindsUp:'Hausse des blindes',
     spectatorBtn:'Spectateur',

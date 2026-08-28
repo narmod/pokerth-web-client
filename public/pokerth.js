@@ -10373,7 +10373,17 @@ function renderPlayersList() {
     // Pour MOI : appeler openPlayerInfoPopup() SANS argument → exactement la
     // même fenêtre que le bouton joueur du header. Pour les autres : avec pid.
     var _ppArg = r.isMe ? '' : String(r.pid);
+    // Parité QML PlayerListItem (stable, 27/08/2026) : phrase complète
+    // « %1 is playing in "%2". » / « %1 is not playing at the moment. » en
+    // tooltip du NOM — même source (r.act) que la manette de statut, dont le
+    // title (nom de table seul) est conservé tel quel. Le pendant tactile —
+    // pas de hover au doigt — est la même ligne dans le popup joueur
+    // (_otherPlayerInfoHtml, player-popup.mjs).
+    var _actTtl = r.act
+      ? _tt('plPlayingInFull', '%1 is playing in "%2".').replace('%1', r.name).replace('%2', r.act)
+      : _tt('plNotPlayingFull', '%1 is not playing at the moment.').replace('%1', r.name);
     var nameHtml = '<span class="pl-name-link" role="button" tabindex="0"'
+      + ' title="' + esc(_actTtl) + '"'
       + ' onclick="window.openPlayerInfoPopup(' + _ppArg + ')"'
       + ' onkeydown="if(event.key===\'Enter\')window.openPlayerInfoPopup(' + _ppArg + ')">'
       + esc(r.name) + '</span>';
@@ -10744,7 +10754,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.7-web.146'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.7-web.147'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

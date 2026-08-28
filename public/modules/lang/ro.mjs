@@ -725,7 +725,7 @@ export const strings = {
     piStatusEliminated:'Eliminat',
     piViewProfile:'Vezi profilul pokerth.net',
     modeManual:'Manual',
-    plIgnore:'Ignoră', plStats:'Statisticile jucătorului', plNotPlaying:'Nu joacă în acest moment', plSortAlpha:'Sortează alfabetic', plShowIdle:'Afișează jucătorii inactivi', plHideIdle:'Ascunde jucătorii inactivi', gameTimeLabel:'Timp', visRanked:'Clasament', infoBlindsUp:'Creșterea blindurilor',
+    plIgnore:'Ignoră', plStats:'Statisticile jucătorului', plNotPlaying:'Nu joacă în acest moment', plPlayingInFull:'%1 joacă acum în „%2”.', plNotPlayingFull:'%1 nu joacă în acest moment.', plSortAlpha:'Sortează alfabetic', plShowIdle:'Afișează jucătorii inactivi', plHideIdle:'Ascunde jucătorii inactivi', gameTimeLabel:'Timp', visRanked:'Clasament', infoBlindsUp:'Creșterea blindurilor',
     spectatorBtn:'Spectator',
     // v0.3.522–528 : blinds manuelles · dialogue de réglages · config.xml · sync compte
     blindsOrderLbl:'Ordinea creșterii blindurilor', blindsAlwaysDouble:'dublează mereu blindurile', blindsManualOrder:'ordine manuală a blindurilor', blindsAddBtn:'+ Adaugă', blindsRemoveTip:'Elimină acest blind', blindsAfterLbl:'Apoi:', blindsAfterDouble:'dublează blindurile', blindsAfterRaiseBy:'crește blindurile cu', blindsAfterKeep:'păstrează ultimul blind', infoBlindsManual:'Blinduri manuale',

@@ -726,7 +726,7 @@ export const strings = {
     piStatusEliminated:'Air a chur às',
     piViewProfile:'Seall pròifil pokerth.net',
     modeManual:'Le làimh',
-    plIgnore:'Leig seachad', plStats:'Stàitistig a\' chluicheadair', plNotPlaying:'Chan eil e a\' cluich an-dràsta', plSortAlpha:'Seòrsaich a-rèir na h-aibidil', plShowIdle:'Seall cluicheadairean nan tàmh', plHideIdle:'Falaich cluicheadairean nan tàmh', gameTimeLabel:'Ùine', visRanked:'Rangachadh', infoBlindsUp:'Àrdachadh nan dall',
+    plIgnore:'Leig seachad', plStats:'Stàitistig a\' chluicheadair', plNotPlaying:'Chan eil e a\' cluich an-dràsta', plPlayingInFull:'Tha %1 a\' cluich an-dràsta ann an "%2".', plNotPlayingFull:'Chan eil %1 a\' cluich an-dràsta.', plSortAlpha:'Seòrsaich a-rèir na h-aibidil', plShowIdle:'Seall cluicheadairean nan tàmh', plHideIdle:'Falaich cluicheadairean nan tàmh', gameTimeLabel:'Ùine', visRanked:'Rangachadh', infoBlindsUp:'Àrdachadh nan dall',
     spectatorBtn:'Coimhead',
     // v0.3.522–528 : blinds manuelles · dialogue de réglages · config.xml · sync compte
     blindsOrderLbl:'Òrdugh àrdachadh nan dall', blindsAlwaysDouble:'dùblaich na daill an-còmhnaidh', blindsManualOrder:'òrdugh nan dall le làimh', blindsAddBtn:'+ Cuir ris', blindsRemoveTip:'Thoir air falbh an dall seo', blindsAfterLbl:'An dèidh sin:', blindsAfterDouble:'dùblaich na daill', blindsAfterRaiseBy:'àrdaich na daill le', blindsAfterKeep:'cùm an dall mu dheireadh', infoBlindsManual:'Daill le làimh',

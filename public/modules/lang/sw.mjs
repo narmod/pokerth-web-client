@@ -483,7 +483,7 @@ export const strings = {
     gfNone:'Hakuna kichujio kwenye orodha ya michezo', gfOpen:'Onyesha michezo iliyo wazi', gfOpenNF:'Onyesha michezo iliyo wazi na isiyojaa', gfOpenNFNP:'Onyesha michezo iliyo wazi, isiyojaa na isiyo binafsi', gfOpenNFP:'Onyesha michezo iliyo wazi, isiyojaa na binafsi', gfOpenNFR:'Onyesha michezo iliyo wazi, isiyojaa na ya viwango',
     infoTypeLabel:'Aina', infoCapitalLabel:'Mtaji', infoPlayersInGame:'Wachezaji mchezoni', plIgnore:'Puuza', plStats:'Takwimu za mchezaji',
     plSortAlpha:'Panga kialfabeti', plShowIdle:'Onyesha wachezaji wasiocheza', plHideIdle:'Ficha wachezaji wasiocheza',
-    plNotPlaying:'Hachezi',
+    plNotPlaying:'Hachezi', plPlayingInFull:'%1 anacheza sasa katika "%2".', plNotPlayingFull:'%1 hachezi kwa sasa.',
     plColumns:'Safu wima', plColAvatar:'Avatari', plColName:'Jina', plColStatus:'Mchezoni', plColCountry:'Nchi', plColMe:'Mimi', plColActions:'Hatua',
     gameTimeLabel:'Muda', visRanked:'Wa viwango', infoBlindsUp:'Blind zimepanda',
     spectatorBtn:'Tazama',

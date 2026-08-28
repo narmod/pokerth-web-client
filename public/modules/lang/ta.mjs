@@ -726,7 +726,7 @@ export const strings = {
     piStatusEliminated:'வெளியேற்றப்பட்டார்',
     piViewProfile:'pokerth.net சுயவிவரத்தைப் பார்க்க',
     modeManual:'கைமுறை',
-    plIgnore:'புறக்கணி', plStats:'வீரர் புள்ளிவிவரங்கள்', plNotPlaying:'தற்போது விளையாடவில்லை', plSortAlpha:'அகர வரிசையில் வரிசைப்படுத்து', plShowIdle:'செயலற்ற வீரர்களைக் காட்டு', plHideIdle:'செயலற்ற வீரர்களை மறை', gameTimeLabel:'நேரம்', visRanked:'தரவரிசை', infoBlindsUp:'பிளைண்ட்ஸ் உயர்வு',
+    plIgnore:'புறக்கணி', plStats:'வீரர் புள்ளிவிவரங்கள்', plNotPlaying:'தற்போது விளையாடவில்லை', plPlayingInFull:'%1 தற்போது "%2" இல் விளையாடுகிறார்.', plNotPlayingFull:'%1 தற்போது விளையாடவில்லை.', plSortAlpha:'அகர வரிசையில் வரிசைப்படுத்து', plShowIdle:'செயலற்ற வீரர்களைக் காட்டு', plHideIdle:'செயலற்ற வீரர்களை மறை', gameTimeLabel:'நேரம்', visRanked:'தரவரிசை', infoBlindsUp:'பிளைண்ட்ஸ் உயர்வு',
     spectatorBtn:'பார்வையாளர்',
     // v0.3.522–528 : blinds manuelles · dialogue de réglages · config.xml · sync compte
     blindsOrderLbl:'பிளைண்ட்ஸ் உயர்த்தும் வரிசை', blindsAlwaysDouble:'பிளைண்ட்ஸை எப்போதும் இரட்டிப்பாக்கு', blindsManualOrder:'கைமுறை பிளைண்ட்ஸ் வரிசை', blindsAddBtn:'+ சேர்', blindsRemoveTip:'இந்த பிளைண்டை நீக்கு', blindsAfterLbl:'அதன் பிறகு:', blindsAfterDouble:'பிளைண்ட்ஸை இரட்டிப்பாக்கு', blindsAfterRaiseBy:'பிளைண்ட்ஸை இவ்வளவு உயர்த்து', blindsAfterKeep:'கடைசி பிளைண்டை வைத்திரு', infoBlindsManual:'கைமுறை பிளைண்ட்ஸ்',

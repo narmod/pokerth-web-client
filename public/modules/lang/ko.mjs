@@ -533,7 +533,7 @@ export const strings = {
     piStatusEliminated:'탈락',
     piViewProfile:'pokerth.net 프로필 보기',
     modeManual:'수동',
-    plIgnore:'무시', plStats:'플레이어 통계', plNotPlaying:'현재 플레이 중이 아님', plSortAlpha:'알파벳순 정렬', plShowIdle:'대기 중인 플레이어 표시', plHideIdle:'대기 중인 플레이어 숨기기', gameTimeLabel:'시간', visRanked:'랭킹', infoBlindsUp:'블라인드 상승',
+    plIgnore:'무시', plStats:'플레이어 통계', plNotPlaying:'현재 플레이 중이 아님', plPlayingInFull:'%1님은 현재 "%2"에서 플레이 중입니다.', plNotPlayingFull:'%1님은 현재 플레이하고 있지 않습니다.', plSortAlpha:'알파벳순 정렬', plShowIdle:'대기 중인 플레이어 표시', plHideIdle:'대기 중인 플레이어 숨기기', gameTimeLabel:'시간', visRanked:'랭킹', infoBlindsUp:'블라인드 상승',
     spectatorBtn:'관전',
     // v0.3.522–528 : blinds manuelles · dialogue de réglages · config.xml · sync compte
     blindsOrderLbl:'블라인드 인상 순서', blindsAlwaysDouble:'항상 블라인드 2배', blindsManualOrder:'수동 블라인드 순서', blindsAddBtn:'+ 추가', blindsRemoveTip:'이 블라인드 제거', blindsAfterLbl:'그 후:', blindsAfterDouble:'블라인드 2배', blindsAfterRaiseBy:'블라인드 인상액', blindsAfterKeep:'마지막 블라인드 유지', infoBlindsManual:'수동 블라인드',

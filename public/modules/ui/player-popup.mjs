@@ -481,6 +481,22 @@ function _roleHtml(pid) {
 function _otherPlayerInfoHtml(pid) {
   function tt(k, fb) { var v = (typeof t === 'function') ? t(k) : null; return (v && v !== k) ? v : fb; }
   var html = _roleHtml(pid);
+  // Parité QML PlayerListItem (stable, 27/08/2026) : « spielt gerade in … ».
+  // Le QML affiche la phrase au survol du nom (desktop) et dans la zone
+  // dépliée (tactile) ; côté web le tooltip vit sur le nom de la liste des
+  // joueurs et SA version tactile est cette ligne-ci — le popup joueur est
+  // notre équivalent du dépliage. Jamais pour les bots (offline) : la notion
+  // « au lobby / en partie » n'existe pas pour eux.
+  try {
+    if (!window.isBot(pid)) {
+      var _act = (typeof window._playerActivity === 'function') ? window._playerActivity(pid) : '';
+      var _anm = window.getPlayerName(pid) || ('#' + pid);
+      var _aline = _act
+        ? tt('plPlayingInFull', '%1 is playing in "%2".').replace('%1', _anm).replace('%2', _act)
+        : tt('plNotPlayingFull', '%1 is not playing at the moment.').replace('%1', _anm);
+      html += '<div class="pim-activity" style="margin-top:6px;font-size:12px;opacity:.75;text-align:center">' + esc(_aline) + '</div>';
+    }
+  } catch (e) {}
   // Infos en jeu + conteneur des stats de comportement (partagés avec la
   // self-box, cf. _inGameInfoHtml).
   html += _inGameInfoHtml(pid);
