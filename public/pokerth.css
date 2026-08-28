@@ -9498,9 +9498,19 @@ html.reduce-fx .seat-action-badge {
 /* Libellé trop long pour la largeur de l'onglet (portrait étroit, langues
    longues) : retour à la ligne sur 2 lignes max au lieu d'une troncature
    (« Bibliothèques tie… ») ; la barre grandit avec (parité QML CustomTabBar,
-   stable 27/08/2026 — wrapMode WordWrap + maximumLineCount 2). Le clamp
-   -webkit- couvre tous les moteurs actuels, Firefox inclus. */
-.ab-tab { flex:1 1 0; min-width:0; border:none; cursor:pointer; padding:8px 6px; font-size:var(--fs-base); color:var(--text-hi); background:var(--inset); font-family:var(--ff-display); white-space:normal; overflow-wrap:break-word; overflow:hidden; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; text-align:center; }
+   stable 27/08/2026 — wrapMode WordWrap + maximumLineCount 2).
+   Le clamp vit sur un SPAN interne (.ab-tab-lbl) : un <button> garde son
+   rendu interne propre et ignore display:-webkit-box, le clamp posé dessus
+   était donc inopérant (constat iPhone, web.149). Et la coupe se fait par
+   césure typographique (hyphens:auto — le lang du document suit la langue
+   de l'interface), plus par break-word qui tranchait en plein mot sans
+   trait d'union (« Journa / l des / modifi… ») ; break-word ne reste qu'en
+   ultime repli pour les langues sans dictionnaire de césure. */
+.ab-tab { flex:1 1 0; min-width:0; border:none; cursor:pointer; padding:8px 4px; font-size:var(--fs-base); color:var(--text-hi); background:var(--inset); font-family:var(--ff-display); white-space:normal; text-align:center; }
+.ab-tab-lbl { display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; hyphens:auto; overflow-wrap:break-word; }
+/* Six onglets sur un téléphone : police réduite pour que des mots entiers
+   tiennent sur la ligne avant de recourir à la césure. */
+@media (max-width: 560px) { .ab-tab { font-size:var(--fs-sm); } }
 .ab-tab.active { background:var(--panel-hi); font-weight:600; }
 :root[data-theme="pokerth-light"] .ab-tab { background:#dfe3ea; }
 :root[data-theme="pokerth-light"] .ab-tab.active { background:#a9b2c6; }

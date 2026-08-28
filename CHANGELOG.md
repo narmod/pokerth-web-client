@@ -50,6 +50,18 @@ highlights below.
   once the socket has stayed open for 10 s (`_armReconnectStable`) or an
   `InitAck` lands. Covered by `scripts/test-reconnect-backoff.mjs`.
 
+### Fixed
+- **About tabs: the 2-line clamp actually applies, and words hyphenate**
+  (`web.150`). `web.149` put `-webkit-line-clamp` on the `<button>` itself,
+  which keeps its own inner rendering and ignores `display:-webkit-box` — on
+  an iPhone the labels ran to five lines, broken mid-word with no hyphen
+  ("Journa / l des / modifi…"). The clamp now lives on an inner span, words
+  break with real hyphenation (`hyphens:auto`, following the interface
+  language via the document `lang`), `break-word` only remains as a last
+  resort for languages without a hyphenation dictionary, and the tab font
+  steps down one size under 560px so whole words fit first. Guard extended in
+  `scripts/test-portrait-wrap.mjs`.
+
 ### Changed
 - **Long labels wrap instead of truncating** (`web.149`). QML-parity with the
   upstream portrait fine-tuning (stable, 2026-08-27): the About dialog tabs
