@@ -183,10 +183,10 @@ const MSG = (() => {
   // precedente sont acceptees. En 2.1.3 : min Qt-Widget = 0x01020102 (2.1.2).
   // => A CHAQUE release PokerTH, bumper BUILD_ID ci-dessous sinon
   // ERR_NET_VERSION_NOT_SUPPORTED (« Version incompatible »").
-  // TYPE DE CLIENT : par défaut on s'identifie comme le client officiel
-  // Qt-Widget courant (comme le client QML). Le jour où sp0ck ajoute
-  // CLIENT_TYPE_WEB (0x03) côté serveur (game_defs.h + MIN_BUILD_ID_WEB),
-  // passer USE_CLIENT_TYPE_WEB à true ci-dessous — rien d'autre à toucher.
+  // TYPE DE CLIENT : CLIENT_TYPE_WEB (0x03), officiel depuis le commit upstream
+  // c7e2959 (game_defs.h). MIN_BUILD_ID_WEB = 0.0.0 : aucun plancher de version
+  // pour le web (déployé indépendamment des releases desktop). Le triple encodé
+  // (dérivé de BUILD_VERSION) apparaît dans les logs serveur comme « Web X.Y.Z ».
   // Auth (loginType=1) : password en clair dans clientUserData (tag 7),
   //   sécurisé par TLS (mandatory côté serveur v2.0+).
   //   Ref: pokerth/src/net/clientstate.cpp:1465-1469 + serverlobbythread.cpp:1255-1256
@@ -203,12 +203,11 @@ const MSG = (() => {
       if (_bv) { UPSTREAM_MAJOR = +_bv[1]; UPSTREAM_MINOR = +_bv[2]; UPSTREAM_PATCH = +_bv[3]; }
     } catch (e) {}
     const CLIENT_TYPE_QT_WIDGET = 0x01; // client officiel Qt-Widgets
-    const CLIENT_TYPE_WEB       = 0x03; // demandé à sp0ck — pas encore côté serveur
-    const USE_CLIENT_TYPE_WEB   = false; // ← basculer à true quand sp0ck confirme 0x03
+    const CLIENT_TYPE_WEB       = 0x03; // upstream game_defs.h (commit c7e2959, 2026-08)
+    const USE_CLIENT_TYPE_WEB   = true;  // actif — MIN_BUILD_ID_WEB=0.0.0, aucun plancher serveur
     const clientType = USE_CLIENT_TYPE_WEB ? CLIENT_TYPE_WEB : CLIENT_TYPE_QT_WIDGET;
     // buildId composite (type<<24)|(major<<16)|(minor<<8)|patch.
-    // Aujourd'hui : 0x01020107 (Qt-Widget 2.1.7 ; serveur 2.1.7 exige min 2.1.6 = 0x01020106,
-    // cf. game_defs.h MIN_BUILD_ID_QT_WIDGET a la release 2.1.7).
+    // Aujourd'hui : 0x03020107 (Web 2.1.7 ; MIN_BUILD_ID_WEB = 0x03000000, jamais rejeté).
     const BUILD_ID = ((clientType << 24) | (UPSTREAM_MAJOR << 16) | (UPSTREAM_MINOR << 8) | UPSTREAM_PATCH) >>> 0;
     const ver = Proto.encode([[1,0,major],[2,0,minor]]);
     const fields = [

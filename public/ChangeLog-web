@@ -1,4 +1,5 @@
 2026-08-13 version 2.1.7-web (current series):
+- improvement: the web client now introduces itself to the server as its own client type, alongside the desktop and QML clients - server statistics and activity logs can finally tell web players apart
 - bugfix: your avatar no longer changes identity on the server behind your back. The picture was quietly re-processed at every sign-in, and a browser update was enough to make the server treat it as a brand-new avatar - which cluttered the official avatar storage with duplicates. Your avatar is now prepared once, when you pick it, and reused exactly as is from then on
 - bugfix: the Monthly Cup link in the login page menu now shows the real Monthly Cup badge - the green chip from monthlycup.pokerth.net - instead of a generic trophy
 - bugfix: chat translation kept failing for some players - Google temporarily blocks addresses it sees too often, which hits VPN users especially hard. Just like the desktop client, the little globe now quietly tries a second translation service before giving up, and when nothing works at all you get a short notice instead of a silently blinking hourglass

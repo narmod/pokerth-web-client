@@ -16,6 +16,15 @@ release. Granular, per-build changes for this line are on the
 highlights below.
 
 ### Changed
+- **Own client type on the wire** (`web.167`). The client now identifies as
+  `CLIENT_TYPE_WEB` (0x03) in the `Init` buildId instead of masquerading as
+  the Qt-Widget client, following sp0ck's upstream commit `c7e2959`
+  (`game_defs.h`: `CLIENT_TYPE_WEB` + `MIN_BUILD_ID_WEB = 0.0.0`, no version
+  floor for the independently-deployed web client). Server logs and the
+  activity row now show `Web 2.1.7`, letting statistics tell web players
+  apart. `USE_CLIENT_TYPE_WEB` flipped to `true` in
+  `modules/net/messages.mjs`; the upstream triple is still derived from
+  `BUILD_VERSION` at runtime.
 - **Frozen avatar upload bytes** (`web.166`). sp0ck reported the same avatar
   reaching the server under several hashes (e.g. one player's photo avatar).
   Cause: the picked image was re-encoded (canvas → PNG via `toBlob`) on
