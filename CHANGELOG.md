@@ -15,6 +15,17 @@ release. Granular, per-build changes for this line are on the
 [GitHub Releases](https://github.com/narmod/pokerth-web-client/releases) page;
 highlights below.
 
+### Added
+- **Disco table style, Blacklight 4c deck, Disco card back** (`web.171`).
+  Ports of the three style packs shipping with upstream 2.1.8 (`e6b2a67`,
+  `8704f48`): the seventies club table (fullscreen wallpaper, glow-tile
+  action buttons and pucks, magenta PlayerBoxAccent/ChatLog tint from the
+  upstream XML), the four-colour blacklight deck as a gallery deck
+  (`/cards/blacklight-4c/`, auto-listed by `decks-manifest`), and the
+  mirror-ball back both standalone (`back-disco`) and as the deck's
+  flipside. Credits per upstream `data-copyright.txt`: PokerTH
+  Development Team, AGPL-3.0.
+
 ### Fixed
 - **Auto-update no longer restarts over reconnect-grace sessions** (`web.170`).
   The idle check gating the automatic update/restart counted only OPEN browser

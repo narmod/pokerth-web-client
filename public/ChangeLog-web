@@ -1,4 +1,7 @@
 2026-08-13 version 2.1.7-web (current series):
+- new: the table takes a night out - the Disco style sets the game in a seventies club lounge, mirror ball spinning over the dance floor, neon sign glowing behind the velvet drapes, with matching glow-tile buttons and pucks
+- new: a Blacklight 4c card deck to go with it - four neon suit colours glowing on near-black cards, easy to tell apart at a glance even on a dark table
+- new: a Disco card back showing the mirror ball itself, catching the blacklight colours of the deck - pick it in Settings > Styles > Card back, or it comes along automatically with the Blacklight deck
 - bugfix: the automatic server update could mistake the server for empty when the only players connected were on phones with the screen momentarily off, and restart in the middle of their game - it now sees those players too and waits its turn
 - bugfix: inviting a friend to a table on a home or LAN server now works as intended - the link and QR code always carried the right address, but on the friend's screen the connection form quietly fell back to its own default server, so they could not find your table. The address from the invitation now stays in place until they change it themselves
 - bugfix: signing in on pokerth.net stopped working with a "version not supported" error after a server update - the way the client introduces itself has been adjusted so you can play again right away

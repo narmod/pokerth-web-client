@@ -82,6 +82,8 @@ const TABLES = [
   { id: 'terminus_hotel_2', name: "Terminus Hotel 2 QML table style", key: 'tableTerminusHotel2', fallback: "Terminus Hotel 2", swatch: '#6e53a2', feltUrl: '/table/terminus_hotel_2/felt.png', preview: '/table/terminus_hotel_2/preview.png', previewPortrait: '/table/terminus_hotel_2/preview_portrait.png', radius: 6.5, mode: 'fs', skin: true, align: 'center', zoom: 1.3 },
   // 2.1.7 : BBC Anthem (BaShFX). TableBackgroundAlign=bottom dans le XML amont.
   { id: 'bbc_anthem', name: "BBC Anthem QML table style", key: 'tableBbcAnthem', fallback: "BBC Anthem", swatch: '#252626', feltUrl: '/table/bbc_anthem/felt.png', preview: '/table/bbc_anthem/preview.png', previewPortrait: '/table/bbc_anthem/preview_portrait.png', radius: 6.5, mode: 'fs', skin: true, align: 'center bottom' },
+  // 2.1.8 : Disco (upstream e6b2a67). ActionButtonBorderRadius=7, align center, zoom 1.0.
+  { id: 'disco', name: "Disco QML table style", key: 'tableDisco', fallback: "Disco", swatch: '#d1298f', feltUrl: '/table/disco/felt.png', preview: '/table/disco/preview.png', previewPortrait: '/table/disco/preview_portrait.png', radius: 7, mode: 'fs', skin: true, align: 'center' },
 ];
 const DECKS = [
   { id: 'default', name: 'PokerTH default QML card deck', by: 'PokerTH Development Team', swatch: '#1d6b30', ext: 'svg' },
@@ -536,6 +538,8 @@ var _STANDALONE_BACKS = [
   { id: 'back-terminus-hotel-2',  name: 'Terminus Hotel 2 WoA (QML/SVG)', key: 'cardbackTerminusHotel2',  fallback: 'Terminus Hotel 2',  ext: 'svg' },
   // 2.1.7 : dos assorti au tapis BBC Anthem.
   { id: 'back-bbc-anthem',        name: 'BBC Anthem (QML/SVG)',           key: 'cardbackBbcAnthem',       fallback: 'BBC Anthem',        ext: 'svg' },
+  // 2.1.8 : la boule a facettes, assortie au tapis Disco et au deck Blacklight 4c.
+  { id: 'back-disco',             name: 'Disco (QML/SVG)',                key: 'cardbackDisco',           fallback: 'Disco',             ext: 'svg' },
 ];
 // Options : Assorti au deck · dos de chaque deck connu (intégrés + galerie) ·
 // dos autonomes QML · image importée (si présente) · « Importer une image… ».
@@ -853,7 +857,8 @@ var _SKIN_TINT = {
   pirates:{a:'#cf9a34',bg:'#141009',su:'#221a11',bo:'#7d5c26',tx:'#f3e8d2',se:'#d7c096',mu:'#998158'},
   mile_high_club:{a:'#e7181c',bg:'#1c2e37',su:'#344e5c',bo:'#397c8d',tx:'#d6fcff',se:'#a8e1e6',mu:'#60a4a9'},
   terminus_hotel_2:{a:'#1a1a1a',bg:'#28253c',su:'#444163',bo:'#6e53a2',tx:'#ead6ff',se:'#c7a8e6',mu:'#8460a9'},
-  bbc_anthem:{a:'#252626',bg:'#1c2e37',su:'#344e5c',bo:'#397c8d',tx:'#d6fcff',se:'#a8e1e6',mu:'#60a4a9'}
+  bbc_anthem:{a:'#252626',bg:'#1c2e37',su:'#344e5c',bo:'#397c8d',tx:'#d6fcff',se:'#a8e1e6',mu:'#60a4a9'},
+  disco:{a:'#d1298f',bg:'#200f2c',su:'#3a1d4d',bo:'#a4308c',tx:'#ffe2f4',se:'#e0b0d8',mu:'#a06fa8'}
 };
 function _injectTintObj(m){
   var el=document.documentElement;
@@ -1435,7 +1440,7 @@ var TABLE_AUTHORS = {
   wanted:'Etienne Graphic Designer', xanax:'Sebastien Kerguen',
   saloon:'PokerTH Development Team', discworld:'PokerTH Development Team',
   pirates:'PokerTH Development Team', mile_high_club:'BaShFX', terminus_hotel_2:'BaShFX',
-  bbc_anthem:'BaShFX'
+  bbc_anthem:'BaShFX', disco:'PokerTH Development Team'
 };
 var _TABS = [
   { id:'table',    kind:'table',    titleKey:'sectionTable',    fallback:'Table' },

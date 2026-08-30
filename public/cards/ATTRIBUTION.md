@@ -54,3 +54,19 @@ Three backs matching the table styles shipped in 2.1.5, each a single
 - Source: https://github.com/pokerth/pokerth (tag `v2.1.5`,
   `data/gfx/qml/backside/{pirates,mile_high_club,terminus_hotel_2}/`)
 - License: GNU Affero General Public License v3.0 (AGPL-3.0)
+
+## Blacklight 4c deck and Disco card back (PokerTH 2.1.8)
+
+The vector deck `public/cards/blacklight-4c/` (`0.svg`–`51.svg`) is the
+"Blacklight 4c" deck introduced alongside PokerTH 2.1.8: the geometry (rank
+glyphs, suit symbols, layout) is inherited upstream from `default4c`, with the
+blacklight colours and glow being original work.
+
+The mirror-ball back served as `public/cards/back-disco/flipside.svg` (also
+used as the deck's `flipside.svg`) is the matching "Disco" card back from
+`data/gfx/qml/backside/disco/backside.svg`.
+
+- © the PokerTH Development Team.
+- Source: https://github.com/pokerth/pokerth (branch `stable`,
+  `data/gfx/qml/cards/blacklight_4c/` and `data/gfx/qml/backside/disco/`)
+- License: GNU Affero General Public License v3.0 (AGPL-3.0)
