@@ -26,6 +26,17 @@ highlights below.
   flipside. Credits per upstream `data-copyright.txt`: PokerTH
   Development Team, AGPL-3.0.
 
+### Added
+- **Monthly Cup templates fill in the current tournament title**
+  (`web.173`). QML parity: `applyVorlage` now resolves `titleCommand`
+  through `gameTitlePrefix` (gameslist.txt) and substitutes the live
+  monthly name ("August Cup Final") when the fallback name is untouched
+  and the template still selected — the plumbing existed in
+  botsuggest.mjs since the 2.1.4 port but was never wired into the create
+  form. Also ports upstream `0640366`: `prefetchGameTitles()` warms the
+  gameslist cache when the create page opens, so a fast click on Create
+  no longer races the async title fetch.
+
 ### Fixed
 - **Idle filter now counts spectators as at a table** (`web.172`). QML
   parity with upstream `26018c9` (`syncPlayerGameMembership`: idle = at no

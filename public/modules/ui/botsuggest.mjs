@@ -320,6 +320,15 @@ function suggestForType(type, idleNames, playingPlayers, onResult) {
   onResult(false, '');
 }
 
+// Précharge gameslist.txt (parité upstream 0640366) : sans ça, le fichier
+// n'est tiré qu'au choix d'une vorlage Monthly Cup — le titre arrive alors en
+// asynchrone, et un clic rapide sur « Créer la partie » envoie le nom de repli
+// (« Monthly Cup Final » au lieu d'« August Cup Final »). Appelé à l'ouverture
+// de la page de création ; le fichier fait ~1 ko.
+function prefetchGameTitles() {
+  _ensure('gameslist', function () {});
+}
+
 // Titre courant d'une table communautaire à nom mensuel (Monthly Cup).
 function gameTitlePrefix(command, onResult) {
   _ensure('gameslist', function (ok) {
@@ -483,7 +492,7 @@ window._suggestPlayers = suggestPlayers;
 window._syncSuggestBtn = syncSuggestBtn;
 // presets : source unique des vorlagen communautaires. pokerth.js
 // (App._communityVorlagen) les lit ICI — voir le commentaire sur PRESETS.
-window._botSuggest = { suggestForType, gameTitlePrefix, isSuggestType,
+window._botSuggest = { suggestForType, gameTitlePrefix, prefetchGameTitles, isSuggestType,
                        setCreatedSuggestType, getCreatedSuggestType,
                        idlePlayerNames, playingPlayerEntries,
                        presets: PRESETS, suggestTypeForGame, isBbcAdmin,

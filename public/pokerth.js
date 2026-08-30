@@ -7481,6 +7481,13 @@ const App = (() => {
       this._rankSnap = null;      // jamais de restauration trans-session
       this._vorlageSnap = null;   // idem pour le modèle communautaire (non persisté, comme le QML)
       try { var _vs = document.getElementById('cf-vorlage'); if (_vs) _vs.value = '0'; } catch (e) {}
+      // Précharger les titres communautaires (parité upstream 0640366) : le
+      // titre mensuel est alors déjà en cache au choix d'une vorlage Monthly
+      // Cup, au lieu d'arriver après un éventuel clic rapide sur « Créer ».
+      try {
+        if (_advGet('community_content', true) && window._botSuggest && window._botSuggest.prefetchGameTitles)
+          window._botSuggest.prefetchGameTitles();
+      } catch (e) {}
       try { this._applyCreateFormDefaults(false); } catch (e) {}
       // Pastille « Perso » (charger mes préférences) : visible seulement si
       // des préférences existent pour le MODE COURANT (pastille 💾 ou Options
@@ -7689,6 +7696,21 @@ const App = (() => {
       var p = this._communityVorlagen[idx - 1];
       this._activeVorlage = p;
       var nm = g('cf-name'); if (nm) nm.value = p.name;
+      // Vorlagen au nom mensuel (Monthly Cup) : tirer le préfixe de titre
+      // courant de gameslist.txt (« August Cup Final ») et — si l'utilisateur
+      // n'a pas édité le nom de repli et que la même vorlage est toujours
+      // choisie — le substituer. Asynchrone ; en cas d'échec p.name reste
+      // (parité QML LobbyCreateGamePage applyPreset).
+      if (p.titleCommand && window._botSuggest && window._botSuggest.gameTitlePrefix) {
+        var _fallbackName = p.name, _self = this;
+        try {
+          window._botSuggest.gameTitlePrefix(p.titleCommand, function (title) {
+            var _nm2 = g('cf-name');
+            if (title && title.length > 0 && _self._activeVorlage === p
+                && _nm2 && _nm2.value === _fallbackName) _nm2.value = title;
+          });
+        } catch (e) {}
+      }
       var ne = g('cf-name-err'); if (ne) ne.style.display = 'none';
       setv('cf-players', 10);
       setv('cf-stack',   p.startCash);
@@ -10997,7 +11019,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.7-web.172'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.7-web.173'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
