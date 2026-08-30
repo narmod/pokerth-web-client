@@ -51,8 +51,8 @@ const done = () => new Promise((r) => setTimeout(r, 0));
   let out = '';
   B.suggestForType('step2', ['* ghoti *', 'alice', 'bob'], [], (o, m) => { out = o ? m : 'KO'; });
   await done();
-  eq(out, 'I suggest the following players for step 2: * ghoti *, alice, bob',
-     'step 2: sorted by score, untrimmed name preserved');
+  eq(out, 'I suggest the following players for step 2:\n* ghoti *\nalice\nbob',
+     'step 2: one player per line, sorted by score, untrimmed name preserved');
   ok(fetched.length === 1 && fetched[0].indexOf('f=minidb') !== -1, 'step: minidb fetched once');
 }
 
@@ -80,7 +80,7 @@ const done = () => new Promise((r) => setTimeout(r, 0));
   let out = '';
   B.suggestForType('step2', ['bob'], [{ name: 'alice', game: 'Cash 3' }], (o, m) => { out = m; });
   await done();
-  eq(out, 'I suggest the following players for step 2: bob, alice (playing in game Cash 3)',
+  eq(out, 'I suggest the following players for step 2:\nbob\nalice (playing in game Cash 3)',
      'busy players are appended with their table');
 }
 
@@ -158,7 +158,7 @@ const done = () => new Promise((r) => setTimeout(r, 0));
 // ── 10. The suggestion is shown locally, never sent ───────────────────
 {
   const shown = [];
-  window.addChat = (sender, text, cls) => shown.push({ sender, text, cls });
+  window.addChat = (sender, text, cls, spec) => shown.push({ sender, text, cls, spec });
   B.setCreatedSuggestType('step2');
   S._lobbyPids = new Set([1]); S.players = { 1: 'alice' }; S._playerRights = { 1: 2 };
   // Une table valide : suggestPlayers() passe desormais par
@@ -171,6 +171,8 @@ const done = () => new Promise((r) => setTimeout(r, 0));
   await done();
   eq(shown.length, 1, 'suggestPlayers: one local line');
   eq(shown[0].sender, null, 'suggestPlayers: no sender -> local note, not a chat message');
+  ok(shown[0].spec && shown[0].spec.force === true,
+     'suggestPlayers: the note carries force (sys messages are filtered without it)');
   ok(shown[0].text.indexOf('alice') !== -1, 'suggestPlayers: the suggestion reached the panel');
 }
 

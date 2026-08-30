@@ -26,6 +26,20 @@ highlights below.
   flipside. Credits per upstream `data-copyright.txt`: PokerTH
   Development Team, AGPL-3.0.
 
+### Fixed
+- **Community suggest output was silently dropped** (`web.175`). The
+  local suggestion note was posted as a plain `sys` chat message; when
+  system messages were removed from the chat (narmod request, `spec.force`
+  escape hatch), the suggest path was not updated and the note vanished —
+  the mocked `addChat` in the test hid it. It now passes `{ force: true }`
+  and the test asserts it.
+
+### Changed
+- **Suggest output is one player per line** (`web.175`). Parity with
+  upstream `4afc377`: headline, then one name per line (`\n`), rendered
+  via `white-space: pre-line` on `.msg.sys .txt` — the counterpart of the
+  `<br>` conversion in QML `postLocalChatNote`.
+
 ### Added
 - **Community suggest opens to WEC admins on foreign WEC tables**
   (`web.174`). Port of upstream `576b598`: the table fingerprint now also

@@ -307,15 +307,19 @@ function _scoreWec(candidates) {
   return out;
 }
 
-// Joueurs libres d'abord, puis — en dernier — ceux déjà attablés ailleurs,
-// annotés de leur table. Les deux groupes plafonnés à `limit`.
+// Ligne d'en-tête, puis UN joueur par ligne (parité amont 4afc377) : joueurs
+// libres d'abord, puis — en dernier — ceux déjà attablés ailleurs, annotés de
+// leur table. Les deux groupes plafonnés à `limit`. Le \n est un vrai saut de
+// ligne : la note locale du chat le rend via white-space: pre-line
+// (.msg.sys .txt, pokerth.css) — l'équivalent du <br> que pose
+// Lobby.postLocalChatNote côté QML.
 function _buildMessage(headline, idleScored, busyScored, limit, emptyText) {
   if (!idleScored.length && !busyScored.length) return emptyText;
   const parts = [];
   for (let i = 0; i < idleScored.length && i < limit; i++) parts.push(idleScored[i].dbName);
   for (let j = 0; j < busyScored.length && j < limit; j++)
     parts.push(busyScored[j].dbName + ' (playing in game ' + busyScored[j].game + ')');
-  return headline + parts.join(', ');
+  return headline + '\n' + parts.join('\n');
 }
 
 function _suggestStep(step, idleNames, playingPlayers) {
@@ -325,7 +329,7 @@ function _suggestStep(step, idleNames, playingPlayers) {
   // longue. Ils reapparaissent a partir du step 2.
   const busy = step === 1 ? [] : _scoreStep(playingPlayers, step);
   return _buildMessage(
-    'I suggest the following players for step ' + step + ': ',
+    'I suggest the following players for step ' + step + ':',
     _scoreStep(_asCandidates(idleNames), step),
     busy,
     12,
@@ -334,7 +338,7 @@ function _suggestStep(step, idleNames, playingPlayers) {
 
 function _suggestWec(idleNames, playingPlayers) {
   return _buildMessage(
-    'I suggest the following players for wec: ',
+    'I suggest the following players for wec:',
     _scoreWec(_asCandidates(idleNames)),
     _scoreWec(playingPlayers),
     10,
@@ -503,7 +507,9 @@ function suggestPlayers() {
     _busy = false;
     try { const b = document.getElementById('l-suggest-btn'); if (b) b.style.opacity = ''; } catch (e) {}
     // Affichage LOCAL uniquement, jamais envoyé — comme postLocalChatNote().
-    if (ok && message && typeof window.addChat === 'function') window.addChat(null, message, 'sys');
+    // { force: true } : les messages 'sys' sont filtrés du chat depuis leur
+    // purge — sans lui la suggestion n'apparaissait plus du tout.
+    if (ok && message && typeof window.addChat === 'function') window.addChat(null, message, 'sys', { force: true });
   });
 }
 

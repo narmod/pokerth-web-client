@@ -1968,6 +1968,9 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
 .msg .who   { color: var(--gold); font-weight: 700; }
 .msg .txt   { color: var(--text-hi); }
 .msg.sys    { color: var(--text); font-size: var(--fs-sm); font-style: italic; }
+/* Notes locales multilignes (suggest communautaire, parite amont 4afc377) :
+   le \n du texte devient un saut de ligne, sans toucher au markup. */
+.msg.sys .txt { white-space: pre-line; }
 .msg.reaction { font-size: var(--fs-lg); opacity: 0.85; font-style: italic; }
 .msg.bc     { color: var(--gold-dim); border-left: 2px solid var(--gold-dim); padding-left: 6px; }
 .msg.mine .who { color: var(--green); }
