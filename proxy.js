@@ -7343,7 +7343,7 @@ function handleRanking(req, res, query) {
 // BotSuggest.qml : ainsi un changement de format amont se corrige par un
 // deploiement statique, sans redemarrer le proxy.
 //
-//   GET /api/botfile?f=minidb|weclist|gameslist|bbcadmins  -> text/plain
+//   GET /api/botfile?f=minidb|weclist|gameslist|bbcadmins|wecadmins  -> text/plain
 //
 // bbcadmins.txt (format de weclist.txt : un pseudo par ligne) dit qui a le
 // droit de proposer des joueurs sur un tapis BBC Step qu'il n'a pas cree
@@ -7354,7 +7354,10 @@ function handleRanking(req, res, query) {
 const BOTFILE_BASE = 'https://bbc.pokerth.net/exp3/bbcbot/';
 const BOTFILE_TTL_MS = 15 * 60 * 1000;
 const BOTFILE_NAMES = { minidb: 'minidb.txt', weclist: 'weclist.txt', gameslist: 'gameslist.txt',
-                        bbcadmins: 'bbcadmins.txt' };
+                        bbcadmins: 'bbcadmins.txt',
+                        // wecadmins.txt (amont 576b598) : les admins WEC, pour
+                        // le suggest sur une table WEC qu'ils n'ont pas creee.
+                        wecadmins: 'wecadmins.txt' };
 
 function handleBotfile(req, res, query) {
   const key = String((query && query.f) || '').toLowerCase();

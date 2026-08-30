@@ -27,6 +27,18 @@ highlights below.
   Development Team, AGPL-3.0.
 
 ### Added
+- **Community suggest opens to WEC admins on foreign WEC tables**
+  (`web.174`). Port of upstream `576b598`: the table fingerprint now also
+  recognises WEC (no blind list, so start cash + first small blind +
+  raise interval mode/value + action timeout must all match; the known
+  Monthly Cup Final = WEC ambiguity is accepted as upstream), a separate
+  `wecadmins.txt` joins the botfile relay (proxy.js — needs a proxy
+  restart to serve it), and `isCommunityAdmin(type, nick)` picks the
+  admin list per community with per-list failure throttling.
+  `isBbcAdmin` stays as a compat wrapper. Covered by 11 new cases in
+  scripts/test-botsuggest.mjs.
+
+### Added
 - **Monthly Cup templates fill in the current tournament title**
   (`web.173`). QML parity: `applyVorlage` now resolves `titleCommand`
   through `gameTitlePrefix` (gameslist.txt) and substitutes the live

@@ -19,11 +19,13 @@ import { S } from '../game/state.mjs';
 const BASE = '/api/botfile?f=';
 const CACHE_TTL_MS = 15 * 60 * 1000;      // = cacheTtlMs du singleton QML
 
-const KINDS = ['minidb', 'weclist', 'gameslist', 'bbcadmins'];
+const KINDS = ['minidb', 'weclist', 'gameslist', 'bbcadmins', 'wecadmins'];
 const _cache = { minidb: { data: null, ts: 0 }, weclist: { data: null, ts: 0 },
-                 gameslist: { data: null, ts: 0 }, bbcadmins: { data: null, ts: 0 } };
-const _queues = { minidb: [], weclist: [], gameslist: [], bbcadmins: [] };
-const _inflight = { minidb: false, weclist: false, gameslist: false, bbcadmins: false };
+                 gameslist: { data: null, ts: 0 }, bbcadmins: { data: null, ts: 0 },
+                 wecadmins: { data: null, ts: 0 } };
+const _queues = { minidb: [], weclist: [], gameslist: [], bbcadmins: [], wecadmins: [] };
+const _inflight = { minidb: false, weclist: false, gameslist: false, bbcadmins: false,
+                    wecadmins: false };
 
 // Type de suggestion du spiel qu'on vient de créer. Comme en QML depuis
 // 2.1.5, il vient EXPLICITEMENT du preset et jamais du nom de table :
@@ -103,45 +105,79 @@ const PRESETS = [
 function suggestTypeForGame(g) {
   if (!g) return '';
   const blinds = g.manualBlinds || [];
-  if (!blinds.length) return '';
   for (let i = 0; i < PRESETS.length; i++) {
     const p = PRESETS[i];
-    if (!p.suggestType || !p.blinds || !p.blinds.length) continue;
+    if (!p.suggestType) continue;
     if (p.startCash !== g.startMoney || p.firstSmallBlind !== g.smallBlind) continue;
-    if (p.blinds.length !== blinds.length) continue;
-    let same = true;
-    for (let b = 0; b < p.blinds.length; b++) {
-      if (p.blinds[b] !== blinds[b]) { same = false; break; }
+    const pb = p.blinds || [];
+    if (pb.length !== blinds.length) continue;
+    if (pb.length > 0) {
+      let same = true;
+      for (let b = 0; b < pb.length; b++) {
+        if (pb[b] !== blinds[b]) { same = false; break; }
+      }
+      if (!same) continue;
+    } else {
+      // Vorlagen a blinds doublees (WEC) : pas de liste comme empreinte, et
+      // capital + petite blind seuls ne signent rien (10000/50 matcherait des
+      // tables quelconques). S'y ajoutent donc l'intervalle de hausse (mode +
+      // valeur) et le timeout d'action — avec le filtre invitation de
+      // l'appelant, c'est assez etroit (parite amont 576b598).
+      // Imprecision connue et assumee en amont : « Monthly Cup Final » a
+      // exactement les reglages de « WEC » (10000/50, /22 mains, 12 s) — un
+      // admin WEC voit donc aussi le bouton a une table MC Final. Le
+      // vorschlag ne s'affiche que localement chez qui clique. Le nom de
+      // table reste exclu comme critere : librement editable.
+      // g.raiseMode : 1 = mains, 2 = minutes (RAISE_ON_HANDNUMBER /
+      // RAISE_ON_MINUTES, gamedata.h) — champs poses par onGameListNew.
+      if (p.raiseOnHands !== (g.raiseMode === 1)) continue;
+      if (p.raiseOnHands ? (p.raiseEveryHands !== g.raiseHands)
+                         : (p.raiseEveryMinutes !== g.raiseMins)) continue;
+      if (p.playerActionTimeout !== g.timeout) continue;
     }
-    if (same) return p.suggestType;
+    return p.suggestType;
   }
   return '';
 }
 
-// ── Verification « admin BBC » ────────────────────────────────────────
-// bbcadmins.txt (meme format que weclist.txt) dit qui a le droit de proposer
-// des joueurs sur un tapis BBC Step qu'il n'a pas cree. A n'appeler QUE si
-// l'empreinte locale dit deja « BBC Step » : ailleurs, la fonction ne coute
-// pas une seule requete.
+// ── Verification « admin communautaire » ──────────────────────────────
+// Une liste d'admins par communaute, au format de weclist.txt : bbcadmins.txt
+// pour les BBC Steps, wecadmins.txt pour les tables WEC (parite amont
+// 576b598). Elle dit qui a le droit de proposer des joueurs sur une table de
+// SA communaute qu'il n'a pas creee. A n'appeler QUE si l'empreinte locale
+// livre deja un type : ailleurs, la fonction ne coute pas une seule requete.
 // onResult(isAdmin) : false aussi quand le fichier n'est pas (encore)
 // joignable — le bouton reste alors cache, comme sans la fonction.
-let _bbcAdminLastTry = 0;
+// Horodatage du dernier essai (meme rate) par liste d'admins.
+const _adminLastTry = { bbcadmins: 0, wecadmins: 0 };
 
-function isBbcAdmin(nick, onResult) {
-  if (!nick) { onResult(false); return; }
+// Type de suggestion -> liste d'admins competente ('' = aucune, donc pas de
+// suggestion sur table etrangere pour ce type).
+function _adminKind(type) {
+  if (/^step[1-4]$/.test(type || '')) return 'bbcadmins';
+  if (type === 'wec') return 'wecadmins';
+  return '';
+}
+
+function isCommunityAdmin(type, nick, onResult) {
+  const kind = _adminKind(type);
+  if (!kind || !nick) { onResult(false); return; }
   // Brider aussi les ECHECS : la reponse commande la visibilite du bouton, qui
   // est re-evaluee a chaque changement de la liste des joueurs. Sans ce garde-
   // fou, un fichier absent declencherait un telechargement par join/leave. Un
   // cache encore frais repond de toute facon sans reseau (_ensure).
-  const c = _cache.bbcadmins;
+  const c = _cache[kind];
   const fresh = c.data !== null && (Date.now() - c.ts) < CACHE_TTL_MS;
-  if (!fresh && (Date.now() - _bbcAdminLastTry) < CACHE_TTL_MS) { onResult(false); return; }
-  if (!fresh) _bbcAdminLastTry = Date.now();
-  _ensure('bbcadmins', function (ok) {
-    const set = ok ? _cache.bbcadmins.data : null;
+  if (!fresh && (Date.now() - _adminLastTry[kind]) < CACHE_TTL_MS) { onResult(false); return; }
+  if (!fresh) _adminLastTry[kind] = Date.now();
+  _ensure(kind, function (ok) {
+    const set = ok ? _cache[kind].data : null;
     onResult(!!(set && set[String(nick).toLowerCase()] !== undefined));
   });
 }
+
+// Compat : l'ancienne entree BBC seule, conservee pour les appels existants.
+function isBbcAdmin(nick, onResult) { isCommunityAdmin('step1', nick, onResult); }
 
 // ── Chargement + cache ────────────────────────────────────────────────
 function _ensure(kind, done) {
@@ -171,7 +207,7 @@ function _ensure(kind, done) {
 }
 
 function _parse(kind, text) {
-  if (kind === 'weclist' || kind === 'bbcadmins') return _parseNameList(text);
+  if (kind === 'weclist' || kind === 'bbcadmins' || kind === 'wecadmins') return _parseNameList(text);
   if (kind === 'gameslist') return _parseGameslist(text);
   return _parseDb(text);
 }
@@ -397,11 +433,12 @@ function playingPlayerEntries() {
 //   • tout ADMIN BBC sur une table BBC Step montée par quelqu'un d'autre — là
 //     le type n'est connu de personne et se déduit des réglages
 //     (suggestTypeForGame).
-// Résultat du dernier contrôle bbcadmins.txt, épinglé à la table concernée :
-// une réponse tardive arrivant après un changement de table ne doit pas
-// allumer le bouton sur la nouvelle.
-let _bbcAdmin = false;
-let _bbcAdminForGame = null;
+// Résultat du dernier contrôle d'admin communautaire (bbcadmins.txt /
+// wecadmins.txt selon le type), épinglé à la table concernée : une réponse
+// tardive arrivant après un changement de table ne doit pas allumer le
+// bouton sur la nouvelle.
+let _communityAdmin = false;
+let _communityAdminForGame = null;
 
 function _communityEnabled() {
   try {
@@ -429,24 +466,27 @@ function effectiveSuggestType() {
   const own = _ownSuggestType();
   if (own) return own;
   const table = _tableSuggestType();
-  return (_bbcAdmin && _bbcAdminForGame === S.gId) ? table : '';
+  return (_communityAdmin && _communityAdminForGame === S.gId) ? table : '';
 }
 
-// Lance le contrôle bbcadmins.txt, mais UNIQUEMENT sur une table BBC Step
-// étrangère : partout ailleurs la fonction ne coûte aucune requête. Les
-// invités ne peuvent pas chatter, donc pas de contrôle non plus pour eux.
-function _resolveBbcAdmin() {
+// Lance le contrôle d'admin, mais UNIQUEMENT sur une table communautaire
+// (BBC Step ou WEC) étrangère : partout ailleurs la fonction ne coûte aucune
+// requête. La liste compétente est choisie par le type (isCommunityAdmin,
+// parité amont 576b598). Les invités ne peuvent pas chatter, donc pas de
+// contrôle non plus pour eux.
+function _resolveCommunityAdmin() {
   if (!_communityEnabled() || _ownSuggestType()) return;
-  if (!/^step[1-4]$/.test(_tableSuggestType())) return;
+  const table = _tableSuggestType();
+  if (!isSuggestType(table)) return;
   if (((S._playerRights && S._playerRights[S.myId]) || 0) === 1) return;
-  if (_bbcAdminForGame === S.gId) return;   // déjà tranché pour cette table
+  if (_communityAdminForGame === S.gId) return;   // déjà tranché pour cette table
   const nick = (S.players && S.players[S.myId]) || '';
   if (!nick) return;
   const gid = S.gId;
-  isBbcAdmin(nick, function (ok) {
+  isCommunityAdmin(table, nick, function (ok) {
     if (S.gId !== gid) return;              // table quittée entre-temps
-    _bbcAdmin = !!ok;
-    _bbcAdminForGame = gid;
+    _communityAdmin = !!ok;
+    _communityAdminForGame = gid;
     syncSuggestBtn();                        // la réponse rouvre le bouton
   });
 }
@@ -478,7 +518,7 @@ function syncSuggestBtn() {
   let on = false;
   try {
     on = !!effectiveSuggestType();
-    if (!on) _resolveBbcAdmin();
+    if (!on) _resolveCommunityAdmin();
   } catch (e) { on = false; }
   b.style.display = on ? '' : 'none';
 }
@@ -486,7 +526,8 @@ function syncSuggestBtn() {
 export { suggestPlayers, syncSuggestBtn, suggestForType, gameTitlePrefix,
          isSuggestType, setCreatedSuggestType, getCreatedSuggestType,
          idlePlayerNames, playingPlayerEntries,
-         PRESETS as presets, suggestTypeForGame, isBbcAdmin, effectiveSuggestType };
+         PRESETS as presets, suggestTypeForGame, isBbcAdmin, isCommunityAdmin,
+         effectiveSuggestType };
 
 window._suggestPlayers = suggestPlayers;
 window._syncSuggestBtn = syncSuggestBtn;
@@ -496,4 +537,4 @@ window._botSuggest = { suggestForType, gameTitlePrefix, prefetchGameTitles, isSu
                        setCreatedSuggestType, getCreatedSuggestType,
                        idlePlayerNames, playingPlayerEntries,
                        presets: PRESETS, suggestTypeForGame, isBbcAdmin,
-                       effectiveSuggestType };
+                       isCommunityAdmin, effectiveSuggestType };

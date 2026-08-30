@@ -25,6 +25,7 @@ const FILES = {
   ].join('\n'),
   weclist: ['Carol', 'dave', ''].join('\n'),
   bbcadmins: ['Referee', 'alice', ''].join('\n'),
+  wecadmins: ['WecBoss', ''].join('\n'),
   gameslist: ['// comment', '#mcup#g#July Cup#', '#mcupfinal#g#July Cup Final#', 'junk'].join('\n')
 };
 let fetched = [];
@@ -193,8 +194,22 @@ const done = () => new Promise((r) => setTimeout(r, 0));
   eq(B.suggestTypeForGame({ startMoney: step1.startCash, smallBlind: step1.firstSmallBlind,
                             manualBlinds: step1.blinds.slice(0, -1) }), '',
      'fingerprint: a truncated blind list is no longer a match');
+  // WEC (amont 576b598) : pas de liste de blinds, l'empreinte exige en plus
+  // intervalle de hausse (mode + valeur) et timeout d'action.
+  eq(B.suggestTypeForGame({ startMoney: 10000, smallBlind: 50, manualBlinds: [],
+                            raiseMode: 1, raiseHands: 22, raiseMins: 5, timeout: 12 }), 'wec',
+     'fingerprint: full WEC settings identify a WEC table');
+  eq(B.suggestTypeForGame({ startMoney: 10000, smallBlind: 50, manualBlinds: [],
+                            raiseMode: 1, raiseHands: 35, raiseMins: 5, timeout: 25 }), 'wec',
+     'fingerprint: WEC Grand Final settings are recognised too');
+  eq(B.suggestTypeForGame({ startMoney: 10000, smallBlind: 50, manualBlinds: [],
+                            raiseMode: 1, raiseHands: 22, raiseMins: 5, timeout: 15 }), '',
+     'fingerprint: a different action timeout breaks the WEC match');
+  eq(B.suggestTypeForGame({ startMoney: 10000, smallBlind: 50, manualBlinds: [],
+                            raiseMode: 2, raiseHands: 22, raiseMins: 22, timeout: 12 }), '',
+     'fingerprint: raise-by-minutes is not the WEC mode');
   eq(B.suggestTypeForGame({ startMoney: 10000, smallBlind: 50, manualBlinds: [] }), '',
-     'fingerprint: doubling blinds is no signature (Monthly Cup / WEC skipped)');
+     'fingerprint: capital + small blind alone stay no signature');
   eq(B.suggestTypeForGame(null), '', 'fingerprint: no game info -> no type');
   // Le nom ne doit jouer aucun role.
   eq(B.suggestTypeForGame({ name: 'BBC Step 1', startMoney: 3000, smallBlind: 15,
@@ -222,6 +237,20 @@ const done = () => new Promise((r) => setTimeout(r, 0));
   B.isBbcAdmin('', (v) => { got = v; });
   await done();
   eq(got, false, 'bbcadmin: an empty nickname is refused without a request');
+
+  // wecadmins.txt : la liste competente est choisie par le type (576b598).
+  fetched = [];
+  B.isCommunityAdmin('wec', 'wecboss', (v) => { got = v; });
+  await done();
+  eq(got, true, 'wecadmin: a listed nickname is recognised (case-insensitive)');
+  ok(fetched.length === 1 && fetched[0].indexOf('f=wecadmins') !== -1,
+     'wecadmin: wecadmins.txt fetched through the relay');
+  B.isCommunityAdmin('wec', 'alice', (v) => { got = v; });
+  await done();
+  eq(got, false, 'wecadmin: a BBC admin is not a WEC admin');
+  B.isCommunityAdmin('unknown', 'wecboss', (v) => { got = v; });
+  await done();
+  eq(got, false, 'wecadmin: an unknown type maps to no admin list');
 }
 
 // ── 13. The button opens to a BBC admin on a foreign Step table ────────
@@ -249,6 +278,26 @@ const done = () => new Promise((r) => setTimeout(r, 0));
   B.syncSuggestBtn();
   eq(btn.style.display, 'none', 'foreign non-Step table: no button');
   eq(fetched.length, 0, 'foreign non-Step table: bbcadmins.txt is never requested');
+
+  // Table WEC etrangere (576b598) : l'empreinte livre 'wec', wecadmins.txt
+  // tranche. alice est admin BBC mais PAS WEC -> bouton ferme.
+  S.games[10] = { type: 3, seats: [], name: 'whatever', startMoney: 10000, smallBlind: 50,
+                  manualBlinds: [], raiseMode: 1, raiseHands: 22, raiseMins: 5, timeout: 12 };
+  S.gId = 10;
+  B.syncSuggestBtn();
+  await done();
+  B.syncSuggestBtn();
+  eq(btn.style.display, 'none', 'foreign WEC table: a BBC-only admin stays without the button');
+  // WecBoss, lui, l'obtient.
+  S.players = { 1: 'WecBoss' };
+  S.games[11] = { type: 3, seats: [], name: 'whatever', startMoney: 10000, smallBlind: 50,
+                  manualBlinds: [], raiseMode: 1, raiseHands: 22, raiseMins: 5, timeout: 12 };
+  S.gId = 11;
+  B.syncSuggestBtn();
+  await done();
+  B.syncSuggestBtn();
+  eq(btn.style.display, '', 'foreign WEC table: a WEC admin gets the button');
+  eq(B.effectiveSuggestType(), 'wec', 'foreign WEC table: the type comes from the settings');
 }
 
 console.log(fails ? '\nFAIL ' + fails : '\nALL OK');
