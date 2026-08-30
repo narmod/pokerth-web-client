@@ -1,4 +1,5 @@
 2026-08-13 version 2.1.7-web (current series):
+- bugfix: the "idle players" view of the player list no longer shows people who are watching a table - just like the desktop client, a spectator counts as being at that table, so their status light turns on and hovering their name tells you which game they are watching
 - new: the table takes a night out - the Disco style sets the game in a seventies club lounge, mirror ball spinning over the dance floor, neon sign glowing behind the velvet drapes, with matching glow-tile buttons and pucks
 - new: a Blacklight 4c card deck to go with it - four neon suit colours glowing on near-black cards, easy to tell apart at a glance even on a dark table
 - new: a Disco card back showing the mirror ball itself, catching the blacklight colours of the deck - pick it in Settings > Styles > Card back, or it comes along automatically with the Blacklight deck

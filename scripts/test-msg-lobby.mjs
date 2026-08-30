@@ -151,6 +151,17 @@ ok((S.games[12].seats || []).includes(9), 'onGameListPlayerJoined : pid 9 assis 
 M.onGameListPlayerLeft(sub);
 ok(!(S.games[12].seats || []).includes(9), 'onGameListPlayerLeft : pid 9 retiré');
 
+// onGameListSpectatorJoined / Left : suivi des spectateurs (parité QML
+// 26018c9 — un spectateur n'est pas « idle »)
+sub = subOf([[1, 0, 12], [2, 0, 9]]);
+M.onGameListSpectatorJoined(sub);
+ok((S.games[12].watchers || []).includes(9), 'onGameListSpectatorJoined : pid 9 spectateur de la table 12');
+M.onGameListSpectatorJoined(sub);
+ok((S.games[12].watchers || []).filter(function (p) { return p === 9; }).length === 1,
+   'onGameListSpectatorJoined : pas de doublon');
+M.onGameListSpectatorLeft(sub);
+ok(!(S.games[12].watchers || []).includes(9), 'onGameListSpectatorLeft : pid 9 retiré');
+
 // ── onError : code affiché + bannière masquée
 S._intentionalDisconnect = false;
 sub = subOf([[1, 0, 3]]);

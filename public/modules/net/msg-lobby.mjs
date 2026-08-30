@@ -792,12 +792,31 @@ function onGameListPlayerLeft(sub) {
     return;
 }
 
+// Spectateurs par table (parité QML 26018c9 syncPlayerGameMembership :
+// « idle = an keinem Tisch », assis OU spectateur — le pendant de la rôle 34
+// du client Widget). games[id].watchers alimente _playerActivity (pokerth.js),
+// donc le filtre « idle », la manette de statut et le tooltip « playing in »
+// de la liste des joueurs ; d'où le repaint à chaque changement, comme pour
+// les sièges.
 function onGameListSpectatorJoined(sub) {
-    /* pas besoin de compter les spectateurs ici */ return;
+    const id  = Proto.u32(sub, 1);
+    const pid = Proto.u32(sub, 2);
+    if (S.games[id] && pid) {
+      if (!S.games[id].watchers) S.games[id].watchers = [];
+      if (S.games[id].watchers.indexOf(pid) === -1) S.games[id].watchers.push(pid);
+      _refreshPlayersPanelIfOpen();
+    }
+    return;
 }
 
 function onGameListSpectatorLeft(sub) {
-   return;
+    const id  = Proto.u32(sub, 1);
+    const pid = Proto.u32(sub, 2);
+    if (S.games[id] && S.games[id].watchers) {
+      const _iw = S.games[id].watchers.indexOf(pid);
+      if (_iw !== -1) { S.games[id].watchers.splice(_iw, 1); _refreshPlayersPanelIfOpen(); }
+    }
+    return;
 }
 
 export { onAnnounce, onInitAck, onAuthChallenge, onReportGameAck, onReportAvatarAck, onAdminBanPlayerAck, onAdminGlobalNoticeAck, onError, onPlayerList, onStatistics, onPlayerInfoReply, onGameListNew, onGameListUpdate, onGameListPlayerJoined, onGameListPlayerLeft, onGameListAdminChanged, onGameListSpectatorJoined, onGameListSpectatorLeft };

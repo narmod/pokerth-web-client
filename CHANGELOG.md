@@ -27,6 +27,18 @@ highlights below.
   Development Team, AGPL-3.0.
 
 ### Fixed
+- **Idle filter now counts spectators as at a table** (`web.172`). QML
+  parity with upstream `26018c9` (`syncPlayerGameMembership`: idle = at no
+  table, seated *or* watching; the counterpart of the Widget client's
+  role 34). `GameListSpectatorJoined/Left` now maintain
+  `games[id].watchers` and repaint the players panel; `_playerActivity`
+  falls back to the watcher list after the seat scan (a seat wins, as
+  upstream), so the status pad, the "playing in" tooltip and the idle
+  view all agree. The re-evaluation half of the upstream fix was already
+  covered web-side (`_refreshPlayersPanelIfOpen` on every seat/mode
+  mutation).
+
+### Fixed
 - **Auto-update no longer restarts over reconnect-grace sessions** (`web.170`).
   The idle check gating the automatic update/restart counted only OPEN browser
   WebSockets (`wss.clients.size`); a mobile player whose phone is locked sits

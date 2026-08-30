@@ -5051,6 +5051,16 @@ const App = (() => {
           return g.name || ('#' + id);
         }
       }
+      // Parité QML 26018c9 : un spectateur n'est pas « idle » non plus
+      // (syncPlayerGameMembership balaie info.spectators puis info.players,
+      // le siège prime — d'où la seconde passe ici). games[*].watchers est
+      // tenu à jour par GameListSpectatorJoined / Left (msg-lobby.mjs).
+      for (var id2 in S.games) {
+        var g2 = S.games[id2];
+        if (g2 && g2.mode !== 3 && g2.watchers && g2.watchers.indexOf(pid) !== -1) {
+          return g2.name || ('#' + id2);
+        }
+      }
     } catch (e) {}
     return '';
   };
@@ -10987,7 +10997,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.7-web.171'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.7-web.172'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
