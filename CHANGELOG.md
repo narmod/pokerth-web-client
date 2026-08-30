@@ -15,6 +15,14 @@ release. Granular, per-build changes for this line are on the
 [GitHub Releases](https://github.com/narmod/pokerth-web-client/releases) page;
 highlights below.
 
+### Fixed
+- **Login restored on pokerth.net** (`web.168`). The live server currently runs a
+  v2.1.7 build that predates upstream commit `c7e2959` (`CLIENT_TYPE_WEB`), so it
+  rejected our `0x03` buildId with `initVersionNotSupported`. The client
+  temporarily identifies as Qt-Widget 2.1.7 again (`USE_CLIENT_TYPE_WEB=false`);
+  the web client type will be re-enabled once the server ships `c7e2959` /
+  v2.1.8.
+
 ### Changed
 - **Own client type on the wire** (`web.167`). The client now identifies as
   `CLIENT_TYPE_WEB` (0x03) in the `Init` buildId instead of masquerading as

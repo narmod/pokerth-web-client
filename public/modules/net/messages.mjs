@@ -204,10 +204,14 @@ const MSG = (() => {
     } catch (e) {}
     const CLIENT_TYPE_QT_WIDGET = 0x01; // client officiel Qt-Widgets
     const CLIENT_TYPE_WEB       = 0x03; // upstream game_defs.h (commit c7e2959, 2026-08)
-    const USE_CLIENT_TYPE_WEB   = true;  // actif — MIN_BUILD_ID_WEB=0.0.0, aucun plancher serveur
+    const USE_CLIENT_TYPE_WEB   = false; // TEMPORAIREMENT off (2026-08-30) : le serveur live
+    // pokerth.net tourne sur un build v2.1.7 SANS le commit c7e2959 (CLIENT_TYPE_WEB
+    // inconnu → initVersionNotSupported). Rebasculer à true dès que sp0ck redéploie
+    // un serveur incluant c7e2959 (ou la release v2.1.8).
     const clientType = USE_CLIENT_TYPE_WEB ? CLIENT_TYPE_WEB : CLIENT_TYPE_QT_WIDGET;
     // buildId composite (type<<24)|(major<<16)|(minor<<8)|patch.
-    // Aujourd'hui : 0x03020107 (Web 2.1.7 ; MIN_BUILD_ID_WEB = 0x03000000, jamais rejeté).
+    // En attendant : 0x01020107 (Qt-Widget 2.1.7), accepté par v2.1.7 (min 2.1.6)
+    // comme par le futur v2.1.8 (min 2.1.7).
     const BUILD_ID = ((clientType << 24) | (UPSTREAM_MAJOR << 16) | (UPSTREAM_MINOR << 8) | UPSTREAM_PATCH) >>> 0;
     const ver = Proto.encode([[1,0,major],[2,0,minor]]);
     const fields = [
