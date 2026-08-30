@@ -3164,6 +3164,9 @@ document.addEventListener("DOMContentLoaded", function() {
         var ti = document.getElementById('use-tls');
         if (ti) ti.checked = (tls === '1');
       }
+      // Legacy share links: keep the target authoritative across the
+      // mode-change re-derives too (see _shareLanTarget in _lanFields).
+      if (h) window._shareLanTarget = { host: h, port: p || '', tls: tls };
       if (table) {
         var t = parseInt(table, 10);
         // Published on window because parseShareLink runs at GLOBAL
@@ -3222,7 +3225,15 @@ document.addEventListener("DOMContentLoaded", function() {
           var _jh = document.getElementById('host'); if (_jh) _jh.value = _jhp[0] || '';
           var _jp = document.getElementById('port'); if (_jp && _jhp[1]) _jp.value = _jhp[1];
           var _jt = document.getElementById('use-tls'); if (_jt && joinTls !== null) _jt.checked = (joinTls === '1');
+          // The server-mode 'change' below re-derives the LAN fields via
+          // _lanFields(), which would overwrite them with the player's saved
+          // pth_lan_* / the instance defaults \u2014 losing the invite target.
+          // Publish it on window so _lanFields() gives it top priority.
+          window._shareLanTarget = { host: _jhp[0] || '', port: _jhp[1] || '', tls: joinTls };
         }
+        // Set BEFORE the change event so every guarded re-derive path
+        // (load / app-config / iOS select watcher) already sees the flag.
+        window._shareLinkActive = true;
         var _jsm = document.getElementById('server-mode');
         if (_jsm) { _jsm.value = _jMode; _jsm.dispatchEvent(new Event('change', { bubbles: true })); }
         // Jump the 2-step wizard straight to that mode's form \u2014 same
@@ -3265,6 +3276,14 @@ document.addEventListener("DOMContentLoaded", function() {
         }, 20000);
         try { window.history.replaceState({}, '', window.location.pathname); } catch(eR) {}
       }
+      // A deliberate edit of the server fields releases the invite target:
+      // from then on the player's own input is the truth again.
+      try {
+        ['host', 'port'].forEach(function (id) {
+          var el = document.getElementById(id);
+          if (el) el.addEventListener('input', function () { window._shareLanTarget = null; });
+        });
+      } catch (eL) {}
       if (h || p || table || go || sp.get('proto') || sp.get('share') || sp.get('open')) {
         // Only treat as a "share link" (which suppresses saved-prefs
         // restore of host/port/mode) when a server/table was actually
@@ -5308,11 +5327,19 @@ const App = (() => {
       var _lanFields = function () {
         var d = window._pthLanDefaults ? window._pthLanDefaults() : { host: autoHost, port: '7234', tls: false };
         if (proxyInput) proxyInput.value = proto + '//' + (autoHost || 'localhost') + ':' + port;
-        if (hostInput) hostInput.value = (lsGet('pth_lan_host') || d.host || hostInput.value);
-        if ($('port')) $('port').value = (lsGet('pth_lan_port') || d.port || '7234');
+        // Invite / share link target (#join=\u2026&s=host:port) FIRST: without it,
+        // switching onto the LAN form would clobber the shared address with the
+        // invitee's own saved server or the instance default \u2014 the guest would
+        // land on the wrong server. Cleared when the player edits the fields.
+        var st = window._shareLanTarget || null;
+        if (hostInput) hostInput.value = ((st && st.host) || lsGet('pth_lan_host') || d.host || hostInput.value);
+        if ($('port')) $('port').value = ((st && st.port) || lsGet('pth_lan_port') || d.port || '7234');
         if ($('use-tls')) {
-          var _t = lsGet('pth_lan_tls');
-          $('use-tls').checked = (_t === '1' || _t === '0') ? (_t === '1') : !!d.tls;
+          if (st && (st.tls === '1' || st.tls === '0')) $('use-tls').checked = (st.tls === '1');
+          else if (!st) {
+            var _t = lsGet('pth_lan_tls');
+            $('use-tls').checked = (_t === '1' || _t === '0') ? (_t === '1') : !!d.tls;
+          } // st sans tls explicite : ne pas toucher la case (etat du lien conserve)
         }
       };
 
@@ -10960,7 +10987,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.7-web.168'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.7-web.169'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

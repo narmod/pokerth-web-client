@@ -16,6 +16,16 @@ release. Granular, per-build changes for this line are on the
 highlights below.
 
 ### Fixed
+- **LAN invite links now land on the right server** (`web.169`). Sharing a
+  table from a LAN / dedicated connection encodes the target in the link
+  (`#join=<name>&s=<host[:port]>[&tls=1]`), and the invitee's fields were
+  prefilled correctly — but the subsequent server-mode switch re-derived the
+  LAN form via `_lanFields()`, overwriting host/port/TLS with the invitee's
+  own saved `pth_lan_*` values or the instance defaults. The invite target is
+  now published as `window._shareLanTarget` and takes top priority in
+  `_lanFields()` (share link → player's saved prefs → instance default);
+  a manual edit of the host/port fields releases it. Legacy `?host=`/`?port=`
+  share links get the same protection.
 - **Login restored on pokerth.net** (`web.168`). The live server currently runs a
   v2.1.7 build that predates upstream commit `c7e2959` (`CLIENT_TYPE_WEB`), so it
   rejected our `0x03` buildId with `initVersionNotSupported`. The client
