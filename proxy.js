@@ -5089,6 +5089,10 @@ function _autoUpdateApply() {
     return;
   }
   let sockets = 0; try { sockets = wss.clients.size; } catch (e) {}
+  // Les ponts en grâce de reconnexion (mobile verrouillé) n'ont PAS de socket
+  // navigateur ouverte mais gardent une partie en cours côté serveur — un
+  // redémarrage les tuerait. Le serveur n'est libre que sans pont vivant.
+  try { if (_liveSessions.size > sockets) sockets = _liveSessions.size; } catch (e) {}
   if (sockets > 0) return;                                      // serveur occupé : on repassera au prochain battement
   _restartAt = Date.now() + cfg.noticeSec * 1000;
   _restartKind = 'update';
@@ -5097,6 +5101,7 @@ function _autoUpdateApply() {
   _restartTimer = setTimeout(function () {
     _restartTimer = null; _restartAt = 0; _restartNotice = ''; _autoArmed = false;
     let n = 0; try { n = wss.clients.size; } catch (e) {}
+    try { if (_liveSessions.size > n) n = _liveSessions.size; } catch (e) {}
     if (n > 0) {                                                // quelqu'un est arrivé pendant le préavis : on lui laisse la place
       broadcastNotice('NOTICE:CANCEL');
       console.log('[auto-update] window closed (' + n + ' client(s) connected) — postponed');
@@ -5747,7 +5752,8 @@ function handleAdmin(req, res, reqPathOnly, query) {
     let version = '';
     try { version = (JSON.parse(fs.readFileSync(path.join(__dirname, 'package.json'), 'utf8')).version) || ''; } catch (e) {}
     let sockets = null; try { sockets = wss.clients.size; } catch (e) {}
-    return adminJson(res, 200, { ok: true, version: version, runningVersion: BOOT_VERSION, node: process.version, uptimeSec: Math.floor(process.uptime()), installKind: installKind(), gitUpdatable: GIT_UPDATABLE, sockets: sockets, players: Object.keys(statsStore).length, resetPeriod: STATS_RESET_PERIOD, modes: appModes(), showLoginTitle: !!_adminConfig.showLoginTitle, defaultTheme: _adminConfig.defaultTheme || '', defaults: _adminConfig.defaults || {}, loginDefaults: _loginDefaults(false), proxyCfg: _adminConfig.proxyCfg || {}, logLevel: _logLevelName(), maxClients: _maxClients(), fd: _fdInfo(), tableDefaults: _adminConfig.tableDefaults || {}, tableNames: _adminConfig.tableNames || {}, serverName: _adminConfig.serverName || '', serverTagline: _adminConfig.serverTagline || '', discordChatWebhookUrl: _adminConfig.discordChatWebhookUrl || '', seo: _seoAdmin(), restartAt: (_restartAt > Date.now() ? _restartAt : null), restartKind: (_restartAt > Date.now() ? _restartKind : null), autoUpdate: _autoUpdateCfg(), autoArmed: !!(_autoArmed && _restartAt > Date.now()), update: _updPublic() });
+    let liveSessions = null; try { liveSessions = _liveSessions.size; } catch (e) {}
+    return adminJson(res, 200, { ok: true, version: version, runningVersion: BOOT_VERSION, node: process.version, uptimeSec: Math.floor(process.uptime()), installKind: installKind(), gitUpdatable: GIT_UPDATABLE, sockets: sockets, liveSessions: liveSessions, players: Object.keys(statsStore).length, resetPeriod: STATS_RESET_PERIOD, modes: appModes(), showLoginTitle: !!_adminConfig.showLoginTitle, defaultTheme: _adminConfig.defaultTheme || '', defaults: _adminConfig.defaults || {}, loginDefaults: _loginDefaults(false), proxyCfg: _adminConfig.proxyCfg || {}, logLevel: _logLevelName(), maxClients: _maxClients(), fd: _fdInfo(), tableDefaults: _adminConfig.tableDefaults || {}, tableNames: _adminConfig.tableNames || {}, serverName: _adminConfig.serverName || '', serverTagline: _adminConfig.serverTagline || '', discordChatWebhookUrl: _adminConfig.discordChatWebhookUrl || '', seo: _seoAdmin(), restartAt: (_restartAt > Date.now() ? _restartAt : null), restartKind: (_restartAt > Date.now() ? _restartKind : null), autoUpdate: _autoUpdateCfg(), autoArmed: !!(_autoArmed && _restartAt > Date.now()), update: _updPublic() });
   }
   // ── Erreurs JS remontées par les clients (clé maître uniquement) ────────
   if (reqPathOnly === '/admin/errors') {

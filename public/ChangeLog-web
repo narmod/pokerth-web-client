@@ -1,4 +1,5 @@
 2026-08-13 version 2.1.7-web (current series):
+- bugfix: the automatic server update could mistake the server for empty when the only players connected were on phones with the screen momentarily off, and restart in the middle of their game - it now sees those players too and waits its turn
 - bugfix: inviting a friend to a table on a home or LAN server now works as intended - the link and QR code always carried the right address, but on the friend's screen the connection form quietly fell back to its own default server, so they could not find your table. The address from the invitation now stays in place until they change it themselves
 - bugfix: signing in on pokerth.net stopped working with a "version not supported" error after a server update - the way the client introduces itself has been adjusted so you can play again right away
 - improvement: the web client now introduces itself to the server as its own client type, alongside the desktop and QML clients - server statistics and activity logs can finally tell web players apart

@@ -16,6 +16,16 @@ release. Granular, per-build changes for this line are on the
 highlights below.
 
 ### Fixed
+- **Auto-update no longer restarts over reconnect-grace sessions** (`web.170`).
+  The idle check gating the automatic update/restart counted only OPEN browser
+  WebSockets (`wss.clients.size`); a mobile player whose phone is locked sits
+  in reconnect grace — browser socket closed, upstream game bridge alive — and
+  was invisible to it, so the proxy could deem itself idle and restart, killing
+  games in progress. Both the arming check and the end-of-notice re-check now
+  also count `_liveSessions` (bridges incl. grace). The admin Status card gains
+  an **Active sessions** row (`/admin/status.liveSessions`) next to Connected
+  sockets, so the two figures — open sockets vs live bridges — are no longer
+  conflated.
 - **LAN invite links now land on the right server** (`web.169`). Sharing a
   table from a LAN / dedicated connection encodes the target in the link
   (`#join=<name>&s=<host[:port]>[&tls=1]`), and the invitee's fields were
