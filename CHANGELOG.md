@@ -27,6 +27,9 @@ highlights below.
   Development Team, AGPL-3.0.
 
 ### Fixed
+- **Deal/action sound calls guarded** (`web.176`): `notifyCard`/`notifyAction`
+  from `sounds.mjs` are now called only when defined, so a failed module load
+  no longer throws in `msg-hand.mjs` mid-hand.
 - **Community suggest output was silently dropped** (`web.175`). The
   local suggestion note was posted as a plain `sys` chat message; when
   system messages were removed from the chat (narmod request, `spec.force`

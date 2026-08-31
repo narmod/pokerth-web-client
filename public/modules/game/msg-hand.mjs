@@ -589,8 +589,11 @@ function onHandStart(sub) {
     if (!S._statsInited && startMon > 0) initStats(startMon);
     // Sons + animations deal
     setTimeout(function(){
-      window.notifyCard();
-      setTimeout(window.notifyCard, 120);
+      // Guarded: sounds.mjs may have failed to load (transient network cut)
+      if (typeof window.notifyCard === 'function') {
+        window.notifyCard();
+        setTimeout(window.notifyCard, 120);
+      }
       window.animateDealMyCards();
     }, 250);
     var hs = document.getElementById('hand-strength');
@@ -735,7 +738,7 @@ function onPlayersActionDone(sub) {
       window.playActionSound(action);
     } else if (action === 6) {
       if (typeof window.notifyAllIn === 'function') window.notifyAllIn();
-    } else {
+    } else if (typeof window.notifyAction === 'function') {
       window.notifyAction();
     }
     window.flashActionLabel(pid);

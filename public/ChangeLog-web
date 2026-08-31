@@ -1,4 +1,5 @@
 2026-08-13 version 2.1.7-web (current series):
+- bugfix: if the sound module failed to load (brief network cut while the page was opening), the table could stop reacting at the first deal or the first action - it now carries on silently instead of stalling
 - bugfix: the "suggest players" button went quiet a while ago - the suggestion was silently swallowed by the chat cleanup that removed system messages. It shows up again, and only for you, as before
 - improvement: the suggestion now lists one player per line instead of one long comma-separated line, like the desktop client - much easier to read with a dozen names
 - improvement: the "suggest players" button in invitation games now also works for WEC community admins at WEC tables they did not create themselves, just like BBC admins at BBC Step tables - the client recognises a WEC table by its exact settings, and each community keeps its own admin list
