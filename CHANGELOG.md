@@ -27,6 +27,14 @@ highlights below.
   Development Team, AGPL-3.0.
 
 ### Fixed
+- **Failed static loads are retried in-page** (`web.177`). The error
+  collector in `pokerth-client.html` re-injects a failed `<script>` or
+  stylesheet `<link>` with a cache-buster (`?r=1` after 700 ms, `?r=2`
+  after 2 s more) before falling back to the one-shot auto-reload. Aimed
+  at the short Cloudflare↔origin TLS bursts (HTTP 525) seen on
+  pokerth.net: the same URL answers a second later, but a failed static
+  tag used to stay dead for the whole session. The log gets one line per
+  outcome (`retry #n recovered` / `giving up`), no extra probe.
 - **Deal/action sound calls guarded** (`web.176`): `notifyCard`/`notifyAction`
   from `sounds.mjs` are now called only when defined, so a failed module load
   no longer throws in `msg-hand.mjs` mid-hand.

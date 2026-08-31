@@ -87,7 +87,54 @@
       // c'est le choix du visiteur, on ne peut rien y faire, et un seul
       // bloqueur répandu suffirait à noyer le journal.
       if (url && url.indexOf(location.origin + '/') !== 0) return;
-      push({ msg: 'Failed to load ' + tag.toLowerCase(), src: url, line: 0, col: 0, stack: '' });
+      // Réessai automatique : le fichier est ré-injecté avec un cache-buster
+      // (?r=1 après 700 ms, ?r=2 après 2 s de plus). Cible : les rafales de
+      // handshakes TLS ratés entre Cloudflare et l'origine (HTTP 525, quelques
+      // secondes, ~1 requête sur 20) — sans cela une balise statique qui rate
+      // reste morte pour toute la session, alors que la même URL répond dès
+      // la seconde suivante. Un module ré-injecté partage les instances déjà
+      // chargées de ses imports (mêmes URLs) ; seule la balise racine change.
+      // Le journal ne reçoit qu'une ligne par issue (récupéré / abandonné).
+      var base = url.replace(/[?#].*$/, '');
+      var rn = parseInt(t.getAttribute('data-pth-retry') || '0', 10) || 0;
+      var canRetry = false;
+      try {
+        var R = window.__pthErrRetry = window.__pthErrRetry || {};
+        var next = (R[base] || 0) + 1;
+        if (next <= 2 && (tag === 'SCRIPT' || String(t.rel || '').toLowerCase() === 'stylesheet')) {
+          R[base] = next; canRetry = true;
+          setTimeout(function () {
+            try {
+              var el;
+              if (tag === 'SCRIPT') {
+                el = document.createElement('script');
+                if (t.type) el.type = t.type;
+                if (t.noModule) el.noModule = true;
+                if (t.defer) el.defer = true;
+                el.src = base + '?r=' + next;
+              } else {
+                el = document.createElement('link');
+                el.rel = 'stylesheet';
+                if (t.media) el.media = t.media;
+                el.href = base + '?r=' + next;
+              }
+              el.setAttribute('data-pth-retry', String(next));
+              el.addEventListener('load', function () {
+                push({ msg: 'Load-failure retry #' + next + ' recovered', src: base, line: 0, col: 0, stack: '' });
+              });
+              (t.parentNode || document.head).appendChild(el);
+            } catch (_) {}
+          }, next === 1 ? 700 : 2000);
+        }
+      } catch (_) {}
+      if (rn) {
+        // Échec d'un réessai : une seule ligne quand on abandonne, pas de
+        // sonde (celle de l'échec initial suffit), puis la récupération
+        // par rechargement ci-dessous prend le relais.
+        if (!canRetry) push({ msg: 'Load-failure retry #' + rn + ' failed, giving up', src: base, line: 0, col: 0, stack: '' });
+      } else {
+        push({ msg: 'Failed to load ' + tag.toLowerCase(), src: url, line: 0, col: 0, stack: '' });
+      }
       // Sonde de diagnostic : « failed to load » seul ne dit pas POURQUOI
       // (404 de déploiement ? 5xx ? réseau coupé ? bloqueur ?). On re-tente
       // la même URL en fetch et on remonte le statut HTTP — ou le nom de
@@ -95,7 +142,7 @@
       // worker. Une seule sonde par URL, pour ne pas boucler.
       try {
         var P = window.__pthErrProbed = window.__pthErrProbed || {};
-        if (url && !P[url]) {
+        if (url && !rn && !P[url]) {
           P[url] = 1;
           var ctx = (navigator.onLine === false ? ' offline' : ' online')
                   + (navigator.serviceWorker && navigator.serviceWorker.controller ? ' sw' : ' no-sw');
@@ -113,9 +160,9 @@
       // (drapeau sessionStorage, levé au démarrage réussi), différé pour
       // laisser partir le rapport, et seulement si l'app n'a pas démarré ;
       // au-delà, l'écran « Réessayer » du garde de démarrage prend le
-      // relais.
+      // relais. N'intervient qu'une fois les réessais in-page épuisés.
       try {
-        if (tag === 'SCRIPT' && !window.App && !sessionStorage.getItem('pth_autoreload')) {
+        if (tag === 'SCRIPT' && !canRetry && !window.App && !sessionStorage.getItem('pth_autoreload')) {
           sessionStorage.setItem('pth_autoreload', '1');
           setTimeout(function () {
             try { if (!window.App) location.reload(); } catch (_) {}
