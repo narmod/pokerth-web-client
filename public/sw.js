@@ -23,13 +23,18 @@
  *                 Cross-origin requests and WS upgrades are left untouched.
  *                 (Fonts are now self-hosted and handled by SWR above.)
  */
-const CACHE_VERSION = 'pokerth-v2.1.7-web.177';
+const CACHE_VERSION = 'pokerth-v2.1.7-web.178';
 // Share Target payload park (see handleShareTarget). Kept OUT of CACHE_VERSION
 // so an update sweep never eats a share that arrived seconds earlier.
 const SHARE_CACHE = 'pokerth-share';
 
 // Where navigations fall back to when the network is unavailable.
 const NAV_FALLBACK = '/pokerth-client.html';
+// How long a navigation waits for the origin before falling back to the
+// cached shell. Keeps the tab from hanging on a blank page when the origin
+// is slow (e.g. during server backups); the network fetch keeps running in
+// the background so the cached shell still gets refreshed.
+const NAV_TIMEOUT_MS = 3500;
 
 // Critical app shell precached on install. Keep this list tight — anything
 // large or rarely used (e.g. the protobuf bundle, individual flags) is fetched
@@ -332,7 +337,25 @@ function handleNavigation(e) {
   return (async function() {
     try {
       var preload = await e.preloadResponse;
-      var response = preload || await fetch(e.request);
+      var netP = preload ? Promise.resolve(preload) : fetch(e.request);
+      // Don't hang on a blank page while the origin is slow: after
+      // NAV_TIMEOUT_MS serve the cached shell and let the fetch finish in the
+      // background (it still refreshes the cache for the next load).
+      var response = await Promise.race([
+        netP,
+        new Promise(function (res) { setTimeout(function () { res(null); }, NAV_TIMEOUT_MS); })
+      ]);
+      if (response === null) {
+        netP.then(function (r) {
+          if (r && r.status === 200) {
+            var cl = r.clone();
+            caches.open(CACHE_VERSION).then(function (c) { c.put(e.request, cl); });
+          }
+        }).catch(function () {});
+        var shellNow = await caches.match(e.request) || await caches.match(NAV_FALLBACK);
+        if (shellNow) return shellNow;
+        response = await netP; // nothing cached yet (first visit) — wait it out
+      }
       if (response && response.status === 200) {
         var clone = response.clone();
         caches.open(CACHE_VERSION).then(function(c) { c.put(e.request, clone); });
@@ -374,24 +397,31 @@ function handleAsset(e) {
   });
 }
 
-// Network-first for app CODE (.js/.mjs/.css). `cache:'reload'` bypasses the
-// HTTP disk cache so a deployed change is always picked up when online; falls
-// back to the SW cache when offline (training mode keeps working on a plane).
+// Stale-while-revalidate for app CODE (.js/.mjs/.css). Served instantly from
+// the SW cache; the background refresh uses `cache:'reload'` to bypass the
+// HTTP disk cache, so a deployed change is stored on the very next request.
+// Deploys reach the user through the /__ver banner (CACHE_VERSION bump →
+// re-precache) or on the following load — this keeps the app fast even when
+// the origin is slow (e.g. during server backups) and fully offline-capable.
 function handleCode(e) {
-  return (async function () {
-    try {
-      var fresh = await fetch(e.request, { cache: 'reload' });
-      if (fresh && fresh.status === 200) {
-        var clone = fresh.clone();
-        caches.open(CACHE_VERSION).then(function (c) { c.put(e.request, clone); });
-      }
-      return fresh;
-    } catch (err) {
-      var cached = await caches.match(e.request);
-      if (cached) return cached;
-      return new Response('Offline', { status: 503, headers: { 'Content-Type': 'text/plain; charset=utf-8' } });
-    }
-  })();
+  return caches.open(CACHE_VERSION).then(function (cache) {
+    return cache.match(e.request).then(function (cached) {
+      var network = fetch(e.request, { cache: 'reload' }).then(function (response) {
+        if (response && response.status === 200) {
+          cache.put(e.request, response.clone());
+        }
+        return response;
+      }).catch(function () { return null; });
+      // Cache hit → instant response, refresh in the background.
+      // Cache miss → wait for the network (and a real Response on failure).
+      return cached || network.then(function (r) {
+        return r || new Response('Offline', {
+          status: 503,
+          headers: { 'Content-Type': 'text/plain; charset=utf-8' }
+        });
+      });
+    });
+  });
 }
 
 // ── Notification actions ──

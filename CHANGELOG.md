@@ -26,6 +26,16 @@ highlights below.
   flipside. Credits per upstream `data-copyright.txt`: PokerTH
   Development Team, AGPL-3.0.
 
+### Changed
+- **App code served cache-first by the service worker** (`web.178`). Scripts
+  and stylesheets (.js/.mjs/.css) move from network-first to
+  stale-while-revalidate: served instantly from the SW cache with a
+  `cache:'reload'` background refresh. Deploys still reach users through the
+  /__ver banner (CACHE_VERSION bump) or the following load. Navigations now
+  race the origin against a 3.5 s timeout and fall back to the cached shell,
+  with the fetch finishing in the background. Both changes keep the client
+  responsive when the origin is slow — typically during server backups.
+
 ### Fixed
 - **Failed static loads are retried in-page** (`web.177`). The error
   collector in `pokerth-client.html` re-injects a failed `<script>` or
