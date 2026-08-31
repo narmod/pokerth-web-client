@@ -27,6 +27,15 @@ highlights below.
   Development Team, AGPL-3.0.
 
 ### Changed
+- **proxy.js no longer touches the disk on hot static paths** (proxy-only,
+  ships with the next Docker image — no client bump). Every static request
+  used to run 2–3 synchronous `fs.statSync` calls (router + `sendFile`), and
+  each `/__ver` poll rescanned ~50 files; when disk I/O is saturated by the
+  nightly backup those sync calls block the Node event loop and stall the
+  game WebSockets sharing the process. A 5 s TTL stat cache (`statCached`)
+  now backs the router, `sendFile` and `sendClientHtml`, and
+  `newestAssetMtime()` memoises its scan for 5 s across all `/__ver` polls.
+  Deploys are still picked up within 5 seconds.
 - **App code served cache-first by the service worker** (`web.178`). Scripts
   and stylesheets (.js/.mjs/.css) move from network-first to
   stale-while-revalidate: served instantly from the SW cache with a

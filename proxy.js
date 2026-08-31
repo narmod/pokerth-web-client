@@ -1484,7 +1484,9 @@ function seoFooterBlock(lang) {
 // /privacy) whose text lives here.
 var _SEO_ASSET_FILES = ['pokerth.js', 'pokerth.css', 'pokerth-client.html',
   'modules/i18n.mjs', 'modules/sounds.mjs', 'sw.js'];
+var _namMemo = null; // { v, exp } — one directory scan per 5 s, shared by all /__ver polls
 function newestAssetMtime() {
+  if (_namMemo && _namMemo.exp > Date.now()) return _namMemo.v;
   var newest = 0;
   _SEO_ASSET_FILES.forEach(function (f) {
     try {
@@ -1503,6 +1505,7 @@ function newestAssetMtime() {
       } catch (e) { /* ignore */ }
     });
   } catch (e) { /* no lang dir yet — ignore */ }
+  _namMemo = { v: newest, exp: Date.now() + 5000 };
   return newest;
 }
 function _seoIsoDay(ms) {
@@ -3864,8 +3867,8 @@ const _seoHtmlCache = new Map();
 let _seoHtmlGen = '';
 function sendClientHtml(req, res) {
   const p = path.join(__dirname, 'public', 'pokerth-client.html');
-  let st;
-  try { st = fs.statSync(p); } catch (e) { res.writeHead(404); res.end('Not found'); return; }
+  const st = statCached(p);
+  if (!st) { res.writeHead(404); res.end('Not found'); return; }
   const on = seoEnabled(), base = on ? seoPublicUrl() : '';
   // One cached variant per language (?lang=xx) within the current generation
   // (mtime + SEO state). A generation change flushes everything; a new
@@ -4703,7 +4706,28 @@ const SECURITY_HEADERS = {
 };
 const _compCache = new Map(); // 'enc:path:mtime' -> Buffer
 
-function sendFile(req, res, filePath, type, cacheCtl) {
+// ── Stat cache ──
+// fs.statSync on every static request blocks the event loop whenever disk I/O
+// is slow — during the nightly server backup above all — and that stall also
+// freezes the game WebSockets sharing this process. Hot paths go through this
+// small TTL cache instead: at most one real stat per file per STAT_TTL_MS,
+// everything else answers from memory (misses/404s are cached too). The TTL
+// keeps deploys honest: a replaced file is picked up within 5 seconds, which
+// the client tolerates (SW cache + /__ver banner drive updates anyway).
+const STAT_TTL_MS = 5000;
+const _statCache = new Map(); // path -> { st: fs.Stats|null, exp: ms }
+function statCached(p) {
+  const now = Date.now();
+  const hit = _statCache.get(p);
+  if (hit && hit.exp > now) return hit.st;
+  let st = null;
+  try { st = fs.statSync(p); } catch (e) { st = null; }
+  if (_statCache.size > 4096) _statCache.clear(); // bound memory
+  _statCache.set(p, { st: st, exp: now + STAT_TTL_MS });
+  return st;
+}
+
+function sendFile(req, res, filePath, type, cacheCtl, st) {
   const headers = Object.assign({ 'Content-Type': type, 'Cache-Control': cacheCtl }, SECURITY_HEADERS);
   let enc = null;
   if (COMPRESSIBLE.test(type)) {
@@ -4717,8 +4741,8 @@ function sendFile(req, res, filePath, type, cacheCtl) {
     // 200: it needs 206 Partial Content, otherwise it keeps refetching and
     // playback stutters. Content-Length also lets the element report a duration
     // and seek instead of guessing.
-    let fst;
-    try { fst = fs.statSync(filePath); } catch (e) { res.writeHead(404); res.end('Not found'); return; }
+    const fst = st || statCached(filePath);
+    if (!fst) { res.writeHead(404); res.end('Not found'); return; }
     headers['Accept-Ranges'] = 'bytes';
     const rg = /^bytes=(\d*)-(\d*)$/.exec(String(req.headers.range || '').trim());
     if (rg && (rg[1] !== '' || rg[2] !== '')) {
@@ -4748,8 +4772,8 @@ function sendFile(req, res, filePath, type, cacheCtl) {
     fs.createReadStream(filePath).pipe(res);
     return;
   }
-  let st;
-  try { st = fs.statSync(filePath); } catch (e) { res.writeHead(404); res.end('Not found'); return; }
+  st = st || statCached(filePath);
+  if (!st) { res.writeHead(404); res.end('Not found'); return; }
   const key = enc + ':' + filePath + ':' + st.mtimeMs;
   const send = function (buf) {
     headers['Content-Encoding'] = enc;
@@ -8578,7 +8602,8 @@ const httpServer = http.createServer((req, res) => {
   if (!candidate.startsWith(publicRoot + path.sep) && candidate !== publicRoot) {
     res.writeHead(403); res.end('Forbidden'); return;
   }
-  if (fs.existsSync(candidate) && fs.statSync(candidate).isFile()) {
+  const candSt = statCached(candidate);
+  if (candSt && candSt.isFile()) {
     const ext = path.extname(candidate).toLowerCase();
     const type = ext === '.css'  ? 'text/css; charset=utf-8'
            : ext === '.js'   ? 'application/javascript; charset=utf-8'
@@ -8606,7 +8631,7 @@ const httpServer = http.createServer((req, res) => {
     const cacheCtl = (ext === '.css' || ext === '.js' || ext === '.mjs')
       ? 'no-cache, must-revalidate'
       : 'public, max-age=86400';
-    return sendFile(req, res, candidate, type, cacheCtl);
+    return sendFile(req, res, candidate, type, cacheCtl, candSt);
   }
   res.writeHead(404); res.end('Not found');
 });
