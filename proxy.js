@@ -8789,7 +8789,7 @@ function _scheduleConn(fn) {
 // déconnexion ni nouvel Init → pas de collision de pseudo, pas de blocage IP,
 // siège + tapis conservés. Sans 'sid' (anciens clients, directWS) → repli sur
 // l'ancien comportement (fermeture immédiate de l'amont).
-function _heartbeat() { this.isAlive = true; }
+function _heartbeat() { this.isAlive = true; this._hbMisses = 0; }
 
 const _sessions = new Map();              // sid → S (session vivante)
 // ── Erreurs JavaScript remontées par les navigateurs (/clienterr) ─────────
@@ -9191,6 +9191,7 @@ function _attachWs(S, ws) {
 
 wss.on('connection', (ws, req) => {
   ws.isAlive = true;
+  ws._hbMisses = 0;
   ws.on('pong', _heartbeat);
   const params = new URLSearchParams(url.parse(req.url).query);
   const host   = params.get('host') || 'pokerth.net';
@@ -9319,13 +9320,22 @@ wss.on('connection', (ws, req) => {
   }, 20000);
 });
 
-const HEARTBEAT_MS = 10000; // ping toutes les 10 s
+const HEARTBEAT_MS = 10000;      // ping toutes les 10 s
+const HEARTBEAT_MAX_MISSES = 2;  // pongs manqués tolérés avant terminaison (~20 s)
 const _heartbeatTimer = setInterval(() => {
   wss.clients.forEach((ws) => {
     if (ws.isAlive === false) {
-      console.log('[-] Heartbeat timeout → terminating dead client');
-      try { ws.terminate(); } catch (_) {}  // → ws.on('close') → grâce (session) ou destroy
-      return;
+      // Un pong manqué ne suffit plus : quand le CPU sature (backup pigz),
+      // une réponse peut arriver après la fenêtre de 10 s alors que le client
+      // est parfaitement sain — le couper en pleine main est pire que
+      // d'attendre un cycle de plus. Deux échecs consécutifs (~20 s) restent
+      // bien en deçà de la grâce de session et des timeouts amont.
+      ws._hbMisses = (ws._hbMisses || 0) + 1;
+      if (ws._hbMisses >= HEARTBEAT_MAX_MISSES) {
+        console.log('[-] Heartbeat timeout (' + ws._hbMisses + ' missed) → terminating dead client');
+        try { ws.terminate(); } catch (_) {}  // → ws.on('close') → grâce (session) ou destroy
+        return;
+      }
     }
     ws.isAlive = false;
     try { ws.ping(); } catch (_) {}

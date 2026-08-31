@@ -27,6 +27,12 @@ highlights below.
   Development Team, AGPL-3.0.
 
 ### Changed
+- **WebSocket heartbeat tolerates one missed pong** (proxy-only, ships
+  with the next Docker image). A pong arriving just past the 10 s window
+  — typical when the nightly pigz backup saturates the CPU — used to get
+  a healthy client terminated mid-hand. The proxy now requires two
+  consecutive misses (~20 s) before terminating, still well within the
+  session grace and upstream timeouts.
 - **Compression cache hardened; service-worker precache throttled**
   (`web.179` + proxy-side). Proxy: concurrent requests for the same
   not-yet-compressed file now share a single read + brotli job instead of
