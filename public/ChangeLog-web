@@ -1,4 +1,5 @@
 2026-08-13 version 2.1.7-web (current series):
+- improvement: updating the app now downloads its files a few at a time instead of all at once - gentler on the server, so an update landing at a busy moment no longer slows everyone down
 - improvement: the app now opens from its local copy first and refreshes in the background - pages and tables come up instantly even when the server is briefly busy (for example during its nightly backup), instead of waiting on a slow download
 - improvement: a script or stylesheet that fails to load while the page opens (short network hiccup) is now fetched again automatically, up to twice, before the "unstable connection" screen is shown - a single dropped request no longer leaves you with a half-loaded table
 - bugfix: if the sound module failed to load (brief network cut while the page was opening), the table could stop reacting at the first deal or the first action - it now carries on silently instead of stalling

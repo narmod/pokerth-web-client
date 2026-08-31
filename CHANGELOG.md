@@ -27,6 +27,16 @@ highlights below.
   Development Team, AGPL-3.0.
 
 ### Changed
+- **Compression cache hardened; service-worker precache throttled**
+  (`web.179` + proxy-side). Proxy: concurrent requests for the same
+  not-yet-compressed file now share a single read + brotli job instead of
+  launching duplicates (in-flight dedup); the critical shell is warmed
+  serially right after boot so the first visitors never pay the brotli-11
+  cost; and a full cache overflow now evicts only the oldest entry instead
+  of wiping everything. Client: the service worker installs its ~130
+  precached assets through a 6-wide worker pool instead of all at once,
+  easing the load on the origin when an update lands during the backup
+  window.
 - **proxy.js no longer touches the disk on hot static paths** (proxy-only,
   ships with the next Docker image — no client bump). Every static request
   used to run 2–3 synchronous `fs.statSync` calls (router + `sendFile`), and

@@ -4784,29 +4784,79 @@ function sendFile(req, res, filePath, type, cacheCtl, st) {
   };
   const cached = _compCache.get(key);
   if (cached) { send(cached); return; }
-  fs.readFile(filePath, function (err, raw) {
-    if (err) { res.writeHead(500); res.end('Read error'); return; }
-    const done = function (e, out) {
-      if (e || !out) { // compression failed — fall back to uncompressed
-        const h = Object.assign({ 'Content-Type': type, 'Cache-Control': cacheCtl, 'Vary': 'Accept-Encoding' }, SECURITY_HEADERS);
-        res.writeHead(200, h);
-        res.end(raw);
-        return;
-      }
-      if (_compCache.size > 256) _compCache.clear(); // bound memory across deploys
-      _compCache.set(key, out);
-      send(out);
-    };
-    if (enc === 'br') {
-      zlib.brotliCompress(raw, { params: {
-        [zlib.constants.BROTLI_PARAM_QUALITY]: 11,
-        [zlib.constants.BROTLI_PARAM_SIZE_HINT]: raw.length
-      } }, done);
-    } else {
-      zlib.gzip(raw, { level: 9 }, done);
-    }
+  _compressInto(key, filePath, enc).then(function (r) {
+    if (r.err) { res.writeHead(500); res.end('Read error'); return; }
+    if (r.buf) { send(r.buf); return; }
+    // compression failed — fall back to uncompressed
+    const h = Object.assign({ 'Content-Type': type, 'Cache-Control': cacheCtl, 'Vary': 'Accept-Encoding' }, SECURITY_HEADERS);
+    res.writeHead(200, h);
+    res.end(r.raw);
   });
 }
+
+// FIFO eviction: dropping only the oldest entry replaces the previous
+// clear-everything sweep, which used to trigger a recompression storm the
+// moment the 257th entry landed.
+function _compSet(key, buf) {
+  if (_compCache.size >= 256) {
+    const oldest = _compCache.keys().next().value;
+    if (oldest !== undefined) _compCache.delete(oldest);
+  }
+  _compCache.set(key, buf);
+}
+
+// In-flight dedup: N concurrent requests for the same not-yet-cached file used
+// to launch N identical brotli-11 jobs (pokerth.js is ~600 KB — q11 is slow),
+// saturating the 4-thread libuv pool that async fs reads share. One promise
+// per key means one read + one compression, shared by every waiter.
+const _compInflight = new Map(); // key -> Promise<{buf}|{raw}|{err}>
+function _compressInto(key, filePath, enc) {
+  const got = _compInflight.get(key);
+  if (got) return got;
+  const p = new Promise(function (resolve) {
+    fs.readFile(filePath, function (err, raw) {
+      if (err) { resolve({ err: true }); return; }
+      const done = function (e, out) {
+        if (e || !out) { resolve({ raw: raw }); return; }
+        _compSet(key, out);
+        resolve({ buf: out });
+      };
+      if (enc === 'br') {
+        zlib.brotliCompress(raw, { params: {
+          [zlib.constants.BROTLI_PARAM_QUALITY]: 11,
+          [zlib.constants.BROTLI_PARAM_SIZE_HINT]: raw.length
+        } }, done);
+      } else {
+        zlib.gzip(raw, { level: 9 }, done);
+      }
+    });
+  });
+  _compInflight.set(key, p);
+  const drop = function () { _compInflight.delete(key); };
+  p.then(drop, drop);
+  return p;
+}
+
+// ── Compression warm-up ──
+// After a restart the compression cache starts empty, so the first visitors
+// paid the brotli-11 cost of the biggest files. Warm the critical shell
+// SERIALLY (one job at a time — never saturate the libuv pool at boot),
+// br only (what virtually every browser negotiates), shortly after start.
+const _WARM_FILES = ['pokerth.js', 'pokerth.css', 'chat-emotes.js',
+  'vendor/sql-wasm.js', 'vendor/phe.mjs', 'sw.js'];
+const _warmTimer = setTimeout(function () {
+  let i = 0;
+  (function next() {
+    if (i >= _WARM_FILES.length) return;
+    const f = path.join(__dirname, 'public', _WARM_FILES[i++]);
+    const wst = statCached(f);
+    if (!wst) return next();
+    const key = 'br:' + f + ':' + wst.mtimeMs;
+    if (_compCache.has(key)) return next();
+    _compressInto(key, f, 'br').then(next, next);
+  })();
+}, 2000);
+if (_warmTimer.unref) _warmTimer.unref();
 
 // ── Admin tool: import / remove gallery packages (table styles & card decks) ──
 // A small token-gated page served at /admin lets the maintainer add or remove

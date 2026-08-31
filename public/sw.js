@@ -23,7 +23,7 @@
  *                 Cross-origin requests and WS upgrades are left untouched.
  *                 (Fonts are now self-hosted and handled by SWR above.)
  */
-const CACHE_VERSION = 'pokerth-v2.1.7-web.178';
+const CACHE_VERSION = 'pokerth-v2.1.7-web.179';
 // Share Target payload park (see handleShareTarget). Kept OUT of CACHE_VERSION
 // so an update sweep never eats a share that arrived seconds earlier.
 const SHARE_CACHE = 'pokerth-share';
@@ -268,12 +268,27 @@ function precacheOne(cache, url, tries) {
 self.addEventListener('install', function(e) {
   e.waitUntil(
     caches.open(CACHE_VERSION).then(function (c) {
-      return Promise.allSettled(ASSETS.map(function (u) { return precacheOne(c, u); }))
-        .then(function (results) {
-          var miss = results.filter(function (r) { return r.status === 'fulfilled' && r.value === false; }).length;
-          if (miss) console.warn('[SW] precache incomplete:', miss, 'of', ASSETS.length, 'asset(s) missing');
-          else console.log('[SW] precache complete:', ASSETS.length, 'assets');
+      // Bounded concurrency: firing all ~130 fetches at once hammered the
+      // origin on every update — worst when the update banner lands during
+      // the nightly server backup. A small worker pool (6) keeps installs
+      // gentle without noticeably slowing them; precacheOne never rejects,
+      // so each worker chain runs to the end of the queue.
+      var queue = ASSETS.slice();
+      var miss = 0;
+      function worker() {
+        var u = queue.shift();
+        if (u === undefined) return Promise.resolve();
+        return precacheOne(c, u).then(function (ok) {
+          if (ok === false) miss++;
+          return worker();
         });
+      }
+      var pool = [];
+      for (var i = 0; i < 6 && i < ASSETS.length; i++) pool.push(worker());
+      return Promise.all(pool).then(function () {
+        if (miss) console.warn('[SW] precache incomplete:', miss, 'of', ASSETS.length, 'asset(s) missing');
+        else console.log('[SW] precache complete:', ASSETS.length, 'assets');
+      });
     })
   );
   // NOTE: skipWaiting() is deliberately NOT called here. A freshly installed SW
