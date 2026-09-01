@@ -70,6 +70,9 @@ function onJoinGameAck(sub) {
     S.gId = Proto.u32(sub, 1);
     // Disarm the join watchdog (armed by _sendJoin in pokerth.js).
     if (S._joinWd) { clearTimeout(S._joinWd); S._joinWd = 0; }
+    // Préchauffe les 52 faces + le dos du deck actif pendant la page d'attente,
+    // pour que la première main n'ait pas de cartes blanches (fetch à la volée).
+    try { if (window._preloadDeck) window._preloadDeck(); } catch (e) {}
     // Back at the table — clear the transient pending-rejoin flag and the
     // banner, mais ÉCRIRE un marqueur durable « je suis dans la partie gId »
     // (pth_resume) : il permet de réintégrer la table après une coupure

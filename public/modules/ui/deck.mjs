@@ -91,8 +91,45 @@ function _refreshDeck() {
     if (bk) document.documentElement.style.setProperty('--card-back', 'url(' + bk + ')');
     else document.documentElement.style.removeProperty('--card-back');
   } catch (e) {}
+  _preloadDeck();
 }
 try { window._refreshDeck = _refreshDeck; } catch (e) {}
+
+// ── Préchargement des 52 faces + dos du deck actif (2.1.8-web.8) ──
+// Les faces sont des background-image posées à la volée par cardToHtml :
+// sans préchargement, chaque carte est TÉLÉCHARGÉE à sa première apparition
+// (carte blanche le temps du fetch en 4G/5G, jusqu'à ce que le cache SW soit
+// plein). On tire les mêmes URLs que --cf/--card-back (même clé de cache
+// HTTP/SW) en basse priorité, 6 à la fois, une seule fois par deck/dos.
+// Appelé à l'entrée à une table (JoinGameAck) et à chaque _refreshDeck
+// (changement de deck ou de dos). Les imports en dataURL sont ignorés.
+var _preloadedDeckKey = '';
+function _preloadDeck() {
+  try {
+    if (typeof Image === 'undefined') return;
+    var d = document.documentElement.getAttribute('data-deck') || '';
+    var urls = [];
+    var bk = _deckBack();
+    if (bk && bk.slice(0, 5) !== 'data:') urls.push(bk);
+    if (d) for (var n = 0; n < 52; n++) {
+      var u = _deckFace(n);
+      if (u && u.slice(0, 5) !== 'data:') urls.push(u);
+    }
+    var key = urls.join('|');
+    if (!urls.length || key === _preloadedDeckKey) return;
+    _preloadedDeckKey = key;
+    var i = 0, PAR = 6;
+    function next() {
+      if (i >= urls.length) return;
+      var img = new Image();
+      try { img.decoding = 'async'; img.fetchPriority = 'low'; } catch (e) {}
+      img.onload = img.onerror = next;
+      img.src = urls[i++];
+    }
+    for (var k = 0; k < PAR; k++) next();
+  } catch (e) {}
+}
+try { window._preloadDeck = _preloadDeck; } catch (e) {}
 
 function cardToHtml(n, sm, isComm, extraCls) {
   extraCls = extraCls || '';
@@ -237,7 +274,7 @@ function _timerSvg(secs, total) {
 }
 
 // ─── Exports ES + alias legacy ───────────────────────────────────────────
-export { cardName, cardToHtml, cardHtml, flipCommCards, chipSvg, dealerChipSvg };
+export { cardName, cardToHtml, cardHtml, flipCommCards, chipSvg, dealerChipSvg, _preloadDeck };
 if (typeof window !== 'undefined') {
   // window._refreshDeck déjà attaché par le bloc (verbatim, try node-safe).
   window.cardName = cardName;

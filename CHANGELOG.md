@@ -70,6 +70,15 @@ highlights below.
   evaluator (full kicker ordering, ~20× faster) once loaded — with 600
   deals instead of 200, so the percentage is steadier. `phe` is warmed up
   at the preflop so the very first flop already benefits.
+- **Active deck preloaded on table entry** (`web.8`). Card faces are
+  `background-image`s set on the fly by `cardToHtml`, so every card was
+  fetched the first time it showed up — a blank card for the length of the
+  request on 4G/5G until the service-worker cache had seen all 52. The 52
+  faces and the back of the active deck are now requested at low priority,
+  six at a time, during the waiting page (`JoinGameAck`) and again whenever
+  the deck or the card back changes (`_refreshDeck`), once per deck; the
+  URLs are the very ones the CSS uses, so the HTTP/SW caches are warm before
+  the first hand. Imported decks (data URLs) are skipped.
 
 ## 2.1.7-web line (2026)
 
