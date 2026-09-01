@@ -227,6 +227,16 @@ function _ensurePhe() {
   }).catch(function () { _pheLoad = null; return null; });
   return _pheLoad;
 }
+// Force brute phe (1 = royal … 7462 = pire) pour 5 à 7 cartes PokerTH,
+// ordre total avec kickers — remplace _cmpHand(evaluateBestHand()) dans les
+// simulations de calcWinProbAsync (~20× plus rapide). null si phe absent.
+function _pheStrength(cards) {
+  if (!_phe || !_pheMap) return null;
+  var codes = [];
+  for (var i = 0; i < cards.length; i++) codes.push(_pheMap[cards[i]]);
+  return _phe.evaluateCardCodes(codes);
+}
+function _pheReady() { return !!(_phe && _pheMap); }
 // Catégorie 0..9 (0=Höchste Karte … 8=Straight Flush, 9=Royal) pour 5 à 7
 // cartes PokerTH — même échelle que _evalFive().r et GameTable.cardsChance QML.
 function _pheCat(cards) {
@@ -294,6 +304,7 @@ function _oddsCompute(hole, board, onDone, isStale) {
 export {
   _getCombos, _evalFive, _cmpHand, _qmlWinningHandText,
   evaluatePreFlopHand, normalizeHoleCard, evaluateBestHand, _oddsCompute,
+  _ensurePhe, _pheReady, _pheStrength,
 };
 
 // ─── Alias legacy : pokerth.js consomme encore ces noms via le global ────

@@ -60,6 +60,16 @@ highlights below.
   and made the river — `delay: 0 !important` — appear *before* the turn
   card; it is gone, so the flop staggers 0/120/240 ms and turn/river are
   immediate.
+- **Assistance win% no longer freezes the table** (`web.7`). The hand-strength
+  banner ran its Monte Carlo (200 deals × every live opponent, 21-combo
+  evaluator) synchronously on the main thread 150 ms after each street —
+  ~300 ms on a desktop and 0.5–1 s on a phone at a 10-seat table, right
+  while the new card flips and the action bar opens. `calcWinProbAsync`
+  now yields every ~8 ms like the Chances tab, abandons a pass the moment
+  a newer street or hand supersedes it, and uses the vendored `phe`
+  evaluator (full kicker ordering, ~20× faster) once loaded — with 600
+  deals instead of 200, so the percentage is steadier. `phe` is warmed up
+  at the preflop so the very first flop already benefits.
 
 ## 2.1.7-web line (2026)
 

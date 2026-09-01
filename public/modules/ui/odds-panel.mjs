@@ -16,7 +16,8 @@ import { S } from '../game/state.mjs';
 import { t } from '../i18n.mjs';
 import { esc } from './misc.mjs';
 import { normalizeHoleCard, evaluateBestHand, _cmpHand,
-         evaluatePreFlopHand, _oddsCompute } from '../game/cards.mjs';
+         evaluatePreFlopHand, _oddsCompute,
+         _ensurePhe, _pheReady, _pheStrength } from '../game/cards.mjs';
 
 // ── Probabilité de gain (Monte Carlo simplifié) ──
 function calcWinProb() {
@@ -62,6 +63,71 @@ function calcWinProb() {
     if (myBest) wins += tied ? 0.5 : 1;       // split compté pour un demi-pot
   }
   return Math.round(wins / total * 100);
+}
+
+// ── Même probabilité, version ASYNCHRONE en tranches (~8 ms) ──
+// calcWinProb() ci-dessus est synchrone : 200 tirages × (1 + adversaires
+// non couchés) evaluateBestHand — jusqu'à ~300 ms sur desktop et 0,5–1 s sur
+// iPhone à 10 sièges, lancé 150 ms après chaque street, donc PENDANT le flip
+// des cartes et l'ouverture de la barre d'actions (gel visible, 2.1.8-web.7).
+// Cette version rend la main toutes les ~8 ms comme _oddsCompute, utilise phe
+// (ordre total avec kickers, ~20× plus rapide) quand il est chargé — avec
+// plus de tirages, donc un % plus stable — et abandonne via isStale() si une
+// street plus récente a pris le relais. onDone(pct) ; -1 = non calculable.
+function calcWinProbAsync(onDone, isStale) {
+  function done(v) { try { onDone(v); } catch (e) {} }
+  if (S.myCards[0] == null || S.myCards[1] == null) { done(-1); return; }
+  var comm = S.commCards.filter(function(c){ return c != null; });
+  if (comm.length < 3) { done(-1); return; }
+  var myNorm = [S.myCards[0], S.myCards[1]].map(normalizeHoleCard).filter(function(c){ return c != null; });
+  if (myNorm.length < 2) { done(-1); return; }
+  var known = myNorm.concat(comm);
+  var deck = [];
+  for (var i = 0; i < 52; i++) { if (known.indexOf(i) < 0) deck.push(i); }
+  var needed = 5 - comm.length;
+  var nOpp = Math.max(1, S.seats.filter(function(p){ return p !== S.myId && S.seatData[p] && !S.seatData[p].folded; }).length);
+  _ensurePhe();                    // charge phe en arrière-plan pour les prochaines fois
+  var usePhe = _pheReady();        // choix figé pour toute la passe
+  var TOTAL = usePhe ? 600 : 200, tr = 0, wins = 0;
+  function now() { return (typeof performance !== 'undefined' && performance.now) ? performance.now() : Date.now(); }
+  function chunk() {
+    if (isStale && isStale()) return;
+    var start = now();
+    while (tr < TOTAL) {
+      var d = deck.slice();
+      for (var i2 = d.length-1; i2 > 0; i2--) {
+        var j = Math.floor(Math.random()*(i2+1));
+        var tmp = d[i2]; d[i2] = d[j]; d[j] = tmp;
+      }
+      var fullComm = comm.concat(d.slice(0, needed));
+      var pos = needed, myBest = true, tied = false;
+      if (usePhe) {
+        var myS = _pheStrength(myNorm.concat(fullComm));
+        for (var o = 0; o < nOpp; o++) {
+          var a = d[pos++], b = d[pos++];
+          if (a === undefined || b === undefined) break;
+          var os = _pheStrength([a, b].concat(fullComm));
+          if (os < myS) { myBest = false; break; }   // phe : plus petit = plus fort
+          if (os === myS) tied = true;
+        }
+      } else {
+        var myScore = evaluateBestHand(myNorm, fullComm);
+        for (var o2 = 0; o2 < nOpp; o2++) {
+          var oc1 = d[pos++], oc2 = d[pos++];
+          if (oc1 === undefined || oc2 === undefined) break;
+          var cmp = _cmpHand(myScore, evaluateBestHand([oc1, oc2], fullComm));
+          if (cmp < 0) { myBest = false; break; }
+          if (cmp === 0) tied = true;
+        }
+      }
+      if (myBest) wins += tied ? 0.5 : 1;
+      tr++;
+      if ((tr & 15) === 0 && (now() - start) > 8) break; // rendre la main
+    }
+    if (tr < TOTAL) { setTimeout(chunk, 0); }
+    else { done(Math.round(wins / TOTAL * 100)); }
+  }
+  chunk();
 }
 
 // ─── Force de la main ───
@@ -162,6 +228,9 @@ function renderPreFlopStrength() {
   if (!S._assistOn) { _hsHide(el); return; } // assistance désactivée
   if (S.commCards.filter(function(c){ return c!=null; }).length > 0) return;
   if (S.myCards[0] == null || S.myCards[1] == null) { _hsHide(el); return; }
+  // Préchauffe phe dès le préflop (assistance active) pour que le flop de la
+  // première main utilise déjà l'évaluateur rapide et non le repli.
+  try { _ensurePhe(); } catch (e) {}
   var res = evaluatePreFlopHand(S.myCards[0], S.myCards[1]);
   if (!res) { _hsHide(el); return; }
   var label = res.label;
@@ -175,6 +244,7 @@ function renderPreFlopStrength() {
 }
 
 // ─── Force de la main ───
+var _hsSeq = 0; // passe calcWinProbAsync courante (les anciennes s'abandonnent)
 function renderHandStrength() {
   var el = document.getElementById('hand-strength');
   if (!el) return;
@@ -198,18 +268,23 @@ function renderHandStrength() {
   if (validComm.length >= 3) {
     var _captureComm = validComm.slice();
     var _captureHole = [S.myCards[0], S.myCards[1]];
-    setTimeout(function() {
-      // Vérifier que le contexte n'a pas changé (nouvelle main, fold…)
+    var _seqHs = ++_hsSeq;
+    // Contexte périmé (street suivante, nouvelle main, fold) → on abandonne
+    // la passe en cours entre deux tranches, sans rien afficher.
+    var _stale = function () {
+      if (_seqHs !== _hsSeq) return true;
+      if (S.myCards[0] !== _captureHole[0] || S.myCards[1] !== _captureHole[1]) return true;
       var currComm = S.commCards.filter(function(c){ return c != null; });
-      if (currComm.length !== _captureComm.length) return;
-      var pct = calcWinProb();
-      if (pct < 0) return;
+      return currComm.length !== _captureComm.length;
+    };
+    calcWinProbAsync(function (pct) {
+      if (pct < 0 || _stale()) return;
       var elNow = document.getElementById('hand-strength');
       if (!elNow) return;
       // Indicateur couleur : vert brillant ≥71%, vert 51-70%, jaune 36-50%, orange 26-35%, rouge ≤25%
       var pctCol = pct >= 60 ? '#50c878' : pct >= 45 ? '#E3C800' : pct >= 30 ? '#FF6D00' : '#e05050';
       _hsSet(elNow, handLabel + ' · ' + pct + '%', pct, pctCol);
-    }, 0);
+    }, _stale);
   }
 }
 
@@ -257,7 +332,7 @@ function renderOddsMonitor() {
   }, function () { return seq !== window._oddsSeq; });
 }
 
-export { calcWinProb, _hsPanelIsLight, _hsContrastCol, _hsSet, _hsHide,
+export { calcWinProb, calcWinProbAsync, _hsPanelIsLight, _hsContrastCol, _hsSet, _hsHide,
          _gipAssistSync, renderPreFlopStrength, renderHandStrength,
          renderOddsMonitor };
 

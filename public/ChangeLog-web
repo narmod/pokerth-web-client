@@ -4,6 +4,7 @@
 - improvement: the stats HUD on the seats is no longer marked as beta - it is an official feature of the web client, still off by default in Advanced options > Assistance
 - improvement: bets are now shown inside the player box by default on phones and tablets too, as in the official client since 2.1.8 - the tray under the box needs no room around the boxes, which suits small screens best. Your own choice in Settings > Styles > Seats, "Bet display", is kept as it is
 - new: the Ivoire & Chêne table style - a light oak table with an ivory felt and a brass rail, set in a library, with matching cream buttons and pucks. The first light table of the collection; the chat and log panels follow with a warm parchment tint. Settings > Styles > Table
+- improvement: the assistance win percentage is computed in the background and no longer freezes the table for up to a second on phones after the flop, turn and river; it is also a little more precise
 - bugfix: the community cards no longer flicker at the turn and the river - cards already on the board stay put and only the new card flips, as in the desktop client; the river card also no longer showed up before the turn card
 - improvement: the table previews in Settings > Styles > Table are the freshly rendered ones from the 2.1.8 desktop client - every table now has a landscape and a portrait preview, showing the bets inside the player boxes, and the default table and Green Casino get a real preview instead of a plain felt crop
 
