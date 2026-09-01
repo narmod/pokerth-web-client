@@ -54,7 +54,9 @@ export const BUILD_ID = (() => {
     const m = /^(\d+)\.(\d+)\.(\d+)-web\.\d+$/.exec(String(globalThis.BUILD_VERSION || ''));
     if (m) { M = +m[1]; N = +m[2]; P = +m[3]; }
   } catch (e) {}
-  return ((0x01 << 24) | (M << 16) | (N << 8) | P) >>> 0; // Qt-Widget M.N.P
+  // Type 0x03 = CLIENT_TYPE_WEB (upstream c7e2959), le meme que buildInit dans
+  // net/messages.mjs depuis 2.1.8-web.0 : probes et joueurs, une seule verite.
+  return ((0x03 << 24) | (M << 16) | (N << 8) | P) >>> 0; // Web M.N.P
 })();
 
 // ─────────────────────────────────────────────────────────────────────────

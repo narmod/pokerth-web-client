@@ -30,7 +30,7 @@ const m = /^(\d+)\.(\d+)\.(\d+)-web\.\d+$/.exec(pkgVersion);
 ok(!!m, 'package.json : version au format MAJ.MIN.PATCH-web.N (' + pkgVersion + ')');
 if (!m) { process.exit(1); }
 const [MAJ, MIN, PATCH] = [+m[1], +m[2], +m[3]];
-const EXPECTED = ((0x01 << 24) | (MAJ << 16) | (MIN << 8) | PATCH) >>> 0; // Qt-Widget
+const EXPECTED = ((0x03 << 24) | (MAJ << 16) | (MIN << 8) | PATCH) >>> 0; // CLIENT_TYPE_WEB, comme net/messages.mjs
 
 // ── 1+2. Façade proto : dérivation puis repli ─────────────────────────────
 globalThis.BUILD_VERSION = pkgVersion;

@@ -25,6 +25,11 @@ highlights below.
   pthranking game-server dashboard.
 - Announced upstream version follows `BUILD_VERSION` → **2.1.8**; hard-coded
   fallback triple bumped to match.
+- **Admin lobby probes announce `CLIENT_TYPE_WEB` too** (`web.1`). The proto
+  facade used by the proxy's headless guest probes (Check button, Server tab)
+  still encoded Qt-Widget `0x01`; it now uses `0x03` like `buildInit`, so
+  probes and players tell the server the same story (the 2026-08-12
+  "one truth" rule). `test-build-id` updated accordingly.
 
 ## 2.1.7-web line (2026)
 
