@@ -120,9 +120,9 @@ export const help = {
           b: ['Blok asistence lze od panelu odtrhnout do vlastního okénka vždy navrchu: použij tlačítko odtržení na bloku, pak ho přesouvej a zvětšuj kdekoli nad stolem — praktické pro sledování síly ruky bez otevřeného celého panelu. Tlačítko ukotvení ho vrátí do záložky Šance a poloha se pamatuje. Uvnitř panelu ti úchyt mezi Asistencí a šancemi umožní rozdělit prostor mezi obě části.'] },
         { id: 'stats', t: 'Statistiky',
           b: ['Záložka Statistiky sleduje tvé sezení: odehrané ruce, viděné flopy, showdowny, úspěšnost a další. Sledování statistik lze vypnout v Pokročilých možnostech.'] },
-        { id: 'hud', t: 'HUD statistik u míst (beta)',
+        { id: 'hud', t: 'HUD statistik u míst',
           b: ['HUD připojí vedle místa každého hráče malé okénko se statistikami, sestavené z rozdání, která jsi zaznamenal ve svých denících: počet pozorovaných rozdání, pak VPIP (jak často dobrovolně vkládá peníze pre-flop), PFR (pre-flop navýšení) a AF (faktor agresivity), barevně odstupňované od pasivního k agresivnímu. Pod nimi odznak shrne hráče slovy \u2014 Těsný-Pasivní, Volný-Agresivní a tak dále \u2014 vedle malého ciferníku, jehož rozsvícený kvadrant se čte zleva doprava od těsného k volnému a zdola nahoru od pasivního k agresivnímu. Odznak se objeví hned od prvního rozdání, ale zůstává ztlumený do 25 rozdání, odkud je spolehlivý. Klepni na okénko pro podrobné vyskakovací okno se všemi čísly (3-bet, continuation bet, fold na 3-bet, pokusy o krádež, míry showdownu\u2026), a přetáhni je, pokud něco zakrývá.',
-              'HUD zná jen to, co jsi viděl u vlastních stolů — čte tvé místní záznamy rukou, takže záznam musí být zapnutý a čísla dávají smysl až po dostatku rukou. Je to beta funkce, ve výchozím stavu vypnutá: zapni ji v Pokročilé možnosti \u2192 Asistence.'] },
+              'HUD zná jen to, co jsi viděl u vlastních stolů — čte tvé místní záznamy rukou, takže záznam musí být zapnutý a čísla dávají smysl až po dostatku rukou. Ve výchozím stavu je vypnutá: zapni ji v Pokročilé možnosti \u2192 Asistence.'] },
         { id: 'handsbtn', t: 'Přehled kombinací',
           b: ['Ikona pokerových rukou na plátně kdykoli otevře rychlý přehled 10 kombinací — šikovné při učení. Skrývá se v Pokročilých možnostech.'] }
       ]

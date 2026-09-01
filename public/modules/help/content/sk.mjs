@@ -121,9 +121,9 @@ export const help = {
           b: ['Blok asistencie možno od panela odtrhnúť do vlastného okienka vždy navrchu: použi tlačidlo odtrhnutia na bloku, potom ho presúvaj a zväčšuj kdekoľvek nad stolom — praktické na sledovanie sily ruky bez otvoreného celého panela. Tlačidlo ukotvenia ho vráti do karty Šance a poloha sa pamätá. Vnútri panela ti úchyt medzi Asistenciou a šancami umožní rozdeliť priestor medzi obe časti.'] },
         { id: 'stats', t: 'Štatistiky',
           b: ['Karta Štatistiky sleduje tvoju reláciu: odohrané ruky, videné flopy, showdowny, úspešnosť a ďalšie. Sledovanie štatistík možno vypnúť v Pokročilých možnostiach.'] },
-        { id: 'hud', t: 'HUD štatistík pri miestach (beta)',
+        { id: 'hud', t: 'HUD štatistík pri miestach',
           b: ['HUD pripojí vedľa miesta každého hráča malé okienko so štatistikami, zostavené z rozdaní, ktoré si zaznamenal vo svojich denníkoch: počet pozorovaných rozdaní, potom VPIP (ako často dobrovoľne vkladá peniaze pre-flop), PFR (pre-flop navýšenia) a AF (faktor agresivity), farebne odstupňované od pasívneho k agresívnemu. Pod nimi odznak zhrnie hráča slovami \u2014 Tesný-Pasívny, Voľný-Agresívny a tak ďalej \u2014 vedľa malého ciferníka, ktorého rozsvietený kvadrant sa číta zľava doprava od tesného k voľnému a zdola nahor od pasívneho k agresívnemu. Odznak sa objaví hneď od prvého rozdania, ale zostáva stlmený do 25 rozdaní, odkiaľ je spoľahlivý. Ťukni na okienko pre podrobné vyskakovacie okno so všetkými číslami (3-bet, continuation bet, fold na 3-bet, pokusy o krádež, miery showdownu\u2026), a potiahni ho, ak niečo zakrýva.',
-              'HUD pozná len to, čo si videl pri vlastných stoloch — číta tvoje lokálne záznamy rúk, takže záznam musí byť zapnutý a čísla dávajú zmysel až po dostatku rúk. Je to beta funkcia, predvolene vypnutá: zapni ju v Pokročilé možnosti \u2192 Asistencia.'] },
+              'HUD pozná len to, čo si videl pri vlastných stoloch — číta tvoje lokálne záznamy rúk, takže záznam musí byť zapnutý a čísla dávajú zmysel až po dostatku rúk. Predvolene je vypnutá: zapni ju v Pokročilé možnosti \u2192 Asistencia.'] },
         { id: 'handsbtn', t: 'Prehľad kombinácií',
           b: ['Ikona pokrových rúk na plátne kedykoľvek otvorí rýchly prehľad 10 kombinácií — šikovné pri učení. Skrýva sa v Pokročilých možnostiach.'] }
       ]

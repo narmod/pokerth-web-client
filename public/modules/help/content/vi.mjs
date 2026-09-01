@@ -121,9 +121,9 @@ export const help = {
           b: ['Khối trợ lý có thể tách khỏi bảng thành một cửa sổ nhỏ riêng luôn nằm trên cùng: dùng nút tách trên khối, rồi di chuyển và đổi kích thước tùy ý phía trên bàn — tiện để theo dõi sức mạnh bài mà không cần mở cả bảng. Nút gắn lại đưa nó về thẻ Xác suất, và vị trí được ghi nhớ. Bên trong bảng, tay kéo giữa Trợ lý và phần xác suất cho phép bạn chia không gian giữa hai phần.'] },
         { id: 'stats', t: 'Thống kê',
           b: ['Thẻ Thống kê theo dõi phiên chơi của bạn: số ván bài đã chơi, số flop đã thấy, số showdown, tỉ lệ thắng và hơn thế nữa. Việc theo dõi thống kê có thể tắt trong Tùy chọn nâng cao.'] },
-        { id: 'hud', t: 'HUD thống kê tại chỗ ngồi (thử nghiệm)',
+        { id: 'hud', t: 'HUD thống kê tại chỗ ngồi',
           b: ['HUD gắn một ô thống kê nhỏ bên cạnh ghế của mỗi người chơi, dựng từ những ván bạn đã ghi trong nhật ký: số ván đã quan sát, rồi VPIP (mức độ thường xuyên tự nguyện bỏ tiền vào trước flop), PFR (tăng cược trước flop) và AF (hệ số hung hăng), được tô màu từ bị động đến hung hăng. Bên dưới, một huy hiệu tóm tắt người chơi bằng lời \u2014 Chặt-Bị động, Lỏng-Hung hăng, v.v. \u2014 cạnh một mặt số nhỏ có góc phần tư sáng lên, đọc từ trái sang phải là chặt đến lỏng, từ dưới lên trên là bị động đến hung hăng. Huy hiệu hiện ngay từ ván đầu tiên nhưng vẫn mờ cho đến 25 ván, từ đó mới đáng tin. Chạm vào một ô để mở cửa sổ chi tiết với đầy đủ con số (3-bet, continuation bet, fold trước 3-bet, số lần cướp mù, tỷ lệ showdown\u2026), và kéo ô đi nếu nó che mất thứ gì.',
-              'HUD chỉ biết những gì bạn đã thấy tại bàn của chính mình — nó đọc nhật ký ván bài cục bộ, nên việc ghi phải đang bật, và các con số chỉ có ý nghĩa sau đủ nhiều ván bài. Đây là tính năng thử nghiệm, mặc định tắt: hãy bật ở Tùy chọn nâng cao \u2192 Trợ lý.'] },
+              'HUD chỉ biết những gì bạn đã thấy tại bàn của chính mình — nó đọc nhật ký ván bài cục bộ, nên việc ghi phải đang bật, và các con số chỉ có ý nghĩa sau đủ nhiều ván bài. Tính năng này mặc định tắt: hãy bật ở Tùy chọn nâng cao \u2192 Trợ lý.'] },
         { id: 'handsbtn', t: 'Xem nhanh các bộ bài',
           b: ['Biểu tượng bộ bài poker trên mặt bàn mở bảng tóm tắt nhanh 10 bộ bài bất cứ lúc nào — tiện khi đang học. Có thể ẩn trong Tùy chọn nâng cao.'] }
       ]
