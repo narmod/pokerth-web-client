@@ -4,6 +4,7 @@
 - improvement: the stats HUD on the seats is no longer marked as beta - it is an official feature of the web client, still off by default in Advanced options > Assistance
 - improvement: bets are now shown inside the player box by default on phones and tablets too, as in the official client since 2.1.8 - the tray under the box needs no room around the boxes, which suits small screens best. Your own choice in Settings > Styles > Seats, "Bet display", is kept as it is
 - new: the Ivoire & Chêne table style - a light oak table with an ivory felt and a brass rail, set in a library, with matching cream buttons and pucks. The first light table of the collection; the chat and log panels follow with a warm parchment tint. Settings > Styles > Table
+- improvement: the table previews in Settings > Styles > Table are the freshly rendered ones from the 2.1.8 desktop client - every table now has a landscape and a portrait preview, showing the bets inside the player boxes, and the default table and Green Casino get a real preview instead of a plain felt crop
 
 2026-08-13 version 2.1.7-web:
 - new: private messages, like the desktop client - envelope next to a player's name or in the lobby header, conversations listed down the left with message bubbles, translation globe on received messages, one inbox per signed-in account; closed while a hand is running and never sent to guests, exactly as the desktop client does

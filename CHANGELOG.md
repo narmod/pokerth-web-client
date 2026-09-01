@@ -41,6 +41,12 @@ highlights below.
   light-toned pack, so `TABLES` gains an optional `btnFg` (dark button
   labels, as the QML reference render shows) instead of the white default.
   Credit: PokerTH Development Team, AGPL-3.0.
+- **Table previews regenerated** (`web.5`). All 21 built-in packs take the
+  `preview.png` / `preview_portrait.png` re-rendered upstream in `eee31d4`
+  (bets inside the player boxes, `inset` seat style). Thirteen packs had no
+  portrait preview and the default pack had no preview at all; `TABLES` now
+  carries both for every entry. Felts are byte-identical upstream/web for
+  Green Casino and the default table, so their QML renders apply as well.
 
 ## 2.1.7-web line (2026)
 
