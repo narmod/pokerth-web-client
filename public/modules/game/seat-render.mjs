@@ -129,7 +129,7 @@ function renderSeatsImmediate() {
   // Style de mise « inset » (parité QML SeatStyle/PlayerBetStrip, upstream
   // 414a89c) : la mise dans un socle EN BAS de la boîte au lieu du jeton
   // betside. Résolu par window._betStyleVariant (pokerth.js : pth_bet_style,
-  // vide = défaut plateforme desktop inset / mobile classic). Ne concerne que
+  // vide = 'inset' partout, parité QML f9a8906). Ne concerne que
   // les packs à politique betside QML (trait betOut) ; la classe betside-*
   // reste posée dans les deux styles (les pucks D/SB/BB s'en servent et
   // restent HORS boîte, comme le QML).

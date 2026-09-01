@@ -30,6 +30,9 @@ highlights below.
   still encoded Qt-Widget `0x01`; it now uses `0x03` like `buildInit`, so
   probes and players tell the server the same story (the 2026-08-12
   "one truth" rule). `test-build-id` updated accordingly.
+- **Bet display defaults to `inset` on every platform** (`web.3`), following
+  upstream `f9a8906` (QML `SeatStyle.defaultVariant`): the coarse-pointer
+  `classic` default is gone; an explicit `pth_bet_style` is untouched.
 
 ## 2.1.7-web line (2026)
 

@@ -1535,7 +1535,7 @@ function _render(){
   var list = document.createElement('div'); list.style.cssText = 'display:flex;flex-direction:column;gap:7px';
   // ── Affichage de la mise (onglet Sièges) — parité QML StyleSettings
   // « Einsatzanzeige » (upstream 414a89c) : socle DANS la boîte ('inset') ou
-  // jeton À CÔTÉ ('classic'). pth_bet_style vide = défaut plateforme, résolu
+  // jeton À CÔTÉ ('classic'). pth_bet_style vide = 'inset' partout, résolu
   // par window._betStyleVariant (pokerth.js) ; bascule LIVE sur la table via
   // window._applyBetStyle, comme applySeatStyle côté QML.
   if (_activeTab === 'seat') {

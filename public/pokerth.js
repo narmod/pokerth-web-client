@@ -2036,19 +2036,18 @@ window._applySeatOrient = _applySeatOrient;
 // ── Style de mise (parité QML config/SeatStyle.qml, upstream 414a89c) ──────
 // 'inset' = la mise dans un SOCLE en bas, À L'INTÉRIEUR de la boîte joueur
 // (PlayerBetStrip QML) ; 'classic' = jeton betside À CÔTÉ de la boîte (état
-// historique). pth_bet_style vide => défaut de la plateforme, comme le QML
-// (QmlSeatStyle vide) : desktop = inset, mobile = classic. Côté QML le mobile
-// est Qt.platform.os android/ios ; côté web on suit la convention maison
-// « isMobile web = pointer:coarse » (cf. calibrage des boutons d'action).
+// historique). pth_bet_style vide => 'inset' sur TOUTES les plateformes, comme
+// le QML depuis upstream f9a8906 (SeatStyle.defaultVariant : le socle dans la
+// boîte ne réclame aucune place autour des boîtes et passe mieux sur les
+// petits écrans). Jusqu'à 2.1.8-web.2 le mobile (pointer:coarse) restait en
+// 'classic', reflet de l'ancien platformDefault QML.
 // Ne s'applique qu'aux packs à politique betside QML (trait betOut) — les
 // packs qui posent déjà la mise dans le pied ne sont pas concernés.
 function _betStyleVariant() {
   var v = '';
   try { v = localStorage.getItem('pth_bet_style') || ''; } catch (e) {}
   if (v === 'inset' || v === 'classic') return v;
-  var coarse = false;
-  try { coarse = !!(window.matchMedia && window.matchMedia('(pointer: coarse)').matches); } catch (e) {}
-  return coarse ? 'classic' : 'inset';
+  return 'inset';
 }
 // Pose html[data-bet="inset|classic"] (consommé par pokerth.css : réservation
 // de la place du socle sous .seat) puis re-rend les sièges si une partie est
@@ -11019,7 +11018,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.8-web.2'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.8-web.3'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
