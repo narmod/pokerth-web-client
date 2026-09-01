@@ -3213,17 +3213,9 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
               transform 0.5s ease;
 }
 
-/* ══ CARD FLIP ANIMATION — (replaced above) ══ */
-@keyframes _cardFlip_unused {
-  0%   { transform: rotateY(90deg) scale(0.85); opacity: 0; }
-  60%  { transform: rotateY(-8deg) scale(1.04); opacity: 1; }
-  100% { transform: rotateY(0deg)  scale(1);    opacity: 1; }
-}
-.pk-flip { animation: cardFlip 0.32s cubic-bezier(.4,0,.2,1) both; }
-.pk-flip:nth-child(2) { animation-delay: 0.07s; }
-.pk-flip:nth-child(3) { animation-delay: 0.14s; }
-.pk-flip:nth-child(4) { animation-delay: 0.21s; }
-.pk-flip:nth-child(5) { animation-delay: 0.28s; }
+/* (Ancien bloc .pk-flip doublon supprimé en 2.1.8-web.6 : placé APRÈS le
+   bloc officiel, il écrasait les timings QML — 0,32 s et délais 0,07/0,14/
+   0,21/0,28 s — d'où la river (délai 0 !important) affichée avant la turn.) */
 
 /* ══ CHIP ANIMATION ══ */
 .flying-chip {

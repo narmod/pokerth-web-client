@@ -142,17 +142,42 @@ function animateChipToPot(pid, amount) {
 }
 
 // ─── Community cards ───
+// Rendu incrémental : seuls les slots dont la carte a changé sont recréés.
+// Avant, `el.innerHTML = h` rebâtissait les 5 slots à chaque street, donc
+// les cartes déjà visibles repassaient par le flip (opacity 0 → rotateY 90°)
+// au turn et à la river — clignotement + cartes "en retard" sur mobile.
+// Désormais, comme le QML, une carte posée ne bouge plus ; seule la nouvelle
+// carte flippe (flop échelonné 0/120/240 ms via :nth-child, turn/river à 0).
+function _commSlotValue(node) {
+  if (!node || node.classList.contains('comm-slot')) return null;
+  var v = parseInt(node.getAttribute('data-c'), 10);
+  return Number.isInteger(v) ? v : null;
+}
 function renderComm(animate, isRiver) {
   const el = document.getElementById('g-comm');
-  let h = '';
-  for (let i=0; i<5; i++) {
-    const v = S.commCards[i];
-    let cls = (animate && v != null) ? ' pk-flip' : '';
-    // River (i=4) — révélation plus lente et dramatique
-    if (isRiver && i === 4 && v != null) cls = ' pk-flip pk-river';
-    h += cardToHtml(v != null ? v : null, false, true, cls);
+  if (!el) return;
+  const kids = el.children;
+  if (kids.length === 5) {
+    for (let i = 0; i < 5; i++) {
+      const v = S.commCards[i] != null ? S.commCards[i] : null;
+      if (_commSlotValue(kids[i]) === v) continue; // slot inchangé : on ne touche pas
+      let cls = (animate && v != null) ? ' pk-flip' : '';
+      if (isRiver && i === 4 && v != null) cls = ' pk-flip pk-river';
+      const tmp = document.createElement('div');
+      tmp.innerHTML = cardToHtml(v, false, true, cls);
+      el.replaceChild(tmp.firstChild, kids[i]);
+    }
+  } else {
+    // Première pose (ou conteneur vidé par msg-game-join) : rendu complet.
+    let h = '';
+    for (let i = 0; i < 5; i++) {
+      const v = S.commCards[i];
+      let cls = (animate && v != null) ? ' pk-flip' : '';
+      if (isRiver && i === 4 && v != null) cls = ' pk-flip pk-river';
+      h += cardToHtml(v != null ? v : null, false, true, cls);
+    }
+    el.innerHTML = h;
   }
-  el.innerHTML = h;
 
   renderHandStrength();
 }

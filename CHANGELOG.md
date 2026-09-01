@@ -48,6 +48,19 @@ highlights below.
   carries both for every entry. Felts are byte-identical upstream/web for
   Green Casino and the default table, so their QML renders apply as well.
 
+### Fixed
+- **Community cards no longer re-flip on every street** (`web.6`).
+  `renderComm` rebuilt all five slots with `innerHTML` at the flop, turn and
+  river, so cards already on the board went through the flip again (opacity
+  0 → `rotateY(90deg)`) and flickered — on phones they looked late. The
+  renderer is now incremental: only a slot whose card changed is recreated,
+  so a dealt card stays put and only the new one flips, as in the QML client.
+  A stale duplicate `.pk-flip` block in `pokerth.css`, placed after the
+  official one, also overrode the QML timings (0.32 s, delays 0.07–0.28 s)
+  and made the river — `delay: 0 !important` — appear *before* the turn
+  card; it is gone, so the flop staggers 0/120/240 ms and turn/river are
+  immediate.
+
 ## 2.1.7-web line (2026)
 
 Opened with `v2.1.7-web.0` (2026-08-13), following the upstream **2.1.7**
