@@ -8,10 +8,28 @@ web counter (`2.1.5` → `2.1.5-web.0`). Granular, per-build tags are published 
 [GitHub Releases](https://github.com/narmod/pokerth-web-client/releases) page;
 this file captures what matters to players and operators.
 
+## 2.1.8-web line (2026)
+
+Opened with `v2.1.8-web.0` (2026-09-01), following the upstream **2.1.8**
+release (server restarted by sp0ck the same night). Granular, per-build
+changes for this line are on the
+[GitHub Releases](https://github.com/narmod/pokerth-web-client/releases) page;
+highlights below.
+
+### Changed
+- **Client identifies as `CLIENT_TYPE_WEB` (0x03)** (`web.0`). The switch
+  shipped dormant in `2.1.7-web.170` while pokerth.net still ran a build
+  without upstream `c7e2959`; 2.1.8 includes it, so the flag is now on and
+  the composite buildId is `0x03020108`. Web players show up as their own
+  client type in server statistics, the Live/Spectator tool and the
+  pthranking game-server dashboard.
+- Announced upstream version follows `BUILD_VERSION` → **2.1.8**; hard-coded
+  fallback triple bumped to match.
+
 ## 2.1.7-web line (2026)
 
 Opened with `v2.1.7-web.0` (2026-08-13), following the upstream **2.1.7**
-release. Granular, per-build changes for this line are on the
+release, closed at `web.179`. Granular, per-build changes for this line are on the
 [GitHub Releases](https://github.com/narmod/pokerth-web-client/releases) page;
 highlights below.
 

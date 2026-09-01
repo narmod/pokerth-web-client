@@ -1,4 +1,8 @@
-2026-08-13 version 2.1.7-web (current series):
+2026-09-01 version 2.1.8-web (current series):
+- improvement: the web client now follows the PokerTH 2.1.8 release running on pokerth.net
+- improvement: the client now introduces itself to the server as a web client for real - the switch shipped earlier but stayed off until the server could recognise it; web players are now counted as their own client type in server statistics, the Live/Spectator tool and the game-server dashboard
+
+2026-08-13 version 2.1.7-web:
 - improvement: updating the app now downloads its files a few at a time instead of all at once - gentler on the server, so an update landing at a busy moment no longer slows everyone down
 - improvement: the app now opens from its local copy first and refreshes in the background - pages and tables come up instantly even when the server is briefly busy (for example during its nightly backup), instead of waiting on a slow download
 - improvement: a script or stylesheet that fails to load while the page opens (short network hiccup) is now fetched again automatically, up to twice, before the "unstable connection" screen is shown - a single dropped request no longer leaves you with a half-loaded table
