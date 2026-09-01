@@ -34,6 +34,14 @@ highlights below.
   upstream `f9a8906` (QML `SeatStyle.defaultVariant`): the coarse-pointer
   `classic` default is gone; an explicit `pth_bet_style` is untouched.
 
+### Added
+- **Ivoire & Chêne table style** (`web.4`). Port of upstream `eee31d4`
+  (`data/gfx/qml/table/ivoire-chene/`): fullscreen wallpaper, cream action
+  buttons and pucks, ChatLog* parchment tint from the upstream XML. First
+  light-toned pack, so `TABLES` gains an optional `btnFg` (dark button
+  labels, as the QML reference render shows) instead of the white default.
+  Credit: PokerTH Development Team, AGPL-3.0.
+
 ## 2.1.7-web line (2026)
 
 Opened with `v2.1.7-web.0` (2026-08-13), following the upstream **2.1.7**

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Ivoire & Chene QML table style. Fullscreen wallpaper (data-table-fs). Extracted from the official
+     PokerTH QML client (data/gfx/qml/table/ivoire-chene/table.png, upstream eee31d4), AGPL-3.0.
+     Source: github.com/pokerth/pokerth. -->
+<PokerTH_TableStyle version="1.0">
+  <StyleDescription value="Ivoire &amp; Chene QML table style"/>
+  <Creator value="PokerTH Development Team"/>
+  <License value="AGPL-3.0"/>
+</PokerTH_TableStyle>

@@ -84,6 +84,11 @@ const TABLES = [
   { id: 'bbc_anthem', name: "BBC Anthem QML table style", key: 'tableBbcAnthem', fallback: "BBC Anthem", swatch: '#252626', feltUrl: '/table/bbc_anthem/felt.png', preview: '/table/bbc_anthem/preview.png', previewPortrait: '/table/bbc_anthem/preview_portrait.png', radius: 6.5, mode: 'fs', skin: true, align: 'center bottom' },
   // 2.1.8 : Disco (upstream e6b2a67). ActionButtonBorderRadius=7, align center, zoom 1.0.
   { id: 'disco', name: "Disco QML table style", key: 'tableDisco', fallback: "Disco", swatch: '#d1298f', feltUrl: '/table/disco/felt.png', preview: '/table/disco/preview.png', previewPortrait: '/table/disco/preview_portrait.png', radius: 7, mode: 'fs', skin: true, align: 'center' },
+  // 2.1.8 : Ivoire & Chene (upstream eee31d4, narmod). Table claire (chene, feutre
+  // ivoire, filet laiton) dans une bibliotheque ; ActionButtonBorderRadius=6.5,
+  // align center, zoom 1.0 (le feutre remplit le cadre comme Disco). Boutons
+  // creme : libelles sombres (btnFg), comme le rendu QML de reference.
+  { id: 'ivoire-chene', name: "Ivoire & Chene QML table style", key: 'tableIvoireChene', fallback: "Ivoire & Ch\u00eane", swatch: '#d5bb90', feltUrl: '/table/ivoire-chene/felt.png', preview: '/table/ivoire-chene/preview.png', previewPortrait: '/table/ivoire-chene/preview_portrait.png', radius: 6.5, mode: 'fs', skin: true, align: 'center', btnFg: '#3a2c1a' },
 ];
 const DECKS = [
   { id: 'default', name: 'PokerTH default QML card deck', by: 'PokerTH Development Team', swatch: '#1d6b30', ext: 'svg' },
@@ -858,7 +863,10 @@ var _SKIN_TINT = {
   mile_high_club:{a:'#e7181c',bg:'#1c2e37',su:'#344e5c',bo:'#397c8d',tx:'#d6fcff',se:'#a8e1e6',mu:'#60a4a9'},
   terminus_hotel_2:{a:'#1a1a1a',bg:'#28253c',su:'#444163',bo:'#6e53a2',tx:'#ead6ff',se:'#c7a8e6',mu:'#8460a9'},
   bbc_anthem:{a:'#252626',bg:'#1c2e37',su:'#344e5c',bo:'#397c8d',tx:'#d6fcff',se:'#a8e1e6',mu:'#60a4a9'},
-  disco:{a:'#d1298f',bg:'#200f2c',su:'#3a1d4d',bo:'#a4308c',tx:'#ffe2f4',se:'#e0b0d8',mu:'#a06fa8'}
+  disco:{a:'#d1298f',bg:'#200f2c',su:'#3a1d4d',bo:'#a4308c',tx:'#ffe2f4',se:'#e0b0d8',mu:'#a06fa8'},
+  // Ivoire & Chene : premier tapis CLAIR — ChatLog* du XML amont, accent = liseré
+  // laiton des boutons (#93794d).
+  'ivoire-chene':{a:'#93794d',bg:'#f5eee1',su:'#e9dcc4',bo:'#c6ac82',tx:'#3a2c1a',se:'#5d4a30',mu:'#8a755a'}
 };
 function _injectTintObj(m){
   var el=document.documentElement;
@@ -978,7 +986,7 @@ table.apply = function(id){
     if (tb) {
       // Style officiel bundle : feutre + pucks + boutons ; mode fs/full/felt.
       _injectAxis(TABLE_TOKENS, { feltUrl: tb.feltUrl }, 'pth_table_css', true);
-      if (tb.skin) { var _bd='/table/'+(tb.dir||tb.id)+'/'; _injectButtons({ images:{ fold:'url('+_bd+'actionFold.svg)', check:'url('+_bd+'actionCall.svg)', call:'url('+_bd+'actionCall.svg)', raise:'url('+_bd+'actionRaise.svg)', allin:'url('+_bd+'actionAllIn.svg)' }, colors:(tb.btn === 'casino' ? CASINO_BTN.colors : { 'btn-fold-fg':'#f0f3f8','btn-check-fg':'#f0f3f8','btn-call-fg':'#f0f3f8','btn-raise-fg':'#f0f3f8','btn-allin-fg':'#fff4ec','btn-allin-fg-b':'#ffffff' }) }); }
+      if (tb.skin) { var _bd='/table/'+(tb.dir||tb.id)+'/'; _injectButtons({ images:{ fold:'url('+_bd+'actionFold.svg)', check:'url('+_bd+'actionCall.svg)', call:'url('+_bd+'actionCall.svg)', raise:'url('+_bd+'actionRaise.svg)', allin:'url('+_bd+'actionAllIn.svg)' }, colors:(tb.btn === 'casino' ? CASINO_BTN.colors : tb.btnFg ? { 'btn-fold-fg':tb.btnFg,'btn-check-fg':tb.btnFg,'btn-call-fg':tb.btnFg,'btn-raise-fg':tb.btnFg,'btn-allin-fg':tb.btnFg,'btn-allin-fg-b':tb.btnFg } : { 'btn-fold-fg':'#f0f3f8','btn-check-fg':'#f0f3f8','btn-call-fg':'#f0f3f8','btn-raise-fg':'#f0f3f8','btn-allin-fg':'#fff4ec','btn-allin-fg-b':'#ffffff' }) }); }
       else _injectButtons(tb.btn === 'casino' ? CASINO_BTN : { colors: BUTTON_GLOSSY });
       // ActionButtonBorderRadius (defaut 9) : le rectangle de libelle est pose
       // PAR-DESSUS le SVG du bouton, donc son arrondi doit etre celui dessine
@@ -1440,7 +1448,7 @@ var TABLE_AUTHORS = {
   wanted:'Etienne Graphic Designer', xanax:'Sebastien Kerguen',
   saloon:'PokerTH Development Team', discworld:'PokerTH Development Team',
   pirates:'PokerTH Development Team', mile_high_club:'BaShFX', terminus_hotel_2:'BaShFX',
-  bbc_anthem:'BaShFX', disco:'PokerTH Development Team'
+  bbc_anthem:'BaShFX', disco:'PokerTH Development Team', 'ivoire-chene':'PokerTH Development Team'
 };
 var _TABS = [
   { id:'table',    kind:'table',    titleKey:'sectionTable',    fallback:'Table' },
