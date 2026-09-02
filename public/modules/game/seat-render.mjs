@@ -154,13 +154,18 @@ function renderSeatsImmediate() {
   //   compact → opp = 84, PAS 71 ; l'ancien 1.32 surdimensionnait la self).
   // C'est l'agrandissement de BASE (zoom 0) ; le cycle de zoom des cartes
   // (#g-cardzoom) reste independant et s'ajoute par-dessus.
-  var SELF_BOX_MUL = 1.143;
+  // 2.1.8 (upstream 414a89c3) : le socle inset entre dans les DEUX bases —
+  // les ratios se resserrent en style inset (défaut) : portrait 102/91 =
+  // 1.121 · wide 116/104 = 1.115 · landscapeCompact 114/104 = 1.096.
+  // Classic garde les ratios 2.1.3 (1.155 / 1.143 / 1.119).
+  var _mulStrip = 20;
+  try { if (typeof window._betStyleVariant === 'function' && window._betStyleVariant() !== 'inset') _mulStrip = 0; } catch (e) {}
+  var SELF_BOX_MUL = (96 + _mulStrip) / (84 + _mulStrip);
   try {
     var _smw = window.innerWidth, _smh = window.innerHeight;
-    if (_smh > _smw) SELF_BOX_MUL = 1.155;
-    // Paysage compact : 94/84 = 1.119 (valeur du commentaire ci-dessus ; le
-    // 1.15 qui traînait ici ne correspondait à aucun ratio QML).
-    else if (_smh < 600) SELF_BOX_MUL = 1.119;
+    if (_smh > _smw) SELF_BOX_MUL = (82 + _mulStrip) / (71 + _mulStrip);
+    // Paysage compact : selfBaseHeight 94 (+ socle) sur oppBaseHeight 84 (+ socle).
+    else if (_smh < 600) SELF_BOX_MUL = (94 + _mulStrip) / (84 + _mulStrip);
     // STRICT QML (packs pokerth) : GamePlayerSelfBox est scalée par
     // boxScale COMME les adversaires (scale: tableZone.boxScale) — sa
     // proéminence vient de ses dimensions de BASE (avatar 52, cartes

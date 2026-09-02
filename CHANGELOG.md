@@ -79,6 +79,17 @@ highlights below.
   (3) in the inset seat style the side puck is vertically centred beside
   the box (the socle frees the lower slot), classic keeps the low slot.
   Self puck and the 32×32 size were already exact.
+- **Self-box parity pass** (`web.14`). Three fixes after auditing
+  `GamePlayerSelfBox` 2.1.8: the mobile-portrait geometry now models the
+  self at its REAL web anchor (H−24, the deliberate 17/07 adjustment)
+  instead of the QML H−4 — without this the new dynamic bottom row could
+  bite ~20 px into the self box (`opts.selfBottom`, spectator unaffected);
+  `SELF_BOX_MUL` for non-pokerth packs is derived from the 2.1.8 bases
+  including the inset socle (1.121/1.115/1.096 in inset vs the stale 2.1.3
+  ratios); and the QML at-turn lift of the self (`scale 1.03`, 180 ms
+  OutQuad) is applied to the seat plate. Scale-by-boxScale, socle/strip
+  bet display, 0.78/0.4 opacities, avatar 52 and the puck anchor were
+  already conform.
 
 ### Added
 - **Ivoire & Chêne table style** (`web.4`). Port of upstream `eee31d4`

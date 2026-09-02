@@ -235,6 +235,23 @@ for (const [M, W, H] of [[5, 844, 390], [8, 844, 390]]) {
   ok(lay.s <= 2.2 + 1e-9 && lay.s >= 0.55, '2.1.8 mobile: échelle dans [0.55, 2.2] (' + lay.s.toFixed(3) + ')');
 }
 
+// 6bis) Ancre self réelle : par défaut la géométrie mobile modélise la self
+// à H−24 (ajustement web) ; à échelle et slots figés (strip/outset épinglés),
+// la rangée basse remonte de 20 px vs une ancre QML à H−4.
+{
+  const W = 390, H = 740, O = { strip: 20, outset: 40, mobile: true };
+  const s24 = _qmlPortraitScale(6, W, H, 1, false, O);
+  const l24 = _qmlPortraitLayout(6, W, H, 1, false, O);
+  const l04 = _qmlPortraitLayout(6, W, H, 1, false, Object.assign({ selfBottom: 4 }, O));
+  // Compare à échelle égale seulement si la bisection n'a pas bougé ;
+  // sinon vérifie au moins l'ordre (ancre 24 => rangée basse plus haute).
+  ok(l24.slots.L_lower[1] * H <= l04.slots.L_lower[1] * H + 1e-6
+     || l24.s < l04.s,
+     '2.1.8 selfBottom: ancre 24 px => rangée basse remontée (ou échelle réduite)');
+  ok(близко(l24.band[1], H - 24 - l24.selfH * s24, 0.6) || l24.band[1] < H - 24 - l24.selfH * s24 + 0.6,
+     '2.1.8 selfBottom: bande bornée par la self à H−24');
+}
+
 // 7) Frein d'urgence : zone minuscule — les groupes restent ordonnés
 // (upper < lower), pas de NaN.
 {

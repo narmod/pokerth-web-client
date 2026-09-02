@@ -7651,6 +7651,12 @@ html[data-seat-struct="qml"] .seat.me .seat-pucks {
 }
 /* Self au tour : cadre du PlayerTurnGlow un peu plus épais (borderWidth 2 QML). */
 html[data-seat-struct="qml"] .seat.me.active .seat-plate::after { border-width: 2px; }
+/* Self au tour : levée QML (GamePlayerSelfBox `scale: isAtTurn ? 1.03 : 1.0`,
+   180 ms OutQuad). Appliquée à la PLAQUE (le transform inline du .seat porte
+   translate+boxScale et ne doit pas être écrasé) ; les pucks, hors plaque,
+   restent en place — écart accepté vs le QML qui lève toute la box. */
+html[data-seat-struct="qml"] .seat.me .seat-plate { transition: transform 0.18s ease-out; transform-origin: center; }
+html[data-seat-struct="qml"] .seat.me.active .seat-plate { transform: scale(1.03); }
 /* Couché : 0.72 ; éliminé : la base gère déjà l'estompe (transition QML 250ms). */
 html[data-seat-struct="qml"] .seat { transition: opacity 0.25s ease-out; }
 html[data-seat-struct="qml"] .seat.folded { opacity: 0.72; }

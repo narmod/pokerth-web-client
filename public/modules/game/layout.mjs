@@ -52,7 +52,12 @@ function _seatGeomOpts(opts) {
   return {
     mobile: mob,
     strip:  (o.strip  !== undefined) ? o.strip  : (inset ? 20 : 0),   // SeatStyle.betStripExtra
-    outset: (o.outset !== undefined) ? o.outset : (inset ? 40 : 68)   // SeatStyle.betSideOutset
+    outset: (o.outset !== undefined) ? o.outset : (inset ? 40 : 68),  // SeatStyle.betSideOutset
+    // Marge basse RÉELLE de la self côté web (ajustement narmod 17-19/07 :
+    // 24 px pour décoller la self du panneau d'action flottant ; QML = 4).
+    // Les rangées mobiles doivent modéliser la self LÀ OÙ le rendu la met,
+    // sinon la rangée basse mord la self de ~20 px. Spectateur non concerné.
+    selfBottom: (o.selfBottom !== undefined) ? o.selfBottom : 24
   };
 }
 
@@ -502,7 +507,7 @@ function _qmlPortraitLayout(oppCnt, zW, zH, zoomMul, spectating, opts) {
     var yBC = H - 4 - vH / 2;
     var yBottom = spectating
         ? yBC - step
-        : H - 4 - selfVH - Math.max(8, selfBadgeGapBase * s) - vH / 2;
+        : H - _st.selfBottom - selfVH - Math.max(8, selfBadgeGapBase * s) - vH / 2;
     // La rangée bottom n'est occupée qu'à partir de 8 sièges d'anneau ;
     // tant qu'elle est vide, la rangée lower descend elle-même à la butée.
     var yLower = ((spectating ? ringCnt - 1 : ringCnt) >= 8) ? yBottom - step : yBottom;
@@ -536,7 +541,7 @@ function _qmlPortraitLayout(oppCnt, zW, zH, zoomMul, spectating, opts) {
   function portraitBandAt(s, pos) {
     var vH = oppH * s;
     var top = 4;
-    var bottom = spectating ? zH - 4 : zH - 4 - selfH * s;
+    var bottom = spectating ? zH - 4 : zH - _st.selfBottom - selfH * s;
     for (var i = 0; i < seq.length; i++) {
       var p = pos[seq[i]];
       if (!p) continue;
