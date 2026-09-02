@@ -55,6 +55,20 @@ highlights below.
   The network fallback follows the chat-translation switch
   (`pth_chat_translate`, on by default) and never swaps a message whose
   detected source already matches the client's language.
+- **Mobile table geometry synced with upstream 2.1.8** (`web.12`). Port of
+  upstream `414a89c3` + `06db9866` into `layout.mjs`: the inset bet socle
+  (betStripExtra 20) now enters the geometry base sizes, `betSideOutset`
+  (inset 40 / classic 68) replaces the flat 48 side reserve on mobile, the
+  39 px top-badge reserve is dropped on mobile compact landscape, and the
+  landscape pair slack follows upstream (12 in compact, 4 otherwise).
+  Portrait on mobile gets DYNAMIC seat rows (`buildPortraitSlots`, derived
+  from the real box size like landscape) with the bisection probing the
+  exact drawing function, a raised cap (fillCap 2.0, base 1.15), and the
+  community row sized/centred in the computed middle band
+  (`portraitBandAt` / `portraitCommunityNeed`); desktop keeps the fixed
+  slots and nudges. Pure functions take an `opts` override (mobile /
+  strip / outset) so `test-layout` pins the legacy classic-desktop
+  expectations verbatim and adds 2.1.8 assertions.
 
 ### Added
 - **Ivoire & Chêne table style** (`web.4`). Port of upstream `eee31d4`

@@ -373,6 +373,14 @@ function renderSeatsImmediate() {
       // self -> on place TOUS les slots (0 inclus) pour que l'officiel s'applique.
       var _op0 = (myIdx >= 0) ? 1 : 0;
       if (_offPos) { for (var _op = _op0; _op < pixPos.length; _op++) { if (_offPos[_op]) pixPos[_op] = _offPos[_op]; } }
+      // Bande centrale portrait MOBILE (06db9866) publiée par la géométrie :
+      // consommée plus bas par l'échelle/le centrage de la rangée community.
+      // Toujours réécrite (null hors mobile-portrait) pour ne jamais servir
+      // une bande périmée après rotation ou changement de style de siège.
+      try {
+        window._seatPortraitBand = (_offPos && _offPos._portraitBand)
+          ? { t: _offPos._portraitBand[0], b: _offPos._portraitBand[1] } : null;
+      } catch (eB) {}
       // Échelle bisectée du QML (paysage seulement) : remplace l'heuristique
       // téléphone, chaque box adverse est mise à l'échelle comme l'officiel.
       if (_offPos && _offPos._boxScale) {
@@ -943,8 +951,17 @@ function renderSeatsImmediate() {
       var _commSkip3 = false; // garde : 0 plate adverse mesurée (voir plus bas)
       var _commTargetY = null; // centre Y cible (px zone) — parité anchors QML
       if (_forceSeatPortrait) {
+        // 06db9866 (portrait MOBILE) : la bande centrale n'est plus le ruban
+        // fixe 0.305·H — c'est exactement le reste entre groupe haut et
+        // groupe bas (buildPortraitSlots) ; les cartes la remplissent
+        // (vHalf = bande/2 − 6) et la rangée se centre dedans. Desktop
+        // (slots fixes) : formules historiques inchangées.
+        var _bandP3 = null;
+        try { _bandP3 = window._seatPortraitBand || null; } catch (eB3) {}
         var _oppH3 = (window._seatDimsMeasured && window._seatDimsMeasured.h > 30) ? window._seatDimsMeasured.h : 71;
-        var _vHalf = 0.15 * _zH3 - _oppH3 * _seatBoxScale / 2 - 6;
+        var _vHalf = _bandP3
+            ? (_bandP3.b - _bandP3.t) / 2 - 6
+            : 0.15 * _zH3 - _oppH3 * _seatBoxScale / 2 - 6;
         _csComm = Math.max(0.55, Math.min(1.8, (_vHalf > 0 ? _vHalf / 62 : 0.55), Math.max(0, _zW3 - 16) / 264));
         // ── Compensation de l'autofit (portrait uniquement) ──
         // Le QML calcule cette echelle en pixels de ZONE : ses cartes ne
@@ -973,9 +990,12 @@ function renderSeatsImmediate() {
             }
           }
         } catch (eFit) {}
-        // QML (GamePage communityArea, branche portrait) :
-        // verticalCenterOffset = -height*0.0025 + 5 par rapport au centre.
-        _commTargetY = _zH3 / 2 - 0.0025 * _zH3 + 5;
+        // QML (GamePage communityArea) : mobile = centre de la bande
+        // centrale calculée (les rangées ne sont plus symétriques autour du
+        // centre de zone) ; desktop = -height*0.0025 + 5 (slots fixes,
+        // quasi symétriques autour de 0.4975).
+        _commTargetY = _bandP3 ? (_bandP3.t + _bandP3.b) / 2
+                               : _zH3 / 2 - 0.0025 * _zH3 + 5;
       } else {
         // Port EXACT de GamePage.qml communityScale (branche wide) — audit
         // 2026-07-15 contre pokerth/pokerth qt6-qml. Trois corrections vs
