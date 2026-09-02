@@ -2373,6 +2373,30 @@ function _detectTranslate(text) {
   }).catch(function () { return null; });
 }
 
+// ── Network fallback for operator text (gtx pipeline, same gate as chat) ───
+// On-device translation is Chromium-only: everywhere else (Safari, Firefox,
+// iOS PWA) the helpers above resolve null and the welcome / broadcasts stayed
+// in the operator's language. Fall back to the shared _gtxTranslate pipeline
+// (gtx direct → MyMemory → /api/translate relay), exactly like chat and forum
+// translations. Network use follows the chat-translation switch
+// (pth_chat_translate, ON by default): an explicit '0' keeps operator text
+// untouched. The swap is skipped when gtx reports the detected source equal
+// to the client's language (message already readable) or a no-op result.
+function _netTrOn() {
+  try { return localStorage.getItem('pth_chat_translate') !== '0'; } catch (e) { return true; }
+}
+function _gtxAuto(text) {
+  if (!text || !String(text).trim() || !_netTrOn() || typeof window._gtxTranslate !== 'function') return Promise.resolve(null);
+  var tgt = (typeof _chatTrTarget === 'function') ? _chatTrTarget() : 'en';
+  return window._gtxTranslate(text, tgt).then(function (res) {
+    if (!res || !res.text || !String(res.text).trim()) return null;
+    var src = String(res.src || '').toLowerCase().split('-')[0];
+    if (src && src === String(tgt).toLowerCase().split('-')[0]) return null;
+    if (res.text === text) return null;
+    return res.text;
+  }).catch(function () { return null; });
+}
+
 // ── First-visit welcome / rules modal (admin-authored, per language) ────────
 // Picks the operator's text for the client's active UI language (_lang), with
 // fallback: exact code → primary subtag (pt-br → pt) → configured default → any.
@@ -2429,10 +2453,19 @@ function maybeShowWelcome(w) {
   showWelcomeModal(c.title, c.body, w.updatedAt); // operator text shows immediately
   if (!c.exact) {
     // No operator version for the client's language → try on-device translation
-    // and swap it in if the modal is still open.
+    // first, then the gtx pipeline (chat/forum path) where on-device is
+    // unavailable; swap the text in only while the modal is still open.
     var target = (typeof _lang !== 'undefined' && _lang) ? _lang : c.lang;
     _translateEntry(c.title, c.body, c.lang, target).then(function (tr) {
-      if (tr && (tr.title || tr.body) && document.getElementById('welcome-modal')) showWelcomeModal(tr.title || c.title, tr.body || c.body, w.updatedAt);
+      if (tr && (tr.title || tr.body)) {
+        if (document.getElementById('welcome-modal')) showWelcomeModal(tr.title || c.title, tr.body || c.body, w.updatedAt);
+        return;
+      }
+      return _gtxAuto(c.title).then(function (tt) {
+        return _gtxAuto(c.body).then(function (tb) {
+          if ((tt || tb) && document.getElementById('welcome-modal')) showWelcomeModal(tt || c.title, tb || c.body, w.updatedAt);
+        });
+      });
     }).catch(function () {});
   }
 }
@@ -2443,7 +2476,16 @@ function _showBroadcast(message, icon, cdAt) {
   _bcSeq++; var seq = _bcSeq;
   showInfoToast(message, icon, cdAt);
   _detectTranslate(message).then(function (tr) {
-    if (tr && tr !== message && seq === _bcSeq && document.getElementById('srv-info-toast')) showInfoToast(tr, icon, cdAt);
+    if (tr && tr !== message) {
+      if (seq === _bcSeq && document.getElementById('srv-info-toast')) showInfoToast(tr, icon, cdAt);
+      return;
+    }
+    // On-device gave nothing (non-Chromium, missing model pair, or same
+    // language): the gtx pipeline decides — its own source check keeps
+    // already-readable messages untouched.
+    return _gtxAuto(message).then(function (g) {
+      if (g && seq === _bcSeq && document.getElementById('srv-info-toast')) showInfoToast(g, icon, cdAt);
+    });
   }).catch(function () {});
 }
 window.maybeShowWelcome = maybeShowWelcome;
@@ -11018,7 +11060,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.8-web.10'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.8-web.11'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

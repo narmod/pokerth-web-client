@@ -47,6 +47,14 @@ highlights below.
   longer requires a remembered folder: with none, Restore goes straight to
   the folder picker, and picking a folder from the advanced options
   releases the write hold (it counts as the pending banner decision).
+- **Welcome modal and broadcasts translate everywhere** (`web.11`). Both
+  already tried the on-device Translator API, which is Chromium-only; on
+  Safari, Firefox and the iOS PWA the operator's text stayed untranslated.
+  They now fall back to the shared `_gtxTranslate` chain (gtx direct →
+  MyMemory → `/api/translate` relay), like chat and forum translations.
+  The network fallback follows the chat-translation switch
+  (`pth_chat_translate`, on by default) and never swaps a message whose
+  detected source already matches the client's language.
 
 ### Added
 - **Ivoire & Chêne table style** (`web.4`). Port of upstream `eee31d4`

@@ -1,4 +1,5 @@
 2026-09-01 version 2.1.8-web (current series):
+- improvement: the welcome message and server announcements are now translated into your language on every browser - they use the same translation service as the chat and the forum when the built-in browser translator is not available; turning off chat translation also keeps them in their original language
 - improvement: the local-backup banner now also appears on a brand-new browser, so you can create your first backup right away
 - improvement: the banner offering to restore your settings now explains itself - the browser can keep a local backup of your settings in a folder of your choice, with clear Create / Restore / Later buttons; creating a backup never overwrites an existing backup file
 - improvement: the web client now follows the PokerTH 2.1.8 release running on pokerth.net
