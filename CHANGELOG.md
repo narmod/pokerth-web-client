@@ -34,6 +34,16 @@ highlights below.
   upstream `f9a8906` (QML `SeatStyle.defaultVariant`): the coarse-pointer
   `classic` default is gone; an explicit `pth_bet_style` is untouched.
 
+- **Restore banner reworked into a backup banner** (`web.9`). The startup
+  banner shown when settings look empty no longer assumes a backup exists:
+  it now explains that the browser can keep a local backup of the settings,
+  with symmetric "Create a backup" / "Restore a backup" actions and a
+  "Later" dismiss. Creating never clobbers: if the picked folder already
+  holds `pokerth-web-backup.json` the write is refused and the player is
+  pointed to Restore; Restore falls back to the folder picker after a
+  folder-shaped failure (gone, denied, no file). Seven new i18n keys in all
+  45 languages.
+
 ### Added
 - **Ivoire & Chêne table style** (`web.4`). Port of upstream `eee31d4`
   (`data/gfx/qml/table/ivoire-chene/`): fullscreen wallpaper, cream action

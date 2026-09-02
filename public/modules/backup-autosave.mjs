@@ -314,6 +314,38 @@ async function pickForRestore() {
   return _restoreFromFolder();
 }
 
+// Banner "Create a backup" path: pick a folder and write the first backup
+// right away — but never overwrite an existing backup file with the blank
+// state the banner was shown for. Deliberately SEPARATE from pickFolder()
+// (advanced-options button), which writes unconditionally.
+async function _pickForCreate() {
+  if (!_supported()) return 'bad';
+  let h;
+  try {
+    h = await window.showDirectoryPicker({ id: 'pokerth-backup', mode: 'readwrite' });
+  } catch (e) {
+    if (e && e.name === 'AbortError') return 'abort';
+    return 'bad';
+  }
+  if (!h) return 'abort';
+  if (!(await _ensurePerm(h, true))) return 'noperm';
+  // A backup already there: refuse — the player probably wants Restore.
+  let exists = true;
+  try { await h.getFileHandle(FILE_NAME); } catch (_e) { exists = false; }
+  if (exists) return 'exists';
+  _handle = h;
+  _handleLoaded = true;
+  _state.dirName = h.name || null;
+  _state.err = null;
+  try { await _saveHandle(h); } catch (_e) { /* the handle stays valid for this session */ }
+  // The player chose to start fresh: release the write hold, then write the
+  // first backup immediately so the file appears.
+  _hold = false;
+  _ui();
+  save('pick');
+  return 'ok';
+}
+
 // Message shown for each failure code, INSIDE the banner (a toast would be
 // hidden behind it).
 const _WHY = {
@@ -321,6 +353,7 @@ const _WHY = {
   nofile:   ['bakRestoreNoFile', 'No backup file in this folder.'],
   noperm:   ['bakRestoreNoPerm', 'Folder access was not granted — pick the folder again.'],
   empty:    ['bakRestoreEmpty', 'The backup file is empty — nothing to restore.'],
+  exists:   ['bakBannerExists', 'A backup file already exists in this folder — use Restore.'],
   bad:      ['backupImportErr', 'Import failed'],
 };
 
@@ -331,40 +364,67 @@ function _showRestoreBanner() {
     el.id = 'bak-restore-banner';
     el.setAttribute('role', 'alertdialog');
     el.style.cssText = 'position:fixed;left:50%;transform:translateX(-50%);bottom:18px;' +
-      'z-index:99999;background:#1c2733;color:#fff;padding:10px 14px;border-radius:10px;' +
-      'box-shadow:0 4px 18px rgba(0,0,0,.45);display:flex;gap:10px;align-items:center;' +
-      'flex-wrap:wrap;max-width:min(92vw,620px);font-size:14px;line-height:1.35';
+      'z-index:99999;background:#1c2733;color:#fff;padding:12px 14px;border-radius:10px;' +
+      'box-shadow:0 4px 18px rgba(0,0,0,.45);max-width:min(92vw,620px);font-size:14px;line-height:1.35';
 
-    // Text column: the question, then the target path (folder / file) —
-    // without it the player cannot tell what the banner is talking about —
-    // then the status line, empty until something happens.
+    // Header row: icon, text column, dismiss cross.
+    const head = document.createElement('div');
+    head.style.cssText = 'display:flex;gap:10px;align-items:flex-start';
+    const ico = document.createElement('span');
+    ico.setAttribute('aria-hidden', 'true');
+    ico.style.cssText = 'flex:0 0 auto;margin-top:1px;line-height:0';
+    // stroke= takes a literal color: SVG attributes do not resolve CSS var().
+    ico.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#66bb6a" ' +
+      'stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
+      '<path d="M6 4h10l4 4v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z"/>' +
+      '<path d="M14 4v4H9V4"/><path d="M8 20v-6h8v6"/></svg>';
+
+    // Text column: title, explanation, then the target path (folder / file) —
+    // without it the player cannot tell what folder the banner is talking
+    // about — then the status line, empty until something happens.
     const col = document.createElement('div');
     col.style.cssText = 'flex:1 1 240px;min-width:0';
     const txt = document.createElement('div');
-    txt.textContent = _t('bakRestoreQ', 'Your settings look empty. Restore them from your backup folder?');
+    txt.style.cssText = 'font-weight:600';
+    txt.textContent = _t('bakBannerTitle', 'Local backup of your settings');
+    const body = document.createElement('div');
+    body.style.cssText = 'color:#cfe0ef;font-size:13px;margin-top:2px';
+    body.textContent = _t('bakBannerBody', 'This browser can save your settings to a folder of your choice, or restore them from an existing backup.');
     const sub = document.createElement('div');
     sub.style.cssText = 'color:#9fb0c0;font-size:12px;margin-top:2px;word-break:break-all';
     sub.textContent = (_state.dirName ? _state.dirName + ' / ' : '') + FILE_NAME;
     const msg = document.createElement('div');
     msg.style.cssText = 'font-size:12px;margin-top:4px;display:none';
-    col.appendChild(txt); col.appendChild(sub); col.appendChild(msg);
+    col.appendChild(txt); col.appendChild(body); col.appendChild(sub); col.appendChild(msg);
 
-    const ok = document.createElement('button');
-    ok.type = 'button';
-    ok.textContent = _t('bakRestoreBtn', 'Restore');
-    ok.style.cssText = 'background:#2e7d32;color:#fff;border:0;border-radius:8px;' +
-      'padding:6px 12px;font-size:14px;cursor:pointer;white-space:nowrap';
-    const pick = document.createElement('button');
-    pick.type = 'button';
-    pick.textContent = _t('advPdbAutoPick', 'Choose folder…');
-    pick.style.cssText = 'background:transparent;color:#cfe0ef;border:1px solid #3d5061;' +
-      'border-radius:8px;padding:6px 12px;font-size:14px;cursor:pointer;white-space:nowrap';
     const no = document.createElement('button');
     no.type = 'button';
     no.setAttribute('aria-label', 'Dismiss');
     no.textContent = '\u2715';
     no.style.cssText = 'background:transparent;color:#9fb0c0;border:0;font-size:15px;' +
-      'cursor:pointer;padding:4px 6px';
+      'cursor:pointer;padding:4px 6px;flex:0 0 auto';
+    head.appendChild(ico); head.appendChild(col); head.appendChild(no);
+
+    // Action row: create (filled), restore (outline), later (text).
+    const row = document.createElement('div');
+    row.style.cssText = 'display:flex;gap:10px;align-items:center;flex-wrap:wrap;' +
+      'margin-top:10px;padding-left:28px';
+    const bCreate = document.createElement('button');
+    bCreate.type = 'button';
+    bCreate.textContent = _t('bakBannerCreate', 'Create a backup');
+    bCreate.style.cssText = 'background:#2e7d32;color:#fff;border:0;border-radius:8px;' +
+      'padding:6px 12px;font-size:14px;cursor:pointer;white-space:nowrap';
+    const bRestore = document.createElement('button');
+    bRestore.type = 'button';
+    bRestore.textContent = _t('bakBannerRestore', 'Restore a backup');
+    bRestore.style.cssText = 'background:transparent;color:#cfe0ef;border:1px solid #3d5061;' +
+      'border-radius:8px;padding:6px 12px;font-size:14px;cursor:pointer;white-space:nowrap';
+    const bLater = document.createElement('button');
+    bLater.type = 'button';
+    bLater.textContent = _t('bakBannerLater', 'Later');
+    bLater.style.cssText = 'background:transparent;color:#9fb0c0;border:0;' +
+      'padding:6px 8px;font-size:14px;cursor:pointer;white-space:nowrap';
+    row.appendChild(bCreate); row.appendChild(bRestore); row.appendChild(bLater);
 
     function setMsg(text, isErr) {
       msg.textContent = text || '';
@@ -376,35 +436,51 @@ function _showRestoreBanner() {
     }
 
     let busy = false;
-    function run(fn) {
+    function run(fn, busyText, onOk) {
       if (busy) return;
-      busy = true; ok.disabled = true; pick.disabled = true;
-      setMsg(_t('bakRestoreBusy', 'Restoring…'), false);
+      busy = true; bCreate.disabled = true; bRestore.disabled = true;
+      setMsg(busyText || '', false);
       // fn() is called in the click's own tick: showDirectoryPicker() and
       // requestPermission() require a fresh user activation.
       let p;
       try { p = fn(); } catch (e) { p = Promise.reject(e); }
       Promise.resolve(p).then((why) => {
-        if (why === 'ok') { setMsg(_t('backupImported', 'Backup imported'), false); return; }
-        busy = false; ok.disabled = false; pick.disabled = false;
+        if (why === 'ok') { onOk(); return; }
+        busy = false; bCreate.disabled = false; bRestore.disabled = false;
         setSub();
         if (why === 'abort') { setMsg('', false); return; }
         const k = _WHY[why] || _WHY.bad;
         setMsg(_t(k[0], k[1]), true);
       }).catch((e) => {
-        busy = false; ok.disabled = false; pick.disabled = false;
+        busy = false; bCreate.disabled = false; bRestore.disabled = false;
         const d = (e && (e.name || e.message)) ? String(e.name || e.message) : '';
         setMsg(_t('backupImportErr', 'Import failed') + (d ? ' — ' + d : ''), true);
       });
     }
 
-    ok.addEventListener('click', () => run(_restoreFromFolder));
-    pick.addEventListener('click', () => run(pickForRestore));
+    // Restore tries the remembered folder first; after a folder-shaped
+    // failure (gone, denied, no file) the next click opens the picker.
+    let pickNext = false;
+    async function doRestore() {
+      const why = await (pickNext ? pickForRestore() : _restoreFromFolder());
+      if (why === 'nofolder' || why === 'noperm' || why === 'nofile') pickNext = true;
+      return why;
+    }
+
+    bCreate.addEventListener('click', () => run(_pickForCreate, '', () => {
+      _toast(_t('bakBannerCreated', 'Backup created.'));
+      try { el.remove(); } catch (_e) {}
+    }));
+    bRestore.addEventListener('click', () => run(doRestore, _t('bakRestoreBusy', 'Restoring…'), () => {
+      setMsg(_t('backupImported', 'Backup imported'), false);
+    }));
     // Explicit dismissal: the player starts fresh, automatic writing may
     // resume.
-    no.addEventListener('click', () => { _hold = false; try { el.remove(); } catch (_e) {} });
+    function dismiss() { _hold = false; try { el.remove(); } catch (_e) {} }
+    bLater.addEventListener('click', dismiss);
+    no.addEventListener('click', dismiss);
 
-    el.appendChild(col); el.appendChild(ok); el.appendChild(pick); el.appendChild(no);
+    el.appendChild(head); el.appendChild(row);
     document.body.appendChild(el);
   } catch (_e) {}
 }
