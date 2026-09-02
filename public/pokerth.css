@@ -7782,6 +7782,16 @@ html[data-seat-struct="qml"] .seat.betside-l .seat-pucks { right: calc(100% + va
    verticale que la mise (centre puck 32 ≈ centre mise 20 posée à 7px). */
 html[data-seat-struct="qml"] .seat.betside-t .seat-pucks { bottom: calc(100% + 1px); right: 6px; left: auto; }
 html[data-seat-struct="qml"] .seat.betside-b .seat-pucks { top: calc(100% + 1px); right: 6px; left: auto; }
+/* betSplit (QML 2.1.8, upstream 9f402258) : mise à DROITE de la boîte (+8),
+   pucks à GAUCHE (−8), centrés verticalement — box haut-centre en paysage et
+   siège bas-centre du spectateur (classe betside-split posée par le JS). */
+html[data-seat-struct="qml"] .seat.betside-split .seat-bet { left: calc(100% + var(--seat-bet-gap-r, 8px)); right: auto; top: 50%; bottom: auto; transform: translateY(-50%); }
+html[data-seat-struct="qml"] .seat.betside-split .seat-pucks { right: calc(100% + var(--seat-bet-gap-l, 8px)); left: auto; top: 50%; bottom: auto; transform: translateY(-50%); }
+/* Sitz-Stil inset (QML : betInset → puck vertical mittig) : la mise vit dans
+   le socle, le slot latéral est libre → le puck se centre verticalement à
+   côté de la boîte. Classic garde le slot bas (dégagement sous la mise). */
+html[data-bet="inset"][data-seat-struct="qml"] .seat.betside-r .seat-pucks,
+html[data-bet="inset"][data-seat-struct="qml"] .seat.betside-l .seat-pucks { top: var(--seat-pucks-top, 50%); }
 html[data-seat-struct="qml"] .seat-timer-badge { display: none; }
 /* Countdown RECTANGULAIRE (style pokerth) : cadre depletif autour de la boite,
    remplace l'anneau rond .seat-timer. Couleurs officielles 2.1.1. */

@@ -69,6 +69,16 @@ highlights below.
   slots and nudges. Pure functions take an `opts` override (mobile /
   strip / outset) so `test-layout` pins the legacy classic-desktop
   expectations verbatim and adds 2.1.8 assertions.
+- **Puck/bet placement parity with QML 2.1.8** (`web.13`). Three gaps vs
+  the current `GamePlayerBox`: (1) landscape betSide now follows the QML
+  column fractions (x < 0.45 → left, > 0.55 → right) instead of the old
+  right-everywhere bias; (2) `betSplit` (upstream `9f402258`) is
+  implemented — the top-centre box in landscape and the spectator's
+  bottom-centre seat show the bet to the RIGHT of the box and the puck to
+  the LEFT, both vertically centred (`betside-split` class + CSS);
+  (3) in the inset seat style the side puck is vertically centred beside
+  the box (the socle frees the lower slot), classic keeps the low slot.
+  Self puck and the 32×32 size were already exact.
 
 ### Added
 - **Ivoire & Chêne table style** (`web.4`). Port of upstream `eee31d4`

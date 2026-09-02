@@ -579,6 +579,7 @@ function renderSeatsImmediate() {
       // choisi) : colonnes collees aux bords d'ecran -> mises et pucks
       // vers le feutre, jamais hors ecran (demande narmod, parite QML
       // betSide).
+      var _fx = px.left / Math.max(zRect.width, 1);
       if (_forceSeatPortrait) {
         // Parité QML exacte (GamePage Repeater) : en portrait SEUL X compte —
         // colonne gauche (x < 0.45) → mise/puck à DROITE (vers le feutre),
@@ -586,11 +587,23 @@ function renderSeatsImmediate() {
         // (L'ancien choix par angle envoyait la mise AU-DESSUS pour les
         // sièges du bas → SB/BB entraient en collision avec le montant
         // et la boîte voisine.)
-        var _fx = px.left / Math.max(zRect.width, 1);
         _bs = _fx < 0.45 ? 'r' : (_fx > 0.55 ? 'l' : 'b');
       } else {
-        _bs = (_bdx > -zRect.width * 0.06) ? 'r' : 'l';
+        // Parité QML 2.1.8 (branche wide) : colonne gauche (x < 0.45) →
+        // mise/puck à GAUCHE (extérieur), colonne droite (x > 0.55) → à
+        // DROITE. L'ancien biais « droite partout » (seuil 6 % du centre)
+        // suivait une capture antérieure à betSplit.
+        _bs = _fx < 0.45 ? 'l' : (_fx > 0.55 ? 'r' : 'b');
       }
+      // betSplit (QML 2.1.8, upstream 9f402258) : la box HAUT-CENTRE en
+      // paysage (un badge dessous heurterait le pot) et le siège BAS-CENTRE
+      // du spectateur (aucune place dessous ; mise centrée + puck à droite
+      // se chevauchent dans la largeur de box) éclatent le groupe — mise à
+      // DROITE de la box, puck à GAUCHE, tous deux centrés verticalement.
+      // Le siège spectateur du bas est pixPos[0] (seat0/BC du placement
+      // officiel), dans les deux orientations.
+      var _isBcSeat = (myIdx < 0 && i === 0 && _applyOfficial);
+      if (_isBcSeat || (!_forceSeatPortrait && _fx >= 0.45 && _fx <= 0.55)) _bs = 'split';
       _betSideCls = 'betside-' + _bs;
     }
     const cls = ['seat', isMe?'me':'', isDealer?'dealer':'', isActive?'active':'',
