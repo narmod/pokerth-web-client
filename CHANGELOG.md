@@ -43,6 +43,10 @@ highlights below.
   pointed to Restore; Restore falls back to the folder picker after a
   folder-shaped failure (gone, denied, no file). Seven new i18n keys in all
   45 languages.
+- **Backup banner also shows on a brand-new browser** (`web.10`). It no
+  longer requires a remembered folder: with none, Restore goes straight to
+  the folder picker, and picking a folder from the advanced options
+  releases the write hold (it counts as the pending banner decision).
 
 ### Added
 - **Ivoire & Chêne table style** (`web.4`). Port of upstream `eee31d4`

@@ -134,10 +134,11 @@ check('state: last write timestamp set', mod._state.lastAt > 0);
 check('state: no error recorded', mod._state.err === null);
 
 // ── Write hold ─────────────────────────────────────────────────────────────
-// At boot storage is blank, but no folder is remembered (no IDB in the tests):
-// the hold must be released, otherwise no backup would ever be written again
-// for a player starting fresh.
-check('hold: released when no folder is remembered', mod._holdState() === false);
+// At boot storage was blank and no folder was remembered; since 2.1.8-web.10
+// the banner is offered anyway (Create / Restore / Later), so the hold stays
+// engaged until the player decides. Picking a folder counts as that decision:
+// pickFolder() above released the hold, so writes are allowed again.
+check('hold: released once a folder was picked', mod._holdState() === false);
 
 // ── Restoring from the banner ──────────────────────────────────────────────
 // Every failure must surface an explicit CODE: the banner uses it to tell the

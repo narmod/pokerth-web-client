@@ -1,4 +1,5 @@
 2026-09-01 version 2.1.8-web (current series):
+- improvement: the local-backup banner now also appears on a brand-new browser, so you can create your first backup right away
 - improvement: the banner offering to restore your settings now explains itself - the browser can keep a local backup of your settings in a folder of your choice, with clear Create / Restore / Later buttons; creating a backup never overwrites an existing backup file
 - improvement: the web client now follows the PokerTH 2.1.8 release running on pokerth.net
 - improvement: the client now introduces itself to the server as a web client for real - the switch shipped earlier but stayed off until the server could recognise it; web players are now counted as their own client type in server statistics, the Live/Spectator tool and the game-server dashboard

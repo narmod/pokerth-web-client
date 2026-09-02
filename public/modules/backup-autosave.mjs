@@ -225,6 +225,10 @@ async function pickFolder() {
     _state.err = null;
     try { await _saveHandle(h); } catch (_e) { /* the handle stays valid for this session */ }
     _ui();
+    // Picking a folder IS the pending banner decision: release the write
+    // hold, otherwise the first write below would be refused on a
+    // brand-new browser while the banner is still up.
+    _hold = false;
     // Immediate first write: the player sees the file appear.
     save('pick');
     return true;
@@ -460,7 +464,7 @@ function _showRestoreBanner() {
 
     // Restore tries the remembered folder first; after a folder-shaped
     // failure (gone, denied, no file) the next click opens the picker.
-    let pickNext = false;
+    let pickNext = !_state.dirName;   // no folder remembered: picker first
     async function doRestore() {
       const why = await (pickNext ? pickForRestore() : _restoreFromFolder());
       if (why === 'nofolder' || why === 'noperm' || why === 'nofile') pickNext = true;
@@ -490,9 +494,12 @@ function _holdState() { return _hold; }
 
 function _maybeOfferRestore() {
   if (!_supported() || !_enabled() || !_FRESH_AT_BOOT) { _hold = false; return; }
-  _getHandle()
-    .then((h) => { if (h) _showRestoreBanner(); else _hold = false; })
-    .catch(() => { _hold = false; });
+  // Since 2.1.8-web.10 the banner also shows when NO folder is remembered
+  // (brand-new browser): the player learns a local backup exists. Create
+  // picks a folder; Restore goes straight to the picker (pickNext starts
+  // true without a folder). _getHandle() already ran at _ready(), so
+  // _state.dirName is populated before the banner renders.
+  _showRestoreBanner();
 }
 
 // ── UI (advanced-options panel) ────────────────────────────────────────────
