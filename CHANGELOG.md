@@ -10,6 +10,9 @@ this file captures what matters to players and operators.
 
 ## 2.1.8-web line (2026)
 
+2026-09-03 version 2.1.8-web.22:
+- bugfix: non-PokerTH seat packs now render bets the way they did before the "Bet display" option existed - chip next to the player box ('classic') instead of the inset strip; web.21 had frozen them on 'inset'
+
 2026-09-03 version 2.1.8-web.21:
 - improvement: the "Bet display" option (inset strip vs chip next to the box) now applies only to the built-in "PokerTH" seat style - other seat packs always keep their original presentation; the option UI moved from the top of the Seats tab to a nested block under the PokerTH entry, shown only while that style is selected, and switching seat packs re-resolves the bet display live
 

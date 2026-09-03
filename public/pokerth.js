@@ -2044,13 +2044,14 @@ window._applySeatOrient = _applySeatOrient;
 // Ne s'applique qu'aux packs à politique betside QML (trait betOut) — les
 // packs qui posent déjà la mise dans le pied ne sont pas concernés.
 // Depuis 2.1.8-web.21 (demande narmod) l'option est limitée au pack de
-// sièges « PokerTH » : les autres packs gardent la présentation d'origine
-// ('inset'), la préférence pth_bet_style est conservée mais ignorée.
+// sièges « PokerTH » ; depuis web.22 les autres packs reviennent à la
+// présentation d'AVANT l'option (jeton betside À CÔTÉ de la boîte,
+// 'classic'), la préférence pth_bet_style est conservée mais ignorée.
 function _betStyleVariant() {
   var sid = null;
   try { sid = localStorage.getItem('pth_seat'); } catch (e) {}
   if (sid === null || sid === undefined || sid === '') sid = 'pokerth'; // défaut de l'axe
-  if (sid !== 'pokerth') return 'inset';
+  if (sid !== 'pokerth') return 'classic';
   var v = '';
   try { v = localStorage.getItem('pth_bet_style') || ''; } catch (e) {}
   if (v === 'inset' || v === 'classic') return v;
@@ -11102,7 +11103,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.8-web.21'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.8-web.22'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

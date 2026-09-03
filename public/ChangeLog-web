@@ -1,4 +1,7 @@
 2026-09-03 version 2.1.8-web (current series):
+- bugfix: with a seat style other than PokerTH, bets are shown next to the player box again, as they were before the bet display option was introduced
+
+2026-09-03 version 2.1.8-web:
 - improvement: the bet display choice (inside or next to the player box) now belongs to the PokerTH seat style only - the setting appears under its entry in the Seats tab, and other seat styles keep their own look
 
 2026-09-03 version 2.1.8-web:
