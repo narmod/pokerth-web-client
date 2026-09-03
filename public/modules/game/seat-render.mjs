@@ -88,6 +88,26 @@ function _plateSocleH(plateEl, plateRect) {
   var eff = (oh > 0 && plateRect && plateRect.height > 0) ? plateRect.height / oh : 1;
   return lh * eff;
 }
+// ── Surbrillance de tour (playerBox.scale QML) : scale(1.04) adverses /
+// 1.03 self posé sur .seat-plate au tour. En QML ce scale est PUREMENT
+// visuel — la géométrie (slots, communityCenterY, bisection) l'ignore. Nos
+// mesures getBoundingClientRect le voyaient : la plate du siège au tour
+// « pesait » +4 % → témoin _seatDimsMeasured au-delà du seuil de 2 px
+// (re-render + bisection), bornes/corridor du barycentre qui respirent à
+// chaque déplacement du tour. On lit le transform PROPRE de la plate
+// (getComputedStyle : matrice de l'élément seul, pas des ancêtres — le
+// translate+boxScale du .seat n'y entre pas) et on divise. transform-origin
+// center → le CENTRE du rect est invariant, seules les demi-dimensions se
+// normalisent. Marche aussi À TOUT INSTANT de la transition 180 ms.
+function _plateTurnK(plateEl) {
+  try {
+    var tr = getComputedStyle(plateEl).transform;
+    if (!tr || tr === 'none') return 1;
+    var m = tr.match(/matrix\(([-\d.e]+)/);
+    var k = m ? parseFloat(m[1]) : 1;
+    return (k > 0.05 && k < 20) ? k : 1;
+  } catch (e) { return 1; }
+}
 
 function renderSeatsImmediate() {
   if (window._seatEditMode) { if (document.documentElement.getAttribute('data-seat-layout') === 'custom') return; window._seatEditMode = false; }   // gel pendant l'edition (custom seul) ; auto-degele si le mode a change
@@ -1052,11 +1072,17 @@ function renderSeatsImmediate() {
         var _zr3 = zone.getBoundingClientRect();
         var _selfPl3 = el.querySelector('.seat.me .seat-plate');
         var _selfR3 = _selfPl3 ? _selfPl3.getBoundingClientRect() : null;
-        var _selfTop3 = _selfR3 ? (_selfR3.top - _zr3.top) : (_zH3 - 100);
+        var _selfTop3 = _selfR3 ? (_selfR3.top - _zr3.top) : (_zH3 - 100); // réaffiné après _selfHn3 ci-dessous
         // Socle inset : centre mesuré SANS le socle (bet-invariant, cf.
         // _plateSocleH) — sinon le barycentre descendait à chaque mise self.
-        var _selfSo3 = _selfR3 ? _plateSocleH(_selfPl3, _selfR3) : 0;
-        var _sumY3 = _selfR3 ? (_selfR3.top + (_selfR3.height - _selfSo3) / 2 - _zr3.top) : (_zH3 - 100);
+        // Scale de tour divisé (cf. _plateTurnK, centre invariant) : le haut
+        // de la self ne remonte plus de ~1.5 px quand c'est mon tour.
+        var _selfK3 = _selfR3 ? _plateTurnK(_selfPl3) : 1;
+        var _selfHn3 = _selfR3 ? _selfR3.height / _selfK3 : 0;
+        var _selfCy3 = _selfR3 ? (_selfR3.top + _selfR3.height / 2 - _zr3.top) : (_zH3 - 100);
+        var _selfSo3 = _selfR3 ? _plateSocleH(_selfPl3, { height: _selfHn3 }) : 0;
+        var _sumY3 = _selfR3 ? (_selfCy3 - _selfSo3 / 2) : (_zH3 - 100);
+        if (_selfR3) _selfTop3 = _selfCy3 - _selfHn3 / 2;
         var _n3 = 1, _minB3 = Infinity;
         var _botTop3 = -Infinity, _botC3 = -Infinity; // siege du BAS de l'anneau (spectateur)
         var _rects3 = []; // rects des plates (px zone) pour le cap horizontal community
@@ -1075,8 +1101,10 @@ function renderSeatsImmediate() {
         var _liveH3 = [], _liveW3 = [];
         el.querySelectorAll('.seat:not(.me):not(.seat-ghost) .seat-plate').forEach(function (plL3) {
           var rL3 = plL3.getBoundingClientRect();
-          var _hL3 = rL3.height - _plateSocleH(plL3, rL3); // socle exclu (bet-invariant)
-          if (_hL3 > 4) { _liveH3.push(_hL3); _liveW3.push(rL3.width); }
+          var _kL3 = _plateTurnK(plL3);                    // turn scale divisé
+          var _hLn3 = rL3.height / _kL3;
+          var _hL3 = _hLn3 - _plateSocleH(plL3, { height: _hLn3 }); // socle exclu
+          if (_hL3 > 4) { _liveH3.push(_hL3); _liveW3.push(rL3.width / _kL3); }
         });
         var _med3 = function (a3) {
           if (!a3.length) return 0;
@@ -1090,11 +1118,15 @@ function renderSeatsImmediate() {
           var _gh3 = !!(_st3 && _st3.classList.contains('seat-ghost'));
           // Socle inset exclu de la hauteur ET du centre (le socle s'ouvre
           // vers le BAS : haut inchangé, centre remonté d'une demi-contribution)
-          // → barycentre/bornes identiques avec ou sans mises (parité QML).
-          var _so3 = _plateSocleH(pl3, rr3);
-          var _h3v = rr3.height - _so3, _w3v = rr3.width;
+          // et scale de tour divisé (centre invariant, demi-dimensions
+          // normalisées) → barycentre/bornes/corridor identiques avec ou
+          // sans mises et quel que soit le siège au tour (parité QML).
+          var _k3 = _plateTurnK(pl3);
+          var _hn3 = rr3.height / _k3;
+          var _so3 = _plateSocleH(pl3, { height: _hn3 });
+          var _h3v = _hn3 - _so3, _w3v = rr3.width / _k3;
           if (_gh3 && _refH3 > 4) { _h3v = _refH3; _w3v = _refW3; }
-          var _c3 = rr3.top + (rr3.height - _so3) / 2 - _zr3.top; // centre = slot (translate -50%)
+          var _c3 = rr3.top + rr3.height / 2 - _so3 / 2 - _zr3.top; // centre = slot (translate -50%)
           var _cx3 = rr3.left + rr3.width / 2 - _zr3.left;
           var _t3 = _c3 - _h3v / 2, _b3 = _c3 + _h3v / 2;
           if (_b3 < _minB3) _minB3 = _b3;                       // box la plus haute
@@ -1305,11 +1337,18 @@ function renderSeatsImmediate() {
             || kc.indexOf('seat-foot') !== -1 || kc.indexOf('seat-bet') !== -1) continue;
         var kr = kid.getBoundingClientRect();
         if (!kr.width && !kr.height) continue;
-        // Socle inset : ne compte pas dans les dimensions (voir _plateSocleH)
-        // — sinon le témoin gonflait de 18 px dès qu'il misait → re-render
-        // + bisection + re-scale de la table à chaque street.
-        var _kb = kr.bottom;
-        if (kc.indexOf('seat-plate') !== -1) _kb -= _plateSocleH(kid, kr);
+        // Plate : dimensions normalisées — socle inset exclu (voir
+        // _plateSocleH : le témoin gonflait de 18 px dès qu'il misait) et
+        // scale de tour divisé (voir _plateTurnK : +4 % quand le témoin est
+        // au tour, re-render + bisection à chaque déplacement du tour).
+        var _kl = kr.left, _kr2 = kr.right, _kt = kr.top, _kb = kr.bottom;
+        if (kc.indexOf('seat-plate') !== -1) {
+          var _tk = _plateTurnK(kid);
+          var _kcx = (kr.left + kr.right) / 2, _kcy = (kr.top + kr.bottom) / 2;
+          var _khw = kr.width / (2 * _tk), _khh = kr.height / (2 * _tk);
+          _kl = _kcx - _khw; _kr2 = _kcx + _khw; _kt = _kcy - _khh;
+          _kb = _kcy + _khh - _plateSocleH(kid, { height: kr.height / _tk });
+        }
         // .seat-info (nom + stack) : largeur VARIABLE — le montant change à
         // chaque action → la mesure jitterait → re-render + nouveau boxScale
         // = « flicker » de re-scale de la table (sp0ck 2026-07-17). Comme en
@@ -1318,10 +1357,10 @@ function renderSeatsImmediate() {
         var _vOnly = kc.indexOf('seat-info') !== -1;
         if (!_vOnly) {
           found = true;
-          if (kr.left < minX) minX = kr.left;
-          if (kr.right > maxX) maxX = kr.right;
+          if (_kl < minX) minX = _kl;
+          if (_kr2 > maxX) maxX = _kr2;
         }
-        if (kr.top < minY) minY = kr.top;
+        if (_kt < minY) minY = _kt;
         if (_kb > maxY) maxY = _kb;
       }
       if (!found) return null;

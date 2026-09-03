@@ -7400,6 +7400,24 @@ html[data-seat-struct="qml"] .seat-plate {
   opacity: 0.9;
   transition: transform 0.18s ease-out;
 }
+/* §4.2 QML (2.1.3+) : largeur de boîte adverse FIXE (opp ≈121), INDÉPENDANTE
+   du contenu — « le texte n'élargit jamais le layout ». Avant : grille auto →
+   « $6 000 » vs « $29 575 » (ou un nom long) élargissait la plate → le
+   corridor libre entre plates latérales variait → --comm-scale, la rangée
+   community ET la barre d'action (264×cs) « respiraient » avec les tapis
+   (rapport narmod 03/09, choix B = parité complète plutôt que normalisation
+   de mesure). border-box : 121 = boîte EXTÉRIEURE comme en QML ; le seat
+   inline porte translate+boxScale par-dessus. Écarts acceptés : spectateur
+   ≈115 en QML → 121 conservé partout ; self en largeur de contenu (valeur
+   QML non documentée) ; packs image (data-seat-img) exclus — cadre 9-slice
+   à padding libre, largeur pilotée par le pack. */
+html[data-seat-struct="qml"]:not([data-seat-img]) .seat:not(.me) .seat-plate {
+  width: 121px; box-sizing: border-box;
+}
+/* Le texte se range DANS la largeur imposée (élision, jamais d'élargissement,
+   parité infoBar QML) : le nom cède la place, le tapis ne se coupe jamais. */
+html[data-seat-struct="qml"] .seat:not(.me) .seat-name { min-width: 0; }
+html[data-seat-struct="qml"] .seat:not(.me) .seat-money { flex: 0 0 auto; white-space: nowrap; }
 /* PlayerBoxAccent : un tablestyle.xml peut TEINTER la boîte joueur (p. ex. le
    bleu des consoles du style Star Trek). Parité GamePlayerBox : l'accent
    TEINTE le dégradé et la bordure, il ne les remplace pas — la boîte reste

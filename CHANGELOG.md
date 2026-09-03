@@ -10,6 +10,10 @@ this file captures what matters to players and operators.
 
 ## 2.1.8-web line (2026)
 
+2026-09-03 version 2.1.8-web.19:
+- improvement: opponent seat plates now have the fixed QML box width (121 layout px, border-box, GamePage tableZone 2.1.3 opp base) instead of sizing to their content - stack amounts and long names no longer widen boxes, so the free corridor between side plates, --comm-scale, the community row and the action-bar width (264*cs) stay constant as chip counts change; text elides inside the imposed width (name yields, stack never clips); image seat packs and the self box keep content sizing
+- bugfix: the turn-highlight scale (playerBox.scale QML: 1.04 opponents, 1.03 self) is now divided out of all rect-based geometry measurements (new `_plateTurnK`, transform-origin center so rect centres are invariant) - the witness seat no longer crosses the 2 px `_seatDimsMeasured` threshold when it is at turn (which re-triggered layout bisection), and barycentre bounds/corridor no longer breathe as the turn moves around the table; works at any instant of the 180 ms transition
+
 2026-09-03 version 2.1.8-web.18:
 - bugfix: table geometry is now invariant to bet display - with the "in the box" bet style, the opened bet strip made each seat plate 18 px taller, which shifted the community-row barycentre (community cards nudged and rescaled), re-centred the fullscreen table background, and could bump the reference seat measurement into a re-layout; the strip's height (constant 18 px throughout its unfold, per the socleOpen keyframes) is now excluded from all geometry measurements (`_plateSocleH` in seat-render.mjs), matching the QML client where the strip space is permanently reserved in the slot heights
 
