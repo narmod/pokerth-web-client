@@ -24,7 +24,7 @@ export const strings = {
   abClTabUpstream: 'Telepíthető kliensek',
   abTabChangelog: 'Változásnapló',
   abClLoading: 'Betöltés…',
-  abClError: 'A változásnapló nem érhető el.',
+  abClNew: 'Újdonságok', abClImprovements: 'Fejlesztések', abClBugfixes: 'Hibajavítások', abClError: 'A változásnapló nem érhető el.',
   rkCalcTitle: 'Rangsorszámítás:',
   rkCalcPoints: 'Helyezési pontok:',
   rkCalcFormula: 'Képlet:',

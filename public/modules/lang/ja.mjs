@@ -23,7 +23,7 @@ export const strings = {
   abClTabUpstream: 'インストール版クライアント',
   abTabChangelog: '変更履歴',
   abClLoading: '読み込み中…',
-  abClError: '変更履歴を利用できません。',
+  abClNew: '新機能', abClImprovements: '改善', abClBugfixes: '不具合修正', abClError: '変更履歴を利用できません。',
   rkCalcTitle: 'ランキングの計算:',
   rkCalcPoints: '順位ポイント:',
   rkCalcFormula: '計算式:',

@@ -24,7 +24,7 @@ export const strings = {
   abClTabUpstream: 'Įdiegiami klientai',
   abTabChangelog: 'Pakeitimų žurnalas',
   abClLoading: 'Įkeliama…',
-  abClError: 'Pakeitimų žurnalas nepasiekiamas.',
+  abClNew: 'Nauja', abClImprovements: 'Patobulinimai', abClBugfixes: 'Pataisymai', abClError: 'Pakeitimų žurnalas nepasiekiamas.',
   rkCalcTitle: 'Reitingo skaičiavimas:',
   rkCalcPoints: 'Vietos taškai:',
   rkCalcFormula: 'Formulė:',

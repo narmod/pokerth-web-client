@@ -26,7 +26,7 @@ export const strings = {
   abClTabUpstream: 'Kurulabilir istemciler',
   abTabChangelog: 'Değişiklik günlüğü',
   abClLoading: 'Yükleniyor…',
-  abClError: 'Değişiklik günlüğü kullanılamıyor.',
+  abClNew: 'Yenilikler', abClImprovements: 'İyileştirmeler', abClBugfixes: 'Hata düzeltmeleri', abClError: 'Değişiklik günlüğü kullanılamıyor.',
   rkCalcTitle: 'Sıralama hesabı:',
   rkCalcPoints: 'Sıralama puanları:',
   rkCalcFormula: 'Formül:',

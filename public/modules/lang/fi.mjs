@@ -23,7 +23,7 @@ export const strings = {
   abClTabUpstream: 'Asennettavat asiakkaat',
   abTabChangelog: 'Muutosloki',
   abClLoading: 'Ladataan…',
-  abClError: 'Muutosloki ei ole saatavilla.',
+  abClNew: 'Uutta', abClImprovements: 'Parannukset', abClBugfixes: 'Korjaukset', abClError: 'Muutosloki ei ole saatavilla.',
   rkCalcTitle: 'Sijoituslaskenta:',
   rkCalcPoints: 'Sijoituspisteet:',
   rkCalcFormula: 'Kaava:',

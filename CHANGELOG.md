@@ -38,6 +38,11 @@ highlights below.
   still encoded Qt-Widget `0x01`; it now uses `0x03` like `buildInit`, so
   probes and players tell the server the same story (the 2026-08-12
   "one truth" rule). `test-build-id` updated accordingly.
+- **Changelog grouped by entry type in About** (`web.16`). Each version
+  block of the web changelog now sorts its `new:` / `improvement:` /
+  `bugfix:` lines under translated New / Improvements / Bug fixes
+  subheadings (three new i18n keys in all 45 languages); unprefixed lines
+  and the upstream ChangeLog render unchanged.
 - **Hand name gated behind the river on voluntary shows** (`web.15`),
   following upstream `1bf7a73` (QML showdown/log fine-tuning): when a player
   shows their cards after a pre-river fold-out, the log line now carries the

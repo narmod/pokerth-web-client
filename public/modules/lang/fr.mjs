@@ -30,7 +30,7 @@ export const strings = {
   abClTabUpstream: 'Clients installables',
   abTabChangelog: 'Journal des modifications',
   abClLoading: 'Chargement…',
-  abClError: 'Journal des modifications indisponible.',
+  abClNew: 'Nouveautés', abClImprovements: 'Améliorations', abClBugfixes: 'Corrections', abClError: 'Journal des modifications indisponible.',
   rkCalcTitle: 'Calcul du classement :',
   rkCalcPoints: 'Points de place :',
   rkCalcFormula: 'Formule :',

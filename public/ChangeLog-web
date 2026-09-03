@@ -1,4 +1,5 @@
 2026-09-01 version 2.1.8-web (current series):
+- improvement: the changelog in About now groups each version's entries under New / Improvements / Bug fixes headings, in your language, so it is much easier to scan
 - bugfix: when a player voluntarily shows their cards after everyone else folded before the river, the log no longer names a hand - only the cards are shown, as in the desktop client
 - improvement: the lobby and game chats now keep the last 400 lines instead of growing forever, so long sessions stay fast, as in the desktop client
 - improvement: your own box now lifts slightly when it is your turn, exactly like the official client; its size ratio next to the opponents follows the 2.1.8 measures, and on phones in portrait the bottom opponent row can no longer touch your box

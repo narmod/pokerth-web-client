@@ -24,7 +24,7 @@ export const strings = {
   abClTabUpstream: 'Клијенти за инсталацију',
   abTabChangelog: 'Списак измена',
   abClLoading: 'Учитавање…',
-  abClError: 'Списак измена није доступан.',
+  abClNew: 'Novo', abClImprovements: 'Poboljšanja', abClBugfixes: 'Ispravke', abClError: 'Списак измена није доступан.',
   rkCalcTitle: 'Израчунавање ранг листе:',
   rkCalcPoints: 'Поени за пласман:',
   rkCalcFormula: 'Формула:',

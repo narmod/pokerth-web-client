@@ -9680,6 +9680,10 @@ html.reduce-fx .seat-action-badge {
 .ab-cl-ver:first-child { margin-top: 0; }
 .ab-cl-line { color: var(--text-hi); }
 .ab-cl-gap { height: 8px; }
+/* Sous-titres de regroupement du changelog (New / Improvements / Bug fixes) */
+.ab-cl-grp { color: var(--text-dim, #9aa3b2); font-weight: 600; font-size: var(--fs-sm); text-transform: uppercase; letter-spacing: .06em; margin: 10px 0 2px; }
+.ab-cl-item { padding-left: 12px; }
+.ab-cl-item::before { content: '\2013\00a0'; color: var(--text-dim, #9aa3b2); margin-left: -12px; }
 .ab-copy { color:var(--text); font-size:var(--fs-base); margin-top:10px; }
 .ab-net { text-align:right; margin-top:16px; }
 .ab-pane a { color:var(--info,#2a6fb0); }

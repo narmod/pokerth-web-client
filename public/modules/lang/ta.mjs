@@ -25,7 +25,7 @@ export const strings = {
   abClTabUpstream: 'நிறுவக்கூடிய கிளையன்கள்',
   abTabChangelog: 'மாற்றப் பதிவு',
   abClLoading: 'ஏற்றப்படுகிறது…',
-  abClError: 'மாற்றப் பதிவு கிடைக்கவில்லை.',
+  abClNew: 'புதியவை', abClImprovements: 'மேம்பாடுகள்', abClBugfixes: 'பிழை திருத்தங்கள்', abClError: 'மாற்றப் பதிவு கிடைக்கவில்லை.',
   rkCalcTitle: 'தரவரிசை கணக்கீடு:',
   rkCalcPoints: 'இட புள்ளிகள்:',
   rkCalcFormula: 'சூத்திரம்:',

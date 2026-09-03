@@ -30,7 +30,7 @@ export const strings = {
   abClTabUpstream: 'Viteja vilivyosakinishwa',
   abTabChangelog: 'Orodha ya mabadiliko',
   abClLoading: 'Inapakia…',
-  abClError: 'Orodha ya mabadiliko haipatikani.',
+  abClNew: 'Mpya', abClImprovements: 'Maboresho', abClBugfixes: 'Marekebisho ya hitilafu', abClError: 'Orodha ya mabadiliko haipatikani.',
   rkCalcTitle: 'Hesabu ya viwango:',
   rkCalcPoints: 'Pointi kwa nafasi:',
   rkCalcFormula: 'Fomula:',

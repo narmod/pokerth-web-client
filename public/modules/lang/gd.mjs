@@ -25,7 +25,7 @@ export const strings = {
   abClTabUpstream: 'Cliaìantan a ghabhas stàlaidh',
   abTabChangelog: 'Loga nan atharrachaidhean',
   abClLoading: '’Ga luchdadh…',
-  abClError: 'Chan eil loga nan atharrachaidhean ri fhaighinn.',
+  abClNew: 'Ùr', abClImprovements: 'Leasachaidhean', abClBugfixes: 'Càradh bhugaichean', abClError: 'Chan eil loga nan atharrachaidhean ri fhaighinn.',
   rkCalcTitle: 'Àireamhachadh an rangachaidh:',
   rkCalcPoints: 'Puingean suímh:',
   rkCalcFormula: 'Foirmle:',

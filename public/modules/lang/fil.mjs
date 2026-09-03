@@ -30,7 +30,7 @@ export const strings = {
   abClTabUpstream: 'Mga nai-install na client',
   abTabChangelog: 'Changelog',
   abClLoading: 'Naglo-load…',
-  abClError: 'Hindi available ang changelog.',
+  abClNew: 'Bago', abClImprovements: 'Mga pagpapahusay', abClBugfixes: 'Mga pag-aayos', abClError: 'Hindi available ang changelog.',
   rkCalcTitle: 'Pagkalkula ng ranking:',
   rkCalcPoints: 'Puntos sa pwesto:',
   rkCalcFormula: 'Formula:',

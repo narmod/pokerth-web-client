@@ -30,7 +30,7 @@ export const strings = {
   abClTabUpstream: 'Klien yang dapat diinstal',
   abTabChangelog: 'Changelog',
   abClLoading: 'Memuat…',
-  abClError: 'Changelog tidak tersedia.',
+  abClNew: 'Baru', abClImprovements: 'Peningkatan', abClBugfixes: 'Perbaikan bug', abClError: 'Changelog tidak tersedia.',
   rkCalcTitle: 'Perhitungan peringkat:',
   rkCalcPoints: 'Poin penempatan:',
   rkCalcFormula: 'Rumus:',

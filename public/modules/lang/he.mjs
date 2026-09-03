@@ -28,7 +28,7 @@ export const strings = {
   abClTabUpstream: 'לקוחות ניתנים להתקנה',
   abTabChangelog: 'יומן שינויים',
   abClLoading: 'טוען…',
-  abClError: 'יומן השינויים אינו זמין.',
+  abClNew: 'חדש', abClImprovements: 'שיפורים', abClBugfixes: 'תיקוני באגים', abClError: 'יומן השינויים אינו זמין.',
   rkCalcTitle: 'חישוב הדירוג:',
   rkCalcPoints: 'נקודות מיקום:',
   rkCalcFormula: 'נוסחה:',

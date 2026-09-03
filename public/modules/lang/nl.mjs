@@ -29,7 +29,7 @@ export const strings = {
   abClTabUpstream: 'Installeerbare clients',
   abTabChangelog: 'Wijzigingslogboek',
   abClLoading: 'Laden…',
-  abClError: 'Het wijzigingslogboek is niet beschikbaar.',
+  abClNew: 'Nieuw', abClImprovements: 'Verbeteringen', abClBugfixes: 'Foutoplossingen', abClError: 'Het wijzigingslogboek is niet beschikbaar.',
   rkCalcTitle: 'Ranglijstberekening:',
   rkCalcPoints: 'Plaatsingspunten:',
   rkCalcFormula: 'Formule:',

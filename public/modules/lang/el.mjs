@@ -24,7 +24,7 @@ export const strings = {
   abClTabUpstream: 'Εγκαταστάσιμοι πελάτες',
   abTabChangelog: 'Ιστορικό αλλαγών',
   abClLoading: 'Φόρτωση…',
-  abClError: 'Το ιστορικό αλλαγών δεν είναι διαθέσιμο.',
+  abClNew: 'Νέα', abClImprovements: 'Βελτιώσεις', abClBugfixes: 'Διορθώσεις', abClError: 'Το ιστορικό αλλαγών δεν είναι διαθέσιμο.',
   rkCalcTitle: 'Υπολογισμός κατάταξης:',
   rkCalcPoints: 'Πόντοι θέσης:',
   rkCalcFormula: 'Τύπος:',

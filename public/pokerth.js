@@ -10802,13 +10802,46 @@ function renderPlayersList() {
   var _abClLoaded = false;
   function _abClRender(txt){
     var esc = function(s){ return String(s).replace(/[&<>]/g, function(c){ return { '&':'&amp;', '<':'&lt;', '>':'&gt;' }[c]; }); };
-    var out = [];
+    // Regroupement par type (demande narmod 03/09/2026) : dans chaque bloc de
+    // version, les lignes « - new: / - improvement: / - bugfix: » (convention
+    // de ChangeLog-web) sont rangées sous des sous-titres traduits. Les lignes
+    // sans préfixe reconnu restent telles quelles, dans l'ordre du fichier —
+    // le ChangeLog upstream (sans préfixes) est donc rendu comme avant.
+    var t2 = function(k, fb){ var v = (typeof window.t === 'function') ? window.t(k) : k; return (v && v !== k) ? v : fb; };
+    var GRP = [
+      { re: /^-\s*new:\s*/i,         key: 'abClNew',          fb: 'New' },
+      { re: /^-\s*improvement:\s*/i, key: 'abClImprovements', fb: 'Improvements' },
+      { re: /^-\s*bugfix:\s*/i,      key: 'abClBugfixes',     fb: 'Bug fixes' }
+    ];
+    var out = [], block = null;
+    var flush = function(){
+      if (!block) return;
+      block.plain.forEach(function(l){ out.push('<div class="ab-cl-line">' + esc(l) + '</div>'); });
+      GRP.forEach(function(g, i){
+        if (!block.groups[i].length) return;
+        out.push('<div class="ab-cl-grp">' + esc(t2(g.key, g.fb)) + '</div>');
+        block.groups[i].forEach(function(item){ out.push('<div class="ab-cl-line ab-cl-item">' + esc(item) + '</div>'); });
+      });
+      block = null;
+    };
     String(txt).split('\n').forEach(function(line){
       // Entête de version (« 2026-08-05 version 2.1.6: » ou « Before… ») en évidence
-      if (/^\d{4}-\d{2}-\d{2}\s+version\s/i.test(line) || /^Before\s+\d{4}-\d{2}-\d{2}/i.test(line)) out.push('<div class="ab-cl-ver">' + esc(line) + '</div>');
-      else if (line.trim() === '') out.push('<div class="ab-cl-gap"></div>');
-      else out.push('<div class="ab-cl-line">' + esc(line) + '</div>');
+      if (/^\d{4}-\d{2}-\d{2}\s+version\s/i.test(line) || /^Before\s+\d{4}-\d{2}-\d{2}/i.test(line)) {
+        flush();
+        out.push('<div class="ab-cl-ver">' + esc(line) + '</div>');
+        block = { plain: [], groups: [[], [], []] };
+        return;
+      }
+      if (line.trim() === '') { flush(); out.push('<div class="ab-cl-gap"></div>'); return; }
+      if (block) {
+        for (var i = 0; i < GRP.length; i++)
+          if (GRP[i].re.test(line)) { block.groups[i].push(line.replace(GRP[i].re, '')); return; }
+        block.plain.push(line);
+        return;
+      }
+      out.push('<div class="ab-cl-line">' + esc(line) + '</div>');
     });
+    flush();
     return out.join('');
   }
   // Sous-onglets du changelog : « Client web » | « Autres clients »
@@ -11062,7 +11095,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.8-web.15'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.8-web.16'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

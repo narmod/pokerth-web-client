@@ -24,7 +24,7 @@ export const strings = {
   abClTabUpstream: 'Инсталируеми клиенти',
   abTabChangelog: 'Списък с промени',
   abClLoading: 'Зареждане…',
-  abClError: 'Списъкът с промени не е наличен.',
+  abClNew: 'Ново', abClImprovements: 'Подобрения', abClBugfixes: 'Поправки', abClError: 'Списъкът с промени не е наличен.',
   rkCalcTitle: 'Изчисляване на класацията:',
   rkCalcPoints: 'Точки за класиране:',
   rkCalcFormula: 'Формула:',

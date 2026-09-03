@@ -24,7 +24,7 @@ export const strings = {
   abClTabUpstream: 'Clienți instalabili',
   abTabChangelog: 'Jurnal de modificări',
   abClLoading: 'Se încarcă…',
-  abClError: 'Jurnalul de modificări nu este disponibil.',
+  abClNew: 'Noutăți', abClImprovements: 'Îmbunătățiri', abClBugfixes: 'Remedieri', abClError: 'Jurnalul de modificări nu este disponibil.',
   rkCalcTitle: 'Calculul clasamentului:',
   rkCalcPoints: 'Puncte pentru plasare:',
   rkCalcFormula: 'Formulă:',

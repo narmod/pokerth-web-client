@@ -28,7 +28,7 @@ export const strings = {
   abClTabUpstream: 'इंस्टॉल किए जाने वाले क्लाइंट',
   abTabChangelog: 'परिवर्तन सूची',
   abClLoading: 'लोड हो रहा है…',
-  abClError: 'परिवर्तन सूची उपलब्ध नहीं है।',
+  abClNew: 'नया', abClImprovements: 'सुधार', abClBugfixes: 'बग फ़िक्स', abClError: 'परिवर्तन सूची उपलब्ध नहीं है।',
   rkCalcTitle: 'रैंकिंग गणना:',
   rkCalcPoints: 'स्थान अंक:',
   rkCalcFormula: 'सूत्र:',

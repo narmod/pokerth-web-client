@@ -27,7 +27,7 @@ export const strings = {
   abClTabUpstream: '설치형 클라이언트',
   abTabChangelog: '변경 사항',
   abClLoading: '불러오는 중…',
-  abClError: '변경 사항을 사용할 수 없습니다.',
+  abClNew: '새 기능', abClImprovements: '개선', abClBugfixes: '버그 수정', abClError: '변경 사항을 사용할 수 없습니다.',
   rkCalcTitle: '랭킹 계산:',
   rkCalcPoints: '순위 포인트:',
   rkCalcFormula: '공식:',

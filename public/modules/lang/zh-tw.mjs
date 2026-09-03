@@ -25,7 +25,7 @@ export const strings = {
   abClTabUpstream: '可安裝客戶端',
   abTabChangelog: '更新日誌',
   abClLoading: '載入中…',
-  abClError: '更新日誌無法使用。',
+  abClNew: '新功能', abClImprovements: '改進', abClBugfixes: '錯誤修復', abClError: '更新日誌無法使用。',
   rkCalcTitle: '排名計算：',
   rkCalcPoints: '名次積分：',
   rkCalcFormula: '公式：',

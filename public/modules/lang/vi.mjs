@@ -24,7 +24,7 @@ export const strings = {
   abClTabUpstream: 'Ứng dụng cài đặt được',
   abTabChangelog: 'Nhật ký thay đổi',
   abClLoading: 'Đang tải…',
-  abClError: 'Nhật ký thay đổi không khả dụng.',
+  abClNew: 'Mới', abClImprovements: 'Cải tiến', abClBugfixes: 'Sửa lỗi', abClError: 'Nhật ký thay đổi không khả dụng.',
   rkCalcTitle: 'Cách tính xếp hạng:',
   rkCalcPoints: 'Điểm theo thứ hạng:',
   rkCalcFormula: 'Công thức:',

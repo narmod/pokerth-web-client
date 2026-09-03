@@ -28,7 +28,7 @@ export const strings = {
   abClTabUpstream: 'کلاینت‌های قابل نصب',
   abTabChangelog: 'تاریخچه تغییرات',
   abClLoading: 'در حال بارگذاری…',
-  abClError: 'تاریخچه تغییرات در دسترس نیست.',
+  abClNew: 'جدید', abClImprovements: 'بهبودها', abClBugfixes: 'رفع اشکال', abClError: 'تاریخچه تغییرات در دسترس نیست.',
   rkCalcTitle: 'محاسبهٔ رتبه‌بندی:',
   rkCalcPoints: 'امتیاز جایگاه:',
   rkCalcFormula: 'فرمول:',

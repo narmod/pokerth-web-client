@@ -31,7 +31,7 @@ export const strings = {
   abClTabUpstream: 'العملاء القابلون للتثبيت',
   abTabChangelog: 'سجل التغييرات',
   abClLoading: 'جارٍ التحميل…',
-  abClError: 'سجل التغييرات غير متوفر.',
+  abClNew: 'جديد', abClImprovements: 'تحسينات', abClBugfixes: 'إصلاحات', abClError: 'سجل التغييرات غير متوفر.',
   rkCalcTitle: 'حساب التصنيف:',
   rkCalcPoints: 'نقاط الترتيب:',
   rkCalcFormula: 'المعادلة:',

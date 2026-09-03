@@ -24,7 +24,7 @@ export const strings = {
   abClTabUpstream: 'Klijenti za instalaciju',
   abTabChangelog: 'Popis promjena',
   abClLoading: 'Učitavanje…',
-  abClError: 'Popis promjena nije dostupan.',
+  abClNew: 'Novo', abClImprovements: 'Poboljšanja', abClBugfixes: 'Ispravci', abClError: 'Popis promjena nije dostupan.',
   rkCalcTitle: 'Izračun poretka:',
   rkCalcPoints: 'Bodovi za plasman:',
   rkCalcFormula: 'Formula:',

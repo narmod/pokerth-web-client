@@ -24,7 +24,7 @@ export const strings = {
   abClTabUpstream: 'Inštalovateľní klienti',
   abTabChangelog: 'Zoznam zmien',
   abClLoading: 'Načítava sa…',
-  abClError: 'Zoznam zmien nie je k dispozícii.',
+  abClNew: 'Novinky', abClImprovements: 'Vylepšenia', abClBugfixes: 'Opravy', abClError: 'Zoznam zmien nie je k dispozícii.',
   rkCalcTitle: 'Výpočet rebríčka:',
   rkCalcPoints: 'Body za umiestnenie:',
   rkCalcFormula: 'Vzorec:',

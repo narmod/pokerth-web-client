@@ -30,7 +30,7 @@ export const strings = {
   abClTabUpstream: 'ไคลเอนต์ที่ติดตั้งได้',
   abTabChangelog: 'บันทึกการเปลี่ยนแปลง',
   abClLoading: 'กำลังโหลด…',
-  abClError: 'บันทึกการเปลี่ยนแปลงไม่พร้อมใช้งาน',
+  abClNew: 'ใหม่', abClImprovements: 'การปรับปรุง', abClBugfixes: 'การแก้ไขบั๊ก', abClError: 'บันทึกการเปลี่ยนแปลงไม่พร้อมใช้งาน',
   rkCalcTitle: 'การคำนวณอันดับ:',
   rkCalcPoints: 'คะแนนตามอันดับ:',
   rkCalcFormula: 'สูตร:',

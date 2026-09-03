@@ -30,7 +30,7 @@ export const strings = {
   abClTabUpstream: 'ইনস্টল করা ক্লায়েন্ট',
   abTabChangelog: 'পরিবর্তন তালিকা',
   abClLoading: 'লোড হচ্ছে…',
-  abClError: 'পরিবর্তন তালিকা পাওয়া যাচ্ছে না।',
+  abClNew: 'নতুন', abClImprovements: 'উন্নতি', abClBugfixes: 'ত্রুটি সংশোধন', abClError: 'পরিবর্তন তালিকা পাওয়া যাচ্ছে না।',
   rkCalcTitle: 'র‍্যাংকিং গণনা:',
   rkCalcPoints: 'স্থান অনুযায়ী পয়েন্ট:',
   rkCalcFormula: 'সূত্র:',

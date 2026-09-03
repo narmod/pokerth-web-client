@@ -29,7 +29,7 @@ export const strings = {
   abClTabUpstream: 'Installierbare Clients',
   abTabChangelog: 'Änderungsprotokoll',
   abClLoading: 'Wird geladen…',
-  abClError: 'Das Änderungsprotokoll ist nicht verfügbar.',
+  abClNew: 'Neu', abClImprovements: 'Verbesserungen', abClBugfixes: 'Fehlerbehebungen', abClError: 'Das Änderungsprotokoll ist nicht verfügbar.',
   rkCalcTitle: 'Punkteberechnung:',
   rkCalcPoints: 'Platzierungspunkte:',
   rkCalcFormula: 'Formel:',

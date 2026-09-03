@@ -30,7 +30,7 @@ export const strings = {
   abClTabUpstream: 'Klienty instalowane',
   abTabChangelog: 'Lista zmian',
   abClLoading: 'Ładowanie…',
-  abClError: 'Lista zmian jest niedostępna.',
+  abClNew: 'Nowości', abClImprovements: 'Ulepszenia', abClBugfixes: 'Poprawki', abClError: 'Lista zmian jest niedostępna.',
   rkCalcTitle: 'Obliczanie rankingu:',
   rkCalcPoints: 'Punkty za miejsce:',
   rkCalcFormula: 'Wzór:',

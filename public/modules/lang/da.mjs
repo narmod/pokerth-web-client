@@ -23,7 +23,7 @@ export const strings = {
   abClTabUpstream: 'Installerbare klienter',
   abTabChangelog: 'Ændringslog',
   abClLoading: 'Indlæser…',
-  abClError: 'Ændringsloggen er ikke tilgængelig.',
+  abClNew: 'Nyt', abClImprovements: 'Forbedringer', abClBugfixes: 'Fejlrettelser', abClError: 'Ændringsloggen er ikke tilgængelig.',
   rkCalcTitle: 'Ranglisteberegning:',
   rkCalcPoints: 'Placeringspoint:',
   rkCalcFormula: 'Formel:',

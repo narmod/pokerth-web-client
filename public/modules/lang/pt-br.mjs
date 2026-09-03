@@ -23,7 +23,7 @@ export const strings = {
   abClTabUpstream: 'Clientes instaláveis',
   abTabChangelog: 'Registro de alterações',
   abClLoading: 'Carregando…',
-  abClError: 'O registro de alterações não está disponível.',
+  abClNew: 'Novidades', abClImprovements: 'Melhorias', abClBugfixes: 'Correções', abClError: 'O registro de alterações não está disponível.',
   rkCalcTitle: 'Cálculo do ranking:',
   rkCalcPoints: 'Pontos por posição:',
   rkCalcFormula: 'Fórmula:',

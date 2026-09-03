@@ -29,7 +29,7 @@ export const strings = {
   abClTabUpstream: 'Устанавливаемые клиенты',
   abTabChangelog: 'Список изменений',
   abClLoading: 'Загрузка…',
-  abClError: 'Список изменений недоступен.',
+  abClNew: 'Новое', abClImprovements: 'Улучшения', abClBugfixes: 'Исправления', abClError: 'Список изменений недоступен.',
   rkCalcTitle: 'Расчёт рейтинга:',
   rkCalcPoints: 'Очки за место:',
   rkCalcFormula: 'Формула:',

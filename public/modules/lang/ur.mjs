@@ -28,7 +28,7 @@ export const strings = {
   abClTabUpstream: 'انسٹال کے قابل کلائنٹس',
   abTabChangelog: 'تبدیلیوں کا ریکارڈ',
   abClLoading: 'لوڈ ہو رہا ہے…',
-  abClError: 'تبدیلیوں کا ریکارڈ دستیاب نہیں۔',
+  abClNew: 'نیا', abClImprovements: 'بہتریاں', abClBugfixes: 'خرابیوں کی اصلاح', abClError: 'تبدیلیوں کا ریکارڈ دستیاب نہیں۔',
   rkCalcTitle: 'درجہ بندی کا حساب:',
   rkCalcPoints: 'پوزیشن پوائنٹس:',
   rkCalcFormula: 'فارمولا:',

@@ -30,7 +30,7 @@ export const strings = {
   abClTabUpstream: 'Installable clients',
   abTabChangelog: 'Changelog',
   abClLoading: 'Loading…',
-  abClError: 'Changelog unavailable.',
+  abClNew: 'New', abClImprovements: 'Improvements', abClBugfixes: 'Bug fixes', abClError: 'Changelog unavailable.',
   rkCalcTitle: 'Ranking calculation:',
   rkCalcPoints: 'Placement points:',
   rkCalcFormula: 'Formula:',

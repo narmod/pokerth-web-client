@@ -24,7 +24,7 @@ export const strings = {
   abClTabUpstream: 'Installeerbare kliënte',
   abTabChangelog: 'Veranderingslys',
   abClLoading: 'Laai tans…',
-  abClError: 'Veranderingslys nie beskikbaar nie.',
+  abClNew: 'Nuut', abClImprovements: 'Verbeterings', abClBugfixes: 'Regstellings', abClError: 'Veranderingslys nie beskikbaar nie.',
   rkCalcTitle: 'Ranglysberekening:',
   rkCalcPoints: 'Plasingspunte:',
   rkCalcFormula: 'Formule:',
