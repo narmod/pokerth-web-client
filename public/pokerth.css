@@ -7811,6 +7811,19 @@ html[data-seat-struct="qml"] .seat.betside-b .seat-pucks { top: calc(100% + 1px)
    siège bas-centre du spectateur (classe betside-split posée par le JS). */
 html[data-seat-struct="qml"] .seat.betside-split .seat-bet { left: calc(100% + var(--seat-bet-gap-r, 8px)); right: auto; top: 50%; bottom: auto; transform: translateY(-50%); }
 html[data-seat-struct="qml"] .seat.betside-split .seat-pucks { right: calc(100% + var(--seat-bet-gap-l, 8px)); left: auto; top: 50%; bottom: auto; transform: translateY(-50%); }
+/* Socle inset × betside-split : la règle split ci-dessus gagnait la cascade
+   (spécificité égale, ordre postérieur) sur la remise à plat du BetChip du
+   socle (plus haut dans le fichier) et posait son translateY(-50%) sur le
+   chip DU SOCLE — left/top ignorés (position:static) mais le TRANSFORM
+   s'applique → le chip remontait d'une demi-hauteur dans le ruban
+   overflow:hidden de 20 px : mise du siège HAUT-CENTRE (et du spectateur
+   bas-centre) « mangée » (rapport narmod 03/09). Le QML n'a pas ce cas :
+   PlayerBetStrip (inset) ignore betSide, betSplit ne concerne que le jeton
+   classic. On re-neutralise APRÈS la règle split, pour tous les axes. */
+html[data-seat-struct="qml"] .seat.betside-split .seat-bet-socle .seat-bet {
+  position: static; left: auto; right: auto; top: auto; bottom: auto;
+  transform: none; margin: 0;
+}
 /* Sitz-Stil inset (QML : betInset → puck vertical mittig) : la mise vit dans
    le socle, le slot latéral est libre → le puck se centre verticalement à
    côté de la boîte. Classic garde le slot bas (dégagement sous la mise). */

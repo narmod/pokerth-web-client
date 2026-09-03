@@ -1,4 +1,7 @@
 2026-09-03 version 2.1.8-web (current series):
+- bugfix: with bets shown inside the boxes, the bet of the top-centre player (and of the bottom spectator seat) was half cut off - it now sits fully inside its strip like every other seat, as in the desktop client
+
+2026-09-03 version 2.1.8-web:
 - improvement: opponent boxes now have the official fixed width - chip stacks and long names no longer resize the boxes, so the community cards and the action bar keep a constant size as the amounts change, exactly like the desktop client
 - bugfix: the highlight that slightly enlarges the box of the player whose turn it is no longer nudges the table layout as the turn moves around
 
