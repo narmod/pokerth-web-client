@@ -17,6 +17,14 @@ changes for this line are on the
 highlights below.
 
 ### Changed
+- **Auto-update no longer blocked by notify-only sockets** (proxy-only,
+  ships with the next Docker image). The restart gate counted every open
+  WebSocket, including the lightweight `?notify=1` channels held by players
+  connected directly to pokerth.net or playing offline against bots — so a
+  handful of idle notify channels could postpone an armed update forever.
+  The gate now counts only game bridges (active sessions, reconnect grace
+  included); notify channels still receive the restart notice and simply
+  reconnect after the bounce.
 - **Client identifies as `CLIENT_TYPE_WEB` (0x03)** (`web.0`). The switch
   shipped dormant in `2.1.7-web.170` while pokerth.net still ran a build
   without upstream `c7e2959`; 2.1.8 includes it, so the flag is now on and

@@ -5162,7 +5162,12 @@ function _autoUpdateApply() {
     console.log('[auto-update] static deploy ' + _upd.remote.slice(0, 8) + ' (' + _upd.files + ' file(s), no restart)');
     return;
   }
-  let sockets = 0; try { sockets = wss.clients.size; } catch (e) {}
+  // On ne compte que les sessions actives (ponts de jeu). Les canaux
+  // notify-only (?notify=1 : joueurs sur pokerth.net direct ou en
+  // entraînement) tiennent une WebSocket ouverte mais aucune partie via le
+  // proxy : ils reçoivent le préavis, encaissent la coupure et se
+  // rebranchent seuls — ils ne doivent pas bloquer la fenêtre.
+  let sockets = 0; try { wss.clients.forEach(function (c) { if (!c._notify) sockets++; }); } catch (e) {}
   // Les ponts en grâce de reconnexion (mobile verrouillé) n'ont PAS de socket
   // navigateur ouverte mais gardent une partie en cours côté serveur — un
   // redémarrage les tuerait. Le serveur n'est libre que sans pont vivant.
@@ -5174,7 +5179,7 @@ function _autoUpdateApply() {
   _autoArmed = true;
   _restartTimer = setTimeout(function () {
     _restartTimer = null; _restartAt = 0; _restartNotice = ''; _autoArmed = false;
-    let n = 0; try { n = wss.clients.size; } catch (e) {}
+    let n = 0; try { wss.clients.forEach(function (c) { if (!c._notify) n++; }); } catch (e) {}
     try { if (_liveSessions.size > n) n = _liveSessions.size; } catch (e) {}
     if (n > 0) {                                                // quelqu'un est arrivé pendant le préavis : on lui laisse la place
       broadcastNotice('NOTICE:CANCEL');
