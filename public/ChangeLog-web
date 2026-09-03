@@ -1,4 +1,7 @@
-2026-09-01 version 2.1.8-web (current series):
+2026-09-03 version 2.1.8-web (current series):
+- bugfix: the table no longer shifts when bets appear - with bets shown inside the player boxes, the background image, the community cards and the seat layout could nudge every time a bet strip opened or closed; everything now stays perfectly still, as in the desktop client
+
+2026-09-01 version 2.1.8-web:
 - bugfix: connecting to an older LAN or dedicated PokerTH server (before 2.1.8) no longer fails with "Version incompatible" - the client automatically retries by introducing itself the classic way when the server does not know the new web client type
 - improvement: the changelog in About now groups each version's entries under New / Improvements / Bug fixes headings, in your language, so it is much easier to scan
 - bugfix: when a player voluntarily shows their cards after everyone else folded before the river, the log no longer names a hand - only the cards are shown, as in the desktop client

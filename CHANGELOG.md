@@ -10,6 +10,9 @@ this file captures what matters to players and operators.
 
 ## 2.1.8-web line (2026)
 
+2026-09-03 version 2.1.8-web.18:
+- bugfix: table geometry is now invariant to bet display - with the "in the box" bet style, the opened bet strip made each seat plate 18 px taller, which shifted the community-row barycentre (community cards nudged and rescaled), re-centred the fullscreen table background, and could bump the reference seat measurement into a re-layout; the strip's height (constant 18 px throughout its unfold, per the socleOpen keyframes) is now excluded from all geometry measurements (`_plateSocleH` in seat-render.mjs), matching the QML client where the strip space is permanently reserved in the slot heights
+
 Opened with `v2.1.8-web.0` (2026-09-01), following the upstream **2.1.8**
 release (server restarted by sp0ck the same night). Granular, per-build
 changes for this line are on the

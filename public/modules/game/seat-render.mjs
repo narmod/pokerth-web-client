@@ -61,6 +61,33 @@ function getPlayerInitial(pid) {
 function getPlayerTypeBadge(pid) {
   return ''; // Badges supprimés : 🤖 identifie les bots, pas de 👤 pour les humains
 }
+// ── Socle de mise inset (PlayerBetStrip) : contribution du socle à la
+// hauteur ÉCRAN d'une .seat-plate, à SOUSTRAIRE de toute mesure servant à
+// la géométrie (dimensions témoin, barycentre communityCenterY). Parité
+// QML : communityCenterY et les hauteurs de boîtes dérivent des SLOTS, la
+// place du strip étant réservée en permanence — la géométrie est
+// bet-invariante. Côté web la réservation est un padding sur .seat, HORS
+// .seat-plate : quand le socle s'ouvre, la plate grandit de 18 px vers le
+// bas et tout ce qui la mesure bougeait à chaque affichage/retrait des
+// mises — barycentre → --comm-shift-y/--comm-scale ET fond « center »
+// (_applyQmlBgCenter) recalés, témoin _seatDimsMeasured +18 px → re-render
+// + bisection → re-scale de la table (rapport narmod 03/09 : « quand les
+// mises s'affichent, ça bouge le fond d'écran »). Contribution réelle =
+// hauteur + margin-bottom du socle : somme CONSTANTE (18 px layout)
+// pendant tout le dépli (keyframes socleOpen anime height 0→20 et
+// margin-bottom 18→-2 en opposition), convertie en px écran via l'échelle
+// effective de la plate (rect / offsetHeight).
+function _plateSocleH(plateEl, plateRect) {
+  if (!plateEl || !plateEl.querySelector) return 0;
+  var so = plateEl.querySelector('.seat-bet-socle');
+  if (!so) return 0;
+  var lh = so.offsetHeight;
+  try { lh += parseFloat(getComputedStyle(so).marginBottom) || 0; } catch (e) { lh -= 2; }
+  if (!(lh > 0)) return 0;
+  var oh = plateEl.offsetHeight;
+  var eff = (oh > 0 && plateRect && plateRect.height > 0) ? plateRect.height / oh : 1;
+  return lh * eff;
+}
 
 function renderSeatsImmediate() {
   if (window._seatEditMode) { if (document.documentElement.getAttribute('data-seat-layout') === 'custom') return; window._seatEditMode = false; }   // gel pendant l'edition (custom seul) ; auto-degele si le mode a change
@@ -1026,7 +1053,10 @@ function renderSeatsImmediate() {
         var _selfPl3 = el.querySelector('.seat.me .seat-plate');
         var _selfR3 = _selfPl3 ? _selfPl3.getBoundingClientRect() : null;
         var _selfTop3 = _selfR3 ? (_selfR3.top - _zr3.top) : (_zH3 - 100);
-        var _sumY3 = _selfR3 ? (_selfR3.top + _selfR3.height / 2 - _zr3.top) : (_zH3 - 100);
+        // Socle inset : centre mesuré SANS le socle (bet-invariant, cf.
+        // _plateSocleH) — sinon le barycentre descendait à chaque mise self.
+        var _selfSo3 = _selfR3 ? _plateSocleH(_selfPl3, _selfR3) : 0;
+        var _sumY3 = _selfR3 ? (_selfR3.top + (_selfR3.height - _selfSo3) / 2 - _zr3.top) : (_zH3 - 100);
         var _n3 = 1, _minB3 = Infinity;
         var _botTop3 = -Infinity, _botC3 = -Infinity; // siege du BAS de l'anneau (spectateur)
         var _rects3 = []; // rects des plates (px zone) pour le cap horizontal community
@@ -1045,7 +1075,8 @@ function renderSeatsImmediate() {
         var _liveH3 = [], _liveW3 = [];
         el.querySelectorAll('.seat:not(.me):not(.seat-ghost) .seat-plate').forEach(function (plL3) {
           var rL3 = plL3.getBoundingClientRect();
-          if (rL3.height > 4) { _liveH3.push(rL3.height); _liveW3.push(rL3.width); }
+          var _hL3 = rL3.height - _plateSocleH(plL3, rL3); // socle exclu (bet-invariant)
+          if (_hL3 > 4) { _liveH3.push(_hL3); _liveW3.push(rL3.width); }
         });
         var _med3 = function (a3) {
           if (!a3.length) return 0;
@@ -1057,9 +1088,13 @@ function renderSeatsImmediate() {
           var rr3 = pl3.getBoundingClientRect();
           var _st3 = pl3.closest ? pl3.closest('.seat') : null;
           var _gh3 = !!(_st3 && _st3.classList.contains('seat-ghost'));
-          var _h3v = rr3.height, _w3v = rr3.width;
+          // Socle inset exclu de la hauteur ET du centre (le socle s'ouvre
+          // vers le BAS : haut inchangé, centre remonté d'une demi-contribution)
+          // → barycentre/bornes identiques avec ou sans mises (parité QML).
+          var _so3 = _plateSocleH(pl3, rr3);
+          var _h3v = rr3.height - _so3, _w3v = rr3.width;
           if (_gh3 && _refH3 > 4) { _h3v = _refH3; _w3v = _refW3; }
-          var _c3 = rr3.top + rr3.height / 2 - _zr3.top;         // centre = slot (translate -50%)
+          var _c3 = rr3.top + (rr3.height - _so3) / 2 - _zr3.top; // centre = slot (translate -50%)
           var _cx3 = rr3.left + rr3.width / 2 - _zr3.left;
           var _t3 = _c3 - _h3v / 2, _b3 = _c3 + _h3v / 2;
           if (_b3 < _minB3) _minB3 = _b3;                       // box la plus haute
@@ -1270,6 +1305,11 @@ function renderSeatsImmediate() {
             || kc.indexOf('seat-foot') !== -1 || kc.indexOf('seat-bet') !== -1) continue;
         var kr = kid.getBoundingClientRect();
         if (!kr.width && !kr.height) continue;
+        // Socle inset : ne compte pas dans les dimensions (voir _plateSocleH)
+        // — sinon le témoin gonflait de 18 px dès qu'il misait → re-render
+        // + bisection + re-scale de la table à chaque street.
+        var _kb = kr.bottom;
+        if (kc.indexOf('seat-plate') !== -1) _kb -= _plateSocleH(kid, kr);
         // .seat-info (nom + stack) : largeur VARIABLE — le montant change à
         // chaque action → la mesure jitterait → re-render + nouveau boxScale
         // = « flicker » de re-scale de la table (sp0ck 2026-07-17). Comme en
@@ -1282,7 +1322,7 @@ function renderSeatsImmediate() {
           if (kr.right > maxX) maxX = kr.right;
         }
         if (kr.top < minY) minY = kr.top;
-        if (kr.bottom > maxY) maxY = kr.bottom;
+        if (_kb > maxY) maxY = _kb;
       }
       if (!found) return null;
       return { w: Math.round((maxX - minX) / div), h: Math.round((maxY - minY) / div) };
