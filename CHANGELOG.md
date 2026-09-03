@@ -10,6 +10,9 @@ this file captures what matters to players and operators.
 
 ## 2.1.8-web line (2026)
 
+2026-09-03 version 2.1.8-web.21:
+- improvement: the "Bet display" option (inset strip vs chip next to the box) now applies only to the built-in "PokerTH" seat style - other seat packs always keep their original presentation; the option UI moved from the top of the Seats tab to a nested block under the PokerTH entry, shown only while that style is selected, and switching seat packs re-resolves the bet display live
+
 2026-09-03 version 2.1.8-web.20:
 - bugfix: the top-centre seat's bet (and the bottom-centre spectator seat's) was half-clipped in the inset bet strip - the betside-split rule (bet right of the box / puck left, QML 2.1.8 9f402258) won the cascade over the strip's chip reset at equal specificity, and its translateY(-50%) applied to the strip's static chip (left/top ignored, transform not), lifting it half out of the 20 px overflow-hidden band; a re-neutralising rule now follows the split rule - QML has no such case since PlayerBetStrip ignores betSide entirely
 

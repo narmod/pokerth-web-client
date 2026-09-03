@@ -1,4 +1,7 @@
 2026-09-03 version 2.1.8-web (current series):
+- improvement: the bet display choice (inside or next to the player box) now belongs to the PokerTH seat style only - the setting appears under its entry in the Seats tab, and other seat styles keep their own look
+
+2026-09-03 version 2.1.8-web:
 - bugfix: with bets shown inside the boxes, the bet of the top-centre player (and of the bottom spectator seat) was half cut off - it now sits fully inside its strip like every other seat, as in the desktop client
 
 2026-09-03 version 2.1.8-web:

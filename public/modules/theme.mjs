@@ -363,6 +363,9 @@ seat.apply = function (id) {
   try { _injectSeatPkg(_gallerySeatById(id) || null); } catch (e) {}
   // Structure commune QML : attribut CSS piloté par le trait qmlStruct.
   try { if (_seatPackTraits(id).qmlStruct) document.documentElement.setAttribute('data-seat-struct', 'qml'); else document.documentElement.removeAttribute('data-seat-struct'); } catch (e) {}
+  // L'option « Affichage de la mise » ne vaut que pour le pack 'pokerth' :
+  // re-résoudre data-bet à chaque changement de pack (bascule LIVE).
+  try { if (typeof window._applyBetStyle === 'function') window._applyBetStyle(); } catch (e) {}
 };
 seat.set = seat.apply;
 // Setter public pour le monolithe (option « Synchroniser les sieges » des
@@ -1542,17 +1545,20 @@ function _render(){
   var tab = _TABS[0]; for (var t=0;t<_TABS.length;t++) if (_TABS[t].id===_activeTab) tab=_TABS[t];
   var info = _tabItems(_activeTab);
   var list = document.createElement('div'); list.style.cssText = 'display:flex;flex-direction:column;gap:7px';
-  // ── Affichage de la mise (onglet Sièges) — parité QML StyleSettings
-  // « Einsatzanzeige » (upstream 414a89c) : socle DANS la boîte ('inset') ou
-  // jeton À CÔTÉ ('classic'). pth_bet_style vide = 'inset' partout, résolu
-  // par window._betStyleVariant (pokerth.js) ; bascule LIVE sur la table via
-  // window._applyBetStyle, comme applySeatStyle côté QML.
-  if (_activeTab === 'seat') {
+  // ── Affichage de la mise — parité QML StyleSettings « Einsatzanzeige »
+  // (upstream 414a89c) : socle DANS la boîte ('inset') ou jeton À CÔTÉ
+  // ('classic'). Depuis 2.1.8-web.21 (demande narmod) l'option ne vaut que
+  // pour le pack « PokerTH » : le bloc est imbriqué SOUS sa ligne et
+  // n'apparaît que quand ce pack est sélectionné ; _betStyleVariant
+  // (pokerth.js) ignore la préférence pour les autres packs.
+  function _betDisplayBlock() {
     var _bsCur = (typeof window._betStyleVariant === 'function') ? window._betStyleVariant() : 'inset';
+    var wrap = document.createElement('div');
+    wrap.style.cssText = 'display:flex;flex-direction:column;gap:6px;margin:0 0 3px 12px;padding:2px 0 2px 10px;border-left:2px solid var(--border,rgba(200,168,74,0.18))';
     var bsTitle = document.createElement('div');
     bsTitle.textContent = _t('betDisplayTitle', 'Bet display:');
     bsTitle.style.cssText = 'font-size:0.8rem;font-weight:700;color:var(--cream,#f0e6d2);margin:1px 0 0';
-    list.appendChild(bsTitle);
+    wrap.appendChild(bsTitle);
     [['inset', 'betDisplayInset', 'Bet inside the player box'],
      ['classic', 'betDisplayClassic', 'Bet next to the player box']].forEach(function (o) {
       var act = _bsCur === o[0];
@@ -1572,11 +1578,9 @@ function _render(){
         try { if (typeof window._applyBetStyle === 'function') window._applyBetStyle(); } catch (err) {}
         _render();
       });
-      list.appendChild(row);
+      wrap.appendChild(row);
     });
-    var bsSep = document.createElement('div');
-    bsSep.style.cssText = 'height:1px;background:var(--border,rgba(200,168,74,0.18));margin:5px 0 3px';
-    list.appendChild(bsSep);
+    return wrap;
   }
   info.opts.forEach(function(it){
     var name = it.name || _t(it.key, it.fallback);
@@ -1584,6 +1588,9 @@ function _render(){
     var active = it.id === info.cur;
     var row = _styleRow(tab.kind, it, name, author, active, (function(id){ return function(){ var keep = info.pick(id); if (!keep) _render(); }; })(it.id));
     list.appendChild(row);
+    // Sous-option imbriquée sous la ligne « PokerTH » (uniquement quand ce
+    // pack est sélectionné) : l'option ne s'applique qu'à lui.
+    if (_activeTab === 'seat' && it.id === 'pokerth' && active) list.appendChild(_betDisplayBlock());
   });
   if (_activeTab === 'table' || _activeTab === 'deck' || _activeTab === 'seat') {
     var _ik=_activeTab;
