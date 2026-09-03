@@ -38,6 +38,15 @@ highlights below.
   still encoded Qt-Widget `0x01`; it now uses `0x03` like `buildInit`, so
   probes and players tell the server the same story (the 2026-08-12
   "one truth" rule). `test-build-id` updated accordingly.
+- **Hand name gated behind the river on voluntary shows** (`web.15`),
+  following upstream `1bf7a73` (QML showdown/log fine-tuning): when a player
+  shows their cards after a pre-river fold-out, the log line now carries the
+  cards only — no hand name computed from an incomplete board. The trailing
+  "—" of the `logShowdown` template is stripped when no hand is named.
+- **Chat history capped at 400 lines** (`web.15`), matching QML
+  `LobbyHandler::pushChatLine` and upstream `c65fb30` (`kMaxChatBlocks`):
+  both the lobby chat and the game chat now drop their oldest lines past
+  400, keeping DOM size and relayout cost flat over long sessions.
 - **Bet display defaults to `inset` on every platform** (`web.3`), following
   upstream `f9a8906` (QML `SeatStyle.defaultVariant`): the coarse-pointer
   `classic` default is gone; an explicit `pth_bet_style` is untouched.

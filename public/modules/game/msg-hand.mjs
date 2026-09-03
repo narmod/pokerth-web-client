@@ -1205,12 +1205,21 @@ function onAfterHandShowCards(sub) {
       try { window.renderSeats(); } catch (e) {}
       const _sBd = S.commCards.slice();
       window.logAction(function () {
-        var ev = (typeof evaluateBestHand === 'function') ? evaluateBestHand([_sC1, _sC2], _sBd) : null;
-        return t('logShowdown', {
+        // Parité QML/widget (upstream stable 1bf7a73 « showdown/log
+        // fine-tuning ») : le nom de la combinaison n'est ajouté qu'à partir
+        // de la river (5 cartes de board posées). Show volontaire après un
+        // fold-out preflop/flop/turn → cartes seules, sans nom de blatt —
+        // le widget gatte au même endroit (showHoleCards: currentRound <
+        // GAME_STATE_RIVER ⇒ cartes sans valeur de main).
+        var ev = (_sBd.length >= 5 && typeof evaluateBestHand === 'function') ? evaluateBestHand([_sC1, _sC2], _sBd) : null;
+        var line = t('logShowdown', {
           name:  window.getPlayerName(_sPid),
           cards: cardName(_sC1, false) + ' ' + cardName(_sC2, false),
           hand:  ev ? ev.label : ''
         });
+        // Sans blatt : retirer le « — » final du gabarit (identique dans
+        // les 45 langues, toujours en fin de chaîne).
+        return ev ? line : line.replace(/\s*—\s*$/, '');
       });
     }
     return;

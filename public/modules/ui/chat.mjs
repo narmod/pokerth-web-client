@@ -353,6 +353,11 @@ function addChat(sender, text, cls='', spec) {
   // (ui/livescroll.mjs) — miroir de addGameChat et du journal.
   const _ls = liveBefore(el);
   el.appendChild(d);
+  // Plafond d'historique — parité QML (LobbyHandler::pushChatLine) et widget
+  // (upstream stable c65fb30, kMaxChatBlocks = 400) : au-delà de 400 lignes
+  // les plus anciennes tombent, sinon le DOM grossit sur toute la session
+  // (mémoire + relayout de plus en plus coûteux).
+  while (el.childElementCount > 400) el.removeChild(el.firstElementChild);
   if (_ls) liveAfter(el, _ls);
   else el.scrollTop = el.scrollHeight;
 }

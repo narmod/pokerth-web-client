@@ -8390,6 +8390,8 @@ function addGameChat(sender, text, cls, spec) {
   if (spec && !sender) { try { d.dataset.sys = JSON.stringify(spec); } catch(_e){} }
   var _ls = (typeof window._liveBefore === 'function') ? window._liveBefore(el) : null;
   el.appendChild(d);
+  // Plafond d'historique (parité QML kMaxChatBlocks = 400, cf. addChat).
+  while (el.childElementCount > 400) el.removeChild(el.firstElementChild);
   if (_ls) window._liveAfter(el, _ls);
   else el.scrollTop = el.scrollHeight;
   var cBtn = document.getElementById('chat-toggle-btn');
@@ -11060,7 +11062,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.8-web.14'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.8-web.15'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
