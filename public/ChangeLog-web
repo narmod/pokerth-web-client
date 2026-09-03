@@ -1,4 +1,5 @@
 2026-09-01 version 2.1.8-web (current series):
+- bugfix: connecting to an older LAN or dedicated PokerTH server (before 2.1.8) no longer fails with "Version incompatible" - the client automatically retries by introducing itself the classic way when the server does not know the new web client type
 - improvement: the changelog in About now groups each version's entries under New / Improvements / Bug fixes headings, in your language, so it is much easier to scan
 - bugfix: when a player voluntarily shows their cards after everyone else folded before the river, the log no longer names a hand - only the cards are shown, as in the desktop client
 - improvement: the lobby and game chats now keep the last 400 lines instead of growing forever, so long sessions stay fast, as in the desktop client

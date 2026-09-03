@@ -128,6 +128,16 @@ highlights below.
   Green Casino and the default table, so their QML renders apply as well.
 
 ### Fixed
+- **Older LAN / dedicated servers rejected the client with "Version
+  incompatible"** (`web.17`). Since `web.0` the client always introduces
+  itself as `CLIENT_TYPE_WEB` (0x03); any `pokerth-server` built before
+  upstream `c7e2959` (i.e. < 2.1.8 — every distro package) does not know
+  that type and answers `initVersionNotSupported` even though protocol and
+  build are fine. On error 1 in LAN / dedicated-server modes only, the
+  client now retries the Init once announcing `CLIENT_TYPE_QT_WIDGET`
+  (0x01), as before `web.0`; the fallback flag sticks for the page session
+  and never applies to pokerth.net (guest/auth), where an error 1 remains a
+  genuine rejection.
 - **Community cards no longer re-flip on every street** (`web.6`).
   `renderComm` rebuilt all five slots with `innerHTML` at the flop, turn and
   river, so cards already on the board went through the flip again (opacity

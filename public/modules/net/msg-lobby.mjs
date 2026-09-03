@@ -396,6 +396,24 @@ function onError(sub) {
       window._startIpBlockCountdown();
       setStatus(t('ipBlockedRetry'), 'err'); return;
     }
+    // ── Fallback LAN / serveur dédié : serveur d'avant CLIENT_TYPE_WEB ──
+    // Un pokerth-server ancien (< 2.1.8, sans le commit upstream c7e2959)
+    // ne connait pas le type client 0x03 et repond initVersionNotSupported
+    // alors que protocole et build sont compatibles. On retente UNE fois
+    // l'Init en s'annoncant CLIENT_TYPE_QT_WIDGET (drapeau lu par buildInit,
+    // colle a la page -- un rechargement le remet a zero). pokerth.net
+    // (guest/auth) n'est jamais concerne : la un code 1 est un vrai rejet.
+    if (r === 1) {
+      const _lmFb = document.getElementById('login-mode') ? document.getElementById('login-mode').value : '';
+      if ((_lmFb === 'lan' || _lmFb === 'unauth') && !window._forceQtWidgetInit) {
+        window._forceQtWidgetInit = true;   // buildInit basculera sur 0x01
+        S._intentionalDisconnect = true;    // coupe le backoff generique de onclose
+        S._lastConnectFailed = false;       // ne pas armer le rate-limiter de connect()
+        setStatus(t('reconnInProgress'));
+        setTimeout(function(){ try { App.connect(); } catch (e) {} }, 1000);
+        return;
+      }
+    }
     if (r === 4) {
       // Pseudo déjà utilisé sur le serveur : c'est presque toujours NOTRE
       // propre session précédente qui n'est pas encore retombée. On ne renomme
