@@ -16,6 +16,20 @@ changes for this line are on the
 [GitHub Releases](https://github.com/narmod/pokerth-web-client/releases) page;
 highlights below.
 
+### Added
+- **Ivoire & Chêne table style** (`web.4`). Port of upstream `eee31d4`
+  (`data/gfx/qml/table/ivoire-chene/`): fullscreen wallpaper, cream action
+  buttons and pucks, ChatLog* parchment tint from the upstream XML. First
+  light-toned pack, so `TABLES` gains an optional `btnFg` (dark button
+  labels, as the QML reference render shows) instead of the white default.
+  Credit: PokerTH Development Team, AGPL-3.0.
+- **Table previews regenerated** (`web.5`). All 21 built-in packs take the
+  `preview.png` / `preview_portrait.png` re-rendered upstream in `eee31d4`
+  (bets inside the player boxes, `inset` seat style). Thirteen packs had no
+  portrait preview and the default pack had no preview at all; `TABLES` now
+  carries both for every entry. Felts are byte-identical upstream/web for
+  Green Casino and the default table, so their QML renders apply as well.
+
 ### Changed
 - **Bet display option scoped to the PokerTH seat style** (`web.21`). The
   inset-strip / classic-chip choice now applies only to the built-in
@@ -68,7 +82,6 @@ highlights below.
 - **Bet display defaults to `inset` on every platform** (`web.3`), following
   upstream `f9a8906` (QML `SeatStyle.defaultVariant`): the coarse-pointer
   `classic` default is gone; an explicit `pth_bet_style` is untouched.
-
 - **Restore banner reworked into a backup banner** (`web.9`). The startup
   banner shown when settings look empty no longer assumes a backup exists:
   it now explains that the browser can keep a local backup of the settings,
@@ -125,20 +138,6 @@ highlights below.
   OutQuad) is applied to the seat plate. Scale-by-boxScale, socle/strip
   bet display, 0.78/0.4 opacities, avatar 52 and the puck anchor were
   already conform.
-
-### Added
-- **Ivoire & Chêne table style** (`web.4`). Port of upstream `eee31d4`
-  (`data/gfx/qml/table/ivoire-chene/`): fullscreen wallpaper, cream action
-  buttons and pucks, ChatLog* parchment tint from the upstream XML. First
-  light-toned pack, so `TABLES` gains an optional `btnFg` (dark button
-  labels, as the QML reference render shows) instead of the white default.
-  Credit: PokerTH Development Team, AGPL-3.0.
-- **Table previews regenerated** (`web.5`). All 21 built-in packs take the
-  `preview.png` / `preview_portrait.png` re-rendered upstream in `eee31d4`
-  (bets inside the player boxes, `inset` seat style). Thirteen packs had no
-  portrait preview and the default pack had no preview at all; `TABLES` now
-  carries both for every entry. Felts are byte-identical upstream/web for
-  Green Casino and the default table, so their QML renders apply as well.
 
 ### Fixed
 - **Hand-history writes survive Android closing IndexedDB** (`web.23`).
@@ -246,68 +245,6 @@ highlights below.
   mirror-ball back both standalone (`back-disco`) and as the deck's
   flipside. Credits per upstream `data-copyright.txt`: PokerTH
   Development Team, AGPL-3.0.
-
-### Changed
-- **WebSocket heartbeat tolerates one missed pong** (proxy-only, ships
-  with the next Docker image). A pong arriving just past the 10 s window
-  — typical when the nightly pigz backup saturates the CPU — used to get
-  a healthy client terminated mid-hand. The proxy now requires two
-  consecutive misses (~20 s) before terminating, still well within the
-  session grace and upstream timeouts.
-- **Compression cache hardened; service-worker precache throttled**
-  (`web.179` + proxy-side). Proxy: concurrent requests for the same
-  not-yet-compressed file now share a single read + brotli job instead of
-  launching duplicates (in-flight dedup); the critical shell is warmed
-  serially right after boot so the first visitors never pay the brotli-11
-  cost; and a full cache overflow now evicts only the oldest entry instead
-  of wiping everything. Client: the service worker installs its ~130
-  precached assets through a 6-wide worker pool instead of all at once,
-  easing the load on the origin when an update lands during the backup
-  window.
-- **proxy.js no longer touches the disk on hot static paths** (proxy-only,
-  ships with the next Docker image — no client bump). Every static request
-  used to run 2–3 synchronous `fs.statSync` calls (router + `sendFile`), and
-  each `/__ver` poll rescanned ~50 files; when disk I/O is saturated by the
-  nightly backup those sync calls block the Node event loop and stall the
-  game WebSockets sharing the process. A 5 s TTL stat cache (`statCached`)
-  now backs the router, `sendFile` and `sendClientHtml`, and
-  `newestAssetMtime()` memoises its scan for 5 s across all `/__ver` polls.
-  Deploys are still picked up within 5 seconds.
-- **App code served cache-first by the service worker** (`web.178`). Scripts
-  and stylesheets (.js/.mjs/.css) move from network-first to
-  stale-while-revalidate: served instantly from the SW cache with a
-  `cache:'reload'` background refresh. Deploys still reach users through the
-  /__ver banner (CACHE_VERSION bump) or the following load. Navigations now
-  race the origin against a 3.5 s timeout and fall back to the cached shell,
-  with the fetch finishing in the background. Both changes keep the client
-  responsive when the origin is slow — typically during server backups.
-
-### Fixed
-- **Failed static loads are retried in-page** (`web.177`). The error
-  collector in `pokerth-client.html` re-injects a failed `<script>` or
-  stylesheet `<link>` with a cache-buster (`?r=1` after 700 ms, `?r=2`
-  after 2 s more) before falling back to the one-shot auto-reload. Aimed
-  at the short Cloudflare↔origin TLS bursts (HTTP 525) seen on
-  pokerth.net: the same URL answers a second later, but a failed static
-  tag used to stay dead for the whole session. The log gets one line per
-  outcome (`retry #n recovered` / `giving up`), no extra probe.
-- **Deal/action sound calls guarded** (`web.176`): `notifyCard`/`notifyAction`
-  from `sounds.mjs` are now called only when defined, so a failed module load
-  no longer throws in `msg-hand.mjs` mid-hand.
-- **Community suggest output was silently dropped** (`web.175`). The
-  local suggestion note was posted as a plain `sys` chat message; when
-  system messages were removed from the chat (narmod request, `spec.force`
-  escape hatch), the suggest path was not updated and the note vanished —
-  the mocked `addChat` in the test hid it. It now passes `{ force: true }`
-  and the test asserts it.
-
-### Changed
-- **Suggest output is one player per line** (`web.175`). Parity with
-  upstream `4afc377`: headline, then one name per line (`\n`), rendered
-  via `white-space: pre-line` on `.msg.sys .txt` — the counterpart of the
-  `<br>` conversion in QML `postLocalChatNote`.
-
-### Added
 - **Community suggest opens to WEC admins on foreign WEC tables**
   (`web.174`). Port of upstream `576b598`: the table fingerprint now also
   recognises WEC (no blind list, so start cash + first small blind +
@@ -318,8 +255,6 @@ highlights below.
   admin list per community with per-list failure throttling.
   `isBbcAdmin` stays as a compat wrapper. Covered by 11 new cases in
   scripts/test-botsuggest.mjs.
-
-### Added
 - **Monthly Cup templates fill in the current tournament title**
   (`web.173`). QML parity: `applyVorlage` now resolves `titleCommand`
   through `gameTitlePrefix` (gameslist.txt) and substitutes the live
@@ -329,104 +264,6 @@ highlights below.
   form. Also ports upstream `0640366`: `prefetchGameTitles()` warms the
   gameslist cache when the create page opens, so a fast click on Create
   no longer races the async title fetch.
-
-### Fixed
-- **Idle filter now counts spectators as at a table** (`web.172`). QML
-  parity with upstream `26018c9` (`syncPlayerGameMembership`: idle = at no
-  table, seated *or* watching; the counterpart of the Widget client's
-  role 34). `GameListSpectatorJoined/Left` now maintain
-  `games[id].watchers` and repaint the players panel; `_playerActivity`
-  falls back to the watcher list after the seat scan (a seat wins, as
-  upstream), so the status pad, the "playing in" tooltip and the idle
-  view all agree. The re-evaluation half of the upstream fix was already
-  covered web-side (`_refreshPlayersPanelIfOpen` on every seat/mode
-  mutation).
-
-### Fixed
-- **Auto-update no longer restarts over reconnect-grace sessions** (`web.170`).
-  The idle check gating the automatic update/restart counted only OPEN browser
-  WebSockets (`wss.clients.size`); a mobile player whose phone is locked sits
-  in reconnect grace — browser socket closed, upstream game bridge alive — and
-  was invisible to it, so the proxy could deem itself idle and restart, killing
-  games in progress. Both the arming check and the end-of-notice re-check now
-  also count `_liveSessions` (bridges incl. grace). The admin Status card gains
-  an **Active sessions** row (`/admin/status.liveSessions`) next to Connected
-  sockets, so the two figures — open sockets vs live bridges — are no longer
-  conflated.
-- **LAN invite links now land on the right server** (`web.169`). Sharing a
-  table from a LAN / dedicated connection encodes the target in the link
-  (`#join=<name>&s=<host[:port]>[&tls=1]`), and the invitee's fields were
-  prefilled correctly — but the subsequent server-mode switch re-derived the
-  LAN form via `_lanFields()`, overwriting host/port/TLS with the invitee's
-  own saved `pth_lan_*` values or the instance defaults. The invite target is
-  now published as `window._shareLanTarget` and takes top priority in
-  `_lanFields()` (share link → player's saved prefs → instance default);
-  a manual edit of the host/port fields releases it. Legacy `?host=`/`?port=`
-  share links get the same protection.
-- **Login restored on pokerth.net** (`web.168`). The live server currently runs a
-  v2.1.7 build that predates upstream commit `c7e2959` (`CLIENT_TYPE_WEB`), so it
-  rejected our `0x03` buildId with `initVersionNotSupported`. The client
-  temporarily identifies as Qt-Widget 2.1.7 again (`USE_CLIENT_TYPE_WEB=false`);
-  the web client type will be re-enabled once the server ships `c7e2959` /
-  v2.1.8.
-
-### Changed
-- **Own client type on the wire** (`web.167`). The client now identifies as
-  `CLIENT_TYPE_WEB` (0x03) in the `Init` buildId instead of masquerading as
-  the Qt-Widget client, following sp0ck's upstream commit `c7e2959`
-  (`game_defs.h`: `CLIENT_TYPE_WEB` + `MIN_BUILD_ID_WEB = 0.0.0`, no version
-  floor for the independently-deployed web client). Server logs and the
-  activity row now show `Web 2.1.7`, letting statistics tell web players
-  apart. `USE_CLIENT_TYPE_WEB` flipped to `true` in
-  `modules/net/messages.mjs`; the upstream triple is still derived from
-  `BUILD_VERSION` at runtime.
-- **Frozen avatar upload bytes** (`web.166`). sp0ck reported the same avatar
-  reaching the server under several hashes (e.g. one player's photo avatar).
-  Cause: the picked image was re-encoded (canvas → PNG via `toBlob`) on
-  every session, and PNG encoders / JPEG decoders differ per browser,
-  browser version and OS — same pixels, new bytes, new MD5, one server
-  duplicate per environment. The encoded PNG is now persisted at pick time
-  (`pth_avatar_up`, base64) and re-served byte for byte by
-  `_pthRefreshUpload`; re-encoding only happens when the avatar actually
-  changes (all `pth_avatar_img` writers purge the frozen record). Emoji and
-  initial-letter avatars freeze per choice too, so system-font drift no
-  longer mints new hashes. `pth_avatar_up` joins the factory-reset keep
-  list next to the image itself. Mirrors the desktop principle of hashing
-  the file's bytes once. New suite `scripts/test-avatar-frozen.mjs`.
-- **Translation fallback hardening** (`web.163`). Parity with upstream commit
-  `69ec0824` ("qml/widget: translation fallback hardening"): Google throttles
-  the gtx endpoint per IP (HTTP 429, VPN users first), so the chain is now
-  gtx direct → MyMemory direct (player's IP) → server relay, and the relay
-  itself falls back gtx → MyMemory (the server's single shared IP is the
-  first to get blocked). MyMemory is queried as `Autodetect|target`, its
-  `responseStatus` is checked (it answers HTTP 200 with an UPPERCASE warning
-  in `translatedText` on quota/pair errors), and the source==target 403 hands
-  the original back like gtx does. When every service fails, a toast
-  (existing `chatTranslateFailed` key, throttled 60 s) replaces the silent
-  hourglass. New suite `scripts/test-translate-fallback.mjs`.
-- **Per-account private messages** (`web.161`). Parity with upstream commit
-  `9bccf3a` ("qml: pm dialog persistence fine-tuning"): the PM history now
-  belongs to the logged-in nickname instead of the whole browser profile.
-  IndexedDB `pth_pm` migrates to v2 (composite `(owner, partner)` key,
-  mirroring the SQLite `owner` column upstream); ownerless rows from before
-  the split are adopted by the first account that logs in. The inbox is
-  empty and nothing is persisted while nobody is logged in (owner set on
-  our own PlayerInfoReply, cleared on InitAck — the web analogue of
-  `setMyPlayerInfo` / `setSession`), and a selected conversation that
-  disappears with an account switch falls back to the first partner.
-  New deterministic suite `scripts/test-pm-owner.mjs`.
-- **Floating bet keypad on desktop** (`web.159`). On fine-pointer devices the
-  web-only bet keypad no longer swaps out the middle and action rows: it now
-  opens as a compact overlay (34 px keys) floating just above the action
-  panel, with a short fade-in, so the whole bar — Fold/Call/Raise, slider,
-  quick bets — stays visible and active and the game view does not move at
-  all. A click anywhere outside the keypad cancels it; the click then reaches
-  the bar normally. Touch devices keep the in-place replacement, which
-  remains the only way to avoid the OS keyboard and table reflow. The small
-  keypad-open button also now stretches to the exact height of the bet amount
-  field at every bar scale, instead of a fixed 34 px.
-
-### Added
 - **Bet display setting — bet inside the player box** (`web.158`). Parity with
   upstream QML commit `414a89c` (`config/SeatStyle.qml` + `PlayerBetStrip.qml`):
   a new "Bet display" radio group in Settings → Styles → Seats chooses between
@@ -485,74 +322,6 @@ highlights below.
   animation and per-emoji effect for the QML port. Catalog integrity
   (order, FX coverage, CSS keyframes) is guarded by
   `scripts/test-reactions-catalog.mjs`.
-
-### Fixed
-- **The client no longer defeats the server-side AFK kick** (`web.132`).
-  `renderMyTurnActions()` sent a `ResetTimeoutMessage` on every render, and
-  the client calls it on its own each time the turn comes round: an
-  abandoned tab answered "still here" hand after hand, its session never
-  timed out and its seat was never freed, while a QML client in the same
-  spot is kicked. Upstream only ever sends a reset from real input
-  (`GameHandler::eventFilter`) or from the OK button of the timeout popup
-  (`TimeoutMsgBoxImpl`); `_afkActivity` (`modules/net/msg-social.mjs`) is
-  now the single sender on the web side, rate-limited to 3 min like
-  `kAfkResetIntervalMs`. Guarded by `scripts/test-afk-single-sender.mjs`.
-
-  Fixing it also exposed four assertions in `scripts/test-action-bar.mjs`
-  that were passing for the wrong reason: "action sent to the server" was
-  really counting the keepalive above, and a stale `S.highestBet` made the
-  Check/Call race guard reject the `doAction` calls before they reached what
-  was under test.
-- **Content pages keep the reader’s language** (`web.128`). The nav on the
-  server-rendered pages, the crawler block on `/` and the connect-screen footer
-  line all emitted bare hrefs, so a reader on `/rules?lang=fr` was thrown back
-  to English on the next click and the translated pages looked as if they did
-  not exist. `_seoLangHref(relPath, table, lang)` now builds every internal
-  link and appends `?lang=` only where the target page has that translation,
-  so no link points at a URL that canonicalises elsewhere. Covered by
-  `scripts/test-seo-nav-lang.mjs`.
-- **Reconnect backoff no longer resets on the server Announce** (`web.125`).
-  A PokerTH server sends its `AnnounceMessage` the instant the socket opens,
-  and both reconnect paths cleared `S._reconnectAttempts` from `ws.onmessage`.
-  Against a target that hung up right after the Announce (server-side
-  anti-brute-force, PROXY-protocol mismatch, ban) the backoff never advanced
-  past its first step: the client retried every 5 s indefinitely until the
-  server replied `blockedByServer`. An attempt now only counts as successful
-  once the socket has stayed open for 10 s (`_armReconnectStable`) or an
-  `InitAck` lands. Covered by `scripts/test-reconnect-backoff.mjs`.
-
-### Fixed
-- **About tabs: the 2-line clamp actually applies, and words hyphenate**
-  (`web.150`). `web.149` put `-webkit-line-clamp` on the `<button>` itself,
-  which keeps its own inner rendering and ignores `display:-webkit-box` — on
-  an iPhone the labels ran to five lines, broken mid-word with no hyphen
-  ("Journa / l des / modifi…"). The clamp now lives on an inner span, words
-  break with real hyphenation (`hyphens:auto`, following the interface
-  language via the document `lang`), `break-word` only remains as a last
-  resort for languages without a hyphenation dictionary, and the tab font
-  steps down one size under 560px so whole words fit first. Guard extended in
-  `scripts/test-portrait-wrap.mjs`.
-
-### Changed
-- **Long labels wrap instead of truncating** (`web.149`). QML-parity with the
-  upstream portrait fine-tuning (stable, 2026-08-27): the About dialog tabs
-  now wrap onto a second line and the bar grows with them, instead of cutting
-  the label off ("Third party li…") in narrow portrait windows or long
-  translations (`CustomTabBar`: WordWrap + `maximumLineCount: 2`, mirrored
-  with a 2-line `-webkit-line-clamp`). The create-table form labels likewise
-  wrap freely (`Local`/`NetworkGameSettings`: WordWrap on every Label).
-  Guarded by `scripts/test-portrait-wrap.mjs`.
-- **PM dialog sends with a paper-plane icon** (`web.148`). QML-parity with
-  upstream `PrivateMessageDialog` fine-tuning (stable, 2026-08-27): the wide
-  labeled "Send" button is replaced by the same square paper-plane icon button
-  the lobby and table chats use, sized to the input row. A mouse click no
-  longer steals focus from the input (`onmousedown` preventDefault, the web
-  equivalent of QML's `focusPolicy: NoFocus`), so the next message goes out
-  with Enter right away. Same `sendTooltip` i18n key as the chat button; the
-  `pmSend` key stays in the tables but is no longer referenced. Guarded by
-  `scripts/test-pm-send-icon.mjs`.
-
-### Added
 - **"Playing in …" info in the players list** (`web.147`). QML-parity with
   upstream `PlayerListItem` (stable, 2026-08-27): hovering a player's name in
   the lobby players panel now shows the full sentence *"X is playing in
@@ -567,13 +336,11 @@ highlights below.
   three and every reader got English. All five are now complete — each
   hreflang alternate resolves to a page actually written in that language, and
   each page carries 45 sitemap URLs instead of one.
-
   The tables live in `seo-i18n/`, one module per page: inlined they would have
   added 836 KB to a `proxy.js` that already weighs 1.1 MB. Each module
   assembles its page bodies once at load from language-neutral data handed in
   by `proxy.js`, so `seoPageLangs()`, the hreflang set and the sitemap work
   unchanged, and English stays in the page functions as the fallback.
-
   Terminology follows the client rather than the translator. Hand names come
   from each language’s own `h1n`…`h10n` catalogue, so the page says Kåk in
   Swedish and 葫芦 in Chinese and never disagrees with the in-game hand list.
@@ -582,7 +349,6 @@ highlights below.
   language has one, which is why Russian carries 53 of them and German seven.
   The five action words stay in English everywhere, as they do at every table
   in the world.
-
   Three bugs surfaced along the way, each invisible in a Latin-script
   language. The bidi algorithm reverses `A♠ K♦` and `10-J-Q-K-A` inside an
   Arabic or Hebrew paragraph, so a worked example rendered backwards — wrong,
@@ -590,7 +356,6 @@ highlights below.
   cost in LTR. An untranslated `players` sat unnoticed inside a Japanese
   definition. And Devanagari `फ़` exists both precomposed and as base + nukta,
   which made an identical Hindi hand name compare as different.
-
   `scripts/test-seo-hands-i18n.mjs`, `test-seo-howto-i18n.mjs`,
   `test-seo-glossary-i18n.mjs` and `test-seo-nav-lang.mjs` guard the result:
   entry completeness, index alignment against the English source, terminology
@@ -645,6 +410,114 @@ highlights below.
   (`web.40`), both operator-controlled.
 
 ### Changed
+- **WebSocket heartbeat tolerates one missed pong** (proxy-only, ships
+  with the next Docker image). A pong arriving just past the 10 s window
+  — typical when the nightly pigz backup saturates the CPU — used to get
+  a healthy client terminated mid-hand. The proxy now requires two
+  consecutive misses (~20 s) before terminating, still well within the
+  session grace and upstream timeouts.
+- **Compression cache hardened; service-worker precache throttled**
+  (`web.179` + proxy-side). Proxy: concurrent requests for the same
+  not-yet-compressed file now share a single read + brotli job instead of
+  launching duplicates (in-flight dedup); the critical shell is warmed
+  serially right after boot so the first visitors never pay the brotli-11
+  cost; and a full cache overflow now evicts only the oldest entry instead
+  of wiping everything. Client: the service worker installs its ~130
+  precached assets through a 6-wide worker pool instead of all at once,
+  easing the load on the origin when an update lands during the backup
+  window.
+- **proxy.js no longer touches the disk on hot static paths** (proxy-only,
+  ships with the next Docker image — no client bump). Every static request
+  used to run 2–3 synchronous `fs.statSync` calls (router + `sendFile`), and
+  each `/__ver` poll rescanned ~50 files; when disk I/O is saturated by the
+  nightly backup those sync calls block the Node event loop and stall the
+  game WebSockets sharing the process. A 5 s TTL stat cache (`statCached`)
+  now backs the router, `sendFile` and `sendClientHtml`, and
+  `newestAssetMtime()` memoises its scan for 5 s across all `/__ver` polls.
+  Deploys are still picked up within 5 seconds.
+- **App code served cache-first by the service worker** (`web.178`). Scripts
+  and stylesheets (.js/.mjs/.css) move from network-first to
+  stale-while-revalidate: served instantly from the SW cache with a
+  `cache:'reload'` background refresh. Deploys still reach users through the
+  /__ver banner (CACHE_VERSION bump) or the following load. Navigations now
+  race the origin against a 3.5 s timeout and fall back to the cached shell,
+  with the fetch finishing in the background. Both changes keep the client
+  responsive when the origin is slow — typically during server backups.
+- **Suggest output is one player per line** (`web.175`). Parity with
+  upstream `4afc377`: headline, then one name per line (`\n`), rendered
+  via `white-space: pre-line` on `.msg.sys .txt` — the counterpart of the
+  `<br>` conversion in QML `postLocalChatNote`.
+- **Own client type on the wire** (`web.167`). The client now identifies as
+  `CLIENT_TYPE_WEB` (0x03) in the `Init` buildId instead of masquerading as
+  the Qt-Widget client, following sp0ck's upstream commit `c7e2959`
+  (`game_defs.h`: `CLIENT_TYPE_WEB` + `MIN_BUILD_ID_WEB = 0.0.0`, no version
+  floor for the independently-deployed web client). Server logs and the
+  activity row now show `Web 2.1.7`, letting statistics tell web players
+  apart. `USE_CLIENT_TYPE_WEB` flipped to `true` in
+  `modules/net/messages.mjs`; the upstream triple is still derived from
+  `BUILD_VERSION` at runtime.
+- **Frozen avatar upload bytes** (`web.166`). sp0ck reported the same avatar
+  reaching the server under several hashes (e.g. one player's photo avatar).
+  Cause: the picked image was re-encoded (canvas → PNG via `toBlob`) on
+  every session, and PNG encoders / JPEG decoders differ per browser,
+  browser version and OS — same pixels, new bytes, new MD5, one server
+  duplicate per environment. The encoded PNG is now persisted at pick time
+  (`pth_avatar_up`, base64) and re-served byte for byte by
+  `_pthRefreshUpload`; re-encoding only happens when the avatar actually
+  changes (all `pth_avatar_img` writers purge the frozen record). Emoji and
+  initial-letter avatars freeze per choice too, so system-font drift no
+  longer mints new hashes. `pth_avatar_up` joins the factory-reset keep
+  list next to the image itself. Mirrors the desktop principle of hashing
+  the file's bytes once. New suite `scripts/test-avatar-frozen.mjs`.
+- **Translation fallback hardening** (`web.163`). Parity with upstream commit
+  `69ec0824` ("qml/widget: translation fallback hardening"): Google throttles
+  the gtx endpoint per IP (HTTP 429, VPN users first), so the chain is now
+  gtx direct → MyMemory direct (player's IP) → server relay, and the relay
+  itself falls back gtx → MyMemory (the server's single shared IP is the
+  first to get blocked). MyMemory is queried as `Autodetect|target`, its
+  `responseStatus` is checked (it answers HTTP 200 with an UPPERCASE warning
+  in `translatedText` on quota/pair errors), and the source==target 403 hands
+  the original back like gtx does. When every service fails, a toast
+  (existing `chatTranslateFailed` key, throttled 60 s) replaces the silent
+  hourglass. New suite `scripts/test-translate-fallback.mjs`.
+- **Per-account private messages** (`web.161`). Parity with upstream commit
+  `9bccf3a` ("qml: pm dialog persistence fine-tuning"): the PM history now
+  belongs to the logged-in nickname instead of the whole browser profile.
+  IndexedDB `pth_pm` migrates to v2 (composite `(owner, partner)` key,
+  mirroring the SQLite `owner` column upstream); ownerless rows from before
+  the split are adopted by the first account that logs in. The inbox is
+  empty and nothing is persisted while nobody is logged in (owner set on
+  our own PlayerInfoReply, cleared on InitAck — the web analogue of
+  `setMyPlayerInfo` / `setSession`), and a selected conversation that
+  disappears with an account switch falls back to the first partner.
+  New deterministic suite `scripts/test-pm-owner.mjs`.
+- **Floating bet keypad on desktop** (`web.159`). On fine-pointer devices the
+  web-only bet keypad no longer swaps out the middle and action rows: it now
+  opens as a compact overlay (34 px keys) floating just above the action
+  panel, with a short fade-in, so the whole bar — Fold/Call/Raise, slider,
+  quick bets — stays visible and active and the game view does not move at
+  all. A click anywhere outside the keypad cancels it; the click then reaches
+  the bar normally. Touch devices keep the in-place replacement, which
+  remains the only way to avoid the OS keyboard and table reflow. The small
+  keypad-open button also now stretches to the exact height of the bet amount
+  field at every bar scale, instead of a fixed 34 px.
+- **Long labels wrap instead of truncating** (`web.149`). QML-parity with the
+  upstream portrait fine-tuning (stable, 2026-08-27): the About dialog tabs
+  now wrap onto a second line and the bar grows with them, instead of cutting
+  the label off ("Third party li…") in narrow portrait windows or long
+  translations (`CustomTabBar`: WordWrap + `maximumLineCount: 2`, mirrored
+  with a 2-line `-webkit-line-clamp`). The create-table form labels likewise
+  wrap freely (`Local`/`NetworkGameSettings`: WordWrap on every Label).
+  Guarded by `scripts/test-portrait-wrap.mjs`.
+- **PM dialog sends with a paper-plane icon** (`web.148`). QML-parity with
+  upstream `PrivateMessageDialog` fine-tuning (stable, 2026-08-27): the wide
+  labeled "Send" button is replaced by the same square paper-plane icon button
+  the lobby and table chats use, sized to the input row. A mouse click no
+  longer steals focus from the input (`onmousedown` preventDefault, the web
+  equivalent of QML's `focusPolicy: NoFocus`), so the next message goes out
+  with Enter right away. Same `sendTooltip` i18n key as the chat button; the
+  `pmSend` key stays in the tables but is no longer referenced. Guarded by
+  `scripts/test-pm-send-icon.mjs`.
 - **Most played tracks is a ranking first** (`web.127`). The section opens
   with the top ten titles as horizontal bars (plays and share; titles removed
   from the catalogue shown in italics), then one context line — plays per day
@@ -675,6 +548,101 @@ highlights below.
   veil left to click.
 
 ### Fixed
+- **Failed static loads are retried in-page** (`web.177`). The error
+  collector in `pokerth-client.html` re-injects a failed `<script>` or
+  stylesheet `<link>` with a cache-buster (`?r=1` after 700 ms, `?r=2`
+  after 2 s more) before falling back to the one-shot auto-reload. Aimed
+  at the short Cloudflare↔origin TLS bursts (HTTP 525) seen on
+  pokerth.net: the same URL answers a second later, but a failed static
+  tag used to stay dead for the whole session. The log gets one line per
+  outcome (`retry #n recovered` / `giving up`), no extra probe.
+- **Deal/action sound calls guarded** (`web.176`): `notifyCard`/`notifyAction`
+  from `sounds.mjs` are now called only when defined, so a failed module load
+  no longer throws in `msg-hand.mjs` mid-hand.
+- **Community suggest output was silently dropped** (`web.175`). The
+  local suggestion note was posted as a plain `sys` chat message; when
+  system messages were removed from the chat (narmod request, `spec.force`
+  escape hatch), the suggest path was not updated and the note vanished —
+  the mocked `addChat` in the test hid it. It now passes `{ force: true }`
+  and the test asserts it.
+- **Idle filter now counts spectators as at a table** (`web.172`). QML
+  parity with upstream `26018c9` (`syncPlayerGameMembership`: idle = at no
+  table, seated *or* watching; the counterpart of the Widget client's
+  role 34). `GameListSpectatorJoined/Left` now maintain
+  `games[id].watchers` and repaint the players panel; `_playerActivity`
+  falls back to the watcher list after the seat scan (a seat wins, as
+  upstream), so the status pad, the "playing in" tooltip and the idle
+  view all agree. The re-evaluation half of the upstream fix was already
+  covered web-side (`_refreshPlayersPanelIfOpen` on every seat/mode
+  mutation).
+- **Auto-update no longer restarts over reconnect-grace sessions** (`web.170`).
+  The idle check gating the automatic update/restart counted only OPEN browser
+  WebSockets (`wss.clients.size`); a mobile player whose phone is locked sits
+  in reconnect grace — browser socket closed, upstream game bridge alive — and
+  was invisible to it, so the proxy could deem itself idle and restart, killing
+  games in progress. Both the arming check and the end-of-notice re-check now
+  also count `_liveSessions` (bridges incl. grace). The admin Status card gains
+  an **Active sessions** row (`/admin/status.liveSessions`) next to Connected
+  sockets, so the two figures — open sockets vs live bridges — are no longer
+  conflated.
+- **LAN invite links now land on the right server** (`web.169`). Sharing a
+  table from a LAN / dedicated connection encodes the target in the link
+  (`#join=<name>&s=<host[:port]>[&tls=1]`), and the invitee's fields were
+  prefilled correctly — but the subsequent server-mode switch re-derived the
+  LAN form via `_lanFields()`, overwriting host/port/TLS with the invitee's
+  own saved `pth_lan_*` values or the instance defaults. The invite target is
+  now published as `window._shareLanTarget` and takes top priority in
+  `_lanFields()` (share link → player's saved prefs → instance default);
+  a manual edit of the host/port fields releases it. Legacy `?host=`/`?port=`
+  share links get the same protection.
+- **Login restored on pokerth.net** (`web.168`). The live server currently runs a
+  v2.1.7 build that predates upstream commit `c7e2959` (`CLIENT_TYPE_WEB`), so it
+  rejected our `0x03` buildId with `initVersionNotSupported`. The client
+  temporarily identifies as Qt-Widget 2.1.7 again (`USE_CLIENT_TYPE_WEB=false`);
+  the web client type will be re-enabled once the server ships `c7e2959` /
+  v2.1.8.
+- **The client no longer defeats the server-side AFK kick** (`web.132`).
+  `renderMyTurnActions()` sent a `ResetTimeoutMessage` on every render, and
+  the client calls it on its own each time the turn comes round: an
+  abandoned tab answered "still here" hand after hand, its session never
+  timed out and its seat was never freed, while a QML client in the same
+  spot is kicked. Upstream only ever sends a reset from real input
+  (`GameHandler::eventFilter`) or from the OK button of the timeout popup
+  (`TimeoutMsgBoxImpl`); `_afkActivity` (`modules/net/msg-social.mjs`) is
+  now the single sender on the web side, rate-limited to 3 min like
+  `kAfkResetIntervalMs`. Guarded by `scripts/test-afk-single-sender.mjs`.
+  Fixing it also exposed four assertions in `scripts/test-action-bar.mjs`
+  that were passing for the wrong reason: "action sent to the server" was
+  really counting the keepalive above, and a stale `S.highestBet` made the
+  Check/Call race guard reject the `doAction` calls before they reached what
+  was under test.
+- **Content pages keep the reader’s language** (`web.128`). The nav on the
+  server-rendered pages, the crawler block on `/` and the connect-screen footer
+  line all emitted bare hrefs, so a reader on `/rules?lang=fr` was thrown back
+  to English on the next click and the translated pages looked as if they did
+  not exist. `_seoLangHref(relPath, table, lang)` now builds every internal
+  link and appends `?lang=` only where the target page has that translation,
+  so no link points at a URL that canonicalises elsewhere. Covered by
+  `scripts/test-seo-nav-lang.mjs`.
+- **Reconnect backoff no longer resets on the server Announce** (`web.125`).
+  A PokerTH server sends its `AnnounceMessage` the instant the socket opens,
+  and both reconnect paths cleared `S._reconnectAttempts` from `ws.onmessage`.
+  Against a target that hung up right after the Announce (server-side
+  anti-brute-force, PROXY-protocol mismatch, ban) the backoff never advanced
+  past its first step: the client retried every 5 s indefinitely until the
+  server replied `blockedByServer`. An attempt now only counts as successful
+  once the socket has stayed open for 10 s (`_armReconnectStable`) or an
+  `InitAck` lands. Covered by `scripts/test-reconnect-backoff.mjs`.
+- **About tabs: the 2-line clamp actually applies, and words hyphenate**
+  (`web.150`). `web.149` put `-webkit-line-clamp` on the `<button>` itself,
+  which keeps its own inner rendering and ignores `display:-webkit-box` — on
+  an iPhone the labels ran to five lines, broken mid-word with no hyphen
+  ("Journa / l des / modifi…"). The clamp now lives on an inner span, words
+  break with real hyphenation (`hyphens:auto`, following the interface
+  language via the document `lang`), `break-word` only remains as a last
+  resort for languages without a hyphenation dictionary, and the tab font
+  steps down one size under 560px so whole words fit first. Guard extended in
+  `scripts/test-portrait-wrap.mjs`.
 - **The announced build id fell back to 2.1.6 after the 2.1.7 release**
   (`web.91`) — the derivation now follows `BUILD_VERSION` in both the protocol
   init and the served files.
@@ -736,6 +704,11 @@ because sp0ck shared them ahead of the release.
   its choices ("Portrait" finds "Seat placement"). Picking a result opens the
   right panel, unfolds the section and highlights the row. Same field and same
   behaviour as the Help window search.
+- **The card-dealing animation can be switched off** — a new toggle in the
+  advanced options, Cards section (web, on by default), asked for on the
+  forum. In the same pass the animation stops flying cards to the chairs of
+  knocked-out or departed players: it now targets only the seats actually
+  dealt this hand, using the seat list the renderer publishes.
 
 ### Changed
 - **The translate globe now appears on the line under the pointer**, or on the
@@ -752,15 +725,6 @@ because sp0ck shared them ahead of the release.
 - **Action buttons use their pack's own corner radius.** Fourteen of the
   seventeen table packs declare something other than the default; they were all
   being drawn at the default until now.
-
-### Added
-- **The card-dealing animation can be switched off** — a new toggle in the
-  advanced options, Cards section (web, on by default), asked for on the
-  forum. In the same pass the animation stops flying cards to the chairs of
-  knocked-out or departed players: it now targets only the seats actually
-  dealt this hand, using the seat list the renderer publishes.
-
-### Changed
 - **One automatic reload when a core script fails to load.** The probe added
   in web.94 showed the pattern: a script fails while the very same URL
   answers HTTP 200 a second later — a transient hiccup, not a broken file.
@@ -901,6 +865,14 @@ QML build, and the client is live on the official infrastructure at
 line so far — fidelity and interface work bringing the client closer to the
 official QML client:
 
+### Added
+- **Training-mode achievements.** A new **Trophées** tab in the ranking window — shown only inside Training mode, once connected — tracks 27 achievements across Progress, Skill, Play-style, Fun and PokerTH formats: play 100 / 500 / 1000 hands, win 1 / 10 / 50 games, win-streaks, a comeback from under 15% of your stack, a heads-up win, patience, bluffs, all-ins, beating the three difficulty "schools", a completionist meta, and PokerTH-format wins (Ranking, WeCup, BBC, plus a Triple Crown, a Blitz and a rising-blinds milestone). Locked ones are greyed out, a 👥 badge flags achievements that require a set number of players, and unlocking one pops a toast. A compact "X / 27" counter also shows on your own profile card and the end-of-game screen. Fully localised in the 36 languages. Under the hood it's a mode-agnostic module (`public/modules/achievements/`) driven purely by the engine's event stream, so the same system can later plug into other modes.
+- **Startup loading screen.** A boot splash matching the login look (theme-aware colours, labels in 36 languages) covers startup until the app is ready, preloading the critical assets with automatic retry and offering a **Retry** button if the connection drops mid-load — so a flaky network no longer leaves a half-loaded UI.
+- **Seven official PokerTH card decks** in the deck gallery, plus one-click import
+  of a table, card deck or card-back from a `.zip`.
+- **A dedicated Music player panel** (game-sound settings moved to Advanced options).
+> **Offline needs HTTPS.** A Service Worker — and therefore the whole offline cache — only registers over **HTTPS** (or `localhost`). On a plain `http://` server the game still works online, but there is **no offline cache**, so an installed PWA can't launch (not even Training mode) without a connection. Serve the app over `https://` for offline play.
+
 ### Changed
 - **Smarter training bots — multi-street aggression.** Bots no longer play each
   street in isolation. When a bot was the last to bet and gets checked to on the
@@ -934,15 +906,6 @@ official QML client:
   The auto-mode selector and the 1/3 / 1/2 / Pot quick-bets are now always shown
   in the action bar (as in the official client); the web-only 4-color deck option
   is gone — cards use the standard two suit colours.
-
-### Added
-- **Training-mode achievements.** A new **Trophées** tab in the ranking window — shown only inside Training mode, once connected — tracks 27 achievements across Progress, Skill, Play-style, Fun and PokerTH formats: play 100 / 500 / 1000 hands, win 1 / 10 / 50 games, win-streaks, a comeback from under 15% of your stack, a heads-up win, patience, bluffs, all-ins, beating the three difficulty "schools", a completionist meta, and PokerTH-format wins (Ranking, WeCup, BBC, plus a Triple Crown, a Blitz and a rising-blinds milestone). Locked ones are greyed out, a 👥 badge flags achievements that require a set number of players, and unlocking one pops a toast. A compact "X / 27" counter also shows on your own profile card and the end-of-game screen. Fully localised in the 36 languages. Under the hood it's a mode-agnostic module (`public/modules/achievements/`) driven purely by the engine's event stream, so the same system can later plug into other modes.
-- **Startup loading screen.** A boot splash matching the login look (theme-aware colours, labels in 36 languages) covers startup until the app is ready, preloading the critical assets with automatic retry and offering a **Retry** button if the connection drops mid-load — so a flaky network no longer leaves a half-loaded UI.
-- **Seven official PokerTH card decks** in the deck gallery, plus one-click import
-  of a table, card deck or card-back from a `.zip`.
-- **A dedicated Music player panel** (game-sound settings moved to Advanced options).
-
-> **Offline needs HTTPS.** A Service Worker — and therefore the whole offline cache — only registers over **HTTPS** (or `localhost`). On a plain `http://` server the game still works online, but there is **no offline cache**, so an installed PWA can't launch (not even Training mode) without a connection. Serve the app over `https://` for offline play.
 
 ## 0.3 line — public beta (2026)
 
@@ -981,8 +944,6 @@ The `0.3` line marks the move into public beta. What landed across the
 - Proxy hardening: upstream host **and** port allowlists (anti open-relay and
   anti-SSRF), a token-gated admin API, scoped delegate keys, and a relay
   frame-size cap. See [`docs/SECURITY.md`](docs/SECURITY.md).
-
 ---
-
 Earlier history (the `0.2.x` build series) is on the
 [Releases](https://github.com/narmod/pokerth-web-client/releases) page.
