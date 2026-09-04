@@ -10,22 +10,6 @@ this file captures what matters to players and operators.
 
 ## 2.1.8-web line (2026)
 
-2026-09-03 version 2.1.8-web.22:
-- bugfix: non-PokerTH seat packs now render bets the way they did before the "Bet display" option existed - chip next to the player box ('classic') instead of the inset strip; web.21 had frozen them on 'inset'
-
-2026-09-03 version 2.1.8-web.21:
-- improvement: the "Bet display" option (inset strip vs chip next to the box) now applies only to the built-in "PokerTH" seat style - other seat packs always keep their original presentation; the option UI moved from the top of the Seats tab to a nested block under the PokerTH entry, shown only while that style is selected, and switching seat packs re-resolves the bet display live
-
-2026-09-03 version 2.1.8-web.20:
-- bugfix: the top-centre seat's bet (and the bottom-centre spectator seat's) was half-clipped in the inset bet strip - the betside-split rule (bet right of the box / puck left, QML 2.1.8 9f402258) won the cascade over the strip's chip reset at equal specificity, and its translateY(-50%) applied to the strip's static chip (left/top ignored, transform not), lifting it half out of the 20 px overflow-hidden band; a re-neutralising rule now follows the split rule - QML has no such case since PlayerBetStrip ignores betSide entirely
-
-2026-09-03 version 2.1.8-web.19:
-- improvement: opponent seat plates now have the fixed QML box width (121 layout px, border-box, GamePage tableZone 2.1.3 opp base) instead of sizing to their content - stack amounts and long names no longer widen boxes, so the free corridor between side plates, --comm-scale, the community row and the action-bar width (264*cs) stay constant as chip counts change; text elides inside the imposed width (name yields, stack never clips); image seat packs and the self box keep content sizing
-- bugfix: the turn-highlight scale (playerBox.scale QML: 1.04 opponents, 1.03 self) is now divided out of all rect-based geometry measurements (new `_plateTurnK`, transform-origin center so rect centres are invariant) - the witness seat no longer crosses the 2 px `_seatDimsMeasured` threshold when it is at turn (which re-triggered layout bisection), and barycentre bounds/corridor no longer breathe as the turn moves around the table; works at any instant of the 180 ms transition
-
-2026-09-03 version 2.1.8-web.18:
-- bugfix: table geometry is now invariant to bet display - with the "in the box" bet style, the opened bet strip made each seat plate 18 px taller, which shifted the community-row barycentre (community cards nudged and rescaled), re-centred the fullscreen table background, and could bump the reference seat measurement into a re-layout; the strip's height (constant 18 px throughout its unfold, per the socleOpen keyframes) is now excluded from all geometry measurements (`_plateSocleH` in seat-render.mjs), matching the QML client where the strip space is permanently reserved in the slot heights
-
 Opened with `v2.1.8-web.0` (2026-09-01), following the upstream **2.1.8**
 release (server restarted by sp0ck the same night). Granular, per-build
 changes for this line are on the
@@ -33,6 +17,19 @@ changes for this line are on the
 highlights below.
 
 ### Changed
+- **Bet display option scoped to the PokerTH seat style** (`web.21`). The
+  inset-strip / classic-chip choice now applies only to the built-in
+  "PokerTH" seat style; other seat packs always keep their original
+  presentation. The option UI moved from the top of the Seats tab to a
+  nested block under the PokerTH entry, shown only while that style is
+  selected, and switching seat packs re-resolves the bet display live.
+- **Opponent seat plates at the fixed QML box width** (`web.19`). 121
+  layout px, border-box (GamePage tableZone 2.1.3 opp base), instead of
+  sizing to content: stack amounts and long names no longer widen the
+  boxes, so the free corridor between side plates, `--comm-scale`, the
+  community row and the action-bar width (264*cs) stay constant as chip
+  counts change. Text elides inside the imposed width (name yields, stack
+  never clips); image seat packs and the self box keep content sizing.
 - **Auto-update no longer blocked by notify-only sockets** (proxy-only,
   ships with the next Docker image). The restart gate counted every open
   WebSocket, including the lightweight `?notify=1` channels held by players
@@ -144,6 +141,35 @@ highlights below.
   Green Casino and the default table, so their QML renders apply as well.
 
 ### Fixed
+- **Non-PokerTH seat packs were stuck on the inset bet display**
+  (`web.22`). `web.21` had frozen them on `inset`; they now render bets
+  the way they did before the "Bet display" option existed — chip next to
+  the player box (`classic`).
+- **Top-centre (and spectator bottom-centre) bet half-clipped in the
+  inset strip** (`web.20`). The betside-split rule (bet right of the box /
+  puck left, QML 2.1.8 `9f402258`) won the cascade over the strip's chip
+  reset at equal specificity, and its `translateY(-50%)` applied to the
+  strip's static chip (left/top ignored, transform not), lifting it half
+  out of the 20 px overflow-hidden band; a re-neutralising rule now
+  follows the split rule — QML has no such case since `PlayerBetStrip`
+  ignores `betSide` entirely.
+- **Turn-highlight scale divided out of geometry measurements**
+  (`web.19`). `playerBox.scale` (QML: 1.04 opponents, 1.03 self) is now
+  excluded from all rect-based measurements (new `_plateTurnK`,
+  transform-origin center so rect centres are invariant) — the witness
+  seat no longer crosses the 2 px `_seatDimsMeasured` threshold when it
+  is at turn (which re-triggered layout bisection), and barycentre
+  bounds / corridor no longer breathe as the turn moves around the
+  table; works at any instant of the 180 ms transition.
+- **Table geometry invariant to bet display** (`web.18`). With the
+  "in the box" style, the opened bet strip made each seat plate 18 px
+  taller, which shifted the community-row barycentre (community cards
+  nudged and rescaled), re-centred the fullscreen table background, and
+  could bump the reference seat measurement into a re-layout. The
+  strip's height (constant 18 px throughout its unfold, per the
+  `socleOpen` keyframes) is now excluded from all geometry measurements
+  (`_plateSocleH` in `seat-render.mjs`), matching the QML client where
+  the strip space is permanently reserved in the slot heights.
 - **Older LAN / dedicated servers rejected the client with "Version
   incompatible"** (`web.17`). Since `web.0` the client always introduces
   itself as `CLIENT_TYPE_WEB` (0x03); any `pokerth-server` built before
