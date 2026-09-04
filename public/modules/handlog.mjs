@@ -457,18 +457,66 @@ function _openDb() {
 class HandStore {
   constructor() {
     this._db = null;
-    this._ready = _openDb().then((db) => { this._db = db; }).catch(() => { this._db = null; });
+    this._dead = false;      // IndexedDB indisponible : ne jamais réessayer.
+    this._quotaHit = false;  // Stockage plein : écritures suspendues pour la session.
+    this._ready = _openDb().then((db) => { this._db = db; this._watchClose(db); })
+                           .catch(() => { this._db = null; this._dead = true; });
   }
 
-  async _tx(stores, mode, fn) {
+  // Le navigateur peut fermer la base sans nous prévenir par une erreur
+  // (Android sous pression de stockage, onglet gelé/réactivé) : on oublie le
+  // handle, _tx rouvrira à la demande au lieu de jeter « connection is
+  // closing » en rejection non gérée.
+  _watchClose(db) {
+    try { db.onclose = () => { if (this._db === db) this._db = null; }; } catch (_e) {}
+  }
+
+  _reopen() {
+    this._db = null;
+    this._ready = _openDb().then((db) => { this._db = db; this._watchClose(db); })
+                           .catch(() => { this._db = null; this._dead = true; });
+    return this._ready;
+  }
+
+  async _tx(stores, mode, fn, _retried) {
     await this._ready;
-    if (!this._db) return null;
+    if (this._dead || (this._quotaHit && mode === 'readwrite')) return null;
+    if (!this._db) {
+      if (_retried) return null;
+      await this._reopen();
+      return this._tx(stores, mode, fn, true);
+    }
+    let tx;
+    try {
+      tx = this._db.transaction(stores, mode);
+    } catch (_e) {
+      // InvalidStateError « The database connection is closing » : la base
+      // s'est fermée entre deux mains. Une réouverture, un rejeu, sinon tant
+      // pis pour cette écriture (best-effort, comme le log fichier QML).
+      if (_retried) return null;
+      await this._reopen();
+      return this._tx(stores, mode, fn, true);
+    }
     return new Promise((resolve, reject) => {
-      const tx = this._db.transaction(stores, mode);
       const out = fn(tx);
+      const fail = () => {
+        const err = tx.error;
+        if (err && err.name === 'QuotaExceededError') {
+          // Appareil plein : pas un bug du client, et chaque fin de main en
+          // produirait un autre. On suspend l'enregistrement pour la session
+          // (une seule trace console) ; lecture et export restent servis.
+          if (!this._quotaHit) {
+            this._quotaHit = true;
+            try { console.warn('[handlog] storage quota exceeded — hand recording paused for this session'); } catch (_e) {}
+          }
+          resolve(null);
+          return;
+        }
+        reject(err);
+      };
       tx.oncomplete = () => resolve(out);
-      tx.onerror = () => reject(tx.error);
-      tx.onabort = () => reject(tx.error);
+      tx.onerror = fail;
+      tx.onabort = fail;
     });
   }
 
@@ -503,13 +551,13 @@ class HandStore {
   }
 
   async _all(store) {
-    await this._ready;
-    if (!this._db) return [];
-    return new Promise((resolve, reject) => {
-      const req = this._db.transaction([store], 'readonly').objectStore(store).getAll();
-      req.onsuccess = () => resolve(req.result || []);
-      req.onerror = () => reject(req.error);
+    // Passe par _tx pour profiter des mêmes gardes (réouverture, base morte).
+    let rows = [];
+    await this._tx([store], 'readonly', (tx) => {
+      const req = tx.objectStore(store).getAll();
+      req.onsuccess = () => { rows = req.result || []; };
     });
+    return rows;
   }
 
   // Recharge tout l'historique (toutes sessions) sous forme de tables .pdb.

@@ -73,6 +73,22 @@
     if (Q.length < 20) Q.push(e);
     if (window.__pthErrFlush) { try { window.__pthErrFlush(); } catch (_) {} }
   }
+  /* Bruit d'extensions navigateur : pas des bugs du client, et quelques
+     visiteurs équipés suffisent à noyer le journal. Sont écartés :
+     - toute frame chez *-extension:// (chrome-, moz-, safari-web-…) ;
+     - « Script error. » opaque cross-origin (tout notre code est same-origin,
+       une erreur sans message/pile ne peut venir que d'un script injecté) ;
+     - la collision window.ethereum des injecteurs de wallets crypto ;
+     - les extensions de traduction de page injectées dans le document
+       (checkInScreen/textNodesUnder/… : fonctions absentes du client). */
+  function isExtNoise(msg, src, stack) {
+    var s = String(msg || '') + '\n' + String(src || '') + '\n' + String(stack || '');
+    if (s.indexOf('-extension://') !== -1) return true;
+    if (String(msg || '') === 'Script error.') return true;
+    if (s.indexOf('Cannot redefine property: ethereum') !== -1) return true;
+    if (/(checkInScreen|textNodesUnder|processExtraInfo|processNode)@/.test(s)) return true;
+    return false;
+  }
   window.addEventListener('error', function (ev) {
     if (!ev) return;
     var t = ev.target;
@@ -171,14 +187,18 @@
       } catch (_) {}
       return;
     }
+    var stk = (ev.error && ev.error.stack) ? String(ev.error.stack) : '';
+    if (isExtNoise(ev.message, ev.filename, stk)) return;
     push({ msg: String(ev.message || 'error'), src: String(ev.filename || ''),
            line: ev.lineno || 0, col: ev.colno || 0,
-           stack: (ev.error && ev.error.stack) ? String(ev.error.stack) : '' });
+           stack: stk });
   }, true);
   window.addEventListener('unhandledrejection', function (ev) {
     var r = ev && ev.reason;
+    var stk = (r && r.stack) ? String(r.stack) : '';
+    if (isExtNoise((r && r.message) || r, '', stk)) return;
     push({ msg: 'Unhandled rejection: ' + String((r && r.message) || r || '?'),
-           src: '', line: 0, col: 0, stack: (r && r.stack) ? String(r.stack) : '' });
+           src: '', line: 0, col: 0, stack: stk });
   });
 })();
 </script>

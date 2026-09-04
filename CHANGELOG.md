@@ -141,6 +141,24 @@ highlights below.
   Green Casino and the default table, so their QML renders apply as well.
 
 ### Fixed
+- **Hand-history writes survive Android closing IndexedDB** (`web.23`).
+  Android can close the `pth_handlog` connection behind the app's back
+  (storage pressure, frozen tab); the next hand-end write then threw
+  `InvalidStateError: The database connection is closing` synchronously
+  inside `HandStore._tx` as an unhandled rejection, and the hand was lost.
+  The store now watches `db.onclose`, reopens the base once and replays
+  the transaction; `_all()` goes through the same guards. On
+  `QuotaExceededError` (device full — not a client bug) recording pauses
+  for the session with a single console warning instead of erroring after
+  every hand; reads and export keep working.
+- **Error collector filters browser-extension noise**. Frames from
+  `*-extension://` URLs (crypto-wallet `window.ethereum` redefinition
+  collisions), injected page-translator content scripts
+  (`checkInScreen`/`textNodesUnder`/… — functions absent from the client,
+  misattributed to the page URL), and opaque cross-origin `Script error.`
+  entries (all client code is same-origin, so these can only come from
+  injected scripts) no longer reach the report queue — a handful of
+  equipped visitors was enough to drown the log.
 - **Non-PokerTH seat packs were stuck on the inset bet display**
   (`web.22`). `web.21` had frozen them on `inset`; they now render bets
   the way they did before the "Bet display" option existed — chip next to

@@ -1,4 +1,8 @@
-2026-09-03 version 2.1.8-web (current series):
+2026-09-04 version 2.1.8-web (current series):
+- bugfix: hand-history recording no longer fails when Android closes its database in the background - the client reopens it and carries on; if the device storage is completely full, recording pauses quietly for the session instead of erroring after every hand
+- improvement: automatic error reports no longer pick up noise caused by browser extensions (crypto wallets, page translators), so real client issues stand out
+
+2026-09-03 version 2.1.8-web:
 - bugfix: with a seat style other than PokerTH, bets are shown next to the player box again, as they were before the bet display option was introduced
 
 2026-09-03 version 2.1.8-web:
