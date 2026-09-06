@@ -24,7 +24,10 @@ highlights below.
   authored any language — the admin editor shows it pre-filled and any saved
   text replaces it; the enabled toggle stays operator-controlled. English
   only by design: the client's translation fallback (on-device → gtx)
-  localises the popup. **proxy.js changed — restart required.**
+  localises the popup. Later the same day the registered-account text gained
+  a "Ranking & community events" section (10-player full-table start rule
+  verified against upstream `servergamestate.cpp`; BBC / WeCup / Monthly
+  Cup). **proxy.js changed — restart required.**
 - **Registered-account notice** (`web.29`). Mirror of the guest notice for
   pokerth.net logins made WITH an account: `authNotice` admin config key,
   master-only editor card, popup on every such connection at lobby entry,
