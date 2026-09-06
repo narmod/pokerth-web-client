@@ -1,4 +1,7 @@
 2026-09-06 version 2.1.8-web (current series):
+- improvement: both default notices now explain when the private-message envelope shows up - only next to players who are online and not seated at a running game
+
+2026-09-06 version 2.1.8-web:
 - improvement: the default message for registered accounts now details the ranking scene - ranking games are fixed 10-player tournaments that only start when full, results feed the official pokerth.net ranking, and the community BBC, WeCup and Monthly Cup competitions are mentioned
 
 2026-09-06 version 2.1.8-web:
