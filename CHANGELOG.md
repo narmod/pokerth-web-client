@@ -17,6 +17,16 @@ changes for this line are on the
 highlights below.
 
 ### Added
+- **Hand-written notice defaults in all 45 languages** (proxy-only). The
+  guest and account notices ship hand-written in every client language
+  (game-type names taken verbatim from each `lang/*.mjs`), replacing
+  machine translation whose output was poor ("running games" → "jeux de
+  course"). An exact language match on the client skips translation
+  entirely. Also fixed: a language saved verbatim identical to its built-in
+  default is dropped before storage (`_stripDefaultNoticeLangs`), so
+  enabling a notice with the pre-filled editor no longer freezes the text —
+  future default updates flow to everyone. **proxy.js changed — restart
+  required.**
 - **Thumbs up / down on the music player** (`web.32`). Two thumbs sit under
   the track title in the LCD, on the CURRENT track only — no per-row voting,
   which would turn the playlist into a form. `POST /__music-vote {id, vid,

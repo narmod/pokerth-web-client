@@ -1,4 +1,8 @@
 2026-09-06 version 2.1.8-web (current series):
+- improvement: the guest and account notices are now hand-written in all 45 languages of the app (using each language's own game-type names) instead of machine-translated - no more odd wording
+- bugfix: enabling a notice without touching the pre-filled text no longer freezes it - future improvements to the built-in messages reach everyone automatically
+
+2026-09-06 version 2.1.8-web:
 - new: tell everyone what you think of the music - two thumbs under the track title let you say whether you like what is playing, radios included; one vote per device, changeable or removable at any time, and nothing about who voted is recorded
 - new: voting is blind by default - you see your own thumb but not the totals, so the numbers on screen cannot sway your answer; the server operator can reveal the counts
 
