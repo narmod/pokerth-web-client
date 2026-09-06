@@ -11169,11 +11169,15 @@ body.adv-no-avcreate #avp-tab-create { display: none !important; }
 }
 
 /* Bloc de la carte joueur */
+/* Même gabarit que les blocs voisins de la carte joueur (.pim-ig,
+   .pim-stat-box) : la carte est un flex colonne centré, sans width:100% le
+   bloc se rétracte à son contenu — d'où la peau et la largeur calquées. */
 .nv-block {
-  margin-top: 10px; padding: 10px;
-  background: var(--inset);
+  width: 100%; box-sizing: border-box;
+  padding: 10px 12px;
+  background: var(--field-bg);
   border: 1px solid var(--border);
-  border-radius: var(--r-md);
+  border-radius: var(--r-sm);
   text-align: left;
 }
 .nv-hd {
