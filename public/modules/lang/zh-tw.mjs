@@ -11,6 +11,8 @@ export const meta = {
 };
 
 export const strings = {
+    // Classement des tapis (game/stack-rank.mjs, extra web)
+    chipRankTitle:'籌碼排名', chipRankTip:'籌碼排名（即時）', chipRankLeft:'仍在角逐', chipRankAvg:'平均', chipRankInPlay:'場上總量', chipRankAllIn:'all-in', chipRankFolded:'蓋牌', chipRankOut:'出局', chipRankEmpty:'目前沒有可排名的籌碼。',
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'我的筆記', nvPlaceholder:'跟注任何 3-bet…', nvSaved:'已儲存', nvTagNone:'無標籤', nvTagRed:'危險', nvTagOrange:'激進', nvTagYellow:'關注', nvTagGreen:'魚', nvTagBlue:'緊手', nvTagPurple:'狡猾', nvLabelPh:'標籤名稱', nvLabelTip:'重新命名標籤 — 適用於所有使用此顏色的玩家',
     ppMyStats:'我的統計',

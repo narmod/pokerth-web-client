@@ -23,7 +23,7 @@
  *                 Cross-origin requests and WS upgrades are left untouched.
  *                 (Fonts are now self-hosted and handled by SWR above.)
  */
-const CACHE_VERSION = 'pokerth-v2.1.8-web.25';
+const CACHE_VERSION = 'pokerth-v2.1.8-web.26';
 // Share Target payload park (see handleShareTarget). Kept OUT of CACHE_VERSION
 // so an update sweep never eats a share that arrived seconds earlier.
 const SHARE_CACHE = 'pokerth-share';
@@ -70,6 +70,7 @@ const ASSETS = [
   '/modules/journal.mjs',
   '/modules/notes/index.mjs',
   '/modules/notes/store.mjs',
+  '/modules/game/stack-rank.mjs',
   '/vendor/sql-wasm.js',
   '/vendor/sql-wasm.wasm',
   '/modules/theme.mjs',

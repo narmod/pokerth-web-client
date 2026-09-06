@@ -14,6 +14,8 @@ export const meta = {
 };
 
 export const strings = {
+    // Classement des tapis (game/stack-rank.mjs, extra web)
+    chipRankTitle:'चिप रैंकिंग', chipRankTip:'चिप रैंकिंग (लाइव)', chipRankLeft:'दौड़ में', chipRankAvg:'औसत', chipRankInPlay:'खेल में', chipRankAllIn:'all-in', chipRankFolded:'फ़ोल्ड', chipRankOut:'बाहर', chipRankEmpty:'अभी रैंक करने के लिए कोई स्टैक नहीं।',
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'मेरा नोट', nvPlaceholder:'हर 3-bet कॉल करता है…', nvSaved:'सहेजा गया', nvTagNone:'कोई लेबल नहीं', nvTagRed:'ख़तरनाक', nvTagOrange:'आक्रामक', nvTagYellow:'नज़र रखें', nvTagGreen:'फ़िश', nvTagBlue:'टाइट', nvTagPurple:'चालाक', nvLabelPh:'लेबल का नाम', nvLabelTip:'लेबल का नाम बदलें — इस रंग वाले सभी खिलाड़ियों पर लागू होगा',
     ppMyStats:'मेरे आँकड़े',

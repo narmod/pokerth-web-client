@@ -9,6 +9,8 @@ export const meta = {
 };
 
 export const strings = {
+    // Classement des tapis (game/stack-rank.mjs, extra web)
+    chipRankTitle:'Рейтинг стеків', chipRankTip:'Рейтинг стеків (наживо)', chipRankLeft:'У боротьбі', chipRankAvg:'Середнє', chipRankInPlay:'У грі', chipRankAllIn:'all-in', chipRankFolded:'фолд', chipRankOut:'вибув', chipRankEmpty:'Поки нема стеків для рейтингу.',
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'Моя нотатка', nvPlaceholder:'Колує будь-який 3-бет…', nvSaved:'Збережено', nvTagNone:'Без мітки', nvTagRed:'Небезпечний', nvTagOrange:'Агресивний', nvTagYellow:'Спостерігати', nvTagGreen:'Фіш', nvTagBlue:'Тайтовий', nvTagPurple:'Хитрий', nvLabelPh:'Назва мітки', nvLabelTip:'Перейменувати мітку — стосується всіх гравців із цим кольором',
     ppMyStats:'Моя статистика',

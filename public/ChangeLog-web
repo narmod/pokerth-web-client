@@ -1,4 +1,7 @@
 2026-09-06 version 2.1.8-web (current series):
+- new: chip ranking - a chip-stack button in the game header opens a small movable panel ranking everyone at the table by chips (stack plus current bet), with average and total in play; ties share their rank, eliminated players close the list, and your row is highlighted; tap a row to open that player's card
+
+2026-09-06 version 2.1.8-web:
 - new: player notes - tap an opponent (seat or players list) to write a private note about them and mark them with one of six colour labels; the colour dot shows in front of their name at the table and in the players list, and hovering it previews your note
 - new: the meaning of each colour label can be renamed (for example turn "Danger" into "Bluffs a lot") - the new name applies to every player carrying that colour
 - new: notes and labels follow your account between devices - notes taken on the phone and on the desktop are merged, never overwritten

@@ -20,7 +20,7 @@ const SEL = [
   '.floating-win',
   '#g-chat-panel', '#lobby-chat-panel', '#g-log-panel', '#g-assist-panel',
   '#g-reaction-panel', '#music-panel', '#hands-overlay', '#stats-overlay',
-  '#odds-monitor', '#assist-win',
+  '#odds-monitor', '#assist-win', '#chiprank-win',
   '#g-overflow-menu', '#l-overflow-menu', '#cr-overflow-menu',
   '#connect-overflow-menu', '#pv-overflow-menu'
 ].join(',');

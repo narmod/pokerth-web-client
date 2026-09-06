@@ -1452,6 +1452,10 @@ function renderSeatsImmediate() {
     try { if (window._repositionWinHandBadge) window._repositionWinHandBadge(); } catch (e) {}
     setTimeout(function(){ try { if (window._repositionWinHandBadge) window._repositionWinHandBadge(); } catch (e) {} }, 160);
   });
+  // Classement des tapis (game/stack-rank.mjs) : appelé ici parce que c'est
+  // exactement le moment où les tapis changent à l'écran ; la fonction sort
+  // immédiatement si le panneau est fermé. Module optionnel.
+  try { if (window._chipRankSync) window._chipRankSync(); } catch (e) {}
 }
 
 // Multiple back-to-back renderSeats() calls (bot bursts, PlayersActionDone

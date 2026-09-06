@@ -16,6 +16,8 @@ export const meta = {
 };
 
 export const strings = {
+    // Classement des tapis (game/stack-rank.mjs, extra web)
+    chipRankTitle:'Peringkat chip', chipRankTip:'Peringkat chip (langsung)', chipRankLeft:'Masih bersaing', chipRankAvg:'Rata-rata', chipRankInPlay:'Dalam permainan', chipRankAllIn:'all-in', chipRankFolded:'fold', chipRankOut:'tersingkir', chipRankEmpty:'Belum ada stack untuk diperingkat.',
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'Catatan saya', nvPlaceholder:'Call semua 3-bet…', nvSaved:'Tersimpan', nvTagNone:'Tanpa label', nvTagRed:'Berbahaya', nvTagOrange:'Agresif', nvTagYellow:'Awasi', nvTagGreen:'Ikan', nvTagBlue:'Ketat', nvTagPurple:'Licik', nvLabelPh:'Nama label', nvLabelTip:'Ganti nama label — berlaku untuk semua pemain dengan warna ini',
     ppMyStats:'Statistik saya',

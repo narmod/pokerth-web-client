@@ -11,6 +11,8 @@ export const meta = {
 };
 
 export const strings = {
+    // Classement des tapis (game/stack-rank.mjs, extra web)
+    chipRankTitle:'Rangachadh nan sgonnan', chipRankTip:'Rangachadh nan sgonnan (beò)', chipRankLeft:'San rèis', chipRankAvg:'Cuibheas', chipRankInPlay:'Sa gheama', chipRankAllIn:'all-in', chipRankFolded:'phaisg', chipRankOut:'a-mach', chipRankEmpty:'Chan eil stacaichean rin rangachadh fhathast.',
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'An nòta agam', nvPlaceholder:'A’ gairm gach 3-bet…', nvSaved:'Air a shàbhaladh', nvTagNone:'Gun leubail', nvTagRed:'Cunnartach', nvTagOrange:'Ionnsaigheach', nvTagYellow:'Cùm sùil', nvTagGreen:'Iasg', nvTagBlue:'Teann', nvTagPurple:'Carach', nvLabelPh:'Ainm na leubail', nvLabelTip:'Thoir ainm ùr air an leubail — buinidh e ri gach cluicheadair leis an dath seo',
     ppMyStats:'Na staitistigean agam',

@@ -10,6 +10,8 @@ export const meta = {
 };
 
 export const strings = {
+    // Classement des tapis (game/stack-rank.mjs, extra web)
+    chipRankTitle:'Clasificación de fichas', chipRankTip:'Clasificación de fichas (en directo)', chipRankLeft:'En carreira', chipRankAvg:'Media', chipRankInPlay:'En xogo', chipRankAllIn:'all-in', chipRankFolded:'retirado', chipRankOut:'eliminado', chipRankEmpty:'Aínda non hai stacks que clasificar.',
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'A miña nota', nvPlaceholder:'Paga calquera 3-bet…', nvSaved:'Gardado', nvTagNone:'Sen etiqueta', nvTagRed:'Perigoso', nvTagOrange:'Agresivo', nvTagYellow:'Vixiar', nvTagGreen:'Peixe', nvTagBlue:'Pechado', nvTagPurple:'Astuto', nvLabelPh:'Nome da etiqueta', nvLabelTip:'Renomear esta etiqueta — aplícase a todos os xogadores con esta cor',
     ppMyStats:'As miñas estatísticas',

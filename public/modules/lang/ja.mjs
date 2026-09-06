@@ -9,6 +9,8 @@ export const meta = {
 };
 
 export const strings = {
+    // Classement des tapis (game/stack-rank.mjs, extra web)
+    chipRankTitle:'チップランキング', chipRankTip:'チップランキング（ライブ）', chipRankLeft:'勝負に残っている', chipRankAvg:'平均', chipRankInPlay:'プレイ中', chipRankAllIn:'all-in', chipRankFolded:'フォールド', chipRankOut:'敗退', chipRankEmpty:'まだランク付けするスタックがありません。',
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'メモ', nvPlaceholder:'どんな3-betもコールする…', nvSaved:'保存済み', nvTagNone:'ラベルなし', nvTagRed:'危険', nvTagOrange:'アグレッシブ', nvTagYellow:'要注意', nvTagGreen:'フィッシュ', nvTagBlue:'タイト', nvTagPurple:'トリッキー', nvLabelPh:'ラベル名', nvLabelTip:'ラベル名を変更 — この色のすべてのプレイヤーに適用されます',
     ppMyStats:'自分の統計',

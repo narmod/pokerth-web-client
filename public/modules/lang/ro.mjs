@@ -10,6 +10,8 @@ export const meta = {
 };
 
 export const strings = {
+    // Classement des tapis (game/stack-rank.mjs, extra web)
+    chipRankTitle:'Clasamentul stack-urilor', chipRankTip:'Clasamentul stack-urilor (live)', chipRankLeft:'În cursă', chipRankAvg:'Medie', chipRankInPlay:'În joc', chipRankAllIn:'all-in', chipRankFolded:'fold', chipRankOut:'eliminat', chipRankEmpty:'Încă nu există stack-uri de clasat.',
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'Nota mea', nvPlaceholder:'Plătește orice 3-bet…', nvSaved:'Salvat', nvTagNone:'Fără etichetă', nvTagRed:'Periculos', nvTagOrange:'Agresiv', nvTagYellow:'De urmărit', nvTagGreen:'Pește', nvTagBlue:'Strâns', nvTagPurple:'Viclean', nvLabelPh:'Numele etichetei', nvLabelTip:'Redenumește eticheta — se aplică tuturor jucătorilor cu această culoare',
     ppMyStats:'Statisticile mele',

@@ -9519,6 +9519,7 @@ var _WIN_BTN = [
   { win: 'g-chat-panel',          mode: 'display', btns: ['chat-toggle-btn', 'gchat-fab'] },
   { win: 'g-log-panel',           mode: 'display', btns: ['log-toggle-btn'] },
   { win: 'g-reaction-panel',      mode: 'display', btns: ['react-toggle-btn'] },
+  { win: 'chiprank-win',          mode: 'display', btns: ['chiprank-btn-game'] },
   { win: 'hands-overlay',         mode: 'display', btns: ['hands-toggle-btn'] },
   { win: 'players-panel',         mode: 'display', btns: ['h-players'], sel: ['.fbar-players'] },
   { win: 'avatar-popup',          mode: 'display', btns: ['av-trigger'] },
@@ -11139,7 +11140,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.8-web.25'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.8-web.26'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

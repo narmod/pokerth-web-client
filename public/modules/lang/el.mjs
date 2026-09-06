@@ -10,6 +10,8 @@ export const meta = {
 };
 
 export const strings = {
+    // Classement des tapis (game/stack-rank.mjs, extra web)
+    chipRankTitle:'Κατάταξη μαρκών', chipRankTip:'Κατάταξη μαρκών (ζωντανά)', chipRankLeft:'Στη μάχη', chipRankAvg:'Μέσος όρος', chipRankInPlay:'Σε παιχνίδι', chipRankAllIn:'all-in', chipRankFolded:'πάσο', chipRankOut:'εκτός', chipRankEmpty:'Δεν υπάρχουν ακόμη stacks για κατάταξη.',
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'Η σημείωσή μου', nvPlaceholder:'Πληρώνει κάθε 3-bet…', nvSaved:'Αποθηκεύτηκε', nvTagNone:'Χωρίς ετικέτα', nvTagRed:'Επικίνδυνος', nvTagOrange:'Επιθετικός', nvTagYellow:'Παρακολούθηση', nvTagGreen:'Ψάρι', nvTagBlue:'Σφιχτός', nvTagPurple:'Πονηρός', nvLabelPh:'Όνομα ετικέτας', nvLabelTip:'Μετονομασία ετικέτας — ισχύει για κάθε παίκτη με αυτό το χρώμα',
     ppMyStats:'Τα στατιστικά μου',

@@ -10,6 +10,8 @@ export const meta = {
 };
 
 export const strings = {
+    // Classement des tapis (game/stack-rank.mjs, extra web)
+    chipRankTitle:'Rang-lista čipova', chipRankTip:'Rang-lista čipova (uživo)', chipRankLeft:'U trci', chipRankAvg:'Prosek', chipRankInPlay:'U igri', chipRankAllIn:'all-in', chipRankFolded:'odustao', chipRankOut:'ispao', chipRankEmpty:'Još nema stekova za rangiranje.',
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'Moja beleška', nvPlaceholder:'Plaća svaki 3-bet…', nvSaved:'Sačuvano', nvTagNone:'Bez oznake', nvTagRed:'Opasan', nvTagOrange:'Agresivan', nvTagYellow:'Posmatrati', nvTagGreen:'Riba', nvTagBlue:'Tesan', nvTagPurple:'Lukav', nvLabelPh:'Naziv oznake', nvLabelTip:'Preimenuj oznaku — važi za sve igrače sa ovom bojom',
     ppMyStats:'Моја статистика',

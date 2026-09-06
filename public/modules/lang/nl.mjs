@@ -15,6 +15,8 @@ export const meta = {
 };
 
 export const strings = {
+    // Classement des tapis (game/stack-rank.mjs, extra web)
+    chipRankTitle:'Chipranglijst', chipRankTip:'Chipranglijst (live)', chipRankLeft:'In de race', chipRankAvg:'Gemiddelde', chipRankInPlay:'In het spel', chipRankAllIn:'all-in', chipRankFolded:'gefold', chipRankOut:'uit', chipRankEmpty:'Nog geen stacks om te rangschikken.',
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'Mijn notitie', nvPlaceholder:'Callt elke 3-bet…', nvSaved:'Opgeslagen', nvTagNone:'Geen label', nvTagRed:'Gevaar', nvTagOrange:'Agressief', nvTagYellow:'In de gaten houden', nvTagGreen:'Vis', nvTagBlue:'Tight', nvTagPurple:'Sluw', nvLabelPh:'Labelnaam', nvLabelTip:'Label hernoemen — geldt voor elke speler met deze kleur',
     ppMyStats:'Mijn statistieken',

@@ -48,6 +48,7 @@ const SURFACES = [
   ['hands-overlay',        'toggleHandsHelp'],
   ['music-panel',          'toggleMusicPanel'],
   ['g-reaction-panel',     'App.toggleReactionsPin'],
+  ['chiprank-win',         'closeChipRank'],
   ['g-log-panel',          'toggleLog'],
   ['g-chat-panel',         'toggleGameChat'],
   ['g-winner-overlay',     'App.dismissWinner']

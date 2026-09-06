@@ -13,6 +13,8 @@ export const meta = {
 };
 
 export const strings = {
+    // Classement des tapis (game/stack-rank.mjs, extra web)
+    chipRankTitle:'칩 랭킹', chipRankTip:'칩 랭킹 (실시간)', chipRankLeft:'경쟁 중', chipRankAvg:'평균', chipRankInPlay:'플레이 중', chipRankAllIn:'all-in', chipRankFolded:'폴드', chipRankOut:'탈락', chipRankEmpty:'아직 순위를 매길 스택이 없습니다.',
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'내 메모', nvPlaceholder:'모든 3-bet을 콜함…', nvSaved:'저장됨', nvTagNone:'라벨 없음', nvTagRed:'위험', nvTagOrange:'공격적', nvTagYellow:'주시', nvTagGreen:'피시', nvTagBlue:'타이트', nvTagPurple:'교활함', nvLabelPh:'라벨 이름', nvLabelTip:'라벨 이름 바꾸기 — 이 색의 모든 플레이어에게 적용됩니다',
     ppMyStats:'내 통계',
