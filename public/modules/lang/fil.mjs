@@ -16,8 +16,6 @@ export const meta = {
 };
 
 export const strings = {
-    // Classement des tapis (game/stack-rank.mjs, extra web)
-    chipRankTitle:'Ranggo ng chips', chipRankTip:'Ranggo ng chips (live)', chipRankLeft:'Nasa labanan', chipRankAvg:'Karaniwan', chipRankInPlay:'Nasa laro', chipRankAllIn:'all-in', chipRankFolded:'nag-fold', chipRankOut:'tanggal', chipRankEmpty:'Wala pang stack na irarangko.',
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'Ang tala ko', nvPlaceholder:'Tinatawagan ang bawat 3-bet…', nvSaved:'Na-save', nvTagNone:'Walang label', nvTagRed:'Mapanganib', nvTagOrange:'Agresibo', nvTagYellow:'Bantayan', nvTagGreen:'Isda', nvTagBlue:'Mahigpit', nvTagPurple:'Tuso', nvLabelPh:'Pangalan ng label', nvLabelTip:'Palitan ang pangalan ng label — para sa lahat ng manlalarong may kulay na ito',
     ppMyStats:'Aking estadistika',

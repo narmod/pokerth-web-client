@@ -10,8 +10,6 @@ export const meta = {
 };
 
 export const strings = {
-    // Classement des tapis (game/stack-rank.mjs, extra web)
-    chipRankTitle:'Žetonų reitingas', chipRankTip:'Žetonų reitingas (gyvai)', chipRankLeft:'Kovoje', chipRankAvg:'Vidurkis', chipRankInPlay:'Žaidime', chipRankAllIn:'all-in', chipRankFolded:'nusimetė', chipRankOut:'iškrito', chipRankEmpty:'Kol kas nėra ką reitinguoti.',
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'Mano pastaba', nvPlaceholder:'Sumoka bet kokį 3-bet…', nvSaved:'Išsaugota', nvTagNone:'Be žymos', nvTagRed:'Pavojingas', nvTagOrange:'Agresyvus', nvTagYellow:'Stebėti', nvTagGreen:'Žuvis', nvTagBlue:'Ankštas', nvTagPurple:'Gudrus', nvLabelPh:'Žymos pavadinimas', nvLabelTip:'Pervadinti žymą — galioja visiems šios spalvos žaidėjams',
     ppMyStats:'Mano statistika',

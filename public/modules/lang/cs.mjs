@@ -10,8 +10,6 @@ export const meta = {
 };
 
 export const strings = {
-    // Classement des tapis (game/stack-rank.mjs, extra web)
-    chipRankTitle:'Žebříček žetonů', chipRankTip:'Žebříček žetonů (živě)', chipRankLeft:'Ve hře o vítězství', chipRankAvg:'Průměr', chipRankInPlay:'Ve hře', chipRankAllIn:'all-in', chipRankFolded:'složil', chipRankOut:'vypadl', chipRankEmpty:'Zatím žádné stacky k seřazení.',
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'Moje poznámka', nvPlaceholder:'Dorovná každý 3-bet…', nvSaved:'Uloženo', nvTagNone:'Bez štítku', nvTagRed:'Nebezpečný', nvTagOrange:'Agresivní', nvTagYellow:'Sledovat', nvTagGreen:'Ryba', nvTagBlue:'Těsný', nvTagPurple:'Vychytralý', nvLabelPh:'Název štítku', nvLabelTip:'Přejmenovat štítek — platí pro všechny hráče s touto barvou',
     ppMyStats:'Moje statistiky',

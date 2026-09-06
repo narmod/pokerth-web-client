@@ -17,15 +17,6 @@ changes for this line are on the
 highlights below.
 
 ### Added
-- **Live chip ranking** (`web.26`). Original web extra, distinct from the
-  existing Table ranking (pokerth.net ELO of seated players): a non-blocking
-  movable panel (odds-monitor pattern, position remembered) ranking the
-  table by stack + current bet, competition ranking for ties, eliminated
-  players unranked at the end, own row highlighted, share bar vs the
-  leader, average / total-in-play header. Rows open the player card; the
-  notes colour dot shows next to names; refreshed at seat-render time.
-  Pure ranking function exported and covered by `scripts/test-chip-rank.mjs`
-  (31 checks); i18n in all 45 languages.
 - **Player notes and colour labels** (`web.24`). Web-only extra, designed to
   be portable to the QML client later: the player card gains a free-text
   note (500 chars) and six fixed-colour labels whose meaning can be renamed

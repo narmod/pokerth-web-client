@@ -9,8 +9,6 @@ export const meta = {
 };
 
 export const strings = {
-    // Classement des tapis (game/stack-rank.mjs, extra web)
-    chipRankTitle:'Merkkiranking', chipRankTip:'Merkkiranking (suorana)', chipRankLeft:'Kisassa mukana', chipRankAvg:'Keskiarvo', chipRankInPlay:'Pelissä', chipRankAllIn:'all-in', chipRankFolded:'luovutti', chipRankOut:'ulkona', chipRankEmpty:'Ei vielä pinoja järjestettäväksi.',
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'Muistiinpanoni', nvPlaceholder:'Maksaa jokaisen 3-betin…', nvSaved:'Tallennettu', nvTagNone:'Ei tunnistetta', nvTagRed:'Vaarallinen', nvTagOrange:'Aggressiivinen', nvTagYellow:'Tarkkaile', nvTagGreen:'Kala', nvTagBlue:'Tiukka', nvTagPurple:'Ovela', nvLabelPh:'Tunnisteen nimi', nvLabelTip:'Nimeä tunniste uudelleen — koskee kaikkia tämän värin pelaajia',
     ppMyStats:'Omat tilastoni',

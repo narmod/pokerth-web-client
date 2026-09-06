@@ -10,8 +10,6 @@ export const meta = {
 };
 
 export const strings = {
-    // Classement des tapis (game/stack-rank.mjs, extra web)
-    chipRankTitle:'Classificació de fitxes', chipRankTip:'Classificació de fitxes (en directe)', chipRankLeft:'En cursa', chipRankAvg:'Mitjana', chipRankInPlay:'En joc', chipRankAllIn:'all-in', chipRankFolded:'retirat', chipRankOut:'eliminat', chipRankEmpty:'Encara no hi ha stacks per classificar.',
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'La meva nota', nvPlaceholder:'Paga qualsevol 3-bet…', nvSaved:'Desat', nvTagNone:'Sense etiqueta', nvTagRed:'Perillós', nvTagOrange:'Agressiu', nvTagYellow:'Vigilar', nvTagGreen:'Peix', nvTagBlue:'Tancat', nvTagPurple:'Astut', nvLabelPh:'Nom de l’etiqueta', nvLabelTip:'Canvia el nom de l’etiqueta — s’aplica a tots els jugadors amb aquest color',
     ppMyStats:'Les meves estadístiques',

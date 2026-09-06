@@ -15,8 +15,6 @@ export const meta = {
 };
 
 export const strings = {
-    // Classement des tapis (game/stack-rank.mjs, extra web)
-    chipRankTitle:'Рейтинг стеков', chipRankTip:'Рейтинг стеков (в реальном времени)', chipRankLeft:'В борьбе', chipRankAvg:'Среднее', chipRankInPlay:'В игре', chipRankAllIn:'all-in', chipRankFolded:'фолд', chipRankOut:'выбыл', chipRankEmpty:'Пока нечего ранжировать.',
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'Моя заметка', nvPlaceholder:'Коллирует любой 3-бет…', nvSaved:'Сохранено', nvTagNone:'Без метки', nvTagRed:'Опасен', nvTagOrange:'Агрессивный', nvTagYellow:'Наблюдать', nvTagGreen:'Фиш', nvTagBlue:'Тайтовый', nvTagPurple:'Хитрый', nvLabelPh:'Название метки', nvLabelTip:'Переименовать метку — применяется ко всем игрокам с этим цветом',
     ppMyStats:'Моя статистика',

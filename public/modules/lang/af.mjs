@@ -10,8 +10,6 @@ export const meta = {
 };
 
 export const strings = {
-    // Classement des tapis (game/stack-rank.mjs, extra web)
-    chipRankTitle:'Chip-ranglys', chipRankTip:'Chip-ranglys (regstreeks)', chipRankLeft:'In die wedloop', chipRankAvg:'Gemiddeld', chipRankInPlay:'In spel', chipRankAllIn:'all-in', chipRankFolded:'gevou', chipRankOut:'uit', chipRankEmpty:'Nog geen stapels om te rangskik nie.',
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'My nota', nvPlaceholder:'Call enige 3-bet…', nvSaved:'Gestoor', nvTagNone:'Geen etiket', nvTagRed:'Gevaarlik', nvTagOrange:'Aggressief', nvTagYellow:'Hou dop', nvTagGreen:'Vis', nvTagBlue:'Styf', nvTagPurple:'Slinks', nvLabelPh:'Etiketnaam', nvLabelTip:'Hernoem hierdie etiket — geld vir elke speler met hierdie kleur',
     ppMyStats:'My statistieke',

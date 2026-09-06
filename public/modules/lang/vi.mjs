@@ -10,8 +10,6 @@ export const meta = {
 };
 
 export const strings = {
-    // Classement des tapis (game/stack-rank.mjs, extra web)
-    chipRankTitle:'Xếp hạng chip', chipRankTip:'Xếp hạng chip (trực tiếp)', chipRankLeft:'Đang trong cuộc đua', chipRankAvg:'Trung bình', chipRankInPlay:'Trong ván', chipRankAllIn:'all-in', chipRankFolded:'bỏ bài', chipRankOut:'bị loại', chipRankEmpty:'Chưa có stack nào để xếp hạng.',
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'Ghi chú của tôi', nvPlaceholder:'Theo mọi 3-bet…', nvSaved:'Đã lưu', nvTagNone:'Không nhãn', nvTagRed:'Nguy hiểm', nvTagOrange:'Hung hăng', nvTagYellow:'Cần theo dõi', nvTagGreen:'Cá', nvTagBlue:'Chặt', nvTagPurple:'Ranh mãnh', nvLabelPh:'Tên nhãn', nvLabelTip:'Đổi tên nhãn — áp dụng cho mọi người chơi mang màu này',
     ppMyStats:'Thống kê của tôi',

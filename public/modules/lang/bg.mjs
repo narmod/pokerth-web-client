@@ -10,8 +10,6 @@ export const meta = {
 };
 
 export const strings = {
-    // Classement des tapis (game/stack-rank.mjs, extra web)
-    chipRankTitle:'Класация на чиповете', chipRankTip:'Класация на чиповете (на живо)', chipRankLeft:'В играта', chipRankAvg:'Средно', chipRankInPlay:'В игра', chipRankAllIn:'all-in', chipRankFolded:'пас', chipRankOut:'отпаднал', chipRankEmpty:'Още няма стекове за класиране.',
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'Моята бележка', nvPlaceholder:'Плаща всеки 3-бет…', nvSaved:'Запазено', nvTagNone:'Без етикет', nvTagRed:'Опасен', nvTagOrange:'Агресивен', nvTagYellow:'Наблюдавай', nvTagGreen:'Риба', nvTagBlue:'Стегнат', nvTagPurple:'Хитър', nvLabelPh:'Име на етикета', nvLabelTip:'Преименувай етикета — важи за всички играчи с този цвят',
     ppMyStats:'Моята статистика',

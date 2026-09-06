@@ -10,8 +10,6 @@ export const meta = {
 };
 
 export const strings = {
-    // Classement des tapis (game/stack-rank.mjs, extra web)
-    chipRankTitle:'Zsetonrangsor', chipRankTip:'Zsetonrangsor (élőben)', chipRankLeft:'Versenyben', chipRankAvg:'Átlag', chipRankInPlay:'Játékban', chipRankAllIn:'all-in', chipRankFolded:'dobott', chipRankOut:'kiesett', chipRankEmpty:'Még nincs rangsorolható stack.',
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'Jegyzetem', nvPlaceholder:'Minden 3-betet megad…', nvSaved:'Mentve', nvTagNone:'Nincs címke', nvTagRed:'Veszélyes', nvTagOrange:'Agresszív', nvTagYellow:'Figyelni', nvTagGreen:'Hal', nvTagBlue:'Szoros', nvTagPurple:'Ravasz', nvLabelPh:'Címke neve', nvLabelTip:'Címke átnevezése — minden ilyen színű játékosra érvényes',
     ppMyStats:'Statisztikáim',

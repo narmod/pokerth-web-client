@@ -16,8 +16,6 @@ export const meta = {
 };
 
 export const strings = {
-    // Classement des tapis (game/stack-rank.mjs, extra web)
-    chipRankTitle:'Ranking żetonów', chipRankTip:'Ranking żetonów (na żywo)', chipRankLeft:'W grze o zwycięstwo', chipRankAvg:'Średnia', chipRankInPlay:'W grze', chipRankAllIn:'all-in', chipRankFolded:'spasował', chipRankOut:'odpadł', chipRankEmpty:'Nie ma jeszcze stacków do sklasyfikowania.',
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'Moja notatka', nvPlaceholder:'Sprawdza każdy 3-bet…', nvSaved:'Zapisano', nvTagNone:'Bez etykiety', nvTagRed:'Niebezpieczny', nvTagOrange:'Agresywny', nvTagYellow:'Obserwować', nvTagGreen:'Ryba', nvTagBlue:'Ciasny', nvTagPurple:'Przebiegły', nvLabelPh:'Nazwa etykiety', nvLabelTip:'Zmień nazwę etykiety — dotyczy każdego gracza z tym kolorem',
     ppMyStats:'Moje statystyki',

@@ -16,8 +16,6 @@ export const meta = {
 };
 
 export const strings = {
-    // Classement des tapis (game/stack-rank.mjs, extra web)
-    chipRankTitle:'Orodha ya chips', chipRankTip:'Orodha ya chips (moja kwa moja)', chipRankLeft:'Bado mashindanoni', chipRankAvg:'Wastani', chipRankInPlay:'Mchezoni', chipRankAllIn:'all-in', chipRankFolded:'aliachia', chipRankOut:'ametolewa', chipRankEmpty:'Bado hakuna marundo ya kupanga.',
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'Kumbukumbu yangu', nvPlaceholder:'Hulipa kila 3-bet…', nvSaved:'Imehifadhiwa', nvTagNone:'Hakuna lebo', nvTagRed:'Hatari', nvTagOrange:'Mkali', nvTagYellow:'Mwangalie', nvTagGreen:'Samaki', nvTagBlue:'Mbanaji', nvTagPurple:'Mjanja', nvLabelPh:'Jina la lebo', nvLabelTip:'Badilisha jina la lebo — inatumika kwa kila mchezaji mwenye rangi hii',
     ppMyStats:'Takwimu zangu',

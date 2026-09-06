@@ -15,8 +15,6 @@ export const meta = {
 };
 
 export const strings = {
-    // Classement des tapis (game/stack-rank.mjs, extra web)
-    chipRankTitle:'Classifica dei chip', chipRankTip:'Classifica dei chip (in diretta)', chipRankLeft:'In corsa', chipRankAvg:'Media', chipRankInPlay:'In gioco', chipRankAllIn:'all-in', chipRankFolded:'foldato', chipRankOut:'eliminato', chipRankEmpty:'Ancora nessuno stack da classificare.',
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'La mia nota', nvPlaceholder:'Paga qualsiasi 3-bet…', nvSaved:'Salvato', nvTagNone:'Nessuna etichetta', nvTagRed:'Pericolo', nvTagOrange:'Aggressivo', nvTagYellow:'Da osservare', nvTagGreen:'Pesce', nvTagBlue:'Stretto', nvTagPurple:'Astuto', nvLabelPh:'Nome dell’etichetta', nvLabelTip:'Rinomina questa etichetta — vale per tutti i giocatori con questo colore',
     ppMyStats:'Le mie statistiche',

@@ -17,8 +17,6 @@ export const meta = {
 };
 
 export const strings = {
-    // Classement des tapis (game/stack-rank.mjs, extra web)
-    chipRankTitle:'ترتيب الرقائق', chipRankTip:'ترتيب الرقائق (مباشر)', chipRankLeft:'في السباق', chipRankAvg:'المتوسط', chipRankInPlay:'في اللعب', chipRankAllIn:'all-in', chipRankFolded:'انسحب', chipRankOut:'خرج', chipRankEmpty:'لا توجد رصات لترتيبها بعد.',
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'ملاحظتي', nvPlaceholder:'يدفع أي 3-bet…', nvSaved:'تم الحفظ', nvTagNone:'بدون وسم', nvTagRed:'خطير', nvTagOrange:'عدواني', nvTagYellow:'تحت المراقبة', nvTagGreen:'سمكة', nvTagBlue:'متحفّظ', nvTagPurple:'ماكر', nvLabelPh:'اسم الوسم', nvLabelTip:'إعادة تسمية الوسم — ينطبق على كل لاعب بهذا اللون',
     ppMyStats:'إحصائياتي',

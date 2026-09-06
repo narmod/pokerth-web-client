@@ -11,8 +11,6 @@ export const meta = {
 };
 
 export const strings = {
-    // Classement des tapis (game/stack-rank.mjs, extra web)
-    chipRankTitle:'சிப் தரவரிசை', chipRankTip:'சிப் தரவரிசை (நேரலை)', chipRankLeft:'போட்டியில்', chipRankAvg:'சராசரி', chipRankInPlay:'விளையாட்டில்', chipRankAllIn:'all-in', chipRankFolded:'ஃபோல்டு', chipRankOut:'வெளியேறினார்', chipRankEmpty:'தரவரிசைப்படுத்த இன்னும் ஸ்டேக்குகள் இல்லை.',
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'என் குறிப்பு', nvPlaceholder:'எந்த 3-bet-ஐயும் கால் செய்கிறார்…', nvSaved:'சேமிக்கப்பட்டது', nvTagNone:'லேபிள் இல்லை', nvTagRed:'ஆபத்தானவர்', nvTagOrange:'தாக்குதல்காரர்', nvTagYellow:'கவனிக்க', nvTagGreen:'ஃபிஷ்', nvTagBlue:'டைட்', nvTagPurple:'தந்திரமானவர்', nvLabelPh:'லேபிள் பெயர்', nvLabelTip:'லேபிளின் பெயரை மாற்று — இந்த நிறமுள்ள எல்லா வீரர்களுக்கும் பொருந்தும்',
     ppMyStats:'என் புள்ளிவிவரங்கள்',

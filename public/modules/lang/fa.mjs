@@ -14,8 +14,6 @@ export const meta = {
 };
 
 export const strings = {
-    // Classement des tapis (game/stack-rank.mjs, extra web)
-    chipRankTitle:'رتبه‌بندی ژتون‌ها', chipRankTip:'رتبه‌بندی ژتون‌ها (زنده)', chipRankLeft:'در رقابت', chipRankAvg:'میانگین', chipRankInPlay:'در بازی', chipRankAllIn:'all-in', chipRankFolded:'فولد کرد', chipRankOut:'حذف شد', chipRankEmpty:'هنوز استکی برای رتبه‌بندی نیست.',
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'یادداشت من', nvPlaceholder:'هر 3-bet را کال می‌کند…', nvSaved:'ذخیره شد', nvTagNone:'بدون برچسب', nvTagRed:'خطرناک', nvTagOrange:'تهاجمی', nvTagYellow:'زیر نظر', nvTagGreen:'ماهی', nvTagBlue:'محتاط', nvTagPurple:'حیله‌گر', nvLabelPh:'نام برچسب', nvLabelTip:'تغییر نام برچسب — برای همهٔ بازیکنان با این رنگ اعمال می‌شود',
     ppMyStats:'آمار من',
