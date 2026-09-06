@@ -17,6 +17,12 @@ changes for this line are on the
 highlights below.
 
 ### Added
+- **Registered-account notice** (`web.29`). Mirror of the guest notice for
+  pokerth.net logins made WITH an account: `authNotice` admin config key,
+  master-only editor card, popup on every such connection at lobby entry,
+  same translation fallback, nothing persisted on dismiss
+  (`scripts/test-authnotice.mjs`, 30 checks). **proxy.js changed — restart
+  required.**
 - **Guest notice** (`web.28`). Operator-authored multilingual popup shown on
   every connection made as a guest in Internet / PokerTH.net mode — typically
   to explain what guests can and cannot do compared to a registered account.

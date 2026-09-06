@@ -3926,6 +3926,10 @@ function _welcomePublic() { var w = _adminConfig.welcome; if (!w || !w.enabled) 
 // every guest connection (the client persists no seen-version for it).
 function _guestNoticeAdmin() { var w = _adminConfig.guestNotice || {}; return { enabled: !!w.enabled, updatedAt: w.updatedAt || 0, 'default': w['default'] || 'fr', langs: w.langs || {} }; }
 function _guestNoticePublic() { var w = _adminConfig.guestNotice; if (!w || !w.enabled) return null; return { enabled: true, updatedAt: w.updatedAt || 0, 'default': w['default'] || 'fr', langs: w.langs || {} }; }
+// Registered-account notice: the mirror of the guest notice for pokerth.net
+// internet users logged in WITH an account; shown on every such connection.
+function _authNoticeAdmin() { var w = _adminConfig.authNotice || {}; return { enabled: !!w.enabled, updatedAt: w.updatedAt || 0, 'default': w['default'] || 'fr', langs: w.langs || {} }; }
+function _authNoticePublic() { var w = _adminConfig.authNotice; if (!w || !w.enabled) return null; return { enabled: true, updatedAt: w.updatedAt || 0, 'default': w['default'] || 'fr', langs: w.langs || {} }; }
 
 // ── Product polls (web-only feature; no QML counterpart) ───────────────────
 // The admin authors a short multiple-choice poll ("which feature next?"). Web
@@ -6008,7 +6012,7 @@ function handleAdmin(req, res, reqPathOnly, query) {
   if (reqPathOnly === '/admin/config') {
     if (req.method === 'GET') {
       if (!adminAuthed(query)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
-      return adminJson(res, 200, { ok: true, resetPeriod: STATS_RESET_PERIOD, modes: appModes(), welcome: _welcomeAdmin(), guestNotice: _guestNoticeAdmin(), showLoginTitle: !!_adminConfig.showLoginTitle, defaultTheme: _adminConfig.defaultTheme || '', defaults: _adminConfig.defaults || {}, loginDefaults: _loginDefaults(false), proxyCfg: _adminConfig.proxyCfg || {}, tableDefaults: _adminConfig.tableDefaults || {}, tableNames: _adminConfig.tableNames || {}, serverName: _adminConfig.serverName || '', serverTagline: _adminConfig.serverTagline || '', discordChatWebhookUrl: _adminConfig.discordChatWebhookUrl || '', featureSwitches: FEATURE_SWITCHES, featureOff: featureOffList(), musicEnabled: musicEnabled(), seo: _seoAdmin() });
+      return adminJson(res, 200, { ok: true, resetPeriod: STATS_RESET_PERIOD, modes: appModes(), welcome: _welcomeAdmin(), guestNotice: _guestNoticeAdmin(), authNotice: _authNoticeAdmin(), showLoginTitle: !!_adminConfig.showLoginTitle, defaultTheme: _adminConfig.defaultTheme || '', defaults: _adminConfig.defaults || {}, loginDefaults: _loginDefaults(false), proxyCfg: _adminConfig.proxyCfg || {}, tableDefaults: _adminConfig.tableDefaults || {}, tableNames: _adminConfig.tableNames || {}, serverName: _adminConfig.serverName || '', serverTagline: _adminConfig.serverTagline || '', discordChatWebhookUrl: _adminConfig.discordChatWebhookUrl || '', featureSwitches: FEATURE_SWITCHES, featureOff: featureOffList(), musicEnabled: musicEnabled(), seo: _seoAdmin() });
     }
     if (req.method === 'POST') {
       return readJsonBody(req, function (d) {
@@ -6060,6 +6064,25 @@ function handleAdmin(req, res, reqPathOnly, query) {
           if (!gw['default']) gw['default'] = 'fr';
           gw.updatedAt = Date.now();
           _adminConfig.guestNotice = gw;
+        }
+        if (d.authNotice && typeof d.authNotice === 'object') {
+          // Same validation as the two notices above (sizes, language caps).
+          var aw = _adminConfig.authNotice || {};
+          if (typeof d.authNotice.enabled === 'boolean') aw.enabled = d.authNotice.enabled;
+          if (typeof d.authNotice['default'] === 'string') aw['default'] = d.authNotice['default'].slice(0, 10);
+          if (d.authNotice.langs && typeof d.authNotice.langs === 'object') {
+            var aout = {};
+            Object.keys(d.authNotice.langs).slice(0, 60).forEach(function (k) {
+              var v = d.authNotice.langs[k] || {};
+              var title = (typeof v.title === 'string' ? v.title : '').slice(0, 200);
+              var body = (typeof v.body === 'string' ? v.body : '').slice(0, 4000);
+              if (title || body) aout[String(k).slice(0, 10)] = { title: title, body: body };
+            });
+            aw.langs = aout;
+          }
+          if (!aw['default']) aw['default'] = 'fr';
+          aw.updatedAt = Date.now();
+          _adminConfig.authNotice = aw;
         }
         if (typeof d.defaultTheme === 'string') _adminConfig.defaultTheme = d.defaultTheme.slice(0, 40);
         if (d.defaults && typeof d.defaults === 'object') {
@@ -6184,7 +6207,7 @@ function handleAdmin(req, res, reqPathOnly, query) {
           }
         }
         saveAdminConfig();
-        return adminJson(res, 200, { ok: true, resetPeriod: STATS_RESET_PERIOD, modes: appModes(), welcome: _welcomeAdmin(), guestNotice: _guestNoticeAdmin(), showLoginTitle: !!_adminConfig.showLoginTitle, defaultTheme: _adminConfig.defaultTheme || '', defaults: _adminConfig.defaults || {}, loginDefaults: _loginDefaults(false), proxyCfg: _adminConfig.proxyCfg || {}, tableDefaults: _adminConfig.tableDefaults || {}, tableNames: _adminConfig.tableNames || {}, serverName: _adminConfig.serverName || '', serverTagline: _adminConfig.serverTagline || '', discordChatWebhookUrl: _adminConfig.discordChatWebhookUrl || '', featureSwitches: FEATURE_SWITCHES, featureOff: featureOffList(), musicEnabled: musicEnabled(), seo: _seoAdmin() });
+        return adminJson(res, 200, { ok: true, resetPeriod: STATS_RESET_PERIOD, modes: appModes(), welcome: _welcomeAdmin(), guestNotice: _guestNoticeAdmin(), authNotice: _authNoticeAdmin(), showLoginTitle: !!_adminConfig.showLoginTitle, defaultTheme: _adminConfig.defaultTheme || '', defaults: _adminConfig.defaults || {}, loginDefaults: _loginDefaults(false), proxyCfg: _adminConfig.proxyCfg || {}, tableDefaults: _adminConfig.tableDefaults || {}, tableNames: _adminConfig.tableNames || {}, serverName: _adminConfig.serverName || '', serverTagline: _adminConfig.serverTagline || '', discordChatWebhookUrl: _adminConfig.discordChatWebhookUrl || '', featureSwitches: FEATURE_SWITCHES, featureOff: featureOffList(), musicEnabled: musicEnabled(), seo: _seoAdmin() });
       });
     }
     res.writeHead(405); res.end('Method not allowed'); return;
@@ -6865,7 +6888,7 @@ function handleAdmin(req, res, reqPathOnly, query) {
       // list is silently wiped by an export -> import round-trip. That is
       // exactly what happened to 'seo' (and the server list): restoring a
       // config reset SEO to Off. Keep in sync with the keys the code reads.
-      const ALLOWED = ['resetPeriod', 'modes', 'welcome', 'guestNotice', 'defaultTheme', 'defaults', 'loginDefaults',
+      const ALLOWED = ['resetPeriod', 'modes', 'welcome', 'guestNotice', 'authNotice', 'defaultTheme', 'defaults', 'loginDefaults',
                        'proxyCfg', 'tableDefaults', 'tableNames', 'serverName', 'serverTagline',
                        'discordChatWebhookUrl', 'showLoginTitle', 'featureOff', 'bannedIps',
                        'pkgDisabled', 'pkgFull', 'pkgFullscreen', 'pkgAlign', 'musicTracks',
@@ -8584,7 +8607,7 @@ const httpServer = http.createServer((req, res) => {
 
   if (reqPathOnly === '/app-config') {
     res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' });
-    res.end(JSON.stringify({ ok: true, modes: appModes(), welcome: _welcomePublic(), guestNotice: _guestNoticePublic(), poll: _pollPublic(), showLoginTitle: !!_adminConfig.showLoginTitle, defaultTheme: _adminConfig.defaultTheme || '', defaults: _adminConfig.defaults || {}, loginDefaults: _loginDefaults(true), tableDefaults: _adminConfig.tableDefaults || {}, tableNames: _adminConfig.tableNames || {}, serverName: _adminConfig.serverName || '', serverTagline: _adminConfig.serverTagline || '', featureOff: featureOffList(), pokerthnetServer: _activePokerthnetServer(), pokerthnetSource: _pokerthnetSource(), internetTransport: _internetTransport(), musicEnabled: musicEnabled() }));
+    res.end(JSON.stringify({ ok: true, modes: appModes(), welcome: _welcomePublic(), guestNotice: _guestNoticePublic(), authNotice: _authNoticePublic(), poll: _pollPublic(), showLoginTitle: !!_adminConfig.showLoginTitle, defaultTheme: _adminConfig.defaultTheme || '', defaults: _adminConfig.defaults || {}, loginDefaults: _loginDefaults(true), tableDefaults: _adminConfig.tableDefaults || {}, tableNames: _adminConfig.tableNames || {}, serverName: _adminConfig.serverName || '', serverTagline: _adminConfig.serverTagline || '', featureOff: featureOffList(), pokerthnetServer: _activePokerthnetServer(), pokerthnetSource: _pokerthnetSource(), internetTransport: _internetTransport(), musicEnabled: musicEnabled() }));
     return;
   }
 

@@ -925,6 +925,22 @@
         <div class="periodrow" style="margin-top:8px"><button id="gwSave" class="use">Save guest notice</button></div>
         <div id="gwState" class="msg"></div>
       </div>
+      <div class="card" data-master="1">
+        <h2>Registered-account notice (pokerth.net internet mode)</h2>
+        <p class="muted">The mirror of the guest notice above, for players who log in <b>with a registered account</b> in Internet / PokerTH.net mode: shown in a centered popup on every such connection. Each player sees the version matching their language (fallback below; missing languages are auto-translated on the client). Players dismiss it with &ldquo;I understand&rdquo;.</p>
+        <label class="muted" style="display:flex;align-items:center;gap:8px;margin:0 0 8px"><input type="checkbox" id="awEnabled" style="width:auto"> Enabled</label>
+        <div class="periodrow" style="margin-bottom:8px">
+          <label class="muted">Edit language <select id="awLang" class="filter" style="margin:0;flex:none;width:auto"></select></label>
+          <label class="muted">Fallback <select id="awDefault" class="filter" style="margin:0;flex:none;width:auto"></select></label>
+        </div>
+        <div id="awFilled" class="muted" style="margin:0 0 8px;font-size:.8rem"></div>
+        <input id="awTitle" class="filter" maxlength="200" placeholder="Title (optional)" style="width:100%;margin-bottom:8px">
+        <textarea id="awBody" class="filter" rows="5" maxlength="4000" placeholder="Message for registered players in this language&hellip;" style="width:100%;resize:vertical"></textarea>
+        <div class="muted" style="font-size:.78rem;margin-top:4px">Tip: paste a URL, or write <code>[label](https://example.com)</code> for a clickable link (opens in a new tab).</div>
+        <div id="awPrev"></div>
+        <div class="periodrow" style="margin-top:8px"><button id="awSave" class="use">Save registered-account notice</button></div>
+        <div id="awState" class="msg"></div>
+      </div>
     </div>
 
     <div id="panel-polls" style="display:none">
@@ -1319,7 +1335,7 @@
     if(t==='traffic') loadTraffic();
     if(t==='servers') loadServers();
     if(t==='polls') loadPolls();
-    if(t==='broadcast'){ loadBroadcasts(); if(_isMaster){ loadWelcome(); loadGuestNotice(); } }
+    if(t==='broadcast'){ loadBroadcasts(); if(_isMaster){ loadWelcome(); loadGuestNotice(); loadAuthNotice(); } }
     if(t==='clients'){ loadStatus(true); loadThemes(); loadFeatureSwitches(); }
     if(t==='sessions'){ seStart(); } else { seStop(); }
     if(t==='errors') loadErrors();
@@ -3414,6 +3430,32 @@
   ['gwTitle','gwBody'].forEach(function(id){ if($(id)) $(id).addEventListener('input',function(){ gwCommit(); gwPreview(); gwUpdateFilled(); }); });
   if($('gwSave')) $('gwSave').addEventListener('click',saveGuestNotice);
 
+  // ── Registered-account notice (pokerth.net auth logins, every connection) ─
+  // Mirror of the guest notice above; posts the 'authNotice' key.
+  var authNoticeState={ enabled:false, 'default':'fr', langs:{} };
+  var awEdit='fr';
+  (function(){ var a=$('awLang'), b=$('awDefault'); if(a&&b){ WC_LANGS.forEach(function(c){ var o1=document.createElement('option'); o1.value=c; o1.textContent=c; a.appendChild(o1); var o2=document.createElement('option'); o2.value=c; o2.textContent=c; b.appendChild(o2); }); a.value='fr'; b.value='fr'; } })();
+  function awFilledList(){ return Object.keys(authNoticeState.langs); }
+  function awUpdateFilled(){ var el=$('awFilled'); if(!el) return; var f=awFilledList(); el.textContent = f.length ? ('Filled languages: '+f.join(', ')) : 'No language filled yet.'; }
+  function awCommit(){ var t=($('awTitle').value||''), b=($('awBody').value||''); if(t.trim()||b.trim()) authNoticeState.langs[awEdit]={title:t,body:b}; else delete authNoticeState.langs[awEdit]; }
+  function awShow(code){ awEdit=code; if($('awLang')) $('awLang').value=code; var v=authNoticeState.langs[code]||{}; $('awTitle').value=v.title||''; $('awBody').value=v.body||''; awPreview(); awUpdateFilled(); }
+  function awPreview(){ var el=$('awPrev'); if(!el) return; var t=($('awTitle').value||'').trim(), b=($('awBody').value||'').trim();
+    if(!t&&!b){ el.style.cssText='display:none'; el.textContent=''; return; }
+    el.textContent=''; el.style.cssText='display:block;margin-top:8px;max-width:440px;background:#1c1812;border:1px solid rgba(200,168,74,.5);border-radius:14px;overflow:hidden';
+    if(t){ var h=document.createElement('div'); h.textContent=t; h.style.cssText='padding:12px 16px;font-weight:700;color:#e0c070;border-bottom:1px solid rgba(200,168,74,.25)'; el.appendChild(h); }
+    var p=document.createElement('div'); p.innerHTML=annLinkify(b); p.style.cssText='padding:12px 16px;white-space:pre-line;line-height:1.5;color:#efe6d2;font-size:.9rem'; el.appendChild(p);
+  }
+  function awInitialLang(){ var d=authNoticeState['default']||'fr'; if(authNoticeState.langs[d]) return d; var f=awFilledList(); return f.length ? f[0] : d; }
+  function loadAuthNotice(){ api('/admin/config').then(function(r){return r.json();}).then(function(d){ if(!d||!d.ok||!d.authNotice) return; authNoticeState={ enabled:!!d.authNotice.enabled, 'default':d.authNotice['default']||'fr', langs:d.authNotice.langs||{} }; if($('awEnabled')) $('awEnabled').checked=authNoticeState.enabled; if($('awDefault')) $('awDefault').value=authNoticeState['default']; awShow(awInitialLang()); }).catch(function(){}); }
+  function saveAuthNotice(){ awCommit(); var body={ authNotice:{ enabled:$('awEnabled').checked, 'default':$('awDefault').value, langs:authNoticeState.langs }, token:tok() };
+    bcSay('awState','Saving\u2026');
+    api('/admin/config',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)})
+      .then(function(r){return r.json();}).then(function(d){ if(d&&d.ok){ bcSay('awState','Saved \u2014 registered players will see it on their next connection.','ok'); if(d.authNotice){ authNoticeState={ enabled:!!d.authNotice.enabled, 'default':d.authNotice['default']||'fr', langs:d.authNotice.langs||{} }; awUpdateFilled(); } } else bcSay('awState','Failed: '+((d&&d.error)||'error'),'err'); })
+      .catch(function(){ bcSay('awState','Network error.','err'); }); }
+  if($('awLang')) $('awLang').addEventListener('change', function(){ awCommit(); awShow($('awLang').value); });
+  ['awTitle','awBody'].forEach(function(id){ if($(id)) $(id).addEventListener('input',function(){ awCommit(); awPreview(); awUpdateFilled(); }); });
+  if($('awSave')) $('awSave').addEventListener('click',saveAuthNotice);
+
   // ── Product polls (web-only feature) ────────────────────────────────────
   // Same multilingual editor shape as the welcome message above: one draft kept
   // in memory, the visible fields committed into the language being edited
@@ -3542,7 +3584,7 @@
     var STORE='pth_admin_collapsed', saved=null;
     try{ saved=JSON.parse(localStorage.getItem(STORE)||'null'); }catch(e){}
     var state = saved || {}, firstRun = !saved;
-    var DEFAULT_FOLDED = ['In-game settings','Schedule a restart','Schedule a recurring message','Welcome / rules message','Guest notice (pokerth.net internet mode)'];
+    var DEFAULT_FOLDED = ['In-game settings','Schedule a restart','Schedule a recurring message','Welcome / rules message','Guest notice (pokerth.net internet mode)','Registered-account notice (pokerth.net internet mode)'];
     function slug(s){ return (s||'').trim().replace(/[^a-z0-9]+/gi,'_').replace(/^_+|_+$/g,'').toLowerCase().slice(0,48); }
     document.querySelectorAll('.card').forEach(function(card){
       var h2s = card.querySelectorAll('h2');

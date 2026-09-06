@@ -229,6 +229,9 @@ function onInitAck(sub) {
     // auto-rejoin branch above returns before this point, so a transient
     // reconnection straight back to a table does not re-open the modal.
     try { if (window.maybeShowGuestNotice) window.maybeShowGuestNotice(); } catch (eGw) {}
+    // Registered-account notice: same trigger, gated on the auth login mode
+    // inside the function itself (at most one of the two modals can match).
+    try { if (window.maybeShowAuthNotice) window.maybeShowAuthNotice(); } catch (eAw) {}
     // Demander la permission pour les notifications
     if ('Notification' in window && Notification.permission === 'default') {
       Notification.requestPermission().catch(function(){});

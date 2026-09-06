@@ -1,4 +1,7 @@
 2026-09-06 version 2.1.8-web (current series):
+- new: the guest notice now has a twin for registered accounts - a popup shown on every connection made with a pokerth.net account, written per language in the admin page and auto-translated for the others
+
+2026-09-06 version 2.1.8-web:
 - new: server operators can show a notice to guests - a popup that appears on every connection made as a guest in Internet / PokerTH.net mode, typically explaining what guests can and cannot do compared to a registered account; it is written per language in the admin page and auto-translated for the others
 
 2026-09-06 version 2.1.8-web:
