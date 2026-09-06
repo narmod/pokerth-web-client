@@ -1,4 +1,7 @@
 2026-09-06 version 2.1.8-web (current series):
+- improvement: clearer default notices - the chat sections now explain in plain words why an envelope can be missing (your own line, a guest, someone mid-game), and the account notice describes each community scene (BBC time-based games, WeCup tournaments, the Monthly Cup) with its own ranking
+
+2026-09-06 version 2.1.8-web:
 - improvement: the guest and account notices now appear only once - after tapping "I understand" they stay hidden until the operator edits the message; with a pokerth.net account the acknowledgement follows you across devices
 
 2026-09-06 version 2.1.8-web:
