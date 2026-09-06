@@ -1467,6 +1467,28 @@ function _forumMergeIn(o) {
   if (changed) { try { if (window._forumReadSynced) window._forumReadSynced(); } catch (e) {} }
   return needPush;
 }
+// Accuse de reception des notices operateur (invite / compte). Valeur =
+// updatedAt de la version acquittee. Seule la cle du COMPTE se synchronise
+// (les invites n'ont pas de profil ; le canal /prefs-web n'existe de toute
+// facon qu'avec un jeton emis sur InitAck authentifie). Reconciliation par
+// FUSION comme pth_forum_read_base : maximum numerique — acquitte quelque
+// part = acquitte partout, et une edition operateur (updatedAt plus grand)
+// re-affiche sur tous les appareils.
+var _NOTICE_SYNC_KEYS = ['pth_authnotice_seen'];
+function _noticeMergeIn(o) {
+  var needPush = false;
+  try {
+    var raw = o ? (o.pth_authnotice_seen != null ? o.pth_authnotice_seen : null) : null;
+    if (typeof raw === 'string' && raw.length <= 32) {
+      var theirs = parseInt(raw, 10) || 0;
+      var mine = parseInt(_cfgLs('pth_authnotice_seen'), 10) || 0;
+      var mx = Math.max(theirs, mine);
+      if (mx > theirs) needPush = true;
+      if (mx !== mine) { try { localStorage.setItem('pth_authnotice_seen', String(mx)); } catch (e) {} }
+    }
+  } catch (e) {}
+  return needPush;
+}
 var _cfgWebForcePush = false;   // le local était plus riche : repousser après fusion
 function _achNorm(k, v) {       // sérialisation stable (comparaisons fiables)
   try {
@@ -1533,6 +1555,10 @@ function _cfgWebCollect() {
     var v = _cfgLs(k);
     if (v != null && v.length <= 20000) o[k] = v;
   });
+  _NOTICE_SYNC_KEYS.forEach(function (k) {
+    var v = _cfgLs(k);
+    if (v != null && v.length <= 32) o[k] = v;
+  });
   return o;
 }
 function _cfgWebDirty() {
@@ -1572,6 +1598,9 @@ function _cfgWebApply(o) {
   } catch (e) {}
   try {
     if (_notesMergeIn(o)) { _cfgWebForcePush = true; _cfgSyncPushSoon(1500); }
+  } catch (e) {}
+  try {
+    if (_noticeMergeIn(o)) { _cfgWebForcePush = true; _cfgSyncPushSoon(1500); }
   } catch (e) {}
   // Même fusion que pour le config.xml : une clé modifiée ici depuis le dernier
   // envoi (elle diffère de l'instantané poussé) n'est PAS écrasée par le
@@ -2534,13 +2563,14 @@ window._showBroadcast = _showBroadcast;
 // ── Guest notice (pokerth.net internet guests, every connection) ───────────
 // Same operator-authored multilingual shape as the welcome message above
 // (language pick via _welcomeChoose, on-device -> gtx translation fallback,
-// linkified body), but shown on EVERY guest connection: no seen-version is
-// persisted, and the trigger lives at lobby entry (net/msg-lobby.mjs
-// onInitAck) rather than at boot. Config arrives from /app-config as
+// linkified body). Shown at lobby entry (net/msg-lobby.mjs onInitAck) until
+// the guest clicks "I understand": the acknowledged updatedAt is kept in
+// pth_guestnotice_seen (local only — guests have no profile) and the popup
+// only returns when the operator edits the message. Config arrives from /app-config as
 // c.guestNotice (null unless the operator enabled it) and is kept in
 // window._guestNoticeCfg until the connection happens.
 function hideGuestNoticeModal() { var el = document.getElementById('guestnotice-modal'); if (el) el.remove(); }
-function showGuestNoticeModal(title, body) {
+function showGuestNoticeModal(title, body, version) {
   hideGuestNoticeModal();
   var back = document.createElement('div');
   back.id = 'guestnotice-modal';
@@ -2562,8 +2592,10 @@ function showGuestNoticeModal(title, body) {
   var btn = document.createElement('button');
   btn.textContent = (typeof window.t === 'function' ? window.t('welcomeAck') : '') || 'I understand';
   btn.style.cssText = 'padding:9px 18px;border-radius:10px;border:0;cursor:pointer;font-weight:700;background:var(--gold);color:var(--on-gold);';
-  // Every-connection notice: dismiss only, nothing persisted (unlike welcome).
-  btn.addEventListener('click', hideGuestNoticeModal);
+  // Acquittement : la version (updatedAt) est memorisee localement — le
+  // popup ne revient que si l'operateur edite le message. Invite = pas de
+  // profil, donc pas de synchronisation (contrairement a la notice compte).
+  btn.addEventListener('click', function () { try { localStorage.setItem('pth_guestnotice_seen', String(version)); } catch (e) {} hideGuestNoticeModal(); });
   foot.appendChild(btn);
   card.appendChild(foot);
   back.appendChild(card);
@@ -2572,23 +2604,25 @@ function showGuestNoticeModal(title, body) {
 function maybeShowGuestNotice() {
   var g = window._guestNoticeCfg;
   if (!g || !g.enabled) return;
+  // Deja acquitte pour cette version du message -> silence.
+  try { if ((parseInt(localStorage.getItem('pth_guestnotice_seen'), 10) || -1) >= (Number(g.updatedAt) || 0)) return; } catch (e) {}
   if (window._offlineMode) return;                                  // training never shows it
   if (!(typeof window._amGuestMode === 'function' && window._amGuestMode())) return; // pokerth.net GUEST only
   var c = _welcomeChoose(g);
   if (!c || (!c.title && !c.body)) return;
-  showGuestNoticeModal(c.title, c.body); // operator text shows immediately
+  showGuestNoticeModal(c.title, c.body, g.updatedAt || 0); // operator text shows immediately
   if (!c.exact) {
     // No operator version for the client's language -> on-device translation
     // first, then the gtx pipeline; swap only while the modal is still open.
     var target = (typeof _lang !== 'undefined' && _lang) ? _lang : c.lang;
     _translateEntry(c.title, c.body, c.lang, target).then(function (tr) {
       if (tr && (tr.title || tr.body)) {
-        if (document.getElementById('guestnotice-modal')) showGuestNoticeModal(tr.title || c.title, tr.body || c.body);
+        if (document.getElementById('guestnotice-modal')) showGuestNoticeModal(tr.title || c.title, tr.body || c.body, g.updatedAt || 0);
         return;
       }
       return _gtxAuto(c.title).then(function (tt) {
         return _gtxAuto(c.body).then(function (tb) {
-          if ((tt || tb) && document.getElementById('guestnotice-modal')) showGuestNoticeModal(tt || c.title, tb || c.body);
+          if ((tt || tb) && document.getElementById('guestnotice-modal')) showGuestNoticeModal(tt || c.title, tb || c.body, g.updatedAt || 0);
         });
       });
     }).catch(function () {});
@@ -2600,11 +2634,14 @@ window.hideGuestNoticeModal = hideGuestNoticeModal;
 
 // ── Registered-account notice (pokerth.net auth logins, every connection) ──
 // Mirror of the guest notice above for players logged in WITH a pokerth.net
-// account: same multilingual pick, same translation fallback, same
-// every-connection semantics (nothing persisted on dismiss). Config arrives
-// from /app-config as c.authNotice and waits in window._authNoticeCfg.
+// account: same multilingual pick, same translation fallback. The
+// acknowledgement (pth_authnotice_seen = updatedAt) is stored locally AND
+// synced to the account profile through /prefs-web (_noticeMergeIn, maximum
+// wins) — dismissed on one device means dismissed everywhere, and an
+// operator edit re-shows it. Config arrives from /app-config as c.authNotice
+// and waits in window._authNoticeCfg.
 function hideAuthNoticeModal() { var el = document.getElementById('authnotice-modal'); if (el) el.remove(); }
-function showAuthNoticeModal(title, body) {
+function showAuthNoticeModal(title, body, version) {
   hideAuthNoticeModal();
   var back = document.createElement('div');
   back.id = 'authnotice-modal';
@@ -2626,8 +2663,14 @@ function showAuthNoticeModal(title, body) {
   var btn = document.createElement('button');
   btn.textContent = (typeof window.t === 'function' ? window.t('welcomeAck') : '') || 'I understand';
   btn.style.cssText = 'padding:9px 18px;border-radius:10px;border:0;cursor:pointer;font-weight:700;background:var(--gold);color:var(--on-gold);';
-  // Every-connection notice: dismiss only, nothing persisted (unlike welcome).
-  btn.addEventListener('click', hideAuthNoticeModal);
+  // Acquittement : version memorisee localement ET poussee sur le profil du
+  // compte via le canal /prefs-web (fusion par maximum, _noticeMergeIn) — vu
+  // sur un appareil = vu partout ; une edition operateur re-affiche.
+  btn.addEventListener('click', function () {
+    try { localStorage.setItem('pth_authnotice_seen', String(version)); } catch (e) {}
+    try { if (typeof _cfgSyncPushSoon === 'function') _cfgSyncPushSoon(1500); } catch (e) {}
+    hideAuthNoticeModal();
+  });
   foot.appendChild(btn);
   card.appendChild(foot);
   back.appendChild(card);
@@ -2636,21 +2679,23 @@ function showAuthNoticeModal(title, body) {
 function maybeShowAuthNotice() {
   var g = window._authNoticeCfg;
   if (!g || !g.enabled) return;
+  // Deja acquitte pour cette version (localement ou via le profil) -> silence.
+  try { if ((parseInt(localStorage.getItem('pth_authnotice_seen'), 10) || -1) >= (Number(g.updatedAt) || 0)) return; } catch (e) {}
   if (window._offlineMode) return;                                  // training never shows it
   if (!(typeof window._amAuthMode === 'function' && window._amAuthMode())) return; // pokerth.net ACCOUNT only
   var c = _welcomeChoose(g);
   if (!c || (!c.title && !c.body)) return;
-  showAuthNoticeModal(c.title, c.body); // operator text shows immediately
+  showAuthNoticeModal(c.title, c.body, g.updatedAt || 0); // operator text shows immediately
   if (!c.exact) {
     var target = (typeof _lang !== 'undefined' && _lang) ? _lang : c.lang;
     _translateEntry(c.title, c.body, c.lang, target).then(function (tr) {
       if (tr && (tr.title || tr.body)) {
-        if (document.getElementById('authnotice-modal')) showAuthNoticeModal(tr.title || c.title, tr.body || c.body);
+        if (document.getElementById('authnotice-modal')) showAuthNoticeModal(tr.title || c.title, tr.body || c.body, g.updatedAt || 0);
         return;
       }
       return _gtxAuto(c.title).then(function (tt) {
         return _gtxAuto(c.body).then(function (tb) {
-          if ((tt || tb) && document.getElementById('authnotice-modal')) showAuthNoticeModal(tt || c.title, tb || c.body);
+          if ((tt || tb) && document.getElementById('authnotice-modal')) showAuthNoticeModal(tt || c.title, tb || c.body, g.updatedAt || 0);
         });
       });
     }).catch(function () {});
@@ -11273,7 +11318,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.8-web.30'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.8-web.31'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

@@ -1,10 +1,11 @@
 #!/usr/bin/env node
-// Deterministic tests for the guest notice (operator-authored popup shown on
-// every pokerth.net guest connection). The behaviour that matters and cannot
-// be seen in a quick manual check: the client must NOT persist a seen-version
-// (unlike the welcome message), the trigger must live at lobby entry, and the
-// proxy must expose the config through every path (admin GET/POST, public
-// /app-config, export/import allow-list) or a config round-trip wipes it.
+// Deterministic tests for the guest notice (operator-authored popup shown to
+// pokerth.net guests until they acknowledge it). The behaviour that matters
+// and cannot be seen in a quick manual check: the acknowledged updatedAt must
+// be persisted (locally only — guests have no profile) and respected, the
+// trigger must live at lobby entry, and the proxy must expose the config
+// through every path (admin GET/POST, public /app-config, export/import
+// allow-list) or a config round-trip wipes it.
 // Run: node scripts/test-guestnotice.mjs
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
@@ -52,11 +53,16 @@ ok(/function maybeShowGuestNotice\(\)/.test(app), 'maybeShowGuestNotice exists')
 ok(/function showGuestNoticeModal\(/.test(app), 'the guest modal builder exists');
 ok(/window\._guestNoticeCfg = \(c && c\.guestNotice\) \|\| null;/.test(app),
   'the /app-config handler stores the notice config');
-// Every-connection semantics: the guest modal never writes a seen marker.
+// Ack semantics: dismissing stores the acknowledged updatedAt locally, and
+// the popup is skipped while the stored version covers the current one.
 const gm = app.slice(app.indexOf('function showGuestNoticeModal('), app.indexOf('function maybeShowGuestNotice('));
-ok(!/localStorage\.setItem/.test(gm), 'dismissing the guest notice persists nothing');
+ok(/localStorage\.setItem\('pth_guestnotice_seen', String\(version\)\)/.test(gm),
+  'dismissing stores the acknowledged version');
 const mg = app.slice(app.indexOf('function maybeShowGuestNotice('), app.indexOf('window.maybeShowGuestNotice'));
-ok(!/localStorage/.test(mg), 'maybeShowGuestNotice reads no seen-version');
+ok(/pth_guestnotice_seen/.test(mg) && />= \(Number\(g\.updatedAt\) \|\| 0\)\) return/.test(mg),
+  'an acknowledged version silences the notice until the operator edits it');
+ok(!/_NOTICE_SYNC_KEYS = \['pth_guestnotice_seen'/.test(app),
+  'the guest ack stays local (guests have no profile to sync to)');
 ok(/_amGuestMode/.test(mg), 'the notice is gated on the pokerth.net GUEST mode');
 ok(/window\._offlineMode\) return/.test(mg), 'training mode never shows it');
 ok(/_welcomeChoose\(g\)/.test(mg), 'language pick reuses the welcome chooser (fallback + exact flag)');

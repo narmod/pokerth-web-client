@@ -17,6 +17,14 @@ changes for this line are on the
 highlights below.
 
 ### Added
+- **Notice acknowledgement** (`web.31`). Both notices switch from
+  every-connection to acknowledge-once: "I understand" stores the message's
+  `updatedAt` (`pth_guestnotice_seen` locally for guests;
+  `pth_authnotice_seen` for accounts, synced to the profile via `/prefs-web`
+  with maximum-wins merge — dismissed on one device means dismissed
+  everywhere). An operator edit bumps `updatedAt` and re-shows the popup.
+  Client-only change (the proxy's `pth_[a-z0-9_]+` allow-list already
+  accepts the key).
 - **Built-in default text for both notices** (`web.30`). The guest and
   registered-account notices ship with a ready-made English text covering
   access, chat, game types and ranking (guest version links to the

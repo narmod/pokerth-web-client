@@ -1,4 +1,7 @@
 2026-09-06 version 2.1.8-web (current series):
+- improvement: the guest and account notices now appear only once - after tapping "I understand" they stay hidden until the operator edits the message; with a pokerth.net account the acknowledgement follows you across devices
+
+2026-09-06 version 2.1.8-web:
 - improvement: both default notices now explain when the private-message envelope shows up - only next to players who are online and not seated at a running game
 
 2026-09-06 version 2.1.8-web:

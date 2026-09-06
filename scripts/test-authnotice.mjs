@@ -1,8 +1,10 @@
 #!/usr/bin/env node
 // Deterministic tests for the registered-account notice (operator-authored
-// popup shown on every pokerth.net connection made WITH an account). The behaviour that matters and cannot
-// be seen in a quick manual check: the client must NOT persist a seen-version
-// (unlike the welcome message), the trigger must live at lobby entry, and the
+// popup shown to pokerth.net account logins until they acknowledge it; the
+// acknowledgement follows the account across devices via /prefs-web). The
+// behaviour that matters and cannot be seen in a quick manual check: the
+// acknowledged updatedAt must be persisted and respected, synced by numeric
+// maximum, the trigger must live at lobby entry, and the
 // proxy must expose the config through every path (admin GET/POST, public
 // /app-config, export/import allow-list) or a config round-trip wipes it.
 // Run: node scripts/test-authnotice.mjs
@@ -52,11 +54,22 @@ ok(/function maybeShowAuthNotice\(\)/.test(app), 'maybeShowAuthNotice exists');
 ok(/function showAuthNoticeModal\(/.test(app), 'the account modal builder exists');
 ok(/window\._authNoticeCfg = \(c && c\.authNotice\) \|\| null;/.test(app),
   'the /app-config handler stores the notice config');
-// Every-connection semantics: the guest modal never writes a seen marker.
+// Ack semantics: dismissing stores the acknowledged updatedAt locally AND
+// syncs it to the account profile; the popup is skipped while the stored
+// version covers the current one.
 const gm = app.slice(app.indexOf('function showAuthNoticeModal('), app.indexOf('function maybeShowAuthNotice('));
-ok(!/localStorage\.setItem/.test(gm), 'dismissing the account notice persists nothing');
+ok(/localStorage\.setItem\('pth_authnotice_seen', String\(version\)\)/.test(gm),
+  'dismissing stores the acknowledged version');
+ok(/_cfgSyncPushSoon/.test(gm), 'dismissing schedules a profile sync push');
 const mg = app.slice(app.indexOf('function maybeShowAuthNotice('), app.indexOf('window.maybeShowAuthNotice'));
-ok(!/localStorage/.test(mg), 'maybeShowAuthNotice reads no seen-version');
+ok(/pth_authnotice_seen/.test(mg) && />= \(Number\(g\.updatedAt\) \|\| 0\)\) return/.test(mg),
+  'an acknowledged version silences the notice until the operator edits it');
+// Profile sync wiring: collected, merged by numeric maximum, applied.
+ok(/_NOTICE_SYNC_KEYS = \['pth_authnotice_seen'\]/.test(app), 'the ack key is a sync group');
+ok(/function _noticeMergeIn\(/.test(app) && /Math\.max\(theirs, mine\)/.test(app.slice(app.indexOf('function _noticeMergeIn('), app.indexOf('function _noticeMergeIn(') + 900)),
+  'reconciliation is a numeric maximum (seen somewhere = seen everywhere)');
+ok(/_NOTICE_SYNC_KEYS\.forEach/.test(app), 'the ack key is collected for /prefs-web');
+ok(/if \(_noticeMergeIn\(o\)\)/.test(app), 'the ack key is merged on /prefs-web apply');
 ok(/_amAuthMode/.test(mg), 'the notice is gated on the pokerth.net ACCOUNT (auth) mode');
 ok(/window\._offlineMode\) return/.test(mg), 'training mode never shows it');
 ok(/_welcomeChoose\(g\)/.test(mg), 'language pick reuses the welcome chooser (fallback + exact flag)');
