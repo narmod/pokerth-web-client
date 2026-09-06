@@ -11153,3 +11153,71 @@ body.adv-no-avcreate #avp-tab-create { display: none !important; }
   text-align: center; line-height: 1.4;
 }
 #invite-banner-name { font-weight: 700; }
+
+
+/* ══ PLAYER NOTES & COLOUR LABELS (modules/notes — web-only extra) ══ */
+
+/* Pastille devant le pseudo (siège ET liste des joueurs). Inline-block plutôt
+   qu'un ::before : la pastille doit disparaître avec l'élément quand le joueur
+   n'est pas étiqueté, sans laisser d'espace résiduel dans un nom déjà
+   tronqué. Son title porte l'aperçu (libellé + extrait de note) au survol. */
+.seat-note-tag {
+  display: inline-block; vertical-align: middle;
+  width: 7px; height: 7px; margin-right: 4px;
+  border-radius: var(--r-pill);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.45);
+}
+
+/* Bloc de la carte joueur */
+.nv-block {
+  margin-top: 10px; padding: 10px;
+  background: var(--inset);
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  text-align: left;
+}
+.nv-hd {
+  font-size: var(--fs-2xs); color: var(--text);
+  text-transform: uppercase; letter-spacing: 0.08em;
+  margin-bottom: 8px;
+}
+.nv-swatches { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 8px; }
+.nv-sw {
+  width: 22px; height: 22px; padding: 0;
+  border: 1px solid var(--border); border-radius: var(--r-pill);
+  cursor: pointer; transition: transform 0.12s, box-shadow 0.12s;
+}
+.nv-sw:hover { transform: scale(1.12); }
+.nv-sw.on { box-shadow: 0 0 0 2px var(--gold); }
+.nv-sw:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+.nv-sw-none {
+  background: transparent; color: var(--text);
+  font-size: var(--fs-2xs); line-height: 1;
+}
+/* Champ de renommage du libellé — visible seulement quand une couleur est
+   posée. Même peau que la zone de note, sur une seule ligne. */
+.nv-label-row { margin-bottom: 8px; }
+.nv-label {
+  display: block; width: 100%; box-sizing: border-box;
+  padding: 5px 8px;
+  background: var(--card, rgba(0, 0, 0, 0.25));
+  border: 1px solid var(--border); border-radius: var(--r-sm);
+  color: var(--text-hi); font-family: inherit; font-size: var(--fs-sm);
+}
+.nv-label:focus { border-color: var(--border-hi); outline: none; }
+.nv-text {
+  display: block; width: 100%; box-sizing: border-box;
+  padding: 6px 8px; resize: vertical; min-height: 54px;
+  background: var(--card, rgba(0, 0, 0, 0.25));
+  border: 1px solid var(--border); border-radius: var(--r-sm);
+  color: var(--text-hi); font-family: inherit; font-size: var(--fs-sm);
+  line-height: 1.35;
+}
+.nv-text:focus { border-color: var(--border-hi); outline: none; }
+.nv-foot { min-height: 14px; margin-top: 4px; }
+.nv-saved { font-size: var(--fs-2xs); color: var(--gold-dim); }
+
+@media (prefers-reduced-motion: reduce) {
+  .nv-sw { transition: none; }
+  .nv-sw:hover { transform: none; }
+}

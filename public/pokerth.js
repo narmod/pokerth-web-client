@@ -1395,6 +1395,29 @@ var _CFG_WEB_SYNC_KEYS = [
   // n'etaient collectees par aucun canal (donc jamais synchronisees).
   'pth_conn_pill', 'pth_stats_track', 'pth_pdb_auto', 'pth_bak_auto'
 ];
+// Notes de joueur + étiquettes (modules/notes). PAS dans la liste ci-dessus :
+// elles se FUSIONNENT au lieu de s'écraser. Un écrasement ferait perdre la
+// note prise sur le téléphone dès que le bureau repousse la sienne — chaque
+// appareil annote des joueurs différents. Même traitement que les succès.
+// Les LIBELLÉS renommés des couleurs suivent la même règle, couleur par
+// couleur (la logique vit dans modules/notes/store.mjs::mergeIn).
+var _NOTES_SYNC_KEYS = ['pth_notes'];
+// Fusion pseudo par pseudo (et couleur par couleur pour les libellés), la
+// date la plus récente gagnant — pont window._nvStore.
+// Renvoie true si le local en sait plus que le distant -> il faut repousser.
+function _notesMergeIn(o) {
+  var raw = o ? o.pth_notes : null;
+  if (typeof raw !== 'string' || raw.length > 20000) return false;
+  var theirs = null;
+  try { theirs = JSON.parse(raw); } catch (e) { return false; }
+  if (!theirs || typeof theirs !== 'object') return false;
+  var store = window._nvStore;
+  if (!store || typeof store.mergeIn !== 'function') return false;
+  store.mergeIn(theirs);
+  // Si l'état local ne coïncide plus avec ce qu'ils ont envoyé, c'est qu'on a
+  // des notes qu'ils n'ont pas : on repousse.
+  try { return JSON.stringify(store.raw()) !== JSON.stringify(theirs); } catch (e) { return false; }
+}
 // Succès (mode entraînement) : mêmes transport et compte que les réglages, mais
 // réconciliation par FUSION et non par écrasement — la progression est cumulative,
 // donc deux appareils ne peuvent pas se contredire : union des succès débloqués
@@ -1506,6 +1529,10 @@ function _cfgWebCollect() {
     var v = _cfgLs(k);
     if (v != null && v.length <= 20000) o[k] = v;   // clés déjà en minuscules
   });
+  _NOTES_SYNC_KEYS.forEach(function (k) {
+    var v = _cfgLs(k);
+    if (v != null && v.length <= 20000) o[k] = v;
+  });
   return o;
 }
 function _cfgWebDirty() {
@@ -1542,6 +1569,9 @@ function _cfgWebApply(o) {
   } catch (e) {}
   try {
     if (_forumMergeIn(o)) { _cfgWebForcePush = true; _cfgSyncPushSoon(1500); }
+  } catch (e) {}
+  try {
+    if (_notesMergeIn(o)) { _cfgWebForcePush = true; _cfgSyncPushSoon(1500); }
   } catch (e) {}
   // Même fusion que pour le config.xml : une clé modifiée ici depuis le dernier
   // envoi (elle diffère de l'instantané poussé) n'est PAS écrasée par le
@@ -10698,11 +10728,17 @@ function renderPlayersList() {
     var _actTtl = r.act
       ? _tt('plPlayingInFull', '%1 is playing in "%2".').replace('%1', r.name).replace('%2', r.act)
       : _tt('plNotPlayingFull', '%1 is not playing at the moment.').replace('%1', r.name);
+    // Pastille d'étiquette (modules/notes) devant le pseudo — même pont que le
+    // siège (window._nvSeatTag), jamais sur ma propre ligne, '' sans étiquette.
+    var _nvTag = '';
+    if (!r.isMe) {
+      try { if (typeof window._nvSeatTag === 'function') _nvTag = window._nvSeatTag(r.name); } catch (e) {}
+    }
     var nameHtml = '<span class="pl-name-link" role="button" tabindex="0"'
       + ' title="' + esc(_actTtl) + '"'
       + ' onclick="window.openPlayerInfoPopup(' + _ppArg + ')"'
       + ' onkeydown="if(event.key===\'Enter\')window.openPlayerInfoPopup(' + _ppArg + ')">'
-      + esc(r.name) + '</span>';
+      + _nvTag + esc(r.name) + '</span>';
     // Statut « en partie » : une seule manette dans sa colonne (allumée si le
     // joueur est dans une partie, éteinte sinon). Plus de nom de partie sous le pseudo.
     var _status = '<span class="pl-status' + (r.act ? ' on' : '') + '" title="' + (r.act ? esc(r.act) : _tt('plNotPlaying','Not playing')) + '"' + (r.act ? '' : ' data-i18n-title="plNotPlaying"') + '>' + _PL_PAD_SVG + '</span>';
@@ -11103,7 +11139,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.8-web.23'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.8-web.24'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

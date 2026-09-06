@@ -16,6 +16,8 @@ export const meta = {
 };
 
 export const strings = {
+    // Notes de joueur + étiquettes (modules/notes, extra web)
+    nvTitle:'আমার নোট', nvPlaceholder:'যেকোনো 3-bet কল করে…', nvSaved:'সংরক্ষিত', nvTagNone:'কোনো লেবেল নেই', nvTagRed:'বিপজ্জনক', nvTagOrange:'আক্রমণাত্মক', nvTagYellow:'নজরে রাখুন', nvTagGreen:'ফিশ', nvTagBlue:'টাইট', nvTagPurple:'ধূর্ত', nvLabelPh:'লেবেলের নাম', nvLabelTip:'লেবেলের নাম বদলান — এই রঙের সব খেলোয়াড়ের ক্ষেত্রে প্রযোজ্য',
     ppMyStats:'আমার পরিসংখ্যান',
     // Session stats, behind a button on the player card.
     piShowStats:'পরিসংখ্যান দেখুন', piHideStats:'পরিসংখ্যান লুকান',

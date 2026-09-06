@@ -1,4 +1,9 @@
-2026-09-04 version 2.1.8-web (current series):
+2026-09-06 version 2.1.8-web (current series):
+- new: player notes - tap an opponent (seat or players list) to write a private note about them and mark them with one of six colour labels; the colour dot shows in front of their name at the table and in the players list, and hovering it previews your note
+- new: the meaning of each colour label can be renamed (for example turn "Danger" into "Bluffs a lot") - the new name applies to every player carrying that colour
+- new: notes and labels follow your account between devices - notes taken on the phone and on the desktop are merged, never overwritten
+
+2026-09-04 version 2.1.8-web:
 - bugfix: hand-history recording no longer fails when Android closes its database in the background - the client reopens it and carries on; if the device storage is completely full, recording pauses quietly for the session instead of erroring after every hand
 - improvement: automatic error reports no longer pick up noise caused by browser extensions (crypto wallets, page translators), so real client issues stand out
 

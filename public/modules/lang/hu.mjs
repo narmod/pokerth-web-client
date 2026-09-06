@@ -10,6 +10,8 @@ export const meta = {
 };
 
 export const strings = {
+    // Notes de joueur + étiquettes (modules/notes, extra web)
+    nvTitle:'Jegyzetem', nvPlaceholder:'Minden 3-betet megad…', nvSaved:'Mentve', nvTagNone:'Nincs címke', nvTagRed:'Veszélyes', nvTagOrange:'Agresszív', nvTagYellow:'Figyelni', nvTagGreen:'Hal', nvTagBlue:'Szoros', nvTagPurple:'Ravasz', nvLabelPh:'Címke neve', nvLabelTip:'Címke átnevezése — minden ilyen színű játékosra érvényes',
     ppMyStats:'Statisztikáim',
     // Session stats, behind a button on the player card.
     piShowStats:'Statisztikák mutatása', piHideStats:'Statisztikák elrejtése',

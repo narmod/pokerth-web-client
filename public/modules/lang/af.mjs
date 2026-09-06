@@ -10,6 +10,8 @@ export const meta = {
 };
 
 export const strings = {
+    // Notes de joueur + étiquettes (modules/notes, extra web)
+    nvTitle:'My nota', nvPlaceholder:'Call enige 3-bet…', nvSaved:'Gestoor', nvTagNone:'Geen etiket', nvTagRed:'Gevaarlik', nvTagOrange:'Aggressief', nvTagYellow:'Hou dop', nvTagGreen:'Vis', nvTagBlue:'Styf', nvTagPurple:'Slinks', nvLabelPh:'Etiketnaam', nvLabelTip:'Hernoem hierdie etiket — geld vir elke speler met hierdie kleur',
     ppMyStats:'My statistieke',
     // Session stats, behind a button on the player card.
     piShowStats:'Wys statistieke', piHideStats:'Versteek statistieke',

@@ -10,6 +10,8 @@ export const meta = {
 };
 
 export const strings = {
+    // Notes de joueur + étiquettes (modules/notes, extra web)
+    nvTitle:'Moja bilješka', nvPlaceholder:'Plaća svaki 3-bet…', nvSaved:'Spremljeno', nvTagNone:'Bez oznake', nvTagRed:'Opasan', nvTagOrange:'Agresivan', nvTagYellow:'Promatrati', nvTagGreen:'Riba', nvTagBlue:'Tijesan', nvTagPurple:'Lukav', nvLabelPh:'Naziv oznake', nvLabelTip:'Preimenuj oznaku — vrijedi za sve igrače s ovom bojom',
     ppMyStats:'Moja statistika',
     // Session stats, behind a button on the player card.
     piShowStats:'Prikaži statistiku', piHideStats:'Sakrij statistiku',

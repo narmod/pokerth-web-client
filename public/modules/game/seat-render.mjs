@@ -854,7 +854,15 @@ function renderSeatsImmediate() {
     if (isActive) h += '<div class="seat-timer-badge" id="stb-'+pid+'">'
       + ((S._timerSec > 0) ? S._timerSec + 's' : '') + '</div>';
     h += '<div class="seat-info">';
-    h += '<div class="seat-name">' + esc(isMe ? S.myName : getPlayerName(pid)) + '</div>';
+    // Pastille d'étiquette (modules/notes) devant le pseudo — jamais sur soi,
+    // et '' quand le joueur n'est pas étiqueté : aucun surcoût dans le cas
+    // courant. Module optionnel, d'où le test de fonction. Le title de la
+    // pastille porte l'aperçu (libellé + extrait de note) au survol.
+    var _nvTag = '';
+    if (!isMe) {
+      try { if (typeof window._nvSeatTag === 'function') _nvTag = window._nvSeatTag(getPlayerName(pid)); } catch (e) {}
+    }
+    h += '<div class="seat-name">' + _nvTag + esc(isMe ? S.myName : getPlayerName(pid)) + '</div>';
     if (_seatTr.flagInfo && !_seatNarrow) {
       // infoBar QML (wideLayout) : drapeau 22×15 en bas-gauche + stack or à droite.
       h += '<div class="seat-info-row2">' + flagBadge + '<div class="seat-money">' + moneyStr + '</div></div>';

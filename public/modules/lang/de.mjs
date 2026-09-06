@@ -15,6 +15,8 @@ export const meta = {
 };
 
 export const strings = {
+    // Notes de joueur + étiquettes (modules/notes, extra web)
+    nvTitle:'Meine Notiz', nvPlaceholder:'Callt jede 3-Bet…', nvSaved:'Gespeichert', nvTagNone:'Kein Etikett', nvTagRed:'Gefahr', nvTagOrange:'Aggressiv', nvTagYellow:'Beobachten', nvTagGreen:'Fisch', nvTagBlue:'Tight', nvTagPurple:'Trickreich', nvLabelPh:'Name des Etiketts', nvLabelTip:'Etikett umbenennen — gilt für alle Spieler mit dieser Farbe',
     ppMyStats:'Meine Statistiken',
     // Session stats, behind a button on the player card.
     piShowStats:'Statistiken anzeigen', piHideStats:'Statistiken ausblenden',

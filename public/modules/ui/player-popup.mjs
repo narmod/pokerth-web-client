@@ -260,6 +260,8 @@ function openPlayerInfoPopup(pid, autoStats) {
     if (infoEl) {
       infoEl.innerHTML = _otherPlayerInfoHtml(targetPid);
       infoEl.style.display = '';
+      // Le bloc de note n'existe qu'une fois le HTML posé — câblage ici.
+      try { if (typeof window._nvWire === 'function') window._nvWire(infoEl); } catch (e) {}
     }
   }
   // Stats de comportement (VPIP/PFR/AF…) : locales et légères → chargées à
@@ -502,6 +504,15 @@ function _otherPlayerInfoHtml(pid) {
   html += _inGameInfoHtml(pid);
   // Coupes + lien profil pokerth.net (identique pour moi et pour les autres).
   html += _cupsBlockHtml(pid);
+  // Note libre + étiquette de couleur (extra web, modules/notes). Uniquement
+  // sur un ADVERSAIRE : se noter soi-même n'a pas de sens, et la self-box
+  // partage ce chemin de rendu. Les bots y ont droit — en entraînement, c'est
+  // justement là qu'on apprend à lire un adversaire.
+  try {
+    if (typeof window._nvBlockHtml === 'function') {
+      html += window._nvBlockHtml(window.getPlayerName(pid));
+    }
+  } catch (e) {}
   var _ignNm = window.getPlayerName(pid);
   html += '<button type="button" class="pim-ignore-btn" onclick="window._toggleIgnore(' + pid + ')" '
         + 'style="display:block;width:100%;margin-top:10px;padding:8px 0;border:1px solid var(--border-hi,rgba(200,168,74,.4));border-radius:8px;cursor:pointer;background:transparent;color:var(--text,#eff1f5);font-weight:600">'
@@ -572,6 +583,9 @@ function _renderProfileStats(boxId) {
 function closePlayerInfoPopup() {
   var modal = document.getElementById('player-info-modal');
   if (!modal) return;
+  // La note se sauve en différé pendant la frappe : on force l'écriture avant
+  // de fermer, sinon la dernière phrase tapée disparaît avec la fenêtre.
+  try { if (typeof window._nvFlush === 'function') window._nvFlush(); } catch (e) {}
   var card = modal.querySelector('.pim-card');
   if (card && card.classList.contains('floating-win') && typeof window._disableFloating === 'function') {
     try { window._disableFloating(card); } catch (e) {}

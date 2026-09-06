@@ -16,6 +16,8 @@ export const meta = {
 };
 
 export const strings = {
+    // Notes de joueur + étiquettes (modules/notes, extra web)
+    nvTitle:'โน้ตของฉัน', nvPlaceholder:'คอลทุก 3-bet…', nvSaved:'บันทึกแล้ว', nvTagNone:'ไม่มีป้าย', nvTagRed:'อันตราย', nvTagOrange:'ก้าวร้าว', nvTagYellow:'จับตาดู', nvTagGreen:'ปลา', nvTagBlue:'เล่นแน่น', nvTagPurple:'เจ้าเล่ห์', nvLabelPh:'ชื่อป้าย', nvLabelTip:'เปลี่ยนชื่อป้าย — มีผลกับผู้เล่นทุกคนที่ใช้สีนี้',
     ppMyStats:'สถิติของฉัน',
     // Session stats, behind a button on the player card.
     piShowStats:'ดูสถิติ', piHideStats:'ซ่อนสถิติ',

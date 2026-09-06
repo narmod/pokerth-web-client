@@ -10,6 +10,8 @@ export const meta = {
 };
 
 export const strings = {
+    // Notes de joueur + étiquettes (modules/notes, extra web)
+    nvTitle:'La meva nota', nvPlaceholder:'Paga qualsevol 3-bet…', nvSaved:'Desat', nvTagNone:'Sense etiqueta', nvTagRed:'Perillós', nvTagOrange:'Agressiu', nvTagYellow:'Vigilar', nvTagGreen:'Peix', nvTagBlue:'Tancat', nvTagPurple:'Astut', nvLabelPh:'Nom de l’etiqueta', nvLabelTip:'Canvia el nom de l’etiqueta — s’aplica a tots els jugadors amb aquest color',
     ppMyStats:'Les meves estadístiques',
     // Session stats, behind a button on the player card.
     piShowStats:'Mostra les estadístiques', piHideStats:'Amaga les estadístiques',

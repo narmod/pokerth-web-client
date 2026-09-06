@@ -17,6 +17,8 @@ export const meta = {
 };
 
 export const strings = {
+    // Notes de joueur + étiquettes (modules/notes, extra web)
+    nvTitle:'ملاحظتي', nvPlaceholder:'يدفع أي 3-bet…', nvSaved:'تم الحفظ', nvTagNone:'بدون وسم', nvTagRed:'خطير', nvTagOrange:'عدواني', nvTagYellow:'تحت المراقبة', nvTagGreen:'سمكة', nvTagBlue:'متحفّظ', nvTagPurple:'ماكر', nvLabelPh:'اسم الوسم', nvLabelTip:'إعادة تسمية الوسم — ينطبق على كل لاعب بهذا اللون',
     ppMyStats:'إحصائياتي',
     // Session stats, behind a button on the player card.
     piShowStats:'عرض الإحصائيات', piHideStats:'إخفاء الإحصائيات',

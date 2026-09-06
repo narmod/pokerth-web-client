@@ -9,6 +9,8 @@ export const meta = {
 };
 
 export const strings = {
+    // Notes de joueur + étiquettes (modules/notes, extra web)
+    nvTitle:'Min note', nvPlaceholder:'Caller enhver 3-bet…', nvSaved:'Gemt', nvTagNone:'Intet mærkat', nvTagRed:'Farlig', nvTagOrange:'Aggressiv', nvTagYellow:'Hold øje', nvTagGreen:'Fisk', nvTagBlue:'Tight', nvTagPurple:'Snu', nvLabelPh:'Mærkatnavn', nvLabelTip:'Omdøb mærkatet — gælder for alle spillere med denne farve',
     ppMyStats:'Min statistik',
     // Session stats, behind a button on the player card.
     piShowStats:'Vis statistik', piHideStats:'Skjul statistik',

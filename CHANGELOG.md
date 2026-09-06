@@ -17,6 +17,16 @@ changes for this line are on the
 highlights below.
 
 ### Added
+- **Player notes and colour labels** (`web.24`). Web-only extra, designed to
+  be portable to the QML client later: the player card gains a free-text
+  note (500 chars) and six fixed-colour labels whose meaning can be renamed
+  globally; a colour dot precedes the player's name on the seat and in the
+  players list, with a hover preview (label + note excerpt). Stored under a
+  single `pth_notes` key and reconciled by MERGE in the web settings sync —
+  per player and per colour, latest timestamp wins — so two devices never
+  overwrite each other (`modules/notes/`, `scripts/test-notes.mjs`, 68
+  checks). Based on `lbernardo`'s fork commit `26a754c`, reworked
+  (renameable labels, list dot, hover preview, i18n in all 45 languages).
 - **Ivoire & Chêne table style** (`web.4`). Port of upstream `eee31d4`
   (`data/gfx/qml/table/ivoire-chene/`): fullscreen wallpaper, cream action
   buttons and pucks, ChatLog* parchment tint from the upstream XML. First

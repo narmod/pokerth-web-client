@@ -15,6 +15,8 @@ export const meta = {
 };
 
 export const strings = {
+    // Notes de joueur + étiquettes (modules/notes, extra web)
+    nvTitle:'Mijn notitie', nvPlaceholder:'Callt elke 3-bet…', nvSaved:'Opgeslagen', nvTagNone:'Geen label', nvTagRed:'Gevaar', nvTagOrange:'Agressief', nvTagYellow:'In de gaten houden', nvTagGreen:'Vis', nvTagBlue:'Tight', nvTagPurple:'Sluw', nvLabelPh:'Labelnaam', nvLabelTip:'Label hernoemen — geldt voor elke speler met deze kleur',
     ppMyStats:'Mijn statistieken',
     // Session stats, behind a button on the player card.
     piShowStats:'Statistieken tonen', piHideStats:'Statistieken verbergen',

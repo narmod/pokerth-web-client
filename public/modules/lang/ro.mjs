@@ -10,6 +10,8 @@ export const meta = {
 };
 
 export const strings = {
+    // Notes de joueur + étiquettes (modules/notes, extra web)
+    nvTitle:'Nota mea', nvPlaceholder:'Plătește orice 3-bet…', nvSaved:'Salvat', nvTagNone:'Fără etichetă', nvTagRed:'Periculos', nvTagOrange:'Agresiv', nvTagYellow:'De urmărit', nvTagGreen:'Pește', nvTagBlue:'Strâns', nvTagPurple:'Viclean', nvLabelPh:'Numele etichetei', nvLabelTip:'Redenumește eticheta — se aplică tuturor jucătorilor cu această culoare',
     ppMyStats:'Statisticile mele',
     // Session stats, behind a button on the player card.
     piShowStats:'Arată statisticile', piHideStats:'Ascunde statisticile',

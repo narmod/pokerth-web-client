@@ -14,6 +14,8 @@ export const meta = {
 };
 
 export const strings = {
+    // Notes de joueur + étiquettes (modules/notes, extra web)
+    nvTitle:'ההערה שלי', nvPlaceholder:'משלם כל 3-bet…', nvSaved:'נשמר', nvTagNone:'ללא תווית', nvTagRed:'מסוכן', nvTagOrange:'אגרסיבי', nvTagYellow:'במעקב', nvTagGreen:'דג', nvTagBlue:'הדוק', nvTagPurple:'ערמומי', nvLabelPh:'שם התווית', nvLabelTip:'שינוי שם התווית — חל על כל שחקן בצבע הזה',
     ppMyStats:'הסטטיסטיקות שלי',
     // Session stats, behind a button on the player card.
     piShowStats:'הצג סטטיסטיקות', piHideStats:'הסתר סטטיסטיקות',

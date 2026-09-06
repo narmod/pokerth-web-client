@@ -11,6 +11,8 @@ export const meta = {
 };
 
 export const strings = {
+    // Notes de joueur + étiquettes (modules/notes, extra web)
+    nvTitle:'என் குறிப்பு', nvPlaceholder:'எந்த 3-bet-ஐயும் கால் செய்கிறார்…', nvSaved:'சேமிக்கப்பட்டது', nvTagNone:'லேபிள் இல்லை', nvTagRed:'ஆபத்தானவர்', nvTagOrange:'தாக்குதல்காரர்', nvTagYellow:'கவனிக்க', nvTagGreen:'ஃபிஷ்', nvTagBlue:'டைட்', nvTagPurple:'தந்திரமானவர்', nvLabelPh:'லேபிள் பெயர்', nvLabelTip:'லேபிளின் பெயரை மாற்று — இந்த நிறமுள்ள எல்லா வீரர்களுக்கும் பொருந்தும்',
     ppMyStats:'என் புள்ளிவிவரங்கள்',
     // Session stats, behind a button on the player card.
     piShowStats:'புள்ளிவிவரங்களைக் காட்டு', piHideStats:'புள்ளிவிவரங்களை மறை',

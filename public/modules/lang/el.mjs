@@ -10,6 +10,8 @@ export const meta = {
 };
 
 export const strings = {
+    // Notes de joueur + étiquettes (modules/notes, extra web)
+    nvTitle:'Η σημείωσή μου', nvPlaceholder:'Πληρώνει κάθε 3-bet…', nvSaved:'Αποθηκεύτηκε', nvTagNone:'Χωρίς ετικέτα', nvTagRed:'Επικίνδυνος', nvTagOrange:'Επιθετικός', nvTagYellow:'Παρακολούθηση', nvTagGreen:'Ψάρι', nvTagBlue:'Σφιχτός', nvTagPurple:'Πονηρός', nvLabelPh:'Όνομα ετικέτας', nvLabelTip:'Μετονομασία ετικέτας — ισχύει για κάθε παίκτη με αυτό το χρώμα',
     ppMyStats:'Τα στατιστικά μου',
     // Session stats, behind a button on the player card.
     piShowStats:'Εμφάνιση στατιστικών', piHideStats:'Απόκρυψη στατιστικών',
