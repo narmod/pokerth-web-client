@@ -1,4 +1,8 @@
 2026-09-06 version 2.1.8-web (current series):
+- new: tell everyone what you think of the music - two thumbs under the track title let you say whether you like what is playing, radios included; one vote per device, changeable or removable at any time, and nothing about who voted is recorded
+- new: voting is blind by default - you see your own thumb but not the totals, so the numbers on screen cannot sway your answer; the server operator can reveal the counts
+
+2026-09-06 version 2.1.8-web:
 - improvement: clearer default notices - the chat sections now explain in plain words why an envelope can be missing (your own line, a guest, someone mid-game), and the account notice describes each community scene (BBC time-based games, WeCup tournaments, the Monthly Cup) with its own ranking
 
 2026-09-06 version 2.1.8-web:

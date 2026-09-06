@@ -992,7 +992,7 @@ export const strings = {
     musicCompact: "Compacte",
     musicExpand: "Amplia",
     musicMoveUp: "Mou amunt",
-    musicMoveDown: "Mou avall", musicRadios: "Ràdios",
+    musicMoveDown: "Mou avall", musicRadios: "Ràdios", musicLike: "M’agrada", musicDislike: "No és per a mi",
     betDisplayTitle:"Visualització de l'aposta:", betDisplayInset:'Aposta dins del requadre del jugador', betDisplayClassic:'Aposta al costat del requadre del jugador', importSeat: "Importa un paquet de seients (.zip)",
     plColumns: "Columnes",
     plColAvatar: "Avatar",

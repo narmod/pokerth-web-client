@@ -272,7 +272,7 @@ ok(/\n  \.fld\{display:flex/.test(admin), 'the settings row is a class now');
 ok(/max-width:560px/.test(admin),
   'the control stays near its label instead of drifting to the far edge');
 ok(!/class="defrow" style="display:flex/.test(admin), 'no settings row carries the flex inline any more');
-ok((admin.match(/class="defrow fld/g) || []).length === 57, 'all 57 rows use it');
+ok((admin.match(/class="defrow fld/g) || []).length === 58, 'all 58 rows use it');
 ok(/\.fld\.left\{justify-content:flex-start\}/.test(admin), 'the left-aligned variant survives');
 ok(/\.fld\.gap\{margin:10px 0 5px\}/.test(admin), 'so does the wider-margin variant');
 ok(/\.fld>input\[type=number\]\{width:110px\}/.test(admin), 'short control widths live in the sheet');

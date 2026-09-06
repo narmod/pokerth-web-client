@@ -921,7 +921,7 @@ export const strings = {
     musicCompact: "Kompaktowo",
     musicExpand: "Rozwiń",
     musicMoveUp: "W górę",
-    musicMoveDown: "W dół", musicRadios: "Stacje radiowe",
+    musicMoveDown: "W dół", musicRadios: "Stacje radiowe", musicLike: "Podoba mi się", musicDislike: "Nie dla mnie",
     betDisplayTitle:'Wyświetlanie stawki:', betDisplayInset:'Stawka w ramce gracza', betDisplayClassic:'Stawka obok ramki gracza', importSeat: "Importuj pakiet miejsc (.zip)",
     plColumns: "Kolumny",
     plColAvatar: "Awatar",

@@ -513,8 +513,10 @@
       <div class="card">
         <h2>Music player</h2>
         <div class="defrow fld"><span>Available to players</span><select id="mzEnabled"><option value="1">On</option><option value="0">Off</option></select></div>
+        <div class="defrow fld"><span>Show vote counts to players</span><select id="mzVotesPub"><option value="0">Off (blind)</option><option value="1">On</option></select></div>
         <div class="rowtop"><button id="mzSaveEnabled" class="use">Save</button></div>
         <div id="mzEnMsg" class="msg"></div>
+        <p class="muted note">Players see two thumbs on the track they are listening to. One vote per device per track, deduplicated on a salted hash of the same anonymous id used by the visit counter — no IP, no nickname, no listening time. Blind is the default: a player sees their own thumb but not the totals, so the figures on screen cannot sway the answer. Radios are votable too, unlike plays. Counts appear next to each entry in the library below.</p>
         <p class="muted note">Off removes the 🎵 entry from every player menu and makes <code>/music/*</code> answer 404 (manifest and MP3s). The track list below stays fully editable. Players already in a session keep the player until they reload.</p>
       </div>
       <div class="card">
@@ -1407,6 +1409,7 @@
   // leaderboard
   // ── Music (background tracks) ──
   var mzPlays={}, mzPlaysKnown=false;
+  var mzVotes={}, mzVotesKnown=false;
   function mzSay(t,cls){ var m=$('mzMsg'); if(m){ m.textContent=t; m.className='msg '+(cls||''); } }
   function mzProg(f){ var p=$('mzProg'); if(p){ p.classList.add('on'); p.firstElementChild.style.width=Math.round((f||0)*100)+'%'; } }
   function mzProgHide(){ var p=$('mzProg'); if(p){ p.classList.remove('on'); p.firstElementChild.style.width='0'; } }
@@ -1546,6 +1549,19 @@
     b.title='Times this track was started by players. Resuming after a pause is not counted, and nothing about who listened is recorded.';
     return b;
   }
+  // Pouces haut/bas, en pastille. Radios comprises : elles sont votables meme
+  // si elles ne sont pas comptees en ecoutes. Une entree jamais votee n'affiche
+  // rien plutot qu'un « 0 / 0 » qui remplirait la liste de bruit.
+  function mzVoteBadge(p){
+    if(!mzVotesKnown) return null;
+    var v=mzVotes[p.id]||{}, up=v.up||0, dn=v.down||0;
+    if(!up && !dn) return null;
+    var b=document.createElement('span');
+    b.className='mzplays';
+    b.textContent='\u25B2 '+up+' \u00b7 \u25BC '+dn;
+    b.title='Thumbs up / down from players on this entry. One vote per device, and nothing about who voted is recorded.';
+    return b;
+  }
   function mzRenderList(all){ var el=$('mzList'); if(!el)return; mzAll=all||[];
     var ct=$('mzCntT'), cr=$('mzCntR');
     var nT=mzAll.filter(function(p){return !p.stream;}).length, nR=mzAll.length-nT;
@@ -1567,6 +1583,7 @@
         row.insertBefore(np,row.firstChild);
       }
       var pb=mzPlayBadge(p); if(pb) row.appendChild(pb);
+      var vb=mzVoteBadge(p); if(vb) row.appendChild(vb);
       var tg=document.createElement('button'); tg.className='toggle '+(on?'on':'off'); tg.textContent=on?'On':'Off'; tg.title=on?'Audible to players \u2014 tap to hide':'Hidden \u2014 tap to show'; tg.addEventListener('click',function(){mzToggle(p.id,on);});
       row.appendChild(tg);
       var up=document.createElement('button'); up.className='use'; up.textContent='\u25B2'; up.title='Move up'; up.style.cssText='padding:6px 9px'; if(pi===0)up.disabled=true; up.addEventListener('click',function(){ mzMove(p.id,-1,arr); }); row.appendChild(up);
@@ -1574,7 +1591,7 @@
       // (les déplacements restent DANS l'onglet affiché ; l'ordre global est préservé)
       if(!p.builtin){ var ed=document.createElement('button'); ed.className='use'; ed.textContent='Edit'; ed.addEventListener('click',function(){ mzEditId=p.id; mzRenderList(mzAll); }); row.appendChild(ed); var del=document.createElement('button'); del.className='del'; del.textContent='Remove'; del.addEventListener('click',function(){mzRemove(p.id,p.title||p.id);}); row.appendChild(del); }
       el.appendChild(row); }); }
-  function mzRefresh(){ api('/admin/music-list?t='+Date.now()).then(function(r){return r.json();}).then(function(d){ if($('mzEnabled')&&d&&typeof d.enabled==='boolean')$('mzEnabled').value=d.enabled?'1':'0'; mzPlaysKnown=(d&&d.plays!==undefined); mzPlays=(d&&d.plays)||{}; if(d.ok)mzRenderList(d.tracks); else mzRenderList([]); }).catch(function(){ var el=$('mzList'); if(el)el.innerHTML='<div class="empty">Could not load tracks.</div>'; }); }
+  function mzRefresh(){ api('/admin/music-list?t='+Date.now()).then(function(r){return r.json();}).then(function(d){ if($('mzEnabled')&&d&&typeof d.enabled==='boolean')$('mzEnabled').value=d.enabled?'1':'0'; mzPlaysKnown=(d&&d.plays!==undefined); mzPlays=(d&&d.plays)||{}; mzVotesKnown=(d&&d.votes!==undefined); mzVotes=(d&&d.votes)||{}; if($('mzVotesPub')&&d&&typeof d.votesPublic==='boolean')$('mzVotesPub').value=d.votesPublic?'1':'0'; if(d.ok)mzRenderList(d.tracks); else mzRenderList([]); }).catch(function(){ var el=$('mzList'); if(el)el.innerHTML='<div class="empty">Could not load tracks.</div>'; }); }
   (function(){ var d=$('mzDrop'), f=$('mzFile'); if(d&&f){ d.addEventListener('click',function(){f.click();}); d.addEventListener('dragover',function(e){e.preventDefault();d.classList.add('hot');}); d.addEventListener('dragleave',function(){d.classList.remove('hot');}); d.addEventListener('drop',function(e){e.preventDefault();d.classList.remove('hot');if(e.dataTransfer.files[0])mzUpload(e.dataTransfer.files[0]);}); f.addEventListener('change',function(){if(f.files[0])mzUpload(f.files[0]);}); } })();
 
   (function(){ // segmentés : formulaire d'ajout (Track|Radio) et bibliothèque (Tracks|Radios)
@@ -1617,9 +1634,17 @@
 
   (function(){ var b=$('mzSaveEnabled'); if(!b) return; b.addEventListener('click', function(){
     var m=$('mzEnMsg'), on=($('mzEnabled')?$('mzEnabled').value==='1':true);
+    var pub=($('mzVotesPub')?$('mzVotesPub').value==='1':false);
+    // Un seul bouton pour les deux reglages : ils vivent dans la meme carte, et
+    // deux boutons Save cote a cote invitent a n'en cliquer qu'un.
     api('/admin/music-enable',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({enabled:on,token:tok()})})
-      .then(function(r){return r.json();}).then(function(d){ if(d&&d.ok){ m.textContent=on?'Saved. The music player is available to players.':'Saved. The music player is hidden and /music/* now answers 404.'; m.className='msg ok'; } else { m.textContent='Failed: '+((d&&d.error)||'error'); m.className='msg err'; } })
-      .catch(function(){ m.textContent='Network error.'; m.className='msg err'; });
+      .then(function(r){return r.json();})
+      .then(function(d){ if(!(d&&d.ok)) throw new Error((d&&d.error)||'error');
+        return api('/admin/music-votes-public',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({pub:pub,token:tok()})}).then(function(r){return r.json();}); })
+      .then(function(d2){ if(!(d2&&d2.ok)) throw new Error((d2&&d2.error)||'error');
+        m.textContent=(on?'Saved. The music player is available to players.':'Saved. The music player is hidden and /music/* now answers 404.')+(pub?' Vote counts are visible to players.':' Voting stays blind.');
+        m.className='msg ok'; mzRefresh(); })
+      .catch(function(e){ m.textContent=(e&&e.message&&e.message!=='Failed to fetch')?('Failed: '+e.message):'Network error.'; m.className='msg err'; });
   }); })();
 
   function bmsg(t,cls){ $('boardmsg').textContent=t; $('boardmsg').className='msg '+(cls||''); }

@@ -17,6 +17,30 @@ changes for this line are on the
 highlights below.
 
 ### Added
+- **Thumbs up / down on the music player** (`web.32`). Two thumbs sit under
+  the track title in the LCD, on the CURRENT track only — no per-row voting,
+  which would turn the playlist into a form. `POST /__music-vote {id, vid,
+  vote}` with vote `1`, `-1` or `0` (withdraw); the same body WITHOUT `vote`
+  is a read ("what did this device already say?"), kept a POST so the
+  anonymous `vid` never reaches the access logs. One device = one voice per
+  track, deduplicated on a SHA-256 salted with the track id and truncated to
+  12 chars — same scheme as the product polls, and for the same reason: the
+  stored data alone cannot correlate two tracks back to one device.
+  `MUSIC_VOTERS_MAX` (20 000/entry) bounds cardinality; a voter already known
+  keeps the right to change their mind or withdraw once the cap is reached.
+  Radios ARE votable, unlike plays: a stream has no end of track, so "one
+  play" would mean nothing there, but "I like this station" does. Voting is
+  BLIND by default (`musicVotesPublic`, admin → Music): a player sees their
+  own thumb, never the totals, so figures on screen cannot sway the answer;
+  the server response (`pub`) is the single source of truth, not a flag
+  copied client-side. The thumbs stay hidden until the proxy answers, so an
+  offline or LAN session shows no dead button. Counts land in the admin
+  library as a `▲ n · ▼ n` badge next to the existing plays badge, and
+  `/admin/music-list` gained `votes` + `votesPublic` (new
+  `/admin/music-votes-public` route, `music` scope). Two new UI strings
+  (`musicLike`, `musicDislike`) in all 45 languages, plus a sentence in the
+  `music` help entry of all 45 help corpora. **proxy.js changed — restart
+  required.**
 - **Notice acknowledgement** (`web.31`). Both notices switch from
   every-connection to acknowledge-once: "I understand" stores the message's
   `updatedAt` (`pth_guestnotice_seen` locally for guests;

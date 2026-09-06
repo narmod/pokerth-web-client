@@ -990,7 +990,7 @@ export const strings = {
     musicCompact: "Kompaktno",
     musicExpand: "Proširi",
     musicMoveUp: "Pomakni gore",
-    musicMoveDown: "Pomakni dolje", musicRadios: "Radio postaje",
+    musicMoveDown: "Pomakni dolje", musicRadios: "Radio postaje", musicLike: "Sviđa mi se", musicDislike: "Nije za mene",
     betDisplayTitle:'Prikaz uloga:', betDisplayInset:'Ulog u okviru igrača', betDisplayClassic:'Ulog pored okvira igrača', importSeat: "Uvezi paket mjesta (.zip)",
     plColumns: "Stupci",
     plColAvatar: "Avatar",

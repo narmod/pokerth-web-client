@@ -915,7 +915,7 @@ export const strings = {
     musicCompact: "コンパクト",
     musicExpand: "展開",
     musicMoveUp: "上へ",
-    musicMoveDown: "下へ", musicRadios: "ラジオ",
+    musicMoveDown: "下へ", musicRadios: "ラジオ", musicLike: "好き", musicDislike: "好みじゃない",
     betDisplayTitle:'ベット表示：', betDisplayInset:'ベットをプレイヤー枠の中に表示', betDisplayClassic:'ベットをプレイヤー枠の横に表示', importSeat: "座席パック（.zip）をインポート",
     plColumns: "列",
     plColAvatar: "アバター",

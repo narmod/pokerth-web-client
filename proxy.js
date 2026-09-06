@@ -4123,7 +4123,8 @@ function emptyVisitsStore() {
   return {
     days: {}, totalV: 0, totalRet: 0, allU: {},
     allM: { pokerthnet: 0, lan: 0, offline: 0 },
-    env: {}, envSince: 0, music: {}, musicSince: 0, hourSince: 0
+    env: {}, envSince: 0, music: {}, musicSince: 0, hourSince: 0,
+    musicVotes: {}, musicVotesSince: 0
   };
 }
 let visitsStore = emptyVisitsStore();
@@ -4140,6 +4141,8 @@ try {
     visitsStore.envSince = (typeof _vs.envSince === 'number') ? _vs.envSince : 0;
     visitsStore.music  = (_vs.music && typeof _vs.music === 'object') ? _vs.music : {};
     visitsStore.musicSince = (typeof _vs.musicSince === 'number') ? _vs.musicSince : 0;
+    visitsStore.musicVotes = (_vs.musicVotes && typeof _vs.musicVotes === 'object') ? _vs.musicVotes : {};
+    visitsStore.musicVotesSince = (typeof _vs.musicVotesSince === 'number') ? _vs.musicVotesSince : 0;
     visitsStore.hourSince = (typeof _vs.hourSince === 'number') ? _vs.hourSince : 0;
   }
 } catch (e) { /* first run — start empty */ }
@@ -4224,6 +4227,95 @@ function recordMusicPlay(id) {
   bucket.mu[id] = (bucket.mu[id] || 0) + 1;
   saveVisitsSoon();
 }
+// ── Pouces haut / bas sur la musique ──────────────────────────────────────
+// Le lecteur montre deux pouces sur la piste EN COURS uniquement. Un clic poste
+// POST /__music-vote { id, vid, vote } ; le même corps sans `vote` est une
+// simple lecture (« quel est mon vote sur cette piste ? »), ce qui évite de
+// faire passer le vid en query string où il finirait dans les journaux d'accès.
+//
+// Un appareil = une voix par piste, dédupliquée sur un hachage salé par l'id de
+// la piste — le même procédé que les sondages, et pour la même raison : les
+// données stockées seules ne permettent pas de recoller deux pistes au même
+// appareil. Changer d'avis est permis (l'ancienne voix est décomptée), revoter
+// le même pouce le retire.
+//
+// Les radios COMPTENT ici, à la différence des écoutes : un flux n'a pas de fin
+// de piste, donc « une lecture » n'y voudrait rien dire, mais « j'aime cette
+// station » veut dire quelque chose.
+//
+// Par défaut le vote est AVEUGLE : le joueur voit son propre pouce, jamais les
+// totaux, pour que les chiffres à l'écran ne biaisent pas la réponse. L'admin
+// peut révéler les compteurs (onglet Music) — musicVotesPublic.
+const MUSIC_VOTERS_MAX = 20000;   // garde-fou de cardinalité, par piste
+function musicVotesPublic() { return !!(_adminConfig && _adminConfig.musicVotesPublic === true); }
+// Salé avec l'id de la piste : deux pistes votées par le même appareil donnent
+// deux hachages sans rapport visible. Tronqué à 12 caractères — la collision y
+// est sans conséquence (au pire une voix perdue sur une piste) et le fichier
+// reste petit quand la playlist grandit.
+function _musicVoterHash(trackId, rawVid) {
+  return crypto.createHash('sha256').update('mv|' + String(trackId) + '|' + String(rawVid)).digest('hex').slice(0, 12);
+}
+// Contrairement à musicCountable(), les flux sont acceptés (voir plus haut).
+function musicVotable(id) {
+  if (typeof id !== 'string' || !/^[A-Za-z0-9_-]{1,64}$/.test(id)) return false;
+  try {
+    const list = musicListForClient();
+    for (let i = 0; i < list.length; i++) if (list[i].id === id) return true;
+  } catch (e) {}
+  return false;
+}
+function _musicVoteBucket(id) {
+  if (!visitsStore.musicVotes) visitsStore.musicVotes = {};
+  let b = visitsStore.musicVotes[id];
+  if (!b || typeof b !== 'object') b = visitsStore.musicVotes[id] = { up: 0, down: 0, voters: {} };
+  if (!b.voters || typeof b.voters !== 'object') b.voters = {};
+  if (typeof b.up !== 'number') b.up = 0;
+  if (typeof b.down !== 'number') b.down = 0;
+  return b;
+}
+// Lecture seule : ce que cet appareil a déjà voté sur cette piste, et les totaux
+// si (et seulement si) l'admin les a rendus publics.
+function readMusicVote(id, rawVid) {
+  if (!musicVotable(id)) return null;
+  const b = (visitsStore.musicVotes || {})[id];
+  const mine = (b && b.voters && rawVid) ? (b.voters[_musicVoterHash(id, rawVid)] || 0) : 0;
+  const out = { id: id, mine: mine, pub: musicVotesPublic() };
+  if (out.pub) { out.up = (b && b.up) || 0; out.down = (b && b.down) || 0; }
+  return out;
+}
+// vote : 1 (pouce haut), -1 (pouce bas), 0 (retrait). Idempotent — reposter le
+// même pouce n'ajoute rien ; c'est aussi ainsi qu'un client qui a perdu sa
+// réponse peut la redemander sans fausser le compte.
+function recordMusicVote(id, rawVid, vote) {
+  if (!musicVotable(id) || !rawVid) return null;
+  const b = _musicVoteBucket(id);
+  const h = _musicVoterHash(id, rawVid);
+  const prev = b.voters[h] || 0;
+  if (vote !== prev) {
+    // Plafond : une fois atteint, on n'enregistre plus de NOUVEAU votant, mais
+    // ceux déjà connus gardent le droit de changer d'avis ou de se retirer.
+    if (!prev && Object.keys(b.voters).length >= MUSIC_VOTERS_MAX) return readMusicVote(id, rawVid);
+    if (prev === 1) b.up = Math.max(0, b.up - 1);
+    else if (prev === -1) b.down = Math.max(0, b.down - 1);
+    if (vote === 1) { b.up++; b.voters[h] = 1; }
+    else if (vote === -1) { b.down++; b.voters[h] = -1; }
+    else delete b.voters[h];
+    if (!visitsStore.musicVotesSince) visitsStore.musicVotesSince = Date.now();
+    saveVisitsSoon();
+  }
+  return readMusicVote(id, rawVid);
+}
+// Projection pour le tableau de bord : les totaux, jamais les hachages de
+// votants. Le score sert au tri (« ce qui plaît » en haut).
+function musicVoteTotals() {
+  const out = {}, v = visitsStore.musicVotes || {};
+  Object.keys(v).forEach(function (k) {
+    const b = v[k] || {};
+    out[k] = { up: b.up || 0, down: b.down || 0 };
+  });
+  return out;
+}
+
 // Titres à afficher en face des identifiants dans le tableau de bord. Une
 // piste retirée du catalogue garde ses écoutes mais perd son titre : on
 // retombe alors sur l'identifiant, jamais sur une ligne vide.
@@ -6425,7 +6517,9 @@ function handleAdmin(req, res, reqPathOnly, query) {
     if (!hasScope('music', query)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
     // plays : compteur par piste, affiche en face de chaque titre dans la
     // bibliotheque. Les radios n'y figurent jamais (elles ne sont pas mesurees).
-    return adminJson(res, 200, { ok: true, enabled: musicEnabled(), tracks: musicListForAdmin(), plays: visitsStore.music || {} });
+    // votes : pouces haut/bas, radios comprises (elles ne sont pas dans plays).
+    // votesPublic dit si les joueurs voient les totaux ou votent a l'aveugle.
+    return adminJson(res, 200, { ok: true, enabled: musicEnabled(), tracks: musicListForAdmin(), plays: visitsStore.music || {}, votes: musicVoteTotals(), votesPublic: musicVotesPublic() });
   }
   // Interrupteur global du lecteur. Portee 'music' : un token delegue a la musique
   // peut couper le lecteur sans avoir le token maitre.
@@ -6436,6 +6530,18 @@ function handleAdmin(req, res, reqPathOnly, query) {
       _adminConfig.musicEnabled = d.enabled;
       saveAdminConfig();
       return adminJson(res, 200, { ok: true, enabled: musicEnabled() });
+    });
+  }
+  // Reveler ou non les totaux de pouces aux joueurs. Off par defaut : le vote
+  // est aveugle, pour que les chiffres affiches ne biaisent pas la reponse. La
+  // collecte, elle, tourne des que le lecteur est actif.
+  if (reqPathOnly === '/admin/music-votes-public' && req.method === 'POST') {
+    return readJsonBody(req, function (d) {
+      if (!hasScope('music', query, d && d.token)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
+      if (!d || typeof d.pub !== 'boolean') return adminJson(res, 400, { ok: false, error: 'pub (boolean) required' });
+      _adminConfig.musicVotesPublic = d.pub;
+      saveAdminConfig();
+      return adminJson(res, 200, { ok: true, votesPublic: musicVotesPublic() });
     });
   }
   if (reqPathOnly === '/admin/music-upload' && req.method === 'POST') {
@@ -8591,6 +8697,41 @@ const httpServer = http.createServer((req, res) => {
     return;
   }
 
+  // ── Thumbs up / down on the current track ──
+  // POST { id, vid, vote } where vote is 1, -1 or 0 (withdraw). The same body
+  // WITHOUT `vote` is a read: "what did this device already say about this
+  // track?". Keeping it a POST keeps the anonymous vid out of access logs.
+  // Radios are votable even though they are not counted as plays. Totals come
+  // back only when the admin has revealed them; otherwise the reply carries the
+  // caller's own thumb and nothing else.
+  if (reqPathOnly === '/__music-vote') {
+    if (req.method !== 'POST') { res.writeHead(405); res.end('Method not allowed'); return; }
+    readJsonBody(req, function (d) {
+      function j(code, obj) {
+        res.writeHead(code, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' });
+        res.end(JSON.stringify(obj));
+      }
+      if (!musicEnabled()) return j(404, { ok: false, error: 'music disabled' });
+      const id = (d && typeof d.id === 'string') ? d.id : '';
+      const vid = (d && typeof d.vid === 'string') ? d.vid.slice(0, 128) : '';
+      if (!id) return j(400, { ok: false, error: 'id required' });
+      if (!vid) return j(400, { ok: false, error: 'vid required' });
+      if (!musicVotable(id)) return j(404, { ok: false, error: 'unknown track' });
+      let out;
+      if (d.vote === undefined || d.vote === null) {
+        out = readMusicVote(id, vid);
+      } else {
+        const v = (d.vote === 1 || d.vote === -1 || d.vote === 0) ? d.vote : null;
+        if (v === null) return j(400, { ok: false, error: 'vote must be 1, -1 or 0' });
+        out = recordMusicVote(id, vid, v);
+      }
+      if (!out) return j(404, { ok: false, error: 'unknown track' });
+      out.ok = true;
+      return j(200, out);
+    });
+    return;
+  }
+
   // Public app config the client reads on load: which entry "modes" are enabled.
   // Product poll vote (web-only, opt-in client side). One answer per device per
   // poll, deduped on a salted hash of the same anonymous `vid` already posted to
@@ -8623,7 +8764,7 @@ const httpServer = http.createServer((req, res) => {
 
   if (reqPathOnly === '/app-config') {
     res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' });
-    res.end(JSON.stringify({ ok: true, modes: appModes(), welcome: _welcomePublic(), guestNotice: _guestNoticePublic(), authNotice: _authNoticePublic(), poll: _pollPublic(), showLoginTitle: !!_adminConfig.showLoginTitle, defaultTheme: _adminConfig.defaultTheme || '', defaults: _adminConfig.defaults || {}, loginDefaults: _loginDefaults(true), tableDefaults: _adminConfig.tableDefaults || {}, tableNames: _adminConfig.tableNames || {}, serverName: _adminConfig.serverName || '', serverTagline: _adminConfig.serverTagline || '', featureOff: featureOffList(), pokerthnetServer: _activePokerthnetServer(), pokerthnetSource: _pokerthnetSource(), internetTransport: _internetTransport(), musicEnabled: musicEnabled() }));
+    res.end(JSON.stringify({ ok: true, modes: appModes(), welcome: _welcomePublic(), guestNotice: _guestNoticePublic(), authNotice: _authNoticePublic(), poll: _pollPublic(), showLoginTitle: !!_adminConfig.showLoginTitle, defaultTheme: _adminConfig.defaultTheme || '', defaults: _adminConfig.defaults || {}, loginDefaults: _loginDefaults(true), tableDefaults: _adminConfig.tableDefaults || {}, tableNames: _adminConfig.tableNames || {}, serverName: _adminConfig.serverName || '', serverTagline: _adminConfig.serverTagline || '', featureOff: featureOffList(), pokerthnetServer: _activePokerthnetServer(), pokerthnetSource: _pokerthnetSource(), internetTransport: _internetTransport(), musicEnabled: musicEnabled(), musicVotesPublic: musicVotesPublic() }));
     return;
   }
 

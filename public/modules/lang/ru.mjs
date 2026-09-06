@@ -920,7 +920,7 @@ export const strings = {
     musicCompact: "Компактно",
     musicExpand: "Развернуть",
     musicMoveUp: "Вверх",
-    musicMoveDown: "Вниз", musicRadios: "Радиостанции",
+    musicMoveDown: "Вниз", musicRadios: "Радиостанции", musicLike: "Нравится", musicDislike: "Не моё",
     betDisplayTitle:'Отображение ставки:', betDisplayInset:'Ставка внутри рамки игрока', betDisplayClassic:'Ставка рядом с рамкой игрока', importSeat: "Импортировать пакет мест (.zip)",
     plColumns: "Столбцы",
     plColAvatar: "Аватар",

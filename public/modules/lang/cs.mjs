@@ -919,7 +919,7 @@ export const strings = {
     musicCompact: "Kompaktní",
     musicExpand: "Rozbalit",
     musicMoveUp: "Posunout nahoru",
-    musicMoveDown: "Posunout dolů", musicRadios: "Rádia",
+    musicMoveDown: "Posunout dolů", musicRadios: "Rádia", musicLike: "Líbí se mi", musicDislike: "Není to pro mě",
     betDisplayTitle:'Zobrazení sázky:', betDisplayInset:'Sázka v rámečku hráče', betDisplayClassic:'Sázka vedle rámečku hráče', importSeat: "Importovat balíček míst (.zip)",
     plColumns: "Sloupce",
     plColAvatar: "Avatar",

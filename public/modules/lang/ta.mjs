@@ -993,7 +993,7 @@ export const strings = {
     musicCompact: "சுருக்கம்",
     musicExpand: "விரிவாக்கு",
     musicMoveUp: "மேலே நகர்த்து",
-    musicMoveDown: "கீழே நகர்த்து", musicRadios: "வானொலிகள்",
+    musicMoveDown: "கீழே நகர்த்து", musicRadios: "வானொலிகள்", musicLike: "எனக்குப் பிடிக்கும்", musicDislike: "எனக்கானது அல்ல",
     betDisplayTitle:'பந்தயக் காட்சி:', betDisplayInset:'பந்தயம் வீரர் பெட்டிக்குள்', betDisplayClassic:'பந்தயம் வீரர் பெட்டிக்கு அருகில்', importSeat: "இருக்கைத் தொகுப்பை (.zip) இறக்குமதி செய்",
     plColumns: "நெடுவரிசைகள்",
     plColAvatar: "அவதாரம்",

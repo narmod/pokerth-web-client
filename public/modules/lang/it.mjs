@@ -923,7 +923,7 @@ export const strings = {
     musicCompact: "Compatto",
     musicExpand: "Espandi",
     musicMoveUp: "Sposta su",
-    musicMoveDown: "Sposta giù", musicRadios: "Radio",
+    musicMoveDown: "Sposta giù", musicRadios: "Radio", musicLike: "Mi piace", musicDislike: "Non fa per me",
     betDisplayTitle:'Visualizzazione della puntata:', betDisplayInset:'Puntata dentro il riquadro del giocatore', betDisplayClassic:'Puntata accanto al riquadro del giocatore', importSeat: "Importa un pacchetto posti (.zip)",
     plColumns: "Colonne",
     plColAvatar: "Avatar",

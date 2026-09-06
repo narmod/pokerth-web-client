@@ -723,7 +723,7 @@ export const strings = {
     musicCompact: "간략히",
     musicExpand: "펼치기",
     musicMoveUp: "위로",
-    musicMoveDown: "아래로", musicRadios: "라디오",
+    musicMoveDown: "아래로", musicRadios: "라디오", musicLike: "좋아요", musicDislike: "취향이 아니에요",
     betDisplayTitle:'베팅 표시:', betDisplayInset:'플레이어 상자 안에 베팅 표시', betDisplayClassic:'플레이어 상자 옆에 베팅 표시', importSeat: "좌석 팩(.zip) 가져오기",
     plColumns: "열",
     plColAvatar: "아바타",

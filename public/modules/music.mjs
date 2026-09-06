@@ -521,6 +521,77 @@ function _byId(id)   { var i = _index(id); return i >= 0 ? _tracks[i] : null; }
 // gardent leur place dans la playlist. Une reprise après pause ne compte pas
 // (la source est déjà chargée), les radios non plus — un flux n'a pas de fin
 // de piste. Envoi au mieux : un échec est ignoré, la lecture prime.
+// ── Pouces haut / bas ─────────────────────────────────────────────────────
+// Deux pouces sur la piste EN COURS seulement : pas de vote par ligne de
+// playlist, qui transformerait la liste en formulaire. Un appareil = une voix
+// par piste, dédupliquée côté proxy sur un hachage salé du même `pth_vid`
+// anonyme que le beacon /__visit — jamais d'IP, jamais de pseudo.
+//
+// Le vote est AVEUGLE par défaut : le joueur voit son propre pouce, jamais les
+// totaux. L'admin peut les révéler ; c'est la réponse du serveur (`pub`) qui
+// fait autorité, pas un réglage recopié ici, pour qu'il n'y ait qu'une seule
+// source de vérité.
+//
+// Les radios sont votables, contrairement aux écoutes : un flux n'a pas de fin
+// de piste, mais « j'aime cette station » veut dire quelque chose.
+//
+// `known` reste faux tant que le proxy n'a pas répondu : hors ligne, en LAN ou
+// sur une instance sans compteur, les pouces ne s'affichent pas du tout plutôt
+// que de proposer un bouton mort.
+let _vote = { id: null, mine: 0, up: 0, down: 0, pub: false, known: false, busy: false };
+// Même identifiant anonyme que /__visit et les sondages (cf. ui/poll.mjs) —
+// dupliqué ici pour garder ce module sans import, comme le reste du fichier.
+function _vid() {
+  let v = '';
+  try { v = localStorage.getItem('pth_vid') || ''; } catch (e) {}
+  if (!v) {
+    v = (window.crypto && crypto.randomUUID) ? crypto.randomUUID()
+      : (Date.now().toString(36) + Math.random().toString(36).slice(2, 10));
+    try { localStorage.setItem('pth_vid', v); } catch (e) {}
+  }
+  return v;
+}
+function _voteApply(id, d) {
+  if (id !== _curId) return;                       // la piste a changé entre-temps
+  _vote.id = id;
+  _vote.mine = (d && (d.mine === 1 || d.mine === -1)) ? d.mine : 0;
+  _vote.pub  = !!(d && d.pub);
+  _vote.up   = (d && typeof d.up === 'number') ? d.up : 0;
+  _vote.down = (d && typeof d.down === 'number') ? d.down : 0;
+  _vote.known = true;
+  _renderVote();
+}
+// Corps sans `vote` = lecture seule (« qu'ai-je déjà voté ici ? »). Le POST est
+// gardé même en lecture pour que le vid ne parte jamais en query string, où il
+// finirait dans les journaux d'accès du serveur.
+function _votePost(id, vote) {
+  var body = { id: id, vid: _vid() };
+  if (vote !== undefined) body.vote = vote;
+  return fetch('/__music-vote', {
+    method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body), cache: 'no-store'
+  }).then(function (r) { return r.ok ? r.json() : null; }).catch(function () { return null; });
+}
+// Appelé au rendu : une seule interrogation par piste.
+function _voteSync(id) {
+  if (!id || _vote.id === id) return;
+  _vote = { id: id, mine: 0, up: 0, down: 0, pub: _vote.pub, known: false, busy: false };
+  _votePost(id).then(function (d) { if (d && d.ok) _voteApply(id, d); });
+}
+// Clic : reposter le même pouce le retire (vote 0), l'autre pouce remplace.
+function _voteClick(v) {
+  var id = _curId;
+  if (!id || !_vote.known || _vote.busy) return;
+  var next = (_vote.mine === v) ? 0 : v;
+  _vote.busy = true;
+  _vote.mine = next;                                // retour immédiat, corrigé par la réponse
+  _renderVote();
+  _votePost(id, next).then(function (d) {
+    _vote.busy = false;
+    if (d && d.ok) _voteApply(id, d); else _renderVote();
+  });
+}
+
 function _countPlay(t) {
   if (!t || _isStream(t)) return;
   try {
@@ -721,6 +792,25 @@ function _renderProgress() {
   _updateMediaSessionPos();
 }
 
+// Rafraîchissement en place de la rangée de pouces — jamais un _render(), qui
+// reconstruirait le panneau et casserait le drag de la barre de position.
+function _renderVote() {
+  if (!_bodyEl) return;
+  var row = _bodyEl.querySelector('.music-vote');
+  if (!row) return;
+  if (!_vote.known || _vote.id !== _curId) { row.hidden = true; return; }
+  row.hidden = false;
+  [['up', 1], ['down', -1]].forEach(function (pair) {
+    var b = row.querySelector('[data-mvote="' + pair[0] + '"]');
+    if (!b) return;
+    var on = _vote.mine === pair[1];
+    b.classList.toggle('is-active', on);
+    b.setAttribute('aria-pressed', String(on));
+    var c = b.querySelector('.music-vote-n');
+    if (c) { c.hidden = !_vote.pub; c.textContent = _vote.pub ? String(pair[1] === 1 ? _vote.up : _vote.down) : ''; }
+  });
+}
+
 // ── UI ──
 function mount(bodyEl) {
   if (bodyEl) _bodyEl = bodyEl;
@@ -753,7 +843,9 @@ function _icon(name) {
     expand: '<path d="M6 15l6-6 6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>',
     'mv-up':   '<path d="M7 14l5-5 5 5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>',
     'mv-down': '<path d="M7 10l5 5 5-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>',
-    volume: '<path d="M4 9v6h4l5 4V5L8 9z"/><path d="M16.5 8.8a4.5 4.5 0 0 1 0 6.4" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>'
+    volume: '<path d="M4 9v6h4l5 4V5L8 9z"/><path d="M16.5 8.8a4.5 4.5 0 0 1 0 6.4" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>',
+    'thumb-up':   '<rect x="2.6" y="10.2" width="3.8" height="9.4" rx="1"/><path d="M8 10.6l3.9-6.9a1.55 1.55 0 0 1 2.85 1.05L14 9.1h4.9a1.7 1.7 0 0 1 1.64 2.14l-1.72 6.3A2.2 2.2 0 0 1 16.7 19.6H8z"/>',
+    'thumb-down': '<rect x="2.6" y="4.4" width="3.8" height="9.4" rx="1"/><path d="M8 13.4l3.9 6.9a1.55 1.55 0 0 0 2.85-1.05L14 14.9h4.9a1.7 1.7 0 0 0 1.64-2.14l-1.72-6.3A2.2 2.2 0 0 0 16.7 4.4H8z"/>'
   };
   return '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false">' + (P[name] || '') + '</svg>';
 }
@@ -815,6 +907,11 @@ function _render() {
         ((_vuDead || !playing || _bypass) ? '' : '<span class="music-vu" aria-hidden="true">' + vuBars + '</span>') +
       '</div>' +
       '<div class="music-marquee"><span class="music-marquee-txt">' + (nowTxt || _esc(_t('musicNoTracks', 'No tracks available'))) + '</span></div>' +
+      // ── pouces haut/bas sur la piste en cours (masqués tant que le proxy n'a pas répondu) ──
+      '<div class="music-vote" hidden>' +
+        '<button type="button" class="music-vbtn" data-mvote="up" aria-pressed="false" title="' + _esc(_t('musicLike', 'I like this track')) + '" data-i18n-title="musicLike" aria-label="' + _esc(_t('musicLike', 'I like this track')) + '">' + _icon('thumb-up') + '<span class="music-vote-n" hidden></span></button>' +
+        '<button type="button" class="music-vbtn" data-mvote="down" aria-pressed="false" title="' + _esc(_t('musicDislike', 'Not for me')) + '" data-i18n-title="musicDislike" aria-label="' + _esc(_t('musicDislike', 'Not for me')) + '">' + _icon('thumb-down') + '<span class="music-vote-n" hidden></span></button>' +
+      '</div>' +
     '</div>' +
     // ── barre de position ──
     '<div class="music-seek-row">' +
@@ -867,6 +964,8 @@ function _render() {
     '</div>';
 
   _wire();
+  _voteSync(_curId);   // une interrogation par piste, puis affichage en place
+  _renderVote();
   _updateMediaSession();
 }
 
@@ -885,6 +984,14 @@ function _wire() {
       else if (a === 'shuffle') setShuffle(!_shuffle);
       else if (a === 'rep-one') setRepeat(_repeat === 'one' ? 'off' : 'one');
       else if (a === 'rep-all') setRepeat(_repeat === 'all' ? 'off' : 'all');
+    });
+  });
+  // Les pouces ne touchent pas au son : pas de _unlockAudio(), et un
+  // stopPropagation par prudence si la rangée se retrouve un jour cliquable.
+  _bodyEl.querySelectorAll('[data-mvote]').forEach(function (btn) {
+    btn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      _voteClick(btn.getAttribute('data-mvote') === 'up' ? 1 : -1);
     });
   });
   _bodyEl.querySelectorAll('[data-mtab]').forEach(function (btn) {

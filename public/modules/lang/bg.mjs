@@ -991,7 +991,7 @@ export const strings = {
     musicCompact: "Компактно",
     musicExpand: "Разгъни",
     musicMoveUp: "Нагоре",
-    musicMoveDown: "Надолу", musicRadios: "Радиостанции",
+    musicMoveDown: "Надолу", musicRadios: "Радиостанции", musicLike: "Харесва ми", musicDislike: "Не е за мен",
     betDisplayTitle:'Показване на залога:', betDisplayInset:'Залог в рамката на играча', betDisplayClassic:'Залог до рамката на играча', importSeat: "Импортиране на пакет с места (.zip)",
     plColumns: "Колони",
     plColAvatar: "Аватар",

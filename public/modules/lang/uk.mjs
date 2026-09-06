@@ -990,7 +990,7 @@ export const strings = {
     musicCompact: "Компактно",
     musicExpand: "Розгорнути",
     musicMoveUp: "Угору",
-    musicMoveDown: "Униз", musicRadios: "Радіостанції",
+    musicMoveDown: "Униз", musicRadios: "Радіостанції", musicLike: "Подобається", musicDislike: "Не моє",
     betDisplayTitle:'Відображення ставки:', betDisplayInset:'Ставка всередині рамки гравця', betDisplayClassic:'Ставка поруч із рамкою гравця', importSeat: "Імпортувати пакет місць (.zip)",
     plColumns: "Стовпці",
     plColAvatar: "Аватар",

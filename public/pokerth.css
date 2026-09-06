@@ -8321,6 +8321,25 @@ html[data-seat-edit="1"] #g-seats .seat.seat-ghost { outline: none; cursor: defa
   transform-origin: bottom;
   transition: height 90ms linear;
 }
+/* Pouces haut/bas, en bas du LCD : discrets au repos, teintés une fois votés.
+   Le compteur reste caché tant que l'admin n'a pas révélé les totaux. */
+.music-vote { display: flex; align-items: center; justify-content: flex-end; gap: var(--sp-2); margin-top: 2px; }
+.music-vote[hidden] { display: none; }
+.music-vbtn {
+  flex: 0 0 auto;
+  display: inline-flex; align-items: center; gap: var(--sp-1);
+  padding: 3px 8px; line-height: 1;
+  background: transparent; color: var(--gold-dim);
+  border: 1px solid var(--border); border-radius: 999px;
+  cursor: pointer;
+  transition: border-color 120ms ease, background 120ms ease, color 120ms ease, transform 90ms ease;
+}
+.music-vbtn svg { width: 15px; height: 15px; display: block; pointer-events: none; }
+.music-vbtn:hover { border-color: var(--gold-dim); color: var(--gold); }
+.music-vbtn:active { transform: scale(0.94); }
+.music-vbtn.is-active { color: var(--sel,var(--gold)); border-color: var(--sel,var(--gold)); background: rgba(var(--sel-rgb,var(--gold-rgb)),0.16); }
+.music-vote-n { font-size: var(--fs-2xs); font-weight: 700; font-variant-numeric: tabular-nums; }
+.music-vote-n[hidden] { display: none; }
 .music-marquee { overflow: hidden; white-space: nowrap; }
 .music-marquee-txt {
   display: inline-block; font-size: var(--fs-md); color: var(--text); font-weight: 600;

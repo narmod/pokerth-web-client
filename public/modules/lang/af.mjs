@@ -991,7 +991,7 @@ export const strings = {
     musicCompact: "Kompak",
     musicExpand: "Vou uit",
     musicMoveUp: "Skuif op",
-    musicMoveDown: "Skuif af", musicRadios: "Radio's",
+    musicMoveDown: "Skuif af", musicRadios: "Radio's", musicLike: "Ek hou hiervan", musicDislike: "Nie vir my nie",
     betDisplayTitle:'Weddenskapvertoning:', betDisplayInset:'Weddenskap binne die spelerkassie', betDisplayClassic:'Weddenskap langs die spelerkassie', importSeat: "Voer 'n sitplekpakket (.zip) in",
     plColumns: "Kolomme",
     plColAvatar: "Avatar",

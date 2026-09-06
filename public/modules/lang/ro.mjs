@@ -919,7 +919,7 @@ export const strings = {
     musicCompact: "Compact",
     musicExpand: "Extinde",
     musicMoveUp: "Mută în sus",
-    musicMoveDown: "Mută în jos", musicRadios: "Radiouri",
+    musicMoveDown: "Mută în jos", musicRadios: "Radiouri", musicLike: "Îmi place", musicDislike: "Nu e pentru mine",
     betDisplayTitle:'Afișarea mizei:', betDisplayInset:'Miza în caseta jucătorului', betDisplayClassic:'Miza lângă caseta jucătorului', importSeat: "Importă un pachet de locuri (.zip)",
     plColumns: "Coloane",
     plColAvatar: "Avatar",

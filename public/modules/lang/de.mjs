@@ -922,7 +922,7 @@ export const strings = {
     musicCompact: "Kompakt",
     musicExpand: "Erweitern",
     musicMoveUp: "Nach oben",
-    musicMoveDown: "Nach unten", musicRadios: "Radios",
+    musicMoveDown: "Nach unten", musicRadios: "Radios", musicLike: "Gefällt mir", musicDislike: "Nichts für mich",
     betDisplayTitle:'Einsatzanzeige:', betDisplayInset:'Einsatz in der Spielerbox', betDisplayClassic:'Einsatz neben der Spielerbox', importSeat: "Sitz-Paket (.zip) importieren",
     plColumns: "Spalten",
     plColAvatar: "Avatar",
