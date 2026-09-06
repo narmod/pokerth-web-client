@@ -3924,12 +3924,28 @@ function _welcomePublic() { var w = _adminConfig.welcome; if (!w || !w.enabled) 
 // Guest notice: same operator-authored multilingual shape as the welcome
 // message, but aimed at pokerth.net internet GUESTS and shown by the client on
 // every guest connection (the client persists no seen-version for it).
-function _guestNoticeAdmin() { var w = _adminConfig.guestNotice || {}; return { enabled: !!w.enabled, updatedAt: w.updatedAt || 0, 'default': w['default'] || 'fr', langs: w.langs || {} }; }
-function _guestNoticePublic() { var w = _adminConfig.guestNotice; if (!w || !w.enabled) return null; return { enabled: true, updatedAt: w.updatedAt || 0, 'default': w['default'] || 'fr', langs: w.langs || {} }; }
+// Built-in English defaults for the two operator notices. They are served
+// as long as the operator has not authored any language of the matching
+// notice (the admin editor shows them pre-filled and any saved text replaces
+// them); the enabled toggle stays fully operator-controlled. English only on
+// purpose: the client translates the popup into the player's language
+// (on-device Translator, then the gtx pipeline) exactly like the welcome
+// message.
+const GUEST_NOTICE_DEFAULT_LANGS = { en: { title: 'Playing as a guest', body: "You are connected to pokerth.net as a guest, without an account. Here is what that means:\n\nACCESS\n- You play under an automatic name (Guest12345) and can join or create tables right away.\n- You can also watch running games as a spectator.\n\nCHAT\n- The pokerth.net server does not allow guests to chat: lobby chat, table chat and private messages are disabled.\n- Emoji reactions at the table still work.\n\nGAME TYPES\n- Guests can join and create \"Normal\" games only.\n- \"Registered players only\" and \"Ranking\" games require an account; \"Invited players only\" games need an invitation from the table owner.\n\nRANKING & PROFILE\n- Guest results are not recorded: no pokerth.net ranking, no account avatar.\n\nCreate a free account to unlock everything: [Register on pokerth.net](https://www.pokerth.net/ucp.php?mode=register), then log in with your account instead of guest mode." } };
+const AUTH_NOTICE_DEFAULT_LANGS = { en: { title: 'Playing with your pokerth.net account', body: "You are logged in with a registered pokerth.net account. Everything is unlocked:\n\nACCESS\n- Your nickname and the avatar of your pokerth.net profile are shown at every table.\n\nCHAT\n- Lobby chat, table chat and private messages are available. Please stay friendly and follow the pokerth.net rules.\n\nGAME TYPES\n- You can join and create every game type: Normal, Registered players only, Invited players only and Ranking.\n- Ranking games use fixed official settings and count towards the official pokerth.net ranking.\n\nRANKING\n- Your results in Ranking games appear on the ranking pages of [pokerth.net](https://www.pokerth.net/).\n\nGood luck at the tables!" } };
+// Overlay helper: keep the operator's object untouched, swap in the built-in
+// languages (and an 'en' fallback) only while nothing is authored.
+function _noticeWithDefaults(w, defLangs) {
+  var langs = (w && w.langs) || {};
+  if (Object.keys(langs).length) return { langs: langs, def: (w && w['default']) || 'fr' };
+  return { langs: defLangs, def: 'en' };
+}
+function _guestNoticeAdmin() { var w = _adminConfig.guestNotice || {}; var e = _noticeWithDefaults(w, GUEST_NOTICE_DEFAULT_LANGS); return { enabled: !!w.enabled, updatedAt: w.updatedAt || 0, 'default': e.def, langs: e.langs }; }
+function _guestNoticePublic() { var w = _adminConfig.guestNotice; if (!w || !w.enabled) return null; var e = _noticeWithDefaults(w, GUEST_NOTICE_DEFAULT_LANGS); return { enabled: true, updatedAt: w.updatedAt || 0, 'default': e.def, langs: e.langs }; }
 // Registered-account notice: the mirror of the guest notice for pokerth.net
 // internet users logged in WITH an account; shown on every such connection.
-function _authNoticeAdmin() { var w = _adminConfig.authNotice || {}; return { enabled: !!w.enabled, updatedAt: w.updatedAt || 0, 'default': w['default'] || 'fr', langs: w.langs || {} }; }
-function _authNoticePublic() { var w = _adminConfig.authNotice; if (!w || !w.enabled) return null; return { enabled: true, updatedAt: w.updatedAt || 0, 'default': w['default'] || 'fr', langs: w.langs || {} }; }
+function _authNoticeAdmin() { var w = _adminConfig.authNotice || {}; var e = _noticeWithDefaults(w, AUTH_NOTICE_DEFAULT_LANGS); return { enabled: !!w.enabled, updatedAt: w.updatedAt || 0, 'default': e.def, langs: e.langs }; }
+function _authNoticePublic() { var w = _adminConfig.authNotice; if (!w || !w.enabled) return null; var e = _noticeWithDefaults(w, AUTH_NOTICE_DEFAULT_LANGS); return { enabled: true, updatedAt: w.updatedAt || 0, 'default': e.def, langs: e.langs }; }
 
 // ── Product polls (web-only feature; no QML counterpart) ───────────────────
 // The admin authors a short multiple-choice poll ("which feature next?"). Web

@@ -1,4 +1,7 @@
 2026-09-06 version 2.1.8-web (current series):
+- improvement: the guest and registered-account notices now ship with a ready-made English text (access, chat, game types, ranking) - it is used until the operator writes their own, and the app translates it into each player's language
+
+2026-09-06 version 2.1.8-web:
 - new: the guest notice now has a twin for registered accounts - a popup shown on every connection made with a pokerth.net account, written per language in the admin page and auto-translated for the others
 
 2026-09-06 version 2.1.8-web:

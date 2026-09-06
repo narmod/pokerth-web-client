@@ -34,6 +34,18 @@ const gwBlock = proxy.slice(proxy.indexOf("d.guestNotice && typeof d.guestNotice
 ok(/slice\(0, 200\)/.test(gwBlock.slice(0, 1200)) && /slice\(0, 4000\)/.test(gwBlock.slice(0, 1200)),
   'guestNotice validation caps title/body like the welcome message');
 
+// ── proxy.js: built-in English default text ───────────────────────────────
+ok(/const GUEST_NOTICE_DEFAULT_LANGS = \{ en: \{ title: '/.test(proxy),
+  'a built-in English default exists');
+ok(/function _noticeWithDefaults\(/.test(proxy), 'the defaults overlay helper exists');
+ok((proxy.match(/_noticeWithDefaults\(w, GUEST_NOTICE_DEFAULT_LANGS\)/g) || []).length === 2,
+  'both the admin and the public accessor fall back to the built-in text');
+// The overlay only fires while nothing is authored, and then serves 'en'.
+ok(/if \(Object\.keys\(langs\)\.length\) return \{ langs: langs/.test(proxy),
+  'operator-authored languages always win over the built-in text');
+ok(/return \{ langs: defLangs, def: 'en' \}/.test(proxy),
+  "the built-in text is served with an 'en' fallback language");
+
 // ── pokerth.js: client behaviour ──────────────────────────────────────────
 const app = R('public', 'pokerth.js');
 ok(/function maybeShowGuestNotice\(\)/.test(app), 'maybeShowGuestNotice exists');

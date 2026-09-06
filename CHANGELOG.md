@@ -17,6 +17,14 @@ changes for this line are on the
 highlights below.
 
 ### Added
+- **Built-in default text for both notices** (`web.30`). The guest and
+  registered-account notices ship with a ready-made English text covering
+  access, chat, game types and ranking (guest version links to the
+  pokerth.net registration page). Served as long as the operator has not
+  authored any language — the admin editor shows it pre-filled and any saved
+  text replaces it; the enabled toggle stays operator-controlled. English
+  only by design: the client's translation fallback (on-device → gtx)
+  localises the popup. **proxy.js changed — restart required.**
 - **Registered-account notice** (`web.29`). Mirror of the guest notice for
   pokerth.net logins made WITH an account: `authNotice` admin config key,
   master-only editor card, popup on every such connection at lobby entry,
