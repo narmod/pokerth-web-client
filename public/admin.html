@@ -909,6 +909,22 @@
         <div class="periodrow" style="margin-top:8px"><button id="wcSave" class="use">Save welcome message</button></div>
         <div id="wcState" class="msg"></div>
       </div>
+      <div class="card" data-master="1">
+        <h2>Guest notice (pokerth.net internet mode)</h2>
+        <p class="muted">Shown in a centered popup on <b>every</b> connection made as a guest in Internet / PokerTH.net mode &mdash; typically to explain what guests can and cannot do compared to a registered account. Each guest sees the version matching their language (fallback below; missing languages are auto-translated on the client). Players dismiss it with &ldquo;I understand&rdquo;.</p>
+        <label class="muted" style="display:flex;align-items:center;gap:8px;margin:0 0 8px"><input type="checkbox" id="gwEnabled" style="width:auto"> Enabled</label>
+        <div class="periodrow" style="margin-bottom:8px">
+          <label class="muted">Edit language <select id="gwLang" class="filter" style="margin:0;flex:none;width:auto"></select></label>
+          <label class="muted">Fallback <select id="gwDefault" class="filter" style="margin:0;flex:none;width:auto"></select></label>
+        </div>
+        <div id="gwFilled" class="muted" style="margin:0 0 8px;font-size:.8rem"></div>
+        <input id="gwTitle" class="filter" maxlength="200" placeholder="Title (optional)" style="width:100%;margin-bottom:8px">
+        <textarea id="gwBody" class="filter" rows="5" maxlength="4000" placeholder="Message for guests in this language&hellip;" style="width:100%;resize:vertical"></textarea>
+        <div class="muted" style="font-size:.78rem;margin-top:4px">Tip: paste a URL, or write <code>[label](https://example.com)</code> for a clickable link (opens in a new tab).</div>
+        <div id="gwPrev"></div>
+        <div class="periodrow" style="margin-top:8px"><button id="gwSave" class="use">Save guest notice</button></div>
+        <div id="gwState" class="msg"></div>
+      </div>
     </div>
 
     <div id="panel-polls" style="display:none">
@@ -1303,7 +1319,7 @@
     if(t==='traffic') loadTraffic();
     if(t==='servers') loadServers();
     if(t==='polls') loadPolls();
-    if(t==='broadcast'){ loadBroadcasts(); if(_isMaster) loadWelcome(); }
+    if(t==='broadcast'){ loadBroadcasts(); if(_isMaster){ loadWelcome(); loadGuestNotice(); } }
     if(t==='clients'){ loadStatus(true); loadThemes(); loadFeatureSwitches(); }
     if(t==='sessions'){ seStart(); } else { seStop(); }
     if(t==='errors') loadErrors();
@@ -3371,6 +3387,33 @@
   ['wcTitle','wcBody'].forEach(function(id){ if($(id)) $(id).addEventListener('input',function(){ wcCommit(); wcPreview(); wcUpdateFilled(); }); });
   if($('wcSave')) $('wcSave').addEventListener('click',saveWelcome);
 
+  // ── Guest notice (pokerth.net internet guests, every connection) ────────
+  // Same multilingual editor shape as the welcome message above; posts the
+  // 'guestNotice' key of /admin/config instead of 'welcome'.
+  var guestNoticeState={ enabled:false, 'default':'fr', langs:{} };
+  var gwEdit='fr';
+  (function(){ var a=$('gwLang'), b=$('gwDefault'); if(a&&b){ WC_LANGS.forEach(function(c){ var o1=document.createElement('option'); o1.value=c; o1.textContent=c; a.appendChild(o1); var o2=document.createElement('option'); o2.value=c; o2.textContent=c; b.appendChild(o2); }); a.value='fr'; b.value='fr'; } })();
+  function gwFilledList(){ return Object.keys(guestNoticeState.langs); }
+  function gwUpdateFilled(){ var el=$('gwFilled'); if(!el) return; var f=gwFilledList(); el.textContent = f.length ? ('Filled languages: '+f.join(', ')) : 'No language filled yet.'; }
+  function gwCommit(){ var t=($('gwTitle').value||''), b=($('gwBody').value||''); if(t.trim()||b.trim()) guestNoticeState.langs[gwEdit]={title:t,body:b}; else delete guestNoticeState.langs[gwEdit]; }
+  function gwShow(code){ gwEdit=code; if($('gwLang')) $('gwLang').value=code; var v=guestNoticeState.langs[code]||{}; $('gwTitle').value=v.title||''; $('gwBody').value=v.body||''; gwPreview(); gwUpdateFilled(); }
+  function gwPreview(){ var el=$('gwPrev'); if(!el) return; var t=($('gwTitle').value||'').trim(), b=($('gwBody').value||'').trim();
+    if(!t&&!b){ el.style.cssText='display:none'; el.textContent=''; return; }
+    el.textContent=''; el.style.cssText='display:block;margin-top:8px;max-width:440px;background:#1c1812;border:1px solid rgba(200,168,74,.5);border-radius:14px;overflow:hidden';
+    if(t){ var h=document.createElement('div'); h.textContent=t; h.style.cssText='padding:12px 16px;font-weight:700;color:#e0c070;border-bottom:1px solid rgba(200,168,74,.25)'; el.appendChild(h); }
+    var p=document.createElement('div'); p.innerHTML=annLinkify(b); p.style.cssText='padding:12px 16px;white-space:pre-line;line-height:1.5;color:#efe6d2;font-size:.9rem'; el.appendChild(p);
+  }
+  function gwInitialLang(){ var d=guestNoticeState['default']||'fr'; if(guestNoticeState.langs[d]) return d; var f=gwFilledList(); return f.length ? f[0] : d; }
+  function loadGuestNotice(){ api('/admin/config').then(function(r){return r.json();}).then(function(d){ if(!d||!d.ok||!d.guestNotice) return; guestNoticeState={ enabled:!!d.guestNotice.enabled, 'default':d.guestNotice['default']||'fr', langs:d.guestNotice.langs||{} }; if($('gwEnabled')) $('gwEnabled').checked=guestNoticeState.enabled; if($('gwDefault')) $('gwDefault').value=guestNoticeState['default']; gwShow(gwInitialLang()); }).catch(function(){}); }
+  function saveGuestNotice(){ gwCommit(); var body={ guestNotice:{ enabled:$('gwEnabled').checked, 'default':$('gwDefault').value, langs:guestNoticeState.langs }, token:tok() };
+    bcSay('gwState','Saving\u2026');
+    api('/admin/config',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)})
+      .then(function(r){return r.json();}).then(function(d){ if(d&&d.ok){ bcSay('gwState','Saved \u2014 guests will see it on their next connection.','ok'); if(d.guestNotice){ guestNoticeState={ enabled:!!d.guestNotice.enabled, 'default':d.guestNotice['default']||'fr', langs:d.guestNotice.langs||{} }; gwUpdateFilled(); } } else bcSay('gwState','Failed: '+((d&&d.error)||'error'),'err'); })
+      .catch(function(){ bcSay('gwState','Network error.','err'); }); }
+  if($('gwLang')) $('gwLang').addEventListener('change', function(){ gwCommit(); gwShow($('gwLang').value); });
+  ['gwTitle','gwBody'].forEach(function(id){ if($(id)) $(id).addEventListener('input',function(){ gwCommit(); gwPreview(); gwUpdateFilled(); }); });
+  if($('gwSave')) $('gwSave').addEventListener('click',saveGuestNotice);
+
   // ── Product polls (web-only feature) ────────────────────────────────────
   // Same multilingual editor shape as the welcome message above: one draft kept
   // in memory, the visible fields committed into the language being edited
@@ -3499,7 +3542,7 @@
     var STORE='pth_admin_collapsed', saved=null;
     try{ saved=JSON.parse(localStorage.getItem(STORE)||'null'); }catch(e){}
     var state = saved || {}, firstRun = !saved;
-    var DEFAULT_FOLDED = ['In-game settings','Schedule a restart','Schedule a recurring message','Welcome / rules message'];
+    var DEFAULT_FOLDED = ['In-game settings','Schedule a restart','Schedule a recurring message','Welcome / rules message','Guest notice (pokerth.net internet mode)'];
     function slug(s){ return (s||'').trim().replace(/[^a-z0-9]+/gi,'_').replace(/^_+|_+$/g,'').toLowerCase().slice(0,48); }
     document.querySelectorAll('.card').forEach(function(card){
       var h2s = card.querySelectorAll('h2');

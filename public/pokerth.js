@@ -2531,6 +2531,73 @@ window.showWelcomeModal = showWelcomeModal;
 window.hideWelcomeModal = hideWelcomeModal;
 window._showBroadcast = _showBroadcast;
 
+// ── Guest notice (pokerth.net internet guests, every connection) ───────────
+// Same operator-authored multilingual shape as the welcome message above
+// (language pick via _welcomeChoose, on-device -> gtx translation fallback,
+// linkified body), but shown on EVERY guest connection: no seen-version is
+// persisted, and the trigger lives at lobby entry (net/msg-lobby.mjs
+// onInitAck) rather than at boot. Config arrives from /app-config as
+// c.guestNotice (null unless the operator enabled it) and is kept in
+// window._guestNoticeCfg until the connection happens.
+function hideGuestNoticeModal() { var el = document.getElementById('guestnotice-modal'); if (el) el.remove(); }
+function showGuestNoticeModal(title, body) {
+  hideGuestNoticeModal();
+  var back = document.createElement('div');
+  back.id = 'guestnotice-modal';
+  back.style.cssText = 'position:fixed;inset:0;z-index:10001;display:flex;align-items:center;justify-content:center;padding:18px;background:rgba(0,0,0,.62);backdrop-filter:blur(2px);';
+  var card = document.createElement('div');
+  card.style.cssText = 'max-width:480px;width:100%;max-height:84vh;display:flex;flex-direction:column;background:var(--modal-bg);color:var(--text);border:1px solid var(--border);border-radius:16px;box-shadow:0 18px 50px rgba(0,0,0,.6);overflow:hidden;';
+  if (title) {
+    var h = document.createElement('div');
+    h.textContent = title;
+    h.style.cssText = "padding:16px 20px;font-family:var(--ff-display);font-weight:700;font-size:1.15rem;color:var(--text-hi);border-bottom:1px solid var(--border);";
+    card.appendChild(h);
+  }
+  var p = document.createElement('div');
+  p.innerHTML = _linkifyAnnounce(body || '');
+  p.style.cssText = 'padding:16px 20px;overflow:auto;white-space:pre-line;line-height:1.55;font-size:.95rem;';
+  card.appendChild(p);
+  var foot = document.createElement('div');
+  foot.style.cssText = 'padding:12px 20px 16px;display:flex;justify-content:flex-end;border-top:1px solid var(--border);';
+  var btn = document.createElement('button');
+  btn.textContent = (typeof window.t === 'function' ? window.t('welcomeAck') : '') || 'I understand';
+  btn.style.cssText = 'padding:9px 18px;border-radius:10px;border:0;cursor:pointer;font-weight:700;background:var(--gold);color:var(--on-gold);';
+  // Every-connection notice: dismiss only, nothing persisted (unlike welcome).
+  btn.addEventListener('click', hideGuestNoticeModal);
+  foot.appendChild(btn);
+  card.appendChild(foot);
+  back.appendChild(card);
+  document.body.appendChild(back);
+}
+function maybeShowGuestNotice() {
+  var g = window._guestNoticeCfg;
+  if (!g || !g.enabled) return;
+  if (window._offlineMode) return;                                  // training never shows it
+  if (!(typeof window._amGuestMode === 'function' && window._amGuestMode())) return; // pokerth.net GUEST only
+  var c = _welcomeChoose(g);
+  if (!c || (!c.title && !c.body)) return;
+  showGuestNoticeModal(c.title, c.body); // operator text shows immediately
+  if (!c.exact) {
+    // No operator version for the client's language -> on-device translation
+    // first, then the gtx pipeline; swap only while the modal is still open.
+    var target = (typeof _lang !== 'undefined' && _lang) ? _lang : c.lang;
+    _translateEntry(c.title, c.body, c.lang, target).then(function (tr) {
+      if (tr && (tr.title || tr.body)) {
+        if (document.getElementById('guestnotice-modal')) showGuestNoticeModal(tr.title || c.title, tr.body || c.body);
+        return;
+      }
+      return _gtxAuto(c.title).then(function (tt) {
+        return _gtxAuto(c.body).then(function (tb) {
+          if ((tt || tb) && document.getElementById('guestnotice-modal')) showGuestNoticeModal(tt || c.title, tb || c.body);
+        });
+      });
+    }).catch(function () {});
+  }
+}
+window.maybeShowGuestNotice = maybeShowGuestNotice;
+window.showGuestNoticeModal = showGuestNoticeModal;
+window.hideGuestNoticeModal = hideGuestNoticeModal;
+
 
 // Rafraîchit immédiatement l'avatar du joueur local dans l'UI
 window.refreshMyAvatar = function() {
@@ -3698,7 +3765,7 @@ document.addEventListener("DOMContentLoaded", function() {
     function go() {
       fetch('/app-config', { cache: 'no-store' })
         .then(function (r) { return r.json(); })
-        .then(function (c) { if (c) { window._pthNetServer = (c.pokerthnetServer && c.pokerthnetServer.host) ? c.pokerthnetServer : null; window._pthNetSource = (c.pokerthnetSource === 'auto') ? 'auto' : 'manual'; window._pthNetTransport = (c.internetTransport === 'proxy') ? 'proxy' : 'direct'; } if (c && c.modes) applyModes(c.modes); if (c) _applyMusicFlag(c.musicEnabled !== false); if (c && c.loginDefaults) _applyLoginDefaults(c.loginDefaults); if (c && c.welcome && c.welcome.enabled && typeof window.maybeShowWelcome === 'function') window.maybeShowWelcome(c.welcome); if (typeof window._pollSetConfig === 'function') window._pollSetConfig(c && c.poll); if (c && typeof c.defaultTheme === 'string') _applyDefaultTheme(c.defaultTheme); if (c && typeof c.showLoginTitle === 'boolean') { try { document.body.classList.toggle('adv-show-title', c.showLoginTitle); } catch (e) {} } if (c && c.defaults) _applyDefaultSettings(c.defaults); if (c && Array.isArray(c.featureOff)) _applyFeatureOff(c.featureOff); _applyBranding(c); try { if (!window._shareLinkActive && window.App && App.onServerOrGuestChange) App.onServerOrGuestChange(); } catch (e) {} })
+        .then(function (c) { if (c) { window._pthNetServer = (c.pokerthnetServer && c.pokerthnetServer.host) ? c.pokerthnetServer : null; window._pthNetSource = (c.pokerthnetSource === 'auto') ? 'auto' : 'manual'; window._pthNetTransport = (c.internetTransport === 'proxy') ? 'proxy' : 'direct'; } if (c && c.modes) applyModes(c.modes); if (c) _applyMusicFlag(c.musicEnabled !== false); if (c && c.loginDefaults) _applyLoginDefaults(c.loginDefaults); if (c && c.welcome && c.welcome.enabled && typeof window.maybeShowWelcome === 'function') window.maybeShowWelcome(c.welcome); window._guestNoticeCfg = (c && c.guestNotice) || null; if (typeof window._pollSetConfig === 'function') window._pollSetConfig(c && c.poll); if (c && typeof c.defaultTheme === 'string') _applyDefaultTheme(c.defaultTheme); if (c && typeof c.showLoginTitle === 'boolean') { try { document.body.classList.toggle('adv-show-title', c.showLoginTitle); } catch (e) {} } if (c && c.defaults) _applyDefaultSettings(c.defaults); if (c && Array.isArray(c.featureOff)) _applyFeatureOff(c.featureOff); _applyBranding(c); try { if (!window._shareLinkActive && window.App && App.onServerOrGuestChange) App.onServerOrGuestChange(); } catch (e) {} })
         .catch(function () {});
     }
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', go); else go();
@@ -11139,7 +11206,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.8-web.27'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.8-web.28'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

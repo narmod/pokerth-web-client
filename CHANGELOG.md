@@ -17,6 +17,15 @@ changes for this line are on the
 highlights below.
 
 ### Added
+- **Guest notice** (`web.28`). Operator-authored multilingual popup shown on
+  every connection made as a guest in Internet / PokerTH.net mode — typically
+  to explain what guests can and cannot do compared to a registered account.
+  Same editor shape and client translation fallback (on-device → gtx) as the
+  first-visit welcome message, but nothing is persisted client-side: the
+  notice reappears on each fresh guest session (auto-rejoin after a drop does
+  not re-open it). New `guestNotice` key in the admin config (`/admin/config`,
+  export/import allow-list, public `/app-config`); trigger at lobby entry in
+  `net/msg-lobby.mjs`. **proxy.js changed — restart required.**
 - **Player notes and colour labels** (`web.24`). Web-only extra, designed to
   be portable to the QML client later: the player card gains a free-text
   note (500 chars) and six fixed-colour labels whose meaning can be renamed

@@ -1,0 +1,78 @@
+#!/usr/bin/env node
+// Deterministic tests for the guest notice (operator-authored popup shown on
+// every pokerth.net guest connection). The behaviour that matters and cannot
+// be seen in a quick manual check: the client must NOT persist a seen-version
+// (unlike the welcome message), the trigger must live at lobby entry, and the
+// proxy must expose the config through every path (admin GET/POST, public
+// /app-config, export/import allow-list) or a config round-trip wipes it.
+// Run: node scripts/test-guestnotice.mjs
+import { readFileSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
+import { dirname, join } from 'node:path';
+
+const here = dirname(fileURLToPath(import.meta.url));
+const R = (...p) => readFileSync(join(here, '..', ...p), 'utf8');
+let n = 0, fail = 0;
+function ok(cond, msg) { n++; if (!cond) { fail++; console.error('  ✗', msg); } else console.log('  ✓', msg); }
+
+// ── proxy.js: config plumbing ─────────────────────────────────────────────
+const proxy = R('proxy.js');
+ok(/function _guestNoticeAdmin\(\)/.test(proxy), 'admin-side accessor exists');
+ok(/function _guestNoticePublic\(\)/.test(proxy), 'public accessor exists');
+ok(/_guestNoticePublic\(\); if \(!w \|\| !w\.enabled\) return null/.test(proxy) ||
+   /_adminConfig\.guestNotice; if \(!w \|\| !w\.enabled\) return null/.test(proxy),
+  'the public accessor hides the notice while disabled');
+ok((proxy.match(/guestNotice: _guestNoticeAdmin\(\)/g) || []).length === 2,
+  'admin GET and admin POST responses both return guestNotice');
+ok(/guestNotice: _guestNoticePublic\(\)/.test(proxy), '/app-config exposes guestNotice');
+ok(/d\.guestNotice && typeof d\.guestNotice === 'object'/.test(proxy),
+  'POST /admin/config accepts a guestNotice payload');
+ok(/'welcome', 'guestNotice',/.test(proxy),
+  'export/import allow-list keeps guestNotice (no wipe on config round-trip)');
+// Same size caps as the welcome message (title 200, body 4000, 60 languages).
+const gwBlock = proxy.slice(proxy.indexOf("d.guestNotice && typeof d.guestNotice === 'object'"));
+ok(/slice\(0, 200\)/.test(gwBlock.slice(0, 1200)) && /slice\(0, 4000\)/.test(gwBlock.slice(0, 1200)),
+  'guestNotice validation caps title/body like the welcome message');
+
+// ── pokerth.js: client behaviour ──────────────────────────────────────────
+const app = R('public', 'pokerth.js');
+ok(/function maybeShowGuestNotice\(\)/.test(app), 'maybeShowGuestNotice exists');
+ok(/function showGuestNoticeModal\(/.test(app), 'the guest modal builder exists');
+ok(/window\._guestNoticeCfg = \(c && c\.guestNotice\) \|\| null;/.test(app),
+  'the /app-config handler stores the notice config');
+// Every-connection semantics: the guest modal never writes a seen marker.
+const gm = app.slice(app.indexOf('function showGuestNoticeModal('), app.indexOf('function maybeShowGuestNotice('));
+ok(!/localStorage\.setItem/.test(gm), 'dismissing the guest notice persists nothing');
+const mg = app.slice(app.indexOf('function maybeShowGuestNotice('), app.indexOf('window.maybeShowGuestNotice'));
+ok(!/localStorage/.test(mg), 'maybeShowGuestNotice reads no seen-version');
+ok(/_amGuestMode/.test(mg), 'the notice is gated on the pokerth.net GUEST mode');
+ok(/window\._offlineMode\) return/.test(mg), 'training mode never shows it');
+ok(/_welcomeChoose\(g\)/.test(mg), 'language pick reuses the welcome chooser (fallback + exact flag)');
+ok(/_translateEntry\(/.test(mg) && /_gtxAuto\(/.test(mg),
+  'missing languages fall back to on-device then gtx translation');
+ok(/getElementById\('guestnotice-modal'\)/.test(mg),
+  'the translated swap only lands while the guest modal is still open');
+
+// ── msg-lobby.mjs: trigger at lobby entry ─────────────────────────────────
+const lobby = R('public', 'modules', 'net', 'msg-lobby.mjs');
+const idxShow = lobby.indexOf("else show('s-lobby');");
+ok(idxShow >= 0 && /maybeShowGuestNotice/.test(lobby.slice(idxShow, idxShow + 500)),
+  'onInitAck fires the notice right after the lobby is shown');
+const idxRejoin = lobby.indexOf('S._pendingRejoin = _rt;');
+ok(idxRejoin >= 0 && idxRejoin < lobby.indexOf('maybeShowGuestNotice'),
+  'the auto-rejoin early-return path stays above the trigger (no modal over a rejoin)');
+
+// ── admin.html: editor ────────────────────────────────────────────────────
+const adm = R('public', 'admin.html');
+['gwEnabled', 'gwLang', 'gwDefault', 'gwTitle', 'gwBody', 'gwSave'].forEach(function (id) {
+  ok(new RegExp('id="' + id + '"').test(adm), 'admin editor has #' + id);
+});
+ok(/guestNotice:\{ enabled:\$\('gwEnabled'\)\.checked/.test(adm),
+  'the admin save posts the guestNotice key');
+ok(/loadGuestNotice\(\);/.test(adm), 'the broadcast tab loads the guest notice');
+ok(/data-master="1">\s*<h2>Guest notice/.test(adm), 'the card is master-only');
+ok(/'Guest notice \(pokerth\.net internet mode\)'\]/.test(adm),
+  'the card is folded by default');
+
+console.log(fail ? `FAIL ${fail}/${n}` : `OK ${n}/${n}`);
+process.exit(fail ? 1 : 0);

@@ -224,6 +224,11 @@ function onInitAck(sub) {
     // s'ouvre directement (le lobby reste accessible via Annuler/retour).
     if (window._offlineMode) { try { App.openCreatePage(); } catch (eOc) { show('s-lobby'); } }
     else show('s-lobby');
+    // Guest notice (operator-authored, /app-config guestNotice): shown on
+    // EVERY pokerth.net guest connection once the lobby is on screen. The
+    // auto-rejoin branch above returns before this point, so a transient
+    // reconnection straight back to a table does not re-open the modal.
+    try { if (window.maybeShowGuestNotice) window.maybeShowGuestNotice(); } catch (eGw) {}
     // Demander la permission pour les notifications
     if ('Notification' in window && Notification.permission === 'default') {
       Notification.requestPermission().catch(function(){});
