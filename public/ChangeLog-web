@@ -1,4 +1,8 @@
 2026-09-07 version 2.1.8-web (current series):
+- improvement: in the lobby players list, your rating of a player now sits in the star column instead of after their name - the same column that marks your own row, so the two never collide; the colour dot stays next to the name
+- bugfix: stars are gold again in every theme - the PokerTH theme paints its accent white, which turned them white too; they now follow each theme's own gold
+
+2026-09-07 version 2.1.8-web:
 - improvement: the colour dot now sits next to the star rating, after the player's name instead of in front of it - both marks about the same player are read together, at the table and in the lobby players list
 
 2026-09-07 version 2.1.8-web:

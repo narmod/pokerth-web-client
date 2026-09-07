@@ -10765,7 +10765,7 @@ function _plActsTrack() {
   try { admin = !!(window._amServerAdmin && window._amServerAdmin()); } catch (e) {}
   return _PL_ACTS_W[admin ? 4 : 3];
 }
-var _PL_TRACK = { av:'22px', name:'minmax(0,1fr)', status:'22px', flag:'48px', star:'16px', inv:'26px', acts:'70px' };
+var _PL_TRACK = { av:'22px', name:'minmax(0,1fr)', status:'22px', flag:'48px', star:'26px', inv:'26px', acts:'70px' };
 // Lu a CHAQUE construction de gabarit (en-tete comme lignes) pour que le
 // passage admin / non-admin se voie sans rechargement.
 function _plTrack(k) { return (k === 'acts') ? _plActsTrack() : _PL_TRACK[k]; }
@@ -10840,7 +10840,7 @@ function _plColHeadHtml() {
   var _tt = function (k, fb) { return (typeof t === 'function' && t(k) !== k) ? t(k) : fb; };
   var NAME_SVG = '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><line x1="5" y1="8" x2="19" y2="8"/><line x1="5" y1="12" x2="15" y2="12"/><line x1="5" y1="16" x2="17" y2="16"/></svg>';
   var ICON  = { av:_PL_PERSON_SVG, name:NAME_SVG, status:_PL_PAD_SVG, flag:_PL_FLAG_SVG, star:'<span class="pl-colh-star">\u2605</span>', inv:_PL_INVITE_SVG, acts:_PL_BAR_SVG };
-  var LABEL = { av:_tt('plColAvatar','Avatar'), name:_tt('plColName','Name'), status:_tt('plColStatus','In game'), flag:_tt('plColCountry','Country'), star:_tt('plColMe','Me'), inv:_tt('inviteBtn','Invite'), acts:_tt('plColActions','Actions') };
+  var LABEL = { av:_tt('plColAvatar','Avatar'), name:_tt('plColName','Name'), status:_tt('plColStatus','In game'), flag:_tt('plColCountry','Country'), star:_tt('plColMe','Me') + ' \u00b7 ' + _tt('nvRating','Rating'), inv:_tt('inviteBtn','Invite'), acts:_tt('plColActions','Actions') };
   return _plColOrder().map(function (k) {
     if (k === 'name' || k === 'inv') {
       // Fausse pastille : colonne Nom toujours visible (non togglable),
@@ -10980,14 +10980,17 @@ function renderPlayersList() {
     var _actTtl = r.act
       ? _tt('plPlayingInFull', '%1 is playing in "%2".').replace('%1', r.name).replace('%2', r.act)
       : _tt('plNotPlayingFull', '%1 is not playing at the moment.').replace('%1', r.name);
-    // Pastille d'étiquette + note en étoiles (modules/notes) APRÈS le pseudo —
-    // même côté qu'au siège (demande narmod 07/09), jamais sur ma propre
-    // ligne, '' quand le joueur n'est ni étiqueté ni noté. Hors du lien : le
-    // pseudo garde l'ellipse pour lui seul, les badges restent visibles même
-    // derrière un nom trop long.
-    var _nvTag = '';
+    // Pastille d'étiquette APRÈS le pseudo, hors du lien (le pseudo garde
+    // l'ellipse pour lui seul, la pastille reste visible derrière un nom trop
+    // long) ; la note en étoiles, elle, va dans la colonne ★ (demande narmod
+    // 07/09). Jamais sur ma propre ligne — ce qui laisse justement la place à
+    // mon étoile dans cette colonne.
+    var _nvTag = '', _nvStars = '';
     if (!r.isMe) {
-      try { if (typeof window._nvSeatTag === 'function') _nvTag = window._nvSeatTag(r.name); } catch (e) {}
+      try {
+        if (typeof window._nvSeatDot === 'function') _nvTag = window._nvSeatDot(r.name);
+        if (typeof window._nvSeatStars === 'function') _nvStars = window._nvSeatStars(r.name);
+      } catch (e) {}
     }
     var nameHtml = '<span class="pl-name-link" role="button" tabindex="0"'
       + ' title="' + esc(_actTtl) + '"'
@@ -11018,7 +11021,10 @@ function renderPlayersList() {
         case 'name':   return '<span class="pl-name' + (_nvTag ? ' has-nv' : '') + '">' + nameHtml + '</span>';
         case 'status': return _status;
         case 'flag':   return '<span class="pl-flag">' + flag + (cc ? '<span class="pl-cc">' + cc + '</span>' : '') + '</span>';
-        case 'star':   return '<span class="pl-star">' + (r.isMe ? '★' : '') + '</span>';
+        // Deux sens, une colonne : mon étoile sur ma ligne, ma note en étoiles
+        // sur celle des autres. Ils ne peuvent pas se croiser (_nvStars est
+        // vide sur ma propre ligne).
+        case 'star':   return '<span class="pl-star">' + (r.isMe ? '★' : _nvStars) + '</span>';
         case 'inv': {
           if (!_invMode || !_invElig[r.pid]) return '<span class="pl-cell-off"></span>';
           var _sent = (typeof App.inviteSentTo === 'function') && App.inviteSentTo(r.pid);
@@ -11395,7 +11401,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.8-web.40'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.8-web.41'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

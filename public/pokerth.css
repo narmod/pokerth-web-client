@@ -77,6 +77,14 @@ html { touch-action: manipulation; -webkit-text-size-adjust: 100%; text-size-adj
   --panel-hi:   rgba(14,28,16,0.9);
   --gold:       #E3C800;
   --gold-rgb:   227,200,0;
+  /* Couleur des ÉTOILES (étoile « moi » de la liste, badge ★N, barre de la
+     carte joueur). Séparée de --gold parce que tous les thèmes ne font pas de
+     --gold un or : le thème « pokerth » le met à #eff1f5 (blanc, l'accent QML)
+     et garde le vrai or sous --sel. Une étoile blanche ne se lit plus comme
+     une étoile, d'où cette variable — chaque thème y met SON or, avec son
+     propre contraste, plutôt qu'un or figé qui jurerait sur le feutre rouge
+     et deviendrait illisible en clair. */
+  --star:       var(--gold);
   --chrome-tint: rgba(0,0,0,0.35);
   --pos:        #4cff88;
   --neg:        #ff6b6b;
@@ -167,6 +175,7 @@ html { touch-action: manipulation; -webkit-text-size-adjust: 100%; text-size-adj
   --sel:        #E3C800;
   --sel-rgb:    227,200,0;
   --sel-hi:     #ffd700;
+  --star:       var(--sel);   /* --gold vaut ici le blanc de l'accent QML */
   --timer-normal: #cdd3e0;
   --cream:      #eff1f5;
   --field-bg:   #161c25;
@@ -207,6 +216,7 @@ html { touch-action: manipulation; -webkit-text-size-adjust: 100%; text-size-adj
   --gold-dim:   #576378;
   --sel:        #9a7d0a;
   --sel-rgb:    154,125,10;
+  --star:       var(--sel);   /* or sombre : lisible sur fond clair */
   /* Bandeau noir meme en clair -> on garde l'or QML (sinon 3,7:1 sur le texte,
      sous le seuil AA, et bordure a 2,1:1 quasi invisible). */
   --sel-bar:     #E3C800;
@@ -6120,7 +6130,11 @@ body.spectator-nosend #g-reaction-panel { display: none !important; }
 .players-list .pl-flag { flex: none; display: inline-flex; align-items: center; justify-content: flex-start; gap: var(--sp-1); font-size: var(--fs-md); line-height: 1; }
 .players-list .pl-cc { font-size: var(--fs-2xs); color: var(--gold-dim); font-family: var(--ff-mono); letter-spacing: 0.04em; white-space: nowrap; }
 .players-list .pl-flag .cc-flag { width: 20px; height: 15px; }
-.players-list .pl-star { flex: none; width: 1.4em; text-align: center; font-size: var(--fs-md); line-height: 1; color: var(--gold); }
+/* Colonne ★ : mon étoile sur MA ligne, ma note en étoiles sur celle des
+   autres — les deux ne se rencontrent jamais (une note n'est pas rendue sur ma
+   propre ligne), d'où une seule colonne pour les deux. */
+.players-list .pl-star { flex: none; text-align: center; font-size: var(--fs-md); line-height: 1; color: var(--star); white-space: nowrap; }
+.players-list .pl-star .seat-note-stars { margin: 0; font-size: var(--fs-xs); }
 .players-list .pl-id   { flex: none; min-width: 4.2em; text-align: right; color: var(--gold-dim); font-size: var(--fs-xs); }
 .players-list .pl-row.pl-me { color: var(--gold); }
 /* ── Avatar chip in the players-online list ──
@@ -11217,7 +11231,7 @@ body.adv-no-avcreate #avp-tab-create { display: none !important; }
   display: inline-block; vertical-align: middle;
   margin-right: 4px;
   font-size: var(--fs-2xs); line-height: 1;
-  color: var(--gold); white-space: nowrap;
+  color: var(--star); white-space: nowrap;
 }
 /* Les DEUX marques — pastille de couleur et badge d'étoiles — se rangent à
    l'autre bout de la ligne du pseudo, qui s'élide contre elles (upstream
@@ -11277,7 +11291,7 @@ html[data-seat-struct="qml"] .seat-narrow .seat-name .seat-note-stars { font-siz
   font-size: var(--fs-lg); line-height: 1;
   cursor: pointer; transition: transform 0.12s, opacity 0.12s;
 }
-.nv-star.on { color: var(--gold); opacity: 1; }
+.nv-star.on { color: var(--star); opacity: 1; }
 .nv-star:hover { transform: scale(1.12); }
 .nv-star:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
 .nv-swatches { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 8px; }

@@ -187,9 +187,18 @@ ok(/_officialSeatPix\(_geomSeatN,/.test(SRC) && /S\._peakSeatCount/.test(SRC),
   const JS = readFileSync(new URL('../public/pokerth.js', import.meta.url), 'utf8');
   const plRow = JS.slice(JS.indexOf('var nameHtml ='), JS.indexOf('var nameHtml =') + 800);
   ok(/esc\(r\.name\) \+ '<\/span>'\s*\+ \(_nvTag \? '<span class="seat-nv">'/.test(plRow),
-     'liste : les badges suivent le pseudo, hors du lien');
+     'liste : la pastille suit le pseudo, hors du lien');
   ok(/\.players-list \.pl-name\.has-nv \{ display: flex/.test(CSS),
-     'CSS : la ligne de liste ne passe en flex que si elle porte des badges');
+     'CSS : la ligne de liste ne passe en flex que si elle porte une pastille');
+  // Les étoiles, elles, vont dans la colonne ★ — jamais en double avec elle.
+  ok(/case 'star':\s+return '<span class="pl-star">' \+ \(r\.isMe \? '★' : _nvStars\)/.test(JS),
+     'liste : la colonne ★ porte mon étoile OU la note de l’autre');
+  ok(/star:'26px'/.test(JS), 'la piste ★ est élargie pour loger « ★N »');
+  // L'or des étoiles ne suit plus --gold : le thème pokerth y met du blanc.
+  ok(/--star:\s+var\(--gold\)/.test(CSS) && (CSS.match(/--star:\s+var\(--sel\)/g) || []).length === 2,
+     'CSS : --star vaut l’or du thème (--sel dans les deux thèmes pokerth)');
+  ok(/\.pl-star \{[^}]*color: var\(--star\)/.test(CSS) && /\.seat-note-stars \{[^}]*color: var\(--star\)/.test(CSS),
+     'CSS : étoile « moi » et badge ★N prennent --star');
 }
 
 console.log(fail ? `\n${fail}/${n} ÉCHECS` : `\n${n}/${n} OK`);

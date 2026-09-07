@@ -144,6 +144,20 @@ highlights below.
   Green Casino and the default table, so their QML renders apply as well.
 
 ### Changed
+- **Star ratings moved into the lobby star column, and a `--star` colour**
+  (`web.41`). In the players list the `★N` badge leaves the name and goes to
+  the `★` column — the one that marks my own row. The two senses share it
+  without ever meeting: a note is never rendered on my own row, so the cell
+  holds my star there and my rating of the player elsewhere. The track widens
+  16 px → 26 px to fit `★N`, and the header chip reads
+  `plColMe · nvRating` — both keys already exist in the 45 languages, so no
+  new string. The colour dot stays after the name.
+  The stars also stopped being gold: `--gold` is not gold in every theme — the
+  PokerTH theme sets it to `#eff1f5`, the white QML accent, and keeps the real
+  gold under `--sel`. Stars now use a dedicated `--star`, `var(--gold)` by
+  default and `var(--sel)` in the two PokerTH themes, so each theme lends its
+  own gold with its own contrast rather than a fixed one that would clash on
+  the red felt and go unreadable on the light theme.
 - **Colour dot joins the star badge after the name** (`web.40`). The dot used
   to lead the name while the rating trailed it, which split the two marks
   about one player across the row. Both now live in a single `.seat-nv` group
