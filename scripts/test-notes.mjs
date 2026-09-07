@@ -17,7 +17,7 @@ globalThis.document = { readyState: 'complete', addEventListener() {},
   getElementById: () => null, createElement: () => ({ style: {} }),
   body: { appendChild() {} } };
 
-const { createNotes, tagById, TAGS, MAX_NOTE_LEN, MAX_LABEL_LEN, MAX_ENTRIES } =
+const { createNotes, tagById, TAGS, MAX_NOTE_LEN, MAX_LABEL_LEN, MAX_ENTRIES, MAX_STARS } =
   await import('../public/modules/notes/store.mjs');
 
 let n = 0, fail = 0;
@@ -198,6 +198,64 @@ const mk = (opts = {}) => createNotes({ backend: mem(), ...opts });
   ok(hits === 3 && st.count() === 0, 'clearAll vide et notifie');
 }
 
+// ── Note en étoiles (parité QML b77ad47) ──────────────────────────────────
+{
+  const st = mk();
+  ok(st.starsOf('Alice') === 0, 'joueur inconnu → 0 étoile');
+
+  st.set('Alice', { stars: 3 });
+  ok(st.starsOf('Alice') === 3, 'étoiles écrites puis relues');
+  ok(st.hasAny('Alice'), 'des étoiles seules suffisent à exister');
+  ok(st.noteOf('Alice') === '' && st.tagOf('Alice') === '',
+     'noter en étoiles ne pose ni note ni couleur');
+
+  st.set('Alice', { note: 'suit toujours' });
+  ok(st.starsOf('Alice') === 3, 'écrire la note ne touche pas aux étoiles');
+  st.set('Alice', { stars: 5 });
+  ok(st.noteOf('Alice') === 'suit toujours' && st.starsOf('Alice') === 5,
+     'changer les étoiles ne perd pas la note');
+
+  // Bornes : ce qui vient d'une saisie, d'un import ou d'un autre appareil.
+  st.set('Bob', { stars: 99 });
+  ok(st.starsOf('Bob') === MAX_STARS, 'au-dessus du maximum → borné');
+  st.set('Bob', { stars: -4 });
+  ok(st.starsOf('Bob') === 0, 'valeur négative → aucune étoile');
+  st.set('Carl', { stars: 2.6 });
+  ok(st.starsOf('Carl') === 3, 'valeur fractionnaire → entier');
+  st.set('Dan', { stars: 'trois' });
+  ok(st.get('Dan') === null, 'valeur absurde → rien à stocker');
+
+  // Une entrée réduite à zéro sur ses trois champs disparaît.
+  st.set('Eve', { stars: 4 });
+  st.set('Eve', { stars: 0 });
+  ok(st.get('Eve') === null, 'dernière étoile retirée → entrée supprimée');
+  st.set('Fay', { note: 'nit', stars: 4 });
+  st.set('Fay', { stars: 0 });
+  ok(st.get('Fay') !== null && st.noteOf('Fay') === 'nit',
+     'retirer les étoiles ne supprime pas une entrée qui a encore une note');
+
+  // Zéro n'est pas écrit : la valeur voyage dans un blob plafonné.
+  st.set('Gil', { note: 'x' });
+  ok(!('s' in st.raw().p.Gil), 'aucune clé s pour une entrée sans étoile');
+  st.set('Gil', { stars: 1 });
+  ok(st.raw().p.Gil.s === 1, 'la clé s apparaît dès la première étoile');
+}
+
+// ── Fusion : les étoiles suivent l'entrée gagnante ────────────────────────
+{
+  const st = mk();
+  st.set('Ivy', { note: 'ici', stars: 2 });
+  const older = st.raw().p.Ivy.t - 1000;
+  st.mergeIn({ p: { Ivy: { n: 'ailleurs', c: 'blue', s: 5, t: older } } });
+  ok(st.starsOf('Ivy') === 2 && st.noteOf('Ivy') === 'ici',
+     'entrée distante plus ancienne → ignorée, étoiles comprises');
+  st.mergeIn({ p: { Ivy: { n: 'ailleurs', c: 'blue', s: 5, t: Date.now() + 5000 } } });
+  ok(st.starsOf('Ivy') === 5 && st.tagOf('Ivy') === 'blue',
+     'entrée distante plus récente → ses étoiles gagnent');
+  st.mergeIn({ p: { Jan: { s: 42, t: Date.now() } } });
+  ok(st.starsOf('Jan') === MAX_STARS, 'étoiles hors bornes reçues d’un autre appareil → bornées');
+}
+
 // ── Rendu (formes HTML, sans navigateur) ──────────────────────────────────
 {
   const UI = await import('../public/modules/notes/index.mjs');
@@ -213,10 +271,28 @@ const mk = (opts = {}) => createNotes({ backend: mem(), ...opts });
   const seat3 = UI.seatTagHtml('Bavard');
   ok(seat3.includes('…') && !seat3.includes('y'.repeat(120)), 'aperçu tronqué pour une note longue');
 
+  // Étoiles au siège : « ★N », affiché seul si le joueur n'a pas de couleur.
+  UI.notes.set('Noted', { stars: 4 });
+  const seatS = UI.seatTagHtml('Noted');
+  ok(seatS.includes('seat-note-stars') && seatS.includes('\u26054') && !seatS.includes('seat-note-tag'),
+     'siège noté sans couleur → badge étoiles seul');
+  UI.notes.set('Noted', { tag: 'green' });
+  const seatSB = UI.seatTagHtml('Noted');
+  ok(seatSB.includes('seat-note-tag') && seatSB.includes('seat-note-stars'),
+     'couleur + étoiles → pastille puis badge');
+  ok(seatSB.includes('\u26054/' + MAX_STARS), 'l’aperçu annonce la note sur ' + MAX_STARS);
+  UI.notes.set('Noted', { stars: 0, tag: '' });
+  ok(UI.seatTagHtml('Noted') === '', 'ni couleur ni étoile → aucun HTML au siège');
+
   const block = UI.notesBlockHtml('Tagged');
   ok(block.includes('nv-block') && block.includes('data-nv-name="Tagged"'), 'bloc de carte rendu avec son pseudo');
   ok((block.match(/data-nv-tag=/g) || []).length === TAGS.length + 1, 'une pastille par étiquette + le bouton « aucune »');
   ok(block.includes('aria-pressed="true"'), 'l’étiquette active est marquée pour les lecteurs d’écran');
+  ok((block.match(/data-nv-star=/g) || []).length === MAX_STARS, 'une étoile cliquable par cran');
+  UI.notes.set('Tagged', { stars: 2 });
+  const rated = UI.notesBlockHtml('Tagged');
+  ok((rated.match(/\u2605/g) || []).length === 2 && (rated.match(/\u2606/g) || []).length === MAX_STARS - 2,
+     'la barre reflète la note posée (pleines puis vides)');
   ok(UI.notesBlockHtml('') === '', 'pseudo vide → aucun bloc');
 
   ok(block.includes('nv-label') && !block.includes('nv-label-row" style="display:none"'),

@@ -11,7 +11,7 @@ export const meta = {
 
 export const strings = {
     // Notes de joueur + étiquettes (modules/notes, extra web)
-    nvTitle:'Moja poznámka', nvPlaceholder:'Dorovná každý 3-bet…', nvSaved:'Uložené', nvTagNone:'Bez štítku', nvTagRed:'Nebezpečný', nvTagOrange:'Agresívny', nvTagYellow:'Sledovať', nvTagGreen:'Ryba', nvTagBlue:'Tesný', nvTagPurple:'Prefíkaný', nvLabelPh:'Názov štítku', nvLabelTip:'Premenovať štítok — platí pre všetkých hráčov s touto farbou',
+    nvTitle:'Moja poznámka', nvRating:'Hodnotenie', nvPlaceholder:'Dorovná každý 3-bet…', nvSaved:'Uložené', nvTagNone:'Bez štítku', nvTagRed:'Nebezpečný', nvTagOrange:'Agresívny', nvTagYellow:'Sledovať', nvTagGreen:'Ryba', nvTagBlue:'Tesný', nvTagPurple:'Prefíkaný', nvLabelPh:'Názov štítku', nvLabelTip:'Premenovať štítok — platí pre všetkých hráčov s touto farbou',
     ppMyStats:'Moje štatistiky',
     // Session stats, behind a button on the player card.
     piShowStats:'Zobraziť štatistiky', piHideStats:'Skryť štatistiky',

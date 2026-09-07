@@ -5,9 +5,10 @@
 //   · la carte joueur (player-popup) — saisie de la note, choix de couleur et
 //     renommage du LIBELLÉ de la couleur (sens global : renommer « rouge »
 //     renomme le rouge de tous les joueurs qui le portent) ;
-//   · le siège à la table — une pastille de couleur devant le pseudo, dont le
-//     tooltip donne le libellé et un extrait de la note (aperçu au survol ;
-//     au doigt, taper le siège ouvre de toute façon la carte avec la note) ;
+//   · le siège à la table — une pastille de couleur devant le pseudo, suivie
+//     de « ★N » si le joueur est noté, dont le tooltip donne le libellé et un
+//     extrait de la note (aperçu au survol ; au doigt, taper le siège ouvre
+//     de toute façon la carte avec la note) ;
 //   · la liste des joueurs — la même pastille devant le pseudo.
 //
 // Conception : module AUTONOME, comme handlog/journal. Le reste du client ne
@@ -17,7 +18,7 @@
 // La note vit sous 'pth_notes' et voyage dans le blob de réglages web : elle
 // suit le joueur du téléphone au bureau sans serveur dédié.
 
-import { createNotes, TAGS, tagById, MAX_NOTE_LEN, MAX_LABEL_LEN } from './store.mjs';
+import { createNotes, TAGS, tagById, MAX_NOTE_LEN, MAX_LABEL_LEN, MAX_STARS } from './store.mjs';
 import { esc } from '../ui/misc.mjs';
 
 function T(k, fb) {
@@ -56,12 +57,30 @@ export function labelText(tag) {
 export function seatTagHtml(name) {
   const e = notes.get(name);
   const tag = tagById(e ? e.tag : '');
-  if (!tag) return '';
-  let tip = labelText(tag);
+  const stars = e ? e.stars : 0;
+  if (!tag && !stars) return '';
+  // Aperçu commun à la pastille et aux étoiles : ce qui les distingue tient
+  // en un coup d'œil, le tooltip sert à lire la note.
+  const head = [];
+  if (tag) head.push(labelText(tag));
+  if (stars) head.push('★' + stars + '/' + MAX_STARS);
+  let tip = head.join(' · ');
   const n = e && e.note ? String(e.note) : '';
-  if (n) tip += ' — ' + (n.length > 90 ? n.slice(0, 90) + '…' : n);
-  return '<span class="seat-note-tag" style="background:' + tag.hex + '"'
+  if (n) tip += (tip ? ' — ' : '') + (n.length > 90 ? n.slice(0, 90) + '…' : n);
+  let h = '';
+  if (tag) {
+    h += '<span class="seat-note-tag" style="background:' + tag.hex + '"'
        + ' title="' + esc(tip) + '" aria-label="' + esc(tip) + '"></span>';
+  }
+  // « ★N » plutôt que cinq étoiles : la boîte adverse est déjà à largeur
+  // fixe et le pseudo y est tronqué — même raisonnement que le badge QML
+  // (PlayerNoteBadge.qml : « fünf einzelne Sterne wären dort weder lesbar
+  // noch treffbar »).
+  if (stars) {
+    h += '<span class="seat-note-stars" title="' + esc(tip) + '"'
+       + ' aria-label="' + esc(tip) + '">\u2605' + stars + '</span>';
+  }
+  return h;
 }
 
 // ── Bloc de la carte joueur ───────────────────────────────────────────────
@@ -70,7 +89,21 @@ export function seatTagHtml(name) {
 export function notesBlockHtml(name) {
   const nm = String(name == null ? '' : name);
   if (!nm) return '';
-  const cur = notes.get(nm) || { note: '', tag: '' };
+  const cur = notes.get(nm) || { note: '', tag: '', stars: 0 };
+  // Barre 0–5 étoiles (parité PlayerRatingStars.qml). Glyphes Unicode et non
+  // icônes : elles suivent la taille de police et se colorent sans qu'il
+  // faille une image par taille.
+  const ratingLbl = T('nvRating', 'Rating');
+  let starsHtml = '';
+  for (let i = 1; i <= MAX_STARS; i++) {
+    const on = cur.stars >= i;
+    starsHtml += '<button type="button" class="nv-star' + (on ? ' on' : '') + '"'
+      + ' data-nv-star="' + i + '"'
+      + ' title="' + esc(ratingLbl + ' ' + i + '/' + MAX_STARS) + '"'
+      + ' aria-label="' + esc(ratingLbl + ' ' + i + '/' + MAX_STARS) + '"'
+      + ' aria-pressed="' + (on ? 'true' : 'false') + '">'
+      + (on ? '\u2605' : '\u2606') + '</button>';
+  }
   const swatches = TAGS.map((tg) => {
     const on = cur.tag === tg.id;
     const lbl = labelText(tg);
@@ -86,6 +119,8 @@ export function notesBlockHtml(name) {
   const curLbl = cur.tag ? labelText(cur.tag) : '';
   return '<div class="nv-block" data-nv-name="' + esc(nm) + '">'
        + '<div class="nv-hd">' + esc(T('nvTitle', 'My note')) + '</div>'
+       + '<div class="nv-stars" role="group" aria-label="' + esc(ratingLbl) + '">'
+       + starsHtml + '</div>'
        + '<div class="nv-swatches">' + swatches
        + '<button type="button" class="nv-sw nv-sw-none' + (clearOn ? ' on' : '') + '"'
        + ' data-nv-tag="" title="' + esc(T('nvTagNone', 'No label')) + '"'
@@ -190,6 +225,30 @@ export function wireBlock(root) {
         o.setAttribute('aria-pressed', on ? 'true' : 'false');
       });
       syncLabelRow();
+      flash();
+    });
+  });
+
+  // Étoiles : cliquer la i-ème pose i, re-cliquer la DERNIÈRE posée retire
+  // celle-là (i−1) — c'est ainsi qu'on revient à zéro sans bouton dédié,
+  // exactement comme la barre QML (PlayerRatingStars.qml).
+  function paintStars(v) {
+    host.querySelectorAll('[data-nv-star]').forEach((b) => {
+      const i = parseInt(b.getAttribute('data-nv-star') || '0', 10);
+      const on = v >= i;
+      b.classList.toggle('on', on);
+      b.setAttribute('aria-pressed', on ? 'true' : 'false');
+      b.textContent = on ? '\u2605' : '\u2606';
+    });
+  }
+  host.querySelectorAll('[data-nv-star]').forEach((b) => {
+    b.addEventListener('click', () => {
+      const i = parseInt(b.getAttribute('data-nv-star') || '0', 10);
+      if (!i) return;
+      const curV = notes.starsOf(nm);
+      const next = curV === i ? i - 1 : i;
+      notes.set(nm, { stars: next });
+      paintStars(next);
       flash();
     });
   });

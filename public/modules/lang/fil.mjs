@@ -17,7 +17,7 @@ export const meta = {
 
 export const strings = {
     // Notes de joueur + étiquettes (modules/notes, extra web)
-    nvTitle:'Ang tala ko', nvPlaceholder:'Tinatawagan ang bawat 3-bet…', nvSaved:'Na-save', nvTagNone:'Walang label', nvTagRed:'Mapanganib', nvTagOrange:'Agresibo', nvTagYellow:'Bantayan', nvTagGreen:'Isda', nvTagBlue:'Mahigpit', nvTagPurple:'Tuso', nvLabelPh:'Pangalan ng label', nvLabelTip:'Palitan ang pangalan ng label — para sa lahat ng manlalarong may kulay na ito',
+    nvTitle:'Ang tala ko', nvRating:'Rating', nvPlaceholder:'Tinatawagan ang bawat 3-bet…', nvSaved:'Na-save', nvTagNone:'Walang label', nvTagRed:'Mapanganib', nvTagOrange:'Agresibo', nvTagYellow:'Bantayan', nvTagGreen:'Isda', nvTagBlue:'Mahigpit', nvTagPurple:'Tuso', nvLabelPh:'Pangalan ng label', nvLabelTip:'Palitan ang pangalan ng label — para sa lahat ng manlalarong may kulay na ito',
     ppMyStats:'Aking estadistika',
     // Session stats, behind a button on the player card.
     piShowStats:'Ipakita ang estadistika', piHideStats:'Itago ang estadistika',

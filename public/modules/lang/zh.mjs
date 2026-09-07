@@ -12,7 +12,7 @@ export const meta = {
 
 export const strings = {
     // Notes de joueur + étiquettes (modules/notes, extra web)
-    nvTitle:'我的笔记', nvPlaceholder:'跟注任何 3-bet…', nvSaved:'已保存', nvTagNone:'无标签', nvTagRed:'危险', nvTagOrange:'激进', nvTagYellow:'关注', nvTagGreen:'鱼', nvTagBlue:'紧凶', nvTagPurple:'狡猾', nvLabelPh:'标签名称', nvLabelTip:'重命名标签 — 适用于所有使用此颜色的玩家',
+    nvTitle:'我的笔记', nvRating:'评分', nvPlaceholder:'跟注任何 3-bet…', nvSaved:'已保存', nvTagNone:'无标签', nvTagRed:'危险', nvTagOrange:'激进', nvTagYellow:'关注', nvTagGreen:'鱼', nvTagBlue:'紧凶', nvTagPurple:'狡猾', nvLabelPh:'标签名称', nvLabelTip:'重命名标签 — 适用于所有使用此颜色的玩家',
     ppMyStats:'我的统计',
     // Session stats, behind a button on the player card.
     piShowStats:'查看统计', piHideStats:'隐藏统计',

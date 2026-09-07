@@ -12,11 +12,17 @@
 //
 // Forme stockée (compacte — la valeur synchronisée est plafonnée à 20 000
 // caractères côté pokerth.js, donc chaque octet compte) :
-//   { p: { "<pseudo>": { n:"texte", c:"red", t:1756400000000 } },
+//   { p: { "<pseudo>": { n:"texte", c:"red", s:3, t:1756400000000 } },
 //     l: { "red": { v:"Bluffe tout", t:1756400000000 } } }
 // p = notes par joueur ; n = note (peut être vide si seule la couleur est
-// posée) ; c = id d'étiquette (voir TAGS) ou '' ; t = date de dernière
+// posée) ; c = id d'étiquette (voir TAGS) ou '' ; s = note en étoiles 0–5
+// (OMISE quand elle vaut 0 — la valeur voyage dans un blob plafonné, une clé
+// qui ne dit rien ne mérite pas ses octets) ; t = date de dernière
 // modification (ms) — sert au tri, à l'élagage et à la fusion.
+// Les étoiles sont la parité du client QML (upstream b77ad47, « player notes
+// and star rating »), qui les range à côté de la note dans le même
+// enregistrement — mêmes trois informations, un cran plus riche ici avec
+// l'étiquette de couleur.
 // l = libellés d'étiquette RENOMMÉS par le joueur (sens global : « rouge »
 // veut dire la même chose pour tous les joueurs marqués rouge). Seuls les
 // libellés modifiés y figurent ; absent = libellé i18n par défaut. Chaque
@@ -24,8 +30,8 @@
 // renommage du bureau sur DEUX couleurs différentes survivent tous les deux
 // à la fusion.
 //
-// Une entrée joueur sans note ET sans couleur est supprimée : pas de
-// squelette vide. Un libellé remis au défaut est supprimé de l.
+// Une entrée joueur sans note, sans couleur ET sans étoile est supprimée :
+// pas de squelette vide. Un libellé remis au défaut est supprimé de l.
 
 // Palette d'étiquettes. Les libellés par défaut passent par i18n (clés
 // nvTag*), les couleurs sont fixes pour rester lisibles sur n'importe quel
@@ -49,6 +55,8 @@ export function tagById(id) { return TAG_BY_ID.get(String(id || '')) || null; }
 // d'écrire, qui portent le t le plus récent. Les libellés (6 max) ne sont
 // jamais élagués.
 export const MAX_NOTE_LEN = 500;
+// 0 à 5 étoiles, comme la barre du dialogue QML (PlayerRatingStars.qml).
+export const MAX_STARS = 5;
 export const MAX_LABEL_LEN = 40;
 export const MAX_ENTRIES = 300;
 
@@ -79,6 +87,15 @@ function safeLocal() {
 // « Alice » et un « Alice  » venus de deux chemins différents doivent tomber
 // sur la même note.
 function _key(name) { return String(name == null ? '' : name).trim(); }
+
+// Normalise une valeur d'étoiles venue de n'importe où (saisie, import,
+// appareil d'en face) : entier borné à [0, MAX_STARS]. Tout le reste vaut 0,
+// c'est-à-dire « pas de note en étoiles » — jamais une exception.
+function _stars(v) {
+  const n = Math.round(Number(v));
+  if (!Number.isFinite(n) || n <= 0) return 0;
+  return n > MAX_STARS ? MAX_STARS : n;
+}
 
 // Un objet brut → la forme { p, l }. Tolère l'ancienne forme plate (un objet
 // pseudo → entrée, sans enveloppe) pour qu'un import venu d'un client qui
@@ -129,31 +146,34 @@ export function createNotes(opts = {}) {
       if (!k) return null;
       const e = _all().p[k];
       if (!e || typeof e !== 'object') return null;
-      return { note: String(e.n || ''), tag: String(e.c || ''), ts: e.t || 0 };
+      return { note: String(e.n || ''), tag: String(e.c || ''), stars: _stars(e.s), ts: e.t || 0 };
     },
 
-    noteOf(name) { const e = this.get(name); return e ? e.note : ''; },
-    tagOf(name)  { const e = this.get(name); return e ? e.tag : ''; },
-    hasAny(name) { const e = this.get(name); return !!(e && (e.note || e.tag)); },
+    noteOf(name)  { const e = this.get(name); return e ? e.note : ''; },
+    tagOf(name)   { const e = this.get(name); return e ? e.tag : ''; },
+    starsOf(name) { const e = this.get(name); return e ? e.stars : 0; },
+    hasAny(name)  { const e = this.get(name); return !!(e && (e.note || e.tag || e.stars)); },
 
-    // Écrit note et/ou couleur. Passer null à un champ le laisse inchangé ;
-    // passer '' l'efface. Une entrée devenue entièrement vide est supprimée.
-    set(name, { note = null, tag = null } = {}) {
+    // Écrit note, couleur et/ou étoiles. Passer null à un champ le laisse
+    // inchangé ; passer '' (ou 0 pour les étoiles) l'efface. Une entrée
+    // devenue entièrement vide est supprimée.
+    set(name, { note = null, tag = null, stars = null } = {}) {
       const k = _key(name);
       if (!k) return null;
       const o = _all();
       const cur = o.p[k] && typeof o.p[k] === 'object' ? o.p[k] : {};
       let n = note === null ? String(cur.n || '') : String(note);
       let c = tag === null ? String(cur.c || '') : String(tag);
+      const st = stars === null ? _stars(cur.s) : _stars(stars);
       n = n.slice(0, MAX_NOTE_LEN);
       if (c && !TAG_BY_ID.has(c)) c = '';       // id inconnu → pas d'étiquette
-      if (!n && !c) { delete o.p[k]; _write(o); return null; }
-      o.p[k] = { n, c, t: Date.now() };
+      if (!n && !c && !st) { delete o.p[k]; _write(o); return null; }
+      o.p[k] = st ? { n, c, s: st, t: Date.now() } : { n, c, t: Date.now() };
       _write(o);
-      return { note: n, tag: c, ts: o.p[k].t };
+      return { note: n, tag: c, stars: st, ts: o.p[k].t };
     },
 
-    clear(name) { return this.set(name, { note: '', tag: '' }); },
+    clear(name) { return this.set(name, { note: '', tag: '', stars: 0 }); },
 
     // Tous les pseudos annotés, du plus récemment touché au plus ancien.
     names() {
@@ -207,8 +227,10 @@ export function createNotes(opts = {}) {
           const n = String(e.n || '').slice(0, MAX_NOTE_LEN);
           let c = String(e.c || '');
           if (c && !TAG_BY_ID.has(c)) c = '';
-          if (!n && !c) { if (mine) { delete o.p[k]; changed = true; } continue; }
-          o.p[k] = { n, c, t: e.t || Date.now() };
+          const st = _stars(e.s);
+          if (!n && !c && !st) { if (mine) { delete o.p[k]; changed = true; } continue; }
+          const t = e.t || Date.now();
+          o.p[k] = st ? { n, c, s: st, t } : { n, c, t };
           changed = true;
         }
       }

@@ -11,7 +11,7 @@ export const meta = {
 
 export const strings = {
     // Notes de joueur + étiquettes (modules/notes, extra web)
-    nvTitle:'Ghi chú của tôi', nvPlaceholder:'Theo mọi 3-bet…', nvSaved:'Đã lưu', nvTagNone:'Không nhãn', nvTagRed:'Nguy hiểm', nvTagOrange:'Hung hăng', nvTagYellow:'Cần theo dõi', nvTagGreen:'Cá', nvTagBlue:'Chặt', nvTagPurple:'Ranh mãnh', nvLabelPh:'Tên nhãn', nvLabelTip:'Đổi tên nhãn — áp dụng cho mọi người chơi mang màu này',
+    nvTitle:'Ghi chú của tôi', nvRating:'Đánh giá', nvPlaceholder:'Theo mọi 3-bet…', nvSaved:'Đã lưu', nvTagNone:'Không nhãn', nvTagRed:'Nguy hiểm', nvTagOrange:'Hung hăng', nvTagYellow:'Cần theo dõi', nvTagGreen:'Cá', nvTagBlue:'Chặt', nvTagPurple:'Ranh mãnh', nvLabelPh:'Tên nhãn', nvLabelTip:'Đổi tên nhãn — áp dụng cho mọi người chơi mang màu này',
     ppMyStats:'Thống kê của tôi',
     // Session stats, behind a button on the player card.
     piShowStats:'Xem thống kê', piHideStats:'Ẩn thống kê',

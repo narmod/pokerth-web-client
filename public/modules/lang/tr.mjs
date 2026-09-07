@@ -13,7 +13,7 @@ export const meta = {
 
 export const strings = {
     // Notes de joueur + étiquettes (modules/notes, extra web)
-    nvTitle:'Notum', nvPlaceholder:'Her 3-bet’i öder…', nvSaved:'Kaydedildi', nvTagNone:'Etiket yok', nvTagRed:'Tehlikeli', nvTagOrange:'Agresif', nvTagYellow:'İzle', nvTagGreen:'Balık', nvTagBlue:'Sıkı', nvTagPurple:'Kurnaz', nvLabelPh:'Etiket adı', nvLabelTip:'Etiketi yeniden adlandır — bu renkteki tüm oyuncular için geçerli',
+    nvTitle:'Notum', nvRating:'Değerlendirme', nvPlaceholder:'Her 3-bet’i öder…', nvSaved:'Kaydedildi', nvTagNone:'Etiket yok', nvTagRed:'Tehlikeli', nvTagOrange:'Agresif', nvTagYellow:'İzle', nvTagGreen:'Balık', nvTagBlue:'Sıkı', nvTagPurple:'Kurnaz', nvLabelPh:'Etiket adı', nvLabelTip:'Etiketi yeniden adlandır — bu renkteki tüm oyuncular için geçerli',
     ppMyStats:'İstatistiklerim',
     // Session stats, behind a button on the player card.
     piShowStats:'İstatistikleri göster', piHideStats:'İstatistikleri gizle',

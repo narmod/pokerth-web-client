@@ -1,4 +1,8 @@
 2026-09-07 version 2.1.8-web (current series):
+- new: rate a player from zero to five stars, right above your private note on their card - tap the star you want, tap it again to take it back; the rating shows as "★N" in front of their name at the table and in the players list, like the desktop and mobile clients
+- improvement: ratings travel with your notes between devices, and the tooltip in front of a name now shows the colour label, the rating and the start of your note together
+
+2026-09-07 version 2.1.8-web:
 - bugfix: a faulty or hostile server can no longer flood the browser with avatar data - a picture that is bigger than announced, or that arrives incomplete, is now dropped instead of being kept in memory or cached under the wrong name
 
 2026-09-07 version 2.1.8-web:

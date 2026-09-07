@@ -11186,6 +11186,17 @@ body.adv-no-avcreate #avp-tab-create { display: none !important; }
   border-radius: var(--r-pill);
   box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.45);
 }
+/* Note en étoiles au siège et dans la liste des joueurs : « ★N » et non cinq
+   glyphes — la boîte adverse est à largeur fixe et le pseudo y est déjà
+   tronqué (même arbitrage que PlayerNoteBadge.qml). Comme la pastille, le
+   span n'existe pas quand le joueur n'est pas noté : rien à masquer, rien qui
+   prenne de la place. */
+.seat-note-stars {
+  display: inline-block; vertical-align: middle;
+  margin-right: 4px;
+  font-size: var(--fs-2xs); line-height: 1;
+  color: var(--gold); white-space: nowrap;
+}
 
 /* Bloc de la carte joueur */
 /* Même gabarit que les blocs voisins de la carte joueur (.pim-ig,
@@ -11204,6 +11215,21 @@ body.adv-no-avcreate #avp-tab-create { display: none !important; }
   text-transform: uppercase; letter-spacing: 0.08em;
   margin-bottom: 8px;
 }
+/* Barre de notation de la carte joueur : glyphes ★/☆ posés sur des boutons
+   nus, donc alignés sur la taille du texte et colorables — pas d'image à
+   fournir par densité d'écran (parité PlayerRatingStars.qml). La zone
+   cliquable reste au gabarit tactile grâce au padding. */
+.nv-stars { display: flex; gap: 2px; margin-bottom: 8px; }
+.nv-star {
+  padding: 2px 4px;
+  background: none; border: 0;
+  color: var(--text); opacity: 0.55;
+  font-size: var(--fs-lg); line-height: 1;
+  cursor: pointer; transition: transform 0.12s, opacity 0.12s;
+}
+.nv-star.on { color: var(--gold); opacity: 1; }
+.nv-star:hover { transform: scale(1.12); }
+.nv-star:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
 .nv-swatches { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 8px; }
 .nv-sw {
   width: 22px; height: 22px; padding: 0;
@@ -11243,4 +11269,6 @@ body.adv-no-avcreate #avp-tab-create { display: none !important; }
 @media (prefers-reduced-motion: reduce) {
   .nv-sw { transition: none; }
   .nv-sw:hover { transform: none; }
+  .nv-star { transition: none; }
+  .nv-star:hover { transform: none; }
 }

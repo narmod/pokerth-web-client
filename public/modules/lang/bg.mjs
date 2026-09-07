@@ -11,7 +11,7 @@ export const meta = {
 
 export const strings = {
     // Notes de joueur + étiquettes (modules/notes, extra web)
-    nvTitle:'Моята бележка', nvPlaceholder:'Плаща всеки 3-бет…', nvSaved:'Запазено', nvTagNone:'Без етикет', nvTagRed:'Опасен', nvTagOrange:'Агресивен', nvTagYellow:'Наблюдавай', nvTagGreen:'Риба', nvTagBlue:'Стегнат', nvTagPurple:'Хитър', nvLabelPh:'Име на етикета', nvLabelTip:'Преименувай етикета — важи за всички играчи с този цвят',
+    nvTitle:'Моята бележка', nvRating:'Оценка', nvPlaceholder:'Плаща всеки 3-бет…', nvSaved:'Запазено', nvTagNone:'Без етикет', nvTagRed:'Опасен', nvTagOrange:'Агресивен', nvTagYellow:'Наблюдавай', nvTagGreen:'Риба', nvTagBlue:'Стегнат', nvTagPurple:'Хитър', nvLabelPh:'Име на етикета', nvLabelTip:'Преименувай етикета — важи за всички играчи с този цвят',
     ppMyStats:'Моята статистика',
     // Session stats, behind a button on the player card.
     piShowStats:'Показване на статистиките', piHideStats:'Скриване на статистиките',

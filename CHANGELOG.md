@@ -17,6 +17,21 @@ changes for this line are on the
 highlights below.
 
 ### Added
+- **Star rating on player notes** (`web.36`, parity with upstream
+  `b77ad47`, "qml: player notes and star rating"). A 0–5 star bar sits above
+  the note on the player card: clicking star *i* sets the rating to *i*,
+  clicking the star already set takes it back to *i−1* — the way back to zero
+  without a dedicated button, as in `PlayerRatingStars.qml`. A rated player
+  carries a `★N` badge in front of their name at the table and in the players
+  list, next to the colour dot; the shared tooltip now reads
+  "label · ★N/5 — note excerpt". `★N` rather than five glyphs because the
+  opponent box is fixed-width and the name is already truncated there, the
+  same trade-off `PlayerNoteBadge.qml` makes.
+  The rating lives in the existing `pth_notes` entry as `s`, written only when
+  non-zero (the blob is capped), merges by timestamp like the note and the
+  label, and clamps anything out of range coming from another device. An entry
+  with no note, no colour and no star is still deleted. New i18n key
+  `nvRating`, translated in all 45 languages.
 - **Hand-written notice defaults in all 45 languages** (proxy-only). The
   guest and account notices ship hand-written in every client language
   (game-type names taken verbatim from each `lang/*.mjs`), replacing
