@@ -113,6 +113,25 @@ S._statsEligible = false;
 P._pimSetTab('life');
 ok(S._pimTab === 'session', 'garde : hors éligibilité, retour forcé à session');
 
+// ── Fenetre a largeur figee ───────────────────────────────────────────────
+// La carte est une colonne centree : etiree, elle laissait deux marges vides.
+// Seule la hauteur reste ajustable, et le zoom du contenu est coupe (a largeur
+// fixe il ne dependrait plus que de la hauteur).
+{
+  const src = await import('node:fs').then((m) => m.readFileSync('public/modules/ui/player-popup.mjs', 'utf8'));
+  const optBlock = src.slice(src.indexOf('window._enableFloating(card, {'));
+  ok(/minW:\s*g\.w/.test(optBlock) && /maxW:\s*g\.w/.test(optBlock),
+     'largeur verrouillee : minW == maxW == la largeur calculee');
+  ok(/zoom:\s*false/.test(optBlock.slice(0, optBlock.indexOf('});'))),
+     'zoom du contenu coupe avec la largeur figee');
+  ok(/card\.style\.width = g\.w/.test(src),
+     'largeur reimposee apres restauration d’une geometrie memorisee');
+  const css = await import('node:fs').then((m) => m.readFileSync('public/pokerth.css', 'utf8'));
+  const hidden = ['e', 'w', 'ne', 'nw', 'se', 'sw'].every(
+    (d) => css.includes('.pim-card.floating-win .win-rsz-' + d));
+  ok(hidden, 'poignees horizontales et coins masques (seules n/s subsistent)');
+}
+
 ok(window.openPlayerInfoPopup === P.openPlayerInfoPopup
    && window._renderProfileStats === P._renderProfileStats
    && window.closeAvatarPickerFromLobby === P.closeAvatarPickerFromLobby, 'ponts window en place');

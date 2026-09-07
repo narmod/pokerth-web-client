@@ -124,6 +124,20 @@ highlights below.
   Green Casino and the default table, so their QML renders apply as well.
 
 ### Changed
+- **Player card window locked to a fixed width** (`web.37`). The card is a
+  centred column — avatar, name, full-width buttons, note block — and nothing
+  in it uses horizontal room, so a widened window only produced two empty
+  margins and stopped looking like the rest of the interface (the same card in
+  modal mode is capped at 400 px). The one block that did want width, the
+  season cups, has had its own window since the stats button was introduced.
+  `PIM_WIN_W = 400` — the modal cap, and the order of magnitude of Kai's QML
+  dialog (`min(parent*0.9, 420)`) — clamped to the viewport on narrow screens,
+  re-applied after a stored geometry is restored, with `minW == maxW` so the
+  horizontal handles have no travel and the pure-horizontal handles and the
+  four corners hidden. Content zoom is off for this window: at fixed width the
+  factor `min(w/defW, h/defH)` would depend on height alone, so shortening the
+  card would have shrunk its text while its width stayed put. Height stays
+  adjustable.
 - **`InitMessage.clientPlatform` announced to the server** (`web.34`,
   upstream `864bc53`, PokerTH 2.1.9). The login packet now carries the
   operating system the browser runs on (field 9: Windows / Linux / Mac /

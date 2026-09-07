@@ -8700,6 +8700,16 @@ body.adv-no-forumnews [id^="forum-btn-"], body.adv-no-forumnews #forum-modal { d
    pas d'un pixel, mais decalait l'avatar (112 px fixes) contre le bord
    gauche. */
 #player-info-modal .pim-card.floating-win { align-items: center; }
+/* Largeur FIGEE pour la carte joueur (PIM_WIN_W, player-popup.mjs) : seules
+   les poignees haut/bas gardent une course. Les poignees purement
+   horizontales et les quatre coins sont retires — un coin qui ne fait plus
+   que la hauteur ment sur ce qu'il propose. */
+#player-info-modal .pim-card.floating-win .win-rsz-e,
+#player-info-modal .pim-card.floating-win .win-rsz-w,
+#player-info-modal .pim-card.floating-win .win-rsz-ne,
+#player-info-modal .pim-card.floating-win .win-rsz-nw,
+#player-info-modal .pim-card.floating-win .win-rsz-se,
+#player-info-modal .pim-card.floating-win .win-rsz-sw { display: none !important; }
 /* Une fenetre large ne doit pas etirer les COMMANDES : un bouton « Ignorer »
    de 1 300 px de long est absurde. On plafonne la colonne d'actions et on la
    centre ; seuls les blocs de donnees (tableau des places, camembert,

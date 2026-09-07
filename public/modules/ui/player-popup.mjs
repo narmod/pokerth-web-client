@@ -148,18 +148,27 @@ function _winGateOk() {
 }
 // Geometrie d'ouverture : large et centree. Calculee a chaque ouverture pour
 // suivre la taille de la fenetre du navigateur.
+// Largeur FIXE de la carte joueur en mode fenetre. La carte est une colonne
+// centree — avatar, nom, boutons pleine largeur, bloc de note — et rien la-dedans
+// ne profite d'une fenetre large : etiree, elle laissait deux grandes marges
+// vides de chaque cote et ne ressemblait plus au reste de l'interface (la meme
+// carte en modale est plafonnee a 400 px). Le seul bloc qui reclamait de la
+// largeur, les coupes de saison (tableau dix colonnes, camembert, histogramme),
+// a sa propre fenetre depuis le bouton stats — la carte ne l'heberge plus.
+// 400 px = le plafond de la version modale, et l'ordre de grandeur du dialogue
+// QML de Kai (min(parent*0.9, 420)). Seule la HAUTEUR reste ajustable.
+const PIM_WIN_W = 400;
+
 function _pimGeom() {
   var vw = 1024, vh = 768;
   try { vw = window.innerWidth || vw; vh = window.innerHeight || vh; } catch (e) {}
-  // Plafond volontairement genereux : le bloc coupes tient un tableau de dix
-  // colonnes, un camembert et un histogramme de dix barres, et la fenetre est
-  // redimensionnable a la main — autant laisser aller jusqu'a la quasi-totalite
-  // de l'ecran plutot que d'imposer une borne arbitraire.
-  var maxW = Math.min(1400, Math.round(vw * 0.96));
+  // Hauteur : plafond genereux, la carte defile au-dela.
   var maxH = Math.min(1000, Math.round(vh * 0.94));
-  var w = Math.max(320, Math.min(maxW, Math.round(vw * 0.58)));
+  // Largeur bornee au viewport pour une fenetre etroite : mieux vaut une carte
+  // plus fine que debordante.
+  var w = Math.max(260, Math.min(PIM_WIN_W, vw - 16));
   var h = Math.max(340, Math.min(maxH, Math.round(vh * 0.82)));
-  return { w: w, h: h, maxW: maxW, maxH: maxH,
+  return { w: w, h: h, maxW: w, maxH: maxH,
            left: Math.max(8, Math.round((vw - w) / 2)),
            top:  Math.max(8, Math.round((vh - h) / 2)) };
 }
@@ -290,12 +299,23 @@ function _pimEnterWindowMode() {
   try {
     window._enableFloating(card, {
       handle: document.getElementById('pim-grip'), resizable: true,
-      maxW: g.maxW, maxH: g.maxH,
-      zoom: true, key: 'pth-pim-win2',
-      defW: g.w, defH: g.h, minW: 260, minH: 260,
+      // minW == maxW : les poignees horizontales n'ont plus de course (celles
+      // qui ne servent qu'a la largeur sont masquees en CSS, cf. .pim-card
+      // .win-rsz-e/-w et les coins).
+      maxW: g.w, maxH: g.maxH,
+      // Zoom du contenu DESACTIVE avec la largeur figee : le facteur vaut
+      // min(l/defW, h/defH), il ne dependrait donc plus que de la hauteur — la
+      // carte aurait ecrit plus petit quand on la raccourcit, alors que sa
+      // largeur ne bouge pas. A largeur fixe, on rend au 1:1, comme la modale.
+      zoom: false, key: 'pth-pim-win2',
+      defW: g.w, defH: g.h, minW: g.w, minH: 260,
       defLeft: g.left, defTop: g.top
     });
   } catch (e) { return; }
+  // Largeur imposee APRES coup : _enableFloating restaure la geometrie
+  // memorisee (pth-pim-win2) et ne re-borne que vers le BAS — une carte
+  // enregistree plus etroite par une version precedente serait restee etroite.
+  try { card.style.width = g.w + 'px'; } catch (e) {}
   // Hauteur ajustee au contenu. La carte a overflow-y:auto, donc scrollHeight
   // porte la totalite du contenu meme quand la fenetre est plus courte : on
   // relache la hauteur, on mesure, puis on borne. Au-dela du plafond la carte
