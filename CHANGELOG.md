@@ -109,6 +109,19 @@ highlights below.
   Green Casino and the default table, so their QML renders apply as well.
 
 ### Changed
+- **`InitMessage.clientPlatform` announced to the server** (`web.34`,
+  upstream `864bc53`, PokerTH 2.1.9). The login packet now carries the
+  operating system the browser runs on (field 9: Windows / Linux / Mac /
+  Android / iOS), detected from `navigator.userAgentData.platform` when
+  available and from the user agent otherwise (Android tested before Linux,
+  iPadOS told from macOS by the touch points, as in upstream
+  `clientstate.cpp`). The build id already says *which* client speaks
+  (type `0x03`, web); the platform says *where* it runs, which the build id
+  cannot express for a client shipped on every OS. Server logs read
+  `Web/Android 2.1.8` and the activity table stores the platform. The field
+  is optional and unknown to the 2.1.8 server currently running
+  pokerth.net, which ignores it; it is omitted entirely when the platform
+  cannot be determined.
 - **Bet display option scoped to the PokerTH seat style** (`web.21`). The
   inset-strip / classic-chip choice now applies only to the built-in
   "PokerTH" seat style; other seat packs always keep their original

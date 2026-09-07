@@ -1,4 +1,7 @@
 2026-09-07 version 2.1.8-web (current series):
+- improvement: the client now tells the server which system your browser runs on (Windows, macOS, Linux, Android or iOS), the way the desktop and mobile clients already do - it lets the server operator see which platforms players actually use; nothing else about your browser is sent
+
+2026-09-07 version 2.1.8-web:
 - bugfix: connecting to your own LAN or dedicated server works again when the operator forwards player IPs to the game server - that setting now applies only to the server the site is configured for, and no longer to an address you type in yourself
 
 2026-09-06 version 2.1.8-web:

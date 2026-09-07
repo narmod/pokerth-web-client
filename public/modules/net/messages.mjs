@@ -176,6 +176,51 @@ const MSG = (() => {
     return { clientFinal: finalBare + ',p=' + _scBytesToB64(proof), serverSignatureB64: _scBytesToB64(serverSig) };
   }
 
+  // ── InitMessage.clientPlatform (field 9, upstream 864bc53, PokerTH 2.1.9) ──
+  // The build id says WHICH client speaks (type 0x03 = web); this says which
+  // operating system it runs on. Upstream added it because a single QML binary
+  // serves desktop and Android alike, so the build id alone cannot tell the two
+  // apart in the server logs and the activity table. The same holds here: a web
+  // client is a browser on Windows, on a phone, or on a Mac.
+  // Enum (pokerth.proto InitMessage.ClientPlatform): 0 unknown, 1 Windows,
+  // 2 Linux, 3 Mac, 4 Android, 5 iOS. There is no "web" value on purpose -- the
+  // client TYPE already carries that, this field is only the OS.
+  // Field 9 is optional: a server older than 2.1.9 (pokerth.net runs 2.1.8 as
+  // of this writing) simply skips the unknown field, and older clients are
+  // counted as platformUnknown -- so sending it is safe either way.
+  function clientPlatform() {
+    try {
+      const P = { UNKNOWN: 0, WINDOWS: 1, LINUX: 2, MAC: 3, ANDROID: 4, IOS: 5 };
+      if (typeof navigator === 'undefined') return P.UNKNOWN;
+      // Preferred source: the UA-Client-Hints platform, which is a clean token
+      // ("Windows", "macOS", "Android", "iOS", "Linux", "Chrome OS") instead of
+      // a string to be pattern-matched. Only Chromium exposes it today.
+      const hint = (navigator.userAgentData && navigator.userAgentData.platform) || '';
+      if (hint) {
+        const h = hint.toLowerCase();
+        if (h.indexOf('android') >= 0) return P.ANDROID;
+        if (h === 'ios' || h.indexOf('iphone') >= 0 || h.indexOf('ipad') >= 0) return P.IOS;
+        if (h.indexOf('win') >= 0) return P.WINDOWS;
+        if (h.indexOf('mac') >= 0) return P.MAC;
+        // Chrome OS is a Linux system and has no value of its own upstream.
+        if (h.indexOf('linux') >= 0 || h.indexOf('chrome os') >= 0 ||
+            h.indexOf('chromium os') >= 0 || h.indexOf('cros') >= 0) return P.LINUX;
+        return P.UNKNOWN;
+      }
+      const ua = navigator.userAgent || '';
+      // Order matters, exactly as in upstream clientstate.cpp: an Android user
+      // agent also says "Linux", and iPadOS 13+ says "Macintosh" (told apart by
+      // the touch points, same test as _isIOS() in pokerth.js).
+      if (/Android/i.test(ua)) return P.ANDROID;
+      if (/iP(hone|ad|od)/.test(ua) ||
+          (/Macintosh/.test(ua) && (navigator.maxTouchPoints || 0) > 1)) return P.IOS;
+      if (/Windows/i.test(ua)) return P.WINDOWS;
+      if (/Mac OS X|Macintosh/i.test(ua)) return P.MAC;
+      if (/CrOS|Linux|X11/i.test(ua)) return P.LINUX;
+      return P.UNKNOWN;
+    } catch (e) { return 0; }
+  }
+
   // Construit un InitMessage (guest, unauth ou authenticated user)
   // buildId = (CLIENT_TYPE_QT_WIDGET<<24)|(MAJOR<<16)|(MINOR<<8)|REV.
   // POLITIQUE SERVEUR (game_defs.h, verifiee sur le tag v2.1.2 du 2026-07-08) :
@@ -272,6 +317,12 @@ const MSG = (() => {
       var _up = (typeof window !== 'undefined') ? window._pthMyUpload : null;
       if (_up && _up.hashBytes && _up.hashBytes.length === 16) fields.push([8, 2, _up.hashBytes]);
     } catch(e) {}
+    // Operating system of this browser (InitMessage field 9, see clientPlatform
+    // above). Omitted when it cannot be determined: the field defaults to
+    // platformUnknown on the server, so an empty value carries no information
+    // and would only grow the packet.
+    const _plat = clientPlatform();
+    if (_plat) fields.push([9, 0, _plat]); // clientPlatform
     const init = Proto.encode(fields);
     return Proto.encode([[1,0,T.Init],[3,2,init]]);
   }
