@@ -1,4 +1,7 @@
 2026-09-07 version 2.1.8-web (current series):
+- improvement: at the table, a player's star rating now sits at the right end of their name line instead of in front of the name, exactly where the desktop and mobile clients put it - the name simply shortens against it, and the colour dot stays in front
+
+2026-09-07 version 2.1.8-web:
 - new: your player notes and star ratings now travel in the config.xml export/import, in the same format the desktop and mobile PokerTH clients use - a note written there shows up here, and one written here shows up there
 - improvement: importing a config.xml never erases your colour labels; the official format has no field for them, so they simply stay in this client
 

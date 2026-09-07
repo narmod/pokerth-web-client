@@ -858,11 +858,27 @@ function renderSeatsImmediate() {
     // et '' quand le joueur n'est pas étiqueté : aucun surcoût dans le cas
     // courant. Module optionnel, d'où le test de fonction. Le title de la
     // pastille porte l'aperçu (libellé + extrait de note) au survol.
-    var _nvTag = '';
+    var _nvTag = '', _nvStars = '';
     if (!isMe) {
-      try { if (typeof window._nvSeatTag === 'function') _nvTag = window._nvSeatTag(getPlayerName(pid)); } catch (e) {}
+      try {
+        var _nvNm = getPlayerName(pid);
+        if (typeof window._nvSeatDot === 'function') _nvTag = window._nvSeatDot(_nvNm);
+        if (typeof window._nvSeatStars === 'function') _nvStars = window._nvSeatStars(_nvNm);
+      } catch (e) {}
     }
-    h += '<div class="seat-name">' + _nvTag + esc(isMe ? S.myName : getPlayerName(pid)) + '</div>';
+    // Badge d'étoiles à l'AUTRE bout de la ligne du pseudo (upstream d72d109) :
+    // la ligne du bas porte déjà le drapeau et le tapis, qui remplissent la
+    // largeur intérieure de la boîte — le badge n'y tient pas. Ici il ne
+    // concurrence que le pseudo, qui s'élide de toute façon. La ligne ne passe
+    // en flex QUE s'il y a un badge (.has-nv) : sans note en étoiles, le rendu
+    // du pseudo ne change pas d'un pixel.
+    if (_nvStars) {
+      h += '<div class="seat-name has-nv">' + _nvTag
+         + '<span class="seat-name-txt">' + esc(isMe ? S.myName : getPlayerName(pid)) + '</span>'
+         + _nvStars + '</div>';
+    } else {
+      h += '<div class="seat-name">' + _nvTag + esc(isMe ? S.myName : getPlayerName(pid)) + '</div>';
+    }
     if (_seatTr.flagInfo && !_seatNarrow) {
       // infoBar QML (wideLayout) : drapeau 22×15 en bas-gauche + stack or à droite.
       h += '<div class="seat-info-row2">' + flagBadge + '<div class="seat-money">' + moneyStr + '</div></div>';

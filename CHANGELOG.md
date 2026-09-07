@@ -144,6 +144,18 @@ highlights below.
   Green Casino and the default table, so their QML renders apply as well.
 
 ### Changed
+- **Star badge anchored to the right of the seat name** (`web.39`, upstream
+  `d72d109`). Kai's follow-up moved the QML badge out of the bottom row — flag
+  (22+6) and stack (~55 px at six digits) already fill the 106 px of inner box
+  width — and anchored it at the right end of the name row, the name eliding
+  against it. The same constraint holds here (fixed 121 px opponent box), so
+  the `★N` badge moves the same way: `seatDotHtml()` before the name,
+  `seatStarsHtml()` at the far end, with the glyph sizes he settled on (13 px
+  wide, 10 px compact). The name row only becomes a flex row when a badge is
+  present (`.has-nv`), so an unrated player's name renders exactly as before,
+  and outside the QML seat structure the name+badge pair stays centred rather
+  than shifting seats that never asked for it. The players list keeps both
+  pieces side by side through `seatTagHtml()` — it has no width problem.
 - **Player card window locked to a fixed width** (`web.37`). The card is a
   centred column — avatar, name, full-width buttons, note block — and nothing
   in it uses horizontal room, so a widened window only produced two empty

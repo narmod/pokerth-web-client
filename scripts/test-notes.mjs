@@ -284,6 +284,20 @@ const mk = (opts = {}) => createNotes({ backend: mem(), ...opts });
   UI.notes.set('Noted', { stars: 0, tag: '' });
   ok(UI.seatTagHtml('Noted') === '', 'ni couleur ni étoile → aucun HTML au siège');
 
+  // Au siège les deux morceaux sont rendus SÉPARÉMENT : la pastille précède le
+  // pseudo, le badge se range à l'autre bout de la ligne (upstream d72d109).
+  UI.notes.set('Split', { tag: 'purple', stars: 2 });
+  ok(UI.seatDotHtml('Split').includes('seat-note-tag')
+     && !UI.seatDotHtml('Split').includes('seat-note-stars'), 'seatDotHtml ne rend que la pastille');
+  ok(UI.seatStarsHtml('Split').includes('seat-note-stars')
+     && !UI.seatStarsHtml('Split').includes('seat-note-tag'), 'seatStarsHtml ne rend que le badge');
+  ok(UI.seatTagHtml('Split') === UI.seatDotHtml('Split') + UI.seatStarsHtml('Split'),
+     'seatTagHtml (liste des joueurs) = les deux d’affilée');
+  ok(UI.seatDotHtml('Split').includes('★2/' + MAX_STARS)
+     && UI.seatStarsHtml('Split').includes('★2/' + MAX_STARS),
+     'les deux portent le même aperçu');
+  UI.notes.set('Split', { tag: '', stars: 0 });
+
   const block = UI.notesBlockHtml('Tagged');
   ok(block.includes('nv-block') && block.includes('data-nv-name="Tagged"'), 'bloc de carte rendu avec son pseudo');
   ok((block.match(/data-nv-tag=/g) || []).length === TAGS.length + 1, 'une pastille par étiquette + le bouton « aucune »');
@@ -307,6 +321,7 @@ const mk = (opts = {}) => createNotes({ backend: mem(), ...opts });
   ok(!eb.includes('<img src=x>'), 'pseudo échappé dans le bloc');
 
   ok(typeof window._nvBlockHtml === 'function' && typeof window._nvSeatTag === 'function'
+     && typeof window._nvSeatDot === 'function' && typeof window._nvSeatStars === 'function'
      && typeof window._nvWire === 'function' && typeof window._nvFlush === 'function', 'ponts window en place');
 }
 

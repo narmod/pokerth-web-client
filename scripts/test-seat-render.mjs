@@ -164,5 +164,22 @@ ok(!ghostSel || hasNorm,
 ok(/_officialSeatPix\(_geomSeatN,/.test(SRC) && /S\._peakSeatCount/.test(SRC),
    'le placement officiel utilise le pic d\'effectif (_geomSeatN)');
 
+// Badge de note en étoiles : rendu à l'AUTRE bout de la ligne du pseudo
+// (upstream d72d109), et la ligne ne passe en flex que lorsqu'il y a un badge
+// — sans note en étoiles, le pseudo doit garder son rendu d'avant.
+{
+  const nameRow = SRC.slice(SRC.indexOf("_nvStars = ''"), SRC.indexOf("ferme .seat-info"));
+  ok(/_nvSeatDot/.test(nameRow) && /_nvSeatStars/.test(nameRow),
+     'le siège demande la pastille et le badge séparément');
+  ok(/class="seat-name has-nv"/.test(nameRow) && /seat-name-txt/.test(nameRow),
+     'avec badge : ligne .has-nv et pseudo dans son propre span (élision)');
+  ok(/class="seat-name">' \+ _nvTag \+ esc\(/.test(nameRow),
+     'sans badge : la ligne du pseudo est inchangée');
+  const CSS = readFileSync(new URL('../public/pokerth.css', import.meta.url), 'utf8');
+  ok(/\.seat-name\.has-nv \{ display: flex/.test(CSS)
+     && /seat-struct="qml"\] \.seat-name\.has-nv \.seat-note-stars \{ margin-left: auto/.test(CSS),
+     'CSS : badge collé au bord droit dans la structure QML');
+}
+
 console.log(fail ? `\n${fail}/${n} ÉCHECS` : `\n${n}/${n} OK`);
 process.exit(fail ? 1 : 0);

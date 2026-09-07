@@ -48,39 +48,57 @@ export function labelText(tag) {
   return notes.labelOf(tg.id) || T(tg.key, tg.fb);
 }
 
-// ── Pastille (siège ET liste des joueurs) ─────────────────────────────────
-// Appelée par game/seat-render.mjs pour chaque siège et par le rendu de la
-// liste des joueurs. Renvoie '' quand le joueur n'a pas d'étiquette : aucun
-// surcoût de DOM dans le cas courant. Le title porte l'aperçu (libellé +
+// ── Pastille et badge d'étoiles (siège ET liste des joueurs) ──────────────
+// Appelées par game/seat-render.mjs pour chaque siège et par le rendu de la
+// liste des joueurs. Renvoient '' quand le joueur n'a rien : aucun surcoût de
+// DOM dans le cas courant. Le title porte l'aperçu (libellé + étoiles +
 // extrait de note) — le survol répond sur bureau ; au doigt, le tap ouvre la
 // carte joueur qui montre la note entière.
-export function seatTagHtml(name) {
-  const e = notes.get(name);
+//
+// Deux morceaux SÉPARÉS parce qu'ils ne vont pas au même endroit au siège :
+// la pastille de couleur précède le pseudo, le badge d'étoiles se range à
+// l'autre bout de la ligne (upstream d72d109, « follow-up » : Kai a sorti le
+// badge de la ligne du bas — drapeau + tapis y remplissent déjà la largeur
+// intérieure de la boîte — pour l'ancrer à droite de la ligne du pseudo, qui
+// s'élide contre lui). La liste des joueurs, elle, n'a pas cette contrainte
+// de largeur et garde les deux côte à côte via seatTagHtml().
+function _tipOf(e) {
   const tag = tagById(e ? e.tag : '');
   const stars = e ? e.stars : 0;
-  if (!tag && !stars) return '';
-  // Aperçu commun à la pastille et aux étoiles : ce qui les distingue tient
-  // en un coup d'œil, le tooltip sert à lire la note.
   const head = [];
   if (tag) head.push(labelText(tag));
   if (stars) head.push('★' + stars + '/' + MAX_STARS);
   let tip = head.join(' · ');
   const n = e && e.note ? String(e.note) : '';
   if (n) tip += (tip ? ' — ' : '') + (n.length > 90 ? n.slice(0, 90) + '…' : n);
-  let h = '';
-  if (tag) {
-    h += '<span class="seat-note-tag" style="background:' + tag.hex + '"'
-       + ' title="' + esc(tip) + '" aria-label="' + esc(tip) + '"></span>';
-  }
-  // « ★N » plutôt que cinq étoiles : la boîte adverse est déjà à largeur
-  // fixe et le pseudo y est tronqué — même raisonnement que le badge QML
-  // (PlayerNoteBadge.qml : « fünf einzelne Sterne wären dort weder lesbar
-  // noch treffbar »).
-  if (stars) {
-    h += '<span class="seat-note-stars" title="' + esc(tip) + '"'
-       + ' aria-label="' + esc(tip) + '">\u2605' + stars + '</span>';
-  }
-  return h;
+  return tip;
+}
+
+export function seatDotHtml(name) {
+  const e = notes.get(name);
+  const tag = tagById(e ? e.tag : '');
+  if (!tag) return '';
+  const tip = esc(_tipOf(e));
+  return '<span class="seat-note-tag" style="background:' + tag.hex + '"'
+       + ' title="' + tip + '" aria-label="' + tip + '"></span>';
+}
+
+// « ★N » plutôt que cinq étoiles : la boîte adverse est à largeur fixe et le
+// pseudo y est déjà tronqué — même arbitrage que le badge QML
+// (PlayerNoteBadge.qml : « fünf einzelne Sterne wären dort weder lesbar noch
+// treffbar »).
+export function seatStarsHtml(name) {
+  const e = notes.get(name);
+  const stars = e ? e.stars : 0;
+  if (!stars) return '';
+  const tip = esc(_tipOf(e));
+  return '<span class="seat-note-stars" title="' + tip + '"'
+       + ' aria-label="' + tip + '">\u2605' + stars + '</span>';
+}
+
+// Les deux d'affilée — la forme qu'attend la liste des joueurs.
+export function seatTagHtml(name) {
+  return seatDotHtml(name) + seatStarsHtml(name);
 }
 
 // ── Bloc de la carte joueur ───────────────────────────────────────────────
@@ -271,6 +289,8 @@ if (typeof window !== 'undefined') {
   window._nvBlockHtml = notesBlockHtml;
   window._nvWire = wireBlock;
   window._nvFlush = flushOpen;
-  window._nvSeatTag = seatTagHtml;   // sert au siège ET à la liste des joueurs
+  window._nvSeatTag = seatTagHtml;   // liste des joueurs (pastille + étoiles)
+  window._nvSeatDot = seatDotHtml;   // siège : devant le pseudo
+  window._nvSeatStars = seatStarsHtml; // siège : à l'autre bout de la ligne
   window._nvStore = notes;
 }
