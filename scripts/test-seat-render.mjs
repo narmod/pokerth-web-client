@@ -172,13 +172,24 @@ ok(/_officialSeatPix\(_geomSeatN,/.test(SRC) && /S\._peakSeatCount/.test(SRC),
   ok(/_nvSeatDot/.test(nameRow) && /_nvSeatStars/.test(nameRow),
      'le siège demande la pastille et le badge séparément');
   ok(/class="seat-name has-nv"/.test(nameRow) && /seat-name-txt/.test(nameRow),
-     'avec badge : ligne .has-nv et pseudo dans son propre span (élision)');
-  ok(/class="seat-name">' \+ _nvTag \+ esc\(/.test(nameRow),
-     'sans badge : la ligne du pseudo est inchangée');
+     'avec badges : ligne .has-nv et pseudo dans son propre span (élision)');
+  // Les deux marques partent ENSEMBLE, dans le même groupe, APRÈS le pseudo.
+  ok(/<span class="seat-nv">' \+ _nvTag \+ _nvStars/.test(nameRow),
+     'pastille et étoiles réunies dans un seul groupe après le pseudo');
+  ok(/class="seat-name">' \+ esc\(/.test(nameRow),
+     'sans marque : la ligne du pseudo est inchangée (aucun span en plus)');
   const CSS = readFileSync(new URL('../public/pokerth.css', import.meta.url), 'utf8');
   ok(/\.seat-name\.has-nv \{ display: flex/.test(CSS)
-     && /seat-struct="qml"\] \.seat-name\.has-nv \.seat-note-stars \{ margin-left: auto/.test(CSS),
-     'CSS : badge collé au bord droit dans la structure QML');
+     && /seat-struct="qml"\] \.seat-name\.has-nv \.seat-nv \{ margin-left: auto/.test(CSS),
+     'CSS : le groupe est collé au bord droit dans la structure QML');
+  // Liste des joueurs : mêmes marques, du même côté, et hors du lien pour que
+  // l'ellipse du pseudo ne les mange pas.
+  const JS = readFileSync(new URL('../public/pokerth.js', import.meta.url), 'utf8');
+  const plRow = JS.slice(JS.indexOf('var nameHtml ='), JS.indexOf('var nameHtml =') + 800);
+  ok(/esc\(r\.name\) \+ '<\/span>'\s*\+ \(_nvTag \? '<span class="seat-nv">'/.test(plRow),
+     'liste : les badges suivent le pseudo, hors du lien');
+  ok(/\.players-list \.pl-name\.has-nv \{ display: flex/.test(CSS),
+     'CSS : la ligne de liste ne passe en flex que si elle porte des badges');
 }
 
 console.log(fail ? `\n${fail}/${n} ÉCHECS` : `\n${n}/${n} OK`);

@@ -1,4 +1,7 @@
 2026-09-07 version 2.1.8-web (current series):
+- improvement: the colour dot now sits next to the star rating, after the player's name instead of in front of it - both marks about the same player are read together, at the table and in the lobby players list
+
+2026-09-07 version 2.1.8-web:
 - improvement: at the table, a player's star rating now sits at the right end of their name line instead of in front of the name, exactly where the desktop and mobile clients put it - the name simply shortens against it, and the colour dot stays in front
 
 2026-09-07 version 2.1.8-web:

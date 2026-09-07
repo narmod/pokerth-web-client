@@ -10980,8 +10980,11 @@ function renderPlayersList() {
     var _actTtl = r.act
       ? _tt('plPlayingInFull', '%1 is playing in "%2".').replace('%1', r.name).replace('%2', r.act)
       : _tt('plNotPlayingFull', '%1 is not playing at the moment.').replace('%1', r.name);
-    // Pastille d'étiquette (modules/notes) devant le pseudo — même pont que le
-    // siège (window._nvSeatTag), jamais sur ma propre ligne, '' sans étiquette.
+    // Pastille d'étiquette + note en étoiles (modules/notes) APRÈS le pseudo —
+    // même côté qu'au siège (demande narmod 07/09), jamais sur ma propre
+    // ligne, '' quand le joueur n'est ni étiqueté ni noté. Hors du lien : le
+    // pseudo garde l'ellipse pour lui seul, les badges restent visibles même
+    // derrière un nom trop long.
     var _nvTag = '';
     if (!r.isMe) {
       try { if (typeof window._nvSeatTag === 'function') _nvTag = window._nvSeatTag(r.name); } catch (e) {}
@@ -10990,7 +10993,8 @@ function renderPlayersList() {
       + ' title="' + esc(_actTtl) + '"'
       + ' onclick="window.openPlayerInfoPopup(' + _ppArg + ')"'
       + ' onkeydown="if(event.key===\'Enter\')window.openPlayerInfoPopup(' + _ppArg + ')">'
-      + _nvTag + esc(r.name) + '</span>';
+      + esc(r.name) + '</span>'
+      + (_nvTag ? '<span class="seat-nv">' + _nvTag + '</span>' : '');
     // Statut « en partie » : une seule manette dans sa colonne (allumée si le
     // joueur est dans une partie, éteinte sinon). Plus de nom de partie sous le pseudo.
     var _status = '<span class="pl-status' + (r.act ? ' on' : '') + '" title="' + (r.act ? esc(r.act) : _tt('plNotPlaying','Not playing')) + '"' + (r.act ? '' : ' data-i18n-title="plNotPlaying"') + '>' + _PL_PAD_SVG + '</span>';
@@ -11011,7 +11015,7 @@ function renderPlayersList() {
     var _plCell = function (k) {
       switch (k) {
         case 'av':     return avChip;
-        case 'name':   return '<span class="pl-name">' + nameHtml + '</span>';
+        case 'name':   return '<span class="pl-name' + (_nvTag ? ' has-nv' : '') + '">' + nameHtml + '</span>';
         case 'status': return _status;
         case 'flag':   return '<span class="pl-flag">' + flag + (cc ? '<span class="pl-cc">' + cc + '</span>' : '') + '</span>';
         case 'star':   return '<span class="pl-star">' + (r.isMe ? '★' : '') + '</span>';
@@ -11391,7 +11395,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.8-web.39'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.8-web.40'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

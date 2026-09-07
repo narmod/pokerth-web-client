@@ -144,6 +144,19 @@ highlights below.
   Green Casino and the default table, so their QML renders apply as well.
 
 ### Changed
+- **Colour dot joins the star badge after the name** (`web.40`). The dot used
+  to lead the name while the rating trailed it, which split the two marks
+  about one player across the row. Both now live in a single `.seat-nv` group
+  placed after the name: one block to push right, and the gap between them
+  does not depend on whether the other is there. At the seat the group is
+  anchored to the right edge in the QML seat structure and the name elides
+  against it (upstream `d72d109`), while the older structure keeps the
+  name+badges pair centred. In the lobby players list the group sits right
+  after the name and OUTSIDE the name link, so the ellipsis eats the nickname
+  only and never the badges; it stays next to the name rather than being
+  pushed to the column edge, where it would drift away from what it
+  qualifies. Both rows only become flex rows when there is something to show
+  (`.has-nv`), so an unmarked player renders exactly as before.
 - **Star badge anchored to the right of the seat name** (`web.39`, upstream
   `d72d109`). Kai's follow-up moved the QML badge out of the bottom row — flag
   (22+6) and stack (~55 px at six digits) already fill the 106 px of inner box

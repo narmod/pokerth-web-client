@@ -6103,6 +6103,18 @@ body.spectator-nosend #g-reaction-panel { display: none !important; }
 .players-list .pl-row:last-child { border-bottom: none; }
 .players-list .pl-row:hover { background: rgba(var(--gold-rgb), 0.08); }
 .players-list .pl-name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+/* Liste des joueurs : mêmes marques, du même côté qu'au siège — après le
+   pseudo, et HORS du lien, pour que l'ellipse ne mange que le nom et jamais
+   les badges. Collées au pseudo plutôt que repoussées au bord de la colonne :
+   à cette largeur elles s'éloigneraient du nom qu'elles qualifient. */
+.players-list .pl-name.has-nv { display: flex; align-items: center; }
+.players-list .pl-name.has-nv .pl-name-link {
+  min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.players-list .pl-name.has-nv .seat-nv { flex: 0 0 auto; margin-left: 5px; }
+.players-list .pl-name.has-nv .seat-note-tag { margin-right: 0; }
+.players-list .pl-name.has-nv .seat-note-tag + .seat-note-stars { margin-left: 3px; }
+.players-list .pl-name.has-nv .seat-note-stars { margin-right: 0; }
 .players-list .pl-name-link { color: inherit; text-decoration: none; cursor: pointer; }
 .players-list .pl-name-link:hover, .players-list .pl-name-link:active { color: var(--gold-hi); }
 .players-list .pl-flag { flex: none; display: inline-flex; align-items: center; justify-content: flex-start; gap: var(--sp-1); font-size: var(--fs-md); line-height: 1; }
@@ -11207,21 +11219,30 @@ body.adv-no-avcreate #avp-tab-create { display: none !important; }
   font-size: var(--fs-2xs); line-height: 1;
   color: var(--gold); white-space: nowrap;
 }
-/* Au SIÈGE, le badge se range à l'autre bout de la ligne du pseudo, qui
-   s'élide contre lui (upstream d72d109). La ligne ne devient un flex que
-   lorsqu'un badge est là (.has-nv posé par seat-render) : sans note en
-   étoiles, le pseudo garde exactement son rendu d'avant. */
+/* Les DEUX marques — pastille de couleur et badge d'étoiles — se rangent à
+   l'autre bout de la ligne du pseudo, qui s'élide contre elles (upstream
+   d72d109 pour le badge, demande narmod 07/09 pour les réunir). Elles vivent
+   dans un .seat-nv commun : un seul bloc à pousser à droite, et l'écart entre
+   les deux ne dépend pas de la présence de l'autre. La ligne ne devient un
+   flex que lorsqu'il y a quelque chose à montrer (.has-nv posé par
+   seat-render) : sans note ni étiquette, le pseudo garde son rendu d'avant. */
 .seat-name.has-nv { display: flex; align-items: center; }
 .seat-name.has-nv .seat-name-txt {
   min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
 }
-.seat-name.has-nv .seat-note-stars { flex: 0 0 auto; margin-right: 0; margin-left: 4px; }
-/* Structure QML : le pseudo est déjà cadré à gauche, le badge va se coller au
+.seat-nv { display: inline-flex; align-items: center; }
+.seat-name.has-nv .seat-nv { flex: 0 0 auto; margin-left: 4px; }
+/* Dans le groupe, la pastille précède les étoiles et n'a plus à s'écarter
+   d'un pseudo qui n'est plus derrière elle. */
+.seat-name.has-nv .seat-note-tag,
+.seat-name.has-nv .seat-note-stars { margin-right: 0; }
+.seat-name.has-nv .seat-note-tag + .seat-note-stars { margin-left: 3px; }
+/* Structure QML : le pseudo est déjà cadré à gauche, le groupe va se coller au
    bord droit de la boîte — l'ancrage exact de GamePlayerBox.qml. Ailleurs
-   (ancienne structure, pseudo centré) le couple pseudo + badge reste centré,
+   (ancienne structure, pseudo centré) le couple pseudo + badges reste centré,
    pour ne pas décaler des sièges qui ne le demandaient pas. */
 html[data-seat-struct="qml"] .seat-name.has-nv { justify-content: flex-start; }
-html[data-seat-struct="qml"] .seat-name.has-nv .seat-note-stars { margin-left: auto; }
+html[data-seat-struct="qml"] .seat-name.has-nv .seat-nv { margin-left: auto; }
 html:not([data-seat-struct="qml"]) .seat-name.has-nv { justify-content: center; }
 /* Tailles de glyphe de d72d109 : 13 px dans la boîte large, 10 en compact. */
 html[data-seat-struct="qml"] .seat-name .seat-note-stars { font-size: 13px; }
