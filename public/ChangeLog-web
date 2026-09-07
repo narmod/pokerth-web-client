@@ -1,4 +1,8 @@
 2026-09-07 version 2.1.8-web (current series):
+- new: right-click a player at the table - or press and hold on a touch screen - to open a menu with the note, the player profile, ignore and report avatar, the same gesture the desktop and mobile clients offer; "My note" opens the player card straight on the note, with the cursor in the field
+- improvement: a plain tap on a seat still opens the full player card, exactly as before - the menu is a shortcut, not a detour
+
+2026-09-07 version 2.1.8-web:
 - improvement: your own name is now bold in the players list, so you find your line at a glance
 
 2026-09-07 version 2.1.8-web:

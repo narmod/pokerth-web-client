@@ -17,6 +17,24 @@ changes for this line are on the
 highlights below.
 
 ### Added
+- **Context menu on a seat, right-click or long press** (`web.43`, parity with
+  `GamePlayerBox.qml`). New module `modules/ui/seat-menu.mjs`. Right-click on
+  desktop, press-and-hold on touch (500 ms, cancelled past 10 px of travel so a
+  felt drag is never stolen) opens a menu carrying the note, the player
+  profile, ignore/unignore, report avatar and — for pokerth.net admins — the
+  kickban, each entry reusing **exactly** the guard of its button in the player
+  card: a menu offering what the card would refuse would be lying. With nothing
+  to offer, nothing opens, like the QML `hasContextActions`.
+  This adds to the card rather than replacing it: a plain tap still opens it in
+  full. "My note" opens the card already scrolled to the note block with the
+  cursor in the field — one step fewer than the separate QML dialog. Long press
+  is touch-only, as upstream `b77ad47` chose, so a held left mouse button still
+  does nothing, the browser's own context menu is suppressed over a seat, and
+  the click that follows a long press is swallowed so the card does not open
+  behind the menu. Nothing fires during seat edit mode, where a drag moves the
+  box. No new strings: the five entries reuse keys already translated in the 45
+  languages (`nvTitle`, `ppOpen`, `piIgnore`/`piUnignore`, `piReportAvatar`,
+  `piKickban`). New test: `scripts/test-seat-menu.mjs` (20 checks, gates first).
 - **Player notes exchanged with the official clients** (`web.38`). The
   config.xml export now writes the config list `PlayerTooltips` —
   `Name(!#$%)Note(!#$%)Stars(!#$%)`, the format the Qt-Widgets client has

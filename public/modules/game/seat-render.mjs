@@ -22,6 +22,7 @@ import { autoScaleTable } from './seats.mjs';
 import { _officialSeatPix, _applyQmlBgCenter } from './layout.mjs';
 import { _timerRectSvg } from './turn-timer.mjs';
 import { _ccToFlag, _pthAvatarFor, openPlayerInfoPopup } from '../ui/player-popup.mjs';
+import { openSeatMenu, closeSeatMenu, initSeatMenu } from '../ui/seat-menu.mjs';
 import { _ownCardsHidden } from '../ui/table-cards.mjs';
 
 function getPlayerName(pid) { return S.players[pid] || (pid === S.myId ? S.myName : '#'+pid); }
@@ -117,16 +118,59 @@ function renderSeatsImmediate() {
   // rendu. Les sièges deviennent cliquables via CSS (.seat { pointer-events }).
   if (el && !el._seatClickBound) {
     el._seatClickBound = true;
-    el.addEventListener('click', function(ev) {
-      if (window._seatEditMode) return;   // pas de popup pendant l'edition (clic = drag)
+    initSeatMenu();
+    // Siège visé par l'événement, ou null (tapis vide, siège fantôme, édition).
+    function _seatPidAt(ev) {
+      if (window._seatEditMode) return null;
       var seat = (ev.target && ev.target.closest) ? ev.target.closest('.seat[data-pid]') : null;
-      if (!seat || seat.classList.contains('seat-ghost')) return; // siège vide / joueur parti
-      var sp = parseInt(seat.getAttribute('data-pid'), 10);
+      if (!seat || seat.classList.contains('seat-ghost')) return null;
+      var v = parseInt(seat.getAttribute('data-pid'), 10);
+      return isNaN(v) ? null : v;
+    }
+    // Clic droit → menu contextuel, comme la boîte QML (GamePlayerBox.qml).
+    // preventDefault sur contextmenu : sans lui le menu natif du navigateur se
+    // superpose au nôtre. Pas de clic gauche maintenu ici — Kai s'en garde
+    // aussi, un bouton gauche tenu à la souris ne doit rien déclencher.
+    el.addEventListener('contextmenu', function(ev) {
+      var pid = _seatPidAt(ev);
+      if (pid === null) return;
+      ev.preventDefault();
+      openSeatMenu(pid, ev.clientX, ev.clientY);
+    });
+    // Tactile : le doigt n'a pas de bouton droit, l'appui long tient ce rôle
+    // (upstream b77ad47 a fait le même ajout côté QML, lui aussi restreint au
+    // TouchScreen). 500 ms, annulé au moindre glissé de plus de 10 px pour ne
+    // pas voler un défilement du tapis, et le clic qui suit est neutralisé —
+    // sinon la carte s'ouvrirait derrière le menu qu'on vient d'afficher.
+    var _lpTimer = null, _lpX = 0, _lpY = 0, _lpFired = false;
+    function _lpCancel() { if (_lpTimer) { clearTimeout(_lpTimer); _lpTimer = null; } }
+    el.addEventListener('pointerdown', function(ev) {
+      if (ev.pointerType !== 'touch') return;
+      var pid = _seatPidAt(ev);
+      if (pid === null) return;
+      _lpX = ev.clientX; _lpY = ev.clientY; _lpFired = false;
+      _lpCancel();
+      _lpTimer = setTimeout(function() {
+        _lpTimer = null;
+        _lpFired = openSeatMenu(pid, _lpX, _lpY);
+      }, 500);
+    }, { passive: true });
+    el.addEventListener('pointermove', function(ev) {
+      if (!_lpTimer) return;
+      if (Math.abs(ev.clientX - _lpX) > 10 || Math.abs(ev.clientY - _lpY) > 10) _lpCancel();
+    }, { passive: true });
+    el.addEventListener('pointerup', _lpCancel, { passive: true });
+    el.addEventListener('pointercancel', function() { _lpCancel(); _lpFired = false; }, { passive: true });
+    el.addEventListener('click', function(ev) {
+      if (_lpFired) { _lpFired = false; ev.preventDefault(); ev.stopPropagation(); return; }
+      closeSeatMenu();
+      var sp = _seatPidAt(ev);
+      if (sp === null) return;
       // PAS d'autoStats depuis la table (revirement narmod 26/07) : les coupes
       // de saison ne se chargent plus automatiquement à l'ouverture — bouton 🏆
       // à la demande. Les stats de comportement (VPIP…) restent chargées par le
       // popup lui-même. Le bouton 📊 de la liste lobby garde l'auto-chargement.
-      if (!isNaN(sp)) openPlayerInfoPopup(sp);
+      openPlayerInfoPopup(sp);
     });
   }
   if (!S.seats.length) { el.innerHTML = ''; window._seatDomPrev = null; return; }

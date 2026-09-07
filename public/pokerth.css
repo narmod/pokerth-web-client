@@ -2936,6 +2936,41 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
   gap: clamp(4px, 1vw, 7px);
   box-shadow: 0 12px 32px rgba(0,0,0,0.7);
 }
+/* Menu contextuel d'un siège (clic droit / appui long) — ui/seat-menu.mjs.
+   Même vocabulaire visuel que les menus ••• de l'en-tête (fond de modale,
+   bordure dorée, boutons .btn-sm pleine largeur) : c'est un menu de plus, pas
+   un composant de plus. position: fixed parce qu'il s'ancre au POINTEUR, pas à
+   un bouton ; z au-dessus des cartes joueur (1200) puisqu'il peut s'ouvrir
+   alors qu'une carte est déjà là. */
+#seat-ctx-menu {
+  display: none;
+  position: fixed;
+  z-index: 1250;
+  background: var(--modal-bg);
+  border: 1px solid var(--border-hi);
+  border-radius: var(--r-bar);
+  padding: 6px 5px;
+  width: clamp(200px, 52vw, 264px);
+  box-sizing: border-box;
+  flex-direction: column;
+  gap: 4px;
+  box-shadow: 0 12px 32px rgba(0,0,0,0.7);
+}
+#seat-ctx-menu.open { display: flex; }
+#seat-ctx-menu .btn-sm {
+  width: 100%; box-sizing: border-box; text-align: left;
+  display: flex; align-items: center;
+}
+#seat-ctx-menu .ctx-danger { color: var(--danger, #e05050); border-color: var(--danger, #e05050); }
+/* En-tête : le pseudo visé. Sans lui, un menu ouvert au pointeur ne dit pas
+   sur QUI il porte — la boîte QML, elle, reste visible sous son menu. */
+#seat-ctx-menu .ctx-hd {
+  padding: 3px 8px 5px;
+  font-size: var(--fs-2xs); font-weight: 700;
+  color: var(--gold-dim, var(--text));
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+#seat-ctx-menu .menu-sep { height: 1px; margin: 3px 4px; background: var(--border-hi); }
 #g-overflow-menu.open,
 #l-overflow-menu.open,
 #connect-overflow-menu.open,
