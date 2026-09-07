@@ -144,6 +144,9 @@ highlights below.
   Green Casino and the default table, so their QML renders apply as well.
 
 ### Changed
+- **Own row in bold in the players list** (`web.42`). The row was already
+  tinted `--gold`, which is precisely the running text colour in the PokerTH
+  theme — a colour that says nothing there. The nickname is now bold as well.
 - **Star ratings moved into the lobby star column, and a `--star` colour**
   (`web.41`). In the players list the `★N` badge leaves the name and goes to
   the `★` column — the one that marks my own row. The two senses share it

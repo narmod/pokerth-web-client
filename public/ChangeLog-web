@@ -1,4 +1,7 @@
 2026-09-07 version 2.1.8-web (current series):
+- improvement: your own name is now bold in the players list, so you find your line at a glance
+
+2026-09-07 version 2.1.8-web:
 - improvement: in the lobby players list, your rating of a player now sits in the star column instead of after their name - the same column that marks your own row, so the two never collide; the colour dot stays next to the name
 - bugfix: stars are gold again in every theme - the PokerTH theme paints its accent white, which turned them white too; they now follow each theme's own gold
 

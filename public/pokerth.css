@@ -6137,6 +6137,10 @@ body.spectator-nosend #g-reaction-panel { display: none !important; }
 .players-list .pl-star .seat-note-stars { margin: 0; font-size: var(--fs-xs); }
 .players-list .pl-id   { flex: none; min-width: 4.2em; text-align: right; color: var(--gold-dim); font-size: var(--fs-xs); }
 .players-list .pl-row.pl-me { color: var(--gold); }
+/* Ma ligne : pseudo en gras. La couleur seule ne suffisait pas à la repérer
+   d'un coup d'œil dans une liste de quarante lignes — et dans le thème
+   pokerth, --gold est justement la couleur du texte courant. */
+.players-list .pl-row.pl-me .pl-name { font-weight: 700; }
 /* ── Avatar chip in the players-online list ──
    Same priority order as everywhere else (real PokerTH image >
    placeholder logo > emoji > 🤖 > initial letter). The chip-pth-img
