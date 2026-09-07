@@ -1,4 +1,8 @@
 2026-09-07 version 2.1.8-web (current series):
+- new: your player notes and star ratings now travel in the config.xml export/import, in the same format the desktop and mobile PokerTH clients use - a note written there shows up here, and one written here shows up there
+- improvement: importing a config.xml never erases your colour labels; the official format has no field for them, so they simply stay in this client
+
+2026-09-07 version 2.1.8-web:
 - improvement: the player card window now keeps one fixed width instead of being stretched sideways - the card is a centred column, so a wide window only added empty margins; the height still adjusts, and the season cups keep their own window
 
 2026-09-07 version 2.1.8-web:

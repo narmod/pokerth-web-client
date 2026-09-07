@@ -816,7 +816,65 @@ function _cfgBlindsKeys(p, net, out, lists) {
 }
 // Construit { scalars: {clé: valeur}, lists: {clé: {sub, values[]}} } depuis
 // l'état web courant — la table de vérité du mapping web → officiel.
-function _cfgCollectWebSettings() {
+// ── Notes de joueur ↔ clients officiels (liste config « PlayerTooltips ») ────
+// Format d'une ligne, partagé par le client Qt-Widgets (myavatarlabel.cpp) et
+// le client QML depuis upstream b77ad47 :
+//     Nom(!#$%)Note(!#$%)Étoiles(!#$%)
+// Trois champs, séparateur compris à la fin. Pas de couleur (le web en a une
+// en plus, cf. modules/notes) et pas de date : côté officiel le fichier est
+// local, il n'y a rien à réconcilier. C'est pourquoi cette liste sert
+// d'ÉCHANGE (export/import de config.xml) et non de stockage : la fusion
+// multi-appareils du web a besoin du t par entrée, que ce format ne porte pas.
+var PTH_TIP_SEP = '(!#$%)';
+// Lignes à écrire dans le config.xml exporté, une par joueur annoté.
+function _cfgTipLines() {
+  var out = [];
+  try {
+    var st = window._nvStore;
+    if (!st || typeof st.names !== 'function') return out;   // module notes absent
+    st.names().forEach(function (nm) {
+      var e = st.get(nm);
+      if (!e) return;
+      // Un pseudo qui contient le séparateur casserait la ligne à la relecture,
+      // ici comme chez l'officiel : on le laisse de côté plutôt que d'exporter
+      // une entrée qui reviendrait en morceaux.
+      if (String(nm).indexOf(PTH_TIP_SEP) >= 0) return;
+      // Le séparateur est retiré du texte (même geste que setPlayerNote côté
+      // QML) et les retours à la ligne deviennent des espaces : la valeur
+      // voyage dans un attribut XML, où un saut de ligne est normalisé en
+      // espace à la lecture — autant que les deux clients lisent la même chose.
+      var note = String(e.note || '').split(PTH_TIP_SEP).join(' ').replace(/[\r\n\t]+/g, ' ');
+      var stars = e.stars || 0;
+      // Une entrée qui n'a QUE la couleur web n'a rien à dire à l'officiel :
+      // la ligne serait vide et il la supprimerait de toute façon.
+      if (!note && !stars) return;
+      out.push(nm + PTH_TIP_SEP + note + PTH_TIP_SEP + stars + PTH_TIP_SEP);
+    });
+  } catch (e) {}
+  return out;
+}
+// Lecture : fusionne les lignes d'un config.xml IMPORTÉ dans les notes web.
+// Importer un fichier est un geste explicite, donc la note et les étoiles du
+// fichier gagnent ; la COULEUR locale n'est pas touchée (le format ne la porte
+// pas, l'écraser reviendrait à l'effacer). Retourne le nombre d'entrées lues.
+function _cfgApplyTipLines(list) {
+  var st = window._nvStore;
+  if (!list || !list.values || !list.values.length || !st || typeof st.set !== 'function') return 0;
+  var n = 0;
+  list.values.forEach(function (line) {
+    var f = String(line == null ? '' : line).split(PTH_TIP_SEP);
+    if (f.length < 3) return;                  // ligne d'un autre format : ignorée
+    var nm = String(f[0]).trim();
+    if (!nm) return;
+    var stars = parseInt(f[2], 10);
+    if (!isFinite(stars)) stars = 0;
+    // set() borne les étoiles et la longueur, et supprime l'entrée si tout est
+    // vide — y compris quand la couleur locale l'était déjà.
+    try { st.set(nm, { note: f[1], stars: stars }); n++; } catch (e) {}
+  });
+  return n;
+}
+function _cfgCollectWebSettings(withNotes) {
   var out = {}, lists = {};
   var B = function (advKey, def) { return _advGet(advKey, def) ? 1 : 0; };
   // Identité & connexion
@@ -867,6 +925,14 @@ function _cfgCollectWebSettings() {
   if (pn.allowSpectators != null) out.InternetGameAllowSpectators = pn.allowSpectators ? 1 : 0;
   if (pn.usePassword != null) out.UseInternetGamePassword = pn.usePassword ? 1 : 0;
   if (pn.usePassword && pn.password) out.InternetGamePassword = String(pn.password);
+  // Notes de joueur : SEULEMENT dans le fichier qu'on télécharge. Le config.xml
+  // poussé au compte n'en veut pas — les notes y voyagent déjà sous pth_notes,
+  // avec leurs dates et leurs couleurs, et 300 notes de 500 caractères
+  // gonfleraient la charge de synchro pour rien.
+  if (withNotes) {
+    var tips = _cfgTipLines();
+    if (tips.length) lists.PlayerTooltips = { sub: 'PlayerTooltips', values: tips };
+  }
   return { scalars: out, lists: lists };
 }
 // Parse un config.xml (DOMParser) → { scalars, lists, order[] } ; jette si invalide.
@@ -896,8 +962,8 @@ function _cfgParseXml(text) {
 }
 // Export : round-trip (XML importé précédemment) fusionné avec l'état web
 // courant (le web gagne sur les clés mappées), sérialisé au format officiel.
-function _cfgBuildXml() {
-  var web = _cfgCollectWebSettings();
+function _cfgBuildXml(withNotes) {
+  var web = _cfgCollectWebSettings(withNotes);
   var base = { scalars: {}, lists: {}, order: [] };
   var stored = _cfgLs(PTH_CFG_XML_KEY);
   if (stored) { try { base = _cfgParseXml(stored); } catch (e) { base = { scalars: {}, lists: {}, order: [] }; } }
@@ -924,7 +990,9 @@ function _cfgBuildXml() {
 }
 function exportPokerthConfig() {
   var xml;
-  try { xml = _cfgBuildXml(); } catch (e) {
+  // true : le fichier téléchargé emporte les notes de joueur, pour qu'un
+  // client officiel les retrouve (liste PlayerTooltips).
+  try { xml = _cfgBuildXml(true); } catch (e) {
     if (typeof showToast === 'function') showToast('Export failed: ' + e.message, { tone: 'error' });
     return;
   }
@@ -1162,6 +1230,11 @@ function _importPokerthConfigFile(f) {
       try { localStorage.setItem(PTH_CFG_XML_KEY, text.slice(0, 400000)); } catch (e) {}
       Object.keys(PTH_CFG_MACHINE_KEYS).forEach(function (k) { delete cfg.scalars[k]; });
       _cfgApplyImported(cfg);
+      // Notes de joueur : uniquement sur import de FICHIER, jamais sur la
+      // descente de synchro (_cfgSyncApplyDescent passe par _cfgApplyImported
+      // aussi). Un config.xml de bureau plus ancien, rejoué à chaque
+      // connexion, écraserait sinon des notes prises depuis sur le téléphone.
+      try { _cfgApplyTipLines(cfg.lists && cfg.lists.PlayerTooltips); } catch (e) {}
       var msg = t('cfgXmlImported') || 'config.xml imported';
       if (typeof showToast === 'function') showToast(msg);
       // Comme le « redémarre PokerTH » de l'officiel : proposer un rechargement
@@ -11318,7 +11391,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.8-web.37'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.8-web.38'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

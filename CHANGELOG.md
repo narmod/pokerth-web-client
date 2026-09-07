@@ -17,6 +17,26 @@ changes for this line are on the
 highlights below.
 
 ### Added
+- **Player notes exchanged with the official clients** (`web.38`). The
+  config.xml export now writes the config list `PlayerTooltips` —
+  `Name(!#$%)Note(!#$%)Stars(!#$%)`, the format the Qt-Widgets client has
+  always used (`myavatarlabel.cpp`) and the QML client adopted in upstream
+  `b77ad47` — and an imported file feeds its lines back into the notes.
+  The separator is stripped from the note text and newlines become spaces
+  (the value lives in an XML attribute, where a newline is normalised to a
+  space on read), a nickname containing the separator is left out rather than
+  exported broken, and a colour-only entry is not exported at all: the
+  official format has no colour field. On import the file wins on note and
+  rating — importing is a deliberate act — while the local colour label is
+  left untouched, and ratings out of range are clamped.
+  **Exchange only, not storage**: the format carries no timestamp, so making
+  it the store would have cost the per-entry `t` the multi-device merge runs
+  on. The notes therefore go into the *downloaded* config.xml only — the one
+  pushed to the account keeps out of it, since `pth_notes` already syncs with
+  its dates and colours — and are read back only on an explicit file import,
+  never on the sync descent, which replays the same file on every connection
+  and would flatten notes taken meanwhile elsewhere. Help updated in all 45
+  languages. New test: `scripts/test-player-tooltips.mjs`.
 - **Star rating on player notes** (`web.36`, parity with upstream
   `b77ad47`, "qml: player notes and star rating"). A 0–5 star bar sits above
   the note on the player card: clicking star *i* sets the rating to *i*,
