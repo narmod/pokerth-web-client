@@ -231,6 +231,17 @@ highlights below.
   already conform.
 
 ### Fixed
+- **Incoming avatar transfers bounded** (`web.35`, upstream `0f700c4`). The
+  receiving side used to append every `AvatarData` chunk with no reference to
+  the size the `AvatarHeader` had announced, so a server streaming without end
+  grew the tab's memory until it died. The announced size is now checked
+  against the range the server itself enforces on upload (32 B …
+  30720 B, `avatarmanager.h`), each chunk against that budget, and the total
+  against it again at `AvatarEnd` — a transfer stopping short no longer gets
+  assembled and cached under a hash it does not match. A rejected stream
+  releases its partial data, drops its requestId mapping so later chunks land
+  nowhere, and stays marked `error` so the same hash is not requested again
+  for the session. New deterministic test: `scripts/test-avatar-bounds.mjs`.
 - **PROXY protocol header no longer breaks LAN / dedicated servers**
   (`web.33`, proxy-only). `proxyProtocol` is a single global toggle, but it
   was applied to *every* upstream connection, including an address a player

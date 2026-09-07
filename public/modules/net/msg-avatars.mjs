@@ -18,6 +18,35 @@ import { renderGames } from '../ui/lobby.mjs';
 
 const T = MSG.T;
 
+// Bounds of a legitimate avatar transfer, from upstream avatarmanager.h
+// (MIN/MAX_AVATAR_FILE_SIZE). The server enforces them on upload and on the
+// files it fetches itself, so no avatar it relays can fall outside this range.
+// Upstream 0f700c4 ("Bound client avatar transfer size") stopped trusting the
+// peer on the incoming side as well: an AvatarData stream that never ends, or
+// one that announces 40 bytes and sends megabytes, used to grow the receiving
+// buffer without limit. Same reasoning here, where the buffer is the tab's
+// memory: the announced size is checked against these bounds, and the bytes
+// that follow are checked against the announced size.
+const MIN_AVATAR_FILE_SIZE = 32;
+const MAX_AVATAR_FILE_SIZE = 30720;
+
+// Abandons a transfer that broke its own announced size: the partial data is
+// dropped before anything else so an invalid stream keeps nothing, and the
+// requestId mapping goes with it, which makes every later AvatarData and the
+// closing AvatarEnd no-ops for this request. The entry itself stays in
+// _pthAvatarsByHash marked 'error', so the hash is not requested again for the
+// rest of the session -- a stream that misbehaved once would misbehave again.
+function _dropTransfer(entry, hashHex, reqId, why) {
+  if (entry) {
+    entry.chunks = [];
+    entry.received = 0;
+    entry.expectedSize = 0;
+    entry.status = 'error';
+  }
+  if (hashHex) delete S._pthAvatarReqIdToHash[reqId];
+  console.warn('[pth-avatar] transfer dropped (' + why + ') hash=' + hashHex);
+}
+
 function onAvatarRequest(sub) {
   const reqId = Proto.u32(sub, 1);
   const want = Proto.raw(sub, 2);
@@ -47,6 +76,14 @@ function onAvatarHeader(sub) {
   const hashHex = S._pthAvatarReqIdToHash[reqId];
   const entry = hashHex ? S._pthAvatarsByHash[hashHex] : null;
   if (entry) {
+    // The announced size is the budget for everything that follows, so it is
+    // checked before it is stored -- exactly the range the server itself
+    // applies when a client uploads (serverlobbythread.cpp HandleNetPacket-
+    // AvatarHeader). Outside it, the transfer never starts.
+    if (!(size >= MIN_AVATAR_FILE_SIZE && size <= MAX_AVATAR_FILE_SIZE)) {
+      _dropTransfer(entry, hashHex, reqId, 'announced size ' + size);
+      return;
+    }
     entry.expectedSize = size;
     // Server may correct the type vs what PlayerInfoReply said
     if (avType) entry.type = avType;
@@ -59,6 +96,16 @@ function onAvatarData(sub) {
   const hashHex = S._pthAvatarReqIdToHash[reqId];
   const entry = hashHex ? S._pthAvatarsByHash[hashHex] : null;
   if (entry && block) {
+    // Data before a valid header has no budget to spend against, and a chunk
+    // that would take the total past the announced size means the stream is
+    // not what it said it was. Either way the transfer ends here instead of
+    // growing the buffer (upstream clientthread.cpp StoreInTempAvatarFile).
+    if (!entry.expectedSize ||
+        entry.received + block.length > entry.expectedSize) {
+      _dropTransfer(entry, hashHex, reqId,
+        'chunk overruns ' + entry.received + '+' + block.length + ' > ' + entry.expectedSize);
+      return;
+    }
     entry.chunks.push(block);
     entry.received += block.length;
   }
@@ -69,6 +116,16 @@ function onAvatarEnd(sub) {
   const hashHex = S._pthAvatarReqIdToHash[reqId];
   const entry = hashHex ? S._pthAvatarsByHash[hashHex] : null;
   if (entry) {
+    // A transfer that ends short of what it announced is incomplete, not
+    // finished: assembling it would cache a truncated image under a hash that
+    // no longer describes it. Upstream drops it the same way
+    // (clientthread.cpp CompleteTempAvatarFile: the file never reaches the
+    // avatar manager when the size does not match).
+    if (entry.received !== entry.expectedSize) {
+      _dropTransfer(entry, hashHex, reqId,
+        'ended at ' + entry.received + ' of ' + entry.expectedSize);
+      return;
+    }
     entry.status = 'done';
     // ── Step 3: assemble chunks into a Data URL, cache it,
     // free the chunk buffers, then trigger a re-render so the

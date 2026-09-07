@@ -1,4 +1,7 @@
 2026-09-07 version 2.1.8-web (current series):
+- bugfix: a faulty or hostile server can no longer flood the browser with avatar data - a picture that is bigger than announced, or that arrives incomplete, is now dropped instead of being kept in memory or cached under the wrong name
+
+2026-09-07 version 2.1.8-web:
 - improvement: the client now tells the server which system your browser runs on (Windows, macOS, Linux, Android or iOS), the way the desktop and mobile clients already do - it lets the server operator see which platforms players actually use; nothing else about your browser is sent
 
 2026-09-07 version 2.1.8-web:
