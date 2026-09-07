@@ -653,6 +653,23 @@ function _serverlistUrl() { var u = _adminConfig && _adminConfig.serverlistUrl; 
 // The game server must be configured to expect it — otherwise the line is
 // garbage to it and every connection dies. Hence: explicit toggle, default OFF.
 function _proxyProtocolOn() { return !!(_adminConfig && _adminConfig.proxyProtocol); }
+// Scope of the PROXY protocol header: the ACTIVE game server ONLY.
+// The toggle above is global, but a LAN / dedicated address typed by a player
+// in the login form is an arbitrary third-party pokerth_server: it almost
+// never expects a v1 header, reads the line as the start of a PokerTH frame
+// and drops the connection right after its Announce ("Server closed (1 msg
+// received)"), with no Error frame to explain it. Restricting the header to
+// the host:port this proxy is configured to dial keeps the real-IP forwarding
+// working for the operator's own server while leaving every player-supplied
+// target untouched. Comparison is on the REQUESTED host (S.host), never on
+// the resolved address, which is almost always an IP.
+function _ppAppliesTo(host, port) {
+  if (!_proxyProtocolOn()) return false;
+  var srv = _activePokerthnetServer();
+  if (!srv) return false;
+  return String(host || '').trim().toLowerCase() === String(srv.host || '').trim().toLowerCase()
+      && parseInt(port, 10) === parseInt(srv.port, 10);
+}
 function _ppNorm(ip) { var s = String(ip || '').trim(); var m = s.match(/^::ffff:(\d+\.\d+\.\d+\.\d+)$/i); return m ? m[1] : s; }
 function _ppHeader(S, dstAddr) {
   var srcA = _ppNorm(S.ip), dstA = _ppNorm(dstAddr);
@@ -9295,7 +9312,7 @@ function _openUpstream(S) {
           : '(raw TCP)';
         console.log('[+] Connected ' + info + ' → ' + addr + ':' + S.port);
       };
-      if (_proxyProtocolOn()) {
+      if (_ppAppliesTo(S.host, S.port)) {
         // PROXY protocol : socket TCP nu d'abord, header en tout premier octet,
         // puis (si TLS) handshake par-dessus le même socket. L'écouteur du
         // header est enregistré AVANT le wrap TLS → il part avant le ClientHello.

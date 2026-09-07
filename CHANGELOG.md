@@ -218,6 +218,18 @@ highlights below.
   already conform.
 
 ### Fixed
+- **PROXY protocol header no longer breaks LAN / dedicated servers**
+  (`web.33`, proxy-only). `proxyProtocol` is a single global toggle, but it
+  was applied to *every* upstream connection, including an address a player
+  typed in the login form. A stock `pokerth_server` does not expect a v1
+  header: it read the line as the start of a PokerTH frame and closed the
+  connection right after its `Announce` — the client only saw a WebSocket
+  drop, with no `Error` frame naming the cause. The header is now emitted
+  solely toward the active game server (`_ppAppliesTo`, matched on the
+  requested `host:port`, not the resolved address), so real-IP forwarding
+  keeps working for the operator's own server while player-supplied targets
+  are left alone. Admin label updated to state the scope. **proxy.js
+  changed — restart required.**
 - **Hand-history writes survive Android closing IndexedDB** (`web.23`).
   Android can close the `pth_handlog` connection behind the app's back
   (storage pressure, frozen tab); the next hand-end write then threw

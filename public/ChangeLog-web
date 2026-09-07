@@ -1,4 +1,7 @@
-2026-09-06 version 2.1.8-web (current series):
+2026-09-07 version 2.1.8-web (current series):
+- bugfix: connecting to your own LAN or dedicated server works again when the operator forwards player IPs to the game server - that setting now applies only to the server the site is configured for, and no longer to an address you type in yourself
+
+2026-09-06 version 2.1.8-web:
 - improvement: the guest and account notices are now hand-written in all 45 languages of the app (using each language's own game-type names) instead of machine-translated - no more odd wording
 - bugfix: enabling a notice without touching the pre-filled text no longer freezes it - future improvements to the built-in messages reach everyone automatically
 
