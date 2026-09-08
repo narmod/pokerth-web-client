@@ -292,11 +292,10 @@ highlights below.
   picker grows from 30 to 90 over Emotions, Mood & gestures and Poker & luck,
   with `‹ N/3 ›` paging in the title bar, a horizontal swipe on touch, the 37
   faces leading the catalogue and the last page persisted
-  (`pth_react_page`). Several emojis re-picked for the poker context, plus
-  sp0ck's 🚬 and 🔫. Eight new choreographies (15 in total) and the `boom` /
-  `gunshot` particle presets. The wire protocol is unchanged
-  (`/emoji <char>`); `docs/REACTIONS_FX.md` documents every effect for the QML
-  port.
+  (`pth_react_page`). Several emojis re-picked for the poker context. Eight new
+  choreographies (15 in total) and the `boom` / `gunshot` particle presets. The
+  wire protocol is unchanged (`/emoji <char>`); `docs/REACTIONS_FX.md`
+  documents every effect for the QML port.
 - **"Playing in …" info in the players list** (`web.147`, parity with upstream
   `PlayerListItem`) — the full sentence on hover in the lobby panel, and in
   the player popup on touch. Two new i18n keys in all 45 languages.
@@ -505,7 +504,7 @@ highlights below.
 
 Opened with `v2.1.5-web.0` (2026-07-30), following the upstream **2.1.5**
 release. The whole 2.1.5 delta is covered; a few items were already in place
-because sp0ck shared them ahead of the release.
+ahead of it.
 
 ### Added
 - **Community suggest.** In an invite game created from a BBC Step or WEC
