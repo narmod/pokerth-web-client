@@ -229,14 +229,33 @@ ok(/if\(\$\('clkPick'\) && Array\.isArray\(d\.clockZones\)\) clkPickRender\(d\.c
 // -- The strip fills the width, and folds on a phone ------------------------
 ok(/\.ck\{flex:1 1 0/.test(admin),
   'every cell shares the row, so three clocks fill the bar as readily as twelve');
-ok(/\.clockbar\{[^}]*flex-wrap:wrap/.test(admin), 'and a row too long folds rather than overflowing');
+ok(/\.clockbar\{[^}]*flex-wrap:wrap/.test(admin), 'and on a wide screen a row too long folds rather than overflowing');
 ok(/\.ck \.ckn span\{overflow:hidden;text-overflow:ellipsis/.test(admin),
   'a long city name is clipped instead of pushing its neighbours out of line');
 ok(/\.ckdial\{display:block;flex:none;width:44px;height:44px\}/.test(admin), 'the dial has a size in the sheet');
 const phone = [...admin.matchAll(/@media\(max-width:600px\)\{([^]*?)\n  \}/g)].map(m => m[1]).join('\n');
 ok(phone !== '', 'there is a phone block');
 ok(/\.ckdial\{width:32px;height:32px\}/.test(phone), 'where the dial shrinks');
-ok(/\.ck\{min-width:52px/.test(phone), 'and the cells narrow so four still fit across a phone');
+ok(/\.ck\{flex:0 0 auto;min-width:56px/.test(phone), 'and the cells stop stretching, keeping a readable size');
+// Folded, a dozen clocks ate half a phone screen before the first line of
+// content. The row scrolls sideways instead, like the section bar under it.
+ok(/\.clockbar\{[^}]*flex-wrap:nowrap/.test(phone), 'the row stays on one line there');
+ok(/\.clockbar\{[^}]*overflow-x:auto/.test(phone), 'and scrolls sideways rather than folding');
+ok(/\.clockbar\{[^}]*scrollbar-width:none/.test(phone) && /\.clockbar::-webkit-scrollbar\{display:none\}/.test(phone),
+  'without a scrollbar eating a row already only 44px tall');
+
+// -- Arriving centred on the reference -------------------------------------
+const centre = body(admin, 'clkCentre');
+ok(centre !== '', 'the strip can bring the reference to the middle');
+ok(/var over=bar\.scrollWidth-bar\.clientWidth; if\(over<=1\) return;/.test(centre),
+  'and does nothing where the row does not scroll, which is every desktop');
+ok(/r\.offsetLeft-\(bar\.clientWidth-r\.offsetWidth\)\/2/.test(centre), 'the reference lands in the middle, not at the edge');
+ok(/Math\.max\(0,Math\.min\(over,/.test(centre), 'clamped, so a reference at either end does not scroll into nothing');
+ok(/if\(sig!==_clkSig\)\{ _clkSig=sig; setTimeout\(clkCentre,0\); \}/.test(render),
+  'it fires when the row itself changes — never on a tick, which would tear the bar out of a reader\'s fingers');
+ok(/_clkSig=''/.test(body(admin, 'clkStop')), 'and logging out forgets the row, so the next login centres again');
+ok(/addEventListener\('orientationchange'/.test(admin) && !/addEventListener\('resize',function\(\)\{ setTimeout\(clkCentre/.test(admin),
+  'a rotation recentres; a plain resize does not, since a phone fires one every time the URL bar slides');
 const wide = /@media\(min-width:760px\)\{([^]*?)\n  \}/.exec(admin);
 ok(wide && !/\.ck\{/.test(wide[1]),
   'and no clock rule is left in the desktop block, where the phone rules once sat doing nothing');

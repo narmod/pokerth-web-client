@@ -102,7 +102,10 @@ ok(/document\.querySelectorAll\('\.tabs'\)\.forEach/.test(body(admin, 'tabsFade'
 // ── Family bar stands out ─────────────────────────────────────────────────
 ok(/\.gtab\{flex:1 1 0/.test(admin),
   'the three families share the width, reading as the page navigation');
-ok(/\.gtabs\{[^}]*max-width:520px/.test(admin), 'and stop short of absurd on a wide screen');
+// The 520px cap made the family row a short island above a full-width section
+// row: two bars that belong together, aligned differently. It is gone; the row
+// takes the page width like everything under it.
+ok(!/\.gtabs\{[^}]*max-width/.test(admin), 'taking the page width, aligned with the sections below');
 ok(/\.subtabs \.tab\{background:transparent;border-color:transparent\}/.test(admin),
   'unopened sections are plain text, so the two rows do not look alike');
 ok(/\.subtabs \.tab\.on\{background:var\(--panel\);border-color:var\(--gold\)\}/.test(admin),
@@ -114,7 +117,7 @@ ok(/light"\] \.gtab:not\(\.on\)\{/.test(admin),
   'the light-theme fill spares the active family');
 ok(/light"\] \.gtab\.on\{color:#f4f6fb\}/.test(admin),
   'and the active family keeps a readable text colour there');
-ok(/\.gtabs\{max-width:none/.test(small), 'on a phone the families take the full width');
+ok(!/\.gtabs\{[^}]*max-width/.test(small), 'with nothing left on a phone to undo a cap that no longer exists');
 ok(/\.gtabs\{[^}]*overflow:visible/.test(small), 'three of them never need to scroll');
 
 // ── One section per panel ─────────────────────────────────────────────────

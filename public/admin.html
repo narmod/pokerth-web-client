@@ -82,7 +82,7 @@
   /* Les trois familles se partagent la largeur : elles se lisent alors comme
      la navigation de la page, et non comme quatre boutons de plus sous ceux de
      l'en-tete. Le plafond les empeche de devenir absurdes sur un grand ecran. */
-  .gtabs{margin:16px 0 10px;gap:8px;max-width:520px}
+  .gtabs{margin:16px 0 10px;gap:8px}
   .gtab{flex:1 1 0;min-width:0;white-space:nowrap;padding:11px 18px;border-radius:10px;border:1px solid var(--line);background:rgba(255,255,255,.04);color:var(--text);cursor:pointer;font-size:.95rem}
   .gtab.on{background:var(--gold);color:#10151c;border-color:var(--gold);font-weight:700}
   /* Les sections passent au second plan : seule celle qui est ouverte porte un
@@ -310,10 +310,13 @@
   }
   @media(max-width:600px){
     body{padding:12px}
-    /* Sur un telephone la rangee se replie sur plusieurs lignes plutot que de
-       se comprimer : quatre horloges lisibles valent mieux que douze illisibles. */
-    .clockbar{gap:0;padding:6px 3px}
-    .ck{min-width:52px;padding:4px 2px;gap:2px}
+    /* Sur un telephone la rangee ne se replie pas : elle defile lateralement,
+       comme la barre des sections juste en dessous, et arrive centree sur le
+       fuseau de reference. Repliee, une douzaine d'horloges mangeait la moitie
+       de l'ecran avant meme la premiere ligne de contenu. */
+    .clockbar{gap:0;padding:6px 3px;flex-wrap:nowrap;justify-content:flex-start;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+    .clockbar::-webkit-scrollbar{display:none}
+    .ck{flex:0 0 auto;min-width:56px;padding:4px 2px;gap:2px}
     .ckdial{width:32px;height:32px}
     .ck b{font-size:.74rem}
     .ck .ckn{font-size:.6rem;gap:3px}
@@ -327,7 +330,7 @@
     /* Trois familles tiennent toujours sur une ligne : pleine largeur, une
        cible tactile par tiers d'ecran, et rien qui defile. Seules les sections
        defilent, et le fondu de bord le dit. */
-    .gtabs{max-width:none;margin:12px 0 8px;overflow:visible}
+    .gtabs{margin:12px 0 8px;overflow:visible}
     .gtab{padding:11px 6px;font-size:.92rem}
     .subtabs .tab{padding:8px 12px}
     .tabs.sc-r{-webkit-mask-image:linear-gradient(90deg,#000 0,#000 calc(100% - 26px),transparent 100%);mask-image:linear-gradient(90deg,#000 0,#000 calc(100% - 26px),transparent 100%)}
@@ -1384,7 +1387,7 @@
   var CLOCK_DEFAULT=['UTC','Europe/London','Europe/Paris','America/New_York','America/Los_Angeles','America/Sao_Paulo','Asia/Tokyo','Australia/Sydney'];
   var CLOCK_REF_DEFAULT='UTC';
   var CLOCK_MAX=12;
-  var _clkSkew=0,_clkTz='',_clkZones=null,_clkRef=CLOCK_REF_DEFAULT,_clkTick=null,_clkSyncT=null;
+  var _clkSkew=0,_clkTz='',_clkZones=null,_clkRef=CLOCK_REF_DEFAULT,_clkTick=null,_clkSyncT=null,_clkSig='';
   function clkMeta(z){ for(var i=0;i<CLOCK_CAT.length;i++){ if(CLOCK_CAT[i][0]===z) return CLOCK_CAT[i]; }
     return [z,String(z).split('/').pop().replace(/_/g,' '),'','Other',null,null]; }
   function clkAt(z,ms){
@@ -1511,6 +1514,14 @@
     if(at&&refDay&&at.d&&at.d!==refDay){ var dd=document.createElement('div'); dd.className='cd'; dd.textContent=at.d; w.appendChild(dd); }
     return w;
   }
+  // Amene la reference au milieu de la rangee quand celle-ci defile (le
+  // telephone). Sans defilement, il n'y a rien a centrer.
+  function clkCentre(){
+    var bar=$('clockBar'); if(!bar) return;
+    var over=bar.scrollWidth-bar.clientWidth; if(over<=1) return;
+    var r=bar.querySelector('.ck.ref'); if(!r) return;
+    bar.scrollLeft=Math.max(0,Math.min(over,r.offsetLeft-(bar.clientWidth-r.offsetWidth)/2));
+  }
   function clkRender(){
     var bar=$('clockBar'); if(!bar) return;
     if(_clkZones===null){ bar.style.display='none'; return; }
@@ -1530,6 +1541,10 @@
       if(at) bar.appendChild(clkCell(m,at,clkSky(m[4],m[5],ms),z===_clkRef,refDay));
     });
     bar.style.display=bar.firstChild?'':'none';
+    // Recentrer a chaque tic arracherait la barre des doigts de qui la fait
+    // defiler : on ne le fait que si la rangee elle-meme a change.
+    var sig=list.join('|')+'>'+_clkRef;
+    if(sig!==_clkSig){ _clkSig=sig; setTimeout(clkCentre,0); }
   }
   function clkSync(){
     return api('/admin/clock').then(function(r){ return r.json(); }).then(function(d){
@@ -1541,10 +1556,11 @@
     }).catch(function(){});
   }
   function clkStart(){ if(_clkTick) return; clkSync(); _clkTick=setInterval(clkRender,5000); _clkSyncT=setInterval(clkSync,300000); }
+  window.addEventListener('orientationchange',function(){ setTimeout(clkCentre,120); });
   function clkStop(){
     if(_clkTick){ clearInterval(_clkTick); _clkTick=null; }
     if(_clkSyncT){ clearInterval(_clkSyncT); _clkSyncT=null; }
-    _clkZones=null; var b=$('clockBar'); if(b){ b.textContent=''; b.style.display='none'; }
+    _clkZones=null; _clkSig=''; var b=$('clockBar'); if(b){ b.textContent=''; b.style.display='none'; }
   }
   // Heure du serveur, en tete du statut. Lue sur l'instant que le serveur a
   // lui-meme envoye : une machine dont l'horloge derive n'invente pas ici une

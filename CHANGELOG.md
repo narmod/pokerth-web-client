@@ -52,6 +52,16 @@ highlights below.
   row, so three clocks read as comfortably as twelve; below 600px the dials
   shrink and the row wraps instead of squeezing. The phone rules had been
   written into the desktop media block, where they did nothing.
+- **On a phone the clock strip scrolls sideways, arriving centred on the
+  reference** (`web.50`). Folded onto three or four rows, a dozen clocks ate
+  half the screen before the first line of content. The row now stays on one
+  line and scrolls like the section bar under it, and opens with the reference
+  zone in the middle so both directions are one flick away. It recentres when
+  the selection changes or the phone is turned, never on a tick — that would
+  tear the bar out of the reader's fingers.
+- **The Server / Client / Data buttons take the page width** (`web.50`). They
+  were capped at 520px, which made them a short island above a full-width row
+  of sections: two bars that belong together, aligned differently.
 - **Icons on every dashboard tab** (`web.47`). The three family buttons and the
   seventeen sections each open with an emoji, so a section is found by shape
   before it is read. Decorative only — screen readers still get the label alone.
