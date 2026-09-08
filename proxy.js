@@ -9026,17 +9026,34 @@ const MAX_WS_MSGS_PER_WINDOW  = 200;        // frames per window per connection
 const MAX_WS_BYTES_PER_WINDOW = 128 * 1024; // bytes per window per connection
 const MAX_WS_SEND_QUEUE       = 1024 * 1024; // outbound queue cap per socket (mirror of pokerth#518)
 
+// Refus d'upgrade : jusqu'ici totalement muets. Le navigateur n'expose pas le
+// statut HTTP d'un handshake WebSocket échoué — le client ne peut afficher que
+// « Erreur WebSocket », et le log du proxy ne montrait RIEN. Un joueur rejeté
+// pour cause de plafond, de rafale ou de bannissement était indiscernable d'un
+// proxy injoignable, y compris pour l'administrateur. On journalise donc chaque
+// refus, avec l'IP masquée comme partout ailleurs.
+function _wsDeny(ip, code, why) {
+  console.warn('[!] WS upgrade refused (' + code + ' ' + why + ') — ' + _maskIp(ip));
+}
+
 const wss = new WebSocket.Server({ server: httpServer, maxPayload: MAX_WS_FRAME_BYTES, verifyClient: function (info, cb) {
+  var _ip = clientIp(info.req);
   // Bannissement décidé par l'admin : refus à l'upgrade, avant tout pont. La
   // page reste servie — c'est l'accès au JEU via ce proxy qui est coupé.
-  if (isBanned(clientIp(info.req))) return cb(false, 403, 'Forbidden');
+  if (isBanned(_ip)) { _wsDeny(_ip, 403, 'banned'); return cb(false, 403, 'Forbidden'); }
   // Per-IP held-connection cap (MAX_WS_PER_IP) : compté à 'connection',
   // libéré à 'close' — vérifié ici pour refuser l'upgrade avant tout pont.
-  if (MAX_WS_PER_IP > 0 && (_ipConns.get(clientIp(info.req)) || 0) >= MAX_WS_PER_IP) return cb(false, 429, 'Too Many Connections');
+  if (MAX_WS_PER_IP > 0 && (_ipConns.get(_ip) || 0) >= MAX_WS_PER_IP) {
+    _wsDeny(_ip, 429, 'per-IP cap ' + (_ipConns.get(_ip) || 0) + '/' + MAX_WS_PER_IP);
+    return cb(false, 429, 'Too Many Connections');
+  }
   // Connection-storm guard: reject the upgrade with 429 BEFORE any bridge is
   // built. No limiter installed → always accept (unchanged behavior).
   if (!_rlWs) return cb(true);
-  _rlWs.consume(clientIp(info.req)).then(function () { cb(true); }).catch(function () { cb(false, 429, 'Too Many Requests'); });
+  _rlWs.consume(_ip).then(function () { cb(true); }).catch(function () {
+    _wsDeny(_ip, 429, 'upgrade rate 30/min');
+    cb(false, 429, 'Too Many Requests');
+  });
 } });
 
 console.log('\n╔═══════════════════════════════════════════════╗');

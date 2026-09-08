@@ -340,6 +340,15 @@ highlights below.
   already conform.
 
 ### Fixed
+- **WebSocket upgrade refusals are now logged** (`web.44`, proxy-only).
+  `verifyClient` rejects an upgrade on three grounds — admin ban (403),
+  per-IP socket cap (429), upgrade-rate guard (429) — and all three were
+  silent. Browsers do not expose the HTTP status of a failed WebSocket
+  handshake, so the player saw only "WebSocket error. Is the proxy
+  running?" while the proxy log showed nothing at all: a rejected player
+  was indistinguishable from an unreachable proxy, even for the operator.
+  Each refusal now prints `[!] WS upgrade refused (code reason) — <masked
+  ip>`. **proxy.js changed — restart required.**
 - **Incoming avatar transfers bounded** (`web.35`, upstream `0f700c4`). The
   receiving side used to append every `AvatarData` chunk with no reference to
   the size the `AvatarHeader` had announced, so a server streaming without end
