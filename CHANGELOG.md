@@ -128,6 +128,15 @@ highlights below.
   every entry now carries both.
 
 ### Changed
+- **Ivoire & Chene panel colours follow upstream `f7a8e26`** (`web.57`) —
+  `bg #f5eee1 → #ece0c9`, `su #e9dcc4 → #ddceb0`, `bo #c6ac82 → #b89a6c`,
+  `mu #8a755a → #6f5a3c`, `ws #8a6a2a → #7d5e20`, `sd #0e7a37 → #0c6b30` in
+  `theme.mjs`; the chat/log/info boxes now sit a shade deeper than the felt so
+  light content on them keeps an edge, and the contrast floor on the panel
+  background rises to 4.5:1. The other two halves of that commit need no work
+  here: the boxed emoji toggle the QML client just gained has been the web
+  button since `web.0`, and the odds monitor is a web-specific design without
+  QML's greyed-out impossible categories.
 - **Own row in bold in the players list** (`web.42`), `--gold` alone being the
   running text colour of the PokerTH theme.
 - **Star ratings moved to the lobby star column, new `--star` colour**

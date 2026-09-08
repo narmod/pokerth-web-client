@@ -874,9 +874,12 @@ var _SKIN_TINT = {
   // laiton des boutons (#93794d).
   // ac/wi/ws/bd/sd = les <ChatLog*> de contenu ajoutes en amont (e90593e) au
   // meme XML : sur creme, l'accent de contenu est plus sombre que le liseré
-  // laiton des boutons (contraste >= 4,3:1 sur #f5eee1).
-  'ivoire-chene':{a:'#93794d',bg:'#f5eee1',su:'#e9dcc4',bo:'#c6ac82',tx:'#3a2c1a',se:'#5d4a30',mu:'#8a755a',
-                  ac:'#7a5a12',wi:'#6b4e0a',ws:'#8a6a2a',bd:'#a8431a',sd:'#0e7a37'}
+  // laiton des boutons (contraste >= 4,5:1 sur #ece0c9).
+  // Fond/surface/bordure/gris repris du reglage amont f7a8e26 : le fond des
+  // boites est un cran plus profond que le feutre ivoire du tapis, pour que
+  // les elements clairs poses dessus (emoji, avatars) gardent une arete.
+  'ivoire-chene':{a:'#93794d',bg:'#ece0c9',su:'#ddceb0',bo:'#b89a6c',tx:'#3a2c1a',se:'#5d4a30',mu:'#6f5a3c',
+                  ac:'#7a5a12',wi:'#6b4e0a',ws:'#7d5e20',bd:'#a8431a',sd:'#0c6b30'}
 };
 function _injectTintObj(m){
   var el=document.documentElement;

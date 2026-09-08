@@ -33,7 +33,7 @@ ok(chatLogBrightness('#fff') === 1, 'short hex expands');
 ok(chatLogBrightness('rgba(0,0,0,.5)') === null, 'rgba() is not guessed');
 ok(chatLogBrightness(null) === null, 'null is not guessed');
 
-ok(isLightChatLog('#f5eee1') === true, 'ivoire cream reads as light');
+ok(isLightChatLog('#ece0c9') === true, 'ivoire cream reads as light');
 ok(isLightChatLog('#1d222b') === false, 'the default panel reads as dark');
 ok(isLightChatLog('#0c1a0e') === false, 'casino green reads as dark');
 ok(isLightChatLog(undefined) === false, 'a missing background falls to dark');
@@ -97,7 +97,7 @@ ok(css.includes(':root[data-theme="pokerth-light"] { --lg-win-fb'),
 const theme = readFileSync(join(root, 'public', 'modules', 'theme.mjs'), 'utf8');
 const ivoire = /'ivoire-chene':\{[\s\S]*?\}/.exec(theme);
 ok(!!ivoire, 'the ivoire tint is still there');
-for (const hex of ['#7a5a12', '#6b4e0a', '#8a6a2a', '#a8431a', '#0e7a37']) {
+for (const hex of ['#7a5a12', '#6b4e0a', '#7d5e20', '#a8431a', '#0c6b30']) {
   ok(ivoire && ivoire[0].includes(hex), 'ivoire carries ' + hex + ' from the upstream XML');
 }
 for (const tag of ['ChatLogAccent', 'ChatLogAccentText', 'ChatLogWinner', 'ChatLogWinnerSide', 'ChatLogBoard', 'ChatLogSend']) {
