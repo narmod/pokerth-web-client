@@ -39,6 +39,19 @@ highlights below.
   rather than a scope, so a delegate key does not stare at dashes. The
   selection and the reference live in `admin-config.json` (`clockZones`,
   `clockRef`), apply immediately, and survive a config export/import.
+- **Each dial shows the city's real sky** (`web.49`). The face behind the hands
+  is worked out from the sun's height above that city's horizon: full day, the
+  golden hour, sunrise told apart from sunset by which way the sun is moving,
+  then civil, nautical and astronomical twilight, and night. It follows the
+  season and the latitude, so a northern winter afternoon reads as dusk while
+  the tropics are still in daylight, and polar day and polar night fall out of
+  the same formula rather than needing a special case. The model is the USNO
+  low-precision one, checked in the test suite against the almanac at both
+  solstices and at the equinox. Hovering a dial names its phase.
+- **The strip fills the width and folds on a phone** (`web.49`). Cells share the
+  row, so three clocks read as comfortably as twelve; below 600px the dials
+  shrink and the row wraps instead of squeezing. The phone rules had been
+  written into the desktop media block, where they did nothing.
 - **Icons on every dashboard tab** (`web.47`). The three family buttons and the
   seventeen sections each open with an emoji, so a section is found by shape
   before it is read. Decorative only — screen readers still get the label alone.

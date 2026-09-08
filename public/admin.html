@@ -16,16 +16,19 @@
   .top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
   .topbtns{display:flex;gap:8px;margin-top:4px;flex:none}
   /* Bandeau d'horloges : hors des onglets, donc visible partout. */
-  .clockbar{display:flex;flex-wrap:wrap;align-items:flex-start;justify-content:center;gap:2px;margin:14px 0 0;padding:8px 6px;border:1px solid var(--line);border-radius:10px;background:rgba(160,172,196,.05)}
-  .ck{display:flex;flex-direction:column;align-items:center;gap:3px;min-width:68px;padding:5px 6px;border:1px solid transparent;border-radius:9px;color:var(--cream);line-height:1.2}
+  .clockbar{display:flex;flex-wrap:wrap;align-items:flex-start;gap:2px;margin:14px 0 0;padding:8px 6px;border:1px solid var(--line);border-radius:10px;background:rgba(160,172,196,.05)}
+  /* flex:1 1 0 sur chaque pastille : trois horloges ou douze, la rangee occupe
+     toute la largeur et se partage l'espace a parts egales. */
+  .ck{flex:1 1 0;min-width:60px;display:flex;flex-direction:column;align-items:center;gap:3px;padding:5px 4px;border:1px solid transparent;border-radius:9px;color:var(--cream);line-height:1.2}
   .ck b{font-size:.85rem;font-weight:700;font-variant-numeric:tabular-nums;letter-spacing:.02em}
-  .ck .ckn{display:flex;align-items:center;gap:4px;font-size:.68rem;color:var(--text);white-space:nowrap}
+  .ck .ckn{display:flex;align-items:center;gap:4px;max-width:100%;font-size:.68rem;color:var(--text)}
+  .ck .ckn span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
   .ck .cd{font-size:.63rem;color:var(--text);opacity:.85}
   .ck.ref{border-color:var(--line);background:rgba(160,172,196,.12)}
   .ck.ref .ckn{color:var(--cream)}
   .ck.peak{color:#7fd17f}
   .ck.peak b{color:#7fd17f}
-  .ckdial{display:block}
+  .ckdial{display:block;flex:none;width:44px;height:44px}
   .ckf{width:17px;height:12px;border-radius:2px;object-fit:cover;display:block;flex:none}
   .clkopt .ckf{width:19px;height:14px}
   .clkpick{display:flex;flex-direction:column;gap:9px;margin-top:4px}
@@ -290,9 +293,6 @@
     .wrap{max-width:820px}
     .card{padding:18px}
     .tabs{gap:8px}
-    .clockbar{gap:1px;padding:6px 4px}
-    .ck{min-width:60px;padding:4px}
-    .ck b{font-size:.78rem}
     #login{max-width:440px;margin:0 auto}
     input[type=password]{max-width:480px}
   }
@@ -310,6 +310,15 @@
   }
   @media(max-width:600px){
     body{padding:12px}
+    /* Sur un telephone la rangee se replie sur plusieurs lignes plutot que de
+       se comprimer : quatre horloges lisibles valent mieux que douze illisibles. */
+    .clockbar{gap:0;padding:6px 3px}
+    .ck{min-width:52px;padding:4px 2px;gap:2px}
+    .ckdial{width:32px;height:32px}
+    .ck b{font-size:.74rem}
+    .ck .ckn{font-size:.6rem;gap:3px}
+    .ckf{width:13px;height:10px}
+    .ck .cd{font-size:.58rem}
     .top{flex-wrap:wrap}
     .topbtns{flex-wrap:wrap}
     .tabs{overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;gap:4px}
@@ -699,7 +708,7 @@
       </div>
       <div class="card">
         <h2>World clock (dashboard header)</h2>
-        <p class="muted">The strip above the tabs is on every tab, for every admin key. Each region gets a dial, its time and its name, ranked by offset — earliest on the left, latest on the right — around the reference below, which therefore sits in the middle. A region turns green between 18:00 and 01:00 locally, the hours when its players come to the tables, so you can see at a glance which continents are awake; a weekday is appended where the region has already rolled over. Up to 12 regions, plus the reference, which is always shown whether or not it is ticked. This server’s own clock is not here — it heads the status list under <b>Health &amp; logs</b>. Applies immediately (no restart needed).</p>
+        <p class="muted">The strip above the tabs is on every tab, for every admin key. Each region gets a dial, its time and its name, ranked by offset — earliest on the left, latest on the right — around the reference below, which therefore sits in the middle. The face of each dial is that city’s actual sky, worked out from the sun’s height above its horizon: full day, the golden hour, sunrise told apart from sunset, then the three twilights and night. It follows the season and the latitude, so a northern winter afternoon reads as dusk while the tropics are still in daylight. The time turns green between 18:00 and 01:00 locally, the hours when players come to the tables. A weekday is appended where the region has already rolled over, and hovering a dial names its phase. Up to 12 regions, plus the reference, which is always shown whether or not it is ticked. This server’s own clock is not here — it heads the status list under <b>Health &amp; logs</b>. Applies immediately (no restart needed).</p>
         <div class="defrow fld"><span style="white-space:nowrap">Reference zone</span><select id="clkRef"></select></div>
         <div id="clkPick" class="clkpick"></div>
         <p class="muted" id="clkCount" style="margin-top:10px"></p>
@@ -1318,60 +1327,66 @@
   // villes sont rangées par décalage UTC — plus tôt à gauche, plus tard à
   // droite — autour d'un fuseau de référence (UTC par défaut, réglable). Les
   // fuseaux en soirée (18 h → 1 h) passent en vert.
+  // Le fond du cadran est le ciel réel de la ville, calculé depuis la hauteur
+  // du soleil : on distingue le jour, l'heure dorée, le lever du coucher, et
+  // les trois crépuscules. C'est ce qui rend le bandeau lisible d'un coup
+  // d'œil en hiver, quand 17 h à Moscou et 17 h à Lagos n'ont rien à voir.
   // L'heure du serveur n'est PAS ici : elle est en tête de Server › Health &
   // logs, où on la lit quand on en a besoin, et le bandeau reste une carte du
   // monde plutôt qu'un mélange des deux.
   // Le rendu tourne en local à partir d'un écart mesuré une fois avec le
   // serveur (aucun sondage à la seconde) ; recalage toutes les 5 min, qui
   // ramasse aussi une sélection changée depuis un autre onglet.
-  // [tz, libellé, code pays ISO (drapeau auto-hébergé, '' = aucun), groupe]
+  // [tz, libellé, code pays ISO ('' = aucun drapeau), groupe, latitude, longitude]
+  // Les coordonnées sont celles de la ville affichée, pas du fuseau : le ciel
+  // de Mumbai n'est pas celui de Kolkata, à trente minutes de soleil près.
   var CLOCK_CAT=[
-    ['UTC','UTC','','Reference'],
-    ['Europe/London','London','gb','Europe'],
-    ['Europe/Lisbon','Lisbon','pt','Europe'],
-    ['Europe/Paris','Paris','fr','Europe'],
-    ['Europe/Berlin','Berlin','de','Europe'],
-    ['Europe/Madrid','Madrid','es','Europe'],
-    ['Europe/Rome','Rome','it','Europe'],
-    ['Europe/Warsaw','Warsaw','pl','Europe'],
-    ['Europe/Athens','Athens','gr','Europe'],
-    ['Europe/Kyiv','Kyiv','ua','Europe'],
-    ['Europe/Moscow','Moscow','ru','Europe'],
-    ['America/Toronto','Toronto','ca','Americas'],
-    ['America/New_York','New York','us','Americas'],
-    ['America/Chicago','Chicago','us','Americas'],
-    ['America/Denver','Denver','us','Americas'],
-    ['America/Los_Angeles','Los Angeles','us','Americas'],
-    ['America/Mexico_City','Mexico City','mx','Americas'],
-    ['America/Bogota','Bogota','co','Americas'],
-    ['America/Sao_Paulo','S\u00e3o Paulo','br','Americas'],
-    ['America/Argentina/Buenos_Aires','Buenos Aires','ar','Americas'],
-    ['Africa/Casablanca','Casablanca','ma','Africa & Middle East'],
-    ['Africa/Lagos','Lagos','ng','Africa & Middle East'],
-    ['Africa/Cairo','Cairo','eg','Africa & Middle East'],
-    ['Africa/Johannesburg','Johannesburg','za','Africa & Middle East'],
-    ['Asia/Jerusalem','Jerusalem','il','Africa & Middle East'],
-    ['Asia/Dubai','Dubai','ae','Africa & Middle East'],
-    ['Asia/Karachi','Karachi','pk','Asia'],
-    ['Asia/Kolkata','Mumbai','in','Asia'],
-    ['Asia/Bangkok','Bangkok','th','Asia'],
-    ['Asia/Jakarta','Jakarta','id','Asia'],
-    ['Asia/Singapore','Singapore','sg','Asia'],
-    ['Asia/Shanghai','Shanghai','cn','Asia'],
-    ['Asia/Seoul','Seoul','kr','Asia'],
-    ['Asia/Tokyo','Tokyo','jp','Asia'],
-    ['Australia/Perth','Perth','au','Oceania'],
-    ['Australia/Brisbane','Brisbane','au','Oceania'],
-    ['Australia/Sydney','Sydney','au','Oceania'],
-    ['Pacific/Auckland','Auckland','nz','Oceania']
+    ['UTC','UTC','','Reference',null,null],
+    ['Europe/London','London','gb','Europe',51.51,-0.13],
+    ['Europe/Lisbon','Lisbon','pt','Europe',38.72,-9.14],
+    ['Europe/Paris','Paris','fr','Europe',48.86,2.35],
+    ['Europe/Berlin','Berlin','de','Europe',52.52,13.40],
+    ['Europe/Madrid','Madrid','es','Europe',40.42,-3.70],
+    ['Europe/Rome','Rome','it','Europe',41.90,12.50],
+    ['Europe/Warsaw','Warsaw','pl','Europe',52.23,21.01],
+    ['Europe/Athens','Athens','gr','Europe',37.98,23.73],
+    ['Europe/Kyiv','Kyiv','ua','Europe',50.45,30.52],
+    ['Europe/Moscow','Moscow','ru','Europe',55.76,37.62],
+    ['America/Toronto','Toronto','ca','Americas',43.65,-79.38],
+    ['America/New_York','New York','us','Americas',40.71,-74.01],
+    ['America/Chicago','Chicago','us','Americas',41.88,-87.63],
+    ['America/Denver','Denver','us','Americas',39.74,-104.99],
+    ['America/Los_Angeles','Los Angeles','us','Americas',34.05,-118.24],
+    ['America/Mexico_City','Mexico City','mx','Americas',19.43,-99.13],
+    ['America/Bogota','Bogota','co','Americas',4.71,-74.07],
+    ['America/Sao_Paulo','S\u00e3o Paulo','br','Americas',-23.55,-46.63],
+    ['America/Argentina/Buenos_Aires','Buenos Aires','ar','Americas',-34.60,-58.38],
+    ['Africa/Casablanca','Casablanca','ma','Africa & Middle East',33.57,-7.59],
+    ['Africa/Lagos','Lagos','ng','Africa & Middle East',6.52,3.38],
+    ['Africa/Cairo','Cairo','eg','Africa & Middle East',30.04,31.24],
+    ['Africa/Johannesburg','Johannesburg','za','Africa & Middle East',-26.20,28.05],
+    ['Asia/Jerusalem','Jerusalem','il','Africa & Middle East',31.78,35.22],
+    ['Asia/Dubai','Dubai','ae','Africa & Middle East',25.20,55.27],
+    ['Asia/Karachi','Karachi','pk','Asia',24.86,67.01],
+    ['Asia/Kolkata','Mumbai','in','Asia',19.08,72.88],
+    ['Asia/Bangkok','Bangkok','th','Asia',13.75,100.50],
+    ['Asia/Jakarta','Jakarta','id','Asia',-6.21,106.85],
+    ['Asia/Singapore','Singapore','sg','Asia',1.35,103.82],
+    ['Asia/Shanghai','Shanghai','cn','Asia',31.23,121.47],
+    ['Asia/Seoul','Seoul','kr','Asia',37.57,126.98],
+    ['Asia/Tokyo','Tokyo','jp','Asia',35.68,139.69],
+    ['Australia/Perth','Perth','au','Oceania',-31.95,115.86],
+    ['Australia/Brisbane','Brisbane','au','Oceania',-27.47,153.03],
+    ['Australia/Sydney','Sydney','au','Oceania',-33.87,151.21],
+    ['Pacific/Auckland','Auckland','nz','Oceania',-36.85,174.76]
   ];
   // Doit rester alignee sur CLOCK_ZONES_DEFAULT / CLOCK_REF_DEFAULT dans proxy.js.
   var CLOCK_DEFAULT=['UTC','Europe/London','Europe/Paris','America/New_York','America/Los_Angeles','America/Sao_Paulo','Asia/Tokyo','Australia/Sydney'];
   var CLOCK_REF_DEFAULT='UTC';
   var CLOCK_MAX=12;
-  var _clkSkew=0,_clkTz='',_clkNow=0,_clkZones=null,_clkRef=CLOCK_REF_DEFAULT,_clkTick=null,_clkSyncT=null;
+  var _clkSkew=0,_clkTz='',_clkZones=null,_clkRef=CLOCK_REF_DEFAULT,_clkTick=null,_clkSyncT=null;
   function clkMeta(z){ for(var i=0;i<CLOCK_CAT.length;i++){ if(CLOCK_CAT[i][0]===z) return CLOCK_CAT[i]; }
-    return [z,String(z).split('/').pop().replace(/_/g,' '),'','Other']; }
+    return [z,String(z).split('/').pop().replace(/_/g,' '),'','Other',null,null]; }
   function clkAt(z,ms){
     try{
       var pr={},f=new Intl.DateTimeFormat('en-GB',{timeZone:z,hour:'2-digit',minute:'2-digit',weekday:'short',hour12:false});
@@ -1395,50 +1410,94 @@
   }
   // Heure de pointe : 18 h -> 1 h du matin, la fenetre ou les tables se remplissent.
   function clkPeak(h){ return h>=18 || h<1; }
+
+  // ── Hauteur du soleil ──────────────────────────────────────────────────
+  // Algorithme basse precision de l'USNO (~0,5 degre), largement suffisant
+  // pour choisir une couleur de ciel. Il tient compte de la saison et de la
+  // latitude, donc le jour polaire et la nuit polaire sortent tout seuls :
+  // une table d'heures de lever n'aurait su ni l'un ni l'autre.
+  var D2R=Math.PI/180, R2D=180/Math.PI;
+  function clkSunAlt(lat,lon,ms){
+    var d=ms/86400000+2440587.5-2451545.0;
+    var g=(357.529+0.98560028*d)*D2R;
+    var q=280.459+0.98564736*d;
+    var L=(q+1.915*Math.sin(g)+0.020*Math.sin(2*g))*D2R;
+    var e=(23.439-0.00000036*d)*D2R;
+    var dec=Math.asin(Math.sin(e)*Math.sin(L));
+    var ra=Math.atan2(Math.cos(e)*Math.sin(L),Math.cos(L))*R2D;
+    var gmst=(18.697374558+24.06570982441908*d)%24;
+    var ha=((gmst*15+lon-ra)%360+540)%360-180;
+    var la=lat*D2R;
+    return Math.asin(Math.sin(la)*Math.sin(dec)+Math.cos(la)*Math.cos(dec)*Math.cos(ha*D2R))*R2D;
+  }
+  // Couleur du ciel. Les teintes sont fixes et non tirees du theme : elles
+  // representent le ciel, pas l'habillage, et chaque bande porte son encre
+  // pour que les aiguilles restent lisibles sur un fond de nuit comme sur un
+  // plein midi, dans le theme clair comme dans le sombre.
+  // La montee ou la descente du soleil separe le lever du coucher : dix
+  // minutes plus tard, est-il plus haut ou plus bas ?
+  function clkSky(lat,lon,ms){
+    if(typeof lat!=='number'||typeof lon!=='number') return null;
+    var a=clkSunAlt(lat,lon,ms), up=clkSunAlt(lat,lon,ms+600000)>a;
+    if(a>=12)     return {f:'#8ec5f0',i:'#0c2740',r:'#5f9dd0',n:'day'};
+    if(a>=6)      return {f:'#a9d3f2',i:'#12314b',r:'#6ba5d4',n:'day'};
+    if(a>=-0.833) return up?{f:'#f2c87f',i:'#3d2a08',r:'#c9963f',n:'sunrise'}
+                          :{f:'#ea9358',i:'#3d1a06',r:'#c2662f',n:'sunset'};
+    if(a>=-6)     return up?{f:'#9887c9',i:'#1b1237',r:'#6d5aa4',n:'dawn'}
+                          :{f:'#ac6a76',i:'#31101b',r:'#874752',n:'dusk'};
+    if(a>=-12)    return {f:'#3d4b88',i:'#e2e8ff',r:'#5b69aa',n:up?'dawn twilight':'dusk twilight'};
+    if(a>=-18)    return {f:'#243160',i:'#d1daf4',r:'#3e4d87',n:up?'dawn twilight':'dusk twilight'};
+    return {f:'#151e3d',i:'#c5cde8',r:'#2c3761',n:'night'};
+  }
+
   var SVGNS='http://www.w3.org/2000/svg';
-  // Cadran analogique. Tout est trace en currentColor : la pastille porte la
-  // couleur (vert en soiree, texte sinon) et le cadran la suit, ce qu'un
-  // attribut stroke="var(--x)" ne saurait pas faire.
-  function clkDial(at,size){
-    var r=size/2, sv=document.createElementNS(SVGNS,'svg');
-    sv.setAttribute('width',size); sv.setAttribute('height',size);
-    sv.setAttribute('viewBox','0 0 '+size+' '+size);
+  // Cadran analogique, trace dans un repere de 44 unites : la taille reelle
+  // vient de la feuille de style (.ckdial), donc le mobile retrecit le cadran
+  // sans que le JS ait a savoir sur quel ecran il tourne.
+  // Sans ciel connu (UTC n'est pas un lieu) tout passe en currentColor et la
+  // pastille garde la couleur du theme.
+  var CLOCK_DIAL=44;
+  function clkDial(at,sky){
+    var S=CLOCK_DIAL, r=S/2, ink=sky?sky.i:'currentColor', ring=sky?sky.r:'currentColor';
+    var sv=document.createElementNS(SVGNS,'svg');
+    sv.setAttribute('viewBox','0 0 '+S+' '+S);
     sv.setAttribute('class','ckdial'); sv.setAttribute('aria-hidden','true');
-    var ring=document.createElementNS(SVGNS,'circle');
-    ring.setAttribute('cx',r); ring.setAttribute('cy',r); ring.setAttribute('r',r-0.75);
-    ring.setAttribute('fill','none'); ring.setAttribute('stroke','currentColor');
-    ring.setAttribute('stroke-width','1'); ring.setAttribute('opacity','.5');
-    sv.appendChild(ring);
+    var face=document.createElementNS(SVGNS,'circle');
+    face.setAttribute('cx',r); face.setAttribute('cy',r); face.setAttribute('r',r-0.75);
+    face.setAttribute('fill',sky?sky.f:'none');
+    face.setAttribute('stroke',ring); face.setAttribute('stroke-width','1');
+    if(!sky) face.setAttribute('opacity','.5');
+    sv.appendChild(face);
     for(var i=0;i<12;i++){
-      var a=(i*30-90)*Math.PI/180, dot=document.createElementNS(SVGNS,'circle');
+      var a=(i*30-90)*D2R, dot=document.createElementNS(SVGNS,'circle');
       dot.setAttribute('cx',(r+Math.cos(a)*(r-3.6)).toFixed(2));
       dot.setAttribute('cy',(r+Math.sin(a)*(r-3.6)).toFixed(2));
       dot.setAttribute('r',(i%3===0)?'1.1':'0.6');
-      dot.setAttribute('fill','currentColor');
+      dot.setAttribute('fill',ink);
       dot.setAttribute('opacity',(i%3===0)?'.9':'.45');
       sv.appendChild(dot);
     }
     if(at){
       [[((at.h%12)+at.m/60)*30, r*0.44, 1.9],[at.m*6, r*0.70, 1.3]].forEach(function(hd){
-        var a=(hd[0]-90)*Math.PI/180, ln=document.createElementNS(SVGNS,'line');
+        var a=(hd[0]-90)*D2R, ln=document.createElementNS(SVGNS,'line');
         ln.setAttribute('x1',r); ln.setAttribute('y1',r);
         ln.setAttribute('x2',(r+Math.cos(a)*hd[1]).toFixed(2));
         ln.setAttribute('y2',(r+Math.sin(a)*hd[1]).toFixed(2));
-        ln.setAttribute('stroke','currentColor'); ln.setAttribute('stroke-width',String(hd[2]));
+        ln.setAttribute('stroke',ink); ln.setAttribute('stroke-width',String(hd[2]));
         ln.setAttribute('stroke-linecap','round');
         sv.appendChild(ln);
       });
       var pin=document.createElementNS(SVGNS,'circle');
       pin.setAttribute('cx',r); pin.setAttribute('cy',r); pin.setAttribute('r','1.6');
-      pin.setAttribute('fill','currentColor'); sv.appendChild(pin);
+      pin.setAttribute('fill',ink); sv.appendChild(pin);
     }
     return sv;
   }
-  function clkCell(meta,at,isRef,refDay){
+  function clkCell(meta,at,sky,isRef,refDay){
     var w=document.createElement('div');
     w.className='ck'+(isRef?' ref':'')+((at&&clkPeak(at.h))?' peak':'');
-    w.title=meta[0];
-    w.appendChild(clkDial(at,44));
+    w.title=meta[0]+(sky?' \u2014 '+sky.n:'');
+    w.appendChild(clkDial(at,sky));
     var b=document.createElement('b'); b.textContent=at?at.t:'--:--'; w.appendChild(b);
     var n=document.createElement('div'); n.className='ckn';
     if(meta[2]){
@@ -1466,7 +1525,10 @@
              .map(function(x){ return x.z; });
     var refAt=clkAt(_clkRef,ms), refDay=refAt?refAt.d:'';
     bar.textContent='';
-    list.forEach(function(z){ var at=clkAt(z,ms); if(at) bar.appendChild(clkCell(clkMeta(z),at,z===_clkRef,refDay)); });
+    list.forEach(function(z){
+      var m=clkMeta(z), at=clkAt(z,ms);
+      if(at) bar.appendChild(clkCell(m,at,clkSky(m[4],m[5],ms),z===_clkRef,refDay));
+    });
     bar.style.display=bar.firstChild?'':'none';
   }
   function clkSync(){

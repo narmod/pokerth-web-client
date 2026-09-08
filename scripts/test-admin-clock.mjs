@@ -107,11 +107,71 @@ ok(peak(18) && peak(21) && peak(23), 'an evening is peak');
 ok(peak(0) && !peak(1), 'and it straddles midnight, stopping at 01:00');
 ok(!peak(2) && !peak(9) && !peak(17), 'a night or a working day is not');
 
+// -- The sky behind the hands ----------------------------------------------
+// The face is the city's real sky, so the strip says at a glance that 17:00 in
+// Moscow and 17:00 in Lagos are not the same hour of the day. Checked against
+// the almanac rather than against itself: the crossing of -0.833 degrees is
+// sunrise and sunset, and Paris at both solstices has to land on the minute.
+const sunSrc = body(admin, 'clkSunAlt');
+ok(sunSrc !== '', 'the sun has a position, not a lookup table');
+const D2R = 'var D2R=Math.PI/180,R2D=180/Math.PI;';
+const sunAlt = new Function('lat', 'lon', 'ms', D2R + sunSrc.slice(1, -1));
+const skyOf = new Function('lat', 'lon', 'ms',
+  D2R + 'function clkSunAlt(lat,lon,ms)' + sunSrc + body(admin, 'clkSky').slice(1, -1));
+function crossings(lat, lon, day) {
+  const out = []; let prev = sunAlt(lat, lon, day);
+  for (let m = 1; m <= 1440; m++) {
+    const t = day + m * 60000, a = sunAlt(lat, lon, t);
+    if (prev < -0.833 && a >= -0.833) out.push(['rise', t]);
+    if (prev >= -0.833 && a < -0.833) out.push(['set', t]);
+    prev = a;
+  }
+  return out;
+}
+const hm = (t, tz) => new Intl.DateTimeFormat('en-GB', { timeZone: tz, hour: '2-digit', minute: '2-digit', hour12: false }).format(new Date(t));
+function near(got, want, slack) {
+  const [gh, gm] = got.split(':').map(Number), [wh, wm] = want.split(':').map(Number);
+  return Math.abs((gh * 60 + gm) - (wh * 60 + wm)) <= slack;
+}
+const midsummer = crossings(48.86, 2.35, Date.UTC(2026, 5, 21)).map(([k, t]) => [k, hm(t, 'Europe/Paris')]);
+ok(midsummer.length === 2 && near(midsummer[0][1], '05:47', 2) && near(midsummer[1][1], '21:58', 2),
+  'Paris at midsummer rises and sets when the almanac says (' + midsummer.map(x => x.join(' ')).join(', ') + ')');
+const midwinter = crossings(48.86, 2.35, Date.UTC(2026, 11, 21)).map(([k, t]) => [k, hm(t, 'Europe/Paris')]);
+ok(midwinter.length === 2 && near(midwinter[0][1], '08:42', 2) && near(midwinter[1][1], '16:56', 2),
+  'and at midwinter too, which a fixed 06:00/18:00 rule never would (' + midwinter.map(x => x.join(' ')).join(', ') + ')');
+const equator = crossings(1.35, 103.82, Date.UTC(2026, 2, 20)).map(([k, t]) => hm(t, 'Asia/Singapore'));
+ok(equator.length === 2 && near(equator[1], '07:11', 3) && near(equator[0], '19:16', 3),
+  'Singapore at the equinox lands on its almanac day too (' + equator.join(', ') + ')');
+ok(sunAlt(78.22, 15.63, Date.UTC(2026, 5, 21, 0, 0)) > 0 && sunAlt(78.22, 15.63, Date.UTC(2026, 5, 21, 12, 0)) > 0,
+  'Svalbard at midsummer never dips below the horizon, so polar day needs no special case');
+ok(sunAlt(78.22, 15.63, Date.UTC(2026, 11, 21, 12, 0)) < -6,
+  'and polar night falls out of the same formula');
+
+// Sunrise and sunset are told apart by where the sun is going ten minutes on,
+// not by comparing the clock with noon — which breaks in the polar regions.
+ok(/clkSunAlt\(lat,lon,ms\+600000\)>a/.test(body(admin, 'clkSky')),
+  'a rising sun is told from a setting one by looking ten minutes ahead');
+const parisDay = Date.UTC(2026, 8, 8);
+ok(skyOf(48.86, 2.35, parisDay + 4 * 3600000).n.indexOf('dawn') === 0, 'Paris before six in September is dawn');
+ok(skyOf(48.86, 2.35, parisDay + 10 * 3600000).n === 'day', 'midday is day');
+ok(skyOf(48.86, 2.35, parisDay + 18 * 3600000).n === 'sunset', 'and the sun goes down in the evening, not up');
+ok(skyOf(48.86, 2.35, parisDay + 23 * 3600000).n === 'night', 'the middle of the night is night');
+ok(skyOf(null, null, parisDay) === null, 'UTC is not a place, so it gets no sky and keeps the theme colour');
+const bands = new Set(['day', 'sunrise', 'sunset', 'dawn', 'dusk', 'dawn twilight', 'dusk twilight', 'night']);
+let sampled = new Set();
+for (let m = 0; m < 1440; m += 5) sampled.add(skyOf(48.86, 2.35, parisDay + m * 60000).n);
+ok([...sampled].every(x => bands.has(x)), 'every band a day passes through is one of the named ones');
+ok(sampled.has('sunrise') && sampled.has('sunset') && sampled.has('day') && sampled.has('night'),
+  'and a September day in Paris passes through all four of the obvious ones');
+
 // -- Dials -----------------------------------------------------------------
 const dial = body(admin, 'clkDial');
 ok(/createElementNS\(SVGNS,'svg'\)/.test(dial), 'the dial is real SVG, built node by node');
-ok(/'currentColor'/.test(dial) && !/var\(--/.test(dial),
-  'hands and ticks use currentColor — a stroke attribute cannot resolve a CSS var');
+ok(/ink=sky\?sky\.i:'currentColor'/.test(dial),
+  'the hands take their colour from the sky band, since dark ink on a night face would vanish');
+ok(!/var\(--/.test(dial), 'and never from a CSS var — a stroke attribute cannot resolve one');
+ok(/sv\.setAttribute\('viewBox'/.test(dial) && !/setAttribute\('width'/.test(dial),
+  'the dial carries a viewBox and no pixel size, so the sheet can shrink it on a phone');
 ok(/\(\(at\.h%12\)\+at\.m\/60\)\*30/.test(dial), 'the hour hand creeps with the minutes instead of jumping on the hour');
 ok(/at\.m\*6/.test(dial), 'and the minute hand is six degrees a minute');
 ok(/if\(at\)\{/.test(dial), 'a zone that would not read shows an empty face rather than hands at midnight');
@@ -165,6 +225,21 @@ ok(/clkPickSel\(\)\.slice\(0,CLOCK_MAX\)/.test(admin), 'capped client-side too, 
 ok(/if\(\$\('clkPick'\) && Array\.isArray\(d\.clockZones\)\) clkPickRender\(d\.clockZones\)/.test(admin)
   && /if\(\$\('clkRef'\)\) clkRefRender\(d\.clockRef\|\|CLOCK_REF_DEFAULT\)/.test(admin),
   'and both are filled from the server, not from a local guess');
+
+// -- The strip fills the width, and folds on a phone ------------------------
+ok(/\.ck\{flex:1 1 0/.test(admin),
+  'every cell shares the row, so three clocks fill the bar as readily as twelve');
+ok(/\.clockbar\{[^}]*flex-wrap:wrap/.test(admin), 'and a row too long folds rather than overflowing');
+ok(/\.ck \.ckn span\{overflow:hidden;text-overflow:ellipsis/.test(admin),
+  'a long city name is clipped instead of pushing its neighbours out of line');
+ok(/\.ckdial\{display:block;flex:none;width:44px;height:44px\}/.test(admin), 'the dial has a size in the sheet');
+const phone = [...admin.matchAll(/@media\(max-width:600px\)\{([^]*?)\n  \}/g)].map(m => m[1]).join('\n');
+ok(phone !== '', 'there is a phone block');
+ok(/\.ckdial\{width:32px;height:32px\}/.test(phone), 'where the dial shrinks');
+ok(/\.ck\{min-width:52px/.test(phone), 'and the cells narrow so four still fit across a phone');
+const wide = /@media\(min-width:760px\)\{([^]*?)\n  \}/.exec(admin);
+ok(wide && !/\.ck\{/.test(wide[1]),
+  'and no clock rule is left in the desktop block, where the phone rules once sat doing nothing');
 
 // -- Icons -----------------------------------------------------------------
 const gtabs = admin.slice(iTabs, admin.indexOf('</div>', iTabs));
