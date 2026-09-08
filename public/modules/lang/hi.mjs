@@ -228,6 +228,7 @@ export const strings = {
     loginOfflineDesc:'बॉट्स के विरुद्ध अकेले',
     loginLanTitle:'LAN / समर्पित सर्वर',
     loginLanDesc:'निजी सर्वर · लोकल नेटवर्क',
+    liveOnline:'{n} खिलाड़ी ऑनलाइन', liveToday:'आज {n} खेल',
     loginChange:'बदलें',
     blindsNextTip:'{n} हाथ में', blindsEveryMin:'हर {n} मिनट',
     connect:'कनेक्ट करें', disconnect:'✕ डिस्कनेक्ट', connecting:'कनेक्ट हो रहा है…',

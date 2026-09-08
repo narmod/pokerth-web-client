@@ -223,6 +223,7 @@ export const strings = {
     loginOfflineDesc:'Yksin botteja vastaan',
     loginLanTitle:'LAN / Oma palvelin',
     loginLanDesc:'Yksityinen palvelin · lähiverkko',
+    liveOnline:'{n} pelaajaa paikalla', liveToday:'{n} peliä tänään',
     loginChange:'Vaihda',
     preActionTitle:'Toimintojen esikatselu', preActionHint:'sulje napauttamalla kortteja',
     blindsNextTip:'{n} käden päästä', blindsEveryMin:'joka {n} min',

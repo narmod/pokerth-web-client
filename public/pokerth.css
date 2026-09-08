@@ -1537,6 +1537,13 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
 .lc-d { display: block; font-size: var(--fs-xs); color: var(--text); margin-top: 3px;
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .lc-go { font-size: 1.5rem; color: var(--gold-dim); flex: 0 0 auto; line-height: 1; }
+/* Live pokerth.net figures under the Internet card (modules/ui/live-stats.mjs).
+   Hidden by default: it only appears once the relay answers with figures. */
+.lc-live { display: block; font-size: var(--fs-xs); color: var(--green); margin-top: 4px;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.lc-live::before { content: ''; display: inline-block; width: 6px; height: 6px; border-radius: 50%;
+  background: var(--green); vertical-align: middle; margin-right: 6px; }
+
 
 .login-back { display: flex; align-items: center; gap: 9px; width: 100%; margin: 0; padding: var(--sp-0);
   background: none; border: 0; font-family: inherit; cursor: pointer; }

@@ -133,6 +133,7 @@ export const strings = {
     loginOfflineDesc:'יחיד מול בוטים',
     loginLanTitle:'LAN / שרת ייעודי',
     loginLanDesc:'שרת פרטי · רשת מקומית',
+    liveOnline:'{n} שחקנים מחוברים', liveToday:'{n} משחקים היום',
     loginChange:'שינוי',
     srvSegNet:'אינטרנט', srvSegOffline:'אימון', srvSegLan:'LAN',
     botDifficulty:'רמת קושי בוטים', botEasy:'קל', botMixed:'מעורב', botNormal:'רגיל', botHard:'קשה',

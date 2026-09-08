@@ -17,6 +17,22 @@ changes for this line are on the
 highlights below.
 
 ### Added
+- **Live server figures on the login screen** (`web.56`). The Internet card
+  of the mode picker carries a second line — players online, and games played
+  today — read from the JSON counters the official site publishes at
+  `pokerth.net/pthranking/live`. The browser never touches that URL: the proxy
+  is the single reader (`GET /api/live`), fetching once per refresh interval
+  and serving every client from one in-memory cache, which sidesteps the
+  cross-origin question and spares the upstream one request per open tab. The
+  card describes the official server whoever runs the front-end, so a
+  self-hosted web client shows the same figures. The line is purely additive
+  and hides itself whenever the answer is unusable: counters flagged `stale`
+  upstream, address unreachable, or the feature switched off. A **Live server
+  figures** card in the dashboard (Clients tab) carries the on/off box, the
+  JSON address — settable, so an operator can point at their own endpoint and
+  a move of the official one needs no deployment — the refresh interval
+  (30–900 s, default 60), and a Test button that reads a candidate address
+  once and reports what players would see, without saving anything.
 - **A world clock above the admin tabs** (`web.47`–`web.48`). The dashboard
   header carries a strip that is on every tab, for every admin key: one analog
   dial per region, with its time and its name underneath, ranked by UTC offset

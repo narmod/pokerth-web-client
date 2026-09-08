@@ -6334,7 +6334,7 @@ function handleAdmin(req, res, reqPathOnly, query) {
   if (reqPathOnly === '/admin/config') {
     if (req.method === 'GET') {
       if (!adminAuthed(query)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
-      return adminJson(res, 200, { ok: true, resetPeriod: STATS_RESET_PERIOD, modes: appModes(), welcome: _welcomeAdmin(), guestNotice: _guestNoticeAdmin(), authNotice: _authNoticeAdmin(), showLoginTitle: !!_adminConfig.showLoginTitle, defaultTheme: _adminConfig.defaultTheme || '', defaults: _adminConfig.defaults || {}, loginDefaults: _loginDefaults(false), proxyCfg: _adminConfig.proxyCfg || {}, tableDefaults: _adminConfig.tableDefaults || {}, tableNames: _adminConfig.tableNames || {}, serverName: _adminConfig.serverName || '', serverTagline: _adminConfig.serverTagline || '', discordChatWebhookUrl: _adminConfig.discordChatWebhookUrl || '', featureSwitches: FEATURE_SWITCHES, featureOff: featureOffList(), musicEnabled: musicEnabled(), seo: _seoAdmin() });
+      return adminJson(res, 200, { ok: true, resetPeriod: STATS_RESET_PERIOD, modes: appModes(), welcome: _welcomeAdmin(), guestNotice: _guestNoticeAdmin(), authNotice: _authNoticeAdmin(), showLoginTitle: !!_adminConfig.showLoginTitle, defaultTheme: _adminConfig.defaultTheme || '', defaults: _adminConfig.defaults || {}, loginDefaults: _loginDefaults(false), proxyCfg: _adminConfig.proxyCfg || {}, tableDefaults: _adminConfig.tableDefaults || {}, tableNames: _adminConfig.tableNames || {}, serverName: _adminConfig.serverName || '', serverTagline: _adminConfig.serverTagline || '', discordChatWebhookUrl: _adminConfig.discordChatWebhookUrl || '', featureSwitches: FEATURE_SWITCHES, featureOff: featureOffList(), liveStats: _liveStatsCfg(), musicEnabled: musicEnabled(), seo: _seoAdmin() });
     }
     if (req.method === 'POST') {
       return readJsonBody(req, function (d) {
@@ -6496,6 +6496,16 @@ function handleAdmin(req, res, reqPathOnly, query) {
         if (typeof d.serverName === 'string')    _adminConfig.serverName    = d.serverName.trim().slice(0, 40);
         if (typeof d.serverTagline === 'string') _adminConfig.serverTagline = d.serverTagline.trim().slice(0, 60);
         if (typeof d.showLoginTitle === 'boolean') _adminConfig.showLoginTitle = d.showLoginTitle;
+        if (d.liveStats && typeof d.liveStats === 'object') {
+          const _cur = _liveStatsCfg(), _in = d.liveStats;
+          const _sec = parseInt(_in.sec, 10);
+          const _url = (typeof _in.url === 'string') ? _in.url.trim() : '';
+          _adminConfig.liveStats = {
+            on: (typeof _in.on === 'boolean') ? _in.on : _cur.on,
+            url: _liveUrlOk(_url) ? _url : (_url === '' ? LIVE_URL_DEFAULT : _cur.url),
+            sec: Number.isFinite(_sec) ? Math.min(LIVE_SEC_MAX, Math.max(LIVE_SEC_MIN, _sec)) : _cur.sec
+          };
+        }
         if (d.seo && typeof d.seo === 'object') {
           var _so = (_adminConfig.seo && typeof _adminConfig.seo === 'object') ? _adminConfig.seo : {};
           if (typeof d.seo.enabled === 'boolean') _so.enabled = d.seo.enabled;
@@ -6536,7 +6546,7 @@ function handleAdmin(req, res, reqPathOnly, query) {
           }
         }
         saveAdminConfig();
-        return adminJson(res, 200, { ok: true, resetPeriod: STATS_RESET_PERIOD, modes: appModes(), welcome: _welcomeAdmin(), guestNotice: _guestNoticeAdmin(), authNotice: _authNoticeAdmin(), showLoginTitle: !!_adminConfig.showLoginTitle, defaultTheme: _adminConfig.defaultTheme || '', defaults: _adminConfig.defaults || {}, loginDefaults: _loginDefaults(false), proxyCfg: _adminConfig.proxyCfg || {}, tableDefaults: _adminConfig.tableDefaults || {}, tableNames: _adminConfig.tableNames || {}, serverName: _adminConfig.serverName || '', serverTagline: _adminConfig.serverTagline || '', discordChatWebhookUrl: _adminConfig.discordChatWebhookUrl || '', featureSwitches: FEATURE_SWITCHES, featureOff: featureOffList(), musicEnabled: musicEnabled(), seo: _seoAdmin() });
+        return adminJson(res, 200, { ok: true, resetPeriod: STATS_RESET_PERIOD, modes: appModes(), welcome: _welcomeAdmin(), guestNotice: _guestNoticeAdmin(), authNotice: _authNoticeAdmin(), showLoginTitle: !!_adminConfig.showLoginTitle, defaultTheme: _adminConfig.defaultTheme || '', defaults: _adminConfig.defaults || {}, loginDefaults: _loginDefaults(false), proxyCfg: _adminConfig.proxyCfg || {}, tableDefaults: _adminConfig.tableDefaults || {}, tableNames: _adminConfig.tableNames || {}, serverName: _adminConfig.serverName || '', serverTagline: _adminConfig.serverTagline || '', discordChatWebhookUrl: _adminConfig.discordChatWebhookUrl || '', featureSwitches: FEATURE_SWITCHES, featureOff: featureOffList(), liveStats: _liveStatsCfg(), musicEnabled: musicEnabled(), seo: _seoAdmin() });
       });
     }
     res.writeHead(405); res.end('Method not allowed'); return;
@@ -7233,7 +7243,7 @@ function handleAdmin(req, res, reqPathOnly, query) {
       // config reset SEO to Off. Keep in sync with the keys the code reads.
       const ALLOWED = ['resetPeriod', 'modes', 'welcome', 'guestNotice', 'authNotice', 'defaultTheme', 'defaults', 'loginDefaults',
                        'proxyCfg', 'tableDefaults', 'tableNames', 'serverName', 'serverTagline', 'clockZones', 'clockRef',
-                       'discordChatWebhookUrl', 'showLoginTitle', 'featureOff', 'bannedIps',
+                       'discordChatWebhookUrl', 'showLoginTitle', 'featureOff', 'liveStats', 'bannedIps',
                        'pkgDisabled', 'pkgFull', 'pkgFullscreen', 'pkgAlign', 'musicTracks',
                        'musicEnabled', 'musicHidden', 'musicOrder',
                        'seo', 'servers', 'activeServerId', 'pokerthnetSource',
@@ -7479,6 +7489,11 @@ function handleAdmin(req, res, reqPathOnly, query) {
       const n = fireBroadcast(job); saveBroadcasts();
       return adminJson(res, 200, { ok: true, notified: n });
     });
+  }
+  if (reqPathOnly === '/admin/live-test' && req.method === 'POST') {
+    if (!adminAuthed(query)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
+    handleLiveTest(req, res);
+    return;
   }
   if (reqPathOnly === '/admin/restart' && req.method === 'POST') {
     return readJsonBody(req, function (d) {
@@ -8454,6 +8469,106 @@ function handleForumFeed(req, res) {
 }
 
 
+
+// ── Live server figures (GET /api/live) ──────────────────────────
+// sp0ck publishes the public counters of the official server as JSON. The
+// browser cannot read that URL itself (different origin, no CORS header), and
+// one request per open tab would hammer his box for nothing -- so the proxy is
+// the single reader: one fetch per refresh interval, kept in memory, served
+// from here to every client. It also means the figures work for a self-hosted
+// web client: the Internet card of the login screen points at pokerth.net for
+// everyone, whoever runs the front-end.
+//
+// Upstream shape: { online, tables, waiting, today, stale, updated }. `stale`
+// means the counters were never refreshed (updated sits at the epoch) -- we
+// report the failure and the client simply hides the line rather than showing
+// figures that may be wrong.
+//
+// The URL is settable in the dashboard so an operator whose own server exposes
+// the same JSON can point at it, and so a move of the official endpoint does
+// not need a deployment.
+const LIVE_URL_DEFAULT = 'https://www.pokerth.net/pthranking/live';
+const LIVE_SEC_DEFAULT = 60, LIVE_SEC_MIN = 30, LIVE_SEC_MAX = 900;
+const LIVE_URL_MAX = 300;
+
+// http(s) only, and never a URL with credentials in it. Private and loopback
+// hosts are deliberately allowed: a self-hosted install may well read its
+// figures from a box on the same LAN.
+function _liveUrlOk(u) {
+  if (typeof u !== 'string' || !u || u.length > LIVE_URL_MAX) return false;
+  try {
+    const p = new URL(u);
+    return (p.protocol === 'https:' || p.protocol === 'http:') && !p.username && !p.password;
+  } catch (e) { return false; }
+}
+
+function _liveStatsCfg() {
+  const c = (_adminConfig && _adminConfig.liveStats) || {};
+  const n = parseInt(c.sec, 10);
+  return {
+    on: (c.on !== false),
+    url: _liveUrlOk(c.url) ? c.url : LIVE_URL_DEFAULT,
+    sec: Number.isFinite(n) ? Math.min(LIVE_SEC_MAX, Math.max(LIVE_SEC_MIN, n)) : LIVE_SEC_DEFAULT
+  };
+}
+
+function _liveNum(v) { return (typeof v === 'number' && Number.isFinite(v) && v >= 0) ? v : null; }
+
+// Shape the upstream JSON into what the login card needs, or say why not.
+function _liveShape(d, sec) {
+  if (!d || typeof d !== 'object') return { ok: false, error: 'bad_shape', sec: sec };
+  if (d.stale === true) return { ok: false, error: 'stale', sec: sec };
+  if (_liveNum(d.online) === null) return { ok: false, error: 'no_figures', sec: sec };
+  return { ok: true, sec: sec, at: Date.now(), online: _liveNum(d.online), today: _liveNum(d.today),
+           tables: _liveNum(d.tables), waiting: _liveNum(d.waiting) };
+}
+
+function handleLiveStats(req, res) {
+  const cfg = _liveStatsCfg();
+  const send = function (obj, note) {
+    res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store', 'X-Live-Cache': note });
+    res.end(JSON.stringify(obj));
+  };
+  if (!cfg.on) { send({ ok: false, error: 'disabled', sec: cfg.sec }, 'off'); return; }
+  const key = 'livestats\u0000' + cfg.url;
+  const hit = RANKING_CACHE.get(key);
+  if (hit && (Date.now() - hit.at) < (cfg.sec * 1000)) {
+    res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store', 'X-Live-Cache': 'hit' });
+    res.end(hit.body);
+    return;
+  }
+  rankingFetch(cfg.url).then(function (r) {
+    if (!r.ok) throw new Error('upstream_' + r.status);
+    return r.json();
+  }).then(function (d) {
+    const body = JSON.stringify(_liveShape(d, cfg.sec));
+    RANKING_CACHE.set(key, { at: Date.now(), status: 200, body: body });
+    res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store', 'X-Live-Cache': 'miss' });
+    res.end(body);
+  }).catch(function (err) {
+    // Never surface a 5xx here: the login screen must stay usable when the
+    // upstream is unreachable (offline LAN install, blocked egress).
+    send({ ok: false, error: 'relay_failed', detail: String((err && err.message) || err), sec: cfg.sec }, 'fail');
+  });
+}
+
+// Dashboard "Test" button: read a candidate URL once, bypassing the cache and
+// without saving anything, so an operator can check an address before keeping it.
+function handleLiveTest(req, res) {
+  readJsonBody(req, function (d) {
+    const u = (d && typeof d.url === 'string' && d.url.trim()) ? d.url.trim() : LIVE_URL_DEFAULT;
+    if (!_liveUrlOk(u)) return adminJson(res, 400, { ok: false, error: 'bad_url' });
+    rankingFetch(u).then(function (r) {
+      if (!r.ok) throw new Error('upstream_' + r.status);
+      return r.json();
+    }).then(function (j) {
+      adminJson(res, 200, { ok: true, url: u, result: _liveShape(j, _liveStatsCfg().sec), raw: j });
+    }).catch(function (err) {
+      adminJson(res, 200, { ok: false, url: u, error: String((err && err.message) || err) });
+    });
+  });
+}
+
 // ── Translation relay (POST /api/translate) ──────────────────────────────
 // The client calls the gtx endpoint directly first, so the player's own IP
 // carries the quota — the method the QML client uses, and the reason nothing
@@ -8868,6 +8983,10 @@ const httpServer = http.createServer((req, res) => {
   }
   if (reqPathOnly === '/api/forumfeed') {
     handleForumFeed(req, res);
+    return;
+  }
+  if (reqPathOnly === '/api/live') {
+    handleLiveStats(req, res);
     return;
   }
   if (reqPathOnly === '/api/forumimg') {

@@ -225,6 +225,7 @@ export const strings = {
     loginOfflineDesc:'单人对战机器人',
     loginLanTitle:'局域网 / 专用服务器',
     loginLanDesc:'私人服务器 · 局域网',
+    liveOnline:'{n} 名玩家在线', liveToday:'今日 {n} 局',
     loginChange:'更改',
     preActionTitle:'操作预览', preActionHint:'点击手牌关闭',
     blindsNextTip:'{n} 手后', blindsEveryMin:'每 {n} 分钟',

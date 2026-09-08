@@ -135,6 +135,7 @@ export const strings = {
     loginOfflineDesc:'Solo vs bot',
     loginLanTitle:'LAN / Server khusus',
     loginLanDesc:'Server pribadi · jaringan lokal',
+    liveOnline:'{n} pemain online', liveToday:'{n} permainan hari ini',
     loginChange:'Ubah',
     srvSegNet:'Internet', srvSegOffline:'Latihan', srvSegLan:'LAN',
     botDifficulty:'Kesulitan bot', botEasy:'Mudah', botMixed:'Campuran', botNormal:'Normal', botHard:'Sulit',

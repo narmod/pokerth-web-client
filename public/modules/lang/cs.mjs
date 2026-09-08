@@ -224,6 +224,7 @@ export const strings = {
     loginOfflineDesc:'Sólo proti botům',
     loginLanTitle:'LAN / Vyhrazený server',
     loginLanDesc:'Soukromý server · místní síť',
+    liveOnline:'{n} hráčů online', liveToday:'{n} her dnes',
     loginChange:'Změnit',
     preActionTitle:'Náhled akcí', preActionHint:'klepni na karty pro zavření',
     blindsNextTip:'za {n} her', blindsEveryMin:'každých {n} min',

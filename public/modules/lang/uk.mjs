@@ -223,6 +223,7 @@ export const strings = {
     loginOfflineDesc:'Сам проти ботів',
     loginLanTitle:'LAN / Виділений сервер',
     loginLanDesc:'Приватний сервер · локальна мережа',
+    liveOnline:'{n} гравців онлайн', liveToday:'{n} ігор сьогодні',
     loginChange:'Змінити',
     preActionTitle:'Попередній перегляд дій', preActionHint:'торкніться карт, щоб закрити',
     blindsNextTip:'через {n} роздач', blindsEveryMin:'кожні {n} хв',

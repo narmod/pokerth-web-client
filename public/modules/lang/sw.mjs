@@ -135,6 +135,7 @@ export const strings = {
     loginOfflineDesc:'Peke yako dhidi ya boti',
     loginLanTitle:'LAN / Seva maalum',
     loginLanDesc:'Seva binafsi · mtandao wa ndani',
+    liveOnline:'wachezaji {n} mtandaoni', liveToday:'michezo {n} leo',
     loginChange:'Badilisha',
     srvSegNet:'Intaneti', srvSegOffline:'Mazoezi', srvSegLan:'LAN',
     botDifficulty:'Ugumu wa boti', botEasy:'Rahisi', botMixed:'Mchanganyiko', botNormal:'Kawaida', botHard:'Ngumu',

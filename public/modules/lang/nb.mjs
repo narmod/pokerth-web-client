@@ -223,6 +223,7 @@ export const strings = {
     loginOfflineDesc:'Alene mot bots',
     loginLanTitle:'LAN / Dedikert server',
     loginLanDesc:'Privat server · lokalt nettverk',
+    liveOnline:'{n} spillere pålogget', liveToday:'{n} spill i dag',
     loginChange:'Endre',
     preActionTitle:'Forhåndsvisning av handlinger', preActionHint:'trykk på kortene for å lukke',
     blindsNextTip:'om {n} hender', blindsEveryMin:'hvert {n}. min',

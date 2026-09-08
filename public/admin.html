@@ -667,6 +667,25 @@
         <div id="fsList" class="muted">Loading…</div>
         <div id="fsMsg" class="msg"></div>
       </div>
+      <div class="card">
+        <div class="boardhead"><h2>Live server figures</h2><button id="lsSave" class="use">Save</button></div>
+        <p class="muted">The <b>Internet</b> card of the login screen can carry a live line — players online, games played today — read from the JSON counters the official site publishes. The proxy is the only reader: it fetches once per interval and serves every player from that one copy, so the upstream sees one request per interval instead of one per open tab, and the browser never has to reach another origin. The line hides itself whenever the answer is unusable (counters flagged stale, address unreachable, feature off here), leaving the card exactly as it was.</p>
+        <label style="display:inline-flex;align-items:center;gap:6px;margin-bottom:10px">
+          <input type="checkbox" id="lsOn" style="width:auto"> Show the line on the login screen
+        </label>
+        <div class="f">
+          <label for="lsUrl">JSON address</label>
+          <input id="lsUrl" type="text" spellcheck="false" placeholder="https://www.pokerth.net/pthranking/live">
+          <p class="muted">Expects <code>{ online, today, tables, waiting, stale }</code>. Leave empty to fall back to the official address. http and https only; a host on your own network is allowed, which is what a self-hosted install would point at.</p>
+        </div>
+        <div class="f">
+          <label for="lsSec">Refresh every</label>
+          <input id="lsSec" type="number" min="30" max="900" step="10" style="width:100px">
+          <p class="muted">Seconds, 30–900 (default 60). One read per interval for the whole server.</p>
+        </div>
+        <button id="lsTest" class="use">Test this address</button>
+        <div id="lsMsg" class="msg"></div>
+      </div>
     </div>
 
     <div id="panel-defaults" style="display:none">
@@ -3731,6 +3750,7 @@
   }
   function renderFeatureSwitches(d){
     var box=$('fsList'); if(!box) return;
+    renderLiveStats(d);
     var list=(d&&d.featureSwitches)||[], off=(d&&d.featureOff)||[];
     if(!list.length){ box.textContent='This server exposes no kill switch.'; return; }
     box.innerHTML=''; box.style.cssText='display:flex;flex-wrap:wrap;gap:6px 18px';
@@ -3752,6 +3772,46 @@
         .then(function(r){return r.json();}).then(function(d){
           if(d&&d.ok){ m.textContent=offs.length?('Saved \u2014 '+offs.length+' feature'+(offs.length===1?'':'s')+' off for everyone.'):'Saved \u2014 every feature enabled.'; m.className='msg ok'; renderFeatureSwitches(d); }
           else { m.textContent='Failed: '+((d&&d.error)||'error'); m.className='msg err'; }
+        }).catch(function(){ m.textContent='Network error.'; m.className='msg err'; });
+    });
+  })();
+
+  // -- Live server figures on the login screen (master only) ------------------
+  // Shares the /admin/config payload the kill switches already load, so the
+  // card fills in without a second round trip.
+  function renderLiveStats(d){
+    var c=(d&&d.liveStats)||{};
+    if($('lsOn')) $('lsOn').checked=(c.on!==false);
+    if($('lsUrl')) $('lsUrl').value=c.url||'';
+    if($('lsSec')) $('lsSec').value=(typeof c.sec==='number'?c.sec:60);
+  }
+  function liveStatsBody(){
+    var sec=parseInt($('lsSec')?$('lsSec').value:'',10);
+    if(!isFinite(sec)) sec=60;
+    sec=Math.min(900,Math.max(30,sec));
+    if($('lsSec')) $('lsSec').value=sec;
+    return { on:!!($('lsOn')&&$('lsOn').checked), url:($('lsUrl')?$('lsUrl').value.trim():''), sec:sec };
+  }
+  (function(){
+    var sb=$('lsSave');
+    if(sb) sb.addEventListener('click', function(){
+      var m=$('lsMsg');
+      api('/admin/config',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({liveStats:liveStatsBody(),token:tok()})})
+        .then(function(r){return r.json();}).then(function(d){
+          if(d&&d.ok){ renderLiveStats(d); m.textContent=(d.liveStats&&d.liveStats.on===false)?'Saved \u2014 the line is off.':('Saved \u2014 refreshed every '+((d.liveStats&&d.liveStats.sec)||60)+' s from '+((d.liveStats&&d.liveStats.url)||'')); m.className='msg ok'; }
+          else { m.textContent='Failed: '+((d&&d.error)||'error'); m.className='msg err'; }
+        }).catch(function(){ m.textContent='Network error.'; m.className='msg err'; });
+    });
+    var tb=$('lsTest');
+    if(tb) tb.addEventListener('click', function(){
+      var m=$('lsMsg');
+      m.textContent='Reading\u2026'; m.className='msg';
+      api('/admin/live-test',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({url:($('lsUrl')?$('lsUrl').value.trim():''),token:tok()})})
+        .then(function(r){return r.json();}).then(function(d){
+          if(!d||!d.ok){ m.textContent='No answer: '+((d&&d.error)||'error'); m.className='msg err'; return; }
+          var q=d.result||{};
+          if(q.ok){ m.textContent='Answered \u2014 '+q.online+' online'+(q.today!=null?(', '+q.today+' games today'):'')+'. Players would see the line.'; m.className='msg ok'; }
+          else { m.textContent='Answered, but the figures are unusable ('+(q.error||'?')+') \u2014 the line would stay hidden.'; m.className='msg err'; }
         }).catch(function(){ m.textContent='Network error.'; m.className='msg err'; });
     });
   })();

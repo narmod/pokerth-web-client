@@ -135,6 +135,7 @@ export const strings = {
     loginOfflineDesc:'Solo vs bots',
     loginLanTitle:'LAN / Dedicated server',
     loginLanDesc:'Private server · local network',
+    liveOnline:'{n} players online', liveToday:'{n} games today',
     loginChange:'Change',
     srvSegNet:'Internet', srvSegOffline:'Training', srvSegLan:'LAN',
     botDifficulty:'Bot difficulty', botEasy:'Easy', botMixed:'Mixed', botNormal:'Normal', botHard:'Hard',

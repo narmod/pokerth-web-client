@@ -1050,7 +1050,7 @@ function _processAvatarFile(file) {
       <div class="login-cards">
         <button type="button" class="login-card" onclick="loginPickMode(this,'pokerthnet')">
           <span class="lc-ic"><svg class="lc-globe" viewBox="0 0 24 24" style="width:30px;height:30px;display:block;margin:0 auto" aria-hidden="true"><defs><clipPath id="eglobe-card"><circle cx="12" cy="12" r="10"/></clipPath></defs><circle cx="12" cy="12" r="10" fill="#2f7fd4"/><g clip-path="url(#eglobe-card)" fill="#3fae4e"><path d="M4 6c2-1.5 4.5-1.6 5.6-.4.8.9.2 2-.8 2.5-1 .5-2.3.3-3 1.2-.6.8-.3 2-1.1 2.6-.8.6-2 .3-2.6-.6C1.6 9.6 2.6 7.4 4 6z"/><path d="M14.5 4.6c2.6-.5 5.2.7 6.6 2.8.5 1.4.6 2.8.3 4.1-.7.8-2 .7-2.7-.2-.6-.8-.5-2-1.3-2.6-.8-.6-2 0-2.8-.7-.8-.7-.7-2.1-.1-3.4z"/><path d="M10.5 13.5c1.4-.6 3.1-.3 4.1.8.9 1 .9 2.5.1 3.5-.7.9-1.9 1.3-2.4 2.4-.3.6-.2 1.4-.7 1.8-2-.4-3.8-1.5-5-3.1-.2-1.9.9-3.8 2.6-4.7.4-.3.9-.5 1.3-.7z"/></g><circle cx="12" cy="12" r="9.5" fill="none" stroke="rgba(255,255,255,0.28)" stroke-width="1"/></svg></span>
-          <span class="lc-tx"><span class="lc-t" data-i18n="loginNetTitle">Internet</span><span class="lc-d" data-i18n="loginNetDesc">Play online, ranked</span></span>
+          <span class="lc-tx"><span class="lc-t" data-i18n="loginNetTitle">Internet</span><span class="lc-d" data-i18n="loginNetDesc">Play online, ranked</span><span class="lc-live" id="lc-live" style="display:none"></span></span>
           <span class="lc-go">›</span>
         </button>
         <button type="button" class="login-card" onclick="loginPickMode(this,'offline')">
@@ -2612,6 +2612,7 @@ function _processAvatarFile(file) {
 <script type="module" src="modules/net/messages.mjs"></script>
 <script type="module" src="modules/ui/shortcuts.mjs"></script>
 <script type="module" src="modules/ui/poll.mjs"></script>
+<script type="module" src="modules/ui/live-stats.mjs"></script>
 <script type="module" src="modules/ui/reactions.mjs"></script>
 <script type="module" src="modules/ui/anim.mjs"></script>
 <script type="module" src="modules/game/seats.mjs"></script>

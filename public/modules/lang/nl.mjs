@@ -229,6 +229,7 @@ export const strings = {
     loginOfflineDesc:'Solo tegen bots',
     loginLanTitle:'LAN / Toegewijde server',
     loginLanDesc:'Privéserver · lokaal netwerk',
+    liveOnline:'{n} spelers online', liveToday:'{n} spellen vandaag',
     loginChange:'Wijzigen',
     preActionTitle:'Actievoorbeeld', preActionHint:'tik op kaarten om te sluiten',
     blindsNextTip:'over {n} hand(en)', blindsEveryMin:'elke {n} min',

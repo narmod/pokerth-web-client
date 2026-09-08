@@ -231,6 +231,7 @@ export const strings = {
     loginOfflineDesc:'Solo contro bot',
     loginLanTitle:'LAN / Server dedicato',
     loginLanDesc:'Server privato · rete locale',
+    liveOnline:'{n} giocatori online', liveToday:'{n} partite oggi',
     loginChange:'Cambia',
     preActionTitle:'Anteprima azioni', preActionHint:'tocca le carte per chiudere',
     blindsNextTip:'tra {n} mani', blindsEveryMin:'ogni {n} min',

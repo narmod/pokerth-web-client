@@ -135,6 +135,7 @@ export const strings = {
     loginOfflineDesc:'একা বনাম বট',
     loginLanTitle:'LAN / ডেডিকেটেড সার্ভার',
     loginLanDesc:'ব্যক্তিগত সার্ভার · স্থানীয় নেটওয়ার্ক',
+    liveOnline:'{n} জন খেলোয়াড় অনলাইন', liveToday:'আজ {n}টি খেলা',
     loginChange:'পরিবর্তন',
     srvSegNet:'ইন্টারনেট', srvSegOffline:'অনুশীলন', srvSegLan:'LAN',
     botDifficulty:'বটের কঠিনতা', botEasy:'সহজ', botMixed:'মিশ্র', botNormal:'সাধারণ', botHard:'কঠিন',

@@ -133,6 +133,7 @@ export const strings = {
     loginOfflineDesc:'بوٹس کے خلاف تنہا',
     loginLanTitle:'LAN / مخصوص سرور',
     loginLanDesc:'نجی سرور · مقامی نیٹ ورک',
+    liveOnline:'{n} کھلاڑی آن لائن', liveToday:'آج {n} گیمز',
     loginChange:'تبدیل کریں',
     srvSegNet:'انٹرنیٹ', srvSegOffline:'مشق', srvSegLan:'LAN',
     botDifficulty:'بوٹ کی مشکل', botEasy:'آسان', botMixed:'ملا جلا', botNormal:'عام', botHard:'مشکل',

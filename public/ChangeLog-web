@@ -1,4 +1,7 @@
 2026-09-08 version 2.1.8-web (current series):
+- new: the Internet card on the opening screen now shows how many players are on pokerth.net and how many games have been played today, refreshed while you look at it, so you can tell whether the tables are busy before you connect
+
+2026-09-08 version 2.1.8-web:
 - new: the game log now colours its lines the way the desktop and mobile clients do - the winner of the pot, the winner of a side pot, and the flop/turn/river steps each have their own colour, so a hand can be read at a glance instead of line by line
 - improvement: on a light table style such as Ivoire & Chene, the chat and log colours are the darkened set the official client uses there, instead of the yellow and orange meant for a dark felt
 - improvement: an imported table style can now set those colours itself (accent, winner, side pot, board, send), like the styles shipped with the official client; anything it leaves out is filled in to match the brightness of its own panel background

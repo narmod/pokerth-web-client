@@ -151,7 +151,7 @@ function panel(id) {
 }
 const PANELS = {
   'panel-server': 2, 'panel-proxy': 1, 'panel-deploy': 3, 'panel-access': 2,
-  'panel-clients': 2, 'panel-defaults': 5, 'panel-identity': 4,
+  'panel-clients': 3, 'panel-defaults': 5, 'panel-identity': 4,
 };
 for (const [id, count] of Object.entries(PANELS)) {
   const seg = panel(id);

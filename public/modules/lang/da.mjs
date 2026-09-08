@@ -223,6 +223,7 @@ export const strings = {
     loginOfflineDesc:'Solo mod bots',
     loginLanTitle:'LAN / Dedikeret server',
     loginLanDesc:'Privat server · lokalt netværk',
+    liveOnline:'{n} spillere online', liveToday:'{n} spil i dag',
     loginChange:'Skift',
     preActionTitle:'Forhåndsvisning af handlinger', preActionHint:'tryk på kortene for at lukke',
     blindsNextTip:'om {n} hænder', blindsEveryMin:'hver {n}. min',

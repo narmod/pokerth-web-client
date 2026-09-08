@@ -224,6 +224,7 @@ export const strings = {
     loginOfflineDesc:'Alleen teen bots',
     loginLanTitle:'LAN / Toegewyde bediener',
     loginLanDesc:'Privaat bediener · plaaslike netwerk',
+    liveOnline:'{n} spelers aanlyn', liveToday:'{n} spele vandag',
     loginChange:'Verander',
     preActionTitle:'Aksievoorskou', preActionHint:'tik op kaarte om te sluit',
     blindsNextTip:'oor {n} hand(e)', blindsEveryMin:'elke {n} min',

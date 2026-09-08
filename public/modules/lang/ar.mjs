@@ -136,6 +136,7 @@ export const strings = {
     loginOfflineDesc:'فردي ضد الروبوتات',
     loginLanTitle:'LAN / خادم مخصّص',
     loginLanDesc:'خادم خاص · شبكة محلية',
+    liveOnline:'{n} لاعب متصل', liveToday:'{n} لعبة اليوم',
     loginChange:'تغيير',
     srvSegNet:'إنترنت', srvSegOffline:'تدريب', srvSegLan:'LAN',
     botDifficulty:'صعوبة الروبوتات', botEasy:'سهل', botMixed:'مختلط', botNormal:'عادي', botHard:'صعب',

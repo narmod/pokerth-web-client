@@ -226,6 +226,7 @@ export const strings = {
     loginOfflineDesc:'Botlara karşı tek başına',
     loginLanTitle:'LAN / Özel sunucu',
     loginLanDesc:'Özel sunucu · yerel ağ',
+    liveOnline:'{n} oyuncu çevrimiçi', liveToday:'bugün {n} oyun',
     loginChange:'Değiştir',
     preActionTitle:'Eylem önizlemesi', preActionHint:'kapatmak için kartlara dokun',
     blindsNextTip:'{n} el sonra', blindsEveryMin:'her {n} dk',

@@ -224,6 +224,7 @@ export const strings = {
     loginOfflineDesc:'Egyedül botok ellen',
     loginLanTitle:'LAN / Dedikált szerver',
     loginLanDesc:'Privát szerver · helyi hálózat',
+    liveOnline:'{n} játékos online', liveToday:'{n} játék ma',
     loginChange:'Módosítás',
     preActionTitle:'Műveletek előnézete', preActionHint:'érintsd meg a lapokat a bezáráshoz',
     blindsNextTip:'{n} leosztás múlva', blindsEveryMin:'{n} percenként',

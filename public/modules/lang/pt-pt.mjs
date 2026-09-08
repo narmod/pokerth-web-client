@@ -225,6 +225,7 @@ export const strings = {
     loginOfflineDesc:'Sozinho contra bots',
     loginLanTitle:'LAN / Servidor dedicado',
     loginLanDesc:'Servidor privado · rede local',
+    liveOnline:'{n} jogadores online', liveToday:'{n} jogos hoje',
     loginChange:'Alterar',
     preActionTitle:'Pré-visualização de ações', preActionHint:'toca nas cartas para fechar',
     blindsNextTip:'em {n} mão(s)', blindsEveryMin:'a cada {n} min',
