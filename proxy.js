@@ -5593,6 +5593,38 @@ function hasScope(scope, query, bodyToken) {
   return false;
 }
 
+// Any valid admin key at all, whatever its scopes. Used only by read-only bits
+// of chrome that sit outside the tabs (the world-clock strip): gating them on a
+// scope would leave a delegate staring at empty dashes on every section.
+function _anyAdminKey(query, bodyToken) {
+  if (adminAuthed(query, bodyToken)) return true;
+  var tok = (query && query.token) || bodyToken || '';
+  if (!tok) return false;
+  return _loadScopedTokens().some(function (r) { return r.token === tok; });
+}
+
+// ── World clock (admin header) ────────────────────────────────────────────
+// The dashboard shows the time in a handful of regions so an admin can tell at
+// a glance which continents are in their evening — i.e. where the tables are
+// about to fill. The browser clock cannot be trusted for the server row, so the
+// server sends its own timestamp and the panel keeps a skew.
+const CLOCK_ZONES_DEFAULT = ['UTC', 'Europe/London', 'Europe/Paris', 'America/New_York',
+                             'America/Los_Angeles', 'America/Sao_Paulo', 'Asia/Tokyo', 'Australia/Sydney'];
+const CLOCK_ZONES_MAX = 12;
+function _validTz(z) {
+  if (typeof z !== 'string' || !z || z.length > 64) return false;
+  try { new Intl.DateTimeFormat('en-US', { timeZone: z }); return true; } catch (e) { return false; }
+}
+function _serverTz() {
+  try { return Intl.DateTimeFormat().resolvedOptions().timeZone || ''; } catch (e) { return ''; }
+}
+function _clockZones() {
+  const z = _adminConfig && _adminConfig.clockZones;
+  if (!Array.isArray(z)) return CLOCK_ZONES_DEFAULT.slice();
+  const out = z.filter(_validTz).slice(0, CLOCK_ZONES_MAX);
+  return out;   // an explicit empty list means "no strip", and is honoured
+}
+
 // ── IP bloquées (anti-force brute) et bannies (décision d'admin) ─────────
 // Le garde anti-force brute de l'admin travaillait en aveugle : on ne voyait ni
 // qui était bloqué, ni comment débloquer quelqu'un qui s'est trompé de jeton.
@@ -6069,7 +6101,15 @@ function handleAdmin(req, res, reqPathOnly, query) {
     try { version = (JSON.parse(fs.readFileSync(path.join(__dirname, 'package.json'), 'utf8')).version) || ''; } catch (e) {}
     let sockets = null; try { sockets = wss.clients.size; } catch (e) {}
     let liveSessions = null; try { liveSessions = _liveSessions.size; } catch (e) {}
-    return adminJson(res, 200, { ok: true, version: version, runningVersion: BOOT_VERSION, node: process.version, uptimeSec: Math.floor(process.uptime()), installKind: installKind(), gitUpdatable: GIT_UPDATABLE, sockets: sockets, liveSessions: liveSessions, players: Object.keys(statsStore).length, resetPeriod: STATS_RESET_PERIOD, modes: appModes(), showLoginTitle: !!_adminConfig.showLoginTitle, defaultTheme: _adminConfig.defaultTheme || '', defaults: _adminConfig.defaults || {}, loginDefaults: _loginDefaults(false), proxyCfg: _adminConfig.proxyCfg || {}, logLevel: _logLevelName(), maxClients: _maxClients(), fd: _fdInfo(), tableDefaults: _adminConfig.tableDefaults || {}, tableNames: _adminConfig.tableNames || {}, serverName: _adminConfig.serverName || '', serverTagline: _adminConfig.serverTagline || '', discordChatWebhookUrl: _adminConfig.discordChatWebhookUrl || '', seo: _seoAdmin(), restartAt: (_restartAt > Date.now() ? _restartAt : null), restartKind: (_restartAt > Date.now() ? _restartKind : null), autoUpdate: _autoUpdateCfg(), autoArmed: !!(_autoArmed && _restartAt > Date.now()), update: _updPublic() });
+    return adminJson(res, 200, { ok: true, version: version, runningVersion: BOOT_VERSION, node: process.version, uptimeSec: Math.floor(process.uptime()), installKind: installKind(), gitUpdatable: GIT_UPDATABLE, sockets: sockets, liveSessions: liveSessions, players: Object.keys(statsStore).length, resetPeriod: STATS_RESET_PERIOD, modes: appModes(), showLoginTitle: !!_adminConfig.showLoginTitle, defaultTheme: _adminConfig.defaultTheme || '', defaults: _adminConfig.defaults || {}, loginDefaults: _loginDefaults(false), proxyCfg: _adminConfig.proxyCfg || {}, logLevel: _logLevelName(), maxClients: _maxClients(), fd: _fdInfo(), tableDefaults: _adminConfig.tableDefaults || {}, tableNames: _adminConfig.tableNames || {}, serverName: _adminConfig.serverName || '', serverTagline: _adminConfig.serverTagline || '', discordChatWebhookUrl: _adminConfig.discordChatWebhookUrl || '', seo: _seoAdmin(), restartAt: (_restartAt > Date.now() ? _restartAt : null), restartKind: (_restartAt > Date.now() ? _restartKind : null), autoUpdate: _autoUpdateCfg(), autoArmed: !!(_autoArmed && _restartAt > Date.now()), update: _updPublic(), now: Date.now(), tz: _serverTz(), clockZones: _clockZones() });
+  }
+  // ── Horloge du bandeau (toutes clés) ───────────────────────────────────
+  // Réponse minuscule, relue toutes les 5 min : elle sert uniquement à recaler
+  // la dérive du navigateur et à connaître le fuseau réel du serveur.
+  if (reqPathOnly === '/admin/clock' && req.method === 'GET') {
+    if (!_anyAdminKey(query)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
+    res._rlNoPenalty = true;
+    return adminJson(res, 200, { ok: true, now: Date.now(), tz: _serverTz(), zones: _clockZones() });
   }
   // ── Erreurs JS remontées par les clients (clé maître uniquement) ────────
   if (reqPathOnly === '/admin/errors') {
@@ -6391,6 +6431,9 @@ function handleAdmin(req, res, reqPathOnly, query) {
           var dw = d.discordChatWebhookUrl.trim().slice(0, 200);
           if (dw && !DISCORD_WEBHOOK_RE.test(dw)) return adminJson(res, 400, { ok: false, error: 'invalid Discord webhook URL (expected https://discord.com/api/webhooks/…)' });
           _adminConfig.discordChatWebhookUrl = dw;   // vide = relais désactivé
+        }
+        if (Array.isArray(d.clockZones)) {
+          _adminConfig.clockZones = d.clockZones.filter(_validTz).slice(0, CLOCK_ZONES_MAX);
         }
         if (typeof d.serverName === 'string')    _adminConfig.serverName    = d.serverName.trim().slice(0, 40);
         if (typeof d.serverTagline === 'string') _adminConfig.serverTagline = d.serverTagline.trim().slice(0, 60);
@@ -7131,7 +7174,7 @@ function handleAdmin(req, res, reqPathOnly, query) {
       // exactly what happened to 'seo' (and the server list): restoring a
       // config reset SEO to Off. Keep in sync with the keys the code reads.
       const ALLOWED = ['resetPeriod', 'modes', 'welcome', 'guestNotice', 'authNotice', 'defaultTheme', 'defaults', 'loginDefaults',
-                       'proxyCfg', 'tableDefaults', 'tableNames', 'serverName', 'serverTagline',
+                       'proxyCfg', 'tableDefaults', 'tableNames', 'serverName', 'serverTagline', 'clockZones',
                        'discordChatWebhookUrl', 'showLoginTitle', 'featureOff', 'bannedIps',
                        'pkgDisabled', 'pkgFull', 'pkgFullscreen', 'pkgAlign', 'musicTracks',
                        'musicEnabled', 'musicHidden', 'musicOrder',
@@ -8494,7 +8537,8 @@ const httpServer = http.createServer((req, res) => {
       // Online brute force through these GETs is unrealistic anyway: the token
       // is a high-entropy value from the environment, not a guessable password.
       if (req.method === 'GET' && (reqPathOnly === '/admin/status' || reqPathOnly === '/admin/logs'
-          || reqPathOnly === '/admin/sessions' || reqPathOnly === '/admin/broadcasts')) res._rlNoPenalty = true;
+          || reqPathOnly === '/admin/sessions' || reqPathOnly === '/admin/broadcasts'
+          || reqPathOnly === '/admin/clock')) res._rlNoPenalty = true;
       if (req.method === 'POST') res.on('finish', function () { auditRecord(req, res, reqPathOnly, q); });
       _rlAdminFail.get(ip).then(function (r) {
         if (r && r.remainingPoints <= 0 && r.msBeforeNext > 0) {

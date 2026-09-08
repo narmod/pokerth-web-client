@@ -15,6 +15,22 @@
   .sub{color:var(--text);font-size:.8rem;margin:0 0 16px}
   .top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
   .topbtns{display:flex;gap:8px;margin-top:4px;flex:none}
+  /* Bandeau d'horloges : hors des onglets, donc visible partout. */
+  .clockbar{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:14px 0 0;padding:7px 9px;border:1px solid var(--line);border-radius:10px;background:rgba(160,172,196,.05)}
+  .ck{display:inline-flex;align-items:baseline;gap:5px;padding:3px 9px;border-radius:999px;border:1px solid transparent;font-size:.79rem;white-space:nowrap;line-height:1.5}
+  .ck b{font-weight:700;font-variant-numeric:tabular-nums;letter-spacing:.02em}
+  .ck .cn{color:var(--text)}
+  .ck .cd{color:var(--text);font-size:.7rem;opacity:.8}
+  .ck.srv{border-color:var(--line);background:rgba(160,172,196,.12);font-weight:600}
+  .ck.peak{border-color:#7fd17f}
+  .ck.peak b{color:#7fd17f}
+  .clkpick{display:flex;flex-direction:column;gap:9px;margin-top:4px}
+  .clkgrp{display:flex;flex-wrap:wrap;gap:6px}
+  .clkgl{width:100%;font-size:.72rem;color:var(--text);text-transform:uppercase;letter-spacing:.05em;margin:2px 0 0}
+  .clkopt{display:inline-flex;align-items:center;gap:6px;padding:5px 10px;border:1px solid var(--line);border-radius:999px;font-size:.8rem;cursor:pointer;user-select:none}
+  .clkopt input{margin:0;flex:none}
+  .clkopt.on{border-color:var(--gold);background:rgba(160,172,196,.14)}
+  .ti{margin-right:6px}
   .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px;margin:0 0 14px}
   /* Deux tableaux courts se lisent mieux cote a cote qu'empiles : le duo
      « connexions par serveur » / « nouveaux vs recurrents » tient sur une seule
@@ -270,6 +286,8 @@
     .wrap{max-width:820px}
     .card{padding:18px}
     .tabs{gap:8px}
+    .clockbar{gap:5px;padding:6px 7px}
+    .ck{font-size:.74rem;padding:2px 7px}
     #login{max-width:440px;margin:0 auto}
     input[type=password]{max-width:480px}
   }
@@ -334,33 +352,34 @@
         <button id="logoutBtn" class="ghost">Log out</button>
       </div>
     </div>
+    <div class="clockbar" id="clockBar" style="display:none" title="Server clock and the regions picked in Server › Identity & reach"></div>
     <div class="tabs gtabs" id="tabGroups">
-      <button class="gtab on" data-g="server">Server</button>
-      <button class="gtab" data-g="client">Client</button>
-      <button class="gtab" data-g="data">Data</button>
+      <button class="gtab on" data-g="server"><span class="ti" aria-hidden="true">🖥️</span>Server</button>
+      <button class="gtab" data-g="client"><span class="ti" aria-hidden="true">🎮</span>Client</button>
+      <button class="gtab" data-g="data"><span class="ti" aria-hidden="true">📊</span>Data</button>
     </div>
     <div class="tabs subtabs" data-g="server">
-      <button class="tab on" data-t="server">Health &amp; logs</button>
-      <button class="tab" data-t="deploy">Deployment</button>
-      <button class="tab" data-t="proxy">Proxy</button>
-      <button class="tab" data-t="access">Access &amp; backup</button>
-      <button class="tab" data-t="identity">Identity &amp; reach</button>
-      <button class="tab" data-t="servers">Game servers</button>
-      <button class="tab" data-t="keys">Keys</button>
+      <button class="tab on" data-t="server"><span class="ti" aria-hidden="true">💓</span>Health &amp; logs</button>
+      <button class="tab" data-t="deploy"><span class="ti" aria-hidden="true">🚀</span>Deployment</button>
+      <button class="tab" data-t="proxy"><span class="ti" aria-hidden="true">🔀</span>Proxy</button>
+      <button class="tab" data-t="access"><span class="ti" aria-hidden="true">🔐</span>Access &amp; backup</button>
+      <button class="tab" data-t="identity"><span class="ti" aria-hidden="true">🪪</span>Identity &amp; reach</button>
+      <button class="tab" data-t="servers"><span class="ti" aria-hidden="true">🗄️</span>Game servers</button>
+      <button class="tab" data-t="keys"><span class="ti" aria-hidden="true">🔑</span>Keys</button>
     </div>
     <div class="tabs subtabs" data-g="client" style="display:none">
-      <button class="tab" data-t="clients">Modes &amp; features</button>
-      <button class="tab" data-t="defaults">Defaults</button>
-      <button class="tab" data-t="packages" data-scope="packages">Packages</button>
-      <button class="tab" data-t="music" data-scope="music">Music</button>
-      <button class="tab" data-t="broadcast" data-scope="broadcast">Broadcasts</button>
-      <button class="tab" data-t="polls" data-scope="polls">Polls</button>
+      <button class="tab" data-t="clients"><span class="ti" aria-hidden="true">🎛️</span>Modes &amp; features</button>
+      <button class="tab" data-t="defaults"><span class="ti" aria-hidden="true">⚙️</span>Defaults</button>
+      <button class="tab" data-t="packages" data-scope="packages"><span class="ti" aria-hidden="true">📦</span>Packages</button>
+      <button class="tab" data-t="music" data-scope="music"><span class="ti" aria-hidden="true">🎵</span>Music</button>
+      <button class="tab" data-t="broadcast" data-scope="broadcast"><span class="ti" aria-hidden="true">📢</span>Broadcasts</button>
+      <button class="tab" data-t="polls" data-scope="polls"><span class="ti" aria-hidden="true">🗳️</span>Polls</button>
     </div>
     <div class="tabs subtabs" data-g="data" style="display:none">
-      <button class="tab" data-t="traffic">Traffic</button>
-      <button class="tab" data-t="sessions">Sessions</button>
-      <button class="tab" data-t="errors">Errors</button>
-      <button class="tab" data-t="board" data-scope="leaderboard">Leaderboard</button>
+      <button class="tab" data-t="traffic"><span class="ti" aria-hidden="true">📈</span>Traffic</button>
+      <button class="tab" data-t="sessions"><span class="ti" aria-hidden="true">👥</span>Sessions</button>
+      <button class="tab" data-t="errors"><span class="ti" aria-hidden="true">🐞</span>Errors</button>
+      <button class="tab" data-t="board" data-scope="leaderboard"><span class="ti" aria-hidden="true">🏆</span>Leaderboard</button>
     </div>
 
     <div id="panel-traffic" style="display:none">
@@ -672,6 +691,14 @@
         <div class="defrow fld"><span>PokerTH title</span><select id="loginTitle"><option value="0">Hidden (default)</option><option value="1">Shown</option></select></div>
         <div class="rowtop"><button id="saveIdent" class="use">Save</button></div>
         <div id="identMsg" class="msg"></div>
+      </div>
+      <div class="card">
+        <h2>World clock (dashboard header)</h2>
+        <p class="muted">The strip above the tabs is on every tab, for every admin key. It always shows this server's own clock; add the regions you want beside it. A region is highlighted in green when it is between 18:00 and 01:00 locally \u2014 the hours when its players come to the tables \u2014 so you can see at a glance which continents are awake. A weekday is appended when the region is already on another day. Up to 12 regions; with none ticked the strip shows the server clock alone. Applies immediately (no restart needed).</p>
+        <div id="clkPick" class="clkpick"></div>
+        <p class="muted" id="clkCount" style="margin-top:10px"></p>
+        <div class="rowtop"><button id="saveClocks" class="use">Save</button><button id="clkDefaults" class="ghost">Default set</button></div>
+        <div id="clkMsg" class="msg"></div>
       </div>
       <div class="card">
         <h2>Discord chat relay</h2>
@@ -1232,7 +1259,7 @@
   // the last-activity stamp; activity listeners (capture+passive) just stamp.
   var IDLE_MS=10*60*1000, _idleLast=Date.now();
   function _idleReset(){ _idleLast=Date.now(); }
-  function doLogout(reason){ srvStop(); seStop(); localStorage.removeItem(TOKK); $('ltok').value=''; if($('loginErr')) $('loginErr').textContent=reason||''; show('login'); }
+  function doLogout(reason){ srvStop(); seStop(); clkStop(); localStorage.removeItem(TOKK); $('ltok').value=''; if($('loginErr')) $('loginErr').textContent=reason||''; show('login'); }
   function _idleCheck(){ if(tok() && dash.style.display!=='none' && Date.now()-_idleLast>IDLE_MS) doLogout('Logged out after 10 minutes of inactivity.'); }
   ['mousemove','mousedown','keydown','touchstart','scroll','click'].forEach(function(ev){ document.addEventListener(ev,_idleReset,{passive:true,capture:true}); });
   setInterval(_idleCheck, 30000);
@@ -1268,6 +1295,7 @@
       if(!info || !info.ok){ $('loginErr').textContent=(info&&info.error)||'Invalid token'; show('login'); return; }
       _isMaster=!!info.master; applyScopeVisibility(info);
       $('loginErr').textContent=''; _idleLast=Date.now(); show('dash');
+      clkStart();
       if(_isMaster){
         api('/admin/pkg-list').then(function(r){return r.json();}).then(function(d){ if(d&&d.ok) renderPkgs(d); }).catch(function(){});
         loadServer(); loadDeploys(); loadBlocked(); loadThemes(); loadFeatureSwitches(); srvStart();
@@ -1278,6 +1306,136 @@
       }
     }).catch(function(){ $('loginErr').textContent='Network error'; show('login'); });
   }
+
+  // ── Bandeau d'horloges (au-dessus des familles d'onglets) ──────────────
+  // But : voir d'un coup d'œil quels continents sont à l'heure de jouer. Les
+  // fuseaux en soirée (18 h → 1 h) sont surlignés en vert. L'horloge du
+  // navigateur ne fait pas foi pour la ligne « Server » : on lit l'instant
+  // serveur une fois, on garde l'écart, et le rendu tourne en local (aucun
+  // sondage à la seconde). Recalage toutes les 5 min, qui ramasse aussi un
+  // changement de sélection fait depuis un autre onglet.
+  // [tz, libellé, emoji, groupe]
+  var CLOCK_CAT=[
+    ['UTC','UTC','\u{1F310}','Reference'],
+    ['Europe/London','London','\u{1F1EC}\u{1F1E7}','Europe'],
+    ['Europe/Lisbon','Lisbon','\u{1F1F5}\u{1F1F9}','Europe'],
+    ['Europe/Paris','Paris','\u{1F1EB}\u{1F1F7}','Europe'],
+    ['Europe/Berlin','Berlin','\u{1F1E9}\u{1F1EA}','Europe'],
+    ['Europe/Madrid','Madrid','\u{1F1EA}\u{1F1F8}','Europe'],
+    ['Europe/Rome','Rome','\u{1F1EE}\u{1F1F9}','Europe'],
+    ['Europe/Warsaw','Warsaw','\u{1F1F5}\u{1F1F1}','Europe'],
+    ['Europe/Athens','Athens','\u{1F1EC}\u{1F1F7}','Europe'],
+    ['Europe/Kyiv','Kyiv','\u{1F1FA}\u{1F1E6}','Europe'],
+    ['Europe/Moscow','Moscow','\u{1F1F7}\u{1F1FA}','Europe'],
+    ['America/Toronto','Toronto','\u{1F1E8}\u{1F1E6}','Americas'],
+    ['America/New_York','New York','\u{1F1FA}\u{1F1F8}','Americas'],
+    ['America/Chicago','Chicago','\u{1F1FA}\u{1F1F8}','Americas'],
+    ['America/Denver','Denver','\u{1F1FA}\u{1F1F8}','Americas'],
+    ['America/Los_Angeles','Los Angeles','\u{1F1FA}\u{1F1F8}','Americas'],
+    ['America/Mexico_City','Mexico City','\u{1F1F2}\u{1F1FD}','Americas'],
+    ['America/Bogota','Bogota','\u{1F1E8}\u{1F1F4}','Americas'],
+    ['America/Sao_Paulo','S\u00e3o Paulo','\u{1F1E7}\u{1F1F7}','Americas'],
+    ['America/Argentina/Buenos_Aires','Buenos Aires','\u{1F1E6}\u{1F1F7}','Americas'],
+    ['Africa/Casablanca','Casablanca','\u{1F1F2}\u{1F1E6}','Africa & Middle East'],
+    ['Africa/Lagos','Lagos','\u{1F1F3}\u{1F1EC}','Africa & Middle East'],
+    ['Africa/Cairo','Cairo','\u{1F1EA}\u{1F1EC}','Africa & Middle East'],
+    ['Africa/Johannesburg','Johannesburg','\u{1F1FF}\u{1F1E6}','Africa & Middle East'],
+    ['Asia/Jerusalem','Jerusalem','\u{1F1EE}\u{1F1F1}','Africa & Middle East'],
+    ['Asia/Dubai','Dubai','\u{1F1E6}\u{1F1EA}','Africa & Middle East'],
+    ['Asia/Karachi','Karachi','\u{1F1F5}\u{1F1F0}','Asia'],
+    ['Asia/Kolkata','Mumbai','\u{1F1EE}\u{1F1F3}','Asia'],
+    ['Asia/Bangkok','Bangkok','\u{1F1F9}\u{1F1ED}','Asia'],
+    ['Asia/Jakarta','Jakarta','\u{1F1EE}\u{1F1E9}','Asia'],
+    ['Asia/Singapore','Singapore','\u{1F1F8}\u{1F1EC}','Asia'],
+    ['Asia/Shanghai','Shanghai','\u{1F1E8}\u{1F1F3}','Asia'],
+    ['Asia/Seoul','Seoul','\u{1F1F0}\u{1F1F7}','Asia'],
+    ['Asia/Tokyo','Tokyo','\u{1F1EF}\u{1F1F5}','Asia'],
+    ['Australia/Perth','Perth','\u{1F1E6}\u{1F1FA}','Oceania'],
+    ['Australia/Brisbane','Brisbane','\u{1F1E6}\u{1F1FA}','Oceania'],
+    ['Australia/Sydney','Sydney','\u{1F1E6}\u{1F1FA}','Oceania'],
+    ['Pacific/Auckland','Auckland','\u{1F1F3}\u{1F1FF}','Oceania']
+  ];
+  // Doit rester alignee sur CLOCK_ZONES_DEFAULT dans proxy.js.
+  var CLOCK_DEFAULT=['UTC','Europe/London','Europe/Paris','America/New_York','America/Los_Angeles','America/Sao_Paulo','Asia/Tokyo','Australia/Sydney'];
+  var CLOCK_MAX=12;
+  var _clkSkew=0,_clkTz='',_clkZones=null,_clkTick=null,_clkSyncT=null;
+  function clkMeta(z){ for(var i=0;i<CLOCK_CAT.length;i++){ if(CLOCK_CAT[i][0]===z) return CLOCK_CAT[i]; }
+    return [z,String(z).split('/').pop().replace(/_/g,' '),'\u{1F552}','Other']; }
+  function clkAt(z,ms){
+    try{
+      var pr={},f=new Intl.DateTimeFormat('en-GB',{timeZone:z,hour:'2-digit',minute:'2-digit',weekday:'short',hour12:false});
+      f.formatToParts(new Date(ms)).forEach(function(x){ pr[x.type]=x.value; });
+      var h=parseInt(pr.hour,10); if(!isFinite(h)) return null; if(h===24) h=0;
+      return { t:(h<10?'0':'')+h+':'+(pr.minute||'00'), h:h, d:pr.weekday||'' };
+    }catch(e){ return null; }
+  }
+  // Heure de pointe : 18 h -> 1 h du matin, la fenetre ou les tables se remplissent.
+  function clkPeak(h){ return h>=18 || h<1; }
+  function clkChip(icon,name,at,cls,refDay,title){
+    var s=document.createElement('span');
+    s.className='ck'+(cls?' '+cls:'')+((at&&clkPeak(at.h))?' peak':'');
+    if(title) s.title=title;
+    var i=document.createElement('span'); i.setAttribute('aria-hidden','true'); i.textContent=icon; s.appendChild(i);
+    var n=document.createElement('span'); n.className='cn'; n.textContent=name; s.appendChild(n);
+    var b=document.createElement('b'); b.textContent=at?at.t:'--:--'; s.appendChild(b);
+    if(at&&refDay&&at.d&&at.d!==refDay){ var d=document.createElement('span'); d.className='cd'; d.textContent=at.d; s.appendChild(d); }
+    return s;
+  }
+  function clkRender(){
+    var bar=$('clockBar'); if(!bar) return;
+    if(_clkZones===null){ bar.style.display='none'; return; }
+    var ms=Date.now()+_clkSkew, srv=clkAt(_clkTz||'UTC',ms), ref=srv?srv.d:'';
+    bar.textContent='';
+    bar.appendChild(clkChip('\u{1F5A5}\uFE0F','Server',srv,'srv','','Server clock'+(_clkTz?' \u2014 '+_clkTz:' \u2014 UTC')));
+    _clkZones.forEach(function(z){ var m=clkMeta(z),at=clkAt(z,ms); if(at) bar.appendChild(clkChip(m[2],m[1],at,'',ref,z)); });
+    bar.style.display='';
+  }
+  function clkSync(){
+    return api('/admin/clock').then(function(r){ return r.json(); }).then(function(d){
+      if(!d||!d.ok) return;
+      if(typeof d.now==='number') _clkSkew=d.now-Date.now();
+      _clkTz=d.tz||''; _clkZones=Array.isArray(d.zones)?d.zones:[];
+      clkRender();
+    }).catch(function(){});
+  }
+  function clkStart(){ if(_clkTick) return; clkSync(); _clkTick=setInterval(clkRender,5000); _clkSyncT=setInterval(clkSync,300000); }
+  function clkStop(){
+    if(_clkTick){ clearInterval(_clkTick); _clkTick=null; }
+    if(_clkSyncT){ clearInterval(_clkSyncT); _clkSyncT=null; }
+    _clkZones=null; var b=$('clockBar'); if(b){ b.textContent=''; b.style.display='none'; }
+  }
+  // Selecteur de villes (Server > Identity & reach)
+  function clkPickSel(){ return [].slice.call(document.querySelectorAll('#clkPick input:checked')).map(function(i){ return i.value; }); }
+  function clkPickCount(){ var n=clkPickSel().length,m=$('clkCount'); if(m) m.textContent=n+' of '+CLOCK_MAX+' selected'+(n>CLOCK_MAX?' \u2014 only the first '+CLOCK_MAX+' are kept':''); }
+  function clkPickRender(sel){
+    var host=$('clkPick'); if(!host) return;
+    sel=Array.isArray(sel)?sel:[];
+    host.textContent='';
+    var groups=[]; CLOCK_CAT.forEach(function(c){ if(groups.indexOf(c[3])<0) groups.push(c[3]); });
+    groups.forEach(function(g){
+      var w=document.createElement('div'); w.className='clkgrp';
+      var gl=document.createElement('div'); gl.className='clkgl'; gl.textContent=g; w.appendChild(gl);
+      CLOCK_CAT.forEach(function(c){
+        if(c[3]!==g) return;
+        var on=sel.indexOf(c[0])>=0;
+        var lab=document.createElement('label'); lab.className='clkopt'+(on?' on':''); lab.title=c[0];
+        var cb=document.createElement('input'); cb.type='checkbox'; cb.value=c[0]; cb.checked=on;
+        cb.addEventListener('change',function(){ lab.classList.toggle('on',cb.checked); clkPickCount(); });
+        lab.appendChild(cb);
+        var t=document.createElement('span'); t.textContent=c[2]+'\u00a0'+c[1]; lab.appendChild(t);
+        w.appendChild(lab);
+      });
+      host.appendChild(w);
+    });
+    clkPickCount();
+  }
+  (function(){ var b=$('saveClocks'); if(!b) return; b.addEventListener('click',function(){
+    var m=$('clkMsg'),sel=clkPickSel().slice(0,CLOCK_MAX);
+    api('/admin/config',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({clockZones:sel,token:tok()})})
+      .then(function(r){ return r.json(); }).then(function(d){ if(d&&d.ok){ m.textContent='Saved. The strip updates right away (no restart needed).'; m.className='msg ok'; clkSync(); } else { m.textContent='Failed: '+((d&&d.error)||'error'); m.className='msg err'; } })
+      .catch(function(){ m.textContent='Network error.'; m.className='msg err'; });
+  }); })();
+  (function(){ var b=$('clkDefaults'); if(!b) return; b.addEventListener('click',function(){ clkPickRender(CLOCK_DEFAULT.slice()); var m=$('clkMsg'); if(m){ m.textContent='Default set restored below \u2014 press Save to apply.'; m.className='msg'; } }); })();
 
   // État de débordement de la barre d'onglets. Appelé au défilement, au
   // redimensionnement et à chaque changement d'onglet, parce qu'afficher ou
@@ -1715,6 +1873,7 @@
         if($('srvTagline') && typeof d.serverTagline==='string') $('srvTagline').value=d.serverTagline;
         if($('loginTitle')) $('loginTitle').value=(d.showLoginTitle?'1':'0');
         if($('discordHook') && typeof d.discordChatWebhookUrl==='string') $('discordHook').value=d.discordChatWebhookUrl;
+        if($('clkPick') && Array.isArray(d.clockZones)) clkPickRender(d.clockZones);
         if(d.seo && typeof d.seo==='object'){ if($('seoEnabled'))$('seoEnabled').value=(d.seo.enabled?'1':'0'); if($('seoUrl')&&typeof d.seo.publicUrl==='string')$('seoUrl').value=d.seo.publicUrl; if($('seoGsv')&&typeof d.seo.googleVerification==='string')$('seoGsv').value=d.seo.googleVerification; if($('seoBing')&&typeof d.seo.bingVerification==='string')$('seoBing').value=d.seo.bingVerification; if($('seoYandex')&&typeof d.seo.yandexVerification==='string')$('seoYandex').value=d.seo.yandexVerification; if($('seoSiteName')&&typeof d.seo.siteName==='string')$('seoSiteName').value=d.seo.siteName; if($('seoTitle')&&typeof d.seo.title==='string')$('seoTitle').value=d.seo.title; if($('seoDesc')&&typeof d.seo.description==='string')$('seoDesc').value=d.seo.description; if($('seoImage')&&typeof d.seo.image==='string')$('seoImage').value=d.seo.image; if($('seoAi'))$('seoAi').value=(d.seo.aiCrawlers===false?'0':'1'); if($('seoIndexNow')&&typeof d.seo.indexNowKey==='string'&&d.seo.indexNowKey){ var _ik=d.seo.indexNowKey+'  (served at /'+d.seo.indexNowKey+'.txt, pinged on save)'; var _in=d.seo.indexNow; if(_in&&_in.at){ var _d=new Date(_in.at); _ik+=' \u2014 last submission '+_d.toISOString().replace('T',' ').slice(0,16)+' UTC, '+_in.count+' URLs'+(_in.error?' ('+_in.error+')':' accepted'); } $('seoIndexNow').textContent=_ik; } }
         _pxLoaded=true;
         if(d.proxyCfg && typeof d.proxyCfg==='object'){ var P=d.proxyCfg; if($('pxHosts'))$('pxHosts').value=(Array.isArray(P.allowedHosts)?P.allowedHosts.join('\n'):''); if($('pxGrace'))$('pxGrace').value=(typeof P.graceSec==='number'?P.graceSec:''); if($('pxGap'))$('pxGap').value=(typeof P.connGapMs==='number'?P.connGapMs:''); if($('pxPorts'))$('pxPorts').value=(Array.isArray(P.allowedPorts)?P.allowedPorts.join('\n'):''); if($('pxLog'))$('pxLog').value=(typeof P.logLevel==='string'?P.logLevel:''); if($('logQuick'))$('logQuick').value=(typeof P.logLevel==='string'?P.logLevel:''); if($('pxMax'))$('pxMax').value=(typeof P.maxClients==='number'?P.maxClients:''); }

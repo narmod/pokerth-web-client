@@ -17,6 +17,24 @@ changes for this line are on the
 highlights below.
 
 ### Added
+- **A world clock above the admin tabs** (`web.47`). The dashboard header now
+  carries a strip that is on every tab, for every admin key: this server's own
+  clock first, then the regions picked in *Server › Identity & reach*. A region
+  turns green between 18:00 and 01:00 local time — the hours when its players
+  come to the tables — so an operator can tell at a glance which continents are
+  awake before scheduling a restart, a broadcast or a tournament. A weekday is
+  appended where the region has already rolled over. Up to twelve regions from a
+  catalogue of thirty-eight, five continents deep; with none ticked the strip
+  shows the server clock alone. The server row is not the browser's clock: the
+  proxy sends its own instant and zone through the new `/admin/clock`, the panel
+  keeps the skew and ticks locally, so a laptop running fast never misreports the
+  server time and nothing polls per second. The selection lives in
+  `admin-config.json` (`clockZones`), applies immediately, and is carried through
+  a config export/import.
+- **Icons on every dashboard tab** (`web.47`). The three family buttons and the
+  seventeen sections each open with an emoji, so a section is found by shape
+  before it is read. Decorative only — screen readers still get the label alone.
+
 - **The game log reads its colours from the table style** (`web.46`, parity
   with upstream `e90593e`, "qml: table theme ivoire fine-tuning"). Three roles
   get a colour of their own: the winner of the main pot, the winner of a side
