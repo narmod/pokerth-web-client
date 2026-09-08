@@ -17,6 +17,39 @@ changes for this line are on the
 highlights below.
 
 ### Added
+- **The game log reads its colours from the table style** (`web.46`, parity
+  with upstream `e90593e`, "qml: table theme ivoire fine-tuning"). Three roles
+  get a colour of their own: the winner of the main pot, the winner of a side
+  pot, and the board steps (flop, turn, river) — the same split
+  `TableChatColors` makes. The values come from the table, so a style can set
+  them, and what a style leaves out is filled in from the set that matches the
+  brightness of its own panel background: the light set on a cream felt, the
+  historical yellow/orange on a dark one. That second half is the actual bug
+  Kai fixed upstream, and it bit here for the same reason — "Ivoire & Chene" is
+  our only light table, and nothing had ever been checked against a light
+  background before it shipped.
+  The protocol never says which pot a player collected, so the main-pot / side-
+  pot split follows the convention `handlog.mjs` has always used: the biggest
+  win of the hand is the main pot, the rest are side pots, and a tie is a split
+  of the main pot rather than one of each. The role is resolved **at render
+  time**, not when the line is written — at the moment a winner's line lands,
+  the next winner has not been announced yet. Untinted tables keep working off
+  CSS fallbacks that follow the palette, so a light palette never shows yellow
+  on white.
+  New module `modules/ui/chatlog-tint.mjs` (pure, no DOM) holding the
+  brightness rule, the two default sets and the fallback order; `theme.mjs`
+  owns the injection as before. Six new style tags are parsed for imported
+  packs (`ChatLogAccent`, `ChatLogAccentText`, `ChatLogWinner`,
+  `ChatLogWinnerSide`, `ChatLogBoard`, `ChatLogSend`), and the built-in ivoire
+  tint carries the five values of the upstream XML.
+  **Deliberate divergences**, both to avoid repainting what already works: the
+  chat accent falls back to the table's seat accent before the bundled gold
+  (all twenty-one built-in styles have carried one since 2.1.4), and the six
+  older `ChatLog*` keys still fall through to CSS instead of being filled in.
+  `--chatlog-send` is parsed and exposed but not wired: the send button is the
+  palette's gold on every table, and switching it would change all of them for
+  a colour upstream applies to a flat glyph. New test:
+  `scripts/test-chatlog-tint.mjs` (66 checks).
 - **Context menu on a seat, right-click or long press** (`web.43`, parity with
   `GamePlayerBox.qml`). New module `modules/ui/seat-menu.mjs`. Right-click on
   desktop, press-and-hold on touch (500 ms, cancelled past 10 px of travel so a

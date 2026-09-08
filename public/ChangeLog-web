@@ -1,4 +1,9 @@
 2026-09-08 version 2.1.8-web (current series):
+- new: the game log now colours its lines the way the desktop and mobile clients do - the winner of the pot, the winner of a side pot, and the flop/turn/river steps each have their own colour, so a hand can be read at a glance instead of line by line
+- improvement: on a light table style such as Ivoire & Chene, the chat and log colours are the darkened set the official client uses there, instead of the yellow and orange meant for a dark felt
+- improvement: an imported table style can now set those colours itself (accent, winner, side pot, board, send), like the styles shipped with the official client; anything it leaves out is filled in to match the brightness of its own panel background
+
+2026-09-08 version 2.1.8-web:
 - bugfix: playing on a LAN or dedicated server works again from anywhere - the client was dialling the wrong address for the relay and never reached it, so the connection failed with "is the proxy running?" no matter which server you typed
 - improvement: a LAN game now always goes through the site's relay, and only the Internet connection carries the operator's real-IP header - the two no longer get in each other's way
 

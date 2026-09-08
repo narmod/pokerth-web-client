@@ -22,6 +22,8 @@
 // TO ADD A WHOLE AXIS: makeAxis(...) + push into AXES; it appears automatically.
 // ─────────────────────────────────────────────────────────────────────────
 
+import { CHATLOG_VARS, resolveChatLogTint } from './ui/chatlog-tint.mjs';
+
 function _t(key, fallback) {
   try {
     if (typeof window.t === 'function') {
@@ -870,12 +872,20 @@ var _SKIN_TINT = {
   disco:{a:'#d1298f',bg:'#200f2c',su:'#3a1d4d',bo:'#a4308c',tx:'#ffe2f4',se:'#e0b0d8',mu:'#a06fa8'},
   // Ivoire & Chene : premier tapis CLAIR — ChatLog* du XML amont, accent = liseré
   // laiton des boutons (#93794d).
-  'ivoire-chene':{a:'#93794d',bg:'#f5eee1',su:'#e9dcc4',bo:'#c6ac82',tx:'#3a2c1a',se:'#5d4a30',mu:'#8a755a'}
+  // ac/wi/ws/bd/sd = les <ChatLog*> de contenu ajoutes en amont (e90593e) au
+  // meme XML : sur creme, l'accent de contenu est plus sombre que le liseré
+  // laiton des boutons (contraste >= 4,3:1 sur #f5eee1).
+  'ivoire-chene':{a:'#93794d',bg:'#f5eee1',su:'#e9dcc4',bo:'#c6ac82',tx:'#3a2c1a',se:'#5d4a30',mu:'#8a755a',
+                  ac:'#7a5a12',wi:'#6b4e0a',ws:'#8a6a2a',bd:'#a8431a',sd:'#0e7a37'}
 };
 function _injectTintObj(m){
   var el=document.documentElement;
-  var K={'--chatlog-bg':'bg','--chatlog-surface':'su','--chatlog-border':'bo','--chatlog-text':'tx','--chatlog-text2':'se','--chatlog-muted':'mu','--box-accent':'a'};
-  for (var k in K){ var v=m?m[K[k]]:null; if(v) el.style.setProperty(k, v); else el.style.removeProperty(k); }
+  // resolveChatLogTint complete les couleurs de CONTENU (accent, roles du
+  // journal, symbole d'envoi) avec le jeu de defauts qui va a la luminosite du
+  // fond de panneau — sans quoi un tapis clair heriterait du jaune et de
+  // l'orange prevus pour fond sombre (upstream e90593e).
+  var r=resolveChatLogTint(m);
+  for (var k in CHATLOG_VARS){ var v=r?r[k]:null; if(v) el.style.setProperty(CHATLOG_VARS[k], v); else el.style.removeProperty(CHATLOG_VARS[k]); }
   if (m && m.a) el.setAttribute('data-box-accent','1'); else el.removeAttribute('data-box-accent');
 }
 function _injectSkinTint(id){ _injectTintObj((id&&_SKIN_TINT[id]) || _paletteChatlog || null); }
@@ -935,7 +945,11 @@ function _importTablePackage(file){
       meta.dealer=_xmlVal(xml,'DealerPuck')||meta.dealer; meta.sb=_xmlVal(xml,'SmallBlindPuck')||meta.sb; meta.bb=_xmlVal(xml,'BigBlindPuck')||meta.bb;
       meta.fold=_xmlVal(xml,'FoldButton')||meta.fold; meta.call=_xmlVal(xml,'CheckCallButton')||meta.call; meta.raise=_xmlVal(xml,'BetRaiseButton')||meta.raise; meta.allin=_xmlVal(xml,'AllInButton')||meta.allin;
       var acc=_xmlVal(xml,'PlayerBoxAccent'), cbg=_xmlVal(xml,'ChatLogBackground');
-      if(acc||cbg) meta.tint={ a:acc, bg:cbg, su:_xmlVal(xml,'ChatLogSurface'), bo:_xmlVal(xml,'ChatLogBorder'), tx:_xmlVal(xml,'ChatLogText'), se:_xmlVal(xml,'ChatLogTextSecondary'), mu:_xmlVal(xml,'ChatLogTextMuted') };
+      // ChatLogAccent..ChatLogSend : couleurs de contenu ajoutees en amont
+      // (e90593e). Absentes, elles sont completees a l'injection selon la
+      // luminosite du fond, donc un pack ecrit pour le client QML rend pareil.
+      if(acc||cbg) meta.tint={ a:acc, bg:cbg, su:_xmlVal(xml,'ChatLogSurface'), bo:_xmlVal(xml,'ChatLogBorder'), tx:_xmlVal(xml,'ChatLogText'), se:_xmlVal(xml,'ChatLogTextSecondary'), mu:_xmlVal(xml,'ChatLogTextMuted'),
+                              ac:_xmlVal(xml,'ChatLogAccent'), act:_xmlVal(xml,'ChatLogAccentText'), wi:_xmlVal(xml,'ChatLogWinner'), ws:_xmlVal(xml,'ChatLogWinnerSide'), bd:_xmlVal(xml,'ChatLogBoard'), sd:_xmlVal(xml,'ChatLogSend') };
       // 2.1.3 : couleurs de libelle par bouton (styles a boutons sombres), zoom/cadrage
       //         du fond, rayon des boutons d'action et apercu portrait.
       var _bfg={ fold:_xmlVal(xml,'FoldButtonTextColor'), check:_xmlVal(xml,'CheckCallButtonTextColor'), raise:_xmlVal(xml,'BetRaiseButtonTextColor'), allin:_xmlVal(xml,'AllInButtonTextColor') };

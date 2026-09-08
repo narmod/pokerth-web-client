@@ -5286,7 +5286,13 @@ const App = (() => {
   // rappelé par _retranslateSysChat() (lui-même appelé par setLang) → le journal
   // se re-traduit instantanément au changement de langue. Une chaîne passée
   // directement (lignes sans terme traduisible) est simplement figée.
-  function logAction(entry, isAction) {
+  // `role` (optionnel) colore la ligne comme le fait le client officiel :
+  // 'board' pour flop/turn/river, 'win' pour le gagnant du pot principal,
+  // 'win-side' pour un side pot (upstream e90593e, TableChatColors). Il peut
+  // etre une FONCTION, evaluee au rendu comme le texte : au moment ou la ligne
+  // d'un gagnant est ecrite, on ne sait pas encore si un autre joueur ramassera
+  // davantage sur la meme main. Une valeur inconnue ne pose aucune classe.
+  function logAction(entry, isAction, role) {
     // Parite QML LogsSettings : LogOnOff coupe la collecte (les entrees deja
     // enregistrees restent affichees) ; LogInterval 'hand' saute les lignes
     // d'action individuelles (isAction) et ne garde que les etapes de main.
@@ -5294,7 +5300,12 @@ const App = (() => {
       if (!_advGet('log_on', true)) return;
       if (isAction && _getLogInterval() === 'hand') return;
     } catch (e) {}
-    var fn = (typeof entry === 'function') ? entry : function(){ return entry; };
+    var _src = (typeof entry === 'function') ? entry : function(){ return entry; };
+    // Enveloppe systematique : le role est porte par la fonction stockee, et
+    // deux appels peuvent partager la meme fonction source avec des roles
+    // differents. _buildLogText et renderLog n'appellent que fn().
+    var fn = function(){ return _src(); };
+    fn.role = role || null;
     S.actionLog.push(fn);
     if (S.actionLog.length > 500) S.actionLog.shift();
     renderLog(1);   // une ligne de plus en tete (liste inversee) — cf. renderLog
@@ -5317,7 +5328,12 @@ const App = (() => {
     var _ls = (typeof window._liveBefore === 'function') ? window._liveBefore(el) : null;
     el.innerHTML = S.actionLog.slice().reverse().map(function(fn){
       var s; try { s = fn(); } catch (_e) { s = ''; }
-      return '<div class="log-line">'+esc(s)+'</div>';
+      // Role de la ligne (cf. logAction) : resolu A CHAQUE rendu, donc un role
+      // fonction voit l'etat final de la main meme si la ligne a ete ecrite
+      // pendant l'abattage.
+      var r = fn && fn.role; if (typeof r === 'function') { try { r = r(); } catch (_e2) { r = null; } }
+      var cls = (r === 'board' || r === 'win' || r === 'win-side') ? ' lg-' + r : '';
+      return '<div class="log-line'+cls+'">'+esc(s)+'</div>';
     }).join('');
     if (_ls) window._liveAfter(el, _ls, _n);
     else el.scrollTop = 0; // le plus recent est en haut (liste inversee)
@@ -11411,7 +11427,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.8-web.45'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.8-web.46'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

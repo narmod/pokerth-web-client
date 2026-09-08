@@ -9329,7 +9329,7 @@ html:not([data-seat-struct="qml"]) .seat:not(.me) .seat-foot { margin-top: 1px; 
   color:var(--chatlog-muted, var(--text-dim, #9aa3b5)); font-size:var(--fs-2xs); letter-spacing:0.12em; text-transform:uppercase;
   padding:3px 12px 4px; cursor:pointer; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
   touch-action:none; }
-.gip-tab.gip-on { color:var(--chatlog-text, var(--gold)); border-bottom-color:var(--box-accent, var(--chatlog-muted, var(--gold-dim))); font-weight:700; }
+.gip-tab.gip-on { color:var(--chatlog-text, var(--gold)); border-bottom-color:var(--chatlog-accent, var(--box-accent, var(--chatlog-muted, var(--gold-dim)))); font-weight:700; }
 .gip-tab:hover { color:var(--chatlog-text, var(--gold)); }
 /* Onglet Chances : mêmes classes que l'ancien moniteur, tailles panneau. */
 #g-odds-body .odds-hd{font-weight:700;font-size:var(--fs-sm);color:var(--box-accent, var(--chatlog-text, var(--gold)));margin:2px 0 5px;letter-spacing:.3px}
@@ -10405,7 +10405,7 @@ html[data-buttons="pokerth"] .btn-action[disabled] { filter: grayscale(0.55) bri
 #g-chat-msgs { color: var(--chatlog-text, var(--text-hi)); }
 #g-chat-msgs .msg .txt { color: var(--chatlog-text, var(--text-hi)); }
 #g-chat-msgs .msg.sys { color: var(--chatlog-text2, var(--chatlog-text, var(--text))); }
-#g-chat-msgs .msg .who { color: var(--box-accent, var(--gold)); }
+#g-chat-msgs .msg .who { color: var(--chatlog-accent, var(--box-accent, var(--gold))); }
 /* Fenetre « Combinaisons du poker » : c'est une fenetre de jeu au meme titre
    que le chat, le journal et les reactions -> elle suit la teinte du tapis
    (ChatLog* du tablestyle.xml) au lieu de rester sur la palette de l'app.
@@ -10417,7 +10417,20 @@ html[data-buttons="pokerth"] .btn-action[disabled] { filter: grayscale(0.55) bri
 #hands-card-inner .hand-row,
 #hands-card-inner .hands-legend { border-bottom-color: var(--chatlog-border, rgba(var(--gold-rgb), 0.07)); }
 #g-chat-msgs .msg .msg-time { color: var(--chatlog-muted, var(--text-dim, #8b93a7)); }
-#g-chat-msgs .msg.mention .txt { color: var(--box-accent, var(--gold)); font-weight: 700; }
+#g-chat-msgs .msg.mention .txt { color: var(--chatlog-accent, var(--box-accent, var(--gold))); font-weight: 700; }
+
+/* ── Roles du journal (upstream e90593e « qml: table theme ivoire fine-tuning »)
+   Le client officiel colore trois roles dans le journal : le gagnant du pot
+   principal, celui d'un side pot, et les etapes de tableau (flop/turn/river).
+   Les valeurs viennent du tapis (--chatlog-*) ; sans tapis teinte, les replis
+   ci-dessous sont les defauts amont, jeu clair sous la palette claire — c'est
+   exactement l'ecueil que le commit corrige : jaune et orange sur fond clair
+   sont les premieres couleurs que l'oeil perd. */
+:root { --lg-win-fb: #FFFF00; --lg-win-side-fb: #FFFFCC; --lg-board-fb: #FF6633; }
+:root[data-theme="pokerth-light"] { --lg-win-fb: #6b5400; --lg-win-side-fb: #8a6a2a; --lg-board-fb: #a8431a; }
+.log-line.lg-win      { color: var(--chatlog-winner, var(--lg-win-fb)); }
+.log-line.lg-win-side { color: var(--chatlog-winner-side, var(--lg-win-side-fb)); }
+.log-line.lg-board    { color: var(--chatlog-board, var(--lg-board-fb)); }
 html[data-box-accent][data-seat-struct="qml"] .seat-plate { border-color: var(--box-accent); }
 
 /* ═══════════════════════════════════════════════════════════════════════════

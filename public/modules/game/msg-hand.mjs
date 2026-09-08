@@ -818,7 +818,9 @@ function onDealFlop(sub) {
     setTimeout(renderHandStrength, 150); // force de la main au flop (was 500ms)
     setTimeout(renderOddsMonitor, 220); // moniteur d'odds (flop)
     const _lhPotF = S.pot;
-    window.logAction(function(){ return '--- ' + t('flop') + ' [' + flopStr + '] · ' + t('pot') + ' ' + _groupThousands(_lhPotF) + ' ---'; });
+    // Role 'board' : les etapes de tableau ont leur propre couleur dans le
+    // journal du client officiel (upstream e90593e, TableChatColors::Board).
+    window.logAction(function(){ return '--- ' + t('flop') + ' [' + flopStr + '] · ' + t('pot') + ' ' + _groupThousands(_lhPotF) + ' ---'; }, false, 'board');
     window.notifyCard(); window.notifyCard(); window.notifyCard();
     return;
 }
@@ -842,7 +844,7 @@ function onDealTurn(sub) {
     window.setPot(S.pot);
     const tvCard = S.commCards[3]; const tvName = tvCard != null ? cardName(tvCard, true) : '?';
     const _lhPotT = S.pot;
-    window.logAction(function(){ return '--- ' + t('turn') + ' [' + tvName + '] · ' + t('pot') + ' ' + _groupThousands(_lhPotT) + ' ---'; });
+    window.logAction(function(){ return '--- ' + t('turn') + ' [' + tvName + '] · ' + t('pot') + ' ' + _groupThousands(_lhPotT) + ' ---'; }, false, 'board');
     renderComm(true); // flip animation
     setTimeout(renderHandStrength, 150); // force de la main au turn (was 500ms)
     setTimeout(renderOddsMonitor, 220); // moniteur d'odds (turn)
@@ -870,7 +872,7 @@ function onDealRiver(sub) {
     window.setPot(S.pot);
     const rvCard = S.commCards[4]; const rvName = rvCard != null ? cardName(rvCard, true) : '?';
     const _lhPotR = S.pot;
-    window.logAction(function(){ return '--- ' + t('river') + ' [' + rvName + '] · ' + t('pot') + ' ' + _groupThousands(_lhPotR) + ' ---'; });
+    window.logAction(function(){ return '--- ' + t('river') + ' [' + rvName + '] · ' + t('pot') + ' ' + _groupThousands(_lhPotR) + ' ---'; }, false, 'board');
     renderComm(true, true); // flip animation + dramatic river
     setTimeout(renderHandStrength, 200); // force de la main à la river (was 600ms)
     setTimeout(renderOddsMonitor, 240); // moniteur d'odds (river)
@@ -984,7 +986,18 @@ function onEndOfHandShow(sub) {
           recordHand(true, netWin, myPair2);
         }
         // Gain affiché dans le Journal 📋 (pas dans le chat, pour ne pas le noyer)
-        window.logAction('🏆 ' + window.getPlayerName(pid) + ' +' + _groupThousands(won));
+        // Role resolu au RENDU : le protocole ne dit pas quel pot un joueur a
+        // ramasse, on applique donc la convention deja tenue par handlog.mjs —
+        // le plus gros gain de la main est le pot principal, les autres sont
+        // des side pots. Ex aequo = partage du pot principal, donc 'win' pour
+        // les deux. Ecrite tout de suite, la ligne ne peut pas savoir : le
+        // gagnant suivant n'est pas encore arrive.
+        const _wonHere = won;
+        window.logAction('🏆 ' + window.getPlayerName(pid) + ' +' + _groupThousands(won), false, function(){
+          var top = 0;
+          for (var _wi = 0; _wi < winners.length; _wi++) if (winners[_wi].won > top) top = winners[_wi].won;
+          return _wonHere >= top ? 'win' : 'win-side';
+        });
     speak(t('voiceWins', { name: window.getPlayerName(pid), n: fmtChipsVoice(won) }));
       }
     }
@@ -1106,7 +1119,8 @@ function onEndOfHandHide(sub) {
     const won  = Proto.u32(sub, 3);
     const cash = Proto.u32(sub, 4);
     if (S.seatData[pid]) { S.seatData[pid].money = cash; if(won) S.seatData[pid].action = '+'+won; }
-    if (won > 0) window.logAction('🏆 ' + window.getPlayerName(pid) + ' +' + _groupThousands(won));
+    // Fin de main sans abattage : un seul gagnant annonce, donc pot principal.
+    if (won > 0) window.logAction('🏆 ' + window.getPlayerName(pid) + ' +' + _groupThousands(won), false, 'win');
     try { if (window._handlog) window._handlog.onHandHideEnd({ pid: pid, won: won, round: (typeof S.gameState === 'number' ? S.gameState : undefined), eliminated: _hlEliminatedPids(), gameOverPid: null }); } catch (_e) {}
     try { if (typeof window._hudRefresh === 'function') window._hudRefresh(); } catch (_e) {}
     try { window._sdWinners = won > 0 ? new Set([pid]) : new Set(); } catch (e) {}
