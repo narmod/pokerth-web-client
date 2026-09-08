@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex">
-<title>PokerTH — Admin</title>
+<title>PokerTH Web Client — Admin</title>
 <style>
   :root{--panel:rgba(20,25,33,.92);--line:rgba(160,172,196,.18);--gold:#eff1f5;--cream:#eff1f5;--text:#a0acc4}
   *{box-sizing:border-box}
@@ -14,7 +14,13 @@
   h2{font-size:.95rem;color:var(--gold);margin:2px 0 8px}
   .sub{color:var(--text);font-size:.8rem;margin:0 0 16px}
   .top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
-  .topbtns{display:flex;gap:8px;margin-top:4px;flex:none}
+  .top>.tophd{flex:1 1 0;min-width:0}
+  .topbtns{display:flex;gap:8px;margin-top:4px;flex:1 1 0;justify-content:flex-end}
+  /* Quelle instance ai-je sous les yeux ? Deux onglets d'administration se
+     ressemblent trait pour trait ; l'hote est la seule chose qui les separe. */
+  .tophost{flex:0 0 auto;align-self:center;max-width:40%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+           padding:4px 12px;border:1px solid var(--line);border-radius:999px;background:rgba(160,172,196,.06);
+           font-size:.78rem;color:var(--cream)}
   /* Bandeau d'horloges : hors des onglets, donc visible partout. */
   .clockbar{display:flex;flex-wrap:wrap;align-items:flex-start;gap:2px;margin:14px 0 0;padding:8px 6px;border:1px solid var(--line);border-radius:10px;background:rgba(160,172,196,.05)}
   /* flex:1 1 0 sur chaque pastille : trois horloges ou douze, la rangee occupe
@@ -343,7 +349,9 @@
     .ckf{width:13px;height:10px}
     .ck .cd{font-size:.58rem}
     .top{flex-wrap:wrap}
-    .topbtns{flex-wrap:wrap}
+    .topbtns{flex-wrap:wrap;flex:1 1 auto}
+    .top>.tophd{flex:1 1 auto}
+    .tophost{order:3;flex:1 1 100%;max-width:none;text-align:center;margin-top:6px}
     .tabs{overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;gap:4px}
     .tabs::-webkit-scrollbar{display:none}
     .tabs{flex-wrap:nowrap}
@@ -368,7 +376,7 @@
 <body>
 <div class="wrap">
   <div id="login" style="display:none">
-    <h1>PokerTH — Admin</h1>
+    <h1>PokerTH Web Client — Admin</h1>
     <p class="sub">Enter your admin token to continue.</p>
     <div class="card">
       <label for="ltok">Admin token</label>
@@ -381,7 +389,8 @@
 
   <div id="dash" style="display:none">
     <div class="top">
-      <div><h1>PokerTH — Admin</h1><p class="sub">Dashboard</p></div>
+      <div class="tophd"><h1>PokerTH Web Client — Admin</h1><p class="sub">Dashboard</p></div>
+      <div class="tophost" id="topHost" title="The host this panel is served from"></div>
       <div class="topbtns">
         <button id="themeBtn" class="ghost" title="Toggle dark / light"></button>
         <a class="appbtn" href="/" target="_blank" rel="noopener">Open the app &#8599;</a>
@@ -1091,6 +1100,9 @@
       return r;
     }); }
   function show(v){ login.style.display=v==='login'?'block':'none'; dash.style.display=v==='dash'?'block':'none'; }
+  // location.host, pas hostname : un panneau servi sur un port non standard
+  // doit le dire, sinon deux instances de la meme machine se confondent.
+  (function(){ var h=$('topHost'); if(h) h.textContent=location.host||''; })();
 
   // ── Game servers (PokerTH dial registry + reachability) — master-only ──
   var _srv = [];

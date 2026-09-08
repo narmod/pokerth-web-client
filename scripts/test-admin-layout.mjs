@@ -99,6 +99,24 @@ ok(/querySelectorAll\('\.tab'\)/.test(scope) && !/querySelectorAll\('\.gtab, \.t
 ok(/document\.querySelectorAll\('\.tabs'\)\.forEach/.test(body(admin, 'tabsFade')),
   'the edge fade now covers every bar, not just the first');
 
+// ── Header ────────────────────────────────────────────────────────────────
+// Two admin tabs look alike down to the pixel; the host is the only thing
+// that tells them apart, so it sits in the middle of the header.
+ok((admin.match(/PokerTH Web Client \u2014 Admin/g) || []).length === 3,
+  'the product is named in full, in the tab, on the login screen and on the dashboard');
+ok(!/PokerTH \u2014 Admin/.test(admin), 'and the short form is gone from all three');
+ok(/<div class="tophost" id="topHost"/.test(admin), 'the header carries a host chip');
+ok(/h\.textContent=location\.host/.test(admin) && !/location\.hostname/.test(admin),
+  'filled from the URL, host and not hostname \u2014 a panel on an odd port has to say so');
+ok(/\.top>\.tophd\{flex:1 1 0/.test(admin) && /\.topbtns\{[^}]*flex:1 1 0/.test(admin),
+  'both sides take an equal share, so the chip lands on the real centre rather than wherever the title ends');
+ok(/\.tophost\{flex:0 0 auto/.test(admin), 'while the chip itself is sized by its text');
+ok(/\.tophost\{[^}]*text-overflow:ellipsis/.test(admin), 'a long host is clipped, not allowed to shove the buttons off');
+const smallTop = /@media\(max-width:600px\)\{([^]*?)\n  \}/g;
+const phoneCss = [...admin.matchAll(smallTop)].map(m => m[1]).join('\n');
+ok(/\.tophost\{order:3;flex:1 1 100%/.test(phoneCss),
+  'and on a phone it drops to its own full-width line instead of squeezing between title and buttons');
+
 // ── Family bar stands out ─────────────────────────────────────────────────
 ok(/\.gtab\{flex:1 1 0/.test(admin),
   'the three families share the width, reading as the page navigation');

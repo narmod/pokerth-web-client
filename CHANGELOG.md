@@ -108,6 +108,13 @@ highlights below.
   with the bot noise. A translated language is now never folded, whatever the
   cap, and the cap for the rest went to 90 — still low enough that a chatty
   client cannot inflate the file.
+- **The admin panel names the product in full, and says which host it is**
+  (`web.55`). The title reads *PokerTH Web Client — Admin* in the browser tab,
+  on the login screen and on the dashboard, and the header carries the host it
+  is served from, centred between the title and the buttons. Two admin tabs look
+  alike down to the pixel; the host is the only thing that tells one instance
+  from another. It is `location.host`, so a panel on an odd port says so, and it
+  drops to its own line on a phone.
 - **Icons on every dashboard tab** (`web.47`). The three family buttons and the
   seventeen sections each open with an emoji, so a section is found by shape
   before it is read. Decorative only — screen readers still get the label alone.
