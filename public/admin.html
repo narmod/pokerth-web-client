@@ -16,14 +16,18 @@
   .top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
   .topbtns{display:flex;gap:8px;margin-top:4px;flex:none}
   /* Bandeau d'horloges : hors des onglets, donc visible partout. */
-  .clockbar{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:14px 0 0;padding:7px 9px;border:1px solid var(--line);border-radius:10px;background:rgba(160,172,196,.05)}
-  .ck{display:inline-flex;align-items:baseline;gap:5px;padding:3px 9px;border-radius:999px;border:1px solid transparent;font-size:.79rem;white-space:nowrap;line-height:1.5}
-  .ck b{font-weight:700;font-variant-numeric:tabular-nums;letter-spacing:.02em}
-  .ck .cn{color:var(--text)}
-  .ck .cd{color:var(--text);font-size:.7rem;opacity:.8}
-  .ck.srv{border-color:var(--line);background:rgba(160,172,196,.12);font-weight:600}
-  .ck.peak{border-color:#7fd17f}
+  .clockbar{display:flex;flex-wrap:wrap;align-items:flex-start;justify-content:center;gap:2px;margin:14px 0 0;padding:8px 6px;border:1px solid var(--line);border-radius:10px;background:rgba(160,172,196,.05)}
+  .ck{display:flex;flex-direction:column;align-items:center;gap:3px;min-width:68px;padding:5px 6px;border:1px solid transparent;border-radius:9px;color:var(--cream);line-height:1.2}
+  .ck b{font-size:.85rem;font-weight:700;font-variant-numeric:tabular-nums;letter-spacing:.02em}
+  .ck .ckn{display:flex;align-items:center;gap:4px;font-size:.68rem;color:var(--text);white-space:nowrap}
+  .ck .cd{font-size:.63rem;color:var(--text);opacity:.85}
+  .ck.ref{border-color:var(--line);background:rgba(160,172,196,.12)}
+  .ck.ref .ckn{color:var(--cream)}
+  .ck.peak{color:#7fd17f}
   .ck.peak b{color:#7fd17f}
+  .ckdial{display:block}
+  .ckf{width:17px;height:12px;border-radius:2px;object-fit:cover;display:block;flex:none}
+  .clkopt .ckf{width:19px;height:14px}
   .clkpick{display:flex;flex-direction:column;gap:9px;margin-top:4px}
   .clkgrp{display:flex;flex-wrap:wrap;gap:6px}
   .clkgl{width:100%;font-size:.72rem;color:var(--text);text-transform:uppercase;letter-spacing:.05em;margin:2px 0 0}
@@ -286,8 +290,9 @@
     .wrap{max-width:820px}
     .card{padding:18px}
     .tabs{gap:8px}
-    .clockbar{gap:5px;padding:6px 7px}
-    .ck{font-size:.74rem;padding:2px 7px}
+    .clockbar{gap:1px;padding:6px 4px}
+    .ck{min-width:60px;padding:4px}
+    .ck b{font-size:.78rem}
     #login{max-width:440px;margin:0 auto}
     input[type=password]{max-width:480px}
   }
@@ -352,7 +357,7 @@
         <button id="logoutBtn" class="ghost">Log out</button>
       </div>
     </div>
-    <div class="clockbar" id="clockBar" style="display:none" title="Server clock and the regions picked in Server › Identity & reach"></div>
+    <div class="clockbar" id="clockBar" style="display:none" title="Regions picked in Server › Identity &amp; reach, earliest on the left"></div>
     <div class="tabs gtabs" id="tabGroups">
       <button class="gtab on" data-g="server"><span class="ti" aria-hidden="true">🖥️</span>Server</button>
       <button class="gtab" data-g="client"><span class="ti" aria-hidden="true">🎮</span>Client</button>
@@ -694,7 +699,8 @@
       </div>
       <div class="card">
         <h2>World clock (dashboard header)</h2>
-        <p class="muted">The strip above the tabs is on every tab, for every admin key. It always shows this server's own clock; add the regions you want beside it. A region is highlighted in green when it is between 18:00 and 01:00 locally \u2014 the hours when its players come to the tables \u2014 so you can see at a glance which continents are awake. A weekday is appended when the region is already on another day. Up to 12 regions; with none ticked the strip shows the server clock alone. Applies immediately (no restart needed).</p>
+        <p class="muted">The strip above the tabs is on every tab, for every admin key. Each region gets a dial, its time and its name, ranked by offset — earliest on the left, latest on the right — around the reference below, which therefore sits in the middle. A region turns green between 18:00 and 01:00 locally, the hours when its players come to the tables, so you can see at a glance which continents are awake; a weekday is appended where the region has already rolled over. Up to 12 regions, plus the reference, which is always shown whether or not it is ticked. This server’s own clock is not here — it heads the status list under <b>Health &amp; logs</b>. Applies immediately (no restart needed).</p>
+        <div class="defrow fld"><span style="white-space:nowrap">Reference zone</span><select id="clkRef"></select></div>
         <div id="clkPick" class="clkpick"></div>
         <p class="muted" id="clkCount" style="margin-top:10px"></p>
         <div class="rowtop"><button id="saveClocks" class="use">Save</button><button id="clkDefaults" class="ghost">Default set</button></div>
@@ -1309,92 +1315,166 @@
 
   // ── Bandeau d'horloges (au-dessus des familles d'onglets) ──────────────
   // But : voir d'un coup d'œil quels continents sont à l'heure de jouer. Les
-  // fuseaux en soirée (18 h → 1 h) sont surlignés en vert. L'horloge du
-  // navigateur ne fait pas foi pour la ligne « Server » : on lit l'instant
-  // serveur une fois, on garde l'écart, et le rendu tourne en local (aucun
-  // sondage à la seconde). Recalage toutes les 5 min, qui ramasse aussi un
-  // changement de sélection fait depuis un autre onglet.
-  // [tz, libellé, emoji, groupe]
+  // villes sont rangées par décalage UTC — plus tôt à gauche, plus tard à
+  // droite — autour d'un fuseau de référence (UTC par défaut, réglable). Les
+  // fuseaux en soirée (18 h → 1 h) passent en vert.
+  // L'heure du serveur n'est PAS ici : elle est en tête de Server › Health &
+  // logs, où on la lit quand on en a besoin, et le bandeau reste une carte du
+  // monde plutôt qu'un mélange des deux.
+  // Le rendu tourne en local à partir d'un écart mesuré une fois avec le
+  // serveur (aucun sondage à la seconde) ; recalage toutes les 5 min, qui
+  // ramasse aussi une sélection changée depuis un autre onglet.
+  // [tz, libellé, code pays ISO (drapeau auto-hébergé, '' = aucun), groupe]
   var CLOCK_CAT=[
-    ['UTC','UTC','\u{1F310}','Reference'],
-    ['Europe/London','London','\u{1F1EC}\u{1F1E7}','Europe'],
-    ['Europe/Lisbon','Lisbon','\u{1F1F5}\u{1F1F9}','Europe'],
-    ['Europe/Paris','Paris','\u{1F1EB}\u{1F1F7}','Europe'],
-    ['Europe/Berlin','Berlin','\u{1F1E9}\u{1F1EA}','Europe'],
-    ['Europe/Madrid','Madrid','\u{1F1EA}\u{1F1F8}','Europe'],
-    ['Europe/Rome','Rome','\u{1F1EE}\u{1F1F9}','Europe'],
-    ['Europe/Warsaw','Warsaw','\u{1F1F5}\u{1F1F1}','Europe'],
-    ['Europe/Athens','Athens','\u{1F1EC}\u{1F1F7}','Europe'],
-    ['Europe/Kyiv','Kyiv','\u{1F1FA}\u{1F1E6}','Europe'],
-    ['Europe/Moscow','Moscow','\u{1F1F7}\u{1F1FA}','Europe'],
-    ['America/Toronto','Toronto','\u{1F1E8}\u{1F1E6}','Americas'],
-    ['America/New_York','New York','\u{1F1FA}\u{1F1F8}','Americas'],
-    ['America/Chicago','Chicago','\u{1F1FA}\u{1F1F8}','Americas'],
-    ['America/Denver','Denver','\u{1F1FA}\u{1F1F8}','Americas'],
-    ['America/Los_Angeles','Los Angeles','\u{1F1FA}\u{1F1F8}','Americas'],
-    ['America/Mexico_City','Mexico City','\u{1F1F2}\u{1F1FD}','Americas'],
-    ['America/Bogota','Bogota','\u{1F1E8}\u{1F1F4}','Americas'],
-    ['America/Sao_Paulo','S\u00e3o Paulo','\u{1F1E7}\u{1F1F7}','Americas'],
-    ['America/Argentina/Buenos_Aires','Buenos Aires','\u{1F1E6}\u{1F1F7}','Americas'],
-    ['Africa/Casablanca','Casablanca','\u{1F1F2}\u{1F1E6}','Africa & Middle East'],
-    ['Africa/Lagos','Lagos','\u{1F1F3}\u{1F1EC}','Africa & Middle East'],
-    ['Africa/Cairo','Cairo','\u{1F1EA}\u{1F1EC}','Africa & Middle East'],
-    ['Africa/Johannesburg','Johannesburg','\u{1F1FF}\u{1F1E6}','Africa & Middle East'],
-    ['Asia/Jerusalem','Jerusalem','\u{1F1EE}\u{1F1F1}','Africa & Middle East'],
-    ['Asia/Dubai','Dubai','\u{1F1E6}\u{1F1EA}','Africa & Middle East'],
-    ['Asia/Karachi','Karachi','\u{1F1F5}\u{1F1F0}','Asia'],
-    ['Asia/Kolkata','Mumbai','\u{1F1EE}\u{1F1F3}','Asia'],
-    ['Asia/Bangkok','Bangkok','\u{1F1F9}\u{1F1ED}','Asia'],
-    ['Asia/Jakarta','Jakarta','\u{1F1EE}\u{1F1E9}','Asia'],
-    ['Asia/Singapore','Singapore','\u{1F1F8}\u{1F1EC}','Asia'],
-    ['Asia/Shanghai','Shanghai','\u{1F1E8}\u{1F1F3}','Asia'],
-    ['Asia/Seoul','Seoul','\u{1F1F0}\u{1F1F7}','Asia'],
-    ['Asia/Tokyo','Tokyo','\u{1F1EF}\u{1F1F5}','Asia'],
-    ['Australia/Perth','Perth','\u{1F1E6}\u{1F1FA}','Oceania'],
-    ['Australia/Brisbane','Brisbane','\u{1F1E6}\u{1F1FA}','Oceania'],
-    ['Australia/Sydney','Sydney','\u{1F1E6}\u{1F1FA}','Oceania'],
-    ['Pacific/Auckland','Auckland','\u{1F1F3}\u{1F1FF}','Oceania']
+    ['UTC','UTC','','Reference'],
+    ['Europe/London','London','gb','Europe'],
+    ['Europe/Lisbon','Lisbon','pt','Europe'],
+    ['Europe/Paris','Paris','fr','Europe'],
+    ['Europe/Berlin','Berlin','de','Europe'],
+    ['Europe/Madrid','Madrid','es','Europe'],
+    ['Europe/Rome','Rome','it','Europe'],
+    ['Europe/Warsaw','Warsaw','pl','Europe'],
+    ['Europe/Athens','Athens','gr','Europe'],
+    ['Europe/Kyiv','Kyiv','ua','Europe'],
+    ['Europe/Moscow','Moscow','ru','Europe'],
+    ['America/Toronto','Toronto','ca','Americas'],
+    ['America/New_York','New York','us','Americas'],
+    ['America/Chicago','Chicago','us','Americas'],
+    ['America/Denver','Denver','us','Americas'],
+    ['America/Los_Angeles','Los Angeles','us','Americas'],
+    ['America/Mexico_City','Mexico City','mx','Americas'],
+    ['America/Bogota','Bogota','co','Americas'],
+    ['America/Sao_Paulo','S\u00e3o Paulo','br','Americas'],
+    ['America/Argentina/Buenos_Aires','Buenos Aires','ar','Americas'],
+    ['Africa/Casablanca','Casablanca','ma','Africa & Middle East'],
+    ['Africa/Lagos','Lagos','ng','Africa & Middle East'],
+    ['Africa/Cairo','Cairo','eg','Africa & Middle East'],
+    ['Africa/Johannesburg','Johannesburg','za','Africa & Middle East'],
+    ['Asia/Jerusalem','Jerusalem','il','Africa & Middle East'],
+    ['Asia/Dubai','Dubai','ae','Africa & Middle East'],
+    ['Asia/Karachi','Karachi','pk','Asia'],
+    ['Asia/Kolkata','Mumbai','in','Asia'],
+    ['Asia/Bangkok','Bangkok','th','Asia'],
+    ['Asia/Jakarta','Jakarta','id','Asia'],
+    ['Asia/Singapore','Singapore','sg','Asia'],
+    ['Asia/Shanghai','Shanghai','cn','Asia'],
+    ['Asia/Seoul','Seoul','kr','Asia'],
+    ['Asia/Tokyo','Tokyo','jp','Asia'],
+    ['Australia/Perth','Perth','au','Oceania'],
+    ['Australia/Brisbane','Brisbane','au','Oceania'],
+    ['Australia/Sydney','Sydney','au','Oceania'],
+    ['Pacific/Auckland','Auckland','nz','Oceania']
   ];
-  // Doit rester alignee sur CLOCK_ZONES_DEFAULT dans proxy.js.
+  // Doit rester alignee sur CLOCK_ZONES_DEFAULT / CLOCK_REF_DEFAULT dans proxy.js.
   var CLOCK_DEFAULT=['UTC','Europe/London','Europe/Paris','America/New_York','America/Los_Angeles','America/Sao_Paulo','Asia/Tokyo','Australia/Sydney'];
+  var CLOCK_REF_DEFAULT='UTC';
   var CLOCK_MAX=12;
-  var _clkSkew=0,_clkTz='',_clkZones=null,_clkTick=null,_clkSyncT=null;
+  var _clkSkew=0,_clkTz='',_clkNow=0,_clkZones=null,_clkRef=CLOCK_REF_DEFAULT,_clkTick=null,_clkSyncT=null;
   function clkMeta(z){ for(var i=0;i<CLOCK_CAT.length;i++){ if(CLOCK_CAT[i][0]===z) return CLOCK_CAT[i]; }
-    return [z,String(z).split('/').pop().replace(/_/g,' '),'\u{1F552}','Other']; }
+    return [z,String(z).split('/').pop().replace(/_/g,' '),'','Other']; }
   function clkAt(z,ms){
     try{
       var pr={},f=new Intl.DateTimeFormat('en-GB',{timeZone:z,hour:'2-digit',minute:'2-digit',weekday:'short',hour12:false});
       f.formatToParts(new Date(ms)).forEach(function(x){ pr[x.type]=x.value; });
-      var h=parseInt(pr.hour,10); if(!isFinite(h)) return null; if(h===24) h=0;
-      return { t:(h<10?'0':'')+h+':'+(pr.minute||'00'), h:h, d:pr.weekday||'' };
+      var h=parseInt(pr.hour,10),m=parseInt(pr.minute,10);
+      if(!isFinite(h)||!isFinite(m)) return null; if(h===24) h=0;
+      return { t:(h<10?'0':'')+h+':'+(m<10?'0':'')+m, h:h, m:m, d:pr.weekday||'' };
     }catch(e){ return null; }
+  }
+  // Decalage d'un fuseau en minutes, mesure a l'instant donne : c'est ce qui
+  // range les villes de la plus en retard a la plus en avance. Lu depuis Intl
+  // plutot qu'une table, sinon l'heure d'ete se decale deux fois par an.
+  function clkOffset(z,ms){
+    try{
+      var pr={},f=new Intl.DateTimeFormat('en-US',{timeZone:z,hour12:false,year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',second:'2-digit'});
+      f.formatToParts(new Date(ms)).forEach(function(x){ pr[x.type]=x.value; });
+      var h=parseInt(pr.hour,10)%24;
+      var asUTC=Date.UTC(+pr.year,+pr.month-1,+pr.day,h,+pr.minute,+pr.second);
+      return Math.round((asUTC-Math.floor(ms/1000)*1000)/60000);
+    }catch(e){ return 0; }
   }
   // Heure de pointe : 18 h -> 1 h du matin, la fenetre ou les tables se remplissent.
   function clkPeak(h){ return h>=18 || h<1; }
-  function clkChip(icon,name,at,cls,refDay,title){
-    var s=document.createElement('span');
-    s.className='ck'+(cls?' '+cls:'')+((at&&clkPeak(at.h))?' peak':'');
-    if(title) s.title=title;
-    var i=document.createElement('span'); i.setAttribute('aria-hidden','true'); i.textContent=icon; s.appendChild(i);
-    var n=document.createElement('span'); n.className='cn'; n.textContent=name; s.appendChild(n);
-    var b=document.createElement('b'); b.textContent=at?at.t:'--:--'; s.appendChild(b);
-    if(at&&refDay&&at.d&&at.d!==refDay){ var d=document.createElement('span'); d.className='cd'; d.textContent=at.d; s.appendChild(d); }
-    return s;
+  var SVGNS='http://www.w3.org/2000/svg';
+  // Cadran analogique. Tout est trace en currentColor : la pastille porte la
+  // couleur (vert en soiree, texte sinon) et le cadran la suit, ce qu'un
+  // attribut stroke="var(--x)" ne saurait pas faire.
+  function clkDial(at,size){
+    var r=size/2, sv=document.createElementNS(SVGNS,'svg');
+    sv.setAttribute('width',size); sv.setAttribute('height',size);
+    sv.setAttribute('viewBox','0 0 '+size+' '+size);
+    sv.setAttribute('class','ckdial'); sv.setAttribute('aria-hidden','true');
+    var ring=document.createElementNS(SVGNS,'circle');
+    ring.setAttribute('cx',r); ring.setAttribute('cy',r); ring.setAttribute('r',r-0.75);
+    ring.setAttribute('fill','none'); ring.setAttribute('stroke','currentColor');
+    ring.setAttribute('stroke-width','1'); ring.setAttribute('opacity','.5');
+    sv.appendChild(ring);
+    for(var i=0;i<12;i++){
+      var a=(i*30-90)*Math.PI/180, dot=document.createElementNS(SVGNS,'circle');
+      dot.setAttribute('cx',(r+Math.cos(a)*(r-3.6)).toFixed(2));
+      dot.setAttribute('cy',(r+Math.sin(a)*(r-3.6)).toFixed(2));
+      dot.setAttribute('r',(i%3===0)?'1.1':'0.6');
+      dot.setAttribute('fill','currentColor');
+      dot.setAttribute('opacity',(i%3===0)?'.9':'.45');
+      sv.appendChild(dot);
+    }
+    if(at){
+      [[((at.h%12)+at.m/60)*30, r*0.44, 1.9],[at.m*6, r*0.70, 1.3]].forEach(function(hd){
+        var a=(hd[0]-90)*Math.PI/180, ln=document.createElementNS(SVGNS,'line');
+        ln.setAttribute('x1',r); ln.setAttribute('y1',r);
+        ln.setAttribute('x2',(r+Math.cos(a)*hd[1]).toFixed(2));
+        ln.setAttribute('y2',(r+Math.sin(a)*hd[1]).toFixed(2));
+        ln.setAttribute('stroke','currentColor'); ln.setAttribute('stroke-width',String(hd[2]));
+        ln.setAttribute('stroke-linecap','round');
+        sv.appendChild(ln);
+      });
+      var pin=document.createElementNS(SVGNS,'circle');
+      pin.setAttribute('cx',r); pin.setAttribute('cy',r); pin.setAttribute('r','1.6');
+      pin.setAttribute('fill','currentColor'); sv.appendChild(pin);
+    }
+    return sv;
+  }
+  function clkCell(meta,at,isRef,refDay){
+    var w=document.createElement('div');
+    w.className='ck'+(isRef?' ref':'')+((at&&clkPeak(at.h))?' peak':'');
+    w.title=meta[0];
+    w.appendChild(clkDial(at,44));
+    var b=document.createElement('b'); b.textContent=at?at.t:'--:--'; w.appendChild(b);
+    var n=document.createElement('div'); n.className='ckn';
+    if(meta[2]){
+      var img=document.createElement('img'); img.className='ckf'; img.src='/flags/'+meta[2]+'.svg';
+      img.alt=''; img.setAttribute('aria-hidden','true'); img.loading='lazy'; img.draggable=false;
+      img.addEventListener('error',function(){ img.style.display='none'; });
+      n.appendChild(img);
+    }
+    var nm=document.createElement('span'); nm.textContent=meta[1]; n.appendChild(nm);
+    w.appendChild(n);
+    if(at&&refDay&&at.d&&at.d!==refDay){ var dd=document.createElement('div'); dd.className='cd'; dd.textContent=at.d; w.appendChild(dd); }
+    return w;
   }
   function clkRender(){
     var bar=$('clockBar'); if(!bar) return;
     if(_clkZones===null){ bar.style.display='none'; return; }
-    var ms=Date.now()+_clkSkew, srv=clkAt(_clkTz||'UTC',ms), ref=srv?srv.d:'';
+    var ms=Date.now()+_clkSkew;
+    // La reference figure toujours, cochee ou non : c'est l'axe du bandeau.
+    var list=_clkZones.slice();
+    if(list.indexOf(_clkRef)<0) list.push(_clkRef);
+    // Range par decalage : plus tot a gauche, plus tard a droite. La reference
+    // se retrouve donc naturellement au centre des villes qui l'encadrent.
+    list=list.map(function(z){ return {z:z,o:clkOffset(z,ms)}; })
+             .sort(function(a,b){ return a.o-b.o || a.z.localeCompare(b.z); })
+             .map(function(x){ return x.z; });
+    var refAt=clkAt(_clkRef,ms), refDay=refAt?refAt.d:'';
     bar.textContent='';
-    bar.appendChild(clkChip('\u{1F5A5}\uFE0F','Server',srv,'srv','','Server clock'+(_clkTz?' \u2014 '+_clkTz:' \u2014 UTC')));
-    _clkZones.forEach(function(z){ var m=clkMeta(z),at=clkAt(z,ms); if(at) bar.appendChild(clkChip(m[2],m[1],at,'',ref,z)); });
-    bar.style.display='';
+    list.forEach(function(z){ var at=clkAt(z,ms); if(at) bar.appendChild(clkCell(clkMeta(z),at,z===_clkRef,refDay)); });
+    bar.style.display=bar.firstChild?'':'none';
   }
   function clkSync(){
     return api('/admin/clock').then(function(r){ return r.json(); }).then(function(d){
       if(!d||!d.ok) return;
       if(typeof d.now==='number') _clkSkew=d.now-Date.now();
       _clkTz=d.tz||''; _clkZones=Array.isArray(d.zones)?d.zones:[];
+      _clkRef=(typeof d.ref==='string'&&d.ref)?d.ref:CLOCK_REF_DEFAULT;
       clkRender();
     }).catch(function(){});
   }
@@ -1403,6 +1483,16 @@
     if(_clkTick){ clearInterval(_clkTick); _clkTick=null; }
     if(_clkSyncT){ clearInterval(_clkSyncT); _clkSyncT=null; }
     _clkZones=null; var b=$('clockBar'); if(b){ b.textContent=''; b.style.display='none'; }
+  }
+  // Heure du serveur, en tete du statut. Lue sur l'instant que le serveur a
+  // lui-meme envoye : une machine dont l'horloge derive n'invente pas ici une
+  // heure serveur qui n'existe nulle part.
+  function clkServerStamp(now,tz){
+    if(typeof now!=='number'||!now) return '\u2014';
+    try{
+      var f=new Intl.DateTimeFormat('en-GB',{timeZone:tz||'UTC',weekday:'short',day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false});
+      return f.format(new Date(now))+' \u00b7 '+(tz||'UTC');
+    }catch(e){ return new Date(now).toISOString().replace('T',' ').slice(0,19)+' \u00b7 UTC'; }
   }
   // Selecteur de villes (Server > Identity & reach)
   function clkPickSel(){ return [].slice.call(document.querySelectorAll('#clkPick input:checked')).map(function(i){ return i.value; }); }
@@ -1422,20 +1512,35 @@
         var cb=document.createElement('input'); cb.type='checkbox'; cb.value=c[0]; cb.checked=on;
         cb.addEventListener('change',function(){ lab.classList.toggle('on',cb.checked); clkPickCount(); });
         lab.appendChild(cb);
-        var t=document.createElement('span'); t.textContent=c[2]+'\u00a0'+c[1]; lab.appendChild(t);
+        if(c[2]){
+          var fi=document.createElement('img'); fi.className='ckf'; fi.src='/flags/'+c[2]+'.svg';
+          fi.alt=''; fi.setAttribute('aria-hidden','true'); fi.loading='lazy'; fi.draggable=false;
+          fi.addEventListener('error',function(){ fi.style.display='none'; });
+          lab.appendChild(fi);
+        }
+        var t=document.createElement('span'); t.textContent=c[1]; lab.appendChild(t);
         w.appendChild(lab);
       });
       host.appendChild(w);
     });
     clkPickCount();
   }
+  function clkRefRender(ref){
+    var sel=$('clkRef'); if(!sel) return;
+    sel.textContent='';
+    CLOCK_CAT.forEach(function(c){
+      var o=document.createElement('option'); o.value=c[0]; o.textContent=c[1]+' ('+c[0]+')'; sel.appendChild(o);
+    });
+    sel.value=ref||CLOCK_REF_DEFAULT;
+    if(!sel.value) sel.value=CLOCK_REF_DEFAULT;
+  }
   (function(){ var b=$('saveClocks'); if(!b) return; b.addEventListener('click',function(){
-    var m=$('clkMsg'),sel=clkPickSel().slice(0,CLOCK_MAX);
-    api('/admin/config',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({clockZones:sel,token:tok()})})
+    var m=$('clkMsg'),sel=clkPickSel().slice(0,CLOCK_MAX),rf=($('clkRef')?$('clkRef').value:CLOCK_REF_DEFAULT);
+    api('/admin/config',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({clockZones:sel,clockRef:rf,token:tok()})})
       .then(function(r){ return r.json(); }).then(function(d){ if(d&&d.ok){ m.textContent='Saved. The strip updates right away (no restart needed).'; m.className='msg ok'; clkSync(); } else { m.textContent='Failed: '+((d&&d.error)||'error'); m.className='msg err'; } })
       .catch(function(){ m.textContent='Network error.'; m.className='msg err'; });
   }); })();
-  (function(){ var b=$('clkDefaults'); if(!b) return; b.addEventListener('click',function(){ clkPickRender(CLOCK_DEFAULT.slice()); var m=$('clkMsg'); if(m){ m.textContent='Default set restored below \u2014 press Save to apply.'; m.className='msg'; } }); })();
+  (function(){ var b=$('clkDefaults'); if(!b) return; b.addEventListener('click',function(){ clkPickRender(CLOCK_DEFAULT.slice()); clkRefRender(CLOCK_REF_DEFAULT); var m=$('clkMsg'); if(m){ m.textContent='Default set restored below \u2014 press Save to apply.'; m.className='msg'; } }); })();
 
   // État de débordement de la barre d'onglets. Appelé au défilement, au
   // redimensionnement et à chaque changement d'onglet, parce qu'afficher ou
@@ -1857,7 +1962,7 @@
       // à proxy.js reste inactif pendant ce temps. On le dit franchement.
       var _stale=(d.runningVersion && d.version && d.runningVersion!==d.version);
       var _vtxt=(d.version||'\u2014')+(_stale?(' \u2014 proxy still running '+d.runningVersion+', restart needed'):'');
-      var items=[['Build version',_vtxt],['Install',(d.installKind||'\u2014')+(d.gitUpdatable===false?' (self-update off)':'')],['Node',d.node||'\u2014'],['Uptime',fmtUptime(d.uptimeSec)],['Connected sockets',d.sockets==null?'\u2014':String(d.sockets)],['Active sessions',d.liveSessions==null?'\u2014':String(d.liveSessions)],['Players on board',String(d.players)],['Reset period',d.resetPeriod||'\u2014']];
+      var items=[['Server time',clkServerStamp(d.now,d.tz)],['Build version',_vtxt],['Install',(d.installKind||'\u2014')+(d.gitUpdatable===false?' (self-update off)':'')],['Node',d.node||'\u2014'],['Uptime',fmtUptime(d.uptimeSec)],['Connected sockets',d.sockets==null?'\u2014':String(d.sockets)],['Active sessions',d.liveSessions==null?'\u2014':String(d.liveSessions)],['Players on board',String(d.players)],['Reset period',d.resetPeriod||'\u2014']];
       items.forEach(function(it){ var r=document.createElement('div');r.className='srow';var s=document.createElement('span');s.textContent=it[0];var b=document.createElement('b');b.textContent=it[1];if(it[0]==='Build version'&&_stale)b.className='err';r.appendChild(s);r.appendChild(b);el.appendChild(r); });
       // Only explicit (re)loads sync the editable controls, so auto-refresh never
       // resets the period dropdown or modes toggles while you're using them.
@@ -1874,6 +1979,7 @@
         if($('loginTitle')) $('loginTitle').value=(d.showLoginTitle?'1':'0');
         if($('discordHook') && typeof d.discordChatWebhookUrl==='string') $('discordHook').value=d.discordChatWebhookUrl;
         if($('clkPick') && Array.isArray(d.clockZones)) clkPickRender(d.clockZones);
+        if($('clkRef')) clkRefRender(d.clockRef||CLOCK_REF_DEFAULT);
         if(d.seo && typeof d.seo==='object'){ if($('seoEnabled'))$('seoEnabled').value=(d.seo.enabled?'1':'0'); if($('seoUrl')&&typeof d.seo.publicUrl==='string')$('seoUrl').value=d.seo.publicUrl; if($('seoGsv')&&typeof d.seo.googleVerification==='string')$('seoGsv').value=d.seo.googleVerification; if($('seoBing')&&typeof d.seo.bingVerification==='string')$('seoBing').value=d.seo.bingVerification; if($('seoYandex')&&typeof d.seo.yandexVerification==='string')$('seoYandex').value=d.seo.yandexVerification; if($('seoSiteName')&&typeof d.seo.siteName==='string')$('seoSiteName').value=d.seo.siteName; if($('seoTitle')&&typeof d.seo.title==='string')$('seoTitle').value=d.seo.title; if($('seoDesc')&&typeof d.seo.description==='string')$('seoDesc').value=d.seo.description; if($('seoImage')&&typeof d.seo.image==='string')$('seoImage').value=d.seo.image; if($('seoAi'))$('seoAi').value=(d.seo.aiCrawlers===false?'0':'1'); if($('seoIndexNow')&&typeof d.seo.indexNowKey==='string'&&d.seo.indexNowKey){ var _ik=d.seo.indexNowKey+'  (served at /'+d.seo.indexNowKey+'.txt, pinged on save)'; var _in=d.seo.indexNow; if(_in&&_in.at){ var _d=new Date(_in.at); _ik+=' \u2014 last submission '+_d.toISOString().replace('T',' ').slice(0,16)+' UTC, '+_in.count+' URLs'+(_in.error?' ('+_in.error+')':' accepted'); } $('seoIndexNow').textContent=_ik; } }
         _pxLoaded=true;
         if(d.proxyCfg && typeof d.proxyCfg==='object'){ var P=d.proxyCfg; if($('pxHosts'))$('pxHosts').value=(Array.isArray(P.allowedHosts)?P.allowedHosts.join('\n'):''); if($('pxGrace'))$('pxGrace').value=(typeof P.graceSec==='number'?P.graceSec:''); if($('pxGap'))$('pxGap').value=(typeof P.connGapMs==='number'?P.connGapMs:''); if($('pxPorts'))$('pxPorts').value=(Array.isArray(P.allowedPorts)?P.allowedPorts.join('\n'):''); if($('pxLog'))$('pxLog').value=(typeof P.logLevel==='string'?P.logLevel:''); if($('logQuick'))$('logQuick').value=(typeof P.logLevel==='string'?P.logLevel:''); if($('pxMax'))$('pxMax').value=(typeof P.maxClients==='number'?P.maxClients:''); }
