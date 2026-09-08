@@ -66,6 +66,17 @@ highlights below.
   started as — a lit face now reads as sunlight rather than as sky. The golden
   hour moved to amber and orange to keep its distance from it; the twilights and
   the night, which were already right, are untouched.
+- **The clock faces have no bands left** (`web.52`). The sky is now a vertical
+  gradient computed continuously from the sun's altitude: the zenith at the top,
+  the horizon at the bottom, so the warmth of a sunset stays low on the dial
+  while the top of the sky has already gone to night. Nothing steps from one
+  colour to the next any more, and the tooltip gives the altitude alongside the
+  phase name, since the shade is no longer something anyone could name. The
+  hands needed their own gradient to survive it: no single ink sits on a face
+  running from a dark zenith to an orange horizon, and the two attempts before
+  this one measured 1.87 and 2.56 against a 3:1 floor. The ink switches in hard
+  steps at the luminance where the two inks contrast equally, which puts the
+  measured worst case at 3.29 across a year, from Svalbard to Tierra del Fuego.
 - **Icons on every dashboard tab** (`web.47`). The three family buttons and the
   seventeen sections each open with an emoji, so a section is found by shape
   before it is read. Decorative only — screen readers still get the label alone.

@@ -116,8 +116,22 @@ const sunSrc = body(admin, 'clkSunAlt');
 ok(sunSrc !== '', 'the sun has a position, not a lookup table');
 const D2R = 'var D2R=Math.PI/180,R2D=180/Math.PI;';
 const sunAlt = new Function('lat', 'lon', 'ms', D2R + sunSrc.slice(1, -1));
-const skyOf = new Function('lat', 'lon', 'ms',
-  D2R + 'function clkSunAlt(lat,lon,ms)' + sunSrc + body(admin, 'clkSky').slice(1, -1));
+const grab = re => re.exec(admin)[0];
+const SKY = D2R
+  + grab(/var SKY_TOP=\[[^;]*;/) + grab(/var SKY_BOT_UP=\[[^;]*;/) + grab(/var SKY_BOT_DN=\[[^;]*;/)
+  + 'function clkRgb(c)' + body(admin, 'clkRgb')
+  + 'function clkMix(c1,c2,k)' + body(admin, 'clkMix')
+  + 'function clkRamp(tab,a)' + body(admin, 'clkRamp')
+  + 'function clkLum(c)' + body(admin, 'clkLum')
+  + 'function clkRatio(c1,c2)' + body(admin, 'clkRatio')
+  + grab(/var SKY_INK_DARK=[^;]*;/) + grab(/var SKY_INK_CUT=[^;]*;/) + grab(/var SKY_INK_STEP=[^;]*;/)
+  + 'function clkInk(c)' + body(admin, 'clkInk')
+  + 'function clkInkStops(t,b)' + body(admin, 'clkInkStops')
+  + 'function clkPhase(a,up)' + body(admin, 'clkPhase')
+  + 'function clkSunAlt(lat,lon,ms)' + sunSrc;
+const skyOf = new Function('lat', 'lon', 'ms', SKY + body(admin, 'clkSky').slice(1, -1));
+const mixOf = new Function('a', 'b', 'k', SKY + 'return clkMix(a,b,k);');
+const ratioOf = new Function('a', 'b', SKY + 'return clkRatio(a,b);');
 function crossings(lat, lon, day) {
   const out = []; let prev = sunAlt(lat, lon, day);
   for (let m = 1; m <= 1440; m++) {
@@ -152,24 +166,62 @@ ok(sunAlt(78.22, 15.63, Date.UTC(2026, 11, 21, 12, 0)) < -6,
 ok(/clkSunAlt\(lat,lon,ms\+600000\)>a/.test(body(admin, 'clkSky')),
   'a rising sun is told from a setting one by looking ten minutes ahead');
 const parisDay = Date.UTC(2026, 8, 8);
-ok(skyOf(48.86, 2.35, parisDay + 4 * 3600000).n.indexOf('dawn') === 0, 'Paris before six in September is dawn');
-ok(skyOf(48.86, 2.35, parisDay + 10 * 3600000).n === 'day', 'midday is day');
-ok(skyOf(48.86, 2.35, parisDay + 18 * 3600000).n === 'sunset', 'and the sun goes down in the evening, not up');
-ok(skyOf(48.86, 2.35, parisDay + 23 * 3600000).n === 'night', 'the middle of the night is night');
+const phaseAt = ms => skyOf(48.86, 2.35, ms).n.split(' \u00b7 ')[0];
+ok(phaseAt(parisDay + 4 * 3600000).indexOf('dawn') === 0, 'Paris before six in September is dawn');
+ok(phaseAt(parisDay + 10 * 3600000) === 'day', 'midday is day');
+ok(phaseAt(parisDay + 18 * 3600000) === 'sunset', 'and the sun goes down in the evening, not up');
+ok(phaseAt(parisDay + 23 * 3600000) === 'night', 'the middle of the night is night');
 ok(skyOf(null, null, parisDay) === null, 'UTC is not a place, so it gets no sky and keeps the theme colour');
 const bands = new Set(['day', 'sunrise', 'sunset', 'dawn', 'dusk', 'dawn twilight', 'dusk twilight', 'night']);
-let sampled = new Set();
-for (let m = 0; m < 1440; m += 5) sampled.add(skyOf(48.86, 2.35, parisDay + m * 60000).n);
-ok([...sampled].every(x => bands.has(x)), 'every band a day passes through is one of the named ones');
+const sampled = new Set();
+for (let m = 0; m < 1440; m += 5) sampled.add(phaseAt(parisDay + m * 60000));
+ok([...sampled].every(x => bands.has(x)), 'every phase a day passes through is one of the named ones');
 ok(sampled.has('sunrise') && sampled.has('sunset') && sampled.has('day') && sampled.has('night'),
   'and a September day in Paris passes through all four of the obvious ones');
+// The paint is continuous but the name is a band, so the two can disagree by a
+// shade. The tooltip carries the altitude alongside, which cannot.
+ok(/ \u00b7 [+-]\d+\u00b0$/.test(skyOf(48.86, 2.35, parisDay + 10 * 3600000).n),
+  'the tooltip states the altitude, since the colour is no longer a band anyone could name');
+
+// -- Continuous sky, and hands that survive it -----------------------------
+// A single ink cannot sit on a face running from a dark zenith to an orange
+// horizon: whichever you pick, it vanishes over half the dial. Measured at
+// 1.87 before the ink became a gradient of its own, then 2.56 when that
+// gradient was smooth — a smooth blend from light ink to dark passes through
+// a mid grey exactly where the face is mid too. Hard steps fix it by
+// construction: the worst case is the threshold itself, where both inks are
+// equal and both are 3.26.
+ok(/gradientUnits','userSpaceOnUse'/.test(body(admin, 'clkGrad')),
+  'both gradients run on the dial axis, not on each shape\'s own box');
+ok(/y2',String\(CLOCK_DIAL\)/.test(body(admin, 'clkGrad')), 'top to bottom, over the whole face');
+const stopsSrc = body(admin, 'clkInkStops');
+ok(/out\.push\(\[k\.toFixed\(2\),cur\]\)/.test(stopsSrc) && /out\.push\(\[k\.toFixed\(2\),c\]\)/.test(stopsSrc),
+  'the ink steps are hard — two stops at one offset, never a blend through grey');
+ok(/Math\.sqrt\(\(clkLum\(SKY_INK_DARK\)\+0\.05\)\*\(clkLum\(SKY_INK_LIGHT\)\+0\.05\)\)-0\.05/.test(admin),
+  'and they change over at the equal-contrast luminance, not at an eyeballed midpoint');
+function inkAt(stops, k) { let c = stops[0][1]; for (const [o, col] of stops) { if (+o <= k + 1e-9) c = col; else break; } return c; }
+function worstInk(s) { let w = 99; for (let k = 0; k <= 1.0001; k += 0.02) w = Math.min(w, ratioOf(inkAt(s.is, k), mixOf(s.t, s.b, k))); return w; }
+let worst = 99, where = '';
+for (const [la, lo] of [[48.86, 2.35], [78.22, 15.63], [1.35, 103.82], [-54.8, -68.3]]) {
+  for (let d = 0; d < 365; d += 5) for (let m = 0; m < 1440; m += 20) {
+    const s = skyOf(la, lo, Date.UTC(2026, 0, 1) + d * 86400000 + m * 60000), w = worstInk(s);
+    if (w < worst) { worst = w; where = la + ',' + lo + ' ' + s.t + '/' + s.b; }
+  }
+}
+ok(worst >= 3, 'the hands clear 3:1 against the face at every height, all year, from the pole to the tropics ('
+  + worst.toFixed(2) + (worst < 3 ? ' at ' + where : '') + ')');
+ok(skyOf(48.86, 2.35, parisDay + 13 * 3600000).is.length === 2,
+  'a face that is light all over needs one ink and gets no steps at all');
 
 // -- Dials -----------------------------------------------------------------
 const dial = body(admin, 'clkDial');
 ok(/createElementNS\(SVGNS,'svg'\)/.test(dial), 'the dial is real SVG, built node by node');
-ok(/ink=sky\?sky\.i:'currentColor'/.test(dial),
-  'the hands take their colour from the sky band, since dark ink on a night face would vanish');
-ok(!/var\(--/.test(dial), 'and never from a CSS var — a stroke attribute cannot resolve one');
+ok(/ink='url\(#cki'\+n\+'\)'/.test(dial) && /ink='currentColor'/.test(dial),
+  'the hands follow the ink gradient where there is a sky, and the theme where there is none');
+ok(/fill',sky\?'url\(#ckf'\+_clkGid\+'\)':'none'/.test(dial), 'the face carries the sky gradient');
+ok(/var n=\+\+_clkGid/.test(dial),
+  'one id per dial — the row is rebuilt every render, and two gradients of one name collide');
+ok(!/var\(--/.test(dial), 'no CSS var in the SVG — a stroke attribute cannot resolve one');
 ok(/sv\.setAttribute\('viewBox'/.test(dial) && !/setAttribute\('width'/.test(dial),
   'the dial carries a viewBox and no pixel size, so the sheet can shrink it on a phone');
 ok(/\(\(at\.h%12\)\+at\.m\/60\)\*30/.test(dial), 'the hour hand creeps with the minutes instead of jumping on the hour');
