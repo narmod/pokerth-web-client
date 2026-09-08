@@ -11,7 +11,7 @@ this file captures what matters to players and operators.
 ## 2.1.8-web line (2026)
 
 Opened with `v2.1.8-web.0` (2026-09-01), following the upstream **2.1.8**
-release (server restarted by sp0ck the same night). Per-build detail is on the
+release. Per-build detail is on the
 [GitHub Releases](https://github.com/narmod/pokerth-web-client/releases) page;
 highlights below.
 
