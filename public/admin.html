@@ -124,8 +124,26 @@
   .trafchart .bar span{font-size:.58rem;color:var(--text);margin-top:3px;white-space:nowrap}
   .trafchart .bar i.nw{background:linear-gradient(180deg,#3fae6a,#1c6b3e);border-radius:0 0 0 0}
   .trafchart .bar i.rt{background:linear-gradient(180deg,#4080d8,#1a3d8b);border-radius:3px 3px 0 0}
-  .traflegend{display:flex;gap:14px;font-size:.7rem;color:var(--text);margin:6px 0 0}
+  .traflegend{display:flex;gap:6px;font-size:.7rem;color:var(--text);margin:6px 0 0}
   .traflegend em{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:5px;vertical-align:-1px;font-style:normal}
+  /* Une entree de legende est un bouton : elle allume et eteint sa serie, et
+     l'echelle se recalcule sur ce qui reste. */
+  .traflegend .lgi{display:inline-flex;align-items:center;padding:3px 8px;border:1px solid transparent;border-radius:999px;background:none;color:var(--text);font:inherit;font-size:.7rem;line-height:1.5;cursor:pointer}
+  .traflegend .lgi:hover{border-color:var(--line)}
+  .traflegend .lgi.off{opacity:.45}
+  .traflegend .lgi.off .lb{text-decoration:line-through}
+  /* Lecture au pointeur : une bulle et un trait de reperage poses sur l'hote,
+     qui remplacent les <title> — invisibles au doigt. pan-y laisse la page
+     defiler verticalement au-dessus du graphique ; seul le balayage
+     horizontal promene la lecture. */
+  .chartbox{position:relative}
+  .chartbox svg{touch-action:pan-y}
+  .chartgd{position:absolute;width:1px;background:rgba(160,172,196,.55);pointer-events:none;display:none}
+  .chartro{position:absolute;z-index:6;display:none;pointer-events:none;padding:6px 9px;border:1px solid var(--line);border-radius:8px;background:var(--panel);box-shadow:0 6px 18px rgba(0,0,0,.4);font-size:.72rem;line-height:1.6;white-space:nowrap}
+  .chartro b{display:block;color:var(--gold);font-size:.7rem;margin-bottom:2px}
+  .chartro span{display:block}
+  .chartro em{display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:6px;font-style:normal}
+  .chartro s{float:right;margin-left:16px;text-decoration:none;color:var(--cream);font-variant-numeric:tabular-nums}
   .traflegend .nw em{background:#3fae6a}
   .traflegend .rt em{background:#4080d8}
   /* Traffic read as trends, not just totals. Same frame as .tstat so the two
@@ -2375,6 +2393,120 @@
     });
     return '<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="daily bars">'+g+'</svg>';
   }
+  // ── Graphiques interactifs ─────────────────────────────────────────────
+  // Les courbes etaient du SVG figé : une <title> par point, donc une bulle au
+  // survol de la souris et rien du tout au doigt, et aucun moyen d'ecarter une
+  // serie qui ecrase l'echelle des autres. Les deux manques se reglent au meme
+  // endroit : un montage garde les series et l'etat masque/visible, redessine
+  // le SVG a chaque changement, et une lecture maison remplace les <title>
+  // — elle repond a la souris comme au doigt.
+  // L'echelle est recalculee sur les seules series visibles : c'est tout
+  // l'interet de masquer la plus haute.
+  var CHART_W=700;
+  var CHART_GEO={line:{l:38,r:10,t:10,b:20},stack:{l:32,r:10,t:16,b:20}};
+  var _chartUid=0, _charts={};
+  function _chartSig(lines){ return lines.map(function(l){ return l.k; }).join('|'); }
+  // Le trafic se rafraichit tout seul : si la signature des series n'a pas
+  // bouge, on garde ce que l'admin avait masque. Sinon un clic serait defait
+  // cinq secondes plus tard.
+  function _chartMount(host,labels,lines,H,kind){
+    if(!host) return;
+    if(!host.id) host.id='chart'+(++_chartUid);
+    var sig=_chartSig(lines), prev=_charts[host.id];
+    _charts[host.id]={labels:labels,lines:lines,H:H||170,kind:kind||'line',
+                      hidden:(prev&&prev.sig===sig)?prev.hidden:{},sig:sig};
+    host.classList.add('chartbox');
+    if(!host._chartWired){
+      host._chartWired=1;
+      host.addEventListener('click',function(e){
+        var b=e.target.closest?e.target.closest('.lgi'):null;
+        if(!b||!host.contains(b)) return;
+        var st=_charts[host.id]; if(!st) return;
+        var k=b.dataset.k;
+        // Tout masquer laisserait une grille vide : le dernier visible ne se
+        // masque pas, il se rallume au clic suivant.
+        var visible=st.lines.filter(function(l){ return !st.hidden[l.k]; });
+        if(!st.hidden[k] && visible.length<=1) return;
+        if(st.hidden[k]) delete st.hidden[k]; else st.hidden[k]=1;
+        _chartDraw(host.id);
+      });
+      ['pointerdown','pointermove'].forEach(function(ev){
+        host.addEventListener(ev,function(e){
+          if(ev==='pointermove'&&e.pointerType!=='mouse'&&!(e.buttons&1)) return;
+          _chartRead(host.id,e);
+        },{passive:true});
+      });
+      ['pointerup','pointercancel','pointerleave'].forEach(function(ev){
+        host.addEventListener(ev,function(){ _chartHide(host.id); },{passive:true});
+      });
+    }
+    _chartDraw(host.id);
+  }
+  function _chartVisible(st){ return st.lines.filter(function(l){ return !st.hidden[l.k]; }); }
+  function _chartLegend(st){
+    return '<div class="traflegend" style="flex-wrap:wrap">'+st.lines.map(function(l){
+      return '<button type="button" class="lgi'+(st.hidden[l.k]?' off':'')+'" data-k="'+_annEsc(l.k)
+           + '" aria-pressed="'+(st.hidden[l.k]?'false':'true')+'"><em style="background:'+l.c
+           + '"></em><span class="lb">'+_annEsc(l.n||l.k)+'</span></button>';
+    }).join('')+'</div>';
+  }
+  function _chartDraw(id){
+    var st=_charts[id], host=document.getElementById(id); if(!st||!host) return;
+    var vis=_chartVisible(st);
+    host.innerHTML=(st.kind==='stack'?_stackChart(st.labels,vis,st.H):_lineChart(st.labels,vis,st.H))
+                 + _chartLegend(st)
+                 + '<div class="chartgd"></div><div class="chartro"></div>';
+  }
+  // Index de la colonne sous le pointeur. Le SVG est etire en largeur, on
+  // repasse donc par la fraction de largeur plutot que par des pixels.
+  function _chartIndex(st,frac){
+    var n=st.labels.length, geo=CHART_GEO[st.kind]||CHART_GEO.line;
+    var x=frac*CHART_W, iw=CHART_W-geo.l-geo.r;
+    if(st.kind==='stack'){ var slot=iw/n; return Math.max(0,Math.min(n-1,Math.floor((x-geo.l)/slot))); }
+    if(n===1) return 0;
+    return Math.max(0,Math.min(n-1,Math.round((x-geo.l)*(n-1)/iw)));
+  }
+  function _chartCentre(st,i){
+    var n=st.labels.length, geo=CHART_GEO[st.kind]||CHART_GEO.line, iw=CHART_W-geo.l-geo.r;
+    if(st.kind==='stack') return (geo.l+(iw/n)*i+(iw/n)/2)/CHART_W;
+    return (n===1?geo.l+iw/2:geo.l+(i*iw)/(n-1))/CHART_W;
+  }
+  function _chartHide(id){
+    var host=document.getElementById(id); if(!host) return;
+    var ro=host.querySelector('.chartro'), gd=host.querySelector('.chartgd');
+    if(ro) ro.style.display='none';
+    if(gd) gd.style.display='none';
+  }
+  function _chartRead(id,e){
+    var st=_charts[id], host=document.getElementById(id); if(!st||!host) return;
+    var svg=host.querySelector('svg'); if(!svg) return;
+    var rc=svg.getBoundingClientRect(); if(!rc.width) return;
+    var frac=(e.clientX-rc.left)/rc.width;
+    if(frac<-0.02||frac>1.02){ _chartHide(id); return; }
+    var i=_chartIndex(st,frac), vis=_chartVisible(st);
+    var ro=host.querySelector('.chartro'), gd=host.querySelector('.chartgd');
+    if(!ro||!gd) return;
+    ro.innerHTML='<b>'+_annEsc(st.labels[i]||'')+'</b>'+vis.map(function(l){
+      return '<span><em style="background:'+l.c+'"></em>'+_annEsc(l.n||l.k)
+           + '<s>'+_round1(l.vals[i]||0)+'</s></span>';
+    }).join('');
+    var geo=CHART_GEO[st.kind]||CHART_GEO.line;
+    var cx=_chartCentre(st,i)*rc.width, hb=host.getBoundingClientRect();
+    var left=rc.left-hb.left+cx;
+    gd.style.left=left.toFixed(1)+'px';
+    gd.style.top=(rc.top-hb.top+geo.t*rc.height/st.H).toFixed(1)+'px';
+    gd.style.height=((st.H-geo.t-geo.b)*rc.height/st.H).toFixed(1)+'px';
+    gd.style.display='block';
+    ro.style.display='block';
+    // Colle au bord plutot que de deborder de la carte, et bascule au-dessus
+    // du pointeur quand il n'y a plus la place en dessous.
+    var w=ro.offsetWidth, h=ro.offsetHeight;
+    ro.style.left=Math.max(0,Math.min(hb.width-w,left-w/2)).toFixed(1)+'px';
+    var top=e.clientY-hb.top+14;
+    if(top+h>hb.height) top=Math.max(0,e.clientY-hb.top-h-14);
+    ro.style.top=top.toFixed(1)+'px';
+  }
+
   // Barres empilees : une colonne par jour, une couche par serie, la premiere
   // serie en bas. A faible volume, une pile se lit la ou sept courbes se
   // superposent au zero ; le total du jour est ecrit au sommet.
@@ -2399,7 +2531,7 @@
       series.forEach(function(s){
         var v=s.vals[i]||0; if(!v) return;
         var y1=Y(acc+v), h=Y(acc)-y1;
-        g+='<rect x="'+(CX(i)-bw/2).toFixed(1)+'" y="'+y1.toFixed(1)+'" width="'+bw.toFixed(1)+'" height="'+Math.max(0.5,h).toFixed(1)+'" style="fill:'+s.c+'"><title>'+_annEsc(lab)+' \u00b7 '+_annEsc(s.k)+': '+v+'</title></rect>';
+        g+='<rect x="'+(CX(i)-bw/2).toFixed(1)+'" y="'+y1.toFixed(1)+'" width="'+bw.toFixed(1)+'" height="'+Math.max(0.5,h).toFixed(1)+'" style="fill:'+s.c+'"/>';
         acc+=v;
       });
       if(tot[i] && n<=20) g+='<text x="'+CX(i).toFixed(1)+'" y="'+(Y(tot[i])-4).toFixed(1)+'" text-anchor="middle" style="fill:var(--text);font-size:8.5px;font-variant-numeric:tabular-nums">'+tot[i]+'</text>';
@@ -2440,12 +2572,14 @@
       g+='<polyline points="'+pts+'" style="fill:none;stroke:'+l.c+st+'"/>';
       if(l.dash) return;
       l.vals.forEach(function(v,i){
-        g+='<circle cx="'+X(i).toFixed(1)+'" cy="'+Y(v).toFixed(1)+'" r="2.6" style="fill:'+l.c+'"><title>'+_annEsc(labels[i])+' \u00b7 '+_annEsc(l.k)+': '+(v||0)+'</title></circle>';
+        g+='<circle cx="'+X(i).toFixed(1)+'" cy="'+Y(v).toFixed(1)+'" r="2.6" style="fill:'+l.c+'"/>';
       });
     });
-    return '<div class="linechart"><svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="trend">'+g+'</svg></div>';
+    return '<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="trend">'+g+'</svg>';
   }
+  var _envLangLines=null,_envLangLabs=null,_musLines=null,_musLabs=null;
   function _envLangChart(){
+    _envLangLines=null;
     if(_envView!=='lang') return '';
     var s=_trafSeries||[], has=false;
     s.forEach(function(x){ if(x.lg&&Object.keys(x.lg).length) has=true; });
@@ -2479,10 +2613,9 @@
         var lg=x.lg||{},r=0; restK.forEach(function(k){ r+=lg[k]||0; }); return r;
       })});
     }
-    var leg=lls.map(function(l){ return '<span><em style="background:'+l.c+'"></em>'+_annEsc(l.k)+'</span>'; }).join('');
+    _envLangLines=lls; _envLangLabs=llabs;
     return '<div class="muted" style="margin:14px 0 4px">Languages per day \u2014 last 14 days</div>'
-         + _lineChart(llabs,lls,150)
-         + '<div class="traflegend" style="flex-wrap:wrap">'+leg+'</div>';
+         + '<div class="linechart" id="envLangChart"></div>';
   }
   // Un titre retiré du catalogue garde ses lectures : on retombe alors sur son
   // identifiant plutôt que d'afficher une ligne sans nom.
@@ -2527,6 +2660,7 @@
       +(vis?', <b>'+(per<10?per.toFixed(1):Math.round(per))+'</b> plays per 100 visits':'')+'.</div>';
   }
   function _musChart(keys){
+    _musLines=null;
     var s=_musDays(), has=false;
     s.forEach(function(x){ if(x.mu&&Object.keys(x.mu).length) has=true; });
     if(!has) return '<div class="muted" style="margin-top:12px">Per-day history starts with this proxy version \u2014 the chart fills in as days pass.</div>';
@@ -2540,10 +2674,9 @@
         var mu=x.mu||{},r=0; restK.forEach(function(k){ r+=mu[k]||0; }); return r;
       })});
     }
-    var leg=lls.map(function(l){ return '<span><em style="background:'+l.c+'"></em>'+_annEsc(l.k)+'</span>'; }).join('');
+    _musLines=lls; _musLabs=labs;
     return '<div class="muted" style="margin:14px 0 4px">Plays per day \u2014 since '+_annEsc(s[0].date||'')+'</div>'
-         + _stackChart(labs,lls,160)
-         + '<div class="traflegend" style="flex-wrap:wrap">'+leg+'</div>';
+         + '<div id="musDayChart"></div>';
   }
   function renderMusic(){
     var box=$('trafMusic'); if(!box) return;
@@ -2561,6 +2694,7 @@
       return;
     }
     box.innerHTML=_musRank(keys,total)+_musContext(keys,total)+_musChart(keys);
+    if(_musLines) _chartMount($('musDayChart'),_musLabs,_musLines,160,'stack');
   }
   function renderEnv(){
     var box=$('trafEnv'); if(!box) return;
@@ -2596,6 +2730,7 @@
     }
     box.innerHTML='<div class="envwrap">'+_envDonut(r.slices,r.total)+'<div class="envlist">'+rows+more+'</div></div>'+_envLangChart()+_envHighlight()+_envPingLine();
     var mb=$('envMoreBtn'); if(mb) mb.addEventListener('click',function(){ _envExpanded=!_envExpanded; renderEnv(); });
+    if(_envLangLines) _chartMount($('envLangChart'),_envLangLabs,_envLangLines,150,'line');
   }
   (function(){
     var seg=$('envSeg'); if(!seg) return;
@@ -2657,26 +2792,22 @@
         // lit contre le total, au lieu de vivre dans un second graphe. Le champ
         // nw manque si le proxy tourne encore sur une version anterieure.
         var lines=[
-          {k:'visits',c:'#4080d8',vals:s.map(function(x){ return x.v||0; })},
-          {k:'unique',c:'#7fd17f',vals:s.map(function(x){ return x.u||0; })}
+          {k:'visits',n:'Visits',c:'#4080d8',vals:s.map(function(x){ return x.v||0; })},
+          {k:'unique',n:'Unique',c:'#7fd17f',vals:s.map(function(x){ return x.u||0; })}
         ];
-        var leg='<span><em style="background:#4080d8"></em>Visits</span><span><em style="background:#7fd17f"></em>Unique</span>';
         if(s.length && s[0].nw!==undefined){
-          lines.push({k:'new',c:'#e0b050',vals:s.map(function(x){ return x.nw||0; })});
-          lines.push({k:'returning',c:'#c08ae0',vals:s.map(function(x){ return x.rt||0; })});
-          leg+='<span><em style="background:#e0b050"></em>New</span><span><em style="background:#c08ae0"></em>Returning</span>';
+          lines.push({k:'new',n:'New',c:'#e0b050',vals:s.map(function(x){ return x.nw||0; })});
+          lines.push({k:'returning',n:'Returning',c:'#c08ae0',vals:s.map(function(x){ return x.rt||0; })});
         }
         // La droite de tendance est ajoutee en dernier pour passer au-dessus
         // des courbes, et ne rejoint la legende que si la fenetre est pleine :
         // deux points ne font pas une tendance.
         var _rg=_linreg(lines[0].vals);
         if(s.length>=5){
-          lines.push({k:'trend',c:'#9aa7bd',dash:true,vals:s.map(function(_,i){ return Math.max(0,_rg.a*i+_rg.b); })});
-          leg+='<span><em style="background:#9aa7bd"></em>Trend</span>';
+          lines.push({k:'trend',n:'Trend',c:'#9aa7bd',dash:true,vals:s.map(function(_,i){ return Math.max(0,_rg.a*i+_rg.b); })});
         }
         c.className='linechart';
-        c.innerHTML=_lineChart(labs,lines)
-        +'<div class="traflegend" style="flex-wrap:wrap">'+leg+'</div>';
+        _chartMount(c,labs,lines,170,'line');
       }
       _trafInsights(d,s);
       var md=$('trafModes');

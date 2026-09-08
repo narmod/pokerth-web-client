@@ -77,6 +77,17 @@ highlights below.
   this one measured 1.87 and 2.56 against a 3:1 floor. The ink switches in hard
   steps at the luminance where the two inks contrast equally, which puts the
   measured worst case at 3.29 across a year, from Svalbard to Tierra del Fuego.
+- **The traffic charts answer to a finger, and their legends switch series on
+  and off** (`web.53`). Tapping a legend entry hides that series and the scale
+  redraws around what is left — which is the point, since one tall line
+  flattens everything under it. The toggle survives the panel's own five-second
+  refresh, and the last visible series will not switch itself off. Reading a
+  value no longer needs a mouse: the `<title>` tooltips, which never existed
+  under a finger, are replaced by a readout that follows the pointer and lists
+  every visible series for the day under it. A vertical swipe still scrolls the
+  page; only a sideways one moves the readout. Applies to daily visits,
+  languages per day and plays per day; the hourly bar charts still print their
+  values above the bars.
 - **Icons on every dashboard tab** (`web.47`). The three family buttons and the
   seventeen sections each open with an emoji, so a section is found by shape
   before it is read. Decorative only — screen readers still get the label alone.

@@ -409,7 +409,8 @@ ok(/var MUS_TOP=10, MUS_STACK=5;/.test(admin), 'ten titles ranked, five stacked'
 ok(/box\.innerHTML=_musRank\(keys,total\)\+_musContext\(keys,total\)\+_musChart\(keys\);/.test(admin),
   'ranking, then context, then the chart');
 ok(/function _stackChart\(labels,series,H\)/.test(admin), 'a stacked bar helper exists');
-ok(!/_lineChart\(labs,lls,150\)/.test(admin) && /_stackChart\(labs,lls,160\)/.test(admin), 'the music history is stacked bars, not lines');
+ok(/_chartMount\(\$\('musDayChart'\),_musLabs,_musLines,160,'stack'\)/.test(admin),
+  'the music history is stacked bars, not lines');
 ok(/return s\.filter\(function\(x\)\{ return \(x\.date\|\|''\)>=key; \}\);/.test(admin), 'days before counting began are dropped from the window');
 ok(/plays per 100 visits/.test(admin), 'adoption is stated as plays per hundred visits');
 ok(/title="removed from the catalogue"/.test(admin), 'a title no longer in the catalogue is marked, not hidden');
@@ -426,11 +427,14 @@ ok(/title="removed from the catalogue"/.test(admin), 'a title no longer in the c
     var _musData={t1:30,t2:20,t3:10,t4:5,t5:3,t6:2,t7:1,t8:1,t9:1,t10:1,t11:1,t12:1};
     var _musTitles={t1:'Alpha',t2:'Beta',t3:'Gamma',t4:'Delta',t5:'Eps',t6:'Zeta',t7:'Eta',t8:'Th',t9:'Io',t11:'La'};
     var _musSince=new Date(2026,7,23,10,0,0).getTime();
-    var _trafSeries=[{date:'2026-08-21',v:100},{date:'2026-08-22',v:100},{date:'2026-08-23',v:200,mu:{t1:20,t2:10,t6:2}},{date:'2026-08-24',v:100,mu:{t1:10,t2:10,t3:10,t12:1}}];`;
+    var _trafSeries=[{date:'2026-08-21',v:100},{date:'2026-08-22',v:100},{date:'2026-08-23',v:200,mu:{t1:20,t2:10,t6:2}},{date:'2026-08-24',v:100,mu:{t1:10,t2:10,t3:10,t12:1}}];
+    var _musLines=null,_musLabs=null;`;
   const fn = new Function(env + lifted + `
     var keys=Object.keys(_musData).sort(function(a,b){return _musData[b]-_musData[a];});
     var total=0; keys.forEach(function(k){ total+=_musData[k]; });
-    return { rank:_musRank(keys,total), ctx:_musContext(keys,total), chart:_musChart(keys), days:_musDays().length };`);
+    var chart=_musChart(keys);
+    return { rank:_musRank(keys,total), ctx:_musContext(keys,total), chart:chart, lines:_musLines,
+             svg:_stackChart(_musLabs,_musLines,160), days:_musDays().length };`);
   const r = fn();
   ok(r.days === 2, 'the window holds only the days since counting began');
   ok(/Alpha[^]*?30 \u00b7 39%/.test(r.rank), 'the top title carries its plays and share');
@@ -441,7 +445,11 @@ ok(/title="removed from the catalogue"/.test(admin), 'a title no longer in the c
   ok(/<b>76<\/b> plays across <b>12<\/b> titles/.test(r.ctx), 'the context line states the totals');
   ok(/<b>31\.5<\/b> plays\/day over 2 days/.test(r.ctx), 'plays per day are averaged over the window only');
   ok(/<b>21<\/b> plays per 100 visits/.test(r.ctx), 'adoption is plays over visits of the same days');
-  ok(/aria-label="stacked daily bars"/.test(r.chart) && (r.chart.match(/<em /g) || []).length === 6, 'five titles plus others are stacked');
+  // The chart is now a mount point; the series it hands over are what gets
+  // drawn, and the legend is built from them rather than written alongside.
+  ok(/id="musDayChart"/.test(r.chart), 'the markup is a mount point the controller fills');
+  ok(r.lines.length === 6, 'five titles plus others are stacked');
+  ok(/aria-label="stacked daily bars"/.test(r.svg), 'and the helper still draws them as bars');
   ok(/since 2026-08-23/.test(r.chart), 'the chart says where its window starts');
 }
 ok(!/Last 90 days/.test(admin) && !/Last 180 days/.test(admin) && !/Last 365 days/.test(admin),
