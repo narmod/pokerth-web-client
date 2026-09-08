@@ -1331,9 +1331,10 @@
   // droite — autour d'un fuseau de référence (UTC par défaut, réglable). Les
   // fuseaux en soirée (18 h → 1 h) passent en vert.
   // Le fond du cadran est le ciel réel de la ville, calculé depuis la hauteur
-  // du soleil : on distingue le jour, l'heure dorée, le lever du coucher, et
-  // les trois crépuscules. C'est ce qui rend le bandeau lisible d'un coup
-  // d'œil en hiver, quand 17 h à Moscou et 17 h à Lagos n'ont rien à voir.
+  // du soleil : plein jour en jaune soleil, heure dorée en ambre, le lever
+  // distingué du coucher, puis les trois crépuscules et la nuit en bleus. On
+  // lit ainsi le bandeau d'un coup d'œil en hiver, quand 17 h à Moscou et
+  // 17 h à Lagos n'ont rien à voir.
   // L'heure du serveur n'est PAS ici : elle est en tête de Server › Health &
   // logs, où on la lit quand on en a besoin, et le bandeau reste une carte du
   // monde plutôt qu'un mélange des deux.
@@ -1442,10 +1443,10 @@
   function clkSky(lat,lon,ms){
     if(typeof lat!=='number'||typeof lon!=='number') return null;
     var a=clkSunAlt(lat,lon,ms), up=clkSunAlt(lat,lon,ms+600000)>a;
-    if(a>=12)     return {f:'#8ec5f0',i:'#0c2740',r:'#5f9dd0',n:'day'};
-    if(a>=6)      return {f:'#a9d3f2',i:'#12314b',r:'#6ba5d4',n:'day'};
-    if(a>=-0.833) return up?{f:'#f2c87f',i:'#3d2a08',r:'#c9963f',n:'sunrise'}
-                          :{f:'#ea9358',i:'#3d1a06',r:'#c2662f',n:'sunset'};
+    if(a>=12)     return {f:'#fbd85d',i:'#3f3006',r:'#cfab2c',n:'day'};
+    if(a>=6)      return {f:'#fbe79c',i:'#4a3a0d',r:'#d8bd5e',n:'day'};
+    if(a>=-0.833) return up?{f:'#f3a34e',i:'#3f2606',r:'#c67b2a',n:'sunrise'}
+                          :{f:'#e8763c',i:'#3d1806',r:'#bb5522',n:'sunset'};
     if(a>=-6)     return up?{f:'#9887c9',i:'#1b1237',r:'#6d5aa4',n:'dawn'}
                           :{f:'#ac6a76',i:'#31101b',r:'#874752',n:'dusk'};
     if(a>=-12)    return {f:'#3d4b88',i:'#e2e8ff',r:'#5b69aa',n:up?'dawn twilight':'dusk twilight'};

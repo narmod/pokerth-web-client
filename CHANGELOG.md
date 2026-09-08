@@ -62,6 +62,10 @@ highlights below.
 - **The Server / Client / Data buttons take the page width** (`web.50`). They
   were capped at 520px, which made them a short island above a full-width row
   of sections: two bars that belong together, aligned differently.
+- **Daylight on the clock faces is sun yellow** (`web.51`), not the pale blue it
+  started as — a lit face now reads as sunlight rather than as sky. The golden
+  hour moved to amber and orange to keep its distance from it; the twilights and
+  the night, which were already right, are untouched.
 - **Icons on every dashboard tab** (`web.47`). The three family buttons and the
   seventeen sections each open with an emoji, so a section is found by shape
   before it is read. Decorative only — screen readers still get the label alone.
