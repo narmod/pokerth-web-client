@@ -124,6 +124,8 @@
   .trafchart .bar span{font-size:.58rem;color:var(--text);margin-top:3px;white-space:nowrap}
   .trafchart .bar i.nw{background:linear-gradient(180deg,#3fae6a,#1c6b3e);border-radius:0 0 0 0}
   .trafchart .bar i.rt{background:linear-gradient(180deg,#4080d8,#1a3d8b);border-radius:3px 3px 0 0}
+  .misslg{display:inline-block;margin:3px 5px 0 0;padding:2px 8px;border:1px solid var(--line);border-radius:999px;font-size:.7rem;color:var(--cream)}
+  .misslg s{text-decoration:none;color:var(--text);font-variant-numeric:tabular-nums;margin-left:5px}
   .traflegend{display:flex;gap:6px;font-size:.7rem;color:var(--text);margin:6px 0 0}
   .traflegend em{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:5px;vertical-align:-1px;font-style:normal}
   /* Une entree de legende est un bouton : elle allume et eteint sa serie, et
@@ -2192,12 +2194,25 @@
   // an ordered list (ranking), because the two answer different questions —
   // "is anything dominant?" versus "what exactly is in the tail?".
   var _envData={}, _envSince=0, _envView='combo', _envKnown=false, _envPings=null, _envExpanded=false, _trafSeries=[], _retVerdict=false;
+  var _envLangs=[], _envLangsKnown=false, _envLangN=0;
   var _musData={}, _musTitles={}, _musSince=0, _musKnown=false;
   function _envFmt(n){ try{ return Number(n||0).toLocaleString(); }catch(e){ return String(n||0); } }
   // Palette lisible sur les deux thèmes admin; la dernière teinte sert au
   // regroupement « autres », volontairement neutre.
   var ENV_COLORS=['#4080d8','#7fd17f','#e0a03a','#c47ad6','#4fc3c7','#e98a8a','#9aa7bd','#6f7f99','#b58b5a','#8f8f8f'];
   var ENV_LABELS={standalone:'Installed app',browser:'Browser tab',other:'Other'};
+  // « other » ne veut pas dire la meme chose d'une vue a l'autre. Dans les
+  // vues systeme et navigateur, c'est un User-Agent que la table ne reconnait
+  // pas. Dans la vue des langues, c'est un ping dont l'en-tete Accept-Language
+  // est absent ou inexploitable : ce n'est pas une langue, et surtout pas une
+  // langue non traduite — une langue reelle est toujours comptee sous son
+  // propre code, traduite ou non. C'est la meme condition qui alimente
+  // l'estimation de bruit plus bas, et c'est presque toujours un automate.
+  var ENV_TITLES={
+    other:'User-Agent the table does not recognise.',
+    'lang:other':'Pings whose Accept-Language header is missing or unusable \u2014 not a language, and not an untranslated one. Almost always a bot or a script; the same condition feeds the bot-like estimate below.'
+  };
+  function _envTitle(k){ return ENV_TITLES[_envView+':'+k]||ENV_TITLES[k]||''; }
   // Un nom de langue se lit, un code se devine : « en » et « nl » ne disent
   // rien a qui n'a pas la liste en tete. Intl.DisplayNames couvre n'importe
   // quel code arrivant de l'en-tete Accept-Language, sans table a tenir a jour.
@@ -2218,9 +2233,13 @@
     return k;
   }
   function _envLabel(k){
+    if(_envView==='lang' && k==='other') return 'No language header';
     if(ENV_LABELS[k]) return ENV_LABELS[k];
     return _envView==='lang' ? _langLabel(k) : k;
   }
+  // Le regroupement de queue de classement s'appelait « N others », comme la
+  // cle « other » juste au-dessus : deux notions sans rapport sous le meme mot.
+  function _envRest(n){ return n+(_envView==='lang'?(' more language'+(n>1?'s':'')):' others'); }
   // Une couleur par CLÉ, pas par rang dans la série qu'on est en train de
   // dessiner : le classement (cumul depuis le début) et la courbe (14 derniers
   // jours) n'ordonnent pas les langues pareil, et deux teintes différentes pour
@@ -2252,7 +2271,7 @@
     var slices=top.map(function(k,i){ return {key:k,k:_envLabel(k),n:map[k]||0,c:ENV_COLORS[i%9]}; });
     if(rest.length){
       var r=0; rest.forEach(function(k){ r+=map[k]||0; });
-      slices.push({k:rest.length+' others',n:r,c:ENV_COLORS[9]});
+      slices.push({k:_envRest(rest.length),n:r,c:ENV_COLORS[9]});
     }
     return {total:tot,slices:slices,rest:rest.length};
   }
@@ -2274,6 +2293,28 @@
   // Ligne de lecture : la part qui mérite qu'on la regarde. iOS Safari parce
   // que c'est là que vivent la moitié de nos pièges connus, l'installation en
   // PWA parce qu'elle change le cycle de vie (AudioContext, stockage).
+  // Langues vues mais non traduites. La liste des traduites est lue par le
+  // proxy dans public/modules/lang/ et voyage avec le trafic : recopier ici
+  // quarante-cinq codes reviendrait a tenir un doublon qui derive au premier
+  // ajout. Un proxy anterieur ne l'envoie pas — on le dit plutot que de
+  // pretendre qu'il ne manque rien.
+  function _envMissingLangs(){
+    if(_envView!=='lang') return '';
+    var lang=_envData.lang||{}, seen=Object.keys(lang).filter(function(k){ return k!=='other'; });
+    if(!seen.length) return '';
+    if(!_envLangsKnown) return '<div class="muted" style="margin-top:10px">Which of these are translated is not known: the running proxy predates the check. Restart it to find out.</div>';
+    var miss=seen.filter(function(k){ return _envLangs.indexOf(k)<0; })
+                 .sort(function(a,b){ return (lang[b]||0)-(lang[a]||0); });
+    if(!miss.length) return '<div class="muted" style="margin-top:10px">Every language seen so far has a translation.</div>';
+    var tot=0; seen.forEach(function(k){ tot+=lang[k]||0; });
+    var mt=0; miss.forEach(function(k){ mt+=lang[k]||0; });
+    return '<div class="muted" style="margin-top:10px"><b>Seen but not translated</b> \u2014 '
+         + miss.length+' language'+(miss.length>1?'s':'')+', '+_envFmt(mt)+' ping'+(mt>1?'s':'')
+         + (tot?(' ('+(mt*100/tot<1?(mt*100/tot).toFixed(1):Math.round(mt*100/tot))+'% of pings with a language)'):'')
+         + ': '+miss.map(function(k){
+             return '<span class="misslg" title="'+_annEsc(k)+'">'+_annEsc(_langLabel(k))+' <s>'+_envFmt(lang[k]||0)+'</s></span>';
+           }).join('')+'</div>';
+  }
   function _envHighlight(){
     var combo=_envData.combo||{}, pwa=_envData.pwa||{}, lang=_envData.lang||{};
     var tot=0; Object.keys(combo).forEach(function(k){ tot+=combo[k]||0; });
@@ -2286,8 +2327,10 @@
     }
     var pt=(pwa.standalone||0)+(pwa.browser||0);
     if(pt) bits.push('<b>'+Math.round(((pwa.standalone||0)/pt)*100)+'%</b> run it as an installed app');
-    var nl=Object.keys(lang).length;
-    if(nl) bits.push('<b>'+nl+'</b> language'+(nl===1?'':'s')+' seen, of 45 translated');
+    // « other » n'est pas une langue : le comptait, on annoncait une langue de
+    // trop des le premier ping sans en-tete.
+    var nl=Object.keys(lang).filter(function(k){ return k!=='other'; }).length;
+    if(nl) bits.push('<b>'+nl+'</b> language'+(nl===1?'':'s')+' seen'+(_envLangN?(', of '+_envLangN+' translated'):''));
     // Noise floor: pings with an automated user-agent or no usable language
     // header. An estimate to scale the other numbers by — nothing is filtered.
     var nz=_envData.noise||{}, nzT=(nz['bot-like']||0)+(nz.clean||0);
@@ -2609,7 +2652,7 @@
     // « N others », comme dans le classement : une langue réellement déclarée
     // « other » existe dans les données, deux légendes « other » se confondraient.
     if(restK.length){
-      lls.push({k:restK.length+' others',c:ENV_COLORS[9],vals:s.map(function(x){
+      lls.push({k:_envRest(restK.length),c:ENV_COLORS[9],vals:s.map(function(x){
         var lg=x.lg||{},r=0; restK.forEach(function(k){ r+=lg[k]||0; }); return r;
       })});
     }
@@ -2720,7 +2763,7 @@
     var rows=rl.slices.map(function(s){
       var pc=(s.n/rl.total)*100;
       return '<div class="envrow"><span class="dot" style="background:'+s.c+'"></span>'
-           + '<span class="nmx"'+(s.key&&s.key!==s.k?' title="'+_annEsc(s.key)+'"':'')+'>'+_annEsc(s.k)+'</span>'
+           + '<span class="nmx"'+(s.key?(' title="'+_annEsc(_envTitle(s.key)||(s.key!==s.k?s.key:''))+'"'):'')+'>'+_annEsc(s.k)+'</span>'
            + '<span class="barx"><i style="width:'+Math.max(2,pc).toFixed(1)+'%;background:'+s.c+'"></i></span>'
            + '<span class="pct">'+_envFmt(s.n)+' \u00b7 '+(pc<1?pc.toFixed(1):Math.round(pc))+'%</span></div>';
     }).join('');
@@ -2728,7 +2771,7 @@
     if(r.rest||_envExpanded){
       more='<button id="envMoreBtn" class="use" style="margin-top:8px">'+(_envExpanded?'Show top 8':'Show all '+(r.rest+8)+' entries')+'</button>';
     }
-    box.innerHTML='<div class="envwrap">'+_envDonut(r.slices,r.total)+'<div class="envlist">'+rows+more+'</div></div>'+_envLangChart()+_envHighlight()+_envPingLine();
+    box.innerHTML='<div class="envwrap">'+_envDonut(r.slices,r.total)+'<div class="envlist">'+rows+more+'</div></div>'+_envLangChart()+_envMissingLangs()+_envHighlight()+_envPingLine();
     var mb=$('envMoreBtn'); if(mb) mb.addEventListener('click',function(){ _envExpanded=!_envExpanded; renderEnv(); });
     if(_envLangLines) _chartMount($('envLangChart'),_envLangLabs,_envLangLines,150,'line');
   }
@@ -2818,7 +2861,8 @@
       }
       // Champ absent = proxy antérieur à la fonctionnalité ; objet vide = rien
       // à compter encore. Voir renderEnv().
-      _envKnown=(d.env!==undefined); _envData=d.env||{}; _envColorReset(); _envSince=d.envSince||0; _envPings=d.pings||null; renderEnv();
+      _envKnown=(d.env!==undefined); _envData=d.env||{}; _envColorReset(); _envSince=d.envSince||0; _envPings=d.pings||null;
+      _envLangsKnown=Array.isArray(d.langs); _envLangs=_envLangsKnown?d.langs:[]; _envLangN=d.langN||0; renderEnv();
       _musKnown=(d.music!==undefined); _musData=d.music||{}; _musTitles=d.musicTitles||{}; _musSince=d.musicSince||0; renderMusic();
       var dbx=$('trafDb');
       if(dbx){

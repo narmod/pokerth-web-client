@@ -179,7 +179,10 @@ ok(/catch\(e\)/.test(lab), 'a browser without Intl.DisplayNames still shows the 
 ok(/_envView==='lang' \? _langLabel\(k\) : k/.test(body(admin, '_envLabel')),
   'the lookup only applies to the language view');
 ok(/\{key:k,k:_envLabel\(k\)/.test(admin), 'the raw code is kept alongside the label');
-ok(/s\.key&&s\.key!==s\.k\?' title="'/.test(admin), 'and shown on hover, where it does not crowd the row');
+// The hover text now prefers an explanation where there is one ("other" means
+// something different in each view), and falls back to the raw code.
+ok(/_envTitle\(s\.key\)\|\|\(s\.key!==s\.k\?s\.key:''\)/.test(admin),
+  'and shown on hover, where it does not crowd the row');
 
 // ── Log timestamps ────────────────────────────────────────────────────────
 // The proxy writes ISO UTC, which is right for a file and unreadable on

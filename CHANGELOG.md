@@ -88,6 +88,26 @@ highlights below.
   page; only a sideways one moves the readout. Applies to daily visits,
   languages per day and plays per day; the hourly bar charts still print their
   values above the bars.
+- **The language breakdown says what “Other” actually is, and which languages
+  are missing** (`web.54`). In the ranking, that row was never an untranslated
+  language — a real language is always counted under its own code — but a ping
+  whose `Accept-Language` header was missing or unusable, which is almost always
+  a bot. It is now called *No language header*, with a tooltip saying so, and
+  the tail of the ranking is called *N more languages* rather than reusing the
+  same word for something unrelated. A new line lists the languages seen that
+  have no translation, ordered by how many pings each would serve, resolving the
+  codes browsers really send: `no` for Norwegian where the file is `nb`, `tl`
+  for Tagalog where it is `fil`, and the retired ISO codes some Android builds
+  still use. The list of translations is read from `public/modules/lang/` by the
+  proxy rather than copied into the panel, so it cannot drift, and the count of
+  languages seen no longer includes the no-header bucket — it had been saying
+  one too many since the first header-less ping.
+- **No language can be lost to the cardinality cap** (`web.54`). Both language
+  counters folded any code past the 40th into the same `other` bucket. With 45
+  translations that was three languages away from silently mixing real ones in
+  with the bot noise. A translated language is now never folded, whatever the
+  cap, and the cap for the rest went to 90 — still low enough that a chatty
+  client cannot inflate the file.
 - **Icons on every dashboard tab** (`web.47`). The three family buttons and the
   seventeen sections each open with an emoji, so a section is found by shape
   before it is read. Decorative only — screen readers still get the label alone.

@@ -4475,12 +4475,24 @@ function _uaPick(table, ua) {
   for (let i = 0; i < table.length; i++) if (table[i][0].test(ua)) return table[i][1];
   return 'other';
 }
+// Plafond de cardinalité : une valeur inconnue ne crée pas une clé de plus
+// indéfiniment (l'en-tête Accept-Language est libre côté client). Il était à
+// 40 pour un client qui parle 45 langues : passé 40 codes distincts, une
+// langue réelle serait tombée dans « other » et s'y serait confondue avec les
+// pings sans en-tête, sans que rien ne le dise. Une langue traduite passe donc
+// toujours, et le plafond des autres monte à 90 — assez pour les codes que
+// nous ne traduisons pas encore, trop bas pour qu'un client bavard fasse
+// enfler le fichier.
+const ENV_KEY_CAP = 90;
+function _envRoom(b, val, key) {
+  if (b[val] !== undefined) return true;
+  if (key === 'lang' && supportedLangs().indexOf(val) >= 0) return true;
+  return Object.keys(b).length < ENV_KEY_CAP;
+}
 function _envBump(key, val) {
   if (!visitsStore.env) visitsStore.env = {};
   const b = visitsStore.env[key] || (visitsStore.env[key] = {});
-  // Plafond de cardinalité : une valeur inconnue ne crée pas une clé de plus
-  // indéfiniment (l'en-tête Accept-Language est libre côté client).
-  if (b[val] === undefined && Object.keys(b).length >= 40) { b.other = (b.other || 0) + 1; return; }
+  if (!_envRoom(b, val, key)) { b.other = (b.other || 0) + 1; return; }
   b[val] = (b[val] || 0) + 1;
 }
 // Compteur de diagnostic : combien de pings de visite sont réellement arrivés
@@ -4489,6 +4501,38 @@ function _envBump(key, val) {
 // passé — et on ne peut que deviner laquelle. En mémoire, non persisté : c'est
 // une mesure du processus courant, pas une statistique.
 const _pingStats = { boot: Date.now(), n: 0, nMode: 0, nMusic: 0, last: 0 };
+// ── Langues traduites ─────────────────────────────────────────────────────
+// Lues sur le disque, pas recopiees : public/modules/lang/ est la seule source
+// de verite, et une liste tenue a la main a cote finit toujours par diverger.
+// Base tronquee comme l'en-tete Accept-Language l'est a l'enregistrement
+// (pt-br et pt-pt comptent tous deux pour « pt »), plus les alias que les
+// navigateurs envoient reellement : « no » pour le norvegien la ou le fichier
+// s'appelle nb, « tl » pour le tagalog la ou il s'appelle fil, et les vieux
+// codes ISO qu'Android envoie encore (iw, in, ji).
+const LANG_ALIAS = { no: 'nb', tl: 'fil', iw: 'he', in: 'id', ji: 'yi', mo: 'ro' };
+let _langsCache = null, _langsMtime = -1, _langsFiles = 0;
+// Nombre de traductions reellement livrees, distinct de la taille du jeu de
+// correspondance : celui-ci contient en plus les alias, et annoncer « 48
+// traduites » quand il y a 45 fichiers serait faux.
+function supportedLangCount() { supportedLangs(); return _langsFiles; }
+function supportedLangs() {
+  const dir = path.join(PUBLIC_DIR, 'modules', 'lang');
+  let mt = 0;
+  try { mt = fs.statSync(dir).mtimeMs; } catch (e) { return _langsCache || []; }
+  if (mt === _langsMtime && _langsCache) return _langsCache;
+  try {
+    const base = {};
+    fs.readdirSync(dir).forEach(function (f) {
+      if (!/\.mjs$/.test(f)) return;
+      base[f.replace(/\.mjs$/, '').toLowerCase().split('-')[0]] = 1;
+    });
+    _langsFiles = fs.readdirSync(dir).filter(function (f) { return /\.mjs$/.test(f); }).length;
+    Object.keys(LANG_ALIAS).forEach(function (a) { if (base[LANG_ALIAS[a]]) base[a] = 1; });
+    _langsCache = Object.keys(base).sort();
+    _langsMtime = mt;
+  } catch (e) { _langsCache = _langsCache || []; }
+  return _langsCache;
+}
 function recordVisitEnv(ua, acceptLang, standalone) {
   try {
     ua = String(ua || '');
@@ -4515,7 +4559,7 @@ function recordVisitEnv(ua, acceptLang, standalone) {
     let bucket = visitsStore.days[day];
     if (!bucket) { bucket = visitsStore.days[day] = { v: 0, ids: {} }; pruneVisitDays(); }
     if (!bucket.lg) bucket.lg = {};
-    if (bucket.lg[lgv] === undefined && Object.keys(bucket.lg).length >= 40) bucket.lg.other = (bucket.lg.other || 0) + 1;
+    if (!_envRoom(bucket.lg, lgv, 'lang')) bucket.lg.other = (bucket.lg.other || 0) + 1;
     else bucket.lg[lgv] = (bucket.lg[lgv] || 0) + 1;
     saveVisitsSoon();
   } catch (e) {}
@@ -4712,6 +4756,8 @@ function visitsSummary() {
     cohorts: visitCohorts(30),
     env: visitsStore.env || {},
     envSince: visitsStore.envSince || 0,
+    langs: supportedLangs(),
+    langN: supportedLangCount(),
     music: visitsStore.music || {},
     musicTitles: musicPlayTitles(),
     musicSince: visitsStore.musicSince || 0,
