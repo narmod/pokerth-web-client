@@ -340,6 +340,29 @@ highlights below.
   already conform.
 
 ### Fixed
+- **LAN / dedicated mode reached the wrong WebSocket proxy** (`web.45`,
+  client-only). The default proxy URL was rebuilt from
+  `hostInput.dataset.autoHost` rather than from the page origin. Under the
+  `forced` instance policy (admin → *Login form* → *LAN server*),
+  `_applyLoginDefaults` fills `autoHost` with the **game server** host, so the
+  browser was sent to `wss://<game-server>/` — where no proxy listens as soon
+  as the web client and the LAN server sit on two different machines. The
+  handshake failed before anything reached the real proxy: the player saw
+  "WebSocket error. Is the proxy running?" and the operator's proxy log stayed
+  empty, because it was never contacted. The admin label already promised the
+  right behaviour ("auto: page address"); the code did something else.
+  The same expression ran in the guest and authenticated branches, where the
+  field is unused for dialling (Internet always uses the page origin) but *is*
+  persisted to `pth_proxy` on connect and re-read into the field on the next
+  load — so a single Internet login poisoned the LAN form for good. All three
+  now derive from `window.location.hostname`. `autoHost` keeps its role for the
+  **host** field, and an operator-forced `loginDefaults.proxyUrl` still wins,
+  applied right after by `_applyProxyPolicy()`. No effect when the web client
+  is co-hosted with the LAN server, where both values are identical.
+  Consequence for the PROXY protocol header: LAN traffic now genuinely flows
+  through the site's proxy, which sends no header for it (`_ppAppliesTo()`
+  matches host+port against the active server only), while Internet traffic
+  keeps it — the two coexist on one proxy, as intended.
 - **WebSocket upgrade refusals are now logged** (`web.44`, proxy-only).
   `verifyClient` rejects an upgrade on three grounds — admin ban (403),
   per-IP socket cap (429), upgrade-rate guard (429) — and all three were

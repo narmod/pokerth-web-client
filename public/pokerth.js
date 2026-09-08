@@ -5667,7 +5667,17 @@ const App = (() => {
       // serveur du réseau, et son choix est retenu par _pthLanRemember().
       var _lanFields = function () {
         var d = window._pthLanDefaults ? window._pthLanDefaults() : { host: autoHost, port: '7234', tls: false };
-        if (proxyInput) proxyInput.value = proto + '//' + (autoHost || 'localhost') + ':' + port;
+        // URL du proxy WebSocket par defaut = l'ORIGINE DE LA PAGE, jamais
+        // dataset.autoHost. En politique d'instance « forced » (admin ->
+        // loginDefaults.lanMode), autoHost porte l'hote du SERVEUR DE JEU :
+        // en deriver le proxy envoyait le navigateur vers wss://<serveur-de-jeu>/,
+        // ou aucun proxy n'ecoute des que le web client et le serveur LAN sont
+        // sur deux machines -> echec a l'ouverture du WebSocket (« le proxy
+        // est-il lance ? ») et aucune trace dans les logs du vrai proxy.
+        // C'est aussi ce que le libelle admin promet (« auto: page address »).
+        // Une URL imposee (loginDefaults.proxyUrl) reste prioritaire :
+        // _applyProxyPolicy() la reecrit juste apres.
+        if (proxyInput) proxyInput.value = proto + '//' + (window.location.hostname || 'localhost') + ':' + port;
         // Invite / share link target (#join=\u2026&s=host:port) FIRST: without it,
         // switching onto the LAN form would clobber the shared address with the
         // invitee's own saved server or the instance default \u2014 the guest would
@@ -5715,7 +5725,7 @@ const App = (() => {
         // own TLS flag (set in the /app-config handler -> window._pthNetServer).
         var _ps = window._pthNetServer;
         $('use-tls').checked = _ps ? !!_ps.tls : false;
-        if (proxyInput) proxyInput.value = proto + '//' + (autoHost||'localhost') + ':' + port;
+        if (proxyInput) proxyInput.value = proto + '//' + (window.location.hostname||'localhost') + ':' + port;
         if (hostInput) hostInput.value = _ps ? _ps.host : 'pokerth.net';
         if ($('port')) $('port').value = String(_ps ? _ps.port : 7234);
         setStatus(t('guestHint'), '', 'guestHint');
@@ -5738,7 +5748,7 @@ const App = (() => {
         // mot de passe de bout en bout.
         var _viaProxy2 = (window._pthNetTransport === 'proxy') || (_ps2 && String(_ps2.host).indexOf('pokerth.net') < 0);
         $('use-tls').checked = _viaProxy2 ? (_ps2 ? !!_ps2.tls : true) : true;
-        if (proxyInput) proxyInput.value = proto + '//' + (autoHost||'localhost') + ':' + port;
+        if (proxyInput) proxyInput.value = proto + '//' + (window.location.hostname||'localhost') + ':' + port;
         if (hostInput) hostInput.value = _ps2 ? _ps2.host : 'pokerth.net';
         if ($('port')) $('port').value = String(_ps2 ? _ps2.port : 7234);
         setStatus(t('enterCredentials'), '', 'enterCredentials');
@@ -11401,7 +11411,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.8-web.44'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.8-web.45'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

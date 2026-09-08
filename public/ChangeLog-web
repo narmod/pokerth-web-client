@@ -1,4 +1,8 @@
 2026-09-08 version 2.1.8-web (current series):
+- bugfix: playing on a LAN or dedicated server works again from anywhere - the client was dialling the wrong address for the relay and never reached it, so the connection failed with "is the proxy running?" no matter which server you typed
+- improvement: a LAN game now always goes through the site's relay, and only the Internet connection carries the operator's real-IP header - the two no longer get in each other's way
+
+2026-09-08 version 2.1.8-web:
 - improvement: when the site turns a connection away - too many tabs open, too many attempts in a row, or a blocked address - the server operator can now see it in the logs instead of nothing at all
 
 2026-09-07 version 2.1.8-web:
