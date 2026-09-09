@@ -14,7 +14,7 @@
 import { S } from '../game/state.mjs';
 import { Proto } from './proto.mjs';
 import { MSG } from './messages.mjs';
-import { send } from './session.mjs';
+import { send, show } from './session.mjs';
 import { t } from '../i18n.mjs';
 import { _inviteShow } from './petitions.mjs';
 import { handleIncomingReaction } from '../ui/reactions.mjs';
@@ -143,6 +143,42 @@ function _towText(reason, sec, expired) {
   return t('timeoutWarnIdle', { s: sec });
 }
 
+// ── Filet de sécurité : après l'expiration, la coupure DOIT arriver ───────
+// À l'expiration le bouton OK est grisé (parité QML : le serveur a déjà
+// tranché, un ResetTimeout ne servirait plus à rien) — ce n'est donc pas le
+// clic qui ramène le client officiel à l'écran de connexion, c'est la coupure
+// serveur qui suit : ErrorMessage 14 puis fermeture de session. Quand cette
+// coupure ne nous parvient pas (WebSocket laissé ouvert par le proxy alors que
+// le TCP côté serveur est mort), rien ne bougeait : lobby figé sous un
+// décompte mort, et un OK inerte. Passé ce délai de grâce, on conclut la
+// session nous-mêmes, exactement comme l'aurait fait la coupure.
+// Armé UNIQUEMENT pour la raison 0 (connexion inactive) et hors partie : dans
+// une partie le serveur retire seulement le joueur du jeu (SessionError →
+// KickPlayer) et la session, elle, survit — y conclure serait un faux positif.
+const TOW_GRACE_MS = 10000;
+let _towGrace = 0;
+
+function _towGraceCancel() { if (_towGrace) { clearTimeout(_towGrace); _towGrace = 0; } }
+
+function _towArmGrace(reason) {
+  _towGraceCancel();
+  if (reason !== 0) return;
+  if (S.gId) return;
+  if (window._offlineMode) return;
+  _towGrace = setTimeout(_towGiveUp, TOW_GRACE_MS);
+}
+
+function _towGiveUp() {
+  _towGrace = 0;
+  if (!S.ws) return;                 // la coupure est arrivée entre-temps
+  _towClose();
+  S._intentionalDisconnect = true;   // session finie : surtout pas de backoff
+  S._connLostReason = '';            // l'annonce est faite ici, pas par onclose
+  try { S.ws.close(); } catch (e) {}
+  try { show('s-connect'); } catch (e) {}
+  try { window._connLostShow && window._connLostShow(t('connErrIdle')); } catch (e) {}
+}
+
 function _towClose() {
   if (_towTimer) { clearInterval(_towTimer); _towTimer = 0; }
   const modal = document.getElementById('timeout-warn-modal');
@@ -165,11 +201,14 @@ function _towShow(reason, sec) {
   paint(left <= 0);
   modal.style.display = 'flex';
   if (left > 0) {
+    _towGraceCancel();
     _towTimer = setInterval(function () {
       left--;
-      if (left <= 0) { clearInterval(_towTimer); _towTimer = 0; paint(true); }
+      if (left <= 0) { clearInterval(_towTimer); _towTimer = 0; paint(true); _towArmGrace(reason); }
       else paint(false);
     }, 1000);
+  } else {
+    _towArmGrace(reason); // avertissement déjà expiré à l'arrivée
   }
 }
 
@@ -177,6 +216,7 @@ function _towShow(reason, sec) {
 // there is a single place that emits ResetTimeout; S._afkWarned is set, which
 // short-circuits the 3 min rate limit, so the packet really does leave now.
 function _timeoutWarnAck() {
+  _towGraceCancel();   // on répond avant l'échéance : plus rien à conclure
   _towClose();
   _afkActivity();
 }
@@ -193,7 +233,9 @@ window._timeoutWarnAck = _timeoutWarnAck;
 // Called from the socket's onclose: the warning belongs to a session that no
 // longer exists, and leaving a dead countdown on screen would be worse than
 // the silence it was meant to fix (QML does the same in onConnectionFailed).
-window._timeoutWarnClose = _towClose;
+window._timeoutWarnClose = function () { _towGraceCancel(); _towClose(); };
+// Exposée pour le diagnostic et les tests : conclut la session sur-le-champ.
+window._towGiveUp = _towGiveUp;
 
 function onChatReject(sub) {
   const rejText = Proto.str(sub, 1);

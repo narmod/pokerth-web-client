@@ -1,4 +1,7 @@
 2026-09-09 version 2.1.8-web (current series):
+- bugfix: when the inactivity countdown ran out, the warning window stayed on screen with a dead OK button and the lobby behind it never moved, because the disconnection from the server sometimes never reached the browser; the client now ends the session itself a few seconds later and takes you back to the connection screen
+
+2026-09-09 version 2.1.8-web:
 - bugfix: when the server ended the session - kicked, banned, or timed out after 20 minutes without activity - the lobby stayed on screen, frozen, with no word of what had happened; the client now returns to the connection screen and says why, like the desktop and mobile clients
 
 2026-09-09 version 2.1.8-web:

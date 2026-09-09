@@ -237,6 +237,21 @@ highlights below.
   (`scale 1.03`, 180 ms OutQuad) is applied to the seat plate.
 
 ### Fixed
+- **An expired inactivity countdown could leave the client hanging**
+  (`web.64`) — at expiry the OK button is disabled on purpose (QML:
+  `enabled: !timeoutWarningPopup.expired`; the server has decided, a
+  `ResetTimeout` would be pointless), so what moves the official client on is
+  the disconnection that follows — `ErrorMessage` 14 then `CloseSession`. When
+  that never reaches the browser (the proxy's WebSocket still open over a dead
+  server-side TCP), nothing happened at all: a dead countdown over a frozen
+  lobby, and an inert OK. `_towShow()` now arms a 10 s grace timer at expiry;
+  if no close has arrived by then, `_towGiveUp()` ends the session the way the
+  cut would have — socket closed, no reconnect backoff, connect screen, and the
+  `connErrIdle` reason in the "Connection lost" window. Armed for reason 0
+  (idle connection) only and only outside a game: in a game the server merely
+  kicks the player from the table (`SessionError` → `KickPlayer`) and the
+  session lives on. A deliberate OK before expiry disarms it, as does the
+  socket close. Six new cases in `scripts/test-msg-social.mjs`.
 - **A server-ended session left the lobby frozen on screen** (`web.62`) — a
   rejection after login (kick 11, ban 12, session timeout 14, i.e. the server's
   20-minute lobby inactivity timer, `SERVER_SESSION_ACTIVITY_TIMEOUT_SEC`)

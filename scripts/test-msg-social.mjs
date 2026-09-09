@@ -125,6 +125,37 @@ ok(els['timeout-warn-modal'].style.display === 'flex', 'nouvel avertissement : p
 window._timeoutWarnClose();
 ok(els['timeout-warn-modal'].style.display === 'none', 'onclose : popup fermé');
 
+// ── Expiration du décompte : le serveur doit couper. Sans coupure (WebSocket
+// laissé ouvert alors que le TCP est mort), le filet de sécurité conclut la
+// session à sa place : retour à l'écran de connexion + fenêtre « Connexion
+// perdue ». Armé pour la raison 0 seulement, et hors partie.
+const _realST = globalThis.setTimeout;
+let _armed = [];
+globalThis.setTimeout = (fn, ms) => { _armed.push({ fn, ms }); return 99; };
+S.gId = 0; S.ws = { readyState: 1, send: () => {}, close() { this.closed = true; } };
+S._intentionalDisconnect = false; S._connLostReason = 'x';
+let _shown = null; window._connLostShow = (m) => { _shown = m; };
+M.onTimeoutWarning(subOf([[1, 0, 2], [2, 0, 0]]));   // raison 2 (AFK en partie)
+ok(!_armed.some(a => a.ms === 10000), 'expiration raison 2 : aucun filet (la session survit)');
+_armed = [];
+S.gId = 7;
+M.onTimeoutWarning(subOf([[1, 0, 0], [2, 0, 0]]));   // raison 0 mais assis à une table
+ok(!_armed.some(a => a.ms === 10000), 'expiration à une table : aucun filet (le serveur ne kicke que du jeu)');
+_armed = [];
+S.gId = 0;
+M.onTimeoutWarning(subOf([[1, 0, 0], [2, 0, 0]]));   // raison 0, hors partie
+const _grace = _armed.find(a => a.ms === 10000);
+ok(!!_grace, 'expiration raison 0 hors partie : filet armé à 10 s');
+ok(els['tow-ok'].disabled === true, 'expiration : OK grisé (parité QML)');
+_grace.fn();
+ok(S.ws.closed === true, 'filet : socket fermé');
+ok(S._intentionalDisconnect === true, 'filet : pas de reconnexion automatique');
+ok(els['timeout-warn-modal'].style.display === 'none', 'filet : décompte mort retiré');
+ok(!!els['s-connect'].classList.contains('active'), 'filet : retour à l\'écran de connexion');
+ok(typeof _shown === 'string' && _shown.length > 0, 'filet : fenêtre « Connexion perdue » avec motif');
+globalThis.setTimeout = _realST;
+S.ws = { readyState: 1, send: () => {} }; S.gId = 3; S._intentionalDisconnect = false;
+
 // ── ChatReject : réaction rejetée en LAN → note locale discrète, pas de chat
 S._lastMsgWasReaction = true; S._chatRejectShown = false; S._currentLoginMode = 'lan';
 els['reaction-bar'] = makeEl();
