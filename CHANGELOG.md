@@ -47,7 +47,7 @@ highlights below.
   takes a round trip and then a wait, and a click with nothing on screen reads
   as a click that did nothing. Cancel calls the client's own `leaveGame()`, so
   a half-completed join is cleaned up properly. It reuses the `#leave-dialog`
-  shell and three strings that already exist in all 40 locales.
+  shell and three strings that already exist in all 45 locales.
 - **`/live` — avatars, player cards, type icons** (`web.78`) — the Players tab
   now matches the tool it replaces: avatar on the left, name on the first line
   and the table below it, Spectate on the right. Clicking a name opens the
@@ -76,7 +76,7 @@ highlights below.
 - **`/live` — the figures replace the idle hint** (`web.75`) — the four server
   counters now sit centred below the Login button, in the place the guest hint
   occupied, each with its full translated wording rather than a bare number.
-  The wording was already carried on the title attribute in all 40 locales, so
+  The wording was already carried on the title attribute in all 45 locales, so
   showing it costs no translation work; it stays hidden in the ordinary client,
   whose Internet card is a single line with no room for it. Idle notes are
   hidden on `/live` by their status key, so errors and connection progress —
@@ -120,7 +120,7 @@ highlights below.
   once a table is actually running). It reads the same `S.games` / `S.players`
   records the ordinary lobby renders from and repaints by wrapping
   `renderGames`, so no second source of truth and no new protocol handling.
-  Every label reuses an existing i18n key, so all 40 locales stay complete.
+  Every label reuses an existing i18n key, so all 45 locales stay complete.
   Covered by `scripts/test-live-lobby.mjs`, which runs the module against a
   jsdom document rather than pattern-matching its source.
 - **`/live` — one-button guest login** (`web.67`) — the connect screen drops to
@@ -370,6 +370,13 @@ highlights below.
   (`scale 1.03`, 180 ms OutQuad) is applied to the seat plate.
 
 ### Fixed
+- **The language count was stated as 40 in entries written today** (`web.86`)
+  — the catalogue has held 45 for a while; 40 was the figure at the time of
+  the fourth RTL batch and it was repeated afterwards without anyone counting
+  the files. Corrected where it describes the client as it is now. The
+  `web.58`/`web.59` entries keep their 40: they were true when written, and a
+  changelog is a record rather than a status page. `scripts/test-lang-count.mjs`
+  now counts the catalogue and fails on any current claim that disagrees.
 - **The table was re-scaled between hands while spectating** (`web.82`) — a
   seated player keeps an always-present action bar precisely so `#g-actions`
   cannot collapse and force a re-layout, but that guard is off for spectators,

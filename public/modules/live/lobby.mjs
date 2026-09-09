@@ -17,7 +17,7 @@
  * IIFE). window.S does not exist — an earlier revision of this file read it
  * and therefore always saw an empty game list and a nameless header.
  *
- * Every label reuses an existing i18n key, so the 40 locales stay complete.
+ * Every label reuses an existing i18n key, so the 45 locales stay complete.
  */
 
 import { keepDocked } from './chat-pane.mjs';
