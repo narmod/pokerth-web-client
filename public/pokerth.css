@@ -11479,20 +11479,31 @@ html[data-seat-struct="qml"] .seat-narrow .seat-name .seat-note-stars { font-siz
 :root[data-live="1"] .live-lobby {
   --live-chat-w: 320px;
   display: flex; flex: 1; min-height: 0; align-items: stretch;
+  gap: 18px; padding: 12px;
 }
-:root[data-live="1"] .live-lobby .llb-main {
-  flex: 1; min-width: 0; overflow-y: auto; padding: 10px 12px 16px;
+/* Same frame as the lobby's own columns: one border, 8px radius, panel
+   background, sp-3 of padding — so /live reads as the same product. */
+:root[data-live="1"] .live-lobby .llb-main,
+:root[data-live="1"] .live-lobby .llb-side {
+  border: 1px solid var(--border); border-radius: 8px;
+  background: var(--panel); padding: var(--sp-3); overflow: hidden;
+  display: flex; flex-direction: column; min-width: 0; min-height: 0;
 }
+:root[data-live="1"] .live-lobby .llb-main { flex: 1; }
 :root[data-live="1"] .live-lobby .llb-side {
   width: var(--live-chat-w); flex: 0 0 var(--live-chat-w);
-  min-width: 0; display: flex; flex-direction: column;
-  border-left: 1px solid var(--border, rgba(255,255,255,.12));
 }
 /* The chat panel is the client's own node, moved here. Its inline styles cap
    the height for the dropdown it normally is, so they have to be overridden. */
 :root[data-live="1"] .live-lobby #lobby-chat-panel {
   display: flex !important; flex: 1; min-height: 0;
   max-height: none !important; border-radius: 0;
+  background: transparent; border: 0;
+}
+/* Cancel the column padding so the header spans the full width, exactly as
+   the lobby does for its own panels. */
+:root[data-live="1"] .live-lobby #lobby-chat-panel > .g-chat-panel-header {
+  margin: calc(var(--sp-3) * -1) calc(var(--sp-3) * -1) var(--sp-3);
 }
 :root[data-live="1"] .live-lobby #lobby-chat-panel #chat {
   max-height: none !important; flex: 1;
@@ -11571,20 +11582,24 @@ html[data-seat-struct="qml"] .seat-narrow .seat-name .seat-note-stars { font-siz
 
 /* ── Live mode: tabs above the list, and the players pane ────────────────── */
 .live-lobby .llb-tabs {
-  display: flex; gap: 4px; padding: 2px 4px 8px;
-  border-bottom: 1px solid var(--border, rgba(255,255,255,.12));
+  display: flex; gap: 2px; flex-shrink: 0;
+  background: var(--chrome-tint); border-bottom: 1px solid var(--border);
+}
+:root[data-live="1"] .live-lobby .llb-tabs {
+  margin: calc(var(--sp-3) * -1) calc(var(--sp-3) * -1) var(--sp-3);
 }
 .live-lobby .llb-tab {
-  font: inherit; font-size: .82rem; font-weight: 600; cursor: pointer;
-  padding: 6px 14px; border-radius: 6px 6px 0 0;
-  color: var(--text); background: transparent; border: 0;
-  border-bottom: 2px solid transparent;
+  font: inherit; font-size: var(--fs-2xs); font-weight: 600; cursor: pointer;
+  letter-spacing: .15em; text-transform: uppercase;
+  padding: 8px 14px; color: var(--gold-dim);
+  background: transparent; border: 0; border-bottom: 2px solid transparent;
 }
 .live-lobby .llb-tab:hover { background: rgba(255, 255, 255, .06); }
 .live-lobby .llb-tab.on {
   color: var(--text-hi); border-bottom-color: var(--gold, #c8a24a);
 }
-.live-lobby .llb-players { padding-top: 4px; }
+:root[data-live="1"] .live-lobby .llb-main { overflow-y: auto; }
+.live-lobby .llb-players { padding-top: 2px; }
 .live-lobby .llb-pl {
   display: flex; align-items: center; gap: 10px; padding: 7px 10px;
   border-bottom: 1px solid var(--border, rgba(255,255,255,.08));
@@ -11622,7 +11637,8 @@ html[data-seat-struct="qml"] .seat-narrow .seat-name .seat-note-stars { font-siz
   margin-right: 0 !important; gap: 6px !important; justify-self: start;
 }
 /* The wording only shows here — in the Internet card it stays on the title. */
-:root[data-live="1"] .live-stats-host .lcl-x { opacity: .82; }
+:root[data-live="1"] .live-stats-host .lcl-x { display: inline; opacity: .82; }
+:root[data-live="1"] .live-lang-row { display: flex; justify-content: center; margin: 10px 0 2px; }
 .lcl-x { display: none; }
 @media (max-width: 420px) {
   :root[data-live="1"] .live-stats-host #lc-live { grid-template-columns: auto; }

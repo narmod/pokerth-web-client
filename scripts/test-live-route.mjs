@@ -95,7 +95,25 @@ check('the figures sit below the button, where the hint was',
 check('each figure carries its translated wording',
   /tx\.className = 'lcl-x'/.test(
     fs.readFileSync(path.join(root, 'public', 'modules', 'ui', 'live-stats.mjs'), 'utf8')));
-check('the wording only shows in live mode', /\.lcl-x \{ display: none; \}/.test(css));
+check('the wording is hidden in the ordinary client', /\.lcl-x \{ display: none; \}/.test(css));
+// It was hidden with display and only re-shown with opacity, so it never
+// appeared at all — the whole point of the row.
+check('the wording is actually displayed in live mode',
+  /:root\[data-live="1"\] \.live-stats-host \.lcl-x \{ display: inline/.test(css));
+
+// ── Language, and the lobby frame (2.1.8-web.76) ──
+check('a language button in each header, on the ids i18n already syncs',
+  /id="lang-toggle-lobby"/.test(html) && /id="lang-toggle-game"/.test(html) &&
+  /id="lang-toggle-connect"/.test(html));
+// The Advanced-options control uses the same entry point, hence four in all.
+check('the language buttons open the existing picker',
+  ['lang-toggle-lobby', 'lang-toggle-game', 'lang-toggle-connect'].every(function (id) {
+    return new RegExp('id="' + id + '" onclick="openLangMenu\\(event\\)"').test(html);
+  }));
+check('the columns wear the lobby panel frame',
+  /:root\[data-live="1"\] \.live-lobby \.llb-main,[\s\S]{0,120}border-radius: 8px;[\s\S]{0,80}var\(--panel\)/.test(css));
+check('the tab bar is a panel header',
+  /\.live-lobby \.llb-tabs \{[\s\S]{0,140}var\(--chrome-tint\)/.test(css));
 check('login is forced to pokerth.net', /sm\.value = 'pokerthnet'/.test(live));
 check('guest mode is forced on', /gc\.checked = true/.test(live));
 check('guest state re-asserted on click capture', /addEventListener\('click'[\s\S]{0,200}, true\)/.test(live));

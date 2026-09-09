@@ -16,6 +16,16 @@ release. Per-build detail is on the
 highlights below.
 
 ### Added
+- **`/live` — language in the header, lobby frame, figures in words**
+  (`web.76`) — a flag button in the lobby and table headers, and on the login
+  card, opening the client's own language picker. It uses the ids `i18n.mjs`
+  already keeps in sync with the active flag, so nothing new had to be wired;
+  until now the only language control lived in Advanced options, which live
+  mode hides. The two lobby columns wear the lobby's own panel frame — same
+  border, radius, background and padding, with the tab bar and the chat header
+  flush to the edges as panel headers. The server figures now really show
+  their wording: they were hidden with `display` and only re-shown with
+  `opacity`, so the sentences never appeared.
 - **`/live` — the figures replace the idle hint** (`web.75`) — the four server
   counters now sit centred below the Login button, in the place the guest hint
   occupied, each with its full translated wording rather than a bare number.
