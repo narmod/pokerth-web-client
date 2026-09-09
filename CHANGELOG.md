@@ -16,6 +16,14 @@ release. Per-build detail is on the
 highlights below.
 
 ### Added
+- **The game-server figures in the dashboard header** (`web.63`) — the same
+  four counters, as a strip in the top bar of the admin page, on every tab and
+  for every admin key. It reads the same `GET /api/live` the login screen
+  reads, so the upstream still sees one request per interval however many
+  people have the dashboard open. The Live server figures card also gained a
+  live preview of what players are seeing, which says plainly when they are
+  seeing nothing and why (switched off, counters stale, no usable answer).
+  Repaints right after a save, so a changed address shows its effect at once.
 - **Live server figures on the login screen** (`web.56`) — players online and
   games played today on the Internet card, read by the proxy
   (`GET /api/live`, one shared in-memory cache) from the official
@@ -140,6 +148,10 @@ highlights below.
   every entry now carries both.
 
 ### Changed
+- **The dashboard header lost its two link buttons** (`web.63`). “Open the
+  app” and “Studio” gave their place to the game-server figures; the theme
+  toggle moved to sit beside Log out and now shows only its icon, the wording
+  having moved to its tooltip and aria-label.
 - **Ivoire & Chene panel colours follow upstream `f7a8e26`** (`web.57`) —
   `bg #f5eee1 → #ece0c9`, `su #e9dcc4 → #ddceb0`, `bo #c6ac82 → #b89a6c`,
   `mu #8a755a → #6f5a3c`, `ws #8a6a2a → #7d5e20`, `sd #0e7a37 → #0c6b30` in

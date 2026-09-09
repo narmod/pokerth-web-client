@@ -77,6 +77,21 @@
   select{flex:1;padding:9px 11px;border-radius:8px;border:1px solid var(--line);background:rgba(0,0,0,.25);color:var(--cream);font-size:.9rem}
   button{font-family:inherit}
   .primary{margin-top:10px;width:100%;padding:10px;border-radius:8px;border:1px solid var(--gold);background:var(--gold);color:#10151c;font-weight:700;cursor:pointer;font-size:.9rem}
+  .ghost.ico{padding:7px 9px;font-size:.95rem;line-height:1}
+  .toplive{display:flex;align-items:center;gap:14px;padding:6px 11px;border:1px solid var(--line);
+    border-radius:8px;background:rgba(255,255,255,.04);font-size:.8rem;white-space:nowrap}
+  .toplive .tl{display:inline-flex;align-items:center;gap:5px;color:var(--muted)}
+  .toplive .tl svg{width:14px;height:14px;flex:0 0 auto}
+  .toplive .tl b{font-weight:700;color:var(--cream)}
+  .toplive .tl.on svg{color:var(--good,#4ade80)}
+  .lsprev{margin-top:12px;padding:10px 12px;border:1px solid var(--line);border-radius:8px;
+    background:rgba(255,255,255,.03)}
+  .lsprev .lsp-h{font-size:.72rem;color:var(--muted);margin-bottom:7px}
+  .lsprev .lsp-r{display:flex;align-items:center;gap:16px;flex-wrap:wrap;font-size:.85rem}
+  .lsprev .tl{display:inline-flex;align-items:center;gap:5px;color:var(--muted)}
+  .lsprev .tl svg{width:15px;height:15px;flex:0 0 auto}
+  .lsprev .tl b{font-weight:700;color:var(--cream)}
+  .lsprev .tl.on svg{color:var(--good,#4ade80)}
   .ghost,.appbtn{padding:7px 11px;border-radius:8px;border:1px solid var(--line);background:rgba(255,255,255,.04);color:var(--cream);text-decoration:none;font-size:.8rem;white-space:nowrap;cursor:pointer}
   .appbtn{border-color:var(--gold);background:rgba(239,241,245,.12);color:var(--gold)}
   .tabs{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 14px}
@@ -392,9 +407,8 @@
       <div class="tophd"><h1>PokerTH Web Client — Admin</h1><p class="sub">Dashboard</p></div>
       <div class="tophost" id="topHost" title="The host this panel is served from"></div>
       <div class="topbtns">
-        <button id="themeBtn" class="ghost" title="Toggle dark / light"></button>
-        <a class="appbtn" href="/" target="_blank" rel="noopener">Open the app &#8599;</a>
-        <a class="appbtn" href="/studio" target="_blank" rel="noopener">Studio &#8599;</a>
+        <div class="toplive" id="topLive" style="display:none" title="Game server, as the login screen reads it"></div>
+        <button id="themeBtn" class="ghost ico" title="Toggle dark / light" aria-label="Toggle dark / light"></button>
         <button id="logoutBtn" class="ghost">Log out</button>
       </div>
     </div>
@@ -684,6 +698,10 @@
           <p class="muted">Seconds, 30–900 (default 60). One read per interval for the whole server.</p>
         </div>
         <button id="lsTest" class="use">Test this address</button>
+        <div class="lsprev" id="lsPrev" style="display:none">
+          <div class="lsp-h">What players see on the login screen right now</div>
+          <div class="lsp-r" id="lsPrevRow"></div>
+        </div>
         <div id="lsMsg" class="msg"></div>
       </div>
     </div>
@@ -1318,7 +1336,7 @@
   (function(){
     var btn=$('themeBtn'); if(!btn) return;
     function cur(){ return document.documentElement.getAttribute('data-admin-theme')==='light' ? 'light' : 'dark'; }
-    function paint(){ btn.textContent = cur()==='light' ? '☀️ Light' : '🌙 Dark'; }
+    function paint(){ btn.textContent = cur()==='light' ? '☀️' : '🌙'; btn.title = 'Switch to ' + (cur()==='light' ? 'dark' : 'light'); }
     function set(t){ document.documentElement.setAttribute('data-admin-theme', t); try{ localStorage.setItem('pth_admin_theme', t); }catch(e){} paint(); }
     paint();
     btn.addEventListener('click', function(){ set(cur()==='light' ? 'dark' : 'light'); });
@@ -1328,7 +1346,7 @@
   // the last-activity stamp; activity listeners (capture+passive) just stamp.
   var IDLE_MS=10*60*1000, _idleLast=Date.now();
   function _idleReset(){ _idleLast=Date.now(); }
-  function doLogout(reason){ srvStop(); seStop(); clkStop(); localStorage.removeItem(TOKK); $('ltok').value=''; if($('loginErr')) $('loginErr').textContent=reason||''; show('login'); }
+  function doLogout(reason){ srvStop(); seStop(); clkStop(); liveStop(); localStorage.removeItem(TOKK); $('ltok').value=''; if($('loginErr')) $('loginErr').textContent=reason||''; show('login'); }
   function _idleCheck(){ if(tok() && dash.style.display!=='none' && Date.now()-_idleLast>IDLE_MS) doLogout('Logged out after 10 minutes of inactivity.'); }
   ['mousemove','mousedown','keydown','touchstart','scroll','click'].forEach(function(ev){ document.addEventListener(ev,_idleReset,{passive:true,capture:true}); });
   setInterval(_idleCheck, 30000);
@@ -1364,7 +1382,7 @@
       if(!info || !info.ok){ $('loginErr').textContent=(info&&info.error)||'Invalid token'; show('login'); return; }
       _isMaster=!!info.master; applyScopeVisibility(info);
       $('loginErr').textContent=''; _idleLast=Date.now(); show('dash');
-      clkStart();
+      clkStart(); liveStart();
       if(_isMaster){
         api('/admin/pkg-list').then(function(r){return r.json();}).then(function(d){ if(d&&d.ok) renderPkgs(d); }).catch(function(){});
         loadServer(); loadDeploys(); loadBlocked(); loadThemes(); loadFeatureSwitches(); srvStart();
@@ -3776,6 +3794,72 @@
     });
   })();
 
+  // -- Game-server figures: header strip, and the preview in the settings card
+  // Both read the same GET /api/live the login screen reads, so the dashboard
+  // costs the upstream nothing extra -- the proxy is still the single reader and
+  // both surfaces are served from its one cache. The strip is drawn for every
+  // admin key; the preview only exists on the master's Clients tab, so the
+  // painter simply skips whichever element is absent.
+  var LIVE_ICONS = {
+    online:  '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="7" r="4"/><path d="M6 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/></svg>',
+    tables:  '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="4" width="6" height="6" rx="1"/><rect x="14" y="4" width="6" height="6" rx="1"/><rect x="4" y="14" width="6" height="6" rx="1"/><rect x="14" y="14" width="6" height="6" rx="1"/></svg>',
+    waiting: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>',
+    today:   '<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3c-1.6 2.6-6 5.4-6 9a3.6 3.6 0 0 0 5.2 3.2L10 21h4l-1.2-5.8A3.6 3.6 0 0 0 18 12c0-3.6-4.4-6.4-6-9z"/></svg>'
+  };
+  var LIVE_LABELS = { online:'online', tables:'tables', waiting:'waiting', today:'today' };
+  var _liveTimer=null, _liveSec=60, _liveBusy=false;
+
+  function _liveCell(kind, n){
+    var sp=document.createElement('span');
+    sp.className='tl'+(kind==='online'?' on':'');
+    sp.title=n+' '+LIVE_LABELS[kind];
+    sp.insertAdjacentHTML('beforeend', LIVE_ICONS[kind]);
+    var b=document.createElement('b'); b.textContent=String(n); sp.appendChild(b);
+    var l=document.createElement('span'); l.textContent=LIVE_LABELS[kind]; sp.appendChild(l);
+    return sp;
+  }
+  function _liveFill(box, d){
+    if(!box) return;
+    box.textContent='';
+    box.appendChild(_liveCell('online', d.online));
+    if(typeof d.tables==='number') box.appendChild(_liveCell('tables', d.tables));
+    if(typeof d.waiting==='number') box.appendChild(_liveCell('waiting', d.waiting));
+    if(typeof d.today==='number') box.appendChild(_liveCell('today', d.today));
+  }
+  function livePaint(d){
+    var strip=$('topLive'), prev=$('lsPrev'), row=$('lsPrevRow');
+    var good = d && d.ok===true && typeof d.online==='number';
+    if(strip){
+      if(good){ _liveFill(strip, d); strip.style.display='flex'; }
+      else { strip.textContent=''; strip.style.display='none'; }
+    }
+    if(prev){
+      if(good){ _liveFill(row, d); prev.style.display='block'; }
+      else if(d && d.error){
+        row.textContent='';
+        var m=document.createElement('span');
+        m.className='tl';
+        m.textContent = d.error==='disabled' ? 'Switched off \u2014 players see nothing here.'
+                      : d.error==='stale'    ? 'The counters are flagged stale \u2014 players see nothing here.'
+                      : 'No usable answer (' + d.error + ') \u2014 players see nothing here.';
+        row.appendChild(m);
+        prev.style.display='block';
+      }
+      else { prev.style.display='none'; }
+    }
+  }
+  function livePoll(){
+    if(_liveBusy) return;
+    _liveBusy=true;
+    fetch('/api/live',{cache:'no-store'}).then(function(r){return r.json();}).then(function(d){
+      if(d && typeof d.sec==='number' && d.sec>0 && d.sec!==_liveSec){ _liveSec=d.sec; liveArm(); }
+      livePaint(d);
+    }).catch(function(){ livePaint(null); }).finally(function(){ _liveBusy=false; });
+  }
+  function liveArm(){ if(_liveTimer) clearInterval(_liveTimer); _liveTimer=setInterval(livePoll, _liveSec*1000); }
+  function liveStart(){ liveArm(); livePoll(); }
+  function liveStop(){ if(_liveTimer){ clearInterval(_liveTimer); _liveTimer=null; } var t=$('topLive'); if(t){ t.textContent=''; t.style.display='none'; } }
+
   // -- Live server figures on the login screen (master only) ------------------
   // Shares the /admin/config payload the kill switches already load, so the
   // card fills in without a second round trip.
@@ -3798,7 +3882,7 @@
       var m=$('lsMsg');
       api('/admin/config',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({liveStats:liveStatsBody(),token:tok()})})
         .then(function(r){return r.json();}).then(function(d){
-          if(d&&d.ok){ renderLiveStats(d); m.textContent=(d.liveStats&&d.liveStats.on===false)?'Saved \u2014 the line is off.':('Saved \u2014 refreshed every '+((d.liveStats&&d.liveStats.sec)||60)+' s from '+((d.liveStats&&d.liveStats.url)||'')); m.className='msg ok'; }
+          if(d&&d.ok){ renderLiveStats(d); livePoll(); m.textContent=(d.liveStats&&d.liveStats.on===false)?'Saved \u2014 the line is off.':('Saved \u2014 refreshed every '+((d.liveStats&&d.liveStats.sec)||60)+' s from '+((d.liveStats&&d.liveStats.url)||'')); m.className='msg ok'; }
           else { m.textContent='Failed: '+((d&&d.error)||'error'); m.className='msg err'; }
         }).catch(function(){ m.textContent='Network error.'; m.className='msg err'; });
     });
