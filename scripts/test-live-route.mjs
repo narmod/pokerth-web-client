@@ -82,7 +82,20 @@ for (const sel of ['#login-form', '#tls-row', '#register-link-row', '#server-mod
     new RegExp(':root\\[data-live="1"\\] ' + sel + '[,\\s]').test(css));
 }
 check('the real CONNECT button is kept', !/:root\[data-live="1"\][^{]*\.btn-primary[^{]*\{ display: none/.test(css));
-check('the status line is kept', !/:root\[data-live="1"\][^{]*#cstatus/.test(css));
+// Idle notes go, anything that reports stays: only keyed messages are hidden.
+check('idle status notes are hidden',
+  /#cstatus\[data-status-key\]:not\(\[data-status-key=""\]\) \{ display: none/.test(css));
+check('errors and progress keep the status line',
+  !/:root\[data-live="1"\] #cstatus \{ display: none/.test(css));
+check('the status key reaches the DOM',
+  /if \(el\.dataset\) el\.dataset\.statusKey = key \|\| '';/.test(
+    fs.readFileSync(path.join(root, 'public', 'modules', 'net', 'session.mjs'), 'utf8')));
+check('the figures sit below the button, where the hint was',
+  html.indexOf('id="cstatus"') < html.indexOf('id="live-stats-host"'));
+check('each figure carries its translated wording',
+  /tx\.className = 'lcl-x'/.test(
+    fs.readFileSync(path.join(root, 'public', 'modules', 'ui', 'live-stats.mjs'), 'utf8')));
+check('the wording only shows in live mode', /\.lcl-x \{ display: none; \}/.test(css));
 check('login is forced to pokerth.net', /sm\.value = 'pokerthnet'/.test(live));
 check('guest mode is forced on', /gc\.checked = true/.test(live));
 check('guest state re-asserted on click capture', /addEventListener\('click'[\s\S]{0,200}, true\)/.test(live));

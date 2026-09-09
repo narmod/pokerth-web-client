@@ -229,6 +229,10 @@ function setStatus(txt, cls='', key, opts) {
   if (!el) return;
   el.textContent = txt;
   el.className = 'status ' + cls;
+  // Keyed messages are the persistent notes (guest hint, LAN note); errors and
+  // progress carry no key. Exposing the key lets a stylesheet tell them apart
+  // — /live drops the notes and keeps everything that actually reports.
+  if (el.dataset) el.dataset.statusKey = key || '';
   // #cstatus vit sous le bouton CONNECT, donc sur l'écran de connexion. Une
   // fois au lobby ou à table, cet écran est masqué : tout message écrit ici
   // devient invisible. Les REFUS DE JOIN passaient par là — le serveur

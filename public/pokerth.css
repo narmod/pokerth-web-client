@@ -11606,14 +11606,24 @@ html[data-seat-struct="qml"] .seat-narrow .seat-name .seat-note-stars { font-siz
    The card carries the server's own figures — players online, tables running,
    players waiting, games today — rather than a bare status line. They are the
    client's #lc-live node, moved here from the Internet card of step 1. */
-:root[data-live="1"] .live-stats-host {
-  display: flex; justify-content: center; flex-wrap: wrap;
-  margin: 14px 0 4px;
-}
+/* Idle notes (the guest hint, the LAN note) have no place here: the card says
+   what this is, and the figures say what the server is doing. Anything that
+   actually reports — errors, connection progress — carries no status key and
+   stays visible. */
+:root[data-live="1"] #cstatus[data-status-key]:not([data-status-key=""]) { display: none; }
+
+:root[data-live="1"] .live-stats-host { display: block; margin: 16px 0 2px; }
 :root[data-live="1"] .live-stats-host #lc-live {
-  display: flex; flex-wrap: wrap; justify-content: center;
-  gap: 2px 0; font-size: .82rem; opacity: .9;
+  display: grid !important;
+  grid-template-columns: repeat(2, auto); justify-content: center;
+  gap: 7px 22px; font-size: .82rem; opacity: .92;
 }
-/* The counters carry their own inline margin for the one-line layout of the
-   Internet card; centred here, the trailing gap would push them off-centre. */
-:root[data-live="1"] .live-stats-host .lcl:last-child { margin-right: 0 !important; }
+:root[data-live="1"] .live-stats-host .lcl {
+  margin-right: 0 !important; gap: 6px !important; justify-self: start;
+}
+/* The wording only shows here — in the Internet card it stays on the title. */
+:root[data-live="1"] .live-stats-host .lcl-x { opacity: .82; }
+.lcl-x { display: none; }
+@media (max-width: 420px) {
+  :root[data-live="1"] .live-stats-host #lc-live { grid-template-columns: auto; }
+}

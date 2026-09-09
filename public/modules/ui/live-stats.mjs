@@ -82,6 +82,14 @@ function _item(kind, key, n) {
   const b = document.createElement('b');
   b.textContent = _fmt(n);
   sp.appendChild(b);
+  // The same wording as the title, as visible text. Hidden by default so the
+  // one-line layout of the Internet card is unchanged; /live shows it, where
+  // there is room for the full sentence and no room for a mystery number.
+  const tx = document.createElement('span');
+  tx.className = 'lcl-x';
+  tx.setAttribute('aria-hidden', 'true');
+  tx.textContent = String(label).replace(_fmt(n), '').trim();
+  sp.appendChild(tx);
   return sp;
 }
 

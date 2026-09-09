@@ -16,6 +16,14 @@ release. Per-build detail is on the
 highlights below.
 
 ### Added
+- **`/live` — the figures replace the idle hint** (`web.75`) — the four server
+  counters now sit centred below the Login button, in the place the guest hint
+  occupied, each with its full translated wording rather than a bare number.
+  The wording was already carried on the title attribute in all 40 locales, so
+  showing it costs no translation work; it stays hidden in the ordinary client,
+  whose Internet card is a single line with no room for it. Idle notes are
+  hidden on `/live` by their status key, so errors and connection progress —
+  which carry no key — still report exactly as before.
 - **`/live` — the login card shows the server** (`web.74`) — the card is
   titled *Live / Spectator Tool* and carries the four figures the site's own
   Game-Server Status box carries: players online, tables running, players
