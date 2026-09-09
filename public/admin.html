@@ -1093,6 +1093,11 @@
           <div style="margin:10px 0 6px"><b>2 · How?</b> <span class="muted" style="font-weight:normal">(transport)</span></div>
           <label class="muted" style="display:block;margin:3px 0"><input type="radio" name="srvTransport" class="trDirect"> <b>Direct WS</b> — browser dials wss://www.pokerth.net/pthlive itself (historical; no reconnect grace)</label>
           <label class="muted" style="display:block;margin:3px 0"><input type="radio" name="srvTransport" class="trProxy"> <b>Via proxy</b> — bridge through this proxy (session kept alive on wifi drops, buffered reconnect)</label>
+          <div style="margin:10px 0 4px"><b>Embedded spectator mode</b> <span class="muted" style="font-weight:normal">(/live)</span></div>
+          <label class="muted" style="display:block;margin:3px 0"><input type="radio" name="liveTransport" class="ltInherit"> <b>Same as above</b> — /live uses whatever the Internet mode uses (default)</label>
+          <label class="muted" style="display:block;margin:3px 0"><input type="radio" name="liveTransport" class="ltDirect"> <b>Direct WS</b> — spectators dial wss://www.pokerth.net/pthlive themselves, this proxy carries nothing</label>
+          <label class="muted" style="display:block;margin:3px 0"><input type="radio" name="liveTransport" class="ltProxy"> <b>Via proxy</b> — spectators bridge through this proxy, like ordinary players</label>
+          <div class="muted" style="margin:2px 0 8px;opacity:.8">An install running beside the game server and one running on a separate machine rarely want the same answer here, which is why /live has its own setting.</div>
           <label class="muted" style="display:block;margin:3px 0 3px 22px"><input type="checkbox" id="srvPP"> Send <b>PROXY protocol</b> header — forwards each player&#39;s real IP to the game server (v1, haproxy-style). Applies to the active server above only; LAN / dedicated addresses typed by players never receive it. <span style="color:#FFC107">Enable only if that server expects it, otherwise every connection to it fails.</span></label>
         </div>
         <div style="margin:2px 0 6px"><b>3 · Registered servers</b> <span class="muted" style="font-weight:normal">— used in Manual; saving also allowlists host + port. “Check” tests the values on screen with the same TLS settings as a real game.</span></div>
@@ -1146,6 +1151,7 @@
   var _activeSrv = '';
   var _srcMode = 'auto';
   var _transport = 'direct';
+  var _liveTransport = 'inherit';
   var _pp = false;
   var _slUrl = '';
   function srvEsc(s){ return String(s==null?'':s).replace(/[&<>"]/g,function(c){return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'})[c];}); }
@@ -1267,7 +1273,7 @@
       if(!d||!d.ok){ if(box) box.innerHTML='<div class="empty">'+srvEsc((d&&d.error)||'Error')+'</div>'; return; }
       _srv=(d.servers||[]).map(function(s){return {id:s.id,name:s.name||'',host:s.host||'',port:parseInt(s.port,10)||7234,tls:!!s.tls,sni:s.sni||'',noverify:!!s.noverify};}); _srvDirty={};
       _activeSrv=d.activeServerId||'';
-      _srcMode=(d.source==='auto')?'auto':'manual'; _transport=(d.transport==='proxy')?'proxy':'direct'; _pp=!!d.proxyProtocol; _slUrl=d.serverlistUrl||'';
+      _srcMode=(d.source==='auto')?'auto':'manual'; _transport=(d.transport==='proxy')?'proxy':'direct'; _liveTransport=(d.liveTransport==='proxy'||d.liveTransport==='direct')?d.liveTransport:'inherit'; _pp=!!d.proxyProtocol; _slUrl=d.serverlistUrl||'';
       applySourceUI(d.serverlist||null); applyTransportUI(); applyEffectiveUI(d.effective||null);
       renderServers();
       var al=$('srvAllow'); if(al){ var hosts=(d.allowlist&&d.allowlist.hosts)||[], ports=(d.allowlist&&d.allowlist.ports)||[]; al.innerHTML='<b>Hosts:</b> '+srvEsc(hosts.join(', ')||'—')+'<br><b>Ports:</b> '+srvEsc(ports.join(', ')||'—'); }
@@ -1275,7 +1281,7 @@
   }
   function saveServers(){
     srvSyncAll(); var st=$('srvState'); if(st){ st.textContent='Saving…'; st.className='msg'; }
-    api('/admin/servers',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({servers:_srv,activeServerId:_activeSrv,source:_srcMode,transport:_transport,proxyProtocol:_pp,serverlistUrl:($('srvSlUrl')?$('srvSlUrl').value.trim():_slUrl)})}).then(function(r){return r.json();}).then(function(d){
+    api('/admin/servers',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({servers:_srv,activeServerId:_activeSrv,source:_srcMode,transport:_transport,liveTransport:_liveTransport,proxyProtocol:_pp,serverlistUrl:($('srvSlUrl')?$('srvSlUrl').value.trim():_slUrl)})}).then(function(r){return r.json();}).then(function(d){
       if(!st) return;
       if(!d||!d.ok){ st.textContent='✗ '+srvEsc((d&&d.error)||'error'); st.className='msg err'; return; }
       loadServers(); st.textContent='✓ Saved'; st.className='msg ok';
@@ -1302,12 +1308,20 @@
   function applyTransportUI(){
     var td=document.querySelector('.trDirect'), tp=document.querySelector('.trProxy');
     if(td) td.checked=(_transport!=='proxy'); if(tp) tp.checked=(_transport==='proxy');
+    var li=document.querySelector('.ltInherit'), ld=document.querySelector('.ltDirect'), lp=document.querySelector('.ltProxy');
+    if(li) li.checked=(_liveTransport==='inherit');
+    if(ld) ld.checked=(_liveTransport==='direct');
+    if(lp) lp.checked=(_liveTransport==='proxy');
     var pp=$('srvPP'); if(pp) pp.checked=_pp;
   }
   function _bindTransport(){
     var td=document.querySelector('.trDirect'), tp=document.querySelector('.trProxy');
     if(td) td.addEventListener('change',function(){ if(td.checked) _transport='direct'; });
     if(tp) tp.addEventListener('change',function(){ if(tp.checked) _transport='proxy'; });
+    var li=document.querySelector('.ltInherit'), ld=document.querySelector('.ltDirect'), lp=document.querySelector('.ltProxy');
+    if(li) li.addEventListener('change',function(){ if(li.checked) _liveTransport='inherit'; });
+    if(ld) ld.addEventListener('change',function(){ if(ld.checked) _liveTransport='direct'; });
+    if(lp) lp.addEventListener('change',function(){ if(lp.checked) _liveTransport='proxy'; });
     var pp=$('srvPP');
     if(pp) pp.addEventListener('change',function(){ _pp=pp.checked; });
   }

@@ -16,6 +16,15 @@ release. Per-build detail is on the
 highlights below.
 
 ### Added
+- **`/live` — its own transport setting** (`web.73`) — Servers → *How?* gains a
+  choice for the embedded spectator mode: same as the Internet mode (default),
+  Direct WS, or Via proxy. An install running beside the game server and one
+  running on a separate machine rarely want the same answer, and until now
+  `/live` was forced to follow the Internet setting. Direct WS means spectators
+  dial `wss://www.pokerth.net/pthlive` themselves and this proxy carries
+  nothing for them — the framing difference (one protobuf per frame, no length
+  prefix) was already implemented for the Internet mode and is reused as is.
+  The default keeps every existing install on exactly the behaviour it had.
 - **`/live` — Players tab and read-only chat** (`web.72`) — a tab bar above the
   list switches between the tables and everyone online, each with its count,
   as in the spectator tool. A player's row says which table they are at or

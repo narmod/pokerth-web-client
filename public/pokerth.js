@@ -116,6 +116,7 @@ setTimeout(_pingTick, 3000);
 // Sièges « perdants » au showdown (pids) → cartes estompées (fadeOutLosingCards).
 // Rempli dans EndOfHandShow (si pth_fade_losers != '0'), vidé à HandStart.
 window.directWS = false; // [9g-A2] jamais déclaré → propriété window explicite
+window._pthLiveTransport = 'inherit'; // /live transport override, from /app-config
 window._sdLosers = new Set();
 window._sdWinners = new Set();   // sièges gagnants du showdown (PlayerWinnerOverlay QML)
 // Option "révéler mes cartes au tap" (pth_own_click) : quand activée, mes cartes
@@ -3945,7 +3946,7 @@ document.addEventListener("DOMContentLoaded", function() {
     function go() {
       fetch('/app-config', { cache: 'no-store' })
         .then(function (r) { return r.json(); })
-        .then(function (c) { if (c) { window._pthNetServer = (c.pokerthnetServer && c.pokerthnetServer.host) ? c.pokerthnetServer : null; window._pthNetSource = (c.pokerthnetSource === 'auto') ? 'auto' : 'manual'; window._pthNetTransport = (c.internetTransport === 'proxy') ? 'proxy' : 'direct'; } if (c && c.modes) applyModes(c.modes); if (c) _applyMusicFlag(c.musicEnabled !== false); if (c && c.loginDefaults) _applyLoginDefaults(c.loginDefaults); if (c && c.welcome && c.welcome.enabled && typeof window.maybeShowWelcome === 'function') window.maybeShowWelcome(c.welcome); window._guestNoticeCfg = (c && c.guestNotice) || null; window._authNoticeCfg = (c && c.authNotice) || null; if (typeof window._pollSetConfig === 'function') window._pollSetConfig(c && c.poll); if (c && typeof c.defaultTheme === 'string') _applyDefaultTheme(c.defaultTheme); if (c && typeof c.showLoginTitle === 'boolean') { try { document.body.classList.toggle('adv-show-title', c.showLoginTitle); } catch (e) {} } if (c && c.defaults) _applyDefaultSettings(c.defaults); if (c && Array.isArray(c.featureOff)) _applyFeatureOff(c.featureOff); _applyBranding(c); try { if (!window._shareLinkActive && window.App && App.onServerOrGuestChange) App.onServerOrGuestChange(); } catch (e) {} })
+        .then(function (c) { if (c) { window._pthNetServer = (c.pokerthnetServer && c.pokerthnetServer.host) ? c.pokerthnetServer : null; window._pthNetSource = (c.pokerthnetSource === 'auto') ? 'auto' : 'manual'; window._pthNetTransport = (c.internetTransport === 'proxy') ? 'proxy' : 'direct'; window._pthLiveTransport = (c.liveTransport === 'proxy' || c.liveTransport === 'direct') ? c.liveTransport : 'inherit'; } if (c && c.modes) applyModes(c.modes); if (c) _applyMusicFlag(c.musicEnabled !== false); if (c && c.loginDefaults) _applyLoginDefaults(c.loginDefaults); if (c && c.welcome && c.welcome.enabled && typeof window.maybeShowWelcome === 'function') window.maybeShowWelcome(c.welcome); window._guestNoticeCfg = (c && c.guestNotice) || null; window._authNoticeCfg = (c && c.authNotice) || null; if (typeof window._pollSetConfig === 'function') window._pollSetConfig(c && c.poll); if (c && typeof c.defaultTheme === 'string') _applyDefaultTheme(c.defaultTheme); if (c && typeof c.showLoginTitle === 'boolean') { try { document.body.classList.toggle('adv-show-title', c.showLoginTitle); } catch (e) {} } if (c && c.defaults) _applyDefaultSettings(c.defaults); if (c && Array.isArray(c.featureOff)) _applyFeatureOff(c.featureOff); _applyBranding(c); try { if (!window._shareLinkActive && window.App && App.onServerOrGuestChange) App.onServerOrGuestChange(); } catch (e) {} })
         .catch(function () {});
     }
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', go); else go();
@@ -6115,7 +6116,14 @@ const App = (() => {
       // the Internet mode through our proxy (session grace on wifi drops,
       // buffered reconnect) even when the target is pokerth.net itself.
       // 'direct' (default) keeps the historical hostname-based behavior.
-      window.directWS = isPokerThDirect && targetIsPokerTH && (window._pthNetTransport !== 'proxy');
+      // /live has its own transport setting, because an install sitting next
+      // to the game server and one on a separate machine do not want the same
+      // answer. 'inherit' (the default) falls back to the Internet setting, so
+      // nothing changes for the ordinary client.
+      const _liveTr = window._pthLiveTransport;
+      const _tr = (window.LIVE_MODE && (_liveTr === 'direct' || _liveTr === 'proxy'))
+        ? _liveTr : window._pthNetTransport;
+      window.directWS = isPokerThDirect && targetIsPokerTH && (_tr !== 'proxy');
       // Mode CHOISI par le joueur, source unique pour le compteur de trafic ET
       // pour le ciblage des diffusions cote proxy. Ne PAS le deduire du
       // transport : avec « Via proxy » la socket va vers notre proxy dans les
@@ -11447,7 +11455,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.8-web.72'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.8-web.73'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
