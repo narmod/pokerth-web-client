@@ -16,6 +16,14 @@ release. Per-build detail is on the
 highlights below.
 
 ### Added
+- **`/live` defaults in the admin page** (`web.84`) — Defaults gains a *Live /
+  Spectator mode* card: palette, sound and whether the lobby chat strip is
+  shown. The spectator view is embedded on a site with its own look and has no
+  Advanced options for a visitor to fall back on, so it gets its own set
+  rather than the one tuned for players; leaving the palette on *Same as the
+  main client* keeps the previous behaviour. Palette and sound are first-visit
+  defaults — a visitor who chose keeps their choice — while the chat strip is
+  an operator decision and always applies.
 - **`/live?embed=1` — the spectator view in an iframe** (`web.83`) — the same
   page, with the three things a frame needs and nothing else: it reports its
   height to the host page over `postMessage` (channel `pokerth-live`, plus a

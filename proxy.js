@@ -650,6 +650,18 @@ function _internetTransport() { var t = _adminConfig && _adminConfig.internetTra
 // above: an install running next to the game server and one running on a
 // separate machine do not want the same answer. 'inherit' (default) follows
 // the Internet setting, so existing installs are unaffected.
+// Appearance and behaviour defaults that apply to /live only. The spectator
+// view is embedded on a site with its own look, and it has no Advanced
+// options for a visitor to fall back on, so it gets its own set rather than
+// inheriting the ones tuned for players.
+function _liveDefaults() {
+  var d = (_adminConfig && _adminConfig.liveDefaults) || {};
+  return {
+    theme: String(d.theme || '').slice(0, 40),
+    sound: (d.sound === '0' || d.sound === '1') ? d.sound : '',
+    chat:  (d.chat === '0' || d.chat === '1') ? d.chat : ''
+  };
+}
 function _liveTransport() {
   var t = _adminConfig && _adminConfig.liveTransport;
   return (t === 'proxy' || t === 'direct') ? t : 'inherit';
@@ -6176,7 +6188,7 @@ function handleAdmin(req, res, reqPathOnly, query) {
     try { version = (JSON.parse(fs.readFileSync(path.join(__dirname, 'package.json'), 'utf8')).version) || ''; } catch (e) {}
     let sockets = null; try { sockets = wss.clients.size; } catch (e) {}
     let liveSessions = null; try { liveSessions = _liveSessions.size; } catch (e) {}
-    return adminJson(res, 200, { ok: true, version: version, runningVersion: BOOT_VERSION, node: process.version, uptimeSec: Math.floor(process.uptime()), installKind: installKind(), gitUpdatable: GIT_UPDATABLE, sockets: sockets, liveSessions: liveSessions, players: Object.keys(statsStore).length, resetPeriod: STATS_RESET_PERIOD, modes: appModes(), showLoginTitle: !!_adminConfig.showLoginTitle, defaultTheme: _adminConfig.defaultTheme || '', defaults: _adminConfig.defaults || {}, loginDefaults: _loginDefaults(false), proxyCfg: _adminConfig.proxyCfg || {}, logLevel: _logLevelName(), maxClients: _maxClients(), fd: _fdInfo(), tableDefaults: _adminConfig.tableDefaults || {}, tableNames: _adminConfig.tableNames || {}, serverName: _adminConfig.serverName || '', serverTagline: _adminConfig.serverTagline || '', discordChatWebhookUrl: _adminConfig.discordChatWebhookUrl || '', seo: _seoAdmin(), restartAt: (_restartAt > Date.now() ? _restartAt : null), restartKind: (_restartAt > Date.now() ? _restartKind : null), autoUpdate: _autoUpdateCfg(), autoArmed: !!(_autoArmed && _restartAt > Date.now()), update: _updPublic(), now: Date.now(), tz: _serverTz(), clockZones: _clockZones(), clockRef: _clockRef() });
+    return adminJson(res, 200, { ok: true, version: version, runningVersion: BOOT_VERSION, node: process.version, uptimeSec: Math.floor(process.uptime()), installKind: installKind(), gitUpdatable: GIT_UPDATABLE, sockets: sockets, liveSessions: liveSessions, players: Object.keys(statsStore).length, resetPeriod: STATS_RESET_PERIOD, modes: appModes(), showLoginTitle: !!_adminConfig.showLoginTitle, defaultTheme: _adminConfig.defaultTheme, liveDefaults: _liveDefaults() || '', defaults: _adminConfig.defaults || {}, loginDefaults: _loginDefaults(false), proxyCfg: _adminConfig.proxyCfg || {}, logLevel: _logLevelName(), maxClients: _maxClients(), fd: _fdInfo(), tableDefaults: _adminConfig.tableDefaults || {}, tableNames: _adminConfig.tableNames || {}, serverName: _adminConfig.serverName || '', serverTagline: _adminConfig.serverTagline || '', discordChatWebhookUrl: _adminConfig.discordChatWebhookUrl || '', seo: _seoAdmin(), restartAt: (_restartAt > Date.now() ? _restartAt : null), restartKind: (_restartAt > Date.now() ? _restartKind : null), autoUpdate: _autoUpdateCfg(), autoArmed: !!(_autoArmed && _restartAt > Date.now()), update: _updPublic(), now: Date.now(), tz: _serverTz(), clockZones: _clockZones(), clockRef: _clockRef() });
   }
   // ── Horloge du bandeau (toutes clés) ───────────────────────────────────
   // Réponse minuscule, relue toutes les 5 min : elle sert uniquement à recaler
@@ -6355,7 +6367,7 @@ function handleAdmin(req, res, reqPathOnly, query) {
   if (reqPathOnly === '/admin/config') {
     if (req.method === 'GET') {
       if (!adminAuthed(query)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
-      return adminJson(res, 200, { ok: true, resetPeriod: STATS_RESET_PERIOD, modes: appModes(), welcome: _welcomeAdmin(), guestNotice: _guestNoticeAdmin(), authNotice: _authNoticeAdmin(), showLoginTitle: !!_adminConfig.showLoginTitle, defaultTheme: _adminConfig.defaultTheme || '', defaults: _adminConfig.defaults || {}, loginDefaults: _loginDefaults(false), proxyCfg: _adminConfig.proxyCfg || {}, tableDefaults: _adminConfig.tableDefaults || {}, tableNames: _adminConfig.tableNames || {}, serverName: _adminConfig.serverName || '', serverTagline: _adminConfig.serverTagline || '', discordChatWebhookUrl: _adminConfig.discordChatWebhookUrl || '', featureSwitches: FEATURE_SWITCHES, featureOff: featureOffList(), liveStats: _liveStatsCfg(), musicEnabled: musicEnabled(), seo: _seoAdmin() });
+      return adminJson(res, 200, { ok: true, resetPeriod: STATS_RESET_PERIOD, modes: appModes(), welcome: _welcomeAdmin(), guestNotice: _guestNoticeAdmin(), authNotice: _authNoticeAdmin(), showLoginTitle: !!_adminConfig.showLoginTitle, defaultTheme: _adminConfig.defaultTheme, liveDefaults: _liveDefaults() || '', defaults: _adminConfig.defaults || {}, loginDefaults: _loginDefaults(false), proxyCfg: _adminConfig.proxyCfg || {}, tableDefaults: _adminConfig.tableDefaults || {}, tableNames: _adminConfig.tableNames || {}, serverName: _adminConfig.serverName || '', serverTagline: _adminConfig.serverTagline || '', discordChatWebhookUrl: _adminConfig.discordChatWebhookUrl || '', featureSwitches: FEATURE_SWITCHES, featureOff: featureOffList(), liveStats: _liveStatsCfg(), musicEnabled: musicEnabled(), seo: _seoAdmin() });
     }
     if (req.method === 'POST') {
       return readJsonBody(req, function (d) {
@@ -6428,6 +6440,14 @@ function handleAdmin(req, res, reqPathOnly, query) {
           _adminConfig.authNotice = aw;
         }
         if (typeof d.defaultTheme === 'string') _adminConfig.defaultTheme = d.defaultTheme.slice(0, 40);
+        if (d.liveDefaults && typeof d.liveDefaults === 'object') {
+          var _ld = d.liveDefaults;
+          _adminConfig.liveDefaults = {
+            theme: String(_ld.theme || '').slice(0, 40),
+            sound: (_ld.sound === '0' || _ld.sound === '1') ? _ld.sound : '',
+            chat:  (_ld.chat === '0' || _ld.chat === '1') ? _ld.chat : ''
+          };
+        }
         if (d.defaults && typeof d.defaults === 'object') {
           var DEF_KEYS = ['haptic', 'voice', 'assist', 'autobtn', 'quickbet', 'displaybb'];
           var dout = {};
@@ -6567,7 +6587,7 @@ function handleAdmin(req, res, reqPathOnly, query) {
           }
         }
         saveAdminConfig();
-        return adminJson(res, 200, { ok: true, resetPeriod: STATS_RESET_PERIOD, modes: appModes(), welcome: _welcomeAdmin(), guestNotice: _guestNoticeAdmin(), authNotice: _authNoticeAdmin(), showLoginTitle: !!_adminConfig.showLoginTitle, defaultTheme: _adminConfig.defaultTheme || '', defaults: _adminConfig.defaults || {}, loginDefaults: _loginDefaults(false), proxyCfg: _adminConfig.proxyCfg || {}, tableDefaults: _adminConfig.tableDefaults || {}, tableNames: _adminConfig.tableNames || {}, serverName: _adminConfig.serverName || '', serverTagline: _adminConfig.serverTagline || '', discordChatWebhookUrl: _adminConfig.discordChatWebhookUrl || '', featureSwitches: FEATURE_SWITCHES, featureOff: featureOffList(), liveStats: _liveStatsCfg(), musicEnabled: musicEnabled(), seo: _seoAdmin() });
+        return adminJson(res, 200, { ok: true, resetPeriod: STATS_RESET_PERIOD, modes: appModes(), welcome: _welcomeAdmin(), guestNotice: _guestNoticeAdmin(), authNotice: _authNoticeAdmin(), showLoginTitle: !!_adminConfig.showLoginTitle, defaultTheme: _adminConfig.defaultTheme, liveDefaults: _liveDefaults() || '', defaults: _adminConfig.defaults || {}, loginDefaults: _loginDefaults(false), proxyCfg: _adminConfig.proxyCfg || {}, tableDefaults: _adminConfig.tableDefaults || {}, tableNames: _adminConfig.tableNames || {}, serverName: _adminConfig.serverName || '', serverTagline: _adminConfig.serverTagline || '', discordChatWebhookUrl: _adminConfig.discordChatWebhookUrl || '', featureSwitches: FEATURE_SWITCHES, featureOff: featureOffList(), liveStats: _liveStatsCfg(), musicEnabled: musicEnabled(), seo: _seoAdmin() });
       });
     }
     res.writeHead(405); res.end('Method not allowed'); return;
@@ -7267,7 +7287,7 @@ function handleAdmin(req, res, reqPathOnly, query) {
       // list is silently wiped by an export -> import round-trip. That is
       // exactly what happened to 'seo' (and the server list): restoring a
       // config reset SEO to Off. Keep in sync with the keys the code reads.
-      const ALLOWED = ['resetPeriod', 'modes', 'welcome', 'guestNotice', 'authNotice', 'defaultTheme', 'defaults', 'loginDefaults',
+      const ALLOWED = ['resetPeriod', 'modes', 'welcome', 'guestNotice', 'authNotice', 'defaultTheme', 'liveDefaults', 'defaults', 'loginDefaults',
                        'proxyCfg', 'tableDefaults', 'tableNames', 'serverName', 'serverTagline', 'clockZones', 'clockRef',
                        'discordChatWebhookUrl', 'showLoginTitle', 'featureOff', 'liveStats', 'bannedIps',
                        'pkgDisabled', 'pkgFull', 'pkgFullscreen', 'pkgAlign', 'musicTracks',
@@ -9137,7 +9157,7 @@ const httpServer = http.createServer((req, res) => {
 
   if (reqPathOnly === '/app-config') {
     res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' });
-    res.end(JSON.stringify({ ok: true, modes: appModes(), welcome: _welcomePublic(), guestNotice: _guestNoticePublic(), authNotice: _authNoticePublic(), poll: _pollPublic(), showLoginTitle: !!_adminConfig.showLoginTitle, defaultTheme: _adminConfig.defaultTheme || '', defaults: _adminConfig.defaults || {}, loginDefaults: _loginDefaults(true), tableDefaults: _adminConfig.tableDefaults || {}, tableNames: _adminConfig.tableNames || {}, serverName: _adminConfig.serverName || '', serverTagline: _adminConfig.serverTagline || '', featureOff: featureOffList(), pokerthnetServer: _activePokerthnetServer(), pokerthnetSource: _pokerthnetSource(), internetTransport: _internetTransport(), liveTransport: _liveTransport(), musicEnabled: musicEnabled(), musicVotesPublic: musicVotesPublic() }));
+    res.end(JSON.stringify({ ok: true, modes: appModes(), welcome: _welcomePublic(), guestNotice: _guestNoticePublic(), authNotice: _authNoticePublic(), poll: _pollPublic(), showLoginTitle: !!_adminConfig.showLoginTitle, defaultTheme: _adminConfig.defaultTheme, liveDefaults: _liveDefaults() || '', defaults: _adminConfig.defaults || {}, loginDefaults: _loginDefaults(true), tableDefaults: _adminConfig.tableDefaults || {}, tableNames: _adminConfig.tableNames || {}, serverName: _adminConfig.serverName || '', serverTagline: _adminConfig.serverTagline || '', featureOff: featureOffList(), pokerthnetServer: _activePokerthnetServer(), pokerthnetSource: _pokerthnetSource(), internetTransport: _internetTransport(), liveTransport: _liveTransport(), liveDefaults: _liveDefaults(), musicEnabled: musicEnabled(), musicVotesPublic: musicVotesPublic() }));
     return;
   }
 

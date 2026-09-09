@@ -722,6 +722,28 @@
         <div id="themeMsg" class="msg"></div>
       </div>
       <div class="card">
+        <h2>Live / Spectator mode <span class="muted" style="font-weight:normal">(/live)</span></h2>
+        <p class="muted">Applies to the spectator view only. The embedded view has no Advanced options for a visitor to fall back on, so it gets its own defaults rather than the ones tuned for players. Like every default here, a visitor who already chose keeps their choice — except the chat strip, which is an operator decision.</p>
+        <div class="defrow fld"><span>Palette</span><select id="lvTheme">
+          <option value="">Same as the main client</option>
+          <option value="official">PokerTH Dark</option>
+          <option value="officiallight">PokerTH Light</option>
+          <option value="casino">Green Casino</option>
+        </select></div>
+        <div class="defrow fld"><span>Sound</span><select id="lvSound">
+          <option value="">App default</option>
+          <option value="1">On</option>
+          <option value="0">Off</option>
+        </select></div>
+        <div class="defrow fld"><span>Lobby chat strip</span><select id="lvChat">
+          <option value="">Shown</option>
+          <option value="0">Hidden</option>
+        </select></div>
+        <div class="rowtop"><button id="saveLive" class="use">Save</button></div>
+        <div id="lvState" class="msg"></div>
+      </div>
+
+      <div class="card">
         <h2>In-game settings</h2>
         <p class="muted">Applied on a player's first visit only; a setting a player has already changed is never touched.</p>
         <div class="defrow fld"><span>Vibration</span><select id="defHaptic"><option value="">App default (on)</option><option value="1">On</option><option value="0">Off</option></select></div>
@@ -2226,7 +2248,7 @@
       if(syncCfg){
         if(d.resetPeriod) $('period').value=d.resetPeriod;
         if(d.modes){ modesState=Object.assign({offline:true,lan:true,pokerthnet:true},d.modes); renderModes(); }
-        if($('defTheme') && typeof d.defaultTheme==='string'){ window._defThemeVal=d.defaultTheme; $('defTheme').value=d.defaultTheme; }
+        if($('defTheme') && typeof d.defaultTheme==='string'){ window._defThemeVal=d.defaultTheme; $('defTheme').value=d.defaultTheme; } applyLiveDefaultsUI(d.liveDefaults);
         if(d.defaults && typeof d.defaults==='object'){ var _DM={defHaptic:'haptic',defVoice:'voice',defAssist:'assist',defBB:'displaybb'}; Object.keys(_DM).forEach(function(id){ var el=$(id); if(el){ var dv=d.defaults[_DM[id]]; el.value=(dv==='0'||dv==='1')?dv:''; } }); }
         if(d.loginDefaults && typeof d.loginDefaults==='object'){ var L=d.loginDefaults; if($('defMode'))$('defMode').value=(['offline','lan-dedi','pokerthnet'].indexOf(L.mode)>=0)?L.mode:''; if($('defLanMode'))$('defLanMode').value=(L.lanMode==='forced')?'forced':'auto'; if($('defHost'))$('defHost').value=L.host||''; if($('defLanPort'))$('defLanPort').value=(L.lanPort>0)?String(L.lanPort):''; if($('defLanTls'))$('defLanTls').value=(L.lanTls?'1':'0'); if(window.syncLanMode)window.syncLanMode(); if($('defProxyUrl'))$('defProxyUrl').value=L.proxyUrl||''; if($('defHideProxy'))$('defHideProxy').value=(L.hideProxy?'1':'0'); }
         if(d.tableDefaults && typeof d.tableDefaults==='object'){ var T=d.tableDefaults; var _tm={tdPlayers:'players',tdBlind:'blind',tdStack:'stack',tdTimeout:'timeout'}; Object.keys(_tm).forEach(function(id){ var el=$(id); if(el){ var v=T[_tm[id]]; el.value=(v==null)?'':v; } }); }
@@ -3291,6 +3313,19 @@
       .then(function(r){return r.json();}).then(function(d){ if(d&&d.ok){ if($('defTheme')&&typeof d.defaultTheme==='string') $('defTheme').value=d.defaultTheme; m.textContent='Saved.'; m.className='msg ok'; } else { m.textContent='Failed: '+((d&&d.error)||'error'); m.className='msg err'; } })
       .catch(function(){ m.textContent='Network error.'; m.className='msg err'; });
   }); })();
+  (function(){ var sb=$('saveLive'); if(!sb) return; sb.addEventListener('click', function(){
+    var m=$('lvState');
+    var body={liveDefaults:{theme:($('lvTheme')?$('lvTheme').value:''),sound:($('lvSound')?$('lvSound').value:''),chat:($('lvChat')?$('lvChat').value:'')},token:tok()};
+    api('/admin/config',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)})
+      .then(function(r){return r.json();}).then(function(d){ if(d&&d.ok){ applyLiveDefaultsUI(d.liveDefaults); m.textContent='Saved.'; m.className='msg ok'; } else { m.textContent='Failed: '+((d&&d.error)||'error'); m.className='msg err'; } })
+      .catch(function(){ m.textContent='Network error.'; m.className='msg err'; });
+  }); })();
+  function applyLiveDefaultsUI(d){
+    d=d||{};
+    if($('lvTheme')) $('lvTheme').value=d.theme||'';
+    if($('lvSound')) $('lvSound').value=(d.sound==='0'||d.sound==='1')?d.sound:'';
+    if($('lvChat'))  $('lvChat').value =(d.chat==='0')?'0':'';
+  }
   (function(){ var sb=$('saveDefaults'); if(!sb) return; sb.addEventListener('click', function(){
     var DM={defHaptic:'haptic',defVoice:'voice',defAssist:'assist',defBB:'displaybb'};
     var defs={}; Object.keys(DM).forEach(function(id){ var el=$(id); if(el && (el.value==='0'||el.value==='1')) defs[DM[id]]=el.value; });

@@ -11717,3 +11717,8 @@ html[data-seat-struct="qml"] .seat-narrow .seat-name .seat-note-stars { font-siz
 :root[data-embed="1"] .screen { height: auto; min-height: 420px; }
 :root[data-embed="1"] #install-btn,
 :root[data-embed="1"] .connect-footer { display: none !important; }
+
+/* Operator chose to run /live without the lobby chat (admin → Defaults). The
+   strip and its grip go; the table list takes the height. */
+:root[data-live-nochat="1"] .live-lobby .llb-side,
+:root[data-live-nochat="1"] .live-lobby .llb-resizer { display: none !important; }

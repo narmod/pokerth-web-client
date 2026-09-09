@@ -32,6 +32,30 @@ if (window.LIVE_MODE) {
     }
   }
 
+  // ── Admin defaults for /live ──────────────────────────────────────────
+  // Sound and the chat strip, from /app-config.liveDefaults. Both are
+  // first-visit defaults, not overrides: a visitor who chose keeps their
+  // choice. The palette is applied by pokerth.js, which already owns the
+  // first-visit theme rule.
+  function applyLiveDefaults() {
+    let tries = 0;
+    (function wait() {
+      const d = window._pthLiveDefaults;
+      if (!d) { if (tries++ < 60) setTimeout(wait, 100); return; }
+      try {
+        if (d.sound === '0' || d.sound === '1') {
+          if (window.localStorage.getItem('pth_sound') === null) {
+            window.localStorage.setItem('pth_sound', d.sound);
+          }
+        }
+      } catch (e) {}
+      // The chat strip is an operator choice, not a visitor one: a site that
+      // does not want the lobby chat on its front page should not have it
+      // reappear because a visitor once had it.
+      if (d.chat === '0') document.documentElement.setAttribute('data-live-nochat', '1');
+    })();
+  }
+
   // ── Guest-only login ──────────────────────────────────────────────────
   // The connect screen is reduced to a single button by CSS; the state behind
   // it is forced here so the ordinary App.connect() path runs unchanged:
@@ -89,5 +113,6 @@ if (window.LIVE_MODE) {
     initLiveChatPane();
     initSpectateDialog();
     initEmbed();
+    applyLiveDefaults();
   });
 }

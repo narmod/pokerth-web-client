@@ -163,6 +163,11 @@ check('the leave-lobby button is kept in live mode',
 check('live lobby is wired from the live entry point',
   /initLiveLobby\(\)/.test(live) && /from '\.\/lobby\.mjs'/.test(live));
 
+check('the operator can run /live without the chat strip',
+  /:root\[data-live-nochat="1"\] \.live-lobby \.llb-side/.test(css));
+check('sound and chat defaults are first-visit only',
+  /getItem\('pth_sound'\) === null/.test(live));
+
 // Version triple must stay in lockstep — three files, one value.
 const pkg = JSON.parse(fs.readFileSync(path.join(root, 'package.json'), 'utf8')).version;
 const sw = /const CACHE_VERSION = 'pokerth-v([^']+)'/.exec(

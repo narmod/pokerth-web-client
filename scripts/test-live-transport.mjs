@@ -48,6 +48,22 @@ check('direct sends carry no length prefix',
 check('direct receives treat one frame as one message',
   /if \(window\.directWS\)[\s\S]{0,260}handleMsg\(new Uint8Array\(chunk\)\)/.test(client));
 
+// ── Live defaults (2.1.8-web.84) ──
+check('the live defaults resolver exists', /function _liveDefaults\(\)/.test(proxy));
+check('only 0 or 1 is accepted for the toggles',
+  /\(d\.sound === '0' \|\| d\.sound === '1'\) \? d\.sound : ''/.test(proxy));
+check('published to the client', /liveDefaults: _liveDefaults\(\)/.test(proxy));
+check('persisted across restarts', /'defaultTheme', 'liveDefaults'/.test(proxy));
+check('the live palette wins over the global one only on /live',
+  /window\.LIVE_MODE && c\.liveDefaults && c\.liveDefaults\.theme/.test(client));
+check('the global default still applies everywhere else',
+  /else if \(typeof c\.defaultTheme === 'string'\) _applyDefaultTheme\(c\.defaultTheme\)/.test(client));
+for (const id of ['lvTheme', 'lvSound', 'lvChat']) {
+  check('admin offers ' + id, new RegExp('id="' + id + '"').test(admin));
+}
+check('admin saves the set', /liveDefaults:\{theme:/.test(admin));
+check('admin loads it back', /applyLiveDefaultsUI\(d\.liveDefaults\)/.test(admin));
+
 // ── Admin page ──
 for (const cls of ['ltInherit', 'ltDirect', 'ltProxy']) {
   check('admin offers ' + cls, new RegExp('class="' + cls + '"').test(admin));

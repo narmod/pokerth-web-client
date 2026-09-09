@@ -151,7 +151,7 @@ function panel(id) {
 }
 const PANELS = {
   'panel-server': 2, 'panel-proxy': 1, 'panel-deploy': 3, 'panel-access': 2,
-  'panel-clients': 3, 'panel-defaults': 5, 'panel-identity': 4,
+  'panel-clients': 3, 'panel-defaults': 6, 'panel-identity': 4,
 };
 for (const [id, count] of Object.entries(PANELS)) {
   const seg = panel(id);
@@ -296,7 +296,7 @@ ok(/\n  \.fld\{display:flex/.test(admin), 'the settings row is a class now');
 ok(/max-width:560px/.test(admin),
   'the control stays near its label instead of drifting to the far edge');
 ok(!/class="defrow" style="display:flex/.test(admin), 'no settings row carries the flex inline any more');
-ok((admin.match(/class="defrow fld/g) || []).length === 59, 'all 59 rows use it');
+ok((admin.match(/class="defrow fld/g) || []).length === 62, 'all 62 rows use it');
 ok(/\.fld\.left\{justify-content:flex-start\}/.test(admin), 'the left-aligned variant survives');
 ok(/\.fld\.gap\{margin:10px 0 5px\}/.test(admin), 'so does the wider-margin variant');
 ok(/\.fld>input\[type=number\]\{width:110px\}/.test(admin), 'short control widths live in the sheet');

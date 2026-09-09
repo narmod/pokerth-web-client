@@ -265,7 +265,7 @@ use too. Items are grouped by status rather than fixed phases.
   one-button guest login in `2.1.8-web.67`, the table list in `2.1.8-web.68`, the
   resizable chat column and Players tab in `2.1.8-web.71`/`72`, and its own
   transport setting in `2.1.8-web.73`; `?embed=1` (auto-height,
-  deep link) in `2.1.8-web.83`; the admin tab for live defaults is next.
+  deep link) in `2.1.8-web.83`; and the admin defaults for `/live` in `2.1.8-web.84`.
 
 - **Official QML client fidelity** — ongoing pixel-and-behaviour alignment of the in-game
   screen with the official QML client (action bar, mobile layouts, seat geometry).
