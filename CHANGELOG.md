@@ -16,6 +16,16 @@ release. Per-build detail is on the
 highlights below.
 
 ### Added
+- **`/live` — avatars, player cards, type icons** (`web.78`) — the Players tab
+  now matches the tool it replaces: avatar on the left, name on the first line
+  and the table below it, Spectate on the right. Clicking a name opens the
+  client's own player card, statistics included — the same
+  `openPlayerInfoPopup` the ordinary lobby opens, and the avatar is built by
+  the same `_avatarChipHtml` its players panel uses, so there is no second
+  avatar path and no extra request per visitor. In the table list, the game
+  type is now an icon with the translated wording on its title, which also
+  stops a long type name wrapping over three lines, and the spectator column
+  carries the eye the tool shows.
 - **`/live` — chat as a bottom strip** (`web.77`) — the lobby chat moves from a
   right column to a full-width strip under the table list, with a horizontal
   grip drawn in the same 18px gutter the lobby leaves between its own panels.

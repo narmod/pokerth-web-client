@@ -50,6 +50,13 @@ function typeLabel(tp) {
             3: tr('gtypeInvite', 'Invite'), 4: tr('gtypeRanked', 'Ranked') })[tp] || '';
 }
 
+// The list shows an icon per game type, as the spectator tool does; the
+// translated wording stays on the title so no locale is left behind and no
+// column has to be wide enough for "Invited players only".
+function typeIcon(tp) {
+  return ({ 1: '\u2660', 2: '\u{1F464}', 3: '\u{1F465}', 4: '\u{1F3C6}' })[tp] || '\u2660';
+}
+
 function groupThousands(n) {
   return String(n == null ? 0 : n).replace(/\B(?=(\d{3})+(?!\d))/g, '\u202F');
 }
@@ -105,8 +112,21 @@ function renderPlayers() {
               '\u{1F441} ' + esc(tr('spectatorBtn', 'Spectate')) + '</button>';
       }
     }
-    return '<div class="llb-pl">' +
-      '<span class="llb-pl-name">' + esc(players[pid]) + '</span>' + sub + btn +
+    // Avatar and the player card both come from the client: _avatarChipHtml is
+    // what the ordinary players panel uses, and openPlayerInfoPopup is the
+    // same card, statistics included, that a click on a name opens there.
+    const name = String(players[pid]);
+    const chip = (typeof window._avatarChipHtml === 'function')
+      ? window._avatarChipHtml(pid, name, 'llb-pl-av')
+      : '<span class="llb-pl-av letter">' + esc((name[0] || '?').toUpperCase()) + '</span>';
+
+    return '<div class="llb-pl">' + chip +
+      '<span class="llb-pl-tx">' +
+        '<span class="llb-pl-name" role="button" tabindex="0"' +
+          ' onclick="window.openPlayerInfoPopup(' + esc(pid) + ')"' +
+          ' onkeydown="if(event.key===\'Enter\')window.openPlayerInfoPopup(' + esc(pid) + ')">' +
+          esc(name) + '</span>' + sub +
+      '</span>' + btn +
     '</div>';
   }).join('') + '</div>';
 }
@@ -217,9 +237,10 @@ function render() {
         '<span class="llb-c-name">' + esc(g.name || '') + '</span>' +
         '<span class="llb-c-num">' + (g.players || 0) + '/' + (g.maxPlayers || 0) + '</span>' +
         '<span class="llb-c-ico" title="' + esc(modeLabel(g.mode)) + '">' + statusIco + '</span>' +
-        '<span class="llb-c-type">' + esc(typeLabel(g.type)) + '</span>' +
+        '<span class="llb-c-type" title="' + esc(typeLabel(g.type)) + '">' +
+          typeIcon(g.type) + '</span>' +
         '<span class="llb-c-ico">' + (priv ? '\u{1F512}' : '') + '</span>' +
-        '<span class="llb-c-ico">' + watchers + '</span>' +
+        '<span class="llb-c-ico llb-c-spec">\u{1F441} ' + watchers + '</span>' +
         '<span class="llb-c-time">' + esc(time) + '</span>' +
         '<span class="llb-chev">' + (open ? '\u2303' : '\u2304') + '</span>' +
       '</div>' +

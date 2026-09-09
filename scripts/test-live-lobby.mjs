@@ -56,8 +56,8 @@ check('seat count is shown as x/max',
 const runningCells = [...host.querySelectorAll('.llb-row')]
   .find(r => r.textContent.includes('My Online Game123'))
   .querySelector('.llb-line').children;
-check('spectator count is shown in its own column',
-  runningCells[5].textContent === '1');
+check('spectator count is shown in its own column, with the eye',
+  /\u{1F441}\s*1/u.test(runningCells[5].textContent));
 check('private table shows the lock', host.innerHTML.includes('\u{1F512}'));
 check('timeouts are shown as Xs/Ys', /5s\/5s/.test(host.textContent));
 check('header row is present', !!host.querySelector('.llb-head'));
@@ -131,6 +131,10 @@ check('the players tab lists everyone online',
   /velt/.test(host.textContent) && /gehawe/.test(host.textContent));
 check('the players tab replaces the table list',
   !host.querySelector('.llb-row'));
+check('each player row carries an avatar chip',
+  !!host.querySelector('.llb-pl .llb-pl-av'));
+check('clicking a name opens the client player card',
+  /openPlayerInfoPopup\(11\)/.test(host.innerHTML));
 check('a player at a running table can be spectated from their row',
   !!host.querySelector('.llb-pl [data-spec]'));
 
