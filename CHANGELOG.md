@@ -16,6 +16,15 @@ release. Per-build detail is on the
 highlights below.
 
 ### Added
+- **`/live` drops the lobby feed while watching a table** (`web.85`) — the
+  server takes `SubscriptionRequestMessage` to turn the game-list feed off and
+  on, and the official spectator tool sends it on the way into a table and on
+  the way back. We never did, so every embedded viewer kept receiving every
+  update of every table while watching a single hand — cheap for one visitor,
+  not for a front page full of them. Live mode only: a seated player's lobby
+  has filters, a player list and an info panel that all read that feed. On the
+  way back the game list is cleared before resubscribing, since tables were
+  created and closed while away and the server replays the list.
 - **`/live` defaults in the admin page** (`web.84`) — Defaults gains a *Live /
   Spectator mode* card: palette, sound and whether the lobby chat strip is
   shown. The spectator view is embedded on a site with its own look and has no

@@ -10,6 +10,7 @@ import { initLiveLobby } from './lobby.mjs';
 import { initLiveChatPane } from './chat-pane.mjs';
 import { initSpectateDialog } from './spectate-dialog.mjs';
 import { initEmbed } from './embed.mjs';
+import { initLobbySubscription } from './subscription.mjs';
 
 if (window.LIVE_MODE) {
   const VER_IDS = ['live-ver-lobby', 'live-ver-game'];
@@ -114,5 +115,6 @@ if (window.LIVE_MODE) {
     initSpectateDialog();
     initEmbed();
     applyLiveDefaults();
+    initLobbySubscription();
   });
 }

@@ -29,6 +29,7 @@ const MSG = (() => {
     12:13,                                     // PlayerList
     13:14, 14:15, 15:16, 16:17, 17:18,        // GameList*
     18:19, 19:20,                              // PlayerInfo req/reply
+    20:21,                                     // SubscriptionRequest (lobby feed on/off)
     21:22, 22:23, 23:24, 24:25, 25:26,        // Join*
     26:27, 27:28, 28:29, 29:30,               // GamePlayer*
     32:33, 33:34, 34:35, 35:36,                // Invite*: InvitePlayerToGame, InviteNotify, RejectGameInvitation, RejectInvNotify
@@ -61,6 +62,10 @@ const MSG = (() => {
     GameListNew:13, GameListUpdate:14, GameListPlayerJoined:15, GameListPlayerLeft:16,
     GameListAdminChanged:17,
     PlayerInfoRequest:18, PlayerInfoReply:19,
+    // Lobby feed on/off — sent by /live while watching a table, so a viewer
+    // does not receive every update of every other table (parity with the
+    // official spectator tool). subscriptionAction: 1 = off, 2 = on.
+    SubscriptionRequest:20,
     JoinExisting:21, JoinNew:22, RejoinExisting:23,
     JoinGameAck:24, JoinGameFailed:25,
     GamePlayerJoined:26, GamePlayerLeft:27, GameAdminChanged:28, RemovedFromGame:29,
