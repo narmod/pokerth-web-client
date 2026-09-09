@@ -12,6 +12,11 @@
  * fire. The hidden list is still rendered in live mode, which makes it a
  * reliable signal. No new protocol handling, no second source of truth.
  *
+ * The state object reaches the page as window.PthState (game/state.mjs bridges
+ * it for pokerth.js, which does `const S = window.PthState` at the top of its
+ * IIFE). window.S does not exist — an earlier revision of this file read it
+ * and therefore always saw an empty game list and a nameless header.
+ *
  * Every label reuses an existing i18n key, so the 40 locales stay complete.
  */
 
@@ -46,8 +51,13 @@ function groupThousands(n) {
   return String(n == null ? 0 : n).replace(/\B(?=(\d{3})+(?!\d))/g, '\u202F');
 }
 
+// The one place this module reaches the shared state.
+function state() {
+  return window.PthState || {};
+}
+
 function seatNames(g) {
-  const S = window.S || {};
+  const S = state();
   const ids = (g && g.seats && g.seats.length) ? g.seats : [];
   return ids.map(function (pid) {
     return (S.players && S.players[pid]) ? String(S.players[pid]) : '#' + pid;
@@ -96,7 +106,7 @@ let lastSig = null;
 function render() {
   const host = document.getElementById('live-lobby');
   if (!host) return;
-  const S = window.S || {};
+  const S = state();
   const entries = Object.entries(S.games || {});
   entries.sort(function (a, b) { return a[1].mode - b[1].mode; });
 

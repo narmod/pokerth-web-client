@@ -13,7 +13,8 @@ if (window.LIVE_MODE) {
   let lastName = null;
 
   function syncIdentity() {
-    const name = (window.S && window.S.myName) ? String(window.S.myName) : '';
+    const S = window.PthState;   // bridged by game/state.mjs; window.S is not a thing
+    const name = (S && S.myName) ? String(S.myName) : '';
     if (name === lastName) return;
     lastName = name;
     const el = document.getElementById('live-id');

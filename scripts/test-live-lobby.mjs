@@ -18,7 +18,7 @@ function check(name, cond) {
   console.log('  FAIL ' + name); failed++;
 }
 
-window.S = {
+window.PthState = {
   players: { 11: 'velt', 12: 'indios', 13: 'gehawe' },
   games: {
     7: { name: 'My Online Game123', mode: 2, players: 3, maxPlayers: 10, type: 4,
@@ -40,6 +40,10 @@ const { initLiveLobby } = await import('../public/modules/live/lobby.mjs');
 initLiveLobby();
 
 const host = document.getElementById('live-lobby');
+// The state bridge is window.PthState, not window.S — reading the wrong one
+// is what made the list show "no tables" on a full server (web.69).
+check('the list reads the real state bridge',
+  host.querySelectorAll('.llb-row').length === 2 && !('S' in window));
 check('both tables are listed', host.querySelectorAll('.llb-row').length === 2);
 check('running table is sorted first',
   host.querySelector('.llb-row .llb-c-name').textContent === 'Waiting table');
@@ -64,7 +68,7 @@ const repaint = async function () {
   document.getElementById('g-list').appendChild(document.createElement('i'));
   await new Promise(function (r) { setTimeout(r, 0); });
 };
-window.S.games[12] = { name: 'Third table', mode: 2, players: 5, maxPlayers: 10,
+window.PthState.games[12] = { name: 'Third table', mode: 2, players: 5, maxPlayers: 10,
   type: 1, priv: false, timeout: 5, delay: 5, seats: [], watchers: [] };
 await repaint();
 check('a table added without the global still appears',
@@ -92,13 +96,13 @@ check('no Spectate button on a table that has not started',
   !waitingRow.querySelector('[data-spec]'));
 
 // Names are escaped, never injected.
-window.S.games[7].name = '<img src=x onerror=alert(1)>';
+window.PthState.games[7].name = '<img src=x onerror=alert(1)>';
 window.renderGames();
 check('table names are escaped',
   host.innerHTML.includes('&lt;img') && !host.querySelector('img'));
 
 // Empty list falls back to a message instead of a bare header.
-window.S.games = {};
+window.PthState.games = {};
 window.renderGames();
 check('empty list shows a placeholder', !!host.querySelector('.llb-empty'));
 

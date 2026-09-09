@@ -274,6 +274,11 @@ highlights below.
   (`scale 1.03`, 180 ms OutQuad) is applied to the seat plate.
 
 ### Fixed
+- **`/live` showed no tables and no guest name** (`web.70`) — both live
+  modules read `window.S`, which does not exist: `game/state.mjs` bridges the
+  shared state as `window.PthState`. One wrong identifier, both symptoms. The
+  jsdom test now stubs `PthState` and asserts `window.S` is absent, so the
+  same mistake fails the suite instead of the page.
 - **`/live` table list stayed empty** (`web.69`) — it hooked
   `window.renderGames`, but `net/msg-lobby.mjs` calls the `renderGames`
   binding it imports from `ui/lobby.mjs`, so the hook never fired and the list
