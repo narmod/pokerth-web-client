@@ -7,7 +7,11 @@
 import { JSDOM } from 'jsdom';
 
 const dom = new JSDOM(
-  '<!DOCTYPE html><body><div id="live-lobby"></div><div id="g-list"></div></body>',
+  '<!DOCTYPE html><body>' +
+  '<div id="live-lobby"><div id="live-lobby-list"></div>' +
+  '<div id="live-chat-resizer"></div><div id="live-chat-side"></div></div>' +
+  '<div id="lobby-chat-panel"><div id="chat"></div></div>' +
+  '<div id="g-list"></div></body>',
   { url: 'https://pokerth.net/live' });
 global.window = dom.window;
 global.document = dom.window.document;
@@ -39,7 +43,7 @@ console.log('test-live-lobby');
 const { initLiveLobby } = await import('../public/modules/live/lobby.mjs');
 initLiveLobby();
 
-const host = document.getElementById('live-lobby');
+const host = document.getElementById('live-lobby-list');
 // The state bridge is window.PthState, not window.S — reading the wrong one
 // is what made the list show "no tables" on a full server (web.69).
 check('the list reads the real state bridge',
@@ -105,6 +109,36 @@ check('table names are escaped',
 window.PthState.games = {};
 window.renderGames();
 check('empty list shows a placeholder', !!host.querySelector('.llb-empty'));
+
+// ── Chat column ──
+const { initLiveChatPane } = await import('../public/modules/live/chat-pane.mjs');
+const lobby = document.getElementById('live-lobby');
+const side = document.getElementById('live-chat-side');
+initLiveChatPane();
+
+check('the real chat panel is moved into the right column',
+  document.getElementById('lobby-chat-panel').parentNode === side);
+check('the chat panel keeps its own message node',
+  !!side.querySelector('#chat'));
+check('a width is set on the container',
+  /px$/.test(lobby.style.getPropertyValue('--live-chat-w')));
+
+// Keyboard resizing, since the grip is focusable.
+const grip = document.getElementById('live-chat-resizer');
+const before = parseInt(lobby.style.getPropertyValue('--live-chat-w'), 10);
+grip.dispatchEvent(new dom.window.KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true }));
+check('ArrowRight narrows the chat column',
+  parseInt(lobby.style.getPropertyValue('--live-chat-w'), 10) < before);
+check('the new width is persisted',
+  parseInt(dom.window.localStorage.getItem('pth_live_chat_w'), 10) ===
+  parseInt(lobby.style.getPropertyValue('--live-chat-w'), 10));
+
+// The floor must hold however hard the user drags.
+for (let i = 0; i < 60; i++) {
+  grip.dispatchEvent(new dom.window.KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true }));
+}
+check('the chat column never collapses below its floor',
+  parseInt(lobby.style.getPropertyValue('--live-chat-w'), 10) >= 180);
 
 console.log(failed ? `\n${failed} check(s) failed` : '\nall checks passed');
 process.exit(failed ? 1 : 0);

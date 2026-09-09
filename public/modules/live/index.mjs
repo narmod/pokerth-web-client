@@ -7,6 +7,7 @@
  */
 
 import { initLiveLobby } from './lobby.mjs';
+import { initLiveChatPane } from './chat-pane.mjs';
 
 if (window.LIVE_MODE) {
   const VER_IDS = ['live-ver-lobby', 'live-ver-game'];
@@ -67,5 +68,6 @@ if (window.LIVE_MODE) {
     armLoginGuard();
     forceGuestLogin();
     initLiveLobby();
+    initLiveChatPane();
   });
 }

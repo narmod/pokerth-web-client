@@ -81,6 +81,13 @@ check('nickname is left empty for the persistent guest name', !/getElementById\(
 // ── Live lobby (2.1.8-web.68) ──
 check('live lobby container in the lobby screen', /class="live-only live-lobby" id="live-lobby"/.test(html));
 check('the full lobby body is replaced', /:root\[data-live="1"\] \.lobby-body[,\s]/.test(css));
+check('leave button comes before the guest name',
+  html.indexOf('id="live-leave-anchor"') < html.indexOf('id="live-id"'));
+check('chat column and grip exist in the lobby',
+  /id="live-chat-side"/.test(html) && /id="live-chat-resizer"/.test(html));
+check('chat width is a custom property', /--live-chat-w/.test(css));
+check('chat pane is wired from the live entry point',
+  /initLiveChatPane\(\)/.test(live) && /from '\.\/chat-pane\.mjs'/.test(live));
 check('the leave-lobby button is kept in live mode',
   !/confirmDisconnect/.test(css));
 check('live lobby is wired from the live entry point',

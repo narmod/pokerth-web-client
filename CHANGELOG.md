@@ -16,6 +16,15 @@ release. Per-build detail is on the
 highlights below.
 
 ### Added
+- **`/live` — lobby chat as a resizable right column** (`web.71`) — the table
+  list and the chat sit side by side as they do in the full client and the
+  QML lobby, with a drag grip between them. The width is remembered across
+  visits, has a floor and never takes more than 60% of the lobby, and the grip
+  is focusable so the column resizes with the arrow keys too. Below 720px the
+  chat moves back under the list rather than squeezing it. It is the client's
+  own `#lobby-chat-panel`, moved rather than cloned, so message rendering, the
+  emoji picker, translations and the send path are unchanged. The leave button
+  now sits at the far left of the header, before the guest name.
 - **`/live` — the table list** (`web.68`) — the full lobby body is replaced on
   `/live` by a row-per-table list in the shape of the spectator tool it
   succeeds: name, seats, status, type, private, spectators and timeouts, with

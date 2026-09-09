@@ -1749,8 +1749,8 @@ function _processAvatarFile(file) {
 <!-- ╚════════════════════╝ -->
 <div id="s-lobby" class="screen">
   <div class="header">
+    <button class="btn-sm btn-icon" onclick="App.confirmDisconnect()" title="Disconnect" data-i18n-title="disconnectTooltip" id="live-leave-anchor"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor" style="vertical-align:middle" aria-hidden="true"><path d="M12 3c-1.11 0-2 .89-2 2H3v14H2v2h20v-2h-1V5c0-1.11-.89-2-2-2zm0 2h7v14h-7zm-7 6h2v2H5z"/></svg></button>
     <span class="live-only live-id" id="live-id" aria-live="polite"></span>
-    <button class="btn-sm btn-icon" onclick="App.confirmDisconnect()" title="Disconnect" data-i18n-title="disconnectTooltip"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor" style="vertical-align:middle" aria-hidden="true"><path d="M12 3c-1.11 0-2 .89-2 2H3v14H2v2h20v-2h-1V5c0-1.11-.89-2-2-2zm0 2h7v14h-7zm-7 6h2v2H5z"/></svg></button>
     <div id="lobby-wait-status" class="lobby-wait-status" style="display:none" aria-live="polite"><span class="lws-hourglass" aria-hidden="true">⏳</span><span id="lws-txt" data-i18n="hdrWaitingPlayers">Waiting for players</span><span class="wait-dots" aria-hidden="true"><span>.</span><span>.</span><span>.</span></span></div>
     <div class="header-pills">
       <span class="pill" id="h-players" onclick="togglePlayersPanel()" style="cursor:pointer">—</span>
@@ -1811,7 +1811,12 @@ function _processAvatarFile(file) {
   </div>
 
   <!-- Lobby body : création (repliable) au-dessus des tables -->
-  <div class="live-only live-lobby" id="live-lobby" role="region"></div>
+  <div class="live-only live-lobby" id="live-lobby">
+    <div class="llb-main" id="live-lobby-list" role="region"></div>
+    <div class="llb-resizer" id="live-chat-resizer" role="separator"
+         aria-orientation="vertical" tabindex="0"></div>
+    <div class="llb-side" id="live-chat-side"></div>
+  </div>
   <div class="lobby-body">
    <div class="lobby-grid">
 

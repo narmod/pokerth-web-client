@@ -104,7 +104,7 @@ function rowDetail(id, g) {
 let lastSig = null;
 
 function render() {
-  const host = document.getElementById('live-lobby');
+  const host = document.getElementById('live-lobby-list');
   if (!host) return;
   const S = state();
   const entries = Object.entries(S.games || {});
@@ -165,7 +165,7 @@ function render() {
 }
 
 function onClick(ev) {
-  const host = document.getElementById('live-lobby');
+  const host = document.getElementById('live-lobby-list');
   if (!host || !ev.target || !ev.target.closest) return;
 
   const spec = ev.target.closest('[data-spec]');
@@ -186,7 +186,7 @@ function onClick(ev) {
 }
 
 export function initLiveLobby() {
-  if (!document.getElementById('live-lobby')) return;
+  if (!document.getElementById('live-lobby-list')) return;
 
   // Repaint whenever the ordinary list repaints. #g-list is hidden in live
   // mode but still rendered, and every lobby message that changes a table
@@ -209,7 +209,7 @@ export function initLiveLobby() {
   document.addEventListener('click', onClick);
   document.addEventListener('keydown', function (ev) {
     if (ev.key !== 'Enter' && ev.key !== ' ') return;
-    const line = ev.target && ev.target.closest && ev.target.closest('#live-lobby [data-row]');
+    const line = ev.target && ev.target.closest && ev.target.closest('#live-lobby-list [data-row]');
     if (line) { ev.preventDefault(); onClick(ev); }
   });
 
