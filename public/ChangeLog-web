@@ -1,4 +1,7 @@
 2026-09-09 version 2.1.8-web (current series):
+- bugfix: in the About window, the web changelog repeated the same version heading - and its "New", "Improvements" and "Bug fixes" titles - once per deployment; every entry of a version is now gathered under a single heading, the way the changelog of the installable clients reads
+
+2026-09-09 version 2.1.8-web:
 - bugfix: the live figures on the opening screen could blow the Internet card up to the full height of the screen on a browser still holding an older stylesheet - the icons now carry their own size and no longer depend on it
 
 2026-09-09 version 2.1.8-web:

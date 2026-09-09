@@ -11145,37 +11145,44 @@ function renderPlayersList() {
       { re: /^-\s*improvement:\s*/i, key: 'abClImprovements', fb: 'Improvements' },
       { re: /^-\s*bugfix:\s*/i,      key: 'abClBugfixes',     fb: 'Bug fixes' }
     ];
-    var out = [], block = null;
-    var flush = function(){
-      if (!block) return;
-      block.plain.forEach(function(l){ out.push('<div class="ab-cl-line">' + esc(l) + '</div>'); });
-      GRP.forEach(function(g, i){
-        if (!block.groups[i].length) return;
-        out.push('<div class="ab-cl-grp">' + esc(t2(g.key, g.fb)) + '</div>');
-        block.groups[i].forEach(function(item){ out.push('<div class="ab-cl-line ab-cl-item">' + esc(item) + '</div>'); });
-      });
-      block = null;
-    };
+    // Fusion par version (narmod 09/09/2026) : ChangeLog-web tient une entrée
+    // par DÉPLOIEMENT, donc plusieurs entêtes « <date> version 2.1.8-web: »
+    // se suivent et les sous-titres se répétaient. Les blocs qui portent la
+    // même version sont réunis sous l'entête de la première rencontrée (le
+    // fichier est antichronologique : la plus récente, celle qui porte
+    // « (current series) »), items dans l'ordre du fichier. Le ChangeLog
+    // upstream n'a qu'une entrée par version — rendu inchangé.
+    var VER = /^\d{4}-\d{2}-\d{2}\s+version\s+(.*)$/i;
+    var head = [], blocks = [], byKey = {}, block = null;
     String(txt).split('\n').forEach(function(line){
-      // Entête de version (« 2026-08-05 version 2.1.6: » ou « Before… ») en évidence
-      if (/^\d{4}-\d{2}-\d{2}\s+version\s/i.test(line) || /^Before\s+\d{4}-\d{2}-\d{2}/i.test(line)) {
-        flush();
-        out.push('<div class="ab-cl-ver">' + esc(line) + '</div>');
-        block = { plain: [], groups: [[], [], []] };
+      var m = VER.exec(line);
+      if (m || /^Before\s+\d{4}-\d{2}-\d{2}/i.test(line)) {
+        var key = m ? m[1].replace(/\(current series\)/i, '').replace(/:/g, '').trim() : line.trim();
+        block = byKey['k:' + key];
+        if (!block) { block = byKey['k:' + key] = { ver: line, plain: [], groups: [[], [], []] }; blocks.push(block); }
         return;
       }
-      if (line.trim() === '') { flush(); out.push('<div class="ab-cl-gap"></div>'); return; }
-      if (block) {
-        for (var i = 0; i < GRP.length; i++)
-          if (GRP[i].re.test(line)) { block.groups[i].push(line.replace(GRP[i].re, '')); return; }
-        block.plain.push(line);
-        return;
-      }
-      out.push('<div class="ab-cl-line">' + esc(line) + '</div>');
+      if (line.trim() === '') return; // séparateur de blocs : l'espacement est posé au rendu
+      if (!block) { head.push(line); return; }
+      for (var i = 0; i < GRP.length; i++)
+        if (GRP[i].re.test(line)) { block.groups[i].push(line.replace(GRP[i].re, '')); return; }
+      block.plain.push(line);
     });
-    flush();
+    var out = [];
+    head.forEach(function(l){ out.push('<div class="ab-cl-line">' + esc(l) + '</div>'); });
+    blocks.forEach(function(b, bi){
+      if (bi || head.length) out.push('<div class="ab-cl-gap"></div>');
+      out.push('<div class="ab-cl-ver">' + esc(b.ver) + '</div>');
+      b.plain.forEach(function(l){ out.push('<div class="ab-cl-line">' + esc(l) + '</div>'); });
+      GRP.forEach(function(g, i){
+        if (!b.groups[i].length) return;
+        out.push('<div class="ab-cl-grp">' + esc(t2(g.key, g.fb)) + '</div>');
+        b.groups[i].forEach(function(item){ out.push('<div class="ab-cl-line ab-cl-item">' + esc(item) + '</div>'); });
+      });
+    });
     return out.join('');
   }
+
   // Sous-onglets du changelog : « Client web » | « Autres clients »
   window.abClShowSub = function(which){
     var tw = document.getElementById('ab-cl-tab-web'), tu = document.getElementById('ab-cl-tab-up');
@@ -11427,7 +11434,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.8-web.59'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.8-web.60'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

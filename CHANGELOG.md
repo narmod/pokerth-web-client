@@ -225,6 +225,14 @@ highlights below.
   (`scale 1.03`, 180 ms OutQuad) is applied to the seat plate.
 
 ### Fixed
+- **Web changelog repeated one heading per deployment** (`web.60`) — the
+  About window opens a new block on every `<date> version <x>:` line, and
+  `public/ChangeLog-web` keeps one entry per deployment, so `2.1.8-web`
+  appeared forty times over, each with its own "New / Improvements / Bug
+  fixes" titles. `_abClRender()` now keys blocks by version and merges them
+  under the first heading it meets — the most recent one, which carries
+  `(current series)` — items kept in file order. The upstream `ChangeLog`
+  has one entry per version, so its rendering is byte-identical.
 - **LAN / dedicated mode reached the wrong WebSocket proxy** (`web.45`) — the
   default proxy URL was rebuilt from `hostInput.dataset.autoHost`, which under
   the `forced` instance policy holds the game-server host, and was persisted
