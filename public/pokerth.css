@@ -11477,9 +11477,9 @@ html[data-seat-struct="qml"] .seat-narrow .seat-name .seat-note-stars { font-siz
    same arrangement as the full client and the QML lobby. The width lives in
    --live-chat-w so the grip only has to move one custom property. */
 :root[data-live="1"] .live-lobby {
-  --live-chat-w: 320px;
-  display: flex; flex: 1; min-height: 0; align-items: stretch;
-  gap: 18px; padding: 12px;
+  --live-chat-h: 200px;
+  display: flex; flex-direction: column; flex: 1; min-height: 0;
+  gap: 0; padding: 12px;
 }
 /* Same frame as the lobby's own columns: one border, 8px radius, panel
    background, sp-3 of padding — so /live reads as the same product. */
@@ -11491,7 +11491,7 @@ html[data-seat-struct="qml"] .seat-narrow .seat-name .seat-note-stars { font-siz
 }
 :root[data-live="1"] .live-lobby .llb-main { flex: 1; }
 :root[data-live="1"] .live-lobby .llb-side {
-  width: var(--live-chat-w); flex: 0 0 var(--live-chat-w);
+  height: var(--live-chat-h); flex: 0 0 var(--live-chat-h);
 }
 /* The chat panel is the client's own node, moved here. Its inline styles cap
    the height for the dropdown it normally is, so they have to be overridden. */
@@ -11508,26 +11508,36 @@ html[data-seat-struct="qml"] .seat-narrow .seat-name .seat-note-stars { font-siz
 :root[data-live="1"] .live-lobby #lobby-chat-panel #chat {
   max-height: none !important; flex: 1;
 }
+/* Horizontal grip between the list and the chat strip. Same 18px gutter the
+   lobby leaves between its own panels, with the handle drawn inside it. */
 :root[data-live="1"] .live-lobby .llb-resizer {
-  flex: 0 0 7px; cursor: col-resize; touch-action: none;
-  background: var(--border, rgba(255,255,255,.12));
-  background-clip: content-box; padding: 0 3px;
-  transition: background-color .12s;
+  flex: 0 0 18px; cursor: row-resize; touch-action: none;
+  position: relative; background: transparent;
 }
-:root[data-live="1"] .live-lobby .llb-resizer:hover,
-:root[data-live="1"] .live-lobby .llb-resizer:focus-visible,
-:root[data-live="1"] .live-lobby .llb-resizer.dragging {
-  background: var(--gold, #c8a24a); outline: none;
+:root[data-live="1"] .live-lobby .llb-resizer::after {
+  content: ''; position: absolute; left: 42%; right: 42%; top: 50%; height: 4px;
+  transform: translateY(-50%); border-radius: var(--r-xs);
+  background: var(--border); transition: background-color .12s;
 }
-/* Narrow screens: the chat goes back under the list instead of squeezing it. */
+:root[data-live="1"] .live-lobby .llb-resizer:hover::after,
+:root[data-live="1"] .live-lobby .llb-resizer:focus-visible::after,
+:root[data-live="1"] .live-lobby .llb-resizer.dragging::after {
+  background: var(--gold);
+}
+:root[data-live="1"] .live-lobby .llb-resizer:focus-visible { outline: none; }
+/* Narrow screens: a fixed share of the height, no dragging. */
 @media (max-width: 720px) {
-  :root[data-live="1"] .live-lobby { flex-direction: column; }
-  :root[data-live="1"] .live-lobby .llb-side {
-    width: auto; flex: 0 0 40%; border-left: 0;
-    border-top: 1px solid var(--border, rgba(255,255,255,.12));
-  }
-  :root[data-live="1"] .live-lobby .llb-resizer { display: none; }
+  :root[data-live="1"] .live-lobby .llb-side { flex: 0 0 34%; height: auto; }
+  :root[data-live="1"] .live-lobby .llb-resizer { flex-basis: 12px; }
 }
+/* The flag has no intrinsic size of its own here, and a button with an empty
+   SVG is a button nobody can find. */
+:root[data-live="1"] .header [id^="lang-toggle-"] svg,
+:root[data-live="1"] .live-lang-row [id^="lang-toggle-"] svg {
+  display: block; width: 22px; height: 22px;
+}
+:root[data-live="1"] .header [id^="lang-toggle-"],
+:root[data-live="1"] .live-lang-row [id^="lang-toggle-"] { min-width: 30px; }
 .live-lobby .llb-head,
 .live-lobby .llb-line {
   display: grid;

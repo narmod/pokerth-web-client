@@ -149,29 +149,36 @@ const lobby = document.getElementById('live-lobby');
 const side = document.getElementById('live-chat-side');
 initLiveChatPane();
 
-check('the real chat panel is moved into the right column',
+check('the real chat panel is docked in the strip',
   document.getElementById('lobby-chat-panel').parentNode === side);
 check('the chat panel keeps its own message node',
   !!side.querySelector('#chat'));
-check('a width is set on the container',
-  /px$/.test(lobby.style.getPropertyValue('--live-chat-w')));
+check('a height is set on the container',
+  /px$/.test(lobby.style.getPropertyValue('--live-chat-h')));
 
 // Keyboard resizing, since the grip is focusable.
 const grip = document.getElementById('live-chat-resizer');
-const before = parseInt(lobby.style.getPropertyValue('--live-chat-w'), 10);
-grip.dispatchEvent(new dom.window.KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true }));
-check('ArrowRight narrows the chat column',
-  parseInt(lobby.style.getPropertyValue('--live-chat-w'), 10) < before);
-check('the new width is persisted',
-  parseInt(dom.window.localStorage.getItem('pth_live_chat_w'), 10) ===
-  parseInt(lobby.style.getPropertyValue('--live-chat-w'), 10));
+const before = parseInt(lobby.style.getPropertyValue('--live-chat-h'), 10);
+grip.dispatchEvent(new dom.window.KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }));
+check('ArrowDown shrinks the chat strip',
+  parseInt(lobby.style.getPropertyValue('--live-chat-h'), 10) < before);
+check('the new height is persisted',
+  parseInt(dom.window.localStorage.getItem('pth_live_chat_h'), 10) ===
+  parseInt(lobby.style.getPropertyValue('--live-chat-h'), 10));
 
 // The floor must hold however hard the user drags.
 for (let i = 0; i < 60; i++) {
-  grip.dispatchEvent(new dom.window.KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true }));
+  grip.dispatchEvent(new dom.window.KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }));
 }
-check('the chat column never collapses below its floor',
-  parseInt(lobby.style.getPropertyValue('--live-chat-w'), 10) >= 180);
+check('the chat strip never collapses below its floor',
+  parseInt(lobby.style.getPropertyValue('--live-chat-h'), 10) >= 110);
+
+// pokerth.js re-parents the chat panel whenever the lobby re-lays itself out;
+// the strip has to take it back rather than sit empty.
+document.getElementById('g-list').appendChild(document.getElementById('lobby-chat-panel'));
+await repaint();
+check('the chat is re-docked after the client steals it back',
+  document.getElementById('lobby-chat-panel').parentNode === side);
 
 console.log(failed ? `\n${failed} check(s) failed` : '\nall checks passed');
 process.exit(failed ? 1 : 0);

@@ -16,6 +16,11 @@ release. Per-build detail is on the
 highlights below.
 
 ### Added
+- **`/live` — chat as a bottom strip** (`web.77`) — the lobby chat moves from a
+  right column to a full-width strip under the table list, with a horizontal
+  grip drawn in the same 18px gutter the lobby leaves between its own panels.
+  Height is remembered, floored at 110px and capped at 60% of the lobby, and
+  the grip resizes with the arrow keys.
 - **`/live` — language in the header, lobby frame, figures in words**
   (`web.76`) — a flag button in the lobby and table headers, and on the login
   card, opening the client's own language picker. It uses the ids `i18n.mjs`
@@ -323,6 +328,13 @@ highlights below.
   (`scale 1.03`, 180 ms OutQuad) is applied to the seat plate.
 
 ### Fixed
+- **`/live` chat strip sat empty** (`web.77`) — `pokerth.js` has a `reparent()`
+  that appends `#lobby-chat-panel` back into `.lobby-grid` whenever the lobby
+  re-lays itself out, which undid the move as soon as it ran. The dock is now
+  re-asserted on every repaint of the table list and on resize.
+- **`/live` language buttons were invisible** (`web.77`) — the flag SVG has no
+  intrinsic size in a header button, so the buttons rendered at zero width and
+  looked absent.
 - **`/live` showed no tables and no guest name** (`web.70`) — both live
   modules read `window.S`, which does not exist: `game/state.mjs` bridges the
   shared state as `window.PthState`. One wrong identifier, both symptoms. The

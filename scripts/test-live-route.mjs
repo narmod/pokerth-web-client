@@ -128,7 +128,17 @@ check('chat column and grip exist in the lobby',
   /id="live-chat-side"/.test(html) && /id="live-chat-resizer"/.test(html));
 check('the chat composer is hidden in live mode',
   /:root\[data-live="1"\] \.live-lobby #lobby-chat-panel \.chat-input/.test(css));
-check('chat width is a custom property', /--live-chat-w/.test(css));
+check('chat height is a custom property', /--live-chat-h/.test(css));
+check('the chat sits at the bottom, full width',
+  /:root\[data-live="1"\] \.live-lobby \{[\s\S]{0,120}flex-direction: column/.test(css));
+check('the grip resizes vertically', /cursor: row-resize/.test(css));
+check('the dock is re-asserted, not set once',
+  /export function keepDocked/.test(
+    fs.readFileSync(path.join(root, 'public', 'modules', 'live', 'chat-pane.mjs'), 'utf8')) &&
+  /keepDocked\(\);/.test(
+    fs.readFileSync(path.join(root, 'public', 'modules', 'live', 'lobby.mjs'), 'utf8')));
+check('the flag has a size in the header buttons',
+  /\[id\^="lang-toggle-"\] svg \{[\s\S]{0,80}width: 22px/.test(css));
 check('chat pane is wired from the live entry point',
   /initLiveChatPane\(\)/.test(live) && /from '\.\/chat-pane\.mjs'/.test(live));
 check('the leave-lobby button is kept in live mode',

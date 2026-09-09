@@ -20,6 +20,8 @@
  * Every label reuses an existing i18n key, so the 40 locales stay complete.
  */
 
+import { keepDocked } from './chat-pane.mjs';
+
 const expanded = new Set();
 let activeTab = 'games';   // 'games' | 'players'
 
@@ -149,6 +151,11 @@ function rowDetail(id, g) {
 let lastSig = null;
 
 function render() {
+  // pokerth.js re-parents the chat panel into .lobby-grid whenever the lobby
+  // re-lays itself out, which empties the strip. Cheapest place to notice is
+  // here, since this runs on every lobby change anyway.
+  keepDocked();
+
   const host = document.getElementById('live-lobby-list');
   if (!host) return;
   const S = state();
