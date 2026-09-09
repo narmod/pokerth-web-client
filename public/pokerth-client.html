@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<!--__LIVE_BOOT__-->
   <!-- Disable Google Translate's automatic translation banner. The page is
        already bilingual (EN/FR) via the i18n module, which also syncs the
        <html lang> attribute to the active language. We don't want the
@@ -2701,7 +2702,9 @@ function _processAvatarFile(file) {
 <script src="chat-emotes.js" defer></script>
 <script type="module" src="pokerth.js"></script> <!-- [9g-A2] module : ordre inchangé (défèrement identique, dernier du document) -->
 <script>
-if ('serviceWorker' in navigator) {
+if ('serviceWorker' in navigator && !window.LIVE_MODE) {
+  // Live/embed mode registers no service worker: the page runs inside
+  // pokerth.net and must not install anything in that origin's scope.
   // updateViaCache:'none' => the browser always fetches sw.js fresh, so a
   // bumped CACHE_VERSION is detected promptly.
   navigator.serviceWorker.register('/sw.js', { updateViaCache: 'none' })

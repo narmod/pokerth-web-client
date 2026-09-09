@@ -3882,11 +3882,15 @@ function seoGlossaryPage(res, method, lang) {
 // Compressed once (gzip + brotli, moderate quality) like _compCache does.
 const _seoHtmlCache = new Map();
 let _seoHtmlGen = '';
-function sendClientHtml(req, res) {
+// live=true serves the same client in embedded spectator mode (/live): the
+// markup is identical, only the LIVE_BOOT flag and the framing headers differ.
+function sendClientHtml(req, res, live) {
   const p = path.join(__dirname, 'public', 'pokerth-client.html');
   const st = statCached(p);
   if (!st) { res.writeHead(404); res.end('Not found'); return; }
-  const on = seoEnabled(), base = on ? seoPublicUrl() : '';
+  // /live is never indexed: it exists to be embedded, not to compete with
+  // the main page in search results.
+  const on = !live && seoEnabled(), base = on ? seoPublicUrl() : '';
   // One cached variant per language (?lang=xx) within the current generation
   // (mtime + SEO state). A generation change flushes everything; a new
   // language within the same generation just adds one entry (37 max).
@@ -3896,11 +3900,12 @@ function sendClientHtml(req, res) {
   // pages until the next deploy.
   const gen = st.mtimeMs + '|' + (on ? '1' : '0') + '|' + (on ? JSON.stringify(_seoAdmin()) : '');
   if (_seoHtmlGen !== gen) { _seoHtmlCache.clear(); _seoHtmlGen = gen; }
-  const key = lang || '_';
+  const key = (live ? 'live:' : '') + (lang || '_');
   let ent = _seoHtmlCache.get(key);
   if (!ent) {
     let html;
     try { html = fs.readFileSync(p, 'utf8'); } catch (e) { res.writeHead(404); res.end('Not found'); return; }
+    html = html.replace('<!--__LIVE_BOOT__-->', live ? '<script>window.LIVE_MODE=1;</script>' : '');
     html = html.replace('<!--__SEO_HEAD__-->', on ? seoHeadBlock(base, lang) : '<meta name="robots" content="noindex, nofollow">');
     html = html.replace('<!--__SEO_BODY__-->', on ? seoBodyBlock(lang) : '');
     html = html.replace('<!--__SEO_FOOTER__-->', on ? seoFooterBlock(lang) : '');
@@ -3925,6 +3930,7 @@ function sendClientHtml(req, res) {
     'Cache-Control': 'no-store, no-cache, must-revalidate',
     'Vary': 'Accept-Encoding'
   }, SECURITY_HEADERS);
+  if (live) headers['Content-Security-Policy'] = LIVE_FRAME_ANCESTORS;
   const ae = String(req.headers['accept-encoding'] || '');
   let body = ent.raw;
   if (/\bbr\b/.test(ae)) { body = ent.br; headers['Content-Encoding'] = 'br'; }
@@ -4987,6 +4993,10 @@ const SECURITY_HEADERS = {
   'X-Content-Type-Options': 'nosniff',
   'Referrer-Policy': 'no-referrer-when-downgrade'
 };
+// Who may embed /live in an iframe. pokerth.net hosts the page that replaces
+// the legacy spectator tool; 'self' keeps a direct visit to /live working.
+// No X-Frame-Options is sent anywhere, so nothing has to be unset here.
+const LIVE_FRAME_ANCESTORS = "frame-ancestors 'self' https://pokerth.net https://www.pokerth.net";
 const _compCache = new Map(); // 'enc:path:mtime' -> Buffer
 
 // ── Stat cache ──
@@ -8721,6 +8731,12 @@ const httpServer = http.createServer((req, res) => {
       }).catch(function () { handleAdmin(req, res, reqPathOnly, q); });
     } else handleAdmin(req, res, reqPathOnly, q);
     return;
+  }
+  // ── /live — embedded spectator mode, successor to the pokerth-live tool.
+  // Same client, same themes/decks/seats/layout, so every table improvement
+  // is inherited instead of being ported a second time.
+  if (reqPathOnly === '/live' || reqPathOnly === '/live/' || reqPathOnly === '/live.html') {
+    return sendClientHtml(req, res, true);
   }
   if (reqPathOnly === '/' || reqPathOnly === '/index.html' || reqPathOnly === '/pokerth-client.html') {
     // Served through the SEO injector: <!--__SEO_HEAD__--> / <!--__SEO_BODY__-->

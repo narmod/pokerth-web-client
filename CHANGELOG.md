@@ -16,6 +16,15 @@ release. Per-build detail is on the
 highlights below.
 
 ### Added
+- **`/live` — embedded spectator mode, first stone** (`web.65`) — a new route
+  serving the same client with `window.LIVE_MODE` set, groundwork for replacing
+  the standalone `pokerth-live` spectator tool with this codebase, so table
+  work (themes, decks, seats, layout) is inherited instead of ported twice.
+  The route is `noindex`, keeps its own entry in the injected-HTML cache, sends
+  `Content-Security-Policy: frame-ancestors` so only pokerth.net may embed it,
+  and registers no service worker — an embedded page must install nothing in
+  the host origin's scope. No player-visible change yet: the live lobby and the
+  slim header come next. Covered by `scripts/test-live-route.mjs`.
 - **The game-server figures in the dashboard header** (`web.63`) — the same
   four counters, as a strip in the top bar of the admin page, on every tab and
   for every admin key. It reads the same `GET /api/live` the login screen
