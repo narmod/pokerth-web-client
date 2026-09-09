@@ -11446,3 +11446,23 @@ html[data-seat-struct="qml"] .seat-narrow .seat-name .seat-note-stars { font-siz
 :root[data-live="1"] #s-game .hdr-ovf-wrap,
 /* No install prompt inside an iframe. */
 :root[data-live="1"] #install-btn { display: none !important; }
+
+/* ── Live mode: the connect screen is one guest Login button ──────────────
+   The machinery underneath is the ordinary one (server-mode = pokerthnet,
+   guest mode on, empty nick → persistent guest name); live mode only strips
+   the choices a guest watching from the website never makes. The CONNECT
+   button and the status line are the real ones, so errors and progress still
+   report exactly as they do in the full client. */
+:root[data-live="1"] #login-step1 { display: none !important; }
+:root[data-live="1"] #login-step2 { display: block !important; }
+:root[data-live="1"] #s-connect .header,
+:root[data-live="1"] #s-connect .login-back,
+:root[data-live="1"] #s-connect .login-avatar-top,
+:root[data-live="1"] #s-connect .guest-line,
+:root[data-live="1"] #s-connect .connect-footer,
+:root[data-live="1"] #server-mode-seg,
+:root[data-live="1"] #login-form,
+:root[data-live="1"] #tls-row,
+:root[data-live="1"] #register-link-row,
+:root[data-live="1"] #invite-banner { display: none !important; }
+:root[data-live="1"] #s-connect .btn-primary { margin: 18px auto; display: block; }

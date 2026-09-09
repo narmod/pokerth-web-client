@@ -64,6 +64,20 @@ check('sound button is kept at the table', !/:root\[data-live="1"\] #sound-toggl
 check('CSS braces balanced',
   (css.match(/\{/g) || []).length === (css.match(/\}/g) || []).length);
 
+// ── Guest-only login screen (2.1.8-web.67) ──
+check('step 1 is skipped in live mode', /:root\[data-live="1"\] #login-step1 \{ display: none/.test(css));
+check('step 2 is forced visible', /:root\[data-live="1"\] #login-step2 \{ display: block/.test(css));
+for (const sel of ['#login-form', '#tls-row', '#register-link-row', '#server-mode-seg', '#invite-banner']) {
+  check('hidden on the live connect screen: ' + sel,
+    new RegExp(':root\\[data-live="1"\\] ' + sel + '[,\\s]').test(css));
+}
+check('the real CONNECT button is kept', !/:root\[data-live="1"\][^{]*\.btn-primary[^{]*\{ display: none/.test(css));
+check('the status line is kept', !/:root\[data-live="1"\][^{]*#cstatus/.test(css));
+check('login is forced to pokerth.net', /sm\.value = 'pokerthnet'/.test(live));
+check('guest mode is forced on', /gc\.checked = true/.test(live));
+check('guest state re-asserted on click capture', /addEventListener\('click'[\s\S]{0,200}, true\)/.test(live));
+check('nickname is left empty for the persistent guest name', !/getElementById\('nick'\)/.test(live));
+
 // Version triple must stay in lockstep — three files, one value.
 const pkg = JSON.parse(fs.readFileSync(path.join(root, 'package.json'), 'utf8')).version;
 const sw = /const CACHE_VERSION = 'pokerth-v([^']+)'/.exec(

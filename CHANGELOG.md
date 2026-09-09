@@ -16,6 +16,14 @@ release. Per-build detail is on the
 highlights below.
 
 ### Added
+- **`/live` — one-button guest login** (`web.67`) — the connect screen drops to
+  a single button: no mode cards, no nickname field, no avatar picker, no TLS
+  or guest checkbox, no footer. Underneath it is the ordinary connect path —
+  pokerth.net, guest mode, empty nickname so the client reuses its persistent
+  Guest name — and the real button and status line, so progress and errors
+  report exactly as they do in the full client. The guest state is re-asserted
+  in the click capture phase, since a visitor who once used the full client on
+  this origin has a stored login mode that would otherwise be restored.
 - **`/live` — slim header** (`web.66`) — in live mode the header keeps only
   what a guest watching from the website can use: the guest name on the left,
   and on the right an appearance button (the existing theme panel — palette,

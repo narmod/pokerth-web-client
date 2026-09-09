@@ -26,6 +26,33 @@ if (window.LIVE_MODE) {
     }
   }
 
+  // ── Guest-only login ──────────────────────────────────────────────────
+  // The connect screen is reduced to a single button by CSS; the state behind
+  // it is forced here so the ordinary App.connect() path runs unchanged:
+  // pokerth.net as the server, guest mode on, and an empty nickname, which
+  // makes the client reuse its persistent Guest name.
+  function forceGuestLogin() {
+    const sm = document.getElementById('server-mode');
+    const gc = document.getElementById('guest-mode-cb');
+    if (sm) sm.value = 'pokerthnet';
+    if (gc) gc.checked = true;
+    try {
+      if (window.App && window.App.onServerOrGuestChange) window.App.onServerOrGuestChange();
+    } catch (e) {}
+  }
+
+  // Re-asserted in the capture phase, just before the button's own inline
+  // onclick runs. Doing it at load time only would not be enough: the client
+  // restores a previously chosen login mode from storage after we run, and a
+  // visitor who once used the full client on this origin would otherwise
+  // connect as themselves from inside the embedded viewer.
+  function armLoginGuard() {
+    document.addEventListener('click', function (ev) {
+      const el = ev.target && ev.target.closest && ev.target.closest('#s-connect .btn-primary');
+      if (el) forceGuestLogin();
+    }, true);
+  }
+
   // The nickname is only known once the guest login round-trip has completed,
   // and the client emits no event for it. A one-second poll that writes only
   // when the value actually changed is cheaper — and far less brittle — than
@@ -34,5 +61,7 @@ if (window.LIVE_MODE) {
     stampVersion();
     syncIdentity();
     setInterval(syncIdentity, 1000);
+    armLoginGuard();
+    forceGuestLogin();
   });
 }
