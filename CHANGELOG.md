@@ -274,6 +274,14 @@ highlights below.
   (`scale 1.03`, 180 ms OutQuad) is applied to the seat plate.
 
 ### Fixed
+- **`/live` table list stayed empty** (`web.69`) — it hooked
+  `window.renderGames`, but `net/msg-lobby.mjs` calls the `renderGames`
+  binding it imports from `ui/lobby.mjs`, so the hook never fired and the list
+  showed "no tables" while the server had plenty. It now watches the ordinary
+  `#g-list` for mutations — hidden in live mode but still rendered — with a
+  content signature so a busy server doesn't cause a rewrite per message.
+- **`/live` lost the leave-lobby button** (`web.69`) — hidden by mistake with
+  the rest of the lobby header chrome; restored.
 - **An expired inactivity countdown could leave the client hanging**
   (`web.64`) — at expiry the OK button is disabled on purpose (QML:
   `enabled: !timeoutWarningPopup.expired`; the server has decided, a

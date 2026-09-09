@@ -6,9 +6,9 @@
  */
 import { JSDOM } from 'jsdom';
 
-const dom = new JSDOM('<!DOCTYPE html><body><div id="live-lobby"></div></body>', {
-  url: 'https://pokerth.net/live'
-});
+const dom = new JSDOM(
+  '<!DOCTYPE html><body><div id="live-lobby"></div><div id="g-list"></div></body>',
+  { url: 'https://pokerth.net/live' });
 global.window = dom.window;
 global.document = dom.window.document;
 
@@ -57,6 +57,18 @@ check('header row is present', !!host.querySelector('.llb-head'));
 // The original renderGames must still run — the live list is additive.
 window.renderGames();
 check('the wrapped renderGames still calls through', origCalls === 1);
+
+// The real repaint path: msg-lobby.mjs calls the ESM binding, not the global,
+// so the list has to follow the ordinary list's DOM instead.
+const repaint = async function () {
+  document.getElementById('g-list').appendChild(document.createElement('i'));
+  await new Promise(function (r) { setTimeout(r, 0); });
+};
+window.S.games[12] = { name: 'Third table', mode: 2, players: 5, maxPlayers: 10,
+  type: 1, priv: false, timeout: 5, delay: 5, seats: [], watchers: [] };
+await repaint();
+check('a table added without the global still appears',
+  /Third table/.test(host.textContent));
 
 // Expanding a running table exposes the seated players and Spectate.
 const running = [...host.querySelectorAll('.llb-line')]

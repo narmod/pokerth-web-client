@@ -11423,7 +11423,6 @@ html[data-seat-struct="qml"] .seat-narrow .seat-name .seat-note-stars { font-siz
 }
 /* Lobby header — no account actions, no side panels: those arrive as tabs in
    the live lobby instead. */
-:root[data-live="1"] #s-lobby .header > button[onclick*="confirmDisconnect"],
 :root[data-live="1"] #s-lobby .header .header-pills,
 :root[data-live="1"] #fs-btn-lobby,
 :root[data-live="1"] #lobby-chat-btn,

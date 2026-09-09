@@ -6,9 +6,11 @@
  * while the table view stays the client's own.
  *
  * It reads S.games / S.players — the same records the ordinary lobby renders
- * from — and repaints by wrapping window.renderGames, so every lobby message
- * that refreshes the normal list refreshes this one too. No new protocol
- * handling, no second source of truth.
+ * from. Repaints are driven by watching the ordinary list (#g-list) for
+ * mutations: net/msg-lobby.mjs calls the renderGames binding it imported from
+ * ui/lobby.mjs, not window.renderGames, so hooking the global would never
+ * fire. The hidden list is still rendered in live mode, which makes it a
+ * reliable signal. No new protocol handling, no second source of truth.
  *
  * Every label reuses an existing i18n key, so the 40 locales stay complete.
  */
@@ -89,12 +91,25 @@ function rowDetail(id, g) {
   '</div>';
 }
 
+let lastSig = null;
+
 function render() {
   const host = document.getElementById('live-lobby');
   if (!host) return;
   const S = window.S || {};
   const entries = Object.entries(S.games || {});
   entries.sort(function (a, b) { return a[1].mode - b[1].mode; });
+
+  // The observer below fires on every repaint of the ordinary list, several
+  // times per second on a busy server. Rewriting innerHTML each time would
+  // drop focus and flicker, so skip when nothing this list shows has changed.
+  const sig = JSON.stringify([entries.map(function (p) {
+    const g = p[1];
+    return [p[0], g.name, g.mode, g.players, g.maxPlayers, g.type, !!g.priv,
+            g.timeout, g.delay, (g.watchers || []).length, (g.seats || []).join(',')];
+  }), [...expanded].sort()]);
+  if (sig === lastSig) return;
+  lastSig = sig;
 
   const head =
     '<div class="llb-head">' +
@@ -156,21 +171,30 @@ function onClick(ev) {
   if (line && host.contains(line)) {
     const id = line.getAttribute('data-row');
     if (expanded.has(id)) expanded.delete(id); else expanded.add(id);
-    render();
+    render();   // the signature includes `expanded`, so this always repaints
   }
 }
 
 export function initLiveLobby() {
   if (!document.getElementById('live-lobby')) return;
 
-  // Repaint whenever the ordinary lobby repaints. window.renderGames is
-  // assigned while pokerth.js runs as a deferred module, i.e. before
-  // DOMContentLoaded, so wrapping it here can't be overwritten afterwards.
+  // Repaint whenever the ordinary list repaints. #g-list is hidden in live
+  // mode but still rendered, and every lobby message that changes a table
+  // ends up rewriting it — including the ones that reach renderGames through
+  // the ESM binding rather than through window.
+  const gl = document.getElementById('g-list');
+  if (gl && window.MutationObserver) {
+    new window.MutationObserver(function () { render(); })
+      .observe(gl, { childList: true, subtree: true, characterData: true });
+  }
+  // Belt and braces: anything that does go through the global still repaints,
+  // and a slow safety tick covers a browser without MutationObserver.
   const orig = window.renderGames;
   window.renderGames = function () {
     try { if (orig) orig.apply(this, arguments); } catch (e) {}
     render();
   };
+  setInterval(render, 3000);
 
   document.addEventListener('click', onClick);
   document.addEventListener('keydown', function (ev) {

@@ -81,6 +81,8 @@ check('nickname is left empty for the persistent guest name', !/getElementById\(
 // ── Live lobby (2.1.8-web.68) ──
 check('live lobby container in the lobby screen', /class="live-only live-lobby" id="live-lobby"/.test(html));
 check('the full lobby body is replaced', /:root\[data-live="1"\] \.lobby-body[,\s]/.test(css));
+check('the leave-lobby button is kept in live mode',
+  !/confirmDisconnect/.test(css));
 check('live lobby is wired from the live entry point',
   /initLiveLobby\(\)/.test(live) && /from '\.\/lobby\.mjs'/.test(live));
 
