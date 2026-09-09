@@ -16,6 +16,15 @@ release. Per-build detail is on the
 highlights below.
 
 ### Added
+- **`/live` — slim header** (`web.66`) — in live mode the header keeps only
+  what a guest watching from the website can use: the guest name on the left,
+  and on the right an appearance button (the existing theme panel — palette,
+  table, deck) plus the build. Disconnect, fullscreen, chat, private messages,
+  forum, ranking, the overflow menus and the table-admin buttons are hidden;
+  the sound toggle stays at the table. All of it is CSS on
+  `:root[data-live="1"]`, so the ordinary client is byte-identical in
+  behaviour, and `public/modules/live/index.mjs` — loaded only on `/live` —
+  fills the two dynamic slots.
 - **`/live` — embedded spectator mode, first stone** (`web.65`) — a new route
   serving the same client with `window.LIVE_MODE` set, groundwork for replacing
   the standalone `pokerth-live` spectator tool with this codebase, so table

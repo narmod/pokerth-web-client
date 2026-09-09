@@ -3905,7 +3905,10 @@ function sendClientHtml(req, res, live) {
   if (!ent) {
     let html;
     try { html = fs.readFileSync(p, 'utf8'); } catch (e) { res.writeHead(404); res.end('Not found'); return; }
-    html = html.replace('<!--__LIVE_BOOT__-->', live ? '<script>window.LIVE_MODE=1;</script>' : '');
+    html = html.replace('<!--__LIVE_BOOT__-->', live
+      ? '<script>window.LIVE_MODE=1;document.documentElement.setAttribute("data-live","1");</script>'
+        + '<script type="module" src="/modules/live/index.mjs"></script>'
+      : '');
     html = html.replace('<!--__SEO_HEAD__-->', on ? seoHeadBlock(base, lang) : '<meta name="robots" content="noindex, nofollow">');
     html = html.replace('<!--__SEO_BODY__-->', on ? seoBodyBlock(lang) : '');
     html = html.replace('<!--__SEO_FOOTER__-->', on ? seoFooterBlock(lang) : '');

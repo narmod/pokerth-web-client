@@ -11403,3 +11403,46 @@ html[data-seat-struct="qml"] .seat-narrow .seat-name .seat-note-stars { font-siz
   .nv-star { transition: none; }
   .nv-star:hover { transform: none; }
 }
+
+/* ══ Live / embedded spectator mode (/live) ═══════════════════════════════
+   Driven by :root[data-live="1"], set by the LIVE_BOOT script proxy.js
+   injects for /live only. The markup is the ordinary client — live mode just
+   hides the chrome that has no meaning for a guest watching inside an iframe
+   on pokerth.net, and reveals the .live-only pieces of the slim header
+   (identity, appearance, build). The table itself is untouched, which is the
+   whole point: table work is inherited here rather than ported twice. */
+.live-only { display: none; }
+:root[data-live="1"] .live-only { display: inline-flex; align-items: center; }
+:root[data-live="1"] .live-id {
+  gap: 6px; font-weight: 600; color: var(--text-hi);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  max-width: 45%; min-width: 0;
+}
+:root[data-live="1"] .live-ver {
+  opacity: .5; font-size: .72rem; margin-left: 6px; white-space: nowrap;
+}
+/* Lobby header — no account actions, no side panels: those arrive as tabs in
+   the live lobby instead. */
+:root[data-live="1"] #s-lobby .header > button[onclick*="confirmDisconnect"],
+:root[data-live="1"] #s-lobby .header .header-pills,
+:root[data-live="1"] #fs-btn-lobby,
+:root[data-live="1"] #lobby-chat-btn,
+:root[data-live="1"] #pm-btn-lobby,
+:root[data-live="1"] #forum-btn-lobby,
+:root[data-live="1"] #ranking-btn-lobby,
+:root[data-live="1"] #s-lobby .hdr-ovf-wrap,
+/* Game header — the back arrow, the table name and sound stay; everything a
+   spectator cannot act on goes. */
+:root[data-live="1"] #fs-btn-game,
+:root[data-live="1"] #forum-btn-game,
+:root[data-live="1"] #ranking-btn-game,
+:root[data-live="1"] #tableranking-btn-game,
+:root[data-live="1"] #haptic-toggle-btn,
+:root[data-live="1"] #voice-toggle-btn,
+:root[data-live="1"] #admin-startnobots-btn,
+:root[data-live="1"] #admin-start-btn,
+:root[data-live="1"] #admin-close-btn,
+:root[data-live="1"] #admin-kick-btn,
+:root[data-live="1"] #s-game .hdr-ovf-wrap,
+/* No install prompt inside an iframe. */
+:root[data-live="1"] #install-btn { display: none !important; }

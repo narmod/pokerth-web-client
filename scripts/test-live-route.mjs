@@ -27,7 +27,7 @@ check('/live serves the client with live=true', /sendClientHtml\(req, res, true\
 check('sendClientHtml takes the live flag', /function sendClientHtml\(req, res, live\)/.test(proxy));
 check('live is excluded from SEO', /const on = !live && seoEnabled\(\)/.test(proxy));
 check('live has its own cache key', /const key = \(live \? 'live:' : ''\)/.test(proxy));
-check('LIVE_BOOT placeholder is substituted', /__LIVE_BOOT__-->', live \?/.test(proxy));
+check('LIVE_BOOT placeholder is substituted', /__LIVE_BOOT__-->', live\s/.test(proxy));
 check('frame-ancestors constant defined', /LIVE_FRAME_ANCESTORS = "frame-ancestors 'self'/.test(proxy));
 check('frame-ancestors sent only in live mode', /if \(live\) headers\['Content-Security-Policy'\] = LIVE_FRAME_ANCESTORS;/.test(proxy));
 check('no X-Frame-Options header is set', !/['"]X-Frame-Options['"]/.test(proxy));
@@ -38,6 +38,31 @@ check('LIVE_BOOT sits before the first <script>',
   html.indexOf('<!--__LIVE_BOOT__-->') < html.indexOf('<script'));
 check('service worker is skipped in live mode',
   /if \('serviceWorker' in navigator && !window\.LIVE_MODE\)/.test(html));
+
+// ── Slim header (2.1.8-web.66) ──
+const css = fs.readFileSync(path.join(root, 'public', 'pokerth.css'), 'utf8');
+const live = fs.readFileSync(path.join(root, 'public', 'modules', 'live', 'index.mjs'), 'utf8');
+
+check('LIVE_BOOT flags the root element', /setAttribute\("data-live","1"\)/.test(proxy));
+check('LIVE_BOOT loads the live module', /modules\/live\/index\.mjs/.test(proxy));
+check('live module is guarded by LIVE_MODE', /if \(window\.LIVE_MODE\)/.test(live));
+check('live-only is hidden by default', /\.live-only \{ display: none; \}/.test(css));
+check('live-only is revealed under data-live', /:root\[data-live="1"\] \.live-only/.test(css));
+check('identity slot in the lobby header', /class="live-only live-id" id="live-id"/.test(html));
+check('appearance button in both headers',
+  /id="live-theme-lobby"/.test(html) && /id="live-theme-game"/.test(html));
+check('appearance reuses openThemePanel',
+  (html.match(/onclick="openThemePanel\(event\)"/g) || []).length === 2);
+check('version slot in both headers',
+  /id="live-ver-lobby"/.test(html) && /id="live-ver-game"/.test(html));
+for (const id of ['fs-btn-lobby', 'pm-btn-lobby', 'forum-btn-lobby', 'lobby-chat-btn',
+                  'haptic-toggle-btn', 'voice-toggle-btn', 'install-btn']) {
+  check('hidden in live mode: #' + id,
+    new RegExp(':root\\[data-live="1"\\] #' + id + '[,\\s]').test(css));
+}
+check('sound button is kept at the table', !/:root\[data-live="1"\] #sound-toggle-btn/.test(css));
+check('CSS braces balanced',
+  (css.match(/\{/g) || []).length === (css.match(/\}/g) || []).length);
 
 // Version triple must stay in lockstep — three files, one value.
 const pkg = JSON.parse(fs.readFileSync(path.join(root, 'package.json'), 'utf8')).version;
