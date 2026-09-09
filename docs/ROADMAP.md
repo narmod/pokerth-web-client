@@ -262,7 +262,8 @@ use too. Items are grouped by status rather than fixed phases.
   Spectate), the table view is ours, so every table improvement is inherited.
   Guest-only, settings in a slim header rather than a popup. Server route and
   embed hygiene landed in `2.1.8-web.65`, the slim header in `2.1.8-web.66`, the
-  one-button guest login in `2.1.8-web.67`; the live lobby is next.
+  one-button guest login in `2.1.8-web.67`, the table list in `2.1.8-web.68`;
+  the Players and Chat tabs, then the direct `/pthlive` transport, are next.
 
 - **Official QML client fidelity** — ongoing pixel-and-behaviour alignment of the in-game
   screen with the official QML client (action bar, mobile layouts, seat geometry).

@@ -16,6 +16,17 @@ release. Per-build detail is on the
 highlights below.
 
 ### Added
+- **`/live` — the table list** (`web.68`) — the full lobby body is replaced on
+  `/live` by a row-per-table list in the shape of the spectator tool it
+  succeeds: name, seats, status, type, private, spectators and timeouts, with
+  an expandable panel showing who is seated, the starting stack, the small
+  blind and the blind schedule, and Spectate as the only action (offered only
+  once a table is actually running). It reads the same `S.games` / `S.players`
+  records the ordinary lobby renders from and repaints by wrapping
+  `renderGames`, so no second source of truth and no new protocol handling.
+  Every label reuses an existing i18n key, so all 40 locales stay complete.
+  Covered by `scripts/test-live-lobby.mjs`, which runs the module against a
+  jsdom document rather than pattern-matching its source.
 - **`/live` — one-button guest login** (`web.67`) — the connect screen drops to
   a single button: no mode cards, no nickname field, no avatar picker, no TLS
   or guest checkbox, no footer. Underneath it is the ordinary connect path —

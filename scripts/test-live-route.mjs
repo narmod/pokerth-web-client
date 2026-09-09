@@ -78,6 +78,12 @@ check('guest mode is forced on', /gc\.checked = true/.test(live));
 check('guest state re-asserted on click capture', /addEventListener\('click'[\s\S]{0,200}, true\)/.test(live));
 check('nickname is left empty for the persistent guest name', !/getElementById\('nick'\)/.test(live));
 
+// ── Live lobby (2.1.8-web.68) ──
+check('live lobby container in the lobby screen', /class="live-only live-lobby" id="live-lobby"/.test(html));
+check('the full lobby body is replaced', /:root\[data-live="1"\] \.lobby-body[,\s]/.test(css));
+check('live lobby is wired from the live entry point',
+  /initLiveLobby\(\)/.test(live) && /from '\.\/lobby\.mjs'/.test(live));
+
 // Version triple must stay in lockstep — three files, one value.
 const pkg = JSON.parse(fs.readFileSync(path.join(root, 'package.json'), 'utf8')).version;
 const sw = /const CACHE_VERSION = 'pokerth-v([^']+)'/.exec(

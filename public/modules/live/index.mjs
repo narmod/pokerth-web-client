@@ -6,6 +6,8 @@
  * of the slim header — who we are logged in as, and the build version.
  */
 
+import { initLiveLobby } from './lobby.mjs';
+
 if (window.LIVE_MODE) {
   const VER_IDS = ['live-ver-lobby', 'live-ver-game'];
   let lastName = null;
@@ -63,5 +65,6 @@ if (window.LIVE_MODE) {
     setInterval(syncIdentity, 1000);
     armLoginGuard();
     forceGuestLogin();
+    initLiveLobby();
   });
 }
