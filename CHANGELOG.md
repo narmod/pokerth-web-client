@@ -28,6 +28,12 @@ highlights below.
   now shown as an icon and a figure each, with the same icons, and the wording
   moved to each item's title and aria-label so it stays translated and stays
   read out. Counters the server does not publish are simply left out.
+  Hardened in `web.59`: the icons had been left to size themselves from the
+  stylesheet, so a browser still holding a cached `pokerth.css` from before
+  those rules rendered each one at the browser default of 300x150 and the
+  Internet card grew to fill the screen. They now carry width and height as
+  attributes and the row lays itself out inline, so the module survives a
+  stale or missing stylesheet; `scripts/test-live-stats.mjs` pins that.
 - **World clock above the admin tabs** (`web.47`–`web.48`) — one analog dial
   per region, up to twelve from a catalogue of thirty-eight, ordered by UTC
   offset around a settable reference zone; a region turns green between 18:00

@@ -1,4 +1,7 @@
 2026-09-09 version 2.1.8-web (current series):
+- bugfix: the live figures on the opening screen could blow the Internet card up to the full height of the screen on a browser still holding an older stylesheet - the icons now carry their own size and no longer depend on it
+
+2026-09-09 version 2.1.8-web:
 - improvement: the live figures on the opening screen now show all four counters the website does - players online, tables running, players waiting and games today - as an icon and a number each, so nothing gets cut off on a narrow phone screen
 
 2026-09-08 version 2.1.8-web:

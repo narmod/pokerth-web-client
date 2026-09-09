@@ -1542,9 +1542,11 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
    Icon + number per counter, no words — the card is narrow on a phone and a
    worded line was being cut off mid-sentence. The full wording lives in each
    item's title/aria-label, so it is still read out and still translated. */
-.lc-live { display: flex; align-items: center; flex-wrap: wrap; gap: 3px 12px;
+.lc-live { display: flex; align-items: center; flex-wrap: wrap; row-gap: 3px;
   font-size: var(--fs-xs); color: var(--green); margin-top: 4px; }
-.lc-live .lcl { display: inline-flex; align-items: center; gap: 4px; white-space: nowrap; }
+.lc-live .lcl { display: inline-flex; align-items: center; gap: 4px; white-space: nowrap;
+  margin-right: 12px; }
+.lc-live .lcl:last-child { margin-right: 0; }
 .lc-live .lcl svg { width: 13px; height: 13px; flex: 0 0 auto; }
 .lc-live .lcl-g { font-size: 13px; line-height: 1; flex: 0 0 auto; }
 .lc-live .lcl b { font-weight: 700; }

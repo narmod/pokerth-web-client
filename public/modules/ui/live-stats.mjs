@@ -42,10 +42,16 @@ function _fmt(n) {
 // pokerth.net -- a player who saw one recognises the other. Stroke is
 // currentColor, never a CSS var: an SVG stroke= attribute does not resolve
 // var().
+//
+// width/height are set as attributes, not left to the stylesheet: an <svg>
+// with neither falls back to the browser default of 300x150, and a client
+// running a cached stylesheet from before these icons existed blew the login
+// card up to full-screen height. Presentation still comes from the CSS -- the
+// attributes are only the floor that keeps a stale stylesheet survivable.
 const ICONS = {
-  online:  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="7" r="4"/><path d="M6 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/></svg>',
-  tables:  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="4" width="6" height="6" rx="1"/><rect x="14" y="4" width="6" height="6" rx="1"/><rect x="4" y="14" width="6" height="6" rx="1"/><rect x="14" y="14" width="6" height="6" rx="1"/></svg>',
-  waiting: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>',
+  online:  '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="7" r="4"/><path d="M6 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/></svg>',
+  tables:  '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="4" width="6" height="6" rx="1"/><rect x="14" y="4" width="6" height="6" rx="1"/><rect x="4" y="14" width="6" height="6" rx="1"/><rect x="14" y="14" width="6" height="6" rx="1"/></svg>',
+  waiting: '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>',
   today:   null
 };
 
@@ -54,6 +60,11 @@ const ICONS = {
 function _item(kind, key, n) {
   const sp = document.createElement('span');
   sp.className = 'lcl';
+  sp.style.display = 'inline-flex';
+  sp.style.alignItems = 'center';
+  sp.style.gap = '4px';
+  sp.style.marginRight = '12px';
+  sp.style.whiteSpace = 'nowrap';
   const label = t(key, { n: _fmt(n) });
   sp.title = label;
   sp.setAttribute('aria-label', label);
@@ -62,6 +73,8 @@ function _item(kind, key, n) {
   } else {
     const g = document.createElement('span');
     g.className = 'lcl-g';
+    g.style.fontSize = '13px';
+    g.style.lineHeight = '1';
     g.setAttribute('aria-hidden', 'true');
     g.textContent = '\u2660';
     sp.appendChild(g);
@@ -84,13 +97,15 @@ function _render(d) {
   if (!el) return;
   if (!d || d.ok !== true || typeof d.online !== 'number') { _hide(); return; }
   el.textContent = '';
+  el.style.display = 'flex';
+  el.style.alignItems = 'center';
+  el.style.flexWrap = 'wrap';
   el.appendChild(_item('online', 'liveOnline', d.online));
   // tables / waiting only exist on a server that publishes them; today can be
   // zero early in the day, and a zero there says something, so it is kept.
   if (typeof d.tables === 'number' && d.tables > 0) el.appendChild(_item('tables', 'liveTables', d.tables));
   if (typeof d.waiting === 'number' && d.waiting > 0) el.appendChild(_item('waiting', 'liveWaiting', d.waiting));
   if (typeof d.today === 'number') el.appendChild(_item('today', 'liveToday', d.today));
-  el.style.display = '';
 }
 
 function _poll() {
