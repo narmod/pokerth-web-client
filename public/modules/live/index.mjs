@@ -8,6 +8,7 @@
 
 import { initLiveLobby } from './lobby.mjs';
 import { initLiveChatPane } from './chat-pane.mjs';
+import { initSpectateDialog } from './spectate-dialog.mjs';
 
 if (window.LIVE_MODE) {
   const VER_IDS = ['live-ver-lobby', 'live-ver-game'];
@@ -85,5 +86,6 @@ if (window.LIVE_MODE) {
     dressLoginCard();
     initLiveLobby();
     initLiveChatPane();
+    initSpectateDialog();
   });
 }

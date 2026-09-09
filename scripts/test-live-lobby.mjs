@@ -147,6 +147,39 @@ host.querySelector('[data-tab="games"]')
   .dispatchEvent(new dom.window.MouseEvent('click', { bubbles: true }));
 check('switching back restores the table list', !!host.querySelector('.llb-row'));
 
+// ── Spectate dialog ──
+// Joining takes a round trip and then a wait for the hand in progress; the
+// click must say so, and must be cancellable.
+const dlg = document.createElement('div');
+dlg.id = 'live-spectate-dialog';
+dlg.innerHTML = '<div class="ld-card"><button data-live-cancel>x</button></div>';
+document.body.appendChild(dlg);
+const banner = document.createElement('div');
+banner.id = 'lobby-wait-status';
+document.body.appendChild(banner);
+
+const sd = await import('../public/modules/live/spectate-dialog.mjs');
+sd.initSpectateDialog();
+
+host.querySelector('[data-tab="games"]')
+  .dispatchEvent(new dom.window.MouseEvent('click', { bubbles: true }));
+const specBtn = host.querySelector('[data-spec]') ||
+  (function () {
+    [...host.querySelectorAll('.llb-line')]
+      .find(l => l.textContent.includes('My Online Game123'))
+      .dispatchEvent(new dom.window.MouseEvent('click', { bubbles: true }));
+    return host.querySelector('[data-spec]');
+  })();
+specBtn.dispatchEvent(new dom.window.MouseEvent('click', { bubbles: true }));
+check('the dialog opens on Spectate', dlg.style.display === 'flex');
+
+let left = false;
+window.App.leaveGame = function () { left = true; };
+dlg.querySelector('[data-live-cancel]')
+  .dispatchEvent(new dom.window.MouseEvent('click', { bubbles: true }));
+check('Cancel closes the dialog', dlg.style.display === 'none');
+check('Cancel actually leaves the table', left);
+
 // ── Chat column ──
 const { initLiveChatPane } = await import('../public/modules/live/chat-pane.mjs');
 const lobby = document.getElementById('live-lobby');

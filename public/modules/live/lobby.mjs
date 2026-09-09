@@ -21,6 +21,7 @@
  */
 
 import { keepDocked } from './chat-pane.mjs';
+import { openSpectateDialog } from './spectate-dialog.mjs';
 
 const expanded = new Set();
 let activeTab = 'games';   // 'games' | 'players'
@@ -260,6 +261,10 @@ function onClick(ev) {
     ev.preventDefault();
     ev.stopPropagation();
     const id = parseInt(spec.getAttribute('data-spec'), 10);
+    // Up first: joining takes a round trip and then a wait for the hand in
+    // progress, and a click with nothing on screen reads as a click that did
+    // nothing.
+    openSpectateDialog();
     try { if (window.App && window.App.spectateGame) window.App.spectateGame(id); } catch (e) {}
     return;
   }

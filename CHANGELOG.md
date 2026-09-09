@@ -16,6 +16,13 @@ release. Per-build detail is on the
 highlights below.
 
 ### Added
+- **`/live` — a word while the join happens** (`web.81`) — clicking Spectate
+  now raises a dialog saying the table is being joined and that the viewer is
+  waiting for the current hand to finish, with Cancel to back out. Joining
+  takes a round trip and then a wait, and a click with nothing on screen reads
+  as a click that did nothing. Cancel calls the client's own `leaveGame()`, so
+  a half-completed join is cleaned up properly. It reuses the `#leave-dialog`
+  shell and three strings that already exist in all 40 locales.
 - **`/live` — avatars, player cards, type icons** (`web.78`) — the Players tab
   now matches the tool it replaces: avatar on the left, name on the first line
   and the table below it, Spectate on the right. Clicking a name opens the

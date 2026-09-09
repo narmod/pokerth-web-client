@@ -5980,6 +5980,7 @@ body.spectator-nosend #g-reaction-panel { display: none !important; }
    already has its own rule because it was added in a separate commit
    with the same body; consolidating could be a future cleanup. */
 #leave-dialog,
+#live-spectate-dialog,
 #disconnect-dialog {
   position: fixed; inset: 0; z-index: 120;
   display: flex; align-items: center; justify-content: center;
