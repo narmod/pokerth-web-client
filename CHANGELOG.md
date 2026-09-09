@@ -16,6 +16,13 @@ release. Per-build detail is on the
 highlights below.
 
 ### Added
+- **`/live` — Players tab and read-only chat** (`web.72`) — a tab bar above the
+  list switches between the tables and everyone online, each with its count,
+  as in the spectator tool. A player's row says which table they are at or
+  watching and offers Spectate when that table is running, so a visitor can
+  follow a name straight to its seat. The chat composer and emoji panel are
+  hidden: an embedded viewer watches the lobby, it does not post to it. The
+  panel is still the client's own node, so nothing is removed — only hidden.
 - **`/live` — lobby chat as a resizable right column** (`web.71`) — the table
   list and the chat sit side by side as they do in the full client and the
   QML lobby, with a drag grip between them. The width is remembered across

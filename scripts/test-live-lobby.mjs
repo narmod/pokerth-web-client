@@ -110,6 +110,39 @@ window.PthState.games = {};
 window.renderGames();
 check('empty list shows a placeholder', !!host.querySelector('.llb-empty'));
 
+// ── Tabs and the players pane ──
+// The empty-list check above cleared the games, so put a running table back.
+window.PthState.games = {
+  7: { name: 'My Online Game123', mode: 2, players: 3, maxPlayers: 10, type: 4,
+       priv: false, timeout: 5, delay: 5, startMoney: 10000, smallBlind: 50,
+       raiseMode: 1, raiseHands: 11, seats: [11, 12, 13], watchers: [99] }
+};
+await repaint();
+check('a tab bar sits above the list', !!host.querySelector('.llb-tabs'));
+check('the games tab is active by default',
+  host.querySelector('.llb-tab.on').getAttribute('data-tab') === 'games');
+check('the tabs carry their counts',
+  /^1 /.test(host.querySelector('[data-tab="games"]').textContent.trim()) &&
+  /^3 /.test(host.querySelector('[data-tab="players"]').textContent.trim()));
+
+host.querySelector('[data-tab="players"]')
+  .dispatchEvent(new dom.window.MouseEvent('click', { bubbles: true }));
+check('the players tab lists everyone online',
+  /velt/.test(host.textContent) && /gehawe/.test(host.textContent));
+check('the players tab replaces the table list',
+  !host.querySelector('.llb-row'));
+check('a player at a running table can be spectated from their row',
+  !!host.querySelector('.llb-pl [data-spec]'));
+
+spectated = null;
+host.querySelector('.llb-pl [data-spec]')
+  .dispatchEvent(new dom.window.MouseEvent('click', { bubbles: true }));
+check('spectating from the players tab opens their table', spectated === 7);
+
+host.querySelector('[data-tab="games"]')
+  .dispatchEvent(new dom.window.MouseEvent('click', { bubbles: true }));
+check('switching back restores the table list', !!host.querySelector('.llb-row'));
+
 // ── Chat column ──
 const { initLiveChatPane } = await import('../public/modules/live/chat-pane.mjs');
 const lobby = document.getElementById('live-lobby');

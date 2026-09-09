@@ -21,6 +21,7 @@
  */
 
 const expanded = new Set();
+let activeTab = 'games';   // 'games' | 'players'
 
 function esc(s) {
   return String(s == null ? '' : s)
@@ -62,6 +63,50 @@ function seatNames(g) {
   return ids.map(function (pid) {
     return (S.players && S.players[pid]) ? String(S.players[pid]) : '#' + pid;
   });
+}
+
+// Where a player is, for the Players tab: the game they sit at, or the one
+// they are watching. Same records the ordinary lobby reads.
+function whereIs(pid) {
+  const S = state();
+  const games = S.games || {};
+  for (const id of Object.keys(games)) {
+    const g = games[id];
+    if (g.seats && g.seats.indexOf(pid) !== -1) return { id: id, g: g, watching: false };
+  }
+  for (const id of Object.keys(games)) {
+    const g = games[id];
+    if (g.watchers && g.watchers.indexOf(pid) !== -1) return { id: id, g: g, watching: true };
+  }
+  return null;
+}
+
+function renderPlayers() {
+  const S = state();
+  const players = S.players || {};
+  const ids = Object.keys(players).sort(function (a, b) {
+    return String(players[a]).toLowerCase() < String(players[b]).toLowerCase() ? -1 : 1;
+  });
+  if (!ids.length) return '<div class="llb-empty">\u2014</div>';
+
+  return '<div class="llb-players">' + ids.map(function (pid) {
+    const at = whereIs(parseInt(pid, 10));
+    let sub = '';
+    let btn = '';
+    if (at) {
+      const label = at.watching ? tr('spectatingTable', 'Spectating table ')
+                                : tr('plInGame', 'In game') + ' : ';
+      sub = '<span class="llb-pl-at">' + esc(label) + esc(at.g.name || '') + '</span>';
+      // Spectating a player means spectating their table — only once it runs.
+      if (at.g.mode === 2) {
+        btn = '<button type="button" class="llb-spec llb-spec-sm" data-spec="' + esc(at.id) + '">' +
+              '\u{1F441} ' + esc(tr('spectatorBtn', 'Spectate')) + '</button>';
+      }
+    }
+    return '<div class="llb-pl">' +
+      '<span class="llb-pl-name">' + esc(players[pid]) + '</span>' + sub + btn +
+    '</div>';
+  }).join('') + '</div>';
 }
 
 function rowDetail(id, g) {
@@ -117,9 +162,23 @@ function render() {
     const g = p[1];
     return [p[0], g.name, g.mode, g.players, g.maxPlayers, g.type, !!g.priv,
             g.timeout, g.delay, (g.watchers || []).length, (g.seats || []).join(',')];
-  }), [...expanded].sort()]);
+  }), [...expanded].sort(), activeTab, Object.keys(S.players || {}).join(',')]);
   if (sig === lastSig) return;
   lastSig = sig;
+
+  const nGames = entries.length;
+  const nPlayers = Object.keys(S.players || {}).length;
+  const tabs =
+    '<div class="llb-tabs" role="tablist">' +
+      '<button type="button" class="llb-tab' + (activeTab === 'games' ? ' on' : '') +
+        '" role="tab" data-tab="games">' +
+        nGames + ' ' + esc(tr('tableCount', 'table(s)')) + '</button>' +
+      '<button type="button" class="llb-tab' + (activeTab === 'players' ? ' on' : '') +
+        '" role="tab" data-tab="players">' +
+        nPlayers + ' ' + esc(tr('playersOnline', 'player(s)')) + '</button>' +
+    '</div>';
+
+  if (activeTab === 'players') { host.innerHTML = tabs + renderPlayers(); return; }
 
   const head =
     '<div class="llb-head">' +
@@ -133,7 +192,7 @@ function render() {
     '</div>';
 
   if (!entries.length) {
-    host.innerHTML = head + '<div class="llb-empty">' +
+    host.innerHTML = tabs + head + '<div class="llb-empty">' +
       esc(tr('noTablesAvailable', 'No tables')) + '</div>';
     return;
   }
@@ -161,7 +220,7 @@ function render() {
     '</div>';
   }).join('');
 
-  host.innerHTML = head + rows;
+  host.innerHTML = tabs + head + rows;
 }
 
 function onClick(ev) {
@@ -174,6 +233,13 @@ function onClick(ev) {
     ev.stopPropagation();
     const id = parseInt(spec.getAttribute('data-spec'), 10);
     try { if (window.App && window.App.spectateGame) window.App.spectateGame(id); } catch (e) {}
+    return;
+  }
+
+  const tab = ev.target.closest('[data-tab]');
+  if (tab && host.contains(tab)) {
+    const want = tab.getAttribute('data-tab');
+    if (want !== activeTab) { activeTab = want; render(); }
     return;
   }
 

@@ -11568,3 +11568,36 @@ html[data-seat-struct="qml"] .seat-narrow .seat-name .seat-note-stars { font-siz
   .live-lobby .llb-c-type,
   .live-lobby .llb-c-time { display: none; }
 }
+
+/* ── Live mode: tabs above the list, and the players pane ────────────────── */
+.live-lobby .llb-tabs {
+  display: flex; gap: 4px; padding: 2px 4px 8px;
+  border-bottom: 1px solid var(--border, rgba(255,255,255,.12));
+}
+.live-lobby .llb-tab {
+  font: inherit; font-size: .82rem; font-weight: 600; cursor: pointer;
+  padding: 6px 14px; border-radius: 6px 6px 0 0;
+  color: var(--text); background: transparent; border: 0;
+  border-bottom: 2px solid transparent;
+}
+.live-lobby .llb-tab:hover { background: rgba(255, 255, 255, .06); }
+.live-lobby .llb-tab.on {
+  color: var(--text-hi); border-bottom-color: var(--gold, #c8a24a);
+}
+.live-lobby .llb-players { padding-top: 4px; }
+.live-lobby .llb-pl {
+  display: flex; align-items: center; gap: 10px; padding: 7px 10px;
+  border-bottom: 1px solid var(--border, rgba(255,255,255,.08));
+}
+.live-lobby .llb-pl-name { font-weight: 600; }
+.live-lobby .llb-pl-at {
+  flex: 1; min-width: 0; font-size: .8rem; opacity: .75;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.live-lobby .llb-spec-sm { padding: 3px 10px; font-size: .78rem; }
+
+/* Read-only chat: an embedded viewer watches, it does not post. The panel is
+   the client's own node, so the composer is hidden rather than removed. */
+:root[data-live="1"] .live-lobby #lobby-chat-panel .chat-input,
+:root[data-live="1"] .live-lobby #lobby-chat-panel .chat-emoji-panel,
+:root[data-live="1"] .live-lobby #lobby-wait-actions { display: none !important; }
