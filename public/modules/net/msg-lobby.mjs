@@ -459,6 +459,12 @@ function onError(sub) {
       // la reco, comme le QML (isRecoverableTransportError).
       var _protoErr = (r === 9 || r === 10);
       if (!_protoErr) S._intentionalDisconnect = true;
+      // Le motif est memorise pour ws.onclose : un rejet recu APRES le login
+      // (kick, ban, timeout de session) ne changeait aucun ecran — le lobby
+      // restait affiche, fige, et setStatus ecrivait sur l'ecran de connexion
+      // que personne ne voyait. Parite QML : retour a l'ecran de connexion et
+      // fenetre « Connexion perdue » portant ce motif.
+      if (!_protoErr) S._connLostReason = codes[r] || ('code ' + r);
       if (_protoErr && S._wasAuthenticated) {
         try { console.warn('[NET] ErrorMessage ' + r + ' (' + (codes[r] || '?') + ') ignoré — session authentifiée active (Init redondant post-rebind ?)'); } catch (e) {}
       } else {
@@ -847,6 +853,30 @@ function onGameListSpectatorLeft(sub) {
     }
     return;
 }
+
+// ── Fenetre « Connexion perdue » (parite QML connectionLostPopup) ────────
+// Meme carcasse que l'avertissement de timeout (kcm-card) ; le motif est
+// deja traduit par onError. Escape ferme, comme le popup officiel.
+function _connLostShow(msg) {
+  var modal = document.getElementById('conn-lost-modal');
+  var el = document.getElementById('clm-msg');
+  if (!modal || !el) return;
+  el.textContent = msg || '';
+  modal.style.display = 'flex';
+}
+function _connLostClose() {
+  var modal = document.getElementById('conn-lost-modal');
+  if (modal) modal.style.display = 'none';
+}
+try {
+  document.addEventListener('keydown', function (ev) {
+    if (ev.key !== 'Escape') return;
+    var m = document.getElementById('conn-lost-modal');
+    if (m && m.style.display === 'flex') _connLostClose();
+  });
+} catch (e) {}
+window._connLostShow = _connLostShow;
+window._connLostClose = _connLostClose;
 
 export { onAnnounce, onInitAck, onAuthChallenge, onReportGameAck, onReportAvatarAck, onAdminBanPlayerAck, onAdminGlobalNoticeAck, onError, onPlayerList, onStatistics, onPlayerInfoReply, onGameListNew, onGameListUpdate, onGameListPlayerJoined, onGameListPlayerLeft, onGameListAdminChanged, onGameListSpectatorJoined, onGameListSpectatorLeft };
 

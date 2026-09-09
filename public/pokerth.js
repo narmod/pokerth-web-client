@@ -6311,6 +6311,19 @@ const App = (() => {
         // seconds after they returned to the home screen.
         if (S._intentionalDisconnect) {
           _closeNotifyWS();
+          // …sauf quand c'est le SERVEUR qui a rejeté la session (kick, ban,
+          // timeout d'inactivité) : onError pose le même drapeau pour couper le
+          // backoff, mais personne ne changeait d'écran — le lobby restait
+          // affiché et figé, le motif écrit par setStatus n'étant visible que
+          // sur l'écran de connexion. Parité QML (onConnectionFailed) : retour
+          // à l'écran de connexion + fenêtre « Connexion perdue ». Un départ
+          // volontaire n'a pas de motif et a déjà changé d'écran.
+          if (S._connLostReason) {
+            var _clr = S._connLostReason;
+            S._connLostReason = '';
+            try { show('s-connect'); } catch (e3) {}
+            try { window._connLostShow && window._connLostShow(_clr); } catch (e3) {}
+          }
           return;
         }
 
@@ -11434,7 +11447,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.8-web.61'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.8-web.62'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

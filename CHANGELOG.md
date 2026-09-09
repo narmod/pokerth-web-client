@@ -225,6 +225,20 @@ highlights below.
   (`scale 1.03`, 180 ms OutQuad) is applied to the seat plate.
 
 ### Fixed
+- **A server-ended session left the lobby frozen on screen** (`web.62`) — a
+  rejection after login (kick 11, ban 12, session timeout 14, i.e. the server's
+  20-minute lobby inactivity timer, `SERVER_SESSION_ACTIVITY_TIMEOUT_SEC`)
+  goes through `onError()`, which sets `_intentionalDisconnect` to stop the
+  reconnect backoff — correct, and the same call `isRecoverableTransportError()`
+  makes upstream. But nothing then changed screen: `ws.onclose` returned on that
+  flag, the lobby stayed up with a dead player list, and the reason went to
+  `setStatus()`, which only paints the connect screen nobody was looking at.
+  `onError()` now records the reason in `S._connLostReason`, and `onclose`
+  consumes it: back to the connect screen plus a modal carrying the reason —
+  the QML `connectionLostPopup` path (`pokerth.qml onConnectionFailed`: pop to
+  StartPage, push `ServerConnectionDialog`, open the popup). A deliberate
+  disconnect sets no reason and is untouched. New key `connLostTitle` in all 45
+  languages; `scripts/test-state.mjs` pins the new field.
 - **Lobby avatars stopped at the initial in the online-players list**
   (`web.61`) — the players list on the left and the Game Info panel are
   painted as soon as a nickname is known, i.e. *before* the avatar transfer

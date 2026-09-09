@@ -2909,6 +2909,23 @@ if ('serviceWorker' in navigator) {
   </div>
 </div>
 
+<!-- Connection lost (parity: connectionLostPopup, pokerth.qml). Shown when the
+     SERVER ends the session - kicked, banned, or timed out for inactivity -
+     while the client was past the login. The socket close alone changed no
+     screen, so the lobby stayed on display, frozen. Reason text comes from
+     onError (already translated); OK just closes, the connect screen is
+     already underneath. -->
+<div id="conn-lost-modal" style="display:none">
+  <div class="km-backdrop"></div>
+  <div class="kcm-card" role="alertdialog" aria-labelledby="clm-title" aria-describedby="clm-msg">
+    <div class="kcm-title" id="clm-title" data-i18n="connLostTitle">Connection lost</div>
+    <div class="kcm-msg" id="clm-msg">&mdash;</div>
+    <div class="kcm-btns">
+      <button class="kcm-confirm" type="button" id="clm-ok" onclick="window._connLostClose()" data-i18n="timeoutWarnOk">OK</button>
+    </div>
+  </div>
+</div>
+
 <!-- Ranking modal (connect screen) — PokerTH / BBC / WEC leaderboards via the
      same-origin /api/ranking relay (proxy.js). Entry: 🏆 button next to the
      corner globe. BBC supports a season dropdown + All-Time (season 0) like the

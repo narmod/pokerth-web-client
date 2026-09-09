@@ -6662,7 +6662,8 @@ body.spectator-nosend #g-reaction-panel { display: none !important; }
    Sits above every other surface: it can fire while the help window, the
    options or a ranking modal is open, and missing it costs the connection.
    Mirrors the QML popup, which lives on Overlay.overlay. */
-#timeout-warn-modal {
+#timeout-warn-modal,
+#conn-lost-modal {
   position: fixed;
   inset: 0;
   z-index: 10050;

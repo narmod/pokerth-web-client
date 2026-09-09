@@ -190,7 +190,7 @@ ok(JSON.stringify(keys) === JSON.stringify(['REACT_EMOJI_MIN_GAP', 'REACT_EMOJI_
    'ws', 'rxBuf', 'lastMajor', 'lastMinor', 'lastLoginType', '_lastConnectParams',
    '_lastInitMode', '_lastInitNick', '_lastInitTime', '_connectingNow',
    '_connectTimeout', '_connectBtnLabel', '_preserveConnect', '_currentLoginMode', '_reconnectAttempts',
-   '_lastRxTime', '_intentionalDisconnect', '_pendingRejoin', '_pendingRejoinSpec', '_rejoinNickRetries',
+   '_lastRxTime', '_intentionalDisconnect', '_connLostReason', '_pendingRejoin', '_pendingRejoinSpec', '_rejoinNickRetries',
    '_sessionGuid',
    '_nickBusyTries', '_nickBusyName', '_nickBusyAuto',
    '_wasAuthenticated', '_lastConnectTime', '_lastConnectFailed', '_ipBlockUntil',

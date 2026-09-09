@@ -128,6 +128,13 @@ export const S = {
   _reconnectAttempts: 0,
   _lastRxTime: Date.now(), // watchdog liveness (dernier message reçu)
   _intentionalDisconnect: false,
+  // Motif d'un REJET serveur (kick, ban, timeout de session AFK...) recu
+  // pendant que la session tournait. Pose par onError, consomme par
+  // ws.onclose : le drapeau ci-dessus coupe seulement le backoff, c'est ce
+  // motif qui declenche le retour a l'ecran de connexion et la fenetre
+  // « Connexion perdue » (parite QML onConnectionFailed). '' = depart
+  // volontaire, rien a annoncer.
+  _connLostReason: '',
   _pendingRejoin: 0,       // gameId à rejoindre après reconnexion (0 = aucun)
   _pendingRejoinSpec: false, // true = on était SPECTATEUR → re-spectater (pas de siège à réclamer)
   _rejoinNickRetries: 0,
