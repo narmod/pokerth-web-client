@@ -224,6 +224,7 @@ export const strings = {
     loginOfflineDesc:'Sol contra bots',
     loginLanTitle:'LAN / Servidor dedicat',
     loginLanDesc:'Servidor privat · xarxa local',
+    liveTables:'{n} taules en joc', liveWaiting:'{n} jugadors esperant',
     liveOnline:'{n} jugadors en línia', liveToday:'{n} partides avui',
     loginChange:'Canvia',
     preActionTitle:'Vista prèvia d\'accions', preActionHint:'toca les cartes per tancar',

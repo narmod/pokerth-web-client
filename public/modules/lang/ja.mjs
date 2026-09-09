@@ -223,6 +223,7 @@ export const strings = {
     loginOfflineDesc:'ボットと一人で対戦',
     loginLanTitle:'LAN / 専用サーバー',
     loginLanDesc:'プライベートサーバー · ローカルネットワーク',
+    liveTables:'進行中 {n} 卓', liveWaiting:'待機中 {n} 人',
     liveOnline:'オンライン {n} 人', liveToday:'本日 {n} ゲーム',
     loginChange:'変更',
     preActionTitle:'アクションのプレビュー', preActionHint:'カードをタップして閉じる',

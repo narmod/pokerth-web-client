@@ -224,6 +224,7 @@ export const strings = {
     loginOfflineDesc:'Một mình đấu với bot',
     loginLanTitle:'LAN / Máy chủ riêng',
     loginLanDesc:'Máy chủ riêng · mạng cục bộ',
+    liveTables:'{n} bàn đang chơi', liveWaiting:'{n} người chơi đang chờ',
     liveOnline:'{n} người chơi trực tuyến', liveToday:'{n} ván hôm nay',
     loginChange:'Thay đổi',
     preActionTitle:'Xem trước hành động', preActionHint:'chạm vào lá bài để đóng',

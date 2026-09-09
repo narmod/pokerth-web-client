@@ -230,6 +230,7 @@ export const strings = {
     loginOfflineDesc:'Sam przeciw botom',
     loginLanTitle:'LAN / Serwer dedykowany',
     loginLanDesc:'Prywatny serwer · sieć lokalna',
+    liveTables:'{n} stołów w grze', liveWaiting:'{n} graczy czeka',
     liveOnline:'{n} graczy online', liveToday:'{n} gier dzisiaj',
     loginChange:'Zmień',
     preActionTitle:'Podgląd akcji', preActionHint:'dotknij kart, aby zamknąć',

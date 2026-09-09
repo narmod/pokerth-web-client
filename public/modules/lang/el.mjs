@@ -224,6 +224,7 @@ export const strings = {
     loginOfflineDesc:'Μόνος εναντίον bots',
     loginLanTitle:'LAN / Αποκλειστικός διακομιστής',
     loginLanDesc:'Ιδιωτικός διακομιστής · τοπικό δίκτυο',
+    liveTables:'{n} ενεργά τραπέζια', liveWaiting:'{n} παίκτες περιμένουν',
     liveOnline:'{n} παίκτες συνδεδεμένοι', liveToday:'{n} παιχνίδια σήμερα',
     loginChange:'Αλλαγή',
     preActionTitle:'Προεπισκόπηση ενεργειών', preActionHint:'πάτα τα φύλλα για κλείσιμο',

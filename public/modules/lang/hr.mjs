@@ -224,6 +224,7 @@ export const strings = {
     loginOfflineDesc:'Sam protiv botova',
     loginLanTitle:'LAN / Namjenski poslužitelj',
     loginLanDesc:'Privatni poslužitelj · lokalna mreža',
+    liveTables:'{n} stolova u tijeku', liveWaiting:'{n} igrača čeka',
     liveOnline:'{n} igrača na mreži', liveToday:'{n} igara danas',
     loginChange:'Promijeni',
     preActionTitle:'Pregled poteza', preActionHint:'dodirni karte za zatvaranje',

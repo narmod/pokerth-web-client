@@ -22,6 +22,12 @@ highlights below.
   `pokerth.net/pthranking/live` counters. Hidden when stale, unreachable or
   switched off. Admin card (Clients tab): toggle, endpoint, refresh interval
   (30–900 s, default 60) and a Test button.
+  Reworked in `web.58` after the worded line was being cut off mid-sentence
+  on a phone: all four counters the website's own Game-Server Status box
+  carries — players online, tables running, players waiting, games today — are
+  now shown as an icon and a figure each, with the same icons, and the wording
+  moved to each item's title and aria-label so it stays translated and stays
+  read out. Counters the server does not publish are simply left out.
 - **World clock above the admin tabs** (`web.47`–`web.48`) — one analog dial
   per region, up to twelve from a catalogue of thirty-eight, ordered by UTC
   offset around a settable reference zone; a region turns green between 18:00

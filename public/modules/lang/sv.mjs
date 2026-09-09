@@ -223,6 +223,7 @@ export const strings = {
     loginOfflineDesc:'Ensam mot bottar',
     loginLanTitle:'LAN / Dedikerad server',
     loginLanDesc:'Privat server · lokalt nätverk',
+    liveTables:'{n} bord igång', liveWaiting:'{n} spelare väntar',
     liveOnline:'{n} spelare online', liveToday:'{n} spel i dag',
     loginChange:'Ändra',
     preActionTitle:'Förhandsvisning av åtgärder', preActionHint:'tryck på korten för att stänga',

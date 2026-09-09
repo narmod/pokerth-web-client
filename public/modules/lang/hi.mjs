@@ -228,6 +228,7 @@ export const strings = {
     loginOfflineDesc:'बॉट्स के विरुद्ध अकेले',
     loginLanTitle:'LAN / समर्पित सर्वर',
     loginLanDesc:'निजी सर्वर · लोकल नेटवर्क',
+    liveTables:'{n} टेबल चल रही हैं', liveWaiting:'{n} खिलाड़ी प्रतीक्षा में',
     liveOnline:'{n} खिलाड़ी ऑनलाइन', liveToday:'आज {n} खेल',
     loginChange:'बदलें',
     blindsNextTip:'{n} हाथ में', blindsEveryMin:'हर {n} मिनट',

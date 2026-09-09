@@ -224,6 +224,7 @@ export const strings = {
     loginOfflineDesc:'Vienas prieš botus',
     loginLanTitle:'LAN / Skirtasis serveris',
     loginLanDesc:'Privatus serveris · vietinis tinklas',
+    liveTables:'{n} vykstantys stalai', liveWaiting:'{n} žaidėjų laukia',
     liveOnline:'{n} žaidėjų prisijungę', liveToday:'{n} žaidimų šiandien',
     loginChange:'Keisti',
     preActionTitle:'Veiksmų peržiūra', preActionHint:'palieskite kortas, kad uždarytumėte',

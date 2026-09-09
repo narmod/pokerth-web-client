@@ -135,6 +135,7 @@ export const strings = {
     loginOfflineDesc:'Solo vs mga bot',
     loginLanTitle:'LAN / Dedicated server',
     loginLanDesc:'Pribadong server · lokal na network',
+    liveTables:'{n} mesa na tumatakbo', liveWaiting:'{n} manlalaro naghihintay',
     liveOnline:'{n} manlalaro online', liveToday:'{n} laro ngayon',
     loginChange:'Palitan',
     srvSegNet:'Internet', srvSegOffline:'Pagsasanay', srvSegLan:'LAN',

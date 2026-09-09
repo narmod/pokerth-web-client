@@ -133,6 +133,7 @@ export const strings = {
     loginOfflineDesc:'انفرادی با ربات‌ها',
     loginLanTitle:'LAN / سرور اختصاصی',
     loginLanDesc:'سرور خصوصی · شبکهٔ محلی',
+    liveTables:'{n} میز فعال', liveWaiting:'{n} بازیکن در انتظار',
     liveOnline:'{n} بازیکن آنلاین', liveToday:'{n} بازی امروز',
     loginChange:'تغییر',
     srvSegNet:'اینترنت', srvSegOffline:'تمرین', srvSegLan:'LAN',

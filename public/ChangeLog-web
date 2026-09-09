@@ -1,4 +1,7 @@
-2026-09-08 version 2.1.8-web (current series):
+2026-09-09 version 2.1.8-web (current series):
+- improvement: the live figures on the opening screen now show all four counters the website does - players online, tables running, players waiting and games today - as an icon and a number each, so nothing gets cut off on a narrow phone screen
+
+2026-09-08 version 2.1.8-web:
 - improvement: the Ivoire & Chene table now uses the finer colours of the official client - the chat, log and info boxes sit a shade deeper than the felt, so light things on them (emoji, avatars) keep an edge, and the muted text, the side-pot winner and the send symbol read more clearly on cream
 
 2026-09-08 version 2.1.8-web:

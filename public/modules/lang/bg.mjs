@@ -224,6 +224,7 @@ export const strings = {
     loginOfflineDesc:'Сам срещу ботове',
     loginLanTitle:'LAN / Отделен сървър',
     loginLanDesc:'Частен сървър · локална мрежа',
+    liveTables:'{n} активни маси', liveWaiting:'{n} играчи чакат',
     liveOnline:'{n} играчи онлайн', liveToday:'{n} игри днес',
     loginChange:'Промяна',
     preActionTitle:'Преглед на действията', preActionHint:'докосни картите за затваряне',

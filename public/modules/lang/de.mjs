@@ -231,6 +231,7 @@ export const strings = {
     loginOfflineDesc:'Solo gegen Bots',
     loginLanTitle:'LAN / Dedizierter Server',
     loginLanDesc:'Privater Server · lokales Netzwerk',
+    liveTables:'{n} laufende Tische', liveWaiting:'{n} Spieler warten',
     liveOnline:'{n} Spieler online', liveToday:'{n} Spiele heute',
     loginChange:'Ändern',
     preActionTitle:'Aktionsvorschau', preActionHint:'Karten antippen zum Schließen',

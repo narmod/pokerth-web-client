@@ -225,6 +225,7 @@ export const strings = {
     loginOfflineDesc:'பாட்களுக்கு எதிராக தனியாக',
     loginLanTitle:'LAN / பிரத்யேக சேவையகம்',
     loginLanDesc:'தனிப்பட்ட சேவையகம் · உள்ளூர் வலையமைப்பு',
+    liveTables:'{n} மேசைகள் நடக்கின்றன', liveWaiting:'{n} வீரர்கள் காத்திருக்கிறார்கள்',
     liveOnline:'{n} வீரர்கள் ஆன்லைனில்', liveToday:'இன்று {n} ஆட்டங்கள்',
     loginChange:'மாற்று',
     preActionTitle:'செயல் முன்னோட்டம்', preActionHint:'மூட அட்டைகளைத் தொடவும்',

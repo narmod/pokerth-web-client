@@ -225,6 +225,7 @@ export const strings = {
     loginOfflineDesc:'Nad aonar an aghaidh bhotaichean',
     loginLanTitle:'LAN / Frithealadair sònraichte',
     loginLanDesc:'Frithealaiche prìobhaideach · lìonra ionadail',
+    liveTables:'{n} bùird a’ ruith', liveWaiting:'{n} cluicheadairean a’ feitheamh',
     liveOnline:'{n} cluicheadairean air-loidhne', liveToday:'{n} geamannan an-diugh',
     loginChange:'Atharraich',
     preActionTitle:'Ro-shealladh gnìomh', preActionHint:'thoir gnogadh air na cairtean gus dùnadh',

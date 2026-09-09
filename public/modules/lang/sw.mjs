@@ -135,6 +135,7 @@ export const strings = {
     loginOfflineDesc:'Peke yako dhidi ya boti',
     loginLanTitle:'LAN / Seva maalum',
     loginLanDesc:'Seva binafsi · mtandao wa ndani',
+    liveTables:'meza {n} zinaendelea', liveWaiting:'wachezaji {n} wanasubiri',
     liveOnline:'wachezaji {n} mtandaoni', liveToday:'michezo {n} leo',
     loginChange:'Badilisha',
     srvSegNet:'Intaneti', srvSegOffline:'Mazoezi', srvSegLan:'LAN',
