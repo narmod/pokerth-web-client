@@ -338,6 +338,14 @@ highlights below.
   (`scale 1.03`, 180 ms OutQuad) is applied to the seat plate.
 
 ### Fixed
+- **`/live` lobby was narrow and the chat sat over the top** (`web.80`) — two
+  causes. `#live-lobby` carries the `.live-only` class, which sets
+  `align-items:center` for the small inline bits that share it; inherited by a
+  column container that shrank both panels to their content width and centred
+  them in an empty lobby. And the chat panel keeps the client's floating-window
+  placement, so it drew itself fixed across the top whatever its parent was.
+  The panels now stretch, and the docked chat is reset to an ordinary block —
+  the same reset the client applies for its own lobby grid.
 - **`/live` lobby fell apart when the chat failed to dock** (`web.79`) —
   `#lobby-chat-panel` is a child of `#s-lobby`, not of the `.lobby-body` live
   mode hides, so an undocked panel stayed visible and spread across the top of

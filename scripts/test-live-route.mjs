@@ -142,6 +142,14 @@ check('the dock is re-asserted, not set once',
 // the .lobby-body that live mode hides.
 check('an undocked chat panel is hidden, not left loose',
   /:root\[data-live="1"\] #s-lobby > #lobby-chat-panel \{ display: none !important; \}/.test(css));
+// .live-only carries align-items:center for the small inline bits sharing the
+// class; inherited by the lobby it shrank both panels to their content width.
+check('the lobby panels stretch to full width',
+  /:root\[data-live="1"\] \.live-lobby \{[\s\S]{0,420}align-items: stretch !important/.test(css));
+// Docked, the chat must stop being a floating window or it draws itself over
+// the top of the lobby whatever its parent is.
+check('the docked chat is taken out of floating placement',
+  /\.live-lobby #lobby-chat-panel \{[\s\S]{0,400}position: static !important/.test(css));
 check('the lobby layout cannot be overridden into a row',
   /flex-direction: column !important/.test(css));
 check('the language buttons have visible content of their own',

@@ -11486,6 +11486,11 @@ html[data-seat-struct="qml"] .seat-narrow .seat-name .seat-note-stars { font-siz
 :root[data-live="1"] .live-lobby {
   --live-chat-h: 200px;
   display: flex !important; flex-direction: column !important;
+  /* .live-only sets align-items:center for the small inline bits that share
+     the class. Inherited here it shrank both panels to their content width
+     and centred them, which is what left the list floating in the middle of
+     an empty lobby. */
+  align-items: stretch !important; align-self: stretch; width: 100%;
   flex: 1; min-height: 0; gap: 0; padding: 12px;
 }
 /* Same frame as the lobby's own columns: one border, 8px radius, panel
@@ -11502,10 +11507,19 @@ html[data-seat-struct="qml"] .seat-narrow .seat-name .seat-note-stars { font-siz
 }
 /* The chat panel is the client's own node, moved here. Its inline styles cap
    the height for the dropdown it normally is, so they have to be overridden. */
+/* The chat panel is a floating window elsewhere in the client: fixed, placed
+   by inline styles, raised above everything. Docked here it has to be an
+   ordinary block again, or it draws itself across the top of the lobby
+   whatever its parent is — the client does the same reset for its own grid. */
 :root[data-live="1"] .live-lobby #lobby-chat-panel {
   display: flex !important; flex: 1; min-height: 0;
-  max-height: none !important; border-radius: 0;
-  background: transparent; border: 0;
+  position: static !important; inset: auto !important;
+  transform: none !important; z-index: auto !important;
+  left: auto !important; top: auto !important;
+  right: auto !important; bottom: auto !important;
+  width: auto !important; height: auto !important;
+  max-height: none !important; box-shadow: none !important;
+  border-radius: 0; background: transparent; border: 0;
 }
 /* Cancel the column padding so the header spans the full width, exactly as
    the lobby does for its own panels. */
