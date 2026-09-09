@@ -137,6 +137,15 @@ check('the dock is re-asserted, not set once',
     fs.readFileSync(path.join(root, 'public', 'modules', 'live', 'chat-pane.mjs'), 'utf8')) &&
   /keepDocked\(\);/.test(
     fs.readFileSync(path.join(root, 'public', 'modules', 'live', 'lobby.mjs'), 'utf8')));
+// If the dock fails for any reason, the chat must disappear rather than smear
+// itself across the top of the lobby: the panel is a child of #s-lobby, not of
+// the .lobby-body that live mode hides.
+check('an undocked chat panel is hidden, not left loose',
+  /:root\[data-live="1"\] #s-lobby > #lobby-chat-panel \{ display: none !important; \}/.test(css));
+check('the lobby layout cannot be overridden into a row',
+  /flex-direction: column !important/.test(css));
+check('the language buttons have visible content of their own',
+  (html.match(/data-i18n-title="advLanguage">\u{1F310}<\/button>/gu) || []).length === 3);
 check('the flag has a size in the header buttons',
   /\[id\^="lang-toggle-"\] svg \{[\s\S]{0,80}width: 22px/.test(css));
 check('chat pane is wired from the live entry point',

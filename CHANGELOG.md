@@ -338,6 +338,18 @@ highlights below.
   (`scale 1.03`, 180 ms OutQuad) is applied to the seat plate.
 
 ### Fixed
+- **`/live` lobby fell apart when the chat failed to dock** (`web.79`) —
+  `#lobby-chat-panel` is a child of `#s-lobby`, not of the `.lobby-body` live
+  mode hides, so an undocked panel stayed visible and spread across the top of
+  the lobby. It is now hidden unless it is actually inside the strip: the
+  layout fails closed. The column direction is also enforced, so a stale or
+  half-deployed stylesheet cannot lay the strip out as a side column, and the
+  dock is re-checked once a second for the case where a quiet server produces
+  no repaint for minutes.
+- **`/live` language buttons looked absent** (`web.79`) — they carried no
+  content of their own and relied on `i18n.mjs` filling in the flag, which only
+  happens inside `setLang`. They now ship a globe glyph that the flag replaces
+  when that sync runs.
 - **`/live` chat strip sat empty** (`web.77`) — `pokerth.js` has a `reparent()`
   that appends `#lobby-chat-panel` back into `.lobby-grid` whenever the lobby
   re-lays itself out, which undid the move as soon as it ran. The dock is now

@@ -109,4 +109,8 @@ export function initLiveChatPane() {
   keepDocked();
   applyHeight(host, storedHeight());
   armDrag(host, grip);
+  // The table list re-asserts the dock on every repaint, but a quiet server
+  // may not repaint for minutes while the client still re-lays the lobby out.
+  // A one-second identity check costs nothing and closes that window.
+  setInterval(keepDocked, 1000);
 }

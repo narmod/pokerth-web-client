@@ -11476,10 +11476,17 @@ html[data-seat-struct="qml"] .seat-narrow .seat-name .seat-note-stars { font-siz
 /* Two columns: the table list, a drag grip, and the lobby chat on the right —
    same arrangement as the full client and the QML lobby. The width lives in
    --live-chat-w so the grip only has to move one custom property. */
+/* The chat panel is a direct child of #s-lobby, not of .lobby-body, so hiding
+   the body does not hide it. Docked, its parent is #live-chat-side and this
+   selector no longer matches. Undocked — the client's reparent() ran, the
+   module failed, a stale file is being served — it is hidden instead of
+   smeared across the top of the lobby. A layout must fail closed. */
+:root[data-live="1"] #s-lobby > #lobby-chat-panel { display: none !important; }
+
 :root[data-live="1"] .live-lobby {
   --live-chat-h: 200px;
-  display: flex; flex-direction: column; flex: 1; min-height: 0;
-  gap: 0; padding: 12px;
+  display: flex !important; flex-direction: column !important;
+  flex: 1; min-height: 0; gap: 0; padding: 12px;
 }
 /* Same frame as the lobby's own columns: one border, 8px radius, panel
    background, sp-3 of padding — so /live reads as the same product. */
