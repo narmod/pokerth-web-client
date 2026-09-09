@@ -345,6 +345,15 @@ highlights below.
   (`scale 1.03`, 180 ms OutQuad) is applied to the seat plate.
 
 ### Fixed
+- **The table was re-scaled between hands while spectating** (`web.82`) — a
+  seated player keeps an always-present action bar precisely so `#g-actions`
+  cannot collapse and force a re-layout, but that guard is off for spectators,
+  who have no bar to show. So the box went from one waiting line to nothing
+  and back, the zone lost 23px each time and every seat and the community row
+  were recomputed: zone 1263x764 to 1263x741, boxScale 1.579 to 1.531,
+  commScale 1.775 to 1.719. The height of one waiting line is now reserved
+  while spectating. The seat geometry itself was never at fault — plate
+  dimensions and the community shift were identical in both readings.
 - **`/live` lobby was narrow and the chat sat over the top** (`web.80`) — two
   causes. `#live-lobby` carries the `.live-only` class, which sets
   `align-items:center` for the small inline bits that share it; inherited by a

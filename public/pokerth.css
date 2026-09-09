@@ -4897,6 +4897,22 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
   color: var(--text); font-size: var(--fs-sm);
   font-style: italic; padding: 4px 0;
 }
+/* ── Spectateur : hauteur de #g-actions réservée ──────────────────────────
+   Un joueur assis garde une barre d'action TOUJOURS présente pendant la
+   partie, précisément pour que #g-actions ne s'effondre pas et ne relance
+   pas le calcul de la table (cf. _pinShow dans renderGameWaiting). Ce garde
+   est explicitement désactivé en spectateur — et un spectateur n'a pas de
+   barre à afficher. Résultat : #g-actions passait de « une ligne d'attente »
+   à « rien » entre les mains, la zone perdait 23 px et TOUTE la table était
+   redimensionnée (zone 1263x764 -> 1263x741, boxScale 1.579 -> 1.531,
+   commScale 1.775 -> 1.719 — relevé narmod, table WEC 22:00).
+   On réserve donc la hauteur d'une ligne .waiting-msg : la zone reste
+   constante que le message soit là ou non, sans donner au spectateur la
+   moindre commande de jeu. */
+body.spectator-nosend #g-actions {
+  min-height: calc(var(--fs-sm) * 1.4 + 8px);
+  box-sizing: content-box;
+}
 /* ══ PASSWORD PROMPT ══ */
 #password-prompt {
   position: fixed; inset: 0; z-index: 200;
