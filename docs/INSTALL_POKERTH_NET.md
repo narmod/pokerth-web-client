@@ -170,3 +170,34 @@ acts after a short notice, calling it off if someone connects in the meantime.
   zero-upstream-work path, and the session-grace behaviour is a feature the direct
   `/pthlive` endpoint does not provide.
 
+## Embedding the spectator view on the website
+
+`/live` is the spectator client. Visited directly it is a standalone page;
+with `?embed=1` it is meant to sit in an iframe on pokerth.net.
+
+```html
+<iframe id="pth-live" src="/live?embed=1" allow="autoplay"
+        style="width:100%;border:0;height:640px" title="PokerTH live"></iframe>
+<script>
+  addEventListener('message', function (ev) {
+    var d = ev.data;
+    if (!d || d.channel !== 'pokerth-live') return;
+    if (d.type === 'height') {
+      document.getElementById('pth-live').style.height = d.height + 'px';
+    }
+  });
+</script>
+```
+
+The frame posts `{channel:'pokerth-live', type:'ready'}` once it has loaded and
+`{channel:'pokerth-live', type:'height', height:<px>}` whenever its content
+changes size, so the host page can size it instead of guessing. Sound starts
+off; a visitor who turns it on keeps it.
+
+To point the frame at one table, add `?table=<gameId>`: in live mode that
+spectates it as soon as the lobby announces it, rather than taking a seat.
+
+Same-origin is the point. The route is served by the web client itself, so it
+follows every release, and the settings (theme, deck, table) are the ones the
+admin page already sets. Which transport `/live` uses — direct `/pthlive` or
+through this proxy — is its own setting under Servers, *How?*.

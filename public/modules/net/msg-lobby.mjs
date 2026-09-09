@@ -762,7 +762,10 @@ function onGameListNew(sub) {
       // Defer slightly so renderGames() has painted and games[id]
       // is fully populated before joinGame reads it.
       setTimeout(function(){
-        try { if (App && App.joinGame) App.joinGame(_aj); } catch(e) {}
+        try {
+          if (window.LIVE_MODE && App && App.spectateGame) App.spectateGame(_aj);
+          else if (App && App.joinGame) App.joinGame(_aj);
+        } catch(e) {}
       }, 150);
     }
     // \u2500\u2500 Auto-join by game NAME (invite links #join=<name>) \u2500\u2500
@@ -777,7 +780,10 @@ function onGameListNew(sub) {
       addChat(null, t('sharedTableJoining'), 'sys', { key: 'sharedTableJoining' });
       var _ajn = id;
       setTimeout(function(){
-        try { if (App && App.joinGame) App.joinGame(_ajn); } catch(e) {}
+        try {
+          if (window.LIVE_MODE && App && App.spectateGame) App.spectateGame(_ajn);
+          else if (App && App.joinGame) App.joinGame(_ajn);
+        } catch(e) {}
       }, 150);
     }
     return;

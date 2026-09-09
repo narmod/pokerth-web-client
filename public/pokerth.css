@@ -11707,3 +11707,13 @@ html[data-seat-struct="qml"] .seat-narrow .seat-name .seat-note-stars { font-siz
 @media (max-width: 420px) {
   :root[data-live="1"] .live-stats-host #lc-live { grid-template-columns: auto; }
 }
+
+/* ── Embedded on the website (?embed=1) ───────────────────────────────────
+   Same page as /live, inside an iframe on pokerth.net. Only what has no
+   meaning in a frame is removed: the page cannot be installed as an app from
+   inside one, and the host page owns the outer scroll — the frame reports its
+   height instead of growing its own scrollbar. */
+:root[data-embed="1"], :root[data-embed="1"] body { overflow: hidden; }
+:root[data-embed="1"] .screen { height: auto; min-height: 420px; }
+:root[data-embed="1"] #install-btn,
+:root[data-embed="1"] .connect-footer { display: none !important; }

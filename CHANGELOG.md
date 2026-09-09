@@ -16,6 +16,14 @@ release. Per-build detail is on the
 highlights below.
 
 ### Added
+- **`/live?embed=1` — the spectator view in an iframe** (`web.83`) — the same
+  page, with the three things a frame needs and nothing else: it reports its
+  height to the host page over `postMessage` (channel `pokerth-live`, plus a
+  `ready` message once loaded) so the site sizes the frame instead of guessing,
+  sound starts off for a visitor who has never chosen, and nothing offers to
+  install a page that is not the destination. `?table=<gameId>` now spectates
+  that table in live mode rather than taking a seat, so the site can embed one
+  specific table. Host snippet in `docs/INSTALL_POKERTH_NET.md`.
 - **`/live` — a word while the join happens** (`web.81`) — clicking Spectate
   now raises a dialog saying the table is being joined and that the viewer is
   waiting for the current hand to finish, with Cancel to back out. Joining
