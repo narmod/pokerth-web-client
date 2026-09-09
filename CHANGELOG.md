@@ -16,6 +16,12 @@ release. Per-build detail is on the
 highlights below.
 
 ### Added
+- **`/live` — the login card shows the server** (`web.74`) — the card is
+  titled *Live / Spectator Tool* and carries the four figures the site's own
+  Game-Server Status box carries: players online, tables running, players
+  waiting, games today. They are the client's own `#lc-live` node, moved into
+  the card from the Internet card of step 1 that live mode hides — the same
+  counters, the same relay, the same polling rules, no second implementation.
 - **`/live` — its own transport setting** (`web.73`) — Servers → *How?* gains a
   choice for the embedded spectator mode: same as the Internet mode (default),
   Direct WS, or Via proxy. An install running beside the game server and one

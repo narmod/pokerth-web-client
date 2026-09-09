@@ -11601,3 +11601,19 @@ html[data-seat-struct="qml"] .seat-narrow .seat-name .seat-note-stars { font-siz
 :root[data-live="1"] .live-lobby #lobby-chat-panel .chat-input,
 :root[data-live="1"] .live-lobby #lobby-chat-panel .chat-emoji-panel,
 :root[data-live="1"] .live-lobby #lobby-wait-actions { display: none !important; }
+
+/* ── Live mode: the login card ────────────────────────────────────────────
+   The card carries the server's own figures — players online, tables running,
+   players waiting, games today — rather than a bare status line. They are the
+   client's #lc-live node, moved here from the Internet card of step 1. */
+:root[data-live="1"] .live-stats-host {
+  display: flex; justify-content: center; flex-wrap: wrap;
+  margin: 14px 0 4px;
+}
+:root[data-live="1"] .live-stats-host #lc-live {
+  display: flex; flex-wrap: wrap; justify-content: center;
+  gap: 2px 0; font-size: .82rem; opacity: .9;
+}
+/* The counters carry their own inline margin for the one-line layout of the
+   Internet card; centred here, the trailing gap would push them off-centre. */
+:root[data-live="1"] .live-stats-host .lcl:last-child { margin-right: 0 !important; }

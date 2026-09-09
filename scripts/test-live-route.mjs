@@ -64,6 +64,16 @@ check('sound button is kept at the table', !/:root\[data-live="1"\] #sound-toggl
 check('CSS braces balanced',
   (css.match(/\{/g) || []).length === (css.match(/\}/g) || []).length);
 
+// ── Login card (2.1.8-web.74) ──
+check('a host for the server figures sits in the login card',
+  /class="live-only live-stats-host" id="live-stats-host"/.test(html));
+check('the card is retitled for the spectator tool',
+  /'Live \/ Spectator Tool'/.test(live));
+check('the figures node is moved, not rebuilt',
+  /getElementById\('lc-live'\)/.test(live) && !/lcl'/.test(live));
+check('the moved figures are styled where they land',
+  /:root\[data-live="1"\] \.live-stats-host/.test(css));
+
 // ── Guest-only login screen (2.1.8-web.67) ──
 check('step 1 is skipped in live mode', /:root\[data-live="1"\] #login-step1 \{ display: none/.test(css));
 check('step 2 is forced visible', /:root\[data-live="1"\] #login-step2 \{ display: block/.test(css));

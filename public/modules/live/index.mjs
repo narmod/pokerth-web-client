@@ -57,6 +57,21 @@ if (window.LIVE_MODE) {
     }, true);
   }
 
+  // ── Login card: this is the spectator tool, and it shows the server ──
+  // The counters are the client's own #lc-live node, driven by
+  // ui/live-stats.mjs. It normally sits in the Internet card of step 1, which
+  // live mode hides, so the node is moved into the visible card rather than a
+  // second one being built — the module polls only while its element is on
+  // screen, so moving it is also what keeps it polling.
+  function dressLoginCard() {
+    const sub = document.querySelector('#s-connect .card-subtitle');
+    if (sub) sub.textContent = 'Live / Spectator Tool';
+
+    const host = document.getElementById('live-stats-host');
+    const stats = document.getElementById('lc-live');
+    if (host && stats && stats.parentNode !== host) host.appendChild(stats);
+  }
+
   // The nickname is only known once the guest login round-trip has completed,
   // and the client emits no event for it. A one-second poll that writes only
   // when the value actually changed is cheaper — and far less brittle — than
@@ -67,6 +82,7 @@ if (window.LIVE_MODE) {
     setInterval(syncIdentity, 1000);
     armLoginGuard();
     forceGuestLogin();
+    dressLoginCard();
     initLiveLobby();
     initLiveChatPane();
   });
