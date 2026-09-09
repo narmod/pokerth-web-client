@@ -14,7 +14,7 @@ import { Proto } from './proto.mjs';
 import { MSG } from './messages.mjs';
 import { send } from './session.mjs';
 import { _pthAssembleDataUrl, _pthCachePut } from './avatar-cache.mjs';
-import { renderGames } from '../ui/lobby.mjs';
+import { renderGames, renderGameInfoPanel } from '../ui/lobby.mjs';
 
 const T = MSG.T;
 
@@ -146,6 +146,19 @@ function onAvatarEnd(sub) {
   if (typeof window.refreshMyAvatar === 'function') window.refreshMyAvatar();
   // Rafraîchir aussi un panneau « joueurs à cette table » ouvert.
   if (S._openTables.size) renderGames();
+  // ── Surfaces du lobby ──────────────────────────────────────────────────
+  // La liste « Joueurs en ligne » et le panneau « Infos de partie » sont
+  // peints dès que le pseudo est connu, donc AVANT la fin du transfert de
+  // l'image. Sans repeinture ici, ils gardent l'initiale (ou le logo) alors
+  // que l'avatar est disponible et déjà affiché sur les sièges — écart
+  // visible surtout en LAN, où le repli est l'initiale. Même déclencheur
+  // que les sièges, aucun état supplémentaire.
+  try {
+    const _pp = document.getElementById('players-panel');
+    if (_pp && _pp.style.display !== 'none' &&
+        typeof window.renderPlayersList === 'function') window.renderPlayersList();
+  } catch (e) {}
+  if (S._selectedGame != null) { try { renderGameInfoPanel(S._selectedGame); } catch (e) {} }
   if (hashHex) delete S._pthAvatarReqIdToHash[reqId];
 }
 

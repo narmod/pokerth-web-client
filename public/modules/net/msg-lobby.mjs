@@ -600,6 +600,9 @@ function onPlayerInfoReply(sub) {
             if (typeof window._renderSeats === 'function') window._renderSeats();
             if (typeof window.refreshMyAvatar === 'function') window.refreshMyAvatar();
             if (S._openTables.size) renderGames();
+            // Panneau « Infos de partie » : l'image restaurée du cache doit y
+            // apparaître aussi (la liste des joueurs est repeinte plus bas).
+            if (S._selectedGame != null) { try { renderGameInfoPanel(S._selectedGame); } catch (e) {} }
           }
         }
         // ── Step 2: cache miss -> kick off an AvatarRequest. Dedup

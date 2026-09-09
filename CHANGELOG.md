@@ -225,6 +225,18 @@ highlights below.
   (`scale 1.03`, 180 ms OutQuad) is applied to the seat plate.
 
 ### Fixed
+- **Lobby avatars stopped at the initial in the online-players list**
+  (`web.61`) — the players list on the left and the Game Info panel are
+  painted as soon as a nickname is known, i.e. *before* the avatar transfer
+  (`AvatarRequest`/`Header`/`Data`/`End`) completes, and `onAvatarEnd()` only
+  repainted the table seats, my own chip and an expanded table row. Both lobby
+  surfaces therefore kept the letter fallback for players whose picture had in
+  fact arrived and was already showing at the seats — most visible in LAN /
+  dedicated mode, where the no-avatar fallback is the initial rather than the
+  PokerTH logo. `onAvatarEnd()` now also repaints the players panel (when
+  open) and the selected game's info panel; the `localStorage` cache-hit path
+  in `onPlayerInfoReply()` does the same for the info panel. Rendering only,
+  no new state and no change to the transfer itself.
 - **Web changelog repeated one heading per deployment** (`web.60`) — the
   About window opens a new block on every `<date> version <x>:` line, and
   `public/ChangeLog-web` keeps one entry per deployment, so `2.1.8-web`

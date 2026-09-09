@@ -1,4 +1,7 @@
 2026-09-09 version 2.1.8-web (current series):
+- bugfix: in the lobby, a player's picture was missing from the online players list on the left - it stayed a plain letter while the very same player showed their picture in the game info panel; pictures that finish downloading now appear everywhere at once
+
+2026-09-09 version 2.1.8-web:
 - bugfix: in the About window, the web changelog repeated the same version heading - and its "New", "Improvements" and "Bug fixes" titles - once per deployment; every entry of a version is now gathered under a single heading, the way the changelog of the installable clients reads
 
 2026-09-09 version 2.1.8-web:
