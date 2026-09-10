@@ -11570,6 +11570,14 @@ html[data-seat-struct="qml"] .seat-narrow .seat-name .seat-note-stars { font-siz
 }
 /* The flag has no intrinsic size of its own here, and a button with an empty
    SVG is a button nobody can find. */
+/* These ids are the old header twins of the ••• menu entries, hidden at all
+   sizes by the rule near .header above and again in the mobile block. Live
+   mode reuses them on purpose — i18n.mjs already keeps the active flag in
+   sync with exactly these three — so it has to win those two rules back. */
+:root[data-live="1"] #lang-toggle-lobby,
+:root[data-live="1"] #lang-toggle-game,
+:root[data-live="1"] #s-lobby #lang-toggle-lobby { display: inline-flex !important; }
+
 :root[data-live="1"] .header [id^="lang-toggle-"] svg,
 :root[data-live="1"] .live-lang-row [id^="lang-toggle-"] svg {
   display: block; width: 22px; height: 22px;

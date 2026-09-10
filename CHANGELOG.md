@@ -377,6 +377,12 @@ highlights below.
   (`scale 1.03`, 180 ms OutQuad) is applied to the seat plate.
 
 ### Fixed
+- **`/live` language buttons never appeared** (`web.88`) — the three ids are
+  the old header twins of the ••• menu entries, hidden at all sizes by an
+  existing rule and again in the mobile block. Live mode reuses them
+  deliberately, since `i18n.mjs` already keeps the active flag in sync with
+  exactly those ids, so it now wins both rules back. The earlier test asserted
+  the markup existed, which is precisely how they shipped invisible twice.
 - **The language count was stated as 40 in entries written today** (`web.86`)
   — the catalogue has held 45 for a while; 40 was the figure at the time of
   the fourth RTL batch and it was repeated afterwards without anyone counting

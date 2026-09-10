@@ -154,6 +154,14 @@ check('the lobby layout cannot be overridden into a row',
   /flex-direction: column !important/.test(css));
 check('the language buttons have visible content of their own',
   (html.match(/data-i18n-title="advLanguage">\u{1F310}<\/button>/gu) || []).length === 3);
+// Those three ids are hidden at all sizes elsewhere in the stylesheet: they
+// are the old header twins of the ••• menu entries. Live mode reuses them for
+// the flag sync, so it must win those rules back — asserting the markup alone
+// is what let them ship invisible.
+check('the language buttons are shown again in live mode',
+  /:root\[data-live="1"\] #lang-toggle-lobby,[\s\S]{0,160}display: inline-flex !important/.test(css));
+check('including against the mobile rule',
+  /:root\[data-live="1"\] #s-lobby #lang-toggle-lobby/.test(css));
 check('the flag has a size in the header buttons',
   /\[id\^="lang-toggle-"\] svg \{[\s\S]{0,80}width: 22px/.test(css));
 check('chat pane is wired from the live entry point',
