@@ -1699,7 +1699,6 @@ function _cfgWebApply(o) {
   if (heldWeb) { _cfgWebForcePush = true; _cfgSyncPushSoon(1500); }
   if (!changed) return;
   try { applyAdvOpts(); } catch (e) {}
-  try { if (typeof window.applyAccessibilityPreferences === 'function') window.applyAccessibilityPreferences(); } catch (e) {}
   try { if (typeof applyTooltips === 'function') applyTooltips(); } catch (e) {}
   try {
     var sl = _cfgLs('pth_seat_layout'); if (sl) document.documentElement.setAttribute('data-seat-layout', sl);
@@ -11439,7 +11438,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.8-web.121'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.8-web.122'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

@@ -40,6 +40,23 @@ try {
 if (moduleLoaded && entries[0] && panel) {
   entries[0].click();
   check('entry point opens the panel without login', panel.hidden === false);
+  const standard = panel.querySelector('input[value="standard"]');
+  const close = panel.querySelector('#accessibility-close');
+  const reset = panel.querySelector('#accessibility-reset');
+  check('opening focuses the selected interface-size control',
+    w.document.activeElement === standard);
+  reset.focus();
+  reset.dispatchEvent(new w.KeyboardEvent('keydown', { key: 'Tab', bubbles: true }));
+  check('Tab stays inside the open accessibility panel',
+    w.document.activeElement === close);
+  close.focus();
+  close.dispatchEvent(new w.KeyboardEvent('keydown', { key: 'Tab', shiftKey: true, bubbles: true }));
+  check('Shift+Tab stays inside the open accessibility panel',
+    w.document.activeElement === reset);
+  reset.dispatchEvent(new w.KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+  check('Escape closes and restores focus to the exact invoking button',
+    panel.hidden === true && w.document.activeElement === entries[0]);
+  entries[0].click();
   const large = panel.querySelector('input[value="large"]');
   large.checked = true;
   large.dispatchEvent(new w.Event('change', { bubbles: true }));
