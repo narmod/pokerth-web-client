@@ -11761,10 +11761,11 @@ html[data-seat-struct="qml"] .seat-narrow .seat-name .seat-note-stars { font-siz
 /* ── Embedded on the website (?embed=1) ───────────────────────────────────
    Same page as /live, inside an iframe on pokerth.net. Only what has no
    meaning in a frame is removed: the page cannot be installed as an app from
-   inside one, and the host page owns the outer scroll — the frame reports its
-   height instead of growing its own scrollbar. */
+   inside one. The layout is plain /live — the host page sizes the frame, the
+   screens fill it, and the table list scrolls inside it. (Up to web.114 the
+   screens went height:auto here so the frame could report a content height;
+   that dropped the list's scroller and left the table view at 420px.) */
 :root[data-embed="1"], :root[data-embed="1"] body { overflow: hidden; }
-:root[data-embed="1"] .screen { height: auto; min-height: 420px; }
 :root[data-embed="1"] #install-btn,
 :root[data-embed="1"] .connect-footer { display: none !important; }
 

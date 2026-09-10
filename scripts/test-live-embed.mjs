@@ -1,8 +1,8 @@
 /* test-live-embed — ?embed=1, the layer that makes /live usable in an iframe.
  *
- * Three things change and nothing else: the host is told how tall the content
- * is, sound starts off, and nothing offers to install a page that is not the
- * destination. Everything else is plain /live.
+ * Two things change and nothing else: sound starts off, and nothing offers to
+ * install a page that is not the destination. The host sizes the frame and the
+ * layout is plain /live (the table list keeps its own scroller).
  */
 import { JSDOM } from 'jsdom';
 import fs from 'node:fs';
@@ -60,8 +60,8 @@ check('the embed flag lands on <html>',
 check('sound starts off', dom.window.localStorage.getItem('pth_sound') === '0');
 check('the host is told we are ready',
   posted.some(m => m && m.channel === 'pokerth-live' && m.type === 'ready'));
-check('the host is told how tall we are',
-  posted.some(m => m && m.type === 'height' && typeof m.height === 'number'));
+check('no height reports (the host sizes the frame)',
+  !posted.some(m => m && m.type === 'height'));
 
 // A visitor who already chose keeps their choice — this sets a default only.
 dom = new JSDOM('<!DOCTYPE html><body></body>', { url: 'https://pokerth.net/live?embed=1' });
@@ -82,6 +82,8 @@ check('the seated client still joins as before',
 // ── Stylesheet ──
 check('the frame does not grow its own scrollbar',
   /:root\[data-embed="1"\], :root\[data-embed="1"\] body \{ overflow: hidden; \}/.test(css));
+check('embed keeps the /live screen height (list scroller, full table view)',
+  !/:root\[data-embed="1"\] \.screen\b/.test(css));
 check('nothing offers to install an embedded page',
   /:root\[data-embed="1"\] #install-btn/.test(css));
 

@@ -554,6 +554,20 @@ highlights below.
   (`scale 1.03`, 180 ms OutQuad) is applied to the seat plate.
 
 ### Fixed
+- **`/live?embed=1` — table list clipped, no scroll** (`web.115`, reported by
+  Kai) — embed mode set `.screen { height: auto }` so the frame could report a
+  content height, but `html`/`body` stay pinned to the viewport with
+  `overflow: hidden`: `documentElement.scrollHeight` echoed whatever height the
+  host set (640 → 640, 1600 → 1600, content 2459), the ResizeObserver on
+  `<html>` never fired, and `#live-lobby-list` grew to its content so it had
+  no scroller left. The same rule left the table view at its 420px floor.
+  Measuring `body` or unpinning `html` would not do either — both give
+  max(content, frame), so the frame could grow but never shrink. Embed now
+  keeps the /live layout (screens fill the frame, the list scrolls inside),
+  the host sizes the iframe, and `embed.mjs` no longer posts `height`
+  messages (`ready`, muted-by-default sound and install suppression stay).
+  Host snippet in `docs/INSTALL_POKERTH_NET.md` updated;
+  `scripts/test-live-embed.mjs` checks the new contract.
 - **Hashed device ids were kept forever** (`web.110`) — daily visit buckets
   expire after `VISIT_RETENTION_DAYS` (400), but the all-time sets `allU`
   (hash → first day) and `allLU` (/live) were never pruned. `pruneVisitIds()`

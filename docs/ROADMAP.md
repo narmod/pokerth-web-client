@@ -264,8 +264,8 @@ use too. Items are grouped by status rather than fixed phases.
   embed hygiene landed in `2.1.8-web.65`, the slim header in `2.1.8-web.66`, the
   one-button guest login in `2.1.8-web.67`, the table list in `2.1.8-web.68`, the
   resizable chat column and Players tab in `2.1.8-web.71`/`72`, and its own
-  transport setting in `2.1.8-web.73`; `?embed=1` (auto-height,
-  deep link) in `2.1.8-web.83`; and the admin defaults for `/live` in `2.1.8-web.84`.
+  transport setting in `2.1.8-web.73`; `?embed=1` (deep link) in
+  `2.1.8-web.83`, host-sized with the list's own scroller since `2.1.8-web.115`; and the admin defaults for `/live` in `2.1.8-web.84`.
 
 - **Official QML client fidelity** — ongoing pixel-and-behaviour alignment of the in-game
   screen with the official QML client (action bar, mobile layouts, seat geometry).

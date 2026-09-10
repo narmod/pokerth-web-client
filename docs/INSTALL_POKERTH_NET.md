@@ -177,22 +177,17 @@ with `?embed=1` it is meant to sit in an iframe on pokerth.net.
 
 ```html
 <iframe id="pth-live" src="/live?embed=1" allow="autoplay"
-        style="width:100%;border:0;height:640px" title="PokerTH live"></iframe>
-<script>
-  addEventListener('message', function (ev) {
-    var d = ev.data;
-    if (!d || d.channel !== 'pokerth-live') return;
-    if (d.type === 'height') {
-      document.getElementById('pth-live').style.height = d.height + 'px';
-    }
-  });
-</script>
+        style="width:100%;border:0;height:clamp(560px, 100vh - 140px, 900px)"
+        title="PokerTH live"></iframe>
 ```
 
-The frame posts `{channel:'pokerth-live', type:'ready'}` once it has loaded and
-`{channel:'pokerth-live', type:'height', height:<px>}` whenever its content
-changes size, so the host page can size it instead of guessing. Sound starts
-off; a visitor who turns it on keeps it.
+The host page sizes the frame; `/live` fills it and scrolls inside, like the
+standalone page — the table list has its own scroller and the table view is
+laid out from the frame's height. The frame posts
+`{channel:'pokerth-live', type:'ready'}` once it has loaded, so the host can
+show it only then. Sound starts off; a visitor who turns it on keeps it.
+(Until `2.1.8-web.114` it also posted `type:'height'` messages; they only
+echoed the frame's own height and are no longer sent.)
 
 To point the frame at one table, add `?table=<gameId>`: in live mode that
 spectates it as soon as the lobby announces it, rather than taking a seat.
