@@ -59,6 +59,11 @@ function assertScaled(actual, baseline, multiplier, label) {
   assert.ok(actual >= baseline * (multiplier - 0.05), `${label}: expected ${multiplier}x ${baseline}, got ${actual}`);
 }
 
+function assertExactScaled(actual, baseline, multiplier, label) {
+  assert.ok(Math.abs(actual - baseline * multiplier) <= 0.05,
+    `${label}: expected exactly ${multiplier}x ${baseline}, got ${actual}`);
+}
+
 async function assertTextFits(page, selector, label) {
   const fits = await page.locator(selector).first().evaluate((element) =>
     element.scrollWidth <= element.clientWidth + 1 && element.scrollHeight <= element.clientHeight + 1);
@@ -227,9 +232,9 @@ try {
     await chooseInterfaceSize(page, 'connect', 'standard');
     const standardLogin = await visibleMetrics(page, ['.login-card .lc-t', '.login-card .lc-d', '.login-card .lc-ic']);
     await chooseInterfaceSize(page, 'connect', 'extra-large');
-    const largeLogin = await visibleMetrics(page, ['.login-card .lc-t', '.login-card .lc-d', '.login-card .lc-ic']);
+    const extraLargeLogin = await visibleMetrics(page, ['.login-card .lc-t', '.login-card .lc-d', '.login-card .lc-ic']);
     for (const selector of Object.keys(standardLogin)) {
-      assertScaled(largeLogin[selector].fontSize, standardLogin[selector].fontSize, 2, `mobile Extra Large ${selector}`);
+      assertScaled(extraLargeLogin[selector].fontSize, standardLogin[selector].fontSize, 2, `mobile Extra Large ${selector}`);
       await assertTextFits(page, selector, `mobile Extra Large ${selector}`);
     }
     assert.ok(await page.locator('#s-connect').evaluate((screen) => screen.scrollWidth <= screen.clientWidth + 1), 'mobile Extra Large login overflows horizontally');
@@ -244,9 +249,9 @@ try {
     const standardLobby = await chooseInterfaceSize(page, 'lobby', 'standard').then(() =>
       visibleMetrics(page, ['#g-filter-select', '#chat-in', '.lobby-footbar .lfb-create']));
     await chooseInterfaceSize(page, 'lobby', 'extra-large');
-    const largeLobby = await visibleMetrics(page, ['#g-filter-select', '#chat-in', '.lobby-footbar .lfb-create']);
+    const extraLargeLobby = await visibleMetrics(page, ['#g-filter-select', '#chat-in', '.lobby-footbar .lfb-create']);
     for (const selector of Object.keys(standardLobby)) {
-      assertScaled(largeLobby[selector].fontSize, standardLobby[selector].fontSize, 2, `mobile Extra Large ${selector}`);
+      assertScaled(extraLargeLobby[selector].fontSize, standardLobby[selector].fontSize, 2, `mobile Extra Large ${selector}`);
     }
     await assertTextFits(page, '.lobby-footbar .lfb-create', 'mobile Extra Large Create Table action');
     const lobbyOverflow = await page.locator('#s-lobby').evaluate((screen) => ({
@@ -282,6 +287,75 @@ try {
       await page.locator('.lobby-footbar .lfb-create').click();
       await page.locator('#s-create.active #create-form').waitFor();
       await assertEnhancedTargets(page, ['#s-create .cp-back', '#cf-name', '.cf-create-btn'], `${value} Create Table`);
+    }
+  });
+  await check('short mobile landscape keeps principal login and lobby header targets enhanced', async () => {
+    await page.setViewportSize({ width: 844, height: 390 });
+    for (const value of ['large', 'extra-large']) {
+      await page.evaluate(async () => (await import('/modules/net/session.mjs')).show('s-connect'));
+      await page.locator('#s-connect.active').waitFor();
+      await chooseInterfaceSize(page, 'connect', value);
+      await assertEnhancedTargets(page, ['#cl-links-connect > summary', '#accessibility-open-connect', '#connect-overflow-btn'], `${value} short-landscape login header`);
+      await page.locator('#accessibility-open-connect').click();
+      await page.locator('#accessibility-modal[aria-hidden="false"]').waitFor();
+      await page.keyboard.press('Escape');
+
+      await page.evaluate(async () => (await import('/modules/net/session.mjs')).show('s-lobby'));
+      await page.locator('#s-lobby.active').waitFor();
+      await assertEnhancedTargets(page, ['#live-leave-anchor', '#accessibility-open-lobby', '#l-overflow-btn'], `${value} short-landscape lobby header`);
+      await page.locator('#accessibility-open-lobby').click();
+      await page.locator('#accessibility-modal[aria-hidden="false"]').waitFor();
+      await page.keyboard.press('Escape');
+    }
+  });
+  await check('visible login branding and lobby headings follow the exact Interface size multiplier', async () => {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    const loginSelectors = ['.card-chip', '.card-suits-row', '.card-subtitle', '.login-card .lc-go'];
+    const loginSamples = {};
+    const backSamples = {};
+    for (const [value, multiplier] of [['standard', 1], ['large', 1.5], ['extra-large', 2]]) {
+      await page.evaluate(async () => (await import('/modules/net/session.mjs')).show('s-connect'));
+      await page.locator('#s-connect.active').waitFor();
+      await chooseInterfaceSize(page, 'connect', value);
+      loginSamples[value] = await visibleMetrics(page, loginSelectors);
+      for (const selector of loginSelectors) {
+        assert.equal(loginSamples[value][selector].visible, true, `${value} ${selector} is outside the viewport`);
+        if (selector === '.card-chip') {
+          assertExactScaled(loginSamples[value][selector].width, loginSamples.standard[selector].width, multiplier, `${value} login branding width`);
+          assertExactScaled(loginSamples[value][selector].height, loginSamples.standard[selector].height, multiplier, `${value} login branding height`);
+        } else {
+          assertExactScaled(loginSamples[value][selector].fontSize, loginSamples.standard[selector].fontSize, multiplier, `${value} ${selector}`);
+          if (selector !== '.login-card .lc-go') await assertTextFits(page, selector, `${value} ${selector}`);
+        }
+      }
+      await page.locator('.login-card').first().click();
+      backSamples[value] = await visibleMetrics(page, ['.login-back .lb-chev']);
+      assert.equal(backSamples[value]['.login-back .lb-chev'].visible, true, `${value} login chevron is outside the viewport`);
+      assertExactScaled(backSamples[value]['.login-back .lb-chev'].fontSize, backSamples.standard['.login-back .lb-chev'].fontSize, multiplier, `${value} login chevron`);
+      await page.locator('#nick').fill(`Scale ${value}`);
+      await page.locator('.login-back').click();
+      assert.ok(await page.locator('#s-connect').evaluate((screen) => screen.scrollWidth <= screen.clientWidth + 1), `${value} login branding overflows horizontally`);
+    }
+
+    await page.evaluate(async () => (await import('/modules/net/session.mjs')).show('s-lobby'));
+    await page.locator('#s-lobby.active').waitFor();
+    const headingSelectors = [
+      '#s-lobby .games-col > .g-chat-panel-header > span:first-child',
+      '#lobby-chat-panel > .g-chat-panel-header > span:first-child',
+      '#lobby-gameinfo > .g-chat-panel-header > span:first-child',
+    ];
+    const headingSamples = {};
+    for (const [value, multiplier] of [['standard', 1], ['large', 1.5], ['extra-large', 2]]) {
+      await chooseInterfaceSize(page, 'lobby', value);
+      headingSamples[value] = await visibleMetrics(page, headingSelectors);
+      for (const selector of headingSelectors) {
+        assert.equal(headingSamples[value][selector].visible, true, `${value} ${selector} is outside the viewport`);
+        assertExactScaled(headingSamples[value][selector].fontSize, headingSamples.standard[selector].fontSize, multiplier, `${value} ${selector}`);
+        await assertTextFits(page, selector, `${value} ${selector}`);
+      }
+      await page.locator('#g-filter-select').selectOption('1');
+      await page.locator('#chat-in').fill(`Scale ${value}`);
+      assert.ok(await page.locator('#s-lobby').evaluate((screen) => screen.scrollWidth <= screen.clientWidth + 1), `${value} lobby headings overflow horizontally`);
     }
   });
   await check('keyboard focus remains visible throughout login and lobby controls', async () => {
