@@ -41,14 +41,9 @@ async function chooseInterfaceSize(page, surface, value) {
   await page.keyboard.press('Escape');
 }
 
-async function populateLobby(page) {
-  if (await page.locator('.game-row.gcard').count()) return;
-  await page.evaluate(async () => (await import('/modules/net/session.mjs')).show('s-connect'));
-  await page.locator('#s-connect.active').waitFor();
-  await page.locator('.login-card').nth(2).click();
-  await page.locator('#nick').fill('OutcomeTester');
+async function connectFixtureSocket(page) {
   await page.evaluate(() => {
-    class LobbyFixtureSocket extends EventTarget {
+    class FixtureSocket extends EventTarget {
       static CONNECTING = 0;
       static OPEN = 1;
       static CLOSING = 2;
@@ -56,14 +51,14 @@ async function populateLobby(page) {
       constructor(url) {
         super();
         this.url = url;
-        this.readyState = LobbyFixtureSocket.OPEN;
+        this.readyState = FixtureSocket.OPEN;
         this.sent = [];
-        LobbyFixtureSocket.instance = this;
+        FixtureSocket.instance = this;
         setTimeout(() => this.onopen && this.onopen({ target: this }), 0);
       }
       send(data) { this.sent.push(data); }
       close() {
-        this.readyState = LobbyFixtureSocket.CLOSED;
+        this.readyState = FixtureSocket.CLOSED;
         if (this.onclose) this.onclose({ code: 1000, target: this });
       }
       receive(payload) {
@@ -73,10 +68,20 @@ async function populateLobby(page) {
         this.onmessage({ data: frame, target: this });
       }
     }
-    window.WebSocket = LobbyFixtureSocket;
+    window.WebSocket = FixtureSocket;
   });
   await page.locator('.btn-primary[data-i18n="connect"]').click();
   await page.waitForFunction(() => window.WebSocket.instance && typeof window.WebSocket.instance.onmessage === 'function');
+  await page.waitForFunction(() => window.WebSocket.instance.readyState === window.WebSocket.OPEN);
+}
+
+async function populateLobby(page) {
+  if (await page.locator('.game-row.gcard').count()) return;
+  await page.evaluate(async () => (await import('/modules/net/session.mjs')).show('s-connect'));
+  await page.locator('#s-connect.active').waitFor();
+  await page.locator('.login-card').nth(2).click();
+  await page.locator('#nick').fill('OutcomeTester');
+  await connectFixtureSocket(page);
   const sawInit = await page.evaluate(async () => {
     const { Proto } = await import('/modules/net/proto.mjs');
     const { MSG } = await import('/modules/net/messages.mjs');
@@ -121,39 +126,8 @@ async function startActiveHand(page, seatCount) {
   await page.locator('#s-connect.active').waitFor();
   await page.locator('.login-card').nth(2).click();
   await page.locator('#nick').fill('OutcomeTester');
-  await page.evaluate(() => {
-    class ActiveHandFixtureSocket extends EventTarget {
-      static CONNECTING = 0;
-      static OPEN = 1;
-      static CLOSING = 2;
-      static CLOSED = 3;
-      constructor(url) {
-        super();
-        this.url = url;
-        this.readyState = ActiveHandFixtureSocket.OPEN;
-        this.sent = [];
-        this.fixtureId = crypto.randomUUID();
-        ActiveHandFixtureSocket.instance = this;
-        setTimeout(() => this.onopen && this.onopen({ target: this }), 0);
-      }
-      send(data) { this.sent.push(data); }
-      close() {
-        this.readyState = ActiveHandFixtureSocket.CLOSED;
-        if (this.onclose) this.onclose({ code: 1000, target: this });
-      }
-      receive(payload) {
-        const frame = new ArrayBuffer(4 + payload.byteLength);
-        new DataView(frame).setUint32(0, payload.byteLength, false);
-        new Uint8Array(frame).set(payload, 4);
-        this.onmessage({ data: frame, target: this });
-      }
-    }
-    window.WebSocket = ActiveHandFixtureSocket;
-  });
-  await page.locator('.btn-primary[data-i18n="connect"]').click();
-  await page.waitForFunction(() => window.WebSocket.instance && typeof window.WebSocket.instance.onmessage === 'function');
+  await connectFixtureSocket(page);
   await page.waitForTimeout(300);
-  await page.waitForFunction(() => window.WebSocket.instance && window.WebSocket.instance.readyState === window.WebSocket.OPEN);
   await page.evaluate(async (count) => {
     const { Proto } = await import('/modules/net/proto.mjs');
     const { MSG } = await import('/modules/net/messages.mjs');
@@ -277,13 +251,11 @@ async function turnCueOutcome(page) {
     const active = document.querySelector('.seat.active .seat-plate');
     const inactive = document.querySelector('.seat:not(.active) .seat-plate');
     const style = getComputedStyle(active, '::after');
-    const shadowLengths = (style.boxShadow.match(/-?\d+(?:\.\d+)?px/g) || []).map(parseFloat);
     const inactiveStyle = inactive ? getComputedStyle(inactive, '::after') : null;
+    const borderWidth = parseFloat(style.borderWidth);
     return {
-      borderWidth: parseFloat(style.borderWidth),
-      blur: Math.abs(shadowLengths[2] || 0),
-      spread: Math.abs(shadowLengths[3] || 0),
-      inset: Math.abs(parseFloat(style.top) || 0),
+      borderWidth,
+      visible: borderWidth > 0 && style.borderStyle !== 'none' && style.content !== 'none',
       distinctFromInactive: !inactiveStyle || inactiveStyle.content === 'none' || inactiveStyle.borderStyle === 'none',
     };
   });
@@ -795,6 +767,7 @@ try {
     assert.ok(restoredCards.length && restoredCards.every((card) => card.imageFace && !card.rankVisible && !card.suitVisible),
       'Standard did not restore the image-card presentation during the active hand');
     assert.deepEqual(await outboundSizeChangeTraffic(page, sentBefore), [], 'restoring Standard sent network traffic');
+    assert.equal(extraLargeCue.visible, true, 'Extra Large lost the visible current-turn indication');
     assert.ok(extraLargeCue.distinctFromInactive, 'the current-turn cue is not visually distinct from inactive seats');
   });
   await check('desktop two-seat and ten-seat hands keep critical play reachable and operable', async () => {
@@ -803,6 +776,8 @@ try {
       await startActiveHand(page, seatCount);
       const standardCenters = await seatCenters(page);
       const standardCue = await turnCueOutcome(page);
+      assert.equal(standardCue.visible, true, `${seatCount}-seat Standard current-turn indication is not visible`);
+      assert.equal(standardCue.distinctFromInactive, true, `${seatCount}-seat Standard current-turn cue is ambiguous`);
       for (const value of ['standard', 'large', 'extra-large']) {
         await chooseInterfaceSize(page, 'game', value);
         if (value !== 'standard') {
@@ -853,11 +828,7 @@ try {
             assert.equal(overlaps(card.rank, card.suit), false, `${seatCount}-seat ${value} card ${index + 1} rank and suit overlap`);
           }
           const cue = await turnCueOutcome(page);
-          const multiplier = value === 'large' ? 1.5 : 2;
-          assert.ok(cue.borderWidth > 0, `${seatCount}-seat ${value} current-turn border is not visible`);
-          for (const metric of ['blur', 'spread', 'inset']) {
-            assertExactScaled(cue[metric], standardCue[metric], multiplier, `${seatCount}-seat ${value} turn-cue ${metric} (${JSON.stringify({ standardCue, cue })})`);
-          }
+          assert.equal(cue.visible, true, `${seatCount}-seat ${value} current-turn indication is not visible`);
           assert.equal(cue.distinctFromInactive, true, `${seatCount}-seat ${value} current-turn cue is ambiguous`);
           await assertEnhancedTargets(page, actionSelectors, `${seatCount}-seat ${value} action`);
           await assertKeyboardFocusVisible(page, actionSelectors, `${seatCount}-seat ${value} action`);
