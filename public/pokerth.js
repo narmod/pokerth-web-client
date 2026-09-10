@@ -6198,7 +6198,12 @@ const App = (() => {
           try { setStatus(t('loadingOffline')); } catch (e) { setStatus('Loading offline mode…'); }
           import('/modules/offline/index.mjs')
             .then(function(){ App.connect(); })
-            .catch(function(){ setStatus('Offline init failed', 'err'); });
+            .catch(function(e){
+              // Say WHY (a module missing from the SW cache shows up here as
+              // a failed dynamic import) instead of a bare message.
+              try { console.error('[offline] init failed:', e); } catch (_) {}
+              setStatus('Offline init failed' + (e && e.message ? ': ' + e.message : ''), 'err');
+            });
           return;
         }
         try {
@@ -11431,7 +11436,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.8-web.102'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.8-web.103'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

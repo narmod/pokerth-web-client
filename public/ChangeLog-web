@@ -1,4 +1,7 @@
 2026-09-10 version 2.1.8-web (current series):
+- bugfix: once the web client had been updated, the offline training mode against bots could refuse to start without a connection ("Offline init failed") until it had been opened online once; everything it needs is now stored with the app on install, so it starts with no network at all
+
+2026-09-10 version 2.1.8-web:
 - bugfix: a palette button and an empty button had appeared in the lobby and table headers; they belonged to the spectator view on pokerth.net only and are gone from the web client
 - bugfix: the same player could show one avatar to web players and another to players on the desktop and mobile clients - a picture changed while connected, or brought back with a backup, reached web players only; the avatar now goes through the server alone, as in the official clients, so everyone sees the same one
 - improvement: an avatar chosen while you are connected now takes effect from your next connection, as in the desktop and mobile clients, instead of changing on some screens only

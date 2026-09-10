@@ -470,6 +470,19 @@ highlights below.
   (`scale 1.03`, 180 ms OutQuad) is applied to the seat plate.
 
 ### Fixed
+- **Offline training mode failed to start with no network** (fixed in
+  `web.103`) — "Offline init failed" on a phone in airplane mode. The mode
+  is a lazy `import('/modules/offline/index.mjs')`, and `offline/server.mjs`
+  imports `modules/achievements/` (four files), which were never in the SW
+  `ASSETS`. Runtime-cached files live in the `CACHE_VERSION` cache and are
+  dropped on every bump, so after each deploy the achievements were missing
+  until offline mode had been opened online once. Nine modules loaded by
+  `pokerth-client.html` (`seat-menu`, `z-order`, `pm` + `pm/store`,
+  `assist-pane`, `back-guard`, `debuglog`, `livescroll`, `chat/abbrev`) and
+  the `ar`/`fa`/`he`/`ur` help pages were missing too. All are precached now;
+  the failure status carries the import error. New
+  `scripts/test-precache.mjs` walks the module graph from the HTML (plus the
+  per-language imports) and fails on any file absent from `ASSETS`.
 - **Localized pages served French and English interface text to crawlers**
   (fixed in `web.102`) — `/?lang=nl` (and every other variant, `/` included)
   had a localized `<title>` and SEO block, but the static defaults of

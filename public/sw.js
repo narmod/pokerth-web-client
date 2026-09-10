@@ -23,7 +23,7 @@
  *                 Cross-origin requests and WS upgrades are left untouched.
  *                 (Fonts are now self-hosted and handled by SWR above.)
  */
-const CACHE_VERSION = 'pokerth-v2.1.8-web.102';
+const CACHE_VERSION = 'pokerth-v2.1.8-web.103';
 // Share Target payload park (see handleShareTarget). Kept OUT of CACHE_VERSION
 // so an update sweep never eats a share that arrived seconds earlier.
 const SHARE_CACHE = 'pokerth-share';
@@ -74,6 +74,18 @@ const ASSETS = [
   '/vendor/sql-wasm.wasm',
   '/modules/theme.mjs',
   '/modules/ui/chatlog-tint.mjs',
+  // Modules loaded by pokerth-client.html (or imported by one) — a module
+  // missing here breaks its whole graph offline after a CACHE_VERSION bump.
+  // Guarded by scripts/test-precache.mjs.
+  '/modules/ui/debuglog.mjs',
+  '/modules/ui/livescroll.mjs',
+  '/modules/chat/abbrev.mjs',
+  '/modules/ui/pm.mjs',
+  '/modules/pm/store.mjs',
+  '/modules/ui/assist-pane.mjs',
+  '/modules/ui/seat-menu.mjs',
+  '/modules/ui/back-guard.mjs',
+  '/modules/ui/z-order.mjs',
   // Offline (vs bots) mode modules
   '/vendor/phe.mjs',
   '/modules/game/state.mjs',
@@ -164,11 +176,21 @@ const ASSETS = [
   '/modules/help/content/fil.mjs',
   '/modules/help/content/bn.mjs',
   '/modules/help/content/sw.mjs',
+  '/modules/help/content/ar.mjs',
+  '/modules/help/content/fa.mjs',
+  '/modules/help/content/he.mjs',
+  '/modules/help/content/ur.mjs',
   '/modules/offline/engine.mjs',
   '/modules/offline/bots.mjs',
   '/modules/offline/proto.mjs',
   '/modules/offline/server.mjs',
   '/modules/offline/index.mjs',
+  // Achievements, imported by offline/server.mjs: without them the lazy
+  // import of the offline mode fails with no network ("Offline init failed").
+  '/modules/achievements/index.mjs',
+  '/modules/achievements/defs.mjs',
+  '/modules/achievements/tracker.mjs',
+  '/modules/achievements/store.mjs',
   '/modules/lang/en.mjs',
   '/modules/lang/fr.mjs',
   '/modules/lang/de.mjs',
