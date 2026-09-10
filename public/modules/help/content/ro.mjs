@@ -31,7 +31,7 @@ export const help = {
             'Safari / iOS: instalarea trece prin Partajează \u2192 \u201eAdaugă la ecranul principal\u201d; fără vibrație; ecran complet limitat pe iPhone; sunetul pornește după prima ta atingere.',
             'Android: suport complet în browserele Chromium, inclusiv vibrația și comportamentul butonului Înapoi.'] },
         { id: 'avatar', t: 'Pseudonim și avatar',
-          b: ['Alege-ți pseudonimul și avatarul pe ecranul de conectare înainte de a te conecta. Pe pokerth.net, pseudonimul este numele contului tău; avatarurile sunt partajate cu ceilalți jucători prin serverul de avataruri.'] }
+          b: ['Alege-ți pseudonimul și avatarul pe ecranul de conectare înainte de a te conecta. Pe pokerth.net, pseudonimul este numele contului tău; avatarurile sunt partajate cu ceilalți jucători prin serverul de avataruri.', 'Avatarul tău este trimis la conectare și toți jucătorii îl văd pe același. Dacă îl schimbi cât ești conectat, noul avatar se aplică de la următoarea conectare. Inițiala (Aa) nu este trimisă: ceilalți jucători văd avatarul implicit.'] }
       ]
     },
     {

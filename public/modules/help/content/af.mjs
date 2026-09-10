@@ -31,7 +31,7 @@ export const help = {
             'Safari / iOS: installasie loop deur Deel \u2192 \u201cVoeg by tuisskerm\u201d; geen vibrasie nie; volskerm beperk op iPhone; klank begin ná jou eerste tik.',
             'Android: volle ondersteuning in Chromium-blaaiers, insluitend vibrasie en die Terug-knoppie se gedrag.'] },
         { id: 'avatar', t: 'Bynaam en avatar',
-          b: ['Kies jou bynaam en avatar op die aanmeldskerm voordat jy koppel. Op pokerth.net is jou bynaam jou rekeningnaam; avatars word deur die avatarbediener met ander spelers gedeel.'] }
+          b: ['Kies jou bynaam en avatar op die aanmeldskerm voordat jy koppel. Op pokerth.net is jou bynaam jou rekeningnaam; avatars word deur die avatarbediener met ander spelers gedeel.', 'Jou avatar word gestuur wanneer jy koppel, en elke speler sien daardie selfde een. As jy dit verander terwyl jy gekoppel is, geld die nuwe avatar vanaf jou volgende verbinding. Die voorletter (Aa) word nie gestuur nie: ander spelers sien die verstekavatar.'] }
       ]
     },
     {

@@ -33,7 +33,7 @@ export const help = {
             'Safari / iOS: usakinishaji kupitia Kushiriki \u2192 Add to Home Screen; hakuna mtetemo; skrini nzima ni finyu kwenye iPhone; sauti huanza baada ya kugusa kwako kwa kwanza.',
             'Android: msaada kamili kwenye vivinjari vya Chromium, pamoja na mtetemo na tabia ya kitufe cha Kurudi.'] },
         { id: 'avatar', t: 'Jina la utani na avatari',
-          b: ['Chagua jina lako la utani na avatari kwenye skrini ya kuingia kabla ya kuunganisha. Kwenye pokerth.net, jina lako la utani ni jina la akaunti yako; avatari hushirikiwa na wachezaji wengine kupitia seva ya avatari.'] }
+          b: ['Chagua jina lako la utani na avatari kwenye skrini ya kuingia kabla ya kuunganisha. Kwenye pokerth.net, jina lako la utani ni jina la akaunti yako; avatari hushirikiwa na wachezaji wengine kupitia seva ya avatari.', 'Avatari yako hutumwa unapounganisha, na kila mchezaji huona hiyo hiyo. Ukiibadilisha ukiwa umeunganishwa, avatari mpya itatumika kuanzia muunganisho wako ujao. Herufi ya kwanza (Aa) haitumwi: wachezaji wengine huona avatari ya msingi.'] }
       ]
     },
     {

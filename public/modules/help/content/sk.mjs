@@ -31,7 +31,7 @@ export const help = {
             'Safari / iOS: inštalácia cez Zdieľať \u2192 \u201ePridať na plochu\u201c; bez vibrácií; celá obrazovka na iPhone obmedzená; zvuk sa spustí po tvojom prvom ťuknutí.',
             'Android: plná podpora v prehliadačoch Chromium, vrátane vibrácií a správania tlačidla Späť.'] },
         { id: 'avatar', t: 'Prezývka a avatar',
-          b: ['Pred pripojením si na prihlasovacej obrazovke vyber prezývku a avatar. Na pokerth.net je prezývka menom tvojho účtu; avatary sa s ostatnými hráčmi zdieľajú cez avatarový server.'] }
+          b: ['Pred pripojením si na prihlasovacej obrazovke vyber prezývku a avatar. Na pokerth.net je prezývka menom tvojho účtu; avatary sa s ostatnými hráčmi zdieľajú cez avatarový server.', 'Tvoj avatar sa odošle pri pripojení a všetci hráči vidia práve ten. Ak ho zmeníš počas pripojenia, nový avatar platí až od ďalšieho pripojenia. Začiatočné písmeno (Aa) sa neodosiela: ostatní hráči vidia predvolený avatar.'] }
       ]
     },
     {

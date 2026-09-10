@@ -31,7 +31,7 @@ export const help = {
             'Safari / iOS: installation via Dela \u2192 \u201dLägg till på hemskärmen\u201d; ingen vibration; helskärm begränsad på iPhone; ljudet startar efter din första tryckning.',
             'Android: fullt stöd i Chromium-webbläsare, inklusive vibration och Bakåt-knappens beteende.'] },
         { id: 'avatar', t: 'Smeknamn och avatar',
-          b: ['Välj ditt smeknamn och din avatar på inloggningsskärmen innan du ansluter. På pokerth.net är ditt smeknamn ditt kontonamn; avatarer delas med andra spelare via avatarservern.'] }
+          b: ['Välj ditt smeknamn och din avatar på inloggningsskärmen innan du ansluter. På pokerth.net är ditt smeknamn ditt kontonamn; avatarer delas med andra spelare via avatarservern.', 'Din avatar skickas när du ansluter, och alla spelare ser samma. Byter du den medan du är ansluten gäller den nya avataren från nästa anslutning. Initialen (Aa) skickas inte: andra spelare ser standardavataren.'] }
       ]
     },
     {

@@ -31,7 +31,7 @@ export const help = {
             'Safari / iOS: l\u2019installazione passa per Condividi \u2192 «Aggiungi alla schermata Home»; niente vibrazione; schermo intero limitato su iPhone; l\u2019audio parte dopo il tuo primo tocco.',
             'Android: supporto completo nei browser Chromium, comprese la vibrazione e il comportamento del tasto Indietro.'] },
         { id: 'avatar', t: 'Nickname e avatar',
-          b: ['Scegli nickname e avatar nella schermata di accesso prima di collegarti. Su pokerth.net il tuo nickname è il nome del tuo account; gli avatar sono condivisi con gli altri giocatori tramite il server degli avatar.'] }
+          b: ['Scegli nickname e avatar nella schermata di accesso prima di collegarti. Su pokerth.net il tuo nickname è il nome del tuo account; gli avatar sono condivisi con gli altri giocatori tramite il server degli avatar.', 'Il tuo avatar viene inviato quando ti colleghi e tutti i giocatori vedono proprio quello. Se lo cambi mentre sei collegato, il nuovo avatar vale dalla connessione successiva. L\u2019iniziale (Aa) non viene inviata: gli altri giocatori vedono l\u2019avatar predefinito.'] }
       ]
     },
     {

@@ -48,6 +48,21 @@ sent.length = 0;
 M.onAvatarRequest(sub);
 ok(sent.length === 1 && typeOf(sent[0]) === T.UnknownAvatar, 'onAvatarRequest (hash inconnu) : UnknownAvatar');
 
+// Parité QML (ClientContext) : les octets servis sont ceux FIGÉS à l'Init, pas un
+// avatar choisi entre l'Init et l'AvatarRequest.
+{
+  const saveUp = window._pthMyUpload;
+  S._sessUpload = { type: 1, bytes: new Uint8Array(40).fill(7), hashBytes: [9, 9, 9] };
+  window._pthMyUpload = { type: 1, bytes: new Uint8Array(40).fill(8), hashBytes: [4, 4, 4] };
+  sent.length = 0;
+  M.onAvatarRequest(subOf([[1, 0, T.AvatarRequest], [8, 2, Proto.encode([[1, 0, 11], [2, 2, new Uint8Array([9, 9, 9])]])]]));
+  ok(sent.length === 3 && typeOf(sent[0]) === T.AvatarHeader, 'onAvatarRequest : hash de session servi (Header + 1 Data + End)');
+  sent.length = 0;
+  M.onAvatarRequest(subOf([[1, 0, T.AvatarRequest], [8, 2, Proto.encode([[1, 0, 12], [2, 2, new Uint8Array([4, 4, 4])]])]]));
+  ok(sent.length === 1 && typeOf(sent[0]) === T.UnknownAvatar, 'onAvatarRequest : avatar choisi après l\'Init non servi');
+  S._sessUpload = null; window._pthMyUpload = saveUp; sent.length = 0;
+}
+
 // ── Cycle de réception : Header → Data ×2 → End (assemblage + cache + re-rendus)
 S._pthAvatarReqIdToHash = { 7: 'aabbcc' };
 S._pthAvatarsByHash = { aabbcc: { status: 'pending', type: 1, expectedSize: 0, chunks: [], received: 0 } };

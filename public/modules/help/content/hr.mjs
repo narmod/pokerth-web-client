@@ -31,7 +31,7 @@ export const help = {
             'Safari / iOS: instalacija ide kroz Dijeli \u2192 \u201eDodaj na početni zaslon\u201c; bez vibracije; puni zaslon ograničen na iPhoneu; zvuk kreće nakon tvog prvog dodira.',
             'Android: puna podrška u Chromium preglednicima, uključujući vibraciju i ponašanje gumba Natrag.'] },
         { id: 'avatar', t: 'Nadimak i avatar',
-          b: ['Odaberi nadimak i avatar na zaslonu za prijavu prije spajanja. Na pokerth.net nadimak je ime tvog računa; avatari se dijele s drugim igračima preko avatar-poslužitelja.'] }
+          b: ['Odaberi nadimak i avatar na zaslonu za prijavu prije spajanja. Na pokerth.net nadimak je ime tvog računa; avatari se dijele s drugim igračima preko avatar-poslužitelja.', 'Tvoj avatar šalje se pri spajanju i svi igrači vide upravo njega. Ako ga promijeniš dok si spojen, novi avatar vrijedi od sljedećeg spajanja. Početno slovo (Aa) ne šalje se: ostali igrači vide zadani avatar.'] }
       ]
     },
     {

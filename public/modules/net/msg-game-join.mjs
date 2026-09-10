@@ -10,7 +10,7 @@
 // (turn-timer), dismissWinner/showEndGameOverlay (showdown),
 // autoScaleTable (seats) ; window.* pour les fonctions pontées
 // (renderWaitingPanel, updateSpectatorStrip, setPot [pont ajouté],
-// clearSpectatorActions, _rebroadcastAvatar, renderSeats,
+// clearSpectatorActions, renderSeats,
 // _applyReactMuteUI, animateTableEnter, notifyPlayerConnected/
 // GameReady, _hideBanner) ; App.* conservé nu.
 // ═══════════════════════════════════════════════════════════════════
@@ -214,13 +214,6 @@ function onJoinGameAck(sub) {
     }
     document.body.classList.add('in-game');
     try { window._applyReactMuteUI(); } catch(e) {}
-    // Diffuser l'avatar aux autres joueurs via le proxy. We use
-    // _myAvatarToBroadcast() which collapses the '__pth__' sentinel
-    // to '' -- the other players will then receive an empty avatar
-    // and render our initial. They'll still get our real PokerTH
-    // avatar (if any) through their own PlayerInfoReply flow, so
-    // sending the sentinel would just produce visual garbage.
-    setTimeout(function() { window._rebroadcastAvatar(); }, 500);
     // Plusieurs tentatives pour s'assurer que la table s'affiche
     [100, 300, 600, 1200].forEach(function(d){
       setTimeout(function(){
@@ -469,8 +462,6 @@ function onPlayerIdChanged(sub) {
     for (let i = S.seats.length - 1; i > 0; i--) if (S.seats.indexOf(S.seats[i]) < i) S.seats.splice(i, 1);
     if (S.players[oldPid] !== undefined) { S.players[newPid] = S.players[oldPid]; delete S.players[oldPid]; }
     if (S.seatData[oldPid]) { S.seatData[newPid] = S.seatData[oldPid]; delete S.seatData[oldPid]; S.seatData[newPid].gone = false; }
-    if (S._playerAvatars[oldPid]) { S._playerAvatars[newPid] = S._playerAvatars[oldPid]; delete S._playerAvatars[oldPid]; }
-    if (S._playerImgAvatars[oldPid]) { S._playerImgAvatars[newPid] = S._playerImgAvatars[oldPid]; delete S._playerImgAvatars[oldPid]; }
     if (S._seatStackAtHandStart && S._seatStackAtHandStart[oldPid] != null) {
       S._seatStackAtHandStart[newPid] = S._seatStackAtHandStart[oldPid];
       delete S._seatStackAtHandStart[oldPid];

@@ -31,7 +31,7 @@ export const help = {
             'Safari / iOS: instalacja przez Udostępnij \u2192 \u201eDo ekranu początkowego\u201d; brak wibracji; pełny ekran ograniczony na iPhonie; dźwięk startuje po pierwszym dotknięciu.',
             'Android: pełne wsparcie w przeglądarkach Chromium, łącznie z wibracją i zachowaniem przycisku Wstecz.'] },
         { id: 'avatar', t: 'Pseudonim i awatar',
-          b: ['Wybierz pseudonim i awatar na ekranie logowania przed połączeniem. Na pokerth.net twój pseudonim to nazwa konta; awatary są udostępniane innym graczom przez serwer awatarów.'] }
+          b: ['Wybierz pseudonim i awatar na ekranie logowania przed połączeniem. Na pokerth.net twój pseudonim to nazwa konta; awatary są udostępniane innym graczom przez serwer awatarów.', 'Twój awatar jest wysyłany przy połączeniu i wszyscy gracze widzą ten sam. Jeśli zmienisz go w trakcie połączenia, nowy awatar obowiązuje od następnego połączenia. Inicjał (Aa) nie jest wysyłany: inni gracze widzą awatar domyślny.'] }
       ]
     },
     {

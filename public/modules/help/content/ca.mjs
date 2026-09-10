@@ -31,7 +31,7 @@ export const help = {
             'Safari / iOS: la instal\u00b7lació passa per Comparteix \u2192 \u00abAfegeix a la pantalla d\u2019inici\u00bb; sense vibració; pantalla completa limitada a l\u2019iPhone; el so comença després del teu primer toc.',
             'Android: compatibilitat completa als navegadors Chromium, inclosa la vibració i el comportament del botó Enrere.'] },
         { id: 'avatar', t: 'Sobrenom i avatar',
-          b: ['Tria el teu sobrenom i el teu avatar a la pantalla d\u2019inici de sessió abans de connectar-te. A pokerth.net, el teu sobrenom és el nom del teu compte; els avatars es comparteixen amb els altres jugadors mitjançant el servidor d\u2019avatars.'] }
+          b: ['Tria el teu sobrenom i el teu avatar a la pantalla d\u2019inici de sessió abans de connectar-te. A pokerth.net, el teu sobrenom és el nom del teu compte; els avatars es comparteixen amb els altres jugadors mitjançant el servidor d\u2019avatars.', 'El teu avatar s\u2019envia en connectar-te i tots els jugadors veuen aquest mateix. Si el canvies mentre estàs connectat, el nou avatar s\u2019aplica a partir de la propera connexió. La inicial (Aa) no s\u2019envia: els altres jugadors veuen l\u2019avatar per defecte.'] }
       ]
     },
     {

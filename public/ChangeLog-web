@@ -1,4 +1,9 @@
-2026-09-09 version 2.1.8-web (current series):
+2026-09-10 version 2.1.8-web (current series):
+- bugfix: the same player could show one avatar to web players and another to players on the desktop and mobile clients - a picture changed while connected, or brought back with a backup, reached web players only; the avatar now goes through the server alone, as in the official clients, so everyone sees the same one
+- improvement: an avatar chosen while you are connected now takes effect from your next connection, as in the desktop and mobile clients, instead of changing on some screens only
+- improvement: the initial-letter avatar (Aa) is no longer sent as a picture; other players see the default avatar, as they do for a desktop player who has none
+
+2026-09-09 version 2.1.8-web:
 - bugfix: when the inactivity countdown ran out, the warning window stayed on screen with a dead OK button and the lobby behind it never moved, because the disconnection from the server sometimes never reached the browser; the client now ends the session itself a few seconds later and takes you back to the connection screen
 
 2026-09-09 version 2.1.8-web:

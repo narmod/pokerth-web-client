@@ -31,7 +31,7 @@ export const help = {
             'Safari / iOS: cài đặt qua Chia sẻ \u2192 \u201cThêm vào Màn hình chính\u201d; không rung; toàn màn hình bị hạn chế trên iPhone; âm thanh bắt đầu sau lần chạm đầu tiên của bạn.',
             'Android: hỗ trợ đầy đủ trên các trình duyệt Chromium, kể cả rung và hành vi của nút Quay lại.'] },
         { id: 'avatar', t: 'Biệt danh và ảnh đại diện',
-          b: ['Hãy chọn biệt danh và ảnh đại diện ở màn hình đăng nhập trước khi kết nối. Trên pokerth.net, biệt danh chính là tên tài khoản của bạn; ảnh đại diện được chia sẻ với người chơi khác qua máy chủ ảnh đại diện.'] }
+          b: ['Hãy chọn biệt danh và ảnh đại diện ở màn hình đăng nhập trước khi kết nối. Trên pokerth.net, biệt danh chính là tên tài khoản của bạn; ảnh đại diện được chia sẻ với người chơi khác qua máy chủ ảnh đại diện.', 'Ảnh đại diện của bạn được gửi khi kết nối, và mọi người chơi đều thấy cùng một ảnh. Nếu bạn đổi ảnh khi đang kết nối, ảnh mới sẽ áp dụng từ lần kết nối tiếp theo. Chữ cái đầu (Aa) không được gửi: người chơi khác sẽ thấy ảnh đại diện mặc định.'] }
       ]
     },
     {

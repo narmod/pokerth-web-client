@@ -31,7 +31,7 @@ export const help = {
             'Safari / iOS: installation via Del \u2192 \u201cFøj til hjemmeskærm\u201d; ingen vibration; fuld skærm begrænset på iPhone; lyden starter efter dit første tryk.',
             'Android: fuld understøttelse i Chromium-browsere, inklusive vibration og Tilbage-knappens opførsel.'] },
         { id: 'avatar', t: 'Kaldenavn og avatar',
-          b: ['Vælg dit kaldenavn og din avatar på loginskærmen, før du forbinder. På pokerth.net er dit kaldenavn dit kontonavn; avatarer deles med andre spillere via avatarserveren.'] }
+          b: ['Vælg dit kaldenavn og din avatar på loginskærmen, før du forbinder. På pokerth.net er dit kaldenavn dit kontonavn; avatarer deles med andre spillere via avatarserveren.', 'Din avatar sendes, når du forbinder, og alle spillere ser den samme. Skifter du den, mens du er forbundet, gælder den nye avatar fra din næste forbindelse. Forbogstavet (Aa) sendes ikke: andre spillere ser standardavataren.'] }
       ]
     },
     {

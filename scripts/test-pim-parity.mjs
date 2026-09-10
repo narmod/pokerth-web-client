@@ -46,7 +46,7 @@ const S = w.PthState;
 S.myId = 1; S.myName = 'moi';
 S.players = { 1: 'moi', 2: 'autre' };
 S._playerRights = { 1: 2, 2: 3 };          // moi enregistre, l'autre admin
-S._playerCountries = {}; S._playerAvatars = {}; S._playerImgAvatars = {};
+S._playerCountries = {};
 S._pthAvatarHashes = {};
 w.getPlayerName = (p) => S.players[p];
 w.isBot = () => false;

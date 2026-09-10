@@ -27,7 +27,6 @@ window.getPlayerName = (pid) => 'J' + pid;
 const logs = []; window.logAction = (fn) => logs.push(typeof fn === 'function' ? fn() : fn);
 window._wpHide = () => {};
 window.renderGameWaiting = () => {};
-window._rebroadcastAvatar = () => {};
 const toasts = []; window._showBlindsToast = (h) => toasts.push(h);
 let cardDing = 0; window.notifyCard = () => cardDing++;
 let dealerMoved = null; window.animateDealerMove = (a, b) => { dealerMoved = [a, b]; };

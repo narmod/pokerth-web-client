@@ -21,7 +21,7 @@ import { chipSvg, dealerChipSvg, cardHtml } from '../ui/deck.mjs';
 import { autoScaleTable } from './seats.mjs';
 import { _officialSeatPix, _applyQmlBgCenter } from './layout.mjs';
 import { _timerRectSvg } from './turn-timer.mjs';
-import { _ccToFlag, _pthAvatarFor, openPlayerInfoPopup } from '../ui/player-popup.mjs';
+import { _ccToFlag, _pthAvatarFor, _myAvChoice, _myAvImg, openPlayerInfoPopup } from '../ui/player-popup.mjs';
 import { openSeatMenu, closeSeatMenu, initSeatMenu } from '../ui/seat-menu.mjs';
 import { _ownCardsHidden } from '../ui/table-cards.mjs';
 
@@ -34,9 +34,9 @@ function isBot(pid) {
 }
 function getPlayerInitial(pid) {
   if (pid === S.myId) {
-    // Utiliser le cache ; recharger depuis localStorage si vide
+    // Utiliser le cache ; sinon l'avatar de session (choix courant hors session)
     if (!S._myAvatarCache) {
-      try { S._myAvatarCache = localStorage.getItem('pth_avatar') || ''; } catch(e) {}
+      S._myAvatarCache = _myAvChoice() || '';
     }
     // Never return the '__pth__' sentinel as an "initial". The seat
     // builder renders the result inside <span class="seat-initial">;
@@ -54,8 +54,6 @@ function getPlayerInitial(pid) {
   // Shark…) qui ne commencent pas par « bot »/« computer ».
   try { var _bavI = (pid !== S.myId) && window._offlineBotAv && window._offlineBotAv[pid]; if (_bavI) return _bavI; } catch (e) {}
   if (isBot(pid)) return '🤖';
-  // Avatar reçu des autres joueurs via proxy
-  if (S._playerAvatars[pid]) return S._playerAvatars[pid];
   var name = S.players[pid] || '';
   return name.charAt(0).toUpperCase() || '?';
 }
@@ -714,8 +712,8 @@ function renderSeatsImmediate() {
     var _offBotAv = false;
     try { _offBotAv = !isMe && !_ignHide && !!(window._offlineBotAv && window._offlineBotAv[pid]); } catch (e) {}
     var _hasEmojiAv = isMe
-      ? (function(){ try { var av = localStorage.getItem('pth_avatar'); return !!av && av !== '__pth__' && av !== '__img__'; } catch(e){ return false; } })()
-      : (_ignHide ? false : (!!S._playerAvatars[pid] || _offBotAv));
+      ? (function(){ var av = _myAvChoice(); return !!av && av !== '__pth__' && av !== '__img__'; })()
+      : (_ignHide ? false : _offBotAv);
     const avatarType = isMe
       ? (_hasEmojiAv ? ' emoji-av' : '')
       : ((isBot(pid) || _offBotAv) && !_ignHide ? ' is-bot emoji-av' : (_hasEmojiAv ? ' emoji-av is-human' : ' is-human'));
@@ -777,7 +775,7 @@ function renderSeatsImmediate() {
     let pthAvUrl = _pthAvatarFor(pid);
     if (isMe) {
       let myChoice = null;
-      try { myChoice = localStorage.getItem('pth_avatar'); } catch(e) {}
+      myChoice = _myAvChoice();
       // If the user picked an emoji (or initial), suppress the
       // real avatar image for the local seat only.
       if (pthAvUrl && myChoice !== null && myChoice !== '__pth__') {
@@ -792,11 +790,9 @@ function renderSeatsImmediate() {
       }
       // Image perso choisie localement : l'afficher sur mon siège.
       if (myChoice === '__img__') {
-        try { pthAvUrl = localStorage.getItem('pth_avatar_img') || pthAvUrl; } catch(e) {}
+        pthAvUrl = _myAvImg() || pthAvUrl;
       }
     }
-    // Autres joueurs : image perso reçue via le proxy (prioritaire sur l'emoji).
-    if (!isMe && S._playerImgAvatars[pid]) pthAvUrl = S._playerImgAvatars[pid];
     if (_ignHide) pthAvUrl = null;
     // ── Avatar par défaut = jeton PokerTH (fidélité client officiel) ──
     // Aucun avatar perso (image) NI emoji choisi → on affiche le

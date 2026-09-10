@@ -127,6 +127,19 @@ function onAnnounce(sub) {
     // Trimmé ; vide → null donc omis de l'InitMessage. Lu directement ici
     // (comme authPass) pour couvrir aussi les reconnexions automatiques.
     const srvPass = (document.getElementById('server-pass') ? document.getElementById('server-pass').value.trim() : '') || null;
+    // Avatar de SESSION (parité QML) : le client officiel fige son avatar dans
+    // ClientContext à la connexion — hash annoncé ici, fichier renvoyé sur
+    // AvatarRequest, siège local. On fige de même le choix courant et ses
+    // octets d'upload : buildInit lit window._pthMyUpload dans ce même tour,
+    // onAvatarRequest et l'affichage de MON avatar lisent l'instantané. Un
+    // nouveau choix en cours de session vaudra à la connexion suivante.
+    try {
+      var _sc = null, _si = null;
+      try { _sc = localStorage.getItem('pth_avatar'); _si = localStorage.getItem('pth_avatar_img'); } catch (e) {}
+      S._sessAv = { choice: _sc, img: _si || null };
+      S._sessUpload = window._pthMyUpload || null;
+      S._myAvatarCache = (_sc && _sc !== '__pth__' && _sc !== '__img__') ? _sc : '';
+    } catch (e) {}
     send(MSG.buildInit(S.myName, pMaj, pMin, loginType, authPass, srvPass, _lastSid));
     return;
 }

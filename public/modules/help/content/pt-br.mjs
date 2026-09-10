@@ -31,7 +31,7 @@ export const help = {
             'Safari / iOS: a instalação passa por Compartilhar \u2192 \u201cAdicionar à Tela de Início\u201d; sem vibração; tela cheia limitada no iPhone; o som começa após o seu primeiro toque.',
             'Android: suporte completo nos navegadores Chromium, inclusive vibração e o comportamento do botão Voltar.'] },
         { id: 'avatar', t: 'Apelido e avatar',
-          b: ['Escolha seu apelido e avatar na tela de conexão antes de conectar. No pokerth.net, seu apelido é o nome da sua conta; os avatares são compartilhados com os outros jogadores pelo servidor de avatares.'] }
+          b: ['Escolha seu apelido e avatar na tela de conexão antes de conectar. No pokerth.net, seu apelido é o nome da sua conta; os avatares são compartilhados com os outros jogadores pelo servidor de avatares.', 'Seu avatar é enviado ao conectar, e todos os jogadores veem esse mesmo. Se você o trocar enquanto estiver conectado, o novo avatar vale a partir da próxima conexão. A inicial (Aa) não é enviada: os outros jogadores veem o avatar padrão.'] }
       ]
     },
     {

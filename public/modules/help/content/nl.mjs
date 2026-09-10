@@ -31,7 +31,7 @@ export const help = {
             'Safari / iOS: installatie via Delen \u2192 \u201cZet op beginscherm\u201d; geen trilfunctie; volledig scherm beperkt op iPhone; geluid start na je eerste tik.',
             'Android: volledige ondersteuning in Chromium-browsers, inclusief trillen en het gedrag van de Terug-knop.'] },
         { id: 'avatar', t: 'Bijnaam en avatar',
-          b: ['Kies je bijnaam en avatar op het inlogscherm voordat je verbindt. Op pokerth.net is je bijnaam je accountnaam; avatars worden via de avatarserver met andere spelers gedeeld.'] }
+          b: ['Kies je bijnaam en avatar op het inlogscherm voordat je verbindt. Op pokerth.net is je bijnaam je accountnaam; avatars worden via de avatarserver met andere spelers gedeeld.', 'Je avatar wordt verstuurd wanneer je verbindt, en alle spelers zien diezelfde. Wijzig je hem terwijl je verbonden bent, dan geldt de nieuwe avatar vanaf je volgende verbinding. De beginletter (Aa) wordt niet verstuurd: andere spelers zien de standaardavatar.'] }
       ]
     },
     {

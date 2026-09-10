@@ -62,8 +62,8 @@ ok(S._statusKey === null && S._origTitle === 'PokerTH Web' && S._titleBlinkID ==
    'status bar / titre init');
 
 // V4 — Avatars
-ok(Object.keys(S._playerAvatars).length === 0 && Object.keys(S._playerImgAvatars).length === 0,
-   'caches avatars proxy init = {}');
+ok(S._sessAv === null && S._sessUpload === null,
+   'avatar de session (figé à l\'Init) init = null');
 ok(Object.keys(S._pthAvatarHashes).length === 0 && Object.keys(S._pthAvatarsByHash).length === 0
    && Object.keys(S._pthAvatarReqIdToHash).length === 0 && Object.keys(S._pthDataUrls).length === 0,
    'caches avatars pokerth.net init = {}');
@@ -173,9 +173,9 @@ ok(JSON.stringify(keys) === JSON.stringify(['REACT_EMOJI_MIN_GAP', 'REACT_EMOJI_
    '_avatarPopupOrigNextSibling', '_avatarPopupOrigParent', '_boardEligible', '_boardSort',
    '_chatRejectShown', '_curU', '_gameCounted', '_hapticEnabled', '_inv', '_invSent',
    '_lastMsgWasReaction', '_lifePushTimer', '_myAvatarCache', '_origTitle', '_pimPid',
-   '_pimTab', '_playerAvatars', '_playerImgAvatars', '_pthAvatarHashes',
+   '_pimTab', '_pthAvatarHashes',
    '_pthAvatarReqIdToHash', '_pthAvatarsByHash', '_pthDataUrls', '_pthNextAvatarReqId',
-   '_reactEmojiLastSent', '_reactEmojiQueue', '_reactEmojiTimer', '_speakQ', '_speaking',
+   '_reactEmojiLastSent', '_reactEmojiQueue', '_reactEmojiTimer', '_sessAv', '_sessUpload', '_speakQ', '_speaking',
    '_stats', '_statsEligible', '_statsInited', '_statsOffline', '_statsOpen', '_statsTab',
    '_statusKey', '_timerID', '_timerSec', '_timerTot', '_titleBlinkID', '_voiceEnabled',
    '_voices',

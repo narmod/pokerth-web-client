@@ -57,8 +57,8 @@ export const S = {
   _titleBlinkID: null,
 
   // ── V4 · Avatars (domaine C) ──
-  _playerAvatars: {},      // pid → emoji avatar (reçu des autres joueurs via proxy)
-  _playerImgAvatars: {},   // pid → data URL (avatar image perso diffusé via proxy)
+  _sessAv: null,           // {choice, img} : MON avatar figé à l'Init (parité QML ClientContext)
+  _sessUpload: null,       // octets d'upload figés à l'Init (servis sur AvatarRequest)
   _pthAvatarHashes: {},
   _pthAvatarsByHash: {},
   _pthAvatarReqIdToHash: {},

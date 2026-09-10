@@ -9365,9 +9365,9 @@ console.log('\nWaiting for connections...\n');
 // are server-global, so cross-table delivery to the same server is harmless
 // (an absent id simply renders nothing).
 const _allClients = new Set();
-// Hard ceiling on a relayed text frame (REACT:/AVATAR:/AVATARIMG:). AVATARIMG
-// carries a base64 image; without a cap a client could push a multi-MB blob
-// that we'd fan out to every peer — a cheap amplification/DoS vector.
+// Hard ceiling on a relayed text frame (REACT:). Without a cap a client could
+// push a multi-MB payload that we'd fan out to every peer — a cheap
+// amplification/DoS vector.
 const MAX_RELAY_BYTES = 32 * 1024;
 
 // ── Throttle outbound TCP connections to PokerTH servers ──
@@ -9733,8 +9733,14 @@ function _attachWs(S, ws) {
     }
     if (!isBinary) {
       const text = data.toString();
-      if (text.startsWith('REACT:') || text.startsWith('AVATAR:') || text.startsWith('AVATARIMG:')) {
-        // Drop oversized relays (mainly AVATARIMG base64) before fan-out.
+      // Former web-to-web avatar relay (AVATAR:/AVATARIMG:): retired, the avatar
+      // now travels only through the PokerTH protocol, as with the QML client.
+      // A tab still running an older build may keep sending them: absorb them
+      // here, unrelayed - otherwise they would reach the TCP path below and
+      // count as malformed frames until that player's session is closed.
+      if (text.startsWith('AVATAR:') || text.startsWith('AVATARIMG:')) return;
+      if (text.startsWith('REACT:')) {
+        // Drop oversized relays before fan-out.
         if (Buffer.byteLength(text) > MAX_RELAY_BYTES) {
           console.warn('[!] Dropped oversized relay frame (' + Buffer.byteLength(text) + 'b) from ' + (ws._relayKey || '?'));
           return;

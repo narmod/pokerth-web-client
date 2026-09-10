@@ -31,7 +31,7 @@ export const help = {
             '\u201eSafari\u201c / iOS: diegimas eina per Bendrinti \u2192 \u201ePridėti prie pagrindinio ekrano\u201c; be vibracijos; visas ekranas ribotas \u201eiPhone\u201c; garsas prasideda po pirmo tavo palietimo.',
             '\u201eAndroid\u201c: visiškas palaikymas \u201eChromium\u201c naršyklėse, įskaitant vibraciją ir mygtuko Atgal elgseną.'] },
         { id: 'avatar', t: 'Slapyvardis ir avataras',
-          b: ['Prieš prisijungdamas prisijungimo ekrane pasirink slapyvardį ir avatarą. pokerth.net svetainėje tavo slapyvardis yra paskyros vardas; avatarai dalijami kitiems žaidėjams per avatarų serverį.'] }
+          b: ['Prieš prisijungdamas prisijungimo ekrane pasirink slapyvardį ir avatarą. pokerth.net svetainėje tavo slapyvardis yra paskyros vardas; avatarai dalijami kitiems žaidėjams per avatarų serverį.', 'Tavo avataras siunčiamas prisijungiant, ir visi žaidėjai mato būtent jį. Jei jį pakeisi būdamas prisijungęs, naujas avataras galios nuo kito prisijungimo. Pirmoji raidė (Aa) nesiunčiama: kiti žaidėjai mato numatytąjį avatarą.'] }
       ]
     },
     {

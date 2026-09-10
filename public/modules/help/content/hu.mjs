@@ -31,7 +31,7 @@ export const help = {
             'Safari / iOS: a telepítés a Megosztás \u2192 \u201eHozzáadás a Főképernyőhöz\u201d útvonalon megy; nincs rezgés; a teljes képernyő korlátozott iPhone-on; a hang az első érintésed után indul.',
             'Android: teljes támogatás a Chromium-böngészőkben, beleértve a rezgést és a Vissza gomb viselkedését.'] },
         { id: 'avatar', t: 'Becenév és avatár',
-          b: ['Csatlakozás előtt a bejelentkezési képernyőn válaszd ki a beceneved és az avatárod. A pokerth.net oldalon a beceneved a fiókod neve; az avatárokat az avatárszerveren keresztül osztja meg a rendszer a többi játékossal.'] }
+          b: ['Csatlakozás előtt a bejelentkezési képernyőn válaszd ki a beceneved és az avatárod. A pokerth.net oldalon a beceneved a fiókod neve; az avatárokat az avatárszerveren keresztül osztja meg a rendszer a többi játékossal.', 'Az avatárod csatlakozáskor kerül elküldésre, és minden játékos ugyanazt látja. Ha csatlakozás közben megváltoztatod, az új avatár a következő csatlakozástól érvényes. A kezdőbetű (Aa) nem kerül elküldésre: a többi játékos az alapértelmezett avatárt látja.'] }
       ]
     },
     {

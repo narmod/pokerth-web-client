@@ -33,7 +33,7 @@ export const help = {
             'Safari / iOS: pag-install sa pamamagitan ng Share \u2192 Add to Home Screen; walang vibration; limitado ang fullscreen sa iPhone; nagsisimula ang tunog pagkatapos ng unang tap mo.',
             'Android: buong suporta sa mga Chromium browser, kasama ang vibration at ang gawi ng Back button.'] },
         { id: 'avatar', t: 'Palayaw at avatar',
-          b: ['Piliin ang iyong palayaw at avatar sa login screen bago kumonekta. Sa pokerth.net, ang palayaw mo ang pangalan ng account mo; ibinabahagi ang mga avatar sa ibang manlalaro sa pamamagitan ng avatar server.'] }
+          b: ['Piliin ang iyong palayaw at avatar sa login screen bago kumonekta. Sa pokerth.net, ang palayaw mo ang pangalan ng account mo; ibinabahagi ang mga avatar sa ibang manlalaro sa pamamagitan ng avatar server.', 'Ipinapadala ang iyong avatar kapag kumonekta, at iyon din ang nakikita ng bawat manlalaro. Kung papalitan ito habang nakakonekta, ang bagong avatar ay gagamitin mula sa susunod na koneksyon. Hindi ipinapadala ang inisyal (Aa): ang ibang manlalaro ay nakakakita ng default na avatar.'] }
       ]
     },
     {

@@ -31,7 +31,7 @@ export const help = {
             'Safari / iOS : installation via Partager \u2192 « Sur l\u2019écran d\u2019accueil » ; pas de vibration ; plein écran limité sur iPhone ; le son démarre après ton premier appui.',
             'Android : support complet dans les navigateurs Chromium, vibration et comportement du bouton Retour compris.'] },
         { id: 'avatar', t: 'Pseudo et avatar',
-          b: ['Choisis ton pseudo et ton avatar sur l\u2019écran de connexion avant de te connecter. Sur pokerth.net, ton pseudo est le nom de ton compte ; les avatars sont partagés avec les autres joueurs via le serveur d\u2019avatars.'] }
+          b: ['Choisis ton pseudo et ton avatar sur l\u2019écran de connexion avant de te connecter. Sur pokerth.net, ton pseudo est le nom de ton compte ; les avatars sont partagés avec les autres joueurs via le serveur d\u2019avatars.', 'Ton avatar est envoyé à la connexion et tous les joueurs voient celui-là. Si tu le changes en étant connecté, le nouvel avatar s\u2019applique à partir de ta prochaine connexion. L\u2019initiale (Aa) n\u2019est pas envoyée : les autres joueurs voient l\u2019avatar par défaut.'] }
       ]
     },
     {

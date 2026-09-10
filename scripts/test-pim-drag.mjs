@@ -119,8 +119,8 @@ if (cardEl.classList.contains('floating-win')) w._disableFloating(cardEl);
 w.PthState.myId = 1; w.PthState.myName = 'moi';
 w.PthState.players = { 1: 'moi' };
 w.PthState._playerRights = { 1: 2 };
-w.PthState._playerCountries = {}; w.PthState._playerAvatars = {};
-w.PthState._playerImgAvatars = {}; w.PthState._pthAvatarHashes = {};
+w.PthState._playerCountries = {};
+w.PthState._pthAvatarHashes = {};
 w.getPlayerName = (p) => w.PthState.players[p];
 w.isBot = () => false; w._isIgnored = () => false;
 for (const need of [520, 1400]) {

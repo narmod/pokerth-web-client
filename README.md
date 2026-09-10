@@ -274,9 +274,8 @@ A full appearance system, reached from the **Theme** button — a styles window 
 
 ### Player experience
 - **Emoji avatar** selector: 🎭 button → 500+ icons organised by category (animals, fantasy, fun characters…)
-- Avatars visible by all players in real time (broadcast via proxy `AVATAR:pid:emoji`)
-- **Custom image avatar** — use your own photo instead of an emoji, shared live with the table (broadcast via `AVATARIMG:pid:dataURL`)
-- **Avatars also reach the official clients** — your chosen avatar (emoji, image, or initial) is uploaded over PokerTH's native avatar protocol, so it appears for players on the official desktop/mobile clients too, not just other web players
+- **Custom image avatar** — use your own photo instead of an emoji
+- **One avatar for everyone, as in the official clients** — your chosen avatar (emoji or image) is uploaded over PokerTH's native avatar protocol when you connect, and every player — web, desktop or mobile — fetches that same avatar from the server. A change made while connected applies from the next connection; the initial letter is not uploaded (others see the default avatar)
 - Anti-flicker cache so avatars survive seat re-renders
 - Bots always show 🤖
 - **Report an inappropriate avatar** — a 🚩 button in the player card sends the official `ReportAvatar` request to the server, exactly like the desktop client
@@ -422,13 +421,11 @@ Beyond bridging WebSocket frames to the server's raw TCP/TLS stream, `proxy.js` 
 - **Static file server** — serves the client (HTML/JS/CSS and PWA assets) over HTTP, with on-the-fly **brotli/gzip compression** cached by file mtime.
 - **Session persistence & seamless reconnect** — each browser session is keyed by a `sid`. If the WebSocket drops (e.g. a phone switching Wi-Fi ↔ cellular), the upstream PokerTH connection is **kept alive for a 2-minute grace period**, and the next connection presenting the same `sid` is rebound to it — no re-login, no lost seat. A **heartbeat (ping/pong) plus an RX watchdog** detect genuinely dead sockets.
 - **Clean intentional disconnect** — when the user actively leaves (the ✕ button), the client closes the WebSocket with code **4001**. The proxy treats this as a deliberate quit and tears down the upstream **immediately**, skipping the grace period, so the player/nick is freed on the server right away instead of lingering as a "ghost" for ~2 minutes.
-- **Custom broadcast relays** — three application messages are fanned out to the other connected clients. Relays are **scoped per upstream** (`host:port`) so they only reach players on the same server, and oversized frames are dropped:
+- **Custom broadcast relay** — one application message is fanned out to the other connected clients. The relay is **scoped per upstream** (`host:port`) so it only reaches players on the same server, and oversized frames are dropped. Avatars are not relayed: they travel only through the PokerTH protocol (the retired `AVATAR:`/`AVATARIMG:` frames are absorbed without relay):
 
 | Message | Purpose |
 |---|---|
 | `REACT:pid:emoji` | Emoji reaction from a player |
-| `AVATAR:pid:emoji` | Avatar emoji update |
-| `AVATARIMG:pid:dataURL` | Custom image-avatar update |
 
 - **Connection allowlist** — for anti-open-relay safety the proxy only dials servers on a configured allowlist (see the deployment section below).
 - **TLS public-key pinning** — parity with the official client's `tlspinning.cpp`: when the server list publishes a `<TLSPin>`, the upstream certificate's public key (base64 SHA-256 of the DER SPKI) must match one of the pinned keys or the connection is refused.

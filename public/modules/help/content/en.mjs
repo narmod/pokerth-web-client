@@ -35,7 +35,7 @@ export const help = {
             'Safari / iOS: install goes through Share \u2192 Add to Home Screen; no vibration; fullscreen is limited on iPhone; sound starts after your first tap.',
             'Android: full support in Chromium browsers, including vibration and the Back-button behavior.'] },
         { id: 'avatar', t: 'Nickname and avatar',
-          b: ['Pick your nickname and avatar on the login screen before connecting. On pokerth.net, your nickname is your account name; avatars are shared with other players through the avatar server.'] }
+          b: ['Pick your nickname and avatar on the login screen before connecting. On pokerth.net, your nickname is your account name; avatars are shared with other players through the avatar server.', 'Your avatar is sent when you connect, and every player sees that same one. If you change it while connected, the new avatar applies from your next connection. The initial letter (Aa) is not sent: other players see the default avatar.'] }
       ]
     },
     {

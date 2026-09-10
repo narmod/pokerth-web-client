@@ -31,7 +31,7 @@ export const help = {
             'Safari / iOS: asennus kulkee Jaa \u2192 \u201dLisää Koti-valikkoon\u201d -reittiä; ei värinää; koko näyttö rajoitettu iPhonella; ääni alkaa ensimmäisen kosketuksesi jälkeen.',
             'Android: täysi tuki Chromium-selaimissa, mukaan lukien värinä ja Takaisin-painikkeen toiminta.'] },
         { id: 'avatar', t: 'Nimimerkki ja avatar',
-          b: ['Valitse nimimerkkisi ja avatarisi kirjautumisruudulla ennen yhdistämistä. pokerth.netissä nimimerkkisi on tilisi nimi; avatarit jaetaan muille pelaajille avatar-palvelimen kautta.'] }
+          b: ['Valitse nimimerkkisi ja avatarisi kirjautumisruudulla ennen yhdistämistä. pokerth.netissä nimimerkkisi on tilisi nimi; avatarit jaetaan muille pelaajille avatar-palvelimen kautta.', 'Avatarisi lähetetään, kun yhdistät, ja kaikki pelaajat näkevät saman avatarin. Jos vaihdat sen yhteyden aikana, uusi avatar on käytössä seuraavasta yhteydestä alkaen. Alkukirjainta (Aa) ei lähetetä: muut pelaajat näkevät oletusavatarin.'] }
       ]
     },
     {

@@ -50,7 +50,10 @@ function _dropTransfer(entry, hashHex, reqId, why) {
 function onAvatarRequest(sub) {
   const reqId = Proto.u32(sub, 1);
   const want = Proto.raw(sub, 2);
-  const up = (typeof window !== 'undefined') ? window._pthMyUpload : null;
+  // Octets de la SESSION (figés à l'envoi de l'Init, msg-lobby.mjs) : le serveur
+  // réclame le hash annoncé, pas un avatar choisi entre-temps. Parité QML :
+  // ClientContext::GetAvatarFile() est fixé à la connexion.
+  const up = S._sessUpload || ((typeof window !== 'undefined') ? window._pthMyUpload : null);
   const ok = up && up.hashBytes && up.bytes && up.bytes.length && want &&
              want.length === up.hashBytes.length &&
              up.hashBytes.every(function(b, i) { return b === want[i]; });

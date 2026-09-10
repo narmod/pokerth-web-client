@@ -7,7 +7,7 @@
 // blinds (+ toast et minuteur de montée), sons, distribution animée,
 // pré-actions/odds. Adaptations comptées : 12 imports de modules ;
 // window.* pour les fonctions pontées (renderSeats, getPlayerName,
-// logAction, _wpHide, renderGameWaiting, _rebroadcastAvatar,
+// logAction, _wpHide, renderGameWaiting,
 // _showBlindsToast, notifyCard, animateDealerMove, fadeOutAllActions,
 // animateDealMyCards, resetBlindRaises), les vars top-level du script
 // _sdLosers/_sdWinners/_ownReveal/_lastCallSeen/_callConfirmArmed
@@ -169,9 +169,6 @@ function onGameStartInitial(sub) {
       }
     }
 
-    // Re-diffuser l'avatar à chaque début de main (pour les nouveaux
-    // connectés). Respecte le choix image / emoji / initiale.
-    window._rebroadcastAvatar();
     if (isFirstDeal) {
       setTimeout(function(){ window.renderSeats(); }, 120);
       window.renderGameWaiting(t('gameStartedWaitHand'));
@@ -272,7 +269,6 @@ function onGameStartRejoin(sub) {
         send(Proto.encode([[1,0,T.PlayerInfoRequest],[19,2,req]]));
       }
     }
-    window._rebroadcastAvatar();
     window._prevDealerPid = S.dealerPid;
     setTimeout(function(){ window.renderSeats(); }, 120);
     window.renderGameWaiting(t('gameStartedWaitHand'));

@@ -31,7 +31,7 @@ export const help = {
             'Safari / iOS: yükleme Paylaş \u2192 \u201cAna Ekrana Ekle\u201d üzerinden; titreşim yok; iPhone\u2019da tam ekran sınırlı; ses ilk dokunuşundan sonra başlar.',
             'Android: Chromium tabanlı tarayıcılarda titreşim ve Geri tuşu davranışı dahil tam destek.'] },
         { id: 'avatar', t: 'Takma ad ve avatar',
-          b: ['Bağlanmadan önce giriş ekranında takma adını ve avatarını seç. pokerth.net\u2019te takma adın hesap adındır; avatarlar, avatar sunucusu üzerinden diğer oyuncularla paylaşılır.'] }
+          b: ['Bağlanmadan önce giriş ekranında takma adını ve avatarını seç. pokerth.net\u2019te takma adın hesap adındır; avatarlar, avatar sunucusu üzerinden diğer oyuncularla paylaşılır.', 'Avatarın bağlandığında gönderilir ve tüm oyuncular aynısını görür. Bağlıyken değiştirirsen yeni avatar bir sonraki bağlantından itibaren geçerli olur. Baş harf (Aa) gönderilmez: diğer oyuncular varsayılan avatarı görür.'] }
       ]
     },
     {

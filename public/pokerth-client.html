@@ -596,10 +596,8 @@ function selectAvatarPopup(emoji) {
   if (typeof window.refreshMyAvatar === "function") window.refreshMyAvatar();
   // Mettre à jour le siège autour de la table
   if (typeof window._renderSeats === "function") window._renderSeats();
-  // Diffuser aux autres joueurs. Don't broadcast the sentinel -- other
-  // players don't have access to our PokerTH avatar anyway, they will
-  // fetch their own copy from the server via the existing flow. Sending
-  // "__pth__" as an emoji would just show 4 weird chars on their seat.
+  // Cache d'avatar local. Plus de relais vers les autres joueurs : ils
+  // recoivent l'avatar par le serveur, a la connexion (parite QML).
   if (emoji !== "__pth__" && emoji !== "__img__" && typeof window._broadcastMyAvatar === "function") {
     window._broadcastMyAvatar(emoji);
   }

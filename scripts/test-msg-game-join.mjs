@@ -26,7 +26,6 @@ let wp = 0; window.renderWaitingPanel = () => wp++;
 let strip = 0; window.updateSpectatorStrip = () => strip++;
 let potSet = null; window.setPot = (v) => { potSet = v; };
 window.clearSpectatorActions = () => {};
-window._rebroadcastAvatar = () => {};
 let seatsR = 0; window.renderSeats = () => seatsR++;
 window._hideBanner = () => {};
 window._applyReactMuteUI = () => {};

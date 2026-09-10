@@ -31,7 +31,7 @@ export const help = {
             'Safari / iOS: Installation über Teilen \u2192 \u201eZum Home-Bildschirm\u201c; keine Vibration; Vollbild auf dem iPhone eingeschränkt; Ton startet nach deinem ersten Tippen.',
             'Android: volle Unterstützung in Chromium-Browsern, einschließlich Vibration und Zurück-Tasten-Verhalten.'] },
         { id: 'avatar', t: 'Spitzname und Avatar',
-          b: ['Wähle Spitznamen und Avatar auf dem Anmeldebildschirm, bevor du dich verbindest. Auf pokerth.net ist dein Spitzname dein Kontoname; Avatare werden über den Avatar-Server mit anderen Spielern geteilt.'] }
+          b: ['Wähle Spitznamen und Avatar auf dem Anmeldebildschirm, bevor du dich verbindest. Auf pokerth.net ist dein Spitzname dein Kontoname; Avatare werden über den Avatar-Server mit anderen Spielern geteilt.', 'Dein Avatar wird beim Verbinden übertragen, und alle Spieler sehen genau diesen. Änderst du ihn während der Verbindung, gilt der neue Avatar ab deiner nächsten Verbindung. Der Anfangsbuchstabe (Aa) wird nicht übertragen: Andere Spieler sehen den Standard-Avatar.'] }
       ]
     },
     {

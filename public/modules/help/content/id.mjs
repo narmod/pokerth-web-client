@@ -33,7 +33,7 @@ export const help = {
             'Safari / iOS: instalasi lewat Bagikan \u2192 Tambah ke Layar Utama; tanpa getaran; layar penuh terbatas di iPhone; suara mulai setelah ketukan pertama Anda.',
             'Android: dukungan penuh di peramban Chromium, termasuk getaran dan perilaku tombol Kembali.'] },
         { id: 'avatar', t: 'Nama panggilan dan avatar',
-          b: ['Pilih nama panggilan dan avatar Anda di layar masuk sebelum menyambungkan. Di pokerth.net, nama panggilan Anda adalah nama akun Anda; avatar dibagikan dengan pemain lain lewat server avatar.'] }
+          b: ['Pilih nama panggilan dan avatar Anda di layar masuk sebelum menyambungkan. Di pokerth.net, nama panggilan Anda adalah nama akun Anda; avatar dibagikan dengan pemain lain lewat server avatar.', 'Avatar Anda dikirim saat Anda terhubung, dan semua pemain melihat avatar yang sama. Jika Anda menggantinya saat terhubung, avatar baru berlaku mulai koneksi berikutnya. Huruf awal (Aa) tidak dikirim: pemain lain melihat avatar bawaan.'] }
       ]
     },
     {

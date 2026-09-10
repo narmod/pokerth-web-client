@@ -19,11 +19,20 @@ ok(/localStorage\.setItem\('pth_avatar_up', JSON\.stringify\(\{ k: key, b64: bto
 ok(/function _pthLoadFrozenUpload\(key\)/.test(js), 'rechargement des octets gel\u00e9s pr\u00e9sent');
 ok(/rec\.k !== key/.test(js), 'gel resservi UNIQUEMENT pour le choix courant (cl\u00e9 v\u00e9rifi\u00e9e)');
 // Chaque branche du dispatcher tente le gel avant tout ré-encodage.
-ok(/_pthUploadKey = ki;\s+if \(_pthLoadFrozenUpload\('img'\)\) return;\s+_pthPrepareMyUpload\(url\)/.test(js), 'image perso : gel avant r\u00e9-encodage');
-ok(/_pthUploadKey = ke;\s+if \(_pthLoadFrozenUpload\(ke\)\) return;\s+_pthPrepareEmojiUpload\(stored\)/.test(js), 'emoji : gel avant r\u00e9-encodage');
-ok(/_pthUploadKey = kl;\s+if \(_pthLoadFrozenUpload\(kl\)\) return;\s+_pthPrepareLetterUpload\(letter\)/.test(js), 'initiale : gel avant r\u00e9-encodage');
-ok(/_pthCanvasToUpload\(cv, 'emoji:' \+ emoji\)/.test(js) && /_pthCanvasToUpload\(cv, 'letter:' \+ letter\)/.test(js), 'cl\u00e9s de gel distinctes par emoji / lettre');
-ok(/_pthCanvasToUpload\(cv, 'img'\)/.test(js), 'import photo pass\u00e9 par la queue commune (plus de toBlob priv\u00e9)');
+// Image perso : la clé de gel est liée au CONTENU (MD5 du data URL) — une autre
+// image (import de sauvegarde, synchro) ne peut plus se voir resservir le gel
+// d'une précédente : ce qui part au serveur est ce qui est affiché.
+ok(/var kf = 'img:' \+ _pthHex\(_md5bytes\(_pthAsciiBytes\(url\)\)\);\s+_pthPendingKey = kf;\s+if \(_pthLoadFrozenUpload\(kf\)\) return;\s+_pthPrepareMyUpload\(url, kf\)/.test(js), 'image perso : gel avant r\u00e9-encodage, cl\u00e9 li\u00e9e au contenu');
+ok(js.indexOf("_pthLoadFrozenUpload('img')") === -1, 'plus de cl\u00e9 fixe \u00ab img \u00bb (gel resservi pour une autre image)');
+ok(/_pthUploadKey = ke;\s+_pthPendingKey = ke;\s+if \(_pthLoadFrozenUpload\(ke\)\) return;\s+_pthPrepareEmojiUpload\(stored\)/.test(js), 'emoji : gel avant r\u00e9-encodage');
+ok(/_pthCanvasToUpload\(cv, 'emoji:' \+ emoji\)/.test(js), 'cl\u00e9 de gel par emoji');
+ok(/_pthCanvasToUpload\(cv, key\);/.test(js) && /function _pthPrepareMyUpload\(dataUrl, key\)/.test(js), 'import photo pass\u00e9 par la queue commune avec sa cl\u00e9');
+// Encodage asynchrone doublé par un nouveau choix : rien de périmé n'est publié.
+ok((js.match(/if \(key !== _pthPendingKey\) return;/g) || []).length === 2, 'encodage p\u00e9rim\u00e9 ignor\u00e9 (avant et apr\u00e8s arrayBuffer)');
+// Parité QML (MyAvatar vide) : initiale et avatar par défaut n'annoncent aucun hash.
+ok(js.indexOf('_pthPrepareLetterUpload') === -1, 'plus de PNG g\u00e9n\u00e9r\u00e9 pour l\u2019initiale');
+ok(/\} else if \(stored === '__pth__'\) \{\s+_pthClearMyUpload\(\);\s+\} else if \(stored\) \{/.test(js), '__pth__ : aucun upload');
+ok(/\/\/ joueurs voient l'avatar par d\u00e9faut, l'initiale reste locale\.\s+_pthClearMyUpload\(\);\s+\}/.test(js), 'initiale (Aa / d\u00e9faut) : aucun upload');
 ok(/bytes\.length < 32 \|\| bytes\.length > 30720/.test(js), 'fen\u00eatre serveur [32, 30720] toujours appliqu\u00e9e (gel ET encodage)');
 
 console.log('writers (invalidation du gel au changement d\u2019image):');

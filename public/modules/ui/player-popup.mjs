@@ -22,6 +22,21 @@ function _pthAvatarFor(pid) {
 }
 // Expose for refreshMyAvatar (defined at module top level)
 window._pthAvatarFor = _pthAvatarFor;
+// MON avatar de SESSION — parité QML : le client officiel fige son avatar dans
+// ClientContext à la connexion (hash annoncé à l'Init, fichier renvoyé sur
+// AvatarRequest, siège local) ; un nouveau choix en cours de session ne vaut
+// qu'à la connexion suivante. S._sessAv est figé à l'envoi de l'Init
+// (msg-lobby.mjs) et effacé au reset de connexion ; hors session, c'est le
+// choix courant. Toute lecture d'AFFICHAGE de mon avatar passe par ici.
+function _myAvChoice() {
+  if (S._sessAv) return S._sessAv.choice;
+  try { return localStorage.getItem('pth_avatar'); } catch (e) { return null; }
+}
+function _myAvImg() {
+  if (S._sessAv) return S._sessAv.img || null;
+  try { return localStorage.getItem('pth_avatar_img') || null; } catch (e) { return null; }
+}
+
 // Avatar feature: returns the emoji to display for the local player,
 // or '' if there is none. Crucially treats the '__pth__' sentinel as
 // "no emoji" so the literal string never leaks into the UI as text.
@@ -31,17 +46,8 @@ window._pthAvatarFor = _pthAvatarFor;
 function _myAvatarDisplay() {
   var v = S._myAvatarCache;
   if (!v) {
-    try { v = localStorage.getItem('pth_avatar') || ''; } catch(e) { v = ''; }
+    v = _myAvChoice() || '';
   }
-  return (v === '__pth__' || v === '__img__') ? '' : v;
-}
-// Same idea for broadcasting to other players: don't send the
-// sentinel over the wire (it would show as 4 weird chars on their
-// seat). When the local player picked '__pth__', they get the real
-// PokerTH avatar through their own PlayerInfoReply flow.
-function _myAvatarToBroadcast() {
-  var v = '';
-  try { v = localStorage.getItem('pth_avatar') || ''; } catch(e) {}
   return (v === '__pth__' || v === '__img__') ? '' : v;
 }
 
@@ -54,7 +60,7 @@ function _myAvatarToBroadcast() {
 //   1. Real PokerTH avatar image downloaded for this pid -> <img>
 //   2. For me + I chose '__pth__' but image not downloaded ->
 //      placeholder /favicon.svg
-//   3. Emoji (mine from localStorage, others' from S._playerAvatars)
+//   3. Emoji (mine only, from the session avatar)
 //   4. Bot fallback -> 🤖
 //   5. Mode internet (pokerth.net) sans avatar -> logo PokerTH /favicon.svg
 //   6. Final fallback (LAN / entrainement) -> first letter of the pseudo
@@ -74,27 +80,25 @@ function _avatarChipHtml(pid, nick, chipClass) {
   // too, same as on the table seat).
   if (pthUrl && isMe) {
     var myChoice = null;
-    try { myChoice = localStorage.getItem('pth_avatar'); } catch(e) {}
+    myChoice = _myAvChoice();
     if (myChoice !== null && myChoice !== '__pth__') pthUrl = null;
   }
   // 2) placeholder logo for me when I chose __pth__ but no image yet
   if (!pthUrl && isMe) {
     var myChoice2 = null;
-    try { myChoice2 = localStorage.getItem('pth_avatar'); } catch(e) {}
+    myChoice2 = _myAvChoice();
     if (myChoice2 === '__img__') {
-      try { pthUrl = localStorage.getItem('pth_avatar_img') || null; } catch(e) { pthUrl = null; }
+      pthUrl = _myAvImg();
     }
     if (!pthUrl && myChoice2 === '__pth__') pthUrl = '/favicon.svg';
   }
-  // Autres joueurs : image perso reçue via le proxy (prioritaire sur l'emoji).
-  if (!isMe && S._playerImgAvatars[pid]) pthUrl = S._playerImgAvatars[pid];
   if (pthUrl) {
     return '<span class="' + chipClass + ' has-pth-avatar">'
          + '<img class="chip-pth-img" src="' + pthUrl + '" alt="" draggable="false">'
          + '</span>';
   }
-  // 3) emoji? (mine via the sentinel-aware helper, others via S._playerAvatars)
-  var emoji = isMe ? _myAvatarDisplay() : (S._playerAvatars[pid] || '');
+  // 3) emoji? (mine only — other players' avatars come from the server)
+  var emoji = isMe ? _myAvatarDisplay() : '';
   if (emoji) {
     return '<span class="' + chipClass + ' emoji-av">' + esc(emoji) + '</span>';
   }
@@ -194,19 +198,17 @@ function openPlayerInfoPopup(pid, autoStats) {
     if (isSelf) {
       var realPth = (typeof _pthAvatarFor === 'function') ? _pthAvatarFor(S.myId) : null;
       var stored = null;
-      try { stored = localStorage.getItem('pth_avatar'); } catch(e) {}
+      stored = _myAvChoice();
       if (stored === '__pth__') {
         url = realPth || '/favicon.svg';   // vrai avatar sinon logo
       } else if (stored === '__img__') {
-        try { url = localStorage.getItem('pth_avatar_img') || null; } catch(e) { url = null; }
+        url = _myAvImg();
       } else if (stored && stored !== '__pth__' && stored !== '__img__') {
         emoji = stored;
       }
     } else {
       url = (typeof _pthAvatarFor === 'function') ? _pthAvatarFor(targetPid) : null;
-      if (S._playerImgAvatars[targetPid]) url = S._playerImgAvatars[targetPid];
-      if (!url) emoji = S._playerAvatars[targetPid]
-                        || (window._offlineBotAv && window._offlineBotAv[targetPid])   // emoji des bots offline (mode entraînement), comme les sièges
+      if (!url) emoji = (window._offlineBotAv && window._offlineBotAv[targetPid])   // emoji des bots offline (mode entraînement), comme les sièges
                         || (window.isBot(targetPid) ? '🤖' : '');
     }
     if (url) {
@@ -806,14 +808,14 @@ function closeAvatarPickerFromLobby() {
   }
 }
 
-export { _pthAvatarFor, _myAvatarDisplay, _myAvatarToBroadcast, _avatarChipHtml,
+export { _pthAvatarFor, _myAvChoice, _myAvImg, _myAvatarDisplay, _avatarChipHtml,
          _ccToFlag, openPlayerInfoPopup, _otherPlayerInfoHtml, _cupsBlockHtml, _pimSetTab,
          _renderProfileStats, closePlayerInfoPopup,
          _pimLoadPlayerStats, _pimRenderPlayerStats,
          openAvatarPickerFromLobby, closeAvatarPickerFromLobby };
 
-for (const [k, v] of Object.entries({ _pthAvatarFor, _myAvatarDisplay,
-  _myAvatarToBroadcast, _avatarChipHtml, _ccToFlag, openPlayerInfoPopup,
+for (const [k, v] of Object.entries({ _pthAvatarFor, _myAvChoice, _myAvImg,
+  _myAvatarDisplay, _avatarChipHtml, _ccToFlag, openPlayerInfoPopup,
   _otherPlayerInfoHtml, _cupsBlockHtml, _pimSetTab, _renderProfileStats, closePlayerInfoPopup,
   _pimLoadPlayerStats, _pimRenderPlayerStats,
   openAvatarPickerFromLobby, closeAvatarPickerFromLobby }))

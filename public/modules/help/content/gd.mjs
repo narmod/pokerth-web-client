@@ -31,7 +31,7 @@ export const help = {
             'Safari / iOS: thèid an stàladh tro Cho-roinn \u2192 \u201cCuir ris an Sgrìn Dhachaigh\u201d; gun chrith; làn-sgrìn cuingichte air iPhone; tòisichidh am fuaim às dèidh a\u2019 chiad shuathaidh agad.',
             'Android: taic iomlan ann am brabhsairean Chromium, a\u2019 gabhail a-steach crith agus giùlan a\u2019 phutain Air ais.'] },
         { id: 'avatar', t: 'Far-ainm agus avatar',
-          b: ['Tagh d\u2019 fhar-ainm agus d\u2019 avatar air sgrìn a\u2019 chlàraidh a-steach mus ceangail thu. Air pokerth.net, \u2019s e d\u2019 fhar-ainm ainm a\u2019 chunntais agad; thèid avataran a cho-roinn le cluicheadairean eile tron fhrithealaiche avatar.'] }
+          b: ['Tagh d\u2019 fhar-ainm agus d\u2019 avatar air sgrìn a\u2019 chlàraidh a-steach mus ceangail thu. Air pokerth.net, \u2019s e d\u2019 fhar-ainm ainm a\u2019 chunntais agad; thèid avataran a cho-roinn le cluicheadairean eile tron fhrithealaiche avatar.', 'Thèid d\u2019 avatar a chur nuair a cheanglas tu, agus chì gach cluicheadair an aon fhear. Ma dh\u2019atharraicheas tu e fhad \u2019s a tha thu ceangailte, bidh an avatar ùr an sàs on ath cheangal agad. Cha tèid a\u2019 chiad litir (Aa) a chur: chì cluicheadairean eile an avatar bunaiteach.'] }
       ]
     },
     {
