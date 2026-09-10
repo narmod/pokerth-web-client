@@ -11861,7 +11861,7 @@ html[data-seat-struct="qml"] .seat-narrow .seat-name .seat-note-stars { font-siz
 
 /* Low-vision Interface size: login, lobby, and the lobby's Create Table journey
    use the shared type scale without geometrically magnifying the page. Standard
-   deliberately has no override, and active-game rendering stays out of scope. */
+   deliberately has no override; active-game rules are scoped separately below. */
 :root[data-interface-size="large"] :is(#s-connect, #s-lobby, #s-create) { --interface-scale: 1.5; }
 :root[data-interface-size="extra-large"] :is(#s-connect, #s-lobby, #s-create) { --interface-scale: 2; }
 :root[data-interface-size]:not([data-interface-size="standard"]) :is(#s-connect, #s-lobby, #s-create) {
@@ -11940,4 +11940,75 @@ html[data-seat-struct="qml"] .seat-narrow .seat-name .seat-note-stars { font-siz
 :is(#s-connect, #s-lobby, #s-create) :focus-visible {
   outline: 3px solid var(--sel, var(--gold)) !important;
   outline-offset: 3px !important;
+}
+
+/* Desktop active-play low-vision scale. Keep Standard on the established QML
+   geometry; enlarge only information and controls needed to play a hand. */
+@media (min-width: 900px) and (min-height: 600px) and (hover: hover) and (pointer: fine) {
+  :root[data-interface-size="large"] #s-game { --active-play-scale: 1.5; }
+  :root[data-interface-size="extra-large"] #s-game { --active-play-scale: 2; }
+
+  :root[data-interface-size]:not([data-interface-size="standard"]) #s-game {
+    --fs-3xs: calc(var(--fs-source-3xs) * var(--active-play-scale));
+    --fs-2xs: calc(var(--fs-source-2xs) * var(--active-play-scale));
+    --fs-xs: calc(var(--fs-source-xs) * var(--active-play-scale));
+    --fs-sm: calc(var(--fs-source-sm) * var(--active-play-scale));
+    --fs-base: calc(var(--fs-source-base) * var(--active-play-scale));
+    --fs-md: calc(var(--fs-source-md) * var(--active-play-scale));
+  }
+
+  :root[data-interface-size="large"] #s-game #g-potbar { font-size: calc(19.5px * var(--comm-scale, 1)); }
+  :root[data-interface-size="extra-large"] #s-game #g-potbar { font-size: calc(26px * var(--comm-scale, 1)); }
+  :root[data-interface-size="large"] #s-game :is(.gsb-lbl, .gsb-total, .gsb-phase) { font-size: 19.5px; }
+  :root[data-interface-size="extra-large"] #s-game :is(.gsb-lbl, .gsb-total, .gsb-phase) { font-size: 26px; }
+  :root[data-interface-size="large"] #s-game :is(.gsb-left .gsb-row:last-child .gsb-lbl, .gsb-gh .gsb-lbl, .gsb-val, .gsb-bets) { font-size: 16.5px; }
+  :root[data-interface-size="extra-large"] #s-game :is(.gsb-left .gsb-row:last-child .gsb-lbl, .gsb-gh .gsb-lbl, .gsb-val, .gsb-bets) { font-size: 22px; }
+  :root[data-interface-size="large"] #s-game #pot-strip { height: 54px; }
+  :root[data-interface-size="extra-large"] #s-game #pot-strip { height: 68px; }
+  :root[data-interface-size="large"] #s-game .blinds-next { font-size: 24px; }
+  :root[data-interface-size="extra-large"] #s-game .blinds-next { font-size: 32px; }
+  :root[data-interface-size]:not([data-interface-size="standard"]) #s-game :is(#g-potbar, .blinds-next) {
+    height: auto;
+    min-height: 44px;
+    padding-inline: calc(10px * var(--active-play-scale));
+  }
+
+  :root[data-interface-size="large"] #s-game .comm-row .pk { font-size: calc(1.53rem * var(--comm-scale, 1)); }
+  :root[data-interface-size="extra-large"] #s-game .comm-row .pk { font-size: calc(2.04rem * var(--comm-scale, 1)); }
+  :root[data-interface-size]:not([data-interface-size="standard"])[data-deck] #s-game .pk:not(.back):not(.comm-slot) {
+    background-image: none;
+    background-color: #fff;
+  }
+  :root[data-interface-size]:not([data-interface-size="standard"])[data-deck] #s-game .pk:not(.back):not(.comm-slot) :is(.c-rank, .c-suit) {
+    display: block;
+  }
+
+  :root[data-interface-size]:not([data-interface-size="standard"]) #s-game .seat-name,
+  :root[data-interface-size]:not([data-interface-size="standard"]) #s-game .seat-money {
+    overflow: visible;
+    text-overflow: clip;
+  }
+  :root[data-interface-size="large"] #s-game .seat-name,
+  :root[data-interface-size="large"] #s-game .seat-money { font-size: 22.5px !important; line-height: 24px; }
+  :root[data-interface-size="extra-large"] #s-game .seat-name,
+  :root[data-interface-size="extra-large"] #s-game .seat-money { font-size: 30px !important; line-height: 32px; }
+
+  :root[data-interface-size="large"] #s-game .seat-timeout-bar { width: 84px; height: 10.5px; }
+  :root[data-interface-size="extra-large"] #s-game .seat-timeout-bar { width: 112px; height: 14px; }
+
+  :root[data-interface-size="large"] #s-game .act-buttons-row { height: 64px; padding-block: 5px; }
+  :root[data-interface-size="extra-large"] #s-game .act-buttons-row { height: 76px; padding-block: 5px; }
+  :root[data-interface-size]:not([data-interface-size="standard"]) #s-game .act-buttons-row .btn-action {
+    min-width: 44px;
+    min-height: 44px !important;
+    max-height: none !important;
+    font-size: calc(15px * var(--bar-kf, 1) * var(--active-play-scale)) !important;
+  }
+  :root[data-interface-size="large"] #s-game .act-buttons-row .btn-action { height: 54px !important; }
+  :root[data-interface-size="extra-large"] #s-game .act-buttons-row .btn-action { height: 66px !important; }
+
+  #s-game :focus-visible {
+    outline: 3px solid var(--sel, var(--gold)) !important;
+    outline-offset: 3px !important;
+  }
 }

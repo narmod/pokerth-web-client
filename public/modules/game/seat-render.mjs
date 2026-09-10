@@ -453,7 +453,13 @@ function renderSeatsImmediate() {
   if (_applyOfficial) {
     try {
       var _layoutZoom = 1;   // la bisection travaille TOUJOURS à zoom 1
-      var _offPos = _officialSeatPix(_geomSeatN, _forceSeatPortrait, zRect.width, zRect.height, oCX, oCY, oRect, _seatBoxScale, _layoutZoom, myIdx < 0);
+      var _interfaceSize = document.documentElement.getAttribute('data-interface-size');
+      var _desktopInterfaceScale = window.innerWidth >= 900 && window.innerHeight >= 600
+        && window.matchMedia && window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+      var _activeLayoutOpts = !_desktopInterfaceScale ? undefined
+                            : (_interfaceSize === 'extra-large' ? { sideGap: 0, radiusMax: 0.42 }
+                            : (_interfaceSize === 'large' ? { sideGap: 24, radiusMax: 0.39 } : undefined));
+      var _offPos = _officialSeatPix(_geomSeatN, _forceSeatPortrait, zRect.width, zRect.height, oCX, oCY, oRect, _seatBoxScale, _layoutZoom, myIdx < 0, _activeLayoutOpts);
       // Diagnostic INCONDITIONNEL (le bloc interne peut être sauté si
       // _boxScale est NaN/absent — on veut voir pourquoi).
       try {

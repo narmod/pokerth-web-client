@@ -109,6 +109,138 @@ async function populateLobby(page) {
   await page.locator('.game-row.gcard').first().waitFor();
 }
 
+async function startActiveHand(page, seatCount) {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.evaluate(() => {
+    localStorage.removeItem('pth_resume');
+    localStorage.setItem('pth_interface_size', 'standard');
+  });
+  await page.reload({ waitUntil: 'domcontentloaded' });
+  await page.waitForFunction(() => typeof window.applyAccessibilityPreferences === 'function');
+  await page.evaluate(async () => (await import('/modules/net/session.mjs')).show('s-connect'));
+  await page.locator('#s-connect.active').waitFor();
+  await page.locator('.login-card').nth(2).click();
+  await page.locator('#nick').fill('OutcomeTester');
+  await page.evaluate(() => {
+    class ActiveHandFixtureSocket extends EventTarget {
+      static CONNECTING = 0;
+      static OPEN = 1;
+      static CLOSING = 2;
+      static CLOSED = 3;
+      constructor(url) {
+        super();
+        this.url = url;
+        this.readyState = ActiveHandFixtureSocket.OPEN;
+        this.sent = [];
+        this.fixtureId = crypto.randomUUID();
+        ActiveHandFixtureSocket.instance = this;
+        setTimeout(() => this.onopen && this.onopen({ target: this }), 0);
+      }
+      send(data) { this.sent.push(data); }
+      close() {
+        this.readyState = ActiveHandFixtureSocket.CLOSED;
+        if (this.onclose) this.onclose({ code: 1000, target: this });
+      }
+      receive(payload) {
+        const frame = new ArrayBuffer(4 + payload.byteLength);
+        new DataView(frame).setUint32(0, payload.byteLength, false);
+        new Uint8Array(frame).set(payload, 4);
+        this.onmessage({ data: frame, target: this });
+      }
+    }
+    window.WebSocket = ActiveHandFixtureSocket;
+  });
+  await page.locator('.btn-primary[data-i18n="connect"]').click();
+  await page.waitForFunction(() => window.WebSocket.instance && typeof window.WebSocket.instance.onmessage === 'function');
+  await page.evaluate(async (count) => {
+    const { Proto } = await import('/modules/net/proto.mjs');
+    const { MSG } = await import('/modules/net/messages.mjs');
+    const socket = window.WebSocket.instance;
+    const envelope = (type, field, inner) => Proto.encode([[1, 0, type], [field, 2, Proto.encode(inner)]]);
+    const version = Proto.encode([[1, 0, 2], [2, 0, 1]]);
+    const ids = [42, ...Array.from({ length: count - 1 }, (_, index) => 50 + index)];
+    socket.receive(envelope(MSG.T.Announce, 2, [[1, 2, version], [2, 2, version], [4, 0, 0], [5, 0, 0]]));
+    socket.receive(envelope(MSG.T.InitAck, 7, [[1, 2, new Uint8Array([1, 2, 3, count])], [2, 0, 42]]));
+    for (const [index, pid] of ids.entries()) {
+      socket.receive(envelope(MSG.T.PlayerList, 13, [[1, 0, pid], [2, 0, 0]]));
+      const info = Proto.encode([[1, 2, pid === 42 ? 'OutcomeTester' : `Player ${index + 1}`], [3, 0, 2]]);
+      socket.receive(envelope(MSG.T.PlayerInfoReply, 20, [[1, 0, pid], [2, 2, info]]));
+    }
+    const gameInfo = Proto.encode([
+      [1, 2, `Accessibility ${count}-seat table`], [2, 0, 1], [3, 0, count],
+      [4, 0, 1], [5, 0, 7], [10, 0, 5], [11, 0, 30], [12, 0, 10], [13, 0, 3000],
+    ]);
+    socket.receive(envelope(MSG.T.GameListNew, 14, [
+      [1, 0, 303], [2, 0, 1], [3, 0, 0], ...ids.map((pid) => [4, 0, pid]),
+      [5, 0, ids[1]], [6, 2, gameInfo],
+    ]));
+    socket.receive(envelope(MSG.T.JoinGameAck, 25, [[1, 0, 303], [2, 0, 0]]));
+    socket.receive(envelope(MSG.T.GameStartInitial, 39, [
+      [1, 0, 303], [2, 0, ids[1]], [3, 2, new Uint8Array(ids)],
+    ]));
+    socket.receive(envelope(MSG.T.HandStart, 41, [
+      [1, 0, 303], [2, 2, Proto.encode([[1, 0, 12], [2, 0, 25]])], [4, 0, 10], [6, 0, ids[1]],
+    ]));
+    socket.receive(envelope(MSG.T.PlayersActionDone, 45, [
+      [1, 0, 303], [2, 0, ids[1]], [3, 0, 0], [4, 0, 0], [5, 0, 20], [6, 0, 2980], [7, 0, 20], [8, 0, 20],
+    ]));
+    socket.receive(envelope(MSG.T.PlayersActionDone, 45, [
+      [1, 0, 303], [2, 0, 42], [3, 0, 0], [4, 0, 0], [5, 0, 10], [6, 0, 2990], [7, 0, 20], [8, 0, 20],
+    ]));
+    socket.receive(envelope(MSG.T.DealFlop, 46, [[1, 0, 303], [2, 0, 10], [3, 0, 22], [4, 0, 35]]));
+    socket.receive(envelope(MSG.T.PlayersTurn, 42, [[1, 0, 303], [2, 0, 42], [3, 0, 1]]));
+  }, seatCount);
+  await page.locator('#s-game.active .act-buttons-row .btn-action').first().waitFor();
+  await page.locator(`#g-seats .seat[data-pid="42"]`).waitFor();
+  await page.waitForFunction((count) => document.querySelectorAll('#g-seats .seat').length === count, seatCount);
+  await page.waitForTimeout(180);
+}
+
+async function activeHandRects(page) {
+  return page.evaluate(() => {
+    const rect = (element) => {
+      const value = element.getBoundingClientRect();
+      return { left: value.left, top: value.top, right: value.right, bottom: value.bottom, width: value.width, height: value.height };
+    };
+    const contentRect = (element) => {
+      const range = document.createRange();
+      range.selectNodeContents(element);
+      const value = range.getBoundingClientRect();
+      return { left: value.left, top: value.top, right: value.right, bottom: value.bottom, width: value.width, height: value.height };
+    };
+    const union = (elements) => {
+      const values = [...elements].map((element) => typeof element.getBoundingClientRect === 'function' ? rect(element) : element);
+      return {
+        left: Math.min(...values.map((value) => value.left)),
+        top: Math.min(...values.map((value) => value.top)),
+        right: Math.max(...values.map((value) => value.right)),
+        bottom: Math.max(...values.map((value) => value.bottom)),
+        width: Math.max(...values.map((value) => value.right)) - Math.min(...values.map((value) => value.left)),
+        height: Math.max(...values.map((value) => value.bottom)) - Math.min(...values.map((value) => value.top)),
+      };
+    };
+    return {
+      viewport: { width: innerWidth, height: innerHeight },
+      seats: [...document.querySelectorAll('#g-seats .seat-plate')].map(rect),
+      seatValues: [...document.querySelectorAll('#g-seats .seat')].map((seat) => union([...seat.querySelectorAll('.seat-name, .seat-money')].map(contentRect))),
+      cards: union(document.querySelectorAll('#g-comm .pk')),
+      pot: rect(document.querySelector('#g-potbar')),
+      actions: rect(document.querySelector('#g-actions .action-grid')),
+      status: rect(document.querySelector('#pot-strip')),
+    };
+  });
+}
+
+function overlaps(a, b, tolerance = 1) {
+  return Math.min(a.right, b.right) - Math.max(a.left, b.left) > tolerance &&
+    Math.min(a.bottom, b.bottom) - Math.max(a.top, b.top) > tolerance;
+}
+
+function assertReachable(rect, viewport, label) {
+  assert.ok(rect.width > 0 && rect.height > 0 && rect.left >= -1 && rect.top >= -1 && rect.right <= viewport.width + 1 && rect.bottom <= viewport.height + 1,
+    `${label} is outside ${viewport.width}x${viewport.height}: ${JSON.stringify(rect)}`);
+}
+
 async function takeLobbyJoinOutcomes(page) {
   return page.evaluate(async () => {
     const { Proto } = await import('/modules/net/proto.mjs');
@@ -128,8 +260,14 @@ async function visibleMetrics(page, selectors) {
     const style = getComputedStyle(element);
     return [selector, {
       fontSize: parseFloat(style.fontSize),
+      cssWidth: parseFloat(style.width),
+      cssHeight: parseFloat(style.height),
       width: rect.width,
       height: rect.height,
+      left: rect.left,
+      top: rect.top,
+      right: rect.right,
+      bottom: rect.bottom,
       visible: rect.bottom > 0 && rect.right > 0 && rect.top < innerHeight && rect.left < innerWidth,
     }];
   })), selectors);
@@ -539,6 +677,95 @@ try {
     await page.locator('#s-create.active #create-form').waitFor();
     await page.locator('#cf-name').fill('Zoom Outcome');
     assert.equal(await page.locator('#cf-name').inputValue(), 'Zoom Outcome');
+  });
+  await check('desktop active-hand critical information follows every Interface size live', async () => {
+    await startActiveHand(page, 2);
+    const fontSelectors = [
+      '#g-pot', '#g-bets', '#g-potbar', '.blinds-next',
+      '.seat.active .seat-name', '.seat.active .seat-money',
+      '#g-actions .btn-fold', '#g-actions .act-buttons-row .btn-action:nth-child(2)', '#g-actions .raise-btn',
+    ];
+    const cardSelector = '#g-comm .pk';
+    const cardInfoSelectors = ['#g-comm .pk .c-rank', '#g-comm .pk .c-suit'];
+    const timerSelector = '.seat.active .seat-timeout-bar';
+    const samples = {};
+    const socketId = await page.evaluate(() => window.WebSocket.instance.fixtureId);
+    for (const [value, multiplier] of [['standard', 1], ['large', 1.5], ['extra-large', 2]]) {
+      await chooseInterfaceSize(page, 'game', value);
+      await page.locator('#g-actions .btn-fold').waitFor();
+      for (const selector of [...fontSelectors, cardSelector, ...cardInfoSelectors, timerSelector]) assert.ok(await page.locator(selector).count(), `active-hand fixture did not render ${selector}`);
+      samples[value] = await visibleMetrics(page, [...fontSelectors, cardSelector, ...cardInfoSelectors, timerSelector]);
+      for (const selector of fontSelectors) {
+        assert.equal(samples[value][selector].visible, true, `${value} active hand ${selector} is outside the viewport: ${JSON.stringify(samples[value][selector])}`);
+        assertExactScaled(samples[value][selector].fontSize, samples.standard[selector].fontSize, multiplier, `${value} active hand ${selector}`);
+      }
+      assert.equal(samples[value][cardSelector].visible, true, `${value} active-hand card face is outside the viewport`);
+      if (value !== 'standard') {
+        for (const selector of cardInfoSelectors) {
+          assert.equal(samples[value][selector].visible, true, `${value} active-hand ${selector} is not visible`);
+          assertExactScaled(samples[value][selector].fontSize, samples.standard[selector].fontSize, multiplier, `${value} active-hand ${selector}`);
+        }
+      }
+      assert.equal(samples[value][timerSelector].visible, true, `${value} active-hand turn timer is outside the viewport`);
+      assertExactScaled(samples[value][timerSelector].cssHeight, samples.standard[timerSelector].cssHeight, multiplier, `${value} active-hand turn-timer height`);
+      assert.equal(await page.evaluate(() => window.WebSocket.instance.fixtureId), socketId, `${value} replaced the active socket`);
+      assert.equal(await page.locator('#g-gameid').textContent(), '303', `${value} lost the game identity`);
+      assert.equal(await page.locator('#g-handn').textContent(), '1', `${value} lost the hand identity`);
+      assert.equal(await page.locator('#g-actions .act-buttons-row .btn-action').count(), 3, `${value} lost principal actions`);
+      const turnIndicator = await page.locator('.seat.active .seat-plate').evaluate((element) => {
+        const style = getComputedStyle(element, '::after');
+        return { borderWidth: parseFloat(style.borderWidth), borderStyle: style.borderStyle, animationName: style.animationName };
+      });
+      assert.ok(turnIndicator.borderWidth >= 1 && turnIndicator.borderStyle !== 'none' && turnIndicator.animationName !== 'none',
+        `${value} lost the visible current-turn indication: ${JSON.stringify(turnIndicator)}`);
+      for (const [selector, label] of [['.gsb-left', 'pot and bet status'], ['.gsb-right', 'game and hand status'], ['.blinds-next', 'blind status']]) {
+        await assertTextFits(page, selector, `${value} active-hand ${label}`);
+      }
+    }
+  });
+  await check('desktop two-seat and ten-seat hands keep critical play reachable and operable', async () => {
+    const actionSelectors = ['#g-actions .btn-fold', '#g-actions .act-buttons-row .btn-action:nth-child(2)', '#g-actions .raise-btn'];
+    for (const seatCount of [2, 10]) {
+      await startActiveHand(page, seatCount);
+      for (const value of ['standard', 'large', 'extra-large']) {
+        await chooseInterfaceSize(page, 'game', value);
+        await page.waitForTimeout(300);
+        const geometry = await activeHandRects(page);
+        for (const [index, rect] of geometry.seats.entries()) assertReachable(rect, geometry.viewport, `${seatCount}-seat ${value} seat ${index + 1}`);
+        for (const [index, rect] of geometry.seatValues.entries()) assertReachable(rect, geometry.viewport, `${seatCount}-seat ${value} player value ${index + 1}`);
+        for (let left = 0; left < geometry.seats.length; left += 1) {
+          for (let right = left + 1; right < geometry.seats.length; right += 1) {
+            assert.equal(overlaps(geometry.seats[left], geometry.seats[right]), false,
+              `${seatCount}-seat ${value} seats ${left + 1} and ${right + 1} overlap`);
+            assert.equal(overlaps(geometry.seatValues[left], geometry.seatValues[right]), false,
+              `${seatCount}-seat ${value} player values ${left + 1} ${JSON.stringify(geometry.seatValues[left])} and ${right + 1} ${JSON.stringify(geometry.seatValues[right])} overlap`);
+          }
+        }
+        for (const [label, rect] of Object.entries({ cards: geometry.cards, pot: geometry.pot, actions: geometry.actions, status: geometry.status })) {
+          assertReachable(rect, geometry.viewport, `${seatCount}-seat ${value} ${label}`);
+        }
+        assert.equal(overlaps(geometry.cards, geometry.actions), false, `${seatCount}-seat ${value} cards overlap actions`);
+        assert.equal(overlaps(geometry.pot, geometry.actions), false, `${seatCount}-seat ${value} pot overlaps actions`);
+        for (const [index, rect] of geometry.seatValues.entries()) {
+          assert.equal(overlaps(rect, geometry.cards), false, `${seatCount}-seat ${value} player value ${index + 1} ${JSON.stringify(rect)} overlaps cards ${JSON.stringify(geometry.cards)}; all values ${JSON.stringify(geometry.seatValues)}`);
+          assert.equal(overlaps(rect, geometry.actions), false, `${seatCount}-seat ${value} player value ${index + 1} ${JSON.stringify(rect)} overlaps actions ${JSON.stringify(geometry.actions)}`);
+        }
+        if (value !== 'standard') {
+          await assertEnhancedTargets(page, actionSelectors, `${seatCount}-seat ${value} action`);
+          await assertKeyboardFocusVisible(page, actionSelectors, `${seatCount}-seat ${value} action`);
+        }
+      }
+      const sentBefore = await page.evaluate(() => window.WebSocket.instance.sent.length);
+      await page.locator('#g-actions .btn-fold').click();
+      await page.waitForFunction((before) => window.WebSocket.instance.sent.length > before, sentBefore);
+      const sentAction = await page.evaluate(async (before) => {
+        const { MSG } = await import('/modules/net/messages.mjs');
+        return window.WebSocket.instance.sent.slice(before)
+          .filter((frame) => frame instanceof ArrayBuffer)
+          .some((frame) => MSG.parse(new Uint8Array(frame).slice(4)).type === MSG.T.MyActionRequest);
+      }, sentBefore);
+      assert.equal(sentAction, true, `${seatCount}-seat Fold did not cross the production message boundary`);
+    }
   });
   console.log(`PASS ${passed}/${passed}`);
 } finally {
