@@ -12076,9 +12076,9 @@ html[data-seat-struct="qml"] .seat-narrow .seat-name .seat-note-stars { font-siz
   }
 }
 
-/* Extra Large adaptive play layout for phone portrait. The semantic document
-   state owns the viewport predicate so CSS and JS cannot drift apart. */
-  :root[data-adaptive-play="portrait-extra-large"] #s-game {
+/* Extra Large adaptive play layout for constrained screens. The semantic
+   document state owns the viewport predicate so CSS and JS cannot drift apart. */
+  :root[data-adaptive-play="constrained-extra-large"] #s-game {
     --active-play-scale: 2;
     --active-pot-font-base: calc(13px * var(--active-standard-comm-scale, var(--comm-scale, 1)));
     --active-status-primary-base: 13px;
@@ -12110,17 +12110,17 @@ html[data-seat-struct="qml"] .seat-narrow .seat-name .seat-note-stars { font-siz
     --active-turn-inset: calc(var(--active-turn-inset-base) * var(--active-play-scale));
   }
 
-  :root[data-adaptive-play="portrait-extra-large"] #s-game #g-potbar {
+  :root[data-adaptive-play="constrained-extra-large"] #s-game #g-potbar {
     font-size: calc(var(--active-pot-font-base) * var(--active-play-scale));
     --pot-badge-lift: calc(var(--active-community-font-base) * var(--active-play-scale) * 1.8 + var(--sp-4));
   }
-  :root[data-adaptive-play="portrait-extra-large"] #s-game :is(.gsb-lbl, .gsb-total, .gsb-phase) {
+  :root[data-adaptive-play="constrained-extra-large"] #s-game :is(.gsb-lbl, .gsb-total, .gsb-phase) {
     font-size: calc(var(--active-status-primary-base) * var(--active-play-scale));
   }
-  :root[data-adaptive-play="portrait-extra-large"] #s-game :is(.gsb-left .gsb-row:last-child .gsb-lbl, .gsb-gh .gsb-lbl, .gsb-val, .gsb-bets) {
+  :root[data-adaptive-play="constrained-extra-large"] #s-game :is(.gsb-left .gsb-row:last-child .gsb-lbl, .gsb-gh .gsb-lbl, .gsb-val, .gsb-bets) {
     font-size: calc(var(--active-status-secondary-base) * var(--active-play-scale));
   }
-  :root[data-adaptive-play="portrait-extra-large"] #s-game #pot-strip {
+  :root[data-adaptive-play="constrained-extra-large"] #s-game #pot-strip {
     height: auto;
     min-height: 66px;
     padding: var(--sp-1) var(--sp-3);
@@ -12128,27 +12128,27 @@ html[data-seat-struct="qml"] .seat-narrow .seat-name .seat-note-stars { font-siz
     grid-template-columns: minmax(0, 1fr) auto;
     align-content: center;
   }
-  :root[data-adaptive-play="portrait-extra-large"] #s-game .gsb-mid {
+  :root[data-adaptive-play="constrained-extra-large"] #s-game .gsb-mid {
     position: static;
     transform: none;
     justify-self: end;
   }
-  :root[data-adaptive-play="portrait-extra-large"] #s-game .gsb-right {
+  :root[data-adaptive-play="constrained-extra-large"] #s-game .gsb-right {
     display: none;
   }
-  :root[data-adaptive-play="portrait-extra-large"] #s-game .blinds-next {
+  :root[data-adaptive-play="constrained-extra-large"] #s-game .blinds-next {
     font-size: calc(var(--active-blinds-font-base) * var(--active-play-scale));
   }
-  :root[data-adaptive-play="portrait-extra-large"] #s-game :is(#g-potbar, .blinds-next) {
+  :root[data-adaptive-play="constrained-extra-large"] #s-game :is(#g-potbar, .blinds-next) {
     height: auto;
     min-height: var(--ctrl-enhanced);
     padding-inline: calc(var(--sp-4) * var(--active-play-scale));
   }
 
-  :root[data-adaptive-play="portrait-extra-large"] #s-game .comm-row .pk {
+  :root[data-adaptive-play="constrained-extra-large"] #s-game .comm-row .pk {
     font-size: calc(var(--active-community-font-base) * var(--active-play-scale));
   }
-  :root[data-adaptive-play="portrait-extra-large"][data-deck] #s-game .pk:not(.back):not(.comm-slot) {
+  :root[data-adaptive-play="constrained-extra-large"][data-deck] #s-game .pk:not(.back):not(.comm-slot) {
     background-image: none;
     background-color: #fff;
     min-width: calc(1.3em + var(--sp-1));
@@ -12156,42 +12156,42 @@ html[data-seat-struct="qml"] .seat-narrow .seat-name .seat-note-stars { font-siz
     padding: 0.2em 0.08em;
     gap: calc(var(--sp-3) * var(--active-play-scale));
   }
-  :root[data-adaptive-play="portrait-extra-large"] #s-game :is(.comm-row, .pot-badge) {
+  :root[data-adaptive-play="constrained-extra-large"] #s-game :is(.comm-row, .pot-badge) {
     top: calc(50% + var(--comm-shift-y, 0px) + var(--sp-1) * var(--active-play-scale));
   }
-  :root[data-adaptive-play="portrait-extra-large"][data-deck] #s-game .pk:not(.back):not(.comm-slot) :is(.c-rank, .c-suit) {
+  :root[data-adaptive-play="constrained-extra-large"][data-deck] #s-game .pk:not(.back):not(.comm-slot) :is(.c-rank, .c-suit) {
     display: block;
     flex: 0 0 auto;
   }
 
-  :root[data-adaptive-play="portrait-extra-large"] #s-game .seat.me .seat-timeout-bar {
+  :root[data-adaptive-play="constrained-extra-large"] #s-game .seat.me .seat-timeout-bar {
     height: calc(var(--active-timer-self-height-base) * var(--active-play-scale));
   }
-  :root[data-adaptive-play="portrait-extra-large"] #s-game .seat:not(.me) .seat-timeout-bar {
+  :root[data-adaptive-play="constrained-extra-large"] #s-game .seat:not(.me) .seat-timeout-bar {
     height: calc(var(--active-timer-opponent-height-base) * var(--active-play-scale));
   }
 
-  :root[data-adaptive-play="portrait-extra-large"] #s-game .act-buttons-row {
+  :root[data-adaptive-play="constrained-extra-large"] #s-game .act-buttons-row {
     height: calc(var(--active-action-height-base) * var(--active-play-scale));
     padding-block: 0;
   }
-  :root[data-adaptive-play="portrait-extra-large"] #s-game .act-buttons-row .btn-action {
+  :root[data-adaptive-play="constrained-extra-large"] #s-game .act-buttons-row .btn-action {
     min-width: var(--ctrl-enhanced);
     min-height: var(--ctrl-enhanced) !important;
     max-height: none !important;
     height: calc(var(--active-action-height-base) * var(--active-play-scale)) !important;
     font-size: calc(var(--active-action-font-base) * var(--active-play-scale)) !important;
   }
-  :root[data-adaptive-play="portrait-extra-large"] #s-game :is(.bet-row .raise-amt-field, .mid-row .btn-pct, .mid-row .btn-allin, .mid-row .mode-sel-wrap) {
+  :root[data-adaptive-play="constrained-extra-large"] #s-game :is(.bet-row .raise-amt-field, .mid-row .btn-pct, .mid-row .btn-allin, .mid-row .mode-sel-wrap) {
     min-height: var(--ctrl-enhanced);
     height: var(--ctrl-enhanced);
   }
-  :root[data-adaptive-play="portrait-extra-large"] #s-game :is(.header .btn-icon, .g-felt-btn) {
+  :root[data-adaptive-play="constrained-extra-large"] #s-game :is(.header .btn-icon, .g-felt-btn) {
     min-width: var(--ctrl-enhanced);
     min-height: var(--ctrl-enhanced);
   }
-  :root[data-adaptive-play="portrait-extra-large"] #s-game .g-felt-corner { display: none; }
-  :root[data-adaptive-play="portrait-extra-large"] #s-game .adaptive-drawer-bar {
+  :root[data-adaptive-play="constrained-extra-large"] #s-game .g-felt-corner { display: none; }
+  :root[data-adaptive-play="constrained-extra-large"] #s-game .adaptive-drawer-bar {
     display: grid;
     grid-template-columns: 0.8fr 1.2fr 0.8fr 1.2fr;
     gap: var(--sp-1);
@@ -12199,7 +12199,7 @@ html[data-seat-struct="qml"] .seat-narrow .seat-name .seat-note-stars { font-siz
     background: var(--panel);
     border-bottom: 1px solid var(--border);
   }
-  :root[data-adaptive-play="portrait-extra-large"] #s-game .adaptive-drawer-bar button {
+  :root[data-adaptive-play="constrained-extra-large"] #s-game .adaptive-drawer-bar button {
     min-width: 0;
     min-height: var(--ctrl-enhanced);
     padding: var(--sp-1);
@@ -12210,10 +12210,10 @@ html[data-seat-struct="qml"] .seat-narrow .seat-name .seat-note-stars { font-siz
     font: 700 var(--fs-xs)/1.15 var(--ff-display);
     cursor: pointer;
   }
-  :root[data-adaptive-play="portrait-extra-large"] #s-game .adaptive-drawer-bar [aria-hidden="true"] {
+  :root[data-adaptive-play="constrained-extra-large"] #s-game .adaptive-drawer-bar [aria-hidden="true"] {
     display: none;
   }
-  :root[data-adaptive-play="portrait-extra-large"] #s-game :is(#g-chat-panel, #g-log-panel) {
+  :root[data-adaptive-play="constrained-extra-large"] #s-game :is(#g-chat-panel, #g-log-panel) {
     position: relative !important;
     inset: auto !important;
     width: 100% !important;
@@ -12226,21 +12226,147 @@ html[data-seat-struct="qml"] .seat-narrow .seat-name .seat-note-stars { font-siz
     box-sizing: border-box;
     overflow: hidden;
   }
-  :root[data-adaptive-play="portrait-extra-large"] #s-game :is(#g-chat-panel, #g-log-panel) :is(button, input) {
+  :root[data-adaptive-play="constrained-extra-large"] #s-game :is(#g-chat-panel, #g-log-panel) :is(button, input) {
     min-height: var(--adaptive-drawer-target);
   }
-  :root[data-adaptive-play="portrait-extra-large"] #s-game :is(#g-chat-close, #g-log-close, #gip-export, #g-chat-emoji-toggle, .chat-send) {
+  :root[data-adaptive-play="constrained-extra-large"] #s-game :is(#g-chat-close, #g-log-close, #gip-export, #g-chat-emoji-toggle, .chat-send) {
     min-width: var(--adaptive-drawer-target);
   }
-  :root[data-adaptive-play="portrait-extra-large"] #s-game :is(#hands-card-inner .g-chat-panel-header button, #g-reaction-panel .react-title-actions button) {
+  :root[data-adaptive-play="constrained-extra-large"] #s-game :is(#hands-card-inner .g-chat-panel-header button, #g-reaction-panel .react-title-actions button) {
     min-width: var(--adaptive-drawer-target);
     min-height: var(--adaptive-drawer-target);
   }
-  :root[data-adaptive-play="portrait-extra-large"] #s-game #g-reaction-panel .react-title-actions {
+  :root[data-adaptive-play="constrained-extra-large"] #s-game #g-reaction-panel .react-title-actions {
     position: relative;
     z-index: 7;
   }
-  :root[data-adaptive-play="portrait-extra-large"] #s-game :focus-visible {
+  :root[data-adaptive-play="constrained-extra-large"] #s-game #hands-card-inner {
+    width: 100%;
+    max-width: min(560px, calc(100vw - var(--sp-5) * 2));
+    max-height: calc(100dvh - var(--sp-5) * 2);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background: var(--chatlog-bg, var(--modal-bg));
+  }
+  :root[data-adaptive-play="constrained-extra-large"] #s-game #hands-card-inner .hands-scroll {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: auto;
+  }
+  :root[data-adaptive-play="constrained-extra-large"] #s-game :focus-visible {
     outline: 3px solid var(--sel, var(--gold)) !important;
     outline-offset: 3px !important;
   }
+
+@media (max-height: 500px) and (orientation: landscape) {
+  :root[data-adaptive-play="constrained-extra-large"] #s-game {
+    --active-action-height-base: 22px;
+    --active-action-font-base: 15px;
+    --adaptive-drawer-target: var(--ctrl-enhanced);
+    --adaptive-drawer-height: calc(var(--ctrl-enhanced) * 2);
+    --adaptive-drawer-clearance: 0px;
+  }
+  :root[data-adaptive-play="constrained-extra-large"] #s-game .header {
+    min-height: var(--ctrl-enhanced) !important;
+  }
+  :root[data-adaptive-play="constrained-extra-large"] #s-game .header .btn-icon {
+    width: var(--ctrl-enhanced) !important;
+    height: var(--ctrl-enhanced) !important;
+  }
+  :root[data-adaptive-play="constrained-extra-large"] #s-game #pot-strip {
+    height: calc(var(--ctrl-enhanced) + var(--sp-5));
+    min-height: calc(var(--ctrl-enhanced) + var(--sp-5));
+  }
+  :root[data-adaptive-play="constrained-extra-large"] #s-game .game-area {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(300px, 380px);
+    grid-template-rows: minmax(0, 1fr) auto;
+    min-height: 0;
+  }
+  :root[data-adaptive-play="constrained-extra-large"] #s-game .table-zone {
+    grid-column: 1;
+    grid-row: 1 / 3;
+    min-width: 0;
+    min-height: 0;
+  }
+  :root[data-adaptive-play="constrained-extra-large"] #s-game :is(.comm-row, .pot-badge) {
+    top: calc(50% + var(--comm-shift-y, 0px) - var(--sp-4));
+  }
+  :root[data-adaptive-play="constrained-extra-large"] #s-game .my-zone {
+    grid-column: 2;
+    grid-row: 1;
+    align-self: end;
+    left: auto !important;
+    right: auto !important;
+    width: auto !important;
+    transform: none !important;
+  }
+  :root[data-adaptive-play="constrained-extra-large"] #s-game .action-grid {
+    padding: var(--sp-0) !important;
+  }
+  :root[data-adaptive-play="constrained-extra-large"] #s-game .bet-row .raise-amt-field {
+    min-height: 24px;
+    height: 24px;
+  }
+  :root[data-adaptive-play="constrained-extra-large"] #s-game .player-bar {
+    grid-column: 2;
+    grid-row: 2;
+  }
+  :root[data-adaptive-play="constrained-extra-large"] #s-game .act-buttons-row,
+  :root[data-adaptive-play="constrained-extra-large"] #s-game .act-buttons-row .btn-action {
+    height: var(--ctrl-enhanced) !important;
+  }
+  :root[data-adaptive-play="constrained-extra-large"] #s-game .adaptive-drawer-bar {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    height: var(--ctrl-enhanced);
+    padding: 0 var(--sp-0);
+    flex: 0 0 var(--ctrl-enhanced);
+  }
+  :root[data-adaptive-play="constrained-extra-large"] #s-game .adaptive-drawer-bar button {
+    height: var(--ctrl-enhanced);
+    white-space: nowrap;
+  }
+  :root[data-adaptive-play="constrained-extra-large"] #s-game :is(#g-chat-panel, #g-log-panel) {
+    position: absolute !important;
+    top: calc(var(--ctrl-enhanced) * 3 + var(--sp-5)) !important;
+    right: 0 !important;
+    left: auto !important;
+    width: min(380px, 45vw) !important;
+    margin: 0;
+    z-index: 20;
+  }
+  :root[data-adaptive-play="constrained-extra-large"] #s-game #hands-overlay {
+    position: absolute;
+    inset: 0;
+    padding: 0;
+    align-items: flex-start;
+    justify-content: flex-end;
+    z-index: 20;
+  }
+  :root[data-adaptive-play="constrained-extra-large"] #s-game :is(#hands-card-inner, #g-reaction-panel) {
+    position: absolute !important;
+    top: calc(var(--ctrl-enhanced) * 3 + var(--sp-5)) !important;
+    right: 0 !important;
+    bottom: auto !important;
+    left: auto !important;
+    width: min(380px, 45vw) !important;
+    height: var(--adaptive-drawer-height) !important;
+    max-width: none !important;
+    max-height: var(--adaptive-drawer-height) !important;
+    box-sizing: border-box;
+    overflow: hidden;
+    z-index: 20;
+  }
+  :root[data-adaptive-play="constrained-extra-large"] #s-game #hands-card-inner {
+    display: flex;
+    flex-direction: column;
+    background: var(--chatlog-bg, var(--modal-bg));
+    pointer-events: auto;
+  }
+  :root[data-adaptive-play="constrained-extra-large"] #s-game :is(#hands-card-inner .hands-scroll, #g-reaction-panel .react-grid) {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: auto;
+  }
+}

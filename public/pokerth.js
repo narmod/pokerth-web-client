@@ -9763,22 +9763,31 @@ document.addEventListener('click', function(e) {
   }
 });
 
-function toggleHandsHelp() {
+function toggleHandsHelp(invoker) {
   var ov = document.getElementById('hands-overlay');
   var card = document.getElementById('hands-card-inner');
   if (!ov || !card) return;
   var opening = ov.style.display === 'none';
+  var fallbackBtn = document.getElementById('hands-toggle-btn');
+  var btn = opening && invoker && invoker.getAttribute && invoker.getAttribute('aria-controls') === 'hands-card-inner'
+    ? invoker : (card._drawerInvoker || fallbackBtn);
+  if (opening) card._drawerInvoker = btn;
   if (opening) {
     renderHandsHelp();
     ov.style.display = 'flex';
+    card.setAttribute('aria-hidden', 'false');
     card._winRszWired = false;   // innerHTML reconstruit -> re-injecter les poignees
-    var btn = document.getElementById('hands-toggle-btn');
     // Même système de fenêtre que chat/journal/réactions (déplaçable + redimensionnable partout).
-    _openFloatingNearBtn(card, btn, { key:'pth_winpos_hands', handle: card.querySelector('.g-chat-panel-header'), resizable:true, minW:280, minH:220, defW:380, defH:440, zoom:true }, 'right');
+    _configureGameDrawer(card, true, btn);
   } else {
     if (card.classList.contains('floating-win')) _saveWin(card, 'pth_winpos_hands');
     ov.style.display = 'none';
+    card.setAttribute('aria-hidden', 'true');
+    _configureGameDrawer(card, false, btn);
   }
+  document.querySelectorAll('[aria-controls="hands-card-inner"]').forEach(function(trigger) {
+    trigger.setAttribute('aria-expanded', opening ? 'true' : 'false');
+  });
 }
 
 // ── État « fenêtre ouverte » : le bouton déclencheur passe en or ────────
@@ -10384,6 +10393,23 @@ function _gameDrawerConfig(panel) {
     refreshOutsideAdaptive: false,
     floating: { key:'pth_winpos_log2', handle: panel.querySelector('.g-chat-panel-header'), resizable:true, minW:240, minH:140, defW: window.innerWidth >= 1400 ? 340 : 300, defH:300, zoom:true }
   };
+  if (panel.id === 'hands-card-inner') return {
+    normalTrigger: document.getElementById('hands-toggle-btn'),
+    adaptiveTrigger: document.getElementById('adaptive-hands-toggle'),
+    visibilityPanel: document.getElementById('hands-overlay'),
+    side: 'right',
+    focus: function () { return panel.querySelector('.g-chat-panel-header button'); },
+    refreshOutsideAdaptive: false,
+    floating: { key:'pth_winpos_hands', handle: panel.querySelector('.g-chat-panel-header'), resizable:true, minW:280, minH:220, defW:380, defH:440, zoom:true }
+  };
+  if (panel.id === 'g-reaction-panel') return {
+    normalTrigger: document.getElementById('react-toggle-btn'),
+    adaptiveTrigger: document.getElementById('adaptive-reactions-toggle'),
+    side: 'left',
+    focus: function () { return panel.querySelector('.react-panel-close'); },
+    refreshOutsideAdaptive: false,
+    floating: { key:'pth_winpos_react', handle: panel.querySelector('.react-panel-title'), resizable:true, minW:280, minH:230, maxW:760, maxH:520, defW:330, defH:340 }
+  };
   return null;
 }
 
@@ -10396,7 +10422,7 @@ function _refreshGameDrawerLayout() {
 }
 
 function reconfigureGameDrawersForAdaptivePlay(adaptive) {
-  var panels = [document.getElementById('g-chat-panel'), document.getElementById('g-log-panel')];
+  var panels = [document.getElementById('g-chat-panel'), document.getElementById('g-log-panel'), document.getElementById('hands-card-inner'), document.getElementById('g-reaction-panel')];
   for (var i = 0; i < panels.length; i++) {
     var panel = panels[i], config = _gameDrawerConfig(panel);
     if (!panel || !config) continue;
@@ -10408,7 +10434,8 @@ function reconfigureGameDrawersForAdaptivePlay(adaptive) {
       panel.removeAttribute('role');
       panel.removeAttribute('aria-modal');
     }
-    var open = panel.style.display !== 'none';
+    var visibilityPanel = config.visibilityPanel || panel;
+    var open = visibilityPanel.style.display !== 'none';
     if (!open) continue;
     var btn = adaptive ? config.adaptiveTrigger : config.normalTrigger;
     panel._drawerInvoker = btn;
@@ -10425,12 +10452,12 @@ function reconfigureGameDrawersForAdaptivePlay(adaptive) {
   _refreshGameDrawerLayout();
 }
 window.reconfigureGameDrawersForAdaptivePlay = reconfigureGameDrawersForAdaptivePlay;
-try { reconfigureGameDrawersForAdaptivePlay(typeof window.isAdaptivePortraitPlay === 'function' && window.isAdaptivePortraitPlay()); } catch (e) {}
+try { reconfigureGameDrawersForAdaptivePlay(typeof window.isAdaptivePlay === 'function' && window.isAdaptivePlay()); } catch (e) {}
 
 function _configureGameDrawer(panel, opening, btn) {
   var config = _gameDrawerConfig(panel);
   if (!config) return false;
-  var adaptive = typeof window.isAdaptivePortraitPlay === 'function' && window.isAdaptivePortraitPlay();
+  var adaptive = typeof window.isAdaptivePlay === 'function' && window.isAdaptivePlay();
   if (opening) {
     if (adaptive) _disableFloating(panel);
     else _openFloatingNearBtn(panel, btn, config.floating, config.side);
@@ -10639,7 +10666,7 @@ function _reactPageCurrent(){
   return v;
 }
 
-function toggleReactionPanel() {
+function toggleReactionPanel(invoker) {
   // Réactions actives partout, y compris pokerth.net : sendReaction() relaie
   // via la commande /emoji dans le chat de partie (interop web <-> Qt/QML).
   // L'ancien garde-fou _directWS masquait le bouton sur pokerth.net (régression).
@@ -10647,15 +10674,22 @@ function toggleReactionPanel() {
   // hidden by CSS, this guard covers programmatic/keyboard paths.
   try { if (window.PthState && window.PthState._amSpectator) return; } catch (e) {}
   var panel = document.getElementById('g-reaction-panel');
-  var btn   = document.getElementById('react-toggle-btn');
+  var fallbackBtn = document.getElementById('react-toggle-btn');
   if (!panel) return;
   var open = panel.style.display === 'none' || panel.style.display === '';
+  var btn = open && invoker && invoker.getAttribute && invoker.getAttribute('aria-controls') === 'g-reaction-panel'
+    ? invoker : (panel._drawerInvoker || fallbackBtn);
+  if (open) panel._drawerInvoker = btn;
   panel.style.display = open ? 'flex' : 'none';
+  panel.setAttribute('aria-hidden', open ? 'false' : 'true');
+  document.querySelectorAll('[aria-controls="g-reaction-panel"]').forEach(function(trigger) {
+    trigger.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
   if (open) { _applyReactMuteUI(); try { _applyReactPinUI(); } catch (e) {} }
   if (open) {
     // minW/minH relevés : au minimum de fenêtre, les 30 émojis de la page active tiennent encore
     // à la borne basse de case (32 px) sans défilement.
-    _openFloatingNearBtn(panel, btn, { key:'pth_winpos_react', handle: panel.querySelector('.react-panel-title'), resizable:true, minW:280, minH:230, maxW:760, maxH:520, defW:330, defH:340 }, 'left');
+    _configureGameDrawer(panel, true, btn);
     if (!panel._reactFitRO && typeof ResizeObserver !== 'undefined'){
       panel._reactFitRO = new ResizeObserver(function(){ _fitReactGrid(panel); });
       panel._reactFitRO.observe(panel);
@@ -10663,6 +10697,7 @@ function toggleReactionPanel() {
     setReactionPage(_reactPageCurrent());  // restaure la page + _fitReactGrid
     _attachReactSwipe(panel);              // pages au doigt sur tactile
   }
+  if (!open) _configureGameDrawer(panel, false, btn);
   if (btn) {
     btn.style.background  = open ? 'rgba(var(--gold-rgb),0.2)' : '';
     btn.style.borderColor = open ? 'var(--gold-dim)' : '';
@@ -11525,7 +11560,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.8-web.132'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.8-web.133'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

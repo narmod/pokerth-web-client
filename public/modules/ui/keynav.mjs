@@ -50,7 +50,7 @@ const SURFACES = [
   // — panneaux flottants —
   ['hands-overlay',        'toggleHandsHelp'],
   ['music-panel',          'toggleMusicPanel'],
-  ['g-reaction-panel',     'App.toggleReactionsPin'],
+  ['g-reaction-panel',     'toggleReactionPanel'],
   ['g-log-panel',          'toggleLog'],
   ['g-chat-panel',         'toggleGameChat'],
   ['g-winner-overlay',     'App.dismissWinner'],

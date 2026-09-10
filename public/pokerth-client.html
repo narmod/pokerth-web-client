@@ -2171,8 +2171,8 @@ function _processAvatarFile(file) {
   <nav class="adaptive-drawer-bar" aria-label="Game information" data-i18n-aria="gameInfoTitle">
     <button type="button" id="adaptive-chat-toggle" onclick="toggleGameChat(this)" aria-controls="g-chat-panel" aria-expanded="false"><span aria-hidden="true">💬</span> <span data-i18n="chatTooltip">Chat</span></button>
     <button type="button" id="adaptive-info-toggle" onclick="toggleLog(this)" aria-controls="g-log-panel" aria-expanded="false"><span aria-hidden="true">📋</span> <span data-i18n="gipTabLog">Log</span> / <span data-i18n="gipTabStats">Stats</span></button>
-    <button type="button" id="adaptive-hands-toggle" onclick="toggleHandsHelp()"><span aria-hidden="true">🃏</span> <span data-i18n="handsHelpTooltip">Hands</span></button>
-    <button type="button" id="adaptive-reactions-toggle" onclick="toggleReactionPanel()"><span aria-hidden="true">😊</span> <span data-i18n="reactionsLabel">Reactions</span></button>
+    <button type="button" id="adaptive-hands-toggle" onclick="toggleHandsHelp(this)" aria-controls="hands-card-inner" aria-expanded="false"><span aria-hidden="true">🃏</span> <span data-i18n="handsHelpTooltip">Hands</span></button>
+    <button type="button" id="adaptive-reactions-toggle" onclick="toggleReactionPanel(this)" aria-controls="g-reaction-panel" aria-expanded="false"><span aria-hidden="true">😊</span> <span data-i18n="reactionsLabel">Reactions</span></button>
   </nav>
   <!-- Log dropdown (below header) -->
   <!-- Log dropdown (below header) — same structure as chat panel
@@ -2206,10 +2206,10 @@ function _processAvatarFile(file) {
 
   <!-- ══ HANDS HELP OVERLAY ══ -->
   <div id="hands-overlay" style="display:none" onclick="if(event.target===this)toggleHandsHelp()">
-    <div id="hands-card-inner"></div>
+    <div id="hands-card-inner" aria-label="Poker hand rankings" data-i18n-aria="handsHelpTooltip" aria-hidden="true"></div>
   </div>
   <!-- Panneau réactions (dropdown header) -->
-  <div id="g-reaction-panel" style="display:none">
+  <div id="g-reaction-panel" aria-label="Reactions" data-i18n-aria="reactionsLabel" aria-hidden="true" style="display:none">
     <div class="react-panel-title">
       <span>😊 <span data-i18n="reactionsLabel">Reactions</span></span><span class="react-pager"><button type="button" class="react-pg-arrow" onclick="App.reactPageStep(-1)" aria-label="&#8249;">&#8249;</button><span class="react-pg-ind" id="react-page-ind">1/3</span><button type="button" class="react-pg-arrow" onclick="App.reactPageStep(1)" aria-label="&#8250;">&#8250;</button></span>
       <span class="react-title-actions"><button type="button" class="react-pin-btn" id="react-pin-toggle" onclick="App.toggleReactionsPin()" aria-pressed="false" title="Pin: keep the window open after a reaction" data-i18n-title="reactionsPinTitle">📌</button><button type="button" class="react-mute-btn" id="react-mute-toggle" onclick="App.toggleReactionsMute()" aria-pressed="false" title="Enable / disable reactions" data-i18n-title="reactionsMuteTitle"><span class="rm-emo">😊</span></button><button class="react-panel-close" onclick="toggleReactionPanel()">✕</button></span>
@@ -2324,10 +2324,10 @@ function _processAvatarFile(file) {
          haut-gauche, journal en haut-droite. -->
     <div class="g-felt-corner g-felt-tl">
       <button class="g-felt-btn" id="chat-toggle-btn" onclick="toggleGameChat(this)" title="Chat" data-i18n-title="chatTooltip" data-i18n-aria="chatTooltip" aria-label="Chat" aria-controls="g-chat-panel" aria-expanded="false">💬</button>
-      <button class="g-felt-btn" id="react-toggle-btn" onclick="toggleReactionPanel()" title="Reactions" data-i18n-title="reactionsLabel">😊</button>
+      <button class="g-felt-btn" id="react-toggle-btn" onclick="toggleReactionPanel(this)" title="Reactions" data-i18n-title="reactionsLabel" aria-controls="g-reaction-panel" aria-expanded="false">😊</button>
     </div>
     <div class="g-felt-corner g-felt-tr">
-      <button class="g-felt-btn" id="hands-toggle-btn" onclick="toggleHandsHelp()" title="Poker hand rankings" data-i18n-title="handsHelpTooltip" data-i18n-aria="handsHelpTooltip" aria-label="Poker hand rankings">🃏</button>
+      <button class="g-felt-btn" id="hands-toggle-btn" onclick="toggleHandsHelp(this)" title="Poker hand rankings" data-i18n-title="handsHelpTooltip" data-i18n-aria="handsHelpTooltip" aria-label="Poker hand rankings" aria-controls="hands-card-inner" aria-expanded="false">🃏</button>
       <button class="g-felt-btn" id="log-toggle-btn" onclick="toggleLog(this)" title="Log" data-i18n-title="logTooltip" data-i18n-aria="logTooltip" aria-label="Log" aria-controls="g-log-panel" aria-expanded="false">📋</button>
     </div>
     <!-- Zoom table : bouton repliable en mobile (une touche qui déploie les autres) -->
