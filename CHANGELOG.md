@@ -316,6 +316,16 @@ highlights below.
   every entry now carries both.
 
 ### Changed
+- **Reaction choreographies ×1.25, as upstream `b8a1d18`** (`web.111`) — the
+  QML and widget clients took the web keyframes (1.4–1.7 s) and stretch them
+  by `durationScale` 1.25 back to the 2.1.7 flight time (`pop` 1.6 s → 2 s);
+  the web client kept the short tempo, so the same `/emoji` ran shorter here.
+  All 16 `.rfx-anim-*` durations are scaled in `pokerth.css` (keyframe
+  percentages untouched), and the delays aligned with the choreography follow
+  (`RFX_DURATION_SCALE` in `reactions.mjs`): 💣 impact 420 → 525 ms, second
+  ring 540 → 675 ms. Particle and ring durations stay as upstream. The burst
+  container now lives `RFX_LIFE_MS` = 2225 ms (was 1800). Guarded in
+  `scripts/test-reactions-catalog.mjs`.
 - **`/live` — no table chat, no fullscreen inside a frame** (`web.107`,
   feedback from the pokerth.net embedding) — a visitor on the site no longer
   sees the chat of the table being watched: `#chat-toggle-btn`, `#gchat-fab`

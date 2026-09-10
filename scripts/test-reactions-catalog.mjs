@@ -32,7 +32,7 @@ globalThis.document = {
 };
 globalThis.window = globalThis;
 
-const { REACT_EMOJIS, REACTION_FX } = await import('../public/modules/ui/reactions.mjs');
+const { REACT_EMOJIS, REACTION_FX, RFX_DURATION_SCALE, RFX_LIFE_MS } = await import('../public/modules/ui/reactions.mjs');
 
 let fails = 0;
 function ok(cond, label) {
@@ -76,6 +76,19 @@ const badPresets = Object.entries(REACTION_FX)
   .filter(([, f]) => typeof f.p === 'string' && !KNOWN_PRESETS.has(f.p));
 ok(badPresets.length === 0, 'all string presets are known (sparkle/shock/confetti/boom)');
 ok(css.includes('.rfx-ring-boom') && css.includes('@keyframes rfxRingBoom'), "CSS for 'boom' shockwave ring exists");
+
+// 4) Durations follow upstream b8a1d18: keyframe base (1.4-1.7 s) x 1.25, and the
+//    container outlives the longest choreography.
+ok(RFX_DURATION_SCALE === 1.25, 'RFX_DURATION_SCALE is 1.25 (upstream durationScale)');
+const SCALED = new Set([1400, 1500, 1600, 1700].map((ms) => Math.round(ms * 1.25)));
+let maxAnim = 0;
+for (const a of anims) {
+  const m = css.match(new RegExp('\\.rfx-anim-' + a + '\\s*\\{\\s*animation:\\s*rfx\\w+\\s+([\\d.]+)s'));
+  const ms = m ? Math.round(parseFloat(m[1]) * 1000) : NaN;
+  if (ms > maxAnim) maxAnim = ms;
+  ok(SCALED.has(ms), '.rfx-anim-' + a + ' duration is a scaled base (' + ms + ' ms)');
+}
+ok(RFX_LIFE_MS > maxAnim, 'container life ' + RFX_LIFE_MS + ' ms outlives longest choreography ' + maxAnim + ' ms');
 
 if (fails) { console.error(fails + ' test(s) failed'); process.exit(1); }
 console.log('All reactions-catalog tests passed.');

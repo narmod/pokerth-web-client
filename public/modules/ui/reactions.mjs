@@ -155,20 +155,32 @@ var REACTION_FX = {
 };
 function _rfxDefault(){ return { a:'pop', p:'sparkle' }; }
 
+// Facteur de durée des chorégraphies — parité upstream b8a1d18
+// (ReactionCatalog.qml durationScale, reactionfx.cpp kDurationScale) : les
+// keyframes de base (1,4–1,7 s) sont étirées ×1,25 dans pokerth.css (pop
+// 1,6 s → 2 s, la durée de vol de 2.1.7), ainsi que les délais qui leur sont
+// alignés. Particules et anneaux gardent leur durée.
+var RFX_DURATION_SCALE = 1.25;
+// Durée de vie du conteneur : chorégraphie la plus longue (1,7 s × 1,25 =
+// 2125 ms) + 100 ms de marge, comme l'ancien 1800 ms pour 1,7 s.
+var RFX_LIFE_MS = Math.round(1700 * RFX_DURATION_SCALE) + 100;
+
 // Génère les particules d'un effet dans le conteneur c (centré sur 0,0 du conteneur)
 function _rfxSpawn(c, spec){
   if (spec === 'sparkle') spec = {chars:['✦','✧'],count:7,color:'var(--gold)',size:12,a0:0,a1:360,dist:54,life:700};
   if (spec === 'confetti'){ _rfxConfetti(c); return; }
   if (spec === 'boom'){
     // 💣 (demande Kai 2026-08-28) : la bombe tombe (anim 'drop'), PUIS explose
-    // à l'atterrissage (~420 ms) — double onde de choc orange + gerbe 💥🔥✦.
+    // à l'atterrissage — double onde de choc orange + gerbe 💥🔥✦. Délais
+    // alignés sur la chorégraphie, donc étirés avec elle (upstream b8a1d18,
+    // scaled()) : impact 420→525 ms, 2e onde 540→675 ms (+150 ms).
     setTimeout(function(){
       if (!c.parentNode) return;
       var r1 = document.createElement('div'); r1.className = 'rfx-ring rfx-ring-boom'; c.appendChild(r1);
-      var r2 = document.createElement('div'); r2.className = 'rfx-ring rfx-ring-boom'; r2.style.animationDelay = '0.12s'; c.appendChild(r2);
+      var r2 = document.createElement('div'); r2.className = 'rfx-ring rfx-ring-boom'; r2.style.animationDelay = Math.round(120 * RFX_DURATION_SCALE) + 'ms'; c.appendChild(r2);
       setTimeout(function(){ r1.remove(); r2.remove(); }, 1150);
       _rfxSpawn(c, {chars:['💥','🔥','✦'],count:14,size:18,a0:0,a1:360,dist:95,life:950,rot:1});
-    }, 420);
+    }, Math.round(420 * RFX_DURATION_SCALE));
     return;
   }
   if (spec === 'gunshot'){
@@ -253,7 +265,7 @@ function playReactionFx(emoji, x, y){
   big.textContent = emoji;
   c.appendChild(big);
   if (!reduce) _rfxSpawn(c, fx.p);
-  setTimeout(function(){ if (c.parentNode) c.remove(); }, 1800);
+  setTimeout(function(){ if (c.parentNode) c.remove(); }, RFX_LIFE_MS);
 }
 
 // Affiche la réaction animée (chorégraphie) à la position fournie (siège du joueur).
@@ -392,7 +404,7 @@ function setReactMuted(on) {
 window.setReactMuted = setReactMuted;
 
 // ─── Exports ES + alias legacy ───────────────────────────────────────────
-export { handleIncomingReaction, setReactMuted, playReactionFx, showFloatingReaction, REACT_EMOJIS, REACTION_FX };
+export { handleIncomingReaction, setReactMuted, playReactionFx, showFloatingReaction, REACT_EMOJIS, REACTION_FX, RFX_DURATION_SCALE, RFX_LIFE_MS };
 if (typeof window !== 'undefined') {
   // setReactMuted est déjà attaché par le bloc lui-même (verbatim).
   window.handleIncomingReaction = handleIncomingReaction;
