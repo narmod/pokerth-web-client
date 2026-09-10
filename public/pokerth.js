@@ -9809,8 +9809,8 @@ var _WIN_BTN = [
   { win: 'music-panel',           mode: 'display', btns: ['music-toggle-connect-mob', 'music-toggle-lobby-mob', 'music-toggle-create-mob', 'music-toggle-game-mob'] },
   { win: 'g-chat-panel',          mode: 'display', btns: ['chat-toggle-btn', 'gchat-fab', 'adaptive-chat-toggle'] },
   { win: 'g-log-panel',           mode: 'display', btns: ['log-toggle-btn', 'adaptive-info-toggle'] },
-  { win: 'g-reaction-panel',      mode: 'display', btns: ['react-toggle-btn'] },
-  { win: 'hands-overlay',         mode: 'display', btns: ['hands-toggle-btn'] },
+  { win: 'g-reaction-panel',      mode: 'display', btns: ['react-toggle-btn', 'adaptive-reactions-toggle'] },
+  { win: 'hands-overlay',         mode: 'display', btns: ['hands-toggle-btn', 'adaptive-hands-toggle'] },
   { win: 'players-panel',         mode: 'display', btns: ['h-players'], sel: ['.fbar-players'] },
   { win: 'avatar-popup',          mode: 'display', btns: ['av-trigger'] },
   { win: 'l-chat-emoji-panel',    mode: 'display', btns: ['l-chat-emoji-toggle'] },
@@ -10698,11 +10698,6 @@ function toggleReactionPanel(invoker) {
     _attachReactSwipe(panel);              // pages au doigt sur tactile
   }
   if (!open) _configureGameDrawer(panel, false, btn);
-  if (btn) {
-    btn.style.background  = open ? 'rgba(var(--gold-rgb),0.2)' : '';
-    btn.style.borderColor = open ? 'var(--gold-dim)' : '';
-    btn.style.color       = open ? 'var(--gold)' : '';
-  }
   setTimeout(function(){
     autoScaleTable();
     if(typeof renderSeats==='function' && typeof seats!=='undefined' && seats.length)
@@ -11560,7 +11555,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.8-web.133'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.8-web.134'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

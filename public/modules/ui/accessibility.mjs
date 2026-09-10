@@ -89,7 +89,12 @@ function applyAccessibilityPreferences() {
     const root = document.documentElement;
     const previousSize = root.getAttribute('data-interface-size');
     const game = document.getElementById('s-game');
-    if (game && previousSize === 'standard' && preferences.interfaceSize !== 'standard') {
+    const magnifierActive = (window._loupeK || 1) > 1.001;
+    // The root community scale belongs to the magnified layout while the loupe
+    // is active; keep the last real Standard metrics across a size round trip.
+    const preserveStandardMetrics = magnifierActive && game
+      && game.style.getPropertyValue('--active-standard-comm-scale');
+    if (game && previousSize === 'standard' && preferences.interfaceSize !== 'standard' && !preserveStandardMetrics) {
       const standardCommunityScale = window.getComputedStyle(root).getPropertyValue('--comm-scale').trim();
       if (standardCommunityScale) game.style.setProperty('--active-standard-comm-scale', standardCommunityScale);
       const pot = document.getElementById('g-potbar');
@@ -100,7 +105,7 @@ function applyAccessibilityPreferences() {
     root.setAttribute('data-interface-size', preferences.interfaceSize);
     root.setAttribute('data-high-contrast', preferences.highContrast ? 'true' : 'false');
     adaptiveChanged = syncAdaptivePlayState(preferences.interfaceSize);
-    if (game && preferences.interfaceSize === 'standard') {
+    if (game && preferences.interfaceSize === 'standard' && !magnifierActive) {
       game.style.removeProperty('--active-standard-comm-scale');
       game.style.removeProperty('--active-pot-font-base');
       game.style.removeProperty('--active-community-font-base');

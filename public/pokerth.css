@@ -12229,6 +12229,9 @@ html[data-seat-struct="qml"] .seat-narrow .seat-name .seat-note-stars { font-siz
   :root[data-adaptive-play="constrained-extra-large"] #s-game :is(#g-chat-panel, #g-log-panel) :is(button, input) {
     min-height: var(--adaptive-drawer-target);
   }
+  :root[data-adaptive-play="constrained-extra-large"] #s-game :is(#g-chat-panel, #g-log-panel) button {
+    min-width: var(--adaptive-drawer-target);
+  }
   :root[data-adaptive-play="constrained-extra-large"] #s-game :is(#g-chat-close, #g-log-close, #gip-export, #g-chat-emoji-toggle, .chat-send) {
     min-width: var(--adaptive-drawer-target);
   }
@@ -12263,9 +12266,12 @@ html[data-seat-struct="qml"] .seat-narrow .seat-name .seat-note-stars { font-siz
   :root[data-adaptive-play="constrained-extra-large"] #s-game {
     --active-action-height-base: 22px;
     --active-action-font-base: 15px;
+    --adaptive-play-target: var(--ctrl-enhanced);
     --adaptive-drawer-target: var(--ctrl-enhanced);
     --adaptive-drawer-height: calc(var(--ctrl-enhanced) * 2);
     --adaptive-drawer-clearance: 0px;
+    --adaptive-reaction-columns: 7;
+    --adaptive-reaction-choice: var(--ctrl-enhanced);
   }
   :root[data-adaptive-play="constrained-extra-large"] #s-game .header {
     min-height: var(--ctrl-enhanced) !important;
@@ -12305,9 +12311,12 @@ html[data-seat-struct="qml"] .seat-narrow .seat-name .seat-note-stars { font-siz
   :root[data-adaptive-play="constrained-extra-large"] #s-game .action-grid {
     padding: var(--sp-0) !important;
   }
-  :root[data-adaptive-play="constrained-extra-large"] #s-game .bet-row .raise-amt-field {
-    min-height: 24px;
-    height: 24px;
+  :root[data-adaptive-play="constrained-extra-large"] #s-game .bet-row {
+    min-height: var(--adaptive-play-target);
+  }
+  :root[data-adaptive-play="constrained-extra-large"] #s-game .bet-row :is(.raise-amt-field, .raise-slider) {
+    min-height: var(--adaptive-play-target);
+    height: var(--adaptive-play-target);
   }
   :root[data-adaptive-play="constrained-extra-large"] #s-game .player-bar {
     grid-column: 2;
@@ -12357,6 +12366,37 @@ html[data-seat-struct="qml"] .seat-narrow .seat-name .seat-note-stars { font-siz
     box-sizing: border-box;
     overflow: hidden;
     z-index: 20;
+  }
+  :root[data-adaptive-play="constrained-extra-large"] #s-game #g-reaction-panel {
+    padding: 0;
+  }
+  :root[data-adaptive-play="constrained-extra-large"] #s-game #g-reaction-panel .react-panel-title {
+    min-height: var(--adaptive-drawer-target);
+    margin: 0;
+    padding-inline: var(--sp-0);
+    flex: 0 0 var(--adaptive-drawer-target);
+  }
+  :root[data-adaptive-play="constrained-extra-large"] #s-game #g-reaction-panel button {
+    min-width: var(--adaptive-drawer-target);
+    min-height: var(--adaptive-drawer-target);
+  }
+  :root[data-adaptive-play="constrained-extra-large"] #s-game #g-reaction-panel .react-grid {
+    grid-template-columns: repeat(var(--adaptive-reaction-columns), var(--adaptive-reaction-choice));
+    grid-auto-rows: var(--adaptive-reaction-choice);
+    justify-content: center;
+    align-content: start;
+    gap: var(--sp-1);
+    width: 100%;
+    max-height: none;
+    margin: 0;
+    padding: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+  :root[data-adaptive-play="constrained-extra-large"] #s-game #g-reaction-panel .react-btn {
+    width: var(--adaptive-reaction-choice);
+    height: var(--adaptive-reaction-choice);
+    aspect-ratio: 1;
   }
   :root[data-adaptive-play="constrained-extra-large"] #s-game #hands-card-inner {
     display: flex;
