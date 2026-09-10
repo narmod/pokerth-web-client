@@ -2809,10 +2809,16 @@ if ('serviceWorker' in navigator && !window.LIVE_MODE) {
       .catch(function () { /* offline / proxy busy — retry later */ });
   }
 
-  check();
-  document.addEventListener('visibilitychange', function () { if (!document.hidden) check(); });
-  window.addEventListener('focus', check);
-  setInterval(check, 60000);
+  // Not on /live. The banner is the web client telling a visitor about itself,
+  // and an embedded frame on the front page is the wrong place for it. The
+  // cost is real and accepted: an embedded page can sit on a stale build until
+  // the visitor reloads, so a deploy is not visible there straight away.
+  if (!window.LIVE_MODE) {
+    check();
+    document.addEventListener('visibilitychange', function () { if (!document.hidden) check(); });
+    window.addEventListener('focus', check);
+    setInterval(check, 60000);
+  }
 })();
 </script>
 

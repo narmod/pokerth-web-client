@@ -2679,6 +2679,9 @@ function showGuestNoticeModal(title, body, version) {
   document.body.appendChild(back);
 }
 function maybeShowGuestNotice() {
+  // /live is the spectator tool, not the web client's shop window: the
+  // operator notices about the client have no place there (sp0ck, 2026-09-10).
+  if (window.LIVE_MODE) return;
   var g = window._guestNoticeCfg;
   if (!g || !g.enabled) return;
   // Deja acquitte pour cette version du message -> silence.
@@ -11461,7 +11464,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.8-web.93'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.8-web.94'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

@@ -32,6 +32,11 @@ check('no welcome modal',
   /function maybeShowWelcome\(w\) \{[\s\S]{0,260}if \(window\.LIVE_MODE\) return;/.test(client));
 check('no auth notice',
   /function maybeShowAuthNotice\(\) \{[\s\S]{0,260}if \(window\.LIVE_MODE\) return;/.test(client));
+check('no guest notice',
+  /function maybeShowGuestNotice\(\) \{[\s\S]{0,260}if \(window\.LIVE_MODE\) return;/.test(client));
+check('no update banner',
+  /if \(!window\.LIVE_MODE\) \{[\s\S]{0,200}setInterval\(check, 60000\);/.test(
+    fs.readFileSync(path.join(root, 'public', 'pokerth-client.html'), 'utf8')));
 check('no poll',
   /window\._pollOnScreen = function \(id\) \{[\s\S]{0,200}if \(window\.LIVE_MODE\) \{ _close\(\); return; \}/.test(poll));
 check('nothing under the button but the figures',

@@ -91,5 +91,12 @@ check('and it is the one pushed hard right there',
   /:root\[data-live="1"\] #live-theme-game \{ margin-left: auto/.test(css) ||
   /#live-theme-game \{ margin-left: auto !important; \}/.test(css));
 
+// A language change must land at once everywhere /live draws its own text.
+const lobbyMod = R('public/modules/live/lobby.mjs');
+check('the table list repaints on a language change',
+  /onLangChange\(function \(\) \{ lastSig = null; render\(\); \}\)/.test(lobbyMod));
+check('and it drops the guard that would have skipped it',
+  /lastSig = null/.test(lobbyMod));
+
 console.log(failed ? `\n${failed} check(s) failed` : '\nall checks passed');
 process.exit(failed ? 1 : 0);

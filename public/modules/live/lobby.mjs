@@ -21,6 +21,7 @@
  */
 
 import { keepDocked } from './chat-pane.mjs';
+import { onLangChange } from '../i18n.mjs';
 import { openSpectateDialog } from './spectate-dialog.mjs';
 
 const expanded = new Set();
@@ -283,6 +284,12 @@ function onClick(ev) {
     render();   // the signature includes `expanded`, so this always repaints
   }
 }
+
+// Every label in this list comes from t(); the signature that guards repaints
+// is built from game data alone, so a language change would leave the previous
+// language on screen until a table happened to change. Drop the signature and
+// repaint at once.
+onLangChange(function () { lastSig = null; render(); });
 
 export function initLiveLobby() {
   if (!document.getElementById('live-lobby-list')) return;

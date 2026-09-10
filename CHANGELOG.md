@@ -290,6 +290,14 @@ highlights below.
   every entry now carries both.
 
 ### Changed
+- **`/live` — the last two notices go, and language lands live** (`web.94`) —
+  the guest-rules card is silenced: it explains the chat and game-type rules
+  to someone who can neither chat nor play. The update banner is silenced too;
+  the cost is real and accepted, since an embedded frame can then sit on a
+  stale build until the visitor reloads. And the table list repaints on a
+  language change: every label in it comes from `t()`, but the guard that
+  skips needless repaints is built from game data alone, so switching language
+  left the previous one on screen until a table happened to change.
 - **`/live` — the player card is read-only, and the header settles**
   (`web.93`) — notes, ignore, avatar report and kickban all disappear from the
   player card in live mode: they act on a session the spectator has no part
