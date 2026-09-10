@@ -1,4 +1,5 @@
 2026-09-10 version 2.1.8-web (current series):
+- improvement: with a keyboard, windows that pop up now put the focus on the safe button, as in the desktop and mobile clients - Decline on a game invitation (Escape declines too), Cancel when leaving a game or disconnecting, OK on the inactivity and connection-lost messages - so an Enter pressed by accident never takes you anywhere; Tab reaches the other button, and the focus goes back where it was when the window closes
 - improvement: emoji reactions now play at the same pace as in the desktop and mobile clients - each animation lasts a quarter longer (about 2 seconds) and the bomb explodes as it lands, so a reaction looks the same to every player at the table
 - improvement: anonymous visit identifiers of devices not seen for about 13 months are now deleted too, as the privacy page says
 - bugfix: the error report option now says exactly what is sent (error details, browser and shortened IP address) instead of "no personal data"

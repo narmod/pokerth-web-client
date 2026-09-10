@@ -17,6 +17,12 @@ const dom = new JSDOM(`<!doctype html><body>
     <input id="qc-name" type="text">
   </div>
   <div id="leave-dialog" style="display:none"></div>
+  <div id="disconnect-dialog" style="display:none">
+    <button id="dd-quit">Disconnect</button>
+    <button id="dd-cancel" data-kn-focus>Cancel</button>
+  </div>
+  <div id="timeout-warn-modal" style="display:none"><button id="tow-ok" data-kn-focus>OK</button></div>
+  <input id="chat-in" type="text">
 </body>`, { pretendToBeVisual: true, url: 'https://pokerth.local/' });   // origine non opaque : localStorage dispo
 
 const w = dom.window;
@@ -28,7 +34,7 @@ Object.defineProperty(w.HTMLElement.prototype, 'offsetWidth', {
 w.HTMLElement.prototype.getClientRects = function () {
   return this.style.display === 'none' ? [] : [{ width: 10, height: 10 }];
 };
-for (const k of ['document', 'localStorage', 'getComputedStyle', 'HTMLElement', 'Event', 'KeyboardEvent']) {
+for (const k of ['document', 'localStorage', 'getComputedStyle', 'HTMLElement', 'Event', 'KeyboardEvent', 'MutationObserver']) {
   globalThis[k] = w[k];
 }
 globalThis.window = w;
@@ -40,6 +46,7 @@ w.App = {
   cancelKickConfirm: () => calls.push('cancelKickConfirm'),
   cancelQuickCreate: () => calls.push('cancelQuickCreate'),
   cancelLeaveGame: () => calls.push('cancelLeave'),
+  cancelDisconnect: () => calls.push('cancelDisconnect'),
   confirmQuickCreate: () => calls.push('CONFIRM-CREATE')
 };
 
@@ -117,6 +124,58 @@ w.localStorage.setItem('pth_keynav', '1');
 calls.length = 0;
 key('Escape');
 ok(calls.join() === 'cancelQuickCreate', 'option reactivee : Escape repond de nouveau');
+
+// 10 — focus initial (parité QML b170786) : le bouton data-kn-focus reçoit
+//      le focus à l'ouverture, et le focus revient au champ à la fermeture
+const d = w.document, tick = () => new Promise((r) => setTimeout(r, 0));
+d.getElementById('chat-in').focus();
+show('disconnect-dialog'); await tick();
+ok(d.activeElement && d.activeElement.id === 'dd-cancel', 'ouverture : focus sur Annuler (data-kn-focus), pas sur Déconnexion');
+calls.length = 0; key('Escape');
+ok(calls.join() === 'cancelDisconnect', 'Escape annule toujours la déconnexion');
+hide('disconnect-dialog'); await tick();
+ok(d.activeElement && d.activeElement.id === 'chat-in', 'fermeture : le focus revient au champ précédent');
+
+// 11 — bouton désactivé (avertissement déjà expiré) : focus laissé en place
+d.getElementById('tow-ok').disabled = true;
+show('timeout-warn-modal'); await tick();
+ok(d.activeElement && d.activeElement.id === 'chat-in', 'bouton désactivé : aucun focus forcé');
+hide('timeout-warn-modal'); await tick();
+d.getElementById('tow-ok').disabled = false;
+show('timeout-warn-modal'); await tick();
+ok(d.activeElement && d.activeElement.id === 'tow-ok', 'bouton unique actif : focus sur OK');
+hide('timeout-warn-modal'); await tick();
+
+// 12 — option coupée : aucun focus forcé
+w.localStorage.setItem('pth_keynav', '0');
+d.getElementById('chat-in').focus();
+show('disconnect-dialog'); await tick();
+ok(d.activeElement && d.activeElement.id === 'chat-in', 'option désactivée : focus initial inerte');
+hide('disconnect-dialog'); await tick();
+w.localStorage.setItem('pth_keynav', '1');
+
+// 13 — surface dynamique (bandeau d'invitation) : focusInitial + restore,
+//      Escape = refuser via registerOverlay
+const ban = d.createElement('div');
+ban.innerHTML = '<button id="gi-yes">Join</button><button id="gi-no" data-kn-focus>Decline</button>';
+d.body.appendChild(ban);
+calls.length = 0;
+const unreg = w.keynavRegisterOverlay(ban, () => calls.push('decline'));
+const restore = w.keynavFocusInitial(ban);
+ok(d.activeElement && d.activeElement.id === 'gi-no', 'invitation : focus sur Refuser');
+key('Escape');
+ok(calls.join() === 'decline', 'invitation : Escape = Refuser');
+unreg(); ban.remove(); restore();
+ok(d.activeElement && d.activeElement.id === 'chat-in', 'invitation fermée : le focus revient au champ');
+
+// 14 — appareil tactile sans souris : pas de focus volé (clavier virtuel)
+w.matchMedia = () => ({ matches: true });
+const ban2 = d.createElement('div');
+ban2.innerHTML = '<button id="gi2" data-kn-focus>Decline</button>';
+d.body.appendChild(ban2);
+w.keynavFocusInitial(ban2);
+ok(d.activeElement && d.activeElement.id === 'chat-in', 'tactile : focus laissé au champ');
+ban2.remove();
 
 console.log(fail ? `FAIL ${fail}/${pass + fail}` : `PASS ${pass}/${pass}`);
 process.exit(fail ? 1 : 0);

@@ -316,6 +316,25 @@ highlights below.
   every entry now carries both.
 
 ### Changed
+- **Popups open with the keyboard focus on their safe button** (`web.112`,
+  upstream `b170786` / `21da2f0` / `5c321a5` / `3fa46aa`) — the QML client now
+  gives every popup a start focus (`onOpened: X.forceActiveFocus()`). Same
+  targets here, opt-in in the markup with `data-kn-focus` (like
+  `data-kn-primary`): Cancel on `#leave-dialog` and `#disconnect-dialog`, OK
+  on `#timeout-warn-modal` and `#conn-lost-modal`, Decline on the invitation
+  banner, which also registers with keynav so Escape / Android Back decline
+  it (the host gets an answer, as in QML). `keynav.mjs` watches those
+  surfaces with a `MutationObserver` on their attributes — no change to the
+  functions that open them — and hands the focus back to the previous element
+  on close, as a Qt popup does. Enter/Space on the focused button are native;
+  the ring is `:focus-visible` only (QML `visualFocus`) on `.ld-btn`,
+  `.kcm-*` and the banner buttons. Skipped on touch-only devices (no keyboard
+  to serve, and blurring a field would drop the soft keyboard) and when
+  `pth_keynav` is off; a disabled button (warning already expired) is left
+  alone. Not ported: the QML `ConfirmPopup` focuses **Confirm** (kick, ban,
+  report…), against the web rule that no destructive dialog answers Enter —
+  pending a decision. No rejoin prompt exists here (rejoin is automatic).
+  Tests in `scripts/test-keynav.mjs` (21 checks).
 - **Reaction choreographies ×1.25, as upstream `b8a1d18`** (`web.111`) — the
   QML and widget clients took the web keyframes (1.4–1.7 s) and stretch them
   by `durationScale` 1.25 back to the 2.1.7 flight time (`pop` 1.6 s → 2 s);

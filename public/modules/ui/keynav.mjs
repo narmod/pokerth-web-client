@@ -158,7 +158,65 @@ export function registerOverlay(el, close) {
   };
 }
 
+// ── Focus initial des popups — parité QML b170786 ─────────────────────────
+// Le client QML donne le focus clavier à un bouton précis à l'ouverture de
+// chaque popup (onOpened: X.forceActiveFocus()) : l'action SÛRE quand le
+// popup arrive sans prévenir ou garde une action lourde (Refuser une
+// invitation, Annuler quitter / déconnexion), l'unique action sinon (OK).
+// Ici le bouton visé porte data-kn-focus dans le HTML — même principe
+// d'opt-in que data-kn-primary, aucune heuristique. Enter/Espace sur un
+// bouton focalisé sont natifs ; le cadre n'apparaît qu'au clavier
+// (:focus-visible, l'équivalent de visualFocus). À la fermeture, le focus
+// revient où il était, comme un Popup Qt. Rien sur un appareil tactile sans
+// souris : pas de clavier à servir, et retirer le focus d'un champ fermerait
+// le clavier virtuel. Suit l'option pth_keynav.
+const FOCUS_WATCH = SURFACES.map(function (s) { return s[0]; })
+  .concat(['timeout-warn-modal', 'conn-lost-modal']);   // gèrent Escape eux-mêmes
+
+function _touchOnly() {
+  try { return !!(window.matchMedia && window.matchMedia('(hover: none) and (pointer: coarse)').matches); }
+  catch (e) { return false; }
+}
+
+// Focalise le [data-kn-focus] de el. Renvoie restore(), qui rend le focus à
+// l'élément qui l'avait avant — sauf si l'utilisateur est allé ailleurs.
+export function focusInitial(el) {
+  var noop = function () {};
+  if (!el || !_enabled() || _touchOnly()) return noop;
+  var target = el.querySelector('[data-kn-focus]');
+  if (!target || target.disabled || !_visible(target)) return noop;
+  var prev = document.activeElement;
+  if (prev && el.contains(prev)) return noop;          // déjà dans le popup
+  try { target.focus({ preventScroll: true }); } catch (e) { return noop; }
+  return function restore() {
+    var cur = document.activeElement;
+    if (cur && cur !== document.body && !el.contains(cur)) return;
+    if (!prev || prev === document.body || !prev.isConnected || !_visible(prev)) return;
+    try { prev.focus({ preventScroll: true }); } catch (e) {}
+  };
+}
+
+// Surfaces du HTML : suivies par leurs attributs (style.display, hidden,
+// class), sans toucher aux fonctions qui les ouvrent.
+function _watchFocus() {
+  if (typeof MutationObserver !== 'function') return;
+  FOCUS_WATCH.forEach(function (id) {
+    var el = document.getElementById(id);
+    if (!el || !el.querySelector('[data-kn-focus]')) return;
+    var open = _visible(el), restore = null;
+    new MutationObserver(function () {
+      var now = _visible(el);
+      if (now === open) return;
+      open = now;
+      if (now) restore = focusInitial(el);
+      else if (restore) { var r = restore; restore = null; r(); }
+    }).observe(el, { attributes: true, attributeFilter: ['style', 'hidden', 'class'] });
+  });
+}
+_watchFocus();
+
 document.addEventListener('keydown', _onKey, true);   // capture : avant les
                                                       // handlers locaux
 window.keynavRegisterOverlay = registerOverlay;
 window.keynavCloseTop = closeTop;
+window.keynavFocusInitial = focusInitial;

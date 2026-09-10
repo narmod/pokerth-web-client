@@ -13,6 +13,9 @@ import { MSG } from './messages.mjs';
 // Pseudo d'un joueur, repli sur « #<pid> » si inconnu (local).
 function _petName(pid) { return S.players[pid] || ('#' + pid); }
 
+// Clavier (parité QML b170786) : désinscription Escape et retour du focus.
+var _invUnreg = null, _invRestore = null;
+
 // ─────────────────────────────────────────────────────────────
 //  Game invitations (InviteNotifyMessage — pokerth.net & dedicated)
 //  The host invites us to a (possibly invite-only) table; the server
@@ -23,7 +26,9 @@ function _petName(pid) { return S.players[pid] || ('#' + pid); }
 function _inviteClear() {
   S._inv = null;
   var b = document.getElementById('game-invite-banner');
+  if (_invUnreg) { try { _invUnreg(); } catch (e) {} _invUnreg = null; }
   if (b) b.remove();
+  if (_invRestore) { var r = _invRestore; _invRestore = null; try { r(); } catch (e) {} }
 }
 function _inviteShow(o) {
   if (window._offlineMode) return;
@@ -47,7 +52,7 @@ function _inviteShow(o) {
       '<button id="gi-yes" style="flex:1;max-width:140px;padding:8px 0;border:0;border-radius:8px;' +
         'font-weight:700;cursor:pointer;background:var(--green,#3fae5a);color:#06210e">' +
         esc(t('inviteAccept')) + '</button>' +
-      '<button id="gi-no" style="flex:1;max-width:140px;padding:8px 0;border:0;border-radius:8px;' +
+      '<button id="gi-no" data-kn-focus style="flex:1;max-width:140px;padding:8px 0;border:0;border-radius:8px;' +
         'font-weight:700;cursor:pointer;background:rgba(var(--red-rgb,217,64,64),1);color:#fff">' +
         esc(t('inviteDecline')) + '</button>' +
     '</div>';
@@ -55,6 +60,11 @@ function _inviteShow(o) {
   var y = document.getElementById('gi-yes'), n = document.getElementById('gi-no');
   if (y) y.addEventListener('click', _inviteAccept);
   if (n) n.addEventListener('click', _inviteDecline);
+  // Parité QML b170786 : l'invitation arrive sans prévenir, peut-être pendant
+  // la frappe → Escape (et Retour Android) = Refuser, pour que l'hôte reçoive
+  // une réponse, et le focus clavier s'ouvre sur Refuser ; Tab → Rejoindre.
+  try { if (typeof window.keynavRegisterOverlay === 'function') _invUnreg = window.keynavRegisterOverlay(b, _inviteDecline); } catch (e) {}
+  try { if (typeof window.keynavFocusInitial === 'function') _invRestore = window.keynavFocusInitial(b); } catch (e) {}
 }
 function _inviteAccept() {
   if (!S._inv) return;

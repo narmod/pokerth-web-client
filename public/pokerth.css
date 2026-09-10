@@ -6776,6 +6776,10 @@ body.spectator-nosend #g-reaction-panel { display: none !important; }
 }
 .kcm-confirm:hover  { background: var(--inset); }
 .kcm-confirm:active { transform: scale(0.98); }
+/* Cadre de focus clavier des boutons de dialogue (parité QML b170786,
+   useSystemFocusVisuals) : au clavier seulement, jamais après un clic. */
+.ld-btn:focus-visible, .kcm-cancel:focus-visible, .kcm-confirm:focus-visible,
+#game-invite-banner button:focus-visible { outline: 2px solid var(--gold-hi); outline-offset: 2px; }
 
 
 /* ── Waiting-panel start buttons (2-button variant) ──

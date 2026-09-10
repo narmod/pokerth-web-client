@@ -2711,7 +2711,7 @@ function _processAvatarFile(file) {
     <div class="ld-body"  data-i18n="disconnectDialogBody">You will be returned to the login screen.</div>
     <div class="ld-buttons">
       <button class="ld-btn ld-quit"   onclick="App.confirmDisconnectQuit()" data-i18n="disconnectQuit">Disconnect</button>
-      <button class="ld-btn ld-cancel" onclick="App.cancelDisconnect()"      data-i18n="leaveCancel">Cancel</button>
+      <button class="ld-btn ld-cancel" onclick="App.cancelDisconnect()"      data-kn-focus data-i18n="leaveCancel">Cancel</button>
     </div>
   </div>
 </div>
@@ -2730,7 +2730,7 @@ function _processAvatarFile(file) {
     <div class="ld-body"  data-i18n="leaveDialogBody">You will lose your seat and return to the lobby.</div>
     <div class="ld-buttons">
       <button class="ld-btn ld-quit"   onclick="App.confirmLeaveQuit()"  data-i18n="leaveQuit">Quit</button>
-      <button class="ld-btn ld-cancel" onclick="App.cancelLeaveGame()"   data-i18n="leaveCancel">Cancel</button>
+      <button class="ld-btn ld-cancel" onclick="App.cancelLeaveGame()"   data-kn-focus data-i18n="leaveCancel">Cancel</button>
     </div>
   </div>
 </div>
@@ -2948,7 +2948,7 @@ if ('serviceWorker' in navigator && !window.LIVE_MODE) {
     <div class="kcm-msg" id="tow-msg">—</div>
     <div class="kcm-msg" id="tow-hint" data-i18n="timeoutWarnHint">Please click “OK” to stop the countdown!</div>
     <div class="kcm-btns">
-      <button class="kcm-confirm" type="button" id="tow-ok" onclick="window._timeoutWarnAck()" data-i18n="timeoutWarnOk">OK</button>
+      <button class="kcm-confirm" type="button" id="tow-ok" onclick="window._timeoutWarnAck()" data-kn-focus data-i18n="timeoutWarnOk">OK</button>
     </div>
   </div>
 </div>
@@ -2965,7 +2965,7 @@ if ('serviceWorker' in navigator && !window.LIVE_MODE) {
     <div class="kcm-title" id="clm-title" data-i18n="connLostTitle">Connection lost</div>
     <div class="kcm-msg" id="clm-msg">&mdash;</div>
     <div class="kcm-btns">
-      <button class="kcm-confirm" type="button" id="clm-ok" onclick="window._connLostClose()" data-i18n="timeoutWarnOk">OK</button>
+      <button class="kcm-confirm" type="button" id="clm-ok" onclick="window._connLostClose()" data-kn-focus data-i18n="timeoutWarnOk">OK</button>
     </div>
   </div>
 </div>
