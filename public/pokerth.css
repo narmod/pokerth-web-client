@@ -12076,10 +12076,9 @@ html[data-seat-struct="qml"] .seat-narrow .seat-name .seat-note-stars { font-siz
   }
 }
 
-/* Extra Large adaptive play layout for phone portrait. Critical information
-   reaches the 200% preset while the table scaffolding remains free to reflow. */
-@media (max-width: 740px) and (orientation: portrait) {
-  :root[data-interface-size="extra-large"] #s-game {
+/* Extra Large adaptive play layout for phone portrait. The semantic document
+   state owns the viewport predicate so CSS and JS cannot drift apart. */
+  :root[data-adaptive-play="portrait-extra-large"] #s-game {
     --active-play-scale: 2;
     --active-pot-font-base: calc(13px * var(--active-standard-comm-scale, var(--comm-scale, 1)));
     --active-status-primary-base: 13px;
@@ -12094,6 +12093,10 @@ html[data-seat-struct="qml"] .seat-narrow .seat-name .seat-note-stars { font-siz
     --active-turn-blur-base: 14px;
     --active-turn-spread-base: 2px;
     --active-turn-inset-base: -2px;
+    /* A 44px target plus one spacing token survives the related legacy
+       floating-panel scale while remaining expressed by shared tokens. */
+    --adaptive-drawer-target: calc(var(--ctrl-enhanced) + var(--sp-2));
+    --adaptive-drawer-height: calc(var(--adaptive-drawer-target) * 2 + var(--sp-4));
     --fs-3xs: calc(var(--fs-source-3xs) * var(--active-play-scale));
     --fs-2xs: calc(var(--fs-source-2xs) * var(--active-play-scale));
     --fs-xs: calc(var(--fs-source-xs) * var(--active-play-scale));
@@ -12106,17 +12109,17 @@ html[data-seat-struct="qml"] .seat-narrow .seat-name .seat-note-stars { font-siz
     --active-turn-inset: calc(var(--active-turn-inset-base) * var(--active-play-scale));
   }
 
-  :root[data-interface-size="extra-large"] #s-game #g-potbar {
+  :root[data-adaptive-play="portrait-extra-large"] #s-game #g-potbar {
     font-size: calc(var(--active-pot-font-base) * var(--active-play-scale));
     --pot-badge-lift: calc(var(--active-community-font-base) * var(--active-play-scale) * 1.8 + var(--sp-4));
   }
-  :root[data-interface-size="extra-large"] #s-game :is(.gsb-lbl, .gsb-total, .gsb-phase) {
+  :root[data-adaptive-play="portrait-extra-large"] #s-game :is(.gsb-lbl, .gsb-total, .gsb-phase) {
     font-size: calc(var(--active-status-primary-base) * var(--active-play-scale));
   }
-  :root[data-interface-size="extra-large"] #s-game :is(.gsb-left .gsb-row:last-child .gsb-lbl, .gsb-gh .gsb-lbl, .gsb-val, .gsb-bets) {
+  :root[data-adaptive-play="portrait-extra-large"] #s-game :is(.gsb-left .gsb-row:last-child .gsb-lbl, .gsb-gh .gsb-lbl, .gsb-val, .gsb-bets) {
     font-size: calc(var(--active-status-secondary-base) * var(--active-play-scale));
   }
-  :root[data-interface-size="extra-large"] #s-game #pot-strip {
+  :root[data-adaptive-play="portrait-extra-large"] #s-game #pot-strip {
     height: auto;
     min-height: 66px;
     padding: var(--sp-1) var(--sp-3);
@@ -12124,27 +12127,27 @@ html[data-seat-struct="qml"] .seat-narrow .seat-name .seat-note-stars { font-siz
     grid-template-columns: minmax(0, 1fr) auto;
     align-content: center;
   }
-  :root[data-interface-size="extra-large"] #s-game .gsb-mid {
+  :root[data-adaptive-play="portrait-extra-large"] #s-game .gsb-mid {
     position: static;
     transform: none;
     justify-self: end;
   }
-  :root[data-interface-size="extra-large"] #s-game .gsb-right {
+  :root[data-adaptive-play="portrait-extra-large"] #s-game .gsb-right {
     display: none;
   }
-  :root[data-interface-size="extra-large"] #s-game .blinds-next {
+  :root[data-adaptive-play="portrait-extra-large"] #s-game .blinds-next {
     font-size: calc(var(--active-blinds-font-base) * var(--active-play-scale));
   }
-  :root[data-interface-size="extra-large"] #s-game :is(#g-potbar, .blinds-next) {
+  :root[data-adaptive-play="portrait-extra-large"] #s-game :is(#g-potbar, .blinds-next) {
     height: auto;
     min-height: var(--ctrl-enhanced);
     padding-inline: calc(var(--sp-4) * var(--active-play-scale));
   }
 
-  :root[data-interface-size="extra-large"] #s-game .comm-row .pk {
+  :root[data-adaptive-play="portrait-extra-large"] #s-game .comm-row .pk {
     font-size: calc(var(--active-community-font-base) * var(--active-play-scale));
   }
-  :root[data-interface-size="extra-large"][data-deck] #s-game .pk:not(.back):not(.comm-slot) {
+  :root[data-adaptive-play="portrait-extra-large"][data-deck] #s-game .pk:not(.back):not(.comm-slot) {
     background-image: none;
     background-color: #fff;
     min-width: calc(1.3em + var(--sp-1));
@@ -12152,42 +12155,42 @@ html[data-seat-struct="qml"] .seat-narrow .seat-name .seat-note-stars { font-siz
     padding: 0.2em 0.08em;
     gap: calc(var(--sp-3) * var(--active-play-scale));
   }
-  :root[data-interface-size="extra-large"] #s-game :is(.comm-row, .pot-badge) {
+  :root[data-adaptive-play="portrait-extra-large"] #s-game :is(.comm-row, .pot-badge) {
     top: calc(50% + var(--comm-shift-y, 0px) + var(--sp-1) * var(--active-play-scale));
   }
-  :root[data-interface-size="extra-large"][data-deck] #s-game .pk:not(.back):not(.comm-slot) :is(.c-rank, .c-suit) {
+  :root[data-adaptive-play="portrait-extra-large"][data-deck] #s-game .pk:not(.back):not(.comm-slot) :is(.c-rank, .c-suit) {
     display: block;
     flex: 0 0 auto;
   }
 
-  :root[data-interface-size="extra-large"] #s-game .seat.me .seat-timeout-bar {
+  :root[data-adaptive-play="portrait-extra-large"] #s-game .seat.me .seat-timeout-bar {
     height: calc(var(--active-timer-self-height-base) * var(--active-play-scale));
   }
-  :root[data-interface-size="extra-large"] #s-game .seat:not(.me) .seat-timeout-bar {
+  :root[data-adaptive-play="portrait-extra-large"] #s-game .seat:not(.me) .seat-timeout-bar {
     height: calc(var(--active-timer-opponent-height-base) * var(--active-play-scale));
   }
 
-  :root[data-interface-size="extra-large"] #s-game .act-buttons-row {
+  :root[data-adaptive-play="portrait-extra-large"] #s-game .act-buttons-row {
     height: calc(var(--active-action-height-base) * var(--active-play-scale));
     padding-block: 0;
   }
-  :root[data-interface-size="extra-large"] #s-game .act-buttons-row .btn-action {
+  :root[data-adaptive-play="portrait-extra-large"] #s-game .act-buttons-row .btn-action {
     min-width: var(--ctrl-enhanced);
     min-height: var(--ctrl-enhanced) !important;
     max-height: none !important;
     height: calc(var(--active-action-height-base) * var(--active-play-scale)) !important;
     font-size: calc(var(--active-action-font-base) * var(--active-play-scale)) !important;
   }
-  :root[data-interface-size="extra-large"] #s-game :is(.bet-row .raise-amt-field, .mid-row .btn-pct, .mid-row .btn-allin, .mid-row .mode-sel-wrap) {
+  :root[data-adaptive-play="portrait-extra-large"] #s-game :is(.bet-row .raise-amt-field, .mid-row .btn-pct, .mid-row .btn-allin, .mid-row .mode-sel-wrap) {
     min-height: var(--ctrl-enhanced);
     height: var(--ctrl-enhanced);
   }
-  :root[data-interface-size="extra-large"] #s-game :is(.header .btn-icon, .g-felt-btn) {
+  :root[data-adaptive-play="portrait-extra-large"] #s-game :is(.header .btn-icon, .g-felt-btn) {
     min-width: var(--ctrl-enhanced);
     min-height: var(--ctrl-enhanced);
   }
-  :root[data-interface-size="extra-large"] #s-game .g-felt-corner { display: none; }
-  :root[data-interface-size="extra-large"] #s-game .adaptive-drawer-bar {
+  :root[data-adaptive-play="portrait-extra-large"] #s-game .g-felt-corner { display: none; }
+  :root[data-adaptive-play="portrait-extra-large"] #s-game .adaptive-drawer-bar {
     display: grid;
     grid-template-columns: 0.8fr 1.2fr 1fr 1fr;
     gap: var(--sp-1);
@@ -12195,7 +12198,7 @@ html[data-seat-struct="qml"] .seat-narrow .seat-name .seat-note-stars { font-siz
     background: var(--panel);
     border-bottom: 1px solid var(--border);
   }
-  :root[data-interface-size="extra-large"] #s-game .adaptive-drawer-bar button {
+  :root[data-adaptive-play="portrait-extra-large"] #s-game .adaptive-drawer-bar button {
     min-width: 0;
     min-height: var(--ctrl-enhanced);
     padding: var(--sp-1);
@@ -12203,29 +12206,36 @@ html[data-seat-struct="qml"] .seat-narrow .seat-name .seat-note-stars { font-siz
     border-radius: var(--r-sm);
     background: var(--panel-hi);
     color: var(--text-hi);
-    font: 700 0.72rem/1.15 var(--ff-display);
+    font: 700 var(--fs-source-xs)/1.15 var(--ff-display);
     cursor: pointer;
   }
-  :root[data-interface-size="extra-large"] #s-game :is(#g-chat-panel, #g-log-panel) {
-    max-height: min(280px, 34dvh) !important;
+  :root[data-adaptive-play="portrait-extra-large"] #s-game :is(#g-chat-panel, #g-log-panel) {
+    position: relative !important;
+    inset: auto !important;
+    width: 100% !important;
+    height: var(--adaptive-drawer-height) !important;
+    max-height: var(--adaptive-drawer-height) !important;
+    flex: 0 0 var(--adaptive-drawer-height);
+    z-index: auto;
+    box-shadow: none;
+    box-sizing: border-box;
     overflow: hidden;
   }
-  :root[data-interface-size="extra-large"] #s-game :is(#g-chat-panel, #g-log-panel) :is(button, input) {
-    min-height: 50px;
+  :root[data-adaptive-play="portrait-extra-large"] #s-game :is(#g-chat-panel, #g-log-panel) :is(button, input) {
+    min-height: var(--adaptive-drawer-target);
   }
-  :root[data-interface-size="extra-large"] #s-game :is(#g-chat-close, #g-log-close, #gip-export, #g-chat-emoji-toggle, .chat-send) {
-    min-width: 50px;
+  :root[data-adaptive-play="portrait-extra-large"] #s-game :is(#g-chat-close, #g-log-close, #gip-export, #g-chat-emoji-toggle, .chat-send) {
+    min-width: var(--adaptive-drawer-target);
   }
-  :root[data-interface-size="extra-large"] #s-game :is(#hands-card-inner .g-chat-panel-header button, #g-reaction-panel .react-title-actions button) {
-    min-width: 50px;
-    min-height: 50px;
+  :root[data-adaptive-play="portrait-extra-large"] #s-game :is(#hands-card-inner .g-chat-panel-header button, #g-reaction-panel .react-title-actions button) {
+    min-width: var(--adaptive-drawer-target);
+    min-height: var(--adaptive-drawer-target);
   }
-  :root[data-interface-size="extra-large"] #s-game #g-reaction-panel .react-title-actions {
+  :root[data-adaptive-play="portrait-extra-large"] #s-game #g-reaction-panel .react-title-actions {
     position: relative;
     z-index: 7;
   }
-  :root[data-interface-size="extra-large"] #s-game :focus-visible {
+  :root[data-adaptive-play="portrait-extra-large"] #s-game :focus-visible {
     outline: 3px solid var(--sel, var(--gold)) !important;
     outline-offset: 3px !important;
   }
-}

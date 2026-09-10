@@ -10366,6 +10366,26 @@ function _initChatFocusHold() {
 if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', _initChatFocusHold);
 else _initChatFocusHold();
 
+function _configureGameDrawer(panel, opening, btn, floatingOptions, side, openingFocus, refreshOutsideAdaptive) {
+  var adaptive = typeof window.isAdaptivePortraitPlay === 'function' && window.isAdaptivePortraitPlay();
+  if (opening) {
+    if (adaptive) _disableFloating(panel);
+    else _openFloatingNearBtn(panel, btn, floatingOptions, side);
+  }
+  if (adaptive || refreshOutsideAdaptive) {
+    setTimeout(function () {
+      try { autoScaleTable(); } catch (e) {}
+      if (adaptive) { try { if (typeof updateBottomLayout === 'function') updateBottomLayout(); } catch (e) {} }
+      try { if (typeof renderSeats === 'function' && typeof seats !== 'undefined' && seats.length) renderSeats(); } catch (e) {}
+      if (!adaptive) return;
+      var target = opening ? (typeof openingFocus === 'function' ? openingFocus() : openingFocus) : btn;
+      try { if (target) target.focus(); } catch (e) {}
+      if (!opening) panel._drawerInvoker = null;
+    }, 50);
+  }
+  return adaptive;
+}
+
 function toggleGameChat(invoker) {
   // Spectators can open the panel read-only (sp0ck 31/07/2026): the input row
   // is hidden by CSS (body.spectator-nosend), only sending is blocked.
@@ -10381,23 +10401,20 @@ function toggleGameChat(invoker) {
   document.querySelectorAll('[aria-controls="g-chat-panel"]').forEach(function(trigger) {
     trigger.setAttribute('aria-expanded', open ? 'true' : 'false');
   });
-  setTimeout(function(){ autoScaleTable(); if(typeof renderSeats==='function' && typeof seats!=='undefined' && seats.length) renderSeats(); }, 50);
+  var adaptive = _configureGameDrawer(panel, open, btn,
+    { key:'pth_winpos_chat', handle: panel.querySelector('.g-chat-panel-header'), resizable:true, minW:240, minH:160, defW:300, defH:280, zoom:true },
+    'left', function () { return document.getElementById('g-chat-in'); }, true);
   if (btn) {
     btn.style.background  = open ? 'rgba(var(--gold-rgb),0.2)' : '';
     btn.style.borderColor = open ? 'var(--gold-dim)' : '';
     btn.style.color       = open ? 'var(--gold)' : '';
   }
   if (open) {
-    _openFloatingNearBtn(panel, btn, { key:'pth_winpos_chat', handle: panel.querySelector('.g-chat-panel-header'), resizable:true, minW:240, minH:160, defW:300, defH:280, zoom:true }, 'left');
     if (typeof clearUnreadChat === 'function') clearUnreadChat();
     var m = document.getElementById('g-chat-msgs');
     if (m) { if (typeof window._liveReset === 'function') window._liveReset(m); else m.scrollTop = m.scrollHeight; }
     var inp = document.getElementById('g-chat-in');
-    if (inp) setTimeout(function(){ inp.focus(); }, 80);
-  } else if (btn && window.matchMedia('(max-width: 740px) and (orientation: portrait)').matches
-      && document.documentElement.getAttribute('data-interface-size') === 'extra-large') {
-    setTimeout(function(){ btn.focus(); }, 0);
-    panel._drawerInvoker = null;
+    if (inp && !adaptive) setTimeout(function(){ inp.focus(); }, 80);
   }
 }
 function joinWithPassword() {
@@ -10657,26 +10674,19 @@ function toggleLog(invoker) {
   document.querySelectorAll('[aria-controls="g-log-panel"]').forEach(function(trigger) {
     trigger.setAttribute('aria-expanded', isHidden ? 'true' : 'false');
   });
+  _configureGameDrawer(panel, isHidden, btn,
+    { key:'pth_winpos_log2', handle: panel.querySelector('.g-chat-panel-header'), resizable:true, minW:240, minH:140, defW: window.innerWidth >= 1400 ? 340 : 300, defH:300, zoom:true },
+    'right', function () { return panel.querySelector('.gip-tab.gip-on'); }, false);
   if (btn) btn.style.background = isHidden ? 'rgba(var(--gold-rgb),0.2)' : '';
   if (btn) btn.style.borderColor = isHidden ? 'var(--gold-dim)' : '';
   if (btn) btn.style.color       = isHidden ? 'var(--gold)' : '';
   if (isHidden) {
-    // Poignée de redimensionnement, identique au chat (glisser pour étendre).
-    _openFloatingNearBtn(panel, btn, { key:'pth_winpos_log2', handle: panel.querySelector('.g-chat-panel-header'), resizable:true, minW:240, minH:140, defW: window.innerWidth >= 1400 ? 340 : 300, defH:300, zoom:true }, 'right');
     var lb = document.getElementById('g-log-body');
     // Le plus récent est en haut (liste inversée) : rouvrir le panneau
     // remet le suivi automatique en marche, même s'il était en pause.
     if (lb) { if (typeof window._liveReset === 'function') window._liveReset(lb); else lb.scrollTop = 0; }
     // Restaurer le dernier onglet consulté (Historique par défaut).
     try { gipShowTab((function(){try{var _t=localStorage.getItem('pth_gip_tab');return (_t==='odds'||_t==='stats')?_t:'log';}catch(_e){return 'log';}})()); } catch (e) {}
-    if (window.matchMedia('(max-width: 740px) and (orientation: portrait)').matches
-        && document.documentElement.getAttribute('data-interface-size') === 'extra-large') {
-      setTimeout(function(){ var tab = panel.querySelector('.gip-tab.gip-on'); if (tab) tab.focus(); }, 0);
-    }
-  } else if (btn && window.matchMedia('(max-width: 740px) and (orientation: portrait)').matches
-      && document.documentElement.getAttribute('data-interface-size') === 'extra-large') {
-    setTimeout(function(){ btn.focus(); }, 0);
-    panel._drawerInvoker = null;
   }
 }
 
@@ -11464,7 +11474,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.8-web.129'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.8-web.130'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

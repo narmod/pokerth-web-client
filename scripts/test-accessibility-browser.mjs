@@ -206,7 +206,10 @@ async function activeHandRects(page) {
       communityCardFaces: [...document.querySelectorAll('#g-comm .pk:not(.back):not(.comm-slot)')]
         .filter((card) => { const value = card.getBoundingClientRect(); return value.width > 0 && value.height > 0; }).map(rect),
       pot: rect(document.querySelector('#g-potbar')),
+      blinds: rect(document.querySelector('.blinds-next')),
       actions: rect(document.querySelector('#g-actions .action-grid')),
+      activeSeat: rect(document.querySelector('.seat.active .seat-plate')),
+      activeTimer: rect(document.querySelector('.seat.active .seat-timeout-bar')),
       status: rect(document.querySelector('#pot-strip')),
       statusContent: [...document.querySelectorAll('#pot-strip .gsb-lbl, #pot-strip .gsb-total, #pot-strip .gsb-bets, #pot-strip .gsb-phase, #pot-strip .gsb-val, #pot-strip .blinds-next')]
         .filter((element) => { const value = element.getBoundingClientRect(); return value.width > 0 && value.height > 0; }).map(rect),
@@ -287,6 +290,33 @@ function overlaps(a, b, tolerance = 1) {
 function assertReachable(rect, viewport, label) {
   assert.ok(rect.width > 0 && rect.height > 0 && rect.left >= -1 && rect.top >= -1 && rect.right <= viewport.width + 1 && rect.bottom <= viewport.height + 1,
     `${label} is outside ${viewport.width}x${viewport.height}: ${JSON.stringify(rect)}`);
+}
+
+function assertCriticalUnoccluded(geometry, drawer, label) {
+  for (const [name, rect] of Object.entries({
+    cards: geometry.cards,
+    pot: geometry.pot,
+    blinds: geometry.blinds,
+    currentTurn: geometry.activeSeat,
+    timer: geometry.activeTimer,
+    actions: geometry.actions,
+  })) {
+    assertReachable(rect, geometry.viewport, `${label} ${name}`);
+    assert.equal(overlaps(rect, drawer), false, `${label} ${name} is occluded by the open drawer`);
+  }
+}
+
+async function assertActionOperable(page, label) {
+  const before = await page.evaluate(() => window.WebSocket.instance.sent.length);
+  await page.locator('#g-actions .btn-fold').click();
+  await page.waitForFunction((start) => window.WebSocket.instance.sent.length > start, before);
+  const sent = await page.evaluate(async (start) => {
+    const { MSG } = await import('/modules/net/messages.mjs');
+    return window.WebSocket.instance.sent.slice(start)
+      .filter((frame) => frame instanceof ArrayBuffer)
+      .some((frame) => MSG.parse(new Uint8Array(frame).slice(4)).type === MSG.T.MyActionRequest);
+  }, before);
+  assert.equal(sent, true, `${label} action did not cross the production message boundary`);
 }
 
 async function takeLobbyJoinOutcomes(page) {
@@ -876,6 +906,16 @@ try {
     const extraLarge = await visibleMetrics(page, [...fontSelectors, timerSelector]);
     const geometry = await activeHandRects(page);
 
+    assert.equal(geometry.seats.length, 10, 'mobile portrait Extra Large did not render all ten seat plates');
+    for (const [index, seat] of geometry.seats.entries()) {
+      assertReachable(seat, geometry.viewport, `mobile portrait Extra Large seat ${index + 1}`);
+      for (let other = index + 1; other < geometry.seats.length; other += 1) {
+        assert.equal(overlaps(seat, geometry.seats[other]), false,
+          `mobile portrait Extra Large seats ${index + 1} and ${other + 1} overlap`);
+      }
+    }
+    assertReachable(geometry.activeSeat, geometry.viewport, 'mobile portrait Extra Large active current-turn seat');
+    assertReachable(geometry.activeTimer, geometry.viewport, 'mobile portrait Extra Large active timer');
     for (const selector of fontSelectors) {
       assert.equal(extraLarge[selector].visible, true, `mobile portrait Extra Large ${selector} is outside the viewport`);
       assertExactScaled(extraLarge[selector].fontSize, standard[selector].fontSize, 2, `mobile portrait Extra Large ${selector}`);
@@ -919,6 +959,32 @@ try {
         .some((frame) => MSG.parse(new Uint8Array(frame).slice(4)).type === MSG.T.MyActionRequest);
     }, sentBefore);
     assert.equal(sentAction, true, 'mobile portrait Extra Large Fold did not cross the production message boundary');
+  });
+  await check('Extra Large mobile portrait drawers reflow around critical play', async () => {
+    for (const drawer of [
+      { trigger: '#adaptive-chat-toggle', panel: '#g-chat-panel', close: '#g-chat-close', label: 'chat' },
+      { trigger: '#adaptive-info-toggle', panel: '#g-log-panel', close: '#g-log-close', label: 'information' },
+    ]) {
+      await startActiveHand(page, 10);
+      assert.equal(await page.locator(drawer.panel).getAttribute('role'), null,
+        `${drawer.label} panel exposes dialog semantics outside adaptive portrait play`);
+      await page.setViewportSize({ width: 390, height: 844 });
+      await page.waitForTimeout(300);
+      await chooseInterfaceSize(page, 'game', 'extra-large');
+      await page.locator(drawer.trigger).click();
+      await page.locator(drawer.panel).waitFor({ state: 'visible' });
+      await page.waitForTimeout(300);
+      const box = await page.locator(drawer.panel).boundingBox();
+      const drawerRect = { left: box.x, top: box.y, right: box.x + box.width, bottom: box.y + box.height, width: box.width, height: box.height };
+      const geometry = await activeHandRects(page);
+      assertCriticalUnoccluded(geometry, drawerRect, `mobile portrait Extra Large open ${drawer.label} drawer`);
+      const cue = await turnCueOutcome(page);
+      assert.equal(cue.visible, true, `mobile portrait Extra Large open ${drawer.label} drawer hides the current-turn cue`);
+      assert.equal(cue.distinctFromInactive, true, `mobile portrait Extra Large open ${drawer.label} drawer makes the current-turn cue ambiguous`);
+      await assertActionOperable(page, `mobile portrait Extra Large open ${drawer.label} drawer`);
+      await page.locator(drawer.close).click();
+      await page.locator(drawer.panel).waitFor({ state: 'hidden' });
+    }
   });
   await check('Extra Large mobile portrait secondary drawers preserve content and focus', async () => {
     await startActiveHand(page, 10);
