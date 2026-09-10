@@ -277,7 +277,20 @@ function _renderList(posts) {
     // Un clic ouvre le post DANS la fenetre (parite QML ForumNewsPage).
     const open = function () { _openPostView(p); };
     row.addEventListener('click', open);
-    row.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(); } });
+    row.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(); return; }
+      // Flèches / Début / Fin : ligne voisine (parité QML ForumNewsPage,
+      // keyNavigationEnabled — b170786). Suit l'option clavier.
+      if (e.altKey || e.ctrlKey || e.metaKey || e.shiftKey) return;
+      if (['ArrowDown', 'ArrowUp', 'Home', 'End'].indexOf(e.key) < 0) return;
+      try { if (localStorage.getItem('pth_keynav') === '0') return; } catch (_) {}
+      const rows = Array.prototype.slice.call(list.querySelectorAll('.fn-row'));
+      const i = rows.indexOf(row);
+      const j = e.key === 'Home' ? 0 : e.key === 'End' ? rows.length - 1
+              : Math.max(0, Math.min(rows.length - 1, i + (e.key === 'ArrowDown' ? 1 : -1)));
+      e.preventDefault();
+      if (rows[j] && j !== i) { rows[j].focus(); if (rows[j].scrollIntoView) rows[j].scrollIntoView({ block: 'nearest' }); }
+    });
   });
   _updateBadge(posts);
 }
@@ -371,6 +384,9 @@ function _openPostView(p) {
   }
   // Vue ouverte = lu (parite QML : ouvrir la page marque le post lu).
   _markPostRead(p);
+  // Lecture au clavier (parite QML ForumPostPage, b170786) : la ligne
+  // cliquee disparait avec la liste, le focus passe a la zone qui defile.
+  try { if (window.keynavFocusReading) window.keynavFocusReading(document.querySelector('#forum-modal .rk-body')); } catch (e) {}
 }
 
 // ── Traduction du post (meme service et meme reglage que le chat) ──────
@@ -492,7 +508,19 @@ function toggleForumModal() {
   openForumModal();
 }
 
-function forumBackToList() { _showListView(); }
+function forumBackToList() {
+  const prev = _curPost;
+  _showListView();
+  // Retour : le focus revient sur la ligne du post quitte, sauf s'il est deja
+  // ailleurs que dans la fenetre du forum.
+  try {
+    const ae = document.activeElement, modal = document.getElementById('forum-modal');
+    if (ae && ae !== document.body && modal && !modal.contains(ae)) return;
+    const idx = (prev && _cache) ? _cache.posts.indexOf(prev) : -1;
+    const row = idx >= 0 ? document.querySelector('#fn-list .fn-row[data-idx="' + idx + '"]') : null;
+    if (row && window.keynavFocusReading) window.keynavFocusReading(row);
+  } catch (e) {}
+}
 
 function forumMarkRead() {
   try {

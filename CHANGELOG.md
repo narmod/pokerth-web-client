@@ -329,6 +329,28 @@ highlights below.
   every entry now carries both.
 
 ### Changed
+- **Keyboard lot completed** (`web.117`, rest of upstream `b170786` /
+  `21da2f0` / `5c321a5` / `3fa46aa`) — *Reading areas*: `#about-page`,
+  `.pv-scroll`, the table-ranking `.rk-body` and `#rk-profile` (QML
+  AboutPage / GameTableStatsPage / PokerthPlayerPage) take the focus on open
+  (`tabindex="-1"`, `data-kn-focus`), so the browser's own PgUp/PgDn/Home/End
+  scroll them; `data-kn-read` hides the ring. `focusInitial` now picks the
+  first *visible* candidate, the watched element included, and watches its
+  surfaces without requiring candidates at start-up (content injected later).
+  *Ranking*: opens in `#rk-search` when shown, else in the list; Enter
+  searches at once (`rankingSearchNow`, QML `onAccepted`). *Settings
+  categories*: `data-kn-tabs` on `.adv-nav` — arrows on both axes, Home/End,
+  focus + click, disabled categories skipped (QML `showCategory`). *Forum*:
+  arrows/Home/End move between `.fn-row`s (QML `keyNavigationEnabled`), an
+  opened post focuses the scroller, Back returns to the post's row. *End of
+  game*: Play again (training) is the start focus (QML `gameOverPopup`), and
+  `#g-endgame-overlay` joins the Escape surfaces with `App.endGameClose`, which
+  stays at the table. *Login*: `#login-step2` is the last Escape / Android Back
+  surface, calling `loginBackToStep1` (QML `handleBack`). *Notes*: Ctrl/⌘+Enter
+  saves at once, Enter alone stays a newline (QML PlayerNoteDialog). Not
+  applicable: `focus:true` fixes on QML popups (Escape already works here),
+  CustomButton ring (`:focus-visible` since `web.112`), LAN host/enter pages;
+  session logs were already keyboard-driven (`web.24`). Tests in `scripts/test-keynav.mjs` (53 checks).
 - **Start focus per screen, Enter creates from any settings field**
   (`web.116`, upstream `b170786`: `StackView.onActivated` on StartPage,
   ServerConnectionDialog, LobbyCreateGamePage, LocalGamePage; `Keys.onReturnPressed`

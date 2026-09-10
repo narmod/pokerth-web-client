@@ -129,7 +129,7 @@ function showEndGameOverlay(winnerPid, opts) {
       '</div>' +
       '<div id="eg-ach"></div>' +
       '<div class="eg-actions">' +
-        (window._offlineMode ? '<button class="eg-btn primary" onclick="App.offlineReplay()">' + t('endGameReplay') + '</button>' : '') +
+        (window._offlineMode ? '<button class="eg-btn primary" onclick="App.offlineReplay()" data-kn-focus>' + t('endGameReplay') + '</button>' : '') +
         '<button class="eg-btn" onclick="App.endGameClose()">' + t('endGameClose') + '</button>' +
         '<button class="eg-btn' + (window._offlineMode ? '' : ' primary') + '" onclick="App.endGameLeave()">' + t('endGameBackToLobby') + '</button>' +
       '</div>' +

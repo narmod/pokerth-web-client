@@ -44,19 +44,25 @@ const SURFACES = [
   ['poll-modal',           'closePollModal'],
   ['about-page',           'closeAboutPage'],
   ['privacy-page',         'closePrivacyPage'],
+  // Fin de partie : Escape la ferme et on reste à la table (endGameClose),
+  // comme gameOverPopup du QML (b170786) — jamais « retour au lobby ».
+  ['g-endgame-overlay',    'App.endGameClose'],
   // — panneaux flottants —
   ['hands-overlay',        'toggleHandsHelp'],
   ['music-panel',          'toggleMusicPanel'],
   ['g-reaction-panel',     'App.toggleReactionsPin'],
   ['g-log-panel',          'toggleLog'],
   ['g-chat-panel',         'toggleGameChat'],
-  ['g-winner-overlay',     'App.dismissWinner']
+  ['g-winner-overlay',     'App.dismissWinner'],
+  // — étapes de page (dernier recours) —
+  // Formulaire de connexion → choix du mode : le handleBack() du QML
+  // (ServerConnectionDialog, b170786), pour Escape comme pour Retour Android.
+  ['login-step2',          'loginBackToStep1']
 ];
 
 // Surfaces volontairement ABSENTES : #lobby-chat-panel et #players-panel sont
 // des colonnes intégrées au lobby (pas des overlays) — Escape ne doit pas les
-// replier ; les panneaux emoji et les overlays de fin de partie n'exposent
-// aucune fermeture fiable.
+// replier ; les panneaux emoji n'exposent aucune fermeture fiable.
 
 const REG = [];   // surfaces enregistrées à chaud : {el, close}
 
@@ -113,6 +119,7 @@ function _inEditable(t) {
 function _onKey(e) {
   if (!_enabled()) return;
   if (e.defaultPrevented || e.altKey || e.ctrlKey || e.metaKey) return;
+  if (_tabsKey(e)) return;
 
   if (e.key === 'Escape') {
     var s = _topSurface();
@@ -135,6 +142,46 @@ function _onKey(e) {
     e.stopPropagation();
     btn.click();
   }
+}
+
+// ── Liste d'onglets au clavier — parité QML b170786 (SettingsPage) ─────────
+// Catégories des réglages : « keyNavigationEnabled », les flèches changent
+// de catégorie et le contenu suit (showCategory). Ici un conteneur
+// data-kn-tabs de boutons role="tab" : flèches (les deux axes, la liste est
+// verticale sur grand écran et horizontale en compact), Début / Fin ; le
+// bouton atteint reçoit le focus et est cliqué. Onglets désactivés sautés.
+const TAB_KEYS = { ArrowDown: 1, ArrowRight: 1, ArrowUp: -1, ArrowLeft: -1, Home: 'first', End: 'last' };
+function _tabsKey(e) {
+  var step = TAB_KEYS[e.key];
+  if (!step || e.shiftKey) return false;
+  var tg = e.target;
+  if (!tg || tg.getAttribute('role') !== 'tab') return false;
+  var box = tg.closest ? tg.closest('[data-kn-tabs]') : null;
+  if (!box) return false;
+  var tabs = Array.prototype.filter.call(box.querySelectorAll('[role="tab"]'), function (b) {
+    return !b.disabled && !b.hasAttribute('disabled') && _visible(b);
+  });
+  var i = tabs.indexOf(tg);
+  if (i < 0 || !tabs.length) return false;
+  var j = step === 'first' ? 0 : step === 'last' ? tabs.length - 1
+        : Math.max(0, Math.min(tabs.length - 1, i + step));
+  e.preventDefault();
+  e.stopPropagation();
+  if (j === i) return true;
+  try { tabs[j].focus({ preventScroll: true }); } catch (err) {}
+  tabs[j].click();
+  return true;
+}
+
+// ── Zone de lecture — parité QML b170786 (About, ForumPost, fiche joueur) ──
+// Le QML met le focus sur le défilement pour lire sans souris (Pg préc. /
+// Pg suiv. / Début / Fin). Un navigateur fait défiler nativement l'élément
+// focalisé : il suffit de lui donner le focus (tabindex="-1" dans le HTML,
+// data-kn-read pour masquer le cadre). Mêmes garde-fous que le reste.
+export function focusReading(el) {
+  if (!el || !_enabled() || _touchOnly() || !_visible(el)) return false;
+  try { el.focus({ preventScroll: true }); } catch (e) { return false; }
+  return true;
 }
 
 // ── Bouton par défaut d'un formulaire — parité QML b170786 ─────────────────
@@ -281,7 +328,8 @@ export function registerOverlay(el, close) {
 // souris : pas de clavier à servir, et retirer le focus d'un champ fermerait
 // le clavier virtuel. Suit l'option pth_keynav.
 const FOCUS_WATCH = SURFACES.map(function (s) { return s[0]; })
-  .concat(['timeout-warn-modal', 'conn-lost-modal']);   // gèrent Escape eux-mêmes
+  .concat(['timeout-warn-modal', 'conn-lost-modal',     // gèrent Escape eux-mêmes
+           'rk-profile']);                             // fiche joueur du classement
 
 function _touchOnly() {
   try { return !!(window.matchMedia && window.matchMedia('(hover: none) and (pointer: coarse)').matches); }
@@ -293,8 +341,16 @@ function _touchOnly() {
 export function focusInitial(el) {
   var noop = function () {};
   if (!el || !_enabled() || _touchOnly()) return noop;
-  var target = el.querySelector('[data-kn-focus]');
-  if (!target || target.disabled || !_visible(target)) return noop;
+  // Premier candidat visible et actif, el compris (une page qui défile
+  // elle-même) : le champ de recherche du classement s'il est affiché, sinon
+  // la zone de lecture.
+  var cands = (el.matches && el.matches('[data-kn-focus]') ? [el] : [])
+    .concat(Array.prototype.slice.call(el.querySelectorAll('[data-kn-focus]')));
+  var target = null;
+  for (var ci = 0; ci < cands.length; ci++) {
+    if (!cands[ci].disabled && _visible(cands[ci])) { target = cands[ci]; break; }
+  }
+  if (!target) return noop;
   var prev = document.activeElement;
   if (prev && el.contains(prev)) return noop;          // déjà dans le popup
   try { target.focus({ preventScroll: true }); } catch (e) { return noop; }
@@ -312,7 +368,7 @@ function _watchFocus() {
   if (typeof MutationObserver !== 'function') return;
   FOCUS_WATCH.forEach(function (id) {
     var el = document.getElementById(id);
-    if (!el || !el.querySelector('[data-kn-focus]')) return;
+    if (!el) return;       // candidats lus à l'ouverture : contenu parfois injecté
     var open = _visible(el), restore = null;
     new MutationObserver(function () {
       var now = _visible(el);
@@ -332,3 +388,4 @@ window.keynavRegisterOverlay = registerOverlay;
 window.keynavCloseTop = closeTop;
 window.keynavFocusInitial = focusInitial;
 window.keynavFocusStart = focusStart;
+window.keynavFocusReading = focusReading;

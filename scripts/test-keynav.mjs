@@ -28,6 +28,15 @@ const dom = new JSDOM(`<!doctype html><body>
     <input id="nick" data-kn-start>
     <input id="pass" type="password" data-kn-start>
   </div>
+  <nav id="tabs" role="tablist" data-kn-tabs>
+    <button role="tab" id="t1">A</button><button role="tab" id="t2" disabled>B</button><button role="tab" id="t3">C</button>
+  </nav>
+  <div id="ranking-modal" style="display:none">
+    <input id="rk-search" data-kn-focus style="display:none">
+    <div id="rk-body" tabindex="-1" data-kn-focus></div>
+  </div>
+  <div id="about-page" style="display:none" tabindex="-1" data-kn-focus></div>
+  <div id="g-endgame-overlay" style="display:none"></div>
   <div class="screen" id="s-create" style="display:none">
     <div id="create-form" data-kn-form>
       <input id="cf-name" data-kn-start="online">
@@ -60,7 +69,8 @@ w.App = {
   cancelQuickCreate: () => calls.push('cancelQuickCreate'),
   cancelLeaveGame: () => calls.push('cancelLeave'),
   cancelDisconnect: () => calls.push('cancelDisconnect'),
-  confirmQuickCreate: () => calls.push('CONFIRM-CREATE')
+  confirmQuickCreate: () => calls.push('CONFIRM-CREATE'),
+  endGameClose: () => calls.push('endGameClose')
 };
 
 // jsdom ne compile pas les attributs onclick sans runScripts : on branche le
@@ -69,6 +79,10 @@ w.document.querySelector('[data-kn-primary]')
   .addEventListener('click', () => w.App.confirmQuickCreate());
 
 w.document.getElementById('cf-create').addEventListener('click', () => calls.push('CREATE'));
+for (const id of ['t1', 't2', 't3']) w.document.getElementById(id).addEventListener('click', () => calls.push('tab-' + id));
+w.closeRankingModal = () => calls.push('closeRanking');
+w.closeAboutPage = () => calls.push('closeAbout');
+w.loginBackToStep1 = () => calls.push('backToStep1');
 await import('../public/modules/ui/keynav.mjs');
 const bootFocus = w.document.activeElement && w.document.activeElement.id;
 const bootQuiet = w.document.getElementById('card-net').hasAttribute('data-kn-quiet');
@@ -245,6 +259,52 @@ calls.length = 0; d.getElementById('cf-create').disabled = true; key('Enter', d.
 ok(calls.length === 0, 'bouton Créer désactivé : rien');
 d.getElementById('cf-create').disabled = false;
 hide('s-create'); d.getElementById('chat-in').style.display = '';
+d.getElementById('chat-in').focus();
+
+// 18 — onglets data-kn-tabs (catégories des réglages, SettingsPage QML)
+d.getElementById('t1').focus(); calls.length = 0;
+let evT = key('ArrowDown', d.getElementById('t1'));
+ok(d.activeElement.id === 't3' && calls.join() === 'tab-t3' && evT.defaultPrevented, '↓ : onglet suivant actif (désactivé sauté), focus + clic');
+calls.length = 0; key('ArrowRight', d.getElementById('t3'));
+ok(calls.length === 0 && d.activeElement.id === 't3', 'dernier onglet : pas de bouclage');
+calls.length = 0; key('Home', d.getElementById('t3'));
+ok(d.activeElement.id === 't1' && calls.join() === 'tab-t1', 'Début : premier onglet');
+calls.length = 0; key('ArrowDown', d.getElementById('chat-in'));
+ok(calls.length === 0, 'flèche hors d\u2019une liste d\u2019onglets : ignorée');
+
+// 19 — zones de lecture et recherche (About, classement, fiche joueur)
+d.getElementById('chat-in').focus();
+show('about-page'); await tick();
+ok(d.activeElement.id === 'about-page', 'À propos : la page elle-même reçoit le focus (défilement clavier)');
+hide('about-page'); await tick();
+ok(d.activeElement.id === 'chat-in', 'À propos fermé : focus rendu');
+show('ranking-modal'); await tick();
+ok(d.activeElement.id === 'rk-body', 'classement, recherche masquée : focus sur la zone de lecture');
+hide('ranking-modal'); await tick();
+d.getElementById('rk-search').style.display = '';
+show('ranking-modal'); await tick();
+ok(d.activeElement.id === 'rk-search', 'classement, recherche affichée : focus dans la recherche');
+hide('ranking-modal'); await tick();
+ok(typeof w.keynavFocusReading === 'function' && w.keynavFocusReading(d.getElementById('rk-body')) && d.activeElement.id === 'rk-body', 'keynavFocusReading : focus sur une zone de lecture');
+d.getElementById('chat-in').focus();
+
+// 20 — fin de partie : focus Rejouer (entraînement), Escape = fermer
+const eg = d.getElementById('g-endgame-overlay');
+eg.innerHTML = '<button id="eg-replay" data-kn-focus>Play again</button><button id="eg-lobby">Back</button>';
+show('g-endgame-overlay'); await tick();
+ok(d.activeElement.id === 'eg-replay', 'fin de partie : focus sur Rejouer (gameOverPopup QML)');
+calls.length = 0; key('Escape');
+ok(calls.join() === 'endGameClose', 'fin de partie : Escape ferme la fenêtre (reste à la table)');
+hide('g-endgame-overlay'); await tick();
+d.getElementById('chat-in').focus();
+
+// 21 — connexion : Escape revient au choix du mode (handleBack QML)
+show('login-step2'); await tick();
+calls.length = 0; key('Escape');
+ok(calls.join() === 'backToStep1', 'formulaire de connexion : Escape → choix du mode');
+hide('login-step2'); await tick();
+calls.length = 0; key('Escape');
+ok(calls.length === 0, 'rien d\u2019ouvert : Escape toujours inerte');
 d.getElementById('chat-in').focus();
 
 // 17 — vue /live : pas de focus au démarrage

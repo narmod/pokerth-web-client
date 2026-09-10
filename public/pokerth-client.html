@@ -2393,7 +2393,7 @@ function _processAvatarFile(file) {
 <!-- ╚═══════════════════════════╝ -->
 <!-- Parité AboutPage QML 2.1.3 : bouton retour, titre, 5 onglets pleine
      largeur (À propos / Projet / Remerciements / Licence / Bibliothèques). -->
-<div id="about-page" style="display:none">
+<div id="about-page" style="display:none" tabindex="-1" data-kn-focus data-kn-read>
   <div class="ab-head">
     <button class="ab-back" type="button" onclick="window.closeAboutPage()" title="Back" data-i18n-aria="backTooltip" data-i18n-title="backTooltip" aria-label="Back">&#8249;</button>
   </div>
@@ -2510,7 +2510,7 @@ function _processAvatarFile(file) {
       <button class="btn-sm help-menu-btn" onclick="window.closePrivacyOverflow();if(window.toggleHelp)window.toggleHelp()"><span style="margin-right:7px" aria-hidden="true"><svg viewBox="0 0 24 24" style="display:inline-block;width:16px;height:16px;vertical-align:-3px" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.4 2.3c-.8.3-.9 1-.9 1.7M12 16.6h.01"/></svg></span><span data-i18n="helpTitle">Help</span></button>
     </div></span>
   </div>
-  <div class="pv-scroll">
+  <div class="pv-scroll" tabindex="-1" data-kn-focus data-kn-read>
     <div class="pv-body">
       <p class="pv-updated" data-i18n="pvUpdated">Last updated: September 10, 2026</p>
       <h2 data-i18n="pvWhoH">Who runs this</h2>
@@ -3039,7 +3039,7 @@ if ('serviceWorker' in navigator && !window.LIVE_MODE) {
   <div class="rk-card" role="dialog" aria-labelledby="fn-title">
     <button class="rk-close" type="button" onclick="closeForumModal()" title="Close" data-i18n-title="closeTooltip" data-i18n-aria="closeTooltip" aria-label="Close">✕</button>
     <div class="rk-title" id="fn-title"><svg viewBox="0 0 24 24" style="display:inline-block;width:15px;height:15px;vertical-align:-2px;margin-right:6px" fill="currentColor" aria-hidden="true"><path d="M22 3l-1.67 1.67L18.67 3 17 4.67 15.33 3l-1.66 1.67L12 3l-1.67 1.67L8.67 3 7 4.67 5.33 3 3.67 4.67 2 3v16c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V3zM11 19H4v-6h7v6zm9 0h-7v-2h7v2zm0-4h-7v-2h7v2zm0-4H4V8h16v3z"/></svg><span data-i18n="forumTitle">Forum news</span></div>
-    <div class="rk-body">
+    <div class="rk-body" tabindex="-1" data-kn-read>
       <div id="fn-listwrap">
         <div class="rk-msg" id="fn-loading" data-i18n="rankingLoading">Loading…</div>
         <div class="rk-msg" id="fn-error" data-i18n="forumError" style="display:none">Could not load the forum feed.</div>
@@ -3081,7 +3081,7 @@ if ('serviceWorker' in navigator && !window.LIVE_MODE) {
       <button type="button" class="rk-tab" data-src="wec" onclick="rankingSelect('wec')" data-i18n="rankingWec">WEC</button>
       <button type="button" class="rk-tab rk-tab-ach" data-src="ach" onclick="rankingSelect('ach')" data-i18n="achTitle" style="display:none">Trophies</button>
     </div>
-    <div class="rk-body">
+    <div class="rk-body" tabindex="-1" data-kn-focus data-kn-read>
       <div class="rk-controls" id="rk-controls" style="display:none">
         <label class="rk-season-lbl"><span data-i18n="rankingSeason">Season</span>:
           <select id="rk-season" class="rk-season" onchange="rankingSeason()" aria-label="Season"></select>
@@ -3091,7 +3091,7 @@ if ('serviceWorker' in navigator && !window.LIVE_MODE) {
         </label>
       </div>
       <div class="rk-search-wrap" id="rk-search-wrap" style="display:none">
-        <input type="text" id="rk-search" class="rk-search" oninput="rankingFilter()" placeholder="Search a player…" data-i18n-placeholder="rankingSearch" autocomplete="off" spellcheck="false" aria-label="Search a player">
+        <input type="text" id="rk-search" class="rk-search" oninput="rankingFilter()" onkeydown="if(event.key==='Enter'&&window.rankingSearchNow){event.preventDefault();rankingSearchNow();}" data-kn-focus placeholder="Search a player…" data-i18n-placeholder="rankingSearch" autocomplete="off" spellcheck="false" aria-label="Search a player">
       </div>
       <div class="rk-msg" id="rk-loading" data-i18n="rankingLoading">Loading…</div>
       <div class="rk-msg" id="rk-soon" data-i18n="rankingSoon" style="display:none">Ranking coming soon.</div>
@@ -3111,7 +3111,7 @@ if ('serviceWorker' in navigator && !window.LIVE_MODE) {
         <div class="rk-calc-row"><span data-i18n="rkCalcFormula">Formula:</span> 25 * average * (1 - 10000 / (10000 + games^3))</div>
       </div>
     </div>
-    <div id="rk-profile" style="display:none">
+    <div id="rk-profile" style="display:none" tabindex="-1" data-kn-focus data-kn-read>
       <button type="button" class="rk-back" onclick="rankingBackToList()" title="Back" data-i18n-title="rankingBack" aria-label="Back">←</button>
       <div id="rk-prof-body"></div>
     </div>
@@ -3132,7 +3132,7 @@ if ('serviceWorker' in navigator && !window.LIVE_MODE) {
       <button type="button" class="rk-tab" data-src="bbc" onclick="trSelect('bbc')" data-i18n="rankingBbc">BBC</button>
       <button type="button" class="rk-tab" data-src="wec" onclick="trSelect('wec')" data-i18n="rankingWec">WEC</button>
     </div>
-    <div class="rk-body">
+    <div class="rk-body" tabindex="-1" data-kn-focus data-kn-read>
       <div class="trk-sub" id="trk-sub"></div>
       <div class="rk-msg" id="trk-loading" data-i18n="rankingLoading">Loading…</div>
       <div class="rk-msg" id="trk-error" data-i18n="rankingError" style="display:none">Could not load the ranking.</div>
@@ -3177,7 +3177,7 @@ if ('serviceWorker' in navigator && !window.LIVE_MODE) {
          typing; picking a result goes back to the setting itself. -->
     <div class="help-search adv-search"><input id="adv-search-in" type="search" autocomplete="off" placeholder="Search settings…" data-i18n-placeholder="advSearchPh" oninput="try{window._advSearch&&window._advSearch()}catch(e){}"></div>
     <div class="adv-layout">
-      <nav class="adv-nav" role="tablist" aria-label="Settings categories">
+      <nav class="adv-nav" role="tablist" aria-label="Settings categories" data-kn-tabs>
         <button type="button" class="adv-cat is-active" data-cat="ui" id="adv-cat-ui" role="tab" aria-selected="true" aria-controls="adv-panel-ui" onclick="advSelectCat('ui')"><span class="adv-cat-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/></svg></span><span class="adv-cat-lbl" data-i18n="advCatUI">User interface</span></button>
         <button type="button" class="adv-cat" data-cat="style" id="adv-cat-style" role="tab" aria-selected="false" aria-controls="adv-panel-style" onclick="advSelectCat('style')"><span class="adv-cat-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a9 9 0 1 0 .5 18c1 0 1.5-.8 1.5-1.6 0-.5-.2-.9-.5-1.2-.3-.3-.5-.7-.5-1.2 0-.9.7-1.5 1.6-1.5H17a4 4 0 0 0 4-4c0-4.4-4-7.5-9-7.5z"/><circle cx="7.5" cy="11.5" r="1.1" fill="currentColor" stroke="none"/><circle cx="11" cy="7.5" r="1.1" fill="currentColor" stroke="none"/><circle cx="15.5" cy="9" r="1.1" fill="currentColor" stroke="none"/></svg></span><span class="adv-cat-lbl" data-i18n="advCatStyle">Style</span></button>
         <button type="button" class="adv-cat" data-cat="sound" id="adv-cat-sound" role="tab" aria-selected="false" aria-controls="adv-panel-sound" onclick="advSelectCat('sound')"><span class="adv-cat-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9.5v5h3.5L13 19V5L7.5 9.5H4z"/><path d="M16.5 8.5a5 5 0 0 1 0 7"/></svg></span><span class="adv-cat-lbl" data-i18n="advCatSound">Sound</span></button>
@@ -3531,6 +3531,17 @@ if ('serviceWorker' in navigator && !window.LIVE_MODE) {
     if (RK_SORT.col === col) { RK_SORT.dir = -RK_SORT.dir; }
     else { RK_SORT.col = col; RK_SORT.dir = (col === 'player') ? 1 : -1; } // stats: desc d'abord
     rkRenderCurrent();
+  };
+  // Entrée dans la recherche : chercher tout de suite, sans attendre
+  // l'anti-rebond (parité QML RankingPage onAccepted, b170786).
+  window.rankingSearchNow = function () {
+    if (rkSearchTimer) { clearTimeout(rkSearchTimer); rkSearchTimer = null; }
+    if (RK_SERVER.indexOf(RK_SRC) >= 0) {
+      var sel = $('rk-season');
+      rkFetch(RK_SRC, sel ? sel.value : 'current', 1, true);
+    } else {
+      rkRenderCurrent();
+    }
   };
   window.rankingFilter = function () {
     if (rkSearchTimer) clearTimeout(rkSearchTimer);

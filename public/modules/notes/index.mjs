@@ -195,7 +195,12 @@ export function wireBlock(root) {
     ta.addEventListener('blur', saveNote);
     // Escape ferme la carte (keynav) : sans ce flush la dernière frappe
     // partirait à la poubelle.
-    ta.addEventListener('keydown', (e) => { if (e.key === 'Escape') saveNote(); });
+    ta.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') saveNote();
+      // Ctrl+Entrée (⌘+Entrée) enregistre tout de suite, Entrée seule reste un
+      // saut de ligne — parité QML PlayerNoteDialog (b170786).
+      else if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) { e.preventDefault(); saveNote(); }
+    });
   }
 
   // Renommage du libellé : différé pareil, et un libellé retapé à l'identique
