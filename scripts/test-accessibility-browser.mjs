@@ -203,9 +203,14 @@ async function activeHandRects(page) {
       cards: union(document.querySelectorAll('#g-comm .pk')),
       cardFaces: [...document.querySelectorAll('#s-game .pk:not(.back):not(.comm-slot)')]
         .filter((card) => { const value = card.getBoundingClientRect(); return value.width > 0 && value.height > 0; }).map(rect),
+      communityCardFaces: [...document.querySelectorAll('#g-comm .pk:not(.back):not(.comm-slot)')]
+        .filter((card) => { const value = card.getBoundingClientRect(); return value.width > 0 && value.height > 0; }).map(rect),
       pot: rect(document.querySelector('#g-potbar')),
       actions: rect(document.querySelector('#g-actions .action-grid')),
       status: rect(document.querySelector('#pot-strip')),
+      statusContent: [...document.querySelectorAll('#pot-strip .gsb-lbl, #pot-strip .gsb-total, #pot-strip .gsb-bets, #pot-strip .gsb-phase, #pot-strip .gsb-val, #pot-strip .blinds-next')]
+        .filter((element) => { const value = element.getBoundingClientRect(); return value.width > 0 && value.height > 0; }).map(rect),
+      drawerBar: rect(document.querySelector('.adaptive-drawer-bar')),
     };
   });
 }
@@ -851,6 +856,136 @@ try {
       }, sentBefore);
       assert.equal(sentAction, true, `${seatCount}-seat Fold did not cross the production message boundary`);
     }
+  });
+  await check('Extra Large mobile portrait keeps a dense active hand readable and operable', async () => {
+    await startActiveHand(page, 10);
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.waitForTimeout(300);
+    const fontSelectors = [
+      '#g-pot', '#g-bets', '#g-potbar', '.blinds-next',
+      '#g-comm .pk .c-rank', '#g-comm .pk .c-suit',
+      '#g-actions .btn-fold', '#g-actions .act-buttons-row .btn-action:nth-child(2)', '#g-actions .raise-btn',
+    ];
+    const timerSelector = '.seat.active .seat-timeout-bar';
+    const standard = await visibleMetrics(page, [...fontSelectors, timerSelector]);
+    const standardCue = await turnCueOutcome(page);
+
+    await chooseInterfaceSize(page, 'game', 'extra-large');
+    await page.locator('#g-actions .btn-fold').waitFor();
+    await page.waitForTimeout(300);
+    const extraLarge = await visibleMetrics(page, [...fontSelectors, timerSelector]);
+    const geometry = await activeHandRects(page);
+
+    for (const selector of fontSelectors) {
+      assert.equal(extraLarge[selector].visible, true, `mobile portrait Extra Large ${selector} is outside the viewport`);
+      assertExactScaled(extraLarge[selector].fontSize, standard[selector].fontSize, 2, `mobile portrait Extra Large ${selector}`);
+    }
+    assert.equal(extraLarge[timerSelector].visible, true, 'mobile portrait Extra Large turn timer is outside the viewport');
+    assertExactScaled(extraLarge[timerSelector].cssHeight, standard[timerSelector].cssHeight, 2, 'mobile portrait Extra Large turn-timer height');
+    for (const [label, rect] of Object.entries({ cards: geometry.cards, pot: geometry.pot, actions: geometry.actions, status: geometry.status })) {
+      assertReachable(rect, geometry.viewport, `mobile portrait Extra Large ${label}`);
+    }
+    for (const [index, rect] of geometry.statusContent.entries()) {
+      assert.ok(rect.left >= geometry.status.left - 1 && rect.top >= geometry.status.top - 1
+          && rect.right <= geometry.status.right + 1 && rect.bottom <= geometry.status.bottom + 1,
+      `mobile portrait Extra Large status value ${index + 1} escapes the status bar`);
+      assert.equal(overlaps(rect, geometry.drawerBar), false, `mobile portrait Extra Large status value ${index + 1} overlaps the drawer bar`);
+    }
+    assert.equal(overlaps(geometry.cards, geometry.actions), false, 'mobile portrait Extra Large cards overlap actions');
+    assert.equal(overlaps(geometry.pot, geometry.cards), false, 'mobile portrait Extra Large pot overlaps cards');
+    assert.equal(overlaps(geometry.pot, geometry.actions), false, 'mobile portrait Extra Large pot overlaps actions');
+    for (const [cardIndex, card] of geometry.communityCardFaces.entries()) {
+      for (const [seatIndex, seat] of geometry.seats.entries()) {
+        assert.equal(overlaps(card, seat), false, `mobile portrait Extra Large card ${cardIndex + 1} overlaps seat ${seatIndex + 1}`);
+      }
+    }
+    for (const [seatIndex, seat] of geometry.seats.entries()) {
+      assert.equal(overlaps(geometry.actions, seat), false, `mobile portrait Extra Large actions overlap seat ${seatIndex + 1}`);
+    }
+    const extraLargeCue = await turnCueOutcome(page);
+    assert.equal(extraLargeCue.visible, true, 'mobile portrait Extra Large current-turn indication is not visible');
+    assert.equal(extraLargeCue.distinctFromInactive, true, 'mobile portrait Extra Large current-turn cue is ambiguous');
+    assert.ok(extraLargeCue.prominence > standardCue.prominence, 'mobile portrait Extra Large current-turn cue did not grow');
+    await assertEnhancedTargets(page, ['#accessibility-open-game', '#g-actions .btn-fold', '#g-actions .act-buttons-row .btn-action:nth-child(2)', '#g-actions .raise-btn'], 'mobile portrait Extra Large');
+    await assertKeyboardFocusVisible(page, ['#accessibility-open-game', '#g-actions .btn-fold', '#g-actions .act-buttons-row .btn-action:nth-child(2)', '#g-actions .raise-btn'], 'mobile portrait Extra Large');
+
+    const sentBefore = await page.evaluate(() => window.WebSocket.instance.sent.length);
+    await page.locator('#g-actions .btn-fold').click();
+    await page.waitForFunction((before) => window.WebSocket.instance.sent.length > before, sentBefore);
+    const sentAction = await page.evaluate(async (before) => {
+      const { MSG } = await import('/modules/net/messages.mjs');
+      return window.WebSocket.instance.sent.slice(before)
+        .filter((frame) => frame instanceof ArrayBuffer)
+        .some((frame) => MSG.parse(new Uint8Array(frame).slice(4)).type === MSG.T.MyActionRequest);
+    }, sentBefore);
+    assert.equal(sentAction, true, 'mobile portrait Extra Large Fold did not cross the production message boundary');
+  });
+  await check('Extra Large mobile portrait secondary drawers preserve content and focus', async () => {
+    await startActiveHand(page, 10);
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.waitForTimeout(300);
+    await chooseInterfaceSize(page, 'game', 'extra-large');
+
+    const chatButton = page.locator('#adaptive-chat-toggle');
+    await assertEnhancedTargets(page, ['#adaptive-chat-toggle', '#adaptive-info-toggle', '#adaptive-hands-toggle', '#adaptive-reactions-toggle'], 'mobile portrait Extra Large drawer');
+    await chatButton.click();
+    const chatDrawer = page.locator('#g-chat-panel');
+    await chatDrawer.waitFor({ state: 'visible' });
+    const chatRect = await chatDrawer.boundingBox();
+    assertReachable(chatRect && { left: chatRect.x, top: chatRect.y, right: chatRect.x + chatRect.width, bottom: chatRect.y + chatRect.height, width: chatRect.width, height: chatRect.height }, { width: 390, height: 844 }, 'mobile portrait Extra Large chat drawer');
+    assert.equal(await chatDrawer.getAttribute('role'), 'dialog');
+    assert.equal(await chatDrawer.getAttribute('aria-modal'), 'false');
+    assert.equal(await chatButton.getAttribute('aria-expanded'), 'true');
+    await page.waitForFunction(() => document.activeElement && document.activeElement.id === 'g-chat-in');
+    assert.equal(await page.evaluate(() => document.activeElement && document.activeElement.id), 'g-chat-in');
+    await page.locator('#g-chat-in').fill('Preserved portrait draft');
+    await page.keyboard.press('Escape');
+    await chatDrawer.waitFor({ state: 'hidden' });
+    await page.waitForFunction(() => document.activeElement && document.activeElement.id === 'adaptive-chat-toggle');
+    assert.equal(await chatButton.getAttribute('aria-expanded'), 'false');
+    assert.equal(await page.evaluate(() => document.activeElement && document.activeElement.id), 'adaptive-chat-toggle');
+    await chatButton.click();
+    assert.equal(await page.locator('#g-chat-in').inputValue(), 'Preserved portrait draft');
+    await assertEnhancedTargets(page, ['#g-chat-in', '#g-chat-emoji-toggle', '#g-chat-panel .chat-send', '#g-chat-close'], 'mobile portrait Extra Large chat drawer');
+    await page.locator('#g-chat-close').click();
+    await chatDrawer.waitFor({ state: 'hidden' });
+
+    const logButton = page.locator('#adaptive-info-toggle');
+    await logButton.click();
+    const infoDrawer = page.locator('#g-log-panel');
+    await infoDrawer.waitFor({ state: 'visible' });
+    const infoRect = await infoDrawer.boundingBox();
+    assertReachable(infoRect && { left: infoRect.x, top: infoRect.y, right: infoRect.x + infoRect.width, bottom: infoRect.y + infoRect.height, width: infoRect.width, height: infoRect.height }, { width: 390, height: 844 }, 'mobile portrait Extra Large information drawer');
+    assert.equal(await infoDrawer.getAttribute('role'), 'dialog');
+    assert.equal(await infoDrawer.getAttribute('aria-modal'), 'false');
+    assert.equal(await logButton.getAttribute('aria-expanded'), 'true');
+    await page.waitForFunction(() => document.activeElement && document.activeElement.id === 'gip-tab-log');
+    assert.equal(await page.evaluate(() => document.activeElement && document.activeElement.id), 'gip-tab-log');
+    assert.ok((await page.locator('#g-log-body').textContent()).trim().length > 0, 'history drawer lost the active hand log');
+    await assertEnhancedTargets(page, ['#gip-tab-log', '#gip-tab-odds', '#gip-tab-stats', '#g-log-close'], 'mobile portrait Extra Large information drawer');
+    await page.locator('#gip-tab-stats').click();
+    assert.equal(await page.locator('#g-stats-body').isVisible(), true, 'statistics are unavailable from the secondary drawer');
+    await page.keyboard.press('Escape');
+    await infoDrawer.waitFor({ state: 'hidden' });
+    await page.waitForFunction(() => document.activeElement && document.activeElement.id === 'adaptive-info-toggle');
+    assert.equal(await logButton.getAttribute('aria-expanded'), 'false');
+    assert.equal(await page.evaluate(() => document.activeElement && document.activeElement.id), 'adaptive-info-toggle');
+    await logButton.click();
+    assert.equal(await page.locator('#g-stats-body').isVisible(), true, 'secondary drawer did not preserve its selected statistics tab');
+    await page.locator('#g-log-close').click();
+    await infoDrawer.waitFor({ state: 'hidden' });
+
+    await page.locator('#adaptive-hands-toggle').click();
+    await page.locator('#hands-overlay').waitFor({ state: 'visible' });
+    await assertEnhancedTargets(page, ['#hands-card-inner .g-chat-panel-header button'], 'mobile portrait Extra Large hands help');
+    await page.locator('#hands-card-inner .g-chat-panel-header button').click();
+    await page.locator('#hands-overlay').waitFor({ state: 'hidden' });
+    await page.locator('#adaptive-reactions-toggle').click();
+    await page.locator('#g-reaction-panel').waitFor({ state: 'visible' });
+    await assertEnhancedTargets(page, ['#g-reaction-panel .react-panel-close'], 'mobile portrait Extra Large reactions');
+    await page.locator('#g-reaction-panel .react-panel-close').click();
+    await page.locator('#g-reaction-panel').waitFor({ state: 'hidden' });
+    assert.ok(await page.locator('.adaptive-drawer-bar').evaluate((bar) => bar.scrollWidth <= bar.clientWidth + 1), 'mobile portrait Extra Large drawer controls overflow horizontally');
   });
   console.log(`PASS ${passed}/${passed}`);
 } finally {

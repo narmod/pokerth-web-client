@@ -4075,6 +4075,7 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
 
 /* ═══ GAME SCREEN ═══ */
 #s-game { overflow: visible; flex-direction: column; }
+.adaptive-drawer-bar { display: none; }
 
 .game-area {
   position: relative; /* ancre des boutons de zoom de la table */
@@ -12070,6 +12071,160 @@ html[data-seat-struct="qml"] .seat-narrow .seat-name .seat-note-stars { font-siz
   }
 
   #s-game :focus-visible {
+    outline: 3px solid var(--sel, var(--gold)) !important;
+    outline-offset: 3px !important;
+  }
+}
+
+/* Extra Large adaptive play layout for phone portrait. Critical information
+   reaches the 200% preset while the table scaffolding remains free to reflow. */
+@media (max-width: 740px) and (orientation: portrait) {
+  :root[data-interface-size="extra-large"] #s-game {
+    --active-play-scale: 2;
+    --active-pot-font-base: calc(13px * var(--active-standard-comm-scale, var(--comm-scale, 1)));
+    --active-status-primary-base: 13px;
+    --active-status-secondary-base: 11px;
+    --active-blinds-font-base: max(10px, calc(12px * var(--active-standard-comm-scale, var(--comm-scale, 1))));
+    --active-community-font-base: calc(1.02rem * var(--active-standard-comm-scale, var(--comm-scale, 1)));
+    --active-timer-self-height-base: 7px;
+    --active-timer-opponent-height-base: 9px;
+    --active-action-font-base: var(--fs-source-md);
+    --active-action-height-base: 45px;
+    --active-turn-border-base: 2px;
+    --active-turn-blur-base: 14px;
+    --active-turn-spread-base: 2px;
+    --active-turn-inset-base: -2px;
+    --fs-3xs: calc(var(--fs-source-3xs) * var(--active-play-scale));
+    --fs-2xs: calc(var(--fs-source-2xs) * var(--active-play-scale));
+    --fs-xs: calc(var(--fs-source-xs) * var(--active-play-scale));
+    --fs-sm: calc(var(--fs-source-sm) * var(--active-play-scale));
+    --fs-base: calc(var(--fs-source-base) * var(--active-play-scale));
+    --fs-md: calc(var(--fs-source-md) * var(--active-play-scale));
+    --active-turn-border: calc(var(--active-turn-border-base) * var(--active-play-scale));
+    --active-turn-blur: calc(var(--active-turn-blur-base) * var(--active-play-scale));
+    --active-turn-spread: calc(var(--active-turn-spread-base) * var(--active-play-scale));
+    --active-turn-inset: calc(var(--active-turn-inset-base) * var(--active-play-scale));
+  }
+
+  :root[data-interface-size="extra-large"] #s-game #g-potbar {
+    font-size: calc(var(--active-pot-font-base) * var(--active-play-scale));
+    --pot-badge-lift: calc(var(--active-community-font-base) * var(--active-play-scale) * 1.8 + var(--sp-4));
+  }
+  :root[data-interface-size="extra-large"] #s-game :is(.gsb-lbl, .gsb-total, .gsb-phase) {
+    font-size: calc(var(--active-status-primary-base) * var(--active-play-scale));
+  }
+  :root[data-interface-size="extra-large"] #s-game :is(.gsb-left .gsb-row:last-child .gsb-lbl, .gsb-gh .gsb-lbl, .gsb-val, .gsb-bets) {
+    font-size: calc(var(--active-status-secondary-base) * var(--active-play-scale));
+  }
+  :root[data-interface-size="extra-large"] #s-game #pot-strip {
+    height: auto;
+    min-height: 66px;
+    padding: var(--sp-1) var(--sp-3);
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-content: center;
+  }
+  :root[data-interface-size="extra-large"] #s-game .gsb-mid {
+    position: static;
+    transform: none;
+    justify-self: end;
+  }
+  :root[data-interface-size="extra-large"] #s-game .gsb-right {
+    display: none;
+  }
+  :root[data-interface-size="extra-large"] #s-game .blinds-next {
+    font-size: calc(var(--active-blinds-font-base) * var(--active-play-scale));
+  }
+  :root[data-interface-size="extra-large"] #s-game :is(#g-potbar, .blinds-next) {
+    height: auto;
+    min-height: var(--ctrl-enhanced);
+    padding-inline: calc(var(--sp-4) * var(--active-play-scale));
+  }
+
+  :root[data-interface-size="extra-large"] #s-game .comm-row .pk {
+    font-size: calc(var(--active-community-font-base) * var(--active-play-scale));
+  }
+  :root[data-interface-size="extra-large"][data-deck] #s-game .pk:not(.back):not(.comm-slot) {
+    background-image: none;
+    background-color: #fff;
+    min-width: calc(1.3em + var(--sp-1));
+    min-height: calc(3.3em + var(--sp-1));
+    padding: 0.2em 0.08em;
+    gap: calc(var(--sp-3) * var(--active-play-scale));
+  }
+  :root[data-interface-size="extra-large"] #s-game :is(.comm-row, .pot-badge) {
+    top: calc(50% + var(--comm-shift-y, 0px) + var(--sp-1) * var(--active-play-scale));
+  }
+  :root[data-interface-size="extra-large"][data-deck] #s-game .pk:not(.back):not(.comm-slot) :is(.c-rank, .c-suit) {
+    display: block;
+    flex: 0 0 auto;
+  }
+
+  :root[data-interface-size="extra-large"] #s-game .seat.me .seat-timeout-bar {
+    height: calc(var(--active-timer-self-height-base) * var(--active-play-scale));
+  }
+  :root[data-interface-size="extra-large"] #s-game .seat:not(.me) .seat-timeout-bar {
+    height: calc(var(--active-timer-opponent-height-base) * var(--active-play-scale));
+  }
+
+  :root[data-interface-size="extra-large"] #s-game .act-buttons-row {
+    height: calc(var(--active-action-height-base) * var(--active-play-scale));
+    padding-block: 0;
+  }
+  :root[data-interface-size="extra-large"] #s-game .act-buttons-row .btn-action {
+    min-width: var(--ctrl-enhanced);
+    min-height: var(--ctrl-enhanced) !important;
+    max-height: none !important;
+    height: calc(var(--active-action-height-base) * var(--active-play-scale)) !important;
+    font-size: calc(var(--active-action-font-base) * var(--active-play-scale)) !important;
+  }
+  :root[data-interface-size="extra-large"] #s-game :is(.bet-row .raise-amt-field, .mid-row .btn-pct, .mid-row .btn-allin, .mid-row .mode-sel-wrap) {
+    min-height: var(--ctrl-enhanced);
+    height: var(--ctrl-enhanced);
+  }
+  :root[data-interface-size="extra-large"] #s-game :is(.header .btn-icon, .g-felt-btn) {
+    min-width: var(--ctrl-enhanced);
+    min-height: var(--ctrl-enhanced);
+  }
+  :root[data-interface-size="extra-large"] #s-game .g-felt-corner { display: none; }
+  :root[data-interface-size="extra-large"] #s-game .adaptive-drawer-bar {
+    display: grid;
+    grid-template-columns: 0.8fr 1.2fr 1fr 1fr;
+    gap: var(--sp-1);
+    padding: var(--sp-1) var(--sp-2);
+    background: var(--panel);
+    border-bottom: 1px solid var(--border);
+  }
+  :root[data-interface-size="extra-large"] #s-game .adaptive-drawer-bar button {
+    min-width: 0;
+    min-height: var(--ctrl-enhanced);
+    padding: var(--sp-1);
+    border: 1px solid var(--border-hi);
+    border-radius: var(--r-sm);
+    background: var(--panel-hi);
+    color: var(--text-hi);
+    font: 700 0.72rem/1.15 var(--ff-display);
+    cursor: pointer;
+  }
+  :root[data-interface-size="extra-large"] #s-game :is(#g-chat-panel, #g-log-panel) {
+    max-height: min(280px, 34dvh) !important;
+    overflow: hidden;
+  }
+  :root[data-interface-size="extra-large"] #s-game :is(#g-chat-panel, #g-log-panel) :is(button, input) {
+    min-height: 50px;
+  }
+  :root[data-interface-size="extra-large"] #s-game :is(#g-chat-close, #g-log-close, #gip-export, #g-chat-emoji-toggle, .chat-send) {
+    min-width: 50px;
+  }
+  :root[data-interface-size="extra-large"] #s-game :is(#hands-card-inner .g-chat-panel-header button, #g-reaction-panel .react-title-actions button) {
+    min-width: 50px;
+    min-height: 50px;
+  }
+  :root[data-interface-size="extra-large"] #s-game #g-reaction-panel .react-title-actions {
+    position: relative;
+    z-index: 7;
+  }
+  :root[data-interface-size="extra-large"] #s-game :focus-visible {
     outline: 3px solid var(--sel, var(--gold)) !important;
     outline-offset: 3px !important;
   }

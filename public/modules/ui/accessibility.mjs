@@ -78,6 +78,9 @@ function applyAccessibilityPreferences() {
   if (sizeChanged) {
     try {
       window.requestAnimationFrame(() => {
+        const portraitExtraLarge = preferences.interfaceSize === 'extra-large'
+          && window.matchMedia('(max-width: 740px) and (orientation: portrait)').matches;
+        if (portraitExtraLarge && typeof window.updateBottomLayout === 'function') window.updateBottomLayout();
         if (typeof window.renderSeats === 'function') window.renderSeats();
       });
     } catch (_error) {}

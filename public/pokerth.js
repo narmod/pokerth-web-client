@@ -10366,14 +10366,21 @@ function _initChatFocusHold() {
 if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', _initChatFocusHold);
 else _initChatFocusHold();
 
-function toggleGameChat() {
+function toggleGameChat(invoker) {
   // Spectators can open the panel read-only (sp0ck 31/07/2026): the input row
   // is hidden by CSS (body.spectator-nosend), only sending is blocked.
   var panel = document.getElementById('g-chat-panel');
-  var btn   = document.getElementById('chat-toggle-btn');
+  var fallbackBtn = document.getElementById('chat-toggle-btn');
   if (!panel) return;
   var open = panel.style.display === 'none';
+  var btn = open && invoker && invoker.getAttribute && invoker.getAttribute('aria-controls') === 'g-chat-panel'
+    ? invoker : (panel._drawerInvoker || fallbackBtn);
+  if (open) panel._drawerInvoker = btn;
   panel.style.display = open ? 'flex' : 'none';
+  panel.setAttribute('aria-hidden', open ? 'false' : 'true');
+  document.querySelectorAll('[aria-controls="g-chat-panel"]').forEach(function(trigger) {
+    trigger.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
   setTimeout(function(){ autoScaleTable(); if(typeof renderSeats==='function' && typeof seats!=='undefined' && seats.length) renderSeats(); }, 50);
   if (btn) {
     btn.style.background  = open ? 'rgba(var(--gold-rgb),0.2)' : '';
@@ -10387,6 +10394,10 @@ function toggleGameChat() {
     if (m) { if (typeof window._liveReset === 'function') window._liveReset(m); else m.scrollTop = m.scrollHeight; }
     var inp = document.getElementById('g-chat-in');
     if (inp) setTimeout(function(){ inp.focus(); }, 80);
+  } else if (btn && window.matchMedia('(max-width: 740px) and (orientation: portrait)').matches
+      && document.documentElement.getAttribute('data-interface-size') === 'extra-large') {
+    setTimeout(function(){ btn.focus(); }, 0);
+    panel._drawerInvoker = null;
   }
 }
 function joinWithPassword() {
@@ -10633,12 +10644,19 @@ function gipOpenTab(tab) {
 }
 window.gipOpenTab = gipOpenTab;
 
-function toggleLog() {
+function toggleLog(invoker) {
   var panel = document.getElementById('g-log-panel');
-  var btn   = document.getElementById('log-toggle-btn');
+  var fallbackBtn = document.getElementById('log-toggle-btn');
   if (!panel) return;
   var isHidden = panel.style.display === 'none';
+  var btn = isHidden && invoker && invoker.getAttribute && invoker.getAttribute('aria-controls') === 'g-log-panel'
+    ? invoker : (panel._drawerInvoker || fallbackBtn);
+  if (isHidden) panel._drawerInvoker = btn;
   panel.style.display = isHidden ? '' : 'none';
+  panel.setAttribute('aria-hidden', isHidden ? 'false' : 'true');
+  document.querySelectorAll('[aria-controls="g-log-panel"]').forEach(function(trigger) {
+    trigger.setAttribute('aria-expanded', isHidden ? 'true' : 'false');
+  });
   if (btn) btn.style.background = isHidden ? 'rgba(var(--gold-rgb),0.2)' : '';
   if (btn) btn.style.borderColor = isHidden ? 'var(--gold-dim)' : '';
   if (btn) btn.style.color       = isHidden ? 'var(--gold)' : '';
@@ -10651,6 +10669,14 @@ function toggleLog() {
     if (lb) { if (typeof window._liveReset === 'function') window._liveReset(lb); else lb.scrollTop = 0; }
     // Restaurer le dernier onglet consulté (Historique par défaut).
     try { gipShowTab((function(){try{var _t=localStorage.getItem('pth_gip_tab');return (_t==='odds'||_t==='stats')?_t:'log';}catch(_e){return 'log';}})()); } catch (e) {}
+    if (window.matchMedia('(max-width: 740px) and (orientation: portrait)').matches
+        && document.documentElement.getAttribute('data-interface-size') === 'extra-large') {
+      setTimeout(function(){ var tab = panel.querySelector('.gip-tab.gip-on'); if (tab) tab.focus(); }, 0);
+    }
+  } else if (btn && window.matchMedia('(max-width: 740px) and (orientation: portrait)').matches
+      && document.documentElement.getAttribute('data-interface-size') === 'extra-large') {
+    setTimeout(function(){ btn.focus(); }, 0);
+    panel._drawerInvoker = null;
   }
 }
 
@@ -11438,7 +11464,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.8-web.124'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.8-web.125'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
