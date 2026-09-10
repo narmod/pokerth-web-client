@@ -17,7 +17,7 @@ export const help = {
         { id: 'lan', t: 'LAN / dedikeret server',
           b: ['Den tredje tilstand forbinder til enhver PokerTH-server, som du eller en ven kører — på et hjemmenetværk, en privat VPS, hvor som helst. Indtast serverens adresse og port, sæt kryds ved TLS, hvis serveren bruger en krypteret port, og log ind med et kaldenavn (gæsteadgang virker, hvis serveren tillader det). Ved bordet opfører alt sig derefter nøjagtigt som på den officielle server.'] },
         { id: 'famboard', t: 'Familierangliste',
-          b: ['Kun på private servere og i LAN-spil gemmer klienten samlede statistikker pr. kaldenavn — spillede og vundne hænder og partier, største gevinst, bedste stime — og deler dem via serveren, så alle enheder rundt om bordet ser den samme rangliste. pokerth.net-spil registreres aldrig på denne måde, og træningstilstandens statistikker holdes helt adskilt.'] },
+          b: ['Kun på private servere og i LAN-spil gemmer klienten samlede statistikker pr. kaldenavn — spillede og vundne hænder og partier, største gevinst, bedste stime — og deler dem via serveren, så alle enheder rundt om bordet ser den samme rangliste. pokerth.net-spil registreres aldrig på denne måde, og træningstilstandens statistikker holdes helt adskilt.', 'I disse spil åbner pokal-knappen ranglistevinduet på fanen LAN: alle spillere, sorterbare efter flere kriterier.'] },
         { id: 'language', t: 'Sprog',
           b: ['Grænsefladen findes på 45 sprog. Skift det når som helst i Avancerede indstillinger (tandhjulsmenuen), kategorien Brugergrænseflade. Pokerens handlingstermer (Fold, Check, Call, Bet, Raise, All-In) forbliver på engelsk efter konventionen, nøjagtigt som i skrivebordsklienten.'] },
         { id: 'pwa', t: 'Installér som app',

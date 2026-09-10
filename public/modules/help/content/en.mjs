@@ -21,7 +21,7 @@ export const help = {
         { id: 'lan', t: 'LAN / dedicated server',
           b: ['The third mode connects to any PokerTH server you or a friend runs \u2014 on a home network, a private VPS, anywhere. Enter the server\u2019s address and port, tick TLS if the server uses an encrypted port, and log in with a nickname (guest access works if the server allows it). Everything at the table then behaves exactly like on the official server.'] },
         { id: 'famboard', t: 'Family leaderboard',
-          b: ['On private servers and LAN games only, the client keeps lifetime statistics per nickname \u2014 hands and games played and won, biggest win, best streak \u2014 and shares them through the server so every device around the table sees the same leaderboard. pokerth.net games are never tracked this way, and training-mode stats are kept completely separate.'] },
+          b: ['On private servers and LAN games only, the client keeps lifetime statistics per nickname \u2014 hands and games played and won, biggest win, best streak \u2014 and shares them through the server so every device around the table sees the same leaderboard. pokerth.net games are never tracked this way, and training-mode stats are kept completely separate.', 'In these games the trophy button opens the ranking window on its LAN tab: every player, sortable by several criteria.'] },
         { id: 'language', t: 'Language',
           b: ['The interface is available in 45 languages. Change it any time in Advanced options (gear menu) under User interface. Poker action terms (Fold, Check, Call, Bet, Raise, All-In) stay in English by convention, exactly like the desktop client.'] },
         { id: 'pwa', t: 'Install as an app',

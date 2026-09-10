@@ -17,7 +17,7 @@ export const help = {
         { id: 'lan', t: 'LAN / dedikerad server',
           b: ['Det tredje läget ansluter till vilken PokerTH-server som helst som du eller en vän kör — på ett hemnätverk, en privat VPS, var som helst. Ange serverns adress och port, bocka i TLS om servern använder en krypterad port, och logga in med ett smeknamn (gästinloggning fungerar om servern tillåter det). Vid bordet beter sig sedan allt exakt som på den officiella servern.'] },
         { id: 'famboard', t: 'Familjeranking',
-          b: ['Endast på privata servrar och i LAN-spel sparar klienten samlad statistik per smeknamn — spelade och vunna händer och partier, största vinst, bästa svit — och delar den via servern, så att varje enhet runt bordet ser samma ranking. pokerth.net-spel spåras aldrig på det här sättet, och träningslägets statistik hålls helt åtskild.'] },
+          b: ['Endast på privata servrar och i LAN-spel sparar klienten samlad statistik per smeknamn — spelade och vunna händer och partier, största vinst, bästa svit — och delar den via servern, så att varje enhet runt bordet ser samma ranking. pokerth.net-spel spåras aldrig på det här sättet, och träningslägets statistik hålls helt åtskild.', 'I dessa spel öppnar pokalknappen rankningsfönstret på fliken LAN: alla spelare, sorterbara efter flera kriterier.'] },
         { id: 'language', t: 'Språk',
           b: ['Gränssnittet finns på 45 språk. Byt när som helst i Avancerade inställningar (kugghjulsmenyn), kategorin Användargränssnitt. Pokerns handlingstermer (Fold, Check, Call, Bet, Raise, All-In) förblir på engelska enligt konventionen, precis som i skrivbordsklienten.'] },
         { id: 'pwa', t: 'Installera som app',

@@ -231,6 +231,9 @@ function _boardSetSort(k) {
   try { localStorage.setItem('pth_board_sort', k); } catch(e) {}
   if (document.getElementById('stats-board-body')) renderBoard('stats-board-body');
   if (document.getElementById('pim-board-body'))   renderBoard('pim-board-body');
+  // Onglet LAN de la fenetre des classements (pokerth-client.html).
+  var _rkl = document.getElementById('rk-lan-wrap');
+  if (_rkl && _rkl.style.display !== 'none') renderBoard('rk-lan-wrap');
 }
 window._boardSetSort = _boardSetSort;
 

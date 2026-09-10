@@ -3079,6 +3079,7 @@ if ('serviceWorker' in navigator && !window.LIVE_MODE) {
       <button type="button" class="rk-tab" data-src="pth" onclick="rankingSelect('pth')" data-i18n="rankingPth">PokerTH</button>
       <button type="button" class="rk-tab" data-src="bbc" onclick="rankingSelect('bbc')" data-i18n="rankingBbc">BBC</button>
       <button type="button" class="rk-tab" data-src="wec" onclick="rankingSelect('wec')" data-i18n="rankingWec">WEC</button>
+      <button type="button" class="rk-tab rk-tab-lan" data-src="lan" onclick="rankingSelect('lan')" style="display:none">LAN</button>
       <button type="button" class="rk-tab rk-tab-ach" data-src="ach" onclick="rankingSelect('ach')" data-i18n="achTitle" style="display:none">Trophies</button>
     </div>
     <div class="rk-body" tabindex="-1" data-kn-focus data-kn-read>
@@ -3100,6 +3101,7 @@ if ('serviceWorker' in navigator && !window.LIVE_MODE) {
       <div class="rk-msg" id="rk-nomatch" data-i18n="rankingNoMatch" style="display:none">No player found.</div>
       <div id="rk-table-wrap" style="display:none"></div>
       <div id="rk-ach-wrap" style="display:none"></div>
+      <div id="rk-lan-wrap" style="display:none"></div>
       <div id="rk-pager" class="rk-pager" style="display:none"></div>
       <!-- Calcul du classement (parité QML RankingPage, commit ea33d7a) :
            le même encart que sous le leaderboard de pokerth.net. Valeurs
@@ -4165,8 +4167,14 @@ if ('serviceWorker' in navigator && !window.LIVE_MODE) {
     var _achTab = document.querySelector('#ranking-modal .rk-tab-ach');
     var _off = _achAllowed();
     if (_achTab) _achTab.style.display = _off ? '' : 'none';
+    // Onglet LAN : uniquement connecte en LAN / serveur prive, et ouvert par
+    // defaut (les classements pokerth.net ne concernent pas ces joueurs).
+    var _lanTab = document.querySelector('#ranking-modal .rk-tab-lan');
+    var _lan = _lanAllowed();
+    if (_lanTab) _lanTab.style.display = _lan ? '' : 'none';
     var _rkDef = 'pth'; try { _rkDef = localStorage.getItem('pth_rank_src') || 'pth'; } catch (e) {}
     if (_off) _rkDef = 'ach';
+    else if (_lan) _rkDef = 'lan';
     rankingSelect(_rkDef);
   };
   // Re-clic sur le bouton declencheur = fermer (parite des autres boutons a
@@ -4245,8 +4253,27 @@ if ('serviceWorker' in navigator && !window.LIVE_MODE) {
     rkSetView('list');
     var tabs = document.querySelectorAll('#ranking-modal .rk-tab');
     for (var i = 0; i < tabs.length; i++) tabs[i].classList.toggle('active', tabs[i].dataset.src === 'ach');
-    ['rk-controls', 'rk-search-wrap', 'rk-loading', 'rk-soon', 'rk-error', 'rk-empty', 'rk-nomatch', 'rk-table-wrap', 'rk-pager', 'rk-calc'].forEach(function (id) { var e = document.getElementById(id); if (e) e.style.display = 'none'; });
+    ['rk-controls', 'rk-search-wrap', 'rk-loading', 'rk-soon', 'rk-error', 'rk-empty', 'rk-nomatch', 'rk-table-wrap', 'rk-pager', 'rk-calc', 'rk-lan-wrap'].forEach(function (id) { var e = document.getElementById(id); if (e) e.style.display = 'none'; });
     var w = document.getElementById('rk-ach-wrap'); if (w) { w.innerHTML = rkAchRender(); w.style.display = ''; }
+  };
+
+  // -- Onglet LAN (LAN / serveur prive) : classement familial du proxy (/stats).
+  // Rendu delegue tel quel a renderBoard (game/stats.mjs) : memes lignes, memes
+  // criteres de tri (pth_board_sort) que l'onglet Classement des statistiques.
+  function _lanAllowed() {
+    try { var st = window.PthState; return !window._offlineMode && !!(st && st._boardEligible); } catch (e) { return false; }
+  }
+  window.rankingSelectLan = function () {
+    rkSetView('list');
+    rkFetchSeq++;                                  // une reponse /api/ranking en vol ne repeint plus la liste
+    var tabs = document.querySelectorAll('#ranking-modal .rk-tab');
+    for (var i = 0; i < tabs.length; i++) tabs[i].classList.toggle('active', tabs[i].dataset.src === 'lan');
+    ['rk-controls', 'rk-search-wrap', 'rk-loading', 'rk-soon', 'rk-error', 'rk-empty', 'rk-nomatch', 'rk-table-wrap', 'rk-pager', 'rk-calc', 'rk-ach-wrap'].forEach(function (id) { var e = document.getElementById(id); if (e) e.style.display = 'none'; });
+    var w = document.getElementById('rk-lan-wrap'); if (!w) return;
+    w.style.display = '';
+    if (typeof window.renderBoard !== 'function') { w.innerHTML = '<div class="rk-msg">' + rkEsc(rkT('rankingError', 'Could not load the ranking.')) + '</div>'; return; }
+    w.innerHTML = '<div class="rk-msg">' + rkEsc(rkT('rankingLoading', 'Loading\u2026')) + '</div>';
+    window.renderBoard('rk-lan-wrap');
   };
   try {
     window.addEventListener('pth-achievement', function (ev) {
@@ -4264,7 +4291,10 @@ if ('serviceWorker' in navigator && !window.LIVE_MODE) {
   window.rankingSelect = function (src) {
     if (src === 'ach' && !_achAllowed()) src = 'pth';   // Trophees : entrainement connecte uniquement
     if (src === 'ach') { rankingSelectAch(); return; }
+    if (src === 'lan' && !_lanAllowed()) src = 'pth';   // LAN : connecte en LAN / serveur prive uniquement
+    if (src === 'lan') { rankingSelectLan(); return; }
     var _aw = document.getElementById('rk-ach-wrap'); if (_aw) _aw.style.display = 'none';
+    var _lw = document.getElementById('rk-lan-wrap'); if (_lw) _lw.style.display = 'none';
     rkSetView('list');
     if (RK_SRCS.indexOf(src) < 0) src = 'pth';
     RK_SRC = src; RK_ALLTIME = false; RK_PAGE = 1;
@@ -4300,6 +4330,8 @@ if ('serviceWorker' in navigator && !window.LIVE_MODE) {
     var modal = $('ranking-modal');
     if (!modal || !modal.style.display || modal.style.display === 'none') return;
     var si = $('rk-search'); if (si) si.placeholder = rkT('rankingSearch', 'Search a player\u2026');
+    var lw = $('rk-lan-wrap');
+    if (lw && lw.style.display !== 'none') { if (typeof window.renderBoard === 'function') window.renderBoard('rk-lan-wrap'); return; }
     var prof = $('rk-profile');
     if (prof && prof.style.display === 'block') {
       if (RK_PROF_CUR) { var pb = $('rk-prof-body'); if (pb) { pb.innerHTML = rkRenderProfile(RK_PROF_CUR); rkPaintPies(pb); } }

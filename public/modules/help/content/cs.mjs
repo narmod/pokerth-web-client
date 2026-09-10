@@ -16,7 +16,7 @@ export const help = {
         { id: 'lan', t: 'LAN / vyhrazený server',
           b: ['Třetí režim se připojí k libovolnému serveru PokerTH, který provozuješ ty nebo kamarád — v domácí síti, na soukromém VPS, kdekoli. Zadej adresu a port serveru, zaškrtni TLS, pokud server používá šifrovaný port, a přihlas se přezdívkou (hostovské přihlášení funguje, pokud ho server povoluje). U stolu se pak vše chová úplně stejně jako na oficiálním serveru.'] },
         { id: 'famboard', t: 'Rodinný žebříček',
-          b: ['Jen na soukromých serverech a v LAN hrách si klient vede souhrnné statistiky podle přezdívek — odehrané a vyhrané ruce i partie, největší výhra, nejlepší série — a sdílí je přes server, takže každé zařízení u stolu vidí stejný žebříček. Hry na pokerth.net se takto nikdy nesledují a statistiky tréninkového režimu zůstávají zcela oddělené.'] },
+          b: ['Jen na soukromých serverech a v LAN hrách si klient vede souhrnné statistiky podle přezdívek — odehrané a vyhrané ruce i partie, největší výhra, nejlepší série — a sdílí je přes server, takže každé zařízení u stolu vidí stejný žebříček. Hry na pokerth.net se takto nikdy nesledují a statistiky tréninkového režimu zůstávají zcela oddělené.', 'V těchto hrách otevře tlačítko s pohárem okno žebříčků na kartě LAN: všichni hráči, řaditelní podle několika kritérií.'] },
         { id: 'language', t: 'Jazyk',
           b: ['Rozhraní je k dispozici ve 45 jazycích. Kdykoli ho změníš v Pokročilých možnostech (menu s ozubeným kolem), kategorie Uživatelské rozhraní. Pokerové akční termíny (Fold, Check, Call, Bet, Raise, All-In) zůstávají podle konvence anglicky, přesně jako v desktopovém klientu.'] },
         { id: 'pwa', t: 'Instalace jako aplikace',

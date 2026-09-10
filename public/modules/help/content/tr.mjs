@@ -17,7 +17,7 @@ export const help = {
         { id: 'lan', t: 'LAN / özel sunucu',
           b: ['Üçüncü mod, senin veya bir arkadaşının çalıştırdığı herhangi bir PokerTH sunucusuna bağlanır — ev ağında, özel bir VPS\u2019te, nerede olursa. Sunucunun adresini ve portunu gir, sunucu şifreli port kullanıyorsa TLS\u2019yi işaretle ve bir takma adla giriş yap (sunucu izin veriyorsa misafir girişi de çalışır). Sonrasında masadaki her şey resmi sunucudakiyle tıpatıp aynı davranır.'] },
         { id: 'famboard', t: 'Aile sıralaması',
-          b: ['Yalnızca özel sunucularda ve LAN oyunlarında istemci, takma ada göre birikimli istatistikler tutar — oynanan ve kazanılan eller ile oyunlar, en büyük kazanç, en iyi seri — ve bunları sunucu üzerinden paylaşır; böylece masadaki her cihaz aynı sıralamayı görür. pokerth.net oyunları asla bu şekilde izlenmez ve antrenman modu istatistikleri tamamen ayrı tutulur.'] },
+          b: ['Yalnızca özel sunucularda ve LAN oyunlarında istemci, takma ada göre birikimli istatistikler tutar — oynanan ve kazanılan eller ile oyunlar, en büyük kazanç, en iyi seri — ve bunları sunucu üzerinden paylaşır; böylece masadaki her cihaz aynı sıralamayı görür. pokerth.net oyunları asla bu şekilde izlenmez ve antrenman modu istatistikleri tamamen ayrı tutulur.', 'Bu oyunlarda kupa düğmesi sıralama penceresini LAN sekmesinde açar: tüm oyuncular, birkaç ölçüte göre sıralanabilir.'] },
         { id: 'language', t: 'Dil',
           b: ['Arayüz 45 dilde mevcut. İstediğin an Gelişmiş seçeneklerden (dişli menüsü), Kullanıcı arayüzü kategorisinden değiştirebilirsin. Poker aksiyon terimleri (Fold, Check, Call, Bet, Raise, All-In) gelenek gereği İngilizce kalır — masaüstü istemcideki gibi.'] },
         { id: 'pwa', t: 'Uygulama olarak yükleme',

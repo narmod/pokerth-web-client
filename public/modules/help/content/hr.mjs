@@ -17,7 +17,7 @@ export const help = {
         { id: 'lan', t: 'LAN / namjenski poslužitelj',
           b: ['Treći način spaja se na bilo koji PokerTH poslužitelj koji vodiš ti ili prijatelj — u kućnoj mreži, na privatnom VPS-u, bilo gdje. Unesi adresu i port poslužitelja, označi TLS ako poslužitelj koristi šifrirani port i prijavi se nadimkom (gostujuća prijava radi ako je poslužitelj dopušta). Za stolom se potom sve ponaša točno kao na službenom poslužitelju.'] },
         { id: 'famboard', t: 'Obiteljska ljestvica',
-          b: ['Samo na privatnim poslužiteljima i u LAN igrama klijent čuva kumulativne statistike po nadimku — odigrane i dobivene ruke i partije, najveći dobitak, najbolji niz — i dijeli ih preko poslužitelja, tako da svaki uređaj oko stola vidi istu ljestvicu. Igre na pokerth.net nikad se ne prate na taj način, a statistike trening načina drže se potpuno odvojeno.'] },
+          b: ['Samo na privatnim poslužiteljima i u LAN igrama klijent čuva kumulativne statistike po nadimku — odigrane i dobivene ruke i partije, najveći dobitak, najbolji niz — i dijeli ih preko poslužitelja, tako da svaki uređaj oko stola vidi istu ljestvicu. Igre na pokerth.net nikad se ne prate na taj način, a statistike trening načina drže se potpuno odvojeno.', 'U tim igrama gumb s peharom otvara prozor ljestvica na kartici LAN: svi igrači, s razvrstavanjem prema nekoliko kriterija.'] },
         { id: 'language', t: 'Jezik',
           b: ['Sučelje je dostupno na 45 jezika. Promijeni ga bilo kada u Naprednim opcijama (izbornik sa zupčanikom), kategorija Korisničko sučelje. Pokerski izrazi za akcije (Fold, Check, Call, Bet, Raise, All-In) ostaju na engleskom prema konvenciji, točno kao u desktop klijentu.'] },
         { id: 'pwa', t: 'Instaliraj kao aplikaciju',

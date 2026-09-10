@@ -16,6 +16,15 @@ release. Per-build detail is on the
 highlights below.
 
 ### Added
+- **LAN tab in the ranking window** (`web.120`) — connected in either LAN /
+  private-server mode (`S._boardEligible`, never training), `#ranking-modal`
+  shows a `LAN` tab (hidden elsewhere, selected by default on open, not saved
+  to `pth_rank_src`) that renders the family leaderboard from `/stats` into
+  `#rk-lan-wrap` by reusing `renderBoard` (`game/stats.mjs`): same rows, same
+  five sort criteria, same persisted `pth_board_sort`. `_boardSetSort`
+  repaints it, selecting it invalidates any in-flight `/api/ranking` reply,
+  language changes re-render it. PokerTH / BBC / WEC tabs unchanged. Help →
+  *Family leaderboard* gains the pointer in all 45 languages.
 - **Lobby table list by keyboard** (`web.114`, upstream `b170786`,
   `LobbyPage.qml` `gameListView`) — `#g-list` takes Tab focus; ↑/↓ move the
   selection in display order (filter applied, no wrap), Home/End jump to the
