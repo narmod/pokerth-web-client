@@ -5,6 +5,7 @@
  * form, and "+ Bots" fills empty seats. No network, no proxy.
  */
 import { FakeServer } from './server.mjs';
+import { cryptoRandom } from './rand.mjs';
 
 export const BOT_POOL = [
   // [name, avatar, archetype] — the name/flavour matches the hidden play-style
@@ -48,7 +49,9 @@ class FakeSocket {
 
 export function createSocket(config){
   config = config || {};
-  const rng = config.rng || Math.random;
+  // Hasard cryptographique pour le paquet et les bots (parité upstream
+  // 40122fe, cf. rand.mjs) ; un rng injecté (tests) reste prioritaire.
+  const rng = config.rng || cryptoRandom;
   const server = new FakeServer({ me:{ name: config.nick || 'You' }, botPool: BOT_POOL, rng,
     botSkill: config.botSkill || 'mixed',
     pauseGate: config.pauseGate || null,

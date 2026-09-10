@@ -329,6 +329,21 @@ highlights below.
   every entry now carries both.
 
 ### Changed
+- **Training mode draws from a cryptographic RNG** (`web.118`, upstream
+  `40122fe`, `tools.cpp`) — `Math.random` (xorshift128+ in V8) gives its
+  state away after a few dozen outputs, and a shuffled deck is a run of
+  outputs the player partly sees, so the bots' hole cards and later hands
+  were predictable in principle. New `modules/offline/rand.mjs`:
+  `crypto.getRandomValues` read in 256-word blocks, returned as a 53-bit float
+  in [0, 1) — the same interface as `Math.random`, so `makeDeck`'s
+  Fisher-Yates and every bot draw are untouched (`floor(x·n)` bias below
+  n / 2^53; upstream's Lemire method works on integers). Wired as the default
+  in `offline/index.mjs` only (`config.rng || cryptoRandom`): engine, server
+  and bots keep their code, injected test RNGs still win, the cosmetic
+  reactions keep `_rrng`, and the equity rollout's mulberry32 is still seeded
+  once per decision from the game RNG. Falls back to `Math.random` without
+  Web Crypto. Precached. Tests in `scripts/test-offline-rand.mjs` (13 checks,
+  deterministic: known words for the bit assembly and buffering).
 - **Keyboard lot completed** (`web.117`, rest of upstream `b170786` /
   `21da2f0` / `5c321a5` / `3fa46aa`) — *Reading areas*: `#about-page`,
   `.pv-scroll`, the table-ranking `.rk-body` and `#rk-profile` (QML
