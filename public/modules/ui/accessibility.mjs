@@ -2,6 +2,8 @@ const SIZE_KEY = 'pth_interface_size';
 const CONTRAST_KEY = 'pth_high_contrast';
 const BROWSER_ZOOM_KEY = 'pth_browser_zoom';
 const SIZES = ['standard', 'large', 'extra-large'];
+const ADAPTIVE_PLAY = 'portrait-extra-large';
+const ADAPTIVE_PLAY_QUERY = '(max-width: 740px) and (orientation: portrait)';
 let invokingElement = null;
 
 function read(key) {
@@ -50,9 +52,36 @@ function syncControls(preferences) {
   } catch (_error) {}
 }
 
+function isAdaptivePortraitPlay() {
+  try { return document.documentElement.getAttribute('data-adaptive-play') === ADAPTIVE_PLAY; } catch (_error) { return false; }
+}
+
+function syncAdaptivePlayState(interfaceSize = sizePreference()) {
+  let active = false;
+  try { active = interfaceSize === 'extra-large' && window.matchMedia(ADAPTIVE_PLAY_QUERY).matches; } catch (_error) {}
+  const changed = active !== isAdaptivePortraitPlay();
+  try {
+    const root = document.documentElement;
+    if (active) root.setAttribute('data-adaptive-play', ADAPTIVE_PLAY);
+    else root.removeAttribute('data-adaptive-play');
+    for (const panel of [document.getElementById('g-chat-panel'), document.getElementById('g-log-panel')]) {
+      if (!panel) continue;
+      if (active) {
+        panel.setAttribute('role', 'dialog');
+        panel.setAttribute('aria-modal', 'false');
+      } else {
+        panel.removeAttribute('role');
+        panel.removeAttribute('aria-modal');
+      }
+    }
+  } catch (_error) {}
+  return changed;
+}
+
 function applyAccessibilityPreferences() {
   const preferences = getAccessibilityPreferences();
   let sizeChanged = false;
+  let adaptiveChanged = false;
   try {
     const root = document.documentElement;
     const previousSize = root.getAttribute('data-interface-size');
@@ -67,6 +96,7 @@ function applyAccessibilityPreferences() {
     }
     root.setAttribute('data-interface-size', preferences.interfaceSize);
     root.setAttribute('data-high-contrast', preferences.highContrast ? 'true' : 'false');
+    adaptiveChanged = syncAdaptivePlayState(preferences.interfaceSize);
     if (game && preferences.interfaceSize === 'standard') {
       game.style.removeProperty('--active-standard-comm-scale');
       game.style.removeProperty('--active-pot-font-base');
@@ -75,12 +105,10 @@ function applyAccessibilityPreferences() {
     sizeChanged = previousSize !== null && previousSize !== preferences.interfaceSize;
   } catch (_error) {}
   syncControls(preferences);
-  if (sizeChanged) {
+  if (sizeChanged || adaptiveChanged) {
     try {
       window.requestAnimationFrame(() => {
-        const portraitExtraLarge = preferences.interfaceSize === 'extra-large'
-          && window.matchMedia('(max-width: 740px) and (orientation: portrait)').matches;
-        if (portraitExtraLarge && typeof window.updateBottomLayout === 'function') window.updateBottomLayout();
+        if (adaptiveChanged && typeof window.updateBottomLayout === 'function') window.updateBottomLayout();
         if (typeof window.renderSeats === 'function') window.renderSeats();
       });
     } catch (_error) {}
@@ -190,6 +218,13 @@ function bind() {
         }
       }
     });
+    window.matchMedia(ADAPTIVE_PLAY_QUERY).addEventListener('change', () => {
+      if (!syncAdaptivePlayState()) return;
+      window.requestAnimationFrame(() => {
+        if (typeof window.updateBottomLayout === 'function') window.updateBottomLayout();
+        if (typeof window.renderSeats === 'function') window.renderSeats();
+      });
+    });
   } catch (_error) {}
   applyAccessibilityPreferences();
 }
@@ -199,6 +234,7 @@ window.applyAccessibilityPreferences = applyAccessibilityPreferences;
 window.openAccessibility = openAccessibility;
 window.closeAccessibility = closeAccessibility;
 window.resetAccessibilityPreferences = resetAccessibilityPreferences;
+window.isAdaptivePortraitPlay = isAdaptivePortraitPlay;
 
 try {
   window.addEventListener('storage', (event) => {
