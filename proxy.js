@@ -3927,6 +3927,10 @@ function sendClientHtml(req, res, live) {
     try { html = fs.readFileSync(p, 'utf8'); } catch (e) { res.writeHead(404); res.end('Not found'); return; }
     html = html.replace('<!--__LIVE_BOOT__-->', live
       ? '<script>window.LIVE_MODE=1;document.documentElement.setAttribute("data-live","1");</script>'
+        // Blocking, and before everything else: it namespaces localStorage so
+        // /live cannot read or write the web client's settings, and the shim
+        // is worthless if any client code has already touched the store.
+        + '<script src="/live-storage.js"></script>'
         + '<script type="module" src="/modules/live/index.mjs"></script>'
       : '');
     html = html.replace('<!--__SEO_HEAD__-->', on ? seoHeadBlock(base, lang) : '<meta name="robots" content="noindex, nofollow">');

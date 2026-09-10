@@ -16,6 +16,15 @@ release. Per-build detail is on the
 highlights below.
 
 ### Added
+- **`/live` keeps its own storage** (`web.89`) — the spectator view is served
+  from the same origin as the web client and therefore shared one
+  `localStorage` with it: a spectator inherited the player's theme and
+  nickname, and watching a table wrote into the settings of the account that
+  plays at one. The browser gives no way to be a different origin here, so
+  every key is namespaced instead — to the page, `/live` has its own empty
+  store, and `clear()` empties only that. Loaded as a blocking script before
+  anything else, since a shim installed after the first read is worthless, and
+  injected for `/live` only, so the ordinary client pays not even a request.
 - **`/live` drops the lobby feed while watching a table** (`web.85`) — the
   server takes `SubscriptionRequestMessage` to turn the game-list feed off and
   on, and the official spectator tool sends it on the way into a table and on
