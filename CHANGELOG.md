@@ -316,6 +316,16 @@ highlights below.
   every entry now carries both.
 
 ### Changed
+- **Default deck and table precached for offline play** (`web.104`) — images
+  are runtime-cached in the `CACHE_VERSION` cache and dropped on every bump,
+  so an offline game right after an update could show blank cards and no
+  felt. `sw.js` now precaches the default deck (`cards/pokerth-new`, 52 faces
+  + back, ~50 KB) and the default table style (`table/pokerth-official-fs`:
+  felt, D/SB/BB pucks, action buttons, ~1 MB). The back is listed plain (inline
+  boot) and as `flipside.svg?v=<build>` (`deck.mjs`), via a `BUILD_ID` derived
+  from `CACHE_VERSION`. `scripts/test-precache.mjs` now evaluates `ASSETS`
+  from `sw.js`, checks every entry exists on disk, that the defaults in
+  `theme.mjs` still match, and that `BUILD_ID` equals `BUILD_VERSION`.
 - **Avatars behave like the QML client: one per session, through the server
   only** (`web.95`) — a lobby-chat report had web and desktop players seeing
   different avatars for the same person. Next to the PokerTH avatar protocol

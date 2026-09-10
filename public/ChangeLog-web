@@ -1,4 +1,7 @@
 2026-09-10 version 2.1.8-web (current series):
+- improvement: the default cards and the default PokerTH table (felt, dealer and blind buttons, action buttons) are now stored with the app, so an offline training game shows them without a connection, even right after an update
+
+2026-09-10 version 2.1.8-web:
 - bugfix: once the web client had been updated, the offline training mode against bots could refuse to start without a connection ("Offline init failed") until it had been opened online once; everything it needs is now stored with the app on install, so it starts with no network at all
 
 2026-09-10 version 2.1.8-web:

@@ -23,7 +23,10 @@
  *                 Cross-origin requests and WS upgrades are left untouched.
  *                 (Fonts are now self-hosted and handled by SWR above.)
  */
-const CACHE_VERSION = 'pokerth-v2.1.8-web.103';
+const CACHE_VERSION = 'pokerth-v2.1.8-web.104';
+// Build id the page puts on the card back URL (deck.mjs _deckBack →
+// flipside.<ext>?v=<BUILD_VERSION>): CACHE_VERSION without its prefix.
+const BUILD_ID = CACHE_VERSION.replace(/^pokerth-v/, '');
 // Share Target payload park (see handleShareTarget). Kept OUT of CACHE_VERSION
 // so an update sweep never eats a share that arrived seconds earlier.
 const SHARE_CACHE = 'pokerth-share';
@@ -252,6 +255,22 @@ const ASSETS = [
   '/sounds/pokerth/blinds_raises_level1.mp3',
   '/sounds/pokerth/blinds_raises_level2.mp3',
   '/sounds/pokerth/blinds_raises_level3.mp3',
+  // Default deck (theme.mjs 'pokerth-new', PokerTH Royal Classic, ~50 KB)
+  // and default table style ('' → table/pokerth-official-fs: felt, pucks,
+  // action buttons, ~1 MB), so a table has its cards and felt with no
+  // network right after an update. The back is listed twice: the inline
+  // boot poses it plain, deck.mjs with ?v=<build> (a distinct cache key).
+  ...Array.from({ length: 52 }, function (_, n) { return '/cards/pokerth-new/' + n + '.svg'; }),
+  '/cards/pokerth-new/flipside.svg',
+  '/cards/pokerth-new/flipside.svg?v=' + BUILD_ID,
+  '/table/pokerth-official-fs/felt.png',
+  '/table/pokerth-official-fs/dealerPuck.svg',
+  '/table/pokerth-official-fs/smallblindPuck.svg',
+  '/table/pokerth-official-fs/bigblindPuck.svg',
+  '/table/pokerth-official-fs/actionFold.svg',
+  '/table/pokerth-official-fs/actionCall.svg',
+  '/table/pokerth-official-fs/actionRaise.svg',
+  '/table/pokerth-official-fs/actionAllIn.svg',
   '/favicon.ico',
   '/favicon.svg',
   '/favicon-32.png',

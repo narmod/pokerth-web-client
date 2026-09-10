@@ -10,16 +10,21 @@
 // Walks the ES module graph from every <script src> of pokerth-client.html
 // (static imports, re-exports and literal dynamic imports), adds the per-
 // language files loaded by computed dynamic imports (lang/, help/content/),
-// and fails if any of them is absent from ASSETS. Dependency-free.
+// and fails if any of them is absent from ASSETS. Also guards the default deck
+// and table style (cards and felt of an offline game) and checks every ASSETS
+// entry exists on disk. Dependency-free.
 // Run: node scripts/test-precache.mjs
 import fs from 'fs';
 import path from 'path';
+import vm from 'vm';
 
 const PUB = path.resolve('public');
+// Evaluate sw.js (ASSETS is built with expressions, not only literals).
 const sw = fs.readFileSync(path.join(PUB, 'sw.js'), 'utf8');
-const block = sw.match(/const ASSETS = \[([\s\S]*?)\n\];/);
-if (!block) { console.log('  \u2717 ASSETS array not found in sw.js'); process.exit(1); }
-const assets = new Set([...block[1].matchAll(/'([^']+)'/g)].map(m => m[1]));
+const ctx = { self: { addEventListener() {}, location: { origin: '' }, registration: {}, clients: {} } };
+vm.runInNewContext(sw + '\n;self.__out = { ASSETS, CACHE_VERSION, BUILD_ID: typeof BUILD_ID === \'undefined\' ? null : BUILD_ID };', ctx);
+const { ASSETS: ASSET_LIST, BUILD_ID } = ctx.self.__out;
+const assets = new Set(ASSET_LIST);
 
 let pass = 0, fail = 0;
 function ok(cond, label) {
@@ -76,7 +81,28 @@ const missing = [...seen].filter(([u]) => !assets.has(u));
 for (const [u, from] of missing) ok(false, 'precached: ' + u + '  <= ' + from);
 ok(missing.length === 0, seen.size + ' loaded file(s) all precached');
 
-const dupes = block[1].match(/'([^']+)'/g).filter((v, i, a) => a.indexOf(v) !== i);
+// Every precached entry must exist, or install logs a miss on each deploy.
+const absent = ASSET_LIST.filter(u => u !== '/' && !fs.existsSync(path.join(PUB, u.split('?')[0])));
+ok(absent.length === 0, 'every ASSETS entry exists on disk' + (absent.length ? ': ' + absent.join(', ') : ''));
+
+// Default deck + table style: what an offline game draws.
+const theme = fs.readFileSync(path.join(PUB, 'modules/theme.mjs'), 'utf8');
+ok(/storeKey: 'pth_deck',\s*attr: 'data-deck',\s*def: 'pokerth-new'/.test(theme), "theme.mjs default deck is still 'pokerth-new'");
+ok(/\{ id: '',[^\n]*dir: 'pokerth-official-fs'/.test(theme), "theme.mjs default table ('') is still pokerth-official-fs");
+ok(html.includes("_dk='pokerth-new';_dx='svg'"), 'inline boot default deck is still pokerth-new (svg)');
+const deck = [];
+for (let n = 0; n < 52; n++) deck.push('/cards/pokerth-new/' + n + '.svg');
+deck.push('/cards/pokerth-new/flipside.svg', '/cards/pokerth-new/flipside.svg?v=' + BUILD_ID);
+const deckMiss = deck.filter(u => !assets.has(u));
+ok(deckMiss.length === 0, 'default deck precached (52 faces + back, plain and ?v=)' + (deckMiss.length ? ': ' + deckMiss.join(', ') : ''));
+const tbl = ['felt.png', 'dealerPuck.svg', 'smallblindPuck.svg', 'bigblindPuck.svg',
+  'actionFold.svg', 'actionCall.svg', 'actionRaise.svg', 'actionAllIn.svg'].map(f => '/table/pokerth-official-fs/' + f);
+const tblMiss = tbl.filter(u => !assets.has(u));
+ok(tblMiss.length === 0, 'default table style precached (felt, pucks, buttons)' + (tblMiss.length ? ': ' + tblMiss.join(', ') : ''));
+const bv = (fs.readFileSync(path.join(PUB, 'pokerth.js'), 'utf8').match(/window\.BUILD_VERSION='([^']+)'/) || [])[1];
+ok(bv && bv === BUILD_ID, 'sw.js BUILD_ID (' + BUILD_ID + ') equals pokerth.js BUILD_VERSION (' + bv + ')');
+
+const dupes = ASSET_LIST.filter((v, i, a) => a.indexOf(v) !== i);
 ok(dupes.length === 0, 'no duplicate ASSETS entry' + (dupes.length ? ': ' + dupes.join(', ') : ''));
 
 console.log('\n' + pass + ' passed, ' + fail + ' failed');
