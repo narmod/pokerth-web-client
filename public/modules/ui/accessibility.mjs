@@ -2,6 +2,7 @@ const SIZE_KEY = 'pth_interface_size';
 const CONTRAST_KEY = 'pth_high_contrast';
 const BROWSER_ZOOM_KEY = 'pth_browser_zoom';
 const SIZES = ['standard', 'large', 'extra-large'];
+let invokingElement = null;
 
 function read(key) {
   try { return localStorage.getItem(key); } catch (_error) { return null; }
@@ -99,9 +100,15 @@ function resetAccessibilityPreferences() {
   markChanged('high_contrast');
 }
 
-function openAccessibility() {
+function panelFocusables(panel) {
+  return [...panel.querySelectorAll('button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [href], [tabindex]:not([tabindex="-1"])')]
+    .filter((element) => !element.hidden);
+}
+
+function openAccessibility(invoker) {
   const panel = document.getElementById('accessibility-modal');
   if (!panel) return;
+  if (invoker && typeof invoker.focus === 'function') invokingElement = invoker;
   applyAccessibilityPreferences();
   panel.hidden = false;
   panel.setAttribute('aria-hidden', 'false');
@@ -114,12 +121,15 @@ function closeAccessibility() {
   if (!panel) return;
   panel.hidden = true;
   panel.setAttribute('aria-hidden', 'true');
+  const target = invokingElement;
+  invokingElement = null;
+  try { if (target && target.isConnected) target.focus(); } catch (_error) {}
 }
 
 function bind() {
   try {
     document.querySelectorAll('.accessibility-entry').forEach((button) => {
-      button.addEventListener('click', openAccessibility);
+      button.addEventListener('click', () => openAccessibility(button));
     });
     document.querySelectorAll('input[name="interface-size"]').forEach((input) => {
       input.addEventListener('change', () => { if (input.checked) setInterfaceSize(input.value); });
@@ -139,6 +149,18 @@ function bind() {
       if (event.key === 'Escape' && panel && !panel.hidden) {
         event.preventDefault();
         closeAccessibility();
+      } else if (event.key === 'Tab' && panel && !panel.hidden) {
+        const focusables = panelFocusables(panel);
+        if (!focusables.length) return;
+        const first = focusables[0];
+        const last = focusables[focusables.length - 1];
+        if (event.shiftKey && document.activeElement === first) {
+          event.preventDefault();
+          last.focus();
+        } else if (!event.shiftKey && document.activeElement === last) {
+          event.preventDefault();
+          first.focus();
+        }
       }
     });
   } catch (_error) {}

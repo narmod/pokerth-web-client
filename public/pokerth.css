@@ -9156,24 +9156,24 @@ body.adv-no-forumnews [id^="forum-btn-"], body.adv-no-forumnews #forum-modal { d
    Entrée via la roue crantée (jeu + lobby). Chrome réutilisé de .km-* ; corps
    .adv-* propre. Bascules présentation appliquées par applyAdvOpts() via des
    classes sur <body>. */
-#accessibility-modal{position:fixed;inset:0;z-index:1210;display:flex;align-items:center;justify-content:center;padding:16px}
+#accessibility-modal{position:fixed;inset:0;z-index:1210;display:flex;align-items:center;justify-content:center;padding:var(--sp-6)}
 #accessibility-modal[hidden]{display:none}
 .accessibility-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.58)}
-.accessibility-card{position:relative;width:min(430px,calc(100vw - 32px));max-height:calc(100dvh - 32px);overflow:auto;box-sizing:border-box;padding:22px;border:1px solid var(--border-hi);border-radius:var(--r-lg);background:var(--modal-bg);box-shadow:0 18px 50px rgba(0,0,0,.5);color:var(--text)}
-.accessibility-card h2{margin:0 40px 18px 0;color:var(--text-hi);font:600 var(--fs-xl)/1.2 var(--ff-display)}
-.accessibility-close{position:absolute;top:12px;right:12px;width:34px;height:34px;border:1px solid var(--border);border-radius:50%;background:var(--inset);color:var(--text-hi);font:inherit;cursor:pointer}
-.accessibility-size{margin:0 0 12px;padding:0;border:0}
-.accessibility-size legend{margin-bottom:8px;color:var(--gold);font-weight:700}
-.accessibility-size label,.accessibility-toggle{display:flex;align-items:center;gap:10px;min-height:44px;padding:6px 8px;box-sizing:border-box;border-radius:var(--r-md);cursor:pointer}
+.accessibility-card{position:relative;width:min(430px,calc(100vw - var(--sp-6) - var(--sp-6)));max-height:calc(100dvh - var(--sp-6) - var(--sp-6));overflow:auto;box-sizing:border-box;padding:var(--sp-7);border:1px solid var(--border-hi);border-radius:var(--r-lg);background:var(--modal-bg);box-shadow:0 18px 50px rgba(0,0,0,.5);color:var(--text)}
+.accessibility-card h2{margin:0 calc(var(--sp-7) + var(--sp-7)) var(--sp-7) 0;color:var(--text-hi);font:600 var(--fs-xl)/1.2 var(--ff-display)}
+.accessibility-close{position:absolute;top:var(--sp-5);right:var(--sp-5);width:var(--ctrl-md);height:var(--ctrl-md);border:1px solid var(--border);border-radius:var(--r-pill);background:var(--inset);color:var(--text-hi);font:inherit;cursor:pointer}
+.accessibility-size{margin:0 0 var(--sp-5);padding:0;border:0}
+.accessibility-size legend{margin-bottom:var(--sp-3);color:var(--gold);font-weight:700}
+.accessibility-size label,.accessibility-toggle{display:flex;align-items:center;gap:var(--sp-4);min-height:calc(var(--ctrl-lg) + var(--sp-1));padding:var(--sp-2) var(--sp-3);box-sizing:border-box;border-radius:var(--r-md);cursor:pointer}
 .accessibility-size label:hover,.accessibility-toggle:hover{background:var(--inset)}
-.accessibility-size input,.accessibility-toggle input{width:20px;height:20px;flex:0 0 auto;accent-color:var(--sel,var(--gold))}
-.accessibility-size label span{display:flex;align-items:baseline;justify-content:space-between;gap:16px;flex:1}
+.accessibility-size input,.accessibility-toggle input{width:var(--sp-7);height:var(--sp-7);flex:0 0 auto;accent-color:var(--sel,var(--gold))}
+.accessibility-size label span{display:flex;align-items:baseline;justify-content:space-between;gap:var(--sp-6);flex:1}
 .accessibility-size label strong{color:var(--text-hi)}
 .accessibility-size label small{color:var(--text)}
 .accessibility-toggle{border-top:1px solid var(--border)}
-.accessibility-reset{width:100%;min-height:44px;margin-top:16px;padding:9px 14px;border:1px solid var(--border-hi);border-radius:var(--r-md);background:var(--inset);color:var(--text-hi);font:600 var(--fs-base)/1.2 var(--ff-display);cursor:pointer}
+.accessibility-reset{width:100%;min-height:calc(var(--ctrl-lg) + var(--sp-1));margin-top:var(--sp-6);padding:var(--sp-3) var(--sp-6);border:1px solid var(--border-hi);border-radius:var(--r-md);background:var(--inset);color:var(--text-hi);font:600 var(--fs-base)/1.2 var(--ff-display);cursor:pointer}
 .accessibility-close:focus-visible,.accessibility-size input:focus-visible,.accessibility-toggle input:focus-visible,.accessibility-reset:focus-visible{outline:3px solid var(--sel,var(--gold));outline-offset:3px}
-@media (max-width:599.98px){.accessibility-card{width:calc(100vw - 20px);max-height:calc(100dvh - 20px);padding:20px 16px}}
+@media (max-width:599.98px){.accessibility-card{width:calc(100vw - var(--sp-7));max-height:calc(100dvh - var(--sp-7));padding:var(--sp-7) var(--sp-6)}}
 
 #adv-modal{position:fixed;inset:0;z-index:1200;display:flex;align-items:center;justify-content:center;pointer-events:none}
 #adv-modal .km-backdrop{display:none}
