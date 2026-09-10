@@ -44,24 +44,29 @@
     <div class="suits"><span>&spades;</span> <span class="r">&hearts;</span> <span class="r">&diams;</span> <span>&clubs;</span></div>
     <div class="sub">Web Client &mdash; Privacy</div>
   </header>
-  <p class="updated">Last updated: July 17, 2026</p>
+  <p class="updated">Last updated: September 10, 2026</p>
 
   <h2>Who runs this</h2>
-  <p>The PokerTH Web Client is a <strong>free and open-source hobby project</strong>, maintained by an individual &mdash; Arnaud Obscur (narmod@pokerth.net) &mdash; in collaboration with the <a href="https://www.pokerth.net" target="_blank" rel="noopener noreferrer">PokerTH project</a>. It is not a company and has no commercial purpose: no ads, no sale of data, no advertising profiling, no third-party trackers.</p>
+  <p>The PokerTH Web Client is a <strong>free and open-source hobby project</strong>, maintained by an individual &mdash; Arnaud Obscur (&ldquo;narmod&rdquo;) &mdash; in collaboration with the <a href="https://www.pokerth.net" target="_blank" rel="noopener noreferrer">PokerTH project</a>. It is not a company and has no commercial purpose: no ads, no sale of data, no advertising profiling, no third-party trackers.</p>
 
   <h2>What stays in your browser</h2>
-  <p>Your settings (theme, language, table styles, sound options&hellip;) are stored <strong>locally in your browser</strong> and never leave your device. You can clear them at any time from your browser settings.</p>
+  <p>Your settings, statistics, achievements and logs are stored <strong>in your browser</strong>. They leave your device only in the cases listed below. You can clear them from your browser settings or with <em>Restore defaults</em>.</p>
 
-  <h2>What the server sees</h2>
+  <h2>What this server receives</h2>
   <ul>
-    <li><strong>Anonymous visit counters.</strong> A random identifier stored in your browser is used to count distinct devices and visits. These statistics contain <strong>no name and no IP address</strong> and are deleted after about 13 months.</li>
-    <li><strong>Technical connection data.</strong> Like any web server, this one receives the connection data (including your IP address) needed to deliver and protect the service. It is used for nothing else.</li>
-    <li><strong>Game data.</strong> If you play on a ranked server, the nickname you choose and your game results are recorded to display the leaderboard.</li>
+    <li><strong>Visit statistics.</strong> A random identifier created by your browser counts distinct devices and visits. The server stores only a <strong>hashed form</strong> of it, never with a name or an IP address. Daily figures are deleted after about 13 months; the hashed identifiers used to tell new from returning devices are kept longer. Browser, operating system and language are only counted as totals.</li>
+    <li><strong>Settings sync (registered accounts).</strong> When you log in with a registered pokerth.net account, your settings (the config.xml shared with the desktop client, plus web options such as theme, seats, shortcuts, language, avatar choice and ignore list) are stored on this server under your account name, so they follow you to other devices. On by default; it can be turned off in Advanced options.</li>
+    <li><strong>Error reports.</strong> When a script error occurs, the error message, page, client version, browser user agent and a shortened IP address are sent to the server admin to fix bugs. They are kept in memory only and erased when the server restarts. On by default; it can be turned off in Advanced options.</li>
+    <li><strong>Polls and music votes.</strong> If you answer a poll or rate a track, your answer is stored with the hashed identifier so that each device counts once. Track plays are counted without any identifier.</li>
+    <li><strong>Leaderboard.</strong> If you play on a LAN or private server through this client, your nickname, avatar choice and game statistics are stored for the leaderboard. Resetting your statistics removes the entry.</li>
+    <li><strong>Technical connection data.</strong> Your IP address is needed to deliver and protect the service and may appear in the server logs for security (rate limiting, blocking abusive connections). It is used for nothing else.</li>
   </ul>
 
   <h2>Third-party services</h2>
   <p>When you connect to <strong>pokerth.net</strong> (or any other game server), you are using a service operated independently of this web client, with its own rules. This page only covers the web client and the server that hosts it.</p>
-  <p><strong>Chat translation.</strong> If you tap the translate button (🌐) on a chat message, the text of that message is sent to Google's translation service (Google Translate) so it can be translated into your language. Nothing is sent unless you tap the button, and the feature can be turned off in Advanced options.</p>
+  <p><strong>Translation.</strong> When you tap the translate button (🌐) on a chat message or a forum post, the text is sent from your browser to Google Translate, or to MyMemory if that fails, or finally through this server to Google. Nothing is sent unless you tap, and the feature can be turned off in Advanced options.</p>
+  <p><strong>Radios.</strong> When you play a radio station in the music player, your browser connects directly to that station.</p>
+  <p><strong>Log analysis.</strong> If you use <em>Analyse log file</em>, the .pdb file is sent through this server to the pokerth.net log analysis service.</p>
 
   <h2>Free software &mdash; AGPL-3.0</h2>
   <p>The entire client is free software, released under the <strong>GNU AGPL v3</strong> license. You can read the source code, verify what it does, host your own copy, and modify it:</p>
@@ -73,7 +78,8 @@
   <p>PokerTH itself is released under the GNU GPL license.</p>
 
   <h2>Your rights &amp; contact</h2>
-  <p>Under the GDPR you may request access to, correction of, or deletion of data concerning you (for example a leaderboard entry). As this is a community project, the simplest way to reach the maintainer is to open an issue on <a href="https://github.com/narmod/pokerth-web-client/issues" target="_blank" rel="noopener noreferrer">GitHub</a>.</p>
+  <p>Under the GDPR you may request access to, correction of, or deletion of data concerning you (for example synced settings or a leaderboard entry). Please contact the <strong>pokerth.net administrators</strong>, whose details are on the <a href="https://www.pokerth.net/app.php/imprint" target="_blank" rel="noopener noreferrer">pokerth.net Imprint page</a>.</p>
+  <p>For questions about the web client itself, you can also open an issue on <a href="https://github.com/narmod/pokerth-web-client/issues" target="_blank" rel="noopener noreferrer">GitHub</a>.</p>
 
   <a class="back" href="/">&larr; Back to the game</a>
 </div>

@@ -2512,20 +2512,25 @@ function _processAvatarFile(file) {
   </div>
   <div class="pv-scroll">
     <div class="pv-body">
-      <p class="pv-updated" data-i18n="pvUpdated">Last updated: July 17, 2026</p>
+      <p class="pv-updated" data-i18n="pvUpdated">Last updated: September 10, 2026</p>
       <h2 data-i18n="pvWhoH">Who runs this</h2>
       <p data-i18n="pvWho">The PokerTH Web Client is a free and open-source hobby project, maintained by an individual, Arnaud Obscur ("narmod"), in collaboration with the PokerTH project. It is not a company and has no commercial purpose: no ads, no sale of data, no advertising profiling, no third-party trackers.</p>
       <h2 data-i18n="pvLocalH">What stays in your browser</h2>
-      <p data-i18n="pvLocal">Your settings (theme, language, table styles, sound options...) are stored locally in your browser and never leave your device. You can clear them at any time from your browser settings.</p>
+      <p data-i18n="pvLocal">Your settings, statistics, achievements and logs are stored in your browser. They leave your device only in the cases listed below. You can clear them from your browser settings or with Restore defaults.</p>
       <h2 data-i18n="pvServerH">What the server sees</h2>
       <ul>
-        <li data-i18n="pvSrv1">Anonymous visit counters: a random identifier stored in your browser is used to count distinct devices and visits. These statistics contain no name and no IP address and are deleted after about 13 months.</li>
-        <li data-i18n="pvSrv2">Technical connection data: like any web server, this one receives the connection data (including your IP address) needed to deliver and protect the service. It is used for nothing else.</li>
-        <li data-i18n="pvSrv3">Game data: if you play on a ranked server, the nickname you choose and your game results are recorded to display the leaderboard.</li>
+        <li data-i18n="pvSrv1">Visit statistics: a random identifier created by your browser counts distinct devices and visits. The server stores only a hashed form of it, never with a name or an IP address. Daily figures are deleted after about 13 months; the hashed identifiers used to tell new from returning devices are kept longer. Browser, operating system and language are only counted as totals.</li>
+        <li data-i18n="pvSrvSync">Settings sync (registered accounts): when you log in with a registered pokerth.net account, your settings (the config.xml shared with the desktop client, plus web options such as theme, seats, shortcuts, language, avatar choice and ignore list) are stored on this server under your account name, so they follow you to other devices. On by default; it can be turned off in Advanced options.</li>
+        <li data-i18n="pvSrvErr">Error reports: when a script error occurs, the error message, page, client version, browser user agent and a shortened IP address are sent to the server admin to fix bugs. They are kept in memory only and erased when the server restarts. On by default; it can be turned off in Advanced options.</li>
+        <li data-i18n="pvSrvVotes">Polls and music votes: if you answer a poll or rate a track, your answer is stored with the hashed identifier so that each device counts once. Track plays are counted without any identifier.</li>
+        <li data-i18n="pvSrv3">Leaderboard: if you play on a LAN or private server through this client, your nickname, avatar choice and game statistics are stored for the leaderboard. Resetting your statistics removes the entry.</li>
+        <li data-i18n="pvSrv2">Technical connection data: your IP address is needed to deliver and protect the service and may appear in the server logs for security (rate limiting, blocking abusive connections). It is used for nothing else.</li>
       </ul>
       <h2 data-i18n="pvThirdH">Third-party services</h2>
       <p data-i18n="pvThird">When you connect to pokerth.net (or any other game server), you are using a service operated independently of this web client, with its own rules. This page only covers the web client and the server that hosts it.</p>
-      <p data-i18n="pvThirdTr">Chat translation: if you tap the translate button (🌐) on a chat message, the text of that message is sent to Google's translation service (Google Translate) so it can be translated into your language. Nothing is sent unless you tap the button, and the feature can be turned off in Advanced options.</p>
+      <p data-i18n="pvThirdTr">Translation: when you tap the translate button (🌐) on a chat message or a forum post, the text is sent from your browser to Google Translate, or to MyMemory if that fails, or finally through this server to Google. Nothing is sent unless you tap, and the feature can be turned off in Advanced options.</p>
+      <p data-i18n="pvThirdRadio">Radios: when you play a radio station in the music player, your browser connects directly to that station.</p>
+      <p data-i18n="pvThirdPdb">Log analysis: if you use Analyse log file, the .pdb file is sent through this server to the pokerth.net log analysis service.</p>
       <h2 data-i18n="pvLicH">Free software - AGPL-3.0</h2>
       <p data-i18n="pvLic1">The entire client is free software, released under the GNU AGPL v3 license. You can read the source code, verify what it does, host your own copy, and modify it:</p>
       <ul>
@@ -2535,7 +2540,9 @@ function _processAvatarFile(file) {
       </ul>
       <p data-i18n="pvLic2">PokerTH itself is released under the GNU GPL license.</p>
       <h2 data-i18n="pvRightsH">Your rights and contact</h2>
-      <p data-i18n="pvRights">Under the GDPR you may request access to, correction of, or deletion of data concerning you (for example a leaderboard entry). As this is a community project, the simplest way to reach the maintainer is to open an issue on GitHub:</p>
+      <p data-i18n="pvRights">Under the GDPR you may request access to, correction of, or deletion of data concerning you (for example synced settings or a leaderboard entry). Please contact the pokerth.net administrators, whose details are on the pokerth.net Imprint page:</p>
+      <p><a href="https://www.pokerth.net/app.php/imprint" target="_blank" rel="noopener noreferrer">pokerth.net/app.php/imprint</a></p>
+      <p data-i18n="pvRightsGh">For questions about the web client itself, you can also open an issue on GitHub:</p>
       <p><a href="https://github.com/narmod/pokerth-web-client/issues" target="_blank" rel="noopener noreferrer">github.com/narmod/pokerth-web-client/issues</a></p>
     </div>
   </div>

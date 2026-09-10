@@ -316,6 +316,19 @@ highlights below.
   every entry now carries both.
 
 ### Changed
+- **Privacy page rewritten to match what the code does** (`web.105`) — the
+  in-app page (`pv*` keys, 45 languages) and `/privacy` said settings never
+  leave the device, visit data is gone after ~13 months and translation goes
+  to Google only. They now describe: pseudonymous visit statistics (daily
+  buckets pruned at 400 days, all-time hashed ids kept longer), settings sync
+  for registered accounts (on by default), in-memory error reports with UA and
+  masked IP (on by default), hashed poll and music votes, the LAN/private
+  leaderboard, IPs in security logs, the Google → MyMemory → relay translation
+  chain (chat and forum), direct radio streams and the `.pdb` relay to
+  pokerth.net. GDPR requests now go to the pokerth.net administrators (Imprint
+  page), GitHub issues for the client itself; the maintainer e-mail is no
+  longer shown on `/privacy`. New keys: `pvSrvSync`, `pvSrvErr`, `pvSrvVotes`,
+  `pvThirdRadio`, `pvThirdPdb`, `pvRightsGh`.
 - **Default deck and table precached for offline play** (`web.104`) — images
   are runtime-cached in the `CACHE_VERSION` cache and dropped on every bump,
   so an offline game right after an update could show blank cards and no
