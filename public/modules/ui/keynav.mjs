@@ -124,7 +124,9 @@ function _onKey(e) {
   }
 
   if (e.key === 'Enter') {
-    if (e.shiftKey || _inEditable(e.target)) return;
+    if (e.shiftKey || e.isComposing) return;
+    if (_formDefault(e)) return;
+    if (_inEditable(e.target)) return;
     var s2 = _topSurface();
     if (!s2 || !s2.el) return;
     var btn = s2.el.querySelector('[data-kn-primary]');
@@ -133,6 +135,110 @@ function _onKey(e) {
     e.stopPropagation();
     btn.click();
   }
+}
+
+// ── Bouton par défaut d'un formulaire — parité QML b170786 ─────────────────
+// LobbyCreateGamePage / LocalGamePage : « Keys.onReturnPressed:
+// createBtn.clicked() » — Entrée crée la partie depuis n'importe quel champ.
+// Ici : un conteneur data-kn-form et, dedans, son bouton data-kn-default.
+// Seulement depuis un champ simple (texte, nombre, mot de passe, case,
+// bouton radio, curseur) : un bouton, une liste déroulante, une zone de texte
+// ou un lien focalisé garde sa propre touche Entrée, comme un bouton
+// focalisé garde la priorité dans le QML. Rien si une surface est ouverte
+// par-dessus (menu, modale).
+const FORM_INPUTS = /^(text|search|email|url|tel|number|password|checkbox|radio|range)$/;
+function _formDefault(e) {
+  var tg = e.target;
+  if (!tg || (tg.tagName || '').toLowerCase() !== 'input') return false;
+  if (!FORM_INPUTS.test((tg.type || 'text').toLowerCase())) return false;
+  var form = tg.closest ? tg.closest('[data-kn-form]') : null;
+  if (!form || !_visible(form) || _topSurface()) return false;
+  var btn = form.querySelector('[data-kn-default]');
+  if (!btn || btn.disabled || !_visible(btn)) return false;
+  e.preventDefault();
+  e.stopPropagation();
+  btn.click();
+  return true;
+}
+
+// ── Focus au démarrage d'une page — parité QML b170786 ─────────────────────
+// « StackView.onActivated: Qt.callLater(X.forceActiveFocus) » : chaque page
+// met le focus sur son élément utile. Ici les candidats portent
+// data-kn-start (valeur vide = toujours, « online » / « offline » = selon le
+// mode entraînement). À l'affichage d'un écran (.screen.active) ou d'une
+// étape de connexion, le focus va au premier candidat visible et actif qui
+// est VIDE (champ), sinon au premier candidat visible : pseudo vide → pseudo,
+// pseudo mémorisé → mot de passe, comme applyInitialFocus() du QML.
+// Jamais sur un appareil tactile (clavier virtuel) ; jamais si le focus est
+// déjà sur un élément visible hors de la page (fenêtre ouverte par-dessus,
+// saisie en cours). Un bouton focalisé ainsi ne montre pas son cadre avant
+// la première touche (data-kn-quiet) : le QML n'affiche le cadre qu'au Tab.
+const START_WATCH = ['login-step1', 'login-step2'];
+
+function _startCandidates(scope) {
+  var off = !!window._offlineMode;
+  return Array.prototype.filter.call(scope.querySelectorAll('[data-kn-start]'), function (el) {
+    var m = el.getAttribute('data-kn-start');
+    if ((m === 'online' && off) || (m === 'offline' && !off)) return false;
+    return !el.disabled && _visible(el);
+  });
+}
+
+function _quiet(el) {
+  if ((el.tagName || '').toLowerCase() !== 'button') return;
+  el.setAttribute('data-kn-quiet', '');
+  var off = function () {
+    el.removeAttribute('data-kn-quiet');
+    document.removeEventListener('keydown', off, true);
+    el.removeEventListener('blur', off);
+  };
+  document.addEventListener('keydown', off, true);
+  el.addEventListener('blur', off);
+}
+
+// Vue /live (spectateur embarqué en iframe sur pokerth.net) ou page encadrée :
+// pas de focus automatique, il volerait le focus — voire le défilement — de
+// la page hôte au chargement.
+function _embedded() {
+  try {
+    if (document.documentElement.getAttribute('data-live') === '1') return true;
+    return window.self !== window.top;
+  } catch (e) { return true; }
+}
+
+export function focusStart(scope) {
+  if (!scope || !_enabled() || _touchOnly() || _embedded() || !_visible(scope)) return false;
+  var ae = document.activeElement;
+  if (ae && ae !== document.body && !scope.contains(ae) && _visible(ae)) return false;
+  var list = _startCandidates(scope);
+  if (!list.length) return false;
+  var target = list[0];
+  for (var i = 0; i < list.length; i++) {
+    if ((list[i].tagName || '').toLowerCase() === 'input' && !list[i].value) { target = list[i]; break; }
+  }
+  if (target === ae) return false;
+  try { target.focus({ preventScroll: true }); } catch (e) { return false; }
+  _quiet(target);
+  return true;
+}
+
+function _watchStart() {
+  if (typeof MutationObserver !== 'function') return;
+  var els = Array.prototype.slice.call(document.querySelectorAll('.screen'));
+  START_WATCH.forEach(function (id) { var el = document.getElementById(id); if (el) els.push(el); });
+  // Tous les écrans sont suivis : le formulaire de création n'est déplacé dans
+  // #s-create qu'à sa première ouverture, ses candidats n'y sont pas encore.
+  els.forEach(function (el) {
+    var open = _visible(el);
+    new MutationObserver(function () {
+      var now = _visible(el);
+      if (now === open) return;
+      open = now;
+      if (now) focusStart(el);
+    }).observe(el, { attributes: true, attributeFilter: ['style', 'hidden', 'class'] });
+  });
+  // Premier affichage (chargement de la page) : l'écran d'accueil est déjà là.
+  els.forEach(function (el) { if (el.id && START_WATCH.indexOf(el.id) >= 0) focusStart(el); });
 }
 
 // Ferme la surface ouverte la plus prioritaire. Renvoie true si quelque chose
@@ -218,9 +324,11 @@ function _watchFocus() {
   });
 }
 _watchFocus();
+_watchStart();
 
 document.addEventListener('keydown', _onKey, true);   // capture : avant les
                                                       // handlers locaux
 window.keynavRegisterOverlay = registerOverlay;
 window.keynavCloseTop = closeTop;
 window.keynavFocusInitial = focusInitial;
+window.keynavFocusStart = focusStart;

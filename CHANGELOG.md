@@ -329,6 +329,26 @@ highlights below.
   every entry now carries both.
 
 ### Changed
+- **Start focus per screen, Enter creates from any settings field**
+  (`web.116`, upstream `b170786`: `StackView.onActivated` on StartPage,
+  ServerConnectionDialog, LobbyCreateGamePage, LocalGamePage; `Keys.onReturnPressed`
+  on the create pages) — candidates are opt-in in the markup with
+  `data-kn-start` (empty = always, `online` / `offline` = by training mode):
+  the Internet login card, `#nick` and `#pass`, `#cf-name` online and the
+  Create button in training. When a `.screen` becomes active or a login step
+  is shown, `keynav.mjs` focuses the first visible, enabled candidate that is
+  an empty field, else the first one — so a remembered nickname hands over
+  to the password, as `applyInitialFocus()` does. Never on touch-only
+  devices, never in `/live` or inside a frame (it would steal the host
+  page's focus), never over an element already focused and visible outside
+  the screen (a popup, typing elsewhere); a guest's locked table name is
+  skipped. A button focused this way hides its ring until the first key
+  (`data-kn-quiet`), as QML shows no ring without a focus reason. The
+  optional LAN user password is not a candidate. `#create-form` is a
+  `data-kn-form` with its Create button as `data-kn-default`: Enter in a
+  text, number, password, checkbox, radio or range field clicks it; a focused
+  button, select, textarea or link keeps its own Enter, and nothing happens
+  with a surface open on top. Tests in `scripts/test-keynav.mjs` (40 checks).
 - **Kick and report confirmations focus Confirm** (`web.113`, upstream
   `b170786`, narmod's call for QML parity) — the QML `ConfirmPopup` opens on
   its confirm button, so `data-kn-focus` now sits on the confirm button of

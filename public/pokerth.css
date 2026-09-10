@@ -1531,6 +1531,9 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
   box-shadow: 0 6px 18px rgba(var(--gold-rgb), 0.15); transform: translateY(-1px); }
 .login-card:active { transform: translateY(0); }
 .login-card:focus-visible { outline: 2px solid var(--gold-hi); outline-offset: 2px; }
+/* Focus posé au démarrage d'une page (keynav focusStart) : pas de cadre avant
+   la première touche, comme le QML sans raison de focus (parité b170786). */
+[data-kn-quiet]:focus-visible { outline: none !important; }
 .lc-ic { font-size: 1.8rem; width: 40px; text-align: center; flex: 0 0 auto; }
 .lc-tx { flex: 1; min-width: 0; }
 .lc-t { display: block; font-size: var(--fs-md); font-weight: 800; color: var(--text-hi); }

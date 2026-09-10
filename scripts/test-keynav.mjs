@@ -23,6 +23,19 @@ const dom = new JSDOM(`<!doctype html><body>
   </div>
   <div id="timeout-warn-modal" style="display:none"><button id="tow-ok" data-kn-focus>OK</button></div>
   <input id="chat-in" type="text">
+  <div id="login-step1"><button id="card-net" data-kn-start>Internet</button></div>
+  <div id="login-step2" style="display:none">
+    <input id="nick" data-kn-start>
+    <input id="pass" type="password" data-kn-start>
+  </div>
+  <div class="screen" id="s-create" style="display:none">
+    <div id="create-form" data-kn-form>
+      <input id="cf-name" data-kn-start="online">
+      <select id="cf-sel"><option>1</option></select>
+      <input id="cf-players" type="number">
+      <button id="cf-create" data-kn-default data-kn-start="offline">Create</button>
+    </div>
+  </div>
 </body>`, { pretendToBeVisual: true, url: 'https://pokerth.local/' });   // origine non opaque : localStorage dispo
 
 const w = dom.window;
@@ -55,7 +68,10 @@ w.App = {
 w.document.querySelector('[data-kn-primary]')
   .addEventListener('click', () => w.App.confirmQuickCreate());
 
+w.document.getElementById('cf-create').addEventListener('click', () => calls.push('CREATE'));
 await import('../public/modules/ui/keynav.mjs');
+const bootFocus = w.document.activeElement && w.document.activeElement.id;
+const bootQuiet = w.document.getElementById('card-net').hasAttribute('data-kn-quiet');
 
 const show = id => { w.document.getElementById(id).style.display = 'block'; };
 const hide = id => { w.document.getElementById(id).style.display = 'none'; };
@@ -179,6 +195,67 @@ key('Escape');
 ok(calls.join() === 'cancelKickConfirm', 'exclusion : Escape annule');
 hide('kick-confirm-modal'); await tick();
 ok(d.activeElement && d.activeElement.id === 'chat-in', 'exclusion fermée : le focus revient au champ');
+
+// 15 — focus au démarrage des pages (parité QML StackView.onActivated)
+ok(bootFocus === 'card-net', 'chargement : focus sur la carte Internet (StartPage)');
+ok(bootQuiet, 'bouton focalisé au démarrage : cadre retenu (data-kn-quiet)');
+ok(!d.getElementById('card-net').hasAttribute('data-kn-quiet'), 'première touche : le cadre redevient normal');
+hide('quick-create-dialog');
+// jsdom ne propage pas display:none aux enfants : on masque la carte elle-même
+d.getElementById('card-net').focus();
+d.getElementById('card-net').style.display = 'none';
+w.document.getElementById('login-step1').style.display = 'none';
+show('login-step2'); await tick();
+ok(d.activeElement && d.activeElement.id === 'nick', 'étape connexion, pseudo vide : focus sur le pseudo');
+hide('login-step2'); await tick();
+d.getElementById('nick').value = 'Narmod';
+d.getElementById('card-net').focus();
+show('login-step2'); await tick();
+ok(d.activeElement && d.activeElement.id === 'pass', 'pseudo déjà rempli : focus sur le mot de passe');
+hide('login-step2'); await tick();
+d.getElementById('chat-in').focus();
+show('login-step2'); await tick();
+ok(d.activeElement && d.activeElement.id === 'chat-in', 'focus déjà sur un élément visible hors page : pas de vol');
+hide('login-step2'); await tick();
+d.getElementById('chat-in').style.display = 'none';
+w._offlineMode = false;
+show('s-create'); await tick();
+ok(d.activeElement && d.activeElement.id === 'cf-name', 'création en ligne : focus sur le nom de table');
+hide('s-create'); await tick();
+w._offlineMode = true;
+show('s-create'); await tick();
+ok(d.activeElement && d.activeElement.id === 'cf-create', 'entraînement : focus sur Créer (LocalGamePage)');
+hide('s-create'); await tick();
+d.getElementById('cf-name').disabled = true; w._offlineMode = false; d.getElementById('cf-create').blur();
+show('s-create'); await tick();
+ok(!d.activeElement || d.activeElement.id !== 'cf-name', 'invité (nom verrouillé) : aucun focus forcé sur le nom');
+d.getElementById('cf-name').disabled = false;
+
+// 16 — Entrée = bouton par défaut du formulaire de création
+calls.length = 0; key('Enter', d.getElementById('cf-players'));
+ok(calls.join() === 'CREATE', 'Entrée dans un champ nombre : crée la partie');
+calls.length = 0; key('Enter', d.getElementById('cf-name'));
+ok(calls.join() === 'CREATE', 'Entrée dans le nom : crée la partie');
+calls.length = 0; key('Enter', d.getElementById('cf-sel'));
+ok(calls.length === 0, 'Entrée sur une liste déroulante : laissée à la liste');
+calls.length = 0; show('adv-modal'); key('Enter', d.getElementById('cf-players'));
+ok(calls.length === 0, 'surface ouverte par-dessus : Entrée ne crée pas');
+hide('adv-modal');
+calls.length = 0; d.getElementById('cf-create').disabled = true; key('Enter', d.getElementById('cf-players'));
+ok(calls.length === 0, 'bouton Créer désactivé : rien');
+d.getElementById('cf-create').disabled = false;
+hide('s-create'); d.getElementById('chat-in').style.display = '';
+d.getElementById('chat-in').focus();
+
+// 17 — vue /live : pas de focus au démarrage
+d.documentElement.setAttribute('data-live', '1');
+if (d.activeElement && d.activeElement.blur) d.activeElement.blur();
+w._offlineMode = true;
+show('s-create'); await tick();
+ok(d.activeElement === d.body, '/live : aucun focus automatique (focus laissé au document)');
+hide('s-create'); await tick();
+d.documentElement.removeAttribute('data-live'); w._offlineMode = false;
+d.getElementById('chat-in').focus();
 
 // 14 — appareil tactile sans souris : pas de focus volé (clavier virtuel)
 w.matchMedia = () => ({ matches: true });

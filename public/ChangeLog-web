@@ -1,4 +1,5 @@
 2026-09-10 version 2.1.8-web (current series):
+- improvement: with a keyboard, each screen now starts with the focus where you need it, as in the desktop client - the Internet card on the opening screen, your nickname (or your password once the nickname is filled) on the login step, the table name when creating a game and the Create button in training - and Enter in any field of the game settings creates the table
 - bugfix: in the live spectator view on pokerth.net, a long list of tables was cut off at the bottom with no way to scroll; the list scrolls again, and a watched table uses the whole height of the view instead of a squeezed strip
 - new: the lobby table list works with the keyboard, as in the desktop client - reach it with Tab, move between tables with the arrow keys (Home/End for the first and last), and press Enter to join the selected table (on a narrow screen, Enter shows its details); the keyboard shortcuts page of the help lists it
 - improvement: with a keyboard, the kick and report confirmations now open with the focus on the confirm button, as in the desktop and mobile clients - Enter confirms, Tab reaches Cancel, Escape still cancels
