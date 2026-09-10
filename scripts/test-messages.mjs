@@ -85,18 +85,19 @@ const ids = [MSG.T.Init, MSG.T.MyActionRequest, MSG.T.ChatRequest];
 ok(new Set(ids).size === ids.length && ids.every((n) => Number.isInteger(n) && n > 0),
    'T: core message ids are distinct positive integers');
 
-// Client type in buildId (type << 24): the player web client is CLIENT_TYPE_WEB
-// (0x03); /live, successor of pokerth-live, announces CLIENT_TYPE_QT_WIDGET
-// (0x01) like the tool it replaces, with a version above MIN_BUILD_ID_QT_WIDGET.
+// Client type in buildId (type << 24): the player web client and /live, the
+// spectator view, both announce CLIENT_TYPE_WEB (0x03) — sp0ck, 2026-09-10:
+// the server session dashboard must count /live as a web client.
 {
   if (typeof globalThis.window === 'undefined') globalThis.window = globalThis;
   const bid = () => Proto.u32(MSG.parse(MSG.buildInit('T', 5, 1, 0)).sub, 2) >>> 0;
   delete window.LIVE_MODE;
-  ok((bid() >>> 24) === 0x03, 'buildInit: web client announces CLIENT_TYPE_WEB (0x03)');
+  const web = bid();
+  ok((web >>> 24) === 0x03, 'buildInit: web client announces CLIENT_TYPE_WEB (0x03)');
   window.LIVE_MODE = 1;
   const live = bid();
-  ok((live >>> 24) === 0x01, 'buildInit: /live announces CLIENT_TYPE_QT_WIDGET (0x01)');
-  ok(live >= 0x01020107, 'buildInit: /live buildId >= MIN_BUILD_ID_QT_WIDGET (2.1.7)');
+  ok((live >>> 24) === 0x03, 'buildInit: /live announces CLIENT_TYPE_WEB (0x03) too');
+  ok(live === web, 'buildInit: /live buildId identical to the web client');
   delete window.LIVE_MODE;
 }
 

@@ -329,6 +329,14 @@ highlights below.
   every entry now carries both.
 
 ### Changed
+- **`/live` identifies as the web client** (`web.119`, sp0ck 2026-09-10) —
+  `buildInit` no longer switches to `CLIENT_TYPE_QT_WIDGET` (0x01) when
+  `window.LIVE_MODE` is set: the spectator view now sends the same buildId as
+  the player client, `CLIENT_TYPE_WEB` (0x03) with the current upstream
+  release, so the server session entries behind the pokerth.net dashboard
+  count it as a web client. Reverses the 0x01 choice made when `/live`
+  replaced `pokerth-live`. The LAN fallback to 0x01 for pre-2.1.8 servers is
+  unchanged (lan/unauth modes only). `scripts/test-messages.mjs` updated.
 - **Training mode draws from a cryptographic RNG** (`web.118`, upstream
   `40122fe`, `tools.cpp`) — `Math.random` (xorshift128+ in V8) gives its
   state away after a few dozen outputs, and a shuffled deck is a run of

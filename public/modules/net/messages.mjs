@@ -263,22 +263,19 @@ const MSG = (() => {
     // msg-lobby.mjs arme window._forceQtWidgetInit puis retente : on
     // s'annonce alors CLIENT_TYPE_QT_WIDGET, comme avant web.0. Limite
     // volontaire aux modes lan/unauth -- pokerth.net (guest/auth) garde
-    // toujours le type web (statistiques serveur, sonde admin), sauf /live.
+    // toujours le type web (statistiques serveur, sonde admin), /live compris.
     let _lanWidgetFallback = false;
     try {
       const _lmEl = document.getElementById('login-mode');
       _lanWidgetFallback = !!window._forceQtWidgetInit && !!_lmEl &&
         (_lmEl.value === 'lan' || _lmEl.value === 'unauth');
     } catch (e) {}
-    // /live (mode spectateur, successeur de pokerth-live) s'annonce comme l'outil
-    // qu'il remplace : CLIENT_TYPE_QT_WIDGET (0x01), cf. pokerth-live
-    // netEventHandler.js (CLIENT_TYPE_QT_WIDGET << 24 | version). Le webclient
-    // joueur garde CLIENT_TYPE_WEB (0x03). La version reste la release upstream
-    // courante : le 2.0.6 figé de pokerth-live est sous MIN_BUILD_ID_QT_WIDGET
-    // (2.1.7) et serait refusé.
-    let _liveMode = false;
-    try { _liveMode = !!window.LIVE_MODE; } catch (e) {}
-    const clientType = (USE_CLIENT_TYPE_WEB && !_lanWidgetFallback && !_liveMode) ? CLIENT_TYPE_WEB : CLIENT_TYPE_QT_WIDGET;
+    // /live (mode spectateur, successeur de pokerth-live) s'annonce lui aussi
+    // CLIENT_TYPE_WEB (0x03), comme le webclient joueur : demande sp0ck du
+    // 10/09/2026 — les sessions serveur du tableau de bord doivent le compter
+    // comme client web, et non plus comme client Qt-Widget (0x01, type de
+    // l'ancien pokerth-live, que /live reprenait jusqu'en 2.1.8-web.118).
+    const clientType = (USE_CLIENT_TYPE_WEB && !_lanWidgetFallback) ? CLIENT_TYPE_WEB : CLIENT_TYPE_QT_WIDGET;
     // buildId composite (type<<24)|(major<<16)|(minor<<8)|patch.
     // Web 2.1.8 = 0x03020108 (aucun plancher de version pour le type web).
     const BUILD_ID = ((clientType << 24) | (UPSTREAM_MAJOR << 16) | (UPSTREAM_MINOR << 8) | UPSTREAM_PATCH) >>> 0;
