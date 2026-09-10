@@ -5,6 +5,7 @@ const SIZES = ['standard', 'large', 'extra-large'];
 const ADAPTIVE_PLAY = 'constrained-extra-large';
 const ADAPTIVE_PLAY_QUERY = '(max-width: 740px) and (orientation: portrait), (max-height: 500px) and (orientation: landscape)';
 let invokingElement = null;
+let standardMetricsViewport = null;
 
 function read(key) {
   try { return localStorage.getItem(key); } catch (_error) { return null; }
@@ -89,27 +90,24 @@ function applyAccessibilityPreferences() {
     const root = document.documentElement;
     const previousSize = root.getAttribute('data-interface-size');
     const game = document.getElementById('s-game');
-    const magnifierActive = (window._loupeK || 1) > 1.001;
-    // The root community scale belongs to the magnified layout while the loupe
-    // is active; keep the last real Standard metrics across a size round trip.
-    const preserveStandardMetrics = magnifierActive && game
-      && game.style.getPropertyValue('--active-standard-comm-scale');
-    if (game && previousSize === 'standard' && preferences.interfaceSize !== 'standard' && !preserveStandardMetrics) {
+    const viewport = `${window.innerWidth}x${window.innerHeight}`;
+    const canCaptureStandardMetrics = previousSize === null || previousSize === 'standard';
+    const hasStandardMetrics = game && game.style.getPropertyValue('--active-standard-comm-scale');
+    // Capture only an untransformed cold DOM or a real Standard layout. These
+    // inline metrics are inert in Standard and remain valid for its round trip.
+    if (game && preferences.interfaceSize !== 'standard' && canCaptureStandardMetrics
+      && (!hasStandardMetrics || standardMetricsViewport !== viewport)) {
       const standardCommunityScale = window.getComputedStyle(root).getPropertyValue('--comm-scale').trim();
       if (standardCommunityScale) game.style.setProperty('--active-standard-comm-scale', standardCommunityScale);
       const pot = document.getElementById('g-potbar');
       const communityCard = document.querySelector('#g-comm .pk');
       if (pot) game.style.setProperty('--active-pot-font-base', window.getComputedStyle(pot).fontSize);
       if (communityCard) game.style.setProperty('--active-community-font-base', window.getComputedStyle(communityCard).fontSize);
+      standardMetricsViewport = viewport;
     }
     root.setAttribute('data-interface-size', preferences.interfaceSize);
     root.setAttribute('data-high-contrast', preferences.highContrast ? 'true' : 'false');
     adaptiveChanged = syncAdaptivePlayState(preferences.interfaceSize);
-    if (game && preferences.interfaceSize === 'standard' && !magnifierActive) {
-      game.style.removeProperty('--active-standard-comm-scale');
-      game.style.removeProperty('--active-pot-font-base');
-      game.style.removeProperty('--active-community-font-base');
-    }
     sizeChanged = previousSize !== null && previousSize !== preferences.interfaceSize;
   } catch (_error) {}
   syncControls(preferences);
