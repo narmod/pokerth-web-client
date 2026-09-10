@@ -44,9 +44,6 @@ try {
     await page.locator('#accessibility-open-connect').click();
     await page.locator('#accessibility-modal[aria-hidden="false"]').waitFor();
   });
-  await check('pre-login, lobby, and game headers expose the same entry point', async () => {
-    assert.equal(await page.locator('.accessibility-entry').count(), 3);
-  });
   await check('keyboard focus stays in the modal and returns to its invoker', async () => {
     assert.equal(await page.evaluate(() => document.activeElement && document.activeElement.value), 'standard');
     await page.locator('#accessibility-reset').focus();
@@ -57,7 +54,25 @@ try {
     await page.keyboard.press('Escape');
     assert.equal(await page.locator('#accessibility-modal').getAttribute('aria-hidden'), 'true');
     assert.equal(await page.evaluate(() => document.activeElement && document.activeElement.id), 'accessibility-open-connect');
-    await page.locator('#accessibility-open-connect').click();
+  });
+  await check('the lobby Accessibility entry is visibly operable', async () => {
+    await page.evaluate(async () => (await import('/modules/net/session.mjs')).show('s-lobby'));
+    await page.locator('#s-lobby.active').waitFor();
+    const entry = page.locator('#accessibility-open-lobby');
+    assert.equal(await entry.isVisible(), true);
+    assert.equal(await entry.isEnabled(), true);
+    await entry.click();
+    await page.locator('#accessibility-modal[aria-hidden="false"]').waitFor();
+    await page.keyboard.press('Escape');
+  });
+  await check('the game Accessibility entry is visibly operable', async () => {
+    await page.evaluate(async () => (await import('/modules/net/session.mjs')).show('s-game'));
+    await page.locator('#s-game.active').waitFor();
+    const entry = page.locator('#accessibility-open-game');
+    assert.equal(await entry.isVisible(), true);
+    assert.equal(await entry.isEnabled(), true);
+    await entry.click();
+    await page.locator('#accessibility-modal[aria-hidden="false"]').waitFor();
   });
   await check('interface size and high contrast apply live', async () => {
     await page.locator('input[name="interface-size"][value="large"]').check();
