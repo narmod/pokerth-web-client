@@ -2,8 +2,8 @@ const SIZE_KEY = 'pth_interface_size';
 const CONTRAST_KEY = 'pth_high_contrast';
 const BROWSER_ZOOM_KEY = 'pth_browser_zoom';
 const SIZES = ['standard', 'large', 'extra-large'];
-const ADAPTIVE_PLAY = 'portrait-extra-large';
-const ADAPTIVE_PLAY_QUERY = '(max-width: 740px) and (orientation: portrait)';
+const ADAPTIVE_PLAY = 'constrained-extra-large';
+const ADAPTIVE_PLAY_QUERY = '(max-width: 740px) and (orientation: portrait), (max-height: 500px) and (orientation: landscape)';
 let invokingElement = null;
 
 function read(key) {
@@ -52,7 +52,7 @@ function syncControls(preferences) {
   } catch (_error) {}
 }
 
-function isAdaptivePortraitPlay() {
+function isAdaptivePlay() {
   try { return document.documentElement.getAttribute('data-adaptive-play') === ADAPTIVE_PLAY; } catch (_error) { return false; }
 }
 
@@ -60,7 +60,7 @@ function notifyAdaptivePlayChange() {
   try {
     window.requestAnimationFrame(() => {
       if (typeof window.reconfigureGameDrawersForAdaptivePlay === 'function') {
-        window.reconfigureGameDrawersForAdaptivePlay(isAdaptivePortraitPlay());
+        window.reconfigureGameDrawersForAdaptivePlay(isAdaptivePlay());
         return;
       }
       if (typeof window.updateBottomLayout === 'function') window.updateBottomLayout();
@@ -72,7 +72,7 @@ function notifyAdaptivePlayChange() {
 function syncAdaptivePlayState(interfaceSize = sizePreference()) {
   let active = false;
   try { active = interfaceSize === 'extra-large' && window.matchMedia(ADAPTIVE_PLAY_QUERY).matches; } catch (_error) {}
-  const changed = active !== isAdaptivePortraitPlay();
+  const changed = active !== isAdaptivePlay();
   try {
     const root = document.documentElement;
     if (active) root.setAttribute('data-adaptive-play', ADAPTIVE_PLAY);
@@ -234,7 +234,8 @@ window.applyAccessibilityPreferences = applyAccessibilityPreferences;
 window.openAccessibility = openAccessibility;
 window.closeAccessibility = closeAccessibility;
 window.resetAccessibilityPreferences = resetAccessibilityPreferences;
-window.isAdaptivePortraitPlay = isAdaptivePortraitPlay;
+window.isAdaptivePlay = isAdaptivePlay;
+window.isAdaptivePortraitPlay = isAdaptivePlay;
 
 try {
   window.addEventListener('storage', (event) => {

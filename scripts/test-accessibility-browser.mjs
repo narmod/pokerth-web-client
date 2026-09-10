@@ -914,6 +914,129 @@ try {
       assert.equal(sentAction, true, `${seatCount}-seat Fold did not cross the production message boundary`);
     }
   });
+  await check('Extra Large mobile landscape keeps a ten-seat decision readable and operable', async () => {
+    await startActiveHand(page, 10);
+    await page.setViewportSize({ width: 844, height: 390 });
+    await page.waitForTimeout(300);
+    const fontSelectors = [
+      '#g-potbar', '.blinds-next', '#g-comm .pk .c-rank', '#g-comm .pk .c-suit',
+      '#g-actions .btn-fold', '#g-actions .act-buttons-row .btn-action:nth-child(2)', '#g-actions .raise-btn',
+    ];
+    const timerSelector = '.seat.active .seat-timeout-bar';
+    const standard = await visibleMetrics(page, [...fontSelectors, timerSelector]);
+    const standardCue = await turnCueOutcome(page);
+
+    await chooseInterfaceSize(page, 'game', 'extra-large');
+    await page.locator('#g-actions .btn-fold').waitFor();
+    await page.waitForTimeout(300);
+    const extraLarge = await visibleMetrics(page, [...fontSelectors, timerSelector]);
+    const geometry = await activeHandRects(page);
+
+    assert.equal(geometry.seats.length, 10, 'mobile landscape Extra Large did not render all ten seat plates');
+    for (const [index, seat] of geometry.seats.entries()) {
+      assertReachable(seat, geometry.viewport, `mobile landscape Extra Large seat ${index + 1}`);
+      const values = geometry.seatValues[index];
+      assert.ok(values.left >= seat.left - 1 && values.top >= seat.top - 1 && values.right <= seat.right + 1 && values.bottom <= seat.bottom + 1,
+        `mobile landscape Extra Large seat ${index + 1} values escape their plate`);
+      for (let other = index + 1; other < geometry.seats.length; other += 1) {
+        assert.equal(overlaps(seat, geometry.seats[other]), false,
+          `mobile landscape Extra Large seats ${index + 1} and ${other + 1} overlap: ${JSON.stringify({ seat, other: geometry.seats[other] })}`);
+      }
+    }
+    for (const selector of fontSelectors) {
+      assert.equal(extraLarge[selector].visible, true, `mobile landscape Extra Large ${selector} is outside the viewport`);
+      assertExactScaled(extraLarge[selector].fontSize, standard[selector].fontSize, 2, `mobile landscape Extra Large ${selector}`);
+    }
+    assert.equal(extraLarge[timerSelector].visible, true, 'mobile landscape Extra Large turn timer is outside the viewport');
+    assertExactScaled(extraLarge[timerSelector].cssHeight, standard[timerSelector].cssHeight, 2, 'mobile landscape Extra Large turn-timer height');
+    for (const [label, rect] of Object.entries({ cards: geometry.cards, pot: geometry.pot, blinds: geometry.blinds, currentTurn: geometry.activeSeat, timer: geometry.activeTimer, actions: geometry.actions, status: geometry.status })) {
+      assertReachable(rect, geometry.viewport, `mobile landscape Extra Large ${label}`);
+    }
+    for (const [index, rect] of geometry.statusContent.entries()) {
+      assert.ok(rect.left >= geometry.status.left - 1 && rect.top >= geometry.status.top - 1
+          && rect.right <= geometry.status.right + 1 && rect.bottom <= geometry.status.bottom + 1,
+      `mobile landscape Extra Large status value ${index + 1} escapes the status bar: ${JSON.stringify({ value: rect, status: geometry.status })}`);
+      assert.equal(overlaps(rect, geometry.drawerBar), false, `mobile landscape Extra Large status value ${index + 1} overlaps the drawer bar`);
+    }
+    assert.equal(overlaps(geometry.cards, geometry.actions), false,
+      `mobile landscape Extra Large cards overlap actions: ${JSON.stringify({ cards: geometry.cards, actions: geometry.actions })}`);
+    assert.equal(overlaps(geometry.pot, geometry.cards), false,
+      `mobile landscape Extra Large pot overlaps cards: ${JSON.stringify({ pot: geometry.pot, cards: geometry.cards })}`);
+    assert.equal(overlaps(geometry.pot, geometry.actions), false,
+      `mobile landscape Extra Large pot overlaps actions: ${JSON.stringify({ pot: geometry.pot, actions: geometry.actions })}`);
+    for (const [cardIndex, card] of geometry.communityCardFaces.entries()) {
+      for (const [seatIndex, seat] of geometry.seats.entries()) {
+        assert.equal(overlaps(card, seat), false,
+          `mobile landscape Extra Large card ${cardIndex + 1} overlaps seat ${seatIndex + 1}: ${JSON.stringify({ card, seat })}`);
+      }
+    }
+    for (const [seatIndex, seat] of geometry.seats.entries()) {
+      assert.equal(overlaps(geometry.actions, seat), false,
+        `mobile landscape Extra Large actions overlap seat ${seatIndex + 1}: ${JSON.stringify({ actions: geometry.actions, seat })}`);
+    }
+    const extraLargeCue = await turnCueOutcome(page);
+    assert.equal(extraLargeCue.visible, true, 'mobile landscape Extra Large current-turn indication is not visible');
+    assert.equal(extraLargeCue.distinctFromInactive, true, 'mobile landscape Extra Large current-turn cue is ambiguous');
+    assert.ok(extraLargeCue.prominence > standardCue.prominence, 'mobile landscape Extra Large current-turn cue did not grow');
+    await assertEnhancedTargets(page, ['#accessibility-open-game', '#g-actions .btn-fold', '#g-actions .act-buttons-row .btn-action:nth-child(2)', '#g-actions .raise-btn'], 'mobile landscape Extra Large');
+    await assertKeyboardFocusVisible(page, ['#accessibility-open-game', '#g-actions .btn-fold', '#g-actions .act-buttons-row .btn-action:nth-child(2)', '#g-actions .raise-btn'], 'mobile landscape Extra Large');
+    await assertActionOperable(page, 'mobile landscape Extra Large');
+  });
+  await check('Extra Large mobile landscape drawers remain operable without occluding a decision', async () => {
+    for (const drawer of [
+      { trigger: '#adaptive-chat-toggle', panel: '#g-chat-panel', close: '#g-chat-close', label: 'chat' },
+      { trigger: '#adaptive-info-toggle', panel: '#g-log-panel', close: '#g-log-close', label: 'information' },
+    ]) {
+      await startActiveHand(page, 10);
+      await page.setViewportSize({ width: 844, height: 390 });
+      await page.waitForTimeout(300);
+      await chooseInterfaceSize(page, 'game', 'extra-large');
+      await page.locator(drawer.trigger).click();
+      await page.locator(drawer.panel).waitFor({ state: 'visible' });
+      await page.waitForTimeout(300);
+      const box = await page.locator(drawer.panel).boundingBox();
+      const drawerRect = { left: box.x, top: box.y, right: box.x + box.width, bottom: box.y + box.height, width: box.width, height: box.height };
+      assertReachable(drawerRect, { width: 844, height: 390 }, `mobile landscape Extra Large ${drawer.label} drawer`);
+      assertCriticalUnoccluded(await activeHandRects(page), drawerRect, `mobile landscape Extra Large open ${drawer.label} drawer`);
+      await assertActionOperable(page, `mobile landscape Extra Large open ${drawer.label} drawer`);
+      await page.keyboard.press('Escape');
+      await page.locator(drawer.panel).waitFor({ state: 'hidden' });
+      await page.waitForFunction((id) => document.activeElement && document.activeElement.id === id, drawer.trigger.slice(1));
+      assert.equal(await page.evaluate(() => document.activeElement && document.activeElement.id), drawer.trigger.slice(1),
+        `mobile landscape Extra Large ${drawer.label} drawer did not return focus to its trigger`);
+      await page.locator(drawer.trigger).click();
+      await page.locator(drawer.close).click();
+      await page.locator(drawer.panel).waitFor({ state: 'hidden' });
+    }
+
+    for (const drawer of [
+      { trigger: '#adaptive-hands-toggle', panel: '#hands-card-inner', visible: '#hands-overlay', close: '#hands-card-inner .g-chat-panel-header button', label: 'hands' },
+      { trigger: '#adaptive-reactions-toggle', panel: '#g-reaction-panel', visible: '#g-reaction-panel', close: '#g-reaction-panel .react-panel-close', label: 'reactions' },
+    ]) {
+      await startActiveHand(page, 10);
+      await page.setViewportSize({ width: 844, height: 390 });
+      await page.waitForTimeout(300);
+      await chooseInterfaceSize(page, 'game', 'extra-large');
+      await page.locator(drawer.trigger).click();
+      await page.locator(drawer.visible).waitFor({ state: 'visible' });
+      await page.waitForTimeout(300);
+      assert.equal(await page.locator(drawer.panel).getAttribute('role'), 'dialog',
+        `mobile landscape Extra Large ${drawer.label} drawer lacks dialog semantics`);
+      const box = await page.locator(drawer.panel).boundingBox();
+      const drawerRect = { left: box.x, top: box.y, right: box.x + box.width, bottom: box.y + box.height, width: box.width, height: box.height };
+      assertReachable(drawerRect, { width: 844, height: 390 }, `mobile landscape Extra Large ${drawer.label} drawer`);
+      assertCriticalUnoccluded(await activeHandRects(page), drawerRect, `mobile landscape Extra Large open ${drawer.label} drawer`);
+      await assertEnhancedTargets(page, [drawer.close], `mobile landscape Extra Large ${drawer.label} drawer`);
+      await page.keyboard.press('Escape');
+      await page.locator(drawer.visible).waitFor({ state: 'hidden' });
+      await page.waitForFunction((id) => document.activeElement && document.activeElement.id === id, drawer.trigger.slice(1));
+      assert.equal(await page.evaluate(() => document.activeElement && document.activeElement.id), drawer.trigger.slice(1),
+        `mobile landscape Extra Large ${drawer.label} drawer did not return focus to its trigger`);
+      await page.locator(drawer.trigger).click();
+      await page.locator(drawer.close).click();
+      await page.locator(drawer.visible).waitFor({ state: 'hidden' });
+    }
+  });
   await check('Extra Large mobile portrait keeps a dense active hand readable and operable', async () => {
     await startActiveHand(page, 10);
     await page.setViewportSize({ width: 390, height: 844 });
@@ -1013,7 +1136,7 @@ try {
       await page.locator(drawer.panel).waitFor({ state: 'hidden' });
     }
   });
-  await check('open drawers adapt across live portrait transitions without losing state', async () => {
+  await check('open drawers preserve state across live constrained-screen and Interface-size transitions', async () => {
     for (const drawer of [
       { trigger: '#chat-toggle-btn', adaptiveTrigger: '#adaptive-chat-toggle', panel: '#g-chat-panel', close: '#g-chat-close', label: 'chat', focus: 'g-chat-in' },
       { trigger: '#log-toggle-btn', adaptiveTrigger: '#adaptive-info-toggle', panel: '#g-log-panel', close: '#g-log-close', label: 'information', focus: 'gip-tab-stats' },
@@ -1057,14 +1180,38 @@ try {
 
       await page.setViewportSize({ width: 844, height: 390 });
       await page.waitForTimeout(400);
-      const restored = await drawerPresentation(page, drawer.panel);
-      assert.equal(await page.locator(drawer.panel).isVisible(), true, `${drawer.label} drawer closed during portrait exit`);
-      assert.equal(await page.locator(drawer.panel).getAttribute('role'), null, `${drawer.label} drawer retained adaptive dialog semantics outside portrait`);
-      assert.equal(restored.position, 'fixed', `${drawer.label} drawer did not restore normal floating presentation after portrait exit`);
-      assert.ok(restored.width < restored.viewportWidth, `${drawer.label} drawer did not restore its bounded floating width after portrait exit`);
-      assert.ok(restored.resizeHandles > 0, `${drawer.label} drawer did not restore normal floating resize controls after portrait exit`);
+      const landscapeAdaptive = await drawerPresentation(page, drawer.panel);
+      assert.equal(await page.locator(drawer.panel).isVisible(), true, `${drawer.label} drawer closed during landscape entry`);
+      assert.equal(await page.locator(drawer.panel).getAttribute('role'), 'dialog', `${drawer.label} drawer lost adaptive dialog semantics in mobile landscape`);
+      assert.notEqual(landscapeAdaptive.position, 'fixed', `${drawer.label} drawer became a floating overlay in mobile landscape Extra Large`);
+      assert.equal(landscapeAdaptive.resizeHandles, 0, `${drawer.label} drawer restored floating resize controls in mobile landscape Extra Large`);
+      const landscapeBox = await page.locator(drawer.panel).boundingBox();
+      const landscapeRect = { left: landscapeBox.x, top: landscapeBox.y, right: landscapeBox.x + landscapeBox.width, bottom: landscapeBox.y + landscapeBox.height, width: landscapeBox.width, height: landscapeBox.height };
+      assertCriticalUnoccluded(await activeHandRects(page), landscapeRect, `live-transition landscape ${drawer.label} drawer`);
       if (drawer.label === 'chat') assert.equal(await page.locator('#g-chat-in').inputValue(), 'Draft survives adaptive transitions');
-      else assert.equal(await page.locator('#g-stats-body').isVisible(), true, 'information drawer lost its active Stats tab on portrait exit');
+      else assert.equal(await page.locator('#g-stats-body').isVisible(), true, 'information drawer lost its active Stats tab on landscape entry');
+
+      await page.locator('#accessibility-open-game').click();
+      await page.locator('input[name="interface-size"][value="standard"]').check();
+      await page.locator('#accessibility-close').click();
+      await page.waitForTimeout(400);
+      const restored = await drawerPresentation(page, drawer.panel);
+      assert.equal(await page.locator(drawer.panel).isVisible(), true, `${drawer.label} drawer closed when leaving Extra Large`);
+      assert.equal(await page.locator(drawer.panel).getAttribute('role'), null, `${drawer.label} drawer retained adaptive dialog semantics at Standard`);
+      assert.equal(restored.position, 'fixed', `${drawer.label} drawer did not restore normal floating presentation at Standard`);
+      assert.ok(restored.width < restored.viewportWidth, `${drawer.label} drawer did not restore its bounded floating width at Standard`);
+      assert.ok(restored.resizeHandles > 0, `${drawer.label} drawer did not restore normal floating resize controls at Standard`);
+      if (drawer.label === 'chat') assert.equal(await page.locator('#g-chat-in').inputValue(), 'Draft survives adaptive transitions');
+      else assert.equal(await page.locator('#g-stats-body').isVisible(), true, 'information drawer lost its active Stats tab when leaving Extra Large');
+
+      await page.locator('#accessibility-open-game').click();
+      await page.locator('input[name="interface-size"][value="extra-large"]').check();
+      await page.locator('#accessibility-close').click();
+      await page.waitForTimeout(400);
+      assert.equal(await page.locator(drawer.panel).isVisible(), true, `${drawer.label} drawer closed when returning to Extra Large`);
+      assert.equal(await page.locator(drawer.panel).getAttribute('role'), 'dialog', `${drawer.label} drawer did not restore adaptive dialog semantics in Extra Large`);
+      assert.equal(await page.evaluate(() => document.activeElement && document.activeElement.id), drawer.focus,
+        `${drawer.label} drawer did not restore focus when returning to Extra Large`);
       if (drawer.label === 'information') await page.locator('#gip-tab-log').click();
       await page.locator(drawer.close).click();
       await page.locator(drawer.panel).waitFor({ state: 'hidden' });
@@ -1177,6 +1324,43 @@ try {
     await page.locator('#g-reaction-panel .react-panel-close').click();
     await page.locator('#g-reaction-panel').waitFor({ state: 'hidden' });
     assert.ok(await page.locator('.adaptive-drawer-bar').evaluate((bar) => bar.scrollWidth <= bar.clientWidth + 1), 'mobile portrait Extra Large drawer controls overflow horizontally');
+  });
+  await check('pinch permission and table magnification remain independently operable across Interface sizes', async () => {
+    await page.setViewportSize({ width: 844, height: 390 });
+    await page.waitForTimeout(300);
+    await page.locator('#accessibility-open-game').click();
+    await page.locator('#accessibility-browser-zoom').check();
+    assert.equal(await page.evaluate(() => localStorage.getItem('pth_browser_zoom')), '1');
+    assert.equal(await page.locator('#adv-browserzoom').isChecked(), true, 'Advanced lost the pinch-zoom alias');
+    assert.equal((await page.locator('meta[name="viewport"]').getAttribute('content')).includes('user-scalable=no'), false,
+      'enabling pinch zoom did not release the viewport restriction');
+    await page.locator('input[name="interface-size"][value="standard"]').check();
+    await page.locator('input[name="interface-size"][value="extra-large"]').check();
+    assert.equal(await page.locator('#accessibility-browser-zoom').isChecked(), true, 'Interface size changed pinch-zoom permission');
+    assert.equal(await page.locator('#adv-browserzoom').isChecked(), true, 'Interface size desynchronized the Advanced pinch-zoom alias');
+    await page.locator('#accessibility-close').click();
+
+    await page.evaluate(() => {
+      const nativeMatchMedia = window.matchMedia.bind(window);
+      window.matchMedia = (query) => query === '(pointer: coarse)'
+        ? { matches: true, media: query, onchange: null, addListener() {}, removeListener() {}, addEventListener() {}, removeEventListener() {}, dispatchEvent() { return true; } }
+        : nativeMatchMedia(query);
+      localStorage.setItem('pth_table_zoom', '1');
+      window.applyAdvOpts();
+      window._loupeBtnSync();
+    });
+    assert.equal(await page.locator('#g-zoom-toggle').isVisible(), true, 'table magnifier is unavailable on a compact touch layout');
+    await page.locator('#g-zoom-toggle').click();
+    assert.equal(await page.locator('#g-zoom-toggle').getAttribute('aria-pressed'), 'true', 'table magnifier did not activate');
+    await page.locator('#accessibility-open-game').click();
+    await page.locator('input[name="interface-size"][value="standard"]').check();
+    await page.locator('input[name="interface-size"][value="extra-large"]').check();
+    await page.locator('#accessibility-close').click();
+    assert.equal(await page.locator('#g-zoom-toggle').getAttribute('aria-pressed'), 'true', 'Interface size deactivated table magnification');
+    assert.equal(await page.evaluate(() => localStorage.getItem('pth_table_zoom')), '1', 'Interface size changed table magnification permission');
+    assert.equal(await page.evaluate(() => localStorage.getItem('pth_browser_zoom')), '1', 'table magnification changed pinch-zoom permission');
+    await page.locator('#g-zoom-toggle').click();
+    assert.equal(await page.locator('#g-zoom-toggle').getAttribute('aria-pressed'), 'false', 'table magnifier did not deactivate');
   });
   console.log(`PASS ${passed}/${passed}`);
 } finally {
