@@ -16,12 +16,12 @@ release. Per-build detail is on the
 highlights below.
 
 ### Added
-- **`/live` — fullscreen in both headers** (`web.95`) — out of the ••• menu
+- **`/live` — fullscreen in both headers** (`web.97`) — out of the ••• menu
   and into the lobby and table headers. It reuses `#fs-btn-lobby` and
   `#fs-btn-game`, which already exist with their handler and translated title
   and were only hidden when they moved into that menu, so live mode wins those
   rules back rather than adding a second button. Being first of the visible
-  group, it now carries the margin that pushes the whole set hard right.
+  group, it carries the margin that pushes the whole set hard right.
 - **`/live` keeps its own storage** (`web.89`) — the spectator view is served
   from the same origin as the web client and therefore shared one
   `localStorage` with it: a spectator inherited the player's theme and
@@ -296,6 +296,27 @@ highlights below.
   every entry now carries both.
 
 ### Changed
+- **Avatars behave like the QML client: one per session, through the server
+  only** (`web.95`) — a lobby-chat report had web and desktop players seeing
+  different avatars for the same person. Next to the PokerTH avatar protocol
+  the web client kept a second, web-only path: the proxy relayed
+  `AVATAR:`/`AVATARIMG:` frames between browsers and they took precedence over
+  the server avatar, so a change made while connected reached web players at
+  once while the server — and every official client — kept the one announced
+  at login. The official client has a single source: `ClientContext` holds the
+  file chosen at connection, its MD5 goes into `InitMessage.avatarHash`, the
+  same bytes answer `AvatarRequest`, and everyone fetches it by hash. Same here
+  now. The relay is gone (the proxy absorbs frames from tabs still on an older
+  build, which would otherwise reach the TCP path as malformed frames). My own
+  avatar is frozen when the Init is sent (`S._sessAv`, bytes in
+  `S._sessUpload`) for the seat, the lists and the `AvatarRequest` reply; a pick
+  made while connected applies at the next connection. The frozen PNG of a
+  custom image is keyed by the MD5 of the image instead of the constant `img`,
+  so a restored backup or a synced picture can no longer be uploaded with
+  another image's bytes, and an encode overtaken by a newer pick publishes
+  nothing. The initial letter no longer uploads a generated PNG: as with an
+  empty `MyAvatar`, no hash is announced. The help explains, in all 45
+  languages, when a change applies. Test: `scripts/test-avatar-session.mjs`.
 - **`/live` — the last two notices go, and language lands live** (`web.94`) —
   the guest-rules card is silenced: it explains the chat and game-type rules
   to someone who can neither chat nor play. The update banner is silenced too;
@@ -429,6 +450,15 @@ highlights below.
   (`scale 1.03`, 180 ms OutQuad) is applied to the seat plate.
 
 ### Fixed
+- **`/live` announced itself as a web client** (`web.96`) — `/live` goes through
+  the same `buildInit` as the player client, so since `USE_CLIENT_TYPE_WEB`
+  (`web.0`) its spectator sessions logged in as `CLIENT_TYPE_WEB` (0x03).
+  The tool it replaces, `pokerth-live`, identifies as `CLIENT_TYPE_QT_WIDGET`
+  (0x01), and that is what `/live` must keep doing on the server. `buildInit`
+  now picks 0x01 when `window.LIVE_MODE` is set; the player client keeps 0x03.
+  The version bytes stay the current upstream release: `pokerth-live`'s frozen
+  2.0.6 would fall under `MIN_BUILD_ID_QT_WIDGET` (2.1.7) and be refused.
+  Test in `scripts/test-messages.mjs`.
 - **The spectator table still moved when a hand ended** (`web.90`) — `web.82`
   reserved the action box with `min-height`, which only guarantees the empty
   case: once a message is present its own box can exceed the reservation. On a

@@ -2841,6 +2841,15 @@ window.refreshMyAvatar = function() {
               : ((document.getElementById('nick') && document.getElementById('nick').value) || '');
     _pthRefreshUpload(stored, String(_upNm).trim());
   } catch(e) {}
+  // L'upload ci-dessus prépare le choix COURANT (pour la prochaine connexion).
+  // L'affichage, lui, suit l'avatar de SESSION figé à l'Init — parité QML :
+  // ClientContext garde l'avatar de la connexion, le siège local aussi.
+  // (hors de la portée du S de l'IIFE : passer par le pont window.PthState)
+  var _sessAv = (window.PthState && window.PthState._sessAv) || null;
+  if (_sessAv) {
+    stored = _sessAv.choice;
+    customImg = (stored === '__img__') ? (_sessAv.img || null) : null;
+  }
   // Effective choice: 'pth' | 'img' | 'initial' | 'emoji-xxx'
   var usePth   = (stored === '__pth__') && !!pthUrl;
   var emojiAv  = (stored && stored !== '__pth__' && stored !== '__img__') ? stored : '';
@@ -2927,7 +2936,8 @@ window.refreshMyAvatar = function() {
   // compute its MD5, advertise the hash in InitMessage (field 8), and stream
   // the bytes back when the server asks (AvatarRequest handler). Chunks MUST
   // be <= 256 bytes (MAX_FILE_DATA_SIZE; server validates avatarblock 1..256).
-  // Emoji / initial avatars are NOT uploaded (scope A).
+  // Emoji avatars are rendered to a PNG and uploaded too; the initial letter
+  // and the PokerTH default announce no hash (QML: empty MyAvatar).
   // ──────────────────────────────────────────────────────────────────
 
   // Compact MD5 (RFC 1321) over a Uint8Array -> Uint8Array(16). Pure JS:
@@ -2985,12 +2995,16 @@ window.refreshMyAvatar = function() {
 
   var _pthUploadSrc = null;
   var _pthUploadKey = null;
+  // Clé de gel du choix EN COURS de préparation : un encodage asynchrone
+  // (toBlob) terminé après un nouveau choix ne doit rien publier.
+  var _pthPendingKey = null;
   function _pthClearMyUpload() {
     _pthUploadSrc = null;
     _pthUploadKey = null;
+    _pthPendingKey = null;
     try { window._pthMyUpload = null; } catch(e) {}
   }
-  function _pthPrepareMyUpload(dataUrl) {
+  function _pthPrepareMyUpload(dataUrl, key) {
     if (!dataUrl || typeof dataUrl !== 'string') { _pthClearMyUpload(); return; }
     if (dataUrl === _pthUploadSrc && window._pthMyUpload) return;
     _pthUploadSrc = dataUrl;
@@ -3004,7 +3018,7 @@ window.refreshMyAvatar = function() {
         var s = Math.min(img.width, img.height) || SZ;
         var sx = (img.width - s) / 2, sy = (img.height - s) / 2;
         ctx.drawImage(img, sx, sy, s, s, 0, 0, SZ, SZ);
-        _pthCanvasToUpload(cv, 'img');
+        _pthCanvasToUpload(cv, key);
       } catch(e) { _pthClearMyUpload(); }
     };
     img.onerror = function() { _pthClearMyUpload(); };
@@ -3030,8 +3044,10 @@ window.refreshMyAvatar = function() {
   // hash, stable a travers sessions et mises a jour.
   function _pthCanvasToUpload(cv, key) {
     cv.toBlob(function(blob) {
+      if (key !== _pthPendingKey) return; // choix remplacé pendant l'encodage
       if (!blob) { _pthClearMyUpload(); return; }
       blob.arrayBuffer().then(function(ab) {
+        if (key !== _pthPendingKey) return;
         var bytes = new Uint8Array(ab);
         if (bytes.length < 32 || bytes.length > 30720) { _pthClearMyUpload(); return; }
         window._pthMyUpload = { bytes: bytes, hashBytes: _md5bytes(bytes), type: 1, size: bytes.length };
@@ -3042,8 +3058,18 @@ window.refreshMyAvatar = function() {
             localStorage.setItem('pth_avatar_up', JSON.stringify({ k: key, b64: btoa(b64) }));
           } catch (e) {} // stockage plein : on retombe sur le re-encodage d'avant, sans casser l'upload
         }
-      }).catch(function() { _pthClearMyUpload(); });
+      }).catch(function() { if (key === _pthPendingKey) _pthClearMyUpload(); });
     }, 'image/png');
+  }
+  function _pthHex(b) {
+    var h = '', i;
+    for (i = 0; i < b.length; i++) h += (b[i] < 16 ? '0' : '') + b[i].toString(16);
+    return h;
+  }
+  function _pthAsciiBytes(str) {
+    var out = new Uint8Array(str.length), i;
+    for (i = 0; i < str.length; i++) out[i] = str.charCodeAt(i) & 0xff;
+    return out;
   }
   // Recharge les octets geles si (et seulement si) ils correspondent au choix
   // courant. true = _pthMyUpload restaure, rien a re-encoder.
@@ -3076,24 +3102,10 @@ window.refreshMyAvatar = function() {
       _pthCanvasToUpload(cv, 'emoji:' + emoji);
     } catch(e) { _pthClearMyUpload(); }
   }
-  // Render the INITIAL-letter avatar to a PNG (dark disc + gold bold letter).
-  function _pthPrepareLetterUpload(letter) {
-    try {
-      var SZ = 96;
-      var cv = document.createElement('canvas'); cv.width = SZ; cv.height = SZ;
-      var ctx = cv.getContext('2d');
-      ctx.beginPath(); ctx.arc(SZ/2, SZ/2, SZ/2, 0, Math.PI*2); ctx.closePath();
-      ctx.fillStyle = '#1d222b'; ctx.fill();
-      ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-      ctx.fillStyle = '#E3C800';
-      ctx.font = "bold 52px system-ui,'Segoe UI',Roboto,Helvetica,Arial,sans-serif";
-      ctx.fillText(letter, SZ/2, SZ/2 + 4);
-      _pthCanvasToUpload(cv, 'letter:' + letter);
-    } catch(e) { _pthClearMyUpload(); }
-  }
   // Dispatcher: prepare the upload for WHATEVER avatar is selected.
-  //   '__img__' -> custom image ; '__pth__' -> nothing (official default kept)
-  //   non-empty  -> emoji string ; '' -> initial letter from the player name.
+  //   '__img__' -> custom image ; non-empty -> emoji string
+  //   '__pth__' / '' (initial letter) -> nothing: like the QML client with an
+  //   empty MyAvatar, no hash is announced and others see the default avatar.
   // De-duped by key so we don't re-render on every avatar refresh.
   function _pthRefreshUpload(stored, name) {
     try {
@@ -3107,23 +3119,29 @@ window.refreshMyAvatar = function() {
         var ki = 'img:' + url;
         if (ki === _pthUploadKey && window._pthMyUpload) return;
         _pthUploadKey = ki;
-        if (_pthLoadFrozenUpload('img')) return;
-        _pthPrepareMyUpload(url);
+        // Clé de gel liée au CONTENU de l'image (MD5 du data URL) : une autre
+        // image — import de sauvegarde, synchro, autre appareil — ne peut plus
+        // se voir resservir les octets gelés d'une précédente. Ce qui part au
+        // serveur est toujours ce qui est affiché (parité QML : un fichier, un
+        // hash). L'ancienne clé fixe 'img' ne correspond plus : ré-encodage unique.
+        var kf = 'img:' + _pthHex(_md5bytes(_pthAsciiBytes(url)));
+        _pthPendingKey = kf;
+        if (_pthLoadFrozenUpload(kf)) return;
+        _pthPrepareMyUpload(url, kf);
       } else if (stored === '__pth__') {
         _pthClearMyUpload();
       } else if (stored) {
         var ke = 'emoji:' + stored;
         if (ke === _pthUploadKey && window._pthMyUpload) return;
         _pthUploadKey = ke;
+        _pthPendingKey = ke;
         if (_pthLoadFrozenUpload(ke)) return;
         _pthPrepareEmojiUpload(stored);
       } else {
-        var letter = ((name && name.charAt(0)) || '?').toUpperCase();
-        var kl = 'letter:' + letter;
-        if (kl === _pthUploadKey && window._pthMyUpload) return;
-        _pthUploadKey = kl;
-        if (_pthLoadFrozenUpload(kl)) return;
-        _pthPrepareLetterUpload(letter);
+        // '' : l'initiale (choix « Aa », valeur par défaut). Parité QML : sans
+        // avatar choisi, le client officiel n'annonce aucun hash — les autres
+        // joueurs voient l'avatar par défaut, l'initiale reste locale.
+        _pthClearMyUpload();
       }
     } catch(e) { _pthClearMyUpload(); }
   }
@@ -4194,8 +4212,8 @@ const App = (() => {
   // window.*). L'état en mémoire (S._pthAvatarsByHash…) et _pthAvatarFor
   // restent ici (closure).
 
-  // [9f-7] _pthAvatarFor / _myAvatarDisplay / _myAvatarToBroadcast /
-  // _avatarChipHtml déplacés dans public/modules/ui/player-popup.mjs.
+  // [9f-7] _pthAvatarFor / _myAvatarDisplay / _avatarChipHtml déplacés dans
+  // public/modules/ui/player-popup.mjs (avec _myAvChoice / _myAvImg).
   // [9g-B1] refreshStartNoBotsVisibility déplacé dans public/modules/ui/game-info.mjs
   // (toujours global via window.*).
 
@@ -5492,42 +5510,23 @@ const App = (() => {
   window.renderGames = renderGames;
   window.toggleStats  = toggleStats;
   window._toggleStats = toggleStats;
+  // Parité QML : l'avatar ne voyage QUE par le protocole PokerTH — hash dans
+  // l'InitMessage, octets sur AvatarRequest, et chaque client le récupère au
+  // serveur via PlayerInfoReply. Le relais AVATAR:/AVATARIMG: entre clients web
+  // est retiré : ce canal parallèle montrait aux joueurs web un avatar que les
+  // clients officiels ne voyaient pas (changement en cours de session, octets
+  // gelés d'une autre image). Le nom reste pour les appelants (sélecteur,
+  // import, studio) : il ne fait plus que rafraîchir l'affichage local.
   window._broadcastMyAvatar = function(emoji) {
-    S._myAvatarCache = (emoji && emoji !== '__img__' && emoji !== '__pth__') ? emoji : '';
-    if (S.ws && S.ws.readyState === WebSocket.OPEN && !window.directWS && S.myId) {
-      if (emoji === '__img__') {
-        // Diffuser l'image perso (data URL) aux autres clients du proxy.
-        var img = ''; try { img = localStorage.getItem('pth_avatar_img') || ''; } catch(e) {}
-        if (img) S.ws.send('AVATARIMG:' + S.myId + ':' + img);
-      } else {
-        // Emoji / initiale : diffuser l'emoji ET purger toute image perso
-        // précédemment diffusée chez les autres (sinon elle resterait affichée).
-        S.ws.send('AVATAR:' + S.myId + ':' + (_myAvatarToBroadcast()));
-        S.ws.send('AVATARIMG:' + S.myId + ':');
-      }
-    }
+    // En session, MON avatar affiché reste celui figé à l'Init (S._sessAv) :
+    // le nouveau choix vaudra à la connexion suivante.
+    if (!S._sessAv) S._myAvatarCache = (emoji && emoji !== '__img__' && emoji !== '__pth__') ? emoji : '';
     // Lobby pill is now an avatar+name combo (clickable, opens the
     // player-info modal). Refresh it so the user sees their pick
     // immediately, both when picking from the connect screen popup
     // AND when picking from the in-lobby popup.
     try { if (typeof updateLobbyPill === 'function') updateLobbyPill(); } catch(e) {}
   };
-  // Re-diffusion de l'avatar (appelée au début de chaque main et à l'entrée
-  // en partie, pour les joueurs qui viennent d'arriver). Respecte le choix
-  // image / emoji / initiale courant.
-  function _rebroadcastAvatar() {
-    try {
-      if (!(S.ws && S.ws.readyState === WebSocket.OPEN && !window.directWS && S.myId)) return;
-      var choice = ''; try { choice = localStorage.getItem('pth_avatar') || ''; } catch(e) {}
-      if (choice === '__img__') {
-        var img = ''; try { img = localStorage.getItem('pth_avatar_img') || ''; } catch(e) {}
-        if (img) S.ws.send('AVATARIMG:' + S.myId + ':' + img);
-      } else {
-        S.ws.send('AVATAR:' + S.myId + ':' + _myAvatarToBroadcast());
-      }
-    } catch(e) {}
-  }
-  window._rebroadcastAvatar = _rebroadcastAvatar;
 
   // [9g-B4] _applyAssistUI + window.toggleAssist/setAssist (assistance) déplacé dans public/modules/ui/action-bar.mjs
   // (toujours global via window.*).
@@ -6064,7 +6063,7 @@ const App = (() => {
         $('nick').value = S.myName;
       }
       if (!S.myName) { setStatus(t('enterNick'), 'err', null, { local: true }); return; }
-      // Ré-aligne l'avatar-upload (initiale) sur le pseudo définitif AVANT l'Init.
+      // Prépare l'avatar-upload du choix courant AVANT l'Init.
       try { if (window.refreshMyAvatar) window.refreshMyAvatar(); } catch(e) {}
       if (S.myName.length < 3) { setStatus(t('nickTooShort'), 'err', null, { local: true }); return; }
       if (!_off && (!effProxyUrl || !host)) { setStatus(t('fillFields'), 'err', null, { local: true }); return; }
@@ -6100,9 +6099,10 @@ const App = (() => {
         // Avatars : indexés par pid (stables tant que la session lobby dure) ou
         // par hash (cache réutilisable). Donc même cycle de vie que 'players' :
         // on ne les vide qu'à la déconnexion complète, pas en quittant une partie
-        // (sinon les avatars disparaissent au retour au lobby — les hashes/emojis
-        // ne sont re-reçus qu'une fois).
-        S._playerAvatars = {}; S._playerImgAvatars = {};
+        // (sinon les avatars disparaissent au retour au lobby — les hashes ne
+        // sont re-reçus qu'une fois). L'avatar de session (S._sessAv, figé à
+        // l'Init) tombe avec : la nouvelle session figera le choix courant.
+        S._sessAv = null; S._sessUpload = null; S._myAvatarCache = '';
         S._pthAvatarHashes = {}; S._pthAvatarsByHash = {}; S._pthAvatarReqIdToHash = {}; S._pthDataUrls = {};
         S.loaded  = false;
         // Repeindre tout de suite la liste (désormais vide) : sinon, dans un
@@ -6260,43 +6260,10 @@ const App = (() => {
             try { if (window._cfgSyncOnToken) window._cfgSyncOnToken(e.data.slice(8)); } catch (_e) {}
             return;
           }
-          // Avatar IMAGE perso diffusé via le proxy. Le data URL contient
-          // des ':' -> on découpe uniquement sur le 1er séparateur après le pid.
-          if (e.data.startsWith('AVATARIMG:')) {
-            var imgRest = e.data.slice(10); // après "AVATARIMG:"
-            var imgSep  = imgRest.indexOf(':');
-            if (imgSep > 0) {
-              var imgPid = parseInt(imgRest.slice(0, imgSep), 10);
-              var imgUrl = imgRest.slice(imgSep + 1);
-              if (imgPid && imgPid !== S.myId) {
-                if (imgUrl && imgUrl.slice(0, 5) === 'data:') {
-                  // Bombe de décompression : refuser toute image dont l'en-tête
-                  // déclare > 1 Mpx AVANT de la donner au navigateur (miroir du
-                  // PR upstream pokerth#521 côté QML). Repli permissif si le
-                  // module avatar-cache n'est pas encore chargé : la garde est
-                  // présente dès que les modules ESM sont prêts.
-                  if (typeof window._pthDataUrlDimsSafe === 'function' && !window._pthDataUrlDimsSafe(imgUrl)) {
-                    console.warn('[avatar] AVATARIMG rejeté (dimensions déclarées non sûres) pid=' + imgPid);
-                  } else {
-                    S._playerImgAvatars[imgPid] = imgUrl;
-                  }
-                }
-                else delete S._playerImgAvatars[imgPid]; // vide = effacer l'image
-                if (typeof renderSeats === 'function' && S.seats.length) renderSeats();
-              }
-            }
-            return;
-          }
-          if (e.data.startsWith('AVATAR:')) {
-            var avParts = e.data.split(':');
-            var avPid = parseInt(avParts[1]);
-            var avEmoji = avParts[2] || '';
-            if (avPid && avPid !== S.myId) {
-              S._playerAvatars[avPid] = avEmoji;
-              if (typeof renderSeats === 'function' && S.seats.length) renderSeats();
-            }
-            return;
-          }
+          // AVATAR:/AVATARIMG: (ancien relais d'avatar entre clients web) : plus
+          // émis ni affichés, le proxy les absorbe — l'avatar passe uniquement
+          // par le protocole PokerTH, comme pour le client QML. Une trame
+          // résiduelle tombe sur le « return » ci-dessous, sans effet.
           if (e.data.startsWith('REACT:')) {
             var parts = e.data.split(':');
             var fromPid = parseInt(parts[1]);
@@ -11464,7 +11431,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.8-web.95'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.8-web.97'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
