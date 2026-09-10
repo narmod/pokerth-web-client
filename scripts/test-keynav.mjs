@@ -11,7 +11,7 @@ function ok(cond, label) {
 const dom = new JSDOM(`<!doctype html><body>
   <div id="adv-modal" style="display:none"></div>
   <div id="kick-modal" style="display:none"></div>
-  <div id="kick-confirm-modal" style="display:none"></div>
+  <div id="kick-confirm-modal" style="display:none"><button id="kcm-cancel">Cancel</button><button id="kcm-ok" data-kn-focus>Kick</button></div>
   <div id="quick-create-dialog" style="display:none">
     <button onclick="App.confirmQuickCreate()" data-kn-primary>Create</button>
     <input id="qc-name" type="text">
@@ -167,6 +167,18 @@ key('Escape');
 ok(calls.join() === 'decline', 'invitation : Escape = Refuser');
 unreg(); ban.remove(); restore();
 ok(d.activeElement && d.activeElement.id === 'chat-in', 'invitation fermée : le focus revient au champ');
+
+// 13b — confirmation d'exclusion : focus sur Confirmer (parité ConfirmPopup
+//       QML, choix narmod), Escape annule toujours, Enter depuis le corps inerte
+d.getElementById('chat-in').focus();
+show('kick-confirm-modal'); await tick();
+ok(d.activeElement && d.activeElement.id === 'kcm-ok', 'exclusion : focus sur Confirmer (parité QML)');
+calls.length = 0; key('Enter');
+ok(calls.length === 0, 'exclusion : Enter hors du bouton ne devine rien (pas de data-kn-primary)');
+key('Escape');
+ok(calls.join() === 'cancelKickConfirm', 'exclusion : Escape annule');
+hide('kick-confirm-modal'); await tick();
+ok(d.activeElement && d.activeElement.id === 'chat-in', 'exclusion fermée : le focus revient au champ');
 
 // 14 — appareil tactile sans souris : pas de focus volé (clavier virtuel)
 w.matchMedia = () => ({ matches: true });

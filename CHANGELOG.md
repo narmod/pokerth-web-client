@@ -316,6 +316,15 @@ highlights below.
   every entry now carries both.
 
 ### Changed
+- **Kick and report confirmations focus Confirm** (`web.113`, upstream
+  `b170786`, narmod's call for QML parity) — the QML `ConfirmPopup` opens on
+  its confirm button, so `data-kn-focus` now sits on the confirm button of
+  `#kick-confirm-modal` and `#report-confirm-modal` (game name and avatar).
+  Enter confirms only while the focus is still on that button: neither dialog
+  gains `data-kn-primary`, so Enter from anywhere else stays inert, and Escape
+  still cancels. The other QML `ConfirmPopup` uses (ignore, ban, delete a
+  conversation) are native `window.confirm()` prompts here, which the browser
+  already opens on OK. Tests in `scripts/test-keynav.mjs` (25 checks).
 - **Popups open with the keyboard focus on their safe button** (`web.112`,
   upstream `b170786` / `21da2f0` / `5c321a5` / `3fa46aa`) — the QML client now
   gives every popup a start focus (`onOpened: X.forceActiveFocus()`). Same
@@ -331,9 +340,8 @@ highlights below.
   `.kcm-*` and the banner buttons. Skipped on touch-only devices (no keyboard
   to serve, and blurring a field would drop the soft keyboard) and when
   `pth_keynav` is off; a disabled button (warning already expired) is left
-  alone. Not ported: the QML `ConfirmPopup` focuses **Confirm** (kick, ban,
-  report…), against the web rule that no destructive dialog answers Enter —
-  pending a decision. No rejoin prompt exists here (rejoin is automatic).
+  alone. The QML `ConfirmPopup` targets (kick, report) followed in `web.113`.
+  No rejoin prompt exists here (rejoin is automatic).
   Tests in `scripts/test-keynav.mjs` (21 checks).
 - **Reaction choreographies ×1.25, as upstream `b8a1d18`** (`web.111`) — the
   QML and widget clients took the web keyframes (1.4–1.7 s) and stretch them

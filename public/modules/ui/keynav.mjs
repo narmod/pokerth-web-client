@@ -163,6 +163,10 @@ export function registerOverlay(el, close) {
 // chaque popup (onOpened: X.forceActiveFocus()) : l'action SÛRE quand le
 // popup arrive sans prévenir ou garde une action lourde (Refuser une
 // invitation, Annuler quitter / déconnexion), l'unique action sinon (OK).
+// Exception voulue : les confirmations du ConfirmPopup QML (exclure,
+// signaler) s'ouvrent sur CONFIRMER — parité retenue par narmod le
+// 2026-09-10. Ce focus ne fait pas de ces dialogues des data-kn-primary :
+// Entrée ne confirme que si le focus est encore sur ce bouton.
 // Ici le bouton visé porte data-kn-focus dans le HTML — même principe
 // d'opt-in que data-kn-primary, aucune heuristique. Enter/Espace sur un
 // bouton focalisé sont natifs ; le cadre n'apparaît qu'au clavier
