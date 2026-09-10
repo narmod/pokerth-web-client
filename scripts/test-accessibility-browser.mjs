@@ -41,6 +41,34 @@ async function chooseInterfaceSize(page, surface, value) {
   await page.keyboard.press('Escape');
 }
 
+async function populateLobby(page) {
+  await page.waitForFunction(() => window.PthState && typeof window.renderGames === 'function' && typeof window.renderPlayersList === 'function');
+  await page.evaluate(() => {
+    const state = window.PthState;
+    state.games = {
+      101: { name: 'Accessible Open Table', mode: 1, players: 2, maxPlayers: 8, type: 1, priv: false, timeout: 15, delay: 5 },
+      202: { name: 'Accessible Running Table', mode: 2, players: 5, maxPlayers: 10, type: 4, priv: false, timeout: 10, delay: 7 },
+    };
+    state.players = { 11: 'Alex', 12: 'Blair', 13: 'Casey' };
+    state._lobbyPids = new Set([11, 12, 13]);
+    state._lobbyPlayerCount = 3;
+    state._tableFilter = '0';
+    state._selectedGame = null;
+    state._openTables = new Set();
+    state._currentLoginMode = 'auth';
+    state.gId = 0;
+    state.amInGame = false;
+    state.loaded = true;
+    window.__lobbyOutcomeActions = [];
+    window.App.joinGame = (id) => window.__lobbyOutcomeActions.push(`join:${id}`);
+    window.App.spectateGame = (id) => window.__lobbyOutcomeActions.push(`spectate:${id}`);
+    window.renderGames();
+    window._refreshPlayersPill();
+    window.renderPlayersList();
+  });
+  await page.locator('.game-row.gcard').first().waitFor();
+}
+
 async function visibleMetrics(page, selectors) {
   return page.evaluate((entries) => Object.fromEntries(entries.map((selector) => {
     const element = document.querySelector(selector);
@@ -356,6 +384,67 @@ try {
       await page.locator('#g-filter-select').selectOption('1');
       await page.locator('#chat-in').fill(`Scale ${value}`);
       assert.ok(await page.locator('#s-lobby').evaluate((screen) => screen.scrollWidth <= screen.clientWidth + 1), `${value} lobby headings overflow horizontally`);
+    }
+  });
+  await check('populated mobile lobby keeps Players, Join, and Spectate actions enhanced and operable', async () => {
+    await page.setViewportSize({ width: 375, height: 812 });
+    await page.evaluate(async () => (await import('/modules/net/session.mjs')).show('s-lobby'));
+    await page.locator('#s-lobby.active').waitFor();
+    await populateLobby(page);
+    for (const value of ['large', 'extra-large']) {
+      await chooseInterfaceSize(page, 'lobby', value);
+      await assertEnhancedTargets(page, ['.fbar-players', '.game-row .btn-join:not(.btn-spectate)', '.game-row .btn-spectate'], `${value} populated mobile lobby`);
+      await page.locator('.fbar-players').click();
+      assert.equal(await page.locator('#players-panel').isVisible(), true, `${value} Players control did not open the player list`);
+      await page.locator('#players-panel .g-chat-panel-header button').click();
+      await page.locator('.game-row .btn-join:not(.btn-spectate)').click();
+      await page.locator('.game-row .btn-spectate').click();
+      assert.deepEqual(await page.evaluate(() => window.__lobbyOutcomeActions.splice(0)), ['join:101', 'spectate:202']);
+    }
+  });
+  await check('populated lobby names and player counts follow exact Interface sizes without clipping', async () => {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.evaluate(async () => (await import('/modules/net/session.mjs')).show('s-lobby'));
+    await page.locator('#s-lobby.active').waitFor();
+    await populateLobby(page);
+    const desktopSelectors = ['.game-row.gcard .game-name', '.game-row.gcard .game-meta > span:first-child', '#players-panel-count', '#g-count'];
+    const desktopSamples = {};
+    for (const [value, multiplier] of [['standard', 1], ['large', 1.5], ['extra-large', 2]]) {
+      await chooseInterfaceSize(page, 'lobby', value);
+      desktopSamples[value] = await visibleMetrics(page, desktopSelectors);
+      for (const selector of desktopSelectors) {
+        assert.equal(desktopSamples[value][selector].visible, true, `${value} populated desktop ${selector} is outside the viewport`);
+        assertExactScaled(desktopSamples[value][selector].fontSize, desktopSamples.standard[selector].fontSize, multiplier, `${value} populated desktop ${selector}`);
+      }
+      await assertTextFits(page, '.game-row.gcard .game-name', `${value} populated desktop table name`);
+      await assertTextFits(page, '#players-panel-title', `${value} populated desktop online-player count`);
+      assert.ok(await page.locator('#s-lobby').evaluate((screen) => screen.scrollWidth <= screen.clientWidth + 1), `${value} populated desktop lobby overflows horizontally`);
+    }
+
+    await page.setViewportSize({ width: 375, height: 812 });
+    await populateLobby(page);
+    const mobileSelectors = ['.game-row.gcard .game-name', '.game-row.gcard .game-meta > span:first-child', '#g-count'];
+    const mobileSamples = {};
+    const playerCountSamples = {};
+    for (const [value, multiplier] of [['standard', 1], ['large', 1.5], ['extra-large', 2]]) {
+      await chooseInterfaceSize(page, 'lobby', value);
+      mobileSamples[value] = await visibleMetrics(page, mobileSelectors);
+      for (const selector of mobileSelectors) {
+        assert.equal(mobileSamples[value][selector].visible, true, `${value} populated mobile ${selector} is outside the viewport`);
+        assertExactScaled(mobileSamples[value][selector].fontSize, mobileSamples.standard[selector].fontSize, multiplier, `${value} populated mobile ${selector}`);
+      }
+      await assertTextFits(page, '.game-row.gcard .game-name', `${value} populated mobile table name`);
+      await page.locator('.fbar-players').click();
+      await page.waitForFunction(() => {
+        const element = document.querySelector('#players-panel-count');
+        const rect = element && element.getBoundingClientRect();
+        return rect && rect.bottom > 0 && rect.right > 0 && rect.top < innerHeight && rect.left < innerWidth;
+      });
+      playerCountSamples[value] = await visibleMetrics(page, ['#players-panel-count']);
+      assert.equal(playerCountSamples[value]['#players-panel-count'].visible, true, `${value} populated mobile online-player count is outside the viewport`);
+      assertExactScaled(playerCountSamples[value]['#players-panel-count'].fontSize, playerCountSamples.standard['#players-panel-count'].fontSize, multiplier, `${value} populated mobile online-player count`);
+      await page.locator('#players-panel .g-chat-panel-header button').click();
+      assert.ok(await page.locator('#s-lobby').evaluate((screen) => screen.scrollWidth <= screen.clientWidth + 1), `${value} populated mobile lobby overflows horizontally`);
     }
   });
   await check('keyboard focus remains visible throughout login and lobby controls', async () => {

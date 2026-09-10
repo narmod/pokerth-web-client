@@ -4894,6 +4894,7 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
 
 .g-chat-panel-header { display:flex; align-items:center; justify-content:space-between; padding:4px 10px; background:var(--chrome-tint); border-bottom:1px solid var(--border); flex-shrink:0; }
 .lobby-section-title { --lobby-section-title-size: .65rem; font-size: calc(var(--lobby-section-title-size) * var(--interface-scale)); }
+#s-lobby #g-count { --lobby-table-count-size: 1rem; font-size: calc(var(--lobby-table-count-size) * var(--interface-scale)); }
 /* Poignée de redimensionnement du chat (bord bas) — glissable au doigt */
 .chat-resize-handle {
   flex-shrink: 0; height: 18px;
@@ -7307,7 +7308,7 @@ body.spectator-nosend #g-reaction-panel { display: none !important; }
   .create-toggle { font-size: 1.15rem; }
 }
 @media (min-width: 900px) {
-  .game-row.gcard .game-name { font-size: 1.16rem; }
+  .game-row.gcard .game-name { --lobby-table-name-size: 1.16rem; font-size: calc(var(--lobby-table-name-size) * var(--interface-scale)); }
   .game-row.gcard .game-meta { font-size: var(--fs-base); }
   .game-badge { font-size: var(--fs-xs); }
   .game-row.gcard .btn-join { font-size: var(--fs-md); padding: 11px 20px; }
@@ -11915,6 +11916,11 @@ html[data-seat-struct="qml"] .seat-narrow .seat-name .seat-note-stars { font-siz
 :root[data-interface-size]:not([data-interface-size="standard"]) #s-lobby :is(.chat-emoji-toggle, .chat-send) {
   min-width: var(--ctrl-enhanced);
   min-height: var(--ctrl-enhanced);
+}
+:root[data-interface-size]:not([data-interface-size="standard"]) #s-lobby :is(.fbar-players, .game-row.gcard .btn-join) {
+  min-width: var(--ctrl-enhanced);
+  min-height: var(--ctrl-enhanced);
+  box-sizing: border-box;
 }
 :root[data-interface-size]:not([data-interface-size="standard"]) #s-create :is(.cf-input, .cf-create-btn) {
   min-height: var(--ctrl-enhanced);
