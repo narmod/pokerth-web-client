@@ -28,10 +28,19 @@ check('the always-present bar is still off for spectators',
   /_pinShow = !S\._amSpectator && S\._gameStarted/.test(client));
 check('the spectator marker is still the one the rule keys off',
   /classList\.toggle\('spectator-nosend', _noSend\)/.test(client));
-check('#g-actions keeps a reserved height while spectating',
-  /body\.spectator-nosend #g-actions \{[\s\S]{0,120}min-height:/.test(css));
-check('the reservation is one waiting line, not a magic number',
-  /min-height: calc\(var\(--fs-sm\) \* 1\.4 \+ 8px\)/.test(css));
+// Read the rule itself rather than matching across it: the explanatory
+// comment inside is longer than any sane lookahead window.
+const rule = (css.match(/body\.spectator-nosend #g-actions \{[\s\S]*?\n\}/) || [''])[0];
+const msgRule = (css.match(/body\.spectator-nosend #g-actions \.waiting-msg \{[\s\S]*?\n\}/) || [''])[0];
+check('#g-actions keeps a reserved height while spectating', /min-height:/.test(rule));
+// A floor is not enough: with min-height alone, a message whose box exceeds
+// the reservation still shrinks the zone. Measured on a recording, the table
+// lost 4px of width the frame "next hand" appeared, and kept the new size.
+check('the box is fixed, not merely floored',
+  /\n  height: calc\(/.test(rule) && /max-height: calc\(/.test(rule));
+check('and it cannot be grown from inside', /overflow: hidden;/.test(rule));
+check('the message is neutralised inside that box',
+  /padding: 0; margin: 0;/.test(msgRule));
 check('the waiting line it mirrors still has that padding',
   /\.waiting-msg \{[\s\S]{0,120}padding: 4px 0;/.test(css));
 check('spectators are still given no action controls',

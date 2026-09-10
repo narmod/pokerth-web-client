@@ -386,6 +386,14 @@ highlights below.
   (`scale 1.03`, 180 ms OutQuad) is applied to the seat plate.
 
 ### Fixed
+- **The spectator table still moved when a hand ended** (`web.90`) — `web.82`
+  reserved the action box with `min-height`, which only guarantees the empty
+  case: once a message is present its own box can exceed the reservation. On a
+  frame-by-frame reading of a recording, at the exact frame *next hand*
+  appeared the table lost 4px of width and 9px at the top, and kept the new
+  size. `#g-actions` is now a fixed box while spectating — height, min and max
+  — with the message centred inside it, so nothing it holds can move the
+  table.
 - **`/live` language buttons never appeared** (`web.88`) — the three ids are
   the old header twins of the ••• menu entries, hidden at all sizes by an
   existing rule and again in the mobile block. Live mode reuses them

@@ -4910,8 +4910,22 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
    constante que le message soit là ou non, sans donner au spectateur la
    moindre commande de jeu. */
 body.spectator-nosend #g-actions {
-  min-height: calc(var(--fs-sm) * 1.4 + 8px);
-  box-sizing: content-box;
+  /* A FIXED box, not a floor. min-height only guarantees the empty case: as
+     soon as a message is present its own box can exceed the reservation, the
+     zone shrinks and the whole table is recomputed — measured on a recording,
+     the table lost 4px of width at the exact frame "next hand" appeared and
+     never got it back. A fixed height makes #g-actions invariant whatever it
+     holds; the message is centred in it and a freak two-line string is
+     clipped rather than allowed to move the table. */
+  height: calc(var(--fs-sm) * 2.2 + 10px);
+  min-height: calc(var(--fs-sm) * 2.2 + 10px);
+  max-height: calc(var(--fs-sm) * 2.2 + 10px);
+  box-sizing: border-box; overflow: hidden;
+  display: flex; align-items: center; justify-content: center;
+}
+body.spectator-nosend #g-actions .waiting-msg {
+  padding: 0; margin: 0; line-height: 1.2;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 100%;
 }
 /* ══ PASSWORD PROMPT ══ */
 #password-prompt {
