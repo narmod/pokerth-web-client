@@ -12097,6 +12097,7 @@ html[data-seat-struct="qml"] .seat-narrow .seat-name .seat-note-stars { font-siz
        floating-panel scale while remaining expressed by shared tokens. */
     --adaptive-drawer-target: calc(var(--ctrl-enhanced) + var(--sp-2));
     --adaptive-drawer-height: calc(var(--adaptive-drawer-target) * 2 + var(--sp-4));
+    --adaptive-drawer-clearance: calc(var(--sp-6) + var(--sp-7));
     --fs-3xs: calc(var(--fs-source-3xs) * var(--active-play-scale));
     --fs-2xs: calc(var(--fs-source-2xs) * var(--active-play-scale));
     --fs-xs: calc(var(--fs-source-xs) * var(--active-play-scale));
@@ -12192,7 +12193,7 @@ html[data-seat-struct="qml"] .seat-narrow .seat-name .seat-note-stars { font-siz
   :root[data-adaptive-play="portrait-extra-large"] #s-game .g-felt-corner { display: none; }
   :root[data-adaptive-play="portrait-extra-large"] #s-game .adaptive-drawer-bar {
     display: grid;
-    grid-template-columns: 0.8fr 1.2fr 1fr 1fr;
+    grid-template-columns: 0.8fr 1.2fr 0.8fr 1.2fr;
     gap: var(--sp-1);
     padding: var(--sp-1) var(--sp-2);
     background: var(--panel);
@@ -12206,8 +12207,11 @@ html[data-seat-struct="qml"] .seat-narrow .seat-name .seat-note-stars { font-siz
     border-radius: var(--r-sm);
     background: var(--panel-hi);
     color: var(--text-hi);
-    font: 700 var(--fs-source-xs)/1.15 var(--ff-display);
+    font: 700 var(--fs-xs)/1.15 var(--ff-display);
     cursor: pointer;
+  }
+  :root[data-adaptive-play="portrait-extra-large"] #s-game .adaptive-drawer-bar [aria-hidden="true"] {
+    display: none;
   }
   :root[data-adaptive-play="portrait-extra-large"] #s-game :is(#g-chat-panel, #g-log-panel) {
     position: relative !important;
@@ -12216,6 +12220,7 @@ html[data-seat-struct="qml"] .seat-narrow .seat-name .seat-note-stars { font-siz
     height: var(--adaptive-drawer-height) !important;
     max-height: var(--adaptive-drawer-height) !important;
     flex: 0 0 var(--adaptive-drawer-height);
+    margin-bottom: var(--adaptive-drawer-clearance);
     z-index: auto;
     box-shadow: none;
     box-sizing: border-box;

@@ -56,6 +56,19 @@ function isAdaptivePortraitPlay() {
   try { return document.documentElement.getAttribute('data-adaptive-play') === ADAPTIVE_PLAY; } catch (_error) { return false; }
 }
 
+function notifyAdaptivePlayChange() {
+  try {
+    window.requestAnimationFrame(() => {
+      if (typeof window.reconfigureGameDrawersForAdaptivePlay === 'function') {
+        window.reconfigureGameDrawersForAdaptivePlay(isAdaptivePortraitPlay());
+        return;
+      }
+      if (typeof window.updateBottomLayout === 'function') window.updateBottomLayout();
+      if (typeof window.renderSeats === 'function') window.renderSeats();
+    });
+  } catch (_error) {}
+}
+
 function syncAdaptivePlayState(interfaceSize = sizePreference()) {
   let active = false;
   try { active = interfaceSize === 'extra-large' && window.matchMedia(ADAPTIVE_PLAY_QUERY).matches; } catch (_error) {}
@@ -64,16 +77,6 @@ function syncAdaptivePlayState(interfaceSize = sizePreference()) {
     const root = document.documentElement;
     if (active) root.setAttribute('data-adaptive-play', ADAPTIVE_PLAY);
     else root.removeAttribute('data-adaptive-play');
-    for (const panel of [document.getElementById('g-chat-panel'), document.getElementById('g-log-panel')]) {
-      if (!panel) continue;
-      if (active) {
-        panel.setAttribute('role', 'dialog');
-        panel.setAttribute('aria-modal', 'false');
-      } else {
-        panel.removeAttribute('role');
-        panel.removeAttribute('aria-modal');
-      }
-    }
   } catch (_error) {}
   return changed;
 }
@@ -105,10 +108,10 @@ function applyAccessibilityPreferences() {
     sizeChanged = previousSize !== null && previousSize !== preferences.interfaceSize;
   } catch (_error) {}
   syncControls(preferences);
-  if (sizeChanged || adaptiveChanged) {
+  if (adaptiveChanged) notifyAdaptivePlayChange();
+  else if (sizeChanged) {
     try {
       window.requestAnimationFrame(() => {
-        if (adaptiveChanged && typeof window.updateBottomLayout === 'function') window.updateBottomLayout();
         if (typeof window.renderSeats === 'function') window.renderSeats();
       });
     } catch (_error) {}
@@ -220,10 +223,7 @@ function bind() {
     });
     window.matchMedia(ADAPTIVE_PLAY_QUERY).addEventListener('change', () => {
       if (!syncAdaptivePlayState()) return;
-      window.requestAnimationFrame(() => {
-        if (typeof window.updateBottomLayout === 'function') window.updateBottomLayout();
-        if (typeof window.renderSeats === 'function') window.renderSeats();
-      });
+      notifyAdaptivePlayChange();
     });
   } catch (_error) {}
   applyAccessibilityPreferences();
