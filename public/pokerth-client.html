@@ -1713,7 +1713,11 @@ function _processAvatarFile(file) {
     <button class="btn-primary" onclick="App.connect()" data-i18n="connect">CONNECT</button>
     <div id="cstatus" class="status"></div>
     <div class="live-only live-stats-host" id="live-stats-host"></div>
-    <div class="live-only live-lang-row"><button class="btn-sm btn-icon" id="lang-toggle-connect" onclick="openLangMenu(event)" title="Language" data-i18n-title="advLanguage">🌐</button><button class="btn-sm btn-icon" id="live-mode-connect" onclick="liveCycleThemeMode()" title="Light / dark" data-i18n-title="sectionPalette"></button></div>
+    <div class="live-only live-card-corners" aria-hidden="false">
+      <button class="btn-sm btn-icon live-tl" id="lang-toggle-connect" onclick="openLangMenu(event)" title="Language" data-i18n-title="advLanguage">🌐</button>
+      <button class="btn-sm btn-icon live-tr" id="live-mode-connect" onclick="liveCycleThemeMode()" title="Light / dark" data-i18n-title="sectionPalette"></button>
+    </div>
+    
 
     <!-- Lien d'inscription pokerth.net : visible UNIQUEMENT en mode Internet /
          PokerTH.net (modes internes guest/auth). Affiché / masqué par

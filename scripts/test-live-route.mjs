@@ -82,14 +82,18 @@ for (const sel of ['#login-form', '#tls-row', '#register-link-row', '#server-mod
     new RegExp(':root\\[data-live="1"\\] ' + sel + '[,\\s]').test(css));
 }
 check('the real CONNECT button is kept', !/:root\[data-live="1"\][^{]*\.btn-primary[^{]*\{ display: none/.test(css));
-// Idle notes go, anything that reports stays: only keyed messages are hidden.
-check('idle status notes are hidden',
-  /#cstatus\[data-status-key\]:not\(\[data-status-key=""\]\) \{ display: none/.test(css));
-check('errors and progress keep the status line',
-  !/:root\[data-live="1"\] #cstatus \{ display: none/.test(css));
-check('the status key reaches the DOM',
-  /if \(el\.dataset\) el\.dataset\.statusKey = key \|\| '';/.test(
-    fs.readFileSync(path.join(root, 'public', 'modules', 'net', 'session.mjs'), 'utf8')));
+// Nothing under the button but the figures — except an error, which a
+// spectator who cannot connect has to be told about.
+check('the status line is silent on /live',
+  /:root\[data-live="1"\] #cstatus \{ display: none; \}/.test(css));
+check('errors still get through',
+  /:root\[data-live="1"\] #cstatus\.err \{ display: block; \}/.test(css));
+check('language sits in the top-left corner of the card',
+  /\.live-card-corners \.live-tl \{ left: 10px; \}/.test(css));
+check('light\/dark sits in the top-right',
+  /\.live-card-corners \.live-tr \{ right: 10px; \}/.test(css));
+check('the card is the positioning context',
+  /:root\[data-live="1"\] #s-connect \.card \{ position: relative; \}/.test(css));
 check('the figures sit below the button, where the hint was',
   html.indexOf('id="cstatus"') < html.indexOf('id="live-stats-host"'));
 check('each figure carries its translated wording',

@@ -290,6 +290,16 @@ highlights below.
   every entry now carries both.
 
 ### Changed
+- **`/live` — a quieter table and a tidier login card** (`web.92`) — the hand
+  log and the poker-combinations card go: one is a record of a session the
+  spectator has no part in, the other a reminder for someone deciding a move.
+  Buttons, panels and openers all, so nothing can build them. On the login
+  card, language is pinned to the top-left corner and light/dark to the
+  top-right, sitting on the card rather than in its column, which keeps the
+  logo centred. Everything under the button is gone except the figures — an
+  error still shows, since a spectator who cannot connect has to be told why.
+  And the figures now follow a language change immediately instead of keeping
+  the previous language until the next poll.
 - **`/live` carries less of the web client** (`web.91`) — no local backup: the
   feature is off at its root check, so there is no banner offering to save
   settings a spectator never made, no folder handle and no IndexedDB. No

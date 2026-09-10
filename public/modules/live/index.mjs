@@ -145,5 +145,11 @@ if (window.LIVE_MODE) {
     applyLiveDefaults();
     initLobbySubscription();
     paintModeButtons();
+    // The log and the combinations card are hidden by the stylesheet; stub
+    // their openers too, so a stray call from the overflow menu or a keyboard
+    // shortcut cannot build a panel nobody can close.
+    ['toggleLog', 'toggleHandsHelp'].forEach(function (fn) {
+      try { window[fn] = function () {}; } catch (e) {}
+    });
   });
 }

@@ -12,7 +12,7 @@
 // `live_stats`, stale counters, pokerth.net unreachable) the line stays
 // hidden and the card looks exactly as it did before.
 // ═══════════════════════════════════════════════════════════════════
-import { t } from '../i18n.mjs';
+import { t, onLangChange } from '../i18n.mjs';
 
 const EL_ID = 'lc-live';
 const FALLBACK_SEC = 60;
@@ -100,7 +100,17 @@ function _hide() {
   el.textContent = '';
 }
 
+// Last payload, kept so a language change can repaint without waiting for the
+// next poll. The figures carry their wording as text now, so switching
+// language used to leave the previous language on screen for up to a minute.
+let _lastData = null;
+
+// Guarded: test-live-stats loads this module with its imports stripped, and
+// a missing binding must not stop the icons being checked.
+try { onLangChange(function () { if (_lastData) _render(_lastData); }); } catch (e) {}
+
 function _render(d) {
+  _lastData = d;
   const el = _el();
   if (!el) return;
   if (!d || d.ok !== true || typeof d.online !== 'number') { _hide(); return; }

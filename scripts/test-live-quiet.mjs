@@ -34,15 +34,15 @@ check('no auth notice',
   /function maybeShowAuthNotice\(\) \{[\s\S]{0,260}if \(window\.LIVE_MODE\) return;/.test(client));
 check('no poll',
   /window\._pollOnScreen = function \(id\) \{[\s\S]{0,200}if \(window\.LIVE_MODE\) \{ _close\(\); return; \}/.test(poll));
-check('no idle status notes',
-  /#cstatus\[data-status-key\]:not\(\[data-status-key=""\]\) \{ display: none/.test(css));
+check('nothing under the button but the figures',
+  /:root\[data-live="1"\] #cstatus \{ display: none; \}/.test(css));
 check('no install prompt', /:root\[data-live="1"\] #install-btn/.test(css));
 
 // Kept: these report, they do not advertise.
 check('the inactivity warning still reaches a spectator',
   /function onTimeoutWarning/.test(social) && !/onTimeoutWarning[\s\S]{0,200}LIVE_MODE/.test(social));
-check('errors and progress keep the status line',
-  !/:root\[data-live="1"\] #cstatus \{ display: none/.test(css));
+check('a spectator who cannot connect is still told why',
+  /:root\[data-live="1"\] #cstatus\.err \{ display: block; \}/.test(css));
 
 console.log(failed ? `\n${failed} check(s) failed` : '\nall checks passed');
 process.exit(failed ? 1 : 0);

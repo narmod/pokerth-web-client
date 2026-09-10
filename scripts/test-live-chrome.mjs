@@ -56,5 +56,21 @@ check('it reuses the palette axis rather than adding a setting',
 check('an unrelated palette falls back to automatic',
   /MODES\[\(i < 0 \? -1 : i\) \+ 1\] \|\| MODES\[0\]/.test(live));
 
+// Player aids on the felt: a log of a session the spectator has no part in,
+// and a combinations reminder for someone deciding a move.
+check('the log and combinations buttons are gone',
+  /:root\[data-live="1"\] #hands-toggle-btn,[\s\S]{0,160}#log-toggle-btn/.test(css));
+check('and their panels with them',
+  /:root\[data-live="1"\] #g-log-panel,[\s\S]{0,80}#hands-overlay/.test(css));
+check('their openers are stubbed, so nothing can build them',
+  /\['toggleLog', 'toggleHandsHelp'\]/.test(live));
+
+// The figures carry their wording as text, so a language change has to
+// repaint them instead of leaving the old language up until the next poll.
+const stats = R('public/modules/ui/live-stats.mjs');
+check('the server figures follow a language change',
+  /onLangChange\(function \(\) \{ if \(_lastData\) _render\(_lastData\); \}\)/.test(stats));
+check('the last payload is kept for that repaint', /_lastData = d;/.test(stats));
+
 console.log(failed ? `\n${failed} check(s) failed` : '\nall checks passed');
 process.exit(failed ? 1 : 0);
