@@ -16,6 +16,17 @@ release. Per-build detail is on the
 highlights below.
 
 ### Added
+- **Admin tells `/live` apart from the web client** (`web.100`) — a spectator
+  on the embedded view used to count as a pokerth.net player in both places
+  the admin reads. *Traffic → Where sessions open*: the connect beacon now
+  reports mode `live`, kept in its own per-day and all-time counter, its own
+  `conn_live` CSV column (appended last) and DB-mirror column (added on start
+  when missing); it is left out of the players' mode shares. *Live
+  connections*: sockets from `/live` send `&live=1`, `/admin/sessions` tags
+  each bridge and notice channel, and the board splits its summary into web
+  client and `/live`. Broadcast targeting is unchanged. `/live` sessions
+  opened before this build stay under pokerth.net. Needs a proxy restart.
+  Test in `scripts/test-live-split.mjs`.
 - **`/live` — fullscreen in both headers** (`web.97`) — out of the ••• menu
   and into the lobby and table headers. It reuses `#fs-btn-lobby` and
   `#fs-btn-game`, which already exist with their handler and translated title

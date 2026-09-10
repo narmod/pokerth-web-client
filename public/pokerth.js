@@ -4707,7 +4707,7 @@ const App = (() => {
     // &v= : version du client annoncée au proxy, purement descriptive (tableau
     // de bord admin → qui tourne encore sur une version périmée). Jamais lue
     // pour prendre une décision côté serveur.
-    const u = baseUrl + (baseUrl.indexOf('?') >= 0 ? '&' : '?') + 'notify=1&mode=' + (mode === 'offline' ? 'offline' : 'pthnet') + (window.BUILD_VERSION ? '&v=' + encodeURIComponent(window.BUILD_VERSION) : '');
+    const u = baseUrl + (baseUrl.indexOf('?') >= 0 ? '&' : '?') + 'notify=1&mode=' + (mode === 'offline' ? 'offline' : 'pthnet') + (window.LIVE_MODE ? '&live=1' : '') + (window.BUILD_VERSION ? '&v=' + encodeURIComponent(window.BUILD_VERSION) : '');
     if (S._notifyWS && S._notifyUrl === u) return; // déjà ouvert sur la bonne URL
     _closeNotifyWS();
     S._notifyUrl = u;
@@ -6148,7 +6148,7 @@ const App = (() => {
       var _bcMode = (function () { var m = _cntMode(); return m === 'pokerthnet' ? 'pthnet' : m; })();
       const finalUrl = window.directWS
         ? 'wss://www.pokerth.net:443/pthlive'
-        : effProxyUrl + '?host=' + encodeURIComponent(host) + '&port=' + encodeURIComponent(port) + '&tls=' + tlsParam + '&sid=' + encodeURIComponent(_getSessionId()) + '&mode=' + _bcMode + (window.BUILD_VERSION ? '&v=' + encodeURIComponent(window.BUILD_VERSION) : '');
+        : effProxyUrl + '?host=' + encodeURIComponent(host) + '&port=' + encodeURIComponent(port) + '&tls=' + tlsParam + '&sid=' + encodeURIComponent(_getSessionId()) + '&mode=' + _bcMode + (window.LIVE_MODE ? '&live=1' : '') + (window.BUILD_VERSION ? '&v=' + encodeURIComponent(window.BUILD_VERSION) : '');
 
       setStatus(window.directWS ? t('connDirect') : t('connProxy'));
 
@@ -11431,7 +11431,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.8-web.99'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.8-web.100'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
@@ -11538,8 +11538,11 @@ window.BUILD_VERSION='2.1.8-web.99'; try{ var b=document.getElementById('cf-buil
     return window.directWS ? 'pokerthnet' : 'lan';
   };
   window._pthCountConnect = function (mode) {
+    // /live is counted apart from the web client: a spectator session is not a
+    // player opening pokerth.net.
+    if (window.LIVE_MODE) mode = 'live';
     try {
-      if (['pokerthnet', 'lan', 'offline'].indexOf(mode) < 0) return;
+      if (['pokerthnet', 'lan', 'offline', 'live'].indexOf(mode) < 0) return;
       try { if (localStorage.getItem('pth_no_count') === '1') return; } catch (e) {}
       var k = 'pth_conn_' + mode;
       if (sessionStorage.getItem(k)) return;

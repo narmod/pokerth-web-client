@@ -4275,7 +4275,7 @@ const VISIT_RETENTION_DAYS = 400; // keep per-day id sets this long (covers up t
 function emptyVisitsStore() {
   return {
     days: {}, totalV: 0, totalRet: 0, allU: {},
-    allM: { pokerthnet: 0, lan: 0, offline: 0 },
+    allM: { pokerthnet: 0, lan: 0, offline: 0, live: 0 },
     env: {}, envSince: 0, music: {}, musicSince: 0, hourSince: 0,
     musicVotes: {}, musicVotesSince: 0
   };
@@ -4289,7 +4289,7 @@ try {
     visitsStore.allU   = (_vs.allU && typeof _vs.allU === 'object') ? _vs.allU : {};
     visitsStore.totalRet = (typeof _vs.totalRet === 'number') ? _vs.totalRet : 0;
     const _am = (_vs.allM && typeof _vs.allM === 'object') ? _vs.allM : {};
-    visitsStore.allM   = { pokerthnet: _am.pokerthnet || 0, lan: _am.lan || 0, offline: _am.offline || 0 };
+    visitsStore.allM   = { pokerthnet: _am.pokerthnet || 0, lan: _am.lan || 0, offline: _am.offline || 0, live: _am.live || 0 };
     visitsStore.env    = (_vs.env && typeof _vs.env === 'object') ? _vs.env : {};
     visitsStore.envSince = (typeof _vs.envSince === 'number') ? _vs.envSince : 0;
     visitsStore.music  = (_vs.music && typeof _vs.music === 'object') ? _vs.music : {};
@@ -4336,7 +4336,10 @@ function pruneVisitDays() {
   keys.sort();
   keys.slice(0, keys.length - VISIT_RETENTION_DAYS).forEach(function (k) { delete visitsStore.days[k]; });
 }
-const VISIT_MODES = ['pokerthnet', 'lan', 'offline'];
+// 'live' = a /live spectator session (embedded on pokerth.net). Counted apart
+// from 'pokerthnet' so spectators never inflate the players' share; sessions
+// opened before 2.1.8-web.100 stay under 'pokerthnet', they cannot be told apart.
+const VISIT_MODES = ['pokerthnet', 'lan', 'offline', 'live'];
 function recordModeConnect(mode) {
   if (VISIT_MODES.indexOf(mode) < 0) return;
   const day = visitDayKey();
@@ -4641,7 +4644,7 @@ function visitWindow(daysBack, offset) {
   offset = offset || 0;
   let v = 0, nw = 0, rt = 0;
   const u = {};
-  const m = { pokerthnet: 0, lan: 0, offline: 0 };
+  const m = { pokerthnet: 0, lan: 0, offline: 0, live: 0 };
   for (let i = offset; i < offset + daysBack; i++) {
     const d = new Date(now);
     d.setDate(now.getDate() - i);
@@ -4781,7 +4784,7 @@ function visitsSummary() {
     semester: visitWindow(180),
     year: visitWindow(365),
     prev: { todayToHour: visitYesterdayToHour(), yesterday: visitWindow(1, 1), week: visitWindow(7, 7), month: visitWindow(30, 30) },
-    allTime: { v: visitsStore.totalV || 0, u: Object.keys(visitsStore.allU).length, nw: Object.keys(visitsStore.allU).length, rt: visitsStore.totalRet || 0, m: (function () { const am = visitsStore.allM || {}; return { pokerthnet: am.pokerthnet || 0, lan: am.lan || 0, offline: am.offline || 0 }; })() },
+    allTime: { v: visitsStore.totalV || 0, u: Object.keys(visitsStore.allU).length, nw: Object.keys(visitsStore.allU).length, rt: visitsStore.totalRet || 0, m: (function () { const am = visitsStore.allM || {}; return { pokerthnet: am.pokerthnet || 0, lan: am.lan || 0, offline: am.offline || 0, live: am.live || 0 }; })() },
     series: series,
     hours48: visitHourSeries(48),
     hourProfile: visitHourProfile(30),
@@ -4844,7 +4847,7 @@ async function initDb() {
     await _dbPool.query('CREATE TABLE IF NOT EXISTS traffic_daily (' +
       'day DATE PRIMARY KEY, visits INT NOT NULL DEFAULT 0, unique_visitors INT NOT NULL DEFAULT 0, ' +
       'new_visitors INT NOT NULL DEFAULT 0, returning_visitors INT NOT NULL DEFAULT 0, ' +
-      'conn_pokerthnet INT NOT NULL DEFAULT 0, conn_lan INT NOT NULL DEFAULT 0, conn_offline INT NOT NULL DEFAULT 0, ' +
+      'conn_pokerthnet INT NOT NULL DEFAULT 0, conn_lan INT NOT NULL DEFAULT 0, conn_offline INT NOT NULL DEFAULT 0, conn_live INT NOT NULL DEFAULT 0, ' +
       'updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4');
     await _dbPool.query('CREATE TABLE IF NOT EXISTS leaderboard (' +
       'player VARCHAR(190) PRIMARY KEY, hands_played INT NOT NULL DEFAULT 0, hands_won INT NOT NULL DEFAULT 0, ' +
@@ -4862,6 +4865,7 @@ async function initDb() {
     try { await _dbPool.query("ALTER TABLE broadcasts ADD COLUMN IF NOT EXISTS target VARCHAR(16) NOT NULL DEFAULT 'all'"); } catch (e) {}
     try { await _dbPool.query('ALTER TABLE broadcasts ADD COLUMN IF NOT EXISTS start_at BIGINT DEFAULT NULL'); } catch (e) {}
     try { await _dbPool.query('ALTER TABLE broadcasts ADD COLUMN IF NOT EXISTS countdown_at BIGINT DEFAULT NULL'); } catch (e) {}
+    try { await _dbPool.query('ALTER TABLE traffic_daily ADD COLUMN IF NOT EXISTS conn_live INT NOT NULL DEFAULT 0'); } catch (e) {}
     _dbStatus.connected = true; _dbStatus.error = '';
     console.log('[db] MySQL mirror connected (' + cfg.database + ', source: ' + cfg.source + ')');
     dbFlushTrafficToday();
@@ -4885,9 +4889,9 @@ async function dbFlushTrafficToday() {
     const u = b.ids ? Object.keys(b.ids).length : 0;
     const m = b.m || {};
     await _dbPool.query(
-      'INSERT INTO traffic_daily (day, visits, unique_visitors, new_visitors, returning_visitors, conn_pokerthnet, conn_lan, conn_offline) VALUES (?,?,?,?,?,?,?,?) ' +
-      'ON DUPLICATE KEY UPDATE visits=VALUES(visits), unique_visitors=VALUES(unique_visitors), new_visitors=VALUES(new_visitors), returning_visitors=VALUES(returning_visitors), conn_pokerthnet=VALUES(conn_pokerthnet), conn_lan=VALUES(conn_lan), conn_offline=VALUES(conn_offline)',
-      [day, b.v || 0, u, b.nw || 0, b.rt || 0, m.pokerthnet || 0, m.lan || 0, m.offline || 0]
+      'INSERT INTO traffic_daily (day, visits, unique_visitors, new_visitors, returning_visitors, conn_pokerthnet, conn_lan, conn_offline, conn_live) VALUES (?,?,?,?,?,?,?,?,?) ' +
+      'ON DUPLICATE KEY UPDATE visits=VALUES(visits), unique_visitors=VALUES(unique_visitors), new_visitors=VALUES(new_visitors), returning_visitors=VALUES(returning_visitors), conn_pokerthnet=VALUES(conn_pokerthnet), conn_lan=VALUES(conn_lan), conn_offline=VALUES(conn_offline), conn_live=VALUES(conn_live)',
+      [day, b.v || 0, u, b.nw || 0, b.rt || 0, m.pokerthnet || 0, m.lan || 0, m.offline || 0, m.live || 0]
     );
     _dbStatus.lastWrite = new Date().toISOString(); _dbStatus.connected = true; _dbStatus.error = '';
   } catch (e) { _dbStatus.error = e.message; }
@@ -6245,12 +6249,12 @@ function handleAdmin(req, res, reqPathOnly, query) {
     if (!adminAuthed(query)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
     const fmt = (query.format === 'csv') ? 'csv' : 'json';
     if (fmt === 'csv') {
-      const lines = ['date,visits,unique_visitors,new_visitors,returning_visitors,conn_pokerthnet,conn_lan,conn_offline'];
+      const lines = ['date,visits,unique_visitors,new_visitors,returning_visitors,conn_pokerthnet,conn_lan,conn_offline,conn_live'];
       Object.keys(visitsStore.days).sort().forEach(function (d) {
         const b = visitsStore.days[d] || {};
         const u = b.ids ? Object.keys(b.ids).length : 0;
         const m = b.m || {};
-        lines.push([d, b.v || 0, u, b.nw || 0, b.rt || 0, m.pokerthnet || 0, m.lan || 0, m.offline || 0].join(','));
+        lines.push([d, b.v || 0, u, b.nw || 0, b.rt || 0, m.pokerthnet || 0, m.lan || 0, m.offline || 0, m.live || 0].join(','));
       });
       res.writeHead(200, { 'Content-Type': 'text/csv; charset=utf-8', 'Cache-Control': 'no-store', 'Content-Disposition': 'attachment; filename="pokerth-traffic.csv"' });
       res.end(lines.join('\n') + '\n');
@@ -9496,7 +9500,7 @@ function _sessionsSnapshot() {
   _liveSessions.forEach(function (S) {
     bridges.push({
       id: S.id, sid: S.sid ? String(S.sid).slice(0, 8) : '',
-      nick: S.chatNick || '', auth: !!S.isAuthLogin,
+      nick: S.chatNick || '', auth: !!S.isAuthLogin, live: !!S.live,
       mode: (S.ws && S.ws._bcMode) || S.bcMode || '',
       host: S.host, port: S.port, tls: !!S.useTls,
       ver: S.ver || '', ua: S.ua || '', ip: _maskIp(S.ip),
@@ -9511,7 +9515,7 @@ function _sessionsSnapshot() {
   try {
     wss.clients.forEach(function (c) {
       if (!c._notify) return;
-      notify.push({ id: c._nid, mode: c._bcMode || '', ver: c._ver || '',
+      notify.push({ id: c._nid, mode: c._bcMode || '', live: !!c._live, ver: c._ver || '',
                     ua: c._ua || '', ip: _maskIp(c._ip), startedAt: c._startedAt || now,
                     attached: c.readyState === 1 });
     });
@@ -9701,6 +9705,7 @@ function _attachWs(S, ws) {
   if (ws._ip) S.ip = ws._ip;
   if (ws._ua) S.ua = ws._ua;
   if (ws._ver) S.ver = ws._ver;
+  S.live = !!ws._live;
   // Relay scope = the upstream this socket is bridged to. Reactions/avatars
   // only fan out to peers sharing the same host:port.
   ws._relayKey = S.host + ':' + S.port;
@@ -9835,6 +9840,9 @@ wss.on('connection', (ws, req) => {
   // les onglets ouverts avant la mise a jour du client.
   const modeParam = (function () { const m = params.get('mode'); return (m === 'pthnet' || m === 'lan' || m === 'offline') ? m : null; })();
   ws._modeParam = modeParam;
+  // &live=1: the socket comes from /live (spectator view). Descriptive only --
+  // the admin board and nothing else; broadcast targeting still uses _bcMode.
+  ws._live = params.get('live') === '1';
   // Métadonnées purement descriptives (tableau de bord admin) : version du
   // client web annoncée par &v=, User-Agent et IP du navigateur. Aucune n'est
   // utilisée pour une décision — ni filtrage, ni routage.
