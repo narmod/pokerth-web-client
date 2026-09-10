@@ -54,6 +54,9 @@ function _seatGeomOpts(opts) {
     mobile: mob,
     strip:  (o.strip  !== undefined) ? o.strip  : (inset ? 20 : 0),   // SeatStyle.betStripExtra
     outset: (o.outset !== undefined) ? o.outset : (inset ? 40 : 68),  // SeatStyle.betSideOutset
+    // Optional desktop semantic-scale inputs. Defaults preserve QML geometry.
+    sideGap: (typeof o.sideGap === 'number' && isFinite(o.sideGap)) ? Math.max(0, o.sideGap) : null,
+    radiusMax: (typeof o.radiusMax === 'number' && isFinite(o.radiusMax)) ? Math.max(0.36, Math.min(0.46, o.radiusMax)) : 0.36,
     // Marge basse RÉELLE de la self côté web (ajustement narmod 17-19/07 :
     // 24 px pour décoller la self du panneau d'action flottant ; QML = 4).
     // Les rangées mobiles doivent modéliser la self LÀ OÙ le rendu la met,
@@ -95,7 +98,7 @@ function _qmlLandscapeLayout(oppCnt, zW, zH, compact, zoomMul, spectating, opts)
   // (betSideOutset) — l'inset libère 28 px de base par flanc pour des boxes
   // plus grandes, le classic réserve honnêtement la place du chip+montant.
   // Desktop garde le forfait historique 48.
-  var sideBadgeGapBase = _st.mobile ? _st.outset : 48;
+  var sideBadgeGapBase = _st.mobile ? _st.outset : (_st.sideGap === null ? 48 : _st.sideGap);
   // Slack de paire de la bisection — QML 2.1.8 : 12 en landscapeCompact
   // (les paires hautes/latérales se touchaient visuellement sur iPhone
   // mini), 4 sinon (l'ancien « 4 les deux modes » datait de 2.1.3).
@@ -135,7 +138,7 @@ function _qmlLandscapeLayout(oppCnt, zW, zH, compact, zoomMul, spectating, opts)
     var selfGapY = spectating ? 0
         : (compact ? Math.max(8, selfBadgeGapBase * s * 0.5) : selfBadgeGapBase * s);
     var sideX = (sideMargin + visualW / 2) / Math.max(zW, 1);
-    var radiusX = Math.min(0.36, Math.max(0.22, 0.5 - sideX));
+    var radiusX = Math.min(_st.radiusMax, Math.max(0.22, 0.5 - sideX));
     // STRICT QML : la BISECTION (feasibleAt) réserve le surplomb badge haut
     // (topBadgeExt 39·s en compact), mais buildLandscapeSlots trace les
     // slots SANS cette réserve (deux ellipses distinctes, comme le source).
