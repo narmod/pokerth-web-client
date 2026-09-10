@@ -363,9 +363,15 @@
     .ck .ckn{font-size:.6rem;gap:3px}
     .ckf{width:13px;height:10px}
     .ck .cd{font-size:.58rem}
-    .top{flex-wrap:wrap}
-    .topbtns{flex-wrap:wrap;flex:1 1 auto}
-    .top>.tophd{flex:1 1 auto}
+    /* Titre et boutons partagent la premiere ligne : theme et deconnexion restent
+       en haut a droite. .topbtns s'efface (display:contents) pour que la pastille
+       live, trop large pour cette ligne, descende seule en pleine largeur au lieu
+       d'entrainer les boutons avec elle. */
+    .top{flex-wrap:wrap;gap:6px 8px}
+    .topbtns{display:contents}
+    .top>.tophd{flex:1 1 0}
+    .topbtns>.ghost{order:1;flex:0 0 auto;margin-top:2px}
+    .toplive{order:2;flex:1 1 100%;justify-content:center}
     .tophost{order:3;flex:1 1 100%;max-width:none;text-align:center;margin-top:6px}
     .tabs{overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;gap:4px}
     .tabs::-webkit-scrollbar{display:none}

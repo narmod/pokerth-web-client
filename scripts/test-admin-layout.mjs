@@ -116,6 +116,10 @@ const smallTop = /@media\(max-width:600px\)\{([^]*?)\n  \}/g;
 const phoneCss = [...admin.matchAll(smallTop)].map(m => m[1]).join('\n');
 ok(/\.tophost\{order:3;flex:1 1 100%/.test(phoneCss),
   'and on a phone it drops to its own full-width line instead of squeezing between title and buttons');
+ok(/\.topbtns\{display:contents\}/.test(phoneCss) && /\.topbtns>\.ghost\{order:1/.test(phoneCss),
+  'on a phone the theme and log-out buttons stay on the title line, top right');
+ok(/\.toplive\{order:2;flex:1 1 100%/.test(phoneCss),
+  'while the live-stats pill, too wide for that line, drops below on its own');
 
 // ── Family bar stands out ─────────────────────────────────────────────────
 ok(/\.gtab\{flex:1 1 0/.test(admin),

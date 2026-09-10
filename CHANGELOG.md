@@ -450,6 +450,12 @@ highlights below.
   (`scale 1.03`, 180 ms OutQuad) is applied to the seat plate.
 
 ### Fixed
+- **Admin header on a phone** (`web.98`) — under 600 px the live-stats pill
+  sat in the same box as the theme and log-out buttons; too wide to share the
+  title's line, it wrapped and dragged both buttons down with it. The box now
+  steps aside (`display:contents`): title and buttons keep the first line, top
+  right, and the pill drops below at full width, above the host chip.
+  Test in `scripts/test-admin-layout.mjs`.
 - **`/live` announced itself as a web client** (`web.96`) — `/live` goes through
   the same `buildInit` as the player client, so since `USE_CLIENT_TYPE_WEB`
   (`web.0`) its spectator sessions logged in as `CLIENT_TYPE_WEB` (0x03).
