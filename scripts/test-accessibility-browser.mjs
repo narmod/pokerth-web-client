@@ -42,31 +42,83 @@ async function chooseInterfaceSize(page, surface, value) {
 }
 
 async function populateLobby(page) {
-  await page.waitForFunction(() => window.PthState && typeof window.renderGames === 'function' && typeof window.renderPlayersList === 'function');
+  if (await page.locator('.game-row.gcard').count()) return;
+  await page.evaluate(async () => (await import('/modules/net/session.mjs')).show('s-connect'));
+  await page.locator('#s-connect.active').waitFor();
+  await page.locator('.login-card').nth(2).click();
+  await page.locator('#nick').fill('OutcomeTester');
   await page.evaluate(() => {
-    const state = window.PthState;
-    state.games = {
-      101: { name: 'Accessible Open Table', mode: 1, players: 2, maxPlayers: 8, type: 1, priv: false, timeout: 15, delay: 5 },
-      202: { name: 'Accessible Running Table', mode: 2, players: 5, maxPlayers: 10, type: 4, priv: false, timeout: 10, delay: 7 },
-    };
-    state.players = { 11: 'Alex', 12: 'Blair', 13: 'Casey' };
-    state._lobbyPids = new Set([11, 12, 13]);
-    state._lobbyPlayerCount = 3;
-    state._tableFilter = '0';
-    state._selectedGame = null;
-    state._openTables = new Set();
-    state._currentLoginMode = 'auth';
-    state.gId = 0;
-    state.amInGame = false;
-    state.loaded = true;
-    window.__lobbyOutcomeActions = [];
-    window.App.joinGame = (id) => window.__lobbyOutcomeActions.push(`join:${id}`);
-    window.App.spectateGame = (id) => window.__lobbyOutcomeActions.push(`spectate:${id}`);
-    window.renderGames();
-    window._refreshPlayersPill();
-    window.renderPlayersList();
+    class LobbyFixtureSocket extends EventTarget {
+      static CONNECTING = 0;
+      static OPEN = 1;
+      static CLOSING = 2;
+      static CLOSED = 3;
+      constructor(url) {
+        super();
+        this.url = url;
+        this.readyState = LobbyFixtureSocket.OPEN;
+        this.sent = [];
+        LobbyFixtureSocket.instance = this;
+        setTimeout(() => this.onopen && this.onopen({ target: this }), 0);
+      }
+      send(data) { this.sent.push(data); }
+      close() {
+        this.readyState = LobbyFixtureSocket.CLOSED;
+        if (this.onclose) this.onclose({ code: 1000, target: this });
+      }
+      receive(payload) {
+        const frame = new ArrayBuffer(4 + payload.byteLength);
+        new DataView(frame).setUint32(0, payload.byteLength, false);
+        new Uint8Array(frame).set(payload, 4);
+        this.onmessage({ data: frame, target: this });
+      }
+    }
+    window.WebSocket = LobbyFixtureSocket;
   });
+  await page.locator('.btn-primary[data-i18n="connect"]').click();
+  await page.waitForFunction(() => window.WebSocket.instance && typeof window.WebSocket.instance.onmessage === 'function');
+  const sawInit = await page.evaluate(async () => {
+    const { Proto } = await import('/modules/net/proto.mjs');
+    const { MSG } = await import('/modules/net/messages.mjs');
+    const socket = window.WebSocket.instance;
+    const envelope = (type, field, inner) => Proto.encode([[1, 0, type], [field, 2, Proto.encode(inner)]]);
+    const version = Proto.encode([[1, 0, 2], [2, 0, 1]]);
+    socket.receive(envelope(MSG.T.Announce, 2, [[1, 2, version], [2, 2, version], [4, 0, 0], [5, 0, 0]]));
+    const sentTypes = socket.sent.filter((frame) => frame instanceof ArrayBuffer).map((frame) => {
+      const bytes = new Uint8Array(frame);
+      return MSG.parse(bytes.slice(4)).type;
+    });
+    socket.receive(envelope(MSG.T.InitAck, 7, [[1, 2, new Uint8Array([1, 2, 3, 4])], [2, 0, 42]]));
+    for (const [pid, name] of [[11, 'Alex'], [12, 'Blair'], [13, 'Casey']]) {
+      socket.receive(envelope(MSG.T.PlayerList, 13, [[1, 0, pid], [2, 0, 0]]));
+      const info = Proto.encode([[1, 2, name], [3, 0, 2]]);
+      socket.receive(envelope(MSG.T.PlayerInfoReply, 20, [[1, 0, pid], [2, 2, info]]));
+    }
+    const game = (id, mode, name, maxPlayers, type, seats, timeout, delay) => envelope(MSG.T.GameListNew, 14, [
+      [1, 0, id], [2, 0, mode], [3, 0, 0], ...seats.map((pid) => [4, 0, pid]), [5, 0, seats[0]],
+      [6, 2, Proto.encode([[1, 2, name], [2, 0, type], [3, 0, maxPlayers], [10, 0, delay], [11, 0, timeout]])],
+    ]);
+    socket.receive(game(101, 1, 'Accessible Open Table', 8, 1, [11, 12], 15, 5));
+    socket.receive(game(202, 2, 'Accessible Running Table', 10, 4, [11, 12, 13, 14, 15], 10, 7));
+    socket.sent.length = 0;
+    return sentTypes.includes(MSG.T.Init);
+  });
+  assert.equal(sawInit, true, 'the production session did not answer Announce with Init');
+  await page.locator('#s-lobby.active').waitFor();
+  await page.locator('#g-filter-select').selectOption('0');
   await page.locator('.game-row.gcard').first().waitFor();
+}
+
+async function takeLobbyJoinOutcomes(page) {
+  return page.evaluate(async () => {
+    const { Proto } = await import('/modules/net/proto.mjs');
+    const { MSG } = await import('/modules/net/messages.mjs');
+    return window.WebSocket.instance.sent.splice(0)
+      .filter((frame) => frame instanceof ArrayBuffer)
+      .map((frame) => MSG.parse(new Uint8Array(frame).slice(4)))
+      .filter((message) => message.type === MSG.T.JoinExisting)
+      .map((message) => `${Proto.u32(message.sub, 4) ? 'spectate' : 'join'}:${Proto.u32(message.sub, 1)}`);
+  });
 }
 
 async function visibleMetrics(page, selectors) {
@@ -399,7 +451,7 @@ try {
       await page.locator('#players-panel .g-chat-panel-header button').click();
       await page.locator('.game-row .btn-join:not(.btn-spectate)').click();
       await page.locator('.game-row .btn-spectate').click();
-      assert.deepEqual(await page.evaluate(() => window.__lobbyOutcomeActions.splice(0)), ['join:101', 'spectate:202']);
+      assert.deepEqual(await takeLobbyJoinOutcomes(page), ['join:101', 'spectate:202']);
     }
   });
   await check('populated lobby names and player counts follow exact Interface sizes without clipping', async () => {
