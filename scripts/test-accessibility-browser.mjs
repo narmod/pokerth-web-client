@@ -253,8 +253,11 @@ async function turnCueOutcome(page) {
     const style = getComputedStyle(active, '::after');
     const inactiveStyle = inactive ? getComputedStyle(inactive, '::after') : null;
     const borderWidth = parseFloat(style.borderWidth);
+    const renderedWidth = parseFloat(style.width) + parseFloat(style.borderLeftWidth) + parseFloat(style.borderRightWidth);
+    const renderedHeight = parseFloat(style.height) + parseFloat(style.borderTopWidth) + parseFloat(style.borderBottomWidth);
     return {
       borderWidth,
+      prominence: Math.max(renderedWidth - active.offsetWidth, renderedHeight - active.offsetHeight),
       visible: borderWidth > 0 && style.borderStyle !== 'none' && style.content !== 'none',
       distinctFromInactive: !inactiveStyle || inactiveStyle.content === 'none' || inactiveStyle.borderStyle === 'none',
     };
@@ -778,6 +781,7 @@ try {
       const standardCue = await turnCueOutcome(page);
       assert.equal(standardCue.visible, true, `${seatCount}-seat Standard current-turn indication is not visible`);
       assert.equal(standardCue.distinctFromInactive, true, `${seatCount}-seat Standard current-turn cue is ambiguous`);
+      let previousCue = standardCue;
       for (const value of ['standard', 'large', 'extra-large']) {
         await chooseInterfaceSize(page, 'game', value);
         if (value !== 'standard') {
@@ -830,6 +834,8 @@ try {
           const cue = await turnCueOutcome(page);
           assert.equal(cue.visible, true, `${seatCount}-seat ${value} current-turn indication is not visible`);
           assert.equal(cue.distinctFromInactive, true, `${seatCount}-seat ${value} current-turn cue is ambiguous`);
+          assert.ok(cue.prominence > previousCue.prominence, `${seatCount}-seat ${value} current-turn cue did not grow`);
+          previousCue = cue;
           await assertEnhancedTargets(page, actionSelectors, `${seatCount}-seat ${value} action`);
           await assertKeyboardFocusVisible(page, actionSelectors, `${seatCount}-seat ${value} action`);
         }
