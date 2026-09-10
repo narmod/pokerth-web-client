@@ -44,7 +44,7 @@ check('no music slider in the sound popover',
 // Header.
 check('the build string is hidden', /:root\[data-live="1"\] \.live-ver \{ display: none/.test(css));
 check('the buttons are pushed hard right',
-  /:root\[data-live="1"\] #lang-toggle-lobby,[\s\S]{0,80}margin-left: auto/.test(css));
+  /:root\[data-live="1"\] #fs-btn-lobby,[\s\S]{0,90}margin-left: auto/.test(css));
 for (const id of ['live-mode-lobby', 'live-mode-game', 'live-mode-connect']) {
   check('a light/dark button in ' + id.replace('live-mode-', ''),
     new RegExp('id="' + id + '"').test(html));
@@ -87,9 +87,17 @@ check('no appearance button in the lobby',
 check('at the table it sits left of language and light\/dark',
   html.indexOf('id="live-theme-game"') < html.indexOf('id="lang-toggle-game"') &&
   html.indexOf('id="lang-toggle-game"') < html.indexOf('id="live-mode-game"'));
-check('and it is the one pushed hard right there',
-  /:root\[data-live="1"\] #live-theme-game \{ margin-left: auto/.test(css) ||
-  /#live-theme-game \{ margin-left: auto !important; \}/.test(css));
+// Fullscreen comes out of the ••• menu into both headers. The ids already
+// existed with their handler and translated title; they were hidden at all
+// sizes since the move to that menu, so live mode wins those rules back.
+check('fullscreen is shown in both headers',
+  /:root\[data-live="1"\] #fs-btn-lobby,[\s\S]{0,200}display: inline-flex !important/.test(css));
+check('including against the mobile rule',
+  /:root\[data-live="1"\] #s-lobby #fs-btn-lobby/.test(css));
+check('it is no longer hidden by the live rules',
+  !/:root\[data-live="1"\] #fs-btn-lobby,\n:root\[data-live="1"\] #lobby-chat-btn/.test(css));
+check('and it carries the margin that pushes the group right',
+  /:root\[data-live="1"\] #fs-btn-lobby,[\s\S]{0,90}margin-left: auto !important/.test(css));
 
 // A language change must land at once everywhere /live draws its own text.
 const lobbyMod = R('public/modules/live/lobby.mjs');

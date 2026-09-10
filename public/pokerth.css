@@ -11455,7 +11455,6 @@ html[data-seat-struct="qml"] .seat-narrow .seat-name .seat-note-stars { font-siz
 /* Lobby header — no account actions, no side panels: those arrive as tabs in
    the live lobby instead. */
 :root[data-live="1"] #s-lobby .header .header-pills,
-:root[data-live="1"] #fs-btn-lobby,
 :root[data-live="1"] #lobby-chat-btn,
 :root[data-live="1"] #pm-btn-lobby,
 :root[data-live="1"] #forum-btn-lobby,
@@ -11463,7 +11462,6 @@ html[data-seat-struct="qml"] .seat-narrow .seat-name .seat-note-stars { font-siz
 :root[data-live="1"] #s-lobby .hdr-ovf-wrap,
 /* Game header — the back arrow, the table name and sound stay; everything a
    spectator cannot act on goes. */
-:root[data-live="1"] #fs-btn-game,
 :root[data-live="1"] #forum-btn-game,
 :root[data-live="1"] #ranking-btn-game,
 :root[data-live="1"] #tableranking-btn-game,
@@ -11590,7 +11588,10 @@ html[data-seat-struct="qml"] .seat-narrow .seat-name .seat-note-stars { font-siz
    sync with exactly these three — so it has to win those two rules back. */
 :root[data-live="1"] #lang-toggle-lobby,
 :root[data-live="1"] #lang-toggle-game,
-:root[data-live="1"] #s-lobby #lang-toggle-lobby { display: inline-flex !important; }
+:root[data-live="1"] #fs-btn-lobby,
+:root[data-live="1"] #fs-btn-game,
+:root[data-live="1"] #s-lobby #lang-toggle-lobby,
+:root[data-live="1"] #s-lobby #fs-btn-lobby { display: inline-flex !important; }
 
 :root[data-live="1"] .header [id^="lang-toggle-"] svg,
 :root[data-live="1"] .live-lang-row [id^="lang-toggle-"] svg {
@@ -11761,8 +11762,10 @@ html[data-seat-struct="qml"] .seat-narrow .seat-name .seat-note-stars { font-siz
    embedded in the site it is noise. The language, light/dark and appearance
    buttons belong hard right, so the guest name keeps the left. */
 :root[data-live="1"] .live-ver { display: none !important; }
-:root[data-live="1"] #lang-toggle-lobby,
-:root[data-live="1"] #live-theme-game { margin-left: auto !important; }
+/* Fullscreen is now the first visible button of the group in both headers, so
+   it carries the margin that pushes the whole set hard right. */
+:root[data-live="1"] #fs-btn-lobby,
+:root[data-live="1"] #fs-btn-game { margin-left: auto !important; }
 /* Appearance is a table setting — deck, felt, seat pack. In the lobby there
    is no table to dress, so the button has nothing to change there. */
 :root[data-live="1"] #live-theme-lobby { display: none !important; }

@@ -163,7 +163,7 @@ check('the language buttons have visible content of their own',
 // the flag sync, so it must win those rules back — asserting the markup alone
 // is what let them ship invisible.
 check('the language buttons are shown again in live mode',
-  /:root\[data-live="1"\] #lang-toggle-lobby,[\s\S]{0,160}display: inline-flex !important/.test(css));
+  /:root\[data-live="1"\] #lang-toggle-lobby,[\s\S]{0,220}display: inline-flex !important/.test(css));
 check('including against the mobile rule',
   /:root\[data-live="1"\] #s-lobby #lang-toggle-lobby/.test(css));
 check('the flag has a size in the header buttons',
