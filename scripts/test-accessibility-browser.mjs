@@ -114,12 +114,13 @@ async function populateLobby(page) {
   await page.locator('.game-row.gcard').first().waitFor();
 }
 
-async function startActiveHand(page, seatCount) {
-  await page.setViewportSize({ width: 1440, height: 900 });
-  await page.evaluate(() => {
+async function startActiveHand(page, seatCount, options = {}) {
+  const { interfaceSize = 'standard', viewport = { width: 1440, height: 900 } } = options;
+  await page.setViewportSize(viewport);
+  await page.evaluate((size) => {
     localStorage.removeItem('pth_resume');
-    localStorage.setItem('pth_interface_size', 'standard');
-  });
+    localStorage.setItem('pth_interface_size', size);
+  }, interfaceSize);
   await page.reload({ waitUntil: 'domcontentloaded' });
   await page.waitForFunction(() => typeof window.applyAccessibilityPreferences === 'function');
   await page.evaluate(async () => (await import('/modules/net/session.mjs')).show('s-connect'));
@@ -1350,10 +1351,11 @@ try {
       window._loupeBtnSync();
     });
     assert.equal(await page.locator('#g-zoom-toggle').isVisible(), true, 'table magnifier is unavailable on a compact touch layout');
+    await assertEnhancedTargets(page, ['#g-zoom-toggle'], 'mobile landscape Extra Large table magnifier');
     await waitForStableTableLayout(page);
     const baseGeometry = await activeHandRects(page);
     await page.locator('#g-zoom-toggle').click();
-    await page.waitForTimeout(300);
+    await waitForStableTableLayout(page);
     assert.equal(await page.locator('#g-zoom-toggle').getAttribute('aria-pressed'), 'true', 'table magnifier did not activate');
     const magnifiedGeometry = await activeHandRects(page);
     assert.ok(magnifiedGeometry.cards.width >= baseGeometry.cards.width * 1.8,
@@ -1386,12 +1388,82 @@ try {
     assert.equal(await page.locator('#g-zoom-toggle').getAttribute('aria-pressed'), 'true', 'disabling pinch permission changed table magnification');
     await page.locator('#accessibility-close').click();
     await page.locator('#g-zoom-toggle').click();
-    await page.waitForTimeout(300);
-    assert.equal(await page.locator('#g-zoom-toggle').getAttribute('aria-pressed'), 'false', 'table magnifier did not deactivate');
     await waitForStableTableLayout(page);
+    assert.equal(await page.locator('#g-zoom-toggle').getAttribute('aria-pressed'), 'false', 'table magnifier did not deactivate');
     const restoredGeometry = await activeHandRects(page);
     assert.ok(Math.abs(restoredGeometry.cards.width - baseGeometry.cards.width) <= 1,
       `table magnifier did not restore card geometry: ${baseGeometry.cards.width} -> ${restoredGeometry.cards.width}`);
+  });
+  await check('persisted Extra Large cold start keeps magnifier geometry stable', async () => {
+    const viewport = { width: 844, height: 390 };
+    await page.evaluate(() => {
+      localStorage.setItem('pth_browser_zoom', '0');
+      localStorage.setItem('pth_table_zoom', '1');
+    });
+    await startActiveHand(page, 10, { interfaceSize: 'extra-large', viewport });
+    await page.evaluate(() => {
+      const nativeMatchMedia = window.matchMedia.bind(window);
+      window.matchMedia = (query) => query === '(pointer: coarse)'
+        ? { matches: true, media: query, onchange: null, addListener() {}, removeListener() {}, addEventListener() {}, removeEventListener() {}, dispatchEvent() { return true; } }
+        : nativeMatchMedia(query);
+      window.applyAdvOpts();
+      window._loupeBtnSync();
+    });
+    await waitForStableTableLayout(page);
+    assert.equal(await page.locator('html').getAttribute('data-interface-size'), 'extra-large', 'cold start did not apply persisted Extra Large');
+    assert.equal(await page.locator('html').getAttribute('data-adaptive-play'), 'constrained-extra-large', 'cold start did not enter adaptive landscape play');
+    assert.equal(await page.evaluate(() => localStorage.getItem('pth_interface_size')), 'extra-large', 'cold start changed the persisted Interface size');
+    await assertEnhancedTargets(page, ['#g-zoom-toggle'], 'cold-start Extra Large table magnifier');
+    const baseGeometry = await activeHandRects(page);
+    for (const [name, rect] of Object.entries({ cards: baseGeometry.cards, pot: baseGeometry.pot, blinds: baseGeometry.blinds, currentTurn: baseGeometry.activeSeat, timer: baseGeometry.activeTimer, actions: baseGeometry.actions, status: baseGeometry.status })) {
+      assertReachable(rect, baseGeometry.viewport, `cold-start Extra Large ${name}`);
+    }
+    const sentBefore = await page.evaluate(() => window.WebSocket.instance.sent.length);
+
+    await page.locator('#g-zoom-toggle').click();
+    await waitForStableTableLayout(page);
+    const magnifiedGeometry = await activeHandRects(page);
+    assert.ok(magnifiedGeometry.cards.width >= baseGeometry.cards.width * 1.8, 'cold-start magnifier did not visibly enlarge cards');
+    assert.equal(await page.locator('#g-zoom-toggle').getAttribute('aria-pressed'), 'true', 'cold-start magnifier did not activate');
+    await page.locator('#accessibility-open-game').click();
+    await page.locator('#accessibility-browser-zoom').check();
+    await page.locator('input[name="interface-size"][value="standard"]').check();
+    await page.locator('input[name="interface-size"][value="extra-large"]').check();
+    await waitForStableTableLayout(page);
+    const activeRoundTrip = await activeHandRects(page);
+    assert.ok(Math.abs(activeRoundTrip.cards.width - magnifiedGeometry.cards.width) <= 1,
+      `cold-start active magnifier geometry was contaminated: ${magnifiedGeometry.cards.width} -> ${activeRoundTrip.cards.width}`);
+    assert.equal(await page.locator('#g-zoom-toggle').getAttribute('aria-pressed'), 'true', 'Interface-size round trip deactivated the cold-start magnifier');
+    assert.equal(await page.locator('#accessibility-browser-zoom').isChecked(), true, 'Interface-size round trip changed pinch permission');
+    await page.locator('#accessibility-browser-zoom').uncheck();
+    await page.locator('#accessibility-close').click();
+
+    await page.locator('#g-zoom-toggle').click();
+    await waitForStableTableLayout(page);
+    const restoredGeometry = await activeHandRects(page);
+    assert.equal(await page.locator('#g-zoom-toggle').getAttribute('aria-pressed'), 'false', 'cold-start magnifier did not deactivate');
+    assert.ok(Math.abs(restoredGeometry.cards.width - baseGeometry.cards.width) <= 1,
+      `cold-start magnifier did not restore card geometry: ${baseGeometry.cards.width} -> ${restoredGeometry.cards.width}`);
+    for (const [index, seat] of restoredGeometry.seats.entries()) {
+      assert.ok(Math.abs(seat.width - baseGeometry.seats[index].width) <= 1 && Math.abs(seat.height - baseGeometry.seats[index].height) <= 1,
+        `cold-start magnifier did not restore seat ${index + 1} geometry`);
+    }
+
+    await page.locator('#accessibility-open-game').click();
+    await page.locator('input[name="interface-size"][value="standard"]').check();
+    await waitForStableTableLayout(page);
+    await page.locator('input[name="interface-size"][value="extra-large"]').check();
+    await page.locator('#accessibility-close').click();
+    await waitForStableTableLayout(page);
+    const offRoundTrip = await activeHandRects(page);
+    assert.ok(Math.abs(offRoundTrip.cards.width - baseGeometry.cards.width) <= 1,
+      `cold-start off geometry was contaminated by Interface sizes: ${baseGeometry.cards.width} -> ${offRoundTrip.cards.width}`);
+    assert.equal(await page.locator('html').getAttribute('data-interface-size'), 'extra-large', 'cold-start round trip lost Extra Large');
+    assert.equal(await page.evaluate(() => localStorage.getItem('pth_browser_zoom')), '0', 'Interface-size round trip changed pinch permission storage');
+    assert.deepEqual(await outboundSizeChangeTraffic(page, sentBefore), [], 'cold-start accessibility controls sent network traffic');
+    for (const [name, rect] of Object.entries({ cards: offRoundTrip.cards, pot: offRoundTrip.pot, blinds: offRoundTrip.blinds, currentTurn: offRoundTrip.activeSeat, timer: offRoundTrip.activeTimer, actions: offRoundTrip.actions, status: offRoundTrip.status })) {
+      assertReachable(rect, offRoundTrip.viewport, `cold-start restored Extra Large ${name}`);
+    }
   });
   console.log(`PASS ${passed}/${passed}`);
 } finally {
