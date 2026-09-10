@@ -504,6 +504,11 @@ highlights below.
   (`scale 1.03`, 180 ms OutQuad) is applied to the seat plate.
 
 ### Fixed
+- **Error report label claimed "no personal data"** (`web.109`) — reports carry
+  the browser user agent and a masked IP (last IPv4 octet / IPv6 tail removed)
+  next to the error itself, kept in memory only. `advErrReport` now says what
+  is sent, in all 45 languages; the option stays on by default, as the privacy
+  page states.
 - **Settings sync label claimed "opt-in"** (`web.108`) — `advCfgSync` read
   "(registered login only — stored on this server, opt-in)" in every language,
   but `_cfgSyncEnabled()` defaults to on for registered logins, as the privacy
