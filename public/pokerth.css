@@ -12062,8 +12062,8 @@ html[data-seat-struct="qml"] .seat-narrow .seat-name .seat-note-stars { font-siz
     padding-block: 0;
   }
   :root[data-interface-size]:not([data-interface-size="standard"]) #s-game .act-buttons-row .btn-action {
-    min-width: 44px;
-    min-height: 44px !important;
+    min-width: var(--ctrl-enhanced);
+    min-height: var(--ctrl-enhanced) !important;
     max-height: none !important;
     height: max(var(--ctrl-enhanced), calc(var(--active-action-height-base) * var(--active-play-scale))) !important;
     font-size: calc(var(--active-action-font-base) * var(--active-play-scale)) !important;
