@@ -105,11 +105,11 @@ const l3 = _qmlLandscapeLayout(3, lW, lH, false, 1, false, LEGACY);
 const l9 = _qmlLandscapeLayout(9, lW, lH, false, 1, false, LEGACY);
 ok(l9.s <= l3.s + 1e-9, 'landscape: boxScale décroît avec la densité (' + l9.s.toFixed(3) + ' <= ' + l3.s.toFixed(3) + ')');
 ok(_qmlLandscapeLayout(5, lW, lH, false, 1, false, LEGACY).s === lay5.s, 'landscape déterministe');
-const lv9 = _qmlLandscapeLayout(9, lW, lH, false, 1, false, { ...LEGACY, sideGap: 0, radiusMax: 0.42 });
+const lv9 = _qmlLandscapeLayout(9, lW, lH, false, 1, false, { ...LEGACY, interfaceScale: 2 });
 ok(Math.min(...lv9.slots.map((slot) => slot.x)) < Math.min(...l9.slots.map((slot) => slot.x))
    && Math.max(...lv9.slots.map((slot) => slot.x)) > Math.max(...l9.slots.map((slot) => slot.x)),
    'landscape: public low-vision radius input expands dense side clearance');
-ok(_qmlLandscapeLayout(9, lW, lH, false, 1, false, { ...LEGACY, sideGap: 0, radiusMax: 0.42 }).slots[2].x === lv9.slots[2].x,
+ok(_qmlLandscapeLayout(9, lW, lH, false, 1, false, { ...LEGACY, interfaceScale: 2 }).slots[2].x === lv9.slots[2].x,
    'landscape: low-vision radius input remains deterministic');
 // compact : la moitié basse est écrasée vers la self (lowerSquash)
 const layC = _qmlLandscapeLayout(5, lW, 480, true, 1, false, LEGACY);

@@ -23,6 +23,11 @@ remplace cette dispersion par un barème **discret** (pas fixes), fidèle au QML
   connexion/lobby/création réappliquent les alias `--fs-*` depuis les mêmes pas
   sources avec un multiplicateur `1.5` ou `2`; aucune seconde liste de valeurs
   typographiques n'est maintenue.
+- **Jeu actif desktop** : `#s-game` expose `--active-play-scale` (`1`, `1.5`,
+  `2`) et des tokens `--active-*-base` pour les informations critiques. Les
+  règles Large/Extra Large multiplient ces bases, agrandissent les cartes selon
+  leur contenu et transmettent la même échelle à la géométrie publique des
+  sièges. Standard conserve les dimensions QML existantes.
 - **Fidélité QML encodée** : les valeurs officielles (barre d'action 54 / 40 px,
   All-In 52 px, radius bouton 9 / barre 10) sont les valeurs des tokens → la parité
   est garantie par construction.
