@@ -151,5 +151,13 @@ if (window.LIVE_MODE) {
     ['toggleLog', 'toggleHandsHelp'].forEach(function (fn) {
       try { window[fn] = function () {}; } catch (e) {}
     });
+    // No table chat on /live: a visitor on the site does not read the chat of
+    // the table being watched. The panel and both its buttons are hidden by
+    // the stylesheet; the opener is stubbed like the log's, and incoming table
+    // chat is dropped, so no unread count builds up behind a button nobody
+    // sees. The lobby chat strip is a different panel and is untouched.
+    ['toggleGameChat', 'addGameChat'].forEach(function (fn) {
+      try { window[fn] = function () {}; } catch (e) {}
+    });
   });
 }

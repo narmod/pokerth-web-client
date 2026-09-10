@@ -11788,3 +11788,24 @@ html[data-seat-struct="qml"] .seat-narrow .seat-name .seat-note-stars { font-siz
 :root[data-live="1"] #log-toggle-btn,
 :root[data-live="1"] #g-log-panel,
 :root[data-live="1"] #hands-overlay { display: none !important; }
+
+/* ── Live mode: no table chat ─────────────────────────────────────────────
+   A visitor on the site does not read the chat of the table being watched.
+   The seated web client still lets a spectator read it — this is /live only.
+   The felt button, the floating button and the panel go; index.mjs stubs the
+   opener and drops incoming table chat. !important also beats the inline
+   display the opener would set. */
+:root[data-live="1"] #chat-toggle-btn,
+:root[data-live="1"] #gchat-fab,
+:root[data-live="1"] #g-chat-panel { display: none !important; }
+
+/* ── Live mode: no fullscreen inside a frame ──────────────────────────────
+   From inside an iframe, fullscreen depends on how the host page built it,
+   and on pokerth.net the button does nothing. Hidden wherever /live is framed
+   (embed.mjs sets data-framed, ?embed=1 or not); the standalone page keeps
+   it. The margin that pushes the group hard right moves to the next visible
+   button of each header. Specificity beats the rules that win it back above. */
+:root[data-live="1"][data-framed="1"] #s-game #fs-btn-game,
+:root[data-live="1"][data-framed="1"] #s-lobby #fs-btn-lobby { display: none !important; }
+:root[data-live="1"][data-framed="1"] #s-lobby #lang-toggle-lobby,
+:root[data-live="1"][data-framed="1"] #s-game #sound-toggle-btn { margin-left: auto !important; }

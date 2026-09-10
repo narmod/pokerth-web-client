@@ -99,6 +99,27 @@ check('it is no longer hidden by the live rules',
 check('and it carries the margin that pushes the group right',
   /:root\[data-live="1"\] #fs-btn-lobby,[\s\S]{0,90}margin-left: auto !important/.test(css));
 
+// Inside a frame the button does nothing, so it goes there; the standalone
+// page keeps it, and the push-right margin moves to the next visible button.
+check('fullscreen is hidden when /live is framed',
+  /:root\[data-live="1"\]\[data-framed="1"\] #s-game #fs-btn-game,\n:root\[data-live="1"\]\[data-framed="1"\] #s-lobby #fs-btn-lobby \{ display: none !important; \}/.test(css));
+check('and only then — the plain /live rule is unchanged',
+  !/:root\[data-live="1"\] #fs-btn-game \{ display: none/.test(css));
+check('the next visible button takes the push-right margin',
+  /\[data-framed="1"\] #s-lobby #lang-toggle-lobby,\n:root\[data-live="1"\]\[data-framed="1"\] #s-game #sound-toggle-btn \{ margin-left: auto !important; \}/.test(css));
+check('the framing rule comes after the rules that win fullscreen back',
+  css.indexOf('[data-framed="1"] #s-lobby #fs-btn-lobby') > css.lastIndexOf(':root[data-live="1"] #s-lobby #fs-btn-lobby'));
+
+// No table chat: a visitor on the site does not read the watched table's chat.
+check('the table chat buttons and panel are hidden',
+  /:root\[data-live="1"\] #chat-toggle-btn,\n:root\[data-live="1"\] #gchat-fab,\n:root\[data-live="1"\] #g-chat-panel \{ display: none !important; \}/.test(css));
+check('the opener is stubbed and incoming table chat dropped',
+  /\['toggleGameChat', 'addGameChat'\]\.forEach\(function \(fn\) \{\n\s+try \{ window\[fn\] = function \(\) \{\}; \}/.test(live));
+check('the lobby chat strip is not touched',
+  !/:root\[data-live="1"\] #lobby-chat-panel \{ display: none/.test(css) && !/'toggleLobbyChat'/.test(live));
+check('incoming chat reaches the game pane through window.addGameChat',
+  /window\.addGameChat\(who, text, cls\)/.test(social));
+
 // A language change must land at once everywhere /live draws its own text.
 const lobbyMod = R('public/modules/live/lobby.mjs');
 check('the table list repaints on a language change',

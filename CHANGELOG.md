@@ -316,6 +316,17 @@ highlights below.
   every entry now carries both.
 
 ### Changed
+- **`/live` — no table chat, no fullscreen inside a frame** (`web.107`,
+  feedback from the pokerth.net embedding) — a visitor on the site no longer
+  sees the chat of the table being watched: `#chat-toggle-btn`, `#gchat-fab`
+  and `#g-chat-panel` are hidden, `toggleGameChat` and `addGameChat` are
+  stubbed so no unread count builds up. The seated web client still lets a
+  spectator read the table chat. Fullscreen does nothing inside the site's
+  iframe, so `embed.mjs` now sets `data-framed` whenever `/live` is framed
+  (`?embed=1` or not) and both header buttons go there; standalone `/live`
+  keeps them (`web.97`). The push-right margin moves to the next visible
+  button. Tests in `scripts/test-live-chrome.mjs` and
+  `scripts/test-live-embed.mjs`.
 - **Privacy page rewritten to match what the code does** (`web.105`) — the
   in-app page (`pv*` keys, 45 languages) and `/privacy` said settings never
   leave the device, visit data is gone after ~13 months and translation goes

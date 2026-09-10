@@ -66,7 +66,17 @@ function silenceByDefault() {
   } catch (e) {}
 }
 
+// Inside a frame at all, ?embed=1 or not: a host page may frame /live without
+// the flag, so this checks the fact rather than the query.
+export function isFramed() {
+  try { return window.self !== window.top; } catch (e) { return true; }
+}
+
 export function initEmbed() {
+  // Fullscreen from inside a frame depends on how the host built the iframe,
+  // and on pokerth.net the button does nothing. data-framed lets the
+  // stylesheet drop it wherever /live is framed; standalone /live keeps it.
+  if (isFramed()) document.documentElement.setAttribute('data-framed', '1');
   if (!isEmbedded()) return;
   document.documentElement.setAttribute('data-embed', '1');
   silenceByDefault();
