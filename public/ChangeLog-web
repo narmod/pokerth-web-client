@@ -1,4 +1,5 @@
 2026-09-10 version 2.1.8-web (current series):
+- improvement: anonymous visit identifiers of devices not seen for about 13 months are now deleted too, as the privacy page says
 - bugfix: the error report option now says exactly what is sent (error details, browser and shortened IP address) instead of "no personal data"
 - bugfix: the settings sync option no longer says it is opt-in - it is on by default for registered accounts, as the privacy page explains
 - bugfix: the table picture could jump by one pixel during a hand, for example right after your turn; it now stays still and only moves when the window size or the table style changes

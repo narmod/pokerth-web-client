@@ -504,6 +504,15 @@ highlights below.
   (`scale 1.03`, 180 ms OutQuad) is applied to the seat plate.
 
 ### Fixed
+- **Hashed device ids were kept forever** (`web.110`) — daily visit buckets
+  expire after `VISIT_RETENTION_DAYS` (400), but the all-time sets `allU`
+  (hash → first day) and `allLU` (/live) were never pruned. `pruneVisitIds()`
+  now runs whenever a bucket expires and drops every id no retained bucket
+  holds, which also clears ids orphaned by older builds. A device back after
+  the window counts as new again; cohorts and in-window new/returning figures
+  are unchanged. Admin note: "all time" unique devices now means devices seen
+  within the retention window. Privacy page (`pvSrv1`, 45 languages, and
+  `/privacy`) updated accordingly. Test in `scripts/test-visit-prune.mjs`.
 - **Error report label claimed "no personal data"** (`web.109`) — reports carry
   the browser user agent and a masked IP (last IPv4 octet / IPv6 tail removed)
   next to the error itself, kept in memory only. `advErrReport` now says what

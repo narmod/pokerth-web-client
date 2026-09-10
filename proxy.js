@@ -4364,6 +4364,32 @@ function pruneVisitDays() {
   if (keys.length <= VISIT_RETENTION_DAYS) return;
   keys.sort();
   keys.slice(0, keys.length - VISIT_RETENTION_DAYS).forEach(function (k) { delete visitsStore.days[k]; });
+  pruneVisitIds();
+}
+// The all-time device sets (allU: hash -> first day, allLU: /live) used to grow
+// forever, while the privacy page promises visit data is gone after about 13
+// months. A hashed id now lives exactly as long as the daily buckets that saw
+// it: once no retained bucket holds it, it is dropped. Runs only when a bucket
+// has just expired (retention reached), so a young store never loses ids, and
+// the first expiry after an upgrade also clears ids orphaned by older builds.
+// A device back after the window is simply counted as new again; cohorts and
+// new/returning figures within the window are unaffected, since every id they
+// look at is, by construction, in a retained bucket.
+function pruneVisitIds() {
+  const seen = {}, seenLive = {};
+  const days = visitsStore.days || {};
+  for (const k in days) {
+    const b = days[k];
+    if (!b) continue;
+    if (b.ids) for (const h in b.ids) seen[h] = 1;
+    if (b.lids) for (const h in b.lids) seenLive[h] = 1;
+  }
+  let n = 0;
+  const all = visitsStore.allU || {};
+  for (const h in all) if (!seen[h]) { delete all[h]; n++; }
+  const allL = visitsStore.allLU || {};
+  for (const h in allL) if (!seenLive[h]) { delete allL[h]; n++; }
+  return n;
 }
 // 'live' = a /live spectator session (embedded on pokerth.net). Counted apart
 // from 'pokerthnet' so spectators never inflate the players' share; sessions
