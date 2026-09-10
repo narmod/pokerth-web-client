@@ -290,6 +290,12 @@ highlights below.
   every entry now carries both.
 
 ### Changed
+- **`/live` — the player card is read-only, and the header settles**
+  (`web.93`) — notes, ignore, avatar report and kickban all disappear from the
+  player card in live mode: they act on a session the spectator has no part
+  in, so `/live` gives even less than a guest has in the full client. The
+  appearance button leaves the lobby, where there is no table to dress, and at
+  the table it sits left of language and light/dark.
 - **`/live` — a quieter table and a tidier login card** (`web.92`) — the hand
   log and the poker-combinations card go: one is a record of a session the
   spectator has no part in, the other a reminder for someone deciding a move.

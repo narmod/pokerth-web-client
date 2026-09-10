@@ -528,13 +528,17 @@ function _otherPlayerInfoHtml(pid) {
   // sur un ADVERSAIRE : se noter soi-même n'a pas de sens, et la self-box
   // partage ce chemin de rendu. Les bots y ont droit — en entraînement, c'est
   // justement là qu'on apprend à lire un adversaire.
+  // A spectator does the one thing the card is for: read who this is. Notes,
+  // ignore, avatar report and kickban all act on a session they are not part
+  // of — /live gives them even less than a guest has in the full client.
+  const _readOnly = !!window.LIVE_MODE;
   try {
-    if (typeof window._nvBlockHtml === 'function') {
+    if (!_readOnly && typeof window._nvBlockHtml === 'function') {
       html += window._nvBlockHtml(window.getPlayerName(pid));
     }
   } catch (e) {}
   var _ignNm = window.getPlayerName(pid);
-  html += '<button type="button" class="pim-ignore-btn" onclick="window._toggleIgnore(' + pid + ')" '
+  if (!_readOnly) html += '<button type="button" class="pim-ignore-btn" onclick="window._toggleIgnore(' + pid + ')" '
         + 'style="display:block;width:100%;margin-top:10px;padding:8px 0;border:1px solid var(--border-hi,rgba(200,168,74,.4));border-radius:8px;cursor:pointer;background:transparent;color:var(--text,#eff1f5);font-weight:600">'
         + (window._isIgnored(_ignNm) ? '🔔 ' + esc(tt('piUnignore', 'Unignore')) : '🔕 ' + esc(tt('piIgnore', 'Ignore'))) + '</button>';
   // Signaler un avatar inapproprié — parité GamePlayerBox.qml (entrée
@@ -544,7 +548,7 @@ function _otherPlayerInfoHtml(pid) {
   // avec le PlayerInfo — c'est la même condition vue du protocole). Le QML
   // réserve son menu contextuel au desktop ; ici l'action vit dans le popup
   // joueur, donc elle reste accessible au doigt.
-  if (!window.isBot(pid) && pid !== S.myId && S._pthAvatarHashes[pid] && S._pthAvatarHashes[pid].hashHex) {
+  if (!_readOnly && !window.isBot(pid) && pid !== S.myId && S._pthAvatarHashes[pid] && S._pthAvatarHashes[pid].hashHex) {
     html += '<button type="button" class="pim-report-avatar-btn" onclick="window._reportAvatar(' + pid + ')" '
           + 'style="display:block;width:100%;margin-top:8px;padding:8px 0;border:1px solid var(--border-hi,rgba(200,168,74,.4));border-radius:8px;cursor:pointer;background:transparent;color:var(--text,#eff1f5);font-weight:600">'
           + '\uD83D\uDEA9 ' + esc(tt('piReportAvatar', 'Report avatar')) + '</button>';
@@ -552,7 +556,7 @@ function _otherPlayerInfoHtml(pid) {
   // Kickban total — visible UNIQUEMENT si JE suis admin pokerth.net
   // (playerRights=3), jamais sur soi ni sur un bot. Marteau (gavel), comme
   // le PlayerListItem du client QML officiel.
-  if (!window.isBot(pid) && pid !== S.myId && (S._playerRights[S.myId] || 0) === 3) {
+  if (!_readOnly && !window.isBot(pid) && pid !== S.myId && (S._playerRights[S.myId] || 0) === 3) {
     html += '<button type="button" class="pim-kickban-btn" onclick="window._adminBanPlayer(' + pid + ')" '
           + 'style="display:block;width:100%;margin-top:8px;padding:8px 0;border:1px solid var(--danger,#e05050);border-radius:8px;cursor:pointer;background:transparent;color:var(--danger,#e05050);font-weight:600">'
           + '🔨 ' + esc(tt('piKickban', 'Total kickban')) + '</button>';

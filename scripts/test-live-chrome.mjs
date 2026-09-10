@@ -72,5 +72,24 @@ check('the server figures follow a language change',
   /onLangChange\(function \(\) \{ if \(_lastData\) _render\(_lastData\); \}\)/.test(stats));
 check('the last payload is kept for that repaint', /_lastData = d;/.test(stats));
 
+// The player card: a spectator reads it, and that is all. Notes, ignore,
+// avatar report and kickban all act on a session they are not part of.
+const popup = R('public/modules/ui/player-popup.mjs');
+check('the card is read-only in live mode', /const _readOnly = !!window\.LIVE_MODE;/.test(popup));
+check('no notes block', /if \(!_readOnly && typeof window\._nvBlockHtml/.test(popup));
+check('no ignore button', /if \(!_readOnly\) html \+= '<button type="button" class="pim-ignore-btn/.test(popup));
+check('no avatar report', /if \(!_readOnly && !window\.isBot\(pid\) && pid !== S\.myId && S\._pthAvatarHashes/.test(popup));
+check('no kickban', /if \(!_readOnly && !window\.isBot\(pid\) && pid !== S\.myId && \(S\._playerRights/.test(popup));
+
+// Appearance dresses a table, so it has no place in the lobby.
+check('no appearance button in the lobby',
+  /:root\[data-live="1"\] #live-theme-lobby \{ display: none !important; \}/.test(css));
+check('at the table it sits left of language and light\/dark',
+  html.indexOf('id="live-theme-game"') < html.indexOf('id="lang-toggle-game"') &&
+  html.indexOf('id="lang-toggle-game"') < html.indexOf('id="live-mode-game"'));
+check('and it is the one pushed hard right there',
+  /:root\[data-live="1"\] #live-theme-game \{ margin-left: auto/.test(css) ||
+  /#live-theme-game \{ margin-left: auto !important; \}/.test(css));
+
 console.log(failed ? `\n${failed} check(s) failed` : '\nall checks passed');
 process.exit(failed ? 1 : 0);
