@@ -1392,6 +1392,7 @@ function seoIndexNowPing(force, cb) {
 // One ping shortly after boot when SEO is already enabled, so a restarted
 // proxy re-announces itself without waiting for an admin save.
 setTimeout(function () { try { seoIndexNowPing(true); } catch (e) {} }, 15000);
+setImmediate(function () { try { if (seoEnabled()) _seoSsr.refresh(path.join(__dirname, 'public')); } catch (e) {} });
 // Deploy detection. A static update swaps the served files without restarting
 // this process, so without this nothing would ever tell the search engines the
 // site changed — the boot ping above only fires on a restart. Watch the same
@@ -1484,14 +1485,29 @@ function seoBodyBlock(lang) {
     '<p>' + _seoAttr(seoDescOverride() || loc.d) + '</p>' +
     '<p>' + b.m + '</p>' +
     '<p>' + b.g + '</p>' +
-    '<p>Free software \u2014 source code on GitHub (narmod/pokerth-web-client), based on PokerTH by the PokerTH Development Team.</p>' +
+    // Project line: the About dialog's own strings (abProject1/2), localized at
+    // serve time by seo-i18n/ssr.js like the rest of the page. The English text
+    // here is only the fallback while the catalog loads.
+    '<p><span data-i18n="abProject1">PokerTH is a free and open source Texas Hold\'em poker game, developed since 2006. This web client is its browser port, developed in collaboration with the PokerTH project.</span> ' +
+    '<span data-i18n="abProject2">The source code is freely available:</span> github.com/narmod/pokerth-web-client</p>' +
     '<p><a href="' + _seoLangHref('/rules', SEO_RULES_I18N, lang) + '">' + b.r + '</a> \u2014 ' +
-    '<a href="' + _seoLangHref('/hand-rankings', SEO_HANDS_I18N, lang) + '">Poker hand rankings</a> \u2014 ' +
-    '<a href="' + _seoLangHref('/how-to-play', SEO_HOWTO_I18N, lang) + '">How to play</a> \u2014 ' +
-    '<a href="' + _seoLangHref('/glossary', SEO_GLOSSARY_I18N, lang) + '">Glossary</a> \u2014 ' +
+    '<a href="' + _seoLangHref('/hand-rankings', SEO_HANDS_I18N, lang) + '">' + _seoPageLabel(SEO_HANDS_I18N, lang, 'Poker hand rankings') + '</a> \u2014 ' +
+    '<a href="' + _seoLangHref('/how-to-play', SEO_HOWTO_I18N, lang) + '">' + _seoPageLabel(SEO_HOWTO_I18N, lang, 'How to play') + '</a> \u2014 ' +
+    '<a href="' + _seoLangHref('/glossary', SEO_GLOSSARY_I18N, lang) + '">' + _seoPageLabel(SEO_GLOSSARY_I18N, lang, 'Glossary') + '</a> \u2014 ' +
     '<a href="' + _seoLangHref('/faq', SEO_FAQ_I18N, lang) + '">FAQ</a> \u2014 ' +
     '<a href="/privacy">' + b.pv + '</a></p>' +
     '</div>';
+}
+
+// Anchor text for a link to a localized content page: that page's own <h1>,
+// cut before an em-dash subtitle ("Pokerglossarium \u2014 Texas Hold\u2019em-termen"
+// -> "Pokerglossarium"). Same condition as _seoLangHref: when the link opens
+// the English page, the label stays English.
+function _seoPageLabel(table, lang, en) {
+  var e = (lang && SEO_I18N[lang] && table) ? table[lang] : null;
+  var m = e && /<h1>([\s\S]*?)<\/h1>/.exec(e.body || '');
+  var label = m ? m[1].replace(/<[^>]*>/g, '').split(' \u2014 ')[0].trim() : '';
+  return label || en;
 }
 
 function seoFooterBlock(lang) {
@@ -3862,6 +3878,8 @@ function _seoPageHref(page, lang) {
 
 // Order matters: each table must exist before another body links into it.
 SEO_HANDS_I18N = require('./seo-i18n/hands.js').build(_SEO_HANDS, _sd);
+// Serve-time localization of pokerth-client.html (see sendClientHtml).
+const _seoSsr = require('./seo-i18n/ssr.js');
 SEO_HOWTO_I18N = require('./seo-i18n/howto.js').build(_SEO_HOWTO, _seoPageHref);
 SEO_GLOSSARY_I18N = require('./seo-i18n/glossary.js').build(_SEO_GLOSSARY, _seoPageHref);
 
@@ -3918,7 +3936,11 @@ function sendClientHtml(req, res, live) {
   // Every SEO field is baked into the served HTML, so the whole block keys the
   // cache — listing fields one by one is how a new one silently serves stale
   // pages until the next deploy.
-  const gen = st.mtimeMs + '|' + (on ? '1' : '0') + '|' + (on ? JSON.stringify(_seoAdmin()) : '');
+  // Serve-time localization (seo-i18n/ssr.js) keys the cache too: a catalog
+  // (re)load after boot or after a static deploy must flush the variants built
+  // without it.
+  if (on) _seoSsr.refresh(path.join(__dirname, 'public'));
+  const gen = st.mtimeMs + '|' + (on ? '1' : '0') + '|' + (on ? JSON.stringify(_seoAdmin()) + '|' + _seoSsr.version() : '');
   if (_seoHtmlGen !== gen) { _seoHtmlCache.clear(); _seoHtmlGen = gen; }
   const key = (live ? 'live:' : '') + (lang || '_');
   let ent = _seoHtmlCache.get(key);
@@ -3944,6 +3966,11 @@ function sendClientHtml(req, res, live) {
     } else if (on && seoTitleOverride()) {
       html = html.replace('<title>PokerTH Web Client</title>', '<title>' + _seoAttr(seoTitleOverride()) + '</title>');
     }
+    // Interface text in the page language, not just the SEO block: every
+    // data-i18n* node gets the value setLang() would give it at boot, so a
+    // crawler without JavaScript reads /?lang=nl in Dutch throughout. The bare
+    // / is rendered in English the same way. Indexed pages only (SEO on).
+    if (on) html = _seoSsr.localize(html, lang || 'en', _seoSsr.catalog());
     const buf = Buffer.from(html, 'utf8');
     ent = {
       raw: buf,

@@ -1004,13 +1004,13 @@ function _processAvatarFile(file) {
       <a class="btn-sm" href="https://bbc.pokerth.net/shoutbox" target="_blank" rel="noopener noreferrer" onclick="this.closest('details').open=false"><span class="cl-ico"><img src="/bbc-icon.png" alt="" onerror="this.onerror=null;this.replaceWith('🌐')"></span>Best Brainies Cup</a>
       <a class="btn-sm" href="https://wec.pokerth.net/" target="_blank" rel="noopener noreferrer" onclick="this.closest('details').open=false"><span class="cl-ico"><img src="/wec-icon.png" alt="" onerror="this.onerror=null;this.replaceWith('🃏')"></span>WeCup</a>
       <a class="btn-sm" href="https://monthlycup.pokerth.net/" target="_blank" rel="noopener noreferrer" onclick="this.closest('details').open=false"><span class="cl-ico"><img src="/mc-icon.png" alt="" onerror="this.onerror=null;this.replaceWith('🏆')"></span>Monthly Cup</a>
-      <button class="btn-sm" type="button" onclick="this.closest('details').open=false;window.openAboutPage()"><span class="cl-ico"><svg viewBox="0 0 24 24" style="display:block;width:18px;height:18px" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><line x1="12" y1="11" x2="12" y2="16.5"/><circle cx="12" cy="7.6" r="0.6" fill="currentColor"/></svg></span><span data-i18n="aboutMenu">À propos de PokerTH</span></button>
+      <button class="btn-sm" type="button" onclick="this.closest('details').open=false;window.openAboutPage()"><span class="cl-ico"><svg viewBox="0 0 24 24" style="display:block;width:18px;height:18px" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><line x1="12" y1="11" x2="12" y2="16.5"/><circle cx="12" cy="7.6" r="0.6" fill="currentColor"/></svg></span><span data-i18n="aboutMenu">About PokerTH</span></button>
       </div>
       </details>
     </div>
     <div class="hdr-group hdr-right">
-      <button class="btn-sm btn-icon" id="install-btn" onclick="pwaInstall()" title="Install app" data-i18n-title="installTooltip" aria-label="Install app" style="display:none"><svg viewBox="0 0 24 24" style="display:block;width:22px;height:22px" fill="currentColor" aria-hidden="true"><path d="M17 1.01 7 1c-1.1 0-1.99.9-1.99 2L5 21c0 1.1.89 2 1.99 2H17c1.1 0 2-.9 2-2V3c0-1.1-.9-1.99-2-1.99zM17 19H7V5h10v14zm-4.2-8V7h-1.6v4H9l3 3 3-3h-2.2z"/></svg></button>
-      <button class="btn-sm btn-icon" id="forum-btn-connect" onclick="toggleForumModal()" title="Forum" data-i18n-title="forumTooltip" aria-label="Forum"><svg viewBox="0 0 24 24" style="display:block;width:22px;height:22px" fill="currentColor" aria-hidden="true"><path d="M22 3l-1.67 1.67L18.67 3 17 4.67 15.33 3l-1.66 1.67L12 3l-1.67 1.67L8.67 3 7 4.67 5.33 3 3.67 4.67 2 3v16c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V3zM11 19H4v-6h7v6zm9 0h-7v-2h7v2zm0-4h-7v-2h7v2zm0-4H4V8h16v3z"/></svg><span class="forum-unread" style="display:none" aria-hidden="true">0</span></button>
+      <button class="btn-sm btn-icon" id="install-btn" onclick="pwaInstall()" title="Install the app" data-i18n-title="installTooltip" aria-label="Install app" style="display:none"><svg viewBox="0 0 24 24" style="display:block;width:22px;height:22px" fill="currentColor" aria-hidden="true"><path d="M17 1.01 7 1c-1.1 0-1.99.9-1.99 2L5 21c0 1.1.89 2 1.99 2H17c1.1 0 2-.9 2-2V3c0-1.1-.9-1.99-2-1.99zM17 19H7V5h10v14zm-4.2-8V7h-1.6v4H9l3 3 3-3h-2.2z"/></svg></button>
+      <button class="btn-sm btn-icon" id="forum-btn-connect" onclick="toggleForumModal()" title="Forum" data-i18n-aria="forumTooltip" data-i18n-title="forumTooltip" aria-label="Forum"><svg viewBox="0 0 24 24" style="display:block;width:22px;height:22px" fill="currentColor" aria-hidden="true"><path d="M22 3l-1.67 1.67L18.67 3 17 4.67 15.33 3l-1.66 1.67L12 3l-1.67 1.67L8.67 3 7 4.67 5.33 3 3.67 4.67 2 3v16c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V3zM11 19H4v-6h7v6zm9 0h-7v-2h7v2zm0-4h-7v-2h7v2zm0-4H4V8h16v3z"/></svg><span class="forum-unread" style="display:none" aria-hidden="true">0</span></button>
       <button class="btn-sm btn-icon" id="ranking-btn-connect" onclick="toggleRankingModal()" title="Ranking" data-i18n-title="rankingTooltip" aria-label="Ranking"><svg class="rk-trophy" viewBox="0 0 24 24" style="display:block;width:22px;height:22px" fill="currentColor" aria-hidden="true"><path d="M19 5h-2V3H7v2H5C3.9 5 3 5.9 3 7v1c0 2.55 1.92 4.63 4.39 4.94.63 1.5 1.98 2.63 3.61 2.96V19H7v2h10v-2h-4v-3.1c1.63-.33 2.98-1.46 3.61-2.96C19.08 12.63 21 10.55 21 8V7c0-1.1-.9-2-2-2zM5 8V7h2v3.82C5.84 10.4 5 9.3 5 8zm14 0c0 1.3-.84 2.4-2 2.82V7h2v1z"/></svg></button>
       <span class="hdr-ovf-wrap"><button class="btn-sm btn-icon" id="connect-overflow-btn" onclick="toggleConnectOverflow(event)" title="More" data-i18n-title="moreTooltip" aria-label="More"><svg viewBox="0 0 24 24" style="display:block;width:22px;height:22px" fill="currentColor" aria-hidden="true"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58a.49.49 0 0 0 .12-.61l-1.92-3.32a.488.488 0 0 0-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54a.484.484 0 0 0-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58a.49.49 0 0 0-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg></button>
       <div id="connect-overflow-menu">
@@ -1099,8 +1099,8 @@ function _processAvatarFile(file) {
           </button>
         </div>
         <select id="server-mode" autocomplete="off" onchange="App.onServerOrGuestChange()" style="display:none" aria-hidden="true" tabindex="-1">
-          <option value="pokerthnet" selected data-i18n="srvPokerthNet">🌐 Internet / PokerTH.net</option>
-          <option value="offline" data-i18n="srvOffline">🏋️ Local / entraînement</option>
+          <option value="pokerthnet" selected data-i18n="srvPokerthNet">🌐 Internet</option>
+          <option value="offline" data-i18n="srvOffline">🏋️ Local / training</option>
           <option value="lan-dedi" data-i18n="srvDedicated">🖥️ LAN / Dedicated server</option>
         </select>
         <!-- Sélecteur de mode INTERNE (4 valeurs) — MASQUÉ. Piloté par
@@ -1187,14 +1187,14 @@ function _processAvatarFile(file) {
       </div>
       <div id="avp-pane-gallery">
       <div class="avp-cats" role="tablist">
-        <button type="button" class="avp-cat selected" data-cat="gallery" onclick="avpShowCat('gallery', this)" data-i18n-title="avatarGallery" title="Galerie d'avatars" aria-label="Galerie d'avatars">🖼️</button>
-        <button type="button" class="avp-cat" data-cat="people" onclick="avpShowCat('people', this)" data-i18n-title="avCatPeople" title="Personnes" aria-label="Personnes">🧑</button>
-        <button type="button" class="avp-cat" data-cat="fantasy" onclick="avpShowCat('fantasy', this)" data-i18n-title="avCatFantasy" title="Fantastique" aria-label="Fantastique">🧙</button>
-        <button type="button" class="avp-cat" data-cat="poker" onclick="avpShowCat('poker', this)" data-i18n-title="avCatPoker" title="Poker" aria-label="Poker">🃏</button>
-        <button type="button" class="avp-cat" data-cat="animals" onclick="avpShowCat('animals', this)" data-i18n-title="avCatAnimals" title="Animaux" aria-label="Animaux">🐶</button>
-        <button type="button" class="avp-cat" data-cat="plants" onclick="avpShowCat('plants', this)" data-i18n-title="avCatPlants" title="Plantes &amp; Fleurs" aria-label="Plantes et Fleurs">🌸</button>
-        <button type="button" class="avp-cat" data-cat="sport" onclick="avpShowCat('sport', this)" data-i18n-title="avCatSport" title="Sport" aria-label="Sport">⚽</button>
-        <button type="button" class="avp-cat" data-cat="objects" onclick="avpShowCat('objects', this)" data-i18n-title="avCatObjects" title="Objets" aria-label="Objets">🎩</button>
+        <button type="button" class="avp-cat selected" data-cat="gallery" onclick="avpShowCat('gallery', this)" data-i18n-aria="avatarGallery" data-i18n-title="avatarGallery" title="Avatar gallery" aria-label="Avatar gallery">🖼️</button>
+        <button type="button" class="avp-cat" data-cat="people" onclick="avpShowCat('people', this)" data-i18n-aria="avCatPeople" data-i18n-title="avCatPeople" title="People" aria-label="People">🧑</button>
+        <button type="button" class="avp-cat" data-cat="fantasy" onclick="avpShowCat('fantasy', this)" data-i18n-aria="avCatFantasy" data-i18n-title="avCatFantasy" title="Fantasy" aria-label="Fantasy">🧙</button>
+        <button type="button" class="avp-cat" data-cat="poker" onclick="avpShowCat('poker', this)" data-i18n-aria="avCatPoker" data-i18n-title="avCatPoker" title="Poker" aria-label="Poker">🃏</button>
+        <button type="button" class="avp-cat" data-cat="animals" onclick="avpShowCat('animals', this)" data-i18n-aria="avCatAnimals" data-i18n-title="avCatAnimals" title="Animals" aria-label="Animals">🐶</button>
+        <button type="button" class="avp-cat" data-cat="plants" onclick="avpShowCat('plants', this)" data-i18n-aria="avCatPlants" data-i18n-title="avCatPlants" title="Plants &amp; Flowers" aria-label="Plants &amp; Flowers">🌸</button>
+        <button type="button" class="avp-cat" data-cat="sport" onclick="avpShowCat('sport', this)" data-i18n-aria="avCatSport" data-i18n-title="avCatSport" title="Sport" aria-label="Sport">⚽</button>
+        <button type="button" class="avp-cat" data-cat="objects" onclick="avpShowCat('objects', this)" data-i18n-aria="avCatObjects" data-i18n-title="avCatObjects" title="Objects" aria-label="Objects">🎩</button>
       </div>
       <div class="avp-grid">
 <!-- PokerTH official avatar option. Hidden by default; shown only when
@@ -1202,7 +1202,7 @@ function _processAvatarFile(file) {
      an avatar (the JS toggles inline display below). The 🪪 (id card)
      glyph indicates "this is my official identity". data-av is the
      sentinel "__pth__" the JS branches on. -->
-<button type="button" class="avp-btn avp-pth avp-pin" data-av="__pth__" id="avp-btn-pth" onclick="selectAvatarPopup('__pth__')" title="Mon avatar PokerTH" data-i18n-title="avatarTooltip">🪪</button>
+<button type="button" class="avp-btn avp-pth avp-pin" data-av="__pth__" id="avp-btn-pth" onclick="selectAvatarPopup('__pth__')" title="My PokerTH avatar" data-i18n-title="avatarTooltip">🪪</button>
 <button type="button" class="avp-btn avp-none avp-pin" data-av="" onclick="selectAvatarPopup('')">Aa</button>
 <button type="button" class="avp-btn" data-av="🌸" data-cat="plants" style="display:none" onclick="selectAvatarPopup('🌸')">🌸</button>
 <button type="button" class="avp-btn" data-av="🌺" data-cat="plants" style="display:none" onclick="selectAvatarPopup('🌺')">🌺</button>
@@ -1708,12 +1708,12 @@ function _processAvatarFile(file) {
          data-i18n="forgotPassword">Forgot your password?</span>&#160;)</a>
     </div>
 
-    <button class="btn-primary" onclick="App.connect()" data-i18n="connect">CONNECT</button>
+    <button class="btn-primary" onclick="App.connect()" data-i18n="connect">Connect</button>
     <div id="cstatus" class="status"></div>
     <div class="live-only live-stats-host" id="live-stats-host"></div>
     <div class="live-only live-card-corners" aria-hidden="false">
       <button class="btn-sm btn-icon live-tl" id="lang-toggle-connect" onclick="openLangMenu(event)" title="Language" data-i18n-title="advLanguage">🌐</button>
-      <button class="btn-sm btn-icon live-tr" id="live-mode-connect" onclick="liveCycleThemeMode()" title="Light / dark" data-i18n-title="sectionPalette"></button>
+      <button class="btn-sm btn-icon live-tr" id="live-mode-connect" onclick="liveCycleThemeMode()" title="Palette" data-i18n-title="sectionPalette"></button>
     </div>
     
 
@@ -1762,13 +1762,13 @@ function _processAvatarFile(file) {
     <button class="btn-sm btn-icon" id="fs-btn-lobby" onclick="toggleFullscreen()" title="Fullscreen" data-i18n-title="fullscreenTooltip">⛶</button>
     <button class="btn-sm btn-icon" id="lobby-chat-btn" onclick="toggleLobbyChat()" title="Chat" data-i18n-title="chatTooltip"><svg viewBox="0 0 24 24" style="display:block;width:22px;height:22px" fill="currentColor" aria-hidden="true"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg></button>
     <button class="btn-sm btn-icon" id="pm-btn-lobby" onclick="togglePmModal()" title="Private messages" data-i18n-title="pmTooltip" aria-label="Private messages"><svg viewBox="0 0 24 24" style="display:block;width:22px;height:22px" fill="currentColor" aria-hidden="true"><path d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2Zm0 4.24-8 4.76-8-4.76V6l8 4.76L20 6v2.24Z"/></svg><span class="pm-unread" style="display:none" aria-hidden="true">0</span></button>
-    <button class="btn-sm btn-icon" id="forum-btn-lobby" onclick="toggleForumModal()" title="Forum" data-i18n-title="forumTooltip" aria-label="Forum"><svg viewBox="0 0 24 24" style="display:block;width:22px;height:22px" fill="currentColor" aria-hidden="true"><path d="M22 3l-1.67 1.67L18.67 3 17 4.67 15.33 3l-1.66 1.67L12 3l-1.67 1.67L8.67 3 7 4.67 5.33 3 3.67 4.67 2 3v16c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V3zM11 19H4v-6h7v6zm9 0h-7v-2h7v2zm0-4h-7v-2h7v2zm0-4H4V8h16v3z"/></svg><span class="forum-unread" style="display:none" aria-hidden="true">0</span></button>
+    <button class="btn-sm btn-icon" id="forum-btn-lobby" onclick="toggleForumModal()" title="Forum" data-i18n-aria="forumTooltip" data-i18n-title="forumTooltip" aria-label="Forum"><svg viewBox="0 0 24 24" style="display:block;width:22px;height:22px" fill="currentColor" aria-hidden="true"><path d="M22 3l-1.67 1.67L18.67 3 17 4.67 15.33 3l-1.66 1.67L12 3l-1.67 1.67L8.67 3 7 4.67 5.33 3 3.67 4.67 2 3v16c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V3zM11 19H4v-6h7v6zm9 0h-7v-2h7v2zm0-4h-7v-2h7v2zm0-4H4V8h16v3z"/></svg><span class="forum-unread" style="display:none" aria-hidden="true">0</span></button>
     <button class="btn-sm btn-icon" id="ranking-btn-lobby" onclick="toggleRankingModal()" title="Ranking" data-i18n-title="rankingTooltip" aria-label="Ranking" style="display:none"><svg class="rk-trophy" viewBox="0 0 24 24" style="display:block;width:22px;height:22px" fill="currentColor" aria-hidden="true"><path d="M19 5h-2V3H7v2H5C3.9 5 3 5.9 3 7v1c0 2.55 1.92 4.63 4.39 4.94.63 1.5 1.98 2.63 3.61 2.96V19H7v2h10v-2h-4v-3.1c1.63-.33 2.98-1.46 3.61-2.96C19.08 12.63 21 10.55 21 8V7c0-1.1-.9-2-2-2zM5 8V7h2v3.82C5.84 10.4 5 9.3 5 8zm14 0c0 1.3-.84 2.4-2 2.82V7h2v1z"/></svg></button>
     <button class="btn-sm btn-icon live-only" id="lang-toggle-lobby" onclick="openLangMenu(event)" title="Language" data-i18n-title="advLanguage">🌐</button>
-    <button class="btn-sm btn-icon live-only" id="live-mode-lobby" onclick="liveCycleThemeMode()" title="Light / dark" data-i18n-title="sectionPalette"></button>
+    <button class="btn-sm btn-icon live-only" id="live-mode-lobby" onclick="liveCycleThemeMode()" title="Palette" data-i18n-title="sectionPalette"></button>
     <button class="btn-sm btn-icon live-only" id="live-theme-lobby" onclick="openThemePanel(event)" aria-label="Appearance">🎨</button>
     <span class="live-only live-ver" id="live-ver-lobby"></span>
-    <span class="hdr-ovf-wrap"><button class="btn-sm btn-icon" id="l-overflow-btn" onclick="toggleLobbyOverflow(event)" title="Plus" data-i18n-title="moreTooltip"><svg viewBox="0 0 24 24" style="display:block;width:22px;height:22px" fill="currentColor" aria-hidden="true"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58a.49.49 0 0 0 .12-.61l-1.92-3.32a.488.488 0 0 0-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54a.484.484 0 0 0-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58a.49.49 0 0 0-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg></button>
+    <span class="hdr-ovf-wrap"><button class="btn-sm btn-icon" id="l-overflow-btn" onclick="toggleLobbyOverflow(event)" title="More" data-i18n-title="moreTooltip"><svg viewBox="0 0 24 24" style="display:block;width:22px;height:22px" fill="currentColor" aria-hidden="true"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58a.49.49 0 0 0 .12-.61l-1.92-3.32a.488.488 0 0 0-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54a.484.484 0 0 0-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58a.49.49 0 0 0-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg></button>
     <div id="l-overflow-menu">
       <button class="btn-sm" onclick="toggleFullscreen();closeLobbyOverflow()"><span style="margin-right:7px">⛶</span><span data-i18n="fullscreenTooltip">Fullscreen</span></button>
       <button class="btn-sm" id="music-toggle-lobby-mob" onclick="closeLobbyOverflow();toggleMusicPanel()"><span style="margin-right:7px">🎵</span><span data-i18n="musicPanelTitle">Music player</span></button>
@@ -1802,11 +1802,11 @@ function _processAvatarFile(file) {
 
   <!-- Lobby chat -->
   <div id="lobby-chat-panel" style="display:none;flex-direction:column;max-height:min(200px,28dvh)">
-    <div class="g-chat-panel-header"><span style="font-size:0.65rem;color:var(--gold-dim);letter-spacing:0.15em;text-transform:uppercase">Chat</span><span style="display:flex;gap:2px;align-items:center"><button type="button" id="l-gn-btn" onclick="App.globalNoticePrompt()" title="Global notice (admin)" data-i18n-title="gnBtn" aria-label="Global notice (admin)" data-i18n-aria="gnBtn" style="display:none;background:none;border:none;color:var(--gold-dim);cursor:pointer;font-size:0.9rem;padding:0 4px">📢</button><button type="button" id="l-suggest-btn" onclick="window._suggestPlayers()" title="Suggest players" data-i18n-title="suggestPlayers" aria-label="Suggest players" data-i18n-aria="suggestPlayers" style="display:none;background:none;border:none;color:var(--gold-dim);cursor:pointer;font-size:0.9rem;padding:0 4px">👥</button><button onclick="clearChatPanel('lobby')" title="Effacer le chat" data-i18n-title="chatClearTitle" style="background:none;border:none;color:var(--gold-dim);cursor:pointer;font-size:0.9rem;padding:0 4px">🗑️</button><button onclick="toggleLobbyChat()" style="background:none;border:none;color:var(--text);cursor:pointer;font-size:0.85rem;padding:0 4px">X</button></span></div>
+    <div class="g-chat-panel-header"><span style="font-size:0.65rem;color:var(--gold-dim);letter-spacing:0.15em;text-transform:uppercase">Chat</span><span style="display:flex;gap:2px;align-items:center"><button type="button" id="l-gn-btn" onclick="App.globalNoticePrompt()" title="Global notice (admin)" data-i18n-title="gnBtn" aria-label="Global notice (admin)" data-i18n-aria="gnBtn" style="display:none;background:none;border:none;color:var(--gold-dim);cursor:pointer;font-size:0.9rem;padding:0 4px">📢</button><button type="button" id="l-suggest-btn" onclick="window._suggestPlayers()" title="Suggest players" data-i18n-title="suggestPlayers" aria-label="Suggest players" data-i18n-aria="suggestPlayers" style="display:none;background:none;border:none;color:var(--gold-dim);cursor:pointer;font-size:0.9rem;padding:0 4px">👥</button><button onclick="clearChatPanel('lobby')" title="Clear chat" data-i18n-title="chatClearTitle" style="background:none;border:none;color:var(--gold-dim);cursor:pointer;font-size:0.9rem;padding:0 4px">🗑️</button><button onclick="toggleLobbyChat()" style="background:none;border:none;color:var(--text);cursor:pointer;font-size:0.85rem;padding:0 4px">X</button></span></div>
     <div class="chat-msgs" id="chat" style="flex:1;min-height:50px;max-height:120px;overflow-y:auto;padding:5px 10px;background:var(--field-bg)"></div>
     <div id="l-chat-emoji-panel" class="chat-emoji-panel" style="display:none"></div>
     <div class="chat-input" style="border-top:1px solid var(--border);flex-shrink:0">
-      <button type="button" class="chat-emoji-toggle" id="l-chat-emoji-toggle" onclick="toggleChatEmojiPicker(this)" data-panel="l-chat-emoji-panel" data-input="chat-in" title="Insérer un emoji" data-i18n-title="emojiPickerTitle" data-i18n-aria="emojiPickerTitle" aria-label="Insert emoji">🙂</button>
+      <button type="button" class="chat-emoji-toggle" id="l-chat-emoji-toggle" onclick="toggleChatEmojiPicker(this)" data-panel="l-chat-emoji-panel" data-input="chat-in" title="Insert emoji" data-i18n-title="emojiPickerTitle" data-i18n-aria="emojiPickerTitle" aria-label="Insert emoji">🙂</button>
       <input id="chat-in" maxlength="128" placeholder="Message…" data-i18n-placeholder="chatPlaceholder" onkeydown="if(event.key==='Enter') App.sendChat()">
       <button class="chat-send" onclick="App.sendChat()" data-i18n-aria="sendTooltip" aria-label="Send" data-i18n-title="sendTooltip" title="Send"><svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg></button>
     </div>
@@ -1830,33 +1830,33 @@ function _processAvatarFile(file) {
     <div class="create-col">
       <button class="create-toggle" id="create-toggle-btn" onclick="App.openCreatePage()">
         <span class="ct-ico">🛠️</span>
-        <span data-i18n="createTableHdr">Créer une table</span>
+        <span data-i18n="createTableHdr">Create a table</span>
       </button>
       <div id="create-form" style="display:none">
         <!-- Style de partie (TON différenciateur — conservé) -->
         <div class="cf-block">
-          <div class="cf-presets-label cf-style-label-row"><span data-i18n="gameStyle">Style de partie</span><button type="button" id="cf-style-toggle" class="cf-style-toggle" aria-expanded="false" onclick="App.toggleStyleGrid()"><span class="cfs-tx" data-i18n="styleExpand">Développer</span><span class="cfs-arr">▾</span></button></div>
+          <div class="cf-presets-label cf-style-label-row"><span data-i18n="gameStyle">Game style</span><button type="button" id="cf-style-toggle" class="cf-style-toggle" aria-expanded="false" onclick="App.toggleStyleGrid()"><span class="cfs-tx" data-i18n="styleExpand">Expand</span><span class="cfs-arr">▾</span></button></div>
           <div class="cf-presets cf-presets-style" id="cf-style-grid" style="display:none">
-            <button type="button" class="cf-preset" data-preset="tranquille" onclick="App.applyPreset('tranquille',this)"><span class="cfp-ico">🐢</span><span class="cfp-n" data-i18n="presetCalmName">Tranquille</span><span class="cfp-d" data-i18n="presetCalmDesc">parties longues</span></button>
-            <button type="button" class="cf-preset" data-preset="normal" onclick="App.applyPreset('normal',this)"><span class="cfp-ico">⚖️</span><span class="cfp-n" data-i18n="presetNormalName">Normal</span><span class="cfp-d" data-i18n="presetNormalDesc">équilibré</span></button>
-            <button type="button" class="cf-preset" data-preset="rapide" onclick="App.applyPreset('rapide',this)"><span class="cfp-ico">⚡</span><span class="cfp-n" data-i18n="presetFastName">Rapide</span><span class="cfp-d" data-i18n="presetFastDesc">ça va vite !</span></button>
+            <button type="button" class="cf-preset" data-preset="tranquille" onclick="App.applyPreset('tranquille',this)"><span class="cfp-ico">🐢</span><span class="cfp-n" data-i18n="presetCalmName">Relaxed</span><span class="cfp-d" data-i18n="presetCalmDesc">long games</span></button>
+            <button type="button" class="cf-preset" data-preset="normal" onclick="App.applyPreset('normal',this)"><span class="cfp-ico">⚖️</span><span class="cfp-n" data-i18n="presetNormalName">Normal</span><span class="cfp-d" data-i18n="presetNormalDesc">balanced</span></button>
+            <button type="button" class="cf-preset" data-preset="rapide" onclick="App.applyPreset('rapide',this)"><span class="cfp-ico">⚡</span><span class="cfp-n" data-i18n="presetFastName">Fast</span><span class="cfp-d" data-i18n="presetFastDesc">fast-paced!</span></button>
             <button type="button" class="cf-preset" data-preset="ranking" onclick="App.applyPreset('ranking',this)"><span class="cfp-ico">🏆</span><span class="cfp-n" data-i18n="presetRankingName">Ranking</span><span class="cfp-d" data-i18n="presetRankingDesc">official pace</span></button>
             <button type="button" class="cf-preset" data-preset="wecup" onclick="App.applyPreset('wecup',this)"><span class="cfp-ico">🏅</span><span class="cfp-n" data-i18n="presetWecupName">WeCup</span><span class="cfp-d" data-i18n="presetWecupDesc">balanced tournament</span></button>
             <button type="button" class="cf-preset" data-preset="bbc" onclick="App.applyPreset('bbc',this)"><span class="cfp-ico">⏱️</span><span class="cfp-n" data-i18n="presetBbcName">BBC</span><span class="cfp-d" data-i18n="presetBbcDesc">time-based blinds</span></button>
           </div>
-          <button type="button" class="cf-preset cfp-bar" id="cf-preset-perso" data-preset="perso" style="display:none" onclick="App.applyCreatePrefs(this)"><span class="cfp-ico">⭐</span><span class="cfp-n" data-i18n="presetPersoName">Perso</span><span class="cfp-d" data-i18n="presetPersoDesc">mes réglages</span></button>
+          <button type="button" class="cf-preset cfp-bar" id="cf-preset-perso" data-preset="perso" style="display:none" onclick="App.applyCreatePrefs(this)"><span class="cfp-ico">⭐</span><span class="cfp-n" data-i18n="presetPersoName">My prefs</span><span class="cfp-d" data-i18n="presetPersoDesc">my settings</span></button>
         </div>
 
         <!-- Nom de la partie -->
         <div class="cf-row cf-row-col">
-          <label class="cf-lbl" data-i18n="gameNameLabel">Nom de la partie</label>
-          <input id="cf-name" class="cf-input" placeholder="Table..." data-i18n-placeholder="tableNamePh">
+          <label class="cf-lbl" data-i18n="gameNameLabel">Game name</label>
+          <input id="cf-name" class="cf-input" placeholder="Table name…" data-i18n-placeholder="tableNamePh">
           <div id="cf-name-err" class="cf-name-err" style="display:none" data-i18n="gameNameRequired">Please enter a game name.</div>
         </div>
 
         <!-- Type de partie (masqué pour un invité pokerth.net : seul Normal est permis) -->
         <div class="cf-row cf-row-col" id="cf-gtype-row">
-          <label class="cf-lbl" data-i18n="gameType">Type de partie</label>
+          <label class="cf-lbl" data-i18n="gameType">Game type</label>
           <div class="gt-dd" id="cf-gtype-dd">
             <!-- Select natif conservé (caché) : source de vérité pour tout le JS existant -->
             <select id="cf-game-type" class="cf-select gt-dd-native" tabindex="-1" aria-hidden="true">
@@ -1899,23 +1899,23 @@ function _processAvatarFile(file) {
 
         <!-- Mot de passe (toggle) -->
         <div class="cf-row">
-          <label class="cf-lbl" data-i18n="passwordLabel">Mot de passe</label>
+          <label class="cf-lbl" data-i18n="passwordLabel">Password</label>
           <label class="cf-switch"><input type="checkbox" id="cf-use-password" onchange="var r=document.getElementById('cf-password-row');if(r)r.style.display=this.checked?'flex':'none'"><span class="cf-switch-tr"></span></label>
         </div>
         <div id="cf-password-row" class="cf-row cf-row-col" style="display:none">
-          <label class="cf-lbl" data-i18n="tablePassword">Password</label>
+          <label class="cf-lbl" data-i18n="tablePassword">Password:</label>
           <input id="cf-password" class="cf-input" type="password" maxlength="64" placeholder="••••••">
         </div>
 
         <!-- Spectateurs autorisés (toggle) -->
         <div class="cf-row">
-          <label class="cf-lbl" data-i18n="allowSpectators">Spectateurs autorisés</label>
+          <label class="cf-lbl" data-i18n="allowSpectators">Spectators</label>
           <label class="cf-switch"><input type="checkbox" id="cf-allow-spectators" checked><span class="cf-switch-tr"></span></label>
         </div>
 
         <!-- Joueurs max (stepper) -->
         <div class="cf-row">
-          <label class="cf-lbl" data-i18n="maxPlayers">Joueurs max.</label>
+          <label class="cf-lbl" data-i18n="maxPlayers">Max players</label>
           <div class="cf-step">
             <button type="button" class="cf-step-btn" onclick="App.stepField('cf-players',-1)">&minus;</button>
             <input id="cf-players" class="cf-step-num" type="number" min="2" max="10" step="1" value="10" onchange="App.clampNum(this)">
@@ -1925,7 +1925,7 @@ function _processAvatarFile(file) {
 
         <!-- Capital de départ (stepper) -->
         <div class="cf-row">
-          <label class="cf-lbl" data-i18n="startCash">Capital de départ</label>
+          <label class="cf-lbl" data-i18n="startCash">Starting stack</label>
           <div class="cf-step cf-step-money">
             <button type="button" class="cf-step-btn" onclick="App.stepField('cf-stack',-1)">&minus;</button>
             <input id="cf-stack" class="cf-step-num" type="number" min="1000" max="1000000" step="500" value="3000" onchange="App.clampNum(this)">
@@ -1934,9 +1934,9 @@ function _processAvatarFile(file) {
         </div>
 
         <!-- Réglages des blindes -->
-        <div class="cf-sec" data-i18n="blindsSettings">Réglages des blindes</div>
+        <div class="cf-sec" data-i18n="blindsSettings">Blind settings</div>
         <div class="cf-row">
-          <label class="cf-lbl" data-i18n="firstSmallBlind">Première petite blinde</label>
+          <label class="cf-lbl" data-i18n="firstSmallBlind">First small blind</label>
           <div class="cf-step cf-step-money">
             <button type="button" class="cf-step-btn" onclick="App.stepField('cf-blind',-1)">&minus;</button>
             <input id="cf-blind" class="cf-step-num" type="number" min="5" max="20000" step="1" value="10" onchange="App.clampNum(this)">
@@ -1944,9 +1944,9 @@ function _processAvatarFile(file) {
           </div>
         </div>
         <div class="cf-row cf-row-col">
-          <label class="cf-lbl" data-i18n="blindInterval">Intervalle d'augmentation des blindes</label>
+          <label class="cf-lbl" data-i18n="blindInterval">Blind increase interval</label>
           <div class="cf-interval">
-            <label class="cf-radio"><input type="radio" name="cf-rm" id="cf-rm1" checked onchange="App.setRaiseMode(1)"> <span data-i18n="unitHands">mains</span></label>
+            <label class="cf-radio"><input type="radio" name="cf-rm" id="cf-rm1" checked onchange="App.setRaiseMode(1)"> <span data-i18n="unitHands">hands</span></label>
             <label class="cf-radio"><input type="radio" name="cf-rm" id="cf-rm2" onchange="App.setRaiseMode(2)"> <span data-i18n="unitMinutes">minutes</span></label>
             <div class="cf-step cf-step-sm">
               <button type="button" class="cf-step-btn" onclick="App.stepField('cf-raise-every',-1)">&minus;</button>
@@ -1960,10 +1960,10 @@ function _processAvatarFile(file) {
         <!-- Ordre d'augmentation des blindes (parité QML : toujours doubler / liste manuelle,
              NetGameInfo champ 14 ; « Ensuite » = endRaiseMode champs 7/8) -->
         <div class="cf-row cf-row-col">
-          <label class="cf-lbl" data-i18n="blindsOrderLbl">Ordre d'augmentation des blindes</label>
+          <label class="cf-lbl" data-i18n="blindsOrderLbl">Blind raise order</label>
           <div class="cf-interval">
-            <label class="cf-radio"><input type="radio" name="cf-mb" id="cf-mb0" checked onchange="App.setManualBlindsMode(false)"> <span data-i18n="blindsAlwaysDouble">toujours doubler</span></label>
-            <label class="cf-radio"><input type="radio" name="cf-mb" id="cf-mb1" onchange="App.setManualBlindsMode(true)"> <span data-i18n="blindsManualOrder">liste manuelle</span></label>
+            <label class="cf-radio"><input type="radio" name="cf-mb" id="cf-mb0" checked onchange="App.setManualBlindsMode(false)"> <span data-i18n="blindsAlwaysDouble">always double blinds</span></label>
+            <label class="cf-radio"><input type="radio" name="cf-mb" id="cf-mb1" onchange="App.setManualBlindsMode(true)"> <span data-i18n="blindsManualOrder">manual blinds order</span></label>
           </div>
           <div id="cf-mb-editor" style="display:none;margin-top:6px">
             <div class="cf-presets" id="cf-mb-list" style="margin-bottom:6px"></div>
@@ -1973,27 +1973,27 @@ function _processAvatarFile(file) {
                 <input id="cf-mb-val" class="cf-step-num" type="number" min="2" max="9999999" step="1" value="20" onchange="App.clampNum(this)">
                 <button type="button" class="cf-step-btn" onclick="App.stepField('cf-mb-val',1)">+</button>
               </div>
-              <button type="button" class="btn-cf-reset" onclick="App.addManualBlind()"><span class="cf-reset-lbl" data-i18n="blindsAddBtn">+ Ajouter</span></button>
+              <button type="button" class="btn-cf-reset" onclick="App.addManualBlind()"><span class="cf-reset-lbl" data-i18n="blindsAddBtn">+ Add</span></button>
             </div>
-            <label class="cf-lbl" style="margin-top:8px;display:block" data-i18n="blindsAfterLbl">Ensuite :</label>
+            <label class="cf-lbl" style="margin-top:8px;display:block" data-i18n="blindsAfterLbl">Afterwards:</label>
             <div class="cf-interval" style="flex-wrap:wrap">
-              <label class="cf-radio"><input type="radio" name="cf-amb" id="cf-amb1" checked onchange="App.setAfterMB(1)"> <span data-i18n="blindsAfterDouble">doubler les blindes</span></label>
-              <label class="cf-radio"><input type="radio" name="cf-amb" id="cf-amb2" onchange="App.setAfterMB(2)"> <span data-i18n="blindsAfterRaiseBy">augmenter de</span></label>
+              <label class="cf-radio"><input type="radio" name="cf-amb" id="cf-amb1" checked onchange="App.setAfterMB(1)"> <span data-i18n="blindsAfterDouble">double blinds</span></label>
+              <label class="cf-radio"><input type="radio" name="cf-amb" id="cf-amb2" onchange="App.setAfterMB(2)"> <span data-i18n="blindsAfterRaiseBy">raise blinds by</span></label>
               <div class="cf-step cf-step-money" id="cf-amb2-step" style="display:none">
                 <button type="button" class="cf-step-btn" onclick="App.stepField('cf-end-raise-val',-1)">&minus;</button>
                 <input id="cf-end-raise-val" class="cf-step-num" type="number" min="1" max="9999999" step="1" value="200" onchange="App.clampNum(this)">
                 <button type="button" class="cf-step-btn" onclick="App.stepField('cf-end-raise-val',1)">+</button>
               </div>
-              <label class="cf-radio"><input type="radio" name="cf-amb" id="cf-amb3" onchange="App.setAfterMB(3)"> <span data-i18n="blindsAfterKeep">garder la dernière blinde</span></label>
+              <label class="cf-radio"><input type="radio" name="cf-amb" id="cf-amb3" onchange="App.setAfterMB(3)"> <span data-i18n="blindsAfterKeep">keep last blind</span></label>
             </div>
           </div>
           <input type="hidden" id="cf-manual-blinds" value="">
         </div>
 
         <!-- Limites de temps -->
-        <div class="cf-sec" data-i18n="timeLimits">Limites de temps</div>
+        <div class="cf-sec" data-i18n="timeLimits">Time limits</div>
         <div class="cf-row">
-          <label class="cf-lbl" data-i18n="actionTimeout">Limite de temps par action</label>
+          <label class="cf-lbl" data-i18n="actionTimeout">Time per action</label>
           <div class="cf-step cf-step-sec">
             <button type="button" class="cf-step-btn" onclick="App.stepField('cf-timeout',-1)">&minus;</button>
             <input id="cf-timeout" class="cf-step-num" type="number" min="5" max="60" step="1" value="20" onchange="App.clampNum(this)">
@@ -2001,7 +2001,7 @@ function _processAvatarFile(file) {
           </div>
         </div>
         <div class="cf-row">
-          <label class="cf-lbl" data-i18n="pauseBetweenHands">Pause entre les mains</label>
+          <label class="cf-lbl" data-i18n="pauseBetweenHands">Pause between hands</label>
           <div class="cf-step cf-step-sec">
             <button type="button" class="cf-step-btn" onclick="App.stepField('cf-delay',-1)">&minus;</button>
             <input id="cf-delay" class="cf-step-num" type="number" min="5" max="20" step="1" value="7" onchange="App.clampNum(this)">
@@ -2027,8 +2027,8 @@ function _processAvatarFile(file) {
         <div class="cf-actions">
           <button type="button" class="btn-cf-reset" id="cf-prefs-save-btn" onclick="App.saveCreatePrefs()" title="Save this form as my personal preferences" data-i18n-title="createPrefsSaveTip"><span class="cf-reset-ico" aria-hidden="true">💾</span><span class="cf-reset-lbl" data-i18n="createPrefsSave">💾 Save prefs</span></button>
           <button type="button" class="btn-cf-reset" onclick="App.resetCreateForm()"><span class="cf-reset-ico" aria-hidden="true">↺</span><span class="cf-reset-lbl" data-i18n="resetForm">↺ Reset</span></button>
-          <button type="button" class="btn-cf-cancel" onclick="App.closeCreatePage()" data-i18n="cancelBtn">Annuler</button>
-          <button type="button" class="cf-create-btn" data-i18n="createTable" onclick="App.createGame()">+ Créer</button>
+          <button type="button" class="btn-cf-cancel" onclick="App.closeCreatePage()" data-i18n="cancelBtn">Cancel</button>
+          <button type="button" class="cf-create-btn" data-i18n="createTable" onclick="App.createGame()">＋ Create table</button>
         </div>
       </div>
     </div>
@@ -2040,7 +2040,7 @@ function _processAvatarFile(file) {
         <span id="g-count" style="color:var(--text)">0 <span data-i18n="tableCount">table(s)</span></span>
       </div>
       <div class="filter-bar" id="g-filter-bar">
-        <button type="button" class="fbar-players" onclick="togglePlayersPanel()" title="Joueurs en ligne" data-i18n-title="playersOnlineTitle" data-i18n-aria="playersOnlineTitle" aria-label="Players online">👥</button>
+        <button type="button" class="fbar-players" onclick="togglePlayersPanel()" title="Players online" data-i18n-title="playersOnlineTitle" data-i18n-aria="playersOnlineTitle" aria-label="Players online">👥</button>
         <div class="sel-wrap gfilt-wrap">
           <select id="g-filter-select" onchange="App.setTableFilter(this.value)">
             <option value="0" data-i18n-opt="gfNone">No game list filter</option>
@@ -2071,7 +2071,7 @@ function _processAvatarFile(file) {
 
    <!-- Barre du bas — parité QML : joueur courant + accès à la création de table. -->
    <div class="lobby-footbar">
-     <span class="lfb-name"><span data-i18n="footPlayer">Player</span> : <span id="lobby-foot-av"></span><b id="lobby-foot-name" class="lfb-name-link" role="button" tabindex="0" onclick="openPlayerInfoPopup()" onkeydown="if(event.key==='Enter')openPlayerInfoPopup()" title="Mon profil" data-i18n-title="profileTooltip">—</b></span>
+     <span class="lfb-name"><span data-i18n="footPlayer">Player</span> : <span id="lobby-foot-av"></span><b id="lobby-foot-name" class="lfb-name-link" role="button" tabindex="0" onclick="openPlayerInfoPopup()" onkeydown="if(event.key==='Enter')openPlayerInfoPopup()" title="My profile" data-i18n-title="profileTooltip">—</b></span>
      <!-- Rejoindre la partie sélectionnée (parité LobbyPage QML : bouton Join en bas).
           Visible seulement quand une partie OUVERTE est sélectionnée. -->
      <button type="button" class="lfb-join" id="lobby-foot-join" style="display:none" onclick="App.joinSelectedGame()" data-i18n="footJoin">Join</button>
@@ -2094,12 +2094,12 @@ function _processAvatarFile(file) {
      #create-form y est déplacé à la 1re ouverture par App.openCreatePage(). -->
 <div id="s-create" class="screen">
   <div class="cp-header">
-    <button class="btn-sm btn-icon cp-back" type="button" onclick="App.closeCreatePage()" title="Retour" data-i18n-title="navBack" aria-label="Retour"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor" style="vertical-align:middle" aria-hidden="true"><path d="M12 3c-1.11 0-2 .89-2 2H3v14H2v2h20v-2h-1V5c0-1.11-.89-2-2-2zm0 2h7v14h-7zm-7 6h2v2H5z"/></svg></button>
-    <span class="cp-title" data-i18n="createTableHdr">Créer une partie</span>
+    <button class="btn-sm btn-icon cp-back" type="button" onclick="App.closeCreatePage()" title="Back" data-i18n-aria="navBack" data-i18n-title="navBack" aria-label="Back"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor" style="vertical-align:middle" aria-hidden="true"><path d="M12 3c-1.11 0-2 .89-2 2H3v14H2v2h20v-2h-1V5c0-1.11-.89-2-2-2zm0 2h7v14h-7zm-7 6h2v2H5z"/></svg></button>
+    <span class="cp-title" data-i18n="createTableHdr">Create a table</span>
     <span class="cp-head-spacer" aria-hidden="true"></span>
-    <button class="btn-sm btn-icon" id="forum-btn-create" onclick="toggleForumModal()" title="Forum" data-i18n-title="forumTooltip" aria-label="Forum"><svg viewBox="0 0 24 24" style="display:block;width:22px;height:22px" fill="currentColor" aria-hidden="true"><path d="M22 3l-1.67 1.67L18.67 3 17 4.67 15.33 3l-1.66 1.67L12 3l-1.67 1.67L8.67 3 7 4.67 5.33 3 3.67 4.67 2 3v16c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V3zM11 19H4v-6h7v6zm9 0h-7v-2h7v2zm0-4h-7v-2h7v2zm0-4H4V8h16v3z"/></svg><span class="forum-unread" style="display:none" aria-hidden="true">0</span></button>
+    <button class="btn-sm btn-icon" id="forum-btn-create" onclick="toggleForumModal()" title="Forum" data-i18n-aria="forumTooltip" data-i18n-title="forumTooltip" aria-label="Forum"><svg viewBox="0 0 24 24" style="display:block;width:22px;height:22px" fill="currentColor" aria-hidden="true"><path d="M22 3l-1.67 1.67L18.67 3 17 4.67 15.33 3l-1.66 1.67L12 3l-1.67 1.67L8.67 3 7 4.67 5.33 3 3.67 4.67 2 3v16c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V3zM11 19H4v-6h7v6zm9 0h-7v-2h7v2zm0-4h-7v-2h7v2zm0-4H4V8h16v3z"/></svg><span class="forum-unread" style="display:none" aria-hidden="true">0</span></button>
       <button class="btn-sm btn-icon" id="ranking-btn-create" onclick="toggleRankingModal()" title="Ranking" data-i18n-title="rankingTooltip" aria-label="Ranking"><svg class="rk-trophy" viewBox="0 0 24 24" style="display:block;width:22px;height:22px" fill="currentColor" aria-hidden="true"><path d="M19 5h-2V3H7v2H5C3.9 5 3 5.9 3 7v1c0 2.55 1.92 4.63 4.39 4.94.63 1.5 1.98 2.63 3.61 2.96V19H7v2h10v-2h-4v-3.1c1.63-.33 2.98-1.46 3.61-2.96C19.08 12.63 21 10.55 21 8V7c0-1.1-.9-2-2-2zM5 8V7h2v3.82C5.84 10.4 5 9.3 5 8zm14 0c0 1.3-.84 2.4-2 2.82V7h2v1z"/></svg></button>
-    <span class="hdr-ovf-wrap"><button class="btn-sm btn-icon" id="cr-overflow-btn" onclick="toggleCreateOverflow(event)" title="Plus" data-i18n-title="moreTooltip"><svg viewBox="0 0 24 24" style="display:block;width:22px;height:22px" fill="currentColor" aria-hidden="true"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58a.49.49 0 0 0 .12-.61l-1.92-3.32a.488.488 0 0 0-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54a.484.484 0 0 0-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58a.49.49 0 0 0-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg></button>
+    <span class="hdr-ovf-wrap"><button class="btn-sm btn-icon" id="cr-overflow-btn" onclick="toggleCreateOverflow(event)" title="More" data-i18n-title="moreTooltip"><svg viewBox="0 0 24 24" style="display:block;width:22px;height:22px" fill="currentColor" aria-hidden="true"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58a.49.49 0 0 0 .12-.61l-1.92-3.32a.488.488 0 0 0-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54a.484.484 0 0 0-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58a.49.49 0 0 0-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg></button>
     <div id="cr-overflow-menu">
       <button class="btn-sm" onclick="toggleFullscreen();closeCreateOverflow()"><span style="margin-right:7px">⛶</span><span data-i18n="fullscreenTooltip">Fullscreen</span></button>
       <button class="btn-sm" id="music-toggle-create-mob" onclick="closeCreateOverflow();toggleMusicPanel()"><span style="margin-right:7px">🎵</span><span data-i18n="musicPanelTitle">Music player</span></button>
@@ -2115,24 +2115,24 @@ function _processAvatarFile(file) {
 <div id="s-game" class="screen">
   <div class="header">
     <button class="btn-sm btn-icon" onclick="App.confirmLeaveGame()" title="Quit" data-i18n-title="quitTooltip"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor" style="vertical-align:middle" aria-hidden="true"><path d="M12 3c-1.11 0-2 .89-2 2H3v14H2v2h20v-2h-1V5c0-1.11-.89-2-2-2zm0 2h7v14h-7zm-7 6h2v2H5z"/></svg></button>
-    <div class="header-brand header-brand--game"><span class="g-brand-click" onclick="openGameInfoPopup()" title="Détails de la partie" data-i18n-title="gameDetailsTooltip"><span id="g-admin-badge" class="g-status-badge g-status-admin" style="display:none" title="Vous êtes créateur de cette table" data-i18n-title="adminBadgeTooltip"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" style="display:inline-block;vertical-align:-1px"><path d="M3 6l3.5 3L12 4l5.5 5L21 6l-1.6 9H4.6L3 6zm1.6 11h14.8v2H4.6v-2z"/></svg><span class="gsb-label" data-i18n="menuAdmin">Admin</span></span><span id="g-name" class="g-name-clickable">TABLE</span></span></div>
+    <div class="header-brand header-brand--game"><span class="g-brand-click" onclick="openGameInfoPopup()" title="Game details" data-i18n-title="gameDetailsTooltip"><span id="g-admin-badge" class="g-status-badge g-status-admin" style="display:none" title="You created this table" data-i18n-title="adminBadgeTooltip"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" style="display:inline-block;vertical-align:-1px"><path d="M3 6l3.5 3L12 4l5.5 5L21 6l-1.6 9H4.6L3 6zm1.6 11h14.8v2H4.6v-2z"/></svg><span class="gsb-label" data-i18n="menuAdmin">Admin</span></span><span id="g-name" class="g-name-clickable">TABLE</span></span></div>
     <div class="header-pills"></div>
     <button class="btn-sm btn-icon" id="fs-btn-game" onclick="toggleFullscreen()" title="Fullscreen" data-i18n-title="fullscreenTooltip">⛶</button>
-    <button class="btn-sm btn-icon" id="sound-toggle-btn" onclick="toggleSoundPopover(this)" title="Couper/Unmute" data-i18n-title="soundTooltip"><svg viewBox="0 0 24 24" style="display:block;width:22px;height:22px" fill="currentColor" aria-hidden="true"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg></button>
-    <button class="btn-sm btn-icon" id="forum-btn-game" onclick="toggleForumModal()" title="Forum" data-i18n-title="forumTooltip" aria-label="Forum" style="display:none"><svg viewBox="0 0 24 24" style="display:block;width:22px;height:22px" fill="currentColor" aria-hidden="true"><path d="M22 3l-1.67 1.67L18.67 3 17 4.67 15.33 3l-1.66 1.67L12 3l-1.67 1.67L8.67 3 7 4.67 5.33 3 3.67 4.67 2 3v16c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V3zM11 19H4v-6h7v6zm9 0h-7v-2h7v2zm0-4h-7v-2h7v2zm0-4H4V8h16v3z"/></svg><span class="forum-unread" style="display:none" aria-hidden="true">0</span></button>
+    <button class="btn-sm btn-icon" id="sound-toggle-btn" onclick="toggleSoundPopover(this)" title="Mute / unmute" data-i18n-title="soundTooltip"><svg viewBox="0 0 24 24" style="display:block;width:22px;height:22px" fill="currentColor" aria-hidden="true"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg></button>
+    <button class="btn-sm btn-icon" id="forum-btn-game" onclick="toggleForumModal()" title="Forum" data-i18n-aria="forumTooltip" data-i18n-title="forumTooltip" aria-label="Forum" style="display:none"><svg viewBox="0 0 24 24" style="display:block;width:22px;height:22px" fill="currentColor" aria-hidden="true"><path d="M22 3l-1.67 1.67L18.67 3 17 4.67 15.33 3l-1.66 1.67L12 3l-1.67 1.67L8.67 3 7 4.67 5.33 3 3.67 4.67 2 3v16c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V3zM11 19H4v-6h7v6zm9 0h-7v-2h7v2zm0-4h-7v-2h7v2zm0-4H4V8h16v3z"/></svg><span class="forum-unread" style="display:none" aria-hidden="true">0</span></button>
       <button class="btn-sm btn-icon" id="ranking-btn-game" onclick="toggleRankingModal()" title="Ranking" data-i18n-title="rankingTooltip" aria-label="Ranking" style="display:none"><svg class="rk-trophy" viewBox="0 0 24 24" style="display:block;width:22px;height:22px" fill="currentColor" aria-hidden="true"><path d="M19 5h-2V3H7v2H5C3.9 5 3 5.9 3 7v1c0 2.55 1.92 4.63 4.39 4.94.63 1.5 1.98 2.63 3.61 2.96V19H7v2h10v-2h-4v-3.1c1.63-.33 2.98-1.46 3.61-2.96C19.08 12.63 21 10.55 21 8V7c0-1.1-.9-2-2-2zM5 8V7h2v3.82C5.84 10.4 5 9.3 5 8zm14 0c0 1.3-.84 2.4-2 2.82V7h2v1z"/></svg></button>
     <button class="btn-sm btn-icon" id="tableranking-btn-game" onclick="toggleTableRanking()" title="Table ranking" data-i18n-title="tableRankTooltip" aria-label="Table ranking" style="display:none"><svg viewBox="0 0 24 24" style="display:block;width:22px;height:22px" fill="currentColor" aria-hidden="true"><path d="M9 3h6v18H9V3zm2 2v14h2V5h-2zM2 11h5v10H2V11zm2 2v6h1v-6H4zm13 -2h5v10h-5V11zm2 2v6h1v-6h-1z"/></svg></button>
-    <button class="btn-sm btn-icon" id="haptic-toggle-btn" onclick="toggleHaptic()" title="Vibration" data-i18n-title="hapticLabel" aria-label="Vibration">📳</button>
-    <button class="btn-sm btn-icon" id="voice-toggle-btn" onclick="toggleVoice()" title="Annonce vocale" data-i18n-title="voiceLabel" aria-label="Annonce vocale">🤐</button>
-    <button class="btn-sm" id="admin-startnobots-btn" onclick="App.startNoBots()" style="display:none;color:var(--green);border-color:rgba(var(--green-rgb),0.4)" title="Start without bots (humans only)" data-i18n-title="wpStartHumansTip"><span data-i18n="startNoBots">▶ Start (no bots)</span></button>
-    <button class="btn-sm" id="admin-start-btn" onclick="App.startWithBots()" style="display:none;color:var(--green);border-color:rgba(var(--green-rgb),0.4)" title="Start with bots" data-i18n-title="wpFillBotsTip"><span data-i18n="startWithBots">▶ Start with bots</span></button>
+    <button class="btn-sm btn-icon" id="haptic-toggle-btn" onclick="toggleHaptic()" title="Vibration" data-i18n-aria="hapticLabel" data-i18n-title="hapticLabel" aria-label="Vibration">📳</button>
+    <button class="btn-sm btn-icon" id="voice-toggle-btn" onclick="toggleVoice()" title="Voice" data-i18n-aria="voiceLabel" data-i18n-title="voiceLabel" aria-label="Voice">🤐</button>
+    <button class="btn-sm" id="admin-startnobots-btn" onclick="App.startNoBots()" style="display:none;color:var(--green);border-color:rgba(var(--green-rgb),0.4)" title="Start with humans only" data-i18n-title="wpStartHumansTip"><span data-i18n="startNoBots">▶ Start (no bots)</span></button>
+    <button class="btn-sm" id="admin-start-btn" onclick="App.startWithBots()" style="display:none;color:var(--green);border-color:rgba(var(--green-rgb),0.4)" title="Fill empty seats with bots" data-i18n-title="wpFillBotsTip"><span data-i18n="startWithBots">▶ Start with bots</span></button>
     <button class="btn-sm" id="admin-close-btn" onclick="App.closeTable()" style="display:none;color:var(--text-hi);border-color:var(--border-hi)" title="Close table" data-i18n-title="closeTableTooltip" data-i18n="closeTable">🔒 Close table</button>
     <button class="btn-sm" id="admin-kick-btn" onclick="App.openKickModal()" style="display:none;color:var(--text-hi);border-color:var(--border-hi)" title="Kick player" data-i18n-title="kickTooltip">👥 <span data-i18n="kickTooltip">Kick player</span></button>
     <button class="btn-sm btn-icon live-only" id="live-theme-game" onclick="openThemePanel(event)" aria-label="Appearance">🎨</button>
     <button class="btn-sm btn-icon live-only" id="lang-toggle-game" onclick="openLangMenu(event)" title="Language" data-i18n-title="advLanguage">🌐</button>
-    <button class="btn-sm btn-icon live-only" id="live-mode-game" onclick="liveCycleThemeMode()" title="Light / dark" data-i18n-title="sectionPalette"></button>
+    <button class="btn-sm btn-icon live-only" id="live-mode-game" onclick="liveCycleThemeMode()" title="Palette" data-i18n-title="sectionPalette"></button>
     <span class="live-only live-ver" id="live-ver-game"></span>
-    <span class="hdr-ovf-wrap"><button class="btn-sm btn-icon" id="g-overflow-btn" onclick="toggleHeaderOverflow(event)" title="Plus" data-i18n-title="moreTooltip"><svg viewBox="0 0 24 24" style="display:block;width:22px;height:22px" fill="currentColor" aria-hidden="true"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58a.49.49 0 0 0 .12-.61l-1.92-3.32a.488.488 0 0 0-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54a.484.484 0 0 0-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58a.49.49 0 0 0-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg></button>
+    <span class="hdr-ovf-wrap"><button class="btn-sm btn-icon" id="g-overflow-btn" onclick="toggleHeaderOverflow(event)" title="More" data-i18n-title="moreTooltip"><svg viewBox="0 0 24 24" style="display:block;width:22px;height:22px" fill="currentColor" aria-hidden="true"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58a.49.49 0 0 0 .12-.61l-1.92-3.32a.488.488 0 0 0-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54a.484.484 0 0 0-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58a.49.49 0 0 0-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg></button>
     <div id="g-overflow-menu">
       <!-- Vue -->
       <button class="btn-sm" onclick="toggleFullscreen();closeHeaderOverflow()"><span style="margin-right:7px">⛶</span><span data-i18n="fullscreenTooltip">Fullscreen</span></button>
@@ -2170,7 +2170,7 @@ function _processAvatarFile(file) {
        so the two share styles: header with title + close button,
        scrollable body inside a fixed-height container. -->
   <div id="g-log-panel" style="display:none;flex-direction:column">
-    <div class="g-chat-panel-header"><span class="gip-grip" aria-hidden="true" data-i18n-title="winMove" title="Move">⠿</span><span class="gip-tabs"><button type="button" id="gip-tab-log" class="gip-tab gip-on" onclick="gipShowTab('log')" data-i18n="gipTabLog">Historique</button><button type="button" id="gip-tab-odds" class="gip-tab" onclick="gipShowTab('odds')" data-i18n="gipTabOdds">Chances</button><button type="button" id="gip-tab-stats" class="gip-tab" onclick="gipShowTab('stats')" data-i18n="gipTabStats">Stats</button></span><span style="display:flex;gap:2px;align-items:center"><button id="gip-export" onclick="exportLog()" data-i18n-title="logExportTitle" title="Exporter le journal" style="background:none;border:none;color:var(--chatlog-muted, var(--gold-dim));cursor:pointer;font-size:0.9rem;padding:0 4px">📤</button><button onclick="toggleLog()" style="background:none;border:none;color:var(--chatlog-text2, var(--chatlog-text, var(--text)));cursor:pointer;font-size:0.85rem;padding:0 4px">✕</button></span></div>
+    <div class="g-chat-panel-header"><span class="gip-grip" aria-hidden="true" data-i18n-title="winMove" title="Move">⠿</span><span class="gip-tabs"><button type="button" id="gip-tab-log" class="gip-tab gip-on" onclick="gipShowTab('log')" data-i18n="gipTabLog">Log</button><button type="button" id="gip-tab-odds" class="gip-tab" onclick="gipShowTab('odds')" data-i18n="gipTabOdds">Odds</button><button type="button" id="gip-tab-stats" class="gip-tab" onclick="gipShowTab('stats')" data-i18n="gipTabStats">Stats</button></span><span style="display:flex;gap:2px;align-items:center"><button id="gip-export" onclick="exportLog()" data-i18n-title="logExportTitle" title="Export log" style="background:none;border:none;color:var(--chatlog-muted, var(--gold-dim));cursor:pointer;font-size:0.9rem;padding:0 4px">📤</button><button onclick="toggleLog()" style="background:none;border:none;color:var(--chatlog-text2, var(--chatlog-text, var(--text)));cursor:pointer;font-size:0.85rem;padding:0 4px">✕</button></span></div>
     <div class="log-msgs" id="g-log-body" style="flex:1;min-height:60px;overflow-y:auto;padding:6px 12px;background:var(--chatlog-bg, var(--field-bg))"></div>
     <div id="gip-assist" style="display:none"><div class="odds-hd" data-i18n="assist">Assistance</div><span class="hs-lbl" id="hs-lbl"><span class="hs-txt"></span></span><div id="hand-strength"><span class="hs-track"><i class="hs-fill"></i></span></div><div class="hs-segs" id="hs-segs" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div>
     <div class="log-msgs" id="g-odds-body" style="display:none;flex:1;min-height:60px;overflow-y:auto;padding:6px 12px;background:var(--chatlog-bg, var(--field-bg))"></div>
@@ -2178,11 +2178,11 @@ function _processAvatarFile(file) {
   </div>
   <!-- Chat dropdown (below header) -->
   <div id="g-chat-panel" style="display:none;flex-direction:column">
-    <div class="g-chat-panel-header"><span style="font-size:0.65rem;color:var(--gold-dim);letter-spacing:0.15em;text-transform:uppercase">💬 Chat</span><span style="display:flex;gap:2px;align-items:center"><button onclick="clearChatPanel('game')" title="Effacer le chat" data-i18n-title="chatClearTitle" style="background:none;border:none;color:var(--gold-dim);cursor:pointer;font-size:0.9rem;padding:0 4px">🗑️</button><button onclick="toggleGameChat()" style="background:none;border:none;color:var(--text);cursor:pointer;font-size:0.85rem;padding:0 4px">✕</button></span></div>
+    <div class="g-chat-panel-header"><span style="font-size:0.65rem;color:var(--gold-dim);letter-spacing:0.15em;text-transform:uppercase">💬 Chat</span><span style="display:flex;gap:2px;align-items:center"><button onclick="clearChatPanel('game')" title="Clear chat" data-i18n-title="chatClearTitle" style="background:none;border:none;color:var(--gold-dim);cursor:pointer;font-size:0.9rem;padding:0 4px">🗑️</button><button onclick="toggleGameChat()" style="background:none;border:none;color:var(--text);cursor:pointer;font-size:0.85rem;padding:0 4px">✕</button></span></div>
     <div class="chat-msgs" id="g-chat-msgs" style="flex:1;min-height:60px;overflow-y:auto;padding:6px 12px;background:var(--chatlog-bg, var(--field-bg))"></div>
     <div id="g-chat-emoji-panel" class="chat-emoji-panel" style="display:none"></div>
     <div class="chat-input" style="border-top:1px solid var(--border);flex-shrink:0">
-      <button type="button" class="chat-emoji-toggle" id="g-chat-emoji-toggle" onclick="toggleChatEmojiPicker(this)" data-panel="g-chat-emoji-panel" data-input="g-chat-in" title="Insérer un emoji" data-i18n-title="emojiPickerTitle" data-i18n-aria="emojiPickerTitle" aria-label="Insert emoji">😊</button>
+      <button type="button" class="chat-emoji-toggle" id="g-chat-emoji-toggle" onclick="toggleChatEmojiPicker(this)" data-panel="g-chat-emoji-panel" data-input="g-chat-in" title="Insert emoji" data-i18n-title="emojiPickerTitle" data-i18n-aria="emojiPickerTitle" aria-label="Insert emoji">😊</button>
       <input id="g-chat-in" maxlength="128" placeholder="Message…" data-i18n-placeholder="chatPlaceholder" onkeydown="if(event.key==='Enter')App.sendGameChat()">
       <button class="chat-send" onclick="App.sendGameChat()">▶</button>
     </div>
@@ -2202,8 +2202,8 @@ function _processAvatarFile(file) {
   <!-- Panneau réactions (dropdown header) -->
   <div id="g-reaction-panel" style="display:none">
     <div class="react-panel-title">
-      <span>😊 <span data-i18n="reactionsLabel">Réactions</span></span><span class="react-pager"><button type="button" class="react-pg-arrow" onclick="App.reactPageStep(-1)" aria-label="&#8249;">&#8249;</button><span class="react-pg-ind" id="react-page-ind">1/3</span><button type="button" class="react-pg-arrow" onclick="App.reactPageStep(1)" aria-label="&#8250;">&#8250;</button></span>
-      <span class="react-title-actions"><button type="button" class="react-pin-btn" id="react-pin-toggle" onclick="App.toggleReactionsPin()" aria-pressed="false" title="Épingler : garder la fenêtre ouverte après une réaction" data-i18n-title="reactionsPinTitle">📌</button><button type="button" class="react-mute-btn" id="react-mute-toggle" onclick="App.toggleReactionsMute()" aria-pressed="false" title="Activer / désactiver les réactions" data-i18n-title="reactionsMuteTitle"><span class="rm-emo">😊</span></button><button class="react-panel-close" onclick="toggleReactionPanel()">✕</button></span>
+      <span>😊 <span data-i18n="reactionsLabel">Reactions</span></span><span class="react-pager"><button type="button" class="react-pg-arrow" onclick="App.reactPageStep(-1)" aria-label="&#8249;">&#8249;</button><span class="react-pg-ind" id="react-page-ind">1/3</span><button type="button" class="react-pg-arrow" onclick="App.reactPageStep(1)" aria-label="&#8250;">&#8250;</button></span>
+      <span class="react-title-actions"><button type="button" class="react-pin-btn" id="react-pin-toggle" onclick="App.toggleReactionsPin()" aria-pressed="false" title="Pin: keep the window open after a reaction" data-i18n-title="reactionsPinTitle">📌</button><button type="button" class="react-mute-btn" id="react-mute-toggle" onclick="App.toggleReactionsMute()" aria-pressed="false" title="Enable / disable reactions" data-i18n-title="reactionsMuteTitle"><span class="rm-emo">😊</span></button><button class="react-panel-close" onclick="toggleReactionPanel()">✕</button></span>
     </div>
     <div class="react-grid" data-rpage="0">
         <button class="react-btn" onclick="App.sendReaction('😂')" title="😂">😂<span class="rc" id="rcp-0"></span></button>
@@ -2315,20 +2315,20 @@ function _processAvatarFile(file) {
          haut-gauche, journal en haut-droite. -->
     <div class="g-felt-corner g-felt-tl">
       <button class="g-felt-btn" id="chat-toggle-btn" onclick="toggleGameChat()" title="Chat" data-i18n-title="chatTooltip">💬</button>
-      <button class="g-felt-btn" id="react-toggle-btn" onclick="toggleReactionPanel()" title="Réactions" data-i18n-title="reactionsLabel">😊</button>
+      <button class="g-felt-btn" id="react-toggle-btn" onclick="toggleReactionPanel()" title="Reactions" data-i18n-title="reactionsLabel">😊</button>
     </div>
     <div class="g-felt-corner g-felt-tr">
-      <button class="g-felt-btn" id="hands-toggle-btn" onclick="toggleHandsHelp()" title="Combinaisons du poker" data-i18n-title="handsHelpTooltip" data-i18n-aria="handsHelpTooltip" aria-label="Poker hand rankings">🃏</button>
-      <button class="g-felt-btn" id="log-toggle-btn" onclick="toggleLog()" title="Journal" data-i18n-title="logTooltip">📋</button>
+      <button class="g-felt-btn" id="hands-toggle-btn" onclick="toggleHandsHelp()" title="Poker hand rankings" data-i18n-title="handsHelpTooltip" data-i18n-aria="handsHelpTooltip" aria-label="Poker hand rankings">🃏</button>
+      <button class="g-felt-btn" id="log-toggle-btn" onclick="toggleLog()" title="Log" data-i18n-title="logTooltip">📋</button>
     </div>
     <!-- Zoom table : bouton repliable en mobile (une touche qui déploie les autres) -->
     <div id="g-zoom-ctrl" class="zoom-ctrl">
       <button class="zoom-btn zoom-toggle" id="g-zoom-toggle" onclick="toggleLoupe()" data-i18n-title="loupeToggle" title="Magnifier ×2" data-i18n-aria="loupeToggle" aria-label="Magnifier ×2" aria-pressed="false">🔍</button>
-      <button class="zoom-btn" id="g-zoom-in" onclick="tableZoomStep(1)" title="Agrandir la table" data-i18n-title="zoomIn" data-i18n-aria="zoomIn" aria-label="Enlarge table">+</button>
-      <button class="zoom-btn" id="g-zoom-reset" onclick="tableZoomReset()" title="Réinitialiser la vue" data-i18n-title="zoomReset" data-i18n-aria="zoomReset" aria-label="Reset view">↺</button>
-      <button class="zoom-btn" id="g-seat-edit" onclick="toggleSeatEdit()" title="Éditer le placement des sièges" data-i18n-title="seatEditToggle" data-i18n-aria="seatEditToggle" aria-label="Edit seat placement">✎</button>
-      <button class="zoom-btn" id="g-cardzoom" onclick="toggleOwnCardZoom()" title="Agrandir mes cartes" data-i18n-title="cardZoomToggle" data-i18n-aria="cardZoomToggle" aria-label="Enlarge my cards"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="3" y="7" width="10" height="14" rx="2"/><rect x="11" y="3" width="10" height="14" rx="2"/></svg></button>
-      <button class="zoom-btn" id="g-zoom-out" onclick="tableZoomStep(-1)" title="Réduire la table" data-i18n-title="zoomOut" data-i18n-aria="zoomOut" aria-label="Shrink table">−</button>
+      <button class="zoom-btn" id="g-zoom-in" onclick="tableZoomStep(1)" title="Enlarge table" data-i18n-title="zoomIn" data-i18n-aria="zoomIn" aria-label="Enlarge table">+</button>
+      <button class="zoom-btn" id="g-zoom-reset" onclick="tableZoomReset()" title="Reset view" data-i18n-title="zoomReset" data-i18n-aria="zoomReset" aria-label="Reset view">↺</button>
+      <button class="zoom-btn" id="g-seat-edit" onclick="toggleSeatEdit()" title="Edit seat placement" data-i18n-title="seatEditToggle" data-i18n-aria="seatEditToggle" aria-label="Edit seat placement">✎</button>
+      <button class="zoom-btn" id="g-cardzoom" onclick="toggleOwnCardZoom()" title="Enlarge my cards" data-i18n-title="cardZoomToggle" data-i18n-aria="cardZoomToggle" aria-label="Enlarge my cards"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="3" y="7" width="10" height="14" rx="2"/><rect x="11" y="3" width="10" height="14" rx="2"/></svg></button>
+      <button class="zoom-btn" id="g-zoom-out" onclick="tableZoomStep(-1)" title="Shrink table" data-i18n-title="zoomOut" data-i18n-aria="zoomOut" aria-label="Shrink table">−</button>
     </div>
     <!-- TABLE -->
     <div class="table-zone" id="g-table-zone">
@@ -2358,14 +2358,14 @@ function _processAvatarFile(file) {
     <!-- PLAYER BAR -->
     <div class="player-bar">
       <div class="player-bar-left">
-        <div class="pb-avatar" id="g-myseat-av" onclick="openPlayerInfoPopup()" title="Mon profil" data-i18n-title="profileTooltip" style="cursor:pointer;transition:box-shadow 0.2s" onmouseenter="this.style.boxShadow='0 0 14px rgba(200,168,74,0.7)'" onmouseleave="this.style.boxShadow=''">N</div>
+        <div class="pb-avatar" id="g-myseat-av" onclick="openPlayerInfoPopup()" title="My profile" data-i18n-title="profileTooltip" style="cursor:pointer;transition:box-shadow 0.2s" onmouseenter="this.style.boxShadow='0 0 14px rgba(200,168,74,0.7)'" onmouseleave="this.style.boxShadow=''">N</div>
         <!-- Indicateur de ping (parité ShowPingStateInAvatar QML, opt-in) -->
         <span id="g-ping-dot" class="ping-dot" style="display:none"></span>
         <div class="pb-info">
           <div class="pb-name" id="g-myseat-name">—</div>
           <div class="pb-money" id="g-myseat-money">—</div>
         </div>
-        <div class="pb-cards" id="g-myseat-cards" onclick="App.togglePreActionPanel&&App.togglePreActionPanel()" title="Aperçu des actions" data-i18n-title="preActionTitle" style="cursor:pointer">
+        <div class="pb-cards" id="g-myseat-cards" onclick="App.togglePreActionPanel&&App.togglePreActionPanel()" title="Action preview" data-i18n-title="preActionTitle" style="cursor:pointer">
           <div class="pk sm back"></div><div class="pk sm back"></div>
           <!-- « Show » post-main : au-dessus des cartes (suggestion communauté), F5 -->
           <button type="button" id="g-show-btn" class="show-cards-btn" style="display:none" onclick="event.stopPropagation();App.showMyCards&&App.showMyCards()" title="F5"><span data-i18n="showCards">Show</span> 👁</button>
@@ -2395,16 +2395,16 @@ function _processAvatarFile(file) {
      largeur (À propos / Projet / Remerciements / Licence / Bibliothèques). -->
 <div id="about-page" style="display:none">
   <div class="ab-head">
-    <button class="ab-back" type="button" onclick="window.closeAboutPage()" title="Retour" data-i18n-title="backTooltip" aria-label="Retour">&#8249;</button>
+    <button class="ab-back" type="button" onclick="window.closeAboutPage()" title="Back" data-i18n-aria="backTooltip" data-i18n-title="backTooltip" aria-label="Back">&#8249;</button>
   </div>
-  <div class="ab-title" data-i18n="abTitle">À propos de PokerTH</div>
+  <div class="ab-title" data-i18n="abTitle">About PokerTH</div>
   <div class="ab-tabs" role="tablist">
-    <button class="ab-tab active" id="ab-tab-0" type="button" role="tab" onclick="window.abShowTab(0)"><span class="ab-tab-lbl" data-i18n="abTabAbout">A propos de</span></button>
-    <button class="ab-tab" id="ab-tab-5" type="button" role="tab" onclick="window.abShowTab(5)"><span class="ab-tab-lbl" data-i18n="abTabChangelog">Journal des modifications</span></button>
-    <button class="ab-tab" id="ab-tab-1" type="button" role="tab" onclick="window.abShowTab(1)"><span class="ab-tab-lbl" data-i18n="abTabProject">Projet</span></button>
-    <button class="ab-tab" id="ab-tab-2" type="button" role="tab" onclick="window.abShowTab(2)"><span class="ab-tab-lbl" data-i18n="abTabThanks">Remerciements à</span></button>
-    <button class="ab-tab" id="ab-tab-3" type="button" role="tab" onclick="window.abShowTab(3)"><span class="ab-tab-lbl" data-i18n="abTabLicense">Licence</span></button>
-    <button class="ab-tab" id="ab-tab-4" type="button" role="tab" onclick="window.abShowTab(4)"><span class="ab-tab-lbl" data-i18n="abTabLibs">Bibliothèques tierces</span></button>
+    <button class="ab-tab active" id="ab-tab-0" type="button" role="tab" onclick="window.abShowTab(0)"><span class="ab-tab-lbl" data-i18n="abTabAbout">About</span></button>
+    <button class="ab-tab" id="ab-tab-5" type="button" role="tab" onclick="window.abShowTab(5)"><span class="ab-tab-lbl" data-i18n="abTabChangelog">Changelog</span></button>
+    <button class="ab-tab" id="ab-tab-1" type="button" role="tab" onclick="window.abShowTab(1)"><span class="ab-tab-lbl" data-i18n="abTabProject">Project</span></button>
+    <button class="ab-tab" id="ab-tab-2" type="button" role="tab" onclick="window.abShowTab(2)"><span class="ab-tab-lbl" data-i18n="abTabThanks">Thanks to</span></button>
+    <button class="ab-tab" id="ab-tab-3" type="button" role="tab" onclick="window.abShowTab(3)"><span class="ab-tab-lbl" data-i18n="abTabLicense">License</span></button>
+    <button class="ab-tab" id="ab-tab-4" type="button" role="tab" onclick="window.abShowTab(4)"><span class="ab-tab-lbl" data-i18n="abTabLibs">Third-party libraries</span></button>
   </div>
   <div class="ab-body">
     <div class="ab-pane" id="ab-pane-0">
@@ -2414,65 +2414,65 @@ function _processAvatarFile(file) {
         <div class="ab-vername" id="ab-version">PokerTH Web Client</div>
       </div>
       <div class="ab-feats">
-        <div>– <span data-i18n="abFeat1">Le jeu de Poker Texas Holdem par excellence</span></div>
-        <div>– <span data-i18n="abFeat2">Partie solo avec possibilité de jouer jusqu'à 9 adversaires contrôlés par l'ordinateur</span></div>
-        <div>– <span data-i18n="abFeat3">Parties sur Internet et sur serveur privé</span></div>
-        <div>– <span data-i18n="abFeat4">Mode entraînement hors ligne contre les bots</span></div>
-        <div>– <span data-i18n="abFeat5">Possibilité de changer l'aspect du jeu avec des styles de cartes et de tables</span></div>
-        <div>– <span data-i18n="abFeat6">Certaines parties sont enregistrées et vous pouvez consulter le classement des meilleurs joueurs en ligne</span></div>
+        <div>– <span data-i18n="abFeat1">The Texas Hold'em poker game par excellence</span></div>
+        <div>– <span data-i18n="abFeat2">Solo play against up to 9 computer-controlled opponents</span></div>
+        <div>– <span data-i18n="abFeat3">Internet and private-server games</span></div>
+        <div>– <span data-i18n="abFeat4">Offline training mode against the bots</span></div>
+        <div>– <span data-i18n="abFeat5">Customize the look of the game with card decks and table styles</span></div>
+        <div>– <span data-i18n="abFeat6">Some games are recorded and you can browse the online leaderboard of the best players</span></div>
       </div>
       <div class="ab-copy" data-i18n="abCopy">(c) 2006–2026, Kai Philipp, Felix Hammer, Florian Thauer, Lothar May</div>
       <div class="ab-net"><a href="https://www.pokerth.net" target="_blank" rel="noopener noreferrer">https://www.pokerth.net</a></div>
     </div>
     <div class="ab-pane" id="ab-pane-1" style="display:none">
-      <p data-i18n="abProject1">PokerTH est un jeu de poker Texas Hold'em libre et open source, développé depuis 2006. Ce client web en est le portage navigateur, développé en collaboration avec le projet PokerTH.</p>
-      <p data-i18n="abProject2">Le code source est librement disponible :</p>
+      <p data-i18n="abProject1">PokerTH is a free and open source Texas Hold'em poker game, developed since 2006. This web client is its browser port, developed in collaboration with the PokerTH project.</p>
+      <p data-i18n="abProject2">The source code is freely available:</p>
       <ul>
         <li>PokerTH — <a href="https://github.com/pokerth/pokerth" target="_blank" rel="noopener noreferrer">github.com/pokerth/pokerth</a></li>
-        <li><span data-i18n="abProjectWeb">Client web</span> — <a href="https://github.com/narmod/pokerth-web-client" target="_blank" rel="noopener noreferrer">github.com/narmod/pokerth-web-client</a></li>
+        <li><span data-i18n="abProjectWeb">Web client</span> — <a href="https://github.com/narmod/pokerth-web-client" target="_blank" rel="noopener noreferrer">github.com/narmod/pokerth-web-client</a></li>
       </ul>
-      <p><b data-i18n="abAuthors">Auteurs :</b></p>
+      <p><b data-i18n="abAuthors">Authors:</b></p>
       <ul class="ab-authors">
-        <li>Felix Hammer (<a href="mailto:doitux@pokerth.net">doitux@pokerth.net</a>)<br><span class="ab-role" data-i18n="abAuthRole1">idée initiale, architecture de base, implémentation de l'interface graphique, édition des graphismes de l'interface graphique, paquets Linux</span></li>
-        <li>Florian Thauer (<a href="mailto:floty@pokerth.net">floty@pokerth.net</a>)<br><span class="ab-role" data-i18n="abAuthRole2">idée initiale, architecture de base, développement du moteur</span></li>
-        <li>Lothar May (<a href="mailto:lotodore@pokerth.net">lotodore@pokerth.net</a>)<br><span class="ab-role" data-i18n="abAuthRole3">architecture de base, développement réseau, paquet Windows, paquet MacOS</span></li>
-        <li>Oskar Lindqvist (<a href="mailto:tranberry@pokerth.net">tranberry@pokerth.net</a>)<br><span class="ab-role" data-i18n="abAuthRole4">design initial du graphisme de l'interface graphique</span></li>
-        <li>Kai Philipp (<a href="mailto:kphilipp@inquies.de">kphilipp@inquies.de</a>)<br><span class="ab-role" data-i18n="abAuthRole5">modernisation du code, mise en page QML</span></li>
-        <li>Arnaud Obscur (<a href="mailto:narmod@pokerth.net">narmod@pokerth.net</a>)<br><span class="ab-role" data-i18n="abAuthRole6">développement du client web</span></li>
+        <li>Felix Hammer (<a href="mailto:doitux@pokerth.net">doitux@pokerth.net</a>)<br><span class="ab-role" data-i18n="abAuthRole1">initial idea, basic architecture, GUI implementation, GUI graphics editing, Linux packages</span></li>
+        <li>Florian Thauer (<a href="mailto:floty@pokerth.net">floty@pokerth.net</a>)<br><span class="ab-role" data-i18n="abAuthRole2">initial idea, basic architecture, engine development</span></li>
+        <li>Lothar May (<a href="mailto:lotodore@pokerth.net">lotodore@pokerth.net</a>)<br><span class="ab-role" data-i18n="abAuthRole3">basic architecture, network development, Windows package, MacOS package</span></li>
+        <li>Oskar Lindqvist (<a href="mailto:tranberry@pokerth.net">tranberry@pokerth.net</a>)<br><span class="ab-role" data-i18n="abAuthRole4">initial GUI graphics design</span></li>
+        <li>Kai Philipp (<a href="mailto:kphilipp@inquies.de">kphilipp@inquies.de</a>)<br><span class="ab-role" data-i18n="abAuthRole5">code modernization, QML layout</span></li>
+        <li>Arnaud Obscur (<a href="mailto:narmod@pokerth.net">narmod@pokerth.net</a>)<br><span class="ab-role" data-i18n="abAuthRole6">web client development</span></li>
       </ul>
     </div>
     <div class="ab-pane" id="ab-pane-2" style="display:none">
       <ul class="ab-credits">
-        <li>Ollika (<a href="https://github.com/MCNCHEESYF/pokerth-tracker" target="_blank" rel="noopener noreferrer">GitHub : MCNCHEESYF</a>) : <span data-i18n="abCredTracker">pour le pokerth-tracker, dont s'inspirent le HUD de statistiques, la grille de range et l'export .pdb</span></li>
-        <li data-i18n="abCred1">Wikimedia Commons : pour leurs différents avatars populaires</li>
-        <li data-i18n="abCred2">Benedikt, Erhard, Felix, Florian, Linus, Lothar, Steffi, Caro : pour les avatars/visages de joueurs</li>
-        <li data-i18n="abCred3">ZeiZei : pour divers avatars</li>
-        <li><a href="http://kde-look.org" target="_blank" rel="noopener noreferrer">kde-look.org</a> : <span data-i18n="abCred4">pour les différents sons sous licence GPL</span></li>
-        <li data-i18n="abCred5">doc_dos : pour les sons qu'il a enregistrés lui-même</li>
-        <li data-i18n="abCred6">thiger, dunkanx, BerndA, coldz, drull : pour leurs différents patches</li>
-        <li data-i18n="abCred7">kraut : pour l'hébergement du serveur de parties internet et l'administration</li>
-        <li data-i18n="abCred8">danuxi : pour le fond de l'écran de démarrage gfx et le fond de la table danuxi1</li>
-        <li data-i18n="abCred9">heyn : pour la modération sur le forum et l'organisation du système de suivi des bogues et des fonctionnalités</li>
-        <li data-i18n="abCred10">texas_outlaw : pour les nouveaux effets sonores</li>
+        <li>Ollika (<a href="https://github.com/MCNCHEESYF/pokerth-tracker" target="_blank" rel="noopener noreferrer">GitHub : MCNCHEESYF</a>) : <span data-i18n="abCredTracker">for pokerth-tracker, which inspired the stats HUD, range grid and .pdb export</span></li>
+        <li data-i18n="abCred1">Wikimedia Commons: for their various popular avatars</li>
+        <li data-i18n="abCred2">Benedikt, Erhard, Felix, Florian, Linus, Lothar, Steffi, Caro: for the player avatars/faces</li>
+        <li data-i18n="abCred3">ZeiZei: for various avatars</li>
+        <li><a href="http://kde-look.org" target="_blank" rel="noopener noreferrer">kde-look.org</a> : <span data-i18n="abCred4">for the various GPL-licensed sounds</span></li>
+        <li data-i18n="abCred5">doc_dos: for the sounds he recorded himself</li>
+        <li data-i18n="abCred6">thiger, dunkanx, BerndA, coldz, drull: for their various patches</li>
+        <li data-i18n="abCred7">kraut: for hosting and administrating the internet game server</li>
+        <li data-i18n="abCred8">danuxi: for the start-screen background gfx and the danuxi1 table background</li>
+        <li data-i18n="abCred9">heyn: for forum moderation and organizing the bug and feature tracking system</li>
+        <li data-i18n="abCred10">texas_outlaw: for the new sound effects</li>
       </ul>
-      <p data-i18n="abThanks2">Merci également à la communauté PokerTH.net, aux traducteurs et aux testeurs, et aux mainteneurs actuels pour l'accompagnement de ce client web.</p>
+      <p data-i18n="abThanks2">Thanks also to the PokerTH.net community, the translators and testers, and the current maintainers for supporting this web client.</p>
     </div>
     <div class="ab-pane" id="ab-pane-3" style="display:none">
-      <p data-i18n="abLicense1">Le client web PokerTH est publié sous licence GNU AGPL v3. PokerTH est publié sous licence GNU GPL.</p>
-      <p data-i18n="abLicense2">Le texte complet des licences est disponible avec le code source :</p>
+      <p data-i18n="abLicense1">The PokerTH web client is released under the GNU AGPL v3 license. PokerTH is released under the GNU GPL license.</p>
+      <p data-i18n="abLicense2">The full license texts are available with the source code:</p>
       <ul>
         <li><a href="https://github.com/narmod/pokerth-web-client/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">AGPL-3.0 — pokerth-web-client</a></li>
         <li><a href="https://www.gnu.org/licenses/" target="_blank" rel="noopener noreferrer">gnu.org/licenses</a></li>
       </ul>
     </div>
     <div class="ab-pane" id="ab-pane-4" style="display:none">
-      <p data-i18n="abLibsIntro">Ce client web s'appuie sur les projets libres suivants :</p>
+      <p data-i18n="abLibsIntro">This web client builds on the following free software projects:</p>
       <ul>
-        <li>Inter — <span data-i18n="abLibFont">police de caractères</span> (SIL OFL)</li>
+        <li>Inter — <span data-i18n="abLibFont">typeface</span> (SIL OFL)</li>
         <li>Noto Color Emoji (SIL OFL)</li>
         <li>flag-icons (MIT)</li>
-        <li>Node.js &amp; ws — <span data-i18n="abLibProxy">proxy WebSocket</span> (MIT)</li>
-        <li>Google Translate — <span data-i18n="abLibChatTr">traduction du chat (service en ligne de Google)</span></li>
+        <li>Node.js &amp; ws — <span data-i18n="abLibProxy">WebSocket proxy</span> (MIT)</li>
+        <li>Google Translate — <span data-i18n="abLibChatTr">chat translation (Google online service)</span></li>
       </ul>
     </div>
     <!-- Changelog (demande sp0ck, parité widget/QML) : le fichier ChangeLog
@@ -2482,12 +2482,12 @@ function _processAvatarFile(file) {
       <!-- Deux sous-onglets : le journal du client web, puis celui des
            autres clients (fichier ChangeLog upstream). -->
       <div class="ab-cl-tabs" role="tablist">
-        <button class="ab-cl-tab active" id="ab-cl-tab-web" type="button" role="tab" onclick="window.abClShowSub('web')" data-i18n="abClTabWeb">Client web</button>
-        <button class="ab-cl-tab" id="ab-cl-tab-up" type="button" role="tab" onclick="window.abClShowSub('up')" data-i18n="abClTabUpstream">Clients installables</button>
+        <button class="ab-cl-tab active" id="ab-cl-tab-web" type="button" role="tab" onclick="window.abClShowSub('web')" data-i18n="abClTabWeb">Web client</button>
+        <button class="ab-cl-tab" id="ab-cl-tab-up" type="button" role="tab" onclick="window.abClShowSub('up')" data-i18n="abClTabUpstream">Installable clients</button>
       </div>
       <div id="ab-cl" class="ab-cl">
-        <div id="ab-cl-web"><span data-i18n="abClLoading">Chargement…</span></div>
-        <div id="ab-cl-up" style="display:none"><span data-i18n="abClLoading">Chargement…</span></div>
+        <div id="ab-cl-web"><span data-i18n="abClLoading">Loading…</span></div>
+        <div id="ab-cl-up" style="display:none"><span data-i18n="abClLoading">Loading…</span></div>
       </div>
     </div>
   </div>
@@ -2500,10 +2500,10 @@ function _processAvatarFile(file) {
      crantée ••• ). Le contenu reflète public/privacy.html (repli deep-link). -->
 <div id="privacy-page" style="display:none">
   <div class="cp-header">
-    <button class="btn-sm btn-icon" type="button" onclick="window.closePrivacyPage()" title="Retour" data-i18n-title="navBack" aria-label="Retour"><svg viewBox="0 0 24 24" style="display:block;width:22px;height:22px" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg></button>
+    <button class="btn-sm btn-icon" type="button" onclick="window.closePrivacyPage()" title="Back" data-i18n-aria="navBack" data-i18n-title="navBack" aria-label="Back"><svg viewBox="0 0 24 24" style="display:block;width:22px;height:22px" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg></button>
     <span class="cp-title" data-i18n="privacyTitle">Privacy</span>
     <span class="cp-head-spacer" aria-hidden="true"></span>
-    <span class="hdr-ovf-wrap"><button class="btn-sm btn-icon" id="pv-overflow-btn" onclick="window.togglePrivacyOverflow(event)" title="Plus" data-i18n-title="moreTooltip"><svg viewBox="0 0 24 24" style="display:block;width:22px;height:22px" fill="currentColor" aria-hidden="true"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58a.49.49 0 0 0 .12-.61l-1.92-3.32a.488.488 0 0 0-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54a.484.484 0 0 0-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58a.49.49 0 0 0-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg></button>
+    <span class="hdr-ovf-wrap"><button class="btn-sm btn-icon" id="pv-overflow-btn" onclick="window.togglePrivacyOverflow(event)" title="More" data-i18n-title="moreTooltip"><svg viewBox="0 0 24 24" style="display:block;width:22px;height:22px" fill="currentColor" aria-hidden="true"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58a.49.49 0 0 0 .12-.61l-1.92-3.32a.488.488 0 0 0-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54a.484.484 0 0 0-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58a.49.49 0 0 0-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg></button>
     <div id="pv-overflow-menu">
       <button class="btn-sm" onclick="toggleFullscreen();window.closePrivacyOverflow()"><span style="margin-right:7px">⛶</span><span data-i18n="fullscreenTooltip">Fullscreen</span></button>
       <button class="btn-sm" onclick="window.closePrivacyOverflow();toggleAdvancedOptions()"><span style="margin-right:7px">⚙️</span><span data-i18n="advTitle">Advanced options</span></button>
@@ -2514,7 +2514,7 @@ function _processAvatarFile(file) {
     <div class="pv-body">
       <p class="pv-updated" data-i18n="pvUpdated">Last updated: July 17, 2026</p>
       <h2 data-i18n="pvWhoH">Who runs this</h2>
-      <p data-i18n="pvWho">The PokerTH Web Client is a free and open-source hobby project, maintained by an individual, Arnaud Obscur (narmod@pokerth.net), in collaboration with the PokerTH project. It is not a company and has no commercial purpose: no ads, no sale of data, no advertising profiling, no third-party trackers.</p>
+      <p data-i18n="pvWho">The PokerTH Web Client is a free and open-source hobby project, maintained by an individual, Arnaud Obscur ("narmod"), in collaboration with the PokerTH project. It is not a company and has no commercial purpose: no ads, no sale of data, no advertising profiling, no third-party trackers.</p>
       <h2 data-i18n="pvLocalH">What stays in your browser</h2>
       <p data-i18n="pvLocal">Your settings (theme, language, table styles, sound options...) are stored locally in your browser and never leave your device. You can clear them at any time from your browser settings.</p>
       <h2 data-i18n="pvServerH">What the server sees</h2>
@@ -2544,7 +2544,7 @@ function _processAvatarFile(file) {
 <!-- Password prompt modal -->
 <div id="password-prompt" style="display:none">
   <div class="pp-card">
-    <div class="pp-title" id="pp-table-name">🔒 Table protégée</div>
+    <div class="pp-title" id="pp-table-name">🔒</div>
     <div>
       <div class="pp-label" data-i18n="password">Password</div>
       <input class="pp-input" id="pp-pass" type="password" placeholder="••••••••"
@@ -2675,7 +2675,7 @@ function _processAvatarFile(file) {
      dialogs. The password is never part of the link. -->
 <div id="invite-dialog" style="display:none" onclick="if(event.target===this)InviteUI.close()">
   <div class="ld-card inv-card">
-    <div class="ld-title inv-title"><span data-i18n="wpInvite">Invite friends</span><button type="button" class="inv-close" onclick="InviteUI.close()" aria-label="Close" data-i18n-title="closeTooltip">✕</button></div>
+    <div class="ld-title inv-title"><span data-i18n="wpInvite">Invite friends</span><button type="button" class="inv-close" onclick="InviteUI.close()" aria-label="Close" data-i18n-title="closeTooltip" title="Close">✕</button></div>
     <div class="inv-table" id="inv-table-name"></div>
     <canvas id="inv-qr-canvas" class="inv-qr" width="190" height="190" aria-hidden="true"></canvas>
     <div class="inv-scan" data-i18n="invScanQr">Scan to join</div>
@@ -2834,7 +2834,7 @@ if ('serviceWorker' in navigator && !window.LIVE_MODE) {
          exactement ou elle etait et par-dessus (makeWinDraggable ignore les
          clics sur un bouton). Visible seulement en mode fenetre. -->
     <div class="pim-grip" id="pim-grip" aria-hidden="true"></div>
-    <button class="pim-close" type="button" onclick="closePlayerInfoPopup()" title="Fermer" data-i18n-title="closeTooltip" data-i18n-aria="closeTooltip" aria-label="Close">✕</button>
+    <button class="pim-close" type="button" onclick="closePlayerInfoPopup()" title="Close" data-i18n-title="closeTooltip" data-i18n-aria="closeTooltip" aria-label="Close">✕</button>
     <!-- Avatar : cliquable seulement pour MON profil (rôle/onclick câblés en
          JS selon le mode). Pour un adversaire il reste neutre, non cliquable. -->
     <div class="pim-avatar" id="pim-avatar"></div>
@@ -2855,7 +2855,7 @@ if ('serviceWorker' in navigator && !window.LIVE_MODE) {
 <div id="game-info-modal" style="display:none">
   <div class="gim-backdrop" onclick="closeGameInfoPopup()"></div>
   <div class="gim-card" role="dialog" aria-labelledby="gim-title">
-    <button class="gim-close" type="button" onclick="closeGameInfoPopup()" title="Fermer" data-i18n-title="closeTooltip" data-i18n-aria="closeTooltip" aria-label="Close">✕</button>
+    <button class="gim-close" type="button" onclick="closeGameInfoPopup()" title="Close" data-i18n-title="closeTooltip" data-i18n-aria="closeTooltip" aria-label="Close">✕</button>
     <div class="gim-header">
       <div class="gim-title" id="gim-title">—</div>
       <div class="gim-subtitle" id="gim-subtitle"></div>
@@ -2872,11 +2872,11 @@ if ('serviceWorker' in navigator && !window.LIVE_MODE) {
 <div id="kick-modal" style="display:none">
   <div class="km-backdrop" onclick="App.closeKickModal()"></div>
   <div class="km-card" role="dialog" aria-labelledby="km-title">
-    <button class="km-close" type="button" onclick="App.closeKickModal()" title="Fermer" data-i18n-title="closeTooltip" data-i18n-aria="closeTooltip" aria-label="Close">✕</button>
+    <button class="km-close" type="button" onclick="App.closeKickModal()" title="Close" data-i18n-title="closeTooltip" data-i18n-aria="closeTooltip" aria-label="Close">✕</button>
     <div class="km-title" id="km-title">👥 <span data-i18n="kickTooltip">Kick player</span></div>
     <div class="km-subtitle" id="km-subtitle" data-i18n="kickSubtitle">Select a player to remove from the table</div>
     <div class="km-list" id="km-list">
-      <div class="km-empty">— Aucun joueur —</div>
+      <div class="km-empty">— <span data-i18n="kickNoPlayers">No players at the table</span> —</div>
     </div>
   </div>
 </div>
@@ -2884,9 +2884,9 @@ if ('serviceWorker' in navigator && !window.LIVE_MODE) {
 <div id="invite-modal" style="display:none">
   <div class="km-backdrop" onclick="App.closeInviteModal()"></div>
   <div class="km-card" role="dialog" aria-labelledby="im-title">
-    <button class="km-close" type="button" onclick="App.closeInviteModal()" title="Fermer" data-i18n-title="closeTooltip" data-i18n-aria="closeTooltip" aria-label="Close">✕</button>
-    <div class="km-title" id="im-title">✉️ <span data-i18n="inviteModalTitle">Inviter des joueurs</span></div>
-    <div class="km-subtitle" id="im-subtitle" data-i18n="inviteSubtitle">Joueurs en ligne pas encore à la table</div>
+    <button class="km-close" type="button" onclick="App.closeInviteModal()" title="Close" data-i18n-title="closeTooltip" data-i18n-aria="closeTooltip" aria-label="Close">✕</button>
+    <div class="km-title" id="im-title">✉️ <span data-i18n="inviteModalTitle">Invite players</span></div>
+    <div class="km-subtitle" id="im-subtitle" data-i18n="inviteSubtitle">Online players not yet at the table</div>
     <div class="km-list" id="im-list">
       <div class="km-empty">—</div>
     </div>
@@ -2900,11 +2900,11 @@ if ('serviceWorker' in navigator && !window.LIVE_MODE) {
   <div class="km-backdrop" onclick="App.cancelKickConfirm()"></div>
   <div class="kcm-card" role="alertdialog" aria-labelledby="kcm-title">
     <div class="kcm-icon">⚠️</div>
-    <div class="kcm-title" id="kcm-title">Kicker ce joueur ?</div>
+    <div class="kcm-title" id="kcm-title" data-i18n="kickThisPlayer">Kick this player?</div>
     <div class="kcm-msg" id="kcm-msg">—</div>
     <div class="kcm-btns">
       <button class="kcm-cancel" type="button" onclick="App.cancelKickConfirm()" data-i18n="leaveCancel">Cancel</button>
-      <button class="kcm-confirm" type="button" onclick="App.doKickConfirmed()">🗑️ <span data-i18n="kickTooltip">Kick</span></button>
+      <button class="kcm-confirm" type="button" onclick="App.doKickConfirmed()">🗑️ <span data-i18n="kickTooltip">Kick player</span></button>
     </div>
   </div>
 </div>
@@ -2920,7 +2920,7 @@ if ('serviceWorker' in navigator && !window.LIVE_MODE) {
   <div class="km-backdrop" onclick="App.cancelReport()"></div>
   <div class="kcm-card" role="alertdialog" aria-labelledby="rcm-title">
     <div class="kcm-icon">🚩</div>
-    <div class="kcm-title" id="rcm-title" data-i18n="reportGameTitle">Report the game name</div>
+    <div class="kcm-title" id="rcm-title" data-i18n="reportGameTitle">Report inappropriate game name</div>
     <div class="kcm-msg" id="rcm-msg">—</div>
     <div class="kcm-btns">
       <button class="kcm-cancel" type="button" onclick="App.cancelReport()" data-i18n="leaveCancel">Cancel</button>
@@ -2939,7 +2939,7 @@ if ('serviceWorker' in navigator && !window.LIVE_MODE) {
   <div class="kcm-card" role="alertdialog" aria-labelledby="tow-title" aria-describedby="tow-msg">
     <div class="kcm-title" id="tow-title" data-i18n="timeoutWarnTitle">Timeout Warning</div>
     <div class="kcm-msg" id="tow-msg">—</div>
-    <div class="kcm-msg" id="tow-hint" data-i18n="timeoutWarnHint">Please click "OK" to stop the countdown!</div>
+    <div class="kcm-msg" id="tow-hint" data-i18n="timeoutWarnHint">Please click “OK” to stop the countdown!</div>
     <div class="kcm-btns">
       <button class="kcm-confirm" type="button" id="tow-ok" onclick="window._timeoutWarnAck()" data-i18n="timeoutWarnOk">OK</button>
     </div>
@@ -3013,7 +3013,7 @@ if ('serviceWorker' in navigator && !window.LIVE_MODE) {
         <div class="pm-msgs" id="pm-msgs"></div>
         <div class="pm-note" id="pm-note" style="display:none"></div>
         <div class="pm-foot">
-          <input id="pm-in" class="pm-input" maxlength="128" placeholder="Message&#8230;" data-i18n-placeholder="pmPlaceholder" autocomplete="off">
+          <input id="pm-in" class="pm-input" maxlength="128" placeholder="Message…" data-i18n-placeholder="pmPlaceholder" autocomplete="off">
           <span class="pm-count" id="pm-count">0/128</span>
           <!-- Envoi comme dans le chat lobby/table (ChatBox) : bouton-icone avion
                carre a hauteur du champ (parite QML be3c43c, 27/08/2026). Le gros
@@ -3030,7 +3030,7 @@ if ('serviceWorker' in navigator && !window.LIVE_MODE) {
 <div id="forum-modal" style="display:none">
   <div class="rk-backdrop" onclick="closeForumModal()"></div>
   <div class="rk-card" role="dialog" aria-labelledby="fn-title">
-    <button class="rk-close" type="button" onclick="closeForumModal()" title="Fermer" data-i18n-title="closeTooltip" data-i18n-aria="closeTooltip" aria-label="Close">✕</button>
+    <button class="rk-close" type="button" onclick="closeForumModal()" title="Close" data-i18n-title="closeTooltip" data-i18n-aria="closeTooltip" aria-label="Close">✕</button>
     <div class="rk-title" id="fn-title"><svg viewBox="0 0 24 24" style="display:inline-block;width:15px;height:15px;vertical-align:-2px;margin-right:6px" fill="currentColor" aria-hidden="true"><path d="M22 3l-1.67 1.67L18.67 3 17 4.67 15.33 3l-1.66 1.67L12 3l-1.67 1.67L8.67 3 7 4.67 5.33 3 3.67 4.67 2 3v16c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V3zM11 19H4v-6h7v6zm9 0h-7v-2h7v2zm0-4h-7v-2h7v2zm0-4H4V8h16v3z"/></svg><span data-i18n="forumTitle">Forum news</span></div>
     <div class="rk-body">
       <div id="fn-listwrap">
@@ -3066,13 +3066,13 @@ if ('serviceWorker' in navigator && !window.LIVE_MODE) {
   <div id="rk-awpop" onclick="this.style.display='none'"><img alt=""></div>
   <div class="rk-backdrop" onclick="closeRankingModal()"></div>
   <div class="rk-card" role="dialog" aria-labelledby="rk-title">
-    <button class="rk-close" type="button" onclick="closeRankingModal()" title="Fermer" data-i18n-title="closeTooltip" data-i18n-aria="closeTooltip" aria-label="Close">✕</button>
+    <button class="rk-close" type="button" onclick="closeRankingModal()" title="Close" data-i18n-title="closeTooltip" data-i18n-aria="closeTooltip" aria-label="Close">✕</button>
     <div class="rk-title" id="rk-title">🏆 <span data-i18n="rankingTitle">Ranking</span></div>
     <div class="rk-tabs">
       <button type="button" class="rk-tab" data-src="pth" onclick="rankingSelect('pth')" data-i18n="rankingPth">PokerTH</button>
       <button type="button" class="rk-tab" data-src="bbc" onclick="rankingSelect('bbc')" data-i18n="rankingBbc">BBC</button>
       <button type="button" class="rk-tab" data-src="wec" onclick="rankingSelect('wec')" data-i18n="rankingWec">WEC</button>
-      <button type="button" class="rk-tab rk-tab-ach" data-src="ach" onclick="rankingSelect('ach')" data-i18n="achTitle" style="display:none">Trophées</button>
+      <button type="button" class="rk-tab rk-tab-ach" data-src="ach" onclick="rankingSelect('ach')" data-i18n="achTitle" style="display:none">Trophies</button>
     </div>
     <div class="rk-body">
       <div class="rk-controls" id="rk-controls" style="display:none">
@@ -3118,7 +3118,7 @@ if ('serviceWorker' in navigator && !window.LIVE_MODE) {
 <div id="tableranking-modal" style="display:none">
   <div class="rk-backdrop" onclick="closeTableRanking()"></div>
   <div class="rk-card" role="dialog" aria-labelledby="trk-title">
-    <button class="rk-close" type="button" onclick="closeTableRanking()" title="Fermer" data-i18n-title="closeTooltip" data-i18n-aria="closeTooltip" aria-label="Close">✕</button>
+    <button class="rk-close" type="button" onclick="closeTableRanking()" title="Close" data-i18n-title="closeTooltip" data-i18n-aria="closeTooltip" aria-label="Close">✕</button>
     <div class="rk-title" id="trk-title">🏆 <span id="trk-title-txt">Table ranking</span></div>
     <div class="rk-tabs">
       <button type="button" class="rk-tab" data-src="pth" onclick="trSelect('pth')" data-i18n="rankingPth">PokerTH</button>
@@ -3163,7 +3163,7 @@ if ('serviceWorker' in navigator && !window.LIVE_MODE) {
 <div id="adv-modal" style="display:none">
   <div class="km-backdrop" onclick="closeAdvancedOptions()"></div>
   <div class="km-card adv-card" role="dialog" aria-labelledby="adv-title">
-    <button class="km-close" type="button" onclick="closeAdvancedOptions()" title="Fermer" data-i18n-title="closeTooltip" data-i18n-aria="closeTooltip" aria-label="Close">✕</button>
+    <button class="km-close" type="button" onclick="closeAdvancedOptions()" title="Close" data-i18n-title="closeTooltip" data-i18n-aria="closeTooltip" aria-label="Close">✕</button>
     <div class="km-title" id="adv-title"><span style="margin-right:7px">⚙️</span><span data-i18n="advTitle">Advanced options</span></div>
     <!-- Settings search (modules/ui/adv-search.mjs): same shell as the Help
          window search. The result list replaces the category panels while
@@ -3190,7 +3190,7 @@ if ('serviceWorker' in navigator && !window.LIVE_MODE) {
       <div class="adv-body adv-uipanel is-active" data-uitab="general">
       <details class="adv-fold" open><summary class="adv-sec"><span class="adv-sec-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13A8 8 0 1 1 11 4a6.5 6.5 0 0 0 9 9z"/></svg></span><span data-i18n="advSecAppearance">Appearance</span></summary>
       <div class="adv-row"><span data-i18n="advDarkMode">Dark mode</span><div class="sel-wrap adv-sel"><select id="adv-darkmode" onchange="if(window.setTheme)window.setTheme(this.value)"><option value="auto" data-i18n="modeAuto">Automatic</option><option value="pokerth-light" data-i18n="modeLight">Light</option><option value="pokerth" data-i18n="modeDark">Dark</option></select><span class="sel-arr">▾</span></div></div>
-      <div class="adv-row"><span data-i18n="advLanguage">Language</span><div class="sel-wrap adv-sel"><button type="button" id="adv-lang-btn" class="adv-lang-btn" onclick="openLangMenu(event)" aria-haspopup="menu" aria-label="Switch language" data-i18n-title="langTooltip"></button><span class="sel-arr">▾</span></div></div>
+      <div class="adv-row"><span data-i18n="advLanguage">Language</span><div class="sel-wrap adv-sel"><button type="button" id="adv-lang-btn" class="adv-lang-btn" onclick="openLangMenu(event)" aria-haspopup="menu" aria-label="Switch language" data-i18n-title="langTooltip" title="Switch language"></button><span class="sel-arr">▾</span></div></div>
       <label class="adv-row"><input type="checkbox" id="adv-tooltips" onchange="setTooltips(this.checked)"><span data-i18n="advShowTooltips">Show tooltips</span><em class="adv-webtag">web</em></label>
       <label class="adv-row"><input type="checkbox" id="adv-pokeren" onchange="setAdvOpt('poker_en',this.checked)"><span data-i18n="advPokerTerms">Do not translate international poker terms (Check, Call, Raise)</span></label>
       <label class="adv-row"><input type="checkbox" id="adv-browserzoom" onchange="setAdvOpt('browser_zoom',this.checked)"><span data-i18n="advBrowserZoom">Allow browser zoom (pinch) on phone / tablet</span><em class="adv-webtag">web</em></label>
@@ -3223,7 +3223,7 @@ if ('serviceWorker' in navigator && !window.LIVE_MODE) {
       <label class="adv-row"><input type="checkbox" id="adv-ownclick" onchange="setAdvOpt('own_click',this.checked)"><span data-i18n="advOwnClick">Reveal my cards on tap</span></label>
       </details>
       <details class="adv-fold"><summary class="adv-sec"><span class="adv-sec-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3.4"/><path d="M12 4v3M12 17v3M4 12h3M17 12h3"/></svg></span><span data-i18n="advSecBet">Betting &amp; turn</span></summary>
-      <label class="adv-row"><input type="checkbox" id="adv-voice" onchange="setVoice(this.checked)"><span data-i18n="voiceLabel">Voice announcements</span><em class="adv-webtag">web</em></label>
+      <label class="adv-row"><input type="checkbox" id="adv-voice" onchange="setVoice(this.checked)"><span data-i18n="voiceLabel">Voice</span><em class="adv-webtag">web</em></label>
       <label class="adv-row"><input type="checkbox" id="adv-haptic" onchange="setHaptic(this.checked)"><span data-i18n="hapticLabel">Vibration</span><em class="adv-webtag">web</em></label>
       <label class="adv-row"><input type="checkbox" id="adv-displaybb" onchange="setDisplayBB(this.checked)"><span data-i18n="advDisplayBB">Show amounts in big blinds</span><em class="adv-webtag">web</em></label>
       </details>
@@ -3232,7 +3232,7 @@ if ('serviceWorker' in navigator && !window.LIVE_MODE) {
       <label class="adv-row"><input type="checkbox" id="adv-chatts" onchange="setAdvOpt('chat_ts',this.checked)"><span data-i18n="advChatTimestamps">Show time in chat messages</span><em class="adv-webtag">web</em></label>
       <label class="adv-row"><input type="checkbox" id="adv-chattranslate" onchange="setChatTranslate(this.checked)"><span data-i18n="advChatTranslate">Chat translation (Google Translate, per-message button)</span></label>
       <label class="adv-row"><input type="checkbox" id="adv-chattralways" onchange="setAdvOpt('chat_tr_always',this.checked);try{document.body.classList.toggle('chat-tr-always',this.checked)}catch(e){}"><span data-i18n="advChatTrAlways">Translation button always visible (otherwise only on the hovered or tapped line)</span><em class="adv-webtag">web</em></label>
-      <label class="adv-row"><input type="checkbox" id="adv-avcreate" onchange="setAdvOpt('avatar_create',this.checked)"><span data-i18n="advAvatarCreate">Show the &laquo; Create &raquo; portraits tab in the avatar window</span><em class="adv-webtag">web</em></label>
+      <label class="adv-row"><input type="checkbox" id="adv-avcreate" onchange="setAdvOpt('avatar_create',this.checked)"><span data-i18n="advAvatarCreate">Show the “Create” portraits tab in the avatar window</span><em class="adv-webtag">web</em></label>
       <label class="adv-row"><input type="checkbox" id="adv-chatabbrev" onchange="setAdvOpt('chat_abbrev',this.checked)"><span data-i18n="advChatAbbrev">Explain chat abbreviations (gg, nh, utg…) on hover</span><em class="adv-webtag">web</em></label>
       <label class="adv-row"><input type="checkbox" id="adv-chatclearlogin" onchange="setAdvOpt('chat_clear_login',this.checked)"><span data-i18n="advChatClearLogin">Clear the lobby chat when connecting</span></label>
       </details>
@@ -3263,7 +3263,7 @@ if ('serviceWorker' in navigator && !window.LIVE_MODE) {
         <label class="adv-row"><input type="checkbox" id="adv-fkeysalt" onchange="setAdvOpt('fkeys_alt',this.checked)"><span data-i18n="advFkeysAlt">Reverse F1–F4 order (F1 = All-In)</span></label>
         <div class="adv-keyhint"><span data-i18n="kbHintF">Official PokerTH keys also work: F1–F4 = Fold · Check/Call · Bet/Raise · All-In, F6/F7/F8 = Manual / Auto Check-Fold / Auto Check-Call, Alt+M/K/F = modes, Alt+C chat, Alt+L log, Alt+I odds.</span></div>
         <div class="adv-keyhint"><span data-i18n="kbHintExtra">Alt+S opens the settings anywhere, as in the official client. Alt+T opens the statistics panel — a web addition, the official client has no shortcut for it.</span></div>
-        <div class="adv-keyhint"><em class="adv-webtag">web</em> <span data-i18n="kbHint">Tap a key, then press the new key. Space = Call, Enter = confirm raise.</span><button type="button" class="kb-reset" onclick="resetKeys()" data-i18n="kbReset">Reset</button></div>
+        <div class="adv-keyhint"><em class="adv-webtag">web</em> <span data-i18n="kbHint">Tap a key, then press the new one. Space = Call, Enter = confirm raise.</span><button type="button" class="kb-reset" onclick="resetKeys()" data-i18n="kbReset">Reset</button></div>
       </div>
       </details>
       </div>
@@ -3322,7 +3322,7 @@ if ('serviceWorker' in navigator && !window.LIVE_MODE) {
           <div class="adv-body">
             <div class="adv-sec" data-i18n="advSecLocalGame">Training game</div>
             <label class="adv-row"><input type="checkbox" id="adv-pausehands" onchange="setAdvOpt('pause_hands',this.checked)"><span data-i18n="advPauseHands">Pause between hands (continue with the winner window)</span></label>
-            <label class="adv-row"><input type="checkbox" id="adv-createdialog" onchange="setAdvOpt('create_dialog',this.checked)"><span data-i18n="advCreateDialog">Show the game settings screen on new game (off: start straight away with the saved settings)</span></label>
+            <label class="adv-row"><input type="checkbox" id="adv-createdialog" onchange="setAdvOpt('create_dialog',this.checked)"><span data-i18n="advCreateDialog">Show Game Settings Dialog for New Game</span></label>
             <div class="adv-sec" data-i18n="advSecTablePrefs">Table preferences</div>
             <div class="adv-ign-desc" data-i18n="advTablePrefsDesc">Defaults for the tables you create in this mode — the ⭐ pill on the create form loads them.</div>
             <div class="adv-row"><span data-i18n="maxPlayers">Max players</span><input type="number" class="adv-numin" id="advp-local-players" min="2" max="10" step="1" onchange="advPrefSet('local','players',this)"></div>
@@ -3363,7 +3363,7 @@ if ('serviceWorker' in navigator && !window.LIVE_MODE) {
             <div class="adv-sec" data-i18n="advSecTablePrefs">Table preferences</div>
             <div class="adv-ign-desc" data-i18n="advTablePrefsDesc">Defaults for the tables you create in this mode — the ⭐ pill on the create form loads them.</div>
             <div class="adv-row"><span data-i18n="gameNameLabel">Game name</span><input type="text" class="adv-textin" id="advp-net-name" maxlength="60" onchange="advPrefSet('net','name',this)"></div>
-            <div class="adv-row"><span data-i18n="gameType">Game type</span><div class="sel-wrap adv-sel"><select id="advp-net-gtype" onchange="advPrefSet('net','gameType',this)"><option value="1" data-i18n-opt="gameNormal">Normal</option><option value="2" data-i18n-opt="gameRegistered">Registered only</option><option value="3" data-i18n-opt="gameInvite">Invite only</option><option value="4" data-i18n-opt="gameRanking">Ranking</option></select><span class="sel-arr">▾</span></div></div>
+            <div class="adv-row"><span data-i18n="gameType">Game type</span><div class="sel-wrap adv-sel"><select id="advp-net-gtype" onchange="advPrefSet('net','gameType',this)"><option value="1" data-i18n-opt="gameNormal">Normal</option><option value="2" data-i18n-opt="gameRegistered">Registered players only</option><option value="3" data-i18n-opt="gameInvite">Invited players only</option><option value="4" data-i18n-opt="gameRanking">Ranking game</option></select><span class="sel-arr">▾</span></div></div>
             <label class="adv-row"><input type="checkbox" id="advp-net-spect" onchange="advPrefSet('net','allowSpectators',this)"><span data-i18n="allowSpectators">Spectators</span></label>
             <div class="adv-row"><span data-i18n="maxPlayers">Max players</span><input type="number" class="adv-numin" id="advp-net-players" min="2" max="10" step="1" onchange="advPrefSet('net','players',this)"></div>
             <div class="adv-row"><span data-i18n="startCash">Starting stack</span><input type="number" class="adv-numin" id="advp-net-stack" min="500" max="1000000" step="500" onchange="advPrefSet('net','stack',this)"></div>
@@ -3399,7 +3399,7 @@ if ('serviceWorker' in navigator && !window.LIVE_MODE) {
               <button type="button" class="btn-sm adv-export-btn" onclick="_advExportPdb('all',this)"><span data-i18n="advStatsExportAll">Export all history</span></button>
             </div>
             <div class="adv-sec" data-i18n="advPdbAutoSec">Automatic .pdb file</div>
-            <div class="adv-link-desc" data-i18n="advPdbAutoDesc">Write the .pdb log into a folder on your computer and keep it up to date at the log interval set above, like the desktop client. Desktop Chrome, Edge and Opera only.</div>
+            <div class="adv-link-desc" data-i18n="advPdbAutoDesc">Write the .pdb log into a folder on your computer and update it after every hand, like the desktop client. Desktop Chrome, Edge and Opera only.</div>
             <label class="adv-row"><input type="checkbox" id="adv-pdbauto" onchange="setAdvOpt('pdb_auto',this.checked)"><span data-i18n="advPdbAuto">Write the .pdb file automatically</span><em class="adv-webtag">web</em></label>
             <div class="adv-row adv-export-row">
               <button type="button" class="btn-sm adv-export-btn" id="adv-pdbauto-pick" onclick="if(window._pdbAutoPick)window._pdbAutoPick()"><span data-i18n="advPdbAutoPick">Choose folder…</span></button>

@@ -1,6 +1,6 @@
 {
   "name": "pokerth-web-client",
-  "version": "2.1.8-web.101",
+  "version": "2.1.8-web.102",
   "description": "Experimental modern web client for PokerTH using a WebSocket-to-TCP proxy.",
   "main": "proxy.js",
   "private": false,
@@ -62,7 +62,8 @@
     "test:journal": "node scripts/test-journal.mjs",
     "test:globalnotice": "node scripts/test-globalnotice.mjs",
     "test:backup-autosave": "node scripts/test-backup-autosave.mjs",
-    "test:notes": "node scripts/test-notes.mjs"
+    "test:notes": "node scripts/test-notes.mjs",
+    "test:seo-ssr": "node scripts/test-seo-ssr.mjs"
   },
   "keywords": [
     "pokerth",
