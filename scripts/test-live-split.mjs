@@ -7,6 +7,8 @@
 // and the live connection board could not tell them apart.
 //   1. traffic: the connect beacon reports mode 'live', and proxy.js keeps it
 //      in its own counter (per day, all time, CSV, DB mirror);
+//   1c. visits: the /live visit beacon says live, and proxy.js keeps its own
+//      visits and unique devices, out of every web-client footfall figure;
 //   2. live board: sockets from /live carry &live=1, and /admin/sessions tags
 //      each bridge and notice channel with it.
 import { readFileSync } from 'node:fs';
@@ -44,9 +46,34 @@ ok(r.today.m.live === 2 && r.today.m.pokerthnet === 1, 'and the same split in th
 ok(!('bogus' in r.store.allM), 'an unknown mode is still refused');
 ok(/live: am\.live \|\| 0 \}; \}\)\(\) \}/.test(proxy), 'the summary returns the all-time /live count');
 ok(/live: _am\.live \|\| 0 \};/.test(proxy), 'which survives a restart');
-ok(/conn_offline,conn_live'\];/.test(proxy) && /m\.offline \|\| 0, m\.live \|\| 0\]\.join/.test(proxy), 'CSV export has a conn_live column, last so old readers keep their columns');
+ok(/conn_offline,conn_live[,']/.test(proxy) && /m\.offline \|\| 0, m\.live \|\| 0[,\]]/.test(proxy), 'CSV export has a conn_live column, after the existing ones so old readers keep theirs');
 ok(/ALTER TABLE traffic_daily ADD COLUMN IF NOT EXISTS conn_live/.test(proxy), 'an existing DB mirror gains the column');
 ok(/conn_live=VALUES\(conn_live\)/.test(proxy), 'and is written to');
+
+// -- 1c. Visits (footfall), run for real ---------------------------------
+const runV = new Function('crypto',
+  fn(proxy, 'emptyVisitsStore') + '\n' + fn(proxy, 'visitDayKey') + '\n' + fn(proxy, 'visitDayIndex') + '\n' +
+  'let visitsStore = emptyVisitsStore();\nfunction pruneVisitDays() {}\nfunction saveVisitsSoon() {}\n' +
+  fn(proxy, 'recordVisit') + '\n' + fn(proxy, 'recordLiveVisit') + '\n' + fn(proxy, 'visitWindow') + '\n' +
+  "recordVisit('web-a'); recordLiveVisit('live-a'); recordLiveVisit('live-a'); recordLiveVisit('live-b');\n" +
+  'return { store: visitsStore, today: visitWindow(1) };');
+const crypto = await import('node:crypto');
+const rv = runV(crypto);
+ok(rv.today.v === 1 && rv.today.u === 1, 'web-client visits and uniques leave /live out');
+ok(rv.today.lv === 3 && rv.today.lu === 2, '/live has its own visits (3) and uniques (2) for the day');
+ok(rv.store.totalV === 1 && rv.store.totalLV === 3, 'all-time totals are kept apart');
+ok(Object.keys(rv.store.allU).length === 1 && Object.keys(rv.store.allLU).length === 2, 'and so are the all-time device sets, so cohorts never see /live');
+ok(!rv.store.days[Object.keys(rv.store.days)[0]].h || rv.store.days[Object.keys(rv.store.days)[0]].h[new Date().getHours()] === 1, 'the hourly buckets count the web client only');
+const wiped = new Function(fn(proxy, 'emptyVisitsStore') + '\nreturn emptyVisitsStore();')();
+ok(wiped.totalLV === 0 && wiped.allLU && Object.keys(wiped.allLU).length === 0, 'a reset clears the /live visit counters too');
+ok(/visitsStore\.allLU  = \(_vs\.allLU && typeof _vs\.allLU === 'object'\)/.test(proxy), 'which survive a restart');
+ok(/else if \(d && d\.live === true\) \{ _pingStats\.nLive\+\+; recordLiveVisit\(d\.vid\); \}/.test(proxy), '/__visit routes a live ping away from recordVisit and recordVisitEnv');
+ok(proxy.indexOf('recordLiveVisit(d.vid)') < proxy.indexOf('recordVisit(d && d.vid)'), 'before the web-client branch');
+ok(/lv: visitsStore\.totalLV \|\| 0, lu: Object\.keys\(visitsStore\.allLU \|\| \{\}\)\.length/.test(proxy), 'the summary returns /live all-time visits and uniques');
+ok(/conn_live,live_visits,live_unique_visitors'\];/.test(proxy), 'CSV gains the /live visit columns, last');
+ok(/ADD COLUMN IF NOT EXISTS live_visits/.test(proxy) && /ADD COLUMN IF NOT EXISTS live_unique_visitors/.test(proxy), 'and so does an existing DB mirror');
+ok(/JSON\.stringify\(window\.LIVE_MODE \? \{ vid: vid, live: true \} : \{ vid: vid, pwa: pwa \}\)/.test(client), 'the /live visit beacon says live');
+ok(/id="trafLive"/.test(admin) && /fmt\(o\.lv\)\+' visits · '\+fmt\(o\.lu\)\+' unique/.test(admin), 'the traffic card shows /live visits and uniques');
 
 // -- 1b. Client beacon ------------------------------------------------------
 const cc = client.slice(client.indexOf('window._pthCountConnect = function'));

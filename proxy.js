@@ -4274,7 +4274,7 @@ const VISIT_RETENTION_DAYS = 400; // keep per-day id sets this long (covers up t
 // qui se trompe, parce que rien ne le signale.
 function emptyVisitsStore() {
   return {
-    days: {}, totalV: 0, totalRet: 0, allU: {},
+    days: {}, totalV: 0, totalRet: 0, allU: {}, totalLV: 0, allLU: {},
     allM: { pokerthnet: 0, lan: 0, offline: 0, live: 0 },
     env: {}, envSince: 0, music: {}, musicSince: 0, hourSince: 0,
     musicVotes: {}, musicVotesSince: 0
@@ -4288,6 +4288,8 @@ try {
     visitsStore.totalV = (typeof _vs.totalV === 'number') ? _vs.totalV : 0;
     visitsStore.allU   = (_vs.allU && typeof _vs.allU === 'object') ? _vs.allU : {};
     visitsStore.totalRet = (typeof _vs.totalRet === 'number') ? _vs.totalRet : 0;
+    visitsStore.totalLV = (typeof _vs.totalLV === 'number') ? _vs.totalLV : 0;
+    visitsStore.allLU  = (_vs.allLU && typeof _vs.allLU === 'object') ? _vs.allLU : {};
     const _am = (_vs.allM && typeof _vs.allM === 'object') ? _vs.allM : {};
     visitsStore.allM   = { pokerthnet: _am.pokerthnet || 0, lan: _am.lan || 0, offline: _am.offline || 0, live: _am.live || 0 };
     visitsStore.env    = (_vs.env && typeof _vs.env === 'object') ? _vs.env : {};
@@ -4536,7 +4538,7 @@ function _envBump(key, val) {
 // indiscernables — code non déployé, ping jamais émis, ou personne n'est
 // passé — et on ne peut que deviner laquelle. En mémoire, non persisté : c'est
 // une mesure du processus courant, pas une statistique.
-const _pingStats = { boot: Date.now(), n: 0, nMode: 0, nMusic: 0, last: 0 };
+const _pingStats = { boot: Date.now(), n: 0, nMode: 0, nLive: 0, nMusic: 0, last: 0 };
 // ── Langues traduites ─────────────────────────────────────────────────────
 // Lues sur le disque, pas recopiees : public/modules/lang/ est la seule source
 // de verite, et une liste tenue a la main a cote finit toujours par diverger.
@@ -4600,6 +4602,27 @@ function recordVisitEnv(ua, acceptLang, standalone) {
     saveVisitsSoon();
   } catch (e) {}
 }
+// A visit to /live (spectator view embedded on pokerth.net). Kept out of every
+// web-client figure -- visits, unique, new/returning, hours, cohorts and the
+// "Who visits" environment -- in its own counters: per day `lv` (sessions) and
+// `lids` (hashed ids, same hash as recordVisit), all time `totalLV` and `allLU`.
+// /live keeps its own storage, so its id is not the web client's: a device
+// that uses both is one unique on each side, never merged.
+function recordLiveVisit(rawId) {
+  const day = visitDayKey();
+  let bucket = visitsStore.days[day];
+  if (!bucket) { bucket = visitsStore.days[day] = { v: 0, ids: {} }; pruneVisitDays(); }
+  bucket.lv = (bucket.lv || 0) + 1;
+  visitsStore.totalLV = (visitsStore.totalLV || 0) + 1;
+  if (rawId) {
+    const h = crypto.createHash('sha256').update(String(rawId)).digest('hex').slice(0, 16);
+    if (!bucket.lids) bucket.lids = {};
+    bucket.lids[h] = 1;
+    if (!visitsStore.allLU) visitsStore.allLU = {};
+    visitsStore.allLU[h] = 1;
+  }
+  saveVisitsSoon();
+}
 function recordVisit(rawId) {
   const day = visitDayKey();
   let bucket = visitsStore.days[day];
@@ -4642,8 +4665,8 @@ function recordVisit(rawId) {
 function visitWindow(daysBack, offset) {
   const now = new Date();
   offset = offset || 0;
-  let v = 0, nw = 0, rt = 0;
-  const u = {};
+  let v = 0, nw = 0, rt = 0, lv = 0;
+  const u = {}, lu = {};
   const m = { pokerthnet: 0, lan: 0, offline: 0, live: 0 };
   for (let i = offset; i < offset + daysBack; i++) {
     const d = new Date(now);
@@ -4655,8 +4678,10 @@ function visitWindow(daysBack, offset) {
     rt += b.rt || 0;
     if (b.ids) for (const k in b.ids) u[k] = 1;
     if (b.m) for (const mk in m) if (b.m[mk]) m[mk] += b.m[mk];
+    lv += b.lv || 0;
+    if (b.lids) for (const k in b.lids) lu[k] = 1;
   }
-  return { v: v, u: Object.keys(u).length, m: m, nw: nw, rt: rt };
+  return { v: v, u: Object.keys(u).length, m: m, nw: nw, rt: rt, lv: lv, lu: Object.keys(lu).length };
 }
 // Hier, arrete a l'heure courante : comparer un « aujourd'hui » de 13h a un
 // hier complet ferait voir rouge chaque matin. Faute de cases horaires (jour
@@ -4784,7 +4809,7 @@ function visitsSummary() {
     semester: visitWindow(180),
     year: visitWindow(365),
     prev: { todayToHour: visitYesterdayToHour(), yesterday: visitWindow(1, 1), week: visitWindow(7, 7), month: visitWindow(30, 30) },
-    allTime: { v: visitsStore.totalV || 0, u: Object.keys(visitsStore.allU).length, nw: Object.keys(visitsStore.allU).length, rt: visitsStore.totalRet || 0, m: (function () { const am = visitsStore.allM || {}; return { pokerthnet: am.pokerthnet || 0, lan: am.lan || 0, offline: am.offline || 0, live: am.live || 0 }; })() },
+    allTime: { v: visitsStore.totalV || 0, u: Object.keys(visitsStore.allU).length, nw: Object.keys(visitsStore.allU).length, rt: visitsStore.totalRet || 0, lv: visitsStore.totalLV || 0, lu: Object.keys(visitsStore.allLU || {}).length, m: (function () { const am = visitsStore.allM || {}; return { pokerthnet: am.pokerthnet || 0, lan: am.lan || 0, offline: am.offline || 0, live: am.live || 0 }; })() },
     series: series,
     hours48: visitHourSeries(48),
     hourProfile: visitHourProfile(30),
@@ -4797,7 +4822,7 @@ function visitsSummary() {
     music: visitsStore.music || {},
     musicTitles: musicPlayTitles(),
     musicSince: visitsStore.musicSince || 0,
-    pings: { boot: _pingStats.boot, visits: _pingStats.n, modes: _pingStats.nMode, music: _pingStats.nMusic, last: _pingStats.last },
+    pings: { boot: _pingStats.boot, visits: _pingStats.n, modes: _pingStats.nMode, live: _pingStats.nLive, music: _pingStats.nMusic, last: _pingStats.last },
     db: { enabled: _dbStatus.enabled, connected: _dbStatus.connected, error: _dbStatus.error, lastWrite: _dbStatus.lastWrite, source: _dbStatus.source }
   };
 }
@@ -4847,7 +4872,7 @@ async function initDb() {
     await _dbPool.query('CREATE TABLE IF NOT EXISTS traffic_daily (' +
       'day DATE PRIMARY KEY, visits INT NOT NULL DEFAULT 0, unique_visitors INT NOT NULL DEFAULT 0, ' +
       'new_visitors INT NOT NULL DEFAULT 0, returning_visitors INT NOT NULL DEFAULT 0, ' +
-      'conn_pokerthnet INT NOT NULL DEFAULT 0, conn_lan INT NOT NULL DEFAULT 0, conn_offline INT NOT NULL DEFAULT 0, conn_live INT NOT NULL DEFAULT 0, ' +
+      'conn_pokerthnet INT NOT NULL DEFAULT 0, conn_lan INT NOT NULL DEFAULT 0, conn_offline INT NOT NULL DEFAULT 0, conn_live INT NOT NULL DEFAULT 0, live_visits INT NOT NULL DEFAULT 0, live_unique_visitors INT NOT NULL DEFAULT 0, ' +
       'updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4');
     await _dbPool.query('CREATE TABLE IF NOT EXISTS leaderboard (' +
       'player VARCHAR(190) PRIMARY KEY, hands_played INT NOT NULL DEFAULT 0, hands_won INT NOT NULL DEFAULT 0, ' +
@@ -4866,6 +4891,8 @@ async function initDb() {
     try { await _dbPool.query('ALTER TABLE broadcasts ADD COLUMN IF NOT EXISTS start_at BIGINT DEFAULT NULL'); } catch (e) {}
     try { await _dbPool.query('ALTER TABLE broadcasts ADD COLUMN IF NOT EXISTS countdown_at BIGINT DEFAULT NULL'); } catch (e) {}
     try { await _dbPool.query('ALTER TABLE traffic_daily ADD COLUMN IF NOT EXISTS conn_live INT NOT NULL DEFAULT 0'); } catch (e) {}
+    try { await _dbPool.query('ALTER TABLE traffic_daily ADD COLUMN IF NOT EXISTS live_visits INT NOT NULL DEFAULT 0'); } catch (e) {}
+    try { await _dbPool.query('ALTER TABLE traffic_daily ADD COLUMN IF NOT EXISTS live_unique_visitors INT NOT NULL DEFAULT 0'); } catch (e) {}
     _dbStatus.connected = true; _dbStatus.error = '';
     console.log('[db] MySQL mirror connected (' + cfg.database + ', source: ' + cfg.source + ')');
     dbFlushTrafficToday();
@@ -4889,9 +4916,9 @@ async function dbFlushTrafficToday() {
     const u = b.ids ? Object.keys(b.ids).length : 0;
     const m = b.m || {};
     await _dbPool.query(
-      'INSERT INTO traffic_daily (day, visits, unique_visitors, new_visitors, returning_visitors, conn_pokerthnet, conn_lan, conn_offline, conn_live) VALUES (?,?,?,?,?,?,?,?,?) ' +
-      'ON DUPLICATE KEY UPDATE visits=VALUES(visits), unique_visitors=VALUES(unique_visitors), new_visitors=VALUES(new_visitors), returning_visitors=VALUES(returning_visitors), conn_pokerthnet=VALUES(conn_pokerthnet), conn_lan=VALUES(conn_lan), conn_offline=VALUES(conn_offline), conn_live=VALUES(conn_live)',
-      [day, b.v || 0, u, b.nw || 0, b.rt || 0, m.pokerthnet || 0, m.lan || 0, m.offline || 0, m.live || 0]
+      'INSERT INTO traffic_daily (day, visits, unique_visitors, new_visitors, returning_visitors, conn_pokerthnet, conn_lan, conn_offline, conn_live, live_visits, live_unique_visitors) VALUES (?,?,?,?,?,?,?,?,?,?,?) ' +
+      'ON DUPLICATE KEY UPDATE visits=VALUES(visits), unique_visitors=VALUES(unique_visitors), new_visitors=VALUES(new_visitors), returning_visitors=VALUES(returning_visitors), conn_pokerthnet=VALUES(conn_pokerthnet), conn_lan=VALUES(conn_lan), conn_offline=VALUES(conn_offline), conn_live=VALUES(conn_live), live_visits=VALUES(live_visits), live_unique_visitors=VALUES(live_unique_visitors)',
+      [day, b.v || 0, u, b.nw || 0, b.rt || 0, m.pokerthnet || 0, m.lan || 0, m.offline || 0, m.live || 0, b.lv || 0, b.lids ? Object.keys(b.lids).length : 0]
     );
     _dbStatus.lastWrite = new Date().toISOString(); _dbStatus.connected = true; _dbStatus.error = '';
   } catch (e) { _dbStatus.error = e.message; }
@@ -6249,12 +6276,12 @@ function handleAdmin(req, res, reqPathOnly, query) {
     if (!adminAuthed(query)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
     const fmt = (query.format === 'csv') ? 'csv' : 'json';
     if (fmt === 'csv') {
-      const lines = ['date,visits,unique_visitors,new_visitors,returning_visitors,conn_pokerthnet,conn_lan,conn_offline,conn_live'];
+      const lines = ['date,visits,unique_visitors,new_visitors,returning_visitors,conn_pokerthnet,conn_lan,conn_offline,conn_live,live_visits,live_unique_visitors'];
       Object.keys(visitsStore.days).sort().forEach(function (d) {
         const b = visitsStore.days[d] || {};
         const u = b.ids ? Object.keys(b.ids).length : 0;
         const m = b.m || {};
-        lines.push([d, b.v || 0, u, b.nw || 0, b.rt || 0, m.pokerthnet || 0, m.lan || 0, m.offline || 0, m.live || 0].join(','));
+        lines.push([d, b.v || 0, u, b.nw || 0, b.rt || 0, m.pokerthnet || 0, m.lan || 0, m.offline || 0, m.live || 0, b.lv || 0, b.lids ? Object.keys(b.lids).length : 0].join(','));
       });
       res.writeHead(200, { 'Content-Type': 'text/csv; charset=utf-8', 'Cache-Control': 'no-store', 'Content-Disposition': 'attachment; filename="pokerth-traffic.csv"' });
       res.end(lines.join('\n') + '\n');
@@ -9068,6 +9095,7 @@ const httpServer = http.createServer((req, res) => {
       try {
         _pingStats.last = Date.now();
         if (d && d.mode) { _pingStats.nMode++; recordModeConnect(d.mode); }
+        else if (d && d.live === true) { _pingStats.nLive++; recordLiveVisit(d.vid); }
         else {
           _pingStats.n++;
           recordVisit(d && d.vid);

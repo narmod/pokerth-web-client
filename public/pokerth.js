@@ -11431,7 +11431,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.8-web.100'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.8-web.101'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
@@ -11507,7 +11507,9 @@ window.BUILD_VERSION='2.1.8-web.100'; try{ var b=document.getElementById('cf-bui
       // sont dérivés côté serveur — on n'envoie rien de plus.
       var pwa = false;
       try { pwa = !!(window.matchMedia && matchMedia('(display-mode: standalone)').matches) || navigator.standalone === true; } catch (e) {}
-      var body = JSON.stringify({ vid: vid, pwa: pwa });
+      // live: /live visits are counted apart from the web client's (proxy.js
+      // recordLiveVisit), so the embedded view never inflates its footfall.
+      var body = JSON.stringify(window.LIVE_MODE ? { vid: vid, live: true } : { vid: vid, pwa: pwa });
       if (navigator.sendBeacon) {
         navigator.sendBeacon('/__visit', new Blob([body], { type: 'application/json' }));
       } else {

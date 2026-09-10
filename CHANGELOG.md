@@ -16,6 +16,15 @@ release. Per-build detail is on the
 highlights below.
 
 ### Added
+- **`/live` visits counted apart too** (`web.101`) — the visit beacon of the
+  embedded view says `live`, and `/__visit` sends it to `recordLiveVisit`
+  instead of `recordVisit` + `recordVisitEnv`. Visits, unique, new/returning,
+  hourly buckets, cohorts and *Who visits* are now web client only; `/live`
+  has its own per-day and all-time visits and unique devices, a *Traffic →
+  /live spectator view* block, `live_visits` / `live_unique_visitors` CSV
+  columns (last) and DB-mirror columns. `/live` keeps its own device id, so a
+  device using both counts once on each side. Earlier `/live` visits stay
+  mixed in. Needs a proxy restart. Test in `scripts/test-live-split.mjs`.
 - **Admin tells `/live` apart from the web client** (`web.100`) — a spectator
   on the embedded view used to count as a pokerth.net player in both places
   the admin reads. *Traffic → Where sessions open*: the connect beacon now

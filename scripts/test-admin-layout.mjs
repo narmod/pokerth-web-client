@@ -396,7 +396,7 @@ ok(/\.card>h2\+\.tsec\{border-top:0/.test(admin),
   'except the first one, which has nothing above it to separate from');
 ok(/\.tsec \.boardhead>h3\{[^}]*white-space:nowrap/.test(admin),
   'a section title does not break, so its note can take the slack');
-ok((traf.match(/<div class="tsec">/g) || []).length === 12, 'twelve sections spread across them');
+ok((traf.match(/<div class="tsec">/g) || []).length === 13, 'thirteen sections spread across them (the /live spectator view has its own)');
 ok(traf.indexOf('<h2>Data &amp; settings</h2>') > traf.indexOf('<h2>Bottom line</h2>'),
   'the controls come last, after everything that is read');
 for (const id of ['btnNoCount', 'dbHost', 'btnTrafCsv', 'btnTrafReset', 'trafModes', 'trafEnv', 'trafMusic']) {

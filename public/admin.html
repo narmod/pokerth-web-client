@@ -462,6 +462,11 @@
           <p class="muted">Counts a session once per entry mode it is opened with, whatever the transport: Internet games routed through this proxy still count as pokerth.net. Offline = training vs bots. <b>/live</b> = spectator sessions from the embedded view, counted apart from the web client (since 2.1.8-web.100; earlier ones sit under pokerth.net).</p>
           <div id="trafModes"><div class="empty">Loading…</div></div>
         </div>
+        <div class="tsec">
+          <h3>/live spectator view</h3>
+          <p class="muted">Visits to the spectator view embedded on pokerth.net, kept out of every other traffic figure and of “Who visits” (since 2.1.8-web.101; earlier ones are mixed in with the web client). Visits = browser sessions; unique = distinct devices. /live keeps its own device id, so a device using both is counted once on each side.</p>
+          <div id="trafLive"><div class="empty">Loading…</div></div>
+        </div>
       </div>
       <div class="card">
         <h2>Trends</h2>
@@ -2943,6 +2948,10 @@
         _chartMount(c,labs,lines,170,'line');
       }
       _trafInsights(d,s);
+      var lvx=$('trafLive');
+      if(lvx){
+        lvx.innerHTML=[['Today',d.today],['Last 7 days',d.week],['Last 30 days',d.month],['All time',d.allTime]].map(function(rw){ var o=rw[1]||{}; return '<div class="srow"><span>'+rw[0]+'</span><b>'+fmt(o.lv)+' visits · '+fmt(o.lu)+' unique</b></div>'; }).join('');
+      }
       var md=$('trafModes');
       if(md){
         var tm=(d.today&&d.today.m)||{}, am=(d.allTime&&d.allTime.m)||{};
