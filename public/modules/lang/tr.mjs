@@ -739,7 +739,7 @@ export const strings = {
     advCfgXmlSec:'PokerTH config.xml', advCfgExport:'config.xml dışa aktar', advCfgImport:'config.xml içe aktar',
     advCfgXmlDesc:'Ayarlarınızı PokerTH masaüstü ve QML istemcileriyle paylaşın (onların ~/.pokerth/config.xml dosyası). Dışa aktarma ortak ayarları yazar (ad, görüntü, sesler, masa tercihleri, blindler, stiller); içe aktarma bunları burada uygular. Web istemcisinin bilmediği ayarlar dosyada korunur ve bir sonraki dışa aktarmada değişmeden yeniden yazılır.',
     cfgXmlExported:'config.xml dışa aktarıldı — masaüstü istemcinin ~/.pokerth/ klasörüne koyun', cfgXmlImported:'config.xml içe aktarıldı — ortak ayarlar uygulandı', cfgXmlImportErr:'İçe aktarma başarısız — geçersiz PokerTH config.xml', cfgXmlReload:'Her şeyi uygulamak için şimdi yeniden yüklensin mi (temalar, desteler, adlar)?',
-    advCfgSync:'Bu ayarları hesabımla otomatik senkronize et (yalnızca kayıtlı oturum — bu sunucuda saklanır, isteğe bağlı)', cfgSyncApplied:'Ayarlar hesabınızdan senkronize edildi',
+    advCfgSync:'Bu ayarları hesabımla otomatik senkronize et (yalnızca kayıtlı oturum — bu sunucuda saklanır)', cfgSyncApplied:'Ayarlar hesabınızdan senkronize edildi',
     // v0.3.533 : case « ne pas traduire les termes de poker » (parité officielle)
     advPokerTerms:'Uluslararası poker terimlerini çevirme (Check, Call, Raise)',
     pokerFold:'Fold', pokerCheck:'Check', pokerCall:'Call', pokerBet:'Bet', pokerRaise:'Raise', pokerAllin:'All-In',

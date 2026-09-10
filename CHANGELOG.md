@@ -504,6 +504,11 @@ highlights below.
   (`scale 1.03`, 180 ms OutQuad) is applied to the seat plate.
 
 ### Fixed
+- **Settings sync label claimed "opt-in"** (`web.108`) — `advCfgSync` read
+  "(registered login only — stored on this server, opt-in)" in every language,
+  but `_cfgSyncEnabled()` defaults to on for registered logins, as the privacy
+  page now states. The "opt-in" part is removed from the label in all 45
+  languages; behaviour is unchanged.
 - **Table background no longer jumps by a pixel mid-hand** (`web.106`) — on
   fullscreen tables framed `center` (default PokerTH, Ivoire & Chêne, Disco…)
   the wallpaper is centred on `communityCenterY`, a barycentre measured from

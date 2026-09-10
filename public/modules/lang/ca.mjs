@@ -737,7 +737,7 @@ export const strings = {
     advCfgXmlSec:'PokerTH config.xml', advCfgExport:'Exporta config.xml', advCfgImport:'Importa config.xml',
     advCfgXmlDesc:'Intercanvia els teus ajustos amb els clients d\'escriptori i QML de PokerTH (el seu fitxer ~/.pokerth/config.xml). L\'exportació escriu els ajustos compartits (nom, pantalla, sons, preferències de taula, cegues, estils); la importació els aplica aquí. Els ajustos desconeguts pel client web es conserven al fitxer i es reescriuen intactes a la propera exportació.',
     cfgXmlExported:'config.xml exportat — posa\'l a ~/.pokerth/ del client d\'escriptori', cfgXmlImported:'config.xml importat — ajustos compartits aplicats', cfgXmlImportErr:'Ha fallat la importació — config.xml de PokerTH no vàlid', cfgXmlReload:'Vols recarregar ara per aplicar-ho tot (temes, baralles, noms)?',
-    advCfgSync:'Sincronitza automàticament aquests ajustos amb el meu compte (només sessió registrada — desats en aquest servidor, opcional)', cfgSyncApplied:'Ajustos sincronitzats des del teu compte',
+    advCfgSync:'Sincronitza automàticament aquests ajustos amb el meu compte (només sessió registrada — desats en aquest servidor)', cfgSyncApplied:'Ajustos sincronitzats des del teu compte',
     // v0.3.533 : case « ne pas traduire les termes de poker » (parité officielle)
     advPokerTerms:'No tradueixis els termes internacionals del pòquer (Check, Call, Raise)',
     pokerFold:'Fold', pokerCheck:'Check', pokerCall:'Call', pokerBet:'Bet', pokerRaise:'Raise', pokerAllin:'All-In',

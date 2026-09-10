@@ -737,7 +737,7 @@ export const strings = {
     advCfgXmlSec:'PokerTH config.xml', advCfgExport:'Exportovať config.xml', advCfgImport:'Importovať config.xml',
     advCfgXmlDesc:'Vymieňajte si nastavenia s desktopovým a QML klientom PokerTH (ich súbor ~/.pokerth/config.xml). Export zapíše zdieľané nastavenia (meno, zobrazenie, zvuky, predvoľby stola, blindy, štýly); import ich použije tu. Nastavenia neznáme webovému klientovi ostávajú v súbore a pri ďalšom exporte sa zapíšu bez zmeny.',
     cfgXmlExported:'config.xml exportovaný — vložte ho do ~/.pokerth/ desktopového klienta', cfgXmlImported:'config.xml importovaný — zdieľané nastavenia použité', cfgXmlImportErr:'Import zlyhal — neplatný config.xml PokerTH', cfgXmlReload:'Načítať znova a použiť všetko (motívy, balíčky, mená)?',
-    advCfgSync:'Automaticky synchronizovať tieto nastavenia s mojím účtom (iba registrované prihlásenie — uložené na tomto serveri, voliteľné)', cfgSyncApplied:'Nastavenia synchronizované z vášho účtu',
+    advCfgSync:'Automaticky synchronizovať tieto nastavenia s mojím účtom (iba registrované prihlásenie — uložené na tomto serveri)', cfgSyncApplied:'Nastavenia synchronizované z vášho účtu',
     // v0.3.533 : case « ne pas traduire les termes de poker » (parité officielle)
     advPokerTerms:'Neprekladať medzinárodné pokrové výrazy (Check, Call, Raise)',
     pokerFold:'Fold', pokerCheck:'Check', pokerCall:'Call', pokerBet:'Bet', pokerRaise:'Raise', pokerAllin:'All-In',

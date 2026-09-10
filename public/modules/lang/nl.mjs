@@ -740,7 +740,7 @@ export const strings = {
     advCfgXmlSec:'PokerTH config.xml', advCfgExport:'config.xml exporteren', advCfgImport:'config.xml importeren',
     advCfgXmlDesc:'Wissel je instellingen uit met de desktop- en QML-clients van PokerTH (hun bestand ~/.pokerth/config.xml). Exporteren schrijft de gedeelde instellingen (naam, weergave, geluiden, tafelvoorkeuren, blinds, stijlen); importeren past ze hier toe. Instellingen die de webclient niet kent, blijven in het bestand staan en worden bij de volgende export ongewijzigd teruggeschreven.',
     cfgXmlExported:'config.xml geëxporteerd — plaats het in ~/.pokerth/ van de desktopclient', cfgXmlImported:'config.xml geïmporteerd — gedeelde instellingen toegepast', cfgXmlImportErr:'Importeren mislukt — geen geldige PokerTH config.xml', cfgXmlReload:'Nu herladen om alles toe te passen (thema\'s, decks, namen)?',
-    advCfgSync:'Deze instellingen automatisch synchroniseren met mijn account (alleen geregistreerde login — opgeslagen op deze server, opt-in)', cfgSyncApplied:'Instellingen gesynchroniseerd vanaf je account',
+    advCfgSync:'Deze instellingen automatisch synchroniseren met mijn account (alleen geregistreerde login — opgeslagen op deze server)', cfgSyncApplied:'Instellingen gesynchroniseerd vanaf je account',
     // v0.3.533 : case « ne pas traduire les termes de poker » (parité officielle)
     advPokerTerms:'Internationale pokertermen niet vertalen (Check, Call, Raise)',
     pokerFold:'Fold', pokerCheck:'Check', pokerCall:'Call', pokerBet:'Bet', pokerRaise:'Raise', pokerAllin:'All-In',

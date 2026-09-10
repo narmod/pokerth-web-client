@@ -740,7 +740,7 @@ export const strings = {
     advCfgXmlSec:'PokerTH config.xml', advCfgExport:'Eksportuj config.xml', advCfgImport:'Importuj config.xml',
     advCfgXmlDesc:'Wymieniaj ustawienia z klientami desktopowym i QML PokerTH (ich plik ~/.pokerth/config.xml). Eksport zapisuje wspólne ustawienia (nazwa, wyświetlanie, dźwięki, preferencje stołu, ciemne, style); import stosuje je tutaj. Ustawienia nieznane klientowi webowemu pozostają w pliku i są zapisywane bez zmian przy następnym eksporcie.',
     cfgXmlExported:'config.xml wyeksportowany — umieść go w ~/.pokerth/ klienta desktopowego', cfgXmlImported:'config.xml zaimportowany — wspólne ustawienia zastosowane', cfgXmlImportErr:'Import nieudany — nieprawidłowy config.xml PokerTH', cfgXmlReload:'Przeładować teraz, aby zastosować wszystko (motywy, talie, nazwy)?',
-    advCfgSync:'Automatycznie synchronizuj te ustawienia z moim kontem (tylko zarejestrowane logowanie — zapisywane na tym serwerze, opcjonalne)', cfgSyncApplied:'Ustawienia zsynchronizowane z Twojego konta',
+    advCfgSync:'Automatycznie synchronizuj te ustawienia z moim kontem (tylko zarejestrowane logowanie — zapisywane na tym serwerze)', cfgSyncApplied:'Ustawienia zsynchronizowane z Twojego konta',
     // v0.3.533 : case « ne pas traduire les termes de poker » (parité officielle)
     advPokerTerms:'Nie tłumacz międzynarodowych terminów pokerowych (Check, Call, Raise)',
     pokerFold:'Fold', pokerCheck:'Check', pokerCall:'Call', pokerBet:'Bet', pokerRaise:'Raise', pokerAllin:'All-In',

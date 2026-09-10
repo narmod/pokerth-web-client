@@ -737,7 +737,7 @@ export const strings = {
     advCfgXmlSec:'PokerTH config.xml', advCfgExport:'Exportă config.xml', advCfgImport:'Importă config.xml',
     advCfgXmlDesc:'Schimbă setările cu clienții desktop și QML PokerTH (fișierul lor ~/.pokerth/config.xml). Exportul scrie setările comune (nume, afișare, sunete, preferințe de masă, blinduri, stiluri); importul le aplică aici. Setările necunoscute clientului web rămân în fișier și sunt rescrise neschimbate la următorul export.',
     cfgXmlExported:'config.xml exportat — pune-l în ~/.pokerth/ al clientului desktop', cfgXmlImported:'config.xml importat — setările comune aplicate', cfgXmlImportErr:'Import eșuat — config.xml PokerTH nevalid', cfgXmlReload:'Reîncarci acum pentru a aplica tot (teme, pachete, nume)?',
-    advCfgSync:'Sincronizează automat aceste setări cu contul meu (doar autentificare înregistrată — stocate pe acest server, opțional)', cfgSyncApplied:'Setări sincronizate din contul tău',
+    advCfgSync:'Sincronizează automat aceste setări cu contul meu (doar autentificare înregistrată — stocate pe acest server)', cfgSyncApplied:'Setări sincronizate din contul tău',
     // v0.3.533 : case « ne pas traduire les termes de poker » (parité officielle)
     advPokerTerms:'Nu traduce termenii internaționali de poker (Check, Call, Raise)',
     pokerFold:'Fold', pokerCheck:'Check', pokerCall:'Call', pokerBet:'Bet', pokerRaise:'Raise', pokerAllin:'All-In',

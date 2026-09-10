@@ -736,7 +736,7 @@ export const strings = {
     advCfgXmlSec:'PokerTH config.xml', advCfgExport:'Eksporter config.xml', advCfgImport:'Importer config.xml',
     advCfgXmlDesc:'Utveksle innstillingene dine med PokerTHs skrivebords- og QML-klienter (filen deres ~/.pokerth/config.xml). Eksport skriver de delte innstillingene (navn, visning, lyder, bordinnstillinger, blinds, stiler); import bruker dem her. Innstillinger webklienten ikke kjenner, beholdes i filen og skrives uendret tilbake ved neste eksport.',
     cfgXmlExported:'config.xml eksportert — legg den i ~/.pokerth/ i skrivebordsklienten', cfgXmlImported:'config.xml importert — delte innstillinger brukt', cfgXmlImportErr:'Import mislyktes — ugyldig PokerTH config.xml', cfgXmlReload:'Last inn på nytt nå for å bruke alt (temaer, kortstokker, navn)?',
-    advCfgSync:'Synkroniser disse innstillingene automatisk med kontoen min (kun registrert pålogging — lagres på denne serveren, valgfritt)', cfgSyncApplied:'Innstillinger synkronisert fra kontoen din',
+    advCfgSync:'Synkroniser disse innstillingene automatisk med kontoen min (kun registrert pålogging — lagres på denne serveren)', cfgSyncApplied:'Innstillinger synkronisert fra kontoen din',
     // v0.3.533 : case « ne pas traduire les termes de poker » (parité officielle)
     advPokerTerms:'Ikke oversett internasjonale pokeruttrykk (Check, Call, Raise)',
     pokerFold:'Fold', pokerCheck:'Check', pokerCall:'Call', pokerBet:'Bet', pokerRaise:'Raise', pokerAllin:'All-In',

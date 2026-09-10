@@ -737,7 +737,7 @@ export const strings = {
     advCfgXmlSec:'PokerTH config.xml', advCfgExport:'Εξαγωγή config.xml', advCfgImport:'Εισαγωγή config.xml',
     advCfgXmlDesc:'Ανταλλάξτε τις ρυθμίσεις σας με τους πελάτες desktop και QML του PokerTH (το αρχείο τους ~/.pokerth/config.xml). Η εξαγωγή γράφει τις κοινές ρυθμίσεις (όνομα, εμφάνιση, ήχοι, προτιμήσεις τραπεζιού, τυφλές, στυλ)· η εισαγωγή τις εφαρμόζει εδώ. Ρυθμίσεις άγνωστες στον πελάτη web διατηρούνται στο αρχείο και ξαναγράφονται ανέπαφες στην επόμενη εξαγωγή.',
     cfgXmlExported:'Το config.xml εξήχθη — τοποθετήστε το στο ~/.pokerth/ του πελάτη desktop', cfgXmlImported:'Το config.xml εισήχθη — οι κοινές ρυθμίσεις εφαρμόστηκαν', cfgXmlImportErr:'Αποτυχία εισαγωγής — μη έγκυρο config.xml PokerTH', cfgXmlReload:'Επαναφόρτωση τώρα για να εφαρμοστούν όλα (θέματα, τράπουλες, ονόματα);',
-    advCfgSync:'Αυτόματος συγχρονισμός αυτών των ρυθμίσεων με τον λογαριασμό μου (μόνο εγγεγραμμένη σύνδεση — αποθηκεύονται σε αυτόν τον διακομιστή, προαιρετικό)', cfgSyncApplied:'Οι ρυθμίσεις συγχρονίστηκαν από τον λογαριασμό σας',
+    advCfgSync:'Αυτόματος συγχρονισμός αυτών των ρυθμίσεων με τον λογαριασμό μου (μόνο εγγεγραμμένη σύνδεση — αποθηκεύονται σε αυτόν τον διακομιστή)', cfgSyncApplied:'Οι ρυθμίσεις συγχρονίστηκαν από τον λογαριασμό σας',
     // v0.3.533 : case « ne pas traduire les termes de poker » (parité officielle)
     advPokerTerms:'Να μη μεταφράζονται οι διεθνείς όροι του πόκερ (Check, Call, Raise)',
     pokerFold:'Φόλντ', pokerCheck:'Τσεκ', pokerCall:'Κολ', pokerBet:'Μπετ', pokerRaise:'Ρέιζ', pokerAllin:'Ολ-ιν',
