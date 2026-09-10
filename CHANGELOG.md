@@ -281,6 +281,13 @@ highlights below.
   every entry now carries both.
 
 ### Changed
+- **`/live` no longer shows the client's own notices** (`web.87`) — the
+  welcome modal, the authenticated-player notice and the operator poll are
+  silenced in live mode, at their entry points so every call site is covered.
+  A spectator arrived to watch a hand, not to read about the web client
+  (sp0ck, after reviewing the deployed `/live`). What reports rather than
+  advertises is untouched: connection errors, the server's inactivity warning,
+  and the dialog raised by clicking Spectate.
 - **The dashboard header lost its two link buttons** (`web.63`). “Open the
   app” and “Studio” gave their place to the game-server figures; the theme
   toggle moved to sit beside Log out and now shows only its icon, the wording

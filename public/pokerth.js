@@ -2587,6 +2587,9 @@ function showWelcomeModal(title, body, version) {
   document.body.appendChild(back);
 }
 function maybeShowWelcome(w) {
+  // /live is the spectator tool, not the web client's shop window: the
+  // operator notices about the client have no place there (sp0ck, 2026-09-10).
+  if (window.LIVE_MODE) return;
   if (!w || !w.enabled) return;
   try { if (String(localStorage.getItem('pth_welcome_seen')) === String(w.updatedAt)) return; } catch (e) {}
   var c = _welcomeChoose(w);
@@ -2751,6 +2754,9 @@ function showAuthNoticeModal(title, body, version) {
   document.body.appendChild(back);
 }
 function maybeShowAuthNotice() {
+  // /live is the spectator tool, not the web client's shop window: the
+  // operator notices about the client have no place there (sp0ck, 2026-09-10).
+  if (window.LIVE_MODE) return;
   var g = window._authNoticeCfg;
   if (!g || !g.enabled) return;
   // Deja acquitte pour cette version (localement ou via le profil) -> silence.
@@ -11455,7 +11461,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.8-web.86'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.8-web.87'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

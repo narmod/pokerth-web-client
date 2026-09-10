@@ -249,7 +249,12 @@ window._pollSetConfig = function (p) {
   _poll = (p && p.id && Array.isArray(p.options) && p.options.length >= 2) ? p : null;
   _render();
 };
-window._pollOnScreen = function (id) { if (id === 's-lobby') _render(); else _close(); };
+// Same reason as the welcome and auth notices: a spectator is not the
+// audience for a web-client poll.
+window._pollOnScreen = function (id) {
+  if (window.LIVE_MODE) { _close(); return; }
+  if (id === 's-lobby') _render(); else _close();
+};
 window._pollRefresh = function () { _render(); };
 // Escape : enregistree dans le registre de ui/keynav.mjs. Fermer vaut « vu »,
 // comme la croix.
