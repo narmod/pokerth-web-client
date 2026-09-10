@@ -10366,19 +10366,82 @@ function _initChatFocusHold() {
 if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', _initChatFocusHold);
 else _initChatFocusHold();
 
-function _configureGameDrawer(panel, opening, btn, floatingOptions, side, openingFocus, refreshOutsideAdaptive) {
+function _gameDrawerConfig(panel) {
+  if (!panel) return null;
+  if (panel.id === 'g-chat-panel') return {
+    normalTrigger: document.getElementById('chat-toggle-btn'),
+    adaptiveTrigger: document.getElementById('adaptive-chat-toggle'),
+    side: 'left',
+    focus: function () { return document.getElementById('g-chat-in'); },
+    refreshOutsideAdaptive: true,
+    floating: { key:'pth_winpos_chat', handle: panel.querySelector('.g-chat-panel-header'), resizable:true, minW:240, minH:160, defW:300, defH:280, zoom:true }
+  };
+  if (panel.id === 'g-log-panel') return {
+    normalTrigger: document.getElementById('log-toggle-btn'),
+    adaptiveTrigger: document.getElementById('adaptive-info-toggle'),
+    side: 'right',
+    focus: function () { return panel.querySelector('.gip-tab.gip-on'); },
+    refreshOutsideAdaptive: false,
+    floating: { key:'pth_winpos_log2', handle: panel.querySelector('.g-chat-panel-header'), resizable:true, minW:240, minH:140, defW: window.innerWidth >= 1400 ? 340 : 300, defH:300, zoom:true }
+  };
+  return null;
+}
+
+function _refreshGameDrawerLayout() {
+  setTimeout(function () {
+    try { autoScaleTable(); } catch (e) {}
+    try { if (typeof updateBottomLayout === 'function') updateBottomLayout(); } catch (e) {}
+    try { if (typeof renderSeats === 'function' && typeof seats !== 'undefined' && seats.length) renderSeats(); } catch (e) {}
+  }, 50);
+}
+
+function reconfigureGameDrawersForAdaptivePlay(adaptive) {
+  var panels = [document.getElementById('g-chat-panel'), document.getElementById('g-log-panel')];
+  for (var i = 0; i < panels.length; i++) {
+    var panel = panels[i], config = _gameDrawerConfig(panel);
+    if (!panel || !config) continue;
+    if (adaptive) {
+      panel.setAttribute('role', 'dialog');
+      panel.setAttribute('aria-modal', 'false');
+      _disableFloating(panel);
+    } else {
+      panel.removeAttribute('role');
+      panel.removeAttribute('aria-modal');
+    }
+    var open = panel.style.display !== 'none';
+    if (!open) continue;
+    var btn = adaptive ? config.adaptiveTrigger : config.normalTrigger;
+    panel._drawerInvoker = btn;
+    if (adaptive) {
+      setTimeout(function (targetPanel) {
+        var targetConfig = _gameDrawerConfig(targetPanel);
+        var target = targetConfig && targetConfig.focus();
+        try { if (target) target.focus(); } catch (e) {}
+      }, 80, panel);
+    } else {
+      _openFloatingNearBtn(panel, btn, config.floating, config.side);
+    }
+  }
+  _refreshGameDrawerLayout();
+}
+window.reconfigureGameDrawersForAdaptivePlay = reconfigureGameDrawersForAdaptivePlay;
+try { reconfigureGameDrawersForAdaptivePlay(typeof window.isAdaptivePortraitPlay === 'function' && window.isAdaptivePortraitPlay()); } catch (e) {}
+
+function _configureGameDrawer(panel, opening, btn) {
+  var config = _gameDrawerConfig(panel);
+  if (!config) return false;
   var adaptive = typeof window.isAdaptivePortraitPlay === 'function' && window.isAdaptivePortraitPlay();
   if (opening) {
     if (adaptive) _disableFloating(panel);
-    else _openFloatingNearBtn(panel, btn, floatingOptions, side);
+    else _openFloatingNearBtn(panel, btn, config.floating, config.side);
   }
-  if (adaptive || refreshOutsideAdaptive) {
+  if (adaptive || config.refreshOutsideAdaptive) {
     setTimeout(function () {
       try { autoScaleTable(); } catch (e) {}
       if (adaptive) { try { if (typeof updateBottomLayout === 'function') updateBottomLayout(); } catch (e) {} }
       try { if (typeof renderSeats === 'function' && typeof seats !== 'undefined' && seats.length) renderSeats(); } catch (e) {}
       if (!adaptive) return;
-      var target = opening ? (typeof openingFocus === 'function' ? openingFocus() : openingFocus) : btn;
+      var target = opening ? config.focus() : btn;
       try { if (target) target.focus(); } catch (e) {}
       if (!opening) panel._drawerInvoker = null;
     }, 50);
@@ -10401,9 +10464,7 @@ function toggleGameChat(invoker) {
   document.querySelectorAll('[aria-controls="g-chat-panel"]').forEach(function(trigger) {
     trigger.setAttribute('aria-expanded', open ? 'true' : 'false');
   });
-  var adaptive = _configureGameDrawer(panel, open, btn,
-    { key:'pth_winpos_chat', handle: panel.querySelector('.g-chat-panel-header'), resizable:true, minW:240, minH:160, defW:300, defH:280, zoom:true },
-    'left', function () { return document.getElementById('g-chat-in'); }, true);
+  var adaptive = _configureGameDrawer(panel, open, btn);
   if (btn) {
     btn.style.background  = open ? 'rgba(var(--gold-rgb),0.2)' : '';
     btn.style.borderColor = open ? 'var(--gold-dim)' : '';
@@ -10674,9 +10735,7 @@ function toggleLog(invoker) {
   document.querySelectorAll('[aria-controls="g-log-panel"]').forEach(function(trigger) {
     trigger.setAttribute('aria-expanded', isHidden ? 'true' : 'false');
   });
-  _configureGameDrawer(panel, isHidden, btn,
-    { key:'pth_winpos_log2', handle: panel.querySelector('.g-chat-panel-header'), resizable:true, minW:240, minH:140, defW: window.innerWidth >= 1400 ? 340 : 300, defH:300, zoom:true },
-    'right', function () { return panel.querySelector('.gip-tab.gip-on'); }, false);
+  _configureGameDrawer(panel, isHidden, btn);
   if (btn) btn.style.background = isHidden ? 'rgba(var(--gold-rgb),0.2)' : '';
   if (btn) btn.style.borderColor = isHidden ? 'var(--gold-dim)' : '';
   if (btn) btn.style.color       = isHidden ? 'var(--gold)' : '';
@@ -11474,7 +11533,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.8-web.130'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.8-web.131'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

@@ -302,7 +302,8 @@ function assertCriticalUnoccluded(geometry, drawer, label) {
     actions: geometry.actions,
   })) {
     assertReachable(rect, geometry.viewport, `${label} ${name}`);
-    assert.equal(overlaps(rect, drawer), false, `${label} ${name} is occluded by the open drawer`);
+    assert.equal(overlaps(rect, drawer), false,
+      `${label} ${name} is occluded by the open drawer: ${JSON.stringify({ critical: rect, drawer })}`);
   }
 }
 
@@ -317,6 +318,20 @@ async function assertActionOperable(page, label) {
       .some((frame) => MSG.parse(new Uint8Array(frame).slice(4)).type === MSG.T.MyActionRequest);
   }, before);
   assert.equal(sent, true, `${label} action did not cross the production message boundary`);
+}
+
+async function drawerPresentation(page, panelSelector) {
+  return page.locator(panelSelector).evaluate((panel) => {
+    const style = getComputedStyle(panel);
+    const content = panel.querySelector('.g-chat-panel-header');
+    return {
+      position: style.position,
+      width: panel.getBoundingClientRect().width,
+      viewportWidth: innerWidth,
+      resizeHandles: panel.querySelectorAll('.win-rsz').length,
+      contentZoom: content ? parseFloat(getComputedStyle(content).zoom || '1') : 1,
+    };
+  });
 }
 
 async function takeLobbyJoinOutcomes(page) {
@@ -982,6 +997,63 @@ try {
       assert.equal(cue.visible, true, `mobile portrait Extra Large open ${drawer.label} drawer hides the current-turn cue`);
       assert.equal(cue.distinctFromInactive, true, `mobile portrait Extra Large open ${drawer.label} drawer makes the current-turn cue ambiguous`);
       await assertActionOperable(page, `mobile portrait Extra Large open ${drawer.label} drawer`);
+      await page.locator(drawer.close).click();
+      await page.locator(drawer.panel).waitFor({ state: 'hidden' });
+    }
+  });
+  await check('open drawers adapt across live portrait transitions without losing state', async () => {
+    for (const drawer of [
+      { trigger: '#chat-toggle-btn', adaptiveTrigger: '#adaptive-chat-toggle', panel: '#g-chat-panel', close: '#g-chat-close', label: 'chat', focus: 'g-chat-in' },
+      { trigger: '#log-toggle-btn', adaptiveTrigger: '#adaptive-info-toggle', panel: '#g-log-panel', close: '#g-log-close', label: 'information', focus: 'gip-tab-stats' },
+    ]) {
+      await startActiveHand(page, 10);
+      await chooseInterfaceSize(page, 'game', 'extra-large');
+      await page.locator(drawer.trigger).click();
+      await page.locator(drawer.panel).waitFor({ state: 'visible' });
+      if (drawer.label === 'chat') await page.locator('#g-chat-in').fill('Draft survives adaptive transitions');
+      else await page.locator('#gip-tab-stats').click();
+
+      const before = await drawerPresentation(page, drawer.panel);
+      assert.equal(await page.locator(drawer.panel).getAttribute('role'), null,
+        `${drawer.label} drawer exposes adaptive dialog semantics before portrait entry`);
+      assert.equal(before.position, 'fixed', `${drawer.label} drawer is not using its established floating presentation before portrait entry`);
+      assert.ok(before.resizeHandles > 0, `${drawer.label} drawer has no normal floating resize controls before portrait entry`);
+
+      await page.setViewportSize({ width: 390, height: 844 });
+      await page.waitForTimeout(400);
+      const adaptive = await drawerPresentation(page, drawer.panel);
+      assert.equal(await page.locator(drawer.panel).isVisible(), true, `${drawer.label} drawer closed during portrait entry`);
+      assert.equal(await page.locator(drawer.panel).getAttribute('role'), 'dialog', `${drawer.label} drawer lacks adaptive dialog semantics`);
+      assert.notEqual(adaptive.position, 'fixed', `${drawer.label} drawer remained a floating overlay in portrait Extra Large`);
+      assert.equal(adaptive.resizeHandles, 0, `${drawer.label} drawer retained floating resize controls in portrait Extra Large`);
+      assert.equal(adaptive.contentZoom, 1, `${drawer.label} drawer retained floating content zoom in portrait Extra Large`);
+      const adaptiveLabel = (await visibleMetrics(page, [drawer.adaptiveTrigger]))[drawer.adaptiveTrigger];
+      assert.ok(Math.abs(adaptiveLabel.fontSize - 22.4) <= 0.05,
+        `${drawer.label} drawer label does not use the 2x public small-text scale: ${adaptiveLabel.fontSize}px`);
+      await assertTextFits(page, drawer.adaptiveTrigger, `${drawer.label} adaptive drawer label`);
+      assert.equal(await page.evaluate(() => document.activeElement && document.activeElement.id), drawer.focus,
+        `${drawer.label} drawer did not receive focus on portrait entry`);
+      if (drawer.label === 'chat') assert.equal(await page.locator('#g-chat-in').inputValue(), 'Draft survives adaptive transitions');
+      else assert.equal(await page.locator('#g-stats-body').isVisible(), true, 'information drawer lost its active Stats tab on portrait entry');
+      await assertEnhancedTargets(page,
+        drawer.label === 'chat' ? ['#g-chat-in', '#g-chat-close'] : ['#gip-tab-stats', '#g-log-close'],
+        `live-transition ${drawer.label} drawer`);
+      const panelBox = await page.locator(drawer.panel).boundingBox();
+      const drawerRect = { left: panelBox.x, top: panelBox.y, right: panelBox.x + panelBox.width, bottom: panelBox.y + panelBox.height, width: panelBox.width, height: panelBox.height };
+      assertCriticalUnoccluded(await activeHandRects(page), drawerRect, `live-transition ${drawer.label} drawer`);
+      await assertActionOperable(page, `live-transition ${drawer.label} drawer`);
+
+      await page.setViewportSize({ width: 844, height: 390 });
+      await page.waitForTimeout(400);
+      const restored = await drawerPresentation(page, drawer.panel);
+      assert.equal(await page.locator(drawer.panel).isVisible(), true, `${drawer.label} drawer closed during portrait exit`);
+      assert.equal(await page.locator(drawer.panel).getAttribute('role'), null, `${drawer.label} drawer retained adaptive dialog semantics outside portrait`);
+      assert.equal(restored.position, 'fixed', `${drawer.label} drawer did not restore normal floating presentation after portrait exit`);
+      assert.ok(restored.width < restored.viewportWidth, `${drawer.label} drawer did not restore its bounded floating width after portrait exit`);
+      assert.ok(restored.resizeHandles > 0, `${drawer.label} drawer did not restore normal floating resize controls after portrait exit`);
+      if (drawer.label === 'chat') assert.equal(await page.locator('#g-chat-in').inputValue(), 'Draft survives adaptive transitions');
+      else assert.equal(await page.locator('#g-stats-body').isVisible(), true, 'information drawer lost its active Stats tab on portrait exit');
+      if (drawer.label === 'information') await page.locator('#gip-tab-log').click();
       await page.locator(drawer.close).click();
       await page.locator(drawer.panel).waitFor({ state: 'hidden' });
     }
