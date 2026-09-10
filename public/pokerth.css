@@ -11443,6 +11443,11 @@ html[data-seat-struct="qml"] .seat-narrow .seat-name .seat-note-stars { font-siz
    (identity, appearance, build). The table itself is untouched, which is the
    whole point: table work is inherited here rather than ported twice. */
 .live-only { display: none; }
+/* Outside /live nothing .live-only may ever show. The plain rule above
+   (0,1,0) lost to `.header .btn-sm { display: inline-flex }` (0,2,0), so the
+   live appearance button and the (empty) light/dark button showed in the web
+   client's lobby and table headers. Scoped to normal mode, /live is untouched. */
+:root:not([data-live="1"]) .live-only { display: none !important; }
 :root[data-live="1"] .live-only { display: inline-flex; align-items: center; }
 :root[data-live="1"] .live-id {
   gap: 6px; font-weight: 600; color: var(--text-hi);

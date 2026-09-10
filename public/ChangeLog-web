@@ -1,4 +1,5 @@
 2026-09-10 version 2.1.8-web (current series):
+- bugfix: a palette button and an empty button had appeared in the lobby and table headers; they belonged to the spectator view on pokerth.net only and are gone from the web client
 - bugfix: the same player could show one avatar to web players and another to players on the desktop and mobile clients - a picture changed while connected, or brought back with a backup, reached web players only; the avatar now goes through the server alone, as in the official clients, so everyone sees the same one
 - improvement: an avatar chosen while you are connected now takes effect from your next connection, as in the desktop and mobile clients, instead of changing on some screens only
 - improvement: the initial-letter avatar (Aa) is no longer sent as a picture; other players see the default avatar, as they do for a desktop player who has none

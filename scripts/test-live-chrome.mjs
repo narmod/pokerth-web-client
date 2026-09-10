@@ -106,5 +106,15 @@ check('the table list repaints on a language change',
 check('and it drops the guard that would have skipped it',
   /lastSig = null/.test(lobbyMod));
 
+// Outside /live nothing .live-only may show. `.header .btn-sm` sets
+// display:inline-flex at a higher specificity than `.live-only`, so the plain
+// rule alone let the appearance and light/dark buttons into the web client.
+check('outside /live, .live-only is hidden with !important',
+  /:root:not\(\[data-live="1"\]\) \.live-only \{ display: none !important; \}/.test(css));
+for (const id of ['live-theme-lobby', 'live-mode-lobby', 'live-theme-game', 'live-mode-game']) {
+  check(`#${id} carries .live-only`,
+    new RegExp(`class="[^"]*\\blive-only\\b[^"]*" id="${id}"`).test(html));
+}
+
 console.log(failed ? `\n${failed} check(s) failed` : '\nall checks passed');
 process.exit(failed ? 1 : 0);

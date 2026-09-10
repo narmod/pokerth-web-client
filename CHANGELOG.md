@@ -450,6 +450,13 @@ highlights below.
   (`scale 1.03`, 180 ms OutQuad) is applied to the seat plate.
 
 ### Fixed
+- **`/live` header buttons leaked into the web client** (`web.66`–`web.98`,
+  fixed in `web.99`) — `.live-only { display: none }` (0,1,0) lost to
+  `.header .btn-sm { display: inline-flex }` (0,2,0), so the appearance button
+  (🎨) and the light/dark button — empty outside live mode — showed in the
+  ordinary lobby and table headers. A `:root:not([data-live="1"]) .live-only`
+  rule with `!important` now hides every live-only piece outside `/live`;
+  `/live` itself is untouched. Test in `scripts/test-live-chrome.mjs`.
 - **Admin header on a phone** (`web.98`) — under 600 px the live-stats pill
   sat in the same box as the theme and log-out buttons; too wide to share the
   title's line, it wrapped and dragged both buttons down with it. The box now
