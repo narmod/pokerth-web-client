@@ -230,6 +230,7 @@ function applyAdvOpts() {
     b.classList.add('adv-hide-pbar'); // mode PokerTH permanent — option « barre joueur masquée » retirée (narmod 2026-07-17), le CSS reste keyé sur la classe
     b.classList.toggle('adv-no-tablezoom', !_advGet('table_zoom', true)); // interrupteur zoom (parite QML tableZoomEnabled)
     try { if (typeof window._applyBrowserZoomOpt === 'function') window._applyBrowserZoomOpt(); } catch (e) {}   // zoom navigateur (option browser_zoom)
+    try { if (typeof window.applyAccessibilityPreferences === 'function') window.applyAccessibilityPreferences(); } catch (e) {}
     b.classList.toggle('adv-no-lobbychat', !_advGet('lobby_chat', true)); // chat du lobby (parite QML UseLobbyChat)
     b.classList.toggle('adv-no-chatts', !_advGet('chat_ts', true)); // heure [HH:MM:SS] devant les messages de chat (demande forum, extension web)
     b.classList.remove('adv-no-winopen'); // bouton dore tant que sa fenetre est ouverte : toujours actif — option retiree (narmod 2026-07-30), le CSS reste keye sur la classe
@@ -1467,7 +1468,8 @@ var _CFG_WEB_SYNC_KEYS = [
   'pth_log_interval', 'pth_avatar', 'pth_ignored', 'pth_prefs_lan',
   // Web-only sans equivalent config.xml : elles appelaient _cfgSyncMark() mais
   // n'etaient collectees par aucun canal (donc jamais synchronisees).
-  'pth_conn_pill', 'pth_stats_track', 'pth_pdb_auto', 'pth_bak_auto'
+  'pth_conn_pill', 'pth_stats_track', 'pth_pdb_auto', 'pth_bak_auto',
+  'pth_interface_size', 'pth_high_contrast', 'pth_browser_zoom'
 ];
 // Notes de joueur + étiquettes (modules/notes). PAS dans la liste ci-dessus :
 // elles se FUSIONNENT au lieu de s'écraser. Un écrasement ferait perdre la
@@ -1697,6 +1699,7 @@ function _cfgWebApply(o) {
   if (heldWeb) { _cfgWebForcePush = true; _cfgSyncPushSoon(1500); }
   if (!changed) return;
   try { applyAdvOpts(); } catch (e) {}
+  try { if (typeof window.applyAccessibilityPreferences === 'function') window.applyAccessibilityPreferences(); } catch (e) {}
   try { if (typeof applyTooltips === 'function') applyTooltips(); } catch (e) {}
   try {
     var sl = _cfgLs('pth_seat_layout'); if (sl) document.documentElement.setAttribute('data-seat-layout', sl);

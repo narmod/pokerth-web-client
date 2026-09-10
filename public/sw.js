@@ -81,6 +81,7 @@ const ASSETS = [
   // missing here breaks its whole graph offline after a CACHE_VERSION bump.
   // Guarded by scripts/test-precache.mjs.
   '/modules/ui/debuglog.mjs',
+  '/modules/ui/accessibility.mjs',
   '/modules/ui/livescroll.mjs',
   '/modules/chat/abbrev.mjs',
   '/modules/ui/pm.mjs',

@@ -1,0 +1,172 @@
+const SIZE_KEY = 'pth_interface_size';
+const CONTRAST_KEY = 'pth_high_contrast';
+const BROWSER_ZOOM_KEY = 'pth_browser_zoom';
+const SIZES = ['standard', 'large', 'extra-large'];
+
+function read(key) {
+  try { return localStorage.getItem(key); } catch (_error) { return null; }
+}
+
+function write(key, value) {
+  try { localStorage.setItem(key, value); return true; } catch (_error) { return false; }
+}
+
+function sizePreference() {
+  const raw = read(SIZE_KEY);
+  if (raw === null) return 'standard';
+  if (SIZES.includes(raw)) return raw;
+  write(SIZE_KEY, 'standard');
+  return 'standard';
+}
+
+function booleanPreference(key) {
+  const raw = read(key);
+  if (raw === null) return false;
+  if (raw === '1') return true;
+  if (raw !== '0') write(key, '0');
+  return false;
+}
+
+function getAccessibilityPreferences() {
+  return {
+    interfaceSize: sizePreference(),
+    highContrast: booleanPreference(CONTRAST_KEY),
+    browserZoom: booleanPreference(BROWSER_ZOOM_KEY),
+  };
+}
+
+function syncControls(preferences) {
+  try {
+    document.querySelectorAll('input[name="interface-size"]').forEach((input) => {
+      input.checked = input.value === preferences.interfaceSize;
+    });
+    const contrast = document.getElementById('accessibility-high-contrast');
+    if (contrast) contrast.checked = preferences.highContrast;
+    const browserZoom = document.getElementById('accessibility-browser-zoom');
+    if (browserZoom) browserZoom.checked = preferences.browserZoom;
+    const advancedBrowserZoom = document.getElementById('adv-browserzoom');
+    if (advancedBrowserZoom) advancedBrowserZoom.checked = preferences.browserZoom;
+  } catch (_error) {}
+}
+
+function applyAccessibilityPreferences() {
+  const preferences = getAccessibilityPreferences();
+  try {
+    const root = document.documentElement;
+    root.setAttribute('data-interface-size', preferences.interfaceSize);
+    root.setAttribute('data-high-contrast', preferences.highContrast ? 'true' : 'false');
+  } catch (_error) {}
+  syncControls(preferences);
+  try {
+    if (typeof window._applyBrowserZoomOpt === 'function') window._applyBrowserZoomOpt();
+  } catch (_error) {}
+  return preferences;
+}
+
+function markChanged(key) {
+  try {
+    if (typeof window._cfgSyncMark === 'function') window._cfgSyncMark(key);
+  } catch (_error) {}
+}
+
+function setInterfaceSize(value) {
+  write(SIZE_KEY, SIZES.includes(value) ? value : 'standard');
+  applyAccessibilityPreferences();
+  markChanged('interface_size');
+}
+
+function setHighContrast(value) {
+  write(CONTRAST_KEY, value ? '1' : '0');
+  applyAccessibilityPreferences();
+  markChanged('high_contrast');
+}
+
+function setBrowserZoom(value) {
+  if (typeof window.setAdvOpt === 'function') {
+    window.setAdvOpt('browser_zoom', !!value);
+  } else {
+    write(BROWSER_ZOOM_KEY, value ? '1' : '0');
+    applyAccessibilityPreferences();
+    markChanged('browser_zoom');
+  }
+}
+
+function resetAccessibilityPreferences() {
+  write(SIZE_KEY, 'standard');
+  write(CONTRAST_KEY, '0');
+  applyAccessibilityPreferences();
+  markChanged('interface_size');
+  markChanged('high_contrast');
+}
+
+function openAccessibility() {
+  const panel = document.getElementById('accessibility-modal');
+  if (!panel) return;
+  applyAccessibilityPreferences();
+  panel.hidden = false;
+  panel.setAttribute('aria-hidden', 'false');
+  const first = panel.querySelector('input[name="interface-size"]:checked') || panel.querySelector('input, button');
+  try { if (first) first.focus(); } catch (_error) {}
+}
+
+function closeAccessibility() {
+  const panel = document.getElementById('accessibility-modal');
+  if (!panel) return;
+  panel.hidden = true;
+  panel.setAttribute('aria-hidden', 'true');
+}
+
+function bind() {
+  try {
+    document.querySelectorAll('.accessibility-entry').forEach((button) => {
+      button.addEventListener('click', openAccessibility);
+    });
+    document.querySelectorAll('input[name="interface-size"]').forEach((input) => {
+      input.addEventListener('change', () => { if (input.checked) setInterfaceSize(input.value); });
+    });
+    const contrast = document.getElementById('accessibility-high-contrast');
+    if (contrast) contrast.addEventListener('change', () => setHighContrast(contrast.checked));
+    const browserZoom = document.getElementById('accessibility-browser-zoom');
+    if (browserZoom) browserZoom.addEventListener('change', () => setBrowserZoom(browserZoom.checked));
+    const reset = document.getElementById('accessibility-reset');
+    if (reset) reset.addEventListener('click', resetAccessibilityPreferences);
+    const close = document.getElementById('accessibility-close');
+    if (close) close.addEventListener('click', closeAccessibility);
+    const backdrop = document.querySelector('#accessibility-modal .accessibility-backdrop');
+    if (backdrop) backdrop.addEventListener('click', closeAccessibility);
+    document.addEventListener('keydown', (event) => {
+      const panel = document.getElementById('accessibility-modal');
+      if (event.key === 'Escape' && panel && !panel.hidden) {
+        event.preventDefault();
+        closeAccessibility();
+      }
+    });
+  } catch (_error) {}
+  applyAccessibilityPreferences();
+}
+
+window.getAccessibilityPreferences = getAccessibilityPreferences;
+window.applyAccessibilityPreferences = applyAccessibilityPreferences;
+window.openAccessibility = openAccessibility;
+window.closeAccessibility = closeAccessibility;
+window.resetAccessibilityPreferences = resetAccessibilityPreferences;
+
+try {
+  window.addEventListener('storage', (event) => {
+    if ([SIZE_KEY, CONTRAST_KEY, BROWSER_ZOOM_KEY].includes(event.key)) applyAccessibilityPreferences();
+  });
+} catch (_error) {}
+
+if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', bind, { once: true });
+else bind();
+
+export {
+  applyAccessibilityPreferences,
+  closeAccessibility,
+  getAccessibilityPreferences,
+  openAccessibility,
+  resetAccessibilityPreferences,
+  setBrowserZoom,
+  setHighContrast,
+  setInterfaceSize,
+};

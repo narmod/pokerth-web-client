@@ -59,6 +59,7 @@
     "test:music-stats": "node scripts/test-music-stats.mjs",
     "test:sounds": "node scripts/test-sounds.mjs",
     "test:keynav": "node scripts/test-keynav.mjs",
+    "test:accessibility": "node scripts/test-accessibility.mjs",
     "test:journal": "node scripts/test-journal.mjs",
     "test:globalnotice": "node scripts/test-globalnotice.mjs",
     "test:backup-autosave": "node scripts/test-backup-autosave.mjs",
