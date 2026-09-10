@@ -38,10 +38,15 @@ html { touch-action: manipulation; -webkit-text-size-adjust: 100%; text-size-adj
      Les valeurs QML (barre d'action 54/40 px, All-In 52 px, radius 9/10) sont
      encodées ici → la fidélité est préservée par construction.
      Réf. complète : docs/DESIGN_TOKENS.md */
-  /* Typographie (rem) — dérivée des 77 valeurs existantes ramenées à 10 pas */
-  --fs-3xs: .55rem;  --fs-2xs: .62rem;  --fs-xs: .70rem;   --fs-sm: .78rem;
-  --fs-base: .85rem; --fs-md: .95rem;   --fs-lg: 1.05rem;  --fs-xl: 1.35rem;
-  --fs-2xl: 1.6rem;  --fs-hero: 2.6rem;
+  /* Typographie (rem) — les sources canoniques alimentent les alias publics.
+     Les surfaces à vision réduite réappliquent les alias avec leur multiplicateur. */
+  --fs-source-3xs: .55rem;  --fs-source-2xs: .62rem;  --fs-source-xs: .70rem;   --fs-source-sm: .78rem;
+  --fs-source-base: .85rem; --fs-source-md: .95rem;   --fs-source-lg: 1.05rem;  --fs-source-xl: 1.35rem;
+  --fs-source-2xl: 1.6rem;  --fs-source-hero: 2.6rem;
+  --fs-3xs: var(--fs-source-3xs);  --fs-2xs: var(--fs-source-2xs);  --fs-xs: var(--fs-source-xs);   --fs-sm: var(--fs-source-sm);
+  --fs-base: var(--fs-source-base); --fs-md: var(--fs-source-md);   --fs-lg: var(--fs-source-lg);  --fs-xl: var(--fs-source-xl);
+  --fs-2xl: var(--fs-source-2xl);  --fs-hero: var(--fs-source-hero);
+  --interface-scale: 1;
   --lh-tight: 1.1;   --lh-base: 1.35;
   /* Espacement (px, base 2 — 6/8 = chevaux de trait) */
   --sp-0: 2px;  --sp-1: 4px;  --sp-2: 6px;  --sp-3: 8px;
@@ -56,7 +61,8 @@ html { touch-action: manipulation; -webkit-text-size-adjust: 100%; text-size-adj
   --sel-bar: var(--sel, #E3C800);
   --sel-bar-rgb: var(--sel-rgb, 227,200,0);
   /* Hauteurs de contrôle (QML : barre 54, landscapeCompact 40, All-In 52) */
-  --ctrl-sm: 26px; --ctrl-md: 34px; --ctrl-lg: 40px; --ctrl-xl: 54px; --ctrl-allin: 52px;
+  --ctrl-sm: 26px; --ctrl-md: 34px; --ctrl-lg: 40px; --ctrl-enhanced: 44px; --ctrl-xl: 54px; --ctrl-allin: 52px;
+  --ctrl-header-icon: 30px; --icon-header: 22px;
 
   --ff-display: 'Cinzel', serif;
   --ff-mono:    'Inconsolata', monospace;
@@ -648,20 +654,22 @@ body {
   letter-spacing: 0.12em;
   line-height: 1;
 }
-.card-subtitle { font-size: var(--fs-2xs); letter-spacing: 0.4em; text-transform: uppercase; color: var(--text); }
+.cl-app-title { --login-title-size: 2rem; font-size: calc(var(--login-title-size) * var(--interface-scale)); }
+.card-subtitle { --login-subtitle-size: .65rem; font-size: calc(var(--login-subtitle-size) * var(--interface-scale)); letter-spacing: 0.4em; text-transform: uppercase; color: var(--text); }
 .card-chip {
+  --login-brand-size: clamp(56px, 13vw, 126px);
   display: block;
   margin: 0 auto;
   /* Parité client QML (Theme.brandLogoSize) : plafond 126 px desktop /
      100 px phone, plancher 56 px, mise à l'échelle fluide (narmod 19/07).
      Les media-queries max-height ci-dessous prennent le relais sur écrans
      très courts, comme le compact QML. */
-  width: clamp(56px, 13vw, 126px);
-  height: clamp(56px, 13vw, 126px);
+  width: calc(var(--login-brand-size) * var(--interface-scale));
+  height: calc(var(--login-brand-size) * var(--interface-scale));
   filter: drop-shadow(0 4px 12px rgba(0,0,0,0.55));
 }
 @media (max-width: 600px) {
-  .card-chip { width: clamp(56px, 22vw, 100px); height: clamp(56px, 22vw, 100px); }  /* compact QML : plafond 100 */
+  .card-chip { --login-brand-size: clamp(56px, 22vw, 100px); }  /* compact QML : plafond 100 */
 }
 
 /* Small / short screens (e.g. iPhone SE, landscape): compact the login
@@ -674,10 +682,11 @@ body {
   #s-connect { padding: 8px 14px; }
   .card { gap: var(--sp-3); padding: 14px 18px; }
   .card-logo { padding: 8px 0 10px !important; }
-  .card-chip { width: 54px; height: 54px; }
+  .card-chip { --login-brand-size: 54px; }
   .card-title-big { font-size: 1.5rem !important; margin-top: 6px !important; }
+  .cl-app-title { --login-title-size: 1.5rem; font-size: calc(var(--login-title-size) * var(--interface-scale)) !important; }
   .card-suits-row { font-size: var(--fs-md) !important; margin-top: 5px !important; }
-  .card-subtitle { font-size: var(--fs-3xs) !important; margin-top: 4px !important; }
+  .card-subtitle { --login-subtitle-size: var(--fs-source-3xs); font-size: calc(var(--login-subtitle-size) * var(--interface-scale)) !important; margin-top: 4px !important; }
   .f { gap: var(--sp-1); }
   .f input { padding: 7px 10px; font-size: var(--fs-base); }
   .sel-wrap select { padding: 7px 30px 7px 10px; }
@@ -687,8 +696,9 @@ body {
   .tls-row { font-size: var(--fs-xs); }
 }
 @media (max-height: 640px) {
-  .card-chip { width: 44px; height: 44px; }
+  .card-chip { --login-brand-size: 44px; }
   .card-title-big { font-size: var(--fs-xl) !important; }
+  .cl-app-title { --login-title-size: var(--fs-source-xl); font-size: calc(var(--login-title-size) * var(--interface-scale)) !important; }
   .card-suits-row { display: none !important; }
   .card { gap: var(--sp-2); }
   #login-step2 { gap: var(--sp-2); }
@@ -1542,7 +1552,7 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
 .lc-t { display: block; font-size: var(--fs-md); font-weight: 800; color: var(--text-hi); }
 .lc-d { display: block; font-size: var(--fs-xs); color: var(--text); margin-top: 3px;
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.lc-go { font-size: 1.5rem; color: var(--gold-dim); flex: 0 0 auto; line-height: 1; }
+.lc-go { --login-chevron-size: 1.5rem; font-size: calc(var(--login-chevron-size) * var(--interface-scale)); color: var(--gold-dim); flex: 0 0 auto; line-height: 1; }
 /* Live server figures under the Internet card (modules/ui/live-stats.mjs).
    Hidden by default: it only appears once the relay answers with figures.
    Icon + number per counter, no words — the card is narrow on a phone and a
@@ -4883,6 +4893,7 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
 #g-log-body, #g-chat-msgs, #chat { scrollbar-gutter: stable; }
 
 .g-chat-panel-header { display:flex; align-items:center; justify-content:space-between; padding:4px 10px; background:var(--chrome-tint); border-bottom:1px solid var(--border); flex-shrink:0; }
+.lobby-section-title { --lobby-section-title-size: .65rem; font-size: calc(var(--lobby-section-title-size) * var(--interface-scale)); }
 /* Poignée de redimensionnement du chat (bord bas) — glissable au doigt */
 .chat-resize-handle {
   flex-shrink: 0; height: 18px;
@@ -11048,9 +11059,9 @@ html[data-seat-struct="qml"] .seat:not(.me) .seat-narrow .seat-holecards .pk { w
    leur taille (leur règle gagne). Voir docs/DESIGN_TOKENS.md §Responsive. */
 @media (max-width: 380px) {
   :root {
-    --fs-3xs: .52rem; --fs-2xs: .58rem; --fs-xs: .66rem;  --fs-sm: .74rem;
-    --fs-base: .80rem; --fs-md: .90rem; --fs-lg: 1.0rem;  --fs-xl: 1.28rem;
-    --fs-2xl: 1.5rem;  --fs-hero: 2.4rem;
+    --fs-source-3xs: .52rem; --fs-source-2xs: .58rem; --fs-source-xs: .66rem;  --fs-source-sm: .74rem;
+    --fs-source-base: .80rem; --fs-source-md: .90rem; --fs-source-lg: 1.0rem;  --fs-source-xl: 1.28rem;
+    --fs-source-2xl: 1.5rem;  --fs-source-hero: 2.4rem;
   }
 }
 
@@ -11853,16 +11864,16 @@ html[data-seat-struct="qml"] .seat-narrow .seat-name .seat-note-stars { font-siz
 :root[data-interface-size="large"] :is(#s-connect, #s-lobby, #s-create) { --interface-scale: 1.5; }
 :root[data-interface-size="extra-large"] :is(#s-connect, #s-lobby, #s-create) { --interface-scale: 2; }
 :root[data-interface-size]:not([data-interface-size="standard"]) :is(#s-connect, #s-lobby, #s-create) {
-  --fs-3xs: calc(.55rem * var(--interface-scale));
-  --fs-2xs: calc(.62rem * var(--interface-scale));
-  --fs-xs: calc(.70rem * var(--interface-scale));
-  --fs-sm: calc(.78rem * var(--interface-scale));
-  --fs-base: calc(.85rem * var(--interface-scale));
-  --fs-md: calc(.95rem * var(--interface-scale));
-  --fs-lg: calc(1.05rem * var(--interface-scale));
-  --fs-xl: calc(1.35rem * var(--interface-scale));
-  --fs-2xl: calc(1.6rem * var(--interface-scale));
-  --fs-hero: calc(2.6rem * var(--interface-scale));
+  --fs-3xs: calc(var(--fs-source-3xs) * var(--interface-scale));
+  --fs-2xs: calc(var(--fs-source-2xs) * var(--interface-scale));
+  --fs-xs: calc(var(--fs-source-xs) * var(--interface-scale));
+  --fs-sm: calc(var(--fs-source-sm) * var(--interface-scale));
+  --fs-base: calc(var(--fs-source-base) * var(--interface-scale));
+  --fs-md: calc(var(--fs-source-md) * var(--interface-scale));
+  --fs-lg: calc(var(--fs-source-lg) * var(--interface-scale));
+  --fs-xl: calc(var(--fs-source-xl) * var(--interface-scale));
+  --fs-2xl: calc(var(--fs-source-2xl) * var(--interface-scale));
+  --fs-hero: calc(var(--fs-source-hero) * var(--interface-scale));
 }
 :root[data-interface-size]:not([data-interface-size="standard"]) #s-connect .lc-ic {
   width: calc(40px * var(--interface-scale));
@@ -11872,18 +11883,18 @@ html[data-seat-struct="qml"] .seat-narrow .seat-name .seat-note-stars { font-siz
   width: calc(30px * var(--interface-scale)) !important;
   height: calc(30px * var(--interface-scale)) !important;
 }
-:root[data-interface-size]:not([data-interface-size="standard"]) #s-connect .connect-header .btn-icon {
-  width: calc(34px * var(--interface-scale));
-  min-width: calc(34px * var(--interface-scale));
-  height: calc(30px * var(--interface-scale));
-  min-height: calc(30px * var(--interface-scale));
+:root[data-interface-size]:not([data-interface-size="standard"]) :is(#s-connect .connect-header, #s-lobby .header, #s-create .cp-header) .btn-icon {
+  width: calc(var(--ctrl-md) * var(--interface-scale)) !important;
+  min-width: var(--ctrl-enhanced) !important;
+  height: calc(var(--ctrl-header-icon) * var(--interface-scale)) !important;
+  min-height: var(--ctrl-enhanced) !important;
 }
-:root[data-interface-size]:not([data-interface-size="standard"]) #s-connect .connect-header .btn-icon svg {
-  width: calc(22px * var(--interface-scale)) !important;
-  height: calc(22px * var(--interface-scale)) !important;
+:root[data-interface-size]:not([data-interface-size="standard"]) :is(#s-connect .connect-header, #s-lobby .header, #s-create .cp-header) .btn-icon svg {
+  width: calc(var(--icon-header) * var(--interface-scale)) !important;
+  height: calc(var(--icon-header) * var(--interface-scale)) !important;
 }
 :root[data-interface-size]:not([data-interface-size="standard"]) #s-connect :is(.login-back, .f input, .btn-primary) {
-  min-height: 44px;
+  min-height: var(--ctrl-enhanced);
   box-sizing: border-box;
 }
 @media (max-width: 599.98px) {
@@ -11897,36 +11908,16 @@ html[data-seat-struct="qml"] .seat-narrow .seat-name .seat-note-stars { font-siz
     overflow-wrap: anywhere;
   }
 }
-:root[data-interface-size]:not([data-interface-size="standard"]) #s-lobby .header .btn-icon svg {
-  width: calc(22px * var(--interface-scale)) !important;
-  height: calc(22px * var(--interface-scale)) !important;
-}
-:root[data-interface-size]:not([data-interface-size="standard"]) #s-lobby .header .btn-icon {
-  width: calc(34px * var(--interface-scale));
-  min-width: calc(34px * var(--interface-scale));
-  height: calc(30px * var(--interface-scale));
-  min-height: calc(30px * var(--interface-scale));
-}
 :root[data-interface-size]:not([data-interface-size="standard"]) #s-lobby :is(#g-filter-select, #chat-in, .lobby-footbar .lfb-create) {
-  min-height: 44px;
+  min-height: var(--ctrl-enhanced);
   box-sizing: border-box;
 }
 :root[data-interface-size]:not([data-interface-size="standard"]) #s-lobby :is(.chat-emoji-toggle, .chat-send) {
-  min-width: 44px;
-  min-height: 44px;
-}
-:root[data-interface-size]:not([data-interface-size="standard"]) #s-create .cp-header .btn-icon {
-  width: calc(34px * var(--interface-scale));
-  min-width: calc(34px * var(--interface-scale));
-  height: calc(30px * var(--interface-scale));
-  min-height: calc(30px * var(--interface-scale));
-}
-:root[data-interface-size]:not([data-interface-size="standard"]) #s-create .cp-header .btn-icon svg {
-  width: calc(22px * var(--interface-scale)) !important;
-  height: calc(22px * var(--interface-scale)) !important;
+  min-width: var(--ctrl-enhanced);
+  min-height: var(--ctrl-enhanced);
 }
 :root[data-interface-size]:not([data-interface-size="standard"]) #s-create :is(.cf-input, .cf-create-btn) {
-  min-height: 44px;
+  min-height: var(--ctrl-enhanced);
   box-sizing: border-box;
 }
 @media (max-width: 599.98px) {

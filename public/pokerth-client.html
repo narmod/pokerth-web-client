@@ -1032,9 +1032,9 @@ function _processAvatarFile(file) {
   <div class="card">
     <div class="card-logo" style="padding:18px 0 18px">
       <img class="card-chip" src="/favicon.svg" alt="PokerTH" width="126" height="126">
-      <div class="card-title-big cl-app-title" style="font-size:2rem;letter-spacing:0.18em;margin-top:10px">PokerTH</div>
-      <div class="card-suits-row" style="font-size:1.05rem;letter-spacing:0.32em;margin-top:9px;opacity:0.85"><span>♠</span><span class="r">♥</span><span class="r">♦</span><span>♣</span></div>
-      <div class="card-subtitle" style="font-size:0.65rem;margin-top:8px">Web Client</div>
+      <div class="card-title-big cl-app-title" style="letter-spacing:0.18em;margin-top:10px">PokerTH</div>
+      <div class="card-suits-row" style="letter-spacing:0.32em;margin-top:9px;opacity:0.85"><span>♠</span><span class="r">♥</span><span class="r">♦</span><span>♣</span></div>
+      <div class="card-subtitle" style="margin-top:8px">Web Client</div>
     </div>
 
     <!-- ÉTAPE 1 — choix du mode (cartes empilées). Chaque carte écrit la
@@ -1784,7 +1784,7 @@ function _processAvatarFile(file) {
        consistent. Lists every pid we know about in the lobby with
        its real name (looked up from players{}). -->
   <div id="players-panel" style="display:none;flex-direction:column">
-    <div class="g-chat-panel-header"><span id="players-panel-title" style="font-size:0.65rem;color:var(--gold-dim);letter-spacing:0.15em;text-transform:uppercase">👥 Players online — <span id="players-panel-count">0</span></span><button onclick="togglePlayersPanel()" style="background:none;border:none;color:var(--text);cursor:pointer;font-size:0.85rem;padding:0 4px">✕</button></div>
+    <div class="g-chat-panel-header"><span id="players-panel-title" class="lobby-section-title" style="color:var(--gold-dim);letter-spacing:0.15em;text-transform:uppercase">👥 Players online — <span id="players-panel-count">0</span></span><button onclick="togglePlayersPanel()" style="background:none;border:none;color:var(--text);cursor:pointer;font-size:0.85rem;padding:0 4px">✕</button></div>
     <div class="players-search">
       <input id="players-search-in" placeholder="Search…" data-i18n-placeholder="playersSearchPlaceholder"
              oninput="renderPlayersList()" />
@@ -1804,7 +1804,7 @@ function _processAvatarFile(file) {
 
   <!-- Lobby chat -->
   <div id="lobby-chat-panel" style="display:none;flex-direction:column;max-height:min(200px,28dvh)">
-    <div class="g-chat-panel-header"><span style="font-size:0.65rem;color:var(--gold-dim);letter-spacing:0.15em;text-transform:uppercase">Chat</span><span style="display:flex;gap:2px;align-items:center"><button type="button" id="l-gn-btn" onclick="App.globalNoticePrompt()" title="Global notice (admin)" data-i18n-title="gnBtn" aria-label="Global notice (admin)" data-i18n-aria="gnBtn" style="display:none;background:none;border:none;color:var(--gold-dim);cursor:pointer;font-size:0.9rem;padding:0 4px">📢</button><button type="button" id="l-suggest-btn" onclick="window._suggestPlayers()" title="Suggest players" data-i18n-title="suggestPlayers" aria-label="Suggest players" data-i18n-aria="suggestPlayers" style="display:none;background:none;border:none;color:var(--gold-dim);cursor:pointer;font-size:0.9rem;padding:0 4px">👥</button><button onclick="clearChatPanel('lobby')" title="Clear chat" data-i18n-title="chatClearTitle" style="background:none;border:none;color:var(--gold-dim);cursor:pointer;font-size:0.9rem;padding:0 4px">🗑️</button><button onclick="toggleLobbyChat()" style="background:none;border:none;color:var(--text);cursor:pointer;font-size:0.85rem;padding:0 4px">X</button></span></div>
+    <div class="g-chat-panel-header"><span class="lobby-section-title" style="color:var(--gold-dim);letter-spacing:0.15em;text-transform:uppercase">Chat</span><span style="display:flex;gap:2px;align-items:center"><button type="button" id="l-gn-btn" onclick="App.globalNoticePrompt()" title="Global notice (admin)" data-i18n-title="gnBtn" aria-label="Global notice (admin)" data-i18n-aria="gnBtn" style="display:none;background:none;border:none;color:var(--gold-dim);cursor:pointer;font-size:0.9rem;padding:0 4px">📢</button><button type="button" id="l-suggest-btn" onclick="window._suggestPlayers()" title="Suggest players" data-i18n-title="suggestPlayers" aria-label="Suggest players" data-i18n-aria="suggestPlayers" style="display:none;background:none;border:none;color:var(--gold-dim);cursor:pointer;font-size:0.9rem;padding:0 4px">👥</button><button onclick="clearChatPanel('lobby')" title="Clear chat" data-i18n-title="chatClearTitle" style="background:none;border:none;color:var(--gold-dim);cursor:pointer;font-size:0.9rem;padding:0 4px">🗑️</button><button onclick="toggleLobbyChat()" style="background:none;border:none;color:var(--text);cursor:pointer;font-size:0.85rem;padding:0 4px">X</button></span></div>
     <div class="chat-msgs" id="chat" style="flex:1;min-height:50px;max-height:120px;overflow-y:auto;padding:5px 10px;background:var(--field-bg)"></div>
     <div id="l-chat-emoji-panel" class="chat-emoji-panel" style="display:none"></div>
     <div class="chat-input" style="border-top:1px solid var(--border);flex-shrink:0">
@@ -2038,7 +2038,7 @@ function _processAvatarFile(file) {
         <!-- Colonne tables -->
     <div class="games-col">
       <div class="g-chat-panel-header">
-        <span style="font-size:0.65rem;color:var(--gold-dim);letter-spacing:0.15em;text-transform:uppercase" data-i18n="availTables">Available tables</span>
+        <span class="lobby-section-title" style="color:var(--gold-dim);letter-spacing:0.15em;text-transform:uppercase" data-i18n="availTables">Available tables</span>
         <span id="g-count" style="color:var(--text)">0 <span data-i18n="tableCount">table(s)</span></span>
       </div>
       <div class="filter-bar" id="g-filter-bar">
@@ -2065,7 +2065,7 @@ function _processAvatarFile(file) {
          Chat juste en dessous). Placeholder Phase 1 ; alimenté par la partie
          sélectionnée en Phase 2. Masqué en compact, affiché en 3-colonnes. -->
     <div id="lobby-gameinfo">
-      <div class="g-chat-panel-header"><span style="font-size:0.65rem;color:var(--gold-dim);letter-spacing:0.15em;text-transform:uppercase" data-i18n="gameInfoTitle">Game info</span></div>
+      <div class="g-chat-panel-header"><span class="lobby-section-title" style="color:var(--gold-dim);letter-spacing:0.15em;text-transform:uppercase" data-i18n="gameInfoTitle">Game info</span></div>
       <div class="lgi-empty" data-i18n="gameInfoEmpty">Select a table</div>
     </div>
 

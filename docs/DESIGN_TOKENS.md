@@ -16,8 +16,13 @@ remplace cette dispersion par un barème **discret** (pas fixes), fidèle au QML
 ## 1. Principe
 
 - Tokens définis dans `:root` de `public/pokerth.css` (bloc « COUCHE DE TOKENS GÉNÉRIQUE »).
-- **Barème discret** : des pas fixes, surchargés par breakpoint en un seul bloc
-  `@media` (voir §3), au lieu de répéter chaque taille dans des dizaines de règles.
+- **Barème discret** : des pas sources `--fs-source-*`, surchargés par breakpoint
+  en un seul bloc `@media` (voir §3), alimentent les alias publics `--fs-*` au
+  lieu de répéter chaque taille dans des dizaines de règles.
+- **Taille d'interface** : `--interface-scale` vaut `1` par défaut. Les parcours
+  connexion/lobby/création réappliquent les alias `--fs-*` depuis les mêmes pas
+  sources avec un multiplicateur `1.5` ou `2`; aucune seconde liste de valeurs
+  typographiques n'est maintenue.
 - **Fidélité QML encodée** : les valeurs officielles (barre d'action 54 / 40 px,
   All-In 52 px, radius bouton 9 / barre 10) sont les valeurs des tokens → la parité
   est garantie par construction.
@@ -47,6 +52,11 @@ remplace cette dispersion par un barème **discret** (pas fixes), fidèle au QML
 
 Ligne : `--lh-tight: 1.1` · `--lh-base: 1.35`.
 
+Chaque token public ci-dessus est l'alias du pas canonique de même nom préfixé
+`--fs-source-` (par exemple `--fs-base: var(--fs-source-base)`). Les composants
+continuent de consommer uniquement `--fs-*`; les sources servent aux variantes
+responsive et au multiplicateur de taille d'interface.
+
 ### Espacement (px, base 2)
 
 `--sp-0: 2` · `--sp-1: 4` · `--sp-2: 6` · `--sp-3: 8` · `--sp-4: 10`
@@ -62,7 +72,9 @@ Cibles : `gap`, `padding`, `margin`. `--sp-2` (6) et `--sp-3` (8) couvrent la ma
 ### Hauteurs de contrôle
 
 `--ctrl-sm: 26` (inputs) · `--ctrl-md: 34` · `--ctrl-lg: 40` (landscapeCompact)
-· `--ctrl-xl: 54` (barre normale) · `--ctrl-allin: 52`
+· `--ctrl-enhanced: 44` (cible principale Large/Extra Large) · `--ctrl-xl: 54`
+(barre normale) · `--ctrl-allin: 52`. Le bouton d'icône d'en-tête conserve une
+base `--ctrl-header-icon: 30`; son pictogramme utilise `--icon-header: 22`.
 
 ---
 
@@ -75,8 +87,10 @@ et hauteur). Au lieu de rétrécir chaque élément, on rétrécit **le barème*
 /* Exemple — phonePortrait : tout le texte descend d'un cran, en un bloc. */
 @media (max-width: 599.98px) {
   :root {
-    --fs-3xs: .52rem; --fs-2xs: .58rem; --fs-xs: .66rem; --fs-sm: .74rem;
-    --fs-base: .82rem; --fs-md: .90rem; --fs-lg: 1.0rem;  --fs-xl: 1.25rem;
+    --fs-source-3xs: .52rem; --fs-source-2xs: .58rem;
+    --fs-source-xs: .66rem; --fs-source-sm: .74rem;
+    --fs-source-base: .82rem; --fs-source-md: .90rem;
+    --fs-source-lg: 1.0rem;  --fs-source-xl: 1.25rem;
     --sp-6: 12px; --sp-7: 16px;
   }
 }
