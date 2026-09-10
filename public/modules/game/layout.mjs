@@ -41,6 +41,8 @@ function _seatStyleInset() {
 function _seatGeomOpts(opts) {
   var o = opts || {};
   var inset = (o.inset !== undefined) ? !!o.inset : _seatStyleInset();
+  var interfaceScale = (typeof o.interfaceScale === 'number' && isFinite(o.interfaceScale))
+    ? Math.max(1, Math.min(2, o.interfaceScale)) : 1;
   var mob;
   if (o.mobile !== undefined) mob = !!o.mobile;
   else {
@@ -54,9 +56,11 @@ function _seatGeomOpts(opts) {
     mobile: mob,
     strip:  (o.strip  !== undefined) ? o.strip  : (inset ? 20 : 0),   // SeatStyle.betStripExtra
     outset: (o.outset !== undefined) ? o.outset : (inset ? 40 : 68),  // SeatStyle.betSideOutset
-    // Optional desktop semantic-scale inputs. Defaults preserve QML geometry.
-    sideGap: (typeof o.sideGap === 'number' && isFinite(o.sideGap)) ? Math.max(0, o.sideGap) : null,
-    radiusMax: (typeof o.radiusMax === 'number' && isFinite(o.radiusMax)) ? Math.max(0.36, Math.min(0.46, o.radiusMax)) : 0.36,
+    // Optional desktop semantic scale. At 1, QML geometry is unchanged; the
+    // dense ring expands continuously as critical information grows.
+    interfaceScale: interfaceScale,
+    sideGap: 48 * (2 - interfaceScale),
+    radiusMax: 0.36 + 0.06 * (interfaceScale - 1),
     // Marge basse RÉELLE de la self côté web (ajustement narmod 17-19/07 :
     // 24 px pour décoller la self du panneau d'action flottant ; QML = 4).
     // Les rangées mobiles doivent modéliser la self LÀ OÙ le rendu la met,
@@ -98,7 +102,7 @@ function _qmlLandscapeLayout(oppCnt, zW, zH, compact, zoomMul, spectating, opts)
   // (betSideOutset) — l'inset libère 28 px de base par flanc pour des boxes
   // plus grandes, le classic réserve honnêtement la place du chip+montant.
   // Desktop garde le forfait historique 48.
-  var sideBadgeGapBase = _st.mobile ? _st.outset : (_st.sideGap === null ? 48 : _st.sideGap);
+  var sideBadgeGapBase = _st.mobile ? _st.outset : _st.sideGap;
   // Slack de paire de la bisection — QML 2.1.8 : 12 en landscapeCompact
   // (les paires hautes/latérales se touchaient visuellement sur iPhone
   // mini), 4 sinon (l'ancien « 4 les deux modes » datait de 2.1.3).

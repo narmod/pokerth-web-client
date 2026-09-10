@@ -152,6 +152,8 @@ async function startActiveHand(page, seatCount) {
   });
   await page.locator('.btn-primary[data-i18n="connect"]').click();
   await page.waitForFunction(() => window.WebSocket.instance && typeof window.WebSocket.instance.onmessage === 'function');
+  await page.waitForTimeout(300);
+  await page.waitForFunction(() => window.WebSocket.instance && window.WebSocket.instance.readyState === window.WebSocket.OPEN);
   await page.evaluate(async (count) => {
     const { Proto } = await import('/modules/net/proto.mjs');
     const { MSG } = await import('/modules/net/messages.mjs');
@@ -193,7 +195,8 @@ async function startActiveHand(page, seatCount) {
   await page.locator('#s-game.active .act-buttons-row .btn-action').first().waitFor();
   await page.locator(`#g-seats .seat[data-pid="42"]`).waitFor();
   await page.waitForFunction((count) => document.querySelectorAll('#g-seats .seat').length === count, seatCount);
-  await page.waitForTimeout(180);
+  await page.waitForTimeout(700);
+  await page.evaluate(() => { window.WebSocket.instance.sent.length = 0; });
 }
 
 async function activeHandRects(page) {
@@ -224,11 +227,76 @@ async function activeHandRects(page) {
       seats: [...document.querySelectorAll('#g-seats .seat-plate')].map(rect),
       seatValues: [...document.querySelectorAll('#g-seats .seat')].map((seat) => union([...seat.querySelectorAll('.seat-name, .seat-money')].map(contentRect))),
       cards: union(document.querySelectorAll('#g-comm .pk')),
+      cardFaces: [...document.querySelectorAll('#s-game .pk:not(.back):not(.comm-slot)')]
+        .filter((card) => { const value = card.getBoundingClientRect(); return value.width > 0 && value.height > 0; }).map(rect),
       pot: rect(document.querySelector('#g-potbar')),
       actions: rect(document.querySelector('#g-actions .action-grid')),
       status: rect(document.querySelector('#pot-strip')),
     };
   });
+}
+
+async function visibleCardOutcomes(page) {
+  return page.evaluate(() => {
+    const rect = (element) => {
+      const value = element.getBoundingClientRect();
+      return { left: value.left, top: value.top, right: value.right, bottom: value.bottom, width: value.width, height: value.height };
+    };
+    const contentRect = (element) => {
+      const range = document.createRange();
+      range.selectNodeContents(element);
+      return rect(range);
+    };
+    return [...document.querySelectorAll('#s-game .pk:not(.back):not(.comm-slot)')]
+      .filter((card) => { const value = card.getBoundingClientRect(); return value.width > 0 && value.height > 0; })
+      .map((card) => {
+        const rank = card.querySelector('.c-rank');
+        const suit = card.querySelector('.c-suit');
+        const style = getComputedStyle(card);
+        return {
+          card: rect(card),
+          rank: contentRect(rank),
+          suit: contentRect(suit),
+          rankVisible: getComputedStyle(rank).display !== 'none',
+          suitVisible: getComputedStyle(suit).display !== 'none',
+          imageFace: style.backgroundImage !== 'none',
+        };
+      });
+  });
+}
+
+async function seatCenters(page) {
+  return page.evaluate(() => [...document.querySelectorAll('#g-seats .seat:not(.me)')].map((seat) => {
+    const rect = seat.getBoundingClientRect();
+    return { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 };
+  }));
+}
+
+async function turnCueOutcome(page) {
+  return page.evaluate(() => {
+    const active = document.querySelector('.seat.active .seat-plate');
+    const inactive = document.querySelector('.seat:not(.active) .seat-plate');
+    const style = getComputedStyle(active, '::after');
+    const shadowLengths = (style.boxShadow.match(/-?\d+(?:\.\d+)?px/g) || []).map(parseFloat);
+    const inactiveStyle = inactive ? getComputedStyle(inactive, '::after') : null;
+    return {
+      borderWidth: parseFloat(style.borderWidth),
+      blur: Math.abs(shadowLengths[2] || 0),
+      spread: Math.abs(shadowLengths[3] || 0),
+      inset: Math.abs(parseFloat(style.top) || 0),
+      distinctFromInactive: !inactiveStyle || inactiveStyle.content === 'none' || inactiveStyle.borderStyle === 'none',
+    };
+  });
+}
+
+async function outboundSizeChangeTraffic(page, before) {
+  return page.evaluate(async (start) => {
+    const { MSG } = await import('/modules/net/messages.mjs');
+    return window.WebSocket.instance.sent.slice(start)
+      .filter((frame) => frame instanceof ArrayBuffer)
+      .map((frame) => MSG.parse(new Uint8Array(frame).slice(4)).type)
+      .filter((type) => type !== MSG.T.ResetTimeout);
+  }, before);
 }
 
 function overlaps(a, b, tolerance = 1) {
@@ -680,6 +748,9 @@ try {
   });
   await check('desktop active-hand critical information follows every Interface size live', async () => {
     await startActiveHand(page, 2);
+    const initialCards = await visibleCardOutcomes(page);
+    assert.ok(initialCards.length && initialCards.every((card) => card.imageFace && !card.rankVisible && !card.suitVisible),
+      'Standard did not begin the active hand with the selected image-card presentation');
     const fontSelectors = [
       '#g-pot', '#g-bets', '#g-potbar', '.blinds-next',
       '.seat.active .seat-name', '.seat.active .seat-money',
@@ -689,9 +760,9 @@ try {
     const cardInfoSelectors = ['#g-comm .pk .c-rank', '#g-comm .pk .c-suit'];
     const timerSelector = '.seat.active .seat-timeout-bar';
     const samples = {};
-    const socketId = await page.evaluate(() => window.WebSocket.instance.fixtureId);
+    const sentBefore = await page.evaluate(() => window.WebSocket.instance.sent.length);
     for (const [value, multiplier] of [['standard', 1], ['large', 1.5], ['extra-large', 2]]) {
-      await chooseInterfaceSize(page, 'game', value);
+      if (value !== 'standard') await chooseInterfaceSize(page, 'game', value);
       await page.locator('#g-actions .btn-fold').waitFor();
       for (const selector of [...fontSelectors, cardSelector, ...cardInfoSelectors, timerSelector]) assert.ok(await page.locator(selector).count(), `active-hand fixture did not render ${selector}`);
       samples[value] = await visibleMetrics(page, [...fontSelectors, cardSelector, ...cardInfoSelectors, timerSelector]);
@@ -708,28 +779,41 @@ try {
       }
       assert.equal(samples[value][timerSelector].visible, true, `${value} active-hand turn timer is outside the viewport`);
       assertExactScaled(samples[value][timerSelector].cssHeight, samples.standard[timerSelector].cssHeight, multiplier, `${value} active-hand turn-timer height`);
-      assert.equal(await page.evaluate(() => window.WebSocket.instance.fixtureId), socketId, `${value} replaced the active socket`);
+      assert.equal(await page.evaluate(() => window.WebSocket.instance.readyState), 1, `${value} disconnected the active socket`);
+      const outbound = await outboundSizeChangeTraffic(page, sentBefore);
+      assert.deepEqual(outbound, [], `${value} sent network traffic while changing Interface size`);
       assert.equal(await page.locator('#g-gameid').textContent(), '303', `${value} lost the game identity`);
       assert.equal(await page.locator('#g-handn').textContent(), '1', `${value} lost the hand identity`);
-      assert.equal(await page.locator('#g-actions .act-buttons-row .btn-action').count(), 3, `${value} lost principal actions`);
-      const turnIndicator = await page.locator('.seat.active .seat-plate').evaluate((element) => {
-        const style = getComputedStyle(element, '::after');
-        return { borderWidth: parseFloat(style.borderWidth), borderStyle: style.borderStyle, animationName: style.animationName };
-      });
-      assert.ok(turnIndicator.borderWidth >= 1 && turnIndicator.borderStyle !== 'none' && turnIndicator.animationName !== 'none',
-        `${value} lost the visible current-turn indication: ${JSON.stringify(turnIndicator)}`);
+      assert.equal(await page.locator('#g-actions .btn-fold').isEnabled(), true, `${value} lost an operable principal action`);
       for (const [selector, label] of [['.gsb-left', 'pot and bet status'], ['.gsb-right', 'game and hand status'], ['.blinds-next', 'blind status']]) {
         await assertTextFits(page, selector, `${value} active-hand ${label}`);
       }
     }
+    const extraLargeCue = await turnCueOutcome(page);
+    await chooseInterfaceSize(page, 'game', 'standard');
+    const restoredCards = await visibleCardOutcomes(page);
+    assert.ok(restoredCards.length && restoredCards.every((card) => card.imageFace && !card.rankVisible && !card.suitVisible),
+      'Standard did not restore the image-card presentation during the active hand');
+    assert.deepEqual(await outboundSizeChangeTraffic(page, sentBefore), [], 'restoring Standard sent network traffic');
+    assert.ok(extraLargeCue.distinctFromInactive, 'the current-turn cue is not visually distinct from inactive seats');
   });
   await check('desktop two-seat and ten-seat hands keep critical play reachable and operable', async () => {
     const actionSelectors = ['#g-actions .btn-fold', '#g-actions .act-buttons-row .btn-action:nth-child(2)', '#g-actions .raise-btn'];
     for (const seatCount of [2, 10]) {
       await startActiveHand(page, seatCount);
+      const standardCenters = await seatCenters(page);
+      const standardCue = await turnCueOutcome(page);
       for (const value of ['standard', 'large', 'extra-large']) {
         await chooseInterfaceSize(page, 'game', value);
-        await page.waitForTimeout(300);
+        if (value !== 'standard') {
+          await page.waitForFunction((before) => {
+            const now = [...document.querySelectorAll('#g-seats .seat:not(.me)')].map((seat) => {
+              const rect = seat.getBoundingClientRect();
+              return { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 };
+            });
+            return now.some((point, index) => before[index] && (Math.abs(point.x - before[index].x) > 2 || Math.abs(point.y - before[index].y) > 2));
+          }, standardCenters);
+        }
         const geometry = await activeHandRects(page);
         for (const [index, rect] of geometry.seats.entries()) assertReachable(rect, geometry.viewport, `${seatCount}-seat ${value} seat ${index + 1}`);
         for (const [index, rect] of geometry.seatValues.entries()) assertReachable(rect, geometry.viewport, `${seatCount}-seat ${value} player value ${index + 1}`);
@@ -745,12 +829,36 @@ try {
           assertReachable(rect, geometry.viewport, `${seatCount}-seat ${value} ${label}`);
         }
         assert.equal(overlaps(geometry.cards, geometry.actions), false, `${seatCount}-seat ${value} cards overlap actions`);
+        for (const [cardIndex, card] of geometry.cardFaces.entries()) {
+          assert.equal(overlaps(card, geometry.pot), false, `${seatCount}-seat ${value} card ${cardIndex + 1} overlaps the pot`);
+          assert.equal(overlaps(card, geometry.actions), false, `${seatCount}-seat ${value} card ${cardIndex + 1} overlaps actions`);
+          for (const [playerIndex, player] of geometry.seatValues.entries()) {
+            assert.equal(overlaps(card, player), false, `${seatCount}-seat ${value} card ${cardIndex + 1} overlaps player value ${playerIndex + 1}`);
+          }
+        }
         assert.equal(overlaps(geometry.pot, geometry.actions), false, `${seatCount}-seat ${value} pot overlaps actions`);
         for (const [index, rect] of geometry.seatValues.entries()) {
           assert.equal(overlaps(rect, geometry.cards), false, `${seatCount}-seat ${value} player value ${index + 1} ${JSON.stringify(rect)} overlaps cards ${JSON.stringify(geometry.cards)}; all values ${JSON.stringify(geometry.seatValues)}`);
           assert.equal(overlaps(rect, geometry.actions), false, `${seatCount}-seat ${value} player value ${index + 1} ${JSON.stringify(rect)} overlaps actions ${JSON.stringify(geometry.actions)}`);
         }
         if (value !== 'standard') {
+          const cards = await visibleCardOutcomes(page);
+          assert.ok(cards.length > 0, `${seatCount}-seat ${value} rendered no visible face cards`);
+          for (const [index, card] of cards.entries()) {
+            assert.equal(card.rankVisible && card.suitVisible, true, `${seatCount}-seat ${value} card ${index + 1} hid its accessible rank or suit`);
+            for (const [label, glyph] of [['rank', card.rank], ['suit', card.suit]]) {
+              assert.ok(glyph.left >= card.card.left - 1 && glyph.top >= card.card.top - 1 && glyph.right <= card.card.right + 1 && glyph.bottom <= card.card.bottom + 1,
+                `${seatCount}-seat ${value} card ${index + 1} ${label} escapes its card: ${JSON.stringify({ card: card.card, glyph })}`);
+            }
+            assert.equal(overlaps(card.rank, card.suit), false, `${seatCount}-seat ${value} card ${index + 1} rank and suit overlap`);
+          }
+          const cue = await turnCueOutcome(page);
+          const multiplier = value === 'large' ? 1.5 : 2;
+          assert.ok(cue.borderWidth > 0, `${seatCount}-seat ${value} current-turn border is not visible`);
+          for (const metric of ['blur', 'spread', 'inset']) {
+            assertExactScaled(cue[metric], standardCue[metric], multiplier, `${seatCount}-seat ${value} turn-cue ${metric} (${JSON.stringify({ standardCue, cue })})`);
+          }
+          assert.equal(cue.distinctFromInactive, true, `${seatCount}-seat ${value} current-turn cue is ambiguous`);
           await assertEnhancedTargets(page, actionSelectors, `${seatCount}-seat ${value} action`);
           await assertKeyboardFocusVisible(page, actionSelectors, `${seatCount}-seat ${value} action`);
         }

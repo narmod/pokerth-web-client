@@ -52,12 +52,36 @@ function syncControls(preferences) {
 
 function applyAccessibilityPreferences() {
   const preferences = getAccessibilityPreferences();
+  let sizeChanged = false;
   try {
     const root = document.documentElement;
+    const previousSize = root.getAttribute('data-interface-size');
+    const game = document.getElementById('s-game');
+    if (game && previousSize === 'standard' && preferences.interfaceSize !== 'standard') {
+      const standardCommunityScale = window.getComputedStyle(root).getPropertyValue('--comm-scale').trim();
+      if (standardCommunityScale) game.style.setProperty('--active-standard-comm-scale', standardCommunityScale);
+      const pot = document.getElementById('g-potbar');
+      const communityCard = document.querySelector('#g-comm .pk');
+      if (pot) game.style.setProperty('--active-pot-font-base', window.getComputedStyle(pot).fontSize);
+      if (communityCard) game.style.setProperty('--active-community-font-base', window.getComputedStyle(communityCard).fontSize);
+    }
     root.setAttribute('data-interface-size', preferences.interfaceSize);
     root.setAttribute('data-high-contrast', preferences.highContrast ? 'true' : 'false');
+    if (game && preferences.interfaceSize === 'standard') {
+      game.style.removeProperty('--active-standard-comm-scale');
+      game.style.removeProperty('--active-pot-font-base');
+      game.style.removeProperty('--active-community-font-base');
+    }
+    sizeChanged = previousSize !== null && previousSize !== preferences.interfaceSize;
   } catch (_error) {}
   syncControls(preferences);
+  if (sizeChanged) {
+    try {
+      window.requestAnimationFrame(() => {
+        if (typeof window.renderSeats === 'function') window.renderSeats();
+      });
+    } catch (_error) {}
+  }
   try {
     if (typeof window._applyBrowserZoomOpt === 'function') window._applyBrowserZoomOpt();
   } catch (_error) {}
