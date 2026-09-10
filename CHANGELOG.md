@@ -290,6 +290,19 @@ highlights below.
   every entry now carries both.
 
 ### Changed
+- **`/live` carries less of the web client** (`web.91`) — no local backup: the
+  feature is off at its root check, so there is no banner offering to save
+  settings a spectator never made, no folder handle and no IndexedDB. No
+  operator broadcasts: they address players, and an embedded viewer is not
+  their audience. No music slider in the sound popover, since the spectator
+  tool ships no music player, reusing the same gate the admin music switch
+  uses. The build string is gone from the header, and the language, light/dark
+  and appearance buttons sit hard right, leaving the guest name the left.
+- **`/live` — light / dark / automatic in the header** (`web.91`) — a button
+  cycling the three, in the lobby, at the table and on the login card. It
+  cycles the palette axis, which already carries those three values and
+  already follows the OS in automatic, rather than adding a setting of its
+  own; a visitor on some other palette lands on automatic first.
 - **`/live` no longer shows the client's own notices** (`web.87`) — the
   welcome modal, the authenticated-player notice and the operator poll are
   silenced in live mode, at their entry points so every call site is covered.

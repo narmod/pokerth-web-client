@@ -33,6 +33,34 @@ if (window.LIVE_MODE) {
     }
   }
 
+  // ── Light / dark / automatic ──────────────────────────────────────────
+  // The palette axis already carries the three values and already follows the
+  // OS in 'auto', so the button is a cycle over them rather than a new
+  // setting. window.setTheme / getTheme are theme.mjs's own API.
+  const MODES = ['auto', 'pokerth-light', 'pokerth'];
+  const GLYPH = { 'auto': '\u25D1', 'pokerth-light': '\u2600', 'pokerth': '\u263D' };
+
+  function paintModeButtons() {
+    let cur = 'auto';
+    try { if (window.getTheme) cur = window.getTheme() || 'auto'; } catch (e) {}
+    const g = GLYPH[cur] || GLYPH.auto;
+    ['live-mode-lobby', 'live-mode-game', 'live-mode-connect'].forEach(function (id) {
+      const el = document.getElementById(id);
+      if (el) el.textContent = g;
+    });
+  }
+
+  window.liveCycleThemeMode = function () {
+    let cur = 'auto';
+    try { if (window.getTheme) cur = window.getTheme() || 'auto'; } catch (e) {}
+    // A visitor on some other palette lands on 'auto' first, not somewhere
+    // unrelated in the cycle.
+    const i = MODES.indexOf(cur);
+    const next = MODES[(i < 0 ? -1 : i) + 1] || MODES[0];
+    try { if (window.setTheme) window.setTheme(next); } catch (e) {}
+    paintModeButtons();
+  };
+
   // ── Admin defaults for /live ──────────────────────────────────────────
   // Sound and the chat strip, from /app-config.liveDefaults. Both are
   // first-visit defaults, not overrides: a visitor who chose keeps their
@@ -116,5 +144,6 @@ if (window.LIVE_MODE) {
     initEmbed();
     applyLiveDefaults();
     initLobbySubscription();
+    paintModeButtons();
   });
 }

@@ -28,6 +28,10 @@
 // ── Support & option ───────────────────────────────────────────────────────
 
 function _supported() {
+  // /live keeps nothing: no folder picker, no IndexedDB handle, no banner
+  // offering to save settings a spectator never made. Gating _supported()
+  // rather than the banner switches the whole feature off at the root.
+  if (typeof window !== 'undefined' && window.LIVE_MODE) return false;
   return (typeof window !== 'undefined'
     && typeof window.showDirectoryPicker === 'function'
     && typeof window.indexedDB !== 'undefined');

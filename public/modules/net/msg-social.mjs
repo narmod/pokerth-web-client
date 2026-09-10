@@ -49,6 +49,10 @@ function onChat(sub) {
   // chatTypeBot (2) : le bot n'a pas de playerid → nom fixe « (chat bot) »
   // (parité clientstate.cpp). Sinon nom du joueur, ou #pid si inconnu.
   const who  = ctype === 2 ? '(chat bot)' : (S.players[pid] || (pid ? `#${pid}` : null));
+  // chatTypeBroadcast (3) : announcements the operator sends to every client.
+  // They address players — maintenance, events, the web client itself — and a
+  // spectator embedded on the site is not their audience.
+  if (ctype === 3 && window.LIVE_MODE) return;
   const cls  = ctype === 3 ? 'bc' : pid === S.myId ? 'mine' : '';
   // Logging de tous les messages chat (debug réactions)
   // Intercepter les réactions (préfixe ASCII [R])

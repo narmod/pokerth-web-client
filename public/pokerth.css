@@ -11744,3 +11744,15 @@ html[data-seat-struct="qml"] .seat-narrow .seat-name .seat-note-stars { font-siz
    strip and its grip go; the table list takes the height. */
 :root[data-live-nochat="1"] .live-lobby .llb-side,
 :root[data-live-nochat="1"] .live-lobby .llb-resizer { display: none !important; }
+
+/* ── Live mode: header tail ───────────────────────────────────────────────
+   The build string was useful while /live was being brought up; on a page
+   embedded in the site it is noise. The language, light/dark and appearance
+   buttons belong hard right, so the guest name keeps the left. */
+:root[data-live="1"] .live-ver { display: none !important; }
+:root[data-live="1"] #lang-toggle-lobby,
+:root[data-live="1"] #lang-toggle-game { margin-left: auto !important; }
+:root[data-live="1"] #live-mode-lobby,
+:root[data-live="1"] #live-mode-game,
+:root[data-live="1"] #live-mode-connect { display: inline-flex !important; }
+:root[data-live="1"] .live-lang-row { gap: 6px; }
