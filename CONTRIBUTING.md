@@ -29,6 +29,14 @@ Then open `http://localhost:8080/`. See the **Development (running from source)*
 section of the [README](README.md) for the TLS / custom-port / `--insecure`
 variants, and [`docs/PROJECT.md`](docs/PROJECT.md) for an architecture overview.
 
+The Chromium outcome checks use Playwright. Install its browser once after
+`npm install`, then run the focused test:
+
+```bash
+npx playwright install chromium
+npm run test:accessibility-browser
+```
+
 The codebase is intentionally dependency-light:
 
 - `proxy.js` — the WebSocket→TCP/TLS proxy and static HTTP server (Node — `ws` at

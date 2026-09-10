@@ -17,8 +17,10 @@ const failures = [];
 for (const file of files) {
   const { strings } = await import(`../public/modules/lang/${file}`);
   for (const key of keys) {
-    if (strings[key] !== english[key]) failures.push(`${file}: ${key}`);
+    if (typeof strings[key] !== 'string' || !strings[key].trim()) failures.push(`${file}: ${key} is missing or empty`);
   }
+  if (file !== 'en.mjs' && keys.every((key) => strings[key] === english[key]))
+    failures.push(`${file}: all accessibility values duplicate English`);
 }
 
 console.log('test-accessibility-locales');

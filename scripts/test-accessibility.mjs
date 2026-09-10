@@ -17,6 +17,9 @@ function check(name, condition) {
 }
 
 console.log('test-accessibility');
+const contributing = readFileSync('CONTRIBUTING.md', 'utf8');
+check('contributor setup documents the one-time Chromium install command',
+  contributing.includes('npx playwright install chromium'));
 const entries = ['connect', 'lobby', 'game'].map((surface) =>
   w.document.getElementById('accessibility-open-' + surface));
 check('Accessibility entry point is available before login and in lobby/game headers',
