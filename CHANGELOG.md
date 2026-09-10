@@ -444,6 +444,15 @@ highlights below.
   (`scale 1.03`, 180 ms OutQuad) is applied to the seat plate.
 
 ### Fixed
+- **`/live` announced itself as a web client** (`web.96`) — `/live` goes through
+  the same `buildInit` as the player client, so since `USE_CLIENT_TYPE_WEB`
+  (`web.0`) its spectator sessions logged in as `CLIENT_TYPE_WEB` (0x03).
+  The tool it replaces, `pokerth-live`, identifies as `CLIENT_TYPE_QT_WIDGET`
+  (0x01), and that is what `/live` must keep doing on the server. `buildInit`
+  now picks 0x01 when `window.LIVE_MODE` is set; the player client keeps 0x03.
+  The version bytes stay the current upstream release: `pokerth-live`'s frozen
+  2.0.6 would fall under `MIN_BUILD_ID_QT_WIDGET` (2.1.7) and be refused.
+  Test in `scripts/test-messages.mjs`.
 - **The spectator table still moved when a hand ended** (`web.90`) — `web.82`
   reserved the action box with `min-height`, which only guarantees the empty
   case: once a message is present its own box can exceed the reservation. On a
