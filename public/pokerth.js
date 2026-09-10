@@ -9798,8 +9798,8 @@ var _WIN_BTN = [
   { win: 'pm-modal',              mode: 'display', btns: ['pm-btn-lobby'] },
   { win: 'adv-modal',             mode: 'display', btns: ['adv-opts-connect-mob', 'adv-opts-lobby-mob', 'adv-opts-create-mob', 'adv-opts-mob'] },
   { win: 'music-panel',           mode: 'display', btns: ['music-toggle-connect-mob', 'music-toggle-lobby-mob', 'music-toggle-create-mob', 'music-toggle-game-mob'] },
-  { win: 'g-chat-panel',          mode: 'display', btns: ['chat-toggle-btn', 'gchat-fab'] },
-  { win: 'g-log-panel',           mode: 'display', btns: ['log-toggle-btn'] },
+  { win: 'g-chat-panel',          mode: 'display', btns: ['chat-toggle-btn', 'gchat-fab', 'adaptive-chat-toggle'] },
+  { win: 'g-log-panel',           mode: 'display', btns: ['log-toggle-btn', 'adaptive-info-toggle'] },
   { win: 'g-reaction-panel',      mode: 'display', btns: ['react-toggle-btn'] },
   { win: 'hands-overlay',         mode: 'display', btns: ['hands-toggle-btn'] },
   { win: 'players-panel',         mode: 'display', btns: ['h-players'], sel: ['.fbar-players'] },
@@ -10465,11 +10465,6 @@ function toggleGameChat(invoker) {
     trigger.setAttribute('aria-expanded', open ? 'true' : 'false');
   });
   var adaptive = _configureGameDrawer(panel, open, btn);
-  if (btn) {
-    btn.style.background  = open ? 'rgba(var(--gold-rgb),0.2)' : '';
-    btn.style.borderColor = open ? 'var(--gold-dim)' : '';
-    btn.style.color       = open ? 'var(--gold)' : '';
-  }
   if (open) {
     _openFloatingNearBtn(panel, btn, { key:'pth_winpos_chat', handle: panel.querySelector('.g-chat-panel-header'), resizable:true, minW:240, minH:160, defW:300, defH:280, zoom:true }, 'left');
     if (typeof clearUnreadChat === 'function') clearUnreadChat();
@@ -10741,9 +10736,6 @@ function toggleLog(invoker) {
     trigger.setAttribute('aria-expanded', isHidden ? 'true' : 'false');
   });
   _configureGameDrawer(panel, isHidden, btn);
-  if (btn) btn.style.background = isHidden ? 'rgba(var(--gold-rgb),0.2)' : '';
-  if (btn) btn.style.borderColor = isHidden ? 'var(--gold-dim)' : '';
-  if (btn) btn.style.color       = isHidden ? 'var(--gold)' : '';
   if (isHidden) {
     // Poignée de redimensionnement, identique au chat (glisser pour étendre).
     _openFloatingNearBtn(panel, btn, { key:'pth_winpos_log2', handle: panel.querySelector('.g-chat-panel-header'), resizable:true, minW:240, minH:140, defW: window.innerWidth >= 1400 ? 340 : 300, defH:300, zoom:true }, 'right');
@@ -11548,7 +11540,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.8-web.126'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.8-web.127'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
    standalone récent). Lit --theme-color (défini par thème dans la CSS) et met

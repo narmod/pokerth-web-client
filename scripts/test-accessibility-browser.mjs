@@ -334,6 +334,18 @@ async function drawerPresentation(page, panelSelector) {
   });
 }
 
+async function triggerPresentation(page, selector) {
+  return page.locator(selector).evaluate((trigger) => {
+    const style = getComputedStyle(trigger);
+    return {
+      expanded: trigger.getAttribute('aria-expanded'),
+      backgroundColor: style.backgroundColor,
+      borderColor: style.borderColor,
+      color: style.color,
+    };
+  });
+}
+
 async function takeLobbyJoinOutcomes(page) {
   return page.evaluate(async () => {
     const { Proto } = await import('/modules/net/proto.mjs');
@@ -1056,6 +1068,47 @@ try {
       if (drawer.label === 'information') await page.locator('#gip-tab-log').click();
       await page.locator(drawer.close).click();
       await page.locator(drawer.panel).waitFor({ state: 'hidden' });
+    }
+  });
+  await check('drawer triggers return to their inactive appearance across live transitions', async () => {
+    for (const drawer of [
+      { normal: '#chat-toggle-btn', adaptive: '#adaptive-chat-toggle', panel: '#g-chat-panel', label: 'chat' },
+      { normal: '#log-toggle-btn', adaptive: '#adaptive-info-toggle', panel: '#g-log-panel', label: 'information' },
+    ]) {
+      await page.setViewportSize({ width: 1280, height: 800 });
+      await startActiveHand(page, 10);
+      await chooseInterfaceSize(page, 'game', 'extra-large');
+      const normalInactive = await triggerPresentation(page, drawer.normal);
+
+      await page.locator(drawer.normal).click();
+      await page.locator(drawer.panel).waitFor({ state: 'visible' });
+      await page.setViewportSize({ width: 390, height: 844 });
+      await page.waitForTimeout(400);
+      await page.locator(drawer.adaptive).click();
+      await page.locator(drawer.panel).waitFor({ state: 'hidden' });
+      await page.waitForTimeout(100);
+      const adaptiveInactive = await triggerPresentation(page, drawer.adaptive);
+      await page.setViewportSize({ width: 1280, height: 800 });
+      await page.waitForTimeout(400);
+      assert.deepEqual(await triggerPresentation(page, drawer.normal), normalInactive,
+        `${drawer.label} desktop trigger retained its open appearance after adaptive close`);
+      assert.equal(await page.locator(drawer.adaptive).getAttribute('aria-expanded'), 'false',
+        `${drawer.label} adaptive trigger remained expanded after adaptive close`);
+
+      await page.setViewportSize({ width: 390, height: 844 });
+      await page.waitForTimeout(400);
+      await page.locator(drawer.adaptive).click();
+      await page.locator(drawer.panel).waitFor({ state: 'visible' });
+      await page.setViewportSize({ width: 1280, height: 800 });
+      await page.waitForTimeout(400);
+      await page.locator(drawer.normal).click();
+      await page.locator(drawer.panel).waitFor({ state: 'hidden' });
+      await page.setViewportSize({ width: 390, height: 844 });
+      await page.waitForTimeout(400);
+      assert.deepEqual(await triggerPresentation(page, drawer.adaptive), adaptiveInactive,
+        `${drawer.label} adaptive trigger retained its open appearance after desktop close`);
+      assert.equal(await page.locator(drawer.normal).getAttribute('aria-expanded'), 'false',
+        `${drawer.label} desktop trigger remained expanded after desktop close`);
     }
   });
   await check('Extra Large mobile portrait secondary drawers preserve content and focus', async () => {
