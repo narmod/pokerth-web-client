@@ -272,7 +272,8 @@ export const help = {
             ['A', 'All-In'],
             ['1 / 2 / 3', 'Bet 1/3 \u00b7 1/2 \u00b7 Pot'],
             ['Alt+T', 'Tilastopaneeli'],
-            ['Esc', 'Sulje päällimmäinen ikkuna (myös Androidin Takaisin-painike)']],
+            ['Esc', 'Sulje päällimmäinen ikkuna (myös Androidin Takaisin-painike)'],
+            ['\u2191 \u2193 \u00b7 \u21b5', 'Aulan pöytälista (siirry Tabilla): valitse pöytä \u00b7 liity']],
           note: 'Androidilla järjestelmän Takaisin-painike/ele sulkee ikkunat kuten Esc sen sijaan, että poistuisi pelistä (säädettävissä asetuksista). iOS:llä ei ole vastaavaa järjestelmäpainiketta — käytä jokaisen ikkunan \u2715-merkkiä.' }
       ]
     }

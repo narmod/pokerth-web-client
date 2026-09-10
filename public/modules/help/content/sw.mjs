@@ -274,7 +274,8 @@ export const help = {
             ['A', 'All-In'],
             ['1 / 2 / 3', 'Bet 1/3 \u00b7 1/2 \u00b7 Pot'],
             ['Alt+T', 'Paneli ya takwimu'],
-            ['Esc', 'Funga dirisha la juu kabisa (pia kitufe cha Kurudi cha Android)']],
+            ['Esc', 'Funga dirisha la juu kabisa (pia kitufe cha Kurudi cha Android)'],
+            ['\u2191 \u2193 \u00b7 \u21b5', 'Orodha ya meza kwenye ukumbi (fika kwa Tab): chagua meza \u00b7 jiunge']],
           note: 'Kwenye Android, kitufe/ishara ya Kurudi ya mfumo hufunga madirisha kama Escape badala ya kuondoka mchezoni (inasanidika kwenye chaguo). iOS haina kitufe cha mfumo sawa \u2014 tumia \u2715 ya kila dirisha.' }
       ]
     }

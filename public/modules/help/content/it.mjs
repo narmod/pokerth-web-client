@@ -272,7 +272,8 @@ export const help = {
             ['A', 'All-In'],
             ['1 / 2 / 3', 'Bet 1/3 \u00b7 1/2 \u00b7 Pot'],
             ['Alt+T', 'Pannello statistiche'],
-            ['Esc', 'Chiudere la finestra in primo piano (anche il tasto Indietro di Android)']],
+            ['Esc', 'Chiudere la finestra in primo piano (anche il tasto Indietro di Android)'],
+            ['\u2191 \u2193 \u00b7 \u21b5', 'Elenco dei tavoli nella lobby (si raggiunge con Tab): scegliere un tavolo \u00b7 unirsi']],
           note: 'Su Android, il tasto/gesto Indietro di sistema chiude le finestre come Esc invece di lasciare la partita (configurabile nelle opzioni). iOS non ha un tasto di sistema equivalente — usa la \u2715 di ogni finestra.' }
       ]
     }

@@ -272,7 +272,8 @@ export const help = {
             ['A', 'All-In'],
             ['1 / 2 / 3', 'Bet 1/3 \u00b7 1/2 \u00b7 Pot'],
             ['Alt+T', 'Painel de estat\u00edsticas'],
-            ['Esc', 'Fechar a janela da frente (também o botão Voltar do Android)']],
+            ['Esc', 'Fechar a janela da frente (também o botão Voltar do Android)'],
+            ['\u2191 \u2193 \u00b7 \u21b5', 'Lista de mesas do lobby (acessível com Tab): escolher uma mesa \u00b7 entrar']],
           note: 'No Android, o botão/gesto Voltar do sistema fecha as janelas como Esc em vez de sair da partida (configurável nas opções). O iOS não tem botão de sistema equivalente — usa o \u2715 de cada janela.' }
       ]
     }

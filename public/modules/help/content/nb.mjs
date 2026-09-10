@@ -272,7 +272,8 @@ export const help = {
             ['A', 'All-In'],
             ['1 / 2 / 3', 'Bet 1/3 \u00b7 1/2 \u00b7 Pot'],
             ['Alt+T', 'Statistikkpanel'],
-            ['Esc', 'Lukk det forreste vinduet (også Androids Tilbake-knapp)']],
+            ['Esc', 'Lukk det forreste vinduet (også Androids Tilbake-knapp)'],
+            ['\u2191 \u2193 \u00b7 \u21b5', 'Bordlisten i lobbyen (nås med Tab): velg et bord \u00b7 bli med']],
           note: 'På Android lukker systemets Tilbake-knapp/-bevegelse vinduer som Esc i stedet for å forlate spillet (kan stilles inn). iOS har ingen tilsvarende systemknapp — bruk \u2715 i hvert vindu.' }
       ]
     }

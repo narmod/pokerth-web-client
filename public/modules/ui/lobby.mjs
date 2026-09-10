@@ -18,6 +18,7 @@ import { _groupThousands } from './fmt.mjs';
 import { Proto } from '../net/proto.mjs';
 import { MSG } from '../net/messages.mjs';
 import { _ccToFlag, _avatarChipHtml } from './player-popup.mjs';
+import { bindLobbyKeynav } from './lobby-keynav.mjs';
 
 // ──────────────────────────────────────────────────────────────
 // Game info modal -- snapshot of the current table's settings +
@@ -423,7 +424,7 @@ function renderGames() {
     var _sel = (String(gid) === String(S._selectedGame)) ? ' sel' : '';
     var _open = S._openTables.has(String(gid));
     var caret = '<button class="gcard-caret" onclick="event.stopPropagation();App.toggleTablePlayers(' + parseInt(gid) + ')" title="' + t('showPlayers') + '" aria-label="' + t('showPlayers') + '" aria-expanded="' + (_open?'true':'false') + '">' + (_open ? '\u25B4' : '\u25BE') + '</button>';
-    return '<div class="game-row gcard' + _sel + (_open ? ' gc-open' : '') + '" onclick="App.selectGame(' + parseInt(gid) + ')">'
+    return '<div class="game-row gcard' + _sel + (_open ? ' gc-open' : '') + '" data-gid="' + parseInt(gid) + '" onclick="App.selectGame(' + parseInt(gid) + ')">'
       + '<div class="gcard-main">'
       + '<div class="game-name">' + lock + esc(g.name) + '</div>'
       + '<div class="game-meta">' + metaBits.join('') + '</div>'
@@ -480,3 +481,26 @@ for (const [k, v] of Object.entries({ MODE_LABEL, GTYPE, _tableMatches,
 // ce que faisait setLang avant la migration ; renderGames() est sans effet
 // tant que la liste n'est pas montée.
 try { window._onLangChange(function () { try { renderGames(); } catch (e) {} }); } catch (e) {}
+
+// Liste des tables au clavier (parité QML b170786, cf. lobby-keynav.mjs).
+// Sélection : comme App.selectGame, sans le panneau glissant du compact.
+// Activation : compact → infos de partie ; large → Rejoindre, seulement si le
+// bouton Rejoindre du bas est proposé (mêmes règles : ouverte, pas déjà
+// assis, invité autorisé ; mot de passe demandé par App.joinGame).
+function _kbSelectGame(gid) {
+  S._selectedGame = parseInt(gid, 10);
+  renderGameInfoPanel(S._selectedGame);
+  renderGames();
+}
+function _kbActivateGame() {
+  if (S._selectedGame == null || !S.games[S._selectedGame]) return;
+  var wide = (typeof window._lobby3IsWide === 'function') ? window._lobby3IsWide() : true;
+  if (!wide) { if (typeof window._lobby3OpenInfo === 'function') window._lobby3OpenInfo(); return; }
+  var bj = document.getElementById('lobby-foot-join');
+  if (!bj || bj.style.display === 'none') return;
+  if (window.App && typeof window.App.joinSelectedGame === 'function') window.App.joinSelectedGame();
+}
+try {
+  bindLobbyKeynav({ listId: 'g-list', current: function () { return S._selectedGame; },
+                    select: _kbSelectGame, activate: _kbActivateGame });
+} catch (e) {}

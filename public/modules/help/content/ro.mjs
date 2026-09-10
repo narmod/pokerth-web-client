@@ -272,7 +272,8 @@ export const help = {
             ['A', 'All-In'],
             ['1 / 2 / 3', 'Bet 1/3 \u00b7 1/2 \u00b7 Pot'],
             ['Alt+T', 'Panoul de statistici'],
-            ['Esc', 'Închide fereastra din față (și butonul Înapoi pe Android)']],
+            ['Esc', 'Închide fereastra din față (și butonul Înapoi pe Android)'],
+            ['\u2191 \u2193 \u00b7 \u21b5', 'Lista meselor din lobby (se ajunge cu Tab): alege o masă \u00b7 alătură-te']],
           note: 'Pe Android, butonul/gestul Înapoi al sistemului închide ferestrele ca Esc, în loc să părăsească partida (configurabil din opțiuni). iOS nu are un buton de sistem echivalent — folosește \u2715 al fiecărei ferestre.' }
       ]
     }

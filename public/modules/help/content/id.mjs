@@ -274,7 +274,8 @@ export const help = {
             ['A', 'All-In'],
             ['1 / 2 / 3', 'Bet 1/3 \u00b7 1/2 \u00b7 Pot'],
             ['Alt+T', 'Panel statistik'],
-            ['Esc', 'Tutup jendela teratas (juga tombol Kembali Android)']],
+            ['Esc', 'Tutup jendela teratas (juga tombol Kembali Android)'],
+            ['\u2191 \u2193 \u00b7 \u21b5', 'Daftar meja di lobi (capai dengan Tab): pilih meja \u00b7 bergabung']],
           note: 'Di Android, tombol/gestur Kembali sistem menutup jendela seperti Escape alih-alih meninggalkan permainan (dapat dikonfigurasi di opsi). iOS tidak punya tombol sistem setara \u2014 pakai \u2715 di setiap jendela.' }
       ]
     }

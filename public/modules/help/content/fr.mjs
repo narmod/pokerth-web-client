@@ -278,7 +278,8 @@ export const help = {
             ['A', 'All-In'],
             ['1 / 2 / 3', 'Bet 1/3 \u00b7 1/2 \u00b7 Pot'],
             ['Alt+T', 'Panneau de statistiques'],
-            ['Échap', 'Fermer la fenêtre au premier plan (aussi le bouton Retour Android)']],
+            ['Échap', 'Fermer la fenêtre au premier plan (aussi le bouton Retour Android)'],
+            ['\u2191 \u2193 \u00b7 \u21b5', 'Liste des tables du lobby (atteinte avec Tab) : choisir une table \u00b7 la rejoindre']],
           note: 'Sur Android, le bouton/geste Retour du système ferme les fenêtres comme Échap au lieu de quitter la partie (configurable dans les options). iOS n\u2019a pas de bouton système équivalent — utilise le \u2715 de chaque fenêtre.' }
       ]
     }

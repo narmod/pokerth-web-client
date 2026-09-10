@@ -272,7 +272,8 @@ export const help = {
             ['A', 'All-In'],
             ['1 / 2 / 3', 'Bet 1/3 \u00b7 1/2 \u00b7 Pot'],
             ['Alt+T', 'İstatistik paneli'],
-            ['Esc', 'En üstteki pencereyi kapat (Android Geri tuşu da öyle)']],
+            ['Esc', 'En üstteki pencereyi kapat (Android Geri tuşu da öyle)'],
+            ['\u2191 \u2193 \u00b7 \u21b5', 'Lobideki masa listesi (Tab ile ulaşılır): masa seç \u00b7 katıl']],
           note: 'Android\u2019de sistemin Geri tuşu/hareketi oyundan çıkmak yerine pencereleri Esc gibi kapatır (seçeneklerden ayarlanabilir). iOS\u2019ta eşdeğer bir sistem tuşu yoktur — her pencerenin \u2715 işaretini kullan.' }
       ]
     }

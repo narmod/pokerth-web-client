@@ -272,7 +272,8 @@ export const help = {
             ['A', 'All-In'],
             ['1 / 2 / 3', 'Bet 1/3 \u00b7 1/2 \u00b7 Pot'],
             ['Alt+T', 'Statisztikapanel'],
-            ['Esc', 'A legfelső ablak bezárása (az Android Vissza gombja is)']],
+            ['Esc', 'A legfelső ablak bezárása (az Android Vissza gombja is)'],
+            ['\u2191 \u2193 \u00b7 \u21b5', 'Asztallista az előtérben (Tabbal érhető el): asztal választása \u00b7 csatlakozás']],
           note: 'Androidon a rendszer Vissza gombja/mozdulata az ablakokat zárja be, mint az Esc, ahelyett hogy kilépne a játszmából (a beállításokban konfigurálható). Az iOS-nek nincs megfelelő rendszergombja — használd minden ablak \u2715 jelét.' }
       ]
     }

@@ -272,7 +272,8 @@ export const help = {
             ['A', 'All-In'],
             ['1 / 2 / 3', 'Bet 1/3 \u00b7 1/2 \u00b7 Pot'],
             ['Alt+T', 'Statistiekenpaneel'],
-            ['Esc', 'Het bovenste venster sluiten (ook de Android-Terug-knop)']],
+            ['Esc', 'Het bovenste venster sluiten (ook de Android-Terug-knop)'],
+            ['\u2191 \u2193 \u00b7 \u21b5', 'Tafellijst in de lobby (bereik je met Tab): tafel kiezen \u00b7 meedoen']],
           note: 'Op Android sluit de systeem-Terug-knop/-beweging vensters zoals Esc in plaats van het spel te verlaten (instelbaar in de opties). iOS heeft geen vergelijkbare systeemknop — gebruik de \u2715 van elk venster.' }
       ]
     }

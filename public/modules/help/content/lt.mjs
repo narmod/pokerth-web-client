@@ -272,7 +272,8 @@ export const help = {
             ['A', 'All-In'],
             ['1 / 2 / 3', 'Bet 1/3 \u00b7 1/2 \u00b7 Pot'],
             ['Alt+T', 'Statistikos skydelis'],
-            ['Esc', 'Uždaryti viršutinį langą (taip pat \u201eAndroid\u201c mygtukas Atgal)']],
+            ['Esc', 'Uždaryti viršutinį langą (taip pat \u201eAndroid\u201c mygtukas Atgal)'],
+            ['\u2191 \u2193 \u00b7 \u21b5', 'Poilsio salės stalų sąrašas (pasiekiamas Tab): pasirinkti stalą \u00b7 prisijungti']],
           note: '\u201eAndroid\u201c sistemos mygtukas/gestas Atgal uždaro langus kaip Esc, užuot palikęs partiją (nustatoma parinktyse). iOS neturi atitinkamo sistemos mygtuko — naudok kiekvieno lango \u2715.' }
       ]
     }

@@ -272,7 +272,8 @@ export const help = {
             ['A', 'All-In'],
             ['1 / 2 / 3', 'Bet 1/3 \u00b7 1/2 \u00b7 Pot'],
             ['Alt+T', 'Panel de estad\u00edsticas'],
-            ['Esc', 'Cerrar la ventana en primer plano (también el botón Atrás de Android)']],
+            ['Esc', 'Cerrar la ventana en primer plano (también el botón Atrás de Android)'],
+            ['\u2191 \u2193 \u00b7 \u21b5', 'Lista de mesas del lobby (se llega con Tab): elegir una mesa \u00b7 unirse']],
           note: 'En Android, el botón/gesto Atrás del sistema cierra las ventanas como Esc en lugar de abandonar la partida (configurable en las opciones). iOS no tiene un botón de sistema equivalente — usa el \u2715 de cada ventana.' }
       ]
     }

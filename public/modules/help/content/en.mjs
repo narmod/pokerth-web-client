@@ -282,7 +282,8 @@ export const help = {
             ['A', 'All-In'],
             ['1 / 2 / 3', 'Bet 1/3 \u00b7 1/2 \u00b7 Pot'],
             ['Alt+T', 'Statistics panel'],
-            ['Esc', 'Close the topmost window (also the Android Back button)']],
+            ['Esc', 'Close the topmost window (also the Android Back button)'],
+            ['\u2191 \u2193 \u00b7 \u21b5', 'Lobby table list (reach it with Tab): pick a table \u00b7 join it']],
           note: 'On Android, the system Back button/gesture closes windows like Escape instead of leaving the game (configurable in the options). iOS has no equivalent system button \u2014 use the \u2715 of each window.' }
       ]
     }

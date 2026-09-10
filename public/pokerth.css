@@ -10364,6 +10364,10 @@ html[data-buttons="pokerth"] .btn-action[disabled] { filter: grayscale(0.55) bri
 .lgi-pempty { color:var(--text-dim,#8b93a7); font-size:var(--fs-sm); padding:var(--sp-3); }
 
 /* Ligne de partie sélectionnée */
+/* Liste des tables focalisée au clavier (parité QML b170786) : cadre au
+   clavier seulement, à l'intérieur pour ne pas être rogné par la colonne. */
+#g-list:focus { outline: none; }
+#g-list:focus-visible { outline: 2px solid var(--gold-hi); outline-offset: -2px; border-radius: var(--r-md); }
 .game-row.gcard.sel { border-color:var(--gold); box-shadow:0 0 0 1px var(--gold) inset; background:rgba(var(--gold-rgb),0.06); }
 /* Palette claire : selection = fond kaki plein (accent or #E3C800 sur col600),
    sans liseré or sombre (parite QML). */

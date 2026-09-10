@@ -16,6 +16,19 @@ release. Per-build detail is on the
 highlights below.
 
 ### Added
+- **Lobby table list by keyboard** (`web.114`, upstream `b170786`,
+  `LobbyPage.qml` `gameListView`) — `#g-list` takes Tab focus; ↑/↓ move the
+  selection in display order (filter applied, no wrap), Home/End jump to the
+  ends, Enter activates like the QML double-click: join in the wide layout —
+  only when the footer Join button is offered, so the same open / not seated
+  / guest rules apply and `App.joinGame` still asks for a password — or show
+  the game info in the compact layout. As in QML, moving the selection does
+  not open the compact info slide-in; only activating does. Keys received by
+  a row's own buttons stay native. New `modules/ui/lobby-keynav.mjs` (pure
+  `stepGid` + DOM binding, imported by `lobby.mjs`, precached), rows carry
+  `data-gid`, `:focus-visible` ring drawn inside the column. Follows
+  `pth_keynav`. Help → *Web letter keys* gains the row in all 45 languages.
+  Tests in `scripts/test-lobby-keynav.mjs` (15 checks).
 - **`/live` visits counted apart too** (`web.101`) — the visit beacon of the
   embedded view says `live`, and `/__visit` sends it to `recordLiveVisit`
   instead of `recordVisit` + `recordVisitEnv`. Visits, unique, new/returning,

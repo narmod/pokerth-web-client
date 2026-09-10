@@ -272,7 +272,8 @@ export const help = {
             ['A', 'All-In'],
             ['1 / 2 / 3', 'Bet 1/3 \u00b7 1/2 \u00b7 Pot'],
             ['Alt+T', 'Ploča statistike'],
-            ['Esc', 'Zatvori prednji prozor (i gumb Natrag na Androidu)']],
+            ['Esc', 'Zatvori prednji prozor (i gumb Natrag na Androidu)'],
+            ['\u2191 \u2193 \u00b7 \u21b5', 'Popis stolova u predvorju (dolazi se Tabom): odabir stola \u00b7 pridruživanje']],
           note: 'Na Androidu sustavski gumb/gesta Natrag zatvara prozore poput Esc, umjesto da napusti partiju (podesivo u opcijama). iOS nema ekvivalentan sustavski gumb — koristi \u2715 svakog prozora.' }
       ]
     }

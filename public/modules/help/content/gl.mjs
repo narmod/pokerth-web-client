@@ -272,7 +272,8 @@ export const help = {
             ['A', 'All-In'],
             ['1 / 2 / 3', 'Bet 1/3 \u00b7 1/2 \u00b7 Pot'],
             ['Alt+T', 'Panel de estatísticas'],
-            ['Esc', 'Pecha a xanela da fronte (tamén o botón Atrás de Android)']],
+            ['Esc', 'Pecha a xanela da fronte (tamén o botón Atrás de Android)'],
+            ['\u2191 \u2193 \u00b7 \u21b5', 'Lista de mesas do vestíbulo (chégase con Tab): escoller mesa \u00b7 unirse']],
           note: 'En Android, o botón/xesto Atrás do sistema pecha as xanelas coma Esc, en vez de saír da partida (configurable nas opcións). O iOS non ten ningún botón de sistema equivalente — usa o \u2715 de cada xanela.' }
       ]
     }
