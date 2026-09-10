@@ -1,4 +1,5 @@
 2026-09-10 version 2.1.8-web (current series):
+- bugfix: the table picture could jump by one pixel during a hand, for example right after your turn; it now stays still and only moves when the window size or the table style changes
 - improvement: the privacy page now lists everything the web client sends and where - settings sync, error reports, polls, translation, radios - and tells you to contact the pokerth.net administrators for any data request
 - improvement: the default cards and the default PokerTH table (felt, dealer and blind buttons, action buttons) are now stored with the app, so an offline training game shows them without a connection, even right after an update
 

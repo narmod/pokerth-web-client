@@ -13,7 +13,8 @@
 //   • _officialSeatPix — mapping [self, opp…] → px (portrait slots fixes /
 //     paysage ellipse), out._boxScale + out._zoomHeadroom.
 //   • _applyQmlBgCenter — fond « center » calé sur communityCenterY
-//     (cache de tailles naturelles via window._bgNatCache, comme avant).
+//     (cache de tailles naturelles via window._bgNatCache, comme avant) ;
+//     _bgDynKeep — hystérésis pure (≤ 3 px à géométrie égale) anti-saut 1 px.
 //
 // Fonctions PURES (les trois premières) — testées en node contre les valeurs
 // de la Bible/DELTA (scripts/test-layout.mjs). Historique : extraites de
@@ -727,13 +728,30 @@ function _officialSeatPix(n, isPortrait, zW, zH, oCX, oCY, oRect, boxScale, zoom
   return out;
 }
 
+// ── Anti-sautillement du fond « center » (constaté narmod 10/09/2026,
+// vidéo : fin de mon tour → tout le tapis descend d'1 px). cY est un
+// barycentre MESURÉ sur les rects DOM des plates : ouverture du socle, fin du
+// scale de tour, badge d'action le déplacent d'une fraction de pixel, et
+// Math.round() en faisait un saut d'un pixel entier de TOUTE l'image. Le QML
+// n'a pas ce bruit (slots théoriques). On garde donc la taille/position déjà
+// posées tant que la géométrie structurelle est la même (zone, #s-game,
+// image, zoom, orientation) ET que l'écart reste ≤ BG_DYN_TOL px ; un resize
+// ou un changement de style recalcule exactement. Fonction pure (testée).
+const BG_DYN_TOL = 3;
+function _bgDynKeep(prev, next, tol) {
+  if (!prev || !next || prev.key !== next.key) return false;
+  var t = (tol == null) ? BG_DYN_TOL : tol;
+  return Math.abs(prev.w - next.w) <= t && Math.abs(prev.h - next.h) <= t &&
+         Math.abs(prev.x - next.x) <= t && Math.abs(prev.y - next.y) <= t;
+}
+
 // Port de GamePage.qml tableBackgroundImage (mode center) : taille et
 // position du fond calculées pour couvrir la bande tableZone(+action bar en
 // wide) en étant centré sur (zoneW/2, communityCenterY), × zoom du style.
 // Pose --wallpaper-dyn-size/pos (prioritaires sur --wallpaper-size/pos).
 function _applyQmlBgCenter(zRect, cY) {
   var de = document.documentElement;
-  function _clr() { de.style.removeProperty('--wallpaper-dyn-size'); de.style.removeProperty('--wallpaper-dyn-pos'); }
+  function _clr() { window._bgDynLast = null; de.style.removeProperty('--wallpaper-dyn-size'); de.style.removeProperty('--wallpaper-dyn-pos'); }
   if (de.getAttribute('data-table-fs') !== '1' || cY == null) { _clr(); return; }
   var cs = getComputedStyle(de);
   var pos = (cs.getPropertyValue('--wallpaper-pos') || '').trim();
@@ -787,12 +805,18 @@ function _applyQmlBgCenter(zRect, cY) {
     x = Math.round(sgr.width / 2 - w / 2);
     y = Math.round(cYsg - h / 2);
   }
+  var next = { key: [Math.round(zRect.left - sgr.left), Math.round(zRect.top - sgr.top),
+                     Math.round(zRect.width), Math.round(zRect.height),
+                     Math.round(sgr.width), Math.round(sgr.height), url, zoom, wide ? 'w' : 'p'].join('|'),
+               w: w, h: h, x: x, y: y };
+  if (_bgDynKeep(window._bgDynLast, next) && de.style.getPropertyValue('--wallpaper-dyn-pos')) return;
+  window._bgDynLast = next;
   de.style.setProperty('--wallpaper-dyn-size', w + 'px ' + h + 'px');
   de.style.setProperty('--wallpaper-dyn-pos', x + 'px ' + y + 'px');
 }
 
 // ─── Exports ES + alias legacy ───────────────────────────────────────────
-export { _qmlLandscapeLayout, _qmlPortraitScale, _qmlPortraitLayout, _officialSeatPix, _applyQmlBgCenter };
+export { _qmlLandscapeLayout, _qmlPortraitScale, _qmlPortraitLayout, _officialSeatPix, _applyQmlBgCenter, _bgDynKeep };
 if (typeof window !== 'undefined') {
   // _qmlLandscapeLayout / _qmlPortraitScale déjà attachés par le bloc (verbatim).
   window._officialSeatPix = _officialSeatPix;

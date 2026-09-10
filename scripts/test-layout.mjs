@@ -7,7 +7,7 @@
 // the three pure functions.
 // Run: node scripts/test-layout.mjs
 import {
-  _qmlLandscapeLayout, _qmlPortraitScale, _qmlPortraitLayout, _officialSeatPix,
+  _qmlLandscapeLayout, _qmlPortraitScale, _qmlPortraitLayout, _officialSeatPix, _bgDynKeep,
 } from '../public/modules/game/layout.mjs';
 
 // Géométrie héritée (Bible 2.1.3/2.1.4) : épinglée sur classic + desktop —
@@ -258,6 +258,22 @@ for (const [M, W, H] of [[5, 844, 390], [8, 844, 390]]) {
   const t = _qmlPortraitLayout(9, 320, 380, 1, false, IN_M);
   ok(t.slots.L_upper[1] < t.slots.L_lower[1], '2.1.8 frein: upper < lower sur zone minuscule');
   ok(isFinite(t.band[0]) && isFinite(t.band[1]), '2.1.8 frein: bande finie');
+}
+
+// 8) Fond « center » : hystérésis anti-saut 1 px (_bgDynKeep). Barycentre
+// mesuré qui bouge d'une fraction de px → fond conservé ; vrai changement
+// (> 3 px, resize, autre image, orientation) → recalcul.
+{
+  const K = '0|36|1912|700|1912|904|/table/ivoire-chene/felt.png|1|w';
+  const prev = { key: K, w: 1912, h: 1283, x: 0, y: -210 };
+  ok(_bgDynKeep(prev, { key: K, w: 1912, h: 1283, x: 0, y: -209 }) === true, 'bg-dyn: 1 px de bruit de barycentre -> fond conservé');
+  ok(_bgDynKeep(prev, { key: K, w: 1913, h: 1284, x: -1, y: -207 }) === true, 'bg-dyn: ≤ 3 px sur toutes les composantes -> conservé');
+  ok(_bgDynKeep(prev, { key: K, w: 1912, h: 1283, x: 0, y: -214 }) === false, 'bg-dyn: 4 px -> recalcul');
+  ok(_bgDynKeep(prev, { key: K.replace('|700|', '|701|'), w: 1912, h: 1283, x: 0, y: -210 }) === false, 'bg-dyn: zone redimensionnée -> recalcul exact');
+  ok(_bgDynKeep(prev, { key: K.replace('ivoire-chene', 'disco'), w: 1912, h: 1283, x: 0, y: -210 }) === false, 'bg-dyn: autre style -> recalcul');
+  ok(_bgDynKeep(prev, { key: K.replace(/\|w$/, '|p'), w: 1912, h: 1283, x: 0, y: -210 }) === false, 'bg-dyn: orientation -> recalcul');
+  ok(_bgDynKeep(null, { key: K, w: 1, h: 1, x: 0, y: 0 }) === false, 'bg-dyn: premier calcul -> posé');
+  ok(_bgDynKeep(prev, { key: K, w: 1912, h: 1283, x: 0, y: -208 }, 1) === false, 'bg-dyn: tolérance paramétrable');
 }
 
 if (fails) { console.error(fails + ' test(s) failed'); process.exit(1); }

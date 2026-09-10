@@ -493,6 +493,17 @@ highlights below.
   (`scale 1.03`, 180 ms OutQuad) is applied to the seat plate.
 
 ### Fixed
+- **Table background no longer jumps by a pixel mid-hand** (`web.106`) — on
+  fullscreen tables framed `center` (default PokerTH, Ivoire & Chêne, Disco…)
+  the wallpaper is centred on `communityCenterY`, a barycentre measured from
+  the seat plates' DOM rects. The socle opening, the end of the turn scale or
+  an action badge moved it by a fraction of a pixel, and `Math.round` turned
+  that into a 1 px jump of the whole picture (seen when the player's own turn
+  ends). `_applyQmlBgCenter` now keeps the size/position already applied while
+  the structural geometry (zone and `#s-game` rects, image, zoom, orientation)
+  is unchanged and every component stays within 3 px; resizes and style
+  changes still recompute exactly. Pure helper `_bgDynKeep`, tested in
+  `scripts/test-layout.mjs`.
 - **Offline training mode failed to start with no network** (fixed in
   `web.103`) — "Offline init failed" on a phone in airplane mode. The mode
   is a lazy `import('/modules/offline/index.mjs')`, and `offline/server.mjs`
