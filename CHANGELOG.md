@@ -16,6 +16,13 @@ release. Per-build detail is on the
 highlights below.
 
 ### Added
+- **Accessibility: login and lobby scaling** (`web.123`, community
+  contribution by @seanpianka, scope 2/N) — the Large/Extra Large interface
+  sizes chosen in the Accessibility panel now take visible effect on the
+  login screen and the lobby (`data-interface-size` on `<html>`, read by new
+  `pokerth.css` rules), including the populated-lobby table/outcome rows.
+  High contrast still has no visible effect yet — that lands with the
+  dedicated palette in a later scope.
 - **Accessibility entry point** (`web.122`, community contribution by
   @seanpianka, scope 1/N of a broader low-vision accessibility effort) — a new
   `#accessibility-modal` reachable from a header button before login and in
