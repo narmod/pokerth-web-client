@@ -82,6 +82,18 @@ ok(P._cupsBlockHtml(8) === '', '_cupsBlockHtml : invité (droits 1) → aucun bl
 ok(P._cupsBlockHtml(901) === '', '_cupsBlockHtml : bot → aucun bloc');
 els['login-mode'].value = 'lan-dedi';
 ok(P._cupsBlockHtml(3) === '', '_cupsBlockHtml : hors réseau pokerth.net → aucun bloc');
+// En LAN / serveur prive, MOI reste ouvert des que mes stats sont eligibles
+// (S._statsEligible) : c'est justement la que vivent mon score et mon reset
+// hors pokerth.net (remonte narmod — sans ca, aucun acces depuis mon avatar).
+S._statsEligible = true;
+const mineLan = P._cupsBlockHtml(3);
+ok(mineLan.includes('pim-cups-btn') && mineLan.includes('_pimOpenStats(3)'),
+   '_cupsBlockHtml : MOI en LAN, stats eligibles → bouton stats present');
+ok(!mineLan.includes('pim-profile-link'),
+   '_cupsBlockHtml : MOI en LAN → pas de lien profil pokerth.net (sans objet)');
+ok(P._cupsBlockHtml(7) === '',
+   '_cupsBlockHtml : adversaire en LAN reste ferme (donnees pas les miennes)');
+S._statsEligible = false;
 els['login-mode'].value = 'auth';
 
 // Pastille 📊 de la liste : depuis 2.1.7-web.112 elle ouvre la FENETRE de

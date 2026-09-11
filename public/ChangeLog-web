@@ -1,4 +1,6 @@
-2026-09-11 version 2.1.8-web.136 (current series):
+2026-09-11 version 2.1.8-web.137 (current series):
+- bugfix: in LAN or private-server games, clicking your own avatar now lets you open your statistics (score, total stats) and reset them again - this button had accidentally only ever worked when connected to pokerth.net
+2026-09-11 version 2.1.8-web.136:
 - new: the Table ranking window (podium button) now has a LAN tab when you're connected to a LAN or private-server game - it shows the family leaderboard for just the players sitting at this table
 2026-09-11 version 2.1.8-web.135:
 - improvement: pressing Escape now closes the Accessibility panel first if it's open over another screen, such as the login form, instead of acting on that screen underneath - this closes out the Accessibility feature (interface size, high contrast, entry points, mobile layouts); thanks to @seanpianka for the contribution

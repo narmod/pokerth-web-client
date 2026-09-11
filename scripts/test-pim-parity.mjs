@@ -151,6 +151,37 @@ ok(/\.pp-sec \{[^}]*border:/.test(cssTxt), 'css : la carte des stats est encadre
 ok(typeof w._pimRenderSessionStats === 'function',
    'rendu des stats de session adressable a un conteneur au choix');
 
+// ── Mon avatar en LAN / serveur prive (hors pokerth.net) ──────────────────
+// _cupsBlockHtml gate historiquement sur onNet (pokerth.net) : en LAN, MOI
+// n'avais plus AUCUN moyen d'atteindre mes stats/reset depuis mon avatar
+// (remonte narmod). Le bouton doit rester ouvert pour MOI quand mes stats de
+// session sont eligibles (S._statsEligible), meme sans classements
+// PokerTH/BBC/WEC — et sans le lien profil pokerth.net, sans objet en LAN.
+w.document.getElementById('login-mode').value = 'lan-dedi';
+S._statsEligible = true;
+S._boardEligible = true;
+S._playerRights[1] = 0; S._playerRights[2] = 0;   // pas de droits pokerth.net en LAN
+w.document.getElementById('pp-modal').style.display = 'none';
+w.openPlayerInfoPopup();   // MA fiche, en LAN
+const infoBoxLan = w.document.getElementById('pim-info');
+const lanBtns = infoBoxLan.querySelectorAll('.pim-cups-btn');
+ok(lanBtns.length === 1, 'MA fiche en LAN : bouton stats present malgre l\u2019absence de pokerth.net, trouve ' + lanBtns.length);
+ok(infoBoxLan.querySelector('.pim-profile-link') === null,
+   'MA fiche en LAN : pas de lien profil pokerth.net (sans objet hors reseau)');
+if (lanBtns[0]) {
+  const lanAttr = lanBtns[0].getAttribute('onclick') || '';
+  let lanClickErr = null;
+  try { vm.runInContext(lanAttr, ctx, { filename: 'onclick-lan.js' }); } catch (e) { lanClickErr = e; }
+  ok(!lanClickErr, 'MA fiche en LAN : le bouton ouvre bien la fenetre (' + (lanClickErr ? lanClickErr.message : 'ok') + ')');
+  ok(w.document.getElementById('pp-session') !== null,
+     'MA fiche en LAN : la fenetre contient mes stats de session (SESSION/TOTAL/CLASSEMENT + reset)');
+}
+// La fiche d'un AUTRE joueur en LAN reste sans bouton (pas mes donnees).
+w.openPlayerInfoPopup(2);
+const otherBoxLan = w.document.getElementById('pim-info');
+ok((otherBoxLan.querySelectorAll('.pim-cups-btn') || []).length === 0,
+   'fiche d un autre en LAN : toujours pas de bouton stats (donnees pas les miennes)');
+
 // Une seule source pour les deux branches.
 const src = readFileSync('public/modules/ui/player-popup.mjs', 'utf8');
 ok((src.match(/piRoleAdmin/g) || []).length === 1,

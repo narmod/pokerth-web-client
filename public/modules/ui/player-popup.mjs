@@ -414,7 +414,15 @@ function _cupsBlockHtml(pid) {
   var rg = S._playerRights[pid] || 0;
   var modeEl = document.getElementById('login-mode');
   var onNet = !!(modeEl && (modeEl.value === 'guest' || modeEl.value === 'auth'));
-  if (window.isBot(pid) || !onNet || (rg !== 2 && rg !== 3)) return '';
+  // MOI, en LAN / serveur prive (hors pokerth.net) : le bouton reste ouvert
+  // meme sans classements PokerTH/BBC/WEC, car c'est justement la que vivent
+  // mes stats de session/a vie et le classement familial (S._statsEligible,
+  // window._pimRenderSessionStats) — sans lui, aucun moyen de voir mon score
+  // ni de reset mes stats depuis mon avatar en LAN (remonte narmod).
+  var selfLan = (pid === S.myId) && !onNet && !!S._statsEligible;
+  if (window.isBot(pid)) return '';
+  if (!onNet && !selfLan) return '';
+  if (!selfLan && rg !== 2 && rg !== 3) return '';
   var nm = _pimNameFor(pid);
   if (!nm) return '';
   // Toutes les statistiques vivent dans LEUR fenetre (demande narmod 26/08) :
@@ -430,11 +438,16 @@ function _cupsBlockHtml(pid) {
   // guillemets doubles, qui fermaient l'attribut onclick lui-meme : le
   // navigateur ne gardait que « window.openPlayerProfile( » et le clic ne
   // faisait rien. Le nom est resolu cote JS, ou aucun echappement n'est requis.
-  return '<button type="button" class="pim-cups-btn" onclick="window._pimOpenStats(' + pid + ')">\uD83D\uDCCA '
-       + esc(tt('ppOpen', 'Player profile')) + '</button>'
-       + '<a class="pim-profile-link" href="https://www.pokerth.net/app.php/player?u='
+  var html = '<button type="button" class="pim-cups-btn" onclick="window._pimOpenStats(' + pid + ')">\uD83D\uDCCA '
+       + esc(tt('ppOpen', 'Player profile')) + '</button>';
+  // Lien pokerth.net : sans objet en LAN / serveur prive (pas de compte, pas
+  // de coupes) — seulement affiche quand on est reellement sur pokerth.net.
+  if (onNet) {
+    html += '<a class="pim-profile-link" href="https://www.pokerth.net/app.php/player?u='
        + encodeURIComponent(nm) + '" target="_blank" rel="noopener noreferrer">'
        + esc(tt('piViewProfile', 'View pokerth.net profile')) + '</a>';
+  }
+  return html;
 }
 
 // Nom à interroger sur pokerth.net. Pour moi, S.myName fait foi : je ne suis pas

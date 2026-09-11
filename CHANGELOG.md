@@ -16,6 +16,18 @@ release. Per-build detail is on the
 highlights below.
 
 ### Added
+- **My avatar: stats/reset accessible in LAN / private server** (`web.137`)
+  — `_cupsBlockHtml` (`player-popup.mjs`) used to gate its "📊 Player
+  profile" button on being connected to pokerth.net (`onNet`), so on LAN
+  or a private server there was no way at all to reach the stats window
+  (SESSION/TOTAL/CLASSEMENT tabs, lifetime reset) from your own avatar —
+  the button, and with it the only path to the reset, only ever showed up
+  for pokerth.net-registered players. Now shown for MYSELF whenever
+  `S._statsEligible` (LAN/private) too, without the (irrelevant off
+  pokerth.net) "View pokerth.net profile" link; opponents are unaffected
+  and stay gated as before. `test-pim-parity.mjs` / `test-player-popup.mjs`
+  cover the new self+LAN case (button present, no profile link, opponent
+  still closed).
 - **Table ranking: LAN tab** (`web.136`) — the "Table ranking" window
   (podium button in the game header) gains a fourth tab, LAN, shown only
   when connected to a LAN / private server (`_boardEligible`, opened by
