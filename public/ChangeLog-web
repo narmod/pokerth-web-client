@@ -1,4 +1,6 @@
-2026-09-12 version 2.1.8-web.144 (current series):
+2026-09-12 version 2.1.8-web.145 (current series):
+- new: the public pages (poker rules, hand rankings, glossary, how to play) are now available in Estonian too, so a search in Estonian lands on an Estonian page instead of the English one
+2026-09-12 version 2.1.8-web.144:
 - new: Estonian (Eesti) is now available in the language list - the whole interface and the built-in help are translated, bringing the client to 46 languages
 2026-09-11 version 2.1.8-web.143:
 - bugfix: action icons (message, ignore, stats) in the online players list are properly lined up under their header icon again - a leftover invisible column was pushing them out of place

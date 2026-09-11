@@ -1501,6 +1501,42 @@ var PARTS = {
     seeP: "Žaidžiant PokerTH po stalu parašo dabartinės geriausios jūsų rankos pavadinimą, tad jos niekada nereikia dėliotis mintyse spaudžiant laikui, o atskleidžiant kortas kiekvienoje atverstoje rankoje išryškina būtent tas penkias kortas, kurios iš tikrųjų buvo skaičiuojamos. Treniruotis neprisijungus prieš kompiuterio varžovus — greičiausias būdas šį eiliškumą įsiminti."
   },
 
+
+  et: {
+    title: "Pokkerikäte tugevus — käte järjestus Texas Hold\u2019emis",
+    desc: "Kõik kümme Texas Hold\u2019emi pokkerikätt kuninglikust mastireast kõrgeima kaardini, koos näidete, iga käe tõenäosuse ning kickeri ja viikide reeglitega.",
+    ldHeadline: "Pokkerikäte tugevus — Texas Hold\u2019em",
+    ldDesc: "Kümme Texas Hold\u2019emi kätt järjekorras, koos näidete, esinemissageduse ja viigireeglitega.",
+    h1: "Pokkerikäte tugevus",
+    lead: "Texas Hold\u2019emis järjestatakse käed tugevaimast nõrgimani nii. Käsi koosneb alati täpselt viiest kaardist, mis on valitud seitsme nähtava hulgast: sinu kaks varjatud kaarti ja viis ühist kaarti. Oma kaarte ei pea tingimata kasutama — kui parim viisik tuleb ainuüksi lauast, on seegi sinu käsi.",
+    names: ["Kuninglik mastirida", "Mastirida", "Neljik", "Täismaja", "Mast", "Rida", "Kolmik", "Kaks paari", "Paar", "Kõrgeim kaart"],
+    texts: [
+      "A K Q J 10, kõik sama masti. Parim võimalik käsi: seda ei saa lüüa, sellega saab ainult viiki jääda.",
+      "Viis järjestikust sama masti kaarti. Kahest mastireast võidab see, mille ülemine kaart on kõrgem.",
+      "Neli sama tugevusega kaarti. Viies kaart (kicker) lahendab harva ette tuleva viigi, kui kõik neli on laual.",
+      "Kolmik koos paariga. Kõigepealt võrreldakse kolmikut, seejärel paari.",
+      "Viis sama masti kaarti, mis ei ole järjestikused. Võrreldakse ükshaaval kõrgeimast alates; ükski mast ei ole teisest kõrgem.",
+      "Viis järjestikust eri masti kaarti. Äss käib üleval (10-J-Q-K-A) või all (A-2-3-4-5), mitte kunagi mõlemal pool korraga.",
+      "Kolm sama tugevusega kaarti ja kaks seostamata kaarti.",
+      "Kaks erinevat paari ja viies kaart. Kõigepealt võrreldakse kõrgemat paari, siis madalamat, siis kickerit.",
+      "Kaks sama tugevusega kaarti ja kolm seostamata kaarti, mida võrreldakse järjest.",
+      "Mitte ükski eelnevatest. Otsustab kõrgeim kaart, seejärel järgmine ja nii edasi."
+    ],
+    dealt: "tekib %s seitsmekaardilise käe puhul",
+    tiesH2: "Kuidas viigid lahendatakse",
+    tiesP: "Kõigepealt võrreldakse kategooriat: iga mast lööb iga rea, ükskõik millised kaardid seal on. Sama kategooria sees võrreldakse tugevust tugevuse haaval ülalt alla. Seda, mis pärast kombinatsiooni moodustamist üle jääb, nimetatakse <em>kickeriks</em>, ja see otsustab palju rohkem käsi, kui algajad arvavad: laual A-9-4 ning A♠ K♦ ja A♣ 7♥ annavad mõlemad ässade paari, kuid kuningas lööb seitsme. Hold\u2019emis ei lahenda mastid kunagi viiki — kaks sama viie tugevusega mängijat jagavad poti viimse žetoonini.",
+    wrongH2: "Mida kõige sagedamini valesti mõistetakse",
+    wrong: [
+      "Äss on rea jaoks korraga nii kõrgeim kui ka madalaim kaart: A-K-Q-J-10 on parim ja A-2-3-4-5 (nn <em>wheel</em>) nõrgim. Jada ei sulgu ringiks — Q-K-A-2-3 ei ole mitte midagi.",
+      "Mast on viis sama masti kaarti, mitte neli. Neli ärtut sinu käe ja laua peale kokku ei ole iseenesest midagi väärt.",
+      "Kolmikut, mis on moodustatud käes olevast paarist ja ühest laual olevast kaardist, nimetatakse <em>set</em>\u2019iks; ühest käes olevast kaardist ja laual olevast paarist moodustatut aga <em>trips</em>\u2019iks. Sama koht järjestuses, hoopis teine tugevus, sest tripsi näevad kõik.",
+      "Arvesse lähevad ainult viis parimat kaarti. Kaks paari käes ja kolmas paar laual on ikkagi kaks paari, mitte kolm.",
+      "Ülaltoodud protsendid näitavad, kui sageli iga kombinatsioon seitsmest kaardist riveriks üldse tekib, mitte kui sageli see võidab. Kaks paari tunduvad igapäevased ja löövad siiski suurema osa sellest, mida nad kohtavad."
+    ],
+    seeH2: "Kuidas seda lauas näha",
+    seeP: "PokerTH-s mängides kirjutatakse laua alla sinu praeguse parima käe nimi, nii et seda ei pea kunagi ajasurve all peast kokku panema, ning kaartide avamisel tõstetakse igas näidatud käes esile just need viis kaarti, mis tegelikult arvesse läksid. Võrguvaba treening arvutivastaste vastu on kiireim viis see järjestus meelde jätta."
+  },
+
   sw: {
     title: "Mpangilio wa mikono ya poka — daraja la mikono katika Texas Hold’em",
     desc: "Mikono yote kumi ya poka ya Texas Hold’em kuanzia royal flush hadi karata ya juu, ikiwa na mifano, uwezekano wa kila mmoja, na jinsi kicker na sare zinavyoamuliwa.",

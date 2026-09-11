@@ -16,6 +16,15 @@ release. Per-build detail is on the
 highlights below.
 
 ### Added
+- **Estonian SEO content pages** (`web.145`) — `seo-i18n/hands.js`,
+  `glossary.js` and `howto.js` gain their `et` entries, so
+  `/hand-rankings`, `/glossary` and `/how-to-play` render in Estonian and
+  `et` joins the hreflang set and the sitemap (both built from the same
+  source, `seoPageLangs()`). `proxy.js` gets the localized `<title>` and
+  description, `og:locale` `et_EE`, and the Estonian marketing block.
+  Hand names reuse the catalogue's forms, as `test-seo-hands-i18n`
+  requires. The "45 languages" claim inside the SEO copy of every
+  language was updated to 46 at the same time.
 - **Estonian catalogue (`et`)** (`web.144`) — a 46th language: the full UI
   catalogue (1521 keys, parity-checked against `en.mjs` for keys and
   `{token}` placeholders) and the complete help corpus (10 chapters,
