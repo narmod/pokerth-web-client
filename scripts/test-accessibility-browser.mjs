@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { createServer } from 'node:http';
 import { readFileSync, statSync } from 'node:fs';
 import { extname, join, normalize } from 'node:path';
-import { chromium } from 'playwright';
+import { chromium, firefox, webkit } from 'playwright';
 
 const root = join(process.cwd(), 'public');
 const types = { '.css': 'text/css', '.html': 'text/html', '.js': 'text/javascript', '.json': 'application/json', '.mjs': 'text/javascript', '.svg': 'image/svg+xml', '.woff2': 'font/woff2' };
@@ -23,7 +23,17 @@ const server = createServer((request, response) => {
 
 await new Promise((resolve) => server.listen(0, '127.0.0.1', resolve));
 const address = server.address();
-const browser = await chromium.launch({ headless: true });
+const browserTarget = process.env.PTH_BROWSER || 'chromium';
+const browserTargets = {
+  chromium: [chromium, {}],
+  chrome: [chromium, { channel: 'chrome' }],
+  msedge: [chromium, { channel: 'msedge' }],
+  firefox: [firefox, {}],
+  webkit: [webkit, {}],
+};
+if (!browserTargets[browserTarget]) throw new Error(`unsupported PTH_BROWSER: ${browserTarget}`);
+const [browserType, browserOptions] = browserTargets[browserTarget];
+const browser = await browserType.launch({ headless: true, ...browserOptions });
 const context = await browser.newContext({ acceptDownloads: true, serviceWorkers: 'block' });
 const page = await context.newPage();
 page.on('dialog', (dialog) => dialog.dismiss());
@@ -635,7 +645,7 @@ async function assertKeyboardFocusVisible(page, selectors, label) {
   }
 }
 
-console.log('test-accessibility-browser');
+console.log(`test-accessibility-browser (${browserTarget} ${browser.version()})`);
 try {
   await page.goto(`http://127.0.0.1:${address.port}/`, { waitUntil: 'domcontentloaded' });
   await waitForAppSessionReady(page);
@@ -879,6 +889,43 @@ try {
         bodyBackground: getComputedStyle(document.body).backgroundColor,
       }));
       assert.deepEqual(presentation, { highContrast: 'true', themeColor: '#000000', bodyBackground: 'rgb(0, 0, 0)' });
+    } finally {
+      await pwaContext.close();
+    }
+  });
+  await check('installed-PWA approximation keeps Extra Large play operable in portrait and landscape', async () => {
+    const pwaContext = await browser.newContext({ serviceWorkers: 'block' });
+    try {
+      await pwaContext.addInitScript(() => {
+        Object.defineProperty(navigator, 'standalone', { configurable: true, value: true });
+      });
+      const pwaPage = await pwaContext.newPage();
+      await pwaPage.goto(`http://127.0.0.1:${address.port}/`, { waitUntil: 'domcontentloaded' });
+      await waitForAppSessionReady(pwaPage);
+      for (const [label, viewport] of [
+        ['portrait', { width: 390, height: 844 }],
+        ['landscape', { width: 844, height: 390 }],
+      ]) {
+        await startActiveHand(pwaPage, 10, { interfaceSize: 'extra-large', viewport });
+        assert.equal(await pwaPage.locator('html').getAttribute('data-pwa'), '1', `${label} lost standalone presentation`);
+        assert.equal(await pwaPage.locator('html').getAttribute('data-interface-size'), 'extra-large', `${label} lost Extra Large`);
+        assert.equal(await pwaPage.locator('html').getAttribute('data-adaptive-play'), 'constrained-extra-large', `${label} did not use adaptive play`);
+        const geometry = await activeHandRects(pwaPage);
+        for (const [name, rect] of Object.entries({
+          cards: geometry.cards,
+          pot: geometry.pot,
+          blinds: geometry.blinds,
+          currentTurn: geometry.activeSeat,
+          timer: geometry.activeTimer,
+          actions: geometry.actions,
+          drawers: geometry.drawerBar,
+        })) assertReachable(rect, geometry.viewport, `installed-PWA approximation ${label} ${name}`);
+        await pwaPage.locator('#adaptive-info-toggle').click();
+        await pwaPage.locator('#g-log-panel').waitFor({ state: 'visible' });
+        await pwaPage.keyboard.press('Escape');
+        await pwaPage.locator('#g-log-panel').waitFor({ state: 'hidden' });
+        await assertActionOperable(pwaPage, `installed-PWA approximation ${label}`);
+      }
     } finally {
       await pwaContext.close();
     }
@@ -1145,7 +1192,7 @@ try {
     await page.locator('#s-create.active #create-form').waitFor();
     await assertKeyboardFocusVisible(page, ['#s-create .cp-back', '#cf-name', '.cf-create-btn'], 'Create Table');
   });
-  await check('Standard remains operable in a 200% browser-zoom layout with chat visible', async () => {
+  await check('Standard remains operable in a 200%-browser-zoom-equivalent layout with chat visible', async () => {
     await page.setViewportSize({ width: 640, height: 450 });
     await page.evaluate(async () => (await import('/modules/net/session.mjs')).show('s-lobby'));
     await page.locator('#s-lobby.active').waitFor();
