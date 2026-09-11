@@ -69,11 +69,13 @@ async function connectFixtureSocket(page) {
       static OPEN = 1;
       static CLOSING = 2;
       static CLOSED = 3;
+      static connections = 0;
       constructor(url) {
         super();
         this.url = url;
         this.readyState = FixtureSocket.OPEN;
         this.sent = [];
+        FixtureSocket.connections += 1;
         FixtureSocket.instance = this;
         setTimeout(() => this.onopen && this.onopen({ target: this }), 0);
       }
@@ -94,6 +96,48 @@ async function connectFixtureSocket(page) {
   await page.locator('.btn-primary[data-i18n="connect"]').click();
   await page.waitForFunction(() => window.WebSocket.instance && typeof window.WebSocket.instance.onmessage === 'function');
   await page.waitForFunction(() => window.WebSocket.instance.readyState === window.WebSocket.OPEN);
+}
+
+function channel(value) {
+  value /= 255;
+  return value <= 0.04045 ? value / 12.92 : ((value + 0.055) / 1.055) ** 2.4;
+}
+
+function colorChannels(value) {
+  const match = value.match(/^rgba?\((\d+),\s*(\d+),\s*(\d+)/);
+  assert.ok(match, `expected a computed RGB color, got ${value}`);
+  return match.slice(1, 4).map(Number);
+}
+
+function contrastRatio(first, second) {
+  const luminances = [first, second].map((value) => {
+    const [red, green, blue] = colorChannels(value).map(channel);
+    return 0.2126 * red + 0.7152 * green + 0.0722 * blue;
+  }).sort((a, b) => b - a);
+  return (luminances[0] + 0.05) / (luminances[1] + 0.05);
+}
+
+async function presentationColors(page, foregroundSelector, backgroundSelector = foregroundSelector) {
+  return page.evaluate(({ foregroundSelector, backgroundSelector }) => {
+    const foreground = getComputedStyle(document.querySelector(foregroundSelector));
+    const background = getComputedStyle(document.querySelector(backgroundSelector));
+    return { foreground: foreground.color, background: background.backgroundColor, border: background.borderColor };
+  }, { foregroundSelector, backgroundSelector });
+}
+
+async function setHighContrast(page, surface, enabled) {
+  await page.locator(`#accessibility-open-${surface}`).click();
+  const toggle = page.locator('#accessibility-high-contrast');
+  if (enabled) await toggle.check();
+  else await toggle.uncheck();
+  await page.keyboard.press('Escape');
+}
+
+async function takeStableScreenshot(page, path) {
+  await page.evaluate(() => document.fonts.ready);
+  const stable = await page.addStyleTag({ content: '*,*::before,*::after{animation:none!important;transition:none!important;caret-color:transparent!important}.seat-timeout-bar{visibility:hidden!important}' });
+  await page.screenshot({ path, animations: 'disabled', caret: 'hide' });
+  await stable.evaluate((element) => element.remove());
 }
 
 async function populateLobby(page) {
@@ -647,8 +691,159 @@ try {
     assert.equal(await page.locator('html').getAttribute('data-high-contrast'), 'true');
     assert.equal(await page.locator('#accessibility-browser-zoom').isChecked(), false);
   });
+  await check('High contrast toggles live before login without changing the player draft or Interface size', async () => {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.evaluate(async () => (await import('/modules/net/session.mjs')).show('s-connect'));
+    await page.locator('.login-card').first().click();
+    await page.locator('#nick').fill('Preserved login draft');
+    await chooseInterfaceSize(page, 'connect', 'large');
+    await setHighContrast(page, 'connect', false);
+    await setHighContrast(page, 'connect', true);
+    assert.equal(await page.locator('html').getAttribute('data-high-contrast'), 'true');
+    assert.equal(await page.locator('html').getAttribute('data-interface-size'), 'large');
+    assert.equal(await page.locator('#nick').inputValue(), 'Preserved login draft');
+    const title = await presentationColors(page, '#s-connect .login-lead', '#s-connect');
+    assert.ok(contrastRatio(title.foreground, title.background) >= 7,
+      `High-contrast login text is ${contrastRatio(title.foreground, title.background).toFixed(2)}:1`);
+    await takeStableScreenshot(page, join(process.cwd(), 'docs/screenshots/24-high-contrast-desktop.png'));
+    await page.locator('.login-back').click();
+  });
+  await check('High contrast toggles live in the populated lobby without reconnecting or losing player state', async () => {
+    await populateLobby(page);
+    await page.locator('#g-filter-select').selectOption('2');
+    await page.locator('#chat-in').fill('Preserved lobby draft');
+    const before = await page.evaluate(() => ({ connections: window.WebSocket.connections, sent: window.WebSocket.instance.sent.length }));
+    await setHighContrast(page, 'lobby', false);
+    await setHighContrast(page, 'lobby', true);
+    assert.equal(await page.locator('#g-filter-select').inputValue(), '2');
+    assert.equal(await page.locator('#chat-in').inputValue(), 'Preserved lobby draft');
+    assert.ok(await page.locator('.game-row.gcard').count() >= 1, 'the filtered lobby lost its table list');
+    assert.equal(await page.evaluate(() => window.WebSocket.connections), before.connections);
+    assert.deepEqual(await outboundSizeChangeTraffic(page, before.sent), [], 'High contrast sent gameplay traffic');
+    const filter = await presentationColors(page, '#g-filter-select');
+    assert.ok(contrastRatio(filter.foreground, filter.background) >= 7,
+      `High-contrast lobby text is ${contrastRatio(filter.foreground, filter.background).toFixed(2)}:1`);
+    assert.ok(contrastRatio(filter.border, filter.background) >= 3,
+      `High-contrast lobby control boundary is ${contrastRatio(filter.border, filter.background).toFixed(2)}:1`);
+  });
+  await check('High contrast toggles live during play without reconnecting, traffic, or lost hand state', async () => {
+    await startActiveHand(page, 10, { interfaceSize: 'extra-large', viewport: { width: 390, height: 844 } });
+    await setHighContrast(page, 'game', false);
+    const before = await page.evaluate(() => ({
+      connections: window.WebSocket.connections,
+      sent: window.WebSocket.instance.sent.length,
+      seats: document.querySelectorAll('#g-seats .seat').length,
+      pot: document.querySelector('#g-potbar').textContent,
+    }));
+    await setHighContrast(page, 'game', true);
+    const after = await page.evaluate(() => ({
+      connections: window.WebSocket.connections,
+      seats: document.querySelectorAll('#g-seats .seat').length,
+      pot: document.querySelector('#g-potbar').textContent,
+    }));
+    assert.deepEqual(after, { connections: before.connections, seats: before.seats, pot: before.pot });
+    assert.deepEqual(await outboundSizeChangeTraffic(page, before.sent), [], 'High contrast sent gameplay traffic');
+    assert.equal(await page.locator('html').getAttribute('data-interface-size'), 'extra-large');
+    const turnCue = await turnCueOutcome(page);
+    assert.equal(turnCue.visible && turnCue.distinctFromInactive, true, 'current turn lacks a non-color boundary cue');
+    const cards = await visibleCardOutcomes(page);
+    assert.ok(cards.length >= 3 && cards.every((card) => card.rankVisible && card.suitVisible && !card.imageFace),
+      'High contrast does not expose semantic rank and suit glyphs');
+    const action = await presentationColors(page, '#g-actions .btn-fold');
+    assert.ok(contrastRatio(action.foreground, action.background) >= 7,
+      `High-contrast action text is ${contrastRatio(action.foreground, action.background).toFixed(2)}:1`);
+    assert.ok(contrastRatio(action.border, action.background) >= 3,
+      `High-contrast action boundary is ${contrastRatio(action.border, action.background).toFixed(2)}:1`);
+    await page.locator('#g-actions .btn-fold').focus();
+    const focus = await page.locator('#g-actions .btn-fold').evaluate((element) => {
+      const style = getComputedStyle(element);
+      return { outline: style.outlineColor, adjacent: getComputedStyle(element.parentElement).backgroundColor, width: parseFloat(style.outlineWidth) };
+    });
+    assert.ok(focus.width >= 3 && contrastRatio(focus.outline, focus.adjacent) >= 3,
+      `High-contrast focus is ${contrastRatio(focus.outline, focus.adjacent).toFixed(2)}:1 at ${focus.width}px`);
+    for (const button of await page.locator('#g-actions .btn-action').all()) {
+      const box = await button.boundingBox();
+      assertReachable(box && { left: box.x, top: box.y, right: box.x + box.width, bottom: box.y + box.height, width: box.width, height: box.height }, { width: 390, height: 844 }, 'High-contrast mobile action');
+    }
+    await takeStableScreenshot(page, join(process.cwd(), 'docs/screenshots/25-high-contrast-mobile.png'));
+  });
+  await check('High contrast remains independent across every Interface size and supported viewport', async () => {
+    const cases = [
+      ['desktop', { width: 1440, height: 900 }],
+      ['mobile portrait', { width: 390, height: 844 }],
+      ['mobile landscape', { width: 844, height: 390 }],
+    ];
+    for (const [label, viewport] of cases) {
+      await page.setViewportSize(viewport);
+      for (const size of ['standard', 'large', 'extra-large']) {
+        await chooseInterfaceSize(page, 'game', size);
+        assert.equal(await page.locator('html').getAttribute('data-high-contrast'), 'true', `${label} ${size} lost High contrast`);
+        assert.equal(await page.locator('html').getAttribute('data-interface-size'), size, `${label} did not apply ${size}`);
+        assert.ok(await page.locator('#s-game').evaluate((screen) => screen.scrollWidth <= screen.clientWidth + 1), `${label} ${size} overflows horizontally`);
+      }
+    }
+  });
+  await check('High contrast temporarily overrides and exactly restores prior UI, felt, deck, and theme choices', async () => {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.evaluate(() => {
+      window.setTheme('pokerth-light');
+      window.setTable('saloon');
+      window.setDeck('pokerth');
+    });
+    await setHighContrast(page, 'game', false);
+    const presentation = () => page.evaluate(() => {
+      const root = document.documentElement;
+      const rootStyle = getComputedStyle(root);
+      const felt = getComputedStyle(document.querySelector('.felt-oval'));
+      const card = getComputedStyle(document.querySelector('#s-game .pk:not(.back):not(.comm-slot)'));
+      return {
+        choices: {
+          theme: localStorage.getItem('pth_theme'), table: localStorage.getItem('pth_table'), deck: localStorage.getItem('pth_deck'),
+          themeAttr: root.getAttribute('data-theme'), tableAttr: root.getAttribute('data-table'), deckAttr: root.getAttribute('data-deck'),
+        },
+        rendered: { themeColor: rootStyle.getPropertyValue('--theme-color'), feltImage: felt.backgroundImage, feltColor: felt.backgroundColor, cardImage: card.backgroundImage },
+      };
+    });
+    const before = await presentation();
+    await setHighContrast(page, 'game', true);
+    const overridden = await presentation();
+    assert.deepEqual(overridden.choices, before.choices, 'High contrast overwrote saved cosmetic choices');
+    assert.notDeepEqual(overridden.rendered, before.rendered, 'High contrast did not override incompatible cosmetics');
+    await setHighContrast(page, 'game', false);
+    assert.deepEqual(await presentation(), before, 'disabling High contrast did not exactly restore prior cosmetics');
+  });
+  await check('installed-PWA presentation applies the same High-contrast palette', async () => {
+    const pwaContext = await browser.newContext({ serviceWorkers: 'block', viewport: { width: 390, height: 844 } });
+    try {
+      await pwaContext.addInitScript(() => {
+        Object.defineProperty(navigator, 'standalone', { configurable: true, value: true });
+      });
+      const pwaPage = await pwaContext.newPage();
+      await pwaPage.goto(`http://127.0.0.1:${address.port}/`, { waitUntil: 'domcontentloaded' });
+      await waitForAppSessionReady(pwaPage);
+      assert.equal(await pwaPage.locator('html').getAttribute('data-pwa'), '1');
+      await setHighContrast(pwaPage, 'connect', true);
+      await pwaPage.waitForFunction(() => document.querySelector('meta[name="theme-color"]').content === '#000000');
+      const presentation = await pwaPage.evaluate(() => ({
+        highContrast: document.documentElement.dataset.highContrast,
+        themeColor: document.querySelector('meta[name="theme-color"]').content,
+        bodyBackground: getComputedStyle(document.body).backgroundColor,
+      }));
+      assert.deepEqual(presentation, { highContrast: 'true', themeColor: '#000000', bodyBackground: 'rgb(0, 0, 0)' });
+    } finally {
+      await pwaContext.close();
+    }
+  });
   await check('desktop login remains readable and operable at every Interface size', async () => {
     await page.setViewportSize({ width: 1440, height: 900 });
+    await page.evaluate(() => {
+      localStorage.removeItem('pth_resume');
+      localStorage.setItem('pth_interface_size', 'standard');
+      localStorage.setItem('pth_high_contrast', '0');
+    });
+    await page.reload({ waitUntil: 'domcontentloaded' });
+    await waitForAppSessionReady(page);
+    await page.locator('#s-connect.active').waitFor();
     const selectors = ['#login-step1 .login-lead', '.login-card .lc-t', '.login-card .lc-d', '.login-card .lc-ic'];
     const samples = {};
     for (const [value, multiplier] of [['standard', 1], ['large', 1.5], ['extra-large', 2]]) {

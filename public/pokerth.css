@@ -12414,3 +12414,99 @@ html[data-seat-struct="qml"] .seat-narrow .seat-name .seat-note-stars { font-siz
     overflow: auto;
   }
 }
+
+/* Dedicated High-contrast palette. It is an additive player preference: the
+   saved palette, felt and deck attributes remain untouched underneath this
+   layer, so removing data-high-contrast restores the exact prior cosmetics. */
+:root[data-high-contrast="true"] {
+  color-scheme: dark;
+  --hc-bg: #000000;
+  --hc-surface: #161616;
+  --hc-text: #ffffff;
+  --hc-accent: #ffed00;
+  --hc-focus: #00e5ff;
+  --theme-color: var(--hc-bg) !important;
+  --felt: var(--hc-bg) !important;
+  --felt-mid: var(--hc-bg) !important;
+  --felt-hi: var(--hc-surface) !important;
+  --felt-base-hi: var(--hc-surface) !important;
+  --felt-base-mid: #080808 !important;
+  --felt-base-lo: var(--hc-bg) !important;
+  --modal-bg: var(--hc-bg) !important;
+  --body-glow: transparent !important;
+  --rail: var(--hc-text) !important;
+  --rail-dark: var(--hc-bg) !important;
+  --rail-glow: transparent !important;
+  --panel: var(--hc-bg) !important;
+  --panel-hi: var(--hc-surface) !important;
+  --field-bg: var(--hc-bg) !important;
+  --inset: var(--hc-surface) !important;
+  --inset-hi: #242424 !important;
+  --gold: var(--hc-accent) !important;
+  --gold-rgb: 255, 237, 0 !important;
+  --gold-hi: #fff176 !important;
+  --gold-dim: var(--hc-accent) !important;
+  --sel: var(--hc-accent) !important;
+  --sel-rgb: 255, 237, 0 !important;
+  --sel-bar: var(--hc-accent) !important;
+  --sel-bar-rgb: 255, 237, 0 !important;
+  --cream: var(--hc-text) !important;
+  --text: var(--hc-text) !important;
+  --text-hi: var(--hc-text) !important;
+  --border: var(--hc-text) !important;
+  --border-hi: var(--hc-text) !important;
+  --on-gold: var(--hc-bg) !important;
+  --pos: #69f0ae !important;
+  --neg: #ff8a80 !important;
+  --info: #80d8ff !important;
+  --green: #69f0ae !important;
+  --green-rgb: 105, 240, 174 !important;
+  --green2-rgb: 105, 240, 174 !important;
+  --red: #ff8a80 !important;
+  --red-rgb: 255, 138, 128 !important;
+  --orange: #ffd180 !important;
+  --orange-rgb: 255, 209, 128 !important;
+  --on-green: var(--hc-bg) !important;
+  --turn-glow: var(--hc-focus) !important;
+  --turn-glow-halo: transparent !important;
+  --winner-frame: var(--hc-accent) !important;
+  --winner-halo: transparent !important;
+  --winner-badge-bg: var(--hc-bg) !important;
+  --wallpaper: none !important;
+  --table-img: none !important;
+  --felt-img: var(--hc-bg) !important;
+  --card-back: repeating-linear-gradient(135deg, var(--hc-bg) 0 8px, var(--hc-text) 8px 12px) !important;
+  --btn-fold-bg: var(--hc-bg) !important;
+  --btn-fold-fg: var(--hc-text) !important;
+  --btn-check-bg: var(--hc-bg) !important;
+  --btn-check-fg: var(--hc-text) !important;
+  --btn-call-bg: var(--hc-bg) !important;
+  --btn-call-fg: var(--hc-text) !important;
+  --btn-raise-bg: var(--hc-bg) !important;
+  --btn-raise-fg: var(--hc-text) !important;
+  --btn-allin-bg: var(--hc-bg) !important;
+  --btn-allin-bd: var(--hc-text) !important;
+  --btn-allin-fg: var(--hc-text) !important;
+  --btn-allin-fg-b: var(--hc-text) !important;
+}
+:root[data-high-contrast="true"] body,
+:root[data-high-contrast="true"] #s-connect,
+:root[data-high-contrast="true"] #s-game { background-color:var(--hc-bg) !important; background-image:none !important; }
+:root[data-high-contrast="true"] :is(button,input,select,textarea,summary,[role="button"]) { border-color:var(--hc-text) !important; }
+:root[data-high-contrast="true"] :focus-visible { outline:3px solid var(--hc-focus) !important; outline-offset:3px !important; }
+:root[data-high-contrast="true"] .felt-oval { background:var(--hc-bg) !important; border:3px solid var(--hc-text) !important; box-shadow:0 0 0 2px var(--hc-bg),0 0 0 5px var(--hc-text) !important; filter:none !important; }
+:root[data-high-contrast="true"] .felt-oval::before { display:none !important; }
+:root[data-high-contrast="true"] .pk:not(.back):not(.comm-slot) { background:var(--hc-text) !important; background-image:none !important; border:2px solid var(--hc-bg) !important; box-shadow:0 0 0 2px var(--hc-text) !important; color:var(--hc-bg) !important; }
+:root[data-high-contrast="true"] .pk:not(.back):not(.comm-slot) :is(.c-rank,.c-suit) { display:block !important; color:var(--hc-bg) !important; }
+:root[data-high-contrast="true"] .pk.back { background:var(--card-back) center / 100% 100% no-repeat,var(--hc-bg) !important; border:2px solid var(--hc-text) !important; }
+:root[data-high-contrast="true"] .pk.comm-slot { background:var(--hc-bg) !important; border:2px dashed var(--hc-text) !important; }
+:root[data-high-contrast="true"][data-seat-struct="qml"] .seat-plate { background:var(--hc-bg) !important; border:2px solid var(--hc-text) !important; box-shadow:none !important; opacity:1; }
+:root[data-high-contrast="true"][data-seat-struct="qml"] .seat :is(.seat-name,.seat-action-label) { color:var(--hc-text) !important; }
+:root[data-high-contrast="true"][data-seat-struct="qml"] .seat .seat-money { color:var(--hc-accent) !important; }
+:root[data-high-contrast="true"][data-seat-struct="qml"] .seat.active .seat-plate::after { border:4px double var(--hc-focus) !important; box-shadow:0 0 0 2px var(--hc-bg),0 0 0 4px var(--hc-focus) !important; animation:none; opacity:1; }
+:root[data-high-contrast="true"][data-seat-struct="qml"] .seat.winner .seat-plate::after { border:5px double var(--hc-accent) !important; box-shadow:0 0 0 2px var(--hc-bg),0 0 0 5px var(--hc-accent) !important; }
+:root[data-high-contrast="true"] .btn-action { background:var(--hc-bg) !important; border:3px solid var(--hc-text) !important; border-image:none !important; color:var(--hc-text) !important; filter:none; }
+:root[data-high-contrast="true"] :is(.game-row.gcard.sel,.filter-chip.active,.mode-seg-btn[aria-pressed="true"],.btn-action.prearmed) { outline:3px double var(--hc-accent) !important; outline-offset:2px !important; box-shadow:none !important; }
+@media (display-mode:fullscreen), (display-mode:standalone) {
+  :root[data-high-contrast="true"],:root[data-high-contrast="true"] body,:root[data-high-contrast="true"] .screen { background-color:var(--hc-bg) !important; }
+}
