@@ -61,6 +61,21 @@ Google announced the
 [Chrome 153 stable rollout](https://developer.chrome.com/blog/chrome-two-week-start)
 on 2026-09-08.
 
+### Canonical screenshot ownership
+
+The default `chromium` target captures the two High-contrast screenshots in
+memory and pixel-compares them with the committed canonical fixtures. The
+mobile capture waits for the randomized `.fly-card` deal sequence to finish;
+every screenshot pixel and the separate contrast/operability assertions remain
+exact. Alternate
+targets such as `PTH_BROWSER=chrome` log that screenshots are omitted and retain
+all non-pixel Outcome checks; they never read, write, or update the canonical
+fixtures. To accept an intentional visual change, run
+`PTH_UPDATE_ACCESSIBILITY_SCREENSHOTS=1 npm run test:accessibility-browser` with
+the default Chromium target, review both PNG diffs, then rerun without the update
+variable to prove the new fixtures match. The update variable has no effect on
+alternate targets.
+
 ## Deterministic command record
 
 Fill this table from a clean candidate immediately before handoff. Preserve any

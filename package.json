@@ -61,6 +61,7 @@
     "test:keynav": "node scripts/test-keynav.mjs",
     "test:accessibility": "node scripts/test-accessibility.mjs",
     "test:accessibility-browser": "node scripts/test-accessibility-browser.mjs",
+    "test:accessibility-browser-artifacts": "node scripts/test-accessibility-browser-artifacts.mjs",
     "test:accessibility-locales": "node scripts/test-accessibility-locales.mjs",
     "test:journal": "node scripts/test-journal.mjs",
     "test:globalnotice": "node scripts/test-globalnotice.mjs",
