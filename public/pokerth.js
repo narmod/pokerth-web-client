@@ -11570,11 +11570,11 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.8-web.132'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.8-web.133'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
-/* theme-color du navigateur : suit le thème actif (Android, Safari, iOS
-   standalone récent). Lit --theme-color (défini par thème dans la CSS) et met
-   à jour le meta au chargement + à chaque changement de data-theme. rAF pour
+/* theme-color du navigateur : suit le thème actif ou la palette High contrast
+   (Android, Safari, iOS standalone récent). Lit --theme-color et met
+   à jour le meta au chargement + à chaque changement de présentation. rAF pour
    lire après recalcul de style (fiabilité iOS). */
 ;(function(){
   var meta = document.querySelector('meta[name="theme-color"]');
@@ -11588,7 +11588,7 @@ window.BUILD_VERSION='2.1.8-web.132'; try{ var b=document.getElementById('cf-bui
     });
   }
   upd();
-  try{ new MutationObserver(upd).observe(document.documentElement, { attributes:true, attributeFilter:['data-theme'] }); }catch(e){}
+  try{ new MutationObserver(upd).observe(document.documentElement, { attributes:true, attributeFilter:['data-theme','data-high-contrast'] }); }catch(e){}
 })();
 
 /* ── Overlay dropdowns (chat / réactions / journal + lobby) ────────────────
