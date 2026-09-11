@@ -19,6 +19,7 @@ export const strings = {
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'Catatan saya', nvRating:'Penilaian', nvPlaceholder:'Call semua 3-bet…', nvSaved:'Tersimpan', nvTagNone:'Tanpa label', nvTagRed:'Berbahaya', nvTagOrange:'Agresif', nvTagYellow:'Awasi', nvTagGreen:'Ikan', nvTagBlue:'Ketat', nvTagPurple:'Licik', nvLabelPh:'Nama label', nvLabelTip:'Ganti nama label — berlaku untuk semua pemain dengan warna ini',
     ppMyStats:'Statistik saya',
+    ppLocalTab:'Lokal / Latihan',
     // Session stats, behind a button on the player card.
     piShowStats:'Tampilkan statistik', piHideStats:'Sembunyikan statistik',
     // Player profile window (parity: QML PokerthPlayerPage).

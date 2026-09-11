@@ -19,6 +19,7 @@ export const strings = {
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'Kumbukumbu yangu', nvRating:'Ukadiriaji', nvPlaceholder:'Hulipa kila 3-bet…', nvSaved:'Imehifadhiwa', nvTagNone:'Hakuna lebo', nvTagRed:'Hatari', nvTagOrange:'Mkali', nvTagYellow:'Mwangalie', nvTagGreen:'Samaki', nvTagBlue:'Mbanaji', nvTagPurple:'Mjanja', nvLabelPh:'Jina la lebo', nvLabelTip:'Badilisha jina la lebo — inatumika kwa kila mchezaji mwenye rangi hii',
     ppMyStats:'Takwimu zangu',
+    ppLocalTab:'Ndani / Mazoezi',
     // Session stats, behind a button on the player card.
     piShowStats:'Onyesha takwimu', piHideStats:'Ficha takwimu',
     // Player profile window (parity: QML PokerthPlayerPage).

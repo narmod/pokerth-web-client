@@ -13,6 +13,7 @@ export const strings = {
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'Moja beleška', nvRating:'Ocena', nvPlaceholder:'Plaća svaki 3-bet…', nvSaved:'Sačuvano', nvTagNone:'Bez oznake', nvTagRed:'Opasan', nvTagOrange:'Agresivan', nvTagYellow:'Posmatrati', nvTagGreen:'Riba', nvTagBlue:'Tesan', nvTagPurple:'Lukav', nvLabelPh:'Naziv oznake', nvLabelTip:'Preimenuj oznaku — važi za sve igrače sa ovom bojom',
     ppMyStats:'Моја статистика',
+    ppLocalTab:'Локално / Тренинг',
     // Session stats, behind a button on the player card.
     piShowStats:'Прикажи статистику', piHideStats:'Сакриј статистику',
     // Player profile window (parity: QML PokerthPlayerPage).

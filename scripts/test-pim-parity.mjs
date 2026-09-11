@@ -132,17 +132,21 @@ ok(w.document.getElementById('pp-session') === null,
 
 // Pour MOI, la fenetre porte en plus mes stats de session — desormais dans
 // son propre onglet "Local/Entrainement" plutot qu'un bloc encadre toujours
-// visible au-dessus des coupes (narmod 11/09 : 3 onglets de premier niveau,
-// un par source de donnees — Coupes / Local-Entrainement / LAN).
+// visible au-dessus des coupes (narmod 11/09 : 3 onglets de premier niveau —
+// Coupes / Local-Entrainement / LAN — Local et LAN TOUJOURS visibles tous
+// les deux, meme quand l'un n'a alors rien a montrer ; seul Coupes reste
+// conditionne a onNet).
 w._plOpenStats(1);
 ok(w.document.getElementById('pp-session') !== null,
    'fenetre (moi) : mes stats de session sont presentes');
 const localTab = w.document.querySelector('#pp-modal .rk-tab[data-tab="local"]');
 ok(localTab !== null, 'fenetre (moi) : l onglet Local/Entrainement existe');
-ok(localTab && localTab.textContent.trim().length > 2 && !/ppMyStats/.test(localTab.textContent),
+ok(localTab && localTab.textContent.trim().length > 2 && !/ppLocalTab/.test(localTab.textContent),
    'fenetre (moi) : libelle de l onglet traduit, pas la cle brute (' + (localTab ? localTab.textContent.trim() : '') + ')');
 const lanTabNet = w.document.querySelector('#pp-modal .rk-tab[data-tab="lan"]');
-ok(lanTabNet === null, 'fenetre (moi) sur pokerth.net : pas d onglet LAN (S._boardEligible faux ici)');
+ok(lanTabNet !== null, 'fenetre (moi) sur pokerth.net : l onglet LAN existe quand meme (toujours visible)');
+ok(lanTabNet && !lanTabNet.classList.contains('active'),
+   'fenetre (moi) sur pokerth.net : LAN n est pas l onglet actif par defaut ici (S._boardEligible faux)');
 const coupesTab = w.document.querySelector('#pp-modal .rk-tab[data-tab="coupes"]');
 ok(coupesTab && coupesTab.classList.contains('active'),
    'fenetre (moi) sur pokerth.net : Coupes est l onglet actif par defaut');
@@ -155,6 +159,16 @@ ok(w.document.getElementById('pp-pane-coupes').style.display === 'none',
    'fenetre (moi) : ... et masque le pane Coupes');
 ok(typeof w._pimRenderSessionStats === 'function',
    'rendu des stats de session adressable a un conteneur au choix');
+// L onglet LAN, meme non actif par defaut ici, doit degrader proprement sur
+// Session/Total quand on le selectionne (pas de connexion LAN => pas de
+// sous-onglet Classement, mais Session reste utilisable).
+w._ppSelect('lan');
+ok(w.document.getElementById('pp-lan-session') !== null,
+   'fenetre (moi) sur pokerth.net : le pane LAN a son conteneur de stats');
+ok(w.document.querySelector('#pp-lan-session .stats-tab[onclick*="board"]') === null,
+   'fenetre (moi) sur pokerth.net : pas de sous-onglet Classement dans LAN (pas de connexion LAN)');
+ok(typeof w._pimRenderLanStats === 'function',
+   'rendu des stats LAN adressable a un conteneur au choix');
 
 // ── Mon avatar en LAN / serveur prive (hors pokerth.net) ──────────────────
 // _cupsBlockHtml gate historiquement sur onNet (pokerth.net) : en LAN, MOI
@@ -178,15 +192,24 @@ if (lanBtns[0]) {
   let lanClickErr = null;
   try { vm.runInContext(lanAttr, ctx, { filename: 'onclick-lan.js' }); } catch (e) { lanClickErr = e; }
   ok(!lanClickErr, 'MA fiche en LAN : le bouton ouvre bien la fenetre (' + (lanClickErr ? lanClickErr.message : 'ok') + ')');
-  ok(w.document.getElementById('pp-session') !== null,
-     'MA fiche en LAN : la fenetre contient mes stats de session (Session/Total + reset)');
   const coupesTabLan = w.document.querySelector('#pp-modal .rk-tab[data-tab="coupes"]');
   ok(coupesTabLan === null, 'MA fiche en LAN : pas d onglet Coupes (hors pokerth.net)');
+  const localTabLan = w.document.querySelector('#pp-modal .rk-tab[data-tab="local"]');
+  ok(localTabLan !== null, 'MA fiche en LAN : l onglet Local/Entrainement existe aussi (toujours visible)');
   const lanTabLan = w.document.querySelector('#pp-modal .rk-tab[data-tab="lan"]');
   ok(lanTabLan !== null && lanTabLan.classList.contains('active'),
      'MA fiche en LAN : l onglet LAN existe et est actif par defaut');
-  ok(w.document.getElementById('pp-lan-wrap') !== null,
-     'MA fiche en LAN : le conteneur du classement familial existe');
+  ok(w.document.getElementById('pp-lan-session') !== null,
+     'MA fiche en LAN : le conteneur de stats LAN existe');
+  // Les 3 sous-categories demandees : Session / Total / Classement.
+  const lanSubTabs = w.document.querySelectorAll('#pp-lan-session .stats-tab');
+  ok(lanSubTabs.length === 3, 'MA fiche en LAN : les 3 sous-onglets Session/Total/Classement sont presents, trouve ' + lanSubTabs.length);
+  w._pimSetLanTab('life');
+  const lanResetBtn = w.document.querySelector('#pp-lan-session .stats-reset');
+  ok(lanResetBtn !== null, 'MA fiche en LAN : le bouton de reset est present dans le sous-onglet Total');
+  w._pimSetLanTab('board');
+  ok(w.document.getElementById('pp-lan-board-body') !== null,
+     'MA fiche en LAN : le sous-onglet Classement a son conteneur (renderBoard)');
 }
 // La fiche d'un AUTRE joueur en LAN reste sans bouton (pas mes donnees).
 w.openPlayerInfoPopup(2);

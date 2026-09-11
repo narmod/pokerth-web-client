@@ -14,6 +14,7 @@ export const strings = {
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'我的筆記', nvRating:'評分', nvPlaceholder:'跟注任何 3-bet…', nvSaved:'已儲存', nvTagNone:'無標籤', nvTagRed:'危險', nvTagOrange:'激進', nvTagYellow:'關注', nvTagGreen:'魚', nvTagBlue:'緊手', nvTagPurple:'狡猾', nvLabelPh:'標籤名稱', nvLabelTip:'重新命名標籤 — 適用於所有使用此顏色的玩家',
     ppMyStats:'我的統計',
+    ppLocalTab:'本機/訓練',
     // Session stats, behind a button on the player card.
     piShowStats:'查看統計', piHideStats:'隱藏統計',
     // Player profile window (parity: QML PokerthPlayerPage).

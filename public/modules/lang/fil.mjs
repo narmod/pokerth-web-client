@@ -19,6 +19,7 @@ export const strings = {
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'Ang tala ko', nvRating:'Rating', nvPlaceholder:'Tinatawagan ang bawat 3-bet…', nvSaved:'Na-save', nvTagNone:'Walang label', nvTagRed:'Mapanganib', nvTagOrange:'Agresibo', nvTagYellow:'Bantayan', nvTagGreen:'Isda', nvTagBlue:'Mahigpit', nvTagPurple:'Tuso', nvLabelPh:'Pangalan ng label', nvLabelTip:'Palitan ang pangalan ng label — para sa lahat ng manlalarong may kulay na ito',
     ppMyStats:'Aking estadistika',
+    ppLocalTab:'Lokal / Pagsasanay',
     // Session stats, behind a button on the player card.
     piShowStats:'Ipakita ang estadistika', piHideStats:'Itago ang estadistika',
     // Player profile window (parity: QML PokerthPlayerPage).

@@ -146,6 +146,8 @@ ok(S._pimTab === 'session', 'garde : hors éligibilité, retour forcé à sessio
 
 ok(window.openPlayerInfoPopup === P.openPlayerInfoPopup
    && window._renderProfileStats === P._renderProfileStats
+   && window._pimSetLanTab === P._pimSetLanTab
+   && window._renderLanProfileStats === P._renderLanProfileStats
    && window.closeAvatarPickerFromLobby === P.closeAvatarPickerFromLobby, 'ponts window en place');
 
 console.log(fail ? `FAIL ${fail}/${n}` : `PASS ${n}/${n}`);

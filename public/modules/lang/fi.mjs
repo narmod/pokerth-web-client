@@ -12,6 +12,7 @@ export const strings = {
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'Muistiinpanoni', nvRating:'Arvio', nvPlaceholder:'Maksaa jokaisen 3-betin…', nvSaved:'Tallennettu', nvTagNone:'Ei tunnistetta', nvTagRed:'Vaarallinen', nvTagOrange:'Aggressiivinen', nvTagYellow:'Tarkkaile', nvTagGreen:'Kala', nvTagBlue:'Tiukka', nvTagPurple:'Ovela', nvLabelPh:'Tunnisteen nimi', nvLabelTip:'Nimeä tunniste uudelleen — koskee kaikkia tämän värin pelaajia',
     ppMyStats:'Omat tilastoni',
+    ppLocalTab:'Paikallinen / Harjoittelu',
     // Session stats, behind a button on the player card.
     piShowStats:'Näytä tilastot', piHideStats:'Piilota tilastot',
     // Player profile window (parity: QML PokerthPlayerPage).

@@ -16,6 +16,31 @@ release. Per-build detail is on the
 highlights below.
 
 ### Added
+- **Player profile: LAN and Local/Training as two always-visible tabs**
+  (`web.139`, corrects `web.138`) — the previous single "My statistics" tab
+  (label reused from `ppMyStats`) is replaced with two genuinely distinct,
+  independently-labelled top-level tabs, per an explicit correction from
+  narmod: **Local / Entraînement** (`ppLocalTab`, new key translated across
+  all 45 languages — `Local / Training` in English) keeps the Session/Total
+  sub-tabs as before (`_renderProfileStats`, unchanged); **LAN** is a
+  parallel pane (`_renderLanProfileStats`, `_pimSetLanTab`, own
+  `S._pimLanTab` state so the two panes don't clobber each other's
+  sub-tab position) carrying its own Session/Total **plus a 3rd
+  sub-tab, Classement (the family board, `renderBoard`, with its reset
+  button preserved in Total)**. Both tabs are now shown **together,
+  always**, for MYSELF regardless of mode — not conditionally hidden per
+  eligibility as in `web.138` — degrading gracefully (Session only, or
+  Session+Total) when their data doesn't apply to the current connection
+  (e.g. LAN's Classement sub-tab absent on pokerth.net or in training).
+  Only **Coupes** stays conditional on `onNet` (unchanged, pokerth.net
+  only). Default active tab: LAN if `S._boardEligible`, else Coupes if
+  `onNet`, else Local/Entraînement (training). `stats.mjs`'s
+  `_boardSetSort` now repaints `pp-lan-board-body` (LAN's Classement
+  sub-view) instead of the short-lived `pp-lan-wrap` from `web.138`.
+  `test-pim-parity.mjs` / `test-player-popup.mjs` updated (tab presence
+  regardless of mode, default active tab, LAN's 3 sub-tabs incl. reset,
+  graceful degradation); manual jsdom check covers offline training
+  (Coupes absent, Local+LAN both present, LAN degrades to Session/Total).
 - **Player profile window: three top-level tabs** (`web.138`) — the
   "Player profile" window (`pp-modal`, opened from your own avatar) used to
   stack an always-visible "My statistics" box above a "Cups" block with its

@@ -17,6 +17,7 @@ export const strings = {
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'ההערה שלי', nvRating:'דירוג', nvPlaceholder:'משלם כל 3-bet…', nvSaved:'נשמר', nvTagNone:'ללא תווית', nvTagRed:'מסוכן', nvTagOrange:'אגרסיבי', nvTagYellow:'במעקב', nvTagGreen:'דג', nvTagBlue:'הדוק', nvTagPurple:'ערמומי', nvLabelPh:'שם התווית', nvLabelTip:'שינוי שם התווית — חל על כל שחקן בצבע הזה',
     ppMyStats:'הסטטיסטיקות שלי',
+    ppLocalTab:'מקומי / אימון',
     // Session stats, behind a button on the player card.
     piShowStats:'הצג סטטיסטיקות', piHideStats:'הסתר סטטיסטיקות',
     // Player profile window (parity: QML PokerthPlayerPage).

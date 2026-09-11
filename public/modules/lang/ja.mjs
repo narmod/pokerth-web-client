@@ -12,6 +12,7 @@ export const strings = {
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'メモ', nvRating:'評価', nvPlaceholder:'どんな3-betもコールする…', nvSaved:'保存済み', nvTagNone:'ラベルなし', nvTagRed:'危険', nvTagOrange:'アグレッシブ', nvTagYellow:'要注意', nvTagGreen:'フィッシュ', nvTagBlue:'タイト', nvTagPurple:'トリッキー', nvLabelPh:'ラベル名', nvLabelTip:'ラベル名を変更 — この色のすべてのプレイヤーに適用されます',
     ppMyStats:'自分の統計',
+    ppLocalTab:'ローカル/トレーニング',
     // Session stats, behind a button on the player card.
     piShowStats:'統計を表示', piHideStats:'統計を隠す',
     // Player profile window (parity: QML PokerthPlayerPage).

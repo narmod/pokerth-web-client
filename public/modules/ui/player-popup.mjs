@@ -582,11 +582,12 @@ function _otherPlayerInfoHtml(pid) {
 // Bloc stats du popup de profil — mêmes onglets que le panneau en jeu :
 // SESSION (toujours) / TOTAL (à vie, + bouton reset). N'apparaissent qu'en
 // mode réseau (LAN + serveur privé, S._statsEligible) : sur pokerth.net
-// direct, seul SESSION. Le classement familial (CLASSEMENT/LAN) n'est plus
-// un sous-onglet ici : il vit dans son propre onglet de premier niveau
-// "LAN" de la fenetre "Profil du joueur" (openPlayerProfile, pokerth-client.html),
-// aux cotes de "Coupes" — trois sources de donnees, trois onglets (demande
-// narmod 11/09).
+// direct, seul SESSION. Alimente l'onglet de premier niveau "Local /
+// Entrainement" de la fenetre "Profil du joueur" (openPlayerProfile,
+// pokerth-client.html) — TOUJOURS visible, aux cotes de "LAN" (qui porte en
+// plus le Classement familial) et de "Coupes" (demande narmod 11/09 : les
+// deux, Local/Entrainement et LAN, restent affiches ensemble meme quand l'un
+// n'a alors rien a montrer — ex. Local/Entrainement hors reseau).
 // Réutilise _statsBodySession / _statsBodyLife pour rester strictement
 // identique au jeu (y compris le reset).
 function _pimSetTab(tab) { S._pimTab = tab; _renderProfileStats(S._pimStatsBox); }
@@ -614,6 +615,46 @@ function _renderProfileStats(boxId) {
     : '';
   var body = (S._pimTab === 'life') ? window._statsBodyLife() : window._statsBodySession();
   box.innerHTML = tabs + body;
+  if (window._offlineMode && typeof window._achMountBadge === 'function') { try { window._achMountBadge(box, 'profile'); } catch (e) {} }
+}
+
+// ── Pane LAN de la fenetre "Profil du joueur" ──────────────────────────────
+// Memes stats que Local/Entrainement (Session/Total), PLUS un 3e sous-onglet
+// Classement (le classement familial complet, /stats) — demande narmod
+// 11/09 : garder les 3 sous-categories sous l'onglet LAN, meme si Classement
+// n'a rien a montrer hors connexion LAN/serveur prive (S._boardEligible
+// faux) — il degrade alors sur Session/Total, exactement comme Local/
+// Entrainement. Etat de sous-onglet independant (S._pimLanTab) : ouvrir
+// l'un des deux onglets de premier niveau ne doit pas faire perdre la
+// position de l'autre.
+function _pimSetLanTab(tab) { S._pimLanTab = tab; _renderLanProfileStats(S._pimLanStatsBox); }
+
+window._pimRenderLanStats = function (containerId) {
+  S._pimLanStatsBox = containerId;
+  if (!S._pimLanTab) S._pimLanTab = 'session';
+  _renderLanProfileStats(containerId);
+};
+
+function _renderLanProfileStats(boxId) {
+  var box = document.getElementById(boxId || S._pimLanStatsBox);
+  if (!box) return;
+  var eligible = S._statsEligible;
+  var board    = S._boardEligible;
+  if (!eligible && S._pimLanTab !== 'session') S._pimLanTab = 'session';
+  if (!board && S._pimLanTab === 'board') S._pimLanTab = 'session';
+  function tb(id, label) {
+    return '<button class="stats-tab'+(S._pimLanTab===id?' active':'')+'" onclick="window._pimSetLanTab(\''+id+'\')">'+label+'</button>';
+  }
+  var tabs = eligible
+    ? '<div class="stats-tabs">'+tb('session',t('statTabSession'))+tb('life',t('statTabLife'))
+      + (board ? tb('board',t('statTabBoard')) : '') + '</div>'
+    : '';
+  var body;
+  if (S._pimLanTab === 'life')       body = window._statsBodyLife();
+  else if (S._pimLanTab === 'board') body = '<div id="pp-lan-board-body" class="stats-body"><div class="stat-empty">…</div></div>';
+  else                              body = window._statsBodySession();
+  box.innerHTML = tabs + body;
+  if (S._pimLanTab === 'board') window.renderBoard('pp-lan-board-body');
   if (window._offlineMode && typeof window._achMountBadge === 'function') { try { window._achMountBadge(box, 'profile'); } catch (e) {} }
 }
 
@@ -821,13 +862,14 @@ function closeAvatarPickerFromLobby() {
 
 export { _pthAvatarFor, _myAvChoice, _myAvImg, _myAvatarDisplay, _avatarChipHtml,
          _ccToFlag, openPlayerInfoPopup, _otherPlayerInfoHtml, _cupsBlockHtml, _pimSetTab,
-         _renderProfileStats, closePlayerInfoPopup,
+         _renderProfileStats, _pimSetLanTab, _renderLanProfileStats, closePlayerInfoPopup,
          _pimLoadPlayerStats, _pimRenderPlayerStats,
          openAvatarPickerFromLobby, closeAvatarPickerFromLobby };
 
 for (const [k, v] of Object.entries({ _pthAvatarFor, _myAvChoice, _myAvImg,
   _myAvatarDisplay, _avatarChipHtml, _ccToFlag, openPlayerInfoPopup,
-  _otherPlayerInfoHtml, _cupsBlockHtml, _pimSetTab, _renderProfileStats, closePlayerInfoPopup,
+  _otherPlayerInfoHtml, _cupsBlockHtml, _pimSetTab, _renderProfileStats,
+  _pimSetLanTab, _renderLanProfileStats, closePlayerInfoPopup,
   _pimLoadPlayerStats, _pimRenderPlayerStats,
   openAvatarPickerFromLobby, closeAvatarPickerFromLobby }))
   window[k] = v;

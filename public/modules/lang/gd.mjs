@@ -14,6 +14,7 @@ export const strings = {
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'An nòta agam', nvRating:'Rangachadh', nvPlaceholder:'A’ gairm gach 3-bet…', nvSaved:'Air a shàbhaladh', nvTagNone:'Gun leubail', nvTagRed:'Cunnartach', nvTagOrange:'Ionnsaigheach', nvTagYellow:'Cùm sùil', nvTagGreen:'Iasg', nvTagBlue:'Teann', nvTagPurple:'Carach', nvLabelPh:'Ainm na leubail', nvLabelTip:'Thoir ainm ùr air an leubail — buinidh e ri gach cluicheadair leis an dath seo',
     ppMyStats:'Na staitistigean agam',
+    ppLocalTab:'Ionadail / Trèanadh',
     // Session stats, behind a button on the player card.
     piShowStats:'Seall na staitistigean', piHideStats:'Falaich na staitistigean',
     // Player profile window (parity: QML PokerthPlayerPage).

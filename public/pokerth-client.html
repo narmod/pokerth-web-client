@@ -4124,42 +4124,46 @@ if ('serviceWorker' in navigator && !window.LIVE_MODE) {
       return;
     }
     // MOI : trois sources de donnees, trois onglets de premier niveau (demande
-    // narmod 11/09 — avant, mes stats de session vivaient toujours au-dessus
-    // du bloc coupes, melangeant deux mises en page differentes) :
-    //  - Coupes         : classements PokerTH/BBC/WEC (pokerth.net uniquement)
-    //  - Local/Entrainement : mes stats de session + a vie (onglets internes
-    //    inchanges, cf. _renderProfileStats) — partout ou elles existent
-    //  - LAN             : classement familial complet (LAN/serveur prive)
-    // Chaque onglet n'apparait que si sa source de donnees existe dans le
-    // mode courant ; par defaut on ouvre LAN si dispo, sinon Coupes, sinon
-    // Local/Entrainement (seul restant en entrainement hors ligne).
+    // narmod 11/09) :
+    //  - Coupes             : classements PokerTH/BBC/WEC (pokerth.net uniquement)
+    //  - Local/Entrainement : mes stats de session + a vie (2 sous-onglets,
+    //    cf. _renderProfileStats) — TOUJOURS visible
+    //  - LAN                : memes stats de session + a vie, PLUS le
+    //    classement familial complet en 3e sous-onglet (cf.
+    //    _renderLanProfileStats) — TOUJOURS visible aussi, meme hors
+    //    connexion LAN/serveur prive (degrade alors sur Session/Total,
+    //    exactement comme Local/Entrainement — les deux restent affiches
+    //    ensemble, demande explicite narmod : pas de masquage conditionnel).
+    // Coupes reste seul a etre conditionne (onNet) : sans objet hors pokerth.net.
+    // Par defaut : LAN si connecte en LAN/serveur prive, sinon Coupes si sur
+    // pokerth.net, sinon Local/Entrainement (entrainement hors ligne).
     var modeEl = document.getElementById('login-mode');
     var onNet = !!(modeEl && (modeEl.value === 'guest' || modeEl.value === 'auth'));
     var st = window.PthState;
     var boardOk = !!(st && st._boardEligible);
     var ppTabsDef = [
       { id: 'coupes', label: '\uD83C\uDFC6 ' + rkEsc(rkT('piCups', 'Cups')), show: onNet },
-      { id: 'local',  label: '\uD83D\uDCCA ' + rkEsc(rkT('ppMyStats', 'My statistics')), show: true },
-      { id: 'lan',    label: 'LAN', show: boardOk }
+      { id: 'local',  label: '\uD83D\uDCCA ' + rkEsc(rkT('ppLocalTab', 'Local / Training')), show: true },
+      { id: 'lan',    label: 'LAN', show: true }
     ];
     var ppVisible = ppTabsDef.filter(function (d) { return d.show; });
     var ppDef = boardOk ? 'lan' : (onNet ? 'coupes' : 'local');
-    if (!ppVisible.some(function (d) { return d.id === ppDef; })) ppDef = ppVisible[0].id;
     var ppTabsHtml = '<div class="rk-tabs">' + ppVisible.map(function (d) {
       return '<button type="button" class="rk-tab' + (d.id === ppDef ? ' active' : '') + '" data-tab="' + d.id + '" onclick="window._ppSelect(\'' + d.id + '\')">' + d.label + '</button>';
     }).join('') + '</div>';
     body.innerHTML = ppTabsHtml
       + '<div id="pp-pane-coupes" style="display:none"><div id="pp-cups"></div></div>'
       + '<div id="pp-pane-local" style="display:none"><div id="pp-session"></div></div>'
-      + '<div id="pp-pane-lan" style="display:none"><div id="pp-lan-wrap"></div></div>';
+      + '<div id="pp-pane-lan" style="display:none"><div id="pp-lan-session"></div></div>';
     window._ppSelfCtx = { nick: nick, pid: pid };
     window._ppSelect(ppDef);
   };
   // Selection d'un onglet de premier niveau de la fenetre "Profil du joueur"
   // (MOI uniquement — cf. openPlayerProfile). Charge le contenu de l'onglet
-  // choisi ; les trois panes restent en place (juste masquees), les onglets
-  // internes de "Local/Entrainement" (Session/A vie) restent geres par
-  // _pimSetTab / _renderProfileStats, inchanges.
+  // choisi ; les trois panes restent en place (juste masquees). Les onglets
+  // internes de Local/Entrainement (Session/A vie) et de LAN (Session/A vie/
+  // Classement) gardent chacun leur propre etat (S._pimTab / S._pimLanTab,
+  // player-popup.mjs) : rouvrir l'un ne fait pas perdre la position de l'autre.
   window._ppSelect = function (id) {
     var tabs = document.querySelectorAll('#pp-modal .rk-tab[data-tab]');
     for (var i = 0; i < tabs.length; i++) tabs[i].classList.toggle('active', tabs[i].dataset.tab === id);
@@ -4176,14 +4180,8 @@ if ('serviceWorker' in navigator && !window.LIVE_MODE) {
         try { window._pimRenderSessionStats('pp-session'); } catch (e) {}
       }
     } else if (id === 'lan') {
-      var w = $('pp-lan-wrap');
-      if (w) {
-        if (typeof window.renderBoard === 'function') {
-          w.innerHTML = '<div class="rk-msg">' + rkEsc(rkT('rankingLoading', 'Loading\u2026')) + '</div>';
-          window.renderBoard('pp-lan-wrap');
-        } else {
-          w.innerHTML = '<div class="rk-msg">' + rkEsc(rkT('rankingError', 'Could not load the ranking.')) + '</div>';
-        }
+      if (typeof window._pimRenderLanStats === 'function') {
+        try { window._pimRenderLanStats('pp-lan-session'); } catch (e) {}
       }
     }
   };

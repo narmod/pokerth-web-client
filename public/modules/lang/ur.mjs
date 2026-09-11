@@ -17,6 +17,7 @@ export const strings = {
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'میرا نوٹ', nvRating:'درجہ بندی', nvPlaceholder:'ہر 3-bet کال کرتا ہے…', nvSaved:'محفوظ ہو گیا', nvTagNone:'کوئی لیبل نہیں', nvTagRed:'خطرناک', nvTagOrange:'جارح', nvTagYellow:'نظر رکھیں', nvTagGreen:'فش', nvTagBlue:'ٹائٹ', nvTagPurple:'چالاک', nvLabelPh:'لیبل کا نام', nvLabelTip:'لیبل کا نام بدلیں — اس رنگ والے تمام کھلاڑیوں پر لاگو ہوگا',
     ppMyStats:'میرے اعداد و شمار',
+    ppLocalTab:'مقامی / تربیت',
     // Session stats, behind a button on the player card.
     piShowStats:'اعداد و شمار دیکھیں', piHideStats:'اعداد و شمار چھپائیں',
     // Player profile window (parity: QML PokerthPlayerPage).

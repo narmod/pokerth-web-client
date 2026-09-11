@@ -12,6 +12,7 @@ export const strings = {
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'Моя нотатка', nvRating:'Оцінка', nvPlaceholder:'Колує будь-який 3-бет…', nvSaved:'Збережено', nvTagNone:'Без мітки', nvTagRed:'Небезпечний', nvTagOrange:'Агресивний', nvTagYellow:'Спостерігати', nvTagGreen:'Фіш', nvTagBlue:'Тайтовий', nvTagPurple:'Хитрий', nvLabelPh:'Назва мітки', nvLabelTip:'Перейменувати мітку — стосується всіх гравців із цим кольором',
     ppMyStats:'Моя статистика',
+    ppLocalTab:'Локально / Тренування',
     // Session stats, behind a button on the player card.
     piShowStats:'Показати статистику', piHideStats:'Сховати статистику',
     // Player profile window (parity: QML PokerthPlayerPage).

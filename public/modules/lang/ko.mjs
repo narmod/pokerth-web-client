@@ -16,6 +16,7 @@ export const strings = {
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'내 메모', nvRating:'평가', nvPlaceholder:'모든 3-bet을 콜함…', nvSaved:'저장됨', nvTagNone:'라벨 없음', nvTagRed:'위험', nvTagOrange:'공격적', nvTagYellow:'주시', nvTagGreen:'피시', nvTagBlue:'타이트', nvTagPurple:'교활함', nvLabelPh:'라벨 이름', nvLabelTip:'라벨 이름 바꾸기 — 이 색의 모든 플레이어에게 적용됩니다',
     ppMyStats:'내 통계',
+    ppLocalTab:'로컬 / 연습',
     // Session stats, behind a button on the player card.
     piShowStats:'통계 보기', piHideStats:'통계 숨기기',
     // Player profile window (parity: QML PokerthPlayerPage).

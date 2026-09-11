@@ -13,6 +13,7 @@ export const strings = {
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'My nota', nvRating:'Gradering', nvPlaceholder:'Call enige 3-bet…', nvSaved:'Gestoor', nvTagNone:'Geen etiket', nvTagRed:'Gevaarlik', nvTagOrange:'Aggressief', nvTagYellow:'Hou dop', nvTagGreen:'Vis', nvTagBlue:'Styf', nvTagPurple:'Slinks', nvLabelPh:'Etiketnaam', nvLabelTip:'Hernoem hierdie etiket — geld vir elke speler met hierdie kleur',
     ppMyStats:'My statistieke',
+    ppLocalTab:'Plaaslik / Oefening',
     // Session stats, behind a button on the player card.
     piShowStats:'Wys statistieke', piHideStats:'Versteek statistieke',
     // Player profile window (parity: QML PokerthPlayerPage).
