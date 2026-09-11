@@ -1,4 +1,6 @@
-2026-09-10 version 2.1.8-web (current series):
+2026-09-11 version 2.1.8-web.121 (current series):
+- bugfix: reopening the app could show the previous version for a moment with no update prompt, especially after it had been in the background a while; it now catches up and reloads once by itself
+2026-09-10 version 2.1.8-web:
 - new: in LAN and private-server games, the ranking window (trophy button) has a LAN tab, opened by default - it lists every player of the server and can be sorted by net winnings, winnings per 100 hands, win rate, games won or best streak
 - improvement: in training mode the cards are now shuffled, and the bots decide, with the browser's cryptographic random generator, as in the desktop client and on the server - the cards still to come and the bots' hidden cards can no longer be worked out from the ones already shown
 - improvement: more of the client works from the keyboard, as in the desktop client - About, privacy, table ranking and player pages scroll with Page Up/Down, Home and End as soon as they open; the ranking opens in its search box and Enter searches at once; the arrow keys move through the settings categories and the forum news list, and back from a post returns to it; the end-of-game window starts on Play again in training and Escape closes it; Escape on the login form goes back to the choice of mode; Ctrl+Enter saves a player note

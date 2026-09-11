@@ -628,6 +628,17 @@ highlights below.
   (`scale 1.03`, 180 ms OutQuad) is applied to the seat plate.
 
 ### Fixed
+- **Cold boot could serve stale SW-cached JS/CSS with no update prompt**
+  (`web.121`) — the `/__ver` update banner only compares two polls made
+  *within* the same page load, so a session that starts fresh (app
+  relaunched, not just foregrounded) had no baseline to notice it had just
+  loaded assets from an old service-worker cache; the only fix was a manual
+  hard reload. The last-seen `/__ver` value is now persisted in
+  `localStorage`; a cold boot compares against it and, if behind, nudges any
+  waiting service worker (`SKIP_WAITING`) and reloads once. Runs before
+  `App.connect()`, so there is never a live WS/proxy session to protect at
+  that point — the existing manual-reload path (banner → `SKIP_WAITING` +
+  `App.teardownForReload()`) is untouched.
 - **`/live?embed=1` — table list clipped, no scroll** (`web.115`, reported by
   Kai) — embed mode set `.screen { height: auto }` so the frame could report a
   content height, but `html`/`body` stay pinned to the viewport with

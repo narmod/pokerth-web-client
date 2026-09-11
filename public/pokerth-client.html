@@ -2763,6 +2763,54 @@ if ('serviceWorker' in navigator && !window.LIVE_MODE) {
 // one-tap "update" banner instead of forcing the user to hard-refresh.
 (function () {
   var knownVer = null, shown = false, latestVer = null;
+  var coldBoot = true; // only true for this load's very first check()
+
+  // Cold-boot self-heal ------------------------------------------------
+  // A session that starts fresh (app relaunched, not just brought back to
+  // the foreground) has no in-page baseline to compare against, so the
+  // banner logic below can't tell it just loaded stale SW-cached JS/CSS —
+  // it simply adopts whatever loaded as "current". We persist the last
+  // seen /__ver value in localStorage so a cold boot CAN tell, and if it's
+  // behind, nudge the waiting SW then reload once. Safe here specifically
+  // because this runs before any App.connect() — no live WS/proxy session
+  // exists yet at this point, so unlike the banner's manual reload path,
+  // no App.teardownForReload() is needed.
+  function coldBootSelfHeal(v) {
+    var last, applied;
+    try {
+      last = localStorage.getItem('pth_lastver');
+      applied = localStorage.getItem('pth_verapplied');
+    } catch (e) { return; }
+    if (last === null) { try { localStorage.setItem('pth_lastver', v); } catch (e) {} return; }
+    if (String(last) === String(v)) return; // already current
+    if (String(applied) === String(v)) {
+      // Already tried once for this version — stop nagging (SW may just be
+      // slow, or this browser never keeps a waiting worker) and adopt it.
+      try { localStorage.setItem('pth_lastver', v); } catch (e) {}
+      return;
+    }
+    try { localStorage.setItem('pth_verapplied', v); } catch (e) {}
+    function finish() { try { localStorage.setItem('pth_lastver', v); } catch (e) {} location.reload(); }
+    if (!('serviceWorker' in navigator) || window.LIVE_MODE) { finish(); return; }
+    navigator.serviceWorker.getRegistration().then(function (r) {
+      if (!r) { finish(); return; }
+      if (r.waiting) { r.waiting.postMessage({ type: 'SKIP_WAITING' }); finish(); return; }
+      var done = false;
+      var t = setTimeout(function () { if (!done) { done = true; finish(); } }, 2500);
+      r.addEventListener('updatefound', function () {
+        var nw = r.installing;
+        if (!nw) return;
+        nw.addEventListener('statechange', function () {
+          if (!done && nw.state === 'installed' && r.waiting) {
+            done = true; clearTimeout(t);
+            r.waiting.postMessage({ type: 'SKIP_WAITING' });
+            finish();
+          }
+        });
+      });
+      r.update().catch(function () {});
+    }).catch(function () { finish(); });
+  }
 
   function showBanner() {
     if (shown || document.getElementById('update-banner')) return;
@@ -2808,7 +2856,11 @@ if ('serviceWorker' in navigator && !window.LIVE_MODE) {
       .then(function (r) { return r.ok ? r.json() : null; })
       .then(function (d) {
         if (!d || typeof d.v === 'undefined') return;
-        if (knownVer === null) { knownVer = d.v; return; }
+        if (knownVer === null) {
+          knownVer = d.v;
+          if (coldBoot) { coldBoot = false; coldBootSelfHeal(d.v); }
+          return;
+        }
         if (d.v !== knownVer) { latestVer = d.v; showBanner(); }
       })
       .catch(function () { /* offline / proxy busy — retry later */ });
