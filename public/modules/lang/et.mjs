@@ -174,6 +174,51 @@ export const strings = {
     h8n:'Kaks paari', h8d:'Kaks paari korraga||siin kaks soldatit + kaks viit',
     h9n:'Paar', h9d:'2 ühesugust kaarti||siin kaks ässa',
     h10n:'Kõrgeim kaart', h10d:'Kombinatsioon puudub||kõrgeim kaart otsustab (siin äss)',
+    handsLegOk:'loeb', handsLegNo:'eiratakse', handsLegForce:'tugev → nõrk',
+    handsClose:'Sulge ✕', watchBtn:'Vaata', watchTitle:'Vaata ilma mängimata',
+    // ── Messages migrated from code (i18n batch) ──
+    verifyingAccount:'Konto kontrollimine…',
+    connErrVersion:'Ühildumatu versioon', connErrFull:'Server on täis', connErrAuth:'Autentimine ebaõnnestus',
+    connErrNickTaken:'Hüüdnimi on juba võetud', connErrNickInvalid:'Vigane hüüdnimi', connErrMaintenance:'Hooldus', connErrBlocked:'Blokeeritud',
+    connErrAvatarSize:'Avatari fail on liiga suur', connErrPacket:'Vigane võrgupakett (versioonide erinevus?)', connErrState:'Vigane ühenduse olek (versioonide erinevus?)', connErrKicked:'Sind visati serverist välja', connErrBanned:'Sind on serverist ajutiselt bännitud', connErrAccBlocked:'Sinu konto on blokeeritud', connErrIdle:'Ühendus katkestati tegevusetuse tõttu — võid rahulikult uuesti ühenduda',
+    ipBlockedPrefix:'⏳ IP blokeeritud — ', ipBlockedWaitPrefix:'⏳ IP blokeeritud — oota ', ipBlockedRetry:'⏳ IP blokeeritud — oota 5 minutit ja proovi siis uuesti.',
+    sharedTableJoining:'🔗 Jagatud laud leitud — liitumine…',
+    timerHurry:'⏰ Aeg: {s} s — mängi kiiresti!',
+    chatRefusedReason:'⚠ Vestlus keelduti: {r}',
+    reactionsLanLocal:'Reaktsioonid (kohalikud — LAN-režiim)', reactionsLabel:'Reaktsioonid', reactionsMuteTitle:'Luba / keela reaktsioonid', reactionsPinTitle:'Kinnita: hoia aken pärast reaktsiooni avatuna',
+    gameOverMsg:'Mäng läbi!',
+    tableClosedMsg:'🔒 Laud on suletud.',
+    noHandsPlayed:'Ühtegi kätt pole veel mängitud',
+    gtypeNormal:'Tavaline', gtypeRegistered:'Ainult registreeritud mängijad', gtypeInvite:'Ainult kutsutud mängijad', gtypeRanked:'Edetabelimäng',
+    wsError:'WebSocketi viga. Kas puhvermasin töötab?',
+    reconnFailed:'Taasühendumine ebaõnnestus pärast {n} katset. Palun ühenda käsitsi uuesti.',
+    reconnSeatKept:'Sinu koht lauas jääb mõneks minutiks reserveerituks.',
+    tableNamePh:'Laua nimi…',
+    // ── Hand strength: post-flop ──
+    hsRoyal:'⭐ Kuninglik mastirida', hsSF:'🃏 Mastirida {r}', hsFour:'🟥 Neli {r}',
+    hsFull:'🔴 Täismaja {a}/{b}', hsFlush:'🟠 Mast', hsStraight:'🟡 Rida {r}',
+    hsThree:'🟢 Kolm {r}', hsTwoPair:'🔵 Kaks paari {a}/{b}', hsPair:'⚪ {r} paar', hsHigh:'Kõrgeim kaart {r}',
+    whHigh: 'Kõrgeim kaart, {r} kõrge', whPair: 'Paar, {r}', whTwoPair: 'Kaks paari, {a} ja {b}', whThree: 'Kolmik, {r}', whStraight: 'Rida, {r} kõrge', whFlush: 'Mast, {r} kõrge', whFull: 'Täismaja, {a} ja {b}', whFour: 'Neljik, {r}', whSF: 'Mastirida, {r} kõrge', whRoyal: 'Kuninglik mastirida',
+    // ── Hand strength: pre-flop ──
+    pfPremium:'Tippkäsi', pfAKs:'AKs tippkäsi', pfAKo:'AKo tippkäsi', pfMidPair:'Keskmine paar',
+    pfStrongAceS:'Tugev sama masti äss', pfStrongAce:'Tugev äss', pfKQs:'KQs', pfKQo:'KQo',
+    pfSmallPair:'Väike paar', pfSuitedConn:'Sama masti järjestikused', pfSuitedBroad:'Sama masti kõrged kaardid',
+    pfAceKicker:'Äss kickeriga', pfConnectors:'Järjestikused kaardid', pfWeak:'Nõrk käsi',
+    // ── Player-info modal ──
+    piPrivate:'Privaatne', piPublic:'Avalik', piInformation:'Teave', piType:'Tüüp',
+    piConfiguration:'Seadistus', piStartingStack:'Algžetonid', piActionTimer:'Käigu taimer',
+    piGameState:'Mängu olek', piHandNo:'Käsi nr', piNotStarted:'Pole alanud', piPot:'Pott', piPhase:'Faas',
+    // ── Haptic ──
+    hapticOn:'Vibratsioon sees', hapticOff:'Vibratsioon väljas', hapticLabel:'Vibratsioon',
+    // ── LAN / chat warnings ──
+    reactLanLocalNote:'⚠ LAN-režiim: reaktsioonid on kohalikud. Nende jagamiseks kasuta internetikülalise režiimi.',
+    reactLocalOnlyNote:'⚠ Ainult kohalikud reaktsioonid (server keeldus vestlusest)',
+    chatLanDisabled:'⚠ LAN-režiim: mängusisene vestlus on keelatud. Vestluse ja reaktsioonide lubamiseks ühenda režiimis „internetikülaline“.',
+    chatServerRefused:'⚠ Server keeldus vestlusest. Kontrolli, et seadistuses oleks ServerRestrictGuestLogin=0.',
+    onePlayerLeft:'Alles on ainult üks mängija — mäng lõpetatakse.',
+    // ── Action rejected ──
+    rejInvalidState:'vigane mängu olek (sünkroonist väljas)', rejNotYourTurn:'ei ole enam sinu kord', rejNotAllowed:'käik ei ole lubatud',
+    actionRejected:'Käik lükati tagasi',
 };
 
 export default { meta, strings };
