@@ -6,6 +6,7 @@ const ADAPTIVE_PLAY = 'constrained-extra-large';
 const ADAPTIVE_PLAY_QUERY = '(max-width: 740px) and (orientation: portrait), (max-height: 500px) and (orientation: landscape)';
 let invokingElement = null;
 let standardMetricsViewport = null;
+let standardMetricsRefreshFrame = null;
 
 function read(key) {
   try { return localStorage.getItem(key); } catch (_error) { return null; }
@@ -82,6 +83,51 @@ function syncAdaptivePlayState(interfaceSize = sizePreference()) {
   return changed;
 }
 
+function cacheStandardMetrics(game, root, viewport) {
+  const rootStyle = window.getComputedStyle(root);
+  const communityScale = parseFloat(rootStyle.getPropertyValue('--standard-comm-scale'));
+  if (!Number.isFinite(communityScale) || communityScale <= 0) return false;
+  const rootFontSize = parseFloat(rootStyle.fontSize) || 16;
+  game.style.setProperty('--active-standard-comm-scale', String(communityScale));
+  game.style.setProperty('--active-pot-font-base', `${Math.max(10, 13 * communityScale)}px`);
+  game.style.setProperty('--active-community-font-base', `${rootFontSize * 1.02 * communityScale}px`);
+  standardMetricsViewport = viewport;
+  return true;
+}
+
+function cacheRenderedStandardMetrics(game, root, viewport) {
+  const communityScale = window.getComputedStyle(root).getPropertyValue('--comm-scale').trim();
+  if (!communityScale) return false;
+  game.style.setProperty('--active-standard-comm-scale', communityScale);
+  const pot = document.getElementById('g-potbar');
+  const communityCard = document.querySelector('#g-comm .pk');
+  if (pot) game.style.setProperty('--active-pot-font-base', window.getComputedStyle(pot).fontSize);
+  if (communityCard) game.style.setProperty('--active-community-font-base', window.getComputedStyle(communityCard).fontSize);
+  standardMetricsViewport = viewport;
+  return true;
+}
+
+function refreshStandardMetricsForViewport() {
+  const root = document.documentElement;
+  const game = document.getElementById('s-game');
+  if (!game || sizePreference() === 'standard') return false;
+  const viewport = `${window.innerWidth}x${window.innerHeight}`;
+  if (viewport === standardMetricsViewport) return false;
+  if (!cacheStandardMetrics(game, root, viewport)) return false;
+  try { if (typeof window.renderSeats === 'function') window.renderSeats(); } catch (_error) {}
+  return true;
+}
+
+function scheduleStandardMetricsRefresh() {
+  try {
+    if (standardMetricsRefreshFrame !== null) window.cancelAnimationFrame(standardMetricsRefreshFrame);
+    standardMetricsRefreshFrame = window.requestAnimationFrame(() => {
+      standardMetricsRefreshFrame = null;
+      refreshStandardMetricsForViewport();
+    });
+  } catch (_error) {}
+}
+
 function applyAccessibilityPreferences() {
   const preferences = getAccessibilityPreferences();
   let sizeChanged = false;
@@ -91,19 +137,12 @@ function applyAccessibilityPreferences() {
     const previousSize = root.getAttribute('data-interface-size');
     const game = document.getElementById('s-game');
     const viewport = `${window.innerWidth}x${window.innerHeight}`;
-    const canCaptureStandardMetrics = previousSize === null || previousSize === 'standard';
-    const hasStandardMetrics = game && game.style.getPropertyValue('--active-standard-comm-scale');
-    // Capture only an untransformed cold DOM or a real Standard layout. These
-    // inline metrics are inert in Standard and remain valid for its round trip.
-    if (game && preferences.interfaceSize !== 'standard' && canCaptureStandardMetrics
-      && (!hasStandardMetrics || standardMetricsViewport !== viewport)) {
-      const standardCommunityScale = window.getComputedStyle(root).getPropertyValue('--comm-scale').trim();
-      if (standardCommunityScale) game.style.setProperty('--active-standard-comm-scale', standardCommunityScale);
-      const pot = document.getElementById('g-potbar');
-      const communityCard = document.querySelector('#g-comm .pk');
-      if (pot) game.style.setProperty('--active-pot-font-base', window.getComputedStyle(pot).fontSize);
-      if (communityCard) game.style.setProperty('--active-community-font-base', window.getComputedStyle(communityCard).fontSize);
-      standardMetricsViewport = viewport;
+    // A live Standard layout is the exact baseline when first enlarging. Cold
+    // starts and viewport changes use the media-owned source instead: it never
+    // inherits the active layout or loupe transform.
+    if (game && preferences.interfaceSize !== 'standard' && standardMetricsViewport !== viewport) {
+      if (previousSize === 'standard') cacheRenderedStandardMetrics(game, root, viewport);
+      else cacheStandardMetrics(game, root, viewport);
     }
     root.setAttribute('data-interface-size', preferences.interfaceSize);
     root.setAttribute('data-high-contrast', preferences.highContrast ? 'true' : 'false');
@@ -228,6 +267,7 @@ function bind() {
       if (!syncAdaptivePlayState()) return;
       notifyAdaptivePlayChange();
     });
+    window.addEventListener('resize', scheduleStandardMetricsRefresh, { passive: true });
   } catch (_error) {}
   applyAccessibilityPreferences();
 }
