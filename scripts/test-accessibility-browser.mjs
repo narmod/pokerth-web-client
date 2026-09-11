@@ -133,6 +133,38 @@ async function setHighContrast(page, surface, enabled) {
   await page.keyboard.press('Escape');
 }
 
+async function openPlayerSettings(page) {
+  await page.locator('#g-overflow-btn').click();
+  await page.locator('#adv-opts-mob').click();
+  await page.locator('#adv-modal').waitFor();
+}
+
+async function choosePlayerCosmetics(page) {
+  await openPlayerSettings(page);
+  await page.locator('#adv-darkmode').selectOption({ label: 'Light' });
+  await page.getByRole('tab', { name: 'Style', exact: true }).click();
+  const style = page.locator('#adv-theme-host');
+  await style.getByRole('button', { name: 'Table', exact: true }).click();
+  await style.getByText('Saloon QML table style', { exact: true }).click();
+  await style.getByRole('button', { name: 'Cards', exact: true }).click();
+  await style.getByText('PokerTH', { exact: true }).click();
+}
+
+async function selectedPlayerCosmetics(page) {
+  const ui = (await page.locator('#adv-darkmode option:checked').textContent()).trim();
+  const style = page.locator('#adv-theme-host');
+  const selected = async (tab) => {
+    await style.getByRole('button', { name: tab, exact: true }).click();
+    const marker = style.getByText('Selected', { exact: false });
+    return (await marker.locator('..').innerText()).split('\n')[0].trim();
+  };
+  return { ui, felt: await selected('Table'), deck: await selected('Cards') };
+}
+
+async function closePlayerSettings(page) {
+  await page.locator('#adv-modal').getByRole('button', { name: 'Close' }).click();
+}
+
 async function takeStableScreenshot(page, path) {
   await page.evaluate(() => document.fonts.ready);
   const stable = await page.addStyleTag({ content: '*,*::before,*::after{animation:none!important;transition:none!important;caret-color:transparent!important}.seat-timeout-bar{visibility:hidden!important}' });
@@ -785,32 +817,36 @@ try {
   });
   await check('High contrast temporarily overrides and exactly restores prior UI, felt, deck, and theme choices', async () => {
     await page.setViewportSize({ width: 1440, height: 900 });
-    await page.evaluate(() => {
-      window.setTheme('pokerth-light');
-      window.setTable('saloon');
-      window.setDeck('pokerth');
-    });
     await setHighContrast(page, 'game', false);
+    await choosePlayerCosmetics(page);
+    const choices = { ui: 'Light', felt: 'Saloon QML table style', deck: 'PokerTH' };
+    assert.deepEqual(await selectedPlayerCosmetics(page), choices, 'Settings did not apply the chosen cosmetics');
+    await closePlayerSettings(page);
     const presentation = () => page.evaluate(() => {
-      const root = document.documentElement;
-      const rootStyle = getComputedStyle(root);
       const felt = getComputedStyle(document.querySelector('.felt-oval'));
       const card = getComputedStyle(document.querySelector('#s-game .pk:not(.back):not(.comm-slot)'));
       return {
-        choices: {
-          theme: localStorage.getItem('pth_theme'), table: localStorage.getItem('pth_table'), deck: localStorage.getItem('pth_deck'),
-          themeAttr: root.getAttribute('data-theme'), tableAttr: root.getAttribute('data-table'), deckAttr: root.getAttribute('data-deck'),
-        },
-        rendered: { themeColor: rootStyle.getPropertyValue('--theme-color'), feltImage: felt.backgroundImage, feltColor: felt.backgroundColor, cardImage: card.backgroundImage },
+        browserTheme: document.querySelector('meta[name="theme-color"]').content,
+        feltImage: felt.backgroundImage,
+        feltColor: felt.backgroundColor,
+        cardImage: card.backgroundImage,
       };
     });
     const before = await presentation();
     await setHighContrast(page, 'game', true);
+    await page.waitForFunction(() => document.querySelector('meta[name="theme-color"]').content === '#000000');
     const overridden = await presentation();
-    assert.deepEqual(overridden.choices, before.choices, 'High contrast overwrote saved cosmetic choices');
-    assert.notDeepEqual(overridden.rendered, before.rendered, 'High contrast did not override incompatible cosmetics');
+    assert.notDeepEqual(overridden, before, 'High contrast did not override incompatible cosmetics');
+    assert.equal(overridden.browserTheme, '#000000', 'High contrast did not override the browser theme');
+    await openPlayerSettings(page);
+    assert.deepEqual(await selectedPlayerCosmetics(page), choices, 'High contrast changed the player-visible cosmetic selections');
+    await closePlayerSettings(page);
     await setHighContrast(page, 'game', false);
-    assert.deepEqual(await presentation(), before, 'disabling High contrast did not exactly restore prior cosmetics');
+    await openPlayerSettings(page);
+    assert.deepEqual(await selectedPlayerCosmetics(page), choices, 'disabling High contrast did not restore the selected cosmetics');
+    await closePlayerSettings(page);
+    await page.waitForFunction((theme) => document.querySelector('meta[name="theme-color"]').content === theme, before.browserTheme);
+    assert.deepEqual(await presentation(), before, 'disabling High contrast did not exactly restore rendered cosmetics');
   });
   await check('installed-PWA presentation applies the same High-contrast palette', async () => {
     const pwaContext = await browser.newContext({ serviceWorkers: 'block', viewport: { width: 390, height: 844 } });
