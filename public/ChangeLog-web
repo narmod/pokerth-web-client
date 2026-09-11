@@ -1,4 +1,7 @@
-2026-09-11 version 2.1.8-web.127 (current series):
+2026-09-11 version 2.1.8-web.132 (current series):
+- improvement: the adaptive layout for large interface sizes now also covers landscape play, and the Hands and Reactions buttons in its bottom bar now open in the right place (this closes the spot mentioned in the previous update)
+- bugfix: pressing Escape on the reactions panel now closes it, like every other panel - it used to toggle "keep window open" instead
+2026-09-11 version 2.1.8-web.127:
 - new: at Extra Large interface size, portrait play now uses an adapted layout - chat and log open as full-screen panels reachable from a bar at the bottom, and the round table buttons make room for it (note: for now the Hands and Reactions buttons in that bar can still open in the wrong spot - a fix is coming very shortly)
 2026-09-11 version 2.1.8-web.124:
 - improvement: the Large and Extra Large interface sizes from the Accessibility panel now also scale up the desktop table during a game (seats, badges, whose turn it is) - the table geometry is unchanged if you leave the setting at Standard

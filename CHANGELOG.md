@@ -16,6 +16,17 @@ release. Per-build detail is on the
 highlights below.
 
 ### Added
+- **Accessibility: mobile landscape adaptive play** (`web.132`, community
+  contribution by @seanpianka, scope 5/N) — extends the adaptive
+  chat/log drawer system from the portrait scope to landscape, and adds
+  the Hands and Reactions panels to `_gameDrawerConfig`, closing the gap
+  noted in the previous scope (their buttons in `adaptive-drawer-bar` now
+  correctly target the new drawer system instead of the hidden felt-corner
+  buttons). Also fixes an unrelated pre-existing bug bundled in this series:
+  `keynav.mjs` mapped Escape on `g-reaction-panel` to `App.toggleReactionsPin`
+  (toggling the pin state) instead of `toggleReactionPanel` (closing the
+  panel) — Escape now actually closes it, as it does for every other
+  surface in `SURFACES`.
 - **Accessibility: mobile portrait adaptive play** (`web.127`, community
   contribution by @seanpianka, scope 4/N) — at Extra Large interface size in
   portrait, in-game play switches to an adaptive layout: felt corner buttons
