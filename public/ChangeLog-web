@@ -1,4 +1,6 @@
-2026-09-11 version 2.1.8-web.124 (current series):
+2026-09-11 version 2.1.8-web.127 (current series):
+- new: at Extra Large interface size, portrait play now uses an adapted layout - chat and log open as full-screen panels reachable from a bar at the bottom, and the round table buttons make room for it (note: for now the Hands and Reactions buttons in that bar can still open in the wrong spot - a fix is coming very shortly)
+2026-09-11 version 2.1.8-web.124:
 - improvement: the Large and Extra Large interface sizes from the Accessibility panel now also scale up the desktop table during a game (seats, badges, whose turn it is) - the table geometry is unchanged if you leave the setting at Standard
 2026-09-11 version 2.1.8-web.123:
 - improvement: the Large and Extra Large interface sizes from the Accessibility panel now actually enlarge the login screen and the lobby, including the table list once it's populated (high contrast still has no visible effect yet - it's coming in a later update)

@@ -16,6 +16,17 @@ release. Per-build detail is on the
 highlights below.
 
 ### Added
+- **Accessibility: mobile portrait adaptive play** (`web.127`, community
+  contribution by @seanpianka, scope 4/N) — at Extra Large interface size in
+  portrait, in-game play switches to an adaptive layout: felt corner buttons
+  (chat/reactions/hands/log) hide (`.g-felt-corner { display: none }`) in
+  favor of a bottom `adaptive-drawer-bar`, and chat/log panels open as
+  full ARIA dialogs with proper focus handling instead of floating windows
+  (`_gameDrawerConfig`/`_configureGameDrawer` in `pokerth.js`, additive —
+  normal desktop play is unaffected). Known gap, fixed in the next scope:
+  the Hands and Reactions buttons in the new bar aren't wired to this system
+  yet and still anchor on the now-hidden corner buttons, so tapping them in
+  this build can open in an unexpected spot.
 - **Accessibility: desktop active play scaling** (`web.124`, community
   contribution by @seanpianka, scope 3/N) — interface size (Large/Extra
   Large) now also scales the desktop in-game table (seats, badges, turn
