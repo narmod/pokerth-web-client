@@ -7,14 +7,18 @@ and manual acceptance.
 
 ## Candidate status
 
-- Candidate commit under test: `4810e57a69a2994029a289aa9e66ad4a537ae69e`
-  plus the Issue #8 verification commit.
+- Candidate feature series under test: rebased through
+  `5ea0a5e1dd3cc1d7c1ab5323d02d82fa030dace4` plus the Issue #9
+  integration and verification commit.
 - Automated result date: 2026-09-10.
 - Automated Outcome status: passing in bundled Playwright Chromium 141.0.7390.37
   and installed branded Google Chrome 152.0.7977.83.
 - Real-device acceptance: pending; no manual row is marked passed.
-- Build number: unchanged because Issue #8 changes only tests and documentation,
-  neither of which is served or precached.
+- Build number: `2.1.8-web.140`; Issue #9 advances it once for the integration
+  fix that gives Accessibility priority over its invoking surface on Escape.
+- Screenshot stability: one initial post-rebase Chromium run reported a mobile
+  canonical byte mismatch. The fixture was not updated; the immediate full rerun
+  matched both canonical screenshots and passed 39/39.
 
 ## Issue #8 Outcome inventory
 
@@ -94,9 +98,10 @@ baseline failure separately from Issue #8 results.
 | Configuration | `node scripts/test-cfg-sync-hold.mjs`; `npm run test:state` | All pass; 77/77 pass |
 | Theme and palette | `npm run test:accessibility-browser` | 39/39 integrated Outcomes pass |
 | Deck | `npm run test:deck` | All pass |
-| Navigation | `npm run test:keynav` | 11/11 pass |
+| Navigation | `npm run test:keynav` | 53/53 pass |
 | Boot | `npm run test:boot` | 19/19 pass |
 | Precache | `npm run test:precache` | 12/12 pass |
 | Protobuf build | `npm run build:proto` | Exit 0; current generator rewrote tracked bundles, so the unrelated generated diff was discarded |
-| Version consistency | `node scripts/test-build-id.mjs` | All pass; version remains 2.1.8-web.129 |
-| Known baseline | `npm run test:table-cards` | Fails unchanged in the fake DOM: `gip.style.setProperty is not a function` in `odds-panel.mjs:175`; not repaired in Issue #8 |
+| Version consistency | `node scripts/test-build-id.mjs` | All pass; version is 2.1.8-web.140 |
+| Upstream integration | `node scripts/test-reactions-catalog.mjs`; `node scripts/test-live-embed.mjs`; `node scripts/test-offline-rand.mjs`; `npm run test:messages`; `npm run test:engine-determinism`; `npm run test:crypto`; `npm run test:stats`; `node scripts/test-live-stats.mjs` | All pass |
+| Known baseline | `npm run test:table-cards` | Fails unchanged in the fake DOM: `gip.style.setProperty is not a function` in `odds-panel.mjs:175`; not repaired in Issue #9 |
