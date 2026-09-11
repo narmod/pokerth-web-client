@@ -580,16 +580,20 @@ function _otherPlayerInfoHtml(pid) {
 }
 
 // Bloc stats du popup de profil — mêmes onglets que le panneau en jeu :
-// SESSION (toujours) / TOTAL (à vie, + bouton reset) / CLASSEMENT (proxy).
-// Les onglets TOTAL et CLASSEMENT n'apparaissent qu'en mode réseau (LAN +
-// serveur privé, S._statsEligible) : sur pokerth.net direct, seul SESSION.
-// Réutilise _statsBodySession / _statsBodyLife / renderBoard pour rester
-// strictement identique au jeu (y compris le reset).
+// SESSION (toujours) / TOTAL (à vie, + bouton reset). N'apparaissent qu'en
+// mode réseau (LAN + serveur privé, S._statsEligible) : sur pokerth.net
+// direct, seul SESSION. Le classement familial (CLASSEMENT/LAN) n'est plus
+// un sous-onglet ici : il vit dans son propre onglet de premier niveau
+// "LAN" de la fenetre "Profil du joueur" (openPlayerProfile, pokerth-client.html),
+// aux cotes de "Coupes" — trois sources de donnees, trois onglets (demande
+// narmod 11/09).
+// Réutilise _statsBodySession / _statsBodyLife pour rester strictement
+// identique au jeu (y compris le reset).
 function _pimSetTab(tab) { S._pimTab = tab; _renderProfileStats(S._pimStatsBox); }
 
 // Rendu des stats de session DANS la fenetre de statistiques. Appele par
 // openPlayerProfile ; le conteneur est memorise pour que les onglets
-// (Session / A vie / Tableau) repeignent le bon element.
+// (Session / A vie) repeignent le bon element.
 window._pimRenderSessionStats = function (containerId) {
   S._pimStatsBox = containerId;
   S._pimTab = 'session';
@@ -600,22 +604,16 @@ function _renderProfileStats(boxId) {
   var box = document.getElementById(boxId || S._pimStatsBox || 'pim-stats');
   if (!box) return;
   var eligible = S._statsEligible;
-  var board    = S._boardEligible;
   if (!eligible && S._pimTab !== 'session') S._pimTab = 'session';
-  if (!board && S._pimTab === 'board') S._pimTab = 'session';
+  if (S._pimTab === 'board') S._pimTab = 'session'; // ancien onglet, deplace vers "LAN"
   function tb(id, label) {
     return '<button class="stats-tab'+(S._pimTab===id?' active':'')+'" onclick="window._pimSetTab(\''+id+'\')">'+label+'</button>';
   }
   var tabs = eligible
-    ? '<div class="stats-tabs">'+tb('session',t('statTabSession'))+tb('life',t('statTabLife'))
-      + (board ? tb('board',t('statTabBoard')) : '') + '</div>'
+    ? '<div class="stats-tabs">'+tb('session',t('statTabSession'))+tb('life',t('statTabLife'))+'</div>'
     : '';
-  var body;
-  if (S._pimTab === 'life')       body = window._statsBodyLife();
-  else if (S._pimTab === 'board') body = '<div id="pim-board-body" class="stats-body"><div class="stat-empty">…</div></div>';
-  else                          body = window._statsBodySession();
+  var body = (S._pimTab === 'life') ? window._statsBodyLife() : window._statsBodySession();
   box.innerHTML = tabs + body;
-  if (S._pimTab === 'board') window.renderBoard('pim-board-body');
   if (window._offlineMode && typeof window._achMountBadge === 'function') { try { window._achMountBadge(box, 'profile'); } catch (e) {} }
 }
 

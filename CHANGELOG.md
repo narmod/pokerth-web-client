@@ -16,6 +16,28 @@ release. Per-build detail is on the
 highlights below.
 
 ### Added
+- **Player profile window: three top-level tabs** (`web.138`) — the
+  "Player profile" window (`pp-modal`, opened from your own avatar) used to
+  stack an always-visible "My statistics" box above a "Cups" block with its
+  own internal PokerTH/BBC/WEC sub-tabs — a layout mixing two different
+  patterns and, since the LAN fix in `web.137`, mismatched needs (LAN
+  players got a stats box with no cups to show below it). Replaced with
+  three top-level tabs, one per data source, each shown only where its
+  data applies: **Coupes** (PokerTH/BBC/WEC, pokerth.net only) —
+  **Local/Entraînement** (session + lifetime stats, unchanged internal
+  Session/Total sub-tabs and reset button, shown whenever `S._statsEligible`
+  — pokerth.net, LAN/private, or training) — **LAN** (the family
+  leaderboard, `renderBoard`, unfiltered, shown only when
+  `S._boardEligible`). Default tab: LAN if available, else Coupes, else
+  Local/Entraînement (the only one left in training). Opponents' profiles
+  are unaffected (cups only, no tab bar — none of the other data is theirs
+  to show). The old `.pp-sec` bordered wrapper and the "board" sub-tab of
+  `_renderProfileStats` are removed (dead code); `_boardSetSort` (`stats.mjs`)
+  now repaints `pp-lan-wrap` instead. No new translated strings — tab
+  labels reuse the existing `ppMyStats`/`piCups` keys plus the untranslated
+  "LAN" convention. `test-pim-parity.mjs` updated for the new structure
+  (tab presence/absence per mode, default active tab, pane show/hide on
+  click); manual jsdom check covers the training-only case (single tab).
 - **My avatar: stats/reset accessible in LAN / private server** (`web.137`)
   — `_cupsBlockHtml` (`player-popup.mjs`) used to gate its "📊 Player
   profile" button on being connected to pokerth.net (`onNet`), so on LAN

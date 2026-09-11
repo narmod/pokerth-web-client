@@ -4112,24 +4112,79 @@ if ('serviceWorker' in navigator && !window.LIVE_MODE) {
     try { if (window.zRaise) window.zRaise(m); } catch (e) {}
     var titleEl = $('pp-who');
     if (titleEl) titleEl.textContent = nick;
-    // Mes stats de session d'abord (locales, instantanees), les coupes
-    // ensuite (reseau).
     var isSelf = false;
     try { isSelf = (pid != null && window.PthState && pid === window.PthState.myId); } catch (e) {}
-    // Mes stats de session dans LEUR carte, avec un en-tete : melangees au
-    // bloc coupes juste en dessous, on ne voyait plus ou finissaient les
-    // mesures locales et ou commencaient les classements du serveur.
-    body.innerHTML = (isSelf
-        ? '<div class="pp-sec"><div class="rk-cups-h">\uD83D\uDCCA '
-          + rkEsc(rkT('ppMyStats', 'My statistics'))
-          + '</div><div id="pp-session"></div></div>'
-        : '')
-      + '<div id="pp-cups"></div>';
-    if (isSelf && typeof window._pimRenderSessionStats === 'function') {
-      try { window._pimRenderSessionStats('pp-session'); } catch (e) {}
+    if (!isSelf) {
+      // Adversaire : uniquement les coupes (les autres sources sont MES
+      // donnees locales, sans objet pour son profil a lui).
+      body.innerHTML = '<div id="pp-cups"></div>';
+      if (typeof window.rkLoadPlayerCups === 'function') {
+        try { window.rkLoadPlayerCups(nick, 'pp-cups'); } catch (e) {}
+      }
+      return;
     }
-    if (typeof window.rkLoadPlayerCups === 'function') {
-      try { window.rkLoadPlayerCups(nick, 'pp-cups'); } catch (e) {}
+    // MOI : trois sources de donnees, trois onglets de premier niveau (demande
+    // narmod 11/09 — avant, mes stats de session vivaient toujours au-dessus
+    // du bloc coupes, melangeant deux mises en page differentes) :
+    //  - Coupes         : classements PokerTH/BBC/WEC (pokerth.net uniquement)
+    //  - Local/Entrainement : mes stats de session + a vie (onglets internes
+    //    inchanges, cf. _renderProfileStats) — partout ou elles existent
+    //  - LAN             : classement familial complet (LAN/serveur prive)
+    // Chaque onglet n'apparait que si sa source de donnees existe dans le
+    // mode courant ; par defaut on ouvre LAN si dispo, sinon Coupes, sinon
+    // Local/Entrainement (seul restant en entrainement hors ligne).
+    var modeEl = document.getElementById('login-mode');
+    var onNet = !!(modeEl && (modeEl.value === 'guest' || modeEl.value === 'auth'));
+    var st = window.PthState;
+    var boardOk = !!(st && st._boardEligible);
+    var ppTabsDef = [
+      { id: 'coupes', label: '\uD83C\uDFC6 ' + rkEsc(rkT('piCups', 'Cups')), show: onNet },
+      { id: 'local',  label: '\uD83D\uDCCA ' + rkEsc(rkT('ppMyStats', 'My statistics')), show: true },
+      { id: 'lan',    label: 'LAN', show: boardOk }
+    ];
+    var ppVisible = ppTabsDef.filter(function (d) { return d.show; });
+    var ppDef = boardOk ? 'lan' : (onNet ? 'coupes' : 'local');
+    if (!ppVisible.some(function (d) { return d.id === ppDef; })) ppDef = ppVisible[0].id;
+    var ppTabsHtml = '<div class="rk-tabs">' + ppVisible.map(function (d) {
+      return '<button type="button" class="rk-tab' + (d.id === ppDef ? ' active' : '') + '" data-tab="' + d.id + '" onclick="window._ppSelect(\'' + d.id + '\')">' + d.label + '</button>';
+    }).join('') + '</div>';
+    body.innerHTML = ppTabsHtml
+      + '<div id="pp-pane-coupes" style="display:none"><div id="pp-cups"></div></div>'
+      + '<div id="pp-pane-local" style="display:none"><div id="pp-session"></div></div>'
+      + '<div id="pp-pane-lan" style="display:none"><div id="pp-lan-wrap"></div></div>';
+    window._ppSelfCtx = { nick: nick, pid: pid };
+    window._ppSelect(ppDef);
+  };
+  // Selection d'un onglet de premier niveau de la fenetre "Profil du joueur"
+  // (MOI uniquement — cf. openPlayerProfile). Charge le contenu de l'onglet
+  // choisi ; les trois panes restent en place (juste masquees), les onglets
+  // internes de "Local/Entrainement" (Session/A vie) restent geres par
+  // _pimSetTab / _renderProfileStats, inchanges.
+  window._ppSelect = function (id) {
+    var tabs = document.querySelectorAll('#pp-modal .rk-tab[data-tab]');
+    for (var i = 0; i < tabs.length; i++) tabs[i].classList.toggle('active', tabs[i].dataset.tab === id);
+    ['coupes', 'local', 'lan'].forEach(function (k) {
+      var p = $('pp-pane-' + k); if (p) p.style.display = (k === id) ? '' : 'none';
+    });
+    var ctx = window._ppSelfCtx; if (!ctx) return;
+    if (id === 'coupes') {
+      if (typeof window.rkLoadPlayerCups === 'function') {
+        try { window.rkLoadPlayerCups(ctx.nick, 'pp-cups'); } catch (e) {}
+      }
+    } else if (id === 'local') {
+      if (typeof window._pimRenderSessionStats === 'function') {
+        try { window._pimRenderSessionStats('pp-session'); } catch (e) {}
+      }
+    } else if (id === 'lan') {
+      var w = $('pp-lan-wrap');
+      if (w) {
+        if (typeof window.renderBoard === 'function') {
+          w.innerHTML = '<div class="rk-msg">' + rkEsc(rkT('rankingLoading', 'Loading\u2026')) + '</div>';
+          window.renderBoard('pp-lan-wrap');
+        } else {
+          w.innerHTML = '<div class="rk-msg">' + rkEsc(rkT('rankingError', 'Could not load the ranking.')) + '</div>';
+        }
+      }
     }
   };
   window.closePlayerProfile = function () {

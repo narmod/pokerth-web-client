@@ -130,24 +130,29 @@ ok(w.document.getElementById('pp-cups') !== null, 'fenetre : conteneur des coupe
 ok(w.document.getElementById('pp-session') === null,
    'fenetre (autre joueur) : pas de stats de session — elles sont locales a moi');
 
-// Pour MOI, la fenetre porte en plus mes stats de session.
+// Pour MOI, la fenetre porte en plus mes stats de session — desormais dans
+// son propre onglet "Local/Entrainement" plutot qu'un bloc encadre toujours
+// visible au-dessus des coupes (narmod 11/09 : 3 onglets de premier niveau,
+// un par source de donnees — Coupes / Local-Entrainement / LAN).
 w._plOpenStats(1);
 ok(w.document.getElementById('pp-session') !== null,
    'fenetre (moi) : mes stats de session sont presentes');
-// Elles doivent etre VISUELLEMENT distinctes du bloc coupes : encadrees et
-// coiffees d'un titre. Melangees, on ne voyait plus ou finissaient les
-// mesures locales et ou commencaient les classements du serveur.
-const sessSec = w.document.querySelector('#pp-body .pp-sec');
-ok(sessSec !== null, 'fenetre (moi) : les stats de session ont leur propre carte');
-ok(sessSec && sessSec.contains(w.document.getElementById('pp-session')),
-   'fenetre (moi) : la carte contient bien le bloc de stats');
-ok(sessSec && sessSec.querySelector('.rk-cups-h') !== null,
-   'fenetre (moi) : la carte porte un en-tete');
-const hdr = sessSec && sessSec.querySelector('.rk-cups-h');
-ok(hdr && hdr.textContent.trim().length > 2 && !/ppMyStats/.test(hdr.textContent),
-   'fenetre (moi) : en-tete traduit, pas la cle brute (' + (hdr ? hdr.textContent.trim() : '') + ')');
-const cssTxt = readFileSync('public/pokerth.css', 'utf8');
-ok(/\.pp-sec \{[^}]*border:/.test(cssTxt), 'css : la carte des stats est encadree');
+const localTab = w.document.querySelector('#pp-modal .rk-tab[data-tab="local"]');
+ok(localTab !== null, 'fenetre (moi) : l onglet Local/Entrainement existe');
+ok(localTab && localTab.textContent.trim().length > 2 && !/ppMyStats/.test(localTab.textContent),
+   'fenetre (moi) : libelle de l onglet traduit, pas la cle brute (' + (localTab ? localTab.textContent.trim() : '') + ')');
+const lanTabNet = w.document.querySelector('#pp-modal .rk-tab[data-tab="lan"]');
+ok(lanTabNet === null, 'fenetre (moi) sur pokerth.net : pas d onglet LAN (S._boardEligible faux ici)');
+const coupesTab = w.document.querySelector('#pp-modal .rk-tab[data-tab="coupes"]');
+ok(coupesTab && coupesTab.classList.contains('active'),
+   'fenetre (moi) sur pokerth.net : Coupes est l onglet actif par defaut');
+ok(w.document.getElementById('pp-pane-local').style.display === 'none',
+   'fenetre (moi) : le pane Local/Entrainement est bien masque tant que Coupes est actif');
+w._ppSelect('local');
+ok(w.document.getElementById('pp-pane-local').style.display !== 'none',
+   'fenetre (moi) : cliquer l onglet Local/Entrainement l affiche');
+ok(w.document.getElementById('pp-pane-coupes').style.display === 'none',
+   'fenetre (moi) : ... et masque le pane Coupes');
 ok(typeof w._pimRenderSessionStats === 'function',
    'rendu des stats de session adressable a un conteneur au choix');
 
@@ -174,7 +179,14 @@ if (lanBtns[0]) {
   try { vm.runInContext(lanAttr, ctx, { filename: 'onclick-lan.js' }); } catch (e) { lanClickErr = e; }
   ok(!lanClickErr, 'MA fiche en LAN : le bouton ouvre bien la fenetre (' + (lanClickErr ? lanClickErr.message : 'ok') + ')');
   ok(w.document.getElementById('pp-session') !== null,
-     'MA fiche en LAN : la fenetre contient mes stats de session (SESSION/TOTAL/CLASSEMENT + reset)');
+     'MA fiche en LAN : la fenetre contient mes stats de session (Session/Total + reset)');
+  const coupesTabLan = w.document.querySelector('#pp-modal .rk-tab[data-tab="coupes"]');
+  ok(coupesTabLan === null, 'MA fiche en LAN : pas d onglet Coupes (hors pokerth.net)');
+  const lanTabLan = w.document.querySelector('#pp-modal .rk-tab[data-tab="lan"]');
+  ok(lanTabLan !== null && lanTabLan.classList.contains('active'),
+     'MA fiche en LAN : l onglet LAN existe et est actif par defaut');
+  ok(w.document.getElementById('pp-lan-wrap') !== null,
+     'MA fiche en LAN : le conteneur du classement familial existe');
 }
 // La fiche d'un AUTRE joueur en LAN reste sans bouton (pas mes donnees).
 w.openPlayerInfoPopup(2);

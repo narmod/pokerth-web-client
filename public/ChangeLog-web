@@ -1,4 +1,6 @@
-2026-09-11 version 2.1.8-web.137 (current series):
+2026-09-11 version 2.1.8-web.138 (current series):
+- improvement: the Player profile window (from your own avatar) is now organized as three tabs - Cups, Local/Training, and LAN - each shown only when it applies, instead of a stats box always stacked above the cups
+2026-09-11 version 2.1.8-web.137:
 - bugfix: in LAN or private-server games, clicking your own avatar now lets you open your statistics (score, total stats) and reset them again - this button had accidentally only ever worked when connected to pokerth.net
 2026-09-11 version 2.1.8-web.136:
 - new: the Table ranking window (podium button) now has a LAN tab when you're connected to a LAN or private-server game - it shows the family leaderboard for just the players sitting at this table

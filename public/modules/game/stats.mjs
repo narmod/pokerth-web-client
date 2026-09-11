@@ -230,7 +230,6 @@ function _boardSetSort(k) {
   S._boardSort = k;
   try { localStorage.setItem('pth_board_sort', k); } catch(e) {}
   if (document.getElementById('stats-board-body')) renderBoard('stats-board-body');
-  if (document.getElementById('pim-board-body'))   renderBoard('pim-board-body');
   // Onglet LAN de la fenetre des classements (pokerth-client.html).
   var _rkl = document.getElementById('rk-lan-wrap');
   if (_rkl && _rkl.style.display !== 'none') renderBoard('rk-lan-wrap');
@@ -239,6 +238,11 @@ function _boardSetSort(k) {
   // trSelectLan dans pokerth-client.html).
   var _trl = document.getElementById('trk-lan-wrap');
   if (_trl && _trl.style.display !== 'none') renderBoard('trk-lan-wrap', window._trkLanFilter);
+  // Onglet LAN de la fenetre "Profil du joueur" (openPlayerProfile) — classement
+  // familial complet, non filtre (narmod 11/09 : promu au rang d'onglet
+  // de premier niveau, aux cotes de Coupes et Local/Entrainement).
+  var _ppl = document.getElementById('pp-lan-wrap');
+  if (_ppl && _ppl.style.display !== 'none') renderBoard('pp-lan-wrap');
 }
 window._boardSetSort = _boardSetSort;
 
