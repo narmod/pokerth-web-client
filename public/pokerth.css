@@ -4168,11 +4168,11 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
    sur les rendus existants pour eviter toute regression) :
    desktop 1.35 (≈62x87) · tablette/base 1.0 (46x64 natif) ·
    phone portrait 1.15 (≈53x74) · paysage compact 0.62 (≈29x40). */
-:root { --comm-scale: 1; }
-@media (min-width: 900px) and (min-height: 600px) { :root { --comm-scale: 1.35; } }
+:root { --standard-comm-scale: 1; --comm-scale: var(--standard-comm-scale); }
+@media (min-width: 900px) and (min-height: 600px) { :root { --standard-comm-scale: 1.35; } }
 /* Exception canon (décision B) — voir §RESPONSIVE OVAL SIZE. */
-@media (max-width: 740px) and (orientation: portrait) { :root { --comm-scale: 1.15; } }
-@media (orientation: landscape) and (max-height: 600px) { :root { --comm-scale: 0.62; } }
+@media (max-width: 740px) and (orientation: portrait) { :root { --standard-comm-scale: 1.15; } }
+@media (orientation: landscape) and (max-height: 600px) { :root { --standard-comm-scale: 0.62; } }
 .comm-row {
   position: absolute;
   /* --comm-shift-y : décalage vertical piloté par renderSeats (parité QML

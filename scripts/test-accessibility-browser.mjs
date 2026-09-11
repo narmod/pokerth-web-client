@@ -35,6 +35,27 @@ async function check(name, action) {
   passed++;
 }
 
+async function waitForAppSessionReady(page) {
+  await page.waitForLoadState('load');
+  await page.waitForFunction(() => document.readyState === 'complete'
+    && window.App && typeof window.App.connect === 'function'
+    && window.PthState && typeof window.applyAccessibilityPreferences === 'function'
+    && document.querySelector('#s-connect .btn-primary'));
+  const readiness = await page.evaluate(async () => {
+    const session = await import('/modules/net/session.mjs');
+    return {
+      document: document.readyState,
+      appConnect: typeof window.App.connect,
+      sessionShow: typeof session.show,
+      state: !!window.PthState,
+      connectScreen: !!document.querySelector('#s-connect .btn-primary'),
+    };
+  });
+  assert.deepEqual(readiness, {
+    document: 'complete', appConnect: 'function', sessionShow: 'function', state: true, connectScreen: true,
+  }, 'application/session boundary was not ready after navigation');
+}
+
 async function chooseInterfaceSize(page, surface, value) {
   await page.locator(`#accessibility-open-${surface}`).click();
   await page.locator(`input[name="interface-size"][value="${value}"]`).check();
@@ -122,7 +143,7 @@ async function startActiveHand(page, seatCount, options = {}) {
     localStorage.setItem('pth_interface_size', size);
   }, interfaceSize);
   await page.reload({ waitUntil: 'domcontentloaded' });
-  await page.waitForFunction(() => typeof window.applyAccessibilityPreferences === 'function');
+  await waitForAppSessionReady(page);
   await page.evaluate(async () => (await import('/modules/net/session.mjs')).show('s-connect'));
   await page.locator('#s-connect.active').waitFor();
   await page.locator('.login-card').nth(2).click();
@@ -240,6 +261,32 @@ async function waitForStableTableLayout(page) {
     };
     requestAnimationFrame(sample);
   }));
+}
+
+async function exerciseLoupeRestoration(page, label) {
+  await waitForStableTableLayout(page);
+  assert.equal(await page.locator('html').getAttribute('data-interface-size'), 'extra-large', `${label} lost Extra Large`);
+  assert.equal(await page.locator('html').getAttribute('data-adaptive-play'), 'constrained-extra-large', `${label} lost adaptive play`);
+  const base = await activeHandRects(page);
+  for (const [name, rect] of Object.entries({ cards: base.cards, pot: base.pot, blinds: base.blinds, currentTurn: base.activeSeat, timer: base.activeTimer, actions: base.actions, status: base.status })) {
+    assertReachable(rect, base.viewport, `${label} ${name}`);
+  }
+  await page.locator('#g-zoom-toggle').click();
+  await waitForStableTableLayout(page);
+  const magnified = await activeHandRects(page);
+  assert.equal(await page.locator('#g-zoom-toggle').getAttribute('aria-pressed'), 'true', `${label} loupe did not activate`);
+  assert.ok(magnified.cards.width >= base.cards.width * 1.8, `${label} loupe did not visibly enlarge cards`);
+  await page.locator('#g-zoom-toggle').click();
+  await waitForStableTableLayout(page);
+  const restored = await activeHandRects(page);
+  assert.equal(await page.locator('#g-zoom-toggle').getAttribute('aria-pressed'), 'false', `${label} loupe did not deactivate`);
+  assert.ok(Math.abs(restored.cards.width - base.cards.width) <= 1,
+    `${label} loupe did not restore cards: ${base.cards.width} -> ${restored.cards.width}`);
+  for (const [index, seat] of restored.seats.entries()) {
+    assert.ok(Math.abs(seat.width - base.seats[index].width) <= 1 && Math.abs(seat.height - base.seats[index].height) <= 1,
+      `${label} loupe did not restore seat ${index + 1}`);
+  }
+  return restored;
 }
 
 async function visibleCardOutcomes(page) {
@@ -515,7 +562,8 @@ async function assertKeyboardFocusVisible(page, selectors, label) {
 console.log('test-accessibility-browser');
 try {
   await page.goto(`http://127.0.0.1:${address.port}/`, { waitUntil: 'domcontentloaded' });
-  await page.waitForFunction(() => typeof window.applyAccessibilityPreferences === 'function' && typeof window.exportWebBackup === 'function');
+  await waitForAppSessionReady(page);
+  await page.waitForFunction(() => typeof window.exportWebBackup === 'function');
 
   await check('the pre-login entry point discovers and opens the accessibility panel', async () => {
     await page.locator('#accessibility-open-connect').click();
@@ -1464,6 +1512,38 @@ try {
     for (const [name, rect] of Object.entries({ cards: offRoundTrip.cards, pot: offRoundTrip.pot, blinds: offRoundTrip.blinds, currentTurn: offRoundTrip.activeSeat, timer: offRoundTrip.activeTimer, actions: offRoundTrip.actions, status: offRoundTrip.status })) {
       assertReachable(rect, offRoundTrip.viewport, `cold-start restored Extra Large ${name}`);
     }
+  });
+  await check('persisted Extra Large refreshes Standard metrics across orientation changes', async () => {
+    await page.evaluate(() => localStorage.setItem('pth_table_zoom', '1'));
+    await startActiveHand(page, 10, { interfaceSize: 'extra-large', viewport: { width: 390, height: 844 } });
+    await page.evaluate(() => {
+      const nativeMatchMedia = window.matchMedia.bind(window);
+      window.matchMedia = (query) => query === '(pointer: coarse)'
+        ? { matches: true, media: query, onchange: null, addListener() {}, removeListener() {}, addEventListener() {}, removeEventListener() {}, dispatchEvent() { return true; } }
+        : nativeMatchMedia(query);
+      window.applyAdvOpts();
+      window._loupeBtnSync();
+    });
+    const portraitBefore = await exerciseLoupeRestoration(page, 'cold portrait');
+    await page.setViewportSize({ width: 844, height: 390 });
+    const landscape = await exerciseLoupeRestoration(page, 'rotated landscape');
+    await page.setViewportSize({ width: 390, height: 844 });
+    const portraitAfter = await exerciseLoupeRestoration(page, 'returned portrait');
+    assert.ok(Math.abs(portraitAfter.cards.width - portraitBefore.cards.width) <= 1,
+      `portrait geometry did not return to its current-viewport baseline: ${portraitBefore.cards.width} -> ${portraitAfter.cards.width}`);
+    await startActiveHand(page, 10, { interfaceSize: 'extra-large', viewport: { width: 844, height: 390 } });
+    await page.evaluate(() => {
+      const nativeMatchMedia = window.matchMedia.bind(window);
+      window.matchMedia = (query) => query === '(pointer: coarse)'
+        ? { matches: true, media: query, onchange: null, addListener() {}, removeListener() {}, addEventListener() {}, removeEventListener() {}, dispatchEvent() { return true; } }
+        : nativeMatchMedia(query);
+      window.applyAdvOpts();
+      window.renderSeats();
+    });
+    await waitForStableTableLayout(page);
+    const freshLandscape = await activeHandRects(page);
+    assert.ok(Math.abs(landscape.cards.width - freshLandscape.cards.width) <= 1,
+      `rotated landscape retained a stale viewport baseline: ${landscape.cards.width} -> ${freshLandscape.cards.width}`);
   });
   console.log(`PASS ${passed}/${passed}`);
 } finally {
