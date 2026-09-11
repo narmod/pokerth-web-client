@@ -1,4 +1,6 @@
-2026-09-11 version 2.1.8-web.135 (current series):
+2026-09-11 version 2.1.8-web.136 (current series):
+- new: the Table ranking window (podium button) now has a LAN tab when you're connected to a LAN or private-server game - it shows the family leaderboard for just the players sitting at this table
+2026-09-11 version 2.1.8-web.135:
 - improvement: pressing Escape now closes the Accessibility panel first if it's open over another screen, such as the login form, instead of acting on that screen underneath - this closes out the Accessibility feature (interface size, high contrast, entry points, mobile layouts); thanks to @seanpianka for the contribution
 2026-09-11 version 2.1.8-web.134:
 - new: the High contrast toggle in the Accessibility panel now actually changes how the app looks - a dedicated high-contrast palette for the interface, felt, and cards; turning it off brings back your exact previous look. This was the last accessibility option still waiting for its on-screen effect - the panel is now fully working end to end

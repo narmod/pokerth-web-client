@@ -3212,6 +3212,7 @@ if ('serviceWorker' in navigator && !window.LIVE_MODE) {
       <button type="button" class="rk-tab" data-src="pth" onclick="trSelect('pth')" data-i18n="rankingPth">PokerTH</button>
       <button type="button" class="rk-tab" data-src="bbc" onclick="trSelect('bbc')" data-i18n="rankingBbc">BBC</button>
       <button type="button" class="rk-tab" data-src="wec" onclick="trSelect('wec')" data-i18n="rankingWec">WEC</button>
+      <button type="button" class="rk-tab rk-tab-lan" data-src="lan" onclick="trSelect('lan')" style="display:none">LAN</button>
     </div>
     <div class="rk-body" tabindex="-1" data-kn-focus data-kn-read>
       <div class="trk-sub" id="trk-sub"></div>
@@ -3219,6 +3220,10 @@ if ('serviceWorker' in navigator && !window.LIVE_MODE) {
       <div class="rk-msg" id="trk-error" data-i18n="rankingError" style="display:none">Could not load the ranking.</div>
       <div class="rk-msg" id="trk-empty" data-i18n="rankingEmpty" style="display:none">No entries.</div>
       <div id="trk-table-wrap" style="display:none"></div>
+      <!-- Onglet LAN : classement familial (/stats) filtre aux joueurs assis a
+           cette table. Rendu delegue a renderBoard (game/stats.mjs), meme
+           logique que rk-lan-wrap dans le classement general. -->
+      <div id="trk-lan-wrap" style="display:none"></div>
     </div>
   </div>
 </div>
@@ -4342,6 +4347,8 @@ if ('serviceWorker' in navigator && !window.LIVE_MODE) {
   function _lanAllowed() {
     try { var st = window.PthState; return !window._offlineMode && !!(st && st._boardEligible); } catch (e) { return false; }
   }
+  // Reutilise par l'onglet LAN de "Classement de la table" (autre IIFE plus bas).
+  window._lanAllowed = _lanAllowed;
   window.rankingSelectLan = function () {
     rkSetView('list');
     rkFetchSeq++;                                  // une reponse /api/ranking en vol ne repeint plus la liste
@@ -4470,6 +4477,7 @@ if ('serviceWorker' in navigator && !window.LIVE_MODE) {
       var e = $('trk-' + st); if (e) e.style.display = (st === which) ? '' : 'none';
     });
     var tw = $('trk-table-wrap'); if (tw) tw.style.display = (which === 'table') ? '' : 'none';
+    var lw = $('trk-lan-wrap'); if (lw) lw.style.display = (which === 'lan') ? '' : 'none';
   }
 
   function trTitleSub() {
@@ -4482,8 +4490,11 @@ if ('serviceWorker' in navigator && !window.LIVE_MODE) {
     }
     var sub = $('trk-sub');
     if (sub) {
-      var k = (TR_SRC === 'bbc') ? 'tableRankSubBbc' : (TR_SRC === 'wec') ? 'tableRankSubWec' : 'tableRankSubPth';
-      sub.textContent = trT(k, 'Current season standings of the players at this table.');
+      if (TR_SRC === 'lan') { sub.textContent = ''; }
+      else {
+        var k = (TR_SRC === 'bbc') ? 'tableRankSubBbc' : (TR_SRC === 'wec') ? 'tableRankSubWec' : 'tableRankSubPth';
+        sub.textContent = trT(k, 'Current season standings of the players at this table.');
+      }
     }
   }
 
@@ -4565,7 +4576,32 @@ if ('serviceWorker' in navigator && !window.LIVE_MODE) {
       .catch(function () { if (seq === trFetchSeq) { TR_CUR = { state: 'error', rows: [], cols: [] }; trRender(); } });
   }
 
+  function _trLanAllowed() {
+    try { return typeof window._lanAllowed === 'function' && window._lanAllowed(); } catch (e) { return false; }
+  }
+  // Onglet LAN : classement familial (/stats, meme donnees que rk-lan-wrap du
+  // classement general) filtre aux seuls pseudos assis a CETTE table — meme
+  // esprit que le filtrage client BBC/WEC ci-dessus, mais source LAN/serveur
+  // prive. window._trkLanFilter est relu par _boardSetSort (game/stats.mjs)
+  // pour repeindre ce panneau quand le critere de tri change.
+  function trSelectLan() {
+    TR_SRC = 'lan';
+    var tabs = document.querySelectorAll('#tableranking-modal .rk-tab');
+    for (var i = 0; i < tabs.length; i++) tabs[i].classList.toggle('active', tabs[i].dataset.src === 'lan');
+    trTitleSub();
+    trState('lan');
+    var w = $('trk-lan-wrap'); if (!w) return;
+    window._trkLanFilter = (TR_CTX && TR_CTX.nicks) ? TR_CTX.nicks : [];
+    if (typeof window.renderBoard !== 'function') {
+      w.innerHTML = '<div class="rk-msg">' + trEsc(trT('rankingError', 'Could not load the ranking.')) + '</div>';
+      return;
+    }
+    w.innerHTML = '<div class="rk-msg">' + trEsc(trT('rankingLoading', 'Loading\u2026')) + '</div>';
+    window.renderBoard('trk-lan-wrap', window._trkLanFilter);
+  }
   window.trSelect = function (src) {
+    if (src === 'lan' && !_trLanAllowed()) src = 'pth';
+    if (src === 'lan') { trSelectLan(); return; }
     if (TR_SRCS.indexOf(src) < 0) src = 'pth';
     TR_SRC = src;
     var tabs = document.querySelectorAll('#tableranking-modal .rk-tab');
@@ -4587,7 +4623,14 @@ if ('serviceWorker' in navigator && !window.LIVE_MODE) {
       m.classList.add('rk-floating');
       try { window._enableFloating(card, { handle: $('trk-title'), resizable: true, maxW: Math.min(1010, Math.round(window.innerWidth * 0.92)), maxH: Math.min(680, Math.round(window.innerHeight * 0.90)), zoom: true, key: 'pth-trk-win', defW: 460, defH: 420, minW: 320, minH: 280, defLeft: 80, defTop: 90 }); } catch (e) {}
     }
+    // Onglet LAN : uniquement connecte en LAN / serveur prive, et ouvert par
+    // defaut la ou il est disponible — memes regles que le classement general
+    // (les classements pokerth.net ne concernent pas ces joueurs).
+    var lanTab = document.querySelector('#tableranking-modal .rk-tab-lan');
+    var lanOk = _trLanAllowed();
+    if (lanTab) lanTab.style.display = lanOk ? '' : 'none';
     var def = 'pth'; try { def = localStorage.getItem('pth_rank_src') || 'pth'; } catch (e) {}
+    if (lanOk) def = 'lan';
     window.trSelect(def);
   };
   window.toggleTableRanking = function () {

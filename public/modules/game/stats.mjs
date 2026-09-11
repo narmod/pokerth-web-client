@@ -234,10 +234,23 @@ function _boardSetSort(k) {
   // Onglet LAN de la fenetre des classements (pokerth-client.html).
   var _rkl = document.getElementById('rk-lan-wrap');
   if (_rkl && _rkl.style.display !== 'none') renderBoard('rk-lan-wrap');
+  // Onglet LAN de la fenetre "Classement de la table" — meme classement
+  // familial, filtre aux pseudos de la table (window._trkLanFilter, pose par
+  // trSelectLan dans pokerth-client.html).
+  var _trl = document.getElementById('trk-lan-wrap');
+  if (_trl && _trl.style.display !== 'none') renderBoard('trk-lan-wrap', window._trkLanFilter);
 }
 window._boardSetSort = _boardSetSort;
 
-function renderBoard(targetId) {
+// Fold nom (case + diacritiques) pour le filtrage par pseudos — meme esprit
+// que trFold/rkFold dans pokerth-client.html (comparaisons tolerantes).
+function _boardFold(s) { return String(s == null ? '' : s).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, ''); }
+
+// filterNames (optionnel) : tableau de pseudos — restreint le classement
+// familial a ces joueurs (utilise par l'onglet LAN de "Classement de la
+// table" : memes donnees /stats, vue limitee aux joueurs assis a la table
+// courante).
+function renderBoard(targetId, filterNames) {
   var boxId = targetId || 'stats-board-body';
   fetch('/stats', { cache:'no-store' })
     .then(function(r){ return r.ok ? r.json() : {}; })
@@ -245,6 +258,11 @@ function renderBoard(targetId) {
       var box = document.getElementById(boxId);
       if (!box) return;
       var arr = Object.keys(data || {}).map(function(name){ var v = data[name] || {}; v.name = name; return v; });
+      if (filterNames && filterNames.length) {
+        var want = {};
+        for (var f=0; f<filterNames.length; f++) want[_boardFold(filterNames[f])] = true;
+        arr = arr.filter(function(p){ return want[_boardFold(p.name)]; });
+      }
       arr.sort(_boardCmp(S._boardSort));
       // Sort selector (↕). Labels reuse existing stat keys; only net/100 is new.
       var opt = function(id, lbl){ return '<option value="'+id+'"'+(S._boardSort===id?' selected':'')+'>'+esc(lbl)+'</option>'; };

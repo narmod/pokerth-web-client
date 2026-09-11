@@ -16,6 +16,17 @@ release. Per-build detail is on the
 highlights below.
 
 ### Added
+- **Table ranking: LAN tab** (`web.136`) — the "Table ranking" window
+  (podium button in the game header) gains a fourth tab, LAN, shown only
+  when connected to a LAN / private server (`_boardEligible`, opened by
+  default there). It reuses the same family leaderboard as the general
+  ranking window's LAN tab (`/stats`, `renderBoard` in `game/stats.mjs`)
+  but filtered to the nicks currently seated at this table —
+  `renderBoard(targetId, filterNames)` now accepts an optional name
+  filter, matched case/diacritic-insensitively. Sort-criterion changes
+  (`_boardSetSort`) repaint this panel too. No new translated strings:
+  the tab label follows the existing untranslated "LAN" convention and
+  the subtitle is left blank, exactly like the general ranking modal.
 - **Accessibility: Escape priority on the modal** (`web.135`, community
   contribution by @seanpianka, scope 7/N, final) — `keynav.mjs` gains
   `['accessibility-modal', 'closeAccessibility']`, so Escape closes the
