@@ -11040,7 +11040,7 @@ function renderPlayersList() {
   var _fullTmpl = _plColOrder().map(_plTrack).join(' ');
   var _headHtml = '<div class="pl-colhead" style="grid-template-columns:' + _fullTmpl + '">'
                 + _plColHeadHtml() + '</div>';
-  try { body.style.setProperty('--pl-cols', _fullTmpl); } catch (e) {}
+  try { body.style.setProperty('--pl-cols', _visCols.map(_plTrack).join(' ')); } catch (e) {}
   // Build the list of {pid, name} from _lobbyPids (defined inside
   // the IIFE; we read it via window-level references).
   var pids = window._readLobbyPids ? window._readLobbyPids() : [];
@@ -11198,11 +11198,12 @@ function renderPlayersList() {
       }
       return '';
     };
-    // Colonnes masquées : cellule VIDE (la piste reste présente) plutôt que
-    // retirée → les colonnes restent alignées sous leurs pastilles quel que
-    // soit l'état des toggles (l'en-tête utilise aussi le gabarit complet).
+    // Colonnes masquées : piste RETIRÉE (pas de cellule vide) → le nom
+    // récupère vraiment la largeur. L'en-tête garde son propre gabarit
+    // complet (_fullTmpl, fixe) pour rester une barre de pastilles stable ;
+    // il n'a donc plus besoin d'être aligné piste à piste avec les lignes.
     return '<div class="pl-row' + (r.isMe ? ' pl-me' : '') + '">'
-      + _plColOrder().map(function (k) { return _plColVisible(k) ? _plCell(k) : '<span class="pl-cell-off"></span>'; }).join('')
+      + _visCols.map(function (k) { return _plCell(k); }).join('')
       + '</div>';
   };
   var _tt = function(k, fb) { return (typeof t === 'function' && t(k) !== k) ? t(k) : fb; };
@@ -11570,7 +11571,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.8-web.140'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.8-web.141'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif ou la palette High contrast
    (Android, Safari, iOS standalone récent). Lit --theme-color et met

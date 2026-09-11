@@ -801,6 +801,13 @@ highlights below.
   (`scale 1.03`, 180 ms OutQuad) is applied to the seat plate.
 
 ### Fixed
+- **Hiding a column in the online-players list didn't reclaim any width**
+  (`web.141`) — toggling off status/country/rating via the header chips only
+  cleared the cell content; the grid track stayed reserved at its fixed
+  width, so the name never actually got more room. `--pl-cols` (and the row
+  markup) is now built from the columns that are actually visible instead of
+  the full column list, so a hidden column truly drops its track. The header
+  chip bar keeps its own fixed layout and is unaffected.
 - **Cold boot could serve stale SW-cached JS/CSS with no update prompt**
   (`web.121`) — the `/__ver` update banner only compares two polls made
   *within* the same page load, so a session that starts fresh (app
