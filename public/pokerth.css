@@ -12494,6 +12494,14 @@ html[data-seat-struct="qml"] .seat-narrow .seat-name .seat-note-stars { font-siz
 :root[data-high-contrast="true"] #s-game { background-color:var(--hc-bg) !important; background-image:none !important; }
 :root[data-high-contrast="true"] :is(button,input,select,textarea,summary,[role="button"]) { border-color:var(--hc-text) !important; }
 :root[data-high-contrast="true"] :focus-visible { outline:3px solid var(--hc-focus) !important; outline-offset:3px !important; }
+:root[data-high-contrast="true"] :is(
+  #s-connect .connect-header .btn-icon,
+  #s-connect .connect-header #cl-links-connect > summary,
+  #s-lobby .header .btn-icon,
+  #s-game .header .btn-icon,
+  #s-create .cp-header .btn-icon,
+  #privacy-page .cp-header .btn-icon
+) { color:var(--hc-text) !important; }
 :root[data-high-contrast="true"] .felt-oval { background:var(--hc-bg) !important; border:3px solid var(--hc-text) !important; box-shadow:0 0 0 2px var(--hc-bg),0 0 0 5px var(--hc-text) !important; filter:none !important; }
 :root[data-high-contrast="true"] .felt-oval::before { display:none !important; }
 :root[data-high-contrast="true"] .pk:not(.back):not(.comm-slot) { background:var(--hc-text) !important; background-image:none !important; border:2px solid var(--hc-bg) !important; box-shadow:0 0 0 2px var(--hc-text) !important; color:var(--hc-bg) !important; }
