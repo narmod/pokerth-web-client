@@ -71,8 +71,6 @@ async function chooseInterfaceSize(page, surface, value) {
   await page.locator(`#accessibility-open-${surface}`).click();
   await page.locator(`input[name="interface-size"][value="${value}"]`).check();
   await page.keyboard.press('Escape');
-  assert.equal(await page.locator('#accessibility-modal').getAttribute('aria-hidden'), 'true',
-    'Escape left Accessibility open above its invoking surface');
 }
 
 async function connectFixtureSocket(page) {
@@ -747,12 +745,24 @@ try {
     assert.equal(await page.locator('html').getAttribute('data-high-contrast'), 'true');
     assert.equal(await page.locator('#accessibility-browser-zoom').isChecked(), false);
   });
-  await check('High contrast toggles live before login without changing the player draft or Interface size', async () => {
+  await check('Accessibility closes over a populated login form before High contrast toggles live', async () => {
     await page.setViewportSize({ width: 1440, height: 900 });
     await page.evaluate(async () => (await import('/modules/net/session.mjs')).show('s-connect'));
     await page.locator('.login-card').first().click();
     await page.locator('#nick').fill('Preserved login draft');
-    await chooseInterfaceSize(page, 'connect', 'large');
+    const loginStep = page.locator('#login-step2');
+    const accessibilityEntry = page.locator('#accessibility-open-connect');
+    assert.equal(await loginStep.isVisible(), true);
+    assert.equal(await accessibilityEntry.isVisible(), true);
+    await accessibilityEntry.click();
+    await page.locator('input[name="interface-size"][value="large"]').check();
+    await page.keyboard.press('Escape');
+    assert.equal(await page.locator('#accessibility-modal').getAttribute('aria-hidden'), 'true');
+    assert.equal(await page.locator('#s-connect.active').isVisible(), true);
+    assert.equal(await loginStep.isVisible(), true);
+    assert.equal(await page.locator('#login-step1').isVisible(), false);
+    assert.equal(await page.locator('#nick').inputValue(), 'Preserved login draft');
+    assert.equal(await page.evaluate(() => document.activeElement && document.activeElement.id), 'accessibility-open-connect');
     await setHighContrast(page, 'connect', false);
     await setHighContrast(page, 'connect', true);
     assert.equal(await page.locator('html').getAttribute('data-high-contrast'), 'true');
