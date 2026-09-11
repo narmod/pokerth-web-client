@@ -1544,6 +1544,14 @@ try {
     const freshLandscape = await activeHandRects(page);
     assert.ok(Math.abs(landscape.cards.width - freshLandscape.cards.width) <= 1,
       `rotated landscape retained a stale viewport baseline: ${landscape.cards.width} -> ${freshLandscape.cards.width}`);
+    await page.addStyleTag({ content: ':root { --standard-pot-font-base: 14px; --standard-pot-font-min: 11px; --standard-community-font-base: 1.1rem; }' });
+    await page.setViewportSize({ width: 390, height: 844 });
+    await waitForStableTableLayout(page);
+    const canonicalTokenFonts = await visibleMetrics(page, ['#g-potbar', '#g-comm .pk']);
+    assert.ok(Math.abs(canonicalTokenFonts['#g-potbar'].fontSize - 32.2) <= 0.1,
+      `persisted Extra Large ignored the canonical Standard pot token: ${canonicalTokenFonts['#g-potbar'].fontSize}`);
+    assert.ok(Math.abs(canonicalTokenFonts['#g-comm .pk'].fontSize - 40.48) <= 0.1,
+      `persisted Extra Large ignored the canonical Standard community token: ${canonicalTokenFonts['#g-comm .pk'].fontSize}`);
   });
   console.log(`PASS ${passed}/${passed}`);
 } finally {
