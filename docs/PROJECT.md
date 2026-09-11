@@ -65,7 +65,7 @@ Browser  ⇄  in-memory FakeServer + local engine + bots   (Training mode: no pr
 - **Web client** (`public/`) — Vanilla JavaScript, no framework. The application
   logic is split into focused ES modules under `public/modules/` — `net`
   (protocol, session, message handlers), `game` (state, seat rendering, hand
-  flow, showdown), `ui` (action bar, chat, panels), `i18n` (45 languages),
+  flow, showdown), `ui` (action bar, chat, panels), `i18n` (46 languages),
   `theme` (multi-axis theming + presets), `sounds`, `music`, and the offline
   engine + bots — with `pokerth.js` reduced to a thin orchestrator loaded as a
   native `type="module"`.

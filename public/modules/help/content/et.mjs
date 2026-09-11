@@ -232,5 +232,58 @@ export const help = {
           b: ['Kõik teistest peatükkidest töötab ka siin: šansside monitor, abi kuvamine, eelvalimine, kiirklahvid. Treeningrežiim on parim koht neid surveta proovida, enne kui suundud pokerth.net-i.'] }
       ]
     },
+    {
+      id: 'style', icon: '\uD83C\uDFA8', title: 'Stiil ja heli',
+      sections: [
+        { id: 'themes', t: 'Teemad',
+          b: ['Täpsemate valikute kategooria Stiil kujundab kogu kliendi ümber. Eelseaded seavad ühe puudutusega kõik paika (klassikaline roheline kasiino, ametlik PokerTH välimus\u2026); nende all saab üksikute telgede kaupa eraldi häälestada värvipaletti, laua kalevit ja kaartide esikülgi \u2014 muuda ükskõik millist telge ja sinu segust saab kohandatud teema. Tume, hele või automaatne režiim valitakse jaotises Kasutajaliides ning sinu valikud rakenduvad kohe, igal ekraanil, ja jäetakse meelde.'] },
+        { id: 'tablelook', t: 'Lauad, kaardipakid, istekohad',
+          b: ['Lisaks teemale saab mitut elementi eraldi vahetada: laua tausta, kaardipakki, kaardi tagakülge (sobita pakiga automaatselt või impordi oma pilt), jagaja ja blindide märgiseid, käigunuppude stiili ning terveid istekohtade pakke, mis kujundavad mängijakastid ümber. Vali kõik täpsemates valikutes \u2192 Stiil; muudatused on lauas kohe näha.'] },
+        { id: 'music', t: 'Muusikamängija',
+          b: ['Päisemenüüde muusikakirje avab väikese lounge-muusika mängija: vali esitusloendist lugu, esita/peata, eelmine/järgmine, juhuslik järjekord ning korda üht lugu, tervet esitusloendit või mitte midagi. Helitugevus, valitud lugu ja korduse režiim jäetakse meelde. Esitus ei alga kunagi iseenesest \u2014 brauserid nõuavad puudutust \u2014 ja mängija on mängu heliefektidest täiesti sõltumatu.', 'Kaks pöialt loo pealkirja all ütlevad, kas esitatav sulle meeldib. Üks anonüümne hääl seadme kohta, raadiod kaasa arvatud, ja saad seda igal ajal muuta või tagasi võtta; kui haldaja kogusummasid ei avalda, näed ainult oma pöialt.'] },
+        { id: 'sounds', t: 'Heliefektid',
+          b: ['Mänguhelid on koondatud nelja eraldi lülitatavasse kategooriasse, täpselt nagu töölauakliendis: mängukäigud (kaartide jagamine, Check, Call, Raise, sinu kord\u2026), fuajee vestluse teavitus, võrgumängu teavitused (mängija liitus, mäng valmis) ja blindide tõusu teavitus. Neid kõiki juhib üks helitugevuse liugur täpsemates valikutes \u2192 Heli.'],
+          note: 'Kõik brauserid \u2014 eriti iOS \u2014 keelduvad heli esitamast, enne kui oled lehte korra puudutanud. Kui mäng algab vaikselt, äratab üksainus puudutus kus tahes heli ellu; klient parandab heli mootori ka automaatselt, kui iOS selle peatab (sissetulev kõne, taustale viimine\u2026).' },
+        { id: 'voice', t: 'Hääl ja vibratsioon',
+          b: ['Kaks lisakanalit hoiavad sind kursis ilma ekraanile vaatamata: hääleteated loevad mängusündmused sinu seadme kõnesünteesi abil ette ja telefonides võib lühike vibratsioon sinu käiku märkida. Mõlemad on veebi lisad, seadmest olenevalt vaikimisi väljas või sees, täpsemates valikutes \u2192 Panustamine ja käik.'],
+          note: 'Vibratsioon töötab Androidis (Chromiumi-põhised brauserid); Apple ei paku veebilehtedele vibratsiooni API-t, nii et iPhone\u2019id ei saa vibreerida. Hääleteated töötavad kõikjal, kuid saadaolevad hääled ja keeled sõltuvad sinu süsteemist \u2014 klient kasutab parimat leitud vastet.' }
+      ]
+    },
+    {
+      id: 'options', icon: '\u2699\uFE0F', title: 'Valikud ja kiirklahvid',
+      sections: [
+        { id: 'where', t: 'Kus valikud asuvad',
+          b: ['Täpsemad valikud avanevad iga päisemenüü hammasrattakirjest. Need on rühmitatud nagu töölauakliendis: Kasutajaliides, Stiil, Heli, Kohalik mäng, Võrgumäng, Internetimäng, Hüüdnimed / avatarid, Logisõnumid ja Taasta vaikeseaded. Igal veebispetsiifilisel funktsioonil on seal oma lüliti, nii et saad välja lülitada kõik, mida sa ei kasuta.'] },
+        { id: 'cfgxml', t: 'Seadete vahetamine töölauakliendiga',
+          b: ['Sinu seaded võivad klientide vahel rännata: kategooria Logisõnumid pakub ametliku config.xml faili (\u007e/.pokerth/config.xml, mida kasutavad töölaua- ja QML-klient) eksporti ja importi. Eksport kirjutab ühised seaded \u2014 nimi, kuvamisvalikud, helid, laua eelistused, blindid, stiilid \u2014 ja import rakendab töölauafaili siin. Seaded, mida see klient ei tunne, säilivad failis puutumata.', 'Ka sinu mängijamärkused rändavad failiga kaasa — tekst ja tärnihinnang, kirjutatud kujul, nagu töölauakliendid neid loevad. Värvisildid jäävad sellesse klienti: ametlikus vormingus ei ole nende jaoks välja, nii et import ei puuduta kunagi sinu omi.'] },
+        { id: 'sync', t: 'Seaded, mis järgnevad sulle',
+          b: ['Kui mängid kontoga, sünkroonitakse sinu valikud, teema, klahviseosed, keel ja treeningu auhinnad: muuda midagi ühes seadmes ja järgmine seade, millest sisse logid, võtab selle üle. Auhindade edenemine liidetakse, mitte ei kirjutata üle, nii et kahes seadmes mängides jääb alati alles mõlema parim.'] },
+        { id: 'updates', t: 'Ajakohasena püsimine',
+          b: ['Klient uuendab end ise: uue versiooni juurutamisel kutsub riba sind lehte värskendama (või kirjuta vestlusesse /update, et käsitsi kontrollida). Aeg-ajalt võib ilmuda väike tooteküsitlus, et küsida sinu arvamust mõne funktsiooni kohta \u2014 osalemine on vabatahtlik ja küsitlused saab täpsemates valikutes \u2192 Kogukond täielikult välja lülitada.'] },
+        { id: 'fkeys', t: 'Ametlikud kiirklahvid',
+          b: ['Ametlikud PokerTH funktsiooniklahvid töötavad mängu ajal \u2014 Alt+S töötab kõikjal:'],
+          keys: [
+            ['F1 / F2 / F3 / F4', 'Fold \u00b7 Check/Call \u00b7 Bet/Raise \u00b7 All-In (järjekorra saab valikutes ümber pöörata)'],
+            ['F5', 'Näita oma kaarte (kui võimalik)'],
+            ['F6 / F7 / F8', 'Käsitsi \u00b7 automaatne Check/Fold \u00b7 automaatne Check/Call'],
+            ['Alt+M / Alt+K / Alt+F', 'Käsitsi \u00b7 automaatne Check/Call \u00b7 automaatne Check/Fold'],
+            ['Alt+C / Alt+L / Alt+I', 'Vestlus \u00b7 mängulogi \u00b7 šansside paneel'],
+            ['Alt+S', 'Seaded \u2014 kõikjal rakenduses, mitte ainult mängu ajal'],
+            ['F11', 'Täisekraan']],
+          note: 'Kiirklahvid vajavad füüsilist klaviatuuri. Macis on F-klahvid vaikimisi meediajuhikud: hoia all Fn (või luba macOS-i seadetes \u201cUse F1, F2, etc. as standard function keys\u201d). iPhone\u2019is on täisekraan iOS-i tõttu piiratud \u2014 rakenduse paigaldamine PWA-na annab sama täisekraanikogemuse.' },
+        { id: 'webkeys', t: 'Veebi tähtklahvid',
+          b: ['Veebi lisana käivitavad käike ka üksiktähed ja Alt+T ning igaühe neist saab ümber seadistada täpsemates valikutes \u2192 Kiirklahvid:'],
+          keys: [
+            ['F', 'Fold'],
+            ['C', 'Check / Call'],
+            ['R', 'Raise'],
+            ['A', 'All-In'],
+            ['1 / 2 / 3', 'Panus 1/3 \u00b7 1/2 \u00b7 pott'],
+            ['Alt+T', 'Statistikapaneel'],
+            ['Esc', 'Sulge pealmine aken (ka Androidi tagasi-nupp)'],
+            ['\u2191 \u2193 \u00b7 \u21b5', 'Fuajee laudade loend (jõuad sinna Tab-klahviga): vali laud \u00b7 liitu sellega']],
+          note: 'Androidis sulgeb süsteemi tagasi-nupp/-liigutus aknad nagu Escape, selle asemel et mängust lahkuda (valikutes seadistatav). iOS-is vastavat süsteeminuppu ei ole \u2014 kasuta iga akna nuppu \u2715.' }
+      ]
+    }
   ]
 };

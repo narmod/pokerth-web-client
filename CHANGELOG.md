@@ -16,6 +16,15 @@ release. Per-build detail is on the
 highlights below.
 
 ### Added
+- **Estonian catalogue (`et`)** (`web.144`) — a 46th language: the full UI
+  catalogue (1521 keys, parity-checked against `en.mjs` for keys and
+  `{token}` placeholders) and the complete help corpus (10 chapters,
+  68 sections, same structure as `en.mjs`). Registered in
+  `modules/i18n.mjs`, precached in `sw.js`, added to the admin panel's
+  welcome-message language list, and every "45 languages" claim in the
+  client and docs updated to 46. Poker action terms stay in English;
+  hand names are translated, as in the other catalogues. The SEO
+  content pages (glossary, hands, how-to) do not cover `et` yet.
 - **Local/Entrainement and LAN: viewable and resettable from ANY mode**
   (`web.140`) — narmod reported that connecting to pokerth.net (or LAN, or
   training) with the same nickname showed empty stats and no sub-tabs for
