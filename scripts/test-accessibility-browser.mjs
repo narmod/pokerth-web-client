@@ -833,6 +833,11 @@ try {
       };
     });
     const before = await presentation();
+    const headerIcons = ['#sound-toggle-btn', '#g-overflow-btn'];
+    const headerPresentation = async () => Object.fromEntries(await Promise.all(headerIcons.map(async (selector) => [
+      selector, await presentationColors(page, selector, '#s-game .header'),
+    ])));
+    const beforeHeader = await headerPresentation();
     await setHighContrast(page, 'game', true);
     await page.waitForFunction(() => document.querySelector('meta[name="theme-color"]').content === '#000000');
     const overridden = await presentation();
@@ -841,12 +846,20 @@ try {
     await openPlayerSettings(page);
     assert.deepEqual(await selectedPlayerCosmetics(page), choices, 'High contrast changed the player-visible cosmetic selections');
     await closePlayerSettings(page);
+    const highContrastHeader = await headerPresentation();
+    for (const selector of headerIcons) {
+      const ratio = contrastRatio(highContrastHeader[selector].foreground, highContrastHeader[selector].background);
+      assert.ok(ratio >= 3, `High-contrast ${selector} graphic is ${ratio.toFixed(2)}:1`);
+      assert.notEqual(highContrastHeader[selector].foreground, beforeHeader[selector].foreground,
+        `${selector} did not visibly override the Light UI icon color`);
+    }
     await setHighContrast(page, 'game', false);
     await openPlayerSettings(page);
     assert.deepEqual(await selectedPlayerCosmetics(page), choices, 'disabling High contrast did not restore the selected cosmetics');
     await closePlayerSettings(page);
     await page.waitForFunction((theme) => document.querySelector('meta[name="theme-color"]').content === theme, before.browserTheme);
     assert.deepEqual(await presentation(), before, 'disabling High contrast did not exactly restore rendered cosmetics');
+    assert.deepEqual(await headerPresentation(), beforeHeader, 'disabling High contrast did not restore Light UI header icons');
   });
   await check('installed-PWA presentation applies the same High-contrast palette', async () => {
     const pwaContext = await browser.newContext({ serviceWorkers: 'block', viewport: { width: 390, height: 844 } });
