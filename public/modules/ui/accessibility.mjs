@@ -86,11 +86,15 @@ function syncAdaptivePlayState(interfaceSize = sizePreference()) {
 function cacheStandardMetrics(game, root, viewport) {
   const rootStyle = window.getComputedStyle(root);
   const communityScale = parseFloat(rootStyle.getPropertyValue('--standard-comm-scale'));
-  if (!Number.isFinite(communityScale) || communityScale <= 0) return false;
+  const potFontBase = parseFloat(rootStyle.getPropertyValue('--standard-pot-font-base'));
+  const potFontMin = parseFloat(rootStyle.getPropertyValue('--standard-pot-font-min'));
+  const communityFontBase = parseFloat(rootStyle.getPropertyValue('--standard-community-font-base'));
+  if (![communityScale, potFontBase, potFontMin, communityFontBase].every(Number.isFinite)
+      || communityScale <= 0 || potFontBase <= 0 || potFontMin <= 0 || communityFontBase <= 0) return false;
   const rootFontSize = parseFloat(rootStyle.fontSize) || 16;
   game.style.setProperty('--active-standard-comm-scale', String(communityScale));
-  game.style.setProperty('--active-pot-font-base', `${Math.max(10, 13 * communityScale)}px`);
-  game.style.setProperty('--active-community-font-base', `${rootFontSize * 1.02 * communityScale}px`);
+  game.style.setProperty('--active-pot-font-base', `${Math.max(potFontMin, potFontBase * communityScale)}px`);
+  game.style.setProperty('--active-community-font-base', `${rootFontSize * communityFontBase * communityScale}px`);
   standardMetricsViewport = viewport;
   return true;
 }

@@ -46,6 +46,9 @@ html { touch-action: manipulation; -webkit-text-size-adjust: 100%; text-size-adj
   --fs-3xs: var(--fs-source-3xs);  --fs-2xs: var(--fs-source-2xs);  --fs-xs: var(--fs-source-xs);   --fs-sm: var(--fs-source-sm);
   --fs-base: var(--fs-source-base); --fs-md: var(--fs-source-md);   --fs-lg: var(--fs-source-lg);  --fs-xl: var(--fs-source-xl);
   --fs-2xl: var(--fs-source-2xl);  --fs-hero: var(--fs-source-hero);
+  --standard-pot-font-base: 13px;
+  --standard-pot-font-min: 10px;
+  --standard-community-font-base: 1.02rem;
   --interface-scale: 1;
   --lh-tight: 1.1;   --lh-base: 1.35;
   /* Espacement (px, base 2 — 6/8 = chevaux de trait) */
@@ -4187,7 +4190,7 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
 .comm-row .pk {
   width: calc(46px * var(--comm-scale, 1));
   height: calc(64px * var(--comm-scale, 1));
-  font-size: calc(1.02rem * var(--comm-scale, 1));
+  font-size: calc(var(--standard-community-font-base) * var(--comm-scale, 1));
   border-radius: calc(5px * var(--comm-scale, 1));
 }
 
@@ -4219,7 +4222,7 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
   color: var(--sel, #E3C800);
   font-family: var(--ff-display);
   font-weight: 700;
-  font-size: max(10px, calc(13px * var(--comm-scale, 1))); /* suit communityScale */
+  font-size: max(var(--standard-pot-font-min), calc(var(--standard-pot-font-base) * var(--comm-scale, 1))); /* suit communityScale */
   letter-spacing: 0.05em;
   white-space: nowrap;
   box-shadow: 0 2px 9px rgba(0, 0, 0, 0.42);
@@ -11951,11 +11954,11 @@ html[data-seat-struct="qml"] .seat-narrow .seat-name .seat-note-stars { font-siz
 @media (min-width: 900px) and (min-height: 600px) and (hover: hover) and (pointer: fine) {
   #s-game {
     --active-play-scale: 1;
-    --active-pot-font-base: calc(13px * var(--active-standard-comm-scale, var(--comm-scale, 1)));
+    --active-pot-font-base: max(var(--standard-pot-font-min), calc(var(--standard-pot-font-base) * var(--active-standard-comm-scale, var(--comm-scale, 1))));
     --active-status-primary-base: 13px;
     --active-status-secondary-base: 11px;
     --active-blinds-font-base: 16px;
-    --active-community-font-base: calc(1.02rem * var(--active-standard-comm-scale, var(--comm-scale, 1)));
+    --active-community-font-base: calc(var(--standard-community-font-base) * var(--active-standard-comm-scale, var(--comm-scale, 1)));
     --active-seat-self-font-base: 15px;
     --active-seat-self-line-base: 16px;
     --active-timer-self-width-base: 56px;
@@ -12081,11 +12084,11 @@ html[data-seat-struct="qml"] .seat-narrow .seat-name .seat-note-stars { font-siz
    document state owns the viewport predicate so CSS and JS cannot drift apart. */
   :root[data-adaptive-play="constrained-extra-large"] #s-game {
     --active-play-scale: 2;
-    --active-pot-font-base: calc(13px * var(--active-standard-comm-scale, var(--comm-scale, 1)));
+    --active-pot-font-base: max(var(--standard-pot-font-min), calc(var(--standard-pot-font-base) * var(--active-standard-comm-scale, var(--comm-scale, 1))));
     --active-status-primary-base: 13px;
     --active-status-secondary-base: 11px;
     --active-blinds-font-base: max(10px, calc(12px * var(--active-standard-comm-scale, var(--comm-scale, 1))));
-    --active-community-font-base: calc(1.02rem * var(--active-standard-comm-scale, var(--comm-scale, 1)));
+    --active-community-font-base: calc(var(--standard-community-font-base) * var(--active-standard-comm-scale, var(--comm-scale, 1)));
     --active-timer-self-height-base: 7px;
     --active-timer-opponent-height-base: 9px;
     --active-action-font-base: var(--fs-source-md);
