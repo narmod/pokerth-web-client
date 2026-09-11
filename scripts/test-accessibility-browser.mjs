@@ -4,6 +4,7 @@ import { createServer } from 'node:http';
 import { readFileSync, statSync } from 'node:fs';
 import { extname, join, normalize } from 'node:path';
 import { chromium, firefox, webkit } from 'playwright';
+import { checkCanonicalScreenshot } from './accessibility-screenshot-policy.mjs';
 
 const root = join(process.cwd(), 'public');
 const types = { '.css': 'text/css', '.html': 'text/html', '.js': 'text/javascript', '.json': 'application/json', '.mjs': 'text/javascript', '.svg': 'image/svg+xml', '.woff2': 'font/woff2' };
@@ -176,10 +177,21 @@ async function closePlayerSettings(page) {
 }
 
 async function takeStableScreenshot(page, path) {
-  await page.evaluate(() => document.fonts.ready);
-  const stable = await page.addStyleTag({ content: '*,*::before,*::after{animation:none!important;transition:none!important;caret-color:transparent!important}.seat-timeout-bar{visibility:hidden!important}' });
-  await page.screenshot({ path, animations: 'disabled', caret: 'hide' });
-  await stable.evaluate((element) => element.remove());
+  await checkCanonicalScreenshot({
+    browserTarget,
+    canonicalPath: path,
+    updateCanonical: process.env.PTH_UPDATE_ACCESSIBILITY_SCREENSHOTS === '1',
+    capture: async () => {
+      await page.evaluate(() => document.fonts.ready);
+      if (await page.locator('#s-game.active').count()) await waitForStableTableLayout(page);
+      const stable = await page.addStyleTag({ content: '*,*::before,*::after{animation:none!important;transition:none!important;caret-color:transparent!important}.seat-timeout-bar{visibility:hidden!important}' });
+      try {
+        return await page.screenshot({ animations: 'disabled', caret: 'hide' });
+      } finally {
+        await stable.evaluate((element) => element.remove());
+      }
+    },
+  });
 }
 
 async function populateLobby(page) {
@@ -807,6 +819,8 @@ try {
       const box = await button.boundingBox();
       assertReachable(box && { left: box.x, top: box.y, right: box.x + box.width, bottom: box.y + box.height, width: box.width, height: box.height }, { width: 390, height: 844 }, 'High-contrast mobile action');
     }
+    await page.waitForTimeout(4300);
+    assert.equal(await page.locator('.fly-card').count(), 0, 'deal animation remained active before the canonical screenshot');
     await takeStableScreenshot(page, join(process.cwd(), 'docs/screenshots/25-high-contrast-mobile.png'));
   });
   await check('High contrast remains independent across every Interface size and supported viewport', async () => {
