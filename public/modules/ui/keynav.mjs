@@ -31,6 +31,7 @@ const SURFACES = [
   ['connect-overflow-menu', 'closeConnectOverflow'],
   ['pv-overflow-menu',     'closePrivacyOverflow'],
   // — modales —
+  ['accessibility-modal',  'closeAccessibility'],
   ['invite-modal',         'App.closeInviteModal'],
   ['kick-modal',           'App.closeKickModal'],
   ['player-info-modal',    'closePlayerInfoPopup'],

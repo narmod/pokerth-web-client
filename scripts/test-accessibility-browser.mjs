@@ -71,6 +71,8 @@ async function chooseInterfaceSize(page, surface, value) {
   await page.locator(`#accessibility-open-${surface}`).click();
   await page.locator(`input[name="interface-size"][value="${value}"]`).check();
   await page.keyboard.press('Escape');
+  assert.equal(await page.locator('#accessibility-modal').getAttribute('aria-hidden'), 'true',
+    'Escape left Accessibility open above its invoking surface');
 }
 
 async function connectFixtureSocket(page) {
