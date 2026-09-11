@@ -126,7 +126,111 @@ export const help = {
         { id: 'hud', t: 'Statistika HUD istekohtadel',
           b: ['HUD lisab iga mängija istekoha kõrvale väikese statistikakasti, mis on koostatud sinu logidesse salvestatud kätest: vaadeldud käte arv, seejärel VPIP (kui sageli ta paneb pre-flop\u2019il vabatahtlikult raha sisse), PFR (pre-flop\u2019i tõstmised) ja AF (agressiivsustegur), värvidega passiivsest agressiivseni. Nende all võtab märgis mängija lihtsate sõnadega kokku \u2014 kitsas-passiivne, lai-agressiivne jne \u2014 kõrval väike ketas, mille valgustatud veerand loeb vasakult paremale kitsast laiani ja alt üles passiivsest agressiivseni. Märgis kuvatakse juba esimesest käest, kuid jääb tuhmiks kuni 25 käeni, mil see muutub usaldusväärseks. Puuduta kasti, et avada üksikasjalik hüpikaken kõigi numbritega (3-bet, jätkupanus, 3-beti ees loobumine, varastamiskatsed, showdown\u2019i määrad\u2026), ja lohista kasti, kui see midagi katab.',
               'HUD teab ainult seda, mida sa oled oma laudades näinud \u2014 see loeb sinu kohalikke käte logisid, nii et logimine peab olema sisse lülitatud ja numbrid muutuvad tähendusrikkaks piisava arvu käte järel. Vaikimisi on see väljas: lülita sisse täpsemates valikutes \u2192 Abi.'] },
+        { id: 'handsbtn', t: 'Käte kombinatsioonide ülevaade',
+          b: ['Kalevil olev pokkerikäte ikoon avab igal ajal kiirülevaate kümnest kombinatsioonist \u2014 õppimisel mugav. Selle saab täpsemates valikutes peita.'] }
       ]
-    }
+    },
+    {
+      id: 'chat', icon: '\uD83D\uDCAC', title: 'Vestlus ja suhtlus',
+      sections: [
+        { id: 'panels', t: 'Fuajee vestlus ja mänguvestlus',
+          b: ['Vestlus on nii fuajees kui ka lauas. Telefonides hõljub mänguvestlus laua kohal; suurematel ekraanidel on see lohistatav ja muudetava suurusega aken. Vestlusnupul olev märgis loendab lugemata sõnumeid.'] },
+        { id: 'typing', t: 'Kirjutamise abid',
+          list: [
+            'Tab täiendab hüüdnime \u2014 vajuta uuesti Tab, et vastete vahel liikuda.',
+            '\u2191 / \u2193 sirvivad sinu enda sõnumite ajalugu.',
+            'Emoji-nupp avab täieliku valiku; kooloni : kirjutamine pakub kirjutamise ajal ka emote\u2019e.'] },
+        { id: 'emotes', t: 'Emote\u2019id ja smailid',
+          b: ['Vestlus teisendab emote\u2019ide lühikoode täpselt nagu ametlik töölauaklient: kirjuta nimi kooloonide vahele ja sellest saab emoji \u2014 :sunny: \u2192 \u2600, :+1: \u2192 \uD83D\uDC4D, :joy: \u2192 \uD83D\uDE02, :four_leaf_clover: \u2192 \uD83C\uDF40\u2026 toetatud on üle 1900 koodi (kogu GitHubi komplekt). Teisendatakse ka klassikalised tekstismailid: :-) ;) :D xD :P <3 ja umbes kaheksakümmend muud.',
+              'Kooloni : kirjutamine avab soovituste hüpikakna, mis täiendab koodi kirjutamise ajal (\u2191/\u2193 valimiseks, Tab või Enter kinnitamiseks). Emojide teisendamise saab täielikult välja lülitada täpsemates valikutes \u2192 Vestlus.'] },
+        { id: 'commands', t: 'Vestluskäsud',
+          b: ['Vestlus mõistab kaldkriipsuga käske. Kaks neist on teistele nähtavad:'],
+          keys: [
+            ['/me <tekst>', 'Tegevussõnum, kuvatakse kujul \u201c* sinunimi tekst\u201d'],
+            ['/emoji <emoji>', 'Esitab emoji-reaktsiooni (sama, mida saadab reaktsioonide valija)']] },
+        { id: 'diagcmds', t: 'Diagnostikakäsud',
+          b: ['Kõik ülejäänu on kohalik: vastuseid näed ainult sina ja lauda ei saadeta midagi. Kirjuta /help, et need kõik loetleda. Kõige kasulikumad:'],
+          keys: [
+            ['/help', 'Loetle kõik käsud'],
+            ['/update', 'Kontrolli uut versiooni ja värskenda'],
+            ['/lang <kood>', 'Vaheta keelt (nt /lang et)'],
+            ['/sound on|off', 'Lülita mänguhelid sisse või välja'],
+            ['/zoom', 'Lülita laua suurendus sisse või välja'],
+            ['/clear', 'Tühjenda vestlus kohapeal'],
+            ['/table', 'Praeguse mängu teave (blindid, mängijad, žetoonid)'],
+            ['/diag \u00b7 /netdbg \u00b7 /fps', 'Kliendi oleku, võrgu ja kaadrisageduse diagnostika'],
+            ['/carddbg \u00b7 /msglog \u00b7 /audiodbg \u00b7 /storage \u00b7 /logdump \u00b7 /seatdbg', 'Täpsem silumine (kaardid, protokoll, heli, salvestusruum, istekohad)'],
+            ['/copy', 'Kopeeri viimase käsu vastus lõikelauale']] },
+        { id: 'privatemsg', t: 'Privaatsõnumid',
+          b: ['Kirjuta ühele mängijale, ilma et kogu fuajee kaasa loeks. Mängijate loendis nime kõrval olev ümbrik avab temaga vestluse; fuajee päises olev ümbrik avab uuesti viimase. Vestlusi hoitakse selles seadmes ja need on tagasi tulles alles, nii et päevi hiljem jätkatud vestlusel on oma ajalugu kaasas \u2014 ümbrikul olev punane loendur näitab, mida sa ei ole veel lugenud, ja akna pealkirjas olev prügikast kustutab vestluse jäädavalt.'],
+          keys: [
+            ['/msg <hüüdnimi> <tekst>', 'Saada fuajee vestlusest privaatsõnum'],
+            ['/msg "<tühikutega hüüdnimi>" <tekst>', 'Sama, kui hüüdnimes on tühikud']],
+          note: 'Sõnumid on piiratud 128 märgiga. Server ei toimeta privaatsõnumit kohale mängijale, kes istub käimasolevas lauas, ja ajalugu hoitakse ainult selles brauseris \u2014 see ei järgne sulle teise seadmesse.' },
+        { id: 'reactions', t: 'Emoji-reaktsioonid',
+          b: ['Reaktsiooninupp avab 30 animeeritud reaktsiooni valiku (\uD83C\uDF89, \uD83D\uDE02, \uD83D\uDE31, \uD83D\uDD25\u2026), mis esitatakse efektiga sinu istekoha kohal ja on nähtavad kõigile lauas \u2014 sealhulgas töölaua kliendi mängijatele. Reaktsioonid saab täpsemates valikutes täielikult välja lülitada.'] },
+        { id: 'translate', t: 'Kõigist arusaamine',
+          b: ['Kui vestluse tõlge on sisse lülitatud, ilmub tõlkenupp reale, mille kohal on sinu kursor \u2014 või puuteekraanil reale, mida puudutad \u2014 ja esitab selle sõnumi sinu keeles brauseri sisseehitatud tõlkija abil. Selle saab püsivalt igale reale kuvada täpsemates valikutes \u2192 Vestlus, kus asub ka tavalisi lauaväljendite lühendeid (gg, nh, utg\u2026) selgitav kohtspikker.'],
+          note: 'Tõlkimine kasutab Google Translate\u2019i teenust ja töötab igas brauseris \u2014 vaja on ainult internetiühendust. Sõnum saadetakse tõlketeenusesse ainult siis, kui puudutad selle tõlkenuppu, mitte kunagi automaatselt.' },
+        { id: 'social', t: 'Mängijad: profiil, kutse, eiramine',
+          b: ['Puuduta mis tahes mängijat \u2014 lauas või fuajee loendis \u2014 et avada tema kaart: profiil ja statistika, kutsu ta oma mängu või eira teda (tema vestlussõnumid peidetakse; eiramise saab igal ajal tagasi võtta). Kutsumise/eiramise eelse kinnituse saab valikutes sisse lülitada.'] }
+      ]
+    },
+    {
+      id: 'lobby', icon: '\uD83C\uDFDB\uFE0F', title: 'Fuajee ja mängud',
+      sections: [
+        { id: 'list', t: 'Mängude loend',
+          b: ['Fuajee loetleb serveri kõik lauad. Iga kirje näitab mängijate arvu, mängu tüüpi, tabalukku, kui on vaja parooli või kutset, ning olekumärgist: „Ootel“ (roheline \u2014 mäng ei ole alanud, saad liituda, kui koht on vaba), „Käimas“ (soe värv \u2014 vaadatav otse, kui pealtvaatajad on lubatud) ja „Suletud“ (tuhm). Täis laud näitab lihtsalt täisarvu, näiteks 10/10; märgiste värvid järgivad aktiivset teemat.',
+              'Filtri rippmenüü kitsendab loendit täpselt nagu töölauakliendis, iga valik on eelmisest rangem: ainult avatud mängud \u2192 lisaks täis laudade peitmine \u2192 seejärel ainult mitteprivaatsed, ainult privaatsed või ainult edetabelimängud. Sinu valik jäetakse meelde. Otsinguväli leiab mängu nime järgi ja mängijate nupp avab kõigi võrgus olijate loendi, mis on otsitav ja sorditav.'] },
+        { id: 'join', t: 'Liitumine ja jälgimine',
+          b: ['Vali avatud mäng ja liitu sellega \u2014 tabalukk tähendab, et vaja on parooli. Käimasolevaid mänge, mis lubavad pealtvaatajaid, saab otse jälgida: näed lauda ja vestlust, kuid hole-kaardid jäävad varjatuks ja sa ei saa käike teha.'] },
+        { id: 'gameinfo', t: 'Mängu teave',
+          b: ['Enne liitumist näitab mängu teabekaart kõike, mis lauda määratleb: mängu tüüp, blindid ja nende tõusuviis (kahekordistumine või käsitsi koostatud loend), algraha, käigu ajalimiit, kätevaheline viivitus ning kes juba laua taga istuvad.'] },
+        { id: 'create', t: 'Mängu loomine',
+          b: ['Loo oma laud: nimi, mängijate arv, algraha, esimene väike blind ja tõusugraafik, käigu ajalimiit ning kas pealtvaatajad on lubatud. Mängutüüpe on neli: tavaline (kõigile), ainult registreeritud mängijatele, ainult kutsutuile ja edetabelimäng (läheb ametlikku edetabelisse \u2014 parooli seal lubatud ei ole). Lemmikseaded saab salvestada ja uuesti laadida.'] },
+        { id: 'invites', t: 'Kutsed',
+          b: ['Mängijad võivad kutsuda sind oma lauda; saad teate, mille võid vastu võtta või tagasi lükata. Kutse saamine on ainus viis pääseda ainult kutsutuile mõeldud mängu.'] }
+      ]
+    },
+    {
+      id: 'pthnet', icon: '\uD83C\uDF10', title: 'pokerth.net',
+      sections: [
+        { id: 'account', t: 'Sinu konto',
+          b: ['Ametlik internetiserver on pokerth.net. Seal mängimiseks on vaja tasuta pokerth.net kontot \u2014 registreeru veebilehel ja logi siin sisse sama hüüdnime ja parooliga. See veebiklient ühendub täpselt sama serveriga nagu töölauaklient: samad kontod, samad lauad, samad edetabelid, ja sa võid istuda lauda koos töölauamängijatega.'] },
+        { id: 'ranked', t: 'Edetabelimängud ja hooajad',
+          b: ['Edetabelimängu tüüpi mängud lähevad ametlikku hooaja edetabelisse. Sinu rakendusesisene profiil näitab, millal liitusid, praeguse hooaja kohta, skoori, keskmist ja mängitud mänge ning sinu viimaseid tulemusi. Tavalised (edetabelivälised) mängud on lihtsalt lõbu pärast ega muuda midagi.'] },
+        { id: 'rankhow', t: 'Kuidas edetabelit arvutatakse',
+          b: ['Igas edetabelimängus annab sinu lõppkoht punkte: 15 esimese eest, seejärel 9, 6, 4, 3, 2 ja 1 kuni seitsmendani; kaheksas kuni kümnes ei saa midagi. Üks laud jagab seega kokku 40 punkti.',
+              'Sinu skoor ei ole nende punktide summa, vaid keskmine mängu kohta, mida tempereerib mängitud mängude arvuga kasvav tegur: käputäiest headest tulemustest ei piisa tipus püsimiseks, vaja on ka regulaarsust — mida rohkem mängid, seda lähemale jõuab sinu skoor sinu tegelikule keskmisele. Hooaeg kestab kvartali: vahetusel arhiveeritakse kõik ja loendurid algavad nullist, möödunud hooajad jäävad kättesaadavaks. Mängus näitab poodiuminupp sinu laua mängijate hooaja edetabelit.'],
+          note: 'Punktiskaala ja täpse valemi määrab pokerth.net edetabeliserver ning need võivad muutuda; aluseks on lehel olevad leheküljed.' },
+        { id: 'rankings', t: 'Edetabelilehed',
+          b: ['Edetabeli sissepääs avab ametliku PokerTH edetabeli, mis on mängija järgi otsitav, koos kogukondade edetabelitega (BBC, WEC). Kui edetabelid sind ei huvita, saab sissepääsu peita täpsemates valikutes \u2192 Kogukond.'] },
+        { id: 'cups', t: 'Kogukonna karikad: BBC ja WeCup',
+          b: ['Kaks kogukonda korraldavad pokerth.net-is oma võistlusi, kummalgi oma leht ja edetabel. Best Brainies Cup (BBC) on 2013. aastal sündinud astmeturniir: liigud astmelt 1 astmele 4 ja uus hooaeg algab pärast iga 4. astme mängu, kui karikas välja antakse. WeCupil (WEC) on oma, palju laiem skaala — 75 punkti esimese koha eest, seejärel 45, 30, 20… — ja selle skoor normaliseerib sinu keskmise sinu mängitud mängude arvu suhtes võrreldes teiste liikmetega.',
+              'Mõlemad edetabelid avanevad auhinnanupust, PokerTH edetabeli kõrvalt. Nende võistluste lauaseaded on mängu loomisel saadaval eelseadetena (BBC 1. kuni 4. aste, WEC, WEC kuufinaal ja WEC suurfinaal), nii et saad samadel tingimustel harjutada. Osalemiseks tuleb registreeruda vastava karika lehel.'],
+          note: 'Kui karikad ei ole sinu teema, saab selle sisu ühe korraga peita täpsemates valikutes → Kogukond.' },
+        { id: 'forumcups', t: 'Foorumi karikad ja sündmused',
+          b: ['pokerth.net foorum korraldab ka Monthly Cupi, igakuist sarja, kus mängijad jaotatakse kuld-, hõbe- ja pronkslaudadesse, enne kui kuu meister kroonitakse, ning aasta jooksul toimuvaid ühekordseid erikarikaid.',
+              'Registreerimised, ajakavad, lauaseaded ja tulemused avaldatakse foorumis ning mänge mängitakse ametlikus serveris nagu kõiki teisi. Tulemuste jälgimiseks piisab pokerth.net kontost; karikale registreerumine käib vastava foorumiteema kaudu.'] },
+        { id: 'forumnews', t: 'Foorumi uudised fuajees',
+          b: ['Fuajee päises olev ajalehenupp avab pokerth.net foorumi viimased postitused, üks kirje teema kohta, igal foorumil oma värv. Nupul olev märgis loendab lugemata postitusi; postituse avamine (uus vahekaart) märgib selle loetuks ja „Märgi kõik loetuks“ tühjendab kõik korraga.',
+              'See on veebi lisa: nupu saab peita täpsemates valikutes („Foorumi nupp fuajee päises“).'] },
+        { id: 'avatars', t: 'Avatarid ja lipud',
+          b: ['pokerth.net-is jagatakse sinu avatari teistele mängijatele avatariserveri kaudu ning mängijakastidel saab kuvada väikest riigilippu. Mõlemad on valikulised ja valikutes seadistatavad.'] }
+      ]
+    },
+    {
+      id: 'offline', icon: '\uD83C\uDFCB\uFE0F', title: 'Treeningrežiim',
+      sections: [
+        { id: 'what', t: 'Mis see on',
+          b: ['Kohalik / treeningrežiim on täisväärtuslik mäng arvutivastaste vastu: ühendust ei ole vaja, kontot ei ole vaja, kaalul ei ole midagi. Kui rakendus on paigaldatud (või lihtsalt korra külastatud), töötab see täiesti võrguvabalt \u2014 ideaalne mängu õppimiseks, liidese proovimiseks või lennurežiimis aja veetmiseks.'] },
+        { id: 'setup', t: 'Mängu seadistamine',
+          b: ['Vali vastaste arv, algraha, blindid ja tõusugraafik ning mängu kiirus. Bottide koosseisu ja raskusastet saab kohandada täpsemates valikutes \u2192 Kohalik mäng \u2014 leebetest vastastest karmima, segase koosseisuga lauani.'] },
+        { id: 'trophies', t: 'Auhinnad',
+          b: ['Treeningrežiimil on oma edenemine: mängides avaneb 28 auhinda kuues kategoorias (edenemine, oskus, stiil, formaadid, lõbu ja üks salajane) \u2014 mängitud käed, võidetud mängud, suured blufid, erilised käed ja muu. Sinu auhindade edenemine on kumulatiivne ja liidetakse seadmete vahel, kui konto seadete sünkroonimine on aktiivne.'] },
+        { id: 'learn', t: 'Hea koht õppimiseks',
+          b: ['Kõik teistest peatükkidest töötab ka siin: šansside monitor, abi kuvamine, eelvalimine, kiirklahvid. Treeningrežiim on parim koht neid surveta proovida, enne kui suundud pokerth.net-i.'] }
+      ]
+    },
   ]
 };
