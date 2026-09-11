@@ -1,4 +1,6 @@
-2026-09-11 version 2.1.8-web.142 (current series):
+2026-09-11 version 2.1.8-web.143 (current series):
+- bugfix: action icons (message, ignore, stats) in the online players list are properly lined up under their header icon again - a leftover invisible column was pushing them out of place
+2026-09-11 version 2.1.8-web.142:
 - bugfix: forum posts you already read no longer reappear as unread just because someone replied to the same topic
 2026-09-11 version 2.1.8-web.141:
 - bugfix: hiding a column (in-game status, country, rating) in the online players list now actually gives the name more room - it used to just clear the icon while the same space stayed reserved

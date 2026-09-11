@@ -10978,7 +10978,7 @@ function _plColsHidden() {
   catch (e) { return new Set(); }
 }
 function _plColVisible(k) { return k === 'name' || !_plColsHidden().has(k); }
-function _plVisibleCols() { return _PL_COL_ORDER.filter(_plColVisible); }
+function _plVisibleCols() { return _plColOrder().filter(_plColVisible); }
 window._plToggleCol = function (k) {
   if (_PL_TOGGLE_COLS.indexOf(k) === -1) return;
   try {
@@ -11571,7 +11571,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.8-web.142'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.8-web.143'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif ou la palette High contrast
    (Android, Safari, iOS standalone récent). Lit --theme-color et met

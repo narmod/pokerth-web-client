@@ -801,6 +801,15 @@ highlights below.
   (`scale 1.03`, 180 ms OutQuad) is applied to the seat plate.
 
 ### Fixed
+- **Actions column still misaligned with its header chip after web.141**
+  (`web.143`) — `_plVisibleCols()` (used to build the row grid template)
+  filtered from the raw column list, which still includes `inv` even
+  outside the game-wait page; the header's template comes from
+  `_plColOrder()`, which correctly drops `inv` there. Rows ended up with one
+  extra (empty) track the header didn't have, so everything after it —
+  the actions icons — drifted out from under their header pastille.
+  `_plVisibleCols()` now filters from `_plColOrder()` too, so both templates
+  agree on which columns exist before deciding which are visible.
 - **Forum news: a topic already marked read could reappear as unread**
   (`web.142`) — read state was keyed by `post.id` (the specific post's link),
   but the list is deduplicated to one entry per topic (`fnDedup`, by
