@@ -16,6 +16,14 @@ release. Per-build detail is on the
 highlights below.
 
 ### Added
+- **Accessibility: high-contrast palette** (`web.134`, community
+  contribution by @seanpianka, scope 6/N) — the "High contrast" toggle in
+  the Accessibility panel now has a real effect (`data-high-contrast`
+  attribute read across `pokerth.css`): a dedicated palette overrides UI,
+  felt, deck and browser-theme presentation, restoring the player's exact
+  prior cosmetic choices on disable. Header icon contrast tuned in a
+  follow-up fix. This closes out the last preference that had no on-screen
+  effect since scope 1 — the whole Accessibility panel is now fully live.
 - **Accessibility: mobile landscape adaptive play** (`web.132`, community
   contribution by @seanpianka, scope 5/N) — extends the adaptive
   chat/log drawer system from the portrait scope to landscape, and adds

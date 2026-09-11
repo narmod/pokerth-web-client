@@ -1,4 +1,6 @@
-2026-09-11 version 2.1.8-web.132 (current series):
+2026-09-11 version 2.1.8-web.134 (current series):
+- new: the High contrast toggle in the Accessibility panel now actually changes how the app looks - a dedicated high-contrast palette for the interface, felt, and cards; turning it off brings back your exact previous look. This was the last accessibility option still waiting for its on-screen effect - the panel is now fully working end to end
+2026-09-11 version 2.1.8-web.132:
 - improvement: the adaptive layout for large interface sizes now also covers landscape play, and the Hands and Reactions buttons in its bottom bar now open in the right place (this closes the spot mentioned in the previous update)
 - bugfix: pressing Escape on the reactions panel now closes it, like every other panel - it used to toggle "keep window open" instead
 2026-09-11 version 2.1.8-web.127:
