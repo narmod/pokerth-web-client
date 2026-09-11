@@ -219,6 +219,51 @@ export const strings = {
     // ── Action rejected ──
     rejInvalidState:'vigane mängu olek (sünkroonist väljas)', rejNotYourTurn:'ei ole enam sinu kord', rejNotAllowed:'käik ei ole lubatud',
     actionRejected:'Käik lükati tagasi',
+    // ── Session stats ──
+    statSession:'Sessioon', statHandsPlayed:'Mängitud käed', statWins:'Võidud', statWinRate:'Võiduprotsent',
+    statNet:'Puhaskasum/-kahjum', statBestWin:'Parim võit', statWorstLoss:'Suurim kaotus', statRecentHands:'Hiljutised käed',
+    // ── Waiting to start ──
+    wpReady:'Mänguks valmis — vali, kuidas alustada', wpStart:'Alusta',
+    wpStartHumansTip:'Alusta ainult inimmängijatega', wpFillBotsTip:'Täida tühjad kohad bottidega',
+    // ── Notifications ──
+    notifTurnTitle:'⚡ SINU KORD!', notifTurnBody:"PokerTH-s on sinu käik",
+    // ── WS closed ──
+    wsLostAction:'Ühendus katkes — käiku ei saadetud', wsSendFailed:'Saatmine ebaõnnestus (WS suletud)',
+    reauthBanner:'Ühendatud — uuesti autentimine…',
+    // ── Kick ──
+    kickNoPlayers:'Lauas ei ole mängijaid', kickThisPlayer:'Kas visata see mängija välja?',
+    kickConfirmMsg:'Mängija „{name}“ eemaldatakse lauast.',
+    kickRequested:'Väljaviskamine taotletud mängijale {name} (ootan serverit…)',
+    kickNotProcessed:'Server ei töödelnud mängija {name} väljaviskamist — tõenäoliselt PokerTH server < 2.0.6.',
+    kickAtLeast2:'Alustamiseks on vaja vähemalt 2 mängijat.',
+    // ── Game invitations ──
+    inviteTitle:'{name} kutsus sind lauda {table}', inviteAccept:'Võta vastu', inviteDecline:'Keeldu',
+    inviteAccepted:'Lauaga liitumine...',
+    inviteMenu:'Kutsu mängijaid', inviteModalTitle:'Kutsu mängijaid', inviteSubtitle:'Võrgus mängijad, keda lauas veel ei ole',
+    inviteBtn:'Kutsu', inviteSent:'Kutsutud', inviteNoPlayers:'Keegi pole saadaval', inviteSentToast:'Kutse saadeti mängijale {name}',
+    // ── Copy link ──
+    linkCopied:'🔗 Link kopeeritud!', linkCopyFailed:'Kopeerimine ebaõnnestus — link on kuvatud', copiedShort:'Kopeeritud',
+    piYou:'(sina)', piSpectators:'Pealtvaatajad', reconnIn:'Taasühendumine ', reconnInProgress:'Taasühendumine…',
+    updateAvailable:'Saadaval on uus versioon', updateNow:'Uuenda',
+    voiceLabel:'Hääl', voiceOn:'Hääl sees', voiceOff:'Hääl väljas', voiceYourTurn:'Sinu kord',
+    voiceWins:'{name} võidab {n}',
+    vFold:'teeb foldi', vCheck:'teeb checki', vCall:'teeb calli', vBet:'panustab', vRaise:'teeb raisi', vAllin:'all-in',
+    statTabSession:'Sessioon', statTabLife:'Kokku', statTabBoard:'Edetabel',
+    statGamesPlayed:'Mänge mängitud', statGamesWon:'Mänge võidetud', statStreak:'Parim seeria',
+    statReset:'Lähtesta minu statistika', statResetConfirm:'Kas lähtestada kogu aja statistika? Seda ei saa tagasi võtta.',
+    statLifeOnlyPrivate:'Jälgitakse ainult privaatserveris / LAN-is.', statLifeTraining:'Treeningu statistika (bottide vastu) — hoitakse eraldi.', boardEmpty:'Tulemusi veel ei ole',
+    boardPer100:'Puhastulem / 100 kätt', boardYourRank:'Sina: #{n} / {m}',
+    rejoinInProgress:'Sinu lauaga taasliitumine…', rejoinWaitNick:'Vabastan sinu eelmise sessiooni…',
+    rejoinFailed:'Lauda ei õnnestunud taastada — tagasi fuajeesse.', rejoinReconnectHint:'Ühendus katkes — laua jätkamiseks ühenda uuesti.',
+    noActiveTable:'Aktiivset lauda ei ole', copyThisLink:'Kopeeri see link:', spectatingTable:'Jälgitav laud ',
+    avCatPeople:'Inimesed', avCatFantasy:'Fantaasia', avCatPoker:'Pokker', avCatAnimals:'Loomad',
+    avCatPlants:'Taimed ja lilled', avCatSport:'Sport', avCatObjects:'Esemed', avCatFlags:'Lipud',
+    
+    
+    commCards:'Ühised kaardid', continue:'Jätka ▶',
+    closeTable:'🔒 Sulge laud', startBots:'▶ Botid', startWithBots:'▶ Alusta bottidega', startNoBots:'▶ Alusta (bottideta)', leave:'✕',
+    youWon:'Sina võitsid!', handWinner:'Käe võitja', communityCards:'Ühised kaardid',
+    results:'Tulemused', continueBtn:'Jätka ▶', yourStack:'Sinu žetonid:',
 };
 
 export default { meta, strings };
