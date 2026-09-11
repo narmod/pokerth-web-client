@@ -49,7 +49,9 @@ const none = new Set();
 ok(F.fnUnreadCount(d, none, 0) === 3, 'everything unread with no read state');
 const base = Date.parse('2026-08-08T20:00:00+02:00');
 ok(F.fnUnreadCount(d, none, base) === 2, 'mark-all watermark hides older posts');
-ok(F.fnUnreadCount(d, new Set(['p5']), base) === 1, 'individually read ids are excluded');
+ok(F.fnUnreadCount(d, new Set([F.fnTopicKey(d[0])]), base) === 1, 'individually read ids are excluded (by topic key, not post id)');
+ok(F.fnTopicKey({ forum: 'BBC', title: 'Re: BBC Step 1' }) === F.fnTopicKey({ forum: 'BBC', title: 'BBC Step 1' }), 'topic key ignores the "Re: " prefix, like fnDedup');
+ok(F.fnIsUnread(d[0], new Set(['p5']), base) === true, 'stale post-id read markers no longer match — the fix (topic key survives a change of dedup representative)');
 ok(F.fnIsUnread({ id: 'x', date: 'garbage' }, none, 0) === false, 'unparseable date never counts as unread');
 
 // ── 3) fnForumClass — stable colour coding ─────────────────────────────

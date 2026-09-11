@@ -801,6 +801,18 @@ highlights below.
   (`scale 1.03`, 180 ms OutQuad) is applied to the seat plate.
 
 ### Fixed
+- **Forum news: a topic already marked read could reappear as unread**
+  (`web.142`) — read state was keyed by `post.id` (the specific post's link),
+  but the list is deduplicated to one entry per topic (`fnDedup`, by
+  `forum|title`). Any forum activity that changed which post represents an
+  already-read topic (a new reply, an edit that bumps the thread) surfaced a
+  *different* id the next time the feed refreshed, which had never been
+  marked read — the topic flipped back to unread even though nothing new had
+  actually been seen. `fnIsUnread`/`_markPostRead` now key off the same topic
+  key `fnDedup` already uses (`fnTopicKey`, exported and reused by both), so
+  read state survives a change of representative. Same defect exists
+  upstream in the QML client (`Config.ForumNews`, ported 1:1) — worth
+  flagging to sp0ck, not fixed there.
 - **Hiding a column in the online-players list didn't reclaim any width**
   (`web.141`) — toggling off status/country/rating via the header chips only
   cleared the cell content; the grid track stayed reserved at its fixed

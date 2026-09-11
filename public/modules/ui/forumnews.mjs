@@ -15,7 +15,12 @@
 //
 // Suivi lu/non-lu local + sync compte (fusion, pokerth.js _forumMergeIn) :
 //   pth_forum_read_base  repere « tout marquer comme lu » (ms)
-//   pth_forum_read_ids   ids lus individuellement (borne READ_IDS_MAX)
+//   pth_forum_read_ids   CLES DE SUJET lues individuellement (borne READ_IDS_MAX)
+//                        (forum|titre, cf. fnTopicKey/fnDedup — pas l'id du
+//                        post : le representant d'un sujet change quand le
+//                        flux phpBB change, sinon un sujet deja lu redevient
+//                        non lu des qu'une reponse arrive. Meme defaut porte
+//                        cote QML upstream, Config.ForumNews.isUnread.)
 // ═══════════════════════════════════════════════════════════════════
 import { esc } from './misc.mjs';
 
@@ -31,11 +36,19 @@ let _curPost = null;                   // post affiche dans la vue post
 let _trState = null;                   // { text, shown } traduction du post courant
 
 // ── Aides pures (exportees pour scripts/test-forumnews.mjs) ────────────
+// Cle de sujet (forum|titre normalise) : identifie un fil independamment de
+// QUEL post en est le representant apres dedup — contrairement a post.id
+// (le lien du post precis), qui change des qu'une reponse fait remonter le
+// fil ou qu'un autre post du meme sujet se retrouve premier dans le flux.
+export function fnTopicKey(post) {
+  return String(post && post.forum || '') + '|' +
+    String(post && post.title || '').replace(/^Re:\s*/i, '').trim().toLowerCase();
+}
+
 export function fnDedup(posts) {
   const seen = new Set(); const out = [];
   for (const p of (posts || [])) {
-    const key = String(p.forum || '') + '|' +
-      String(p.title || '').replace(/^Re:\s*/i, '').trim().toLowerCase();
+    const key = fnTopicKey(p);
     if (seen.has(key)) continue;
     seen.add(key); out.push(p);
   }
@@ -45,7 +58,9 @@ export function fnDedup(posts) {
 export function fnIsUnread(post, readIds, baseTs) {
   const ts = Date.parse(post && post.date || '') || 0;
   if (ts <= (baseTs || 0)) return false;
-  return !(readIds && readIds.has(post.id));
+  // Cle de sujet, pas post.id (cf. fnTopicKey) : sinon un sujet deja lu
+  // redevient "non lu" des qu'une reponse en change le representant.
+  return !(readIds && readIds.has(fnTopicKey(post)));
 }
 
 export function fnUnreadCount(posts, readIds, baseTs) {
@@ -171,9 +186,10 @@ function _syncMark() {
   try { if (typeof window._cfgSyncMark === 'function') window._cfgSyncMark('forum_read'); } catch (e) {}
 }
 function _markPostRead(p) {
+  const key = fnTopicKey(p);
   const ids = _readIds();
-  if (ids.has(p.id)) return;
-  ids.add(p.id); _saveIds(ids);
+  if (ids.has(key)) return;
+  ids.add(key); _saveIds(ids);
   _updateBadge();
 }
 

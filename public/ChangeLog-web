@@ -1,4 +1,6 @@
-2026-09-11 version 2.1.8-web.141 (current series):
+2026-09-11 version 2.1.8-web.142 (current series):
+- bugfix: forum posts you already read no longer reappear as unread just because someone replied to the same topic
+2026-09-11 version 2.1.8-web.141:
 - bugfix: hiding a column (in-game status, country, rating) in the online players list now actually gives the name more room - it used to just clear the icon while the same space stayed reserved
 2026-09-11 version 2.1.8-web.140:
 - bugfix: the Local/Training and LAN tabs in the Player profile window now show your real stats and all their sub-tabs (including reset) no matter which mode you're currently connected in - they used to look empty when the mode didn't match
