@@ -16,6 +16,21 @@ release. Per-build detail is on the
 highlights below.
 
 ### Added
+- **Accessibility: Escape priority on the modal** (`web.135`, community
+  contribution by @seanpianka, scope 7/N, final) — `keynav.mjs` gains
+  `['accessibility-modal', 'closeAccessibility']`, so Escape closes the
+  Accessibility panel first when it's open over another surface (e.g. the
+  login form), instead of falling through to that surface's own Escape
+  handler. Closes out the low-vision accessibility series
+  (seanpianka/pokerth-web-client#2): entry point, login/lobby scaling,
+  desktop/portrait/landscape active-play scaling, and high contrast are
+  all merged, tested (`node --check`, `test:accessibility*`, `test:boot`,
+  `test:precache`, `test:keynav`, `test:reactions`, `test:layout`,
+  `test:seat-render` green throughout), and versioned against this repo's
+  own `web.N` counter (`web.122` → `web.135`) rather than the fork's
+  internal numbering. Manual verification on real mobile devices (Safari,
+  Firefox, installed PWA) is still outstanding — see
+  `docs/LOW_VISION_REAL_DEVICE_ACCEPTANCE.md`.
 - **Accessibility: high-contrast palette** (`web.134`, community
   contribution by @seanpianka, scope 6/N) — the "High contrast" toggle in
   the Accessibility panel now has a real effect (`data-high-contrast`
