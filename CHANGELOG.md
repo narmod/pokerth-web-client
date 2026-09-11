@@ -16,6 +16,37 @@ release. Per-build detail is on the
 highlights below.
 
 ### Added
+- **Local/Entrainement and LAN: viewable and resettable from ANY mode**
+  (`web.140`) — narmod reported that connecting to pokerth.net (or LAN, or
+  training) with the same nickname showed empty stats and no sub-tabs for
+  the *other* modes' data, and that resetting Local/Entrainement or LAN
+  wasn't possible except from their own matching mode. Root cause: both
+  panes still read/wrote whichever store `S._statsOffline` pointed to for
+  the *current* connection, and hid their Total (and LAN's Classement)
+  sub-tab whenever `S._statsEligible`/`S._boardEligible` were false for
+  that connection — even though the underlying `pth_life` /
+  `pth_life_offline` localStorage stores are per-device and always
+  present regardless of what you're currently connected to, and the family
+  board (`/stats`) is served by this webclient's own proxy, not gated by
+  which poker server you're playing on. Fixed: `_statsBodyLife` now takes
+  an optional explicit store key; `stats.mjs` gains `_lifeAllFor`/
+  `_lifeResetKey` (reset a named store, decide independently whether to
+  push the delete to `/stats`) and `_statsResetLocal`/`_statsResetLan`
+  (new explicit reset entry points, callable from any mode).
+  `player-popup.mjs`'s `_renderProfileStats` (Local/Entraînement) now
+  always reads/resets `pth_life_offline` explicitly and always shows its
+  Session/Total sub-tabs; `_renderLanProfileStats` (LAN) always reads/
+  resets `pth_life` explicitly and always shows all 3 sub-tabs
+  (Session/Total/Classement, `renderBoard` unconditionally). The in-game
+  📊 stats overlay (`renderStats`/`_statsReset`) keeps its prior ambient
+  (current-mode) behavior, unchanged — this only affects the "Profil du
+  joueur" window's two panes. `test-pim-parity.mjs` adds a same-nickname,
+  three-mode scenario (pth_life and pth_life_offline both pre-populated,
+  connect on pokerth.net, verify each pane shows its own data with no
+  mix-up, verify each reset clears only its own store and pushes the
+  delete signal only for LAN); `test-player-popup.mjs`'s old "forced back
+  to Session when ineligible" case is replaced with the new "always
+  reachable" expectation.
 - **Player profile: LAN and Local/Training as two always-visible tabs**
   (`web.139`, corrects `web.138`) — the previous single "My statistics" tab
   (label reused from `ppMyStats`) is replaced with two genuinely distinct,

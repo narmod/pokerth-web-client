@@ -17,10 +17,15 @@ import { esc } from '../ui/misc.mjs';
 // Training (vs bots) keeps its OWN persistent lifetime store, isolated from the
 // real private-server / LAN stats — they must never mix nor leak to the board.
 function _lifeKey()       { return S._statsOffline ? 'pth_life_offline' : 'pth_life'; }
-function _lifeAll()       { try { return JSON.parse(localStorage.getItem(_lifeKey()) || '{}') || {}; } catch(e) { return {}; } }
+function _lifeAllFor(key) { try { return JSON.parse(localStorage.getItem(key) || '{}') || {}; } catch(e) { return {}; } }
+function _lifeAll()       { return _lifeAllFor(_lifeKey()); }
 function _lifeSaveAll(o)  { try { localStorage.setItem(_lifeKey(), JSON.stringify(o)); } catch(e) {} }
 function _lifeBlank()     { return { handsPlayed:0, handsWon:0, net:0, bigWin:0, bigLoss:0, gamesPlayed:0, gamesWon:0, bestStreak:0, streak:0 }; }
-function _lifeGet(name)   { var a=_lifeAll(); return a[name] || _lifeBlank(); }
+// key optionnel : lire un store explicite (pth_life / pth_life_offline) plutot
+// que celui du mode de connexion courant — utilise par la fenetre "Profil du
+// joueur" pour que Local/Entrainement et LAN restent consultables (et
+// reinitialisables) depuis n'importe quel autre mode (demande narmod 11/09).
+function _lifeGet(name, key) { var a = key ? _lifeAllFor(key) : _lifeAll(); return a[name] || _lifeBlank(); }
 function _pushStats() {
   if (!S._boardEligible || !S.myName) return;   // training never touches the family board
   if (S._lifePushTimer) clearTimeout(S._lifePushTimer);
@@ -52,14 +57,24 @@ function _lifeRecordGame(won) {
   s.gamesPlayed++; if (won) s.gamesWon++;
   a[S.myName] = s; _lifeSaveAll(a); _pushStats();
 }
-function _lifeReset() {
+// key/pushDelete explicites : reinitialiser UN store precis (pas forcement
+// celui du mode courant) et decider independamment si le signal de
+// suppression part au proxy (jamais pour l'entrainement, qui ne pousse
+// jamais rien ; toujours pour LAN/prive, meme reinitialise depuis un autre
+// mode — demande narmod 11/09).
+function _lifeResetKey(key, pushDelete) {
   if (!S.myName) return;
-  var a = _lifeAll(); delete a[S.myName]; _lifeSaveAll(a);
-  if (S._boardEligible) {
+  var a = _lifeAllFor(key);
+  delete a[S.myName];
+  try { localStorage.setItem(key, JSON.stringify(a)); } catch(e) {}
+  if (pushDelete) {
     try { fetch('/stats', { method:'POST', headers:{'Content-Type':'application/json'},
       body: JSON.stringify({ name:S.myName, _delete:true }) }).catch(function(){}); } catch(e) {}
   }
 }
+// Repli ambiant (mode de connexion courant) : inchange, utilise par l'overlay
+// de stats en jeu (renderStats/_statsReset).
+function _lifeReset() { _lifeResetKey(_lifeKey(), S._boardEligible); }
 // Merge two lifetime records keeping the better of each (mirrors the proxy's
 // monotonic merge): counters never regress, net follows the more complete
 // record. Preserves the local current `streak` (not stored server-side).
@@ -177,14 +192,21 @@ function _statsBodySession() {
     + '</div>';
 }
 
-function _statsBodyLife() {
-  var s = _lifeGet(S.myName);
+// explicitKey (optionnel) : forcer la lecture de UN store precis plutot que
+// celui du mode courant — utilise par les panes Local/Entrainement
+// ('pth_life_offline') et LAN ('pth_life') de la fenetre "Profil du joueur",
+// consultables depuis n'importe quel mode (demande narmod 11/09). Sans
+// argument (overlay de stats en jeu, renderStats) : comportement ambiant
+// inchange.
+function _statsBodyLife(explicitKey) {
+  var key = explicitKey || _lifeKey();
+  var s = _lifeGet(S.myName, key);
   var gain = s.net;
   var gainCls = gain > 0 ? 'pos' : gain < 0 ? 'neg' : '';
   var wr = s.handsPlayed > 0 ? Math.round(s.handsWon/s.handsPlayed*100) : 0;
-  var note = S._statsOffline
-    ? '<div class="stat-note">'+t('statLifeTraining')+'</div>'
-    : (S._statsEligible ? '' : '<div class="stat-note">'+t('statLifeOnlyPrivate')+'</div>');
+  var isOffline = (key === 'pth_life_offline');
+  var note = isOffline ? '<div class="stat-note">'+t('statLifeTraining')+'</div>' : '';
+  var resetHandler = !explicitKey ? 'window._statsReset()' : (isOffline ? 'window._statsResetLocal()' : 'window._statsResetLan()');
   return '<div class="stats-body">'
     + note
     + _statsRow(t('statGamesPlayed'), s.gamesPlayed)
@@ -199,21 +221,54 @@ function _statsBodyLife() {
     + _statsRow(t('statBestWin'), '+'+'$' + _groupThousands(s.bigWin), 'pos')
     + _statsRow(t('statWorstLoss'), '$' + _groupThousands(s.bigLoss), 'neg')
     + '<hr class="stat-divider">'
-    + '<button class="stats-reset" onclick="window._statsReset()">'+t('statReset')+'</button>'
+    + '<button class="stats-reset" onclick="'+resetHandler+'">'+t('statReset')+'</button>'
     + '</div>';
 }
+// Reset ambiant (overlay de stats en jeu) : inchange.
 function _statsReset() {
   if (!confirm(t('statResetConfirm'))) return;
   _lifeReset();
   renderStats();
-  // Rafraîchir aussi le popup de profil s'il est ouvert (il partage le
-  // même onglet TOTAL avec son bouton reset).
-  try {
-    var pim = document.getElementById('player-info-modal');
-    if (pim && pim.style.display !== 'none') if (typeof window._renderProfileStats === 'function') window._renderProfileStats();
-  } catch (e) {}
+  // Repeindre aussi la fenetre "Profil du joueur" si ouverte : le pane dont
+  // le store correspond au mode ambiant courant.
+  if (S._statsOffline) {
+    if (typeof window._pimRenderSessionStats === 'function' && S._pimStatsBox) {
+      try { window._pimRenderSessionStats(S._pimStatsBox); } catch (e) {}
+    }
+  } else {
+    if (typeof window._pimRenderLanStats === 'function' && S._pimLanStatsBox) {
+      try { window._pimRenderLanStats(S._pimLanStatsBox); } catch (e) {}
+    }
+  }
 }
 window._statsReset = _statsReset;
+
+// Reset explicite du pane Local/Entrainement (fenetre Profil du joueur) :
+// store 'pth_life_offline' uniquement, jamais pousse au proxy (l'entrainement
+// n'a jamais touche le classement familial) — disponible depuis n'importe
+// quel mode (demande narmod 11/09).
+function _statsResetLocal() {
+  if (!confirm(t('statResetConfirm'))) return;
+  _lifeResetKey('pth_life_offline', false);
+  if (typeof window._pimRenderSessionStats === 'function' && S._pimStatsBox) {
+    try { window._pimRenderSessionStats(S._pimStatsBox); } catch (e) {}
+  }
+  if (S._statsOpen && S._statsOffline) renderStats();
+}
+window._statsResetLocal = _statsResetLocal;
+
+// Reset explicite du pane LAN (fenetre Profil du joueur) : store 'pth_life',
+// TOUJOURS pousse au proxy (le classement familial doit refleter la
+// suppression), disponible depuis n'importe quel mode (demande narmod 11/09).
+function _statsResetLan() {
+  if (!confirm(t('statResetConfirm'))) return;
+  _lifeResetKey('pth_life', true);
+  if (typeof window._pimRenderLanStats === 'function' && S._pimLanStatsBox) {
+    try { window._pimRenderLanStats(S._pimLanStatsBox); } catch (e) {}
+  }
+  if (S._statsOpen && !S._statsOffline) renderStats();
+}
+window._statsResetLan = _statsResetLan;
 
 // Ranking criterion (persisted). net | per100 | winrate | games | streak.
 try { S._boardSort = localStorage.getItem('pth_board_sort') || 'net'; } catch(e) {}
@@ -337,14 +392,16 @@ function recordHand(won, delta, myCardsPair) {
 }
 
 export { _lifeKey, _lifeAll, _lifeSaveAll, _lifeBlank, _lifeGet, _pushStats,
-         _lifeRecordHand, _lifeRecordGame, _lifeReset, _lifeMerge,
+         _lifeRecordHand, _lifeRecordGame, _lifeReset, _lifeResetKey, _lifeMerge,
          _lifeSeedFromServer, toggleStats, _statsSetTab, _statsRow, renderStats,
-         _statsBodySession, _statsBodyLife, _statsReset, _boardPer100,
+         _statsBodySession, _statsBodyLife, _statsReset, _statsResetLocal,
+         _statsResetLan, _boardPer100,
          _boardWinRate, _boardCmp, _boardSetSort, renderBoard, initStats,
          recordHand };
 
 for (const [k, v] of Object.entries({ _lifeKey, _lifeAll, _lifeSaveAll, _lifeBlank,
-  _lifeGet, _pushStats, _lifeRecordHand, _lifeRecordGame, _lifeReset, _lifeMerge,
+  _lifeGet, _pushStats, _lifeRecordHand, _lifeRecordGame, _lifeReset, _lifeResetKey, _lifeMerge,
   _lifeSeedFromServer, toggleStats, _statsSetTab, _statsRow, renderStats,
-  _statsBodySession, _statsBodyLife, _statsReset, _boardPer100, _boardWinRate,
+  _statsBodySession, _statsBodyLife, _statsReset, _statsResetLocal, _statsResetLan,
+  _boardPer100, _boardWinRate,
   _boardCmp, _boardSetSort, renderBoard, initStats, recordHand })) window[k] = v;

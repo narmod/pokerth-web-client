@@ -165,8 +165,8 @@ ok(typeof w._pimRenderSessionStats === 'function',
 w._ppSelect('lan');
 ok(w.document.getElementById('pp-lan-session') !== null,
    'fenetre (moi) sur pokerth.net : le pane LAN a son conteneur de stats');
-ok(w.document.querySelector('#pp-lan-session .stats-tab[onclick*="board"]') === null,
-   'fenetre (moi) sur pokerth.net : pas de sous-onglet Classement dans LAN (pas de connexion LAN)');
+ok(w.document.querySelector('#pp-lan-session .stats-tab[onclick*="board"]') !== null,
+   'fenetre (moi) sur pokerth.net : le sous-onglet Classement reste present (consultable depuis n\u2019importe quel mode)');
 ok(typeof w._pimRenderLanStats === 'function',
    'rendu des stats LAN adressable a un conteneur au choix');
 
@@ -216,6 +216,74 @@ w.openPlayerInfoPopup(2);
 const otherBoxLan = w.document.getElementById('pim-info');
 ok((otherBoxLan.querySelectorAll('.pim-cups-btn') || []).length === 0,
    'fiche d un autre en LAN : toujours pas de bouton stats (donnees pas les miennes)');
+
+// ── Meme pseudo utilise en LAN et en entrainement : consultable ET
+// reinitialisable depuis N'IMPORTE QUEL AUTRE MODE (remonte narmod 11/09 —
+// "je ne vois pas mes scores... je dois pouvoir remettre a zero depuis
+// n'importe quel autre mode"). On simule les deux stores localStorage deja
+// remplis, puis on se connecte sur pokerth.net (un TROISIEME mode, ni LAN ni
+// entrainement) et on verifie que les deux panes affichent bien CHACUN leurs
+// propres donnees (pas de melange, pas de vide) et que le reset cible le bon
+// store.
+S.myName = 'narmod'; S.players[1] = 'narmod';
+w.localStorage.setItem('pth_life', JSON.stringify({ narmod: {
+  handsPlayed: 50, handsWon: 20, net: 500, bigWin: 200, bigLoss: -50,
+  gamesPlayed: 5, gamesWon: 2, bestStreak: 3 } }));
+w.localStorage.setItem('pth_life_offline', JSON.stringify({ narmod: {
+  handsPlayed: 10, handsWon: 3, net: -40, bigWin: 30, bigLoss: -60,
+  gamesPlayed: 2, gamesWon: 0, bestStreak: 1 } }));
+w.document.getElementById('login-mode').value = 'auth';
+w._offlineMode = false;
+S._statsOffline = false;
+S._statsEligible = false;
+S._boardEligible = false;
+S._playerRights[1] = 2;   // enregistre sur pokerth.net (sinon _cupsBlockHtml ferme)
+w.document.getElementById('pp-modal').style.display = 'none';
+w.openPlayerInfoPopup();
+const crossBtn = w.document.querySelector('#pim-info .pim-cups-btn');
+vm.runInContext(crossBtn.getAttribute('onclick'), ctx, {});
+w._ppSelect('local'); w._pimSetTab('life');
+const crossLocalTxt = w.document.getElementById('pp-session').textContent;
+ok(crossLocalTxt.includes('$-40'), 'depuis pokerth.net : Local/Entrainement affiche bien le net -40 (store entrainement, pas vide)');
+w._ppSelect('lan'); w._pimSetLanTab('life');
+const crossLanTxt = w.document.getElementById('pp-lan-session').textContent;
+ok(crossLanTxt.includes('+$500'), 'depuis pokerth.net : LAN affiche bien le net +500 (store LAN, pas vide, pas melange avec l entrainement)');
+
+// Reset LAN depuis pokerth.net : doit vider UNIQUEMENT pth_life (pth_life_offline
+// intact) et pousser le signal de suppression au proxy MEME hors connexion LAN.
+let crossDeletePushed = false;
+const savedFetch = w.fetch;
+w.fetch = function (url, opts) {
+  if (opts && opts.method === 'POST' && String(url).indexOf('/stats') === 0) {
+    try { crossDeletePushed = crossDeletePushed || JSON.parse(opts.body)._delete === true; } catch (e) {}
+  }
+  return Promise.reject(new Error('stub'));
+};
+globalThis.fetch = w.fetch;
+globalThis.confirm = () => true;   // stats.mjs tourne dans le realm exterieur (import ESM reel)
+w._statsResetLan();
+w.fetch = savedFetch;
+globalThis.fetch = savedFetch;
+ok(crossDeletePushed, 'reset LAN depuis pokerth.net : le signal de suppression est bien pousse au proxy');
+ok(!JSON.parse(w.localStorage.getItem('pth_life') || '{}').narmod,
+   'reset LAN depuis pokerth.net : mon entree pth_life est bien effacee');
+ok(!!JSON.parse(w.localStorage.getItem('pth_life_offline') || '{}').narmod,
+   'reset LAN depuis pokerth.net : mon entree pth_life_offline (entrainement) est INTACTE');
+
+// Reset Local/Entrainement depuis pokerth.net : vide pth_life_offline, ne
+// pousse JAMAIS rien au proxy (l entrainement n a jamais touche le classement).
+let localDeletePushed = false;
+w.fetch = function (url, opts) {
+  if (opts && opts.method === 'POST' && String(url).indexOf('/stats') === 0) localDeletePushed = true;
+  return Promise.reject(new Error('stub'));
+};
+globalThis.fetch = w.fetch;
+w._statsResetLocal();
+w.fetch = savedFetch;
+globalThis.fetch = savedFetch;
+ok(!localDeletePushed, 'reset Local/Entrainement depuis pokerth.net : rien n est pousse au proxy');
+ok(!JSON.parse(w.localStorage.getItem('pth_life_offline') || '{}').narmod,
+   'reset Local/Entrainement depuis pokerth.net : mon entree pth_life_offline est bien effacee');
 
 // Une seule source pour les deux branches.
 const src = readFileSync('public/modules/ui/player-popup.mjs', 'utf8');

@@ -117,13 +117,24 @@ cupsFor = null;
 P.openPlayerInfoPopup(7, true);
 ok(cupsFor === null, 'carte : aucun chargement de coupes, meme avec autoStats');
 
-// _pimSetTab pilote l'onglet du popup
+// _pimSetTab pilote l'onglet du popup — Total reste desormais accessible
+// QUEL QUE SOIT le mode (S._statsEligible) : Local/Entrainement lit toujours
+// le store d'entrainement explicite, plus de repli force sur Session hors
+// eligibilite (narmod 11/09 : consultable/reinitialisable depuis n'importe
+// quel mode).
 S._statsEligible = true; S._pimTab = 'session';
 P._pimSetTab('life');
 ok(S._pimTab === 'life', "_pimSetTab bascule sur l'onglet lifetime");
 S._statsEligible = false;
 P._pimSetTab('life');
-ok(S._pimTab === 'session', 'garde : hors éligibilité, retour forcé à session');
+ok(S._pimTab === 'life', 'Total reste accessible hors eligibilite (plus de repli force sur Session)');
+S._statsEligible = true;
+// Meme logique cote LAN : le sous-onglet Classement reste selectionnable
+// meme sans connexion LAN/serveur prive (S._boardEligible faux).
+S._boardEligible = false;
+P._pimSetLanTab('board');
+ok(S._pimLanTab === 'board', 'onglet LAN : Classement reste accessible hors connexion LAN/serveur prive');
+S._boardEligible = true;
 
 // ── Fenetre a largeur figee ───────────────────────────────────────────────
 // La carte est une colonne centree : etiree, elle laissait deux marges vides.

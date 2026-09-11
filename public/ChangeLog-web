@@ -1,4 +1,6 @@
-2026-09-11 version 2.1.8-web.139 (current series):
+2026-09-11 version 2.1.8-web.140 (current series):
+- bugfix: the Local/Training and LAN tabs in the Player profile window now show your real stats and all their sub-tabs (including reset) no matter which mode you're currently connected in - they used to look empty when the mode didn't match
+2026-09-11 version 2.1.8-web.139:
 - improvement: the Player profile window now shows "Local / Training" and "LAN" as two separate tabs, always visible together - LAN keeps all 3 sub-tabs (Session, Total, and the family ranking with its reset button)
 2026-09-11 version 2.1.8-web.138:
 - improvement: the Player profile window (from your own avatar) is now organized as three tabs - Cups, Local/Training, and LAN - each shown only when it applies, instead of a stats box always stacked above the cups

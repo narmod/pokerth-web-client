@@ -580,14 +580,15 @@ function _otherPlayerInfoHtml(pid) {
 }
 
 // Bloc stats du popup de profil — mêmes onglets que le panneau en jeu :
-// SESSION (toujours) / TOTAL (à vie, + bouton reset). N'apparaissent qu'en
-// mode réseau (LAN + serveur privé, S._statsEligible) : sur pokerth.net
-// direct, seul SESSION. Alimente l'onglet de premier niveau "Local /
-// Entrainement" de la fenetre "Profil du joueur" (openPlayerProfile,
-// pokerth-client.html) — TOUJOURS visible, aux cotes de "LAN" (qui porte en
-// plus le Classement familial) et de "Coupes" (demande narmod 11/09 : les
-// deux, Local/Entrainement et LAN, restent affiches ensemble meme quand l'un
-// n'a alors rien a montrer — ex. Local/Entrainement hors reseau).
+// SESSION (toujours) / TOTAL (à vie, + bouton reset). Alimente l'onglet de
+// premier niveau "Local / Entrainement" de la fenetre "Profil du joueur"
+// (openPlayerProfile, pokerth-client.html) — TOUJOURS visible, aux cotes de
+// "LAN" (qui porte en plus le Classement familial) et de "Coupes" (demande
+// narmod 11/09 : les deux, Local/Entrainement et LAN, restent affiches
+// ensemble, DEPUIS N'IMPORTE QUEL MODE — y compris pour consulter/reinitialiser
+// — pas seulement depuis le mode auquel ils correspondent). TOTAL lit ici
+// TOUJOURS le store d'entrainement (pth_life_offline, explicite), jamais
+// celui du mode de connexion courant : _statsBodyLife('pth_life_offline').
 // Réutilise _statsBodySession / _statsBodyLife pour rester strictement
 // identique au jeu (y compris le reset).
 function _pimSetTab(tab) { S._pimTab = tab; _renderProfileStats(S._pimStatsBox); }
@@ -597,35 +598,31 @@ function _pimSetTab(tab) { S._pimTab = tab; _renderProfileStats(S._pimStatsBox);
 // (Session / A vie) repeignent le bon element.
 window._pimRenderSessionStats = function (containerId) {
   S._pimStatsBox = containerId;
-  S._pimTab = 'session';
+  if (!S._pimTab) S._pimTab = 'session';
   _renderProfileStats(containerId);
 };
 
 function _renderProfileStats(boxId) {
   var box = document.getElementById(boxId || S._pimStatsBox || 'pim-stats');
   if (!box) return;
-  var eligible = S._statsEligible;
-  if (!eligible && S._pimTab !== 'session') S._pimTab = 'session';
-  if (S._pimTab === 'board') S._pimTab = 'session'; // ancien onglet, deplace vers "LAN"
   function tb(id, label) {
     return '<button class="stats-tab'+(S._pimTab===id?' active':'')+'" onclick="window._pimSetTab(\''+id+'\')">'+label+'</button>';
   }
-  var tabs = eligible
-    ? '<div class="stats-tabs">'+tb('session',t('statTabSession'))+tb('life',t('statTabLife'))+'</div>'
-    : '';
-  var body = (S._pimTab === 'life') ? window._statsBodyLife() : window._statsBodySession();
+  var tabs = '<div class="stats-tabs">'+tb('session',t('statTabSession'))+tb('life',t('statTabLife'))+'</div>';
+  var body = (S._pimTab === 'life') ? window._statsBodyLife('pth_life_offline') : window._statsBodySession();
   box.innerHTML = tabs + body;
   if (window._offlineMode && typeof window._achMountBadge === 'function') { try { window._achMountBadge(box, 'profile'); } catch (e) {} }
 }
 
 // ── Pane LAN de la fenetre "Profil du joueur" ──────────────────────────────
-// Memes stats que Local/Entrainement (Session/Total), PLUS un 3e sous-onglet
-// Classement (le classement familial complet, /stats) — demande narmod
-// 11/09 : garder les 3 sous-categories sous l'onglet LAN, meme si Classement
-// n'a rien a montrer hors connexion LAN/serveur prive (S._boardEligible
-// faux) — il degrade alors sur Session/Total, exactement comme Local/
-// Entrainement. Etat de sous-onglet independant (S._pimLanTab) : ouvrir
-// l'un des deux onglets de premier niveau ne doit pas faire perdre la
+// Memes stats que Local/Entrainement, mais lisant TOUJOURS le store LAN/
+// serveur prive explicite (pth_life, jamais celui du mode courant), PLUS un
+// 3e sous-onglet Classement (le classement familial complet, /stats — sans
+// mode-gating cote lecture : renderBoard() interroge le proxy quel que soit
+// le mode de connexion actuel). Les 3 sous-categories restent TOUJOURS
+// visibles, consultables ET reinitialisables depuis n'importe quel mode
+// (demande narmod 11/09). Etat de sous-onglet independant (S._pimLanTab) :
+// ouvrir l'un des deux onglets de premier niveau ne doit pas faire perdre la
 // position de l'autre.
 function _pimSetLanTab(tab) { S._pimLanTab = tab; _renderLanProfileStats(S._pimLanStatsBox); }
 
@@ -638,19 +635,12 @@ window._pimRenderLanStats = function (containerId) {
 function _renderLanProfileStats(boxId) {
   var box = document.getElementById(boxId || S._pimLanStatsBox);
   if (!box) return;
-  var eligible = S._statsEligible;
-  var board    = S._boardEligible;
-  if (!eligible && S._pimLanTab !== 'session') S._pimLanTab = 'session';
-  if (!board && S._pimLanTab === 'board') S._pimLanTab = 'session';
   function tb(id, label) {
     return '<button class="stats-tab'+(S._pimLanTab===id?' active':'')+'" onclick="window._pimSetLanTab(\''+id+'\')">'+label+'</button>';
   }
-  var tabs = eligible
-    ? '<div class="stats-tabs">'+tb('session',t('statTabSession'))+tb('life',t('statTabLife'))
-      + (board ? tb('board',t('statTabBoard')) : '') + '</div>'
-    : '';
+  var tabs = '<div class="stats-tabs">'+tb('session',t('statTabSession'))+tb('life',t('statTabLife'))+tb('board',t('statTabBoard'))+'</div>';
   var body;
-  if (S._pimLanTab === 'life')       body = window._statsBodyLife();
+  if (S._pimLanTab === 'life')       body = window._statsBodyLife('pth_life');
   else if (S._pimLanTab === 'board') body = '<div id="pp-lan-board-body" class="stats-body"><div class="stat-empty">…</div></div>';
   else                              body = window._statsBodySession();
   box.innerHTML = tabs + body;
