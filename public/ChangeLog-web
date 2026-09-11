@@ -1,4 +1,6 @@
-2026-09-11 version 2.1.8-web.121 (current series):
+2026-09-11 version 2.1.8-web.122 (current series):
+- new: an Accessibility button is now available before login and in the lobby and game headers, opening a panel where you can pick an interface size, turn on a high-contrast mode, and set the browser pinch-zoom permission - your choices are saved and follow you across devices with settings sync (the on-screen effect of interface size and high contrast is coming in the next updates)
+2026-09-11 version 2.1.8-web.121:
 - bugfix: reopening the app could show the previous version for a moment with no update prompt, especially after it had been in the background a while; it now catches up and reloads once by itself
 2026-09-10 version 2.1.8-web:
 - new: in LAN and private-server games, the ranking window (trophy button) has a LAN tab, opened by default - it lists every player of the server and can be sorted by net winnings, winnings per 100 hands, win rate, games won or best streak

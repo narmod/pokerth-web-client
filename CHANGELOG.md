@@ -16,6 +16,19 @@ release. Per-build detail is on the
 highlights below.
 
 ### Added
+- **Accessibility entry point** (`web.122`, community contribution by
+  @seanpianka, scope 1/N of a broader low-vision accessibility effort) — a new
+  `#accessibility-modal` reachable from a header button before login and in
+  the lobby/game headers (`modules/ui/accessibility.mjs`). Lets a player
+  choose an interface size (Standard/Large/Extra Large), toggle a high-contrast
+  mode, and set the existing browser pinch-zoom permission from one place;
+  choices are stored under `pth_interface_size` / `pth_high_contrast` /
+  `pth_browser_zoom`, participate in config export/import and account web-sync
+  (`_CFG_WEB_SYNC_KEYS`), and degrade property-by-property on malformed
+  storage. Note: this build only ships the preference panel and storage layer
+  — the interface-size and high-contrast presentation itself lands in
+  follow-up builds. Tests in `scripts/test-accessibility.mjs` (20 checks) and
+  `scripts/test-accessibility-locales.mjs` (45 catalogues × 7 keys).
 - **LAN tab in the ranking window** (`web.120`) — connected in either LAN /
   private-server mode (`S._boardEligible`, never training), `#ranking-modal`
   shows a `LAN` tab (hidden elsewhere, selected by default on open, not saved
