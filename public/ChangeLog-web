@@ -1,4 +1,6 @@
-2026-09-11 version 2.1.8-web.123 (current series):
+2026-09-11 version 2.1.8-web.124 (current series):
+- improvement: the Large and Extra Large interface sizes from the Accessibility panel now also scale up the desktop table during a game (seats, badges, whose turn it is) - the table geometry is unchanged if you leave the setting at Standard
+2026-09-11 version 2.1.8-web.123:
 - improvement: the Large and Extra Large interface sizes from the Accessibility panel now actually enlarge the login screen and the lobby, including the table list once it's populated (high contrast still has no visible effect yet - it's coming in a later update)
 2026-09-11 version 2.1.8-web.122:
 - new: an Accessibility button is now available before login and in the lobby and game headers, opening a panel where you can pick an interface size, turn on a high-contrast mode, and set the browser pinch-zoom permission - your choices are saved and follow you across devices with settings sync (the on-screen effect of interface size and high contrast is coming in the next updates)

@@ -16,6 +16,13 @@ release. Per-build detail is on the
 highlights below.
 
 ### Added
+- **Accessibility: desktop active play scaling** (`web.124`, community
+  contribution by @seanpianka, scope 3/N) — interface size (Large/Extra
+  Large) now also scales the desktop in-game table (seats, badges, turn
+  cue) via the additive `interfaceScale` parameter already carried by
+  `layout.mjs`/`seat-render.mjs`, so the geometry stays identical for
+  players who leave the setting at Standard. High contrast still has no
+  visible effect yet.
 - **Accessibility: login and lobby scaling** (`web.123`, community
   contribution by @seanpianka, scope 2/N) — the Large/Extra Large interface
   sizes chosen in the Accessibility panel now take visible effect on the
