@@ -6,12 +6,16 @@ use too. Items are grouped by status rather than fixed phases.
 
 > **Tracking the official client, continuously.** The in-game screen is kept aligned
 > with PokerTH's official QML client on an ongoing basis — as the official client
-> evolves (currently the 2.1.5 build), the web client re-syncs to match. See
+> evolves (currently the 2.1.8 build), the web client re-syncs to match. See
 > *Official client (QML) tracking* below.
 
 ## ✅ Shipped
 
 - **SEO / search-engine visibility (admin option, off by default)** — `/admin` → Clients → Search engine visibility. Off: pages served with `noindex,nofollow`, `robots.txt` blocks all crawlers (self-hosted installs stay unindexed). On: meta description, Open Graph / Twitter cards, canonical, JSON-LD, crawler-readable summary block, plus generated `robots.txt` (AI crawlers welcomed), `sitemap.xml` and `llms.txt` from the configured public URL. Injected at serve time by `proxy.js` (v2.1.6-web.25).
+
+- **Low-vision accessibility** (`2.1.8-web.122`–`.135`, `2.1.8-web.147`) — a browser-local Accessibility preference set, reachable before login and from every lobby/game header: Interface size (Standard / Large / Extra Large), an independent High contrast palette, and the existing pinch-zoom permission. Preferences apply live, survive reload, and travel through configuration export/import and account web-preference sync. On phones and tablets, Extra Large switches active play to an adaptive layout that keeps critical information visible and moves chat/log/hands/reactions into keyboard- and touch-operable drawers. This is a bounded accessibility sweep, not a claim of full WCAG conformance; manual real-device verification is still pending (see [LOW_VISION_REAL_DEVICE_ACCEPTANCE.md](docs/LOW_VISION_REAL_DEVICE_ACCEPTANCE.md)).
+
+- **`/live` — spectator mode for pokerth.net**, replacing the standalone `pokerth-live` tool: guest-only login → table list → Spectate, using this client's own table view so every table improvement is inherited. Deep-linkable (`?embed=1`), host-sized to its embedding frame with its own scroller, configurable from the admin panel's `/live` defaults.
 
 **Core gameplay**
 - Full flow: lobby, table creation, joining, betting, showdown.
@@ -46,7 +50,7 @@ use too. Items are grouped by status rather than fixed phases.
   on strong draws, and barrelling that carries the story across streets — value bets on made
   hands, busted-draw bluffs and medium-hand check-downs on the river — with barrel frequency
   and give-up tuned by difficulty and archetype.
-- **Achievements / Trophies.** A **Trophées** tab in the ranking window (Training mode only, once connected) with 27 achievements across Progress, Skill, Play-style, Fun and PokerTH formats — hand and game milestones, win-streaks, comeback, heads-up, patience, bluff, all-in, "the three schools", a completionist meta, and PokerTH-format wins (Ranking / WeCup / BBC / Triple Crown / Blitz / rising blinds). Locked entries greyed out, a 👥 badge for player-count requirements, an unlock toast, and an "X/27" counter on the profile card and end-of-game screen. Localised in all 45 languages. Built as a mode-agnostic module (`public/modules/achievements/`) consuming the engine's event stream.
+- **Achievements / Trophies.** A **Trophées** tab in the ranking window (Training mode only, once connected) with 27 achievements across Progress, Skill, Play-style, Fun and PokerTH formats — hand and game milestones, win-streaks, comeback, heads-up, patience, bluff, all-in, "the three schools", a completionist meta, and PokerTH-format wins (Ranking / WeCup / BBC / Triple Crown / Blitz / rising blinds). Locked entries greyed out, a 👥 badge for player-count requirements, an unlock toast, and an "X/27" counter on the profile card and end-of-game screen. Localised in all 46 languages. Built as a mode-agnostic module (`public/modules/achievements/`) consuming the engine's event stream.
 
 **Appearance & theming**
 - A QML-style styles window with four tabs — Table · Cards · Card back · Seats — each
@@ -63,7 +67,7 @@ use too. Items are grouped by status rather than fixed phases.
   Advanced options, matching the QML client.
 - Light/dark aware: per-theme `color-scheme` and a dynamic browser `theme-color` that
   follows the active theme.
-- Theme panel fully localised in all 45 languages, with live switching and a live preview
+- Theme panel fully localised in all 46 languages, with live switching and a live preview
   of each deck.
 - Semantic-colour system so the whole UI recolours consistently per theme — gold uses the
   official QML accent (`#E3C800`) and is kept only for deliberate game assets (dealer
@@ -171,13 +175,13 @@ use too. Items are grouped by status rather than fixed phases.
   option to strip emojis from received chat.
 - Lobby game cards show player counts, status, and each table's blind level and raise schedule.
 - Sound effects for every action.
-- Internationalisation in 45 languages, auto-detected and switchable on the fly.
+- Internationalisation in 46 languages, auto-detected and switchable on the fly.
 
 **Official client (QML) tracking — kept aligned on an ongoing basis**
 - The in-game screen is audited feature-by-feature against PokerTH's official QML client
   (sources extracted from the official desktop AppImage and Android APK builds) and
   re-synced as that client evolves. Feature parity was first reached in the `v0.3.166`
-  series; work since has been fidelity tuning against the newer builds (currently **2.1.5**). Feature
+  series; work since has been fidelity tuning against the newer builds (currently **2.1.8**). Feature
   coverage includes:
   - F1–F8 keyboard shortcuts matching the official client (fold / check-call / bet-raise /
     all-in, alternate key order, playing-mode switches), plus F5 to show your cards after
@@ -255,17 +259,6 @@ use too. Items are grouped by status rather than fixed phases.
   engine and bot brain, message handlers, and app boot — run in CI-style before every deploy.
 
 ## 🔨 Now (in progress)
-
-- **`/live` — spectator mode for pokerth.net** — replacing the standalone
-  `pokerth-live` tool with this client, embedded in the website. The flow follows
-  the current tool (explicit guest login → table list with an expandable row →
-  Spectate), the table view is ours, so every table improvement is inherited.
-  Guest-only, settings in a slim header rather than a popup. Server route and
-  embed hygiene landed in `2.1.8-web.65`, the slim header in `2.1.8-web.66`, the
-  one-button guest login in `2.1.8-web.67`, the table list in `2.1.8-web.68`, the
-  resizable chat column and Players tab in `2.1.8-web.71`/`72`, and its own
-  transport setting in `2.1.8-web.73`; `?embed=1` (deep link) in
-  `2.1.8-web.83`, host-sized with the list's own scroller since `2.1.8-web.115`; and the admin defaults for `/live` in `2.1.8-web.84`.
 
 - **Official QML client fidelity** — ongoing pixel-and-behaviour alignment of the in-game
   screen with the official QML client (action bar, mobile layouts, seat geometry).
