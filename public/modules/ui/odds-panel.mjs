@@ -320,7 +320,11 @@ function renderOddsMonitor() {
     for (var i = 0; i < CATS.length; i++) {
       var ri = CATS[i][0], p = r.pct[ri] * 100, pw = Math.max(0, Math.min(100, p));
       var ptxt = p >= 0.5 ? Math.round(p) + '%' : (p > 0 ? '<1%' : '0%');
-      var cls = pw >= 50 ? ' hot' : (pw >= 15 ? ' warm' : '');
+      // Parité QML (fine-tuning sp0ck 2.1.9) : une catégorie à 0 tirage sur
+      // l'échantillon (p === 0, pas juste "< 1%") est réellement impossible
+      // avec les cartes actuelles -> classe "imp", dimmed mais lisible (icône
+      // 50%, texte atténué) au lieu de disparaître comme avant.
+      var cls = p <= 0 ? ' imp' : (pw >= 50 ? ' hot' : (pw >= 15 ? ' warm' : ''));
       rows += '<div class="odds-row' + cls + '"><img class="odds-ico" src="/img/hands/' + CATS[i][2] + '.svg" alt="">'
         + '<span class="odds-cat">' + esc(CATS[i][1])
         + '</span><span class="odds-bar"><i style="width:' + pw.toFixed(1) + '%"></i></span>'

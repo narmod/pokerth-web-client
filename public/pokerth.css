@@ -9471,12 +9471,14 @@ html:not([data-seat-struct="qml"]) .seat:not(.me) .seat-foot { margin-top: 1px; 
 #g-odds-body .odds-row{display:flex;align-items:center;gap:var(--sp-2);height:22px;font-size:var(--fs-sm)}
 #g-odds-body .odds-ico{width:26px;height:17px;object-fit:contain;flex:0 0 auto}
 #g-odds-body .odds-cat{flex:0 0 44%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;opacity:.9}
-#g-odds-body .odds-bar{flex:1;height:7px;background:rgba(var(--gold-rgb),.14);border-radius:var(--r-xs);overflow:hidden}
+#g-odds-body .odds-bar{flex:1;height:7px;background:rgba(var(--gold-rgb),.22);border-radius:var(--r-xs);overflow:hidden}
 #g-odds-body .odds-bar>i{display:block;height:100%;width:0;background:linear-gradient(90deg,#8a93a6,#5a6478);border-radius:3px}
 #g-odds-body .odds-pct{flex:0 0 34px;text-align:right;font-variant-numeric:tabular-nums;opacity:.92}
 #g-odds-body .odds-row.warm .odds-bar>i{background:linear-gradient(90deg,#f0a020,#b36b00)}
 #g-odds-body .odds-row.hot .odds-bar>i{background:linear-gradient(90deg,#50c878,#1e8c4e)}
 #g-odds-body .odds-row.hot .odds-pct{color:#7ce0a0;font-weight:700}
+#g-odds-body .odds-row.imp .odds-ico{opacity:.5}
+#g-odds-body .odds-row.imp .odds-cat,#g-odds-body .odds-row.imp .odds-pct{opacity:.55}
 /* Chances : compression douce quand le panneau est court (parité avec le fix
    QML « elastic row height ») — sous ~270px de corps, lignes 17px + icônes
    réduites pour garder les 10 catégories visibles d'un regard ; en dessous,
@@ -9532,12 +9534,14 @@ html:not([data-seat-struct="qml"]) .seat:not(.me) .seat-foot { margin-top: 1px; 
 #odds-monitor .odds-wait{opacity:.6;padding:2px 0}
 #odds-monitor .odds-row{display:flex;align-items:center;gap:calc(4px*var(--ws));height:calc(13px*var(--ws))}
 #odds-monitor .odds-cat{flex:0 0 calc(50px*var(--ws));white-space:nowrap;overflow:hidden;text-overflow:ellipsis;opacity:.88}
-#odds-monitor .odds-bar{flex:1;height:calc(6px*var(--ws));background:rgba(var(--gold-rgb),.14);border-radius:calc(3px*var(--ws));overflow:hidden}
+#odds-monitor .odds-bar{flex:1;height:calc(6px*var(--ws));background:rgba(var(--gold-rgb),.22);border-radius:calc(3px*var(--ws));overflow:hidden}
 #odds-monitor .odds-bar>i{display:block;height:100%;width:0;background:linear-gradient(90deg,#8a93a6,#5a6478);border-radius:calc(3px*var(--ws))}
 #odds-monitor .odds-pct{flex:0 0 calc(27px*var(--ws));text-align:right;font-variant-numeric:tabular-nums;opacity:.92}
 #odds-monitor .odds-row.warm .odds-bar>i{background:linear-gradient(90deg,#f0a020,#b36b00)}
 #odds-monitor .odds-row.hot .odds-bar>i{background:linear-gradient(90deg,#50c878,#1e8c4e)}
 #odds-monitor .odds-row.hot .odds-pct{color:#7ce0a0;font-weight:700}
+#odds-monitor .odds-row.imp .odds-ico{opacity:.5}
+#odds-monitor .odds-row.imp .odds-cat,#odds-monitor .odds-row.imp .odds-pct{opacity:.55}
 @media (min-width:600px){#odds-monitor{resize:horizontal;overflow:hidden;min-width:104px;max-width:340px}}
 @media (max-width:599.98px){#odds-monitor{--ws:.95;width:120px;top:48px}}
 /* Fenetre flottante "Assistance" (force de la main) -- meme modele que #odds-monitor. */
