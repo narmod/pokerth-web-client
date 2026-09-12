@@ -16,6 +16,18 @@ release. Per-build detail is on the
 highlights below.
 
 ### Added
+- **Latvian catalogue (`lv`)** (`web.148`) — a 47th language: the full UI
+  catalogue (1521 keys, parity-checked against `en.mjs` for keys, `{token}`
+  placeholders, `||` separators and `%1`/`%2` slots) and the complete help
+  corpus (10 chapters, 68 sections, same ids in the same order and the same
+  field and list lengths as `en.mjs`). Registered in `modules/i18n.mjs`,
+  precached in `sw.js`, added to the admin panel's welcome-message language
+  list, and every "46 languages" claim in the client and docs updated to 47.
+  Poker action terms stay in English; hand names are translated
+  (Karaliskā rinda, Pilna māja, Četrinieks…), as in the other catalogues.
+  Fixes three help corpora the Estonian rollout missed — `bn`, `ko` and `sw`
+  still claimed 45 languages — and the same stale claim in `CONTRIBUTING.md`.
+  The SEO content pages (glossary, hands, how-to) do not cover `lv` yet.
 - **Estonian SEO content pages** (`web.145`) — `seo-i18n/hands.js`,
   `glossary.js` and `howto.js` gain their `et` entries, so
   `/hand-rankings`, `/glossary` and `/how-to-play` render in Estonian and

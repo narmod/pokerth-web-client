@@ -13,7 +13,7 @@
 // dans le champ : une étape de moins que le dialogue séparé du QML.
 //
 // Aucune chaîne nouvelle : le menu réutilise les clés déjà traduites dans les
-// 46 langues par la carte (nvTitle, ppOpen, piIgnore/piUnignore,
+// 47 langues par la carte (nvTitle, ppOpen, piIgnore/piUnignore,
 // piReportAvatar, piKickban).
 import { S } from '../game/state.mjs';
 import { t } from '../i18n.mjs';

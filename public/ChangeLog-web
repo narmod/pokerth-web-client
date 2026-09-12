@@ -1,4 +1,6 @@
-2026-09-12 version 2.1.8-web.147 (current series):
+2026-09-12 version 2.1.8-web.148 (current series):
+- new: Latvian (Latviešu) is now available in the language list - the whole interface and the built-in help are translated, bringing the client to 47 languages
+2026-09-12 version 2.1.8-web.147:
 - bugfix: reopening the chat or info drawer via the Accessibility panel at Extra Large no longer leaves keyboard focus stuck outside it - it now lands back in the drawer as intended
 2026-09-12 version 2.1.8-web.146:
 - bugfix: the chat and info drawer buttons in mobile landscape at Extra Large interface size are properly tappable again - they had shrunk below the accessible touch-target size

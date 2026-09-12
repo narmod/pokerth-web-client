@@ -957,7 +957,7 @@ function onEndOfHandShow(sub) {
         S.seatData[pid].action = won ? '🏆 +' + won : '';
       }
       // Abattage : cartes révélées + nom de la combinaison. Le label vient
-      // de evaluateBestHand (clés hs* déjà traduites dans les 46 langues).
+      // de evaluateBestHand (clés hs* déjà traduites dans les 47 langues).
       // Joueurs couchés avant l'abattage : c1/c2 == null → pas de ligne.
       if (c1 != null && c2 != null) {
         const _bd = S.commCards.slice(); // fige le board de CETTE main
@@ -1228,7 +1228,7 @@ function onAfterHandShowCards(sub) {
           hand:  ev ? ev.label : ''
         });
         // Sans blatt : retirer le « — » final du gabarit (identique dans
-        // les 46 langues, toujours en fin de chaîne).
+        // les 47 langues, toujours en fin de chaîne).
         return ev ? line : line.replace(/\s*—\s*$/, '');
       });
     }
