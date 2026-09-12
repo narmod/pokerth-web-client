@@ -840,6 +840,19 @@ highlights below.
   (`scale 1.03`, 180 ms OutQuad) is applied to the seat plate.
 
 ### Fixed
+- **`#gchat-fab` (floating in-game chat button) reachable via Tab from any
+  screen, including the connect/login screen** (`web.156`) — the button had
+  no CSS of its own beyond badge positioning: a plain, always-focusable
+  `<button>` sitting in normal document flow right after `#s-game`. With
+  `#s-game` inactive it fell exactly one viewport below whichever screen
+  was active, invisible in practice — until Tab reached it and the
+  browser's default scroll-focused-element-into-view behaviour scrolled
+  the page down to reveal it floating alone. Same root cause already
+  diagnosed once for the floating player-info/game-info windows (see the
+  "sous la ligne de flottaison" comment above `#pm-btn-lobby`'s floating
+  rules) but never fixed at the source. Gave it a real `position:fixed`
+  and scoped it to `body:has(#s-game.active)` — hidden and unfocusable on
+  every other screen.
 - **`sw.js` served app code (`.js`/`.mjs`/`.css`) stale-while-revalidate
   instead of network-first as documented** (`web.155`) — `handleCode()`
   answered instantly from the SW cache and only refreshed it in the

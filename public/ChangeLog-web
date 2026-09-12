@@ -1,4 +1,6 @@
-2026-09-12 version 2.1.8-web.155 (current series):
+2026-09-12 version 2.1.8-web.156 (current series):
+- bugfix: tabbing through the login screen with the keyboard could eventually scroll down to a floating chat button that only makes sense at the poker table. It now only shows up during a game.
+2026-09-12 version 2.1.8-web.155:
 - bugfix: right after an update, the app could briefly mix a bit of the new version with a bit of the old one (for example a new button showing up without its proper styling) until you reloaded a second time. Updates now always apply as a clean, complete set.
 2026-09-12 version 2.1.8-web.154:
 - bugfix: in the online players list, hiding a column (avatar, in-game, country, actions) no longer makes the name column jump to an unpredictable width - the header buttons and the list now always line up, however many columns you hide and whatever order you hide them in. Hidden columns move into a small "+" button so you can bring them back.

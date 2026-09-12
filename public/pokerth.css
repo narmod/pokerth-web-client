@@ -1874,6 +1874,34 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
   100% { transform: scale(1); }
 }
 #gchat-fab .chat-badge { top: -3px; right: -3px; }
+/* #gchat-fab itself never had layout/visibility rules of its own (only the
+   badge-positioning line above) — a plain, always-focusable, always-in-flow
+   <button> sitting right after #s-game in the document. With #s-game
+   inactive (display:none, zero height) it fell exactly one viewport below
+   whichever screen WAS active (connect, lobby, create), invisible in
+   practice... until Tab reached it and the browser's default
+   scroll-focused-element-into-view behaviour scrolled the whole page down
+   to reveal it, floating alone under e.g. the connect screen. Same root
+   cause already diagnosed once for the floating pim/gim windows further
+   down this file (search "sous la ligne de flottaison") — fixed at the
+   source here instead: a real fixed position, and shown only while #s-game
+   is the active screen. */
+#gchat-fab {
+  display: none;
+  position: fixed;
+  right: var(--sp-6);
+  bottom: calc(var(--sp-6) + env(safe-area-inset-bottom, 0px));
+  z-index: 40;
+  width: 44px; height: 44px;
+  align-items: center; justify-content: center;
+  border-radius: 50%;
+  font-size: var(--fs-lg, 20px); line-height: 1; color: #fff;
+  background: linear-gradient(var(--gold), var(--gold-dim));
+  border: 1px solid var(--gold-dim);
+  box-shadow: 0 4px 14px rgba(0,0,0,0.4);
+  cursor: pointer;
+}
+body:has(#s-game.active) #gchat-fab { display: flex; }
 
 /* Body */
 .lobby-body {
@@ -8817,7 +8845,9 @@ body.adv-no-forumnews [id^="forum-btn-"], body.adv-no-forumnews #forum-modal { d
    la carte retombait dans le flux du document -- posee en bas a gauche, et
    la hauteur ajoutee au body faisait apparaitre une barre de defilement qui
    revelait #gchat-fab, un bouton sans regle CSS vivant sous la ligne de
-   flottaison. */
+   flottaison (ce dernier point a sa propre regle CSS depuis 2.1.8-web.156,
+   voir plus haut pres de .chat-badge — il ne peut plus se reveler, par un
+   scroll ou par Tab). */
 /* Mode fenetre flottante des deux cartes converties (popup joueur, infos de
    partie) : deplacables par leur en-tete, redimensionnables, position
    memorisee -- exactement comme les autres fenetres du lobby. */
