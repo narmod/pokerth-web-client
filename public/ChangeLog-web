@@ -1,4 +1,6 @@
-2026-09-12 version 2.1.8-web.149 (current series):
+2026-09-12 version 2.1.8-web.153 (current series):
+- improvement: the accessibility button now sits in the same spot in every header (right before the settings/overflow icon) - it was out of place on the login screen and missing altogether from the create-table screen
+2026-09-12 version 2.1.8-web.149:
 - new: the public pages (poker rules, hand rankings, glossary, how to play) are now available in Latvian too, so a search in Latvian lands on a Latvian page instead of the English one
 2026-09-12 version 2.1.8-web.148:
 - new: Latvian (Latviešu) is now available in the language list - the whole interface and the built-in help are translated, bringing the client to 47 languages

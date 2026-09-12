@@ -840,6 +840,14 @@ highlights below.
   (`scale 1.03`, 180 ms OutQuad) is applied to the seat plate.
 
 ### Fixed
+- **Accessibility button inconsistently placed, missing from the create-table
+  header** (`web.153`) — on the connect (login) screen the accessibility
+  button sat first in the header group instead of immediately before the
+  overflow/settings button, unlike lobby and game where it's the last icon
+  before overflow; moved to match. The create-table header (`#s-create`)
+  never had an accessibility button at all — added one in the same slot
+  (`accessibility-open-create`), wired automatically via the existing
+  `.accessibility-entry` class selector in `ui/accessibility.mjs`.
 - **`align:bottom` table themes cropped full-screen instead of centred in
   portrait** (`web.152`) — follow-up to `web.150` (landscape only, deferred
   there pending this check). Portrait still fell back to the static CSS
