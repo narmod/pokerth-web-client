@@ -3439,7 +3439,12 @@ body:has(#s-game.active) #gchat-fab { display: flex; }
 }
 .react-panel-title {
   font-size: var(--fs-3xs);
-  color: var(--gold-dim);
+  /* Suit la teinte du tapis (ChatLogText du tablestyle.xml), comme le titre
+     actif des onglets Log/Odds/Stats (.gip-tab.gip-on) juste au-dessus —
+     jusqu'ici seul le fond/la bordure de la fenêtre (#g-reaction-panel,
+     règle plus bas) suivaient le tapis, pas ce libellé. Repli = --gold-dim,
+     donc aucun changement sans tapis skinné. */
+  color: var(--chatlog-text, var(--gold-dim));
   letter-spacing: 0.14em;
   text-transform: uppercase;
   margin-bottom: 8px;

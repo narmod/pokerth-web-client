@@ -840,6 +840,15 @@ highlights below.
   (`scale 1.03`, 180 ms OutQuad) is applied to the seat plate.
 
 ### Fixed
+- **Reactions panel title didn't follow the table style's text colour like
+  the other in-game windows** (`web.157`) — `.react-panel-title` hardcoded
+  `--gold-dim`, while the analogous active-tab label in the Log/Odds/Stats
+  window (`.gip-tab.gip-on`) already reads `--chatlog-text` from the
+  tablestyle.xml (chatlog-tint.mjs). The reaction window's background and
+  border already followed the tapis (`#g-reaction-panel` is in the shared
+  `--chatlog-bg`/`--chatlog-border` rule) — only this title label was left
+  on the app palette. Now reads `--chatlog-text` with the same `--gold-dim`
+  fallback, so it's a no-op on untinted tapis.
 - **`#gchat-fab` (floating in-game chat button) reachable via Tab from any
   screen, including the connect/login screen** (`web.156`) — the button had
   no CSS of its own beyond badge positioning: a plain, always-focusable

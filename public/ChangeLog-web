@@ -1,4 +1,6 @@
-2026-09-12 version 2.1.8-web.156 (current series):
+2026-09-12 version 2.1.8-web.157 (current series):
+- bugfix: the reactions window's title now follows the table style's text colour like the chat/log windows do, instead of always staying the app's default gold.
+2026-09-12 version 2.1.8-web.156:
 - bugfix: tabbing through the login screen with the keyboard could eventually scroll down to a floating chat button that only makes sense at the poker table. It now only shows up during a game.
 2026-09-12 version 2.1.8-web.155:
 - bugfix: right after an update, the app could briefly mix a bit of the new version with a bit of the old one (for example a new button showing up without its proper styling) until you reloaded a second time. Updates now always apply as a clean, complete set.
