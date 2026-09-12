@@ -840,6 +840,16 @@ highlights below.
   (`scale 1.03`, 180 ms OutQuad) is applied to the seat plate.
 
 ### Fixed
+- **Reactions panel pager (‹ page/3 ›) didn't follow the table style
+  either** (`web.158`) — follow-up to `web.157`'s title fix. `.react-pg-arrow`
+  and `.react-pg-ind` hardcoded `var(--text)`/`var(--inset)`/`var(--border)`
+  on purpose, to dodge a *different* contrast bug (some UI theme packs
+  redefine `--gold` near-black; unrelated to the tablestyle.xml tapis
+  variables handled here). Switched to `--chatlog-muted`/`--chatlog-surface`/
+  `--chatlog-border` — the dedicated "secondary element on a tinted panel"
+  variables already used the same way by `.gip-grip` and the stats-table
+  headers, so the original contrast concern doesn't apply; same `var(--text)`
+  etc. fallback, so untinted tapis are pixel-identical to before.
 - **Reactions panel title didn't follow the table style's text colour like
   the other in-game windows** (`web.157`) — `.react-panel-title` hardcoded
   `--gold-dim`, while the analogous active-tab label in the Log/Odds/Stats
