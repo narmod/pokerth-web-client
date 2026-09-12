@@ -1270,12 +1270,14 @@ function renderSeatsImmediate() {
       }
       if (!_commSkip3) {
       document.documentElement.style.setProperty('--comm-scale', _csComm.toFixed(3));
-      // ── Fond de table « center » (parité QML tableBackgroundImage) : image
-      // agrandie pour couvrir, CENTRÉE sur (milieu zone, communityCenterY),
-      // × TableBackgroundZoom — le tapis du visuel tombe au centre de
-      // l'ellipse comme dans le client officiel. Ne s'applique qu'aux
-      // thèmes align:center (pos 'center') en mode fullscreen ; les autres
-      // gardent le cover ancré bas. ──
+      // ── Fond de table (parité QML tableBackgroundImage, mode fullscreen) ──
+      // align:center : image agrandie pour couvrir, CENTRÉE sur (milieu zone,
+      // communityCenterY), × TableBackgroundZoom — le tapis du visuel tombe
+      // au centre de l'ellipse comme dans le client officiel.
+      // align:bottom (Mile High Club, BBC Anthem, Teal, Lemming) : cover
+      // simple centré dans le même cadre (zone + action bar), sans zoom ni
+      // communityCenterY (narmod 2026-09-12, parité GamePage.qml non-center).
+      // En portrait, align:bottom garde encore le repli CSS statique. ──
       try { _applyQmlBgCenter(zRect, _commTargetY); } catch (eBg) {}
       // ── Largeur du panneau d'action (parité GameActionBar.panelWidth) :
       // paysage = min(barre, max(largeur VISUELLE des cartes communes, 380)),
