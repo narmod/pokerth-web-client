@@ -818,8 +818,16 @@ function _applyQmlBgCenter(zRect, cY) {
       x = Math.round(zRect.left - sgr.left + zRect.width / 2 - w / 2);
       y = Math.round(zRect.top - sgr.top + cY - h / 2);
     }
+  } else if (bottomMode) {
+    // Portrait, align:bottom : même repli PLEIN ÉCRAN que le mode center
+    // ci-dessous (la bande tableZone seule laisse un ruban haut/bas montrant
+    // le fond de repli, cf. note du mode center) — mais cover+CENTRÉ pur,
+    // sans zoom ni offset sur communityCenterY, comme en paysage.
+    fs = Math.max(sgr.width / nat.w, sgr.height / nat.h);
+    w = Math.round(nat.w * fs); h = Math.round(nat.h * fs);
+    x = Math.round(sgr.width / 2 - w / 2);
+    y = Math.round(sgr.height / 2 - h / 2);
   } else {
-    if (bottomMode) { _clr(); return; }   // portrait : repli CSS statique inchangé pour l'instant
     // Portrait : PreserveAspectCrop PLEIN ÉCRAN (#s-game entier) — comme le
     // gameBackground QML. La bande tableZone ne couvrait qu'un ruban central
     // (haut/bas laissaient voir le fond de repli). Centré horizontalement +

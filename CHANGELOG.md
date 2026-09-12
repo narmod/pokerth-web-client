@@ -840,6 +840,16 @@ highlights below.
   (`scale 1.03`, 180 ms OutQuad) is applied to the seat plate.
 
 ### Fixed
+- **`align:bottom` table themes cropped full-screen instead of centred in
+  portrait** (`web.152`) — follow-up to `web.150` (landscape only, deferred
+  there pending this check). Portrait still fell back to the static CSS
+  `cover`/`center bottom` for Mile High Club, BBC Anthem, Teal and Lemming.
+  `_applyQmlBgCenter()` now covers portrait too: a plain cover, centred on
+  the whole `#s-game` (mirroring the existing portrait fallback already used
+  for `align:center` themes, which avoids the top/bottom gap a tableZone-only
+  box leaves in portrait), but without the zoom or `communityCenterY` offset
+  that `align:center` applies — consistent with the landscape `align:bottom`
+  fix.
 - **`align:bottom` table themes (Mile High Club, BBC Anthem, Teal, Lemming)
   cropped against the wrong reference box in landscape** (`web.150`) —
   `_applyQmlBgCenter()` only ever computed QML-accurate dynamic background
