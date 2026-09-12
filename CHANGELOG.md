@@ -840,6 +840,22 @@ highlights below.
   (`scale 1.03`, 180 ms OutQuad) is applied to the seat plate.
 
 ### Fixed
+- **`align:bottom` table themes (Mile High Club, BBC Anthem, Teal, Lemming)
+  cropped against the wrong reference box in landscape** (`web.150`) —
+  `_applyQmlBgCenter()` only ever computed QML-accurate dynamic background
+  geometry for `align:center` themes; `align:bottom` themes fell back to a
+  plain CSS `cover`/`center bottom` on the whole `#s-game` (header +
+  status bar + table zone + action bar), whereas `GamePage.qml`'s
+  non-center `tableBackgroundImage` path sizes/crops strictly against
+  `tableZone` (+ action bar behind it) — excluding the status bar row
+  above it. The extra header/status-bar height in the web reference box
+  shifted the effective crop, most visible on the Mile High Club canyon
+  walls and BBC Anthem lion heads. `_applyQmlBgCenter()` now also handles
+  `align:bottom` in landscape: a plain cover, centred within
+  `zRect` (+ action bar height) with no zoom/`communityCenterY` offset —
+  matching QML's `x:0/y:0`, `centerZoom` forced to 1.0 outside
+  `centerMode`. Portrait keeps its prior static-CSS fallback for these
+  themes, unchanged pending confirmation there too.
 - **Accessibility modal stole focus back from a reopened adaptive drawer**
   (`web.147`) — `closeAccessibility()` always returned focus to whichever
   button had opened the Accessibility modal. If the player switched back to

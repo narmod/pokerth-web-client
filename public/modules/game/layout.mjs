@@ -752,9 +752,16 @@ function _bgDynKeep(prev, next, tol) {
          Math.abs(prev.x - next.x) <= t && Math.abs(prev.y - next.y) <= t;
 }
 
-// Port de GamePage.qml tableBackgroundImage (mode center) : taille et
-// position du fond calculées pour couvrir la bande tableZone(+action bar en
-// wide) en étant centré sur (zoneW/2, communityCenterY), × zoom du style.
+// Port de GamePage.qml tableBackgroundImage : taille et position du fond
+// calculées pour couvrir la bande tableZone(+action bar en wide) — cadre qui
+// EXCLUT la barre de statut (#pot-strip, GameStatusBar QML) au-dessus, comme
+// tableZone dans GamePage.qml. Deux modes, selon TableBackgroundAlign :
+//  - align:center (danuxi, matrix, star_trek...) : centré sur
+//    (zoneW/2, communityCenterY), × zoom du style (TableBackgroundZoom).
+//  - align:bottom (mile_high_club, bbc_anthem, teal, lemming...) : simple
+//    cover centré dans le cadre, SANS le zoom ni communityCenterY — QML met
+//    x:0/y:0, width/height = tableZone(+actionBar) et laisse PreserveAspectCrop
+//    centrer tout seul (centerZoom vaut 1.0 hors centerMode, cf. GamePage.qml).
 // Pose --wallpaper-dyn-size/pos (prioritaires sur --wallpaper-size/pos).
 function _applyQmlBgCenter(zRect, cY) {
   var de = document.documentElement;
@@ -762,7 +769,8 @@ function _applyQmlBgCenter(zRect, cY) {
   if (de.getAttribute('data-table-fs') !== '1' || cY == null) { _clr(); return; }
   var cs = getComputedStyle(de);
   var pos = (cs.getPropertyValue('--wallpaper-pos') || '').trim();
-  if (pos && pos !== 'center') { _clr(); return; }   // seuls les styles align:center
+  if (pos && pos !== 'center' && pos !== 'center bottom') { _clr(); return; }   // seuls align:center / align:bottom
+  var bottomMode = (pos === 'center bottom');
   var wp = (cs.getPropertyValue('--wallpaper') || '').trim();
   var m = wp.match(/url\((['"]?)([^'")]+)\1\)/);
   if (!m) { _clr(); return; }
@@ -791,16 +799,27 @@ function _applyQmlBgCenter(zRect, cY) {
   var wide = !(typeof window._tableZonePortrait === 'function' && window._tableZonePortrait());
   var w, h, fs, x, y;
   if (wide) {
-    // Paysage : couvre la bande tableZone (+ derrière l'action bar), centré
-    // sur (milieu zone, communityCenterY). Comportement historique inchangé.
     var myz = document.querySelector('.my-zone');
     var coverExtra = myz ? myz.getBoundingClientRect().height : 0;
-    var reqH = 2 * Math.max(cY, zRect.height + coverExtra - cY);
-    fs = Math.max(zRect.width / nat.w, reqH / nat.h) * zoom;
-    w = Math.round(nat.w * fs); h = Math.round(nat.h * fs);
-    x = Math.round(zRect.left - sgr.left + zRect.width / 2 - w / 2);
-    y = Math.round(zRect.top - sgr.top + cY - h / 2);
+    if (bottomMode) {
+      // align:bottom (non-centerMode QML) : cover simple, centré dans le
+      // cadre tableZone(+actionBar) — pas de zoom, pas de communityCenterY.
+      var boxW = zRect.width, boxH = zRect.height + coverExtra;
+      fs = Math.max(boxW / nat.w, boxH / nat.h);
+      w = Math.round(nat.w * fs); h = Math.round(nat.h * fs);
+      x = Math.round(zRect.left - sgr.left + boxW / 2 - w / 2);
+      y = Math.round(zRect.top - sgr.top + boxH / 2 - h / 2);
+    } else {
+      // Paysage : couvre la bande tableZone (+ derrière l'action bar), centré
+      // sur (milieu zone, communityCenterY). Comportement historique inchangé.
+      var reqH = 2 * Math.max(cY, zRect.height + coverExtra - cY);
+      fs = Math.max(zRect.width / nat.w, reqH / nat.h) * zoom;
+      w = Math.round(nat.w * fs); h = Math.round(nat.h * fs);
+      x = Math.round(zRect.left - sgr.left + zRect.width / 2 - w / 2);
+      y = Math.round(zRect.top - sgr.top + cY - h / 2);
+    }
   } else {
+    if (bottomMode) { _clr(); return; }   // portrait : repli CSS statique inchangé pour l'instant
     // Portrait : PreserveAspectCrop PLEIN ÉCRAN (#s-game entier) — comme le
     // gameBackground QML. La bande tableZone ne couvrait qu'un ruban central
     // (haut/bas laissaient voir le fond de repli). Centré horizontalement +
