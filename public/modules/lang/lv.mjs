@@ -207,4 +207,54 @@ export const strings = {
     // ── Player-info modal ──
     piPrivate:'Privāta', piPublic:'Publiska', piInformation:'Informācija', piType:'Veids',
     piConfiguration:'Konfigurācija', piStartingStack:'Sākuma žetoni', piActionTimer:'Darbības taimeris',
+    piGameState:'Spēles stāvoklis', piHandNo:'Partija #', piNotStarted:'Nav sākta', piPot:'Banka', piPhase:'Posms',
+    // ── Haptic ──
+    hapticOn:'Vibrācija ieslēgta', hapticOff:'Vibrācija izslēgta', hapticLabel:'Vibrācija',
+    // ── LAN / chat warnings ──
+    reactLanLocalNote:'⚠ LAN režīms: lokālas reakcijas. Lai tās kopīgotu, izmanto interneta viesa režīmu.',
+    reactLocalOnlyNote:'⚠ Tikai lokālas reakcijas (serveris atteica tērzēšanu)',
+    chatLanDisabled:'⚠ LAN režīms: tērzēšana spēlē ir atspējota. Lai ieslēgtu tērzēšanu un reakcijas, savienojies "interneta viesa" režīmā.',
+    chatServerRefused:'⚠ Serveris atteica tērzēšanu. Pārbaudi, vai konfigurācijā ir ServerRestrictGuestLogin=0.',
+    onePlayerLeft:'Palicis tikai viens spēlētājs — spēle beidzas.',
+    // ── Action rejected ──
+    rejInvalidState:'nederīgs spēles stāvoklis (nesinhronizēts)', rejNotYourTurn:'vairs nav tavs gājiens', rejNotAllowed:'darbība nav atļauta',
+    actionRejected:'Darbība noraidīta',
+    // ── Session stats ──
+    statSession:'Sesija', statHandsPlayed:'Nospēlētās partijas', statWins:'Uzvaras', statWinRate:'Uzvaru īpatsvars',
+    statNet:'Neto ieguvums/zaudējums', statBestWin:'Labākā uzvara', statWorstLoss:'Sliktākais zaudējums', statRecentHands:'Nesenās partijas',
+    // ── Waiting to start ──
+    wpReady:'Gatavs spēlei — izvēlies, kā sākt', wpStart:'Sākt',
+    wpStartHumansTip:'Sākt tikai ar cilvēkiem', wpFillBotsTip:'Aizpildīt tukšās vietas ar botiem',
+    // ── Notifications ──
+    notifTurnTitle:'⚡ TAVS GĀJIENS!', notifTurnBody:"PokerTH ir tavs gājiens",
+    // ── WS closed ──
+    wsLostAction:'Savienojums zaudēts — darbība netika nosūtīta', wsSendFailed:'Nosūtīšana neizdevās (WS aizvērts)',
+    reauthBanner:'Savienots — autentificējas atkārtoti…',
+    // ── Kick ──
+    kickNoPlayers:'Pie galda nav spēlētāju', kickThisPlayer:'Vai izmest šo spēlētāju?',
+    kickConfirmMsg:'Spēlētājs "{name}" tiks izņemts no galda.',
+    kickRequested:'Pieprasīta {name} izmešana (gaida serveri…)',
+    kickNotProcessed:'Serveris neapstrādāja {name} izmešanu — visticamāk, PokerTH serveris ir vecāks par 2.0.6.',
+    kickAtLeast2:'Lai sāktu, nepieciešami vismaz 2 spēlētāji.',
+    // ── Game invitations ──
+    inviteTitle:'{name} uzaicināja tevi uz {table}', inviteAccept:'Pieņemt', inviteDecline:'Noraidīt',
+    inviteAccepted:'Pievienojas galdam...',
+    inviteMenu:'Uzaicināt spēlētājus', inviteModalTitle:'Uzaicināt spēlētājus', inviteSubtitle:'Tiešsaistes spēlētāji, kas vēl nav pie galda',
+    inviteBtn:'Uzaicināt', inviteSent:'Uzaicināts', inviteNoPlayers:'Neviens nav pieejams', inviteSentToast:'Uzaicinājums nosūtīts spēlētājam {name}',
+    // ── Copy link ──
+    linkCopied:'🔗 Saite nokopēta!', linkCopyFailed:'Kopēšana neizdevās — saite parādīta', copiedShort:'Nokopēts',
+    piYou:'(tu)', piSpectators:'Vērotāji', reconnIn:'Atkārtota savienošanās pēc ', reconnInProgress:'Savienojas atkārtoti…',
+    updateAvailable:'Pieejama jauna versija', updateNow:'Atjaunināt',
+    voiceLabel:'Balss', voiceOn:'Balss ieslēgta', voiceOff:'Balss izslēgta', voiceYourTurn:'Tavs gājiens',
+    voiceWins:'{name} uzvar {n}',
+    vFold:'izdara fold', vCheck:'izdara check', vCall:'izdara call', vBet:'izdara bet', vRaise:'izdara raise', vAllin:'all-in',
+    statTabSession:'Sesija', statTabLife:'Kopā', statTabBoard:'Reitings',
+    statGamesPlayed:'Nospēlētās spēles', statGamesWon:'Uzvarētās spēles', statStreak:'Labākā sērija',
+    statReset:'Atiestatīt manu statistiku', statResetConfirm:'Vai atiestatīt kopējo statistiku? To nevar atsaukt.',
+    statLifeOnlyPrivate:'Tiek uzskaitīts tikai privātā serverī / LAN.', statLifeTraining:'Treniņa statistika (pret botiem) — glabājas atsevišķi.', boardEmpty:'Vēl nav rezultātu',
+    boardPer100:'Neto / 100 partijas', boardYourRank:'Tu: #{n} no {m}',
+    rejoinInProgress:'Atgriežas pie tava galda…', rejoinWaitNick:'Atbrīvo tavu iepriekšējo sesiju…',
+    rejoinFailed:'Neizdevās atsākt spēli pie tava galda — atpakaļ vestibilā.', rejoinReconnectHint:'Savienojums zaudēts — savienojies atkārtoti, lai atsāktu pie sava galda.',
+    noActiveTable:'Nav aktīva galda', copyThisLink:'Kopē šo saiti:', spectatingTable:'Vēro galdu ',
+    avCatPeople:'Cilvēki', avCatFantasy:'Fantāzija', avCatPoker:'Pokers', avCatAnimals:'Dzīvnieki',
 };
