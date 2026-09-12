@@ -840,6 +840,19 @@ highlights below.
   (`scale 1.03`, 180 ms OutQuad) is applied to the seat plate.
 
 ### Fixed
+- **`sw.js` served app code (`.js`/`.mjs`/`.css`) stale-while-revalidate
+  instead of network-first as documented** (`web.155`) — `handleCode()`
+  answered instantly from the SW cache and only refreshed it in the
+  background for the *next* request, so two code files requested moments
+  apart on the same page load (e.g. `pokerth.js` + `pokerth.css`) could
+  each pick up a deploy at a different moment: surfaced right after
+  `web.154` shipped as new JS (the players-online "+" column menu)
+  rendered against still-cached old CSS, producing an unstyled, unpositioned
+  dropdown that blew out the header's height instead of a small aligned
+  popover. `handleCode()` now tries the network first (`cache:'reload'`,
+  bypassing the HTTP disk cache) and falls back to the cache only on a
+  network failure, so code files can no longer drift apart between
+  deploys; offline capability is unchanged.
 - **Players-online column header misaligned with rows after hiding a
   column** (`web.154`) — the header's toggle chips kept a fixed track for
   every hideable column (avatar, in-game, country, actions) even once

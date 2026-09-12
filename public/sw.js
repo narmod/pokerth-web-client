@@ -23,7 +23,7 @@
  *                 Cross-origin requests and WS upgrades are left untouched.
  *                 (Fonts are now self-hosted and handled by SWR above.)
  */
-const CACHE_VERSION = 'pokerth-v2.1.8-web.154';
+const CACHE_VERSION = 'pokerth-v2.1.8-web.155';
 // Build id the page puts on the card back URL (deck.mjs _deckBack →
 // flipside.<ext>?v=<BUILD_VERSION>): CACHE_VERSION without its prefix.
 const BUILD_ID = CACHE_VERSION.replace(/^pokerth-v/, '');
@@ -464,25 +464,30 @@ function handleAsset(e) {
   });
 }
 
-// Stale-while-revalidate for app CODE (.js/.mjs/.css). Served instantly from
-// the SW cache; the background refresh uses `cache:'reload'` to bypass the
-// HTTP disk cache, so a deployed change is stored on the very next request.
-// Deploys reach the user through the /__ver banner (CACHE_VERSION bump →
-// re-precache) or on the following load — this keeps the app fast even when
-// the origin is slow (e.g. during server backups) and fully offline-capable.
+// True network-first for app CODE (.js/.mjs/.css): the network is always
+// tried FIRST (`cache:'reload'` bypasses the HTTP disk cache too), and only
+// a network failure (offline, origin down) falls back to the SW cache — so
+// two code files requested moments apart (e.g. pokerth.js + pokerth.css on
+// the same page load) can never end up served from two different deploys.
+// Was stale-while-revalidate until 2.1.8-web.155 (narmod, 2026-09-12): that
+// served the CACHED copy instantly and only refreshed it in the background
+// for the *next* request, so pokerth.css and pokerth.js — revalidated by
+// independent, differently-timed requests — could each pick up a deploy at
+// a different moment and briefly disagree (new JS markup rendered against
+// old CSS, or vice versa). Slightly slower on a cold/slow connection since
+// every request now waits on the network before falling back; still fully
+// offline-capable, and the /__ver banner is unaffected (CACHE_VERSION bump
+// still drives the full re-precache on activate).
 function handleCode(e) {
   return caches.open(CACHE_VERSION).then(function (cache) {
-    return cache.match(e.request).then(function (cached) {
-      var network = fetch(e.request, { cache: 'reload' }).then(function (response) {
-        if (response && response.status === 200) {
-          cache.put(e.request, response.clone());
-        }
-        return response;
-      }).catch(function () { return null; });
-      // Cache hit → instant response, refresh in the background.
-      // Cache miss → wait for the network (and a real Response on failure).
-      return cached || network.then(function (r) {
-        return r || new Response('Offline', {
+    return fetch(e.request, { cache: 'reload' }).then(function (response) {
+      if (response && response.status === 200) {
+        cache.put(e.request, response.clone());
+      }
+      return response;
+    }).catch(function () {
+      return cache.match(e.request).then(function (cached) {
+        return cached || new Response('Offline', {
           status: 503,
           headers: { 'Content-Type': 'text/plain; charset=utf-8' }
         });
