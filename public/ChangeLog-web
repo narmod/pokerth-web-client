@@ -1,4 +1,6 @@
-2026-09-12 version 2.1.8-web.153 (current series):
+2026-09-12 version 2.1.8-web.154 (current series):
+- bugfix: in the online players list, hiding a column (avatar, in-game, country, actions) no longer makes the name column jump to an unpredictable width - the header buttons and the list now always line up, however many columns you hide and whatever order you hide them in. Hidden columns move into a small "+" button so you can bring them back.
+2026-09-12 version 2.1.8-web.153:
 - improvement: the accessibility button now sits in the same spot in every header (right before the settings/overflow icon) - it was out of place on the login screen and missing altogether from the create-table screen
 2026-09-12 version 2.1.8-web.149:
 - new: the public pages (poker rules, hand rankings, glossary, how to play) are now available in Latvian too, so a search in Latvian lands on a Latvian page instead of the English one

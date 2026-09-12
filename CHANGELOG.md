@@ -840,6 +840,18 @@ highlights below.
   (`scale 1.03`, 180 ms OutQuad) is applied to the seat plate.
 
 ### Fixed
+- **Players-online column header misaligned with rows after hiding a
+  column** (`web.154`) — the header's toggle chips kept a fixed track for
+  every hideable column (avatar, in-game, country, actions) even once
+  hidden, so it could keep clicking, but the rows only kept tracks for
+  columns actually shown; hiding any column made the name column jump to
+  an unpredictable width with no visual cue why, worse the more columns
+  and the more random the order. `_plColHeadHtml()`/`renderPlayersList()`
+  now build the header from the same reduced set of visible columns as
+  the rows (`_plVisibleCols()`), so header and data stay aligned 1:1
+  regardless of order. Hidden columns move into a small "+" chip (its own
+  fixed track, present only when at least one column is hidden) that
+  opens a dropdown to bring them back.
 - **Accessibility button inconsistently placed, missing from the create-table
   header** (`web.153`) — on the connect (login) screen the accessibility
   button sat first in the header group instead of immediately before the

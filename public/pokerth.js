@@ -10976,6 +10976,7 @@ function _plColsHidden() {
 }
 function _plColVisible(k) { return k === 'name' || !_plColsHidden().has(k); }
 function _plVisibleCols() { return _plColOrder().filter(_plColVisible); }
+function _plHiddenToggleKeys() { return _plColOrder().filter(function(k){ return _PL_TOGGLE_COLS.indexOf(k) !== -1 && !_plColVisible(k); }); }
 window._plToggleCol = function (k) {
   if (_PL_TOGGLE_COLS.indexOf(k) === -1) return;
   try {
@@ -10985,32 +10986,57 @@ window._plToggleCol = function (k) {
   } catch (e) {}
   try { renderPlayersList(); } catch (e) {}
 };
+// Menu "+" (colonnes masquées) : ouvert/fermé en mémoire (pas de persistance,
+// il se referme d'une session à l'autre). Fermé au clic extérieur.
+var _plColMenuOpen = false;
+window._plColMenuToggle = function (e) {
+  if (e) e.stopPropagation();
+  _plColMenuOpen = !_plColMenuOpen;
+  try { renderPlayersList(); } catch (e2) {}
+};
+document.addEventListener('click', function (e) {
+  if (!_plColMenuOpen) return;
+  if (e.target.closest && e.target.closest('.pl-colh-plus-wrap')) return;
+  _plColMenuOpen = false;
+  try { renderPlayersList(); } catch (e2) {}
+});
 // Icônes de l'en-tête colonnes (monochromes, suivent le thème via currentColor).
 var _PL_PERSON_SVG = '<svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" aria-hidden="true"><path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm0 1.6c-4 0-7.2 2-7.2 4.6V20h14.4v-1.8c0-2.6-3.2-4.6-7.2-4.6Z"/></svg>';
 var _PL_FLAG_SVG   = '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" aria-hidden="true"><path d="M6 21V4h11l-2.2 4L17 12H6"/></svg>';
-// En-tête : une pastille-toggle par colonne masquable (icône + libellé en info-bulle).
-// En-tête aligné sur les colonnes : une cellule par colonne (dans l'ordre de
-// _PL_COL_ORDER), gabarit = gabarit COMPLET (toutes les colonnes masquables
-// toujours présentes → les pastilles restent cliquables même une fois la
-// colonne masquée). Le Nom = cellule vide (verrouillé, pas de pastille). Les
-// pastilles remplissent leur cellule (width:100%) donc s'élargissent avec la
-// colonne. En tout-visible, ce gabarit = --pl-cols des lignes → alignement 1:1.
+var _PL_PLUS_SVG   = '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>';
+// En-tête : une pastille par colonne actuellement VISIBLE (même gabarit que
+// les lignes, --pl-cols → alignement 1:1 garanti, quel que soit l'ordre dans
+// lequel les colonnes ont été masquées/réaffichées). Le Nom = cellule
+// verrouillée, pas de pastille. Les colonnes masquées n'ont plus de pastille
+// dans la grille : elles se retrouvent dans le menu "+" (piste fixe à part,
+// ajoutée seulement si au moins une colonne est masquée).
 function _plColHeadHtml() {
   var _tt = function (k, fb) { return (typeof t === 'function' && t(k) !== k) ? t(k) : fb; };
   var NAME_SVG = '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><line x1="5" y1="8" x2="19" y2="8"/><line x1="5" y1="12" x2="15" y2="12"/><line x1="5" y1="16" x2="17" y2="16"/></svg>';
   var ICON  = { av:_PL_PERSON_SVG, name:NAME_SVG, status:_PL_PAD_SVG, flag:_PL_FLAG_SVG, star:'<span class="pl-colh-star">\u2605</span>', inv:_PL_INVITE_SVG, acts:_PL_BAR_SVG };
   var LABEL = { av:_tt('plColAvatar','Avatar'), name:_tt('plColName','Name'), status:_tt('plColStatus','In game'), flag:_tt('plColCountry','Country'), star:_tt('plColMe','Me') + ' \u00b7 ' + _tt('nvRating','Rating'), inv:_tt('inviteBtn','Invite'), acts:_tt('plColActions','Actions') };
-  return _plColOrder().map(function (k) {
+  var html = _plVisibleCols().map(function (k) {
     if (k === 'name' || k === 'inv') {
       // Fausse pastille : colonne Nom toujours visible (non togglable),
       // même apparence carrée en état "on" mais non cliquable.
       return '<span class="pl-colh-chip on pl-colh-lock" title="' + LABEL[k] + '" aria-label="' + LABEL[k] + '">' + ICON[k] + '</span>';
     }
-    var on = _plColVisible(k);
-    return '<button type="button" class="pl-colh-chip' + (on ? ' on' : '') + '"'
-      + ' title="' + LABEL[k] + '" aria-label="' + LABEL[k] + '" aria-pressed="' + on + '"'
+    return '<button type="button" class="pl-colh-chip on"'
+      + ' title="' + LABEL[k] + '" aria-label="' + LABEL[k] + '" aria-pressed="true"'
       + ' onclick="window._plToggleCol(\'' + k + '\')">' + ICON[k] + '</button>';
   }).join('');
+  var _hidden = _plHiddenToggleKeys();
+  if (_hidden.length) {
+    var _items = _hidden.map(function (k) {
+      return '<button type="button" class="pl-colh-menu-item" onclick="window._plToggleCol(\'' + k + '\')">' + ICON[k] + '<span>' + LABEL[k] + '</span></button>';
+    }).join('');
+    var _moreLbl = _tt('plColMore', 'More columns');
+    html += '<span class="pl-colh-plus-wrap">'
+      + '<button type="button" class="pl-colh-chip pl-colh-plus" title="' + _moreLbl + '" aria-label="' + _moreLbl + '" aria-expanded="' + _plColMenuOpen + '" onclick="window._plColMenuToggle(event)">' + _PL_PLUS_SVG + '</button>'
+      + (_plColMenuOpen ? '<span class="pl-colh-menu">' + _items + '</span>' : '')
+      + '</span>';
+  }
+  return html;
 }
 
 function renderPlayersList() {
@@ -11029,13 +11055,15 @@ function renderPlayersList() {
   // ── En-tête colonnes + gabarit de grille ──
   // rowHtml n'émet que les cellules visibles ; --pl-cols (posé sur la liste)
   // donne aux .pl-row le gabarit réduit correspondant → pas de piste vide.
-  // L'en-tête (sticky, dans le corps scrollable pour partager exactement la
-  // même largeur/gouttière que les lignes) utilise le gabarit COMPLET afin de
-  // rester cliquable colonne masquée ou non ; en tout-visible les deux
-  // gabarits coïncident → pastilles alignées 1:1 sur les colonnes.
+  // L'en-tête (sticky, dans le corps scrollable) utilise EXACTEMENT le même
+  // gabarit réduit que les lignes → alignement 1:1 garanti, quel que soit
+  // l'ordre dans lequel les colonnes ont été masquées/réaffichées. Une piste
+  // fixe supplémentaire (22px) est ajoutée UNIQUEMENT s'il reste au moins une
+  // colonne masquée, pour le bouton "+" qui les réaffiche.
   var _visCols = _plVisibleCols();
-  var _fullTmpl = _plColOrder().map(_plTrack).join(' ');
-  var _headHtml = '<div class="pl-colhead" style="grid-template-columns:' + _fullTmpl + '">'
+  var _hiddenKeys = _plHiddenToggleKeys();
+  var _headTmpl = _visCols.map(_plTrack).join(' ') + (_hiddenKeys.length ? ' 22px' : '');
+  var _headHtml = '<div class="pl-colhead" style="grid-template-columns:' + _headTmpl + '">'
                 + _plColHeadHtml() + '</div>';
   try { body.style.setProperty('--pl-cols', _visCols.map(_plTrack).join(' ')); } catch (e) {}
   // Build the list of {pid, name} from _lobbyPids (defined inside
@@ -11196,9 +11224,8 @@ function renderPlayersList() {
       return '';
     };
     // Colonnes masquées : piste RETIRÉE (pas de cellule vide) → le nom
-    // récupère vraiment la largeur. L'en-tête garde son propre gabarit
-    // complet (_fullTmpl, fixe) pour rester une barre de pastilles stable ;
-    // il n'a donc plus besoin d'être aligné piste à piste avec les lignes.
+    // récupère vraiment la largeur. L'en-tête (_headTmpl, renderPlayersList)
+    // utilise désormais le même gabarit réduit → alignement 1:1 garanti.
     return '<div class="pl-row' + (r.isMe ? ' pl-me' : '') + '">'
       + _visCols.map(function (k) { return _plCell(k); }).join('')
       + '</div>';
@@ -11568,7 +11595,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.8-web.153'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.8-web.154'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif ou la palette High contrast
    (Android, Safari, iOS standalone récent). Lit --theme-color et met

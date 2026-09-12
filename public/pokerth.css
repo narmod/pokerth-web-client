@@ -10442,8 +10442,10 @@ html[data-buttons="pokerth"] .btn-action[disabled] { filter: grayscale(0.55) bri
 /* En-tête colonnes (afficher/masquer) de la liste « Joueurs en ligne ».
    Rendu comme 1er enfant STICKY du corps scrollable → partage la largeur et la
    gouttière de scroll des lignes. Grille alignée sur les .pl-row : mêmes pistes
-   (gabarit complet posé en inline) + même gap 8px + padding latéral 0 (le 12px
-   latéral vient du padding du conteneur). Chaque pastille remplit sa cellule
+   que les colonnes VISIBLES (gabarit posé en inline par renderPlayersList) +
+   même gap 8px + padding latéral 0 (le 12px latéral vient du padding du
+   conteneur) → alignement 1:1 garanti, quel que soit l'ordre dans lequel les
+   colonnes ont été masquées/réaffichées. Chaque pastille remplit sa cellule
    (width:100%) → elle s'élargit avec la colonne. Le Nom = cellule vide. */
 .pl-colhead {
   position:sticky; top:0; z-index:2;
@@ -10464,6 +10466,24 @@ html[data-buttons="pokerth"] .btn-action[disabled] { filter: grayscale(0.55) bri
 .pl-colh-lock { cursor:default; }
 .pl-colh-lock:hover { background:rgba(var(--gold-rgb),0.10); }
 .pl-colh-star { font-size:var(--fs-base); line-height:1; }
+/* Bouton "+" (piste fixe à part, ajoutée seulement s'il reste des colonnes
+   masquées) et son menu déroulant listant ces colonnes pour les réafficher. */
+.pl-colh-plus-wrap { position:relative; display:flex; }
+.pl-colh-plus { border-style:dashed; }
+.pl-colh-menu {
+  position:absolute; top:calc(100% + 4px); right:0; z-index:5;
+  display:flex; flex-direction:column; gap:2px; min-width:150px;
+  background:var(--panel); border:1px solid var(--border); border-radius:var(--r-sm);
+  padding:4px; box-shadow:0 4px 14px rgba(0,0,0,0.35);
+}
+.pl-colh-menu-item {
+  display:flex; align-items:center; gap:var(--sp-2);
+  background:none; border:none; border-radius:var(--r-xs);
+  padding:6px 8px; cursor:pointer; text-align:left;
+  color:var(--gold-dim); font-size:var(--fs-sm); font-family:var(--ff-sans);
+}
+.pl-colh-menu-item:hover { background:rgba(var(--gold-rgb),0.12); color:var(--gold); }
+.pl-colh-menu-item svg { flex:none; }
 
 /* Colonne statut « en partie » : manette allumée (vert) si le joueur joue, éteinte sinon */
 .players-list .pl-row .pl-status { flex:0 0 auto; display:inline-flex; align-items:center; justify-content:center; width:22px; color:var(--border); line-height:0; }
