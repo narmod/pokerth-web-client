@@ -1,4 +1,8 @@
 node_modules/
+# npm writes package-lock.json on every install, but this repo has never
+# tracked it: Dockerfile, docker-entrypoint.sh and install.sh all deploy
+# with `npm install`, never `npm ci`, so nothing reads the lockfile.
+package-lock.json
 stats.json
 stats.meta.json
 

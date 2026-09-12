@@ -1536,6 +1536,40 @@ var PARTS = {
     seeH2: "Kuidas seda lauas näha",
     seeP: "PokerTH-s mängides kirjutatakse laua alla sinu praeguse parima käe nimi, nii et seda ei pea kunagi ajasurve all peast kokku panema, ning kaartide avamisel tõstetakse igas näidatud käes esile just need viis kaarti, mis tegelikult arvesse läksid. Võrguvaba treening arvutivastaste vastu on kiireim viis see järjestus meelde jätta."
   },
+  lv: {
+    title: "Pokera kombināciju stiprums — kombināciju secība Teksasas Hold’emā",
+    desc: "Visas desmit Teksasas Hold’ema kombinācijas no karaliskās rindas līdz augstākajai kārtij, ar piemēriem, katras kombinācijas varbūtību un kikera un neizšķirtu noteikumiem.",
+    ldHeadline: "Pokera kombināciju stiprums — Teksasas Hold’em",
+    ldDesc: "Desmit Teksasas Hold’ema kombinācijas pēc kārtas, ar piemēriem, to biežumu un neizšķirtu noteikumiem.",
+    h1: "Pokera kombināciju stiprums",
+    lead: "Teksasas Hold’emā kombinācijas no stiprākās līdz vājākajai sakārtojas šādi. Kombinācija vienmēr sastāv tieši no piecām kārtīm, kas izvēlētas no septiņām redzamajām: tavām divām slēptajām kārtīm un piecām kopējām kārtīm. Savas kārtis izmantot nav obligāti — ja labākais piecinieks veidojas tikai no galda, arī tā ir tava kombinācija.",
+    names: ["Karaliskā rinda", "Krāsainā rinda", "Četrinieks", "Pilna māja", "Krāsa", "Rinda", "Trijnieks", "Divi pāri", "Pāris", "Augstākā kārts"],
+    texts: [
+      "A K Q J 10, visas vienā mastā. Labākā iespējamā kombinācija: to pārspēt nevar, ar to var tikai sadalīt banku.",
+      "Piecas secīgas viena masta kārtis. No divām krāsainajām rindām uzvar tā, kuras augstākā kārts ir lielāka.",
+      "Četras viena ranga kārtis. Piektā kārts (kikers) izšķir reto neizšķirtu, kad visas četras ir uz galda.",
+      "Trijnieks kopā ar pāri. Vispirms salīdzina trijnieku, tad pāri.",
+      "Piecas viena masta kārtis, kas nav secīgas. Salīdzina pa vienai, sākot no augstākās; neviens masts nav pārāks par citu.",
+      "Piecas secīgas dažādu mastu kārtis. Dūzis ir vai nu augšā (10-J-Q-K-A), vai apakšā (A-2-3-4-5), nekad abās vietās vienlaikus.",
+      "Trīs viena ranga kārtis un divas nesaistītas kārtis.",
+      "Divi dažādi pāri un piektā kārts. Vispirms salīdzina augstāko pāri, tad zemāko, tad kikeru.",
+      "Divas viena ranga kārtis un trīs nesaistītas kārtis, ko salīdzina pēc kārtas.",
+      "Neviena no iepriekšējām. Izšķir augstākā kārts, tad nākamā un tā tālāk."
+    ],
+    dealt: "izveidojas %s septiņu kāršu gadījumu",
+    tiesH2: "Kā tiek šķirti neizšķirti",
+    tiesP: "Vispirms salīdzina kategoriju: jebkura krāsa pārspēj jebkuru rindu, lai kādas kārtis tajā būtu. Vienas kategorijas ietvaros salīdzina rangu pēc ranga no augšas uz leju. To, kas pēc kombinācijas izveidošanas paliek pāri, sauc par <em>kikeru</em>, un tas izšķir daudz vairāk partiju, nekā iesācēji domā: ar galdu A-9-4 gan A♠ K♦, gan A♣ 7♥ dod dūžu pāri, taču kungs pārspēj septītnieku. Hold’emā masti neizšķirtu nešķir nekad — divi spēlētāji ar vienāda stipruma piecinieku sadala banku līdz pēdējam žetonam.",
+    wrongH2: "Kas visbiežāk tiek pārprasts",
+    wrong: [
+      "Rindā dūzis ir gan augstākā, gan zemākā kārts: A-K-Q-J-10 ir labākā, bet A-2-3-4-5 (tā sauktais <em>wheel</em>) — vājākā. Secība neveido apli — Q-K-A-2-3 nav nekas.",
+      "Krāsa ir piecas viena masta kārtis, nevis četras. Četras ercenes, saskaitot tavas kārtis un galdu, pašas par sevi nav nekā vērtas.",
+      "Trijnieku, kas veidots no pāra tavā rokā un vienas kārts uz galda, sauc par <em>set</em>; to, kas veidots no vienas kārts rokā un pāra uz galda — par <em>trips</em>. Tā pati vieta secībā, pavisam cits stiprums, jo trips redz visi.",
+      "Skaitās tikai piecas labākās kārtis. Divi pāri rokā un trešais pāris uz galda joprojām ir divi pāri, nevis trīs.",
+      "Iepriekš norādītie procenti rāda, cik bieži katra kombinācija no septiņām kārtīm vispār izveidojas līdz river, nevis cik bieži tā uzvar. Divi pāri šķiet ikdienišķi un tomēr pārspēj lielāko daļu no tā, ko sastop."
+    ],
+    seeH2: "Kā to redzēt pie galda",
+    seeP: "Spēlējot PokerTH, tavas pašreizējās labākās kombinācijas nosaukums tiek rakstīts zem galda, tāpēc to nekad nav jāsaliek galvā laika spiedienā, un kāršu atklāšanā katrā parādītajā kombinācijā tiek izceltas tieši tās piecas kārtis, kas patiešām skaitījās. Bezsaistes treniņš pret datora pretiniekiem ir ātrākais veids, kā šo secību iegaumēt."
+  },
 
   sw: {
     title: "Mpangilio wa mikono ya poka — daraja la mikono katika Texas Hold’em",

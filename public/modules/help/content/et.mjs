@@ -21,7 +21,7 @@ export const help = {
         { id: 'famboard', t: 'Pere edetabel',
           b: ['Ainult privaatserverites ja LAN-mängudes peab klient hüüdnime kaupa kogu aja statistikat \u2014 mängitud ja võidetud käed ja mängud, suurim võit, parim seeria \u2014 ning jagab seda serveri kaudu, nii et iga seade laua ümber näeb sama edetabelit. pokerth.net mänge ei jälgita kunagi sel viisil ja treeningrežiimi statistikat hoitakse täiesti eraldi.', 'Neis mängudes avab auhinnanupp edetabeliakna selle LAN-vahekaardil: kõik mängijad, sorditavad mitme kriteeriumi järgi.'] },
         { id: 'language', t: 'Keel',
-          b: ['Liides on saadaval 46 keeles. Muuda seda millal tahes täpsemates valikutes (hammasrattamenüü) jaotises Kasutajaliides. Pokkeri käiguterminid (Fold, Check, Call, Bet, Raise, All-In) jäävad kokkuleppeliselt inglise keelde, täpselt nagu töölauakliendis.'] },
+          b: ['Liides on saadaval 47 keeles. Muuda seda millal tahes täpsemates valikutes (hammasrattamenüü) jaotises Kasutajaliides. Pokkeri käiguterminid (Fold, Check, Call, Bet, Raise, All-In) jäävad kokkuleppeliselt inglise keelde, täpselt nagu töölauakliendis.'] },
         { id: 'pwa', t: 'Paigalda rakendusena',
           b: ['See klient on progressiivne veebirakendus (PWA): saad selle brauseri menüüst (või päises olevast paigaldusnupust) paigaldada ja saada täisekraanirakenduse oma ikooniga. Pärast paigaldamist käivitub see kohe ja treeningrežiim töötab täielikult võrguvabalt.'],
           note: 'Androidis ja töölaua Chrome\u2019is/Edge\u2019is teeb paigaldusnupp kõik ära. iPhone\u2019is/iPadis lubab Apple paigaldamist ainult Safari kaudu: jagamisnupp \u2192 \u201cLisa avakuvale\u201d \u2014 klient näitab neid samme vajaduse korral. Nupp kaob, kui rakendus on paigaldatud.' },

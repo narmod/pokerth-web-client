@@ -1297,7 +1297,7 @@ async function _loadTables(scope) {
 // [clé de stat, libellé court, infobulle par défaut, clé i18n éventuelle].
 // Les sigles poker et leur développement (VPIP = Voluntarily Put $ In Pot…)
 // restent en anglais, comme Fold/Check/Call : ce sont des termes du jeu.
-// « N » est du langage courant → traduit dans les 46 langues.
+// « N » est du langage courant → traduit dans les 47 langues.
 const COLS = [
   ['hands', 'N', 'Hands played', 'hlColHands'],
   ['vpip', 'VPIP', 'Voluntarily Put $ In Pot'],

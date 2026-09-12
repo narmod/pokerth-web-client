@@ -6,7 +6,7 @@
  * shape (#leave-dialog: .ld-card / .ld-title / .ld-body / .ld-buttons) in
  * front of it, with a Cancel that actually leaves the table.
  *
- * Every string already exists in all 46 locales — spectatorBtn,
+ * Every string already exists in all 47 locales — spectatorBtn,
  * hdrSpectatingWait and leaveCancel — so nothing is left untranslated.
  */
 

@@ -1035,7 +1035,7 @@ function _seoAdmin() { var s = _seoCfg(); return { enabled: s.enabled === true, 
 
 var SEO_TITLE = 'PokerTH Web Client \u2014 Play Free Texas Hold\u2019em Poker in Your Browser';
 var SEO_DESC = 'Play Texas Hold\u2019em poker free in your browser with PokerTH, the open-source poker game. ' +
-  'No download, no ads, no registration \u2014 practice offline against bots, play on LAN or join pokerth.net. 46 languages, installable as an app (PWA).';
+  'No download, no ads, no registration \u2014 practice offline against bots, play on LAN or join pokerth.net. 47 languages, installable as an app (PWA).';
 
 
 // ── hreflang — localized <title> + description for the 46 UI languages ────
@@ -1078,6 +1078,7 @@ var SEO_I18N = {
   gd: { t: 'PokerTH Web \u2014 P\u00f2car Texas Hold\u2019em an-asgaidh sa bhrabhsair', d: 'Cluich PokerTH, an geama p\u00f2cair Texas Hold\u2019em saor le c\u00f2d fosgailte, sa bhrabhsair agad fh\u00e8in. Gun luchdachadh a-nuas, gun chl\u00e0radh \u2014 d\u00e8an cleachdadh far loidhne an aghaidh botaichean, cluich air LAN no air pokerth.net.' },
   lt: { t: 'PokerTH Web \u2014 Nemokamas Texas Hold\u2019em pokeris nar\u0161ykl\u0117je', d: '\u017daiskite PokerTH \u2014 nemokam\u0105 atvirojo kodo Texas Hold\u2019em pokerio \u017eaidim\u0105 tiesiai nar\u0161ykl\u0117je. Be atsisiuntimo ir registracijos \u2014 treniruokit\u0117s neprisijung\u0119 prie\u0161 botus, \u017eaiskite LAN tinkle arba pokerth.net.' },
   et: { t: 'PokerTH Web \u2014 Tasuta Texas Hold\u2019emi pokker brauseris', d: 'M\u00e4ngi PokerTH-d \u2014 tasuta avatud l\u00e4htekoodiga Texas Hold\u2019emi pokkerim\u00e4ngu \u2014 otse oma brauseris. Allalaadimist ega registreerimist ei ole vaja \u2014 treeni v\u00f5rguvabalt bottide vastu, m\u00e4ngi LAN-is v\u00f5i pokerth.net-is.' },
+  lv: { t: 'PokerTH Web \u2014 Bezmaksas Teksasas Hold\u2019ema pokers p\u0101rl\u016bk\u0101', d: 'Sp\u0113l\u0113 PokerTH \u2014 bezmaksas atv\u0113rt\u0101 pirmkoda Teksasas Hold\u2019ema pokera sp\u0113li \u2014 tie\u0161i sav\u0101 p\u0101rl\u016bk\u0101. Nav vajadz\u012bga ne lejupiel\u0101de, ne re\u0123istr\u0101cija \u2014 tren\u0113jies bezsaist\u0113 pret botiem, sp\u0113l\u0113 LAN t\u012bkl\u0101 vai pokerth.net.' },
   ta: { t: 'PokerTH Web \u2014 \u0b89\u0bb2\u0bbe\u0bb5\u0bbf\u0baf\u0bbf\u0bb2\u0bcd \u0b87\u0bb2\u0bb5\u0b9a Texas Hold\u2019em \u0baa\u0bcb\u0b95\u0bcd\u0b95\u0bb0\u0bcd', d: '\u0b87\u0bb2\u0bb5\u0b9a \u0ba4\u0bbf\u0bb1\u0bae\u0bc2\u0bb2 Texas Hold\u2019em \u0baa\u0bcb\u0b95\u0bcd\u0b95\u0bb0\u0bcd \u0bb5\u0bbf\u0bb3\u0bc8\u0baf\u0bbe\u0b9f\u0bcd\u0b9f\u0bbe\u0ba9 PokerTH-\u0b90 \u0b89\u0b99\u0bcd\u0b95\u0bb3\u0bcd \u0b89\u0bb2\u0bbe\u0bb5\u0bbf\u0baf\u0bbf\u0bb2\u0bc7\u0baf\u0bc7 \u0bb5\u0bbf\u0bb3\u0bc8\u0baf\u0bbe\u0b9f\u0bc1\u0b99\u0bcd\u0b95\u0bb3\u0bcd. \u0baa\u0ba4\u0bbf\u0bb5\u0bbf\u0bb1\u0b95\u0bcd\u0b95\u0bae\u0bcb \u0baa\u0ba4\u0bbf\u0bb5\u0bcb \u0ba4\u0bc7\u0bb5\u0bc8\u0baf\u0bbf\u0bb2\u0bcd\u0bb2\u0bc8 \u2014 \u0baa\u0bbe\u0b9f\u0bcd\u0b95\u0bb3\u0bc1\u0b9f\u0ba9\u0bcd \u0b86\u0b83\u0baa\u0bcd\u0bb2\u0bc8\u0ba9\u0bbf\u0bb2\u0bcd \u0baa\u0baf\u0bbf\u0bb1\u0bcd\u0b9a\u0bbf, LAN-\u0b87\u0bb2\u0bcd \u0b85\u0bb2\u0bcd\u0bb2\u0ba4\u0bc1 pokerth.net-\u0b87\u0bb2\u0bcd \u0bb5\u0bbf\u0bb3\u0bc8\u0baf\u0bbe\u0b9f\u0bb2\u0bbe\u0bae\u0bcd.' },
   vi: { t: 'PokerTH Web \u2014 Poker Texas Hold\u2019em mi\u1ec5n ph\u00ed tr\u00ean tr\u00ecnh duy\u1ec7t', d: 'Ch\u01a1i PokerTH, tr\u00f2 ch\u01a1i poker Texas Hold\u2019em m\u00e3 ngu\u1ed3n m\u1edf mi\u1ec5n ph\u00ed, ngay tr\u00ean tr\u00ecnh duy\u1ec7t. Kh\u00f4ng c\u1ea7n t\u1ea3i v\u1ec1, kh\u00f4ng c\u1ea7n \u0111\u0103ng k\u00fd \u2014 luy\u1ec7n t\u1eadp ngo\u1ea1i tuy\u1ebfn v\u1edbi bot, ch\u01a1i qua LAN ho\u1eb7c tham gia pokerth.net.' },
   ko: { t: 'PokerTH \uc6f9 \u2014 \ube0c\ub77c\uc6b0\uc800\uc5d0\uc11c \uc990\uae30\ub294 \ubb34\ub8cc \ud14d\uc0ac\uc2a4 \ud640\ub364 \ud3ec\ucee4', d: '\ubb34\ub8cc \uc624\ud508\uc18c\uc2a4 \ud14d\uc0ac\uc2a4 \ud640\ub364 \ud3ec\ucee4 \uac8c\uc784 PokerTH\ub97c \ube0c\ub77c\uc6b0\uc800\uc5d0\uc11c \ubc14\ub85c \uc990\uae30\uc138\uc694. \ub2e4\uc6b4\ub85c\ub4dc\ub3c4 \uac00\uc785\ub3c4 \ud544\uc694 \uc5c6\uc2b5\ub2c8\ub2e4 \u2014 \uc624\ud504\ub77c\uc778 \ubd07 \ub300\uc804, LAN \ud50c\ub808\uc774, pokerth.net \ucc38\uc5ec\uae4c\uc9c0.' },
@@ -1106,7 +1107,7 @@ var OG_LOCALE = {
   nb: 'nb_NO', da: 'da_DK', fi: 'fi_FI', cs: 'cs_CZ', sk: 'sk_SK',
   ro: 'ro_RO', hu: 'hu_HU', el: 'el_GR', bg: 'bg_BG', hr: 'hr_HR',
   sr: 'sr_RS', af: 'af_ZA', ca: 'ca_ES', gl: 'gl_ES', gd: 'gd_GB',
-  lt: 'lt_LT', et: 'et_EE', ta: 'ta_IN', vi: 'vi_VN', ko: 'ko_KR', 'zh-TW': 'zh_TW',
+  lt: 'lt_LT', et: 'et_EE', lv: 'lv_LV', ta: 'ta_IN', vi: 'vi_VN', ko: 'ko_KR', 'zh-TW': 'zh_TW',
   hi: 'hi_IN', ar: 'ar_AR', fa: 'fa_IR', he: 'he_IL', ur: 'ur_PK',
   id: 'id_ID', th: 'th_TH', fil: 'fil_PH', bn: 'bn_IN', sw: 'sw_KE',
 };
@@ -1120,25 +1121,25 @@ var OG_LOCALE = {
 // missing falls back to English.
 var SEO_BODY_I18N = {
   en: { m: "Three ways to play: offline practice against computer opponents, LAN or a private dedicated server, and the official pokerth.net network with seasonal rankings. Full Texas Hold\u2019em rules, up to 10 players per table, and it installs as an app (PWA) on desktop and mobile.",
-     g: "Completely free and open source: no ads, no in-app purchases, no real-money gambling \u2014 play-money chips only. 46 interface languages, customizable card decks and table styles, and feature parity with the official PokerTH desktop client.",
+     g: "Completely free and open source: no ads, no in-app purchases, no real-money gambling \u2014 play-money chips only. 47 interface languages, customizable card decks and table styles, and feature parity with the official PokerTH desktop client.",
      r: "Texas Hold\u2019em rules", pv: "Privacy" },
   fr: { m: "Trois fa\u00e7ons de jouer\u00a0: entra\u00eenement hors ligne contre des adversaires g\u00e9r\u00e9s par l\u2019ordinateur, LAN ou serveur d\u00e9di\u00e9 priv\u00e9, et le r\u00e9seau officiel pokerth.net avec ses classements saisonniers. R\u00e8gles compl\u00e8tes du Texas Hold\u2019em, jusqu\u2019\u00e0 10 joueurs par table, et installation comme application (PWA) sur ordinateur et mobile.",
-     g: "Enti\u00e8rement gratuit et open source\u00a0: pas de publicit\u00e9, pas d\u2019achat int\u00e9gr\u00e9, pas d\u2019argent r\u00e9el \u2014 uniquement des jetons virtuels. 46 langues d\u2019interface, jeux de cartes et styles de table personnalisables, et parit\u00e9 de fonctionnalit\u00e9s avec le client de bureau officiel PokerTH.",
+     g: "Enti\u00e8rement gratuit et open source\u00a0: pas de publicit\u00e9, pas d\u2019achat int\u00e9gr\u00e9, pas d\u2019argent r\u00e9el \u2014 uniquement des jetons virtuels. 47 langues d\u2019interface, jeux de cartes et styles de table personnalisables, et parit\u00e9 de fonctionnalit\u00e9s avec le client de bureau officiel PokerTH.",
      r: "R\u00e8gles du Texas Hold\u2019em", pv: "Confidentialit\u00e9" },
   de: { m: "Drei Spielweisen: Offline-Training gegen Computergegner, LAN oder ein privater dedizierter Server, und das offizielle Netzwerk pokerth.net mit Saisonranglisten. Vollst\u00e4ndige Texas-Hold\u2019em-Regeln, bis zu 10 Spieler pro Tisch, installierbar als App (PWA) auf Desktop und Mobilger\u00e4t.",
      g: "V\u00f6llig kostenlos und quelloffen: keine Werbung, keine In-App-K\u00e4ufe, kein Echtgeld-Gl\u00fccksspiel \u2014 ausschlie\u00dflich Spielgeld. 46 Oberfl\u00e4chensprachen, anpassbare Kartendecks und Tischdesigns, und Funktionsgleichheit mit dem offiziellen PokerTH-Desktop-Client.",
      r: "Texas-Hold\u2019em-Regeln", pv: "Datenschutz" },
   es: { m: "Tres formas de jugar: pr\u00e1ctica sin conexi\u00f3n contra oponentes controlados por el ordenador, LAN o un servidor dedicado privado, y la red oficial pokerth.net con clasificaciones por temporada. Reglas completas del Texas Hold\u2019em, hasta 10 jugadores por mesa, e instalable como aplicaci\u00f3n (PWA) en ordenador y m\u00f3vil.",
-     g: "Totalmente gratuito y de c\u00f3digo abierto: sin anuncios, sin compras integradas, sin dinero real \u2014 solo fichas virtuales. 46 idiomas de interfaz, barajas y estilos de mesa personalizables, y paridad de funciones con el cliente de escritorio oficial de PokerTH.",
+     g: "Totalmente gratuito y de c\u00f3digo abierto: sin anuncios, sin compras integradas, sin dinero real \u2014 solo fichas virtuales. 47 idiomas de interfaz, barajas y estilos de mesa personalizables, y paridad de funciones con el cliente de escritorio oficial de PokerTH.",
      r: "Reglas del Texas Hold\u2019em", pv: "Privacidad" },
   it: { m: "Tre modi di giocare: allenamento offline contro avversari controllati dal computer, LAN o un server dedicato privato, e la rete ufficiale pokerth.net con classifiche stagionali. Regole complete del Texas Hold\u2019em, fino a 10 giocatori per tavolo, installabile come app (PWA) su desktop e mobile.",
      g: "Completamente gratuito e open source: niente pubblicit\u00e0, niente acquisti in-app, niente denaro reale \u2014 solo fiche virtuali. 46 lingue dell\u2019interfaccia, mazzi e stili di tavolo personalizzabili, e parit\u00e0 di funzioni con il client desktop ufficiale di PokerTH.",
      r: "Regole del Texas Hold\u2019em", pv: "Privacy" },
   "pt-BR": { m: "Tr\u00eas formas de jogar: treino offline contra oponentes controlados pelo computador, LAN ou servidor dedicado privado, e a rede oficial pokerth.net com rankings por temporada. Regras completas do Texas Hold\u2019em, at\u00e9 10 jogadores por mesa, e instal\u00e1vel como aplicativo (PWA) no computador e no celular.",
-     g: "Totalmente gratuito e de c\u00f3digo aberto: sem an\u00fancios, sem compras no aplicativo, sem dinheiro real \u2014 apenas fichas virtuais. 46 idiomas de interface, baralhos e estilos de mesa personaliz\u00e1veis, e paridade de recursos com o cliente desktop oficial do PokerTH.",
+     g: "Totalmente gratuito e de c\u00f3digo aberto: sem an\u00fancios, sem compras no aplicativo, sem dinheiro real \u2014 apenas fichas virtuais. 47 idiomas de interface, baralhos e estilos de mesa personaliz\u00e1veis, e paridade de recursos com o cliente desktop oficial do PokerTH.",
      r: "Regras do Texas Hold\u2019em", pv: "Privacidade" },
   "pt-PT": { m: "Tr\u00eas formas de jogar: treino offline contra advers\u00e1rios controlados pelo computador, LAN ou servidor dedicado privado, e a rede oficial pokerth.net com classifica\u00e7\u00f5es por temporada. Regras completas do Texas Hold\u2019em, at\u00e9 10 jogadores por mesa, e instal\u00e1vel como aplica\u00e7\u00e3o (PWA) no computador e no telem\u00f3vel.",
-     g: "Totalmente gratuito e de c\u00f3digo aberto: sem publicidade, sem compras na aplica\u00e7\u00e3o, sem dinheiro real \u2014 apenas fichas virtuais. 46 idiomas de interface, baralhos e estilos de mesa personaliz\u00e1veis, e paridade de funcionalidades com o cliente de secret\u00e1ria oficial do PokerTH.",
+     g: "Totalmente gratuito e de c\u00f3digo aberto: sem publicidade, sem compras na aplica\u00e7\u00e3o, sem dinheiro real \u2014 apenas fichas virtuais. 47 idiomas de interface, baralhos e estilos de mesa personaliz\u00e1veis, e paridade de funcionalidades com o cliente de secret\u00e1ria oficial do PokerTH.",
      r: "Regras do Texas Hold\u2019em", pv: "Privacidade" },
   nl: { m: "Drie manieren om te spelen: offline oefenen tegen computertegenstanders, LAN of een eigen dedicated server, en het offici\u00eble pokerth.net-netwerk met seizoensklassementen. Volledige Texas Hold\u2019em-regels, tot 10 spelers per tafel, en te installeren als app (PWA) op desktop en mobiel.",
      g: "Volledig gratis en opensource: geen advertenties, geen in-app-aankopen, geen echt geld \u2014 alleen speelgeld. 46 interfacetalen, aanpasbare kaartdecks en tafelstijlen, en dezelfde functies als de offici\u00eble PokerTH-desktopclient.",
@@ -1204,7 +1205,7 @@ var SEO_BODY_I18N = {
      g: "Totalment gratu\u00eft i de codi obert: sense anuncis, sense compres integrades, sense diners reals \u2014 nom\u00e9s fitxes virtuals. 46 idiomes d\u2019interf\u00edcie, baralles i estils de taula personalitzables, i les mateixes funcions que el client d\u2019escriptori oficial de PokerTH.",
      r: "Regles del Texas Hold\u2019em", pv: "Privadesa" },
   gl: { m: "Tres maneiras de xogar: pr\u00e1ctica sen conexi\u00f3n contra adversarios controlados polo ordenador, LAN ou un servidor dedicado privado, e a rede oficial pokerth.net con clasificaci\u00f3ns por temporada. Regras completas do Texas Hold\u2019em, ata 10 xogadores por mesa, e instalable como aplicaci\u00f3n (PWA) no ordenador e no m\u00f3bil.",
-     g: "Totalmente gratu\u00edto e de c\u00f3digo aberto: sen anuncios, sen compras integradas, sen di\u00f1eiro real \u2014 s\u00f3 fichas virtuais. 46 idiomas de interface, barallas e estilos de mesa personalizables, e as mesmas funci\u00f3ns que o cliente de escritorio oficial de PokerTH.",
+     g: "Totalmente gratu\u00edto e de c\u00f3digo aberto: sen anuncios, sen compras integradas, sen di\u00f1eiro real \u2014 s\u00f3 fichas virtuais. 47 idiomas de interface, barallas e estilos de mesa personalizables, e as mesmas funci\u00f3ns que o cliente de escritorio oficial de PokerTH.",
      r: "Regras do Texas Hold\u2019em", pv: "Privacidade" },
   gd: { m: "Tr\u00ec d\u00f2ighean air cluich: cleachdadh far loidhne an aghaidh luchd-d\u00f9bhlain a\u2019 choimpiutair, LAN no frithealaiche pr\u00ecobhaideach agad fh\u00e8in, agus l\u00econra oifigeil pokerth.net le rangachadh r\u00e0iteil. Riaghailtean Texas Hold\u2019em gu l\u00e8ir, suas ri 10 cluicheadairean aig a\u2019 bh\u00f2rd, agus gabhaidh a st\u00e0ladh mar aplacaid (PWA) air coimpiutair is f\u00f2n.",
      g: "Gu tur an-asgaidh agus le c\u00f2d fosgailte: gun sanasan, gun cheannach am broinn na h-aplacaid, gun chearrachas le f\u00ecor airgead \u2014 d\u00ecreach airgead cluiche. 46 c\u00e0nan eadar-aghaidh, pacaidean chairtean agus stoidhlean b\u00f9ird gan gn\u00e0thachadh, agus na h-aon ghleusan ris a\u2019 chliant deasg oifigeil PokerTH.",
@@ -1213,8 +1214,11 @@ var SEO_BODY_I18N = {
      g: "Vis\u0161kai nemokama ir atvirojo kodo: joki\u0173 reklam\u0173, joki\u0173 pirkim\u0173 programoje, joki\u0173 tikr\u0173 pinig\u0173 \u2014 tik \u017eaidimo \u017eetonai. 46 s\u0105sajos kalbos, kei\u010diamos kort\u0173 kalad\u0117s ir stal\u0173 stiliai, tos pa\u010dios funkcijos kaip oficialioje PokerTH kompiuterio programoje.",
      r: "Texas Hold\u2019em taisykl\u0117s", pv: "Privatumas" },
   et: { m: "Kolm viisi m\u00e4ngimiseks: v\u00f5rguvaba treening arvuti juhitud vastaste vastu, kohtv\u00f5rk v\u00f5i oma server ning ametlik pokerth.net v\u00f5rk koos hooaja edetabelitega. K\u00f5ik Texas Hold\u2019emi reeglid, kuni 10 m\u00e4ngijat lauas, paigaldatav rakendusena (PWA) arvutis ja telefonis.",
-     g: "T\u00e4iesti tasuta ja avatud l\u00e4htekoodiga: reklaame ei ole, rakendusesiseseid oste ei ole, p\u00e4ris raha peale hasartm\u00e4ngu ei ole \u2014 ainult m\u00e4ngu\u017eetoonid. 46 liidesekeelt, vahetatavad kaardipakid ja lauastiilid ning samad funktsioonid mis ametlikus PokerTH t\u00f6\u00f6lauakliendis.",
+     g: "T\u00e4iesti tasuta ja avatud l\u00e4htekoodiga: reklaame ei ole, rakendusesiseseid oste ei ole, p\u00e4ris raha peale hasartm\u00e4ngu ei ole \u2014 ainult m\u00e4ngu\u017eetoonid. 47 liidesekeelt, vahetatavad kaardipakid ja lauastiilid ning samad funktsioonid mis ametlikus PokerTH t\u00f6\u00f6lauakliendis.",
      r: "Texas Hold\u2019emi reeglid", pv: "Privaatsus" },
+  lv: { m: "Tr\u012bs veidi, k\u0101 sp\u0113l\u0113t: bezsaistes treni\u0146\u0161 pret datora vad\u012btiem pretiniekiem, lok\u0101lais t\u012bkls vai savs serveris, un ofici\u0101lais pokerth.net t\u012bkls ar sezonas reitingiem. Visi Teksasas Hold\u2019ema noteikumi, l\u012bdz 10 sp\u0113l\u0113t\u0101jiem pie galda, instal\u0113jams k\u0101 lietotne (PWA) dator\u0101 un telefon\u0101.",
+     g: "Piln\u012bgi bez maksas un ar atv\u0113rtu pirmkodu: nav rekl\u0101mu, nav pirkumu lietotn\u0113, nav azartsp\u0113\u013cu par \u012bstu naudu \u2014 tikai sp\u0113les \u017eetoni. 47 saskarnes valodas, main\u0101mi k\u0101r\u0161u komplekti un galda stili, un t\u0101s pa\u0161as funkcijas, kas ofici\u0101laj\u0101 PokerTH darbvirsmas klient\u0101.",
+     r: "Teksasas Hold\u2019ema noteikumi", pv: "Priv\u0101tums" },
   ta: { m: "\u0bb5\u0bbf\u0bb3\u0bc8\u0baf\u0bbe\u0b9f \u0bae\u0bc2\u0ba9\u0bcd\u0bb1\u0bc1 \u0bb5\u0bb4\u0bbf\u0b95\u0bb3\u0bcd: \u0b95\u0ba3\u0bbf\u0ba9\u0bbf \u0b8e\u0ba4\u0bbf\u0bb0\u0bbe\u0bb3\u0bbf\u0b95\u0bb3\u0bc1\u0b95\u0bcd\u0b95\u0bc1 \u0b8e\u0ba4\u0bbf\u0bb0\u0bbe\u0b95 \u0b87\u0ba3\u0bc8\u0baf\u0bae\u0bbf\u0bb2\u0bcd\u0bb2\u0bbe\u0bae\u0bb2\u0bcd \u0baa\u0baf\u0bbf\u0bb1\u0bcd\u0b9a\u0bbf, LAN \u0b85\u0bb2\u0bcd\u0bb2\u0ba4\u0bc1 \u0b9a\u0bca\u0ba8\u0bcd\u0ba4 \u0baa\u0bbf\u0bb0\u0ba4\u0bcd\u0baf\u0bc7\u0b95 \u0b9a\u0bc7\u0bb5\u0bc8\u0baf\u0b95\u0bae\u0bcd, \u0bae\u0bb1\u0bcd\u0bb1\u0bc1\u0bae\u0bcd \u0baa\u0bb0\u0bc1\u0bb5\u0b95\u0bbe\u0bb2 \u0ba4\u0bb0\u0bb5\u0bb0\u0bbf\u0b9a\u0bc8\u0b95\u0bb3\u0bc1\u0b9f\u0ba9\u0bcd \u0b95\u0bc2\u0b9f\u0bbf\u0baf \u0b85\u0ba4\u0bbf\u0b95\u0bbe\u0bb0\u0baa\u0bcd\u0baa\u0bc2\u0bb0\u0bcd\u0bb5 pokerth.net \u0bb5\u0bb2\u0bc8\u0baf\u0bae\u0bc8\u0baa\u0bcd\u0baa\u0bc1. \u0bae\u0bc1\u0bb4\u0bc1\u0bae\u0bc8\u0baf\u0bbe\u0ba9 Texas Hold\u2019em \u0bb5\u0bbf\u0ba4\u0bbf\u0b95\u0bb3\u0bcd, \u0b92\u0bb0\u0bc1 \u0bae\u0bc7\u0b9c\u0bc8\u0b95\u0bcd\u0b95\u0bc1 10 \u0bb5\u0bc0\u0bb0\u0bb0\u0bcd\u0b95\u0bb3\u0bcd \u0bb5\u0bb0\u0bc8, \u0b95\u0ba3\u0bbf\u0ba9\u0bbf \u0bae\u0bb1\u0bcd\u0bb1\u0bc1\u0bae\u0bcd \u0b95\u0bc8\u0baa\u0bc7\u0b9a\u0bbf\u0baf\u0bbf\u0bb2\u0bcd \u0b9a\u0bc6\u0baf\u0bb2\u0bbf\u0baf\u0bbe\u0b95 (PWA) \u0ba8\u0bbf\u0bb1\u0bc1\u0bb5\u0bb2\u0bbe\u0bae\u0bcd.",
      g: "\u0bae\u0bc1\u0bb1\u0bcd\u0bb1\u0bbf\u0bb2\u0bc1\u0bae\u0bcd \u0b87\u0bb2\u0bb5\u0b9a\u0bae\u0bcd, \u0ba4\u0bbf\u0bb1\u0ba8\u0bcd\u0ba4 \u0bae\u0bc2\u0bb2\u0bae\u0bcd: \u0bb5\u0bbf\u0bb3\u0bae\u0bcd\u0baa\u0bb0\u0b99\u0bcd\u0b95\u0bb3\u0bcd \u0b87\u0bb2\u0bcd\u0bb2\u0bc8, \u0b9a\u0bc6\u0baf\u0bb2\u0bbf \u0b89\u0bb3\u0bcd \u0b95\u0bca\u0bb3\u0bcd\u0bae\u0bc1\u0ba4\u0bb2\u0bcd \u0b87\u0bb2\u0bcd\u0bb2\u0bc8, \u0b89\u0ba3\u0bcd\u0bae\u0bc8\u0baf\u0bbe\u0ba9 \u0baa\u0ba3\u0bae\u0bcd \u0b87\u0bb2\u0bcd\u0bb2\u0bc8 \u2014 \u0bb5\u0bbf\u0bb3\u0bc8\u0baf\u0bbe\u0b9f\u0bcd\u0b9f\u0bc1 \u0ba8\u0bbe\u0ba3\u0baf\u0b99\u0bcd\u0b95\u0bb3\u0bcd \u0bae\u0b9f\u0bcd\u0b9f\u0bc1\u0bae\u0bc7. 46 \u0b87\u0b9f\u0bc8\u0bae\u0bc1\u0b95 \u0bae\u0bca\u0bb4\u0bbf\u0b95\u0bb3\u0bcd, \u0ba4\u0ba9\u0bbf\u0baa\u0bcd\u0baf\u0ba9\u0bbe\u0b95\u0bcd\u0b95\u0b95\u0bcd\u0b95\u0bc2\u0b9f\u0bbf\u0baf \u0b9a\u0bc0\u0b9f\u0bcd\u0b9f\u0bc1\u0b95\u0bcd\u0b95\u0b9f\u0bcd\u0b9f\u0bc1\u0b95\u0bb3\u0bcd \u0bae\u0bb1\u0bcd\u0bb1\u0bc1\u0bae\u0bcd \u0bae\u0bc7\u0b9c\u0bc8 \u0baa\u0bbe\u0ba3\u0bbf\u0b95\u0bb3\u0bcd, \u0b85\u0ba4\u0bbf\u0b95\u0bbe\u0bb0\u0baa\u0bcd\u0baa\u0bc2\u0bb0\u0bcd\u0bb5 PokerTH \u0b9f\u0bc6\u0bb8\u0bcd\u0b95\u0bcd\u0b9f\u0bbe\u0baa\u0bcd \u0b9a\u0bc6\u0baf\u0bb2\u0bbf\u0b95\u0bcd\u0b95\u0bc1 \u0b87\u0ba3\u0bc8\u0baf\u0bbe\u0ba9 \u0bb5\u0b9a\u0ba4\u0bbf\u0b95\u0bb3\u0bcd.",
      r: "Texas Hold\u2019em \u0bb5\u0bbf\u0ba4\u0bbf\u0b95\u0bb3\u0bcd", pv: "\u0ba4\u0ba9\u0bbf\u0baf\u0bc1\u0bb0\u0bbf\u0bae\u0bc8" },
@@ -1587,7 +1591,7 @@ function seoLlmsTxt(base) {
     '- The official pokerth.net network, with seasonal rankings\n\n' +
     '## Key facts\n\n' +
     '- Free and open source (based on PokerTH by the PokerTH Development Team)\n' +
-    '- 46 interface languages; poker terms (Fold/Check/Call/Raise/All-In) stay in English\n' +
+    '- 47 interface languages; poker terms (Fold/Check/Call/Raise/All-In) stay in English\n' +
     '- Feature parity with the official PokerTH desktop client\n' +
     (u ? '\n## Links\n\n- Play: ' + u + '/\n- Texas Hold\u2019em rules: ' + u + '/rules\n' +
          '- Poker hand rankings: ' + u + '/hand-rankings\n- How to play, step by step: ' + u + '/how-to-play\n' +
@@ -1960,7 +1964,7 @@ var SEO_FAQ_I18N = {
       ["Quelle diff\u00e9rence avec le client de bureau ?",
        "M\u00eame jeu, m\u00eames r\u00e8gles, m\u00eame r\u00e9seau pokerth.net \u2014 mais il s\u2019ex\u00e9cute directement dans le navigateur, sans rien installer, sur n\u2019importe quel syst\u00e8me d\u2019exploitation."],
       ["Quelles langues sont disponibles ?",
-       "L\u2019interface existe en 46 langues. Les termes d\u2019action du poker (Fold, Check, Call, Raise, All-In) restent en anglais, comme le veut l\u2019usage international."],
+       "L\u2019interface existe en 47 langues. Les termes d\u2019action du poker (Fold, Check, Call, Raise, All-In) restent en anglais, comme le veut l\u2019usage international."],
       ["Y a-t-il de l\u2019argent r\u00e9el en jeu ?",
        "Non. PokerTH se joue strictement en argent fictif. Les jetons n\u2019ont aucune valeur mon\u00e9taire et ne peuvent \u00eatre ni achet\u00e9s ni vendus."],
       ["Quelles donn\u00e9es le client web collecte-t-il ?",
@@ -1993,7 +1997,7 @@ var SEO_FAQ_I18N = {
       ["\u00bfEn qu\u00e9 se diferencia del cliente de escritorio?",
        "Mismo juego, mismas reglas, misma red pokerth.net, pero se ejecuta directamente en el navegador, sin instalar nada y en cualquier sistema operativo."],
       ["\u00bfQu\u00e9 idiomas est\u00e1n disponibles?",
-       "La interfaz est\u00e1 disponible en 46 idiomas. Los t\u00e9rminos de acci\u00f3n del p\u00f3quer (Fold, Check, Call, Raise, All-In) se mantienen en ingl\u00e9s, como es convenci\u00f3n internacional."],
+       "La interfaz est\u00e1 disponible en 47 idiomas. Los t\u00e9rminos de acci\u00f3n del p\u00f3quer (Fold, Check, Call, Raise, All-In) se mantienen en ingl\u00e9s, como es convenci\u00f3n internacional."],
       ["\u00bfHay dinero real de por medio?",
        "No. PokerTH es estrictamente un juego con dinero ficticio. Las fichas no tienen valor monetario y no se pueden comprar ni vender."],
       ["\u00bfQu\u00e9 datos recopila el cliente web?",
@@ -2026,7 +2030,7 @@ var SEO_FAQ_I18N = {
       ["Was ist der Unterschied zum Desktop-Client?",
        "Gleiches Spiel, gleiche Regeln, gleiches pokerth.net-Netzwerk \u2014 nur l\u00e4uft es direkt im Browser, ohne Installation, auf jedem Betriebssystem."],
       ["Welche Sprachen werden unterst\u00fctzt?",
-       "Die Oberfl\u00e4che gibt es in 46 Sprachen. Die Poker-Aktionsbegriffe (Fold, Check, Call, Raise, All-In) bleiben englisch, wie international \u00fcblich."],
+       "Die Oberfl\u00e4che gibt es in 47 Sprachen. Die Poker-Aktionsbegriffe (Fold, Check, Call, Raise, All-In) bleiben englisch, wie international \u00fcblich."],
       ["Geht es um echtes Geld?",
        "Nein. PokerTH ist ausschlie\u00dflich ein Spielgeld-Spiel. Chips haben keinen Geldwert und k\u00f6nnen weder gekauft noch verkauft werden."],
       ["Welche Daten erhebt der Web-Client?",
@@ -2092,7 +2096,7 @@ var SEO_FAQ_I18N = {
       ["Qual a diferen\u00e7a para o cliente de desktop?",
        "Mesmo jogo, mesmas regras, mesma rede pokerth.net \u2014 mas roda direto no navegador, sem instalar nada, em qualquer sistema operacional."],
       ["Quais idiomas s\u00e3o suportados?",
-       "A interface est\u00e1 dispon\u00edvel em 46 idiomas. Os termos de a\u00e7\u00e3o do p\u00f4quer (Fold, Check, Call, Raise, All-In) permanecem em ingl\u00eas, como manda a conven\u00e7\u00e3o internacional."],
+       "A interface est\u00e1 dispon\u00edvel em 47 idiomas. Os termos de a\u00e7\u00e3o do p\u00f4quer (Fold, Check, Call, Raise, All-In) permanecem em ingl\u00eas, como manda a conven\u00e7\u00e3o internacional."],
       ["Envolve dinheiro real?",
        "N\u00e3o. O PokerTH \u00e9 estritamente um jogo com fichas de brincadeira. As fichas n\u00e3o t\u00eam valor em dinheiro e n\u00e3o podem ser compradas nem vendidas."],
       ["Quais dados o cliente web coleta?",
@@ -2125,7 +2129,7 @@ var SEO_FAQ_I18N = {
       ["Qual a diferen\u00e7a para o cliente de computador?",
        "Mesmo jogo, mesmas regras, mesma rede pokerth.net \u2014 mas corre diretamente no navegador, sem instalar nada, em qualquer sistema operativo."],
       ["Que idiomas s\u00e3o suportados?",
-       "A interface est\u00e1 dispon\u00edvel em 46 idiomas. Os termos de a\u00e7\u00e3o do p\u00f3quer (Fold, Check, Call, Raise, All-In) mant\u00eam-se em ingl\u00eas, como \u00e9 conven\u00e7\u00e3o internacional."],
+       "A interface est\u00e1 dispon\u00edvel em 47 idiomas. Os termos de a\u00e7\u00e3o do p\u00f3quer (Fold, Check, Call, Raise, All-In) mant\u00eam-se em ingl\u00eas, como \u00e9 conven\u00e7\u00e3o internacional."],
       ["H\u00e1 dinheiro real envolvido?",
        "N\u00e3o. O PokerTH \u00e9 estritamente um jogo com fichas fict\u00edcias. As fichas n\u00e3o t\u00eam valor monet\u00e1rio e n\u00e3o podem ser compradas nem vendidas."],
       ["Que dados recolhe o cliente web?",
@@ -3583,7 +3587,7 @@ var _SEO_FAQ = [
   ['What is the difference with the desktop client?',
    'Same game, same rules, same pokerth.net network \u2014 but it runs directly in the browser with nothing to install, on any operating system.'],
   ['Which languages are supported?',
-   'The interface is available in 46 languages. Poker action terms (Fold, Check, Call, Raise, All-In) stay in English, as is international convention.'],
+   'The interface is available in 47 languages. Poker action terms (Fold, Check, Call, Raise, All-In) stay in English, as is international convention.'],
   ['Is real money involved?',
    'No. PokerTH is strictly a play-money game. Chips have no monetary value and cannot be bought or sold.'],
   ['What data does the web client collect?',
@@ -3782,7 +3786,7 @@ function seoHowToPage(res, method, lang) {
     'Nobody needs to install anything or hand over an email address.</p>' +
     '<h2>Common questions</h2>' +
     '<p>No money is ever involved, in any mode. Your settings, style packs and offline progress stay on your own ' +
-    'device. The interface is available in 46 languages, while the five action words \u2014 Fold, Check, Call, Raise, ' +
+    'device. The interface is available in 47 languages, while the five action words \u2014 Fold, Check, Call, Raise, ' +
     'All-In \u2014 stay in English, as they are at every table in the world. More in the <a href="/faq">FAQ</a>.</p>';
   var title = 'How to Play Poker Online Free \u2014 PokerTH Web Client';
   var desc = 'Step by step: play free Texas Hold\u2019em poker in your browser with no download and no account \u2014 ' +
@@ -3898,7 +3902,7 @@ function seoGlossaryPage(res, method, lang) {
   dl += '</dl>';
   var body = '<h1>Poker Glossary \u2014 Texas Hold\u2019em Terms Explained</h1>' +
     '<p>The words you will meet at a Hold\u2019em table, in the chat and in PokerTH itself. The five action words \u2014 ' +
-    'Fold, Check, Call, Raise and All-In \u2014 stay in English in every one of the 46 interface languages, because ' +
+    'Fold, Check, Call, Raise and All-In \u2014 stay in English in every one of the 47 interface languages, because ' +
     'they do at every table in the world.</p>' + dl +
     '<p style="margin-top:1.6em">Still unclear on how a hand actually runs? The <a href="/rules">rules</a> cover it ' +
     'from the blinds to the showdown, and the <a href="/hand-rankings">hand rankings</a> list what beats what.</p>';
@@ -4546,7 +4550,7 @@ function musicPlayTitles() {
 // Le compteur de trafic dit combien de visites ; il ne disait pas sur quoi. Ces
 // quatre répartitions servent à arbitrer : part réelle d'iOS Safari (où vivent
 // la moitié de nos pièges connus), part de l'installation PWA, et lesquelles
-// des 46 langues sont réellement utilisées.
+// des 47 langues sont réellement utilisées.
 //
 // Ce sont des totaux cumulés, pas des séries : quatre petits dictionnaires de
 // compteurs, alimentés par le même ping anonyme que les visites. Rien de plus
@@ -4572,7 +4576,7 @@ function _uaPick(table, ua) {
 }
 // Plafond de cardinalité : une valeur inconnue ne crée pas une clé de plus
 // indéfiniment (l'en-tête Accept-Language est libre côté client). Il était à
-// 40 pour un client qui parle 46 langues : passé 40 codes distincts, une
+// 40 pour un client qui parle 47 langues : passé 40 codes distincts, une
 // langue réelle serait tombée dans « other » et s'y serait confondue avec les
 // pings sans en-tête, sans que rien ne le dise. Une langue traduite passe donc
 // toujours, et le plafond des autres monte à 90 — assez pour les codes que
