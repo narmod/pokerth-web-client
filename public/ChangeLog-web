@@ -1,4 +1,6 @@
-2026-09-12 version 2.1.8-web.158 (current series):
+2026-09-12 version 2.1.9-web.0 (current series):
+- improvement: the chances panel is easier to read - categories that are impossible with your current cards now stay visible instead of nearly disappearing, and the odds bars themselves are a bit more visible too.
+2026-09-12 version 2.1.8-web.158:
 - bugfix: the reactions window's page switcher (‹ 1/3 ›) now follows the table style's colours too, matching the title fix from the previous update.
 2026-09-12 version 2.1.8-web.157:
 - bugfix: the reactions window's title now follows the table style's text colour like the chat/log windows do, instead of always staying the app's default gold.

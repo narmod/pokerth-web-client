@@ -8,6 +8,22 @@ web counter (`2.1.5` → `2.1.5-web.0`). Granular, per-build tags are published 
 [GitHub Releases](https://github.com/narmod/pokerth-web-client/releases) page;
 this file captures what matters to players and operators.
 
+## 2.1.9-web line (2026)
+
+Opened with `v2.1.9-web.0` (2026-09-12), following the upstream **2.1.9**
+release. Per-build detail is on the
+[GitHub Releases](https://github.com/narmod/pokerth-web-client/releases) page;
+highlights below.
+
+### Changed
+- **Chances panel readability, impossible categories** (`web.0`, parity with
+  upstream `f7a8e26d`) — the bar track background goes from 14% to 22%
+  opacity (both the info-panel tab and the floating odds monitor), and
+  categories at zero samples (truly impossible with the current cards, not
+  just a low percentage) now get a dedicated dimmed-but-readable state
+  (icon at 50% opacity, label/percentage at 55%) instead of blending into
+  the background at the old, near-invisible level.
+
 ## 2.1.8-web line (2026)
 
 Opened with `v2.1.8-web.0` (2026-09-01), following the upstream **2.1.8**
