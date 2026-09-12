@@ -11568,7 +11568,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.8-web.146'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.8-web.147'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif ou la palette High contrast
    (Android, Safari, iOS standalone récent). Lit --theme-color et met
@@ -11884,3 +11884,4 @@ window.BUILD_VERSION='2.1.8-web.146'; try{ var b=document.getElementById('cf-bui
   window._lobby3OpenInfo     = openInfo;
   window._lobby3CloseSlide   = closeSlide;
 })();
+

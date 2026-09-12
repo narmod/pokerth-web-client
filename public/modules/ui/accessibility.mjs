@@ -227,6 +227,15 @@ function closeAccessibility() {
   panel.setAttribute('aria-hidden', 'true');
   const target = invokingElement;
   invokingElement = null;
+  if (isAdaptivePlay() && typeof window.reconfigureGameDrawersForAdaptivePlay === 'function') {
+    // An open drawer already owns focus management in this adaptive layout
+    // (see reconfigureGameDrawersForAdaptivePlay). Clicking Close natively
+    // moves focus onto the Close button first; re-run the drawer
+    // reconfiguration so it reclaims focus instead of handing it to this
+    // modal's own invoker.
+    window.reconfigureGameDrawersForAdaptivePlay(true);
+    return;
+  }
   try { if (target && target.isConnected) target.focus(); } catch (_error) {}
 }
 

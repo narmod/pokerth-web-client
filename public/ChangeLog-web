@@ -1,4 +1,6 @@
-2026-09-12 version 2.1.8-web.146 (current series):
+2026-09-12 version 2.1.8-web.147 (current series):
+- bugfix: reopening the chat or info drawer via the Accessibility panel at Extra Large no longer leaves keyboard focus stuck outside it - it now lands back in the drawer as intended
+2026-09-12 version 2.1.8-web.146:
 - bugfix: the chat and info drawer buttons in mobile landscape at Extra Large interface size are properly tappable again - they had shrunk below the accessible touch-target size
 2026-09-12 version 2.1.8-web.145:
 - new: the public pages (poker rules, hand rankings, glossary, how to play) are now available in Estonian too, so a search in Estonian lands on an Estonian page instead of the English one

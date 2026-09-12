@@ -819,6 +819,18 @@ highlights below.
   (`scale 1.03`, 180 ms OutQuad) is applied to the seat plate.
 
 ### Fixed
+- **Accessibility modal stole focus back from a reopened adaptive drawer**
+  (`web.147`) — `closeAccessibility()` always returned focus to whichever
+  button had opened the Accessibility modal. If the player switched back to
+  Extra Large from inside that modal while a chat/info drawer was already
+  open, `reconfigureGameDrawersForAdaptivePlay()` would (correctly) move
+  focus into the drawer's active tab, but clicking the modal's Close button
+  natively focused the Close button first, and `closeAccessibility()` then
+  explicitly handed focus to the modal's invoker on top of that — leaving
+  the reopened drawer dialog with no focus inside it. `closeAccessibility()`
+  now re-runs `reconfigureGameDrawersForAdaptivePlay(true)` instead of
+  restoring the invoker whenever the layout is currently adaptive, letting
+  the drawer reclaim its own focus target.
 - **Extra Large mobile-landscape chat/info drawers had sub-44px touch targets**
   (`web.146`) — `toggleGameChat()` and `toggleLog()` each called
   `_openFloatingNearBtn(...)` unconditionally right after
