@@ -16,6 +16,15 @@ release. Per-build detail is on the
 highlights below.
 
 ### Added
+- **Latvian SEO content pages** (`web.149`) — `seo-i18n/hands.js`,
+  `glossary.js` and `howto.js` gain their `lv` entries, so
+  `/hand-rankings`, `/glossary` and `/how-to-play` render in Latvian and
+  `lv` joins the hreflang set and the sitemap (both built from the same
+  source, `seoPageLangs()`). `proxy.js` gets the localized `<title>` and
+  description, `og:locale` `lv_LV`, and the Latvian marketing block.
+  Hand names reuse the catalogue's forms, as `test-seo-hands-i18n`
+  requires. The "46 languages" claim inside the SEO copy of every
+  language was updated to 47 at the same time.
 - **Latvian catalogue (`lv`)** (`web.148`) — a 47th language: the full UI
   catalogue (1521 keys, parity-checked against `en.mjs` for keys, `{token}`
   placeholders, `||` separators and `%1`/`%2` slots) and the complete help

@@ -50,7 +50,7 @@ var PARTS = {
     friendsH2: "Jouer entre amis",
     friendsP: "Créez une table, mettez un mot de passe si vous la voulez privée, et envoyez le lien d’invitation. Il ouvre la table directement — dans l’application installée si vos amis l’ont ajoutée à leur écran d’accueil, dans un onglet de navigateur sinon. Personne n’a rien à installer ni d’adresse e-mail à donner.",
     faqH2: "Questions fréquentes",
-    faqP: function (h, c) { return "Aucun argent n’intervient jamais, dans aucun mode. Vos réglages, vos packs de style et votre progression hors ligne restent sur votre appareil. L’interface existe en 46 langues, tandis que les cinq mots d’action — Fold, Check, Call, Raise, All-In — restent en anglais, comme à toutes les tables du monde. La suite dans la <a href=\"{faq}\">FAQ</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
+    faqP: function (h, c) { return "Aucun argent n’intervient jamais, dans aucun mode. Vos réglages, vos packs de style et votre progression hors ligne restent sur votre appareil. L’interface existe en 47 langues, tandis que les cinq mots d’action — Fold, Check, Call, Raise, All-In — restent en anglais, comme à toutes les tables du monde. La suite dans la <a href=\"{faq}\">FAQ</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
   },
 
   de: {
@@ -79,7 +79,7 @@ var PARTS = {
     friendsH2: "Mit Freunden spielen",
     friendsP: "Erstellen Sie einen Tisch, vergeben Sie ein Passwort, wenn er privat sein soll, und schicken Sie den Einladungslink. Er öffnet den Tisch direkt — in der installierten App, falls sie auf dem Startbildschirm liegt, sonst in einem Browser-Tab. Niemand muss etwas installieren oder eine E-Mail-Adresse herausgeben.",
     faqH2: "Häufige Fragen",
-    faqP: function (h, c) { return "Geld ist in keinem Modus jemals im Spiel. Ihre Einstellungen, Stilpakete und der Offline-Fortschritt bleiben auf Ihrem eigenen Gerät. Die Oberfläche gibt es in 46 Sprachen, während die fünf Aktionswörter — Fold, Check, Call, Raise, All-In — auf Englisch bleiben, wie an jedem Tisch der Welt. Mehr in den <a href=\"{faq}\">FAQ</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
+    faqP: function (h, c) { return "Geld ist in keinem Modus jemals im Spiel. Ihre Einstellungen, Stilpakete und der Offline-Fortschritt bleiben auf Ihrem eigenen Gerät. Die Oberfläche gibt es in 47 Sprachen, während die fünf Aktionswörter — Fold, Check, Call, Raise, All-In — auf Englisch bleiben, wie an jedem Tisch der Welt. Mehr in den <a href=\"{faq}\">FAQ</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
   },
 
   es: {
@@ -108,7 +108,7 @@ var PARTS = {
     friendsH2: "Jugar con amigos",
     friendsP: "Crea una mesa, ponle contraseña si la quieres privada y envía el enlace de invitación. Abre la mesa directamente: en la aplicación instalada si la han añadido a su pantalla de inicio, y en una pestaña del navegador si no. Nadie tiene que instalar nada ni dar una dirección de correo.",
     faqH2: "Preguntas frecuentes",
-    faqP: function (h, c) { return "Nunca hay dinero de por medio, en ningún modo. Tus ajustes, tus paquetes de estilo y tu progreso sin conexión se quedan en tu propio dispositivo. La interfaz está disponible en 46 idiomas, mientras que las cinco palabras de acción — Fold, Check, Call, Raise, All-In — se mantienen en inglés, como en cualquier mesa del mundo. Más en las <a href=\"{faq}\">preguntas frecuentes</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
+    faqP: function (h, c) { return "Nunca hay dinero de por medio, en ningún modo. Tus ajustes, tus paquetes de estilo y tu progreso sin conexión se quedan en tu propio dispositivo. La interfaz está disponible en 47 idiomas, mientras que las cinco palabras de acción — Fold, Check, Call, Raise, All-In — se mantienen en inglés, como en cualquier mesa del mundo. Más en las <a href=\"{faq}\">preguntas frecuentes</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
   },
 
   'pt-BR': {
@@ -137,7 +137,7 @@ var PARTS = {
     friendsH2: "Jogando com amigos",
     friendsP: "Crie uma mesa, ponha senha se quiser que seja privada e mande o link de convite. Ele abre a mesa direto — no aplicativo instalado, se a pessoa já o adicionou à tela de início, ou numa aba do navegador. Ninguém precisa instalar nada nem informar um e-mail.",
     faqH2: "Perguntas frequentes",
-    faqP: function (h, c) { return "Dinheiro nunca entra em jogo, em modo nenhum. Suas configurações, seus pacotes de estilo e seu progresso offline ficam no seu próprio aparelho. A interface está disponível em 46 idiomas, enquanto as cinco palavras de ação — Fold, Check, Call, Raise, All-In — continuam em inglês, como em qualquer mesa do mundo. Mais no <a href=\"{faq}\">FAQ</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
+    faqP: function (h, c) { return "Dinheiro nunca entra em jogo, em modo nenhum. Suas configurações, seus pacotes de estilo e seu progresso offline ficam no seu próprio aparelho. A interface está disponível em 47 idiomas, enquanto as cinco palavras de ação — Fold, Check, Call, Raise, All-In — continuam em inglês, como em qualquer mesa do mundo. Mais no <a href=\"{faq}\">FAQ</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
   },
 
   it: {
@@ -166,7 +166,7 @@ var PARTS = {
     friendsH2: "Giocare con gli amici",
     friendsP: "Crea un tavolo, metti una password se lo vuoi privato e manda il link d’invito. Apre il tavolo direttamente — nell’app installata se l’hanno aggiunta alla schermata iniziale, altrimenti in una scheda del browser. Nessuno deve installare niente né lasciare un indirizzo email.",
     faqH2: "Domande frequenti",
-    faqP: function (h, c) { return "Non c’è mai denaro in gioco, in nessuna modalità. Le tue impostazioni, i pacchetti di stile e i progressi offline restano sul tuo dispositivo. L’interfaccia è disponibile in 46 lingue, mentre le cinque parole d’azione — Fold, Check, Call, Raise, All-In — restano in inglese, come a qualsiasi tavolo del mondo. Il resto nelle <a href=\"{faq}\">FAQ</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
+    faqP: function (h, c) { return "Non c’è mai denaro in gioco, in nessuna modalità. Le tue impostazioni, i pacchetti di stile e i progressi offline restano sul tuo dispositivo. L’interfaccia è disponibile in 47 lingue, mentre le cinque parole d’azione — Fold, Check, Call, Raise, All-In — restano in inglese, come a qualsiasi tavolo del mondo. Il resto nelle <a href=\"{faq}\">FAQ</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
   },
 
   pl: {
@@ -195,7 +195,7 @@ var PARTS = {
     friendsH2: "Gra ze znajomymi",
     friendsP: "Utwórz stół, ustaw hasło, jeśli ma być prywatny, i wyślij link z zaproszeniem. Otwiera on stół bezpośrednio — w zainstalowanej aplikacji, jeśli znajomy dodał ją do ekranu głównego, a w przeciwnym razie w karcie przeglądarki. Nikt nie musi niczego instalować ani podawać adresu e-mail.",
     faqH2: "Częste pytania",
-    faqP: function (h, c) { return "W żadnym trybie nie ma prawdziwych pieniędzy. Twoje ustawienia, paczki stylów i postępy offline zostają na twoim urządzeniu. Interfejs jest dostępny w 46 językach, a pięć słów akcji — Fold, Check, Call, Raise, All-In — pozostaje po angielsku, tak jak przy każdym stole na świecie. Więcej w <a href=\"{faq}\">FAQ</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
+    faqP: function (h, c) { return "W żadnym trybie nie ma prawdziwych pieniędzy. Twoje ustawienia, paczki stylów i postępy offline zostają na twoim urządzeniu. Interfejs jest dostępny w 47 językach, a pięć słów akcji — Fold, Check, Call, Raise, All-In — pozostaje po angielsku, tak jak przy każdym stole na świecie. Więcej w <a href=\"{faq}\">FAQ</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
   },
 
   ru: {
@@ -224,7 +224,7 @@ var PARTS = {
     friendsH2: "Игра с друзьями",
     friendsP: "Создайте стол, поставьте пароль, если хотите закрытый, и отправьте ссылку-приглашение. Она открывает стол напрямую — в установленном приложении, если его добавили на домашний экран, иначе во вкладке браузера. Никому не нужно ничего устанавливать и оставлять адрес почты.",
     faqH2: "Частые вопросы",
-    faqP: function (h, c) { return "Реальные деньги не участвуют ни в одном режиме. Ваши настройки, стилевые паки и офлайн-прогресс остаются на вашем устройстве. Интерфейс доступен на 46 языках, а пять слов действий — Fold, Check, Call, Raise, All-In — остаются английскими, как за любым столом в мире. Подробнее в <a href=\"{faq}\">FAQ</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
+    faqP: function (h, c) { return "Реальные деньги не участвуют ни в одном режиме. Ваши настройки, стилевые паки и офлайн-прогресс остаются на вашем устройстве. Интерфейс доступен на 47 языках, а пять слов действий — Fold, Check, Call, Raise, All-In — остаются английскими, как за любым столом в мире. Подробнее в <a href=\"{faq}\">FAQ</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
   },
 
   zh: {
@@ -253,7 +253,7 @@ var PARTS = {
     friendsH2: "和朋友一起玩",
     friendsP: "开一桌，想私密就设个密码，然后把邀请链接发出去。链接会直接打开牌桌——如果对方已把应用添加到主屏幕，就在应用里打开，否则在浏览器标签页里打开。谁都不用安装任何东西，也不用交出电子邮箱。",
     faqH2: "常见问题",
-    faqP: function (h, c) { return "任何模式都不涉及金钱。你的设置、样式包和离线进度都保存在你自己的设备上。界面提供 46 种语言，而 Fold、Check、Call、Raise、All-In 这五个动作词保持英文，和全世界的牌桌一样。更多内容见<a href=\"{faq}\">常见问题</a>。".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
+    faqP: function (h, c) { return "任何模式都不涉及金钱。你的设置、样式包和离线进度都保存在你自己的设备上。界面提供 47 种语言，而 Fold、Check、Call、Raise、All-In 这五个动作词保持英文，和全世界的牌桌一样。更多内容见<a href=\"{faq}\">常见问题</a>。".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
   },
 
   nl: {
@@ -282,7 +282,7 @@ var PARTS = {
     friendsH2: "Spelen met vrienden",
     friendsP: "Maak een tafel, zet er een wachtwoord op als je hem privé wilt, en stuur de uitnodigingslink. Die opent de tafel rechtstreeks — in de geïnstalleerde app als ze die aan hun beginscherm hebben toegevoegd, anders in een browsertabblad. Niemand hoeft iets te installeren of een e-mailadres af te staan.",
     faqH2: "Veelgestelde vragen",
-    faqP: function (h, c) { return "Er komt in geen enkele modus geld aan te pas. Je instellingen, stijlpakketten en offline voortgang blijven op je eigen apparaat. De interface is beschikbaar in 46 talen, terwijl de vijf actiewoorden — Fold, Check, Call, Raise, All-In — in het Engels blijven, zoals aan elke tafel ter wereld. Meer in de <a href=\"{faq}\">veelgestelde vragen</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
+    faqP: function (h, c) { return "Er komt in geen enkele modus geld aan te pas. Je instellingen, stijlpakketten en offline voortgang blijven op je eigen apparaat. De interface is beschikbaar in 47 talen, terwijl de vijf actiewoorden — Fold, Check, Call, Raise, All-In — in het Engels blijven, zoals aan elke tafel ter wereld. Meer in de <a href=\"{faq}\">veelgestelde vragen</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
   },
 
   tr: {
@@ -311,7 +311,7 @@ var PARTS = {
     friendsH2: "Arkadaşlarla oynamak",
     friendsP: "Bir masa kurun, özel olsun istiyorsanız parola koyun ve davet bağlantısını gönderin. Bağlantı masayı doğrudan açar — uygulamayı ana ekranına eklemişlerse kurulu uygulamada, aksi hâlde bir tarayıcı sekmesinde. Kimsenin bir şey kurması ya da e-posta adresi vermesi gerekmez.",
     faqH2: "Sık sorulanlar",
-    faqP: function (h, c) { return "Hiçbir modda para söz konusu değildir. Ayarlarınız, stil paketleriniz ve çevrimdışı ilerlemeniz kendi cihazınızda kalır. Arayüz 46 dilde sunulur; beş işlem sözcüğü — Fold, Check, Call, Raise, All-In — dünyanın her masasında olduğu gibi İngilizce kalır. Gerisi <a href=\"{faq}\">SSS</a> sayfasında.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
+    faqP: function (h, c) { return "Hiçbir modda para söz konusu değildir. Ayarlarınız, stil paketleriniz ve çevrimdışı ilerlemeniz kendi cihazınızda kalır. Arayüz 47 dilde sunulur; beş işlem sözcüğü — Fold, Check, Call, Raise, All-In — dünyanın her masasında olduğu gibi İngilizce kalır. Gerisi <a href=\"{faq}\">SSS</a> sayfasında.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
   },
 
   uk: {
@@ -340,7 +340,7 @@ var PARTS = {
     friendsH2: "Гра з друзями",
     friendsP: "Створіть стіл, поставте пароль, якщо хочете зробити його приватним, і надішліть посилання-запрошення. Воно відкриває стіл напряму — у встановленому застосунку, якщо його додали на головний екран, інакше у вкладці браузера. Нікому не треба нічого встановлювати чи лишати адресу пошти.",
     faqH2: "Часті запитання",
-    faqP: function (h, c) { return "Справжні гроші не беруть участі в жодному режимі. Ваші налаштування, набори стилів і офлайн-прогрес лишаються на вашому пристрої. Інтерфейс доступний 46 мовами, а п’ять слів дій — Fold, Check, Call, Raise, All-In — лишаються англійськими, як за будь-яким столом у світі. Докладніше в <a href=\"{faq}\">FAQ</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
+    faqP: function (h, c) { return "Справжні гроші не беруть участі в жодному режимі. Ваші налаштування, набори стилів і офлайн-прогрес лишаються на вашому пристрої. Інтерфейс доступний 47 мовами, а п’ять слів дій — Fold, Check, Call, Raise, All-In — лишаються англійськими, як за будь-яким столом у світі. Докладніше в <a href=\"{faq}\">FAQ</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
   },
 
   ja: {
@@ -427,7 +427,7 @@ var PARTS = {
     friendsH2: "Bermain bersama teman",
     friendsP: "Buat meja, beri kata sandi kalau ingin privat, lalu kirim tautan undangan. Tautan itu membuka mejanya langsung — di aplikasi yang terpasang bila mereka sudah menambahkannya ke layar utama, atau di tab peramban bila belum. Tidak ada yang perlu memasang apa pun atau menyerahkan alamat surel.",
     faqH2: "Pertanyaan umum",
-    faqP: function (h, c) { return "Tidak ada uang yang terlibat, di mode mana pun. Pengaturan, paket gaya, dan kemajuan offline Anda tetap di perangkat sendiri. Antarmukanya tersedia dalam 46 bahasa, sementara lima kata aksi — Fold, Check, Call, Raise, All-In — tetap dalam bahasa Inggris, seperti di meja mana pun di dunia. Selengkapnya di <a href=\"{faq}\">tanya jawab</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
+    faqP: function (h, c) { return "Tidak ada uang yang terlibat, di mode mana pun. Pengaturan, paket gaya, dan kemajuan offline Anda tetap di perangkat sendiri. Antarmukanya tersedia dalam 47 bahasa, sementara lima kata aksi — Fold, Check, Call, Raise, All-In — tetap dalam bahasa Inggris, seperti di meja mana pun di dunia. Selengkapnya di <a href=\"{faq}\">tanya jawab</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
   },
 
   vi: {
@@ -456,7 +456,7 @@ var PARTS = {
     friendsH2: "Chơi cùng bạn bè",
     friendsP: "Tạo một bàn, đặt mật khẩu nếu muốn riêng tư, rồi gửi liên kết mời. Liên kết mở thẳng bàn chơi — trong ứng dụng đã cài nếu họ đã thêm vào màn hình chính, còn không thì trong một tab trình duyệt. Không ai phải cài gì hay đưa địa chỉ email.",
     faqH2: "Câu hỏi thường gặp",
-    faqP: function (h, c) { return "Không có tiền thật ở bất kỳ chế độ nào. Cài đặt, gói giao diện và tiến trình ngoại tuyến của bạn đều nằm trên thiết bị của bạn. Giao diện có 46 ngôn ngữ, còn năm từ thao tác — Fold, Check, Call, Raise, All-In — vẫn giữ nguyên tiếng Anh, như ở mọi bàn poker trên thế giới. Xem thêm ở <a href=\"{faq}\">câu hỏi thường gặp</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
+    faqP: function (h, c) { return "Không có tiền thật ở bất kỳ chế độ nào. Cài đặt, gói giao diện và tiến trình ngoại tuyến của bạn đều nằm trên thiết bị của bạn. Giao diện có 47 ngôn ngữ, còn năm từ thao tác — Fold, Check, Call, Raise, All-In — vẫn giữ nguyên tiếng Anh, như ở mọi bàn poker trên thế giới. Xem thêm ở <a href=\"{faq}\">câu hỏi thường gặp</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
   },
 
   ar: {
@@ -543,7 +543,7 @@ var PARTS = {
     friendsH2: "לשחק עם חברים",
     friendsP: "צרו שולחן, הוסיפו סיסמה אם אתם רוצים אותו פרטי, ושלחו את קישור ההזמנה. הוא פותח את השולחן ישירות — באפליקציה המותקנת אם הוסיפו אותה למסך הבית, ובלשונית דפדפן אם לא. אף אחד לא צריך להתקין כלום או למסור כתובת דוא\"ל.",
     faqH2: "שאלות נפוצות",
-    faqP: function (h, c) { return "כסף אמיתי אינו מעורב בשום מצב. ההגדרות שלכם, חבילות העיצוב וההתקדמות הלא מקוונת נשארות במכשיר שלכם. הממשק זמין ב־46 שפות, בעוד חמש מילות הפעולה — Fold, Check, Call, Raise, All-In — נשארות באנגלית, כמו בכל שולחן בעולם. עוד ב<a href=\"{faq}\">שאלות הנפוצות</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
+    faqP: function (h, c) { return "כסף אמיתי אינו מעורב בשום מצב. ההגדרות שלכם, חבילות העיצוב וההתקדמות הלא מקוונת נשארות במכשיר שלכם. הממשק זמין ב־47 שפות, בעוד חמש מילות הפעולה — Fold, Check, Call, Raise, All-In — נשארות באנגלית, כמו בכל שולחן בעולם. עוד ב<a href=\"{faq}\">שאלות הנפוצות</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
   },
 
   ur: {
@@ -572,7 +572,7 @@ var PARTS = {
     friendsH2: "دوستوں کے ساتھ کھیلنا",
     friendsP: "ایک میز بنائیں، نجی رکھنی ہو تو پاس ورڈ لگا دیں، اور دعوتی لنک بھیج دیں۔ لنک میز کو سیدھا کھولتا ہے — اگر انہوں نے ایپ ہوم اسکرین پر شامل کر رکھی ہے تو نصب شدہ ایپ میں، ورنہ براؤزر کے ٹیب میں۔ کسی کو کچھ انسٹال کرنے یا ای میل پتہ دینے کی ضرورت نہیں۔",
     faqH2: "عام سوالات",
-    faqP: function (h, c) { return "کسی بھی طریقے میں اصلی پیسہ شامل نہیں ہوتا۔ آپ کی ترتیبات، اسٹائل پیک اور آف لائن پیش رفت آپ ہی کے آلے پر رہتی ہیں۔ انٹرفیس 46 زبانوں میں دستیاب ہے، جبکہ پانچ ایکشن الفاظ — Fold، Check، Call، Raise، All-In — دنیا کی ہر میز کی طرح انگریزی ہی میں رہتے ہیں۔ مزید <a href=\"{faq}\">عام سوالات</a> میں۔".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
+    faqP: function (h, c) { return "کسی بھی طریقے میں اصلی پیسہ شامل نہیں ہوتا۔ آپ کی ترتیبات، اسٹائل پیک اور آف لائن پیش رفت آپ ہی کے آلے پر رہتی ہیں۔ انٹرفیس 47 زبانوں میں دستیاب ہے، جبکہ پانچ ایکشن الفاظ — Fold، Check، Call، Raise، All-In — دنیا کی ہر میز کی طرح انگریزی ہی میں رہتے ہیں۔ مزید <a href=\"{faq}\">عام سوالات</a> میں۔".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
   },
 
   hi: {
@@ -601,7 +601,7 @@ var PARTS = {
     friendsH2: "दोस्तों के साथ खेलना",
     friendsP: "एक मेज़ बनाइए, निजी रखनी हो तो पासवर्ड लगा दीजिए, और न्योते का लिंक भेज दीजिए। लिंक मेज़ को सीधे खोलता है — अगर उन्होंने ऐप होम स्क्रीन पर जोड़ रखी है तो इंस्टॉल की गई ऐप में, वरना ब्राउज़र के टैब में। किसी को कुछ इंस्टॉल करने या ईमेल पता देने की ज़रूरत नहीं।",
     faqH2: "आम सवाल",
-    faqP: function (h, c) { return "किसी भी मोड में पैसा शामिल नहीं होता। आपकी सेटिंग्स, स्टाइल पैक और ऑफ़लाइन प्रगति आपके ही डिवाइस पर रहती हैं। इंटरफ़ेस 46 भाषाओं में उपलब्ध है, जबकि पाँच एक्शन शब्द — Fold, Check, Call, Raise, All-In — दुनिया की हर मेज़ की तरह अंग्रेज़ी में ही रहते हैं। और जानकारी <a href=\"{faq}\">आम सवालों</a> में।".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
+    faqP: function (h, c) { return "किसी भी मोड में पैसा शामिल नहीं होता। आपकी सेटिंग्स, स्टाइल पैक और ऑफ़लाइन प्रगति आपके ही डिवाइस पर रहती हैं। इंटरफ़ेस 47 भाषाओं में उपलब्ध है, जबकि पाँच एक्शन शब्द — Fold, Check, Call, Raise, All-In — दुनिया की हर मेज़ की तरह अंग्रेज़ी में ही रहते हैं। और जानकारी <a href=\"{faq}\">आम सवालों</a> में।".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
   },
 
   th: {
@@ -630,7 +630,7 @@ var PARTS = {
     friendsH2: "เล่นกับเพื่อน",
     friendsP: "สร้างโต๊ะ ตั้งรหัสผ่านถ้าอยากให้เป็นส่วนตัว แล้วส่งลิงก์เชิญไป ลิงก์จะเปิดโต๊ะให้ทันที — ในแอปที่ติดตั้งไว้ถ้าเขาเพิ่มลงหน้าจอหลักแล้ว ไม่อย่างนั้นก็ในแท็บเบราว์เซอร์ ไม่มีใครต้องติดตั้งอะไรหรือให้อีเมล",
     faqH2: "คำถามที่พบบ่อย",
-    faqP: function (h, c) { return "ไม่มีเงินจริงเข้ามาเกี่ยวข้องในโหมดใดเลย การตั้งค่า ชุดตกแต่ง และความคืบหน้าแบบออฟไลน์ของคุณอยู่บนเครื่องของคุณเอง ส่วนติดต่อผู้ใช้มีให้เลือก 46 ภาษา ขณะที่คำสั่งห้าคำ — Fold, Check, Call, Raise, All-In — ยังคงเป็นภาษาอังกฤษ เหมือนโต๊ะโป๊กเกอร์ทุกแห่งในโลก อ่านเพิ่มเติมได้ที่<a href=\"{faq}\">คำถามที่พบบ่อย</a>".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
+    faqP: function (h, c) { return "ไม่มีเงินจริงเข้ามาเกี่ยวข้องในโหมดใดเลย การตั้งค่า ชุดตกแต่ง และความคืบหน้าแบบออฟไลน์ของคุณอยู่บนเครื่องของคุณเอง ส่วนติดต่อผู้ใช้มีให้เลือก 47 ภาษา ขณะที่คำสั่งห้าคำ — Fold, Check, Call, Raise, All-In — ยังคงเป็นภาษาอังกฤษ เหมือนโต๊ะโป๊กเกอร์ทุกแห่งในโลก อ่านเพิ่มเติมได้ที่<a href=\"{faq}\">คำถามที่พบบ่อย</a>".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
   },
 
   bn: {
@@ -688,7 +688,7 @@ var PARTS = {
     friendsH2: "Jogar com amigos",
     friendsP: "Crie uma mesa, ponha palavra-passe se a quiser privada e envie a ligação de convite. Ela abre a mesa directamente — na aplicação instalada, se a tiverem adicionado ao ecrã principal, ou num separador do navegador. Ninguém tem de instalar seja o que for nem dar um endereço de email.",
     faqH2: "Perguntas frequentes",
-    faqP: function (h, c) { return "Nunca há dinheiro envolvido, em modo nenhum. As suas definições, pacotes de estilo e progresso offline ficam no seu próprio aparelho. A interface está disponível em 46 idiomas, ao passo que as cinco palavras de acção — Fold, Check, Call, Raise, All-In — continuam em inglês, tal como em qualquer mesa do mundo. Mais nas <a href=\"{faq}\">perguntas frequentes</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
+    faqP: function (h, c) { return "Nunca há dinheiro envolvido, em modo nenhum. As suas definições, pacotes de estilo e progresso offline ficam no seu próprio aparelho. A interface está disponível em 47 idiomas, ao passo que as cinco palavras de acção — Fold, Check, Call, Raise, All-In — continuam em inglês, tal como em qualquer mesa do mundo. Mais nas <a href=\"{faq}\">perguntas frequentes</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
   },
 
   'zh-TW': {
@@ -717,7 +717,7 @@ var PARTS = {
     friendsH2: "和朋友一起玩",
     friendsP: "開一桌，想私密就設個密碼，然後把邀請連結發出去。連結會直接開啟牌桌——如果對方已把應用程式加到主畫面，就在應用程式裡開啟，否則在瀏覽器分頁裡開啟。誰都不用安裝任何東西，也不用交出電子郵件。",
     faqH2: "常見問題",
-    faqP: function (h, c) { return "任何模式都不涉及金錢。你的設定、樣式包和離線進度都保存在你自己的裝置上。介面提供 46 種語言，而 Fold、Check、Call、Raise、All-In 這五個動作詞維持英文，和全世界的牌桌一樣。更多內容見<a href=\"{faq}\">常見問題</a>。".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
+    faqP: function (h, c) { return "任何模式都不涉及金錢。你的設定、樣式包和離線進度都保存在你自己的裝置上。介面提供 47 種語言，而 Fold、Check、Call、Raise、All-In 這五個動作詞維持英文，和全世界的牌桌一樣。更多內容見<a href=\"{faq}\">常見問題</a>。".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
   },
 
   sv: {
@@ -746,7 +746,7 @@ var PARTS = {
     friendsH2: "Spela med vänner",
     friendsP: "Skapa ett bord, sätt lösenord om du vill ha det privat och skicka inbjudningslänken. Den öppnar bordet direkt — i den installerade appen om de har lagt till den på hemskärmen, annars i en webbläsarflik. Ingen behöver installera något eller lämna ifrån sig en e-postadress.",
     faqH2: "Vanliga frågor",
-    faqP: function (h, c) { return "Inga pengar är någonsin inblandade, i något läge. Dina inställningar, stilpaket och offlineframsteg stannar på din egen enhet. Gränssnittet finns på 46 språk, medan de fem åtgärdsorden — Fold, Check, Call, Raise, All-In — förblir på engelska, precis som vid alla bord i världen. Mer i <a href=\"{faq}\">vanliga frågor</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
+    faqP: function (h, c) { return "Inga pengar är någonsin inblandade, i något läge. Dina inställningar, stilpaket och offlineframsteg stannar på din egen enhet. Gränssnittet finns på 47 språk, medan de fem åtgärdsorden — Fold, Check, Call, Raise, All-In — förblir på engelska, precis som vid alla bord i världen. Mer i <a href=\"{faq}\">vanliga frågor</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
   },
 
   da: {
@@ -775,7 +775,7 @@ var PARTS = {
     friendsH2: "Spil med venner",
     friendsP: "Opret et bord, sæt en adgangskode hvis det skal være privat, og send invitationslinket. Det åbner bordet direkte — i den installerede app, hvis de har lagt den på hjemmeskærmen, ellers i en browserfane. Ingen skal installere noget eller aflevere en mailadresse.",
     faqH2: "Ofte stillede spørgsmål",
-    faqP: function (h, c) { return "Der er aldrig penge involveret, i nogen tilstand. Dine indstillinger, stilpakker og offlinefremskridt bliver på din egen enhed. Brugerfladen findes på 46 sprog, mens de fem handlingsord — Fold, Check, Call, Raise, All-In — forbliver på engelsk, ligesom ved ethvert bord i verden. Mere i <a href=\"{faq}\">ofte stillede spørgsmål</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
+    faqP: function (h, c) { return "Der er aldrig penge involveret, i nogen tilstand. Dine indstillinger, stilpakker og offlinefremskridt bliver på din egen enhed. Brugerfladen findes på 47 sprog, mens de fem handlingsord — Fold, Check, Call, Raise, All-In — forbliver på engelsk, ligesom ved ethvert bord i verden. Mere i <a href=\"{faq}\">ofte stillede spørgsmål</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
   },
 
   nb: {
@@ -804,7 +804,7 @@ var PARTS = {
     friendsH2: "Spille med venner",
     friendsP: "Lag et bord, sett passord hvis du vil ha det privat, og send invitasjonslenken. Den åpner bordet direkte — i den installerte appen hvis de har lagt den til på startskjermen, ellers i en nettleserfane. Ingen trenger å installere noe eller gi fra seg en e-postadresse.",
     faqH2: "Vanlige spørsmål",
-    faqP: function (h, c) { return "Det er aldri penger inne i bildet, i noen modus. Innstillingene dine, stilpakkene og offlinefremgangen blir liggende på din egen enhet. Grensesnittet finnes på 46 språk, mens de fem handlingsordene — Fold, Check, Call, Raise, All-In — forblir på engelsk, som ved ethvert bord i verden. Mer i <a href=\"{faq}\">vanlige spørsmål</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
+    faqP: function (h, c) { return "Det er aldri penger inne i bildet, i noen modus. Innstillingene dine, stilpakkene og offlinefremgangen blir liggende på din egen enhet. Grensesnittet finnes på 47 språk, mens de fem handlingsordene — Fold, Check, Call, Raise, All-In — forblir på engelsk, som ved ethvert bord i verden. Mer i <a href=\"{faq}\">vanlige spørsmål</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
   },
 
   fi: {
@@ -833,7 +833,7 @@ var PARTS = {
     friendsH2: "Pelaaminen kavereiden kanssa",
     friendsP: "Luo pöytä, aseta salasana jos haluat sen yksityiseksi, ja lähetä kutsulinkki. Se avaa pöydän suoraan — asennetussa sovelluksessa, jos he ovat lisänneet sen aloitusnäytölle, muuten selaimen välilehdessä. Kenenkään ei tarvitse asentaa mitään eikä luovuttaa sähköpostiosoitetta.",
     faqH2: "Usein kysyttyä",
-    faqP: function (h, c) { return "Rahaa ei ole missään pelimuodossa mukana. Asetuksesi, tyylipaketit ja offline-edistyminen pysyvät omalla laitteellasi. Käyttöliittymä on saatavilla 46 kielellä, kun taas viisi toimintosanaa — Fold, Check, Call, Raise, All-In — pysyvät englanniksi, kuten jokaisessa pöydässä maailmassa. Lisää <a href=\"{faq}\">usein kysytyissä kysymyksissä</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
+    faqP: function (h, c) { return "Rahaa ei ole missään pelimuodossa mukana. Asetuksesi, tyylipaketit ja offline-edistyminen pysyvät omalla laitteellasi. Käyttöliittymä on saatavilla 47 kielellä, kun taas viisi toimintosanaa — Fold, Check, Call, Raise, All-In — pysyvät englanniksi, kuten jokaisessa pöydässä maailmassa. Lisää <a href=\"{faq}\">usein kysytyissä kysymyksissä</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
   },
 
   cs: {
@@ -862,7 +862,7 @@ var PARTS = {
     friendsH2: "Hraní s přáteli",
     friendsP: "Vytvořte stůl, nastavte heslo, pokud ho chcete soukromý, a pošlete odkaz s pozvánkou. Otevře stůl přímo — v nainstalované aplikaci, pokud si ji přidali na plochu, jinak na kartě prohlížeče. Nikdo nemusí nic instalovat ani dávat e-mailovou adresu.",
     faqH2: "Časté dotazy",
-    faqP: function (h, c) { return "V žádném režimu nejsou ve hře skutečné peníze. Vaše nastavení, stylové balíčky i offline postup zůstávají ve vašem zařízení. Rozhraní je k dispozici ve 46 jazycích, zatímco pět akčních slov — Fold, Check, Call, Raise, All-In — zůstává anglicky, jako u každého stolu na světě. Více v <a href=\"{faq}\">častých dotazech</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
+    faqP: function (h, c) { return "V žádném režimu nejsou ve hře skutečné peníze. Vaše nastavení, stylové balíčky i offline postup zůstávají ve vašem zařízení. Rozhraní je k dispozici ve 47 jazycích, zatímco pět akčních slov — Fold, Check, Call, Raise, All-In — zůstává anglicky, jako u každého stolu na světě. Více v <a href=\"{faq}\">častých dotazech</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
   },
 
   sk: {
@@ -891,7 +891,7 @@ var PARTS = {
     friendsH2: "Hranie s priateľmi",
     friendsP: "Vytvorte stôl, nastavte heslo, ak ho chcete súkromný, a pošlite odkaz s pozvánkou. Otvorí stôl priamo — v nainštalovanej aplikácii, ak si ju pridali na plochu, inak na karte prehliadača. Nikto nemusí nič inštalovať ani dávať e-mailovú adresu.",
     faqH2: "Časté otázky",
-    faqP: function (h, c) { return "V žiadnom režime nie sú v hre skutočné peniaze. Vaše nastavenia, štýlové balíčky aj offline postup zostávajú vo vašom zariadení. Rozhranie je k dispozícii v 46 jazykoch, zatiaľ čo päť akčných slov — Fold, Check, Call, Raise, All-In — zostáva po anglicky, ako pri každom stole na svete. Viac v <a href=\"{faq}\">častých otázkach</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
+    faqP: function (h, c) { return "V žiadnom režime nie sú v hre skutočné peniaze. Vaše nastavenia, štýlové balíčky aj offline postup zostávajú vo vašom zariadení. Rozhranie je k dispozícii v 47 jazykoch, zatiaľ čo päť akčných slov — Fold, Check, Call, Raise, All-In — zostáva po anglicky, ako pri každom stole na svete. Viac v <a href=\"{faq}\">častých otázkach</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
   },
 
   ro: {
@@ -920,7 +920,7 @@ var PARTS = {
     friendsH2: "Jocul cu prietenii",
     friendsP: "Creează o masă, pune o parolă dacă o vrei privată și trimite linkul de invitație. Acesta deschide masa direct — în aplicația instalată, dacă au adăugat-o pe ecranul principal, altfel într-o filă de browser. Nimeni nu trebuie să instaleze ceva sau să dea o adresă de e-mail.",
     faqH2: "Întrebări frecvente",
-    faqP: function (h, c) { return "Nu sunt bani implicați niciodată, în niciun mod. Setările tale, pachetele de stil și progresul offline rămân pe propriul tău dispozitiv. Interfața este disponibilă în 46 de limbi, în timp ce cele cinci cuvinte de acțiune — Fold, Check, Call, Raise, All-In — rămân în engleză, ca la orice masă din lume. Mai multe în <a href=\"{faq}\">întrebările frecvente</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
+    faqP: function (h, c) { return "Nu sunt bani implicați niciodată, în niciun mod. Setările tale, pachetele de stil și progresul offline rămân pe propriul tău dispozitiv. Interfața este disponibilă în 47 de limbi, în timp ce cele cinci cuvinte de acțiune — Fold, Check, Call, Raise, All-In — rămân în engleză, ca la orice masă din lume. Mai multe în <a href=\"{faq}\">întrebările frecvente</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
   },
 
   hu: {
@@ -949,7 +949,7 @@ var PARTS = {
     friendsH2: "Játék barátokkal",
     friendsP: "Hozz létre egy asztalt, tegyél rá jelszót, ha zártnak szeretnéd, és küldd el a meghívó linket. Ez közvetlenül megnyitja az asztalt — a telepített alkalmazásban, ha felvették a kezdőképernyőre, egyébként egy böngészőfülön. Senkinek nem kell semmit telepítenie vagy e-mail-címet megadnia.",
     faqH2: "Gyakori kérdések",
-    faqP: function (h, c) { return "Egyik módban sincs szó pénzről. A beállításaid, a stíluscsomagok és az offline haladásod a saját eszközödön maradnak. A felület 46 nyelven érhető el, míg az öt műveletszó — Fold, Check, Call, Raise, All-In — angolul marad, ahogy a világ minden asztalánál. Bővebben a <a href=\"{faq}\">gyakori kérdések</a> között.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
+    faqP: function (h, c) { return "Egyik módban sincs szó pénzről. A beállításaid, a stíluscsomagok és az offline haladásod a saját eszközödön maradnak. A felület 47 nyelven érhető el, míg az öt műveletszó — Fold, Check, Call, Raise, All-In — angolul marad, ahogy a világ minden asztalánál. Bővebben a <a href=\"{faq}\">gyakori kérdések</a> között.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
   },
 
   el: {
@@ -978,7 +978,7 @@ var PARTS = {
     friendsH2: "Παίζοντας με φίλους",
     friendsP: "Φτιάξτε τραπέζι, βάλτε κωδικό αν το θέλετε ιδιωτικό, και στείλτε τον σύνδεσμο πρόσκλησης. Ανοίγει το τραπέζι απευθείας — στην εγκατεστημένη εφαρμογή αν την έχουν προσθέσει στην αρχική οθόνη, αλλιώς σε μια καρτέλα του περιηγητή. Κανείς δεν χρειάζεται να εγκαταστήσει κάτι ούτε να δώσει διεύθυνση email.",
     faqH2: "Συχνές ερωτήσεις",
-    faqP: function (h, c) { return "Χρήματα δεν εμπλέκονται ποτέ, σε κανέναν τρόπο παιχνιδιού. Οι ρυθμίσεις σας, τα πακέτα εμφάνισης και η πρόοδος εκτός σύνδεσης μένουν στη δική σας συσκευή. Η διεπαφή διατίθεται σε 46 γλώσσες, ενώ οι πέντε λέξεις ενεργειών — Fold, Check, Call, Raise, All-In — παραμένουν στα αγγλικά, όπως σε κάθε τραπέζι του κόσμου. Περισσότερα στις <a href=\"{faq}\">συχνές ερωτήσεις</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
+    faqP: function (h, c) { return "Χρήματα δεν εμπλέκονται ποτέ, σε κανέναν τρόπο παιχνιδιού. Οι ρυθμίσεις σας, τα πακέτα εμφάνισης και η πρόοδος εκτός σύνδεσης μένουν στη δική σας συσκευή. Η διεπαφή διατίθεται σε 47 γλώσσες, ενώ οι πέντε λέξεις ενεργειών — Fold, Check, Call, Raise, All-In — παραμένουν στα αγγλικά, όπως σε κάθε τραπέζι του κόσμου. Περισσότερα στις <a href=\"{faq}\">συχνές ερωτήσεις</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
   },
 
   bg: {
@@ -1007,7 +1007,7 @@ var PARTS = {
     friendsH2: "Игра с приятели",
     friendsP: "Създайте маса, сложете парола, ако я искате частна, и изпратете поканата. Тя отваря масата направо — в инсталираното приложение, ако са го добавили към началния екран, иначе в раздел на браузъра. Никой не трябва да инсталира нищо, нито да дава имейл адрес.",
     faqH2: "Чести въпроси",
-    faqP: function (h, c) { return "В нито един режим не участват истински пари. Настройките, стиловите пакети и офлайн напредъкът ви остават на собственото ви устройство. Интерфейсът е достъпен на 46 езика, докато петте думи за действие — Fold, Check, Call, Raise, All-In — остават на английски, както на всяка маса по света. Повече в <a href=\"{faq}\">честите въпроси</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
+    faqP: function (h, c) { return "В нито един режим не участват истински пари. Настройките, стиловите пакети и офлайн напредъкът ви остават на собственото ви устройство. Интерфейсът е достъпен на 47 езика, докато петте думи за действие — Fold, Check, Call, Raise, All-In — остават на английски, както на всяка маса по света. Повече в <a href=\"{faq}\">честите въпроси</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
   },
 
   hr: {
@@ -1036,7 +1036,7 @@ var PARTS = {
     friendsH2: "Igranje s prijateljima",
     friendsP: "Stvorite stol, stavite lozinku ako ga želite privatnim, i pošaljite poveznicu s pozivom. Ona otvara stol izravno — u instaliranoj aplikaciji ako su je dodali na početni zaslon, inače u kartici preglednika. Nitko ne mora ništa instalirati ni davati adresu e-pošte.",
     faqH2: "Česta pitanja",
-    faqP: function (h, c) { return "Ni u jednom načinu nema pravog novca. Vaše postavke, paketi stilova i offline napredak ostaju na vašem uređaju. Sučelje je dostupno na 46 jezika, dok pet riječi za radnje — Fold, Check, Call, Raise, All-In — ostaju na engleskom, kao za svakim stolom na svijetu. Više u <a href=\"{faq}\">čestim pitanjima</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
+    faqP: function (h, c) { return "Ni u jednom načinu nema pravog novca. Vaše postavke, paketi stilova i offline napredak ostaju na vašem uređaju. Sučelje je dostupno na 47 jezika, dok pet riječi za radnje — Fold, Check, Call, Raise, All-In — ostaju na engleskom, kao za svakim stolom na svijetu. Više u <a href=\"{faq}\">čestim pitanjima</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
   },
 
   sr: {
@@ -1065,7 +1065,7 @@ var PARTS = {
     friendsH2: "Igranje sa prijateljima",
     friendsP: "Napravite sto, stavite lozinku ako želite da bude privatan, i pošaljite pozivnu vezu. Ona otvara sto direktno — u instaliranoj aplikaciji ako su je dodali na početni ekran, inače u kartici pregledača. Niko ne mora ništa da instalira niti da daje adresu e-pošte.",
     faqH2: "Česta pitanja",
-    faqP: function (h, c) { return "Ni u jednom režimu nema pravog novca. Vaša podešavanja, paketi stilova i oflajn napredak ostaju na vašem uređaju. Interfejs je dostupan na 46 jezika, dok pet reči za radnje — Fold, Check, Call, Raise, All-In — ostaju na engleskom, kao za svakim stolom na svetu. Više u <a href=\"{faq}\">čestim pitanjima</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
+    faqP: function (h, c) { return "Ni u jednom režimu nema pravog novca. Vaša podešavanja, paketi stilova i oflajn napredak ostaju na vašem uređaju. Interfejs je dostupan na 47 jezika, dok pet reči za radnje — Fold, Check, Call, Raise, All-In — ostaju na engleskom, kao za svakim stolom na svetu. Više u <a href=\"{faq}\">čestim pitanjima</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
   },
 
   ca: {
@@ -1094,7 +1094,7 @@ var PARTS = {
     friendsH2: "Jugar amb amics",
     friendsP: "Crea una taula, posa-hi contrasenya si la vols privada i envia l’enllaç d’invitació. Obre la taula directament — a l’aplicació instal·lada si l’han afegida a la pantalla d’inici, o en una pestanya del navegador si no. Ningú no ha d’instal·lar res ni donar cap adreça de correu.",
     faqH2: "Preguntes freqüents",
-    faqP: function (h, c) { return "No hi ha mai diners pel mig, en cap mode. La teva configuració, els paquets d’estil i el progrés fora de línia es queden al teu propi dispositiu. La interfície està disponible en 46 idiomes, mentre que les cinc paraules d’acció — Fold, Check, Call, Raise, All-In — es mantenen en anglès, com a qualsevol taula del món. Més a les <a href=\"{faq}\">preguntes freqüents</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
+    faqP: function (h, c) { return "No hi ha mai diners pel mig, en cap mode. La teva configuració, els paquets d’estil i el progrés fora de línia es queden al teu propi dispositiu. La interfície està disponible en 47 idiomes, mentre que les cinc paraules d’acció — Fold, Check, Call, Raise, All-In — es mantenen en anglès, com a qualsevol taula del món. Més a les <a href=\"{faq}\">preguntes freqüents</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
   },
 
   gl: {
@@ -1123,7 +1123,7 @@ var PARTS = {
     friendsH2: "Xogar cos amigos",
     friendsP: "Crea unha mesa, ponlle contrasinal se a queres privada e envía a ligazón de convite. Abre a mesa directamente — na aplicación instalada se a engadiron á pantalla de inicio, ou nunha lapela do navegador se non. Ninguén ten que instalar nada nin dar un enderezo de correo.",
     faqH2: "Preguntas frecuentes",
-    faqP: function (h, c) { return "Nunca hai cartos polo medio, en ningún modo. A túa configuración, os paquetes de estilo e o progreso sen conexión quedan no teu propio dispositivo. A interface está dispoñible en 46 idiomas, mentres que as cinco palabras de acción — Fold, Check, Call, Raise, All-In — quedan en inglés, coma en calquera mesa do mundo. Máis nas <a href=\"{faq}\">preguntas frecuentes</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
+    faqP: function (h, c) { return "Nunca hai cartos polo medio, en ningún modo. A túa configuración, os paquetes de estilo e o progreso sen conexión quedan no teu propio dispositivo. A interface está dispoñible en 47 idiomas, mentres que as cinco palabras de acción — Fold, Check, Call, Raise, All-In — quedan en inglés, coma en calquera mesa do mundo. Máis nas <a href=\"{faq}\">preguntas frecuentes</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
   },
 
   lt: {
@@ -1152,7 +1152,7 @@ var PARTS = {
     friendsH2: "Žaidimas su draugais",
     friendsP: "Sukurkite stalą, uždėkite slaptažodį, jei norite, kad būtų privatus, ir išsiųskite pakvietimo nuorodą. Ji atveria stalą tiesiogiai — įdiegtoje programėlėje, jei ją pridėjo į pradžios ekraną, kitu atveju naršyklės kortelėje. Niekam nereikia nieko diegti ar palikti el. pašto adreso.",
     faqH2: "Dažni klausimai",
-    faqP: function (h, c) { return "Nė viename režime tikri pinigai nedalyvauja. Jūsų nustatymai, stiliaus paketai ir pažanga neprisijungus lieka jūsų pačių įrenginyje. Sąsaja pateikiama 46 kalbomis, o penki veiksmų žodžiai — Fold, Check, Call, Raise, All-In — lieka angliški, kaip ir prie bet kurio stalo pasaulyje. Daugiau <a href=\"{faq}\">dažnuose klausimuose</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
+    faqP: function (h, c) { return "Nė viename režime tikri pinigai nedalyvauja. Jūsų nustatymai, stiliaus paketai ir pažanga neprisijungus lieka jūsų pačių įrenginyje. Sąsaja pateikiama 47 kalbomis, o penki veiksmų žodžiai — Fold, Check, Call, Raise, All-In — lieka angliški, kaip ir prie bet kurio stalo pasaulyje. Daugiau <a href=\"{faq}\">dažnuose klausimuose</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
   },
 
   et: {
@@ -1181,7 +1181,35 @@ var PARTS = {
     friendsH2: "Sõpradega mängimine",
     friendsP: "Loo laud, pane sellele parool, kui soovid, et see oleks privaatne, ja saada kutselink. See avab laua otse — paigaldatud rakenduses, kui sõber selle avakuvale lisas, muidu brauseri vahekaardil. Kellelgi ei ole vaja midagi paigaldada ega e-posti aadressi jätta.",
     faqH2: "Korduvad küsimused",
-    faqP: function (h, c) { return "Üheski režiimis ei ole mängus päris raha. Sinu seaded, stiilipakid ja võrguvaba edenemine jäävad sinu enda seadmesse. Liides on saadaval 46 keeles ja viis käigusõna — Fold, Check, Call, Raise, All-In — jäävad inglise keelde, nagu igas lauas üle maailma. Rohkem <a href=\"{faq}\">korduvates küsimustes</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
+    faqP: function (h, c) { return "Üheski režiimis ei ole mängus päris raha. Sinu seaded, stiilipakid ja võrguvaba edenemine jäävad sinu enda seadmesse. Liides on saadaval 47 keeles ja viis käigusõna — Fold, Check, Call, Raise, All-In — jäävad inglise keelde, nagu igas lauas üle maailma. Rohkem <a href=\"{faq}\">korduvates küsimustes</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
+  },
+  lv: {
+    title: "Kā spēlēt bezmaksas pokeru tiešsaistē — PokerTH Web",
+    desc: "Soli pa solim: spēlē Teksasas Hold’ema pokeru bez maksas savā pārlūkā, bez lejupielādes un konta — bezsaistē pret datoru, oficiālajā pokerth.net tīklā vai privātā galdā ar draugiem.",
+    ldHeadline: "Kā pārlūkā spēlēt bezmaksas Teksasas Hold’ema pokeru",
+    ldDesc: "Soli pa solim ceļvedis, kā PokerTH tīmekļa klientā spēlēt bezmaksas Teksasas Hold’emu.",
+    h1: "Kā spēlēt bezmaksas pokeru tiešsaistē, tieši savā pārlūkā",
+    lead: function (h, c) { return "Šī ir īsā versija: no tukšas cilnes līdz tavai pirmajai Teksasas Hold’ema partijai PokerTH. Ja meklē pašus noteikumus — aklās likmes, likmju kārtas, kas ko pārspēj — sāc labāk ar <a href=\"{rules}\">noteikumu lapu</a> un <a href=\"{hands}\">kombināciju stiprumu</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); },
+    steps: [
+      ["Atver vietni — nekas nav jāinstalē",
+       "PokerTH darbojas pārlūkā. Nav lejupielādes, nav konta, nav spraudņu. Telefonā to no pārlūka izvēlnes vari pievienot sākuma ekrānam; tad tā atveras kā lietotne, pilnekrāna režīmā, un darbojas arī bez savienojuma."],
+      ["Izvēlies, kur spēlēt",
+       "Trīs veidi. <strong>Bezsaistes treniņš</strong> uzreiz apsēdina tevi pie galda ar datora pretiniekiem, un savienojums tam nav vajadzīgs vispār — tieši šeit mācās. <strong>pokerth.net</strong> ir oficiālais tīkls: īsti pretinieki, sezonas reitingi un bezmaksas segvārds, ko reģistrē vienu reizi. <strong>LAN / privāts serveris</strong> savienojas ar dedicētu PokerTH serveri — tavu vai kāda cita."],
+      ["Apsēdies pie galda",
+       "Vestibilā vari vai nu pievienoties kādam galdam no saraksta, vai izveidot savējo. Izveidojot nosaki vietu skaitu, sākuma žetonus, cik ātri pieaug aklās likmes un vai galdam ir parole. Kopīgo uzaicinājuma saiti — draugs nonāks tieši pie tava galda, savā pārlūkā, neko nereģistrējot."],
+      ["Nospēlē partiju",
+       "Tev izdala divas slēptās kārtis. Likmes tiek liktas pa apli pirms flopa un vēlreiz pēc flopa, turn un river. Kad pienāk tava kārta, iedegas darbību josla un piedāvā tikai to, kas ir atļauts: Fold, Check vai Call, Raise vai All-In. Summu vari ierakstīt, aizvilkt ar slīdni vai ar vienu pieskārienu iestatīt uz minimumu, pusi bankas, visu banku vai visiem saviem žetoniem."],
+      ["Lasi galdu",
+       "Kārtīm atklājoties, tava pašreizējā labākā kombinācija tiek rakstīta zem galda. Banka, katra žetoni un aklo likmju līmenis visu laiku ir uz ekrāna, dalītāja poga rāda, kurš runā pēdējais, bet taimeris — cik tev atlicis laika. Kāršu atklāšanā katrā parādītajā kombinācijā tiek izceltas tieši tās piecas kārtis, kas patiešām skaitījās."],
+      ["Uzvari turnīrā",
+       "PokerTH spēles ir sit-and-go turnīri: visi sāk ar vienādu žetonu skaitu, aklās likmes pieaug pēc pulksteņa, un spēlētāji izstājas, līdz vienam ir visi žetoni. Nekas nemaksā naudu, un žetonus piepirkt nevar — tie visi ir spēles žetoni, tāpēc uz spēles likta ir tikai pati partija."]
+    ],
+    phoneH2: "Spēlēšana telefonā",
+    phoneP: "Galds skārienekrānam ir pielāgots tikpat labi kā datoram: pieskaroties likmes laukam, sistēmas tastatūras vietā darbību joslā atveras ciparu tastatūra, tāpēc galds nekad neizlec no vietas, un slīdnis kustas ar tiem pašiem soļiem kā darbvirsmas klientā. Paziņojumi par tavu gājienu var atnākt kopā ar pogām Fold un Check/Call, tāpēc partiju var nospēlēt, neatgriežoties cilnē.",
+    friendsH2: "Spēlēšana ar draugiem",
+    friendsP: "Izveido galdu, uzliec tam paroli, ja vēlies, lai tas būtu privāts, un nosūti uzaicinājuma saiti. Tā atver galdu tieši — instalētajā lietotnē, ja draugs to ir pievienojis sākuma ekrānam, citādi pārlūka cilnē. Nevienam nekas nav jāinstalē un nav jāatstāj e-pasta adrese.",
+    faqH2: "Biežāk uzdotie jautājumi",
+    faqP: function (h, c) { return "Nevienā režīmā spēlē nav īstas naudas. Tavi iestatījumi, stilu komplekti un bezsaistes progress paliek tavā paša ierīcē. Saskarne ir pieejama 47 valodās, bet pieci darbību vārdi — Fold, Check, Call, Raise, All-In — paliek angliski, tāpat kā pie ikviena galda pasaulē. Vairāk <a href=\"{faq}\">biežāk uzdotajos jautājumos</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
   },
 
   af: {
@@ -1210,7 +1238,7 @@ var PARTS = {
     friendsH2: "Speel saam met vriende",
     friendsP: "Skep ’n tafel, sit ’n wagwoord op as jy dit privaat wil hê, en stuur die uitnodigingskakel. Dit open die tafel direk — in die geïnstalleerde toep as hulle dit by hul tuisskerm gevoeg het, anders in ’n blaaieroortjie. Niemand hoef iets te installeer of ’n e-posadres af te staan nie.",
     faqH2: "Algemene vrae",
-    faqP: function (h, c) { return "Daar is nooit geld ter sprake nie, in geen modus nie. Jou instellings, stylpakkette en vanlyn vordering bly op jou eie toestel. Die koppelvlak is in 46 tale beskikbaar, terwyl die vyf aksiewoorde — Fold, Check, Call, Raise, All-In — in Engels bly, soos aan enige tafel ter wêreld. Meer by die <a href=\"{faq}\">algemene vrae</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
+    faqP: function (h, c) { return "Daar is nooit geld ter sprake nie, in geen modus nie. Jou instellings, stylpakkette en vanlyn vordering bly op jou eie toestel. Die koppelvlak is in 47 tale beskikbaar, terwyl die vyf aksiewoorde — Fold, Check, Call, Raise, All-In — in Engels bly, soos aan enige tafel ter wêreld. Meer by die <a href=\"{faq}\">algemene vrae</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
   },
 
   fil: {
@@ -1239,7 +1267,7 @@ var PARTS = {
     friendsH2: "Paglalaro kasama ang mga kaibigan",
     friendsP: "Gumawa ng mesa, lagyan ng password kung gusto mong pribado, at ipadala ang link ng imbitasyon. Diretsong bubuksan nito ang mesa — sa naka-install na app kung naidagdag na nila ito sa home screen, o sa isang tab ng browser kung hindi. Walang kailangang mag-install ng kahit ano o magbigay ng email.",
     faqH2: "Karaniwang tanong",
-    faqP: function (h, c) { return "Walang perang kasangkot, sa alinmang mode. Nananatili sa sarili mong device ang mga setting, style pack at offline na progreso mo. Available ang interface sa 46 wika, samantalang ang limang salitang aksyon — Fold, Check, Call, Raise, All-In — ay nananatiling Ingles, gaya sa anumang mesa sa mundo. Higit pa sa <a href=\"{faq}\">karaniwang tanong</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
+    faqP: function (h, c) { return "Walang perang kasangkot, sa alinmang mode. Nananatili sa sarili mong device ang mga setting, style pack at offline na progreso mo. Available ang interface sa 47 wika, samantalang ang limang salitang aksyon — Fold, Check, Call, Raise, All-In — ay nananatiling Ingles, gaya sa anumang mesa sa mundo. Higit pa sa <a href=\"{faq}\">karaniwang tanong</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
   },
 
   sw: {
@@ -1297,7 +1325,7 @@ var PARTS = {
     friendsH2: "A’ cluich còmhla ri caraidean",
     friendsP: "Cruthaich bòrd, cuir facal-faire air ma tha thu airson gum bi e prìobhaideach, agus cuir an ceangal cuiridh. Fosglaidh e am bòrd gu dìreach — anns an aplacaid stàlaichte ma chuir iad ris an sgrion-dachaigh i, air neo ann an taba brabhsair. Chan fheum duine dad a stàladh no seòladh puist-d a thoirt seachad.",
     faqH2: "Ceistean cumanta",
-    faqP: function (h, c) { return "Chan eil airgead an sàs ann idir, ann am modh sam bith. Fanaidh na roghainnean agad, na pasganan stoidhle agus an adhartas far-loidhne air an uidheam agad fhèin. Tha an eadar-aghaidh ri fhaighinn ann an 46 cànan, fhad ’s a dh’fhanas na còig faclan gnìomh — Fold, Check, Call, Raise, All-In — sa Bheurla, mar a tha aig gach bòrd air an t-saoghal. Barrachd anns na <a href=\"{faq}\">ceistean cumanta</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
+    faqP: function (h, c) { return "Chan eil airgead an sàs ann idir, ann am modh sam bith. Fanaidh na roghainnean agad, na pasganan stoidhle agus an adhartas far-loidhne air an uidheam agad fhèin. Tha an eadar-aghaidh ri fhaighinn ann an 47 cànan, fhad ’s a dh’fhanas na còig faclan gnìomh — Fold, Check, Call, Raise, All-In — sa Bheurla, mar a tha aig gach bòrd air an t-saoghal. Barrachd anns na <a href=\"{faq}\">ceistean cumanta</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
   },
 
   ta: {
@@ -1326,7 +1354,7 @@ var PARTS = {
     friendsH2: "நண்பர்களுடன் விளையாடுவது",
     friendsP: "ஒரு மேசையை உருவாக்குங்கள், தனிப்பட்டதாக வேண்டுமெனில் கடவுச்சொல் இடுங்கள், அழைப்பு இணைப்பை அனுப்புங்கள். அந்த இணைப்பு மேசையை நேரடியாகத் திறக்கும் — முகப்புத் திரையில் செயலியைச் சேர்த்திருந்தால் நிறுவப்பட்ட செயலியில், இல்லையெனில் உலாவித் தாவலில். யாரும் எதையும் நிறுவவோ மின்னஞ்சல் முகவரி தரவோ தேவையில்லை.",
     faqH2: "அடிக்கடி கேட்கப்படுபவை",
-    faqP: function (h, c) { return "எந்த முறையிலும் பணம் சம்பந்தப்படுவதில்லை. உங்கள் அமைப்புகள், தோற்றத் தொகுப்புகள், இணையமில்லா முன்னேற்றம் அனைத்தும் உங்கள் சாதனத்திலேயே இருக்கும். இடைமுகம் 46 மொழிகளில் கிடைக்கிறது; ஐந்து செயல் சொற்கள் — Fold, Check, Call, Raise, All-In — உலகின் எந்த மேசையிலும் போலவே ஆங்கிலத்திலேயே இருக்கும். மேலும் <a href=\"{faq}\">அடிக்கடி கேட்கப்படுபவை</a> பக்கத்தில்.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
+    faqP: function (h, c) { return "எந்த முறையிலும் பணம் சம்பந்தப்படுவதில்லை. உங்கள் அமைப்புகள், தோற்றத் தொகுப்புகள், இணையமில்லா முன்னேற்றம் அனைத்தும் உங்கள் சாதனத்திலேயே இருக்கும். இடைமுகம் 47 மொழிகளில் கிடைக்கிறது; ஐந்து செயல் சொற்கள் — Fold, Check, Call, Raise, All-In — உலகின் எந்த மேசையிலும் போலவே ஆங்கிலத்திலேயே இருக்கும். மேலும் <a href=\"{faq}\">அடிக்கடி கேட்கப்படுபவை</a> பக்கத்தில்.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
   }
 
 };
