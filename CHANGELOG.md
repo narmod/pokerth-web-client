@@ -819,6 +819,17 @@ highlights below.
   (`scale 1.03`, 180 ms OutQuad) is applied to the seat plate.
 
 ### Fixed
+- **Extra Large mobile-landscape chat/info drawers had sub-44px touch targets**
+  (`web.146`) — `toggleGameChat()` and `toggleLog()` each called
+  `_openFloatingNearBtn(...)` unconditionally right after
+  `_configureGameDrawer()`, which already gates floating-vs-adaptive
+  positioning itself (disabling floating when `isAdaptivePlay()` is true).
+  In adaptive layouts the redundant direct call re-applied floating
+  placement on top of the adaptive one, shrinking the drawer's trigger
+  buttons below the 44×44px target size in mobile landscape at Extra
+  Large. Removed the redundant calls; `_configureGameDrawer()` alone now
+  controls placement for both drawers. Reported by @seanpianka against
+  `pokerth-web-client#2`.
 - **Actions column still misaligned with its header chip after web.141**
   (`web.143`) — `_plVisibleCols()` (used to build the row grid template)
   filtered from the raw column list, which still includes `inv` even

@@ -10493,7 +10493,6 @@ function toggleGameChat(invoker) {
   });
   var adaptive = _configureGameDrawer(panel, open, btn);
   if (open) {
-    _openFloatingNearBtn(panel, btn, { key:'pth_winpos_chat', handle: panel.querySelector('.g-chat-panel-header'), resizable:true, minW:240, minH:160, defW:300, defH:280, zoom:true }, 'left');
     if (typeof clearUnreadChat === 'function') clearUnreadChat();
     var m = document.getElementById('g-chat-msgs');
     if (m) { if (typeof window._liveReset === 'function') window._liveReset(m); else m.scrollTop = m.scrollHeight; }
@@ -10767,8 +10766,6 @@ function toggleLog(invoker) {
   });
   _configureGameDrawer(panel, isHidden, btn);
   if (isHidden) {
-    // Poignée de redimensionnement, identique au chat (glisser pour étendre).
-    _openFloatingNearBtn(panel, btn, { key:'pth_winpos_log2', handle: panel.querySelector('.g-chat-panel-header'), resizable:true, minW:240, minH:140, defW: window.innerWidth >= 1400 ? 340 : 300, defH:300, zoom:true }, 'right');
     var lb = document.getElementById('g-log-body');
     // Le plus récent est en haut (liste inversée) : rouvrir le panneau
     // remet le suivi automatique en marche, même s'il était en pause.
@@ -11571,7 +11568,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.8-web.145'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.8-web.146'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif ou la palette High contrast
    (Android, Safari, iOS standalone récent). Lit --theme-color et met

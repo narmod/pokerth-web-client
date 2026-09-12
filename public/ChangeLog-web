@@ -1,4 +1,6 @@
-2026-09-12 version 2.1.8-web.145 (current series):
+2026-09-12 version 2.1.8-web.146 (current series):
+- bugfix: the chat and info drawer buttons in mobile landscape at Extra Large interface size are properly tappable again - they had shrunk below the accessible touch-target size
+2026-09-12 version 2.1.8-web.145:
 - new: the public pages (poker rules, hand rankings, glossary, how to play) are now available in Estonian too, so a search in Estonian lands on an Estonian page instead of the English one
 2026-09-12 version 2.1.8-web.144:
 - new: Estonian (Eesti) is now available in the language list - the whole interface and the built-in help are translated, bringing the client to 46 languages
