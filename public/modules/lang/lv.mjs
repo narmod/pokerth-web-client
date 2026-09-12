@@ -422,4 +422,12 @@ export const strings = {
     connectSlow:'Savienošanās aizņem laiku… ja nepieciešams, mēģini vēlreiz.', copyInviteLink:'Kopēt uzaicinājuma saiti', copyInviteHint:'Saņēmējs pievienosies tieši šim galdam.',
     dbgLogTitle:'Atkļūdošanas žurnāls', dbgLogOpen:'Rādīt atkļūdošanas žurnālu', dbgLogCopy:'Kopēt', dbgLogEmpty:'Vēl nav atkļūdošanas izvades.', dbgLogWrap:'Aplauzt rindas',
     createPrefsSave:'💾 Saglabāt izvēles', createPrefsSaveTip:'Saglabāt šo formu kā manas personīgās izvēles', createPrefsSaved:'Izvēles saglabātas', createPrefsLoaded:'Izvēles ielādētas', createPrefsNone:'Vēl nav saglabātu izvēļu',
+    advSecLocalGame:'Treniņa spēle', advCreateDialog:'Rādīt jaunas spēles iestatījumu logu', advPauseHands:'Pauze starp partijām (turpina ar uzvarētāja logu)', nextHandBtn:'Nākamā partija',
+    advSecTablePrefs:'Galda izvēles', advTablePrefsDesc:'Noklusējumi galdiem, ko šajā režīmā izveido tu — izveides formas ⭐ poga tos ielādē.', advRaiseEveryHands:'Paaugstināt aklās likmes ik pēc N partijām', advGameSpeed:'Spēles ātrums (1–11)',
+    advSecLogSettings:'Žurnāla iestatījumi', advLogOn:'Ieslēgt žurnalēšanu', advLogInterval:'Žurnalēšanas intervāls', advLogEveryAction:'darbība (bieža diska lietošana)', advLogEveryHand:'partija (vidēja diska lietošana)', advLogEveryGame:'spēle (reta diska lietošana)',
+    advSecIgnored:'Ignorētie spēlētāji', advIgnoredDesc:'Ignorēšanas sarakstā iekļautie spēlētāji tērzēšanā ir paslēpti.', advIgnoredEmpty:'(nav ignorētu spēlētāju)', advIgnoredRemove:'Noņemt',
+    advLobbyChat:'Rādīt vestibila tērzēšanu',
+    advBackGuard:'Poga “Atpakaļ” aizver logus, nevis pamet spēli (Android)', backAgainToExit:'Nospied “Atpakaļ” vēlreiz, lai izietu', advBrowserZoom:'Atļaut pārlūka tālummaiņu (savilkšanu) telefonā / planšetē', advTableZoom:'Ieslēgt galda tālummaiņu (lupas pogas)',
+    accessibilityTitle:'Pieejamība', accessibilityInterfaceSize:'Saskarnes izmērs', accessibilityStandard:'Standarta', accessibilityLarge:'Liels', accessibilityExtraLarge:'Ļoti liels', accessibilityHighContrast:'Augsts kontrasts', accessibilityReset:'Atiestatīt pieejamības izvēles',
+    advKeyNav:'Esc aizver/atceļ, Enter apstiprina (ārpus galda)',
 };
