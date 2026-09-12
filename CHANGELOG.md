@@ -32,171 +32,36 @@ release. Per-build detail is on the
 highlights below.
 
 ### Added
-- **Latvian SEO content pages** (`web.149`) — hand rankings, glossary and how-to-play pages now render in Latvian.
-- **Latvian catalogue (`lv`)** (`web.148`) — 47th language, full UI catalogue and help corpus.
-- **Estonian SEO content pages** (`web.145`) — same three content pages in Estonian.
-- **Estonian catalogue (`et`)** (`web.144`) — 46th language, full UI catalogue and help corpus.
-- **Local/Entraînement and LAN: viewable and resettable from any mode** (`web.140`) — both panes now always show their own data and reset independently of the current connection.
-- **Player profile: LAN and Local/Training as two always-visible tabs** (`web.139`, corrects `web.138`) — split into two independent tabs shown together for any mode.
-- **Player profile window: three top-level tabs** (`web.138`) — Coupes / Local-Entraînement / LAN, each shown only where its data applies.
-- **My avatar: stats/reset accessible in LAN / private server** (`web.137`) — the profile button and its reset now also work off pokerth.net.
-- **Table ranking: LAN tab** (`web.136`) — table-scoped family leaderboard, shown on LAN/private servers.
-- **Accessibility: Escape priority on the modal** (`web.135`, community contribution by @seanpianka) — closes out the low-vision accessibility series (scope 7/7).
-- **Accessibility: high-contrast palette** (`web.134`, @seanpianka) — the toggle gets a real dedicated palette.
-- **Accessibility: mobile landscape adaptive play** (`web.132`, @seanpianka) — adaptive drawer system extended to landscape.
-- **Accessibility: mobile portrait adaptive play** (`web.127`, @seanpianka) — felt corner buttons replaced by a bottom drawer bar at Extra Large.
-- **Accessibility: desktop active play scaling** (`web.124`, @seanpianka) — interface size now also scales the in-game table.
-- **Accessibility: login and lobby scaling** (`web.123`, @seanpianka) — Large/Extra Large sizes now visible on login and lobby.
-- **Accessibility entry point** (`web.122`, @seanpianka) — new panel: interface size, high contrast, browser zoom.
-- **LAN tab in the ranking window** (`web.120`) — family leaderboard shown on LAN/private servers.
-- **Lobby table list by keyboard** (`web.114`, upstream `b170786`) — arrows/Home/End/Enter to select and join.
-- **`/live` visits counted apart too** (`web.101`) — separate visit stats from the player client's own.
-- **Admin tells `/live` apart from the web client** (`web.100`) — separate counters and tags in the dashboard.
-- **`/live` — fullscreen in both headers** (`web.97`) — moved out of the ••• menu.
-- **`/live` keeps its own storage** (`web.89`) — namespaced `localStorage` so a spectator doesn't inherit a player's settings.
-- **`/live` drops the lobby feed while watching a table** (`web.85`) — unsubscribes from full lobby updates while spectating.
-- **`/live` defaults in the admin page** (`web.84`) — dedicated palette/sound/chat-strip defaults card.
-- **`/live?embed=1` — the spectator view in an iframe** (`web.83`) — reports height via `postMessage`, table-only embed.
-- **`/live` — a word while the join happens** (`web.81`) — "joining, please wait" dialog with Cancel.
-- **`/live` — avatars, player cards, type icons** (`web.78`) — Players tab reuses the client's own player card and avatar.
-- **`/live` — chat as a bottom strip** (`web.77`) — resizable horizontal chat strip under the table list.
-- **`/live` — language in the header, lobby frame, figures in words** (`web.76`) — language picker added; server figures show their full wording.
-- **`/live` — the figures replace the idle hint** (`web.75`) — server counters shown with full translated wording.
-- **`/live` — the login card shows the server** (`web.74`) — "Live / Spectator Tool" card with the four server figures.
-- **`/live` — its own transport setting** (`web.73`) — Same as Internet / Direct WS / Via proxy, independent of the main client.
-- **`/live` — Players tab and read-only chat** (`web.72`) — online players list; chat composer hidden.
-- **`/live` — lobby chat as a resizable right column** (`web.71`) — same layout as the full client's lobby.
-- **`/live` — the table list** (`web.68`) — spectator-tool-style table list (seats, status, blinds…), Spectate only.
-- **`/live` — one-button guest login** (`web.67`) — single button, no mode/nickname/avatar choices.
-- **`/live` — slim header** (`web.66`) — only guest name, appearance and build shown.
-- **`/live` — embedded spectator mode, first stone** (`web.65`) — new route, groundwork for replacing `pokerth-live`.
-- **The game-server figures in the dashboard header** (`web.63`) — same four counters as a strip on every admin tab.
-- **Live server figures on the login screen** (`web.56`, reworked `web.58`/`web.59`) — players online/tables/waiting/games on the Internet card.
-- **World clock above the admin tabs** (`web.47`–`web.48`) — up to 12 analog dials by UTC offset.
-- **Server time heads the status list** (`web.48`) — read from the proxy, not the browser clock.
-- **Real sky on each dial** (`web.49`) — day/twilight/night rendered from the sun's real altitude at that city.
-- **Clock strip fills the width and folds on a phone** (`web.49`).
-- **Horizontal scroll for the clock strip on phones** (`web.50`).
-- **Server / Client / Data buttons take the page width** (`web.50`).
-- **Sun-yellow daylight on the clock faces** (`web.51`).
-- **Continuous sky gradient on the dials** (`web.52`) — computed from sun altitude, no colour bands.
-- **Traffic charts answer to a finger, legends toggle series** (`web.53`).
-- **Language breakdown names the no-header bucket** (`web.54`) — clearer labels, lists untranslated languages seen.
-- **No language lost to the cardinality cap** (`web.54`).
-- **Admin panel names the product and its host** (`web.55`).
-- **Icons on every dashboard tab** (`web.47`).
-- **Game log reads its colours from the table style** (`web.46`, upstream `e90593e`) — winner/board lines tinted per table style.
-- **Context menu on a seat** (`web.43`, parity `GamePlayerBox.qml`) — right-click/long-press: note, profile, ignore, report, kickban.
-- **Player notes exchanged with the official clients** (`web.38`) — notes round-trip via `config.xml` export/import.
-- **Star rating on player notes** (`web.36`, upstream `b77ad47`) — 0–5 stars on the player card and table badge.
-- **Hand-written notice defaults in all 45 languages** (proxy-only) — replaces machine-translated defaults.
-- **Thumbs up / down on the music player** (`web.32`) — per-track vote, one per device, counts in the admin panel.
-- **Notice acknowledgement** (`web.31`) — "I understand" persists per notice version.
-- **Built-in default text for both notices** (`web.30`).
-- **Registered-account notice** (`web.29`) — separate popup for logged-in pokerth.net accounts.
-- **Guest notice** (`web.28`) — operator-authored popup on every guest connection.
-- **Player notes and colour labels** (`web.24`) — note + 6 colour labels on the player card.
-- **Ivoire & Chêne table style** (`web.4`, upstream `eee31d4`) — new light-toned table pack.
-- **Table previews regenerated** (`web.5`) — all 21 built-in packs get refreshed preview images.
+- **Latvian and Estonian**, full UI + help + SEO content pages — 47 languages total (`web.144`–`149`).
+- **Player profile reorganised** into Coupes / Local-Entraînement / LAN tabs, reachable and resettable regardless of connection mode (`web.136`–`140`).
+- **Low-vision accessibility panel** — interface size, high contrast, browser zoom, extended to login/lobby/desktop/mobile play (`web.122`–`135`, community contribution @seanpianka).
+- **LAN tab** in both ranking windows (`web.120`, `136`).
+- **Lobby table list navigable by keyboard** (`web.114`, upstream `b170786`).
+- **Admin dashboard**: world clock strip with real per-city sky, live server figures, traffic charts, language breakdown (`web.47`–`63`).
+- **Game log table-style colours, seat context menu, player notes with star ratings and colour labels**, note exchange with official clients (`web.24`–`46`).
+- **Guest and registered-account notices** (`web.28`–`31`, proxy.js changed).
+- **Thumbs up/down on the music player** (`web.32`, proxy.js changed).
+- **Ivoire & Chêne table style**, upstream port (`web.4`–`5`).
 
 ### Changed
-- **`/live` identifies as the web client** (`web.119`, sp0ck 2026-09-10) — sends `CLIENT_TYPE_WEB` (0x03) like the player client instead of masquerading as Qt-Widget.
-- **Training mode draws from a cryptographic RNG** (`web.118`, upstream `40122fe`) — `crypto.getRandomValues` replaces `Math.random` for the deck shuffle and bots.
-- **Keyboard lot completed** (`web.117`, upstream `b170786`/`21da2f0`/`5c321a5`/`3fa46aa`) — start focus on reading areas, ranking search, settings/forum arrow-key navigation, end-of-game and login Escape/focus.
-- **Start focus per screen, Enter creates from any settings field** (`web.116`, upstream `b170786`) — login/create-table fields get opt-in initial focus and Enter-to-submit.
-- **Kick and report confirmations focus Confirm** (`web.113`, upstream `b170786`) — matches the QML `ConfirmPopup` default focus.
-- **Popups open with the keyboard focus on their safe button** (`web.112`, upstream `b170786`/`21da2f0`/`5c321a5`/`3fa46aa`) — leave/disconnect/timeout/invite popups now focus a safe default button and restore focus on close.
-- **Reaction choreographies ×1.25, as upstream `b8a1d18`** (`web.111`) — QML/widget adopted the web's animation timings and stretched them back to the 2.1.7 flight time; web keeps the original tempo.
-- **`/live` — no table chat, no fullscreen inside a frame** (`web.107`) — hidden when embedded on pokerth.net.
-- **Privacy page rewritten to match what the code does** (`web.105`) — now accurately describes visit stats, settings sync, error reports, translation relay and leaderboard data handling.
-- **Default deck and table precached for offline play** (`web.104`) — an offline game right after an update no longer shows blank cards/felt.
-- **Avatars behave like the QML client: one per session, through the server only** (`web.95`) — drops the web-only relay path so all clients see the same avatar.
-- **`/live` — the last two notices go, and language lands live** (`web.94`) — guest-rules card and update banner silenced; table list now repaints on language change.
-- **`/live` — the player card is read-only, and the header settles** (`web.93`) — notes/ignore/report/kickban removed from the spectator's player card.
-- **`/live` — a quieter table and a tidier login card** (`web.92`) — hand log and combinations card removed; header buttons repositioned.
-- **`/live` carries less of the web client** (`web.91`) — no local backup, no operator broadcasts, no music slider.
-- **`/live` — light / dark / automatic in the header** (`web.91`) — palette cycle button added.
-- **`/live` no longer shows the client's own notices** (`web.87`) — welcome modal, account notice and polls silenced in live mode.
-- **The dashboard header lost its two link buttons** (`web.63`) — replaced by the game-server figures.
-- **Ivoire & Chêne panel colours follow upstream `f7a8e26`** (`web.57`) — darker palette values, higher contrast floor on the panel background.
-- **Own row in bold in the players list** (`web.42`).
-- **Star ratings moved to the lobby star column, new `--star` colour** (`web.41`).
-- **Colour dot joins the star badge after the name** (`web.40`).
-- **Star badge anchored to the right of the seat name** (`web.39`, upstream `d72d109`).
-- **Player card locked to a fixed width** (`web.37`) — `PIM_WIN_W = 400`, height stays adjustable.
-- **`InitMessage.clientPlatform` announced to the server** (`web.34`, upstream `864bc53`).
-- **Bet display option scoped to the PokerTH seat style** (`web.21`) — other seat packs keep their original presentation.
-- **Opponent seat plates at the fixed QML box width** (`web.19`) — 121px, border-box, text elides.
-- **Auto-update no longer blocked by notify-only sockets** (proxy-only).
-- **Client identifies as `CLIENT_TYPE_WEB` (0x03)** (`web.0`) — switch activated (shipped dormant since `2.1.7-web.170`).
-- Announced upstream version follows `BUILD_VERSION` → **2.1.8**.
-- **Admin lobby probes announce `CLIENT_TYPE_WEB` too** (`web.1`).
-- **Changelog grouped by entry type in About** (`web.16`) — new:/improvement:/bugfix: sort under translated subheadings.
-- **Hand name gated behind the river on voluntary shows** (`web.15`, upstream `1bf7a73`).
-- **Chat history capped at 400 lines** (`web.15`, matching QML/upstream `c65fb30`).
-- **Bet display defaults to `inset` on every platform** (`web.3`, upstream `f9a8906`).
-- **Restore banner reworked into a backup banner** (`web.9`) — symmetric create/restore/later, never overwrites an existing backup.
-- **Backup banner also shows on a brand-new browser** (`web.10`).
-- **Welcome modal and broadcasts translate everywhere** (`web.11`) — fallback translation chain outside Chromium.
-- **Mobile table geometry synced with upstream 2.1.8** (`web.12`) — port of `414a89c3` + `06db9866`.
-- **Puck/bet placement parity with QML 2.1.8** (`web.13`).
-- **Self-box parity pass** (`web.14`) — includes the QML at-turn lift animation.
+- **`/live` embedded spectator mode** built out (own login/header/chat/table list, server figures, storage) then trimmed of player-only features and told apart from the web client in the admin dashboard (`web.63`–`119`).
+- **Client identifies as `CLIENT_TYPE_WEB` (0x03)** on the wire (`web.0`, `1`, `119`, `167`, upstream `c7e2959`).
+- **Keyboard/focus overhaul** — default buttons, safe-button popup focus, per-screen start focus, arrow-key lists (`web.111`–`118`, upstream `b170786` and follow-ups).
+- **Training mode shuffles with a cryptographic RNG** instead of `Math.random` (`web.118`, upstream `40122fe`).
+- **Avatars behave like the QML client** — one per session, fixed at login, web-only relay removed (`web.95`, `137`, `166`).
+- **Privacy page rewritten** to match what the code actually does (`web.105`).
+- **Mobile table geometry and bet placement synced** with upstream 2.1.8 (`web.12`–`14`).
 
 ### Fixed
-- **Reactions panel pager (‹ page/3 ›) didn't follow the table style either** (`web.158`) — follow-up to `web.157`, same tablestyle colour variables.
-- **Reactions panel title didn't follow the table style's text colour** (`web.157`) — now matches the Log/Odds/Stats window's active-tab label.
-- **`#gchat-fab` (floating in-game chat button) reachable via Tab from any screen, including login** (`web.156`) — was invisible below the fold until Tab scrolled it into view; now hidden/unfocusable outside a game.
-- **`sw.js` served app code stale-while-revalidate instead of network-first as documented** (`web.155`) — could mix JS from one deploy with CSS from another; now network-first with a cache fallback.
-- **Players-online column header misaligned with rows after hiding a column** (`web.154`) — header and rows now build from the same visible-columns list; hidden columns move into a "+" chip.
-- **Accessibility button inconsistently placed, missing from the create-table header** (`web.153`).
-- **`align:bottom` table themes cropped full-screen instead of centred in portrait** (`web.152`) — follow-up to `web.150` (which only covered landscape).
-- **`align:bottom` table themes cropped against the wrong reference box in landscape** (`web.150`) — now sized/cropped against the table zone, matching QML.
-- **Accessibility modal stole focus back from a reopened adaptive drawer** (`web.147`).
-- **Extra Large mobile-landscape chat/info drawers had sub-44px touch targets** (`web.146`) — redundant floating-placement call removed.
-- **Actions column still misaligned with its header chip after `web.141`** (`web.143`).
-- **Forum news: a topic already marked read could reappear as unread** (`web.142`) — read state now keyed by topic instead of post id (same defect exists upstream, unfixed there).
-- **Hiding a column in the online-players list didn't reclaim any width** (`web.141`).
-- **Cold boot could serve stale SW-cached JS/CSS with no update prompt** (`web.121`) — last-seen `/__ver` now persisted, a cold boot checks and reloads once if behind.
-- **`/live?embed=1` — table list clipped, no scroll** (`web.115`, reported by Kai) — embed layout reworked so the host sizes the iframe and the list scrolls inside.
-- **Hashed device ids were kept forever** (`web.110`) — all-time unique-device sets now pruned along with expired visit buckets.
-- **Error report label claimed "no personal data"** (`web.109`) — label now says what's actually sent (user agent + masked IP).
-- **Settings sync label claimed "opt-in"** (`web.108`) — corrected; behaviour (on by default for registered logins) unchanged.
-- **Table background no longer jumps by a pixel mid-hand** (`web.106`) — rounding on `communityCenterY` no longer causes a 1px jump.
-- **Offline training mode failed to start with no network** (`web.103`) — several offline-mode modules were missing from the service-worker precache; now all precached.
-- **Localized pages served French and English interface text to crawlers** (`web.102`) — static HTML fallback now in English, and serve-time localization fills every translatable node.
-- **`/live` header buttons leaked into the web client** (`web.66`–`web.98`, fixed `web.99`) — appearance/light-dark buttons showed outside live mode; now properly scoped.
-- **Admin header on a phone** (`web.98`) — live-stats pill no longer wraps and drags the theme/log-out buttons down with it.
-- **`/live` announced itself as a web client** (`web.96`) — reverted to `CLIENT_TYPE_QT_WIDGET` (0x01), matching the tool it replaces.
-- **The spectator table still moved when a hand ended** (`web.90`) — action box now a fixed height while spectating.
-- **`/live` language buttons never appeared** (`web.88`) — reused the ••• menu's hidden twin ids.
-- **The language count was stated as 40 in entries written today** (`web.86`) — corrected to 45 where the changelog describes the client as it is now.
-- **The table was re-scaled between hands while spectating** (`web.82`) — action box height now reserved for spectators too.
-- **`/live` lobby was narrow and the chat sat over the top** (`web.80`) — two layout bugs (inherited centering, floating-window placement) fixed.
-- **`/live` lobby fell apart when the chat failed to dock** (`web.79`) — panel now hidden unless actually docked; layout fails closed.
-- **`/live` language buttons looked absent** (`web.79`) — now ship a placeholder globe glyph.
-- **`/live` chat strip sat empty** (`web.77`) — a `reparent()` call was undoing the dock; now re-asserted on every repaint.
-- **`/live` language buttons were invisible** (`web.77`) — flag SVG had no intrinsic size.
-- **`/live` showed no tables and no guest name** (`web.70`) — both modules read the wrong global (`window.S` vs `window.PthState`).
-- **`/live` table list stayed empty** (`web.69`) — hooked the wrong `renderGames` reference; now watches `#g-list` via mutation.
-- **`/live` lost the leave-lobby button** (`web.69`) — hidden by mistake; restored.
-- **An expired inactivity countdown could leave the client hanging** (`web.64`) — a 10s grace timer now force-ends the session if no server close arrives.
-- **A server-ended session left the lobby frozen on screen** (`web.62`) — kick/ban/session-timeout now return to the connect screen with a reason modal.
-- **Lobby avatars stopped at the initial in the online-players list** (`web.61`) — avatar arrival now also repaints the players panel and game info panel.
-- **Web changelog repeated one heading per deployment** (`web.60`) — About window now merges entries by version under the current-series heading.
-- **LAN / dedicated mode reached the wrong WebSocket proxy** (`web.45`) — proxy URL now always derives from `window.location.hostname`.
-- **WebSocket upgrade refusals are now logged** (`web.44`, proxy-only).
-- **Incoming avatar transfers bounded** (`web.35`, upstream `0f700c4`) — announced/actual size checked against the server's own range.
-- **PROXY protocol header no longer breaks LAN / dedicated servers** (`web.33`, proxy-only).
-- **Hand-history writes survive Android closing IndexedDB** (`web.23`).
-- **Error collector filters browser-extension noise** — extension/translator/cross-origin script errors no longer reach the report queue.
-- **Non-PokerTH seat packs were stuck on the inset bet display** (`web.22`).
-- **Top-centre (and spectator bottom-centre) bet half-clipped in the inset strip** (`web.20`).
-- **Turn-highlight scale divided out of geometry measurements** (`web.19`).
-- **Table geometry invariant to bet display** (`web.18`).
-- **Older LAN / dedicated servers rejected the client with "Version incompatible"** (`web.17`) — client retries announcing `CLIENT_TYPE_QT_WIDGET` on error 1, LAN/dedicated only.
-- **Community cards no longer re-flip on every street** (`web.6`).
-- **Assistance win% no longer freezes the table** (`web.7`) — computation now yields every ~8ms and uses the faster `phe` evaluator.
-- **Active deck preloaded on table entry** (`web.8`).
+- Assorted **`/live` layout, identification and chrome bugs** across its rollout (`web.66`–`115`).
+- **Players-online list** column alignment and hidden-column width bugs (`web.141`, `143`, `154`).
+- **Forum news**: a topic already marked read could reappear as unread (`web.142`) — same bug exists upstream, unfixed there.
+- **Stale service-worker cache** could serve mismatched JS/CSS after a deploy, or survive a cold boot with no update prompt (`web.121`, `155`).
+- **Localized pages served the wrong language to crawlers** instead of the page's own (`web.102`).
+- **Offline training mode failed to start with no network** — missing modules now precached (`web.103`).
+- **Dead/expired sessions** (inactivity, AFK, disconnect) could leave the client hanging instead of returning to the connect screen (`web.62`, `64`).
+- Assorted **table-background, bet-display and reaction-panel colour glitches** on skinned tables (`web.106`, `150`, `152`, `157`, `158`).
+- **Accessibility modal focus and touch-target regressions** on mobile (`web.146`, `147`, `153`).
 
 ## 2.1.7-web line (2026)
 
@@ -206,70 +71,29 @@ release, closed at `web.179`. Per-build detail is on the
 highlights below.
 
 ### Added
-- **Disco table style, Blacklight 4c deck, Disco card back** (`web.171`, upstream `e6b2a67`/`8704f48`) — seventies club table, four-colour gallery deck, mirror-ball back.
-- **Community suggest opens to WEC admins on foreign WEC tables** (`web.174`, upstream `576b598`) — table fingerprint recognises WEC; proxy.js changed, restart required.
-- **Monthly Cup templates fill in the current tournament title** (`web.173`).
-- **Bet display setting — bet inside the player box** (`web.158`, upstream `414a89c`) — `inset` (new desktop default) or `classic` (touch default), stored in `pth_bet_style`.
-- **90 emoji reactions across three themed pages** (`web.151`–`web.164`) — grows from 30 to 90, paged picker, 8 new choreographies.
-- **"Playing in …" info in the players list** (`web.147`, parity `PlayerListItem`).
-- **Every content page written in all 45 languages** (`web.129`–`web.146`) — hand-rankings/how-to-play/glossary join rules/faq.
-- **Admin Traffic tiles read at a glance** (`web.126`) — new-devices count, ±10% delta colouring against the previous period.
-- **Private messages** (`web.96` onwards, parity `PrivateMessageDialog.qml`) — persistent window, history in IndexedDB, translate support.
-- **A player profile window** (`web.102`) — official QML profile fields; session statistics later moved to their own window (`web.112`/`web.114`).
-- **Report an inappropriate avatar** (`web.72`) — 🚩 button sending the official `ReportAvatar` request.
-- **Community suggest opens to every BBC admin** (`web.120`/`web.121`, upstream `422f5fe4`).
-- **Invite friends** (`web.6`–`web.8`) — invitation dialog + landing page.
-- **A bet keypad on touch devices** (`web.58`).
-- **Custom sounds** (`web.19`) and a music play counter (`web.23`), later shown next to titles (`web.26`) and in the admin panel (`web.70`).
-- **PWA integration** (`web.65`/`web.66`) — protocol handler, share target, file handlers, shortcut icons.
-- **Five new languages** — Indonesian, Thai, Filipino, Bengali, Swahili — bringing the client to **45 languages** (`web.11`–`web.15`).
-- **Three new content pages** — hand-rankings, how-to-play, glossary (`web.82`).
-- **BBC Anthem table theme** and matching card back (`web.5`), by BaShFX.
-- **Automatic updates** (`web.17`) and a **weekly leaderboard reset** (`web.40`).
+- **Disco table style, Blacklight 4c deck and card back**, upstream ports (`web.171`).
+- **90 emoji reactions** across three themed pages, new choreographies (`web.151`–`164`).
+- **Bet display setting** — bet chip inside the player box or classic (`web.158`, upstream `414a89c`).
+- **All content pages translated into all 45 languages** — rules, FAQ, hand-rankings, how-to-play, glossary (`web.82`–`146`).
+- **Private messages and a player profile window**, both parity with the QML client (`web.72`–`114`).
+- **Five new languages** (Indonesian, Thai, Filipino, Bengali, Swahili) bringing the client to 45 (`web.11`–`15`).
+- **Invite friends via link**, bet keypad on touch, custom sounds, music play counter, PWA integration (`web.6`–`70`).
+- **BBC Anthem table theme** (`web.5`); automatic updates and weekly leaderboard reset (`web.17`, `40`).
+- **Community suggest opened to BBC/WEC admins**, upstream ports (`web.120`–`174`).
 
 ### Changed
-- **WebSocket heartbeat tolerates one missed pong** (proxy-only) — two consecutive misses required before terminating.
-- **Compression cache hardened; service-worker precache throttled** (`web.179` + proxy-side).
-- **proxy.js no longer touches the disk on hot static paths** (proxy-only) — 5s TTL stat cache.
-- **App code served cache-first by the service worker** (`web.178`) — .js/.mjs/.css move to stale-while-revalidate.
-- **Suggest output is one player per line** (`web.175`, upstream `4afc377`).
-- **Own client type on the wire** (`web.167`, upstream `c7e2959`) — `Init` buildId carries `CLIENT_TYPE_WEB`.
-- **Frozen avatar upload bytes** (`web.166`) — encoded PNG persisted at pick time, no more per-session re-encoding drift.
-- **Translation fallback hardening** (`web.163`, upstream `69ec0824`) — gtx → MyMemory → relay chain, throttled failure toast.
-- **Per-account private messages** (`web.161`, upstream `9bccf3a`) — history now keyed to the logged-in nickname.
-- **Floating bet keypad on desktop** (`web.159`) — compact overlay instead of swapping rows.
-- **Long labels wrap instead of truncating** (`web.149`) — About tabs and create-table form labels.
-- **PM dialog sends with a paper-plane icon** (`web.148`).
-- **Most played tracks is a ranking first** (`web.127`) — top ten as bars, daily chart of the top five.
-- **The admin dashboard reorganised** (`web.27`–`web.38`) — tab families, sub-sections, shared settings-row style.
-- **The Traffic tab rebuilt** (`web.74`–`web.78`) — hour-of-day awareness, return rates, bot-noise estimate.
-- **The SEO panel rebuilt** (`web.81`) — one-click pokerth.net settings fill, single-source hreflang.
-- **Session logs** — multi-select, keyboard selection, clipboard copy, readable times (`web.21`/`24`/`35`/`37`).
-- **Languages are shown by name** (`web.41`), no longer following the browser locale (`web.42`).
-- **Reactions** aligned with the official chat rate limit (`web.71`); avatar import no longer double-encodes (`web.73`).
-- **Statistics cards moved onto the generic window model** (`web.104`).
+- **Own client type on the wire** — `CLIENT_TYPE_WEB` (`web.167`, upstream `c7e2959`).
+- **Translation fallback and per-account private messages hardened** (`web.161`–`163`).
+- **Admin dashboard reorganised** — Traffic tab, SEO panel, session logs (`web.21`–`104`).
+- **Static asset delivery hardened** — proxy disk-cache, precache throttling, cache-first app code (`web.178`–`179` + proxy-side).
+- **Frozen avatar upload bytes**; long labels wrap instead of truncating (`web.149`, `166`).
 
 ### Fixed
-- **Failed static loads are retried in-page** (`web.177`) — cache-busted re-injection before falling back to auto-reload.
-- **Deal/action sound calls guarded** (`web.176`) — no longer throw if a module failed to load.
-- **Community suggest output was silently dropped** (`web.175`) — local note now posted with `force:true`.
-- **Idle filter now counts spectators as at a table** (`web.172`, upstream `26018c9`).
-- **Auto-update no longer restarts over reconnect-grace sessions** (`web.170`) — admin gains an Active sessions row.
-- **LAN invite links now land on the right server** (`web.169`) — invite target takes priority over saved prefs.
-- **Login restored on pokerth.net** (`web.168`) — `USE_CLIENT_TYPE_WEB` reverted until the server shipped 2.1.8.
-- **The client no longer defeats the server-side AFK kick** (`web.132`) — a single, rate-limited `ResetTimeoutMessage` sender.
-- **Content pages keep the reader's language** (`web.128`) — internal links only append `?lang=` where a translation exists.
-- **Reconnect backoff no longer resets on the server Announce** (`web.125`) — a connection must stay open 10s or get an `InitAck` to count as successful.
-- **About tabs: the 2-line clamp actually applies, and words hyphenate** (`web.150`).
-- **The announced build id fell back to 2.1.6 after the 2.1.7 release** (`web.91`).
-- **A dead lobby connection went unnoticed** (`web.57`), **rejoin after a disconnect** was broken (`web.54`), and the **inactivity warning** was not a real dialog (`web.56`).
-- **The players list rendered empty** (`web.98`) and its **column header lost its alignment** (`web.94`).
-- **The backup restore banner** failed silently, and an autosave could erase the backup meant to protect it (`web.67`).
-- **The update banner** was shown for an update already applied; newly imported seat packs stayed invisible until the cache renewed (`web.25`).
-- **iOS** — cards ran under the status bar/notch (`web.108`); the home-screen app opened on a white launch screen (`web.4`).
-- **Contrast** — the Green Casino All-In button (`web.64`) and the keypad cancel on skinned tables (`web.63`) were unreadable.
-- **The proxy hardened against connection floods** (`web.3`).
-- **Stale language counts** across help corpora, README and roadmap (`web.16`, `web.20`).
+- **Reconnect, AFK-kick and dead-session bugs** (`web.56`–`132`).
+- **Static asset load failures** now retried in-page against transient Cloudflare errors (`web.176`–`177`).
+- **LAN invite links, community suggest output and idle-spectator detection** bugs (`web.169`–`175`).
+- **Players list, backup/update banners, iOS status-bar and launch-screen** bugs (`web.4`, `25`, `67`, `94`, `98`, `108`).
+- **Contrast bugs on skinned buttons; stale language counts** across docs (`web.16`, `20`, `63`, `64`).
 
 ## 2.1.6-web line (2026)
 
