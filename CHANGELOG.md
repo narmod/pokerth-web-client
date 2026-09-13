@@ -31,6 +31,8 @@ highlights below.
 - **Albanian**, full UI catalogue, help corpus, SEO content pages and
   guest/registered/LAN broadcast notices (`web.16`–`17`) — 52 languages
   total.
+- **Punjabi**, full UI catalogue (`web.19`) — 53 languages total. Help
+  corpus and SEO content pages to follow.
 
 ### Fixed
 - **`/live` showed the game-invite banner to spectators** (`web.18`) —
