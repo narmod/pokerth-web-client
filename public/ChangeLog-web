@@ -1,4 +1,6 @@
-2026-09-13 version 2.1.9-web.4 (current series):
+2026-09-13 version 2.1.9-web.5 (current series):
+- new: Slovenian (Slovenščina) is now available in the language list - the whole interface and the built-in help are translated, bringing the client to 48 languages
+2026-09-13 version 2.1.9-web.4:
 - bugfix: the Changelog tab used to show one small block per build, which made recent updates look scattered; each update to this same overall version now reads as a single clean entry, grouped by New / Improvements / Bug fixes.
 2026-09-13 version 2.1.9-web.3:
 - bugfix: table styles with their own action buttons (Ivoire & Chêne, Casino, imported skins) could quietly fall back to the default plain buttons after reloading the page. They now stick.
