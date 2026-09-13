@@ -1,4 +1,7 @@
-2026-09-13 version 2.1.9-web.2 (current series):
+2026-09-13 version 2.1.9-web.3 (current series):
+- bugfix: table styles with their own action buttons (Ivoire & Chêne, Casino, imported skins) could quietly fall back to the default plain buttons after reloading the page. They now stick.
+- bugfix: removed an extra floating chat button in the corner - the one on the table felt already does the job.
+2026-09-13 version 2.1.9-web.2:
 - new: if this server only allows one LAN/dedicated address, you'll now see a short note explaining that and pointing you to running your own copy of the web client if you want to connect elsewhere (off by default, set up by the server admin).
 2026-09-13 version 2.1.9-web.1:
 - bugfix: if your avatar image can't be sent to the table (too complex to fit the server's size limit once re-encoded, or an unreadable file), you now get a clear message instead of it silently stopping to show up on future connections.

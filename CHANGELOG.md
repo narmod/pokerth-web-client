@@ -26,6 +26,18 @@ highlights below.
   Admin → Broadcasts → "LAN / dedicated server notice".
 
 ### Fixed
+- **SVG-skinned table style buttons reverting to default colours on reload**
+  (`web.3`) — table styles with their own Fold/Check/Call/Raise/All-In
+  artwork (Ivoire & Chêne, Casino, imported skins) render them via the
+  `data-btn-img` attribute on `<html>`. `_injectButtons()` set it correctly
+  in-session, but the zero-flash boot snippet only replayed the persisted CSS
+  custom properties (`pth_buttons_css`) — the attribute itself was never
+  part of that replay, so it silently stayed unset after any reload and the
+  buttons fell back to the plain default gradient. The boot snippet now also
+  restores the attribute when the persisted CSS carries its marker.
+- **Redundant floating chat button** (`web.3`) — a third chat toggle
+  (`#gchat-fab`, bottom-right FAB) duplicated the felt's own chat button
+  (`#chat-toggle-btn`); a leftover from an old off-screen-focus fix. Removed.
 - **Silent avatar-upload failures** (`web.1`, parity with upstream `665d80a`)
   — the file picker (`_processAvatarFile`) already warned on an unusable
   image, but the PNG re-encode done for the *network* upload

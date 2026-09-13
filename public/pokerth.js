@@ -9901,7 +9901,7 @@ var _WIN_BTN = [
   { win: 'pm-modal',              mode: 'display', btns: ['pm-btn-lobby'] },
   { win: 'adv-modal',             mode: 'display', btns: ['adv-opts-connect-mob', 'adv-opts-lobby-mob', 'adv-opts-create-mob', 'adv-opts-mob'] },
   { win: 'music-panel',           mode: 'display', btns: ['music-toggle-connect-mob', 'music-toggle-lobby-mob', 'music-toggle-create-mob', 'music-toggle-game-mob'] },
-  { win: 'g-chat-panel',          mode: 'display', btns: ['chat-toggle-btn', 'gchat-fab', 'adaptive-chat-toggle'] },
+  { win: 'g-chat-panel',          mode: 'display', btns: ['chat-toggle-btn', 'adaptive-chat-toggle'] },
   { win: 'g-log-panel',           mode: 'display', btns: ['log-toggle-btn', 'adaptive-info-toggle'] },
   { win: 'g-reaction-panel',      mode: 'display', btns: ['react-toggle-btn', 'adaptive-reactions-toggle'] },
   { win: 'hands-overlay',         mode: 'display', btns: ['hands-toggle-btn', 'adaptive-hands-toggle'] },
@@ -10079,8 +10079,8 @@ if (document.readyState === 'loading') document.addEventListener('DOMContentLoad
 else _winStackWire();
 
 // ── Unread-chat badge ──────────────────────────────────────────────
-// A small red counter on the 💬 buttons (game header, lobby header, and
-// the floating FAB) so a closed chat panel never hides incoming messages.
+// A small red counter on the 💬 buttons (game header, lobby header) so a
+// closed chat panel never hides incoming messages.
 // Incremented from addGameChat/addChat when the relevant panel is closed,
 // and cleared when the user opens the chat.
 window._unreadChat = 0;
@@ -10089,7 +10089,7 @@ function _chatBadgeHtml(n) {
 }
 function _renderChatBadge() {
   var n = window._unreadChat || 0;
-  ['chat-toggle-btn', 'lobby-chat-btn', 'gchat-fab'].forEach(function (id) {
+  ['chat-toggle-btn', 'lobby-chat-btn'].forEach(function (id) {
     var btn = document.getElementById(id);
     if (!btn) return;
     var old = btn.querySelector('.chat-badge');
@@ -11689,7 +11689,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.9-web.2'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.9-web.3'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif ou la palette High contrast
    (Android, Safari, iOS standalone récent). Lit --theme-color et met
