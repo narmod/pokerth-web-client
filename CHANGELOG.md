@@ -21,6 +21,8 @@ highlights below.
 - **Bosnian**, full UI catalogue, help corpus, SEO content pages and
   guest/registered/LAN broadcast notices (`web.9`–`10`) — 49 languages
   total.
+- **Macedonian**, full UI catalogue and help corpus (`web.11`) — 50
+  languages total. SEO content pages and broadcast notices to follow.
 
 ### Fixed
 - **Guest / registered-account / LAN broadcast notices missing Estonian,
