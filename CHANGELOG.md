@@ -18,6 +18,8 @@ highlights below.
 ### Added
 - **Slovenian**, full UI catalogue, help corpus and SEO content pages
   (`web.5`–`6`) — 48 languages total.
+- **Bosnian**, full UI catalogue and help corpus (`web.9`) — 49 languages
+  total. SEO content pages to follow.
 
 ### Fixed
 - **Guest / registered-account / LAN broadcast notices missing Estonian,
