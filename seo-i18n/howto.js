@@ -1039,7 +1039,37 @@ var PARTS = {
     faqP: function (h, c) { return "Ni u jednom načinu nema pravog novca. Vaše postavke, paketi stilova i offline napredak ostaju na vašem uređaju. Sučelje je dostupno na 47 jezika, dok pet riječi za radnje — Fold, Check, Call, Raise, All-In — ostaju na engleskom, kao za svakim stolom na svijetu. Više u <a href=\"{faq}\">čestim pitanjima</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
   },
 
+  bs: {
+    title: "Kako besplatno igrati poker online — PokerTH Web",
+    desc: "Korak po korak: igraj Texas Hold’em poker besplatno u svom pregledaču, bez preuzimanja i bez računa — offline protiv računara, na zvaničnoj mreži pokerth.net ili za privatnim stolom sa prijateljima.",
+    ldHeadline: "Kako besplatno igrati Texas Hold’em poker u pregledaču",
+    ldDesc: "Vodič korak po korak za besplatnu igru Texas Hold’ema u PokerTH web klijentu.",
+    h1: "Kako besplatno igrati poker online, direktno u pregledaču",
+    lead: function (h, c) { return "Ovo je kratka verzija: od prazne kartice do tvoje prve ruke Texas Hold’ema u PokerTH-u. Ako tražiš sama pravila — mali i veliki ulog, krugove klađenja, šta pobjeđuje šta — kreni radije od <a href=\"{rules}\">stranice s pravilima</a> i <a href=\"{hands}\">jačine kombinacija</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); },
+    steps: [
+      ["Otvori stranicu — nema se šta instalirati",
+       "PokerTH radi u pregledaču. Bez preuzimanja, bez računa, bez dodataka. Na telefonu ga možeš iz menija pregledača dodati na početni ekran; tada se otvara kao aplikacija, preko cijelog ekrana, i radi i bez veze."],
+      ["Odaberi gdje želiš igrati",
+       "Tri načina. <strong>Vježbanje offline</strong> te odmah posjeda za sto sa računarskim protivnicima i uopšte ne treba vezu — tu se najviše uči. <strong>pokerth.net</strong> je zvanična mreža: pravi protivnici, sezonske ljestvice i besplatan nadimak koji registruješ jednom. <strong>LAN / privatni server</strong> te povezuje na namjenski PokerTH server, tvoj ili tuđi."],
+      ["Sjedni za sto",
+       "U predvorju se pridružuješ stolu s liste ili praviš sopstveni. Pri pravljenju određuješ broj mjesta, početni stek, koliko brzo rastu ulozi i ima li sto lozinku. Podijeli link sa pozivom i prijatelj slijeće pravo za tvoj sto, u svom pregledaču, bez ikakve registracije."],
+      ["Odigraj ruku",
+       "Dobijaš dvije zatvorene karte. Klađenje ide u krugu prije flopa, pa ponovo nakon flopa, turna i rivera. Kad dođeš na red, traka radnji zasvijetli i nudi samo ono što je dozvoljeno: Fold, Check ili Call, Raise ili All-In. Iznos možeš upisati, povući klizačem ili jednim dodirom postaviti na najmanji, pola pota, cijeli pot ili cijeli svoj stek."],
+      ["Čitaj sto",
+       "Tvoja trenutno najbolja kombinacija ispisana je ispod stola kako karte izlaze. Pot, stek svakog igrača i nivo uloga stalno su na ekranu, dugme djelitelja pokazuje ko govori posljednji, a odbrojavanje koliko ti je vremena ostalo. Pri otvaranju karata istaknuto je onih pet karata koje su činile svaku ruku."],
+      ["Pobijedi na turniru",
+       "Igre u PokerTH-u su sit-and-go turniri: svi počinju sa istim stekom, ulozi rastu po satu, a igrači ispadaju dok jedan ne ostane sa svim žetonima. Ništa ne staje novca i žetoni se ne mogu dokupiti — sve je igrački novac, pa je na kocki samo sama partija."]
+    ],
+    phoneH2: "Igranje na telefonu",
+    phoneP: "Sto je jednako dobro prilagođen dodirnom ekranu kao i računaru: dodir na polje uloga otvara brojčanu tastaturu unutar trake radnji umjesto sistemske, pa sto nikad ne skače, a klizač se pomjera istim koracima kao u desktop klijentu. Obavještenja da si na redu mogu stići sa dugmadima Fold i Check/Call na sebi, pa se ruka može odigrati bez vraćanja na karticu.",
+    friendsH2: "Igranje sa prijateljima",
+    friendsP: "Napravi sto, stavi lozinku ako ga želiš privatnim, i pošalji link sa pozivom. On otvara sto direktno — u instaliranoj aplikaciji ako su je dodali na početni ekran, inače u kartici pregledača. Niko ne mora ništa instalirati ni davati adresu e-pošte.",
+    faqH2: "Česta pitanja",
+    faqP: function (h, c) { return "Ni u jednom načinu nema pravog novca. Tvoje postavke, paketi stilova i offline napredak ostaju na tvom uređaju. Interfejs je dostupan na 49 jezika, dok pet riječi za radnje — Fold, Check, Call, Raise, All-In — ostaju na engleskom, kao za svakim stolom na svijetu. Više u <a href=\"{faq}\">čestim pitanjima</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
+  },
+
   sr: {
+
     title: "Kako besplatno igrati poker onlajn — PokerTH Web",
     desc: "Korak po korak: igrajte Teksas Holdem poker besplatno u pregledaču, bez preuzimanja i bez naloga — oflajn protiv računara, na zvaničnoj mreži pokerth.net ili za privatnim stolom sa prijateljima.",
     ldHeadline: "Kako besplatno igrati Teksas Holdem poker u pregledaču",

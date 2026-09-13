@@ -1606,6 +1606,41 @@ var PARTS = {
     seeP: "Med igro PokerTH se pod mizo izpiše ime tvoje trenutno najboljše roke, tako da je nikoli ni treba sestavljati na pamet pod časovnim pritiskom, ob razkritju kart pa je v vsaki prikazani roki poudarjenih točno tistih pet kart, ki so dejansko štele. Brezpovezavna vadba proti računalniškim nasprotnikom je najhitrejši način, da si to zapomniš."
   },
 
+  bs: {
+    title: "Jačina kombinacija u pokeru — redoslijed ruku u Texas Hold’emu",
+    desc: "Svih deset poker kombinacija u Texas Hold’emu, od royal flusha do visoke karte, s primjerima, vjerovatnoćom svake i pravilima za kicker i izjednačene ruke.",
+    ldHeadline: "Jačina kombinacija u pokeru — Texas Hold’em",
+    ldDesc: "Deset kombinacija Texas Hold’ema redom, s primjerima, učestalošću i pravilima kod izjednačenja.",
+    h1: "Jačina kombinacija u pokeru",
+    lead: "U Texas Hold’emu ruke se rangiraju od najjače do najslabije ovako. Ruka je uvijek tačno pet karata, odabranih između sedam koje vidiš: tvoje dvije zatvorene i pet zajedničkih. Ne moraš koristiti svoje karte — ako sam sto formira najboljih pet, to je takođe tvoja ruka.",
+    names: ["Royal flush", "Skala u boji", "Četvorka", "Full house", "Boja", "Skala", "Trojka", "Dva para", "Par", "Visoka karta"],
+    texts: [
+      "A K Q J 10 u istoj boji. Najbolja moguća ruka: ne može se pobijediti, samo izjednačiti.",
+      "Pet uzastopnih karata u istoj boji. Između dvije skale u boji pobjeđuje ona s višom gornjom kartom.",
+      "Četiri karte iste vrijednosti. Peta karta (kicker) rješava rijedak slučaj u kojem četvorka leži na samom stolu.",
+      "Trojka uz par. Prvo se poredi trojka, zatim par.",
+      "Pet karata iste boje, ali ne uzastopnih. Porede se jedna po jedna odozgo; nijedna boja nije jača od druge.",
+      "Pet uzastopnih karata u miješanim bojama. As igra gore (10-J-Q-K-A) ili dolje (A-2-3-4-5), nikad oboje istovremeno.",
+      "Tri karte iste vrijednosti, uz dvije nepovezane karte.",
+      "Dva različita para uz petu kartu. Prvo se poredi viši par, zatim niži, pa kicker.",
+      "Dvije karte iste vrijednosti uz tri nepovezane karte, koje se porede redom.",
+      "Ništa od navedenog. Odlučuje najviša karta, zatim sljedeća, i tako dalje."
+    ],
+    dealt: "pojavljuje se u %s ruku od sedam karata",
+    tiesH2: "Kako se rješava izjednačenje",
+    tiesP: "Prvo se poredi kategorija: bilo koja boja pobjeđuje bilo koju skalu, kakve god karte bile. Unutar iste kategorije poredi se vrijednost po vrijednost odozgo. Ono što ostane nakon kombinacije zove se <em>kicker</em> i odlučuje mnogo više ruku nego što početnici očekuju: na stolu A-9-4 i A♠ K♦ i A♣ 7♥ daju par asova, ali kralj nadjačava sedmicu. U Hold’emu boje nikada ne rješavaju izjednačenje — dva igrača s istih pet vrijednosti dijele pot do zadnjeg žetona.",
+    wrongH2: "Šta se najčešće krivo shvata",
+    wrong: [
+      "As je za skalu istovremeno i najviša i najniža karta: A-K-Q-J-10 je najbolja, A-2-3-4-5 (takozvani <em>wheel</em>) najslabija. Niz se ne zatvara u krug — Q-K-A-2-3 nije baš ništa.",
+      "Boja je pet karata iste boje, ne četiri. Četiri herca između tvoje ruke i stola sama po sebi ne vrijede ništa.",
+      "Trojka složena od para u ruci i jedne karte na stolu zove se <em>set</em>; složena od jedne karte u ruci i para na stolu zove se <em>trips</em>. Isti rang, vrlo različita snaga, jer trips vide svi.",
+      "Broji se samo najboljih pet karata. Dva para u ruci i treći par na stolu i dalje su dva para, ne tri.",
+      "Procenti iznad govore koliko se često svaka ruka uopšte sastavi do rivera od sedam karata, a ne koliko često pobjeđuje. Dva para djeluju obično, a ipak su ispred većine onoga na šta naiđu."
+    ],
+    seeH2: "Kako to izgleda za stolom",
+    seeP: "Tokom igre PokerTH ispod stola ispisuje naziv tvoje trenutne najbolje ruke, pa je nikad ne moraš slagati u glavi dok vrijeme ističe, a na otvaranju karata svaku otkrivenu ruku prikazuje s istaknutih pet karata koje su zaista vrijedile. Vježbanje offline protiv računarskih protivnika najbrži je način da ti redoslijed uđe u prste."
+  },
+
   sw: {
     title: "Mpangilio wa mikono ya poka — daraja la mikono katika Texas Hold’em",
     desc: "Mikono yote kumi ya poka ya Texas Hold’em kuanzia royal flush hadi karata ya juu, ikiwa na mifano, uwezekano wa kila mmoja, na jinsi kicker na sare zinavyoamuliwa.",

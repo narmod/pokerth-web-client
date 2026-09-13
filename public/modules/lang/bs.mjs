@@ -427,7 +427,7 @@ export const strings = {
     inviteSubtitle: 'Igrači na mreži koji još nisu za stolom',
     inviteBtn: 'Pozovi',
     inviteSent: 'Pozvan',
-    inviteNoPlayers: 'Nitko dostupan',
+    inviteNoPlayers: 'Niko dostupan',
     inviteSentToast: 'Pozivnica poslana igraču {name}',
     linkCopied: '🔗 Poveznica kopirana!',
     linkCopyFailed: 'Kopiranje nije uspjelo — poveznica prikazana',
