@@ -1,4 +1,6 @@
-2026-09-13 version 2.1.9-web.19 (current series):
+2026-09-13 version 2.1.9-web.20 (current series):
+- new: the built-in help and the welcome notices are now available in Punjabi too
+2026-09-13 version 2.1.9-web.19:
 - new: Punjabi (ਪੰਜਾਬੀ) is now available in the language list - the whole interface is translated, bringing the client to 53 languages
 2026-09-13 version 2.1.9-web.18:
 - bugfix: the live spectator tool (/live) could pop up a game-invite banner if another player invited the spectator - it's now silenced there, since a spectator can't join a game anyway.
