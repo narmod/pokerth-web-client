@@ -7,10 +7,6 @@
 // register the file in ../i18n.mjs (one import + one LANG_MODULES entry).
 // Nothing else needs to change. When translating, keep {token} placeholders
 // and the `||` line separators exactly as they appear.
-//
-// WORK IN PROGRESS: this catalogue is being translated in stages. It is not
-// registered in ../i18n.mjs yet, so nothing loads it; keys still missing fall
-// back to English through t() once it is registered.
 // ─────────────────────────────────────────────────────────────────────────
 
 export const meta = {

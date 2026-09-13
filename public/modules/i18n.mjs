@@ -49,6 +49,7 @@ import lvLang from './lang/lv.mjs';
 import slLang from './lang/sl.mjs';
 import bsLang from './lang/bs.mjs';
 import mkLang from './lang/mk.mjs';
+import msLang from './lang/ms.mjs';
 import taLang from './lang/ta.mjs';
 import viLang from './lang/vi.mjs';
 import koLang from './lang/ko.mjs';
@@ -69,7 +70,7 @@ import swLang from './lang/sw.mjs';
 // (copy en.mjs and translate), add an import above, then add it here.
 // LANG (the string tables) and LANG_META (flag / label / dir) are assembled
 // automatically from each module's exports — no other code changes needed.
-const LANG_MODULES = { en: enLang, fr: frLang, de: deLang, es: esLang, it: itLang, 'pt-BR': ptBrLang, 'pt-PT': ptPtLang, nl: nlLang, pl: plLang, ru: ruLang, zh: zhLang, tr: trLang, uk: ukLang, ja: jaLang, sv: svLang, nb: nbLang, da: daLang, fi: fiLang, cs: csLang, sk: skLang, ro: roLang, hu: huLang, el: elLang, bg: bgLang, hr: hrLang, sr: srLang, af: afLang, ca: caLang, gl: glLang, gd: gdLang, lt: ltLang, et: etLang, lv: lvLang, sl: slLang, bs: bsLang, mk: mkLang, ta: taLang, vi: viLang, ko: koLang, 'zh-TW': zhTwLang, hi: hiLang, ar: arLang, fa: faLang, he: heLang, ur: urLang, id: idLang, th: thLang, fil: filLang, bn: bnLang, sw: swLang };
+const LANG_MODULES = { en: enLang, fr: frLang, de: deLang, es: esLang, it: itLang, 'pt-BR': ptBrLang, 'pt-PT': ptPtLang, nl: nlLang, pl: plLang, ru: ruLang, zh: zhLang, tr: trLang, uk: ukLang, ja: jaLang, sv: svLang, nb: nbLang, da: daLang, fi: fiLang, cs: csLang, sk: skLang, ro: roLang, hu: huLang, el: elLang, bg: bgLang, hr: hrLang, sr: srLang, af: afLang, ca: caLang, gl: glLang, gd: gdLang, lt: ltLang, et: etLang, lv: lvLang, sl: slLang, bs: bsLang, mk: mkLang, ms: msLang, ta: taLang, vi: viLang, ko: koLang, 'zh-TW': zhTwLang, hi: hiLang, ar: arLang, fa: faLang, he: heLang, ur: urLang, id: idLang, th: thLang, fil: filLang, bn: bnLang, sw: swLang };
 
 const LANG = {};
 const LANG_META = {};
