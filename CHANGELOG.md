@@ -20,14 +20,15 @@ highlights below.
   (`web.5`–`6`) — 48 languages total.
 
 ### Fixed
-- **Guest / registered-account broadcast notices missing Estonian, Latvian
-  and Slovenian** (`web.7`) — `GUEST_NOTICE_DEFAULT_LANGS` and
-  `AUTH_NOTICE_DEFAULT_LANGS` in `proxy.js` were last filled in for the
-  original 45 languages; `et` and `lv` were never added when they shipped,
-  and `sl` was missed in this rollout too. Added `sl` to both tables (and
-  to `LAN_NOTICE_DEFAULT_LANGS`); `et`/`lv` remain a known gap, tracked
-  separately. `test-authnotice.mjs` / `test-guestnotice.mjs` bumped their
-  hardcoded expected count from 45 to 46 to match.
+- **Guest / registered-account / LAN broadcast notices missing Estonian,
+  Latvian and Slovenian** (`web.7`–`8`) — `GUEST_NOTICE_DEFAULT_LANGS`,
+  `AUTH_NOTICE_DEFAULT_LANGS` and `LAN_NOTICE_DEFAULT_LANGS` in `proxy.js`
+  were last filled in for the original 45 languages; `et` and `lv` were
+  never added when they shipped. Added `sl` (`web.7`), then wrote and added
+  `et` and `lv` to close the gap entirely (`web.8`) — all three tables now
+  cover the full 48-language set. `test-authnotice.mjs` /
+  `test-guestnotice.mjs` hardcoded expected count bumped 45 -> 46 -> 48
+  across the two commits.
 - **LAN / dedicated server notice** (`web.2`) — a new operator-authored popup,
   mirroring the guest/registered-account notices, shown once per version to
   everyone connecting in LAN / dedicated-server mode on this instance. Built-in

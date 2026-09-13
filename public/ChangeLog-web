@@ -1,4 +1,6 @@
-2026-09-13 version 2.1.9-web.7 (current series):
+2026-09-13 version 2.1.9-web.8 (current series):
+- bugfix: the guest-mode and registered-account welcome notices, and the LAN/dedicated-server notice, are now available in Estonian and Latvian too (they had been missing since those languages launched).
+2026-09-13 version 2.1.9-web.7:
 - bugfix: the guest-mode and registered-account welcome notices weren't available in Slovenian yet, even though the rest of the interface was - fixed.
 2026-09-13 version 2.1.9-web.6:
 - new: the public pages (poker rules, hand rankings, glossary, how to play) are now available in Slovenian too, so a search in Slovenian lands on a Slovenian page instead of the English one
