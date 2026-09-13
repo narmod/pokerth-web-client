@@ -28,6 +28,8 @@ highlights below.
   guest/registered/LAN broadcast notices (`web.13`–`14`) — 51 languages
   total. This completes the six-language rollout planned on 2026-09-11
   (et, lv, sl, bs, mk, ms).
+- **Albanian**, full UI catalogue and help corpus (`web.16`) — 52 languages
+  total. SEO content pages and broadcast notices to follow.
 
 ### Fixed
 - **`/live` Players tab showed reconnected players multiple times** (`web.15`)
