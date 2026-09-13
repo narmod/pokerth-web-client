@@ -18,6 +18,16 @@ highlights below.
 ### Added
 - **Slovenian**, full UI catalogue, help corpus and SEO content pages
   (`web.5`–`6`) — 48 languages total.
+
+### Fixed
+- **Guest / registered-account broadcast notices missing Estonian, Latvian
+  and Slovenian** (`web.7`) — `GUEST_NOTICE_DEFAULT_LANGS` and
+  `AUTH_NOTICE_DEFAULT_LANGS` in `proxy.js` were last filled in for the
+  original 45 languages; `et` and `lv` were never added when they shipped,
+  and `sl` was missed in this rollout too. Added `sl` to both tables (and
+  to `LAN_NOTICE_DEFAULT_LANGS`); `et`/`lv` remain a known gap, tracked
+  separately. `test-authnotice.mjs` / `test-guestnotice.mjs` bumped their
+  hardcoded expected count from 45 to 46 to match.
 - **LAN / dedicated server notice** (`web.2`) — a new operator-authored popup,
   mirroring the guest/registered-account notices, shown once per version to
   everyone connecting in LAN / dedicated-server mode on this instance. Built-in
