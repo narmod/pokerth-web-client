@@ -11400,21 +11400,35 @@ function renderPlayersList() {
       { re: /^-\s*improvement:\s*/i, key: 'abClImprovements', fb: 'Improvements' },
       { re: /^-\s*bugfix:\s*/i,      key: 'abClBugfixes',     fb: 'Bug fixes' }
     ];
-    // Fusion par version (narmod 09/09/2026) : ChangeLog-web tient une entrée
-    // par DÉPLOIEMENT, donc plusieurs entêtes « <date> version 2.1.8-web: »
-    // se suivent et les sous-titres se répétaient. Les blocs qui portent la
-    // même version sont réunis sous l'entête de la première rencontrée (le
-    // fichier est antichronologique : la plus récente, celle qui porte
-    // « (current series) »), items dans l'ordre du fichier. Le ChangeLog
-    // upstream n'a qu'une entrée par version — rendu inchangé.
-    var VER = /^\d{4}-\d{2}-\d{2}\s+version\s+(.*)$/i;
+    // Fusion par version (narmod 09/09/2026, étendue 13/09/2026) : ChangeLog-web
+    // tient une entrée par DÉPLOIEMENT (« <date> version 2.1.8-web: » ou, depuis
+    // web.121, « <date> version 2.1.9-web.N: »). Pour un rendu propre — un seul
+    // bloc par version upstream, comme le ChangeLog des clients installables —
+    // le compteur de déploiement « .N » est ignoré dans la clé de fusion : tous
+    // les builds d'une même version « X.Y.Z-web » se regroupent sous une seule
+    // entête, quel que soit leur .N (ou son absence, cas des anciennes entrées
+    // sans compteur). L'entête affichée est reconstruite (date du bloc le plus
+    // récent + version sans .N + « (current series) » si présent) plutôt que
+    // recopiée telle quelle, pour ne pas figer un numéro de build particulier
+    // sur un bloc qui en contient plusieurs. Items dans l'ordre du fichier
+    // (antichronologique). Le ChangeLog upstream n'a pas de suffixe « -web »
+    // donc n'est pas affecté par ce repli — rendu inchangé.
+    var VER = /^(\d{4}-\d{2}-\d{2})\s+version\s+(.*)$/i;
     var head = [], blocks = [], byKey = {}, block = null;
     String(txt).split('\n').forEach(function(line){
       var m = VER.exec(line);
       if (m || /^Before\s+\d{4}-\d{2}-\d{2}/i.test(line)) {
-        var key = m ? m[1].replace(/\(current series\)/i, '').replace(/:/g, '').trim() : line.trim();
+        var rawDate = m ? m[1] : null;
+        var rawVer  = m ? m[2] : line.trim();
+        var isCurrent = /\(current series\)/i.test(rawVer);
+        var key = rawVer.replace(/\(current series\)/i, '').replace(/:/g, '').trim()
+          .replace(/(-web)\.\d+\b/i, '$1'); // ignore le compteur de déploiement pour la fusion
         block = byKey['k:' + key];
-        if (!block) { block = byKey['k:' + key] = { ver: line, plain: [], groups: [[], [], []] }; blocks.push(block); }
+        if (!block) {
+          var dispVer = m ? (rawDate + ' version ' + key + (isCurrent ? ' (current series)' : '') + ':') : line;
+          block = byKey['k:' + key] = { ver: dispVer, plain: [], groups: [[], [], []] };
+          blocks.push(block);
+        }
         return;
       }
       if (line.trim() === '') return; // séparateur de blocs : l'espacement est posé au rendu
@@ -11689,7 +11703,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.9-web.3'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.9-web.4'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif ou la palette High contrast
    (Android, Safari, iOS standalone récent). Lit --theme-color et met

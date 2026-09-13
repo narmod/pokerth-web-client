@@ -26,6 +26,16 @@ highlights below.
   Admin → Broadcasts → "LAN / dedicated server notice".
 
 ### Fixed
+- **About → Changelog tab merging by exact build label instead of by
+  release** (`web.4`) — `_abClRender()`'s per-version merge (added `web.87`,
+  09/09) grouped entries whose raw header text matched exactly. Once
+  per-build headers started carrying their `.N` counter (`web.121` onward),
+  each build got a distinct key and rendered as its own tiny block instead of
+  joining the rest of its release — the opposite of the clean, one-block-per-
+  version layout the upstream tab already had. The merge key now drops the
+  trailing `.N` before comparing, and the displayed header is rebuilt from the
+  most recent build's date plus the bare `X.Y.Z-web` (with `(current series)`
+  where it applies) instead of being copied verbatim from one specific build.
 - **SVG-skinned table style buttons reverting to default colours on reload**
   (`web.3`) — table styles with their own Fold/Check/Call/Raise/All-In
   artwork (Ivoire & Chêne, Casino, imported skins) render them via the

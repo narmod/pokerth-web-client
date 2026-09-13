@@ -1,4 +1,6 @@
-2026-09-13 version 2.1.9-web.3 (current series):
+2026-09-13 version 2.1.9-web.4 (current series):
+- bugfix: the Changelog tab used to show one small block per build, which made recent updates look scattered; each update to this same overall version now reads as a single clean entry, grouped by New / Improvements / Bug fixes.
+2026-09-13 version 2.1.9-web.3:
 - bugfix: table styles with their own action buttons (Ivoire & Chêne, Casino, imported skins) could quietly fall back to the default plain buttons after reloading the page. They now stick.
 - bugfix: removed an extra floating chat button in the corner - the one on the table felt already does the job.
 2026-09-13 version 2.1.9-web.2:
