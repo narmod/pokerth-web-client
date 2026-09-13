@@ -39,6 +39,8 @@ check('no update banner',
     fs.readFileSync(path.join(root, 'public', 'pokerth-client.html'), 'utf8')));
 check('no poll',
   /window\._pollOnScreen = function \(id\) \{[\s\S]{0,200}if \(window\.LIVE_MODE\) \{ _close\(\); return; \}/.test(poll));
+check('no game invite banner',
+  /function onInviteNotify\(sub\) \{[\s\S]{0,300}if \(window\.LIVE_MODE\) return;/.test(social));
 check('nothing under the button but the figures',
   /:root\[data-live="1"\] #cstatus \{ display: none; \}/.test(css));
 check('no install prompt', /:root\[data-live="1"\] #install-btn/.test(css));

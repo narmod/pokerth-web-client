@@ -33,6 +33,15 @@ highlights below.
   total.
 
 ### Fixed
+- **`/live` showed the game-invite banner to spectators** (`web.18`) —
+  `onInviteNotify()` in `modules/net/msg-social.mjs` displayed the accept/
+  decline banner for any `InviteNotify` addressed to our player id, with no
+  `LIVE_MODE` guard. A regular player inviting a guest spectator (reported by
+  sp0ck, invited by another player while watching as a guest) surfaced a
+  banner a spectator can't act on — joining a game isn't possible from
+  `/live`. Now short-circuited in `LIVE_MODE`, alongside the other popups
+  already silenced there (`test-live-quiet.mjs`, extended with a matching
+  check).
 - **`/live` Players tab showed reconnected players multiple times** (`web.15`)
   — `renderPlayers()` in `modules/live/lobby.mjs` enumerated `S.players`, a
   pid→name cache that only ever grows (no entry is dropped when a player

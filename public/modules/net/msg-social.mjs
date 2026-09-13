@@ -24,6 +24,9 @@ const T = MSG.T;
 
 function onInviteNotify(sub) {
   // InviteNotify: gameId=1, playerIdWho=2 (invitee), playerIdByWhom=3 (host)
+  // /live : un spectateur ne peut pas rejoindre une partie, la bannière
+  // n'a donc rien à proposer (sp0ck, 22/09). Cf. test-live-quiet.
+  if (window.LIVE_MODE) return;
   if (Proto.u32(sub, 2) === S.myId) {
     _inviteShow({ gameId: Proto.u32(sub, 1), byWhom: Proto.u32(sub, 3) });
   }
