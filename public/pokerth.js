@@ -3000,6 +3000,28 @@ window.refreshMyAvatar = function() {
   // Clé de gel du choix EN COURS de préparation : un encodage asynchrone
   // (toBlob) terminé après un nouveau choix ne doit rien publier.
   var _pthPendingKey = null;
+  // Clé du dernier échec déjà signalé, pour ne prévenir qu'UNE fois par choix
+  // (sinon toast à chaque tentative de reconnexion tant que l'image reste
+  // invalide). Se réarme naturellement dès que `key` change (nouvel avatar).
+  var _pthWarnedUploadKey = null;
+  // Parité upstream 665d80a (« avatar check with warning popup ») côté
+  // web : le ré-encodage réseau (_pthCanvasToUpload, ci-dessous) tourne à
+  // CHAQUE connexion, contrairement au sélecteur de fichier
+  // (_processAvatarFile, pokerth-client.html) qui avertit déjà via _avWarn.
+  // Un avatar qui passait ce premier contrôle peut quand même échouer ici
+  // (PNG plus lourd que le JPEG affiché, décodeur qui échoue, etc.) — sans
+  // ce relai l'annonce s'éteignait silencieusement à chaque login.
+  function _pthWarnUpload(key, i18nKey, fallback) {
+    if (key && key === _pthWarnedUploadKey) return;
+    _pthWarnedUploadKey = key || null;
+    try {
+      if (typeof window._avWarn === 'function') { window._avWarn(i18nKey, fallback); return; }
+    } catch (e) {}
+    try {
+      var m = (typeof t === 'function' ? t(i18nKey) : null) || fallback;
+      if (typeof showToast === 'function') showToast(m, { tone: 'error', icon: '\u2715' });
+    } catch (e) {}
+  }
   function _pthClearMyUpload() {
     _pthUploadSrc = null;
     _pthUploadKey = null;
@@ -3021,9 +3043,9 @@ window.refreshMyAvatar = function() {
         var sx = (img.width - s) / 2, sy = (img.height - s) / 2;
         ctx.drawImage(img, sx, sy, s, s, 0, 0, SZ, SZ);
         _pthCanvasToUpload(cv, key);
-      } catch(e) { _pthClearMyUpload(); }
+      } catch(e) { _pthWarnUpload(key, 'avImgFailed', 'This image could not be processed.'); _pthClearMyUpload(); }
     };
-    img.onerror = function() { _pthClearMyUpload(); };
+    img.onerror = function() { _pthWarnUpload(key, 'avImgInvalid', 'Invalid image.'); _pthClearMyUpload(); };
     img.src = dataUrl;
   }
 
@@ -3047,11 +3069,12 @@ window.refreshMyAvatar = function() {
   function _pthCanvasToUpload(cv, key) {
     cv.toBlob(function(blob) {
       if (key !== _pthPendingKey) return; // choix remplacé pendant l'encodage
-      if (!blob) { _pthClearMyUpload(); return; }
+      if (!blob) { _pthWarnUpload(key, 'avImgFailed', 'This image could not be processed.'); _pthClearMyUpload(); return; }
       blob.arrayBuffer().then(function(ab) {
         if (key !== _pthPendingKey) return;
         var bytes = new Uint8Array(ab);
-        if (bytes.length < 32 || bytes.length > 30720) { _pthClearMyUpload(); return; }
+        if (bytes.length > 30720) { _pthWarnUpload(key, 'avImgTooLarge', 'This image is too large. Please choose a smaller one.'); _pthClearMyUpload(); return; }
+        if (bytes.length < 32) { _pthWarnUpload(key, 'avImgInvalid', 'Invalid image.'); _pthClearMyUpload(); return; }
         window._pthMyUpload = { bytes: bytes, hashBytes: _md5bytes(bytes), type: 1, size: bytes.length };
         if (key) {
           try {
@@ -3060,7 +3083,7 @@ window.refreshMyAvatar = function() {
             localStorage.setItem('pth_avatar_up', JSON.stringify({ k: key, b64: btoa(b64) }));
           } catch (e) {} // stockage plein : on retombe sur le re-encodage d'avant, sans casser l'upload
         }
-      }).catch(function() { if (key === _pthPendingKey) _pthClearMyUpload(); });
+      }).catch(function() { if (key === _pthPendingKey) { _pthWarnUpload(key, 'avImgFailed', 'This image could not be processed.'); _pthClearMyUpload(); } });
     }, 'image/png');
   }
   function _pthHex(b) {
@@ -11595,7 +11618,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.9-web.0'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.9-web.1'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif ou la palette High contrast
    (Android, Safari, iOS standalone récent). Lit --theme-color et met

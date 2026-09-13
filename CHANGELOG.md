@@ -15,6 +15,18 @@ release. Per-build detail is on the
 [GitHub Releases](https://github.com/narmod/pokerth-web-client/releases) page;
 highlights below.
 
+### Fixed
+- **Silent avatar-upload failures** (`web.1`, parity with upstream `665d80a`)
+  — the file picker (`_processAvatarFile`) already warned on an unusable
+  image, but the PNG re-encode done for the *network* upload
+  (`_pthCanvasToUpload`, gated on the server's `[32, 30720]` byte window)
+  ran again on every login and only ever failed silently. An image that
+  passed the picker (JPEG, resized) could still miss that tighter PNG bound
+  and quietly stop announcing an avatar on every future connection. It now
+  surfaces the existing `avImgTooLarge`/`avImgInvalid`/`avImgFailed` toasts
+  (already translated in all 47 languages), de-duped per avatar choice so a
+  reconnect loop doesn't repeat the warning.
+
 ### Changed
 - **Chances panel readability, impossible categories** (`web.0`, parity with
   upstream `f7a8e26d`) — the bar track background goes from 14% to 22%
