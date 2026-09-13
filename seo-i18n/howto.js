@@ -1330,6 +1330,36 @@ var PARTS = {
     faqP: function (h, c) { return "Tiada wang sebenar dalam mana-mana mod. Tetapan, pakej gaya dan kemajuan luar talian anda kekal pada peranti anda. Antara muka tersedia dalam 51 bahasa, sementara lima perkataan tindakan — Fold, Check, Call, Raise, All-In — kekal dalam bahasa Inggeris, seperti di setiap meja di dunia. Lebih lanjut dalam <a href=\"{faq}\">soalan lazim</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
   },
 
+  sq: {
+    title: "Si të Luash Poker Falas Online — PokerTH Web",
+    desc: "Hap pas hapi: luaj poker Texas Hold’em falas në shfletuesin tënd, pa shkarkim dhe pa llogari — offline kundër kompjuterit, në rrjetin zyrtar pokerth.net ose te një tavolinë private me miq.",
+    ldHeadline: "Si të Luash Poker Texas Hold’em Falas në Shfletues",
+    ldDesc: "Udhëzues hap pas hapi për të luajtur Texas Hold’em falas në klientin web PokerTH.",
+    h1: "Si të Luash Poker Falas Online, Direkt në Shfletues",
+    lead: function (h, c) { return "Kjo është versioni i shkurtër: nga një skedë bosh te dora jote e parë e Texas Hold’em në PokerTH. Nëse kërkon vetëm rregullat — blindin e vogël dhe të madh, raundet e bastit, çfarë mund çfarë — fillo më mirë nga <a href=\"{rules}\">faqja e rregullave</a> dhe <a href=\"{hands}\">fuqia e kombinimeve</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); },
+    steps: [
+      ["Hap Faqen — Asgjë për t’u Instaluar",
+       "PokerTH funksionon në shfletues. Pa shkarkim, pa llogari, pa shtesa. Në telefon, mund ta shtosh në ekranin fillestar nga menyja e shfletuesit; ai pastaj hapet si aplikacion, ekran i plotë, dhe funksionon edhe pa lidhje."],
+      ["Zgjidh Ku Dëshiron të Luash",
+       "Tri mënyra. <strong>Stërvitja offline</strong> të vendos menjëherë te tavolina me kundërshtarë kompjuterikë dhe s’kërkon fare lidhje — aty mësohet më shumë. <strong>pokerth.net</strong> është rrjeti zyrtar: kundërshtarë të vërtetë, renditje sezonale dhe një pseudonim falas që e regjistron një herë. <strong>LAN / server privat</strong> të lidh me një server të dedikuar PokerTH, tëndin ose të dikujt tjetër."],
+      ["Ulu në Tavolinë",
+       "Në lobi, bashkohesh me një tavolinë nga lista ose krijon të tënden. Gjatë krijimit, cakton numrin e vendeve, stokun fillestar, sa shpejt rriten blindet dhe nëse tavolina ka fjalëkalim. Ndaj lidhjen e ftesës dhe miku yt zbret drejt e në tavolinën tënde, në shfletuesin e vet, pa asnjë regjistrim."],
+      ["Luaj një Dorë",
+       "Merr dy letra private. Basti bëhet në një raund para flopit, pastaj sërish pas flopit, turnit dhe river-it. Kur vjen radha jote, shiriti i veprimeve ndizet dhe ofron vetëm atë që lejohet: Fold, Check ose Call, Raise ose All-In. Mund ta shkruash shumën, ta tërheqësh me rrëshqitësin, ose me një prekje ta caktosh te minimumi, gjysma e bankës, e gjithë banka, ose gjithë stoku yt."],
+      ["Lexo Tavolinën",
+       "Kombinimi yt aktualisht më i mirë shkruhet nën tavolinë ndërsa dalin letrat. Banka, stoku i çdo lojtari dhe niveli i blindeve janë vazhdimisht në ekran, butoni i dhënësit tregon kush flet i fundit, dhe numërimi mbrapsht tregon sa kohë të ka mbetur. Në zbulimin e letrave, theksohen pesë letrat që vërtet formuan çdo dorë."],
+      ["Fito Turneun",
+       "Lojërat në PokerTH janë turne sit-and-go: të gjithë fillojnë me të njëjtin stok, blindet rriten me kohën, dhe lojtarët eliminohen derisa vetëm një të mbetet me gjithë zhetonët. Asgjë s’kushton para dhe zhetonët s’mund të riblihen — gjithçka është para lojëra, kështu që në rrezik është vetëm vetë partia."]
+    ],
+    phoneH2: "Të Luash në Telefon",
+    phoneP: "Tavolina është përshtatur po aq mirë për ekran me prekje sa edhe për kompjuter: prekja e fushës së bastit hap një tastierë numerike brenda shiritit të veprimeve në vend të asaj të sistemit, kështu që tavolina kurrë s’kërcen, dhe rrëshqitësi lëviz me të njëjtat hapa si te klienti desktop. Njoftimet që je në radhë mund të vijnë me butonat Fold dhe Check/Call mbi to, kështu që dora mund të luhet pa u kthyer te skeda.",
+    friendsH2: "Të Luash me Miq",
+    friendsP: "Krijo një tavolinë, vendos një fjalëkalim nëse dëshiron ta bësh private, dhe dërgo lidhjen e ftesës. Ajo e hap tavolinën direkt — në aplikacionin e instaluar nëse e kanë shtuar në ekranin fillestar, përndryshe në një skedë të shfletuesit. Askush s’duhet të instalojë asgjë apo të japë një adresë email-i.",
+    faqH2: "Pyetjet e Shpeshta",
+    faqP: function (h, c) { return "Në asnjë modalitet s’ka para të vërteta. Cilësimet e tua, paketat e stileve dhe përparimi offline mbeten në pajisjen tënde. Ndërfaqja është e disponueshme në 52 gjuhë, ndërsa pesë fjalët e veprimeve — Fold, Check, Call, Raise, All-In — mbeten në anglisht, si te çdo tavolinë në botë. Më shumë te <a href=\"{faq}\">pyetjet e shpeshta</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
+  },
+
+
    af: {
     title: "Hoe om gratis aanlyn poker te speel — PokerTH Web",
     desc: "Stap vir stap: speel Texas Hold’em-poker gratis in jou blaaier, sonder aflaai en sonder rekening — vanlyn teen die rekenaar, op die amptelike pokerth.net-netwerk, of aan ’n privaat tafel met vriende.",

@@ -39,13 +39,13 @@ ok(/slice\(0, 200\)/.test(gwBlock.slice(0, 1200)) && /slice\(0, 4000\)/.test(gwB
 // ── proxy.js: built-in English default text ───────────────────────────────
 ok(/const AUTH_NOTICE_DEFAULT_LANGS = \{\n  "en": \{ title: "/.test(proxy),
   'a built-in default exists, English first');
-// All 51 client languages are hand-written in the defaults, so an exact
+// All 52 client languages are hand-written in the defaults, so an exact
 // language match on the client means no machine translation at all.
 {
   const m = proxy.match(/const AUTH_NOTICE_DEFAULT_LANGS = (\{[\s\S]*?\n\});/);
   let langCount = 0;
   try { langCount = Object.keys(JSON.parse(m[1].replace(/\n  ("[^"]+"): \{ title: /g, '\n  $1: { "title": ').replace(/, body: /g, ', "body": '))).length; } catch (e) {}
-  ok(langCount === 51, 'the built-in default covers all 51 client languages (got ' + langCount + ')');
+  ok(langCount === 52, 'the built-in default covers all 52 client languages (got ' + langCount + ')');
 }
 ok(/function _stripDefaultNoticeLangs\(/.test(proxy) &&
    /_stripDefaultNoticeLangs\((?:gout, GUEST|aout, AUTH)_NOTICE_DEFAULT_LANGS\)/.test(proxy),

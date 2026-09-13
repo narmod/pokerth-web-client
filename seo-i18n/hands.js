@@ -1712,6 +1712,41 @@ var PARTS = {
     seeP: "Semasa bermain PokerTH, nama kombinasi terbaik anda pada masa itu dipaparkan di bawah meja, jadi anda tidak perlu menyusunnya dalam kepala di bawah tekanan masa, dan semasa penunjukan kad, setiap tangan yang didedahkan menonjolkan tepat lima kad yang benar-benar dikira. Berlatih luar talian menentang lawan komputer adalah cara paling pantas untuk menjadikan susunan ini sebati."
   },
 
+  sq: {
+    title: "Fuqia e Kombinimeve në Poker — Renditja e Duarve në Texas Hold’em",
+    desc: "Të gjitha dhjetë kombinimet e pokerit në Texas Hold’em, nga Royal Flush te letra më e lartë, me shembuj, probabilitetin e secilit dhe rregullat për kicker-in dhe duart e barabarta.",
+    ldHeadline: "Fuqia e Kombinimeve në Poker — Texas Hold’em",
+    ldDesc: "Dhjetë kombinimet e Texas Hold’em sipas renditjes, me shembuj, shpeshtësinë dhe rregullat për barazitë.",
+    h1: "Fuqia e Kombinimeve në Poker",
+    lead: "Në Texas Hold’em, duart renditen nga më e forta te më e dobëta kështu. Dora përbëhet gjithmonë saktësisht nga pesë letra, të zgjedhura mes shtatë që sheh: dy letrat e tua private dhe pesë letrat e komunitetit. Nuk je i detyruar të përdorësh letrat e tua — nëse vetëm tavolina formon pesë letrat më të mira, edhe ajo është dora jote.",
+    names: ["Royal Flush", "Straight Flush", "Katërshja", "Full House", "Flush", "Straight", "Treshja", "Dy çifte", "Një çift", "Letra më e lartë"],
+    texts: [
+      "A K Q J 10, të gjitha e njëjta bojë. Dora më e mirë e mundshme: nuk mund të mundet, vetëm të barazohet.",
+      "Pesë letra rresht e njëjta bojë. Mes dy Straight Flush-eve, fiton ai me letrën më të lartë sipër.",
+      "Katër letra me të njëjtën vlerë. Letra e pestë (kicker) e zgjidh rastin e rrallë kur të katërta janë në tavolinë.",
+      "Treshja bashkë me një çift. Krahasohet fillimisht treshja, pastaj çifti.",
+      "Pesë letra e njëjta bojë, por jo rresht. Krahasohen një nga një duke filluar nga më e larta; asnjë bojë s’është më e fortë se tjetra.",
+      "Pesë letra rresht me bojë të përziera. Asi luan lart (10-J-Q-K-A) ose poshtë (A-2-3-4-5), kurrë të dyja njëkohësisht.",
+      "Tri letra me të njëjtën vlerë, plus dy letra të palidhura.",
+      "Dy çifte të ndryshme plus letra e pestë. Krahasohet fillimisht çifti më i lartë, pastaj më i ulëti, pastaj kicker-i.",
+      "Dy letra me të njëjtën vlerë plus tri letra të palidhura, që krahasohen me radhë.",
+      "Asnjë nga sa më sipër. Vendos letra më e lartë, pastaj tjetra, e kështu me radhë."
+    ],
+    dealt: "ndodh në %s të duarve me shtatë letra",
+    tiesH2: "Si Zgjidhen Barazitë",
+    tiesP: "Krahasohet fillimisht kategoria: çdo Flush mund çdo Straight, pavarësisht cilat letra ka. Brenda së njëjtës kategori, vlera krahasohet një nga një nga lart. Ajo që mbetet pas formimit të kombinimit quhet <em>kicker</em>, dhe vendos shumë më tepër duar sesa fillestarët e presin: në tavolinë A-9-4, si A♠ K♦ ashtu edhe A♣ 7♥ japin çift asash, por mbreti mund shtatën. Në Hold’em, boja kurrë s’e zgjidh barazinë — dy lojtarë me të njëjtën vlerë pesë-letrash e ndajnë bankën deri te zhetoni i fundit.",
+    wrongH2: "Çfarë Kuptohet Më Gabim",
+    wrong: [
+      "Asi është njëkohësisht letra më e lartë dhe më e ulët për Straight-in: A-K-Q-J-10 është më i miri, A-2-3-4-5 (i njohur si <em>wheel</em>) është më i dobëti. Radha nuk mbyllet në rreth — Q-K-A-2-3 s’është asgjë.",
+      "Flush-i është pesë letra e njëjta bojë, jo katër. Katër zemra mes dorës tënde dhe tavolinës vetë s’vlejnë asgjë.",
+      "Treshja e formuar nga një çift në dorë dhe një letër në tavolinë quhet <em>set</em>; ajo e formuar nga një letër në dorë dhe një çift në tavolinë quhet <em>trips</em>. I njëjti rang, forcë shumë e ndryshme, sepse trips-in e shohin të gjithë.",
+      "Numërohen vetëm pesë letrat më të mira. Dy çifte në dorë dhe një çift i tretë në tavolinë mbeten prapë dy çifte, jo tri.",
+      "Përqindjet më sipër tregojnë sa shpesh formohet fare çdo kombinim deri te river-i nga shtatë letra, jo sa shpesh fiton. Dy çiftet duken të zakonshme e prapëseprapë mundin shumicën e asaj që hasin."
+    ],
+    seeH2: "Si Duket te Tavolina",
+    seeP: "Ndërsa luan PokerTH, nën tavolinë shkruhet emri i kombinimit tënd më të mirë aktual, kështu që s’të duhet ta ndërtosh kurrë në mendje nën presionin e kohës, dhe në zbulimin e letrave, çdo dorë e zbuluar i thekson saktësisht ato pesë letra që vërtet numëroheshin. Stërvitja offline kundër kundërshtarëve kompjuterikë është mënyra më e shpejtë për ta bërë këtë renditje refleks."
+  },
+
    sw: {
 
     title: "Mpangilio wa mikono ya poka — daraja la mikono katika Texas Hold’em",

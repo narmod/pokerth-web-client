@@ -1,4 +1,6 @@
-2026-09-13 version 2.1.9-web.16 (current series):
+2026-09-13 version 2.1.9-web.17 (current series):
+- new: the public pages (poker rules, hand rankings, glossary, how to play) and the welcome notices are now available in Albanian too
+2026-09-13 version 2.1.9-web.16:
 - new: Albanian (Shqip) is now available in the language list - the whole interface and the built-in help are translated, bringing the client to 52 languages
 2026-09-13 version 2.1.9-web.15:
 - bugfix: the live spectator tool's Players tab no longer shows the same player several times after they reconnect
