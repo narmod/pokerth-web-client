@@ -30,6 +30,16 @@ highlights below.
   (et, lv, sl, bs, mk, ms).
 
 ### Fixed
+- **`/live` Players tab showed reconnected players multiple times** (`web.15`)
+  — `renderPlayers()` in `modules/live/lobby.mjs` enumerated `S.players`, a
+  pid→name cache that only ever grows (no entry is dropped when a player
+  disconnects from the server, only on a pid remap). A player who reconnects
+  gets a new pid, so the old pid's name stayed listed forever, e.g. "Charro"
+  shown three times after three reconnects. Filtered the list — and the tab's
+  player count — through `S._lobbyPids`, the set already kept in sync with
+  `PlayerList` join/leave notifications and used by the ordinary lobby's own
+  players panel (`renderPlayersList` in `pokerth.js`). Regression case added
+  to `test-live-lobby.mjs`.
 - **Guest / registered-account / LAN broadcast notices missing Estonian,
   Latvian and Slovenian** (`web.7`–`8`) — `GUEST_NOTICE_DEFAULT_LANGS`,
   `AUTH_NOTICE_DEFAULT_LANGS` and `LAN_NOTICE_DEFAULT_LANGS` in `proxy.js`

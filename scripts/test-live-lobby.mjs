@@ -129,6 +129,20 @@ host.querySelector('[data-tab="players"]')
   .dispatchEvent(new dom.window.MouseEvent('click', { bubbles: true }));
 check('the players tab lists everyone online',
   /velt/.test(host.textContent) && /gehawe/.test(host.textContent));
+
+// Regression: S.players is a pid->name cache that never drops an entry when
+// a player disconnects (only a pid remap deletes one) — a reconnect under a
+// new pid left the old one behind, showing the same name twice ("3x Charro").
+// S._lobbyPids is the set actually kept in sync with join/leave, so it must
+// gate what renderPlayers() shows.
+window.PthState._lobbyPids = new Set([11, 12, 13]);
+window.PthState.players[999] = 'velt'; // stale pid, same name as 11, no longer online
+host.querySelector('[data-tab="games"]')
+  .dispatchEvent(new dom.window.MouseEvent('click', { bubbles: true }));
+host.querySelector('[data-tab="players"]')
+  .dispatchEvent(new dom.window.MouseEvent('click', { bubbles: true }));
+check('a stale pid cached under an old name is not shown twice',
+  (host.textContent.match(/velt/g) || []).length === 1);
 check('the players tab replaces the table list',
   !host.querySelector('.llb-row'));
 check('each player row carries an avatar chip',

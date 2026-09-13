@@ -95,9 +95,19 @@ function whereIs(pid) {
 function renderPlayers() {
   const S = state();
   const players = S.players || {};
-  const ids = Object.keys(players).sort(function (a, b) {
-    return String(players[a]).toLowerCase() < String(players[b]).toLowerCase() ? -1 : 1;
-  });
+  // S.players is a pid->name cache that only ever grows (see msg-lobby.mjs /
+  // msg-game-join.mjs: no entry is deleted when a player disconnects from the
+  // server, only when a pid is remapped). Enumerating it directly repaints
+  // every name ever seen this session, including reconnects under a new pid
+  // - the "3x Charro" bug. S._lobbyPids is the set actually kept in sync with
+  // PlayerList join/leave notifications (see onPlayerList), exactly what the
+  // ordinary players panel (renderPlayersList in pokerth.js) filters by.
+  const online = S._lobbyPids || null;
+  const ids = Object.keys(players)
+    .filter(function (pid) { return !online || online.has(parseInt(pid, 10)); })
+    .sort(function (a, b) {
+      return String(players[a]).toLowerCase() < String(players[b]).toLowerCase() ? -1 : 1;
+    });
   if (!ids.length) return '<div class="llb-empty">\u2014</div>';
 
   return '<div class="llb-players">' + ids.map(function (pid) {
@@ -191,12 +201,14 @@ function render() {
     const g = p[1];
     return [p[0], g.name, g.mode, g.players, g.maxPlayers, g.type, !!g.priv,
             g.timeout, g.delay, (g.watchers || []).length, (g.seats || []).join(',')];
-  }), [...expanded].sort(), activeTab, Object.keys(S.players || {}).join(',')]);
+  }), [...expanded].sort(), activeTab, S._lobbyPids ? [...S._lobbyPids].sort(function(a,b){return a-b;}).join(',') : Object.keys(S.players || {}).join(',')]);
   if (sig === lastSig) return;
   lastSig = sig;
 
   const nGames = entries.length;
-  const nPlayers = Object.keys(S.players || {}).length;
+  // Same source as the filtered list above, so the tab count and the rows
+  // it labels never disagree.
+  const nPlayers = S._lobbyPids ? S._lobbyPids.size : Object.keys(S.players || {}).length;
   const tabs =
     '<div class="llb-tabs" role="tablist">' +
       '<button type="button" class="llb-tab' + (activeTab === 'games' ? ' on' : '') +
