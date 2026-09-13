@@ -1300,7 +1300,37 @@ var PARTS = {
     faqP: function (h, c) { return "V nobenem načinu ni v igri pravega denarja. Tvoje nastavitve, slogovni paketi in brezpovezavni napredek ostanejo na tvoji napravi. Vmesnik je na voljo v 48 jezikih, pet izrazov za poteze — Fold, Check, Call, Raise, All-In — pa ostane v angleščini, tako kot pri vsaki mizi po svetu. Več v <a href=\"{faq}\">pogostih vprašanjih</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
   },
 
-  af: {
+
+  ms: {
+    title: "Cara Bermain Poker Percuma dalam Talian — PokerTH Web",
+    desc: "Langkah demi langkah: mainkan poker Texas Hold’em secara percuma dalam pelayar anda, tanpa muat turun dan tanpa akaun — luar talian menentang komputer, di rangkaian rasmi pokerth.net atau di meja peribadi bersama rakan.",
+    ldHeadline: "Cara Bermain Poker Texas Hold’em Percuma dalam Pelayar",
+    ldDesc: "Panduan langkah demi langkah untuk bermain Texas Hold’em secara percuma dalam klien web PokerTH.",
+    h1: "Cara Bermain Poker Percuma dalam Talian, Terus dalam Pelayar",
+    lead: function (h, c) { return "Ini versi ringkas: dari tab kosong hingga tangan Texas Hold’em pertama anda dalam PokerTH. Jika anda mencari peraturan sahaja — small dan big blind, pusingan pertaruhan, apa yang mengalahkan apa — mulakan dengan <a href=\"{rules}\">halaman peraturan</a> dan <a href=\"{hands}\">kekuatan kombinasi</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); },
+    steps: [
+      ["Buka Laman — Tiada Apa untuk Dipasang",
+       "PokerTH berjalan dalam pelayar. Tiada muat turun, tiada akaun, tiada plugin. Pada telefon, anda boleh menambahnya ke skrin utama dari menu pelayar; ia kemudian terbuka seperti aplikasi, skrin penuh, dan berfungsi walaupun tanpa sambungan."],
+      ["Pilih Tempat Anda Ingin Bermain",
+       "Tiga cara. <strong>Berlatih luar talian</strong> terus mendudukkan anda di meja dengan lawan komputer dan langsung tidak memerlukan sambungan — di sinilah anda belajar paling banyak. <strong>pokerth.net</strong> adalah rangkaian rasmi: lawan sebenar, papan pendahulu bermusim dan nama panggilan percuma yang anda daftar sekali. <strong>LAN / pelayan khusus</strong> menghubungkan anda ke pelayan PokerTH khusus, milik anda atau orang lain."],
+      ["Duduk di Meja",
+       "Di lobi, anda menyertai meja dari senarai atau mencipta meja sendiri. Semasa mencipta, anda menentukan bilangan kerusi, stack permulaan, seberapa cepat blind meningkat dan sama ada meja mempunyai kata laluan. Kongsi pautan jemputan dan rakan anda terus mendarat di meja anda, dalam pelayar mereka sendiri, tanpa sebarang pendaftaran."],
+      ["Mainkan Tangan",
+       "Anda menerima dua kad tertutup. Pertaruhan berlaku dalam pusingan sebelum flop, kemudian sekali lagi selepas flop, turn dan river. Apabila giliran anda tiba, bar tindakan menyala dan hanya menawarkan apa yang dibenarkan: Fold, Check atau Call, Raise atau All-In. Anda boleh menaip jumlah, menyeretnya dengan penggelangsar atau dengan satu ketukan menetapkannya kepada minimum, separuh pot, keseluruhan pot atau seluruh stack anda."],
+      ["Baca Meja",
+       "Kombinasi terbaik anda pada masa itu dipaparkan di bawah meja semasa kad keluar. Pot, stack setiap pemain dan tahap blind sentiasa berada pada skrin, butang dealer menunjukkan siapa bercakap terakhir, dan pengiraan detik menunjukkan berapa banyak masa yang anda ada. Semasa penunjukan kad, lima kad yang benar-benar membentuk setiap tangan ditonjolkan."],
+      ["Menangi Kejohanan",
+       "Permainan dalam PokerTH ialah kejohanan sit-and-go: semua orang bermula dengan stack yang sama, blind meningkat mengikut jam, dan pemain tersingkir sehingga seorang sahaja tinggal dengan semua cip. Tiada apa yang memerlukan wang dan cip tidak boleh dibeli semula — semuanya wang permainan, jadi hanya permainan itu sendiri yang dipertaruhkan."]
+    ],
+    phoneH2: "Bermain pada Telefon",
+    phoneP: "Meja disesuaikan sama baik untuk skrin sentuh seperti komputer: sentuhan pada medan pertaruhan membuka papan angka dalam bar tindakan dan bukannya papan kekunci sistem, jadi meja tidak pernah melompat, dan penggelangsar bergerak dengan langkah yang sama seperti dalam klien desktop. Pemberitahuan bahawa anda bergilir boleh datang dengan butang Fold dan Check/Call padanya, jadi tangan boleh dimainkan tanpa kembali ke tab.",
+    friendsH2: "Bermain bersama Rakan",
+    friendsP: "Cipta meja, tetapkan kata laluan jika anda ingin ia peribadi, dan hantar pautan jemputan. Ia membuka meja terus — dalam aplikasi yang dipasang jika mereka menambahnya ke skrin utama, jika tidak dalam tab pelayar. Tiada sesiapa perlu memasang apa-apa atau memberikan alamat e-mel.",
+    faqH2: "Soalan Lazim",
+    faqP: function (h, c) { return "Tiada wang sebenar dalam mana-mana mod. Tetapan, pakej gaya dan kemajuan luar talian anda kekal pada peranti anda. Antara muka tersedia dalam 51 bahasa, sementara lima perkataan tindakan — Fold, Check, Call, Raise, All-In — kekal dalam bahasa Inggeris, seperti di setiap meja di dunia. Lebih lanjut dalam <a href=\"{faq}\">soalan lazim</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
+  },
+
+   af: {
     title: "Hoe om gratis aanlyn poker te speel — PokerTH Web",
     desc: "Stap vir stap: speel Texas Hold’em-poker gratis in jou blaaier, sonder aflaai en sonder rekening — vanlyn teen die rekenaar, op die amptelike pokerth.net-netwerk, of aan ’n privaat tafel met vriende.",
     ldHeadline: "Hoe om gratis Texas Hold’em-poker in jou blaaier te speel",

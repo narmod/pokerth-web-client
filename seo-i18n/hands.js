@@ -1676,7 +1676,43 @@ var PARTS = {
     seeP: "Додека играш PokerTH, под масата се испишува името на твојата тековна најдобра рака, така што никогаш не мораш да ја составуваш во главата под временски притисок, а при покажување на картите, секоја откриена рака ги прикажува истакнати точно тие пет карти што навистина важеле. Вежбањето офлајн против компјутерски противници е најбрзиот начин ова да ти влезе во прсти."
   },
 
-  sw: {
+
+  ms: {
+    title: "Kekuatan Kombinasi Poker — Susunan Tangan dalam Texas Hold’em",
+    desc: "Kesemua sepuluh kombinasi poker dalam Texas Hold’em, dari Royal Flush hingga kad tertinggi, dengan contoh, kebarangkalian setiap satu dan peraturan untuk kicker serta tangan seri.",
+    ldHeadline: "Kekuatan Kombinasi Poker — Texas Hold’em",
+    ldDesc: "Sepuluh kombinasi Texas Hold’em mengikut susunan, dengan contoh, kekerapan dan peraturan untuk seri.",
+    h1: "Kekuatan Kombinasi Poker",
+    lead: "Dalam Texas Hold’em, tangan disusun daripada yang paling kuat kepada yang paling lemah begini. Tangan sentiasa terdiri daripada tepat lima kad, dipilih daripada tujuh yang anda lihat: dua kad tertutup anda dan lima kad komuniti. Anda tidak perlu menggunakan kad anda sendiri — jika hanya meja membentuk lima terbaik, itu juga tangan anda.",
+    names: ["Royal Flush", "Straight Flush", "Four of a Kind", "Full House", "Flush", "Straight", "Three of a Kind", "Two Pair", "One Pair", "High Card"],
+    texts: [
+      "A K Q J 10, semua sekad. Tangan terbaik yang mungkin: tidak boleh dikalahkan, hanya boleh seri.",
+      "Lima kad berturutan sekad. Antara dua Straight Flush, yang menang ialah yang mempunyai kad tertinggi.",
+      "Empat kad nilai sama. Kad kelima (kicker) menyelesaikan keadaan jarang apabila kesemua empat berada di atas meja.",
+      "Three of a Kind bersama sepasang. Three of a Kind dibandingkan dahulu, kemudian pasangan.",
+      "Lima kad sekad, tetapi tidak berturutan. Dibandingkan satu demi satu dari atas; tiada satu kad pun lebih kuat daripada yang lain.",
+      "Lima kad berturutan dengan kad bercampur. As bermain tinggi (10-J-Q-K-A) atau rendah (A-2-3-4-5), tidak pernah kedua-duanya serentak.",
+      "Tiga kad nilai sama, ditambah dua kad tidak berkaitan.",
+      "Dua pasangan berbeza ditambah kad kelima. Pasangan lebih tinggi dibandingkan dahulu, kemudian yang lebih rendah, kemudian kicker.",
+      "Dua kad nilai sama ditambah tiga kad tidak berkaitan, yang dibandingkan mengikut susunan.",
+      "Tiada satu pun daripada yang di atas. Kad tertinggi menentukan, kemudian yang seterusnya, dan seterusnya."
+    ],
+    dealt: "berlaku pada %s tangan tujuh kad",
+    tiesH2: "Cara Seri Diselesaikan",
+    tiesP: "Kategori dibandingkan dahulu: mana-mana Flush mengalahkan mana-mana Straight, tidak kira apa kad yang ada. Dalam kategori yang sama, nilai dibandingkan satu demi satu dari atas. Apa yang tinggal selepas kombinasi dibentuk dipanggil <em>kicker</em>, dan ia menentukan lebih banyak tangan daripada yang disangka pemula: di atas meja A-9-4, kedua-dua A♠ K♦ dan A♣ 7♥ menghasilkan sepasang As, tetapi raja mengalahkan tujuh. Dalam Hold’em, kad tidak pernah menyelesaikan seri — dua pemain dengan nilai lima kad yang sama berkongsi pot sehingga cip terakhir.",
+    wrongH2: "Apa yang Paling Sering Disalahfahamkan",
+    wrong: [
+      "As ialah kad tertinggi dan terendah serentak untuk Straight: A-K-Q-J-10 adalah yang terbaik, A-2-3-4-5 (dikenali sebagai <em>wheel</em>) adalah yang paling lemah. Susunan tidak menutup dalam bulatan — Q-K-A-2-3 bukan apa-apa.",
+      "Flush ialah lima kad sekad, bukan empat. Empat kad hati antara tangan anda dan meja dengan sendirinya tidak bernilai apa-apa.",
+      "Three of a Kind yang dibentuk daripada sepasang di tangan dan satu kad di atas meja dipanggil <em>set</em>; yang dibentuk daripada satu kad di tangan dan sepasang di atas meja dipanggil <em>trips</em>. Kedudukan sama, kekuatan sangat berbeza, kerana semua orang nampak trips.",
+      "Hanya lima kad terbaik dikira. Dua pasangan di tangan dan pasangan ketiga di atas meja masih dua pasangan, bukan tiga.",
+      "Peratusan di atas menunjukkan seberapa kerap setiap kombinasi terbentuk langsung sehingga river daripada tujuh kad, bukan seberapa kerap ia menang. Dua pasangan kelihatan biasa namun masih mengalahkan kebanyakan apa yang ditemuinya."
+    ],
+    seeH2: "Cara Melihatnya di Meja",
+    seeP: "Semasa bermain PokerTH, nama kombinasi terbaik anda pada masa itu dipaparkan di bawah meja, jadi anda tidak perlu menyusunnya dalam kepala di bawah tekanan masa, dan semasa penunjukan kad, setiap tangan yang didedahkan menonjolkan tepat lima kad yang benar-benar dikira. Berlatih luar talian menentang lawan komputer adalah cara paling pantas untuk menjadikan susunan ini sebati."
+  },
+
+   sw: {
 
     title: "Mpangilio wa mikono ya poka — daraja la mikono katika Texas Hold’em",
     desc: "Mikono yote kumi ya poka ya Texas Hold’em kuanzia royal flush hadi karata ya juu, ikiwa na mifano, uwezekano wa kila mmoja, na jinsi kicker na sare zinavyoamuliwa.",

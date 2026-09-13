@@ -24,8 +24,10 @@ highlights below.
 - **Macedonian**, full UI catalogue, help corpus, SEO content pages and
   guest/registered/LAN broadcast notices (`web.11`–`12`) — 50 languages
   total.
-- **Malay**, full UI catalogue and help corpus (`web.13`) — 51 languages
-  total. SEO content pages and broadcast notices to follow.
+- **Malay**, full UI catalogue, help corpus, SEO content pages and
+  guest/registered/LAN broadcast notices (`web.13`–`14`) — 51 languages
+  total. This completes the six-language rollout planned on 2026-09-11
+  (et, lv, sl, bs, mk, ms).
 
 ### Fixed
 - **Guest / registered-account / LAN broadcast notices missing Estonian,
