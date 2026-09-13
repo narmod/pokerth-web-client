@@ -16,9 +16,8 @@ release. Per-build detail is on the
 highlights below.
 
 ### Added
-- **Slovenian**, full UI catalogue + help corpus (`web.5`) — 48 languages
-  total. Not yet wired into the language picker's SEO content pages; those
-  land in a follow-up push.
+- **Slovenian**, full UI catalogue, help corpus and SEO content pages
+  (`web.5`–`6`) — 48 languages total.
 - **LAN / dedicated server notice** (`web.2`) — a new operator-authored popup,
   mirroring the guest/registered-account notices, shown once per version to
   everyone connecting in LAN / dedicated-server mode on this instance. Built-in

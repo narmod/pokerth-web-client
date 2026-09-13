@@ -1212,6 +1212,35 @@ var PARTS = {
     faqP: function (h, c) { return "Nevienā režīmā spēlē nav īstas naudas. Tavi iestatījumi, stilu komplekti un bezsaistes progress paliek tavā paša ierīcē. Saskarne ir pieejama 47 valodās, bet pieci darbību vārdi — Fold, Check, Call, Raise, All-In — paliek angliski, tāpat kā pie ikviena galda pasaulē. Vairāk <a href=\"{faq}\">biežāk uzdotajos jautājumos</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
   },
 
+  sl: {
+    title: "Kako igrati brezplačen poker na spletu — PokerTH Web",
+    desc: "Korak za korakom: igraj Texas Hold’em poker brezplačno v svojem brskalniku, brez prenosa in računa — brez povezave proti računalniku, v uradnem omrežju pokerth.net ali za zasebno mizo s prijatelji.",
+    ldHeadline: "Kako igrati brezplačen Texas Hold’em poker v brskalniku",
+    ldDesc: "Vodnik po korakih, kako brezplačno igrati Texas Hold’em v spletnem odjemalcu PokerTH.",
+    h1: "Kako igrati brezplačen poker na spletu, neposredno v brskalniku",
+    lead: function (h, c) { return "To je kratka različica: od praznega zavihka do tvoje prve roke Texas Hold\u2019ema v PokerTH. Če iščeš sama pravila — blinde, kroge stav, kaj kaj premaga — začni raje pri <a href=\"{rules}\">strani s pravili</a> in <a href=\"{hands}\">moči rok</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); },
+    steps: [
+      ["Odpri stran — ni česa namestiti",
+       "PokerTH deluje v brskalniku. Prenosa ni, računa ni, vtičnikov ni. Na telefonu ga lahko iz menija brskalnika dodaš na domači zaslon; nato se odpre kot aplikacija, celozaslonsko, in deluje tudi brez povezave."],
+      ["Izberi, kje želiš igrati",
+       "Trije načini. <strong>Brezpovezavna vadba</strong> te takoj posadi za mizo z računalniškimi nasprotniki in sploh ne potrebuje povezave — tu se največ naučiš. <strong>pokerth.net</strong> je uradno omrežje: prava nasprotnika, sezonske lestvice in brezplačen vzdevek, ki ga registriraš enkrat. <strong>LAN / zasebni strežnik</strong> te poveže z lastnim strežnikom PokerTH — tvojim ali od nekoga drugega."],
+      ["Sedi za mizo",
+       "V predverju se ali pridružiš mizi s seznama ali ustvariš svojo. Pri ustvarjanju določiš število mest, začetne žetone, kako hitro se zvišujejo blindi in ali je za mizo geslo. Deli povabilno povezavo — prijatelj pristane naravnost pri tvoji mizi, v svojem brskalniku, brez kakršne koli registracije."],
+      ["Odigraj roko",
+       "Dobiš dve skriti karti. Stavi se v krogu pred flopom ter znova po flopu, turnu in riverju. Ko prideš na vrsto, se vrstica potez osvetli in ponudi samo tisto, kar je dovoljeno: Fold, Check ali Call, Raise ali All-In. Znesek lahko vtipkaš, povlečeš z drsnikom ali z enim dotikom nastaviš na minimum, polovico banke, celo banko ali vse svoje žetone."],
+      ["Beri mizo",
+       "Ob razkritju kart se pod mizo izpiše tvoja trenutna najboljša kombinacija. Banka, žetoni vsakega igralca in raven blindov so ves čas na zaslonu, gumb delivca pokaže, kdo govori zadnji, časovnik pa, koliko časa ti je še ostalo. Ob prikazu kart so v vsaki razkriti roki poudarjenih tistih pet kart, ki so dejansko štele."],
+      ["Zmagaj turnir",
+       "Igre PokerTH so turnirji sit-and-go: vsi začnejo z enako količino žetonov, blindi se zvišujejo po urniku, igralci pa izpadajo, dokler jih vsi žetoni nima en sam. Nič ne stane denarja in žetonov ni mogoče dokupiti — vse je igralno, tako da je na kocki samo partija sama."]
+    ],
+    phoneH2: "Igranje na telefonu",
+    phoneP: "Miza je enako dobro prilagojena zaslonu na dotik kot računalniku: dotik polja za stavo odpre številčnico v vrstici potez namesto sistemske tipkovnice, tako da miza nikoli ne skoči s svojega mesta, drsnik pa se premika z enakimi koraki kot v namiznem odjemalcu. Obvestila o tvoji potezi lahko pridejo skupaj z gumboma Fold in Check/Call, tako da lahko roko odigraš, ne da bi se vrnil na zavihek.",
+    friendsH2: "Igranje s prijatelji",
+    friendsP: "Ustvari mizo, po želji nastavi geslo, če naj bo zasebna, in pošlji povabilno povezavo. Ta odpre mizo neposredno — v nameščeni aplikaciji, če jo je prijatelj dodal na domači zaslon, sicer v zavihku brskalnika. Nikomur ni treba ničesar namestiti ali pustiti e-poštnega naslova.",
+    faqH2: "Pogosta vprašanja",
+    faqP: function (h, c) { return "V nobenem načinu ni v igri pravega denarja. Tvoje nastavitve, slogovni paketi in brezpovezavni napredek ostanejo na tvoji napravi. Vmesnik je na voljo v 48 jezikih, pet izrazov za poteze — Fold, Check, Call, Raise, All-In — pa ostane v angleščini, tako kot pri vsaki mizi po svetu. Več v <a href=\"{faq}\">pogostih vprašanjih</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
+  },
+
   af: {
     title: "Hoe om gratis aanlyn poker te speel — PokerTH Web",
     desc: "Stap vir stap: speel Texas Hold’em-poker gratis in jou blaaier, sonder aflaai en sonder rekening — vanlyn teen die rekenaar, op die amptelike pokerth.net-netwerk, of aan ’n privaat tafel met vriende.",

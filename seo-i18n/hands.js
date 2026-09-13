@@ -1571,6 +1571,41 @@ var PARTS = {
     seeP: "Spēlējot PokerTH, tavas pašreizējās labākās kombinācijas nosaukums tiek rakstīts zem galda, tāpēc to nekad nav jāsaliek galvā laika spiedienā, un kāršu atklāšanā katrā parādītajā kombinācijā tiek izceltas tieši tās piecas kārtis, kas patiešām skaitījās. Bezsaistes treniņš pret datora pretiniekiem ir ātrākais veids, kā šo secību iegaumēt."
   },
 
+  sl: {
+    title: "Moč pokrskih rok — uvrstitev rok v Texas Hold\u2019emu",
+    desc: "Vseh deset pokrskih rok Texas Hold\u2019ema, od kraljevega flusha do najvišje karte, s primeri, verjetnostjo vsake roke ter pravili za kicker in izenačenja.",
+    ldHeadline: "Moč pokrskih rok — Texas Hold\u2019em",
+    ldDesc: "Deset rok Texas Hold\u2019ema po vrsti, s primeri, pogostostjo in pravili za izenačenja.",
+    h1: "Moč pokrskih rok",
+    lead: "V Texas Hold\u2019emu se roke razvrstijo od najmočnejše do najšibkejše takole. Roka je vedno sestavljena natanko iz petih kart, izbranih med sedmimi vidnimi: tvojima dvema skritima kartama in petimi skupnimi kartami. Svojih kart ti sploh ni treba uporabiti — če najboljših pet kart pride samo z mize, je to tudi tvoja roka.",
+    names: ["Royal Flush", "Straight Flush", "Kare", "Full House", "Flush", "Straight", "Trojka", "Dva para", "En par", "Visoka karta"],
+    texts: [
+      "A K Q J 10, vse iste barve. Najboljša možna roka: ni je mogoče premagati, lahko se ji le izenačiš.",
+      "Pet zaporednih kart iste barve. Med dvema straight flushema zmaga tisti z višjo zgornjo karto.",
+      "Štiri karte iste vrednosti. Peta karta (kicker) redko odloči izenačenje, kadar so vse štiri na mizi.",
+      "Trojka skupaj s parom. Najprej se primerja trojka, nato par.",
+      "Pet kart iste barve, ki niso zaporedne. Primerjajo se ena za drugo od najvišje naprej; nobena barva ni višja od druge.",
+      "Pet zaporednih kart različnih barv. As šteje zgoraj (10-J-Q-K-A) ali spodaj (A-2-3-4-5), nikoli na obeh straneh hkrati.",
+      "Tri karte iste vrednosti in dve nepovezani karti.",
+      "Dva različna para in peta karta. Najprej se primerja višji par, nato nižji, nato kicker.",
+      "Dve karti iste vrednosti in tri nepovezane karte, ki se primerjajo po vrsti.",
+      "Nič od naštetega. Odloča najvišja karta, nato naslednja in tako naprej."
+    ],
+    dealt: "se pojavi pri %s sedemkartnih rok",
+    tiesH2: "Kako se rešujejo izenačenja",
+    tiesP: "Najprej se primerja kategorija: vsaka barva premaga vsak straight, ne glede na to, katere karte vsebuje. Znotraj iste kategorije se moč primerja karto za karto od zgoraj navzdol. Tisto, kar ostane po sestavljeni kombinaciji, se imenuje <em>kicker</em>, in ta odloča veliko več rok, kot mislijo začetniki: pri A-9-4 na mizi dasta A♠ K♦ in A♣ 7♥ oba par asov, a kralj premaga sedmico. V Hold\u2019emu barve nikoli ne rešijo izenačenja — dva igralca z enako močno roko si banko delita do zadnjega žetona.",
+    wrongH2: "Kaj se najpogosteje narobe razume",
+    wrong: [
+      "As je za straight hkrati najvišja in najnižja karta: A-K-Q-J-10 je najboljši, A-2-3-4-5 (t. i. <em>wheel</em>) pa najšibkejši. Zaporedje se ne zaokroži v krog — Q-K-A-2-3 ni nič.",
+      "Flush je pet kart iste barve, ne štiri. Štiri srca v tvoji roki in na mizi skupaj sama po sebi niso vredna nič.",
+      "Trojka, sestavljena iz para v roki in ene karte na mizi, se imenuje <em>set</em>; trojka, sestavljena iz ene karte v roki in para na mizi, pa <em>trips</em>. Enako mesto v uvrstitvi, povsem druga moč, saj vsi vidijo trips.",
+      "Šteje samo pet najboljših kart. Dva para v roki in tretji par na mizi sta še vedno dva para, ne trije.",
+      "Zgornji odstotki kažejo, kako pogosto se posamezna kombinacija sploh pojavi med sedmimi kartami do rivera, ne kako pogosto zmaga. Dva para se zdita vsakdanja, a vseeno premagata večino tega, kar srečata."
+    ],
+    seeH2: "Kako to vidiš pri mizi",
+    seeP: "Med igro PokerTH se pod mizo izpiše ime tvoje trenutno najboljše roke, tako da je nikoli ni treba sestavljati na pamet pod časovnim pritiskom, ob razkritju kart pa je v vsaki prikazani roki poudarjenih točno tistih pet kart, ki so dejansko štele. Brezpovezavna vadba proti računalniškim nasprotnikom je najhitrejši način, da si to zapomniš."
+  },
+
   sw: {
     title: "Mpangilio wa mikono ya poka — daraja la mikono katika Texas Hold’em",
     desc: "Mikono yote kumi ya poka ya Texas Hold’em kuanzia royal flush hadi karata ya juu, ikiwa na mifano, uwezekano wa kila mmoja, na jinsi kicker na sare zinavyoamuliwa.",
