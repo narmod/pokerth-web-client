@@ -2790,6 +2790,70 @@ window.maybeShowAuthNotice = maybeShowAuthNotice;
 window.showAuthNoticeModal = showAuthNoticeModal;
 window.hideAuthNoticeModal = hideAuthNoticeModal;
 
+// ── LAN / dedicated server notice (LAN / dedicated connections, every connection) ──
+// Mirror of the guest/auth notices above, shown to everyone connecting in LAN
+// or dedicated-server mode on this instance (not offline, not pokerth.net).
+// Config arrives from /app-config as c.lanNotice and waits in window._lanNoticeCfg.
+function hideLanNoticeModal() { var el = document.getElementById('lannotice-modal'); if (el) el.remove(); }
+function showLanNoticeModal(title, body, version) {
+  hideLanNoticeModal();
+  var back = document.createElement('div');
+  back.id = 'lannotice-modal';
+  back.style.cssText = 'position:fixed;inset:0;z-index:10001;display:flex;align-items:center;justify-content:center;padding:18px;background:rgba(0,0,0,.62);backdrop-filter:blur(2px);';
+  var card = document.createElement('div');
+  card.style.cssText = 'max-width:480px;width:100%;max-height:84vh;display:flex;flex-direction:column;background:var(--modal-bg);color:var(--text);border:1px solid var(--border);border-radius:16px;box-shadow:0 18px 50px rgba(0,0,0,.6);overflow:hidden;';
+  if (title) {
+    var h = document.createElement('div');
+    h.textContent = title;
+    h.style.cssText = "padding:16px 20px;font-family:var(--ff-display);font-weight:700;font-size:1.15rem;color:var(--text-hi);border-bottom:1px solid var(--border);";
+    card.appendChild(h);
+  }
+  var p = document.createElement('div');
+  p.innerHTML = _linkifyAnnounce(body || '');
+  p.style.cssText = 'padding:16px 20px;overflow:auto;white-space:pre-line;line-height:1.55;font-size:.95rem;';
+  card.appendChild(p);
+  var foot = document.createElement('div');
+  foot.style.cssText = 'padding:12px 20px 16px;display:flex;justify-content:flex-end;border-top:1px solid var(--border);';
+  var btn = document.createElement('button');
+  btn.textContent = (typeof window.t === 'function' ? window.t('welcomeAck') : '') || 'I understand';
+  btn.style.cssText = 'padding:9px 18px;border-radius:10px;border:0;cursor:pointer;font-weight:700;background:var(--gold);color:var(--on-gold);';
+  // Acquittement local uniquement (pas de compte lie a un serveur LAN) :
+  // meme logique que le guest notice, la version (updatedAt) memorisee.
+  btn.addEventListener('click', function () { try { localStorage.setItem('pth_lannotice_seen', String(version)); } catch (e) {} hideLanNoticeModal(); });
+  foot.appendChild(btn);
+  card.appendChild(foot);
+  back.appendChild(card);
+  document.body.appendChild(back);
+}
+function maybeShowLanNotice() {
+  if (window.LIVE_MODE) return;
+  var g = window._lanNoticeCfg;
+  if (!g || !g.enabled) return;
+  try { if ((parseInt(localStorage.getItem('pth_lannotice_seen'), 10) || -1) >= (Number(g.updatedAt) || 0)) return; } catch (e) {}
+  if (window._offlineMode) return;                                   // training never shows it
+  if (!(typeof window._amLanMode === 'function' && window._amLanMode())) return; // LAN / dedicated only
+  var c = _welcomeChoose(g);
+  if (!c || (!c.title && !c.body)) return;
+  showLanNoticeModal(c.title, c.body, g.updatedAt || 0);
+  if (!c.exact) {
+    var target = (typeof _lang !== 'undefined' && _lang) ? _lang : c.lang;
+    _translateEntry(c.title, c.body, c.lang, target).then(function (tr) {
+      if (tr && (tr.title || tr.body)) {
+        if (document.getElementById('lannotice-modal')) showLanNoticeModal(tr.title || c.title, tr.body || c.body, g.updatedAt || 0);
+        return;
+      }
+      return _gtxAuto(c.title).then(function (tt) {
+        return _gtxAuto(c.body).then(function (tb) {
+          if ((tt || tb) && document.getElementById('lannotice-modal')) showLanNoticeModal(tt || c.title, tb || c.body, g.updatedAt || 0);
+        });
+      });
+    }).catch(function () {});
+  }
+}
+window.maybeShowLanNotice = maybeShowLanNotice;
+window.showLanNoticeModal = showLanNoticeModal;
+window.hideLanNoticeModal = hideLanNoticeModal;
+
 
 // Rafraîchit immédiatement l'avatar du joueur local dans l'UI
 window.refreshMyAvatar = function() {
@@ -3998,7 +4062,7 @@ document.addEventListener("DOMContentLoaded", function() {
     function go() {
       fetch('/app-config', { cache: 'no-store' })
         .then(function (r) { return r.json(); })
-        .then(function (c) { if (c) { window._pthNetServer = (c.pokerthnetServer && c.pokerthnetServer.host) ? c.pokerthnetServer : null; window._pthNetSource = (c.pokerthnetSource === 'auto') ? 'auto' : 'manual'; window._pthNetTransport = (c.internetTransport === 'proxy') ? 'proxy' : 'direct'; window._pthLiveTransport = (c.liveTransport === 'proxy' || c.liveTransport === 'direct') ? c.liveTransport : 'inherit'; window._pthLiveDefaults = c.liveDefaults || null; } if (c && c.modes) applyModes(c.modes); if (c) _applyMusicFlag(c.musicEnabled !== false); if (c && c.loginDefaults) _applyLoginDefaults(c.loginDefaults); if (c && c.welcome && c.welcome.enabled && typeof window.maybeShowWelcome === 'function') window.maybeShowWelcome(c.welcome); window._guestNoticeCfg = (c && c.guestNotice) || null; window._authNoticeCfg = (c && c.authNotice) || null; if (typeof window._pollSetConfig === 'function') window._pollSetConfig(c && c.poll); if (c) { var _lvT = (window.LIVE_MODE && c.liveDefaults && c.liveDefaults.theme) ? c.liveDefaults.theme : null; if (_lvT) _applyDefaultTheme(_lvT); else if (typeof c.defaultTheme === 'string') _applyDefaultTheme(c.defaultTheme); } if (c && typeof c.showLoginTitle === 'boolean') { try { document.body.classList.toggle('adv-show-title', c.showLoginTitle); } catch (e) {} } if (c && c.defaults) _applyDefaultSettings(c.defaults); if (c && Array.isArray(c.featureOff)) _applyFeatureOff(c.featureOff); _applyBranding(c); try { if (!window._shareLinkActive && window.App && App.onServerOrGuestChange) App.onServerOrGuestChange(); } catch (e) {} })
+        .then(function (c) { if (c) { window._pthNetServer = (c.pokerthnetServer && c.pokerthnetServer.host) ? c.pokerthnetServer : null; window._pthNetSource = (c.pokerthnetSource === 'auto') ? 'auto' : 'manual'; window._pthNetTransport = (c.internetTransport === 'proxy') ? 'proxy' : 'direct'; window._pthLiveTransport = (c.liveTransport === 'proxy' || c.liveTransport === 'direct') ? c.liveTransport : 'inherit'; window._pthLiveDefaults = c.liveDefaults || null; } if (c && c.modes) applyModes(c.modes); if (c) _applyMusicFlag(c.musicEnabled !== false); if (c && c.loginDefaults) _applyLoginDefaults(c.loginDefaults); if (c && c.welcome && c.welcome.enabled && typeof window.maybeShowWelcome === 'function') window.maybeShowWelcome(c.welcome); window._guestNoticeCfg = (c && c.guestNotice) || null; window._authNoticeCfg = (c && c.authNotice) || null; window._lanNoticeCfg = (c && c.lanNotice) || null; if (typeof window._pollSetConfig === 'function') window._pollSetConfig(c && c.poll); if (c) { var _lvT = (window.LIVE_MODE && c.liveDefaults && c.liveDefaults.theme) ? c.liveDefaults.theme : null; if (_lvT) _applyDefaultTheme(_lvT); else if (typeof c.defaultTheme === 'string') _applyDefaultTheme(c.defaultTheme); } if (c && typeof c.showLoginTitle === 'boolean') { try { document.body.classList.toggle('adv-show-title', c.showLoginTitle); } catch (e) {} } if (c && c.defaults) _applyDefaultSettings(c.defaults); if (c && Array.isArray(c.featureOff)) _applyFeatureOff(c.featureOff); _applyBranding(c); try { if (!window._shareLinkActive && window.App && App.onServerOrGuestChange) App.onServerOrGuestChange(); } catch (e) {} })
         .catch(function () {});
     }
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', go); else go();
@@ -5486,6 +5550,13 @@ const App = (() => {
   // utilise par la notice operateur des comptes enregistres.)
   window._amAuthMode = function () {
     try { return S._currentLoginMode === 'auth'; } catch (e) { return false; }
+  };
+  // Suis-je en LAN / serveur dedie ? Ni offline (entrainement), ni pokerth.net
+  // (guest/auth) -> tout le reste est LAN/dedicated (meme mapping que
+  // _adminNameForMode). Utilise par la notice LAN operateur.
+  window._amLanMode = function () {
+    try { return !window._offlineMode && S._currentLoginMode !== 'guest' && S._currentLoginMode !== 'auth'; }
+    catch (e) { return false; }
   };
   window._chatNicks = function (gameScope) {
     try {
@@ -11618,7 +11689,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.9-web.1'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.9-web.2'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif ou la palette High contrast
    (Android, Safari, iOS standalone récent). Lit --theme-color et met

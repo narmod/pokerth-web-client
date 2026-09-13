@@ -15,6 +15,16 @@ release. Per-build detail is on the
 [GitHub Releases](https://github.com/narmod/pokerth-web-client/releases) page;
 highlights below.
 
+### Added
+- **LAN / dedicated server notice** (`web.2`) — a new operator-authored popup,
+  mirroring the guest/registered-account notices, shown once per version to
+  everyone connecting in LAN / dedicated-server mode on this instance. Built-in
+  English default text (translated into all 45 client languages, same overlay
+  mechanism as the other two notices) explains that this instance only dials a
+  single pre-configured LAN server and points players toward self-hosting the
+  client for any other address. Disabled by default; enable and edit under
+  Admin → Broadcasts → "LAN / dedicated server notice".
+
 ### Fixed
 - **Silent avatar-upload failures** (`web.1`, parity with upstream `665d80a`)
   — the file picker (`_processAvatarFile`) already warned on an unusable

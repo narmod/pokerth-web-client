@@ -1071,6 +1071,22 @@
         <div id="gwState" class="msg"></div>
       </div>
       <div class="card" data-master="1">
+        <h2>LAN / dedicated server notice</h2>
+        <p class="muted">Shown in a centered popup when someone connects in LAN / dedicated-server mode on this instance (not offline, not Internet/PokerTH.net) &mdash; typically to explain that this instance only dials one operator-configured LAN server, and to point players toward self-hosting for any other address. Once dismissed with &ldquo;I understand&rdquo; it stays hidden on that device until you edit the message. Each player sees the version matching their language (fallback below; missing languages are auto-translated on the client). A built-in English text (shown pre-filled below) is used until you save your own.</p>
+        <label class="muted" style="display:flex;align-items:center;gap:8px;margin:0 0 8px"><input type="checkbox" id="lwEnabled" style="width:auto"> Enabled</label>
+        <div class="periodrow" style="margin-bottom:8px">
+          <label class="muted">Edit language <select id="lwLang" class="filter" style="margin:0;flex:none;width:auto"></select></label>
+          <label class="muted">Fallback <select id="lwDefault" class="filter" style="margin:0;flex:none;width:auto"></select></label>
+        </div>
+        <div id="lwFilled" class="muted" style="margin:0 0 8px;font-size:.8rem"></div>
+        <input id="lwTitle" class="filter" maxlength="200" placeholder="Title (optional)" style="width:100%;margin-bottom:8px">
+        <textarea id="lwBody" class="filter" rows="5" maxlength="4000" placeholder="Message for LAN / dedicated players in this language&hellip;" style="width:100%;resize:vertical"></textarea>
+        <div class="muted" style="font-size:.78rem;margin-top:4px">Tip: paste a URL, or write <code>[label](https://example.com)</code> for a clickable link (opens in a new tab).</div>
+        <div id="lwPrev"></div>
+        <div class="periodrow" style="margin-top:8px"><button id="lwSave" class="use">Save LAN notice</button></div>
+        <div id="lwState" class="msg"></div>
+      </div>
+      <div class="card" data-master="1">
         <h2>Registered-account notice (pokerth.net internet mode)</h2>
         <p class="muted">The mirror of the guest notice above, for players who log in <b>with a registered account</b> in Internet / PokerTH.net mode. Once dismissed with &ldquo;I understand&rdquo; it stays hidden &mdash; the acknowledgement follows the account across devices &mdash; until you edit the message. Each player sees the version matching their language (fallback below; missing languages are auto-translated on the client). A built-in English text (shown pre-filled below) is used until you save your own; players dismiss it with &ldquo;I understand&rdquo;.</p>
         <label class="muted" style="display:flex;align-items:center;gap:8px;margin:0 0 8px"><input type="checkbox" id="awEnabled" style="width:auto"> Enabled</label>
@@ -1889,7 +1905,7 @@
     if(t==='traffic') loadTraffic();
     if(t==='servers') loadServers();
     if(t==='polls') loadPolls();
-    if(t==='broadcast'){ loadBroadcasts(); if(_isMaster){ loadWelcome(); loadGuestNotice(); loadAuthNotice(); } }
+    if(t==='broadcast'){ loadBroadcasts(); if(_isMaster){ loadWelcome(); loadGuestNotice(); loadAuthNotice(); loadLanNotice(); } }
     if(t==='clients'){ loadStatus(true); loadThemes(); loadFeatureSwitches(); }
     if(t==='sessions'){ seStart(); } else { seStop(); }
     if(t==='errors') loadErrors();
@@ -4317,6 +4333,33 @@
   ['awTitle','awBody'].forEach(function(id){ if($(id)) $(id).addEventListener('input',function(){ awCommit(); awPreview(); awUpdateFilled(); }); });
   if($('awSave')) $('awSave').addEventListener('click',saveAuthNotice);
 
+  // ── LAN / dedicated server notice (LAN / dedicated connections, every connection) ─
+  // Mirror of the guest/auth notices above; posts the 'lanNotice' key. Default
+  // fallback language is English (built-in default text ships in English).
+  var lanNoticeState={ enabled:false, 'default':'en', langs:{} };
+  var lwEdit='en';
+  (function(){ var a=$('lwLang'), b=$('lwDefault'); if(a&&b){ WC_LANGS.forEach(function(c){ var o1=document.createElement('option'); o1.value=c; o1.textContent=c; a.appendChild(o1); var o2=document.createElement('option'); o2.value=c; o2.textContent=c; b.appendChild(o2); }); a.value='en'; b.value='en'; } })();
+  function lwFilledList(){ return Object.keys(lanNoticeState.langs); }
+  function lwUpdateFilled(){ var el=$('lwFilled'); if(!el) return; var f=lwFilledList(); el.textContent = f.length ? ('Filled languages: '+f.join(', ')) : 'No language filled yet.'; }
+  function lwCommit(){ var t=($('lwTitle').value||''), b=($('lwBody').value||''); if(t.trim()||b.trim()) lanNoticeState.langs[lwEdit]={title:t,body:b}; else delete lanNoticeState.langs[lwEdit]; }
+  function lwShow(code){ lwEdit=code; if($('lwLang')) $('lwLang').value=code; var v=lanNoticeState.langs[code]||{}; $('lwTitle').value=v.title||''; $('lwBody').value=v.body||''; lwPreview(); lwUpdateFilled(); }
+  function lwPreview(){ var el=$('lwPrev'); if(!el) return; var t=($('lwTitle').value||'').trim(), b=($('lwBody').value||'').trim();
+    if(!t&&!b){ el.style.cssText='display:none'; el.textContent=''; return; }
+    el.textContent=''; el.style.cssText='display:block;margin-top:8px;max-width:440px;background:#1c1812;border:1px solid rgba(200,168,74,.5);border-radius:14px;overflow:hidden';
+    if(t){ var h=document.createElement('div'); h.textContent=t; h.style.cssText='padding:12px 16px;font-weight:700;color:#e0c070;border-bottom:1px solid rgba(200,168,74,.25)'; el.appendChild(h); }
+    var p=document.createElement('div'); p.innerHTML=annLinkify(b); p.style.cssText='padding:12px 16px;white-space:pre-line;line-height:1.5;color:#efe6d2;font-size:.9rem'; el.appendChild(p);
+  }
+  function lwInitialLang(){ var d=lanNoticeState['default']||'en'; if(lanNoticeState.langs[d]) return d; var f=lwFilledList(); return f.length ? f[0] : d; }
+  function loadLanNotice(){ api('/admin/config').then(function(r){return r.json();}).then(function(d){ if(!d||!d.ok||!d.lanNotice) return; lanNoticeState={ enabled:!!d.lanNotice.enabled, 'default':d.lanNotice['default']||'en', langs:d.lanNotice.langs||{} }; if($('lwEnabled')) $('lwEnabled').checked=lanNoticeState.enabled; if($('lwDefault')) $('lwDefault').value=lanNoticeState['default']; lwShow(lwInitialLang()); }).catch(function(){}); }
+  function saveLanNotice(){ lwCommit(); var body={ lanNotice:{ enabled:$('lwEnabled').checked, 'default':$('lwDefault').value, langs:lanNoticeState.langs }, token:tok() };
+    bcSay('lwState','Saving\u2026');
+    api('/admin/config',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)})
+      .then(function(r){return r.json();}).then(function(d){ if(d&&d.ok){ bcSay('lwState','Saved \u2014 LAN / dedicated players will see it on their next connection.','ok'); if(d.lanNotice){ lanNoticeState={ enabled:!!d.lanNotice.enabled, 'default':d.lanNotice['default']||'en', langs:d.lanNotice.langs||{} }; lwUpdateFilled(); } } else bcSay('lwState','Failed: '+((d&&d.error)||'error'),'err'); })
+      .catch(function(){ bcSay('lwState','Network error.','err'); }); }
+  if($('lwLang')) $('lwLang').addEventListener('change', function(){ lwCommit(); lwShow($('lwLang').value); });
+  ['lwTitle','lwBody'].forEach(function(id){ if($(id)) $(id).addEventListener('input',function(){ lwCommit(); lwPreview(); lwUpdateFilled(); }); });
+  if($('lwSave')) $('lwSave').addEventListener('click',saveLanNotice);
+
   // ── Product polls (web-only feature) ────────────────────────────────────
   // Same multilingual editor shape as the welcome message above: one draft kept
   // in memory, the visible fields committed into the language being edited
@@ -4445,7 +4488,7 @@
     var STORE='pth_admin_collapsed', saved=null;
     try{ saved=JSON.parse(localStorage.getItem(STORE)||'null'); }catch(e){}
     var state = saved || {}, firstRun = !saved;
-    var DEFAULT_FOLDED = ['In-game settings','Schedule a restart','Schedule a recurring message','Welcome / rules message','Guest notice (pokerth.net internet mode)','Registered-account notice (pokerth.net internet mode)'];
+    var DEFAULT_FOLDED = ['In-game settings','Schedule a restart','Schedule a recurring message','Welcome / rules message','Guest notice (pokerth.net internet mode)','Registered-account notice (pokerth.net internet mode)','LAN / dedicated server notice'];
     function slug(s){ return (s||'').trim().replace(/[^a-z0-9]+/gi,'_').replace(/^_+|_+$/g,'').toLowerCase().slice(0,48); }
     document.querySelectorAll('.card').forEach(function(card){
       var h2s = card.querySelectorAll('h2');

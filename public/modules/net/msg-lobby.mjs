@@ -245,6 +245,9 @@ function onInitAck(sub) {
     // Registered-account notice: same trigger, gated on the auth login mode
     // inside the function itself (at most one of the two modals can match).
     try { if (window.maybeShowAuthNotice) window.maybeShowAuthNotice(); } catch (eAw) {}
+    // LAN / dedicated server notice: same trigger, gated on LAN/dedicated mode
+    // inside the function itself (see window._amLanMode).
+    try { if (window.maybeShowLanNotice) window.maybeShowLanNotice(); } catch (eLw) {}
     // Demander la permission pour les notifications
     if ('Notification' in window && Notification.permission === 'default') {
       Notification.requestPermission().catch(function(){});
