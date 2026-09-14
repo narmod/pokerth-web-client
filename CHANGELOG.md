@@ -62,6 +62,11 @@ highlights below.
 
 ### Fixed
 
+- The interface-language count quoted in the help corpus, the public
+  glossary / how-to pages, the FAQ, the SEO description and `llms.txt` had
+  drifted (45 to 54 depending on when each language was added); every
+  mention now says 55, in the numeral system of each language (`web.42`).
+
 - **Lobby chat mute button (`web.37`) was hidden by its own CSS selector**
   (`web.38`, reported by narmod) — `#lobby-chat-panel .g-chat-panel-header
   button[onclick*="toggleLobbyChat"]` used a substring match meant to hide

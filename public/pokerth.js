@@ -2154,7 +2154,7 @@ window._chatTranslate = function (btn) {
     // Parite QML 69ec0824 (postFailureNote) : sans note, la sanduhr clignote
     // et il ne se passe rien — indiscernable d'une fonction cassee. Throttle
     // 60 s pour que plusieurs clics pendant la panne ne repetent pas le
-    // meme message. Cle existante (deja traduite en 47 langues).
+    // meme message. Cle existante (deja traduite en 55 langues).
     try {
       var _now = Date.now();
       if (!window._trFailNoteAt || (_now - window._trFailNoteAt) >= 60000) {
@@ -11720,7 +11720,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.9-web.41'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.9-web.42'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif ou la palette High contrast
    (Android, Safari, iOS standalone récent). Lit --theme-color et met
