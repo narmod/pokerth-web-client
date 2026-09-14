@@ -5149,9 +5149,17 @@ async function dbClearTraffic() {
 }
 initDb();
 
-function readJsonBody(req, cb) {
+function readJsonBody(req, cb, maxLen) {
+  // Default 16 KB cap: fine for the many small, untrusted-input endpoints
+  // (chat, votes, table names…). A couple of admin-only endpoints pass a
+  // higher maxLen because their payloads legitimately grow with content —
+  // multilingual notices (54 languages) or a full config export/import.
+  // Past the cap the socket is destroyed with no response, which the browser
+  // reports as a bare network error rather than a readable 4xx — keep limits
+  // generous enough that trusted admin payloads never hit this path.
+  const limit = maxLen || 16384;
   let body = '';
-  req.on('data', function (c) { body += c; if (body.length > 16384) req.destroy(); });
+  req.on('data', function (c) { body += c; if (body.length > limit) req.destroy(); });
   req.on('end', function () {
     let p; try { p = JSON.parse(body || '{}'); } catch (e) { return cb(null); }
     // Le jeton voyage tantôt en requête, tantôt dans le corps. On garde le corps
@@ -6814,7 +6822,7 @@ function handleAdmin(req, res, reqPathOnly, query) {
         }
         saveAdminConfig();
         return adminJson(res, 200, { ok: true, resetPeriod: STATS_RESET_PERIOD, modes: appModes(), welcome: _welcomeAdmin(), guestNotice: _guestNoticeAdmin(), authNotice: _authNoticeAdmin(), lanNotice: _lanNoticeAdmin(), showLoginTitle: !!_adminConfig.showLoginTitle, defaultTheme: _adminConfig.defaultTheme, liveDefaults: _liveDefaults() || '', defaults: _adminConfig.defaults || {}, loginDefaults: _loginDefaults(false), proxyCfg: _adminConfig.proxyCfg || {}, tableDefaults: _adminConfig.tableDefaults || {}, tableNames: _adminConfig.tableNames || {}, serverName: _adminConfig.serverName || '', serverTagline: _adminConfig.serverTagline || '', discordChatWebhookUrl: _adminConfig.discordChatWebhookUrl || '', featureSwitches: FEATURE_SWITCHES, featureOff: featureOffList(), liveStats: _liveStatsCfg(), musicEnabled: musicEnabled(), seo: _seoAdmin() });
-      });
+      }, 2 * 1024 * 1024);
     }
     res.writeHead(405); res.end('Method not allowed'); return;
   }
@@ -7535,7 +7543,7 @@ function handleAdmin(req, res, reqPathOnly, query) {
       }
       console.log('[admin] configuration imported (' + taken.length + ' setting(s), ' + skipped.length + ' ignored)');
       return adminJson(res, 200, { ok: true, imported: taken, ignored: skipped });
-    });
+    }, 8 * 1024 * 1024);
   }
   // ── IP bloquées / bannies (clé maître uniquement) ──────────────────
   if (reqPathOnly === '/admin/blocked') {
