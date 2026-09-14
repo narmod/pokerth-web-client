@@ -370,6 +370,13 @@ has been continuous fidelity tuning against each new upstream build:
 - Installable on mobile and desktop ("Add to Home Screen")
 - ⚠️ **Offline needs HTTPS.** A Service Worker — and therefore the offline cache — only registers over **HTTPS** or `localhost`. On a plain `http://` server the game still works online, but there is **no offline cache** (an installed PWA then shows the browser's "no internet" error offline). Serve the app over `https://` to play Training mode with no connection
 
+### Spectator embed (`/live`)
+A separate, standalone entry point built for embedding: a guest-only, read-only view (table list → Spectate) that reuses this client's own table rendering, so every table/theming improvement is inherited automatically. It replaces the legacy standalone `pokerth-live` tool. On the official deployment it is what [pokerth.net](https://www.pokerth.net/app.php/spectool) embeds for its Live-/Spectator-Tool page.
+- Visited directly, `/live` is a full standalone page; add `?embed=1` for iframe use — see [Embedding the spectator view on the website](docs/INSTALL_POKERTH_NET.md#embedding-the-spectator-view-on-the-website)
+- No service worker, no offline cache, no backup/export features, and a namespaced `localStorage` (`/live-storage.js`) so it never reads or writes the web client's own settings
+- Its own transport setting in the admin panel, independent from the Internet mode's (an install running beside the game server and one running on a separate machine rarely want the same answer)
+- Visits and connections from `/live` are tracked apart from the web client's own traffic figures in the admin **Traffic** tab
+
 ---
 
 <a id="login-modes-transport"></a>
@@ -453,7 +460,9 @@ pokerth-web-client/
 │   ├── sw.js                # Service Worker (versioned cache)
 │   ├── ChangeLog-web        # Player-facing changelog (About → Changelog tab)
 │   ├── ChangeLog            # Upstream PokerTH changelog, shown next to it
+│   ├── live-storage.js      # Namespaced localStorage shim, injected for /live only
 │   ├── modules/             # ES modules
+│   │   ├── live/                    /live embedded spectator mode (guest-only, read-only)
 │   │   ├── i18n.mjs                 internationalisation (54 languages)
 │   │   ├── theme.mjs                theming engine (tables, decks, card backs, seats)
 │   │   ├── sounds.mjs · music.mjs   sound effects · background-music player
@@ -507,6 +516,7 @@ pokerth-web-client/
 | Method | Path | Purpose |
 |---|---|---|
 | `GET` | `/` | Web client |
+| `GET` | `/live` | Standalone embedded spectator client — read-only, guest-only (`?embed=1` for iframe use); see [Spectator embed](#spectator-embed-live) above and [the embedding guide](docs/INSTALL_POKERTH_NET.md#embedding-the-spectator-view-on-the-website) |
 | `GET` | `/studio` | Style studio — the design tool for decks, tables, themes and seat packs |
 | `GET` | `/privacy` | Privacy page (what the analytics do and don't collect) |
 | `GET` | `/faq` · `/rules` · `/how-to-play` · `/hand-rankings` · `/glossary` | Server-rendered content pages, localised and linked from the sitemap |
