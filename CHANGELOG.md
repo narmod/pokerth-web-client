@@ -67,6 +67,15 @@ highlights below.
 
 ### Fixed
 
+- **Community-card row didn't group Flop/Turn/River like the QML client,
+  and the pot badge used a hand-drawn circle instead of the chipStack.svg
+  icon** (reported by narmod, side-by-side screenshots) — the QML source
+  (extracted from the 2.1.9 AppImage) lays the 5 board slots out as
+  `Flop(0-2) | 14px gap | Turn(3) | 14px gap | River(4)`; the web row only
+  had a uniform 3px gap. The pot badge's icon is now the same
+  `chipStack.svg` already used for each player's bet chip, sized to match
+  the QML original (14px base) (`web.45`).
+
 - **Seat/board geometry could inherit a previous game's player count**
   (reported by narmod, screenshots QML vs web at 4 and 10 players) —
   `S._peakSeatCount` (parity with QML `_peakSeatCount`, used to keep box
