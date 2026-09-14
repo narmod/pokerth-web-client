@@ -486,7 +486,7 @@ export const strings = {
     footPlayer:'ਖਿਡਾਰੀ', footCreate:'＋ ਟੇਬਲ ਬਣਾਓ', gameInfoTitle:'ਖੇਡ ਜਾਣਕਾਰੀ', gameInfoEmpty:'ਟੇਬਲ ਚੁਣੋ',
     gfNone:'ਕੋਈ ਖੇਡ ਸੂਚੀ ਫਿਲਟਰ ਨਹੀਂ', gfOpen:'ਖੁੱਲ੍ਹੀਆਂ ਖੇਡਾਂ ਵਿਖਾਓ', gfOpenNF:'ਖੁੱਲ੍ਹੀਆਂ ਅਤੇ ਖਾਲੀ-ਨਹੀਂ ਖੇਡਾਂ ਵਿਖਾਓ', gfOpenNFNP:'ਖੁੱਲ੍ਹੀਆਂ, ਖਾਲੀ-ਨਹੀਂ ਅਤੇ ਨਿੱਜੀ-ਨਹੀਂ ਖੇਡਾਂ ਵਿਖਾਓ', gfOpenNFP:'ਖੁੱਲ੍ਹੀਆਂ, ਖਾਲੀ-ਨਹੀਂ ਅਤੇ ਨਿੱਜੀ ਖੇਡਾਂ ਵਿਖਾਓ', gfOpenNFR:'ਖੁੱਲ੍ਹੀਆਂ, ਖਾਲੀ-ਨਹੀਂ ਅਤੇ ਰੈਂਕਿੰਗ ਖੇਡਾਂ ਵਿਖਾਓ',
     infoTypeLabel:'ਕਿਸਮ', infoCapitalLabel:'ਕੈਪੀਟਲ', infoPlayersInGame:'ਖੇਡ ਵਿੱਚ ਖਿਡਾਰੀ', plIgnore:'ਨਜ਼ਰਅੰਦਾਜ਼ ਕਰੋ', plStats:'ਖਿਡਾਰੀ ਅੰਕੜੇ',
-    plSortAlpha:'ਵਰਣਮਾਲਾ ਅਨੁਸਾਰ ਕ੍ਰਮ', plShowIdle:'ਵਿਹਲੇ ਖਿਡਾਰੀ ਵਿਖਾਓ', plHideIdle:'ਵਿਹਲੇ ਖਿਡਾਰੀ ਲੁਕਾਓ',
+    plSortAlpha:'ਵਰਣਮਾਲਾ ਅਨੁਸਾਰ ਕ੍ਰਮ', plShowIdle:'ਵਿਹਲੇ ਖਿਡਾਰੀ ਵਿਖਾਓ', plHideIdle:'ਵਿਹਲੇ ਖਿਡਾਰੀ ਲੁਕਾਓ', liveIdlePlayer:'ਇਸ ਵੇਲੇ ਵਿਹਲਾ',
     plNotPlaying:'ਨਹੀਂ ਖੇਡ ਰਿਹਾ', plPlayingInFull:'%1 "%2" ਵਿੱਚ ਖੇਡ ਰਿਹਾ ਹੈ।', plNotPlayingFull:'%1 ਇਸ ਵੇਲੇ ਨਹੀਂ ਖੇਡ ਰਿਹਾ।',
     plColumns:'ਕਾਲਮ', plColAvatar:'ਅਵਤਾਰ', plColName:'ਨਾਮ', plColStatus:'ਖੇਡ ਵਿੱਚ', plColCountry:'ਦੇਸ਼', plColMe:'ਮੈਂ', plColActions:'ਕਾਰਵਾਈਆਂ',
     gameTimeLabel:'ਸਮਾਂ', visRanked:'ਰੈਂਕਡ', infoBlindsUp:'ਬਲਾਇੰਡ ਵਾਧਾ',

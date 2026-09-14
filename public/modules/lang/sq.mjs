@@ -488,7 +488,7 @@ export const strings = {
     footPlayer:'Lojtari', footCreate:'＋ Krijo tavolinë', gameInfoTitle:'Informacione për lojën', gameInfoEmpty:'Zgjidh një tavolinë',
     gfNone:'Pa filtër për listën e lojërave', gfOpen:'Trego lojërat e hapura', gfOpenNF:'Trego lojërat e hapura & jo të plota', gfOpenNFNP:'Trego lojërat e hapura & jo të plota & jopubIike', gfOpenNFP:'Trego lojërat e hapura & jo të plota & private', gfOpenNFR:'Trego lojërat e hapura & jo të plota & me renditje',
     infoTypeLabel:'Lloji', infoCapitalLabel:'Kapitali', infoPlayersInGame:'Lojtarët në lojë', plIgnore:'Injoro', plStats:'Statistikat e lojtarit',
-    plSortAlpha:'Rendit alfabetikisht', plShowIdle:'Trego lojtarët joaktivë', plHideIdle:'Fshih lojtarët joaktivë',
+    plSortAlpha:'Rendit alfabetikisht', plShowIdle:'Trego lojtarët joaktivë', plHideIdle:'Fshih lojtarët joaktivë', liveIdlePlayer:'Aktualisht joaktiv',
     plNotPlaying:'Nuk luan', plPlayingInFull:'%1 po luan në "%2".', plNotPlayingFull:'%1 momentalisht nuk luan.',
     plColumns:'Kolonat', plColAvatar:'Avatari', plColName:'Emri', plColStatus:'Në lojë', plColCountry:'Vendi', plColMe:'Unë', plColActions:'Veprimet',
     gameTimeLabel:'Koha', visRanked:'Me renditje', infoBlindsUp:'Rritja e blindeve',

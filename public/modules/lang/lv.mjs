@@ -488,7 +488,7 @@ export const strings = {
     footPlayer:'Spēlētājs', footCreate:'＋ Izveidot galdu', gameInfoTitle:'Spēles informācija', gameInfoEmpty:'Izvēlies galdu',
     gfNone:'Nav spēļu saraksta filtra', gfOpen:'Rādīt atvērtas spēles', gfOpenNF:'Rādīt atvērtas un nepilnas spēles', gfOpenNFNP:'Rādīt atvērtas, nepilnas un neprivātas spēles', gfOpenNFP:'Rādīt atvērtas, nepilnas un privātas spēles', gfOpenNFR:'Rādīt atvērtas, nepilnas un reitinga spēles',
     infoTypeLabel:'Veids', infoCapitalLabel:'Kapitāls', infoPlayersInGame:'Spēlētāji spēlē', plIgnore:'Ignorēt', plStats:'Spēlētāja statistika',
-    plSortAlpha:'Kārtot alfabētiski', plShowIdle:'Rādīt neaktīvos spēlētājus', plHideIdle:'Slēpt neaktīvos spēlētājus',
+    plSortAlpha:'Kārtot alfabētiski', plShowIdle:'Rādīt neaktīvos spēlētājus', plHideIdle:'Slēpt neaktīvos spēlētājus', liveIdlePlayer:'Šobrīd neaktīvs',
     plNotPlaying:'Nespēlē', plPlayingInFull:'%1 spēlē pie galda "%2".', plNotPlayingFull:'%1 šobrīd nespēlē.',
     plColumns:'Kolonnas', plColAvatar:'Avatars', plColName:'Vārds', plColStatus:'Spēlē', plColCountry:'Valsts', plColMe:'Es', plColActions:'Darbības',
     gameTimeLabel:'Laiks', visRanked:'Reitinga', infoBlindsUp:'Aklās likmes pieaug',

@@ -488,7 +488,7 @@ export const strings = {
     footPlayer:'Играч', footCreate:'＋ Создај маса', gameInfoTitle:'Информации за играта', gameInfoEmpty:'Избери маса',
     gfNone:'Без филтер за листата игри', gfOpen:'Прикажи отворени игри', gfOpenNF:'Прикажи отворени и неполни игри', gfOpenNFNP:'Прикажи отворени, неполни и неприватни игри', gfOpenNFP:'Прикажи отворени, неполни и приватни игри', gfOpenNFR:'Прикажи отворени, неполни и игри со рангирање',
     infoTypeLabel:'Тип', infoCapitalLabel:'Капитал', infoPlayersInGame:'Играчи во играта', plIgnore:'Игнорирај', plStats:'Статистика на играчот',
-    plSortAlpha:'Сортирај по азбучен ред', plShowIdle:'Прикажи неактивни играчи', plHideIdle:'Скриј неактивни играчи',
+    plSortAlpha:'Сортирај по азбучен ред', plShowIdle:'Прикажи неактивни играчи', plHideIdle:'Скриј неактивни играчи', liveIdlePlayer:'Моментално неактивен',
     plNotPlaying:'Не игра', plPlayingInFull:'%1 игра во „%2“.', plNotPlayingFull:'%1 моментално не игра.',
     plColumns:'Колони', plColAvatar:'Аватар', plColName:'Име', plColStatus:'Во игра', plColCountry:'Држава', plColMe:'Јас', plColActions:'Дејства',
     gameTimeLabel:'Време', visRanked:'Со рангирање', infoBlindsUp:'Зголемување на блајндовите',

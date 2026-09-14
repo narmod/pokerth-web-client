@@ -44,6 +44,9 @@ highlights below.
   and colour (`--pth-green`, mapped to our own `--green` var). English and
   French only for now; the other 52 languages fall back to the English text
   via the existing `t()` chain until translated.
+- **`liveIdlePlayer` translated into all remaining 52 languages** (`web.29`)
+  — closes the gap left by `web.28`; every UI catalogue now carries its own
+  wording instead of falling back to English.
 
 ### Fixed
 

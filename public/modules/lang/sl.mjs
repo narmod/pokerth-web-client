@@ -488,7 +488,7 @@ export const strings = {
     footPlayer:'Igralec', footCreate:'＋ Ustvari mizo', gameInfoTitle:'Informacije o igri', gameInfoEmpty:'Izberi mizo',
     gfNone:'Brez filtra seznama iger', gfOpen:'Prikaži odprte igre', gfOpenNF:'Prikaži odprte in nepolne igre', gfOpenNFNP:'Prikaži odprte, nepolne in nezasebne igre', gfOpenNFP:'Prikaži odprte, nepolne in zasebne igre', gfOpenNFR:'Prikaži odprte, nepolne in igre z uvrstitvijo',
     infoTypeLabel:'Vrsta', infoCapitalLabel:'Kapital', infoPlayersInGame:'Igralci v igri', plIgnore:'Ignoriraj', plStats:'Statistika igralca',
-    plSortAlpha:'Razvrsti po abecedi', plShowIdle:'Prikaži nedejavne igralce', plHideIdle:'Skrij nedejavne igralce',
+    plSortAlpha:'Razvrsti po abecedi', plShowIdle:'Prikaži nedejavne igralce', plHideIdle:'Skrij nedejavne igralce', liveIdlePlayer:'Trenutno nedejaven',
     plNotPlaying:'Ne igra', plPlayingInFull:'%1 igra v »%2«.', plNotPlayingFull:'%1 trenutno ne igra.',
     plColumns:'Stolpci', plColAvatar:'Avatar', plColName:'Ime', plColStatus:'V igri', plColCountry:'Država', plColMe:'Jaz', plColActions:'Dejanja',
     gameTimeLabel:'Čas', visRanked:'Z uvrstitvijo', infoBlindsUp:'Zvišanje blindov',

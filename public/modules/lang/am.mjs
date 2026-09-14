@@ -486,7 +486,7 @@ export const strings = {
     footPlayer:'ተጫዋች', footCreate:'＋ ጠረጴዛ ፍጠር', gameInfoTitle:'የጨዋታ መረጃ', gameInfoEmpty:'ጠረጴዛ ይምረጡ',
     gfNone:'የጨዋታ ዝርዝር ማጣሪያ የለም', gfOpen:'ክፍት ጨዋታዎችን አሳይ', gfOpenNF:'ክፍት እና ያልሞሉ ጨዋታዎችን አሳይ', gfOpenNFNP:'ክፍት፣ ያልሞሉ እና የግል ያልሆኑ ጨዋታዎችን አሳይ', gfOpenNFP:'ክፍት፣ ያልሞሉ እና የግል ጨዋታዎችን አሳይ', gfOpenNFR:'ክፍት፣ ያልሞሉ እና የደረጃ ጨዋታዎችን አሳይ',
     infoTypeLabel:'ዓይነት', infoCapitalLabel:'ካፒታል', infoPlayersInGame:'በጨዋታ ውስጥ ያሉ ተጫዋቾች', plIgnore:'ችላ በል', plStats:'የተጫዋች ስታቲስቲክስ',
-    plSortAlpha:'በፊደል ደርድር', plShowIdle:'ሥራ ፈት ተጫዋቾችን አሳይ', plHideIdle:'ሥራ ፈት ተጫዋቾችን ደብቅ',
+    plSortAlpha:'በፊደል ደርድር', plShowIdle:'ሥራ ፈት ተጫዋቾችን አሳይ', plHideIdle:'ሥራ ፈት ተጫዋቾችን ደብቅ', liveIdlePlayer:'አሁን ሥራ ፈት',
     plNotPlaying:'እየተጫወተ አይደለም', plPlayingInFull:'%1 በ "%2" ውስጥ እየተጫወተ ነው።', plNotPlayingFull:'%1 በአሁኑ ጊዜ እየተጫወተ አይደለም።',
     plColumns:'ዓምዶች', plColAvatar:'አምሳያ', plColName:'ስም', plColStatus:'በጨዋታ ውስጥ', plColCountry:'አገር', plColMe:'እኔ', plColActions:'እርምጃዎች',
     gameTimeLabel:'ጊዜ', visRanked:'በደረጃ', infoBlindsUp:'የብላይንድ ጭማሪ',

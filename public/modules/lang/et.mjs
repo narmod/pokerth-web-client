@@ -480,7 +480,7 @@ export const strings = {
     footPlayer:'Mängija', footCreate:'＋ Loo laud', gameInfoTitle:'Mängu teave', gameInfoEmpty:'Vali laud',
     gfNone:'Mängude loendi filtrit ei ole', gfOpen:'Näita avatud mänge', gfOpenNF:'Näita avatud ja mittetäis mänge', gfOpenNFNP:'Näita avatud, mittetäis ja mitteprivaatseid mänge', gfOpenNFP:'Näita avatud, mittetäis ja privaatseid mänge', gfOpenNFR:'Näita avatud, mittetäis ja edetabelimänge',
     infoTypeLabel:'Tüüp', infoCapitalLabel:'Kapital', infoPlayersInGame:'Mängijaid mängus', plIgnore:'Eira', plStats:'Mängija statistika',
-    plSortAlpha:'Sordi tähestiku järgi', plShowIdle:'Näita jõude mängijaid', plHideIdle:'Peida jõude mängijad',
+    plSortAlpha:'Sordi tähestiku järgi', plShowIdle:'Näita jõude mängijaid', plHideIdle:'Peida jõude mängijad', liveIdlePlayer:'Praegu jõude',
     plNotPlaying:'Ei mängi', plPlayingInFull:'%1 mängib lauas „%2“.', plNotPlayingFull:'%1 ei mängi hetkel.',
     plColumns:'Veerud', plColAvatar:'Avatar', plColName:'Nimi', plColStatus:'Mängus', plColCountry:'Riik', plColMe:'Mina', plColActions:'Tegevused',
     gameTimeLabel:'Aeg', visRanked:'Edetabeliga', infoBlindsUp:'Blindid tõusevad',

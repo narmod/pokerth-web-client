@@ -487,7 +487,7 @@ export const strings = {
     footPlayer:'Pemain', footCreate:'＋ Buat meja', gameInfoTitle:'Info permainan', gameInfoEmpty:'Pilih sebuah meja',
     gfNone:'Tanpa filter daftar permainan', gfOpen:'Tampilkan permainan terbuka', gfOpenNF:'Tampilkan permainan terbuka & belum penuh', gfOpenNFNP:'Tampilkan permainan terbuka & belum penuh & non-pribadi', gfOpenNFP:'Tampilkan permainan terbuka & belum penuh & pribadi', gfOpenNFR:'Tampilkan permainan terbuka & belum penuh & berperingkat',
     infoTypeLabel:'Tipe', infoCapitalLabel:'Modal', infoPlayersInGame:'Pemain dalam permainan', plIgnore:'Abaikan', plStats:'Statistik pemain',
-    plSortAlpha:'Urutkan menurut abjad', plShowIdle:'Tampilkan pemain diam', plHideIdle:'Sembunyikan pemain diam',
+    plSortAlpha:'Urutkan menurut abjad', plShowIdle:'Tampilkan pemain diam', plHideIdle:'Sembunyikan pemain diam', liveIdlePlayer:'Sedang diam',
     plNotPlaying:'Tidak bermain', plPlayingInFull:'%1 sedang bermain di "%2".', plNotPlayingFull:'%1 sedang tidak bermain.',
     plColumns:'Kolom', plColAvatar:'Avatar', plColName:'Nama', plColStatus:'Dalam permainan', plColCountry:'Negara', plColMe:'Saya', plColActions:'Aksi',
     gameTimeLabel:'Waktu', visRanked:'Berperingkat', infoBlindsUp:'Blind naik',
