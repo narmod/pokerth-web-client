@@ -187,6 +187,29 @@ function rowDetail(id, g) {
 
 let lastSig = null;
 
+// .llb-tabs / .llb-body are built ONCE and kept for the module's lifetime.
+// Rebuilding .llb-tabs via innerHTML on every render (as before) destroys and
+// recreates it — and since it's position: sticky, Safari has to reestablish
+// its sticky context on the new node, which flashed a stale scrolled frame
+// each time a row was expanded/collapsed (sp0ck, fourth report: the glitch
+// only happened while scrolling AND expanding, i.e. exactly when render()
+// ran). Keeping the node stable and only touching its text/classes removes
+// the recreate entirely; only the content below it is replaced.
+let tabsEl = null, gamesTabBtn = null, playersTabBtn = null, bodyEl = null;
+function ensureSkeleton(host) {
+  if (tabsEl && tabsEl.isConnected) return;
+  host.innerHTML =
+    '<div class="llb-tabs" role="tablist">' +
+      '<button type="button" class="llb-tab" role="tab" data-tab="games"></button>' +
+      '<button type="button" class="llb-tab" role="tab" data-tab="players"></button>' +
+    '</div>' +
+    '<div class="llb-body"></div>';
+  tabsEl = host.querySelector('.llb-tabs');
+  gamesTabBtn = tabsEl.children[0];
+  playersTabBtn = tabsEl.children[1];
+  bodyEl = host.querySelector('.llb-body');
+}
+
 function render() {
   // pokerth.js re-parents the chat panel into .lobby-grid whenever the lobby
   // re-lays itself out, which empties the strip. Cheapest place to notice is
@@ -195,6 +218,7 @@ function render() {
 
   const host = document.getElementById('live-lobby-list');
   if (!host) return;
+  ensureSkeleton(host);
   const S = state();
   const entries = Object.entries(S.games || {});
   entries.sort(function (a, b) { return a[1].mode - b[1].mode; });
@@ -214,17 +238,14 @@ function render() {
   // Same source as the filtered list above, so the tab count and the rows
   // it labels never disagree.
   const nPlayers = S._lobbyPids ? S._lobbyPids.size : Object.keys(S.players || {}).length;
-  const tabs =
-    '<div class="llb-tabs" role="tablist">' +
-      '<button type="button" class="llb-tab' + (activeTab === 'games' ? ' on' : '') +
-        '" role="tab" data-tab="games">' +
-        nGames + ' ' + esc(tr('tableCount', 'table(s)')) + '</button>' +
-      '<button type="button" class="llb-tab' + (activeTab === 'players' ? ' on' : '') +
-        '" role="tab" data-tab="players">' +
-        nPlayers + ' ' + esc(tr('playersOnline', 'player(s)')) + '</button>' +
-    '</div>';
+  // textContent, not innerHTML — these two buttons are real persistent nodes
+  // now, so no manual escaping is needed either.
+  gamesTabBtn.textContent = nGames + ' ' + tr('tableCount', 'table(s)');
+  gamesTabBtn.classList.toggle('on', activeTab === 'games');
+  playersTabBtn.textContent = nPlayers + ' ' + tr('playersOnline', 'player(s)');
+  playersTabBtn.classList.toggle('on', activeTab === 'players');
 
-  if (activeTab === 'players') { host.innerHTML = tabs + renderPlayers(); return; }
+  if (activeTab === 'players') { bodyEl.innerHTML = renderPlayers(); return; }
 
   const head =
     '<div class="llb-head">' +
@@ -238,7 +259,7 @@ function render() {
     '</div>';
 
   if (!entries.length) {
-    host.innerHTML = tabs + head + '<div class="llb-empty">' +
+    bodyEl.innerHTML = head + '<div class="llb-empty">' +
       esc(tr('noTablesAvailable', 'No tables')) + '</div>';
     return;
   }
@@ -267,7 +288,7 @@ function render() {
     '</div>';
   }).join('');
 
-  host.innerHTML = tabs + head + rows;
+  bodyEl.innerHTML = head + rows;
 }
 
 function onClick(ev) {

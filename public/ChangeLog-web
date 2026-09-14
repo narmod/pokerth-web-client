@@ -1,4 +1,6 @@
-2026-09-14 version 2.1.9-web.34 (current series):
+2026-09-14 version 2.1.9-web.35 (current series):
+- bugfix: on the live spectator page (/live), expanding a table row no longer causes the Tables/Players tab bar to briefly flash stale content
+2026-09-14 version 2.1.9-web.34:
 - bugfix: on iPhone, a sliver of the previous table row no longer peeks above the Tables/Players tab bar on the live spectator page (/live) while scrolling
 2026-09-14 version 2.1.9-web.33:
 - bugfix: on the live spectator page (/live), the Tables/Players tab bar no longer looks see-through when it's pinned at the top while you scroll

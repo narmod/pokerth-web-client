@@ -50,6 +50,16 @@ highlights below.
 
 ### Fixed
 
+- **`/live` the sliver only appeared while scrolling AND expanding a row —
+  root cause was DOM recreation, not clipping** (`web.35`, reported by
+  sp0ck) — `render()` rebuilt `.llb-tabs` via `innerHTML` on every call,
+  including the one triggered by expanding/collapsing a row. Recreating a
+  `position: sticky` node forces Safari to reestablish its sticky context
+  from scratch, which is what flashed a stale scrolled frame exactly when a
+  row was toggled (`web.34`'s reclip fix addressed a real but different
+  Safari quirk and left this one untouched). `.llb-tabs` is now a stable
+  DOM node built once and never replaced; only its label text/counts update
+  in place, and a separate `.llb-body` node under it takes the row content.
 - **`/live` a sliver of the scrolled-past row still peeked above the sticky
   tab bar on iOS Safari** (`web.34`, reported by sp0ck) — a known WebKit bug:
   an element with both `border-radius` and its own `overflow-y: auto` scroll
