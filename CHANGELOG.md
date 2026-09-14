@@ -37,9 +37,9 @@ highlights below.
 - **Amharic**, full UI catalogue, help corpus, SEO content pages and
   guest/registered/LAN broadcast notices (`web.22`–`24`) — 54 languages
   total.
-- **Khmer**, full UI catalogue, help corpus and guest/registered/LAN
-  broadcast notices (`web.39`–`40`) — 55 languages total. SEO content
-  pages to follow.
+- **Khmer**, full UI catalogue, help corpus, SEO content pages and
+  guest/registered/LAN broadcast notices (`web.39`–`41`) — 55 languages
+  total.
 - **`/live` Players tab shows "Currently idle"** (`web.28`, parity with the
   old spectool's `PlayerListItem.vue`, requested by sp0ck) — a player seated
   and spectating nowhere now gets an italic green label where the

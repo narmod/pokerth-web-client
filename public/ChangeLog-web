@@ -1,4 +1,6 @@
-2026-09-14 version 2.1.9-web.40 (current series):
+2026-09-14 version 2.1.9-web.41 (current series):
+- new: the public pages (poker rules, hand rankings, glossary, how to play) are now available in Khmer too
+2026-09-14 version 2.1.9-web.40:
 - new: the built-in help and the welcome notices are now available in Khmer too
 2026-09-14 version 2.1.9-web.39:
 - new: Khmer (ខ្មែរ) is now available in the language list - the whole interface is translated, bringing the client to 55 languages
