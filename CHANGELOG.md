@@ -67,6 +67,23 @@ highlights below.
 
 ### Fixed
 
+- **Seat geometry only measured `.seat-plate`, ignoring an avatar or hole
+  cards that overflow outside it** (reported by narmod, all three
+  imported seat packs except PokerTH) — Boardwalk, High Roller and Onyx
+  Pill each position the avatar (and sometimes the cards) with
+  `position: absolute` outside `.seat-plate` — biting into an edge or
+  sitting above it — while every geometry calculation in
+  `seat-render.mjs` (community-row centering/bounds, self-box baseline,
+  ghost-seat median height) only read `.seat-plate`'s own bounding box.
+  That undercounted the seat's true on-screen size for these three
+  packs, let the layout draw them larger than the space they actually
+  occupy, and re-measuring every render (i.e. every action) made the
+  felt/table visibly jitter. Same failure mode already fixed for
+  PokerTH's bet socle, generalized: a new `_seatVisualRect()` unions
+  the plate, avatar and hole cards, used everywhere seat size is
+  measured. No change for PokerTH, where these already live inside the
+  plate (`web.46`).
+
 - **Community-card row didn't group Flop/Turn/River like the QML client,
   and the pot badge used a hand-drawn circle instead of the chipStack.svg
   icon** (reported by narmod, side-by-side screenshots) — the QML source
