@@ -33,17 +33,23 @@ if (window.LIVE_MODE) {
     }
   }
 
-  // ── Light / dark / automatic ──────────────────────────────────────────
-  // The palette axis already carries the three values and already follows the
-  // OS in 'auto', so the button is a cycle over them rather than a new
-  // setting. window.setTheme / getTheme are theme.mjs's own API.
-  const MODES = ['auto', 'pokerth-light', 'pokerth'];
-  const GLYPH = { 'auto': '\u25D1', 'pokerth-light': '\u2600', 'pokerth': '\u263D' };
+  // ── Light / dark ──────────────────────────────────────────────────────
+  // Two states only (sp0ck, 14/09/2026) : the third "auto" step just followed
+  // the OS and confused visitors ("what does default mean?"). Read the
+  // ACTUALLY APPLIED palette off <html data-theme> rather than the raw
+  // window.getTheme() value, since that can still be the literal string
+  // 'auto' for a visitor who never touched the button — data-theme always
+  // holds the resolved pokerth/pokerth-light either way.
+  const MODES = ['pokerth-light', 'pokerth'];
+  const GLYPH = { 'pokerth-light': '\u2600', 'pokerth': '\u263D' };
+
+  function currentPalette() {
+    try { return document.documentElement.getAttribute('data-theme') || 'pokerth'; }
+    catch (e) { return 'pokerth'; }
+  }
 
   function paintModeButtons() {
-    let cur = 'auto';
-    try { if (window.getTheme) cur = window.getTheme() || 'auto'; } catch (e) {}
-    const g = GLYPH[cur] || GLYPH.auto;
+    const g = GLYPH[currentPalette()] || GLYPH.pokerth;
     ['live-mode-lobby', 'live-mode-game', 'live-mode-connect'].forEach(function (id) {
       const el = document.getElementById(id);
       if (el) el.textContent = g;
@@ -51,11 +57,7 @@ if (window.LIVE_MODE) {
   }
 
   window.liveCycleThemeMode = function () {
-    let cur = 'auto';
-    try { if (window.getTheme) cur = window.getTheme() || 'auto'; } catch (e) {}
-    // A visitor on some other palette lands on 'auto' first, not somewhere
-    // unrelated in the cycle.
-    const i = MODES.indexOf(cur);
+    const i = MODES.indexOf(currentPalette());
     const next = MODES[(i < 0 ? -1 : i) + 1] || MODES[0];
     try { if (window.setTheme) window.setTheme(next); } catch (e) {}
     paintModeButtons();

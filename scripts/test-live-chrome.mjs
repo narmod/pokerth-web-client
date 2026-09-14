@@ -49,11 +49,11 @@ for (const id of ['live-mode-lobby', 'live-mode-game', 'live-mode-connect']) {
   check('a light/dark button in ' + id.replace('live-mode-', ''),
     new RegExp('id="' + id + '"').test(html));
 }
-check('it cycles automatic, light, dark',
-  /MODES = \['auto', 'pokerth-light', 'pokerth'\]/.test(live));
+check('it cycles light, dark only (no automatic step)',
+  /MODES = \['pokerth-light', 'pokerth'\]/.test(live));
 check('it reuses the palette axis rather than adding a setting',
-  /window\.setTheme\(next\)/.test(live) && /window\.getTheme\(\)/.test(live));
-check('an unrelated palette falls back to automatic',
+  /window\.setTheme\(next\)/.test(live) && /getAttribute\('data-theme'\)/.test(live));
+check('an unrelated palette falls back to the first mode',
   /MODES\[\(i < 0 \? -1 : i\) \+ 1\] \|\| MODES\[0\]/.test(live));
 
 // Player aids on the felt: a log of a session the spectator has no part in,

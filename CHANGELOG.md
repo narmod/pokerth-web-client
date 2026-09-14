@@ -50,7 +50,13 @@ highlights below.
 
 ### Fixed
 
-- **`/live` Tables/Players tab bar scrolled away with the list** (`web.30`,
+- **`/live` theme toggle cycled a confusing third "automatic" step**
+  (`web.31`, reported by sp0ck — "what does default stand for?") — the
+  header button cycled `auto → light → dark`, but a visitor has no reference
+  for what the OS-follow step currently shows. Now light/dark only; the
+  toggle reads the actually-applied `data-theme` attribute (never the raw,
+  possibly still-`'auto'` stored preference) so the icon and the next click
+  always match what's on screen.- **`/live` Tables/Players tab bar scrolled away with the list** (`web.30`,
   reported by sp0ck) — `.llb-tabs` was an ordinary first child inside
   `.llb-main`'s own `overflow-y: auto` scroll, so scrolling down the row
   list carried it off-screen too; switching tabs meant scrolling all the
