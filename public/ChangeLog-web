@@ -1,4 +1,6 @@
-2026-09-14 version 2.1.9-web.24 (current series):
+2026-09-14 version 2.1.9-web.25 (current series):
+- bugfix: the admin editors for the welcome message, notices and polls now list all 54 languages (Amharic, Bengali, Filipino, Indonesian, Punjabi, Swahili and Thai were missing from the picker)
+2026-09-14 version 2.1.9-web.24:
 - new: the public pages (poker rules, hand rankings, glossary, how to play) are now available in Amharic too
 2026-09-14 version 2.1.9-web.23:
 - new: the built-in help and the welcome notices are now available in Amharic too

@@ -39,6 +39,11 @@ highlights below.
   total.
 
 ### Fixed
+
+- Admin: the language pickers of the welcome message, guest / registered /
+  LAN notice and poll editors were missing seven catalogue languages (am,
+  bn, fil, id, pa, sw, th) — operators could not author those messages in
+  them (`web.25`).
 - **`/live` showed the game-invite banner to spectators** (`web.18`) —
   `onInviteNotify()` in `modules/net/msg-social.mjs` displayed the accept/
   decline banner for any `InviteNotify` addressed to our player id, with no
