@@ -16,6 +16,11 @@ release. Per-build detail is on the
 highlights below.
 
 ### Added
+
+- `/rules` and `/faq` translated into the 10 languages that still fell
+  back to English (et, lv, sl, bs, mk, ms, sq, pa, am, km) — both pages
+  now exist in all 55 languages and are advertised in hreflang and the
+  sitemap (`web.43`).
 - **Slovenian**, full UI catalogue, help corpus and SEO content pages
   (`web.5`–`6`) — 48 languages total.
 - **Bosnian**, full UI catalogue, help corpus, SEO content pages and

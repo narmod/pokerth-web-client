@@ -269,8 +269,8 @@ use too. Items are grouped by status rather than fixed phases.
 
 ## ⏭️ Next
 
-- **Translating `/faq`** — `/rules` is done in 44 languages (`web.55`); the 10 added since
-  (et, lv, sl, bs, mk, ms, sq, pa, am, km) still fall back to English there.
+- **Translating `/faq`** — `/rules` and `/faq` are done in all 55 languages
+  (`web.55` through `web.43` of the 2.1.9 series).
   `/faq` has the same shape: thirteen question-and-answer pairs per language,
   filled into `SEO_FAQ_I18N` in batches. Until an entry lands, that language
   falls back to English and is not advertised, so the live site is never in a
