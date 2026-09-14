@@ -1,4 +1,6 @@
-2026-09-14 version 2.1.9-web.26 (current series):
+2026-09-14 version 2.1.9-web.27 (current series):
+- bugfix: on the live spectator page (/live), a folded player's name and avatar no longer grey out along with their "Fold" tag - only their cards do, so the tag stays easy to read
+2026-09-14 version 2.1.9-web.26:
 - bugfix: the live spectator page (/live) no longer plays a chat notification sound for every single message - it was going off constantly instead of just occasionally
 2026-09-14 version 2.1.9-web.25:
 - bugfix: the admin editors for the welcome message, notices and polls now list all 54 languages (Amharic, Bengali, Filipino, Indonesian, Punjabi, Swahili and Thai were missing from the picker)

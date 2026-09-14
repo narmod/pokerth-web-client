@@ -7827,6 +7827,13 @@ html[data-seat-struct="qml"] .seat.me.active .seat-plate { transform: scale(1.03
 /* Couché : 0.72 ; éliminé : la base gère déjà l'estompe (transition QML 250ms). */
 html[data-seat-struct="qml"] .seat { transition: opacity 0.25s ease-out; }
 html[data-seat-struct="qml"] .seat.folded { opacity: 0.72; }
+/* /live uniquement (retour sp0ck 14/09/2026) : le siège couché reste en
+   pleine opacité — avatar, plaque, pastille de mise ET badge d'action « Fold »
+   inclus — seules les cartes se grisent (règle .seat-holecards ci-dessous,
+   inchangée). Ne touche pas le client normal : la parité QML 0.72 / 0.78
+   ci-dessus reste intacte hors /live. */
+:root[data-live="1"] .seat.folded,
+:root[data-live="1"] .seat.me.folded { opacity: 1 !important; }
 /* Self couché : parité totale avec le client officiel (narmod 2026-07-28,
    révise la décision du 26/07). Source upstream qt6-qml :
      GamePlayerBox     (adversaires) : folded → 0.72

@@ -40,6 +40,15 @@ highlights below.
 
 ### Fixed
 
+- **`/live` folded seats dimmed the action badge along with everything else**
+  (`web.27`, reported by sp0ck) — the QML-parity rule that fades a folded
+  seat to 0.72/0.78 opacity (`.seat.folded`, `.seat.me.folded`) dims the whole
+  seat as a compositing group, badge included, since CSS opacity can't be
+  selectively undone on a descendant. On `/live` the badge is now excluded by
+  resetting the seat's own opacity to 1 there and leaving `.seat-holecards`'
+  own 0.3 opacity as the only fade — so a folded player's cards grey out but
+  their name, avatar and "Fold" tag stay fully readable. Scoped to
+  `:root[data-live="1"]`; the ordinary client's QML parity is untouched.
 - **`/live` lobby-chat notification sound firing on every message** (`web.26`,
   reported by sp0ck) — `onChat()` in `modules/net/msg-social.mjs` plays
   `lobbychatnotify.mp3` for any lobby chat line from someone else while the
