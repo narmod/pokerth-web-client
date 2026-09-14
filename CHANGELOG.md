@@ -50,6 +50,12 @@ highlights below.
 
 ### Fixed
 
+- **`/live` Tables/Players tab bar scrolled away with the list** (`web.30`,
+  reported by sp0ck) — `.llb-tabs` was an ordinary first child inside
+  `.llb-main`'s own `overflow-y: auto` scroll, so scrolling down the row
+  list carried it off-screen too; switching tabs meant scrolling all the
+  way back up first. Now `position: sticky; top: 0`, so it stays reachable
+  regardless of scroll position.
 - **`/live` folded seats dimmed the action badge along with everything else**
   (`web.27`, reported by sp0ck) — the QML-parity rule that fades a folded
   seat to 0.72/0.78 opacity (`.seat.folded`, `.seat.me.folded`) dims the whole

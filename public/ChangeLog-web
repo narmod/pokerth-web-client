@@ -1,4 +1,6 @@
-2026-09-14 version 2.1.9-web.29 (current series):
+2026-09-14 version 2.1.9-web.30 (current series):
+- bugfix: on the live spectator page (/live), the Tables/Players tab bar now stays put while you scroll the list instead of scrolling away with it
+2026-09-14 version 2.1.9-web.29:
 - improvement: the "Currently idle" label on the live spectator page (/live) is now translated in all 54 languages instead of just English and French
 2026-09-14 version 2.1.9-web.28:
 - new: the live spectator page (/live) now shows "Currently idle" for players who aren't seated or watching a table, like the old spectator tool did
