@@ -34,6 +34,8 @@ highlights below.
 - **Punjabi**, full UI catalogue, help corpus, SEO content pages and
   guest/registered/LAN broadcast notices (`web.19`–`21`) — 53 languages
   total.
+- **Amharic**, full UI catalogue (`web.22`) — 54 languages total. Help
+  corpus and SEO content pages to follow.
 
 ### Fixed
 - **`/live` showed the game-invite banner to spectators** (`web.18`) —
