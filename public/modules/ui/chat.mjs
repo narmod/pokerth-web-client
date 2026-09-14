@@ -11,6 +11,43 @@ import { esc } from './misc.mjs';
 import { MSG } from '../net/messages.mjs';
 import { liveBefore, liveAfter } from './livescroll.mjs';
 
+// ── Mute local du son de notification "nouveau message" — un état PAR
+// panneau (partie ET lobby), chacun indépendant de l'option avancée
+// « Notification du chat lobby » (pth_snd_lobby / PlayLobbyChatNotification,
+// parité QML) qui reste le réglage par défaut des deux sons (notifyChat /
+// notifyLobbyChat, sounds.mjs). Bouton même gabarit visuel que la corbeille
+// "Effacer" du même en-tête (icône plate, sans cadre) — juste grisé
+// (classe .muted, cf. pokerth.css) quand coupé. Demande narmod 14/09/2026.
+var _gameChatSndMuted = (function(){ try { return localStorage.getItem('pth_gamechat_snd_muted') === '1'; } catch(e){ return false; } })();
+var _lobbyChatSndMuted = (function(){ try { return localStorage.getItem('pth_lobbychat_snd_muted') === '1'; } catch(e){ return false; } })();
+
+function _applyGameChatMuteUI() {
+  var btn = document.getElementById('g-chat-mute-toggle');
+  if (btn) { btn.classList.toggle('muted', _gameChatSndMuted); btn.setAttribute('aria-pressed', _gameChatSndMuted ? 'true' : 'false'); }
+}
+function _applyLobbyChatMuteUI() {
+  var btn = document.getElementById('l-chat-mute-toggle');
+  if (btn) { btn.classList.toggle('muted', _lobbyChatSndMuted); btn.setAttribute('aria-pressed', _lobbyChatSndMuted ? 'true' : 'false'); }
+}
+function setGameChatSoundMuted(on) {
+  _gameChatSndMuted = !!on;
+  try { localStorage.setItem('pth_gamechat_snd_muted', _gameChatSndMuted ? '1' : '0'); } catch (e) {}
+  _applyGameChatMuteUI();
+}
+function setLobbyChatSoundMuted(on) {
+  _lobbyChatSndMuted = !!on;
+  try { localStorage.setItem('pth_lobbychat_snd_muted', _lobbyChatSndMuted ? '1' : '0'); } catch (e) {}
+  _applyLobbyChatMuteUI();
+}
+function isGameChatSoundMuted() { return _gameChatSndMuted; }
+function isLobbyChatSoundMuted() { return _lobbyChatSndMuted; }
+// État initial des deux icônes dès le chargement du module (les deux
+// panneaux sont dans le DOM au démarrage, seulement masqués par CSS).
+// try/catch défensif : environnements de test avec un `document` minimal
+// (sans classList complet), cf. scripts/test-chat.mjs.
+try { _applyGameChatMuteUI(); } catch (e) {}
+try { _applyLobbyChatMuteUI(); } catch (e) {}
+
 // ── Local chat commands (nothing is ever sent to the server) ────────────
 // Shared by the lobby chat and the game chat. echo(name, text) renders the
 // reply locally in the caller's chat panel. Returns true when handled.
@@ -398,7 +435,17 @@ function _bindChatTrReveal() {
 }
 _bindChatTrReveal();
 
-export { _chatLocalCmd, addChat };
+export {
+  _chatLocalCmd, addChat,
+  setGameChatSoundMuted, isGameChatSoundMuted, _applyGameChatMuteUI,
+  setLobbyChatSoundMuted, isLobbyChatSoundMuted, _applyLobbyChatMuteUI
+};
 
 window._chatLocalCmd = _chatLocalCmd;
 window.addChat = addChat;
+window.setGameChatSoundMuted = setGameChatSoundMuted;
+window.isGameChatSoundMuted = isGameChatSoundMuted;
+window._applyGameChatMuteUI = _applyGameChatMuteUI;
+window.setLobbyChatSoundMuted = setLobbyChatSoundMuted;
+window.isLobbyChatSoundMuted = isLobbyChatSoundMuted;
+window._applyLobbyChatMuteUI = _applyLobbyChatMuteUI;

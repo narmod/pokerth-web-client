@@ -47,6 +47,15 @@ highlights below.
 - **`liveIdlePlayer` translated into all remaining 52 languages** (`web.29`)
   — closes the gap left by `web.28`; every UI catalogue now carries its own
   wording instead of falling back to English.
+- **Chat notification-sound mute buttons, per panel** (`web.37`, requested by
+  narmod) — a small bell icon next to the "Clear chat" trash icon in both the
+  table chat and the lobby chat headers, flat/plain style matching the trash
+  icon, greyed out when muted. Each panel has its own independent toggle
+  (`pth_gamechat_snd_muted` / `pth_lobbychat_snd_muted`) — separate from the
+  existing shared Advanced Options → Sound → "Lobby chat notification"
+  setting (`PlayLobbyChatNotification`), which still governs both sounds by
+  default. English and French only for now; the other 52 languages fall back
+  to the English tooltip via the existing `t()` chain until translated.
 
 ### Fixed
 

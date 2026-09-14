@@ -7113,6 +7113,23 @@ const App = (() => {
       _applyReactPinUI();
     },
 
+    // Coupe/rétablit le son de notification du chat de PARTIE (icône à côté
+    // de la corbeille, ui/chat.mjs). Réglage indépendant de l'option avancée
+    // « Notification du chat lobby » (Options avancées → Son).
+    toggleGameChatMute() {
+      if (typeof setGameChatSoundMuted !== 'function') return;
+      var on = !(typeof isGameChatSoundMuted === 'function' && isGameChatSoundMuted());
+      setGameChatSoundMuted(on);
+    },
+
+    // Même principe pour le chat du LOBBY (notifyLobbyChat, msg-social.mjs) —
+    // état séparé, ne coupe pas le son du chat de partie et inversement.
+    toggleLobbyChatMute() {
+      if (typeof setLobbyChatSoundMuted !== 'function') return;
+      var on = !(typeof isLobbyChatSoundMuted === 'function' && isLobbyChatSoundMuted());
+      setLobbyChatSoundMuted(on);
+    },
+
     // Pagination du panneau réactions : flèches ‹ › (l'indicateur N/3 est passif).
     reactPage(i) { setReactionPage(i); },
     reactPageStep(d) { setReactionPage(_reactPageCurrent() + (d || 0), d > 0 ? 'left' : 'right'); },
@@ -8818,7 +8835,7 @@ function addGameChat(sender, text, cls, spec) {
     window._chatFlashTimer = setTimeout(function(){
       if (!cPan || cPan.style.display === 'none') { cBtn.style.color=''; cBtn.style.borderColor=''; }
     }, 3000);
-    if (typeof notifyChat === 'function') notifyChat();
+    if (typeof notifyChat === 'function' && (typeof isGameChatSoundMuted !== 'function' || !isGameChatSoundMuted())) notifyChat();
   }
 }
 
@@ -11703,7 +11720,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.9-web.36'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.9-web.37'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif ou la palette High contrast
    (Android, Safari, iOS standalone récent). Lit --theme-color et met

@@ -18,7 +18,7 @@ import { send, show } from './session.mjs';
 import { t } from '../i18n.mjs';
 import { _inviteShow } from './petitions.mjs';
 import { handleIncomingReaction } from '../ui/reactions.mjs';
-import { addChat } from '../ui/chat.mjs';
+import { addChat, isLobbyChatSoundMuted } from '../ui/chat.mjs';
 
 const T = MSG.T;
 
@@ -77,7 +77,7 @@ function onChat(sub) {
     // quasi en permanence sur la vue lobby, contrairement au client ordinaire
     // où ce son est un ping occasionnel — il jouait donc à chaque message.
     if ((ctype === 0 || ctype === 4) && pid && pid !== S.myId && !_inGameScreen() && !window.LIVE_MODE) {
-      try { if (typeof notifyLobbyChat === 'function') notifyLobbyChat(); } catch (_e) {}
+      try { if (typeof notifyLobbyChat === 'function' && !isLobbyChatSoundMuted()) notifyLobbyChat(); } catch (_e) {}
     }
     // Mon propre message : déjà affiché en optimiste à l'envoi (classe 'mine').
     // Le serveur le rediffuse à tous, expéditeur compris → on ignore l'écho
