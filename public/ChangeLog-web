@@ -1,4 +1,6 @@
-2026-09-14 version 2.1.9-web.39 (current series):
+2026-09-14 version 2.1.9-web.40 (current series):
+- new: the built-in help and the welcome notices are now available in Khmer too
+2026-09-14 version 2.1.9-web.39:
 - new: Khmer (ខ្មែរ) is now available in the language list - the whole interface is translated, bringing the client to 55 languages
 2026-09-14 version 2.1.9-web.38:
 - bugfix: the mute button in the lobby chat header wasn't showing up - a leftover style rule was hiding it by mistake
