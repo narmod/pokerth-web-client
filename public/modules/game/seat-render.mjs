@@ -107,6 +107,40 @@ function _plateTurnK(plateEl) {
     return (k > 0.05 && k < 20) ? k : 1;
   } catch (e) { return 1; }
 }
+// ── Empreinte visuelle RÉELLE d'un siège (rapport narmod 14/09 : sièges trop
+// gros + fond qui bouge à chaque action sur boardwalk/high-roller/onyx-pill,
+// PAS sur pokerth). Cause : ces 3 packs importés posent l'avatar (et parfois
+// les cartes) en `position:absolute` EN DEHORS de .seat-plate (mordant sur un
+// bord ou débordant au-dessus — cf. leurs propres commentaires "Cadre virtuel
+// QML : 114×84 (adversaires)") alors que le pack PokerTH loge tout ÀL'INTÉRIEUR
+// de la plate. Toute la géométrie ci-dessous (centre, bornes, corridor de la
+// rangée community) ne mesurait QUE .seat-plate.getBoundingClientRect() → pour
+// ces 3 packs elle ignorait l'avatar/les cartes qui débordent, sous-estimait
+// la taille réelle du siège, et laissait la bisection les dessiner trop grands
+// par rapport à l'espace qu'ils occupent vraiment sur l'écran — avec re-mesure
+// à chaque rendu (donc à chaque action) le résultat oscillait légèrement d'une
+// frame à l'autre, exactement le symptôme déjà tracé pour le socle de mise
+// ci-dessus (_plateSocleH). Le correctif est le même principe : mesurer
+// l'empreinte VISUELLE complète du siège (union de .seat-plate, .seat-avatar,
+// .seat-holecards), pas seulement la plate. Pour le pack PokerTH, avatar et
+// cartes vivent déjà dans la plate → l'union est égale (ou quasi) à la plate
+// seule, donc AUCUN changement de comportement là où ça fonctionnait déjà.
+function _seatVisualRect(seatEl) {
+  if (!seatEl || !seatEl.querySelectorAll) return null;
+  var els = seatEl.querySelectorAll('.seat-plate, .seat-avatar, .seat-holecards');
+  var top = Infinity, left = Infinity, bottom = -Infinity, right = -Infinity, any = false;
+  for (var i = 0; i < els.length; i++) {
+    var r = els[i].getBoundingClientRect();
+    if (r.width <= 0 || r.height <= 0) continue;
+    any = true;
+    if (r.top < top) top = r.top;
+    if (r.left < left) left = r.left;
+    if (r.bottom > bottom) bottom = r.bottom;
+    if (r.right > right) right = r.right;
+  }
+  if (!any) return null;
+  return { top: top, left: left, bottom: bottom, right: right, width: right - left, height: bottom - top };
+}
 
 function renderSeatsImmediate() {
   if (window._seatEditMode) { if (document.documentElement.getAttribute('data-seat-layout') === 'custom') return; window._seatEditMode = false; }   // gel pendant l'edition (custom seul) ; auto-degele si le mode a change
@@ -1140,18 +1174,21 @@ function renderSeatsImmediate() {
         // boxScale·0.72 (compact 1.1) et cap boxScale·2.0 (compact 2.6).
         var _zr3 = zone.getBoundingClientRect();
         var _selfPl3 = el.querySelector('.seat.me .seat-plate');
-        var _selfR3 = _selfPl3 ? _selfPl3.getBoundingClientRect() : null;
-        var _selfTop3 = _selfR3 ? (_selfR3.top - _zr3.top) : (_zH3 - 100); // réaffiné après _selfHn3 ci-dessous
+        // Empreinte visuelle complète (plate + avatar + cartes qui peuvent en
+        // déborder selon le pack de sièges — cf. _seatVisualRect ci-dessus),
+        // pas la seule plate.
+        var _selfVis3 = _selfPl3 ? _seatVisualRect(_selfPl3.closest('.seat')) : null;
+        var _selfTop3 = _selfVis3 ? (_selfVis3.top - _zr3.top) : (_zH3 - 100); // réaffiné après _selfHn3 ci-dessous
         // Socle inset : centre mesuré SANS le socle (bet-invariant, cf.
         // _plateSocleH) — sinon le barycentre descendait à chaque mise self.
         // Scale de tour divisé (cf. _plateTurnK, centre invariant) : le haut
         // de la self ne remonte plus de ~1.5 px quand c'est mon tour.
-        var _selfK3 = _selfR3 ? _plateTurnK(_selfPl3) : 1;
-        var _selfHn3 = _selfR3 ? _selfR3.height / _selfK3 : 0;
-        var _selfCy3 = _selfR3 ? (_selfR3.top + _selfR3.height / 2 - _zr3.top) : (_zH3 - 100);
-        var _selfSo3 = _selfR3 ? _plateSocleH(_selfPl3, { height: _selfHn3 }) : 0;
-        var _sumY3 = _selfR3 ? (_selfCy3 - _selfSo3 / 2) : (_zH3 - 100);
-        if (_selfR3) _selfTop3 = _selfCy3 - _selfHn3 / 2;
+        var _selfK3 = _selfVis3 ? _plateTurnK(_selfPl3) : 1;
+        var _selfHn3 = _selfVis3 ? _selfVis3.height / _selfK3 : 0;
+        var _selfCy3 = _selfVis3 ? (_selfVis3.top + _selfVis3.height / 2 - _zr3.top) : (_zH3 - 100);
+        var _selfSo3 = _selfVis3 ? _plateSocleH(_selfPl3, { height: _selfHn3 }) : 0;
+        var _sumY3 = _selfVis3 ? (_selfCy3 - _selfSo3 / 2) : (_zH3 - 100);
+        if (_selfVis3) _selfTop3 = _selfCy3 - _selfHn3 / 2;
         var _n3 = 1, _minB3 = Infinity;
         var _botTop3 = -Infinity, _botC3 = -Infinity; // siege du BAS de l'anneau (spectateur)
         var _rects3 = []; // rects des plates (px zone) pour le cap horizontal community
@@ -1168,12 +1205,15 @@ function renderSeatsImmediate() {
         // leur slot → un fantôme pèse exactement comme la boîte qu'il
         // remplace, et l'échelle reste constante toute la partie. ──
         var _liveH3 = [], _liveW3 = [];
-        el.querySelectorAll('.seat:not(.me):not(.seat-ghost) .seat-plate').forEach(function (plL3) {
-          var rL3 = plL3.getBoundingClientRect();
+        el.querySelectorAll('.seat:not(.me):not(.seat-ghost)').forEach(function (stL3) {
+          var plL3 = stL3.querySelector('.seat-plate');
+          if (!plL3) return;
+          var visL3 = _seatVisualRect(stL3); // plate + avatar + cartes (cf. _seatVisualRect)
+          if (!visL3) return;
           var _kL3 = _plateTurnK(plL3);                    // turn scale divisé
-          var _hLn3 = rL3.height / _kL3;
+          var _hLn3 = visL3.height / _kL3;
           var _hL3 = _hLn3 - _plateSocleH(plL3, { height: _hLn3 }); // socle exclu
-          if (_hL3 > 4) { _liveH3.push(_hL3); _liveW3.push(rL3.width / _kL3); }
+          if (_hL3 > 4) { _liveH3.push(_hL3); _liveW3.push(visL3.width / _kL3); }
         });
         var _med3 = function (a3) {
           if (!a3.length) return 0;
@@ -1181,22 +1221,24 @@ function renderSeatsImmediate() {
           return b3[(b3.length - 1) >> 1];
         };
         var _refH3 = _med3(_liveH3), _refW3 = _med3(_liveW3);
-        el.querySelectorAll('.seat:not(.me) .seat-plate').forEach(function (pl3) {
-          var rr3 = pl3.getBoundingClientRect();
-          var _st3 = pl3.closest ? pl3.closest('.seat') : null;
-          var _gh3 = !!(_st3 && _st3.classList.contains('seat-ghost'));
+        el.querySelectorAll('.seat:not(.me)').forEach(function (st3) {
+          var pl3 = st3.querySelector('.seat-plate');
+          if (!pl3) return;
+          var vis3 = _seatVisualRect(st3); // plate + avatar + cartes (cf. _seatVisualRect)
+          if (!vis3) return;
+          var _gh3 = st3.classList.contains('seat-ghost');
           // Socle inset exclu de la hauteur ET du centre (le socle s'ouvre
           // vers le BAS : haut inchangé, centre remonté d'une demi-contribution)
           // et scale de tour divisé (centre invariant, demi-dimensions
           // normalisées) → barycentre/bornes/corridor identiques avec ou
           // sans mises et quel que soit le siège au tour (parité QML).
           var _k3 = _plateTurnK(pl3);
-          var _hn3 = rr3.height / _k3;
+          var _hn3 = vis3.height / _k3;
           var _so3 = _plateSocleH(pl3, { height: _hn3 });
-          var _h3v = _hn3 - _so3, _w3v = rr3.width / _k3;
+          var _h3v = _hn3 - _so3, _w3v = vis3.width / _k3;
           if (_gh3 && _refH3 > 4) { _h3v = _refH3; _w3v = _refW3; }
-          var _c3 = rr3.top + rr3.height / 2 - _so3 / 2 - _zr3.top; // centre = slot (translate -50%)
-          var _cx3 = rr3.left + rr3.width / 2 - _zr3.left;
+          var _c3 = vis3.top + vis3.height / 2 - _so3 / 2 - _zr3.top; // centre = slot (translate -50%)
+          var _cx3 = vis3.left + vis3.width / 2 - _zr3.left;
           var _t3 = _c3 - _h3v / 2, _b3 = _c3 + _h3v / 2;
           if (_b3 < _minB3) _minB3 = _b3;                       // box la plus haute
           if (_c3 > _botC3) { _botC3 = _c3; _botTop3 = _t3; }   // box la plus basse
