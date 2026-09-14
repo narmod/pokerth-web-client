@@ -1,4 +1,6 @@
-2026-09-14 version 2.1.9-web.37 (current series):
+2026-09-14 version 2.1.9-web.38 (current series):
+- bugfix: the mute button in the lobby chat header wasn't showing up - a leftover style rule was hiding it by mistake
+2026-09-14 version 2.1.9-web.37:
 - new: a small bell icon next to the trash icon in the chat header (table chat and lobby chat) lets you mute that chat's notification sound - each one is independent
 2026-09-14 version 2.1.9-web.36:
 - bugfix: the Tables/Players tab bar on the live spectator page (/live) now stays properly pinned to the top while scrolling in every browser, not just some

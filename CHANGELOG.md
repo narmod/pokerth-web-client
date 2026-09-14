@@ -59,6 +59,15 @@ highlights below.
 
 ### Fixed
 
+- **Lobby chat mute button (`web.37`) was hidden by its own CSS selector**
+  (`web.38`, reported by narmod) — `#lobby-chat-panel .g-chat-panel-header
+  button[onclick*="toggleLobbyChat"]` used a substring match meant to hide
+  only the legacy close button (`onclick="toggleLobbyChat()"`), but
+  `App.toggleLobbyChatMute()` also contains `toggleLobbyChat` as a substring,
+  so the new mute button was caught by the same rule and hidden alongside it.
+  Selector changed to an exact match (`[onclick="toggleLobbyChat()"]`). The
+  table chat mute button was unaffected — no equivalent rule exists for
+  `toggleGameChat`.
 - **`/live` tab bar not pinning to the top — happened in Chrome too, not
   just Safari** (`web.36`, reported by sp0ck) — `.llb-tabs` cancelled
   `.llb-main`'s padding with a negative margin so it could sit flush at the

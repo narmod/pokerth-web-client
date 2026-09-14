@@ -10210,7 +10210,7 @@ html[data-buttons="pokerth"] .btn-action[disabled] { filter: grayscale(0.55) bri
   color:var(--text-dim,#8b93a7); font-size:var(--fs-sm); padding:18px; text-align:center; }
 
 /* Chat toujours présent → on masque son bouton de fermeture et son trigger header */
-#lobby-chat-panel .g-chat-panel-header button[onclick*="toggleLobbyChat"] { display:none; }
+#lobby-chat-panel .g-chat-panel-header button[onclick="toggleLobbyChat()"] { display:none; }
 #lobby-chat-btn { display:none !important; }
 /* Corps du chat : remplit le panneau (override du max-height:120px inline) — 2 modes */
 #s-lobby .lobby-grid > #lobby-chat-panel .chat-msgs {
