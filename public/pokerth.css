@@ -11791,6 +11791,11 @@ html[data-seat-struct="qml"] .seat-narrow .seat-name .seat-note-stars { font-siz
   min-width: 0; font-size: .78rem; opacity: .7;
   overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
 }
+/* Parité pokerth-live (PlayerListItem.vue) : italique, vert. */
+.live-lobby .llb-pl-idle {
+  min-width: 0; font-size: .78rem; font-style: italic; color: var(--green);
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
 .live-lobby .llb-c-spec { white-space: nowrap; }
 .live-lobby .llb-spec-sm { padding: 3px 10px; font-size: .78rem; }
 

@@ -37,6 +37,13 @@ highlights below.
 - **Amharic**, full UI catalogue, help corpus, SEO content pages and
   guest/registered/LAN broadcast notices (`web.22`–`24`) — 54 languages
   total.
+- **`/live` Players tab shows "Currently idle"** (`web.28`, parity with the
+  old spectool's `PlayerListItem.vue`, requested by sp0ck) — a player seated
+  and spectating nowhere now gets an italic green label where the
+  Watching/Playing line would go, matching `pokerth/pokerth-live`'s wording
+  and colour (`--pth-green`, mapped to our own `--green` var). English and
+  French only for now; the other 52 languages fall back to the English text
+  via the existing `t()` chain until translated.
 
 ### Fixed
 

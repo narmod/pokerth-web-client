@@ -123,6 +123,11 @@ function renderPlayers() {
         btn = '<button type="button" class="llb-spec llb-spec-sm" data-spec="' + esc(at.id) + '">' +
               '\u{1F441} ' + esc(tr('spectatorBtn', 'Spectate')) + '</button>';
       }
+    } else {
+      // Old spectool parity (pokerth/pokerth-live, PlayerListItem.vue) : a
+      // player seated and spectating nowhere gets an italic green "Currently
+      // idle" label in place of the Watching/Playing line.
+      sub = '<span class="llb-pl-idle">' + esc(tr('liveIdlePlayer', 'Currently idle')) + '</span>';
     }
     // Avatar and the player card both come from the client: _avatarChipHtml is
     // what the ordinary players panel uses, and openPlayerInfoPopup is the
