@@ -5258,8 +5258,31 @@ function statCached(p) {
   return st;
 }
 
-function sendFile(req, res, filePath, type, cacheCtl, st) {
+function sendFile(req, res, filePath, type, cacheCtl, st, useEtag) {
   const headers = Object.assign({ 'Content-Type': type, 'Cache-Control': cacheCtl }, SECURITY_HEADERS);
+  // Validators for CSS/JS/MJS: 'no-cache' means "revalidate before reuse", but
+  // without an ETag/Last-Modified there is nothing to revalidate against, so
+  // an intermediary (notably Cloudflare in front of pokerth.net — already seen
+  // serving stale copies during a past disk outage) can end up just keeping
+  // the old bytes instead of forwarding a real conditional request upstream.
+  if (useEtag) {
+    st = st || statCached(filePath);
+    if (!st) { res.writeHead(404); res.end('Not found'); return; }
+    const etag = 'W/"' + st.mtimeMs.toString(36) + '-' + st.size.toString(36) + '"';
+    const lastModified = st.mtime.toUTCString();
+    headers['ETag'] = etag;
+    headers['Last-Modified'] = lastModified;
+    const inm = req.headers['if-none-match'];
+    const ims = req.headers['if-modified-since'];
+    let notModified = false;
+    if (inm) {
+      notModified = inm.split(',').map(function (s) { return s.trim(); }).indexOf(etag) !== -1;
+    } else if (ims) {
+      const t = Date.parse(ims);
+      notModified = !isNaN(t) && st.mtimeMs <= t + 999; // second-precision header
+    }
+    if (notModified) { res.writeHead(304, headers); res.end(); return; }
+  }
   let enc = null;
   if (COMPRESSIBLE.test(type)) {
     const ae = String(req.headers['accept-encoding'] || '');
@@ -9515,10 +9538,9 @@ const httpServer = http.createServer((req, res) => {
            : 'application/octet-stream';
     // CSS/JS/MJS must always revalidate so a deploy is picked up without a
     // hard refresh; static media (images/fonts) can still be cached a day.
-    const cacheCtl = (ext === '.css' || ext === '.js' || ext === '.mjs')
-      ? 'no-cache, must-revalidate'
-      : 'public, max-age=86400';
-    return sendFile(req, res, candidate, type, cacheCtl, candSt);
+    const isCode = ext === '.css' || ext === '.js' || ext === '.mjs';
+    const cacheCtl = isCode ? 'no-cache, must-revalidate' : 'public, max-age=86400';
+    return sendFile(req, res, candidate, type, cacheCtl, candSt, isCode);
   }
   res.writeHead(404); res.end('Not found');
 });
