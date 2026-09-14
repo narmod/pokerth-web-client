@@ -7854,6 +7854,13 @@ html[data-seat-struct="qml"] .seat.folded .seat-holecards {
   opacity: 0.3;
   transition: opacity 0.25s ease-out;
 }
+/* /live uniquement (retour sp0ck 14/09/2026, suite) : le badge est injecté
+   DANS .seat-holecards (cf. commentaire plus haut), donc c'est CE conteneur —
+   pas .seat — qui le grisait encore malgré le correctif ci-dessus sur .seat.
+   On annule l'opacité de .seat-holecards ici et on grise directement les
+   cartes (.pk) au lieu du conteneur entier, ce qui laisse le badge en dehors. */
+:root[data-live="1"] .seat.folded .seat-holecards { opacity: 1 !important; }
+:root[data-live="1"] .seat.folded .seat-holecards .pk { opacity: 0.3; }
 /* Mise (pack PokerTH) : icône jeton à gauche du montant, comme le BetChip du
    client officiel (chipStack.svg). On garde la pastille de base (fond sombre,
    montant crème) et on préfixe juste le jeton PokerTH. */

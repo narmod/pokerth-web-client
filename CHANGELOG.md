@@ -50,13 +50,22 @@ highlights below.
 
 ### Fixed
 
+- **`/live` folded seats' action badge was still dimmed after `web.27`**
+  (`web.32`, reported by sp0ck) — `web.27` reset `.seat.folded`'s own
+  opacity, but the badge is injected inside `.seat-holecards`, and it is
+  `.seat-holecards` — not `.seat` — that actually carries the fold-dimming
+  opacity (0.3). That container's own opacity still dimmed the badge as
+  part of its compositing group. Now `.seat-holecards` itself stays at 1 on
+  `/live`, and only its `.pk` card children get the 0.3 fade, leaving the
+  badge untouched.
 - **`/live` theme toggle cycled a confusing third "automatic" step**
   (`web.31`, reported by sp0ck — "what does default stand for?") — the
   header button cycled `auto → light → dark`, but a visitor has no reference
   for what the OS-follow step currently shows. Now light/dark only; the
   toggle reads the actually-applied `data-theme` attribute (never the raw,
   possibly still-`'auto'` stored preference) so the icon and the next click
-  always match what's on screen.- **`/live` Tables/Players tab bar scrolled away with the list** (`web.30`,
+  always match what's on screen.
+- **`/live` Tables/Players tab bar scrolled away with the list** (`web.30`,
   reported by sp0ck) — `.llb-tabs` was an ordinary first child inside
   `.llb-main`'s own `overflow-y: auto` scroll, so scrolling down the row
   list carried it off-screen too; switching tabs meant scrolling all the
