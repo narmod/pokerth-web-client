@@ -4200,6 +4200,26 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
   font-size: calc(var(--standard-community-font-base) * var(--comm-scale, 1));
   border-radius: calc(5px * var(--comm-scale, 1));
 }
+/* BUGFIX narmod (14/09) : la Bible §9 groupe les 5 emplacements en
+   "Flop (0-2) | espace | Turn (3) | espace | River (4)" — la rangée web
+   n'appliquait qu'un gap UNIFORME de 3px partout, sans ce regroupement
+   visuel (constate cote-a-cote avec le QML). Valeur EXACTE extraite du
+   source QML en clair dans l'AppImage 2.1.9 fourni par narmod
+   (pokerth_qml-client, texte QML non compile) :
+     Row { spacing: 3
+       CommunitySlot(0) CommunitySlot(1) CommunitySlot(2)
+       Item { width: 8; height: 1 }
+       CommunitySlot(3)
+       Item { width: 8; height: 1 }
+       CommunitySlot(4)
+     }
+   -> entre 2 groupes : spacing(3) + spacer(8) + spacing(3) = 14px total ;
+   notre flexbox pose deja 3px de gap partout, donc marge supplementaire
+   de 14-3 = 11px seulement, ajoutee APRES la 3e carte (fin du flop) et
+   APRES la 4e (turn). */
+.comm-row .pk:nth-child(3), .comm-row .pk:nth-child(4) {
+  margin-right: calc(11px * var(--comm-scale, 1));
+}
 
 /* Pot display */
 .pot-display { display: none; }
@@ -4236,14 +4256,19 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
   pointer-events: none;
 }
 .pot-badge::before {
+  /* BUGFIX narmod (14/09) : le badge du pot dessinait un cercle en degrade
+     CSS fait maison au lieu de l'icone QML prescrite (Bible §9 : "chipStack.svg
+     + $ + totalPot"). C'est LA MEME icone que celle deja utilisee pour le
+     jeton de mise de chaque joueur (.seat-bet::before, meme fichier
+     /pucks/chipStack.svg) -> on reprend exactement la meme regle pour que
+     les deux se ressemblent, comme demande. Meme variable --bet-chip-img
+     pour rester surchargeable par theme de table.
+     */
   content: '';
-  width: max(9px, calc(12px * var(--comm-scale, 1)));
-  height: max(9px, calc(12px * var(--comm-scale, 1)));
-  border-radius: 50%;
-  background: radial-gradient(circle at 50% 38%, #ffe89a 0%, #f2c94c 55%, #c99a1e 100%);
-  border: 2px dashed rgba(0, 0, 0, 0.28);
-  box-sizing: border-box;
+  width: max(9px, calc(14px * var(--comm-scale, 1)));
+  height: max(9px, calc(14px * var(--comm-scale, 1)));
   flex: 0 0 auto;
+  background: var(--bet-chip-img, url('/pucks/chipStack.svg')) center / contain no-repeat;
 }
 .pot-badge.has-pot { display: inline-flex; }
 /* Le badge se positionne via transform:translate ; l'animation générique
