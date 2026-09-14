@@ -50,6 +50,15 @@ highlights below.
 
 ### Fixed
 
+- **`/live` tab bar not pinning to the top — happened in Chrome too, not
+  just Safari** (`web.36`, reported by sp0ck) — `.llb-tabs` cancelled
+  `.llb-main`'s padding with a negative margin so it could sit flush at the
+  top; combined with `position: sticky` (added in `web.30`) that's an
+  unreliable combination across engines, and it's what actually broke the
+  bar's pinning generally, not a Safari-specific clipping quirk as
+  `web.34`'s fix assumed. `.llb-main` now carries no padding at all — the
+  `sp-3` inset moved to the new `.llb-body` node instead — so the tab bar
+  sits flush with nothing to cancel out and no negative margin involved.
 - **`/live` the sliver only appeared while scrolling AND expanding a row —
   root cause was DOM recreation, not clipping** (`web.35`, reported by
   sp0ck) — `render()` rebuilt `.llb-tabs` via `innerHTML` on every call,
