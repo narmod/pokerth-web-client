@@ -40,6 +40,12 @@ highlights below.
 
 ### Fixed
 
+- **`/live` lobby-chat notification sound firing on every message** (`web.26`,
+  reported by sp0ck) — `onChat()` in `modules/net/msg-social.mjs` plays
+  `lobbychatnotify.mp3` for any lobby chat line from someone else while the
+  game screen isn't visible. On the ordinary client that's an occasional
+  ping; a `/live` visitor sits on the lobby view almost permanently, so the
+  sound played on nearly every message. Now skipped outright in `LIVE_MODE`.
 - Admin: the language pickers of the welcome message, guest / registered /
   LAN notice and poll editors were missing seven catalogue languages (am,
   bn, fil, id, pa, sw, th) — operators could not author those messages in

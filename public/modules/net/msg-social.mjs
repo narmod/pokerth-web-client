@@ -73,7 +73,10 @@ function onChat(sub) {
     // assis à une table, le panneau lobby n'est pas visible, le son n'avait
     // donc aucun référent à l'écran (remonté narmod 22/07). Le chat de partie
     // et les broadcasts (ctype 1 / 3) ne passent pas par ici.
-    if ((ctype === 0 || ctype === 4) && pid && pid !== S.myId && !_inGameScreen()) {
+    // Coupé en LIVE_MODE (retour sp0ck 14/09) : un visiteur de /live reste
+    // quasi en permanence sur la vue lobby, contrairement au client ordinaire
+    // où ce son est un ping occasionnel — il jouait donc à chaque message.
+    if ((ctype === 0 || ctype === 4) && pid && pid !== S.myId && !_inGameScreen() && !window.LIVE_MODE) {
       try { if (typeof notifyLobbyChat === 'function') notifyLobbyChat(); } catch (_e) {}
     }
     // Mon propre message : déjà affiché en optimiste à l'envoi (classe 'mine').
