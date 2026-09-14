@@ -1220,7 +1220,18 @@ function renderSeatsImmediate() {
           _selfTop3 = _botTop3;
           _commC3 = (_minB3 + _selfTop3) / 2;
         }
-        var _topB3 = (_minB3 < Infinity ? _minB3 : 0) + (_isCmp3 ? 39 : 26) * _seatBoxScale;
+        // BUGFIX narmod (rapport screenshots 14/09) : cette marge ne réservait
+        // de la place que pour la rangée de cartes elle-même — jamais pour le
+        // badge du pot, qui se dessine ENCORE au-dessus via --pot-badge-lift
+        // (40px x commScale, cf. .pot-badge dans pokerth.css) + sa propre boîte
+        // (~25px x commScale : padding + police + bordure). Sans cette réserve,
+        // _avail3 était surestimé -> _csComm grossissait trop (rangée
+        // surdimensionnée vs QML) ET, avec peu de joueurs (ellipse plus plate,
+        // boîte du haut plus proche du centre), le badge chevauchait carrément
+        // cette boîte. _seatBoxScale sert de proxy pour commScale (inconnu à ce
+        // stade du calcul, circulaire) — cohérent avec floor3/cap3 ci-dessous.
+        var _potBadgeReserve3 = 65 * _seatBoxScale;
+        var _topB3 = (_minB3 < Infinity ? _minB3 : 0) + (_isCmp3 ? 39 : 26) * _seatBoxScale + _potBadgeReserve3;
         var _avail3 = Math.min(_commC3 - _topB3 - 6, _selfTop3 - _commC3 - 6);
         var _gapF3 = _avail3 > 0 ? _avail3 / (_isCmp3 ? 66 : 84) : 0;
         var _cap3 = Math.min(_isCmp3 ? 2.6 : 1.8, _seatBoxScale * 2.0, (0.70 * _zW3) / 264);

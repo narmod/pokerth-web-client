@@ -6850,6 +6850,11 @@ const App = (() => {
       if (S.ws && S.gId) { try { send(MSG.buildLeaveGame(S.gId)); } catch(e) {} }
       S._pendingRejoin = 0; S._rejoinNickRetries = 0;
       try { localStorage.removeItem('pth_resume'); } catch(e) {}
+      // BUGFIX narmod : _peakSeatCount (parité QML _peakSeatCount, seat-render.mjs)
+      // n'était jamais remis à 0 en quittant une table -> une nouvelle partie
+      // avec MOINS de joueurs héritait de la géométrie de sièges de la
+      // précédente (boîtes/rangée cartes mal dimensionnées).
+      S._peakSeatCount = 0;
       S.amInGame = false; S.amGameAdmin = false; S._gameStarted = false; S._seatsFrozen = false; S._amSpectator = false;
       S.gId = 0; S.seats = []; S.seatData = {}; S._specPids = new Set(); updateSpectatorStrip();
       var _ego = document.getElementById('g-endgame-overlay');
@@ -7012,6 +7017,11 @@ const App = (() => {
     // new table.
     _resetGameState() {
       S.amInGame = false; S.amGameAdmin = false; S._gameStarted = false;
+      // BUGFIX narmod : cf. closeTable()/leaveGame() — _peakSeatCount (parité
+      // QML _peakSeatCount) devait déjà retomber ici mais avait été oublié ;
+      // sans ce reset, RemovedFromGame/rejoin raté/InitAck héritaient de la
+      // géométrie de sièges d'une partie précédente à effectif différent.
+      S._peakSeatCount = 0;
       S._seatsFrozen = false; S._amSpectator = false;
       S.gId = 0; S.seats = []; S.seatData = {};
       try { stopTurnTimer(); } catch (e) {}
@@ -7049,6 +7059,8 @@ const App = (() => {
       // ré-aspiré dans la table à la prochaine reconnexion/réouverture).
       S._pendingRejoin = 0; S._rejoinNickRetries = 0;
       try { localStorage.removeItem('pth_resume'); } catch(e) {}
+      // BUGFIX narmod : cf. closeTable() ci-dessus — même oubli de reset.
+      S._peakSeatCount = 0;
       S.amInGame = false; S.amGameAdmin = false; S._gameStarted = false; S._seatsFrozen = false; S._amSpectator = false;
       S.gId = 0; S.seats = []; S.seatData = {}; S._specPids = new Set(); updateSpectatorStrip();
       var _ego = document.getElementById('g-endgame-overlay');
