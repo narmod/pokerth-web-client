@@ -50,6 +50,14 @@ highlights below.
 
 ### Fixed
 
+- **`/live` a sliver of the scrolled-past row still peeked above the sticky
+  tab bar on iOS Safari** (`web.34`, reported by sp0ck) — a known WebKit bug:
+  an element with both `border-radius` and its own `overflow-y: auto` scroll
+  fails to reclip a `position: sticky` child to its rounded corner during
+  momentum scroll, so the row just above the tab bar could still show a
+  thin strip past the top edge even with `web.33`'s opaque background.
+  Added the standard `-webkit-mask-image` workaround, which forces Safari
+  to reclip to the box's actual shape every frame instead of only at rest.
 - **`/live` sticky tab bar let the row beneath it show through** (`web.33`,
   reported by sp0ck) — `web.30` made `.llb-tabs` `position: sticky` so it
   stays reachable while scrolling, but its background (`--chrome-tint`) is

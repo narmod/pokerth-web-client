@@ -11634,6 +11634,14 @@ html[data-seat-struct="qml"] .seat-narrow .seat-name .seat-note-stars { font-siz
   display: flex; flex-direction: column; min-width: 0; min-height: 0;
 }
 :root[data-live="1"] .live-lobby .llb-main { flex: 1; }
+/* Safari (iOS) fails to reclip a position:sticky child (.llb-tabs) to this
+   box's own border-radius during momentum scroll, letting a sliver of the
+   row scrolled past underneath peek above the rounded top edge (sp0ck,
+   third report on the sticky tab bar). Forcing a mask in the box's own
+   shape makes WebKit reclip every frame instead of only at rest. */
+:root[data-live="1"] .live-lobby .llb-main {
+  -webkit-mask-image: -webkit-radial-gradient(white, black);
+}
 :root[data-live="1"] .live-lobby .llb-side {
   height: var(--live-chat-h); flex: 0 0 var(--live-chat-h);
 }
