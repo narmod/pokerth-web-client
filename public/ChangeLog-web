@@ -1,4 +1,6 @@
-2026-09-14 version 2.1.9-web.43 (current series):
+2026-09-14 version 2.1.9-web.44 (current series):
+- bugfix: fixed two table display bugs - a new game with fewer players than the previous one could keep the old seat layout, and the pot marker could grow too big or overlap the top player's box on some tables
+2026-09-14 version 2.1.9-web.43:
 - new: the poker rules and FAQ pages are now available in Estonian, Latvian, Slovenian, Bosnian, Macedonian, Malay, Albanian, Punjabi, Amharic and Khmer - every language now has them
 2026-09-14 version 2.1.9-web.42:
 - improvement: the help pages, public pages and FAQ now all state the correct number of interface languages (55) in every language

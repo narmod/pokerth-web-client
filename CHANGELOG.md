@@ -67,6 +67,20 @@ highlights below.
 
 ### Fixed
 
+- **Seat/board geometry could inherit a previous game's player count**
+  (reported by narmod, screenshots QML vs web at 4 and 10 players) —
+  `S._peakSeatCount` (parity with QML `_peakSeatCount`, used to keep box
+  sizing stable while players get knocked out) was never reset when
+  leaving a table (`closeTable()`/`leaveGame()`/`_resetGameState()`), so
+  starting a new game with fewer players than a previous one on the same
+  page session kept the old, larger geometry. Also, the community-card
+  row's scale calculation (landscape wide layout) only reserved space for
+  the row itself above the top opponent box, never for the pot badge that
+  renders further up via `--pot-badge-lift` — this let the row grow
+  oversized versus the QML client and, with few players, let the pot
+  badge overlap the top seat box outright. Both now reserve/reset
+  correctly (`web.44`).
+
 - The interface-language count quoted in the help corpus, the public
   glossary / how-to pages, the FAQ, the SEO description and `llms.txt` had
   drifted (45 to 54 depending on when each language was added); every
