@@ -11757,11 +11757,17 @@ html[data-seat-struct="qml"] .seat-narrow .seat-name .seat-note-stars { font-siz
 /* ── Live mode: tabs above the list, and the players pane ────────────────── */
 .live-lobby .llb-tabs {
   display: flex; gap: 2px; flex-shrink: 0;
-  background: var(--chrome-tint); border-bottom: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
   /* Sticky within .llb-main's own scroll (overflow-y: auto below) : without
      this the tab bar scrolled away with the rows, and switching Tables/
      Players meant scrolling all the way back up first (sp0ck, 14/09/2026). */
   position: sticky; top: 0; z-index: 2;
+  /* --chrome-tint is only 6-35% opaque depending on theme — fine while the
+     bar scrolled in-flow, but now that it's pinned on top of the rows below,
+     that transparency let them show through (sp0ck, second report same day).
+     --field-bg is a solid, opaque colour in every palette and already what
+     the rows themselves use, so the bar reads as part of the same surface. */
+  background: var(--field-bg);
 }
 :root[data-live="1"] .live-lobby .llb-tabs {
   margin: calc(var(--sp-3) * -1) calc(var(--sp-3) * -1) var(--sp-3);

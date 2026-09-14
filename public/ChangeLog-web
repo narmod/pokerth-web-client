@@ -1,4 +1,6 @@
-2026-09-14 version 2.1.9-web.32 (current series):
+2026-09-14 version 2.1.9-web.33 (current series):
+- bugfix: on the live spectator page (/live), the Tables/Players tab bar no longer looks see-through when it's pinned at the top while you scroll
+2026-09-14 version 2.1.9-web.32:
 - bugfix: on the live spectator page (/live), a folded player's "Fold" tag really stays fully readable now - the previous fix missed that the tag sits inside the same box as the cards
 2026-09-14 version 2.1.9-web.31:
 - improvement: the theme button on the live spectator page (/live) now only switches between light and dark - the confusing third "automatic" step is gone

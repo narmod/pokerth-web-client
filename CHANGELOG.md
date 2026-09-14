@@ -50,6 +50,13 @@ highlights below.
 
 ### Fixed
 
+- **`/live` sticky tab bar let the row beneath it show through** (`web.33`,
+  reported by sp0ck) — `web.30` made `.llb-tabs` `position: sticky` so it
+  stays reachable while scrolling, but its background (`--chrome-tint`) is
+  only 6–35% opaque depending on theme — fine while it scrolled in-flow,
+  but now that it's pinned on top of the rows below, that transparency let
+  the scrolled-past row show through underneath it. Switched to `--field-bg`,
+  a solid colour in every palette and already what the rows themselves use.
 - **`/live` folded seats' action badge was still dimmed after `web.27`**
   (`web.32`, reported by sp0ck) — `web.27` reset `.seat.folded`'s own
   opacity, but the badge is injected inside `.seat-holecards`, and it is
