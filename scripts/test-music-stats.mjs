@@ -92,9 +92,15 @@ ok(/id="trafMusic"/.test(admin), 'the traffic tab keeps the per-day chart');
 const render = body(admin, 'renderMusic');
 ok(/_musKnown/.test(render), 'an empty chart distinguishes "proxy too old" from "nothing yet"');
 ok(/pm2 restart pokerth-web/.test(render), 'the too-old case tells the operator what to do');
-ok(/box\.innerHTML=_musChart\(keys\);/.test(render),
-  'the traffic card is the chart alone \u2014 per-track totals live in the Music tab');
-ok(!/envrow|musMoreBtn/.test(render), 'the ranked list is gone from the traffic tab');
+// The card was the chart on its own for a while, to keep per-track totals in
+// the Music tab and nowhere else. It carries its own summary again: _musRank
+// for the per-title breakdown and _musContext for the plays/day and
+// plays-per-100-visits line, above the chart. What still has to hold is that
+// the chart is last and that the old expandable ranked list did not come back
+// with them.
+ok(/box\.innerHTML=_musRank\(keys,total\)\+_musContext\(keys,total\)\+_musChart\(keys\);/.test(render),
+  'the traffic card is rank + context + chart, in that order');
+ok(!/envrow|musMoreBtn/.test(render), 'the old expandable ranked list is still gone');
 ok(/_musKnown=\(d\.music!==undefined\)/.test(admin), 'the chart is wired to the traffic payload');
 
 console.log(fail ? `FAIL ${fail}/${n}` : `OK ${n}/${n}`);
