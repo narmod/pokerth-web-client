@@ -3259,7 +3259,7 @@ var PARTS = {
       ["ਵੈਲਿਊ ਬੈਟ", "ਅਜਿਹੀ ਬੈਟ ਜੋ ਕਮਜ਼ੋਰ ਹੱਥ ਤੋਂ call ਕਰਵਾਉਣ ਲਈ ਲਾਈ ਜਾਵੇ, ਕਿਸੇ ਨੂੰ fold ਕਰਵਾਉਣ ਲਈ ਨਹੀਂ।"],
       [null, "ਸਟ੍ਰੇਟ A-2-3-4-5, ਜਿਸ ਵਿੱਚ ਇੱਕਾ ਨੀਵਾਂ ਚੱਲਦਾ ਹੈ। ਸਭ ਤੋਂ ਕਮਜ਼ੋਰ ਸਟ੍ਰੇਟ।"]
     ],
-    footer: function (h, c) { return "ਹਾਲੇ ਵੀ ਸਾਫ਼ ਨਹੀਂ ਕਿ ਹੱਥ ਅਸਲ ਵਿੱਚ ਕਿਵੇਂ ਚੱਲਦਾ ਹੈ? <a href=\\\"{rules}\\\">ਨਿਯਮ</a> ਬਲਾਇੰਡਾਂ ਤੋਂ ਸ਼ੋਡਾਊਨ ਤੱਕ ਇਸਨੂੰ ਕਵਰ ਕਰਦੇ ਹਨ, ਅਤੇ <a href=\\\"{hands}\\\">ਹੱਥ ਰੈਂਕਿੰਗ</a> ਦੱਸਦੀ ਹੈ ਕੀ ਕਿਸਨੂੰ ਹਰਾਉਂਦਾ ਹੈ।".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)); }
+    footer: function (h, c) { return "ਹਾਲੇ ਵੀ ਸਾਫ਼ ਨਹੀਂ ਕਿ ਹੱਥ ਅਸਲ ਵਿੱਚ ਕਿਵੇਂ ਚੱਲਦਾ ਹੈ? <a href=\"{rules}\">ਨਿਯਮ</a> ਬਲਾਇੰਡਾਂ ਤੋਂ ਸ਼ੋਡਾਊਨ ਤੱਕ ਇਸਨੂੰ ਕਵਰ ਕਰਦੇ ਹਨ, ਅਤੇ <a href=\"{hands}\">ਹੱਥ ਰੈਂਕਿੰਗ</a> ਦੱਸਦੀ ਹੈ ਕੀ ਕਿਸਨੂੰ ਹਰਾਉਂਦਾ ਹੈ।".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)); }
   },
   am: {
     title: "የፖከር መዝገበ ቃላት — የ Texas Hold’em ቃላት — PokerTH",
@@ -3324,7 +3324,7 @@ var PARTS = {
       ["የእሴት ውርርድ", "ማንንም fold ለማድረግ ሳይሆን፣ በደካማ እጅ call እንዲደረግ የሚደረግ ውርርድ።"],
       [null, "ኤሱ ዝቅ የሚጫወትበት straight A-2-3-4-5። ያለው ደካማው straight።"]
     ],
-    footer: function (h, c) { return "እጅ በእውነት እንዴት እንደሚሄድ አሁንም ግልጽ አይደለም? <a href=\\\"{rules}\\\">ደንቦቹ</a> ከብላይንዶች እስከ showdown ይሸፍኑታል፣ እና <a href=\\\"{hands}\\\">የእጅ ደረጃዎች</a> ምን ምንን እንደሚያሸንፍ ይዘረዝራሉ።".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)); }
+    footer: function (h, c) { return "እጅ በእውነት እንዴት እንደሚሄድ አሁንም ግልጽ አይደለም? <a href=\"{rules}\">ደንቦቹ</a> ከብላይንዶች እስከ showdown ይሸፍኑታል፣ እና <a href=\"{hands}\">የእጅ ደረጃዎች</a> ምን ምንን እንደሚያሸንፍ ይዘረዝራሉ።".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)); }
   },
   km: {
     title: "វចនានុក្រមបៀ — ពាក្យ Texas Hold’em — PokerTH",
@@ -3389,7 +3389,7 @@ var PARTS = {
       ["ការភ្នាល់តម្លៃ", "ការភ្នាល់ដែលធ្វើឡើងដើម្បីឱ្យដៃខ្សោយជាង call មិនមែនដើម្បីធ្វើឱ្យនរណា fold។"],
       [null, "Straight A-2-3-4-5 ដែលអាត់លេងទាប។ Straight ខ្សោយបំផុត។"]
     ],
-    footer: function (h, c) { return "នៅតែមិនច្បាស់ថាដៃដំណើរការយ៉ាងណាពិតប្រាកដ? <a href=\\\"{rules}\\\">ច្បាប់</a> គ្របដណ្ដប់ពី blind ដល់ showdown ហើយ<a href=\\\"{hands}\\\">ចំណាត់ថ្នាក់ដៃ</a> រាយអ្វីឈ្នះអ្វី។".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)); }
+    footer: function (h, c) { return "នៅតែមិនច្បាស់ថាដៃដំណើរការយ៉ាងណាពិតប្រាកដ? <a href=\"{rules}\">ច្បាប់</a> គ្របដណ្ដប់ពី blind ដល់ showdown ហើយ<a href=\"{hands}\">ចំណាត់ថ្នាក់ដៃ</a> រាយអ្វីឈ្នះអ្វី។".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)); }
   },
 
 
