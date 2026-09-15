@@ -17,6 +17,9 @@ highlights below.
 
 ### Added
 
+- **`/live` one expanded game row at a time** (`web.47`, requested by sp0ck)
+  — expanding a table's detail panel now closes whichever other one was
+  open, instead of letting several stack up at once.
 - `/rules` and `/faq` translated into the 10 languages that still fell
   back to English (et, lv, sl, bs, mk, ms, sq, pa, am, km) — both pages
   now exist in all 55 languages and are advertised in hreflang and the

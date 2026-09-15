@@ -318,7 +318,10 @@ function onClick(ev) {
   const line = ev.target.closest('[data-row]');
   if (line && host.contains(line)) {
     const id = line.getAttribute('data-row');
-    if (expanded.has(id)) expanded.delete(id); else expanded.add(id);
+    // One game open at a time (sp0ck, 14/09 evening) : expanding a row
+    // closes whichever other one was open, instead of stacking several.
+    if (expanded.has(id)) { expanded.delete(id); }
+    else { expanded.clear(); expanded.add(id); }
     render();   // the signature includes `expanded`, so this always repaints
   }
 }

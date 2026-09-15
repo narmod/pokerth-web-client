@@ -1,4 +1,6 @@
-2026-09-14 version 2.1.9-web.46 (current series):
+2026-09-14 version 2.1.9-web.47 (current series):
+- improvement: on the live spectator page (/live), opening a table's details now closes any other one you had open, so only one shows at a time
+2026-09-14 version 2.1.9-web.46:
 - bugfix: fixed the table jittering during actions and oversized seats on the Boardwalk, High Roller and Onyx Pill seat styles
 2026-09-14 version 2.1.9-web.45:
 - bugfix: the flop/turn/river cards are now grouped and spaced exactly like the desktop client, and the pot marker now uses the same coin icon as your bet chips
