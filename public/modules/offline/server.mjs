@@ -12,6 +12,8 @@ import { OfflineTable, ACT, bestHand } from './engine.mjs';
 import { decide, pickArchetype } from './bots.mjs';
 import { buildMessage, parseClientFrame, encode, packed, readFields, TYPE } from './proto.mjs';
 import { createAchievements } from '../achievements/index.mjs';
+import { t } from '../i18n.mjs';
+import { pickBanterKey } from './banter.mjs';
 
 const GS  = { preflop:0, flop:1, turn:2, river:3 };
 const NPA = { fold:1, check:2, call:3, bet:4, raise:5, allin:6 };
@@ -72,6 +74,8 @@ export class FakeServer {
     this._eggAces = false;           // easter egg /dealmeaces : AA à la prochaine main
     this._eggAcesUsed = false;       // une seule fois par partie
     this._chatKwTs = 0;              // anti-spam des réponses aux mots-clés du chat
+    this._banteredHand = false;      // vraie ligne de chat (pas [R]) déjà envoyée cette main ?
+    this._lastBanterKey = '';        // anti-répétition immédiate (toutes personnalités confondues)
   }
 
   _send(name, spec){ if(!this.stopped) this.deliver(buildMessage(name, spec)); }
@@ -303,6 +307,14 @@ export class FakeServer {
         try { if (typeof window !== 'undefined' && window.dispatchEvent) window.dispatchEvent(new CustomEvent('pth-achievement', { detail: a })); } catch (e) {}
       } });
     } catch (e) { this._ach = null; }
+    // Table talk : un bot sur les places assises peut saluer avant la
+    // première main (rare, donne le ton). Hors plafond « 1 ligne / main »
+    // puisqu'aucune main n'a encore commencé.
+    const _seatedBots = this.players.filter(p=>p.isBot);
+    if (_seatedBots.length && this._rrng() < 0.35) {
+      const _gb = _seatedBots[Math.floor(this._rrng()*_seatedBots.length)];
+      this._banter(_gb.id, 'greet', 1, 700, true);
+    }
     this.pace(()=>this.table.start(), 300);
   }
   _clearHumanTimer(){ if(this._humanTimer){ clearTimeout(this._humanTimer); this._humanTimer=null; } }
@@ -374,6 +386,29 @@ export class FakeServer {
     // Délai un peu plus long qu'une réaction d'action : après la distribution.
     this._botReact(bot.id, emoji, 0, 900);
   }
+  // ── Vrai banter texte (mode local) ───────────────────────────────────────
+  // Contrairement aux réactions emoji (canal [R], mute dédié), ce sont de
+  // VRAIS messages Chat, affichés comme ceux d'un joueur. Réglage indépendant
+  // (pth_bot_banter, ON par défaut, lu en direct comme pth_offline_skill) et
+  // plafond dur d'UNE ligne par main (bypassCap=true pour les moments hors-
+  // main : accueil à table, fin de tournoi). rng dédié (_rrng) uniquement.
+  _banterEnabled(){
+    try { if (typeof localStorage !== 'undefined') return localStorage.getItem('pth_bot_banter') !== '0'; } catch(e){}
+    return true;
+  }
+  _banter(botId, kind, prob, delay, bypassCap){
+    if(this.stopped || botId===this.meId || botId==null) return;
+    if(!this._banterEnabled()) return;
+    if(!bypassCap && this._banteredHand) return;
+    if(this._rrng() >= (prob==null?1:prob)) return;
+    const arch=(this.botCfg[botId] && this.botCfg[botId].arch) || 'tag';
+    const key = pickBanterKey(arch, kind, this._lastBanterKey, this._rrng);
+    if(!key) return;
+    if(!bypassCap) this._banteredHand = true;
+    this._lastBanterKey = key;
+    const text = t(key);
+    this.pace(()=>{ if(!this.stopped) this._send('Chat',[[1,0,this.gameId],[2,0,botId],[3,0,1],[4,2,text]]); }, delay||0);
+  }
   // Réaction d'un bot pendant son propre tour, d'après la décision calculée
   // (n'utilise QUE le rng dédié — pas de consommation du rng de jeu).
   _reactBotTurn(ev, d, think){
@@ -415,6 +450,16 @@ export class FakeServer {
       if(r.won>0){ this._react(r.playerId, (big || catOf(r)>=6) ? 'big' : 'happy', 0.5, _step(),0); }
       else if(catOf(r)>=4){ this._react(r.playerId, 'bad', 0.6, _step(),0); }  // bad beat : grosse main battue
       else { this._react(r.playerId, 'sad', 0.18, _step(),0); }
+    }
+    // Vrai banter (texte) : au plus une ligne, sur le moment marquant du
+    // showdown — le gros gain d'abord, sinon le bad beat.
+    for (const r of (results||[])){
+      if (r.playerId===this.meId) continue;
+      if (r.won>0 && (big || catOf(r)>=6)){ this._banter(r.playerId,'big',0.5,_step()); break; }
+    }
+    if (!this._banteredHand) for (const r of (results||[])){
+      if (r.playerId===this.meId) continue;
+      if (r.won===0 && catOf(r)>=4){ this._banter(r.playerId,'bad',0.4,_step()); break; }
     }
   }
   // ── Chat entrant (mode entraînement) — easter eggs uniquement ───────────
@@ -485,6 +530,7 @@ export class FakeServer {
       case 'handStart': {
         this._roAcc = 0;   // nouvelle main : repartir d'un accumulateur vierge
         this._reactedHand = new Set(); this._reactN = 0; this._reactCap = 2;
+        this._banteredHand = false;
         // Reset de l'état de barrel par-main pour chaque bot (compteur + street).
         for (const _id in this.botCfg){ const _c = this.botCfg[_id]; if (_c){ _c._barrels = 0; _c._barrelStreet = null; _c._hadDraw = false; } }
         this._reactAmbient();   // chit-chat d'ambiance (rare, cosmétique)
@@ -577,14 +623,16 @@ export class FakeServer {
       }
       case 'eliminated':
         if(ev.playerId===this.meId) this._meBusted = true;
-        else this._react(ev.playerId, 'bad', 0.55, this._roAcc);
+        else { this._react(ev.playerId, 'bad', 0.55, this._roAcc); this._banter(ev.playerId, 'bust', 0.45, this._roAcc + 400); }
         break;
       case 'endOfHandHide': {
         this._send('EndOfHandHide',[[1,0,G],[2,0,ev.playerId],[3,0,ev.moneyWon],[4,0,ev.playerMoney]]);
         // Vol de pot sans abattage : l'agresseur (bot) rafle une mise non triviale.
         var _bb=(this.table && this.table.bb) || 20;
-        if(ev.playerId!==this.meId && this.table && this.table.h && this.table.h.aggressorId===ev.playerId && (ev.moneyWon||0) > 3*_bb)
+        if(ev.playerId!==this.meId && this.table && this.table.h && this.table.h.aggressorId===ev.playerId && (ev.moneyWon||0) > 3*_bb){
           this._react(ev.playerId, 'steal', 0.5, 0);
+          this._banter(ev.playerId, 'steal', 0.3, 500);
+        }
         break;
       }
       case 'handComplete': {
@@ -609,6 +657,15 @@ export class FakeServer {
       case 'gameOver': {
         this._clearHumanTimer();
         var _go=this._roAcc; this._roAcc = 0;
+        // Vrai banter de fin de tournoi (hors plafond / main) : le bot qui
+        // remporte le SnG savoure, ou un bot sur le rail félicite le joueur
+        // humain quand c'est lui qui gagne.
+        if (ev.winnerId && ev.winnerId !== this.meId) {
+          this._banter(ev.winnerId, 'victory', 0.6, _go + 300, true);
+        } else if (!this._meBusted) {
+          var _rail = (this.players||[]).filter(p=>p.isBot);
+          if (_rail.length) { var _rb=_rail[Math.floor(this._rrng()*_rail.length)]; this._banter(_rb.id,'runnerup',0.5,_go+300,true); }
+        }
         if(this._meBusted){
           var _pl2=(this.table?this.table.players.filter(p=>p.in).length:0)+1;
           this.pace(()=>{ if(!this.stopped) this._send('EndOfGame',[[1,0,G],[2,0,ev.winnerId||this.meId],[3,0,_pl2],[4,0,1]]); }, _go + 200);

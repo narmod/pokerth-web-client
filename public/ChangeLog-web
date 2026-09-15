@@ -1,4 +1,7 @@
-2026-09-15 version 2.1.9-web.51 (current series):
+2026-09-15 version 2.1.9-web.54 (current series):
+- new: bots now sometimes speak up in chat with personality-matched one-liners (a boast, a groan, a "gg") instead of only emoji reactions - available in English and French for now, other languages coming soon
+
+2026-09-15 version 2.1.9-web.51:
 - bugfix: the mini music widget is now properly narrow on phones too, not just on desktop
 2026-09-15 version 2.1.9-web.50:
 - improvement: adjusted the music player based on feedback - the like/dislike buttons now sit next to the time counter, and the mini widget is narrower
