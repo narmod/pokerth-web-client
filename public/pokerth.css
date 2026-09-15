@@ -8520,6 +8520,7 @@ html[data-seat-edit="1"] #g-seats .seat.seat-ghost { outline: none; cursor: defa
   display: flex; flex-direction: column; gap: var(--sp-1);
 }
 .music-lcd-top { display: flex; align-items: center; justify-content: space-between; gap: var(--sp-4); }
+.music-lcd-top .music-vote { margin-top: 0; }
 .music-lcd .music-cur {
   font-size: 1.15rem; font-weight: 700; color: var(--gold);
   cursor: pointer; text-align: left; min-width: 0; line-height: 1;
@@ -8647,13 +8648,11 @@ html[data-seat-edit="1"] #g-seats .seat.seat-ghost { outline: none; cursor: defa
    Titre+temps sur une ligne, transport en une seule rangée, volume+balance
    fusionnés : la playlist reste fermée par défaut comme avant (_plOpen). */
 .music-player-box.music-condensed { gap: var(--sp-2); }
-.music-lcd-top .music-marquee { flex: 1 1 auto; min-width: 0; }
 .music-transport-condensed { flex-direction: row; flex-wrap: nowrap; gap: var(--sp-1); }
 .music-transport-condensed .music-tbtn { width: 30px; height: 30px; }
 .music-transport-condensed .music-tbtn svg { width: 15px; height: 15px; }
 .music-transport-condensed .music-tbtn-main { width: 36px; height: 36px; }
 .music-transport-condensed .music-tbtn-main svg { width: 17px; height: 17px; }
-.music-transport-condensed .music-vote { margin: 0 0 0 auto; }
 .music-vol-condensed { flex-wrap: nowrap; }
 .music-vol-condensed .music-vol-range { flex: 1 1 auto; max-width: 96px; }
 .music-vol-condensed .music-bal-range { flex: 1 1 auto; max-width: 64px; }
@@ -8714,6 +8713,13 @@ html[data-seat-edit="1"] #g-seats .seat.seat-ghost { outline: none; cursor: defa
 .floating-win .music-panel-title.win-dragging { cursor: grabbing; }
 /* En mode flottant, la fenetre pilote sa hauteur (resize) : on libere le plafond. */
 #music-panel.floating-win { max-height: none; width: min(340px, 92vw) !important; height: auto !important; }
+/* Widget replie (shade) plus etroit : son contenu (titre + 3 boutons + 2
+   pouces) n'a pas besoin des 340px du lecteur plein. Uniquement au-dessus du
+   seuil mobile (899px) : sous ce seuil la feuille fixe reste width:auto. */
+@media (min-width: 900px) {
+  #music-panel.music-shade { width: min(230px, 86vw); }
+  #music-panel.floating-win.music-shade { width: min(230px, 86vw) !important; }
+}
 /* Telephone / petit ecran : feuille fixe en bas, non deplacable. Le JS
    (_winGate=false) n'ajoute jamais .floating-win ici et nettoie les inline. */
 @media (max-width: 899px), (max-height: 599px) {

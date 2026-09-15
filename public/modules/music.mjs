@@ -908,16 +908,22 @@ function _render() {
       '</div>' +
     '</div>' +
     '<div class="music-player-box music-condensed">' +
-    // ── LCD condensé (narmod 15/09, maquette D) : titre + temps + VU sur UNE
-    // ligne (le titre defile toujours, mais partage la place avec l'heure au
-    // lieu d'occuper sa propre rangee) — les pouces ont quitte le LCD pour la
-    // rangee transport ci-dessous, une seule fois. ──
+    // ── LCD (narmod 15/09, retour arrière sur la fusion titre/temps —
+    // l'option D ne convenait pas telle quelle) : temps + VU sur la rangée du
+    // haut, POUCES sur cette même rangée (toujours à droite, via
+    // justify-content:space-between), titre repassé sur sa propre ligne
+    // en dessous comme avant la condensation. ──
     '<div class="music-lcd">' +
       '<div class="music-lcd-top">' +
-        '<div class="music-marquee"><span class="music-marquee-txt">' + (nowTxt || _esc(_t('musicNoTracks', 'No tracks available'))) + '</span></div>' +
         '<span class="music-time music-cur" data-mact="lcd" role="button" tabindex="0" title="' + _esc(_t('musicNowPlaying', 'Now playing')) + '">' + _curLabel(_cur, _dur, _canSeek) + '</span>' +
         ((_vuDead || !playing || _bypass) ? '' : '<span class="music-vu" aria-hidden="true">' + vuBars + '</span>') +
+        // ── pouces haut/bas sur la piste en cours, alignés à droite avec le temps ──
+        '<div class="music-vote" hidden>' +
+          '<button type="button" class="music-vbtn" data-mvote="up" aria-pressed="false" title="' + _esc(_t('musicLike', 'I like this track')) + '" data-i18n-title="musicLike" aria-label="' + _esc(_t('musicLike', 'I like this track')) + '">' + _icon('thumb-up') + '<span class="music-vote-n" hidden></span></button>' +
+          '<button type="button" class="music-vbtn" data-mvote="down" aria-pressed="false" title="' + _esc(_t('musicDislike', 'Not for me')) + '" data-i18n-title="musicDislike" aria-label="' + _esc(_t('musicDislike', 'Not for me')) + '">' + _icon('thumb-down') + '<span class="music-vote-n" hidden></span></button>' +
+        '</div>' +
       '</div>' +
+      '<div class="music-marquee"><span class="music-marquee-txt">' + (nowTxt || _esc(_t('musicNoTracks', 'No tracks available'))) + '</span></div>' +
     '</div>' +
     // ── barre de position ──
     '<div class="music-seek-row">' +
@@ -935,11 +941,6 @@ function _render() {
       '<button type="button" class="music-tbtn" data-mact="stop" title="' + _esc(_t('musicStop', 'Stop')) + '" data-i18n-title="musicStop">' + _icon('stop') + '</button>' +
       '<button type="button" class="music-tbtn music-rpt' + (_repeat === 'one' ? ' is-active' : '') + '" data-mact="rep-one" aria-pressed="' + (_repeat === 'one') + '" title="' + _esc(_t('musicRepeatOne', 'Repeat one')) + '" data-i18n-title="musicRepeatOne">' + _icon('rep-one') + '</button>' +
       '<button type="button" class="music-tbtn music-rpt' + (_repeat === 'all' ? ' is-active' : '') + '" data-mact="rep-all" aria-pressed="' + (_repeat === 'all') + '" title="' + _esc(_t('musicRepeatAll', 'Repeat playlist')) + '" data-i18n-title="musicRepeatAll">' + _icon('rep-all') + '</button>' +
-      // ── pouces haut/bas sur la piste en cours (masqués tant que le proxy n'a pas répondu) ──
-      '<div class="music-vote" hidden>' +
-        '<button type="button" class="music-vbtn" data-mvote="up" aria-pressed="false" title="' + _esc(_t('musicLike', 'I like this track')) + '" data-i18n-title="musicLike" aria-label="' + _esc(_t('musicLike', 'I like this track')) + '">' + _icon('thumb-up') + '<span class="music-vote-n" hidden></span></button>' +
-        '<button type="button" class="music-vbtn" data-mvote="down" aria-pressed="false" title="' + _esc(_t('musicDislike', 'Not for me')) + '" data-i18n-title="musicDislike" aria-label="' + _esc(_t('musicDislike', 'Not for me')) + '">' + _icon('thumb-down') + '<span class="music-vote-n" hidden></span></button>' +
-      '</div>' +
     '</div>' +
     // ── volume + balance G/D fusionnés sur une rangée (si StereoPanner
     // supporté) au lieu de deux rangées séparées. Rien n'est retiré : la
