@@ -70,6 +70,18 @@ highlights below.
 
 ### Changed
 
+- **High Roller & Onyx-Pill aligned on the same generic avatar-placement
+  mechanism as Boardwalk** (`web.53`, narmod) — the `html[data-seat-avatar="overlay"]`
+  block in `pokerth.css` is generalised from a single fixed "above the bar"
+  recipe into raw position slots (`--seat-avatar-top/bottom/left/right/
+  transform`, same for hole-cards), so it now also covers an avatar
+  anchored to a side and vertically centered (High Roller: left edge,
+  Onyx-Pill: right edge) and centered, non-overlapping hole-cards
+  (Onyx-Pill). Both packs' `style.css` now declare only their placement
+  variables and decoration — no `position:absolute`/`bottom:`/`transform:`
+  left to duplicate. No visual change; all three imported seat packs
+  (Boardwalk included) now share one placement mechanism, making a future
+  seat pack a matter of `seat.json` traits + colors, not layout code.
 - **Boardwalk: avatar/hole-cards placement moved off hardcoded
   `position:absolute`/`bottom:` values onto a new shared, pack-agnostic
   mechanism** (`web.52`, narmod) — a `avatarOverlay` seat trait now drives a

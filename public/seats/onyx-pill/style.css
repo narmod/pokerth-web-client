@@ -19,27 +19,30 @@ html[data-seat-struct="qml"] .seat-plate {
   border-radius: var(--r-pill);
   box-shadow: 0 3px 9px rgba(0, 0, 0, 0.55);
   overflow: visible;
+  /* Placement avatar/cartes : bloc générique data-seat-avatar="overlay" de
+     pokerth.css (trait avatarOverlay du pack). Avatar sur le bord DROIT,
+     centré verticalement ; cartes CENTRÉES (pas d'éventail, gap flex plutôt
+     que chevauchement) — valeurs historiques Onyx-Pill inchangées à l'écran. */
+  --seat-avatar-size: 44px; --seat-avatar-size-self: 50px;
+  --seat-avatar-top: 50%; --seat-avatar-bottom: auto; --seat-avatar-transform: translateY(-50%);
+  --seat-avatar-left: auto; --seat-avatar-right: -20px;
+  --seat-cards-gap: -6px; --seat-cards-bottom-self: calc(100% + 3px);
+  --seat-cards-left: 50%; --seat-cards-transform: translateX(-50%);
+  --seat-cards-overlap: 0px; --seat-cards-overlap-self: 0px; --seat-cards-fan: 0deg;
 }
 
-/* ── Avatar rond qui mord sur le bord droit (position en !important : le
-      rendu pose position:relative en style inline) ─────────────────────── */
+/* ── Avatar rond qui mord sur le bord droit — déco uniquement, le
+      placement vient du bloc générique overlay (pokerth.css) ─────────────── */
 html[data-seat-struct="qml"] .seat-avatar {
-  position: absolute !important;
-  right: -20px !important; left: auto !important;  /* moitié hors pilule : occlusion minimale */
-  top: 50% !important; transform: translateY(-50%) !important;
-  width: 44px !important; height: 44px !important;
   border: 2px solid #8a8a8e !important; border-radius: 50% !important;
   box-shadow: 0 2px 7px rgba(0, 0, 0, 0.65);
   z-index: 2;
 }
 
-/* ── Cartes adverses : posées sur le haut de la pilule, léger mordillage ─ */
+/* ── Cartes adverses : posées sur le haut de la pilule, centrées — déco
+      uniquement, le placement vient du bloc générique overlay ──────────── */
 html[data-seat-struct="qml"] .seat-holecards {
-  position: absolute !important;
-  bottom: calc(100% - 6px); top: auto !important; left: 50% !important;
-  transform: translateX(-50%) !important;
   display: flex !important; gap: 3px; z-index: 1;
-  grid-column: auto !important; grid-row: auto !important;
 }
 html[data-seat-struct="qml"] .seat-holecards .pk {
   width: 28px; height: 39px; font-size: var(--fs-3xs);
@@ -80,12 +83,9 @@ html[data-seat-struct="qml"] .seat.me .seat-plate {
   width: 148px; height: 52px; padding-right: 34px !important;
   border-color: #9a9a9e;
 }
-html[data-seat-struct="qml"] .seat.me .seat-avatar {
-  width: 50px !important; height: 50px !important;
-}
 html[data-seat-struct="qml"] .seat.me .seat-holecards,
 html[data-seat-struct="qml"] .seat.me .seat-holecards.shc-big {
-  bottom: calc(100% + 3px); z-index: 3;
+  z-index: 3;
 }
 html[data-seat-struct="qml"] .seat.me .seat-holecards .pk,
 html[data-seat-struct="qml"] .seat.me .seat-holecards.shc-big .pk {

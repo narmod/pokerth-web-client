@@ -15,6 +15,7 @@
     "badgeOnCards": false,
     "qmlSelf": true,
     "narrowByOrient": false,
-    "qmlStruct": true
+    "qmlStruct": true,
+    "avatarOverlay": true
   }
 }

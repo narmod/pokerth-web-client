@@ -16,6 +16,16 @@ html[data-seat-struct="qml"] .seat-plate {
   --turn-glow-z: 1;                            /* cadre SOUS avatar/cartes */
   --winner-frame-z: 1;
   --seat-bet-gap-l: 26px;                      /* mise écartée de l'avatar (gauche) */
+  /* Placement avatar/cartes : bloc générique data-seat-avatar="overlay" de
+     pokerth.css (trait avatarOverlay du pack). Avatar sur le bord GAUCHE,
+     centré verticalement (pas "au-dessus" comme Boardwalk) — valeurs
+     historiques High-Roller inchangées à l'écran. */
+  --seat-avatar-size: 46px; --seat-avatar-size-self: 56px;
+  --seat-avatar-top: 50%; --seat-avatar-bottom: auto; --seat-avatar-transform: translateY(-50%);
+  --seat-avatar-left: -20px; --seat-avatar-left-self: -24px;
+  --seat-cards-gap: 2px; --seat-cards-left: -8px; --seat-cards-left-self: 34px;
+  --seat-cards-rotate: -8deg; --seat-cards-rotate-self: -6deg;
+  --seat-cards-overlap: -9px; --seat-cards-overlap-self: -12px; --seat-cards-fan: 12deg;
 }
 
 /* ── La barre sombre ───────────────────────────────────────────────────── */
@@ -31,33 +41,22 @@ html[data-seat-struct="qml"] .seat-plate {
   overflow: visible;
 }
 
-/* ── Avatar rond cerclé d'argent, mordant le bord gauche ───────────────── */
+/* ── Avatar rond cerclé d'argent, mordant le bord gauche — déco uniquement,
+      le placement vient du bloc générique overlay (pokerth.css) ────────── */
 html[data-seat-struct="qml"] .seat-avatar {
-  position: absolute !important;
-  left: -20px !important; right: auto !important;
-  top: 50% !important; transform: translateY(-50%) !important;
-  width: 46px !important; height: 46px !important;
-  max-width: 46px !important; max-height: 46px !important;
   border: 2px solid #d9dce3 !important; border-radius: 50% !important;
   background: #101218;
   box-shadow: 0 2px 7px rgba(0, 0, 0, 0.65);
   z-index: 2;
 }
 
-/* ── Cartes en éventail au-dessus de l'avatar ──────────────────────────── */
+/* ── Cartes en éventail au-dessus de l'avatar — déco uniquement ────────── */
 html[data-seat-struct="qml"] .seat-holecards {
-  position: absolute !important;
-  bottom: calc(100% + 2px); top: auto !important;
-  left: -8px !important; transform: rotate(-8deg) !important;
   display: flex !important; z-index: 1;
-  grid-column: auto !important; grid-row: auto !important;
 }
 html[data-seat-struct="qml"] .seat-holecards .pk {
   width: 26px; height: 36px; font-size: var(--fs-3xs);
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
-}
-html[data-seat-struct="qml"] .seat-holecards .pk + .pk {
-  margin-left: -9px; transform: rotate(12deg); transform-origin: bottom left;
 }
 
 /* ── Nom fin / tapis gras (codes WSOP) ─────────────────────────────────── */
@@ -111,18 +110,11 @@ html[data-seat-struct="qml"] .seat.folded .seat-avatar { opacity: 0.5; }
 html[data-seat-struct="qml"] .seat.me .seat-plate {
   width: 152px; height: 46px; padding-left: 40px !important;
 }
-html[data-seat-struct="qml"] .seat.me .seat-avatar {
-  width: 56px !important; height: 56px !important;
-  max-width: 56px !important; max-height: 56px !important;
-  left: -24px !important;
-}
 html[data-seat-struct="qml"] .seat.me .seat-holecards,
 html[data-seat-struct="qml"] .seat.me .seat-holecards.shc-big {
-  bottom: calc(100% + 2px); left: 34px !important;
-  transform: rotate(-6deg) !important; z-index: 3;
+  z-index: 3;   /* placement (bottom/left/rotation) : bloc générique overlay */
 }
 html[data-seat-struct="qml"] .seat.me .seat-holecards .pk,
 html[data-seat-struct="qml"] .seat.me .seat-holecards.shc-big .pk {
   width: 38px !important; height: 53px !important; font-size: var(--fs-base);
 }
-html[data-seat-struct="qml"] .seat.me .seat-holecards .pk + .pk { margin-left: -12px; }

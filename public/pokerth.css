@@ -7649,29 +7649,40 @@ html[data-seat-struct="qml"] .seat.active .seat-avatar {
   animation: none !important;
 }
 html[data-seat-struct="qml"] .seat-holecards { grid-column: 2; grid-row: 1; display: flex; gap: var(--sp-1); flex: none; }
-/* ── Disposition générique "avatar en surplomb" (narmod 2026-09-15) ─────────
+/* ── Disposition générique "avatar hors grille" (narmod 2026-09-15) ─────────
    Trait de pack avatarOverlay:true (theme.mjs) -> html[data-seat-avatar="overlay"].
-   L'avatar et les cartes flottent AU-DESSUS de la barre nom/tapis au lieu
-   d'occuper une cellule de la grille QML — c'est le placement partagé par
-   les packs "avatar-personnage" (Boardwalk, High-Roller, Onyx-Pill…). Un
-   pack ne fournit plus que ses variables (tailles/écarts/rotation) + sa déco
-   (couleurs, bordures, ombres) — plus de position:absolute/bottom: en dur à
-   dupliquer dans chaque style.css. Défauts = valeurs historiques Boardwalk. */
+   L'avatar et les cartes sortent de la cellule de grille QML et se placent
+   en absolu, via des "slots" de position bruts (top/bottom/left/right/
+   transform) pilotés par variables CSS — pas une seule formule figée, donc
+   ça couvre aussi bien un avatar AU-DESSUS de la barre (Boardwalk) qu'un
+   avatar sur le bord GAUCHE ou DROIT centré verticalement (High-Roller,
+   Onyx-Pill), ou toute disposition future. Un pack ne fournit que ses
+   variables (position, tailles, écarts, rotation/overlap des cartes) + sa
+   déco (couleurs, bordures, ombres) — plus de position:absolute/bottom: en
+   dur à dupliquer dans chaque style.css. margin-top de la plate = 0 par
+   défaut (opt-in explicite --seat-plate-mtop, utile seulement pour un
+   avatar au-dessus qui pousse la barre). Défauts avatar = valeurs
+   historiques Boardwalk (au-dessus, ancré à gauche). */
 html[data-seat-avatar="overlay"][data-seat-struct="qml"] .seat-plate {
-  margin-top: var(--seat-plate-mtop, calc(var(--seat-avatar-size, 50px) + var(--seat-avatar-gap, 6px)));
+  margin-top: var(--seat-plate-mtop, 0px);
 }
 html[data-seat-avatar="overlay"][data-seat-struct="qml"] .seat-avatar {
   position: absolute !important;
-  bottom: calc(100% + var(--seat-avatar-gap, 6px)) !important; top: auto !important;
-  left: var(--seat-avatar-left, 2px) !important; right: auto !important;
+  top: var(--seat-avatar-top, auto) !important;
+  bottom: var(--seat-avatar-bottom, calc(100% + var(--seat-avatar-gap, 6px))) !important;
+  left: var(--seat-avatar-left, 2px) !important;
+  right: var(--seat-avatar-right, auto) !important;
+  transform: var(--seat-avatar-transform, none) !important;
   width: var(--seat-avatar-size, 50px) !important; height: var(--seat-avatar-size, 50px) !important;
   max-width: var(--seat-avatar-size, 50px) !important; max-height: var(--seat-avatar-size, 50px) !important;
 }
 html[data-seat-avatar="overlay"][data-seat-struct="qml"] .seat-holecards {
   position: absolute !important;
-  bottom: calc(100% + var(--seat-cards-gap, 3px)) !important; top: auto !important;
+  top: var(--seat-cards-top, auto) !important;
+  bottom: var(--seat-cards-bottom, calc(100% + var(--seat-cards-gap, 3px))) !important;
   left: var(--seat-cards-left, 60px) !important;
-  transform: rotate(var(--seat-cards-rotate, 9deg)) !important;
+  right: var(--seat-cards-right, auto) !important;
+  transform: var(--seat-cards-transform, rotate(var(--seat-cards-rotate, 9deg))) !important;
   grid-column: auto !important; grid-row: auto !important;
 }
 html[data-seat-avatar="overlay"][data-seat-struct="qml"] .seat-holecards .pk + .pk {
@@ -7680,18 +7691,23 @@ html[data-seat-avatar="overlay"][data-seat-struct="qml"] .seat-holecards .pk + .
   transform-origin: bottom left;
 }
 html[data-seat-avatar="overlay"][data-seat-struct="qml"] .seat.me .seat-plate {
-  margin-top: var(--seat-plate-mtop-self, calc(var(--seat-avatar-size-self, 58px) + var(--seat-avatar-gap, 6px)));
+  margin-top: var(--seat-plate-mtop-self, 0px);
 }
 html[data-seat-avatar="overlay"][data-seat-struct="qml"] .seat.me .seat-avatar {
   width: var(--seat-avatar-size-self, 58px) !important; height: var(--seat-avatar-size-self, 58px) !important;
   max-width: var(--seat-avatar-size-self, 58px) !important; max-height: var(--seat-avatar-size-self, 58px) !important;
-  bottom: calc(100% + var(--seat-avatar-gap, 6px)) !important;
-  left: var(--seat-avatar-left, 2px) !important;
+  top: var(--seat-avatar-top, auto) !important;
+  bottom: var(--seat-avatar-bottom, calc(100% + var(--seat-avatar-gap, 6px))) !important;
+  left: var(--seat-avatar-left-self, var(--seat-avatar-left, 2px)) !important;
+  right: var(--seat-avatar-right-self, var(--seat-avatar-right, auto)) !important;
+  transform: var(--seat-avatar-transform, none) !important;
 }
 html[data-seat-avatar="overlay"][data-seat-struct="qml"] .seat.me .seat-holecards {
-  bottom: calc(100% + var(--seat-cards-gap, 3px)) !important;
-  left: var(--seat-cards-left-self, 80px) !important;
-  transform: rotate(var(--seat-cards-rotate-self, 7deg)) !important;
+  top: var(--seat-cards-top, auto) !important;
+  bottom: var(--seat-cards-bottom-self, calc(100% + var(--seat-cards-gap, 3px))) !important;
+  left: var(--seat-cards-left-self, var(--seat-cards-left, 80px)) !important;
+  right: var(--seat-cards-right-self, var(--seat-cards-right, auto)) !important;
+  transform: var(--seat-cards-transform-self, var(--seat-cards-transform, rotate(var(--seat-cards-rotate-self, 7deg)))) !important;
 }
 html[data-seat-avatar="overlay"][data-seat-struct="qml"] .seat.me .seat-holecards .pk + .pk {
   margin-left: var(--seat-cards-overlap-self, -14px);
