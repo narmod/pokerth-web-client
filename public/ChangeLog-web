@@ -1,4 +1,7 @@
-2026-09-15 version 2.1.9-web.54 (current series):
+2026-09-15 version 2.1.9-web.55 (current series):
+- improvement: the bots' chat one-liners are now translated into all 55 interface languages, not just English and French
+
+2026-09-15 version 2.1.9-web.54:
 - new: bots now sometimes speak up in chat with personality-matched one-liners (a boast, a groan, a "gg") instead of only emoji reactions - available in English and French for now, other languages coming soon
 
 2026-09-15 version 2.1.9-web.51:

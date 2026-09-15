@@ -17,7 +17,7 @@ highlights below.
 
 ### Added
 
-- **Offline mode: bot text banter** (`web.54`) — bots occasionally send a real (non-`[R]`) chat line matched to their archetype voice (rock/tag/lag/station/maniac) at key moments (table greet, big win, bad beat, uncontested steal, bust, tournament win/runner-up). New `public/modules/offline/banter.mjs` (key pools only, no text); i18n keys `bnt<Archetype><Kind><n>` shipped in `en.mjs`/`fr.mjs`, other languages fall back to English via the normal `t()` resolution until translated. Independent toggle `pth_bot_banter` (default on), capped at one line per hand (bypassed for the table-greet and end-of-tournament moments).
+- **Offline mode: bot text banter** (`web.54`) — bots occasionally send a real (non-`[R]`) chat line matched to their archetype voice (rock/tag/lag/station/maniac) at key moments (table greet, big win, bad beat, uncontested steal, bust, tournament win/runner-up). New `public/modules/offline/banter.mjs` (key pools only, no text); i18n keys `bnt<Archetype><Kind><n>` shipped in `en.mjs`/`fr.mjs` first (`web.54`), then translated into the remaining 53 interface languages (`web.55`) — 140 keys per catalogue, parity-checked against English. Independent toggle `pth_bot_banter` (default on), capped at one line per hand (bypassed for the table-greet and end-of-tournament moments).
 - **`/live` one expanded game row at a time** (`web.47`, requested by sp0ck)
   — expanding a table's detail panel now closes whichever other one was
   open, instead of letting several stack up at once.
