@@ -95,7 +95,10 @@ for (const code of codes) {
 // sits unnoticed inside a wall of another script — "players" survived a full
 // read-through of one of these entries. Anything in a non-Latin definition
 // that is not deliberate jargon is flagged.
-const JARGON = /^(PokerTH|No-Limit|Fold|Check|Call|Raise|All-In|all-in|set|trips|wheel|LAN|PWA)$/;
+// Hold'em is the name of the game and stays in Latin in 36 of the 54
+// catalogues, including every Latin-script one; bad beat sits with set,
+// trips and wheel as poker jargon that is deliberately left in English.
+const JARGON = /^(PokerTH|No-Limit|Hold|Fold|Check|Call|Raise|All-In|all-in|set|trips|wheel|bad|beat|LAN|PWA)$/;
 const NON_LATIN = /[\u0400-\u04FF\u0590-\u05FF\u0600-\u06FF\u0900-\u097F\u0980-\u09FF\u0B80-\u0BFF\u0E00-\u0E7F\u3040-\u30FF\u4E00-\u9FFF\uAC00-\uD7A3]/;
 for (const code of codes) {
   const leaks = [];
