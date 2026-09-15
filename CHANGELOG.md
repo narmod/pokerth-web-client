@@ -87,6 +87,12 @@ highlights below.
   measured. No change for PokerTH, where these already live inside the
   plate (`web.46`).
 
+- **Shade widget still too wide on mobile** (narmod, screenshot on iPhone)
+  — the narrower width from the previous entry was gated to `>=900px`,
+  leaving the mobile fixed-sheet mode's `width: auto` (nearly edge to
+  edge) untouched. Removed the gate; `.music-shade` now wins on every
+  screen size and anchors to the right instead of stretching (`web.51`).
+
 - **Music player follow-up: LCD title/time merge reverted, shade widget
   narrowed** (narmod tried the previous build and asked for two
   adjustments) — the merged title+time LCD line didn't read well, so the
