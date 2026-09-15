@@ -87,6 +87,22 @@ highlights below.
   measured. No change for PokerTH, where these already live inside the
   plate (`web.46`).
 
+- **Card flip animation didn't match the QML client** (reported by
+  narmod) — QML's `CardImage` component does a plain 2D horizontal scale
+  squash on a centred `Scale{xScale}` transform, not a 3D rotation:
+  phase 1 shrinks `xScale` 1→0 over 170ms (`Easing.InQuad`), phase 2
+  grows it back 0→1 over 300ms with a slight bounce
+  (`Easing.OutBack`, overshoot 1.15) — 470ms total, extracted verbatim
+  from the plain-text QML source embedded in the 2.1.9 AppImage narmod
+  provided. The web client instead ran a fake `rotateY` 3D wobble at a
+  flat 260ms, and staggered the flop cards by 120/240ms instead of
+  QML's 220/440ms. `@keyframes cardFlip` now reproduces the exact
+  2-phase squash (via per-keyframe `animation-timing-function` against
+  a 470ms linear total), with the correct flop stagger; `.pk-river` and
+  `.pk-showdown` (QML reuses the same `CardImage` component for both)
+  now use the same 470ms so the keyframe percentages stay meaningful
+  (`web.48`).
+
 - **Community-card row didn't group Flop/Turn/River like the QML client,
   and the pot badge used a hand-drawn circle instead of the chipStack.svg
   icon** (reported by narmod, side-by-side screenshots) — the QML source
