@@ -8713,13 +8713,6 @@ html[data-seat-edit="1"] #g-seats .seat.seat-ghost { outline: none; cursor: defa
 .floating-win .music-panel-title.win-dragging { cursor: grabbing; }
 /* En mode flottant, la fenetre pilote sa hauteur (resize) : on libere le plafond. */
 #music-panel.floating-win { max-height: none; width: min(340px, 92vw) !important; height: auto !important; }
-/* Widget replie (shade) plus etroit : son contenu (titre + 3 boutons + 2
-   pouces) n'a pas besoin des 340px du lecteur plein. Uniquement au-dessus du
-   seuil mobile (899px) : sous ce seuil la feuille fixe reste width:auto. */
-@media (min-width: 900px) {
-  #music-panel.music-shade { width: min(230px, 86vw); }
-  #music-panel.floating-win.music-shade { width: min(230px, 86vw) !important; }
-}
 /* Telephone / petit ecran : feuille fixe en bas, non deplacable. Le JS
    (_winGate=false) n'ajoute jamais .floating-win ici et nettoie les inline. */
 @media (max-width: 899px), (max-height: 599px) {
@@ -8730,6 +8723,15 @@ html[data-seat-edit="1"] #g-seats .seat.seat-ghost { outline: none; cursor: defa
     border-radius: 14px;
   }
 }
+/* Widget replie (shade) plus etroit QUEL QUE SOIT l'ecran (narmod 15/09,
+   2e retour : encore trop large sur mobile avec le seuil >=900px). Son
+   contenu (titre + 3 boutons + 2 pouces) n'a jamais besoin des 340px du
+   lecteur plein ni de la largeur "auto" (quasi plein ecran) de la feuille
+   mobile — donc plus de garde de largeur d'ecran ici, la specificite de
+   .music-shade suffit a l'emporter sur les deux regles ci-dessus (bureau et
+   mobile). Ancre a droite (left:auto) au lieu d'etirer de bord a bord. */
+#music-panel.music-shade { left: auto; width: min(220px, 78vw); }
+#music-panel.floating-win.music-shade { width: min(220px, 78vw) !important; }
 
 /* ═══════════════════════════════════════════════════════════════════
    Ranking modal (connect screen) — PokerTH / BBC / WEC.
