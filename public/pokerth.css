@@ -2382,14 +2382,19 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
 
 /* ── River — révélation dramatique ── */
 .pk-river {
-  /* Parité QML : river immédiate, même fondu 260 ms que le turn. */
-  animation: cardFlip 0.26s cubic-bezier(.3,0,.2,1) both !important;
+  /* Parité QML : river immédiate, même flip 470ms (170+300) que les autres
+     — cf. le commentaire complet sur @keyframes cardFlip. La durée DOIT
+     rester 0.47s ici : le decoupage 36.17% dans les keyframes est calé sur
+     ce total (170ms de la phase 1), une durée differente le desynchronise. */
+  animation: cardFlip 0.47s linear both !important;
   animation-delay: 0s !important;
 }
 
 /* ── Showdown — flip cartes adversaires ── */
 .pk-showdown {
-  animation: cardFlip 0.32s cubic-bezier(.3,0,.2,1) both;
+  /* Même composant CardImage côté QML pour les cartes retournées au
+     showdown : mêmes 470ms (170+300), cf. @keyframes cardFlip. */
+  animation: cardFlip 0.47s linear both;
 }
 
 /* ── Reset action fade entre mains ── */
@@ -3197,20 +3202,34 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
 }
 .pk-deal:nth-child(2) { animation-delay: 0.15s; }
 
-/* ── Flip cartes communes (amélioré) ── */
+/* ── Flip cartes communes — PARITÉ EXACTE QML (narmod 14/09, source QML en
+   clair extraite de l'AppImage 2.1.9, composant CardImage) ──
+   Le client QML ne fait PAS un vrai flip 3D (pas de rotateY) : c'est un
+   simple aplatissement horizontal en 2 temps, sur transform Scale{xScale}
+   centré (origin = milieu de la carte) :
+     Phase 1 (retournement) : xScale 1 → 0, durée 170ms, easing.type: InQuad
+     Phase 2 (dépli, avec un léger rebond) : xScale 0 → 1, durée 300ms,
+       easing.type: OutBack, easing.overshoot: 1.15
+   Le dos/la face sont déjà en place dans le DOM tout du long ; c'est le
+   passage par xScale=0 qui simule le "retournement" (même principe ici :
+   la face voulue est déjà rendue, seule la mise à plat masque le switch).
+   Durée totale 170+300 = 470ms. Charnière à 170/470 = 36.17% de l'anim.
+   InQuad ≈ cubic-bezier(.11,0,.5,0) ; OutBack(overshoot 1.15, plus doux que
+   le 1.70158 par défaut de Qt) ≈ cubic-bezier(.34,1.38,.64,1) — Qt "back"
+   n'est pas une bézier cubique pure, ceci est la meilleure approximation
+   CSS. Stagger flop : 0 / 220 / 440 ms (boardIndex × 220, QML) ; turn et
+   river à 0 (chacun dans son propre événement de rue, pas de décalage
+   entre eux). Timing-function posé PAR PALIER dans les keyframes (durée
+   globale "linear" pour que chaque palier applique le sien). */
 @keyframes cardFlip {
-  0%   { transform: rotateY(90deg) scale(0.85); opacity: 0; }
-  55%  { transform: rotateY(-6deg) scale(1.06); opacity: 1; }
-  80%  { transform: rotateY(3deg) scale(0.99); }
-  100% { transform: rotateY(0deg) scale(1); opacity: 1; }
+  0%      { transform: scaleX(1); animation-timing-function: cubic-bezier(.11,0,.5,0); }
+  36.17%  { transform: scaleX(0); animation-timing-function: cubic-bezier(.34,1.38,.64,1); }
+  100%    { transform: scaleX(1); }
 }
-/* Timings officiels (bible §9) : flop échelonné 0 / 120 / 240 ms, turn et
-   river IMMÉDIATS — durée 260 ms partout (fondu QML ; on garde le flip web,
-   héritage ShowFlipCardsAnimation du client Qt-Widgets, aux timings QML). */
-.pk-flip { animation: cardFlip 0.26s cubic-bezier(.3,0,.2,1) both; }
+.pk-flip { animation: cardFlip 0.47s linear both; transform-origin: center; }
 .pk-flip:nth-child(1) { animation-delay: 0s; }
-.pk-flip:nth-child(2) { animation-delay: 0.12s; }
-.pk-flip:nth-child(3) { animation-delay: 0.24s; }
+.pk-flip:nth-child(2) { animation-delay: 0.22s; }
+.pk-flip:nth-child(3) { animation-delay: 0.44s; }
 .pk-flip:nth-child(4) { animation-delay: 0s; }
 .pk-flip:nth-child(5) { animation-delay: 0s; }
 
