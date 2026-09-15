@@ -87,6 +87,16 @@ highlights below.
   measured. No change for PokerTH, where these already live inside the
   plate (`web.46`).
 
+- **Music player: thumbs up/down on the collapsed widget, condensed full
+  player** (requested by narmod, mockups A-D, picked C and D) — the
+  collapsed/shade widget now shows the track title on its own line with
+  transport + vote thumbs on a second row (`_renderVote()` now updates
+  every `.music-vote` row, since there can be two now). The full player
+  merges title+time onto one LCD line, collapses the two transport rows
+  into one, and merges volume + L/R balance onto a single row — nothing
+  removed, just regrouped, so the visible height drops by roughly a
+  third (`web.49`).
+
 - **Card flip animation didn't match the QML client** (reported by
   narmod) — QML's `CardImage` component does a plain 2D horizontal scale
   squash on a centred `Scale{xScale}` transform, not a 3D rotation:

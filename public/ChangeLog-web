@@ -1,4 +1,6 @@
-2026-09-15 version 2.1.9-web.48 (current series):
+2026-09-15 version 2.1.9-web.49 (current series):
+- improvement: the mini music player now has like/dislike buttons, and the full player is more compact
+2026-09-15 version 2.1.9-web.48:
 - improvement: the card flip animation on the table now matches the desktop client exactly
 2026-09-14 version 2.1.9-web.47:
 - improvement: on the live spectator page (/live), opening a table's details now closes any other one you had open, so only one shows at a time
