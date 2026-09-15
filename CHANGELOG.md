@@ -87,6 +87,15 @@ highlights below.
   measured. No change for PokerTH, where these already live inside the
   plate (`web.46`).
 
+- **Music player follow-up: LCD title/time merge reverted, shade widget
+  narrowed** (narmod tried the previous build and asked for two
+  adjustments) — the merged title+time LCD line didn't read well, so the
+  full player is back to two lines (time+VU on top, title below), with
+  the vote thumbs now on the time/VU line instead, right-aligned. The
+  collapsed/shade widget's panel width dropped from the shared 340px to
+  230px (desktop/floating only) since its content never needed the full
+  player's width (`web.50`).
+
 - **Music player: thumbs up/down on the collapsed widget, condensed full
   player** (requested by narmod, mockups A-D, picked C and D) — the
   collapsed/shade widget now shows the track title on its own line with

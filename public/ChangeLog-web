@@ -1,4 +1,6 @@
-2026-09-15 version 2.1.9-web.49 (current series):
+2026-09-15 version 2.1.9-web.50 (current series):
+- improvement: adjusted the music player based on feedback - the like/dislike buttons now sit next to the time counter, and the mini widget is narrower
+2026-09-15 version 2.1.9-web.49:
 - improvement: the mini music player now has like/dislike buttons, and the full player is more compact
 2026-09-15 version 2.1.9-web.48:
 - improvement: the card flip animation on the table now matches the desktop client exactly
