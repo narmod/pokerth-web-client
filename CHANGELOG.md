@@ -95,6 +95,16 @@ highlights below.
 
 ### Fixed
 
+- **Portrait board cards ~17 % smaller than the QML client** (narmod,
+  measured directly off side-by-side screenshots of the real QML app —
+  both the desktop AppImage and the Android APK compile `GamePage.qml`
+  to bytecode, so the exact formula isn't extractable as source; the
+  actual pixel sizes are, and that's what was compared) — self hole
+  cards already matched within ~3%, but board cards measured ~14-20%
+  smaller than QML across two independent screenshots at matched
+  screen proportions. The existing portrait autofit compensation
+  (`web` history) closed most of the gap but not all of it; added a
+  measured 1.17× correction on top (`web.59`).
 - **Red X on folded players' avatars** (`web.58`, reported by sp0ck) — the
   fold state was already shown by the fold badge and the dimmed hole
   cards, and the X was barely visible against some avatar seat packs
