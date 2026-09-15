@@ -796,18 +796,20 @@ function _renderProgress() {
 // reconstruirait le panneau et casserait le drag de la barre de position.
 function _renderVote() {
   if (!_bodyEl) return;
-  var row = _bodyEl.querySelector('.music-vote');
-  if (!row) return;
-  if (!_vote.known || _vote.id !== _curId) { row.hidden = true; return; }
-  row.hidden = false;
-  [['up', 1], ['down', -1]].forEach(function (pair) {
-    var b = row.querySelector('[data-mvote="' + pair[0] + '"]');
-    if (!b) return;
-    var on = _vote.mine === pair[1];
-    b.classList.toggle('is-active', on);
-    b.setAttribute('aria-pressed', String(on));
-    var c = b.querySelector('.music-vote-n');
-    if (c) { c.hidden = !_vote.pub; c.textContent = _vote.pub ? String(pair[1] === 1 ? _vote.up : _vote.down) : ''; }
+  // Deux rangees .music-vote depuis narmod 15/09 (widget replie + lecteur
+  // plein) : on les met a jour toutes les deux, chacune independamment.
+  _bodyEl.querySelectorAll('.music-vote').forEach(function (row) {
+    if (!_vote.known || _vote.id !== _curId) { row.hidden = true; return; }
+    row.hidden = false;
+    [['up', 1], ['down', -1]].forEach(function (pair) {
+      var b = row.querySelector('[data-mvote="' + pair[0] + '"]');
+      if (!b) return;
+      var on = _vote.mine === pair[1];
+      b.classList.toggle('is-active', on);
+      b.setAttribute('aria-pressed', String(on));
+      var c = b.querySelector('.music-vote-n');
+      if (c) { c.hidden = !_vote.pub; c.textContent = _vote.pub ? String(pair[1] === 1 ? _vote.up : _vote.down) : ''; }
+    });
   });
 }
 
@@ -894,23 +896,27 @@ function _render() {
 
   _bodyEl.innerHTML =
     '<div class="music-shade-row">' +
-      '<button type="button" class="music-tbtn" data-mact="prev"' + (multi ? '' : ' disabled') + ' aria-label="' + _esc(_t('musicPrev', 'Previous')) + '">' + _icon('prev') + '</button>' +
-      '<button type="button" class="music-tbtn music-tbtn-main" data-mact="toggle" aria-label="' + _esc(_t(ppKey, playing ? 'Pause' : 'Play')) + '">' + ppIcon + '</button>' +
-      '<button type="button" class="music-tbtn" data-mact="next"' + (multi ? '' : ' disabled') + ' aria-label="' + _esc(_t('musicNext', 'Next')) + '">' + _icon('next') + '</button>' +
       '<div class="music-marquee music-shade-mq"><span class="music-marquee-txt">' + (nowTxt || _esc(_t('musicNoTracks', 'No tracks available'))) + '</span></div>' +
+      '<div class="music-shade-ctrl">' +
+        '<button type="button" class="music-tbtn" data-mact="prev"' + (multi ? '' : ' disabled') + ' aria-label="' + _esc(_t('musicPrev', 'Previous')) + '">' + _icon('prev') + '</button>' +
+        '<button type="button" class="music-tbtn music-tbtn-main" data-mact="toggle" aria-label="' + _esc(_t(ppKey, playing ? 'Pause' : 'Play')) + '">' + ppIcon + '</button>' +
+        '<button type="button" class="music-tbtn" data-mact="next"' + (multi ? '' : ' disabled') + ' aria-label="' + _esc(_t('musicNext', 'Next')) + '">' + _icon('next') + '</button>' +
+        '<div class="music-vote music-shade-vote" hidden>' +
+          '<button type="button" class="music-vbtn" data-mvote="up" aria-pressed="false" title="' + _esc(_t('musicLike', 'I like this track')) + '" data-i18n-title="musicLike" aria-label="' + _esc(_t('musicLike', 'I like this track')) + '">' + _icon('thumb-up') + '<span class="music-vote-n" hidden></span></button>' +
+          '<button type="button" class="music-vbtn" data-mvote="down" aria-pressed="false" title="' + _esc(_t('musicDislike', 'Not for me')) + '" data-i18n-title="musicDislike" aria-label="' + _esc(_t('musicDislike', 'Not for me')) + '">' + _icon('thumb-down') + '<span class="music-vote-n" hidden></span></button>' +
+        '</div>' +
+      '</div>' +
     '</div>' +
-    '<div class="music-player-box">' +
-    // ── LCD : temps (cliquable écoulé/restant) + VU + titre défilant ──
+    '<div class="music-player-box music-condensed">' +
+    // ── LCD condensé (narmod 15/09, maquette D) : titre + temps + VU sur UNE
+    // ligne (le titre defile toujours, mais partage la place avec l'heure au
+    // lieu d'occuper sa propre rangee) — les pouces ont quitte le LCD pour la
+    // rangee transport ci-dessous, une seule fois. ──
     '<div class="music-lcd">' +
       '<div class="music-lcd-top">' +
+        '<div class="music-marquee"><span class="music-marquee-txt">' + (nowTxt || _esc(_t('musicNoTracks', 'No tracks available'))) + '</span></div>' +
         '<span class="music-time music-cur" data-mact="lcd" role="button" tabindex="0" title="' + _esc(_t('musicNowPlaying', 'Now playing')) + '">' + _curLabel(_cur, _dur, _canSeek) + '</span>' +
         ((_vuDead || !playing || _bypass) ? '' : '<span class="music-vu" aria-hidden="true">' + vuBars + '</span>') +
-      '</div>' +
-      '<div class="music-marquee"><span class="music-marquee-txt">' + (nowTxt || _esc(_t('musicNoTracks', 'No tracks available'))) + '</span></div>' +
-      // ── pouces haut/bas sur la piste en cours (masqués tant que le proxy n'a pas répondu) ──
-      '<div class="music-vote" hidden>' +
-        '<button type="button" class="music-vbtn" data-mvote="up" aria-pressed="false" title="' + _esc(_t('musicLike', 'I like this track')) + '" data-i18n-title="musicLike" aria-label="' + _esc(_t('musicLike', 'I like this track')) + '">' + _icon('thumb-up') + '<span class="music-vote-n" hidden></span></button>' +
-        '<button type="button" class="music-vbtn" data-mvote="down" aria-pressed="false" title="' + _esc(_t('musicDislike', 'Not for me')) + '" data-i18n-title="musicDislike" aria-label="' + _esc(_t('musicDislike', 'Not for me')) + '">' + _icon('thumb-down') + '<span class="music-vote-n" hidden></span></button>' +
       '</div>' +
     '</div>' +
     // ── barre de position ──
@@ -918,33 +924,35 @@ function _render() {
       '<input type="range" class="music-seek" min="0" max="1000" step="1" value="' + _pos + '"' + (_canSeek ? '' : ' disabled') + ' aria-label="' + _esc(_t('musicNowPlaying', 'Now playing')) + '">' +
       '<span class="music-time music-dur' + (_live ? ' music-live' : '') + '">' + (_live ? 'LIVE' : (_canSeek ? _fmtTime(_dur) : '0:00')) + '</span>' +
     '</div>' +
-    // ── transport ──
-    '<div class="music-transport">' +
-      '<div class="music-trow">' +
+    // ── transport condensé : une seule rangée (au lieu de deux), pouces en
+    // bout de ligne. Rien n'est retiré (stop/shuffle/repeat-one/repeat-all
+    // toujours tous présents), juste regroupés. ──
+    '<div class="music-transport music-transport-condensed">' +
+      '<button type="button" class="music-tbtn music-rpt' + (_shuffle ? ' is-active' : '') + '" data-mact="shuffle" aria-pressed="' + _shuffle + '" title="' + _esc(_t('musicShuffle', 'Shuffle')) + '" data-i18n-title="musicShuffle">' + _icon('shuffle') + '</button>' +
       '<button type="button" class="music-tbtn" data-mact="prev"' + (multi ? '' : ' disabled') + ' title="' + _esc(_t('musicPrev', 'Previous')) + '" data-i18n-title="musicPrev">' + _icon('prev') + '</button>' +
       '<button type="button" class="music-tbtn music-tbtn-main" data-mact="toggle" title="' + _esc(_t(ppKey, playing ? 'Pause' : 'Play')) + '" data-i18n-title="' + ppKey + '">' + ppIcon + '</button>' +
       '<button type="button" class="music-tbtn" data-mact="next"' + (multi ? '' : ' disabled') + ' title="' + _esc(_t('musicNext', 'Next')) + '" data-i18n-title="musicNext">' + _icon('next') + '</button>' +
       '<button type="button" class="music-tbtn" data-mact="stop" title="' + _esc(_t('musicStop', 'Stop')) + '" data-i18n-title="musicStop">' + _icon('stop') + '</button>' +
-      '</div>' +
-      '<div class="music-trow">' +
-      '<button type="button" class="music-tbtn music-rpt' + (_shuffle ? ' is-active' : '') + '" data-mact="shuffle" aria-pressed="' + _shuffle + '" title="' + _esc(_t('musicShuffle', 'Shuffle')) + '" data-i18n-title="musicShuffle">' + _icon('shuffle') + '</button>' +
       '<button type="button" class="music-tbtn music-rpt' + (_repeat === 'one' ? ' is-active' : '') + '" data-mact="rep-one" aria-pressed="' + (_repeat === 'one') + '" title="' + _esc(_t('musicRepeatOne', 'Repeat one')) + '" data-i18n-title="musicRepeatOne">' + _icon('rep-one') + '</button>' +
       '<button type="button" class="music-tbtn music-rpt' + (_repeat === 'all' ? ' is-active' : '') + '" data-mact="rep-all" aria-pressed="' + (_repeat === 'all') + '" title="' + _esc(_t('musicRepeatAll', 'Repeat playlist')) + '" data-i18n-title="musicRepeatAll">' + _icon('rep-all') + '</button>' +
+      // ── pouces haut/bas sur la piste en cours (masqués tant que le proxy n'a pas répondu) ──
+      '<div class="music-vote" hidden>' +
+        '<button type="button" class="music-vbtn" data-mvote="up" aria-pressed="false" title="' + _esc(_t('musicLike', 'I like this track')) + '" data-i18n-title="musicLike" aria-label="' + _esc(_t('musicLike', 'I like this track')) + '">' + _icon('thumb-up') + '<span class="music-vote-n" hidden></span></button>' +
+        '<button type="button" class="music-vbtn" data-mvote="down" aria-pressed="false" title="' + _esc(_t('musicDislike', 'Not for me')) + '" data-i18n-title="musicDislike" aria-label="' + _esc(_t('musicDislike', 'Not for me')) + '">' + _icon('thumb-down') + '<span class="music-vote-n" hidden></span></button>' +
       '</div>' +
     '</div>' +
-    // ── volume ──
-    '<div class="music-vol">' +
+    // ── volume + balance G/D fusionnés sur une rangée (si StereoPanner
+    // supporté) au lieu de deux rangées séparées. Rien n'est retiré : la
+    // balance reste présente quand elle l'était déjà. ──
+    '<div class="music-vol music-vol-condensed">' +
       '<span class="music-vol-ic">' + _icon('volume') + '</span>' +
       '<input type="range" class="music-vol-range" min="0" max="100" value="' + vol + '" title="' + _esc(_t('musicVolume', 'Volume')) + '" data-i18n-title="musicVolume" aria-label="' + _esc(_t('musicVolume', 'Volume')) + '">' +
       '<span class="music-vol-val">' + vol + '%</span>' +
-    '</div>' +
-    // ── balance G/D (si StereoPanner supporté) ──
-    (_hasPan ?
-      '<div class="music-bal">' +
+      (_hasPan ?
         '<span class="music-bal-end">L</span>' +
         '<input type="range" class="music-bal-range" min="-100" max="100" value="' + Math.round(getBalance() * 100) + '" title="' + _esc(_t('musicBalance', 'Balance')) + '" data-i18n-title="musicBalance" aria-label="' + _esc(_t('musicBalance', 'Balance')) + '">' +
-        '<span class="music-bal-end">R</span>' +
-      '</div>' : '') +
+        '<span class="music-bal-end">R</span>' : '') +
+    '</div>' +
     // ── liste dépliable : onglets Playlist | Radios ──
     '<div class="music-pl-head">' +
       '<button type="button" class="music-pl-toggle" data-mact="pl" aria-expanded="' + _plOpen + '">' +
