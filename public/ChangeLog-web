@@ -1,4 +1,7 @@
-2026-09-15 version 2.1.9-web.55 (current series):
+2026-09-15 version 2.1.9-web.57 (current series):
+- bugfix: training mode could fail to start when you had no connection, since the bots' chat lines were not stored for offline use
+
+2026-09-15 version 2.1.9-web.55:
 - improvement: the bots' chat one-liners are now translated into all 55 interface languages, not just English and French
 
 2026-09-15 version 2.1.9-web.54:

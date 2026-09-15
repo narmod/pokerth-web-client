@@ -95,6 +95,13 @@ highlights below.
 
 ### Fixed
 
+- **Offline mode could fail to boot with no network** (`web.57`) —
+  `offline/banter.mjs`, added in `web.54` and imported by
+  `offline/server.mjs`, was never listed in the service worker's `ASSETS`.
+  After a `CACHE_VERSION` bump the lazy import of the offline mode would die
+  with no connection ("Offline init failed"), the same failure the
+  achievements modules are precached to avoid. `test-precache.mjs` was
+  already catching this.
 - **Seat geometry only measured `.seat-plate`, ignoring an avatar or hole
   cards that overflow outside it** (reported by narmod, all three
   imported seat packs except PokerTH) — Boardwalk, High Roller and Onyx

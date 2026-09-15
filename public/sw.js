@@ -23,7 +23,7 @@
  *                 Cross-origin requests and WS upgrades are left untouched.
  *                 (Fonts are now self-hosted and handled by SWR above.)
  */
-const CACHE_VERSION = 'pokerth-v2.1.9-web.56';
+const CACHE_VERSION = 'pokerth-v2.1.9-web.57';
 // Build id the page puts on the card back URL (deck.mjs _deckBack →
 // flipside.<ext>?v=<BUILD_VERSION>): CACHE_VERSION without its prefix.
 const BUILD_ID = CACHE_VERSION.replace(/^pokerth-v/, '');
@@ -201,6 +201,10 @@ const ASSETS = [
   '/modules/offline/server.mjs',
   '/modules/offline/index.mjs',
   '/modules/offline/rand.mjs',
+  // Bot banter lines, imported by offline/server.mjs: same failure mode as
+  // achievements below — missing here, the lazy import of the offline mode
+  // dies with no network once CACHE_VERSION is bumped.
+  '/modules/offline/banter.mjs',
   // Achievements, imported by offline/server.mjs: without them the lazy
   // import of the offline mode fails with no network ("Offline init failed").
   '/modules/achievements/index.mjs',
