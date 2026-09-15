@@ -1,4 +1,7 @@
-2026-09-15 version 2.1.9-web.57 (current series):
+2026-09-15 version 2.1.9-web.58 (current series):
+- bugfix: folded players no longer show a red X on their avatar - the fold badge and dimmed cards already make it clear
+
+2026-09-15 version 2.1.9-web.57:
 - bugfix: training mode could fail to start when you had no connection, since the bots' chat lines were not stored for offline use
 
 2026-09-15 version 2.1.9-web.55:
@@ -421,3 +424,4 @@
 
 Before 2026-07-22 (0.3.x beta series):
 - initial development of the web client - game engine bridge, lobby, tables, offline training against bots, PWA shell, style packs and the WebSocket-to-TCP proxy
+

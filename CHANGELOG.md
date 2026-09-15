@@ -95,6 +95,11 @@ highlights below.
 
 ### Fixed
 
+- **Red X on folded players' avatars** (`web.58`, reported by sp0ck) — the
+  fold state was already shown by the fold badge and the dimmed hole
+  cards, and the X was barely visible against some avatar seat packs
+  (looked like a broken image). Dropped the `::before` overlay,
+  `seat.folded .seat-avatar` still gets the badge/dim treatment.
 - **Offline mode could fail to boot with no network** (`web.57`) —
   `offline/banter.mjs`, added in `web.54` and imported by
   `offline/server.mjs`, was never listed in the service worker's `ASSETS`.
@@ -705,3 +710,4 @@ The `0.3` line marks the move into public beta. What landed across the
 ---
 Earlier history (the `0.2.x` build series) is on the
 [Releases](https://github.com/narmod/pokerth-web-client/releases) page.
+

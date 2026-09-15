@@ -4468,15 +4468,6 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
   65%  { transform: scale(1.25) rotate(8deg); opacity: 1; }
   100% { transform: scale(1) rotate(0deg); opacity: 1; }
 }
-.seat.folded .seat-avatar::before {
-  content: '✕';
-  position: absolute;
-  font-size: var(--fs-xs);
-  color: var(--neg);
-  font-weight: 900;
-  z-index: 3;
-  text-shadow: 0 1px 3px rgba(0,0,0,0.8);
-}
 .seat.me .seat-avatar { border-color: var(--green); }
 
 /* Eliminated / sitting-out seat: stays in place around the felt so the
@@ -12726,3 +12717,4 @@ html[data-seat-struct="qml"] .seat-narrow .seat-name .seat-note-stars { font-siz
 @media (display-mode:fullscreen), (display-mode:standalone) {
   :root[data-high-contrast="true"],:root[data-high-contrast="true"] body,:root[data-high-contrast="true"] .screen { background-color:var(--hc-bg) !important; }
 }
+
