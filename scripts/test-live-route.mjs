@@ -116,8 +116,13 @@ check('the language buttons open the existing picker',
   }));
 check('the columns wear the lobby panel frame',
   /:root\[data-live="1"\] \.live-lobby \.llb-main,[\s\S]{0,120}border-radius: 8px;[\s\S]{0,80}var\(--panel\)/.test(css));
+// The bar is sticky over the rows, so its background has to be opaque:
+// --chrome-tint is only 6-35% opaque and let the rows show through, and it
+// was swapped for the solid --field-bg the rows themselves use (sp0ck,
+// 14/09/2026). What matters here is that the bar still has a background of
+// its own, not which token supplies it.
 check('the tab bar is a panel header',
-  /\.live-lobby \.llb-tabs \{[\s\S]{0,140}var\(--chrome-tint\)/.test(css));
+  /\.live-lobby \.llb-tabs \{[^}]*background: var\(--field-bg\)/.test(css));
 check('login is forced to pokerth.net', /sm\.value = 'pokerthnet'/.test(live));
 check('guest mode is forced on', /gc\.checked = true/.test(live));
 check('guest state re-asserted on click capture', /addEventListener\('click'[\s\S]{0,200}, true\)/.test(live));

@@ -111,8 +111,11 @@ check('the framing rule comes after the rules that win fullscreen back',
   css.indexOf('[data-framed="1"] #s-lobby #fs-btn-lobby') > css.lastIndexOf(':root[data-live="1"] #s-lobby #fs-btn-lobby'));
 
 // No table chat: a visitor on the site does not read the watched table's chat.
+// #gchat-fab, the old floating chat button, was dropped from the client as
+// redundant with #chat-toggle-btn on the felt, so it is no longer in this
+// selector list — there is nothing left to hide.
 check('the table chat buttons and panel are hidden',
-  /:root\[data-live="1"\] #chat-toggle-btn,\n:root\[data-live="1"\] #gchat-fab,\n:root\[data-live="1"\] #g-chat-panel \{ display: none !important; \}/.test(css));
+  /:root\[data-live="1"\] #chat-toggle-btn,\n:root\[data-live="1"\] #g-chat-panel \{ display: none !important; \}/.test(css));
 check('the opener is stubbed and incoming table chat dropped',
   /\['toggleGameChat', 'addGameChat'\]\.forEach\(function \(fn\) \{\n\s+try \{ window\[fn\] = function \(\) \{\}; \}/.test(live));
 check('the lobby chat strip is not touched',
