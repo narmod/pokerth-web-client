@@ -5150,7 +5150,7 @@ function supportedLangs() {
   } catch (e) { _langsCache = _langsCache || []; }
   return _langsCache;
 }
-function recordVisitEnv(ua, acceptLang, standalone) {
+function recordVisitEnv(ua, acceptLang, standalone, seenBefore) {
   try {
     ua = String(ua || '');
     const os = _uaPick(UA_OS, ua), br = _uaPick(UA_BROWSER, ua);
@@ -5166,6 +5166,13 @@ function recordVisitEnv(ua, acceptLang, standalone) {
     const lg = String(acceptLang || '').split(',')[0].trim().slice(0, 12).toLowerCase().split('-')[0];
     const lgv = /^[a-z]{2,3}$/.test(lg) ? lg : 'other';
     _envBump('lang', lgv);
+    // Croisement langue x new/returning : meme id hache que recordVisit (donc
+    // meme notion de "deja vu"), aucune donnee de plus stockee. seenBefore est
+    // null quand le ping n'a pas d'id (recordVisit n'a alors rien pu dire) —
+    // dans ce cas on ne compte ni l'un ni l'autre, plutot que de deviner.
+    if (seenBefore !== null && seenBefore !== undefined) {
+      _envBump(seenBefore ? 'langRet' : 'langNew', lgv);
+    }
     // Estimation du bruit : UA d'automate OU langue inexploitable. Compté à
     // part dans env.noise ; les compteurs de visites restent intacts.
     _envBump('noise', (UA_BOT.test(ua) || lgv === 'other') ? 'bot-like' : 'clean');
@@ -5208,6 +5215,11 @@ function recordVisit(rawId) {
   if (!bucket) { bucket = visitsStore.days[day] = { v: 0, ids: {} }; pruneVisitDays(); }
   bucket.v++;
   visitsStore.totalV = (visitsStore.totalV || 0) + 1;
+  // Valeur de retour : true = revenu, false = nouveau, null = pas d'id (rien
+  // a en dire). Sert au croisement langue x new/returning dans recordVisitEnv,
+  // appelee juste apres avec le meme ping — sans id ici, il n'y a pas non plus
+  // de "nouveau/retour" a croiser la-bas.
+  let seenBeforeOut = null;
   // Heure locale du serveur, une case par heure du jour. Deux compteurs et non
   // un seul : `h` dit quand on vient, `hn` quand on vient POUR LA PREMIERE
   // FOIS. Le creux de la nuit est banal ; un creux ou les nouveaux venus sont
@@ -5221,6 +5233,7 @@ function recordVisit(rawId) {
   if (rawId) {
     const h = crypto.createHash('sha256').update(String(rawId)).digest('hex').slice(0, 16);
     const seenBefore = visitsStore.allU[h] !== undefined; // returning device, or brand new?
+    seenBeforeOut = seenBefore;
     if (!bucket.ids) bucket.ids = {};
     bucket.ids[h] = 1;
     // La valeur porte desormais le jour de la premiere venue, ce qui suffit a
@@ -5236,6 +5249,7 @@ function recordVisit(rawId) {
     }
   }
   saveVisitsSoon();
+  return seenBeforeOut;
 }
 // `offset` decale la fenetre vers le passe : visitWindow(7, 7) = les 7 jours
 // qui precedent les 7 derniers. Sert de reference « periode precedente » aux
@@ -9727,10 +9741,10 @@ const httpServer = http.createServer((req, res) => {
         else if (d && d.live === true) { _pingStats.nLive++; recordLiveVisit(d.vid); }
         else {
           _pingStats.n++;
-          recordVisit(d && d.vid);
+          const _seenBefore = recordVisit(d && d.vid);
           recordVisitEnv(req.headers && req.headers['user-agent'],
                          req.headers && req.headers['accept-language'],
-                         !!(d && d.pwa));
+                         !!(d && d.pwa), _seenBefore);
         }
       } catch (e) { /* ignore a bad ping */ }
       res.writeHead(204, { 'Cache-Control': 'no-store' });
