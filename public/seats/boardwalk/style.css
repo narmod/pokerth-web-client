@@ -15,6 +15,17 @@ html[data-seat-struct="qml"] .seat-plate {
   --turn-glow-halo: rgba(53, 195, 245, 0.55);
   --turn-glow-z: 1;                            /* cadre SOUS avatar/cartes */
   --winner-frame-z: 1;
+  /* Placement avatar/cartes : bloc générique data-seat-avatar="overlay" de
+     pokerth.css (trait avatarOverlay du pack). Ici, seulement les variables
+     -- valeurs historiques Boardwalk inchangées à l'écran. */
+  --seat-avatar-size: 50px; --seat-avatar-size-self: 58px;
+  --seat-avatar-gap: 2px; --seat-avatar-left: 2px;
+  --seat-cards-gap: 3px; --seat-cards-left: 60px; --seat-cards-left-self: 80px;
+  --seat-cards-rotate: 9deg; --seat-cards-rotate-self: 7deg;
+  --seat-cards-overlap: -10px; --seat-cards-overlap-self: -14px; --seat-cards-fan: 10deg;
+  /* margin-top explicite (ne suit pas exactement taille+écart d'origine —
+     marge historique Boardwalk, préservée telle quelle). */
+  --seat-plate-mtop: 56px; --seat-plate-mtop-self: 64px;
 }
 
 /* ── La barre nom/tapis ────────────────────────────────────────────────── */
@@ -22,7 +33,7 @@ html[data-seat-struct="qml"] .seat-plate {
   display: flex; flex-direction: column; align-items: center; justify-content: center;
   gap: 0; position: relative;
   width: 116px; height: 40px; min-height: 0; box-sizing: border-box;
-  padding: 3px 8px !important; margin-top: 56px;   /* avatar/cartes ENTIÈREMENT au-dessus */
+  padding: 3px 8px !important;
   background: linear-gradient(180deg, #24262b 0%, #17181c 100%);
   border: 1px solid rgba(0, 0, 0, 0.55);
   border-radius: 5px;
@@ -30,34 +41,22 @@ html[data-seat-struct="qml"] .seat-plate {
   overflow: visible;
 }
 
-/* ── Avatar-personnage au-dessus, mordant sur la barre ─────────────────── */
+/* ── Avatar-personnage au-dessus, mordant sur la barre — déco uniquement,
+      le placement vient du bloc générique overlay (pokerth.css) ────────── */
 html[data-seat-struct="qml"] .seat-avatar {
-  position: absolute !important;
-  bottom: calc(100% + 2px) !important; top: auto !important;  /* AUCUNE morsure sur la barre */
-  left: 2px !important; right: auto !important;      /* avatar à GAUCHE */
-  transform: none !important;
-  width: 50px !important; height: 50px !important;
-  max-width: 50px !important; max-height: 50px !important;
   border: 2px solid #0d0d0f !important; border-radius: 50%;
   background: #101114;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.6);
   z-index: 2;
 }
 
-/* ── Cartes en éventail à droite de l'avatar ───────────────────────────── */
+/* ── Cartes en éventail à droite de l'avatar — déco uniquement ─────────── */
 html[data-seat-struct="qml"] .seat-holecards {
-  position: absolute !important;
-  bottom: calc(100% + 3px); top: auto !important;   /* au-dessus de la barre, jamais dessus */
-  left: 60px !important; transform: rotate(9deg) !important;  /* à droite de l'avatar */
   display: flex !important; z-index: 1;
-  grid-column: auto !important; grid-row: auto !important;
 }
 html[data-seat-struct="qml"] .seat-holecards .pk {
   width: 26px; height: 36px; font-size: var(--fs-3xs);
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
-}
-html[data-seat-struct="qml"] .seat-holecards .pk + .pk {
-  margin-left: -10px; transform: rotate(10deg); transform-origin: bottom left;
 }
 
 /* ── Nom / tapis dans la barre ─────────────────────────────────────────── */
@@ -117,21 +116,16 @@ html[data-seat-struct="qml"] .seat.folded .seat-avatar { opacity: 0.5; }
 
 /* ── SELF : barre plus large, MES cartes grandes en éventail à droite ──── */
 html[data-seat-struct="qml"] .seat.me .seat-plate {
-  width: 150px; height: 58px; padding-bottom: 19px !important; margin-top: 64px;   /* bas réservé au bandeau d'action : nom + argent toujours visibles */
+  width: 150px; height: 58px; padding-bottom: 19px !important;   /* bas réservé au bandeau d'action : nom + argent toujours visibles */
 }
 html[data-seat-struct="qml"] .seat.me .seat-avatar {
-  width: 58px !important; height: 58px !important;
-  max-width: 58px !important; max-height: 58px !important;
-  bottom: calc(100% + 2px) !important;
-  left: 2px !important; z-index: 2;
+  z-index: 2;   /* placement (taille/bottom/left) : bloc générique overlay */
 }
 html[data-seat-struct="qml"] .seat.me .seat-holecards,
 html[data-seat-struct="qml"] .seat.me .seat-holecards.shc-big {
-  bottom: calc(100% + 3px); left: 80px !important;   /* bien dégagées de l'avatar */
-  transform: rotate(7deg) !important; z-index: 3;
+  z-index: 3;   /* placement (bottom/left/rotation) : bloc générique overlay */
 }
 html[data-seat-struct="qml"] .seat.me .seat-holecards .pk,
 html[data-seat-struct="qml"] .seat.me .seat-holecards.shc-big .pk {
   width: 38px !important; height: 53px !important; font-size: var(--fs-base);
 }
-html[data-seat-struct="qml"] .seat.me .seat-holecards .pk + .pk { margin-left: -14px; }

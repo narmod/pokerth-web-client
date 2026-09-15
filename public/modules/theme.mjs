@@ -151,7 +151,11 @@ var PUCKS_ITEMS   = [ {id:'',key:'pucksAuto',fallback:'Auto (table)',swatch:'#3a
 //   qmlSelf        géométrie self QML (self = perle, pas de multiplicateur)
 //   narrowByOrient boîte narrow quand la disposition est portrait
 //   qmlStruct      structure/gabarit CSS QML (html[data-seat-struct="qml"])
-const SEAT_TRAIT_KEYS = ['holePlate','betOut','pucksSide','flagInfo','timerRect','timerBar','winnerBadge','selfStrip','selfBigCards','badgeOnCards','qmlSelf','narrowByOrient','qmlStruct'];
+//   avatarOverlay  avatar + cartes en surplomb de la barre nom/tapis, via le
+//                  bloc générique html[data-seat-avatar="overlay"] de
+//                  pokerth.css (tailles/écarts pilotés par variables CSS du
+//                  pack — narmod 2026-09-15, alignement Boardwalk/beta)
+const SEAT_TRAIT_KEYS = ['holePlate','betOut','pucksSide','flagInfo','timerRect','timerBar','winnerBadge','selfStrip','selfBigCards','badgeOnCards','qmlSelf','narrowByOrient','qmlStruct','avatarOverlay'];
 const SEAT_TRAITS_QML = { holePlate:true, betOut:true, pucksSide:true, flagInfo:true, timerRect:true, timerBar:true, winnerBadge:true, selfStrip:true, selfBigCards:true, badgeOnCards:true, qmlSelf:true, narrowByOrient:true, qmlStruct:true };
 const SEAT_TRAIT_DEFAULTS = SEAT_TRAITS_QML; // packs importés / inconnus = structure commune
 // Page blanche (demande narmod 17/07) : seul le pack « PokerTH » reste
@@ -365,6 +369,9 @@ seat.apply = function (id) {
   try { _injectSeatPkg(_gallerySeatById(id) || null); } catch (e) {}
   // Structure commune QML : attribut CSS piloté par le trait qmlStruct.
   try { if (_seatPackTraits(id).qmlStruct) document.documentElement.setAttribute('data-seat-struct', 'qml'); else document.documentElement.removeAttribute('data-seat-struct'); } catch (e) {}
+  // Disposition générique "avatar en surplomb" : attribut CSS piloté par le
+  // trait avatarOverlay (bloc partagé pokerth.css, variables fournies par le pack).
+  try { if (_seatPackTraits(id).avatarOverlay) document.documentElement.setAttribute('data-seat-avatar', 'overlay'); else document.documentElement.removeAttribute('data-seat-avatar'); } catch (e) {}
   // L'option « Affichage de la mise » ne vaut que pour le pack 'pokerth' :
   // re-résoudre data-bet à chaque changement de pack (bascule LIVE).
   try { if (typeof window._applyBetStyle === 'function') window._applyBetStyle(); } catch (e) {}

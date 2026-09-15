@@ -68,6 +68,18 @@ highlights below.
   default. English and French only for now; the other 52 languages fall back
   to the English tooltip via the existing `t()` chain until translated.
 
+### Changed
+
+- **Boardwalk: avatar/hole-cards placement moved off hardcoded
+  `position:absolute`/`bottom:` values onto a new shared, pack-agnostic
+  mechanism** (`web.52`, narmod) — a `avatarOverlay` seat trait now drives a
+  generic `html[data-seat-avatar="overlay"]` block in `pokerth.css`,
+  parameterised by CSS custom properties (avatar size/gap, hole-card
+  offset/rotation, plate margin) that a pack simply declares. Boardwalk's
+  `style.css` keeps only its variables and decoration (colors, borders,
+  glow tokens) — no visual change on screen. Pilot for aligning High
+  Roller and Onyx-Pill the same way before they leave beta.
+
 ### Fixed
 
 - **Seat geometry only measured `.seat-plate`, ignoring an avatar or hole

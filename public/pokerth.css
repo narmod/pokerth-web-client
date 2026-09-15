@@ -7649,6 +7649,53 @@ html[data-seat-struct="qml"] .seat.active .seat-avatar {
   animation: none !important;
 }
 html[data-seat-struct="qml"] .seat-holecards { grid-column: 2; grid-row: 1; display: flex; gap: var(--sp-1); flex: none; }
+/* ── Disposition générique "avatar en surplomb" (narmod 2026-09-15) ─────────
+   Trait de pack avatarOverlay:true (theme.mjs) -> html[data-seat-avatar="overlay"].
+   L'avatar et les cartes flottent AU-DESSUS de la barre nom/tapis au lieu
+   d'occuper une cellule de la grille QML — c'est le placement partagé par
+   les packs "avatar-personnage" (Boardwalk, High-Roller, Onyx-Pill…). Un
+   pack ne fournit plus que ses variables (tailles/écarts/rotation) + sa déco
+   (couleurs, bordures, ombres) — plus de position:absolute/bottom: en dur à
+   dupliquer dans chaque style.css. Défauts = valeurs historiques Boardwalk. */
+html[data-seat-avatar="overlay"][data-seat-struct="qml"] .seat-plate {
+  margin-top: var(--seat-plate-mtop, calc(var(--seat-avatar-size, 50px) + var(--seat-avatar-gap, 6px)));
+}
+html[data-seat-avatar="overlay"][data-seat-struct="qml"] .seat-avatar {
+  position: absolute !important;
+  bottom: calc(100% + var(--seat-avatar-gap, 6px)) !important; top: auto !important;
+  left: var(--seat-avatar-left, 2px) !important; right: auto !important;
+  width: var(--seat-avatar-size, 50px) !important; height: var(--seat-avatar-size, 50px) !important;
+  max-width: var(--seat-avatar-size, 50px) !important; max-height: var(--seat-avatar-size, 50px) !important;
+}
+html[data-seat-avatar="overlay"][data-seat-struct="qml"] .seat-holecards {
+  position: absolute !important;
+  bottom: calc(100% + var(--seat-cards-gap, 3px)) !important; top: auto !important;
+  left: var(--seat-cards-left, 60px) !important;
+  transform: rotate(var(--seat-cards-rotate, 9deg)) !important;
+  grid-column: auto !important; grid-row: auto !important;
+}
+html[data-seat-avatar="overlay"][data-seat-struct="qml"] .seat-holecards .pk + .pk {
+  margin-left: var(--seat-cards-overlap, -10px);
+  transform: rotate(var(--seat-cards-fan, 10deg));
+  transform-origin: bottom left;
+}
+html[data-seat-avatar="overlay"][data-seat-struct="qml"] .seat.me .seat-plate {
+  margin-top: var(--seat-plate-mtop-self, calc(var(--seat-avatar-size-self, 58px) + var(--seat-avatar-gap, 6px)));
+}
+html[data-seat-avatar="overlay"][data-seat-struct="qml"] .seat.me .seat-avatar {
+  width: var(--seat-avatar-size-self, 58px) !important; height: var(--seat-avatar-size-self, 58px) !important;
+  max-width: var(--seat-avatar-size-self, 58px) !important; max-height: var(--seat-avatar-size-self, 58px) !important;
+  bottom: calc(100% + var(--seat-avatar-gap, 6px)) !important;
+  left: var(--seat-avatar-left, 2px) !important;
+}
+html[data-seat-avatar="overlay"][data-seat-struct="qml"] .seat.me .seat-holecards {
+  bottom: calc(100% + var(--seat-cards-gap, 3px)) !important;
+  left: var(--seat-cards-left-self, 80px) !important;
+  transform: rotate(var(--seat-cards-rotate-self, 7deg)) !important;
+}
+html[data-seat-avatar="overlay"][data-seat-struct="qml"] .seat.me .seat-holecards .pk + .pk {
+  margin-left: var(--seat-cards-overlap-self, -14px);
+}
 /* PlayerActionBadge QML : centré sur la rangée de hole-cards (x/y = cardsCenter),
    hauteur 18, radius 9, padding H 7, texte #eaf1ff 12px bold, pop à l'apparition
    (0.6→1.12→1.0). Le badge est injecté DANS .seat-holecards par renderSeats. */
