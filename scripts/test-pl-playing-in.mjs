@@ -1,7 +1,9 @@
 // « Joue actuellement dans … » — parité QML PlayerListItem (stable, 27/08/2026).
 // Trois garanties :
-//   1. les deux clés (plPlayingInFull / plNotPlayingFull) existent dans les 45
-//      langues et contiennent bien les gabarits %1 (nom) — %2 requis seulement
+//   1. les deux clés (plPlayingInFull / plNotPlayingFull) existent dans TOUTES
+//      les langues du catalogue (compté sur disque, pas écrit en dur : le
+//      chiffre disait 45 et les langues ajoutées depuis l'avaient périmé)
+//      et contiennent bien les gabarits %1 (nom) — %2 requis seulement
 //      pour la variante « joue » ;
 //   2. renderPlayersList pose la phrase complète en tooltip (title) du NOM,
 //      sourcée sur r.act, SANS toucher au title existant de la manette de
@@ -16,11 +18,11 @@ const ok = (cond, label) => {
   if (!cond) bad++;
 };
 
-// ── 1. Couverture i18n : 45 langues, les deux clés, gabarits présents ──
+// ── 1. Couverture i18n : toutes les langues, les deux clés, gabarits présents ──
 console.log('i18n:');
 const langDir = 'public/modules/lang';
 const files = readdirSync(langDir).filter((f) => f.endsWith('.mjs'));
-ok(files.length === 45, '45 fichiers de langue (' + files.length + ')');
+ok(files.length > 0, files.length + ' fichiers de langue');
 let missing = [];
 for (const f of files) {
   const m = await import('../' + langDir + '/' + f);

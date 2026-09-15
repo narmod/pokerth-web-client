@@ -7,7 +7,7 @@
 // through every path (admin GET/POST, public /app-config, export/import
 // allow-list) or a config round-trip wipes it.
 // Run: node scripts/test-guestnotice.mjs
-import { readFileSync } from 'node:fs';
+import { readFileSync, readdirSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 
@@ -38,13 +38,18 @@ ok(/slice\(0, 200\)/.test(gwBlock.slice(0, 1200)) && /slice\(0, 4000\)/.test(gwB
 // ── proxy.js: built-in English default text ───────────────────────────────
 ok(/const GUEST_NOTICE_DEFAULT_LANGS = \{\n  "en": \{ title: "/.test(proxy),
   'a built-in default exists, English first');
-// All 52 client languages are hand-written in the defaults, so an exact
-// language match on the client means no machine translation at all.
+// Every client language is hand-written in the defaults, so an exact
+// language match on the client means no machine translation at all. The
+// figure is counted off the catalogue rather than written here: it was
+// stated as 52 and left behind by the languages added since.
 {
   const m = proxy.match(/const GUEST_NOTICE_DEFAULT_LANGS = (\{[\s\S]*?\n\});/);
   let langCount = 0;
   try { langCount = Object.keys(JSON.parse(m[1].replace(/\n  ("[^"]+"): \{ title: /g, '\n  $1: { "title": ').replace(/, body: /g, ', "body": '))).length; } catch (e) {}
-  ok(langCount === 52, 'the built-in default covers all 52 client languages (got ' + langCount + ')');
+  const CLIENT_LANGS = readdirSync(join(here, '..', 'public', 'modules', 'lang'))
+    .filter(f => f.endsWith('.mjs')).length;
+  ok(langCount === CLIENT_LANGS,
+    'the built-in default covers all ' + CLIENT_LANGS + ' client languages (got ' + langCount + ')');
 }
 ok(/function _stripDefaultNoticeLangs\(/.test(proxy) &&
    /_stripDefaultNoticeLangs\((?:gout, GUEST|aout, AUTH)_NOTICE_DEFAULT_LANGS\)/.test(proxy),
