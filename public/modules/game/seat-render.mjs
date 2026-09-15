@@ -1131,6 +1131,19 @@ function renderSeatsImmediate() {
             ? (_bandP3.b - _bandP3.t) / 2 - 6
             : 0.15 * _zH3 - _oppH3 * _seatBoxScale / 2 - 6;
         _csComm = Math.max(0.55, Math.min(1.8, (_vHalf > 0 ? _vHalf / 62 : 0.55), Math.max(0, _zW3 - 16) / 264));
+        // ── Correctif empirique narmod (15/09) : capture QML Android réelle
+        // (portrait, 9 adversaires) comparée côte à côte à la même table sur
+        // le web, aux mêmes proportions d'écran. Les cartes en main (self)
+        // tombaient déjà juste (35-38px web vs 35-40px QML, écart <3%), mais
+        // les cartes du board mesuraient ~35px web contre ~40px QML — un
+        // écart de 14 à 20 % selon les deux captures comparées (moyenne
+        // ~1.17×). La compensation d'autofit ci-dessous corrige déjà une
+        // grande partie de l'écart (note du 06db9866) mais pas la totalité ;
+        // ce multiplicateur ferme le reste, mesuré à froid sur les captures,
+        // pas re-dérivé de la formule QML (GamePage.qml est compilée en
+        // bytecode dans l'AppImage ET l'APK 2.1.9 — voir échanges du 15/09,
+        // aucune des deux ne garde ce fichier en source lisible).
+        _csComm *= 1.17;
         // ── Compensation de l'autofit (portrait uniquement) ──
         // Le QML calcule cette echelle en pixels de ZONE : ses cartes ne
         // subissent aucune reduction globale. Cote web, #g-comm vit DANS
