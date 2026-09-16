@@ -291,7 +291,7 @@
   .envrow .barx{flex:0 0 84px;height:6px;border-radius:4px;background:rgba(127,127,127,.18);overflow:hidden}
   .envrow .barx i{display:block;height:100%;border-radius:4px}
   .envrow .pct{flex:none;min-width:78px;text-align:right;color:var(--text);font-variant-numeric:tabular-nums;font-size:.78rem}
-  .envrow .nrbadge{flex:none;min-width:56px;text-align:right;color:var(--text);opacity:.7;font-size:.74rem;font-variant-numeric:tabular-nums}
+  .envrow .nrbadge{flex:none;width:56px;text-align:right;color:var(--text);opacity:.7;font-size:.74rem;font-variant-numeric:tabular-nums;white-space:nowrap}
   .envhi{border:1px solid var(--line);border-radius:10px;padding:9px 11px;margin-top:12px;font-size:.8rem;color:var(--cream);line-height:1.5}
   .envhi b{color:var(--gold)}
   /* ── Light admin theme (data-admin-theme="light") ───────────── */
@@ -2890,8 +2890,8 @@
       var pc=(s.n/rl.total)*100;
       return '<div class="envrow"><span class="dot" style="background:'+s.c+'"></span>'
            + '<span class="nmx"'+(s.key?(' title="'+_annEsc(_envTitle(s.key)||(s.key!==s.k?s.key:''))+'"'):'')+'>'+_annEsc(s.k)+'</span>'
-           + '<span class="barx"><i style="width:'+Math.max(2,pc).toFixed(1)+'%;background:'+s.c+'"></i></span>'
            + _envNewRetBadge(s.key)
+           + '<span class="barx"><i style="width:'+Math.max(2,pc).toFixed(1)+'%;background:'+s.c+'"></i></span>'
            + '<span class="pct">'+_envFmt(s.n)+' \u00b7 '+(pc<1?pc.toFixed(1):Math.round(pc))+'%</span></div>';
     }).join('');
     var more='';
