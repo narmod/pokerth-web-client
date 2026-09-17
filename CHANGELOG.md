@@ -102,6 +102,9 @@ highlights below.
 
 ### Fixed
 
+- **Fallback build id bumped to 2.1.9** (`web.61`) — the hard-coded fallback
+  triple in `public/proto/index.mjs` and `modules/net/messages.mjs` (used only
+  when `BUILD_VERSION` is missing) was still 2.1.8; `test-build-id` now passes.
 - **Portrait board cards ~17 % smaller than the QML client** (narmod,
   measured directly off side-by-side screenshots of the real QML app —
   both the desktop AppImage and the Android APK compile `GamePage.qml`
