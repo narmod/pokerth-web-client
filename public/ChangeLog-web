@@ -1,4 +1,9 @@
-2026-09-15 version 2.1.9-web.59 (current series):
+2026-09-17 version 2.1.9-web.60 (current series):
+- improvement: the avatar Import tab now says clearly that any image works - it is cropped and resized automatically, you do not need to prepare a 96x96 file yourself
+- improvement: the "Restore defaults" settings category is now called "Backup & reset", so the config.xml and backup import/export buttons are easier to find
+- bugfix: the help pointed to the wrong settings category for the config.xml import/export
+
+2026-09-15 version 2.1.9-web.59:
 - bugfix: the community cards in portrait mode are now closer in size to the desktop client
 
 2026-09-15 version 2.1.9-web.58:

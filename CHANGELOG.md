@@ -71,6 +71,13 @@ highlights below.
 
 ### Changed
 
+- **Avatar import hint and "Backup & reset" category** (`web.60`) — players
+  believed avatars had to be pre-converted to 96×96 / 30 KB because the Import
+  tab hint listed the internal output constraints; `avImportHint` now states
+  that any image is cropped and resized automatically. The `advCatReset`
+  category is relabelled "Backup & reset" (config.xml and full-backup
+  import/export live there), and the help `where`/`cfgxml` sections, which
+  still pointed at "Log messages", follow. All 55 catalogues and help files.
 - **High Roller & Onyx-Pill aligned on the same generic avatar-placement
   mechanism as Boardwalk** (`web.53`, narmod) — the `html[data-seat-avatar="overlay"]`
   block in `pokerth.css` is generalised from a single fixed "above the bar"
