@@ -2,8 +2,16 @@
 // ─────────────────────────────────────────────────────────────────────────
 // public/modules/i18n.mjs
 //
-// Internationalisation module — bilingual EN/FR string catalogue plus the
-// helpers (t, setLang, toggleLang, getLang) that read and update it.
+// Internationalisation module — string catalogues plus the helpers
+// (t, setLang, toggleLang, getLang) that read and update them.
+//
+// Loading: only English (the fallback catalogue) is a static import. Every
+// other language is fetched ON DEMAND (dynamic import) — the active one at
+// boot, the others when the player switches. Importing all catalogues
+// statically made this module a 56-request / ~5 MB graph: one flaky request
+// among them failed the whole module (and the ~50 modules importing it).
+// What must be known up front for every language (code, native label, text
+// direction, flag) lives in ./lang-meta.mjs, generated from the catalogues.
 //
 // History: extracted from public/pokerth.js as the first step of the
 // Phase 2 modular refactor. The legacy code in pokerth.js still calls
@@ -14,73 +22,26 @@
 // ─────────────────────────────────────────────────────────────────────────
 
 import enLang from './lang/en.mjs';
-import frLang from './lang/fr.mjs';
-import deLang from './lang/de.mjs';
-import esLang from './lang/es.mjs';
-import itLang from './lang/it.mjs';
-import ptBrLang from './lang/pt-br.mjs';
-import ptPtLang from './lang/pt-pt.mjs';
-import nlLang from './lang/nl.mjs';
-import plLang from './lang/pl.mjs';
-import ruLang from './lang/ru.mjs';
-import zhLang from './lang/zh.mjs';
-import trLang from './lang/tr.mjs';
-import ukLang from './lang/uk.mjs';
-import jaLang from './lang/ja.mjs';
-import svLang from './lang/sv.mjs';
-import nbLang from './lang/nb.mjs';
-import daLang from './lang/da.mjs';
-import fiLang from './lang/fi.mjs';
-import csLang from './lang/cs.mjs';
-import skLang from './lang/sk.mjs';
-import roLang from './lang/ro.mjs';
-import huLang from './lang/hu.mjs';
-import elLang from './lang/el.mjs';
-import bgLang from './lang/bg.mjs';
-import hrLang from './lang/hr.mjs';
-import srLang from './lang/sr.mjs';
-import afLang from './lang/af.mjs';
-import caLang from './lang/ca.mjs';
-import glLang from './lang/gl.mjs';
-import gdLang from './lang/gd.mjs';
-import ltLang from './lang/lt.mjs';
-import etLang from './lang/et.mjs';
-import lvLang from './lang/lv.mjs';
-import slLang from './lang/sl.mjs';
-import bsLang from './lang/bs.mjs';
-import mkLang from './lang/mk.mjs';
-import msLang from './lang/ms.mjs';
-import sqLang from './lang/sq.mjs';
-import paLang from './lang/pa.mjs';
-import amLang from './lang/am.mjs';
-import kmLang from './lang/km.mjs';
-import taLang from './lang/ta.mjs';
-import viLang from './lang/vi.mjs';
-import koLang from './lang/ko.mjs';
-import zhTwLang from './lang/zh-tw.mjs';
-import hiLang from './lang/hi.mjs';
-import arLang from './lang/ar.mjs';
-import faLang from './lang/fa.mjs';
-import heLang from './lang/he.mjs';
-import urLang from './lang/ur.mjs';
-import idLang from './lang/id.mjs';
-import thLang from './lang/th.mjs';
-import filLang from './lang/fil.mjs';
-import bnLang from './lang/bn.mjs';
-import swLang from './lang/sw.mjs';
+import { LANG_META, LANG_CODES } from './lang-meta.mjs';
 
-// ── Language registry ───────────────────────────────────────────────────
-// Single place to wire a language. To add one: create ./lang/<code>.mjs
-// (copy en.mjs and translate), add an import above, then add it here.
-// LANG (the string tables) and LANG_META (flag / label / dir) are assembled
-// automatically from each module's exports — no other code changes needed.
-const LANG_MODULES = { en: enLang, fr: frLang, de: deLang, es: esLang, it: itLang, 'pt-BR': ptBrLang, 'pt-PT': ptPtLang, nl: nlLang, pl: plLang, ru: ruLang, zh: zhLang, tr: trLang, uk: ukLang, ja: jaLang, sv: svLang, nb: nbLang, da: daLang, fi: fiLang, cs: csLang, sk: skLang, ro: roLang, hu: huLang, el: elLang, bg: bgLang, hr: hrLang, sr: srLang, af: afLang, ca: caLang, gl: glLang, gd: gdLang, lt: ltLang, et: etLang, lv: lvLang, sl: slLang, bs: bsLang, mk: mkLang, ms: msLang, sq: sqLang, pa: paLang, am: amLang, km: kmLang, ta: taLang, vi: viLang, ko: koLang, 'zh-TW': zhTwLang, hi: hiLang, ar: arLang, fa: faLang, he: heLang, ur: urLang, id: idLang, th: thLang, fil: filLang, bn: bnLang, sw: swLang };
-
+// ── Language registry ────────────────────────────────────────────
+// To add a language: create ./lang/<code>.mjs (copy en.mjs and translate),
+// then run `node scripts/gen-lang-meta.mjs` — it rebuilds ./lang-meta.mjs,
+// the registry (LANG_META: flag / label / dir, LANG_CODES) this module reads.
+// No import to add here: catalogues are loaded on demand by _loadLang().
+// LANG holds the catalogues loaded SO FAR (always `en`); use LANG_CODES, not
+// Object.keys(LANG), to enumerate the languages the client ships.
 const LANG = {};
-const LANG_META = {};
-for (const code in LANG_MODULES) {
-  LANG[code] = LANG_MODULES[code].strings;
-  LANG_META[code] = LANG_MODULES[code].meta;
+// Keys defined in this module rather than in each lang file (tables below):
+// [key, { code: text }] pairs, applied to a catalogue when it is registered.
+const _EXTRA_KEYS = [];
+function _registerLang(code, strings) {
+  if (!strings || LANG[code]) return;
+  for (var i = 0; i < _EXTRA_KEYS.length; i++) {
+    var v = _EXTRA_KEYS[i][1][code];
+    if (v != null) strings[_EXTRA_KEYS[i][0]] = v;
+  }
+  LANG[code] = strings;
 }
 // ── Clé 'assist' (bouton activer/désactiver l'aide « force de la main »).
 // Ajoutée ici pour les langues couvertes, en un seul endroit plutôt que d'éditer
@@ -94,7 +55,7 @@ const _ASSIST_I18N = {
   sr: 'Помоћ', af: 'Hulp', ca: 'Ajuda', gl: 'Axuda', gd: 'Cuideachadh',
   lt: 'Pagalba', ta: 'உதவி', vi: 'Trợ giúp'
 };
-for (const _c in _ASSIST_I18N) { if (LANG[_c]) LANG[_c].assist = _ASSIST_I18N[_c]; }
+_EXTRA_KEYS.push(['assist', _ASSIST_I18N]);
 // ── Clés 'displayBB' / 'displayChips' : message clair du toast quand on
 // bascule l'unité d'affichage (grosses blindes ↔ jetons). Ajoutées ici pour
 // les langues couvertes ici. Repli EN automatique via t().
@@ -124,8 +85,8 @@ const _DISPLAYCHIPS_I18N = {
   ca: 'Imports en fitxes', gl: 'Importes en fichas', gd: 'Suimean ann an tòcanan',
   lt: 'Sumos žetonais', ta: 'சிப்களில்', vi: 'Số tiền theo chip'
 };
-for (const _c in _DISPLAYBB_I18N) { if (LANG[_c]) LANG[_c].displayBB = _DISPLAYBB_I18N[_c]; }
-for (const _c in _DISPLAYCHIPS_I18N) { if (LANG[_c]) LANG[_c].displayChips = _DISPLAYCHIPS_I18N[_c]; }
+_EXTRA_KEYS.push(['displayBB', _DISPLAYBB_I18N]);
+_EXTRA_KEYS.push(['displayChips', _DISPLAYCHIPS_I18N]);
 // ── Clé 'advLanguage' : libellé « Langue » de la ligne Langue dans Options
 // avancées → Interface. Traduite ici pour les langues couvertes (source unique).
 const _ADVLANG_I18N = {
@@ -138,7 +99,7 @@ const _ADVLANG_I18N = {
   lt: 'Kalba', ta: 'மொழி', vi: 'Ngôn ngữ', ko: '언어', 'zh-TW': '語言',
   hi: 'भाषा'
 };
-for (const _c in _ADVLANG_I18N) { if (LANG[_c]) LANG[_c].advLanguage = _ADVLANG_I18N[_c]; }
+_EXTRA_KEYS.push(['advLanguage', _ADVLANG_I18N]);
 // ── Contrôle « Mode sombre » d'Options avancées (label + 3 options) traduit
 // dans les langues couvertes ici (source unique ; ces clés n'étaient qu'en/fr).
 const _DARKMODE_I18N = {
@@ -181,10 +142,10 @@ const _MODEDARK_I18N = {
   lt: 'Tamsus', ta: 'இருள்', vi: 'Tối', ko: '다크', 'zh-TW': '深色',
   hi: 'डार्क'
 };
-for (const _c in _DARKMODE_I18N) { if (LANG[_c]) LANG[_c].advDarkMode = _DARKMODE_I18N[_c]; }
-for (const _c in _MODEAUTO_I18N) { if (LANG[_c]) LANG[_c].modeAuto = _MODEAUTO_I18N[_c]; }
-for (const _c in _MODELIGHT_I18N) { if (LANG[_c]) LANG[_c].modeLight = _MODELIGHT_I18N[_c]; }
-for (const _c in _MODEDARK_I18N) { if (LANG[_c]) LANG[_c].modeDark = _MODEDARK_I18N[_c]; }
+_EXTRA_KEYS.push(['advDarkMode', _DARKMODE_I18N]);
+_EXTRA_KEYS.push(['modeAuto', _MODEAUTO_I18N]);
+_EXTRA_KEYS.push(['modeLight', _MODELIGHT_I18N]);
+_EXTRA_KEYS.push(['modeDark', _MODEDARK_I18N]);
 // ── Deux dernières clés du panneau Options avancées absentes des fichiers de
 // langue (en/fr les ont déjà inline) : entête « Apparence » + « Deck 4 couleurs ».
 const _ADVAPPEAR_I18N = {
@@ -215,8 +176,8 @@ const _FOURCOLOR_I18N = {
   vi: 'Bộ bài 4 màu (\u2666 xanh dương, \u2663 xanh lá)', ko: '4색 덱 (\u2666 파랑, \u2663 초록)',
   'zh-TW': '四色牌 (\u2666 藍, \u2663 綠)', hi: '4-रंग वाली गड्डी (\u2666 नीला, \u2663 हरा)'
 };
-for (const _c in _ADVAPPEAR_I18N) { if (LANG[_c]) LANG[_c].advSecAppearance = _ADVAPPEAR_I18N[_c]; }
-for (const _c in _FOURCOLOR_I18N) { if (LANG[_c]) LANG[_c].advFourColor = _FOURCOLOR_I18N[_c]; }
+_EXTRA_KEYS.push(['advSecAppearance', _ADVAPPEAR_I18N]);
+_EXTRA_KEYS.push(['advFourColor', _FOURCOLOR_I18N]);
 // ── Clé 'serverPassword' : libellé du champ (optionnel) du mot de passe
 // SERVEUR (authServerPassword), affiché sous « plus d'options » pour les
 // serveurs auto-hébergés. Ajoutée ici pour toutes les langues ; toute langue
@@ -241,7 +202,7 @@ const _SERVERPASS_I18N = {
   vi: 'Mật khẩu máy chủ (tùy chọn)', ko: '서버 비밀번호 (선택 사항)',
   'zh-TW': '伺服器密碼（選填）', hi: 'सर्वर पासवर्ड (वैकल्पिक)'
 };
-for (const _c in _SERVERPASS_I18N) { if (LANG[_c]) LANG[_c].serverPassword = _SERVERPASS_I18N[_c]; }
+_EXTRA_KEYS.push(['serverPassword', _SERVERPASS_I18N]);
 // ── Clé 'userPassword' : libellé (placeholder) du champ mot de passe de
 // COMPTE (clientUserData) saisi par l'utilisateur dans la roue crantée en
 // mode LAN / serveur dédié. Rempli ⇒ le client bascule en authenticatedLogin.
@@ -266,7 +227,7 @@ const _USERPASS_I18N = {
   vi: 'Mật khẩu người dùng (tùy chọn)', ko: '사용자 비밀번호 (선택 사항)',
   'zh-TW': '使用者密碼（選填）', hi: 'उपयोगकर्ता पासवर्ड (वैकल्पिक)'
 };
-for (const _c in _USERPASS_I18N) { if (LANG[_c]) LANG[_c].userPassword = _USERPASS_I18N[_c]; }
+_EXTRA_KEYS.push(['userPassword', _USERPASS_I18N]);
 // ── Lobby : rythme de montée des blindes (« {n} mains » / « {n} min ») ──
 // EN/FR vivent dans en.mjs/fr.mjs ; ici les 34 autres langues. « min »
 // convient à toutes les écritures latines (repli EN automatique), donc
@@ -287,8 +248,69 @@ const _BLINDSUPMINS_I18N = {
   el: '{n} λεπτά', zh: '{n} 分钟', 'zh-TW': '{n} 分鐘', ja: '{n} 分',
   ko: '{n} 분', hi: '{n} मिनट', ta: '{n} நிமிடம்'
 };
-for (const _c in _BLINDSUPHANDS_I18N) { if (LANG[_c]) LANG[_c].blindsUpHands = _BLINDSUPHANDS_I18N[_c]; }
-for (const _c in _BLINDSUPMINS_I18N)  { if (LANG[_c]) LANG[_c].blindsUpMins  = _BLINDSUPMINS_I18N[_c]; }
+_EXTRA_KEYS.push(['blindsUpHands', _BLINDSUPHANDS_I18N]);
+_EXTRA_KEYS.push(['blindsUpMins', _BLINDSUPMINS_I18N]);
+// English is registered once every table above is declared.
+_registerLang('en', enLang.strings);
+
+// ── On-demand catalogues ─────────────────────────────────────────────────
+// _loadLang(code) → Promise<boolean>. One in-flight promise per language.
+// A failed fetch is retried with a cache-buster (?r=1 after 700 ms, ?r=2
+// after 2 s more): browsers may remember a failed module URL for the whole
+// page, and the usual culprit — a burst of failed TLS handshakes between the
+// CDN and the origin — is over within seconds. Same cadence as the script
+// retry of the error collector (pokerth-client.html). A final failure is not
+// remembered, so a later setLang() tries again.
+var _langLoads = {};
+function _langUrl(code, attempt) {
+  return './lang/' + String(code).toLowerCase() + '.mjs' + (attempt ? '?r=' + attempt : '');
+}
+function _loadLang(code) {
+  if (LANG[code]) return Promise.resolve(true);
+  if (LANG_CODES.indexOf(code) === -1) return Promise.resolve(false);
+  if (_langLoads[code]) return _langLoads[code];
+  var retried = false;
+  function attempt(n) {
+    return import(_langUrl(code, n)).then(function (m) {
+      _registerLang(code, m.strings || (m.default && m.default.strings));
+      return !!LANG[code];
+    }).catch(function (e) {
+      if (n >= 2) throw e;
+      retried = true;
+      return new Promise(function (res) { setTimeout(res, n === 0 ? 700 : 2000); })
+        .then(function () { return attempt(n + 1); });
+    });
+  }
+  _langLoads[code] = attempt(0).then(function (ok) {
+    if (!ok) delete _langLoads[code];
+    else if (retried) _report('Lang load retry recovered', code);
+    return ok;
+  }, function () {
+    delete _langLoads[code];
+    _report('Lang load failed, giving up', code);
+    return false;
+  });
+  return _langLoads[code];
+}
+// Every catalogue at once → Promise<boolean> (true when none is missing).
+// Not used by the client itself: for tools that need the whole table — the
+// dev parity check below and the server-side SEO renderer
+// (seo-i18n/catalog-dump.mjs).
+function loadAllLangs() {
+  return Promise.all(LANG_CODES.map(_loadLang)).then(function (r) {
+    return r.every(Boolean);
+  });
+}
+// One line in the error journal (queue of the inline collector, flushed by
+// modules/errreport.mjs when reporting is enabled). Never throws.
+function _report(msg, code) {
+  try {
+    var q = window.__pthErrQ;
+    if (q && q.length < 20) q.push({ msg: msg, src: '/modules/lang/' + String(code).toLowerCase() + '.mjs', line: 0, col: 0, stack: '' });
+    if (window.__pthErrFlush) window.__pthErrFlush();
+  } catch (e) {}
+}
+
 function _flagFor(code) {
   return (LANG_META[code] && LANG_META[code].flag)
     || ('<span class="lang-flag lang-flag-code" style="font:700 0.72rem/1 monospace;letter-spacing:.05em">' + String(code).toUpperCase() + '</span>');
@@ -302,7 +324,7 @@ function _labelFor(code) {
 // localeCompare keeps Latin labels A–Z and places non-Latin scripts
 // (Cyrillic, CJK) consistently after them.
 function _langCodesSorted() {
-  return Object.keys(LANG).sort(function (a, b) {
+  return LANG_CODES.slice().sort(function (a, b) {
     return _labelFor(a).localeCompare(_labelFor(b), undefined, { sensitivity: 'base' });
   });
 }
@@ -322,7 +344,7 @@ const I18N_DEBUG = (function() {
 })();
 
 let _lang = (function(){
-    var avail = Object.keys(LANG);
+    var avail = LANG_CODES;
     // Region-specific catalogues whose code is a full locale, not a bare
     // primary subtag. Maps a lower-cased browser/saved locale onto the
     // catalogue code we ship.
@@ -419,6 +441,10 @@ function t(k, params) {
 // I18N_DEBUG so it never spams real users' consoles in production.
 function checkI18nParity() {
     if (!I18N_DEBUG) return;
+    // Dev only: the check needs every catalogue, so load them all first.
+    loadAllLangs().then(_runI18nParity);
+}
+function _runI18nParity() {
     var ref = Object.keys(LANG.en);
     var refSet = {};
     ref.forEach(function(k){ refSet[k] = true; });
@@ -476,9 +502,27 @@ function _notifyLangChange(lang) {
   catch (e) {}
 }
 
+// setLang(l): applies at once when the catalogue is already loaded (always
+// the case for English and for any language used earlier in the session).
+// Otherwise the catalogue is fetched first and the switch happens when it
+// arrives; if it cannot be fetched the current language stays in place and
+// the player is told. Only the LATEST request wins (quick A → B clicks).
+var _langWanted = null;
+var _langPicked = false;   // an explicit setLang() happened (boot must not override it)
 function setLang(l) {
+  _langPicked = true;
+  if (LANG[l] || LANG_CODES.indexOf(l) === -1) { _langWanted = null; _applyLang(l, true); return; }
+  _langWanted = l;
+  _loadLang(l).then(function (ok) {
+    if (_langWanted !== l) return;
+    _langWanted = null;
+    if (ok) { _applyLang(l, true); return; }
+    try { if (typeof window.showToast === 'function') window.showToast(t('bootErrorMsg'), { tone: 'error' }); } catch (e) {}
+  });
+}
+function _applyLang(l, persist) {
   _lang = l;
-  try { localStorage.setItem('pth_lang', l); } catch(e) {}
+  if (persist) { try { localStorage.setItem('pth_lang', l); } catch(e) {} }
   // Keep <html lang> in sync with the active UI language. The browser
   // uses this attribute to decide whether to offer a translation banner;
   // matching the user's locale here makes the banner disappear.
@@ -675,7 +719,7 @@ function openLangMenu(ev) {
 }
 
 // ─── Modern ES module exports ───────────────────────────────────────────
-export { LANG, t, setLang, toggleLang, getLang, checkI18nParity, openLangMenu, closeLangMenu, onLangChange, offLangChange };
+export { LANG, LANG_CODES, LANG_META, loadAllLangs, t, setLang, toggleLang, getLang, checkI18nParity, openLangMenu, closeLangMenu, onLangChange, offLangChange };
 
 // ─── Legacy global compatibility ────────────────────────────────────────
 // pokerth.js (the un-refactored majority) still references these as bare
@@ -699,7 +743,7 @@ Object.defineProperty(window, '_lang', {
 
 // Also expose a single namespaced object for the migration-aware code
 // that wants a clean entry point.
-window.I18N = { LANG, t, setLang, toggleLang, getLang, checkParity: checkI18nParity, openLangMenu, closeLangMenu, onLangChange, offLangChange };
+window.I18N = { LANG, LANG_CODES, LANG_META, t, setLang, toggleLang, getLang, checkParity: checkI18nParity, openLangMenu, closeLangMenu, onLangChange, offLangChange };
 // Voie non-ESM du registre de relocalisation (cf. onLangChange ci-dessus).
 window._onLangChange = onLangChange;
 window._offLangChange = offLangChange;
@@ -708,9 +752,30 @@ window._offLangChange = offLangChange;
 // Without this, the language-toggle buttons stay empty until the user
 // clicks them (because setLang() is the function that injects the SVG
 // flag). Run it as soon as the DOM is parsed.
+// The active catalogue is requested as soon as this module evaluates, so it
+// is normally there before DOM-ready. The first sweep waits for it — no flash
+// of English — and so does the boot splash (window.__pthLangReady, read by
+// the boot gate in pokerth-client.html). If it cannot be fetched, or after
+// 4 s on a stalled network, the client starts in English WITHOUT overwriting
+// the saved choice: a late catalogue is still applied when it arrives, and
+// the next load tries the player's language again.
+var _bootLang = _lang;
+window.__pthLangReady = !!LANG[_bootLang];
+var _bootLoad = _loadLang(_bootLang);
 function _initI18n() {
-    try { setLang(_lang); } catch (e) { console.warn('[i18n] init failed:', e); }
-    try { checkI18nParity(); } catch (e) {}
+    var started = false;
+    function start(code, persist) {
+        try { if (!_langPicked) _applyLang(code, persist); }
+        catch (e) { console.warn('[i18n] init failed:', e); }
+        if (!started) { started = true; try { checkI18nParity(); } catch (e) {} }
+        window.__pthLangReady = true;
+    }
+    var slow = setTimeout(function () { if (!started) start('en', false); }, 4000);
+    _bootLoad.then(function (ok) {
+        clearTimeout(slow);
+        if (ok) start(_bootLang, true);
+        else if (!started) start('en', false);
+    });
 }
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', _initI18n, { once: true });

@@ -51,8 +51,10 @@ The codebase is intentionally dependency-light:
 1. Catalogues live in `public/modules/lang/<code>.mjs`. The source of truth is
    `en.mjs` (every key must exist in each language).
 2. To add a language, copy `en.mjs`, translate the `strings`, then register it
-   in `public/modules/i18n.mjs` (add the `import` and an entry in
-   `LANG_MODULES`).
+   by running `node scripts/gen-lang-meta.mjs` (rebuilds
+   `public/modules/lang-meta.mjs`, the registry the language picker reads).
+   Catalogues are loaded on demand — there is no import to add. Full checklist:
+   `docs/ADDING_A_LANGUAGE.md`.
 3. Poker action verbs (Fold / Check / Call / Raise / All-In) are kept in English
    by convention in most languages; hand names and UI text are translated.
 4. Keep placeholders intact: `{name}`, `{n}`, `{s}`, `{r}`, `{a}`, etc.

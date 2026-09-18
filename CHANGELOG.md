@@ -71,6 +71,25 @@ highlights below.
 
 ### Changed
 
+- **Language catalogues load on demand** (`web.62`) — `modules/i18n.mjs`
+  statically imported all 55 catalogues: a 56-request, ~5 MB module graph
+  fetched by every visitor, in which a single flaky request failed the whole
+  module and the ~50 modules importing it (top entry of the error journal:
+  `Failed to load script /modules/i18n.mjs`, whose probe then answered
+  HTTP 200 because the culprit was one of the imports). Only English is
+  static now; the active language is fetched at boot, the others when the
+  player switches, each with two cache-busted retries. If the active
+  catalogue cannot be fetched the client starts in English without
+  overwriting the saved choice. The boot splash waits for the catalogue
+  (capped at 4 s), so there is no flash of English. New generated registry
+  `modules/lang-meta.mjs` (code, label, direction, flag — 22 KB) feeds the
+  picker and locale detection: **adding a language is now
+  `node scripts/gen-lang-meta.mjs`**, no import to write. `loadAllLangs()`
+  serves the tools that need the whole table (dev parity check,
+  `seo-i18n/catalog-dump.mjs`). The service worker still precaches every
+  catalogue, so switching language offline keeps working. Guarded by
+  `scripts/test-lang-lazy.mjs`.
+
 - **Avatar import hint and "Backup & reset" category** (`web.60`) — players
   believed avatars had to be pre-converted to 96×96 / 30 KB because the Import
   tab hint listed the internal output constraints; `avImportHint` now states

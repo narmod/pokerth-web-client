@@ -4,8 +4,9 @@
 //
 // Each language file exports `meta` (label / text-direction / flag) and
 // `strings`. TO ADD A LANGUAGE: copy en.mjs, translate every value, then
-// register the file in ../i18n.mjs (one import + one LANG_MODULES entry).
-// Nothing else needs to change. When translating, keep {token} placeholders
+// run `node scripts/gen-lang-meta.mjs` to register it (rebuilds the registry
+// ../lang-meta.mjs; catalogues themselves are loaded on demand by ../i18n.mjs).
+// See docs/ADDING_A_LANGUAGE.md. When translating, keep {token} placeholders
 // and the `||` line separators exactly as they appear.
 // ─────────────────────────────────────────────────────────────────────────
 

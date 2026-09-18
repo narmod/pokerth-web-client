@@ -28,5 +28,12 @@ globalThis.document = {
 // The module warns on a failed init; stdout must stay pure JSON.
 console.log = console.warn = console.info = noop;
 
-const { LANG } = await import(pathToFileURL(join(publicDir, 'modules', 'i18n.mjs')).href);
-process.stdout.write(JSON.stringify(LANG));
+// The client loads catalogues on demand (English + the active language);
+// the renderer needs them all. A client without loadAllLangs is the older
+// all-static one, whose LANG is already complete.
+const i18n = await import(pathToFileURL(join(publicDir, 'modules', 'i18n.mjs')).href);
+if (typeof i18n.loadAllLangs === 'function') {
+  const complete = await i18n.loadAllLangs();
+  if (!complete) { process.stderr.write('catalog-dump: some catalogues failed to load\n'); process.exit(1); }
+}
+process.stdout.write(JSON.stringify(i18n.LANG));

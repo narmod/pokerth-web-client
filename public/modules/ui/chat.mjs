@@ -175,7 +175,7 @@ function _chatLocalCmd(text, echo) {
   }
   if (cmd === '/lang') {
     try {
-      var codes = window.LANG ? Object.keys(window.LANG) : [];
+      var codes = (window.I18N && window.I18N.LANG_CODES) || (window.LANG ? Object.keys(window.LANG) : []);
       var found = null;
       for (var c = 0; c < codes.length; c++) if (codes[c].toLowerCase() === arg.toLowerCase()) { found = codes[c]; break; }
       if (!found) { echo('lang', 'usage: /lang <code> — available: ' + codes.join(' ')); return true; }

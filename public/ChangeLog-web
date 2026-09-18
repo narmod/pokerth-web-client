@@ -1,4 +1,8 @@
-2026-09-17 version 2.1.9-web.60 (current series):
+2026-09-18 version 2.1.9-web.62 (current series):
+- improvement: the game starts faster and uses far less data - only your language is downloaded instead of all 55 (the others load when you pick them)
+- bugfix: on an unstable connection the game could fail to start because one of the 55 language files did not load - it now retries, and falls back to English rather than not starting
+
+2026-09-17 version 2.1.9-web.60:
 - improvement: the avatar Import tab now says clearly that any image works - it is cropped and resized automatically, you do not need to prepare a 96x96 file yourself
 - improvement: the "Restore defaults" settings category is now called "Backup & reset", so the config.xml and backup import/export buttons are easier to find
 - bugfix: the help pointed to the wrong settings category for the config.xml import/export

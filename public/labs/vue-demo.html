@@ -93,7 +93,7 @@
 
 <script type="module">
   import { createApp, ref, computed, version as vueVersion } from './vue.esm-browser.prod.js';
-  import { LANG, t, setLang, getLang } from '../modules/i18n.mjs';
+  import { LANG_CODES, t, setLang, getLang } from '../modules/i18n.mjs';
   import { PRESETS, applyPreset, activePreset } from '../modules/theme.mjs';
 
   createApp({
@@ -110,8 +110,8 @@
 
       return {
         vueVersion,
-        langs: Object.keys(LANG),
-        langCount: Object.keys(LANG).length,
+        langs: LANG_CODES.slice(),
+        langCount: LANG_CODES.length,
         presets: PRESETS,
         presetCount: PRESETS.length,
         currentLang, activePresetId, tr,

@@ -16,8 +16,9 @@ and 2 have to land **together** in the same commit as the wiring —
 so registering a catalogue without its help would leave the suite red.
 
 Work in progress can be committed freely as long as the language is **not yet
-registered** in `modules/i18n.mjs`: nothing loads the files, nothing is visible
-to players, and each commit is a safe resume point. This is how the Estonian
+registered** in `modules/lang-meta.mjs` (i.e. `gen-lang-meta.mjs` has not been
+re-run): nothing loads the files, nothing is visible to players, and each
+commit is a safe resume point. This is how the Estonian
 catalogue was built over a dozen commits.
 
 ### Step 1 — the UI catalogue
@@ -65,10 +66,15 @@ committing, not just `node --check`.
 
 Then, in a single commit:
 
-- `public/modules/i18n.mjs` — one import, one `LANG_MODULES` entry. The
-  inline overlay objects further down do **not** need an entry: with no key
-  for the language, nothing is overwritten and the catalogue's own value is
-  used, which is already translated.
+- `public/modules/lang-meta.mjs` — regenerate it with
+  `node scripts/gen-lang-meta.mjs`. This is the registration: the file lists
+  every language (code, native label, direction, flag) for the picker and the
+  locale detection, while the catalogues themselves are fetched on demand
+  (English statically, the active language at boot, the others on switch).
+  Nothing to add in `public/modules/i18n.mjs`; its inline overlay objects do
+  **not** need an entry either: with no key for the language, nothing is
+  overwritten and the catalogue's own value is used, which is already
+  translated.
 - `public/sw.js` — precache `/modules/lang/<code>.mjs` and
   `/modules/help/content/<code>.mjs`.
 - `public/admin.html` — add the code to `WC_LANGS` (welcome-message editor).
@@ -111,6 +117,7 @@ needs jsdom.
 
 ```
 node scripts/test-lang-count.mjs          # count + one help corpus per catalogue
+node scripts/test-lang-lazy.mjs           # registry in sync + on-demand loading
 node scripts/test-boot.mjs                # 19 checks, offline boot
 node scripts/test-accessibility-locales.mjs
 node scripts/test-admin-langs.mjs
