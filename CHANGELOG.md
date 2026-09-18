@@ -121,6 +121,12 @@ highlights below.
 
 ### Fixed
 
+- **Error journal: two more sources of injected-script noise filtered**
+  (`web.63`) — the script UC Browser injects into every page (served under a
+  fake same-origin path, `/u.c.b.r.o.w.s.e.r/ucbrowser_script.js`) and
+  extension content scripts failing on `wrappedJSObject` (seen on Safari iOS).
+  Neither string exists in the client.
+
 - **Fallback build id bumped to 2.1.9** (`web.61`) — the hard-coded fallback
   triple in `public/proto/index.mjs` and `modules/net/messages.mjs` (used only
   when `BUILD_VERSION` is missing) was still 2.1.8; `test-build-id` now passes.

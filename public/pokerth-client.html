@@ -81,13 +81,19 @@
        une erreur sans message/pile ne peut venir que d'un script injecté) ;
      - la collision window.ethereum des injecteurs de wallets crypto ;
      - les extensions de traduction de page injectées dans le document
-       (checkInScreen/textNodesUnder/… : fonctions absentes du client). */
+       (checkInScreen/textNodesUnder/… : fonctions absentes du client) ;
+     - le script que UC Browser injecte dans chaque page, servi sous un faux
+       chemin same-origin (/u.c.b.r.o.w.s.e.r/ucbrowser_script.js) ;
+     - wrappedJSObject : API des content scripts d'extension (Firefox, et
+       extensions Safari iOS qui la supposent) — jamais utilisée par le client. */
   function isExtNoise(msg, src, stack) {
     var s = String(msg || '') + '\n' + String(src || '') + '\n' + String(stack || '');
     if (s.indexOf('-extension://') !== -1) return true;
     if (String(msg || '') === 'Script error.') return true;
     if (s.indexOf('Cannot redefine property: ethereum') !== -1) return true;
     if (/(checkInScreen|textNodesUnder|processExtraInfo|processNode)@/.test(s)) return true;
+    if (s.indexOf('ucbrowser_script') !== -1 || s.indexOf('/u.c.b.r.o.w.s.e.r/') !== -1) return true;
+    if (s.indexOf('wrappedJSObject') !== -1) return true;
     return false;
   }
   window.addEventListener('error', function (ev) {
