@@ -1,4 +1,7 @@
-2026-09-19 version 2.1.9-web.76 (current series):
+2026-09-19 version 2.1.9-web.77 (current series):
+- new: the public pages (poker rules, hand rankings, glossary, how to play, FAQ) are now available in Gujarati too
+
+2026-09-19 version 2.1.9-web.76:
 - new: Gujarati (ગુજરાતી) is now available in the language list - the whole interface, the built-in help and the welcome notices are translated, bringing the client to 60 languages
 
 2026-09-19 version 2.1.9-web.75:
