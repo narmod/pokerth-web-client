@@ -46,8 +46,9 @@ highlights below.
 - **Amharic**, full UI catalogue, help corpus, SEO content pages and
   guest/registered/LAN broadcast notices (`web.22`–`24`) — 54 languages
   total.
-- **Malayalam**, UI catalogue, help corpus and guest/registered/LAN broadcast
-  notices (`web.70`) — 57 languages total; SEO content pages to follow.
+- **Malayalam**, full UI catalogue, help corpus, SEO content pages (incl.
+  `/rules` and `/faq`) and guest/registered/LAN broadcast notices
+  (`web.70`–`71`) — 57 languages total.
 - **Telugu**, full UI catalogue, help corpus, SEO content pages (incl.
   `/rules` and `/faq`) and guest/registered/LAN broadcast notices
   (`web.67`–`68`) — 56 languages total.
