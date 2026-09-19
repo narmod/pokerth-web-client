@@ -639,6 +639,8 @@ function onPlayersTurn(sub) {
     document.getElementById('g-round').textContent = rounds[S.gameState] || t('preflop');
     startTurnTimer();
     if (S.turnPid === S.myId) {
+      // Mobile loupe (QML onMyTurnChanged): show the self box zone at once.
+      try { if (window._loupeMyTurn) window._loupeMyTurn(); } catch (_e) {}
       // C'est notre tour : on referme tout panneau "aperçu" pour ne pas
       // interférer avec la barre d'actions normale (et tous ses effets).
       S._preActionOpen = false;
@@ -765,6 +767,8 @@ function _beginStreet(dealMs) {
     S._actedStreet  = -1;
     S._roundEnded   = true;
     S._boardDealing = true;
+    // Mobile loupe (QML onBoardCardsChanged): pan to the community cards.
+    try { if (window._loupeBoardCards) window._loupeBoardCards(); } catch (_e) {}
     setTimeout(function () {
       S._boardDealing = false;
       // Rafraîchit l'aperçu : s'il reste verrouillé c'est que la manche n'a

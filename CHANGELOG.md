@@ -121,6 +121,31 @@ highlights below.
 
 ### Fixed
 
+- **Mobile loupe: follow logic brought to parity with QML 2.1.9** (`web.66`,
+  `GamePage.qml` `tableZone`, checked against the 2.1.9 build 1223 Android APK
+  — its `GamePage.qml` is upstream `stable` minus the `a6d4f05` hunk). The
+  loupe's follow code is now a straight port of the QML state machine
+  (`_scheduleFollow` / `_doFollow` / `_panToPoint`, planned seat vs. seat
+  already panned to) instead of a render-driven approximation:
+  - **my turn** → the planned opponent pan is dropped and the self box zone
+    (bottom of the table, centred) is shown at once (`onMyTurnChanged`);
+  - **new street** → pan to the community cards (`communityCenterY`, now
+    exported by `renderSeats` as `window._commCenterY`) and the "already
+    panned to" mark is reset, so the same seat acting first on the next
+    street — routine heads-up — is followed again (`onBoardCardsChanged`);
+  - **the planned player acts** → pan there immediately instead of waiting for
+    the ¼-thinking-time timer (`onRefreshActionTriggered`; the existing
+    `_zoomFollowActed` hook had only ever driven the retired +/− zoom);
+  - **showdown** → pan and follow marks are reset with the zoom-out, so the
+    next hand reopens centred rather than on a stale seat;
+  - the follow delay uses the QML 8 s fallback when no timeout is known, and
+    the re-anchor of `web.65` now falls back to the community-card centre and
+    leaves the self box zone alone, as upstream does.
+  Not ported: `onWinningHandTextChanged` — on the web that text only shows
+  during the showdown, where the loupe is suspended, so it could never act.
+  `scripts/test-loupe-reanchor.mjs` rewritten to cover the whole state machine
+  (22 checks).
+
 - **Mobile loupe: view re-anchored when the ring is redistributed** (`web.65`,
   parity with upstream `a6d4f05`, `GamePage.qml` `_reanchorZoom`) — the ×2
   loupe keeps its pan in absolute zone pixels of the ring layout that was

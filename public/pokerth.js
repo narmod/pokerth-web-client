@@ -9052,9 +9052,10 @@ function _applyZoomTransforms() {
 // (1−k)·zone/2 + pan) ; clip de la zone quand actif ; pan au pointeur ;
 // transition 220 ms OutCubic hors drag. Self/action bar/fond : hors effet.
 var _loupe = { on:false, k:2.0, panX:0, panY:0, susp:false, drag:false,
-               followSeat:null, followTmr:null,
-               panSeat:null,   // pid the current pan was actually computed for
-               ringN:null };   // ring count of the previous render
+               pendSeat:null,     // planned pan seat, timer running (QML _pendingFollowSeat)
+               followSeat:null,   // seat already panned to: pid | 'self' | null (QML _followedSeat)
+               followTmr:null,
+               ringN:null };      // ring count of the previous render
 window._loupeK = 1;
 function _loupeZone() { return document.getElementById('g-table-zone'); }
 function _loupeClamp() {
@@ -9121,7 +9122,7 @@ function toggleLoupe() {
   _loupe.on = !_loupe.on;
   if (!_loupe.on) { _loupe.panX = _loupe.panY = 0; _loupe.susp = false;
                     if (_loupe.followTmr) { clearTimeout(_loupe.followTmr); _loupe.followTmr = null; }
-                    _loupe.followSeat = null; _loupe.panSeat = null; }
+                    _loupe.pendSeat = null; _loupe.followSeat = null; }
   _loupeClamp(); _loupeApply();
 }
 window.toggleLoupe = toggleLoupe;
@@ -9144,7 +9145,7 @@ function _loupeBtnSync() {
   if (!vis && (_loupe.on || _loupe.susp)) {
     _loupe.on = false; _loupe.susp = false; _loupe.panX = _loupe.panY = 0;
     if (_loupe.followTmr) { clearTimeout(_loupe.followTmr); _loupe.followTmr = null; }
-    _loupe.followSeat = null; _loupe.panSeat = null;
+    _loupe.pendSeat = null; _loupe.followSeat = null;
     _loupeApply(false);
   }
   if (vis) {
@@ -9176,30 +9177,105 @@ setTimeout(_loupeBtnSync, 900);
 })();
 // Hook appelé par renderSeats : suivi différé du siège actif + suspension au
 // showdown (parité _scheduleFollow/_doFollow + _zoomSuspendedByShowdown).
-// Re-anchor (upstream a6d4f05, GamePage.qml _reanchorZoom): panX/panY are
-// ABSOLUTE coordinates of the ring distribution that was current when the pan
-// was made. As soon as the ring is redistributed - "Remove departed players"
-// is on and someone leaves, or the option is toggled mid-hand - the excerpt
-// points at a place where no box sits any more. Re-anchor it onto the seat it
-// was showing; if that seat left the ring (or no seat was followed) go back to
-// the table centre, which exists in every distribution. Never during a drag.
-function _loupeReanchor() {
-  if (!_loupe.on || _loupe.drag) return;
+// ── Follow state machine: straight port of GamePage.qml (2.1.9, tableZone) ──
+// _panToPoint / _panToSeat / _scheduleFollow / _doFollow / _reanchorZoom and
+// the GameTable connections (myTurn, boardCards, showdown). Not ported:
+// onWinningHandTextChanged - on the web that text only ever shows during the
+// showdown, where the loupe is suspended (zoomed out), so it could never act.
+function _loupeActive() { return _loupe.on && !_loupe.susp; }
+// Screen centre on the content point (cx,cy), zone px: pan = k·(size/2 − c).
+function _loupePanToPoint(cx, cy) {
   var z = _loupeZone(); if (!z) return;
-  var el = null;
-  if (_loupe.panSeat != null) {
-    try { el = document.querySelector('#g-seats .seat[data-pid="' + _loupe.panSeat + '"]:not(.me)'); } catch (e) { el = null; }
-  }
-  if (el) {
-    _loupe.panX = _loupe.k * (z.clientWidth / 2 - (parseFloat(el.style.left) || 0));
-    _loupe.panY = _loupe.k * (z.clientHeight / 2 - (parseFloat(el.style.top) || 0));
-  } else {
-    _loupe.panSeat = null;
-    _loupe.panX = 0; _loupe.panY = 0;
-  }
+  _loupe.panX = _loupe.k * (z.clientWidth / 2 - cx);
+  _loupe.panY = _loupe.k * (z.clientHeight / 2 - cy);
   _loupeClamp(); _loupeApply();
 }
+// Ring seats only: the self box is not a ring slot (QML slotForSeat → null).
+function _loupeSeatEl(pid) {
+  if (pid == null || pid === 'self') return null;
+  try { return document.querySelector('#g-seats .seat[data-pid="' + pid + '"]:not(.me)'); } catch (e) { return null; }
+}
+function _loupePanToSeat(pid) {
+  var el = _loupeSeatEl(pid); if (!el) return;
+  // Zone coordinates (style left/top set by renderSeats, untransformed).
+  _loupePanToPoint(parseFloat(el.style.left) || 0, parseFloat(el.style.top) || 0);
+}
+// communityCenterY as computed by renderSeats (window._commCenterY, zone px).
+function _loupeCommY() {
+  var z = _loupeZone(), cy = window._commCenterY;
+  return (typeof cy === 'number' && isFinite(cy) && cy > 0) ? cy : (z ? z.clientHeight / 2 : 0);
+}
+function _loupeStopFollow() {
+  if (_loupe.followTmr) { clearTimeout(_loupe.followTmr); _loupe.followTmr = null; }
+}
+// Deferred follow of the seat to act: the view does NOT jump there at once but
+// when that player acts (_loupeDoFollow) or 1/4 of the thinking time is over,
+// so the table / community area stays visible longer after a new card.
+function _loupeScheduleFollow(pid, sec) {
+  if (!_loupeActive() || _loupe.drag) return;
+  if (!_loupeSeatEl(pid)) return;                                  // none, or me (the myTurn path)
+  pid = String(pid);
+  if (pid === _loupe.followSeat) return;                           // already there
+  if (pid === _loupe.pendSeat && _loupe.followTmr) return;         // already planned
+  _loupe.pendSeat = pid;
+  _loupeStopFollow();
+  _loupe.followTmr = setTimeout(_loupeDoFollow, Math.max(800, (sec > 0 ? sec : 8) * 250));
+}
+function _loupeDoFollow() {
+  _loupeStopFollow();
+  if (!_loupeActive() || _loupe.drag) return;
+  if (_loupe.pendSeat == null) return;
+  _loupePanToSeat(_loupe.pendSeat);
+  _loupe.followSeat = _loupe.pendSeat;
+  _loupe.pendSeat = null;
+}
+// My turn: drop a planned opponent pan and show the self box zone at once
+// (bottom of the table, centred) so hand cards and action area are in view.
+function _loupeMyTurn() {
+  if (!_loupeActive()) return;
+  var z = _loupeZone(); if (!z) return;
+  _loupeStopFollow();
+  _loupe.pendSeat = null;
+  _loupe.followSeat = 'self';
+  _loupe.panX = 0;
+  _loupe.panY = -(_loupe.k - 1) * z.clientHeight / 2;
+  _loupeClamp(); _loupeApply();
+}
+// New street: forget the "already panned to" mark so the first player of the
+// round is followed again, and pan to the community cards.
+function _loupeBoardCards() {
+  if (!_loupeActive()) return;
+  _loupeStopFollow();
+  _loupe.pendSeat = null; _loupe.followSeat = null;
+  if (_loupe.drag) return;
+  var z = _loupeZone(); if (!z) return;
+  _loupePanToPoint(z.clientWidth / 2, _loupeCommY());
+}
+// New hand (no board card yet): marks reset only, no pan.
+function _loupeHandStart() {
+  if (!_loupe.on) return;
+  _loupeStopFollow();
+  _loupe.pendSeat = null; _loupe.followSeat = null;
+}
+// Re-anchor (upstream a6d4f05, _reanchorZoom): panX/panY are ABSOLUTE
+// coordinates of the ring distribution that was current when the pan was made.
+// As soon as the ring is redistributed - "Remove departed players" is on and
+// someone leaves, or the option is toggled mid-hand - the excerpt points at a
+// place where no box sits any more. Re-anchor it onto the seat it was showing;
+// if that seat left the ring (or no seat was followed) go back to the table
+// centre, which exists in every distribution. The self box zone hangs on the
+// lower zone edge, not on a ring slot: its excerpt stays valid.
+function _loupeReanchor() {
+  if (!_loupeActive() || _loupe.drag) return;
+  if (_loupe.followSeat === 'self') return;
+  var z = _loupeZone(); if (!z) return;
+  if (_loupeSeatEl(_loupe.followSeat)) { _loupePanToSeat(_loupe.followSeat); return; }
+  _loupe.followSeat = null;
+  _loupePanToPoint(z.clientWidth / 2, _loupeCommY());
+}
 window._loupeReanchor = _loupeReanchor;
+window._loupeMyTurn = _loupeMyTurn;
+window._loupeBoardCards = _loupeBoardCards;
 window._loupeOnRender = function (activeEl, showdown, timerTot) {
   _loupeBtnSync();   // visibilité/position réévaluées à chaque rendu de table
   _loupeAnchorSelf(false);   // #g-seats vient d'etre recree : re-ancrer la self
@@ -9213,28 +9289,20 @@ window._loupeOnRender = function (activeEl, showdown, timerTot) {
   if (_ringMoved && _loupe.on) setTimeout(_loupeReanchor, 0);
   if (!_loupe.on) return;
   var z = _loupeZone(); if (!z) return;
-  if (showdown) {   // dézoom pour la vue d'ensemble, réactivé main suivante
-    if (!_loupe.susp) { _loupe.susp = true; _loupeApply(); }
+  if (showdown) {   // zoom out for the overview, switched on again next hand
+    if (!_loupe.susp) {   // QML onShowdownActiveChanged: planned pan dropped, pan reset
+      _loupe.susp = true;
+      _loupeStopFollow();
+      _loupe.pendSeat = null; _loupe.followSeat = null;
+      _loupe.panX = 0; _loupe.panY = 0;
+      _loupeApply();
+    }
     return;
   }
   if (_loupe.susp) { _loupe.susp = false; _loupeApply(); }
-  var key = activeEl ? (activeEl.getAttribute('data-pid') || 'x') : null;
-  if (!key || key === _loupe.followSeat) return;
-  _loupe.followSeat = key;
-  if (_loupe.followTmr) clearTimeout(_loupe.followTmr);
-  var ms = Math.max(800, (timerTot || 30) * 250);
-  _loupe.followTmr = setTimeout(function () {
-    _loupe.followTmr = null;
-    if (!_loupe.on || _loupe.susp || _loupe.drag) return;
-    var el = document.querySelector('#g-seats .seat.active:not(.me)');
-    var z2 = _loupeZone(); if (!el || !z2) return;
-    // Coordonnées zone (style left/top posés par renderSeats, non transformés).
-    var pxT = parseFloat(el.style.left) || 0, pyT = parseFloat(el.style.top) || 0;
-    _loupe.panX = _loupe.k * (z2.clientWidth / 2 - pxT);
-    _loupe.panY = _loupe.k * (z2.clientHeight / 2 - pyT);
-    _loupe.panSeat = el.getAttribute('data-pid') || null;
-    _loupeClamp(); _loupeApply();
-  }, ms);
+  // Safety net (QML onPlayersChanged): follow the active opponent in a deferred
+  // way. _loupeScheduleFollow is idempotent, no timer thrash under re-renders.
+  if (activeEl) _loupeScheduleFollow(activeEl.getAttribute('data-pid'), timerTot);
 };
 window.addEventListener('resize', function () { _loupeClamp(); _loupeApply(false); _loupeBtnSync(); });
 
@@ -9326,7 +9394,10 @@ window._zoomFollowTurn = function (pid, sec) {
   _zoomFollowTimer = setTimeout(_zoomDoFollow, Math.max(800, (sec > 0 ? sec : 8) * 250));
 };
 // Le joueur a agi → exécuter tout pan en attente immédiatement.
-window._zoomFollowActed = function () { if (_zoomPendingPid > 0) _zoomDoFollow(); };
+window._zoomFollowActed = function () {
+  try { _loupeDoFollow(); } catch (e) {}   // loupe: the planned player has acted → pan there at once
+  if (_zoomPendingPid > 0) _zoomDoFollow();
+};
 // Showdown → dézoom d'ensemble (zoom sauvé, restauré à la main suivante).
 window._zoomShowdownSuspend = function () {
   if (!_advGet('zoom_follow', true)) return;   // option coupée → zoom intact au showdown
@@ -9342,6 +9413,7 @@ window._zoomShowdownSuspend = function () {
 };
 // Nouvelle main → reset du suivi + restauration du zoom suspendu.
 window._zoomHandStart = function () {
+  try { _loupeHandStart(); } catch (e) {}
   if (_zoomFollowTimer) { clearTimeout(_zoomFollowTimer); _zoomFollowTimer = null; }
   _zoomPendingPid = -1; _zoomFollowedPid = -1;
   var need = (_zoomPreShowdown != null) || _zoomPanX || _zoomPanY;
@@ -11767,7 +11839,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.9-web.65'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.9-web.66'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif ou la palette High contrast
    (Android, Safari, iOS standalone récent). Lit --theme-color et met

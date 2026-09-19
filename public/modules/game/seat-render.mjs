@@ -1344,6 +1344,8 @@ function renderSeatsImmediate() {
       // simple centré dans le même cadre (zone + action bar), sans zoom ni
       // communityCenterY (narmod 2026-09-12, parité GamePage.qml non-center).
       // En portrait, align:bottom garde encore le repli CSS statique. ──
+      // communityCenterY (zone px) for the mobile loupe pans (pokerth.js _loupeCommY).
+      try { if (_commTargetY !== null) window._commCenterY = _commTargetY; } catch (eCy) {}
       try { _applyQmlBgCenter(zRect, _commTargetY); } catch (eBg) {}
       // ── Largeur du panneau d'action (parité GameActionBar.panelWidth) :
       // paysage = min(barre, max(largeur VISUELLE des cartes communes, 380)),

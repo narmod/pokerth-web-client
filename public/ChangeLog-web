@@ -1,4 +1,7 @@
-2026-09-19 version 2.1.9-web.65 (current series):
+2026-09-19 version 2.1.9-web.66 (current series):
+- improvement: mobile zoom (magnifier) now behaves like the Android app - on your turn it shows your own area at once, on a new community card it moves to the board, it jumps to a player as soon as he acts, and after a showdown the next hand starts centred
+
+2026-09-19 version 2.1.9-web.65:
 - bugfix: mobile zoom (magnifier) - with "Remove departed players" enabled, the zoomed view no longer stays stuck on an empty spot when a player leaves the table; it follows the seat it was showing, or returns to the table centre (same fix as the desktop client)
 
 2026-09-19 version 2.1.9-web.64:
