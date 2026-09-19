@@ -1,4 +1,7 @@
-2026-09-19 version 2.1.9-web.71 (current series):
+2026-09-19 version 2.1.9-web.72 (current series):
+- new: Marathi (मराठी) is now available in the language list - the whole interface, the built-in help and the welcome notices are translated, bringing the client to 58 languages
+
+2026-09-19 version 2.1.9-web.71:
 - new: the public pages (poker rules, hand rankings, glossary, how to play, FAQ) are now available in Malayalam too
 
 2026-09-19 version 2.1.9-web.70:
