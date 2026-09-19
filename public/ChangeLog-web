@@ -1,4 +1,7 @@
-2026-09-19 version 2.1.9-web.68 (current series):
+2026-09-19 version 2.1.9-web.69 (current series):
+- bugfix: the welcome notice for registered players said ranking games start with blinds at 55 in Afrikaans, Filipino, Indonesian, Lithuanian, Turkish and Traditional Chinese - it is 50, as in every other language
+
+2026-09-19 version 2.1.9-web.68:
 - new: the public pages (poker rules, hand rankings, glossary, how to play, FAQ) are now available in Telugu too
 
 2026-09-19 version 2.1.9-web.67:
