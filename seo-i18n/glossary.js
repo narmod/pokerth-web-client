@@ -35,7 +35,7 @@ var PARTS = {
     ldHeadline: "Glossaire du poker — les termes du Texas Hold’em expliqués",
     ldDesc: "Un glossaire des termes du poker Texas Hold’em, de all-in à wheel.",
     h1: "Glossaire du poker — les termes du Texas Hold’em",
-    lead: "Les mots que vous croiserez à une table de Hold’em, dans le chat et dans PokerTH lui-même. Les cinq mots d’action — Fold, Check, Call, Raise et All-In — restent en anglais dans chacune des 55 langues d’interface, parce qu’il en va ainsi à toutes les tables du monde.",
+    lead: "Les mots que vous croiserez à une table de Hold’em, dans le chat et dans PokerTH lui-même. Les cinq mots d’action — Fold, Check, Call, Raise et All-In — restent en anglais dans chacune des 56 langues d’interface, parce qu’il en va ainsi à toutes les tables du monde.",
     terms: [
       ["tapis", "Miser tous ses jetons. Vous ne pouvez gagner que la part du pot que vous avez payée ; le reste part dans un pot annexe."],
       ["ante", "Petite mise forcée versée par chaque joueur avant la donne, en plus des blindes. Utilisée aux niveaux avancés de certains tournois."],
@@ -101,7 +101,7 @@ var PARTS = {
     ldHeadline: "Poker-Glossar — Texas-Hold’em-Begriffe erklärt",
     ldDesc: "Ein Glossar der Texas-Hold’em-Pokerbegriffe, von All-In bis Wheel.",
     h1: "Poker-Glossar — Texas-Hold’em-Begriffe",
-    lead: "Die Wörter, die Ihnen an einem Hold’em-Tisch begegnen, im Chat und in PokerTH selbst. Die fünf Aktionswörter — Fold, Check, Call, Raise und All-In — bleiben in allen 55 Oberflächensprachen auf Englisch, weil sie das an jedem Tisch der Welt tun.",
+    lead: "Die Wörter, die Ihnen an einem Hold’em-Tisch begegnen, im Chat und in PokerTH selbst. Die fünf Aktionswörter — Fold, Check, Call, Raise und All-In — bleiben in allen 56 Oberflächensprachen auf Englisch, weil sie das an jedem Tisch der Welt tun.",
     terms: [
       ["alles setzen", "Alle eigenen Chips setzen. Gewinnen können Sie nur den Teil des Pots, in den Sie eingezahlt haben; der Rest geht in einen Side Pot."],
       ["Ante", "Ein kleiner Zwangseinsatz, den jeder Spieler vor dem Geben zusätzlich zu den Blinds zahlt. Wird in späteren Turnierstufen verwendet."],
@@ -167,7 +167,7 @@ var PARTS = {
     ldHeadline: "Glosario de póker — términos del Texas Hold’em explicados",
     ldDesc: "Un glosario de términos del póker Texas Hold’em, de all-in a wheel.",
     h1: "Glosario de póker — términos del Texas Hold’em",
-    lead: "Las palabras que te encontrarás en una mesa de Hold’em, en el chat y en el propio PokerTH. Las cinco palabras de acción — Fold, Check, Call, Raise y All-In — se mantienen en inglés en los 55 idiomas de la interfaz, porque así es en todas las mesas del mundo.",
+    lead: "Las palabras que te encontrarás en una mesa de Hold’em, en el chat y en el propio PokerTH. Las cinco palabras de acción — Fold, Check, Call, Raise y All-In — se mantienen en inglés en los 56 idiomas de la interfaz, porque así es en todas las mesas del mundo.",
     terms: [
       ["ir con todo", "Apostar todas tus fichas. Solo puedes ganar la parte del bote que hayas pagado; el resto va a un bote secundario."],
       ["ante", "Una pequeña apuesta obligatoria que paga cada jugador antes del reparto, además de las ciegas. Se usa en los niveles altos de algunos torneos."],
@@ -233,7 +233,7 @@ var PARTS = {
     ldHeadline: "Glossário de pôquer — termos do Texas Hold’em explicados",
     ldDesc: "Um glossário dos termos do pôquer Texas Hold’em, de all-in a wheel.",
     h1: "Glossário de pôquer — termos do Texas Hold’em",
-    lead: "As palavras que você vai encontrar numa mesa de Hold’em, no chat e no próprio PokerTH. As cinco palavras de ação — Fold, Check, Call, Raise e All-In — continuam em inglês nos 55 idiomas da interface, porque é assim em qualquer mesa do mundo.",
+    lead: "As palavras que você vai encontrar numa mesa de Hold’em, no chat e no próprio PokerTH. As cinco palavras de ação — Fold, Check, Call, Raise e All-In — continuam em inglês nos 56 idiomas da interface, porque é assim em qualquer mesa do mundo.",
     terms: [
       ["apostar tudo", "Apostar todas as suas fichas. Você só pode ganhar a parte do pote que pagou; o resto vai para um pote lateral."],
       ["ante", "Uma pequena aposta obrigatória paga por todos antes da distribuição, além dos blinds. Usada nos níveis avançados de alguns torneios."],
@@ -299,7 +299,7 @@ var PARTS = {
     ldHeadline: "Glossario del poker — i termini del Texas Hold’em spiegati",
     ldDesc: "Un glossario dei termini del poker Texas Hold’em, da all-in a wheel.",
     h1: "Glossario del poker — i termini del Texas Hold’em",
-    lead: "Le parole che incontrerai a un tavolo di Hold’em, in chat e in PokerTH stesso. Le cinque parole d’azione — Fold, Check, Call, Raise e All-In — restano in inglese in tutte e 55 le lingue dell’interfaccia, perché è così a ogni tavolo del mondo.",
+    lead: "Le parole che incontrerai a un tavolo di Hold’em, in chat e in PokerTH stesso. Le cinque parole d’azione — Fold, Check, Call, Raise e All-In — restano in inglese in tutte e 56 le lingue dell’interfaccia, perché è così a ogni tavolo del mondo.",
     terms: [
       ["puntare tutto", "Puntare tutte le proprie fiche. Puoi vincere solo la parte di piatto che hai pagato; il resto va in un piatto laterale."],
       ["ante", "Una piccola puntata obbligata versata da ogni giocatore prima della distribuzione, oltre ai bui. Usata nei livelli avanzati di alcuni tornei."],
@@ -365,7 +365,7 @@ var PARTS = {
     ldHeadline: "Pokerglossarium — Texas Hold’em-termen uitgelegd",
     ldDesc: "Een glossarium van Texas Hold’em-pokertermen, van all-in tot wheel.",
     h1: "Pokerglossarium — Texas Hold’em-termen",
-    lead: "De woorden die je aan een Hold’em-tafel tegenkomt, in de chat en in PokerTH zelf. De vijf actiewoorden — Fold, Check, Call, Raise en All-In — blijven in alle 55 interfacetalen Engels, omdat dat aan elke tafel ter wereld zo is.",
+    lead: "De woorden die je aan een Hold’em-tafel tegenkomt, in de chat en in PokerTH zelf. De vijf actiewoorden — Fold, Check, Call, Raise en All-In — blijven in alle 56 interfacetalen Engels, omdat dat aan elke tafel ter wereld zo is.",
     terms: [
       ["alles inzetten", "Al je fiches inzetten. Je kunt alleen het deel van de pot winnen waaraan je hebt meebetaald; de rest gaat naar een side pot."],
       ["ante", "Een kleine verplichte inzet die iedere speler vóór het delen betaalt, boven op de blinds. Wordt in latere toernooiniveaus gebruikt."],
@@ -431,7 +431,7 @@ var PARTS = {
     ldHeadline: "Słownik pokerowy — terminy Texas Hold’em wyjaśnione",
     ldDesc: "Słownik terminów pokera Texas Hold’em, od all-in do wheel.",
     h1: "Słownik pokerowy — terminy Texas Hold’em",
-    lead: "Słowa, które spotkasz przy stole Hold’em, na czacie i w samym PokerTH. Pięć słów akcji — Fold, Check, Call, Raise i All-In — pozostaje po angielsku we wszystkich 55 językach interfejsu, bo tak jest przy każdym stole na świecie.",
+    lead: "Słowa, które spotkasz przy stole Hold’em, na czacie i w samym PokerTH. Pięć słów akcji — Fold, Check, Call, Raise i All-In — pozostaje po angielsku we wszystkich 56 językach interfejsu, bo tak jest przy każdym stole na świecie.",
     terms: [
       ["wchodzę za wszystko", "Postawienie wszystkich swoich żetonów. Możesz wygrać tylko tę część puli, w którą wpłaciłeś; reszta trafia do puli bocznej."],
       ["ante", "Mała przymusowa stawka wnoszona przez każdego gracza przed rozdaniem, poza ciemnymi. Stosowana na wyższych poziomach niektórych turniejów."],
@@ -497,7 +497,7 @@ var PARTS = {
     ldHeadline: "Покерный словарь — термины техасского холдема",
     ldDesc: "Словарь терминов покера техасский холдем, от all-in до wheel.",
     h1: "Покерный словарь — термины техасского холдема",
-    lead: "Слова, которые встретятся вам за столом холдема, в чате и в самом PokerTH. Пять слов действий — Fold, Check, Call, Raise и All-In — остаются английскими во всех 55 языках интерфейса, потому что так за любым столом в мире.",
+    lead: "Слова, которые встретятся вам за столом холдема, в чате и в самом PokerTH. Пять слов действий — Fold, Check, Call, Raise и All-In — остаются английскими во всех 56 языках интерфейса, потому что так за любым столом в мире.",
     terms: [
       ["ва-банк", "Поставить все свои фишки. Выиграть вы можете только ту часть банка, в которую внесли; остальное уходит в побочный банк."],
       ["анте", "Небольшая обязательная ставка, которую каждый игрок вносит до раздачи, помимо блайндов. Используется на поздних уровнях некоторых турниров."],
@@ -563,7 +563,7 @@ var PARTS = {
     ldHeadline: "Glossário de póquer — termos do Texas Hold’em explicados",
     ldDesc: "Um glossário dos termos do póquer Texas Hold’em, de all-in a wheel.",
     h1: "Glossário de póquer — termos do Texas Hold’em",
-    lead: "As palavras que vai encontrar numa mesa de Hold’em, no chat e no próprio PokerTH. As cinco palavras de acção — Fold, Check, Call, Raise e All-In — mantêm-se em inglês nos 55 idiomas da interface, porque é assim em qualquer mesa do mundo.",
+    lead: "As palavras que vai encontrar numa mesa de Hold’em, no chat e no próprio PokerTH. As cinco palavras de acção — Fold, Check, Call, Raise e All-In — mantêm-se em inglês nos 56 idiomas da interface, porque é assim em qualquer mesa do mundo.",
     terms: [
       ["apostar tudo", "Apostar todas as suas fichas. Só pode ganhar a parte do pote que pagou; o resto vai para um pote secundário."],
       ["ante", "Uma pequena aposta obrigatória paga por todos antes da distribuição, além dos blinds. Usada nos níveis avançados de alguns torneios."],
@@ -629,7 +629,7 @@ var PARTS = {
     ldHeadline: "Poker sözlüğü — Texas Hold’em terimleri açıklandı",
     ldDesc: "Texas Hold’em poker terimleri sözlüğü, all-in’den wheel’e.",
     h1: "Poker sözlüğü — Texas Hold’em terimleri",
-    lead: "Bir Hold’em masasında, sohbette ve PokerTH’in kendisinde karşınıza çıkacak kelimeler. Beş işlem sözcüğü — Fold, Check, Call, Raise ve All-In — 55 arayüz dilinin hepsinde İngilizce kalır, çünkü dünyanın her masasında öyledir.",
+    lead: "Bir Hold’em masasında, sohbette ve PokerTH’in kendisinde karşınıza çıkacak kelimeler. Beş işlem sözcüğü — Fold, Check, Call, Raise ve All-In — 56 arayüz dilinin hepsinde İngilizce kalır, çünkü dünyanın her masasında öyledir.",
     terms: [
       ["hepsi içeri", "Bütün çiplerinizi ortaya koymak. Yalnızca potun kendi koyduğunuz kısmını kazanabilirsiniz; gerisi bir yan pota gider."],
       ["ante", "Her oyuncunun dağıtımdan önce, körlere ek olarak ödediği küçük zorunlu bahis. Bazı turnuvaların ileri seviyelerinde kullanılır."],
@@ -695,7 +695,7 @@ var PARTS = {
     ldHeadline: "Покерний словник — терміни техаського холдему",
     ldDesc: "Словник термінів покеру техаський холдем, від all-in до wheel.",
     h1: "Покерний словник — терміни техаського холдему",
-    lead: "Слова, які трапляться вам за столом холдему, у чаті та в самому PokerTH. П’ять слів дій — Fold, Check, Call, Raise і All-In — лишаються англійськими в усіх 55 мовах інтерфейсу, бо так за будь-яким столом у світі.",
+    lead: "Слова, які трапляться вам за столом холдему, у чаті та в самому PokerTH. П’ять слів дій — Fold, Check, Call, Raise і All-In — лишаються англійськими в усіх 56 мовах інтерфейсу, бо так за будь-яким столом у світі.",
     terms: [
       ["ва-банк", "Поставити всі свої фішки. Виграти ви можете лише ту частину банку, до якої доклалися; решта йде в побічний банк."],
       ["анте", "Невелика обов’язкова ставка, яку кожен гравець вносить до роздачі, окрім блайндів. Використовується на пізніх рівнях деяких турнірів."],
@@ -761,7 +761,7 @@ var PARTS = {
     ldHeadline: "Pokerový slovník — pojmy Texas Hold’em vysvětlené",
     ldDesc: "Slovník pojmů pokeru Texas Hold’em, od all-in po wheel.",
     h1: "Pokerový slovník — pojmy Texas Hold’em",
-    lead: "Slova, na která narazíte u stolu Hold’em, v chatu i v samotném PokerTH. Pět akčních slov — Fold, Check, Call, Raise a All-In — zůstává anglicky ve všech 55 jazycích rozhraní, protože tak je to u každého stolu na světě.",
+    lead: "Slova, na která narazíte u stolu Hold’em, v chatu i v samotném PokerTH. Pět akčních slov — Fold, Check, Call, Raise a All-In — zůstává anglicky ve všech 56 jazycích rozhraní, protože tak je to u každého stolu na světě.",
     terms: [
       ["všechno dovnitř", "Vsadit všechny své žetony. Vyhrát můžete jen tu část banku, do které jste přispěli; zbytek jde do vedlejšího banku."],
       ["ante", "Malá povinná sázka, kterou před rozdáním platí každý hráč navíc k blindům. Používá se ve vyšších úrovních některých turnajů."],
@@ -827,7 +827,7 @@ var PARTS = {
     ldHeadline: "Pokerový slovník — pojmy Texas Hold’em vysvetlené",
     ldDesc: "Slovník pojmov pokera Texas Hold’em, od all-in po wheel.",
     h1: "Pokerový slovník — pojmy Texas Hold’em",
-    lead: "Slová, na ktoré narazíte pri stole Hold’em, v chate aj v samotnom PokerTH. Päť akčných slov — Fold, Check, Call, Raise a All-In — zostáva po anglicky vo všetkých 55 jazykoch rozhrania, lebo tak je to pri každom stole na svete.",
+    lead: "Slová, na ktoré narazíte pri stole Hold’em, v chate aj v samotnom PokerTH. Päť akčných slov — Fold, Check, Call, Raise a All-In — zostáva po anglicky vo všetkých 56 jazykoch rozhrania, lebo tak je to pri každom stole na svete.",
     terms: [
       ["všetko dnu", "Staviť všetky svoje žetóny. Vyhrať môžete len tú časť banku, do ktorej ste prispeli; zvyšok ide do vedľajšieho banku."],
       ["ante", "Malá povinná stávka, ktorú pred rozdaním platí každý hráč navyše k blindom. Používa sa vo vyšších úrovniach niektorých turnajov."],
@@ -893,7 +893,7 @@ var PARTS = {
     ldHeadline: "Pókerszótár — a Texas Hold’em kifejezései",
     ldDesc: "A Texas Hold’em póker kifejezéseinek szótára, az all-intől a wheelig.",
     h1: "Pókerszótár — Texas Hold’em kifejezések",
-    lead: "Azok a szavak, amelyekkel egy Hold’em asztalnál, a csevegésben és magában a PokerTH-ben találkozol. Az öt műveletszó — Fold, Check, Call, Raise és All-In — mind a 55 felületi nyelven angolul marad, mert a világ minden asztalánál így van.",
+    lead: "Azok a szavak, amelyekkel egy Hold’em asztalnál, a csevegésben és magában a PokerTH-ben találkozol. Az öt műveletszó — Fold, Check, Call, Raise és All-In — mind a 56 felületi nyelven angolul marad, mert a világ minden asztalánál így van.",
     terms: [
       ["mindent bele", "Az összes zsetonod feltevése. Csak a pot általad befizetett részét nyerheted meg; a többi mellékpotba kerül."],
       ["ante", "Kis kötelező tét, amelyet minden játékos befizet az osztás előtt, a vakokon felül. Egyes versenyek későbbi szintjein használják."],
@@ -959,7 +959,7 @@ var PARTS = {
     ldHeadline: "Glosar de poker — termenii de Texas Hold’em explicați",
     ldDesc: "Un glosar al termenilor de poker Texas Hold’em, de la all-in la wheel.",
     h1: "Glosar de poker — termeni de Texas Hold’em",
-    lead: "Cuvintele pe care le vei întâlni la o masă de Hold’em, în chat și în PokerTH însuși. Cele cinci cuvinte de acțiune — Fold, Check, Call, Raise și All-In — rămân în engleză în toate cele 55 de limbi ale interfeței, pentru că așa e la orice masă din lume.",
+    lead: "Cuvintele pe care le vei întâlni la o masă de Hold’em, în chat și în PokerTH însuși. Cele cinci cuvinte de acțiune — Fold, Check, Call, Raise și All-In — rămân în engleză în toate cele 56 de limbi ale interfeței, pentru că așa e la orice masă din lume.",
     terms: [
       ["totul la mijloc", "Să pariezi toate jetoanele. Poți câștiga doar partea din pot la care ai contribuit; restul merge într-un pot secundar."],
       ["antă", "Un mic pariu obligatoriu plătit de fiecare jucător înainte de împărțire, pe lângă blinduri. Se folosește la nivelurile avansate ale unor turnee."],
@@ -1025,7 +1025,7 @@ var PARTS = {
     ldHeadline: "扑克术语表 — 德州扑克词汇解释",
     ldDesc: "德州扑克术语表，从 all-in 到 wheel。",
     h1: "扑克术语表 — 德州扑克词汇",
-    lead: "你在德州扑克牌桌上、聊天里以及 PokerTH 本身会遇到的词。五个动作词——Fold、Check、Call、Raise 和 All-In——在全部 55 种界面语言中都保持英文，因为全世界的牌桌都是这样。",
+    lead: "你在德州扑克牌桌上、聊天里以及 PokerTH 本身会遇到的词。五个动作词——Fold、Check、Call、Raise 和 All-In——在全部 56 种界面语言中都保持英文，因为全世界的牌桌都是这样。",
     terms: [
       ["全下", "押上你所有的筹码。你只能赢下自己出资的那部分底池，其余进入边池。"],
       ["底注", "每位玩家在发牌前额外支付的小额强制下注，与盲注并存。部分锦标赛的后期级别会使用。"],
@@ -1091,7 +1091,7 @@ var PARTS = {
     ldHeadline: "撲克術語表 — 德州撲克詞彙解釋",
     ldDesc: "德州撲克術語表，從 all-in 到 wheel。",
     h1: "撲克術語表 — 德州撲克詞彙",
-    lead: "你在德州撲克牌桌上、聊天裡以及 PokerTH 本身會遇到的詞。五個動作詞——Fold、Check、Call、Raise 和 All-In——在全部 55 種介面語言中都維持英文，因為全世界的牌桌都是這樣。",
+    lead: "你在德州撲克牌桌上、聊天裡以及 PokerTH 本身會遇到的詞。五個動作詞——Fold、Check、Call、Raise 和 All-In——在全部 56 種介面語言中都維持英文，因為全世界的牌桌都是這樣。",
     terms: [
       ["全下", "押上你所有的籌碼。你只能贏下自己出資的那部分底池，其餘進入邊池。"],
       ["底注", "每位玩家在發牌前額外支付的小額強制下注，與盲注並存。部分錦標賽的後期級別會使用。"],
@@ -1157,7 +1157,7 @@ var PARTS = {
     ldHeadline: "ポーカー用語集 — テキサスホールデムの用語解説",
     ldDesc: "テキサスホールデムのポーカー用語集、all-in から wheel まで。",
     h1: "ポーカー用語集 — テキサスホールデムの用語",
-    lead: "ホールデムのテーブルで、チャットで、そして PokerTH 自体で出会う言葉です。5つのアクション用語——Fold、Check、Call、Raise、All-In——は55すべてのインターフェイス言語で英語のままです。世界中のどのテーブルでもそうだからです。",
+    lead: "ホールデムのテーブルで、チャットで、そして PokerTH 自体で出会う言葉です。5つのアクション用語——Fold、Check、Call、Raise、All-In——は56すべてのインターフェイス言語で英語のままです。世界中のどのテーブルでもそうだからです。",
     terms: [
       ["オールイン", "持ちチップをすべて賭けること。勝ち取れるのは自分が出した分のポットだけで、残りはサイドポットになります。"],
       ["アンティ", "ブラインドとは別に、配る前に全員が支払う少額の強制ベット。一部のトーナメントの後半レベルで使われます。"],
@@ -1223,7 +1223,7 @@ var PARTS = {
     ldHeadline: "포커 용어 사전 — 텍사스 홀덤 용어 풀이",
     ldDesc: "텍사스 홀덤 포커 용어 사전, all-in부터 wheel까지.",
     h1: "포커 용어 사전 — 텍사스 홀덤 용어",
-    lead: "홀덤 테이블에서, 채팅에서, 그리고 PokerTH 안에서 마주치게 될 말들입니다. 다섯 개의 액션 단어 — Fold, Check, Call, Raise, All-In — 는 55개 인터페이스 언어 모두에서 영어로 남습니다. 세계 어느 테이블에서나 그렇기 때문입니다.",
+    lead: "홀덤 테이블에서, 채팅에서, 그리고 PokerTH 안에서 마주치게 될 말들입니다. 다섯 개의 액션 단어 — Fold, Check, Call, Raise, All-In — 는 56개 인터페이스 언어 모두에서 영어로 남습니다. 세계 어느 테이블에서나 그렇기 때문입니다.",
     terms: [
       ["올인", "가진 칩을 전부 거는 것. 자신이 넣은 만큼의 팟만 가져갈 수 있고, 나머지는 사이드 팟으로 갑니다."],
       ["앤티", "블라인드와 별도로, 카드를 돌리기 전에 모든 플레이어가 내는 소액의 강제 베팅. 일부 토너먼트의 후반 레벨에서 씁니다."],
@@ -1289,7 +1289,7 @@ var PARTS = {
     ldHeadline: "مسرد البوكر — شرح مصطلحات تكساس هولدم",
     ldDesc: "مسرد لمصطلحات بوكر تكساس هولدم، من all-in إلى wheel.",
     h1: "مسرد البوكر — مصطلحات تكساس هولدم",
-    lead: "الكلمات التي ستصادفها على طاولة هولدم، وفي الدردشة، وفي PokerTH نفسه. كلمات الإجراءات الخمس — Fold وCheck وCall وRaise وAll-In — تبقى بالإنجليزية في اللغات الخمس والخمسين كلها، لأن الحال كذلك على كل طاولة في العالم.",
+    lead: "الكلمات التي ستصادفها على طاولة هولدم، وفي الدردشة، وفي PokerTH نفسه. كلمات الإجراءات الخمس — Fold وCheck وCall وRaise وAll-In — تبقى بالإنجليزية في اللغات الست والخمسين كلها، لأن الحال كذلك على كل طاولة في العالم.",
     terms: [
       ["كل الرقائق", "أن تراهن بكل رقائقك. لا تربح إلا الجزء الذي دفعته من القدر؛ وما بقي يذهب إلى قدر جانبي."],
       ["الرهان المسبق", "رهان صغير إجباري يدفعه كل لاعب قبل التوزيع، فوق الرهانات العمياء. يُستعمل في المستويات المتأخرة من بعض البطولات."],
@@ -1355,7 +1355,7 @@ var PARTS = {
     ldHeadline: "واژه‌نامهٔ پوکر — اصطلاحات تگزاس هولدم",
     ldDesc: "واژه‌نامه‌ای از اصطلاحات پوکر تگزاس هولدم، از all-in تا wheel.",
     h1: "واژه‌نامهٔ پوکر — اصطلاحات تگزاس هولدم",
-    lead: "واژه‌هایی که سر میز هولدم، در گفت‌وگو و در خود PokerTH با آن‌ها روبه‌رو می‌شوید. پنج واژهٔ کنش — Fold، Check، Call، Raise و All-In — در هر ۵۵ زبان رابط انگلیسی می‌مانند، چون سر هر میزی در دنیا همین‌طور است.",
+    lead: "واژه‌هایی که سر میز هولدم، در گفت‌وگو و در خود PokerTH با آن‌ها روبه‌رو می‌شوید. پنج واژهٔ کنش — Fold، Check، Call، Raise و All-In — در هر ۵۶ زبان رابط انگلیسی می‌مانند، چون سر هر میزی در دنیا همین‌طور است.",
     terms: [
       ["همه‌چیز وسط", "شرط‌بستن تمام ژتون‌ها. تنها بخشی از پات را می‌برید که خودتان پرداخته‌اید؛ باقی به پات جانبی می‌رود."],
       ["آنته", "شرط اجباری کوچکی که هر بازیکن پیش از پخش کارت‌ها، جدا از بلایندها می‌پردازد. در سطوح پایانی برخی تورنمنت‌ها به کار می‌رود."],
@@ -1421,7 +1421,7 @@ var PARTS = {
     ldHeadline: "מילון פוקר — מונחי טקסס הולדם מוסברים",
     ldDesc: "מילון מונחי הפוקר של טקסס הולדם, מ־all-in ועד wheel.",
     h1: "מילון פוקר — מונחי טקסס הולדם",
-    lead: "המילים שתפגשו ליד שולחן הולדם, בצ׳אט ובתוך PokerTH עצמו. חמש מילות הפעולה — Fold, Check, Call, Raise ו־All-In — נשארות באנגלית בכל 55 שפות הממשק, מפני שכך הדבר בכל שולחן בעולם.",
+    lead: "המילים שתפגשו ליד שולחן הולדם, בצ׳אט ובתוך PokerTH עצמו. חמש מילות הפעולה — Fold, Check, Call, Raise ו־All-In — נשארות באנגלית בכל 56 שפות הממשק, מפני שכך הדבר בכל שולחן בעולם.",
     terms: [
       ["הכול פנימה", "להמר את כל הז׳טונים שלכם. תוכלו לזכות רק בחלק הקופה שאליו שילמתם; השאר עובר לקופת צד."],
       ["אנטה", "הימור חובה קטן שכל שחקן משלם לפני החלוקה, בנוסף לעיוורים. בשימוש בשלבים המאוחרים של חלק מהטורנירים."],
@@ -1487,7 +1487,7 @@ var PARTS = {
     ldHeadline: "پوکر اصطلاحات — ٹیکساس ہولڈم کی لغت",
     ldDesc: "ٹیکساس ہولڈم پوکر کی اصطلاحات کی لغت، all-in سے wheel تک۔",
     h1: "پوکر اصطلاحات — ٹیکساس ہولڈم کی لغت",
-    lead: "وہ الفاظ جو آپ کو ہولڈم کی میز پر، گفتگو میں اور خود PokerTH میں ملیں گے۔ پانچ ایکشن الفاظ — Fold، Check، Call، Raise اور All-In — پچپن زبانوں میں سے ہر ایک میں انگریزی ہی رہتے ہیں، کیونکہ دنیا کی ہر میز پر ایسا ہی ہے۔",
+    lead: "وہ الفاظ جو آپ کو ہولڈم کی میز پر، گفتگو میں اور خود PokerTH میں ملیں گے۔ پانچ ایکشن الفاظ — Fold، Check، Call، Raise اور All-In — چھپن زبانوں میں سے ہر ایک میں انگریزی ہی رہتے ہیں، کیونکہ دنیا کی ہر میز پر ایسا ہی ہے۔",
     terms: [
       ["سب کچھ داؤ پر", "اپنے سارے چپس لگا دینا۔ آپ پاٹ کا صرف وہ حصہ جیت سکتے ہیں جو آپ نے ڈالا؛ باقی سائیڈ پاٹ میں چلا جاتا ہے۔"],
       ["اینٹی", "ایک چھوٹی لازمی شرط جو ہر کھلاڑی تقسیم سے پہلے، بلائنڈز کے علاوہ ادا کرتا ہے۔ بعض ٹورنامنٹس کے آخری مراحل میں استعمال ہوتی ہے۔"],
@@ -1553,7 +1553,7 @@ var PARTS = {
     ldHeadline: "Γλωσσάρι πόκερ — οι όροι του Texas Hold’em",
     ldDesc: "Ένα γλωσσάρι των όρων του πόκερ Texas Hold’em, από το all-in ως το wheel.",
     h1: "Γλωσσάρι πόκερ — όροι του Texas Hold’em",
-    lead: "Οι λέξεις που θα συναντήσετε σε ένα τραπέζι Hold’em, στη συνομιλία και μέσα στο ίδιο το PokerTH. Οι πέντε λέξεις ενεργειών — Fold, Check, Call, Raise και All-In — παραμένουν στα αγγλικά και στις 55 γλώσσες της διεπαφής, γιατί έτσι γίνεται σε κάθε τραπέζι του κόσμου.",
+    lead: "Οι λέξεις που θα συναντήσετε σε ένα τραπέζι Hold’em, στη συνομιλία και μέσα στο ίδιο το PokerTH. Οι πέντε λέξεις ενεργειών — Fold, Check, Call, Raise και All-In — παραμένουν στα αγγλικά και στις 56 γλώσσες της διεπαφής, γιατί έτσι γίνεται σε κάθε τραπέζι του κόσμου.",
     terms: [
       ["όλα μέσα", "Να ποντάρετε όλες σας τις μάρκες. Κερδίζετε μόνο το μέρος του πότ που πληρώσατε· τα υπόλοιπα πάνε σε πλαϊνό πότ."],
       ["άντε", "Ένα μικρό υποχρεωτικό ποντάρισμα που πληρώνει κάθε παίκτης πριν τη μοιρασιά, πέρα από τα τυφλά. Χρησιμοποιείται στα ύστερα επίπεδα ορισμένων τουρνουά."],
@@ -1619,7 +1619,7 @@ var PARTS = {
     ldHeadline: "Покер речник — термините в Тексас Холдем",
     ldDesc: "Речник на термините в покера Тексас Холдем, от all-in до wheel.",
     h1: "Покер речник — термини в Тексас Холдем",
-    lead: "Думите, които ще срещнете на маса за Холдем, в чата и в самия PokerTH. Петте думи за действие — Fold, Check, Call, Raise и All-In — остават на английски и в 55-те езика на интерфейса, защото така е на всяка маса по света.",
+    lead: "Думите, които ще срещнете на маса за Холдем, в чата и в самия PokerTH. Петте думи за действие — Fold, Check, Call, Raise и All-In — остават на английски и в 56-те езика на интерфейса, защото така е на всяка маса по света.",
     terms: [
       ["всичко на масата", "Да заложите всичките си чипове. Печелите само частта от пота, в която сте внесли; останалото отива в страничен пот."],
       ["анте", "Малък задължителен залог, който всеки играч плаща преди раздаването, освен блайндовете. Използва се в късните нива на някои турнири."],
@@ -1685,7 +1685,7 @@ var PARTS = {
     ldHeadline: "Pokerordlista — Texas Hold’em-termer förklarade",
     ldDesc: "En ordlista över pokertermer i Texas Hold’em, från all-in till wheel.",
     h1: "Pokerordlista — Texas Hold’em-termer",
-    lead: "Orden du möter vid ett Hold’em-bord, i chatten och i PokerTH självt. De fem åtgärdsorden — Fold, Check, Call, Raise och All-In — förblir på engelska i alla 55 gränssnittsspråk, eftersom de gör det vid varje bord i världen.",
+    lead: "Orden du möter vid ett Hold’em-bord, i chatten och i PokerTH självt. De fem åtgärdsorden — Fold, Check, Call, Raise och All-In — förblir på engelska i alla 56 gränssnittsspråk, eftersom de gör det vid varje bord i världen.",
     terms: [
       ["allt in", "Att satsa alla sina marker. Du kan bara vinna den del av potten du betalat in i; resten går till en sidopott."],
       ["ante", "En liten tvångsinsats som varje spelare betalar före given, utöver mörkarna. Används i senare nivåer av vissa turneringar."],
@@ -1751,7 +1751,7 @@ var PARTS = {
     ldHeadline: "Pokerordbog — Texas Hold’em-udtryk forklaret",
     ldDesc: "En ordbog over pokerudtryk i Texas Hold’em, fra all-in til wheel.",
     h1: "Pokerordbog — Texas Hold’em-udtryk",
-    lead: "De ord, du møder ved et Hold’em-bord, i chatten og i PokerTH selv. De fem handlingsord — Fold, Check, Call, Raise og All-In — forbliver på engelsk i alle 55 sprog, fordi de gør det ved ethvert bord i verden.",
+    lead: "De ord, du møder ved et Hold’em-bord, i chatten og i PokerTH selv. De fem handlingsord — Fold, Check, Call, Raise og All-In — forbliver på engelsk i alle 56 sprog, fordi de gør det ved ethvert bord i verden.",
     terms: [
       ["alt ind", "At satse alle sine jetoner. Du kan kun vinde den del af puljen, du har betalt til; resten går i en sidepulje."],
       ["ante", "En lille tvungen indsats, som hver spiller betaler før givningen, ud over blinds. Bruges i senere niveauer af nogle turneringer."],
@@ -1817,7 +1817,7 @@ var PARTS = {
     ldHeadline: "Pokerordliste — Texas Hold’em-uttrykk forklart",
     ldDesc: "En ordliste over pokeruttrykk i Texas Hold’em, fra all-in til wheel.",
     h1: "Pokerordliste — Texas Hold’em-uttrykk",
-    lead: "Ordene du møter ved et Hold’em-bord, i praten og i PokerTH selv. De fem handlingsordene — Fold, Check, Call, Raise og All-In — blir stående på engelsk i alle 55 grensesnittspråk, fordi de gjør det ved ethvert bord i verden.",
+    lead: "Ordene du møter ved et Hold’em-bord, i praten og i PokerTH selv. De fem handlingsordene — Fold, Check, Call, Raise og All-In — blir stående på engelsk i alle 56 grensesnittspråk, fordi de gjør det ved ethvert bord i verden.",
     terms: [
       ["alt inn", "Å satse alle sjetongene sine. Du kan bare vinne den delen av potten du har betalt inn i; resten går til en sidepott."],
       ["ante", "En liten tvungen innsats hver spiller betaler før givingen, i tillegg til blindene. Brukes på senere nivåer i enkelte turneringer."],
@@ -1883,7 +1883,7 @@ var PARTS = {
     ldHeadline: "Pokerisanasto — Texas Hold’emin termit selitettyinä",
     ldDesc: "Sanasto Texas Hold’em -pokerin termeistä, all-inista wheeliin.",
     h1: "Pokerisanasto — Texas Hold’emin termit",
-    lead: "Sanat, jotka kohtaat Hold’em-pöydässä, chatissa ja itse PokerTH:ssa. Viisi toimintosanaa — Fold, Check, Call, Raise ja All-In — pysyvät englanniksi kaikilla 55 käyttöliittymäkielellä, koska niin on jokaisessa pöydässä maailmassa.",
+    lead: "Sanat, jotka kohtaat Hold’em-pöydässä, chatissa ja itse PokerTH:ssa. Viisi toimintosanaa — Fold, Check, Call, Raise ja All-In — pysyvät englanniksi kaikilla 56 käyttöliittymäkielellä, koska niin on jokaisessa pöydässä maailmassa.",
     terms: [
       ["kaikki peliin", "Panostaa kaikki pelimerkkinsä. Voit voittaa vain sen osan potista, johon olet maksanut; loput menevät sivupottiin."],
       ["ante", "Pieni pakkopanos, jonka jokainen pelaaja maksaa ennen jakoa blindien lisäksi. Käytössä joidenkin turnausten myöhemmillä tasoilla."],
@@ -1949,7 +1949,7 @@ var PARTS = {
     ldHeadline: "Pokerski rječnik — pojmovi Texas Hold’ema",
     ldDesc: "Rječnik pojmova pokera Texas Hold’em, od all-in do wheel.",
     h1: "Pokerski rječnik — pojmovi Texas Hold’ema",
-    lead: "Riječi na koje ćete naići za stolom Hold’ema, u razgovoru i u samom PokerTH-u. Pet riječi za radnje — Fold, Check, Call, Raise i All-In — ostaju na engleskom u svih 55 jezika sučelja, jer tako je za svakim stolom na svijetu.",
+    lead: "Riječi na koje ćete naići za stolom Hold’ema, u razgovoru i u samom PokerTH-u. Pet riječi za radnje — Fold, Check, Call, Raise i All-In — ostaju na engleskom u svih 56 jezika sučelja, jer tako je za svakim stolom na svijetu.",
     terms: [
       ["sve unutra", "Uložiti sve svoje žetone. Možete osvojiti samo onaj dio pota u koji ste uplatili; ostatak ide u sporedni pot."],
       ["ante", "Mali obvezni ulog koji svaki igrač plaća prije dijeljenja, uz uloge. Koristi se u kasnijim razinama nekih turnira."],
@@ -2015,7 +2015,7 @@ var PARTS = {
     ldHeadline: "Pokerski rečnik — pojmovi Teksas Holdema",
     ldDesc: "Rečnik pojmova pokera Teksas Holdem, od all-in do wheel.",
     h1: "Pokerski rečnik — pojmovi Teksas Holdema",
-    lead: "Reči na koje ćete naići za stolom Holdema, u ćaskanju i u samom PokerTH-u. Pet reči za radnje — Fold, Check, Call, Raise i All-In — ostaju na engleskom u svih 55 jezika interfejsa, jer tako je za svakim stolom na svetu.",
+    lead: "Reči na koje ćete naići za stolom Holdema, u ćaskanju i u samom PokerTH-u. Pet reči za radnje — Fold, Check, Call, Raise i All-In — ostaju na engleskom u svih 56 jezika interfejsa, jer tako je za svakim stolom na svetu.",
     terms: [
       ["sve unutra", "Uložiti sve svoje žetone. Možete osvojiti samo onaj deo pota u koji ste uplatili; ostatak ide u sporedni pot."],
       ["ante", "Mali obavezni ulog koji svaki igrač plaća pre deljenja, uz uloge. Koristi se u kasnijim nivoima nekih turnira."],
@@ -2081,7 +2081,7 @@ var PARTS = {
     ldHeadline: "Glossari de pòquer — els termes del Texas Hold’em",
     ldDesc: "Un glossari dels termes del pòquer Texas Hold’em, d’all-in a wheel.",
     h1: "Glossari de pòquer — termes del Texas Hold’em",
-    lead: "Les paraules que trobaràs en una taula de Hold’em, al xat i dins el mateix PokerTH. Les cinc paraules d’acció — Fold, Check, Call, Raise i All-In — es mantenen en anglès en els 55 idiomes de la interfície, perquè així és a qualsevol taula del món.",
+    lead: "Les paraules que trobaràs en una taula de Hold’em, al xat i dins el mateix PokerTH. Les cinc paraules d’acció — Fold, Check, Call, Raise i All-In — es mantenen en anglès en els 56 idiomes de la interfície, perquè així és a qualsevol taula del món.",
     terms: [
       ["tot a dins", "Apostar totes les fitxes. Només pots guanyar la part del pot que hagis pagat; la resta va a un pot secundari."],
       ["ante", "Una aposta obligatòria petita que cada jugador paga abans del repartiment, a més de les cegues. S’usa als nivells alts d’alguns tornejos."],
@@ -2147,7 +2147,7 @@ var PARTS = {
     ldHeadline: "Glosario de póker — os termos do Texas Hold’em",
     ldDesc: "Un glosario dos termos do póker Texas Hold’em, de all-in a wheel.",
     h1: "Glosario de póker — termos do Texas Hold’em",
-    lead: "As palabras que atoparás nunha mesa de Hold’em, na conversa e no propio PokerTH. As cinco palabras de acción — Fold, Check, Call, Raise e All-In — mantéñense en inglés nos 55 idiomas da interface, porque así é en calquera mesa do mundo.",
+    lead: "As palabras que atoparás nunha mesa de Hold’em, na conversa e no propio PokerTH. As cinco palabras de acción — Fold, Check, Call, Raise e All-In — mantéñense en inglés nos 56 idiomas da interface, porque así é en calquera mesa do mundo.",
     terms: [
       ["todo dentro", "Apostar todas as túas fichas. Só podes gañar a parte do bote que pagaches; o resto vai a un bote secundario."],
       ["ante", "Unha pequena aposta obrigatoria que cada xogador paga antes do reparto, ademais das cegas. Úsase nos niveis altos dalgúns torneos."],
@@ -2213,7 +2213,7 @@ var PARTS = {
     ldHeadline: "Pokerio žodynėlis — Texas Hold’em terminai",
     ldDesc: "Texas Hold’em pokerio terminų žodynėlis, nuo all-in iki wheel.",
     h1: "Pokerio žodynėlis — Texas Hold’em terminai",
-    lead: "Žodžiai, kuriuos sutiksite prie Hold’em stalo, pokalbiuose ir pačiame PokerTH. Penki veiksmų žodžiai — Fold, Check, Call, Raise ir All-In — lieka angliški visomis 55 sąsajos kalbomis, nes taip yra prie bet kurio stalo pasaulyje.",
+    lead: "Žodžiai, kuriuos sutiksite prie Hold’em stalo, pokalbiuose ir pačiame PokerTH. Penki veiksmų žodžiai — Fold, Check, Call, Raise ir All-In — lieka angliški visomis 56 sąsajos kalbomis, nes taip yra prie bet kurio stalo pasaulyje.",
     terms: [
       ["viskas vidun", "Statyti visus savo žetonus. Laimėti galite tik tą banko dalį, į kurią įnešėte; likusi keliauja į šalutinį banką."],
       ["antė", "Nedidelis privalomas statymas, kurį kiekvienas žaidėjas moka prieš dalijimą, be akliesiems statymams. Naudojamas vėlesniuose kai kurių turnyrų lygiuose."],
@@ -2279,7 +2279,7 @@ var PARTS = {
     ldHeadline: "Glosarium poker — istilah Texas Hold’em dijelaskan",
     ldDesc: "Glosarium istilah poker Texas Hold’em, dari all-in sampai wheel.",
     h1: "Glosarium poker — istilah Texas Hold’em",
-    lead: "Kata-kata yang akan Anda temui di meja Hold’em, di obrolan, dan di PokerTH sendiri. Lima kata aksi — Fold, Check, Call, Raise, dan All-In — tetap dalam bahasa Inggris di seluruh 55 bahasa antarmuka, karena begitulah di setiap meja di dunia.",
+    lead: "Kata-kata yang akan Anda temui di meja Hold’em, di obrolan, dan di PokerTH sendiri. Lima kata aksi — Fold, Check, Call, Raise, dan All-In — tetap dalam bahasa Inggris di seluruh 56 bahasa antarmuka, karena begitulah di setiap meja di dunia.",
     terms: [
       ["pasang semua", "Mempertaruhkan seluruh chip Anda. Anda hanya bisa memenangkan bagian pot yang Anda bayar; sisanya masuk ke pot samping."],
       ["ante", "Taruhan wajib kecil yang dibayar setiap pemain sebelum pembagian kartu, di luar blind. Dipakai pada level akhir sebagian turnamen."],
@@ -2345,7 +2345,7 @@ var PARTS = {
     ldHeadline: "Từ điển poker — thuật ngữ Texas Hold’em",
     ldDesc: "Từ điển thuật ngữ poker Texas Hold’em, từ all-in đến wheel.",
     h1: "Từ điển poker — thuật ngữ Texas Hold’em",
-    lead: "Những từ bạn sẽ gặp ở bàn Hold’em, trong khung trò chuyện và trong chính PokerTH. Năm từ thao tác — Fold, Check, Call, Raise và All-In — vẫn giữ tiếng Anh trong cả 55 ngôn ngữ giao diện, vì ở bàn nào trên thế giới cũng vậy.",
+    lead: "Những từ bạn sẽ gặp ở bàn Hold’em, trong khung trò chuyện và trong chính PokerTH. Năm từ thao tác — Fold, Check, Call, Raise và All-In — vẫn giữ tiếng Anh trong cả 56 ngôn ngữ giao diện, vì ở bàn nào trên thế giới cũng vậy.",
     terms: [
       ["dốc hết", "Đặt hết số phỉnh của mình. Bạn chỉ có thể thắng phần pot mà mình đã góp; phần còn lại chuyển sang pot phụ."],
       ["tiền góp", "Khoản cược bắt buộc nhỏ mà mỗi người trả trước khi chia bài, ngoài tiền cược mù. Dùng ở các mức sau của một số giải."],
@@ -2411,7 +2411,7 @@ var PARTS = {
     ldHeadline: "อภิธานศัพท์โป๊กเกอร์ — คำศัพท์เท็กซัสโฮลด์เอ็ม",
     ldDesc: "อภิธานศัพท์โป๊กเกอร์เท็กซัสโฮลด์เอ็ม ตั้งแต่ all-in ถึง wheel",
     h1: "อภิธานศัพท์โป๊กเกอร์ — คำศัพท์เท็กซัสโฮลด์เอ็ม",
-    lead: "คำที่คุณจะเจอที่โต๊ะโฮลด์เอ็ม ในห้องแชท และในตัว PokerTH เอง คำสั่งห้าคำ — Fold, Check, Call, Raise และ All-In — ยังคงเป็นภาษาอังกฤษในทั้ง 55 ภาษาของหน้าจอ เพราะโต๊ะโป๊กเกอร์ทุกแห่งในโลกก็เป็นเช่นนั้น",
+    lead: "คำที่คุณจะเจอที่โต๊ะโฮลด์เอ็ม ในห้องแชท และในตัว PokerTH เอง คำสั่งห้าคำ — Fold, Check, Call, Raise และ All-In — ยังคงเป็นภาษาอังกฤษในทั้ง 56 ภาษาของหน้าจอ เพราะโต๊ะโป๊กเกอร์ทุกแห่งในโลกก็เป็นเช่นนั้น",
     terms: [
       ["ลงหมดหน้าตัก", "วางเดิมพันชิปทั้งหมดที่มี คุณชนะได้เฉพาะส่วนของกองกลางที่คุณจ่ายไป ส่วนที่เหลือจะไปอยู่ในกองข้าง"],
       ["เงินกองกลางบังคับ", "เดิมพันบังคับจำนวนน้อยที่ผู้เล่นทุกคนจ่ายก่อนแจกไพ่ นอกเหนือจากไพ่บังคับ ใช้ในระดับท้าย ๆ ของทัวร์นาเมนต์บางรายการ"],
@@ -2477,7 +2477,7 @@ var PARTS = {
     ldHeadline: "पोकर शब्दावली — टेक्सास होल्डम के शब्द",
     ldDesc: "टेक्सास होल्डम पोकर के शब्दों की शब्दावली, all-in से wheel तक।",
     h1: "पोकर शब्दावली — टेक्सास होल्डम के शब्द",
-    lead: "वे शब्द जो आपको होल्डम की मेज़ पर, चैट में और ख़ुद PokerTH में मिलेंगे। पाँच एक्शन शब्द — Fold, Check, Call, Raise और All-In — सभी 55 इंटरफ़ेस भाषाओं में अंग्रेज़ी ही रहते हैं, क्योंकि दुनिया की हर मेज़ पर ऐसा ही है।",
+    lead: "वे शब्द जो आपको होल्डम की मेज़ पर, चैट में और ख़ुद PokerTH में मिलेंगे। पाँच एक्शन शब्द — Fold, Check, Call, Raise और All-In — सभी 56 इंटरफ़ेस भाषाओं में अंग्रेज़ी ही रहते हैं, क्योंकि दुनिया की हर मेज़ पर ऐसा ही है।",
     terms: [
       ["सब कुछ दांव पर", "अपने सारे चिप्स लगा देना। आप पॉट का सिर्फ़ वही हिस्सा जीत सकते हैं जो आपने डाला; बाक़ी साइड पॉट में चला जाता है।"],
       ["एंटी", "एक छोटा अनिवार्य दांव जो हर खिलाड़ी बाँटने से पहले, ब्लाइंड के अलावा देता है। कुछ टूर्नामेंट के बाद के स्तरों में इस्तेमाल होता है।"],
@@ -2543,7 +2543,7 @@ var PARTS = {
     ldHeadline: "পোকার শব্দকোষ — টেক্সাস হোল্ডেমের পরিভাষা",
     ldDesc: "টেক্সাস হোল্ডেম পোকারের পরিভাষার শব্দকোষ, all-in থেকে wheel পর্যন্ত।",
     h1: "পোকার শব্দকোষ — টেক্সাস হোল্ডেমের পরিভাষা",
-    lead: "যে শব্দগুলো আপনি হোল্ডেমের টেবিলে, আড্ডায় আর খোদ PokerTH-এ পাবেন। পাঁচটি অ্যাকশন শব্দ — Fold, Check, Call, Raise আর All-In — ৫৫টি ইন্টারফেস ভাষার প্রতিটিতেই ইংরেজি থাকে, কারণ দুনিয়ার প্রতিটি টেবিলেই তা-ই।",
+    lead: "যে শব্দগুলো আপনি হোল্ডেমের টেবিলে, আড্ডায় আর খোদ PokerTH-এ পাবেন। পাঁচটি অ্যাকশন শব্দ — Fold, Check, Call, Raise আর All-In — ৫৬টি ইন্টারফেস ভাষার প্রতিটিতেই ইংরেজি থাকে, কারণ দুনিয়ার প্রতিটি টেবিলেই তা-ই।",
     terms: [
       ["সব বাজি", "নিজের সব চিপ বাজি ধরা। পটের যতটুকু আপনি দিয়েছেন কেবল ততটুকুই জিততে পারেন; বাকিটা সাইড পটে যায়।"],
       ["অ্যান্টি", "কার্ড বিলির আগে প্রত্যেক খেলোয়াড়ের দেওয়া ছোট বাধ্যতামূলক বাজি, ব্লাইন্ডের অতিরিক্ত। কিছু টুর্নামেন্টের শেষ দিকের স্তরে ব্যবহৃত হয়।"],
@@ -2609,7 +2609,7 @@ var PARTS = {
     ldHeadline: "போக்கர் சொற்களஞ்சியம் — டெக்சாஸ் ஹோல்டெம் சொற்கள்",
     ldDesc: "டெக்சாஸ் ஹோல்டெம் போக்கர் சொற்களின் சொற்களஞ்சியம், all-in முதல் wheel வரை.",
     h1: "போக்கர் சொற்களஞ்சியம் — டெக்சாஸ் ஹோல்டெம் சொற்கள்",
-    lead: "ஹோல்டெம் மேசையிலும், அரட்டையிலும், PokerTH-இலும் நீங்கள் சந்திக்கும் சொற்கள். ஐந்து செயல் சொற்கள் — Fold, Check, Call, Raise, All-In — 55 இடைமுக மொழிகள் அனைத்திலும் ஆங்கிலத்திலேயே இருக்கும், ஏனெனில் உலகின் எந்த மேசையிலும் அப்படித்தான்.",
+    lead: "ஹோல்டெம் மேசையிலும், அரட்டையிலும், PokerTH-இலும் நீங்கள் சந்திக்கும் சொற்கள். ஐந்து செயல் சொற்கள் — Fold, Check, Call, Raise, All-In — 56 இடைமுக மொழிகள் அனைத்திலும் ஆங்கிலத்திலேயே இருக்கும், ஏனெனில் உலகின் எந்த மேசையிலும் அப்படித்தான்.",
     terms: [
       ["அனைத்தையும் பணயம்", "உங்கள் காசுகள் அனைத்தையும் பணயம் வைப்பது. நீங்கள் செலுத்திய பானையின் பகுதியை மட்டுமே வெல்ல முடியும்; மீதி பக்கப் பானைக்குச் செல்லும்."],
       ["முன்பணம்", "சீட்டு பங்கிடுவதற்கு முன், கட்டாயப் பணயத்துக்கு மேலாக ஒவ்வொருவரும் செலுத்தும் சிறு கட்டாயப் பணயம். சில போட்டிகளின் பிற்பகுதி நிலைகளில் பயன்படும்."],
@@ -2675,7 +2675,7 @@ var PARTS = {
     ldHeadline: "Pokerwoordelys — Texas Hold’em-terme verduidelik",
     ldDesc: "’n Woordelys van Texas Hold’em-pokerterme, van all-in tot wheel.",
     h1: "Pokerwoordelys — Texas Hold’em-terme",
-    lead: "Die woorde wat jy by ’n Hold’em-tafel, in die geselsie en in PokerTH self teëkom. Die vyf aksiewoorde — Fold, Check, Call, Raise en All-In — bly in al 55 koppelvlaktale Engels, want dit is so aan elke tafel ter wêreld.",
+    lead: "Die woorde wat jy by ’n Hold’em-tafel, in die geselsie en in PokerTH self teëkom. Die vyf aksiewoorde — Fold, Check, Call, Raise en All-In — bly in al 56 koppelvlaktale Engels, want dit is so aan elke tafel ter wêreld.",
     terms: [
       ["alles inbeteken", "Om al jou fiches te verwed. Jy kan net die deel van die pot wen waarvoor jy betaal het; die res gaan na ’n sypot."],
       ["ante", "’n Klein verpligte inset wat elke speler voor die deel betaal, bo en behalwe die blindes. Word in latere vlakke van sommige toernooie gebruik."],
@@ -2741,7 +2741,7 @@ var PARTS = {
     ldHeadline: "Pokkeri sõnastik — Texas Hold’emi terminid",
     ldDesc: "Texas Hold’emi pokkeriterminite sõnastik, all-in’ist wheel’ini.",
     h1: "Pokkeri sõnastik — Texas Hold’emi terminid",
-    lead: "Sõnad, mida kohtad Hold’emi lauas, vestluses ja PokerTH-s endas. Viis käigusõna — Fold, Check, Call, Raise ja All-In — jäävad inglise keelde kõigis 55 liidesekeeles, sest nii on igas lauas üle maailma.",
+    lead: "Sõnad, mida kohtad Hold’emi lauas, vestluses ja PokerTH-s endas. Viis käigusõna — Fold, Check, Call, Raise ja All-In — jäävad inglise keelde kõigis 56 liidesekeeles, sest nii on igas lauas üle maailma.",
     terms: [
       ["kõik sisse", "Panna mängu kõik oma žetoonid. Võita saad ainult selle osa potist, mille eest maksid; ülejäänu läheb kõrvalpotti."],
       ["ante", "Väike sundpanus, mille iga mängija maksab enne jagamist, lisaks blindidele. Kasutusel mõne turniiri hilisematel tasemetel."],
@@ -2806,7 +2806,7 @@ var PARTS = {
     ldHeadline: "Pokera vārdnīca — Teksasas Hold’ema termini",
     ldDesc: "Teksasas Hold’ema pokera terminu vārdnīca, no all-in līdz wheel.",
     h1: "Pokera vārdnīca — Teksasas Hold’ema termini",
-    lead: "Vārdi, ko sastapsi pie Hold’ema galda, tērzēšanā un pašā PokerTH. Pieci darbību vārdi — Fold, Check, Call, Raise un All-In — visās 55 saskarnes valodās paliek angliski, jo tā tas ir pie ikviena galda pasaulē.",
+    lead: "Vārdi, ko sastapsi pie Hold’ema galda, tērzēšanā un pašā PokerTH. Pieci darbību vārdi — Fold, Check, Call, Raise un All-In — visās 56 saskarnes valodās paliek angliski, jo tā tas ir pie ikviena galda pasaulē.",
     terms: [
       ["viss iekšā", "Ielikt spēlē visus savus žetonus. Laimēt vari tikai to bankas daļu, ko esi nosedzis; pārējais aiziet sānu bankā."],
       [null, "Neliela piespiedu likme, ko pirms dalīšanas maksā katrs spēlētājs, papildus aklajām likmēm. Tiek lietota dažu turnīru vēlākajos līmeņos."],
@@ -2872,7 +2872,7 @@ var PARTS = {
     ldHeadline: "Pokrski slovar — izrazi Texas Hold’ema",
     ldDesc: "Slovar pokrskih izrazov Texas Hold’ema, od all-in do wheel.",
     h1: "Pokrski slovar — izrazi Texas Hold’ema",
-    lead: "Besede, ki jih srečaš pri mizi Hold’ema, v klepetu in v samem PokerTH. Pet izrazov za poteze — Fold, Check, Call, Raise in All-In — ostanejo v angleščini v vseh 55 jezikih vmesnika, ker je tako pri vsaki mizi po svetu.",
+    lead: "Besede, ki jih srečaš pri mizi Hold’ema, v klepetu in v samem PokerTH. Pet izrazov za poteze — Fold, Check, Call, Raise in All-In — ostanejo v angleščini v vseh 56 jezikih vmesnika, ker je tako pri vsaki mizi po svetu.",
     terms: [
       ["vse notri", "Staviti vse svoje žetone. Zmagati lahko samo del banke, h kateremu si prispeval; preostanek gre v stransko banko."],
       [null, "Majhna prisilna stava, ki jo plača vsak igralec pred delitvijo, poleg blindov. Uporablja se v poznejših stopnjah nekaterih turnirjev."],
@@ -2938,7 +2938,7 @@ var PARTS = {
     ldHeadline: "Pokerski rječnik — pojmovi Texas Hold’ema",
     ldDesc: "Rječnik pojmova pokera Texas Hold’em, od all-in do wheel.",
     h1: "Pokerski rječnik — pojmovi Texas Hold’ema",
-    lead: "Riječi na koje ćeš naići za stolom Hold’ema, u razgovoru i u samom PokerTH-u. Pet riječi za radnje — Fold, Check, Call, Raise i All-In — ostaju na engleskom u svih 55 jezika interfejsa, jer tako je za svakim stolom na svijetu.",
+    lead: "Riječi na koje ćeš naići za stolom Hold’ema, u razgovoru i u samom PokerTH-u. Pet riječi za radnje — Fold, Check, Call, Raise i All-In — ostaju na engleskom u svih 56 jezika interfejsa, jer tako je za svakim stolom na svijetu.",
     terms: [
       ["sve unutra", "Uložiti sve svoje žetone. Možeš osvojiti samo onaj dio pota u koji si uplatio; ostatak ide u sporedni pot."],
       ["ante", "Mali obavezni ulog koji svaki igrač plaća prije dijeljenja, uz uloge. Koristi se u kasnijim nivoima nekih turnira."],
@@ -3004,7 +3004,7 @@ var PARTS = {
     ldHeadline: "Покер речник — поими на Texas Hold’em",
     ldDesc: "Речник на покер-поими на Texas Hold’em, од all-in до wheel.",
     h1: "Покер речник — поими на Texas Hold’em",
-    lead: "Зборови на кои ќе наидеш на масата на Hold’em, во разговор и во самиот PokerTH. Пет зборови за потези — Fold, Check, Call, Raise и All-In — остануваат на англиски во сите 55 јазици на интерфејсот, бидејќи така е на секоја маса во светот.",
+    lead: "Зборови на кои ќе наидеш на масата на Hold’em, во разговор и во самиот PokerTH. Пет зборови за потези — Fold, Check, Call, Raise и All-In — остануваат на англиски во сите 56 јазици на интерфејсот, бидејќи така е на секоја маса во светот.",
     terms: [
       ["сè внатре", "Да ги вложиш сите свои жетони. Можеш да добиеш само дел од потот во кој си вложил; остатокот оди во споредниот пот."],
       ["анте", "Мал присилен влог кој секој играч го плаќа пред делењето, покрај блајндовите. Се користи во подоцнежните нивоа на некои турнири."],
@@ -3071,7 +3071,7 @@ var PARTS = {
     ldHeadline: "Glosari Poker — Istilah Texas Hold’em",
     ldDesc: "Glosari istilah poker Texas Hold’em, dari all-in hingga wheel.",
     h1: "Glosari Poker — Istilah Texas Hold’em",
-    lead: "Perkataan yang akan anda temui di meja Hold’em, dalam sembang dan dalam PokerTH itu sendiri. Lima perkataan tindakan — Fold, Check, Call, Raise dan All-In — kekal dalam bahasa Inggeris di dalam kesemua 55 bahasa antara muka, kerana begitulah keadaannya di setiap meja di dunia.",
+    lead: "Perkataan yang akan anda temui di meja Hold’em, dalam sembang dan dalam PokerTH itu sendiri. Lima perkataan tindakan — Fold, Check, Call, Raise dan All-In — kekal dalam bahasa Inggeris di dalam kesemua 56 bahasa antara muka, kerana begitulah keadaannya di setiap meja di dunia.",
     terms: [
       ["semua masuk", "Meletakkan semua cip anda dalam permainan. Anda hanya boleh memenangi bahagian pot yang anda bayar; selebihnya masuk ke side pot."],
       [null, "Pertaruhan wajib kecil yang dibayar setiap pemain sebelum kad diedarkan, tambahan kepada blind. Digunakan pada peringkat lewat sesetengah kejohanan."],
@@ -3137,7 +3137,7 @@ var PARTS = {
     ldHeadline: "Fjalori i Pokerit — Termat e Texas Hold’em",
     ldDesc: "Fjalori i termave të pokerit të Texas Hold’em, nga all-in te wheel.",
     h1: "Fjalori i Pokerit — Termat e Texas Hold’em",
-    lead: "Fjalë që do t’i hasësh te tavolina e Hold’em, në bisedë dhe në vetë PokerTH-in. Pesë fjalët e veprimeve — Fold, Check, Call, Raise dhe All-In — mbeten në anglisht në të gjitha 55 gjuhët e ndërfaqes, sepse ashtu është te çdo tavolinë në botë.",
+    lead: "Fjalë që do t’i hasësh te tavolina e Hold’em, në bisedë dhe në vetë PokerTH-in. Pesë fjalët e veprimeve — Fold, Check, Call, Raise dhe All-In — mbeten në anglisht në të gjitha 56 gjuhët e ndërfaqes, sepse ashtu është te çdo tavolinë në botë.",
     terms: [
       ["gjithçka brenda", "Vë të gjithë zhetonët e tu në lojë. Mund të fitosh vetëm pjesën e bankës që ke paguar; pjesa tjetër shkon te banka anësore."],
       [null, "Bast i vogël i detyrueshëm që çdo lojtar e paguan para ndarjes, përveç blindeve. Përdoret në nivele të mëvonshme të disa turneve."],
@@ -3202,7 +3202,7 @@ var PARTS = {
     ldHeadline: "ਪੋਕਰ ਸ਼ਬਦਾਵਲੀ — Texas Hold’em ਦੇ ਸ਼ਬਦ ਸਮਝਾਏ",
     ldDesc: "Texas Hold’em ਪੋਕਰ ਦੇ ਸ਼ਬਦਾਂ ਦੀ ਸ਼ਬਦਾਵਲੀ, all-in ਤੋਂ wheel ਤੱਕ।",
     h1: "ਪੋਕਰ ਸ਼ਬਦਾਵਲੀ — Texas Hold’em ਦੇ ਸ਼ਬਦ",
-    lead: "ਓਹ ਸ਼ਬਦ ਜੋ ਤੁਹਾਨੂੰ Hold’em ਟੇਬਲ \u2019ਤੇ, ਗੱਲਬਾਤ ਵਿੱਚ ਅਤੇ ਖ਼ੁਦ PokerTH ਵਿੱਚ ਮਿਲਣਗੇ। ਪੰਜ ਕਾਰਵਾਈ ਸ਼ਬਦ — Fold, Check, Call, Raise ਅਤੇ All-In — ਇੰਟਰਫੇਸ ਦੀਆਂ ਸਾਰੀਆਂ 55 ਭਾਸ਼ਾਵਾਂ ਵਿੱਚ ਅੰਗਰੇਜ਼ੀ ਵਿੱਚ ਰਹਿੰਦੇ ਹਨ, ਕਿਉਂਕਿ ਦੁਨੀਆ ਦੇ ਹਰ ਟੇਬਲ \u2019ਤੇ ਇਹ ਇਸੇ ਤਰ੍ਹਾਂ ਹੈ।",
+    lead: "ਓਹ ਸ਼ਬਦ ਜੋ ਤੁਹਾਨੂੰ Hold’em ਟੇਬਲ \u2019ਤੇ, ਗੱਲਬਾਤ ਵਿੱਚ ਅਤੇ ਖ਼ੁਦ PokerTH ਵਿੱਚ ਮਿਲਣਗੇ। ਪੰਜ ਕਾਰਵਾਈ ਸ਼ਬਦ — Fold, Check, Call, Raise ਅਤੇ All-In — ਇੰਟਰਫੇਸ ਦੀਆਂ ਸਾਰੀਆਂ 56 ਭਾਸ਼ਾਵਾਂ ਵਿੱਚ ਅੰਗਰੇਜ਼ੀ ਵਿੱਚ ਰਹਿੰਦੇ ਹਨ, ਕਿਉਂਕਿ ਦੁਨੀਆ ਦੇ ਹਰ ਟੇਬਲ \u2019ਤੇ ਇਹ ਇਸੇ ਤਰ੍ਹਾਂ ਹੈ।",
     terms: [
       [null, "ਆਪਣੇ ਸਾਰੇ ਚਿਪਸ ਦਾਅ \u2019ਤੇ ਲਾਉਣਾ। ਤੁਸੀਂ ਸਿਰਫ਼ ਪਾਟ ਦਾ ਓਹ ਹਿੱਸਾ ਜਿੱਤ ਸਕਦੇ ਹੋ ਜਿਸ ਵਿੱਚ ਤੁਸੀਂ ਪਾਇਆ; ਬਾਕੀ ਸਾਈਡ ਪਾਟ ਵਿੱਚ ਜਾਂਦਾ ਹੈ।"],
       [null, "ਵੰਡ ਤੋਂ ਪਹਿਲਾਂ ਹਰ ਖਿਡਾਰੀ ਦੁਆਰਾ ਬਲਾਇੰਡਾਂ ਤੋਂ ਇਲਾਵਾ ਦਿੱਤੀ ਛੋਟੀ ਲਾਜ਼ਮੀ ਬੈਟ। ਕੁਝ ਟੂਰਨਾਮੈਂਟਾਂ ਦੇ ਬਾਅਦ ਵਾਲੇ ਪੱਧਰਾਂ ਵਿੱਚ ਵਰਤੀ ਜਾਂਦੀ ਹੈ।"],
@@ -3267,7 +3267,7 @@ var PARTS = {
     ldHeadline: "የፖከር መዝገበ ቃላት — የ Texas Hold’em ቃላት ተብራርተዋል",
     ldDesc: "የ Texas Hold’em ፖከር ቃላት መዝገበ ቃላት፣ ከ all-in እስከ wheel።",
     h1: "የፖከር መዝገበ ቃላት — የ Texas Hold’em ቃላት",
-    lead: "በ Hold’em ጠረጴዛ ላይ፣ በውይይት ውስጥ እና በ PokerTH ራሱ የሚያገኙዋቸው ቃላት። አምስቱ የእርምጃ ቃላት — Fold፣ Check፣ Call፣ Raise እና All-In — በሁሉም 55 የበይነገጽ ቋንቋዎች በእንግሊዝኛ ይቆያሉ፣ ምክንያቱም በዓለም ላይ ባለ እያንዳንዱ ጠረጴዛ እንደዚያ ነው።",
+    lead: "በ Hold’em ጠረጴዛ ላይ፣ በውይይት ውስጥ እና በ PokerTH ራሱ የሚያገኙዋቸው ቃላት። አምስቱ የእርምጃ ቃላት — Fold፣ Check፣ Call፣ Raise እና All-In — በሁሉም 56 የበይነገጽ ቋንቋዎች በእንግሊዝኛ ይቆያሉ፣ ምክንያቱም በዓለም ላይ ባለ እያንዳንዱ ጠረጴዛ እንደዚያ ነው።",
     terms: [
       [null, "ያለዎትን እያንዳንዱን ቺፕ መወራረድ። አሁንም የከፈሉበትን የፖት ክፍል ብቻ ማሸነፍ ይችላሉ፤ ቀሪው ወደ ጎን ፖት ይሄዳል።"],
       [null, "ከብላይንዶች በተጨማሪ ከማከፋፈል በፊት በእያንዳንዱ ተጫዋች የሚከፈል ትንሽ አስገዳጅ ውርርድ። በአንዳንድ ውድድሮች በኋለኞቹ ደረጃዎች ውስጥ ይውላል።"],
@@ -3332,7 +3332,7 @@ var PARTS = {
     ldHeadline: "វចនានុក្រមបៀ — ពាក្យ Texas Hold’em ពន្យល់",
     ldDesc: "វចនានុក្រមពាក្យបៀ Texas Hold’em ពី all-in ដល់ wheel។",
     h1: "វចនានុក្រមបៀ — ពាក្យ Texas Hold’em",
-    lead: "ពាក្យដែលអ្នកនឹងជួបនៅតុ Hold’em ក្នុងការជជែក និងក្នុង PokerTH ខ្លួនឯង។ ពាក្យសកម្មភាពទាំងប្រាំ — Fold, Check, Call, Raise និង All-In — នៅជាភាសាអង់គ្លេសក្នុងភាសាចំណុចប្រទាក់ទាំង ៥៥ ព្រោះវាបែបនេះនៅគ្រប់តុលើពិភពលោក។",
+    lead: "ពាក្យដែលអ្នកនឹងជួបនៅតុ Hold’em ក្នុងការជជែក និងក្នុង PokerTH ខ្លួនឯង។ ពាក្យសកម្មភាពទាំងប្រាំ — Fold, Check, Call, Raise និង All-In — នៅជាភាសាអង់គ្លេសក្នុងភាសាចំណុចប្រទាក់ទាំង ៥៦ ព្រោះវាបែបនេះនៅគ្រប់តុលើពិភពលោក។",
     terms: [
       [null, "ភ្នាល់ស៊ីបទាំងអស់ដែលអ្នកមាន។ អ្នកអាចឈ្នះតែផ្នែក pot ដែលអ្នកបានចូលរួម; នៅសល់ទៅ pot ចំហៀង។"],
       [null, "ការភ្នាល់ចាំបាច់តូចដាក់ដោយអ្នកលេងម្នាក់ៗមុនចែក បន្ថែមលើ blind។ ប្រើក្នុងកម្រិតក្រោយនៃការប្រកួតខ្លះ។"],
@@ -3391,6 +3391,71 @@ var PARTS = {
     ],
     footer: function (h, c) { return "នៅតែមិនច្បាស់ថាដៃដំណើរការយ៉ាងណាពិតប្រាកដ? <a href=\"{rules}\">ច្បាប់</a> គ្របដណ្ដប់ពី blind ដល់ showdown ហើយ<a href=\"{hands}\">ចំណាត់ថ្នាក់ដៃ</a> រាយអ្វីឈ្នះអ្វី។".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)); }
   },
+  te: {
+    title: "పోకర్ పదకోశం — Texas Hold’em పదాలు — PokerTH",
+    desc: "all-in నుండి wheel వరకు పోకర్ పదాల అర్థాలు: బ్లైండ్‌లు, కిక్కర్, అవుట్స్, పాట్ ఆడ్స్, సెట్ మరియు ట్రిప్స్, సైడ్ పాట్‌లు మరియు షోడౌన్, సరళంగా వివరించబడ్డాయి.",
+    ldHeadline: "పోకర్ పదకోశం — Texas Hold’em పదాల వివరణ",
+    ldDesc: "all-in నుండి wheel వరకు Texas Hold’em పోకర్ పదాల పదకోశం.",
+    h1: "పోకర్ పదకోశం — Texas Hold’em పదాలు",
+    lead: "Hold’em టేబుల్ వద్ద, చాట్‌లో మరియు PokerTH లోనే మీకు ఎదురయ్యే పదాలు. ఐదు చర్య పదాలు — Fold, Check, Call, Raise మరియు All-In — 56 ఇంటర్‌ఫేస్ భాషలన్నింటిలోనూ ఇంగ్లీష్‌లోనే ఉంటాయి, ఎందుకంటే ప్రపంచంలోని ప్రతి టేబుల్ వద్ద అలాగే ఉంటుంది.",
+    terms: [
+      [null, "మీ చిప్స్ అన్నింటినీ బెట్ చేయడం. మీరు చెల్లించిన పాట్ భాగాన్ని మాత్రమే గెలవగలరు; మిగిలినది సైడ్ పాట్‌లోకి వెళ్తుంది."],
+      [null, "బ్లైండ్‌లకు అదనంగా, కార్డులు పంచే ముందు ప్రతి ఆటగాడు పెట్టే చిన్న తప్పనిసరి బెట్. కొన్ని టోర్నమెంట్‌ల చివరి స్థాయిలలో వాడతారు."],
+      [null, "పూర్తి కావడానికి టర్న్ మరియు రివర్ రెండూ అవసరమైన డ్రా, ఉదాహరణకు Flush కోసం మరో రెండు హార్ట్‌లు."],
+      [null, "మీరు గెలిచే అవకాశం చాలా ఎక్కువగా ఉన్న హ్యాండ్‌ను ఓడిపోవడం."],
+      ["బిగ్ బ్లైండ్", "రెండు తప్పనిసరి బెట్‌లలో పెద్దది, బటన్‌కు ఎడమ వైపు రెండవ సీటు పెడుతుంది. టోర్నమెంట్‌లలో స్టాక్‌లను సాధారణంగా బిగ్ బ్లైండ్‌లలో లెక్కిస్తారు."],
+      ["బ్లైండ్‌లు", "ప్రతి హ్యాండ్‌ను ప్రారంభించి, ఆటగాళ్లు పోటీపడటానికి ఏదో ఒకటి ఇచ్చే రెండు తప్పనిసరి బెట్‌లు. PokerTH లో అవి క్రమ విరామాలలో పెరుగుతాయి."],
+      ["బోర్డు", "అందరూ పంచుకునే ఐదు కమ్యూనిటీ కార్డులు."],
+      [null, "టోర్నమెంట్‌లో బహుమతి లేదా ర్యాంక్ స్థానాలు మొదలయ్యే ముందు క్షణం."],
+      ["బటన్", "నామమాత్ర డీలర్‌ను సూచించే పక్. బటన్‌పై ఉన్న ఆటగాడు ఫ్లాప్ తర్వాత చివరిగా ఆడతాడు, కాబట్టి అది టేబుల్‌లో అత్యుత్తమ స్థానం."],
+      [null, "ప్రస్తుత బెట్‌కు సమానంగా పెట్టడం, అంతకు మించి కాదు."],
+      [null, "బెట్ చేయకుండా వంతు దాటించడం. ప్రస్తుత రౌండ్‌లో ఎవరూ బెట్ చేయనప్పుడు మాత్రమే సాధ్యం."],
+      [null, "Check చేసి, మరొకరు బెట్ చేసిన తర్వాత Raise చేయడం. బలమైన హ్యాండ్‌తో పాట్‌ను పెంచే ఒక మార్గం."],
+      ["కమ్యూనిటీ కార్డులు", "ఆటగాళ్లందరూ వాడగల, తెరిచి ఉంచిన ఐదు కార్డులు, ఫ్లాప్, టర్న్ మరియు రివర్‌గా పంచబడతాయి."],
+      ["కనెక్టర్‌లు", "వరుస ర్యాంక్‌లు గల రెండు హోల్ కార్డులు, ఉదాహరణకు 8-9. సూటెడ్ కనెక్టర్‌లు ఒకే సూట్‌ను కూడా పంచుకుంటాయి."],
+      ["డ్రా", "బలంగా మారడానికి ఒకటి లేదా అంతకంటే ఎక్కువ కార్డులు అవసరమైన అసంపూర్ణ హ్యాండ్ — Flush కు నాలుగు కార్డులు, Straight కు నాలుగు కార్డులు."],
+      [null, "పూర్తయినా గెలవలేని డ్రాను కలిగి ఉండటం."],
+      [null, "రాబోయే కార్డులను పరిగణనలోకి తీసుకుంటే పాట్‌లో మీ వాటా — ఆచరణలో, ఇక్కడి నుండి మీరు ఎంత తరచుగా గెలుస్తారు."],
+      ["ఫ్లాప్", "మొదటి మూడు కమ్యూనిటీ కార్డులు, ఒకేసారి పంచబడతాయి."],
+      [null, "హ్యాండ్‌ను, దానితో పాటు ఇప్పటికే బెట్ చేసిన చిప్స్ అన్నింటినీ వదులుకోవడం."],
+      [null, "ప్రవేశం ఉచితమైన టోర్నమెంట్. PokerTH లో ప్రతి టేబుల్ అలాంటిదే, ఎందుకంటే ఎక్కడా డబ్బు లేదు."],
+      ["హెడ్స్-అప్", "ఇద్దరు ఆటగాళ్లు మాత్రమే మిగిలిన హ్యాండ్ లేదా టోర్నమెంట్ దశ."],
+      ["హోల్ కార్డులు", "మీ రెండు మూసి ఉన్న కార్డులు."],
+      ["కిక్కర్", "కలయికకు వెలుపల మిగిలిన అత్యధిక కార్డు, ఒకే ర్యాంక్ గల రెండు హ్యాండ్‌ల మధ్య తేలుస్తుంది."],
+      [null, "ఫ్లాప్‌కు ముందు Raise చేయడానికి బదులు కేవలం బిగ్ బ్లైండ్‌కు Call చేసి పాట్‌లోకి ప్రవేశించడం."],
+      [null, "షోడౌన్‌లో హ్యాండ్‌ను చూపించకుండా మూసి ఉంచి పక్కన పెట్టడం."],
+      [null, "బోర్డును బట్టి సాధ్యమైన అత్యుత్తమ హ్యాండ్. దీన్ని ఓడించలేరు, సమం మాత్రమే చేయగలరు."],
+      [null, "వేర్వేరు సూట్‌ల రెండు హోల్ కార్డులు."],
+      ["అవుట్స్", "డెక్‌లో ఇంకా మిగిలి ఉండి మీకు గెలిచే హ్యాండ్‌ను ఇచ్చే కార్డులు. నాలుగు కార్డుల Flush డ్రాకు తొమ్మిది అవుట్స్ ఉంటాయి."],
+      [null, "బోర్డుపై ఉన్న ఏ కార్డు కంటే ఎక్కువ ర్యాంక్ గల పాకెట్ జత."],
+      ["పాకెట్ జత", "ఒకే ర్యాంక్ గల రెండు హోల్ కార్డులు."],
+      ["పాట్", "ప్రస్తుత హ్యాండ్‌లో పణంగా ఉన్న చిప్స్."],
+      ["పాట్ ఆడ్స్", "పాట్ మీకు ఇస్తున్న ధర: మీరు చెల్లించాల్సినది, మీరు గెలవగల దానితో పోలిస్తే."],
+      ["ప్రీ-ఫ్లాప్", "ఏ కమ్యూనిటీ కార్డూ పంచక ముందు జరిగే మొదటి బెట్టింగ్ రౌండ్."],
+      [null, "మూడు వేర్వేరు సూట్‌ల ఫ్లాప్, దీనివల్ల వెంటనే Flush డ్రా సాధ్యం కాదు."],
+      [null, "ప్రస్తుత బెట్‌ను పెంచడం. No-Limit లో, మీ మొత్తం స్టాక్ వరకు ఎంతైనా."],
+      [null, "ఒక Raise పై మళ్లీ Raise చేయడం."],
+      ["రివర్", "ఐదవ మరియు చివరి కమ్యూనిటీ కార్డు, దాని తర్వాత వచ్చే బెట్టింగ్ రౌండ్ కూడా."],
+      [null, "పాకెట్ జతకు బోర్డుపై సరిపోయే ఒక కార్డు కలిసి ఏర్పడే Three of a Kind — ట్రిప్స్‌లా కాకుండా బాగా దాగి ఉంటుంది."],
+      ["షార్ట్ స్టాక్", "బ్లైండ్‌లతో పోలిస్తే చిన్న స్టాక్, Fold చేయడం లేదా All-In వెళ్లడం తప్ప పెద్దగా ఎంపిక మిగల్చదు."],
+      ["షోడౌన్", "చివరి బెట్టింగ్ రౌండ్ తర్వాత విజేతను నిర్ణయించడానికి మిగిలిన హ్యాండ్‌లను చూపించడం."],
+      ["సైడ్ పాట్", "ఒక ఆటగాడు All-In అయి, మిగతావారు ఆ మొత్తానికి మించి బెట్ చేస్తూ ఉన్నప్పుడు ఏర్పడే ప్రత్యేక పాట్."],
+      [null, "నిర్ణీత సమయానికి కాకుండా, సీట్లు నిండిన వెంటనే మొదలయ్యే టోర్నమెంట్. ప్రతి PokerTH గేమ్ అలాంటిదే."],
+      ["స్లో ప్లే", "ప్రత్యర్థులను పాట్‌లో ఉంచడానికి బలమైన హ్యాండ్‌ను బలహీనంగా ఆడటం."],
+      ["స్మాల్ బ్లైండ్", "తప్పనిసరి బెట్‌లలో చిన్నది, బటన్‌కు వెంటనే ఎడమ వైపు సీటు పెడుతుంది."],
+      ["స్ప్లిట్ పాట్", "సమాన బలం గల హ్యాండ్‌ల మధ్య పంచబడే పాట్. Hold’em లో సూట్‌లు ఎప్పుడూ దేన్నీ తేల్చవు."],
+      ["స్టాక్", "ఒక ఆటగాడి ముందు ఉన్న చిప్స్."],
+      [null, "కార్డులు పంచే ముందు పెట్టే ఐచ్ఛిక బ్లైండ్ Raise. PokerTH లో వాడరు."],
+      ["సూటెడ్", "ఒకే సూట్ గల రెండు హోల్ కార్డులు."],
+      [null, "నిరాశ ప్రభావంతో చెడుగా ఆడటం, తరచుగా bad beat తర్వాత."],
+      [null, "ఒకే హోల్ కార్డు మరియు బోర్డుపై ఉన్న జతతో ఏర్పడే Three of a Kind. మూడింటిలో రెండు కార్డులు అందరికీ కనిపిస్తాయి."],
+      ["టర్న్", "నాలుగవ కమ్యూనిటీ కార్డు, దాని తర్వాత వచ్చే బెట్టింగ్ రౌండ్ కూడా."],
+      [null, "ఫ్లాప్‌కు ముందు మొదటగా ఆడే సీటు, బిగ్ బ్లైండ్‌కు వెంటనే ఎడమ వైపు."],
+      ["వాల్యూ బెట్", "ఎవరినీ Fold చేయించడానికి కాకుండా, బలహీనమైన హ్యాండ్ Call చేయాలనే ఉద్దేశంతో పెట్టే బెట్."],
+      [null, "A-2-3-4-5 Straight, ఇందులో ఏస్ కింద ఆడుతుంది. అత్యంత బలహీనమైన Straight."]
+    ],
+    footer: function (h, c) { return "ఒక హ్యాండ్ ఎలా సాగుతుందో ఇంకా స్పష్టంగా లేదా? <a href=\"{rules}\">నియమాలు</a> దాన్ని బ్లైండ్‌ల నుండి షోడౌన్ వరకు వివరిస్తాయి, <a href=\"{hands}\">హ్యాండ్ ర్యాంకింగ్‌లు</a> ఏది దేన్ని ఓడిస్తుందో చెబుతాయి.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)); }
+  },
 
 
    sw: {
@@ -3401,7 +3466,7 @@ var PARTS = {
     ldHeadline: "Kamusi ya poka — istilahi za Texas Hold’em",
     ldDesc: "Kamusi ya istilahi za poka ya Texas Hold’em, kuanzia all-in hadi wheel.",
     h1: "Kamusi ya poka — istilahi za Texas Hold’em",
-    lead: "Maneno utakayokutana nayo kwenye meza ya Hold’em, kwenye mazungumzo na ndani ya PokerTH yenyewe. Maneno matano ya vitendo — Fold, Check, Call, Raise na All-In — yanabaki Kiingereza katika lugha zote 55 za kiolesura, kwa sababu ndivyo ilivyo kwenye kila meza duniani.",
+    lead: "Maneno utakayokutana nayo kwenye meza ya Hold’em, kwenye mazungumzo na ndani ya PokerTH yenyewe. Maneno matano ya vitendo — Fold, Check, Call, Raise na All-In — yanabaki Kiingereza katika lugha zote 56 za kiolesura, kwa sababu ndivyo ilivyo kwenye kila meza duniani.",
     terms: [
       ["weka vyote", "Kuweka dau la chipu zako zote. Unaweza kushinda tu sehemu ya pot uliyochangia; iliyobaki huenda kwenye pot ya pembeni."],
       ["ante", "Dau dogo la lazima analolipa kila mchezaji kabla ya kugawa karata, zaidi ya dau la kulazimishwa. Hutumika katika viwango vya baadaye vya baadhi ya mashindano."],
@@ -3467,7 +3532,7 @@ var PARTS = {
     ldHeadline: "Faclair pòcair — briathran Texas Hold’em",
     ldDesc: "Faclair de bhriathran pòcair Texas Hold’em, o all-in gu wheel.",
     h1: "Faclair pòcair — briathran Texas Hold’em",
-    lead: "Na faclan ris an tachair thu aig bòrd Hold’em, sa chòmhradh agus ann am PokerTH fhèin. Fanaidh na còig faclan gnìomh — Fold, Check, Call, Raise agus All-In — sa Bheurla anns a h-uile gin dhen 55 cànan eadar-aghaidh, oir ’s ann mar sin a tha e aig gach bòrd air an t-saoghal.",
+    lead: "Na faclan ris an tachair thu aig bòrd Hold’em, sa chòmhradh agus ann am PokerTH fhèin. Fanaidh na còig faclan gnìomh — Fold, Check, Call, Raise agus All-In — sa Bheurla anns a h-uile gin dhen 56 cànan eadar-aghaidh, oir ’s ann mar sin a tha e aig gach bòrd air an t-saoghal.",
     terms: [
       ["a h-uile sgillinn", "A’ cur nan sliseagan agad uile mar gheall. Chan urrainn dhut ach am pàirt dhen phota a phàigh thu a bhuannachadh; thèid an còrr gu poit taobh."],
       ["ante", "Geall beag èigneachail a phàigheas gach cluicheadair ron ghèilleadh, a bharrachd air na dallabhan. Air a chleachdadh anns na h-ìrean mu dheireadh de chuid de cho-fharpaisean."],
@@ -3533,7 +3598,7 @@ var PARTS = {
     ldHeadline: "Talasalitaan ng poker — mga termino sa Texas Hold’em",
     ldDesc: "Talasalitaan ng mga terminong poker sa Texas Hold’em, mula all-in hanggang wheel.",
     h1: "Talasalitaan ng poker — mga termino sa Texas Hold’em",
-    lead: "Ang mga salitang makikita mo sa mesa ng Hold’em, sa usapan, at sa PokerTH mismo. Ang limang salitang aksyon — Fold, Check, Call, Raise at All-In — ay nananatiling Ingles sa lahat ng 55 wika ng interface, dahil ganoon din sa bawat mesa sa buong mundo.",
+    lead: "Ang mga salitang makikita mo sa mesa ng Hold’em, sa usapan, at sa PokerTH mismo. Ang limang salitang aksyon — Fold, Check, Call, Raise at All-In — ay nananatiling Ingles sa lahat ng 56 wika ng interface, dahil ganoon din sa bawat mesa sa buong mundo.",
     terms: [
       ["ilahat", "Ang itaya ang lahat ng chips mo. Ang mapapanalunan mo lang ay ang bahagi ng pot na binayaran mo; ang natira ay mapupunta sa side pot."],
       ["ante", "Maliit na sapilitang taya na binabayaran ng bawat manlalaro bago mamigay, bukod pa sa blind. Ginagamit sa huling mga antas ng ilang torneo."],

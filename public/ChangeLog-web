@@ -1,4 +1,7 @@
-2026-09-19 version 2.1.9-web.67 (current series):
+2026-09-19 version 2.1.9-web.68 (current series):
+- new: the public pages (poker rules, hand rankings, glossary, how to play, FAQ) are now available in Telugu too
+
+2026-09-19 version 2.1.9-web.67:
 - new: Telugu (తెలుగు) is now available in the language list - the whole interface, the built-in help and the welcome notices are translated, bringing the client to 56 languages
 
 2026-09-19 version 2.1.9-web.66:
