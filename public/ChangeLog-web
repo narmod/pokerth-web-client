@@ -1,4 +1,7 @@
-2026-09-18 version 2.1.9-web.62 (current series):
+2026-09-19 version 2.1.9-web.64 (current series):
+- bugfix: training mode - when the table gets down to two players, nobody has to post the big blind twice in a row any more (same fix as the desktop client)
+
+2026-09-18 version 2.1.9-web.62:
 - improvement: the game starts faster and uses far less data - only your language is downloaded instead of all 55 (the others load when you pick them)
 - bugfix: on an unstable connection the game could fail to start because one of the 55 language files did not load - it now retries, and falls back to English rather than not starting
 

@@ -129,6 +129,17 @@ export class OfflineTable {
     this.sb=sb; this.bb=bb;
     // advance button to next live player
     do { this.button=(this.button+1)%this.players.length; } while(!this.players[this.button].in);
+    // Exception rule (upstream b6f5f7c, fixes pokerth#541): nobody posts the big
+    // blind twice in a row. With three or more players left the plain shift is
+    // right, but on the way down to heads-up - where the button is the small
+    // blind and the other player the big blind - the previous big blind could
+    // be asked to post it again (typically when the button busts). Handing him
+    // the button makes him the small blind instead. Never fires in a heads-up
+    // that was already running: there the blinds simply alternate.
+    if (live.length === 2 && this.h && this.h.bbP && this.h.bbP.in) {
+      const _hu = this._orderFrom(this.button);
+      if (_hu[1] && _hu[1].id === this.h.bbP.id) this.button = this.players.indexOf(this.h.bbP);
+    }
     const order = this._orderFrom(this.button); // live players starting at button
     const n = order.length;
     // blinds

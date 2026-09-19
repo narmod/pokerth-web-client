@@ -121,6 +121,21 @@ highlights below.
 
 ### Fixed
 
+- **Offline mode: nobody posts the big blind twice in a row** (`web.64`,
+  parity with upstream `b6f5f7c`, pokerth#541) — on the way down to heads-up
+  the plain "next live seat" button shift could make the previous big blind
+  post it again (typically when the button busted: 73 of 261 heads-up
+  transitions in a 300-game bot run). `OfflineTable.nextHand()` now hands that
+  player the button (small blind) instead; nothing changes with three or more
+  players nor in a heads-up already running. New `scripts/test-offline-button.mjs`.
+  Online play needed no change: the client already takes the button from
+  `HandStartMessage.dealerPlayerId` rather than computing it. Reviewed and not
+  applicable from the same upstream batch: `a6d4f05` (QML zoom re-anchor on
+  ring redistribution — web seats are frozen for the whole game and the pan is
+  re-measured from the DOM on every follow and reset each hand), `8d2fc74`
+  (Qt audio device crash), `4ad9b5f` (server avatar cache), `58d072c`/`7bbb730`
+  (Android build).
+
 - **Error journal: two more sources of injected-script noise filtered**
   (`web.63`) — the script UC Browser injects into every page (served under a
   fake same-origin path, `/u.c.b.r.o.w.s.e.r/ucbrowser_script.js`) and
