@@ -9052,7 +9052,9 @@ function _applyZoomTransforms() {
 // (1−k)·zone/2 + pan) ; clip de la zone quand actif ; pan au pointeur ;
 // transition 220 ms OutCubic hors drag. Self/action bar/fond : hors effet.
 var _loupe = { on:false, k:2.0, panX:0, panY:0, susp:false, drag:false,
-               followSeat:null, followTmr:null };
+               followSeat:null, followTmr:null,
+               panSeat:null,   // pid the current pan was actually computed for
+               ringN:null };   // ring count of the previous render
 window._loupeK = 1;
 function _loupeZone() { return document.getElementById('g-table-zone'); }
 function _loupeClamp() {
@@ -9119,7 +9121,7 @@ function toggleLoupe() {
   _loupe.on = !_loupe.on;
   if (!_loupe.on) { _loupe.panX = _loupe.panY = 0; _loupe.susp = false;
                     if (_loupe.followTmr) { clearTimeout(_loupe.followTmr); _loupe.followTmr = null; }
-                    _loupe.followSeat = null; }
+                    _loupe.followSeat = null; _loupe.panSeat = null; }
   _loupeClamp(); _loupeApply();
 }
 window.toggleLoupe = toggleLoupe;
@@ -9142,7 +9144,7 @@ function _loupeBtnSync() {
   if (!vis && (_loupe.on || _loupe.susp)) {
     _loupe.on = false; _loupe.susp = false; _loupe.panX = _loupe.panY = 0;
     if (_loupe.followTmr) { clearTimeout(_loupe.followTmr); _loupe.followTmr = null; }
-    _loupe.followSeat = null;
+    _loupe.followSeat = null; _loupe.panSeat = null;
     _loupeApply(false);
   }
   if (vis) {
@@ -9174,9 +9176,41 @@ setTimeout(_loupeBtnSync, 900);
 })();
 // Hook appelé par renderSeats : suivi différé du siège actif + suspension au
 // showdown (parité _scheduleFollow/_doFollow + _zoomSuspendedByShowdown).
+// Re-anchor (upstream a6d4f05, GamePage.qml _reanchorZoom): panX/panY are
+// ABSOLUTE coordinates of the ring distribution that was current when the pan
+// was made. As soon as the ring is redistributed - "Remove departed players"
+// is on and someone leaves, or the option is toggled mid-hand - the excerpt
+// points at a place where no box sits any more. Re-anchor it onto the seat it
+// was showing; if that seat left the ring (or no seat was followed) go back to
+// the table centre, which exists in every distribution. Never during a drag.
+function _loupeReanchor() {
+  if (!_loupe.on || _loupe.drag) return;
+  var z = _loupeZone(); if (!z) return;
+  var el = null;
+  if (_loupe.panSeat != null) {
+    try { el = document.querySelector('#g-seats .seat[data-pid="' + _loupe.panSeat + '"]:not(.me)'); } catch (e) { el = null; }
+  }
+  if (el) {
+    _loupe.panX = _loupe.k * (z.clientWidth / 2 - (parseFloat(el.style.left) || 0));
+    _loupe.panY = _loupe.k * (z.clientHeight / 2 - (parseFloat(el.style.top) || 0));
+  } else {
+    _loupe.panSeat = null;
+    _loupe.panX = 0; _loupe.panY = 0;
+  }
+  _loupeClamp(); _loupeApply();
+}
+window._loupeReanchor = _loupeReanchor;
 window._loupeOnRender = function (activeEl, showdown, timerTot) {
   _loupeBtnSync();   // visibilité/position réévaluées à chaque rendu de table
   _loupeAnchorSelf(false);   // #g-seats vient d'etre recree : re-ancrer la self
+  // The ring count is the one criterion that changes on every redistribution
+  // (parity with onRingCountChanged). Tracked even while the loupe is off, so
+  // the baseline is right when it gets switched on. Deferred (~ Qt.callLater):
+  // the overlap guard of renderSeats may still re-place the seats.
+  var _ringNow = window._seatCount || 0;
+  var _ringMoved = (_loupe.ringN != null && _ringNow !== _loupe.ringN);
+  _loupe.ringN = _ringNow;
+  if (_ringMoved && _loupe.on) setTimeout(_loupeReanchor, 0);
   if (!_loupe.on) return;
   var z = _loupeZone(); if (!z) return;
   if (showdown) {   // dézoom pour la vue d'ensemble, réactivé main suivante
@@ -9198,6 +9232,7 @@ window._loupeOnRender = function (activeEl, showdown, timerTot) {
     var pxT = parseFloat(el.style.left) || 0, pyT = parseFloat(el.style.top) || 0;
     _loupe.panX = _loupe.k * (z2.clientWidth / 2 - pxT);
     _loupe.panY = _loupe.k * (z2.clientHeight / 2 - pyT);
+    _loupe.panSeat = el.getAttribute('data-pid') || null;
     _loupeClamp(); _loupeApply();
   }, ms);
 };
@@ -11732,7 +11767,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.9-web.64'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.9-web.65'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif ou la palette High contrast
    (Android, Safari, iOS standalone récent). Lit --theme-color et met

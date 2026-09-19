@@ -121,6 +121,22 @@ highlights below.
 
 ### Fixed
 
+- **Mobile loupe: view re-anchored when the ring is redistributed** (`web.65`,
+  parity with upstream `a6d4f05`, `GamePage.qml` `_reanchorZoom`) — the ×2
+  loupe keeps its pan in absolute zone pixels of the ring layout that was
+  current when the pan was made. With "Remove departed players" on
+  (`remove_gone`, the web counterpart of QML `keepEmptySeats` off), a player
+  leaving — or the option being toggled mid-hand — redistributes the ring, and
+  the excerpt kept showing a spot where no seat sits any more until a
+  *different* opponent came to act. `_loupeOnRender` now watches the ring count
+  (`window._seatCount`, parity with `onRingCountChanged`) and, deferred past
+  the overlap guard, re-anchors the pan onto the seat it was computed for
+  (new `_loupe.panSeat`), or onto the table centre if that seat left the ring.
+  Never during a manual drag; no effect with `remove_gone` off (ghost seats
+  keep their slot, the count never moves). New `scripts/test-loupe-reanchor.mjs`.
+  The legacy `_zoomPanX/Y` follow code is untouched: it is inert since the +/−
+  table zoom was retired (`_getTableZoom()` always returns 1).
+
 - **Offline mode: nobody posts the big blind twice in a row** (`web.64`,
   parity with upstream `b6f5f7c`, pokerth#541) — on the way down to heads-up
   the plain "next live seat" button shift could make the previous big blind
@@ -130,11 +146,9 @@ highlights below.
   players nor in a heads-up already running. New `scripts/test-offline-button.mjs`.
   Online play needed no change: the client already takes the button from
   `HandStartMessage.dealerPlayerId` rather than computing it. Reviewed and not
-  applicable from the same upstream batch: `a6d4f05` (QML zoom re-anchor on
-  ring redistribution — web seats are frozen for the whole game and the pan is
-  re-measured from the DOM on every follow and reset each hand), `8d2fc74`
-  (Qt audio device crash), `4ad9b5f` (server avatar cache), `58d072c`/`7bbb730`
-  (Android build).
+  applicable from the same upstream batch: `8d2fc74` (Qt audio device crash),
+  `4ad9b5f` (server avatar cache), `58d072c`/`7bbb730` (Android build).
+  `a6d4f05` was first filed here as not applicable, wrongly — see `web.65`.
 
 - **Error journal: two more sources of injected-script noise filtered**
   (`web.63`) — the script UC Browser injects into every page (served under a

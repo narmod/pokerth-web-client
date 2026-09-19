@@ -1,4 +1,7 @@
-2026-09-19 version 2.1.9-web.64 (current series):
+2026-09-19 version 2.1.9-web.65 (current series):
+- bugfix: mobile zoom (magnifier) - with "Remove departed players" enabled, the zoomed view no longer stays stuck on an empty spot when a player leaves the table; it follows the seat it was showing, or returns to the table centre (same fix as the desktop client)
+
+2026-09-19 version 2.1.9-web.64:
 - bugfix: training mode - when the table gets down to two players, nobody has to post the big blind twice in a row any more (same fix as the desktop client)
 
 2026-09-18 version 2.1.9-web.62:
