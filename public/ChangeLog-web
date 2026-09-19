@@ -1,4 +1,8 @@
-2026-09-19 version 2.1.9-web.72 (current series):
+2026-09-19 version 2.1.9-web.73 (current series):
+- new: the public pages (poker rules, hand rankings, glossary, how to play, FAQ) are now available in Marathi too
+- bugfix: in the Malayalam poker glossary, the "Freeroll" entry carried the definition of another term - it now explains what a freeroll is
+
+2026-09-19 version 2.1.9-web.72:
 - new: Marathi (मराठी) is now available in the language list - the whole interface, the built-in help and the welcome notices are translated, bringing the client to 58 languages
 
 2026-09-19 version 2.1.9-web.71:
