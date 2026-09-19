@@ -46,6 +46,8 @@ highlights below.
 - **Amharic**, full UI catalogue, help corpus, SEO content pages and
   guest/registered/LAN broadcast notices (`web.22`–`24`) — 54 languages
   total.
+- **Gujarati**, UI catalogue, help corpus and guest/registered/LAN broadcast
+  notices (`web.76`) — 60 languages total; SEO content pages to follow.
 - **Kannada**, full UI catalogue, help corpus, SEO content pages (incl.
   `/rules` and `/faq`) and guest/registered/LAN broadcast notices
   (`web.74`–`75`) — 59 languages total.
