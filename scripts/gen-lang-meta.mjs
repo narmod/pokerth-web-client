@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // Generates public/modules/lang-meta.mjs — the language REGISTRY.
 //
-// The web client no longer imports every catalogue at boot (56 files, ~5 MB):
+// The web client no longer imports every catalogue at boot (57 files, ~5 MB):
 // only English is static, the active language is fetched on demand by
 // modules/i18n.mjs. The picker, the locale detection and <html dir> still
 // need to know every language up front (code, native label, direction,

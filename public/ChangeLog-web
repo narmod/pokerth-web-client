@@ -1,4 +1,7 @@
-2026-09-19 version 2.1.9-web.69 (current series):
+2026-09-19 version 2.1.9-web.70 (current series):
+- new: Malayalam (മലയാളം) is now available in the language list - the whole interface, the built-in help and the welcome notices are translated, bringing the client to 57 languages
+
+2026-09-19 version 2.1.9-web.69:
 - bugfix: the welcome notice for registered players said ranking games start with blinds at 55 in Afrikaans, Filipino, Indonesian, Lithuanian, Turkish and Traditional Chinese - it is 50, as in every other language
 
 2026-09-19 version 2.1.9-web.68:
