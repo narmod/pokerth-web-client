@@ -1,4 +1,7 @@
-2026-09-19 version 2.1.9-web.66 (current series):
+2026-09-19 version 2.1.9-web.67 (current series):
+- new: Telugu (తెలుగు) is now available in the language list - the whole interface, the built-in help and the welcome notices are translated, bringing the client to 56 languages
+
+2026-09-19 version 2.1.9-web.66:
 - improvement: mobile zoom (magnifier) now behaves like the Android app - on your turn it shows your own area at once, on a new community card it moves to the board, it jumps to a player as soon as he acts, and after a showdown the next hand starts centred
 
 2026-09-19 version 2.1.9-web.65:
