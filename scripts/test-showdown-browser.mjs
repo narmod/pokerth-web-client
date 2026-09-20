@@ -153,7 +153,7 @@ async function runDevice(browser, name, descriptor) {
         assert.ok(n.actions >= 2 && !n.inShowdown, 'action bar is not live on my turn');
         assert.equal(n.popup, null, 'winner window is still open');
       });
-      await check('A: no JavaScript error', async () => assert.deepEqual(errors, []));
+      await check('A: no JavaScript error', async () => assert.equal(errors.length, 0, errors.join(' | ')));
     } catch (error) { reporter.fail('A aborted', String(error && error.message || error).split('\n')[0]); await shot(page, name, 'showdown-a-aborted'); }
     finally { await context.close(); }
   }
@@ -182,7 +182,7 @@ async function runDevice(browser, name, descriptor) {
         assert.equal(s.board.length, 5); assert.equal(seat(s, ids[1]).money, '$5,000'); assert.equal(seat(s, ME).money, '$1,500');
         geometry(s, 'side pot');
       });
-      await check('B: no JavaScript error', async () => assert.deepEqual(errors, []));
+      await check('B: no JavaScript error', async () => assert.equal(errors.length, 0, errors.join(' | ')));
     } catch (error) { reporter.fail('B aborted', String(error && error.message || error).split('\n')[0]); await shot(page, name, 'showdown-b-aborted'); }
     finally { await context.close(); }
   }
@@ -200,7 +200,7 @@ async function runDevice(browser, name, descriptor) {
         s.seats.filter((x) => !x.me).forEach((x) => assert.deepEqual(x.faces, [], `seat ${x.pid} shows cards although nobody had to`));
         geometry(s, 'no showdown');
       });
-      await check('C: no JavaScript error', async () => assert.deepEqual(errors, []));
+      await check('C: no JavaScript error', async () => assert.equal(errors.length, 0, errors.join(' | ')));
     } catch (error) { reporter.fail('C aborted', String(error && error.message || error).split('\n')[0]); await shot(page, name, 'showdown-c-aborted'); }
     finally { await context.close(); }
   }

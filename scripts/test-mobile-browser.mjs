@@ -175,7 +175,7 @@ async function runDevice(browser, name, descriptor) {
       assert.ok(Math.abs(off.me.left - ref.me.left) <= 1 && Math.abs(off.me.top - ref.me.top) <= 1 && Math.abs(off.me.width - ref.me.width) <= 1, `self box ${JSON.stringify(ref.me)} -> ${JSON.stringify(off.me)}`);
       off.plates.forEach((p, i) => assert.ok(Math.abs(p.left - ref.plates[i].left) <= 1 && Math.abs(p.top - ref.plates[i].top) <= 1, `seat ${i + 1} moved`));
     });
-    await check('no JavaScript error during the whole run', async () => { assert.deepEqual(errors, []); });
+    await check('no JavaScript error during the whole run', async () => { assert.equal(errors.length, 0, errors.join(' | ')); });
   } catch (error) {
     reporter.fail('run aborted', String(error && error.message || error).split('\n')[0]);
     await shot(page, name, 'aborted');
