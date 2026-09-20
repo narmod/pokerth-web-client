@@ -64,6 +64,10 @@ configuration:
 - seated: self box centred and clear of the action bar; spectator: no self
   box, no action button.
 
+A configuration that aborts (navigation, timeout) is retried once; layout findings
+never are. On GitHub the failures are grouped in one annotation per phone (GitHub
+keeps at most 10 error annotations per step).
+
 Narrow it while working on one case:
 
 ```sh

@@ -174,6 +174,16 @@ highlights below.
 
 ### Fixed
 
+- **Pucks over the neighbouring box in portrait** (`web.93`) — with 3 or 5
+  opponents (TL · TC · TR) the box scale only tests ring neighbours, so TL and
+  TR grow until they almost touch and both push their puck into the gap: BB on
+  the other box, D hidden under BB, the top-centre puck on TR's corner. New
+  `public/modules/game/puck-dodge.mjs`: after the seats are in the DOM, a seat
+  whose puck group collides (another box, a community card, another puck, the
+  zone edge) moves to the first free side of a short list - default side first,
+  so nothing changes where there is room; seat geometry untouched. Found by
+  `npm run test:table-sweep` (4 and 6 players, seated and spectator, every
+  portrait phone); unit test `scripts/test-puck-dodge.mjs`.
 - **Mobile magnifier: mini-board over the player's own cards** (`web.92`) — on
   short landscape phones (iPhone 15 landscape, 734×343) the magnified self box
   reaches the top of the zone and the centred mini-board sat on the hole cards.

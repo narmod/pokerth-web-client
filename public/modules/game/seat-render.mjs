@@ -20,6 +20,7 @@ import { fmtChips } from '../ui/fmt.mjs';
 import { chipSvg, dealerChipSvg, cardHtml } from '../ui/deck.mjs';
 import { autoScaleTable } from './seats.mjs';
 import { _officialSeatPix, _applyQmlBgCenter } from './layout.mjs';
+import { dodgePucks } from './puck-dodge.mjs';
 import { _timerRectSvg } from './turn-timer.mjs';
 import { _ccToFlag, _pthAvatarFor, _myAvChoice, _myAvImg, openPlayerInfoPopup } from '../ui/player-popup.mjs';
 import { openSeatMenu, closeSeatMenu, initSeatMenu } from '../ui/seat-menu.mjs';
@@ -1552,6 +1553,10 @@ function renderSeatsImmediate() {
       }
     }
   } catch (e) {}
+  // Pucks / side bet chips off the neighbouring boxes (web adjustment, see
+  // puck-dodge.mjs). Last DOM step: the seats, the self-box clamp and the
+  // community row are final here (seat editing returns long before this).
+  try { var _pd = dodgePucks(el, zone); if (window._seatDbg) window._seatDbg.puckDodge = _pd; } catch (e) {}
   S._lastPixPos = pixPos;
   // Pids alignés 1:1 sur pixPos (rotation + filtre « retirer les partis ») —
   // consommés par les animations pour ne viser que des sièges servis.

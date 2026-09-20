@@ -1,4 +1,7 @@
-2026-09-20 version 2.1.9-web.92 (current series):
+2026-09-20 version 2.1.9-web.93 (current series):
+- bugfix: on phones in portrait with 4 or 6 players, the dealer / small blind / big blind buttons no longer cover the neighbouring player's box or hide one another - they move below or beside their own box when there is no room
+
+2026-09-20 version 2.1.9-web.92:
 - bugfix: mobile magnifier in landscape on short phones - the small copy of the community cards no longer covers your own cards; it now sits beside your box
 
 2026-09-20 version 2.1.9-web.91:

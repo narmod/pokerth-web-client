@@ -96,25 +96,33 @@ async function runDevice(browser, name, descriptor) {
     const spectator = mode === 'spectator';
     for (const n of SEATS) {
       const label = `${mode} ${String(n).padStart(2)} players`;
-      const context = await browser.newContext({ ...descriptor, serviceWorkers: 'block' });
-      const page = await context.newPage();
-      const errors = [];
-      page.on('pageerror', (e) => errors.push(String(e && e.message || e)));
-      page.on('dialog', (d) => d.dismiss().catch(() => {}));
-      try {
-        await openTable(page, base, { seats: n, spectator, board: 'river', turn: 'first' });
-        // Let the deal / chip animations land: they do not move the layout, but
-        // the screenshots are meant to be looked at.
-        await page.waitForFunction(() => !document.querySelector('.fly-card, .fly-chip'), null, { timeout: 3000 }).catch(() => {});
-        const g = await measure(page);
-        await shot(page, name, `sweep-${mode}-${String(n).padStart(2, '0')}`);
-        const problems = audit(g, n, spectator).concat(errors.map((e) => 'JavaScript error: ' + e));
-        if (problems.length) reporter.fail(label, problems.join('\n      '));
-        else reporter.pass(label);
-      } catch (error) {
-        reporter.fail(label, 'aborted: ' + String(error && error.message || error).split('\n')[0]);
-        await shot(page, name, `sweep-${mode}-${String(n).padStart(2, '0')}-aborted`);
-      } finally { await context.close(); }
+      const tag = `sweep-${mode}-${String(n).padStart(2, '0')}`;
+      // A run that ABORTS (navigation, timeout) is retried once: that is the
+      // harness hiccuping, not a layout finding. Audit problems never retry.
+      for (let attempt = 1; attempt <= 2; attempt++) {
+        const context = await browser.newContext({ ...descriptor, serviceWorkers: 'block' });
+        const page = await context.newPage();
+        const errors = [];
+        page.on('pageerror', (e) => errors.push(String(e && e.message || e)));
+        page.on('dialog', (d) => d.dismiss().catch(() => {}));
+        try {
+          await openTable(page, base, { seats: n, spectator, board: 'river', turn: 'first' });
+          // Let the deal / chip animations land: they do not move the layout, but
+          // the screenshots are meant to be looked at.
+          await page.waitForFunction(() => !document.querySelector('.fly-card, .fly-chip'), null, { timeout: 3000 }).catch(() => {});
+          const g = await measure(page);
+          await shot(page, name, tag);
+          const problems = audit(g, n, spectator).concat(errors.map((e) => 'JavaScript error: ' + e));
+          if (problems.length) reporter.fail(label, problems.join('\n      '));
+          else reporter.pass(label);
+          attempt = 3;
+        } catch (error) {
+          if (attempt === 2) {
+            reporter.fail(label, 'aborted twice: ' + String(error && error.message || error).split('\n')[0]);
+            await shot(page, name, tag + '-aborted');
+          }
+        } finally { await context.close(); }
+      }
     }
   }
 }

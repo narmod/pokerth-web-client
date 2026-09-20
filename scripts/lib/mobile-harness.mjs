@@ -40,15 +40,21 @@ export async function startServer() {
 }
 
 // ── Reporter: console + GitHub annotations (visible on the run page and
-// through the check-runs API, without opening the log) ─────────────────────
+// through the check-runs API, without opening the log). GitHub keeps at most
+// 10 error annotations per step, so the failures are grouped: ONE annotation
+// per phone, listing every failed check of that phone. ─────────────────────
 export function createReporter() {
-  const r = { passed: 0, failed: 0, device: '' };
+  const r = { passed: 0, failed: 0, device: '', pending: [] };
   const clean = (v) => String(v).replace(/%/g, '%25').replace(/\r/g, '%0D').replace(/\n/g, '%0A');
-  r.annotate = (label, message) => {
-    if (!process.env.GITHUB_ACTIONS) return;
-    console.log(`::error title=${clean(r.device).replace(/,/g, '%2C').replace(/:/g, '%3A')}::${clean(label + ' - ' + message)}`);
+  r.flush = () => {
+    if (process.env.GITHUB_ACTIONS && r.pending.length) {
+      const body = r.pending.map((f) => '\u2717 ' + f).join('\n').slice(0, 3800);
+      console.log(`::error title=${clean(r.device + ' - ' + r.pending.length + ' failed').replace(/,/g, '%2C').replace(/:/g, '%3A')}::${clean(body)}`);
+    }
+    r.pending = [];
   };
-  r.fail = (label, message) => { r.failed++; console.log('  \u2717 ' + label + '\n      ' + message); r.annotate(label, message); };
+  r.fail = (label, message) => { r.failed++; console.log('  \u2717 ' + label + '\n      ' + message);
+    r.pending.push(label.replace(/\s+/g, ' ') + ': ' + String(message).replace(/\s*\n\s*/g, ' ; ')); };
   r.pass = (label) => { r.passed++; console.log('  \u2713 ' + label); };
   r.check = async (label, action) => {
     try { await action(); r.pass(label); }
@@ -191,6 +197,7 @@ export async function runPlan(title, reporter, runDevice, matrix = MATRIX) {
         const vp = devices[d.name].viewport;
         console.log(`\n${d.name} - ${vp.width}x${vp.height} @${devices[d.name].deviceScaleFactor}x`);
         await runDevice(browser, d.name, devices[d.name]);
+        reporter.flush();
       }
     } finally { await browser.close(); }
   }
