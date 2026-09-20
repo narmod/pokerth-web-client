@@ -59,8 +59,9 @@ highlights below.
   extraction/rebuild, parity check, wiring and a `\uXXXX`-aware language-count
   bump for the SEO tables. Replays the Uzbek rollout byte for byte (docs/tools
   only, no version bump).
-- **Burmese** (`my`, Myanmar script), full UI catalogue, help corpus and
-  guest/registered/LAN broadcast notices (`web.87`) — 64 languages total. Action
+- **Burmese** (`my`, Myanmar script), full UI catalogue, help corpus, SEO content
+  pages (incl. `/rules` and `/faq`) and guest/registered/LAN broadcast notices
+  (`web.87`–`88`) — 64 languages total. Action
   terms, street names and hand names stay in English, as in the other
   non-Latin catalogues; the language count is written in Myanmar digits in its
   own help corpus.
