@@ -174,6 +174,18 @@ highlights below.
 
 ### Fixed
 
+- **Text overflow on narrow phones, found by the new `test:i18n-overflow`**
+  (`web.97`) — (1) phone portrait: `Raise $2,990` was wider than its button in
+  every language at 360 px (last digit cut); the amount now sits on a second
+  line, as the QML client does in portrait (Bible §5.1) — the web only did so
+  on desktop; (2) the `Create a table` / `Privacy` screen title, centred
+  absolutely with `max-width: 60%`, was written across the forum and ranking
+  buttons in every language — below 560 px it joins the header flex flow, on
+  up to two lines; (3) the login footer (credits, Discord / site / GitHub),
+  pinned to the screen bottom, was covered by the tall Internet login card on a
+  360×780 phone — on phones it follows the card and the screen scrolls, the
+  card clears the 39 px header bar; (4) `<label>Password</label>` of the login
+  form had no `data-i18n` (key `passwordLabel` already in every catalogue).
 - **Safari follow-up of `web.94` / `web.92`** (`web.96`) — the WebKit CI run
   still failed the seated iPhone-landscape tables that Chromium passed: the
   diagnostics showed a 105 px action panel (86 in Chromium) — the quick-bet

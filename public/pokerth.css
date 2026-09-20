@@ -12794,3 +12794,45 @@ html[data-seat-struct="qml"] .seat-narrow .seat-name .seat-note-stars { font-siz
   .winner-overlay .winner-card .wc-stats { margin-bottom: 6px; }
   .winner-overlay .winner-card .winner-dismiss { position: sticky; bottom: 0; margin: 4px 0 0; padding: 9px 24px !important; box-shadow: 0 -6px 10px var(--modal-bg), 0 6px 0 var(--modal-bg); }
 }
+
+/* ── Phone portrait: action amount on its own line (web.97) ────────────────
+   Found by scripts/test-i18n-overflow.mjs: on a 360px phone "Raise $2,990" was
+   wider than its button in EVERY language (last digit cut, label off-centre).
+   The QML client writes the amount on a second line in portrait ("Call" /
+   "$40", Bible §5.1) - the web only did so on desktop. Standard Interface size
+   only: the larger sizes already have their own adaptive action row. */
+@media (max-width: 740px) and (orientation: portrait) {
+  :root:not([data-interface-size="large"]):not([data-interface-size="extra-large"]) #s-game .my-zone .act-buttons-row .btn-action { line-height: 1.05; white-space: normal; }
+  :root:not([data-interface-size="large"]):not([data-interface-size="extra-large"]) #s-game .my-zone .act-buttons-row .btn-action > b,
+  :root:not([data-interface-size="large"]):not([data-interface-size="extra-large"]) #s-game .my-zone .act-buttons-row .btn-action .raise-btn-amt { display: block; line-height: 1.05; }
+}
+
+/* ── Narrow phones: screen title in the header flow (web.97) ───────────────
+   Found by scripts/test-i18n-overflow.mjs. The "Create a table" / "Privacy"
+   title is centred absolutely with max-width 60% "so it never overlaps the
+   icons" - but with four icons on the right of a 360-390px header, 60% of the
+   width reaches well under them: the title was written across the forum and
+   ranking buttons in every language. Below 560px it joins the flex flow
+   between the back button and the icons, on up to two lines. */
+@media (max-width: 560px) {
+  #s-create .cp-title, #privacy-page .cp-title {
+    position: static; transform: none; max-width: none;
+    flex: 1 1 0; min-width: 0; margin: 0 6px; text-align: left;
+    white-space: normal; font-size: 0.95rem; line-height: 1.08;
+    display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden;
+  }
+  #s-create .cp-head-spacer, #privacy-page .cp-head-spacer { display: none; }
+}
+
+/* ── Login on small phones: the footer follows the card (web.97) ───────────
+   Found by scripts/test-i18n-overflow.mjs. The credits / Discord / GitHub
+   footer is pinned to the bottom of the screen; on a 360x780 phone the Internet
+   login card is tall enough to slide over it (in Russian or Tamil the
+   "Not registered yet?" link ended up on top of the hidden icons). On phones
+   the footer now sits in the flow under the card - the card stays centred in
+   the space that is left, and when there is none the screen simply scrolls. */
+@media (max-width: 560px) and (orientation: portrait) {
+  #s-connect { justify-content: flex-start; padding-top: 48px; }   /* 39px header bar: a tall card starts below it, not under it */
+  #s-connect > .card { margin-top: auto; margin-bottom: auto; flex: 0 0 auto; }
+  #s-connect > .connect-footer { position: static; flex: 0 0 auto; margin-top: 14px; padding-bottom: max(4px, env(safe-area-inset-bottom)); }
+}

@@ -88,10 +88,12 @@ export async function settle(page) {
 
 // ── Fixture WebSocket + a hand on the table ────────────────────────────────
 // options: seats (2-10 players at the table), spectator (I watch: none of the
-// seats is mine), board ('flop' | 'river'), turn ('me' | 'first').
+// seats is mine), board ('flop' | 'river'), turn ('me' | 'first'),
+// stopAt ('login': stop on the login screen, nothing sent; 'lobby': connect and
+// list the game, stop in the lobby - continue later with enterTable(page)).
 // Seated: my pid (42) is seat 0 and posts the small blind, ids[1] the big one.
 export async function openTable(page, base, options = {}) {
-  const { seats = 10, spectator = false, board = 'flop', turn = 'me' } = options;
+  const { seats = 10, spectator = false, board = 'flop', turn = 'me', stopAt = '' } = options;
   await page.goto(base, { waitUntil: 'domcontentloaded' });
   await page.waitForFunction(() => document.readyState === 'complete' && window.App
     && typeof window.App.connect === 'function' && window.PthState && document.querySelector('#s-connect .btn-primary'));
@@ -100,12 +102,16 @@ export async function openTable(page, base, options = {}) {
     (await import('/modules/net/session.mjs')).show('s-connect');
   });
   await page.locator('#s-connect.active').waitFor();
+  // The boot splash fades out over the login screen: wait until it is gone, or
+  // the first measurements / screenshots are taken through it.
+  await page.waitForFunction(() => { const b = document.getElementById('boot-splash'); if (!b) return true; const c = getComputedStyle(b); return c.display === 'none' || c.visibility === 'hidden' || parseFloat(c.opacity) < 0.02; }, null, { timeout: 8000 }).catch(() => {});
   // The first-run "local backup" banner (Chromium only: File System Access
   // API) sits over the third login card on a phone: dismiss it the way a
   // player would, with its last button ("Later").
   await page.waitForTimeout(600);
   const later = page.locator('#bak-restore-banner button').last();
   if (await later.count()) { try { await later.tap({ timeout: 2000 }); } catch (_e) {} }
+  if (stopAt === 'login') return [];
   await page.locator('.login-card').nth(2).click();
   await page.locator('#nick').fill('MobileTester');
   await page.evaluate(() => {
@@ -127,7 +133,7 @@ export async function openTable(page, base, options = {}) {
   await page.locator('.btn-primary[data-i18n="connect"]').click();
   await page.waitForFunction(() => window.WebSocket.instance && typeof window.WebSocket.instance.onmessage === 'function');
   await page.waitForTimeout(300);
-  const ids = await page.evaluate(async ({ count, spectator, board, turn, ME, GAME }) => {
+  const ids = await page.evaluate(async ({ count, spectator, ME, GAME }) => {
     const { Proto } = await import('/modules/net/proto.mjs');
     const { MSG } = await import('/modules/net/messages.mjs');
     const socket = window.WebSocket.instance;
@@ -146,6 +152,18 @@ export async function openTable(page, base, options = {}) {
     const gameInfo = Proto.encode([[1, 2, `Mobile ${count}-seat table`], [2, 0, 1], [3, 0, 10],
       [4, 0, 1], [5, 0, 7], [10, 0, 5], [11, 0, 30], [12, 0, 10], [13, 0, 3000]]);
     socket.receive(envelope(MSG.T.GameListNew, 14, [[1, 0, GAME], [2, 0, 1], [3, 0, 0], ...ids.map((pid) => [4, 0, pid]), [5, 0, ids[1]], [6, 2, gameInfo]]));
+    return ids;
+  }, { count: seats, spectator, ME, GAME });
+  if (stopAt === 'lobby') { await page.waitForTimeout(400); return ids; }
+  await enterTable(page, { seats, spectator, board, turn });
+  return ids;
+}
+
+// Second half of openTable: join (or watch) the listed game and deal the hand.
+export async function enterTable(page, options = {}) {
+  const { seats = 10, spectator = false, board = 'flop', turn = 'me' } = options;
+  await page.evaluate(async ({ spectator, board, turn, ME, GAME }) => {
+    const { Proto, MSG, socket, envelope, ids } = window.__fx;
     if (spectator) { await new Promise((r) => setTimeout(r, 50)); window.App.spectateGame(GAME); }
     socket.receive(envelope(MSG.T.JoinGameAck, 25, [[1, 0, GAME], [2, 0, 0]]));
     socket.receive(envelope(MSG.T.GameStartInitial, 39, [[1, 0, GAME], [2, 0, ids[1]], [3, 2, new Uint8Array(ids)]]));
@@ -159,12 +177,10 @@ export async function openTable(page, base, options = {}) {
     }
     const first = turn === 'me' && !spectator ? ME : ids[spectator ? 0 : 1];
     socket.receive(envelope(MSG.T.PlayersTurn, 42, [[1, 0, GAME], [2, 0, first], [3, 0, board === 'river' ? 3 : 1]]));
-    return ids;
-  }, { count: seats, spectator, board, turn, ME, GAME });
+  }, { spectator, board, turn, ME, GAME });
   await page.locator('#s-game.active').waitFor();
   await page.waitForFunction((count) => document.querySelectorAll('#g-seats .seat:not(.seat-ghost)').length === count, seats);
   await settle(page);
-  return ids;
 }
 export const turnTo = (page, pid) => page.evaluate((p) => { const f = window.__fx;
   f.socket.receive(f.envelope(f.MSG.T.PlayersTurn, 42, [[1, 0, f.GAME], [2, 0, p], [3, 0, 1]])); }, pid);

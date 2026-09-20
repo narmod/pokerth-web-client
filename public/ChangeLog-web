@@ -1,4 +1,10 @@
-2026-09-20 version 2.1.9-web.96 (current series):
+2026-09-20 version 2.1.9-web.97 (current series):
+- bugfix: small phones in portrait - "Raise $2,990" no longer runs out of its button: the amount is written on a second line under Call / Raise, as in the official client
+- bugfix: small phones - the "Create a table" title is no longer written across the header icons
+- bugfix: small phones - on the Internet login form the Discord / PokerTH / GitHub links are no longer hidden under the login card; they follow it and the screen scrolls if needed
+- bugfix: the "Password" label of the login form is now translated
+
+2026-09-20 version 2.1.9-web.96:
 - bugfix: iPhone in landscape (Safari) - the one-line bet controls introduced in web.94 fell back to two lines in Safari, so the table was still cramped; the line can no longer wrap
 - bugfix: mobile magnifier on slow devices - the small copy of the community cards could still land on your own cards; it now waits for the view to finish moving
 

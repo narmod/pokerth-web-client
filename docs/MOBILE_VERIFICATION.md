@@ -97,6 +97,33 @@ landscape - three scenarios, about 35 s per phone:
 - **C, no showdown** (5 players, everybody folds): winner marked and paid, no
   opponent card revealed.
 
+## Text overflow in every language
+
+`npm run test:i18n-overflow` (`scripts/test-i18n-overflow.mjs`) switches the
+interface through **all the languages** on iPhone SE (375 px), Galaxy S24
+(360 px) and iPhone 15 landscape, on five screens: mode picker, login form,
+lobby, create table, and the game table on my turn facing a big bet
+(`Call $1,500` / `Raise $2,990`, the longest labels). One page per phone, the
+language is switched in place: about 4 minutes per phone. Per language:
+
+- **clipped** - a label wider / taller than its box with hidden overflow (an
+  ellipsis counts on buttons, tabs and titles, not on secondary descriptions);
+- **spills** - text running out of its button;
+- **off-screen** - a label partly beyond the screen edge (panes of the lobby
+  pager that sit fully off-screen are ignored);
+- **overlap** - two controls, or a label and a control it does not belong to,
+  on top of each other (wrapped inline links are compared line by line, clipped
+  text by what is actually painted);
+- **page overflow** - the page scrolls sideways.
+
+A problem present in every language is reported once as `ALL languages`
+(structural); the others list their languages and the worst case. A screenshot
+is kept per failing language x screen. Narrow it:
+
+```sh
+PTH_DEVICES="Galaxy S24" PTH_LANGS="de,fi,ar" PTH_SCREENS="game,login" npm run test:i18n-overflow
+```
+
 ## Limits - what still needs a real phone
 
 Playwright WebKit is the Safari engine, not Safari on an iPhone, and Chromium
