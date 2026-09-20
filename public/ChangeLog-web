@@ -1,4 +1,7 @@
-2026-09-20 version 2.1.9-web.90 (current series):
+2026-09-20 version 2.1.9-web.91 (current series):
+- new: mobile magnifier - on your turn, when the community cards are out of view, a small copy of them appears at the top of the table so you can always read the board; tap it to jump to the cards and back. It follows your deck, Interface size and High contrast settings
+
+2026-09-20 version 2.1.9-web.90:
 - bugfix: mobile magnifier - on your turn your own box is now always centred in view; it could end up off-screen on the left or right after the view had followed a player on the side of the table
 
 2026-09-20 version 2.1.9-web.89:

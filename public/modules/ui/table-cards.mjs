@@ -180,6 +180,8 @@ function renderComm(animate, isRiver) {
   }
 
   renderHandStrength();
+  // Loupe mini-board mirrors the board (modules/ui/mini-board.mjs).
+  try { if (window._miniBoardSync) window._miniBoardSync(); } catch (e) {}
 }
 
 export { _setCanShow, _ownCardsHidden, renderMyCards, animateCardDeal,

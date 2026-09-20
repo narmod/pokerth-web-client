@@ -17,6 +17,19 @@ highlights below.
 
 ### Added
 
+- **Mobile magnifier: mini-board on "my turn"** (`web.91`) — web addition, not
+  in the QML client. The QML "my turn" pan shows the lower half of the table,
+  so the community cards sit on the upper edge with their index corners cut
+  off. Pan and ×2 factor stay untouched; instead a small fixed copy of the
+  board (70 % of the normal card size, 78 % with larger Interface sizes) is
+  shown at the top of the table zone, outside the zoom layer, only while the
+  loupe is active, it is the player's turn and a dealt card is out of view.
+  Tap toggles the view between the real cards and the self box
+  (`_loupeToggleBoard`). New `public/modules/ui/mini-board.mjs`; cards come from
+  `cardToHtml` in a `.comm-row` context, so deck, four-colour suits, Interface
+  size and High contrast apply as is; `aria-label` reads the board aloud
+  (existing `communityCards` key — no new UI string). Help updated in all 64
+  languages.
 - **Offline mode: bot text banter** (`web.54`) — bots occasionally send a real (non-`[R]`) chat line matched to their archetype voice (rock/tag/lag/station/maniac) at key moments (table greet, big win, bad beat, uncontested steal, bust, tournament win/runner-up). New `public/modules/offline/banter.mjs` (key pools only, no text); i18n keys `bnt<Archetype><Kind><n>` shipped in `en.mjs`/`fr.mjs` first (`web.54`), then translated into the remaining 53 interface languages (`web.55`) — 140 keys per catalogue, parity-checked against English. Independent toggle `pth_bot_banter` (default on), capped at one line per hand (bypassed for the table-greet and end-of-tournament moments).
 - **`/live` one expanded game row at a time** (`web.47`, requested by sp0ck)
   — expanding a table's detail panel now closes whichever other one was

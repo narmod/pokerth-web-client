@@ -96,6 +96,14 @@ ok(L.pendSeat === null && L.followSeat === 'self' && L.panX === 0 && L.panY === 
 // nominal renderSeats transform, never a counter-transform pinning it at x1.
 ok(me.style.transform === 'translate(-50%,-50%) scale(1.0000)' && me.style.left === '200.0px' && me.style.top === '260.0px',
   'self box lives in the zoom layer: nominal transform, no counter-transform');
+// Mini-board tap (web addition): toggles the view between the community cards
+// and the self box zone; 'board' is never mistaken for a ring seat.
+ok(typeof window._loupeToggleBoard === 'function', 'mini-board toggle hook is exposed');
+window._loupeToggleBoard();
+ok(L.followSeat === 'board' && L.panX === 0 && L.panY === 2 * (150 - 120) && timers.length === 0,
+  'mini-board tap: view goes to the community cards (w/2, communityCenterY), planned pan dropped');
+window._loupeToggleBoard();
+ok(L.followSeat === 'self' && L.panX === 0 && L.panY === -150, 'second tap: back to the self box zone');
 timers.length = 0;
 
 // ── New street (QML onBoardCardsChanged) ───────────────────────────────────

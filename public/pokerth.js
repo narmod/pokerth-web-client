@@ -9104,6 +9104,9 @@ function _loupeApply(anim) {
   if (b) { b.setAttribute('aria-pressed', _loupe.on ? 'true' : 'false');
            b.classList.toggle('active', _loupe.on); }
   _loupeAnchorSelf();
+  // Mini-board (web addition, modules/ui/mini-board.mjs): every pan / toggle
+  // can move the real community cards in or out of view.
+  try { if (window._miniBoardSync) window._miniBoardSync(); } catch (e) {}
 }
 function toggleLoupe() {
   _loupe.on = !_loupe.on;
@@ -9260,11 +9263,25 @@ function _loupeReanchor() {
   _loupe.followSeat = null;
   _loupePanToPoint(z.clientWidth / 2, _loupeCommY());
 }
+// Mini-board tap (web addition): toggle the view between the community cards
+// and the self box zone. 'board' is no ring seat: _loupeScheduleFollow never
+// matches it and _loupeReanchor falls back to the table centre, as intended.
+function _loupeToggleBoard() {
+  if (!_loupeActive() || _loupe.drag) return;
+  if (_loupe.followSeat === 'board') { _loupeMyTurn(); return; }
+  var z = _loupeZone(); if (!z) return;
+  _loupeStopFollow();
+  _loupe.pendSeat = null;
+  _loupePanToPoint(z.clientWidth / 2, _loupeCommY());
+  _loupe.followSeat = 'board';
+}
+window._loupeToggleBoard = _loupeToggleBoard;
 window._loupeReanchor = _loupeReanchor;
 window._loupeMyTurn = _loupeMyTurn;
 window._loupeBoardCards = _loupeBoardCards;
 window._loupeOnRender = function (activeEl, showdown, timerTot) {
   _loupeBtnSync();   // visibilité/position réévaluées à chaque rendu de table
+  try { if (window._miniBoardSync) window._miniBoardSync(); } catch (e) {}   // turn / action state may have changed
   // The ring count is the one criterion that changes on every redistribution
   // (parity with onRingCountChanged). Tracked even while the loupe is off, so
   // the baseline is right when it gets switched on. Deferred (~ Qt.callLater):
@@ -11825,7 +11842,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.9-web.90'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.9-web.91'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif ou la palette High contrast
    (Android, Safari, iOS standalone récent). Lit --theme-color et met

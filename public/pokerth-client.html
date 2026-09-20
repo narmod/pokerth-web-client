@@ -2374,6 +2374,11 @@ function _processAvatarFile(file) {
       <!-- Seats overlay: full zone, pixel-positioned by JS -->
       <div id="g-seats" style="position:absolute;inset:0;pointer-events:none;overflow:visible;z-index:5"></div>
       </div><!-- /g-zoom-layer -->
+      <!-- Loupe mini-board (web addition, modules/ui/mini-board.mjs): fixed copy
+           of the community cards, OUTSIDE the zoom layer, shown only when it is
+           my turn under the loupe and the real cards are out of view. Tap =
+           toggle the view between the real cards and the self box. -->
+      <button type="button" id="g-miniboard" class="mini-board" hidden aria-label="Community cards"><span class="comm-row mb-row" aria-hidden="true"></span></button>
     </div>
     <!-- MY SEAT ROW -->
     <!-- PLAYER BAR -->
@@ -2688,6 +2693,7 @@ function _processAvatarFile(file) {
 <script type="module" src="modules/ui/back-guard.mjs"></script>
 <script type="module" src="modules/ui/z-order.mjs"></script>
 <script type="module" src="modules/ui/invite.mjs"></script>
+<script type="module" src="modules/ui/mini-board.mjs"></script>
 <!-- Quit-game confirmation dialog: 2 buttons (Quit / Cancel).
      Shown when the user clicks the ✕ button in the header from inside
      a game. Driven by App.confirmLeaveGame() (open) and

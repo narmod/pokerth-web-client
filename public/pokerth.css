@@ -8363,6 +8363,38 @@ body.has-keyboard .act-key { display: inline-block; }
 #g-zoom-toggle.loupe-avail.active {
   background: var(--accent, #E3C800); color: #101010;
 }
+/* Loupe mini-board (web addition, modules/ui/mini-board.mjs) : copie fixe des
+   cartes communes, HORS calque zoomé, affichée seulement à mon tour sous loupe
+   quand les vraies cartes sont hors vue. La taille des cartes vient de
+   --comm-scale posé par le module (règles .comm-row .pk existantes : deck,
+   4 couleurs, taille d'interface) ; ici uniquement la pastille. */
+#g-miniboard {
+  position: absolute; top: 8px; left: 50%; transform: translateX(-50%);
+  z-index: 30; margin: 0; padding: 6px 8px; min-width: 0; min-height: 0;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.22);
+  background: rgba(8, 14, 10, 0.78); color: inherit; font: inherit;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.45);
+  -webkit-backdrop-filter: blur(3px); backdrop-filter: blur(3px);
+  cursor: pointer; touch-action: manipulation; -webkit-tap-highlight-color: transparent;
+}
+#g-miniboard[hidden] { display: none !important; }
+#g-miniboard .mb-row {
+  position: static; top: auto; left: auto; transform: none;
+  pointer-events: none;
+}
+#g-miniboard .mb-row .pk { animation: none !important; transition: none !important; opacity: 1 !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5); flex: none; }
+/* Tailles d'interface > standard : les cartes communes y sont pilotées par la
+   police (em), pas par --comm-scale -> on applique le facteur à la police. */
+:root[data-interface-size]:not([data-interface-size="standard"]) #s-game #g-miniboard .comm-row .pk,
+:root[data-adaptive-play="constrained-extra-large"] #s-game #g-miniboard .comm-row .pk {
+  font-size: calc(var(--active-community-font-base) * var(--active-play-scale) * var(--comm-scale, 1));
+}
+:root[data-high-contrast="true"] #g-miniboard {
+  background: var(--hc-bg) !important; border: 2px solid var(--hc-text) !important;
+  -webkit-backdrop-filter: none; backdrop-filter: none;
+}
 /* Couche zoomable (parité zoomLayer QML) : mêmes règles de centrage que
    .table-zone ; le transform est posé par _loupeApply (transition 220ms
    OutCubic hors drag). */
