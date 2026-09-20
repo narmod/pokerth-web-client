@@ -1,4 +1,7 @@
-2026-09-20 version 2.1.9-web.88 (current series):
+2026-09-20 version 2.1.9-web.89 (current series):
+- bugfix: mobile magnifier - your own box is now magnified and moves with the rest of the table, exactly like the official client, instead of floating at normal size over the zoomed seats (odd overlaps in portrait); on your turn the view shows your box enlarged
+
+2026-09-20 version 2.1.9-web.88:
 - new: the rules, FAQ, poker hands, how-to-play and glossary pages are now available in Burmese too
 
 2026-09-20 version 2.1.9-web.87:

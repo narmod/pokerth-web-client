@@ -8955,12 +8955,12 @@ function applyTableZoom() {
 // sieges (#g-seats) sont mis a l'echelle autour du centre du feutre. Le zoom
 // effectif est plafonne (mesure des sieges) pour que TOUTE la table reste dans
 // la zone -> rien hors-ecran. renderSeats reste neutre (zoom gere ici).
-// Parite QML (bible §3.4) : le zoomLayer officiel = adversaires + cartes communes ;
-// la SELF-BOX reste fixe. #g-seats etant scale en bloc, on contre-transforme la
-// self : position p' telle que pan + c + eff*(p'-c) = position de base, et
-// echelle base/eff. A eff<=1 on restaure simplement les valeurs de base.
+// Zoom +/- (placement classique/custom, PAS la loupe QML) : #g-seats etant
+// scale en bloc, on contre-transforme la self : position p' telle que
+// pan + c + eff*(p'-c) = position de base. A eff<=1 on restaure les valeurs de base.
 function _applySelfZoomCounter() {
-  // Loupe QML active -> c'est _loupeAnchorSelf qui ancre la self-box.
+  // Loupe QML active -> la self-box vit DANS le calque zoome (parite QML,
+  // voir _loupeAnchorSelf) : aucune contre-transformation.
   if ((window._loupeK || 1) > 1.001) return;
   // Zoom "grossir sur place" : ma self-box GROSSIT avec le zoom global, mais
   // sa position de BASE ne change PAS (ancree en bas-centre, jamais masquee
@@ -9050,7 +9050,8 @@ function _applyZoomTransforms() {
 // ── Loupe QML (port de tableZone.zoomActive / zoomContent, source 2.1.3) ──
 // Facteur fixe ×2.0 sur #g-zoom-layer (transformOrigin 0,0 ; x/y =
 // (1−k)·zone/2 + pan) ; clip de la zone quand actif ; pan au pointeur ;
-// transition 220 ms OutCubic hors drag. Self/action bar/fond : hors effet.
+// transition 220 ms OutCubic hors drag. Action bar/fond : hors effet ; la
+// self-box est DANS le calque (zoomee et panee avec le reste).
 var _loupe = { on:false, k:2.0, panX:0, panY:0, susp:false, drag:false,
                pendSeat:null,     // planned pan seat, timer running (QML _pendingFollowSeat)
                followSeat:null,   // seat already panned to: pid | 'self' | null (QML _followedSeat)
@@ -9066,39 +9067,25 @@ function _loupeClamp() {
   if (_loupe.panY >  mY) _loupe.panY =  mY;
   if (_loupe.panY < -mY) _loupe.panY = -mY;
 }
-// Parite QML bible §3.5 : le zoomLayer ne contient QUE les adversaires et les
-// cartes communes — « self-box, action bar et fond restent fixes ». Cote web la
-// barre d'action (#g-actions) et mes cartes (#g-myseat-cards) sont deja hors
-// couche, mais la self-box vit dans #g-seats, donc DEDANS : sans compensation
-// elle grossissait ×2 et sortait de l'ecran des que le pan suivait un
-// adversaire. On la contre-transforme pour qu'elle garde sa position ET sa
-// taille de base, ancree en bas-centre comme dans le client officiel.
-function _loupeAnchorSelf(anim) {
+// Parite QML (DELTA 2.1.9 §3.5, GamePage.qml : zoomLayer -> zoomContent ->
+// selfBox, « selfBox is INSIDE the zoomable layer now », deja vrai en 2.1.4) :
+// la self-box est zoomee x2 et panee AVEC le reste ; seuls l'action bar et le
+// fond restent hors calque. L'ancienne Bible (§3.5 « self-box fixe ») etait
+// fausse : le web contre-transformait la self pour la figer a l'echelle 1, ce
+// qui la faisait flotter au milieu d'un anneau x2 (chevauchements en portrait,
+// et pan « mon tour » sans self agrandie). Desormais elle garde simplement son
+// transform nominal de renderSeats ; ce helper ne fait plus que retirer un
+// eventuel reliquat de contre-transformation.
+function _loupeAnchorSelf() {
   var me = document.querySelector('#g-seats .seat.me');
   if (!me || !me.dataset.baseTop) return;
   var bs = parseFloat(me.dataset.baseScale) || 1;
   var bl = parseFloat(me.dataset.baseLeft), bt = parseFloat(me.dataset.baseTop);
   if (isNaN(bl) || isNaN(bt)) return;
-  var k = window._loupeK || 1;
-  me.style.transition = (anim === false || _loupe.drag) ? 'none'
-    : 'transform 220ms cubic-bezier(0.215, 0.61, 0.355, 1)';
+  me.style.transition = '';
   me.style.left = bl.toFixed(1) + 'px';
   me.style.top  = bt.toFixed(1) + 'px';
-  if (k <= 1.001) {   // loupe eteinte : transform nominal de renderSeats
-    me.style.transform = 'translate(-50%,-50%) scale(' + bs.toFixed(4) + ')';
-    return;
-  }
-  var z = _loupeZone(); if (!z) return;
-  // Le layer applique translate(t) scale(k) avec transform-origin 0 0 : un
-  // point local p atterrit en k·p + t. On cherche le decalage local d tel que
-  // k·(p + d) + t = p, soit d = p·(1 − k)/k − t/k. L'echelle propre passe a
-  // bs/k pour que le ×k du layer redonne exactement bs a l'ecran.
-  var tx = (1 - k) * z.clientWidth  / 2 + _loupe.panX;
-  var ty = (1 - k) * z.clientHeight / 2 + _loupe.panY;
-  me.style.transform =
-    'translate(' + (bl * (1 - k) / k - tx / k).toFixed(1) + 'px,'
-                 + (bt * (1 - k) / k - ty / k).toFixed(1) + 'px) '
-    + 'translate(-50%,-50%) scale(' + (bs / k).toFixed(4) + ')';
+  me.style.transform = 'translate(-50%,-50%) scale(' + bs.toFixed(4) + ')';
 }
 function _loupeApply(anim) {
   var el = document.getElementById('g-zoom-layer'), z = _loupeZone();
@@ -9116,7 +9103,7 @@ function _loupeApply(anim) {
   var b = document.getElementById('g-zoom-toggle');
   if (b) { b.setAttribute('aria-pressed', _loupe.on ? 'true' : 'false');
            b.classList.toggle('active', _loupe.on); }
-  _loupeAnchorSelf(anim);
+  _loupeAnchorSelf();
 }
 function toggleLoupe() {
   _loupe.on = !_loupe.on;
@@ -9278,7 +9265,6 @@ window._loupeMyTurn = _loupeMyTurn;
 window._loupeBoardCards = _loupeBoardCards;
 window._loupeOnRender = function (activeEl, showdown, timerTot) {
   _loupeBtnSync();   // visibilité/position réévaluées à chaque rendu de table
-  _loupeAnchorSelf(false);   // #g-seats vient d'etre recree : re-ancrer la self
   // The ring count is the one criterion that changes on every redistribution
   // (parity with onRingCountChanged). Tracked even while the loupe is off, so
   // the baseline is right when it gets switched on. Deferred (~ Qt.callLater):
@@ -11839,7 +11825,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.9-web.88'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.9-web.89'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif ou la palette High contrast
    (Android, Safari, iOS standalone récent). Lit --theme-color et met

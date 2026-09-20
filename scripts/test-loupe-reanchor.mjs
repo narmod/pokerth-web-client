@@ -91,6 +91,11 @@ render(seats[12], false, 8);           // a pan to 12 is pending...
 window._loupeMyTurn();                 // ...and it is my turn
 ok(L.pendSeat === null && L.followSeat === 'self' && L.panX === 0 && L.panY === -150,
   'my turn: planned pan dropped, self box zone shown at once (0,-150)');
+// QML parity (GamePage.qml: selfBox is INSIDE the zoomable layer): under the
+// loupe the self box is magnified and panned with the ring - it must keep the
+// nominal renderSeats transform, never a counter-transform pinning it at x1.
+ok(me.style.transform === 'translate(-50%,-50%) scale(1.0000)' && me.style.left === '200.0px' && me.style.top === '260.0px',
+  'self box lives in the zoom layer: nominal transform, no counter-transform');
 timers.length = 0;
 
 // ── New street (QML onBoardCardsChanged) ───────────────────────────────────

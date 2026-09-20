@@ -161,6 +161,14 @@ highlights below.
 
 ### Fixed
 
+- **Mobile magnifier: self box inside the zoom layer** (`web.89`) — QML parity
+  fix. The official client keeps the self box *inside* `zoomContent`
+  (`GamePage.qml`, already true in 2.1.4); the web client counter-transformed
+  it to stay pinned at ×1 (from an inaccurate early reference), so it floated
+  over a ×2 ring — odd overlaps in portrait, and the "my turn" pan showed no
+  enlarged self box. The counter-transform is gone: the self box is magnified
+  and panned with the ring; only the action bar stays fixed. Help text updated
+  in all 64 languages; `scripts/test-loupe-reanchor.mjs` asserts it.
 - **`es-419`: one string escaped the derivation** (`web.84`) — `timeoutWarnHint`
   is stored with `\uXXXX` escapes in `es.mjs`, so the source-level substitution
   missed it. The rule list now lives in `scripts/es-419-rules.mjs` and

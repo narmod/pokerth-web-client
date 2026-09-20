@@ -134,7 +134,7 @@ export const help = {
         { id: "zoom",
           t: "Aðdráttur borðs (símar)",
           b: [
-            "Á litlum skjám draga stækkunarglershnapparnir borðið að (2×) og þú getur fært það til með fingri — þinn eigin reitur og aðgerðastikan haldast föst. Sýnin fylgir virka sætinu sjálfkrafa og dregur aftur frá í uppgjöri til að sýna allt borðið. Hægt er að slökkva á þessu í ítarlegum valkostum."],
+            "Á litlum skjám draga stækkunarglershnapparnir borðið að (2×) og þú getur fært það til með fingri — aðeins aðgerðastikan helst föst; þinn eigin reitur er líka stækkaður og sýnin fer aftur að honum þegar þú átt leik. Sýnin fylgir virka sætinu sjálfkrafa og dregur aftur frá í uppgjöri til að sýna allt borðið. Hægt er að slökkva á þessu í ítarlegum valkostum."],
           note: "Í símum og spjaldtölvum er klípuaðdráttur vafrans sjálfs sjálfgefið óvirkur svo aðdráttarbending í miðri hönd geti ekki virkjast af slysni; kveiktu aftur á honum í Ítarlegir valkostir → Notendaviðmót ef þú þarft á honum að halda." },
         { id: "protections",
           t: "Gægjuvörn og vörn gegn Call af slysni",

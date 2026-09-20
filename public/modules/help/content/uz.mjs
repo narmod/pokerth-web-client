@@ -134,7 +134,7 @@ export const help = {
         { id: "zoom",
           t: "Stol masshtabi (telefonlar)",
           b: [
-            "Kichik ekranlarda lupa tugmalari stolni kattalashtiradi (2×) va siz uni barmoq bilan surishingiz mumkin — oʻz qutingiz va harakatlar paneli joyida qoladi. Koʻrinish avtomatik ravishda faol oʻringa ergashadi va shoudaunda umumiy koʻrinish uchun yana kichrayadi. Buni Kengaytirilgan sozlamalarda oʻchirish mumkin."],
+            "Kichik ekranlarda lupa tugmalari stolni kattalashtiradi (2×) va siz uni barmoq bilan surishingiz mumkin — faqat harakatlar paneli joyida qoladi; oʻz qutingiz ham kattalashadi va navbat sizga kelganda koʻrinish unga qaytadi. Koʻrinish avtomatik ravishda faol oʻringa ergashadi va shoudaunda umumiy koʻrinish uchun yana kichrayadi. Buni Kengaytirilgan sozlamalarda oʻchirish mumkin."],
           note: "Telefon va planshetlarda brauzerning oʻz ikki barmoqli masshtabi standart holatda bloklangan, shunda masshtab imo-ishorasi qoʻl oʻrtasida tasodifan ishga tushmaydi; xohlasangiz, uni Kengaytirilgan sozlamalar → Foydalanuvchi interfeysi boʻlimida qayta yoqing." },
         { id: "protections",
           t: "Moʻralashdan va tasodifiy call’dan himoya",
