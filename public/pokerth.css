@@ -12770,13 +12770,17 @@ html[data-seat-struct="qml"] .seat-narrow .seat-name .seat-note-stars { font-siz
        back to its own line - the panel stayed 105px high (86 in Chrome) and the
        table kept overlapping. A grid cannot wrap: the right column takes what
        its controls need, the slider takes the rest. */
-    display: grid !important; grid-template-columns: minmax(0, 1fr) auto !important;
+    display: grid !important; grid-template-columns: minmax(170px, 1fr) auto !important;   /* 170 = amount 78 + gap + a usable slider: never squeezed under the quick bets */
     grid-template-areas: "bet mid" "btn btn" !important; align-items: center !important;
     max-width: min(620px, 100%) !important; padding: 4px 10px 5px !important; gap: 3px 10px !important;
   }
   :root:not([data-interface-size="large"]):not([data-interface-size="extra-large"]) #s-game .my-zone .action-grid > .bet-row { grid-area: bet; min-width: 0; }
   :root:not([data-interface-size="large"]):not([data-interface-size="extra-large"]) #s-game .my-zone .action-grid > .mid-row { grid-area: mid; min-width: 0; }
-  :root:not([data-interface-size="large"]):not([data-interface-size="extra-large"]) #s-game .my-zone .action-grid > .mid-row .mode-sel-wrap { margin-left: 4px; flex: 0 0 104px; }
+  /* The mode list is the only part whose width follows the language: in Safari a long label
+     (Estonian, Khmer, Latvian, Macedonian) widened the whole right column until the slider slid
+     under 1/3 (web.98, found by test:i18n-overflow on WebKit). Fixed width, label ellipsised. */
+  :root:not([data-interface-size="large"]):not([data-interface-size="extra-large"]) #s-game .my-zone .action-grid > .mid-row .mode-sel-wrap { margin-left: 4px; flex: 0 0 104px !important; width: 104px; min-width: 0; max-width: 104px; overflow: hidden; }
+  :root:not([data-interface-size="large"]):not([data-interface-size="extra-large"]) #s-game .my-zone .action-grid > .mid-row .mode-sel-wrap select { width: 100%; min-width: 0; max-width: 100%; text-overflow: ellipsis; }
   :root:not([data-interface-size="large"]):not([data-interface-size="extra-large"]) #s-game .my-zone .action-grid > .act-buttons-row { grid-area: btn; }
   /* Keypad open hides the two other rows: the amount row takes the whole line. */
   :root:not([data-interface-size="large"]):not([data-interface-size="extra-large"]) #s-game .my-zone .action-grid.kp-open > .bet-row { grid-column: 1 / -1; }

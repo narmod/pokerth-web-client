@@ -174,6 +174,11 @@ highlights below.
 
 ### Fixed
 
+- **Short-landscape bet panel, language-independent** (`web.98`) — first WebKit
+  run of `test:i18n-overflow`: in et / km / lv / mk the play-mode `<select>`
+  label is long, Safari sized the grid's `auto` column on it and the slider slid
+  under the 1/3 button. The select wrapper has a fixed 104 px width (label
+  ellipsised) and the left column a 170 px floor.
 - **Text overflow on narrow phones, found by the new `test:i18n-overflow`**
   (`web.97`) — (1) phone portrait: `Raise $2,990` was wider than its button in
   every language at 360 px (last digit cut); the amount now sits on a second

@@ -1,4 +1,7 @@
-2026-09-20 version 2.1.9-web.97 (current series):
+2026-09-20 version 2.1.9-web.98 (current series):
+- bugfix: iPhone in landscape (Safari) - in Estonian, Khmer, Latvian and Macedonian the bet slider slid under the 1/3 button; the play-mode list now keeps a fixed width
+
+2026-09-20 version 2.1.9-web.97:
 - bugfix: small phones in portrait - "Raise $2,990" no longer runs out of its button: the amount is written on a second line under Call / Raise, as in the official client
 - bugfix: small phones - the "Create a table" title is no longer written across the header icons
 - bugfix: small phones - on the Internet login form the Discord / PokerTH / GitHub links are no longer hidden under the login card; they follow it and the screen scrolls if needed
