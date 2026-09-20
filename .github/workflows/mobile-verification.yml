@@ -19,6 +19,7 @@ on:
       - 'scripts/test-table-sweep.mjs'
       - 'scripts/test-showdown-browser.mjs'
       - 'scripts/test-i18n-overflow.mjs'
+      - 'scripts/test-pwa-browser.mjs'
       - 'scripts/lib/mobile-harness.mjs'
       - '.github/workflows/mobile-verification.yml'
   pull_request:
@@ -64,6 +65,10 @@ jobs:
       - name: End of hand (showdown, all-in, side pot, next hand)
         if: always()
         run: npm run test:showdown-browser
+
+      - name: PWA (service worker, offline boot, update banner, manifest)
+        if: always()
+        run: npm run test:pwa-browser
 
       - name: Upload screenshots
         if: always()

@@ -22,12 +22,21 @@ export const SHOTS = process.env.PTH_SHOTS !== '0';
 const SHOT_DIR = join(process.cwd(), 'test-artifacts', 'mobile');
 export const ME = 42, GAME = 303;
 
+// The returned state also drives what the PWA test needs: `ver` (value served
+// by /__ver, the deploy stamp the update banner polls), `down` (true = the origin
+// is unreachable: every connection is reset, for the page AND for the service
+// worker - browser-side offline emulation does not always reach the worker) and
+// `hits` (paths actually served).
 export async function startServer() {
   const root = join(process.cwd(), 'public');
+  const state = { ver: 1000, down: false, hits: [] };
   const types = { '.css': 'text/css', '.html': 'text/html', '.js': 'text/javascript', '.json': 'application/json', '.mjs': 'text/javascript', '.svg': 'image/svg+xml', '.woff2': 'font/woff2', '.png': 'image/png', '.webp': 'image/webp' };
   const server = createServer((request, response) => {
     try {
+      if (state.down) { request.socket.destroy(); return; }
       const pathname = new URL(request.url, 'http://localhost').pathname;
+      state.hits.push(pathname);
+      if (pathname === '/__ver') { response.writeHead(200, { 'content-type': 'application/json', 'cache-control': 'no-store' }); response.end(JSON.stringify({ v: state.ver })); return; }
       const relative = pathname === '/' ? 'pokerth-client.html' : decodeURIComponent(pathname).replace(/^\/+/, '');
       const file = normalize(join(root, relative));
       if (!file.startsWith(root) || !statSync(file).isFile()) throw new Error('not found');
@@ -36,7 +45,7 @@ export async function startServer() {
     } catch (_error) { response.writeHead(404); response.end('not found'); }
   });
   await new Promise((resolve) => server.listen(0, '127.0.0.1', resolve));
-  return { server, base: `http://127.0.0.1:${server.address().port}/` };
+  return { server, state, base: `http://127.0.0.1:${server.address().port}/` };
 }
 
 // ── Reporter: console + GitHub annotations (visible on the run page and

@@ -1,4 +1,7 @@
-2026-09-20 version 2.1.9-web.98 (current series):
+2026-09-20 version 2.1.9-web.99 (current series):
+- bugfix: on phones the "New version available" banner squeezed its text onto three lines next to the Update button; it now stays on one line
+
+2026-09-20 version 2.1.9-web.98:
 - bugfix: iPhone in landscape (Safari) - in Estonian, Khmer, Latvian and Macedonian the bet slider slid under the 1/3 button; the play-mode list now keeps a fixed width
 
 2026-09-20 version 2.1.9-web.97:

@@ -124,6 +124,29 @@ is kept per failing language x screen. Narrow it:
 PTH_DEVICES="Galaxy S24" PTH_LANGS="de,fi,ar" PTH_SCREENS="game,login" npm run test:i18n-overflow
 ```
 
+## PWA and service worker
+
+`npm run test:pwa-browser` (`scripts/test-pwa-browser.mjs`) is the only browser
+test that runs WITH the service worker (iPhone 15 + Pixel 7, about 40 s each):
+
+1. the worker installs, activates and controls the next load;
+2. the precache is complete **in a real browser**: every `ASSETS` entry of
+   `sw.js` is in the `CACHE_VERSION` cache (a 404 there is silent until the day
+   someone is offline), `sw.js` and `pokerth.js` agree on the version, no old
+   cache is left behind;
+3. **origin unreachable** (the test server resets every connection - browser
+   offline emulation does not always reach the worker): the app still boots
+   from the cache without a JavaScript error, the login screen is complete and
+   translated, a training table against the bots opens and deals a hand, no
+   image is missing;
+4. **update banner**: the `/__ver` deploy stamp changes -> the banner appears on
+   top, inside the screen, translated, on at most a couple of lines; dismissing
+   it works and it does not come back for the same version;
+5. the manifest is valid and every icon exists with the announced size.
+
+Not covered (needs a real device): the install prompt itself, the standalone
+window, iOS "Add to Home Screen", push / share target.
+
 ## Limits - what still needs a real phone
 
 Playwright WebKit is the Safari engine, not Safari on an iPhone, and Chromium

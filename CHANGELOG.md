@@ -174,6 +174,11 @@ highlights below.
 
 ### Fixed
 
+- **Update banner squeezed on phones** (`web.99`) — `#update-banner` is
+  `position: fixed; left: 50%`: a fixed box only has half the screen to
+  shrink-to-fit in, so "New version available" wrapped onto three lines beside
+  the button. `width: max-content` (still capped by `max-width`). Found by the
+  new `test:pwa-browser`.
 - **Short-landscape bet panel, language-independent** (`web.98`) — first WebKit
   run of `test:i18n-overflow`: in et / km / lv / mk the play-mode `<select>`
   label is long, Safari sized the grid's `auto` column on it and the slider slid

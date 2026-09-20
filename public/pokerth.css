@@ -3766,6 +3766,11 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
   box-shadow: 0 6px 22px rgba(0,0,0,0.55);
   font-family: var(--ff-display); font-size: var(--fs-base);
   color: var(--cream); letter-spacing: 0.04em;
+  /* left:50% leaves a fixed box only HALF the screen to shrink-to-fit in: on a
+     phone "New version available" wrapped onto three lines beside the button
+     (found by scripts/test-pwa-browser.mjs). max-content = one line whenever the
+     screen allows it, still capped by max-width. */
+  width: max-content;
   max-width: calc(100% - 24px);
   animation: fadeIn 0.3s ease;
 }
