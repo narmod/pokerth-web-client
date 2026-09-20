@@ -144,6 +144,10 @@ test that runs WITH the service worker (iPhone 15 + Pixel 7, about 40 s each):
    it works and it does not come back for the same version;
 5. the manifest is valid and every icon exists with the announced size.
 
+Playwright's WebKit build cannot reload a page whose origin is down (internal
+engine error): on the iPhone profile step 3 is reported as skipped and Chromium
+covers it; steps 1, 2, 4 and 5 run on both engines.
+
 Not covered (needs a real device): the install prompt itself, the standalone
 window, iOS "Add to Home Screen", push / share target.
 
