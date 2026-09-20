@@ -1,4 +1,7 @@
-2026-09-20 version 2.1.9-web.84 (current series):
+2026-09-20 version 2.1.9-web.85 (current series):
+- new: Uzbek (Oʻzbekcha) is now available in the language list - the whole interface, the built-in help and the welcome notices are translated, bringing the client to 63 languages
+
+2026-09-20 version 2.1.9-web.84:
 - bugfix: Latin-American Spanish - the inactivity warning still used the Spain wording ("Pulsa", "cuenta atrás")
 
 2026-09-20 version 2.1.9-web.83:
