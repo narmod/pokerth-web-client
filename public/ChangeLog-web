@@ -1,4 +1,7 @@
-2026-09-20 version 2.1.9-web.83 (current series):
+2026-09-20 version 2.1.9-web.84 (current series):
+- bugfix: Latin-American Spanish - the inactivity warning still used the Spain wording ("Pulsa", "cuenta atrás")
+
+2026-09-20 version 2.1.9-web.83:
 - new: the rules, FAQ, poker hands, how-to-play and glossary pages are now available in Latin-American Spanish too
 
 2026-09-20 version 2.1.9-web.82:

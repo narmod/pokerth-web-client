@@ -179,8 +179,11 @@ a full catalogue, help corpus and SEO set of its own — the loader does not
 overlay one catalogue on another — but it does not have to be translated from
 scratch: `es-419` was derived from `es` by a reviewed list of substitutions
 (ordenador → computadora, móvil → celular, pulsar → presionar, bote → pozo…),
-about twenty strings in all. Keep that list with the variant, because every key
-added to the parent later has to go through it again.
+about twenty strings in all. The list is `scripts/es-419-rules.mjs`, and
+`scripts/test-es-419-derivation.mjs` fails when a key added or edited in the
+parent has not been carried over. Apply the rules to evaluated strings, not to
+the source text: some catalogue values are stored with `\uXXXX` escapes and a
+source-level regex walks straight past them.
 
 Do not create one variant per country. The vocabulary of a poker client barely
 differs between, say, Mexico and Argentina, and each variant costs a catalogue,

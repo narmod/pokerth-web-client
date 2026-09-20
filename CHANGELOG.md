@@ -148,6 +148,12 @@ highlights below.
 
 ### Fixed
 
+- **`es-419`: one string escaped the derivation** (`web.84`) — `timeoutWarnHint`
+  is stored with `\uXXXX` escapes in `es.mjs`, so the source-level substitution
+  missed it. The rule list now lives in `scripts/es-419-rules.mjs` and
+  `scripts/test-es-419-derivation.mjs` checks, on evaluated strings, that the
+  `es-419` catalogue and help corpus are exactly `derive(es)` — a key added to
+  `es` and not carried over fails the suite.
 - **Translation backlog of the private-message feature closed** (`web.81`) —
   the help section `chat/privatemsg` existed in 18 corpora only and the
   catalogue key `chatMuteTitle` in 9 catalogues only; the help loader falls
