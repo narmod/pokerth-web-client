@@ -12841,9 +12841,22 @@ html[data-seat-struct="qml"] .seat-narrow .seat-name .seat-note-stars { font-siz
    the footer now sits in the flow under the card - the card stays centred in
    the space that is left, and when there is none the screen simply scrolls. */
 @media (max-width: 560px) and (orientation: portrait) {
-  #s-connect { justify-content: flex-start; padding-top: 48px; }   /* 39px header bar: a tall card starts below it, not under it */
+  /* web.102 (narmod, iPhone): the first version reserved a flat 48px for the
+     header and gave the footer its own safe-area padding ON TOP of the screen's
+     20px - on an iPhone the header is 38px + the status-bar inset (~82px) and
+     the footer floated 54px above the bottom edge, so the card, centred in a
+     box that started under the header and ended too high, looked pushed up.
+     Top: real header height (34px of bar + its own max(4px, inset) padding) +
+     the same 14px gap as under the card. Bottom: exactly what the footer had
+     when it was absolutely positioned, max(10px, inset) - once, on the screen. */
+  #s-connect {
+    --pth-sat: env(safe-area-inset-top, 0px); --pth-sab: env(safe-area-inset-bottom, 0px);
+    justify-content: flex-start;
+    padding-top: calc(34px + max(4px, var(--pth-sat)) + 14px);
+    padding-bottom: max(10px, var(--pth-sab));
+  }
   #s-connect > .card { margin-top: auto; margin-bottom: auto; flex: 0 0 auto; }
-  #s-connect > .connect-footer { position: static; flex: 0 0 auto; margin-top: 14px; padding-bottom: max(4px, env(safe-area-inset-bottom)); }
+  #s-connect > .connect-footer { position: static; flex: 0 0 auto; margin-top: 14px; padding-bottom: 0; }
 }
 
 /* ── Connection lost: the action bar is greyed out and inert (web.101) ─────

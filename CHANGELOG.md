@@ -174,6 +174,12 @@ highlights below.
 
 ### Fixed
 
+- **Login card off-centre on iPhone** (`web.102`, regression of `web.97`,
+  reported by narmod) — the in-flow footer reserved a flat 48 px for the header
+  (82 px on an iPhone: 38 px bar + status-bar inset) and stacked its own
+  safe-area padding on the screen's 20 px (54 px under the footer instead of
+  34). Top reserve = real header height + 14 px, bottom = `max(10px, inset)`
+  once; `test:mobile` now checks the centring with and without emulated insets.
 - **Action bar inert while the link is down; notice stuck on my own turn**
   (`web.101`) — `_showBanner` now sets `body.conn-lost` while the socket is not
   open (CSS: action grid greyed out, `pointer-events: none`, no height change);

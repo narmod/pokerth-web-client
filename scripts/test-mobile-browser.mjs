@@ -78,6 +78,24 @@ async function runDevice(browser, name, descriptor) {
       const over = await page.evaluate(() => document.documentElement.scrollWidth - innerWidth);
       assert.ok(over <= 1, `page is ${over}px wider than the screen`);
     });
+    // Login screen in portrait: the mode card is centred between the header and
+    // the footer, the footer sits at the bottom - with and without the iPhone
+    // safe areas (emulated: Playwright has no notch; the header gets the 47px
+    // status-bar padding it has on the device, the screen the same insets).
+    if (descriptor.viewport.height > descriptor.viewport.width) await check('login: card centred between header and footer, footer at the bottom (also with iPhone safe areas)', async () => {
+      await page.waitForFunction(() => { const b = document.getElementById('boot-splash'); if (!b) return true; const c = getComputedStyle(b); return c.display === 'none' || parseFloat(c.opacity) < 0.02; }, null, { timeout: 8000 }).catch(() => {});
+      const measure = () => page.evaluate(() => { const R = (q) => document.querySelector(q).getBoundingClientRect();
+        const h = R('#s-connect .connect-header'), c = R('#s-connect > .card'), f = R('#s-connect > .connect-footer');
+        return { above: c.top - h.bottom, below: f.top - c.bottom, underFooter: innerHeight - f.bottom }; });
+      const flat = await measure();
+      assert.ok(Math.abs(flat.above - flat.below) <= 3, `card not centred: ${Math.round(flat.above)}px above, ${Math.round(flat.below)}px below`);
+      assert.ok(flat.underFooter >= 8 && flat.underFooter <= 14, `footer is ${Math.round(flat.underFooter)}px above the bottom edge`);
+      await page.evaluate(() => { const s = document.getElementById('s-connect'); s.style.setProperty('--pth-sat', '47px'); s.style.setProperty('--pth-sab', '34px'); document.querySelector('#s-connect .connect-header').style.paddingTop = '47px'; });
+      const notch = await measure();
+      await page.evaluate(() => { const s = document.getElementById('s-connect'); s.style.removeProperty('--pth-sat'); s.style.removeProperty('--pth-sab'); document.querySelector('#s-connect .connect-header').style.paddingTop = ''; });
+      assert.ok(notch.above > 8 && Math.abs(notch.above - notch.below) <= 3, `with safe areas the card is not centred: ${Math.round(notch.above)}px above, ${Math.round(notch.below)}px below`);
+      assert.ok(Math.abs(notch.underFooter - 34) <= 3, `with safe areas the footer is ${Math.round(notch.underFooter)}px above the bottom edge (home indicator needs 34)`);
+    });
     await openTable(page, base, { seats: SEATS, board: 'flop', turn: 'me' });
     await page.locator('#s-game.active .act-buttons-row .btn-action').first().waitFor();
     const base0 = await geometry(page);

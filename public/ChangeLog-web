@@ -1,4 +1,7 @@
-2026-09-20 version 2.1.9-web.101 (current series):
+2026-09-20 version 2.1.9-web.102 (current series):
+- bugfix: iPhone - on the start screen the mode card was pushed up and the footer floated too high above the bottom edge; the card is centred again between the header and the footer
+
+2026-09-20 version 2.1.9-web.101:
 - improvement: while the connection is lost, the Fold / Check / Bet buttons are greyed out and cannot be tapped, instead of looking live; they come back the moment the connection does
 - bugfix: when the connection came back during your own turn, the "re-authenticating" notice stayed over the community cards for your whole thinking time; it now goes away after 10 seconds
 
