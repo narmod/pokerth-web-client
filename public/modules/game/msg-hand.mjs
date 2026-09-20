@@ -1109,7 +1109,7 @@ function onEndOfHandShow(sub) {
                   && _shSd.active !== false && !_shSd.folded && S.myCards[0] != null;
       if (_shOk && !_shSet.has(S.myId)) _setCanShow(true);
     } catch (_e) {}
-    window.renderGameWaiting('Prochaine main...');
+    window.renderGameWaiting(t('nextHand'));   // was a hard-coded French string in every language
     return;
 }
 

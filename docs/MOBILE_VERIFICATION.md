@@ -79,6 +79,24 @@ Screenshots: `test-artifacts/mobile/<device>-sweep-<mode>-<nn>.png`. Both tests
 share `scripts/lib/mobile-harness.mjs` (server, phone profiles, fixture hand,
 reporter, screenshots).
 
+## End of hand: showdown, all-in, side pot, next hand
+
+`npm run test:showdown-browser` (`scripts/test-showdown-browser.mjs`) plays the
+end of a hand on iPhone 15, iPhone 15 landscape, Pixel 7 and Galaxy A55
+landscape - three scenarios, about 35 s per phone:
+
+- **A, classic showdown** (6 players, 3 folded): the winner window fits the
+  screen, shows the right name and amounts (`-$20`, never `$-20`), only the
+  players who show have face-up cards, Continue is reachable; then on the table:
+  winner class and badge, winning-hand badge, revealed cards, card backs for the
+  folded players, loser fade, stacks, dead action bar, translated waiting text,
+  boxes / badges / board clear of one another; then the **next hand** wipes every
+  mark, clears the board, deals my new cards and re-arms the action bar.
+- **B, all-in + side pot** (4 players): cards face up before the river with
+  nobody marked as winner, then two winners and their stacks.
+- **C, no showdown** (5 players, everybody folds): winner marked and paid, no
+  opponent card revealed.
+
 ## Limits - what still needs a real phone
 
 Playwright WebKit is the Safari engine, not Safari on an iPhone, and Chromium

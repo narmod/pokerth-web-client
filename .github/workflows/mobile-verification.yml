@@ -17,6 +17,7 @@ on:
       - 'public/**'
       - 'scripts/test-mobile-browser.mjs'
       - 'scripts/test-table-sweep.mjs'
+      - 'scripts/test-showdown-browser.mjs'
       - 'scripts/lib/mobile-harness.mjs'
       - '.github/workflows/mobile-verification.yml'
   pull_request:
@@ -58,6 +59,10 @@ jobs:
 
       - name: Mobile verification (iOS WebKit + Android Chromium)
         run: npm run test:mobile
+
+      - name: End of hand (showdown, all-in, side pot, next hand)
+        if: always()
+        run: npm run test:showdown-browser
 
       - name: Upload screenshots
         if: always()

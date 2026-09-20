@@ -12773,4 +12773,16 @@ html[data-seat-struct="qml"] .seat-narrow .seat-name .seat-note-stars { font-siz
   :root:not([data-interface-size="large"]):not([data-interface-size="extra-large"]) #s-game .my-zone .action-grid > .mid-row .mode-sel-wrap { margin-left: 4px; }
   :root:not([data-interface-size="large"]):not([data-interface-size="extra-large"]) #s-game .my-zone .action-grid > .act-buttons-row { flex: 0 0 100%; }
   :root:not([data-interface-size="large"]):not([data-interface-size="extra-large"]) #s-game .my-zone .bet-row .raise-amt-field { height: 26px !important; min-height: 26px !important; }
+
+  /* Winner window (web.95, found by scripts/test-showdown-browser.mjs): its
+     design keeps header / board / Continue fixed and scrolls only the results
+     list - but on a 343px screen the fixed parts alone are taller than the
+     window: the list got 0px and Continue fell below the fold, unreachable.
+     Here the WHOLE card scrolls and Continue sticks to its bottom edge. */
+  .winner-overlay { padding: 6px !important; }
+  .winner-overlay .winner-card { display: block !important; max-height: 96dvh !important; overflow-y: auto !important; -webkit-overflow-scrolling: touch; padding: 10px 16px 0 !important; }
+  .winner-overlay .winner-card .wc-players { overflow: visible !important; margin-bottom: 8px; }
+  .winner-overlay .winner-card .wc-header { padding-bottom: 6px; margin-bottom: 6px; }
+  .winner-overlay .winner-card .wc-stats { margin-bottom: 6px; }
+  .winner-overlay .winner-card .winner-dismiss { position: sticky; bottom: 0; margin: 4px 0 0; padding: 9px 24px !important; box-shadow: 0 -6px 10px var(--modal-bg), 0 6px 0 var(--modal-bg); }
 }

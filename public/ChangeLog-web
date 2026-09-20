@@ -1,4 +1,9 @@
-2026-09-20 version 2.1.9-web.94 (current series):
+2026-09-20 version 2.1.9-web.95 (current series):
+- bugfix: the "Next hand…" message after a showdown was shown in French in every language - it is now translated
+- bugfix: in the winner window a loss now reads "-$20" instead of "$-20" (also in the end-of-game summary)
+- bugfix: phones held in landscape with a very short screen - the winner window no longer hides its Continue button below the screen; the whole window scrolls and Continue stays in view
+
+2026-09-20 version 2.1.9-web.94:
 - bugfix: phones held in landscape with a very short screen (iPhone) - the Fold / Check / Bet buttons are no longer cut off at the bottom
 - improvement: on those screens the bet amount, slider, quick bets, All-In and mode now share one line, giving the table about 40 px more height: no more overlapping player boxes at 9-10 players, the pot stays visible
 - bugfix: watching a table of 3 or 4 players on a phone in landscape - the player boxes no longer cover the community cards or the pot

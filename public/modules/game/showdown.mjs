@@ -123,9 +123,9 @@ function showEndGameOverlay(winnerPid, opts) {
         '<div class="eg-stat-row"><span class="eg-stat-label">' + t('endGameHandsWon') + '</span><span class="eg-stat-val pos">' + s.handsWon + ' (' + wr + '%)</span></div>' +
         '<hr class="eg-stat-divider">' +
         '<div class="eg-stat-row"><span class="eg-stat-label">' + t('endGameFinalStack') + '</span><span class="eg-stat-val">' + '$' + _groupThousands(finalStack)+'</span></div>' +
-        '<div class="eg-stat-row"><span class="eg-stat-label">' + t('endGameNetGain') + '</span><span class="eg-stat-val ' + gainCls + '">' + (s.totalGain > 0 ? '+' : '') + '$' + _groupThousands(s.totalGain)+'</span></div>' +
+        '<div class="eg-stat-row"><span class="eg-stat-label">' + t('endGameNetGain') + '</span><span class="eg-stat-val ' + gainCls + '">' + (s.totalGain > 0 ? '+' : (s.totalGain < 0 ? '-' : '')) + '$' + _groupThousands(Math.abs(s.totalGain))+'</span></div>' +
         '<div class="eg-stat-row"><span class="eg-stat-label">' + t('endGameBestWin') + '</span><span class="eg-stat-val pos">+' + '$' + _groupThousands(s.bigWin)+'</span></div>' +
-        '<div class="eg-stat-row"><span class="eg-stat-label">' + t('endGameWorstLoss') + '</span><span class="eg-stat-val neg">' + '$' + _groupThousands(s.bigLoss)+'</span></div>' +
+        '<div class="eg-stat-row"><span class="eg-stat-label">' + t('endGameWorstLoss') + '</span><span class="eg-stat-val neg">' + (s.bigLoss < 0 ? '-' : '') + '$' + _groupThousands(Math.abs(s.bigLoss))+'</span></div>' +
       '</div>' +
       '<div id="eg-ach"></div>' +
       '<div class="eg-actions">' +
@@ -385,7 +385,7 @@ function showWinnerOverlay(winners) {
     } else if (_net != null && _net < 0) {
       // Perdant : perte nette de la main, en rouge.
       deltaClass = "neg";
-      deltaTxt = "$" + _groupThousands(_net);
+      deltaTxt = "-$" + _groupThousands(-_net);   // "-$20", not "$-20"
     } else if (_net != null && _net > 0) {
       // Gain net positif sans être « le » gagnant (split pot / side pot).
       deltaClass = "pos";

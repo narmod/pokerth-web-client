@@ -174,6 +174,15 @@ highlights below.
 
 ### Fixed
 
+- **End of hand, found by the new `test:showdown-browser`** (`web.95`) —
+  `renderGameWaiting('Prochaine main...')` was a hard-coded French string in
+  every language (now `t('nextHand')`, key already in all catalogues); a loss
+  in the winner window and the end-of-game summary read `$-20` (`'$' +
+  _groupThousands(negative)`), now `-$20`; on a 343 px-high landscape screen the
+  winner window's fixed parts (header, stats, board, best hand) were taller than
+  its `88dvh` box, the scrollable results list got 0 px and **Continue** fell
+  below the fold — under `max-height: 400px` landscape the whole card scrolls
+  and Continue is sticky.
 - **Very short landscape phones (734×343)** (`web.94`) — three defects found by
   `test:mobile` / `test:table-sweep`: (1) `.game-area` kept a 300 px
   `min-height` flex fallback, so header 59 + 300 overflowed a 343 px screen and
