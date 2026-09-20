@@ -104,7 +104,13 @@ async function runDevice(browser, name, descriptor) {
         ['EndOfHandShow', 50, [['res', ME, 12, 25, 60, 3050, 700], ['res', ids[1], 37, 50, 0, 2980, 600], ['res', ids[2], 5, 20, 0, 2990, 100],
           ['res', ids[3], 1, 2, 0, 3000, 0], ['res', ids[4], 4, 6, 0, 3000, 0], ['res', ids[5], 7, 8, 0, 3000, 0]]]]);
       await page.waitForFunction(() => getComputedStyle(document.getElementById('g-winner-overlay')).display !== 'none', null, { timeout: 5000 }).catch(() => {});
-      await page.waitForTimeout(500);
+      // The card pops in (scale 0.75 -> 1, 300 ms): measured mid-animation on a
+      // slow CI machine, Continue came out 8 % smaller than it is. Wait for the
+      // animations of the window itself instead of a fixed delay.
+      await page.evaluate(() => Promise.race([
+        Promise.all(document.getElementById('g-winner-overlay').getAnimations({ subtree: true }).filter((a) => a.effect && a.effect.getTiming().iterations !== Infinity).map((a) => a.finished.catch(() => {}))),
+        new Promise((r) => setTimeout(r, 2500))]));
+      await page.waitForTimeout(150);
       const pop = await state(page);
       await shot(page, name, 'showdown-a1-window');
       await check('A showdown: winner window fits the screen, amounts read right, Continue reachable', async () => {
