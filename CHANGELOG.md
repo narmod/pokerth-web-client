@@ -181,6 +181,18 @@ highlights below.
 
 ### Fixed
 
+- **Eleven keys left in English in ~40 catalogues** (`web.108`) — `unitMinutes`,
+  `gipTabStats`, `infoTypeLabel`, `infoCapitalLabel`, `buttonsAuto`,
+  `pucksAuto`, `sectionPucks`, `buttonsGlossy`, `buttonsFlat`, `pucksCasino`,
+  `presetCasino`: 387 values filled in. No new terminology: each value is built
+  from what the SAME catalogue already says — `nMinutes` (so the grammatical
+  form matches `unitHands`: genitive / partitive after a number in the Slavic
+  and Finnic languages), `hlStatsTitle`, `piType`, `startCash`,
+  `modeAuto` + `sectionTable`, `sectionButtons` + `D/SB/BB`; only the two
+  adjectives and "(green) casino" were written per language. A value that was
+  already translated is never touched (the ~20 recent catalogues had them).
+  Full-width brackets in ja / zh, Cyrillic for sr. Slovak typo `hlHandPlur`
+  `rák` → `rúk`.
 - **Two lobby strings stuck in English** (`web.106`) — `lobby.mjs` wrote the
   literal `n + ' table(s)'` over the page's translated
   `<span data-i18n="tableCount">`, and the chat panel heading had no `data-i18n`
