@@ -48,12 +48,6 @@ Screenshots of every step land in `test-artifacts/mobile/` (git-ignored):
 `<device>-1-table`, `-2-loupe-follow`, `-3-loupe-my-turn`, `-4-loupe-board`.
 The assertions catch geometry; look at the pictures for everything else.
 
-**Open point (not a test failure):** the space reserved under the table
-(`.game-area` padding, set by `updateBottomLayout`) differs by about 14 px
-depending on when it was last measured; opening and closing the bet keypad
-re-measures it, so the table can end up 14 px taller or shorter than before.
-The keypad check therefore tolerates 16 px on the "table comes back" assertion.
-
 ## Table sweep: every table size, seated and spectator
 
 `npm run test:table-sweep` (`scripts/test-table-sweep.mjs`) opens the table for

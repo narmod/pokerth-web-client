@@ -1397,6 +1397,7 @@ function renderSeatsImmediate() {
       // paysage = min(barre, max(largeur VISUELLE des cartes communes, 380)),
       // centré ; portrait = pleine largeur. --abar-w consommé par le CSS. ──
       try {
+        var _abarWas = document.documentElement.getAttribute('data-abar') || '';
         if (!_forceSeatPortrait) {
           var _cmEl2 = document.getElementById('g-comm');
           var _cw2 = _cmEl2 ? _cmEl2.getBoundingClientRect().width : 0;
@@ -1407,6 +1408,18 @@ function renderSeatsImmediate() {
           // Zone portrait : paddings/gaps QML compacts sur la barre
           // (raiseSection 4/8/2, spacing 3) — récupère ~25 px de zone.
           document.documentElement.setAttribute('data-abar', 'portrait');
+        }
+        // web.104 : data-abar CHANGE la hauteur de la barre d'action (paddings
+        // compacts : 139 -> 125 px en portrait téléphone), or la réserve sous la
+        // table (padding-bottom de .game-area, posé par updateBottomLayout) avait
+        // été mesurée AVANT, sur la barre haute — et plus jamais ensuite : 14 px
+        // de tapis perdus sous la self-box pendant toute la partie, jusqu'à ce
+        // qu'autre chose (le pavé de mise) force une nouvelle mesure. On re-mesure
+        // donc au CHANGEMENT de l'attribut uniquement (une fois par orientation,
+        // pas à chaque rendu) ; updateBottomLayout relance lui-même le rendu si
+        // la réserve a bougé, et sa garde _cur !== _res interdit toute boucle.
+        if ((document.documentElement.getAttribute('data-abar') || '') !== _abarWas) {
+          requestAnimationFrame(function () { try { if (typeof window.updateBottomLayout === 'function') window.updateBottomLayout(); } catch (eU) {} });
         }
       } catch (eW) {}
       // ── Position verticale (parité anchors QML) : la rangée .comm-row est

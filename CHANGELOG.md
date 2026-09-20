@@ -174,6 +174,17 @@ highlights below.
 
 ### Fixed
 
+- **14 px of felt lost under the self box in phone portrait** (`web.104`) — the
+  space kept under the table (`.game-area` padding-bottom, measured by
+  `updateBottomLayout`) was measured once, BEFORE the first `renderSeats` sets
+  `data-abar="portrait"` and compacts the action bar (139 → 125 px), and never
+  again: 139 px kept for a 125 px bar during the whole game, until something
+  else (opening the bet keypad) forced a new measure - hence the table that
+  "did not come back" by 12–14 px. `renderSeats` now calls
+  `updateBottomLayout` when the attribute CHANGES (once per orientation, not per
+  render; the existing `_cur !== _res` guard prevents any loop). `test:mobile`
+  checks reserve == bar height and restores the strict 2 px keypad round trip;
+  verified by mutation.
 - **Bet keypad cut off on landscape phones** (`web.103`, reported by narmod) —
   on touch screens the keypad replaces the action rows in place (~275 px: head,
   4×4 grid of 42 px keys, foot); a landscape phone has ~330 px under the header

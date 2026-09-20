@@ -58,6 +58,7 @@ const geometry = (page) => page.evaluate(() => {
     plates: [...document.querySelectorAll('#g-seats .seat:not(.seat-ghost)')].map((s) => rect(s.querySelector('.seat-plate') || s)),
     comm: [...document.querySelectorAll('#g-comm .pk[data-c]')].map(rect),
     actionBar: rect(document.querySelector('.my-zone')),
+    reserve: (function () { const ga = document.querySelector('.game-area'), mz = document.querySelector('.my-zone'); return { fixed: getComputedStyle(mz).position === 'fixed', px: parseFloat(ga.style.paddingBottom) || 0, panel: mz.getBoundingClientRect().height }; })(),
     actions: [...document.querySelectorAll('.act-buttons-row .btn-action')].filter(vis).map(rect),
     loupeBtn: vis(document.getElementById('g-zoom-toggle')) ? rect(document.getElementById('g-zoom-toggle')) : null,
     floating: ['chat-toggle-btn', 'react-toggle-btn', 'hands-toggle-btn', 'log-toggle-btn'].map((id) => document.getElementById(id)).filter(vis).map(rect),
@@ -113,6 +114,13 @@ async function runDevice(browser, name, descriptor) {
       assert.ok(Math.abs(mid - cx) <= 2, `self box centre ${mid.toFixed(1)} vs zone centre ${cx.toFixed(1)}`);
       assert.ok(!overlap(base0.me, base0.actionBar), 'self box is covered by the action bar');
     });
+    await check('table: the space kept under the table is exactly the action bar (no dead strip, nothing hidden)', async () => {
+      // web.104: it was measured once, BEFORE renderSeats compacts the bar (data-abar): 139px kept for a
+      // 125px bar - 14px of felt lost under the self box for the whole game.
+      if (!base0.reserve.fixed) return;          // short landscape: the bars are in the flow, nothing is reserved
+      assert.ok(Math.abs(base0.reserve.px - base0.reserve.panel) <= 1.5, `${base0.reserve.px}px reserved for a ${Math.round(base0.reserve.panel)}px action bar`);
+      assert.ok(Math.abs(base0.actionBar.top - base0.zone.bottom) <= 1.5, `the table ends ${Math.round(base0.actionBar.top - base0.zone.bottom)}px above the action bar`);
+    });
     await check('table: action buttons reachable and finger-sized', async () => {
       assert.ok(base0.actions.length >= 2, 'fewer than two action buttons');
       base0.actions.forEach((a, i) => { assert.ok(a.left >= -1 && a.right <= base0.viewport.width + 1 && a.bottom <= base0.viewport.height + 1, `action ${i + 1} is off-screen`);
@@ -151,10 +159,7 @@ async function runDevice(browser, name, descriptor) {
       await page.locator('#kp-cancel').tap(); await page.waitForTimeout(500); await settle(page);
       const after = await geometry(page);
       assert.equal(await page.locator('#bet-keypad').count(), 0, 'Cancel does not close the keypad');
-      // 16px, not 2: the reserve kept under the table (game-area padding, set by updateBottomLayout)
-      // differs by ~14px depending on when it was last measured - an older inconsistency that the
-      // keypad merely reveals by re-measuring. Open point, see docs/MOBILE_VERIFICATION.md.
-      assert.ok(Math.abs(after.me.top - before.me.top) <= 16 && after.actions.length >= 2, `the table did not come back: self box ${Math.round(before.me.top)} -> ${Math.round(after.me.top)}`);
+      assert.ok(Math.abs(after.me.top - before.me.top) <= 2 && after.actions.length >= 2, `the table did not come back: self box ${Math.round(before.me.top)} -> ${Math.round(after.me.top)}`);
       assert.ok(after.me.bottom <= after.actionBar.top + 2, 'after closing, my own box is under the action bar');
     });
 
