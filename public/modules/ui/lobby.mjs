@@ -376,7 +376,7 @@ function renderGames() {
   updateLobbyStatsBar();
 
   if (entries.length === 0) {
-    document.getElementById('g-count').textContent = '0 table(s)';
+    document.getElementById('g-count').textContent = '0 ' + t('tableCount');   // was the English literal: it overwrote the translated <span data-i18n="tableCount"> of the page
     document.getElementById('g-list').innerHTML = S.loaded
       ? '<div class="empty">' + t('noTablesAvailable') + '</div>'
       : '<div class="empty">' + t('loadingTables') + '<br><span class="ld"><span>●</span><span>●</span><span>●</span></span></div>';
@@ -385,7 +385,7 @@ function renderGames() {
 
   // Apply the active filter.
   const shown = entries.filter(function(e){ return _tableMatches(e[1], S._tableFilter); });
-  document.getElementById('g-count').textContent = shown.length + ' table(s)';
+  document.getElementById('g-count').textContent = shown.length + ' ' + t('tableCount');
 
   if (shown.length === 0) {
     document.getElementById('g-list').innerHTML = '<div class="empty">' + t('noTablesForFilter') + '</div>';

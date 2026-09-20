@@ -107,8 +107,10 @@ const SCREENS = [
   { id: 'login', root: '#s-connect', enter: async (page) => { await page.locator('.login-card').nth(0).click(); await page.waitForTimeout(400); },
     leave: async (page) => { await page.locator('.login-back').first().click().catch(() => {}); await page.waitForTimeout(300); } },
   { id: 'lobby', root: '#s-lobby', enter: async (page) => { await openTable(page, base, { seats: 6, stopAt: 'lobby' }); await page.locator('#s-lobby.active').waitFor({ timeout: 8000 }); } },
-  { id: 'create', root: '#s-create', enter: async (page) => { await page.evaluate(async () => (await import('/modules/net/session.mjs')).show('s-create')); await page.waitForTimeout(400); },
-    leave: async (page) => { await page.evaluate(async () => (await import('/modules/net/session.mjs')).show('s-lobby')); await page.waitForTimeout(300); } },
+  // App.openCreatePage(), not show('s-create'): the form is only moved into the page by the former -
+  // the first version of this test audited an EMPTY create screen.
+  { id: 'create', root: '#s-create', scroll: '#s-create .cp-scroll', enter: async (page) => { await page.evaluate(() => window.App.openCreatePage()); await page.locator('#s-create.active #create-form').waitFor({ timeout: 5000 }); await page.waitForTimeout(400); },
+    leave: async (page) => { await page.evaluate(() => window.App.closeCreatePage()); await page.waitForTimeout(300); } },
   { id: 'game', root: '#s-game', enter: async (page) => { await enterTable(page, { seats: 6, board: 'flop', turn: 'first' }); },
     refresh: async (page) => { await page.evaluate(({ ME, GAME }) => { const f = window.__fx, opp = f.ids[2];   // an opponent bets big, then it is my turn
         f.socket.receive(f.envelope(f.MSG.T.PlayersActionDone, 45, [[1, 0, GAME], [2, 0, opp], [3, 0, 1], [4, 0, 4], [5, 0, 1500], [6, 0, 1500], [7, 0, 1500], [8, 0, 1500]]));
@@ -133,7 +135,16 @@ async function runDevice(browser, name, descriptor) {
       for (const lang of langs) {
         await setLang(page, lang);
         if (sc.refresh) await sc.refresh(page);
-        const problems = await page.evaluate(AUDIT, sc.root);
+        let problems = await page.evaluate(AUDIT, sc.root);
+        if (sc.scroll) {   // a long form: audit it screenful by screenful, not just its first screen
+          const steps = await page.evaluate((q) => { const e = document.querySelector(q); return e ? Math.ceil((e.scrollHeight - e.clientHeight) / Math.max(1, e.clientHeight * 0.8)) : 0; }, sc.scroll);
+          for (let i = 1; i <= Math.min(steps, 8); i++) {
+            await page.evaluate(({ q, i }) => { const e = document.querySelector(q); e.scrollTop = i * e.clientHeight * 0.8; }, { q: sc.scroll, i });
+            await page.waitForTimeout(60);
+            problems = problems.concat(await page.evaluate(AUDIT, sc.root));
+          }
+          await page.evaluate((q) => { const e = document.querySelector(q); if (e) e.scrollTop = 0; }, sc.scroll);
+        }
         for (const p of problems) { const key = p.kind + '|' + p.el; if (!found.has(key)) found.set(key, { p, langs: [], sample: {} }); const f = found.get(key); if (!f.langs.includes(lang)) f.langs.push(lang); f.sample[lang] = p; }
         if (problems.length && lang !== 'en') await shot(page, name, `i18n-${sc.id}-${lang}`);
       }

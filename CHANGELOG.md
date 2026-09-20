@@ -174,6 +174,14 @@ highlights below.
 
 ### Fixed
 
+- **Two lobby strings stuck in English** (`web.106`) — `lobby.mjs` wrote the
+  literal `n + ' table(s)'` over the page's translated
+  `<span data-i18n="tableCount">`, and the chat panel heading had no `data-i18n`
+  (`chatTooltip` exists in every catalogue). Seen while checking Japanese.
+  `test:i18n-overflow`: the create-table screen was opened with
+  `show('s-create')`, which leaves the form out of the page — the test audited
+  an empty screen; it now uses `App.openCreatePage()` and scrolls through the
+  whole form.
 - **Operator notices unreachable on iPhone** (`web.105`, reported by narmod) —
   the broadcast toast (`top: 16px`) and the restart notice (`top: 10px`) ignored
   `safe-area-inset-top`: in the installed app they sat under the status bar /

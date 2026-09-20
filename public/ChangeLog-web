@@ -1,4 +1,7 @@
-2026-09-20 version 2.1.9-web.105 (current series):
+2026-09-20 version 2.1.9-web.106 (current series):
+- bugfix: in the lobby the table counter ("3 table(s)") and the "Chat" heading stayed in English in every language - both are now translated
+
+2026-09-20 version 2.1.9-web.105:
 - bugfix: iPhone (installed app) - server announcements appeared under the status bar, where their close button could not be tapped; they now sit below it, never exceed the screen, and their close button is large enough for a finger
 - bugfix: the welcome / guest / account / LAN notice windows can no longer be taller than the visible screen - their button always stays in view
 - improvement: two announcements shown together no longer overlap, and they use the width of the screen instead of a narrow column
