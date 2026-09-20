@@ -159,6 +159,12 @@ export const help = {
             ['/diag \u00b7 /netdbg \u00b7 /fps', 'Asiakkaan tilan, verkon ja sulavuuden diagnostiikka'],
             ['/carddbg \u00b7 /msglog \u00b7 /audiodbg \u00b7 /storage \u00b7 /logdump \u00b7 /seatdbg', 'Edistynyt vianetsintä (kortit, protokolla, ääni, tallennus, paikat)'],
             ['/copy', 'Kopioi viimeisin komentovastaus leikepöydälle']] },
+        { id: 'privatemsg', t: "Yksityisviestit",
+          b: ["Kirjoita yhdelle pelaajalle ilman, että koko aula lukee mukana. Pelaajaluettelossa nimen vieressä oleva kirjekuori avaa keskustelun hänen kanssaan; aulan otsakkeen kirjekuori avaa viimeisimmän uudelleen. Keskustelut säilytetään tällä laitteella ja ne ovat tallessa palatessasi, joten päiviä myöhemmin jatkettu keskustelu säilyttää historiansa — kirjekuoren punainen luku näyttää lukemattomat viestit, ja ikkunan otsikon roskakori poistaa keskustelun lopullisesti."],
+          keys: [
+            ["/msg <nimimerkki> <viesti>", "Lähetä yksityisviesti aulan chatista"],
+            ["/msg \"<nimimerkki>\" <viesti>", "Sama, kun nimimerkissä on välilyöntejä"]],
+          note: "Viestien enimmäispituus on 128 merkkiä. Palvelin ei toimita yksityisviestiä pelaajalle, joka istuu käynnissä olevassa pöydässä, ja historia tallennetaan vain tähän selaimeen — se ei seuraa sinua toiselle laitteelle." },
         { id: 'reactions', t: 'Emoji-reaktiot',
           b: ['Reaktiopainike avaa valitsimen, jossa on 30 animoitua reaktiota (\uD83C\uDF89, \uD83D\uDE02, \uD83D\uDE31, \uD83D\uDD25\u2026). Ne toistuvat tehosteella paikkasi yläpuolella koko pöydän nähden — myös työpöytäasiakkaan pelaajien. Reaktiot voi poistaa kokonaan käytöstä Lisäasetuksista.'] },
         { id: 'translate', t: 'Ymmärrä kaikkia',

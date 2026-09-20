@@ -159,6 +159,12 @@ export const help = {
             ['/diag \u00b7 /netdbg \u00b7 /fps', 'Diagnósticos do estado do cliente, da rede e da fluidez'],
             ['/carddbg \u00b7 /msglog \u00b7 /audiodbg \u00b7 /storage \u00b7 /logdump \u00b7 /seatdbg', 'Depuração avançada (cartas, protocolo, áudio, armazenamento, assentos)'],
             ['/copy', 'Copiar a última resposta de comando para a área de transferência']] },
+        { id: 'privatemsg', t: "Mensagens privadas",
+          b: ["Escreva para um único jogador sem que todo o lobby leia. O envelope ao lado de um nome na lista de jogadores abre uma conversa com ele; o envelope no cabeçalho do lobby reabre a última. As conversas ficam guardadas neste dispositivo e continuam lá quando você volta, então um chat retomado dias depois mantém seu histórico — um contador vermelho no envelope mostra o que você ainda não leu, e a lixeira no título da janela apaga uma conversa definitivamente."],
+          keys: [
+            ["/msg <apelido> <mensagem>", "Enviar uma mensagem privada a partir do chat do lobby"],
+            ["/msg \"<apelido>\" <mensagem>", "O mesmo, quando o apelido contém espaços"]],
+          note: "As mensagens são limitadas a 128 caracteres. O servidor não entrega uma mensagem privada a um jogador sentado em uma mesa em andamento, e o histórico fica armazenado apenas neste navegador — ele não acompanha você em outro dispositivo." },
         { id: 'reactions', t: 'Reações emoji',
           b: ['O botão de reação abre um seletor de 30 reações animadas (\uD83C\uDF89, \uD83D\uDE02, \uD83D\uDE31, \uD83D\uDD25\u2026) que tocam com um efeito sobre o seu assento, visíveis para a mesa inteira — inclusive jogadores do cliente de desktop. As reações são totalmente desativáveis nas Opções avançadas.'] },
         { id: 'translate', t: 'Entender todo mundo',

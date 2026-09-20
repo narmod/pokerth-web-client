@@ -159,6 +159,12 @@ export const help = {
             ['/diag \u00b7 /netdbg \u00b7 /fps', 'Diagnósticos de estado do cliente, rede e fluidez'],
             ['/carddbg \u00b7 /msglog \u00b7 /audiodbg \u00b7 /storage \u00b7 /logdump \u00b7 /seatdbg', 'Depuración avanzada (cartas, protocolo, audio, almacenamento, asentos)'],
             ['/copy', 'Copia a última resposta de orde ao portapapeis']] },
+        { id: 'privatemsg', t: "Mensaxes privadas",
+          b: ["Escribe a un só xogador sen que todo o lobby o lea. O sobre xunto a un nome na lista de xogadores abre unha conversa con el; o sobre da cabeceira do lobby volve abrir a última. As conversas gárdanse neste dispositivo e seguen aí cando volves, de xeito que un chat retomado días despois conserva o seu historial — un contador vermello no sobre indica o que aínda non liches, e a papeleira do título da xanela borra unha conversa definitivamente."],
+          keys: [
+            ["/msg <alcume> <mensaxe>", "Enviar unha mensaxe privada desde o chat do lobby"],
+            ["/msg \"<alcume>\" <mensaxe>", "O mesmo, cando o alcume contén espazos"]],
+          note: "As mensaxes están limitadas a 128 caracteres. O servidor non entrega unha mensaxe privada a un xogador sentado nunha mesa en curso, e o historial só se garda neste navegador — non te segue a outro dispositivo." },
         { id: 'reactions', t: 'Reaccións de emoji',
           b: ['O botón de reaccións abre un selector con 30 reaccións animadas (\uD83C\uDF89, \uD83D\uDE02, \uD83D\uDE31, \uD83D\uDD25\u2026) que se reproducen cun efecto sobre o teu asento, visibles para toda a mesa — incluídos os xogadores do cliente de escritorio. As reaccións pódense desactivar de todo nas Opcións avanzadas.'] },
         { id: 'translate', t: 'Entender a todos',

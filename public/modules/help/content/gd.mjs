@@ -159,6 +159,12 @@ export const help = {
             ['/diag \u00b7 /netdbg \u00b7 /fps', 'Sgrùdaidhean air staid a\u2019 chliant, an lìonra agus an rèidhead'],
             ['/carddbg \u00b7 /msglog \u00b7 /audiodbg \u00b7 /storage \u00b7 /logdump \u00b7 /seatdbg', 'Dì-bhugachadh adhartach (cairtean, pròtacal, fuaim, stòradh, suidheachan)'],
             ['/copy', 'Dèan lethbhreac den fhreagairt àithne mu dheireadh gun stòr-bhòrd']] },
+        { id: 'privatemsg', t: "Teachdaireachdan prìobhaideach",
+          b: ["Sgrìobh gu aon chluicheadair gun an lobaidh gu lèir ga leughadh. Fosglaidh a’ chèis ri taobh ainm air liosta nan cluicheadairean còmhradh leotha; fosglaidh a’ chèis ann am bann-cinn an lobaidh am fear mu dheireadh a-rithist. Thèid còmhraidhean a chumail air an uidheam seo agus bidh iad ann fhathast nuair a thilleas tu, agus mar sin bidh eachdraidh fhèin aig cabadaich a thèid a thogail làithean às dèidh sin — seallaidh àireamh dhearg air a’ chèis na nach do leugh thu fhathast, agus sguabaidh am biona ann an tiotal na h-uinneige còmhradh às gu buan."],
+          keys: [
+            ["/msg <far-ainm> <teachdaireachd>", "Cuir teachdaireachd phrìobhaideach o chabadaich an lobaidh"],
+            ["/msg \"<far-ainm>\" <teachdaireachd>", "An aon rud, nuair a tha beàrnan san fhar-ainm"]],
+          note: "Tha teachdaireachdan cuingichte gu 128 caractar. Cha lìbhrig am frithealaiche teachdaireachd phrìobhaideach gu cluicheadair a tha na shuidhe aig bòrd a tha a’ ruith, agus chan eil an eachdraidh ga stòradh ach sa bhrabhsair seo — cha lean i thu gu uidheam eile." },
         { id: 'reactions', t: 'Freagairtean emoji',
           b: ['Fosglaidh putan nam freagairtean taghadair le 30 freagairt bheòthaichte (\uD83C\uDF89, \uD83D\uDE02, \uD83D\uDE31, \uD83D\uDD25\u2026) a chluicheas le buaidh os cionn an t-suidheachain agad, ri fhaicinn don bhòrd gu lèir — a\u2019 gabhail a-steach cluicheadairean a\u2019 chliant deasg. Gabhaidh na freagairtean a chur dheth gu tur sna Roghainnean adhartach.'] },
         { id: 'translate', t: 'Tuig a h-uile duine',

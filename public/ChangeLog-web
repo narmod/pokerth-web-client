@@ -1,4 +1,8 @@
-2026-09-20 version 2.1.9-web.80 (current series):
+2026-09-20 version 2.1.9-web.81 (current series):
+- bugfix: the "Private messages" chapter of the built-in help was missing in 43 languages - it is now there in every language
+- bugfix: the tooltip of the chat "mute notification sound" button was shown in English in 52 languages - it is now translated everywhere
+
+2026-09-20 version 2.1.9-web.80:
 - bugfix: browsers set to Traditional Chinese (Taiwan, Hong Kong, Macau) now get the Traditional Chinese interface on the first visit - they used to land on Simplified Chinese and had to switch by hand
 
 2026-09-19 version 2.1.9-web.79:

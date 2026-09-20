@@ -159,6 +159,12 @@ export const help = {
             ['/diag \u00b7 /netdbg \u00b7 /fps', 'Kliensállapot-, hálózat- és folyékonyság-diagnosztika'],
             ['/carddbg \u00b7 /msglog \u00b7 /audiodbg \u00b7 /storage \u00b7 /logdump \u00b7 /seatdbg', 'Haladó hibakeresés (lapok, protokoll, hang, tárolás, ülések)'],
             ['/copy', 'Az utolsó parancsválasz vágólapra másolása']] },
+        { id: 'privatemsg', t: "Privát üzenetek",
+          b: ["Írj egyetlen játékosnak anélkül, hogy az egész lobbi olvasná. A játékoslistában a név melletti boríték beszélgetést nyit vele; a lobbi fejlécében lévő boríték újra megnyitja a legutóbbit. A beszélgetések ezen az eszközön maradnak, és visszatéréskor is megvannak, így a napokkal később folytatott csevegés megőrzi az előzményeit — a borítékon lévő piros szám mutatja, mit nem olvastál még el, az ablak címsorában lévő kuka pedig végleg törli a beszélgetést."],
+          keys: [
+            ["/msg <becenév> <üzenet>", "Privát üzenet küldése a lobbi csevegéséből"],
+            ["/msg \"<becenév>\" <üzenet>", "Ugyanez, ha a becenév szóközöket tartalmaz"]],
+          note: "Az üzenetek legfeljebb 128 karakteresek. A kiszolgáló nem kézbesít privát üzenetet olyan játékosnak, aki futó asztalnál ül, és az előzmények csak ebben a böngészőben tárolódnak — nem követnek másik eszközre." },
         { id: 'reactions', t: 'Emodzsi-reakciók',
           b: ['A reakciógomb 30 animált reakció választóját nyitja meg (\uD83C\uDF89, \uD83D\uDE02, \uD83D\uDE31, \uD83D\uDD25\u2026), amelyek effekttel játszódnak le az ülésed fölött, az egész asztal számára láthatóan — az asztali kliens játékosait is beleértve. A reakciók teljesen kikapcsolhatók a Speciális beállításokban.'] },
         { id: 'translate', t: 'Érts meg mindenkit',

@@ -159,6 +159,12 @@ export const help = {
             ['/diag \u00b7 /netdbg \u00b7 /fps', 'Diagnostice de stare a clientului, rețea și fluiditate'],
             ['/carddbg \u00b7 /msglog \u00b7 /audiodbg \u00b7 /storage \u00b7 /logdump \u00b7 /seatdbg', 'Depanare avansată (cărți, protocol, audio, stocare, locuri)'],
             ['/copy', 'Copiază ultimul răspuns de comandă în clipboard']] },
+        { id: 'privatemsg', t: "Mesaje private",
+          b: ["Scrie unui singur jucător fără ca întregul lobby să citească. Plicul de lângă un nume din lista de jucători deschide o conversație cu el; plicul din antetul lobby-ului o redeschide pe ultima. Conversațiile sunt păstrate pe acest dispozitiv și sunt tot acolo când revii, astfel încât un chat reluat după câteva zile își păstrează istoricul — un număr roșu pe plic arată ce nu ai citit încă, iar coșul din titlul ferestrei șterge definitiv o conversație."],
+          keys: [
+            ["/msg <pseudonim> <mesaj>", "Trimite un mesaj privat din chatul lobby-ului"],
+            ["/msg \"<pseudonim>\" <mesaj>", "La fel, când porecla conține spații"]],
+          note: "Mesajele sunt limitate la 128 de caractere. Serverul nu livrează un mesaj privat unui jucător așezat la o masă în desfășurare, iar istoricul este stocat doar în acest browser — nu te urmează pe alt dispozitiv." },
         { id: 'reactions', t: 'Reacții emoji',
           b: ['Butonul de reacții deschide un selector cu 30 de reacții animate (\uD83C\uDF89, \uD83D\uDE02, \uD83D\uDE31, \uD83D\uDD25\u2026) care se redau cu efect deasupra locului tău, vizibile pentru toată masa — inclusiv jucătorii de pe clientul desktop. Reacțiile pot fi dezactivate complet în Opțiuni avansate.'] },
         { id: 'translate', t: 'Înțelege-i pe toți',

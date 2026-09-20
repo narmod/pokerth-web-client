@@ -159,6 +159,12 @@ export const help = {
             ['/diag \u00b7 /netdbg \u00b7 /fps', 'Chẩn đoán trạng thái ứng dụng, mạng và độ mượt'],
             ['/carddbg \u00b7 /msglog \u00b7 /audiodbg \u00b7 /storage \u00b7 /logdump \u00b7 /seatdbg', 'Gỡ lỗi nâng cao (lá bài, giao thức, âm thanh, lưu trữ, chỗ ngồi)'],
             ['/copy', 'Chép phản hồi lệnh gần nhất vào bộ nhớ tạm']] },
+        { id: 'privatemsg', t: "Tin nhắn riêng",
+          b: ["Nhắn cho một người chơi mà cả sảnh không đọc được. Phong bì bên cạnh tên trong danh sách người chơi mở cuộc trò chuyện với họ; phong bì ở đầu trang sảnh mở lại cuộc trò chuyện gần nhất. Các cuộc trò chuyện được lưu trên thiết bị này và vẫn còn đó khi bạn quay lại, nên một cuộc trò chuyện được tiếp tục sau nhiều ngày vẫn giữ lịch sử của nó — con số màu đỏ trên phong bì cho biết những gì bạn chưa đọc, và thùng rác trên tiêu đề cửa sổ xóa hẳn một cuộc trò chuyện."],
+          keys: [
+            ["/msg <biệt danh> <tin nhắn>", "Gửi tin nhắn riêng từ trò chuyện sảnh"],
+            ["/msg \"<biệt danh>\" <tin nhắn>", "Tương tự, khi biệt danh có dấu cách"]],
+          note: "Tin nhắn giới hạn 128 ký tự. Máy chủ không chuyển tin nhắn riêng đến người chơi đang ngồi ở bàn đang diễn ra, và lịch sử chỉ được lưu trong trình duyệt này — nó không theo bạn sang thiết bị khác." },
         { id: 'reactions', t: 'Phản ứng emoji',
           b: ['Nút phản ứng mở bộ chọn gồm 30 phản ứng động (\uD83C\uDF89, \uD83D\uDE02, \uD83D\uDE31, \uD83D\uDD25\u2026) được phát kèm hiệu ứng phía trên chỗ ngồi của bạn, cả bàn đều thấy — kể cả người chơi trên ứng dụng máy tính. Phản ứng có thể tắt hoàn toàn trong Tùy chọn nâng cao.'] },
         { id: 'translate', t: 'Hiểu được mọi người',

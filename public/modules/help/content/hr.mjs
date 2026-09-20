@@ -159,6 +159,12 @@ export const help = {
             ['/diag \u00b7 /netdbg \u00b7 /fps', 'Dijagnostika stanja klijenta, mreže i glatkoće'],
             ['/carddbg \u00b7 /msglog \u00b7 /audiodbg \u00b7 /storage \u00b7 /logdump \u00b7 /seatdbg', 'Napredno otklanjanje pogrešaka (karte, protokol, zvuk, pohrana, mjesta)'],
             ['/copy', 'Kopiraj zadnji odgovor naredbe u međuspremnik']] },
+        { id: 'privatemsg', t: "Privatne poruke",
+          b: ["Pišite jednom igraču, a da cijeli lobby ne čita. Omotnica uz ime na popisu igrača otvara razgovor s njim; omotnica u zaglavlju lobbyja ponovno otvara posljednji. Razgovori se čuvaju na ovom uređaju i još su tu kad se vratite, pa chat nastavljen danima kasnije ima svoju povijest — crveni broj na omotnici pokazuje što još niste pročitali, a koš u naslovu prozora trajno briše razgovor."],
+          keys: [
+            ["/msg <nadimak> <poruka>", "Pošalji privatnu poruku iz lobby chata"],
+            ["/msg \"<nadimak>\" <poruka>", "Isto, kada nadimak sadrži razmake"]],
+          note: "Poruke su ograničene na 128 znakova. Poslužitelj ne isporučuje privatnu poruku igraču koji sjedi za stolom u tijeku, a povijest se sprema samo u ovom pregledniku — ne prati vas na drugi uređaj." },
         { id: 'reactions', t: 'Emoji reakcije',
           b: ['Gumb za reakcije otvara birač s 30 animiranih reakcija (\uD83C\uDF89, \uD83D\uDE02, \uD83D\uDE31, \uD83D\uDD25\u2026) koje se reproduciraju s efektom iznad tvog mjesta, vidljive cijelom stolu — uključujući igrače na desktop klijentu. Reakcije se mogu potpuno isključiti u Naprednim opcijama.'] },
         { id: 'translate', t: 'Razumij sve',

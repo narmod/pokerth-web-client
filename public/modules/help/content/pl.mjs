@@ -159,6 +159,12 @@ export const help = {
             ['/diag \u00b7 /netdbg \u00b7 /fps', 'Diagnostyka stanu klienta, sieci i płynności'],
             ['/carddbg \u00b7 /msglog \u00b7 /audiodbg \u00b7 /storage \u00b7 /logdump \u00b7 /seatdbg', 'Zaawansowane debugowanie (karty, protokół, audio, pamięć, miejsca)'],
             ['/copy', 'Skopiuj ostatnią odpowiedź polecenia do schowka']] },
+        { id: 'privatemsg', t: "Wiadomości prywatne",
+          b: ["Napisz do jednego gracza tak, aby nie czytało tego całe lobby. Koperta obok nazwy na liście graczy otwiera rozmowę z nim; koperta w nagłówku lobby ponownie otwiera ostatnią. Rozmowy są przechowywane na tym urządzeniu i nadal tam są po powrocie, więc czat podjęty po kilku dniach zachowuje swoją historię — czerwona liczba na kopercie pokazuje, czego jeszcze nie przeczytano, a kosz w tytule okna usuwa rozmowę na dobre."],
+          keys: [
+            ["/msg <nick> <wiadomość>", "Wyślij prywatną wiadomość z czatu lobby"],
+            ["/msg \"<nick>\" <wiadomość>", "To samo, gdy pseudonim zawiera spacje"]],
+          note: "Wiadomości są ograniczone do 128 znaków. Serwer nie dostarcza prywatnej wiadomości graczowi siedzącemu przy trwającym stole, a historia jest zapisywana tylko w tej przeglądarce — nie przenosi się na inne urządzenie." },
         { id: 'reactions', t: 'Reakcje emoji',
           b: ['Przycisk reakcji otwiera wybór 30 animowanych reakcji (\uD83C\uDF89, \uD83D\uDE02, \uD83D\uDE31, \uD83D\uDD25\u2026), które odtwarzają się z efektem nad twoim miejscem, widoczne dla całego stołu — także dla graczy na kliencie desktopowym. Reakcje wyłącza się całkiem w Opcjach zaawansowanych.'] },
         { id: 'translate', t: 'Rozumieć wszystkich',

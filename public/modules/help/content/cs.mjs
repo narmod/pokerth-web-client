@@ -158,6 +158,12 @@ export const help = {
             ['/diag \u00b7 /netdbg \u00b7 /fps', 'Diagnostika stavu klienta, sítě a plynulosti'],
             ['/carddbg \u00b7 /msglog \u00b7 /audiodbg \u00b7 /storage \u00b7 /logdump \u00b7 /seatdbg', 'Pokročilé ladění (karty, protokol, zvuk, úložiště, místa)'],
             ['/copy', 'Zkopírovat poslední odpověď příkazu do schránky']] },
+        { id: 'privatemsg', t: "Soukromé zprávy",
+          b: ["Napište jednomu hráči, aniž by to četlo celé lobby. Obálka vedle jména v seznamu hráčů otevře konverzaci s ním; obálka v záhlaví lobby znovu otevře tu poslední. Konverzace se uchovávají v tomto zařízení a po návratu tam stále jsou, takže chat obnovený o několik dní později má svou historii — červený počet na obálce ukazuje, co jste ještě nečetli, a koš v titulku okna konverzaci nenávratně smaže."],
+          keys: [
+            ["/msg <přezdívka> <zpráva>", "Odeslat soukromou zprávu z chatu lobby"],
+            ["/msg \"<přezdívka>\" <zpráva>", "Totéž, když přezdívka obsahuje mezery"]],
+          note: "Zprávy jsou omezeny na 128 znaků. Server nedoručí soukromou zprávu hráči, který sedí u běžícího stolu, a historie se ukládá pouze v tomto prohlížeči — na jiné zařízení vás nenásleduje." },
         { id: 'reactions', t: 'Emoji reakce',
           b: ['Tlačítko reakcí otevře výběr 30 animovaných reakcí (\uD83C\uDF89, \uD83D\uDE02, \uD83D\uDE31, \uD83D\uDD25\u2026), které se s efektem přehrají nad tvým místem a vidí je celý stůl — včetně hráčů na desktopovém klientu. Reakce lze úplně vypnout v Pokročilých možnostech.'] },
         { id: 'translate', t: 'Rozumět všem',

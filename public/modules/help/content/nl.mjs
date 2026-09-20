@@ -159,6 +159,12 @@ export const help = {
             ['/diag \u00b7 /netdbg \u00b7 /fps', 'Diagnose van clientstatus, netwerk en beeldsnelheid'],
             ['/carddbg \u00b7 /msglog \u00b7 /audiodbg \u00b7 /storage \u00b7 /logdump \u00b7 /seatdbg', 'Geavanceerd debuggen (kaarten, protocol, audio, opslag, stoelen)'],
             ['/copy', 'Het laatste commando-antwoord naar het klembord kopiëren']] },
+        { id: 'privatemsg', t: "Privéberichten",
+          b: ["Schrijf naar één speler zonder dat de hele lobby meeleest. De envelop naast een naam in de spelerslijst opent een gesprek met die speler; de envelop in de kop van de lobby opent het laatste gesprek opnieuw. Gesprekken worden op dit apparaat bewaard en zijn er nog als je terugkomt, zodat een chat die dagen later wordt opgepakt zijn eigen geschiedenis heeft — een rood getal op de envelop toont wat je nog niet hebt gelezen, en de prullenbak in de venstertitel verwijdert een gesprek definitief."],
+          keys: [
+            ["/msg <bijnaam> <bericht>", "Een privébericht sturen vanuit de lobbychat"],
+            ["/msg \"<bijnaam>\" <bericht>", "Hetzelfde, wanneer de bijnaam spaties bevat"]],
+          note: "Berichten zijn beperkt tot 128 tekens. De server bezorgt geen privébericht aan een speler die aan een lopende tafel zit, en de geschiedenis wordt alleen in deze browser opgeslagen — ze volgt je niet naar een ander apparaat." },
         { id: 'reactions', t: 'Emoji-reacties',
           b: ['De reactieknop opent een kiezer met 30 geanimeerde reacties (\uD83C\uDF89, \uD83D\uDE02, \uD83D\uDE31, \uD83D\uDD25\u2026) die met een effect boven je stoel worden afgespeeld, zichtbaar voor de hele tafel — ook voor spelers op de desktopclient. Reacties zijn volledig uit te schakelen in de Geavanceerde opties.'] },
         { id: 'translate', t: 'Iedereen begrijpen',

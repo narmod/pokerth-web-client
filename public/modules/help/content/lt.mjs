@@ -159,6 +159,12 @@ export const help = {
             ['/diag \u00b7 /netdbg \u00b7 /fps', 'Kliento būsenos, tinklo ir sklandumo diagnostika'],
             ['/carddbg \u00b7 /msglog \u00b7 /audiodbg \u00b7 /storage \u00b7 /logdump \u00b7 /seatdbg', 'Išplėstinis derinimas (kortos, protokolas, garsas, saugykla, vietos)'],
             ['/copy', 'Nukopijuoti paskutinį komandos atsakymą į iškarpinę']] },
+        { id: 'privatemsg', t: "Privačios žinutės",
+          b: ["Rašykite vienam žaidėjui, kad neskaitytų visas vestibiulis. Vokas šalia vardo žaidėjų sąraše atveria pokalbį su juo; vokas vestibiulio antraštėje vėl atveria paskutinį. Pokalbiai saugomi šiame įrenginyje ir išlieka grįžus, todėl po kelių dienų tęsiamas pokalbis turi savo istoriją — raudonas skaičius ant voko rodo, ko dar neperskaitėte, o šiukšliadėžė lango antraštėje pokalbį ištrina visam laikui."],
+          keys: [
+            ["/msg <slapyvardis> <žinutė>", "Siųsti privačią žinutę iš vestibiulio pokalbio"],
+            ["/msg \"<slapyvardis>\" <žinutė>", "Tas pats, kai slapyvardyje yra tarpų"]],
+          note: "Žinutės ribojamos iki 128 simbolių. Serveris nepristato privačios žinutės žaidėjui, sėdinčiam prie vykstančio stalo, o istorija saugoma tik šioje naršyklėje — į kitą įrenginį ji nepersikelia." },
         { id: 'reactions', t: 'Jaustukų reakcijos',
           b: ['Reakcijų mygtukas atidaro parinkiklį su 30 animuotų reakcijų (\uD83C\uDF89, \uD83D\uDE02, \uD83D\uDE31, \uD83D\uDD25\u2026), kurios su efektu paleidžiamos virš tavo vietos, matomos visam stalui — įskaitant darbalaukio kliento žaidėjus. Reakcijas galima visiškai išjungti Išplėstinėse parinktyse.'] },
         { id: 'translate', t: 'Suprask visus',

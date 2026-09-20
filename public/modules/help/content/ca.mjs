@@ -159,6 +159,12 @@ export const help = {
             ['/diag \u00b7 /netdbg \u00b7 /fps', 'Diagnòstics d\u2019estat del client, xarxa i fluïdesa'],
             ['/carddbg \u00b7 /msglog \u00b7 /audiodbg \u00b7 /storage \u00b7 /logdump \u00b7 /seatdbg', 'Depuració avançada (cartes, protocol, àudio, emmagatzematge, seients)'],
             ['/copy', 'Copia l\u2019última resposta d\u2019ordre al porta-retalls']] },
+        { id: 'privatemsg', t: "Missatges privats",
+          b: ["Escriu a un sol jugador sense que tot el vestíbul ho llegeixi. El sobre al costat d’un nom a la llista de jugadors obre una conversa amb ell; el sobre de la capçalera del vestíbul torna a obrir l’última. Les converses es conserven en aquest dispositiu i continuen allà quan tornes, de manera que un xat reprès dies després manté el seu historial — un comptador vermell al sobre indica el que encara no has llegit, i la paperera del títol de la finestra esborra una conversa definitivament."],
+          keys: [
+            ["/msg <sobrenom> <missatge>", "Envia un missatge privat des del xat del vestíbul"],
+            ["/msg \"<sobrenom>\" <missatge>", "El mateix, quan el sobrenom conté espais"]],
+          note: "Els missatges estan limitats a 128 caràcters. El servidor no lliura un missatge privat a un jugador assegut en una taula en curs, i l’historial només es desa en aquest navegador — no et segueix a un altre dispositiu." },
         { id: 'reactions', t: 'Reaccions d\u2019emoji',
           b: ['El botó de reaccions obre un selector amb 30 reaccions animades (\uD83C\uDF89, \uD83D\uDE02, \uD83D\uDE31, \uD83D\uDD25\u2026) que es reprodueixen amb un efecte sobre el teu seient, visibles per a tota la taula — inclosos els jugadors del client d\u2019escriptori. Les reaccions es poden desactivar del tot a les Opcions avançades.'] },
         { id: 'translate', t: 'Entendre tothom',

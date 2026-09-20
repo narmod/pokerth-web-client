@@ -159,6 +159,12 @@ export const help = {
             ['/diag \u00b7 /netdbg \u00b7 /fps', 'Diagnostica dello stato del client, della rete e della fluidità'],
             ['/carddbg \u00b7 /msglog \u00b7 /audiodbg \u00b7 /storage \u00b7 /logdump \u00b7 /seatdbg', 'Debug avanzato (carte, protocollo, audio, memoria, posti)'],
             ['/copy', 'Copiare l\u2019ultima risposta di comando negli appunti']] },
+        { id: 'privatemsg', t: "Messaggi privati",
+          b: ["Scrivi a un solo giocatore senza che tutta la lobby legga. La busta accanto a un nome nell’elenco dei giocatori apre una conversazione con lui; la busta nell’intestazione della lobby riapre l’ultima. Le conversazioni restano su questo dispositivo e sono ancora lì quando torni, quindi una chat ripresa giorni dopo conserva la sua cronologia — un contatore rosso sulla busta indica ciò che non hai ancora letto, e il cestino nel titolo della finestra elimina definitivamente una conversazione."],
+          keys: [
+            ["/msg <nickname> <messaggio>", "Invia un messaggio privato dalla chat della lobby"],
+            ["/msg \"<nickname>\" <messaggio>", "Lo stesso, quando il soprannome contiene spazi"]],
+          note: "I messaggi sono limitati a 128 caratteri. Il server non recapita un messaggio privato a un giocatore seduto a un tavolo in corso, e la cronologia è salvata solo in questo browser — non ti segue su un altro dispositivo." },
         { id: 'reactions', t: 'Reazioni emoji',
           b: ['Il pulsante delle reazioni apre un selettore di 30 reazioni animate (\uD83C\uDF89, \uD83D\uDE02, \uD83D\uDE31, \uD83D\uDD25\u2026) che si riproducono con un effetto sopra il tuo posto, visibili a tutto il tavolo — compresi i giocatori sul client desktop. Le reazioni si disattivano del tutto nelle Opzioni avanzate.'] },
         { id: 'translate', t: 'Capire tutti',

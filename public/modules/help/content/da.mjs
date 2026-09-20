@@ -159,6 +159,12 @@ export const help = {
             ['/diag \u00b7 /netdbg \u00b7 /fps', 'Diagnostik af klientstatus, netværk og flydende afvikling'],
             ['/carddbg \u00b7 /msglog \u00b7 /audiodbg \u00b7 /storage \u00b7 /logdump \u00b7 /seatdbg', 'Avanceret fejlfinding (kort, protokol, lyd, lager, pladser)'],
             ['/copy', 'Kopiér det seneste kommandosvar til udklipsholderen']] },
+        { id: 'privatemsg', t: "Private beskeder",
+          b: ["Skriv til én spiller, uden at hele lobbyen læser med. Konvolutten ud for et navn på spillerlisten åbner en samtale med vedkommende; konvolutten i lobbyens sidehoved genåbner den seneste. Samtaler gemmes på denne enhed og er der stadig, når du kommer tilbage, så en chat, der genoptages flere dage senere, har sin egen historik — et rødt tal på konvolutten viser, hvad du endnu ikke har læst, og skraldespanden i vinduets titel sletter en samtale for altid."],
+          keys: [
+            ["/msg <kaldenavn> <besked>", "Send en privat besked fra lobbychatten"],
+            ["/msg \"<kaldenavn>\" <besked>", "Det samme, når kaldenavnet indeholder mellemrum"]],
+          note: "Beskeder er begrænset til 128 tegn. Serveren leverer ikke en privat besked til en spiller, der sidder ved et igangværende bord, og historikken gemmes kun i denne browser — den følger dig ikke til en anden enhed." },
         { id: 'reactions', t: 'Emoji-reaktioner',
           b: ['Reaktionsknappen åbner en vælger med 30 animerede reaktioner (\uD83C\uDF89, \uD83D\uDE02, \uD83D\uDE31, \uD83D\uDD25\u2026), der afspilles med en effekt over din plads, synlige for hele bordet — også spillere på skrivebordsklienten. Reaktioner kan slås helt fra i Avancerede indstillinger.'] },
         { id: 'translate', t: 'Forstå alle',

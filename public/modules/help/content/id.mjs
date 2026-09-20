@@ -161,6 +161,12 @@ export const help = {
             ['/diag \u00b7 /netdbg \u00b7 /fps', 'Diagnostik status klien, jaringan, dan framerate'],
             ['/carddbg \u00b7 /msglog \u00b7 /audiodbg \u00b7 /storage \u00b7 /logdump \u00b7 /seatdbg', 'Debug lanjutan (kartu, protokol, audio, penyimpanan, kursi)'],
             ['/copy', 'Salin balasan perintah terakhir ke papan klip']] },
+        { id: 'privatemsg', t: "Pesan pribadi",
+          b: ["Tulis pesan kepada satu pemain tanpa dibaca seluruh lobi. Amplop di samping nama pada daftar pemain membuka percakapan dengannya; amplop di header lobi membuka kembali percakapan terakhir. Percakapan disimpan di perangkat ini dan masih ada saat kamu kembali, sehingga obrolan yang dilanjutkan beberapa hari kemudian tetap memiliki riwayatnya — angka merah pada amplop menunjukkan yang belum kamu baca, dan tempat sampah di judul jendela menghapus percakapan secara permanen."],
+          keys: [
+            ["/msg <nama> <pesan>", "Kirim pesan pribadi dari obrolan lobi"],
+            ["/msg \"<nama>\" <pesan>", "Sama, jika nama panggilan mengandung spasi"]],
+          note: "Pesan dibatasi 128 karakter. Server tidak mengirimkan pesan pribadi kepada pemain yang sedang duduk di meja yang berjalan, dan riwayat hanya disimpan di browser ini — tidak ikut ke perangkat lain." },
         { id: 'reactions', t: 'Reaksi emoji',
           b: ['Tombol reaksi membuka pemilih 30 reaksi beranimasi (\uD83C\uDF89, \uD83D\uDE02, \uD83D\uDE31, \uD83D\uDD25\u2026) yang dimainkan dengan efek di atas kursi Anda, terlihat oleh semua orang di meja \u2014 termasuk pemain di klien desktop. Reaksi dapat dinonaktifkan sepenuhnya di Opsi lanjutan.'] },
         { id: 'translate', t: 'Memahami semua orang',

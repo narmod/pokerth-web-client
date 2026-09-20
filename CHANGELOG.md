@@ -139,6 +139,12 @@ highlights below.
 
 ### Fixed
 
+- **Translation backlog of the private-message feature closed** (`web.81`) —
+  the help section `chat/privatemsg` existed in 18 corpora only and the
+  catalogue key `chatMuteTitle` in 9 catalogues only; the help loader falls
+  back per file, not per section, so 43 languages simply had no such chapter.
+  Both are now present in all 61 languages: every catalogue has the 1663 keys
+  of `en`, every help corpus the same chapters, sections and field shapes.
 - **Traditional Chinese browsers landed on Simplified Chinese** (`web.80`) —
   first-visit detection only knew the `pt-BR` / `pt-PT` region pair, so
   `zh-TW`, `zh-HK`, `zh-MO` and `zh-Hant*` fell through to the primary subtag

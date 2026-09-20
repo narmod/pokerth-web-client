@@ -161,6 +161,12 @@ export const help = {
             ['/diag \u00b7 /netdbg \u00b7 /fps', 'Uchunguzi wa hali ya kiteja, mtandao na kasi ya fremu'],
             ['/carddbg \u00b7 /msglog \u00b7 /audiodbg \u00b7 /storage \u00b7 /logdump \u00b7 /seatdbg', 'Utatuzi wa kina (karata, itifaki, sauti, hifadhi, viti)'],
             ['/copy', 'Nakili jibu la amri ya mwisho kwenye ubao wa kunakili']] },
+        { id: 'privatemsg', t: "Ujumbe wa faragha",
+          b: ["Mwandikie mchezaji mmoja bila ukumbi mzima kusoma. Bahasha iliyo kando ya jina kwenye orodha ya wachezaji hufungua mazungumzo naye; bahasha kwenye kichwa cha ukumbi hufungua tena ya mwisho. Mazungumzo huhifadhiwa kwenye kifaa hiki na bado yapo unaporudi, kwa hiyo chati inayoendelezwa siku kadhaa baadaye ina historia yake — nambari nyekundu kwenye bahasha huonyesha ambayo bado hujasoma, na pipa kwenye kichwa cha dirisha hufuta mazungumzo kabisa."],
+          keys: [
+            ["/msg <jina> <ujumbe>", "Tuma ujumbe wa faragha kutoka chati ya ukumbi"],
+            ["/msg \"<jina>\" <ujumbe>", "Vivyo hivyo, jina la utani likiwa na nafasi"]],
+          note: "Ujumbe una kikomo cha herufi 128. Seva haipeleki ujumbe wa faragha kwa mchezaji aliyeketi kwenye meza inayoendelea, na historia huhifadhiwa kwenye kivinjari hiki pekee — haikufuati kwenye kifaa kingine." },
         { id: 'reactions', t: 'Miitikio ya emoji',
           b: ['Kitufe cha miitikio hufungua kichagua cha miitikio 30 ya uhuishaji (\uD83C\uDF89, \uD83D\uDE02, \uD83D\uDE31, \uD83D\uDD25\u2026) inayocheza na athari juu ya kiti chako, ikionekana na wote mezani \u2014 pamoja na wachezaji kwenye kiteja cha kompyuta. Miitikio inaweza kuzimwa kabisa kwenye chaguo za kina.'] },
         { id: 'translate', t: 'Kuelewa kila mtu',

@@ -159,6 +159,12 @@ export const help = {
             ['/diag \u00b7 /netdbg \u00b7 /fps', 'Diagnostiek van kliëntstatus, netwerk en vloeiendheid'],
             ['/carddbg \u00b7 /msglog \u00b7 /audiodbg \u00b7 /storage \u00b7 /logdump \u00b7 /seatdbg', 'Gevorderde ontfouting (kaarte, protokol, klank, berging, sitplekke)'],
             ['/copy', 'Kopieer die laaste opdragantwoord na die knipbord']] },
+        { id: 'privatemsg', t: "Privaat boodskappe",
+          b: ["Skryf aan een speler sonder dat die hele portaal saamlees. Die koevert langs ’n naam in die spelerslys open ’n gesprek met daardie speler; die koevert in die portaalkop open die laaste gesprek weer. Gesprekke word op hierdie toestel bewaar en is steeds daar wanneer jy terugkom, sodat ’n klets wat dae later hervat word sy eie geskiedenis behou — ’n rooi telling op die koevert wys wat jy nog nie gelees het nie, en die asblik in die venstertitel vee ’n gesprek vir goed uit."],
+          keys: [
+            ["/msg <bynaam> <boodskap>", "Stuur ’n privaat boodskap vanuit die portaalklets"],
+            ["/msg \"<bynaam>\" <boodskap>", "Dieselfde, wanneer die bynaam spasies bevat"]],
+          note: "Boodskappe is beperk tot 128 karakters. Die bediener lewer nie ’n privaat boodskap af aan ’n speler wat by ’n lopende tafel sit nie, en die geskiedenis word net in hierdie blaaier gestoor — dit volg jou nie na ’n ander toestel nie." },
         { id: 'reactions', t: 'Emoji-reaksies',
           b: ['Die reaksieknoppie maak \u2019n kieser met 30 geanimeerde reaksies oop (\uD83C\uDF89, \uD83D\uDE02, \uD83D\uDE31, \uD83D\uDD25\u2026) wat met \u2019n effek bo jou sitplek speel, sigbaar vir die hele tafel — ook vir spelers op die werkskermkliënt. Reaksies kan heeltemal in Gevorderde opsies afgeskakel word.'] },
         { id: 'translate', t: 'Verstaan almal',

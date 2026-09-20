@@ -159,6 +159,12 @@ export const help = {
             ['/diag \u00b7 /netdbg \u00b7 /fps', 'İstemci durumu, ağ ve akıcılık tanıları'],
             ['/carddbg \u00b7 /msglog \u00b7 /audiodbg \u00b7 /storage \u00b7 /logdump \u00b7 /seatdbg', 'İleri hata ayıklama (kartlar, protokol, ses, depolama, koltuklar)'],
             ['/copy', 'Son komut yanıtını panoya kopyala']] },
+        { id: 'privatemsg', t: "Özel mesajlar",
+          b: ["Tüm lobi okumadan tek bir oyuncuya yazın. Oyuncu listesinde bir ismin yanındaki zarf onunla bir konuşma açar; lobi başlığındaki zarf son konuşmayı yeniden açar. Konuşmalar bu cihazda saklanır ve geri döndüğünüzde hâlâ oradadır, böylece günler sonra sürdürülen bir sohbet kendi geçmişini taşır — zarfın üzerindeki kırmızı sayı henüz okumadıklarınızı gösterir, pencere başlığındaki çöp kutusu ise konuşmayı kalıcı olarak siler."],
+          keys: [
+            ["/msg <takma ad> <mesaj>", "Lobi sohbetinden özel mesaj gönder"],
+            ["/msg \"<takma ad>\" <mesaj>", "Takma ad boşluk içerdiğinde de aynısı"]],
+          note: "Mesajlar 128 karakterle sınırlıdır. Sunucu, devam eden bir masada oturan oyuncuya özel mesaj iletmez ve geçmiş yalnızca bu tarayıcıda saklanır — sizi başka bir cihaza takip etmez." },
         { id: 'reactions', t: 'Emoji tepkileri',
           b: ['Tepki düğmesi, koltuğunun üzerinde efektle oynayan ve bütün masaya görünen 30 animasyonlu tepkiden (\uD83C\uDF89, \uD83D\uDE02, \uD83D\uDE31, \uD83D\uDD25\u2026) oluşan bir seçici açar — masaüstü istemcideki oyuncular dahil. Tepkiler Gelişmiş seçeneklerden tamamen kapatılabilir.'] },
         { id: 'translate', t: 'Herkesi anlamak',

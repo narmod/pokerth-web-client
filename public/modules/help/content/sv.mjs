@@ -159,6 +159,12 @@ export const help = {
             ['/diag \u00b7 /netdbg \u00b7 /fps', 'Diagnostik av klientstatus, nätverk och flyt'],
             ['/carddbg \u00b7 /msglog \u00b7 /audiodbg \u00b7 /storage \u00b7 /logdump \u00b7 /seatdbg', 'Avancerad felsökning (kort, protokoll, ljud, lagring, platser)'],
             ['/copy', 'Kopiera det senaste kommandosvaret till urklipp']] },
+        { id: 'privatemsg', t: "Privata meddelanden",
+          b: ["Skriv till en enda spelare utan att hela lobbyn läser med. Kuvertet bredvid ett namn i spelarlistan öppnar en konversation med spelaren; kuvertet i lobbyns sidhuvud öppnar den senaste igen. Konversationer sparas på den här enheten och finns kvar när du kommer tillbaka, så en chatt som tas upp flera dagar senare har sin egen historik — en röd siffra på kuvertet visar vad du inte har läst än, och papperskorgen i fönstrets titel raderar en konversation för gott."],
+          keys: [
+            ["/msg <smeknamn> <meddelande>", "Skicka ett privat meddelande från lobbychatten"],
+            ["/msg \"<smeknamn>\" <meddelande>", "Samma sak, när smeknamnet innehåller mellanslag"]],
+          note: "Meddelanden är begränsade till 128 tecken. Servern levererar inte ett privat meddelande till en spelare som sitter vid ett pågående bord, och historiken sparas bara i den här webbläsaren — den följer inte med till en annan enhet." },
         { id: 'reactions', t: 'Emojireaktioner',
           b: ['Reaktionsknappen öppnar en väljare med 30 animerade reaktioner (\uD83C\uDF89, \uD83D\uDE02, \uD83D\uDE31, \uD83D\uDD25\u2026) som spelas upp med en effekt över din plats, synliga för hela bordet — även spelare på skrivbordsklienten. Reaktioner kan stängas av helt i Avancerade inställningar.'] },
         { id: 'translate', t: 'Förstå alla',

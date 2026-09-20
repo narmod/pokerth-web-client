@@ -159,6 +159,12 @@ export const help = {
             ['/diag \u00b7 /netdbg \u00b7 /fps', 'Diagnose von Client-Zustand, Netzwerk und Bildrate'],
             ['/carddbg \u00b7 /msglog \u00b7 /audiodbg \u00b7 /storage \u00b7 /logdump \u00b7 /seatdbg', 'Erweitertes Debugging (Karten, Protokoll, Audio, Speicher, Sitze)'],
             ['/copy', 'Die letzte Befehlsantwort in die Zwischenablage kopieren']] },
+        { id: 'privatemsg', t: "Private Nachrichten",
+          b: ["Schreibe einem einzelnen Spieler, ohne dass die ganze Lobby mitliest. Der Umschlag neben einem Namen in der Spielerliste öffnet eine Unterhaltung mit ihm; der Umschlag in der Kopfzeile der Lobby öffnet die letzte erneut. Unterhaltungen bleiben auf diesem Gerät gespeichert und sind noch da, wenn du zurückkommst, sodass ein Tage später wieder aufgenommener Chat seinen Verlauf behält — eine rote Zahl auf dem Umschlag zeigt, was du noch nicht gelesen hast, und der Papierkorb im Fenstertitel löscht eine Unterhaltung endgültig."],
+          keys: [
+            ["/msg <Spielername> <Nachricht>", "Private Nachricht aus dem Lobby-Chat senden"],
+            ["/msg \"<Spielername>\" <Nachricht>", "Dasselbe, wenn der Spitzname Leerzeichen enthält"]],
+          note: "Nachrichten sind auf 128 Zeichen begrenzt. Der Server stellt einem Spieler, der an einem laufenden Tisch sitzt, keine private Nachricht zu, und der Verlauf wird nur in diesem Browser gespeichert — er folgt dir nicht auf ein anderes Gerät." },
         { id: 'reactions', t: 'Emoji-Reaktionen',
           b: ['Die Reaktions-Schaltfläche öffnet eine Auswahl von 30 animierten Reaktionen (\uD83C\uDF89, \uD83D\uDE02, \uD83D\uDE31, \uD83D\uDD25\u2026), die mit einem Effekt über deinem Sitz abgespielt werden, sichtbar für den ganzen Tisch — auch für Spieler am Desktop-Client. Reaktionen lassen sich in den Erweiterten Optionen komplett abschalten.'] },
         { id: 'translate', t: 'Alle verstehen',
