@@ -6418,12 +6418,17 @@ const App = (() => {
 
         // --- RECONNEXION AUTO (limitée pour éviter le blocage IP) ---
         S._reconnectAttempts++;
-        var maxAttempts = 3; // max 3 tentatives pour éviter le blocage IP
+        // 6, comme _reconnectContinue qui mène TOUTES les tentatives suivantes : ce
+        // premier passage affichait « (1/3) », puis la suite « (2/6) », « (3/6) »…
+        // (trouvé par scripts/test-reconnect-browser.mjs). La politique réelle est
+        // inchangée : 6 tentatives, 5 s puis 6 · 12 · 24 · 30 · 30 s.
+        var maxAttempts = 6;
         if (S._reconnectAttempts > maxAttempts) {
           _hideBanner();
           S._wasAuthenticated = false;
           show('s-connect');
           setStatus(t('reconnFailed', { n: maxAttempts }), 'err');
+          try { window._connLostShow && window._connLostShow(t('reconnFailed', { n: maxAttempts })); } catch (eCl) {}
           return;
         }
         // Délai croissant : 5s, 15s, 30s — assez long pour ne pas spammer
@@ -6479,6 +6484,11 @@ const App = (() => {
         _hideBanner();
         show('s-connect');
         setStatus(t('reconnFailed', { n: maxAttempts }), 'err');
+        // The status line only exists inside the login FORM: the player who was
+        // just thrown out of his table landed on the mode picker with no word of
+        // explanation (found by scripts/test-reconnect-browser.mjs). Same
+        // "connection lost" window as a server-side rejection (QML parity).
+        try { window._connLostShow && window._connLostShow(t('reconnFailed', { n: maxAttempts })); } catch (eCl) {}
         return;
       }
       // Exponentiel : 3s → 6s → 12s → 24s → 30s → 30s
@@ -11842,7 +11852,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.9-web.99'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.9-web.100'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif ou la palette High contrast
    (Android, Safari, iOS standalone récent). Lit --theme-color et met

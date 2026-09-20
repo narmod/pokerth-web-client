@@ -1354,6 +1354,31 @@ function renderSeatsImmediate() {
         // QML (communityArea, branche wide) : verticalCenterOffset =
         // communityCenterY - height/2 -> centre de la rangee = barycentre.
         _commTargetY = _commC3;
+        // AJUSTEMENT WEB (web.100, trouvé par scripts/test-table-sweep.mjs sous
+        // WebKit) : le QML centre la RANGÉE de cartes ; le badge du pot, lui,
+        // se dessine encore au-dessus (haut du badge ≈ centre − 69·cs, bas des
+        // cartes = centre + 32·cs). Sur un téléphone à plat (zone ~200 px de
+        // haut) il ne restait que 3-5 px entre la boîte du haut et le badge,
+        // contre ~25 px sous les cartes : au moindre écart de métrique de
+        // police (Safari) la boîte recouvrait le pot. En compact on centre
+        // donc le BLOC pot+cartes entre la boîte du haut et la self-box
+        // (décalage vers le bas, plafonné à 14 px ; jamais vers le haut).
+        // Seule une boîte située AU-DESSUS du badge (même colonne) compte : à 3
+        // joueurs les boîtes du haut sont sur les côtés, rien à dégager. Et le
+        // décalage ne descend jamais la rangée à moins de 8 px du siège du bas.
+        if (_isCmp3 && _selfTop3 > 0) {
+          var _eB3 = (typeof _fEffH === 'number' && _fEffH > 0.05) ? _fEffH : 1;
+          var _hp3 = 40 * _csComm * _eB3, _topC3 = -Infinity;
+          for (var _tb = 0; _tb < _rects3.length; _tb++) {
+            var _rt = _rects3[_tb];
+            if (_rt.r > _zW3 / 2 - _hp3 && _rt.l < _zW3 / 2 + _hp3 && _rt.b <= _commC3 && _rt.b > _topC3) _topC3 = _rt.b;
+          }
+          if (_topC3 > -Infinity) {
+            var _mTop3 = (_commC3 - 69 * _csComm * _eB3) - _topC3;
+            var _mBot3 = _selfTop3 - (_commC3 + 32 * _csComm * _eB3);
+            if (_mBot3 > _mTop3) _commTargetY = _commC3 + Math.max(0, Math.min(14, (_mBot3 - _mTop3) / 2, _mBot3 - 8));
+          }
+        }
       }
       if (!_commSkip3) {
       document.documentElement.style.setProperty('--comm-scale', _csComm.toFixed(3));

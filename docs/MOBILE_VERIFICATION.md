@@ -145,11 +145,35 @@ test that runs WITH the service worker (iPhone 15 + Pixel 7, about 40 s each):
 5. the manifest is valid and every icon exists with the announced size.
 
 Playwright's WebKit build cannot reload a page whose origin is down (internal
-engine error): on the iPhone profile step 3 is reported as skipped and Chromium
-covers it; steps 1, 2, 4 and 5 run on both engines.
+engine error, then the browser stays wedged): on the iPhone profile step 3 is
+not attempted and Chromium covers it; steps 1, 2, 4 and 5 run on both engines.
+Every browser test also has a watchdog (`runPlan(..., hardTimeoutMin)`, 8 min
+for this one, 40 by default): a hung browser ends the script with exit code 3.
 
 Not covered (needs a real device): the install prompt itself, the standalone
 window, iOS "Add to Home Screen", push / share target.
+
+## Connection loss in the middle of a hand
+
+`npm run test:reconnect-browser` (`scripts/test-reconnect-browser.mjs`) cuts the
+fixture socket on iPhone 15, Pixel 7 and Galaxy A55 landscape; the app's timers
+are driven with Playwright's clock, so the ~110 s of real back-off take seconds.
+
+- **A, the link comes back at the first retry**: the table stays on screen, a
+  translated notice appears on it (inside the screen, countdown, `1/6`, "your
+  seat stays reserved"), no socket is opened before the 5 s back-off, then ONE
+  retry to the same URL without `fresh=1` (a rebind - a fresh login would kill
+  the seat); the hand goes on over the new socket, the notice goes away, the
+  action bar is live and the click leaves on the new socket.
+- **B, the network stays down**: six attempts with a growing delay and not one
+  more (hammering gets the IP blocked), counter `n/6` throughout, then the login
+  screen **with** the "Connection lost" window and its translated message.
+- **C, leaving on purpose**: no notice, no reconnection attempt.
+
+The fixture socket (`scripts/lib/mobile-harness.mjs`) has `drop()` (the link
+dies under the app) and `window.__fxRefuse = true` (every new socket fails).
+Not covered: the proxy side of the rebind (session grace, `sid`), and a rejoin
+after the grace expired - they need the real proxy.
 
 ## Limits - what still needs a real phone
 

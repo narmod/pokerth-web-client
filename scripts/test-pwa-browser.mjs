@@ -85,16 +85,13 @@ async function runDevice(browser, name, descriptor) {
 
     await check('OFFLINE: origin unreachable - the app still boots, entirely from the cache', async () => {
       await page.waitForTimeout(1500);           // let the background revalidations of the previous load finish
-      state.down = true; if (!isWebkit) await context.setOffline(true);
+      // Not even attempted on WebKit: the failed reload leaves Playwright's WebKit
+      // wedged (the first CI run lost the next three checks, the second one hung
+      // for good on the page that was supposed to replace it).
+      if (isWebkit) { offlineOk = false; console.log('      (skipped on Playwright WebKit: it cannot reload a page whose origin is down - Chromium covers it)'); return; }
+      state.down = true; await context.setOffline(true);
       const before = state.hits.length, errBefore = errors.length;
-      try { await page.reload({ waitUntil: 'domcontentloaded' }); await appReady(page); }
-      catch (error) {
-        if (!isWebkit) throw error;
-        offlineOk = false; state.down = false;
-        console.log('      (skipped on this engine: ' + String(error.message).split('\n')[0] + ')');
-        await page.close().catch(() => {}); page = await open();
-        return;
-      }
+      await page.reload({ waitUntil: 'domcontentloaded' }); await appReady(page);
       await page.waitForTimeout(800);
       assert.equal(state.hits.length, before, 'the server answered although it is down: ' + state.hits.slice(before, before + 5).join(' '));
       assert.deepEqual(errors.slice(errBefore), [], 'JavaScript error while booting offline');
@@ -172,6 +169,6 @@ async function runDevice(browser, name, descriptor) {
   finally { state.down = false; await context.setOffline(false).catch(() => {}); await context.close(); }
 }
 
-const code = await runPlan('test-pwa-browser', reporter, runDevice, PHONES);
+const code = await runPlan('test-pwa-browser', reporter, runDevice, PHONES, 8);
 server.close();
 process.exit(code);

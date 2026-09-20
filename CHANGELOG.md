@@ -174,6 +174,22 @@ highlights below.
 
 ### Fixed
 
+- **Reconnection, found by the new `test:reconnect-browser`** (`web.100`) —
+  after the last failed attempt the app did `show('s-connect')` +
+  `setStatus(reconnFailed)`, but the status line only exists inside the login
+  *form*: the player thrown out of his table landed on the mode picker with no
+  explanation at all. Both give-up paths now also open the "Connection lost"
+  window (`_connLostShow`, the one used for server-side rejections, QML
+  parity). The first attempt displayed `(1/3)` while every following one, led by
+  `_reconnectContinue`, displayed `(n/6)`: the label now reads `/6` from the
+  start; the policy itself (6 attempts, 5 s then 6·12·24·30·30 s, rebind-first)
+  is unchanged.
+- **Pot badge against the top box in compact landscape** (`web.100`) — the QML
+  centres the card ROW; the pot badge still draws above it, leaving 3–5 px
+  under the top box against ~25 px below the cards on a 200 px-high zone: with
+  Safari's font metrics the box covered the pot (WebKit table sweep, heads-up).
+  In compact landscape the pot+cards BLOCK is now centred between the top box
+  and the self box (shift down, capped at 14 px, never up): ~15 px on each side.
 - **Update banner squeezed on phones** (`web.99`) — `#update-banner` is
   `position: fixed; left: 50%`: a fixed box only has half the screen to
   shrink-to-fit in, so "New version available" wrapped onto three lines beside

@@ -126,10 +126,13 @@ export async function openTable(page, base, options = {}) {
   await page.evaluate(() => {
     class FixtureSocket extends EventTarget {
       static CONNECTING = 0; static OPEN = 1; static CLOSING = 2; static CLOSED = 3;
-      constructor(url) { super(); this.url = url; this.readyState = 1; this.sent = []; FixtureSocket.instance = this;
-        setTimeout(() => this.onopen && this.onopen({ target: this }), 0); }
+      // window.__fxRefuse = true: the network is still down, every new socket fails at once.
+      constructor(url) { super(); this.url = url; this.sent = []; FixtureSocket.instance = this; FixtureSocket.count = (FixtureSocket.count || 0) + 1;
+        if (window.__fxRefuse) { this.readyState = 3; setTimeout(() => { if (this.onerror) this.onerror({ target: this }); if (this.onclose) this.onclose({ code: 1006, wasClean: false, target: this }); }, 0); }
+        else { this.readyState = 1; setTimeout(() => this.onopen && this.onopen({ target: this }), 0); } }
       send(data) { this.sent.push(data); }
       close() { this.readyState = 3; if (this.onclose) this.onclose({ code: 1000, target: this }); }
+      drop() { this.readyState = 3; if (this.onclose) this.onclose({ code: 1006, wasClean: false, target: this }); }   // the link dies under the app
       receive(payload) {
         const frame = new ArrayBuffer(4 + payload.byteLength);
         new DataView(frame).setUint32(0, payload.byteLength, false);
@@ -200,7 +203,12 @@ export const dealTurn = (page, card) => page.evaluate((c) => { const f = window.
 
 // ── Plan: PTH_MOBILE / PTH_DEVICES / PTH_ENGINE, engines launched per family,
 // a missing engine is skipped with a notice. runDevice(browser, name, descriptor)
-export async function runPlan(title, reporter, runDevice, matrix = MATRIX) {
+export async function runPlan(title, reporter, runDevice, matrix = MATRIX, hardTimeoutMin = 40) {
+  // Watchdog: a browser that wedges (seen with WebKit after an internal error)
+  // must not hold a CI job until its own timeout. Exit code 3 = hung.
+  const watchdog = setTimeout(() => { console.log(`\n${title}: no end after ${hardTimeoutMin} min - aborting`);
+    if (process.env.GITHUB_ACTIONS) console.log(`::error title=${title}::hung: no end after ${hardTimeoutMin} min (${reporter.device})`); process.exit(3); }, hardTimeoutMin * 60000);
+  watchdog.unref();
   const family = (process.env.PTH_MOBILE || 'all').toLowerCase();
   const only = (process.env.PTH_DEVICES || '').split(',').map((s) => s.trim()).filter(Boolean);
   const plan = matrix.filter((d) => (family === 'all' || d.family === family) && (!only.length || only.includes(d.name)));

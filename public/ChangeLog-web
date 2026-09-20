@@ -1,4 +1,9 @@
-2026-09-20 version 2.1.9-web.99 (current series):
+2026-09-20 version 2.1.9-web.100 (current series):
+- improvement: phones held in landscape - the pot and the community cards are now centred together between the top player and your own box, so the pot no longer touches the player above it
+- bugfix: when the connection could not be restored, you were sent back to the start screen without a word; a "Connection lost" window now explains what happened
+- bugfix: the reconnection counter read "1/3" on the first attempt and "2/6", "3/6"... afterwards; it now counts out of 6 from the start
+
+2026-09-20 version 2.1.9-web.99:
 - bugfix: on phones the "New version available" banner squeezed its text onto three lines next to the Update button; it now stays on one line
 
 2026-09-20 version 2.1.9-web.98:
