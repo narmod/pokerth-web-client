@@ -1,4 +1,7 @@
-2026-09-20 version 2.1.9-web.102 (current series):
+2026-09-20 version 2.1.9-web.103 (current series):
+- bugfix: phones held in landscape - the bet keypad was cut off at the bottom of the screen (OK and Cancel unreachable); it now lies flat: amount with Cancel / OK, the digits on one line, the quick amounts below - and your own cards stay visible above it
+
+2026-09-20 version 2.1.9-web.102:
 - bugfix: iPhone - on the start screen the mode card was pushed up and the footer floated too high above the bottom edge; the card is centred again between the header and the footer
 
 2026-09-20 version 2.1.9-web.101:

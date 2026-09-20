@@ -174,6 +174,17 @@ highlights below.
 
 ### Fixed
 
+- **Bet keypad cut off on landscape phones** (`web.103`, reported by narmod) —
+  on touch screens the keypad replaces the action rows in place (~275 px: head,
+  4×4 grid of 42 px keys, foot); a landscape phone has ~330 px under the header
+  and the table keeps 160: OK / Cancel were below the screen. Under
+  `max-height: 500px` landscape it lies flat (head + Cancel/OK on one line, the
+  twelve keys on one line, the quick amounts below; 32 px keys, 29 px under
+  360 px), the amount + slider row is hidden meanwhile. Image themes: the
+  9-slice key image does not survive a 32×40 px key, the digit keys use the
+  plain key style there. `bet-keypad.mjs` now re-renders the seats on open /
+  close so the player's own box stays visible above the taller panel (it only
+  happened by itself in portrait). New check in `test:mobile`.
 - **Login card off-centre on iPhone** (`web.102`, regression of `web.97`,
   reported by narmod) — the in-flow footer reserved a flat 48 px for the header
   (82 px on an iPhone: 38 px bar + status-bar inset) and stacked its own

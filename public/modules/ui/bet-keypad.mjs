@@ -224,6 +224,16 @@ function openBetKeypad() {
   document.addEventListener('keydown', _keyH, true);
   _paint();
   try { if (window.updateBottomLayout) window.updateBottomLayout(); } catch (e) {}
+  _relayoutTable();
+}
+
+// The in-place keypad is taller than the rows it replaces: the table zone
+// shrinks. In portrait the change is large and the table re-renders by itself;
+// in landscape (~40px) it did not, and the player's own box - his hole cards -
+// stayed under the keypad while he was choosing his bet.
+function _relayoutTable() {
+  if (_float) return;
+  try { requestAnimationFrame(function () { try { if (typeof window.renderSeats === 'function') window.renderSeats(); } catch (e) {} }); } catch (e) {}
 }
 
 function closeBetKeypad() {
@@ -240,7 +250,7 @@ function closeBetKeypad() {
   if (_outH) { document.removeEventListener('pointerdown', _outH, true); _outH = null; }
   _float = false;
   if (_keyH) { document.removeEventListener('keydown', _keyH, true); _keyH = null; }
-  if (el) { try { if (window.updateBottomLayout) window.updateBottomLayout(); } catch (e) {} }
+  if (el) { try { if (window.updateBottomLayout) window.updateBottomLayout(); } catch (e) {} _relayoutTable(); }
 }
 
 // ─── Input ─────────────────────────────────────────────────────────

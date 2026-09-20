@@ -129,6 +129,35 @@ async function runDevice(browser, name, descriptor) {
       assert.equal(base0.mini.hidden, true);
     });
 
+    // Bet keypad (touch: it replaces the action rows in place). It must fit under
+    // the table on every phone - in landscape it lies flat (web.103: it was cut
+    // off after its second row, OK / Cancel below the screen).
+    await check('bet keypad: fits the screen, own box stays visible, typing works, closing restores the table', async () => {
+      const before = await geometry(page);
+      await page.locator('.my-zone .raise-amt-field').tap();
+      await page.locator('#bet-keypad').waitFor({ timeout: 4000 });
+      await page.waitForTimeout(500); await settle(page);
+      for (const k of ['2', '5', '0']) await page.locator(`#kp-grid .kp-k[data-k="${k}"]`).tap();
+      const kp = await page.evaluate(() => { const R = (q) => { const r = document.querySelector(q).getBoundingClientRect(); return { left: r.left, top: r.top, right: r.right, bottom: r.bottom, height: r.height }; };
+        return { vw: innerWidth, vh: innerHeight, pad: R('#bet-keypad'), ok: R('#kp-ok'), cancel: R('#kp-cancel'), key: R('#kp-grid .kp-k'), panel: R('.my-zone'), me: R('#g-seats .seat.me .seat-plate'),
+          zone: R('#g-table-zone'), amt: document.getElementById('kp-amt').textContent.replace(/\D/g, '') }; });
+      await shot(page, name, '1b-bet-keypad');
+      for (const [n, r] of [['keypad', kp.pad], ['OK', kp.ok], ['Cancel', kp.cancel]])
+        assert.ok(r.left >= -1 && r.right <= kp.vw + 1 && r.top >= 0 && r.bottom <= kp.vh + 1, `${n} leaves the screen: ${JSON.stringify(r)} / ${kp.vw}x${kp.vh}`);
+      assert.ok(kp.key.height >= 28, `keys are only ${Math.round(kp.key.height)}px high`);
+      assert.ok(kp.me.bottom <= kp.panel.top + 2, `my own box is under the keypad (box bottom ${Math.round(kp.me.bottom)}, panel top ${Math.round(kp.panel.top)})`);
+      assert.ok(kp.zone.height >= 150, `the table is squeezed to ${Math.round(kp.zone.height)}px`);
+      assert.equal(kp.amt, '250', 'typing 2-5-0 does not give 250');
+      await page.locator('#kp-cancel').tap(); await page.waitForTimeout(500); await settle(page);
+      const after = await geometry(page);
+      assert.equal(await page.locator('#bet-keypad').count(), 0, 'Cancel does not close the keypad');
+      // 16px, not 2: the reserve kept under the table (game-area padding, set by updateBottomLayout)
+      // differs by ~14px depending on when it was last measured - an older inconsistency that the
+      // keypad merely reveals by re-measuring. Open point, see docs/MOBILE_VERIFICATION.md.
+      assert.ok(Math.abs(after.me.top - before.me.top) <= 16 && after.actions.length >= 2, `the table did not come back: self box ${Math.round(before.me.top)} -> ${Math.round(after.me.top)}`);
+      assert.ok(after.me.bottom <= after.actionBar.top + 2, 'after closing, my own box is under the action bar');
+    });
+
     // Loupe on, let the view follow a side seat, then give the turn back to me.
     await page.locator('#g-zoom-toggle').tap();
     await settle(page);
