@@ -147,7 +147,9 @@ test that runs WITH the service worker (iPhone 15 + Pixel 7, about 40 s each):
 Playwright's WebKit build cannot reload a page whose origin is down (internal
 engine error, then the browser stays wedged): on the iPhone profile step 3 is
 not attempted and Chromium covers it; steps 1, 2, 4 and 5 run on both engines.
-Every browser test also has a watchdog (`runPlan(..., hardTimeoutMin)`, 8 min
+Steps 4 and 5 do not need the worker: they run in a second context with service
+workers blocked (on Playwright's WebKit a second navigation of a worker-controlled
+page crashes the page). Every browser test also has a watchdog (`runPlan(..., hardTimeoutMin)`, 8 min
 for this one, 40 by default): a hung browser ends the script with exit code 3.
 
 Not covered (needs a real device): the install prompt itself, the standalone

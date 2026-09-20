@@ -49,7 +49,7 @@ async function runDevice(browser, name, descriptor) {
   // encountered an internal error", first CI run): there the offline part is
   // reported as skipped - Chromium covers it - and the run goes on with a new page.
   const isWebkit = browser.browserType().name() === 'webkit';
-  let offlineOk = true;
+  let offlineOk = true, plain = null;
   try {
     state.ver = 1000;
     await page.goto(base, { waitUntil: 'domcontentloaded' });
@@ -119,10 +119,23 @@ async function runDevice(browser, name, descriptor) {
       assert.deepEqual(broken, [], 'images missing offline (not precached, never seen online): ' + broken.join(' '));
     });
 
+    // The update banner and the manifest do not depend on the service worker:
+    // they run in a SECOND context with workers blocked. On Playwright's WebKit a
+    // second navigation of a worker-controlled page crashes the page ("Page
+    // crashed", CI) - this keeps real WebKit coverage for both checks.
+    state.down = false; if (!isWebkit) await context.setOffline(false).catch(() => {});
+    await page.close().catch(() => {});
+    plain = await browser.newContext({ ...descriptor, serviceWorkers: 'block' });
+    page = await plain.newPage();
+    page.on('pageerror', (e) => errors.push(String(e && e.message || e))); page.on('dialog', (d) => d.dismiss().catch(() => {}));
+    state.ver = 1000;
+
     await check('UPDATE: a new deploy stamp shows the banner, inside the screen, dismissible', async () => {
-      state.down = false; await context.setOffline(false);
       await page.goto(base, { waitUntil: 'domcontentloaded' }); await appReady(page);
       await page.waitForTimeout(600);
+      // fresh profile: the first-run "local backup" card (Chromium) sits at the same bottom-centre spot
+      const later = page.locator('#bak-restore-banner button').last();
+      if (await later.count()) { try { await later.tap({ timeout: 1500 }); } catch (_e) {} }
       assert.equal(await page.locator('#update-banner').count(), 0, 'the banner is shown although nothing changed');
       state.ver = 2000;                                            // a deploy happened
       await page.evaluate(() => window.dispatchEvent(new Event('focus')));   // the app re-checks /__ver on focus
@@ -166,7 +179,7 @@ async function runDevice(browser, name, descriptor) {
 
     await check('no JavaScript error during the whole run', async () => assert.equal(errors.length, 0, errors.join(' | ')));
   } catch (error) { reporter.fail('run aborted', String(error && error.message || error).split('\n')[0]); await shot(page, name, 'pwa-aborted'); }
-  finally { state.down = false; await context.setOffline(false).catch(() => {}); await context.close(); }
+  finally { state.down = false; if (plain) await plain.close().catch(() => {}); await context.close().catch(() => {}); }
 }
 
 const code = await runPlan('test-pwa-browser', reporter, runDevice, PHONES, 8);
