@@ -164,6 +164,15 @@ function _onTap() {
 function _init() {
   const el = document.getElementById('g-miniboard');
   if (el && !el.dataset.mbInit) { el.dataset.mbInit = '1'; el.addEventListener('click', _onTap); }
+  // The 280 ms timer of schedule() assumes the 220 ms pan is over by then. On a
+  // slow device (seen with WebKit on CI) the transition can start late and the
+  // self box was still moving when the mini-board chose its place: it ended up
+  // over the player's cards. The end of the pan is the reliable signal.
+  const layer = document.getElementById('g-zoom-layer');
+  if (layer && !layer.dataset.mbInit) {
+    layer.dataset.mbInit = '1';
+    layer.addEventListener('transitionend', function (e) { if (e.target === layer) schedule(); });
+  }
 }
 if (typeof document !== 'undefined') {
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', _init);

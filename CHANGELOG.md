@@ -174,6 +174,14 @@ highlights below.
 
 ### Fixed
 
+- **Safari follow-up of `web.94` / `web.92`** (`web.96`) — the WebKit CI run
+  still failed the seated iPhone-landscape tables that Chromium passed: the
+  diagnostics showed a 105 px action panel (86 in Chromium) — the quick-bet
+  group wrapped back to its own line beside Safari's wider native controls. The
+  short-landscape panel is now a 2-column **grid** (cannot wrap) instead of a
+  wrapping flex row. Mini-board: it re-places itself on the layer's
+  `transitionend`, not only on a 280 ms timer (on a slow device the pan was
+  still running and it ended up over the hole cards).
 - **End of hand, found by the new `test:showdown-browser`** (`web.95`) —
   `renderGameWaiting('Prochaine main...')` was a hard-coded French string in
   every language (now `t('nextHand')`, key already in all catalogues); a loss

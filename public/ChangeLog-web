@@ -1,4 +1,8 @@
-2026-09-20 version 2.1.9-web.95 (current series):
+2026-09-20 version 2.1.9-web.96 (current series):
+- bugfix: iPhone in landscape (Safari) - the one-line bet controls introduced in web.94 fell back to two lines in Safari, so the table was still cramped; the line can no longer wrap
+- bugfix: mobile magnifier on slow devices - the small copy of the community cards could still land on your own cards; it now waits for the view to finish moving
+
+2026-09-20 version 2.1.9-web.95:
 - bugfix: the "Next hand…" message after a showdown was shown in French in every language - it is now translated
 - bugfix: in the winner window a loss now reads "-$20" instead of "$-20" (also in the end-of-game summary)
 - bugfix: phones held in landscape with a very short screen - the winner window no longer hides its Continue button below the screen; the whole window scrolls and Continue stays in view

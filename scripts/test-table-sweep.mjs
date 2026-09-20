@@ -54,7 +54,7 @@ const measure = (page) => page.evaluate(() => {
     floating: ['chat-toggle-btn', 'react-toggle-btn', 'hands-toggle-btn', 'log-toggle-btn', 'g-zoom-toggle'].map((id) => document.getElementById(id)).filter(vis).map((e) => ({ id: e.id, ...rect(e) })),
     actionBar: vis(document.querySelector('.my-zone')) ? rect(document.querySelector('.my-zone')) : null,
     actions: [...document.querySelectorAll('.act-buttons-row .btn-action')].filter(vis).length,
-    dbg: (function () { const d = window._seatDbg || {}, m = d.dims || {}; return `zone ${d.zone} - box ${m.w}x${m.h} self ${m.sh} - scale ${d.boxScale} - comm ${d.commScale && d.commScale.toFixed ? d.commScale.toFixed(2) : d.commScale}`; })(),
+    dbg: (function () { const d = window._seatDbg || {}, m = d.dims || {}; return `zone ${d.zone} - box ${m.w}x${m.h} self ${m.sh} - scale ${d.boxScale} - comm ${d.commScale && d.commScale.toFixed ? d.commScale.toFixed(2) : d.commScale}` + ['.my-zone .bet-row', '.my-zone .mid-row', '.my-zone .act-buttons-row'].map((q) => { const e = document.querySelector(q); if (!e) return ''; const r = e.getBoundingClientRect(); return ` - ${q.split(' .')[1]} ${Math.round(r.width)}x${Math.round(r.height)}@${Math.round(r.left)},${Math.round(r.top)}`; }).join(''); })(),
   };
 });
 

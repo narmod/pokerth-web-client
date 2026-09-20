@@ -12765,13 +12765,21 @@ html[data-seat-struct="qml"] .seat-narrow .seat-name .seat-note-stars { font-siz
 @media (max-height: 400px) and (orientation: landscape) {
   #s-game .game-area { min-height: 0 !important; }
   :root:not([data-interface-size="large"]):not([data-interface-size="extra-large"]) #s-game .my-zone .action-grid {
-    flex-direction: row !important; flex-wrap: wrap !important; align-items: center !important;
-    max-width: min(600px, 100%) !important; padding: 4px 10px 5px !important; gap: 3px 10px !important;
+    /* GRID, not a wrapping flex row (web.96): in Safari the native controls are
+       wider, the quick-bet group no longer fitted beside the slider and wrapped
+       back to its own line - the panel stayed 105px high (86 in Chrome) and the
+       table kept overlapping. A grid cannot wrap: the right column takes what
+       its controls need, the slider takes the rest. */
+    display: grid !important; grid-template-columns: minmax(0, 1fr) auto !important;
+    grid-template-areas: "bet mid" "btn btn" !important; align-items: center !important;
+    max-width: min(620px, 100%) !important; padding: 4px 10px 5px !important; gap: 3px 10px !important;
   }
-  :root:not([data-interface-size="large"]):not([data-interface-size="extra-large"]) #s-game .my-zone .action-grid > .bet-row { flex: 1 1 190px; min-width: 0; }
-  :root:not([data-interface-size="large"]):not([data-interface-size="extra-large"]) #s-game .my-zone .action-grid > .mid-row { flex: 0 1 auto; min-width: 0; }
-  :root:not([data-interface-size="large"]):not([data-interface-size="extra-large"]) #s-game .my-zone .action-grid > .mid-row .mode-sel-wrap { margin-left: 4px; }
-  :root:not([data-interface-size="large"]):not([data-interface-size="extra-large"]) #s-game .my-zone .action-grid > .act-buttons-row { flex: 0 0 100%; }
+  :root:not([data-interface-size="large"]):not([data-interface-size="extra-large"]) #s-game .my-zone .action-grid > .bet-row { grid-area: bet; min-width: 0; }
+  :root:not([data-interface-size="large"]):not([data-interface-size="extra-large"]) #s-game .my-zone .action-grid > .mid-row { grid-area: mid; min-width: 0; }
+  :root:not([data-interface-size="large"]):not([data-interface-size="extra-large"]) #s-game .my-zone .action-grid > .mid-row .mode-sel-wrap { margin-left: 4px; flex: 0 0 104px; }
+  :root:not([data-interface-size="large"]):not([data-interface-size="extra-large"]) #s-game .my-zone .action-grid > .act-buttons-row { grid-area: btn; }
+  /* Keypad open hides the two other rows: the amount row takes the whole line. */
+  :root:not([data-interface-size="large"]):not([data-interface-size="extra-large"]) #s-game .my-zone .action-grid.kp-open > .bet-row { grid-column: 1 / -1; }
   :root:not([data-interface-size="large"]):not([data-interface-size="extra-large"]) #s-game .my-zone .bet-row .raise-amt-field { height: 26px !important; min-height: 26px !important; }
 
   /* Winner window (web.95, found by scripts/test-showdown-browser.mjs): its
