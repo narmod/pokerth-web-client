@@ -2339,6 +2339,10 @@ function _fmtRestartTime(ms) {
                    : d.toLocaleString([], { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
   } catch (e) { return d.toLocaleTimeString(); }
 }
+// Close cross of the operator notices: a 36px target (it was a bare 17x20px
+// glyph), pulled back into the notice's padding so the look does not change,
+// and sticky so it stays reachable when a long notice scrolls.
+var _NOTICE_CLOSE_CSS = 'flex:none;position:sticky;top:0;align-self:flex-start;width:36px;height:36px;margin:-8px -10px -8px -4px;display:flex;align-items:center;justify-content:center;background:transparent;border:0;font-size:1.35rem;line-height:1;cursor:pointer;padding:0;-webkit-tap-highlight-color:transparent;touch-action:manipulation;';
 function hideRestartNotice() { var el = document.getElementById('srv-restart-notice'); if (el) el.remove(); }
 function showRestartNotice(deadlineMs, kind, note) {
   hideRestartNotice();
@@ -2346,14 +2350,14 @@ function showRestartNotice(deadlineMs, kind, note) {
   if (note) msg += '\n' + note;
   var el = document.createElement('div');
   el.id = 'srv-restart-notice';
-  el.style.cssText = 'position:fixed;top:10px;left:50%;transform:translateX(-50%);max-width:92%;z-index:10000;display:flex;align-items:flex-start;gap:10px;background:rgba(var(--red-rgb),.96);color:#fff;padding:10px 13px;border-radius:10px;box-shadow:0 6px 22px rgba(0,0,0,.45);font-size:.85rem;line-height:1.4;white-space:pre-line;';
+  el.style.cssText = 'position:fixed;top:calc(10px + var(--pth-sat, 0px));left:50%;transform:translateX(-50%);box-sizing:border-box;width:max-content;max-width:92%;max-height:calc(100dvh - 20px - var(--pth-sat, 0px) - var(--pth-sab, 0px));overflow:auto;z-index:10000;display:flex;align-items:flex-start;gap:10px;background:rgba(var(--red-rgb),.96);color:#fff;padding:10px 13px;border-radius:10px;box-shadow:0 6px 22px rgba(0,0,0,.45);font-size:.85rem;line-height:1.4;white-space:pre-line;';
   var span = document.createElement('span');
   span.textContent = msg;
   el.appendChild(span);
   var x = document.createElement('button');
   x.setAttribute('aria-label', 'Close');
   x.textContent = '\u00d7';
-  x.style.cssText = 'flex:none;background:transparent;border:0;color:#fff;font-size:1.25rem;line-height:1;cursor:pointer;padding:0 2px;opacity:.85;';
+  x.style.cssText = _NOTICE_CLOSE_CSS + 'color:#fff;opacity:.85;';
   x.addEventListener('click', hideRestartNotice);
   el.appendChild(x);
   document.body.appendChild(el);
@@ -2438,10 +2442,16 @@ function _fmtCountdown(ms) {
 }
 function showInfoToast(message, icon, cdAt) {
   hideInfoToast();
-  var top = document.getElementById('srv-restart-notice') ? 76 : 16;
+  // Below the status bar / Dynamic Island (--pth-sat = env(safe-area-inset-top)):
+  // at a flat top:16px the toast - and its close cross - sat under the iPhone
+  // status bar in the installed app, where no tap reaches it (narmod, web.105).
+  // Under a restart notice: below ITS real bottom edge (it used to be a fixed
+  // 76px, right for a one-line notice only). Never taller than the screen.
+  var _rn = document.getElementById('srv-restart-notice');
+  var top = _rn ? Math.round(_rn.getBoundingClientRect().bottom + 8) + 'px' : 'calc(16px + var(--pth-sat, 0px))';
   var el = document.createElement('div');
   el.id = 'srv-info-toast';
-  el.style.cssText = 'position:fixed;top:' + top + 'px;left:50%;transform:translateX(-50%);max-width:min(92vw,420px);z-index:9999;display:flex;align-items:flex-start;gap:10px;background:var(--gold);color:var(--on-gold);padding:11px 15px;border-radius:14px;box-shadow:0 8px 28px rgba(0,0,0,.55),0 0 0 1px rgba(255,255,255,.25) inset;font-weight:600;font-size:.9rem;line-height:1.4;white-space:pre-line;';
+  el.style.cssText = 'position:fixed;top:' + top + ';left:50%;transform:translateX(-50%);box-sizing:border-box;width:max-content;max-width:min(92vw,420px);max-height:calc(100dvh - ' + (_rn ? top : '16px - var(--pth-sat, 0px)') + ' - 12px - var(--pth-sab, 0px));overflow:auto;z-index:9999;display:flex;align-items:flex-start;gap:10px;background:var(--gold);color:var(--on-gold);padding:11px 15px;border-radius:14px;box-shadow:0 8px 28px rgba(0,0,0,.55),0 0 0 1px rgba(255,255,255,.25) inset;font-weight:600;font-size:.9rem;line-height:1.4;white-space:pre-line;';
   if (icon) { var ic = document.createElement('span'); ic.textContent = icon; ic.style.cssText = 'flex:none;font-size:1.1rem;line-height:1.3;'; el.appendChild(ic); }
   var span = document.createElement('span'); span.innerHTML = _linkifyAnnounce(message);
   // Compte à rebours optionnel (échéance en epoch ms) : ligne dédiée, tick 1 s,
@@ -2461,7 +2471,7 @@ function showInfoToast(message, icon, cdAt) {
   el.appendChild(span);
   var x = document.createElement('button');
   x.setAttribute('aria-label', 'Close'); x.textContent = '\u00d7';
-  x.style.cssText = 'flex:none;background:transparent;border:0;color:var(--on-gold);font-size:1.25rem;line-height:1;cursor:pointer;padding:0 2px;opacity:.7;';
+  x.style.cssText = _NOTICE_CLOSE_CSS + 'color:var(--on-gold);opacity:.7;';
   x.addEventListener('click', hideInfoToast);
   el.appendChild(x);
   document.body.appendChild(el);
@@ -2576,9 +2586,9 @@ function showWelcomeModal(title, body, version) {
   hideWelcomeModal();
   var back = document.createElement('div');
   back.id = 'welcome-modal';
-  back.style.cssText = 'position:fixed;inset:0;z-index:10001;display:flex;align-items:center;justify-content:center;padding:18px;background:rgba(0,0,0,.62);backdrop-filter:blur(2px);';
+  back.style.cssText = 'position:fixed;inset:0;z-index:10001;display:flex;align-items:center;justify-content:center;box-sizing:border-box;padding:calc(18px + var(--pth-sat, 0px)) 18px calc(18px + var(--pth-sab, 0px));background:rgba(0,0,0,.62);backdrop-filter:blur(2px);';
   var card = document.createElement('div');
-  card.style.cssText = 'max-width:480px;width:100%;max-height:84vh;display:flex;flex-direction:column;background:var(--modal-bg);color:var(--text);border:1px solid var(--border);border-radius:16px;box-shadow:0 18px 50px rgba(0,0,0,.6);overflow:hidden;';
+  card.style.cssText = 'max-width:480px;width:100%;max-height:min(84vh, 100%);display:flex;flex-direction:column;background:var(--modal-bg);color:var(--text);border:1px solid var(--border);border-radius:16px;box-shadow:0 18px 50px rgba(0,0,0,.6);overflow:hidden;';
   if (title) {
     var h = document.createElement('div');
     h.textContent = title;
@@ -2593,7 +2603,7 @@ function showWelcomeModal(title, body, version) {
   foot.style.cssText = 'padding:12px 20px 16px;display:flex;justify-content:flex-end;border-top:1px solid var(--border);';
   var btn = document.createElement('button');
   btn.textContent = (typeof window.t === 'function' ? window.t('welcomeAck') : '') || 'I understand';
-  btn.style.cssText = 'padding:9px 18px;border-radius:10px;border:0;cursor:pointer;font-weight:700;background:var(--gold);color:var(--on-gold);';
+  btn.style.cssText = 'min-height:40px;padding:9px 18px;border-radius:10px;border:0;cursor:pointer;font-weight:700;background:var(--gold);color:var(--on-gold);';
   btn.addEventListener('click', function () { try { localStorage.setItem('pth_welcome_seen', String(version)); } catch (e) {} hideWelcomeModal(); });
   foot.appendChild(btn);
   card.appendChild(foot);
@@ -2665,9 +2675,9 @@ function showGuestNoticeModal(title, body, version) {
   hideGuestNoticeModal();
   var back = document.createElement('div');
   back.id = 'guestnotice-modal';
-  back.style.cssText = 'position:fixed;inset:0;z-index:10001;display:flex;align-items:center;justify-content:center;padding:18px;background:rgba(0,0,0,.62);backdrop-filter:blur(2px);';
+  back.style.cssText = 'position:fixed;inset:0;z-index:10001;display:flex;align-items:center;justify-content:center;box-sizing:border-box;padding:calc(18px + var(--pth-sat, 0px)) 18px calc(18px + var(--pth-sab, 0px));background:rgba(0,0,0,.62);backdrop-filter:blur(2px);';
   var card = document.createElement('div');
-  card.style.cssText = 'max-width:480px;width:100%;max-height:84vh;display:flex;flex-direction:column;background:var(--modal-bg);color:var(--text);border:1px solid var(--border);border-radius:16px;box-shadow:0 18px 50px rgba(0,0,0,.6);overflow:hidden;';
+  card.style.cssText = 'max-width:480px;width:100%;max-height:min(84vh, 100%);display:flex;flex-direction:column;background:var(--modal-bg);color:var(--text);border:1px solid var(--border);border-radius:16px;box-shadow:0 18px 50px rgba(0,0,0,.6);overflow:hidden;';
   if (title) {
     var h = document.createElement('div');
     h.textContent = title;
@@ -2682,7 +2692,7 @@ function showGuestNoticeModal(title, body, version) {
   foot.style.cssText = 'padding:12px 20px 16px;display:flex;justify-content:flex-end;border-top:1px solid var(--border);';
   var btn = document.createElement('button');
   btn.textContent = (typeof window.t === 'function' ? window.t('welcomeAck') : '') || 'I understand';
-  btn.style.cssText = 'padding:9px 18px;border-radius:10px;border:0;cursor:pointer;font-weight:700;background:var(--gold);color:var(--on-gold);';
+  btn.style.cssText = 'min-height:40px;padding:9px 18px;border-radius:10px;border:0;cursor:pointer;font-weight:700;background:var(--gold);color:var(--on-gold);';
   // Acquittement : la version (updatedAt) est memorisee localement — le
   // popup ne revient que si l'operateur edite le message. Invite = pas de
   // profil, donc pas de synchronisation (contrairement a la notice compte).
@@ -2739,9 +2749,9 @@ function showAuthNoticeModal(title, body, version) {
   hideAuthNoticeModal();
   var back = document.createElement('div');
   back.id = 'authnotice-modal';
-  back.style.cssText = 'position:fixed;inset:0;z-index:10001;display:flex;align-items:center;justify-content:center;padding:18px;background:rgba(0,0,0,.62);backdrop-filter:blur(2px);';
+  back.style.cssText = 'position:fixed;inset:0;z-index:10001;display:flex;align-items:center;justify-content:center;box-sizing:border-box;padding:calc(18px + var(--pth-sat, 0px)) 18px calc(18px + var(--pth-sab, 0px));background:rgba(0,0,0,.62);backdrop-filter:blur(2px);';
   var card = document.createElement('div');
-  card.style.cssText = 'max-width:480px;width:100%;max-height:84vh;display:flex;flex-direction:column;background:var(--modal-bg);color:var(--text);border:1px solid var(--border);border-radius:16px;box-shadow:0 18px 50px rgba(0,0,0,.6);overflow:hidden;';
+  card.style.cssText = 'max-width:480px;width:100%;max-height:min(84vh, 100%);display:flex;flex-direction:column;background:var(--modal-bg);color:var(--text);border:1px solid var(--border);border-radius:16px;box-shadow:0 18px 50px rgba(0,0,0,.6);overflow:hidden;';
   if (title) {
     var h = document.createElement('div');
     h.textContent = title;
@@ -2756,7 +2766,7 @@ function showAuthNoticeModal(title, body, version) {
   foot.style.cssText = 'padding:12px 20px 16px;display:flex;justify-content:flex-end;border-top:1px solid var(--border);';
   var btn = document.createElement('button');
   btn.textContent = (typeof window.t === 'function' ? window.t('welcomeAck') : '') || 'I understand';
-  btn.style.cssText = 'padding:9px 18px;border-radius:10px;border:0;cursor:pointer;font-weight:700;background:var(--gold);color:var(--on-gold);';
+  btn.style.cssText = 'min-height:40px;padding:9px 18px;border-radius:10px;border:0;cursor:pointer;font-weight:700;background:var(--gold);color:var(--on-gold);';
   // Acquittement : version memorisee localement ET poussee sur le profil du
   // compte via le canal /prefs-web (fusion par maximum, _noticeMergeIn) — vu
   // sur un appareil = vu partout ; une edition operateur re-affiche.
@@ -2811,9 +2821,9 @@ function showLanNoticeModal(title, body, version) {
   hideLanNoticeModal();
   var back = document.createElement('div');
   back.id = 'lannotice-modal';
-  back.style.cssText = 'position:fixed;inset:0;z-index:10001;display:flex;align-items:center;justify-content:center;padding:18px;background:rgba(0,0,0,.62);backdrop-filter:blur(2px);';
+  back.style.cssText = 'position:fixed;inset:0;z-index:10001;display:flex;align-items:center;justify-content:center;box-sizing:border-box;padding:calc(18px + var(--pth-sat, 0px)) 18px calc(18px + var(--pth-sab, 0px));background:rgba(0,0,0,.62);backdrop-filter:blur(2px);';
   var card = document.createElement('div');
-  card.style.cssText = 'max-width:480px;width:100%;max-height:84vh;display:flex;flex-direction:column;background:var(--modal-bg);color:var(--text);border:1px solid var(--border);border-radius:16px;box-shadow:0 18px 50px rgba(0,0,0,.6);overflow:hidden;';
+  card.style.cssText = 'max-width:480px;width:100%;max-height:min(84vh, 100%);display:flex;flex-direction:column;background:var(--modal-bg);color:var(--text);border:1px solid var(--border);border-radius:16px;box-shadow:0 18px 50px rgba(0,0,0,.6);overflow:hidden;';
   if (title) {
     var h = document.createElement('div');
     h.textContent = title;
@@ -2828,7 +2838,7 @@ function showLanNoticeModal(title, body, version) {
   foot.style.cssText = 'padding:12px 20px 16px;display:flex;justify-content:flex-end;border-top:1px solid var(--border);';
   var btn = document.createElement('button');
   btn.textContent = (typeof window.t === 'function' ? window.t('welcomeAck') : '') || 'I understand';
-  btn.style.cssText = 'padding:9px 18px;border-radius:10px;border:0;cursor:pointer;font-weight:700;background:var(--gold);color:var(--on-gold);';
+  btn.style.cssText = 'min-height:40px;padding:9px 18px;border-radius:10px;border:0;cursor:pointer;font-weight:700;background:var(--gold);color:var(--on-gold);';
   // Acquittement local uniquement (pas de compte lie a un serveur LAN) :
   // meme logique que le guest notice, la version (updatedAt) memorisee.
   btn.addEventListener('click', function () { try { localStorage.setItem('pth_lannotice_seen', String(version)); } catch (e) {} hideLanNoticeModal(); });
@@ -11871,7 +11881,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.9-web.104'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.9-web.105'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif ou la palette High contrast
    (Android, Safari, iOS standalone récent). Lit --theme-color et met

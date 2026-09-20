@@ -29,6 +29,10 @@
 
 html { touch-action: manipulation; -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
 
+/* Safe areas as custom properties (web.105): notices built in JS with inline
+   styles use var(--pth-sat) / var(--pth-sab); the browser tests override them to
+   emulate an iPhone (Playwright has no notch). */
+:root { --pth-sat: env(safe-area-inset-top, 0px); --pth-sab: env(safe-area-inset-bottom, 0px); }
 :root {
   /* ═══════════════════════════════════════════════════════════════════════
      COUCHE DE TOKENS GÉNÉRIQUE — échelles unifiées (typo · espacement · rayon ·

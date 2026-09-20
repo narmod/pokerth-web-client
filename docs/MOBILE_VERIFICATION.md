@@ -181,6 +181,19 @@ dies under the app) and `window.__fxRefuse = true` (every new socket fails).
 Not covered: the proxy side of the rebind (session grace, `sid`), and a rejoin
 after the grace expired - they need the real proxy.
 
+## Operator notices (broadcasts, restart notice, notice windows)
+
+`npm run test:notices-browser` (`scripts/test-notices-browser.mjs`) shows the
+broadcast toast (short and 500-character text, with countdown), the restart
+notice together with a broadcast, and the welcome / guest / account / LAN
+windows with a 2 500-character text, on iPhone SE, iPhone 15, iPhone 15
+landscape and Pixel 7 - each time flat and with the **iPhone safe areas**
+emulated (`--pth-sat: 59px`, `--pth-sab: 34px` on `<html>`; the app reads the
+real insets through those two custom properties). Per notice: entirely inside
+the usable screen (below the status bar, above the home indicator), close
+control fully visible, on top, at least 32 x 32 px, and it closes; two notices
+at once do not overlap; a window keeps its button on screen whatever the length.
+
 ## Limits - what still needs a real phone
 
 Playwright WebKit is the Safari engine, not Safari on an iPhone, and Chromium

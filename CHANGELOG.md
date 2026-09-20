@@ -174,6 +174,19 @@ highlights below.
 
 ### Fixed
 
+- **Operator notices unreachable on iPhone** (`web.105`, reported by narmod) —
+  the broadcast toast (`top: 16px`) and the restart notice (`top: 10px`) ignored
+  `safe-area-inset-top`: in the installed app they sat under the status bar /
+  Dynamic Island, close cross included, where no tap lands; the cross itself was
+  a bare 17×20 px glyph. Both now start below the inset, are capped to the
+  usable height (`100dvh` minus insets, internal scroll), get a 36 px sticky
+  close target and `width: max-content` (a `left: 50%` fixed box only had half
+  the screen to shrink-to-fit in). A broadcast under a restart notice is placed
+  below the notice's real bottom edge (it was a fixed 76 px, right for one line
+  only). The four notice windows (welcome, guest, account, LAN): backdrop padding
+  includes both insets and the card is `max-height: min(84vh, 100%)` — `84vh`
+  alone is the LARGE viewport on iOS, the button could end under the toolbar.
+  Insets exposed as `--pth-sat` / `--pth-sab`. New `test:notices-browser`.
 - **14 px of felt lost under the self box in phone portrait** (`web.104`) — the
   space kept under the table (`.game-area` padding-bottom, measured by
   `updateBottomLayout`) was measured once, BEFORE the first `renderSeats` sets
