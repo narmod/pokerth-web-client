@@ -2018,6 +2018,40 @@ var PARTS = {
     seeH2: 'આ ટેબલ પર જુઓ',
     seeP: 'PokerTH તમે રમો ત્યારે બોર્ડની નીચે તમારા શ્રેષ્ઠ કોમ્બિનેશનનું નામ બતાવે છે, તેથી સમયના દબાણ હેઠળ તમારે તે જાતે શોધવું પડતું નથી, અને શોડાઉનમાં બતાવાતો દરેક હેન્ડ ગણાયેલાં પાંચ કાર્ડ્સ હાઇલાઇટ કરીને દેખાય છે. કમ્પ્યુટર નિયંત્રિત પ્રતિસ્પર્ધીઓ સામે ઓફલાઇન પ્રેક્ટિસ કરવી એ આ ક્રમને આદત બનાવવાની સૌથી ઝડપી રીત છે.'
   },
+  is: {
+    title: 'Röðun pókerhanda — röð handa í Texas Hold’em',
+    desc: 'Pókerhendurnar tíu í Texas Hold’em í röð, frá konunglegri litaröð niður í hátt spil, með dæmum, líkum á hverri hönd og skýringu á því hvernig skorið er úr um jafnar hendur.',
+    ldHeadline: 'Röðun pókerhanda — Texas Hold’em',
+    ldDesc: 'Hendurnar tíu í Texas Hold’em í röð, með dæmum, tíðni og reglum um jafnar hendur.',
+    h1: 'Röðun pókerhanda',
+    lead: 'Í Texas Hold’em raðast hendurnar eins og hér að neðan, frá þeirri sterkustu til þeirrar veikustu. Hönd er alltaf nákvæmlega fimm spil, valin úr þeim sjö sem þú sérð: holuspilunum þínum tveimur og sameiginlegu spilunum fimm. Þú þarft ekki að nota þín eigin spil — ef borðið eitt gefur bestu fimm spilin, þá er það höndin þín.',
+    names: ['Konungleg litaröð', 'Litaröð', 'Ferna', 'Fullt hús', 'Litur', 'Röð', 'Þrenna', 'Tvö pör', 'Par', 'Hátt spil'],
+    texts: [
+      'A K Q J 10, öll í sömu sort. Besta mögulega höndin: hana er ekki hægt að slá, aðeins jafna.',
+      'Fimm spil í röð, öll í sömu sort. Milli tveggja litaraða vinnur sú sem hefur hærra efsta spil.',
+      'Fjögur spil með sama gildi. Fimmta spilið (kicker) sker úr í því sjaldgæfa tilviki að öll fjögur séu á borðinu.',
+      'Þrjú spil með sama gildi auk pars. Þrennan er borin saman fyrst, svo parið.',
+      'Fimm spil í sömu sort, ekki í röð. Borin saman spil fyrir spil frá því hæsta; engin sort er æðri annarri.',
+      'Fimm spil í röð, í ólíkum sortum. Ásinn spilar hátt (10-J-Q-K-A) eða lágt (A-2-3-4-5), en ekki hvort tveggja í einu.',
+      'Þrjú spil með sama gildi, ásamt tveimur öðrum óskyldum spilum.',
+      'Tvö ólík pör og fimmta spil. Hærra parið er borið saman fyrst, svo það lægra, svo kickerinn.',
+      'Tvö spil með sama gildi og þrjú óskyld spil, borin saman í röð.',
+      'Ekkert af ofantöldu. Hæsta spilið ræður, svo það næsta, og svo framvegis.'
+    ],
+    dealt: 'kemur upp í %s af sjö spila höndum',
+    tiesH2: 'Hvernig skorið er úr um jafnar hendur',
+    tiesP: 'Flokkurinn er borinn saman fyrst: hvaða litur sem er slær hvaða röð sem er, sama hvaða spil eru í þeim. Innan sama flokks eru gildin borin saman ofan frá. Það sem eftir stendur þegar samsetningin er mynduð kallast <em>kicker</em>, og hann ræður mun fleiri pottum en byrjendur búast við: á borðinu A-9-4 mynda bæði A♠ K♦ og A♣ 7♥ ásapar, en kóngurinn slær sjöuna sem kicker. Sortir ráða aldrei neinu í Hold’em — tveir leikmenn með sömu fimm gildin skipta pottinum, niður í síðasta spilapening.',
+    wrongH2: 'Það sem fólk ruglast oft á',
+    wrong: [
+      'Ásinn er bæði hæsta og lægsta spilið í röð: A-K-Q-J-10 er sú besta og A-2-3-4-5 (<em>hjólið</em>) sú veikasta. Röð fer ekki hringinn — Q-K-A-2-3 er ekkert.',
+      'Litur þarf fimm spil í sömu sort, ekki fjögur. Fjögur hjörtu samtals á hendi og á borði eru einskis virði ein og sér.',
+      'Þrenna sem mynduð er úr pari á hendi og einu spili á borðinu kallast <em>sett</em>; mynduð úr einu spili á hendi og pari á borðinu kallast hún <em>trips</em>. Sama sæti í röðuninni, mjög ólíkur styrkur, því allir sjá trips.',
+      'Aðeins bestu fimm spilin telja. Ef þú ert með tvö pör á hendi og borðið sýnir þriðja parið ertu með tvö pör, ekki þrjú.',
+      'Prósenturnar hér að ofan segja hve oft hver hönd kemur upp í sjö spilum fram að river, ekki hve oft hún vinnur. Tvö pör virðast algeng en eru samt langt á undan flestu sem þau mæta.'
+    ],
+    seeH2: 'Sjáðu þetta við borðið',
+    seeP: 'PokerTH nefnir bestu samsetninguna þína fyrir neðan borðið meðan þú spilar, svo þú þarft aldrei að finna út úr henni undir tímapressu, og hver hönd sem sýnd er í uppgjöri birtist með spilunum fimm sem telja auðkenndum. Að æfa sig ótengt gegn tölvustýrðum andstæðingum er fljótlegasta leiðin til að gera röðunina að öðru eðli.'
+  },
 
    sw: {
 

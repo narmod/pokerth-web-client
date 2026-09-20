@@ -46,8 +46,9 @@ highlights below.
 - **Amharic**, full UI catalogue, help corpus, SEO content pages and
   guest/registered/LAN broadcast notices (`web.22`–`24`) — 54 languages
   total.
-- **Icelandic**, UI catalogue, help corpus and guest/registered/LAN broadcast
-  notices (`web.78`) — 61 languages total; SEO content pages to follow.
+- **Icelandic**, full UI catalogue, help corpus, SEO content pages (incl.
+  `/rules` and `/faq`) and guest/registered/LAN broadcast notices
+  (`web.78`–`79`) — 61 languages total.
 - **Gujarati**, full UI catalogue, help corpus, SEO content pages (incl.
   `/rules` and `/faq`) and guest/registered/LAN broadcast notices
   (`web.76`–`77`) — 60 languages total.
@@ -138,6 +139,11 @@ highlights below.
 
 ### Fixed
 
+- **Multilingual admin notices and polls no longer drop the 61st language**
+  (`web.79`) — the welcome / guest / registered / LAN notice maps and the poll
+  label maps were capped at 60 language entries when saved; with Icelandic the
+  client now has 61, so the last language would have been discarded silently.
+  The cap is now 90, in line with the language-cardinality cap.
 - **Mobile loupe: follow logic brought to parity with QML 2.1.9** (`web.66`,
   `GamePage.qml` `tableZone`, checked against the 2.1.9 build 1223 Android APK
   — its `GamePage.qml` is upstream `stable` minus the `a6d4f05` hunk). The
