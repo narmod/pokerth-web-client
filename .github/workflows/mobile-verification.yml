@@ -1,0 +1,65 @@
+name: Mobile verification
+
+# Runs scripts/test-mobile-browser.mjs (npm run test:mobile) in real browser
+# engines: WebKit with iPhone profiles (the closest CI gets to iOS Safari) and
+# Chromium with Pixel / Galaxy profiles (Android Chrome). See
+# docs/MOBILE_VERIFICATION.md for what is checked and what still needs a real
+# phone.
+#
+# Informational: this workflow releases nothing and blocks nothing - a red run
+# means "look at the mobile table before deploying". The step screenshots are
+# kept as an artifact (mobile-screenshots) for 14 days, on success and failure.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'public/**'
+      - 'scripts/test-mobile-browser.mjs'
+      - '.github/workflows/mobile-verification.yml'
+  pull_request:
+    paths:
+      - 'public/**'
+      - 'scripts/test-mobile-browser.mjs'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: mobile-verification-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  mobile:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      # The test needs Playwright only (the client is served as static files by
+      # the script itself): install the exact version pinned in package.json
+      # instead of the whole dependency tree.
+      - name: Install Playwright (pinned version)
+        run: |
+          PW="$(node -p "require('./package.json').devDependencies.playwright")"
+          npm install --no-save --no-package-lock "playwright@${PW}"
+          npx playwright install --with-deps chromium webkit
+
+      - name: Mobile verification (iOS WebKit + Android Chromium)
+        run: npm run test:mobile
+
+      - name: Upload screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: mobile-screenshots
+          path: test-artifacts/mobile/
+          if-no-files-found: ignore
+          retention-days: 14
