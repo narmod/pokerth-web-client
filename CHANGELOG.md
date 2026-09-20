@@ -161,6 +161,14 @@ highlights below.
 
 ### Fixed
 
+- **Mobile magnifier: self box off-screen on "my turn"** (`web.90`) —
+  `renderSeats` anchors the self box on the felt centre, measured with
+  `getBoundingClientRect()`; `.felt-oval` sits inside `#g-zoom-layer`, so under
+  the loupe the measure included the ×2 scale and the current pan: the self box
+  landed at `left = W/2 + panX` (0 px or W px after following a side seat) and
+  the "my turn" pan showed empty felt. The felt rect is now un-transformed
+  through the layer's own rect (exact even mid-transition). Latent since the
+  loupe port; masked until `web.89` by the counter-transform.
 - **Mobile magnifier: self box inside the zoom layer** (`web.89`) — QML parity
   fix. The official client keeps the self box *inside* `zoomContent`
   (`GamePage.qml`, already true in 2.1.4); the web client counter-transformed

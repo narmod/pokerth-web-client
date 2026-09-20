@@ -351,8 +351,28 @@ function renderSeatsImmediate() {
   // La disposition retenue fait foi pour l'orientation des packs de sièges
   // (pokerth-official force la grille portrait même fenêtre en paysage).
   try { if (typeof window._applySeatOrient === 'function') window._applySeatOrient(_forceSeatPortrait); } catch (e) {}
-  const oRect = oval.getBoundingClientRect();
   const zRect = zone.getBoundingClientRect();
+  // Mobile loupe: .felt-oval lives INSIDE #g-zoom-layer, so its screen rect is
+  // magnified (x2) and shifted by the current pan - even mid-transition. The
+  // felt centre (oCX/oCY) anchors the self box: measured raw, the self box
+  // landed at left = W/2 + panX (0 px / W px when the view followed a side
+  // seat) and stayed off-screen on "my turn". Un-transform the rect through
+  // the layer's OWN rect (same in-flight transform, so exact at any moment):
+  // the layout is then computed in zone-local coordinates, loupe-invariant.
+  const oRect = (function () {
+    var r = oval.getBoundingClientRect();
+    try {
+      var zl = document.getElementById('g-zoom-layer');
+      if (!zl || !zl.offsetWidth) return r;
+      var lr = zl.getBoundingClientRect();
+      var k = lr.width / zl.offsetWidth;
+      if (!(k > 0) || Math.abs(k - 1) < 0.001) return r;
+      var l = zRect.left + zl.offsetLeft + (r.left - lr.left) / k;
+      var t = zRect.top + zl.offsetTop + (r.top - lr.top) / k;
+      var w = r.width / k, h = r.height / k;
+      return { left: l, top: t, width: w, height: h, right: l + w, bottom: t + h, x: l, y: t };
+    } catch (e) { return r; }
+  })();
   const oCX  = oRect.left - zRect.left + oRect.width  / 2;
   const oCY  = oRect.top  - zRect.top  + oRect.height / 2;
   const isMob = window.innerWidth < 640;       // phone (kept for reference)
