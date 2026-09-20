@@ -46,6 +46,13 @@ highlights below.
 - **Amharic**, full UI catalogue, help corpus, SEO content pages and
   guest/registered/LAN broadcast notices (`web.22`–`24`) — 54 languages
   total.
+- **Latin-American Spanish (`es-419`)**, a regional catalogue derived from `es`
+  (computadora, celular, presionar, mouse, pozo…) with its help corpus and
+  guest/registered/LAN notices (`web.82`) — 62 languages total; SEO content
+  pages to follow. One catalogue for the whole region: the picker flag follows
+  the visitor's country (`es-AR` → Argentina…, `/flags/<cc>.svg`), Mexico by
+  default, and `es-<country>` browser locales of the Americas resolve to it.
+  `es` is now labelled "Español (España)".
 - **Icelandic**, full UI catalogue, help corpus, SEO content pages (incl.
   `/rules` and `/faq`) and guest/registered/LAN broadcast notices
   (`web.78`–`79`) — 61 languages total.

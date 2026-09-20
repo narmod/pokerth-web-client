@@ -1,4 +1,4 @@
-// ── help/content/es.mjs — Corpus de ayuda en español (Lote 2) ───────────────
+// ── help/content/es-419.mjs — Corpus de ayuda en español de Latinoamérica ───────────────
 // Traducción de en.mjs (referencia). Estructura e ids idénticos; solo se
 // traducen t / b / list / keys (etiquetas) / note. Los términos de póker
 // (Fold, Check, Call, Bet, Raise, All-In, flop, turn, river…) permanecen en
@@ -15,7 +15,7 @@ export const help = {
             'Local / entrenamiento — juega sin conexión contra bots. Nada que configurar, funciona sin internet y desbloquea trofeos a medida que progresas.',
             'LAN / servidor dedicado — conéctate a un servidor PokerTH privado en tu red local o en tu propia máquina.'] },
         { id: 'lan', t: 'LAN / servidor dedicado',
-          b: ['El tercer modo se conecta a cualquier servidor PokerTH que tú o un amigo ejecutéis — en una red doméstica, en un VPS privado, donde sea. Introduce la dirección y el puerto del servidor, marca TLS si el servidor usa un puerto cifrado, e inicia sesión con un apodo (el acceso como invitado funciona si el servidor lo permite). Después, todo en la mesa se comporta exactamente igual que en el servidor oficial.'] },
+          b: ['El tercer modo se conecta a cualquier servidor PokerTH que tú o un amigo ejecuten — en una red doméstica, en un VPS privado, donde sea. Introduce la dirección y el puerto del servidor, marca TLS si el servidor usa un puerto cifrado, e inicia sesión con un apodo (el acceso como invitado funciona si el servidor lo permite). Después, todo en la mesa se comporta exactamente igual que en el servidor oficial.'] },
         { id: 'famboard', t: 'Clasificación familiar',
           b: ['Solo en servidores privados y partidas LAN, el cliente guarda estadísticas acumuladas por apodo — manos y partidas jugadas y ganadas, mayor ganancia, mejor racha — y las comparte a través del servidor para que cada dispositivo de la mesa vea la misma clasificación. Las partidas de pokerth.net nunca se registran de esta forma, y las estadísticas del modo entrenamiento se mantienen completamente separadas.', 'En estas partidas, el botón del trofeo abre la ventana de clasificaciones en su pestaña LAN: todos los jugadores, ordenables según varios criterios.'] },
         { id: 'language', t: 'Idioma',
@@ -38,9 +38,9 @@ export const help = {
       id: 'rules', icon: '\uD83C\uDCCF', title: 'Reglas del póker',
       sections: [
         { id: 'basics', t: 'Texas Hold\u2019em en pocas palabras',
-          b: ['PokerTH se juega al Texas Hold\u2019em No-Limit. Cada jugador recibe dos cartas privadas (las hole cards). Después se reparten cinco cartas comunitarias boca arriba en el centro de la mesa. La mejor mano de cinco cartas formada con cualquier combinación de tus dos cartas y las cinco comunitarias gana el bote.'] },
+          b: ['PokerTH se juega al Texas Hold\u2019em No-Limit. Cada jugador recibe dos cartas privadas (las hole cards). Después se reparten cinco cartas comunitarias boca arriba en el centro de la mesa. La mejor mano de cinco cartas formada con cualquier combinación de tus dos cartas y las cinco comunitarias gana el pozo.'] },
         { id: 'blinds', t: 'Las ciegas y el botón del repartidor',
-          b: ['Antes de cada mano, dos apuestas obligatorias alimentan el bote: la ciega pequeña y la ciega grande, puestas por los dos jugadores a la izquierda del botón del repartidor. El botón avanza un asiento en el sentido horario tras cada mano, de modo que todos pagan las ciegas por turnos. Las ciegas suben a intervalos regulares a lo largo de la partida.',
+          b: ['Antes de cada mano, dos apuestas obligatorias alimentan el pozo: la ciega pequeña y la ciega grande, puestas por los dos jugadores a la izquierda del botón del repartidor. El botón avanza un asiento en el sentido horario tras cada mano, de modo que todos pagan las ciegas por turnos. Las ciegas suben a intervalos regulares a lo largo de la partida.',
               'En la mesa, el botón y las ciegas están marcados con fichas: D (repartidor), SB (ciega pequeña), BB (ciega grande).'] },
         { id: 'streets', t: 'Las cuatro rondas de apuestas',
           list: [
@@ -48,17 +48,17 @@ export const help = {
             'Flop — se revelan tres cartas comunitarias, seguidas de una ronda de apuestas.',
             'Turn — una cuarta carta comunitaria, luego otra ronda de apuestas.',
             'River — la quinta y última carta comunitaria, luego la ronda de apuestas final.'],
-          b: ['Una ronda de apuestas termina cuando cada jugador que sigue en la mano ha puesto la misma cantidad en el bote (o está all-in).'] },
+          b: ['Una ronda de apuestas termina cuando cada jugador que sigue en la mano ha puesto la misma cantidad en el pozo (o está all-in).'] },
         { id: 'actions', t: 'Qué puedes hacer en tu turno',
           list: [
-            'Fold — abandonar la mano. Tus cartas se descartan y dejas de optar al bote.',
+            'Fold — abandonar la mano. Tus cartas se descartan y dejas de optar al pozo.',
             'Check — pasar sin apostar. Solo es posible cuando no hay nada que igualar.',
             'Call — igualar la apuesta en curso.',
             'Bet — abrir las apuestas cuando nadie ha apostado aún en esta calle.',
             'Raise — subir por encima de una apuesta existente. La subida mínima iguala la apuesta o la subida anterior.',
             'All-In — poner todas tus fichas. Sigues en la mano hasta el importe que has cubierto.'] },
-        { id: 'showdown', t: 'Showdown y botes divididos',
-          b: ['Si quedan varios jugadores tras la ronda de apuestas del river, las manos se revelan y gana la mejor — la combinación ganadora se muestra bajo las cartas comunitarias. Cuando un jugador va all-in por menos que las apuestas completas, se crean botes secundarios: cada jugador solo puede ganar la parte del bote a la que contribuyó. Las manos empatadas se reparten el bote.',
+        { id: 'showdown', t: 'Showdown y pozos divididos',
+          b: ['Si quedan varios jugadores tras la ronda de apuestas del river, las manos se revelan y gana la mejor — la combinación ganadora se muestra bajo las cartas comunitarias. Cuando un jugador va all-in por menos que las apuestas completas, se crean pozos secundarios: cada jugador solo puede ganar la parte del pozo a la que contribuyó. Las manos empatadas se reparten el pozo.',
             'No todos tienen que mostrar: a partir del último jugador que apostó o subió, una mano solo se descubre si supera lo que ya está boca arriba. Quien puede hacer muck mantiene sus cartas tapadas y recibe un botón Show para enseñarlas de todos modos.'] },
         { id: 'hands', t: 'Clasificación de las manos',
           b: ['De la más débil a la más fuerte:'],
@@ -81,14 +81,14 @@ export const help = {
         { id: 'actionbar', t: 'La barra de acción',
           b: ['Cuando es tu turno, la barra de acción de abajo se ilumina con hasta cuatro botones: Fold (rojo), Check / Call (azul), Bet / Raise (verde — la acción principal, resaltada) y All-In (rojo oscuro). El botón Check / Call muestra la cantidad exacta a igualar; Bet / Raise muestra la cantidad que estás a punto de poner. Después del river, All-In puede convertirse en un botón Show para revelar tus cartas.'] },
         { id: 'betctl', t: 'Elegir tu apuesta',
-          b: ['Ajusta el importe de la subida con el campo numérico, el deslizador o los botones rápidos 1/3 \u00b7 1/2 \u00b7 Pot (fracciones del bote actual). Los importes se redondean automáticamente y se mantienen entre la subida mínima y máxima legales. Si prefieres pensar en ciegas grandes, una opción muestra todos los importes en BB en lugar de fichas.'] },
+          b: ['Ajusta el importe de la subida con el campo numérico, el deslizador o los botones rápidos 1/3 \u00b7 1/2 \u00b7 Pot (fracciones del pozo actual). Los importes se redondean automáticamente y se mantienen entre la subida mínima y máxima legales. Si prefieres pensar en ciegas grandes, una opción muestra todos los importes en BB en lugar de fichas.'] },
         { id: 'preselect', t: 'Preseleccionar una acción',
           b: ['Antes de tu turno puedes armar una acción por adelantado: toca un botón y adquiere un borde dorado con un puntito dorado. Cuando llega tu turno, la acción se ejecuta al instante. Un Fold prearmado se convierte automáticamente en Check cuando el check es gratis — nunca te retiras por nada. Las preselecciones se reinician con cada mano nueva, cada cambio de calle y el showdown, y se anulan si la situación cambia (por ejemplo, si cambia el importe a igualar).'] },
         { id: 'automodes', t: 'Modos automáticos',
           b: ['El desplegable junto a los botones de acción ofrece tres modos de juego: Manual, Auto Check/Call y Auto Check/Fold. Los modos auto juegan por ti hasta que vuelvas atrás — cualquier clic manual en una acción regresa inmediatamente a Manual.'] },
         { id: 'readtable', t: 'Leer la mesa',
           b: ['Cada caja de jugador muestra el avatar, el nombre, las fichas y la apuesta en curso. El repartidor y las ciegas están marcados con fichas D / SB / BB. Una insignia de color en la caja indica la última acción del jugador; una fina barra azul descuenta su tiempo de reflexión. La caja del jugador al que le toca se ilumina; tu propia caja adquiere un marco dorado pulsante en tu turno.',
-              'La barra de estado sobre la mesa muestra el bote total, las apuestas de la calle en curso, la fase (Pre-flop, Flop, Turn, River) y los números de partida y de mano. Los jugadores retirados tienen cartas translúcidas; los eliminados aparecen atenuados. Al final de una mano, una ventana del ganador puede resumir quién ganó qué — se desactiva en las opciones.'] },
+              'La barra de estado sobre la mesa muestra el pozo total, las apuestas de la calle en curso, la fase (Pre-flop, Flop, Turn, River) y los números de partida y de mano. Los jugadores retirados tienen cartas translúcidas; los eliminados aparecen atenuados. Al final de una mano, una ventana del ganador puede resumir quién ganó qué — se desactiva en las opciones.'] },
         { id: 'seatlayout', t: 'Colocación de los asientos',
           b: ['Como extensión web, la disposición de las cajas de jugadores se elige en Opciones avanzadas \u2192 Asientos: Automática sigue al cliente oficial (posiciones fijas en vertical, elipse calculada en horizontal), o fuerza la disposición Vertical u Horizontal — y Personalizada te deja colocar cada asiento tú mismo: aparece un modo de edición donde arrastras cada caja exactamente adonde quieras, y la disposición se guarda.'] },
         { id: 'zoom', t: 'Zoom de mesa (teléfonos)',
@@ -109,7 +109,7 @@ export const help = {
           b: ['La pestaña Probabilidades muestra, para tu mano actual, la probabilidad en vivo de terminar con cada una de las 10 categorías de manos — de High Card a Royal Flush — cada una con su icono, su porcentaje y su barra. La pantalla se atenúa en cuanto te retiras. Solo usa tus propias cartas y las comunitarias: no ve nada que tus rivales no muestren.'] },
         { id: 'journal', t: 'Registros de manos y la ventana «Logs»',
           b: ['Más allá del historial en vivo, cada mano que juegas se graba localmente en tu navegador, en el mismo formato que los archivos de registro .pdb del cliente oficial. La ventana Logs (Opciones avanzadas \u2192 Mensajes de registro \u2192 Gestionar registros\u2026) lista tus sesiones y te permite trabajar con ellas: previsualizar una sesión con búsqueda y resaltado, filtrar por partida, exportar en HTML o texto plano, guardar el archivo .pdb en bruto, o importar un .pdb grabado por el cliente de escritorio. Las sesiones se borran una a una o todas de golpe (con confirmación), y un ajuste de retención automática puede conservar solo los últimos 7, 30, 90, 180 o 365 días. Los registros que importas tú mismo nunca se eliminan automáticamente. Un segundo ajuste limita cuántas sesiones se conservan, y la columna de la lista se puede ensanchar arrastrando.',
-              'Para vaciar varias sesiones de una vez, el botón Seleccionar… muestra una casilla en cada entrada: marca las que sobran y Eliminar borra todo el lote tras una sola confirmación. En un ordenador, Ctrl (⌘) + clic añade sesiones una a una y Mayús + clic toma un rango entero.',
+              'Para vaciar varias sesiones de una vez, el botón Seleccionar… muestra una casilla en cada entrada: marca las que sobran y Eliminar borra todo el lote tras una sola confirmación. En una computadora, Ctrl (⌘) + clic añade sesiones una a una y Mayús + clic toma un rango entero.',
               'El botón Analizar ejecuta un análisis de manos sobre una sesión y puede enviar un registro al servicio de análisis de pokerth.net. Todo permanece en tu dispositivo mientras no exportes o envíes explícitamente.'] },
         { id: 'logopts', t: 'Opciones de registro',
           b: ['En Opciones avanzadas \u2192 Mensajes de registro puedes activar o desactivar el registro y elegir el intervalo de escritura, con los tres mismos ajustes que el cliente de escritorio: tras cada acción, tras cada mano (el valor por defecto) o tras cada partida. Otra opción escribe el archivo .pdb en una carpeta que elijas y lo mantiene al día con ese intervalo, y una vez más al salir de la página, para que otra herramienta pueda seguir la partida en directo.'],
@@ -135,12 +135,12 @@ export const help = {
           b: ['Hay un chat en el lobby y otro en la mesa. En el teléfono, el chat de mesa flota sobre el juego; en pantallas más grandes es una ventana movible y redimensionable. Una insignia en el botón del chat cuenta los mensajes sin leer.'] },
         { id: 'typing', t: 'Ayudas de escritura',
           list: [
-            'Tab completa un apodo — pulsa Tab de nuevo para recorrer las coincidencias.',
+            'Tab completa un apodo — presiona Tab de nuevo para recorrer las coincidencias.',
             '\u2191 / \u2193 recorren el historial de tus propios mensajes.',
             'El botón de emoji abre un selector completo; escribir : también sugiere emoticonos mientras tecleas.'] },
         { id: 'emotes', t: 'Emoticonos y smileys',
           b: ['El chat convierte los códigos de emoticonos exactamente igual que el cliente de escritorio oficial: escribe un nombre entre dos puntos y se convierte en el emoji — :sunny: \u2192 \u2600, :+1: \u2192 \uD83D\uDC4D, :joy: \u2192 \uD83D\uDE02, :four_leaf_clover: \u2192 \uD83C\uDF40\u2026 se admiten más de 1.900 códigos (el juego completo de GitHub). Los smileys de texto clásicos también se convierten: :-) ;) :D xD :P <3 y unos ochenta más.',
-              'Escribir : abre un cuadro de sugerencias que completa el código mientras tecleas (\u2191/\u2193 para elegir, Tab o Intro para aceptar). La conversión de emojis se desactiva por completo en Opciones avanzadas \u2192 Chat.'] },
+              'Escribir : abre un cuadro de sugerencias que completa el código mientras tecleas (\u2191/\u2193 para elegir, Tab o Enter para aceptar). La conversión de emojis se desactiva por completo en Opciones avanzadas \u2192 Chat.'] },
         { id: 'commands', t: 'Comandos del chat',
           b: ['El chat entiende comandos con barra. Dos son visibles para los demás:'],
           keys: [
@@ -221,7 +221,7 @@ export const help = {
       id: 'offline', icon: '\uD83C\uDFCB\uFE0F', title: 'Modo entrenamiento',
       sections: [
         { id: 'what', t: 'Qué es',
-          b: ['El modo Local / entrenamiento es una partida completa contra rivales controlados por el ordenador: sin conexión, sin cuenta, nada en juego. Una vez instalada la aplicación (o simplemente visitada una vez), funciona completamente sin conexión — perfecto para aprender el juego, probar la interfaz o pasar el rato en modo avión.'] },
+          b: ['El modo Local / entrenamiento es una partida completa contra rivales controlados por la computadora: sin conexión, sin cuenta, nada en juego. Una vez instalada la aplicación (o simplemente visitada una vez), funciona completamente sin conexión — perfecto para aprender el juego, probar la interfaz o pasar el rato en modo avión.'] },
         { id: 'setup', t: 'Configurar una partida',
           b: ['Elige el número de rivales, las fichas iniciales, las ciegas y su progresión, y la velocidad de juego. La composición y la dificultad de los bots se ajustan en Opciones avanzadas \u2192 Partida local — desde rivales suaves hasta una mesa más dura y variada.'] },
         { id: 'trophies', t: 'Trofeos',

@@ -311,7 +311,34 @@ function _report(msg, code) {
   } catch (e) {}
 }
 
+// es-419 is ONE catalogue for the whole of Latin America, so no single flag is
+// right for everybody: its picker flag follows the visitor's country instead
+// (es-AR → Argentina, es-CO → Colombia…), read from the browser locales. With
+// no Latin-American region in them the catalogue's own flag (Mexico) is used.
+// The country flags are the /flags/<cc>.svg set already served for the player
+// country badges; the inline default sits underneath as a second background
+// layer, so a flag that cannot be fetched (offline) degrades to it silently.
+var ES419_COUNTRIES = { mx:1, ar:1, co:1, cl:1, pe:1, ve:1, ec:1, gt:1, cu:1, bo:1, 'do':1,
+                        hn:1, py:1, sv:1, ni:1, cr:1, pa:1, uy:1, pr:1, us:1 };
+function _es419Country() {
+  try {
+    var list = (navigator.languages && navigator.languages.length) ? navigator.languages : [navigator.language || ''];
+    for (var i = 0; i < list.length; i++) {
+      var m = /^es-([a-z]{2})$/i.exec(String(list[i] || ''));
+      if (m && ES419_COUNTRIES[m[1].toLowerCase()] === 1) return m[1].toLowerCase();
+    }
+  } catch (e) {}
+  return '';
+}
 function _flagFor(code) {
+  if (code === 'es-419' && LANG_META[code] && LANG_META[code].flag) {
+    var cc = _es419Country();
+    if (cc && cc !== 'mx' && cc !== 'us') {   // es-US keeps the default: a US flag would mislabel the language
+      var dflt = 'data:image/svg+xml,' + encodeURIComponent(LANG_META[code].flag);
+      return '<span class="lang-flag" role="img" aria-label="' + LANG_META[code].label + ' (' + cc.toUpperCase() + ')"'
+        + ' style="background:url(/flags/' + cc + '.svg) center/cover no-repeat,url(&quot;' + dflt + '&quot;) center/cover no-repeat"></span>';
+    }
+  }
   return (LANG_META[code] && LANG_META[code].flag)
     || ('<span class="lang-flag lang-flag-code" style="font:700 0.72rem/1 monospace;letter-spacing:.05em">' + String(code).toUpperCase() + '</span>');
 }
@@ -353,6 +380,12 @@ let _lang = (function(){
         // fell through to the primary subtag 'zh' and got Simplified Chinese.
         'zh-tw': 'zh-TW', 'zh-hk': 'zh-TW', 'zh-mo': 'zh-TW', 'zh-hant': 'zh-TW',
         'zh-hant-tw': 'zh-TW', 'zh-hant-hk': 'zh-TW', 'zh-hant-mo': 'zh-TW' };
+    // Latin-American Spanish: es-419 itself and every es-<country> of the
+    // Americas. Bare 'es', es-ES and the rest keep the European catalogue.
+    try {
+        Object.keys(ES419_COUNTRIES).forEach(function (cc) { regionAlias['es-' + cc] = 'es-419'; });
+        regionAlias['es-419'] = 'es-419';
+    } catch (eEs) {}
     // Primary-subtag aliases: the browser reports a code that differs from
     // our catalogue code, or a macrolanguage/legacy code we fold onto one
     // variant. Bare 'pt' (and the old single 'pt' catalogue) → Brazilian,

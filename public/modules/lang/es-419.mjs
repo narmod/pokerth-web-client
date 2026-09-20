@@ -1,6 +1,10 @@
 // @ts-check
 // ─────────────────────────────────────────────────────────────────────────
-// public/modules/lang/es.mjs — Spanish (Español) catalogue (self-contained).
+// public/modules/lang/es-419.mjs — Latin-American Spanish catalogue (self-contained).
+//
+// Regional variant of es.mjs (same keys, same order): computadora, celular,
+// presionar, mouse, pozo… Its picker flag follows the visitor's country —
+// see _flagFor() in modules/i18n.mjs; the flag below (Mexico) is the default.
 //
 // Sibling of en.mjs/fr.mjs/de.mjs. Keep {token} placeholders and the `||`
 // line separators exactly as in en.mjs when editing. Poker action terms and a
@@ -10,17 +14,17 @@
 // ─────────────────────────────────────────────────────────────────────────
 
 export const meta = {
-  label: 'Español (España)',
+  label: 'Español (Latinoamérica)',
   dir: 'ltr',
-  flag: '<svg class="lang-flag" viewBox="0 0 60 30" xmlns="http://www.w3.org/2000/svg" aria-label="Español (España)"><rect width="60" height="30" fill="#AA151B"/><rect width="60" height="15" y="7.5" fill="#F1BF00"/></svg>',
+  flag: '<svg class="lang-flag" viewBox="0 0 60 30" xmlns="http://www.w3.org/2000/svg" aria-label="Español (Latinoamérica)"><rect width="60" height="30" fill="#fff"/><rect width="20" height="30" fill="#006847"/><rect x="40" width="20" height="30" fill="#CE1126"/><ellipse cx="30" cy="15" rx="4.2" ry="3.6" fill="#8C6B2F"/></svg>',
 };
 
 export const strings = {
     // Bot text banter (mode local / offline) — real chat lines per archetype+moment, 4 variants each.
     // Keys: bnt<Archetype><Kind><n>. See public/modules/offline/banter.mjs for the pool structure.
-    bntRockGreet1:'Buenas. Juguemos.', bntRockGreet2:'Estaré aquí un buen rato.', bntRockGreet3:'Cartas en la mesa, paciencia ante todo.', bntRockGreet4:'A ver qué dice el mazo.', bntRockBig1:'La paciencia paga.', bntRockBig2:'Te dije que esperaría una.', bntRockBig3:'Con eso basta.', bntRockBig4:'Value de manual.', bntRockBad1:'Bien. Siguiente mano.', bntRockBad2:'No se puede ganar todo.', bntRockBad3:'Anotado.', bntRockBad4:'Eso es el póker.', bntRockSteal1:'A veces con una apuesta basta.', bntRockSteal2:'No hace falta mostrarla.', bntRockSteal3:'Un bote pequeño sigue siendo un bote.', bntRockSteal4:'No necesité las cartas.', bntRockBust1:'Bien jugado, mesa.', bntRockBust2:'Les fue bien contra mí.', bntRockBust3:'Miraré el resto desde fuera.', bntRockBust4:'Fuera. GG.', bntRockVictory1:'Paciencia, como siempre.', bntRockVictory2:'Despacio pero seguro.', bntRockVictory3:'Buena partida a todos.', bntRockVictory4:'Así se hace.', bntRockRunnerup1:'Bien merecido.', bntRockRunnerup2:'Buena partida.', bntRockRunnerup3:'Lo jugaste bien.', bntRockRunnerup4:'Quizás la próxima.',
+    bntRockGreet1:'Buenas. Juguemos.', bntRockGreet2:'Estaré aquí un buen rato.', bntRockGreet3:'Cartas en la mesa, paciencia ante todo.', bntRockGreet4:'A ver qué dice el mazo.', bntRockBig1:'La paciencia paga.', bntRockBig2:'Te dije que esperaría una.', bntRockBig3:'Con eso basta.', bntRockBig4:'Value de manual.', bntRockBad1:'Bien. Siguiente mano.', bntRockBad2:'No se puede ganar todo.', bntRockBad3:'Anotado.', bntRockBad4:'Eso es el póker.', bntRockSteal1:'A veces con una apuesta basta.', bntRockSteal2:'No hace falta mostrarla.', bntRockSteal3:'Un pozo pequeño sigue siendo un pozo.', bntRockSteal4:'No necesité las cartas.', bntRockBust1:'Bien jugado, mesa.', bntRockBust2:'Les fue bien contra mí.', bntRockBust3:'Miraré el resto desde fuera.', bntRockBust4:'Fuera. GG.', bntRockVictory1:'Paciencia, como siempre.', bntRockVictory2:'Despacio pero seguro.', bntRockVictory3:'Buena partida a todos.', bntRockVictory4:'Así se hace.', bntRockRunnerup1:'Bien merecido.', bntRockRunnerup2:'Buena partida.', bntRockRunnerup3:'Lo jugaste bien.', bntRockRunnerup4:'Quizás la próxima.',
     bntTagGreet1:'Juguemos buen póker.', bntTagGreet2:'Listo cuando quieras.', bntTagGreet3:'Suerte a todos.', bntTagGreet4:'Veamos algunas manos.', bntTagBig1:'De manual.', bntTagBig2:'Así se juega.', bntTagBig3:'Spot correcto, mano correcta.', bntTagBig4:'Value de principio a fin.', bntTagBad1:'No se puede ganar todo.', bntTagBad2:'Pasa, es normal.', bntTagBad3:'Bien por ti.', bntTagBad4:'Me lo trago sin más.', bntTagSteal1:'A veces la apuesta hace el trabajo.', bntTagSteal2:'No hace falta showdown.', bntTagSteal3:'Me lo quedo.', bntTagSteal4:'Fichas gratis, las acepto.', bntTagBust1:'Buena racha mientras duró.', bntTagBust2:'GG, bien jugado.', bntTagBust3:'Así es el póker.', bntTagBust4:'Veré el resto desde la grada.', bntTagVictory1:'GG a todos, buena partida.', bntTagVictory2:'Mesa sólida esta noche.', bntTagVictory3:'Eso es una victoria.', bntTagVictory4:'Buenas partidas para todos.', bntTagRunnerup1:'Bien jugado.', bntTagRunnerup2:'Victoria merecida.', bntTagRunnerup3:'GG, bien hecho.', bntTagRunnerup4:'Buena partida.',
-    bntLagGreet1:'A mover fichas.', bntLagGreet2:'Espero que traigas tu mejor juego.', bntLagGreet3:'Hora de arriesgar un poco.', bntLagGreet4:'Vamos a ponerlo interesante.', bntLagBig1:'¡Te lo dije!', bntLagBig2:'De eso hablo.', bntLagBig3:'Nunca dudes de mí.', bntLagBig4:'Bum. Lo dije y lo hice.', bntLagBad1:'Mesa amañada, te lo juro 😤', bntLagBad2:'¡Mala suerte! Me lo recupero.', bntLagBad3:'Esa duele.', bntLagBad4:'Vale, me pillaste esta vez.', bntLagSteal1:'Ni siquiera necesité las cartas.', bntLagSteal2:'Demasiado fácil.', bntLagSteal3:'Ese es el movimiento.', bntLagSteal4:'La presión funciona.', bntLagBust1:'Salí peleando.', bntLagBust2:'Sin arrepentimientos.', bntLagBust3:'Así soy yo.', bntLagBust4:'Nos vemos en la próxima.', bntLagVictory1:'¡Nunca hubo duda!', bntLagVictory2:'Por eso juego suelto.', bntLagVictory3:'GG, fue divertido.', bntLagVictory4:'Te dije que lo tenía en mí.', bntLagRunnerup1:'Buena jugada, partida reñida.', bntLagRunnerup2:'Tuviste suerte, respeto.', bntLagRunnerup3:'Buena partida, en serio.', bntLagRunnerup4:'La próxima te agarro.',
+    bntLagGreet1:'A mover fichas.', bntLagGreet2:'Espero que traigas tu mejor juego.', bntLagGreet3:'Hora de arriesgar un poco.', bntLagGreet4:'Vamos a ponerlo interesante.', bntLagBig1:'¡Te lo dije!', bntLagBig2:'De eso hablo.', bntLagBig3:'Nunca dudes de mí.', bntLagBig4:'Bum. Lo dije y lo hice.', bntLagBad1:'Mesa amañada, te lo juro 😤', bntLagBad2:'¡Mala suerte! Me lo recupero.', bntLagBad3:'Esa duele.', bntLagBad4:'Bueno, me atrapaste esta vez.', bntLagSteal1:'Ni siquiera necesité las cartas.', bntLagSteal2:'Demasiado fácil.', bntLagSteal3:'Ese es el movimiento.', bntLagSteal4:'La presión funciona.', bntLagBust1:'Salí peleando.', bntLagBust2:'Sin arrepentimientos.', bntLagBust3:'Así soy yo.', bntLagBust4:'Nos vemos en la próxima.', bntLagVictory1:'¡Nunca hubo duda!', bntLagVictory2:'Por eso juego suelto.', bntLagVictory3:'GG, fue divertido.', bntLagVictory4:'Te dije que lo tenía en mí.', bntLagRunnerup1:'Buena jugada, partida reñida.', bntLagRunnerup2:'Tuviste suerte, respeto.', bntLagRunnerup3:'Buena partida, en serio.', bntLagRunnerup4:'La próxima te agarro.',
     bntStationGreet1:'¡Hola a todos, suerte!', bntStationGreet2:'¡Con ganas de jugar!', bntStationGreet3:'A divertirnos.', bntStationGreet4:'Ojalá me lleguen buenas cartas.', bntStationBig1:'¡Ja, lo logré!', bntStationBig2:'¡Funcionó!', bntStationBig3:'¡Qué suerte!', bntStationBig4:'¡Me quedé por algo!', bntStationBad1:'Bueno, valió la pena intentarlo.', bntStationBad2:'¡Tan cerca!', bntStationBad3:'Ay, casi la tenía.', bntStationBad4:'Supongo que no era mi turno.', bntStationSteal1:'¿Nadie pagó? ¡Está bien!', bntStationSteal2:'¡La acepto, gracias!', bntStationSteal3:'¡Eso también sirve!', bntStationSteal4:'¡No me lo esperaba!', bntStationBust1:'Ay, hasta aquí llegué.', bntStationBust2:'¡Buena partida igual!', bntStationBust3:'Fue divertido mientras duró.', bntStationBust4:'¡Nos vemos la próxima, a todos!', bntStationVictory1:'¡Wow, realmente gané!', bntStationVictory2:'¡No lo vi venir!', bntStationVictory3:'¡Gracias por jugar, a todos!', bntStationVictory4:'¡Fue muy divertido!', bntStationRunnerup1:'¡Gran partida, felicidades!', bntStationRunnerup2:'¡Bien merecido!', bntStationRunnerup3:'¡Fue divertido, bien jugado!', bntStationRunnerup4:'¡Bonita victoria!',
     bntManiacGreet1:'¡A JUGÁRNOSLA!', bntManiacGreet2:'¿Quién está listo para el caos?', bntManiacGreet3:'¡Ningún fold se queda atrás!', bntManiacGreet4:'Agárrense.', bntManiacBig1:'¡BUM! 💥', bntManiacBig2:'¡VAMOOOS!', bntManiacBig3:'¡PARA ESTO estoy aquí!', bntManiacBig4:'¡Nunca más me retiro!', bntManiacBad1:'IRREAL. ¡IRREAL!', bntManiacBad2:'¡Esta partida está LOCA!', bntManiacBad3:'Da igual, siguiente mano, ALL-IN.', bntManiacBad4:'No me arrepiento de NADA.', bntManiacSteal1:'¡Ni siquiera tuve que mostrarla!', bntManiacSteal2:'El caos funciona, siempre.', bntManiacSteal3:'¡Dinero gratis, nena!', bntManiacSteal4:'Es el impuesto del maniaco.', bntManiacBust1:'VALIÓ LA PENA.', bntManiacBust2:'Sin arrepentimientos, solo vibra.', bntManiacBust3:'¡Salí con estilo!', bntManiacBust4:'Así salen las leyendas.', bntManiacVictory1:'¡LES DIJE QUE EL CAOS FUNCIONA!', bntManiacVictory2:'GG, eso fue SALVAJE.', bntManiacVictory3:'Nunca cambio mi juego, JAMÁS.', bntManiacVictory4:'¡El caos gana otra vez!', bntManiacRunnerup1:'¡Partida SALVAJE, GG!', bntManiacRunnerup2:'¡Eso fue una locura, buen golpe!', bntManiacRunnerup3:'¡Respeto, qué batalla!', bntManiacRunnerup4:'¡GG, qué viaje!',
     // Notes de joueur + étiquettes (modules/notes, extra web)
@@ -57,7 +61,7 @@ export const strings = {
 
     advSecConn:'Conexión', advNickRetry:'Reintentar automáticamente cuando el apodo siga en uso', nickInUseRetry:'«{name}» sigue en uso — nuevo intento en {n} s ({a}/{max})…', nickInUseGiveUp:'«{name}» sigue en uso tras {max} intentos. Una sesión anterior sigue abierta en el servidor — inténtalo de nuevo en unos minutos o elige otro apodo.',
     // — i18n gap-fill (backup / trophies / back tooltip) —
-    advKeyNav:'Esc cierra/cancela, Intro confirma (fuera de la mesa)',
+    advKeyNav:'Esc cierra/cancela, Enter confirma (fuera de la mesa)',
     achTitle:'Trofeos', advBackupSec:'Copia de seguridad completa (cliente web)', advBackupDesc:'Guarda en un solo archivo todo lo que contiene este navegador: opciones web, temas, barajas, asientos personalizados, imagen de avatar, trofeos y estadísticas, incluido lo que es demasiado grande para sincronizar con tu cuenta. Tu contraseña y tu sesión nunca se incluyen, y la importación fusiona los trofeos en vez de reemplazarlos, así que nunca se pierde el progreso.', advBackupExport:'Exportar copia', advBackupImport:'Importar copia', advWinOpen:'Resaltar el botón en dorado mientras su ventana está abierta', backTooltip:'Atrás',
   advPolls: "Participar en las encuestas del producto",
   pollTitle: "Encuesta",
@@ -73,7 +77,7 @@ export const strings = {
     advStatsExportSession:"Exportar sesión",
     advStatsExportAll:"Exportar todo el historial",
     advPdbAutoSec:"Archivo .pdb automático",
-    advPdbAutoDesc:"Escribir el registro .pdb en una carpeta de tu ordenador y actualizarlo después de cada mano, como el cliente de escritorio. Solo Chrome, Edge y Opera de escritorio.",
+    advPdbAutoDesc:"Escribir el registro .pdb en una carpeta de tu computadora y actualizarlo después de cada mano, como el cliente de escritorio. Solo Chrome, Edge y Opera de escritorio.",
     advPdbAuto:"Escribir el archivo .pdb automáticamente",
     advPdbAutoPick:"Elegir carpeta…",
     advPdbAutoNoFs:"Este navegador no puede escribir en una carpeta local.",
@@ -128,7 +132,7 @@ export const strings = {
   advCatUI: 'Interfaz de usuario', advCatStyle: 'Estilo', advCatSound: 'Sonido', advCatLocal: 'Partida local', advCatNetwork: 'Partida en red', advCatInternet: 'Partida por Internet', advCatAvatar: 'Apodos / Avatares', advCatLog: 'Mensajes de registro', advCatReset: 'Copia de seguridad y restablecer', advStyleDesc: 'Barajas, tapete, aspecto de los asientos y tema de colores.', advStyleOpen: 'Abrir el selector de temas', advSoundDesc: 'Sonidos del juego, volumen de la música y silencio de las reacciones.', advSoundOpen: 'Ajustes de sonido y volumen', advLocalDesc: 'Practica contra bots: llena los asientos vacíos de tu mesa.', advLocalOpen: 'Llenar los asientos con bots', advNetworkDesc: 'Alojar una partida en tu red local (LAN).', advSoonTag: 'Próximamente', advInternetDesc: 'Estás conectado a un servidor PokerTH.', advSrvLabel: 'Servidor', advInternetOpen: 'Cambiar de servidor / desconectar', advSrvUnknown: '—', advSrvBridge: 'Puente proxy', advAvatarDesc: 'Tu apodo y tu imagen de avatar.', advAvatarOpen: 'Editar apodo / avatar', advLogDesc: 'Registro de la partida y chat superpuesto.', advLogOpen: 'Abrir el registro', advResetDesc: 'Restablecimiento de fábrica: restaura TODO — opciones, estilos y temas, atajos, ventanas, estadísticas y registro — como un usuario nuevo. Se conservan apodo, avatar, cuenta y servidor.', advResetBtn: 'Restablecer valores predeterminados', advResetConfirm: '¿Restablecer todo a los valores de fábrica (opciones, estilos, atajos, estadísticas)? Se conservan apodo, avatar y cuenta. La aplicación se recargará.', seatLayoutAuto: 'Automático', seatLayoutEllipse: "Horizontal", zoomReset: 'Restablecer la vista', installTooltip: 'Instalar la aplicación', piIgnore: 'Ignorar', piUnignore: 'Dejar de ignorar',
   plRemaining: 'Jugadores restantes', showCards: 'Mostrar',
   emoFrequent: 'Frecuentes', emoAll: 'Todos', advPingAvatar: 'Indicador de ping en mi avatar (verde/amarillo/rojo)', advAutoLeave: 'Volver automáticamente al lobby al terminar la partida',
-  advReduceFx: 'Reducir los efectos gráficos (sombras/brillo) — para dispositivos modestos', avatarGallery: 'Galería de avatares', avatarGalleryTooltip: 'Galería de avatares', avgalPeople: 'Personas', avgalMisc: 'Varios', lsbRunning: 'en curso', lsbOpen:'Abierta', statusBets: 'Apuestas', advBlindsBadge:'Indicador de ciegas en la barra de estado', advStatusBar: 'Barra de estado de la partida (mano n.º, bote, apuestas, fase)',
+  advReduceFx: 'Reducir los efectos gráficos (sombras/brillo) — para dispositivos modestos', avatarGallery: 'Galería de avatares', avatarGalleryTooltip: 'Galería de avatares', avgalPeople: 'Personas', avgalMisc: 'Varios', lsbRunning: 'en curso', lsbOpen:'Abierta', statusBets: 'Apuestas', advBlindsBadge:'Indicador de ciegas en la barra de estado', advStatusBar: 'Barra de estado de la partida (mano n.º, pozo, apuestas, fase)',
   piKickban:'Expulsar y bloquear', kickbanConfirm: '¿Expulsar y banear a {name} del servidor (kickban total)?', inviteConfirm:"¿Invitar a {name} a tu partida?", ignoreConfirm:"¿Ignorar a {name}?", unignoreConfirm:"¿Dejar de ignorar a {name}?", kickbanOk: '{name} ha recibido un kickban', kickbanFail: 'El kickban ha fallado', advSecSndCats:'Categorías de sonido', advSndActions: 'Sonidos de las acciones de juego (Check, Call, Raise…)', advSndLobby: 'Notificación del chat del lobby', advSndNet: 'Notificaciones de partida en red (jugador conectado, partida lista)', advSecSndCustom:'Sonidos personalizados', advSndCustomDesc:'Sustituye cualquier sonido del juego por tu propio archivo de audio (MP3, WAV, OGG…, 2 MB máx.). Los archivos se quedan en este navegador y nunca se envían. ▶ reproduce el sonido actual, ↺ restaura el original.', advSndCustomImport:'Importar', advSndCustomReset:'Restaurar el sonido original', advSndCustomResetAll:'Restaurar todos los sonidos originales', advSndCustomResetAllAsk:'¿Restaurar todos los sonidos originales?', advSndCustomDefault:'Sonido original', advSndCustomOwn:'Sonido personalizado', advSndCustomPlay:'Reproducir', advSndCustomOk:'Sonido sustituido', advSndCustomTooBig:'Archivo demasiado grande (2 MB máx.)', advSndCustomBad:'El navegador no puede leer este archivo de audio', sndNameDeal:'Reparto de cartas', sndNameTurn:'Tu turno', sndNameBlinds:'Subida de ciegas', sndNamePlayerConnected:'Jugador conectado', sndNameGameReady:'Partida lista', sndNameLobbyChat:'Chat del vestíbulo', advSndBlinds:'Notificación de subida de ciegas', sectionCardback:'Reverso de las cartas', cardbackAuto: 'A juego con la baraja', cardbackCustom: 'Imagen importada', cardbackImport: 'Importar una imagen…',
   advFkeysAlt: 'Invertir el orden F1–F4 (F1 = All-In)',
   kbHintF: 'Las teclas oficiales de PokerTH también funcionan: F1–F4 = Fold · Check/Call · Bet/Raise · All-In, F6/F7/F8 = Manual / Auto Check-Fold / Auto Check-Call, Alt+M/K/F = modos, Alt+C chat, Alt+L registro, Alt+I probabilidades.',
@@ -175,7 +179,7 @@ export const strings = {
   seatLayoutOfficial: "Vertical",
   confirmCall: "Confirmar",
   kbReset: "Restablecer",
-  kbHint: "Toca una tecla y luego pulsa la nueva. Espacio = Call, Intro = confirmar la subida.",
+  kbHint: "Toca una tecla y luego presiona la nueva. Espacio = Call, Enter = confirmar la subida.",
   oddsTitle: "Probab.",
   oddsRoyal: "Real",
   oddsSF: "Esc.color",
@@ -286,7 +290,7 @@ export const strings = {
     call: 'Call',
     raise: 'Raise',
     allin: 'All-In',
-    pot: 'Bote:',
+    pot: 'Pozo:',
     journal: '📋',
     chat: '💬',
     sound: '🔊',
@@ -389,7 +393,7 @@ export const strings = {
     piGameState: 'Estado de la partida',
     piHandNo: 'Mano #',
     piNotStarted: 'No iniciada',
-    piPot: 'Bote',
+    piPot: 'Pozo',
     piPhase: 'Fase',
     hapticOn: 'Vibración activada',
     hapticOff: 'Vibración desactivada',
@@ -486,7 +490,7 @@ export const strings = {
     avCatFlags: 'Banderas',
     youWon: '¡Has ganado!',
     handWinner: 'Ganador de la mano',
-    totalPot: 'Bote total',
+    totalPot: 'Pozo total',
     players: 'Jugadores',
     blinds: 'Ciegas',
     commCards: 'Cartas comunitarias',
@@ -673,7 +677,7 @@ export const strings = {
     quickCreateLabel: 'Jugadores:',
     quickCreateBtn: 'Crear',
     logPanelTitle: 'Registro',
-    logCopied:'Registro copiado', logEmpty:'El registro está vacío', gnBtn:'Aviso global (admin)',gnSent:'El aviso global se envió a todos los jugadores.',gnRejected:'El servidor rechazó el aviso global.',advChatClearLogin:'Vaciar el chat del vestíbulo al conectar', advGuardRaise:'Confirmar un importe de apuesta fuera del rango permitido', raiseAdjusted:'Importe ajustado — pulsa de nuevo para confirmar', advChatTrAlways:'Botón de traducción siempre visible (si no, solo en la línea señalada o tocada)', advCommunitySuggest:'Sugerir jugadores en mis partidas comunitarias', suggestPlayers:'Sugerir jugadores', kbHintExtra:'Alt+S abre los ajustes en cualquier parte, como en el cliente oficial. Alt+T abre el panel de estadísticas — un añadido web, el cliente oficial no tiene atajo.', advSearchPh:'Buscar en las opciones…', advErrReport:'Informar de los errores de script al administrador del servidor (detalles del error, navegador y dirección IP acortada)', advOffByAdmin:'desactivado (admin)', errJoinTimeout:'El servidor no responde — comprueba tu conexión.', avTabGallery:'Galería', avTabCreate:'Crear', avTabImport:'Importar', avmRandom:'Aleatorio', avmMissing:'Esta combinación aún no está en el catálogo', avmUse:'Usar este avatar', avmGender:'Género', avmAge:'Edad', avmGlasses:'Gafas', avmFemale:'Mujer', avmMale:'Hombre', avmYoung:'Joven', avmAdult:'Adulto', avmSenior:'Sénior', avmWith:'Con', avmWithout:'Sin', avImportDrop:'Arrastra una imagen aquí', avImportOr:'o', avImportBtn:'Elegir un archivo', avImportHint:'Sirve cualquier imagen — se recorta en cuadrado y se redimensiona a 96×96 automáticamente. Visible para los demás jugadores.', advAvatarCreate:'Mostrar la pestaña «Crear» (retratos) en la ventana de avatar', avmBg:'Fondo', avmOutfit:'Atuendo', avmSkin:'Piel', avmMarks:'Marcas de piel', avmHair:'Pelo', avmHairColor:'Color de pelo', avmBeard:'Vello facial', avmEyeShape:'Ojos', avmEyeColor:'Color de ojos', avmMouth:'Boca', avmShoulder:'Accesorio de hombro', avmEarrings:'Pendientes', avmNone:'Ninguno', avmSex:'Silueta', avmFace:'Forma de cara', avmGrpFace:'Cara', avmGrpHair:'Pelo', avmGrpStyle:'Estilo', avmGrpExtra:'Extras', avmHat:'Sombrero', avmGrpBody:'Silueta', avmReset:'Restablecer', avmNose:'Nariz', betKeypad:'Teclado numérico', logExportTitle:'Exportar registro', chatClearTitle:'Borrar chat', chatMuteTitle:'Silenciar el sonido de notificación del chat',
+    logCopied:'Registro copiado', logEmpty:'El registro está vacío', gnBtn:'Aviso global (admin)',gnSent:'El aviso global se envió a todos los jugadores.',gnRejected:'El servidor rechazó el aviso global.',advChatClearLogin:'Vaciar el chat del vestíbulo al conectar', advGuardRaise:'Confirmar un importe de apuesta fuera del rango permitido', raiseAdjusted:'Importe ajustado — presiona de nuevo para confirmar', advChatTrAlways:'Botón de traducción siempre visible (si no, solo en la línea señalada o tocada)', advCommunitySuggest:'Sugerir jugadores en mis partidas comunitarias', suggestPlayers:'Sugerir jugadores', kbHintExtra:'Alt+S abre los ajustes en cualquier parte, como en el cliente oficial. Alt+T abre el panel de estadísticas — un añadido web, el cliente oficial no tiene atajo.', advSearchPh:'Buscar en las opciones…', advErrReport:'Informar de los errores de script al administrador del servidor (detalles del error, navegador y dirección IP acortada)', advOffByAdmin:'desactivado (admin)', errJoinTimeout:'El servidor no responde — comprueba tu conexión.', avTabGallery:'Galería', avTabCreate:'Crear', avTabImport:'Importar', avmRandom:'Aleatorio', avmMissing:'Esta combinación aún no está en el catálogo', avmUse:'Usar este avatar', avmGender:'Género', avmAge:'Edad', avmGlasses:'Lentes', avmFemale:'Mujer', avmMale:'Hombre', avmYoung:'Joven', avmAdult:'Adulto', avmSenior:'Sénior', avmWith:'Con', avmWithout:'Sin', avImportDrop:'Arrastra una imagen aquí', avImportOr:'o', avImportBtn:'Elegir un archivo', avImportHint:'Sirve cualquier imagen — se recorta en cuadrado y se redimensiona a 96×96 automáticamente. Visible para los demás jugadores.', advAvatarCreate:'Mostrar la pestaña «Crear» (retratos) en la ventana de avatar', avmBg:'Fondo', avmOutfit:'Atuendo', avmSkin:'Piel', avmMarks:'Marcas de piel', avmHair:'Pelo', avmHairColor:'Color de pelo', avmBeard:'Vello facial', avmEyeShape:'Ojos', avmEyeColor:'Color de ojos', avmMouth:'Boca', avmShoulder:'Accesorio de hombro', avmEarrings:'Pendientes', avmNone:'Ninguno', avmSex:'Silueta', avmFace:'Forma de cara', avmGrpFace:'Cara', avmGrpHair:'Pelo', avmGrpStyle:'Estilo', avmGrpExtra:'Extras', avmHat:'Sombrero', avmGrpBody:'Silueta', avmReset:'Restablecer', avmNose:'Nariz', betKeypad:'Teclado numérico', logExportTitle:'Exportar registro', chatClearTitle:'Borrar chat', chatMuteTitle:'Silenciar el sonido de notificación del chat',
     jumpLatest:'Ir a lo más reciente',
     chatTranslateBtn:'Traducir', winMove:'Mover', loupeToggle:'Lupa ×2',
     sendTooltip:'Enviar', resizeTooltip:'Arrastra para redimensionar', loadingOffline:'Cargando el modo sin conexión…',
@@ -760,17 +764,17 @@ export const strings = {
     // v0.3.579 : passe native complete — 105 cles en repli anglais traduites + cles err*/affichage (noms propres et termes de tables conserves)
     actBadgeCheck:'Check', unitMinutes:'minutes', presetWecupName:'WeCup', presetBbcName:'BBC', tableDanuxi:'Danuxi Blue', tableMute:'Mute', tableMute2:'Mute 02', tableTeal:'Teal', tableLemming:'Lemming',
     tableMatrix:'Matrix', tableStarTrek:'Star Trek', tableTripSixes:'TripSixes', tableWanted:'Wanted', tableXanax:'Xanax', tableSaloon:"Saloon", tablePirates:"Pirates", tableMileHighClub:"Mile High Club", tableTerminusHotel2:"Terminus Hotel 2", tableBbcAnthem:"BBC Anthem", tableDisco:"Disco", tableIvoireChene:"Ivoire & Ch\u00eane", tableDiscworld:"Discworld", cardbackPirates:"Pirates", cardbackMileHighClub:"Mile High Club", cardbackTerminusHotel2:"Terminus Hotel 2", cardbackBbcAnthem:"BBC Anthem", cardbackDisco:"Disco", cardbackDanuxi:"Danuxi", cardbackMatrix:"Matrix", cardbackNobusBlack:"Nobus Classic Black", cardbackNobusBlue:"Nobus Classic Blue", cardbackNobusGreen:"Nobus Classic Green", cardbackNobusRed:"Nobus Classic Red", pucksAuto:'Auto (table)', pucksCasino:'Casino', infoTypeLabel:'Type', infoCapitalLabel:'Capital', wpWaitingPlayers:'Esperando jugadores …',
-    wpFillBots:'Completar con jugadores de ordenador', wpStartGame:'Iniciar partida', wpLeaveGame:'Abandonar la partida', wpInvite:'Invitar amigos', advInviteLink:'Mostrar el botón «Invitar amigos» en la sala de espera', sharedTableNotFound:'🔗 Mesa compartida no encontrada — puede que ya haya terminado.', advFourColor:'Baraja de 4 colores (♦ azul, ♣ verde)', cardZoomToggle:'Ampliar mis cartas', actBadgeFold:'Retirarse',
+    wpFillBots:'Completar con jugadores de computadora', wpStartGame:'Iniciar partida', wpLeaveGame:'Abandonar la partida', wpInvite:'Invitar amigos', advInviteLink:'Mostrar el botón «Invitar amigos» en la sala de espera', sharedTableNotFound:'🔗 Mesa compartida no encontrada — puede que ya haya terminado.', advFourColor:'Baraja de 4 colores (♦ azul, ♣ verde)', cardZoomToggle:'Ampliar mis cartas', actBadgeFold:'Retirarse',
     actBadgeCall:'Igualar', actBadgeBet:'Apostar', actBadgeRaise:'Subir', actBadgeAllin:'All-In', cancelBtn:'Cancelar', navBack:'Atrás', gameNameLabel:'Nombre de la partida', passwordLabel:'Contraseña', startCash:'Capital inicial', blindsSettings:'Ajustes de ciegas',
     firstSmallBlind:'Primera ciega pequeña', blindInterval:'Intervalo de subida de ciegas', unitHands:'manos', timeLimits:'Límites de tiempo', actionTimeout:'Tiempo por acción', pauseBetweenHands:'Pausa entre manos', guestNeedAccount:'Cuenta necesaria',
     guestJoinBlocked:'Los invitados solo pueden unirse a partidas normales — inicia sesión con una cuenta registrada de pokerth.net para jugar en esta mesa.', presetRankingName:'Ranking', presetRankingDesc:'ritmo oficial', presetWecupDesc:'torneo equilibrado',
     presetBbcDesc:'ciegas por tiempo', advSecLocalGame:'Partida de entrenamiento', advPauseHands:'Pausa entre manos (continuar desde la ventana del ganador)', nextHandBtn:'Siguiente mano', advSecTablePrefs:'Preferencias de mesa',
     advTablePrefsDesc:'Valores por defecto de las mesas que creas en este modo — el botón ⭐ del formulario los carga.', advRaiseEveryHands:'Subir ciegas cada N manos', advGameSpeed:'Velocidad de juego (1–11)', advSecLogSettings:'Ajustes del registro',
     advLogOn:'Activar el registro', advLogInterval:'Intervalo de registro', advLogEveryAction:'acción (acceso a disco muy frecuente)', advLogEveryHand:'mano (acceso a disco medio)', advLogEveryGame:'partida (acceso a disco bajo)', advSecIgnored:'Jugadores ignorados', advIgnoredDesc:'Los jugadores de la lista de ignorados se ocultan del chat.',
-    advIgnoredEmpty:'(ningún jugador ignorado)', advIgnoredRemove:'Quitar', advLobbyChat:'Mostrar el chat del lobby', advBackGuard:'El botón Atrás cierra las ventanas en lugar de salir de la partida (Android)', backAgainToExit:'Pulsa Atrás de nuevo para salir', advBrowserZoom:'Permitir el zoom del navegador (pellizco) en móvil / tableta', accessibilityTitle:'Accesibilidad', accessibilityInterfaceSize:'Tamaño de la interfaz', accessibilityStandard:'Estándar', accessibilityLarge:'Grande', accessibilityExtraLarge:'Extragrande', accessibilityHighContrast:'Contraste alto', accessibilityReset:'Restablecer preferencias de accesibilidad', advTableZoom:'Activar el zoom de la mesa (botones lupa)',    advChatTranslate:'Traducción del chat (Google Translate, botón por mensaje)', chatTranslateUnsupported:'Este navegador no admite la traducción (se requiere Chrome/Edge reciente).', chatTranslateFailed:'Error de traducción',
+    advIgnoredEmpty:'(ningún jugador ignorado)', advIgnoredRemove:'Quitar', advLobbyChat:'Mostrar el chat del lobby', advBackGuard:'El botón Atrás cierra las ventanas en lugar de salir de la partida (Android)', backAgainToExit:'Presiona Atrás de nuevo para salir', advBrowserZoom:'Permitir el zoom del navegador (pellizco) en celular / tableta', accessibilityTitle:'Accesibilidad', accessibilityInterfaceSize:'Tamaño de la interfaz', accessibilityStandard:'Estándar', accessibilityLarge:'Grande', accessibilityExtraLarge:'Extragrande', accessibilityHighContrast:'Contraste alto', accessibilityReset:'Restablecer preferencias de accesibilidad', advTableZoom:'Activar el zoom de la mesa (botones lupa)',    advChatTranslate:'Traducción del chat (Google Translate, botón por mensaje)', chatTranslateUnsupported:'Este navegador no admite la traducción (se requiere Chrome/Edge reciente).', chatTranslateFailed:'Error de traducción',
     wcHideOpt:'No volver a mostrar esta ventana', styleExpand:'Desplegar', styleCollapse:'Plegar', themeLight:'Claro', modeAuto:'Automático', modeLight:'Claro', modeDark:'Oscuro', styleBy:'de', styleSelected:'Seleccionado', importTable:'Importar una mesa (.zip)',
     importDeck:'Importar una baraja (.zip)', importError:'Error de importación', confirmDeleteStyle:'¿Eliminar este estilo importado?', delete:'Eliminar', advSecAppearance:'Apariencia', advDarkMode:'Modo oscuro', tableGreenFelt:'Mesa verde',
-    tableCasino:'Casino verde', themeExport:'Exportar tema (.zip)', sectionAdvanced:'Avanzado', rankingSeasonStats:'Estadísticas de temporada', rankingShare:'Cuota', rankingResults:'Resultados', rankingToggleChart:'Alternar barras / tarta',
+    tableCasino:'Casino verde', themeExport:'Exportar tema (.zip)', sectionAdvanced:'Avanzado', rankingSeasonStats:'Estadísticas de temporada', rankingShare:'Cuota', rankingResults:'Resultados', rankingToggleChart:'Alternar barras / circular',
     footPlayer:'Jugador', footCreate:'＋ Crear una mesa', gameInfoTitle:'Info de la partida', gameInfoEmpty:'Selecciona una mesa', gfNone:'Sin filtro de lista', gfOpen:'Mostrar partidas abiertas', gfOpenNF:'Partidas abiertas y no llenas',
     gfOpenNFNP:'Partidas abiertas, no llenas y no privadas', gfOpenNFP:'Partidas abiertas, no llenas y privadas', gfOpenNFR:'Partidas abiertas, no llenas y de ranking', infoPlayersInGame:'Jugadores en la partida', displayBB:'Importes en ciegas grandes',
     displayChips:'Importes en fichas', errGameFull:'La partida está llena', errBadGameName:'Nombre de partida no válido', errInvalidSettings:'Ajustes de partida no válidos', errBlocked:'Dirección IP bloqueada', errRejoinFailed:'Error al volver a unirse',
@@ -784,7 +788,7 @@ export const strings = {
     abTabLicense:"Licencia",
     abTabLibs:"Bibliotecas de terceros",
     abFeat1:"El juego de póker Texas Hold'em por excelencia",
-    abFeat2:"Partida en solitario contra hasta 9 oponentes controlados por el ordenador",
+    abFeat2:"Partida en solitario contra hasta 9 oponentes controlados por la computadora",
     abFeat3:"Partidas por Internet y en servidor privado",
     abFeat4:"Modo de entrenamiento sin conexión contra los bots",
     abFeat5:"Personaliza el aspecto del juego con barajas de cartas y estilos de mesa",
@@ -819,7 +823,7 @@ export const strings = {
     pvServerH:'Qué ve el servidor',
     pvSrv1:'Estadísticas de visitas: un identificador aleatorio creado por tu navegador sirve para contar dispositivos distintos y visitas. El servidor solo guarda una versión cifrada con hash, nunca junto a un nombre ni una dirección IP. Las cifras diarias se borran tras unos 13 meses, igual que el identificador con hash de cualquier dispositivo que no haya vuelto desde entonces. Navegador, sistema operativo e idioma solo se cuentan como totales.',
     pvSrvSync:'Sincronización de ajustes (cuentas registradas): al iniciar sesión con una cuenta registrada de pokerth.net, tus ajustes (el config.xml compartido con el cliente de escritorio, más opciones web como tema, asientos, atajos, idioma, avatar elegido y lista de ignorados) se guardan en este servidor con el nombre de tu cuenta, para que te sigan en otros dispositivos. Activada por defecto; se puede desactivar en Opciones avanzadas.',
-    pvSrvErr:'Informes de errores: cuando ocurre un error de script, el mensaje de error, la página, la versión del cliente, el agente de usuario del navegador y una dirección IP acortada se envían al administrador del servidor para corregir fallos. Solo se guardan en memoria y se borran al reiniciar el servidor. Activados por defecto; se pueden desactivar en Opciones avanzadas.',
+    pvSrvErr:'Informes de errores: cuando ocurre un error de script, el mensaje de error, la página, la versión del cliente, el agente de usuario del navegador y una dirección IP acortada se envían al administrador del servidor para corregir errores. Solo se guardan en memoria y se borran al reiniciar el servidor. Activados por defecto; se pueden desactivar en Opciones avanzadas.',
     pvSrvVotes:'Encuestas y votos de música: si respondes a una encuesta o valoras una canción, tu respuesta se guarda con el identificador con hash para que cada dispositivo cuente una sola vez. Las reproducciones se cuentan sin ningún identificador.',
     pvSrv2:'Datos técnicos de conexión: tu dirección IP es necesaria para prestar y proteger el servicio y puede aparecer en los registros del servidor por seguridad (limitación de peticiones, bloqueo de conexiones abusivas). No se usa para nada más.',
     pvSrv3:'Clasificación: si juegas en un servidor LAN o privado con este cliente, tu apodo, el avatar elegido y tus estadísticas de juego se guardan para la clasificación. Reiniciar tus estadísticas elimina la entrada.',
@@ -891,7 +895,7 @@ export const strings = {
     srvSegNet: "Internet",
     srvSegOffline: "Entrenamiento",
     srvSegLan: "LAN",
-    advPotBtns: "Mostrar botones de porcentaje del bote (1/3 · 1/2 · Bote)",
+    advPotBtns: "Mostrar botones de porcentaje del pozo (1/3 · 1/2 · Pozo)",
     advCommunityContent: "Mostrar contenido de la comunidad (BBC / WEC)",
     advSndVolume: "Volumen",
     advSplash: "Mostrar la pantalla de bienvenida al iniciar",
@@ -904,7 +908,7 @@ export const strings = {
     removedReason_closed: "La partida ha terminado.",
     advChatTimestamps: "Mostrar la hora en los mensajes del chat",
     advShowOdds: "Mostrar probabilidades en el panel de Posibilidades",
-    advChatAbbrev: "Explicar las abreviaturas del chat (gg, nh, utg…) al pasar el ratón",
+    advChatAbbrev: "Explicar las abreviaturas del chat (gg, nh, utg…) al pasar el mouse",
     abbr_gg: "buena partida",
     abbr_vgg: "muy buena partida",
     abbr_gl: "buena suerte",
@@ -925,7 +929,7 @@ export const strings = {
     abbr_allin: "all-in",
     abbr_utg: "under the gun",
     abbr_nl: "sin límite",
-    abbr_pl: "límite de bote",
+    abbr_pl: "límite de pozo",
     abbr_bb: "ciega grande",
     abbr_sb: "ciega pequeña",
     abbr_str8: "escalera",
@@ -1030,7 +1034,7 @@ export const strings = {
     "backupImported": "Copia importada",
     "backupImportErr": "Error de importación — archivo de copia no válido",
     "advBakAutoSec": "Copia de seguridad automática",
-    "advBakAutoDesc": "Mantiene actualizado el archivo de copia de seguridad completa en una carpeta de tu ordenador y ofrece restaurarlo cuando el almacenamiento del navegador está vacío. Solo Chrome, Edge y Opera de escritorio.",
+    "advBakAutoDesc": "Mantiene actualizado el archivo de copia de seguridad completa en una carpeta de tu computadora y ofrece restaurarlo cuando el almacenamiento del navegador está vacío. Solo Chrome, Edge y Opera de escritorio.",
     "advBakAuto": "Escribir el archivo de copia de seguridad automáticamente",
     "bakBannerTitle": "Copia de seguridad local de tu configuración",
     "bakBannerBody": "Este navegador puede guardar tu configuración en una carpeta de tu elección, o restaurarla desde una copia existente.",

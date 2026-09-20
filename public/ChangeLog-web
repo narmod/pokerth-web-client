@@ -1,4 +1,9 @@
-2026-09-20 version 2.1.9-web.81 (current series):
+2026-09-20 version 2.1.9-web.82 (current series):
+- new: Latin-American Spanish (Español - Latinoamérica) is now a language of its own, with the vocabulary used in the Americas (computadora, celular, pozo...) - 62 languages in total
+- new: its flag in the language list follows your country (Argentina, Colombia, Chile...), Mexico when the browser does not say
+- improvement: browsers set to a Latin-American Spanish locale get it automatically; the existing Spanish is now listed as Español (España)
+
+2026-09-20 version 2.1.9-web.81:
 - bugfix: the "Private messages" chapter of the built-in help was missing in 43 languages - it is now there in every language
 - bugfix: the tooltip of the chat "mute notification sound" button was shown in English in 52 languages - it is now translated everywhere
 
