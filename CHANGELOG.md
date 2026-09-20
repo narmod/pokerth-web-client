@@ -55,9 +55,9 @@ highlights below.
   the visitor's country (`es-AR` → Argentina…, `/flags/<cc>.svg`), Mexico by
   default, and `es-<country>` browser locales of the Americas resolve to it.
   `es` is now labelled "Español (España)".
-- **Uzbek** (`uz`, Latin script), UI catalogue, help corpus and
-  guest/registered/LAN broadcast notices (`web.85`) — 63 languages total; SEO
-  content pages to follow.
+- **Uzbek** (`uz`, Latin script), full UI catalogue, help corpus, SEO content
+  pages (incl. `/rules` and `/faq`) and guest/registered/LAN broadcast notices
+  (`web.85`–`86`) — 63 languages total.
 - **Icelandic**, full UI catalogue, help corpus, SEO content pages (incl.
   `/rules` and `/faq`) and guest/registered/LAN broadcast notices
   (`web.78`–`79`) — 61 languages total.

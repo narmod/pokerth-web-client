@@ -2123,6 +2123,40 @@ var PARTS = {
     seeP: "Wakati unacheza, PokerTH huandika chini ya meza jina la mkono wako bora kwa wakati huo, hivyo huhitaji kamwe kuuunda kichwani huku saa ikienda, na wakati wa showdown huonyesha kila mkono uliofunuliwa ukiangazia karata tano zilizohesabiwa kweli. Kufanya mazoezi nje ya mtandao dhidi ya wapinzani wa kompyuta ndiyo njia ya haraka zaidi ya kuweka mpangilio huu vidoleni."
   },
 
+  uz: {
+    title: "Poker kombinatsiyalari reytingi — Texas Hold’em’da qoʻllar tartibi",
+    desc: "Texas Hold’em’ning oʻnta poker kombinatsiyasi royal-fleshdan katta kartagacha tartib bilan: misollar, har birining chiqish ehtimoli hamda kiker va teng qoʻllar qanday hal qilinishi.",
+    ldHeadline: "Poker kombinatsiyalari reytingi — Texas Hold’em",
+    ldDesc: "Texas Hold’em’ning oʻnta kombinatsiyasi tartib bilan: misollar, uchrash chastotasi va teng qoʻllar qoidalari.",
+    h1: "Poker kombinatsiyalari reytingi",
+    lead: "Texas Hold’em’da qoʻllar eng kuchlisidan eng kuchsizigacha quyidagi tartibda joylashadi. Har bir qoʻl — siz koʻra oladigan yettita kartadan tanlangan roppa-rosa beshta karta: ikkita choʻntak kartangiz va beshta umumiy karta. Oʻz kartalaringizdan foydalanishga majbur emassiz — agar stolning oʻzi eng yaxshi beshlikni bersa, bu sizning ham qoʻlingiz.",
+    names: ["Royal-flesh", "Strit-flesh", "Kare", "Full-xaus", "Flesh", "Strit", "Uchlik", "Ikki juftlik", "Juftlik", "Katta karta"],
+    texts: [
+      "A K Q J 10, hammasi bir mastda. Eng yaxshi qoʻl: uni yengib boʻlmaydi, faqat tenglashish mumkin.",
+      "Ketma-ket beshta karta, hammasi bir mastda. Ikki strit-flesh orasida yuqori kartasi kattarogʻi yutadi.",
+      "Bir xil darajadagi toʻrtta karta. Beshinchi karta (kiker) stolda ikkita bir xil kare chiqqan kamyob holatda tenglikni hal qiladi.",
+      "Uchlik va juftlik. Avval uchlik, soʻng juftlik solishtiriladi.",
+      "Bir mastdagi, ketma-ket boʻlmagan beshta karta. Eng kattasidan boshlab kartama-karta solishtiriladi; hech bir mast boshqasidan ustun emas.",
+      "Turli mastdagi ketma-ket beshta karta. Tuz yuqori (10-J-Q-K-A) yoki past (A-2-3-4-5) oʻynaydi, lekin ikkalasi birdan emas.",
+      "Bir xil darajadagi uchta karta va bir-biriga bogʻliq boʻlmagan yana ikkita karta.",
+      "Ikki xil juftlik va beshinchi karta. Avval katta juftlik, soʻng kichigi, keyin kiker solishtiriladi.",
+      "Bir xil darajadagi ikkita karta va tartib bilan solishtiriladigan uchta bogʻliq boʻlmagan karta.",
+      "Yuqoridagilarning hech biri emas. Eng katta karta hal qiladi, soʻng keyingisi va hokazo."
+    ],
+    dealt: "yetti kartali qoʻllarning %s ida uchraydi",
+    tiesH2: "Teng qoʻllar qanday hal qilinadi",
+    tiesP: "Avval toifa solishtiriladi: kartalari qanday boʻlishidan qatʼi nazar, har qanday flesh har qanday stritni yengadi. Bir toifa ichida darajalar yuqoridan boshlab birma-bir solishtiriladi. Kombinatsiyadan ortib qolgan karta <em>kiker</em> deb ataladi va u yangi boshlovchilar kutganidan koʻproq qoʻllarni hal qiladi: A-9-4 stolida A♠ K♦ ham, A♣ 7♥ ham tuzlar juftligini tuzadi, lekin qirol yettilikdan ustun keladi. Hold’em’da mastlar hech qachon tenglikni hal qilmaydi — bir xil beshta darajaga ega ikki oʻyinchi bankni oxirgi fishkagacha boʻlib oladi.",
+    wrongH2: "Koʻpchilik adashadigan jihatlar",
+    wrong: [
+      "Tuz strit uchun ham eng katta, ham eng kichik karta: A-K-Q-J-10 — eng yaxshisi, A-2-3-4-5 (<em>wheel</em>) — eng kuchsizi. Strit aylanib oʻtmaydi — Q-K-A-2-3 hech narsa emas.",
+      "Flesh — bir mastdagi toʻrtta emas, beshta karta. Qoʻlingiz va stoldagi jami toʻrtta tappon oʻz-oʻzidan hech narsaga arzimaydi.",
+      "Qoʻlingizdagi juftlik va stoldagi bitta kartadan tuzilgan uchlik <em>set</em> deyiladi; qoʻlingizdagi bitta karta va stoldagi juftlikdan tuzilgani esa <em>trips</em>. Reytingda oʻrni bir xil, kuchi esa juda farq qiladi, chunki tripsni hamma koʻradi.",
+      "Faqat eng yaxshi beshta karta hisobga olinadi. Qoʻlingizda ikki juftlik boʻlib, stolda uchinchi juftlik chiqsa, sizda uchta emas, ikki juftlik boʻladi.",
+      "Yuqoridagi foizlar har bir qoʻl rivergacha yetti kartada qanchalik tez-tez chiqishini bildiradi, qanchalik tez-tez yutishini emas. Ikki juftlik keng tarqalgandek koʻrinadi, shunga qaramay u duch keladigan qoʻllarning aksariyatidan oldinda."
+    ],
+    seeH2: "Buni stolda koʻring",
+    seeP: "PokerTH oʻyin davomida joriy eng yaxshi qoʻlingizni stol ostida nomlab turadi, shuning uchun uni vaqt bosimi ostida oʻzingiz hisoblashingizga hojat yoʻq, shoudaunda esa har bir ochilgan qoʻlni hisobga olingan beshta kartani ajratib koʻrsatgan holda namoyish etadi. Kompyuter raqiblariga qarshi oflayn mashq qilish — reytingni yod olishning eng tez yoʻli."
+  },
   ta: {
     title: "போக்கர் சீட்டுக் கோர்வைகள் — டெக்சாஸ் ஹோல்டெம் வரிசை",
     desc: "டெக்சாஸ் ஹோல்டெம் போக்கரின் பத்து கோர்வைகளும் அரச வரிசை முதல் உயர் சீட்டு வரை, எடுத்துக்காட்டுகள், ஒவ்வொன்றும் வர வாய்ப்பு, கிக்கர் மற்றும் சமநிலை தீர்வு விதிகளுடன்.",
