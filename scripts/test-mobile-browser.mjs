@@ -63,10 +63,21 @@ const server = createServer((request, response) => {
 await new Promise((resolve) => server.listen(0, '127.0.0.1', resolve));
 const base = `http://127.0.0.1:${server.address().port}/`;
 
-let passed = 0, failed = 0;
+let passed = 0, failed = 0, currentDevice = '';
+// On GitHub Actions every failure is also emitted as an ::error annotation, so
+// it shows on the run page (and through the check-runs API) without opening
+// the log.
+function annotate(label, message) {
+  if (!process.env.GITHUB_ACTIONS) return;
+  const clean = (v) => String(v).replace(/%/g, '%25').replace(/\r/g, '%0D').replace(/\n/g, '%0A');
+  console.log(`::error title=${clean(currentDevice).replace(/,/g, '%2C').replace(/:/g, '%3A')}::${clean(label + ' - ' + message)}`);
+}
 async function check(label, action) {
   try { await action(); passed++; console.log('  \u2713 ' + label); }
-  catch (error) { failed++; console.log('  \u2717 ' + label + '\n      ' + String(error && error.message || error).split('\n')[0]); }
+  catch (error) {
+    failed++; const message = String(error && error.message || error).split('\n')[0];
+    console.log('  \u2717 ' + label + '\n      ' + message); annotate(label, message);
+  }
 }
 const slug = (s) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 async function shot(page, device, step) {
@@ -198,6 +209,7 @@ async function runDevice(browser, name) {
   page.on('pageerror', (e) => errors.push(String(e && e.message || e)));
   page.on('dialog', (d) => d.dismiss().catch(() => {}));
   const vp = descriptor.viewport;
+  currentDevice = `${name} (${browser.browserType().name()})`;
   console.log(`\n${name} - ${vp.width}x${vp.height} @${descriptor.deviceScaleFactor}x`);
   try {
     await page.goto(base, { waitUntil: 'domcontentloaded' });
@@ -304,7 +316,8 @@ async function runDevice(browser, name) {
     });
     await check('no JavaScript error during the whole run', async () => { assert.deepEqual(errors, []); });
   } catch (error) {
-    failed++; console.log('  \u2717 run aborted: ' + String(error && error.message || error).split('\n')[0]);
+    failed++; const message = String(error && error.message || error).split('\n')[0];
+    console.log('  \u2717 run aborted: ' + message); annotate('run aborted', message);
     await shot(page, name, 'aborted');
   } finally { await context.close(); }
 }
@@ -326,7 +339,8 @@ for (const fam of ['ios', 'android']) {
   try { for (const d of list) await runDevice(browser, d.name); } finally { await browser.close(); }
 }
 server.close();
-skipped.forEach((s) => console.log('\nSKIPPED ' + s));
+skipped.forEach((s) => { console.log('\nSKIPPED ' + s); if (process.env.GITHUB_ACTIONS) console.log('::warning title=Engine skipped::' + s); });
+if (process.env.GITHUB_ACTIONS) console.log(`::notice title=Mobile verification::${passed} passed, ${failed} failed`);
 console.log(`\n${passed} passed, ${failed} failed` + (SHOTS ? ` - screenshots in test-artifacts/mobile/` : ''));
 if (!enginesRun) { console.log('No browser engine available.'); process.exit(2); }
 process.exit(failed ? 1 : 0);
