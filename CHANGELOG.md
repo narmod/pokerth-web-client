@@ -17,6 +17,22 @@ highlights below.
 
 ### Added
 
+- **Community events relay `GET /api/events`** (`web.109`) — web addition, not
+  in the QML client; server side only for now, the "Events" tab of the Forum
+  news window follows. One payload with what is coming up on the community
+  sites and who won last: BBC step games with their sign-up count, the next
+  Monthly Cup with its accepted players, and the latest BBC / WEC / Monthly Cup
+  podium. None of these sites has an API: the data is read from the props of
+  the Vue component each page renders (`registration-component`,
+  `results-component`, `home-component` — the latter as Laravel
+  `JSON.parse('…')` literals rather than HTML entities). Naive BBC/WEC dates are
+  read as Europe/Berlin, the zone the Monthly Cup ISO dates carry. Parsing is a
+  pure module, `server/community-events.js`, pinned by
+  `scripts/test-community-events.mjs` against fixtures cut from the live pages;
+  `proxy.js` only fetches (same User-Agent as the ranking relay) and caches for
+  5 minutes, one upstream round for all clients. One site down never hides the
+  others, and the route never answers 5xx. WEC has no public schedule, so it
+  only contributes results. `proxy.js` changed: container restart needed.
 - **Mobile magnifier: mini-board on "my turn"** (`web.91`) — web addition, not
   in the QML client. The QML "my turn" pan shows the lower half of the table,
   so the community cards sit on the upper edge with their index corners cut

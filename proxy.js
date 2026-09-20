@@ -9718,6 +9718,49 @@ function handleLiveTest(req, res) {
   });
 }
 
+// ── Community events (GET /api/events) ─────────────────────────────────
+// What is coming up on the BBC / WEC / Monthly Cup sites and who won last, for
+// the "Events" tab of the Forum news window. The parsing lives in
+// server/community-events.js (pure, tested by scripts/test-community-events.mjs);
+// this is only the fetcher and the cache. Same reasoning as /api/live: the
+// browser cannot read those hosts (no CORS header), and four page reads per open
+// tab would be rude -- so the proxy reads them once per interval for everyone.
+const communityEvents = require('./server/community-events.js');
+const EVENTS_TTL_MS = 5 * 60 * 1000;
+let _eventsInflight = null;               // one upstream round at a time
+
+function _eventsFetchText(u) {
+  return rankingFetch(u, { 'Accept': 'text/html,application/xhtml+xml,*/*' }).then(function (r) {
+    if (!r.ok) throw new Error('upstream_' + r.status);
+    return r.text();
+  });
+}
+
+function handleCommunityEvents(req, res) {
+  const key = 'communityevents';
+  const send = function (body, note) {
+    res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store', 'X-Events-Cache': note });
+    res.end(body);
+  };
+  const hit = RANKING_CACHE.get(key);
+  if (hit && (Date.now() - hit.at) < EVENTS_TTL_MS) { send(hit.body, 'hit'); return; }
+  if (!_eventsInflight) {
+    _eventsInflight = communityEvents.buildEvents(_eventsFetchText, Date.now())
+      .finally(function () { _eventsInflight = null; });
+  }
+  _eventsInflight.then(function (data) {
+    // A round where every site failed must not evict a good answer.
+    if (!data.ok && hit) { send(hit.body, 'stale'); return; }
+    const body = JSON.stringify(data);
+    if (data.ok) RANKING_CACHE.set(key, { at: Date.now(), status: 200, body: body });
+    send(body, 'miss');
+  }).catch(function (err) {
+    // Never a 5xx: the Forum news window must stay usable without this tab.
+    if (hit) { send(hit.body, 'stale'); return; }
+    send(JSON.stringify({ ok: false, error: 'relay_failed', detail: String((err && err.message) || err) }), 'fail');
+  });
+}
+
 // ── Translation relay (POST /api/translate) ──────────────────────────────
 // The client calls the gtx endpoint directly first, so the player's own IP
 // carries the quota — the method the QML client uses, and the reason nothing
@@ -10142,6 +10185,10 @@ const httpServer = http.createServer((req, res) => {
   }
   if (reqPathOnly === '/api/live') {
     handleLiveStats(req, res);
+    return;
+  }
+  if (reqPathOnly === '/api/events') {
+    handleCommunityEvents(req, res);
     return;
   }
   if (reqPathOnly === '/api/forumimg') {
