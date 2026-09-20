@@ -174,6 +174,16 @@ highlights below.
 
 ### Fixed
 
+- **Action bar inert while the link is down; notice stuck on my own turn**
+  (`web.101`) — `_showBanner` now sets `body.conn-lost` while the socket is not
+  open (CSS: action grid greyed out, `pointer-events: none`, no height change);
+  it follows the *socket*, not the notice, so the bar is live again from the
+  retry socket's `onopen` — after a rebind on the player's own turn the server
+  says nothing more and every greyed second would come off the thinking time.
+  For the same reason the "re-authenticating" pill, only ever hidden by the next
+  server frame, stayed over the community cards for the whole turn: the 10 s
+  "connection is stable" timer now hides it too. Scenario D of
+  `test:reconnect-browser`, verified by mutation.
 - **Reconnection, found by the new `test:reconnect-browser`** (`web.100`) —
   after the last failed attempt the app did `show('s-connect')` +
   `setStatus(reconnFailed)`, but the status line only exists inside the login

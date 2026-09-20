@@ -6,7 +6,8 @@
 //   A · the link dies on my turn, comes back at the first retry:
 //       the table STAYS on screen (no jump to the lobby or the login), a
 //       "reconnecting" notice appears on the table, translated, inside the
-//       screen, says the seat is kept and counts down; one retry, to the same
+//       screen, says the seat is kept and counts down, the action bar is greyed
+//       out and inert (nothing can be sent); one retry, to the same
 //       URL (a rebind, never a fresh login that would kill the seat); the hand
 //       goes on over the new socket, the notice goes away, the action bar is
 //       live and my click leaves on the NEW socket.
@@ -15,6 +16,9 @@
 //       IP blocked), the counter reads n/6 from the first to the last, then
 //       back to the login screen with a translated error - never a frozen table.
 //   C · I leave on purpose: no reconnection is attempted.
+//   D · the link comes back on MY turn and the server says nothing more (it is
+//       waiting for me): the action bar is live as soon as the socket is open,
+//       and the notice does not stay over the cards for my whole thinking time.
 //
 // Timers are driven with Playwright's clock (the real delays add up to ~110 s).
 // Run:  node scripts/test-reconnect-browser.mjs   (npm run test:reconnect-browser)
@@ -40,6 +44,7 @@ const snap = (page) => page.evaluate(() => {
     myCards: [...document.querySelectorAll('#g-seats .seat.me .pk[data-c]')].map((c) => Number(c.getAttribute('data-c'))),
     note: note ? { where: note.id, text: note.innerText.replace(/\s+/g, ' ').trim(), ...rect(note) } : null, vw: innerWidth, vh: innerHeight,
     actions: [...document.querySelectorAll('.act-buttons-row .btn-action')].filter((b) => vis(b) && !b.disabled).length,
+    inert: (function () { const g = document.querySelector('#s-game .my-zone .action-grid'); if (!g) return null; const c = getComputedStyle(g); return c.pointerEvents === 'none' && parseFloat(c.opacity) < 0.7; })(),
     sockets: WS.count || 0, url: WS.instance && WS.instance.url, sent: WS.instance ? WS.instance.sent.length : 0, open: !!(WS.instance && WS.instance.readyState === 1),
     status: ((document.querySelector('#s-connect .status, #status, .conn-status') || {}).textContent || '').trim(),
     keys: ['reconnIn', 'reconnInProgress', 'reauthBanner', 'reconnSeatKept', 'reconnFailed'].filter((k) => typeof window.t === 'function' && window.t(k) === k) };
@@ -76,6 +81,8 @@ async function runDevice(browser, name, descriptor) {
         assert.match(lost.note.text, /5\s*s/, `no 5 s countdown in "${lost.note.text}"`);
         assert.match(lost.note.text, /1\s*\/\s*6/, `attempt counter is not 1/6 in "${lost.note.text}"`);
         assert.equal(lost.sockets, before.sockets, 'a new socket was opened at once (no back-off)');
+        assert.equal(before.inert, false, 'the action bar is greyed out before any loss');
+        assert.equal(lost.inert, true, 'the action bar still looks live although nothing can be sent');
       });
       await tick(page, 5200);
       const back = await snap(page);
@@ -85,6 +92,7 @@ async function runDevice(browser, name, descriptor) {
         assert.equal(strip(back.url), strip(before.url), `the retry goes to another URL: ${back.url} (session: ${before.url})`);
         assert.ok(!/fresh=1/.test(back.url || ''), 'the retry asks the proxy for a FRESH session: the seat would be lost');
         assert.ok(back.open);
+        assert.equal(back.inert, false, 'the action bar stays greyed out although the socket is open again');
       });
       // the proxy re-attached the upstream: the hand simply goes on
       await page.evaluate(({ ME, GAME }) => { const f = window.__fx, s = window.WebSocket.instance, opp = f.ids[1];
@@ -98,6 +106,7 @@ async function runDevice(browser, name, descriptor) {
         assert.equal(live.note, null, `notice still shown: "${live.note && live.note.text}"`);
         assert.equal(live.screen, 's-game'); assert.equal(live.seats, before.seats); assert.deepEqual(live.myCards, before.myCards);
         assert.ok(live.actions >= 2, 'action bar is not live after the reconnection');
+        assert.equal(live.inert, false, 'the action bar stays greyed out after the reconnection');
         await page.locator('.act-buttons-row .btn-action').first().tap();
         await tick(page, 300);
         const after = await snap(page);
@@ -105,6 +114,30 @@ async function runDevice(browser, name, descriptor) {
       });
       await check('A: no JavaScript error', async () => assert.equal(errors.length, 0, errors.join(' | ')));
     } catch (error) { reporter.fail('A aborted', String(error && error.message || error).split('\n')[0]); await shot(page, name, 'reconnect-a-aborted'); }
+    finally { await context.close(); }
+  }
+  // ── D · the link comes back on MY turn and the server has nothing to say ──
+  {
+    const { context, page, errors } = await fresh(browser, descriptor);
+    try {
+      await page.evaluate(() => window.WebSocket.instance.drop());
+      await tick(page, 5300);                        // retry -> socket open, the proxy re-attached the session
+      const opened = await snap(page);
+      await check('D back on my turn, silent server: the action bar is live as soon as the socket is open', async () => {
+        assert.ok(opened.open, 'the retry socket is not open');
+        assert.equal(opened.inert, false, 'the action bar is still greyed out although the link is back - my thinking time is running');
+        assert.ok(opened.actions >= 2);
+      });
+      await tick(page, 11000);                       // nothing arrives: the server is waiting for me
+      const quiet = await snap(page);
+      await check('D the notice does not stay over the cards for the whole of my turn', async () => {
+        assert.equal(quiet.note, null, `the notice is still shown 11 s after the link came back: "${quiet.note && quiet.note.text}"`);
+        const sentBefore = quiet.sent;
+        await page.locator('.act-buttons-row .btn-action').first().tap(); await tick(page, 300);
+        assert.ok((await snap(page)).sent > sentBefore, 'my action was not sent');
+      });
+      await check('D: no JavaScript error', async () => assert.equal(errors.length, 0, errors.join(' | ')));
+    } catch (error) { reporter.fail('D aborted', String(error && error.message || error).split('\n')[0]); }
     finally { await context.close(); }
   }
   // ── B · the network stays down ──────────────────────────────────────────

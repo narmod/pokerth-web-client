@@ -1,4 +1,8 @@
-2026-09-20 version 2.1.9-web.100 (current series):
+2026-09-20 version 2.1.9-web.101 (current series):
+- improvement: while the connection is lost, the Fold / Check / Bet buttons are greyed out and cannot be tapped, instead of looking live; they come back the moment the connection does
+- bugfix: when the connection came back during your own turn, the "re-authenticating" notice stayed over the community cards for your whole thinking time; it now goes away after 10 seconds
+
+2026-09-20 version 2.1.9-web.100:
 - improvement: phones held in landscape - the pot and the community cards are now centred together between the top player and your own box, so the pot no longer touches the player above it
 - bugfix: when the connection could not be restored, you were sent back to the start screen without a word; a "Connection lost" window now explains what happened
 - bugfix: the reconnection counter read "1/3" on the first attempt and "2/6", "3/6"... afterwards; it now counts out of 6 from the start

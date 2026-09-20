@@ -12845,3 +12845,12 @@ html[data-seat-struct="qml"] .seat-narrow .seat-name .seat-note-stars { font-siz
   #s-connect > .card { margin-top: auto; margin-bottom: auto; flex: 0 0 auto; }
   #s-connect > .connect-footer { position: static; flex: 0 0 auto; margin-top: 14px; padding-bottom: max(4px, env(safe-area-inset-bottom)); }
 }
+
+/* ── Connection lost: the action bar is greyed out and inert (web.101) ─────
+   body.conn-lost is set by _showBanner (reconnection notice) and cleared by
+   _hideBanner. Nothing can be sent while the link is down: the buttons must not
+   look live. Layout untouched (no height change -> no table re-layout). */
+body.conn-lost #s-game .my-zone .action-grid {
+  opacity: 0.42; filter: grayscale(0.75); pointer-events: none;
+  transition: opacity 0.2s ease, filter 0.2s ease;
+}

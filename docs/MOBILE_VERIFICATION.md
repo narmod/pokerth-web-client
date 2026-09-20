@@ -171,6 +171,10 @@ are driven with Playwright's clock, so the ~110 s of real back-off take seconds.
   more (hammering gets the IP blocked), counter `n/6` throughout, then the login
   screen **with** the "Connection lost" window and its translated message.
 - **C, leaving on purpose**: no notice, no reconnection attempt.
+- **D, the link comes back on my own turn and the server says nothing more**
+  (it is waiting for me): the action bar - greyed out and inert while the link
+  is down - is live as soon as the retry socket is open, the notice goes away
+  within 10 s instead of staying over the cards, and my action is sent.
 
 The fixture socket (`scripts/lib/mobile-harness.mjs`) has `drop()` (the link
 dies under the app) and `window.__fxRefuse = true` (every new socket fails).

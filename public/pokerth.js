@@ -37,6 +37,17 @@ function _showBanner(msg) {
   var sg = document.getElementById('s-game');
   var usePill = !!(sg && sg.classList.contains('active'));
   try { usePill = usePill && _advGet('conn_pill', true); } catch (e) {}
+  // While the link is DOWN nothing can leave the machine: the action bar is
+  // greyed out and inert (CSS: body.conn-lost) instead of looking live - a
+  // player could tap Fold and believe it was sent. It follows the SOCKET, not
+  // the notice: as soon as the retry socket is open (this function is called
+  // again from its onopen, "re-authenticating") the bar is live again - after a
+  // rebind on my own turn the server says nothing more, it waits for me, and
+  // every second of a greyed bar would be taken from my thinking time.
+  try {
+    var _stB = window.PthState || {};
+    document.body.classList.toggle('conn-lost', !(_stB.ws && _stB.ws.readyState === 1));
+  } catch (e) {}
   var p = document.getElementById('g-conn-pill');
   var pm = document.getElementById('g-conn-pill-msg');
   if (pm) pm.textContent = msg;
@@ -59,6 +70,7 @@ function _showBanner(msg) {
   if (bs) { bs.textContent = _keep ? t('reconnSeatKept') : ''; bs.style.display = (_keep && !usePill) ? 'inline' : 'none'; }
 }
 function _hideBanner() {
+  try { document.body.classList.remove('conn-lost'); } catch (e) {}
   var b = document.getElementById('reconnect-banner');
   if (b) b.classList.remove('visible');
   var p = document.getElementById('g-conn-pill');
@@ -4231,8 +4243,15 @@ const App = (() => {
     clearTimeout(window._reconnectStableTimer);
     const w = S.ws;
     window._reconnectStableTimer = setTimeout(function () {
-      if (S.ws === w && S.ws && S.ws.readyState === WebSocket.OPEN)
+      if (S.ws === w && S.ws && S.ws.readyState === WebSocket.OPEN) {
         S._reconnectAttempts = 0;
+        // The link has been back and stable for 10 s: the notice goes now. It
+        // used to wait for the next frame from the server - but after a rebind
+        // on MY turn there is none (the server waits for my action), so the
+        // "re-authenticating" pill stayed over the community cards for the
+        // whole of my thinking time (scripts/test-reconnect-browser.mjs, D).
+        try { _hideBanner(); } catch (e) {}
+      }
     }, RECONNECT_STABLE_MS);
   }
   // ── Game state ──
@@ -11852,7 +11871,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.9-web.100'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.9-web.101'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif ou la palette High contrast
    (Android, Safari, iOS standalone récent). Lit --theme-color et met
