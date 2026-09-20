@@ -124,6 +124,13 @@ highlights below.
 
 ### Changed
 
+- **Offline mode: bot text banter removed** (`web.107`) — the chat lines added
+  in `web.54` were generic, repetitive and unrelated to the hand in progress,
+  so the feature is withdrawn rather than kept half-good. Removed
+  `public/modules/offline/banter.mjs`, its `sw.js` precache entry, every
+  `_banter()` call site in `offline/server.mjs` and the `bnt<Archetype><Kind><n>`
+  keys from all 64 catalogues. Emoji reactions (`[R]`) and chat keyword replies
+  are untouched. The `pth_bot_banter` localStorage flag is no longer read.
 - **Language catalogues load on demand** (`web.62`) — `modules/i18n.mjs`
   statically imported all 55 catalogues: a 56-request, ~5 MB module graph
   fetched by every visitor, in which a single flaky request failed the whole

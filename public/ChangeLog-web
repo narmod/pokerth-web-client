@@ -1,4 +1,7 @@
-2026-09-20 version 2.1.9-web.106 (current series):
+2026-09-20 version 2.1.9-web.107 (current series):
+- improvement: training mode - bots no longer write text lines in the chat (they were repetitive and unrelated to the hand); their emoji reactions are unchanged
+
+2026-09-20 version 2.1.9-web.106:
 - bugfix: in the lobby the table counter ("3 table(s)") and the "Chat" heading stayed in English in every language - both are now translated
 
 2026-09-20 version 2.1.9-web.105:
