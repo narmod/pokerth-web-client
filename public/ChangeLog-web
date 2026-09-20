@@ -1,4 +1,7 @@
-2026-09-19 version 2.1.9-web.79 (current series):
+2026-09-20 version 2.1.9-web.80 (current series):
+- bugfix: browsers set to Traditional Chinese (Taiwan, Hong Kong, Macau) now get the Traditional Chinese interface on the first visit - they used to land on Simplified Chinese and had to switch by hand
+
+2026-09-19 version 2.1.9-web.79:
 - new: the public pages (poker rules, hand rankings, glossary, how to play, FAQ) are now available in Icelandic too
 
 2026-09-19 version 2.1.9-web.78:

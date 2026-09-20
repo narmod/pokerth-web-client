@@ -348,7 +348,11 @@ let _lang = (function(){
     // Region-specific catalogues whose code is a full locale, not a bare
     // primary subtag. Maps a lower-cased browser/saved locale onto the
     // catalogue code we ship.
-    var regionAlias = { 'pt-br': 'pt-BR', 'pt-pt': 'pt-PT' };
+    var regionAlias = { 'pt-br': 'pt-BR', 'pt-pt': 'pt-PT',
+        // Traditional Chinese: without these, zh-TW / zh-HK / zh-Hant browsers
+        // fell through to the primary subtag 'zh' and got Simplified Chinese.
+        'zh-tw': 'zh-TW', 'zh-hk': 'zh-TW', 'zh-mo': 'zh-TW', 'zh-hant': 'zh-TW',
+        'zh-hant-tw': 'zh-TW', 'zh-hant-hk': 'zh-TW', 'zh-hant-mo': 'zh-TW' };
     // Primary-subtag aliases: the browser reports a code that differs from
     // our catalogue code, or a macrolanguage/legacy code we fold onto one
     // variant. Bare 'pt' (and the old single 'pt' catalogue) → Brazilian,

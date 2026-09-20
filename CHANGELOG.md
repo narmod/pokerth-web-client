@@ -139,6 +139,11 @@ highlights below.
 
 ### Fixed
 
+- **Traditional Chinese browsers landed on Simplified Chinese** (`web.80`) —
+  first-visit detection only knew the `pt-BR` / `pt-PT` region pair, so
+  `zh-TW`, `zh-HK`, `zh-MO` and `zh-Hant*` fell through to the primary subtag
+  `zh`. They now resolve to the `zh-TW` catalogue, for the browser locale, a
+  saved legacy code and the `?lang=` landing parameter alike.
 - **Multilingual admin notices and polls no longer drop the 61st language**
   (`web.79`) — the welcome / guest / registered / LAN notice maps and the poll
   label maps were capped at 60 language entries when saved; with Icelandic the
