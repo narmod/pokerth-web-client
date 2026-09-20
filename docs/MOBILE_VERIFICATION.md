@@ -47,6 +47,33 @@ Screenshots of every step land in `test-artifacts/mobile/` (git-ignored):
 `<device>-1-table`, `-2-loupe-follow`, `-3-loupe-my-turn`, `-4-loupe-board`.
 The assertions catch geometry; look at the pictures for everything else.
 
+## Table sweep: every table size, seated and spectator
+
+`npm run test:table-sweep` (`scripts/test-table-sweep.mjs`) opens the table for
+**2 to 10 players, seated and as a spectator**, on portrait and landscape phones
+(iPhone SE, iPhone 15, iPhone 15 landscape, Pixel 7, Galaxy A55 landscape) with
+the full board dealt - 18 configurations per phone, about 10 s each. Per
+configuration:
+
+- the expected number of seats is drawn, each box inside the table zone;
+- no two player boxes overlap;
+- no player box covers a community card or the pot badge, none sits under a
+  floating zone button;
+- dealer / blind pucks and bet chips stay inside the zone and cover neither
+  another player's box nor a community card;
+- seated: self box centred and clear of the action bar; spectator: no self
+  box, no action button.
+
+Narrow it while working on one case:
+
+```sh
+PTH_DEVICES="Pixel 7" PTH_SEATS="4,6" PTH_MODES=seated npm run test:table-sweep
+```
+
+Screenshots: `test-artifacts/mobile/<device>-sweep-<mode>-<nn>.png`. Both tests
+share `scripts/lib/mobile-harness.mjs` (server, phone profiles, fixture hand,
+reporter, screenshots).
+
 ## Limits - what still needs a real phone
 
 Playwright WebKit is the Safari engine, not Safari on an iPhone, and Chromium

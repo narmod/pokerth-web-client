@@ -62,6 +62,7 @@
     "test:accessibility": "node scripts/test-accessibility.mjs",
     "test:accessibility-browser": "node scripts/test-accessibility-browser.mjs",
     "test:mobile": "node scripts/test-mobile-browser.mjs",
+    "test:table-sweep": "node scripts/test-table-sweep.mjs",
     "test:accessibility-browser-artifacts": "node scripts/test-accessibility-browser-artifacts.mjs",
     "test:accessibility-locales": "node scripts/test-accessibility-locales.mjs",
     "test:journal": "node scripts/test-journal.mjs",

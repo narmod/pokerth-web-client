@@ -32,149 +32,12 @@
 // Safari on a real iPhone: audio, the collapsing toolbar, the notch safe area
 // and the on-screen keyboard still need a real device before a release.
 import assert from 'node:assert/strict';
-import { createServer } from 'node:http';
-import { mkdirSync, readFileSync, statSync } from 'node:fs';
-import { extname, join, normalize } from 'node:path';
-import { chromium, webkit, devices } from 'playwright';
+import { startServer, createReporter, shot, overlap, settle, openTable, turnTo, acted, dealTurn, runPlan, ME } from './lib/mobile-harness.mjs';
 
-const MATRIX = [
-  { name: 'iPhone SE (3rd gen)', family: 'ios' },
-  { name: 'iPhone 15', family: 'ios' },
-  { name: 'iPhone 15 landscape', family: 'ios' },
-  { name: 'Pixel 7', family: 'android' },
-  { name: 'Galaxy S24', family: 'android' },
-  { name: 'Galaxy A55 landscape', family: 'android' },
-];
-const ENGINES = { ios: ['webkit', webkit], android: ['chromium', chromium] };
 const SEATS = 10;
-const SHOTS = process.env.PTH_SHOTS !== '0';
-const SHOT_DIR = join(process.cwd(), 'test-artifacts', 'mobile');
-
-const root = join(process.cwd(), 'public');
-const types = { '.css': 'text/css', '.html': 'text/html', '.js': 'text/javascript', '.json': 'application/json', '.mjs': 'text/javascript', '.svg': 'image/svg+xml', '.woff2': 'font/woff2', '.png': 'image/png', '.webp': 'image/webp' };
-const server = createServer((request, response) => {
-  try {
-    const pathname = new URL(request.url, 'http://localhost').pathname;
-    const relative = pathname === '/' ? 'pokerth-client.html' : decodeURIComponent(pathname).replace(/^\/+/, '');
-    const file = normalize(join(root, relative));
-    if (!file.startsWith(root) || !statSync(file).isFile()) throw new Error('not found');
-    response.writeHead(200, { 'content-type': types[extname(file)] || 'application/octet-stream' });
-    response.end(readFileSync(file));
-  } catch (_error) { response.writeHead(404); response.end('not found'); }
-});
-await new Promise((resolve) => server.listen(0, '127.0.0.1', resolve));
-const base = `http://127.0.0.1:${server.address().port}/`;
-
-let passed = 0, failed = 0, currentDevice = '';
-// On GitHub Actions every failure is also emitted as an ::error annotation, so
-// it shows on the run page (and through the check-runs API) without opening
-// the log.
-function annotate(label, message) {
-  if (!process.env.GITHUB_ACTIONS) return;
-  const clean = (v) => String(v).replace(/%/g, '%25').replace(/\r/g, '%0D').replace(/\n/g, '%0A');
-  console.log(`::error title=${clean(currentDevice).replace(/,/g, '%2C').replace(/:/g, '%3A')}::${clean(label + ' - ' + message)}`);
-}
-async function check(label, action) {
-  try { await action(); passed++; console.log('  \u2713 ' + label); }
-  catch (error) {
-    failed++; const message = String(error && error.message || error).split('\n')[0];
-    console.log('  \u2717 ' + label + '\n      ' + message); annotate(label, message);
-  }
-}
-const slug = (s) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
-async function shot(page, device, step) {
-  if (!SHOTS) return;
-  try { mkdirSync(SHOT_DIR, { recursive: true }); await page.screenshot({ path: join(SHOT_DIR, `${slug(device)}-${step}.png`) }); } catch (_e) {}
-}
-
-// ── Fixture WebSocket + a 10-seat hand: flop dealt, my turn ────────────────
-async function startHand(page) {
-  await page.waitForFunction(() => document.readyState === 'complete' && window.App
-    && typeof window.App.connect === 'function' && window.PthState && document.querySelector('#s-connect .btn-primary'));
-  await page.evaluate(async () => {
-    try { localStorage.removeItem('pth_resume'); } catch (_e) {}
-    (await import('/modules/net/session.mjs')).show('s-connect');
-  });
-  await page.locator('#s-connect.active').waitFor();
-  // The first-run "local backup" banner (Chromium only: File System Access
-  // API) sits over the third login card on a phone: dismiss it the way a
-  // player would, with its last button ("Later").
-  await page.waitForTimeout(600);
-  const later = page.locator('#bak-restore-banner button').last();
-  if (await later.count()) { try { await later.tap({ timeout: 2000 }); } catch (_e) {} }
-  await page.locator('.login-card').nth(2).click();
-  await page.locator('#nick').fill('MobileTester');
-  await page.evaluate(() => {
-    class FixtureSocket extends EventTarget {
-      static CONNECTING = 0; static OPEN = 1; static CLOSING = 2; static CLOSED = 3;
-      constructor(url) { super(); this.url = url; this.readyState = 1; this.sent = []; FixtureSocket.instance = this;
-        setTimeout(() => this.onopen && this.onopen({ target: this }), 0); }
-      send(data) { this.sent.push(data); }
-      close() { this.readyState = 3; if (this.onclose) this.onclose({ code: 1000, target: this }); }
-      receive(payload) {
-        const frame = new ArrayBuffer(4 + payload.byteLength);
-        new DataView(frame).setUint32(0, payload.byteLength, false);
-        new Uint8Array(frame).set(payload, 4);
-        this.onmessage({ data: frame, target: this });
-      }
-    }
-    window.WebSocket = FixtureSocket;
-  });
-  await page.locator('.btn-primary[data-i18n="connect"]').click();
-  await page.waitForFunction(() => window.WebSocket.instance && typeof window.WebSocket.instance.onmessage === 'function');
-  await page.waitForTimeout(300);
-  await page.evaluate(async (count) => {
-    const { Proto } = await import('/modules/net/proto.mjs');
-    const { MSG } = await import('/modules/net/messages.mjs');
-    const socket = window.WebSocket.instance;
-    const envelope = (type, field, inner) => Proto.encode([[1, 0, type], [field, 2, Proto.encode(inner)]]);
-    window.__fx = { Proto, MSG, socket, envelope };
-    const version = Proto.encode([[1, 0, 2], [2, 0, 1]]);
-    const ids = [42, ...Array.from({ length: count - 1 }, (_, index) => 50 + index)];
-    window.__fx.ids = ids;
-    socket.receive(envelope(MSG.T.Announce, 2, [[1, 2, version], [2, 2, version], [4, 0, 0], [5, 0, 0]]));
-    socket.receive(envelope(MSG.T.InitAck, 7, [[1, 2, new Uint8Array([1, 2, 3, count])], [2, 0, 42]]));
-    for (const [index, pid] of ids.entries()) {
-      socket.receive(envelope(MSG.T.PlayerList, 13, [[1, 0, pid], [2, 0, 0]]));
-      const info = Proto.encode([[1, 2, pid === 42 ? 'MobileTester' : `Player ${index + 1}`], [3, 0, 2]]);
-      socket.receive(envelope(MSG.T.PlayerInfoReply, 20, [[1, 0, pid], [2, 2, info]]));
-    }
-    const gameInfo = Proto.encode([[1, 2, `Mobile ${count}-seat table`], [2, 0, 1], [3, 0, count],
-      [4, 0, 1], [5, 0, 7], [10, 0, 5], [11, 0, 30], [12, 0, 10], [13, 0, 3000]]);
-    socket.receive(envelope(MSG.T.GameListNew, 14, [[1, 0, 303], [2, 0, 1], [3, 0, 0], ...ids.map((pid) => [4, 0, pid]), [5, 0, ids[1]], [6, 2, gameInfo]]));
-    socket.receive(envelope(MSG.T.JoinGameAck, 25, [[1, 0, 303], [2, 0, 0]]));
-    socket.receive(envelope(MSG.T.GameStartInitial, 39, [[1, 0, 303], [2, 0, ids[1]], [3, 2, new Uint8Array(ids)]]));
-    socket.receive(envelope(MSG.T.HandStart, 41, [[1, 0, 303], [2, 2, Proto.encode([[1, 0, 12], [2, 0, 25]])], [4, 0, 10], [6, 0, ids[1]]]));
-    socket.receive(envelope(MSG.T.PlayersActionDone, 45, [[1, 0, 303], [2, 0, ids[1]], [3, 0, 0], [4, 0, 0], [5, 0, 20], [6, 0, 2980], [7, 0, 20], [8, 0, 20]]));
-    socket.receive(envelope(MSG.T.PlayersActionDone, 45, [[1, 0, 303], [2, 0, 42], [3, 0, 0], [4, 0, 0], [5, 0, 10], [6, 0, 2990], [7, 0, 20], [8, 0, 20]]));
-    socket.receive(envelope(MSG.T.DealFlop, 46, [[1, 0, 303], [2, 0, 10], [3, 0, 22], [4, 0, 35]]));
-    socket.receive(envelope(MSG.T.PlayersTurn, 42, [[1, 0, 303], [2, 0, 42], [3, 0, 1]]));
-  }, SEATS);
-  await page.locator('#s-game.active .act-buttons-row .btn-action').first().waitFor();
-  await page.waitForFunction((count) => document.querySelectorAll('#g-seats .seat').length === count, SEATS);
-  await settle(page);
-}
-const turnTo = (page, pid) => page.evaluate((p) => { const f = window.__fx;
-  f.socket.receive(f.envelope(f.MSG.T.PlayersTurn, 42, [[1, 0, 303], [2, 0, p], [3, 0, 1]])); }, pid);
-const acted = (page, pid) => page.evaluate((p) => { const f = window.__fx;
-  f.socket.receive(f.envelope(f.MSG.T.PlayersActionDone, 45, [[1, 0, 303], [2, 0, p], [3, 0, 1], [4, 0, 2], [5, 0, 0], [6, 0, 3000], [7, 0, 0], [8, 0, 20]])); }, pid);
-const dealTurn = (page, card) => page.evaluate((c) => { const f = window.__fx;
-  f.socket.receive(f.envelope(f.MSG.T.DealTurn, 47, [[1, 0, 303], [2, 0, c]])); }, card);
-
-// Wait until the table geometry stops moving (renders are rAF-batched, the
-// loupe pan animates 220 ms).
-async function settle(page) {
-  await page.evaluate(() => new Promise((resolve) => {
-    let prior = '', since = performance.now(); const started = since;
-    const tick = (now) => {
-      const cur = JSON.stringify([...document.querySelectorAll('#g-seats .seat, #g-comm .pk, #g-miniboard')].map((e) => {
-        const r = e.getBoundingClientRect(); return [Math.round(r.left), Math.round(r.top), Math.round(r.width)]; }));
-      if (cur !== prior) { prior = cur; since = now; }
-      if (now - since >= 350 || now - started >= 4000) resolve(); else requestAnimationFrame(tick);
-    };
-    requestAnimationFrame(tick);
-  }));
-}
+const { server, base } = await startServer();
+const reporter = createReporter();
+const check = reporter.check;
 
 const geometry = (page) => page.evaluate(() => {
   const rect = (e) => { if (!e) return null; const r = e.getBoundingClientRect();
@@ -201,18 +64,13 @@ const geometry = (page) => page.evaluate(() => {
     mini: { hidden: mb.hidden, rect: rect(mb), cards: mb.querySelectorAll('.pk[data-c]').length, aria: mb.getAttribute('aria-label') },
   };
 });
-const overlap = (a, b) => a && b && a.left < b.right - 1 && b.left < a.right - 1 && a.top < b.bottom - 1 && b.top < a.bottom - 1;
 
-async function runDevice(browser, name) {
-  const descriptor = devices[name];
+async function runDevice(browser, name, descriptor) {
   const context = await browser.newContext({ ...descriptor, serviceWorkers: 'block' });
   const page = await context.newPage();
   const errors = [];
   page.on('pageerror', (e) => errors.push(String(e && e.message || e)));
   page.on('dialog', (d) => d.dismiss().catch(() => {}));
-  const vp = descriptor.viewport;
-  currentDevice = `${name} (${browser.browserType().name()})`;
-  console.log(`\n${name} - ${vp.width}x${vp.height} @${descriptor.deviceScaleFactor}x`);
   try {
     await page.goto(base, { waitUntil: 'domcontentloaded' });
     await check('boots, login screen has no horizontal overflow', async () => {
@@ -220,7 +78,8 @@ async function runDevice(browser, name) {
       const over = await page.evaluate(() => document.documentElement.scrollWidth - innerWidth);
       assert.ok(over <= 1, `page is ${over}px wider than the screen`);
     });
-    await startHand(page);
+    await openTable(page, base, { seats: SEATS, board: 'flop', turn: 'me' });
+    await page.locator('#s-game.active .act-buttons-row .btn-action').first().waitFor();
     const base0 = await geometry(page);
     await shot(page, name, '1-table');
     const cx = base0.zone.left + base0.zone.width / 2;
@@ -268,7 +127,7 @@ async function runDevice(browser, name) {
       const centred = followed.zone.left - followed.zone.width / 2;   // layer left when panX = 0
       assert.ok(Math.abs(followed.layerLeft - centred) > 8, 'the view did not pan sideways');
     });
-    await turnTo(page, 42);
+    await turnTo(page, ME);
     await settle(page);
     const mine = await geometry(page);
     await shot(page, name, '3-loupe-my-turn');
@@ -300,7 +159,7 @@ async function runDevice(browser, name) {
       await settle(page);
       const back = await geometry(page);
       assert.ok(Math.abs(back.me.top - mine.me.top) <= 2, 'the view did not come back to the self box');
-      await dealTurn(page, 48); await turnTo(page, 42); await settle(page);
+      await dealTurn(page, 48); await turnTo(page, ME); await settle(page);
       const turn = await geometry(page);
       assert.equal(turn.mini.hidden, false); assert.equal(turn.mini.cards, 4);
     });
@@ -318,32 +177,11 @@ async function runDevice(browser, name) {
     });
     await check('no JavaScript error during the whole run', async () => { assert.deepEqual(errors, []); });
   } catch (error) {
-    failed++; const message = String(error && error.message || error).split('\n')[0];
-    console.log('  \u2717 run aborted: ' + message); annotate('run aborted', message);
+    reporter.fail('run aborted', String(error && error.message || error).split('\n')[0]);
     await shot(page, name, 'aborted');
   } finally { await context.close(); }
 }
 
-const family = (process.env.PTH_MOBILE || 'all').toLowerCase();
-const only = (process.env.PTH_DEVICES || '').split(',').map((s) => s.trim()).filter(Boolean);
-const plan = MATRIX.filter((d) => (family === 'all' || d.family === family) && (!only.length || only.includes(d.name)));
-only.filter((n) => !MATRIX.some((d) => d.name === n) && devices[n]).forEach((n) => plan.push({ name: n, family: /iphone|ipad/i.test(n) ? 'ios' : 'android' }));
-console.log('test-mobile-browser - ' + plan.map((d) => d.name).join(', '));
-let enginesRun = 0; const skipped = [];
-for (const fam of ['ios', 'android']) {
-  const list = plan.filter((d) => d.family === fam); if (!list.length) continue;
-  const forced = (process.env.PTH_ENGINE || '').toLowerCase();
-  const [engineName, engine] = forced === 'chromium' ? ['chromium', chromium] : forced === 'webkit' ? ['webkit', webkit] : ENGINES[fam];
-  let browser;
-  try { browser = await engine.launch({ headless: true }); }
-  catch (error) { skipped.push(`${engineName} (${fam}): not installed - run "npx playwright install ${engineName}"`); continue; }
-  enginesRun++;
-  console.log(`\n== ${fam === 'ios' ? 'iOS profiles' : 'Android profiles'} - ${engineName} ${browser.version()} ==`);
-  try { for (const d of list) await runDevice(browser, d.name); } finally { await browser.close(); }
-}
+const code = await runPlan('test-mobile-browser', reporter, runDevice);
 server.close();
-skipped.forEach((s) => { console.log('\nSKIPPED ' + s); if (process.env.GITHUB_ACTIONS) console.log('::warning title=Engine skipped::' + s); });
-if (process.env.GITHUB_ACTIONS) console.log(`::notice title=Mobile verification::${passed} passed, ${failed} failed`);
-console.log(`\n${passed} passed, ${failed} failed` + (SHOTS ? ` - screenshots in test-artifacts/mobile/` : ''));
-if (!enginesRun) { console.log('No browser engine available.'); process.exit(2); }
-process.exit(failed ? 1 : 0);
+process.exit(code);
