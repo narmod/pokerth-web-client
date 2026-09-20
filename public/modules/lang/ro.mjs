@@ -201,6 +201,7 @@ export const strings = {
     rankingTooltip: 'Clasament', rankingTitle: 'Clasament', rankingPth: 'PokerTH', rankingBbc: 'BBC', rankingWec: 'WEC',
     rankingMemberSince: 'Membru din', rankingAwards: 'Premii', rankingTickets: 'Bilete', rankingThisSeason: 'Acest sezon', rankingThisMonth: 'Această lună', rankingThisYear: 'Acest an', rankingStep: 'Treaptă', rankingRank: 'Loc', rankingBack: 'Înapoi',
     rankingLoading: 'Se încarcă…', rankingSoon: 'Clasamentul va fi disponibil în curând.', rankingError: 'Clasamentul nu a putut fi încărcat.', rankingEmpty: 'Nicio intrare.',
+    forumTabPosts:'Postări', forumTabEvents:'Evenimente', evUpcoming:'În curând', evResults:'Ultimele rezultate', evSignups:'Înscriși: {n}', evError:'Evenimentele nu au putut fi încărcate.', evNone:'Niciun eveniment viitor.', evOpenSite:'Deschide site-ul',
     forumTooltip:'Forum', forumTitle:'Noutăți de pe forum', forumMarkRead:'Marchează tot ca citit', forumOpen:'Deschide forumul', forumError:'Fluxul forumului nu a putut fi încărcat.', advForumNews:'Buton forum în antetul lobby-ului', forumOpenPost:'Deschide mesajul', forumOpenInForum:'Deschide pe forum', forumTranslate:'Tradu mesajul', forumShowOriginal:'Afișează mesajul original', forumTranslateFailed:'Traducerea a eșuat.',
     rankingSearch: 'Caută un jucător…', rankingNoMatch: 'Niciun jucător găsit.', rankingSeason: 'Sezon', rankingAllTime: 'Din toate timpurile',
     rankingColRank: '#', rankingColPlayer: 'Poreclă', rankingColScore: 'Scor', rankingColPoints: 'Puncte', rankingColGames: 'Jocuri',

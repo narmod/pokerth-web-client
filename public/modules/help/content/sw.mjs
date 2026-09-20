@@ -214,7 +214,8 @@ export const help = {
               'Usajili, ratiba, mipangilio ya meza na matokeo huchapishwa kwenye jukwaa, na michezo huchezwa kwenye seva rasmi kama mingine. Akaunti ya pokerth.net inatosha kufuata matokeo; kuingia kikombeni ni kupitia uzi wa jukwaa husika.'] },
         { id: 'forumnews', t: 'Habari za jukwaa ukumbini',
           b: ['Kitufe cha gazeti kwenye kichwa cha ukumbi hufungua machapisho ya hivi karibuni kutoka jukwaa la pokerth.net, kiingilio kimoja kwa kila mada, kila jukwaa na rangi yake. Beji kwenye kitufe huhesabu machapisho ambayo hayajasomwa; kufungua chapisho (kichupo kipya) hukiweka alama ya kusomwa, na “Weka zote kama zimesomwa” husafisha zote kwa pamoja.',
-              'Hii ni nyongeza ya wavuti: kitufe kinaweza kufichwa kwenye chaguo za kina (“Kitufe cha jukwaa kwenye kichwa cha ukumbi”).'] },
+              'Hii ni nyongeza ya wavuti: kitufe kinaweza kufichwa kwenye chaguo za kina (“Kitufe cha jukwaa kwenye kichwa cha ukumbi”).',
+              'Kichupo cha “Matukio” kinaonyesha michezo ijayo ya BBC na Monthly Cup inayofuata pamoja na idadi ya wachezaji waliojisajili, na washindi wa hivi karibuni wa BBC, WEC na Monthly Cup. Saa ziko katika saa za eneo lako, na kugusa hufungua tovuti ya jumuiya. Chaguo la “Onyesha maudhui ya jumuiya (BBC / WEC)” huficha kichupo hiki.'] },
         { id: 'avatars', t: 'Avatari na bendera',
           b: ['Kwenye pokerth.net, avatari yako husambazwa kwa wachezaji wengine kupitia seva ya avatari, na bendera ndogo ya nchi inaweza kuonyeshwa kwenye visanduku vya wachezaji. Zote ni za hiari na zinaweza kusanidiwa kwenye chaguo.'] }
       ]

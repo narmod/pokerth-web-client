@@ -212,7 +212,8 @@ export const help = {
               'Kayıtlar, program, masa ayarları ve sonuçlar forumda yayımlanır, oyunlar ise diğerleri gibi resmi sunucuda oynanır. Sonuçları izlemek için bir pokerth.net hesabı yeterlidir; bir kupaya kaydolmak ilgili forum başlığından geçer.'] },
         { id: 'forumnews', t: 'Lobide forum haberleri',
           b: ['Lobi başlığındaki gazete düğmesi pokerth.net forumundaki en yeni gönderileri açar; konu başına bir satır, her forumun kendi rengi vardır. Düğmedeki rozet okunmamış gönderileri sayar; bir gönderiyi açmak (yeni sekme) onu okundu olarak işaretler, “Tümünü okundu olarak işaretle” ise hepsini tek seferde temizler.',
-              'Bu bir web eklentisidir: düğme Gelişmiş seçeneklerden gizlenebilir (“Lobi başlığında forum düğmesi”).'] },
+              'Bu bir web eklentisidir: düğme Gelişmiş seçeneklerden gizlenebilir (“Lobi başlığında forum düğmesi”).',
+              '“Etkinlikler” sekmesi, yaklaşan BBC oyunlarını ve bir sonraki Monthly Cup\'ı kayıtlı oyuncu sayısıyla birlikte, ayrıca son BBC, WEC ve Monthly Cup kazananlarını gösterir. Saatler yerel saatinize göredir ve bir dokunuş topluluğun sitesini açar. “Topluluk içeriğini göster (BBC / WEC)” seçeneği bu sekmeyi gizler.'] },
         { id: 'avatars', t: 'Avatarlar ve bayraklar',
           b: ['pokerth.net\u2019te avatarın, avatar sunucusu üzerinden diğer oyunculara dağıtılır ve oyuncu kutularında küçük bir ülke bayrağı gösterilebilir. İkisi de isteğe bağlıdır ve seçeneklerden yapılandırılır.'] }
       ]

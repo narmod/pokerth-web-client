@@ -212,7 +212,8 @@ export const help = {
               'Inscriptions, horaires, réglages de table et résultats se publient sur le forum, et les parties se jouent sur le serveur officiel comme n\u2019importe quelle autre. Un compte pokerth.net suffit pour suivre les résultats ; s\u2019inscrire à une coupe passe par le fil du forum correspondant.'] },
         { id: 'forumnews', t: 'Actualités du forum dans le lobby',
           b: ['Le bouton journal de l\'en-tête du lobby ouvre les derniers messages du forum pokerth.net, une entrée par sujet, chaque forum ayant sa couleur. Le badge sur le bouton compte les messages non lus ; ouvrir un message (nouvel onglet) le marque comme lu, et « Tout marquer comme lu » efface tout d\'un coup.',
-              'C\'est une extension web : le bouton peut être masqué dans les Options avancées (« Bouton forum dans l\'en-tête du lobby »).'] },
+              'C\'est une extension web : le bouton peut être masqué dans les Options avancées (« Bouton forum dans l\'en-tête du lobby »).',
+              'L\'onglet « Événements » affiche les prochaines parties BBC et la prochaine Monthly Cup avec le nombre de joueurs inscrits, ainsi que les derniers vainqueurs BBC, WEC et Monthly Cup. Les heures sont à votre heure locale, et un appui ouvre le site de la communauté. L\'option « Afficher les contenus communauté (BBC / WEC) » masque cet onglet.'] },
         { id: 'avatars', t: 'Avatars et drapeaux',
           b: ['Sur pokerth.net, ton avatar est distribué aux autres joueurs via le serveur d\u2019avatars, et un petit drapeau de pays peut s\u2019afficher sur les boîtes de joueurs. Les deux sont optionnels et configurables dans les options.'] }
       ]

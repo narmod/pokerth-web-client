@@ -477,6 +477,7 @@ export const strings = {
     piNoCupData:'ไม่มีอันดับถ้วยสำหรับผู้เล่นคนนี้',
     rankingTooltip:'อันดับ', rankingTitle:'อันดับ', rankingPth:'PokerTH', rankingBbc:'BBC', rankingWec:'WEC',
     rankingLoading:'กำลังโหลด…', rankingSoon:'อันดับจะมาเร็ว ๆ นี้', rankingError:'โหลดอันดับไม่ได้', rankingEmpty:'ไม่มีรายการ',
+    forumTabPosts:'โพสต์', forumTabEvents:'กิจกรรม', evUpcoming:'เร็ว ๆ นี้', evResults:'ผลล่าสุด', evSignups:'ลงทะเบียนแล้ว: {n}', evError:'ไม่สามารถโหลดกิจกรรมได้', evNone:'ไม่มีกิจกรรมที่กำลังจะมาถึง', evOpenSite:'เปิดเว็บไซต์',
     forumTooltip:'ฟอรัม', forumTitle:'ข่าวฟอรัม', forumMarkRead:'ทำเครื่องหมายอ่านทั้งหมด', forumOpen:'เปิดฟอรัม', forumError:'โหลดฟีดฟอรัมไม่ได้', advForumNews:'ปุ่มฟอรัมในส่วนหัวล็อบบี้', forumOpenPost:'เปิดโพสต์', forumOpenInForum:'เปิดในฟอรัม', forumTranslate:'แปลโพสต์', forumShowOriginal:'แสดงโพสต์ต้นฉบับ', forumTranslateFailed:'การแปลล้มเหลว',
     rankingSearch:'ค้นหาผู้เล่น…', rankingNoMatch:'ไม่พบผู้เล่น',
     rankingSeason:'ฤดูกาล', rankingAllTime:'ตลอดกาล',

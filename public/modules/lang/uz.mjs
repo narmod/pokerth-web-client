@@ -479,6 +479,7 @@ export const strings = {
     piNoCupData:'Bu oʻyinchi uchun kubok reytingi yoʻq.',
     rankingTooltip:'Reyting', rankingTitle:'Reyting', rankingPth:'PokerTH', rankingBbc:'BBC', rankingWec:'WEC',
     rankingLoading:'Yuklanmoqda…', rankingSoon:'Reyting tez kunda.', rankingError:'Reytingni yuklab boʻlmadi.', rankingEmpty:'Yozuvlar yoʻq.',
+    forumTabPosts:'Postlar', forumTabEvents:'Tadbirlar', evUpcoming:'Yaqinda', evResults:'So‘nggi natijalar', evSignups:'Ro‘yxatdan o‘tganlar: {n}', evError:'Tadbirlarni yuklab bo‘lmadi.', evNone:'Yaqin orada tadbirlar yo‘q.', evOpenSite:'Saytni ochish',
     forumTooltip:'Forum', forumTitle:'Forum yangiliklari', forumMarkRead:'Hammasini oʻqilgan deb belgilash', forumOpen:'Forumni ochish', forumError:'Forum tasmasini yuklab boʻlmadi.', advForumNews:'Lobbi sarlavhasida Forum tugmasi', forumOpenPost:'Postni ochish', forumOpenInForum:'Forumda ochish', forumTranslate:'Postni tarjima qilish', forumShowOriginal:'Asl postni koʻrsatish', forumTranslateFailed:'Tarjima qilib boʻlmadi.',
     rankingSearch:'Oʻyinchini qidirish…', rankingNoMatch:'Oʻyinchi topilmadi.',
     rankingSeason:'Mavsum', rankingAllTime:'Butun davr',

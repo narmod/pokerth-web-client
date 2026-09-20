@@ -212,7 +212,8 @@ export const help = {
               'Zapisy, terminy, ustawienia stołów i wyniki publikowane są na forum, a gry toczą się na oficjalnym serwerze jak wszystkie inne. Do śledzenia wyników wystarczy konto pokerth.net; zapis na puchar odbywa się w odpowiednim wątku forum.'] },
         { id: 'forumnews', t: 'Nowości z forum w lobby',
           b: ['Przycisk gazety w nagłówku lobby otwiera najnowsze posty z forum pokerth.net, jeden wpis na temat, każde forum w swoim kolorze. Plakietka na przycisku liczy nieprzeczytane posty; otwarcie posta (nowa karta) oznacza go jako przeczytany, a „Oznacz wszystko jako przeczytane” czyści wszystko naraz.',
-              'To dodatek webowy: przycisk można ukryć w Opcjach zaawansowanych („Przycisk forum w nagłówku lobby”).'] },
+              'To dodatek webowy: przycisk można ukryć w Opcjach zaawansowanych („Przycisk forum w nagłówku lobby”).',
+              'Karta „Wydarzenia” pokazuje nadchodzące gry BBC i następny Monthly Cup wraz z liczbą zapisanych graczy oraz ostatnich zwycięzców BBC, WEC i Monthly Cup. Godziny są podane w Twoim czasie lokalnym, a dotknięcie otwiera stronę społeczności. Opcja „Pokaż treści społeczności (BBC / WEC)” ukrywa tę kartę.'] },
         { id: 'avatars', t: 'Awatary i flagi',
           b: ['Na pokerth.net twój awatar jest rozprowadzany do innych graczy przez serwer awatarów, a mała flaga kraju może pojawiać się na polach graczy. Oba elementy są opcjonalne i konfigurowalne w opcjach.'] }
       ]

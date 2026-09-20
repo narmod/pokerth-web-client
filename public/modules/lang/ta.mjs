@@ -202,6 +202,7 @@ export const strings = {
     rankingTooltip: 'தரவரிசை', rankingTitle: 'தரவரிசை', rankingPth: 'PokerTH', rankingBbc: 'BBC', rankingWec: 'WEC',
     rankingMemberSince: 'உறுப்பினர் முதல்', rankingAwards: 'விருதுகள்', rankingTickets: 'டிக்கெட்டுகள்', rankingThisSeason: 'இந்த சீசன்', rankingThisMonth: 'இந்த மாதம்', rankingThisYear: 'இந்த ஆண்டு', rankingStep: 'படி', rankingRank: 'தரம்', rankingBack: 'பின்செல்',
     rankingLoading: 'ஏற்றுகிறது…', rankingSoon: 'தரவரிசை விரைவில் வரும்.', rankingError: 'தரவரிசையை ஏற்ற முடியவில்லை.', rankingEmpty: 'உள்ளீடுகள் இல்லை.',
+    forumTabPosts:'பதிவுகள்', forumTabEvents:'நிகழ்வுகள்', evUpcoming:'வரவிருப்பவை', evResults:'சமீபத்திய முடிவுகள்', evSignups:'பதிவு செய்தவர்கள்: {n}', evError:'நிகழ்வுகளை ஏற்ற முடியவில்லை.', evNone:'வரவிருக்கும் நிகழ்வுகள் இல்லை.', evOpenSite:'தளத்தைத் திற',
     forumTooltip:'மன்றம்', forumTitle:'மன்றச் செய்திகள்', forumMarkRead:'அனைத்தையும் படித்ததாகக் குறி', forumOpen:'மன்றத்தைத் திற', forumError:'மன்ற ஊட்டத்தை ஏற்ற முடியவில்லை.', advForumNews:'லாபி தலைப்பில் மன்றப் பொத்தான்', forumOpenPost:'பதிவைத் திற', forumOpenInForum:'மன்றத்தில் திற', forumTranslate:'பதிவை மொழிபெயர்', forumShowOriginal:'அசல் பதிவைக் காட்டு', forumTranslateFailed:'மொழிபெயர்ப்பு தோல்வியடைந்தது.',
     rankingSearch: 'வீரரைத் தேடு…', rankingNoMatch: 'வீரர் யாரும் இல்லை.', rankingSeason: 'பருவம்', rankingAllTime: 'எல்லா காலமும்',
     rankingColRank: '#', rankingColPlayer: 'புனைப்பெயர்', rankingColScore: 'மதிப்பெண்', rankingColPoints: 'புள்ளிகள்', rankingColGames: 'ஆட்டங்கள்',

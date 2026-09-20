@@ -476,6 +476,7 @@ export const strings = {
     piNoCupData:'ਇਸ ਖਿਡਾਰੀ ਲਈ ਕੋਈ ਕੱਪ ਰੈਂਕਿੰਗ ਨਹੀਂ।',
     rankingTooltip:'ਰੈਂਕਿੰਗ', rankingTitle:'ਰੈਂਕਿੰਗ', rankingPth:'PokerTH', rankingBbc:'BBC', rankingWec:'WEC',
     rankingLoading:'ਲੋਡ ਹੋ ਰਿਹਾ ਹੈ…', rankingSoon:'ਰੈਂਕਿੰਗ ਜਲਦੀ ਆ ਰਹੀ ਹੈ।', rankingError:'ਰੈਂਕਿੰਗ ਲੋਡ ਨਹੀਂ ਹੋ ਸਕੀ।', rankingEmpty:'ਕੋਈ ਐਂਟਰੀ ਨਹੀਂ।',
+    forumTabPosts:'ਪੋਸਟਾਂ', forumTabEvents:'ਇਵੈਂਟ', evUpcoming:'ਆਉਣ ਵਾਲੇ', evResults:'ਤਾਜ਼ਾ ਨਤੀਜੇ', evSignups:'ਰਜਿਸਟਰ ਹੋਏ: {n}', evError:'ਇਵੈਂਟ ਲੋਡ ਨਹੀਂ ਹੋ ਸਕੇ।', evNone:'ਕੋਈ ਆਉਣ ਵਾਲਾ ਇਵੈਂਟ ਨਹੀਂ।', evOpenSite:'ਸਾਈਟ ਖੋਲ੍ਹੋ',
     forumTooltip:'ਫੋਰਮ', forumTitle:'ਫੋਰਮ ਖ਼ਬਰਾਂ', forumMarkRead:'ਸਾਰੇ ਪੜ੍ਹੇ ਵਜੋਂ ਨਿਸ਼ਾਨ ਲਗਾਓ', forumOpen:'ਫੋਰਮ ਖੋਲ੍ਹੋ', forumError:'ਫੋਰਮ ਫੀਡ ਲੋਡ ਨਹੀਂ ਹੋ ਸਕੀ।', advForumNews:'ਲਾਬੀ ਹੈਡਰ ਵਿੱਚ ਫੋਰਮ ਬਟਨ', forumOpenPost:'ਪੋਸਟ ਖੋਲ੍ਹੋ', forumOpenInForum:'ਫੋਰਮ ਵਿੱਚ ਖੋਲ੍ਹੋ', forumTranslate:'ਪੋਸਟ ਦਾ ਅਨੁਵਾਦ ਕਰੋ', forumShowOriginal:'ਅਸਲੀ ਪੋਸਟ ਵਿਖਾਓ', forumTranslateFailed:'ਅਨੁਵਾਦ ਅਸਫਲ।',
     rankingSearch:'ਖਿਡਾਰੀ ਖੋਜੋ…', rankingNoMatch:'ਕੋਈ ਖਿਡਾਰੀ ਨਹੀਂ ਮਿਲਿਆ।',
     rankingSeason:'ਸੀਜ਼ਨ', rankingAllTime:'ਹਰ ਵੇਲੇ',

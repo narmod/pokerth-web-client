@@ -1,4 +1,8 @@
-2026-09-20 version 2.1.9-web.108 (current series):
+2026-09-20 version 2.1.9-web.110 (current series):
+- new: Forum news window - new "Events" tab next to "Posts": the upcoming BBC step games and the next Monthly Cup with the number of players signed up, and the latest BBC, WEC and Monthly Cup winners; times are shown in your local time and a tap opens the community site
+- new: the "Events" tab follows the "Show community content (BBC / WEC)" option - switch it off and the window is the post list as before
+
+2026-09-20 version 2.1.9-web.108:
 - improvement: a dozen small labels that were still in English in most languages are now translated ("minutes" in the blind settings, "Stats", "Type" and starting chips in the lobby game details, button and marker style names), each with the terms its own language already uses elsewhere in the client
 
 2026-09-20 version 2.1.9-web.107:

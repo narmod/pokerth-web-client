@@ -214,7 +214,8 @@ export const help = {
               'Ang mga sign-up, iskedyul, table setting at resulta ay inilalathala sa forum, at ang mga laro ay nilalaro sa opisyal na server tulad ng iba. Sapat na ang pokerth.net account para sundan ang mga resulta; ang pagsali sa cup ay dumadaan sa katugmang forum thread.'] },
         { id: 'forumnews', t: 'Balita sa forum sa lobby',
           b: ['Ang newspaper button sa lobby header ay nagbubukas ng mga pinakabagong post mula sa pokerth.net forum, isang entry bawat topic, bawat forum may sariling kulay. Binibilang ng badge sa button ang mga hindi pa nabasang post; ang pagbubukas ng post (bagong tab) ay nagmamarka rito bilang nabasa, at nililinis ng “Markahan lahat na nabasa” ang lahat nang sabay-sabay.',
-              'Ito ay web extra: maaaring itago ang button sa Advanced options (“Forum button sa lobby header”).'] },
+              'Ito ay web extra: maaaring itago ang button sa Advanced options (“Forum button sa lobby header”).',
+              'Ipinapakita ng tab na “Mga kaganapan” ang mga paparating na laro ng BBC at ang susunod na Monthly Cup kasama ang bilang ng mga nakarehistrong manlalaro, at ang mga pinakahuling nagwagi sa BBC, WEC at Monthly Cup. Ang mga oras ay nasa iyong lokal na oras, at ang pag-tap ay nagbubukas ng site ng komunidad. Itinatago ng opsyong “Ipakita ang nilalaman ng komunidad (BBC / WEC)” ang tab na ito.'] },
         { id: 'avatars', t: 'Mga avatar at bandila',
           b: ['Sa pokerth.net, ang avatar mo ay ipinapamahagi sa ibang manlalaro sa pamamagitan ng avatar server, at maaaring ipakita ang maliit na bandila ng bansa sa mga player box. Parehong opsyonal at maaaring i-configure sa mga option.'] }
       ]

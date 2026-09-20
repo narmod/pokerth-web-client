@@ -317,7 +317,8 @@ export const help = {
           t: "Lobbida forum yangiliklari",
           b: [
             "Lobbi sarlavhasidagi gazeta tugmasi pokerth.net forumidagi eng soʻnggi postlarni ochadi — har bir mavzu uchun bitta yozuv, har bir forum oʻz rangida. Tugmadagi belgi oʻqilmagan postlarni sanaydi; postni ochish (yangi varaqda) uni oʻqilgan deb belgilaydi, “Hammasini oʻqilgan deb belgilash” esa hammasini birdan tozalaydi.",
-            "Bu veb-qoʻshimcha: tugmani Kengaytirilgan sozlamalarda yashirish mumkin (“Lobbi sarlavhasida Forum tugmasi”)."] },
+            "Bu veb-qoʻshimcha: tugmani Kengaytirilgan sozlamalarda yashirish mumkin (“Lobbi sarlavhasida Forum tugmasi”).",
+            "“Tadbirlar” yorlig‘i yaqinlashayotgan BBC o‘yinlari va navbatdagi Monthly Cup’ni ro‘yxatdan o‘tgan o‘yinchilar soni bilan, shuningdek, BBC, WEC va Monthly Cup’ning so‘nggi g‘oliblarini ko‘rsatadi. Vaqtlar mahalliy vaqtingizda, bosish esa hamjamiyat saytini ochadi. “Hamjamiyat kontentini koʻrsatish (BBC / WEC)” sozlamasi bu yorliqni yashiradi."] },
         { id: "avatars",
           t: "Avatarlar va bayroqlar",
           b: [

@@ -214,7 +214,8 @@ export const help = {
               'Regjistrimet, oraret, cilësimet e tavolinës dhe rezultatet publikohen në forum, dhe lojërat luhen në serverin zyrtar si çdo tjetër. Një llogari pokerth.net mjafton për të ndjekur rezultatet; regjistrimi në një kupë bëhet përmes temës përkatëse në forum.'] },
         { id: 'forumnews', t: 'Lajmet e forumit në lobi',
           b: ['Butoni i gazetës te koka e lobit hap postimet më të fundit të forumit të pokerth.net, një hyrje për temë, çdo forum me ngjyrën e vet. Shenja te butoni numëron postimet e palexuara; hapja e një postimi (skedë e re) e shënon si të lexuar, dhe “Shëno të gjitha si të lexuara” i pastron të gjitha njëherësh.',
-              'Kjo është një shtesë web: butoni mund të fshihet te Opsionet e avancuara (“Butoni i forumit te koka e lobit”).'] },
+              'Kjo është një shtesë web: butoni mund të fshihet te Opsionet e avancuara (“Butoni i forumit te koka e lobit”).',
+              'Skeda “Ngjarje” tregon lojërat e ardhshme të BBC-së dhe Monthly Cup-in e radhës me numrin e lojtarëve të regjistruar, si dhe fituesit e fundit të BBC-së, WEC-ut dhe Monthly Cup-it. Oraret janë në orën tuaj lokale, dhe një prekje hap faqen e komunitetit. Opsioni “Trego përmbajtjen e komunitetit (BBC / WEC)” e fsheh këtë skedë.'] },
         { id: 'avatars', t: 'Avatarët dhe flamujt',
           b: ['Në pokerth.net, avatari yt shpërndahet te lojtarët e tjerë përmes serverit të avatarëve, dhe një flamur i vogël vendi mund të shfaqet te kutitë e lojtarëve. Të dyja janë opsionale dhe të konfigurueshme te opsionet.'] }
       ]

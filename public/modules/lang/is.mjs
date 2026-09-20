@@ -475,6 +475,7 @@ export const strings = {
     piNoCupData:'Engin bikarröðun fyrir þennan leikmann.',
     rankingTooltip:'Stigatafla', rankingTitle:'Stigatafla', rankingPth:'PokerTH', rankingBbc:'BBC', rankingWec:'WEC',
     rankingLoading:'Hleður…', rankingSoon:'Stigataflan er væntanleg.', rankingError:'Ekki tókst að hlaða stigatöflunni.', rankingEmpty:'Engar færslur.',
+    forumTabPosts:'Færslur', forumTabEvents:'Viðburðir', evUpcoming:'Framundan', evResults:'Nýjustu úrslit', evSignups:'Skráðir: {n}', evError:'Ekki tókst að hlaða viðburðum.', evNone:'Engir viðburðir framundan.', evOpenSite:'Opna vefinn',
     forumTooltip:'Spjallborð', forumTitle:'Fréttir af spjallborðinu', forumMarkRead:'Merkja allt sem lesið', forumOpen:'Opna spjallborðið', forumError:'Ekki tókst að hlaða straumi spjallborðsins.', advForumNews:'Spjallborðshnappur í haus anddyris', forumOpenPost:'Opna innlegg', forumOpenInForum:'Opna á spjallborðinu', forumTranslate:'Þýða innleggið', forumShowOriginal:'Sýna upprunalegt innlegg', forumTranslateFailed:'Þýðing mistókst.',
     rankingSearch:'Leita að leikmanni…', rankingNoMatch:'Enginn leikmaður fannst.',
     rankingSeason:'Tímabil', rankingAllTime:'Frá upphafi',

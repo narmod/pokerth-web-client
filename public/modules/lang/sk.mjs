@@ -201,6 +201,7 @@ export const strings = {
     rankingTooltip: 'Rebríček', rankingTitle: 'Rebríček', rankingPth: 'PokerTH', rankingBbc: 'BBC', rankingWec: 'WEC',
     rankingMemberSince: 'Členom od', rankingAwards: 'Ocenenia', rankingTickets: 'Lístky', rankingThisSeason: 'Táto sezóna', rankingThisMonth: 'Tento mesiac', rankingThisYear: 'Tento rok', rankingStep: 'Stupeň', rankingRank: 'Poradie', rankingBack: 'Späť',
     rankingLoading: 'Načítava sa…', rankingSoon: 'Rebríček bude čoskoro k dispozícii.', rankingError: 'Rebríček sa nepodarilo načítať.', rankingEmpty: 'Žiadne záznamy.',
+    forumTabPosts:'Príspevky', forumTabEvents:'Udalosti', evUpcoming:'Nadchádzajúce', evResults:'Posledné výsledky', evSignups:'Prihlásených: {n}', evError:'Udalosti sa nepodarilo načítať.', evNone:'Žiadne nadchádzajúce udalosti.', evOpenSite:'Otvoriť web',
     forumTooltip:'Fórum', forumTitle:'Novinky z fóra', forumMarkRead:'Označiť všetko ako prečítané', forumOpen:'Otvoriť fórum', forumError:'Kanál fóra sa nepodarilo načítať.', advForumNews:'Tlačidlo fóra v záhlaví lobby', forumOpenPost:'Otvoriť príspevok', forumOpenInForum:'Otvoriť na fóre', forumTranslate:'Preložiť príspevok', forumShowOriginal:'Zobraziť pôvodný príspevok', forumTranslateFailed:'Preklad zlyhal.',
     rankingSearch: 'Hľadať hráča…', rankingNoMatch: 'Nenašiel sa žiadny hráč.', rankingSeason: 'Sezóna', rankingAllTime: 'Celkovo',
     rankingColRank: '#', rankingColPlayer: 'Prezývka', rankingColScore: 'Skóre', rankingColPoints: 'Body', rankingColGames: 'Hry',

@@ -470,6 +470,7 @@ export const strings = {
     piNoCupData:'Sellel mängijal ei ole karikaedetabelit.',
     rankingTooltip:'Edetabel', rankingTitle:'Edetabel', rankingPth:'PokerTH', rankingBbc:'BBC', rankingWec:'WEC',
     rankingLoading:'Laadimine…', rankingSoon:'Edetabel tuleb varsti.', rankingError:'Edetabelit ei õnnestunud laadida.', rankingEmpty:'Kirjeid ei ole.',
+    forumTabPosts:'Postitused', forumTabEvents:'Sündmused', evUpcoming:'Tulekul', evResults:'Viimased tulemused', evSignups:'Registreerunud: {n}', evError:'Sündmuste laadimine ebaõnnestus.', evNone:'Tulevasi sündmusi pole.', evOpenSite:'Ava sait',
     forumTooltip:'Foorum', forumTitle:'Foorumi uudised', forumMarkRead:'Märgi kõik loetuks', forumOpen:'Ava foorum', forumError:'Foorumivoogu ei õnnestunud laadida.', advForumNews:'Foorumi nupp fuajee päises', forumOpenPost:'Ava postitus', forumOpenInForum:'Ava foorumis', forumTranslate:'Tõlgi postitus', forumShowOriginal:'Näita algset postitust', forumTranslateFailed:'Tõlkimine ebaõnnestus.',
     rankingSearch:'Otsi mängijat…', rankingNoMatch:'Mängijat ei leitud.',
     rankingSeason:'Hooaeg', rankingAllTime:'Kogu aeg',

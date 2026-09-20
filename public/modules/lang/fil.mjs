@@ -477,6 +477,7 @@ export const strings = {
     piNoCupData:'Walang cup ranking para sa manlalarong ito.',
     rankingTooltip:'Ranking', rankingTitle:'Ranking', rankingPth:'PokerTH', rankingBbc:'BBC', rankingWec:'WEC',
     rankingLoading:'Naglo-load…', rankingSoon:'Malapit na ang ranking.', rankingError:'Hindi ma-load ang ranking.', rankingEmpty:'Walang entry.',
+    forumTabPosts:'Mga post', forumTabEvents:'Mga kaganapan', evUpcoming:'Paparating', evResults:'Mga pinakabagong resulta', evSignups:'Nakarehistro: {n}', evError:'Hindi ma-load ang mga kaganapan.', evNone:'Walang paparating na kaganapan.', evOpenSite:'Buksan ang site',
     forumTooltip:'Forum', forumTitle:'Balita sa forum', forumMarkRead:'Markahan lahat na nabasa', forumOpen:'Buksan ang forum', forumError:'Hindi ma-load ang forum feed.', advForumNews:'Forum button sa lobby header', forumOpenPost:'Buksan ang post', forumOpenInForum:'Buksan sa forum', forumTranslate:'Isalin ang post', forumShowOriginal:'Ipakita ang orihinal na post', forumTranslateFailed:'Nabigo ang pagsasalin.',
     rankingSearch:'Maghanap ng manlalaro…', rankingNoMatch:'Walang nakitang manlalaro.',
     rankingSeason:'Season', rankingAllTime:'All-Time',

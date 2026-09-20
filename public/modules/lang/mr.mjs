@@ -476,6 +476,7 @@ export const strings = {
     piNoCupData:'या खेळाडूची कप क्रमवारी नाही.',
     rankingTooltip:'क्रमवारी', rankingTitle:'क्रमवारी', rankingPth:'PokerTH', rankingBbc:'BBC', rankingWec:'WEC',
     rankingLoading:'लोड होत आहे…', rankingSoon:'क्रमवारी लवकरच येत आहे.', rankingError:'क्रमवारी लोड करता आली नाही.', rankingEmpty:'नोंदी नाहीत.',
+    forumTabPosts:'पोस्ट', forumTabEvents:'इव्हेंट', evUpcoming:'आगामी', evResults:'ताजे निकाल', evSignups:'नोंदणीकृत: {n}', evError:'इव्हेंट लोड करता आले नाहीत.', evNone:'कोणतेही आगामी इव्हेंट नाहीत.', evOpenSite:'साइट उघडा',
     forumTooltip:'फोरम', forumTitle:'फोरमच्या बातम्या', forumMarkRead:'सर्व वाचलेलं म्हणून चिन्हांकित करा', forumOpen:'फोरम उघडा', forumError:'फोरम फीड लोड करता आलं नाही.', advForumNews:'लॉबी हेडरमध्ये फोरम बटण', forumOpenPost:'पोस्ट उघडा', forumOpenInForum:'फोरममध्ये उघडा', forumTranslate:'पोस्टचं भाषांतर करा', forumShowOriginal:'मूळ पोस्ट दाखवा', forumTranslateFailed:'भाषांतर अयशस्वी.',
     rankingSearch:'खेळाडू शोधा…', rankingNoMatch:'खेळाडू सापडला नाही.',
     rankingSeason:'सीझन', rankingAllTime:'ऑल-टाइम',

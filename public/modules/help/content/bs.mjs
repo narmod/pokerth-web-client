@@ -212,7 +212,8 @@ export const help = {
               'Prijave, termini, postavke stolova i rezultati objavljuju se na forumu, a partije se igraju na službenom serveru kao i sve druge. Za praćenje rezultata dovoljan je pokerth.net račun; prijava na kup ide preko odgovarajuće teme na forumu.'] },
         { id: 'forumnews', t: 'Novosti s foruma u predvorju',
           b: ['Gumb s novinama u zaglavlju predvorja otvara najnovije objave s foruma pokerth.net, jedan unos po temi, svaki forum sa svojom bojom. Značka na gumbu broji nepročitane objave; otvaranje objave (nova kartica) označava je pročitanom, a „Označi sve kao pročitano” briše sve odjednom.',
-              'Ovo je web dodatak: gumb se može sakriti u naprednim opcijama („Gumb foruma u zaglavlju predvorja”).'] },
+              'Ovo je web dodatak: gumb se može sakriti u naprednim opcijama („Gumb foruma u zaglavlju predvorja”).',
+              'Kartica „Događaji“ prikazuje predstojeće BBC igre i sljedeći Monthly Cup s brojem prijavljenih igrača, te posljednje pobjednike BBC-a, WEC-a i Monthly Cupa. Vremena su u vašem lokalnom vremenu, a dodir otvara stranicu zajednice. Opcija „Prikaži sadržaj zajednice (BBC / WEC)“ sakriva ovu karticu.'] },
         { id: 'avatars', t: 'Avatari i zastave',
           b: ['Na pokerth.net tvoj se avatar distribuira drugim igračima preko avatar-servera, a mala zastava zemlje može se prikazivati na kutijama igrača. Oboje je neobavezno i podesivo u opcijama.'] }
       ]

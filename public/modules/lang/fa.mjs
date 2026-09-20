@@ -475,6 +475,7 @@ export const strings = {
     piNoCupData:'رتبه‌بندی جام برای این بازیکن نیست.',
     rankingTooltip:'رتبه‌بندی', rankingTitle:'رتبه‌بندی', rankingPth:'PokerTH', rankingBbc:'BBC', rankingWec:'WEC',
     rankingLoading:'در حال بارگذاری…', rankingSoon:'رتبه‌بندی به‌زودی.', rankingError:'بارگذاری رتبه‌بندی ممکن نشد.', rankingEmpty:'موردی نیست.',
+    forumTabPosts:'نوشته‌ها', forumTabEvents:'رویدادها', evUpcoming:'پیش رو', evResults:'آخرین نتایج', evSignups:'ثبت‌نام‌شده: {n}', evError:'بارگیری رویدادها ممکن نشد.', evNone:'رویدادی در پیش نیست.', evOpenSite:'باز کردن سایت',
     forumTooltip:'انجمن', forumTitle:'اخبار انجمن', forumMarkRead:'علامت‌گذاری همه به‌عنوان خوانده', forumOpen:'بازکردن انجمن', forumError:'بارگذاری خوراک انجمن ممکن نشد.', advForumNews:'دکمهٔ انجمن در سربرگ لابی', forumOpenPost:'بازکردن نوشته', forumOpenInForum:'بازکردن در انجمن', forumTranslate:'ترجمهٔ نوشته', forumShowOriginal:'نمایش نوشتهٔ اصلی', forumTranslateFailed:'ترجمه ناموفق بود.',
     rankingSearch:'جستجوی بازیکن…', rankingNoMatch:'بازیکنی یافت نشد.',
     rankingSeason:'فصل', rankingAllTime:'همهٔ زمان‌ها',

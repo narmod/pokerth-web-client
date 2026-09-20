@@ -203,6 +203,7 @@ export const strings = {
     rankingTooltip: 'Sıralama', rankingTitle: 'Sıralama', rankingPth: 'PokerTH', rankingBbc: 'BBC', rankingWec: 'WEC',
     rankingMemberSince: 'Üyelik tarihi', rankingAwards: 'Ödüller', rankingTickets: 'Biletler', rankingThisSeason: 'Bu sezon', rankingThisMonth: 'Bu ay', rankingThisYear: 'Bu yıl', rankingStep: 'Adım', rankingRank: 'Sıralama', rankingBack: 'Geri',
     rankingLoading: 'Yükleniyor…', rankingSoon: 'Sıralama yakında.', rankingError: 'Sıralama yüklenemedi.', rankingEmpty: 'Kayıt yok.',
+    forumTabPosts:'Gönderiler', forumTabEvents:'Etkinlikler', evUpcoming:'Yaklaşan', evResults:'Son sonuçlar', evSignups:'Kayıtlı: {n}', evError:'Etkinlikler yüklenemedi.', evNone:'Yaklaşan etkinlik yok.', evOpenSite:'Siteyi aç',
     forumTooltip:'Forum', forumTitle:'Forum haberleri', forumMarkRead:'Tümünü okundu olarak işaretle', forumOpen:'Forumu aç', forumError:'Forum akışı yüklenemedi.', advForumNews:'Lobi başlığında forum düğmesi', forumOpenPost:'Gönderiyi aç', forumOpenInForum:'Forumda aç', forumTranslate:'Gönderiyi çevir', forumShowOriginal:'Özgün gönderiyi göster', forumTranslateFailed:'Çeviri başarısız oldu.',
     rankingSearch: 'Oyuncu ara…', rankingNoMatch: 'Oyuncu bulunamadı.', rankingSeason: 'Sezon', rankingAllTime: 'Tüm zamanlar',
     rankingColRank: '#', rankingColPlayer: 'Takma ad', rankingColScore: 'Skor', rankingColPoints: 'Puan', rankingColGames: 'Oyunlar',

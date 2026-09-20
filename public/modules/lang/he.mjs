@@ -475,6 +475,7 @@ export const strings = {
     piNoCupData:'אין דירוג גביעים לשחקן הזה.',
     rankingTooltip:'דירוג', rankingTitle:'דירוג', rankingPth:'PokerTH', rankingBbc:'BBC', rankingWec:'WEC',
     rankingLoading:'טוען…', rankingSoon:'הדירוג בקרוב.', rankingError:'לא ניתן היה לטעון את הדירוג.', rankingEmpty:'אין רשומות.',
+    forumTabPosts:'פוסטים', forumTabEvents:'אירועים', evUpcoming:'בקרוב', evResults:'תוצאות אחרונות', evSignups:'נרשמו: {n}', evError:'לא ניתן היה לטעון את האירועים.', evNone:'אין אירועים קרובים.', evOpenSite:'פתיחת האתר',
     forumTooltip:'פורום', forumTitle:'חדשות הפורום', forumMarkRead:'סימון הכול כנקרא', forumOpen:'פתיחת הפורום', forumError:'לא ניתן היה לטעון את פיד הפורום.', advForumNews:'כפתור פורום בכותרת הלובי', forumOpenPost:'פתיחת הפוסט', forumOpenInForum:'פתיחה בפורום', forumTranslate:'תרגום הפוסט', forumShowOriginal:'הצגת הפוסט המקורי', forumTranslateFailed:'התרגום נכשל.',
     rankingSearch:'חיפוש שחקן…', rankingNoMatch:'לא נמצא שחקן.',
     rankingSeason:'עונה', rankingAllTime:'כל הזמנים',

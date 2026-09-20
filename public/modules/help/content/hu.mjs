@@ -212,7 +212,8 @@ export const help = {
               'A jelentkezések, időpontok, asztalbeállítások és eredmények a fórumon jelennek meg, a játékok pedig a hivatalos szerveren zajlanak, mint bármely másik. Az eredmények követéséhez elég egy pokerth.net-fiók; egy kupára a megfelelő fórumtémán keresztül lehet jelentkezni.'] },
         { id: 'forumnews', t: 'Fórumhírek a lobbiban',
           b: ['A lobbi fejlécének újság gombja megnyitja a pokerth.net fórum legfrissebb bejegyzéseit, témánként egy sorral, minden fórum saját színnel. A gombon lévő jelvény a olvasatlan bejegyzéseket számolja; egy bejegyzés megnyitása (új lap) olvasottnak jelöli, az „Összes megjelölése olvasottként” pedig egyszerre töröl mindent.',
-              'Ez webes extra: a gomb elrejthető a speciális beállításokban („Fórum gomb a lobbi fejlécében”).'] },
+              'Ez webes extra: a gomb elrejthető a speciális beállításokban („Fórum gomb a lobbi fejlécében”).',
+              'A(z) „Események” fül a közelgő BBC-játékokat és a következő Monthly Cupot mutatja a jelentkezett játékosok számával, valamint a legutóbbi BBC-, WEC- és Monthly Cup-győzteseket. Az időpontok a helyi időd szerint jelennek meg, egy koppintás pedig megnyitja a közösség oldalát. A(z) „Közösségi tartalom megjelenítése (BBC / WEC)” beállítás elrejti ezt a fület.'] },
         { id: 'avatars', t: 'Avatárok és zászlók',
           b: ['A pokerth.net oldalon az avatárodat az avatárszerver juttatja el a többi játékoshoz, és a játékosdobozokon egy kis országzászló jelenhet meg. Mindkettő választható, és a beállításokban konfigurálható.'] }
       ]

@@ -23,6 +23,7 @@
 //                        cote QML upstream, Config.ForumNews.isUnread.)
 // ═══════════════════════════════════════════════════════════════════
 import { esc } from './misc.mjs';
+import { evShow, evRerender } from './forum-events.mjs';
 
 const FEED_URL = '/api/forumfeed';
 const FORUM_HOME = 'https://www.pokerth.net/';
@@ -34,6 +35,7 @@ let _cache = null;                     // { at, posts } (dedoublonnes)
 let _fetching = null;                  // promesse en vol (dedup des appels)
 let _curPost = null;                   // post affiche dans la vue post
 let _trState = null;                   // { text, shown } traduction du post courant
+let _tab = 'posts';                    // 'posts' | 'events' (onglet Evenements : extension web, forum-events.mjs)
 
 // ── Aides pures (exportees pour scripts/test-forumnews.mjs) ────────────
 // Cle de sujet (forum|titre normalise) : identifie un fil independamment de
@@ -322,6 +324,42 @@ function _showListView() {
   if (footL) footL.style.display = '';
   if (footP) footP.style.display = 'none';
   if (_cache) _renderList(_cache.posts);
+  _applyTab();
+}
+
+// ── Onglets Posts / Evenements (extension web, pas d'equivalent QML) ────
+// L'onglet Evenements est du contenu communautaire : l'option « Afficher le
+// contenu communautaire (BBC / WEC) » masque la barre d'onglets (CSS,
+// body.adv-no-communitycontent) et la fenetre redevient la liste seule.
+function _eventsAllowed() {
+  try { return !document.body.classList.contains('adv-no-communitycontent'); } catch (e) { return true; }
+}
+
+function _applyTab() {
+  if (_tab === 'events' && !_eventsAllowed()) _tab = 'posts';
+  const ev = _tab === 'events';
+  const tabs = document.getElementById('fn-tabs');
+  const lw = document.getElementById('fn-listwrap');
+  const box = document.getElementById('fn-events');
+  const mr = document.getElementById('fn-markread');
+  if (tabs) {
+    tabs.style.display = '';
+    tabs.querySelectorAll('.rk-tab').forEach(function (b) {
+      const on = b.getAttribute('data-tab') === _tab;
+      b.classList.toggle('active', on);
+      b.setAttribute('aria-selected', on ? 'true' : 'false');
+    });
+  }
+  if (lw) lw.style.display = ev ? 'none' : '';
+  if (box) box.style.display = ev ? '' : 'none';
+  if (mr) mr.style.display = ev ? 'none' : '';   // « tout marquer lu » ne concerne que les posts
+  if (ev) evShow(false);
+}
+
+function forumSelectTab(tab) {
+  _tab = tab === 'events' ? 'events' : 'posts';
+  if (_curPost) { _showListView(); return; }
+  _applyTab();
 }
 
 // ── Vue post (parite QML ForumPostPage) ────────────────────────────────
@@ -372,6 +410,9 @@ function _openPostView(p) {
   const footP = document.getElementById('fn-foot-post');
   if (!post) return;
   if (lw) lw.style.display = 'none';
+  // La vue post occupe toute la fenetre : ni onglets ni liste d'evenements.
+  const tabs = document.getElementById('fn-tabs'); if (tabs) tabs.style.display = 'none';
+  const evBox = document.getElementById('fn-events'); if (evBox) evBox.style.display = 'none';
   post.style.display = '';
   if (footL) footL.style.display = 'none';
   if (footP) footP.style.display = '';
@@ -586,4 +627,7 @@ window.forumOpenSite = forumOpenSite;
 window.forumOpenCurrent = forumOpenCurrent;
 window.forumBackToList = forumBackToList;
 window.forumTranslatePost = forumTranslatePost;
+window.forumSelectTab = forumSelectTab;
+// Changement de langue fenetre ouverte : memes donnees, nouveau libelle.
+try { window._onLangChange(function () { try { if (_tab === 'events') evRerender(); } catch (e) {} }); } catch (e) {}
 window._forumLobbyShown = _forumLobbyShown;

@@ -476,6 +476,7 @@ export const strings = {
     piNoCupData:'ഈ കളിക്കാരന് കപ്പ് റാങ്കിംഗില്ല.',
     rankingTooltip:'റാങ്കിംഗ്', rankingTitle:'റാങ്കിംഗ്', rankingPth:'PokerTH', rankingBbc:'BBC', rankingWec:'WEC',
     rankingLoading:'ലോഡ് ചെയ്യുന്നു…', rankingSoon:'റാങ്കിംഗ് ഉടൻ വരുന്നു.', rankingError:'റാങ്കിംഗ് ലോഡ് ചെയ്യാനായില്ല.', rankingEmpty:'എൻട്രികളില്ല.',
+    forumTabPosts:'പോസ്റ്റുകൾ', forumTabEvents:'ഇവന്റുകൾ', evUpcoming:'വരാനിരിക്കുന്നവ', evResults:'ഏറ്റവും പുതിയ ഫലങ്ങൾ', evSignups:'രജിസ്റ്റർ ചെയ്തവർ: {n}', evError:'ഇവന്റുകൾ ലോഡ് ചെയ്യാനായില്ല.', evNone:'വരാനിരിക്കുന്ന ഇവന്റുകളില്ല.', evOpenSite:'സൈറ്റ് തുറക്കുക',
     forumTooltip:'ഫോറം', forumTitle:'ഫോറം വാർത്തകൾ', forumMarkRead:'എല്ലാം വായിച്ചതായി അടയാളപ്പെടുത്തുക', forumOpen:'ഫോറം തുറക്കുക', forumError:'ഫോറം ഫീഡ് ലോഡ് ചെയ്യാനായില്ല.', advForumNews:'ലോബി ഹെഡറിൽ ഫോറം ബട്ടൺ', forumOpenPost:'പോസ്റ്റ് തുറക്കുക', forumOpenInForum:'ഫോറത്തിൽ തുറക്കുക', forumTranslate:'പോസ്റ്റ് വിവർത്തനം ചെയ്യുക', forumShowOriginal:'യഥാർത്ഥ പോസ്റ്റ് കാണിക്കുക', forumTranslateFailed:'വിവർത്തനം പരാജയപ്പെട്ടു.',
     rankingSearch:'ഒരു കളിക്കാരനെ തിരയുക…', rankingNoMatch:'കളിക്കാരനെ കണ്ടെത്തിയില്ല.',
     rankingSeason:'സീസൺ', rankingAllTime:'ഓൾ-ടൈം',

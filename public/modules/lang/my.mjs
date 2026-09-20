@@ -479,6 +479,7 @@ export const strings = {
     piNoCupData:'ဤကစားသမားအတွက် ဖလားအဆင့် မရှိပါ။',
     rankingTooltip:'အဆင့်ဇယား', rankingTitle:'အဆင့်ဇယား', rankingPth:'PokerTH', rankingBbc:'BBC', rankingWec:'WEC',
     rankingLoading:'ဖွင့်နေသည်…', rankingSoon:'အဆင့်ဇယား မကြာမီ လာမည်။', rankingError:'အဆင့်ဇယားကို ဖွင့်မရခဲ့ပါ။', rankingEmpty:'စာရင်း မရှိပါ။',
+    forumTabPosts:'ပို့စ်များ', forumTabEvents:'ပွဲများ', evUpcoming:'လာမည့်', evResults:'နောက်ဆုံးရလဒ်များ', evSignups:'စာရင်းသွင်းသူ: {n}', evError:'ပွဲများကို ဖွင့်၍မရပါ။', evNone:'လာမည့်ပွဲ မရှိပါ။', evOpenSite:'ဆိုက်ကို ဖွင့်ရန်',
     forumTooltip:'ဖိုရမ်', forumTitle:'ဖိုရမ် သတင်းများ', forumMarkRead:'အားလုံးကို ဖတ်ပြီးအဖြစ် မှတ်ရန်', forumOpen:'ဖိုရမ်ကို ဖွင့်ရန်', forumError:'ဖိုရမ် သတင်းစဉ်ကို ဖွင့်မရခဲ့ပါ။', advForumNews:'လော်ဘီခေါင်းစီးတွင် ဖိုရမ်ခလုတ်', forumOpenPost:'ပို့စ်ကို ဖွင့်ရန်', forumOpenInForum:'ဖိုရမ်တွင် ဖွင့်ရန်', forumTranslate:'ပို့စ်ကို ဘာသာပြန်ရန်', forumShowOriginal:'မူရင်းပို့စ်ကို ပြရန်', forumTranslateFailed:'ဘာသာပြန်ခြင်း မအောင်မြင်ပါ။',
     rankingSearch:'ကစားသမားတစ်ဦး ရှာရန်…', rankingNoMatch:'ကစားသမား မတွေ့ပါ။',
     rankingSeason:'ရာသီ', rankingAllTime:'အချိန်အားလုံး',

@@ -477,6 +477,7 @@ export const strings = {
     piNoCupData:'এই খেলোয়াড়ের কোনো কাপ র‍্যাংকিং নেই।',
     rankingTooltip:'র‍্যাংকিং', rankingTitle:'র‍্যাংকিং', rankingPth:'PokerTH', rankingBbc:'BBC', rankingWec:'WEC',
     rankingLoading:'লোড হচ্ছে…', rankingSoon:'র‍্যাংকিং শীঘ্রই আসছে।', rankingError:'র‍্যাংকিং লোড করা যায়নি।', rankingEmpty:'কোনো এন্ট্রি নেই।',
+    forumTabPosts:'পোস্ট', forumTabEvents:'ইভেন্ট', evUpcoming:'আসন্ন', evResults:'সর্বশেষ ফলাফল', evSignups:'নিবন্ধিত: {n}', evError:'ইভেন্টগুলো লোড করা যায়নি।', evNone:'কোনো আসন্ন ইভেন্ট নেই।', evOpenSite:'সাইট খুলুন',
     forumTooltip:'ফোরাম', forumTitle:'ফোরামের খবর', forumMarkRead:'সব পঠিত চিহ্নিত করুন', forumOpen:'ফোরাম খুলুন', forumError:'ফোরাম ফিড লোড করা যায়নি।', advForumNews:'লবি হেডারে ফোরাম বোতাম', forumOpenPost:'পোস্ট খুলুন', forumOpenInForum:'ফোরামে খুলুন', forumTranslate:'পোস্ট অনুবাদ করুন', forumShowOriginal:'মূল পোস্ট দেখান', forumTranslateFailed:'অনুবাদ ব্যর্থ।',
     rankingSearch:'খেলোয়াড় খুঁজুন…', rankingNoMatch:'কোনো খেলোয়াড় পাওয়া যায়নি।',
     rankingSeason:'সিজন', rankingAllTime:'সর্বকালের',

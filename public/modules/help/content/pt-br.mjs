@@ -212,7 +212,8 @@ export const help = {
               'Inscrições, horários, ajustes de mesa e resultados são publicados no fórum, e as partidas acontecem no servidor oficial como qualquer outra. Uma conta pokerth.net basta para acompanhar os resultados; inscrever-se numa copa passa pelo tópico correspondente do fórum.'] },
         { id: 'forumnews', t: 'Novidades do fórum no lobby',
           b: ['O botão de jornal no cabeçalho do lobby abre as últimas mensagens do fórum pokerth.net, uma entrada por tópico, cada fórum com sua cor. O selo no botão conta as mensagens não lidas; abrir uma mensagem (nova aba) a marca como lida, e “Marcar tudo como lido” limpa tudo de uma vez.',
-              'É um extra web: o botão pode ser ocultado nas Opções avançadas (“Botão do fórum no cabeçalho do lobby”).'] },
+              'É um extra web: o botão pode ser ocultado nas Opções avançadas (“Botão do fórum no cabeçalho do lobby”).',
+              'A aba “Eventos” mostra os próximos jogos da BBC e a próxima Monthly Cup com o número de jogadores inscritos, e os últimos vencedores da BBC, da WEC e da Monthly Cup. Os horários estão no seu horário local, e um toque abre o site da comunidade. A opção “Mostrar conteúdo da comunidade (BBC / WEC)” oculta esta aba.'] },
         { id: 'avatars', t: 'Avatares e bandeiras',
           b: ['No pokerth.net, seu avatar é distribuído aos outros jogadores pelo servidor de avatares, e uma pequena bandeira do país pode aparecer nas caixas de jogadores. Ambos são opcionais e configuráveis nas opções.'] }
       ]

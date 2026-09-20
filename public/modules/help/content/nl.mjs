@@ -212,7 +212,8 @@ export const help = {
               'Inschrijvingen, tijden, tafelinstellingen en uitslagen worden op het forum gepubliceerd, en de spellen worden net als alle andere op de officiële server gespeeld. Een pokerth.net-account volstaat om de uitslagen te volgen; je inschrijven voor een cup gaat via het bijbehorende forumdraadje.'] },
         { id: 'forumnews', t: 'Forumnieuws in de lobby',
           b: ['De krantenknop in de lobbykoptekst opent de nieuwste berichten van het pokerth.net-forum, één regel per onderwerp, elk forum met een eigen kleur. De badge op de knop telt de ongelezen berichten; een bericht openen (nieuw tabblad) markeert het als gelezen, en “Alles als gelezen markeren” wist alles in één keer.',
-              'Dit is een webextra: de knop kan worden verborgen in de Geavanceerde opties (“Forumknop in de lobbykoptekst”).'] },
+              'Dit is een webextra: de knop kan worden verborgen in de Geavanceerde opties (“Forumknop in de lobbykoptekst”).',
+              'Het tabblad “Evenementen” toont de komende BBC-spellen en de volgende Monthly Cup met het aantal ingeschreven spelers, en de laatste winnaars van BBC, WEC en Monthly Cup. De tijden zijn in je lokale tijd, en een tik opent de site van de community. De optie “Community-inhoud tonen (BBC / WEC)” verbergt dit tabblad.'] },
         { id: 'avatars', t: 'Avatars en vlaggen',
           b: ['Op pokerth.net wordt je avatar via de avatarserver naar andere spelers verspreid, en kan een kleine landvlag op de spelersvakken verschijnen. Beide zijn optioneel en instelbaar in de opties.'] }
       ]

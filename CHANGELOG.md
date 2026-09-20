@@ -17,6 +17,21 @@ highlights below.
 
 ### Added
 
+- **Forum news: "Events" tab** (`web.110`) — web addition, not in the QML
+  client. A tab bar (`Posts` / `Events`, reusing `.rk-tabs`) sits under the
+  window title; `Events` lists what `/api/events` returns: upcoming BBC step
+  games and the next Monthly Cup with their sign-up count, then the latest
+  BBC / WEC / Monthly Cup winner with the runners-up. Rows reuse the post list
+  look (`.fn-row`, forum colour code) but are links to the community sites
+  only (`evSafeUrl` whitelist). Times arrive as epoch ms and are rendered in the
+  player's zone and UI language through `Intl` ("today" / "tomorrow" on local
+  calendar days, month names) — no date strings to translate. The existing
+  "Show community content (BBC / WEC)" option hides the tab bar, and the bar is
+  hidden while a post is being read; "Mark all as read" only shows on `Posts`.
+  New `public/modules/ui/forum-events.mjs` (precached), wiring in
+  `forumnews.mjs`; 8 new keys in all 64 catalogues (`rankingStep` reused for
+  "Step"), one help paragraph in all 64 corpora,
+  `scripts/test-forum-events.mjs`.
 - **Community events relay `GET /api/events`** (`web.109`) — web addition, not
   in the QML client; server side only for now, the "Events" tab of the Forum
   news window follows. One payload with what is coming up on the community

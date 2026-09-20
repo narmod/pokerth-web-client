@@ -206,6 +206,7 @@ export const strings = {
     rankingTooltip: 'Рейтинг', rankingTitle: 'Рейтинг', rankingPth: 'PokerTH', rankingBbc: 'BBC', rankingWec: 'WEC',
     rankingMemberSince: 'Участник с', rankingAwards: 'Награды', rankingTickets: 'Билеты', rankingThisSeason: 'Этот сезон', rankingThisMonth: 'Этот месяц', rankingThisYear: 'Этот год', rankingStep: 'Ступень', rankingRank: 'Ранг', rankingBack: 'Назад',
     rankingLoading: 'Загрузка…', rankingSoon: 'Рейтинг скоро появится.', rankingError: 'Не удалось загрузить рейтинг.', rankingEmpty: 'Нет записей.',
+    forumTabPosts:'Сообщения', forumTabEvents:'События', evUpcoming:'Скоро', evResults:'Последние результаты', evSignups:'Записалось: {n}', evError:'Не удалось загрузить события.', evNone:'Нет предстоящих событий.', evOpenSite:'Открыть сайт',
     forumTooltip:'Форум', forumTitle:'Новости форума', forumMarkRead:'Отметить всё как прочитанное', forumOpen:'Открыть форум', forumError:'Не удалось загрузить ленту форума.', advForumNews:'Кнопка форума в шапке лобби', forumOpenPost:'Открыть сообщение', forumOpenInForum:'Открыть на форуме', forumTranslate:'Перевести сообщение', forumShowOriginal:'Показать оригинал сообщения', forumTranslateFailed:'Перевод не удался.',
     rankingSearch: 'Поиск игрока…', rankingNoMatch: 'Игрок не найден.', rankingSeason: 'Сезон', rankingAllTime: 'За всё время',
     rankingColRank: '#', rankingColPlayer: 'Никнейм', rankingColScore: 'Счёт', rankingColPoints: 'Очки', rankingColGames: 'Игры',

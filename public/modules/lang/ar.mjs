@@ -478,6 +478,7 @@ export const strings = {
     piNoCupData:'لا تصنيف كؤوس لهذا اللاعب.',
     rankingTooltip:'التصنيف', rankingTitle:'التصنيف', rankingPth:'PokerTH', rankingBbc:'BBC', rankingWec:'WEC',
     rankingLoading:'جارٍ التحميل…', rankingSoon:'التصنيف قريبًا.', rankingError:'تعذّر تحميل التصنيف.', rankingEmpty:'لا مدخلات.',
+    forumTabPosts:'المشاركات', forumTabEvents:'الأحداث', evUpcoming:'القادمة', evResults:'أحدث النتائج', evSignups:'المسجّلون: {n}', evError:'تعذّر تحميل الأحداث.', evNone:'لا توجد أحداث قادمة.', evOpenSite:'فتح الموقع',
     forumTooltip:'المنتدى', forumTitle:'أخبار المنتدى', forumMarkRead:'وضع علامة مقروء على الكل', forumOpen:'فتح المنتدى', forumError:'تعذّر تحميل خلاصة المنتدى.', advForumNews:'زر المنتدى في ترويسة الردهة', forumOpenPost:'فتح المنشور', forumOpenInForum:'فتح في المنتدى', forumTranslate:'ترجمة المنشور', forumShowOriginal:'عرض المنشور الأصلي', forumTranslateFailed:'فشلت الترجمة.',
     rankingSearch:'ابحث عن لاعب…', rankingNoMatch:'لم يُعثر على لاعب.',
     rankingSeason:'الموسم', rankingAllTime:'كل الأوقات',

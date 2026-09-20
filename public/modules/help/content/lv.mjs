@@ -218,7 +218,8 @@ export const help = {
               'Pieteikšanās, grafiki, galda iestatījumi un rezultāti tiek publicēti forumā, un spēles notiek oficiālajā serverī tāpat kā jebkuras citas. Lai sekotu rezultātiem, pietiek ar pokerth.net kontu; pieteikšanās kausam notiek attiecīgajā foruma tēmā.'] },
         { id: 'forumnews', t: 'Foruma jaunumi vestibilā',
           b: ['Avīzes poga vestibila galvenē atver jaunākos pokerth.net foruma ierakstus, pa vienam ierakstam no katras tēmas, katram forumam savā krāsā. Nozīmīte uz pogas skaita neizlasītos ierakstus; ieraksta atvēršana (jaunā cilnē) to atzīmē kā izlasītu, un “Atzīmēt visus kā lasītus” notīra visu uzreiz.',
-              'Šis ir tīmekļa papildinājums: pogu var paslēpt papildu opcijās (“Foruma poga vestibila galvenē”).'] },
+              'Šis ir tīmekļa papildinājums: pogu var paslēpt papildu opcijās (“Foruma poga vestibila galvenē”).',
+              'Cilne “Pasākumi” rāda gaidāmās BBC spēles un nākamo Monthly Cup ar pieteikušos spēlētāju skaitu, kā arī jaunākos BBC, WEC un Monthly Cup uzvarētājus. Laiki ir tavā vietējā laikā, un pieskāriens atver kopienas vietni. Opcija “Rādīt kopienas saturu (BBC / WEC)” paslēpj šo cilni.'] },
         { id: 'avatars', t: 'Avatari un karogi',
           b: ['pokerth.net serverī tavs avatars tiek izplatīts citiem spēlētājiem caur avataru serveri, un uz spēlētāju lodziņiem var rādīt mazu valsts karogu. Abas iespējas ir brīvi izvēlamas un konfigurējamas opcijās.'] }
       ]

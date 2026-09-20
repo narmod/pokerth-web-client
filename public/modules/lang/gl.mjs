@@ -201,6 +201,7 @@ export const strings = {
     rankingTooltip: 'Clasificación', rankingTitle: 'Clasificación', rankingPth: 'PokerTH', rankingBbc: 'BBC', rankingWec: 'WEC',
     rankingMemberSince: 'Membro desde', rankingAwards: 'Premios', rankingTickets: 'Entradas', rankingThisSeason: 'Esta tempada', rankingThisMonth: 'Este mes', rankingThisYear: 'Este ano', rankingStep: 'Paso', rankingRank: 'Rango', rankingBack: 'Atrás',
     rankingLoading: 'Cargando…', rankingSoon: 'Clasificación dispoñible en breve.', rankingError: 'Non se puido cargar a clasificación.', rankingEmpty: 'Sen entradas.',
+    forumTabPosts:'Publicacións', forumTabEvents:'Eventos', evUpcoming:'Proximamente', evResults:'Últimos resultados', evSignups:'Inscritos: {n}', evError:'Non se puideron cargar os eventos.', evNone:'Non hai eventos próximos.', evOpenSite:'Abrir o sitio',
     forumTooltip:'Foro', forumTitle:'Novidades do foro', forumMarkRead:'Marcar todo como lido', forumOpen:'Abrir o foro', forumError:'Non se puido cargar a canle do foro.', advForumNews:'Botón do foro na cabeceira do lobby', forumOpenPost:'Abrir a mensaxe', forumOpenInForum:'Abrir no foro', forumTranslate:'Traducir a mensaxe', forumShowOriginal:'Mostrar a mensaxe orixinal', forumTranslateFailed:'A tradución fallou.',
     rankingSearch: 'Buscar un xogador…', rankingNoMatch: 'Ningún xogador atopado.', rankingSeason: 'Tempada', rankingAllTime: 'De sempre',
     rankingColRank: '#', rankingColPlayer: 'Alcume', rankingColScore: 'Puntuación', rankingColPoints: 'Puntos', rankingColGames: 'Partidas',

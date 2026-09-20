@@ -211,7 +211,8 @@ export const help = {
               'Přihlášky, termíny, nastavení stolů a výsledky se zveřejňují na fóru a hry probíhají na oficiálním serveru jako každé jiné. Ke sledování výsledků stačí účet pokerth.net; přihlášení do poháru vede přes odpovídající vlákno fóra.'] },
         { id: 'forumnews', t: 'Novinky z fóra v lobby',
           b: ['Tlačítko s novinami v záhlaví lobby otevře nejnovější příspěvky z fóra pokerth.net — jeden záznam na téma, každé fórum má svou barvu. Odznak na tlačítku počítá nepřečtené příspěvky; otevření příspěvku (nová karta) jej označí jako přečtený a „Označit vše jako přečtené“ vše naráz vymaže.',
-              'Jde o webový doplněk: tlačítko lze skrýt v pokročilých volbách („Tlačítko fóra v záhlaví lobby“).'] },
+              'Jde o webový doplněk: tlačítko lze skrýt v pokročilých volbách („Tlačítko fóra v záhlaví lobby“).',
+              'Karta „Události“ ukazuje nadcházející hry BBC a příští Monthly Cup s počtem přihlášených hráčů a poslední vítěze BBC, WEC a Monthly Cupu. Časy jsou ve vašem místním čase a klepnutí otevře web komunity. Volba „Zobrazovat obsah komunity (BBC / WEC)“ tuto kartu skryje.'] },
         { id: 'avatars', t: 'Avatary a vlajky',
           b: ['Na pokerth.net se tvůj avatar rozesílá ostatním hráčům přes avatarový server a na hráčských boxech se může zobrazovat malá vlajka země. Obojí je volitelné a nastavitelné v možnostech.'] }
       ]

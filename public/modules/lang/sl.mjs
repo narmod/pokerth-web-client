@@ -478,6 +478,7 @@ export const strings = {
     piNoCupData:'Za tega igralca ni podatkov o pokalih.',
     rankingTooltip:'Uvrstitev', rankingTitle:'Uvrstitev', rankingPth:'PokerTH', rankingBbc:'BBC', rankingWec:'WEC',
     rankingLoading:'Nalaganje…', rankingSoon:'Uvrstitev bo kmalu na voljo.', rankingError:'Uvrstitve ni bilo mogoče naložiti.', rankingEmpty:'Ni vnosov.',
+    forumTabPosts:'Objave', forumTabEvents:'Dogodki', evUpcoming:'Prihajajoče', evResults:'Zadnji rezultati', evSignups:'Prijavljenih: {n}', evError:'Dogodkov ni bilo mogoče naložiti.', evNone:'Ni prihajajočih dogodkov.', evOpenSite:'Odpri spletno mesto',
     forumTooltip:'Forum', forumTitle:'Novice foruma', forumMarkRead:'Označi vse kot prebrano', forumOpen:'Odpri forum', forumError:'Vira foruma ni bilo mogoče naložiti.', advForumNews:'Gumb foruma v glavi predverja', forumOpenPost:'Odpri objavo', forumOpenInForum:'Odpri na forumu', forumTranslate:'Prevedi objavo', forumShowOriginal:'Prikaži izvirno objavo', forumTranslateFailed:'Prevajanje ni uspelo.',
     rankingSearch:'Išči igralca…', rankingNoMatch:'Igralec ni najden.',
     rankingSeason:'Sezona', rankingAllTime:'Vseh časov',

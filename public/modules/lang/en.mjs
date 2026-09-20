@@ -479,6 +479,7 @@ export const strings = {
     piNoCupData:'No cup ranking for this player.',
     rankingTooltip:'Ranking', rankingTitle:'Ranking', rankingPth:'PokerTH', rankingBbc:'BBC', rankingWec:'WEC',
     rankingLoading:'Loading…', rankingSoon:'Ranking coming soon.', rankingError:'Could not load the ranking.', rankingEmpty:'No entries.',
+    forumTabPosts:'Posts', forumTabEvents:'Events', evUpcoming:'Upcoming', evResults:'Latest results', evSignups:'Signed up: {n}', evError:'Could not load the events.', evNone:'No upcoming events.', evOpenSite:'Open the site',
     forumTooltip:'Forum', forumTitle:'Forum news', forumMarkRead:'Mark all as read', forumOpen:'Open the forum', forumError:'Could not load the forum feed.', advForumNews:'Forum button in the lobby header', forumOpenPost:'Open the post', forumOpenInForum:'Open in the forum', forumTranslate:'Translate the post', forumShowOriginal:'Show the original post', forumTranslateFailed:'Translation failed.',
     rankingSearch:'Search a player…', rankingNoMatch:'No player found.',
     rankingSeason:'Season', rankingAllTime:'All-Time',

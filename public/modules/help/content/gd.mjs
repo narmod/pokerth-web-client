@@ -212,7 +212,8 @@ export const help = {
               'Thèid clàraidhean, amannan, roghainnean bùird agus toraidhean fhoillseachadh air an fhòram, agus thèid na geamannan a chluich air an fhrithealaiche oifigeil mar a h-uile geama eile. Tha cunntas pokerth.net gu leòr gus na toraidhean a leantainn; thèid clàradh airson cupa tron t-snàithlean fòraim a bhuineas dha.'] },
         { id: 'forumnews', t: 'Naidheachdan an fhòraim san lobaidh',
           b: ['Fosglaidh putan a\' phàipeir-naidheachd ann an ceann an lobaidh na puist as ùire bho fhòram pokerth.net, aon inntrig airson gach cuspair, agus dath fhèin aig gach fòram. Cunntaidh am bràiste air a\' phutan na puist gun leughadh; ma dh\'fhosglas tu post (taba ùr) thèid a chomharrachadh mar leughte, agus glanaidh “Comharraich na h-uile mar leughte” a h-uile càil aig an aon àm.',
-              '\'S e leudachadh-lìn a th\' ann: gabhaidh am putan fhalach anns na roghainnean adhartach (“Putan an fhòraim ann an ceann an lobaidh”).'] },
+              '\'S e leudachadh-lìn a th\' ann: gabhaidh am putan fhalach anns na roghainnean adhartach (“Putan an fhòraim ann an ceann an lobaidh”).',
+              'Seallaidh an taba “Tachartasan” na geamannan BBC ri thighinn agus an ath Monthly Cup le àireamh nan cluicheadairean clàraichte, agus na buannaichean BBC, WEC is Monthly Cup as ùire. Tha na h-uairean san àm ionadail agad, agus fosglaidh gnogag làrach na coimhearsnachd. Falaichidh an roghainn “Seall susbaint na coimhearsnachd (BBC / WEC)” an taba seo.'] },
         { id: 'avatars', t: 'Avataran agus brataichean',
           b: ['Air pokerth.net thèid an t-avatar agad a sgaoileadh gu cluicheadairean eile tron fhrithealaiche avatar, agus faodaidh bratach bheag dùthcha nochdadh air bogsaichean nan cluicheadairean. Tha an dà chuid roghainneil agus gan rèiteachadh sna roghainnean.'] }
       ]

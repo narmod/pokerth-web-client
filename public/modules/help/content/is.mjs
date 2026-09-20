@@ -317,7 +317,8 @@ export const help = {
           t: "Fréttir af spjallborðinu í anddyrinu",
           b: [
             "Dagblaðshnappurinn í haus anddyrisins opnar nýjustu innleggin á spjallborði pokerth.net, eina færslu fyrir hvert efni, hvert spjallborð í sínum lit. Merki á hnappinum telur ólesin innlegg; ef innlegg er opnað (nýr flipi) er það merkt sem lesið, og „Merkja allt sem lesið“ hreinsar allt í einu.",
-            "Þetta er vefviðbót: hægt er að fela hnappinn í ítarlegum valkostum („Spjallborðshnappur í haus anddyris“)."] },
+            "Þetta er vefviðbót: hægt er að fela hnappinn í ítarlegum valkostum („Spjallborðshnappur í haus anddyris“).",
+            "Flipinn „Viðburðir“ sýnir næstu BBC-leiki og næsta Monthly Cup með fjölda skráðra spilara, og nýjustu sigurvegara BBC, WEC og Monthly Cup. Tímar eru á staðartíma þínum og snerting opnar vef samfélagsins. Valkosturinn „Sýna samfélagsefni (BBC / WEC)“ felur þennan flipa."] },
         { id: "avatars",
           t: "Avatarar og fánar",
           b: [

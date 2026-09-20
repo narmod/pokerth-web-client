@@ -212,7 +212,8 @@ export const help = {
               'Registracijos, laikai, stalo nustatymai ir rezultatai skelbiami forume, o partijos žaidžiamos oficialiame serveryje kaip ir visos kitos. Rezultatams sekti užtenka pokerth.net paskyros; į taurę registruojamasi atitinkamoje forumo gijoje.'] },
         { id: 'forumnews', t: 'Forumo naujienos vestibiulyje',
           b: ['Laikraščio mygtukas vestibiulio antraštėje atveria naujausius pokerth.net forumo įrašus — po vieną įrašą temai, kiekvienas forumas turi savo spalvą. Ženkliukas ant mygtuko skaičiuoja neskaitytus įrašus; atidarius įrašą (naujame skirtuke) jis pažymimas skaitytu, o „Pažymėti viską kaip skaityta“ viską išvalo iš karto.',
-              'Tai žiniatinklio priedas: mygtuką galima paslėpti išplėstinėse parinktyse („Forumo mygtukas vestibiulio antraštėje“).'] },
+              'Tai žiniatinklio priedas: mygtuką galima paslėpti išplėstinėse parinktyse („Forumo mygtukas vestibiulio antraštėje“).',
+              'Skirtukas „Renginiai“ rodo artėjančius BBC žaidimus ir kitą Monthly Cup su užsiregistravusių žaidėjų skaičiumi bei naujausius BBC, WEC ir Monthly Cup nugalėtojus. Laikas rodomas jūsų vietos laiku, o bakstelėjus atidaroma bendruomenės svetainė. Parinktis „Rodyti bendruomenės turinį (BBC / WEC)“ paslepia šį skirtuką.'] },
         { id: 'avatars', t: 'Avatarai ir vėliavos',
           b: ['pokerth.net svetainėje tavo avataras platinamas kitiems žaidėjams per avatarų serverį, o ant žaidėjų dėžučių gali būti rodoma maža šalies vėliava. Abu dalykai pasirenkami ir nustatomi parinktyse.'] }
       ]

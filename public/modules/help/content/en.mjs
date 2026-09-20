@@ -216,7 +216,8 @@ export const help = {
               'Sign-ups, schedules, table settings and results are published on the forum, and the games are played on the official server like any other. A pokerth.net account is enough to follow the results; entering a cup goes through the matching forum thread.'] },
         { id: 'forumnews', t: 'Forum news in the lobby',
           b: ['The newspaper button in the lobby header opens the latest posts from the pokerth.net forum, one entry per topic, each forum with its own colour. The badge on the button counts unread posts; opening a post (new tab) marks it as read, and “Mark all as read” clears everything at once.',
-              'This is a web extra: the button can be hidden in Advanced options (“Forum button in the lobby header”).'] },
+              'This is a web extra: the button can be hidden in Advanced options (“Forum button in the lobby header”).',
+              'The “Events” tab shows the upcoming BBC games and the next Monthly Cup with the number of players signed up, and the latest BBC, WEC and Monthly Cup winners. Times are in your local time, and a tap opens the community site. The option “Show community content (BBC / WEC)” hides this tab.'] },
         { id: 'avatars', t: 'Avatars and flags',
           b: ['On pokerth.net your avatar is distributed to other players through the avatar server, and a small country flag can be shown on player boxes. Both are optional and configurable in the options.'] }
       ]

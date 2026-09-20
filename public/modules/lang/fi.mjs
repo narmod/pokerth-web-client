@@ -200,6 +200,7 @@ export const strings = {
     rankingTooltip: 'Sijoituslista', rankingTitle: 'Sijoituslista', rankingPth: 'PokerTH', rankingBbc: 'BBC', rankingWec: 'WEC',
     rankingMemberSince: 'Jäsen alkaen', rankingAwards: 'Palkinnot', rankingTickets: 'Liput', rankingThisSeason: 'Tämä kausi', rankingThisMonth: 'Tässä kuussa', rankingThisYear: 'Tänä vuonna', rankingStep: 'Taso', rankingRank: 'Sija', rankingBack: 'Takaisin',
     rankingLoading: 'Ladataan…', rankingSoon: 'Sijoituslista tulossa pian.', rankingError: 'Sijoituslistaa ei voitu ladata.', rankingEmpty: 'Ei merkintöjä.',
+    forumTabPosts:'Viestit', forumTabEvents:'Tapahtumat', evUpcoming:'Tulossa', evResults:'Viimeisimmät tulokset', evSignups:'Ilmoittautuneita: {n}', evError:'Tapahtumia ei voitu ladata.', evNone:'Ei tulevia tapahtumia.', evOpenSite:'Avaa sivusto',
     forumTooltip:'Foorumi', forumTitle:'Foorumin uutiset', forumMarkRead:'Merkitse kaikki luetuiksi', forumOpen:'Avaa foorumi', forumError:'Foorumin syötettä ei voitu ladata.', advForumNews:'Foorumipainike aulan yläpalkissa', forumOpenPost:'Avaa viesti', forumOpenInForum:'Avaa foorumilla', forumTranslate:'Käännä viesti', forumShowOriginal:'Näytä alkuperäinen viesti', forumTranslateFailed:'Käännös epäonnistui.',
     rankingSearch: 'Etsi pelaajaa…', rankingNoMatch: 'Pelaajaa ei löytynyt.', rankingSeason: 'Kausi', rankingAllTime: 'Kaikkien aikojen',
     rankingColRank: '#', rankingColPlayer: 'Nimimerkki', rankingColScore: 'Tulos', rankingColPoints: 'Pisteet', rankingColGames: 'Pelit',

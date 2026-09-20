@@ -476,6 +476,7 @@ export const strings = {
     piNoCupData:'ለዚህ ተጫዋች የዋንጫ ደረጃ የለም።',
     rankingTooltip:'ደረጃ', rankingTitle:'ደረጃ', rankingPth:'PokerTH', rankingBbc:'BBC', rankingWec:'WEC',
     rankingLoading:'በመጫን ላይ…', rankingSoon:'ደረጃ በቅርቡ ይመጣል።', rankingError:'ደረጃውን መጫን አልተቻለም።', rankingEmpty:'ግቤቶች የሉም።',
+    forumTabPosts:'ልጥፎች', forumTabEvents:'ዝግጅቶች', evUpcoming:'በቅርቡ', evResults:'የቅርብ ውጤቶች', evSignups:'የተመዘገቡ: {n}', evError:'ዝግጅቶቹን መጫን አልተቻለም።', evNone:'የሚመጡ ዝግጅቶች የሉም።', evOpenSite:'ድረ-ገጹን ክፈት',
     forumTooltip:'መድረክ', forumTitle:'የመድረክ ዜናዎች', forumMarkRead:'ሁሉንም እንደተነበበ ምልክት አድርግ', forumOpen:'መድረኩን ክፈት', forumError:'የመድረክ ምግቡን መጫን አልተቻለም።', advForumNews:'በሎቢ ራስጌ ውስጥ የመድረክ አዝራር', forumOpenPost:'ልጥፉን ክፈት', forumOpenInForum:'በመድረክ ውስጥ ክፈት', forumTranslate:'ልጥፉን ተርጉም', forumShowOriginal:'ዋናውን ልጥፍ አሳይ', forumTranslateFailed:'ትርጉም አልተሳካም።',
     rankingSearch:'ተጫዋች ፈልግ…', rankingNoMatch:'ተጫዋች አልተገኘም።',
     rankingSeason:'ወቅት', rankingAllTime:'የሁልጊዜ',
