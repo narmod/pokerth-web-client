@@ -54,3 +54,6 @@ polls.json
 
 # Work files of scripts/lang-tools (translation chunks, TSV dumps).
 .lang-work/
+
+# Screenshots written by scripts/test-mobile-browser.mjs (local review only).
+/test-artifacts/
