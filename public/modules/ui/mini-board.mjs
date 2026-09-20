@@ -116,6 +116,37 @@ function sync() {
     el.setAttribute('aria-label', t('communityCards') + ': ' + spoken);
   }
   el.hidden = false;
+  _dodgeSelf(el, zone);
+}
+
+// Short landscape phones (zone ~270 px high): at x2 the magnified self box
+// reaches the top of the zone and the centred mini-board would sit on the
+// player's own hole cards. Dock it beside the self box instead - right side
+// first, then left - between the box and the floating buttons; if neither side
+// has room, hide it (own cards matter more than the board copy).
+function _dodgeSelf(el, zone) {
+  el.style.left = ''; el.style.transform = '';                  // back to the centred CSS position
+  const me = document.querySelector('#g-seats .seat.me .seat-plate') || document.querySelector('#g-seats .seat.me');
+  if (!me) return;
+  const hit = function (a, b) { return a.left < b.right && b.left < a.right && a.top < b.bottom && b.top < a.bottom; };
+  const r = el.getBoundingClientRect(), m = me.getBoundingClientRect();
+  if (!hit(r, m)) return;
+  const zr = zone.getBoundingClientRect();
+  let minX = zr.left + 8, maxX = zr.right - 8;
+  ['chat-toggle-btn', 'react-toggle-btn', 'hands-toggle-btn', 'log-toggle-btn'].forEach(function (id) {
+    const b = document.getElementById(id);
+    if (!b) return;
+    const br = b.getBoundingClientRect();
+    if (br.width < 2 || br.bottom <= r.top || br.top >= r.bottom) return;
+    if (br.left + br.width / 2 < zr.left + zr.width / 2) minX = Math.max(minX, br.right + 6);
+    else maxX = Math.min(maxX, br.left - 6);
+  });
+  let x = null;
+  if (m.right + 8 + r.width <= maxX) x = m.right + 8;
+  else if (m.left - 8 - r.width >= minX) x = m.left - 8 - r.width;
+  if (x === null) { el.hidden = true; return; }
+  el.style.transform = 'none';
+  el.style.left = (x - zr.left) + 'px';
 }
 
 // Coalesced: once on the next frame, and once after the 220 ms pan animation

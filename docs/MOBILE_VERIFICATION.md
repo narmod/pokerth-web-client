@@ -10,7 +10,12 @@ npm run test:mobile                      # all profiles
 PTH_MOBILE=ios npm run test:mobile       # iPhone profiles only (WebKit)
 PTH_MOBILE=android npm run test:mobile   # Pixel / Galaxy profiles only (Chromium)
 PTH_DEVICES="iPhone 15,Pixel 7" npm run test:mobile
+PTH_ENGINE=chromium npm run test:mobile  # every profile in one engine (iPhone viewports without WebKit)
 ```
+
+On GitHub the `Mobile verification` workflow runs the same command on every push
+that touches `public/`; failed checks appear as annotations on the run page and
+the screenshots are attached as the `mobile-screenshots` artifact.
 
 | Family | Engine | Profiles |
 |---|---|---|

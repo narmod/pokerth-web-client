@@ -1,4 +1,7 @@
-2026-09-20 version 2.1.9-web.91 (current series):
+2026-09-20 version 2.1.9-web.92 (current series):
+- bugfix: mobile magnifier in landscape on short phones - the small copy of the community cards no longer covers your own cards; it now sits beside your box
+
+2026-09-20 version 2.1.9-web.91:
 - new: mobile magnifier - on your turn, when the community cards are out of view, a small copy of them appears at the top of the table so you can always read the board; tap it to jump to the cards and back. It follows your deck, Interface size and High contrast settings
 
 2026-09-20 version 2.1.9-web.90:

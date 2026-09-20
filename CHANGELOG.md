@@ -174,6 +174,11 @@ highlights below.
 
 ### Fixed
 
+- **Mobile magnifier: mini-board over the player's own cards** (`web.92`) — on
+  short landscape phones (iPhone 15 landscape, 734×343) the magnified self box
+  reaches the top of the zone and the centred mini-board sat on the hole cards.
+  It now docks beside the self box (right, else left, else hidden). Found by
+  the new `npm run test:mobile` on its first CI run (WebKit and Chromium alike).
 - **Mobile magnifier: self box off-screen on "my turn"** (`web.90`) —
   `renderSeats` anchors the self box on the felt centre, measured with
   `getBoundingClientRect()`; `.felt-oval` sits inside `#g-zoom-layer`, so under

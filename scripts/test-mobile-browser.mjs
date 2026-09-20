@@ -22,6 +22,8 @@
 // Options (env):  PTH_MOBILE=all|ios|android     (default all)
 //                 PTH_DEVICES="iPhone 15,Pixel 7" (exact Playwright device names)
 //                 PTH_SHOTS=0                     (no screenshots)
+//                 PTH_ENGINE=chromium|webkit      (force one engine for every profile,
+//                                                  e.g. iPhone viewports without WebKit)
 // Screenshots:    test-artifacts/mobile/<device>-<step>.png (git-ignored) - open
 //                 them after a UI change: the assertions catch geometry, the eye
 //                 catches the rest.
@@ -330,12 +332,13 @@ console.log('test-mobile-browser - ' + plan.map((d) => d.name).join(', '));
 let enginesRun = 0; const skipped = [];
 for (const fam of ['ios', 'android']) {
   const list = plan.filter((d) => d.family === fam); if (!list.length) continue;
-  const [engineName, engine] = ENGINES[fam];
+  const forced = (process.env.PTH_ENGINE || '').toLowerCase();
+  const [engineName, engine] = forced === 'chromium' ? ['chromium', chromium] : forced === 'webkit' ? ['webkit', webkit] : ENGINES[fam];
   let browser;
   try { browser = await engine.launch({ headless: true }); }
   catch (error) { skipped.push(`${engineName} (${fam}): not installed - run "npx playwright install ${engineName}"`); continue; }
   enginesRun++;
-  console.log(`\n== ${fam === 'ios' ? 'iOS Safari (WebKit' : 'Android Chrome (Chromium'} ${browser.version()}) ==`);
+  console.log(`\n== ${fam === 'ios' ? 'iOS profiles' : 'Android profiles'} - ${engineName} ${browser.version()} ==`);
   try { for (const d of list) await runDevice(browser, d.name); } finally { await browser.close(); }
 }
 server.close();
