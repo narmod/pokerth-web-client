@@ -275,10 +275,12 @@ use too. Items are grouped by status rather than fixed phases.
   filled into `SEO_FAQ_I18N` in batches. Until an entry lands, that language
   falls back to English and is not advertised, so the live site is never in a
   half-finished state.
-- **Native review of the smaller languages** — the `/rules` translations for
-  Hindi, Urdu, Bengali, Tamil and Scottish Gaelic were written without an
-  established poker vocabulary to lean on. Worth a pass from a native speaker
-  before they are treated as settled.
+- **Native review of the smaller languages** — the translations for Hindi,
+  Urdu, Bengali, Tamil, Telugu, Malayalam, Marathi, Kannada, Gujarati, Scottish
+  Gaelic and Icelandic were written without an established poker vocabulary to
+  lean on (catalogue, help, welcome notices and the `/rules`, `/faq`, hands,
+  how-to and glossary pages alike). Worth a pass from a native speaker before
+  they are treated as settled.
 
 
 - **Code health**

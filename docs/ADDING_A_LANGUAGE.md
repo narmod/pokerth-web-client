@@ -141,6 +141,37 @@ watchdog threshold. Restrict the substitution to a digit pair followed by a
 word that actually names languages, then **read the diff** before committing.
 Those three regressions were caught by eye, not by any test.
 
+The same trap has a second form in `proxy.js`: there the count is also a
+runtime constant. At 60 languages, `60` was at once the language count, a dozen
+timers (`60 * 1000`), several string limits (`slice(0, 60)`) and a protocol
+enum value (`60:'KickPetitionUpdate'`). Scope the substitution to the
+`SEO_BODY_I18N` and `SEO_FAQ_I18N` tables plus the English "NN languages"
+phrases, then check in the diff that no timer, limit or enum line moved.
+Several languages do not write the count in ASCII digits: Bengali, Khmer and
+Persian/Urdu use native digits, Arabic and Urdu spell it out in places, and
+`proxy.js` stores most of them as `\uXXXX` escapes. Evaluate the tables and
+check entry by entry (`SEO_BODY_I18N[lang].g`, `SEO_FAQ_I18N[lang].qa[9]`,
+the `faqP:` / `lead:` lines of `seo-i18n/`) rather than trusting a grep.
+
+## Caps that follow the language count
+
+The admin-editable language maps in `proxy.js` — welcome, guest, registered and
+LAN notices, and the poll labels — keep at most 90 entries when saved. The cap
+used to be 60 and was only noticed when the 61st language landed: the last
+language would have been dropped silently on the next save. If the client ever
+approaches 90 languages, raise it first.
+
+## Translate the glossary from the reference, not from memory
+
+`glossary.js` entries are positional: entry *n* is the definition of term *n*
+of `_SEO_GLOSSARY` in `proxy.js` (54 terms; index 19 is **Freeroll**). Writing
+definitions from general poker knowledge instead of translating the English
+reference once put a gutshot definition under the Freeroll headword, and the
+suite did not see it: `test-seo-glossary-i18n` checks the entry count and, for
+the scripts it lists, that no Latin word is left in a definition — not that
+the definition matches its term. Translate term by term with the English list
+open.
+
 ## What the tests cannot check
 
 Every catalogue in this repo is machine-assisted (see the README), and the

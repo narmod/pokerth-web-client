@@ -30,7 +30,7 @@ ok(/d\.guestNotice && typeof d\.guestNotice === 'object'/.test(proxy),
   'POST /admin/config accepts a guestNotice payload');
 ok(/'welcome', 'guestNotice',/.test(proxy),
   'export/import allow-list keeps guestNotice (no wipe on config round-trip)');
-// Same size caps as the welcome message (title 200, body 4000, 60 languages).
+// Same size caps as the welcome message (title 200, body 4000, 90 languages).
 const gwBlock = proxy.slice(proxy.indexOf("d.guestNotice && typeof d.guestNotice === 'object'"));
 ok(/slice\(0, 200\)/.test(gwBlock.slice(0, 1200)) && /slice\(0, 4000\)/.test(gwBlock.slice(0, 1200)),
   'guestNotice validation caps title/body like the welcome message');
