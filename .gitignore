@@ -51,3 +51,6 @@ polls.json
 # never conflicts on them, like decks.json / themes.json above).
 /public/seats/seats.json
 /public/table/tables.json
+
+# Work files of scripts/lang-tools (translation chunks, TSV dumps).
+.lang-work/

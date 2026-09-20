@@ -8,6 +8,11 @@ read its commits if anything below is unclear.
 Budget, per language: about 70 KB of UI catalogue, 40 KB of help corpus and
 15 KB of SEO copy. It does not fit in one sitting.
 
+The mechanical parts — extracting the strings, rebuilding the files in the shape
+of the English reference, the wiring, the language count — are scripted in
+[`scripts/lang-tools/`](../scripts/lang-tools/README.md). The steps below say
+what has to be true at the end, whichever way you get there.
+
 ## The three steps
 
 The steps are ordered so that the suite is green after each commit. Steps 1

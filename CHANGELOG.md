@@ -55,6 +55,10 @@ highlights below.
   the visitor's country (`es-AR` → Argentina…, `/flags/<cc>.svg`), Mexico by
   default, and `es-<country>` browser locales of the Americas resolve to it.
   `es` is now labelled "Español (España)".
+- **Language tooling** — `scripts/lang-tools/`: catalogue and help-corpus
+  extraction/rebuild, parity check, wiring and a `\uXXXX`-aware language-count
+  bump for the SEO tables. Replays the Uzbek rollout byte for byte (docs/tools
+  only, no version bump).
 - **Uzbek** (`uz`, Latin script), full UI catalogue, help corpus, SEO content
   pages (incl. `/rules` and `/faq`) and guest/registered/LAN broadcast notices
   (`web.85`–`86`) — 63 languages total.
