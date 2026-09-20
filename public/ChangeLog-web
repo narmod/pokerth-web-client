@@ -1,4 +1,7 @@
-2026-09-20 version 2.1.9-web.82 (current series):
+2026-09-20 version 2.1.9-web.83 (current series):
+- new: the rules, FAQ, poker hands, how-to-play and glossary pages are now available in Latin-American Spanish too
+
+2026-09-20 version 2.1.9-web.82:
 - new: Latin-American Spanish (Español - Latinoamérica) is now a language of its own, with the vocabulary used in the Americas (computadora, celular, pozo...) - 62 languages in total
 - new: its flag in the language list follows your country (Argentina, Colombia, Chile...), Mexico when the browser does not say
 - improvement: browsers set to a Latin-American Spanish locale get it automatically; the existing Spanish is now listed as Español (España)

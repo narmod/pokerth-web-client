@@ -48,8 +48,10 @@ highlights below.
   total.
 - **Latin-American Spanish (`es-419`)**, a regional catalogue derived from `es`
   (computadora, celular, presionar, mouse, pozo…) with its help corpus and
-  guest/registered/LAN notices (`web.82`) — 62 languages total; SEO content
-  pages to follow. One catalogue for the whole region: the picker flag follows
+  guest/registered/LAN notices and SEO content pages (`web.82`–`83`) — 62 languages total. The hreflang
+  aliases of the Americas (`es-MX`, `es-AR`, `es-CO`, `es-CL`, `es-PE`, `es-VE`,
+  `es-US`) now point at `es-419`, itself advertised as a page language, and
+  `es-ES` at `es`. One catalogue for the whole region: the picker flag follows
   the visitor's country (`es-AR` → Argentina…, `/flags/<cc>.svg`), Mexico by
   default, and `es-<country>` browser locales of the Americas resolve to it.
   `es` is now labelled "Español (España)".

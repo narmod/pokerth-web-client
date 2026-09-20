@@ -134,6 +134,40 @@ var PARTS = {
     seeH2: 'Verlo en la mesa',
     seeP: 'PokerTH nombra tu mejor jugada actual bajo la mesa mientras juegas, de modo que nunca tengas que deducirla con el reloj en contra, y en el showdown muestra cada mano revelada con las cinco cartas que contaron resaltadas. Practicar sin conexión contra los oponentes del ordenador es la forma más rápida de aprenderse el orden de memoria.'
   },
+  'es-419': {
+    title: 'Jugadas de póker — orden de las manos en Texas Hold’em',
+    desc: 'Las diez jugadas del póker Texas Hold’em ordenadas de la escalera real a la carta alta, con ejemplos, la probabilidad de cada una y cómo se resuelven los kickers y los empates.',
+    ldHeadline: 'Jugadas de póker — Texas Hold’em',
+    ldDesc: 'Las diez jugadas del Texas Hold’em en orden, con ejemplos, frecuencias y reglas de desempate.',
+    h1: 'Jugadas de póker',
+    lead: 'En Texas Hold’em las manos se ordenan de la más fuerte a la más débil como sigue. Una mano son siempre exactamente cinco cartas, elegidas entre las siete que ves : tus dos cartas privadas y las cinco comunitarias. Nunca estás obligado a usar las tuyas — si la mesa por sí sola forma las mejores cinco, esa también es tu mano.',
+    names: ['Escalera Real', 'Escalera de Color', 'Póker', 'Full', 'Color', 'Escalera', 'Trío', 'Doble Pareja', 'Pareja', 'Carta Alta'],
+    texts: [
+      'A K Q J 10, todas del mismo palo. La mejor mano posible : no se puede ganar, solo empatar.',
+      'Cinco cartas consecutivas del mismo palo. Entre dos escaleras de color gana la de carta más alta.',
+      'Cuatro cartas del mismo valor. La quinta carta (el kicker) resuelve el raro empate cuando el póker está en la mesa.',
+      'Un trío más una pareja. Primero se compara el trío y después la pareja.',
+      'Cinco cartas del mismo palo, sin ser consecutivas. Se comparan una a una empezando por la más alta ; ningún palo vale más que otro.',
+      'Cinco cartas consecutivas de palos mezclados. El as juega alto (10-J-Q-K-A) o bajo (A-2-3-4-5), nunca las dos cosas a la vez.',
+      'Tres cartas del mismo valor, más dos cartas sin relación.',
+      'Dos parejas distintas más una quinta carta. Se compara primero la pareja alta, luego la baja y luego el kicker.',
+      'Dos cartas del mismo valor más tres cartas sin relación, comparadas en orden.',
+      'Ninguna de las anteriores. Decide la carta más alta, luego la siguiente, y así sucesivamente.'
+    ],
+    dealt: 'aparece en el %s de las manos de siete cartas',
+    tiesH2: 'Cómo se resuelven los empates',
+    tiesP: 'Primero se compara la categoría : cualquier color gana a cualquier escalera, sean cuales sean las cartas. Dentro de la misma categoría se compara valor por valor empezando por arriba. Lo que sobra tras la jugada se llama <em>kicker</em>, y decide muchas más manos de las que esperan los principiantes : A♠ K♦ y A♣ 7♥ forman pareja de ases en una mesa A-9-4, pero el rey supera al siete. Los palos nunca desempatan en Hold’em — dos jugadores con los mismos cinco valores reparten el pozo hasta la última ficha.',
+    wrongH2: 'Errores frecuentes',
+    wrong: [
+      'El as es a la vez la carta más alta y la más baja de una escalera : A-K-Q-J-10 es la mejor, A-2-3-4-5 (la <em>rueda</em>) la peor. La secuencia no da la vuelta — Q-K-A-2-3 no vale absolutamente nada.',
+      'Un color son cinco cartas de un palo, no cuatro. Cuatro corazones entre tu mano y la mesa no valen nada por sí solos.',
+      'Un trío formado con una pareja de tu mano más una carta de la mesa se llama <em>set</em> ; formado con una carta tuya más una pareja en la mesa son <em>trips</em>. Misma categoría, fuerza muy distinta, porque los trips los ve todo el mundo.',
+      'Solo cuentan las mejores cinco cartas. Con dos parejas y una tercera pareja en la mesa tienes doble pareja, no triple.',
+      'Los porcentajes de arriba indican con qué frecuencia aparece cada jugada al llegar al river sobre siete cartas, no con qué frecuencia gana. La doble pareja parece común y aún así va por delante de casi todo lo que se encuentra.'
+    ],
+    seeH2: 'Verlo en la mesa',
+    seeP: 'PokerTH nombra tu mejor jugada actual bajo la mesa mientras juegas, de modo que nunca tengas que deducirla con el reloj en contra, y en el showdown muestra cada mano revelada con las cinco cartas que contaron resaltadas. Practicar sin conexión contra los oponentes de la computadora es la forma más rápida de aprenderse el orden de memoria.'
+  },
 
   'pt-BR': {
     title: 'Mãos do pôquer — ordem das mãos no Texas Hold’em',

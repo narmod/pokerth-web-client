@@ -172,6 +172,29 @@ the scripts it lists, that no Latin word is left in a definition — not that
 the definition matches its term. Translate term by term with the English list
 open.
 
+## Regional variants of a language already shipped
+
+`pt-BR` / `pt-PT` and `es` / `es-419` are the two models. A regional variant is
+a full catalogue, help corpus and SEO set of its own — the loader does not
+overlay one catalogue on another — but it does not have to be translated from
+scratch: `es-419` was derived from `es` by a reviewed list of substitutions
+(ordenador → computadora, móvil → celular, pulsar → presionar, bote → pozo…),
+about twenty strings in all. Keep that list with the variant, because every key
+added to the parent later has to go through it again.
+
+Do not create one variant per country. The vocabulary of a poker client barely
+differs between, say, Mexico and Argentina, and each variant costs a catalogue,
+a help corpus, five SEO entries and a line in every future translation pass.
+When one variant serves several countries and no flag fits them all, let the
+flag follow the visitor instead: `_flagFor()` in `modules/i18n.mjs` swaps the
+`es-419` flag for `/flags/<cc>.svg` from the browser's `es-<cc>` locale, with
+the catalogue's inline flag as default and offline fallback.
+
+Three places need the regional codes, and they are independent: `regionAlias`
+in `modules/i18n.mjs` (first-visit detection, saved code, `?lang=`),
+`SEO_HREFLANG_ALIAS` in `proxy.js` (a code that becomes a real page language
+must leave the alias table), and `OG_LOCALE`.
+
 ## What the tests cannot check
 
 Every catalogue in this repo is machine-assisted (see the README), and the
