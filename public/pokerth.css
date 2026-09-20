@@ -12750,3 +12750,27 @@ html[data-seat-struct="qml"] .seat-narrow .seat-name .seat-note-stars { font-siz
   :root[data-high-contrast="true"],:root[data-high-contrast="true"] body,:root[data-high-contrast="true"] .screen { background-color:var(--hc-bg) !important; }
 }
 
+
+/* ── Very short landscape phones (iPhone in landscape: 734x343) ─────────────
+   Found by scripts/test-mobile-browser.mjs + test-table-sweep.mjs (web.94):
+   1) .game-area kept its 300px min-height "flex fallback": header 59 + 300 =
+      359px on a 343px screen -> Fold / Check / Bet were cut off at the bottom.
+   2) The action panel took 118 of the 284 remaining px, the table got 166:
+      the seat bisection hit its 0.55 floor and still overlapped (boxes on one
+      another at 9-10 players, pot badge under the top box). The amount+slider
+      row and the quick-bet / All-In / mode row now share ONE line in a wider
+      panel (every control kept, same order), paddings trimmed: ~40px go back
+      to the table. Standard Interface size only - the larger sizes have their
+      own adaptive layout. */
+@media (max-height: 400px) and (orientation: landscape) {
+  #s-game .game-area { min-height: 0 !important; }
+  :root:not([data-interface-size="large"]):not([data-interface-size="extra-large"]) #s-game .my-zone .action-grid {
+    flex-direction: row !important; flex-wrap: wrap !important; align-items: center !important;
+    max-width: min(600px, 100%) !important; padding: 4px 10px 5px !important; gap: 3px 10px !important;
+  }
+  :root:not([data-interface-size="large"]):not([data-interface-size="extra-large"]) #s-game .my-zone .action-grid > .bet-row { flex: 1 1 190px; min-width: 0; }
+  :root:not([data-interface-size="large"]):not([data-interface-size="extra-large"]) #s-game .my-zone .action-grid > .mid-row { flex: 0 1 auto; min-width: 0; }
+  :root:not([data-interface-size="large"]):not([data-interface-size="extra-large"]) #s-game .my-zone .action-grid > .mid-row .mode-sel-wrap { margin-left: 4px; }
+  :root:not([data-interface-size="large"]):not([data-interface-size="extra-large"]) #s-game .my-zone .action-grid > .act-buttons-row { flex: 0 0 100%; }
+  :root:not([data-interface-size="large"]):not([data-interface-size="extra-large"]) #s-game .my-zone .bet-row .raise-amt-field { height: 26px !important; min-height: 26px !important; }
+}

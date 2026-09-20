@@ -11,6 +11,7 @@ PTH_MOBILE=ios npm run test:mobile       # iPhone profiles only (WebKit)
 PTH_MOBILE=android npm run test:mobile   # Pixel / Galaxy profiles only (Chromium)
 PTH_DEVICES="iPhone 15,Pixel 7" npm run test:mobile
 PTH_ENGINE=chromium npm run test:mobile  # every profile in one engine (iPhone viewports without WebKit)
+PTH_VIEWPORT=734x400 npm run test:mobile # override the viewport of every profile (odd sizes, height thresholds)
 ```
 
 On GitHub the `Mobile verification` workflow runs the same command on every push

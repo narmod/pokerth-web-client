@@ -306,6 +306,16 @@ function _qmlLandscapeLayout(oppCnt, zW, zH, compact, zoomMul, spectating, opts)
   // -15 % sur le resultat, spectateur compact UNIQUEMENT (assis et desktop
   // restent strict QML). Les slots sont traces au s reduit (coherents).
   if (spectating && compact) sFin = Math.max(0.55, sFin * 0.85);
+  // Rabot WEB (web.94, trouvé par scripts/test-table-sweep.mjs) : pendant du
+  // plafond « self <= 28 % » du mode assis ci-dessous. En paysage compact
+  // SPECTATEUR à faible effectif (3-4 joueurs) rien ne bornait la hauteur des
+  // boîtes : sur un téléphone à plat (zone 734x243) elles montaient à ~1.0-1.15
+  // et le siège du bas + celui du haut recouvraient les cartes communes et le
+  // badge du pot (constaté aussi sur 1040x480 à 4 joueurs). On plafonne la
+  // boîte à 30 % de la hauteur de zone : il reste >= 40 % pour la rangée
+  // community et son pot. Sans effet à fort effectif (déjà borné par le
+  // non-chevauchement), ni assis, ni desktop, ni portrait.
+  if (spectating && compact) { var _hCapS = 0.30 * zH / oppBaseH; if (sFin > _hCapS) sFin = Math.max(0.55, _hCapS); }
   // Rabot WEB (narmod 2026-07-20) : en paysage compact ASSIS sur une zone
   // tres plate (peu de joueurs), l'ellipse s'aplatit (radiusY -> 0) et laisse
   // les boxes/self monter a ~taille pleine (constate 3-4 joueurs : boxScale

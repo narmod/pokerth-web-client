@@ -174,6 +174,19 @@ highlights below.
 
 ### Fixed
 
+- **Very short landscape phones (734×343)** (`web.94`) — three defects found by
+  `test:mobile` / `test:table-sweep`: (1) `.game-area` kept a 300 px
+  `min-height` flex fallback, so header 59 + 300 overflowed a 343 px screen and
+  Fold / Check / Bet were cut off; (2) the action panel took 118 px and left the
+  table 166: the seat bisection sat on its 0.55 floor and still overlapped
+  (boxes at 9–10 players, pot badge under the top box) — under
+  `max-height: 400px` landscape the amount+slider row and the quick-bet /
+  All-In / mode row now share one line in a wider panel (every control kept,
+  standard Interface size only), the table gets ~40 px back; (3) compact
+  landscape **spectator** with 3–4 players had no height bound: boxes grew to
+  ~1.0–1.15 and covered the community cards and the pot (also on 1040×480) —
+  new web cap in `layout.mjs`, box ≤ 30 % of the zone height, the counterpart
+  of the seated "self ≤ 28 %" cap. Table sweep: 90/90.
 - **Pucks over the neighbouring box in portrait** (`web.93`) — with 3 or 5
   opponents (TL · TC · TR) the box scale only tests ring neighbours, so TL and
   TR grow until they almost touch and both push their puck into the gap: BB on

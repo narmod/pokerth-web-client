@@ -193,10 +193,16 @@ export async function runPlan(title, reporter, runDevice, matrix = MATRIX) {
     console.log(`\n== ${fam === 'ios' ? 'iOS profiles' : 'Android profiles'} - ${engineName} ${browser.version()} ==`);
     try {
       for (const d of list) {
-        reporter.device = `${d.name} (${engineName})`;
-        const vp = devices[d.name].viewport;
-        console.log(`\n${d.name} - ${vp.width}x${vp.height} @${devices[d.name].deviceScaleFactor}x`);
-        await runDevice(browser, d.name, devices[d.name]);
+        // PTH_VIEWPORT=734x400 overrides the viewport of every profile (keeps
+        // DPR / touch / user agent): try an odd phone size, or find from which
+        // height a layout problem appears.
+        const m = /^(\d+)x(\d+)$/.exec(process.env.PTH_VIEWPORT || '');
+        const descriptor = m ? { ...devices[d.name], viewport: { width: Number(m[1]), height: Number(m[2]) } } : devices[d.name];
+        const label = m ? `${d.name} @${m[1]}x${m[2]}` : d.name;
+        reporter.device = `${label} (${engineName})`;
+        const vp = descriptor.viewport;
+        console.log(`\n${label} - ${vp.width}x${vp.height} @${descriptor.deviceScaleFactor}x`);
+        await runDevice(browser, label, descriptor);
         reporter.flush();
       }
     } finally { await browser.close(); }

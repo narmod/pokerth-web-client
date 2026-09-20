@@ -1,4 +1,9 @@
-2026-09-20 version 2.1.9-web.93 (current series):
+2026-09-20 version 2.1.9-web.94 (current series):
+- bugfix: phones held in landscape with a very short screen (iPhone) - the Fold / Check / Bet buttons are no longer cut off at the bottom
+- improvement: on those screens the bet amount, slider, quick bets, All-In and mode now share one line, giving the table about 40 px more height: no more overlapping player boxes at 9-10 players, the pot stays visible
+- bugfix: watching a table of 3 or 4 players on a phone in landscape - the player boxes no longer cover the community cards or the pot
+
+2026-09-20 version 2.1.9-web.93:
 - bugfix: on phones in portrait with 4 or 6 players, the dealer / small blind / big blind buttons no longer cover the neighbouring player's box or hide one another - they move below or beside their own box when there is no room
 
 2026-09-20 version 2.1.9-web.92:
