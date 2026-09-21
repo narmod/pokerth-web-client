@@ -71,17 +71,35 @@ ok(noNext.ok && noNext.upcoming.length === 0 && noNext.result, 'no cup scheduled
 ok(ce.parseMcHome(mcHome, Date.parse('2026-09-27T00:00:00+02:00')).upcoming.length === 0, 'a cup already played is not announced');
 ok(ce.propJson('JSON.parse(\'{\\u0022n\\u0022:\\u0022O\\u0027Neil \\\\u00e9\\u0022}\')').n === "O'Neil \u00e9", 'quotes and non-ASCII names survive the double escaping');
 
+// -- ranking leaders ----------------------------------------------------------
+const wecRank = '<ranking-component :stats="' + q(JSON.stringify([
+  { player_id: 3, nickname: 'Blupher', score: '38.24', points: 650, games: 16, places: [], avg_games: 6, pos: 0 },
+  { player_id: 6, nickname: 'boehmi', score: '32.06', points: 545, games: 16, places: [], avg_games: 6, pos: 0 },
+  { player_id: 511, nickname: 'Yes', score: '30.00', points: 480, games: 16 },
+  { player_id: 9, nickname: 'MagE', score: '20.00', points: 300, games: 15 }
+])) + '" :stats_year="2026" :stats_month="09"></ranking-component>';
+const wl = ce.parseWecRanking(wecRank);
+ok(wl.ok && wl.leader.player === 'Blupher' && wl.leader.points === 650 && wl.leader.games === 16, 'WEC leader: first row of the monthly table');
+ok(wl.leader.period.year === 2026 && wl.leader.period.month === 9, 'the month "09" is read as 9, with its year');
+ok(wl.leader.next.join('|') === 'boehmi|Yes', 'two runners-up, no more');
+ok(ce.parseWecRanking(wecRank.replace(':stats_month="09"', ':stats_month="&quot;09&quot;"')).leader.period.month === 9, 'a quoted month is tolerated');
+const bbcRank = '<ranking-component :results="' + q(JSON.stringify([{ nickname: 'spoof', score: '41.0', points: 900, games: 22 }])) + '" :season="12" :allseasons="[12,11]"></ranking-component>';
+const bl = ce.parseBbcRanking(bbcRank);
+ok(bl.ok && bl.leader.player === 'spoof' && bl.leader.period.season === 12 && bl.leader.next.length === 0, 'BBC leader comes with its season; a one-row table has no runner-up');
+ok(ce.parseWecRanking('<ranking-component :stats="[]">').ok === false, 'an empty table is an error, not a blank row');
+
 // -- aggregation -------------------------------------------------------------
-const pages = { [ce.SOURCES.bbcSchedule]: bbcReg, [ce.SOURCES.bbcResults]: bbcRes, [ce.SOURCES.wecResults]: wecRes, [ce.SOURCES.mcHome]: mcHome };
+const pages = { [ce.SOURCES.bbcSchedule]: bbcReg, [ce.SOURCES.bbcResults]: bbcRes, [ce.SOURCES.wecResults]: wecRes, [ce.SOURCES.mcHome]: mcHome, [ce.SOURCES.bbcRanking]: bbcRank, [ce.SOURCES.wecRanking]: wecRank };
 const all = await ce.buildEvents(u => Promise.resolve(pages[u]), NOW);
 ok(all.ok && all.upcoming.length === 4 && !all.errors, 'all sources merge into one payload');
 ok(all.upcoming.map(u => u.src).join(',') === 'bbc,bbc,bbc,mc', 'upcoming events are sorted by time across sites');
 ok(all.results.map(r => r.src).join(',') === 'bbc,wec,mc', 'results keep a fixed site order');
+ok(all.leaders.map(r => r.src + ':' + r.player).join(',') === 'bbc:spoof,wec:Blupher', 'leaders ride along, in the same site order');
 const part = await ce.buildEvents(u => u === ce.SOURCES.wecResults ? Promise.reject(new Error('upstream_503')) : Promise.resolve(pages[u]), NOW);
 ok(part.ok && part.errors && part.errors.wec === 'upstream_503' && part.results.length === 2, 'one site down does not hide the others');
 const none = await ce.buildEvents(() => Promise.reject(new Error('offline')), NOW);
 ok(none.ok === false && none.error === 'no_data', 'everything down: ok=false so the tab can hide itself');
-ok(JSON.stringify(all).length < 4000, 'the payload stays small (' + JSON.stringify(all).length + ' bytes)');
+ok(JSON.stringify(all).length < 5000, 'the payload stays small (' + JSON.stringify(all).length + ' bytes)');
 
 console.log(fails ? '\n' + fails + ' FAILED' : '\nAll community-events checks passed');
 process.exit(fails ? 1 : 0);

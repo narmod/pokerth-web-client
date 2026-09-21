@@ -1,4 +1,7 @@
-2026-09-21 version 2.1.9-web.111 (current series):
+2026-09-21 version 2.1.9-web.112 (current series):
+- new: Forum news window, "Events" tab - new "Ranking" section with the current BBC season leader and the WEC leader of the month (points, games played and the two runners-up); a tap opens the full ranking on the community site
+
+2026-09-21 version 2.1.9-web.111:
 - bugfix: iPhone / iPad - the music player stuttered with CarPlay, Bluetooth or a locked screen (one second of sound, a stop, and so on); music now plays through plain playback on these devices and keeps going in the car
 - new: iPhone / iPad - the volume is set with the device or car buttons by default; an "In-app volume" option in the player brings back the volume slider, the balance and the VU meter (it may stutter again in the car)
 

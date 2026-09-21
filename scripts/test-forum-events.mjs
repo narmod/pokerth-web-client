@@ -37,8 +37,13 @@ ok(E.evResultMeta({ src: 'bbc', id: 9743, podium: ['spoof', 'ElmoEGO', 'il Buono
 ok(E.evResultMeta({ src: 'mc', month: 8, year: 2026, at: null, podium: ['Doc Ijiwaru', 'fojo', 'Borussen-Ass'] }, NOW, 'en') === 'August 2026 \u00b7 2. fojo \u00b7 3. Borussen-Ass', 'Monthly Cup meta: month and year, no time');
 ok(E.evSrcName('mc') === 'Monthly Cup' && E.evSrcClass('bbc') === 'fn-c0' && E.evSrcClass('wec') === 'fn-c1' && E.evSrcClass('zz') === 'fn-c7', 'site names and the forum colour code are reused');
 
+// -- leaders ------------------------------------------------------------------
+ok(E.evLeaderMeta({ src: 'wec', period: { year: 2026, month: 9 }, points: 650, games: 16, next: ['boehmi', 'Yes', 'MagE'] }, 'en') === 'September 2026 \u00b7 650 Points \u00b7 16 Games \u00b7 2. boehmi \u00b7 3. Yes', 'WEC leader meta: month, points, games, two runners-up');
+ok(E.evLeaderMeta({ src: 'bbc', period: { season: 12 }, points: 900, games: 22, next: [] }, 'fr', { season: 'Saison', points: 'Points', games: 'Parties' }) === 'Saison 12 \u00b7 900 Points \u00b7 22 Parties', 'BBC leader meta: season, with the translated words');
+ok(E.evLeaderMeta({ src: 'wec', period: {}, points: null, games: null }, 'en') === '', 'nothing known, nothing shown');
+
 // -- links --------------------------------------------------------------------
-ok(E.evSafeUrl('https://bbc.pokerth.net/registration') !== '' && E.evSafeUrl('https://monthlycup.pokerth.net/results/series?year=2026') !== '', 'community site links pass');
+ok(E.evSafeUrl('https://wec.pokerth.net/results/ranking') !== '' && E.evSafeUrl('https://bbc.pokerth.net/registration') !== '' && E.evSafeUrl('https://monthlycup.pokerth.net/results/series?year=2026') !== '', 'community site links pass');
 ok(E.evSafeUrl('https://evil.example/') === '' && E.evSafeUrl('javascript:alert(1)') === '' && E.evSafeUrl('https://bbc.pokerth.net.evil.example/') === '', 'anything else is dropped');
 
 // -- wiring -------------------------------------------------------------------

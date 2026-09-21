@@ -15,8 +15,14 @@
 //   bbc  /results       <results-component :results="[…]">
 //                       { number, started, p1..p10 } -- p1 is the winner.
 //   wec  /results       <results-component :results="[…]">
-//                       { wec, started, p1..p10 }. WEC has no public schedule
-//                       (/registration answers 404 without a login).
+//                       { wec, started, p1..p10 }. WEC has no public schedule:
+//                       every planning path answers 404 without a login, and
+//                       /register is the account form, not a game sign-up
+//                       (audited 2026-09-21).
+//   bbc  /results/ranking  <ranking-component :results="[…]" :season="N">
+//   wec  /results/ranking  <ranking-component :stats="[…]" :stats_year :stats_month>
+//                       Rows { nickname, score, points, games }, best first:
+//                       BBC ranks a season, WEC ranks the current month.
 //   mc   /              <home-component :next-cup="JSON.parse('…')"
 //                         :signup-count="2" :latest-cup="JSON.parse('…')">
 //                       Laravel Js::from(): a JS string literal with \u0022
@@ -38,10 +44,14 @@ const SOURCES = {
   bbcSchedule: 'https://bbc.pokerth.net/registration',
   bbcResults: 'https://bbc.pokerth.net/results',
   wecResults: 'https://wec.pokerth.net/results',
-  mcHome: 'https://monthlycup.pokerth.net/'
+  mcHome: 'https://monthlycup.pokerth.net/',
+  bbcRanking: 'https://bbc.pokerth.net/results/ranking',
+  wecRanking: 'https://wec.pokerth.net/results/ranking'
 };
 
 const LINKS = {
+  bbcRanking: 'https://bbc.pokerth.net/results/ranking',
+  wecRanking: 'https://wec.pokerth.net/results/ranking',
   bbcRegister: 'https://bbc.pokerth.net/registration',
   bbcResults: 'https://bbc.pokerth.net/results',
   wecResults: 'https://wec.pokerth.net/results',
@@ -168,6 +178,30 @@ function parseResults(html, src, idKey, url) {
 function parseBbcResults(html) { return parseResults(html, 'bbc', 'number', LINKS.bbcResults); }
 function parseWecResults(html) { return parseResults(html, 'wec', 'wec', LINKS.wecResults); }
 
+// Leader of a ranking page plus the two runners-up. `period` says what the
+// table covers, so the client can word it: { season } or { year, month }.
+function parseRanking(html, src, attr, url, period) {
+  const arr = propJson(attrOf(html, 'ranking-component', attr));
+  if (!Array.isArray(arr)) return { ok: false, error: 'parse_no_ranking' };
+  const rows = arr.filter(function (p) { return p && typeof p === 'object' && name(p.nickname); });
+  if (!rows.length) return { ok: false, error: 'parse_empty' };
+  const top = rows[0];
+  return { ok: true, leader: { src: src, period: period, player: name(top.nickname),
+    points: count(top.points), games: count(top.games),
+    next: rows.slice(1, 3).map(function (p) { return name(p.nickname); }), url: url } };
+}
+function parseBbcRanking(html) {
+  const season = count(attrOf(html, 'ranking-component', 'season'));
+  return parseRanking(html, 'bbc', 'results', LINKS.bbcRanking, season ? { season: season } : {});
+}
+function parseWecRanking(html) {
+  // Seen as bare 2026 / 09 on the live page; tolerate a quoted "09" too.
+  const digits = function (a) { return count(decodeHtml(attrOf(html, 'ranking-component', a) || '').replace(/[^0-9]/g, '')); };
+  const y = digits('stats_year'), m = digits('stats_month');
+  const period = (y && m >= 1 && m <= 12) ? { year: y, month: m } : {};
+  return parseRanking(html, 'wec', 'stats', LINKS.wecRanking, period);
+}
+
 function parseMcHome(html, now) {
   if (!/<home-component\b/i.test(String(html || ''))) return { ok: false, error: 'parse_no_home' };
   const out = { ok: true, upcoming: [], result: null };
@@ -205,24 +239,28 @@ async function buildEvents(fetchText, now) {
     ['bbc', SOURCES.bbcSchedule, function (h) { return parseBbcSchedule(h, now); }],
     ['bbc', SOURCES.bbcResults, parseBbcResults],
     ['wec', SOURCES.wecResults, parseWecResults],
-    ['mc', SOURCES.mcHome, function (h) { return parseMcHome(h, now); }]
+    ['mc', SOURCES.mcHome, function (h) { return parseMcHome(h, now); }],
+    ['bbc_ranking', SOURCES.bbcRanking, parseBbcRanking],
+    ['wec_ranking', SOURCES.wecRanking, parseWecRanking]
   ];
   const settled = await Promise.all(jobs.map(function (j) {
     return Promise.resolve().then(function () { return fetchText(j[1]); })
       .then(function (html) { return j[2](html); })
       .catch(function (e) { return { ok: false, error: String((e && e.message) || e).slice(0, 80) }; });
   }));
-  const upcoming = [], results = [], errors = {};
+  const upcoming = [], results = [], leaders = [], errors = {};
   settled.forEach(function (r, i) {
     if (!r.ok) { errors[jobs[i][0] + (i === 0 ? '_schedule' : '')] = r.error; return; }
     if (r.upcoming) for (const u of r.upcoming) upcoming.push(u);
     if (r.result) results.push(r.result);
+    if (r.leader) leaders.push(r.leader);
   });
   upcoming.sort(function (a, b) { return a.at - b.at; });
   const order = { bbc: 0, wec: 1, mc: 2 };
   results.sort(function (a, b) { return order[a.src] - order[b.src]; });
-  const ok = upcoming.length > 0 || results.length > 0;
-  const out = { ok: ok, at: now, tz: SITE_TZ, upcoming: upcoming, results: results };
+  leaders.sort(function (a, b) { return order[a.src] - order[b.src]; });
+  const ok = upcoming.length > 0 || results.length > 0 || leaders.length > 0;
+  const out = { ok: ok, at: now, tz: SITE_TZ, upcoming: upcoming, results: results, leaders: leaders };
   if (Object.keys(errors).length) out.errors = errors;
   if (!ok) out.error = 'no_data';
   return out;
@@ -232,5 +270,6 @@ module.exports = {
   SITE_TZ, SOURCES, LINKS,
   decodeHtml, attrOf, propJson, zonedToEpoch,
   parseBbcSchedule, parseBbcResults, parseWecResults, parseMcHome,
+  parseBbcRanking, parseWecRanking,
   buildEvents
 };

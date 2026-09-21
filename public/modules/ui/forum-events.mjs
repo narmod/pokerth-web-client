@@ -2,8 +2,9 @@
 // ═══════════════════════════════════════════════════════════════════
 // "Events" tab of the Forum news window — web extension, no QML
 // counterpart. Shows what is coming up on the community sites (BBC step
-// games with their sign-up count, the next Monthly Cup) and who won last
-// (BBC / WEC / Monthly Cup podium).
+// games with their sign-up count, the next Monthly Cup), who won last
+// (BBC / WEC / Monthly Cup podium) and who leads the BBC season and the WEC
+// month. WEC publishes no schedule, so it only appears in the last two.
 //
 // Data: GET /api/events, the relay in proxy.js (server/community-events.js)
 // that reads the three sites once per five minutes for everyone. Times come
@@ -88,6 +89,20 @@ export function evResultMeta(r, now, locale) {
   return parts.join(' \u00b7 ');
 }
 
+// Meta line of a leader row: "September 2026 · 650 Points · 16 Games · 2. boehmi · 3. Yes".
+// `w` carries the translated words { season, points, games } (existing ranking keys).
+export function evLeaderMeta(l, locale, w) {
+  if (!l) return '';
+  const words = w || {}, parts = [], p = l.period || {};
+  if (p.season != null) parts.push((words.season || 'Season') + ' ' + p.season);
+  else { const m = evMonthName(p.month, locale, p.year); if (m) parts.push(m); }
+  if (l.points != null) parts.push(l.points + ' ' + (words.points || 'Points'));
+  if (l.games != null) parts.push(l.games + ' ' + (words.games || 'Games'));
+  const next = Array.isArray(l.next) ? l.next : [];
+  for (let i = 0; i < next.length && i < 2; i++) parts.push((i + 2) + '. ' + next[i]);
+  return parts.join(' \u00b7 ');
+}
+
 // Only ever link to the community sites, whatever the relay says.
 export function evSafeUrl(u) {
   return /^https:\/\/(bbc|wec|monthlycup)\.pokerth\.net\//.test(String(u || '')) ? String(u) : '';
@@ -161,6 +176,12 @@ function _render(data) {
       if (!pod.length) continue;
       html += _row(r.src, r.url, pod[0], evResultMeta(r, now, loc), true);
     }
+  }
+  const lead = (data.leaders || []).filter(function (l) { return l && l.player; });
+  if (lead.length) {
+    const w = { season: _t('rankingSeason', 'Season'), points: _t('rankingColPoints', 'Points'), games: _t('rankingColGames', 'Games') };
+    html += '<div class="ev-h">' + esc(_t('rankingTitle', 'Ranking')) + '</div>';
+    for (const l of lead) html += _row(l.src, l.url, l.player, evLeaderMeta(l, loc, w), true);
   }
   box.innerHTML = html;
 }

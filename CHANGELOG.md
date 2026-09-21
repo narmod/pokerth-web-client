@@ -17,6 +17,16 @@ highlights below.
 
 ### Added
 
+- **Events tab: ranking leaders** (`web.112`) — `/api/events` gains a `leaders`
+  array: the BBC season leader (`ranking-component :results` + `:season`) and
+  the WEC leader of the month (`:stats` + `:stats_year` / `:stats_month`), each
+  with points, games and two runners-up. The tab shows them in a third section
+  titled with the existing `rankingTitle`; season / points / games reuse the
+  ranking keys, the month comes from `Intl` — no new UI string. WEC was audited
+  again (2026-09-21): it has no public schedule (every planning path is 404
+  without a login, `/register` is the account form), so it contributes results
+  and ranking only. `proxy.js` itself is unchanged, but
+  `server/community-events.js` is loaded at start: container restart needed.
 - **Forum news: "Events" tab** (`web.110`) — web addition, not in the QML
   client. A tab bar (`Posts` / `Events`, reusing `.rk-tabs`) sits under the
   window title; `Events` lists what `/api/events` returns: upcoming BBC step
