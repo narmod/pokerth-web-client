@@ -1,4 +1,7 @@
-2026-09-21 version 2.1.9-web.114 (current series):
+2026-09-21 version 2.1.9-web.115 (current series):
+- new: Georgian (ქართული) is now available in the language list - the whole interface, the built-in help and the welcome notices are translated, bringing the client to 65 languages
+
+2026-09-21 version 2.1.9-web.114:
 - improvement: Forum news window, "Events" tab - "today", "tomorrow" and "yesterday" now come with the date ("tomorrow · 22 Sep")
 
 2026-09-21 version 2.1.9-web.113:

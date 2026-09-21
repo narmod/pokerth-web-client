@@ -21,7 +21,7 @@ export const help = {
         { id: 'famboard', t: 'Družinska lestvica',
           b: ['Samo na zasebnih strežnikih in LAN igrah odjemalec vodi statistiko za celotno obdobje po vzdevku — odigranih in dobljenih rok in iger, največjo zmago, najboljši niz — in jo deli prek strežnika, tako da vsaka naprava pri mizi vidi isto lestvico. Igre pokerth.net na ta način nikoli niso beležene, statistika vadbenega načina pa je vodena povsem ločeno.', 'V teh igrah gumb s trofejo odpre okno uvrstitve na zavihku LAN: vsi igralci, razvrstljivi po več merilih.'] },
         { id: 'language', t: 'Jezik',
-          b: ['Vmesnik je na voljo v 64 jezikih. Spremeniš ga lahko kadar koli v Naprednih možnostih (meni z zobnikom) pod Uporabniški vmesnik. Pokrski izrazi za poteze (Fold, Check, Call, Bet, Raise, All-In) po dogovoru ostanejo v angleščini, tako kot pri namiznem odjemalcu.'] },
+          b: ['Vmesnik je na voljo v 65 jezikih. Spremeniš ga lahko kadar koli v Naprednih možnostih (meni z zobnikom) pod Uporabniški vmesnik. Pokrski izrazi za poteze (Fold, Check, Call, Bet, Raise, All-In) po dogovoru ostanejo v angleščini, tako kot pri namiznem odjemalcu.'] },
         { id: 'pwa', t: 'Namesti kot aplikacijo',
           b: ['Ta odjemalec je progresivna spletna aplikacija (PWA): namestiš jo lahko iz menija brskalnika (ali z gumbom za namestitev v glavi), da dobiš celozaslonsko aplikacijo z lastno ikono. Ko je nameščena, se zažene takoj, vadbeni način pa deluje popolnoma brez povezave.'],
           note: 'Na Androidu in namiznih Chrome/Edge gumb za namestitev poskrbi za vse. Na iPhone/iPad Apple dovoljuje namestitev samo prek Safarija: gumb Deli → »Dodaj na domači zaslon« — odjemalec te korake prikaže, ko je potrebno. Gumb izgine, ko je aplikacija nameščena.' },

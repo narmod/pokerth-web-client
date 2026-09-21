@@ -125,6 +125,12 @@ highlights below.
   extraction/rebuild, parity check, wiring and a `\uXXXX`-aware language-count
   bump for the SEO tables. Replays the Uzbek rollout byte for byte (docs/tools
   only, no version bump).
+- **Georgian** (`ka`, Mkhedruli script), full UI catalogue, help corpus, SEO content
+  pages (incl. `/rules` and `/faq`) and guest/registered/LAN broadcast notices
+  (`web.115`–`116`) — 65 languages total. Hand names are translated and declined
+  in running text; action terms and street names stay in English. Translated
+  with ChatGPT from a spreadsheet kit, then checked mechanically (scripts,
+  placeholders, label parity between help and UI) before the build.
 - **Burmese** (`my`, Myanmar script), full UI catalogue, help corpus, SEO content
   pages (incl. `/rules` and `/faq`) and guest/registered/LAN broadcast notices
   (`web.87`–`88`) — 64 languages total. Action
