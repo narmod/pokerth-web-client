@@ -22,13 +22,20 @@ const opt = (n, k = 1) => { const i = a.indexOf(n); return i < 0 ? null : a.slic
 const after = (opt('--after') || [])[0], bump = opt('--bump', 2);
 if (!code || !/^\d+$/.test(oldN || '') || !/^\d+$/.test(newN || '') || !after) die('usage: see header');
 const rd = f => fs.readFileSync(f, 'utf8'), wr = (f, s) => fs.writeFileSync(f, s);
+const DIGITS = '0-9' + NATIVE_DIGITS.join('');
+const countRe = t => new RegExp('(?<![' + DIGITS + ']|\\\\u[0-9a-fA-F]{0,2})' + t + '(?![' + DIGITS + '])', 'g');
 
 // 1. help corpora
 for (const f of fs.readdirSync(HELP_DIR).filter(f => f.endsWith('.mjs') && f !== code + '.mjs')) {
   const file = path.join(HELP_DIR, f), s = rd(file);
-  const forms = [oldN, ...NATIVE_DIGITS.map(d => toNative(oldN, d))].filter(x => s.includes(x));
+  // The count must stand alone: "65" also sits inside "365 days" (log retention), in any digit
+  // script, and inside \\uXXXX escapes ("\\u65b9").
+  const forms = [oldN, ...NATIVE_DIGITS.map(d => toNative(oldN, d))].filter(x => countRe(x).test(s));
   if (forms.length !== 1) die(f + ': count written ' + forms.length + ' ways — fix by hand');
-  replaceExact(file, forms[0], forms[0] === oldN ? newN : toNative(newN, NATIVE_DIGITS.find(d => toNative(oldN, d) === forms[0])));
+  const from = forms[0], to = from === oldN ? newN : toNative(newN, NATIVE_DIGITS.find(d => toNative(oldN, d) === from));
+  const hits = (s.match(countRe(from)) || []).length;
+  if (hits !== 1) die(file + ': expected 1× "' + from + '" as a standalone number, found ' + hits);
+  wr(file, s.replace(countRe(from), to));
 }
 // 2. counted phrases
 const pat = new RegExp('\\b' + oldN + '(?=[ -](?:languages?\\b|language catalogues|locales|files, ~))', 'g');
