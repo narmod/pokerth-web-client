@@ -927,7 +927,7 @@ export const strings = {
     musicCompact: "Kompakt",
     musicExpand: "Expandera",
     musicMoveUp: "Flytta upp",
-    musicMoveDown: "Flytta ned", musicRadios: "Radiokanaler", musicLike: "Jag gillar den", musicDislike: "Inte min grej",
+    musicMoveDown: "Flytta ned", musicRadios: "Radiokanaler", musicLike: "Jag gillar den", musicDislike: "Inte min grej", musicIosVolume: "Volym i appen (kan hacka med CarPlay / Bluetooth)",
     betDisplayTitle:'Visning av insats:', betDisplayInset:'Insats i spelarrutan', betDisplayClassic:'Insats bredvid spelarrutan', importSeat: "Importera ett platspaket (.zip)",
     plColumns: "Kolumner",
     plColAvatar: "Avatar",

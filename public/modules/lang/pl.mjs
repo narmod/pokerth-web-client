@@ -931,7 +931,7 @@ export const strings = {
     musicCompact: "Kompaktowo",
     musicExpand: "Rozwiń",
     musicMoveUp: "W górę",
-    musicMoveDown: "W dół", musicRadios: "Stacje radiowe", musicLike: "Podoba mi się", musicDislike: "Nie dla mnie",
+    musicMoveDown: "W dół", musicRadios: "Stacje radiowe", musicLike: "Podoba mi się", musicDislike: "Nie dla mnie", musicIosVolume: "Głośność w aplikacji (może przerywać z CarPlay / Bluetooth)",
     betDisplayTitle:'Wyświetlanie stawki:', betDisplayInset:'Stawka w ramce gracza', betDisplayClassic:'Stawka obok ramki gracza', importSeat: "Importuj pakiet miejsc (.zip)",
     plColumns: "Kolumny",
     plColAvatar: "Awatar",

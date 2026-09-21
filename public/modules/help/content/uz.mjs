@@ -361,7 +361,7 @@ export const help = {
           t: "Musiqa pleyeri",
           b: [
             "Sarlavha menyularidagi musiqa bandi kichik lounge-musiqa pleyerini ochadi: pleylistdan trek tanlang, ijro/pauza, oldingi/keyingi, aralashtirish hamda bitta trekni, butun pleylistni takrorlash yoki takrorlamaslik. Balandlik, tanlangan trek va takrorlash rejimi eslab qolinadi. Ijro hech qachon oʻz-oʻzidan boshlanmaydi — brauzerlar bosishni talab qiladi — va pleyer oʻyin ovoz effektlaridan butunlay mustaqil.",
-            "Trek nomi ostidagi ikkita bosh barmoq ijro etilayotgan narsa sizga yoqish-yoqmasligini bildiradi. Har bir qurilmadan bitta anonim ovoz, radiolar ham kiradi, va uni istalgan vaqtda oʻzgartirish yoki qaytarib olish mumkin; operator umumiy natijalarni ochmaguncha siz faqat oʻz ovozingizni koʻrasiz."] },
+            "Trek nomi ostidagi ikkita bosh barmoq ijro etilayotgan narsa sizga yoqish-yoqmasligini bildiradi. Har bir qurilmadan bitta anonim ovoz, radiolar ham kiradi, va uni istalgan vaqtda oʻzgartirish yoki qaytarib olish mumkin; operator umumiy natijalarni ochmaguncha siz faqat oʻz ovozingizni koʻrasiz.", "iPhone va iPad’da pleyer sukut boʻyicha oddiy ijrodan foydalanadi, shunda musiqa CarPlay, Bluetooth yoki qulflangan ekran bilan ham davom etadi; balandlik esa qurilma yoki avtomobil tugmalari bilan sozlanadi. “Ilova ichidagi ovoz balandligi” opsiyasi balandlik slayderi, balans va VU oʻlchagichni qaytaradi, lekin avtomobilda ovoz uzilib qolishi mumkin."] },
         { id: "sounds",
           t: "Ovoz effektlari",
           b: [

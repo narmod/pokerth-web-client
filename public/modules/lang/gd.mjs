@@ -1004,7 +1004,7 @@ export const strings = {
     musicCompact: "Dlùth",
     musicExpand: "Leudaich",
     musicMoveUp: "Gluais suas",
-    musicMoveDown: "Gluais sìos", musicRadios: "Rèidiothan", musicLike: "Is toil leam seo", musicDislike: "Chan eil seo dhòmhsa",
+    musicMoveDown: "Gluais sìos", musicRadios: "Rèidiothan", musicLike: "Is toil leam seo", musicDislike: "Chan eil seo dhòmhsa", musicIosVolume: "Àirde-fuaime san aplacaid (faodaidh e stad-stad le CarPlay / Bluetooth)",
     betDisplayTitle:"Taisbeanadh a' gheall:", betDisplayInset:"Geall am broinn bogsa a' chluicheadair", betDisplayClassic:"Geall ri taobh bogsa a' chluicheadair", importSeat: "Ion-phortaich pasgan shuidheachan (.zip)",
     plColumns: "Colbhan",
     plColAvatar: "Avatar",

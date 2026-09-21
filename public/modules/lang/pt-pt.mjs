@@ -929,7 +929,7 @@ export const strings = {
     musicCompact: "Compacto",
     musicExpand: "Expandir",
     musicMoveUp: "Subir",
-    musicMoveDown: "Descer", musicRadios: "Rádios", musicLike: "Gosto disto", musicDislike: "Não é para mim",
+    musicMoveDown: "Descer", musicRadios: "Rádios", musicLike: "Gosto disto", musicDislike: "Não é para mim", musicIosVolume: "Volume na app (pode falhar com CarPlay / Bluetooth)",
     betDisplayTitle:'Apresentação da aposta:', betDisplayInset:'Aposta dentro da caixa do jogador', betDisplayClassic:'Aposta ao lado da caixa do jogador', importSeat: "Importar um pacote de lugares (.zip)",
     plColumns: "Colunas",
     plColAvatar: "Avatar",

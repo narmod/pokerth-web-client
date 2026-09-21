@@ -925,7 +925,7 @@ export const strings = {
     musicCompact: "紧凑",
     musicExpand: "展开",
     musicMoveUp: "上移",
-    musicMoveDown: "下移", musicRadios: "电台", musicLike: "喜欢", musicDislike: "不合我口味",
+    musicMoveDown: "下移", musicRadios: "电台", musicLike: "喜欢", musicDislike: "不合我口味", musicIosVolume: "应用内音量（使用 CarPlay / 蓝牙时可能卡顿）",
     betDisplayTitle:'下注显示：', betDisplayInset:'下注显示在玩家框内', betDisplayClassic:'下注显示在玩家框旁', importSeat: "导入座位包（.zip）",
     plColumns: "列",
     plColAvatar: "头像",

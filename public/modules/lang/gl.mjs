@@ -1002,7 +1002,7 @@ export const strings = {
     musicCompact: "Compacto",
     musicExpand: "Expandir",
     musicMoveUp: "Subir",
-    musicMoveDown: "Baixar", musicRadios: "Radios", musicLike: "Gústame", musicDislike: "Non é para min",
+    musicMoveDown: "Baixar", musicRadios: "Radios", musicLike: "Gústame", musicDislike: "Non é para min", musicIosVolume: "Volume na app (pode entrecortarse con CarPlay / Bluetooth)",
     betDisplayTitle:'Visualización da aposta:', betDisplayInset:'Aposta dentro do cadro do xogador', betDisplayClassic:'Aposta ao lado do cadro do xogador', importSeat: "Importar un paquete de asentos (.zip)",
     plColumns: "Columnas",
     plColAvatar: "Avatar",

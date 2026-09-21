@@ -1001,7 +1001,7 @@ export const strings = {
     musicCompact: "Tömör",
     musicExpand: "Kibontás",
     musicMoveUp: "Fel",
-    musicMoveDown: "Le", musicRadios: "Rádiók", musicLike: "Tetszik", musicDislike: "Nem nekem való",
+    musicMoveDown: "Le", musicRadios: "Rádiók", musicLike: "Tetszik", musicDislike: "Nem nekem való", musicIosVolume: "Hangerő az alkalmazásban (CarPlay / Bluetooth mellett akadozhat)",
     betDisplayTitle:'Tét megjelenítése:', betDisplayInset:'Tét a játékos dobozában', betDisplayClassic:'Tét a játékos doboza mellett', importSeat: "Ülőhelycsomag (.zip) importálása",
     plColumns: "Oszlopok",
     plColAvatar: "Avatár",

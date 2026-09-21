@@ -1001,7 +1001,7 @@ export const strings = {
     musicCompact: "Kompaktiškas",
     musicExpand: "Išplėsti",
     musicMoveUp: "Aukštyn",
-    musicMoveDown: "Žemyn", musicRadios: "Radijo stotys", musicLike: "Man patinka", musicDislike: "Ne man",
+    musicMoveDown: "Žemyn", musicRadios: "Radijo stotys", musicLike: "Man patinka", musicDislike: "Ne man", musicIosVolume: "Garsumas programėlėje (su CarPlay / Bluetooth gali trūkinėti)",
     betDisplayTitle:'Statymo rodymas:', betDisplayInset:'Statymas žaidėjo langelyje', betDisplayClassic:'Statymas šalia žaidėjo langelio', importSeat: "Importuoti vietų paketą (.zip)",
     plColumns: "Stulpeliai",
     plColAvatar: "Avataras",

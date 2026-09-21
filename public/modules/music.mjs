@@ -66,7 +66,26 @@ let _ctx = null, _srcNode = null, _gain = null, _waReady = false, _waFailed = fa
 let _panner = null, _analyser = null, _vuData = null, _vuRAF = 0, _vuDead = false, _vuZeroFrames = 0;
 // Consecutive graph rebuilds after an iOS interruption (see _rebuildWebAudio).
 const WA_MAX_REBUILD = 4;
+const WA_REFILL_MS   = 10000;   // sustained playback needed before the rebuild budget refills
 let _waRebuilds = 0;
+let _waOkAt = 0;                // timestamp of the last 'playing' event (0 = none since the last rebuild)
+// ── iOS: plain <audio> by default (no Web Audio graph) ──
+// CarPlay, Bluetooth and the lock screen all make iOS park the AudioContext in
+// 'interrupted' for as long as the external route holds the output: an element
+// captured by createMediaElementSource() then plays into a dead graph, which is
+// heard as a one-second play/stop loop. A bare <audio> element is the only path
+// iOS keeps alive there, so it is the default on iPhone/iPad. The price is the
+// graph's features (in-app volume, VU meter, balance, fades); the player offers
+// an opt-in switch for listening sessions away from the car.
+const LS_IOSGRAPH = 'pokerth.music.iosGraph';
+const _isIOS = (function () {
+  try {
+    var n = window.navigator || {};
+    return /iP(hone|ad|od)/.test(n.userAgent || '') || (n.platform === 'MacIntel' && (n.maxTouchPoints || 0) > 1);
+  } catch (e) { return false; }
+})();
+function getIosGraph() { try { return localStorage.getItem(LS_IOSGRAPH) === '1'; } catch (e) { return false; } }
+function _noGraph() { return _isIOS && !getIosGraph(); }
 let _msReady = false;
 let _shade = false;   // mode compact « windowshade »
 // ── Radios (flux live) ──
@@ -168,10 +187,13 @@ function _wireMainEl(a) {
   // updates whatever progress row currently exists in the panel.
   ['timeupdate', 'loadedmetadata', 'durationchange', 'seeked'].forEach(function (ev) { a.addEventListener(ev, _renderProgress); });
   a.addEventListener('loadedmetadata', _probeDuration);
-  // Network watchdog: these fire when the transport dies mid-track.
-  ['stalled', 'waiting', 'suspend'].forEach(function (ev) { a.addEventListener(ev, function () { _wdSchedule(); }); });
-  // Sound is really flowing again → the rebuild budget is refilled.
-  a.addEventListener('playing', function () { _waRebuilds = 0; _wdOk(); });
+  // Network watchdog: these fire when the transport dies mid-track. ('suspend'
+  // is NOT one of them: it only means the browser has buffered enough.)
+  ['stalled', 'waiting'].forEach(function (ev) { a.addEventListener(ev, function () { _wdSchedule(); }); });
+  // 'playing' alone does not refill the rebuild budget: a freshly rebuilt element
+  // fires it right away even when iOS interrupts the context again a second
+  // later. The budget refills after WA_REFILL_MS of real progress (see _wdTick).
+  a.addEventListener('playing', function () { _waOkAt = Date.now(); _wdOk(); });
   return a;
 }
 function _el() {
@@ -263,7 +285,11 @@ function _wdTick(now) {
   if (!el) return;
   if (el.paused) { _wdSchedule(); return; }        // the system paused us (network drop)
   var pos = el.currentTime || 0;
-  if (pos !== _wdPos) { _wdPos = pos; _wdAt = now; _wdTries = 0; return; }
+  if (pos !== _wdPos) {
+    _wdPos = pos; _wdAt = now; _wdTries = 0;
+    if (_waRebuilds && _waOkAt && now - _waOkAt >= WA_REFILL_MS) _waRebuilds = 0;   // sustained playback
+    return;
+  }
   if (now - _wdAt >= WD_STALL) _wdSchedule();
 }
 function getPreload() {
@@ -381,7 +407,7 @@ try { window.addEventListener('online', function () {
   _wdRecover();
 }); } catch (e) {}
 try { window.addEventListener('pageshow', function () { if (_wdIntent) { _resumeCtx(); _wdTick(); } }); } catch (e) {}
-try { document.addEventListener('visibilitychange', function () { if (!document.hidden && _wdIntent) { _resumeCtx(); _wdTick(); } }); } catch (e) {}
+try { document.addEventListener('visibilitychange', function () { if (!document.hidden && _wdIntent) { _waRebuilds = 0; _resumeCtx(); _wdTick(); } }); } catch (e) {}
 
 // Route the desired volume to the gain node once the graph exists, otherwise to
 // the element directly (no-op on iOS, but the gain node takes over on first play).
@@ -393,6 +419,7 @@ function _applyVol(v) {
 // Build the AudioContext → MediaElementSource → GainNode → destination graph once.
 function _ensureWebAudio() {
   if (_waReady || _waFailed) return _waReady;
+  if (_noGraph()) return false;           // iOS default: bare element (CarPlay/Bluetooth-safe)
   try {
     var AC = window.AudioContext || window.webkitAudioContext;
     if (!AC || !_audio) { _waFailed = true; return false; }
@@ -431,10 +458,15 @@ function _ensureWebAudio() {
 // iOS, so retrying forever against a device that refuses to start would make
 // things worse rather than better. The budget refills as soon as the element
 // reports 'playing' again, so only CONSECUTIVE failures count.
-function _rebuildWebAudio() {
-  if (_bypass) return false;              // radio fallback already runs outside the graph
-  if (!_waReady || _waRebuilds >= WA_MAX_REBUILD) return false;
-  _waRebuilds++;
+function _rebuildWebAudio(force) {
+  // force = the user switched the graph off (iOS option): tear it down for good,
+  // from inside the click gesture, whatever the budget or the radio fallback.
+  if (!force) {
+    if (_bypass) return false;            // radio fallback already runs outside the graph
+    if (!_waReady || _waRebuilds >= WA_MAX_REBUILD) return false;
+    _waRebuilds++;
+  }
+  _waOkAt = 0;
   var src = '', pos = 0, wasPlaying = false, loop = false;
   var old = _audio;
   if (old) {
@@ -476,7 +508,18 @@ function _resumeCtx() {
 }
 // Create + unlock the audio graph synchronously inside a user gesture (iOS needs
 // the context created/resumed from a real interaction, before any await).
-function _unlockAudio() { _el(); _ensureWebAudio(); _resumeCtx(); _setupMediaSession(); }
+function _unlockAudio() { _waRebuilds = 0; _el(); _ensureWebAudio(); _resumeCtx(); _setupMediaSession(); }
+// iOS option: route playback through the Web Audio graph (in-app volume, VU
+// meter, balance, fades). Always called from the checkbox click, i.e. inside a
+// user gesture, so the context / the rebuilt element are allowed to start.
+function setIosGraph(on) {
+  on = !!on;
+  try { localStorage.setItem(LS_IOSGRAPH, on ? '1' : '0'); } catch (e) {}
+  if (!_isIOS) return;
+  if (on) { _waFailed = false; _waRebuilds = 0; _el(); _ensureWebAudio(); _resumeCtx(); _applyVol(getVolume()); }
+  else if (_waReady || _ctx) { _stopVU(); _rebuildWebAudio(true); }
+  _render();
+}
 
 async function loadManifest(force) {
   if (_loaded && !force) return _tracks;
@@ -916,7 +959,7 @@ function _render() {
     '<div class="music-lcd">' +
       '<div class="music-lcd-top">' +
         '<span class="music-time music-cur" data-mact="lcd" role="button" tabindex="0" title="' + _esc(_t('musicNowPlaying', 'Now playing')) + '">' + _curLabel(_cur, _dur, _canSeek) + '</span>' +
-        ((_vuDead || !playing || _bypass) ? '' : '<span class="music-vu" aria-hidden="true">' + vuBars + '</span>') +
+        ((_vuDead || !playing || _bypass || _noGraph()) ? '' : '<span class="music-vu" aria-hidden="true">' + vuBars + '</span>') +
         // ── pouces haut/bas sur la piste en cours, alignés à droite avec le temps ──
         '<div class="music-vote" hidden>' +
           '<button type="button" class="music-vbtn" data-mvote="up" aria-pressed="false" title="' + _esc(_t('musicLike', 'I like this track')) + '" data-i18n-title="musicLike" aria-label="' + _esc(_t('musicLike', 'I like this track')) + '">' + _icon('thumb-up') + '<span class="music-vote-n" hidden></span></button>' +
@@ -945,7 +988,7 @@ function _render() {
     // ── volume + balance G/D fusionnés sur une rangée (si StereoPanner
     // supporté) au lieu de deux rangées séparées. Rien n'est retiré : la
     // balance reste présente quand elle l'était déjà. ──
-    '<div class="music-vol music-vol-condensed">' +
+    '<div class="music-vol music-vol-condensed"' + (_noGraph() ? ' hidden' : '') + '>' +
       '<span class="music-vol-ic">' + _icon('volume') + '</span>' +
       '<input type="range" class="music-vol-range" min="0" max="100" value="' + vol + '" title="' + _esc(_t('musicVolume', 'Volume')) + '" data-i18n-title="musicVolume" aria-label="' + _esc(_t('musicVolume', 'Volume')) + '">' +
       '<span class="music-vol-val">' + vol + '%</span>' +
@@ -954,6 +997,12 @@ function _render() {
         '<input type="range" class="music-bal-range" min="-100" max="100" value="' + Math.round(getBalance() * 100) + '" title="' + _esc(_t('musicBalance', 'Balance')) + '" data-i18n-title="musicBalance" aria-label="' + _esc(_t('musicBalance', 'Balance')) + '">' +
         '<span class="music-bal-end">R</span>' : '') +
     '</div>' +
+    // ── iOS only: opt back into the Web Audio graph (off = CarPlay/Bluetooth-safe) ──
+    (_isIOS ?
+      '<label class="music-opt">' +
+        '<input type="checkbox" class="music-opt-iosgraph"' + (getIosGraph() ? ' checked' : '') + '>' +
+        '<span data-i18n="musicIosVolume">' + _esc(_t('musicIosVolume', 'In-app volume (may stutter with CarPlay / Bluetooth)')) + '</span>' +
+      '</label>' : '') +
     // ── liste dépliable : onglets Playlist | Radios ──
     '<div class="music-pl-head">' +
       '<button type="button" class="music-pl-toggle" data-mact="pl" aria-expanded="' + _plOpen + '">' +
@@ -1043,6 +1092,8 @@ function _wire() {
     seekEl.addEventListener('input',  function () { _seeking = true; doSeek(); });
     seekEl.addEventListener('change', function () { doSeek(); _seeking = false; });
   }
+  var iosOpt = _bodyEl.querySelector('.music-opt-iosgraph');
+  if (iosOpt) { iosOpt.addEventListener('change', function () { setIosGraph(iosOpt.checked); }); }
   var bal = _bodyEl.querySelector('.music-bal-range');
   if (bal) { bal.addEventListener('input', function () { setBalance((parseInt(bal.value, 10) || 0) / 100); }); }
   _updateMarquee();
@@ -1264,6 +1315,8 @@ const Music = {
   getCurrentTime: getCurrentTime,
   seek: seek,
   getPreload: getPreload,
+  getIosGraph: getIosGraph,
+  setIosGraph: setIosGraph,
   setPreload: setPreload,
   mount: mount
 };

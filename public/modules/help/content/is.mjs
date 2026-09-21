@@ -361,7 +361,7 @@ export const help = {
           t: "Tónlistarspilari",
           b: [
             "Tónlistarfærslan í valmynd haussins opnar lítinn spilara með setustofutónlist: veldu lag af lagalistanum, spila/hlé, fyrra/næsta, stokka, og endurtaka eitt lag, allan lagalistann eða ekkert. Hljóðstyrkur, valið lag og endurtekningarhamur eru munuð. Spilun hefst aldrei sjálfkrafa — vafrar krefjast snertingar — og spilarinn er alveg óháður hljóðbrellum leiksins.",
-            "Tveir þumlar undir titli lagsins segja til um hvort þér líkar það sem er í spilun. Eitt nafnlaust atkvæði á tæki, líka fyrir útvarpsstöðvar, og þú getur breytt því eða afturkallað hvenær sem er; nema rekstraraðilinn birti heildartölurnar sérðu aðeins þinn eigin þumal."] },
+            "Tveir þumlar undir titli lagsins segja til um hvort þér líkar það sem er í spilun. Eitt nafnlaust atkvæði á tæki, líka fyrir útvarpsstöðvar, og þú getur breytt því eða afturkallað hvenær sem er; nema rekstraraðilinn birti heildartölurnar sérðu aðeins þinn eigin þumal.", "Á iPhone og iPad notar spilarinn sjálfgefið einfalda spilun svo tónlistin haldi áfram með CarPlay, Bluetooth eða læstum skjá; hljóðstyrkurinn er þá stilltur með hnöppum tækisins eða bílsins. Valkosturinn „Hljóðstyrkur í appinu“ færir aftur hljóðstyrkssleðann, jafnvægið og VU-mælinn, en hljóðið getur hökt í bílnum."] },
         { id: "sounds",
           t: "Hljóðbrellur",
           b: [

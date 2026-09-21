@@ -1,4 +1,8 @@
-2026-09-20 version 2.1.9-web.110 (current series):
+2026-09-21 version 2.1.9-web.111 (current series):
+- bugfix: iPhone / iPad - the music player stuttered with CarPlay, Bluetooth or a locked screen (one second of sound, a stop, and so on); music now plays through plain playback on these devices and keeps going in the car
+- new: iPhone / iPad - the volume is set with the device or car buttons by default; an "In-app volume" option in the player brings back the volume slider, the balance and the VU meter (it may stutter again in the car)
+
+2026-09-20 version 2.1.9-web.110:
 - new: Forum news window - new "Events" tab next to "Posts": the upcoming BBC step games and the next Monthly Cup with the number of players signed up, and the latest BBC, WEC and Monthly Cup winners; times are shown in your local time and a tap opens the community site
 - new: the "Events" tab follows the "Show community content (BBC / WEC)" option - switch it off and the window is the post list as before
 

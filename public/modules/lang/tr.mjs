@@ -930,7 +930,7 @@ export const strings = {
     musicCompact: "Sıkışık",
     musicExpand: "Genişlet",
     musicMoveUp: "Yukarı taşı",
-    musicMoveDown: "Aşağı taşı", musicRadios: "Radyolar", musicLike: "Beğendim", musicDislike: "Bana göre değil",
+    musicMoveDown: "Aşağı taşı", musicRadios: "Radyolar", musicLike: "Beğendim", musicDislike: "Bana göre değil", musicIosVolume: "Uygulama içi ses düzeyi (CarPlay / Bluetooth ile takılabilir)",
     betDisplayTitle:'Bahis gösterimi:', betDisplayInset:'Bahis oyuncu kutusunun içinde', betDisplayClassic:'Bahis oyuncu kutusunun yanında', importSeat: "Koltuk paketi (.zip) içe aktar",
     plColumns: "Sütunlar",
     plColAvatar: "Avatar",

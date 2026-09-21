@@ -212,6 +212,25 @@ highlights below.
 
 ### Fixed
 
+- **Music on iPhone: no more one-second play/stop loop with CarPlay /
+  Bluetooth** (`web.111`). CarPlay, a Bluetooth route or the lock screen make
+  iOS park the `AudioContext` in `interrupted` for as long as the external route
+  holds the output, so an `<audio>` element captured by
+  `createMediaElementSource()` plays into a dead graph. Two bugs turned that
+  into a loop: `_rebuildWebAudio()` refilled its own budget on the `playing`
+  event that every freshly rebuilt element fires, and the watchdog treated the
+  normal `suspend` event ("enough buffered") as a transport failure. Now, on
+  iPhone / iPad (`_isIOS`, iPadOS desktop UA included) the player uses a bare
+  `<audio>` element by default — the only path iOS keeps alive there; the
+  volume row and the VU meter are hidden since they need the graph, and
+  play / pause fades are skipped. A new iOS-only checkbox in the player
+  ("In-app volume", `musicIosVolume`, `pokerth.music.iosGraph`) opts back into
+  the graph; switching it off tears the graph down from inside the click
+  gesture (`_rebuildWebAudio(true)`). For the graph path: `suspend` no longer
+  triggers the watchdog, the rebuild budget refills only after 10 s of real
+  progress (`WA_REFILL_MS`), or on a user gesture / return to the foreground.
+  Android and desktop are unchanged. One key in all 64 catalogues, one help
+  paragraph in all 64 corpora, `scripts/test-music-ios.mjs`.
 - **Eleven keys left in English in ~40 catalogues** (`web.108`) — `unitMinutes`,
   `gipTabStats`, `infoTypeLabel`, `infoCapitalLabel`, `buttonsAuto`,
   `pucksAuto`, `sectionPucks`, `buttonsGlossy`, `buttonsFlat`, `pucksCasino`,

@@ -1001,7 +1001,7 @@ export const strings = {
     musicCompact: "Компактно",
     musicExpand: "Прошири",
     musicMoveUp: "Нагоре",
-    musicMoveDown: "Надоле", musicRadios: "Радио-станице", musicLike: "Свиђа ми се", musicDislike: "Није за мене",
+    musicMoveDown: "Надоле", musicRadios: "Радио-станице", musicLike: "Свиђа ми се", musicDislike: "Није за мене", musicIosVolume: "Јачина звука у апликацији (може да сецка уз CarPlay / Bluetooth)",
     betDisplayTitle:'Приказ улога:', betDisplayInset:'Улог у оквиру играча', betDisplayClassic:'Улог поред оквира играча', importSeat: "Увези пакет седишта (.zip)",
     plColumns: "Колоне",
     plColAvatar: "Аватар",

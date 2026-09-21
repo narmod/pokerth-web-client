@@ -927,7 +927,7 @@ export const strings = {
     musicCompact: "Kompakt",
     musicExpand: "Utvid",
     musicMoveUp: "Flytt opp",
-    musicMoveDown: "Flytt ned", musicRadios: "Radioer", musicLike: "Jeg liker den", musicDislike: "Ikke noe for meg",
+    musicMoveDown: "Flytt ned", musicRadios: "Radioer", musicLike: "Jeg liker den", musicDislike: "Ikke noe for meg", musicIosVolume: "Volum i appen (kan hakke med CarPlay / Bluetooth)",
     betDisplayTitle:'Visning av innsats:', betDisplayInset:'Innsats i spillerboksen', betDisplayClassic:'Innsats ved siden av spillerboksen', importSeat: "Importer en setepakke (.zip)",
     plColumns: "Kolonner",
     plColAvatar: "Avatar",

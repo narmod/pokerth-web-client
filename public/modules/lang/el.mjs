@@ -1001,7 +1001,7 @@ export const strings = {
     musicCompact: "Συμπαγές",
     musicExpand: "Ανάπτυξη",
     musicMoveUp: "Μετακίνηση πάνω",
-    musicMoveDown: "Μετακίνηση κάτω", musicRadios: "Ραδιόφωνα", musicLike: "Μου αρέσει", musicDislike: "Δεν είναι για μένα",
+    musicMoveDown: "Μετακίνηση κάτω", musicRadios: "Ραδιόφωνα", musicLike: "Μου αρέσει", musicDislike: "Δεν είναι για μένα", musicIosVolume: "Ένταση μέσα στην εφαρμογή (μπορεί να κόβει με CarPlay / Bluetooth)",
     betDisplayTitle:'Εμφάνιση ποντάρισματος:', betDisplayInset:'Ποντάρισμα μέσα στο πλαίσιο του παίκτη', betDisplayClassic:'Ποντάρισμα δίπλα στο πλαίσιο του παίκτη', importSeat: "Εισαγωγή πακέτου θέσεων (.zip)",
     plColumns: "Στήλες",
     plColAvatar: "Άβαταρ",

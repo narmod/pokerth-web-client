@@ -929,7 +929,7 @@ export const strings = {
     musicCompact: "Kompaktné",
     musicExpand: "Rozbaliť",
     musicMoveUp: "Posunúť nahor",
-    musicMoveDown: "Posunúť nadol", musicRadios: "Rádiá", musicLike: "Páči sa mi", musicDislike: "Nie je to pre mňa",
+    musicMoveDown: "Posunúť nadol", musicRadios: "Rádiá", musicLike: "Páči sa mi", musicDislike: "Nie je to pre mňa", musicIosVolume: "Hlasitosť v aplikácii (s CarPlay / Bluetooth sa môže zasekávať)",
     betDisplayTitle:'Zobrazenie stávky:', betDisplayInset:'Stávka v rámčeku hráča', betDisplayClassic:'Stávka vedľa rámčeka hráča', importSeat: "Importovať balík miest (.zip)",
     plColumns: "Stĺpce",
     plColAvatar: "Avatar",

@@ -928,7 +928,7 @@ export const strings = {
     musicCompact: "Tiivis",
     musicExpand: "Laajenna",
     musicMoveUp: "Siirrä ylös",
-    musicMoveDown: "Siirrä alas", musicRadios: "Radiot", musicLike: "Pidän tästä", musicDislike: "Ei minun makuuni",
+    musicMoveDown: "Siirrä alas", musicRadios: "Radiot", musicLike: "Pidän tästä", musicDislike: "Ei minun makuuni", musicIosVolume: "Äänenvoimakkuus sovelluksessa (voi pätkiä CarPlayn / Bluetoothin kanssa)",
     betDisplayTitle:'Panoksen näyttö:', betDisplayInset:'Panos pelaajan ruudussa', betDisplayClassic:'Panos pelaajan ruudun vieressä', importSeat: "Tuo paikkapaketti (.zip)",
     plColumns: "Sarakkeet",
     plColAvatar: "Avatar",

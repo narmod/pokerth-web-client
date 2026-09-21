@@ -937,7 +937,7 @@ export const strings = {
     musicCompact: "Compacto",
     musicExpand: "Expandir",
     musicMoveUp: "Subir",
-    musicMoveDown: "Bajar", musicRadios: "Radios", musicLike: "Me gusta", musicDislike: "No es para mí",
+    musicMoveDown: "Bajar", musicRadios: "Radios", musicLike: "Me gusta", musicDislike: "No es para mí", musicIosVolume: "Volumen en la app (puede entrecortarse con CarPlay / Bluetooth)",
     betDisplayTitle:'Visualización de la apuesta:', betDisplayInset:'Apuesta dentro del recuadro del jugador', betDisplayClassic:'Apuesta junto al recuadro del jugador', importSeat: "Importar un paquete de asientos (.zip)",
     plColumns: "Columnas",
     plColAvatar: "Avatar",

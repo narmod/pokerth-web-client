@@ -1000,7 +1000,7 @@ export const strings = {
     musicCompact: "Компактно",
     musicExpand: "Розгорнути",
     musicMoveUp: "Угору",
-    musicMoveDown: "Униз", musicRadios: "Радіостанції", musicLike: "Подобається", musicDislike: "Не моє",
+    musicMoveDown: "Униз", musicRadios: "Радіостанції", musicLike: "Подобається", musicDislike: "Не моє", musicIosVolume: "Гучність у застосунку (може перериватися з CarPlay / Bluetooth)",
     betDisplayTitle:'Відображення ставки:', betDisplayInset:'Ставка всередині рамки гравця', betDisplayClassic:'Ставка поруч із рамкою гравця', importSeat: "Імпортувати пакет місць (.zip)",
     plColumns: "Стовпці",
     plColAvatar: "Аватар",

@@ -932,7 +932,7 @@ export const strings = {
     musicCompact: "Compact",
     musicExpand: "Uitklappen",
     musicMoveUp: "Omhoog",
-    musicMoveDown: "Omlaag", musicRadios: "Radio's", musicLike: "Ik vind dit leuk", musicDislike: "Niets voor mij",
+    musicMoveDown: "Omlaag", musicRadios: "Radio's", musicLike: "Ik vind dit leuk", musicDislike: "Niets voor mij", musicIosVolume: "Volume in de app (kan haperen met CarPlay / Bluetooth)",
     betDisplayTitle:'Weergave van de inzet:', betDisplayInset:'Inzet in het spelersvak', betDisplayClassic:'Inzet naast het spelersvak', importSeat: "Een zetelpakket (.zip) importeren",
     plColumns: "Kolommen",
     plColAvatar: "Avatar",
