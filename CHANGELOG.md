@@ -125,6 +125,11 @@ highlights below.
   extraction/rebuild, parity check, wiring and a `\uXXXX`-aware language-count
   bump for the SEO tables. Replays the Uzbek rollout byte for byte (docs/tools
   only, no version bump).
+- **Language tooling** — `seo-dump.mjs` / `seo-build.mjs`: step 3 is no longer
+  done by hand. The SEO strings are extracted to a flat list and the entries of
+  `seo-i18n/` and `proxy.js` are rebuilt from translation chunks, with path,
+  token, tag and hand-name checks. Replays the Kazakh SEO commit byte for byte
+  (docs/tools only, no version bump).
 - **Language tooling** — `wire-language.mjs` now bumps the language count only
   where it stands alone: `65` also sits inside "365 days" (log retention) and
   inside `\\uXXXX` escapes, which stopped the 65 → 66 rollout (tools only).
