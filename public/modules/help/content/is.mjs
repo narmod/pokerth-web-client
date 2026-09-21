@@ -29,7 +29,7 @@ export const help = {
         { id: "language",
           t: "Tungumál",
           b: [
-            "Viðmótið er til á 66 tungumáli. Skiptu um hvenær sem er í ítarlegum valkostum (tannhjólsvalmyndin), undir Notendaviðmót. Aðgerðaorð pókersins (Fold, Check, Call, Bet, Raise, All-In) haldast á ensku samkvæmt hefð, alveg eins og í skjáborðsbiðlaranum."] },
+            "Viðmótið er til á 67 tungumáli. Skiptu um hvenær sem er í ítarlegum valkostum (tannhjólsvalmyndin), undir Notendaviðmót. Aðgerðaorð pókersins (Fold, Check, Call, Bet, Raise, All-In) haldast á ensku samkvæmt hefð, alveg eins og í skjáborðsbiðlaranum."] },
         { id: "pwa",
           t: "Setja upp sem forrit",
           b: [

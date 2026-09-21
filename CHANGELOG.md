@@ -133,6 +133,11 @@ highlights below.
 - **Language tooling** — `wire-language.mjs` now bumps the language count only
   where it stands alone: `65` also sits inside "365 days" (log retention) and
   inside `\\uXXXX` escapes, which stopped the 65 → 66 rollout (tools only).
+- **Sinhala** (`si`, Sinhala script), full UI catalogue, help corpus, SEO content
+  pages (incl. `/rules` and `/faq`) and guest/registered/LAN broadcast notices
+  (`web.119`–`120`) — 67 languages total. Hand names and action terms stay in
+  English, as in the other South Asian catalogues; street names are
+  transliterated (ප්‍රී-ෆ්ලොප්, ෆ්ලොප්, ටර්න්, රිවර්).
 - **Kazakh** (`kk`, Cyrillic script), full UI catalogue, help corpus, SEO content
   pages (incl. `/rules` and `/faq`) and guest/registered/LAN broadcast notices
   (`web.117`–`118`) — 66 languages total. Hand and street names follow the
