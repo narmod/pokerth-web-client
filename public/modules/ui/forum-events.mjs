@@ -39,9 +39,11 @@ export function evSrcClass(src) { return (SRC[src] || {}).cls || 'fn-c7'; }
 
 function _dayStart(ms) { const d = new Date(ms); d.setHours(0, 0, 0, 0); return d.getTime(); }
 
-// "today 23:15" / "tomorrow 01:00" / "Sat 26 · 20:00", in the given locale.
-// Day distance is counted on the local calendar, not in 24 h blocks: a game
-// at 01:00 seen at 23:00 is "tomorrow", not "today".
+// "today · 21 Sep · 23:15" / "tomorrow · 22 Sep · 01:00" / "Sat, 26 Sep · 20:00",
+// in the given locale. Day distance is counted on the local calendar, not in
+// 24 h blocks: a game at 01:00 seen at 23:00 is "tomorrow", not "today". The
+// relative word always comes with its date: "tomorrow" read just after midnight
+// is ambiguous, and a player planning an evening thinks in dates.
 export function evWhen(ms, now, locale) {
   if (typeof ms !== 'number' || !isFinite(ms)) return '';
   const loc = locale || undefined;
@@ -51,6 +53,13 @@ export function evWhen(ms, now, locale) {
   let day = '';
   if (days >= -1 && days <= 1) {
     try { day = new Intl.RelativeTimeFormat(loc, { numeric: 'auto' }).format(days, 'day'); } catch (e) { day = ''; }
+    if (day) {
+      let date = '';
+      try { date = new Date(ms).toLocaleDateString(loc, { day: 'numeric', month: 'short' }); } catch (e) { date = ''; }
+      // Same neutral separator as the rest of the line: a comma reads wrong in
+      // Japanese, Arabic and other scripts.
+      if (date) day += ' \u00b7 ' + date;
+    }
   }
   if (!day) {
     try { day = new Date(ms).toLocaleDateString(loc, { weekday: 'short', day: 'numeric', month: 'short' }); } catch (e) { day = ''; }

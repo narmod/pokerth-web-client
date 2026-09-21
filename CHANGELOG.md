@@ -17,6 +17,10 @@ highlights below.
 
 ### Added
 
+- **Events tab: relative day plus date** (`web.114`) — `evWhen` appends the short
+  date to the `Intl.RelativeTimeFormat` word, with the line's own neutral
+  separator (a comma reads wrong in Japanese or Arabic): "today · 21 Sep ·
+  23:15", "demain · 22 sept. · 01:00". Still all `Intl`, no new UI string.
 - **Events tab: BBC sign-ups as `n/10`** (`web.113`) — the BBC calendar field `num`
   was checked against the site's own code and against
   `/registration/date/get/<id>`: it is the number of advance sign-ups, which the

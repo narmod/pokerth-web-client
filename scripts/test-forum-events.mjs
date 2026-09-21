@@ -25,6 +25,8 @@ ok(/^tomorrow/.test(E.evWhen(Date.parse('2026-09-21T01:00:00+02:00'), NOW, 'en')
 ok(/^yesterday/.test(E.evWhen(Date.parse('2026-09-19T22:00:00+02:00'), NOW, 'en')), 'last night reads "yesterday"');
 ok(/26/.test(E.evWhen(Date.parse('2026-09-26T20:00:00+02:00'), NOW, 'en')) && /Sat/.test(E.evWhen(Date.parse('2026-09-26T20:00:00+02:00'), NOW, 'en')), 'further out: weekday and date');
 ok(/^demain/.test(E.evWhen(Date.parse('2026-09-21T01:00:00+02:00'), NOW, 'fr')), 'the wording follows the locale (fr)');
+ok(/^today \u00b7 .*20.* \u00b7 /.test(E.evWhen(Date.parse('2026-09-20T23:15:00+02:00'), NOW, 'en')) && /Sep/.test(E.evWhen(Date.parse('2026-09-20T23:15:00+02:00'), NOW, 'en')), 'the relative day comes with its date ("today \u00b7 Sep 20")');
+ok(/^demain \u00b7 21 sept\./.test(E.evWhen(Date.parse('2026-09-21T01:00:00+02:00'), NOW, 'fr')), 'in the locale too ("demain \u00b7 21 sept.")');
 ok(E.evWhen(NaN, NOW, 'en') === '' && E.evWhen(null, NOW, 'en') === '', 'no date, no text');
 ok(E.evWhen(NOW, NOW, 'xx-invalid-locale-') !== undefined, 'a bad locale never throws');
 

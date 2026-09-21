@@ -1,4 +1,7 @@
-2026-09-21 version 2.1.9-web.113 (current series):
+2026-09-21 version 2.1.9-web.114 (current series):
+- improvement: Forum news window, "Events" tab - "today", "tomorrow" and "yesterday" now come with the date ("tomorrow · 22 Sep")
+
+2026-09-21 version 2.1.9-web.113:
 - improvement: Forum news window, "Events" tab - BBC games now show their sign-ups the way the BBC calendar does ("4/10"): these are advance sign-ups on the site, not the number of players who will sit down
 
 2026-09-21 version 2.1.9-web.112:
