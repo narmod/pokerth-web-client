@@ -17,6 +17,14 @@ highlights below.
 
 ### Added
 
+- **Events tab: BBC sign-ups as `n/10`** (`web.113`) — the BBC calendar field `num`
+  was checked against the site's own code and against
+  `/registration/date/get/<id>`: it is the number of advance sign-ups, which the
+  site labels "Players: n/10", not the attendance (played games list 10 players
+  with 1–4 sign-ups). The relay now sends `seats: 10` with BBC entries and the
+  tab prints `4/10`; entries without a table size (Monthly Cup) keep the
+  translated "Signed up: {n}". No new UI string. The same endpoint returns the
+  date in UTC, confirming the Europe/Berlin reading of BBC times.
 - **Events tab: ranking leaders** (`web.112`) — `/api/events` gains a `leaders`
   array: the BBC season leader (`ranking-component :results` + `:season`) and
   the WEC leader of the month (`:stats` + `:stats_year` / `:stats_month`), each

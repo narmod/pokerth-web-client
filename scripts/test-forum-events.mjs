@@ -37,6 +37,11 @@ ok(E.evResultMeta({ src: 'bbc', id: 9743, podium: ['spoof', 'ElmoEGO', 'il Buono
 ok(E.evResultMeta({ src: 'mc', month: 8, year: 2026, at: null, podium: ['Doc Ijiwaru', 'fojo', 'Borussen-Ass'] }, NOW, 'en') === 'August 2026 \u00b7 2. fojo \u00b7 3. Borussen-Ass', 'Monthly Cup meta: month and year, no time');
 ok(E.evSrcName('mc') === 'Monthly Cup' && E.evSrcClass('bbc') === 'fn-c0' && E.evSrcClass('wec') === 'fn-c1' && E.evSrcClass('zz') === 'fn-c7', 'site names and the forum colour code are reused');
 
+// -- sign-ups -----------------------------------------------------------------
+ok(E.evSignupText({ signups: 4, seats: 10 }) === '4/10' && E.evSignupText({ signups: 0, seats: 10 }) === '0/10', 'BBC sign-ups read like the BBC calendar: n/10');
+ok(E.evSignupText({ signups: 2 }, 'Inscrits : {n}') === 'Inscrits : 2', 'no table size (Monthly Cup): the translated label');
+ok(E.evSignupText({ signups: null, seats: 10 }) === '' && E.evSignupText(null) === '', 'no count, no text');
+
 // -- leaders ------------------------------------------------------------------
 ok(E.evLeaderMeta({ src: 'wec', period: { year: 2026, month: 9 }, points: 650, games: 16, next: ['boehmi', 'Yes', 'MagE'] }, 'en') === 'September 2026 \u00b7 650 Points \u00b7 16 Games \u00b7 2. boehmi \u00b7 3. Yes', 'WEC leader meta: month, points, games, two runners-up');
 ok(E.evLeaderMeta({ src: 'bbc', period: { season: 12 }, points: 900, games: 22, next: [] }, 'fr', { season: 'Saison', points: 'Points', games: 'Parties' }) === 'Saison 12 \u00b7 900 Points \u00b7 22 Parties', 'BBC leader meta: season, with the translated words');

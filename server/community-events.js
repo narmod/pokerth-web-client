@@ -10,8 +10,13 @@
 //
 //   bbc  /registration  <registration-component :gamedates="[…]">
 //                       HTML-entity JSON: { id, step, date, num } -- `num` is
-//                       the number of players signed up, `date` is naive
-//                       site-local time.
+//                       the number of players signed up in advance, shown by
+//                       the site as "Players: num/10" (checked against
+//                       /registration/date/get/<id>, whose `regs` list has
+//                       `num` rows). It is NOT the attendance: most players
+//                       join without signing up. `date` is naive site-local
+//                       time; the same endpoint returns it in UTC, which
+//                       confirms Europe/Berlin.
 //   bbc  /results       <results-component :results="[…]">
 //                       { number, started, p1..p10 } -- p1 is the winner.
 //   wec  /results       <results-component :results="[…]">
@@ -59,6 +64,7 @@ const LINKS = {
   mcHome: 'https://monthlycup.pokerth.net/'
 };
 
+const BBC_SEATS = 10;            // the BBC calendar itself labels a game "Players: n/10"
 const MAX_UPCOMING_BBC = 8;      // the BBC calendar holds a whole season
 const MAX_NAME = 40;             // nicknames are 3-20 chars upstream; be generous, stay bounded
 
@@ -153,7 +159,7 @@ function parseBbcSchedule(html, now) {
     if (at === null || at < now) continue;
     const step = count(g.step);
     up.push({ src: 'bbc', kind: 'step', step: step, title: name(g.title), at: at,
-      signups: count(g.num), url: LINKS.bbcRegister });
+      signups: count(g.num), seats: BBC_SEATS, url: LINKS.bbcRegister });
   }
   up.sort(function (a, b) { return a.at - b.at; });
   return { ok: true, upcoming: up.slice(0, MAX_UPCOMING_BBC) };

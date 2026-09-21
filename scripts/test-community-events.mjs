@@ -38,6 +38,7 @@ const sch = ce.parseBbcSchedule(bbcReg, NOW);
 ok(sch.ok && sch.upcoming.length === 3, 'past games are dropped, upcoming ones kept (' + (sch.upcoming || []).length + ')');
 ok(sch.upcoming[0].at === Date.parse('2026-09-20T23:15:00+02:00') && sch.upcoming[0].signups === 3, 'the next game comes first, with its sign-up count');
 ok(sch.upcoming[2].step === 2, 'the step number is carried');
+ok(sch.upcoming.every(u => u.seats === 10), 'BBC entries carry the 10 seats the site itself shows ("Players: n/10")');
 ok(sch.upcoming.every(u => u.src === 'bbc' && u.url === 'https://bbc.pokerth.net/registration'), 'every entry links to the BBC registration page');
 const many = Array.from({ length: 40 }, (_, i) => ({ step: 1, date: '2026-10-' + String(1 + (i % 28)).padStart(2, '0') + ' 19:30:00', num: 0 }));
 ok(ce.parseBbcSchedule('<registration-component :gamedates="' + q(JSON.stringify(many)) + '">', NOW).upcoming.length === 8, 'a full season calendar is capped');

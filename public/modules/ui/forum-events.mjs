@@ -103,6 +103,15 @@ export function evLeaderMeta(l, locale, w) {
   return parts.join(' \u00b7 ');
 }
 
+// Sign-up text of an upcoming row. With a known table size it reads like the
+// BBC calendar itself ("4/10"): these are advance sign-ups, not attendance, and
+// the scale says so better than a bare number. Otherwise the translated label.
+export function evSignupText(e, label) {
+  if (!e || e.signups == null) return '';
+  if (e.seats > 0) return e.signups + '/' + e.seats;
+  return String(label || 'Signed up: {n}').replace('{n}', String(e.signups));
+}
+
 // Only ever link to the community sites, whatever the relay says.
 export function evSafeUrl(u) {
   return /^https:\/\/(bbc|wec|monthlycup)\.pokerth\.net\//.test(String(u || '')) ? String(u) : '';
@@ -166,7 +175,7 @@ function _render(data) {
   if (!up.length) html += '<div class="rk-msg">' + esc(_t('evNone', 'No upcoming events.')) + '</div>';
   for (const e of up) {
     const meta = [evWhen(e.at, now, loc)];
-    if (e.signups != null) meta.push(_t('evSignups', 'Signed up: {n}', { n: e.signups }));
+    meta.push(evSignupText(e, _t('evSignups', 'Signed up: {n}')));
     html += _row(e.src, e.url, evUpcomingTitle(e, loc, stepWord), meta.filter(Boolean).join(' \u00b7 '), false);
   }
   if (res.length) {
