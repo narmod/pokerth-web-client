@@ -20,11 +20,11 @@ and 2 have to land **together** in the same commit as the wiring —
 `scripts/test-lang-count.mjs` requires a help corpus for every UI catalogue,
 so registering a catalogue without its help would leave the suite red.
 
-Work in progress can be committed freely as long as the language is **not yet
-registered** in `modules/lang-meta.mjs` (i.e. `gen-lang-meta.mjs` has not been
-re-run): nothing loads the files, nothing is visible to players, and each
-commit is a safe resume point. This is how the Estonian
-catalogue was built over a dozen commits.
+Do **not** commit a half-finished catalogue under `public/modules/lang/`, even
+unregistered: `test-lang-count`, `test-lang-lazy` and `test-precache` count the
+files in that folder, so a lone `<code>.mjs` turns the suite red (checked during
+the Kazakh rollout). Keep work in progress in `.lang-work/` (git-ignored) until
+catalogue, help corpus and wiring can land together.
 
 ### Step 1 — the UI catalogue
 
@@ -145,6 +145,10 @@ Raising the count touches ~60 files, so the temptation is a global
 watchdog threshold. Restrict the substitution to a digit pair followed by a
 word that actually names languages, then **read the diff** before committing.
 Those three regressions were caught by eye, not by any test.
+
+The same trap exists inside the help corpora: `65` also sits in "365 days" (log
+retention) and in `\\uXXXX` escapes such as `\\u65b9`. `wire-language.mjs` only
+replaces the count where it stands alone, in any digit script.
 
 The same trap has a second form in `proxy.js`: there the count is also a
 runtime constant. At 60 languages, `60` was at once the language count, a dozen
