@@ -291,6 +291,8 @@
   .envrow .barx{flex:0 0 84px;height:6px;border-radius:4px;background:rgba(127,127,127,.18);overflow:hidden}
   .envrow .barx i{display:block;height:100%;border-radius:4px}
   .envrow .pct{flex:none;min-width:78px;text-align:right;color:var(--text);font-variant-numeric:tabular-nums;font-size:.78rem}
+  .envrow .trend{flex:none;width:62px;text-align:right;font-size:.74rem;font-variant-numeric:tabular-nums;white-space:nowrap;cursor:help}
+  .envrow .trend.up{color:#5ec269}.envrow .trend.down{color:#e26d6d}.envrow .trend.flat{color:var(--text);opacity:.55}.envrow .trend.na{color:var(--text);opacity:.3}
   .envrow .nrbadge{flex:none;width:56px;text-align:right;color:var(--text);opacity:.7;font-size:.74rem;font-variant-numeric:tabular-nums;white-space:nowrap}
   .envhi{border:1px solid var(--line);border-radius:10px;padding:9px 11px;margin-top:12px;font-size:.8rem;color:var(--cream);line-height:1.5}
   .envhi b{color:var(--gold)}
@@ -498,7 +500,7 @@
         <h2>Who visits</h2>
         <div class="tsec">
   <div class="boardhead"><h3>What visitors run</h3><span id="envSince" class="muted" style="margin:0"></span></div>
-          <p class="muted">From the same anonymous ping as the visit counter: system and browser read from the User-Agent, language from the request header, installed app vs browser tab reported by the client. Running totals, not a time series — what to test on, and which of the 47 languages are actually used.</p>
+          <p class="muted">From the same anonymous ping as the visit counter: system and browser read from the User-Agent, language from the request header, installed app vs browser tab reported by the client. Running totals, not a time series — what to test on, and which of the 47 languages are actually used. In the language view the arrow compares a language’s share over the last 14 full days with the 14 before (only shown when the change is statistically significant).</p>
           <div class="seg" id="envSeg" style="flex-wrap:wrap">
             <button class="on" data-k="combo">Device + browser</button>
             <button data-k="os">System</button>
@@ -2305,7 +2307,7 @@
   // presentation: the same numbers read as a share of the whole (donut) and as
   // an ordered list (ranking), because the two answer different questions —
   // "is anything dominant?" versus "what exactly is in the tail?".
-  var _envData={}, _envSince=0, _envView='combo', _envKnown=false, _envPings=null, _envExpanded=false, _trafSeries=[], _retVerdict=false;
+  var _envData={}, _envTrend=null, _envSince=0, _envView='combo', _envKnown=false, _envPings=null, _envExpanded=false, _trafSeries=[], _retVerdict=false;
   var _envLangs=[], _envLangsKnown=false, _envLangN=0;
   var _musData={}, _musTitles={}, _musSince=0, _musKnown=false;
   function _envFmt(n){ try{ return Number(n||0).toLocaleString(); }catch(e){ return String(n||0); } }
@@ -2856,6 +2858,42 @@
   // env.langNew/env.langRet, alimentes cote proxy par le meme _envBump que
   // env.lang. Cle absente ou 0+0 (pings anterieurs a la fonctionnalite, ou id
   // absent du ping) -> pas de badge plutot qu'un pourcentage invente.
+  // Tendance d'une langue : sa PART dans les pings, fenetre courante contre
+  // fenetre precedente (cote proxy : 14 jours complets contre les 14 d'avant).
+  // La part, pas le volume brut : un week-end charge fait monter toutes les
+  // langues a la fois, ce qui ne dit rien sur laquelle progresse. Le
+  // denominateur exclut les pings sans en-tete (des bots, en pratique) pour
+  // ne pas diluer les vraies langues ; la ligne "No language header" garde,
+  // elle, sa part sur le total. Une fleche n'est tracee que si l'ecart est
+  // significatif (test z a deux proportions, |z| >= 1.96), sinon "stable" ;
+  // et rien du tout sous dix pings ou tant que les deux fenetres ne sont pas
+  // pleines — mieux vaut pas de reponse qu'une reponse inventee.
+  function _langTrendStat(a,T1,b,T2){
+    if(a+b<10 || !T1 || !T2) return null;
+    var p1=a/T1, p2=b/T2, p=(a+b)/(T1+T2);
+    var se=Math.sqrt(p*(1-p)*(1/T1+1/T2));
+    var z=se? (p1-p2)/se : 0;
+    var rel=p2? (p1-p2)/p2 : (p1?Infinity:0);
+    return {p1:p1,p2:p2,z:z,rel:rel,dir: z>=1.96?'up' : z<=-1.96?'down' : 'flat'};
+  }
+  function _envTrendBadge(key){
+    if(_envView!=='lang' || !key || !_envTrend) return '';
+    var t=_envTrend, w=t.win||14;
+    if((t.curDays||0)<w || (t.prevDays||0)<w){
+      return '<span class="trend na" title="Not enough history yet: '+((t.curDays||0)+(t.prevDays||0))+' of '+(2*w)+' full days recorded">\u00b7</span>';
+    }
+    var a=(t.cur&&t.cur[key])||0, b=(t.prev&&t.prev[key])||0;
+    var oc=(t.cur&&t.cur.other)||0, op=(t.prev&&t.prev.other)||0;
+    var T1=key==='other'? t.curN : t.curN-oc, T2=key==='other'? t.prevN : t.prevN-op;
+    var s=_langTrendStat(a,T1,b,T2);
+    if(!s) return '<span class="trend na" title="Too few pings to tell ('+(a+b)+' over '+(2*w)+' days)">\u00b7</span>';
+    var pc=function(p){ return (p*100).toFixed(p<0.01?2:1)+'%'; };
+    var rel=isFinite(s.rel)? (s.rel>=0?'+':'\u2212')+Math.round(Math.abs(s.rel)*100)+'%' : 'new';
+    var arrow=s.dir==='up'?'\u2197':s.dir==='down'?'\u2198':'\u2192';
+    var tip='Share of pings: '+pc(s.p2)+' \u2192 '+pc(s.p1)+' ('+b+' \u2192 '+a+' pings), last '+w+' full days vs the '+w+' before'
+          +(s.dir==='flat'?' \u2014 within noise ('+s.z.toFixed(1)+'\u03c3)':' \u2014 significant ('+s.z.toFixed(1)+'\u03c3)');
+    return '<span class="trend '+s.dir+'" title="'+tip+'">'+arrow+(s.dir==='flat'?'':' '+rel)+'</span>';
+  }
   function _envNewRetBadge(key){
     if(_envView!=='lang' || !key) return '';
     var nw=(_envData.langNew&&_envData.langNew[key])||0;
@@ -2892,7 +2930,8 @@
            + '<span class="nmx"'+(s.key?(' title="'+_annEsc(_envTitle(s.key)||(s.key!==s.k?s.key:''))+'"'):'')+'>'+_annEsc(s.k)+'</span>'
            + _envNewRetBadge(s.key)
            + '<span class="barx"><i style="width:'+Math.max(2,pc).toFixed(1)+'%;background:'+s.c+'"></i></span>'
-           + '<span class="pct">'+_envFmt(s.n)+' \u00b7 '+(pc<1?pc.toFixed(1):Math.round(pc))+'%</span></div>';
+           + '<span class="pct">'+_envFmt(s.n)+' \u00b7 '+(pc<1?pc.toFixed(1):Math.round(pc))+'%</span>'
+           + _envTrendBadge(s.key)+'</div>';
     }).join('');
     var more='';
     if(r.rest||_envExpanded){
@@ -2992,7 +3031,7 @@
       }
       // Champ absent = proxy antérieur à la fonctionnalité ; objet vide = rien
       // à compter encore. Voir renderEnv().
-      _envKnown=(d.env!==undefined); _envData=d.env||{}; _envColorReset(); _envSince=d.envSince||0; _envPings=d.pings||null;
+      _envKnown=(d.env!==undefined); _envData=d.env||{}; _envTrend=d.langTrend||null; _envColorReset(); _envSince=d.envSince||0; _envPings=d.pings||null;
       _envLangsKnown=Array.isArray(d.langs); _envLangs=_envLangsKnown?d.langs:[]; _envLangN=d.langN||0; renderEnv();
       _musKnown=(d.music!==undefined); _musData=d.music||{}; _musTitles=d.musicTitles||{}; _musSince=d.musicSince||0; renderMusic();
       var dbx=$('trafDb');

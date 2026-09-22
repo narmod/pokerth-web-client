@@ -17,6 +17,15 @@ highlights below.
 
 ### Added
 
+- **Admin: per-language trend arrow** (`web.121`) — in "Who visits › Language"
+  each row ends with ↗ / → / ↘. The proxy adds `langTrend` to `/admin/visits`
+  (per-language pings over the last 14 *full* days, ending yesterday, and the
+  14 before, from the existing per-day `lg` series). The page compares the
+  language's *share* of pings (denominator excludes header-less pings, i.e.
+  bots; the "No language header" row keeps its share of all pings) with a
+  two-proportion z-test: an arrow only when |z| ≥ 1.96, "→" otherwise, and
+  nothing at all under 10 pings or until both windows are full. Tooltip
+  shows both shares, raw counts and σ. `scripts/test-admin-lang-trend.mjs`.
 - **Events tab: relative day plus date** (`web.114`) — `evWhen` appends the short
   date to the `Intl.RelativeTimeFormat` word, with the line's own neutral
   separator (a comma reads wrong in Japanese or Arabic): "today · 21 Sep ·

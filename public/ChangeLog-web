@@ -1,4 +1,7 @@
-2026-09-21 version 2.1.9-web.120 (current series):
+2026-09-22 version 2.1.9-web.121 (current series):
+- improvement: admin page — the language breakdown in "Who visits" now shows a trend arrow per language (share over the last 14 full days vs the 14 before, only when the change is statistically significant)
+
+2026-09-21 version 2.1.9-web.120:
 - new: the rules, FAQ, poker hands, how-to-play and glossary pages are now available in Sinhala too
 
 2026-09-21 version 2.1.9-web.119:

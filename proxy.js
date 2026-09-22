@@ -5981,6 +5981,28 @@ function visitHourProfile(daysBack) {
 // Une cohorte n'est comptee que si elle a eu le temps de revenir : les nouveaux
 // d'hier ne peuvent pas figurer dans un « revenu sous 7 jours ». Les
 // denominateurs des trois mesures sont donc differents, et c'est voulu.
+// Tendance par langue : deux fenêtres de `win` jours COMPLETS, la première se
+// terminant hier (le jour en cours est partiel, il fausserait la comparaison),
+// la seconde juste avant. On renvoie les comptes bruts par langue et le nombre
+// de jours de chaque fenêtre qui ont réellement une série `lg` : la page admin
+// décide alors elle-même de ne rien afficher tant que l'historique est trop
+// court, plutôt que de tracer une flèche sur une demi-fenêtre.
+function visitLangTrend(win) {
+  win = win || 14;
+  const today = visitDayIndex();
+  function sumWin(fromBack) {
+    const out = {}, m = { n: 0, days: 0 };
+    for (let i = 0; i < win; i++) {
+      const b = visitsStore.days[visitDayKeyFromIndex(today - fromBack - i)];
+      if (!b || !b.lg) continue;
+      m.days++;
+      for (const k in b.lg) { out[k] = (out[k] || 0) + (b.lg[k] || 0); m.n += b.lg[k] || 0; }
+    }
+    return { by: out, n: m.n, days: m.days };
+  }
+  const cur = sumWin(1), prev = sumWin(1 + win);
+  return { win: win, cur: cur.by, prev: prev.by, curN: cur.n, prevN: prev.n, curDays: cur.days, prevDays: prev.days };
+}
 function visitCohorts(windowDays) {
   const today = visitDayIndex();
   const from = today - windowDays + 1;
@@ -6054,6 +6076,7 @@ function visitsSummary() {
     cohorts: visitCohorts(30),
     env: visitsStore.env || {},
     envSince: visitsStore.envSince || 0,
+    langTrend: visitLangTrend(14),
     langs: supportedLangs(),
     langN: supportedLangCount(),
     music: visitsStore.music || {},
