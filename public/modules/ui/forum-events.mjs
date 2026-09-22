@@ -161,6 +161,18 @@ function _fetch(force) {
 const ICON_OUT = '<svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" aria-hidden="true"><path d="M14 3h7v7h-2V6.41l-9.29 9.3-1.42-1.42 9.3-9.29H14V3zM5 5h6v2H5v12h12v-6h2v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2z"/></svg>';
 const ICON_CUP = '<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:inline-block;vertical-align:-2px;margin-inline-end:5px"><path d="M7 4h10v5a5 5 0 0 1-10 0V4z"/><path d="M7 6H4v1a3 3 0 0 0 3 3M17 6h3v1a3 3 0 0 1-3 3M12 14v4M8.5 20h7"/></svg>';
 
+// Section icons of the category cards (stroke, currentColor).
+function _ico(d) { return '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + d + '</svg>'; }
+const ICON_CAL = _ico('<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>');
+const ICON_FLAG = _ico('<path d="M5 21V4M5 4h11l-2 4 2 4H5"/>');
+const ICON_BARS = _ico('<path d="M6 20V10M12 20V4M18 20v-7"/>');
+
+// One category = one card: header (icon, label, row count) then its rows.
+function _card(icon, label, count, body) {
+  return '<section class="ev-card"><div class="ev-ch">' + icon + '<span class="ev-cl">' + esc(label) + '</span>'
+    + (count > 0 ? '<span class="ev-cnt">' + count + '</span>' : '') + '</div>' + body + '</section>';
+}
+
 function _row(src, url, title, meta, winner) {
   const safe = evSafeUrl(url);
   const open = _t('evOpenSite', 'Open the site');
@@ -180,26 +192,27 @@ function _render(data) {
   const stepWord = _t('rankingStep', 'Step');
   const up = (data.upcoming || []).filter(function (e) { return e && typeof e.at === 'number' && e.at >= now - 5 * 60 * 1000; });
   const res = data.results || [];
-  let html = '<div class="ev-h">' + esc(_t('evUpcoming', 'Upcoming')) + '</div>';
-  if (!up.length) html += '<div class="rk-msg">' + esc(_t('evNone', 'No upcoming events.')) + '</div>';
+  let html = '', rows = '';
   for (const e of up) {
     const meta = [evWhen(e.at, now, loc)];
     meta.push(evSignupText(e, _t('evSignups', 'Signed up: {n}')));
-    html += _row(e.src, e.url, evUpcomingTitle(e, loc, stepWord), meta.filter(Boolean).join(' \u00b7 '), false);
+    rows += _row(e.src, e.url, evUpcomingTitle(e, loc, stepWord), meta.filter(Boolean).join(' \u00b7 '), false);
   }
-  if (res.length) {
-    html += '<div class="ev-h">' + esc(_t('evResults', 'Latest results')) + '</div>';
-    for (const r of res) {
-      const pod = Array.isArray(r.podium) ? r.podium : [];
-      if (!pod.length) continue;
-      html += _row(r.src, r.url, pod[0], evResultMeta(r, now, loc), true);
-    }
+  html += _card(ICON_CAL, _t('evUpcoming', 'Upcoming'), up.length,
+    up.length ? rows : '<div class="rk-msg">' + esc(_t('evNone', 'No upcoming events.')) + '</div>');
+  rows = ''; let n = 0;
+  for (const r of res) {
+    const pod = Array.isArray(r.podium) ? r.podium : [];
+    if (!pod.length) continue;
+    rows += _row(r.src, r.url, pod[0], evResultMeta(r, now, loc), true); n++;
   }
+  if (n) html += _card(ICON_FLAG, _t('evResults', 'Latest results'), n, rows);
   const lead = (data.leaders || []).filter(function (l) { return l && l.player; });
   if (lead.length) {
     const w = { season: _t('rankingSeason', 'Season'), points: _t('rankingColPoints', 'Points'), games: _t('rankingColGames', 'Games') };
-    html += '<div class="ev-h">' + esc(_t('rankingTitle', 'Ranking')) + '</div>';
-    for (const l of lead) html += _row(l.src, l.url, l.player, evLeaderMeta(l, loc, w), true);
+    rows = '';
+    for (const l of lead) rows += _row(l.src, l.url, l.player, evLeaderMeta(l, loc, w), true);
+    html += _card(ICON_BARS, _t('rankingTitle', 'Ranking'), lead.length, rows);
   }
   box.innerHTML = html;
 }
