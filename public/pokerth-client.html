@@ -3148,7 +3148,7 @@ if ('serviceWorker' in navigator && !window.LIVE_MODE) {
     <!-- Onglets Posts / Evenements : extension web (forum-events.mjs), masques
          par l'option « contenu communautaire » et pendant la lecture d'un post. -->
     <div class="rk-tabs" id="fn-tabs" role="tablist">
-      <button type="button" class="rk-tab active" role="tab" aria-selected="true" data-tab="posts" onclick="forumSelectTab('posts')" data-i18n="forumTabPosts">Posts</button>
+      <button type="button" class="rk-tab active" role="tab" aria-selected="true" data-tab="posts" onclick="forumSelectTab('posts')"><span data-i18n="forumTabPosts">Posts</span><span class="forum-unread fn-tab-unread" style="display:none" aria-hidden="true">0</span></button>
       <button type="button" class="rk-tab" role="tab" aria-selected="false" data-tab="events" onclick="forumSelectTab('events')" data-i18n="forumTabEvents">Events</button>
     </div>
     <div class="rk-body" tabindex="-1" data-kn-read>

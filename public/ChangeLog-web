@@ -1,4 +1,7 @@
-2026-09-22 version 2.1.9-web.124 (current series):
+2026-09-22 version 2.1.9-web.125 (current series):
+- improvement: forum news — the "Posts" tab now shows the same red unread counter as the forum button
+
+2026-09-22 version 2.1.9-web.124:
 - bugfix: iPhone (installed app) — after reloading for a new version, a grey band could remain at the bottom of the screen until the phone was rotated; the app now keeps re-checking the screen height for 30 s after start and on the first taps
 
 2026-09-22 version 2.1.9-web.123:
