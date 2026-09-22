@@ -28,6 +28,10 @@
 //   wec  /results/ranking  <ranking-component :stats="[…]" :stats_year :stats_month>
 //                       Rows { nickname, score, points, games }, best first:
 //                       BBC ranks a season, WEC ranks the current month.
+//   pth  /pthranking/ranking/cod  (www.pokerth.net) a real JSON array, best
+//                       first: [{ username, url, score, games }] -- the
+//                       "Champions of the Day" box of the forum home page
+//                       (checked 2026-09-22). We keep the top three.
 //   mc   /              <home-component :next-cup="JSON.parse('…')"
 //                         :signup-count="2" :latest-cup="JSON.parse('…')">
 //                       Laravel Js::from(): a JS string literal with \u0022
@@ -51,7 +55,8 @@ const SOURCES = {
   wecResults: 'https://wec.pokerth.net/results',
   mcHome: 'https://monthlycup.pokerth.net/',
   bbcRanking: 'https://bbc.pokerth.net/results/ranking',
-  wecRanking: 'https://wec.pokerth.net/results/ranking'
+  wecRanking: 'https://wec.pokerth.net/results/ranking',
+  pthCod: 'https://www.pokerth.net/pthranking/ranking/cod'
 };
 
 const LINKS = {
@@ -61,7 +66,8 @@ const LINKS = {
   bbcResults: 'https://bbc.pokerth.net/results',
   wecResults: 'https://wec.pokerth.net/results',
   mcRegister: 'https://monthlycup.pokerth.net/registration',
-  mcHome: 'https://monthlycup.pokerth.net/'
+  mcHome: 'https://monthlycup.pokerth.net/',
+  pthLeaderboard: 'https://www.pokerth.net/app.php/leaderboard'
 };
 
 const BBC_SEATS = 10;            // the BBC calendar itself labels a game "Players: n/10"
@@ -237,6 +243,21 @@ function parseMcHome(html, now) {
   return out;
 }
 
+// Champions of the Day (official server): top three of the JSON array.
+function parseCod(text) {
+  let arr;
+  try { arr = JSON.parse(text); } catch (e) { return { ok: false, error: 'parse_json' }; }
+  if (!Array.isArray(arr)) return { ok: false, error: 'parse_shape' };
+  const top = arr.filter(function (p) { return p && typeof p === 'object' && name(p.username); })
+    .slice(0, 3).map(function (p) {
+      return { player: name(p.username),
+        score: (typeof p.score === 'number' && Number.isFinite(p.score)) ? Math.round(p.score * 100) / 100 : null,
+        games: count(p.games) };
+    });
+  if (!top.length) return { ok: false, error: 'parse_no_rows' };
+  return { ok: true, champions: { top: top, url: LINKS.pthLeaderboard } };
+}
+
 // ── aggregation ──────────────────────────────────────────────────────
 // fetchText(url) -> Promise<string>. One source failing never hides the
 // others: its name lands in `errors` and the rest is served.
@@ -247,7 +268,8 @@ async function buildEvents(fetchText, now) {
     ['wec', SOURCES.wecResults, parseWecResults],
     ['mc', SOURCES.mcHome, function (h) { return parseMcHome(h, now); }],
     ['bbc_ranking', SOURCES.bbcRanking, parseBbcRanking],
-    ['wec_ranking', SOURCES.wecRanking, parseWecRanking]
+    ['wec_ranking', SOURCES.wecRanking, parseWecRanking],
+    ['cod', SOURCES.pthCod, parseCod]
   ];
   const settled = await Promise.all(jobs.map(function (j) {
     return Promise.resolve().then(function () { return fetchText(j[1]); })
@@ -255,18 +277,21 @@ async function buildEvents(fetchText, now) {
       .catch(function (e) { return { ok: false, error: String((e && e.message) || e).slice(0, 80) }; });
   }));
   const upcoming = [], results = [], leaders = [], errors = {};
+  let champions = null;
   settled.forEach(function (r, i) {
     if (!r.ok) { errors[jobs[i][0] + (i === 0 ? '_schedule' : '')] = r.error; return; }
     if (r.upcoming) for (const u of r.upcoming) upcoming.push(u);
     if (r.result) results.push(r.result);
     if (r.leader) leaders.push(r.leader);
+    if (r.champions) champions = r.champions;
   });
   upcoming.sort(function (a, b) { return a.at - b.at; });
   const order = { bbc: 0, wec: 1, mc: 2 };
   results.sort(function (a, b) { return order[a.src] - order[b.src]; });
   leaders.sort(function (a, b) { return order[a.src] - order[b.src]; });
-  const ok = upcoming.length > 0 || results.length > 0 || leaders.length > 0;
+  const ok = upcoming.length > 0 || results.length > 0 || leaders.length > 0 || !!champions;
   const out = { ok: ok, at: now, tz: SITE_TZ, upcoming: upcoming, results: results, leaders: leaders };
+  if (champions) out.champions = champions;
   if (Object.keys(errors).length) out.errors = errors;
   if (!ok) out.error = 'no_data';
   return out;
@@ -276,6 +301,6 @@ module.exports = {
   SITE_TZ, SOURCES, LINKS,
   decodeHtml, attrOf, propJson, zonedToEpoch,
   parseBbcSchedule, parseBbcResults, parseWecResults, parseMcHome,
-  parseBbcRanking, parseWecRanking,
+  parseBbcRanking, parseWecRanking, parseCod,
   buildEvents
 };

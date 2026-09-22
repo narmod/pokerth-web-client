@@ -476,7 +476,7 @@ export const strings = {
     piNoCupData:'ಈ ಆಟಗಾರನಿಗೆ ಕಪ್ ಶ್ರೇಯಾಂಕವಿಲ್ಲ.',
     rankingTooltip:'ಶ್ರೇಯಾಂಕ', rankingTitle:'ಶ್ರೇಯಾಂಕ', rankingPth:'PokerTH', rankingBbc:'BBC', rankingWec:'WEC',
     rankingLoading:'ಲೋಡ್ ಆಗುತ್ತಿದೆ…', rankingSoon:'ಶ್ರೇಯಾಂಕ ಶೀಘ್ರದಲ್ಲಿ ಬರಲಿದೆ.', rankingError:'ಶ್ರೇಯಾಂಕವನ್ನು ಲೋಡ್ ಮಾಡಲು ಆಗಲಿಲ್ಲ.', rankingEmpty:'ಎಂಟ್ರಿಗಳಿಲ್ಲ.',
-    forumTabPosts:'ಪೋಸ್ಟ್‌ಗಳು', forumTabEvents:'ಈವೆಂಟ್‌ಗಳು', evUpcoming:'ಮುಂಬರುವ', evResults:'ಇತ್ತೀಚಿನ ಫಲಿತಾಂಶಗಳು', evSignups:'ನೋಂದಾಯಿಸಿದವರು: {n}', evError:'ಈವೆಂಟ್‌ಗಳನ್ನು ಲೋಡ್ ಮಾಡಲಾಗಲಿಲ್ಲ.', evNone:'ಮುಂಬರುವ ಈವೆಂಟ್‌ಗಳಿಲ್ಲ.', evOpenSite:'ಸೈಟ್ ತೆರೆಯಿರಿ',
+    forumTabPosts:'ಪೋಸ್ಟ್‌ಗಳು', forumTabEvents:'ಈವೆಂಟ್‌ಗಳು', evUpcoming:'ಮುಂಬರುವ', evChampions:'ದಿನದ ಚಾಂಪಿಯನ್‌ಗಳು', evResults:'ಇತ್ತೀಚಿನ ಫಲಿತಾಂಶಗಳು', evSignups:'ನೋಂದಾಯಿಸಿದವರು: {n}', evError:'ಈವೆಂಟ್‌ಗಳನ್ನು ಲೋಡ್ ಮಾಡಲಾಗಲಿಲ್ಲ.', evNone:'ಮುಂಬರುವ ಈವೆಂಟ್‌ಗಳಿಲ್ಲ.', evOpenSite:'ಸೈಟ್ ತೆರೆಯಿರಿ',
     forumTooltip:'ಫೋರಂ', forumTitle:'ಫೋರಂ ಸುದ್ದಿ', forumMarkRead:'ಎಲ್ಲವನ್ನೂ ಓದಿದ್ದೆಂದು ಗುರುತಿಸಿ', forumOpen:'ಫೋರಂ ತೆರೆಯಿರಿ', forumError:'ಫೋರಂ ಫೀಡ್ ಅನ್ನು ಲೋಡ್ ಮಾಡಲು ಆಗಲಿಲ್ಲ.', advForumNews:'ಲಾಬಿ ಹೆಡರ್‌ನಲ್ಲಿ ಫೋರಂ ಬಟನ್', forumOpenPost:'ಪೋಸ್ಟ್ ತೆರೆಯಿರಿ', forumOpenInForum:'ಫೋರಂನಲ್ಲಿ ತೆರೆಯಿರಿ', forumTranslate:'ಪೋಸ್ಟ್ ಅನ್ನು ಅನುವಾದಿಸಿ', forumShowOriginal:'ಮೂಲ ಪೋಸ್ಟ್ ತೋರಿಸಿ', forumTranslateFailed:'ಅನುವಾದ ವಿಫಲವಾಯಿತು.',
     rankingSearch:'ಆಟಗಾರನನ್ನು ಹುಡುಕಿ…', rankingNoMatch:'ಆಟಗಾರ ಸಿಗಲಿಲ್ಲ.',
     rankingSeason:'ಸೀಸನ್', rankingAllTime:'ಆಲ್-ಟೈಮ್',

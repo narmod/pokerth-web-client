@@ -50,7 +50,7 @@ ok(E.evLeaderMeta({ src: 'bbc', period: { season: 12 }, points: 900, games: 22, 
 ok(E.evLeaderMeta({ src: 'wec', period: {}, points: null, games: null }, 'en') === '', 'nothing known, nothing shown');
 
 // -- links --------------------------------------------------------------------
-ok(E.evSafeUrl('https://wec.pokerth.net/results/ranking') !== '' && E.evSafeUrl('https://bbc.pokerth.net/registration') !== '' && E.evSafeUrl('https://monthlycup.pokerth.net/results/series?year=2026') !== '', 'community site links pass');
+ok(E.evSafeUrl('https://wec.pokerth.net/results/ranking') !== '' && E.evSafeUrl('https://bbc.pokerth.net/registration') !== '' && E.evSafeUrl('https://monthlycup.pokerth.net/results/series?year=2026') !== '' && E.evSafeUrl('https://www.pokerth.net/app.php/leaderboard') !== '', 'community site and pokerth.net links pass');
 ok(E.evSafeUrl('https://evil.example/') === '' && E.evSafeUrl('javascript:alert(1)') === '' && E.evSafeUrl('https://bbc.pokerth.net.evil.example/') === '', 'anything else is dropped');
 
 // -- wiring -------------------------------------------------------------------
@@ -61,7 +61,7 @@ ok(/adv-no-communitycontent #forum-modal #fn-tabs/.test(css), 'the community-con
 ok(sw.includes("'/modules/ui/forum-events.mjs'"), 'the module is precached by the service worker');
 
 // -- i18n: every catalogue carries the eight keys -------------------------------
-const KEYS = ['forumTabPosts', 'forumTabEvents', 'evUpcoming', 'evResults', 'evSignups', 'evError', 'evNone', 'evOpenSite'];
+const KEYS = ['forumTabPosts', 'forumTabEvents', 'evUpcoming', 'evResults', 'evSignups', 'evError', 'evNone', 'evOpenSite', 'evChampions'];
 const dir = path.join(root, 'public', 'modules', 'lang');
 let bad = [];
 for (const f of fs.readdirSync(dir).filter(f => f.endsWith('.mjs'))) {

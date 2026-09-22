@@ -89,13 +89,24 @@ const bl = ce.parseBbcRanking(bbcRank);
 ok(bl.ok && bl.leader.player === 'spoof' && bl.leader.period.season === 12 && bl.leader.next.length === 0, 'BBC leader comes with its season; a one-row table has no runner-up');
 ok(ce.parseWecRanking('<ranking-component :stats="[]">').ok === false, 'an empty table is an error, not a blank row');
 
+// -- Champions of the Day (www.pokerth.net JSON) ---------------------------------
+const cod = JSON.stringify([
+  { username: 'RHanson123', url: '/player?u=RHanson123', score: 7.285714285714286, games: 7 },
+  { username: 'darmax99', url: '/player?u=darmax99', score: 6.833333333333333, games: 6 },
+  { username: 'AceTom57', url: '/player?u=AceTom57', score: 6.333333333333333, games: 6 },
+  { username: 'il Buono', url: '/player?u=il Buono', score: 5.57, games: 7 }]);
+const cp = ce.parseCod(cod);
+ok(cp.ok && cp.champions.top.map(p => p.player).join(',') === 'RHanson123,darmax99,AceTom57' && cp.champions.top[0].score === 7.29 && cp.champions.top[0].games === 7, 'Champions of the Day: top three, score rounded');
+ok(ce.parseCod('[]').ok === false && ce.parseCod('<html>').ok === false && ce.parseCod('{}').ok === false, 'Champions of the Day: empty, HTML or wrong shape is an error');
+
 // -- aggregation -------------------------------------------------------------
-const pages = { [ce.SOURCES.bbcSchedule]: bbcReg, [ce.SOURCES.bbcResults]: bbcRes, [ce.SOURCES.wecResults]: wecRes, [ce.SOURCES.mcHome]: mcHome, [ce.SOURCES.bbcRanking]: bbcRank, [ce.SOURCES.wecRanking]: wecRank };
+const pages = { [ce.SOURCES.bbcSchedule]: bbcReg, [ce.SOURCES.bbcResults]: bbcRes, [ce.SOURCES.wecResults]: wecRes, [ce.SOURCES.mcHome]: mcHome, [ce.SOURCES.bbcRanking]: bbcRank, [ce.SOURCES.wecRanking]: wecRank, [ce.SOURCES.pthCod]: cod };
 const all = await ce.buildEvents(u => Promise.resolve(pages[u]), NOW);
 ok(all.ok && all.upcoming.length === 4 && !all.errors, 'all sources merge into one payload');
 ok(all.upcoming.map(u => u.src).join(',') === 'bbc,bbc,bbc,mc', 'upcoming events are sorted by time across sites');
 ok(all.results.map(r => r.src).join(',') === 'bbc,wec,mc', 'results keep a fixed site order');
 ok(all.leaders.map(r => r.src + ':' + r.player).join(',') === 'bbc:spoof,wec:Blupher', 'leaders ride along, in the same site order');
+ok(all.champions && all.champions.top.length === 3 && all.champions.url === ce.LINKS.pthLeaderboard, 'Champions of the Day ride along');
 const part = await ce.buildEvents(u => u === ce.SOURCES.wecResults ? Promise.reject(new Error('upstream_503')) : Promise.resolve(pages[u]), NOW);
 ok(part.ok && part.errors && part.errors.wec === 'upstream_503' && part.results.length === 2, 'one site down does not hide the others');
 const none = await ce.buildEvents(() => Promise.reject(new Error('offline')), NOW);

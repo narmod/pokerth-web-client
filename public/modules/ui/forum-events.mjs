@@ -121,9 +121,9 @@ export function evSignupText(e, label) {
   return String(label || 'Signed up: {n}').replace('{n}', String(e.signups));
 }
 
-// Only ever link to the community sites, whatever the relay says.
+// Only ever link to the community sites and pokerth.net, whatever the relay says.
 export function evSafeUrl(u) {
-  return /^https:\/\/(bbc|wec|monthlycup)\.pokerth\.net\//.test(String(u || '')) ? String(u) : '';
+  return /^https:\/\/(bbc|wec|monthlycup|www)\.pokerth\.net\//.test(String(u || '')) ? String(u) : '';
 }
 
 // ── Runtime ─────────────────────────────────────────────────────────
@@ -166,6 +166,24 @@ function _ico(d) { return '<svg viewBox="0 0 24 24" width="14" height="14" fill=
 const ICON_CAL = _ico('<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>');
 const ICON_FLAG = _ico('<path d="M5 21V4M5 4h11l-2 4 2 4H5"/>');
 const ICON_BARS = _ico('<path d="M6 20V10M12 20V4M18 20v-7"/>');
+const ICON_SUN = _ico('<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>');
+
+// Champions of the Day (official server): gold / silver / bronze medals on one
+// line, the whole strip links to the pokerth.net leaderboard.
+function _champions(c) {
+  const top = (c && Array.isArray(c.top) ? c.top : []).filter(function (p) { return p && p.player; }).slice(0, 3);
+  if (!top.length) return '';
+  const safe = evSafeUrl(c.url);
+  const open = _t('evOpenSite', 'Open the site');
+  let body = '<a class="ev-cod"' + (safe ? ' href="' + esc(safe).replace(/"/g, '&quot;') + '" target="_blank" rel="noopener noreferrer"' : '')
+    + ' title="' + esc(open).replace(/"/g, '&quot;') + '">';
+  top.forEach(function (p, i) {
+    const tip = [p.score != null ? String(p.score) : '', p.games != null ? p.games + ' ' + _t('rankingColGames', 'Games') : ''].filter(Boolean).join(' \u00b7 ');
+    body += '<span class="ev-cod-p"' + (tip ? ' title="' + esc(tip).replace(/"/g, '&quot;') + '"' : '') + '><span class="ev-med ev-med' + (i + 1) + '">' + (i + 1) + '</span>'
+      + '<span class="ev-cod-n">' + esc(p.player) + '</span></span>';
+  });
+  return _card(ICON_SUN, _t('evChampions', 'Champions of the day'), 0, body + '</a>');
+}
 
 // One category = one card: header (icon, label, row count) then its rows.
 function _card(icon, label, count, body) {
@@ -192,7 +210,7 @@ function _render(data) {
   const stepWord = _t('rankingStep', 'Step');
   const up = (data.upcoming || []).filter(function (e) { return e && typeof e.at === 'number' && e.at >= now - 5 * 60 * 1000; });
   const res = data.results || [];
-  let html = '', rows = '';
+  let html = _champions(data.champions), rows = '';
   for (const e of up) {
     const meta = [evWhen(e.at, now, loc)];
     meta.push(evSignupText(e, _t('evSignups', 'Signed up: {n}')));

@@ -479,7 +479,7 @@ export const strings = {
     piNoCupData:'Бұл ойыншының кубок рейтингі жоқ.',
     rankingTooltip:'Рейтинг', rankingTitle:'Рейтинг', rankingPth:'PokerTH', rankingBbc:'BBC', rankingWec:'WEC',
     rankingLoading:'Жүктелуде…', rankingSoon:'Рейтинг жақында пайда болады.', rankingError:'Рейтингті жүктеу мүмкін болмады.', rankingEmpty:'Жазба жоқ.',
-    forumTabPosts:'Жазбалар', forumTabEvents:'Оқиғалар', evUpcoming:'Алдағы', evResults:'Соңғы нәтижелер', evSignups:'Тіркелгендер: {n}', evError:'Оқиғаларды жүктеу мүмкін болмады.', evNone:'Алдағы оқиға жоқ.', evOpenSite:'Сайтты ашу',
+    forumTabPosts:'Жазбалар', forumTabEvents:'Оқиғалар', evUpcoming:'Алдағы', evChampions:'Күн чемпиондары', evResults:'Соңғы нәтижелер', evSignups:'Тіркелгендер: {n}', evError:'Оқиғаларды жүктеу мүмкін болмады.', evNone:'Алдағы оқиға жоқ.', evOpenSite:'Сайтты ашу',
     forumTooltip:'Форум', forumTitle:'Форум жаңалықтары', forumMarkRead:'Барлығын оқылған деп белгілеу', forumOpen:'Форумды ашу', forumError:'Форум таспасын жүктеу мүмкін болмады.', advForumNews:'Лобби тақырыбындағы форум түймесі', forumOpenPost:'Жазбаны ашу', forumOpenInForum:'Форумда ашу', forumTranslate:'Жазбаны аудару', forumShowOriginal:'Түпнұсқа жазбаны көрсету', forumTranslateFailed:'Аудару сәтсіз аяқталды.',
     rankingSearch:'Ойыншыны іздеу…', rankingNoMatch:'Ойыншы табылмады.',
     rankingSeason:'Маусым', rankingAllTime:'Бүкіл уақыт',

@@ -475,7 +475,7 @@ export const strings = {
     piNoCupData:'اس کھلاڑی کی کوئی کپ درجہ بندی نہیں۔',
     rankingTooltip:'درجہ بندی', rankingTitle:'درجہ بندی', rankingPth:'PokerTH', rankingBbc:'BBC', rankingWec:'WEC',
     rankingLoading:'لوڈ ہو رہا ہے…', rankingSoon:'درجہ بندی جلد آ رہی ہے۔', rankingError:'درجہ بندی لوڈ نہیں ہو سکی۔', rankingEmpty:'کوئی اندراج نہیں۔',
-    forumTabPosts:'پوسٹس', forumTabEvents:'ایونٹس', evUpcoming:'آنے والے', evResults:'تازہ ترین نتائج', evSignups:'رجسٹرڈ: {n}', evError:'ایونٹس لوڈ نہیں ہو سکے۔', evNone:'کوئی آنے والا ایونٹ نہیں۔', evOpenSite:'سائٹ کھولیں',
+    forumTabPosts:'پوسٹس', forumTabEvents:'ایونٹس', evUpcoming:'آنے والے', evChampions:'آج کے چیمپئن', evResults:'تازہ ترین نتائج', evSignups:'رجسٹرڈ: {n}', evError:'ایونٹس لوڈ نہیں ہو سکے۔', evNone:'کوئی آنے والا ایونٹ نہیں۔', evOpenSite:'سائٹ کھولیں',
     forumTooltip:'فورم', forumTitle:'فورم کی خبریں', forumMarkRead:'سب پڑھا ہوا نشان لگائیں', forumOpen:'فورم کھولیں', forumError:'فورم فیڈ لوڈ نہیں ہو سکی۔', advForumNews:'لابی ہیڈر میں فورم بٹن', forumOpenPost:'پوسٹ کھولیں', forumOpenInForum:'فورم میں کھولیں', forumTranslate:'پوسٹ کا ترجمہ کریں', forumShowOriginal:'اصل پوسٹ دکھائیں', forumTranslateFailed:'ترجمہ ناکام۔',
     rankingSearch:'کھلاڑی تلاش کریں…', rankingNoMatch:'کوئی کھلاڑی نہیں ملا۔',
     rankingSeason:'سیزن', rankingAllTime:'ہر دور',

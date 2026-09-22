@@ -476,7 +476,7 @@ export const strings = {
     piNoCupData:'ఈ ఆటగాడికి కప్ ర్యాంకింగ్ లేదు.',
     rankingTooltip:'ర్యాంకింగ్', rankingTitle:'ర్యాంకింగ్', rankingPth:'PokerTH', rankingBbc:'BBC', rankingWec:'WEC',
     rankingLoading:'లోడ్ అవుతోంది…', rankingSoon:'ర్యాంకింగ్ త్వరలో వస్తోంది.', rankingError:'ర్యాంకింగ్‌ను లోడ్ చేయడం సాధ్యపడలేదు.', rankingEmpty:'ఎంట్రీలు లేవు.',
-    forumTabPosts:'పోస్ట్‌లు', forumTabEvents:'ఈవెంట్‌లు', evUpcoming:'రాబోయేవి', evResults:'తాజా ఫలితాలు', evSignups:'నమోదైనవారు: {n}', evError:'ఈవెంట్‌లను లోడ్ చేయలేకపోయాం.', evNone:'రాబోయే ఈవెంట్‌లు లేవు.', evOpenSite:'సైట్ తెరవండి',
+    forumTabPosts:'పోస్ట్‌లు', forumTabEvents:'ఈవెంట్‌లు', evUpcoming:'రాబోయేవి', evChampions:'నేటి ఛాంపియన్లు', evResults:'తాజా ఫలితాలు', evSignups:'నమోదైనవారు: {n}', evError:'ఈవెంట్‌లను లోడ్ చేయలేకపోయాం.', evNone:'రాబోయే ఈవెంట్‌లు లేవు.', evOpenSite:'సైట్ తెరవండి',
     forumTooltip:'ఫోరమ్', forumTitle:'ఫోరమ్ వార్తలు', forumMarkRead:'అన్నీ చదివినట్టు గుర్తించు', forumOpen:'ఫోరమ్ తెరువు', forumError:'ఫోరమ్ ఫీడ్‌ను లోడ్ చేయడం సాధ్యపడలేదు.', advForumNews:'లాబీ హెడర్‌లో ఫోరమ్ బటన్', forumOpenPost:'పోస్ట్ తెరువు', forumOpenInForum:'ఫోరమ్‌లో తెరువు', forumTranslate:'పోస్ట్‌ను అనువదించు', forumShowOriginal:'అసలు పోస్ట్‌ను చూపించు', forumTranslateFailed:'అనువాదం విఫలమైంది.',
     rankingSearch:'ఆటగాడి కోసం వెతకండి…', rankingNoMatch:'ఆటగాడు కనబడలేదు.',
     rankingSeason:'సీజన్', rankingAllTime:'ఆల్-టైమ్',

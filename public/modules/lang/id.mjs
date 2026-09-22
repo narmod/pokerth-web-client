@@ -477,7 +477,7 @@ export const strings = {
     piNoCupData:'Tidak ada peringkat piala untuk pemain ini.',
     rankingTooltip:'Peringkat', rankingTitle:'Peringkat', rankingPth:'PokerTH', rankingBbc:'BBC', rankingWec:'WEC',
     rankingLoading:'Memuat…', rankingSoon:'Peringkat segera hadir.', rankingError:'Peringkat tidak dapat dimuat.', rankingEmpty:'Tidak ada entri.',
-    forumTabPosts:'Kiriman', forumTabEvents:'Acara', evUpcoming:'Mendatang', evResults:'Hasil terbaru', evSignups:'Terdaftar: {n}', evError:'Acara tidak dapat dimuat.', evNone:'Tidak ada acara mendatang.', evOpenSite:'Buka situs',
+    forumTabPosts:'Kiriman', forumTabEvents:'Acara', evUpcoming:'Mendatang', evChampions:'Juara hari ini', evResults:'Hasil terbaru', evSignups:'Terdaftar: {n}', evError:'Acara tidak dapat dimuat.', evNone:'Tidak ada acara mendatang.', evOpenSite:'Buka situs',
     forumTooltip:'Forum', forumTitle:'Berita forum', forumMarkRead:'Tandai semua telah dibaca', forumOpen:'Buka forum', forumError:'Umpan forum tidak dapat dimuat.', advForumNews:'Tombol forum di kepala lobi', forumOpenPost:'Buka postingan', forumOpenInForum:'Buka di forum', forumTranslate:'Terjemahkan postingan', forumShowOriginal:'Tampilkan postingan asli', forumTranslateFailed:'Terjemahan gagal.',
     rankingSearch:'Cari pemain…', rankingNoMatch:'Pemain tidak ditemukan.',
     rankingSeason:'Musim', rankingAllTime:'Sepanjang masa',

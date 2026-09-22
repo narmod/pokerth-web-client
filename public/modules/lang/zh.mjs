@@ -202,7 +202,7 @@ export const strings = {
     rankingTooltip: '排行榜', rankingTitle: '排行榜', rankingPth: 'PokerTH', rankingBbc: 'BBC', rankingWec: 'WEC',
     rankingMemberSince: '加入于', rankingAwards: '奖项', rankingTickets: '门票', rankingThisSeason: '本赛季', rankingThisMonth: '本月', rankingThisYear: '今年', rankingStep: '阶段', rankingRank: '排名', rankingBack: '返回',
     rankingLoading: '加载中…', rankingSoon: '排行榜即将推出。', rankingError: '无法加载排行榜。', rankingEmpty: '没有条目。',
-    forumTabPosts:'帖子', forumTabEvents:'活动', evUpcoming:'即将开始', evResults:'最新结果', evSignups:'已报名：{n}', evError:'无法加载活动。', evNone:'暂无即将开始的活动。', evOpenSite:'打开网站',
+    forumTabPosts:'帖子', forumTabEvents:'活动', evUpcoming:'即将开始', evChampions:'今日冠军', evResults:'最新结果', evSignups:'已报名：{n}', evError:'无法加载活动。', evNone:'暂无即将开始的活动。', evOpenSite:'打开网站',
     forumTooltip:'论坛', forumTitle:'论坛消息', forumMarkRead:'全部标为已读', forumOpen:'打开论坛', forumError:'无法加载论坛动态。', advForumNews:'大厅顶栏的论坛按钮', forumOpenPost:'打开帖子', forumOpenInForum:'在论坛中打开', forumTranslate:'翻译帖子', forumShowOriginal:'显示原始帖子', forumTranslateFailed:'翻译失败。',
     rankingSearch: '搜索玩家…', rankingNoMatch: '未找到玩家。', rankingSeason: '赛季', rankingAllTime: '历史',
     rankingColRank: '#', rankingColPlayer: '昵称', rankingColScore: '分数', rankingColPoints: '积分', rankingColGames: '场数',

@@ -477,7 +477,7 @@ export const strings = {
     piNoCupData:'Hakuna kiwango cha kikombe kwa mchezaji huyu.',
     rankingTooltip:'Viwango', rankingTitle:'Viwango', rankingPth:'PokerTH', rankingBbc:'BBC', rankingWec:'WEC',
     rankingLoading:'Inapakia…', rankingSoon:'Viwango vinakuja hivi karibuni.', rankingError:'Haikuweza kupakia viwango.', rankingEmpty:'Hakuna maingizo.',
-    forumTabPosts:'Machapisho', forumTabEvents:'Matukio', evUpcoming:'Yajayo', evResults:'Matokeo ya hivi karibuni', evSignups:'Waliojisajili: {n}', evError:'Imeshindwa kupakia matukio.', evNone:'Hakuna matukio yajayo.', evOpenSite:'Fungua tovuti',
+    forumTabPosts:'Machapisho', forumTabEvents:'Matukio', evUpcoming:'Yajayo', evChampions:'Mabingwa wa siku', evResults:'Matokeo ya hivi karibuni', evSignups:'Waliojisajili: {n}', evError:'Imeshindwa kupakia matukio.', evNone:'Hakuna matukio yajayo.', evOpenSite:'Fungua tovuti',
     forumTooltip:'Jukwaa', forumTitle:'Habari za jukwaa', forumMarkRead:'Weka zote kama zimesomwa', forumOpen:'Fungua jukwaa', forumError:'Haikuweza kupakia mlisho wa jukwaa.', advForumNews:'Kitufe cha jukwaa kwenye kichwa cha ukumbi', forumOpenPost:'Fungua chapisho', forumOpenInForum:'Fungua kwenye jukwaa', forumTranslate:'Tafsiri chapisho', forumShowOriginal:'Onyesha chapisho asili', forumTranslateFailed:'Tafsiri imeshindikana.',
     rankingSearch:'Tafuta mchezaji…', rankingNoMatch:'Hakuna mchezaji aliyepatikana.',
     rankingSeason:'Msimu', rankingAllTime:'Wakati wote',

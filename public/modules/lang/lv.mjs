@@ -478,7 +478,7 @@ export const strings = {
     piNoCupData:'Šim spēlētājam nav kausu reitinga.',
     rankingTooltip:'Reitings', rankingTitle:'Reitings', rankingPth:'PokerTH', rankingBbc:'BBC', rankingWec:'WEC',
     rankingLoading:'Ielādē…', rankingSoon:'Reitings būs pieejams drīzumā.', rankingError:'Neizdevās ielādēt reitingu.', rankingEmpty:'Nav ierakstu.',
-    forumTabPosts:'Ieraksti', forumTabEvents:'Pasākumi', evUpcoming:'Gaidāmie', evResults:'Jaunākie rezultāti', evSignups:'Pieteikušies: {n}', evError:'Neizdevās ielādēt pasākumus.', evNone:'Nav gaidāmu pasākumu.', evOpenSite:'Atvērt vietni',
+    forumTabPosts:'Ieraksti', forumTabEvents:'Pasākumi', evUpcoming:'Gaidāmie', evChampions:'Dienas čempioni', evResults:'Jaunākie rezultāti', evSignups:'Pieteikušies: {n}', evError:'Neizdevās ielādēt pasākumus.', evNone:'Nav gaidāmu pasākumu.', evOpenSite:'Atvērt vietni',
     forumTooltip:'Forums', forumTitle:'Foruma jaunumi', forumMarkRead:'Atzīmēt visus kā lasītus', forumOpen:'Atvērt forumu', forumError:'Neizdevās ielādēt foruma plūsmu.', advForumNews:'Foruma poga vestibila galvenē', forumOpenPost:'Atvērt ierakstu', forumOpenInForum:'Atvērt forumā', forumTranslate:'Tulkot ierakstu', forumShowOriginal:'Rādīt sākotnējo ierakstu', forumTranslateFailed:'Tulkošana neizdevās.',
     rankingSearch:'Meklēt spēlētāju…', rankingNoMatch:'Neviens spēlētājs nav atrasts.',
     rankingSeason:'Sezona', rankingAllTime:'Visu laiku',

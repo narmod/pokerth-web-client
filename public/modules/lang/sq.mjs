@@ -478,7 +478,7 @@ export const strings = {
     piNoCupData:'Nuk ka të dhëna kupash për këtë lojtar.',
     rankingTooltip:'Renditja', rankingTitle:'Renditja', rankingPth:'PokerTH', rankingBbc:'BBC', rankingWec:'WEC',
     rankingLoading:'Duke ngarkuar…', rankingSoon:'Renditja së shpejti do të jetë e disponueshme.', rankingError:'Renditja nuk mund të ngarkohej.', rankingEmpty:'Asnjë hyrje.',
-    forumTabPosts:'Postime', forumTabEvents:'Ngjarje', evUpcoming:'Së shpejti', evResults:'Rezultatet e fundit', evSignups:'Të regjistruar: {n}', evError:'Ngjarjet nuk mund të ngarkoheshin.', evNone:'Nuk ka ngjarje të ardhshme.', evOpenSite:'Hap faqen',
+    forumTabPosts:'Postime', forumTabEvents:'Ngjarje', evUpcoming:'Së shpejti', evChampions:'Kampionët e ditës', evResults:'Rezultatet e fundit', evSignups:'Të regjistruar: {n}', evError:'Ngjarjet nuk mund të ngarkoheshin.', evNone:'Nuk ka ngjarje të ardhshme.', evOpenSite:'Hap faqen',
     forumTooltip:'Forumi', forumTitle:'Lajmet e forumit', forumMarkRead:'Shëno të gjitha si të lexuara', forumOpen:'Hap forumin', forumError:'Burimi i forumit nuk mund të ngarkohej.', advForumNews:'Butoni i forumit në krye të lobit', forumOpenPost:'Hap postimin', forumOpenInForum:'Hap në forum', forumTranslate:'Përkthe postimin', forumShowOriginal:'Trego postimin origjinal', forumTranslateFailed:'Përkthimi dështoi.',
     rankingSearch:'Kërko një lojtar…', rankingNoMatch:'Nuk u gjet asnjë lojtar.',
     rankingSeason:'Sezoni', rankingAllTime:'Të gjitha kohërat',

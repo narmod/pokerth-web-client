@@ -17,6 +17,7 @@ highlights below.
 
 ### Added
 
+- **Events tab: Champions of the day** (`web.127`) — the relay (`server/community-events.js`) now also reads `https://www.pokerth.net/pthranking/ranking/cod` (JSON) and ships the top three; the Events tab, now one card per category (`web.126`), opens with them as gold / silver / bronze medals linked to the official leaderboard.
 - **Admin: Traffic period selector** (`web.123`) — `GET /admin/visits?days=N`
   (7–90, default 14, clamped in `visitPeriodDays`) sets one window for the
   daily series, `hourProfile`, `cohorts`, `langTrend` (N full days vs the N

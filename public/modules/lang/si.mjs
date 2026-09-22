@@ -479,7 +479,7 @@ export const strings = {
     piNoCupData:'මෙම ක්‍රීඩකයාට කුසලාන ශ්‍රේණිගත කිරීමක් නැත.',
     rankingTooltip:'ශ්‍රේණිගත කිරීම', rankingTitle:'ශ්‍රේණිගත කිරීම', rankingPth:'PokerTH', rankingBbc:'BBC', rankingWec:'WEC',
     rankingLoading:'පූරණය වෙමින්…', rankingSoon:'ශ්‍රේණිගත කිරීම ළඟදීම.', rankingError:'ශ්‍රේණිගත කිරීම පූරණය කළ නොහැකි විය.', rankingEmpty:'ඇතුළත් කිරීම් නැත.',
-    forumTabPosts:'පළකිරීම්', forumTabEvents:'සිදුවීම්', evUpcoming:'ඉදිරියට එන', evResults:'නවතම ප්‍රතිඵල', evSignups:'ලියාපදිංචි වූ: {n}', evError:'සිදුවීම් පූරණය කළ නොහැකි විය.', evNone:'ඉදිරියට එන සිදුවීම් නැත.', evOpenSite:'වෙබ් අඩවිය විවෘත කරන්න',
+    forumTabPosts:'පළකිරීම්', forumTabEvents:'සිදුවීම්', evUpcoming:'ඉදිරියට එන', evChampions:'දවසේ ශූරයෝ', evResults:'නවතම ප්‍රතිඵල', evSignups:'ලියාපදිංචි වූ: {n}', evError:'සිදුවීම් පූරණය කළ නොහැකි විය.', evNone:'ඉදිරියට එන සිදුවීම් නැත.', evOpenSite:'වෙබ් අඩවිය විවෘත කරන්න',
     forumTooltip:'සංසදය', forumTitle:'සංසද පුවත්', forumMarkRead:'සියල්ල කියවූ ලෙස සලකුණු කරන්න', forumOpen:'සංසදය විවෘත කරන්න', forumError:'සංසද සංග්‍රහය පූරණය කළ නොහැකි විය.', advForumNews:'ලොබි ශීර්ෂයේ සංසද බොත්තම', forumOpenPost:'පළකිරීම විවෘත කරන්න', forumOpenInForum:'සංසදයේ විවෘත කරන්න', forumTranslate:'පළකිරීම පරිවර්තනය කරන්න', forumShowOriginal:'මුල් පළකිරීම පෙන්වන්න', forumTranslateFailed:'පරිවර්තනය අසාර්ථක විය.',
     rankingSearch:'ක්‍රීඩකයෙකු සොයන්න…', rankingNoMatch:'ක්‍රීඩකයෙකු හමු නොවීය.',
     rankingSeason:'වාරය', rankingAllTime:'සෑම කාලයකම',

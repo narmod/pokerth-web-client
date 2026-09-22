@@ -1,4 +1,7 @@
-2026-09-22 version 2.1.9-web.126 (current series):
+2026-09-22 version 2.1.9-web.127 (current series):
+- new: forum news — the Events tab now opens with the pokerth.net "Champions of the day" (gold, silver and bronze medals, linked to the official leaderboard)
+
+2026-09-22 version 2.1.9-web.126:
 - improvement: forum news — the Events tab now shows each category (upcoming, latest results, ranking) as its own card with an icon and a count, so they are easier to tell apart
 
 2026-09-22 version 2.1.9-web.125:

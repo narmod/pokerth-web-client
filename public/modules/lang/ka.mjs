@@ -479,7 +479,7 @@ export const strings = {
     piNoCupData:'ამ მოთამაშისთვის თასის რეიტინგის მონაცემები არ არის.',
     rankingTooltip:'რეიტინგი', rankingTitle:'რეიტინგი', rankingPth:'PokerTH', rankingBbc:'BBC', rankingWec:'WEC',
     rankingLoading:'იტვირთება…', rankingSoon:'რეიტინგი მალე იქნება ხელმისაწვდომი.', rankingError:'რეიტინგის ჩატვირთვა ვერ მოხერხდა.', rankingEmpty:'ჩანაწერები არ არის.',
-    forumTabPosts:'პოსტები', forumTabEvents:'ღონისძიებები', evUpcoming:'მომავალი', evResults:'ბოლო შედეგები', evSignups:'დარეგისტრირებულია: {n}', evError:'ღონისძიებების ჩატვირთვა ვერ მოხერხდა.', evNone:'მომავალი ღონისძიებები არ არის.', evOpenSite:'საიტის გახსნა',
+    forumTabPosts:'პოსტები', forumTabEvents:'ღონისძიებები', evUpcoming:'მომავალი', evChampions:'დღის ჩემპიონები', evResults:'ბოლო შედეგები', evSignups:'დარეგისტრირებულია: {n}', evError:'ღონისძიებების ჩატვირთვა ვერ მოხერხდა.', evNone:'მომავალი ღონისძიებები არ არის.', evOpenSite:'საიტის გახსნა',
     forumTooltip:'ფორუმი', forumTitle:'ფორუმის სიახლეები', forumMarkRead:'ყველას წაკითხულად მონიშვნა', forumOpen:'ფორუმის გახსნა', forumError:'ფორუმის არხის ჩატვირთვა ვერ მოხერხდა.', advForumNews:'ფორუმის ღილაკი ლობის ზედა ზოლში', forumOpenPost:'პოსტის გახსნა', forumOpenInForum:'ფორუმში გახსნა', forumTranslate:'პოსტის თარგმნა', forumShowOriginal:'ორიგინალი პოსტის ჩვენება', forumTranslateFailed:'თარგმანი ვერ მოხერხდა.',
     rankingSearch:'მოთამაშის ძიება…', rankingNoMatch:'მოთამაშე ვერ მოიძებნა.',
     rankingSeason:'სეზონი', rankingAllTime:'ყველა დრო',

@@ -476,7 +476,7 @@ export const strings = {
     piNoCupData:'គ្មានចំណាត់ថ្នាក់ពានសម្រាប់អ្នកលេងនេះ។',
     rankingTooltip:'ចំណាត់ថ្នាក់', rankingTitle:'ចំណាត់ថ្នាក់', rankingPth:'PokerTH', rankingBbc:'BBC', rankingWec:'WEC',
     rankingLoading:'កំពុងផ្ទុក…', rankingSoon:'ចំណាត់ថ្នាក់នឹងមកឆាប់ៗ។', rankingError:'មិនអាចផ្ទុកចំណាត់ថ្នាក់បានទេ។', rankingEmpty:'គ្មានធាតុ។',
-    forumTabPosts:'ប្រកាស', forumTabEvents:'ព្រឹត្តិការណ៍', evUpcoming:'នាពេលខាងមុខ', evResults:'លទ្ធផលចុងក្រោយ', evSignups:'បានចុះឈ្មោះ៖ {n}', evError:'មិនអាចផ្ទុកព្រឹត្តិការណ៍បានទេ។', evNone:'គ្មានព្រឹត្តិការណ៍នាពេលខាងមុខទេ។', evOpenSite:'បើកគេហទំព័រ',
+    forumTabPosts:'ប្រកាស', forumTabEvents:'ព្រឹត្តិការណ៍', evUpcoming:'នាពេលខាងមុខ', evChampions:'ជើងឯកប្រចាំថ្ងៃ', evResults:'លទ្ធផលចុងក្រោយ', evSignups:'បានចុះឈ្មោះ៖ {n}', evError:'មិនអាចផ្ទុកព្រឹត្តិការណ៍បានទេ។', evNone:'គ្មានព្រឹត្តិការណ៍នាពេលខាងមុខទេ។', evOpenSite:'បើកគេហទំព័រ',
     forumTooltip:'វេទិកា', forumTitle:'ព័ត៌មានវេទិកា', forumMarkRead:'សម្គាល់ទាំងអស់ថាបានអាន', forumOpen:'បើកវេទិកា', forumError:'មិនអាចផ្ទុកអត្ថបទវេទិកាបានទេ។', advForumNews:'ប៊ូតុងវេទិកាក្នុងបឋមកថាបន្ទប់រង់ចាំ', forumOpenPost:'បើកការបង្ហោះ', forumOpenInForum:'បើកក្នុងវេទិកា', forumTranslate:'បកប្រែការបង្ហោះ', forumShowOriginal:'បង្ហាញការបង្ហោះដើម', forumTranslateFailed:'ការបកប្រែបរាជ័យ។',
     rankingSearch:'ស្វែងរកអ្នកលេង…', rankingNoMatch:'រកមិនឃើញអ្នកលេង។',
     rankingSeason:'រដូវកាល', rankingAllTime:'គ្រប់ពេល',
