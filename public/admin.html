@@ -294,6 +294,17 @@
   .envrow .trend{flex:none;width:62px;text-align:right;font-size:.74rem;font-variant-numeric:tabular-nums;white-space:nowrap;cursor:help}
   .envrow .trend.up{color:#5ec269}.envrow .trend.down{color:#e26d6d}.envrow .trend.flat{color:var(--text);opacity:.55}.envrow .trend.na{color:var(--text);opacity:.3}
   .envrow .nrbadge{flex:none;width:56px;text-align:right;color:var(--text);opacity:.7;font-size:.74rem;font-variant-numeric:tabular-nums;white-space:nowrap}
+  /* Sur telephone les quatre colonnes fixes (badge, barre, compte, tendance)
+     ne laissaient plus un pixel au nom, qui disparaissait. La ligne se plie en
+     deux : nom, compte et tendance en haut ; barre pleine largeur et badge
+     « % new » en dessous, alignes sous le nom. */
+  @media(max-width:600px){
+    .envrow{flex-wrap:wrap;row-gap:3px}
+    .envrow .nmx{flex:1 1 0;min-width:6em}
+    .envrow .barx{flex:1 1 100%;order:5;margin-left:19px}
+    .envrow .nrbadge{order:6;width:auto}
+    .envrow .pct{min-width:0}
+  }
   .envhi{border:1px solid var(--line);border-radius:10px;padding:9px 11px;margin-top:12px;font-size:.8rem;color:var(--cream);line-height:1.5}
   .envhi b{color:var(--gold)}
   /* ── Light admin theme (data-admin-theme="light") ───────────── */
@@ -2593,9 +2604,21 @@
           _chartRead(host.id,e);
         },{passive:true});
       });
+      // A la souris la bulle suit le pointeur et s'efface quand il sort. Au
+      // doigt elle restait le temps de l'appui seulement : impossible de lire
+      // sept lignes en levant la main. Elle reste donc posee apres un tap et
+      // s'efface au tap suivant hors du graphique (ecouteur unique, document).
       ['pointerup','pointercancel','pointerleave'].forEach(function(ev){
-        host.addEventListener(ev,function(){ _chartHide(host.id); },{passive:true});
+        host.addEventListener(ev,function(e){ if(e.pointerType==='mouse') _chartHide(host.id); },{passive:true});
       });
+      if(!document._chartDocWired){
+        document._chartDocWired=1;
+        document.addEventListener('pointerdown',function(e){
+          document.querySelectorAll('.chartbox').forEach(function(h){
+            if(!h.contains(e.target)) _chartHide(h.id);
+          });
+        },{passive:true});
+      }
     }
     _chartDraw(host.id);
   }

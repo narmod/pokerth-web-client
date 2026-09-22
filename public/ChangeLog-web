@@ -1,4 +1,8 @@
-2026-09-22 version 2.1.9-web.121 (current series):
+2026-09-22 version 2.1.9-web.122 (current series):
+- bugfix: admin page on phones — the language names in "Who visits" were squeezed out by the new trend column; each row now folds onto two lines
+- improvement: admin page — tapping a chart on a touch screen now keeps the reading open until you tap elsewhere (no need to hold your finger down)
+
+2026-09-22 version 2.1.9-web.121:
 - improvement: admin page — the language breakdown in "Who visits" now shows a trend arrow per language (share over the last 14 full days vs the 14 before, only when the change is statistically significant)
 
 2026-09-21 version 2.1.9-web.120:

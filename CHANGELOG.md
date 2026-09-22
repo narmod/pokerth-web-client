@@ -17,6 +17,10 @@ highlights below.
 
 ### Added
 
+- **Admin: phone layout + touch charts** (`web.122`) — `.envrow` folds onto two
+  lines under 600 px (name · count · trend / bar · "% new") so names are
+  readable again; chart readouts stay put after a tap on touch screens and
+  hide on the next tap outside the chart (mouse behaviour unchanged).
 - **Admin: per-language trend arrow** (`web.121`) — in "Who visits › Language"
   each row ends with ↗ / → / ↘. The proxy adds `langTrend` to `/admin/visits`
   (per-language pings over the last 14 *full* days, ending yesterday, and the
