@@ -5829,6 +5829,23 @@ function recordVisitEnv(ua, acceptLang, standalone, seenBefore) {
     if (!bucket.lg) bucket.lg = {};
     if (!_envRoom(bucket.lg, lgv, 'lang')) bucket.lg.other = (bucket.lg.other || 0) + 1;
     else bucket.lg[lgv] = (bucket.lg[lgv] || 0) + 1;
+    // Même chose pour le reste de l'environnement (OS, navigateur, croisement,
+    // installé) et pour le croisement langue × nouveau/revenu : un dictionnaire
+    // par jour, même seau, même rétention, même plafond. C'est ce qui permet
+    // au sélecteur de période de la page admin de découper « Who visits »
+    // comme le reste, au lieu d'un cumul depuis toujours.
+    if (!bucket.ev) bucket.ev = {};
+    [['os', os], ['br', br], ['combo', os + ' \u00b7 ' + br], ['pwa', standalone ? 'standalone' : 'browser']].forEach(function (kv) {
+      const b = bucket.ev[kv[0]] || (bucket.ev[kv[0]] = {});
+      if (!_envRoom(b, kv[1], kv[0])) b.other = (b.other || 0) + 1;
+      else b[kv[1]] = (b[kv[1]] || 0) + 1;
+    });
+    if (seenBefore !== null && seenBefore !== undefined) {
+      const kk = seenBefore ? 'lgr' : 'lgn';
+      const b = bucket[kk] || (bucket[kk] = {});
+      if (!_envRoom(b, lgv, 'lang')) b.other = (b.other || 0) + 1;
+      else b[lgv] = (b[lgv] || 0) + 1;
+    }
     saveVisitsSoon();
   } catch (e) {}
 }
@@ -6003,6 +6020,34 @@ function visitLangTrend(win) {
   const cur = sumWin(1), prev = sumWin(1 + win);
   return { win: win, cur: cur.by, prev: prev.by, curN: cur.n, prevN: prev.n, curDays: cur.days, prevDays: prev.days };
 }
+// « Who visits » sur une période : somme des dictionnaires quotidiens (jour
+// courant inclus). `days` compte les jours qui portent réellement `ev`,
+// `lgDays` ceux qui portent `lg` (plus ancien) : la page retombe sur le cumul
+// pour une vue dont la série n'existe pas encore, et le dit.
+function visitEnvPeriod(daysBack) {
+  const out = { os: {}, br: {}, combo: {}, pwa: {}, lang: {}, langNew: {}, langRet: {}, days: 0, lgDays: 0, lgnDays: 0 };
+  const today = visitDayIndex();
+  function add(dst, src) { for (const k in src) dst[k] = (dst[k] || 0) + (src[k] || 0); }
+  for (let i = 0; i < daysBack; i++) {
+    const b = visitsStore.days[visitDayKeyFromIndex(today - i)];
+    if (!b) continue;
+    if (b.ev) { out.days++; ['os', 'br', 'combo', 'pwa'].forEach(function (k) { if (b.ev[k]) add(out[k], b.ev[k]); }); }
+    if (b.lg) { out.lgDays++; add(out.lang, b.lg); }
+    if (b.lgn || b.lgr) { out.lgnDays++; if (b.lgn) add(out.langNew, b.lgn); if (b.lgr) add(out.langRet, b.lgr); }
+  }
+  return out;
+}
+function visitMusicPeriod(daysBack) {
+  const out = { plays: {}, days: 0 };
+  const today = visitDayIndex();
+  for (let i = 0; i < daysBack; i++) {
+    const b = visitsStore.days[visitDayKeyFromIndex(today - i)];
+    if (!b || !b.mu) continue;
+    out.days++;
+    for (const k in b.mu) out.plays[k] = (out.plays[k] || 0) + (b.mu[k] || 0);
+  }
+  return out;
+}
 function visitCohorts(windowDays) {
   const today = visitDayIndex();
   const from = today - windowDays + 1;
@@ -6049,10 +6094,22 @@ function visitCohorts(windowDays) {
   if (out.since) out.since = visitDayKeyFromIndex(out.since);
   return out;
 }
-function visitsSummary() {
+// Période du tableau de bord : un seul nombre de jours pilote la série
+// quotidienne, le profil horaire, les cohortes, la tendance par langue et les
+// répartitions « Who visits ». Bornée à [7, 90] : sous sept jours la tendance
+// n'a plus de sens, au-delà de 90 la rétention de 400 jours ne couvre plus la
+// fenêtre précédente de la tendance (2 × 90 = 180) avec la marge d'un export.
+const VISIT_PERIOD_MIN = 7, VISIT_PERIOD_MAX = 90, VISIT_PERIOD_DEFAULT = 14;
+function visitPeriodDays(q) {
+  const n = parseInt(q, 10);
+  if (!(n >= VISIT_PERIOD_MIN)) return VISIT_PERIOD_DEFAULT;
+  return Math.min(VISIT_PERIOD_MAX, n);
+}
+function visitsSummary(periodDays) {
+  const P = visitPeriodDays(periodDays);
   const now = new Date();
   const series = [];
-  for (let i = 13; i >= 0; i--) {
+  for (let i = P - 1; i >= 0; i--) {
     const d = new Date(now);
     d.setDate(now.getDate() - i);
     const k = visitDayKey(d);
@@ -6067,16 +6124,20 @@ function visitsSummary() {
     quarter: visitWindow(90),
     semester: visitWindow(180),
     year: visitWindow(365),
-    prev: { todayToHour: visitYesterdayToHour(), yesterday: visitWindow(1, 1), week: visitWindow(7, 7), month: visitWindow(30, 30) },
+    period: visitWindow(P),
+    periodDays: P,
+    prev: { todayToHour: visitYesterdayToHour(), yesterday: visitWindow(1, 1), week: visitWindow(7, 7), month: visitWindow(30, 30), period: visitWindow(P, P) },
     allTime: { v: visitsStore.totalV || 0, u: Object.keys(visitsStore.allU).length, nw: Object.keys(visitsStore.allU).length, rt: visitsStore.totalRet || 0, lv: visitsStore.totalLV || 0, lu: Object.keys(visitsStore.allLU || {}).length, m: (function () { const am = visitsStore.allM || {}; return { pokerthnet: am.pokerthnet || 0, lan: am.lan || 0, offline: am.offline || 0, live: am.live || 0 }; })() },
     series: series,
     hours48: visitHourSeries(48),
-    hourProfile: visitHourProfile(30),
+    hourProfile: visitHourProfile(P),
     hourSince: visitsStore.hourSince || 0,
-    cohorts: visitCohorts(30),
+    cohorts: visitCohorts(P),
     env: visitsStore.env || {},
     envSince: visitsStore.envSince || 0,
-    langTrend: visitLangTrend(14),
+    langTrend: visitLangTrend(P),
+    envPeriod: visitEnvPeriod(P),
+    musicPeriod: visitMusicPeriod(P),
     langs: supportedLangs(),
     langN: supportedLangCount(),
     music: visitsStore.music || {},
@@ -7588,7 +7649,7 @@ function handleAdmin(req, res, reqPathOnly, query) {
   if (reqPathOnly === '/admin/visits') {
     if (req.method === 'GET') {
       if (!adminAuthed(query)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
-      return adminJson(res, 200, visitsSummary());
+      return adminJson(res, 200, visitsSummary(query.days));
     }
     if (req.method === 'POST') {
       return readJsonBody(req, function (d) {

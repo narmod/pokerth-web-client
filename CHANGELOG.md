@@ -17,6 +17,19 @@ highlights below.
 
 ### Added
 
+- **Admin: Traffic period selector** (`web.123`) — `GET /admin/visits?days=N`
+  (7–90, default 14, clamped in `visitPeriodDays`) sets one window for the
+  daily series, `hourProfile`, `cohorts`, `langTrend` (N full days vs the N
+  before), a new `period` tile with its previous-period reference, and new
+  `envPeriod` / `musicPeriod` aggregates. The proxy now also stores a per-day
+  environment dictionary (`bucket.ev`: os / br / combo / pwa) and the
+  language × new/returning split (`bucket.lgn` / `bucket.lgr`), same caps and
+  retention as `lg`. The page (`<select id="trafPeriod">`, remembered in
+  `localStorage`) uses period data wherever a per-day history exists and
+  falls back to the running totals otherwise, saying so in the section
+  header. Section texts quote the selected period (`.perN`).
+  `scripts/test-admin-period.mjs` (25 checks); layout/hours/lang-trend tests
+  updated.
 - **Admin: phone layout + touch charts** (`web.122`) — `.envrow` folds onto two
   lines under 600 px (name · count · trend / bar · "% new") so names are
   readable again; chart readouts stay put after a tap on touch screens and

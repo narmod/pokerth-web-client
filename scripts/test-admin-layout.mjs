@@ -411,8 +411,8 @@ ok(traf.indexOf('id="trafBottom"') < traf.indexOf('Data &amp; settings'),
 // -- Four windows, not seven -----------------------------------------------
 // 90, 180 and 365 days repeat "All time" to the unit until the site has a year
 // behind it. They stay in the export; they no longer take the space.
-ok(/tile\('Today',d\.today,pv\.todayToHour,'yesterday at this hour'\)\s*\+tile\('Last 7 days',d\.week,pv\.week,'previous 7 days'\)\s*\+tile\('Last 30 days',d\.month,pv\.month,'previous 30 days'\)\s*\+tile\('All time',d\.allTime\)/.test(admin),
-  'four windows are shown, the first three against their previous period');
+ok(/tile\('Today',d\.today,pv\.todayToHour,'yesterday at this hour'\)\s*\+tile\('Last 7 days',d\.week,pv\.week,'previous 7 days'\)\s*\+tile\('Last '\+P\+' days',per,perPrev,'previous '\+P\+' days'\)\s*\+tile\('All time',d\.allTime\)/.test(admin),
+  'four windows are shown, the first three against their previous period; the third follows the period selector');
 // -- Read at a glance --------------------------------------------------------
 // New devices under the unique count; green / red only past a 10 % move, and
 // only where a reference exists. All time has none, so it takes no colour.
@@ -422,7 +422,7 @@ ok(/\(ref&&ref>0\)\? \(cur-ref\)\/ref : null/.test(admin), 'and no reference mea
 ok(/var pv=d\.prev\|\|\{\};/.test(admin), 'an older proxy without prev leaves every tile neutral');
 ok(/\.tstat \.big\.up,\.kpi \.big\.up\{color:#7fd17f\}/.test(admin) && /\.tstat \.big\.dn,\.kpi \.big\.dn\{color:#e8735c\}/.test(admin),
   'the main figure carries the colour on both kinds of tile');
-ok(/prev: \{ todayToHour: visitYesterdayToHour\(\), yesterday: visitWindow\(1, 1\), week: visitWindow\(7, 7\), month: visitWindow\(30, 30\) \}/.test(proxy),
+ok(/prev: \{ todayToHour: visitYesterdayToHour\(\), yesterday: visitWindow\(1, 1\), week: visitWindow\(7, 7\), month: visitWindow\(30, 30\), period: visitWindow\(P, P\) \}/.test(proxy),
   'the proxy serves the previous windows the tiles compare against');
 ok(/for \(let i = offset; i < offset \+ daysBack; i\+\+\)/.test(proxy), 'visitWindow shifts by an offset instead of duplicating the loop');
 ok(/if \(!b \|\| !b\.h\) return null;/.test(proxy), 'yesterday without hour buckets yields no reference for today');
@@ -477,8 +477,8 @@ ok(/title="removed from the catalogue"/.test(admin), 'a title no longer in the c
   ok(/aria-label="stacked daily bars"/.test(r.svg), 'and the helper still draws them as bars');
   ok(/since 2026-08-23/.test(r.chart), 'the chart says where its window starts');
 }
-ok(!/Last 90 days/.test(admin) && !/Last 180 days/.test(admin) && !/Last 365 days/.test(admin),
-  'and the middle three are gone from the screen');
+ok(!/tile\('Last 90 days'/.test(admin) && !/Last 180 days/.test(admin) && !/Last 365 days/.test(admin),
+  'and the middle three are gone from the screen as fixed tiles (90 days remains only as a selector choice)');
 ok(!/trafNvR/.test(admin),
   'new-vs-returning is gone: the New share tile and the cohorts each said it better');
 

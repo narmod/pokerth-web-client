@@ -463,7 +463,7 @@
 
     <div id="panel-traffic" style="display:none">
       <div class="card">
-        <div class="boardhead"><h2>Traffic</h2><span id="trafRange" class="headnote"></span><button id="btnTrafRefresh" class="use">Refresh</button></div>
+        <div class="boardhead"><h2>Traffic</h2><span id="trafRange" class="headnote"></span><select id="trafPeriod" class="use" title="Period applied to every chart and breakdown on this tab (Today, Last 7 days and All time stay as they are)"><option value="7">Last 7 days</option><option value="14" selected>Last 14 days</option><option value="30">Last 30 days</option><option value="60">Last 60 days</option><option value="90">Last 90 days</option></select><button id="btnTrafRefresh" class="use">Refresh</button></div>
         <p class="muted">Anonymous footfall — no IP is ever stored. “Visits” counts browser sessions; “Unique” counts distinct devices; “New” counts devices seen for the first time. Green or red marks a move of 10&nbsp;% or more against the previous period (today is compared with yesterday up to the same hour); gold means flat or nothing to compare. Everything on this tab reads the same anonymous ping; nothing here identifies a person.</p>
         <div class="trafgrid" id="trafCards"><div class="empty">Loading…</div></div>
         <div class="kpirow" id="trafKpis"><div class="empty">Loading…</div></div>
@@ -498,12 +498,12 @@
         <h2>Retention</h2>
         <div class="tsec">
           <div class="boardhead"><h3>Coming back</h3><span id="trafRetNote" class="headnote"></span></div>
-          <p class="muted">Of the devices seen for the very first time in the last 30 days, how many returned afterwards — and on how many separate days they showed up. A cohort only counts once it has had the time to come back, so the three rates are measured against different totals, and that is deliberate. Devices already known before this build carry no first-seen date; they are left out of the rates and serve as the established-base comparison instead.</p>
+          <p class="muted">Of the devices seen for the very first time in the <span class="perN">last 14 days</span>, how many returned afterwards — and on how many separate days they showed up. A cohort only counts once it has had the time to come back, so the three rates are measured against different totals, and that is deliberate. Devices already known before this build carry no first-seen date; they are left out of the rates and serve as the established-base comparison instead.</p>
           <div id="trafRet" class="hourduo"><div class="empty">Loading…</div></div>
         </div>
         <div class="tsec">
           <div class="boardhead"><h3>Time of day</h3><span id="trafHoursNote" class="headnote"></span></div>
-          <p class="muted">An average day, hour by hour, over the last 30 days — server local time. On the left, when people come; on the right, whether the ones arriving at that hour are new out of proportion with the traffic (1.0 = exactly in proportion). A quiet hour is ordinary; a quiet hour that still draws first-time visitors is where they find an empty lobby.</p>
+          <p class="muted">An average day, hour by hour, over the <span class="perN">last 14 days</span> — server local time. On the left, when people come; on the right, whether the ones arriving at that hour are new out of proportion with the traffic (1.0 = exactly in proportion). A quiet hour is ordinary; a quiet hour that still draws first-time visitors is where they find an empty lobby.</p>
           <div id="trafHours" class="hourduo"><div class="empty">Loading…</div></div>
         </div>
       </div>
@@ -511,7 +511,7 @@
         <h2>Who visits</h2>
         <div class="tsec">
   <div class="boardhead"><h3>What visitors run</h3><span id="envSince" class="muted" style="margin:0"></span></div>
-          <p class="muted">From the same anonymous ping as the visit counter: system and browser read from the User-Agent, language from the request header, installed app vs browser tab reported by the client. Running totals, not a time series — what to test on, and which of the 47 languages are actually used. In the language view the arrow compares a language’s share over the last 14 full days with the 14 before (only shown when the change is statistically significant).</p>
+          <p class="muted">From the same anonymous ping as the visit counter: system and browser read from the User-Agent, language from the request header, installed app vs browser tab reported by the client. Sliced by the period selected above where a per-day history exists, running totals otherwise — what to test on, and which of the 47 languages are actually used. In the language view the arrow compares a language’s share over the <span class="perN">last 14 days</span> (full days) with the same span before, only when the change is statistically significant.</p>
           <div class="seg" id="envSeg" style="flex-wrap:wrap">
             <button class="on" data-k="combo">Device + browser</button>
             <button data-k="os">System</button>
@@ -523,7 +523,7 @@
         </div>
         <div class="tsec">
   <div class="boardhead"><h3>Most played tracks</h3><span id="musSince" class="muted" style="margin:0"></span></div>
-          <p class="muted">Counts a play each time a track starts in the players’ music panel — resuming after a pause is not a new play. No visitor id, no listening time. Radio stations are not measured: a live stream has no track end, so “a play” would mean nothing there. The ranking is all-time since counting started; the bars stack the top five titles by day, with the rest grouped.</p>
+          <p class="muted">Counts a play each time a track starts in the players’ music panel — resuming after a pause is not a new play. No visitor id, no listening time. Radio stations are not measured: a live stream has no track end, so “a play” would mean nothing there. The ranking follows the period selected above (all-time before per-day counting started); the bars stack the top five titles by day, with the rest grouped.</p>
           <div id="trafMusic"><div class="empty">Loading…</div></div>
         </div>
       </div>
@@ -2318,9 +2318,19 @@
   // presentation: the same numbers read as a share of the whole (donut) and as
   // an ordered list (ranking), because the two answer different questions —
   // "is anything dominant?" versus "what exactly is in the tail?".
-  var _envData={}, _envTrend=null, _envSince=0, _envView='combo', _envKnown=false, _envPings=null, _envExpanded=false, _trafSeries=[], _retVerdict=false;
+  var _envData={}, _envTrend=null, _envPeriod=null, _envSince=0, _envView='combo', _envKnown=false, _envPings=null, _envExpanded=false, _trafSeries=[], _retVerdict=false;
   var _envLangs=[], _envLangsKnown=false, _envLangN=0;
-  var _musData={}, _musTitles={}, _musSince=0, _musKnown=false;
+  var _musData={}, _musTitles={}, _musSince=0, _musKnown=false, _musPeriodDays=0;
+  // Periode du tableau de bord : un seul nombre de jours pour tout l'onglet,
+  // memorise dans le navigateur comme le theme. 14 par defaut : c'est la
+  // fenetre que les graphes ont toujours eue.
+  var TRAF_PERIODS=[7,14,30,60,90], _trafPeriod=14;
+  try{ var _pp=parseInt(localStorage.getItem('pth_admin_period')||'',10); if(TRAF_PERIODS.indexOf(_pp)>=0) _trafPeriod=_pp; }catch(e){}
+  function _perLabel(n){ return 'last '+n+' days'; }
+  function _paintPeriod(){
+    var sel=$('trafPeriod'); if(sel) sel.value=String(_trafPeriod);
+    document.querySelectorAll('.perN').forEach(function(el){ el.textContent=_perLabel(_trafPeriod); });
+  }
   function _envFmt(n){ try{ return Number(n||0).toLocaleString(); }catch(e){ return String(n||0); } }
   // Palette lisible sur les deux thèmes admin; la dernière teinte sert au
   // regroupement « autres », volontairement neutre.
@@ -2794,7 +2804,7 @@
       })});
     }
     _envLangLines=lls; _envLangLabs=llabs;
-    return '<div class="muted" style="margin:14px 0 4px">Languages per day \u2014 last 14 days</div>'
+    return '<div class="muted" style="margin:14px 0 4px">Languages per day \u2014 '+_perLabel(_trafPeriod)+'</div>'
          + '<div class="linechart" id="envLangChart"></div>';
   }
   // Un titre retiré du catalogue garde ses lectures : on retombe alors sur son
@@ -2861,7 +2871,7 @@
   function renderMusic(){
     var box=$('trafMusic'); if(!box) return;
     var since=$('musSince');
-    if(since) since.textContent=_musSince?('since '+new Date(_musSince).toLocaleDateString()):'';
+    if(since) since.textContent=_musPeriodDays?(_perLabel(_trafPeriod)+(_musPeriodDays<_trafPeriod?(' \u2014 '+_musPeriodDays+' days counted'):'')):(_musSince?('all time since '+new Date(_musSince).toLocaleDateString()):'');
     var keys=Object.keys(_musData).sort(function(a,b){ return (_musData[b]||0)-(_musData[a]||0); });
     var total=0; keys.forEach(function(k){ total+=_musData[k]||0; });
     if(!total){
@@ -2917,6 +2927,29 @@
           +(s.dir==='flat'?' \u2014 within noise ('+s.z.toFixed(1)+'\u03c3)':' \u2014 significant ('+s.z.toFixed(1)+'\u03c3)');
     return '<span class="trend '+s.dir+'" title="'+tip+'">'+arrow+(s.dir==='flat'?'':' '+rel)+'</span>';
   }
+  // Source de chaque vue : la periode quand sa serie quotidienne a au moins
+  // un jour, le cumul depuis toujours sinon. Les series n'ont pas le meme age
+  // (la langue est tracee par jour depuis plus longtemps que l'OS), d'ou une
+  // decision par vue et non globale. _envSrc retient laquelle a ete prise pour
+  // que la ligne d'en-tete le dise au lieu de laisser deviner.
+  var _envSrc={};
+  function _envPick(all,per){
+    var out={}, k;
+    for(k in all) out[k]=all[k];
+    _envSrc={};
+    if(!per) return out;
+    ['os','br','combo','pwa'].forEach(function(v){ if(per.days>0){ out[v]=per[v]||{}; _envSrc[v]='period'; } });
+    if(per.lgDays>0){ out.lang=per.lang||{}; _envSrc.lang='period'; }
+    if(per.lgnDays>0){ out.langNew=per.langNew||{}; out.langRet=per.langRet||{}; _envSrc.langNew='period'; }
+    return out;
+  }
+  function _envSrcLine(){
+    var v=_envView, P=_trafPeriod;
+    if(!_envPeriod) return _envSince?('since '+new Date(_envSince).toLocaleDateString()):'';
+    if(_envSrc[v]!=='period') return 'running totals'+(_envSince?(' since '+new Date(_envSince).toLocaleDateString()):'')+' \u2014 per-day history for this view starts with this proxy version';
+    var have=v==='lang'?_envPeriod.lgDays:_envPeriod.days;
+    return _perLabel(P)+(have<P?(' \u2014 per-day history covers '+have+' of '+P+' days'):'');
+  }
   function _envNewRetBadge(key){
     if(_envView!=='lang' || !key) return '';
     var nw=(_envData.langNew&&_envData.langNew[key])||0;
@@ -2929,7 +2962,7 @@
   function renderEnv(){
     var box=$('trafEnv'); if(!box) return;
     var since=$('envSince');
-    if(since) since.textContent=_envSince?('since '+new Date(_envSince).toLocaleDateString()):'';
+    if(since) since.textContent=_envSrcLine();
     var r=_envSlices(_envData[_envView]);
     if(!r.total){
       // Un vide a deux causes très différentes : le proxy ne sait pas encore
@@ -2983,10 +3016,16 @@
       var dt=$('dbTestBtn'); if(dt) dt.addEventListener('click', dbTest);
       var ds=$('dbSaveBtn'); if(ds) ds.addEventListener('click', dbSave);
       var nc=$('btnNoCount'); if(nc) nc.addEventListener('click', toggleNoCount);
+      var ps=$('trafPeriod'); if(ps) ps.addEventListener('change', function(){
+        var v=parseInt(ps.value,10); if(TRAF_PERIODS.indexOf(v)<0) return;
+        _trafPeriod=v; try{ localStorage.setItem('pth_admin_period',String(v)); }catch(e){}
+        loadTraffic();
+      });
     }
+    _paintPeriod();
     _paintNoCount();
     loadDbConfig();
-    api('/admin/visits').then(function(r){return r.json();}).then(function(d){
+    api('/admin/visits?days='+_trafPeriod).then(function(r){return r.json();}).then(function(d){
       var g=$('trafCards');
       if(!d || !d.ok){ if(g) g.innerHTML='<div class="empty err">'+((d&&d.error)||'error')+'</div>'; return; }
       function fmt(n){ try{return Number(n||0).toLocaleString();}catch(e){return String(n||0);} }
@@ -3011,9 +3050,13 @@
       // recul, 90, 180 et 365 jours repetent « All time » au chiffre pres. Les
       // trois restent dans l'export, elles ne prennent plus la place a l'ecran.
       var pv=d.prev||{};
+      // La troisieme tuile suit le selecteur ; a 7 jours elle ferait doublon
+      // avec « Last 7 days », on y met alors les 30 jours d'avant.
+      var P=d.periodDays||_trafPeriod, per=d.period, perPrev=pv.period;
+      if(P===7||!per){ P=30; per=d.month; perPrev=pv.month; }
       if(g) g.innerHTML = tile('Today',d.today,pv.todayToHour,'yesterday at this hour')
         +tile('Last 7 days',d.week,pv.week,'previous 7 days')
-        +tile('Last 30 days',d.month,pv.month,'previous 30 days')
+        +tile('Last '+P+' days',per,perPrev,'previous '+P+' days')
         +tile('All time',d.allTime);
       var c=$('trafChart'), s=(d.series||[]), max=1;
       _trafSeries=s;
@@ -3044,7 +3087,10 @@
       _trafInsights(d,s);
       var lvx=$('trafLive');
       if(lvx){
-        lvx.innerHTML=[['Today',d.today],['Last 7 days',d.week],['Last 30 days',d.month],['All time',d.allTime]].map(function(rw){ var o=rw[1]||{}; return '<div class="srow"><span>'+rw[0]+'</span><b>'+fmt(o.lv)+' visits · '+fmt(o.lu)+' unique</b></div>'; }).join('');
+        var lrows=[['Today',d.today],['Last 7 days',d.week],['Last 30 days',d.month]];
+        if(d.period && d.periodDays && d.periodDays!==7 && d.periodDays!==30) lrows.push(['Last '+d.periodDays+' days',d.period]);
+        lrows.push(['All time',d.allTime]);
+        lvx.innerHTML=lrows.map(function(rw){ var o=rw[1]||{}; return '<div class="srow"><span>'+rw[0]+'</span><b>'+fmt(o.lv)+' visits · '+fmt(o.lu)+' unique</b></div>'; }).join('');
       }
       var md=$('trafModes');
       if(md){
@@ -3054,9 +3100,9 @@
       }
       // Champ absent = proxy antérieur à la fonctionnalité ; objet vide = rien
       // à compter encore. Voir renderEnv().
-      _envKnown=(d.env!==undefined); _envData=d.env||{}; _envTrend=d.langTrend||null; _envColorReset(); _envSince=d.envSince||0; _envPings=d.pings||null;
+      _envKnown=(d.env!==undefined); _envData=_envPick(d.env||{}, d.envPeriod||null); _envTrend=d.langTrend||null; _envPeriod=d.envPeriod||null; _envColorReset(); _envSince=d.envSince||0; _envPings=d.pings||null;
       _envLangsKnown=Array.isArray(d.langs); _envLangs=_envLangsKnown?d.langs:[]; _envLangN=d.langN||0; renderEnv();
-      _musKnown=(d.music!==undefined); _musData=d.music||{}; _musTitles=d.musicTitles||{}; _musSince=d.musicSince||0; renderMusic();
+      _musKnown=(d.music!==undefined); _musPeriodDays=(d.musicPeriod&&d.musicPeriod.days)||0; _musData=_musPeriodDays?(d.musicPeriod.plays||{}):(d.music||{}); _musTitles=d.musicTitles||{}; _musSince=d.musicSince||0; renderMusic();
       var dbx=$('trafDb');
       if(dbx){
         var db=d.db||{};
