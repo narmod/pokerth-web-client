@@ -1,4 +1,7 @@
-2026-09-22 version 2.1.9-web.123 (current series):
+2026-09-22 version 2.1.9-web.124 (current series):
+- bugfix: iPhone (installed app) — after reloading for a new version, a grey band could remain at the bottom of the screen until the phone was rotated; the app now keeps re-checking the screen height for 30 s after start and on the first taps
+
+2026-09-22 version 2.1.9-web.123:
 - new: admin page — a period selector (last 7 / 14 / 30 / 60 / 90 days) at the top of the Traffic tab now drives every chart and breakdown: daily visits, new devices, return rates, time of day, "Who visits" (system, browser, installed, language, trend arrows) and the most played tracks
 - improvement: admin page — "Who visits" system/browser/installed breakdowns are now also kept per day, so they can be sliced by period from this version on (running totals stay for earlier data)
 

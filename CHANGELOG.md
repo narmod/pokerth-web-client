@@ -284,6 +284,7 @@ highlights below.
 
 ### Fixed
 
+- **iOS installed app: stray band after reload** (`web.124`) — the `--app-h` viewport measurement now runs a 30 s long tail (every 2 s), on `visibilitychange` and on the first three taps/clicks, so a stale viewport after `location.reload()` is corrected without a rotation.
 - **Music on iPhone: no more one-second play/stop loop with CarPlay /
   Bluetooth** (`web.111`). CarPlay, a Bluetooth route or the lock screen make
   iOS park the `AudioContext` in `interrupted` for as long as the external route

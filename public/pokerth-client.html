@@ -286,6 +286,18 @@ try{var _d=document.documentElement,_p=localStorage.getItem('pth_theme'),_tb=loc
        (the 2026-08-01 report: the band vanished when unrelated content
        forced a relayout). Re-measure a few times right after boot. */
     var n = 0, t = setInterval(function () { setH(); if (++n >= 10) clearInterval(t); }, 300);
+    /* Reload path (narmod 2026-09-22, iPhone): after location.reload() from
+       the "new version" banner, iOS can keep the stale height well past the
+       3 s burst above and only correct it on a later relayout (a rotation
+       fixed it every time). Long tail: every 2 s for 30 s; plus re-measure
+       when the app becomes visible again and on the first user gestures,
+       which is when iOS usually reconciles the viewport. */
+    var m = 0, t2 = setInterval(function () { setH(); if (++m >= 15) clearInterval(t2); }, 2000);
+    document.addEventListener('visibilitychange', function () { if (!document.hidden) setTimeout(setH, 100); });
+    var g = 0;
+    function gesture() { setTimeout(setH, 50); if (++g >= 3) { document.removeEventListener('touchend', gesture); document.removeEventListener('click', gesture); } }
+    document.addEventListener('touchend', gesture, { passive: true });
+    document.addEventListener('click', gesture, { passive: true });
   } catch (e) {}
 })();
 </script>
