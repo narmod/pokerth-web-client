@@ -1,4 +1,7 @@
-2026-09-24 version 2.1.9-web.130 (current series):
+2026-09-24 version 2.1.9-web.131 (current series):
+- new: Azerbaijani (Azərbaycanca) is now available in the language list - the whole interface, the built-in help and the welcome notices are translated, bringing the client to 68 languages
+
+2026-09-24 version 2.1.9-web.130:
 - improvement: ranking — the "Champions of the day" podium now sits at the top of the PokerTH ranking (it left the forum news Events tab)
 
 2026-09-24 version 2.1.9-web.129:
