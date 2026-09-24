@@ -1,4 +1,7 @@
-2026-09-24 version 2.1.9-web.137 (current series):
+2026-09-24 version 2.1.9-web.138 (current series):
+- new: Nepali (नेपाली) is now available in the language list - the whole interface, the built-in help and the welcome notices are translated, bringing the client to 71 languages
+
+2026-09-24 version 2.1.9-web.137:
 - bugfix: Belarusian glossary page - three definitions still contained English words; they are now fully translated
 
 2026-09-24 version 2.1.9-web.136:

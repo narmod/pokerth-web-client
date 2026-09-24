@@ -161,6 +161,13 @@ highlights below.
 - **Language tooling** — `wire-language.mjs` now bumps the language count only
   where it stands alone: `65` also sits inside "365 days" (log retention) and
   inside `\\uXXXX` escapes, which stopped the 65 → 66 rollout (tools only).
+- **Nepali** (`ne`, Devanagari script), full UI catalogue, help corpus and
+  guest/registered/LAN broadcast notices (`web.138`) — 71 languages total; SEO
+  content pages follow in the next build. Hand and street names are
+  transliterated as in the Hindi catalogue (रोयल फ्लस, स्ट्रेट, प्रि-फ्लप, रिभर);
+  action terms stay in English. Terminology to be reviewed by a native speaker.
+  The admin environment-key cap (`ENV_KEY_CAP`) goes from 90 to 120 so it stays
+  20 codes above the number of translated catalogues.
 - **Belarusian** (`be`, Cyrillic script), full UI catalogue, help corpus and
   guest/registered/LAN broadcast notices (`web.135`), then SEO content pages
   (incl. `/rules` and `/faq`, `web.136`; three glossary definitions that still
