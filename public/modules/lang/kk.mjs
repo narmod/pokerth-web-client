@@ -664,6 +664,11 @@ export const strings = {
     "bakRestoreNoPerm": 'Қалтаға қол жеткізуге рұқсат берілмеді — қалтаны қайта таңдаңыз.',
     "bakRestoreEmpty": 'Сақтық көшірме файлы бос — қалпына келтіретін ештеңе жоқ.',
     "syncBusy": 'Синхрондалуда…',
+    "lsbClockTitle": "Сервер уақыты",
+    "lsbClockYours": "Сіздің уақытыңыз",
+    "lsbClockSame": "Сервермен бірдей уақыт",
+    "lsbClockNote": "Қауымдастық іс-шаралары (BBC, WEC, Monthly Cup) сервер уақытымен жоспарланады.",
+    "advLobbyClock": "Лоббидің күй жолағында сервер уақыты (pokerth.net)",
 };
 
 export default { meta, strings };

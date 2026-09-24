@@ -2108,7 +2108,12 @@ function _processAvatarFile(file) {
    <!-- LobbyStatsBar (parité QML, bible §16) — tout en bas, pleine largeur -->
    <div class="lobby-statsbar" id="lobby-statsbar">
      <span id="lsb-text">—</span>
-     <a href="https://www.pokerth.net" target="_blank" rel="noopener noreferrer">PokerTH.net</a>
+     <span class="lsb-right">
+       <!-- Horloge serveur (pokerth.net uniquement) — logique : modules/ui/lobby-clock.mjs -->
+       <button type="button" class="lsb-clock" id="lsb-clock" hidden aria-expanded="false" aria-controls="lsb-clock-pop" title="Server time" data-i18n-title="lsbClockTitle"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span id="lsb-clock-t">--:--</span></button>
+       <a href="https://www.pokerth.net" target="_blank" rel="noopener noreferrer">PokerTH.net</a>
+     </span>
+     <div class="lsb-clock-pop" id="lsb-clock-pop" role="dialog" aria-label="Server time" data-i18n-aria="lsbClockTitle" hidden></div>
    </div>
   </div>
 </div>
@@ -2672,6 +2677,7 @@ function _processAvatarFile(file) {
 <script type="module" src="modules/ui/avatar-studio.mjs"></script>
 <script type="module" src="modules/ui/lobby.mjs"></script>
 <script type="module" src="modules/ui/forumnews.mjs"></script>
+<script type="module" src="modules/ui/lobby-clock.mjs"></script>
 <script type="module" src="modules/ui/pm.mjs"></script>
 <script type="module" src="modules/game/showdown.mjs"></script>
 <script type="module" src="modules/net/session.mjs"></script>
@@ -3373,6 +3379,7 @@ if ('serviceWorker' in navigator && !window.LIVE_MODE) {
       <details class="adv-fold"><summary class="adv-sec"><span class="adv-sec-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="9" r="3"/><path d="M3.5 19a5.5 5.5 0 0 1 11 0"/><path d="M15.5 6.5a3 3 0 0 1 0 5.4M17 13.6a5.5 5.5 0 0 1 3.5 5.4"/></svg></span><span data-i18n="advSecCommunity">Community</span></summary>
       <label class="adv-row"><input type="checkbox" id="adv-community" onchange="setAdvOpt('show_community',this.checked)"><span data-i18n="advShowCommunity">Show Ranking entry</span></label>
       <label class="adv-row"><input type="checkbox" id="adv-forumnews" onchange="setAdvOpt('forum_news',this.checked)"><span data-i18n="advForumNews">Forum button in the lobby header</span><em class="adv-webtag">web</em></label>
+      <label class="adv-row"><input type="checkbox" id="adv-lobbyclock" onchange="setAdvOpt('lobby_clock',this.checked)"><span data-i18n="advLobbyClock">Server time in the lobby status bar (pokerth.net)</span><em class="adv-webtag">web</em></label>
       <label class="adv-row"><input type="checkbox" id="adv-communitysuggest" onchange="setAdvOpt('community_suggest',this.checked);try{window._syncSuggestBtn()}catch(e){}"><span data-i18n="advCommunitySuggest">Suggest players in my own community games</span></label>
       <label class="adv-row"><input type="checkbox" id="adv-polls" onchange="setAdvOpt('polls',this.checked);try{_pollRefresh()}catch(e){}"><span data-i18n="advPolls">Take part in product polls</span><em class="adv-webtag">web</em></label>
       <div class="adv-row"><span data-i18n="advDefCommunity">Default community</span><div class="sel-wrap adv-sel"><select id="adv-defcommunity" onchange="setDefaultCommunity(this.value)"><option value="pth">PokerTH</option><option value="bbc">BBC</option><option value="wec">WEC</option></select><span class="sel-arr">▾</span></div></div>

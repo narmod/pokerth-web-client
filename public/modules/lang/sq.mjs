@@ -663,6 +663,11 @@ export const strings = {
     "bakRestoreNoPerm": "Aksesi te dosja nuk u dha — zgjidhe dosjen sërish.",
     "bakRestoreEmpty": "Skedari i kopjes rezervë është bosh — nuk ka çfarë të rivendoset.",
     "syncBusy": "Duke sinkronizuar…",
+    "lsbClockTitle": "Ora e serverit",
+    "lsbClockYours": "Ora juaj",
+    "lsbClockSame": "E njëjta orë si serveri",
+    "lsbClockNote": "Ngjarjet e komunitetit (BBC, WEC, Monthly Cup) planifikohen sipas orës së serverit.",
+    "advLobbyClock": "Ora e serverit në shiritin e gjendjes së holit (pokerth.net)",
 };
 
 export default { meta, strings };

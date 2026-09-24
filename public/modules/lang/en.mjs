@@ -664,6 +664,11 @@ export const strings = {
     "bakRestoreNoPerm": "Folder access was not granted — pick the folder again.",
     "bakRestoreEmpty": "The backup file is empty — nothing to restore.",
     "syncBusy": "Syncing…",
+    "lsbClockTitle": "Server time",
+    "lsbClockYours": "Your time",
+    "lsbClockSame": "Same time as the server",
+    "lsbClockNote": "Community events (BBC, WEC, Monthly Cup) are scheduled in server time.",
+    "advLobbyClock": "Server time in the lobby status bar (pokerth.net)",
 };
 
 export default { meta, strings };

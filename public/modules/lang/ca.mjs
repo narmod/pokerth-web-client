@@ -1037,6 +1037,11 @@ export const strings = {
     "bakRestoreNoPerm": "No s'ha concedit accés a la carpeta — torna a triar la carpeta.",
     "bakRestoreEmpty": "El fitxer de còpia de seguretat és buit — no hi ha res a restaurar.",
     "syncBusy": "Sincronitzant…",
+    "lsbClockTitle": "Hora del servidor",
+    "lsbClockYours": "La teva hora",
+    "lsbClockSame": "La mateixa hora que el servidor",
+    "lsbClockNote": "Els esdeveniments de la comunitat (BBC, WEC, Monthly Cup) es programen en hora del servidor.",
+    "advLobbyClock": "Hora del servidor a la barra d'estat del lobby (pokerth.net)",
 };
 
 export default { meta, strings };

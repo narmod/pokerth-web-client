@@ -843,6 +843,11 @@ export const strings = {
     "bakRestoreNoPerm": "फ़ोल्डर तक पहुँच नहीं दी गई — फ़ोल्डर फिर से चुनें।",
     "bakRestoreEmpty": "बैकअप फ़ाइल खाली है — पुनर्स्थापित करने के लिए कुछ नहीं है।",
     "syncBusy": "सिंक हो रहा है…",
+    "lsbClockTitle": "सर्वर समय",
+    "lsbClockYours": "आपका समय",
+    "lsbClockSame": "सर्वर जैसा ही समय",
+    "lsbClockNote": "कम्युनिटी इवेंट (BBC, WEC, Monthly Cup) सर्वर समय के अनुसार निर्धारित होते हैं।",
+    "advLobbyClock": "लॉबी की स्टेटस बार में सर्वर समय (pokerth.net)",
 };
 
 export default { meta, strings };

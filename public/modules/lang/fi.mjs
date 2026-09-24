@@ -1035,6 +1035,11 @@ export const strings = {
     "bakRestoreNoPerm": "Kansioon ei myönnetty käyttöoikeutta — valitse kansio uudelleen.",
     "bakRestoreEmpty": "Varmuuskopiotiedosto on tyhjä — ei mitään palautettavaa.",
     "syncBusy": "Synkronoidaan…",
+    "lsbClockTitle": "Palvelimen aika",
+    "lsbClockYours": "Sinun aikasi",
+    "lsbClockSame": "Sama aika kuin palvelimella",
+    "lsbClockNote": "Yhteisön tapahtumat (BBC, WEC, Monthly Cup) ajoitetaan palvelimen aikaan.",
+    "advLobbyClock": "Palvelimen aika aulan tilarivillä (pokerth.net)",
 };
 
 export default { meta, strings };

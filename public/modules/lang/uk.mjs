@@ -1035,6 +1035,11 @@ export const strings = {
     "bakRestoreNoPerm": "Доступ до теки не надано — виберіть теку ще раз.",
     "bakRestoreEmpty": "Файл резервної копії порожній — нічого відновлювати.",
     "syncBusy": "Синхронізація…",
+    "lsbClockTitle": "Час сервера",
+    "lsbClockYours": "Ваш час",
+    "lsbClockSame": "Той самий час, що й на сервері",
+    "lsbClockNote": "Події спільноти (BBC, WEC, Monthly Cup) призначаються за часом сервера.",
+    "advLobbyClock": "Час сервера в рядку стану лобі (pokerth.net)",
 };
 
 export default { meta, strings };

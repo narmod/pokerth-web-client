@@ -661,6 +661,11 @@ export const strings = {
     "bakRestoreNoPerm": "የአቃፊ መዳረሻ አልተሰጠም — አቃፊውን እንደገና ይምረጡ።",
     "bakRestoreEmpty": "የምትኬ ፋይሉ ባዶ ነው — የሚመለስ ነገር የለም።",
     "syncBusy": "በማመሳሰል ላይ…",
+    "lsbClockTitle": "የአገልጋይ ሰዓት",
+    "lsbClockYours": "የእርስዎ ሰዓት",
+    "lsbClockSame": "ከአገልጋዩ ጋር ተመሳሳይ ሰዓት",
+    "lsbClockNote": "የማህበረሰብ ዝግጅቶች (BBC, WEC, Monthly Cup) በአገልጋይ ሰዓት ይዘጋጃሉ።",
+    "advLobbyClock": "የአገልጋይ ሰዓት በሎቢው የሁኔታ አሞሌ (pokerth.net)",
 };
 
 export default { meta, strings };

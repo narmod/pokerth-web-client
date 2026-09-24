@@ -1039,6 +1039,11 @@ export const strings = {
     "bakRestoreNoPerm": "Cha deach cead a thoirt dhan phasgan — tagh am pasgan a-rithist.",
     "bakRestoreEmpty": "Tha faidhle an lethbhreac-glèidhidh falamh — chan eil dad ri aiseag.",
     "syncBusy": "A' sioncronachadh…",
+    "lsbClockTitle": "Àm an fhrithealaiche",
+    "lsbClockYours": "An t-àm agad",
+    "lsbClockSame": "An aon àm ris an fhrithealaiche",
+    "lsbClockNote": "Tha tachartasan na coimhearsnachd (BBC, WEC, Monthly Cup) air an clàradh a rèir àm an fhrithealaiche.",
+    "advLobbyClock": "Àm an fhrithealaiche ann am bàr-staid an lobaidh (pokerth.net)",
 };
 
 export default { meta, strings };

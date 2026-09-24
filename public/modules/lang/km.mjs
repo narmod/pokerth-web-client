@@ -661,6 +661,11 @@ export const strings = {
     "bakRestoreNoPerm": "មិនបានផ្ដល់សិទ្ធិចូលថត — ជ្រើសរើសថតម្ដងទៀត។",
     "bakRestoreEmpty": "ឯកសារបម្រុងទុកទទេ — គ្មានអ្វីត្រូវស្ដារ។",
     "syncBusy": "កំពុងធ្វើសមកាលកម្ម…",
+    "lsbClockTitle": "ម៉ោងម៉ាស៊ីនមេ",
+    "lsbClockYours": "ម៉ោងរបស់អ្នក",
+    "lsbClockSame": "ម៉ោងដូចម៉ាស៊ីនមេ",
+    "lsbClockNote": "ព្រឹត្តិការណ៍សហគមន៍ (BBC, WEC, Monthly Cup) ត្រូវបានកំណត់តាមម៉ោងម៉ាស៊ីនមេ។",
+    "advLobbyClock": "ម៉ោងម៉ាស៊ីនមេនៅក្នុងរបារស្ថានភាពឡប់ប៊ី (pokerth.net)",
 };
 
 export default { meta, strings };

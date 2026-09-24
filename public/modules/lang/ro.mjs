@@ -1036,6 +1036,11 @@ export const strings = {
     "bakRestoreNoPerm": "Accesul la folder nu a fost acordat — alege din nou folderul.",
     "bakRestoreEmpty": "Fișierul de rezervă este gol — nu este nimic de restaurat.",
     "syncBusy": "Se sincronizează…",
+    "lsbClockTitle": "Ora serverului",
+    "lsbClockYours": "Ora ta",
+    "lsbClockSame": "Aceeași oră ca serverul",
+    "lsbClockNote": "Evenimentele comunității (BBC, WEC, Monthly Cup) sunt programate după ora serverului.",
+    "advLobbyClock": "Ora serverului în bara de stare a lobby-ului (pokerth.net)",
 };
 
 export default { meta, strings };

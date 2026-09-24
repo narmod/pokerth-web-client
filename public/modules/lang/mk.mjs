@@ -663,6 +663,11 @@ export const strings = {
     "bakRestoreNoPerm": "Пристапот до папката не е одобрен — избери ја папката повторно.",
     "bakRestoreEmpty": "Датотеката за резервна копија е празна — нема што да се врати.",
     "syncBusy": "Синхронизација…",
+    "lsbClockTitle": "Време на серверот",
+    "lsbClockYours": "Вашето време",
+    "lsbClockSame": "Исто време како серверот",
+    "lsbClockNote": "Настаните на заедницата (BBC, WEC, Monthly Cup) се закажуваат според времето на серверот.",
+    "advLobbyClock": "Време на серверот во статусната лента на лобито (pokerth.net)",
 };
 
 export default { meta, strings };

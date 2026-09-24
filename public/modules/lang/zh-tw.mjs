@@ -1032,6 +1032,11 @@ export const strings = {
     "bakRestoreNoPerm": "未授予資料夾存取權限 — 請重新選擇資料夾。",
     "bakRestoreEmpty": "備份檔案是空的 — 沒有可還原的內容。",
     "syncBusy": "正在同步…",
+    "lsbClockTitle": "伺服器時間",
+    "lsbClockYours": "你的時間",
+    "lsbClockSame": "與伺服器時間相同",
+    "lsbClockNote": "社群活動（BBC、WEC、Monthly Cup）皆依伺服器時間安排。",
+    "advLobbyClock": "在大廳狀態列顯示伺服器時間（pokerth.net）",
 };
 
 export default { meta, strings };

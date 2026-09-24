@@ -662,6 +662,11 @@ export const strings = {
     "bakRestoreNoPerm": "Ufikiaji wa folda haukuruhusiwa — chagua folda tena.",
     "bakRestoreEmpty": "Faili la nakala rudufu ni tupu — hakuna cha kurejesha.",
     "syncBusy": "Inasawazisha…",
+    "lsbClockTitle": "Saa ya seva",
+    "lsbClockYours": "Saa yako",
+    "lsbClockSame": "Saa sawa na seva",
+    "lsbClockNote": "Matukio ya jamii (BBC, WEC, Monthly Cup) hupangwa kwa saa ya seva.",
+    "advLobbyClock": "Saa ya seva kwenye upau wa hali wa ukumbi (pokerth.net)",
 };
 
 export default { meta, strings };

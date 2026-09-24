@@ -1040,6 +1040,11 @@ export const strings = {
     "bakRestoreNoPerm": "No se concedió acceso a la carpeta — elige la carpeta de nuevo.",
     "bakRestoreEmpty": "El archivo de copia de seguridad está vacío — no hay nada que restaurar.",
     "syncBusy": "Sincronizando…",
+    "lsbClockTitle": "Hora del servidor",
+    "lsbClockYours": "Tu hora",
+    "lsbClockSame": "Misma hora que el servidor",
+    "lsbClockNote": "Los eventos de la comunidad (BBC, WEC, Monthly Cup) se programan en hora del servidor.",
+    "advLobbyClock": "Hora del servidor en la barra de estado del lobby (pokerth.net)",
 };
 
 export default { meta, strings };

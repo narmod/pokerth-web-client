@@ -10007,6 +10007,22 @@ html.reduce-fx .seat-action-badge {
 }
 .lobby-statsbar a { color: var(--gold-dim, #9a824a); text-decoration: none; }
 .lobby-statsbar a:hover { text-decoration: underline; }
+/* Horloge serveur (modules/ui/lobby-clock.mjs) : pastille + panneau au tap */
+.lobby-statsbar { position: relative; }
+.lsb-right { display: inline-flex; align-items: center; gap: var(--sp-3); flex-shrink: 0; }
+.lsb-clock { display: inline-flex; align-items: center; gap: 4px; padding: 1px 7px; font: inherit; font-variant-numeric: tabular-nums;
+  color: var(--gold-dim, #9a824a); background: transparent; border: 1px solid var(--border, #2c3548); border-radius: 999px; cursor: pointer; white-space: nowrap; }
+.lsb-clock:hover, .lsb-clock[aria-expanded="true"] { color: var(--gold, #d4af37); border-color: var(--gold-dim, #9a824a); }
+.lsb-clock[hidden], .lsb-clock-pop[hidden] { display: none; }
+.lsb-clock-pop { position: absolute; right: 10px; bottom: calc(100% + 6px); z-index: 30; min-width: 220px; max-width: calc(100vw - 20px);
+  padding: 10px 12px; background: var(--panel, #1b2130); border: 1px solid var(--gold-dim, #9a824a); border-radius: 8px;
+  color: var(--text, #d7dbe4); font-size: var(--fs-sm); box-shadow: 0 6px 18px rgba(0,0,0,.35); }
+.lsb-cp-row { display: grid; grid-template-columns: 1fr auto; column-gap: 12px; line-height: 1.35; margin-bottom: 6px; }
+.lsb-cp-k { color: var(--text-dim, #8b93a7); }
+.lsb-cp-v { text-align: right; font-variant-numeric: tabular-nums; color: var(--text-hi, #fff); }
+.lsb-cp-srv { color: var(--gold, #d4af37); font-weight: 600; }
+.lsb-cp-s { grid-column: 1 / -1; font-size: var(--fs-xs); color: var(--text-dim, #8b93a7); }
+.lsb-cp-note { margin-top: 4px; padding-top: 6px; border-top: 1px solid var(--border, #2c3548); font-size: var(--fs-xs); color: var(--text-dim, #8b93a7); }
 
 /* ── Sondages produit (modale lobby, extension web) ───────────────────────
    Meme moule que la modale de bienvenue du monolithe : fond assombri, carte

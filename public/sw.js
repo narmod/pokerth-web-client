@@ -23,7 +23,7 @@
  *                 Cross-origin requests and WS upgrades are left untouched.
  *                 (Fonts are now self-hosted and handled by SWR above.)
  */
-const CACHE_VERSION = 'pokerth-v2.1.9-web.127';
+const CACHE_VERSION = 'pokerth-v2.1.9-web.128';
 // Build id the page puts on the card back URL (deck.mjs _deckBack →
 // flipside.<ext>?v=<BUILD_VERSION>): CACHE_VERSION without its prefix.
 const BUILD_ID = CACHE_VERSION.replace(/^pokerth-v/, '');
@@ -108,6 +108,7 @@ const ASSETS = [
   '/modules/ui/lobby-keynav.mjs',
   '/modules/ui/forumnews.mjs',
   '/modules/ui/forum-events.mjs',
+  '/modules/ui/lobby-clock.mjs',
   '/modules/ui/invite.mjs',
   '/modules/ui/mini-board.mjs',
   '/modules/ui/sound-import.mjs',
@@ -614,7 +615,7 @@ self.addEventListener('fetch', function(e) {
   // particular drives the update banner: served stale, it made the page compare
   // the previous deploy's marker against the fresh one and prompt for an update
   // that was already applied.
-  if (/^\/(?:__ver|__visit|__music|__poll-vote|prefs|prefs-web|stats|api)(?:\/|$)/.test(url.pathname)) return;
+  if (/^\/(?:__ver|__time|__visit|__music|__poll-vote|prefs|prefs-web|stats|api)(?:\/|$)/.test(url.pathname)) return;
   // Media is served by the browser straight from the network: an <audio> element
   // streams with byte-range requests, and the SWR handler below only stores
   // status 200, so a 206 was never cacheable anyway. Every buffer chunk paid a

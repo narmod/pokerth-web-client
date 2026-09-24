@@ -661,6 +661,11 @@ export const strings = {
     "bakRestoreNoPerm": 'ಫೋಲ್ಡರ್ ಪ್ರವೇಶ ನೀಡಲಾಗಿಲ್ಲ — ಫೋಲ್ಡರ್ ಅನ್ನು ಮತ್ತೆ ಆರಿಸಿ.',
     "bakRestoreEmpty": 'ಬ್ಯಾಕಪ್ ಫೈಲ್ ಖಾಲಿಯಾಗಿದೆ — ಮರುಸ್ಥಾಪಿಸಲು ಏನೂ ಇಲ್ಲ.',
     "syncBusy": 'ಸಿಂಕ್ ಆಗುತ್ತಿದೆ…',
+    "lsbClockTitle": "ಸರ್ವರ್ ಸಮಯ",
+    "lsbClockYours": "ನಿಮ್ಮ ಸಮಯ",
+    "lsbClockSame": "ಸರ್ವರ್‌ನ ಅದೇ ಸಮಯ",
+    "lsbClockNote": "ಸಮುದಾಯ ಈವೆಂಟ್‌ಗಳು (BBC, WEC, Monthly Cup) ಸರ್ವರ್ ಸಮಯದಲ್ಲಿ ನಿಗದಿಯಾಗುತ್ತವೆ.",
+    "advLobbyClock": "ಲಾಬಿಯ ಸ್ಥಿತಿ ಪಟ್ಟಿಯಲ್ಲಿ ಸರ್ವರ್ ಸಮಯ (pokerth.net)",
 };
 
 export default { meta, strings };

@@ -1035,6 +1035,11 @@ export const strings = {
     "bakRestoreNoPerm": "Der blev ikke givet adgang til mappen — vælg mappen igen.",
     "bakRestoreEmpty": "Sikkerhedskopien er tom — intet at gendanne.",
     "syncBusy": "Synkroniserer…",
+    "lsbClockTitle": "Servertid",
+    "lsbClockYours": "Din tid",
+    "lsbClockSame": "Samme tid som serveren",
+    "lsbClockNote": "Fællesskabsbegivenheder (BBC, WEC, Monthly Cup) planlægges i servertid.",
+    "advLobbyClock": "Servertid i lobbyens statuslinje (pokerth.net)",
 };
 
 export default { meta, strings };

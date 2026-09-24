@@ -1039,6 +1039,11 @@ export const strings = {
     "bakRestoreNoPerm": "Geen toegang tot de map — kies de map opnieuw.",
     "bakRestoreEmpty": "Het back-upbestand is leeg — niets om te herstellen.",
     "syncBusy": "Synchroniseren…",
+    "lsbClockTitle": "Servertijd",
+    "lsbClockYours": "Jouw tijd",
+    "lsbClockSame": "Zelfde tijd als de server",
+    "lsbClockNote": "Community-evenementen (BBC, WEC, Monthly Cup) worden in servertijd gepland.",
+    "advLobbyClock": "Servertijd in de statusbalk van de lobby (pokerth.net)",
 };
 
 export default { meta, strings };

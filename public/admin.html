@@ -831,6 +831,14 @@
         <div id="clkMsg" class="msg"></div>
       </div>
       <div class="card">
+        <h2>Lobby clock (players)</h2>
+        <p class="muted">Players connected to pokerth.net see the server time in the lobby status bar, so they know when BBC, WEC and Monthly Cup games start. The PokerTH protocol carries no time, so the instant comes from this server and the zone from the setting below — set it to the zone community events are announced in (pokerth.net: Berlin). <b>Automatic</b> uses <code>SERVER_TZ</code> if set, else this host’s own zone. Players can hide the clock in their advanced options. Applies immediately (no restart needed).</p>
+        <div class="defrow fld"><span style="white-space:nowrap">Time zone</span><select id="lobbyClk"></select></div>
+        <p class="muted" id="lobbyClkEff" style="margin-top:10px"></p>
+        <div class="rowtop"><button id="saveLobbyClk" class="use">Save</button></div>
+        <div id="lobbyClkMsg" class="msg"></div>
+      </div>
+      <div class="card">
         <h2>Discord chat relay</h2>
         <p class="muted">Official-server parity (<code>DiscordChatWebhookUrl</code>): lobby chat messages sent by players through this proxy are forwarded to a Discord channel as <b>Player:</b> message. Game chat and private messages are never relayed. Leave blank to disable. One post per message — no duplicates however many clients are connected.</p>
         <div class="defrow fld"><span style="white-space:nowrap">Webhook URL</span><input id="discordHook" maxlength="200" placeholder="https://discord.com/api/webhooks/…" autocomplete="off"></div>
@@ -1859,6 +1867,22 @@
       .then(function(r){ return r.json(); }).then(function(d){ if(d&&d.ok){ m.textContent='Saved. The strip updates right away (no restart needed).'; m.className='msg ok'; clkSync(); } else { m.textContent='Failed: '+((d&&d.error)||'error'); m.className='msg err'; } })
       .catch(function(){ m.textContent='Network error.'; m.className='msg err'; });
   }); })();
+  // Horloge du lobby (joueurs) : fuseau publie par /__time.
+  function lobbyClkRender(val,eff,env){
+    var sel=$('lobbyClk'); if(!sel) return;
+    sel.textContent='';
+    var a=document.createElement('option'); a.value=''; a.textContent='Automatic'+(env?' (SERVER_TZ = '+env+')':' (this host\u2019s zone)'); sel.appendChild(a);
+    CLOCK_CAT.forEach(function(c){ var o=document.createElement('option'); o.value=c[0]; o.textContent=c[1]+' ('+c[0]+')'; sel.appendChild(o); });
+    if(val && !CLOCK_CAT.some(function(c){ return c[0]===val; })){ var x=document.createElement('option'); x.value=val; x.textContent=val; sel.appendChild(x); }
+    sel.value=val||'';
+    var e=$('lobbyClkEff'); if(e) e.textContent=eff?('Players currently see: '+eff):'';
+  }
+  (function(){ var b=$('saveLobbyClk'); if(!b) return; b.addEventListener('click',function(){
+    var m=$('lobbyClkMsg'),v=($('lobbyClk')?$('lobbyClk').value:'');
+    api('/admin/config',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({lobbyClockTz:v,token:tok()})})
+      .then(function(r){ return r.json(); }).then(function(d){ if(d&&d.ok){ m.textContent='Saved. Players pick it up at their next clock sync (within 10 min, or on reload).'; m.className='msg ok'; } else { m.textContent='Failed: '+((d&&d.error)||'error'); m.className='msg err'; } })
+      .catch(function(){ m.textContent='Network error.'; m.className='msg err'; });
+  }); })();
   (function(){ var b=$('clkDefaults'); if(!b) return; b.addEventListener('click',function(){ clkPickRender(CLOCK_DEFAULT.slice()); clkRefRender(CLOCK_REF_DEFAULT); var m=$('clkMsg'); if(m){ m.textContent='Default set restored below \u2014 press Save to apply.'; m.className='msg'; } }); })();
 
   // État de débordement de la barre d'onglets. Appelé au défilement, au
@@ -2299,6 +2323,7 @@
         if($('discordHook') && typeof d.discordChatWebhookUrl==='string') $('discordHook').value=d.discordChatWebhookUrl;
         if($('clkPick') && Array.isArray(d.clockZones)) clkPickRender(d.clockZones);
         if($('clkRef')) clkRefRender(d.clockRef||CLOCK_REF_DEFAULT);
+        if($('lobbyClk')) lobbyClkRender(d.lobbyClockTz||'',d.lobbyClockEff||'',d.lobbyClockEnv||'');
         if(d.seo && typeof d.seo==='object'){ if($('seoEnabled'))$('seoEnabled').value=(d.seo.enabled?'1':'0'); if($('seoUrl')&&typeof d.seo.publicUrl==='string')$('seoUrl').value=d.seo.publicUrl; if($('seoGsv')&&typeof d.seo.googleVerification==='string')$('seoGsv').value=d.seo.googleVerification; if($('seoBing')&&typeof d.seo.bingVerification==='string')$('seoBing').value=d.seo.bingVerification; if($('seoYandex')&&typeof d.seo.yandexVerification==='string')$('seoYandex').value=d.seo.yandexVerification; if($('seoSiteName')&&typeof d.seo.siteName==='string')$('seoSiteName').value=d.seo.siteName; if($('seoTitle')&&typeof d.seo.title==='string')$('seoTitle').value=d.seo.title; if($('seoDesc')&&typeof d.seo.description==='string')$('seoDesc').value=d.seo.description; if($('seoImage')&&typeof d.seo.image==='string')$('seoImage').value=d.seo.image; if($('seoAi'))$('seoAi').value=(d.seo.aiCrawlers===false?'0':'1'); if($('seoIndexNow')&&typeof d.seo.indexNowKey==='string'&&d.seo.indexNowKey){ var _ik=d.seo.indexNowKey+'  (served at /'+d.seo.indexNowKey+'.txt, pinged on save)'; var _in=d.seo.indexNow; if(_in&&_in.at){ var _d=new Date(_in.at); _ik+=' \u2014 last submission '+_d.toISOString().replace('T',' ').slice(0,16)+' UTC, '+_in.count+' URLs'+(_in.error?' ('+_in.error+')':' accepted'); } $('seoIndexNow').textContent=_ik; } }
         _pxLoaded=true;
         if(d.proxyCfg && typeof d.proxyCfg==='object'){ var P=d.proxyCfg; if($('pxHosts'))$('pxHosts').value=(Array.isArray(P.allowedHosts)?P.allowedHosts.join('\n'):''); if($('pxGrace'))$('pxGrace').value=(typeof P.graceSec==='number'?P.graceSec:''); if($('pxGap'))$('pxGap').value=(typeof P.connGapMs==='number'?P.connGapMs:''); if($('pxPorts'))$('pxPorts').value=(Array.isArray(P.allowedPorts)?P.allowedPorts.join('\n'):''); if($('pxLog'))$('pxLog').value=(typeof P.logLevel==='string'?P.logLevel:''); if($('logQuick'))$('logQuick').value=(typeof P.logLevel==='string'?P.logLevel:''); if($('pxMax'))$('pxMax').value=(typeof P.maxClients==='number'?P.maxClients:''); }

@@ -1036,6 +1036,11 @@ export const strings = {
     "bakRestoreNoPerm": "Prieiga prie aplanko nesuteikta — pasirinkite aplanką iš naujo.",
     "bakRestoreEmpty": "Atsarginės kopijos failas tuščias — nėra ką atkurti.",
     "syncBusy": "Sinchronizuojama…",
+    "lsbClockTitle": "Serverio laikas",
+    "lsbClockYours": "Jūsų laikas",
+    "lsbClockSame": "Toks pat laikas kaip serveryje",
+    "lsbClockNote": "Bendruomenės renginiai (BBC, WEC, Monthly Cup) planuojami serverio laiku.",
+    "advLobbyClock": "Serverio laikas vestibiulio būsenos juostoje (pokerth.net)",
 };
 
 export default { meta, strings };

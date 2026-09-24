@@ -664,6 +664,11 @@ export const strings = {
     "bakRestoreNoPerm": 'საქაღალდეზე წვდომა არ მიგიციათ — ხელახლა აირჩიეთ საქაღალდე.',
     "bakRestoreEmpty": 'სარეზერვო ფაილი ცარიელია — აღსადგენი არაფერია.',
     "syncBusy": 'სინქრონიზაცია…',
+    "lsbClockTitle": "სერვერის დრო",
+    "lsbClockYours": "თქვენი დრო",
+    "lsbClockSame": "იგივე დრო, რაც სერვერზე",
+    "lsbClockNote": "საზოგადოების ღონისძიებები (BBC, WEC, Monthly Cup) სერვერის დროით იგეგმება.",
+    "advLobbyClock": "სერვერის დრო ლობის სტატუსის ზოლში (pokerth.net)",
 };
 
 export default { meta, strings };

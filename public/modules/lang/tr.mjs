@@ -1037,6 +1037,11 @@ export const strings = {
     "bakRestoreNoPerm": "Klasör erişimi verilmedi — klasörü yeniden seç.",
     "bakRestoreEmpty": "Yedek dosyası boş — geri yüklenecek bir şey yok.",
     "syncBusy": "Eşitleniyor…",
+    "lsbClockTitle": "Sunucu saati",
+    "lsbClockYours": "Senin saatin",
+    "lsbClockSame": "Sunucuyla aynı saat",
+    "lsbClockNote": "Topluluk etkinlikleri (BBC, WEC, Monthly Cup) sunucu saatine göre planlanır.",
+    "advLobbyClock": "Lobi durum çubuğunda sunucu saati (pokerth.net)",
 };
 
 export default { meta, strings };

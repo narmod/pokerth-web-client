@@ -1038,6 +1038,11 @@ export const strings = {
     "bakRestoreNoPerm": "Brak dostępu do folderu — wybierz folder ponownie.",
     "bakRestoreEmpty": "Plik kopii zapasowej jest pusty — nie ma czego przywracać.",
     "syncBusy": "Synchronizowanie…",
+    "lsbClockTitle": "Czas serwera",
+    "lsbClockYours": "Twój czas",
+    "lsbClockSame": "Ten sam czas co na serwerze",
+    "lsbClockNote": "Wydarzenia społeczności (BBC, WEC, Monthly Cup) są planowane według czasu serwera.",
+    "advLobbyClock": "Czas serwera na pasku stanu lobby (pokerth.net)",
 };
 
 export default { meta, strings };

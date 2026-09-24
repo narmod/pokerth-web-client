@@ -1037,6 +1037,11 @@ export const strings = {
     "bakRestoreNoPerm": "Non se concedeu acceso ao cartafol — escolle o cartafol de novo.",
     "bakRestoreEmpty": "O ficheiro de copia de seguranza está baleiro — non hai nada que restaurar.",
     "syncBusy": "Sincronizando…",
+    "lsbClockTitle": "Hora do servidor",
+    "lsbClockYours": "A túa hora",
+    "lsbClockSame": "A mesma hora que o servidor",
+    "lsbClockNote": "Os eventos da comunidade (BBC, WEC, Monthly Cup) prográmanse na hora do servidor.",
+    "advLobbyClock": "Hora do servidor na barra de estado do lobby (pokerth.net)",
 };
 
 export default { meta, strings };

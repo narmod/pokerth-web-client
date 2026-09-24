@@ -664,6 +664,11 @@ export const strings = {
     "bakRestoreNoPerm": 'ෆෝල්ඩර ප්‍රවේශය ලබා දී නැත — ෆෝල්ඩරය නැවත තෝරන්න.',
     "bakRestoreEmpty": 'උපස්ථ ගොනුව හිස්ය — ප්‍රතිස්ථාපනය කිරීමට කිසිවක් නැත.',
     "syncBusy": 'සමමුහුර්ත වෙමින්…',
+    "lsbClockTitle": "සේවාදායක වේලාව",
+    "lsbClockYours": "ඔබේ වේලාව",
+    "lsbClockSame": "සේවාදායකයට සමාන වේලාව",
+    "lsbClockNote": "ප්‍රජා සිදුවීම් (BBC, WEC, Monthly Cup) සේවාදායක වේලාවට සැලසුම් කෙරේ.",
+    "advLobbyClock": "ලොබියේ තත්ත්ව තීරුවේ සේවාදායක වේලාව (pokerth.net)",
 };
 
 export default { meta, strings };

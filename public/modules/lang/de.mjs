@@ -1039,6 +1039,11 @@ export const strings = {
     "bakRestoreNoPerm": "Kein Zugriff auf den Ordner — wähle den Ordner erneut.",
     "bakRestoreEmpty": "Die Sicherungsdatei ist leer — nichts wiederherzustellen.",
     "syncBusy": "Synchronisierung…",
+    "lsbClockTitle": "Serverzeit",
+    "lsbClockYours": "Deine Zeit",
+    "lsbClockSame": "Gleiche Zeit wie der Server",
+    "lsbClockNote": "Community-Events (BBC, WEC, Monthly Cup) werden in Serverzeit angesetzt.",
+    "advLobbyClock": "Serverzeit in der Statusleiste der Lobby (pokerth.net)",
 };
 
 export default { meta, strings };

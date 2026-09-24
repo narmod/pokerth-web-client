@@ -1038,6 +1038,11 @@ export const strings = {
     "bakRestoreNoPerm": "கோப்புறை அணுகல் வழங்கப்படவில்லை — கோப்புறையை மீண்டும் தேர்ந்தெடுக்கவும்.",
     "bakRestoreEmpty": "காப்புப்பிரதி கோப்பு காலியாக உள்ளது — மீட்டெடுக்க எதுவும் இல்லை.",
     "syncBusy": "ஒத்திசைக்கிறது…",
+    "lsbClockTitle": "சேவையக நேரம்",
+    "lsbClockYours": "உங்கள் நேரம்",
+    "lsbClockSame": "சேவையகத்தின் அதே நேரம்",
+    "lsbClockNote": "சமூக நிகழ்வுகள் (BBC, WEC, Monthly Cup) சேவையக நேரப்படி திட்டமிடப்படுகின்றன.",
+    "advLobbyClock": "லாபியின் நிலைப் பட்டியில் சேவையக நேரம் (pokerth.net)",
 };
 
 export default { meta, strings };

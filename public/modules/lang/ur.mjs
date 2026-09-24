@@ -660,6 +660,11 @@ export const strings = {
     "bakRestoreNoPerm": "فولڈر تک رسائی نہیں دی گئی — فولڈر دوبارہ منتخب کریں۔",
     "bakRestoreEmpty": "بیک اپ فائل خالی ہے — بحال کرنے کو کچھ نہیں۔",
     "syncBusy": "ہم آہنگی جاری…",
+    "lsbClockTitle": "سرور کا وقت",
+    "lsbClockYours": "آپ کا وقت",
+    "lsbClockSame": "سرور جیسا ہی وقت",
+    "lsbClockNote": "کمیونٹی ایونٹس (BBC، WEC، Monthly Cup) سرور کے وقت کے مطابق طے ہوتے ہیں۔",
+    "advLobbyClock": "لابی کی اسٹیٹس بار میں سرور کا وقت (pokerth.net)",
 };
 
 export default { meta, strings };

@@ -1036,6 +1036,11 @@ export const strings = {
     "bakRestoreNoPerm": "Δεν δόθηκε πρόσβαση στον φάκελο — επίλεξε ξανά τον φάκελο.",
     "bakRestoreEmpty": "Το αρχείο αντιγράφου ασφαλείας είναι κενό — δεν υπάρχει τίποτα για επαναφορά.",
     "syncBusy": "Συγχρονισμός…",
+    "lsbClockTitle": "Ώρα διακομιστή",
+    "lsbClockYours": "Η ώρα σας",
+    "lsbClockSame": "Ίδια ώρα με τον διακομιστή",
+    "lsbClockNote": "Οι εκδηλώσεις της κοινότητας (BBC, WEC, Monthly Cup) προγραμματίζονται με την ώρα του διακομιστή.",
+    "advLobbyClock": "Ώρα διακομιστή στη γραμμή κατάστασης του λόμπι (pokerth.net)",
 };
 
 export default { meta, strings };

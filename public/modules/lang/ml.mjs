@@ -661,6 +661,11 @@ export const strings = {
     "bakRestoreNoPerm": 'ഫോൾഡർ ആക്സസ് നൽകിയില്ല — ഫോൾഡർ വീണ്ടും തിരഞ്ഞെടുക്കുക.',
     "bakRestoreEmpty": 'ബാക്കപ്പ് ഫയൽ ശൂന്യമാണ് — പുനഃസ്ഥാപിക്കാൻ ഒന്നുമില്ല.',
     "syncBusy": 'സിങ്ക് ചെയ്യുന്നു…',
+    "lsbClockTitle": "സെർവർ സമയം",
+    "lsbClockYours": "നിങ്ങളുടെ സമയം",
+    "lsbClockSame": "സെർവറിന്റെ അതേ സമയം",
+    "lsbClockNote": "കമ്മ്യൂണിറ്റി ഇവന്റുകൾ (BBC, WEC, Monthly Cup) സെർവർ സമയത്താണ് ക്രമീകരിക്കുന്നത്.",
+    "advLobbyClock": "ലോബിയുടെ സ്റ്റാറ്റസ് ബാറിൽ സെർവർ സമയം (pokerth.net)",
 };
 
 export default { meta, strings };

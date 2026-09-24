@@ -660,6 +660,11 @@ export const strings = {
     "bakRestoreNoPerm": 'Aðgangur að möppunni var ekki veittur — veldu möppuna aftur.',
     "bakRestoreEmpty": 'Afritsskráin er tóm — ekkert til að endurheimta.',
     "syncBusy": 'Samstilli…',
+    "lsbClockTitle": "Tími netþjóns",
+    "lsbClockYours": "Þinn tími",
+    "lsbClockSame": "Sami tími og á netþjóninum",
+    "lsbClockNote": "Samfélagsviðburðir (BBC, WEC, Monthly Cup) eru tímasettir eftir tíma netþjónsins.",
+    "advLobbyClock": "Tími netþjóns í stöðustiku anddyrisins (pokerth.net)",
 };
 
 export default { meta, strings };

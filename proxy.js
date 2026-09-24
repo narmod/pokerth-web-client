@@ -326,6 +326,7 @@ const FEATURE_SWITCHES = [
   { key: 'community_content', label: 'Community content (BBC / WEC)' },
   { key: 'community_suggest', label: 'Suggest players in community games' },
   { key: 'lobby_chat', label: 'Lobby chat' },
+  { key: 'lobby_clock', label: 'Server clock in the lobby' },
   { key: 'keynav', label: 'Esc / Enter navigation outside the table' },
   { key: 'back_guard', label: 'Android back button guard' },
   { key: 'splash', label: 'Splash screen on startup' },
@@ -7098,6 +7099,18 @@ function _clockZones() {
   const out = z.filter(_validTz).slice(0, CLOCK_ZONES_MAX);
   return out;   // an explicit empty list means "no strip", and is honoured
 }
+// ── Lobby clock (players, GET /__time) ────────────────────────────────────
+// The PokerTH protocol carries no server time, so the lobby clock reads it
+// here. The zone is the one community events (BBC, WEC, Monthly Cup) are
+// announced in: admin setting first, then SERVER_TZ, then this host's zone —
+// never hard-coded, so moving the server is one setting away.
+function _lobbyClockTz() {
+  const a = _adminConfig && _adminConfig.lobbyClockTz;
+  if (_validTz(a)) return a;
+  const e = String(process.env.SERVER_TZ || '').trim();
+  if (_validTz(e)) return e;
+  return _serverTz() || 'UTC';
+}
 
 // ── IP bloquées (anti-force brute) et bannies (décision d'admin) ─────────
 // Le garde anti-force brute de l'admin travaillait en aveugle : on ne voyait ni
@@ -7575,7 +7588,7 @@ function handleAdmin(req, res, reqPathOnly, query) {
     try { version = (JSON.parse(fs.readFileSync(path.join(__dirname, 'package.json'), 'utf8')).version) || ''; } catch (e) {}
     let sockets = null; try { sockets = wss.clients.size; } catch (e) {}
     let liveSessions = null; try { liveSessions = _liveSessions.size; } catch (e) {}
-    return adminJson(res, 200, { ok: true, version: version, runningVersion: BOOT_VERSION, node: process.version, uptimeSec: Math.floor(process.uptime()), installKind: installKind(), gitUpdatable: GIT_UPDATABLE, sockets: sockets, liveSessions: liveSessions, players: Object.keys(statsStore).length, resetPeriod: STATS_RESET_PERIOD, modes: appModes(), showLoginTitle: !!_adminConfig.showLoginTitle, defaultTheme: _adminConfig.defaultTheme, liveDefaults: _liveDefaults() || '', defaults: _adminConfig.defaults || {}, loginDefaults: _loginDefaults(false), proxyCfg: _adminConfig.proxyCfg || {}, logLevel: _logLevelName(), maxClients: _maxClients(), fd: _fdInfo(), tableDefaults: _adminConfig.tableDefaults || {}, tableNames: _adminConfig.tableNames || {}, serverName: _adminConfig.serverName || '', serverTagline: _adminConfig.serverTagline || '', discordChatWebhookUrl: _adminConfig.discordChatWebhookUrl || '', seo: _seoAdmin(), restartAt: (_restartAt > Date.now() ? _restartAt : null), restartKind: (_restartAt > Date.now() ? _restartKind : null), autoUpdate: _autoUpdateCfg(), autoArmed: !!(_autoArmed && _restartAt > Date.now()), update: _updPublic(), now: Date.now(), tz: _serverTz(), clockZones: _clockZones(), clockRef: _clockRef() });
+    return adminJson(res, 200, { ok: true, version: version, runningVersion: BOOT_VERSION, node: process.version, uptimeSec: Math.floor(process.uptime()), installKind: installKind(), gitUpdatable: GIT_UPDATABLE, sockets: sockets, liveSessions: liveSessions, players: Object.keys(statsStore).length, resetPeriod: STATS_RESET_PERIOD, modes: appModes(), showLoginTitle: !!_adminConfig.showLoginTitle, defaultTheme: _adminConfig.defaultTheme, liveDefaults: _liveDefaults() || '', defaults: _adminConfig.defaults || {}, loginDefaults: _loginDefaults(false), proxyCfg: _adminConfig.proxyCfg || {}, logLevel: _logLevelName(), maxClients: _maxClients(), fd: _fdInfo(), tableDefaults: _adminConfig.tableDefaults || {}, tableNames: _adminConfig.tableNames || {}, serverName: _adminConfig.serverName || '', serverTagline: _adminConfig.serverTagline || '', discordChatWebhookUrl: _adminConfig.discordChatWebhookUrl || '', seo: _seoAdmin(), restartAt: (_restartAt > Date.now() ? _restartAt : null), restartKind: (_restartAt > Date.now() ? _restartKind : null), autoUpdate: _autoUpdateCfg(), autoArmed: !!(_autoArmed && _restartAt > Date.now()), update: _updPublic(), now: Date.now(), tz: _serverTz(), clockZones: _clockZones(), clockRef: _clockRef(), lobbyClockTz: (_adminConfig.lobbyClockTz || ''), lobbyClockEff: _lobbyClockTz(), lobbyClockEnv: String(process.env.SERVER_TZ || '').trim() });
   }
   // ── Horloge du bandeau (toutes clés) ───────────────────────────────────
   // Réponse minuscule, relue toutes les 5 min : elle sert uniquement à recaler
@@ -7939,6 +7952,11 @@ function handleAdmin(req, res, reqPathOnly, query) {
         if (typeof d.clockRef === 'string') {
           if (!_validTz(d.clockRef)) return adminJson(res, 400, { ok: false, error: 'unknown time zone: ' + d.clockRef.slice(0, 64) });
           _adminConfig.clockRef = d.clockRef;
+        }
+        if (typeof d.lobbyClockTz === 'string') {
+          const lz = d.lobbyClockTz.trim();
+          if (lz && !_validTz(lz)) return adminJson(res, 400, { ok: false, error: 'unknown time zone: ' + lz.slice(0, 64) });
+          _adminConfig.lobbyClockTz = lz;   // '' = automatic (SERVER_TZ, else this host's zone)
         }
         if (typeof d.serverName === 'string')    _adminConfig.serverName    = d.serverName.trim().slice(0, 40);
         if (typeof d.serverTagline === 'string') _adminConfig.serverTagline = d.serverTagline.trim().slice(0, 60);
@@ -8695,7 +8713,7 @@ function handleAdmin(req, res, reqPathOnly, query) {
       // config reset SEO to Off. Keep in sync with the keys the code reads.
       const ALLOWED = ['resetPeriod', 'modes', 'welcome', 'guestNotice', 'authNotice', 'lanNotice', 'defaultTheme', 'liveDefaults', 'defaults', 'loginDefaults',
                        'proxyCfg', 'tableDefaults', 'tableNames', 'serverName', 'serverTagline', 'clockZones', 'clockRef',
-                       'discordChatWebhookUrl', 'showLoginTitle', 'featureOff', 'liveStats', 'bannedIps',
+                       'discordChatWebhookUrl', 'showLoginTitle', 'lobbyClockTz', 'featureOff', 'liveStats', 'bannedIps',
                        'pkgDisabled', 'pkgFull', 'pkgFullscreen', 'pkgAlign', 'musicTracks',
                        'musicEnabled', 'musicHidden', 'musicOrder',
                        'seo', 'servers', 'activeServerId', 'pokerthnetSource',
@@ -10387,6 +10405,13 @@ const httpServer = http.createServer((req, res) => {
     const newest = newestAssetMtime();
     res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' });
     res.end(JSON.stringify({ v: Math.floor(newest) }));
+    return;
+  }
+  // ── Server clock for the lobby (modules/ui/lobby-clock.mjs) ──
+  // The instant is the server's own; the page keeps a skew against it.
+  if (reqPathOnly === '/__time') {
+    res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' });
+    res.end(JSON.stringify({ now: Date.now(), tz: _lobbyClockTz() }));
     return;
   }
 

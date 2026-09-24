@@ -663,6 +663,11 @@ export const strings = {
     "bakRestoreNoPerm": "Piekļuve mapei netika piešķirta — izvēlies mapi vēlreiz.",
     "bakRestoreEmpty": "Rezerves kopijas fails ir tukšs — nav ko atjaunot.",
     "syncBusy": "Sinhronizē…",
+    "lsbClockTitle": "Servera laiks",
+    "lsbClockYours": "Jūsu laiks",
+    "lsbClockSame": "Tāds pats laiks kā serverī",
+    "lsbClockNote": "Kopienas pasākumi (BBC, WEC, Monthly Cup) tiek plānoti servera laikā.",
+    "advLobbyClock": "Servera laiks vestibila statusa joslā (pokerth.net)",
 };
 
 export default { meta, strings };

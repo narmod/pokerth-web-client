@@ -1036,6 +1036,11 @@ export const strings = {
     "bakRestoreNoPerm": "Toegang tot die vouer is nie toegestaan nie — kies die vouer weer.",
     "bakRestoreEmpty": "Die rugsteunlêer is leeg — niks om te herstel nie.",
     "syncBusy": "Sinchroniseer…",
+    "lsbClockTitle": "Bedienertyd",
+    "lsbClockYours": "Jou tyd",
+    "lsbClockSame": "Dieselfde tyd as die bediener",
+    "lsbClockNote": "Gemeenskapsgeleenthede (BBC, WEC, Monthly Cup) word in bedienertyd geskeduleer.",
+    "advLobbyClock": "Bedienertyd in die lobby se statusbalk (pokerth.net)",
 };
 
 export default { meta, strings };

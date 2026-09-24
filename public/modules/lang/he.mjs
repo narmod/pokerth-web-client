@@ -660,6 +660,11 @@ export const strings = {
     "bakRestoreNoPerm": "הגישה לתיקייה לא אושרה — בחר את התיקייה שוב.",
     "bakRestoreEmpty": "קובץ הגיבוי ריק — אין מה לשחזר.",
     "syncBusy": "מסנכרן…",
+    "lsbClockTitle": "שעת השרת",
+    "lsbClockYours": "השעה שלך",
+    "lsbClockSame": "אותה שעה כמו בשרת",
+    "lsbClockNote": "אירועי הקהילה (BBC, WEC, Monthly Cup) מתוזמנים לפי שעת השרת.",
+    "advLobbyClock": "שעת השרת בשורת המצב של הלובי (pokerth.net)",
 };
 
 export default { meta, strings };

@@ -664,6 +664,11 @@ export const strings = {
     "bakRestoreNoPerm": 'ဖိုင်တွဲသို့ ဝင်ရောက်ခွင့် မရခဲ့ပါ — ဖိုင်တွဲကို ထပ်ရွေးပါ။',
     "bakRestoreEmpty": 'အရန်ဖိုင် ဗလာဖြစ်နေသည် — ပြန်ထားစရာ မရှိပါ။',
     "syncBusy": 'ထပ်တူပြုနေသည်…',
+    "lsbClockTitle": "ဆာဗာအချိန်",
+    "lsbClockYours": "သင့်အချိန်",
+    "lsbClockSame": "ဆာဗာနှင့် အချိန်တူ",
+    "lsbClockNote": "အသိုင်းအဝိုင်း ပွဲများ (BBC, WEC, Monthly Cup) ကို ဆာဗာအချိန်ဖြင့် သတ်မှတ်ထားသည်။",
+    "advLobbyClock": "လော်ဘီ အခြေအနေဘားတွင် ဆာဗာအချိန် (pokerth.net)",
 };
 
 export default { meta, strings };

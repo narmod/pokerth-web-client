@@ -664,6 +664,11 @@ export const strings = {
     "bakRestoreNoPerm": 'Jildga kirish ruxsati berilmadi — jildni qayta tanlang.',
     "bakRestoreEmpty": 'Zaxira fayli boʻsh — tiklanadigan narsa yoʻq.',
     "syncBusy": 'Sinxronlanmoqda…',
+    "lsbClockTitle": "Server vaqti",
+    "lsbClockYours": "Sizning vaqtingiz",
+    "lsbClockSame": "Server bilan bir xil vaqt",
+    "lsbClockNote": "Hamjamiyat tadbirlari (BBC, WEC, Monthly Cup) server vaqti bo‘yicha rejalashtiriladi.",
+    "advLobbyClock": "Lobbi holat panelida server vaqti (pokerth.net)",
 };
 
 export default { meta, strings };

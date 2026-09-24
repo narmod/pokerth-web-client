@@ -226,6 +226,7 @@ function applyAdvOpts() {
     b.classList.toggle('adv-no-communitycontent', !_advGet('community_content', true)); // contenus communaute (parite showCommunityContent)
     b.classList.toggle('adv-no-blindsbadge', !_advGet('blinds_badge', true)); // pastille blinds du bandeau (extension web)
     b.classList.toggle('adv-no-forumnews', !_advGet('forum_news', true)); // bouton Forum du lobby (extension web)
+    try { if (typeof window._lobbyClockRefresh === 'function') window._lobbyClockRefresh(); } catch (e) {} // horloge serveur du lobby (option lobby_clock)
     b.classList.toggle('adv-no-community', !_advGet('show_community', true));
     b.classList.toggle('adv-no-flag', !_advGet('show_flag', true));
     // Titre « PokerTH » de l'écran de connexion : caché par défaut (defOn
@@ -461,6 +462,7 @@ function openAdvancedOptions() {
   sync('adv-reducefx', 'reduce_fx', false);
   sync('adv-statusbar', 'status_bar', true);
   sync('adv-blindsbadge', 'blinds_badge', true);
+  sync('adv-lobbyclock', 'lobby_clock', true);   // horloge serveur dans la barre du lobby (pokerth.net, web)
   sync('adv-forumnews', 'forum_news', true);   // bouton Forum + badge non-lus dans l'en-tete du lobby (web)
   sync('adv-winnerpopup', 'winner_popup', true);
   sync('adv-removegone', 'remove_gone', false);
@@ -1470,7 +1472,7 @@ var _CFG_WEB_SYNC_KEYS = [
   'pth_haptic', 'pth_display_bb', 'pth_table_zoom', 'pth_zoom_follow',
   'pth_community_content', 'pth_sound_vol',
   'pth_log_on', 'pth_create_dialog', 'pth_status_bar', 'pth_blinds_badge', 'pth_deal_anim',
-  'pth_forum_news',
+  'pth_forum_news', 'pth_lobby_clock',
   'pth_winner_popup', 'pth_remove_gone', 'pth_tooltips', 'pth_big_own_cards',
   'pth_chat_translate', 'pth_chat_abbrev', 'pth_pin_actionbar', 'pth_confirm_social',
   'pth_help_btn',
@@ -11881,7 +11883,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.9-web.127'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.9-web.128'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif ou la palette High contrast
    (Android, Safari, iOS standalone récent). Lit --theme-color et met

@@ -662,6 +662,11 @@ export const strings = {
     "bakRestoreNoPerm": "Akses folder tidak diberikan — pilih folder lagi.",
     "bakRestoreEmpty": "Berkas cadangan kosong — tidak ada yang bisa dipulihkan.",
     "syncBusy": "Menyinkronkan…",
+    "lsbClockTitle": "Waktu server",
+    "lsbClockYours": "Waktu Anda",
+    "lsbClockSame": "Sama dengan waktu server",
+    "lsbClockNote": "Acara komunitas (BBC, WEC, Monthly Cup) dijadwalkan dalam waktu server.",
+    "advLobbyClock": "Waktu server di bilah status lobi (pokerth.net)",
 };
 
 export default { meta, strings };

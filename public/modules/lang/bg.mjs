@@ -1036,6 +1036,11 @@ export const strings = {
     "bakRestoreNoPerm": "Достъпът до папката не е разрешен — изберете папката отново.",
     "bakRestoreEmpty": "Файлът с резервното копие е празен — няма какво да се възстанови.",
     "syncBusy": "Синхронизиране…",
+    "lsbClockTitle": "Време на сървъра",
+    "lsbClockYours": "Вашето време",
+    "lsbClockSame": "Същото време като сървъра",
+    "lsbClockNote": "Събитията на общността (BBC, WEC, Monthly Cup) са насрочени по времето на сървъра.",
+    "advLobbyClock": "Време на сървъра в лентата на състоянието на лобито (pokerth.net)",
 };
 
 export default { meta, strings };

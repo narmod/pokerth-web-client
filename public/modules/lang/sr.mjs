@@ -1036,6 +1036,11 @@ export const strings = {
     "bakRestoreNoPerm": "Приступ фасцикли није одобрен — поново изабери фасциклу.",
     "bakRestoreEmpty": "Датотека резервне копије је празна — нема шта да се врати.",
     "syncBusy": "Синхронизација…",
+    "lsbClockTitle": "Време сервера",
+    "lsbClockYours": "Ваше време",
+    "lsbClockSame": "Исто време као сервер",
+    "lsbClockNote": "Догађаји заједнице (BBC, WEC, Monthly Cup) заказују се по времену сервера.",
+    "advLobbyClock": "Време сервера у статусној траци лобија (pokerth.net)",
 };
 
 export default { meta, strings };

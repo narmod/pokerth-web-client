@@ -662,6 +662,11 @@ export const strings = {
     "bakRestoreNoPerm": "ফোল্ডারে প্রবেশাধিকার দেওয়া হয়নি — আবার ফোল্ডার নির্বাচন করুন।",
     "bakRestoreEmpty": "ব্যাকআপ ফাইলটি খালি — পুনরুদ্ধার করার কিছু নেই।",
     "syncBusy": "সিংক হচ্ছে…",
+    "lsbClockTitle": "সার্ভারের সময়",
+    "lsbClockYours": "আপনার সময়",
+    "lsbClockSame": "সার্ভারের সমান সময়",
+    "lsbClockNote": "কমিউনিটি ইভেন্টগুলি (BBC, WEC, Monthly Cup) সার্ভারের সময় অনুযায়ী নির্ধারিত হয়।",
+    "advLobbyClock": "লবির স্ট্যাটাস বারে সার্ভারের সময় (pokerth.net)",
 };
 
 export default { meta, strings };

@@ -1032,6 +1032,11 @@ export const strings = {
     "bakRestoreNoPerm": "フォルダーへのアクセスが許可されていません — フォルダーを選び直してください。",
     "bakRestoreEmpty": "バックアップファイルが空です — 復元するものがありません。",
     "syncBusy": "同期中…",
+    "lsbClockTitle": "サーバー時刻",
+    "lsbClockYours": "あなたの時刻",
+    "lsbClockSame": "サーバーと同じ時刻",
+    "lsbClockNote": "コミュニティイベント（BBC、WEC、Monthly Cup）はサーバー時刻で予定されています。",
+    "advLobbyClock": "ロビーのステータスバーにサーバー時刻を表示（pokerth.net）",
 };
 
 export default { meta, strings };

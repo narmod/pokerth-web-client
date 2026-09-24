@@ -1036,6 +1036,11 @@ export const strings = {
     "bakRestoreNoPerm": "Přístup ke složce nebyl povolen — vyberte složku znovu.",
     "bakRestoreEmpty": "Soubor zálohy je prázdný — není co obnovit.",
     "syncBusy": "Synchronizace…",
+    "lsbClockTitle": "Čas serveru",
+    "lsbClockYours": "Váš čas",
+    "lsbClockSame": "Stejný čas jako server",
+    "lsbClockNote": "Komunitní akce (BBC, WEC, Monthly Cup) jsou plánovány v čase serveru.",
+    "advLobbyClock": "Čas serveru ve stavovém řádku lobby (pokerth.net)",
 };
 
 export default { meta, strings };

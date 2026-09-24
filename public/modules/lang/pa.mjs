@@ -661,6 +661,11 @@ export const strings = {
     "bakRestoreNoPerm": "ਫੋਲਡਰ ਪਹੁੰਚ ਨਹੀਂ ਦਿੱਤੀ ਗਈ — ਫੋਲਡਰ ਦੁਬਾਰਾ ਚੁਣੋ।",
     "bakRestoreEmpty": "ਬੈਕਅੱਪ ਫਾਈਲ ਖਾਲੀ ਹੈ — ਮੁੜ-ਸਥਾਪਿਤ ਕਰਨ ਲਈ ਕੁਝ ਨਹੀਂ।",
     "syncBusy": "ਸਮਕਾਲ ਹੋ ਰਿਹਾ ਹੈ…",
+    "lsbClockTitle": "ਸਰਵਰ ਸਮਾਂ",
+    "lsbClockYours": "ਤੁਹਾਡਾ ਸਮਾਂ",
+    "lsbClockSame": "ਸਰਵਰ ਵਾਲਾ ਹੀ ਸਮਾਂ",
+    "lsbClockNote": "ਕਮਿਊਨਿਟੀ ਇਵੈਂਟ (BBC, WEC, Monthly Cup) ਸਰਵਰ ਸਮੇਂ ਅਨੁਸਾਰ ਤੈਅ ਹੁੰਦੇ ਹਨ।",
+    "advLobbyClock": "ਲੌਬੀ ਦੀ ਸਥਿਤੀ ਪੱਟੀ ਵਿੱਚ ਸਰਵਰ ਸਮਾਂ (pokerth.net)",
 };
 
 export default { meta, strings };

@@ -665,6 +665,11 @@ export const strings = {
     "bakRestoreNoPerm": "Accès au dossier non accordé — choisis le dossier à nouveau.",
     "bakRestoreEmpty": "Le fichier de sauvegarde est vide — rien à restaurer.",
     "syncBusy": "Synchronisation…",
+    "lsbClockTitle": "Heure du serveur",
+    "lsbClockYours": "Ton heure",
+    "lsbClockSame": "Même heure que le serveur",
+    "lsbClockNote": "Les événements communautaires (BBC, WEC, Monthly Cup) sont programmés à l'heure du serveur.",
+    "advLobbyClock": "Heure du serveur dans la barre d'état du lobby (pokerth.net)",
 };
 
 export default { meta, strings };

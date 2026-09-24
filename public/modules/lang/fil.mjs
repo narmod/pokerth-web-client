@@ -662,6 +662,11 @@ export const strings = {
     "bakRestoreNoPerm": "Hindi ibinigay ang access sa folder — piliin muli ang folder.",
     "bakRestoreEmpty": "Walang laman ang backup file — walang maibabalik.",
     "syncBusy": "Nagsi-sync…",
+    "lsbClockTitle": "Oras ng server",
+    "lsbClockYours": "Iyong oras",
+    "lsbClockSame": "Kapareho ng oras ng server",
+    "lsbClockNote": "Ang mga event ng komunidad (BBC, WEC, Monthly Cup) ay nakaiskedyul sa oras ng server.",
+    "advLobbyClock": "Oras ng server sa status bar ng lobby (pokerth.net)",
 };
 
 export default { meta, strings };

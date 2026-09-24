@@ -1036,6 +1036,11 @@ export const strings = {
     "bakRestoreNoPerm": "Chưa cấp quyền truy cập thư mục — hãy chọn lại thư mục.",
     "bakRestoreEmpty": "Tệp sao lưu trống — không có gì để khôi phục.",
     "syncBusy": "Đang đồng bộ…",
+    "lsbClockTitle": "Giờ máy chủ",
+    "lsbClockYours": "Giờ của bạn",
+    "lsbClockSame": "Cùng giờ với máy chủ",
+    "lsbClockNote": "Các sự kiện cộng đồng (BBC, WEC, Monthly Cup) được lên lịch theo giờ máy chủ.",
+    "advLobbyClock": "Giờ máy chủ trên thanh trạng thái của sảnh (pokerth.net)",
 };
 
 export default { meta, strings };

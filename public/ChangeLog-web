@@ -1,4 +1,7 @@
-2026-09-22 version 2.1.9-web.127 (current series):
+2026-09-24 version 2.1.9-web.128 (current series):
+- new: lobby — pokerth.net players now see the server time in the status bar at the bottom of the lobby; tap it to compare with your own time (BBC, WEC and Monthly Cup dates are given in server time). It can be hidden in the advanced options
+
+2026-09-22 version 2.1.9-web.127:
 - new: forum news — the Events tab now opens with the pokerth.net "Champions of the day" (gold, silver and bronze medals, linked to the official leaderboard)
 
 2026-09-22 version 2.1.9-web.126:

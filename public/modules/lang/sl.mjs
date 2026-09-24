@@ -663,6 +663,11 @@ export const strings = {
     "bakRestoreNoPerm": "Dostop do mape ni bil odobren — znova izberi mapo.",
     "bakRestoreEmpty": "Datoteka varnostne kopije je prazna — ni česa obnoviti.",
     "syncBusy": "Sinhronizacija…",
+    "lsbClockTitle": "Čas strežnika",
+    "lsbClockYours": "Vaš čas",
+    "lsbClockSame": "Enak čas kot na strežniku",
+    "lsbClockNote": "Dogodki skupnosti (BBC, WEC, Monthly Cup) so načrtovani po času strežnika.",
+    "advLobbyClock": "Čas strežnika v vrstici stanja preddverja (pokerth.net)",
 };
 
 export default { meta, strings };

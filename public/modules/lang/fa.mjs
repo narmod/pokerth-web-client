@@ -660,6 +660,11 @@ export const strings = {
     "bakRestoreNoPerm": "دسترسی به پوشه داده نشد — دوباره پوشه را انتخاب کنید.",
     "bakRestoreEmpty": "فایل پشتیبان خالی است — چیزی برای بازیابی نیست.",
     "syncBusy": "در حال همگام‌سازی…",
+    "lsbClockTitle": "زمان سرور",
+    "lsbClockYours": "زمان شما",
+    "lsbClockSame": "هم‌زمان با سرور",
+    "lsbClockNote": "رویدادهای انجمن (BBC، WEC، Monthly Cup) به وقت سرور برنامه‌ریزی می‌شوند.",
+    "advLobbyClock": "زمان سرور در نوار وضعیت لابی (pokerth.net)",
 };
 
 export default { meta, strings };

@@ -662,6 +662,11 @@ export const strings = {
     "bakRestoreNoPerm": "ไม่ได้รับสิทธิ์เข้าถึงโฟลเดอร์ — โปรดเลือกโฟลเดอร์อีกครั้ง",
     "bakRestoreEmpty": "ไฟล์สำรองข้อมูลว่างเปล่า — ไม่มีอะไรให้กู้คืน",
     "syncBusy": "กำลังซิงก์…",
+    "lsbClockTitle": "เวลาเซิร์ฟเวอร์",
+    "lsbClockYours": "เวลาของคุณ",
+    "lsbClockSame": "เวลาเดียวกับเซิร์ฟเวอร์",
+    "lsbClockNote": "กิจกรรมของชุมชน (BBC, WEC, Monthly Cup) กำหนดตามเวลาเซิร์ฟเวอร์",
+    "advLobbyClock": "เวลาเซิร์ฟเวอร์ในแถบสถานะของล็อบบี้ (pokerth.net)",
 };
 
 export default { meta, strings };

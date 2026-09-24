@@ -840,6 +840,11 @@ export const strings = {
     "bakRestoreNoPerm": "폴더 접근 권한이 없습니다 — 폴더를 다시 선택하세요.",
     "bakRestoreEmpty": "백업 파일이 비어 있습니다 — 복원할 항목이 없습니다.",
     "syncBusy": "동기화 중…",
+    "lsbClockTitle": "서버 시간",
+    "lsbClockYours": "내 시간",
+    "lsbClockSame": "서버와 같은 시간",
+    "lsbClockNote": "커뮤니티 이벤트(BBC, WEC, Monthly Cup)는 서버 시간 기준으로 예정됩니다.",
+    "advLobbyClock": "로비 상태 표시줄에 서버 시간 표시 (pokerth.net)",
 };
 
 export default { meta, strings };

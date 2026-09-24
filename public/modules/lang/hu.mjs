@@ -1036,6 +1036,11 @@ export const strings = {
     "bakRestoreNoPerm": "A mappához nincs hozzáférés — válaszd ki újra a mappát.",
     "bakRestoreEmpty": "A mentésfájl üres — nincs mit visszaállítani.",
     "syncBusy": "Szinkronizálás…",
+    "lsbClockTitle": "Szerveridő",
+    "lsbClockYours": "A te időd",
+    "lsbClockSame": "Ugyanaz az idő, mint a szerveren",
+    "lsbClockNote": "A közösségi események (BBC, WEC, Monthly Cup) szerveridő szerint vannak ütemezve.",
+    "advLobbyClock": "Szerveridő a lobbi állapotsorában (pokerth.net)",
 };
 
 export default { meta, strings };

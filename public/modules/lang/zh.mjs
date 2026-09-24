@@ -1032,6 +1032,11 @@ export const strings = {
     "bakRestoreNoPerm": "未授予文件夹访问权限 — 请重新选择文件夹。",
     "bakRestoreEmpty": "备份文件为空 — 没有可恢复的内容。",
     "syncBusy": "正在同步…",
+    "lsbClockTitle": "服务器时间",
+    "lsbClockYours": "你的时间",
+    "lsbClockSame": "与服务器时间相同",
+    "lsbClockNote": "社区活动（BBC、WEC、Monthly Cup）均按服务器时间安排。",
+    "advLobbyClock": "在大厅状态栏显示服务器时间（pokerth.net）",
 };
 
 export default { meta, strings };

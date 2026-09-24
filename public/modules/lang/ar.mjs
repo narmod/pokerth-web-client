@@ -663,6 +663,11 @@ export const strings = {
     "bakRestoreNoPerm": "لم يُمنح الوصول إلى المجلد — اختر المجلد مرة أخرى.",
     "bakRestoreEmpty": "ملف النسخ الاحتياطي فارغ — لا شيء لاستعادته.",
     "syncBusy": "جارٍ المزامنة…",
+    "lsbClockTitle": "وقت الخادم",
+    "lsbClockYours": "وقتك",
+    "lsbClockSame": "نفس توقيت الخادم",
+    "lsbClockNote": "تُجدوَل فعاليات المجتمع (BBC وWEC وMonthly Cup) بتوقيت الخادم.",
+    "advLobbyClock": "وقت الخادم في شريط حالة الردهة (pokerth.net)",
 };
 
 export default { meta, strings };

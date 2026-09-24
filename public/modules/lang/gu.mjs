@@ -661,6 +661,11 @@ export const strings = {
     "bakRestoreNoPerm": 'ફોલ્ડરની ઍક્સેસ મળી નથી — ફોલ્ડર ફરી પસંદ કરો.',
     "bakRestoreEmpty": 'બેકઅપ ફાઇલ ખાલી છે — પુનઃસ્થાપિત કરવા જેવું કંઈ નથી.',
     "syncBusy": 'સિંક થઈ રહ્યું છે…',
+    "lsbClockTitle": "સર્વર સમય",
+    "lsbClockYours": "તમારો સમય",
+    "lsbClockSame": "સર્વર જેવો જ સમય",
+    "lsbClockNote": "કમ્યુનિટી ઇવેન્ટ્સ (BBC, WEC, Monthly Cup) સર્વર સમય મુજબ નક્કી થાય છે.",
+    "advLobbyClock": "લોબીના સ્ટેટસ બારમાં સર્વર સમય (pokerth.net)",
 };
 
 export default { meta, strings };
