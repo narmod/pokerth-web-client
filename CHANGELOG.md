@@ -163,7 +163,8 @@ highlights below.
   inside `\\uXXXX` escapes, which stopped the 65 → 66 rollout (tools only).
 - **Belarusian** (`be`, Cyrillic script), full UI catalogue, help corpus and
   guest/registered/LAN broadcast notices (`web.135`), then SEO content pages
-  (incl. `/rules` and `/faq`, `web.136`) — 70 languages total. Hand and street names follow the
+  (incl. `/rules` and `/faq`, `web.136`; three glossary definitions that still
+  held English words fixed in `web.137`) — 70 languages total. Hand and street names follow the
   Russian-style vocabulary in Belarusian spelling (флэш, стрыт, карэ, фул-хаўс,
   прэфлоп, тэрн, рывер); action terms stay in English. Terminology to be
   reviewed by a native speaker.
