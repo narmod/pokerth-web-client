@@ -229,6 +229,7 @@ highlights below.
 
 ### Changed
 
+- **Champions of the day moved to the Ranking window** (`web.130`) — the podium now opens the PokerTH tab of the Ranking window (`#rk-cod`, above Season / search) and is gone from the forum news Events tab. `forum-events.mjs` exposes `evShowChampions` (same `/api/events` data and client cache); the ranking script flags the box with `data-on` for the PokerTH tab only and hides it on BBC / WEC / LAN / Trophies, re-checked when the fetch lands. Lower steps (38 / 26 / 18 px) in that window.
 - **Events tab: Champions of the day as a podium** (`web.129`) — the three medals on one line become a small 2 · 1 · 3 podium: tinted steps with a gold / silver / bronze top border and the rank inside, a crown over the winner. DOM order stays 1 · 2 · 3; the podium order comes from CSS grid columns, so one or two champions still render in place. Light-theme variants for contrast.
 - **Offline mode: bot text banter removed** (`web.107`) — the chat lines added
   in `web.54` were generic, repetitive and unrelated to the hand in progress,

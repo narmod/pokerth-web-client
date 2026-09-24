@@ -174,6 +174,8 @@ const ICON_CROWN = '<svg class="ev-pod-crown" viewBox="0 0 24 24" width="16" hei
 // tinted gold / silver / bronze with its rank inside; the whole podium links to
 // the pokerth.net leaderboard. DOM order stays 1 · 2 · 3 (screen readers, fewer
 // than three players); the podium order is done in CSS (grid columns).
+// Since web.130 it is shown above the PokerTH ranking (evShowChampions below),
+// no longer in the Events tab.
 function _champions(c) {
   const top = (c && Array.isArray(c.top) ? c.top : []).filter(function (p) { return p && p.player; }).slice(0, 3);
   if (!top.length) return '';
@@ -216,7 +218,7 @@ function _render(data) {
   const stepWord = _t('rankingStep', 'Step');
   const up = (data.upcoming || []).filter(function (e) { return e && typeof e.at === 'number' && e.at >= now - 5 * 60 * 1000; });
   const res = data.results || [];
-  let html = _champions(data.champions), rows = '';
+  let html = '', rows = '';
   for (const e of up) {
     const meta = [evWhen(e.at, now, loc)];
     meta.push(evSignupText(e, _t('evSignups', 'Signed up: {n}')));
@@ -256,3 +258,26 @@ export function evShow(force) {
 
 // Language switch while the tab is open: same data, new wording.
 export function evRerender() { if (_cache) _render(_cache.data); }
+
+// Champions of the day above the PokerTH ranking (web.130). The ranking window
+// (inline script in pokerth-client.html) sets data-on="1" on its #rk-cod box
+// while the PokerTH tab is shown and calls this bridge; same /api/events data
+// and cache as the Events tab. Nothing to show (no data, relay down, offline)
+// = the box stays hidden. data-on is re-checked when the fetch lands, so a
+// quick switch to BBC / WEC never paints it back.
+function _codPaint(box) {
+  const h = _champions(_cache && _cache.data ? _cache.data.champions : null);
+  box.innerHTML = h;
+  box.style.display = h ? '' : 'none';
+}
+export function evShowChampions(boxId) {
+  const id = boxId || 'rk-cod';
+  const box = document.getElementById(id);
+  if (!box || box.dataset.on !== '1') return;
+  if (_cache) _codPaint(box); else box.style.display = 'none';
+  _fetch(false).then(function () {
+    const b = document.getElementById(id);
+    if (b && b.dataset.on === '1') _codPaint(b);
+  }).catch(function () {});
+}
+try { window.evShowChampions = evShowChampions; } catch (e) {}

@@ -3202,6 +3202,9 @@ if ('serviceWorker' in navigator && !window.LIVE_MODE) {
       <button type="button" class="rk-tab rk-tab-ach" data-src="ach" onclick="rankingSelect('ach')" data-i18n="achTitle" style="display:none">Trophies</button>
     </div>
     <div class="rk-body" tabindex="-1" data-kn-focus data-kn-read>
+      <!-- Champions du jour (web.130) : podium au-dessus du classement PokerTH
+           uniquement ; rempli par modules/ui/forum-events.mjs (evShowChampions). -->
+      <div id="rk-cod" style="display:none" data-on="0"></div>
       <div class="rk-controls" id="rk-controls" style="display:none">
         <label class="rk-season-lbl"><span data-i18n="rankingSeason">Season</span>:
           <select id="rk-season" class="rk-season" onchange="rankingSeason()" aria-label="Season"></select>
@@ -4427,7 +4430,15 @@ if ('serviceWorker' in navigator && !window.LIVE_MODE) {
     });
     return h;
   }
+  // Podium "Champions du jour" : visible sur l'onglet PokerTH seulement.
+  function rkCod(show) {
+    var b = $('rk-cod'); if (!b) return;
+    b.dataset.on = show ? '1' : '0';
+    if (!show) { b.style.display = 'none'; return; }
+    if (typeof window.evShowChampions === 'function') window.evShowChampions('rk-cod');
+  }
   window.rankingSelectAch = function () {
+    rkCod(false);
     rkSetView('list');
     var tabs = document.querySelectorAll('#ranking-modal .rk-tab');
     for (var i = 0; i < tabs.length; i++) tabs[i].classList.toggle('active', tabs[i].dataset.src === 'ach');
@@ -4444,6 +4455,7 @@ if ('serviceWorker' in navigator && !window.LIVE_MODE) {
   // Reutilise par l'onglet LAN de "Classement de la table" (autre IIFE plus bas).
   window._lanAllowed = _lanAllowed;
   window.rankingSelectLan = function () {
+    rkCod(false);
     rkSetView('list');
     rkFetchSeq++;                                  // une reponse /api/ranking en vol ne repeint plus la liste
     var tabs = document.querySelectorAll('#ranking-modal .rk-tab');
@@ -4484,6 +4496,7 @@ if ('serviceWorker' in navigator && !window.LIVE_MODE) {
     var at = $('rk-alltime'); if (at) at.checked = false;
     var ctl = $('rk-controls'); if (ctl) ctl.style.display = 'none';
     var si = $('rk-search'); if (si) si.value = '';
+    rkCod(src === 'pth');
     rkFetch(src);
   };
 
@@ -4510,6 +4523,7 @@ if ('serviceWorker' in navigator && !window.LIVE_MODE) {
     var modal = $('ranking-modal');
     if (!modal || !modal.style.display || modal.style.display === 'none') return;
     var si = $('rk-search'); if (si) si.placeholder = rkT('rankingSearch', 'Search a player\u2026');
+    var cb = $('rk-cod'); if (cb && cb.dataset.on === '1') rkCod(true);
     var lw = $('rk-lan-wrap');
     if (lw && lw.style.display !== 'none') { if (typeof window.renderBoard === 'function') window.renderBoard('rk-lan-wrap'); return; }
     var prof = $('rk-profile');
