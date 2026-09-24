@@ -29,7 +29,7 @@ export const help = {
         { id: "language",
           t: "Dil",
           b: [
-            "İnterfeys 68 dildə mövcuddur. Onu istənilən vaxt Əlavə seçimlərdə (dişli çarx menyusu) İstifadəçi interfeysi bölməsində dəyişin. Poker hərəkət terminləri (Fold, Check, Call, Bet, Raise, All-In) masaüstü klientdə olduğu kimi ənənəyə görə ingiliscə qalır."] },
+            "İnterfeys 69 dildə mövcuddur. Onu istənilən vaxt Əlavə seçimlərdə (dişli çarx menyusu) İstifadəçi interfeysi bölməsində dəyişin. Poker hərəkət terminləri (Fold, Check, Call, Bet, Raise, All-In) masaüstü klientdə olduğu kimi ənənəyə görə ingiliscə qalır."] },
         { id: "pwa",
           t: "Tətbiq kimi quraşdırın",
           b: [
