@@ -8966,14 +8966,27 @@ html[data-seat-edit="1"] #g-seats .seat.seat-ghost { outline: none; cursor: defa
 .ev-cnt { flex-shrink: 0; font-size: var(--fs-3xs); letter-spacing: 0; color: var(--text); }
 .ev-card > .fn-row:last-child { border-bottom: none; }
 .ev-card > .rk-msg { padding: var(--sp-3); }
-/* Champions du jour : 3 medailles or / argent / bronze sur une ligne. Fonds
-   en dur (comme .rk-l5.win) : --gold vire au quasi-noir en theme clair. */
-a.ev-cod { display: flex; flex-wrap: wrap; gap: var(--sp-2) var(--sp-3); padding: var(--sp-3); color: inherit; text-decoration: none; transition: background 0.12s; }
+/* Champions du jour : petit podium 2 · 1 · 3 (maquette AB2, web.129). Marches
+   teintees + liseré or / argent / bronze, rang dans la marche. Couleurs en dur
+   (comme .rk-l5.win) : --gold vire au quasi-noir en theme clair. L'ordre du
+   podium vient des colonnes de la grille, le DOM reste 1 · 2 · 3. */
+a.ev-cod { color: inherit; text-decoration: none; transition: background 0.12s; }
 a.ev-cod:hover, a.ev-cod:focus-visible { background: var(--inset); outline: none; }
-.ev-cod-p { flex: 1 1 0; min-width: 0; display: flex; align-items: center; gap: var(--sp-2); }
-.ev-cod-n { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--text-hi); font-weight: 600; }
-.ev-med { flex-shrink: 0; width: 22px; height: 22px; border-radius: 11px; display: inline-flex; align-items: center; justify-content: center; font-family: var(--ff-mono); font-size: var(--fs-2xs); font-weight: 700; color: #110900; }
-.ev-med1 { background: #E3C800; } .ev-med2 { background: #c3c9d2; } .ev-med3 { background: #cd8a4e; }
+a.ev-pod { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); align-items: end; padding: var(--sp-3) var(--sp-3) 0; }
+.ev-pod-p { min-width: 0; display: flex; flex-direction: column; align-items: center; gap: 4px; --pod-c: #E3C800; --pod-rgb: 227,200,0; --pod-t: #E3C800; }
+.ev-pod1 { grid-column: 2; grid-row: 1; }
+.ev-pod2 { grid-column: 1; grid-row: 1; --pod-c: #c3c9d2; --pod-rgb: 195,201,210; --pod-t: #c3c9d2; }
+.ev-pod3 { grid-column: 3; grid-row: 1; --pod-c: #cd8a4e; --pod-rgb: 205,138,78; --pod-t: #cd8a4e; }
+.ev-cod-n { max-width: 100%; padding: 0 4px; box-sizing: border-box; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--text-hi); font-weight: 600; }
+.ev-pod1 .ev-cod-n { font-size: 1.05em; }
+.ev-pod-crown { flex-shrink: 0; color: var(--pod-c); }
+.ev-pod-s { width: 100%; height: 30px; display: flex; align-items: center; justify-content: center; border-top: 3px solid var(--pod-c); background: rgba(var(--pod-rgb), 0.16); font-family: var(--ff-mono); font-size: var(--fs-md, 16px); font-weight: 700; color: var(--pod-t); }
+.ev-pod1 .ev-pod-s { height: 44px; font-size: 1.25em; }
+.ev-pod3 .ev-pod-s { height: 22px; font-size: 0.9em; }
+:root[data-theme="pokerth-light"] .ev-pod1 { --pod-c: #c9a800; --pod-t: #6b5a00; }
+:root[data-theme="pokerth-light"] .ev-pod2 { --pod-c: #a3aab5; --pod-t: #4a505a; }
+:root[data-theme="pokerth-light"] .ev-pod3 { --pod-c: #c07a3c; --pod-t: #7a431a; }
+:root[data-theme="pokerth-light"] .ev-pod-s { background: rgba(var(--pod-rgb), 0.22); }
 a.ev-row { color: inherit; text-decoration: none; }
 .ev-row .fn-t { white-space: normal; overflow-wrap: anywhere; }
 .ev-row .fn-t.ev-win { color: var(--text-hi); font-weight: 600; }

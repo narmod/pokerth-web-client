@@ -229,6 +229,7 @@ highlights below.
 
 ### Changed
 
+- **Events tab: Champions of the day as a podium** (`web.129`) — the three medals on one line become a small 2 · 1 · 3 podium: tinted steps with a gold / silver / bronze top border and the rank inside, a crown over the winner. DOM order stays 1 · 2 · 3; the podium order comes from CSS grid columns, so one or two champions still render in place. Light-theme variants for contrast.
 - **Offline mode: bot text banter removed** (`web.107`) — the chat lines added
   in `web.54` were generic, repetitive and unrelated to the hand in progress,
   so the feature is withdrawn rather than kept half-good. Removed

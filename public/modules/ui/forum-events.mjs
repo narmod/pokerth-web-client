@@ -168,19 +168,25 @@ const ICON_FLAG = _ico('<path d="M5 21V4M5 4h11l-2 4 2 4H5"/>');
 const ICON_BARS = _ico('<path d="M6 20V10M12 20V4M18 20v-7"/>');
 const ICON_SUN = _ico('<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>');
 
-// Champions of the Day (official server): gold / silver / bronze medals on one
-// line, the whole strip links to the pokerth.net leaderboard.
+const ICON_CROWN = '<svg class="ev-pod-crown" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7l4.5 4L12 5l4.5 6L21 7l-2 11H5L3 7z"/></svg>';
+
+// Champions of the Day (official server): a small podium (2 · 1 · 3), each step
+// tinted gold / silver / bronze with its rank inside; the whole podium links to
+// the pokerth.net leaderboard. DOM order stays 1 · 2 · 3 (screen readers, fewer
+// than three players); the podium order is done in CSS (grid columns).
 function _champions(c) {
   const top = (c && Array.isArray(c.top) ? c.top : []).filter(function (p) { return p && p.player; }).slice(0, 3);
   if (!top.length) return '';
   const safe = evSafeUrl(c.url);
   const open = _t('evOpenSite', 'Open the site');
-  let body = '<a class="ev-cod"' + (safe ? ' href="' + esc(safe).replace(/"/g, '&quot;') + '" target="_blank" rel="noopener noreferrer"' : '')
+  let body = '<a class="ev-cod ev-pod"' + (safe ? ' href="' + esc(safe).replace(/"/g, '&quot;') + '" target="_blank" rel="noopener noreferrer"' : '')
     + ' title="' + esc(open).replace(/"/g, '&quot;') + '">';
   top.forEach(function (p, i) {
     const tip = [p.score != null ? String(p.score) : '', p.games != null ? p.games + ' ' + _t('rankingColGames', 'Games') : ''].filter(Boolean).join(' \u00b7 ');
-    body += '<span class="ev-cod-p"' + (tip ? ' title="' + esc(tip).replace(/"/g, '&quot;') + '"' : '') + '><span class="ev-med ev-med' + (i + 1) + '">' + (i + 1) + '</span>'
-      + '<span class="ev-cod-n">' + esc(p.player) + '</span></span>';
+    body += '<span class="ev-pod-p ev-pod' + (i + 1) + '"' + (tip ? ' title="' + esc(tip).replace(/"/g, '&quot;') + '"' : '') + '>'
+      + (i === 0 ? ICON_CROWN : '')
+      + '<span class="ev-cod-n">' + esc(p.player) + '</span>'
+      + '<span class="ev-pod-s">' + (i + 1) + '</span></span>';
   });
   return _card(ICON_SUN, _t('evChampions', 'Champions of the day'), 0, body + '</a>');
 }
