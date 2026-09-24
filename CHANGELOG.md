@@ -162,8 +162,8 @@ highlights below.
   where it stands alone: `65` also sits inside "365 days" (log retention) and
   inside `\\uXXXX` escapes, which stopped the 65 → 66 rollout (tools only).
 - **Azerbaijani** (`az`, Latin script), full UI catalogue, help corpus and
-  guest/registered/LAN broadcast notices (`web.131`) — 68 languages total; SEO
-  content pages follow in the next build. Hand and street names use the
+  guest/registered/LAN broadcast notices (`web.131`), then SEO content pages
+  (incl. `/rules` and `/faq`, `web.132`) — 68 languages total. Hand and street names use the
   loanwords Azerbaijani players use (flaş, streyt, kare, full-hauz, tern);
   action terms stay in English. Terminology to be reviewed by a native speaker.
 - **Sinhala** (`si`, Sinhala script), full UI catalogue, help corpus, SEO content
