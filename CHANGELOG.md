@@ -161,6 +161,12 @@ highlights below.
 - **Language tooling** — `wire-language.mjs` now bumps the language count only
   where it stands alone: `65` also sits inside "365 days" (log retention) and
   inside `\\uXXXX` escapes, which stopped the 65 → 66 rollout (tools only).
+- **Belarusian** (`be`, Cyrillic script), full UI catalogue, help corpus and
+  guest/registered/LAN broadcast notices (`web.135`) — 70 languages total; SEO
+  content pages follow in the next build. Hand and street names follow the
+  Russian-style vocabulary in Belarusian spelling (флэш, стрыт, карэ, фул-хаўс,
+  прэфлоп, тэрн, рывер); action terms stay in English. Terminology to be
+  reviewed by a native speaker.
 - **Armenian** (`hy`, Armenian script), full UI catalogue, help corpus and
   guest/registered/LAN broadcast notices (`web.133`), then SEO content pages
   (incl. `/rules` and `/faq`, `web.134`) — 69 languages total. Hand names follow the loanwords
