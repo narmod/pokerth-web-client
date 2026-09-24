@@ -162,8 +162,8 @@ highlights below.
   where it stands alone: `65` also sits inside "365 days" (log retention) and
   inside `\\uXXXX` escapes, which stopped the 65 → 66 rollout (tools only).
 - **Armenian** (`hy`, Armenian script), full UI catalogue, help corpus and
-  guest/registered/LAN broadcast notices (`web.133`) — 69 languages total; SEO
-  content pages follow in the next build. Hand names follow the loanwords
+  guest/registered/LAN broadcast notices (`web.133`), then SEO content pages
+  (incl. `/rules` and `/faq`, `web.134`) — 69 languages total. Hand names follow the loanwords
   Armenian players use (ռոյալ ֆլեշ, սթրիթ, կարե, ֆուլ հաուս); action terms and
   street names stay in English. Terminology to be reviewed by a native speaker.
 - **Azerbaijani** (`az`, Latin script), full UI catalogue, help corpus and
