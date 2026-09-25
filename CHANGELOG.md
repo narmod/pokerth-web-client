@@ -17,6 +17,7 @@ highlights below.
 
 ### Changed
 
+- **Lobby server clock: Berlin by default** (`web.168`) — `_lobbyClockTz()` now falls back to `LOBBY_CLOCK_TZ_DEFAULT = 'Europe/Berlin'` (the zone the QML client hard-codes) instead of the proxy host's own zone, which is unrelated to the PokerTH server. Order stays admin `lobbyClockTz` → `SERVER_TZ` → default; the admin option is renamed **Default (Europe/Berlin)**.
 - **Lobby server clock — QML parity** (`web.167`) — follows upstream `f01d1db9` / `735a7930` (LobbyStatsBar shows the community server time): the clock now also requires the **community content** option (QML `showServerTime = showCommunityContent`), is followed by a ` | ` separator before the PokerTH.net link, and uses the QML labels — wide `Server time (Berlin): 14:05`, compact (< 900 px) `Berlin 14:05`, portrait clock icon + `14:05` — chosen by CSS media queries (`lcLabels()` in `modules/ui/lobby-clock.mjs`). The `/__time` source and the tap panel stay as web extensions.
 
 ### Added

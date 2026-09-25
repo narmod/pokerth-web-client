@@ -8233,14 +8233,17 @@ function _clockZones() {
 // ── Lobby clock (players, GET /__time) ────────────────────────────────────
 // The PokerTH protocol carries no server time, so the lobby clock reads it
 // here. The zone is the one community events (BBC, WEC, Monthly Cup) are
-// announced in: admin setting first, then SERVER_TZ, then this host's zone —
-// never hard-coded, so moving the server is one setting away.
+// announced in: admin setting first, then SERVER_TZ, then Europe/Berlin —
+// the zone pokerth.net schedules BBC games in (the QML client hard-codes it,
+// upstream f01d1db9). The host's own zone is no longer used: it is unrelated
+// to the PokerTH server's time.
+const LOBBY_CLOCK_TZ_DEFAULT = 'Europe/Berlin';
 function _lobbyClockTz() {
   const a = _adminConfig && _adminConfig.lobbyClockTz;
   if (_validTz(a)) return a;
   const e = String(process.env.SERVER_TZ || '').trim();
   if (_validTz(e)) return e;
-  return _serverTz() || 'UTC';
+  return _validTz(LOBBY_CLOCK_TZ_DEFAULT) ? LOBBY_CLOCK_TZ_DEFAULT : 'UTC';
 }
 
 // ── IP bloquées (anti-force brute) et bannies (décision d'admin) ─────────
@@ -9087,7 +9090,7 @@ function handleAdmin(req, res, reqPathOnly, query) {
         if (typeof d.lobbyClockTz === 'string') {
           const lz = d.lobbyClockTz.trim();
           if (lz && !_validTz(lz)) return adminJson(res, 400, { ok: false, error: 'unknown time zone: ' + lz.slice(0, 64) });
-          _adminConfig.lobbyClockTz = lz;   // '' = automatic (SERVER_TZ, else this host's zone)
+          _adminConfig.lobbyClockTz = lz;   // '' = default (SERVER_TZ, else Europe/Berlin)
         }
         if (typeof d.serverName === 'string')    _adminConfig.serverName    = d.serverName.trim().slice(0, 40);
         if (typeof d.serverTagline === 'string') _adminConfig.serverTagline = d.serverTagline.trim().slice(0, 60);

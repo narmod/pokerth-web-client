@@ -7,9 +7,9 @@
 //   now  the server's own instant (ms) — the browser clock is not trusted,
 //        a skew is kept and corrected for half the round trip;
 //   tz   the zone community events (BBC, WEC, Monthly Cup) are announced
-//        in: admin setting (lobbyClockTz), else SERVER_TZ, else the host's
-//        zone. Nothing is hard-coded here — moving the server only means
-//        changing that setting.
+//        in: admin setting (lobbyClockTz), else SERVER_TZ, else Europe/Berlin
+//        (QML parity). Nothing is hard-coded in this module — the zone is
+//        always the one the proxy reports.
 //
 // Shown only when connected to pokerth.net (window._pthConnMode) and with
 // community content on (parity: QML LobbyStatsBar showServerTime =

@@ -832,7 +832,7 @@
       </div>
       <div class="card">
         <h2>Lobby clock (players)</h2>
-        <p class="muted">Players connected to pokerth.net see the server time in the lobby status bar, so they know when BBC, WEC and Monthly Cup games start. The PokerTH protocol carries no time, so the instant comes from this server and the zone from the setting below — set it to the zone community events are announced in (pokerth.net: Berlin). <b>Automatic</b> uses <code>SERVER_TZ</code> if set, else this host’s own zone. Players can hide the clock in their advanced options. Applies immediately (no restart needed).</p>
+        <p class="muted">Players connected to pokerth.net see the server time in the lobby status bar, so they know when BBC, WEC and Monthly Cup games start. The PokerTH protocol carries no time, so the instant comes from this server and the zone from the setting below — set it to the zone community events are announced in (pokerth.net: Berlin). <b>Default</b> uses <code>SERVER_TZ</code> if set, else Berlin (Europe/Berlin), like the desktop client. Players can hide the clock in their advanced options. Applies immediately (no restart needed).</p>
         <div class="defrow fld"><span style="white-space:nowrap">Time zone</span><select id="lobbyClk"></select></div>
         <p class="muted" id="lobbyClkEff" style="margin-top:10px"></p>
         <div class="rowtop"><button id="saveLobbyClk" class="use">Save</button></div>
@@ -1871,7 +1871,7 @@
   function lobbyClkRender(val,eff,env){
     var sel=$('lobbyClk'); if(!sel) return;
     sel.textContent='';
-    var a=document.createElement('option'); a.value=''; a.textContent='Automatic'+(env?' (SERVER_TZ = '+env+')':' (this host\u2019s zone)'); sel.appendChild(a);
+    var a=document.createElement('option'); a.value=''; a.textContent='Default'+(env?' (SERVER_TZ = '+env+')':' (Europe/Berlin)'); sel.appendChild(a);
     CLOCK_CAT.forEach(function(c){ var o=document.createElement('option'); o.value=c[0]; o.textContent=c[1]+' ('+c[0]+')'; sel.appendChild(o); });
     if(val && !CLOCK_CAT.some(function(c){ return c[0]===val; })){ var x=document.createElement('option'); x.value=val; x.textContent=val; sel.appendChild(x); }
     sel.value=val||'';

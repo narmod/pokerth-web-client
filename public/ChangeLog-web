@@ -1,4 +1,7 @@
-2026-09-25 version 2.1.9-web.167 (current series):
+2026-09-25 version 2.1.9-web.168 (current series):
+- bugfix: the server time in the lobby status bar now shows Berlin time by default, the time pokerth.net community games are scheduled in, instead of the web host's own time
+
+2026-09-25 version 2.1.9-web.167:
 - improvement: the server time in the lobby status bar now looks like the desktop client - "Server time (Berlin): 14:05", shortened on small screens, a clock icon in portrait - and hides when community content is turned off
 
 2026-09-25 version 2.1.9-web.166:
