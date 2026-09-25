@@ -94,11 +94,11 @@ export const help = {
             "1. Cerdyn uchel — dim cyfuniad; y cerdyn uchaf sy'n penderfynu.",
             "2. Pâr — dau gerdyn o'r un gwerth.",
             "3. Dau bâr — dau bâr gwahanol.",
-            "4. Tri o'r un fath — tri cherdyn o'r un gwerth.",
+            "4. Tri o’r un fath — tri cherdyn o'r un gwerth.",
             "5. Syth — pum cerdyn yn olynol (mae'r As yn cyfrif yn uchel neu'n isel).",
             "6. Fflysh — pum cerdyn o'r un siwt.",
-            "7. Tŷ llawn — tri o'r un fath ynghyd â phâr.",
-            "8. Pedwar o'r un fath — pedwar cerdyn o'r un gwerth.",
+            "7. Tŷ llawn — tri o’r un fath ynghyd â phâr.",
+            "8. Pedwar o’r un fath — pedwar cerdyn o'r un gwerth.",
             "9. Fflysh syth — syth, i gyd o'r un siwt.",
             "10. Fflysh brenhinol — o'r Deg i'r As, i gyd o'r un siwt. Y llaw orau bosibl."] }
       ]

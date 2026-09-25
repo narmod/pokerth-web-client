@@ -277,7 +277,7 @@ use too. Items are grouped by status rather than fixed phases.
   half-finished state.
 - **Native review of the smaller languages** — the translations for Hindi,
   Urdu, Bengali, Tamil, Telugu, Malayalam, Marathi, Kannada, Gujarati, Scottish
-  Gaelic, Icelandic, Uzbek, Burmese, Georgian, Kazakh, Sinhala, Azerbaijani, Armenian, Belarusian, Nepali and Basque were written without an established poker vocabulary to
+  Gaelic, Icelandic, Uzbek, Burmese, Georgian, Kazakh, Sinhala, Azerbaijani, Armenian, Belarusian, Nepali, Basque and Welsh were written without an established poker vocabulary to
   lean on (catalogue, help, welcome notices and the `/rules`, `/faq`, hands,
   how-to and glossary pages alike). Worth a pass from a native speaker before
   they are treated as settled.
