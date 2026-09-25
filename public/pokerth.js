@@ -2022,7 +2022,7 @@ function _chatTrTarget() {
   if (!l) { try { l = localStorage.getItem('pth_lang') || ''; } catch (e) {} }
   if (!l) { try { l = document.documentElement.lang || navigator.language || 'en'; } catch (e) { l = 'en'; } }
   var low = l.toLowerCase();
-  if (low === 'zh-tw') return 'zh-TW'; // gtx distingue trad./simplifié
+  if (low === 'zh-tw' || low === 'zh-hk') return 'zh-TW'; // gtx distingue trad./simplifié (pas de zh-HK)
   if (low === 'zh') return 'zh-CN';
   if (low === 'pt-pt') return 'pt-PT'; // gtx : pt = pt-BR
   return low.split('-')[0];
@@ -2487,7 +2487,7 @@ window.hideInfoToast = hideInfoToast;
 function _apiLang(code) {
   if (!code) return '';
   var c = String(code).toLowerCase();
-  if (c === 'zh-tw') return 'zh-Hant';
+  if (c === 'zh-tw' || c === 'zh-hk') return 'zh-Hant';
   if (c === 'zh-cn') return 'zh';
   if (c === 'pt-br' || c === 'pt-pt') return 'pt';
   return c.split('-')[0];
@@ -11883,7 +11883,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.9-web.163'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.9-web.164'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif ou la palette High contrast
    (Android, Safari, iOS standalone récent). Lit --theme-color et met

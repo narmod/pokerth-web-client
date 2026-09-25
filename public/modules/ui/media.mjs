@@ -57,7 +57,7 @@ function _voiceLangTag(code) {
     ko:'ko-KR', lt:'lt-LT', nb:'nb-NO', nl:'nl-NL', pl:'pl-PL',
     'pt-br':'pt-BR', 'pt-pt':'pt-PT', ro:'ro-RO', ru:'ru-RU', sk:'sk-SK',
     sr:'sr-RS', sv:'sv-SE', ta:'ta-IN', tr:'tr-TR', uk:'uk-UA', vi:'vi-VN',
-    'zh-tw':'zh-TW', zh:'zh-CN'
+    'zh-tw':'zh-TW', 'zh-hk':'zh-HK', zh:'zh-CN'
   };
   return M[c] || c;
 }

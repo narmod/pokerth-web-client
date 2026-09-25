@@ -29,7 +29,7 @@ export const help = {
         { id: "language",
           t: "Teanga",
           b: [
-            "Tá an comhéadan ar fáil i 82 teanga. Athraigh í am ar bith sna hArdroghanna (roghchlár an ghiar) faoi Chomhéadan úsáideora. Fanann téarmaí bheart an phócair (Fold, Check, Call, Bet, Raise, All-In) i mBéarla de réir an traidisiúin, díreach mar sa chliant deisce."] },
+            "Tá an comhéadan ar fáil i 83 teanga. Athraigh í am ar bith sna hArdroghanna (roghchlár an ghiar) faoi Chomhéadan úsáideora. Fanann téarmaí bheart an phócair (Fold, Check, Call, Bet, Raise, All-In) i mBéarla de réir an traidisiúin, díreach mar sa chliant deisce."] },
         { id: "pwa",
           t: "Suiteáil mar aip",
           b: [

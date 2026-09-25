@@ -378,8 +378,10 @@ let _lang = (function(){
     var regionAlias = { 'pt-br': 'pt-BR', 'pt-pt': 'pt-PT',
         // Traditional Chinese: without these, zh-TW / zh-HK / zh-Hant browsers
         // fell through to the primary subtag 'zh' and got Simplified Chinese.
-        'zh-tw': 'zh-TW', 'zh-hk': 'zh-TW', 'zh-mo': 'zh-TW', 'zh-hant': 'zh-TW',
-        'zh-hant-tw': 'zh-TW', 'zh-hant-hk': 'zh-TW', 'zh-hant-mo': 'zh-TW' };
+        // Hong Kong and Macau have their own catalogue (zh-HK, Hong Kong
+        // vocabulary); bare zh-Hant keeps the Taiwan one.
+        'zh-tw': 'zh-TW', 'zh-hk': 'zh-HK', 'zh-mo': 'zh-HK', 'zh-hant': 'zh-TW',
+        'zh-hant-tw': 'zh-TW', 'zh-hant-hk': 'zh-HK', 'zh-hant-mo': 'zh-HK' };
     // Latin-American Spanish: es-419 itself and every es-<country> of the
     // Americas. Bare 'es', es-ES and the rest keep the European catalogue.
     try {

@@ -29,7 +29,7 @@ export const help = {
         { id: "language",
           t: "Ulimi",
           b: [
-            "Isixhumi esibonakalayo sitholakala ngezilimi ezingu-82. Sishintshe noma nini ku-Izinketho ezithuthukisiwe (imenyu yegiya) ngaphansi kokuthi Isixhumi esibonakalayo. Amagama ezenzo ze-poker (Fold, Check, Call, Bet, Raise, All-In) ahlala esesiNgisini ngokwesiko, njengasekhasimendeni ledeskithophu. Amagama ezandla ze-poker nawo asesiNgisini."] },
+            "Isixhumi esibonakalayo sitholakala ngezilimi ezingu-83. Sishintshe noma nini ku-Izinketho ezithuthukisiwe (imenyu yegiya) ngaphansi kokuthi Isixhumi esibonakalayo. Amagama ezenzo ze-poker (Fold, Check, Call, Bet, Raise, All-In) ahlala esesiNgisini ngokwesiko, njengasekhasimendeni ledeskithophu. Amagama ezandla ze-poker nawo asesiNgisini."] },
         { id: "pwa",
           t: "Faka njengohlelo",
           b: [

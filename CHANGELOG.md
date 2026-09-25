@@ -161,6 +161,14 @@ highlights below.
 - **Language tooling** — `wire-language.mjs` now bumps the language count only
   where it stands alone: `65` also sits inside "365 days" (log retention) and
   inside `\uXXXX` escapes, which stopped the 65 → 66 rollout (tools only).
+- **Traditional Chinese, Hong Kong** (`zh-HK`, file `zh-hk.mjs`), full UI
+  catalogue, help corpus and guest/registered/LAN broadcast notices
+  (`web.164`) — 83 languages total; SEO content pages follow in the next build.
+  Derived from the Taiwan catalogue with Hong Kong vocabulary (用戶, 客戶端,
+  網絡, 帳戶, 軟件, 網上, 帖子). Browsers set to zh-HK, zh-MO, zh-Hant-HK or
+  zh-Hant-MO now get this catalogue instead of zh-TW; bare zh-Hant keeps
+  zh-TW. Speech and translation targets map zh-hk like zh-tw. To be reviewed
+  by a native speaker.
 - **Mongolian** (`mn`, Cyrillic script), full UI catalogue, help corpus and
   guest/registered/LAN broadcast notices (`web.162`), then SEO content pages
   (incl. `/rules` and `/faq`, `web.163`) — 82 languages total. Hand and street names follow the
