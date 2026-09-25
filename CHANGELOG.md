@@ -162,8 +162,8 @@ highlights below.
   where it stands alone: `65` also sits inside "365 days" (log retention) and
   inside `\\uXXXX` escapes, which stopped the 65 → 66 rollout (tools only).
 - **Tajik** (`tg`, Cyrillic script), full UI catalogue, help corpus and
-  guest/registered/LAN broadcast notices (`web.157`) — 80 languages total; SEO
-  content pages follow in the next build. Hand and street names follow the
+  guest/registered/LAN broadcast notices (`web.157`), then SEO content pages
+  (incl. `/rules` and `/faq`, `web.158`) — 80 languages total. Hand and street names follow the
   Russian-derived poker vocabulary used in Tajikistan (роял-флеш, фулл-хаус,
   префлоп), with Tajik forms for the simple hands (сеягӣ, ду ҷуфт, ҷуфт);
   action terms stay in English. Terminology to be reviewed by a native speaker.
