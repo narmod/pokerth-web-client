@@ -1,5 +1,8 @@
-2026-09-25 version 2.1.9-web.147 (current series):
+2026-09-25 version 2.1.9-web.148 (current series):
 - new: the rules, FAQ, poker hands, how-to-play and glossary pages are now available in Esperanto too
+
+2026-09-25 version 2.1.9-web.147:
+- improvement: the language count on the rules, FAQ, how-to and glossary pages now reads 75
 
 2026-09-25 version 2.1.9-web.146:
 - new: Esperanto is now available in the language list - the whole interface, the built-in help and the welcome notices are translated, bringing the client to 75 languages

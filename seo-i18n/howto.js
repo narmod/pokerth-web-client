@@ -1168,6 +1168,46 @@ var PARTS = {
     faqH2: "Συχνές ερωτήσεις",
     faqP: function (h, c) { return "Χρήματα δεν εμπλέκονται ποτέ, σε κανέναν τρόπο παιχνιδιού. Οι ρυθμίσεις σας, τα πακέτα εμφάνισης και η πρόοδος εκτός σύνδεσης μένουν στη δική σας συσκευή. Η διεπαφή διατίθεται σε 75 γλώσσες, ενώ οι πέντε λέξεις ενεργειών — Fold, Check, Call, Raise, All-In — παραμένουν στα αγγλικά, όπως σε κάθε τραπέζι του κόσμου. Περισσότερα στις <a href=\"{faq}\">συχνές ερωτήσεις</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
   },
+  eo: {
+    title: "Kiel ludi pokeron rete senpage — PokerTH Web",
+    desc: "Paŝon post paŝo: ludu Texas Hold’em pokeron senpage en via retumilo, sen elŝuto kaj sen konto — senkonekte kontraŭ robotoj, en la oficiala reto pokerth.net aŭ ĉe privata tablo kun amikoj.",
+    ldHeadline: "Kiel ludi Texas Hold’em pokeron senpage en la retumilo",
+    ldDesc: "Paŝa gvidilo por ludi Texas Hold’em senpage en la retkliento de PokerTH.",
+    h1: "Kiel ludi pokeron rete, senpage, en via retumilo",
+    lead: function (h, c) { return "Jen la mallonga versio: de malplena langeto ĝis via unua Texas Hold’em-mano en PokerTH. Se interesas vin la reguloj mem — blindoj, vetrondoj, kio batas kion — komencu per <a href=\"{rules}\">la regula paĝo</a> kaj <a href=\"{hands}\">la manoj</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); },
+    steps: [
+      [
+        "Malfermu la retejon — nenio por instali",
+        "PokerTH funkcias en la retumilo. Sen elŝuto, sen konto, sen kromprogramo. Sur telefono vi povas aldoni ĝin al la hejmekrano per la menuo de la retumilo, kaj ĝi malfermiĝas kiel aplikaĵo, plenekrane kaj kapabla funkcii senkonekte.",
+      ],
+      [
+        "Elektu kie ludi",
+        "Tri reĝimoj. <strong>Senkonekta trejnado</strong> tuj donas al vi tablon de komputilaj kontraŭuloj kaj bezonas neniun konekton — la loko por lerni. <strong>pokerth.net</strong> estas la oficiala reto: veraj kontraŭuloj, sezonaj rangigoj, senpaga kaŝnomo, kiun vi registras unufoje. <strong>LAN / privata servilo</strong> konektiĝas al dediĉita PokerTH-servilo, via aŭ ies alia.",
+      ],
+      [
+        "Sidiĝu ĉe tablo",
+        "En la halo vi aŭ aliĝas al tablo el la listo aŭ kreas vian propran. Kreado lasas vin fiksi la nombron de sidlokoj, la komencan stakon, kiom rapide la blindoj altiĝas kaj ĉu la tablo estas protektita per pasvorto. Kunhavigu la invitan ligilon kaj amiko alvenos rekte ĉe via tablo, en sia propra retumilo, sen registri ion ajn.",
+      ],
+      [
+        "Ludu la manon",
+        "Oni disdonas al vi du privatajn kartojn. La vetado rondiras ĉirkaŭ la tablo antaŭ la flop, kaj denove post la flop, la turn kaj la river. Kiam estas via vico, la agobreto ekbrilas kaj proponas nur tion, kio estas laŭleĝa: Fold, Check aŭ Call, Raise aŭ All-In. La vetsumo estas tajpebla, trenebla per la ŝovilo aŭ fiksebla per unu tuŝo al la minimumo, duona poto, poto aŭ via tuta stako.",
+      ],
+      [
+        "Legu la tablon",
+        "Via nuna plej bona mano estas nomata sub la tablo dum la kartoj malkaŝiĝas. La poto, ĉiu stako kaj la blinda nivelo ĉiam estas sur la ekrano, la butono de la disdonanto montras kiu parolas laste, kaj retronombrado montras kiom da tempo vi havas. Ĉe la showdown, la kvin kartoj kiuj formis ĉiun manon estas emfazitaj.",
+      ],
+      [
+        "Gajnu la turniron",
+        "La ludoj de PokerTH estas sit-and-go-turniroj: ĉiuj komencas kun la sama stako, la blindoj altiĝas laŭ tempilo, kaj ludantoj eliminiĝas ĝis unu havas ĉiujn ĵetonojn. Nenio kostas monon kaj ĵetonoj ne estas aĉeteblaj — ĉio estas ludmono, do la sola afero en risko estas la ludo mem.",
+      ],
+    ],
+    phoneH2: "Ludi per telefono",
+    phoneP: "La tablo estas desegnita por tuŝekrano same kiel por komputilo: tuŝi la vetkampon malfermas ciferan klavareton ene de la agobreto anstataŭ la sistema klavaro, do la tablo neniam saltas, kaj la ŝovilo moviĝas per la samaj paŝoj kiel la labortabla kliento. Vicaj sciigoj povas alveni kun butonoj Fold kaj Check/Call rekte sur ili: la mano estas ludebla sen reveni al la langeto.",
+    friendsH2: "Ludi kun amikoj",
+    friendsP: "Kreu tablon, metu pasvorton se vi volas ke ĝi estu privata, kaj sendu la invitan ligilon. Ĝi malfermas la tablon rekte — en la instalita aplikaĵo se viaj amikoj aldonis ĝin al sia hejmekrano, alie en retumila langeto. Neniu devas instali ion ajn aŭ doni retpoŝtadreson.",
+    faqH2: "Oftaj demandoj",
+    faqP: function (h, c) { return "Mono neniam estas implikita, en neniu reĝimo. Viaj agordoj, stilpakoj kaj senkonekta progreso restas en via aparato. La interfaco disponeblas en 75 lingvoj, dum la kvin agovortoj — Fold, Check, Call, Raise, All-In — restas en la angla, kiel ĉe ĉiu tablo en la mondo. Pli en la <a href=\"{faq}\">oftaj demandoj</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); },
+  },
 
   bg: {
     title: "Как да играете покер онлайн безплатно — PokerTH Web",
