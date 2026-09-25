@@ -29,7 +29,7 @@ export const help = {
         { id: "language",
           t: "Harshe",
           b: [
-            "Fuskar tana samuwa cikin harsuna 78. Canja ta a kowane lokaci a cikin Zaɓuɓɓuka na ci gaba (menu na giya) ƙarƙashin Fuskar mai amfani. Kalmomin motsin poker (Fold, Check, Call, Bet, Raise, All-In) suna zama da Turanci bisa al'ada, kamar a manhajar kwamfuta. Sunayen hannayen poker ma suna zama da Turanci."] },
+            "Fuskar tana samuwa cikin harsuna 79. Canja ta a kowane lokaci a cikin Zaɓuɓɓuka na ci gaba (menu na giya) ƙarƙashin Fuskar mai amfani. Kalmomin motsin poker (Fold, Check, Call, Bet, Raise, All-In) suna zama da Turanci bisa al'ada, kamar a manhajar kwamfuta. Sunayen hannayen poker ma suna zama da Turanci."] },
         { id: "pwa",
           t: "Sanya a matsayin manhaja",
           b: [

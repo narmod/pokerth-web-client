@@ -29,7 +29,7 @@ export const help = {
         { id: "language",
           t: "Lingvo",
           b: [
-            "La interfaco disponeblas en 78 lingvoj. Ŝanĝu ĝin iam ajn en Altnivelaj opcioj (dentrada menuo) sub Uzantinterfaco. La terminoj de pokeraj agoj (Fold, Check, Call, Bet, Raise, All-In) tradicie restas en la angla, ĝuste kiel en la labortabla kliento."] },
+            "La interfaco disponeblas en 79 lingvoj. Ŝanĝu ĝin iam ajn en Altnivelaj opcioj (dentrada menuo) sub Uzantinterfaco. La terminoj de pokeraj agoj (Fold, Check, Call, Bet, Raise, All-In) tradicie restas en la angla, ĝuste kiel en la labortabla kliento."] },
         { id: "pwa",
           t: "Instali kiel aplikaĵon",
           b: [

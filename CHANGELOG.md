@@ -161,6 +161,12 @@ highlights below.
 - **Language tooling** — `wire-language.mjs` now bumps the language count only
   where it stands alone: `65` also sits inside "365 days" (log retention) and
   inside `\\uXXXX` escapes, which stopped the 65 → 66 rollout (tools only).
+- **Kyrgyz** (`ky`, Cyrillic script), full UI catalogue, help corpus and
+  guest/registered/LAN broadcast notices (`web.155`) — 79 languages total; SEO
+  content pages follow in the next build. Hand and street names follow the
+  Russian-derived poker vocabulary used in Kyrgyzstan, as in the Kazakh
+  catalogue (роял-флеш, фулл-хаус, префлоп); action terms stay in English.
+  Terminology to be reviewed by a native speaker.
 - **Zulu** (`zu`, Latin script), full UI catalogue, help corpus and
   guest/registered/LAN broadcast notices (`web.153`), then SEO content pages
   (incl. `/rules` and `/faq`, `web.154`) — 78 languages total. As for Hausa and Yoruba, hand, street
