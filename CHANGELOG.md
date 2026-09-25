@@ -161,9 +161,14 @@ highlights below.
 - **Language tooling** — `wire-language.mjs` now bumps the language count only
   where it stands alone: `65` also sits inside "365 days" (log retention) and
   inside `\\uXXXX` escapes, which stopped the 65 → 66 rollout (tools only).
+- **Yoruba** (`yo`, Latin script with tone marks), full UI catalogue, help
+  corpus and guest/registered/LAN broadcast notices (`web.151`) — 77 languages
+  total; SEO content pages follow in the next build. As for Hausa, hand, street
+  and action names stay in English; the interface is in standard Yoruba with
+  full diacritics. Terminology to be reviewed by a native speaker.
 - **Hausa** (`ha`, Latin script with hooked letters), full UI catalogue, help
-  corpus and guest/registered/LAN broadcast notices (`web.149`) — 76 languages
-  total; SEO content pages follow in the next build. Hausa has no established
+  corpus and guest/registered/LAN broadcast notices (`web.149`), then SEO content
+  pages (incl. `/rules` and `/faq`, `web.150`) — 76 languages total. Hausa has no established
   poker vocabulary, so hand, street and action names stay in English (as in
   the Marathi catalogue). Terminology to be reviewed by a native speaker.
   `wire-language.mjs` now scopes the help-corpus count bump to the

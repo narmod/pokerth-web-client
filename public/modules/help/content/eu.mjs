@@ -29,7 +29,7 @@ export const help = {
         { id: "language",
           t: "Hizkuntza",
           b: [
-            "Interfazea 76 hizkuntzatan dago eskuragarri. Alda ezazu noiznahi Aukera aurreratuetan (engranaje-menua), Erabiltzaile-interfazea atalean. Pokerreko jokaldien terminoak (Fold, Check, Call, Bet, Raise, All-In) ingelesez geratzen dira ohituraz, mahaigaineko bezeroan bezala."] },
+            "Interfazea 77 hizkuntzatan dago eskuragarri. Alda ezazu noiznahi Aukera aurreratuetan (engranaje-menua), Erabiltzaile-interfazea atalean. Pokerreko jokaldien terminoak (Fold, Check, Call, Bet, Raise, All-In) ingelesez geratzen dira ohituraz, mahaigaineko bezeroan bezala."] },
         { id: "pwa",
           t: "Instalatu aplikazio gisa",
           b: [
