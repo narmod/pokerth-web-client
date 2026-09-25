@@ -162,8 +162,8 @@ highlights below.
   where it stands alone: `65` also sits inside "365 days" (log retention) and
   inside `\\uXXXX` escapes, which stopped the 65 → 66 rollout (tools only).
 - **Kyrgyz** (`ky`, Cyrillic script), full UI catalogue, help corpus and
-  guest/registered/LAN broadcast notices (`web.155`) — 79 languages total; SEO
-  content pages follow in the next build. Hand and street names follow the
+  guest/registered/LAN broadcast notices (`web.155`), then SEO content pages
+  (incl. `/rules` and `/faq`, `web.156`) — 79 languages total. Hand and street names follow the
   Russian-derived poker vocabulary used in Kyrgyzstan, as in the Kazakh
   catalogue (роял-флеш, фулл-хаус, префлоп); action terms stay in English.
   Terminology to be reviewed by a native speaker.
