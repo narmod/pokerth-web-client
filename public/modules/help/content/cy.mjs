@@ -29,7 +29,7 @@ export const help = {
         { id: "language",
           t: "Iaith",
           b: [
-            "Mae'r rhyngwyneb ar gael mewn 73 iaith. Newidiwch hi unrhyw bryd yn y Dewisiadau uwch (dewislen y gêr) dan Rhyngwyneb defnyddiwr. Mae termau symudiadau pocer (Fold, Check, Call, Bet, Raise, All-In) yn aros yn Saesneg yn ôl y traddodiad, yn union fel yn y cleient bwrdd gwaith."] },
+            "Mae'r rhyngwyneb ar gael mewn 74 iaith. Newidiwch hi unrhyw bryd yn y Dewisiadau uwch (dewislen y gêr) dan Rhyngwyneb defnyddiwr. Mae termau symudiadau pocer (Fold, Check, Call, Bet, Raise, All-In) yn aros yn Saesneg yn ôl y traddodiad, yn union fel yn y cleient bwrdd gwaith."] },
         { id: "pwa",
           t: "Gosod fel ap",
           b: [

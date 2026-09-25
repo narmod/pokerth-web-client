@@ -67,7 +67,7 @@ use too. Items are grouped by status rather than fixed phases.
   Advanced options, matching the QML client.
 - Light/dark aware: per-theme `color-scheme` and a dynamic browser `theme-color` that
   follows the active theme.
-- Theme panel fully localised in all 73 languages, with live switching and a live preview
+- Theme panel fully localised in all 74 languages, with live switching and a live preview
   of each deck.
 - Semantic-colour system so the whole UI recolours consistently per theme — gold uses the
   official QML accent (`#E3C800`) and is kept only for deliberate game assets (dealer
@@ -175,7 +175,7 @@ use too. Items are grouped by status rather than fixed phases.
   option to strip emojis from received chat.
 - Lobby game cards show player counts, status, and each table's blind level and raise schedule.
 - Sound effects for every action.
-- Internationalisation in 73 languages, auto-detected and switchable on the fly.
+- Internationalisation in 74 languages, auto-detected and switchable on the fly.
 
 **Official client (QML) tracking — kept aligned on an ongoing basis**
 - The in-game screen is audited feature-by-feature against PokerTH's official QML client
@@ -269,7 +269,7 @@ use too. Items are grouped by status rather than fixed phases.
 
 ## ⏭️ Next
 
-- **Translating `/faq`** — `/rules` and `/faq` are done in all 73 languages
+- **Translating `/faq`** — `/rules` and `/faq` are done in all 74 languages
   (`web.55` through `web.43` of the 2.1.9 series).
   `/faq` has the same shape: thirteen question-and-answer pairs per language,
   filled into `SEO_FAQ_I18N` in batches. Until an entry lands, that language
