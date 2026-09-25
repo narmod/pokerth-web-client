@@ -29,7 +29,7 @@ export const help = {
         { id: "language",
           t: "Til",
           b: [
-            "Interfeys 80 tilda mavjud. Uni istalgan vaqtda Kengaytirilgan sozlamalar (tishli gʻildirak menyusi) dagi Foydalanuvchi interfeysi boʻlimida oʻzgartiring. Poker harakat atamalari (Fold, Check, Call, Bet, Raise, All-In) anʼanaga koʻra, xuddi desktop mijozdagidek, ingliz tilida qoladi."] },
+            "Interfeys 81 tilda mavjud. Uni istalgan vaqtda Kengaytirilgan sozlamalar (tishli gʻildirak menyusi) dagi Foydalanuvchi interfeysi boʻlimida oʻzgartiring. Poker harakat atamalari (Fold, Check, Call, Bet, Raise, All-In) anʼanaga koʻra, xuddi desktop mijozdagidek, ingliz tilida qoladi."] },
         { id: "pwa",
           t: "Ilova sifatida oʻrnatish",
           b: [

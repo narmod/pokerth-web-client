@@ -161,6 +161,13 @@ highlights below.
 - **Language tooling** — `wire-language.mjs` now bumps the language count only
   where it stands alone: `65` also sits inside "365 days" (log retention) and
   inside `\\uXXXX` escapes, which stopped the 65 → 66 rollout (tools only).
+- **Turkmen** (`tk`, Latin script), full UI catalogue, help corpus and
+  guest/registered/LAN broadcast notices (`web.159`) — 81 languages total; SEO
+  content pages follow in the next build. Hand and street names follow the
+  Russian-derived poker vocabulary in Turkmen Latin spelling (roýal-fleş,
+  full-haus, tern, riwer), with Turkmen forms for the simple hands (üçlük,
+  iki jübüt, jübüt); action terms stay in English. Terminology to be reviewed
+  by a native speaker.
 - **Tajik** (`tg`, Cyrillic script), full UI catalogue, help corpus and
   guest/registered/LAN broadcast notices (`web.157`), then SEO content pages
   (incl. `/rules` and `/faq`, `web.158`) — 80 languages total. Hand and street names follow the
