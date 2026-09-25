@@ -29,6 +29,9 @@ for (const k in ref) {
   if (ref[k] !== null && toks(ref[k]) !== toks(tr[k])) die('token/tag drift at ' + k);
 }
 for (const k in tr) if (!(k in ref)) die('unknown path ' + k);
+// Object key for the new entry: bare for a plain code, quoted for a region
+// code such as zh-HK (bare `zh-HK:` is a syntax error).
+const KEY = /^[a-z]+$/.test(code) ? code : "'" + code + "'";
 const { strings } = await import(pathToFileURL(path.join(LANG_DIR, code.toLowerCase() + '.mjs')).href);
 for (let i = 0; i < 10; i++) if (tr[`hands.names[${i}]`] !== strings['h' + (i + 1) + 'n']) die(`hands.names[${i}] "${tr[`hands.names[${i}]`]}" ≠ catalogue h${i + 1}n "${strings['h' + (i + 1) + 'n']}"`);
 
@@ -52,9 +55,9 @@ function insert(s, from, to, text) {
   const m = new RegExp('\\n  (?:' + after + '|[\'"]' + after + '[\'"]): \\{').exec(s.slice(from, to + 1));
   if (!m) die('entry "' + after + '" not found');
   const open = s.indexOf('{', from + m.index), end = blockEnd(s, open);
-  if (s[end + 1] !== ',') { const nl = s.indexOf('\n', end); return s.slice(0, end + 1) + ',' + s.slice(end + 1, nl + 1) + '  ' + code + ': ' + text + '\n' + s.slice(nl + 1); }
+  if (s[end + 1] !== ',') { const nl = s.indexOf('\n', end); return s.slice(0, end + 1) + ',' + s.slice(end + 1, nl + 1) + '  ' + KEY + ': ' + text + '\n' + s.slice(nl + 1); }
   const nl = s.indexOf('\n', end);
-  return s.slice(0, nl + 1) + '  ' + code + ': ' + text + ',\n' + s.slice(nl + 1);
+  return s.slice(0, nl + 1) + '  ' + KEY + ': ' + text + ',\n' + s.slice(nl + 1);
 }
 
 for (const m of MODULES) {

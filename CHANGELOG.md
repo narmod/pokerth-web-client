@@ -163,7 +163,7 @@ highlights below.
   inside `\uXXXX` escapes, which stopped the 65 → 66 rollout (tools only).
 - **Traditional Chinese, Hong Kong** (`zh-HK`, file `zh-hk.mjs`), full UI
   catalogue, help corpus and guest/registered/LAN broadcast notices
-  (`web.164`) — 83 languages total; SEO content pages follow in the next build.
+  (`web.164`), then SEO content pages (incl. `/rules` and `/faq`, `web.165`; og `zh_HK`, hreflang zh-MO now points to zh-HK) — 83 languages total. `seo-build.mjs` now quotes region codes used as object keys (a bare `zh-HK:` broke the build).
   Derived from the Taiwan catalogue with Hong Kong vocabulary (用戶, 客戶端,
   網絡, 帳戶, 軟件, 網上, 帖子). Browsers set to zh-HK, zh-MO, zh-Hant-HK or
   zh-Hant-MO now get this catalogue instead of zh-TW; bare zh-Hant keeps

@@ -1,4 +1,7 @@
-2026-09-25 version 2.1.9-web.164 (current series):
+2026-09-25 version 2.1.9-web.165 (current series):
+- new: the rules, FAQ, poker hands, how-to-play and glossary pages are now available in Hong Kong Traditional Chinese too
+
+2026-09-25 version 2.1.9-web.164:
 - new: Traditional Chinese for Hong Kong (繁體中文（香港）) is now available in the language list, with Hong Kong vocabulary - browsers set to Hong Kong or Macau Chinese pick it automatically, bringing the client to 83 languages
 
 2026-09-25 version 2.1.9-web.163:
