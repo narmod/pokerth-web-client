@@ -1,4 +1,7 @@
-2026-09-25 version 2.1.9-web.145 (current series):
+2026-09-25 version 2.1.9-web.146 (current series):
+- new: Esperanto is now available in the language list - the whole interface, the built-in help and the welcome notices are translated, bringing the client to 75 languages
+
+2026-09-25 version 2.1.9-web.145:
 - new: the rules, FAQ, poker hands, how-to-play and glossary pages are now available in Irish too
 
 2026-09-25 version 2.1.9-web.144:

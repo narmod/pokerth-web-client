@@ -161,6 +161,11 @@ highlights below.
 - **Language tooling** — `wire-language.mjs` now bumps the language count only
   where it stands alone: `65` also sits inside "365 days" (log retention) and
   inside `\\uXXXX` escapes, which stopped the 65 → 66 rollout (tools only).
+- **Esperanto** (`eo`, Latin script), full UI catalogue, help corpus and
+  guest/registered/LAN broadcast notices (`web.146`) — 75 languages total; SEO
+  content pages follow in the next build. Hand names follow the Esperanto card
+  vocabulary (vico, samkoloro, plena domo, kvaropo); action terms stay in
+  English. Terminology to be reviewed by a native speaker.
 - **Irish** (`ga`, Latin script), full UI catalogue, help corpus and
   guest/registered/LAN broadcast notices (`web.144`), then SEO content pages
   (incl. `/rules` and `/faq`, `web.145`) — 74 languages total. Hand names follow the Irish card
