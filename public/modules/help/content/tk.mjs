@@ -29,7 +29,7 @@ export const help = {
         { id: "language",
           t: "Dil",
           b: [
-            "Interfeýs 81 dilde elýeterli. Ony islän wagtyňyz Giňişleýin sazlamalarda (dişli tigir menýusy) Ulanyjy interfeýsi bölüminde üýtgediň. Poker hereketleriniň adalgalary (Fold, Check, Call, Bet, Raise, All-In) iş stoly müşderisindäki ýaly däp boýunça iňlis dilinde galýar. Kombinasiýalaryň atlary rus dilinden gelen poker adalgalary bilen berilýär (roýal-fleş, strit, full-haus)."] },
+            "Interfeýs 82 dilde elýeterli. Ony islän wagtyňyz Giňişleýin sazlamalarda (dişli tigir menýusy) Ulanyjy interfeýsi bölüminde üýtgediň. Poker hereketleriniň adalgalary (Fold, Check, Call, Bet, Raise, All-In) iş stoly müşderisindäki ýaly däp boýunça iňlis dilinde galýar. Kombinasiýalaryň atlary rus dilinden gelen poker adalgalary bilen berilýär (roýal-fleş, strit, full-haus)."] },
         { id: "pwa",
           t: "Programma hökmünde gurnamak",
           b: [

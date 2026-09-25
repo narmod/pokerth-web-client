@@ -1,4 +1,7 @@
-2026-09-25 version 2.1.9-web.161 (current series):
+2026-09-25 version 2.1.9-web.162 (current series):
+- new: Mongolian (Монгол) is now available in the language list - the whole interface, the built-in help and the welcome notices are translated, bringing the client to 82 languages
+
+2026-09-25 version 2.1.9-web.161:
 - bugfix: the Arabic FAQ page again shows the current number of interface languages
 
 2026-09-25 version 2.1.9-web.160:

@@ -160,9 +160,16 @@ highlights below.
   (docs/tools only, no version bump).
 - **Language tooling** — `wire-language.mjs` now bumps the language count only
   where it stands alone: `65` also sits inside "365 days" (log retention) and
-  inside `\\uXXXX` escapes, which stopped the 65 → 66 rollout (tools only).
+  inside `\uXXXX` escapes, which stopped the 65 → 66 rollout (tools only).
+- **Mongolian** (`mn`, Cyrillic script), full UI catalogue, help corpus and
+  guest/registered/LAN broadcast notices (`web.162`) — 82 languages total; SEO
+  content pages follow in the next build. Hand and street names follow the
+  Russian-derived poker vocabulary used in Mongolia (роял флэш, фулл хаус,
+  префлоп), with Mongolian forms for the simple hands (гурвал, хоёр хос, хос,
+  өндөр хөзөр); action terms stay in English. Terminology to be reviewed by a
+  native speaker.
 - **Arabic FAQ language count** (`web.161`): the spelled-out count in the
-  Arabic `/faq` answer lives in `proxy.js` as `\\uXXXX` escapes, so the plain-text
+  Arabic `/faq` answer lives in `proxy.js` as `\uXXXX` escapes, so the plain-text
   replacements of the Yoruba → Turkmen rollouts missed it and it stayed at 76.
   Now 81; later rollouts must patch the escaped form as well.
 - **Turkmen** (`tk`, Latin script), full UI catalogue, help corpus and
