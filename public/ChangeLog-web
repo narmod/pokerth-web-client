@@ -1,4 +1,7 @@
-2026-09-25 version 2.1.9-web.160 (current series):
+2026-09-25 version 2.1.9-web.161 (current series):
+- bugfix: the Arabic FAQ page again shows the current number of interface languages
+
+2026-09-25 version 2.1.9-web.160:
 - new: the rules, FAQ, poker hands, how-to-play and glossary pages are now available in Turkmen too
 
 2026-09-25 version 2.1.9-web.159:

@@ -161,6 +161,10 @@ highlights below.
 - **Language tooling** — `wire-language.mjs` now bumps the language count only
   where it stands alone: `65` also sits inside "365 days" (log retention) and
   inside `\\uXXXX` escapes, which stopped the 65 → 66 rollout (tools only).
+- **Arabic FAQ language count** (`web.161`): the spelled-out count in the
+  Arabic `/faq` answer lives in `proxy.js` as `\\uXXXX` escapes, so the plain-text
+  replacements of the Yoruba → Turkmen rollouts missed it and it stayed at 76.
+  Now 81; later rollouts must patch the escaped form as well.
 - **Turkmen** (`tk`, Latin script), full UI catalogue, help corpus and
   guest/registered/LAN broadcast notices (`web.159`), then SEO content pages
   (incl. `/rules` and `/faq`, `web.160`) — 81 languages total. Hand and street names follow the
