@@ -162,8 +162,8 @@ highlights below.
   where it stands alone: `65` also sits inside "365 days" (log retention) and
   inside `\\uXXXX` escapes, which stopped the 65 → 66 rollout (tools only).
 - **Zulu** (`zu`, Latin script), full UI catalogue, help corpus and
-  guest/registered/LAN broadcast notices (`web.153`) — 78 languages total; SEO
-  content pages follow in the next build. As for Hausa and Yoruba, hand, street
+  guest/registered/LAN broadcast notices (`web.153`), then SEO content pages
+  (incl. `/rules` and `/faq`, `web.154`) — 78 languages total. As for Hausa and Yoruba, hand, street
   and action names stay in English. Terminology to be reviewed by a native
   speaker. `wire-language.mjs` now handles an anchor that is the last entry
   of a notice table (no trailing comma), as `zh-tw` is.
