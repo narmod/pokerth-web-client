@@ -15,6 +15,10 @@ release. Per-build detail is on the
 [GitHub Releases](https://github.com/narmod/pokerth-web-client/releases) page;
 highlights below.
 
+### Changed
+
+- **Lobby server clock — QML parity** (`web.167`) — follows upstream `f01d1db9` / `735a7930` (LobbyStatsBar shows the community server time): the clock now also requires the **community content** option (QML `showServerTime = showCommunityContent`), is followed by a ` | ` separator before the PokerTH.net link, and uses the QML labels — wide `Server time (Berlin): 14:05`, compact (< 900 px) `Berlin 14:05`, portrait clock icon + `14:05` — chosen by CSS media queries (`lcLabels()` in `modules/ui/lobby-clock.mjs`). The `/__time` source and the tap panel stay as web extensions.
+
 ### Added
 
 - **Lobby server clock** (`web.128`) — the PokerTH protocol carries no server time, so the proxy now answers `GET /__time` → `{ now, tz }` (never cached, bypassed by the service worker). The zone is the one community events are announced in: admin setting **Lobby clock (players)** (`lobbyClockTz`), else `SERVER_TZ`, else the host's zone — nothing hard-coded. `modules/ui/lobby-clock.mjs` keeps a skew against the server instant (half round-trip corrected, re-synced every 10 min and when the page comes back), shows a chip in the LobbyStatsBar for pokerth.net sessions only, and a tap panel with the player's local time and offset. Advanced option and admin kill switch `lobby_clock`; guarded by `scripts/test-lobby-clock.mjs`.

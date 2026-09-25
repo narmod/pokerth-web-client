@@ -10032,6 +10032,13 @@ html.reduce-fx .seat-action-badge {
   color: var(--gold-dim, #9a824a); background: transparent; border: 1px solid var(--border, #2c3548); border-radius: 999px; cursor: pointer; white-space: nowrap; }
 .lsb-clock:hover, .lsb-clock[aria-expanded="true"] { color: var(--gold, #d4af37); border-color: var(--gold-dim, #9a824a); }
 .lsb-clock[hidden], .lsb-clock-pop[hidden] { display: none; }
+/* QML-style label (upstream 735a7930): wide "Server time (Berlin): 14:05",
+   compact (< 900 px) "Berlin 14:05", portrait: clock icon + "14:05". */
+.lsb-ck-ic, .lsb-ck-c, .lsb-ck-p { display: none; }
+@media (max-width: 899px) { .lsb-ck-w { display: none; } .lsb-ck-c { display: inline; } }
+@media (orientation: portrait) { .lsb-ck-w, .lsb-ck-c { display: none; } .lsb-ck-p { display: inline; } .lsb-ck-ic { display: block; } }
+.lsb-sep { color: var(--text-dim, #8b93a7); }
+.lsb-clock[hidden] + .lsb-sep { display: none; }
 .lsb-clock-pop { position: absolute; right: 10px; bottom: calc(100% + 6px); z-index: 30; min-width: 220px; max-width: calc(100vw - 20px);
   padding: 10px 12px; background: var(--panel, #1b2130); border: 1px solid var(--gold-dim, #9a824a); border-radius: 8px;
   color: var(--text, #d7dbe4); font-size: var(--fs-sm); box-shadow: 0 6px 18px rgba(0,0,0,.35); }

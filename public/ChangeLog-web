@@ -1,4 +1,7 @@
-2026-09-25 version 2.1.9-web.166 (current series):
+2026-09-25 version 2.1.9-web.167 (current series):
+- improvement: the server time in the lobby status bar now looks like the desktop client - "Server time (Berlin): 14:05", shortened on small screens, a clock icon in portrait - and hides when community content is turned off
+
+2026-09-25 version 2.1.9-web.166:
 - bugfix: the English glossary page and the site summary for AI assistants now show the current number of interface languages (83) instead of 64
 
 2026-09-25 version 2.1.9-web.165:

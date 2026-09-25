@@ -11,9 +11,14 @@
 //        zone. Nothing is hard-coded here — moving the server only means
 //        changing that setting.
 //
-// Shown only when connected to pokerth.net (window._pthConnMode), as a chip
-// in the LobbyStatsBar; a tap opens a small panel with the local time and
-// the offset. Advanced option / admin kill switch: lobby_clock.
+// Shown only when connected to pokerth.net (window._pthConnMode) and with
+// community content on (parity: QML LobbyStatsBar showServerTime =
+// showCommunityContent, upstream f01d1db9), as a chip in the LobbyStatsBar
+// before the PokerTH.net link, followed by a ' | ' separator. Label as in the
+// QML: wide 'Server time (Berlin): 14:05', compact 'Berlin 14:05', portrait
+// clock icon + '14:05' (the variant is picked by CSS media queries). A tap
+// opens a small panel with the local time and the offset (web extension).
+// Advanced option / admin kill switch: lobby_clock.
 // ═══════════════════════════════════════════════════════════════════
 
 const SYNC_MS = 10 * 60 * 1000;   // re-read the server instant every 10 min
@@ -53,6 +58,11 @@ export function lcFmtOffset(min) {
   return sg + h + (m ? ':' + (m < 10 ? '0' : '') + m : '');
 }
 
+/** The three footer labels of the QML LobbyStatsBar (wide / compact / portrait). */
+export function lcLabels(title, city, hm) {
+  return { wide: title + ' (' + city + '): ' + hm, compact: city + ' ' + hm, portrait: hm };
+}
+
 /** Skew from one round trip: server instant vs the midpoint of the request. */
 export function lcSkew(serverNow, t0, t1) {
   return serverNow - Math.round((t0 + t1) / 2);
@@ -67,6 +77,7 @@ function _t(key, fallback) {
 
 function _enabled() {
   try { if (typeof window._advGet === 'function' && !window._advGet('lobby_clock', true)) return false; } catch (e) {}
+  try { if (typeof window._advGet === 'function' && !window._advGet('community_content', true)) return false; } catch (e) {}
   try { return typeof window._pthConnMode === 'function' && window._pthConnMode() === 'pokerthnet'; } catch (e) { return false; }
 }
 
@@ -144,12 +155,18 @@ function _render() {
   btn.hidden = !show;
   if (!show) { _close(); return; }
   const now = Date.now() + _skew;
-  const tt = document.getElementById('lsb-clock-t');
-  const txt = _hm(now, _tz) + ' ' + lcCity(_tz);
-  if (tt && tt.textContent !== txt) tt.textContent = txt;
+  const hm = _hm(now, _tz), city = lcCity(_tz);
   const title = _t('lsbClockTitle', 'Server time');
+  const tt = document.getElementById('lsb-clock-t');
+  if (tt) {
+    const v = lcLabels(title, city, hm);
+    [['.lsb-ck-w', v.wide], ['.lsb-ck-c', v.compact], ['.lsb-ck-p', v.portrait]].forEach(function (x) {
+      const el = tt.querySelector(x[0]);
+      if (el && el.textContent !== x[1]) el.textContent = x[1];
+    });
+  }
   btn.title = title;
-  btn.setAttribute('aria-label', title + ' ' + txt);
+  btn.setAttribute('aria-label', title + ' ' + hm + ' ' + city);
   _fillPop();
 }
 

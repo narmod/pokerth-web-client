@@ -4,7 +4,7 @@
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
-import { lcCity, lcOffsetMin, lcFmtOffset, lcSkew } from '../public/modules/ui/lobby-clock.mjs';
+import { lcCity, lcOffsetMin, lcFmtOffset, lcSkew, lcLabels } from '../public/modules/ui/lobby-clock.mjs';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const proxy = readFileSync(join(root, 'proxy.js'), 'utf8');
@@ -21,6 +21,10 @@ ok(lcOffsetMin('Asia/Kolkata', summer) === 330 && lcOffsetMin('UTC', summer) ===
 ok(lcOffsetMin('America/Los_Angeles', summer) === -420, 'negative offsets');
 ok(lcFmtOffset(120) === '+2' && lcFmtOffset(-330) === '\u22125:30' && lcFmtOffset(0) === '0', 'offset formatting');
 ok(lcSkew(10500, 1000, 2000) === 9000, 'skew is taken against the middle of the round trip');
+{ const v = lcLabels('Server time', 'Berlin', '14:05');
+  ok(v.wide === 'Server time (Berlin): 14:05' && v.compact === 'Berlin 14:05' && v.portrait === '14:05', 'labels match the QML footer (wide / compact / portrait)'); }
+const mod = readFileSync(join(root, 'public', 'modules', 'ui', 'lobby-clock.mjs'), 'utf8');
+ok(/_advGet\('community_content', true\)/.test(mod), 'hidden when community content is off (QML showCommunityContent)');
 
 // Server side: nothing hard-coded, admin > SERVER_TZ > host zone
 ok(/reqPathOnly === '\/__time'/.test(proxy), 'the proxy serves /__time');
@@ -33,6 +37,7 @@ ok(/key: 'lobby_clock'/.test(proxy), 'the admin can kill-switch it');
 // Client wiring
 ok(/id="lsb-clock"[^>]*hidden/.test(html), 'the chip starts hidden until a sync succeeded');
 ok(/src="modules\/ui\/lobby-clock\.mjs"/.test(html), 'the module is loaded');
+ok(/<\/button><span class="lsb-sep" aria-hidden="true">\|<\/span>\s*<a href="https:\/\/www\.pokerth\.net"/.test(html), "a ' | ' separator sits between the clock and the PokerTH.net link");
 ok(/id="adv-lobbyclock"/.test(html), 'players can turn it off in the advanced options');
 ok(/__ver\|__time\|/.test(sw), 'the service worker never caches /__time');
 ok(/'\/modules\/ui\/lobby-clock\.mjs'/.test(sw), 'the module is precached');
