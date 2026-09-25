@@ -76,7 +76,10 @@ for (const kind of ['help/content', 'lang']) {
     let blk = s.slice(i, j); const anchor = `\n  "${after}": {`;
     if (blk.split(anchor).length !== 2) die(tbl + ': anchor "' + after + '" not unique');
     const k = blk.indexOf(anchor), e = blk.indexOf('\n', k + 1) < 0 ? blk.length : blk.indexOf('\n', k + 1);
-    blk = blk.slice(0, e) + `\n  "${code}": { title: ${JSON.stringify(N[key].title)}, body: ${JSON.stringify(N[key].body)} },` + blk.slice(e);
+    // The anchor may be the last entry, written without a trailing comma:
+    // give it one and keep the new entry comma-less in that case.
+    const last = !blk.slice(0, e).endsWith(',');
+    blk = (last ? blk.slice(0, e) + ',' : blk.slice(0, e)) + `\n  "${code}": { title: ${JSON.stringify(N[key].title)}, body: ${JSON.stringify(N[key].body)} }${last ? '' : ','}` + blk.slice(e);
     s = s.slice(0, i) + blk + s.slice(j);
   }
   wr('proxy.js', s);

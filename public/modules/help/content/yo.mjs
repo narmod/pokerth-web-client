@@ -29,7 +29,7 @@ export const help = {
         { id: "language",
           t: "Èdè",
           b: [
-            "Ojú olùlò wà ní èdè 77. Yí i padà nígbàkúùgbà nínú Àṣàyàn ìlọsíwájú (àkójọ gíà) lábẹ́ Ojú olùlò. Àwọn ọ̀rọ̀ ìgbésẹ̀ poker (Fold, Check, Call, Bet, Raise, All-In) máa ń wà ní èdè Gẹ̀ẹ́sì gẹ́gẹ́ bí àṣà, bí ó ti rí nínú oníbàárà kọ̀ǹpútà. Orúkọ àwọn ọwọ́ poker náà wà ní èdè Gẹ̀ẹ́sì."] },
+            "Ojú olùlò wà ní èdè 78. Yí i padà nígbàkúùgbà nínú Àṣàyàn ìlọsíwájú (àkójọ gíà) lábẹ́ Ojú olùlò. Àwọn ọ̀rọ̀ ìgbésẹ̀ poker (Fold, Check, Call, Bet, Raise, All-In) máa ń wà ní èdè Gẹ̀ẹ́sì gẹ́gẹ́ bí àṣà, bí ó ti rí nínú oníbàárà kọ̀ǹpútà. Orúkọ àwọn ọwọ́ poker náà wà ní èdè Gẹ̀ẹ́sì."] },
         { id: "pwa",
           t: "Fi sórí ẹ̀rọ gẹ́gẹ́ bí ìṣàfilọ́lẹ̀",
           b: [
