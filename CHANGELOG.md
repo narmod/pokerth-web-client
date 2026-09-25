@@ -161,6 +161,12 @@ highlights below.
 - **Language tooling** — `wire-language.mjs` now bumps the language count only
   where it stands alone: `65` also sits inside "365 days" (log retention) and
   inside `\\uXXXX` escapes, which stopped the 65 → 66 rollout (tools only).
+- **Basque** (`eu`, Latin script), full UI catalogue, help corpus and
+  guest/registered/LAN broadcast notices (`web.140`) — 72 languages total; SEO
+  content pages follow in the next build. Completes the languages of Spain next
+  to Spanish, Catalan and Galician; hand names follow the Spanish tradition in
+  Basque (eskailera, kolorea, pokerra, full); action terms stay in English.
+  Terminology to be reviewed by a native speaker.
 - **Nepali** (`ne`, Devanagari script), full UI catalogue, help corpus and
   guest/registered/LAN broadcast notices (`web.138`), then SEO content pages
   (incl. `/rules` and `/faq`, `web.139`) — 71 languages total. Hand and street names are
