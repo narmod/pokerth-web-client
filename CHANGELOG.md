@@ -162,8 +162,8 @@ highlights below.
   where it stands alone: `65` also sits inside "365 days" (log retention) and
   inside `\uXXXX` escapes, which stopped the 65 → 66 rollout (tools only).
 - **Mongolian** (`mn`, Cyrillic script), full UI catalogue, help corpus and
-  guest/registered/LAN broadcast notices (`web.162`) — 82 languages total; SEO
-  content pages follow in the next build. Hand and street names follow the
+  guest/registered/LAN broadcast notices (`web.162`), then SEO content pages
+  (incl. `/rules` and `/faq`, `web.163`) — 82 languages total. Hand and street names follow the
   Russian-derived poker vocabulary used in Mongolia (роял флэш, фулл хаус,
   префлоп), with Mongolian forms for the simple hands (гурвал, хоёр хос, хос,
   өндөр хөзөр); action terms stay in English. Terminology to be reviewed by a
