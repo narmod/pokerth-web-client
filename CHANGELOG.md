@@ -161,6 +161,14 @@ highlights below.
 - **Language tooling** — `wire-language.mjs` now bumps the language count only
   where it stands alone: `65` also sits inside "365 days" (log retention) and
   inside `\\uXXXX` escapes, which stopped the 65 → 66 rollout (tools only).
+- **Hausa** (`ha`, Latin script with hooked letters), full UI catalogue, help
+  corpus and guest/registered/LAN broadcast notices (`web.149`) — 76 languages
+  total; SEO content pages follow in the next build. Hausa has no established
+  poker vocabulary, so hand, street and action names stay in English (as in
+  the Marathi catalogue). Terminology to be reviewed by a native speaker.
+  `wire-language.mjs` now scopes the help-corpus count bump to the
+  start.language section: at 75 the count collided with the WeCup scale
+  (75 points) elsewhere in the corpus.
 - **Esperanto** (`eo`, Latin script), full UI catalogue, help corpus and
   guest/registered/LAN broadcast notices (`web.146`), then SEO content pages
   (incl. `/rules` and `/faq`, `web.148`; `web.147` shipped only the count bump

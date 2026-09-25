@@ -27,7 +27,13 @@ const countRe = t => new RegExp('(?<![' + DIGITS + ']|\\\\u[0-9a-fA-F]{0,2})' + 
 
 // 1. help corpora
 for (const f of fs.readdirSync(HELP_DIR).filter(f => f.endsWith('.mjs') && f !== code + '.mjs')) {
-  const file = path.join(HELP_DIR, f), s = rd(file);
+  const file = path.join(HELP_DIR, f), whole = rd(file);
+  // Only the start.language section states the count: other chapters hold numbers that can
+  // collide with it (the WeCup scale awards 75 points), so the search is scoped to that block.
+  const i0 = whole.search(/\{\s*id:\s*['"]language['"]/);
+  if (i0 < 0) die(file + ': no language section');
+  const i1 = whole.indexOf('{ id:', i0 + 5), end = i1 < 0 ? whole.length : i1;
+  const s = whole.slice(i0, end);
   // The count must stand alone: "65" also sits inside "365 days" (log retention), in any digit
   // script, and inside \\uXXXX escapes ("\\u65b9").
   const forms = [oldN, ...NATIVE_DIGITS.map(d => toNative(oldN, d))].filter(x => countRe(x).test(s));
@@ -35,7 +41,7 @@ for (const f of fs.readdirSync(HELP_DIR).filter(f => f.endsWith('.mjs') && f !==
   const from = forms[0], to = from === oldN ? newN : toNative(newN, NATIVE_DIGITS.find(d => toNative(oldN, d) === from));
   const hits = (s.match(countRe(from)) || []).length;
   if (hits !== 1) die(file + ': expected 1× "' + from + '" as a standalone number, found ' + hits);
-  wr(file, s.replace(countRe(from), to));
+  wr(file, whole.slice(0, i0) + s.replace(countRe(from), to) + whole.slice(end));
 }
 // 2. counted phrases
 const pat = new RegExp('\\b' + oldN + '(?=[ -](?:languages?\\b|language catalogues|locales|files, ~))', 'g');
