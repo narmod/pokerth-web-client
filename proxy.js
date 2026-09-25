@@ -1738,7 +1738,7 @@ function seoLlmsTxt(base) {
     '- The official pokerth.net network, with seasonal rankings\n\n' +
     '## Key facts\n\n' +
     '- Free and open source (based on PokerTH by the PokerTH Development Team)\n' +
-    '- 64 interface languages; poker terms (Fold/Check/Call/Raise/All-In) stay in English\n' +
+    '- ' + (supportedLangCount() || 83) + ' interface languages; poker terms (Fold/Check/Call/Raise/All-In) stay in English\n' +
     '- Feature parity with the official PokerTH desktop client\n' +
     (u ? '\n## Links\n\n- Play: ' + u + '/\n- Texas Hold\u2019em rules: ' + u + '/rules\n' +
          '- Poker hand rankings: ' + u + '/hand-rankings\n- How to play, step by step: ' + u + '/how-to-play\n' +
@@ -6024,7 +6024,7 @@ function seoGlossaryPage(res, method, lang) {
   dl += '</dl>';
   var body = '<h1>Poker Glossary \u2014 Texas Hold\u2019em Terms Explained</h1>' +
     '<p>The words you will meet at a Hold\u2019em table, in the chat and in PokerTH itself. The five action words \u2014 ' +
-    'Fold, Check, Call, Raise and All-In \u2014 stay in English in every one of the 64 interface languages, because ' +
+    'Fold, Check, Call, Raise and All-In \u2014 stay in English in every one of the ' + (supportedLangCount() || 83) + ' interface languages, because ' +
     'they do at every table in the world.</p>' + dl +
     '<p style="margin-top:1.6em">Still unclear on how a hand actually runs? The <a href="/rules">rules</a> cover it ' +
     'from the blinds to the showdown, and the <a href="/hand-rankings">hand rankings</a> list what beats what.</p>';

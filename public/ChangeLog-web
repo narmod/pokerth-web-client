@@ -1,4 +1,7 @@
-2026-09-25 version 2.1.9-web.165 (current series):
+2026-09-25 version 2.1.9-web.166 (current series):
+- bugfix: the English glossary page and the site summary for AI assistants now show the current number of interface languages (83) instead of 64
+
+2026-09-25 version 2.1.9-web.165:
 - new: the rules, FAQ, poker hands, how-to-play and glossary pages are now available in Hong Kong Traditional Chinese too
 
 2026-09-25 version 2.1.9-web.164:

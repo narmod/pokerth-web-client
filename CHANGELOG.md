@@ -161,6 +161,13 @@ highlights below.
 - **Language tooling** — `wire-language.mjs` now bumps the language count only
   where it stands alone: `65` also sits inside "365 days" (log retention) and
   inside `\uXXXX` escapes, which stopped the 65 → 66 rollout (tools only).
+- **Language count audit** (`web.166`): every catalogue, help corpus and SEO
+  table carries 83 (digits or spelled out in Arabic/Urdu). Two English
+  strings in `proxy.js` had been stuck at 64 since the 64-language build —
+  the `/glossary` intro ("every one of the 64 interface languages") and
+  `/llms.txt` — because the count bump only matches "NN languages". Both now
+  read `supportedLangCount()` (catalogue files on disk), so they can no longer
+  drift. CONTRIBUTING.md updated (docs).
 - **Traditional Chinese, Hong Kong** (`zh-HK`, file `zh-hk.mjs`), full UI
   catalogue, help corpus and guest/registered/LAN broadcast notices
   (`web.164`), then SEO content pages (incl. `/rules` and `/faq`, `web.165`; og `zh_HK`, hreflang zh-MO now points to zh-HK) — 83 languages total. `seo-build.mjs` now quotes region codes used as object keys (a bare `zh-HK:` broke the build).

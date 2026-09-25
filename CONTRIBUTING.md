@@ -42,7 +42,7 @@ The codebase is intentionally dependency-light:
 - `proxy.js` — the WebSocket→TCP/TLS proxy and static HTTP server (Node — `ws` at
   runtime, plus `mysql2` only for the optional database mirror).
 - `public/pokerth.js` — the bulk of the client logic (vanilla JS, no framework).
-- `public/modules/` — extracted ES modules: `i18n` (47 languages), `theme`
+- `public/modules/` — extracted ES modules: `i18n` (83 languages), `theme`
   (theming engine), `sounds`, `music`, and the offline game engine under
   `public/modules/offline/`; plus the Protobuf bindings under `public/proto/`.
 
