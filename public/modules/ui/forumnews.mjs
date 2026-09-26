@@ -35,7 +35,7 @@ let _cache = null;                     // { at, posts } (dedoublonnes)
 let _fetching = null;                  // promesse en vol (dedup des appels)
 let _curPost = null;                   // post affiche dans la vue post
 let _trState = null;                   // { text, shown } traduction du post courant
-let _tab = 'posts';                    // 'posts' | 'events' (onglet Evenements : extension web, forum-events.mjs)
+let _tab = 'events';                   // 'posts' | 'events' (onglet Evenements : extension web, forum-events.mjs) — Evenements a l'ouverture (narmod 26/09)
 
 // ── Aides pures (exportees pour scripts/test-forumnews.mjs) ────────────
 // Cle de sujet (forum|titre normalise) : identifie un fil independamment de
@@ -531,6 +531,9 @@ function _winGateOk() {
 function openForumModal() {
   const m = document.getElementById('forum-modal'); if (!m) return;
   m.style.display = 'flex';
+  // Chaque ouverture repart sur l'onglet Evenements (premier onglet) ; sans
+  // contenu communautaire, _applyTab retombe sur les Posts.
+  _tab = 'events';
   _showListView();
   const card = m.querySelector('.rk-card');
   if (card && _winGateOk()) {

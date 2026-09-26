@@ -1,4 +1,8 @@
-2026-09-26 version 2.1.9-web.171 (current series):
+2026-09-26 version 2.1.9-web.172 (current series):
+- improvement: the Forum news window now opens on the Events tab, placed first, and both tabs have an icon (calendar for Events, newspaper for Posts)
+- improvement: the Events tab shows the pokerth.net server time (Berlin), and your own time when it differs, like the lobby status bar
+
+2026-09-26 version 2.1.9-web.171:
 - bugfix: the link button of the game info panel now shares the same invite link as « Invite friends » — the old link sent your friend to the LAN login instead of pokerth.net
 - bugfix: an invite link opened while the app is already open now takes you to the table instead of doing nothing
 - bugfix: « shared table not found » now shows up even if you take time to log in, and a stale invite no longer drops you later at another table with the same name

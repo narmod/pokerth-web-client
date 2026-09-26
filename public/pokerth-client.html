@@ -3156,12 +3156,12 @@ if ('serviceWorker' in navigator && !window.LIVE_MODE) {
     <!-- Onglets Posts / Evenements : extension web (forum-events.mjs), masques
          par l'option « contenu communautaire » et pendant la lecture d'un post. -->
     <div class="rk-tabs" id="fn-tabs" role="tablist">
-      <button type="button" class="rk-tab active" role="tab" aria-selected="true" data-tab="posts" onclick="forumSelectTab('posts')"><span data-i18n="forumTabPosts">Posts</span><span class="forum-unread fn-tab-unread" style="display:none" aria-hidden="true">0</span></button>
-      <button type="button" class="rk-tab" role="tab" aria-selected="false" data-tab="events" onclick="forumSelectTab('events')" data-i18n="forumTabEvents">Events</button>
+      <button type="button" class="rk-tab active" role="tab" aria-selected="true" data-tab="events" onclick="forumSelectTab('events')"><svg class="fn-tab-ico" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="5" width="16" height="16" rx="2"/><path d="M16 3v4M8 3v4M4 11h16"/><rect x="8" y="15" width="2" height="2"/></svg><span data-i18n="forumTabEvents">Events</span></button>
+      <button type="button" class="rk-tab" role="tab" aria-selected="false" data-tab="posts" onclick="forumSelectTab('posts')"><svg class="fn-tab-ico" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 6h3a1 1 0 0 1 1 1v11a2 2 0 0 1-4 0V5a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v12a3 3 0 0 0 3 3h11"/><path d="M8 8h4M8 12h4M8 16h4"/></svg><span data-i18n="forumTabPosts">Posts</span><span class="forum-unread fn-tab-unread" style="display:none" aria-hidden="true">0</span></button>
     </div>
     <div class="rk-body" tabindex="-1" data-kn-read>
-      <div id="fn-events" style="display:none"></div>
-      <div id="fn-listwrap">
+      <div id="fn-events"></div>
+      <div id="fn-listwrap" style="display:none">
         <div class="rk-msg" id="fn-loading" data-i18n="rankingLoading">Loading…</div>
         <div class="rk-msg" id="fn-error" data-i18n="forumError" style="display:none">Could not load the forum feed.</div>
         <div class="rk-msg" id="fn-empty" data-i18n="rankingEmpty" style="display:none">No entries.</div>

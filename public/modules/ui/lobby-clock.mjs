@@ -197,6 +197,18 @@ function _init() {
   setInterval(_render, TICK_MS);
 }
 
+// Server clock for other windows (Events tab of the Forum news window):
+// { now, tz } once /__time has answered, else null (and a sync is started).
+// Follows the lobby_clock option / admin kill switch, not the connection
+// mode: the Events tab is shown whatever the server the player is on.
+export function lobbyClockNow() {
+  try { if (typeof window._advGet === 'function' && !window._advGet('lobby_clock', true)) return null; } catch (e) {}
+  if (!_syncAt || Date.now() - _syncAt > SYNC_MS) _sync();
+  if (!_tz) return null;
+  return { now: Date.now() + _skew, tz: _tz };
+}
+try { window._lobbyClockNow = lobbyClockNow; } catch (e) {}
+
 // Hook for applyAdvOpts (option toggled) — refresh without waiting a tick.
 try { window._lobbyClockRefresh = _render; } catch (e) {}
 

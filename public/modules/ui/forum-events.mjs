@@ -20,6 +20,7 @@
 // so both tabs read as one window.
 // ═══════════════════════════════════════════════════════════════════
 import { esc } from './misc.mjs';
+import { lobbyClockNow, lcCity, lcLabels } from './lobby-clock.mjs';
 
 const EVENTS_URL = '/api/events';
 const CLIENT_TTL_MS = 2 * 60 * 1000;   // the relay caches 5 min; this only spares tab flips
@@ -121,6 +122,25 @@ export function evSignupText(e, label) {
   return String(label || 'Signed up: {n}').replace('{n}', String(e.signups));
 }
 
+// Server clock line on top of the tab: "Server time (Berlin): 14:05", plus the
+// player's own time when it differs — the event times below are shown in the
+// player's zone, the community sites announce them in server time.
+// `words` = { title, yours } (existing lobby-clock keys).
+export function evClockText(now, tz, locale, words) {
+  if (typeof now !== 'number' || !tz) return '';
+  const w = words || {};
+  const fmt = function (zone) {
+    try { return new Intl.DateTimeFormat(locale || undefined, { hour: '2-digit', minute: '2-digit', timeZone: zone }).format(new Date(now)); }
+    catch (e) { return ''; }
+  };
+  const srv = fmt(tz);
+  if (!srv) return '';
+  let txt = lcLabels(w.title || 'Server time', lcCity(tz), srv).wide;
+  const mine = fmt(undefined);
+  if (mine && mine !== srv) txt += ' \u00b7 ' + (w.yours || 'Your time') + ' ' + mine;
+  return txt;
+}
+
 // Only ever link to the community sites and pokerth.net, whatever the relay says.
 export function evSafeUrl(u) {
   return /^https:\/\/(bbc|wec|monthlycup|www)\.pokerth\.net\//.test(String(u || '')) ? String(u) : '';
@@ -166,6 +186,7 @@ function _ico(d) { return '<svg viewBox="0 0 24 24" width="14" height="14" fill=
 const ICON_CAL = _ico('<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>');
 const ICON_FLAG = _ico('<path d="M5 21V4M5 4h11l-2 4 2 4H5"/>');
 const ICON_BARS = _ico('<path d="M6 20V10M12 20V4M18 20v-7"/>');
+const ICON_CLOCK = _ico('<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>');
 const ICON_SUN = _ico('<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>');
 
 const ICON_CROWN = '<svg class="ev-pod-crown" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7l4.5 4L12 5l4.5 6L21 7l-2 11H5L3 7z"/></svg>';
@@ -240,7 +261,27 @@ function _render(data) {
     for (const l of lead) rows += _row(l.src, l.url, l.player, evLeaderMeta(l, loc, w), true);
     html += _card(ICON_BARS, _t('rankingTitle', 'Ranking'), lead.length, rows);
   }
-  box.innerHTML = html;
+  box.innerHTML = '<div class="ev-clock" id="ev-clock" hidden>' + ICON_CLOCK + '<span></span></div>' + html;
+  _clockPaint();
+}
+
+function _clockPaint() {
+  const el = document.getElementById('ev-clock');
+  if (!el) return;
+  const c = lobbyClockNow();
+  const txt = c ? evClockText(c.now, c.tz, _locale(), { title: _t('lsbClockTitle', 'Server time'), yours: _t('lsbClockYours', 'Your time') }) : '';
+  const sp = el.querySelector('span');
+  if (sp && sp.textContent !== txt) sp.textContent = txt;
+  el.hidden = !txt;
+}
+// Minute display while the tab is open: a 5 s tick is plenty (same as the lobby).
+let _clockTimer = 0;
+function _clockTick() {
+  if (_clockTimer) return;
+  _clockTimer = setInterval(function () {
+    if (!document.getElementById('ev-clock')) { clearInterval(_clockTimer); _clockTimer = 0; return; }
+    _clockPaint();
+  }, 5000);
 }
 
 function _msg(text) {
@@ -250,6 +291,7 @@ function _msg(text) {
 
 // Called by forumnews.mjs when the Events tab is shown.
 export function evShow(force) {
+  _clockTick();
   if (_cache) _render(_cache.data); else _msg(_t('rankingLoading', 'Loading\u2026'));
   _fetch(!!force).then(_render).catch(function () {
     if (!_cache) _msg(_t('evError', 'Could not load the events.'));

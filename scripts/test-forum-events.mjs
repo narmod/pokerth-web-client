@@ -49,6 +49,15 @@ ok(E.evLeaderMeta({ src: 'wec', period: { year: 2026, month: 9 }, points: 650, g
 ok(E.evLeaderMeta({ src: 'bbc', period: { season: 12 }, points: 900, games: 22, next: [] }, 'fr', { season: 'Saison', points: 'Points', games: 'Parties' }) === 'Saison 12 \u00b7 900 Points \u00b7 22 Parties', 'BBC leader meta: season, with the translated words');
 ok(E.evLeaderMeta({ src: 'wec', period: {}, points: null, games: null }, 'en') === '', 'nothing known, nothing shown');
 
+// -- server clock line --------------------------------------------------------
+// TZ = Europe/Paris, server Europe/Berlin: same wall time → no « your time ».
+const T0 = Date.parse('2026-09-26T14:05:00+02:00');
+const W = { title: 'Server time', yours: 'Your time' };
+ok(E.evClockText(T0, 'Europe/Berlin', 'en-GB', W) === 'Server time (Berlin): 14:05', 'clock line: « Server time (Berlin): 14:05 », as in the lobby');
+ok(E.evClockText(T0, 'Europe/Lisbon', 'en-GB', W) === 'Server time (Lisbon): 13:05 \u00b7 Your time 14:05', 'clock line: the player\'s own time when it differs');
+ok(E.evClockText(T0, 'Europe/Berlin', 'fr', { title: 'Heure du serveur', yours: 'Votre heure' }) === 'Heure du serveur (Berlin): 14:05', 'clock line: translated title');
+ok(E.evClockText(T0, '', 'en', W) === '' && E.evClockText(null, 'Europe/Berlin', 'en', W) === '', 'clock line: nothing until the server clock is known');
+
 // -- links --------------------------------------------------------------------
 ok(E.evSafeUrl('https://wec.pokerth.net/results/ranking') !== '' && E.evSafeUrl('https://bbc.pokerth.net/registration') !== '' && E.evSafeUrl('https://monthlycup.pokerth.net/results/series?year=2026') !== '' && E.evSafeUrl('https://www.pokerth.net/app.php/leaderboard') !== '', 'community site and pokerth.net links pass');
 ok(E.evSafeUrl('https://evil.example/') === '' && E.evSafeUrl('javascript:alert(1)') === '' && E.evSafeUrl('https://bbc.pokerth.net.evil.example/') === '', 'anything else is dropped');
@@ -57,6 +66,12 @@ ok(E.evSafeUrl('https://evil.example/') === '' && E.evSafeUrl('javascript:alert(
 const html = rd('public/pokerth-client.html'), css = rd('public/pokerth.css'), sw = rd('public/sw.js'), fn = rd('public/modules/ui/forumnews.mjs');
 ok(/id="fn-tabs"/.test(html) && /forumSelectTab\('events'\)/.test(html) && /id="fn-events"/.test(html), 'the window has the tab bar and the events box');
 ok(/window\.forumSelectTab = forumSelectTab/.test(fn), 'forumnews.mjs exposes the tab switch');
+const tabs = html.slice(html.indexOf('id="fn-tabs"'), html.indexOf('</div>', html.indexOf('id="fn-tabs"')));
+ok(tabs.indexOf('data-tab="events"') !== -1 && tabs.indexOf('data-tab="events"') < tabs.indexOf('data-tab="posts"'), 'Events is the first tab, Posts the second');
+ok(/class="rk-tab active"[^>]*data-tab="events"/.test(tabs), 'Events is the active tab in the markup');
+ok((tabs.match(/class="fn-tab-ico"/g) || []).length === 2 && /<span data-i18n="forumTabEvents">/.test(tabs), 'both tabs carry an icon; the label sits in its own span (i18n never wipes the icon)');
+ok(/let _tab = 'events';/.test(fn) && /function openForumModal\(\) \{[\s\S]{0,400}_tab = 'events';/.test(fn), 'the window opens on the Events tab every time');
+ok(/import \{ lobbyClockNow, lcCity, lcLabels \} from '\.\/lobby-clock\.mjs'/.test(rd('public/modules/ui/forum-events.mjs')), 'the clock line reuses the lobby clock (same /__time sync)');
 ok(/adv-no-communitycontent #forum-modal #fn-tabs/.test(css), 'the community-content option hides the tab bar');
 ok(sw.includes("'/modules/ui/forum-events.mjs'"), 'the module is precached by the service worker');
 
