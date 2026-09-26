@@ -903,6 +903,7 @@ function _processAvatarFile(file) {
     '/modules/net/msg-avatars.mjs',
     '/modules/net/msg-social.mjs',
     '/modules/net/msg-lobby.mjs',
+    '/modules/net/invite-link.mjs',
     '/modules/net/msg-game-join.mjs',
     '/modules/game/msg-hand.mjs',
     '/modules/game/seat-render.mjs',
@@ -2744,6 +2745,7 @@ function _processAvatarFile(file) {
   <div class="ld-card inv-card">
     <div class="ld-title inv-title"><span data-i18n="wpInvite">Invite friends</span><button type="button" class="inv-close" onclick="InviteUI.close()" aria-label="Close" data-i18n-title="closeTooltip" title="Close">✕</button></div>
     <div class="inv-table" id="inv-table-name"></div>
+    <div class="inv-warn" id="inv-warn" role="note" style="display:none"></div>
     <canvas id="inv-qr-canvas" class="inv-qr" width="190" height="190" aria-hidden="true"></canvas>
     <div class="inv-scan" data-i18n="invScanQr">Scan to join</div>
     <div class="inv-linkrow">

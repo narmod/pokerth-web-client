@@ -1319,7 +1319,7 @@ function _pthApplySharedLink(text) {
     }
   } catch (e) { return false; }
   var S = window.PthState;
-  if (S && S.gameId) {
+  if (S && (S.gId || S.amInGame)) {
     if (typeof showToast === 'function') showToast(raw);
     return false;
   }
@@ -3729,9 +3729,11 @@ document.addEventListener("DOMContentLoaded", function() {
         window._shareLinkActive = true;
         // If the shared table never shows up in the lobby list (already
         // finished, wrong server\u2026), tell the user instead of waiting
-        // silently forever. Only once actually connected (PthState.loaded)
-        // so a slow login never cancels a still-valid pending join.
-        setTimeout(function(){
+        // silently forever. The watch counts from the CONNECTION, not from
+        // page load (modules/net/invite-link.mjs), so a friend slow to type
+        // a nickname still gets the message and the stale name is dropped.
+        if (window.InviteLink && window.InviteLink.armNotFoundWatch) window.InviteLink.armNotFoundWatch();
+        else setTimeout(function(){
           try {
             var _S2 = window.PthState;
             if (window._pendingAutoJoinName && _S2 && _S2.loaded) {
@@ -7336,12 +7338,10 @@ const App = (() => {
       addChat(S.myName, text, 'mine');
     },
     // ── Copy a shareable link to the current table ──────────────
-    // Produces a URL like:
-    //   https://<thispage>/?host=your-server.example&port=7234&tls=0&table=72
-    // When a guest opens it, parseShareLink() (run at load) prefills
-    // the connect form with host/port/tls and stashes the table id;
-    // after the lobby loads we auto-join that table (see the
-    // _pendingAutoJoin logic in the GameListNew handler).
+    // Copies the canonical invite link (see _inviteLink / shareTableLink):
+    //   https://<thispage>/#join=<gameName>&s=pokerth.net
+    // The legacy ?host=&port=&table=<id> links are still READ at load
+    // (parseShareLink) so the ones already sent keep working.
     //
     // The link is copied to the clipboard via the async Clipboard
     // API with a legacy execCommand fallback for older / insecure
@@ -7353,27 +7353,20 @@ const App = (() => {
           showKeyHint(t('noActiveTable'));
         return;
       }
-      // Pull the connection params the user actually connected with.
-      var host = '', port = '', tls = '0';
-      try { host = (document.getElementById('host')  || {}).value || ''; } catch(e) {}
-      try { port = (document.getElementById('port')  || {}).value || ''; } catch(e) {}
-      try { tls  = (document.getElementById('use-tls') && document.getElementById('use-tls').checked) ? '1' : '0'; } catch(e) {}
-      host = String(host).trim();
-      port = String(port).trim();
-      // Build the URL from the current page origin + path (so it works
-      // whatever domain the client is served from), with our params.
-      var base = window.location.origin + window.location.pathname;
-      var qs = 'host=' + encodeURIComponent(host) +
-               '&port=' + encodeURIComponent(port) +
-               '&tls=' + tls +
-               '&table=' + encodeURIComponent(S.gId);
-      var url = base + '?' + qs;
+      // Same canonical link as the « Invite friends » dialog (#join=<name>
+      // &s=<server>): the old ?host=&port=&table=<id> format sent the
+      // friend into LAN mode even for a pokerth.net table.
+      var _il = this._inviteLink();
+      if (!_il) { if (typeof showKeyHint === 'function') showKeyHint(t('noActiveTable')); return; }
+      var url = _il.url;
 
       // Copy with graceful fallbacks.
       function done(ok) {
         if (typeof showKeyHint === 'function') {
+          // Copied, but the link cannot work for everyone: say why.
+          var _w = (ok && _il.warnings && _il.warnings.length) ? ' \u2014 ' + t(_il.warnings[0]) : '';
           showKeyHint(ok
-            ? t('linkCopied')
+            ? t('linkCopied') + _w
             : t('linkCopyFailed'));
         }
         // Reflect status on the modal button if present.
@@ -7422,34 +7415,44 @@ const App = (() => {
     // point at itself). The password is NEVER in the link: joinGame()
     // prompts the invitee if the table is protected. Native share
     // sheet when available (phones), clipboard otherwise.
-    shareTableLink() {
-      if (!S.gId) { if (typeof showKeyHint === 'function') showKeyHint(t('noActiveTable')); return; }
+    // Canonical link of the current table: { url, name, warnings } or null.
+    // Built by modules/net/invite-link.mjs (shared with copyTableLink, the
+    // hashchange handler and scripts/test-invite-link.mjs); the inline
+    // builder below is only a fallback for a stale cached module graph.
+    _inviteLink() {
+      if (!S.gId) return null;
       var g = S.games[S.gId] || {};
       var name = g.name || (S._gameMeta && S._gameMeta.name) || '';
-      if (!name) { if (typeof showKeyHint === 'function') showKeyHint(t('noActiveTable')); return; }
-      var mode = S._currentLoginMode || '';
-      var target, tlsFrag = '';
-      if (mode === 'guest' || mode === 'auth') {
-        // 'pokerth.net' is a symbolic token: the receiving install
-        // resolves it onto its own configured Internet server.
-        target = 'pokerth.net';
-      } else {
-        var host = '', port = '';
-        try { host = (document.getElementById('host') || {}).value || ''; } catch(e) {}
-        try { port = (document.getElementById('port') || {}).value || ''; } catch(e) {}
-        host = String(host).trim(); port = String(port).trim();
-        target = host + (port ? ':' + port : '');
-        try { if (document.getElementById('use-tls') && document.getElementById('use-tls').checked) tlsFrag = '&tls=1'; } catch(e) {}
+      if (!name) return null;
+      var host = '', port = '', tls = false;
+      try { host = (document.getElementById('host') || {}).value || ''; } catch(e) {}
+      try { port = (document.getElementById('port') || {}).value || ''; } catch(e) {}
+      try { tls = !!(document.getElementById('use-tls') && document.getElementById('use-tls').checked); } catch(e) {}
+      var IL = window.InviteLink;
+      var base = window.location.origin + window.location.pathname;
+      if (IL && IL.buildInviteUrl) {
+        var target = IL.inviteTarget(S._currentLoginMode || '', host, port, tls);
+        var type = g.type || (S._gameMeta && S._gameMeta.type) || 1;
+        return { url: IL.buildInviteUrl(base, name, target), name: name,
+                 warnings: IL.inviteWarnings({ type: type }, target) };
       }
-      var url = window.location.origin + window.location.pathname +
-        '#join=' + encodeURIComponent(name) + '&s=' + encodeURIComponent(target) + tlsFrag;
+      var mode = S._currentLoginMode || '';
+      var tgt = (mode === 'guest' || mode === 'auth') ? 'pokerth.net'
+        : String(host).trim() + (String(port).trim() ? ':' + String(port).trim() : '');
+      return { url: base + '#join=' + encodeURIComponent(name) + '&s=' + encodeURIComponent(tgt) +
+               ((tgt !== 'pokerth.net' && tls) ? '&tls=1' : ''), name: name, warnings: [] };
+    },
+    shareTableLink() {
+      var _il = this._inviteLink();
+      if (!_il) { if (typeof showKeyHint === 'function') showKeyHint(t('noActiveTable')); return; }
+      var name = _il.name, url = _il.url;
       // Rich share dialog (QR code + copy + messenger shortcuts, see
       // modules/ui/invite.mjs) when available; direct native share /
       // clipboard kept as fallback for a stale cached page.
       if (window.InviteUI && document.getElementById('invite-dialog')) {
         // If the dialog module throws for any reason, fall through to the
         // native share sheet instead of silently doing nothing.
-        try { window.InviteUI.open(url, name); return; }
+        try { window.InviteUI.open(url, name, _il.warnings); return; }
         catch(eInv) { try { console.error('[invite] dialog failed, falling back', eInv); } catch(e2){} }
       }
       var self = this;
@@ -11883,7 +11886,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.9-web.170'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.9-web.171'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif ou la palette High contrast
    (Android, Safari, iOS standalone récent). Lit --theme-color et met

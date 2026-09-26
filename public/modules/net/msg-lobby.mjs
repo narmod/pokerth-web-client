@@ -25,6 +25,7 @@ import { send, setStatus, show, _endConnecting } from './session.mjs';
 import { _pthCacheGet } from './avatar-cache.mjs';
 import { t } from '../i18n.mjs';
 import { addChat } from '../ui/chat.mjs';
+import { namesMatch, scheduleInviteResolve } from './invite-link.mjs';
 import { renderGames, updateLobbyStatsBar, renderGameInfoPanel } from '../ui/lobby.mjs';
 import { updateLobbyPill } from '../ui/game-info.mjs';
 import { _lifeSeedFromServer } from '../game/stats.mjs';
@@ -791,16 +792,11 @@ function onGameListNew(sub) {
     // invitee and changes if the table is re-created. A password-
     // protected table falls through to joinGame()'s password prompt
     // \u2014 the link never carries the password.
-    if (window._pendingAutoJoinName && name === window._pendingAutoJoinName && !S.amInGame) {
-      window._pendingAutoJoinName = '';
-      addChat(null, t('sharedTableJoining'), 'sys', { key: 'sharedTableJoining' });
-      var _ajn = id;
-      setTimeout(function(){
-        try {
-          if (window.LIVE_MODE && App && App.spectateGame) App.spectateGame(_ajn);
-          else if (App && App.joinGame) App.joinGame(_ajn);
-        } catch(e) {}
-      }, 150);
+    // Several tables can share a name, and after login they arrive one by
+    // one: invite-link.mjs waits a beat, then prefers a table still waiting
+    // for players and falls back to watching one already running.
+    if (window._pendingAutoJoinName && namesMatch(name, window._pendingAutoJoinName) && !S.amInGame) {
+      scheduleInviteResolve(400);
     }
     return;
 }

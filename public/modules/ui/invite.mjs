@@ -69,7 +69,32 @@ function _shareText() {
   return _t('invitedBanner', 'You are invited to join the table') + ' \u00ab ' + _curName + ' \u00bb';
 }
 
-function open(url, name) {
+// Why the link may not work for the friend (invite-only table, guests
+// refused, local server address…): keys from InviteLink.inviteWarnings(),
+// shown under the table name. The element is created when an older cached
+// page lacks it.
+function _showWarnings(warnings) {
+  var box = _el('inv-warn');
+  if (!box) {
+    var nm = _el('inv-table-name');
+    if (!nm || !nm.parentNode) return;
+    box = document.createElement('div');
+    box.id = 'inv-warn';
+    box.className = 'inv-warn';
+    box.setAttribute('role', 'note');
+    nm.parentNode.insertBefore(box, nm.nextSibling);
+  }
+  var list = Array.isArray(warnings) ? warnings : [];
+  box.textContent = '';
+  list.forEach(function (k) {
+    var line = document.createElement('div');
+    line.textContent = '\u26A0\uFE0F ' + _t(k, k);
+    box.appendChild(line);
+  });
+  box.style.display = list.length ? '' : 'none';
+}
+
+function open(url, name, warnings) {
   _curUrl = String(url || '');
   _curName = String(name || '');
   const dlg = _el('invite-dialog');
@@ -79,6 +104,7 @@ function open(url, name) {
   }
   const nm = _el('inv-table-name'); if (nm) nm.textContent = _curName;
   const li = _el('inv-link');       if (li) li.textContent = _curUrl;
+  _showWarnings(warnings);
   // Native share button only where the API exists (phones mostly).
   const nb = _el('inv-share-native');
   if (nb) nb.style.display = (navigator.share ? '' : 'none');

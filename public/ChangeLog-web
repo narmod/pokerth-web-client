@@ -1,4 +1,11 @@
-2026-09-26 version 2.1.9-web.170 (current series):
+2026-09-26 version 2.1.9-web.171 (current series):
+- bugfix: the link button of the game info panel now shares the same invite link as « Invite friends » — the old link sent your friend to the LAN login instead of pokerth.net
+- bugfix: an invite link opened while the app is already open now takes you to the table instead of doing nothing
+- bugfix: « shared table not found » now shows up even if you take time to log in, and a stale invite no longer drops you later at another table with the same name
+- improvement: an invite link to a table that has already started lets you watch it as a spectator; among tables with the same name, the one still waiting for players is chosen
+- improvement: the « Invite friends » window warns when the link cannot work for everyone (invite-only table, registered-players or ranking table, local server address)
+
+2026-09-26 version 2.1.9-web.170:
 - improvement: search engines now point Portuguese speakers whose country is unknown to the Brazilian Portuguese version, the one the app already shows them
 
 2026-09-26 version 2.1.9-web.169:

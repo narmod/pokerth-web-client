@@ -11621,6 +11621,13 @@ body.adv-no-avcreate #avp-tab-create { display: none !important; }
   font-family: var(--ff-display); font-weight: 700;
   color: var(--text-hi); margin-bottom: 12px; word-break: break-word;
 }
+.inv-warn {
+  margin: -4px 0 12px; padding: 8px 10px; text-align: left;
+  font-size: var(--fs-sm); line-height: 1.35; color: var(--text-hi);
+  background: rgba(227,200,0,0.10); border: 1px solid rgba(227,200,0,0.45);
+  border-radius: var(--r-md);
+}
+.inv-warn > div + div { margin-top: 6px; }
 .inv-qr { display: block; margin: 0 auto 6px; border-radius: 8px; background: #fff; }
 .inv-scan { font-size: var(--fs-sm); color: var(--cream); opacity: 0.75; margin-bottom: 14px; }
 .inv-linkrow { display: flex; gap: 8px; align-items: stretch; margin-bottom: 14px; }
