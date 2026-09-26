@@ -1,4 +1,7 @@
-2026-09-26 version 2.1.9-web.169 (current series):
+2026-09-26 version 2.1.9-web.170 (current series):
+- improvement: search engines now point Portuguese speakers whose country is unknown to the Brazilian Portuguese version, the one the app already shows them
+
+2026-09-26 version 2.1.9-web.169:
 - bugfix: the Latin American Spanish pages (home, rules, FAQ, poker hands, how to play, glossary) are now served in Spanish to search engines instead of English
 
 2026-09-25 version 2.1.9-web.168:

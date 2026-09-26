@@ -43,5 +43,10 @@ for (const c of cat) {
 }
 ok(S.q('/?lang=es-419&x=1') === 'es-419', 'es-419 followed by another parameter');
 ok(S.q('/?lang=zz') === '', 'unknown code falls back to English');
+// Server and client must agree on a bare 'pt': the client (i18n.mjs) loads pt-BR.
+ok(S.q('/?lang=pt') === 'pt-BR', "bare 'pt' resolves to pt-BR, as in the client");
+ok(S.q('/?lang=pt-AO') === 'pt-PT' && S.q('/?lang=pt-MZ') === 'pt-PT', 'Angola / Mozambique keep pt-PT');
+{ const cli = readFileSync(join(root, 'public', 'modules', 'i18n.mjs'), 'utf8');
+  ok(/pt:\s*'pt-BR'/.test(cli), "client alias still maps 'pt' to pt-BR"); }
 console.log((fail ? 'FAIL ' : 'ok ') + (n - fail) + '/' + n + ' checks');
 process.exit(fail ? 1 : 0);

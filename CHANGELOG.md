@@ -17,6 +17,7 @@ highlights below.
 
 ### Fixed
 
+- **SEO: bare `pt` hreflang now targets Brazilian Portuguese** (`web.170`) — `SEO_HREFLANG_ALIAS.pt` pointed at `pt-PT` while the client's own alias (`i18n.mjs`) loads `pt-BR` for `pt`, so `/?lang=pt` served a European Portuguese head over a Brazilian UI. Both now say `pt-BR` (the large majority of speakers); `pt-AO` / `pt-MZ` keep `pt-PT`. Pinned in `scripts/test-seo-lang-query.mjs`.
 - **SEO: Latin American Spanish variants served in English** (`web.169`) — `seoLangFromQuery()` read `?lang=` with `[A-Za-z-]{2,7}`, so `es-419` matched as `es-` and fell through to English: all six `es-419` URLs in the sitemap (`/`, `/rules`, `/faq`, `/hand-rankings`, `/how-to-play`, `/glossary`) rendered English with `<html lang="en">` and a canonical pointing at the English page, contradicting their own hreflang entries (and the `es-MX`/`es-AR`/… aliases pointing at them). Digits are now accepted. Guarded by `scripts/test-seo-lang-query.mjs`: every advertised hreflang value, and every catalogue code, must resolve to the page it points at. Full audit of the 499 sitemap URLs (83 languages × 6 pages + `/privacy`): canonicals self-referencing, head alternates identical to the sitemap `xhtml:link` set, x-default present, all alternates reciprocal. Stale language counts left in comments and in the admin Traffic help text removed.
 
 ### Changed

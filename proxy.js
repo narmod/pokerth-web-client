@@ -1443,8 +1443,11 @@ var SEO_HREFLANG_ALIAS = {
   // catalogue (es-419, itself a valid hreflang value); Spain keeps 'es'
   'es-MX': 'es-419', 'es-AR': 'es-419', 'es-CO': 'es-419', 'es-CL': 'es-419', 'es-PE': 'es-419',
   'es-VE': 'es-419', 'es-US': 'es-419', 'es-ES': 'es',
-  // Portuguese: the bare 'pt' subtag had no target at all
-  'pt': 'pt-PT', 'pt-AO': 'pt-PT', 'pt-MZ': 'pt-PT',
+  // Portuguese: a bare 'pt' goes to Brazil, the large majority of speakers
+  // and the variant the client itself picks for 'pt' (i18n.mjs alias) — the
+  // server said pt-PT while the UI loaded pt-BR. Angola and Mozambique follow
+  // the European norm and keep pt-PT.
+  'pt': 'pt-BR', 'pt-AO': 'pt-PT', 'pt-MZ': 'pt-PT',
   'fr-CA': 'fr', 'fr-BE': 'fr', 'fr-CH': 'fr',
   'en-GB': 'en', 'en-US': 'en', 'en-CA': 'en', 'en-AU': 'en', 'en-IN': 'en', 'en-IE': 'en',
   'de-AT': 'de', 'de-CH': 'de',
