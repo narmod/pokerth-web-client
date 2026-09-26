@@ -4,7 +4,9 @@
 //
 //   • Dancing suits — the ♠ ♥ ♦ ♣ row under the title hops in a wave,
 //     twice, each time the login screen is shown (after the boot splash
-//     has faded, and again when coming back from the lobby).
+//     has faded, and again when coming back from the lobby), then again
+//     after every 30 s spent idle on it (any click, tap or key press
+//     restarts the count; paused while the tab is hidden).
 //   • Coin flip — a click / tap on the PokerTH chip tosses it like a coin
 //     (jump + spin on the X axis) and lands it back in place.
 //
@@ -60,6 +62,8 @@ export function lfFlipChip() {
   a.onfinish = done; a.oncancel = done;
 }
 
+const IDLE_MS = 30000;   // idle time on the login screen before a new dance
+
 function splashGone() {
   const sp = document.getElementById('boot-splash');
   return !sp || sp.classList.contains('bs-hide');
@@ -74,10 +78,24 @@ function init() {
     chip.addEventListener('dragstart', (e) => e.preventDefault());
   }
   let wasActive = false;
+  let idleT = 0;
+  const disarm = () => { if (idleT) { clearTimeout(idleT); idleT = 0; } };
+  const arm = () => {
+    disarm();
+    if (!wasActive) return;
+    idleT = setTimeout(() => {
+      idleT = 0;
+      if (!wasActive || !sc.classList.contains('active')) return;
+      if (!document.hidden) lfDanceSuits();
+      arm();
+    }, IDLE_MS);
+  };
+  ['pointerdown', 'keydown', 'input'].forEach((ev) =>
+    document.addEventListener(ev, () => { if (wasActive) arm(); }, { capture: true, passive: true }));
   const check = () => {
     const now = sc.classList.contains('active');
-    if (now && !wasActive && splashGone()) { wasActive = true; setTimeout(lfDanceSuits, 350); }
-    else if (!now) wasActive = false;
+    if (now && !wasActive && splashGone()) { wasActive = true; setTimeout(lfDanceSuits, 350); arm(); }
+    else if (!now) { wasActive = false; disarm(); }
   };
   new MutationObserver(check).observe(sc, { attributes: true, attributeFilter: ['class'] });
   // First display: wait for the boot splash to fade out.

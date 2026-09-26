@@ -1,4 +1,7 @@
-2026-09-26 version 2.1.9-web.173 (current series):
+2026-09-26 version 2.1.9-web.174 (current series):
+- improvement: the card suits of the login screen dance again after 30 seconds without touching anything
+
+2026-09-26 version 2.1.9-web.173:
 - new: a little fun on the login screen — the card suits dance when it appears, and a click on the PokerTH chip flips it like a coin
 
 2026-09-26 version 2.1.9-web.172:
