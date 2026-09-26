@@ -35,6 +35,7 @@ highlights below.
 
 ### Added
 
+- **Login screen flourish** (`web.173`) — `public/modules/ui/login-flourish.mjs`: the ♠♥♦♣ row under the title hops in a wave each time the login screen is shown (after the boot splash fades, and on return from the lobby), and a click on the PokerTH chip tosses it like a coin. Web Animations only on existing elements (no DOM added); skipped under « Reduced effects » and `prefers-reduced-motion`.
 - **Lobby server clock** (`web.128`) — the PokerTH protocol carries no server time, so the proxy now answers `GET /__time` → `{ now, tz }` (never cached, bypassed by the service worker). The zone is the one community events are announced in: admin setting **Lobby clock (players)** (`lobbyClockTz`), else `SERVER_TZ`, else the host's zone — nothing hard-coded. `modules/ui/lobby-clock.mjs` keeps a skew against the server instant (half round-trip corrected, re-synced every 10 min and when the page comes back), shows a chip in the LobbyStatsBar for pokerth.net sessions only, and a tap panel with the player's local time and offset. Advanced option and admin kill switch `lobby_clock`; guarded by `scripts/test-lobby-clock.mjs`.
 - **Events tab: Champions of the day** (`web.127`) — the relay (`server/community-events.js`) now also reads `https://www.pokerth.net/pthranking/ranking/cod` (JSON) and ships the top three; the Events tab, now one card per category (`web.126`), opens with them as gold / silver / bronze medals linked to the official leaderboard.
 - **Admin: Traffic period selector** (`web.123`) — `GET /admin/visits?days=N`

@@ -1,4 +1,7 @@
-2026-09-26 version 2.1.9-web.172 (current series):
+2026-09-26 version 2.1.9-web.173 (current series):
+- new: a little fun on the login screen — the card suits dance when it appears, and a click on the PokerTH chip flips it like a coin
+
+2026-09-26 version 2.1.9-web.172:
 - improvement: the Forum news window now opens on the Events tab, placed first, and both tabs have an icon (calendar for Events, newspaper for Posts)
 - improvement: the Events tab shows the pokerth.net server time (Berlin), and your own time when it differs, like the lobby status bar
 

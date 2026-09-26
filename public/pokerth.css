@@ -653,6 +653,10 @@ body {
 }
 .card-suits-row { font-size: var(--fs-lg); letter-spacing: 0.2em; opacity: 0.7; margin-bottom: 4px; }
 .card-suits-row .r { color: var(--red); }
+/* Login flourish (modules/ui/login-flourish.mjs): the suits hop in a wave and
+   the chip flips like a coin on click — inline-block so transforms apply. */
+.card-suits-row span { display: inline-block; }
+#s-connect .card-chip { cursor: pointer; -webkit-tap-highlight-color: transparent; }
 .card-title-big {
   font-family: var(--ff-display);
   font-size: 1.5rem;
