@@ -15,6 +15,10 @@ release. Per-build detail is on the
 [GitHub Releases](https://github.com/narmod/pokerth-web-client/releases) page;
 highlights below.
 
+### Fixed
+
+- **SEO: Latin American Spanish variants served in English** (`web.169`) — `seoLangFromQuery()` read `?lang=` with `[A-Za-z-]{2,7}`, so `es-419` matched as `es-` and fell through to English: all six `es-419` URLs in the sitemap (`/`, `/rules`, `/faq`, `/hand-rankings`, `/how-to-play`, `/glossary`) rendered English with `<html lang="en">` and a canonical pointing at the English page, contradicting their own hreflang entries (and the `es-MX`/`es-AR`/… aliases pointing at them). Digits are now accepted. Guarded by `scripts/test-seo-lang-query.mjs`: every advertised hreflang value, and every catalogue code, must resolve to the page it points at. Full audit of the 499 sitemap URLs (83 languages × 6 pages + `/privacy`): canonicals self-referencing, head alternates identical to the sitemap `xhtml:link` set, x-default present, all alternates reciprocal. Stale language counts left in comments and in the admin Traffic help text removed.
+
 ### Changed
 
 - **Lobby server clock: Berlin by default** (`web.168`) — `_lobbyClockTz()` now falls back to `LOBBY_CLOCK_TZ_DEFAULT = 'Europe/Berlin'` (the zone the QML client hard-codes) instead of the proxy host's own zone, which is unrelated to the PokerTH server. Order stays admin `lobbyClockTz` → `SERVER_TZ` → default; the admin option is renamed **Default (Europe/Berlin)**.

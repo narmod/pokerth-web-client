@@ -1039,7 +1039,7 @@ var SEO_DESC = 'Play Texas Hold\u2019em poker free in your browser with PokerTH,
   'No download, no ads, no registration \u2014 practice offline against bots, play on LAN or join pokerth.net. 83 languages, installable as an app (PWA).';
 
 
-// ── hreflang — localized <title> + description for the 63 UI languages ────
+// ── hreflang — localized <title> + description for every UI language ─────
 // Each language variant lives at /?lang=<code>: the client applies the URL
 // parameter at boot (without overwriting a manually saved choice), so a
 // visitor landing from a localized search result gets the matching UI.
@@ -1411,7 +1411,10 @@ var SEO_BODY_I18N = {
 // Resolve the ?lang= query parameter onto a SEO_I18N code (case-insensitive).
 // Returns '' for missing, unknown, or 'en' (English folds onto the bare /).
 function seoLangFromQuery(reqUrl) {
-  var m = /[?&]lang=([A-Za-z-]{2,7})/.exec(String(reqUrl || ''));
+  // Digits allowed: 'es-419' is a catalogue code and an advertised hreflang
+  // value. Without them it matched as 'es-', fell through to English, and
+  // every es-419 URL canonicalised to its English page.
+  var m = /[?&]lang=([A-Za-z0-9-]{2,12})/.exec(String(reqUrl || ''));
   if (!m) return '';
   var q = m[1].toLowerCase();
   if (q === 'en') return '';

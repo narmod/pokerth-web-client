@@ -1,4 +1,7 @@
-2026-09-25 version 2.1.9-web.168 (current series):
+2026-09-26 version 2.1.9-web.169 (current series):
+- bugfix: the Latin American Spanish pages (home, rules, FAQ, poker hands, how to play, glossary) are now served in Spanish to search engines instead of English
+
+2026-09-25 version 2.1.9-web.168:
 - bugfix: the server time in the lobby status bar now shows Berlin time by default, the time pokerth.net community games are scheduled in, instead of the web host's own time
 
 2026-09-25 version 2.1.9-web.167:
