@@ -11528,7 +11528,8 @@ body.adv-no-avcreate #avp-tab-create { display: none !important; }
 }
 .avm-step-count { font-size: var(--fs-2xs); color: var(--text); flex: 0 0 auto; }
 .avm-group-ico { font-size: 1rem; line-height: 1; }
-.avm-sex-opt { font-size: 1.25rem; line-height: 1; padding: 5px 15px; }
+.avm-sex-opt { display: inline-flex; align-items: center; justify-content: center; width: 52px; height: 40px; padding: 0; line-height: 0; }
+.avm-sex-opt svg { width: 24px; height: 24px; display: block; }
 .avm-preview {
   width: 120px; height: 120px; flex: 0 0 auto; border-radius: 4px; overflow: hidden;
   background: var(--field-bg);
@@ -11574,7 +11575,8 @@ body.adv-no-avcreate #avp-tab-create { display: none !important; }
 .avm-cam {
   position: fixed; inset: 0; z-index: 10050;
   display: flex; align-items: center; justify-content: center;
-  background: rgba(0,0,0,0.82); padding: var(--sp-4);
+  background: rgba(0,0,0,0.9); padding: var(--sp-4);
+  -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
 }
 .avm-cam-card {
   display: flex; flex-direction: column; align-items: center; gap: var(--sp-3);
@@ -11584,10 +11586,23 @@ body.adv-no-avcreate #avp-tab-create { display: none !important; }
   font-family: var(--ff-display); font-size: var(--fs-2xs); letter-spacing: 0.12em;
   text-transform: uppercase; color: var(--sel,var(--gold));
 }
-.avm-cam-sex { display: flex; align-items: center; gap: var(--sp-2); }
-.avm-cam-sex .avm-axis-label { margin: 0 var(--sp-2) 0 0; color: var(--gold-dim); }
-.avm-cam-sex .avm-opt { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.28); color: #fff; }
-.avm-cam-sex .avm-opt.selected { border-color: var(--gold); color: var(--gold); background: rgba(var(--gold-rgb), 0.18); }
+/* step 1: two big silhouette cards; step 2 (view, hint, buttons) hidden meanwhile */
+.avm-cam-choose { display: none; gap: var(--sp-4); justify-content: center; padding: var(--sp-4) 0; }
+.avm-cam.is-choosing .avm-cam-choose { display: flex; }
+.avm-cam.is-choosing .avm-cam-view, .avm-cam.is-choosing .avm-cam-hint, .avm-cam.is-choosing .avm-cam-btns, .avm-cam.is-choosing .avm-cam-sexbtn { display: none; }
+.avm-cam-sexcard {
+  display: flex; flex-direction: column; align-items: center; gap: var(--sp-3);
+  width: min(42vw, 190px); padding: var(--sp-4) var(--sp-2) var(--sp-5);
+  background: rgba(255,255,255,0.06); border: 2px solid rgba(255,255,255,0.25); border-radius: var(--r-md);
+  color: #fff; cursor: pointer; transition: border-color 0.12s, background 0.12s;
+}
+.avm-cam-sexcard:hover { background: rgba(var(--gold-rgb), 0.12); }
+.avm-cam-sexcard.selected { border-color: var(--gold); background: rgba(var(--gold-rgb), 0.16); }
+.avm-cam-sexpic svg { display: block; width: min(30vw, 130px); height: min(30vw, 130px); border-radius: 6px; }
+.avm-cam-sexlbl { display: flex; align-items: center; gap: 6px; font-size: var(--fs-md); font-weight: 600; }
+.avm-cam-sexlbl svg { width: 26px; height: 26px; color: var(--gold); }
+.avm-cam-sexbtn { display: inline-flex; align-items: center; gap: 6px; color: #fff; background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.28); }
+.avm-cam-sexbtn svg { width: 18px; height: 18px; color: var(--gold); }
 .avm-cam-view {
   position: relative; width: min(90vw, 52vh, 420px); aspect-ratio: 1 / 1;
   overflow: hidden; border-radius: var(--r-md); background: #111;

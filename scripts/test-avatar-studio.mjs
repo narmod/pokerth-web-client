@@ -36,11 +36,12 @@ function load(p) {
 }
 load('modules/ui/avatar-vector.mjs');
 load('modules/ui/avatar-photo.mjs');
+global.AV_SEX_SAMPLE = window._AV_SEX_SAMPLE; global.avSvg = window._avSvg; global.avSexIcon = window._avSexIcon;
 load('modules/ui/avatar-capture.mjs');
 // avatar-studio consumes the engines' window._-prefixed exports in the harness.
 let studio = fs.readFileSync(path.join(PUB, 'modules/ui/avatar-studio.mjs'), 'utf8');
 studio = studio.replace(/^import .*$/mg, '');
-studio = 'const AV_AXES = window._AV_AXES, avSvg = window._avSvg, avSwatch = window._avSwatch, avNormalize = window._avNormalize, avRandom = window._avRandom, avVisible = window._avVisible, AV_DEFAULT = window._AV_DEFAULT, AV_CROP = window._AV_CROP, avPartSvg = window._avPartSvg, avPhotoRecipe = window._avPhotoRecipe, avCaptureOpen = window._avCaptureOpen;\n' + studio;
+studio = 'const AV_AXES = window._AV_AXES, avSvg = window._avSvg, avSwatch = window._avSwatch, avNormalize = window._avNormalize, avRandom = window._avRandom, avVisible = window._avVisible, AV_DEFAULT = window._AV_DEFAULT, AV_CROP = window._AV_CROP, avPartSvg = window._avPartSvg, avPhotoRecipe = window._avPhotoRecipe, avCaptureOpen = window._avCaptureOpen, avSexIcon = window._avSexIcon;\n' + studio;
 studio = studio.replace(/export \{[^}]*\};?/, '');
 (0, eval)(studio.replace(/^'use strict';/m, ''));
 
@@ -166,6 +167,7 @@ window.avStudioTab('create');
 ok(document.getElementById('avp-pane-create').style.display === '', 'create pane visible');
 ok(!!document.getElementById('avm-step-label') && document.getElementById('avm-step-label').textContent.indexOf('1/5') !== -1, 'step header shows category 1/5');
 ok(document.getElementById('avm-rows').children.length === 2, 'active group (Silhouette) renders its 2 axis rows');
+ok(document.querySelectorAll('#avm-rows .avm-sex-opt svg').length === 2, 'silhouette chips carry SVG icons instead of glyphs');
 const next = document.getElementById('avm-step-next'), prev = document.getElementById('avm-step-prev');
 next.click(); next.click();
 ok(document.getElementById('avm-rows').children.length === 3, 'stepping to Hair (3/5) renders 3 rows');
@@ -184,13 +186,18 @@ ok(document.querySelector('#avm-photo sup.avm-beta').textContent === 'avmBeta', 
 document.getElementById('avm-photo').click();
 const cam = document.getElementById('avm-cam');
 ok(!!cam && !!cam.querySelector('.avm-cam-guide svg ellipse'), 'framing panel opens with the face template');
-ok(document.getElementById('avm-cam-title').textContent === 'Frame your face', 'framing panel title falls back to English when the key is untranslated (harness t() echoes keys)');
+
 const G = window._AV_GUIDE;
 ok(G && G.cx === 0.5 && G.rx > 0 && G.ry > G.rx && G.cy + G.ry < 0.8, 'template oval sits in the upper part of the square with room for shoulders');
-const sexBtns = cam.querySelectorAll('#avm-cam-sex .avm-sex-opt');
-ok(sexBtns.length === 2 && sexBtns[0].classList.contains('selected'), 'framing panel offers the silhouette choice, preset to the current one (masculine)');
-sexBtns[1].click();
-ok(sexBtns[1].classList.contains('selected') && !sexBtns[0].classList.contains('selected'), 'the silhouette can be switched in the panel');
+const sexCards = cam.querySelectorAll('.avm-cam-sexcard');
+ok(cam.classList.contains('is-choosing') && sexCards.length === 2 && sexCards[0].classList.contains('selected') && !!sexCards[1].querySelector('svg'), 'framing panel opens on the silhouette step: two big cards with portraits, preset to the current one (masculine)');
+ok(document.getElementById('avm-cam-title').textContent === 'Silhouette', 'silhouette step title (fallback)');
+sexCards[1].click();
+ok(!cam.classList.contains('is-choosing') && sexCards[1].classList.contains('selected') && document.getElementById('avm-cam-sexbtn').textContent.indexOf('Woman') !== -1, 'tapping a card picks the silhouette and moves on to the framing step');
+document.getElementById('avm-cam-sexbtn').click();
+ok(cam.classList.contains('is-choosing'), 'the silhouette button reopens the choice');
+sexCards[0].click();
+ok(document.getElementById('avm-cam-title').textContent === 'Frame your face', 'framing step title falls back to English when the key is untranslated (harness t() echoes keys)');
 document.getElementById('avm-cam-cancel').click();
 ok(!document.getElementById('avm-cam'), 'cancel closes the framing panel');
 window.avStudioTab('import');

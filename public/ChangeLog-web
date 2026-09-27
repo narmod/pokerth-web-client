@@ -1,4 +1,9 @@
-2026-09-27 version 2.1.9-web.187 (current series):
+2026-09-27 version 2.1.9-web.188 (current series):
+- improvement: « From a photo » (beta) — the silhouette is now a first, full-size step: two big cards (Man / Woman, with a sample portrait) before the camera opens; a small button above the viewfinder reopens the choice
+- bugfix: « From a photo » — a photo framed in the template is read from the template again (the previous build searched the face on its own and lost skin tone, hair and beard on a normal selfie); the beard is now judged against the cheeks of the same photo, so lighting no longer hides it; the eye line of the template moves up to where eyes really sit
+- improvement: the ♂ / ♀ chips of the « Create » tab use drawn icons, centred in their box, instead of text symbols that sat off-centre
+
+2026-09-27 version 2.1.9-web.187:
 - new: portraits of the « Create » tab — 16 more outfits (men: tee, polo, plaid shirt, crew-neck sweater, denim jacket, tank top, football jersey, zip hoodie; women: floral blouse, strap dress, bow blouse, tailored blazer, cardigan, sweatshirt, swimsuit, scoop tee) and 13 more hairstyles (men: side part, mid-length, ponytail, buzz cut, long curly, curtain fringe; women: short bob, crown braid, straight fringe, very long straight, cropped, messy high bun, long locs)
 - new: an « Outfit colour » choice (8 colours, or « Auto » to keep the garment as drawn) for the plain garments — tees, sweaters, hoodies, turtleneck, blouses, dresses, cardigan…
 - improvement: « From a photo » (beta) picks the outfit colour from your clothes and uses the new hairstyles (mid-length, cropped)

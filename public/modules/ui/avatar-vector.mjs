@@ -990,6 +990,18 @@ function avSvg(recipe, size) {
   return _wrap('0 0 200 200', sz, ctx, body);
 }
 
+// Silhouette icons (♂ / ♀) as inline SVG: the Unicode glyphs sit off-centre
+// and vary by platform font (narmod 2026-09-27).
+function avSexIcon(sex) {
+  if (sex === 1) return '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8.5" r="5.5" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M12 14v8M8.5 18.5h7" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>';
+  return '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10" cy="14" r="5.5" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M14.2 9.8L20 4M20 4h-5.5M20 4v5.5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+}
+// Portraits used as silhouette pickers (framing panel).
+const AV_SEX_SAMPLE = [
+  { sex: 0, face: 0, hair: 1, hairc: 1, outfit: 17, outfitc: 2, mouth: 0, bg: 7 },
+  { sex: 1, face: 0, hair: 5, hairc: 1, outfit: 32, outfitc: 8, mouth: 0, bg: 7 }
+];
+
 // Swatch color shown on the option chip for 'color' axes.
 function avSwatch(axId, i) {
   if (axId === 'bg') return AV_FELT[i][0];
@@ -1000,6 +1012,6 @@ function avSwatch(axId, i) {
   return '#888';
 }
 
-export { AV_AXES, AV_DEFAULT, AV_CROP, avSvg, avPartSvg, avSwatch, avNormalize, avRandom, avVisible };
-for (const [k, v] of Object.entries({ AV_AXES, AV_DEFAULT, AV_CROP, avSvg, avPartSvg, avSwatch, avNormalize, avRandom, avVisible }))
+export { AV_AXES, AV_DEFAULT, AV_CROP, AV_SEX_SAMPLE, avSvg, avPartSvg, avSwatch, avNormalize, avRandom, avVisible, avSexIcon };
+for (const [k, v] of Object.entries({ AV_AXES, AV_DEFAULT, AV_CROP, AV_SEX_SAMPLE, avSvg, avPartSvg, avSwatch, avNormalize, avRandom, avVisible, avSexIcon }))
   window['_' + k] = v;

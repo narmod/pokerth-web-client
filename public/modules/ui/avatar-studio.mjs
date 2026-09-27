@@ -24,7 +24,7 @@
 
 'use strict';
 
-import { AV_AXES, AV_DEFAULT, avSvg, avPartSvg, avSwatch, avNormalize, avRandom, avVisible } from './avatar-vector.mjs';
+import { AV_AXES, AV_DEFAULT, avSvg, avPartSvg, avSwatch, avNormalize, avRandom, avVisible, avSexIcon } from './avatar-vector.mjs';
 import { avPhotoRecipe } from './avatar-photo.mjs';
 import { avCaptureOpen } from './avatar-capture.mjs';
 
@@ -181,7 +181,8 @@ function _avmRender() {
         b.setAttribute('aria-label', t(ax.label) + ' ' + (i + 1));
         if (ax.id === 'sex') {
           b.className = 'avm-opt avm-sex-opt' + (sel ? ' selected' : '');
-          b.textContent = i === 0 ? '\u2642' : '\u2640';
+          b.innerHTML = avSexIcon(i);
+          b.title = t(i === 0 ? 'avmMale' : 'avmFemale');
         } else if (ax.none && i === 0) {
           b.className = 'avm-opt avm-none-opt' + (sel ? ' selected' : '');
           // a colour axis' option 0 keeps the garment as drawn: « Auto »

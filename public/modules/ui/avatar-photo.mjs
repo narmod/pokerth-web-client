@@ -131,52 +131,40 @@ function avPhotoAnalyze(img, opts) {
     bgs.push(medianRgb(px));
   });
   var bgLabs = bgs.map(function (c) { return rgb2lab(c[0], c[1], c[2]); });
-  var isBg = function (idx, tol) {
-    for (var k = 0; k < bgLabs.length; k++) if (dLab(idx, bgLabs[k]) < (tol || 22)) return true;
+  var isBg = function (idx, tol, topOnly) { // topOnly: the bottom corners are often the clothes
+    for (var k = 0; k < (topOnly ? 2 : bgLabs.length); k++) if (dLab(idx, bgLabs[k]) < (tol || 22)) return true;
     return false;
   };
   // a skin-coloured wall must not become the face
   for (i = 0; i < N; i++) if (skin[i] && isBg(i, 16)) skin[i] = 0;
 
   // 1. skin blobs (4-connected) → the most face-like one. With a guide,
-  // every skin pixel inside the (slightly grown) oval is THE face blob.
+  // the blob that overlaps the template oval most (a skin-coloured wall
+  // inside the oval is a different blob and stays out).
   var label = new Int32Array(N), comps = [], stack = new Int32Array(N);
   var gcx = 0, gcy = 0, grx = 0, gry = 0;
-  if (guide) {
-    gcx = guide.cx * W; gcy = guide.cy * H; grx = guide.rx * W; gry = guide.ry * H;
-    var garea = 0, gminx = W, gmaxx = 0, gminy = H, gmaxy = 0, gsx = 0, gsy = 0;
-    for (i = 0; i < N; i++) {
-      if (!skin[i]) continue;
-      x = i % W; y = (i - x) / W;
-      // grown sideways a little and upwards a lot: a bald crown climbs well
-      // above the template's hairline and must stay in the blob
-      var gex = (x - gcx) / (grx * 1.12), gey = (y - gcy) / (gry * (y < gcy ? 1.7 : 1.12));
-      if (gex * gex + gey * gey > 1) continue;
-      label[i] = 1; garea++; gsx += x; gsy += y;
-      if (x < gminx) gminx = x; if (x > gmaxx) gmaxx = x; if (y < gminy) gminy = y; if (y > gmaxy) gmaxy = y;
-    }
-    if (garea < 0.15 * Math.PI * grx * gry) return null; // nobody in the oval
-    comps.push({ id: 1, area: garea, cx: gsx / garea, cy: gsy / garea, minx: gminx, maxx: gmaxx, miny: gminy, maxy: gmaxy });
-  }
-  for (i = 0; guide ? false : i < N; i++) {
+  if (guide) { gcx = guide.cx * W; gcy = guide.cy * H; grx = guide.rx * W; gry = guide.ry * H; }
+  for (i = 0; i < N; i++) {
     if (!skin[i] || label[i]) continue;
-    var id = comps.length + 1, sp = 0, area = 0, sx = 0, sy = 0, minx = W, maxx = 0, miny = H, maxy = 0;
+    var id = comps.length + 1, sp = 0, area = 0, sx = 0, sy = 0, minx = W, maxx = 0, miny = H, maxy = 0, inOval = 0;
     stack[sp++] = i; label[i] = id;
     while (sp) {
       var p = stack[--sp]; area++;
       var px = p % W, py = (p - px) / W;
       sx += px; sy += py;
+      if (guide) { var gex = (px - gcx) / grx, gey = (py - gcy) / gry; if (gex * gex + gey * gey <= 1) inOval++; }
       if (px < minx) minx = px; if (px > maxx) maxx = px; if (py < miny) miny = py; if (py > maxy) maxy = py;
       if (px > 0 && skin[p - 1] && !label[p - 1]) { label[p - 1] = id; stack[sp++] = p - 1; }
       if (px < W - 1 && skin[p + 1] && !label[p + 1]) { label[p + 1] = id; stack[sp++] = p + 1; }
       if (py > 0 && skin[p - W] && !label[p - W]) { label[p - W] = id; stack[sp++] = p - W; }
       if (py < H - 1 && skin[p + W] && !label[p + W]) { label[p + W] = id; stack[sp++] = p + W; }
     }
-    comps.push({ id: id, area: area, cx: sx / area, cy: sy / area, minx: minx, maxx: maxx, miny: miny, maxy: maxy });
+    comps.push({ id: id, area: area, cx: sx / area, cy: sy / area, minx: minx, maxx: maxx, miny: miny, maxy: maxy, inOval: inOval });
   }
   if (!comps.length) return null;
   var best = null, bestScore = 0;
   comps.forEach(function (c) {
+    if (guide) { if (c.inOval > bestScore) { bestScore = c.inOval; best = c; } return; }
     if (c.area < 0.015 * N) return;
     var dx = (c.cx - W / 2) / W, dy = (c.cy - H / 2) / H;
     var bw = c.maxx - c.minx + 1, bh = c.maxy - c.miny + 1, asp = bh / bw;
@@ -186,7 +174,7 @@ function avPhotoAnalyze(img, opts) {
     if (fill < 0.35) score *= 0.5;
     if (score > bestScore) { bestScore = score; best = c; }
   });
-  if (!best) return null;
+  if (!best || (guide && best.inOval < 0.12 * Math.PI * grx * gry)) return null; // nobody in the oval
   var fid = best.id;
 
   // rough face box from the blob's row profile
@@ -246,6 +234,7 @@ function avPhotoAnalyze(img, opts) {
     var ex = (xx - cx) / (fw * 0.55), ey = (yy - (top + fh * 0.5)) / (fh * 0.56);
     return ex * ex + ey * ey <= 1;
   };
+  if (guide) inFace = function () { return true; };
 
   // 2. eyes: darkest 3x3 spot whose ring of neighbours is bright (sclera),
   // eyebrows score worse because their surroundings are plain skin
@@ -270,38 +259,81 @@ function avPhotoAnalyze(img, opts) {
     var S = integ[y1 * (W + 1) + x1] - integ[y0 * (W + 1) + x1] - integ[y1 * (W + 1) + x0] + integ[y0 * (W + 1) + x0];
     return S / ((x1 - x0) * (y1 - y0));
   };
-  var rc = Math.max(1, Math.round(fw * 0.03)), rs = rc * 3;
+  // Multi-scale (the framed face may be smaller or bigger than the
+  // template) and anti-eyebrow: a pupil is brighter on BOTH sides at its
+  // own height (sclera), an eyebrow is dark on both sides.
   var eyeCands = function (x0, x1, y0, y1) {
     var list = [];
-    for (y = y0; y <= y1; y++) for (x = x0; x <= x1; x++) {
-      if (!inFace(x, y)) continue;
-      var c = boxMean(x - rc, y - rc, x + rc + 1, y + rc + 1);
-      if (c > skinLum * 0.85) continue;
-      var big = boxMean(x - rs, y - rs, x + rs + 1, y + rs + 1);
-      var sur = (big * (2 * rs + 1) * (2 * rs + 1) - c * (2 * rc + 1) * (2 * rc + 1)) / ((2 * rs + 1) * (2 * rs + 1) - (2 * rc + 1) * (2 * rc + 1));
-      var sc = c - sur; // negative = dark blob in a bright surround
-      if (sc > -8) continue;
-      list.push({ x: x, y: y, lum: c, score: sc });
-    }
+    [0.022, 0.03, 0.042].forEach(function (kk) {
+      var rc = Math.max(1, Math.round(fw * kk)), rs = rc * 3, side = rc * 2.4;
+      for (y = y0; y <= y1; y++) for (x = x0; x <= x1; x++) {
+        if (!inFace(x, y)) continue;
+        var c = boxMean(x - rc, y - rc, x + rc + 1, y + rc + 1);
+        if (c > skinLum * 0.85) continue;
+        var lft = boxMean(Math.round(x - side - rc), y - rc, Math.round(x - side + rc + 1), y + rc + 1);
+        var rgt = boxMean(Math.round(x + side - rc), y - rc, Math.round(x + side + rc + 1), y + rc + 1);
+        if (Math.min(lft, rgt) - c < 12) continue;
+        var big = boxMean(x - rs, y - rs, x + rs + 1, y + rs + 1);
+        var sur = (big * (2 * rs + 1) * (2 * rs + 1) - c * (2 * rc + 1) * (2 * rc + 1)) / ((2 * rs + 1) * (2 * rs + 1) - (2 * rc + 1) * (2 * rc + 1));
+        var sc = c - sur; // negative = dark blob in a bright surround
+        if (sc > -8) continue;
+        list.push({ x: x, y: y, lum: c, score: sc, r: rc });
+      }
+    });
     list.sort(function (a, b2) { return a.score - b2.score; });
     var keep = [], nms = fw * 0.08;
-    for (var k = 0; k < list.length && keep.length < 6; k++) {
+    for (var k = 0; k < list.length && keep.length < 8; k++) {
       var ok = true;
       for (var m = 0; m < keep.length; m++) if (Math.hypot(keep[m].x - list[k].x, keep[m].y - list[k].y) < nms) { ok = false; break; }
       if (ok) keep.push(list[k]);
     }
     return keep;
   };
-  var ey0 = Math.round(top + 0.2 * fh), ey1 = Math.round(top + 0.6 * fh);
-  var cL = eyeCands(Math.round(left + 0.08 * fw), Math.round(left + 0.47 * fw), ey0, ey1);
-  var cR = eyeCands(Math.round(left + 0.53 * fw), Math.round(right - 0.08 * fw), ey0, ey1);
+  // (a guided face may be smaller or bigger than the template: search the
+  // eyes in a wider band and let the pair distance float)
+  var ey0 = Math.round(top + 0.2 * fh), ey1 = Math.round(top + 0.6 * fh), cL, cR, Eexp = 0;
+  if (guide) {
+    // the template says where the pupils should be (38 % down the oval —
+    // hairline to eyes ≈ 1.1 E, eyes to chin ≈ 1.8 E — and 0.84 face
+    // half-widths apart): look in a window around each expected spot
+    Eexp = 0.84 * grx;
+    var exy = gcy - 0.24 * gry, win = 0.3 * Eexp;
+    cL = eyeCands(Math.round(gcx - 0.5 * Eexp - win), Math.round(gcx - 0.5 * Eexp + win), Math.round(exy - win), Math.round(exy + win));
+    cR = eyeCands(Math.round(gcx + 0.5 * Eexp - win), Math.round(gcx + 0.5 * Eexp + win), Math.round(exy - win), Math.round(exy + win));
+  } else {
+    cL = eyeCands(Math.round(left + 0.08 * fw), Math.round(left + 0.47 * fw), ey0, ey1);
+    cR = eyeCands(Math.round(left + 0.53 * fw), Math.round(right - 0.08 * fw), ey0, ey1);
+  }
+  // face-geometry check on a pair: skin on the nose bridge below the
+  // midpoint and skin under each eye (cheeks) — hair edges, ears and
+  // eyebrow pairs fail it
+  var skinFrac = function (xx, yy, rr) {
+    var c = 0, n = 0;
+    for (var yy2 = Math.round(yy - rr); yy2 <= yy + rr; yy2++) for (var xx2 = Math.round(xx - rr); xx2 <= xx + rr; xx2++) {
+      if (xx2 < 0 || yy2 < 0 || xx2 >= W || yy2 >= H) continue;
+      n++; if (skin[at(xx2, yy2)]) c++;
+    }
+    return n ? c / n : 0;
+  };
+  var pairOk = function (a, b2, d) {
+    var mx2 = (a.x + b2.x) / 2, my2 = (a.y + b2.y) / 2;
+    if (skinFrac(mx2, my2 + 0.5 * d, 0.1 * d) < 0.5) return false;
+    if (skinFrac(a.x, a.y + 0.4 * d, 0.08 * d) < 0.35 || skinFrac(b2.x, b2.y + 0.4 * d, 0.08 * d) < 0.35) return false;
+    // an eye has skin on BOTH sides at its own height (temple and nose);
+    // a hair edge at the temple has the background on its outer side
+    var sideOk = function (e) { return skinFrac(e.x - 0.3 * d, e.y, 0.06 * d) >= 0.3 && skinFrac(e.x + 0.3 * d, e.y, 0.06 * d) >= 0.3; };
+    return sideOk(a) && sideOk(b2);
+  };
   var eL = cL[0] || null, eR = cR[0] || null, pairs = [];
   cL.forEach(function (a) { cR.forEach(function (b2) {
     var dist = Math.hypot(b2.x - a.x, b2.y - a.y);
-    if (dist < 0.28 * fw || dist > 0.6 * fw || Math.abs(b2.y - a.y) > 0.08 * fw) return;
+    if (dist < (guide ? 0.55 * Eexp : 0.28 * fw) || dist > (guide ? 1.8 * Eexp : 0.6 * fw) || Math.abs(b2.y - a.y) > 0.08 * fw) return;
+    if (!pairOk(a, b2, dist)) return;
     // level pair, darkest blobs (pupils beat the inner-corner shadows),
     // loose distance prior (the skin box width is only a hint)
-    pairs.push({ a: a, b: b2, d: dist, sc: a.score + b2.score + Math.abs(b2.y - a.y) * 3 + (a.lum + b2.lum) * 0.3 + Math.abs(dist - 0.42 * fw) * 0.8 });
+    // guided: the template also says where each pupil should be
+    var posPen = guide ? (Math.abs(a.x - (gcx - 0.5 * Eexp)) + Math.abs(b2.x - (gcx + 0.5 * Eexp))) * 0.4 : 0;
+    pairs.push({ a: a, b: b2, d: dist, sc: a.score + b2.score + Math.abs(b2.y - a.y) * 3 + (a.lum + b2.lum) * 0.3 + Math.abs(dist - (guide ? Eexp : 0.42 * fw)) * (guide ? 0.8 : 0.8) + posPen });
   }); });
   pairs.sort(function (p1, p2) { return p1.sc - p2.sc; });
   if (pairs.length) {
@@ -335,7 +367,27 @@ function avPhotoAnalyze(img, opts) {
   // (hairline ≈ 1.1 E above, chin ≈ 1.75 E below, width ≈ 2.2 E)
   var E = (eL && eR) ? Math.hypot(eR.x - eL.x, eR.y - eL.y) : 0;
   var eyesOk = E > 0.3 * fw && E > 6 && Math.abs(eR.y - eL.y) < 0.25 * E && (openL || openR || sunglasses);
-  if (eyesOk) {
+  if (guide) {
+    // Guided: the GEOMETRY is the template's (the player aligned with it),
+    // the pupils only refine the eye centres for the eye attributes. A
+    // pupil missing from its window falls back to the template spot, and
+    // the eyes are then taken as open (the player looks at the camera).
+    eyesOk = true;
+    var exL = { x: Math.round(gcx - 0.5 * Eexp), y: Math.round(gcy - 0.24 * gry), lum: skinLum, score: 0 };
+    var exR = { x: Math.round(gcx + 0.5 * Eexp), y: exL.y, lum: skinLum, score: 0 };
+    var okL = eL && Math.abs(eL.x - exL.x) <= 0.3 * Eexp && Math.abs(eL.y - exL.y) <= 0.3 * Eexp;
+    var okR = eR && Math.abs(eR.x - exR.x) <= 0.3 * Eexp && Math.abs(eR.y - exR.y) <= 0.3 * Eexp;
+    // both pupils found, level and at a plausible distance → they refine
+    // the geometry within bounds (a face a bit smaller or bigger than the
+    // template); otherwise the template's geometry stands
+    var refine = okL && okR && Math.abs(eL.y - eR.y) < 0.15 * Eexp && E >= 0.7 * Eexp && E <= 1.35 * Eexp;
+    if (!refine) E = Eexp;
+    if (!okL) { eL = exL; openL = true; }
+    if (!okR) { eR = exR; openR = true; }
+    if (!okL && !okR) { openL = openR = true; }
+    st = skinStats([[left, top, right + 1, bottom + 1]]) || st;
+    skinLum = st.lum;
+  } else if (eyesOk) {
     var mx = (eL.x + eR.x) / 2, my = (eL.y + eR.y) / 2;
     left = Math.max(0, Math.round(mx - 1.1 * E)); right = Math.min(W - 1, Math.round(mx + 1.1 * E));
     top = Math.max(0, Math.round(my - 1.1 * E)); bottom = Math.min(H - 1, Math.round(my + 1.75 * E));
@@ -400,12 +452,16 @@ function avPhotoAnalyze(img, opts) {
   var hz = { x0: Math.max(0, Math.round(left - 0.5 * fw)), x1: Math.min(W - 1, Math.round(right + 0.5 * fw)),
              y0: Math.max(0, Math.round(top - 0.8 * fh)), y1: Math.min(H - 1, Math.round(bottom + 0.4 * fh)) };
   var skinTop = top, eyeMidY = eyesOk ? (eL.y + eR.y) / 2 : top + 0.42 * fh, Eref = eyesOk ? E : 0.42 * fw;
+  // (light brown hair passes the skin chroma test AND the brightness test in
+  // sunlight: the crown must be the FACE colour — Lab distance to the lit
+  // cheeks — before it counts as skin)
+  var faceLab = rgb2lab(st.rgb[0], st.rgb[1], st.rgb[2]);
+  var isFaceCol = function (idx) { return label[idx] === fid && dLab(idx, faceLab) < 24; };
   var scanTop = Math.max(0, Math.round(eyeMidY - 2.4 * Eref));
   for (y = scanTop; y < eyeMidY; y++) {
     var cnt = 0;
-    // dark brown hair passes the chroma test: the crown must be as bright as the cheeks
     for (x = Math.round(cx - 0.25 * Eref); x <= cx + 0.25 * Eref; x++) {
-      if (x >= 0 && x < W && label[at(x, y)] === fid && lum[at(x, y)] > 0.62 * skinLum) cnt++;
+      if (x >= 0 && x < W && isFaceCol(at(x, y))) cnt++;
     }
     if (cnt > 0.3 * Eref) { skinTop = y; break; }
   }
@@ -418,7 +474,7 @@ function avPhotoAnalyze(img, opts) {
   // whose centre is mostly NOT the face colour (dark brown hair passes the
   // chroma test, a shaded forehead fails it — the Lab distance to the
   // cheeks decides instead).
-  var faceLab = rgb2lab(st.rgb[0], st.rgb[1], st.rgb[2]), seedTop = skinTop;
+  var seedTop = skinTop;
   for (y = skinTop - 1; y >= Math.max(0, Math.round(skinTop - 0.7 * Eref)); y--) {
     var far = 0, ncol = 0;
     for (x = Math.round(cx - 0.3 * Eref); x <= cx + 0.3 * Eref; x++) { if (x < 0 || x >= W) continue; ncol++; if (dLab(at(x, y), faceLab) > 26) far++; }
@@ -507,7 +563,7 @@ function avPhotoAnalyze(img, opts) {
     var rimSides = 0, minRowMax = 1;
     [eL, eR].forEach(function (e) {
       var rim = 0, rtot = 0, rowMax = 0;
-      for (y = Math.round(e.y + 0.35 * E); y <= e.y + 0.6 * E; y++) {
+      for (y = Math.round(e.y + 0.22 * E); y <= e.y + 0.6 * E; y++) {
         var rd = 0, rn = 0;
         for (x = Math.round(e.x - 0.4 * E); x <= e.x + 0.4 * E; x++) {
           if (x < 0 || y < 0 || x >= W || y >= H || !inFace(x, y)) continue;
@@ -574,8 +630,9 @@ function avPhotoAnalyze(img, opts) {
       if (teeth / tot > 0.12 && dark / tot > 0.15) mouth = 6;
       else if (teeth / tot > 0.09) mouth = 1;
       else if (dark / tot > 0.28) mouth = (mouthH / mouthW > 0.5) ? 7 : 6;
+      else if (ratio > 0.46) mouth = teeth / tot > 0.04 ? 1 : 0; // a very wide mouth is a smile (the lip band often misses the corners' curve)
       else if (curve < -0.025 && ratio > 0.22) mouth = 8;
-      else if (ratio > 0.46 || (curve > 0.03 && ratio > 0.28)) mouth = 0;
+      else if (curve > 0.03 && ratio > 0.28) mouth = 0;
       else if (mouthH / mouthW > 0.6) mouth = 5;
       else mouth = 2;
       if (lipPx.length) { // lipstick: saturated red lips, far from the skin colour
@@ -585,55 +642,50 @@ function avPhotoAnalyze(img, opts) {
     }
   }
 
-  // 8. beard: dark hair-like mass under the chin, narrower than a shirt
-  // would be; moustache right above the lip. Measured on every face (it
-  // also drives the silhouette guess), applied to the masculine one only.
-  var beard = 0, bFrac = 0, mFrac = 0;
+  // 8. beard: the chin zone (mouth → just under the chin) is darker than
+  // the CHEEKS of the same photo — median luminance ratio, which cancels
+  // the lighting (a shadowed face keeps its ratio near 1) — and less
+  // skin-like; the moustache band (nose → lip) likewise. Measured on every
+  // face (it also drives the silhouette guess), applied to the masculine
+  // one only.
+  var beard = 0, bFrac = 0, mFrac = 0, beardDbg = '';
   {
-    // zone: below the mouth down to just under the chin (from the pupils
-    // when known: 1.1-1.85 E, which never reaches a shirt collar)
+    var zoneStats = function (x0, x1, y0, y1, collect) {
+      var ls = [], sk = 0, n = 0;
+      for (var yy = Math.max(0, Math.round(y0)); yy <= Math.min(H - 1, y1); yy++) for (var xx = Math.max(0, Math.round(x0)); xx <= Math.min(W - 1, x1); xx++) {
+        var idx = at(xx, yy); if (lipMask[idx] || isBg(idx, 18, true)) continue; // (not the lips, not the backdrop beside a narrow chin)
+        ls.push(lum[idx]); n++; if (skin[idx]) sk++;
+        if (collect && lum[idx] < skinLum * 0.68) collect.push(D[idx * 4], D[idx * 4 + 1], D[idx * 4 + 2]);
+      }
+      return { med: median(ls), skin: n ? sk / n : 0, n: n };
+    };
     var bz0 = Math.round(top + 0.8 * fh), bz1 = Math.min(H - 1, Math.round(bottom + 0.15 * fh));
     if (eyesOk) { bz0 = Math.round(eyeMidY + 1.1 * E); bz1 = Math.min(H - 1, Math.round(eyeMidY + 1.85 * E)); }
-    var dcnt = 0, dtot = 0, flankD = 0, flankT = 0, bpx = [];
-    for (y = bz0; y <= bz1; y++) {
-      for (x = Math.round(left + 0.12 * fw); x <= right - 0.12 * fw; x++) {
-        if (lipMaxY >= 0 && y >= lipMinY - 0.02 * fh && y <= lipMaxY + 0.02 * fh && x >= lipMinX - 2 && x <= lipMaxX + 2) continue;
-        dtot++; i = at(x, y);
-        if (lum[i] < skinLum * 0.62 && !skin[i]) { dcnt++; bpx.push(D[i * 4], D[i * 4 + 1], D[i * 4 + 2]); }
-      }
-      for (x = Math.max(0, Math.round(left - 0.5 * fw)); x < left - 0.2 * fw; x++) { flankT++; if (lum[at(x, y)] < skinLum * 0.62) flankD++; }
-      for (x = Math.round(right + 0.2 * fw); x <= Math.min(W - 1, Math.round(right + 0.5 * fw)); x++) { flankT++; if (lum[at(x, y)] < skinLum * 0.62) flankD++; }
-    }
-    bFrac = dtot ? dcnt / dtot : 0; var fFrac = flankT ? flankD / flankT : 0;
-    // (lip pixels are skipped, so the band may overlap the detected lips)
-    var mcnt = 0, mtot = 0, mz0 = Math.round(eyeMidY + 0.95 * Eref), mz1 = Math.min(H - 1, Math.round(eyeMidY + 1.3 * Eref));
-    for (y = mz0; y <= mz1; y++) for (x = Math.round(cx - 0.4 * Eref); x <= cx + 0.4 * Eref; x++) {
-      if (y < 0 || y >= H || x < 0 || x >= W) continue; i = at(x, y); if (lipMask[i]) continue;
-      mtot++; if (lum[i] < skinLum * 0.75 && !skin[i]) mcnt++;
-    }
-    mFrac = mtot ? mcnt / mtot : 0;
-    // reference colour: the hair, or the eyebrows when bald
-    var refRgb = hairRgb, bpx2 = [];
-    if (!refRgb && eyesOk) {
-      for (y = Math.round(eyeMidY - 0.5 * E); y < eyeMidY - 0.25 * E; y++) for (x = Math.round(eL.x - 0.3 * E); x <= eR.x + 0.3 * E; x++) {
-        if (x < 0 || y < 0 || x >= W || y >= H) continue; i = at(x, y);
-        if (lum[i] < skinLum * 0.62 && !skin[i]) bpx2.push(D[i * 4], D[i * 4 + 1], D[i * 4 + 2]);
-      }
-      if (bpx2.length >= 15) refRgb = medianRgb(bpx2);
-    }
-    var hairLike = true;
-    var beardRgb = bpx.length >= 30 ? medianRgb(bpx) : null;
-    if (beardRgb && refRgb) hairLike = labDist(rgb2lab.apply(null, beardRgb), rgb2lab(refRgb[0], refRgb[1], refRgb[2])) < 28;
-    // the dark mass is the collar when it has the clothes' colour and not
-    // the hair's (a black tee beside a black beard stays ambiguous)
-    var isCollar = false;
-    if (!eyesOk && beardRgb && clothRgb) {
+    var bpx = [];
+    var chinS = zoneStats(left + 0.12 * fw, right - 0.12 * fw, bz0, bz1, bpx);
+    // cheeks: between the eyes and the mouth, both sides — beard-free even
+    // on most bearded faces
+    var cy0 = eyesOk ? eyeMidY + 0.45 * E : top + 0.5 * fh, cy1 = eyesOk ? eyeMidY + 0.95 * E : top + 0.72 * fh;
+    var ckL = zoneStats(left + 0.08 * fw, left + 0.32 * fw, cy0, cy1), ckR = zoneStats(right - 0.32 * fw, right - 0.08 * fw, cy0, cy1);
+    var cheekMed = (ckL.med + ckR.med) / 2 || 1;
+    var medR = chinS.med / cheekMed;
+    // moustache band: nose bottom → upper lip
+    var mz0 = Math.round(eyeMidY + 0.95 * Eref), mz1 = Math.min(H - 1, Math.round(eyeMidY + 1.3 * Eref));
+    var mS = zoneStats(cx - 0.4 * Eref, cx + 0.4 * Eref, mz0, mz1);
+    var mR = mS.med / cheekMed;
+    bFrac = Math.max(0, 1 - medR); mFrac = Math.max(0, 1 - mR);
+    beardDbg = 'medR=' + medR.toFixed(2) + ' mR=' + mR.toFixed(2) + ' skinChin=' + chinS.skin.toFixed(2) + ' skinCheek=' + ((ckL.skin + ckR.skin) / 2).toFixed(2) + ' chin=' + chinS.med.toFixed(0) + '/' + chinS.n + ' cheek=' + cheekMed.toFixed(0) + ' bz=' + bz0 + '-' + bz1;
+    // the dark mass must look like hair, not like the collar of a dark
+    // garment (free photos only: the guided chin zone never reaches it)
+    var beardRgb = bpx.length >= 30 ? medianRgb(bpx) : null, isCollar = false;
+    if (!eyesOk && beardRgb && clothRgb && hairRgb) {
       var dCloth = labDist(rgb2lab.apply(null, beardRgb), rgb2lab(clothRgb[0], clothRgb[1], clothRgb[2]));
-      var dHair = refRgb ? labDist(rgb2lab.apply(null, beardRgb), rgb2lab(refRgb[0], refRgb[1], refRgb[2])) : 99;
+      var dHair = labDist(rgb2lab.apply(null, beardRgb), rgb2lab(hairRgb[0], hairRgb[1], hairRgb[2]));
       isCollar = dCloth < 12 && dHair > 20;
     }
-    if (bFrac > 0.28 && !isCollar && (hairLike || fFrac < bFrac * 0.7)) beard = (bFrac > 0.5) ? (mFrac > 0.35 ? 4 : 3) : 3;
-    else if (mFrac > 0.3) beard = 1;
+    var bearded = !isCollar && (medR < 0.72 || (medR < 0.8 && chinS.skin < 0.85));
+    if (bearded) beard = (medR < 0.62 && mR < 0.85) ? 4 : 3;
+    else if (mR < 0.72) beard = 1;
   }
 
   // skin tone: lightness first (the palette is a lit-skin ramp, peach-toned:
@@ -653,7 +705,7 @@ function avPhotoAnalyze(img, opts) {
   // rest, the player switches it in one tap.
   var sexGuess = null;
   if (opts.guessSex !== false) {
-    if (beard >= 3 || (beard === 1 && mFrac > 0.45)) sexGuess = 0;
+    if (beard >= 3 || (beard === 1 && mFrac > 0.35)) sexGuess = 0;
     else if (lipstick) sexGuess = 1;
     else if (!bald && !hat && length === 'long') sexGuess = 1;
   }
@@ -698,7 +750,7 @@ function avPhotoAnalyze(img, opts) {
     recipe: recipe,
     debug: { box: [left, top, fw, fh], eyes: [eL, eR], eyesOk: eyesOk, cands: cL.concat(cR), guided: !!guide, mouth: [lipMinX, lipMinY, lipMaxX, lipMaxY],
              hair: { capFrac: capFrac, sideFrac: sideFrac, lowFrac: lowFrac, top: hairTop, rgb: hairRgb, count: hairCount, border: borderTot ? borderHits / borderTot : 0, forehead: foreheadH, skinTop: skinTop },
-             skinLum: skinLum, skinRgb: st.rgb, bgs: bgs, aspect: aspect, jaw: jaw, mouthW: mouthW, bFrac: bFrac, mFrac: mFrac, glassesDbg: glassesDbg, mouthDbg: mouthDbg, sexGuess: sexGuess, lipstick: lipstick, length: length }
+             skinLum: skinLum, skinRgb: st.rgb, bgs: bgs, aspect: aspect, jaw: jaw, mouthW: mouthW, bFrac: bFrac, mFrac: mFrac, glassesDbg: glassesDbg, mouthDbg: mouthDbg, beardDbg: beardDbg, sexGuess: sexGuess, lipstick: lipstick, length: length }
   };
 }
 

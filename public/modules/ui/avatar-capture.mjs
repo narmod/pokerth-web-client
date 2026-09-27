@@ -16,8 +16,11 @@
 
 'use strict';
 
+import { AV_SEX_SAMPLE, avSvg, avSexIcon } from './avatar-vector.mjs';
+
 // Template, as fractions of the viewport square: the face oval runs from
-// the hairline to the chin, temple to temple; eyes sit at 45 % of it.
+// the hairline to the chin, temple to temple; the eye line sits 38 % down
+// the oval (hairline → eyes ≈ 1.1 E, eyes → chin ≈ 1.8 E).
 const AV_GUIDE = { cx: 0.5, cy: 0.44, rx: 0.24, ry: 0.31 };
 const AV_CAPTURE_SIZE = 400;
 const AV_PHOTO_MAXSIDE = 1400; // decoded photo cap (memory on phones)
@@ -31,7 +34,7 @@ function _t(k, fb) {
 
 function _guideSvg() {
   var g = AV_GUIDE, cx = g.cx * 100, cy = g.cy * 100, rx = g.rx * 100, ry = g.ry * 100;
-  var eyeY = cy - 0.1 * ry;
+  var eyeY = cy - 0.24 * ry;
   return '<svg viewBox="0 0 100 100" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">'
     + '<defs><mask id="avcm"><rect width="100" height="100" fill="#fff"/><ellipse cx="' + cx + '" cy="' + cy + '" rx="' + rx + '" ry="' + ry + '" fill="#000"/></mask></defs>'
     + '<rect width="100" height="100" fill="rgba(0,0,0,0.45)" mask="url(#avcm)"/>'
@@ -48,11 +51,17 @@ function _build() {
   root.innerHTML =
     '<div class="avm-cam-card" role="dialog" aria-modal="true">' +
     '<div class="avm-cam-title"><span id="avm-cam-title"></span><sup class="avm-beta">' + _t('avmBeta', 'beta') + '</sup></div>' +
-    '<div class="avm-cam-sex" id="avm-cam-sex" role="radiogroup" aria-label="' + _t('avmSex', 'Silhouette') + '">' +
-    '<span class="avm-axis-label">' + _t('avmSex', 'Silhouette') + '</span>' +
-    '<button type="button" class="avm-opt avm-sex-opt" data-sex="0" role="radio">\u2642</button>' +
-    '<button type="button" class="avm-opt avm-sex-opt" data-sex="1" role="radio">\u2640</button>' +
+    // step 1: the silhouette, two big cards (the photo never decides it)
+    '<div class="avm-cam-choose" id="avm-cam-choose" role="radiogroup" aria-label="' + _t('avmSex', 'Silhouette') + '">' +
+    [0, 1].map(function (sx) {
+      return '<button type="button" class="avm-cam-sexcard" data-sex="' + sx + '" role="radio">'
+        + '<span class="avm-cam-sexpic">' + avSvg(AV_SEX_SAMPLE[sx], 104) + '</span>'
+        + '<span class="avm-cam-sexlbl">' + avSexIcon(sx) + '<span>' + _t(sx === 0 ? 'avmMale' : 'avmFemale', sx === 0 ? 'Man' : 'Woman') + '</span></span>'
+        + '</button>';
+    }).join('') +
     '</div>' +
+    // step 2: the framing
+    '<button type="button" class="avm-btn avm-cam-sexbtn" id="avm-cam-sexbtn" title="' + _t('avmSex', 'Silhouette') + '"></button>' +
     '<div class="avm-cam-view" id="avm-cam-view">' +
     '<video id="avm-cam-video" autoplay playsinline muted style="display:none"></video>' +
     '<div class="avm-cam-guide">' + _guideSvg() + '</div>' +
@@ -209,7 +218,7 @@ function _setMode(st, mode) {
   var cam = mode === 'camera';
   if (st.img) st.img.style.display = cam ? 'none' : '';
   st.video.style.display = cam && st.stream ? '' : 'none';
-  document.getElementById('avm-cam-title').textContent = _t('avmCamTitle', 'Frame your face');
+  if (!st.root.classList.contains('is-choosing')) document.getElementById('avm-cam-title').textContent = _t('avmCamTitle', 'Frame your face');
   document.getElementById('avm-cam-hint').textContent = cam ? _t('avmCamHint', 'Place your face in the oval and look at the camera.') : _t('avmCamHintPhoto', 'Drag and zoom the photo until your face fills the oval.');
   document.getElementById('avm-cam-ok').textContent = cam ? '📷 ' + _t('avmCamShoot', 'Take the photo') : '✓ ' + _t('avmCamUse', 'Use this photo');
   document.getElementById('avm-cam-switch').textContent = (cam || st.noCamera) ? '🖼 ' + _t('avmCamGallery', 'Choose a photo') : '📷 ' + _t('avmCamCamera', 'Camera');
@@ -236,15 +245,34 @@ function avCaptureOpen(opts) {
     sex: opts.sex === 1 ? 1 : 0
   };
   _photoGestures(st);
-  var sexBtns = root.querySelectorAll('#avm-cam-sex .avm-sex-opt');
+  st.pendingFile = (opts.mode === 'photo' && opts.file) ? opts.file : null;
+  var cards = root.querySelectorAll('.avm-cam-sexcard');
   var paintSex = function () {
-    sexBtns.forEach(function (b) {
+    cards.forEach(function (b) {
       var on = +b.getAttribute('data-sex') === st.sex;
       b.classList.toggle('selected', on); b.setAttribute('aria-checked', on ? 'true' : 'false');
     });
+    var sb = document.getElementById('avm-cam-sexbtn');
+    sb.innerHTML = avSexIcon(st.sex) + ' <span>' + _t(st.sex === 0 ? 'avmMale' : 'avmFemale', st.sex === 0 ? 'Man' : 'Woman') + '</span> \u270E';
   };
-  sexBtns.forEach(function (b) { b.addEventListener('click', function () { st.sex = +b.getAttribute('data-sex'); paintSex(); }); });
+  var showChooser = function (on) {
+    root.classList.toggle('is-choosing', on);
+    document.getElementById('avm-cam-title').textContent = on ? _t('avmSex', 'Silhouette') : _t('avmCamTitle', 'Frame your face');
+    if (on) _stopCamera(st);
+  };
+  cards.forEach(function (b) {
+    b.addEventListener('click', function () {
+      st.sex = +b.getAttribute('data-sex'); paintSex();
+      showChooser(false);
+      if (st.pendingFile) { var pf = st.pendingFile; st.pendingFile = null; _setMode(st, 'photo'); _loadPhoto(st, pf); }
+      else if (st.img) _setMode(st, 'photo');
+      else if (st.noCamera) _setMode(st, 'photo');
+      else { _setMode(st, 'camera'); _startCamera(st).then(function () { if (_st === st) _setMode(st, 'camera'); }, function () { if (_st === st) _cameraFailed(st); }); }
+    });
+  });
+  document.getElementById('avm-cam-sexbtn').addEventListener('click', function () { showChooser(true); });
   paintSex();
+  showChooser(true);
   document.getElementById('avm-cam-cancel').addEventListener('click', avCaptureClose);
   document.getElementById('avm-cam-file').addEventListener('change', function () {
     var f = this.files && this.files[0];
@@ -268,13 +296,8 @@ function avCaptureOpen(opts) {
   st.onKey = function (e) { if (e.key === 'Escape') avCaptureClose(); };
   document.addEventListener('keydown', st.onKey);
 
-  if (opts.mode === 'photo' && opts.file) {
-    _setMode(st, 'photo');
-    _loadPhoto(st, opts.file);
-  } else {
-    _setMode(st, 'camera');
-    _startCamera(st).then(function () { if (_st === st) _setMode(st, 'camera'); }, function () { if (_st === st) _cameraFailed(st); });
-  }
+  // the camera (or the photo) starts once the silhouette card is tapped
+  _setMode(st, (opts.mode === 'photo' && opts.file) ? 'photo' : 'camera');
 }
 
 // No camera (or permission refused): photo mode only, the switch button
