@@ -1,4 +1,7 @@
-2026-09-27 version 2.1.9-web.180 (current series):
+2026-09-27 version 2.1.9-web.181 (current series):
+- new: « From a photo » (beta) in the « Create » avatar tab — pick a photo and the portrait is pre-filled from it: face shape, skin tone, hair colour and length, eyes, eye colour, glasses, mouth, beard and background; everything is analysed on your device, the photo is never uploaded nor kept. Works best with a well-lit photo, facing the camera, on a plain background — then adjust to taste
+
+2026-09-27 version 2.1.9-web.180:
 - improvement: portraits of the « Create » tab — mouths, eyes and noses are redrawn in a bolder cartoon style: filled mouths with a lower lip, outlined eyes with a thick upper lid, solid little noses, thicker eyebrows
 - new: two more mouths — a frown and a tongue out
 

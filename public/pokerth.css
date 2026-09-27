@@ -11570,6 +11570,11 @@ body.adv-no-avcreate #avp-tab-create { display: none !important; }
 .avm-mini svg { display: block; }
 .avm-none-opt { min-width: 40px; }
 .avm-use { border-color: var(--gold-dim); color: var(--sel,var(--gold)); }
+.avm-beta {
+  font-size: 0.58rem; letter-spacing: 0.1em; text-transform: uppercase; vertical-align: super;
+  color: var(--sel,var(--gold)); border: 1px solid var(--gold-dim); border-radius: 999px;
+  padding: 0 5px; line-height: 1.4; margin-left: 2px;
+}
 /* ── Pane Importer ── */
 .avi-drop {
   border: 2px dashed var(--border); border-radius: var(--r-md); padding: 20px 14px;

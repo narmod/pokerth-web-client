@@ -14,10 +14,16 @@
 //
 // Advanced option 'avatar_create' (default ON) hides the Create tab via
 // body.adv-no-avcreate (see applyAdvOpts in pokerth.js).
+//
+// « From a photo » (BETA, narmod 2026-09-27): a photo picked from the
+// Create tab is analysed IN THE BROWSER by modules/ui/avatar-photo.mjs (no
+// library, no upload, the photo is never stored) and the estimated axes
+// are merged into the recipe as a starting point.
 
 'use strict';
 
 import { AV_AXES, AV_DEFAULT, avSvg, avPartSvg, avSwatch, avNormalize, avRandom, avVisible } from './avatar-vector.mjs';
+import { avPhotoRecipe } from './avatar-photo.mjs';
 
 // Axis groups shown as chip tabs (gallery-category pattern): only the
 // active group's rows are rendered, keeping the pane short and tidy.
@@ -91,6 +97,8 @@ function _avmRender() {
       '<div class="avm-head-btns">' +
       '<button type="button" class="avm-btn" id="avm-dice">\uD83C\uDFB2 <span></span></button>' +
       '<button type="button" class="avm-btn" id="avm-reset">\u21ba</button>' +
+      '<button type="button" class="avm-btn" id="avm-photo">\uD83D\uDCF7 <span></span> <sup class="avm-beta"></sup></button>' +
+      '<input type="file" id="avm-photo-input" accept="image/*" style="display:none">' +
       '<button type="button" class="avm-btn avm-use" id="avm-use"></button>' +
       '</div>' +
       '</div>' +
@@ -114,7 +122,17 @@ function _avmRender() {
       _avmState = avNormalize(AV_DEFAULT); _avmSanitize(); _avmPersist(); _avmRender();
     });
     document.getElementById('avm-use').addEventListener('click', _avmApply);
+    document.getElementById('avm-photo').addEventListener('click', function () {
+      var inp = document.getElementById('avm-photo-input');
+      if (inp) { inp.value = ''; inp.click(); }
+    });
+    document.getElementById('avm-photo-input').addEventListener('change', function () {
+      var f = this.files && this.files[0];
+      if (f) _avmFromPhoto(f);
+    });
   }
+  document.querySelector('#avm-photo span').textContent = t('avmFromPhoto');
+  document.querySelector('#avm-photo sup').textContent = t('avmBeta');
   document.querySelector('#avm-dice span').textContent = t('avmRandom');
   var _rst = document.getElementById('avm-reset');
   _rst.title = t('avmReset');
@@ -185,6 +203,51 @@ function _avmRender() {
     d.appendChild(line);
     rows.appendChild(d);
   });
+}
+
+// ── From a photo (beta) ──────────────────────────────────────────────────
+// Decodes the file (ImageBitmap when available, Image() fallback — same
+// memory precautions as _processAvatarFile in pokerth-client.html), runs
+// the analysis and merges the estimated axes into the recipe. The
+// silhouette is never guessed: the current one is kept.
+function _avmWarn(key, fallback) {
+  if (typeof window._avWarn === 'function') { window._avWarn(key, fallback); return; }
+  try { alert(t(key)); } catch (e) {}
+}
+function _avmFromPhoto(file) {
+  if (!/^image\//.test(file.type)) { _avmWarn('avImgNotImage', 'Please choose an image file.'); return; }
+  var MAX = (typeof window._AV_MAX_FILE_BYTES === 'number') ? window._AV_MAX_FILE_BYTES : 30 * 1024 * 1024;
+  if (file.size > MAX) { _avmWarn('avImgTooLarge', 'This image is too large. Please choose a smaller one.'); return; }
+  var btn = document.getElementById('avm-photo');
+  if (btn) btn.disabled = true;
+  var done = function (res) {
+    if (btn) btn.disabled = false;
+    if (!res || !res.recipe) { _avmWarn('avmPhotoNoFace', 'No face found.'); return; }
+    var next = Object.assign({}, _avmState, res.recipe, { sex: _avmState.sex });
+    _avmState = avNormalize(next);
+    _avmSanitize();
+    _avmPersist(); _avmRender();
+    try { if (typeof window.showToast === 'function') window.showToast(t('avmPhotoDone'), { icon: '\uD83D\uDCF7', duration: 4000 }); } catch (e) {}
+  };
+  var analyse = function (src, w, h, release) {
+    var res = null;
+    try { res = avPhotoRecipe(src, w, h, { sex: _avmState.sex }); } catch (e) { res = null; }
+    try { release && release(); } catch (e) {}
+    done(res);
+  };
+  var viaImage = function () {
+    var url;
+    try { url = URL.createObjectURL(file); } catch (e) { done(null); return; }
+    var img = new Image();
+    img.onload = function () { analyse(img, img.width, img.height, function () { URL.revokeObjectURL(url); img.src = ''; }); };
+    img.onerror = function () { URL.revokeObjectURL(url); done(null); };
+    img.src = url;
+  };
+  if (typeof createImageBitmap === 'function') {
+    createImageBitmap(file).then(function (bmp) {
+      analyse(bmp, bmp.width, bmp.height, function () { bmp.close(); });
+    }, viaImage);
+  } else viaImage();
 }
 
 // Apply: rasterize the SVG on a 96x96 canvas and reuse the photo-import

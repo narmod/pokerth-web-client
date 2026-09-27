@@ -35,10 +35,11 @@ function load(p) {
   (0, eval)(src.replace(/^'use strict';/m, ''));
 }
 load('modules/ui/avatar-vector.mjs');
-// avatar-studio consumes the engine's window._-prefixed exports in the harness.
+load('modules/ui/avatar-photo.mjs');
+// avatar-studio consumes the engines' window._-prefixed exports in the harness.
 let studio = fs.readFileSync(path.join(PUB, 'modules/ui/avatar-studio.mjs'), 'utf8');
-studio = studio.replace(/^import .*$/m,
-  'const AV_AXES = window._AV_AXES, avSvg = window._avSvg, avSwatch = window._avSwatch, avNormalize = window._avNormalize, avRandom = window._avRandom, avVisible = window._avVisible, AV_DEFAULT = window._AV_DEFAULT, AV_CROP = window._AV_CROP;');
+studio = studio.replace(/^import .*$/mg, '');
+studio = 'const AV_AXES = window._AV_AXES, avSvg = window._avSvg, avSwatch = window._avSwatch, avNormalize = window._avNormalize, avRandom = window._avRandom, avVisible = window._avVisible, AV_DEFAULT = window._AV_DEFAULT, AV_CROP = window._AV_CROP, avPartSvg = window._avPartSvg, avPhotoRecipe = window._avPhotoRecipe;\n' + studio;
 studio = studio.replace(/export \{[^}]*\};?/, '');
 (0, eval)(studio.replace(/^'use strict';/m, ''));
 
@@ -167,8 +168,41 @@ next.click();
 ok(document.querySelectorAll('#avm-rows .avm-swatch').length > 0, 'color axes render swatches (Face group)');
 prev.click();
 ok(document.querySelectorAll('#avm-rows .avm-mini').length > 0, 'shape axes render mini previews');
+ok(!!document.getElementById('avm-photo') && !!document.getElementById('avm-photo-input'), 'From-a-photo (beta) button and hidden file input rendered');
+ok(document.querySelector('#avm-photo sup.avm-beta').textContent === 'avmBeta', 'beta badge uses the i18n key');
 window.avStudioTab('import');
 ok(!!document.getElementById('avi-drop'), 'import drop zone rendered');
+
+// 6. Photo analysis (headless, synthetic ImageData): a light-skinned face
+// with dark hair, two dark eyes and a red mouth on a white background.
+function synthFace(opts) {
+  const W = 160, H = 200, data = new Uint8ClampedArray(W * H * 4);
+  const put = (x, y, r, g, b) => { const i = (y * W + x) * 4; data[i] = r; data[i + 1] = g; data[i + 2] = b; data[i + 3] = 255; };
+  for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+    put(x, y, 245, 245, 245);
+    const ex = (x - 80) / 46, ey = (y - 100) / (opts.hair ? 58 : 72); // a bald crown climbs higher
+    if (ex * ex + ey * ey <= 1) put(x, y, 232, 190, 160);            // skin oval
+    if (opts.hair && ex * ex + ey * ey <= 1.35 && y < 62) put(x, y, 60, 40, 30); // hair cap
+  }
+  for (const cx of [62, 98]) for (let y = 88; y <= 96; y++) for (let x = cx - 7; x <= cx + 7; x++) put(x, y, 255, 255, 255); // sclera
+  for (const cx of [62, 98]) for (let y = 89; y <= 95; y++) for (let x = cx - 3; x <= cx + 3; x++) put(x, y, 20, 15, 10);   // pupils
+  for (let y = 134; y <= 140; y++) for (let x = 64; x <= 96; x++) put(x, y, 200, 70, 70);                                  // lips
+  return { width: W, height: H, data };
+}
+const resHair = window._avPhotoAnalyze(synthFace({ hair: true }), { sex: 0 });
+ok(!!resHair && !!resHair.recipe, 'photo analysis finds the synthetic face');
+if (resHair) {
+  ok(resHair.debug.eyesOk, 'both pupils found (box rebuilt from the eyes)');
+  ok(resHair.recipe.skin <= 2, 'light skin tone mapped to a light palette entry (' + resHair.recipe.skin + ')');
+  ok(resHair.recipe.hair !== 0 && resHair.recipe.hairc <= 1, 'dark hair cap → not bald, dark hair colour (' + resHair.recipe.hair + '/' + resHair.recipe.hairc + ')');
+  ok(resHair.recipe.eyes === 0 || resHair.recipe.eyes === 1, 'open eyes (' + resHair.recipe.eyes + ')');
+  ok(resHair.recipe.beard === 0 && resHair.recipe.glasses === 0 && resHair.recipe.hat === 0, 'no beard, glasses or hat on the plain face');
+  ok(AXES.every(ax => !(ax.id in resHair.recipe) || (resHair.recipe[ax.id] >= 0 && resHair.recipe[ax.id] < ax.n)), 'every estimated axis is in range');
+}
+const resBald = window._avPhotoAnalyze(synthFace({ hair: false }), { sex: 0 });
+ok(!!resBald && resBald.recipe.hair === 0, 'no hair cap → bald');
+const blank = { width: 64, height: 64, data: new Uint8ClampedArray(64 * 64 * 4).fill(255) };
+ok(window._avPhotoAnalyze(blank, { sex: 0 }) === null, 'blank image → no face');
 window.avStudioReset();
 ok(document.getElementById('avp-pane-gallery').style.display === '', 'reset returns to gallery');
 document.body.classList.add('adv-no-avcreate');
