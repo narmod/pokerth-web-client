@@ -560,13 +560,13 @@ function _hair(ctx, i, hc, face) {
       if (!ctx.seenClip) ctx.seenClip = {};
       if (!ctx.seenClip[band]) {
         ctx.seenClip[band] = 1;
-        ctx.defs.push('<clipPath id="' + band + '"><path d="M0 68 Q30 58 60 70 L60 122 L0 122z M200 68 Q170 58 140 70 L140 122 L200 122z"/></clipPath>');
+        ctx.defs.push('<clipPath id="' + band + '"><path d="M0 68 Q30 58 60 70 L60 104 Q54 114 0 112z M200 68 Q170 58 140 70 L140 104 Q146 114 200 112z"/></clipPath>');
       }
       // Back: the hair round the back of the head peeks out on both sides
       // (the head outline itself, grown, so it hugs every face); the crown
       // keeps its shine. (The former temple tufts read as blocks beside
       // the wider masculine outlines — gone in 2.1.9-web.195.)
-      return ['<g clip-path="url(#' + band + ')"><path d="' + _headD(face || 0) + '" fill="' + f + '" transform="translate(100,94) scale(1.1) translate(-100,-94)"/></g>',
+      return ['<g data-fit="1" clip-path="url(#' + band + ')"><path d="' + _headD(face || 0) + '" fill="' + f + '" transform="translate(100,94) scale(1.14,1.1) translate(-100,-94)"/></g>',
         '<ellipse cx="84" cy="48" rx="14" ry="7" fill="#fff" opacity=".35"/>'];
     }
     case 17: // mohawk crest
@@ -713,35 +713,43 @@ function _hair(ctx, i, hc, face) {
 
 // ── Beard / moustache (drawn under the mouth) ────────────────────────────
 // Jaw beards are the lower part of the HEAD SHAPE itself (clipped to the
-// face outline, grown a little so they overhang the jaw): they follow the
-// oval, round and square faces exactly. Moustache and goatee are local.
-// Outer corners taper under the ears so the grown outline never shows a
-// flat cut beside the temples.
-// (the outer edges sit well outside every head outline — the clip draws
-// the sideburn line — only the cheek line in the middle matters)
-// (sideburns start at ear-lobe level, y ≈ 104–106 — the former y 90–96
-// framed the face up to the eyes: 2.1.9-web.201)
-var BEARD_SHORT = 'M10 170 L24 126 Q30 108 40 106 Q52 130 70 134 Q86 124 100 126 Q114 124 130 134 Q148 130 160 106 Q170 108 176 126 L190 170 L190 220 L10 220z';
-var BEARD_FULL = 'M10 170 L22 124 Q26 104 40 102 Q52 126 72 130 Q86 122 100 124 Q114 122 128 130 Q148 126 160 102 Q174 104 178 124 L190 170 L190 220 L10 220z';
+// face outline, grown a little so they overhang the jaw): they follow
+// every outline exactly. The cheek line — where the beard stops on the
+// cheek — is built from the outline's landmarks (FACE_PTS, 2.1.9-web.203):
+// the sideburn tip sits ON the edge under the ear (y 103 / 106), the band
+// is ≈ 5 px wide on the cheek (y 120), ≈ 17 px at the jaw angle (y 134),
+// then the whole jaw and chin — the same band on a wide round face and on
+// a narrow long one (the former fixed masks gave the wide faces a beard
+// from the ear and the narrow ones only from the jaw). Moustache and
+// goatee are local; the goatee hangs from the chin landmark.
+// (sideburns start at ear-lobe level — the former y 90–96 framed the
+// face up to the eyes: 2.1.9-web.201)
+function _beardMask(k, full) {
+  var p = _facePts(k), e = p[2], c = p[3], j = p[4];
+  var tx = 100 - e + 1, ty = full ? 103 : 106, cx = 100 - c + (full ? 3 : 5), cy = full ? 124 : 128, jx = 100 - j + (full ? 16 : 18), jy = full ? 132 : 134, ly = full ? 122 : 124;
+  return 'M10 170 L' + (tx - 16) + ' 126 Q' + (tx - 8) + ' ' + (ty + 3) + ' ' + tx + ' ' + ty
+    + ' Q' + cx + ' ' + cy + ' ' + jx + ' ' + jy + ' Q86 ' + ly + ' 100 ' + (ly + 2) + ' Q114 ' + ly + ' ' + (200 - jx) + ' ' + jy
+    + ' Q' + (200 - cx) + ' ' + cy + ' ' + (200 - tx) + ' ' + ty + ' Q' + (200 - tx + 8) + ' ' + (ty + 3) + ' ' + (200 - tx + 16) + ' 126 L190 170 L190 220 L10 220z';
+}
 
 function _beard(ctx, i, hc, face) {
-  var f = ctx.v(hc[0]);
+  var f = ctx.v(hc[0]), p = _facePts(face), chin = p[6], w = p[5] + 6, dy = chin - 153;
   var MOUS = '<path d="M82 124 Q92 116 100 121 Q108 116 118 124 Q116 131 106 127 Q100 126 94 127 Q84 131 82 124z" fill="' + f + '"/>';
-  var jaw = function (mask, grow, extra) {
-    return '<g clip-path="url(#' + _headClip(ctx, face, grow) + ')"><path d="' + mask + '" fill="' + (extra || f) + '"/></g>';
+  var jaw = function (full, grow, extra) {
+    return '<g clip-path="url(#' + _headClip(ctx, face, grow) + ')"><path d="' + _beardMask(face, full) + '" fill="' + (extra || f) + '"/></g>';
   };
   switch (i) {
     case 0: return '';
     case 1: return MOUS; // moustache
-    case 2: return '<path d="M88 140 Q100 162 112 140 Q106 146 100 146 Q94 146 88 140z" fill="' + f + '"/>' + MOUS; // goatee
-    case 3: return jaw(BEARD_SHORT, 1.05) + MOUS; // short beard
-    case 5: return '<g opacity=".3">' + jaw(BEARD_SHORT, 1, hc[0]) // stubble
+    case 2: return '<path d="M88 ' + (chin - 13) + ' Q100 ' + (chin + 9) + ' 112 ' + (chin - 13) + ' Q106 ' + (chin - 7) + ' 100 ' + (chin - 7) + ' Q94 ' + (chin - 7) + ' 88 ' + (chin - 13) + 'z" fill="' + f + '"/>' + MOUS; // goatee
+    case 3: return jaw(false, [1.01, 1.06]) + MOUS; // short beard
+    case 5: return '<g opacity=".3">' + jaw(false, 1, hc[0]) // stubble
       + '<path d="M84 124 Q100 118 116 124" stroke="' + hc[0] + '" stroke-width="4" fill="none" stroke-linecap="round"/></g>';
-    case 6: return jaw(BEARD_FULL, 1.09) // long beard: grows out of the jaw beard and tapers to a rounded point on the chest (2.1.9-web.202)
-      + '<path d="M56 128 Q70 146 100 146 Q130 146 144 128 Q142 164 124 186 Q110 202 100 204 Q90 202 76 186 Q58 164 56 128z" fill="' + f + '"/>'
-      + '<path d="M84 156 Q88 176 86 192 M100 152 Q102 176 100 198 M116 156 Q112 176 114 192" stroke="' + _mix(hc[0], 0.78) + '" stroke-width="2.2" fill="none" stroke-linecap="round" opacity=".75"/>'
-      + '<path d="M70 146 Q68 168 78 184 M130 146 Q132 168 122 184" stroke="' + _mix(hc[0], 1.25) + '" stroke-width="2" fill="none" stroke-linecap="round" opacity=".45"/>' + MOUS;
-    default: return jaw(BEARD_FULL, 1.1) + MOUS; // 4: full beard
+    case 6: return jaw(true, [1.02, 1.14]) // long beard: grows out of the jaw beard and tapers to a rounded point on the chest (2.1.9-web.202); width from the jaw landmark, length from the chin
+      + '<path d="M' + (100 - w) + ' 128 Q' + (114 - w) + ' 146 100 146 Q' + (86 + w) + ' 146 ' + (100 + w) + ' 128 Q' + (98 + w) + ' ' + (164 + dy) + ' ' + (80 + w) + ' ' + (186 + dy) + ' Q110 ' + (202 + dy) + ' 100 ' + (204 + dy) + ' Q90 ' + (202 + dy) + ' ' + (120 - w) + ' ' + (186 + dy) + ' Q' + (102 - w) + ' ' + (164 + dy) + ' ' + (100 - w) + ' 128z" fill="' + f + '"/>'
+      + '<path d="M84 156 Q88 176 86 ' + (192 + dy) + ' M100 152 Q102 176 100 ' + (198 + dy) + ' M116 156 Q112 176 114 ' + (192 + dy) + '" stroke="' + _mix(hc[0], 0.78) + '" stroke-width="2.2" fill="none" stroke-linecap="round" opacity=".75"/>'
+      + '<path d="M' + (114 - w) + ' 146 Q' + (112 - w) + ' ' + (168 + dy) + ' ' + (122 - w) + ' ' + (184 + dy) + ' M' + (86 + w) + ' 146 Q' + (88 + w) + ' ' + (168 + dy) + ' ' + (78 + w) + ' ' + (184 + dy) + '" stroke="' + _mix(hc[0], 1.25) + '" stroke-width="2" fill="none" stroke-linecap="round" opacity=".45"/>' + MOUS;
+    default: return jaw(true, [1.02, 1.12]) + MOUS; // 4: full beard
   }
 }
 
@@ -977,19 +985,100 @@ function _headD(k) {
   }
 }
 function _faceKey(r) { return (r.face || 0) + (r.sex === 1 ? AV_FACE_N : 0); }
-// Half-width of each outline at ear level (y ≈ 100): hair, hats, the
-// temple underlay and the ears follow it, so nothing floats off a wide
-// jaw or pokes out beside a narrow one (drawings are made for ±53).
-var HEAD_HW = [55, 59, 54, 50, 57, 51, 56, 55, 49, 53];
+// ── Face landmarks ──────────────────────────────────────────────────────
+// Per outline (face key): half-widths at the temples (y 60 — hat brim,
+// hairline), at ear level (y 100), under the ear (y 104), on the cheek
+// (y 120), at the jaw angle (y 134) and along the jaw (y 142), then the
+// chin's y. Hair, hats, the temple underlay, the beards and the ears are
+// fitted from these instead of one ear-level width (2.1.9-web.203; the
+// ear-level values are the former HEAD_HW).
+var FACE_PTS = [
+  [49, 55, 54, 51, 44, 38, 153], // 0 masculine oval, firm jaw
+  [52, 59, 58, 55, 49, 43, 154], // 1 round, flat chin
+  [50, 54, 54, 54, 51, 45, 152], // 2 square jaw
+  [46, 50, 50, 50, 48, 45, 155], // 3 long, rectangular
+  [47, 57, 55, 46, 36, 30, 155], // 4 rugged: wide cheekbones, angular chin
+  [45, 51, 50, 46, 37, 30, 155], // 5 feminine oval, tapered chin
+  [44, 56, 55, 49, 38, 27, 149], // 6 round
+  [50, 55, 52, 44, 34, 26, 156], // 7 heart
+  [44, 49, 48, 45, 40, 34, 158], // 8 long, slim
+  [44, 53, 52, 45, 36, 29, 156]  // 9 soft diamond
+];
+function _facePts(k) { return FACE_PTS[k] || FACE_PTS[0]; }
+var HEAD_HW = FACE_PTS.map(function (p) { return p[1]; });
 function _headHW(k) { return HEAD_HW[k] || 53; }
-// clipPath of the head outline, scaled by `grow` around the face centre.
+// The hair, the underlay and the hats are drawn for a ±53 oval. Each
+// outline widens or narrows them by a factor that VARIES WITH THE
+// HEIGHT: the temple factor above the brow line (y ≤ 60), the ear factor
+// at ear level (y ≥ 100), blended in between — so a narrow crown over
+// wide cheekbones (rugged) and a wide crown over a narrow jaw (heart)
+// both wear the same drawing. Below the ears the ear factor is kept:
+// hair falls straight, it does not hug the jaw. The masculine oval keeps
+// the single 55/53 factor it always had.
+function _wfac(k) {
+  var p = _facePts(k), r = FACE_PTS[0];
+  return [p[0] / r[0] * (r[1] / 53), p[1] / 53];
+}
+// Warp an SVG snippet (path data, circles, ellipses, rects, lines) by
+// _wfac: every x is scaled around x = 100 by the factor at its own y.
+// Path data is absolute (M L Q C T S H V A Z), as the engine draws it.
+// A `data-fit` snippet is already built from the outline: untouched.
+function _warp(svg, k) {
+  if (!svg || svg.indexOf('data-fit') !== -1) return svg;
+  var fk = _wfac(k), a = fk[0], b = fk[1];
+  if (Math.abs(a - 1) < 0.003 && Math.abs(b - 1) < 0.003) return svg;
+  var S = function (y) { return y <= 60 ? a : y >= 100 ? b : a + (b - a) * (y - 60) / 40; };
+  var N = function (v) { return String(Math.round(v * 10) / 10); };
+  var X = function (x, y) { return N(100 + (x - 100) * S(y)); };
+  var path = function (d) {
+    var t = d.match(/[A-Za-z]|-?\d*\.?\d+(?:e-?\d+)?/g) || [], o = '', i = 0, c = '', cy = 0;
+    while (i < t.length) {
+      if (/[A-Za-z]/.test(t[i])) { c = t[i++]; o += (o ? ' ' : '') + c; continue; }
+      if (c === 'H') { o += ' ' + X(+t[i], cy); i += 1; }
+      else if (c === 'V') { cy = +t[i]; o += ' ' + t[i]; i += 1; }
+      else if (c === 'A') { // rx ry rot large sweep x y
+        cy = +t[i + 6];
+        o += ' ' + N(+t[i] * S(cy)) + ' ' + t[i + 1] + ' ' + t[i + 2] + ' ' + t[i + 3] + ' ' + t[i + 4] + ' ' + X(+t[i + 5], cy) + ' ' + t[i + 6]; i += 7;
+      } else { cy = +t[i + 1]; o += ' ' + X(+t[i], cy) + ' ' + t[i + 1]; i += 2; } // M L T Q S C: pairs
+    }
+    return o;
+  };
+  var at = function (el, n) { var m = el.match(new RegExp(' ' + n + '="(-?[\\d.]+)"')); return m ? +m[1] : null; };
+  var set = function (el, n, v) { return el.replace(new RegExp(' ' + n + '="-?[\\d.]+"'), ' ' + n + '="' + v + '"'); };
+  svg = svg.replace(/ d="([^"]*)"/g, function (m, d) { return ' d="' + path(d) + '"'; });
+  return svg.replace(/<(circle|ellipse|rect|line)\b[^>]*>/g, function (el, tag) {
+    var x, y, w, h;
+    if (tag === 'circle' || tag === 'ellipse') {
+      x = at(el, 'cx'); y = at(el, 'cy');
+      if (x === null || y === null) return el;
+      el = set(el, 'cx', X(x, y));
+      if (tag === 'ellipse' && (w = at(el, 'rx')) !== null) el = set(el, 'rx', N(w * S(y)));
+    } else if (tag === 'rect') {
+      x = at(el, 'x'); y = at(el, 'y') || 0; w = at(el, 'width'); h = at(el, 'height') || 0;
+      if (x === null || w === null) return el;
+      y += h / 2;
+      el = set(set(el, 'x', X(x, y)), 'width', N(w * S(y)));
+    } else { // line
+      x = at(el, 'x1'); y = at(el, 'y1'); w = at(el, 'x2'); h = at(el, 'y2');
+      if (x === null || y === null || w === null || h === null) return el;
+      el = set(set(el, 'x1', X(x, y)), 'x2', X(w, h));
+    }
+    return el;
+  });
+}
+// clipPath of the head outline, grown: a number scales it uniformly
+// around the face centre (y 94); a pair [sx, sy] scales it around ear
+// level (100, 100) — the beards overhang the jaw and the chin (sy) with
+// hardly any rim beside the cheeks (sx).
 function _headClip(ctx, face, grow) {
-  var id = ctx.cid + 'hc' + face + '_' + Math.round(grow * 100);
+  var pair = grow && grow.length === 2, tr = '';
+  var id = ctx.cid + 'hc' + face + '_' + (pair ? Math.round(grow[0] * 100) + '_' + Math.round(grow[1] * 100) : Math.round(grow * 100));
   if (!ctx.seenClip) ctx.seenClip = {};
   if (!ctx.seenClip[id]) {
     ctx.seenClip[id] = 1;
-    ctx.defs.push('<clipPath id="' + id + '"><path d="' + _headD(face) + '"'
-      + (grow !== 1 ? ' transform="translate(100,94) scale(' + grow + ') translate(-100,-94)"' : '') + '/></clipPath>');
+    if (pair) tr = ' transform="translate(100,100) scale(' + grow[0] + ',' + grow[1] + ') translate(-100,-100)"';
+    else if (grow !== 1) tr = ' transform="translate(100,94) scale(' + grow + ') translate(-100,-94)"';
+    ctx.defs.push('<clipPath id="' + id + '"><path d="' + _headD(face) + '"' + tr + '/></clipPath>');
   }
   return id;
 }
@@ -1079,10 +1168,9 @@ function avSvg(recipe, size) {
   var sz = size || 200;
   var cid = _cid(), ctx = _ctx(cid);
   var fem = r.sex === 1;
-  // Round face (face 1) is wider than the oval the hair, beard and hats
-  // were drawn for: widen them so they hug the head.
+  // Hair, underlay and hats are drawn for a ±53 oval: _warp fits them to
+  // the outline's temple and ear widths (FACE_PTS).
   var fk = _faceKey(r), hair = _hair(ctx, r.hair, hc, fk);
-  var wk = _headHW(fk) / 53; // hair and hats are drawn for the ±53 oval
   var covers = _hatCovers(r.hat);
   var hatClip = AV_SHORT_HAIR[r.hair] ? 'hs' : 'hl';
   var clipHair = function (s) { return covers && s ? '<g clip-path="url(#' + cid + hatClip + ')">' + s + '</g>' : s; };
@@ -1094,15 +1182,15 @@ function avSvg(recipe, size) {
     + '<rect x="2.5" y="2.5" width="195" height="195" fill="#c9992e"/>'
     + '<rect x="6" y="6" width="188" height="188" fill="url(#' + cid + 'bg)"/>'
     + '<g clip-path="url(#' + cid + ')">'
-    + _sx(wk, clipHair(hair[0]
+    + clipHair(_warp(hair[0]
         // Underlay: the hair mass behind the head fills the temples, so
         // the hairline hugs every face shape (no backdrop between hair
         // and skin). Bald, balding and mohawk styles have none.
-        + (AV_NO_UNDERLAY[r.hair] ? '' : '<path d="M45 98 Q42 30 100 28 Q158 30 155 98z" fill="' + _mix(hc[0], 0.85) + '"/>')))
+        + (AV_NO_UNDERLAY[r.hair] ? '' : '<path d="M45 98 Q42 30 100 28 Q158 30 155 98z" fill="' + _mix(hc[0], 0.85) + '"/>'), fk))
     + _sx(fem ? 0.86 : 1, _neck(skin) + _outfit(ctx, r.outfit, skin, r.outfitc ? AV_OUTFITC[r.outfitc - 1] : null))
     + _earsSkin(skin, _headHW(fk))
     + _head(ctx, fk, skin)
-    + (hair[2] ? clipHair('<g clip-path="url(#' + _headClip(ctx, fk, 1.02) + ')">' + _sx(wk, hair[2]) + '</g>') : '')
+    + (hair[2] ? clipHair('<g clip-path="url(#' + _headClip(ctx, fk, 1.02) + ')">' + _warp(hair[2], fk) + '</g>') : '')
     + _marks(r.marks, skin[1])
     // (blush: a feminine touch, barely there on men)
     + '<ellipse cx="68" cy="117" rx="9" ry="5.5" fill="#ff7f86" opacity="' + (fem ? '.32' : '.1') + '"/>'
@@ -1114,9 +1202,9 @@ function avSvg(recipe, size) {
     // Brows follow hair color (a natural one on fantasy hair)
     + '<path d="M68 80 Q78 74 88 79 M112 79 Q122 74 132 80" stroke="' + hcN[0] + '" stroke-width="' + (fem ? 4 : 5.4) + '" stroke-linecap="round" fill="none"/>'
     + _ears(r.ears, _headHW(fk))
-    + _sx(wk, clipHair(hair[1]))
+    + clipHair(_warp(hair[1], fk))
     + _glasses(r.glasses)
-    + _sx(wk, _hat(ctx, r.hat))
+    + _warp(_hat(ctx, r.hat), fk)
     + '</g>'
     + '<rect x="6" y="6" width="188" height="188" fill="none" stroke="#8f6a1d" stroke-width="1"/>';
   return _wrap('0 0 200 200', sz, ctx, body);

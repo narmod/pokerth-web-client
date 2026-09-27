@@ -1,4 +1,7 @@
-2026-09-27 version 2.1.9-web.202 (current series):
+2026-09-27 version 2.1.9-web.203 (current series):
+- improvement: toon portraits — every face shape now carries its own landmarks (temples, ears, cheeks, jaw, chin) and the hair, hats, beards and ears are fitted from them: the hair follows the head width at every height (a narrow crown over wide cheekbones, a wide crown over a narrow jaw), a beard starts right under the ear and keeps the same thickness on the cheek whatever the face, overhangs the chin instead of sticking out beside the cheeks, the goatee hangs from the chin and the balding ring stops at the ear lobe
+
+2026-09-27 version 2.1.9-web.202:
 - improvement: toon portraits — the men's curly hair is made of curls of uneven size (no more rows of identical pearls); the bed-head strands are attached to the head; the long beard grows out of the jaw beard and tapers to a rounded point on the chest; the women's curly ponytail falls beside the head instead of through it; the braided low bun keeps its braid readable on black hair; the long locs are drawn like the dreadlocks (twists from the crown, locks of uneven length)
 
 2026-09-27 version 2.1.9-web.201:
