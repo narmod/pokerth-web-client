@@ -18,7 +18,8 @@ one object in one file; nothing else changes.
 | `avatar-parts/outfits.mjs` | 43 garments |
 | `avatar-parts/face-parts.mjs` | eyes, eyebrows, noses, mouths, skin marks, beards |
 | `avatar-parts/extras.mjs` | glasses, earrings / piercings, hats, badges, the retired shoulder axis |
-| `avatar-parts/expressions.mjs` | the 12 expressions (brows + eyes + mouth presets) and their overlays (`FX`) |
+| `avatar-parts/expressions.mjs` | the 15 expressions (brows + eyes + mouth presets) and their overlays (`FX`) |
+| `avatar-parts/presets.mjs` | the 10 starter characters (whole recipes shown as a gallery at the start of the Create tab) |
 | `avatar-parts/legacy.mjs` | frozen v1 / v2 index tables — the migration of portraits saved before web.209. **Never edit an existing row.** |
 
 `scripts/test-avatar-studio.mjs` renders every part on both silhouettes and
@@ -77,6 +78,22 @@ Per family:
   expression at render time (table reactions).
 - **faces** — an outline is a `_headD(k)` case + a `FACE_PTS` row in
   helpers.mjs, then `{ id, sex, slot, key }` in faces.mjs.
+
+## Starter characters and unlockable options
+
+A preset is `{ id, label, recipe, [unlock] }` in `presets.mjs`: the recipe
+holds part ids (missing axes take the defaults) and must be coherent with
+its silhouette (the test checks it). Its `label` is an i18n key (every
+language file).
+
+Any part or preset may carry `unlock: '<requirement id>'`. It stays visible
+in the studio, greyed out with a lock, is skipped by the dice and cannot be
+picked until the requirement is reported earned; a saved portrait that
+already holds it keeps rendering. The future rewards system (achievements,
+actions at the table, events…) only has to publish what is earned as
+`window._avUnlocks` — an array or `Set` of requirement ids, or a
+`function (id) → boolean` — and re-render the studio. Nothing is locked today;
+`avLocked(axis, id)` / `avPresetLocked(id)` are the engine's checks.
 
 ## Adding a part, step by step
 

@@ -28,11 +28,13 @@
 'use strict';
 import { AXES } from './avatar-parts/index.mjs';
 import { FX } from './avatar-parts/expressions.mjs';
+import { PRESETS } from './avatar-parts/presets.mjs';
 import { lashes } from './avatar-parts/face-parts.mjs';
 import { V1_SKIN, V2, V2_FACE } from './avatar-parts/legacy.mjs';
 import { _mix, _ctx, _sx, _warp, _hatFit, _headClip, _head, _earsSkin, _neck, _cid, _wrap, _headHW, _facePts, _earring, BROW_RING, HAT_LINE, HAT_SHORT_BOTTOM } from './avatar-parts/helpers.mjs';
 
 const AV_AXES = AXES;
+const AV_PRESETS = PRESETS;
 const AV_RECIPE_V = 3;
 
 // Lookups: axis by id, part by (axis, id).
@@ -62,7 +64,7 @@ function _migrate(r) {
   var skin = typeof r.skin === 'number' ? Math.floor(r.skin) : undefined;
   if (skin !== undefined && !(r.v >= 2)) skin = V1_SKIN[skin] !== undefined ? V1_SKIN[skin] : 1;
   Object.keys(V2).forEach(function (ax) {
-    var n = ax === 'skin' ? skin : r[ax];
+    var n = (ax === 'skin' && skin !== undefined) ? skin : r[ax];
     if (typeof n === 'number') { var id = V2[ax][Math.floor(n)]; if (id !== undefined) o[ax] = id; }
     else if (typeof n === 'string') o[ax] = n;
   });
@@ -129,10 +131,29 @@ function avSanitize(r) {
   return r;
 }
 
+// ── Unlockable options (2.1.9-web.210) ────────────────────────────────────
+// A part or a preset may carry `unlock: '<requirement id>'`: it stays
+// visible but greyed out in the studio and skipped by the dice until the
+// requirement is reported earned. The future rewards system (achievements,
+// actions at the table…) publishes what is earned as window._avUnlocks — an
+// array / Set of requirement ids, or a function(id) → boolean. Nothing is
+// locked today; saved portraits always render whatever they hold.
+function _unlocked(req) {
+  var u = (typeof window !== 'undefined') ? window._avUnlocks : null;
+  if (!u) return false;
+  if (typeof u === 'function') return !!u(req);
+  if (typeof u.has === 'function') return u.has(req);
+  return Array.isArray(u) ? u.indexOf(req) !== -1 : !!u[req];
+}
+function avLocked(axId, id) { var p = avPart(axId, id); return !!(p && p.unlock && !_unlocked(p.unlock)); }
+function avPresetLocked(id) { var p = PRESETS.filter(function (q) { return q.id === id; })[0]; return !!(p && p.unlock && !_unlocked(p.unlock)); }
+
 // ── Dice ─────────────────────────────────────────────────────────────────
 // Optional extras are rarer (axis pNone), striking options carry a lower
-// weight, the backdrop is always white, and a chosen silhouette is kept.
+// weight, the backdrop is always white, a chosen silhouette is kept and
+// locked options are never drawn.
 function _randOk(axId, p, r) {
+  if (p.unlock && !_unlocked(p.unlock)) return false;
   if (axId === 'hat' && p.id !== 'none') { var h = avPart('hair', r.hair); if (h && h.noHatDice) return false; }
   return true;
 }
@@ -280,6 +301,6 @@ function avSwatch(axId, id) {
   return p.swatch || (p.colors && p.colors[0]) || '#888';
 }
 
-export { AV_AXES, AV_DEFAULT, AV_CROP, AV_SEX_SAMPLE, AV_RECIPE_V, avSvg, avPartSvg, avSwatch, avNormalize, avRandom, avVisible, avSanitize, avEffective, avAxis, avPart, avSexIcon };
-for (const [k, v] of Object.entries({ AV_AXES, AV_DEFAULT, AV_CROP, AV_SEX_SAMPLE, AV_RECIPE_V, avSvg, avPartSvg, avSwatch, avNormalize, avRandom, avVisible, avSanitize, avEffective, avAxis, avPart, avSexIcon }))
+export { AV_AXES, AV_PRESETS, AV_DEFAULT, AV_CROP, AV_SEX_SAMPLE, AV_RECIPE_V, avSvg, avPartSvg, avSwatch, avNormalize, avRandom, avVisible, avSanitize, avEffective, avAxis, avPart, avLocked, avPresetLocked, avSexIcon };
+for (const [k, v] of Object.entries({ AV_AXES, AV_PRESETS, AV_DEFAULT, AV_CROP, AV_SEX_SAMPLE, AV_RECIPE_V, avSvg, avPartSvg, avSwatch, avNormalize, avRandom, avVisible, avSanitize, avEffective, avAxis, avPart, avLocked, avPresetLocked, avSexIcon }))
   window['_' + k] = v;

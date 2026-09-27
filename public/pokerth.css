@@ -11571,6 +11571,22 @@ body.adv-no-avcreate #avp-tab-create { display: none !important; }
 .avm-mini svg { display: block; }
 .avm-none-opt { min-width: 40px; }
 .avm-use { border-color: var(--gold-dim); color: var(--sel,var(--gold)); }
+/* Starter characters (2.1.9-web.210): portrait cards with a name */
+.avm-presets { gap: var(--sp-3); }
+.avm-preset {
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
+  padding: 4px 4px 6px; border-radius: 10px; background: var(--inset);
+  border: 2px solid transparent; color: var(--text-hi); cursor: pointer; line-height: 0;
+}
+.avm-preset svg { display: block; border-radius: 6px; }
+.avm-preset:hover { background: rgba(var(--gold-rgb), 0.1); }
+.avm-preset-name { font-size: var(--fs-2xs); line-height: 1.2; letter-spacing: 0.04em; }
+/* Options to earn (future rewards): greyed out with a lock */
+.avm-locked { position: relative; opacity: 0.45; filter: grayscale(0.6); cursor: not-allowed; }
+.avm-locked::after {
+  content: '\1F512'; position: absolute; right: 2px; bottom: 2px; font-size: 12px; line-height: 1;
+  opacity: 1; filter: none;
+}
 /* ── Framing panel (camera / photo under the face template) ── */
 .avm-cam {
   position: fixed; inset: 0; z-index: 10050;

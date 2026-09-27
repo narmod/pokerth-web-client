@@ -24,13 +24,15 @@
 
 'use strict';
 
-import { AV_AXES, AV_DEFAULT, avSvg, avPartSvg, avSwatch, avNormalize, avRandom, avVisible, avSanitize, avSexIcon } from './avatar-vector.mjs';
+import { AV_AXES, AV_PRESETS, AV_DEFAULT, avSvg, avPartSvg, avSwatch, avNormalize, avRandom, avVisible, avSanitize, avLocked, avPresetLocked, avSexIcon } from './avatar-vector.mjs';
 import { avPhotoRecipe } from './avatar-photo.mjs';
 import { avCaptureOpen } from './avatar-capture.mjs';
 
 // Axis groups shown as chip tabs (gallery-category pattern): only the
 // active group's rows are rendered, keeping the pane short and tidy.
 const AV_GROUPS = [
+  // Starter characters (2.1.9-web.210): a gallery of archetypes to load and then customise
+  { icon: '\uD83C\uDFAD', label: 'avmGrpPresets', axes: [], presets: true },
   { icon: '\uD83D\uDC65', label: 'avmGrpBody',  axes: ['sex', 'face'] },
   { icon: '\uD83D\uDC64', label: 'avmGrpFace',  axes: ['skin', 'marks', 'eyes', 'eyec', 'brows', 'nose', 'mouth', 'expression'] },
   { icon: '\uD83D\uDC87', label: 'avmGrpHair',  axes: ['hair', 'hairc', 'beard'] },
@@ -149,6 +151,7 @@ function _avmRender() {
   var active = AV_GROUPS[_avmGroup].axes;
   var rows = document.getElementById('avm-rows');
   rows.innerHTML = '';
+  if (AV_GROUPS[_avmGroup].presets) { _avmRenderPresets(rows); return; }
   AV_AXES.filter(function (ax) {
     if (active.indexOf(ax.id) === -1) return false;
     // Hide axes whose only remaining choice is 'none' for the current
@@ -192,7 +195,11 @@ function _avmRender() {
           // current recipe's palette on the felt backdrop.
           b.innerHTML = avPartSvg(ax.id, i, _avmState, 40);
         }
+        // an option to earn (future rewards): greyed out, a lock, no pick
+        var locked = avLocked(ax.id, i);
+        if (locked) { b.classList.add('avm-locked'); b.title = t('avmLocked'); b.setAttribute('aria-disabled', 'true'); }
         b.addEventListener('click', function () {
+          if (locked) { _avmToast('avmLocked'); return; }
           _avmState[ax.id] = i;
           _avmSanitize();
           _avmPersist(); _avmRender();
@@ -203,6 +210,37 @@ function _avmRender() {
     d.appendChild(line);
     rows.appendChild(d);
   });
+}
+
+// Starter characters: one card per archetype (full portrait + name);
+// tapping one loads its whole recipe, ready to customise.
+function _avmRenderPresets(rows) {
+  var d = document.createElement('div');
+  d.className = 'avm-axis';
+  var line = document.createElement('div');
+  line.className = 'avm-axis-opts avm-presets';
+  AV_PRESETS.forEach(function (p) {
+    var b = document.createElement('button');
+    b.type = 'button';
+    var locked = avPresetLocked(p.id);
+    b.className = 'avm-preset' + (locked ? ' avm-locked' : '');
+    b.setAttribute('aria-label', t(p.label));
+    b.innerHTML = avSvg(Object.assign({ v: 3 }, p.recipe), 72) + '<span class="avm-preset-name">' + t(p.label) + '</span>';
+    if (locked) { b.title = t('avmLocked'); b.setAttribute('aria-disabled', 'true'); }
+    b.addEventListener('click', function () {
+      if (locked) { _avmToast('avmLocked'); return; }
+      _avmState = avNormalize(Object.assign({ v: 3 }, p.recipe));
+      _avmSanitize();
+      _avmPersist(); _avmRender();
+      _avmScrollTop();
+    });
+    line.appendChild(b);
+  });
+  d.appendChild(line);
+  rows.appendChild(d);
+}
+function _avmToast(key) {
+  try { if (typeof window.showToast === 'function') { window.showToast(t(key), { icon: '\uD83D\uDD12', duration: 2500 }); return; } } catch (e) {}
 }
 
 // ── From a photo (beta) ──────────────────────────────────────────────────

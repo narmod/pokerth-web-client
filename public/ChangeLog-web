@@ -1,4 +1,9 @@
-2026-09-27 version 2.1.9-web.209 (current series):
+2026-09-27 version 2.1.9-web.210 (current series):
+- new: toon portraits — the « Create » tab opens on a « Characters » step: ten starter characters (the Godfather, the Cowboy, the Diva, the Shark, the Dealer, the Pirate, the Rocker, the Geek, the Queen, the Pro) — tap one to load it, then customise anything
+- new: toon portraits — three more expressions: proud, bored, playful
+- improvement: toon portraits — options and characters can now be marked « to unlock »: they show greyed out with a lock until earned (nothing is locked yet — the ground for future rewards)
+
+2026-09-27 version 2.1.9-web.209:
 - new: toon portraits — an « Expression » row in the Face step sets the eyebrows, eyes and mouth in one tap: neutral, joy, anger, sadness, surprise, bluff, tilt, sleep, fear, love, win, KO — with their little extras (anger vein, tear, sweat drop, zzz, hearts, stars, dizzy stars); heart, star, crossed and shut eyes, sad / worried / raised brows and a wavy mouth come with it
 - improvement: toon portraits — every option now has a permanent name inside the saved portrait, so options can be added, removed or reordered in the future without ever changing a saved face (portraits saved by older builds are converted on opening); the portrait engine was rebuilt around a catalogue of parts (same drawings, checked pixel for pixel)
 - bugfix: the « From a photo » panel and its analysis are precached for offline use like the rest of the Create tab

@@ -36,7 +36,7 @@ function load(p) {
   src = src.replace(/^import .*$/mg, '').replace(/^export \{[^}]*\};?$/mg, '').replace(/^export (const|var|let|function) /mg, '$1 ').replace(/^(const|let) /mg, 'var ');
   (0, eval)(src.replace(/^'use strict';/m, ''));
 }
-['helpers', 'faces', 'colors', 'hair', 'outfits', 'face-parts', 'extras', 'expressions', 'legacy', 'index'].forEach(f => load('modules/ui/avatar-parts/' + f + '.mjs'));
+['helpers', 'faces', 'colors', 'hair', 'outfits', 'face-parts', 'extras', 'expressions', 'presets', 'legacy', 'index'].forEach(f => load('modules/ui/avatar-parts/' + f + '.mjs'));
 load('modules/ui/avatar-vector.mjs');
 load('modules/ui/avatar-photo.mjs');
 global.AV_SEX_SAMPLE = window._AV_SEX_SAMPLE; global.avSvg = window._avSvg; global.avSexIcon = window._avSexIcon;
@@ -44,7 +44,7 @@ load('modules/ui/avatar-capture.mjs');
 // avatar-studio consumes the engines' window._-prefixed exports in the harness.
 let studio = fs.readFileSync(path.join(PUB, 'modules/ui/avatar-studio.mjs'), 'utf8');
 studio = studio.replace(/^import .*$/mg, '');
-studio = 'const AV_AXES = window._AV_AXES, avSvg = window._avSvg, avSwatch = window._avSwatch, avNormalize = window._avNormalize, avRandom = window._avRandom, avVisible = window._avVisible, avSanitize = window._avSanitize, AV_DEFAULT = window._AV_DEFAULT, AV_CROP = window._AV_CROP, avPartSvg = window._avPartSvg, avPhotoRecipe = window._avPhotoRecipe, avCaptureOpen = window._avCaptureOpen, avSexIcon = window._avSexIcon;\n' + studio;
+studio = 'const AV_AXES = window._AV_AXES, AV_PRESETS = window._AV_PRESETS, avLocked = window._avLocked, avPresetLocked = window._avPresetLocked, avSvg = window._avSvg, avSwatch = window._avSwatch, avNormalize = window._avNormalize, avRandom = window._avRandom, avVisible = window._avVisible, avSanitize = window._avSanitize, AV_DEFAULT = window._AV_DEFAULT, AV_CROP = window._AV_CROP, avPartSvg = window._avPartSvg, avPhotoRecipe = window._avPhotoRecipe, avCaptureOpen = window._avCaptureOpen, avSexIcon = window._avSexIcon;\n' + studio;
 studio = studio.replace(/export \{[^}]*\};?/, '');
 (0, eval)(studio.replace(/^'use strict';/m, ''));
 
@@ -71,7 +71,7 @@ for (const a of AXES) {
 ok(catOk, 'catalogue: unique stable ids, existing defaults, drawable parts, colour swatches' + (catOk ? '' : ' (' + catMsg + ')'));
 ok(n('hair') === 52 && n('outfit') === 43 && n('hat') === 16 && n('bg') === 15 && n('skin') === 7 && n('hairc') === 12 && n('eyec') === 6 && n('outfitc') === 9 && n('marks') === 10 && n('beard') === 7 && n('nose') === 5 && n('glasses') === 9 && n('ears') === 8 && n('badge') === 6 && n('shoulder') === 1,
   'catalogue counts: 52 hairstyles, 43 outfits, 16 hats, 15 backdrops, 7 skins, 12 hair colours, 6 eye colours, 9 outfit colours, 10 marks, 7 beards, 5 noses, 9 glasses, 8 piercings, 6 badges, shoulder retired');
-ok(n('eyes') === 14 && n('brows') === 8 && n('mouth') === 16 && n('expression') === 12, 'expressions: 14 eyes (+ shut, hearts, stars, x), 8 brows (+ raised, sad, worried), 16 mouths (+ wavy), 12 expressions');
+ok(n('eyes') === 14 && n('brows') === 8 && n('mouth') === 16 && n('expression') === 15, 'expressions: 14 eyes (+ shut, hearts, stars, x), 8 brows (+ raised, sad, worried), 16 mouths (+ wavy), 15 expressions (+ proud, bored, playful)');
 const axBadge = ax('badge'), axBrows = ax('brows'), axOc = ax('outfitc');
 ok(axBadge.none && AXES[AXES.length - 1] === axBadge && AXES.indexOf(axBrows) === AXES.findIndex(a => a.id === 'eyec') + 1 && AXES.indexOf(ax('expression')) === AXES.findIndex(a => a.id === 'mouth') + 1, 'axis order: brows after the eye colour, expression after the mouth, badge last');
 ok(axOc.kind === 'color' && axOc.none && axOc.opts[0].id === 'auto', 'outfit colour axis: colour kind, option « auto » = as drawn');
@@ -84,7 +84,7 @@ ok(norm({ v: 2, sex: 0, hair: 43, hat: 15, outfit: 42, skin: 6, bg: 13, marks: 9
   && norm({ v: 2, ears: 7 }).ears === 'brow-ring' && norm({ v: 2, badge: 5 }).badge === 'stack' && norm({ v: 2, brows: 4 }).brows === 'thin-arched', 'v2 recipes (numeric) migrate to the ids of the frozen v2 order');
 ok(norm({ skin: 9 }).skin === 'deep' && norm({ skin: 6 }).skin === 'porcelain' && norm({ skin: 0 }).skin === 'light' && norm({ v: 2, skin: 6 }).skin === 'deep', 'v1 recipes (no v): the ten-tone skin palette is remapped first (9 → deep, porcelain 6 → porcelain, very light 0 → light)');
 ok(norm({ v: 2, sex: 1, face: 2 }).face === 'f-heart' && norm({ v: 2, sex: 0, face: 2 }).face === 'm-square' && norm({ sex: 1 }).face === 'f-oval' && norm({ v: 3, sex: 1, face: 'm-square' }).face === 'm-square', 'face slots migrate per silhouette; the default face follows the silhouette; a v3 face id is kept as saved');
-ok(norm({ v: 3, hair: 'no-such-style', bg: 'nope' }).hair === 'short' && norm({ v: 3, hair: 'no-such-style' }).bg === 'green' && norm({ bg: 99, hair: -3 }).bg === 'green', 'unknown ids and out-of-range indices fall back to the defaults');
+ok(norm({ skin: 'deep', hair: 'lob' }).skin === 'deep' && norm({ skin: 'deep', hair: 'lob' }).hair === 'lob' && norm({ v: 3, hair: 'no-such-style', bg: 'nope' }).hair === 'short' && norm({ v: 3, hair: 'no-such-style' }).bg === 'green' && norm({ bg: 99, hair: -3 }).bg === 'green', 'unknown ids and out-of-range indices fall back to the defaults');
 ok(norm({ v: 2, shoulder: 3 }).shoulder === 'none' && vis('shoulder', 'none', {}) && !vis('shoulder', 'x', {}), 'shoulder accessories retired (only none stays valid)');
 ok(window._avRandom(0).v === 3 && typeof window._avRandom(0).hair === 'string', 'the dice produces v3 recipes');
 
@@ -123,6 +123,33 @@ ok(!vis('mouth', 'grin', { expression: 'joy' }) && !vis('eyes', 'wink', { expres
 ok(part('expression', 'tilt', { sex: 0 }, 40).indexOf('viewBox="38 30 124 124"') !== -1 && part('expression', 'tilt', { sex: 0 }, 40).indexOf('fill="#f3d4d4"') !== -1 && part('expression', 'tilt', { sex: 0 }, 40).indexOf('#8f6a1d') === -1, 'expression vignettes show the whole face with the expression, without the frame');
 const sanit = window._avSanitize(norm({ expression: 'joy', mouth: 'grin', sex: 1, hair: 'short', face: 'm-square' }));
 ok(sanit.mouth === 'grin' && sanit.hair === 'ponytail-high' && sanit.face === 'f-heart', 'avSanitize keeps hidden-row values, replaces a foreign hairstyle by the first feminine one and keeps the face slot (square → heart)');
+
+// 1e. Starter characters (2.1.9-web.210): ten coherent recipes; unlock plumbing for the future rewards system
+const PRE = window._AV_PRESETS;
+ok(Array.isArray(PRE) && PRE.length === 10 && new Set(PRE.map(p => p.id)).size === 10 && PRE.every(p => p.label && p.recipe), '10 starter characters with unique ids, labels and recipes');
+let preOk = true, preMsg = '';
+for (const p of PRE) {
+  const r = norm(p.recipe);
+  for (const a of AXES) if (p.recipe[a.id] !== undefined && r[a.id] !== p.recipe[a.id]) { preOk = false; preMsg += p.id + ':' + a.id + ' '; }
+  const s = window._avSanitize(Object.assign({}, r));
+  for (const a of AXES) if (s[a.id] !== r[a.id]) { preOk = false; preMsg += p.id + ':' + a.id + '(sex) '; }
+  const sv = svg(r, 96);
+  if (sv.includes('NaN') || sv.includes('undefined')) { preOk = false; preMsg += p.id + ':svg '; }
+}
+ok(preOk, 'every starter character uses known ids, is coherent with its silhouette and renders' + (preOk ? '' : ' (' + preMsg + ')'));
+ok(!window._avLocked('hat', 'crown') && !window._avPresetLocked('queen') && !window._avLocked('hat', 'nope'), 'nothing is locked today');
+(function () {
+  const hats = ax('hat'), crown = hats.byId.crown;
+  crown.unlock = 'test-req';
+  const lockedNow = window._avLocked('hat', 'crown');
+  let drawn = 0; for (let k = 0; k < 150; k++) if (window._avRandom(0).hat === 'crown') drawn++;
+  window._avUnlocks = ['test-req'];
+  const afterUnlock = window._avLocked('hat', 'crown');
+  window._avUnlocks = (id) => id === 'test-req';
+  const fnUnlock = window._avLocked('hat', 'crown');
+  delete window._avUnlocks; delete crown.unlock;
+  ok(lockedNow && drawn === 0 && !afterUnlock && !fnUnlock && svg({ hat: 'crown' }).indexOf('L84 26 L100 46 L116 26') !== -1, 'a part with `unlock` is locked until window._avUnlocks (array or function) reports the requirement, the dice skips it, saved portraits still render it');
+})();
 
 // 2. Engine coherence: every option of every axis renders a clean SVG, on both silhouettes and every face slot.
 let clean = true, badMsg = '';
@@ -211,23 +238,30 @@ ok(neutralN > 120, 'the dice mostly leaves the expression neutral (' + neutralN 
 // 5. Tabs + panes
 window.avStudioTab('create');
 ok(document.getElementById('avp-pane-create').style.display === '', 'create pane visible');
-ok(!!document.getElementById('avm-step-label') && document.getElementById('avm-step-label').textContent.indexOf('1/5') !== -1, 'step header shows category 1/5');
-ok(document.getElementById('avm-rows').children.length === 2, 'active group (Silhouette) renders its 2 axis rows');
-ok(document.querySelectorAll('#avm-rows .avm-sex-opt svg').length === 2, 'silhouette chips carry SVG icons instead of glyphs');
+ok(!!document.getElementById('avm-step-label') && document.getElementById('avm-step-label').textContent.indexOf('1/6') !== -1, 'step header shows category 1/6 (starter characters first)');
+const preCards = document.querySelectorAll('#avm-rows .avm-preset');
+ok(preCards.length === 10 && preCards[0].querySelector('svg') && preCards[0].querySelector('.avm-preset-name').textContent === 'avmPreGodfather', 'the first step shows the 10 starter characters as portrait cards with their names');
+preCards[2].click(); // the Diva
+const afterPreset = JSON.parse(localStorage.getItem('pth_avatar_vec'));
+ok(afterPreset.sex === 1 && afterPreset.hair === 'hollywood' && afterPreset.glasses === 'cat-eye' && afterPreset.v === 3, 'tapping a character loads its whole recipe (the Diva: feminine, hollywood waves, cat-eye glasses)');
+preCards[0].click(); // back to the Godfather (masculine) for the row counts below
 const next = document.getElementById('avm-step-next'), prev = document.getElementById('avm-step-prev');
 next.click();
-ok(document.getElementById('avm-rows').children.length === 8, 'Face (2/5) renders 8 rows (skin, marks, eyes, eye colour, brows, nose, mouth, expression)');
+ok(document.getElementById('avm-rows').children.length === 2, 'Silhouette (2/6) renders its 2 axis rows');
+ok(document.querySelectorAll('#avm-rows .avm-sex-opt svg').length === 2, 'silhouette chips carry SVG icons instead of glyphs');
 next.click();
-ok(document.getElementById('avm-rows').children.length === 3, 'stepping to Hair (3/5) renders 3 rows');
+ok(document.getElementById('avm-rows').children.length === 8, 'Face (3/6) renders 8 rows (skin, marks, eyes, eye colour, brows, nose, mouth, expression)');
+next.click();
+ok(document.getElementById('avm-rows').children.length === 3, 'stepping to Hair (4/6) renders 3 rows');
 next.click(); next.click();
-ok(document.getElementById('avm-rows').children.length === 4, 'Extras (5/5) renders 4 rows on the masculine silhouette (glasses, hat, piercings — skull studs and brow ring are shared —, badge; shoulder accessory retired)');
+ok(document.getElementById('avm-rows').children.length === 4, 'Extras (6/6) renders 4 rows on the masculine silhouette (glasses, hat, piercings — skull studs and brow ring are shared —, badge; shoulder accessory retired)');
 next.click();
-ok(document.getElementById('avm-step-label').textContent.indexOf('1/5') !== -1, 'next wraps around to 1/5');
-next.click();
+ok(document.getElementById('avm-step-label').textContent.indexOf('1/6') !== -1, 'next wraps around to 1/6');
+next.click(); next.click();
 ok(document.querySelectorAll('#avm-rows .avm-swatch').length > 0, 'color axes render swatches (Face group)');
 // picking an expression hides the brows / eyes / mouth rows; back to neutral shows them again
 const exRow = Array.from(document.querySelectorAll('#avm-rows .avm-axis')).find(d => d.querySelector('.avm-axis-label').textContent === 'avmExpression');
-ok(!!exRow && exRow.querySelectorAll('button').length === 12, 'the expression row shows its 12 vignettes');
+ok(!!exRow && exRow.querySelectorAll('button').length === 15, 'the expression row shows its 15 vignettes');
 exRow.querySelectorAll('button')[2].click();
 ok(document.getElementById('avm-rows').children.length === 5 && JSON.parse(localStorage.getItem('pth_avatar_vec')).expression === 'anger', 'picking « anger » hides brows / eyes / mouth (5 rows left) and persists the id');
 Array.from(document.querySelectorAll('#avm-rows .avm-axis')).find(d => d.querySelector('.avm-axis-label').textContent === 'avmExpression').querySelectorAll('button')[0].click();
@@ -357,26 +391,28 @@ document.body.classList.remove('adv-no-avcreate');
 
 // 5b. Feminine silhouette hides the facial-hair row in the Hair group
 window.avStudioTab('create');
-document.querySelectorAll('#avm-rows .avm-axis')[0].querySelectorAll('button')[1].click(); // sex -> F
-ok(document.querySelectorAll('#avm-rows .avm-sex-opt').length === 2, 'sex axis renders 2 pictogram chips');
+// (the pane re-opens on the current group — Silhouette after the steps above)
+const sexRow = () => document.querySelectorAll('#avm-rows .avm-axis')[0];
+ok(document.getElementById('avm-step-label').textContent.indexOf('2/6') !== -1 && document.querySelectorAll('#avm-rows .avm-sex-opt').length === 2, 'Silhouette step: sex axis renders 2 pictogram chips');
+sexRow().querySelectorAll('button')[1].click(); // sex -> F
 next.click(); next.click();
 ok(document.getElementById('avm-rows').children.length === 2, 'feminine silhouette: Hair step shows 2 rows (no facial hair)');
 prev.click(); prev.click();
-document.querySelectorAll('#avm-rows .avm-axis')[0].querySelectorAll('button')[0].click(); // sex -> M
+sexRow().querySelectorAll('button')[0].click(); // sex -> M
 next.click(); next.click();
 ok(document.getElementById('avm-rows').children.length === 3, 'masculine silhouette: Hair step shows 3 rows again');
 prev.click(); prev.click();
 
 // 5c. Reset button restores the default recipe
 ok(!!document.getElementById('avm-reset'), 'reset button rendered');
-document.querySelectorAll('#avm-rows .avm-axis')[0].querySelectorAll('button')[1].click(); // sex -> F
+sexRow().querySelectorAll('button')[1].click(); // sex -> F
 document.getElementById('avm-reset').click();
 const afterReset = JSON.parse(localStorage.getItem('pth_avatar_vec'));
 ok(afterReset.v === 3 && afterReset.sex === 0 && afterReset.hair === 'short' && afterReset.glasses === 'none', 'reset restores AV_DEFAULT (v3 ids)');
 
-// 6. Recipe persistence, and a v2 recipe saved by an older build re-opens
+// 6. Recipe persistence
 window.avStudioTab('create');
-document.querySelectorAll('#avm-rows .avm-axis')[0].querySelectorAll('button')[1].click();
+sexRow().querySelectorAll('button')[1].click();
 const persisted = JSON.parse(localStorage.getItem('pth_avatar_vec'));
 ok(persisted && persisted.sex === 1 && persisted.face === 'f-oval' && persisted.hair === 'ponytail-high', 'clicking the feminine silhouette persists the recipe (pth_avatar_vec) with the feminine oval and hairstyle');
 
@@ -385,9 +421,10 @@ const KEYS = ['avmSex','avmFace','avmHat','avmGrpBody','avmGrpFace','avmGrpHair'
   'avmNose','avmBg','avmOutfit','avmSkin','avmMarks','avmHair','avmHairColor','avmBeard',
   'avmEyeShape','avmEyeColor','avmMouth','avmShoulder','avmEarrings','avmNone',
   'avTabGallery','avTabCreate','avTabImport','avmRandom','avmReset','avmUse','avmGlasses','avmBrows','avmBadge','avmExpression','avmOutfitColor',
+  'avmGrpPresets','avmLocked','avmPreGodfather','avmPreCowboy','avmPreDiva','avmPreShark','avmPreDealer','avmPrePirate','avmPreRocker','avmPreGeek','avmPreQueen','avmPrePro',
   'avImportDrop','avImportOr','avImportBtn','avImportHint','advAvatarCreate'];
 // every axis label must be in the list (a new axis without a label would show its key)
-ok(AXES.every(a => KEYS.indexOf(a.label) !== -1), 'every axis label key is covered by the i18n check');
+ok(AXES.every(a => KEYS.indexOf(a.label) !== -1) && PRE.every(p => KEYS.indexOf(p.label) !== -1), 'every axis and character label key is covered by the i18n check');
 const langDir = path.join(PUB, 'modules/lang');
 let langsOk = true, nLang = 0;
 for (const f of fs.readdirSync(langDir).filter(f => f.endsWith('.mjs'))) {

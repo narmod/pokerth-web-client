@@ -60,7 +60,11 @@ const EXPRESSIONS = [
   { id: 'fear', weight: 0.3, set: { brows: 'worried', eyes: 'wide', mouth: 'wavy' }, fx: ['sweat'] },
   { id: 'love', weight: 0.3, set: { brows: 'raised', eyes: 'hearts', mouth: 'smile' }, fx: ['hearts'] },
   { id: 'win', weight: 0.4, set: { brows: 'raised', eyes: 'stars', mouth: 'grin' }, fx: ['stars'] },
-  { id: 'ko', weight: 0.25, set: { brows: 'sad', eyes: 'x', mouth: 'wavy' }, fx: ['dizzy'] }
+  { id: 'ko', weight: 0.25, set: { brows: 'sad', eyes: 'x', mouth: 'wavy' }, fx: ['dizzy'] },
+  // 2.1.9-web.210 — narmod's one-tap chips: proud, bored, playful
+  { id: 'proud', weight: 0.4, set: { brows: 'raised', eyes: 'closed', mouth: 'smirk' } },
+  { id: 'bored', weight: 0.4, set: { brows: 'neutral', eyes: 'heavy', mouth: 'neutral' } },
+  { id: 'playful', weight: 0.4, set: { brows: 'raised', eyes: 'wink', mouth: 'tongue' } }
 ];
 
 export { EXPRESSIONS, FX };
