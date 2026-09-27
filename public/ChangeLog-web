@@ -1,4 +1,7 @@
-2026-09-27 version 2.1.9-web.181 (current series):
+2026-09-27 version 2.1.9-web.182 (current series):
+- improvement: « From a photo » (beta) — better eye detection (eyebrows and eye corners are no longer mistaken for pupils), fairer skin tones (measured on the lit part of the face, not on the shadows or the stubble), hair colour taken from the hair rather than the hairline shadow, glasses only when a frame runs under both eyes, a jaw beard no longer squares the face, and the outfit follows the clothes seen under the chin (dark → hoodie / turtleneck, light → open shirt / sweater)
+
+2026-09-27 version 2.1.9-web.181:
 - new: « From a photo » (beta) in the « Create » avatar tab — pick a photo and the portrait is pre-filled from it: face shape, skin tone, hair colour and length, eyes, eye colour, glasses, mouth, beard and background; everything is analysed on your device, the photo is never uploaded nor kept. Works best with a well-lit photo, facing the camera, on a plain background — then adjust to taste
 
 2026-09-27 version 2.1.9-web.180:
