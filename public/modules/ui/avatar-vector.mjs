@@ -1127,40 +1127,40 @@ function _hat(ctx, i, face) {
         + '<path d="M88 176 L84 198 M112 176 L116 198" stroke="#eef1f4" stroke-width="2.2" stroke-linecap="round"/></g>';
     }
     case 11: // black stetson (outlaw)
-      return '<path d="M24 76 Q100 98 176 76 Q164 66 140 64 L60 64 Q36 66 24 76z" fill="' + ctx.v('#1e1e22') + '"/>'
-        + '<path d="M60 66 Q58 30 74 22 Q100 30 126 22 Q142 30 140 66z" fill="' + ctx.v('#26262c') + '"/>'
-        + '<path d="M60 54 L140 54 L140 62 L60 62z" fill="#3b2f26"/><path d="M96 54 L104 54 L104 62 L96 62z" fill="#c9a24a"/>';
+      return '<path d="M20 78 Q100 100 180 78 Q166 66 140 64 L60 64 Q34 66 20 78z" fill="' + ctx.v('#1e1e22') + '"/>'
+        + '<path d="M54 66 Q52 30 72 22 Q100 30 128 22 Q148 30 146 66z" fill="' + ctx.v('#26262c') + '"/>'
+        + '<path d="M54 54 L146 54 L146 62 L54 62z" fill="#3b2f26"/><path d="M96 54 L104 54 L104 62 L96 62z" fill="#c9a24a"/>';
     case 12: // top hat (masculine)
-      return '<ellipse cx="100" cy="66" rx="62" ry="9" fill="' + ctx.v('#1a1a1f') + '"/>'
-        + '<path d="M62 66 L60 10 Q100 4 140 10 L138 66z" fill="' + ctx.v('#26262c') + '"/>'
-        + '<path d="M61 54 L139 54 L139 62 L61 62z" fill="#8e2632"/>';
+      return '<ellipse cx="100" cy="68" rx="68" ry="9" fill="' + ctx.v('#1a1a1f') + '"/>'
+        + '<path d="M52 68 L50 10 Q100 3 150 10 L148 68z" fill="' + ctx.v('#26262c') + '"/>'
+        + '<path d="M51 55 L149 55 L149 64 L51 64z" fill="#8e2632"/>';
     case 13: // black cap with a spade logo (poker)
       return '<path d="M44 70 Q44 16 100 16 Q156 16 156 70z" fill="' + ctx.v('#1f1f24') + '"/>'
         + '<path d="M44 66 L178 64 Q182 76 152 76 L44 74z" fill="' + ctx.v('#16161a') + '"/><circle cx="100" cy="18" r="5" fill="#16161a"/>'
         + _suit(0, 100, 44, 9, '#f2eee6');
     case 14: // fedora with an ace of spades tucked in the band (poker)
-      return '<ellipse cx="100" cy="66" rx="72" ry="12" fill="' + ctx.v('#3a3a42') + '"/>'
-        + '<path d="M60 66 Q58 22 80 18 Q100 28 120 18 Q142 22 140 66z" fill="' + ctx.v('#4a4a54') + '"/>'
-        + '<path d="M60 52 L140 52 L140 62 L60 62z" fill="#1f1f24"/>'
-        + '<g transform="rotate(-14 130 48)">' + _card(124, 34, 12, 0, false) + '</g>';
+      return '<ellipse cx="100" cy="67" rx="76" ry="12" fill="' + ctx.v('#3a3a42') + '"/>'
+        + '<path d="M54 67 Q52 22 76 17 Q100 27 124 17 Q148 22 146 67z" fill="' + ctx.v('#4a4a54') + '"/>'
+        + '<path d="M54 52 L146 52 L146 62 L54 62z" fill="#1f1f24"/>'
+        + '<g transform="rotate(-14 134 48)">' + _card(128, 34, 12, 0, false) + '</g>';
     case 15: // crown (king of the table) — sits on the hair, does not cover it
-      return '<path d="M56 66 L54 30 L72 48 L86 22 L100 42 L114 22 L128 48 L146 30 L144 66z" fill="' + ctx.v('#e0b23c') + '"/>'
-        + '<path d="M56 60 L144 60 L144 66 L56 66z" fill="#b8892a"/>'
-        + '<circle cx="54" cy="30" r="3" fill="#c62828"/><circle cx="86" cy="22" r="3" fill="#2d6aa3"/><circle cx="114" cy="22" r="3" fill="#2d6aa3"/><circle cx="146" cy="30" r="3" fill="#c62828"/>'
-        + '<circle cx="100" cy="54" r="3.5" fill="#2e8b57"/>';
+      return '<path d="M50 72 L48 36 L68 52 L84 26 L100 46 L116 26 L132 52 L152 36 L150 72z" fill="' + ctx.v('#e0b23c') + '"/>'
+        + '<path d="M50 65 L150 65 L150 72 L50 72z" fill="#b8892a"/>'
+        + '<circle cx="48" cy="36" r="3" fill="#c62828"/><circle cx="84" cy="26" r="3" fill="#2d6aa3"/><circle cx="116" cy="26" r="3" fill="#2d6aa3"/><circle cx="152" cy="36" r="3" fill="#c62828"/>'
+        + '<circle cx="100" cy="58" r="3.5" fill="#2e8b57"/>';
     case 1: // cap
       return '<path d="M44 70 Q44 16 100 16 Q156 16 156 70z" fill="' + ctx.v('#c63b2e') + '"/>'
         + '<path d="M44 66 L178 64 Q182 76 152 76 L44 74z" fill="' + ctx.v('#a8302a') + '"/><circle cx="100" cy="18" r="5" fill="#a8302a"/>';
-    case 2: // fedora
-      return '<ellipse cx="100" cy="66" rx="72" ry="12" fill="' + ctx.v('#3a3a42') + '"/>'
-        + '<path d="M60 66 Q58 22 80 18 Q100 28 120 18 Q142 22 140 66z" fill="' + ctx.v('#4a4a54') + '"/>'
-        + '<path d="M60 52 L140 52 L140 62 L60 62z" fill="#8e2632"/>';
+    case 2: // fedora (crown as wide as the skull since 2.1.9-web.208 — a narrow crown perched on the head)
+      return '<ellipse cx="100" cy="67" rx="76" ry="12" fill="' + ctx.v('#3a3a42') + '"/>'
+        + '<path d="M54 67 Q52 22 76 17 Q100 27 124 17 Q148 22 146 67z" fill="' + ctx.v('#4a4a54') + '"/>'
+        + '<path d="M54 52 L146 52 L146 62 L54 62z" fill="#8e2632"/>';
     case 4: // bowler
-      return '<ellipse cx="100" cy="66" rx="60" ry="9" fill="' + ctx.v('#26262c') + '"/>'
-        + '<path d="M58 66 Q58 14 100 14 Q142 14 142 66z" fill="' + ctx.v('#303038') + '"/><path d="M58 56 L142 56 L142 64 L58 64z" fill="#1a1a1f"/>';
+      return '<ellipse cx="100" cy="68" rx="66" ry="9" fill="' + ctx.v('#26262c') + '"/>'
+        + '<path d="M50 68 Q50 14 100 14 Q150 14 150 68z" fill="' + ctx.v('#303038') + '"/><path d="M50 57 L150 57 L150 65 L50 65z" fill="#1a1a1f"/>';
     case 5: // panama
-      return '<ellipse cx="100" cy="66" rx="74" ry="13" fill="' + ctx.v('#e9d9ae') + '"/>'
-        + '<path d="M60 66 Q58 24 80 20 Q100 28 120 20 Q142 24 140 66z" fill="' + ctx.v('#f1e4c0') + '"/><path d="M60 52 L140 52 L140 62 L60 62z" fill="#26262c"/>';
+      return '<ellipse cx="100" cy="67" rx="78" ry="13" fill="' + ctx.v('#e9d9ae') + '"/>'
+        + '<path d="M54 67 Q52 24 76 19 Q100 27 124 19 Q148 24 146 67z" fill="' + ctx.v('#f1e4c0') + '"/><path d="M54 52 L146 52 L146 62 L54 62z" fill="#26262c"/>';
     case 6: // bandana
       return '<path d="M44 72 Q100 44 156 72 L156 84 Q100 58 44 84z" fill="' + ctx.v('#c02a2a') + '"/>'
         + '<path d="M152 74 Q170 72 174 86 Q164 86 156 80 M154 78 Q166 90 162 100 Q156 92 152 84z" fill="#a02222"/>'
@@ -1317,6 +1317,14 @@ function _mapD(d, X, Y, RX, RY) {
 function _headScaled(k, sx, sy, cx, cy) {
   return _mapD(_headD(k), function (x) { return cx + (x - cx) * sx; }, function (x, y) { return cy + (y - cy) * sy; },
     function (r) { return r * sx; }, function (r) { return r * sy; });
+}
+// Hats sit on the widest part of the skull: they follow the ear-level
+// width uniformly (a temple-narrow, cheekbone-wide face wears the same
+// hat size as a round one — 2.1.9-web.208, after the bowler and the crown
+// looked perched on the rugged outline); the hood is built on the outline.
+function _hatFit(svg, k) {
+  if (!svg || svg.indexOf('data-fit') !== -1) return svg;
+  return _sx(_headHW(k) / 53, svg);
 }
 function _warp(svg, k) {
   if (!svg || svg.indexOf('data-fit') !== -1) return svg;
@@ -1497,7 +1505,7 @@ function avSvg(recipe, size) {
     + _ears(r.ears, _headHW(fk))
     + clipHair(_warp(hair[1], fk))
     + _glasses(r.glasses)
-    + _warp(_hat(ctx, r.hat, fk), fk)
+    + _hatFit(_hat(ctx, r.hat, fk), fk)
     + _badge(r.badge)
     + '</g>'
     + '<rect x="6" y="6" width="188" height="188" fill="none" stroke="#8f6a1d" stroke-width="1"/>';

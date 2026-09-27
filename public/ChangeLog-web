@@ -1,4 +1,7 @@
-2026-09-27 version 2.1.9-web.207 (current series):
+2026-09-27 version 2.1.9-web.208 (current series):
+- bugfix: toon portraits — hats are sized on the width of the skull again (a face with narrow temples and wide cheekbones wore a bowler too small for its head since web.203), and the fedora, bowler, panama, stetson and top hat have crowns as wide as the head instead of a narrow one perched on top; the crown sits on the head instead of floating above it
+
+2026-09-27 version 2.1.9-web.207:
 - improvement: toon portraits — seven skin tones sorted light to dark instead of ten (the very light double and the two darkest are gone: scars, bruises and tattoos vanished on them); saved portraits keep the nearest tone
 - improvement: « From a photo » — the eyebrows are read (a frown, one raised brow, thick brows, thin arched brows), a beard that goes on below the chin becomes the long beard, and a green or deep red backdrop becomes the matching felt
 
