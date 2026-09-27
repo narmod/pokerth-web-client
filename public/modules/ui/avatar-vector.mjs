@@ -910,11 +910,22 @@ function _ears(i) {
 }
 
 // ── Head shapes ──────────────────────────────────────────────────────────
-function _headD(i) {
-  if (i === 1) return 'M43 94 A57 55 0 1 0 157 94 A57 55 0 1 0 43 94z'; // round
-  if (i === 2) return 'M46 82 Q46 36 100 36 Q154 36 154 82 L154 112 Q154 152 100 152 Q46 152 46 112z'; // square jaw
-  return 'M47 94 A53 58 0 1 0 153 94 A53 58 0 1 0 47 94z'; // oval
+// Head outline by face key k = face + (feminine ? 3 : 0) — the same three
+// options read differently per silhouette (2.1.9-web.194): the masculine
+// shapes carry a wider, flatter jaw; the feminine ones taper to a softer
+// chin, and the feminine « square » is a heart (wide cheekbones, pointed
+// chin). Features stay put: eyes ≈ y 94, mouth ≈ 133, chin ≈ 152.
+function _headD(k) {
+  switch (k) {
+    case 1: return 'M41 92 Q41 36 100 36 Q159 36 159 92 Q159 136 132 150 Q100 158 68 150 Q41 136 41 92z';        // round, flat chin
+    case 2: return 'M46 80 Q46 36 100 36 Q154 36 154 80 L154 118 Q154 148 120 152 L80 152 Q46 148 46 118z';       // square jaw
+    case 3: return 'M49 92 Q49 36 100 36 Q151 36 151 92 Q151 126 126 145 Q112 155 100 155 Q88 155 74 145 Q49 126 49 92z'; // feminine oval, tapered chin
+    case 4: return 'M44 94 A56 55 0 1 0 156 94 A56 55 0 1 0 44 94z';                                                   // feminine round
+    case 5: return 'M45 84 Q45 36 100 36 Q155 36 155 84 Q155 112 130 138 Q114 156 100 156 Q86 156 70 138 Q45 112 45 84z'; // feminine heart
+    default: return 'M45 90 Q45 36 100 36 Q155 36 155 90 Q155 132 130 148 Q114 153 100 153 Q86 153 70 148 Q45 132 45 90z'; // masculine oval, firm jaw
+  }
 }
+function _faceKey(r) { return (r.face || 0) + (r.sex === 1 ? 3 : 0); }
 // clipPath of the head outline, scaled by `grow` around the face centre.
 function _headClip(ctx, face, grow) {
   var id = ctx.cid + 'hc' + face + '_' + Math.round(grow * 100);
@@ -984,12 +995,12 @@ function avPartSvg(axId, i, recipe, size) {
   if (!vb) return avSvg(r, size);
   var ctx = _ctx(_cid()), body = '', h;
   switch (axId) {
-    case 'face':    body = _earsSkin(skin) + _head(ctx, i, skin); break;
-    case 'marks':   body = _earsSkin(skin) + _head(ctx, r.face, skin) + _marks(i, skin[1]); break;
+    case 'face':    body = _earsSkin(skin) + _head(ctx, i + (r.sex === 1 ? 3 : 0), skin); break;
+    case 'marks':   body = _earsSkin(skin) + _head(ctx, _faceKey(r), skin) + _marks(i, skin[1]); break;
     case 'outfit':  body = _sx(r.sex === 1 ? 0.86 : 1, _neck(skin) + _outfit(ctx, i, skin, r.outfitc ? AV_OUTFITC[r.outfitc - 1] : null)); break;
-    case 'hair':    h = _hair(ctx, i, hc, r.face);
-      body = h[0] + (h[2] ? '<g clip-path="url(#' + _headClip(ctx, r.face, 1.02) + ')">' + h[2] + '</g>' : '') + h[1]; break;
-    case 'beard':   body = _beard(ctx, i, hcN, r.face); break;
+    case 'hair':    h = _hair(ctx, i, hc, _faceKey(r));
+      body = h[0] + (h[2] ? '<g clip-path="url(#' + _headClip(ctx, _faceKey(r), 1.02) + ')">' + h[2] + '</g>' : '') + h[1]; break;
+    case 'beard':   body = _beard(ctx, i, hcN, _faceKey(r)); break;
     case 'eyes':    body = _eyes(i, AV_EYEC[r.eyec], skin, r.sex === 1); break;
     case 'nose':    body = _nose(i, skin[1]); break;
     case 'mouth':   body = _mouth(i); break;
@@ -1014,7 +1025,7 @@ function avSvg(recipe, size) {
   // Round face (face 1) is wider than the oval the hair, beard and hats
   // were drawn for: widen them so they hug the head.
   var wk = r.face === 1 ? 1.075 : 1;
-  var hair = _hair(ctx, r.hair, hc, r.face);
+  var fk = _faceKey(r), hair = _hair(ctx, r.hair, hc, fk);
   var covers = _hatCovers(r.hat);
   var hatClip = AV_SHORT_HAIR[r.hair] ? 'hs' : 'hl';
   var clipHair = function (s) { return covers && s ? '<g clip-path="url(#' + cid + hatClip + ')">' + s + '</g>' : s; };
@@ -1033,14 +1044,14 @@ function avSvg(recipe, size) {
         + (AV_NO_UNDERLAY[r.hair] ? '' : '<path d="M45 98 Q42 30 100 28 Q158 30 155 98z" fill="' + _mix(hc[0], 0.85) + '"/>')))
     + _sx(fem ? 0.86 : 1, _neck(skin) + _outfit(ctx, r.outfit, skin, r.outfitc ? AV_OUTFITC[r.outfitc - 1] : null))
     + _earsSkin(skin)
-    + _head(ctx, r.face, skin)
-    + (hair[2] ? clipHair('<g clip-path="url(#' + _headClip(ctx, r.face, 1.02) + ')">' + hair[2] + '</g>') : '')
+    + _head(ctx, fk, skin)
+    + (hair[2] ? clipHair('<g clip-path="url(#' + _headClip(ctx, fk, 1.02) + ')">' + hair[2] + '</g>') : '')
     + _marks(r.marks, skin[1])
     // (blush: a feminine touch, barely there on men)
     + '<ellipse cx="68" cy="117" rx="9" ry="5.5" fill="#ff7f86" opacity="' + (fem ? '.32' : '.1') + '"/>'
     + '<ellipse cx="132" cy="117" rx="9" ry="5.5" fill="#ff7f86" opacity="' + (fem ? '.32' : '.1') + '"/>'
     + _nose(r.nose, skin[1])
-    + _beard(ctx, r.beard, hcN, r.face)
+    + _beard(ctx, r.beard, hcN, fk)
     + _mouth(r.mouth)
     + _eyes(r.eyes, AV_EYEC[r.eyec], skin, fem)
     // Brows follow hair color (a natural one on fantasy hair)

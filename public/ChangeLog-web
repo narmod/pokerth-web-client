@@ -1,4 +1,7 @@
-2026-09-27 version 2.1.9-web.193 (current series):
+2026-09-27 version 2.1.9-web.194 (current series):
+- improvement: portraits of the « Create » tab — the three face shapes now differ by silhouette: men get a firmer, wider jaw (oval, round, square), women a softer tapered chin (oval, round, and a heart shape with a pointed chin in place of the square). Beards, hair and the shape vignettes follow the new outlines; saved portraits keep their choice
+
+2026-09-27 version 2.1.9-web.193:
 - improvement: portraits of the « Create » tab — men looked too feminine at times: earrings, the pout, the small « o » mouth and the beauty mark are now women's options only, the blush is barely visible on men, and three of the new men's hairstyles are redrawn (a tighter curly mop, a pompadour swept back, a squared flat top). Men get a cigar in the corner of the mouth and a cheek scar instead
 - improvement: « From a photo » — a pout is never guessed on a man
 

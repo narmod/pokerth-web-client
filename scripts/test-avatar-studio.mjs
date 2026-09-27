@@ -139,6 +139,7 @@ ok(vis('mouth', 3, { sex: 1 }) && !vis('mouth', 3, { sex: 0 }), 'lipstick mouth 
 ok(!vis('mouth', 5, { sex: 0 }) && !vis('mouth', 7, { sex: 0 }) && vis('mouth', 10, { sex: 0 }) && !vis('mouth', 10, { sex: 1 }), 'pout and small o are feminine, the cigar is masculine');
 ok([1, 2, 3, 4, 5].every(k => !vis('ears', k, { sex: 0 }) && vis('ears', k, { sex: 1 })) && vis('ears', 0, { sex: 0 }), 'every earring is feminine-only (none stays for men)');
 ok(!vis('marks', 2, { sex: 0 }) && vis('marks', 6, { sex: 0 }) && !vis('marks', 6, { sex: 1 }), 'beauty mark is feminine, the cheek scar masculine');
+ok(window._avSvg({ sex: 0, face: 2 }).indexOf('L154 118') !== -1 && window._avSvg({ sex: 1, face: 2 }).indexOf('Q45 112') !== -1 && window._avPartSvg('face', 2, { sex: 1 }, 60).indexOf('Q45 112') !== -1, 'face shapes differ by silhouette: square jaw for men, heart for women (vignettes too)');
 ok(window._avSvg({ sex: 0, mouth: 10 }).indexOf('#ff6a2a') !== -1 && window._avSvg({ sex: 0 }).indexOf('opacity=".1"') !== -1 && window._avSvg({ sex: 1 }).indexOf('opacity=".32"') !== -1, 'cigar ember drawn; blush faint on men, full on women');
 ok(vis('outfit', 6, { sex: 1 }) && !vis('outfit', 6, { sex: 0 }), 'V-neck blouse is feminine-only');
 const wholeAxisHidden = (ax, rr) => { for (let i = 0; i < ax.n; i++) if (vis(ax.id, i, rr)) return false; return true; };
