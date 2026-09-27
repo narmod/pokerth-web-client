@@ -234,6 +234,7 @@ function avPhotoAnalyze(img, opts) {
     return { lum: 0.299 * lit[0] + 0.587 * lit[1] + 0.114 * lit[2], rgb: pick(0.3), cr: median(crs) };
   };
   var st = skinStats([[left + 0.25 * fw, top + 0.3 * fh, right - 0.25 * fw, top + 0.7 * fh]]);
+  var faceLab0 = st ? rgb2lab(st.rgb[0], st.rgb[1], st.rgb[2]) : [60, 15, 15];
   if (!st) return null;
   var skinLum = st.lum;
   var inFace = function (xx, yy) { // slightly grown face ellipse
@@ -451,6 +452,32 @@ function avPhotoAnalyze(img, opts) {
   var jawW = rowW[Math.max(0, Math.round(chinY - 0.35 * E0))] || 0;
   var jaw = cheekW ? jawW / cheekW : 0, aspect = (chinY - eyeMid0) / E0;
   var face = (jaw > 0.8 && aspect > 1.5) ? 2 : (aspect < 1.55 ? 1 : 0);
+  // Guided: the player fitted the face HEIGHT to the oval, so its height
+  // says nothing — the WIDTH does: a round face is wider than the template
+  // oval at cheek level, a long face narrower; a square face keeps its
+  // width down at the jaw. Skin extent per row, inside the oval's reach.
+  var faceDbg = '';
+  if (guide) {
+    var extent = function (yy) { // skin extent of the face blob on row yy, within ±1.4 rx of the centre
+      if (yy < 0 || yy >= H) return 0;
+      var xa = Math.max(0, Math.round(gcx - 1.4 * grx)), xb = Math.min(W - 1, Math.round(gcx + 1.4 * grx)), l = -1, rgt = -1;
+      for (var xx = xa; xx <= xb; xx++) if (label[at(xx, yy)] === fid) { if (l < 0) l = xx; rgt = xx; }
+      return l < 0 ? 0 : rgt - l + 1;
+    };
+    var ovalW = function (yy) { var t = (yy - gcy) / gry; return t * t >= 1 ? 1 : 2 * grx * Math.sqrt(1 - t * t); };
+    var wr = [], cw = 0;
+    for (y = Math.round(eyeMid0 + 0.3 * E0); y <= eyeMid0 + 0.9 * E0; y += 2) { var ex = extent(y); if (ex > cw) cw = ex; wr.push(ex / ovalW(y)); }
+    wr.sort(function (p, q) { return p - q; });
+    var widthRatio = wr.length ? wr[wr.length >> 1] : 0;
+    var jr = [];
+    for (y = Math.round(eyeMid0 + 1.45 * E0); y <= eyeMid0 + 1.65 * E0; y += 2) jr.push(extent(y));
+    jr.sort(function (p, q) { return p - q; });
+    var jawRatio = (cw && jr.length) ? jr[jr.length >> 1] / cw : 0;
+    // (square needs the cheeks in view too: hair over them narrows the
+    // cheeks and would make any jaw look wide)
+    if (widthRatio > 0) face = widthRatio >= 1.04 ? 1 : ((jawRatio >= 0.8 && widthRatio >= 0.9) ? 2 : 0);
+    faceDbg = 'w=' + widthRatio.toFixed(2) + ' jaw=' + jawRatio.toFixed(2);
+  }
 
   // clothes under the chin (outfit guess, and a guard for the hair flood)
   var clothRgb = null, oy0 = Math.round(bottom + 0.3 * fh), oy1 = Math.min(H - 1, Math.round(bottom + 0.7 * fh));
@@ -783,6 +810,10 @@ function avPhotoAnalyze(img, opts) {
     if (cr[i] > st.cr + 9 && r - g > 30 && r > 70) { lipMask[i] = 1; lipRow[y]++; lipN++; }
   }
   var mouth = 2, mouthTop = Math.round(top + 0.8 * fh), mouthW = 0, lipMinX = 0, lipMaxX = -1, lipMinY = 0, lipMaxY = -1, mouthDbg = '', lipstick = false;
+  // teeth: brighter than the LIT skin of the same photo (never an absolute
+  // level — a dark photo keeps its teeth), not redder than it (a lip
+  // highlight is), and not saturated
+  var isTooth = function (idx) { return lab[idx * 3] > faceLab0[0] + 2 && lab[idx * 3 + 1] <= faceLab0[1] + 4 && Math.hypot(lab[idx * 3 + 1], lab[idx * 3 + 2]) < 24; };
   var rowMaxN = 0; for (y = my0; y <= my1; y++) if (lipRow[y] > rowMaxN) rowMaxN = lipRow[y];
   if (rowMaxN >= 0.15 * (mx1 - mx0)) {
     // densest run of rows
@@ -806,18 +837,20 @@ function avPhotoAnalyze(img, opts) {
     if (cols.length >= 3) {
       lipMinX = cols[0]; lipMaxX = cols[cols.length - 1];
       mouthW = lipMaxX - lipMinX + 1; var mouthH = lipMaxY - lipMinY + 1; mouthTop = lipMinY;
-      var dark = 0, teeth = 0, tot = 0, yc = [], yk = [];
+      var dark = 0, teeth = 0, tot = 0, yc = [], yk = [], teethRows = new Int32Array(H), teethRowMax = 0;
       for (y = Math.max(0, Math.round(lipMinY - 0.12 * fh)); y <= lipMaxY; y++) for (x = lipMinX; x <= lipMaxX; x++) {
         i = at(x, y); tot++;
         if (lum[i] < skinLum * 0.45) dark++;
-        // teeth: bright AND grey (skin is never grey: r - g > 25)
-        if (lum[i] > Math.max(150, skinLum * 0.95) && Math.abs(D[i * 4] - D[i * 4 + 1]) < 24 && Math.abs(D[i * 4 + 1] - D[i * 4 + 2]) < 28) teeth++;
+        // teeth lie BETWEEN the lips, in a wide row (the lit skin above the
+        // upper lip is as bright, but sits above the band)
+        if (y >= lipMinY && isTooth(i)) { teeth++; teethRows[y]++; if (teethRows[y] > teethRowMax) teethRowMax = teethRows[y]; }
         if (lipMask[i]) {
           lipPx.push(D[i * 4], D[i * 4 + 1], D[i * 4 + 2]);
           var t = (x - lipMinX) / Math.max(1, mouthW - 1);
           if (t < 0.2 || t > 0.8) yc.push(y); else if (t > 0.4 && t < 0.6) yk.push(y);
         }
       }
+      if (teethRowMax < 0.3 * mouthW) teeth = 0; // a bright spot, not a row of teeth
       var curve = (yc.length && yk.length) ? (median(yk) - median(yc)) / fh : 0;
       mouthDbg = 'teeth=' + (teeth / tot).toFixed(2) + ' dark=' + (dark / tot).toFixed(2) + ' curve=' + curve.toFixed(3) + ' h/w=' + (mouthH / mouthW).toFixed(2);
       var ratio = mouthW / fw;
@@ -834,6 +867,62 @@ function avPhotoAnalyze(img, opts) {
         if (lh[1] > 0.6 && lr[0] > 130 && labDist(rgb2lab(lr[0], lr[1], lr[2]), rgb2lab(st.rgb[0], st.rgb[1], st.rgb[2])) > 28 && mouth !== 6 && mouth !== 1) lipstick = true;
       }
     }
+  }
+  // No lip band (a wide smile stretches the lips thin around the teeth):
+  // with the template, the mouth sits 1.25–1.75 E under the eyes — teeth
+  // there make it a grin, teeth and a dark opening a laugh.
+  if (guide && lipMaxX < lipMinX) {
+    var tw0 = Math.max(0, Math.round(cx - 0.5 * Eref)), tw1 = Math.min(W - 1, Math.round(cx + 0.5 * Eref));
+    var th0 = Math.max(0, Math.round(eyeMidY + 1.25 * Eref)), th1 = Math.min(H - 1, Math.round(eyeMidY + 1.75 * Eref));
+    var tTeeth = 0, tDark = 0, tTot = 0, tRows = new Int32Array(H);
+    for (y = th0; y <= th1; y++) for (x = tw0; x <= tw1; x++) { i = at(x, y); tTot++; if (isTooth(i)) { tTeeth++; tRows[y]++; } if (lum[i] < skinLum * 0.45) tDark++; }
+    var tf = tTot ? tTeeth / tTot : 0, df = tTot ? tDark / tTot : 0, tRowMax = 0;
+    for (y = th0; y <= th1; y++) if (tRows[y] > tRowMax) tRowMax = tRows[y];
+    mouthDbg = 'noband teeth=' + tf.toFixed(2) + ' dark=' + df.toFixed(2) + ' row=' + (tRowMax / (tw1 - tw0 + 1)).toFixed(2);
+    // a row of teeth must be wide (a highlight is a spot)
+    if (tRowMax >= 0.3 * (tw1 - tw0 + 1)) mouth = (tf > 0.1 && df > 0.1) ? 6 : (tf > 0.04 ? 1 : mouth);
+  }
+
+  // 7b. nose (guided only: the geometry is trusted). Light comes from
+  // above: the nose BASE (nostrils + columella) is a dark dip of the centre
+  // column between the eyes and the lips; its height below the eyes gives
+  // the length.
+  var nose, noseDbg = '';
+  if (guide) {
+    var nyA = Math.max(0, Math.round(eyeMidY + 0.45 * Eref)), nyB = Math.min(H - 1, Math.round(eyeMidY + 1.15 * Eref));
+    if (lipMaxY >= lipMinY && lipMinY > nyA) nyB = Math.min(nyB, lipMinY - 3); // never the lips
+    var bandLum = function (yy, xa, xb) { var sm = 0, nn = 0; for (var xx = Math.max(0, Math.round(xa)); xx <= Math.min(W - 1, Math.round(xb)); xx++) { sm += lum[at(xx, yy)]; nn++; } return nn ? sm / nn : 0; };
+    // reference: the cheeks beside the nose, in the same rows
+    var refL = [], yRef;
+    for (yRef = nyA; yRef <= nyB; yRef += 2) { refL.push(bandLum(yRef, cx - 0.75 * Eref, cx - 0.5 * Eref)); refL.push(bandLum(yRef, cx + 0.5 * Eref, cx + 0.75 * Eref)); }
+    var ref = median(refL) || skinLum;
+    // the FIRST dip below the cheeks going down from the eyes is the nose
+    // base (the mouth is a second, deeper one — a child's mouth sits close)
+    // Going down the centre line: the dips below the cheeks are the nose
+    // base (nostrils + columella shadow), the mouth, a beard. The nose base
+    // is the UPPER of the two deepest dips — a child's mouth sits close under
+    // a short nose, a bearded chin is darker than both.
+    var runs2 = [], cur2 = null, yStart = Math.max(nyA, Math.round(eyeMidY + 0.55 * Eref)); // (below the shadow under the eyes)
+    for (y = yStart; y <= nyB; y++) {
+      var rl = bandLum(y, cx - 0.12 * Eref, cx + 0.12 * Eref);
+      if (rl < 0.82 * ref) { if (!cur2) cur2 = { y: y, min: rl }; else if (rl < cur2.min) { cur2.min = rl; cur2.y = y; } }
+      else if (cur2) { runs2.push(cur2); cur2 = null; }
+    }
+    if (cur2) runs2.push(cur2);
+    runs2 = runs2.filter(function (rn) { return rn.min < 0.72 * ref; }); // a real shadow, not the tail of the one under the eyes
+    runs2.sort(function (p, q) { return p.min - q.min; });
+    var yN = -1, minL = 1e9;
+    if (runs2.length >= 2) { var top2 = runs2[0].y < runs2[1].y ? runs2[0] : runs2[1]; yN = top2.y; minL = top2.min; }
+    else if (runs2.length === 1 && (runs2[0].y - eyeMidY) / Eref < 1.15) { yN = runs2[0].y; minL = runs2[0].min; }
+    if (yN >= 0) {
+      var nLen = (yN - eyeMidY) / Eref;
+      noseDbg = 'len=' + nLen.toFixed(2) + ' dark=' + (minL / ref).toFixed(2) + ' runs=' + runs2.length;
+      // only what a frontal photo says reliably: a clearly short nose is
+      // the small upturned one, a clearly long one the straight one; the
+      // width (the shadow's spread) moves too much with the framing to use
+      if (nLen < 0.62 && minL < 0.6 * ref) nose = 2;
+      else if (nLen >= 1.15 && minL < 0.7 * ref) nose = 1;
+    } else noseDbg = 'none';
   }
 
   // 8. beard: the chin zone (mouth → just under the chin) is darker than
@@ -946,6 +1035,7 @@ function avPhotoAnalyze(img, opts) {
     face: face, skin: skinIndex, hair: hair, hairc: hairc.index, outfit: outfit, outfitc: outfitc,
     eyes: eyes, eyec: eyec, glasses: glasses, mouth: mouth, beard: beard, hat: hat, bg: bg
   };
+  if (nose !== undefined) recipe.nose = nose;
   if (outfit === undefined) delete recipe.outfit;
   if (outfitc === undefined) delete recipe.outfitc;
   if (sexGuess !== null) recipe.sex = sexGuess;
@@ -953,7 +1043,7 @@ function avPhotoAnalyze(img, opts) {
     recipe: recipe,
     debug: { box: [left, top, fw, fh], eyes: [eL, eR], eyesOk: eyesOk, cands: cL.concat(cR), guided: !!guide, mouth: [lipMinX, lipMinY, lipMaxX, lipMaxY],
              hair: { capFrac: capFrac, sideFrac: sideFrac, lowFrac: lowFrac, top: hairTop, rgb: hairRgb, count: hairCount, border: borderTot ? borderHits / borderTot : 0, forehead: foreheadH, skinTop: skinTop },
-             skinLum: skinLum, skinRgb: st.rgb, bgs: bgs, cloth: clothRgb, aspect: aspect, jaw: jaw, mouthW: mouthW, bFrac: bFrac, mFrac: mFrac, glassesDbg: glassesDbg, mouthDbg: mouthDbg, beardDbg: beardDbg, hairDbg: hairDbg, sexGuess: sexGuess, lipstick: lipstick, length: length }
+             skinLum: skinLum, skinRgb: st.rgb, bgs: bgs, cloth: clothRgb, faceDbg: faceDbg, noseDbg: noseDbg, noseRow: (typeof yN !== 'undefined' && yN >= 0 ? [cx - 0.12 * Eref, yN, cx + 0.12 * Eref] : null), aspect: aspect, jaw: jaw, mouthW: mouthW, bFrac: bFrac, mFrac: mFrac, glassesDbg: glassesDbg, mouthDbg: mouthDbg, beardDbg: beardDbg, hairDbg: hairDbg, sexGuess: sexGuess, lipstick: lipstick, length: length }
   };
 }
 

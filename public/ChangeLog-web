@@ -1,4 +1,7 @@
-2026-09-27 version 2.1.9-web.190 (current series):
+2026-09-27 version 2.1.9-web.191 (current series):
+- improvement: « From a photo » (beta) — the face shape now comes from the face's width against the template (you fitted its height): wider than the oval → round, a wide jaw → square, otherwise oval; a clearly short nose picks the small upturned one, a clearly long one the straight one (the nose is otherwise left as it was); teeth are judged against the lit skin of the same photo, so a smile with teeth in a dim photo or a wide grin with thin lips now gives the grin instead of a neutral mouth
+
+2026-09-27 version 2.1.9-web.190:
 - improvement: « From a photo » (beta) — long hair lying over the shoulders is read as hair (it used to become a dark turtleneck and a short cut); a shaded wall the colour of the hair no longer hides the hair beside the face; a beard is only claimed for a dark, hair-coloured mass — a shaded neck or a collar a little below the oval is not one any more; grey is only guessed for truly colourless hair; the analysis runs on the full frame instead of a small copy of it
 - improvement: the « Take the photo » button is big and full width
 

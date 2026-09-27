@@ -239,6 +239,11 @@ ok(!!resBald && resBald.recipe.hair === 0, 'no hair cap → bald');
 // guided: the synthetic face oval (cx 80/160, cy 100/200, rx 46, ry 58) as template
 const resGuided = window._avPhotoAnalyze(synthFace({ hair: true }), { sex: 0, guide: { cx: 0.5, cy: 0.5, rx: 46 / 160, ry: 58 / 200 } });
 ok(!!resGuided && resGuided.debug.guided && resGuided.recipe.skin <= 2 && resGuided.recipe.hair !== 0, 'guided analysis uses the template and finds the same face');
+ok(!!resGuided && resGuided.recipe.face === 0 && !('nose' in resGuided.recipe), 'guided: a face as wide as the oval is oval; no nose shadow → the nose is left alone (' + (resGuided && resGuided.recipe.face) + ')');
+// a wider synthetic face (rx 56 on the same template) reads round
+const wideFace = synthFace({ hair: true, thick: true }); (function () { const W = 160; for (let y = 0; y < 200; y++) for (let x = 0; x < W; x++) { const ex = (x - 80) / 56, ey = (y - 100) / 58; if (ex * ex + ey * ey <= 1 && y >= 62) { const i = (y * W + x) * 4; wideFace.data[i] = 232; wideFace.data[i + 1] = 190; wideFace.data[i + 2] = 160; } } })();
+const resWide = window._avPhotoAnalyze(wideFace, { sex: 0, guide: { cx: 0.5, cy: 0.5, rx: 46 / 160, ry: 58 / 200 }, guessSex: false });
+ok(!!resWide && resWide.recipe.face === 1, 'guided: a face wider than the oval is round (' + (resWide && resWide.recipe.face) + ')');
 ok(window._avPhotoAnalyze(synthFace({ hair: true }), { sex: 0, guide: { cx: 0.1, cy: 0.9, rx: 0.05, ry: 0.05 } }) === null, 'guided analysis with nobody in the oval → no face');
 // guided hair (2.1.9-web.189): the band above the oval top is read as the
 // hair — a bald crown (skin keeps going up), blonde hair (close to the skin
