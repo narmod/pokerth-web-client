@@ -1,4 +1,8 @@
-2026-09-27 version 2.1.9-web.213 (current series):
+2026-09-27 version 2.1.9-web.214 (current series):
+- bugfix: toon portraits — the witch hat's crown now wraps the skull: the top of the head no longer shows on both sides of the cone above the band
+- bugfix: toon portraits — the fedora, the panama, the stetson and the ace fedora start a touch wider at the base: no sliver of skull beside the crown on the square face (checked on every hat × every face shape)
+
+2026-09-27 version 2.1.9-web.213:
 - bugfix: toon portraits — the witch hat no longer lets tufts of hair show above the ends of its brim
 - improvement: avatar « Create » tab — the starter characters fill the width of the window, centred, with bigger portraits
 

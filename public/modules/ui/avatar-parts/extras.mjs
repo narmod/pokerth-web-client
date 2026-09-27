@@ -89,8 +89,8 @@ const HATS = [
   } },
   { id: 'fedora', covers: true, draw: function (ctx) { // crown as wide as the skull (2.1.9-web.208)
     return '<ellipse cx="100" cy="67" rx="76" ry="12" fill="' + ctx.v('#3a3a42') + '"/>'
-      + '<path d="M54 67 Q52 22 76 17 Q100 27 124 17 Q148 22 146 67z" fill="' + ctx.v('#4a4a54') + '"/>'
-      + '<path d="M54 52 L146 52 L146 62 L54 62z" fill="#8e2632"/>';
+      + '<path d="M51 67 Q49 22 76 17 Q100 27 124 17 Q151 22 149 67z" fill="' + ctx.v('#4a4a54') + '"/>'
+      + '<path d="M51 52 L149 52 L149 62 L51 62z" fill="#8e2632"/>';
   } },
   { id: 'visor', draw: function () { // dealer visor: leaves the hair
     return '<path d="M44 66 Q100 46 156 66 L156 74 Q100 56 44 74z" fill="#0f5a35"/>'
@@ -102,7 +102,7 @@ const HATS = [
   } },
   { id: 'panama', covers: true, draw: function (ctx) {
     return '<ellipse cx="100" cy="67" rx="78" ry="13" fill="' + ctx.v('#e9d9ae') + '"/>'
-      + '<path d="M54 67 Q52 24 76 19 Q100 27 124 19 Q148 24 146 67z" fill="' + ctx.v('#f1e4c0') + '"/><path d="M54 52 L146 52 L146 62 L54 62z" fill="#26262c"/>';
+      + '<path d="M51 67 Q49 24 76 19 Q100 27 124 19 Q151 24 149 67z" fill="' + ctx.v('#f1e4c0') + '"/><path d="M51 52 L149 52 L149 62 L51 62z" fill="#26262c"/>';
   } },
   { id: 'bandana', draw: function (ctx) { // leaves the hair
     return '<path d="M44 72 Q100 44 156 72 L156 84 Q100 58 44 84z" fill="' + ctx.v('#c02a2a') + '"/>'
@@ -136,8 +136,8 @@ const HATS = [
     } },
   { id: 'stetson', covers: true, draw: function (ctx) { // black, outlaw
     return '<path d="M20 78 Q100 100 180 78 Q166 66 140 64 L60 64 Q34 66 20 78z" fill="' + ctx.v('#1e1e22') + '"/>'
-      + '<path d="M54 66 Q52 30 72 22 Q100 30 128 22 Q148 30 146 66z" fill="' + ctx.v('#26262c') + '"/>'
-      + '<path d="M54 54 L146 54 L146 62 L54 62z" fill="#3b2f26"/><path d="M96 54 L104 54 L104 62 L96 62z" fill="#c9a24a"/>';
+      + '<path d="M50 66 Q48 30 72 22 Q100 30 128 22 Q152 30 150 66z" fill="' + ctx.v('#26262c') + '"/>'
+      + '<path d="M50 54 L150 54 L150 62 L50 62z" fill="#3b2f26"/><path d="M96 54 L104 54 L104 62 L96 62z" fill="#c9a24a"/>';
   } },
   { id: 'top-hat', sex: 0, covers: true, weight: 0.4, draw: function (ctx) {
     return '<ellipse cx="100" cy="68" rx="68" ry="9" fill="' + ctx.v('#1a1a1f') + '"/>'
@@ -151,8 +151,8 @@ const HATS = [
   } },
   { id: 'fedora-ace', covers: true, draw: function (ctx) { // an ace of spades tucked in the band
     return '<ellipse cx="100" cy="67" rx="76" ry="12" fill="' + ctx.v('#3a3a42') + '"/>'
-      + '<path d="M54 67 Q52 22 76 17 Q100 27 124 17 Q148 22 146 67z" fill="' + ctx.v('#4a4a54') + '"/>'
-      + '<path d="M54 52 L146 52 L146 62 L54 62z" fill="#1f1f24"/>'
+      + '<path d="M51 67 Q49 22 76 17 Q100 27 124 17 Q151 22 149 67z" fill="' + ctx.v('#4a4a54') + '"/>'
+      + '<path d="M51 52 L149 52 L149 62 L51 62z" fill="#1f1f24"/>'
       + '<g transform="rotate(-14 134 48)">' + _card(128, 34, 12, 0, false) + '</g>';
   } },
   // 2.1.9-web.211 (starter characters, lot 2) — headphones, witch hat, chef's toque, sailor cap, headset mic
@@ -163,11 +163,12 @@ const HATS = [
       + '<path d="M70 34 Q100 26 130 34" stroke="#5d626e" stroke-width="2" fill="none" stroke-linecap="round" opacity=".7"/>';
   } },
   { id: 'witch-hat', covers: true, line: 66, weight: 0.4, draw: function (ctx) { // wide brim, tall head-wide cone with concave sides, tip flopped to the right, purple band (redrawn web.212); line 66: the brim's ends sit low, the hair is hidden down to them
-    return '<ellipse cx="100" cy="73" rx="84" ry="14" fill="' + ctx.v('#1c1526') + '"/>'
-      + '<ellipse cx="100" cy="71" rx="78" ry="11" fill="' + ctx.v('#2b2135') + '"/>'
-      + '<path d="M44 72 Q64 52 84 24 Q90 8 104 4 Q126 2 132 20 Q124 10 112 11 Q110 14 114 24 Q134 52 156 72z" fill="' + ctx.v('#2f2439') + '"/>'
+    return '<ellipse cx="100" cy="72" rx="82" ry="13" fill="' + ctx.v('#1c1526') + '"/>'
+      + '<ellipse cx="100" cy="71" rx="77" ry="10.5" fill="' + ctx.v('#2b2135') + '"/>'
+      // crown: the lower sides wrap the skull (outside the ±53 oval's top, y 36–61, by 3–8 px), then taper to the flopped tip
+      + '<path d="M46 72 C50 50 66 34 86 22 Q90 8 104 4 Q126 2 132 20 Q124 10 112 11 Q110 14 114 22 C134 34 150 50 154 72z" fill="' + ctx.v('#2f2439') + '"/>'
       + '<path d="M92 10 Q100 6 112 11" stroke="#1c1526" stroke-width="1.6" fill="none" opacity=".5"/>'
-      + '<path d="M50 61 L150 61 L154 72 L46 72z" fill="#6a2a8a"/><path d="M50 61 L150 61 L151 64 L49 64z" fill="#8a3ab0" opacity=".6"/>'
+      + '<path d="M49 61 L151 61 L154 72 L46 72z" fill="#6a2a8a"/><path d="M49 61 L151 61 L152 64 L48 64z" fill="#8a3ab0" opacity=".6"/>'
       + '<rect x="93" y="58" width="14" height="16" rx="2" fill="#e0b23c"/><rect x="97" y="62" width="6" height="8" rx="1" fill="#6a2a8a"/>';
   } },
   { id: 'chef-toque', covers: true, weight: 0.4, draw: function (ctx) { // white pleated toque

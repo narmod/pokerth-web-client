@@ -129,6 +129,10 @@ const PRE = window._AV_PRESETS;
 ok(Array.isArray(PRE) && PRE.length === 20 && new Set(PRE.map(p => p.id)).size === 20 && PRE.every(p => p.label && p.recipe), '20 starter characters with unique ids, labels and recipes');
 // 2.1.9-web.211 — lot 2 parts: headphones and the headset mic leave the hair, the witch hat / toque / sailor cap cover it; pipe; wart; new garments in pairs
 ok(!ax('hat').byId.headphones.covers && !ax('hat').byId['headset-mic'].covers && ax('hat').byId['witch-hat'].covers && ax('hat').byId['chef-toque'].covers && ax('hat').byId['sailor-cap'].covers && !vis('hat', 'headphones', { hair: 'afro' }) && svg({ hat: 'headphones', hair: 'short' }).indexOf('<rect x="36" y="84"') !== -1, 'lot 2 hats: covering flags, headphones offered only where a hat fits, ear cups drawn');
+// 2.1.9-web.214 — the witch hat's crown wraps the skull and lowers the hair line to its brim; the fedora / panama / stetson crowns start 3 px wider (no skull sliver on the square face)
+ok(ax('hat').byId['witch-hat'].line === 66 && !!svg({ hat: 'witch-hat', hair: 'long-middle' }).match(/clip-path="url\(#[a-z0-9]+hl\)"/) && svg({ hat: 'witch-hat' }).indexOf('<rect x="0" y="66" width="200" height="134"/>') !== -1 && svg({ hat: 'cap', hair: 'long-middle' }).indexOf('<rect x="0" y="60" width="200" height="140"/>') !== -1
+  && svg({ hat: 'witch-hat' }).indexOf('M46 72 C50 50 66 34 86 22') !== -1 && svg({ hat: 'fedora' }).indexOf('M51 67 Q49 22 76 17') !== -1 && svg({ hat: 'stetson' }).indexOf('M50 66 Q48 30 72 22') !== -1,
+  'witch hat: hair line lowered to 66 (others keep 60), crown wrapping the skull; fedora and stetson crowns widened');
 ok(svg({ mouth: 'pipe' }).indexOf('M121 137 Q135 134 134 148') !== -1 && svg({ marks: 'wart' }).indexOf('<circle cx="117" cy="141" r="2.7"') !== -1 && svg({ outfit: 'breton' }).indexOf('<line x1="30" y1="166"') !== -1 && svg({ outfit: 'tracksuit-chain' }).indexOf('M84 160 Q100 192 116 160') !== -1 && svg({ sex: 1, outfit: 'sequin-dress' }).split('<circle').length > 12, 'pipe, wart, breton stripes, gold chain, sequins are drawn');
 let preOk = true, preMsg = '';
 for (const p of PRE) {
