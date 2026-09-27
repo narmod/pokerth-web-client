@@ -15,15 +15,18 @@
 // Advanced option 'avatar_create' (default ON) hides the Create tab via
 // body.adv-no-avcreate (see applyAdvOpts in pokerth.js).
 //
-// « From a photo » (BETA, narmod 2026-09-27): a photo picked from the
-// Create tab is analysed IN THE BROWSER by modules/ui/avatar-photo.mjs (no
-// library, no upload, the photo is never stored) and the estimated axes
-// are merged into the recipe as a starting point.
+// « From a photo » (BETA, narmod 2026-09-27): the player frames their face
+// in a template (front camera, or a photo they pan / zoom —
+// modules/ui/avatar-capture.mjs), the square under the template is
+// analysed IN THE BROWSER by modules/ui/avatar-photo.mjs (no library, no
+// upload, nothing stored) and the estimated axes are merged into the
+// recipe as a starting point.
 
 'use strict';
 
 import { AV_AXES, AV_DEFAULT, avSvg, avPartSvg, avSwatch, avNormalize, avRandom, avVisible } from './avatar-vector.mjs';
 import { avPhotoRecipe } from './avatar-photo.mjs';
+import { avCaptureOpen } from './avatar-capture.mjs';
 
 // Axis groups shown as chip tabs (gallery-category pattern): only the
 // active group's rows are rendered, keeping the pane short and tidy.
@@ -123,9 +126,10 @@ function _avmRender() {
     });
     document.getElementById('avm-use').addEventListener('click', _avmApply);
     document.getElementById('avm-photo').addEventListener('click', function () {
-      var inp = document.getElementById('avm-photo-input');
-      if (inp) { inp.value = ''; inp.click(); }
+      avCaptureOpen({ mode: 'camera', onResult: _avmFromCapture });
     });
+    // hidden input kept for drag-and-drop / tests: a dropped file opens the
+    // framing panel in photo mode
     document.getElementById('avm-photo-input').addEventListener('change', function () {
       var f = this.files && this.files[0];
       if (f) _avmFromPhoto(f);
@@ -218,36 +222,18 @@ function _avmFromPhoto(file) {
   if (!/^image\//.test(file.type)) { _avmWarn('avImgNotImage', 'Please choose an image file.'); return; }
   var MAX = (typeof window._AV_MAX_FILE_BYTES === 'number') ? window._AV_MAX_FILE_BYTES : 30 * 1024 * 1024;
   if (file.size > MAX) { _avmWarn('avImgTooLarge', 'This image is too large. Please choose a smaller one.'); return; }
-  var btn = document.getElementById('avm-photo');
-  if (btn) btn.disabled = true;
-  var done = function (res) {
-    if (btn) btn.disabled = false;
-    if (!res || !res.recipe) { _avmWarn('avmPhotoNoFace', 'No face found.'); return; }
-    var next = Object.assign({}, _avmState, res.recipe, { sex: _avmState.sex });
-    _avmState = avNormalize(next);
-    _avmSanitize();
-    _avmPersist(); _avmRender();
-    try { if (typeof window.showToast === 'function') window.showToast(t('avmPhotoDone'), { icon: '\uD83D\uDCF7', duration: 4000 }); } catch (e) {}
-  };
-  var analyse = function (src, w, h, release) {
-    var res = null;
-    try { res = avPhotoRecipe(src, w, h, { sex: _avmState.sex }); } catch (e) { res = null; }
-    try { release && release(); } catch (e) {}
-    done(res);
-  };
-  var viaImage = function () {
-    var url;
-    try { url = URL.createObjectURL(file); } catch (e) { done(null); return; }
-    var img = new Image();
-    img.onload = function () { analyse(img, img.width, img.height, function () { URL.revokeObjectURL(url); img.src = ''; }); };
-    img.onerror = function () { URL.revokeObjectURL(url); done(null); };
-    img.src = url;
-  };
-  if (typeof createImageBitmap === 'function') {
-    createImageBitmap(file).then(function (bmp) {
-      analyse(bmp, bmp.width, bmp.height, function () { bmp.close(); });
-    }, viaImage);
-  } else viaImage();
+  avCaptureOpen({ mode: 'photo', file: file, onResult: _avmFromCapture });
+}
+// canvas: the framed square; guide: the template oval (fractions).
+function _avmFromCapture(canvas, guide) {
+  var res = null;
+  try { res = avPhotoRecipe(canvas, canvas.width, canvas.height, { sex: _avmState.sex, guide: guide }); } catch (e) { res = null; }
+  if (!res || !res.recipe) { _avmWarn('avmPhotoNoFace', 'No face found.'); return; }
+  var next = Object.assign({}, _avmState, res.recipe, { sex: _avmState.sex });
+  _avmState = avNormalize(next);
+  _avmSanitize();
+  _avmPersist(); _avmRender();
+  try { if (typeof window.showToast === 'function') window.showToast(t('avmPhotoDone'), { icon: '\uD83D\uDCF7', duration: 4000 }); } catch (e) {}
 }
 
 // Apply: rasterize the SVG on a 96x96 canvas and reuse the photo-import

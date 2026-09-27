@@ -81,11 +81,16 @@ function medianRgb(px) { // px: flat [r,g,b, r,g,b, ...]
 }
 
 // ── analysis ─────────────────────────────────────────────────────────────
-// img: { width, height, data: Uint8ClampedArray RGBA } — opts: { sex: 0|1 }
+// img: { width, height, data: Uint8ClampedArray RGBA }
+// opts: { sex: 0|1, guide?: { cx, cy, rx, ry } } — the guide is the face
+// oval the player aligned with (fractions of the image size): the face box
+// then comes from it instead of the skin-blob search, which is the fragile
+// step on a free photo.
 // returns { recipe, debug } or null when no face is found
 function avPhotoAnalyze(img, opts) {
   opts = opts || {};
   var sex = opts.sex === 1 ? 1 : 0;
+  var guide = opts.guide && opts.guide.rx > 0 ? opts.guide : null;
   var W = img.width, H = img.height, N = W * H;
   var i, x, y, r, g, b;
   // auto-levels (same gain on R, G, B, hue kept) so under-exposed photos give
@@ -131,9 +136,27 @@ function avPhotoAnalyze(img, opts) {
   // a skin-coloured wall must not become the face
   for (i = 0; i < N; i++) if (skin[i] && isBg(i, 16)) skin[i] = 0;
 
-  // 1. skin blobs (4-connected) → the most face-like one
+  // 1. skin blobs (4-connected) → the most face-like one. With a guide,
+  // every skin pixel inside the (slightly grown) oval is THE face blob.
   var label = new Int32Array(N), comps = [], stack = new Int32Array(N);
-  for (i = 0; i < N; i++) {
+  var gcx = 0, gcy = 0, grx = 0, gry = 0;
+  if (guide) {
+    gcx = guide.cx * W; gcy = guide.cy * H; grx = guide.rx * W; gry = guide.ry * H;
+    var garea = 0, gminx = W, gmaxx = 0, gminy = H, gmaxy = 0, gsx = 0, gsy = 0;
+    for (i = 0; i < N; i++) {
+      if (!skin[i]) continue;
+      x = i % W; y = (i - x) / W;
+      // grown sideways a little and upwards a lot: a bald crown climbs well
+      // above the template's hairline and must stay in the blob
+      var gex = (x - gcx) / (grx * 1.12), gey = (y - gcy) / (gry * (y < gcy ? 1.7 : 1.12));
+      if (gex * gex + gey * gey > 1) continue;
+      label[i] = 1; garea++; gsx += x; gsy += y;
+      if (x < gminx) gminx = x; if (x > gmaxx) gmaxx = x; if (y < gminy) gminy = y; if (y > gmaxy) gmaxy = y;
+    }
+    if (garea < 0.15 * Math.PI * grx * gry) return null; // nobody in the oval
+    comps.push({ id: 1, area: garea, cx: gsx / garea, cy: gsy / garea, minx: gminx, maxx: gmaxx, miny: gminy, maxy: gmaxy });
+  }
+  for (i = 0; guide ? false : i < N; i++) {
     if (!skin[i] || label[i]) continue;
     var id = comps.length + 1, sp = 0, area = 0, sx = 0, sy = 0, minx = W, maxx = 0, miny = H, maxy = 0;
     stack[sp++] = i; label[i] = id;
@@ -183,6 +206,10 @@ function avPhotoAnalyze(img, opts) {
   for (y = best.maxy; y > yMax; y--) if (rowW[y] >= 0.3 * maxW) { bottom = y; break; }
   var left = W, right = 0;
   for (y = top; y <= bottom; y++) if (rowW[y] > 0.4 * maxW) { if (rowMin[y] < left) left = rowMin[y]; if (rowMax[y] > right) right = rowMax[y]; }
+  if (guide) { // the oval IS the face box (hairline to chin, temple to temple)
+    left = Math.max(0, Math.round(gcx - grx)); right = Math.min(W - 1, Math.round(gcx + grx));
+    top = Math.max(0, Math.round(gcy - gry)); bottom = Math.min(H - 1, Math.round(gcy + gry));
+  }
   var fw = right - left + 1, fh = bottom - top + 1;
   if (fw < 12 || fh < 12) return null;
   if (fh > 1.6 * fw) { fh = Math.round(1.6 * fw); bottom = top + fh - 1; } // neck / chest cut
@@ -288,17 +315,19 @@ function avPhotoAnalyze(img, opts) {
   var isOpen = function (e) { return !!e && e.lum < skinLum - 28 && e.score < -16; };
   var openL = isOpen(eL), openR = isOpen(eR);
   // sunglasses: both eye zones uniformly dark
+  // sunglasses: a lens is uniformly dark — a deep-set eye in shadow is dark
+  // too but keeps the bright sclera
   var zoneDark = function (e) {
     if (!e) return 0;
-    var rz = Math.round(fw * 0.11), c = 0, n = 0;
+    var rz = Math.round(fw * 0.11), c = 0, n = 0, bright = 0;
     for (var dy = -rz; dy <= rz; dy++) for (var dx = -rz; dx <= rz; dx++) {
       var xa = e.x + dx, ya = e.y + dy;
       if (xa < 0 || ya < 0 || xa >= W || ya >= H) continue;
-      n++; if (lum[at(xa, ya)] < 55) c++;
+      n++; var lv = lum[at(xa, ya)]; if (lv < 55) c++; if (lv > skinLum * 0.85) bright++;
     }
-    return n ? c / n : 0;
+    return n && bright / n < 0.04 ? c / n : 0;
   };
-  var sunglasses = zoneDark(eL) > 0.5 && zoneDark(eR) > 0.5;
+  var sunglasses = zoneDark(eL) > 0.55 && zoneDark(eR) > 0.55;
 
   // pupils found on both sides → rebuild the box from the pupil distance
   // (hairline ≈ 1.1 E above, chin ≈ 1.75 E below, width ≈ 2.2 E)
@@ -475,23 +504,24 @@ function avPhotoAnalyze(img, opts) {
     for (y = eyeY - 2; y <= eyeY + 2; y++) for (x = bx0; x <= bx1; x++) { if (y < 0 || y >= H) continue; i = at(x, y); if (lum[i] < skinLum * 0.6 && !skin[i]) bridge++; }
     // a rim is THIN: one dark row in the band, the rest skin — a shadow or
     // eye bags darken the whole band and do not count
-    var rimSides = 0;
+    var rimSides = 0, minRowMax = 1;
     [eL, eR].forEach(function (e) {
       var rim = 0, rtot = 0, rowMax = 0;
       for (y = Math.round(e.y + 0.35 * E); y <= e.y + 0.6 * E; y++) {
         var rd = 0, rn = 0;
         for (x = Math.round(e.x - 0.4 * E); x <= e.x + 0.4 * E; x++) {
           if (x < 0 || y < 0 || x >= W || y >= H || !inFace(x, y)) continue;
-          rn++; i = at(x, y); if (lum[i] < skinLum * 0.5 && !skin[i]) rd++;
+          rn++; i = at(x, y); if (lum[i] < skinLum * 0.6 && !skin[i]) rd++;
         }
         rim += rd; rtot += rn;
         if (rn && rd / rn > rowMax) rowMax = rd / rn;
       }
       frame += rim; ftot += rtot;
       if (rtot && rowMax > 0.45 && rim / rtot < 0.35) rimSides++;
+      if (rowMax < minRowMax) minRowMax = rowMax;
     });
-    glassesDbg = bridge + '/' + (ftot ? (frame / ftot).toFixed(2) : '-');
-    if (rimSides === 2 && (bridge >= 3 || (ftot && frame / ftot > 0.15))) glasses = 2;
+    glassesDbg = bridge + '/' + (ftot ? (frame / ftot).toFixed(2) : '-') + '/' + rimSides + '/' + minRowMax.toFixed(2);
+    if (rimSides === 2 && (bridge >= 3 || minRowMax > 0.55 || (ftot && frame / ftot > 0.15))) glasses = 2;
   }
 
   // 7. mouth: reddish lip band (rows that hold >= 30% of the busiest row)
@@ -502,7 +532,7 @@ function avPhotoAnalyze(img, opts) {
     i = at(x, y); r = D[i * 4]; g = D[i * 4 + 1]; b = D[i * 4 + 2];
     if (cr[i] > st.cr + 9 && r - g > 30 && r > 70) { lipMask[i] = 1; lipRow[y]++; lipN++; }
   }
-  var mouth = 2, mouthTop = Math.round(top + 0.8 * fh), mouthW = 0, lipMinX = 0, lipMaxX = -1, lipMinY = 0, lipMaxY = -1;
+  var mouth = 2, mouthTop = Math.round(top + 0.8 * fh), mouthW = 0, lipMinX = 0, lipMaxX = -1, lipMinY = 0, lipMaxY = -1, mouthDbg = '';
   var rowMaxN = 0; for (y = my0; y <= my1; y++) if (lipRow[y] > rowMaxN) rowMaxN = lipRow[y];
   if (rowMaxN >= 0.15 * (mx1 - mx0)) {
     // densest run of rows
@@ -527,10 +557,11 @@ function avPhotoAnalyze(img, opts) {
       lipMinX = cols[0]; lipMaxX = cols[cols.length - 1];
       mouthW = lipMaxX - lipMinX + 1; var mouthH = lipMaxY - lipMinY + 1; mouthTop = lipMinY;
       var dark = 0, teeth = 0, tot = 0, yc = [], yk = [];
-      for (y = Math.max(0, Math.round(lipMinY - 0.07 * fh)); y <= lipMaxY; y++) for (x = lipMinX; x <= lipMaxX; x++) {
+      for (y = Math.max(0, Math.round(lipMinY - 0.12 * fh)); y <= lipMaxY; y++) for (x = lipMinX; x <= lipMaxX; x++) {
         i = at(x, y); tot++;
         if (lum[i] < skinLum * 0.45) dark++;
-        if (lum[i] > skinLum * 1.15 && lum[i] > 150 && Math.abs(D[i * 4] - D[i * 4 + 1]) < 28 && Math.abs(D[i * 4 + 1] - D[i * 4 + 2]) < 28) teeth++;
+        // teeth: bright AND grey (skin is never grey: r - g > 25)
+        if (lum[i] > Math.max(150, skinLum * 0.95) && Math.abs(D[i * 4] - D[i * 4 + 1]) < 24 && Math.abs(D[i * 4 + 1] - D[i * 4 + 2]) < 28) teeth++;
         if (lipMask[i]) {
           lipPx.push(D[i * 4], D[i * 4 + 1], D[i * 4 + 2]);
           var t = (x - lipMinX) / Math.max(1, mouthW - 1);
@@ -538,9 +569,10 @@ function avPhotoAnalyze(img, opts) {
         }
       }
       var curve = (yc.length && yk.length) ? (median(yk) - median(yc)) / fh : 0;
+      mouthDbg = 'teeth=' + (teeth / tot).toFixed(2) + ' dark=' + (dark / tot).toFixed(2) + ' curve=' + curve.toFixed(3) + ' h/w=' + (mouthH / mouthW).toFixed(2);
       var ratio = mouthW / fw;
-      if (teeth / tot > 0.15 && dark / tot > 0.15) mouth = 6;
-      else if (teeth / tot > 0.12) mouth = 1;
+      if (teeth / tot > 0.12 && dark / tot > 0.15) mouth = 6;
+      else if (teeth / tot > 0.09) mouth = 1;
       else if (dark / tot > 0.28) mouth = (mouthH / mouthW > 0.5) ? 7 : 6;
       else if (curve < -0.025 && ratio > 0.22) mouth = 8;
       else if (ratio > 0.46 || (curve > 0.03 && ratio > 0.28)) mouth = 0;
@@ -606,7 +638,9 @@ function avPhotoAnalyze(img, opts) {
   // skin tone: lightness first (the palette is a lit-skin ramp, peach-toned:
   // pink or olive skins must land by lightness, not by hue)
   var skinLabV = rgb2lab(st.rgb[0], st.rgb[1], st.rgb[2]), skinIndex = 1, skinBest = 1e9;
-  skinLabV[0] += 9; // flat cartoon skin reads darker than lit photo skin of the same L
+  // flat cartoon skin reads darker than lit photo skin of the same L: lift
+  // the measured L, more for darker photos (side light, indoor)
+  skinLabV[0] += 3 + 6 * Math.max(0, Math.min(1, (80 - skinLabV[0]) / 20));
   P_SKIN_LAB.forEach(function (l2, k) {
     var d = Math.sqrt(Math.pow((skinLabV[0] - l2[0]) * 1.6, 2) + Math.pow((skinLabV[1] - l2[1]) * 0.5, 2) + Math.pow((skinLabV[2] - l2[2]) * 0.5, 2));
     if (d < skinBest) { skinBest = d; skinIndex = k; }
@@ -636,9 +670,9 @@ function avPhotoAnalyze(img, opts) {
   if (outfit === undefined) delete recipe.outfit;
   return {
     recipe: recipe,
-    debug: { box: [left, top, fw, fh], eyes: [eL, eR], eyesOk: eyesOk, cands: cL.concat(cR), mouth: [lipMinX, lipMinY, lipMaxX, lipMaxY],
+    debug: { box: [left, top, fw, fh], eyes: [eL, eR], eyesOk: eyesOk, cands: cL.concat(cR), guided: !!guide, mouth: [lipMinX, lipMinY, lipMaxX, lipMaxY],
              hair: { capFrac: capFrac, sideFrac: sideFrac, lowFrac: lowFrac, top: hairTop, rgb: hairRgb, count: hairCount, border: borderTot ? borderHits / borderTot : 0, forehead: foreheadH, skinTop: skinTop },
-             skinLum: skinLum, skinRgb: st.rgb, bgs: bgs, aspect: aspect, jaw: jaw, mouthW: mouthW, bFrac: bFrac, mFrac: mFrac, glassesDbg: glassesDbg }
+             skinLum: skinLum, skinRgb: st.rgb, bgs: bgs, aspect: aspect, jaw: jaw, mouthW: mouthW, bFrac: bFrac, mFrac: mFrac, glassesDbg: glassesDbg, mouthDbg: mouthDbg }
   };
 }
 

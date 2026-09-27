@@ -36,10 +36,11 @@ function load(p) {
 }
 load('modules/ui/avatar-vector.mjs');
 load('modules/ui/avatar-photo.mjs');
+load('modules/ui/avatar-capture.mjs');
 // avatar-studio consumes the engines' window._-prefixed exports in the harness.
 let studio = fs.readFileSync(path.join(PUB, 'modules/ui/avatar-studio.mjs'), 'utf8');
 studio = studio.replace(/^import .*$/mg, '');
-studio = 'const AV_AXES = window._AV_AXES, avSvg = window._avSvg, avSwatch = window._avSwatch, avNormalize = window._avNormalize, avRandom = window._avRandom, avVisible = window._avVisible, AV_DEFAULT = window._AV_DEFAULT, AV_CROP = window._AV_CROP, avPartSvg = window._avPartSvg, avPhotoRecipe = window._avPhotoRecipe;\n' + studio;
+studio = 'const AV_AXES = window._AV_AXES, avSvg = window._avSvg, avSwatch = window._avSwatch, avNormalize = window._avNormalize, avRandom = window._avRandom, avVisible = window._avVisible, AV_DEFAULT = window._AV_DEFAULT, AV_CROP = window._AV_CROP, avPartSvg = window._avPartSvg, avPhotoRecipe = window._avPhotoRecipe, avCaptureOpen = window._avCaptureOpen;\n' + studio;
 studio = studio.replace(/export \{[^}]*\};?/, '');
 (0, eval)(studio.replace(/^'use strict';/m, ''));
 
@@ -170,6 +171,16 @@ prev.click();
 ok(document.querySelectorAll('#avm-rows .avm-mini').length > 0, 'shape axes render mini previews');
 ok(!!document.getElementById('avm-photo') && !!document.getElementById('avm-photo-input'), 'From-a-photo (beta) button and hidden file input rendered');
 ok(document.querySelector('#avm-photo sup.avm-beta').textContent === 'avmBeta', 'beta badge uses the i18n key');
+// 5b. Framing panel: opens on the button (camera mode, no camera in jsdom →
+// photo mode), shows the template, closes on cancel.
+document.getElementById('avm-photo').click();
+const cam = document.getElementById('avm-cam');
+ok(!!cam && !!cam.querySelector('.avm-cam-guide svg ellipse'), 'framing panel opens with the face template');
+ok(document.getElementById('avm-cam-title').textContent === 'Frame your face', 'framing panel title falls back to English when the key is untranslated (harness t() echoes keys)');
+const G = window._AV_GUIDE;
+ok(G && G.cx === 0.5 && G.rx > 0 && G.ry > G.rx && G.cy + G.ry < 0.8, 'template oval sits in the upper part of the square with room for shoulders');
+document.getElementById('avm-cam-cancel').click();
+ok(!document.getElementById('avm-cam'), 'cancel closes the framing panel');
 window.avStudioTab('import');
 ok(!!document.getElementById('avi-drop'), 'import drop zone rendered');
 
@@ -201,6 +212,10 @@ if (resHair) {
 }
 const resBald = window._avPhotoAnalyze(synthFace({ hair: false }), { sex: 0 });
 ok(!!resBald && resBald.recipe.hair === 0, 'no hair cap → bald');
+// guided: the synthetic face oval (cx 80/160, cy 100/200, rx 46, ry 58) as template
+const resGuided = window._avPhotoAnalyze(synthFace({ hair: true }), { sex: 0, guide: { cx: 0.5, cy: 0.5, rx: 46 / 160, ry: 58 / 200 } });
+ok(!!resGuided && resGuided.debug.guided && resGuided.recipe.skin <= 2 && resGuided.recipe.hair !== 0, 'guided analysis uses the template and finds the same face');
+ok(window._avPhotoAnalyze(synthFace({ hair: true }), { sex: 0, guide: { cx: 0.1, cy: 0.9, rx: 0.05, ry: 0.05 } }) === null, 'guided analysis with nobody in the oval → no face');
 const blank = { width: 64, height: 64, data: new Uint8ClampedArray(64 * 64 * 4).fill(255) };
 ok(window._avPhotoAnalyze(blank, { sex: 0 }) === null, 'blank image → no face');
 window.avStudioReset();

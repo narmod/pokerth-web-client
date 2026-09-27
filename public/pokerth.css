@@ -11570,6 +11570,35 @@ body.adv-no-avcreate #avp-tab-create { display: none !important; }
 .avm-mini svg { display: block; }
 .avm-none-opt { min-width: 40px; }
 .avm-use { border-color: var(--gold-dim); color: var(--sel,var(--gold)); }
+/* ── Framing panel (camera / photo under the face template) ── */
+.avm-cam {
+  position: fixed; inset: 0; z-index: 10050;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(0,0,0,0.82); padding: var(--sp-4);
+}
+.avm-cam-card {
+  display: flex; flex-direction: column; align-items: center; gap: var(--sp-3);
+  width: min(94vw, 460px);
+}
+.avm-cam-title {
+  font-family: var(--ff-display); font-size: var(--fs-2xs); letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--sel,var(--gold));
+}
+.avm-cam-view {
+  position: relative; width: min(90vw, 56vh, 420px); aspect-ratio: 1 / 1;
+  overflow: hidden; border-radius: var(--r-md); background: #111;
+  touch-action: none; user-select: none; -webkit-user-select: none;
+}
+.avm-cam-view video {
+  position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
+  transform: scaleX(-1);
+}
+.avm-cam-img { position: absolute; top: 0; left: 0; transform-origin: 0 0; max-width: none; display: block; }
+.avm-cam-view.is-photo { cursor: grab; }
+.avm-cam-guide { position: absolute; inset: 0; pointer-events: none; }
+.avm-cam-guide svg { width: 100%; height: 100%; display: block; }
+.avm-cam-hint { font-size: var(--fs-sm); color: var(--text-hi); text-align: center; max-width: 420px; min-height: 2.4em; }
+.avm-cam-btns { display: flex; gap: var(--sp-2); flex-wrap: wrap; justify-content: center; }
 .avm-beta {
   font-size: 0.58rem; letter-spacing: 0.1em; text-transform: uppercase; vertical-align: super;
   color: var(--sel,var(--gold)); border: 1px solid var(--gold-dim); border-radius: 999px;
