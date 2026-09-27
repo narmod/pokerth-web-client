@@ -475,7 +475,7 @@ function avPhotoAnalyze(img, opts) {
     var jawRatio = (cw && jr.length) ? jr[jr.length >> 1] / cw : 0;
     // (square needs the cheeks in view too: hair over them narrows the
     // cheeks and would make any jaw look wide)
-    if (widthRatio > 0) face = widthRatio >= 1.04 ? 1 : ((jawRatio >= 0.8 && widthRatio >= 0.9) ? 2 : 0);
+    if (widthRatio > 0) face = widthRatio >= 1.04 ? 1 : ((jawRatio >= 0.8 && widthRatio >= 0.9) ? 2 : (widthRatio < 0.8 ? 3 : 0)); // (3: the long shape, 2.1.9-web.197)
     faceDbg = 'w=' + widthRatio.toFixed(2) + ' jaw=' + jawRatio.toFixed(2);
   }
 

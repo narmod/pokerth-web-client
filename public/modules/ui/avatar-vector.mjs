@@ -58,7 +58,7 @@ const AV_OUTFIT_COLORABLE = { 3: 1, 6: 1, 7: 1, 11: 1, 14: 1, 17: 1, 18: 1, 19: 
 
 const AV_AXES = [
   { id: 'sex',   label: 'avmSex',       n: 2,               kind: 'shape', none: false },
-  { id: 'face',  label: 'avmFace',      n: 3,               kind: 'shape', none: false },
+  { id: 'face',  label: 'avmFace',      n: 5,               kind: 'shape', none: false },
   { id: 'bg',    label: 'avmBg',        n: AV_FELT.length,  kind: 'color', none: false },
   { id: 'outfit',label: 'avmOutfit',    n: 33,              kind: 'shape', none: false },
   { id: 'outfitc', label: 'avmOutfitColor', n: AV_OUTFITC.length + 1, kind: 'color', none: true },
@@ -920,26 +920,32 @@ function _ears(i, hw) {
 }
 
 // ── Head shapes ──────────────────────────────────────────────────────────
-// Head outline by face key k = face + (feminine ? 3 : 0) — the same three
-// options read differently per silhouette (2.1.9-web.194): the masculine
-// shapes carry a wider, flatter jaw; the feminine ones taper to a softer
-// chin, and the feminine « square » is a heart (wide cheekbones, pointed
-// chin). Features stay put: eyes ≈ y 94, mouth ≈ 133, chin ≈ 152.
+// Head outline by face key k = face + (feminine ? 5 : 0) — the same five
+// options read differently per silhouette (2.1.9-web.194/197): the
+// masculine shapes carry a wider, flatter jaw; the feminine ones taper to
+// a softer chin. Features stay put: eyes ≈ y 94, mouth ≈ 133, chin ≈ 152.
+var AV_FACE_N = 5;
 function _headD(k) {
   switch (k) {
+    // masculine
     case 1: return 'M41 92 Q41 36 100 36 Q159 36 159 92 Q159 136 132 150 Q100 158 68 150 Q41 136 41 92z';        // round, flat chin
     case 2: return 'M46 80 Q46 36 100 36 Q154 36 154 80 L154 118 Q154 148 120 152 L80 152 Q46 148 46 118z';       // square jaw
-    case 3: return 'M49 92 Q49 36 100 36 Q151 36 151 92 Q151 126 126 145 Q112 155 100 155 Q88 155 74 145 Q49 126 49 92z'; // feminine oval, tapered chin
-    case 4: return 'M44 94 A56 55 0 1 0 156 94 A56 55 0 1 0 44 94z';                                                   // feminine round
-    case 5: return 'M45 84 Q45 36 100 36 Q155 36 155 84 Q155 112 130 138 Q114 156 100 156 Q86 156 70 138 Q45 112 45 84z'; // feminine heart
+    case 3: return 'M50 84 Q50 36 100 36 Q150 36 150 84 L150 122 Q150 152 118 155 L82 155 Q50 152 50 122z';       // long, rectangular
+    case 4: return 'M46 88 Q48 40 100 36 Q152 40 154 88 Q158 100 152 112 L124 150 Q112 155 100 155 Q88 155 76 150 L48 112 Q42 100 46 88z'; // rugged: wide cheekbones, angular chin
+    // feminine
+    case 5: return 'M49 92 Q49 36 100 36 Q151 36 151 92 Q151 126 126 145 Q112 155 100 155 Q88 155 74 145 Q49 126 49 92z'; // oval, tapered chin
+    case 6: return 'M44 94 A56 55 0 1 0 156 94 A56 55 0 1 0 44 94z';                                                   // round
+    case 7: return 'M45 84 Q45 36 100 36 Q155 36 155 84 Q155 112 130 138 Q114 156 100 156 Q86 156 70 138 Q45 112 45 84z'; // heart
+    case 8: return 'M51 90 Q51 36 100 36 Q149 36 149 90 Q149 132 126 150 Q112 158 100 158 Q88 158 74 150 Q51 132 51 90z'; // long, slim
+    case 9: return 'M48 86 Q52 40 100 36 Q148 40 152 86 Q156 100 148 114 Q132 146 112 155 Q100 158 88 155 Q68 146 52 114 Q44 100 48 86z'; // soft diamond: high cheekbones, small chin
     default: return 'M45 90 Q45 36 100 36 Q155 36 155 90 Q155 132 130 148 Q114 153 100 153 Q86 153 70 148 Q45 132 45 90z'; // masculine oval, firm jaw
   }
 }
-function _faceKey(r) { return (r.face || 0) + (r.sex === 1 ? 3 : 0); }
+function _faceKey(r) { return (r.face || 0) + (r.sex === 1 ? AV_FACE_N : 0); }
 // Half-width of each outline at ear level (y ≈ 100): hair, hats, the
 // temple underlay and the ears follow it, so nothing floats off a wide
 // jaw or pokes out beside a narrow one (drawings are made for ±53).
-var HEAD_HW = [55, 59, 54, 51, 56, 55];
+var HEAD_HW = [55, 59, 54, 50, 57, 51, 56, 55, 49, 53];
 function _headHW(k) { return HEAD_HW[k] || 53; }
 // clipPath of the head outline, scaled by `grow` around the face centre.
 function _headClip(ctx, face, grow) {
@@ -1011,7 +1017,7 @@ function avPartSvg(axId, i, recipe, size) {
   if (!vb) return avSvg(r, size);
   var ctx = _ctx(_cid()), body = '', h;
   switch (axId) {
-    case 'face':    body = _earsSkin(skin, _headHW(i + (r.sex === 1 ? 3 : 0))) + _head(ctx, i + (r.sex === 1 ? 3 : 0), skin); break;
+    case 'face':    body = _earsSkin(skin, _headHW(i + (r.sex === 1 ? AV_FACE_N : 0))) + _head(ctx, i + (r.sex === 1 ? AV_FACE_N : 0), skin); break;
     case 'marks':   body = _earsSkin(skin, _headHW(_faceKey(r))) + _head(ctx, _faceKey(r), skin) + _marks(i, skin[1]); break;
     case 'outfit':  body = _sx(r.sex === 1 ? 0.86 : 1, _neck(skin) + _outfit(ctx, i, skin, r.outfitc ? AV_OUTFITC[r.outfitc - 1] : null)); break;
     case 'hair':    h = _hair(ctx, i, hc, _faceKey(r));

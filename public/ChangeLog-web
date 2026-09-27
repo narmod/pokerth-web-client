@@ -1,4 +1,8 @@
-2026-09-27 version 2.1.9-web.196 (current series):
+2026-09-27 version 2.1.9-web.197 (current series):
+- new: two more face shapes per silhouette in the « Create » tab — men: a long rectangular face and a rugged one (wide cheekbones, angular chin); women: a long slim face and a soft diamond (high cheekbones, small chin). Five shapes each, hair, beards, hats and ears fitted to all of them
+- improvement: « From a photo » — a face clearly narrower than the template oval now picks the long shape
+
+2026-09-27 version 2.1.9-web.196:
 - improvement: portraits of the « Create » tab — the men's tank top read as a strapless top on the cropped torso; it becomes a bomber jacket (ribbed collar, zipper, white tee underneath), in the eight outfit colours
 
 2026-09-27 version 2.1.9-web.195:
