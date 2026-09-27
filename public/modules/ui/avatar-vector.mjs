@@ -54,13 +54,13 @@ const AV_BG_WHITE = 7;
 // Outfit colours (axis 'outfitc': 0 = as drawn, 1.. = these), applied to
 // the plain garments listed in AV_OUTFIT_COLORABLE (narmod 2026-09-27).
 const AV_OUTFITC = ['#c0392b', '#2d6aa3', '#2e8b57', '#e6b422', '#8e44ad', '#1f1f24', '#f2f2f2', '#e07aa0'];
-const AV_OUTFIT_COLORABLE = { 3: 1, 6: 1, 7: 1, 11: 1, 14: 1, 17: 1, 18: 1, 19: 1, 20: 1, 21: 1, 22: 1, 23: 1, 24: 1, 25: 1, 26: 1, 27: 1, 28: 1, 29: 1, 30: 1, 31: 1, 32: 1 };
+const AV_OUTFIT_COLORABLE = { 3: 1, 6: 1, 7: 1, 11: 1, 14: 1, 17: 1, 18: 1, 19: 1, 20: 1, 21: 1, 22: 1, 23: 1, 24: 1, 25: 1, 26: 1, 27: 1, 28: 1, 29: 1, 30: 1, 31: 1, 32: 1, 33: 1, 34: 1, 35: 1, 36: 1, 39: 1, 40: 1, 41: 1, 42: 1 };
 
 const AV_AXES = [
   { id: 'sex',   label: 'avmSex',       n: 2,               kind: 'shape', none: false },
   { id: 'face',  label: 'avmFace',      n: 5,               kind: 'shape', none: false },
   { id: 'bg',    label: 'avmBg',        n: AV_FELT.length,  kind: 'color', none: false },
-  { id: 'outfit',label: 'avmOutfit',    n: 33,              kind: 'shape', none: false },
+  { id: 'outfit',label: 'avmOutfit',    n: 43,              kind: 'shape', none: false },
   { id: 'outfitc', label: 'avmOutfitColor', n: AV_OUTFITC.length + 1, kind: 'color', none: true },
   { id: 'skin',  label: 'avmSkin',      n: AV_SKIN.length,  kind: 'color', none: false },
   { id: 'marks', label: 'avmMarks',     n: 10,              kind: 'shape', none: true  },
@@ -75,7 +75,7 @@ const AV_AXES = [
   { id: 'glasses', label: 'avmGlasses', n: 9,               kind: 'shape', none: true  },
   { id: 'shoulder', label: 'avmShoulder', n: 5,             kind: 'shape', none: true  },
   { id: 'ears',  label: 'avmEarrings',  n: 6,               kind: 'shape', none: true  },
-  { id: 'hat',   label: 'avmHat',       n: 10,              kind: 'shape', none: true  }
+  { id: 'hat',   label: 'avmHat',       n: 16,              kind: 'shape', none: true  }
 ];
 
 // Per-option silhouette tags (0 = masculine, 1 = feminine, missing =
@@ -114,7 +114,10 @@ const AV_SEXTAG = {
             // crew-neck sweater, denim jacket, bomber (was a tank top), football jersey, zip
             // hoodie; feminine: floral blouse, strap dress, bow blouse,
             // tailored blazer, cardigan, sweatshirt, swimsuit, tee
-            17: 0, 18: 0, 19: 0, 20: 0, 21: 0, 22: 0, 23: 0, 24: 0, 25: 1, 26: 1, 27: 1, 28: 1, 29: 1, 30: 1, 31: 1, 32: 1 },
+            17: 0, 18: 0, 19: 0, 20: 0, 21: 0, 22: 0, 23: 0, 24: 0, 25: 1, 26: 1, 27: 1, 28: 1, 29: 1, 30: 1, 31: 1, 32: 1,
+            // 2.1.9-web.205 — poker / meaner, in masculine-feminine pairs: dealer
+            // vest, Royal Flush tee, suits shirt, pinstripe suit, biker vest
+            33: 0, 34: 1, 35: 0, 36: 1, 37: 0, 38: 1, 39: 0, 40: 1, 41: 0, 42: 1 },
   // 2.1.9-web.193 (narmod: "some men look too feminine"): every earring,
   // the pout, the small 'o' and the beauty mark are feminine; men get a
   // cigar (mouth 10) and a cheek scar (marks 6) instead.
@@ -123,7 +126,7 @@ const AV_SEXTAG = {
   glasses: { 3: 1, 7: 0 },                  // cat-eye | monocle
   brows: { 4: 1 },                          // thin arched
   ears: { 1: 1, 2: 1, 3: 1, 4: 1, 5: 1 },   // pearl studs, gold studs, hoops, single hoops
-  hat: { 4: 0, 7: 0 }                       // bowler, flat cap
+  hat: { 4: 0, 7: 0, 12: 0 }                // bowler, flat cap, top hat
 };
 
 function avVisible(axId, i, recipe) {
@@ -168,10 +171,11 @@ const AV_RANDWEIGHT = {
   hair: { 0: 0.35, 10: 0.6, 11: 0.6, 15: 0.5, 16: 0.4, 17: 0.2, 23: 0.6, 28: 0.5, 29: 0.5, 30: 0.5, 33: 0.6, 38: 0.6, 42: 0.4, 48: 0.6 },
   hairc: { 10: 0.25, 11: 0.25 },
   mouth: { 10: 0.35, 11: 0.5, 12: 0.4 },
-  outfit: { 31: 0.4 },
+  outfit: { 31: 0.4, 35: 0.6, 36: 0.6, 37: 0.6, 38: 0.6 },
   brows: { 1: 0.5, 2: 0.6, 3: 0.5, 4: 0.6 },
   glasses: { 6: 0.3, 7: 0.4 },
-  marks: { 8: 0.4, 9: 0.5 }
+  marks: { 8: 0.4, 9: 0.5 },
+  hat: { 10: 0.5, 12: 0.4, 15: 0.3 }
 };
 // Probability that an optional axis stays on 'none' ([masculine, feminine]).
 const AV_RANDNONE = { marks: [0.65, 0.65], beard: [0.45, 1], glasses: [0.7, 0.7], ears: [0.85, 0.45], hat: [0.7, 0.75] };
@@ -269,6 +273,23 @@ function _tie(c) {
 function _bowtie(c) {
   return '<path d="M100 166 l-11-6 0 12z M100 166 l11-6 0 12z" fill="' + c + '"/>'
     + '<circle cx="100" cy="166" r="3" fill="' + _mix(c, 0.7) + '"/>';
+}
+
+// Card suit glyph centred on (x, y), half-size s: 0 spade, 1 heart,
+// 2 diamond, 3 club (poker motifs, 2.1.9-web.205).
+function _suit(kind, x, y, s, fill) {
+  var f = ' fill="' + fill + '"';
+  if (kind === 1) return '<path d="M' + x + ' ' + (y + s) + ' Q' + (x - s * 1.2) + ' ' + (y + s * 0.2) + ' ' + (x - s) + ' ' + (y - s * 0.3) + ' Q' + (x - s) + ' ' + (y - s) + ' ' + (x - s * 0.5) + ' ' + (y - s) + ' Q' + x + ' ' + (y - s) + ' ' + x + ' ' + (y - s * 0.4) + ' Q' + x + ' ' + (y - s) + ' ' + (x + s * 0.5) + ' ' + (y - s) + ' Q' + (x + s) + ' ' + (y - s) + ' ' + (x + s) + ' ' + (y - s * 0.3) + ' Q' + (x + s * 1.2) + ' ' + (y + s * 0.2) + ' ' + x + ' ' + (y + s) + 'z"' + f + '/>';
+  if (kind === 2) return '<path d="M' + x + ' ' + (y - s) + ' L' + (x + s * 0.75) + ' ' + y + ' L' + x + ' ' + (y + s) + ' L' + (x - s * 0.75) + ' ' + y + 'z"' + f + '/>';
+  if (kind === 3) return '<circle cx="' + x + '" cy="' + (y - s * 0.45) + '" r="' + (s * 0.42) + '"' + f + '/><circle cx="' + (x - s * 0.45) + '" cy="' + (y + s * 0.15) + '" r="' + (s * 0.42) + '"' + f + '/><circle cx="' + (x + s * 0.45) + '" cy="' + (y + s * 0.15) + '" r="' + (s * 0.42) + '"' + f + '/>'
+    + '<path d="M' + x + ' ' + y + ' L' + (x + s * 0.3) + ' ' + (y + s) + ' L' + (x - s * 0.3) + ' ' + (y + s) + 'z"' + f + '/>';
+  return '<path d="M' + x + ' ' + (y - s) + ' Q' + (x + s * 1.2) + ' ' + (y - s * 0.2) + ' ' + (x + s) + ' ' + (y + s * 0.3) + ' Q' + (x + s) + ' ' + (y + s * 0.8) + ' ' + (x + s * 0.4) + ' ' + (y + s * 0.6) + ' Q' + x + ' ' + (y + s * 0.4) + ' ' + x + ' ' + (y + s * 0.2) + ' Q' + x + ' ' + (y + s * 0.4) + ' ' + (x - s * 0.4) + ' ' + (y + s * 0.6) + ' Q' + (x - s) + ' ' + (y + s * 0.8) + ' ' + (x - s) + ' ' + (y + s * 0.3) + ' Q' + (x - s * 1.2) + ' ' + (y - s * 0.2) + ' ' + x + ' ' + (y - s) + 'z"' + f + '/>'
+    + '<path d="M' + x + ' ' + (y + s * 0.2) + ' L' + (x + s * 0.32) + ' ' + (y + s) + ' L' + (x - s * 0.32) + ' ' + (y + s) + 'z"' + f + '/>';
+}
+// A small playing card (white, rounded) with one suit pip, top-left at (x, y).
+function _card(x, y, w, kind, red) {
+  return '<rect x="' + x + '" y="' + y + '" width="' + w + '" height="' + (w * 1.4) + '" rx="' + (w * 0.14) + '" fill="#fff" stroke="#b9b3a8" stroke-width=".6"/>'
+    + _suit(kind, x + w / 2, y + w * 0.7, w * 0.3, red ? '#c62828' : '#1f1f24');
 }
 
 // Clip to the body silhouette (patterns: plaid, stripes, flowers).
@@ -395,6 +416,53 @@ function _outfit(ctx, i, skin, oc) {
       return _torso(ctx, c)
         + '<path d="M82 157 Q100 180 118 157 Q100 163 82 157z" fill="' + sk + '"/>'
         + '<path d="M80 156 Q100 182 120 156" stroke="' + _mix(c, 0.78) + '" stroke-width="3.4" fill="none"/>';
+    // 2.1.9-web.205 (narmod: poker motifs, meaner looks) — 33–42
+    case 33: case 34: { // dealer vest over a white shirt, bow tie, sleeve garters (33 masculine black vest, 34 feminine burgundy vest)
+      var fm = i === 34; c = C(fm ? '#7a1f2e' : '#1f2126');
+      var gar = fm ? '#1f1f24' : '#c0392b';
+      return _torso(ctx, '#f4f0e6')
+        + '<path d="M60 166 L84 158 L100 190 L116 158 L140 166 L146 204 L54 204z" fill="' + ctx.v(c) + '"/>'
+        + '<path d="M100 190 L100 204" stroke="' + _mix(c, 0.7) + '" stroke-width="1.2"/><circle cx="100" cy="194" r="1.4" fill="' + _mix(c, 1.6) + '"/><circle cx="100" cy="200" r="1.4" fill="' + _mix(c, 1.6) + '"/>'
+        + '<path d="M84 158 L100 190 L116 158" stroke="' + _mix(c, 0.75) + '" stroke-width="1.2" fill="none"/>'
+        + _bowtie(fm ? '#1f1f24' : '#1f1f24')
+        + '<path d="M37 191 L56 186 M144 186 L163 191" stroke="' + gar + '" stroke-width="5" stroke-linecap="round"/>';
+    }
+    case 35: case 36: { // « Royal Flush » tee: five cards fanned on the chest (35 masculine crew neck, 36 feminine scoop neck)
+      c = C('#2a2e36');
+      var cards = '';
+      for (var ci = 0; ci < 5; ci++) cards += '<g transform="rotate(' + ((ci - 2) * 12) + ' 100 214)">' + _card(94, 176, 12, 0, false) + '</g>';
+      return _torso(ctx, c)
+        + (i === 36 ? '<path d="M82 157 Q100 180 118 157 Q100 163 82 157z" fill="' + sk + '"/><path d="M80 156 Q100 182 120 156" stroke="' + _mix(c, 0.78) + '" stroke-width="3.4" fill="none"/>' : _crew(ctx, sk, c))
+        + '<g clip-path="' + _bodyClip(ctx) + '">' + cards + '</g>';
+    }
+    case 37: case 38: { // shirt / blouse scattered with the four suits (37 masculine open collar, 38 feminine V-neck)
+      var pat = '', sp = [[46, 176, 0], [60, 194, 1], [74, 172, 2], [72, 200, 3], [90, 190, 1], [110, 190, 0], [126, 172, 3], [128, 200, 1], [142, 194, 2], [154, 176, 0], [100, 202, 2]];
+      sp.forEach(function (q) { pat += _suit(q[2], q[0], q[1], 3.2, (q[2] === 1 || q[2] === 2) ? '#c62828' : '#1f1f24'); });
+      return _torso(ctx, '#f6f2ea') + '<g clip-path="' + _bodyClip(ctx) + '" opacity=".9">' + pat + '</g>'
+        + (i === 38
+          ? '<path d="M86 157 L100 184 L114 157 Q100 162 86 157z" fill="' + sk + '"/><path d="M84 157 L100 186 L116 157" stroke="#e4ded2" stroke-width="3" fill="none" stroke-linejoin="round"/>'
+          : '<path d="M92 158 L100 172 L108 158z" fill="' + sk + '"/><path d="M86 156 Q92 166 99 170 L92 178 Q84 168 84 158z" fill="#fbf8f2"/><path d="M114 156 Q108 166 101 170 L108 178 Q116 168 116 158z" fill="#efeae0"/>');
+    }
+    case 39: case 40: { // pinstripe suit (39 masculine, red tie + pocket square; 40 feminine blazer, deeper V, pocket square)
+      c = C('#23242b');
+      var st = '';
+      for (var px = 40; px <= 160; px += 7) st += '<line x1="' + px + '" y1="150" x2="' + px + '" y2="206"/>';
+      return _torso(ctx, c) + '<g clip-path="' + _bodyClip(ctx) + '" stroke="' + _mix(c, 1.9) + '" stroke-width=".8" opacity=".55">' + st + '</g>'
+        + (i === 40 ? '<path d="M84 158 L100 200 L116 158 Q100 166 84 158z" fill="' + ctx.v('#f4f0e6') + '"/>' : _shirtV(ctx, '#f4f0e6'))
+        + _lapels(ctx, _mix(c, 0.82))
+        + (i === 39 ? _tie('#a8262f') : '')
+        + '<path d="M126 182 L138 180 L136 186z" fill="' + (i === 39 ? '#f4f0e6' : '#c0392b') + '"/>';
+    }
+    case 41: case 42: { // biker leather vest with a spade patch over a tee (41 masculine, 42 feminine tank)
+      c = C(i === 42 ? '#b3264a' : '#3a3a42');
+      var lv = '#1c1c20';
+      return _torso(ctx, c)
+        + (i === 42 ? '<path d="M82 157 Q100 178 118 157 Q100 163 82 157z" fill="' + sk + '"/>' : _crew(ctx, sk, c))
+        + '<path d="M34 204 Q34 160 88 157 L90 204z" fill="' + ctx.v(lv) + '"/>'
+        + '<path d="M166 204 Q166 160 112 157 L110 204z" fill="' + ctx.v(_mix(lv, 0.9)) + '"/>'
+        + '<path d="M88 157 L90 204 M112 157 L110 204" stroke="#3c3c44" stroke-width="1.2"/>'
+        + '<circle cx="64" cy="186" r="8" fill="#101014" stroke="#e5e1d8" stroke-width="1.4"/>' + _suit(0, 64, 186, 4.6, '#f2eee6');
+    }
     case 5: // open-collar shirt, no jacket (casual)
       return _torso(ctx, '#e6dfcf')
         + '<path d="M92 158 L100 172 L108 158z" fill="' + sk + '"/>'
@@ -958,11 +1026,48 @@ var AV_NO_UNDERLAY = { 0: 1, 16: 1, 17: 1, 29: 1, 41: 1 };
 // (temple tips), long styles keep everything below the hat line.
 var AV_SHORT_HAIR = { 1: 1, 2: 1, 4: 1, 6: 1, 9: 1, 12: 1, 13: 1, 16: 1, 18: 1, 26: 1, 29: 1, 31: 1, 36: 1, 39: 1, 40: 1, 41: 1, 48: 1, 50: 1 };
 var HAT_SHORT_BOTTOM = 86;
-function _hatCovers(i) { return i !== 0 && i !== 3 && i !== 6; }
+function _hatCovers(i) { return i !== 0 && i !== 3 && i !== 6 && i !== 10 && i !== 15; } // visor, bandana, hood (hair shows in its opening) and crown leave the hair
 
-function _hat(ctx, i) {
+// Layer BEHIND the hair and the head: the hood's dark inside, seen round
+// the head through its opening (2.1.9-web.205).
+function _hatBack(ctx, i, face) {
+  if (i !== 10) return '';
+  return '<path d="' + _headScaled(face || 0, 1.17, 1.15, 100, 108) + '" fill="#1c1e23"/>';
+}
+function _hat(ctx, i, face) {
   switch (i) {
     case 0: return '';
+    // 2.1.9-web.205 (narmod: poker motifs, meaner looks) — 10–15
+    case 10: { // hood up: its opening is the face outline itself, grown (data-fit: not warped) — the hair shows inside, the hood lies on the shoulders round the chest
+      var hole = _headScaled(face || 0, 1.17, 1.15, 100, 108);
+      return '<g data-fit="1"><path d="M18 200 Q14 116 38 58 Q56 12 100 8 Q144 12 162 58 Q186 116 182 200 L154 200 Q146 176 100 170 Q54 176 46 200z ' + hole + '" fill-rule="evenodd" fill="' + ctx.v('#2a2d33') + '"/>'
+        + '<path d="' + hole + '" fill="none" stroke="#1c1e23" stroke-width="5" opacity=".55"/>'
+        + '<path d="' + hole + '" fill="none" stroke="#3d414a" stroke-width="2.4"/>'
+        + '<path d="M46 60 Q40 100 44 150 M154 60 Q160 100 156 150" stroke="#1c1e23" stroke-width="1.6" fill="none" opacity=".5"/>'
+        + '<path d="M88 176 L84 198 M112 176 L116 198" stroke="#eef1f4" stroke-width="2.2" stroke-linecap="round"/></g>';
+    }
+    case 11: // black stetson (outlaw)
+      return '<path d="M24 76 Q100 98 176 76 Q164 66 140 64 L60 64 Q36 66 24 76z" fill="' + ctx.v('#1e1e22') + '"/>'
+        + '<path d="M60 66 Q58 30 74 22 Q100 30 126 22 Q142 30 140 66z" fill="' + ctx.v('#26262c') + '"/>'
+        + '<path d="M60 54 L140 54 L140 62 L60 62z" fill="#3b2f26"/><path d="M96 54 L104 54 L104 62 L96 62z" fill="#c9a24a"/>';
+    case 12: // top hat (masculine)
+      return '<ellipse cx="100" cy="66" rx="62" ry="9" fill="' + ctx.v('#1a1a1f') + '"/>'
+        + '<path d="M62 66 L60 10 Q100 4 140 10 L138 66z" fill="' + ctx.v('#26262c') + '"/>'
+        + '<path d="M61 54 L139 54 L139 62 L61 62z" fill="#8e2632"/>';
+    case 13: // black cap with a spade logo (poker)
+      return '<path d="M44 70 Q44 16 100 16 Q156 16 156 70z" fill="' + ctx.v('#1f1f24') + '"/>'
+        + '<path d="M44 66 L178 64 Q182 76 152 76 L44 74z" fill="' + ctx.v('#16161a') + '"/><circle cx="100" cy="18" r="5" fill="#16161a"/>'
+        + _suit(0, 100, 44, 9, '#f2eee6');
+    case 14: // fedora with an ace of spades tucked in the band (poker)
+      return '<ellipse cx="100" cy="66" rx="72" ry="12" fill="' + ctx.v('#3a3a42') + '"/>'
+        + '<path d="M60 66 Q58 22 80 18 Q100 28 120 18 Q142 22 140 66z" fill="' + ctx.v('#4a4a54') + '"/>'
+        + '<path d="M60 52 L140 52 L140 62 L60 62z" fill="#1f1f24"/>'
+        + '<g transform="rotate(-14 130 48)">' + _card(124, 34, 12, 0, false) + '</g>';
+    case 15: // crown (king of the table) — sits on the hair, does not cover it
+      return '<path d="M56 66 L54 30 L72 48 L86 22 L100 42 L114 22 L128 48 L146 30 L144 66z" fill="' + ctx.v('#e0b23c') + '"/>'
+        + '<path d="M56 60 L144 60 L144 66 L56 66z" fill="#b8892a"/>'
+        + '<circle cx="54" cy="30" r="3" fill="#c62828"/><circle cx="86" cy="22" r="3" fill="#2d6aa3"/><circle cx="114" cy="22" r="3" fill="#2d6aa3"/><circle cx="146" cy="30" r="3" fill="#c62828"/>'
+        + '<circle cx="100" cy="54" r="3.5" fill="#2e8b57"/>';
     case 1: // cap
       return '<path d="M44 70 Q44 16 100 16 Q156 16 156 70z" fill="' + ctx.v('#c63b2e') + '"/>'
         + '<path d="M44 66 L178 64 Q182 76 152 76 L44 74z" fill="' + ctx.v('#a8302a') + '"/><circle cx="100" cy="18" r="5" fill="#a8302a"/>';
@@ -1071,29 +1176,40 @@ function _wfac(k) {
 // _wfac: every x is scaled around x = 100 by the factor at its own y.
 // Path data is absolute (M L Q C T S H V A Z), as the engine draws it.
 // A `data-fit` snippet is already built from the outline: untouched.
+function _N(v) { return String(Math.round(v * 10) / 10); }
+// Map absolute path data (M L Q C T S H V A Z) point by point: X(x, y) and
+// Y(x, y) give the new coordinates, RX(r, y) / RY(r, y) the new arc radii.
+function _mapD(d, X, Y, RX, RY) {
+  var t = d.match(/[A-Za-z]|-?\d*\.?\d+(?:e-?\d+)?/g) || [], o = '', i = 0, c = '', cx = 0, cy = 0;
+  while (i < t.length) {
+    if (/[A-Za-z]/.test(t[i])) { c = t[i++]; o += (o ? ' ' : '') + c; continue; }
+    if (c === 'H') { cx = +t[i]; o += ' ' + _N(X(cx, cy)); i += 1; }
+    else if (c === 'V') { cy = +t[i]; o += ' ' + _N(Y(cx, cy)); i += 1; }
+    else if (c === 'A') { // rx ry rot large sweep x y
+      cx = +t[i + 5]; cy = +t[i + 6];
+      o += ' ' + _N(RX(+t[i], cy)) + ' ' + _N(RY(+t[i + 1], cy)) + ' ' + t[i + 2] + ' ' + t[i + 3] + ' ' + t[i + 4] + ' ' + _N(X(cx, cy)) + ' ' + _N(Y(cx, cy)); i += 7;
+    } else { cx = +t[i]; cy = +t[i + 1]; o += ' ' + _N(X(cx, cy)) + ' ' + _N(Y(cx, cy)); i += 2; } // M L T Q S C: pairs
+  }
+  return o;
+}
+// Head outline scaled by (sx, sy) around (cx, cy), as path data.
+function _headScaled(k, sx, sy, cx, cy) {
+  return _mapD(_headD(k), function (x) { return cx + (x - cx) * sx; }, function (x, y) { return cy + (y - cy) * sy; },
+    function (r) { return r * sx; }, function (r) { return r * sy; });
+}
 function _warp(svg, k) {
   if (!svg || svg.indexOf('data-fit') !== -1) return svg;
   var fk = _wfac(k), a = fk[0], b = fk[1];
   if (Math.abs(a - 1) < 0.003 && Math.abs(b - 1) < 0.003) return svg;
   var S = function (y) { return y <= 60 ? a : y >= 100 ? b : a + (b - a) * (y - 60) / 40; };
-  var N = function (v) { return String(Math.round(v * 10) / 10); };
+  var N = _N;
   var X = function (x, y) { return N(100 + (x - 100) * S(y)); };
-  var path = function (d) {
-    var t = d.match(/[A-Za-z]|-?\d*\.?\d+(?:e-?\d+)?/g) || [], o = '', i = 0, c = '', cy = 0;
-    while (i < t.length) {
-      if (/[A-Za-z]/.test(t[i])) { c = t[i++]; o += (o ? ' ' : '') + c; continue; }
-      if (c === 'H') { o += ' ' + X(+t[i], cy); i += 1; }
-      else if (c === 'V') { cy = +t[i]; o += ' ' + t[i]; i += 1; }
-      else if (c === 'A') { // rx ry rot large sweep x y
-        cy = +t[i + 6];
-        o += ' ' + N(+t[i] * S(cy)) + ' ' + t[i + 1] + ' ' + t[i + 2] + ' ' + t[i + 3] + ' ' + t[i + 4] + ' ' + X(+t[i + 5], cy) + ' ' + t[i + 6]; i += 7;
-      } else { cy = +t[i + 1]; o += ' ' + X(+t[i], cy) + ' ' + t[i + 1]; i += 2; } // M L T Q S C: pairs
-    }
-    return o;
-  };
+  var I = function (x, y) { return y; };
   var at = function (el, n) { var m = el.match(new RegExp(' ' + n + '="(-?[\\d.]+)"')); return m ? +m[1] : null; };
   var set = function (el, n, v) { return el.replace(new RegExp(' ' + n + '="-?[\\d.]+"'), ' ' + n + '="' + v + '"'); };
-  svg = svg.replace(/ d="([^"]*)"/g, function (m, d) { return ' d="' + path(d) + '"'; });
+  svg = svg.replace(/ d="([^"]*)"/g, function (m, d) {
+    return ' d="' + _mapD(d, function (x, y) { return 100 + (x - 100) * S(y); }, I, function (r, y) { return r * S(y); }, function (r) { return r; }) + '"';
+  });
   return svg.replace(/<(circle|ellipse|rect|line)\b[^>]*>/g, function (el, tag) {
     var x, y, w, h;
     if (tag === 'circle' || tag === 'ellipse') {
@@ -1201,7 +1317,7 @@ function avPartSvg(axId, i, recipe, size) {
     case 'nose':    body = _nose(i, skin[1]); break;
     case 'mouth':   body = _mouth(i); break;
     case 'glasses': body = _glasses(i); break;
-    case 'hat':     body = _hat(ctx, i); break;
+    case 'hat':     body = _hatBack(ctx, i, _faceKey(r)) + _hat(ctx, i, _faceKey(r)); break;
     case 'shoulder':body = ''; break;
     case 'ears':    // one ear + its earring (the right-only hoop is mirrored)
       body = '<circle cx="47" cy="100" r="10.5" fill="' + skin[0] + '"/>' + _earring(i, 46);
@@ -1232,6 +1348,7 @@ function avSvg(recipe, size) {
     + '<rect x="2.5" y="2.5" width="195" height="195" fill="#c9992e"/>'
     + '<rect x="6" y="6" width="188" height="188" fill="url(#' + cid + 'bg)"/>'
     + '<g clip-path="url(#' + cid + ')">'
+    + _hatBack(ctx, r.hat, fk)
     + clipHair(_warp(hair[0]
         // Underlay: the hair mass behind the head fills the temples, so
         // the hairline hugs every face shape (no backdrop between hair
@@ -1254,7 +1371,7 @@ function avSvg(recipe, size) {
     + _ears(r.ears, _headHW(fk))
     + clipHair(_warp(hair[1], fk))
     + _glasses(r.glasses)
-    + _warp(_hat(ctx, r.hat), fk)
+    + _warp(_hat(ctx, r.hat, fk), fk)
     + '</g>'
     + '<rect x="6" y="6" width="188" height="188" fill="none" stroke="#8f6a1d" stroke-width="1"/>';
   return _wrap('0 0 200 200', sz, ctx, body);

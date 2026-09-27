@@ -58,7 +58,14 @@ ok(window._avSvg({ sex: 0, brows: 1 }).indexOf('M68 75 Q80 77 90 84') !== -1 && 
 ok(window._avSvg({ sex: 0, glasses: 6 }).indexOf('M108 88 Q122 83 136 89') !== -1 && window._avSvg({ sex: 0, glasses: 7 }).indexOf('stroke-dasharray="2 1.6"') !== -1 && window._avSvg({ sex: 0, mouth: 11 }).indexOf('M107 130 L111 137 L113 129z') !== -1 && window._avSvg({ sex: 0, mouth: 12 }).indexOf('<rect x="87" y="130" width="26" height="8"') !== -1, 'eye patch, monocle chain, sneer canine and gritted teeth are drawn');
 ok(window._avSvg({ sex: 0, face: 0, marks: 9 }).indexOf('M141 66 Q153 78 143 92') !== -1 && window._avSvg({ sex: 1, face: 3, marks: 9 }).indexOf('M135 66 Q147 78 137 92') !== -1 && window._avSvg({ sex: 0, marks: 8 }).indexOf('fill="#6a3d8f"') !== -1, 'temple tattoo follows the outline width (oval man x 141, slim woman x 135), black eye is a purple bruise');
 const axOutfit = AXES.find(a => a.id === 'outfit'), axHair = AXES.find(a => a.id === 'hair'), axOc = AXES.find(a => a.id === 'outfitc');
-ok(axOutfit.n === 33 && axHair.n === 52, '2026-09-27 catalogue: 33 outfits, 52 hairstyles (' + axOutfit.n + '/' + axHair.n + ')');
+ok(axOutfit.n === 43 && axHair.n === 52, '2026-09-27 catalogue: 43 outfits, 52 hairstyles (' + axOutfit.n + '/' + axHair.n + ')');
+// 2.1.9-web.205 — lot 2: poker / meaner outfits in masculine-feminine pairs, six hats
+const axHat = AXES.find(a => a.id === 'hat');
+ok(axHat.n === 16 && !window._avVisible('hat', 12, { sex: 1 }) && window._avVisible('hat', 12, { sex: 0 }) && window._avVisible('hat', 10, { sex: 1 }) && window._avVisible('hat', 11, { sex: 1 }), '16 hats: hood, stetson, top hat (masculine), spade cap, ace fedora, crown');
+ok(window._avSvg({ sex: 0, face: 1, hat: 10, hair: 1 }).indexOf('data-fit="1"><path d="M18 200') !== -1 && window._avSvg({ sex: 0, face: 1, hat: 10, hair: 1 }).indexOf('fill-rule="evenodd"') !== -1 && window._avSvg({ sex: 0, face: 1, hat: 10, hair: 1 }).indexOf('" fill="#1c1e23"/>') !== -1, 'the hood is built on the face outline (opening + dark inside behind the head), not warped');
+ok((() => { const s = window._avSvg({ sex: 0, hat: 10, hair: 1 }); const m = s.match(/clip-path="url\(#[a-z0-9]+h[ls]\)"/g); return !m; })() && !!window._avSvg({ sex: 0, hat: 1, hair: 1 }).match(/clip-path="url\(#[a-z0-9]+hs\)"/), 'the hood leaves the hair unclipped (it shows in the opening), a cap still clips it');
+ok(window._avSvg({ sex: 0, outfit: 33 }).indexOf('M60 166 L84 158 L100 190') !== -1 && window._avSvg({ sex: 0, outfit: 35 }).split('<rect').length === window._avSvg({ sex: 0, outfit: 17 }).split('<rect').length + 5 && window._avSvg({ sex: 0, outfit: 39 }).indexOf('<line x1="40" y1="150"') !== -1 && window._avSvg({ sex: 0, outfit: 41 }).indexOf('<circle cx="64" cy="186" r="8"') !== -1, 'dealer vest, five cards on the Royal Flush tee, pinstripes, spade patch');
+ok(window._avSvg({ sex: 0, hat: 13 }).indexOf('<path d="M 100 35 Q 111.2 42.2') !== -1 && window._avSvg({ sex: 0, hat: 14 }).indexOf('rotate(-14 130 48)') !== -1 && window._avSvg({ sex: 0, hat: 15 }).indexOf('L 85.5 22 L 100 42 L 114.5 22') !== -1, 'spade logo on the cap, ace in the fedora band, crown (warped for the oval man)');
 const axHairc = AXES.find(a => a.id === 'hairc');
 ok(axHairc && axHairc.n === 12 && window._avSwatch('hairc', 11) === '#e88ac2' && window._avSwatch('hairc', 8) === '#9c7b52', '12 hair colours (light brown, light red, blue, pink added)');
 ok(window._avSvg({ sex: 0, hair: 1, hairc: 10, beard: 3 }).indexOf('#3b6fd6') !== -1 && window._avSvg({ sex: 0, hair: 1, hairc: 10, beard: 3 }).indexOf('stroke="#4a3222"') !== -1, 'blue hair keeps dark-brown brows and beard');
@@ -135,7 +142,7 @@ for (const axId of ['hair', 'outfit']) {
   }
 }
 ok(oneSided, 'every hairstyle and outfit is visible for exactly one silhouette');
-ok(nM.hair === 24 && nF.hair === 28 && nM.outfit === 17 && nF.outfit === 16, 'catalogue split: 24 / 28 hairstyles, 17 / 16 outfits (' + nM.hair + '/' + nF.hair + ', ' + nM.outfit + '/' + nF.outfit + ')');
+ok(nM.hair === 24 && nF.hair === 28 && nM.outfit === 22 && nF.outfit === 21, 'catalogue split: 24 / 28 hairstyles, 22 / 21 outfits (' + nM.hair + '/' + nF.hair + ', ' + nM.outfit + '/' + nF.outfit + ')');
 ok(vis('outfit', 3, { sex: 1 }) && !vis('outfit', 3, { sex: 0 }) && vis('outfit', 7, { sex: 1 }) && vis('outfit', 16, { sex: 1 }), 'collared sweater, turtleneck and blazer + scarf are feminine');
 ok(!vis('glasses', 3, { sex: 0 }) && !vis('ears', 1, { sex: 0 }) && !vis('hat', 4, { sex: 1 }) && vis('hat', 1, { sex: 1 }), 'cat-eye glasses and pearls hidden for men, bowler hidden for women, cap shared');
 ok(!vis('beard', 2, { sex: 1 }) && vis('beard', 2, { sex: 0 }) && vis('beard', 0, { sex: 1 }), 'beard filtered on feminine silhouette (none stays valid)');
