@@ -162,10 +162,13 @@ const HATS = [
       + '<rect x="40" y="89" width="12" height="18" rx="5" fill="#4a4f5a"/><rect x="148" y="89" width="12" height="18" rx="5" fill="#4a4f5a"/>'
       + '<path d="M70 34 Q100 26 130 34" stroke="#5d626e" stroke-width="2" fill="none" stroke-linecap="round" opacity=".7"/>';
   } },
-  { id: 'witch-hat', covers: true, weight: 0.4, draw: function (ctx) { // pointed, bent tip, purple band
-    return '<ellipse cx="100" cy="68" rx="80" ry="12" fill="' + ctx.v('#221a2e') + '"/>'
-      + '<path d="M58 68 Q80 42 94 12 Q98 4 106 8 Q100 12 100 20 Q118 46 142 68z" fill="' + ctx.v('#2b2135') + '"/>'
-      + '<path d="M64 60 L136 60 L138 68 L62 68z" fill="#6a2a8a"/><rect x="96" y="58" width="8" height="10" rx="1.5" fill="#e0b23c"/>';
+  { id: 'witch-hat', covers: true, weight: 0.4, draw: function (ctx) { // wide brim, tall head-wide cone with concave sides, tip flopped to the right, purple band (redrawn web.212)
+    return '<ellipse cx="100" cy="73" rx="90" ry="14" fill="' + ctx.v('#1c1526') + '"/>'
+      + '<ellipse cx="100" cy="71" rx="84" ry="11" fill="' + ctx.v('#2b2135') + '"/>'
+      + '<path d="M44 72 Q64 52 84 24 Q90 8 104 4 Q126 2 132 20 Q124 10 112 11 Q110 14 114 24 Q134 52 156 72z" fill="' + ctx.v('#2f2439') + '"/>'
+      + '<path d="M92 10 Q100 6 112 11" stroke="#1c1526" stroke-width="1.6" fill="none" opacity=".5"/>'
+      + '<path d="M50 61 L150 61 L154 72 L46 72z" fill="#6a2a8a"/><path d="M50 61 L150 61 L151 64 L49 64z" fill="#8a3ab0" opacity=".6"/>'
+      + '<rect x="93" y="58" width="14" height="16" rx="2" fill="#e0b23c"/><rect x="97" y="62" width="6" height="8" rx="1" fill="#6a2a8a"/>';
   } },
   { id: 'chef-toque', covers: true, weight: 0.4, draw: function (ctx) { // white pleated toque
     return '<path d="M52 56 Q40 30 60 22 Q70 6 100 8 Q130 6 140 22 Q160 30 148 56z" fill="' + ctx.v('#f4f0e6') + '"/>'

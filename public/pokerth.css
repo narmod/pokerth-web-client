@@ -1337,11 +1337,14 @@ body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !im
   display: flex !important;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  /* Top-aligned (web.212): centred on 100vh, the card sat too low on
+     phones and its bottom slid under Safari's toolbar. */
+  justify-content: flex-start;
   background: rgba(0,0,0,0.65);
   -webkit-backdrop-filter: blur(2px);
   backdrop-filter: blur(2px);
   padding: var(--sp-6);
+  padding-top: calc(var(--sp-6) + env(safe-area-inset-top, 0px));
   border: none;
   border-radius: 0;
   /* Reset the small overflow:hidden / fixed border of the static
@@ -11484,13 +11487,17 @@ body.adv-no-helpbtn .help-menu-btn{display:none}
 }
 .avp-tab.selected { color: var(--sel,var(--gold)); border-bottom-color: var(--sel,var(--gold)); }
 body.adv-no-avcreate #avp-tab-create { display: none !important; }
-#avp-pane-create, #avp-pane-import { padding: var(--sp-5); }
+#avp-pane-import { padding: var(--sp-5); }
+/* No top padding on the Create pane: WebKit pins a sticky child at the
+   scroller's CONTENT edge, so with padding above it the rows scrolled
+   past showed through a strip above the pinned header (web.212). */
+#avp-pane-create { padding: 0 var(--sp-5) var(--sp-5); }
 /* ── Pane Créer (matrice) ── */
 .avm-sticky {
   position: sticky; top: 0; z-index: 2;
   background: var(--panel);
   border-bottom: 1px solid var(--border);
-  margin: calc(-1 * var(--sp-5)) calc(-1 * var(--sp-5)) var(--sp-6);
+  margin: 0 calc(-1 * var(--sp-5)) var(--sp-6);
   padding: var(--sp-3) var(--sp-5) 0;
 }
 /* En mode modal, le bloc epingle reprend exactement le fond de la carte
@@ -11673,7 +11680,11 @@ body.adv-no-avcreate #avp-tab-create { display: none !important; }
 #avatar-popup.avatar-popup-as-modal #avp-pane-gallery[style*="none"] { display: none; }
 #avatar-popup.avatar-popup-as-modal #avp-pane-create,
 #avatar-popup.avatar-popup-as-modal #avp-pane-import {
-  max-height: 60vh; overflow-y: auto;
+  /* as tall as the visible viewport allows (header + tabs + margins
+     ≈ 130px), dvh so Safari's toolbar is not counted */
+  max-height: calc(100vh - 170px);
+  max-height: min(76vh, calc(100dvh - 130px));
+  overflow-y: auto;
   border-bottom: 1px solid var(--gold-dim);
   border-bottom-left-radius: 8px;
   border-bottom-right-radius: 8px;
