@@ -67,14 +67,30 @@ const AV_AXES = [
   { id: 'hat',   label: 'avmHat',       n: 10,              kind: 'shape', none: true  }
 ];
 
-// Per-option silhouette tags (0 = masculine-leaning, 1 = feminine-leaning,
-// missing = universal). The 'beard' axis is masculine-only as a whole.
-// avVisible() lets the UI filter rows coherently with the selected sex
-// while the engine still renders any recipe (old recipes stay valid).
+// Per-option silhouette tags (0 = masculine, 1 = feminine, missing =
+// universal). Since 2026-09-27 (narmod: « plus paritaire, quitte à en avoir
+// moins ») EVERY hairstyle and EVERY outfit belongs to exactly one
+// silhouette; only the small extras (most hats, glasses, earrings, marks,
+// eyes, noses, mouths) stay shared. The 'beard' axis is masculine-only as a
+// whole. avVisible() lets the UI filter rows coherently with the selected
+// sex while the engine still renders any recipe (old recipes stay valid).
 const AV_SEXTAG = {
-  hair: { 2: 0, 3: 1, 5: 1, 6: 0, 7: 1, 8: 1, 9: 0, 11: 1, 12: 1, 14: 1, 16: 0, 19: 1, 20: 1, 21: 1, 22: 1, 23: 1, 24: 1, 25: 1 },
-  mouth: { 3: 1 },
-  outfit: { 6: 1, 9: 1, 12: 1, 13: 1, 14: 1 }
+  // 12 masculine: bald, short, slicked back, curly, senior sweep, undercut,
+  // afro, close curls, dreadlocks, balding, mohawk, surfer.
+  // 14 feminine: high ponytail, bob, bun, long middle part, side braid,
+  // pixie, long wavy, pigtails, box braids, low side bun, asymmetric bob,
+  // voluminous curls, low ponytail, hollywood waves.
+  hair: { 0: 0, 1: 0, 2: 0, 3: 1, 4: 0, 5: 1, 6: 0, 7: 1, 8: 1, 9: 0, 10: 0, 11: 1, 12: 1, 13: 0,
+          14: 1, 15: 0, 16: 0, 17: 0, 18: 0, 19: 1, 20: 1, 21: 1, 22: 1, 23: 1, 24: 1, 25: 1 },
+  // 9 masculine: charcoal suit, navy + tie, vest + tie, tux + bow tie, open
+  // shirt, white dinner jacket, leather jacket, hoodie, open-collar shirt.
+  // 8 feminine: collared sweater, V-neck blouse, turtleneck, strapless
+  // dress, V-neck dress, halter dress, scoop top + necklace, blazer + scarf.
+  outfit: { 0: 0, 1: 0, 2: 0, 3: 1, 4: 0, 5: 0, 6: 1, 7: 1, 8: 0, 9: 1, 10: 0, 11: 0, 12: 1, 13: 1, 14: 1, 15: 0, 16: 1 },
+  mouth: { 3: 1 },          // lipstick
+  glasses: { 3: 1 },        // cat-eye
+  ears: { 1: 1, 3: 1 },     // pearl studs, gold hoops
+  hat: { 4: 0, 7: 0 }       // bowler, flat cap
 };
 
 function avVisible(axId, i, recipe) {
@@ -85,8 +101,8 @@ function avVisible(axId, i, recipe) {
   if (axId === 'shoulder') return i === 0;
   if (axId === 'beard') return i === 0 || !(recipe && recipe.sex === 1);
   if (recipe && axId === 'hat' && i !== 0) {
-    // Voluminous hairstyles (bun, afro) don't fit under a hat.
-    if (recipe.hair === 7 || recipe.hair === 10) return false;
+    // Voluminous or tall hairstyles (bun, afro, mohawk) don't fit under a hat.
+    if (recipe.hair === 7 || recipe.hair === 10 || recipe.hair === 17) return false;
   }
   if (recipe && axId === 'eyec') {
     // Eye color is meaningless behind closed eyes or sunglasses.
@@ -109,17 +125,10 @@ function avNormalize(r) {
   return out;
 }
 
-// Dice-only rules (the studio still offers every option to everyone):
-// options that read as the other silhouette are never DRAWN at random, and
-// optional extras are rarer, so random portraits stay coherent instead of
-// piling a hat, glasses, earrings and marks on every face (narmod
-// 2026-09-27).
-const AV_RANDSEX = {
-  hair: { 0: 0, 1: 0, 13: 0, 17: 0 },   // bald, short, close curls, mohawk
-  outfit: { 1: 0, 2: 0, 4: 0 },         // tie, vest + tie, tuxedo bow tie
-  glasses: { 3: 1 },                    // cat-eye
-  ears: { 1: 1 }                        // pearl studs
-};
+// Dice-only rules: optional extras are rarer, so random portraits stay
+// coherent instead of piling a hat, glasses, earrings and marks on every
+// face (narmod 2026-09-27). Silhouette coherence itself comes from
+// AV_SEXTAG through avVisible(), shared with the studio rows.
 // Relative dice weights (default 1): striking styles stay possible but rare.
 const AV_RANDWEIGHT = {
   hair: { 0: 0.35, 10: 0.6, 11: 0.6, 15: 0.5, 16: 0.4, 17: 0.2, 23: 0.6 }
@@ -128,10 +137,8 @@ const AV_RANDWEIGHT = {
 const AV_RANDNONE = { marks: [0.65, 0.65], beard: [0.45, 1], glasses: [0.7, 0.7], ears: [0.85, 0.45], hat: [0.7, 0.75] };
 
 function _randOk(axId, i, r) {
-  var tags = AV_RANDSEX[axId];
-  if (tags && (i in tags) && tags[i] !== r.sex) return false;
-  // Tall styles (high ponytail, mohawk) are not drawn under a hat.
-  if (axId === 'hat' && i !== 0 && (r.hair === 3 || r.hair === 17)) return false;
+  // The high ponytail is not drawn under a hat (the studio still allows it).
+  if (axId === 'hat' && i !== 0 && r.hair === 3) return false;
   return true;
 }
 
@@ -280,7 +287,12 @@ function _outfit(ctx, i, skin) {
         + _shirtV(ctx, '#e9e3d6') + _lapels(ctx, '#46503f')
         + '<path d="M84 154 Q100 166 116 154 L118 162 Q100 174 82 162z" fill="' + ctx.v('#c0703a') + '"/>'
         + '<path d="M94 166 L106 166 L110 198 L100 204 L90 198z" fill="' + ctx.v('#b0622f') + '"/>';
-    default: { // 0 charcoal suit, 1 navy + tie, 2 grey + vest + tie, 3 burgundy, 4 tux + bow tie
+    case 3: // teal sweater with a round white collar (feminine)
+      return _torso(ctx, '#2a8f86')
+        + '<path d="M80 160 Q100 178 120 160 Q100 168 80 160z" fill="' + ctx.v('#1f746d') + '"/>'
+        + '<path d="M78 156 Q88 172 100 170 Q112 172 122 156 Q112 164 100 162 Q88 164 78 156z" fill="#f7f4ec"/>'
+        + '<circle cx="100" cy="176" r="2.2" fill="#f7f4ec"/><circle cx="100" cy="186" r="2.2" fill="#f7f4ec"/>';
+    default: { // 0 charcoal suit, 1 navy + tie, 2 grey + vest + tie, 4 tux + bow tie
       var J = ['#3a3f47', '#2c4470', '#5b6069', '#8a2d3a', '#1f2126'][i] || '#3a3f47';
       var s = _torso(ctx, J) + _shirtV(ctx, '#f4f0e6');
       if (i === 2) s += '<path d="M88 170 L78 176 L90 204 L100 196z M112 170 L122 176 L110 204 L100 196z" fill="' + ctx.v('#43474f') + '"/>';
@@ -311,10 +323,11 @@ function _bumps(cx, cy, rad, from, to, n, r, fill) { // circles along an arc
   }
   return s;
 }
-function _braid(x0, y0, x1, y1, n, fill, line) {
+function _braid(x0, y0, x1, y1, n, fill, line, yMin) {
   var s = '';
   for (var k = 0; k < n; k++) {
     var t = k / (n - 1), x = x0 + (x1 - x0) * t, y = y0 + (y1 - y0) * t, r = 9 - 3 * t;
+    if (yMin && y < yMin) continue;
     s += '<ellipse cx="' + x.toFixed(1) + '" cy="' + y.toFixed(1) + '" rx="' + r.toFixed(1) + '" ry="' + (r * 0.9).toFixed(1) + '" fill="' + fill + '" stroke="' + line + '" stroke-width="1.2"/>';
   }
   return s;
@@ -340,8 +353,8 @@ function _hair(ctx, i, hc, face) {
       return [P('M38 100 Q34 24 100 22 Q166 24 162 100 L164 140 Q150 150 136 142 L64 142 Q50 150 36 140z', bk),
         P(CAP_SIDE) + _shine(hl)];
     case 7: // bun
-      return ['', '<circle cx="100" cy="22" r="20" fill="' + f + '"/>' + P(CAP_SMOOTH)
-        + '<path d="M84 36 Q100 30 116 36" stroke="#d9536a" stroke-width="4" stroke-linecap="round" fill="none"/>' + _shine(hl)];
+      return ['', '<circle cx="100" cy="28" r="17" fill="' + f + '"/>' + P(CAP_SMOOTH)
+        + '<path d="M86 38 Q100 32 114 38" stroke="#d9536a" stroke-width="4" stroke-linecap="round" fill="none"/>' + _shine(hl)];
     case 8: // long, middle part
       return [P('M40 96 Q36 24 100 22 Q164 24 160 96 L166 184 Q146 192 132 178 L68 178 Q54 192 34 184z', bk),
         P(CAP_MID) + _shine(hl)];
@@ -349,13 +362,15 @@ function _hair(ctx, i, hc, face) {
       return ['', P('M46 92 Q44 60 58 50 L142 50 Q156 60 154 92 Q150 72 140 66 L60 66 Q50 72 46 92z', dk)
         + P('M52 64 Q44 18 104 16 Q152 16 162 44 Q146 40 140 54 Q112 50 88 64 Q70 58 52 64z') + _shine(hl)];
     case 10: // afro
-      return ['<circle cx="100" cy="72" r="68" fill="' + f + '"/>',
-        P('M42 92 Q36 20 100 14 Q164 20 158 92 Q150 64 100 58 Q50 64 42 92z')
-        + _bumps(100, 72, 58, 200, 340, 9, 5, hl).replace(/fill=/g, 'opacity=".25" fill=')];
+      return ['<circle cx="100" cy="76" r="64" fill="' + f + '"/>',
+        P('M42 92 Q36 24 100 18 Q164 24 158 92 Q150 64 100 58 Q50 64 42 92z')
+        + _bumps(100, 76, 54, 200, 340, 9, 5, hl).replace(/fill=/g, 'opacity=".25" fill=')];
     case 11: // side braid over the shoulder
-      return ['', P(CAP_SIDE) + _braid(44, 110, 56, 190, 8, f, dk) + _shine(hl)];
+      // The braid comes out from behind the ear (back layer) and its lower
+      // part lies over the shoulder (same beads redrawn in the front layer).
+      return [_braid(50, 100, 46, 190, 8, f, dk), P(CAP_SIDE) + _braid(50, 100, 46, 190, 8, f, dk, 150) + _shine(hl)];
     case 12: // pixie cut with fringe
-      return ['', P('M44 90 Q40 26 100 24 Q160 26 156 86 Q152 70 146 66 Q120 56 70 86 Q62 70 52 70 Q46 78 44 90z') + _shine(hl)];
+      return ['', P('M44 90 Q40 26 100 24 Q160 26 156 86 Q152 70 146 66 Q120 52 70 74 Q62 64 52 68 Q46 78 44 90z') + _shine(hl)];
     case 13: // tight curls, close cut
       return ['', P('M46 86 Q44 32 100 30 Q156 32 154 86 Q150 64 100 58 Q50 64 46 86z')
         + _bumps(100, 80, 40, 200, 340, 9, 2.2, dk) + _bumps(100, 80, 30, 215, 325, 6, 2.2, dk)];
@@ -383,14 +398,16 @@ function _hair(ctx, i, hc, face) {
         '<ellipse cx="46" cy="90" rx="11" ry="22" fill="' + f + '"/><ellipse cx="154" cy="90" rx="11" ry="22" fill="' + f + '"/>'];
     }
     case 17: // mohawk crest
-      return ['', P('M86 60 L80 30 L90 34 L92 6 L100 20 L108 6 L110 34 L120 30 L114 60z'),
+      return ['', P('M86 62 L80 36 L90 40 L92 12 L100 26 L108 12 L110 40 L120 36 L114 62z'),
         '<path d="M0 0 L200 0 L200 96 Q152 62 100 56 Q48 62 0 96z" fill="' + hc[0] + '" opacity=".4"/>'];
     case 18: // tousled mid-length (surfer)
       return [P('M40 96 Q36 26 100 24 Q164 26 160 96 Q164 116 152 126 Q148 112 142 104 L58 104 Q52 112 48 126 Q36 116 40 96z', bk),
-        P('M42 100 Q34 22 100 20 Q166 22 158 100 L150 70 L140 76 L132 60 L118 70 L106 56 L94 70 L80 58 L70 74 L58 64 L50 80z') + _shine(hl)];
+        P('M42 100 Q34 22 100 20 Q166 22 158 100 L150 64 L140 68 L132 54 L118 64 L106 50 L94 64 L80 52 L70 66 L58 58 L50 76z') + _shine(hl)];
     case 19: // pigtails (feminine)
-      return ['', P('M46 80 Q14 88 18 140 Q22 160 34 166 Q28 120 52 96z') + P('M154 80 Q186 88 182 140 Q178 160 166 166 Q172 120 148 96z')
-        + P(CAP_MID) + '<circle cx="44" cy="84" r="5" fill="#d9536a"/><circle cx="156" cy="84" r="5" fill="#d9536a"/>' + _shine(hl)];
+      // Pigtails hang BEHIND the head and the ears (back layer): only the
+      // part outside the head outline shows, so they hug the cheeks.
+      return [P('M58 74 Q22 84 24 136 Q26 172 42 178 Q58 172 56 130z', bk) + P('M142 74 Q178 84 176 136 Q174 172 158 178 Q142 172 144 130z', bk),
+        P(CAP_MID) + '<circle cx="40" cy="86" r="5" fill="#d9536a"/><circle cx="160" cy="86" r="5" fill="#d9536a"/>' + _shine(hl)];
     case 20: { // thin box braids
       var lines = '';
       for (var x = 42; x <= 158; x += 8) if (x < 70 || x > 130) lines += '<path d="M' + x + ' 80 L' + (x + (x < 100 ? -4 : 4)) + ' 188" stroke="' + dk + '" stroke-width="1.6"/>';
@@ -401,7 +418,7 @@ function _hair(ctx, i, hc, face) {
         P(CAP_SIDE) + '<path d="M52 78 Q42 112 56 136 M148 78 Q158 112 144 136" stroke="' + f + '" stroke-width="5" fill="none" stroke-linecap="round"/>' + _shine(hl)];
     case 22: // sleek asymmetric long bob, deep side part
       return [P('M38 100 Q34 24 100 22 Q166 24 162 100 L164 128 L136 130 L64 150 L36 152z', bk),
-        P('M40 120 Q34 24 100 22 Q160 24 156 96 Q150 64 130 54 Q94 58 70 76 Q56 94 58 140z') + _shine(hl)];
+        P('M40 120 Q34 24 100 22 Q160 24 156 96 Q150 64 130 54 Q94 56 72 70 Q56 90 58 140z') + _shine(hl)];
     case 23: // long voluminous curls
       return [P('M36 96 Q32 22 100 20 Q168 22 164 96 L168 180 L32 180z', bk)
         + [100, 124, 148, 172].map(function (y) { return '<circle cx="32" cy="' + y + '" r="12" fill="' + bk + '"/><circle cx="168" cy="' + y + '" r="12" fill="' + bk + '"/>'; }).join(''),
@@ -411,8 +428,8 @@ function _hair(ctx, i, hc, face) {
         + '<circle cx="150" cy="112" r="5" fill="#d9536a"/>' + _shine(hl)];
     case 25: // vintage hollywood waves
       return [P('M40 100 Q36 24 100 22 Q164 24 160 100 Q168 118 158 136 L142 140 L58 140 L42 136 Q32 118 40 100z', bk),
-        P('M42 108 Q36 24 100 22 Q160 24 156 96 Q150 64 128 56 Q108 62 96 52 Q82 76 64 70 Q50 82 58 104 Q44 112 42 108z')
-        + '<path d="M60 76 Q72 64 86 72 M112 58 Q126 50 140 62" stroke="' + hl + '" stroke-width="3" fill="none" stroke-linecap="round" opacity=".6"/>'];
+        P('M42 108 Q36 24 100 22 Q160 24 156 96 Q150 64 128 56 Q108 62 96 52 Q82 68 64 64 Q50 78 58 104 Q44 112 42 108z')
+        + '<path d="M60 70 Q72 58 86 66 M112 58 Q126 50 140 62" stroke="' + hl + '" stroke-width="3" fill="none" stroke-linecap="round" opacity=".6"/>'];
     default: // 6: wavy senior sweep
       return ['', P('M46 90 Q40 28 100 24 Q156 26 156 88 Q150 62 132 56 Q126 64 112 58 Q96 70 80 56 Q66 64 56 60 Q48 70 46 90z') + _shine(hl)];
   }
@@ -581,6 +598,10 @@ function _glasses(i) {
 var HAT_LINE = 60;
 // Hairstyles drawn without the temple underlay (bald, balding, mohawk).
 var AV_NO_UNDERLAY = { 0: 1, 16: 1, 17: 1 };
+// Short styles: under a covering hat only a thin band below the brim shows
+// (temple tips), long styles keep everything below the hat line.
+var AV_SHORT_HAIR = { 1: 1, 2: 1, 4: 1, 6: 1, 9: 1, 12: 1, 13: 1, 16: 1, 18: 1 };
+var HAT_SHORT_BOTTOM = 86;
 function _hatCovers(i) { return i !== 0 && i !== 3 && i !== 6; }
 
 function _hat(ctx, i) {
@@ -739,9 +760,11 @@ function avSvg(recipe, size) {
   var wk = r.face === 1 ? 1.075 : 1;
   var hair = _hair(ctx, r.hair, hc, r.face);
   var covers = _hatCovers(r.hat);
-  var clipHair = function (s) { return covers && s ? '<g clip-path="url(#' + cid + 'hl)">' + s + '</g>' : s; };
+  var hatClip = AV_SHORT_HAIR[r.hair] ? 'hs' : 'hl';
+  var clipHair = function (s) { return covers && s ? '<g clip-path="url(#' + cid + hatClip + ')">' + s + '</g>' : s; };
   ctx.defs.push('<clipPath id="' + cid + '"><rect x="6" y="6" width="188" height="188"/></clipPath>'
     + '<clipPath id="' + cid + 'hl"><rect x="0" y="' + HAT_LINE + '" width="200" height="' + (200 - HAT_LINE) + '"/></clipPath>'
+    + '<clipPath id="' + cid + 'hs"><rect x="0" y="' + HAT_LINE + '" width="200" height="' + (HAT_SHORT_BOTTOM - HAT_LINE) + '"/></clipPath>'
     + '<radialGradient id="' + cid + 'bg" cx=".5" cy=".38" r=".75"><stop offset="0" stop-color="' + felt[1] + '"/><stop offset="1" stop-color="' + felt[0] + '"/></radialGradient>');
   var body = '<rect width="200" height="200" fill="#8f6a1d"/>'
     + '<rect x="2.5" y="2.5" width="195" height="195" fill="#c9992e"/>'

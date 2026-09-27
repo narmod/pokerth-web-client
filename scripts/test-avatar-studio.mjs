@@ -101,9 +101,24 @@ const vis = window._avVisible;
 ok(typeof vis === 'function', 'avVisible exposed');
 ok(vis('hair', 3, { sex: 1 }) && !vis('hair', 3, { sex: 0 }), 'ponytail is feminine-only');
 ok(vis('hair', 2, { sex: 0 }) && !vis('hair', 2, { sex: 1 }), 'slicked-back is masculine-only');
-ok(vis('hair', 4, { sex: 0 }) && vis('hair', 4, { sex: 1 }), 'curly is universal');
+ok(vis('hair', 4, { sex: 0 }) && !vis('hair', 4, { sex: 1 }), 'curly is masculine-only');
+// Strict parity (narmod 2026-09-27): every hairstyle and every outfit belongs
+// to exactly one silhouette, and both sides keep a decent choice.
+let oneSided = true, nM = { hair: 0, outfit: 0 }, nF = { hair: 0, outfit: 0 };
+for (const axId of ['hair', 'outfit']) {
+  const ax = AXES.find(a => a.id === axId);
+  for (let i = 0; i < ax.n; i++) {
+    const m = vis(axId, i, { sex: 0 }), f = vis(axId, i, { sex: 1 });
+    if (m === f) oneSided = false;
+    if (m) nM[axId]++; if (f) nF[axId]++;
+  }
+}
+ok(oneSided, 'every hairstyle and outfit is visible for exactly one silhouette');
+ok(nM.hair >= 10 && nF.hair >= 10 && nM.outfit >= 6 && nF.outfit >= 6, 'both silhouettes keep >= 10 hairstyles and >= 6 outfits (' + nM.hair + '/' + nF.hair + ', ' + nM.outfit + '/' + nF.outfit + ')');
+ok(vis('outfit', 3, { sex: 1 }) && !vis('outfit', 3, { sex: 0 }) && vis('outfit', 7, { sex: 1 }) && vis('outfit', 16, { sex: 1 }), 'collared sweater, turtleneck and blazer + scarf are feminine');
+ok(!vis('glasses', 3, { sex: 0 }) && !vis('ears', 1, { sex: 0 }) && !vis('hat', 4, { sex: 1 }) && vis('hat', 1, { sex: 1 }), 'cat-eye glasses and pearls hidden for men, bowler hidden for women, cap shared');
 ok(!vis('beard', 2, { sex: 1 }) && vis('beard', 2, { sex: 0 }) && vis('beard', 0, { sex: 1 }), 'beard filtered on feminine silhouette (none stays valid)');
-ok(!vis('hat', 1, { hair: 10 }) && !vis('hat', 2, { hair: 7 }) && vis('hat', 0, { hair: 10 }) && vis('hat', 1, { hair: 1 }), 'hats filtered out on afro/bun (none stays valid)');
+ok(!vis('hat', 1, { hair: 10 }) && !vis('hat', 2, { hair: 7 }) && !vis('hat', 1, { hair: 17 }) && vis('hat', 0, { hair: 10 }) && vis('hat', 1, { hair: 1 }), 'hats filtered out on afro/bun/mohawk (none stays valid)');
 ok(!vis('eyec', 1, { eyes: 2 }) && !vis('eyec', 1, { glasses: 5 }) && vis('eyec', 1, { eyes: 0, glasses: 1 }), 'eye color hidden behind closed eyes or sunglasses');
 ok(vis('shoulder', 0, {}) && !vis('shoulder', 1, {}) && !vis('shoulder', 4, {}), 'shoulder accessories retired (only none stays valid)');
 ok(vis('mouth', 3, { sex: 1 }) && !vis('mouth', 3, { sex: 0 }), 'lipstick mouth is feminine-only');
@@ -124,7 +139,10 @@ for (let k = 0; k < 200; k++) {
   for (const ax in MASC_ONLY) if (MASC_ONLY[ax].includes(f[ax])) diceSex = false;
   for (const ax in FEM_ONLY) if (FEM_ONLY[ax].includes(m[ax])) diceSex = false;
   if (f.beard !== 0 || f.shoulder !== 0 || m.shoulder !== 0) diceSex = false;
-  if (f.hat && (f.hair === 3 || f.hair === 17)) diceSex = false;
+  if (f.hat && f.hair === 3) diceSex = false;
+  // (eye color is a whole hidden axis behind closed eyes / sunglasses)
+  const coherent = rr => AXES.every(ax => ax.id === 'eyec' || vis(ax.id, rr[ax.id], rr));
+  if (!coherent(f) || !coherent(m)) diceSex = false;
 }
 ok(diceSex, 'dice keeps silhouette-coherent options (200 draws each)');
 for (let k = 0; k < 20; k++) {
