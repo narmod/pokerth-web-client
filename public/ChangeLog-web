@@ -1,4 +1,7 @@
-2026-09-27 version 2.1.9-web.182 (current series):
+2026-09-27 version 2.1.9-web.183 (current series):
+- bugfix: « From a photo » (beta) — a bearded face is no longer cut at the forehead (eyes were then missed and the beard lost); a beard next to a dark T-shirt is no longer mistaken for the collar; eye bags and shadows no longer pass for glasses
+
+2026-09-27 version 2.1.9-web.182:
 - improvement: « From a photo » (beta) — better eye detection (eyebrows and eye corners are no longer mistaken for pupils), fairer skin tones (measured on the lit part of the face, not on the shadows or the stubble), hair colour taken from the hair rather than the hairline shadow, glasses only when a frame runs under both eyes, a jaw beard no longer squares the face, and the outfit follows the clothes seen under the chin (dark → hoodie / turtleneck, light → open shirt / sweater)
 
 2026-09-27 version 2.1.9-web.181:

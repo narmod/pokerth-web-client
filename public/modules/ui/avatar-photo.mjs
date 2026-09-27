@@ -175,8 +175,12 @@ function avPhotoAnalyze(img, opts) {
   var top = best.miny, compH = best.maxy - best.miny + 1;
   var maxW = 0, yMax = top;
   for (y = top; y <= Math.min(H - 1, top + Math.round(compH * 0.75)); y++) if (rowW[y] > maxW) { maxW = rowW[y]; yMax = y; }
+  // Bottom: the LAST row still reasonably wide, not the first dip — the
+  // eye band (brows, lids, shadows) can dip below half the cheek width on
+  // a bearded face and used to cut the box at the forehead. The height is
+  // capped below anyway, and the pupils rebuild the box when found.
   var bottom = best.maxy;
-  for (y = yMax; y <= best.maxy; y++) if (rowW[y] < 0.55 * maxW) { bottom = y - 1; break; }
+  for (y = best.maxy; y > yMax; y--) if (rowW[y] >= 0.3 * maxW) { bottom = y; break; }
   var left = W, right = 0;
   for (y = top; y <= bottom; y++) if (rowW[y] > 0.4 * maxW) { if (rowMin[y] < left) left = rowMin[y]; if (rowMax[y] > right) right = rowMax[y]; }
   var fw = right - left + 1, fh = bottom - top + 1;
@@ -351,8 +355,8 @@ function avPhotoAnalyze(img, opts) {
   var face = (jaw > 0.8 && aspect > 1.5) ? 2 : (aspect < 1.55 ? 1 : 0);
 
   // clothes under the chin (outfit guess, and a guard for the hair flood)
-  var clothRgb = null, oy0 = Math.round(bottom + 0.25 * fh), oy1 = Math.round(bottom + 0.55 * fh);
-  if (oy1 < H) {
+  var clothRgb = null, oy0 = Math.round(bottom + 0.3 * fh), oy1 = Math.min(H - 1, Math.round(bottom + 0.7 * fh));
+  if (oy0 < H - 4) {
     var opx = [];
     for (y = oy0; y <= oy1; y++) for (x = Math.round(cx - 0.3 * fw); x <= cx + 0.3 * fw; x++) { if (x < 0 || x >= W) continue; i = at(x, y); if (skin[i]) continue; opx.push(D[i * 4], D[i * 4 + 1], D[i * 4 + 2]); }
     if (opx.length >= 30) clothRgb = medianRgb(opx);
@@ -469,15 +473,22 @@ function avPhotoAnalyze(img, opts) {
     // rim, so this stays quiet on bare faces.
     var bx0 = Math.round(eL.x + 0.25 * E), bx1 = Math.round(eR.x - 0.25 * E), bridge = 0, frame = 0, ftot = 0;
     for (y = eyeY - 2; y <= eyeY + 2; y++) for (x = bx0; x <= bx1; x++) { if (y < 0 || y >= H) continue; i = at(x, y); if (lum[i] < skinLum * 0.6 && !skin[i]) bridge++; }
+    // a rim is THIN: one dark row in the band, the rest skin — a shadow or
+    // eye bags darken the whole band and do not count
     var rimSides = 0;
     [eL, eR].forEach(function (e) {
-      var rim = 0, rtot = 0;
-      for (y = Math.round(e.y + 0.35 * E); y <= e.y + 0.6 * E; y++) for (x = Math.round(e.x - 0.4 * E); x <= e.x + 0.4 * E; x++) {
-        if (x < 0 || y < 0 || x >= W || y >= H || !inFace(x, y)) continue;
-        rtot++; i = at(x, y); if (lum[i] < skinLum * 0.5 && !skin[i]) rim++;
+      var rim = 0, rtot = 0, rowMax = 0;
+      for (y = Math.round(e.y + 0.35 * E); y <= e.y + 0.6 * E; y++) {
+        var rd = 0, rn = 0;
+        for (x = Math.round(e.x - 0.4 * E); x <= e.x + 0.4 * E; x++) {
+          if (x < 0 || y < 0 || x >= W || y >= H || !inFace(x, y)) continue;
+          rn++; i = at(x, y); if (lum[i] < skinLum * 0.5 && !skin[i]) rd++;
+        }
+        rim += rd; rtot += rn;
+        if (rn && rd / rn > rowMax) rowMax = rd / rn;
       }
       frame += rim; ftot += rtot;
-      if (rtot && rim / rtot > 0.1) rimSides++;
+      if (rtot && rowMax > 0.45 && rim / rtot < 0.35) rimSides++;
     });
     glassesDbg = bridge + '/' + (ftot ? (frame / ftot).toFixed(2) : '-');
     if (rimSides === 2 && (bridge >= 3 || (ftot && frame / ftot > 0.15))) glasses = 2;
@@ -546,7 +557,10 @@ function avPhotoAnalyze(img, opts) {
   // a shirt would be; moustache right above the lip
   var beard = 0, bFrac = 0, mFrac = 0;
   if (sex === 0) {
+    // zone: below the mouth down to just under the chin (from the pupils
+    // when known: 1.1-1.85 E, which never reaches a shirt collar)
     var bz0 = Math.round(top + 0.8 * fh), bz1 = Math.min(H - 1, Math.round(bottom + 0.15 * fh));
+    if (eyesOk) { bz0 = Math.round(eyeMidY + 1.1 * E); bz1 = Math.min(H - 1, Math.round(eyeMidY + 1.85 * E)); }
     var dcnt = 0, dtot = 0, flankD = 0, flankT = 0, bpx = [];
     for (y = bz0; y <= bz1; y++) {
       for (x = Math.round(left + 0.12 * fw); x <= right - 0.12 * fw; x++) {
@@ -575,8 +589,17 @@ function avPhotoAnalyze(img, opts) {
       if (bpx2.length >= 15) refRgb = medianRgb(bpx2);
     }
     var hairLike = true;
-    if (bpx.length >= 30 && refRgb) hairLike = labDist(rgb2lab.apply(null, medianRgb(bpx)), rgb2lab(refRgb[0], refRgb[1], refRgb[2])) < 28;
-    if (bFrac > 0.28 && fFrac < bFrac * 0.7 && hairLike) beard = (bFrac > 0.5) ? (mFrac > 0.35 ? 4 : 3) : 3;
+    var beardRgb = bpx.length >= 30 ? medianRgb(bpx) : null;
+    if (beardRgb && refRgb) hairLike = labDist(rgb2lab.apply(null, beardRgb), rgb2lab(refRgb[0], refRgb[1], refRgb[2])) < 28;
+    // the dark mass is the collar when it has the clothes' colour and not
+    // the hair's (a black tee beside a black beard stays ambiguous)
+    var isCollar = false;
+    if (!eyesOk && beardRgb && clothRgb) {
+      var dCloth = labDist(rgb2lab.apply(null, beardRgb), rgb2lab(clothRgb[0], clothRgb[1], clothRgb[2]));
+      var dHair = refRgb ? labDist(rgb2lab.apply(null, beardRgb), rgb2lab(refRgb[0], refRgb[1], refRgb[2])) : 99;
+      isCollar = dCloth < 12 && dHair > 20;
+    }
+    if (bFrac > 0.28 && !isCollar && (hairLike || fFrac < bFrac * 0.7)) beard = (bFrac > 0.5) ? (mFrac > 0.35 ? 4 : 3) : 3;
     else if (mFrac > 0.3) beard = 1;
   }
 
