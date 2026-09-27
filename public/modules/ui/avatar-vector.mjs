@@ -63,14 +63,14 @@ const AV_AXES = [
   { id: 'outfit',label: 'avmOutfit',    n: 33,              kind: 'shape', none: false },
   { id: 'outfitc', label: 'avmOutfitColor', n: AV_OUTFITC.length + 1, kind: 'color', none: true },
   { id: 'skin',  label: 'avmSkin',      n: AV_SKIN.length,  kind: 'color', none: false },
-  { id: 'marks', label: 'avmMarks',     n: 6,               kind: 'shape', none: true  },
+  { id: 'marks', label: 'avmMarks',     n: 7,               kind: 'shape', none: true  },
   { id: 'hair',  label: 'avmHair',      n: 50,              kind: 'shape', none: true  },
   { id: 'hairc', label: 'avmHairColor', n: AV_HAIRC.length, kind: 'color', none: false },
   { id: 'beard', label: 'avmBeard',     n: 7,               kind: 'shape', none: true  },
   { id: 'eyes',  label: 'avmEyeShape',  n: 7,               kind: 'shape', none: false },
   { id: 'eyec',  label: 'avmEyeColor',  n: AV_EYEC.length,  kind: 'color', none: false },
   { id: 'nose',  label: 'avmNose',      n: 5,               kind: 'shape', none: false },
-  { id: 'mouth', label: 'avmMouth',     n: 10,              kind: 'shape', none: false },
+  { id: 'mouth', label: 'avmMouth',     n: 11,              kind: 'shape', none: false },
   { id: 'glasses', label: 'avmGlasses', n: 6,               kind: 'shape', none: true  },
   { id: 'shoulder', label: 'avmShoulder', n: 5,             kind: 'shape', none: true  },
   { id: 'ears',  label: 'avmEarrings',  n: 6,               kind: 'shape', none: true  },
@@ -112,10 +112,14 @@ const AV_SEXTAG = {
             // hoodie; feminine: floral blouse, strap dress, bow blouse,
             // tailored blazer, cardigan, sweatshirt, swimsuit, tee
             17: 0, 18: 0, 19: 0, 20: 0, 21: 0, 22: 0, 23: 0, 24: 0, 25: 1, 26: 1, 27: 1, 28: 1, 29: 1, 30: 1, 31: 1, 32: 1 },
-  mouth: { 3: 1 },          // lipstick
-  glasses: { 3: 1 },        // cat-eye
-  ears: { 1: 1, 3: 1 },     // pearl studs, gold hoops
-  hat: { 4: 0, 7: 0 }       // bowler, flat cap
+  // 2.1.9-web.193 (narmod: "some men look too feminine"): every earring,
+  // the pout, the small 'o' and the beauty mark are feminine; men get a
+  // cigar (mouth 10) and a cheek scar (marks 6) instead.
+  mouth: { 3: 1, 5: 1, 7: 1, 10: 0 },      // lipstick, pout, small o | cigar
+  marks: { 2: 1, 6: 0 },                    // beauty mark | cheek scar
+  glasses: { 3: 1 },                        // cat-eye
+  ears: { 1: 1, 2: 1, 3: 1, 4: 1, 5: 1 },   // pearl studs, gold studs, hoops, single hoops
+  hat: { 4: 0, 7: 0 }                       // bowler, flat cap
 };
 
 function avVisible(axId, i, recipe) {
@@ -159,6 +163,7 @@ function avNormalize(r) {
 const AV_RANDWEIGHT = {
   hair: { 0: 0.35, 10: 0.6, 11: 0.6, 15: 0.5, 16: 0.4, 17: 0.2, 23: 0.6, 28: 0.5, 29: 0.5, 30: 0.5, 33: 0.6, 38: 0.6, 42: 0.4, 48: 0.6 },
   hairc: { 10: 0.25, 11: 0.25 },
+  mouth: { 10: 0.35 },
   outfit: { 22: 0.5, 31: 0.4 }
 };
 // Probability that an optional axis stays on 'none' ([masculine, feminine]).
@@ -624,18 +629,17 @@ function _hair(ctx, i, hc, face) {
       return [locks2, P(CAP_SMOOTH) + _bumps(100, 84, 48, 200, 340, 8, 6, f)];
     }
     // ── 2.1.9-web.192 additions ──
-    case 39: // short voluminous curls (masculine): a taller, wider mop of curls
-      return [P('M34 96 Q30 14 100 10 Q170 14 166 96 L166 108 L34 108z', bk),
-        P('M38 94 Q34 18 100 14 Q166 18 162 94 Q152 62 100 56 Q48 62 38 94z')
-        + _bumps(100, 84, 58, 185, 355, 13, 12, f) + _bumps(100, 84, 46, 195, 345, 9, 9, f) + _bumps(100, 84, 54, 200, 340, 7, 4, hl)];
-    case 40: // side part with a wavy quiff (masculine): the top swept up and over to one side
-      return ['', P('M40 96 Q34 22 96 18 Q160 26 156 96 Q152 62 140 56 Q124 50 114 62 Q112 40 94 30 Q70 30 62 56 Q48 68 40 96z')
-        + '<path d="M112 60 Q120 52 132 54" stroke="' + dk + '" stroke-width="1.6" fill="none" stroke-linecap="round"/>'
-        + '<path d="M62 44 Q76 28 96 30" stroke="' + hl + '" stroke-width="6" stroke-linecap="round" fill="none" opacity=".55"/>'];
-    case 41: // fade (masculine): hair on top, the sides shaved down to a shadow
-      return ['', P('M50 70 Q46 30 100 26 Q154 30 150 70 Q140 62 100 60 Q60 62 50 70z') + _shine(hl),
-        '<path d="M0 62 L200 62 L200 96 Q152 72 100 66 Q48 72 0 96z" fill="' + hc[0] + '" opacity=".3"/>'
-        + '<path d="M0 96 L200 96 L200 116 Q152 92 100 88 Q48 92 0 116z" fill="' + hc[0] + '" opacity=".14"/>'];
+    case 39: // short voluminous curls (masculine): a tall mop of curls, cut above the ears
+      return ['', P('M40 90 Q36 18 100 14 Q164 18 160 90 Q152 62 100 56 Q48 62 40 90z')
+        + _bumps(100, 80, 56, 200, 340, 11, 11, f) + _bumps(100, 80, 44, 205, 335, 8, 8, f) + _bumps(100, 80, 52, 210, 330, 6, 3.6, hl)];
+    case 40: // pompadour (masculine): a high front swept back, combed sides
+      return ['', P('M46 90 Q42 34 60 26 Q76 6 112 8 Q146 14 154 90 Q152 60 138 52 Q100 44 62 52 Q48 60 46 90z')
+        + '<path d="M70 42 Q100 28 132 40 M66 50 Q100 38 136 50" stroke="' + dk + '" stroke-width="2" fill="none" stroke-linecap="round"/>'
+        + '<path d="M70 26 Q90 14 112 18" stroke="' + hl + '" stroke-width="6" stroke-linecap="round" fill="none" opacity=".55"/>'];
+    case 41: // flat top (masculine): a squared block of hair, the sides shaved to a shadow
+      return ['', P('M54 64 L52 30 Q100 22 148 30 L146 64 Q100 56 54 64z') + '<path d="M60 32 L140 32" stroke="' + hl + '" stroke-width="4" stroke-linecap="round" opacity=".45"/>',
+        '<path d="M0 60 L200 60 L200 100 Q152 72 100 66 Q48 72 0 100z" fill="' + hc[0] + '" opacity=".32"/>'
+        + '<path d="M0 100 L200 100 L200 118 Q152 94 100 90 Q48 94 0 118z" fill="' + hc[0] + '" opacity=".14"/>'];
     case 42: // man bun (masculine): slicked back, a small knot at the crown
       return ['<circle cx="100" cy="30" r="13" fill="' + bk + '"/>',
         P('M46 88 Q42 24 100 22 Q158 24 154 88 Q152 60 138 52 Q100 42 62 52 Q48 60 46 88z')
@@ -788,6 +792,12 @@ function _mouth(i) {
     case 9: // tongue out
       return line('M89 131 L111 131')
         + '<path d="M94 132 L106 132 Q107 146 100 146 Q93 146 94 132z" fill="#ef6f75"/><path d="M100 136 L100 144" stroke="#c94d58" stroke-width="1.2"/>';
+    case 10: // cigar in the corner of the mouth (masculine)
+      return line('M89 133 L109 133')
+        + '<path d="M106 133 L124 138" stroke="#5a3a22" stroke-width="6.5" stroke-linecap="round"/>'
+        + '<path d="M113 134.8 L116 135.6" stroke="#d9b26b" stroke-width="6.5"/>'
+        + '<circle cx="124.5" cy="138.2" r="2.8" fill="#ff6a2a"/><circle cx="124.5" cy="138.2" r="1.3" fill="#ffd27a"/>'
+        + '<path d="M126 132 Q130 128 127 123" stroke="#c8c8c8" stroke-width="1.6" fill="none" stroke-linecap="round" opacity=".7"/>';
     default: // smile: filled crescent with a lower lip
       return '<path d="M84 127 Q100 151 116 127 Q100 137 84 127z" fill="' + M + '"/>'
         + '<path d="M90 133 Q100 143 110 133 Q100 139 90 133z" fill="' + LIP + '"/>';
@@ -808,6 +818,7 @@ function _marks(i, sh) {
     case 3: return '<path d="M86 66 Q100 62 114 66 M90 71 Q100 68 110 71 M60 96 L55 94 M60 101 L55 102 M140 96 L145 94 M140 101 L145 102" stroke="' + _mix(sh, 0.85) + '" stroke-width="1.8" fill="none" stroke-linecap="round"/>'; // age lines
     case 4: return '<path d="M124 72 L130 86" stroke="#f6d3d0" stroke-width="3" stroke-linecap="round"/>'; // eyebrow scar
     case 5: return '<path d="M80 130 Q82 134 80 137 M120 130 Q118 134 120 137" stroke="' + _mix(sh, 0.85) + '" stroke-width="2" fill="none" stroke-linecap="round"/>'; // dimples
+    case 6: return '<path d="M132 104 L138 124" stroke="#f6d3d0" stroke-width="3" stroke-linecap="round"/><path d="M131 110 L136 109 M133 116 L138 115" stroke="#f6d3d0" stroke-width="1.6" stroke-linecap="round"/>'; // cheek scar (masculine)
     default: return '';
   }
 }
@@ -1025,8 +1036,9 @@ function avSvg(recipe, size) {
     + _head(ctx, r.face, skin)
     + (hair[2] ? clipHair('<g clip-path="url(#' + _headClip(ctx, r.face, 1.02) + ')">' + hair[2] + '</g>') : '')
     + _marks(r.marks, skin[1])
-    + '<ellipse cx="68" cy="117" rx="9" ry="5.5" fill="#ff7f86" opacity=".32"/>'
-    + '<ellipse cx="132" cy="117" rx="9" ry="5.5" fill="#ff7f86" opacity=".32"/>'
+    // (blush: a feminine touch, barely there on men)
+    + '<ellipse cx="68" cy="117" rx="9" ry="5.5" fill="#ff7f86" opacity="' + (fem ? '.32' : '.1') + '"/>'
+    + '<ellipse cx="132" cy="117" rx="9" ry="5.5" fill="#ff7f86" opacity="' + (fem ? '.32' : '.1') + '"/>'
     + _nose(r.nose, skin[1])
     + _beard(ctx, r.beard, hcN, r.face)
     + _mouth(r.mouth)

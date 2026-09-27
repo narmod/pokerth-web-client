@@ -136,6 +136,10 @@ ok(!vis('hat', 1, { hair: 10 }) && !vis('hat', 2, { hair: 7 }) && !vis('hat', 1,
 ok(!vis('eyec', 1, { eyes: 2 }) && !vis('eyec', 1, { glasses: 5 }) && vis('eyec', 1, { eyes: 0, glasses: 1 }), 'eye color hidden behind closed eyes or sunglasses');
 ok(vis('shoulder', 0, {}) && !vis('shoulder', 1, {}) && !vis('shoulder', 4, {}), 'shoulder accessories retired (only none stays valid)');
 ok(vis('mouth', 3, { sex: 1 }) && !vis('mouth', 3, { sex: 0 }), 'lipstick mouth is feminine-only');
+ok(!vis('mouth', 5, { sex: 0 }) && !vis('mouth', 7, { sex: 0 }) && vis('mouth', 10, { sex: 0 }) && !vis('mouth', 10, { sex: 1 }), 'pout and small o are feminine, the cigar is masculine');
+ok([1, 2, 3, 4, 5].every(k => !vis('ears', k, { sex: 0 }) && vis('ears', k, { sex: 1 })) && vis('ears', 0, { sex: 0 }), 'every earring is feminine-only (none stays for men)');
+ok(!vis('marks', 2, { sex: 0 }) && vis('marks', 6, { sex: 0 }) && !vis('marks', 6, { sex: 1 }), 'beauty mark is feminine, the cheek scar masculine');
+ok(window._avSvg({ sex: 0, mouth: 10 }).indexOf('#ff6a2a') !== -1 && window._avSvg({ sex: 0 }).indexOf('opacity=".1"') !== -1 && window._avSvg({ sex: 1 }).indexOf('opacity=".32"') !== -1, 'cigar ember drawn; blush faint on men, full on women');
 ok(vis('outfit', 6, { sex: 1 }) && !vis('outfit', 6, { sex: 0 }), 'V-neck blouse is feminine-only');
 const wholeAxisHidden = (ax, rr) => { for (let i = 0; i < ax.n; i++) if (vis(ax.id, i, rr)) return false; return true; };
 let sexKept = true;
@@ -175,7 +179,7 @@ const next = document.getElementById('avm-step-next'), prev = document.getElemen
 next.click(); next.click();
 ok(document.getElementById('avm-rows').children.length === 3, 'stepping to Hair (3/5) renders 3 rows');
 next.click(); next.click();
-ok(document.getElementById('avm-rows').children.length === 3, 'Extras (5/5) renders 3 rows (glasses, hat, earrings; shoulder accessory retired)');
+ok(document.getElementById('avm-rows').children.length === 2, 'Extras (5/5) renders 2 rows on the masculine silhouette (glasses, hat; earrings are feminine, shoulder accessory retired)');
 next.click();
 ok(document.getElementById('avm-step-label').textContent.indexOf('1/5') !== -1, 'next wraps around to 1/5');
 next.click();
