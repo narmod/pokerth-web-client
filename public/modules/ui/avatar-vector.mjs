@@ -108,7 +108,7 @@ const AV_SEXTAG = {
   // dress, V-neck dress, halter dress, scoop top + necklace, blazer + scarf.
   outfit: { 0: 0, 1: 0, 2: 0, 3: 1, 4: 0, 5: 0, 6: 1, 7: 1, 8: 0, 9: 1, 10: 0, 11: 0, 12: 1, 13: 1, 14: 1, 15: 0, 16: 1,
             // 2026-09-27 additions — masculine: tee, polo, plaid shirt,
-            // crew-neck sweater, denim jacket, tank top, football jersey, zip
+            // crew-neck sweater, denim jacket, bomber (was a tank top), football jersey, zip
             // hoodie; feminine: floral blouse, strap dress, bow blouse,
             // tailored blazer, cardigan, sweatshirt, swimsuit, tee
             17: 0, 18: 0, 19: 0, 20: 0, 21: 0, 22: 0, 23: 0, 24: 0, 25: 1, 26: 1, 27: 1, 28: 1, 29: 1, 30: 1, 31: 1, 32: 1 },
@@ -164,7 +164,7 @@ const AV_RANDWEIGHT = {
   hair: { 0: 0.35, 10: 0.6, 11: 0.6, 15: 0.5, 16: 0.4, 17: 0.2, 23: 0.6, 28: 0.5, 29: 0.5, 30: 0.5, 33: 0.6, 38: 0.6, 42: 0.4, 48: 0.6 },
   hairc: { 10: 0.25, 11: 0.25 },
   mouth: { 10: 0.35 },
-  outfit: { 22: 0.5, 31: 0.4 }
+  outfit: { 31: 0.4 }
 };
 // Probability that an optional axis stays on 'none' ([masculine, feminine]).
 const AV_RANDNONE = { marks: [0.65, 0.65], beard: [0.45, 1], glasses: [0.7, 0.7], ears: [0.85, 0.45], hat: [0.7, 0.75] };
@@ -317,10 +317,16 @@ function _outfit(ctx, i, skin, oc) {
         + '<path d="M62 172 L88 202 M138 172 L112 202" stroke="' + st + '" stroke-width="1.2" fill="none" opacity=".8"/>'
         + '<rect x="48" y="180" width="14" height="11" rx="2" fill="none" stroke="' + st + '" stroke-width="1.2"/>';
     }
-    case 22: // tank top
-      c = C('#e6b422');
-      return _skinTorso(ctx, skin)
-        + '<path d="M60 204 L64 176 Q76 168 86 172 L100 182 L114 172 Q124 168 136 176 L140 204z" fill="' + ctx.v(c) + '"/>';
+    case 22: // bomber jacket over a white tee (masculine) — was a tank top,
+      // which read as a strapless top on the cropped torso (2.1.9-web.196)
+      c = C('#4b5a3a');
+      return _torso(ctx, c)
+        + '<path d="M88 157 L100 174 L112 157 Q100 162 88 157z" fill="#eeeeee"/>'
+        + '<path d="M78 157 Q100 172 122 157" stroke="' + _mix(c, 0.62) + '" stroke-width="7" fill="none"/>'
+        + '<path d="M82 160 Q100 174 118 160" stroke="' + _mix(c, 0.82) + '" stroke-width="1.2" fill="none" stroke-dasharray="1.5 2"/>'
+        + '<path d="M100 172 L100 204" stroke="#c8c8c8" stroke-width="2.6"/><path d="M100 172 L100 204" stroke="#6a6a6a" stroke-width="1" stroke-dasharray="1 2.2"/>'
+        + '<circle cx="100" cy="176" r="2" fill="#9a9a9a"/>'
+        + '<path d="M48 188 L64 188 M136 188 L152 188" stroke="' + _mix(c, 0.62) + '" stroke-width="3" stroke-linecap="round"/>';
     case 23: { // football jersey (vertical stripes)
       c = C('#1f6fd6');
       var sp = '';

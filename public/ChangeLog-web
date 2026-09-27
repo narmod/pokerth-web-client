@@ -1,4 +1,7 @@
-2026-09-27 version 2.1.9-web.195 (current series):
+2026-09-27 version 2.1.9-web.196 (current series):
+- improvement: portraits of the « Create » tab — the men's tank top read as a strapless top on the cropped torso; it becomes a bomber jacket (ribbed collar, zipper, white tee underneath), in the eight outfit colours
+
+2026-09-27 version 2.1.9-web.195:
 - bugfix: portraits of the « Create » tab — hair, hats, beards and ears now follow the width of each face shape: no more hair floating off a round man's temples or ears sticking out beside a narrow oval; beards reach the sideburns on every jaw; the balding crown is a ring of hair hugging the head instead of two blocks beside it; long masculine hair tapers and rounds off at the ends
 
 2026-09-27 version 2.1.9-web.194:
