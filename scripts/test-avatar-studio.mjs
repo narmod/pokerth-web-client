@@ -49,7 +49,14 @@ studio = studio.replace(/export \{[^}]*\};?/, '');
 ok(typeof window.avStudioTab === 'function', 'avStudioTab exposed');
 ok(typeof window._avSvg === 'function', 'vector engine exposed');
 const AXES = window._AV_AXES;
-ok(Array.isArray(AXES) && AXES.length === 18, '18 axes defined, incl. the outfit colour (' + AXES.length + ')');
+ok(Array.isArray(AXES) && AXES.length === 19, '19 axes defined, incl. the outfit colour and the eyebrows (' + AXES.length + ')');
+// 2.1.9-web.204 — "meaner" catalogue, lot 1: eyebrows axis, eye patch / monocle / mirrored aviators, sneer / gritted teeth, nose scar / black eye / temple tattoo
+const axBrows = AXES.find(a => a.id === 'brows'), axGl = AXES.find(a => a.id === 'glasses'), axMo = AXES.find(a => a.id === 'mouth'), axMk = AXES.find(a => a.id === 'marks');
+ok(axBrows && axBrows.n === 5 && axBrows.kind === 'shape' && !axBrows.none && AXES.indexOf(axBrows) === AXES.findIndex(a => a.id === 'eyec') + 1, 'eyebrows axis: 5 shapes, no "none", right after the eye colour');
+ok(axGl.n === 9 && axMo.n === 13 && axMk.n === 10, 'glasses 9 (eye patch, monocle, aviators), mouths 13 (sneer, gritted teeth), marks 10 (nose scar, black eye, temple tattoo)');
+ok(window._avSvg({ sex: 0, brows: 1 }).indexOf('M68 75 Q80 77 90 84') !== -1 && window._avSvg({ sex: 0 }).indexOf('M68 80 Q78 74 88 79 M112 79 Q122 74 132 80') !== -1 && window._avPartSvg('brows', 3, { sex: 0 }, 60).indexOf('stroke-width="7.2"') !== -1 && window._avPartSvg('brows', 3, { sex: 1 }, 60).indexOf('stroke-width="5.5"') !== -1, 'brows: default = the former fixed brows, angry V, thick brows heavier on men (vignettes too)');
+ok(window._avSvg({ sex: 0, glasses: 6 }).indexOf('M108 88 Q122 83 136 89') !== -1 && window._avSvg({ sex: 0, glasses: 7 }).indexOf('stroke-dasharray="2 1.6"') !== -1 && window._avSvg({ sex: 0, mouth: 11 }).indexOf('M107 130 L111 137 L113 129z') !== -1 && window._avSvg({ sex: 0, mouth: 12 }).indexOf('<rect x="87" y="130" width="26" height="8"') !== -1, 'eye patch, monocle chain, sneer canine and gritted teeth are drawn');
+ok(window._avSvg({ sex: 0, face: 0, marks: 9 }).indexOf('M141 66 Q153 78 143 92') !== -1 && window._avSvg({ sex: 1, face: 3, marks: 9 }).indexOf('M135 66 Q147 78 137 92') !== -1 && window._avSvg({ sex: 0, marks: 8 }).indexOf('fill="#6a3d8f"') !== -1, 'temple tattoo follows the outline width (oval man x 141, slim woman x 135), black eye is a purple bruise');
 const axOutfit = AXES.find(a => a.id === 'outfit'), axHair = AXES.find(a => a.id === 'hair'), axOc = AXES.find(a => a.id === 'outfitc');
 ok(axOutfit.n === 33 && axHair.n === 52, '2026-09-27 catalogue: 33 outfits, 52 hairstyles (' + axOutfit.n + '/' + axHair.n + ')');
 const axHairc = AXES.find(a => a.id === 'hairc');
@@ -133,7 +140,8 @@ ok(vis('outfit', 3, { sex: 1 }) && !vis('outfit', 3, { sex: 0 }) && vis('outfit'
 ok(!vis('glasses', 3, { sex: 0 }) && !vis('ears', 1, { sex: 0 }) && !vis('hat', 4, { sex: 1 }) && vis('hat', 1, { sex: 1 }), 'cat-eye glasses and pearls hidden for men, bowler hidden for women, cap shared');
 ok(!vis('beard', 2, { sex: 1 }) && vis('beard', 2, { sex: 0 }) && vis('beard', 0, { sex: 1 }), 'beard filtered on feminine silhouette (none stays valid)');
 ok(!vis('hat', 1, { hair: 10 }) && !vis('hat', 2, { hair: 7 }) && !vis('hat', 1, { hair: 17 }) && !vis('hat', 1, { hair: 33 }) && !vis('hat', 1, { hair: 37 }) && !vis('hat', 1, { hair: 42 }) && vis('hat', 0, { hair: 10 }) && vis('hat', 1, { hair: 1 }), 'hats filtered out on afro/bun/mohawk/crown braid/high bun (none stays valid)');
-ok(!vis('eyec', 1, { eyes: 2 }) && !vis('eyec', 1, { glasses: 5 }) && vis('eyec', 1, { eyes: 0, glasses: 1 }), 'eye color hidden behind closed eyes or sunglasses');
+ok(!vis('eyec', 1, { eyes: 2 }) && !vis('eyec', 1, { glasses: 5 }) && !vis('eyec', 1, { glasses: 8 }) && vis('eyec', 1, { eyes: 0, glasses: 1 }) && vis('eyec', 1, { glasses: 6 }), 'eye color hidden behind closed eyes, sunglasses or mirrored aviators (not behind an eye patch)');
+ok(!vis('brows', 4, { sex: 0 }) && vis('brows', 4, { sex: 1 }) && vis('brows', 1, { sex: 1 }) && !vis('glasses', 7, { sex: 1 }) && vis('glasses', 6, { sex: 1 }), 'thin arched brows are feminine, the monocle masculine, the eye patch shared');
 ok(vis('shoulder', 0, {}) && !vis('shoulder', 1, {}) && !vis('shoulder', 4, {}), 'shoulder accessories retired (only none stays valid)');
 ok(vis('mouth', 3, { sex: 1 }) && !vis('mouth', 3, { sex: 0 }), 'lipstick mouth is feminine-only');
 ok(!vis('mouth', 5, { sex: 0 }) && !vis('mouth', 7, { sex: 0 }) && vis('mouth', 10, { sex: 0 }) && !vis('mouth', 10, { sex: 1 }), 'pout and small o are feminine, the cigar is masculine');
@@ -325,7 +333,7 @@ ok(persisted && persisted.sex === 1, 'clicking an option persists the recipe (pt
 const KEYS = ['avmSex','avmFace','avmHat','avmGrpBody','avmGrpFace','avmGrpHair','avmGrpStyle','avmGrpExtra',
   'avmNose','avmBg','avmOutfit','avmSkin','avmMarks','avmHair','avmHairColor','avmBeard',
   'avmEyeShape','avmEyeColor','avmMouth','avmShoulder','avmEarrings','avmNone',
-  'avTabGallery','avTabCreate','avTabImport','avmRandom','avmReset','avmUse','avmGlasses',
+  'avTabGallery','avTabCreate','avTabImport','avmRandom','avmReset','avmUse','avmGlasses','avmBrows',
   'avImportDrop','avImportOr','avImportBtn','avImportHint','advAvatarCreate'];
 const langDir = path.join(PUB, 'modules/lang');
 let langsOk = true;

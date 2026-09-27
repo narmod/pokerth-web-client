@@ -1,4 +1,9 @@
-2026-09-27 version 2.1.9-web.203 (current series):
+2026-09-27 version 2.1.9-web.204 (current series):
+- new: toon portraits — an « Eyebrows » row in the Face step: neutral, angry V, one raised, low and thick, thin and arched (the last one for the feminine silhouette); the eyebrows keep the hair colour
+- new: toon portraits — a pirate eye patch, a monocle on a chain (men) and mirrored aviators in the Glasses row; a sneer with a canine showing and gritted teeth in the Mouth row; a scar across the bridge of the nose, a black eye and a tribal tattoo on the temple in the Skin marks row
+- improvement: the eye colour row is hidden behind mirrored aviators, like behind sunglasses
+
+2026-09-27 version 2.1.9-web.203:
 - improvement: toon portraits — every face shape now carries its own landmarks (temples, ears, cheeks, jaw, chin) and the hair, hats, beards and ears are fitted from them: the hair follows the head width at every height (a narrow crown over wide cheekbones, a wide crown over a narrow jaw), a beard starts right under the ear and keeps the same thickness on the cheek whatever the face, overhangs the chin instead of sticking out beside the cheeks, the goatee hangs from the chin and the balding ring stops at the ear lobe
 
 2026-09-27 version 2.1.9-web.202:

@@ -63,15 +63,16 @@ const AV_AXES = [
   { id: 'outfit',label: 'avmOutfit',    n: 33,              kind: 'shape', none: false },
   { id: 'outfitc', label: 'avmOutfitColor', n: AV_OUTFITC.length + 1, kind: 'color', none: true },
   { id: 'skin',  label: 'avmSkin',      n: AV_SKIN.length,  kind: 'color', none: false },
-  { id: 'marks', label: 'avmMarks',     n: 7,               kind: 'shape', none: true  },
+  { id: 'marks', label: 'avmMarks',     n: 10,              kind: 'shape', none: true  },
   { id: 'hair',  label: 'avmHair',      n: 52,              kind: 'shape', none: true  },
   { id: 'hairc', label: 'avmHairColor', n: AV_HAIRC.length, kind: 'color', none: false },
   { id: 'beard', label: 'avmBeard',     n: 7,               kind: 'shape', none: true  },
   { id: 'eyes',  label: 'avmEyeShape',  n: 7,               kind: 'shape', none: false },
   { id: 'eyec',  label: 'avmEyeColor',  n: AV_EYEC.length,  kind: 'color', none: false },
+  { id: 'brows', label: 'avmBrows',     n: 5,               kind: 'shape', none: false },
   { id: 'nose',  label: 'avmNose',      n: 5,               kind: 'shape', none: false },
-  { id: 'mouth', label: 'avmMouth',     n: 11,              kind: 'shape', none: false },
-  { id: 'glasses', label: 'avmGlasses', n: 6,               kind: 'shape', none: true  },
+  { id: 'mouth', label: 'avmMouth',     n: 13,              kind: 'shape', none: false },
+  { id: 'glasses', label: 'avmGlasses', n: 9,               kind: 'shape', none: true  },
   { id: 'shoulder', label: 'avmShoulder', n: 5,             kind: 'shape', none: true  },
   { id: 'ears',  label: 'avmEarrings',  n: 6,               kind: 'shape', none: true  },
   { id: 'hat',   label: 'avmHat',       n: 10,              kind: 'shape', none: true  }
@@ -119,7 +120,8 @@ const AV_SEXTAG = {
   // cigar (mouth 10) and a cheek scar (marks 6) instead.
   mouth: { 3: 1, 5: 1, 7: 1, 10: 0 },      // lipstick, pout, small o | cigar
   marks: { 2: 1, 6: 0 },                    // beauty mark | cheek scar
-  glasses: { 3: 1 },                        // cat-eye
+  glasses: { 3: 1, 7: 0 },                  // cat-eye | monocle
+  brows: { 4: 1 },                          // thin arched
   ears: { 1: 1, 2: 1, 3: 1, 4: 1, 5: 1 },   // pearl studs, gold studs, hoops, single hoops
   hat: { 4: 0, 7: 0 }                       // bowler, flat cap
 };
@@ -137,8 +139,8 @@ function avVisible(axId, i, recipe) {
     if (recipe.hair === 7 || recipe.hair === 10 || recipe.hair === 17 || recipe.hair === 33 || recipe.hair === 37 || recipe.hair === 42) return false;
   }
   if (recipe && axId === 'eyec') {
-    // Eye color is meaningless behind closed eyes or sunglasses.
-    if (recipe.eyes === 2 || recipe.glasses === 5) return false;
+    // Eye color is meaningless behind closed eyes, sunglasses or mirrored aviators.
+    if (recipe.eyes === 2 || recipe.glasses === 5 || recipe.glasses === 8) return false;
   }
   var tags = AV_SEXTAG[axId];
   if (!tags || !(i in tags) || !recipe) return true;
@@ -146,7 +148,7 @@ function avVisible(axId, i, recipe) {
 }
 
 const AV_DEFAULT = { sex: 0, face: 0, bg: 0, outfit: 0, outfitc: 0, skin: 1, marks: 0, hair: 1, hairc: 1,
-                     beard: 0, eyes: 0, eyec: 0, nose: 0, mouth: 0, glasses: 0, shoulder: 0, ears: 0, hat: 0 };
+                     beard: 0, eyes: 0, eyec: 0, brows: 0, nose: 0, mouth: 0, glasses: 0, shoulder: 0, ears: 0, hat: 0 };
 
 function avNormalize(r) {
   var out = {};
@@ -165,8 +167,11 @@ function avNormalize(r) {
 const AV_RANDWEIGHT = {
   hair: { 0: 0.35, 10: 0.6, 11: 0.6, 15: 0.5, 16: 0.4, 17: 0.2, 23: 0.6, 28: 0.5, 29: 0.5, 30: 0.5, 33: 0.6, 38: 0.6, 42: 0.4, 48: 0.6 },
   hairc: { 10: 0.25, 11: 0.25 },
-  mouth: { 10: 0.35 },
-  outfit: { 31: 0.4 }
+  mouth: { 10: 0.35, 11: 0.5, 12: 0.4 },
+  outfit: { 31: 0.4 },
+  brows: { 1: 0.5, 2: 0.6, 3: 0.5, 4: 0.6 },
+  glasses: { 6: 0.3, 7: 0.4 },
+  marks: { 8: 0.4, 9: 0.5 }
 };
 // Probability that an optional axis stays on 'none' ([masculine, feminine]).
 const AV_RANDNONE = { marks: [0.65, 0.65], beard: [0.45, 1], glasses: [0.7, 0.7], ears: [0.85, 0.45], hat: [0.7, 0.75] };
@@ -766,6 +771,21 @@ function _nose(i, sh) {
   }
 }
 
+// ── Eyebrows (axis 'brows', 2.1.9-web.204) — in the hair colour ──────────
+// 0 neutral (the former fixed brows), 1 angry V, 2 one raised (sceptical),
+// 3 low and thick (brute), 4 thin and arched (feminine).
+function _brows(i, col, fem) {
+  var w = fem ? 4 : 5.4, d;
+  switch (i) {
+    case 1: d = 'M68 75 Q80 77 90 84 M110 84 Q120 77 132 75'; break;
+    case 2: d = 'M68 80 Q78 74 88 79 M112 75 Q122 65 132 74'; break;
+    case 3: d = 'M66 83 Q78 79 90 83 M110 83 Q122 79 134 83'; w = fem ? 5.5 : 7.2; break;
+    case 4: d = 'M68 79 Q80 66 90 78 M110 78 Q120 66 132 79'; w = 2.6; break;
+    default: d = 'M68 80 Q78 74 88 79 M112 79 Q122 74 132 80';
+  }
+  return '<path d="' + d + '" stroke="' + col + '" stroke-width="' + w + '" stroke-linecap="round" fill="none"/>';
+}
+
 // ── Eyes (shape x iris color) — bold Mii-like outlines ───────────────────
 var EYE_LINE = '#241a12';
 // Open eye: outlined sclera, big iris, pupil, highlight, thick upper lid.
@@ -850,6 +870,14 @@ function _mouth(i) {
         + '<path d="M113 134.8 L116 135.6" stroke="#d9b26b" stroke-width="6.5"/>'
         + '<circle cx="124.5" cy="138.2" r="2.8" fill="#ff6a2a"/><circle cx="124.5" cy="138.2" r="1.3" fill="#ffd27a"/>'
         + '<path d="M126 132 Q130 128 127 123" stroke="#c8c8c8" stroke-width="1.6" fill="none" stroke-linecap="round" opacity=".7"/>';
+    // 2.1.9-web.204 (narmod: « plus méchant ») — sneer, gritted teeth
+    case 11: // sneer: lip curled up on one side, a canine showing
+      return line('M86 136 Q100 138 114 128')
+        + '<path d="M107 130 L111 137 L113 129z" fill="' + TEETH + '"/>';
+    case 12: // gritted teeth
+      return '<path d="M84 128 Q100 125 116 128 Q116 141 100 142 Q84 141 84 128z" fill="' + M + '"/>'
+        + '<rect x="87" y="130" width="26" height="8" rx="2" fill="' + TEETH + '"/>'
+        + '<path d="M93 130 L93 138 M100 130 L100 138 M107 130 L107 138 M87 134 L113 134" stroke="#c9c2b4" stroke-width="1.2"/>';
     default: // smile: filled crescent with a lower lip
       return '<path d="M84 127 Q100 151 116 127 Q100 137 84 127z" fill="' + M + '"/>'
         + '<path d="M90 133 Q100 143 110 133 Q100 139 90 133z" fill="' + LIP + '"/>';
@@ -857,7 +885,8 @@ function _mouth(i) {
 }
 
 // ── Skin marks ───────────────────────────────────────────────────────────
-function _marks(i, sh) {
+function _marks(i, sh, hw) {
+  var b = 100 + (hw || 53) - 4; // right temple edge (FACE_PTS ear-level width)
   switch (i) {
     case 1: { // freckles
       var d = '';
@@ -871,6 +900,10 @@ function _marks(i, sh) {
     case 4: return '<path d="M124 72 L130 86" stroke="#f6d3d0" stroke-width="3" stroke-linecap="round"/>'; // eyebrow scar
     case 5: return '<path d="M80 130 Q82 134 80 137 M120 130 Q118 134 120 137" stroke="' + _mix(sh, 0.85) + '" stroke-width="2" fill="none" stroke-linecap="round"/>'; // dimples
     case 6: return '<path d="M132 104 L138 124" stroke="#f6d3d0" stroke-width="3" stroke-linecap="round"/><path d="M131 110 L136 109 M133 116 L138 115" stroke="#f6d3d0" stroke-width="1.6" stroke-linecap="round"/>'; // cheek scar (masculine)
+    // 2.1.9-web.204 (narmod: « plus méchant ») — nose-bridge scar, black eye, tribal temple tattoo
+    case 7: return '<path d="M95 91 L105 96" stroke="#f6d3d0" stroke-width="3" stroke-linecap="round"/><path d="M98 90 L97 95 M102 93 L101 98" stroke="#f6d3d0" stroke-width="1.6" stroke-linecap="round"/>'; // scar across the bridge of the nose
+    case 8: return '<ellipse cx="78" cy="101" rx="16" ry="14" fill="#b8a13a" opacity=".2"/><ellipse cx="78" cy="101" rx="13.5" ry="11.5" fill="#6a3d8f" opacity=".38"/>'; // black eye (bruise under the eye)
+    case 9: return '<path d="M' + (b - 10) + ' 66 Q' + (b + 2) + ' 78 ' + (b - 8) + ' 92 M' + (b - 5) + ' 72 Q' + (b + 3) + ' 82 ' + (b - 3) + ' 90" stroke="#2a2f3a" stroke-width="2.6" fill="none" stroke-linecap="round"/>'; // tribal tattoo on the right temple
     default: return '';
   }
 }
@@ -894,6 +927,21 @@ function _glasses(i) {
       return '<rect x="61" y="87" width="33" height="21" rx="9" fill="#15171c"/><rect x="106" y="87" width="33" height="21" rx="9" fill="#15171c"/>'
         + '<path d="M94 95 L106 95" stroke="#15171c" stroke-width="3.4"/>'
         + '<path d="M67 93 L76 93 M112 93 L121 93" stroke="#fff" stroke-width="2.4" stroke-linecap="round" opacity=".5"/>';
+    // 2.1.9-web.204 (narmod: « plus méchant ») — eye patch, monocle, mirrored aviators
+    case 6: // pirate eye patch over the right eye, strap across the forehead
+      return '<path d="M111 91 L58 67 M133 91 L152 84" stroke="#1b1b20" stroke-width="3" stroke-linecap="round"/>'
+        + '<path d="M108 88 Q122 83 136 89 L135 107 Q122 113 109 107z" fill="#1b1b20"/>'
+        + '<path d="M114 93 Q122 91 130 94" stroke="#44444c" stroke-width="1.4" fill="none" opacity=".9"/>';
+    case 7: // monocle on a chain (villain)
+      return '<circle cx="122" cy="98" r="14"' + lens + ' stroke="#d4a437" stroke-width="2.6"/>'
+        + '<path d="M133 107 Q144 120 138 136" stroke="#d4a437" stroke-width="1.6" fill="none" stroke-dasharray="2 1.6"/>';
+    case 8: { // mirrored aviators (teardrop lenses, gold frame)
+      var av = function (x0) { return 'M' + x0 + ' 90 Q' + (x0 + 16) + ' 85 ' + (x0 + 32) + ' 90 Q' + (x0 + 33) + ' 112 ' + (x0 + 16) + ' 114 Q' + (x0 + 1) + ' 112 ' + x0 + ' 90z'; };
+      return '<path d="' + av(62) + '" fill="#6ea6dd"/><path d="' + av(106) + '" fill="#6ea6dd"/>'
+        + '<path d="M67 107 L87 91 M111 107 L131 91" stroke="#fff" stroke-width="5" stroke-linecap="round" opacity=".55"/>'
+        + '<path d="' + av(62) + '" fill="none" stroke="#d4a437" stroke-width="1.8"/><path d="' + av(106) + '" fill="none" stroke="#d4a437" stroke-width="1.8"/>'
+        + '<path d="M94 92 Q100 88 106 92 M60 88 L140 88" stroke="#d4a437" stroke-width="2" fill="none"/>';
+    }
     default: // 4: gold round
       return '<circle cx="78" cy="98" r="13"' + lens + ' stroke="#d4a437" stroke-width="2.6"/><circle cx="122" cy="98" r="13"' + lens + ' stroke="#d4a437" stroke-width="2.6"/>'
         + '<path d="M91 96 Q100 92 109 96" stroke="#d4a437" stroke-width="2.4" fill="none"/>';
@@ -1117,6 +1165,7 @@ const AV_CROP = {
   hair:     [20, 4, 160],
   beard:    [40, 80, 120],
   eyes:     [58, 66, 84],
+  brows:    [54, 30, 92],
   nose:     [80, 94, 40],
   mouth:    [74, 110, 52],
   glasses:  [52, 62, 96],
@@ -1142,12 +1191,13 @@ function avPartSvg(axId, i, recipe, size) {
   var ctx = _ctx(_cid()), body = '', h;
   switch (axId) {
     case 'face':    body = _earsSkin(skin, _headHW(i + (r.sex === 1 ? AV_FACE_N : 0))) + _head(ctx, i + (r.sex === 1 ? AV_FACE_N : 0), skin); break;
-    case 'marks':   body = _earsSkin(skin, _headHW(_faceKey(r))) + _head(ctx, _faceKey(r), skin) + _marks(i, skin[1]); break;
+    case 'marks':   body = _earsSkin(skin, _headHW(_faceKey(r))) + _head(ctx, _faceKey(r), skin) + _marks(i, skin[1], _headHW(_faceKey(r))); break;
     case 'outfit':  body = _sx(r.sex === 1 ? 0.86 : 1, _neck(skin) + _outfit(ctx, i, skin, r.outfitc ? AV_OUTFITC[r.outfitc - 1] : null)); break;
     case 'hair':    h = _hair(ctx, i, hc, _faceKey(r));
       body = h[0] + (h[2] ? '<g clip-path="url(#' + _headClip(ctx, _faceKey(r), 1.02) + ')">' + h[2] + '</g>' : '') + h[1]; break;
     case 'beard':   body = _beard(ctx, i, hcN, _faceKey(r)); break;
     case 'eyes':    body = _eyes(i, AV_EYEC[r.eyec], skin, r.sex === 1); break;
+    case 'brows':   body = _brows(i, hcN[0], r.sex === 1); break;
     case 'nose':    body = _nose(i, skin[1]); break;
     case 'mouth':   body = _mouth(i); break;
     case 'glasses': body = _glasses(i); break;
@@ -1191,7 +1241,7 @@ function avSvg(recipe, size) {
     + _earsSkin(skin, _headHW(fk))
     + _head(ctx, fk, skin)
     + (hair[2] ? clipHair('<g clip-path="url(#' + _headClip(ctx, fk, 1.02) + ')">' + _warp(hair[2], fk) + '</g>') : '')
-    + _marks(r.marks, skin[1])
+    + _marks(r.marks, skin[1], _headHW(fk))
     // (blush: a feminine touch, barely there on men)
     + '<ellipse cx="68" cy="117" rx="9" ry="5.5" fill="#ff7f86" opacity="' + (fem ? '.32' : '.1') + '"/>'
     + '<ellipse cx="132" cy="117" rx="9" ry="5.5" fill="#ff7f86" opacity="' + (fem ? '.32' : '.1') + '"/>'
@@ -1200,7 +1250,7 @@ function avSvg(recipe, size) {
     + _mouth(r.mouth)
     + _eyes(r.eyes, AV_EYEC[r.eyec], skin, fem)
     // Brows follow hair color (a natural one on fantasy hair)
-    + '<path d="M68 80 Q78 74 88 79 M112 79 Q122 74 132 80" stroke="' + hcN[0] + '" stroke-width="' + (fem ? 4 : 5.4) + '" stroke-linecap="round" fill="none"/>'
+    + _brows(r.brows, hcN[0], fem)
     + _ears(r.ears, _headHW(fk))
     + clipHair(_warp(hair[1], fk))
     + _glasses(r.glasses)

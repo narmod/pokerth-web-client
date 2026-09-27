@@ -32,7 +32,7 @@ import { avCaptureOpen } from './avatar-capture.mjs';
 // active group's rows are rendered, keeping the pane short and tidy.
 const AV_GROUPS = [
   { icon: '\uD83D\uDC65', label: 'avmGrpBody',  axes: ['sex', 'face'] },
-  { icon: '\uD83D\uDC64', label: 'avmGrpFace',  axes: ['skin', 'marks', 'eyes', 'eyec', 'nose', 'mouth'] },
+  { icon: '\uD83D\uDC64', label: 'avmGrpFace',  axes: ['skin', 'marks', 'eyes', 'eyec', 'brows', 'nose', 'mouth'] },
   { icon: '\uD83D\uDC87', label: 'avmGrpHair',  axes: ['hair', 'hairc', 'beard'] },
   { icon: '\uD83D\uDC54', label: 'avmGrpStyle', axes: ['outfit', 'outfitc', 'bg'] },
   { icon: '\u2728',        label: 'avmGrpExtra', axes: ['glasses', 'hat', 'shoulder', 'ears'] }
