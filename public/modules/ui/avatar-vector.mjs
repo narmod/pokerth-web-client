@@ -46,15 +46,20 @@ const AV_FELT = [
 // Index of the white background: forced by the random dice (narmod
 // 2026-07-31: random draws always land on the white backdrop).
 const AV_BG_WHITE = 7;
+// Outfit colours (axis 'outfitc': 0 = as drawn, 1.. = these), applied to
+// the plain garments listed in AV_OUTFIT_COLORABLE (narmod 2026-09-27).
+const AV_OUTFITC = ['#c0392b', '#2d6aa3', '#2e8b57', '#e6b422', '#8e44ad', '#1f1f24', '#f2f2f2', '#e07aa0'];
+const AV_OUTFIT_COLORABLE = { 3: 1, 6: 1, 7: 1, 11: 1, 14: 1, 17: 1, 18: 1, 19: 1, 20: 1, 21: 1, 22: 1, 23: 1, 24: 1, 25: 1, 26: 1, 27: 1, 28: 1, 29: 1, 30: 1, 31: 1, 32: 1 };
 
 const AV_AXES = [
   { id: 'sex',   label: 'avmSex',       n: 2,               kind: 'shape', none: false },
   { id: 'face',  label: 'avmFace',      n: 3,               kind: 'shape', none: false },
   { id: 'bg',    label: 'avmBg',        n: AV_FELT.length,  kind: 'color', none: false },
-  { id: 'outfit',label: 'avmOutfit',    n: 17,              kind: 'shape', none: false },
+  { id: 'outfit',label: 'avmOutfit',    n: 33,              kind: 'shape', none: false },
+  { id: 'outfitc', label: 'avmOutfitColor', n: AV_OUTFITC.length + 1, kind: 'color', none: true },
   { id: 'skin',  label: 'avmSkin',      n: AV_SKIN.length,  kind: 'color', none: false },
   { id: 'marks', label: 'avmMarks',     n: 6,               kind: 'shape', none: true  },
-  { id: 'hair',  label: 'avmHair',      n: 26,              kind: 'shape', none: true  },
+  { id: 'hair',  label: 'avmHair',      n: 39,              kind: 'shape', none: true  },
   { id: 'hairc', label: 'avmHairColor', n: AV_HAIRC.length, kind: 'color', none: false },
   { id: 'beard', label: 'avmBeard',     n: 7,               kind: 'shape', none: true  },
   { id: 'eyes',  label: 'avmEyeShape',  n: 7,               kind: 'shape', none: false },
@@ -81,12 +86,22 @@ const AV_SEXTAG = {
   // pixie, long wavy, pigtails, box braids, low side bun, asymmetric bob,
   // voluminous curls, low ponytail, hollywood waves.
   hair: { 0: 0, 1: 0, 2: 0, 3: 1, 4: 0, 5: 1, 6: 0, 7: 1, 8: 1, 9: 0, 10: 0, 11: 1, 12: 1, 13: 0,
-          14: 1, 15: 0, 16: 0, 17: 0, 18: 0, 19: 1, 20: 1, 21: 1, 22: 1, 23: 1, 24: 1, 25: 1 },
+          14: 1, 15: 0, 16: 0, 17: 0, 18: 0, 19: 1, 20: 1, 21: 1, 22: 1, 23: 1, 24: 1, 25: 1,
+          // 2026-09-27 additions — masculine: side part, mid-length, ponytail,
+          // buzz cut, long curly, curtain fringe; feminine: short bob, crown
+          // braid, straight fringe, very long straight, cropped, messy high
+          // bun, long locs
+          26: 0, 27: 0, 28: 0, 29: 0, 30: 0, 31: 0, 32: 1, 33: 1, 34: 1, 35: 1, 36: 1, 37: 1, 38: 1 },
   // 9 masculine: charcoal suit, navy + tie, vest + tie, tux + bow tie, open
   // shirt, white dinner jacket, leather jacket, hoodie, open-collar shirt.
   // 8 feminine: collared sweater, V-neck blouse, turtleneck, strapless
   // dress, V-neck dress, halter dress, scoop top + necklace, blazer + scarf.
-  outfit: { 0: 0, 1: 0, 2: 0, 3: 1, 4: 0, 5: 0, 6: 1, 7: 1, 8: 0, 9: 1, 10: 0, 11: 0, 12: 1, 13: 1, 14: 1, 15: 0, 16: 1 },
+  outfit: { 0: 0, 1: 0, 2: 0, 3: 1, 4: 0, 5: 0, 6: 1, 7: 1, 8: 0, 9: 1, 10: 0, 11: 0, 12: 1, 13: 1, 14: 1, 15: 0, 16: 1,
+            // 2026-09-27 additions — masculine: tee, polo, plaid shirt,
+            // crew-neck sweater, denim jacket, tank top, football jersey, zip
+            // hoodie; feminine: floral blouse, strap dress, bow blouse,
+            // tailored blazer, cardigan, sweatshirt, swimsuit, tee
+            17: 0, 18: 0, 19: 0, 20: 0, 21: 0, 22: 0, 23: 0, 24: 0, 25: 1, 26: 1, 27: 1, 28: 1, 29: 1, 30: 1, 31: 1, 32: 1 },
   mouth: { 3: 1 },          // lipstick
   glasses: { 3: 1 },        // cat-eye
   ears: { 1: 1, 3: 1 },     // pearl studs, gold hoops
@@ -101,8 +116,9 @@ function avVisible(axId, i, recipe) {
   if (axId === 'shoulder') return i === 0;
   if (axId === 'beard') return i === 0 || !(recipe && recipe.sex === 1);
   if (recipe && axId === 'hat' && i !== 0) {
-    // Voluminous or tall hairstyles (bun, afro, mohawk) don't fit under a hat.
-    if (recipe.hair === 7 || recipe.hair === 10 || recipe.hair === 17) return false;
+    // Voluminous or tall hairstyles (bun, afro, mohawk, crown braid, high
+    // bun) don't fit under a hat.
+    if (recipe.hair === 7 || recipe.hair === 10 || recipe.hair === 17 || recipe.hair === 33 || recipe.hair === 37) return false;
   }
   if (recipe && axId === 'eyec') {
     // Eye color is meaningless behind closed eyes or sunglasses.
@@ -113,7 +129,7 @@ function avVisible(axId, i, recipe) {
   return tags[i] === recipe.sex;
 }
 
-const AV_DEFAULT = { sex: 0, face: 0, bg: 0, outfit: 0, skin: 1, marks: 0, hair: 1, hairc: 1,
+const AV_DEFAULT = { sex: 0, face: 0, bg: 0, outfit: 0, outfitc: 0, skin: 1, marks: 0, hair: 1, hairc: 1,
                      beard: 0, eyes: 0, eyec: 0, nose: 0, mouth: 0, glasses: 0, shoulder: 0, ears: 0, hat: 0 };
 
 function avNormalize(r) {
@@ -131,7 +147,8 @@ function avNormalize(r) {
 // AV_SEXTAG through avVisible(), shared with the studio rows.
 // Relative dice weights (default 1): striking styles stay possible but rare.
 const AV_RANDWEIGHT = {
-  hair: { 0: 0.35, 10: 0.6, 11: 0.6, 15: 0.5, 16: 0.4, 17: 0.2, 23: 0.6 }
+  hair: { 0: 0.35, 10: 0.6, 11: 0.6, 15: 0.5, 16: 0.4, 17: 0.2, 23: 0.6, 28: 0.5, 29: 0.5, 30: 0.5, 33: 0.6, 38: 0.6 },
+  outfit: { 22: 0.5, 31: 0.4 }
 };
 // Probability that an optional axis stays on 'none' ([masculine, feminine]).
 const AV_RANDNONE = { marks: [0.65, 0.65], beard: [0.45, 1], glasses: [0.7, 0.7], ears: [0.85, 0.45], hat: [0.7, 0.75] };
@@ -231,22 +248,139 @@ function _bowtie(c) {
     + '<circle cx="100" cy="166" r="3" fill="' + _mix(c, 0.7) + '"/>';
 }
 
-function _outfit(ctx, i, skin) {
+// Clip to the body silhouette (patterns: plaid, stripes, flowers).
+function _bodyClip(ctx) {
+  var id = ctx.cid + 'bd';
+  if (!ctx.seenClip) ctx.seenClip = {};
+  if (!ctx.seenClip[id]) { ctx.seenClip[id] = 1; ctx.defs.push('<clipPath id="' + id + '"><path d="' + BODY + '"/></clipPath>'); }
+  return 'url(#' + id + ')';
+}
+function _crew(ctx, sk, c) { // crew neck: a sliver of neck + a rib band
+  return '<path d="M86 157 Q100 168 114 157z" fill="' + sk + '"/>'
+    + '<path d="M84 156 Q100 172 116 156" stroke="' + _mix(c, 0.78) + '" stroke-width="4" fill="none"/>';
+}
+function _collarFlaps(ctx, sk, c) { // open collar: skin V + two flaps
+  return '<path d="M90 157 L100 178 L110 157 Q100 162 90 157z" fill="' + sk + '"/>'
+    + '<path d="M87 156 Q92 168 99 174 L91 181 Q83 170 84 158z" fill="' + _mix(c, 1.12) + '"/>'
+    + '<path d="M113 156 Q108 168 101 174 L109 181 Q117 170 116 158z" fill="' + _mix(c, 0.94) + '"/>';
+}
+
+// oc: outfit colour override (hex) for the colourable garments, or null.
+function _outfit(ctx, i, skin, oc) {
   var sk = ctx.v(skin[0]);
+  var C = function (def) { return (oc && AV_OUTFIT_COLORABLE[i]) ? oc : def; };
+  var c;
   switch (i) {
+    case 17: // plain tee (masculine)
+      c = C('#3d7bd6');
+      return _torso(ctx, c) + _crew(ctx, sk, c);
+    case 18: // polo
+      c = C('#2e8b57');
+      return _torso(ctx, c) + _collarFlaps(ctx, sk, c)
+        + '<circle cx="100" cy="184" r="1.6" fill="' + _mix(c, 0.6) + '"/><circle cx="100" cy="192" r="1.6" fill="' + _mix(c, 0.6) + '"/>';
+    case 19: { // plaid shirt
+      c = C('#b0233f');
+      var ln = _mix(c, 0.62), grid = '';
+      for (var gx = 40; gx <= 166; gx += 14) grid += '<line x1="' + gx + '" y1="150" x2="' + gx + '" y2="206"/>';
+      for (var gy = 160; gy <= 206; gy += 14) grid += '<line x1="30" y1="' + gy + '" x2="170" y2="' + gy + '"/>';
+      return _torso(ctx, c)
+        + '<g clip-path="' + _bodyClip(ctx) + '" stroke="' + ln + '" stroke-width="3" opacity=".55">' + grid + '</g>'
+        + _collarFlaps(ctx, sk, c);
+    }
+    case 20: // crew-neck sweater
+      c = C('#5b6bb0');
+      return _torso(ctx, c) + _crew(ctx, sk, c)
+        + '<path d="M40 198 L160 198 M38 202 L162 202" stroke="' + _mix(c, 0.8) + '" stroke-width="1.4" opacity=".7"/>';
+    case 21: { // denim jacket over a tee (the tee takes the colour)
+      c = C('#e8e4da');
+      var dn = '#4a6fa5', st = '#c9d3e6';
+      return _torso(ctx, c) + _crew(ctx, sk, c)
+        + '<path d="M84 158 L58 170 L86 204 L94 176z" fill="' + ctx.v(dn) + '"/>'
+        + '<path d="M116 158 L142 170 L114 204 L106 176z" fill="' + ctx.v(_mix(dn, 0.9)) + '"/>'
+        + '<path d="M34 204 Q34 160 84 158 L58 170 L86 204z M166 204 Q166 160 116 158 L142 170 L114 204z" fill="' + ctx.v(dn) + '"/>'
+        + '<path d="M62 172 L88 202 M138 172 L112 202" stroke="' + st + '" stroke-width="1.2" fill="none" opacity=".8"/>'
+        + '<rect x="48" y="180" width="14" height="11" rx="2" fill="none" stroke="' + st + '" stroke-width="1.2"/>';
+    }
+    case 22: // tank top
+      c = C('#e6b422');
+      return _skinTorso(ctx, skin)
+        + '<path d="M60 204 L64 176 Q76 168 86 172 L100 182 L114 172 Q124 168 136 176 L140 204z" fill="' + ctx.v(c) + '"/>';
+    case 23: { // football jersey (vertical stripes)
+      c = C('#1f6fd6');
+      var sp = '';
+      for (var sx = 46; sx <= 154; sx += 24) sp += '<rect x="' + sx + '" y="150" width="10" height="60"/>';
+      return _torso(ctx, c)
+        + '<g clip-path="' + _bodyClip(ctx) + '" fill="#f4f4f4" opacity=".85">' + sp + '</g>'
+        + '<path d="M88 157 L100 176 L112 157 Q100 162 88 157z" fill="' + sk + '"/>'
+        + '<path d="M86 156 L100 178 L114 156" stroke="#f4f4f4" stroke-width="3" fill="none" stroke-linejoin="round"/>';
+    }
+    case 24: // zip hoodie (light)
+      c = C('#c9ced6');
+      return _torso(ctx, c)
+        + '<path d="M74 158 Q70 176 100 180 Q130 176 126 158 Q116 170 100 170 Q84 170 74 158z" fill="' + ctx.v(_mix(c, 1.1)) + '"/>'
+        + '<path d="M100 178 L100 204" stroke="' + _mix(c, 0.6) + '" stroke-width="2" stroke-dasharray="2 1.5"/>'
+        + '<path d="M93 176 L90 194 M107 176 L110 194" stroke="' + _mix(c, 0.7) + '" stroke-width="2" stroke-linecap="round"/>';
+    case 25: { // floral blouse (feminine)
+      c = C('#e9c4d3');
+      var fl = '', pts = [[52, 176], [70, 194], [88, 172], [112, 190], [132, 172], [150, 192], [60, 200], [100, 202], [140, 204]];
+      pts.forEach(function (pt) {
+        fl += '<circle cx="' + pt[0] + '" cy="' + pt[1] + '" r="3.2" fill="' + _mix(c, 0.72) + '"/><circle cx="' + pt[0] + '" cy="' + pt[1] + '" r="1.2" fill="#fff6c8"/>';
+      });
+      return _torso(ctx, c) + '<g clip-path="' + _bodyClip(ctx) + '">' + fl + '</g>'
+        + '<path d="M84 157 Q100 174 116 157 Q100 162 84 157z" fill="' + sk + '"/>';
+    }
+    case 26: // strap dress (feminine)
+      c = C('#d9536a');
+      return _skinTorso(ctx, skin)
+        + '<path d="M58 204 L62 180 Q80 172 100 174 Q120 172 138 180 L142 204z" fill="' + ctx.v(c) + '"/>'
+        + '<path d="M76 160 L78 180 M124 160 L122 180" stroke="' + _mix(c, 0.85) + '" stroke-width="3" stroke-linecap="round"/>';
+    case 27: // pussy-bow blouse (feminine)
+      c = C('#f3efe6');
+      return _torso(ctx, c)
+        + '<path d="M86 156 Q100 166 114 156 L112 162 Q100 172 88 162z" fill="' + _mix(c, 0.9) + '"/>'
+        + '<path d="M100 168 Q84 158 82 170 Q84 180 100 170 Q116 180 118 170 Q116 158 100 168z" fill="' + _mix(c, 0.82) + '"/>'
+        + '<path d="M96 170 L92 196 M104 170 L108 196" stroke="' + _mix(c, 0.82) + '" stroke-width="4" stroke-linecap="round"/>'
+        + '<circle cx="100" cy="169" r="3" fill="' + _mix(c, 0.7) + '"/>';
+    case 28: // tailored blazer (feminine)
+      c = C('#3a3f5c');
+      return _torso(ctx, c) + _shirtV(ctx, '#f4f0e6') + _lapels(ctx, _mix(c, 0.85))
+        + '<circle cx="100" cy="198" r="2" fill="' + _mix(c, 0.6) + '"/>';
+    case 29: // cardigan over a light top (feminine)
+      c = C('#7a5c9a');
+      return _torso(ctx, '#f4f0e6')
+        + '<path d="M86 157 Q100 174 114 157 Q100 162 86 157z" fill="' + sk + '"/>'
+        + '<path d="M34 204 Q34 160 90 157 L92 204z" fill="' + ctx.v(c) + '"/>'
+        + '<path d="M166 204 Q166 160 110 157 L108 204z" fill="' + ctx.v(_mix(c, 0.9)) + '"/>'
+        + '<circle cx="90" cy="176" r="1.8" fill="' + _mix(c, 0.6) + '"/><circle cx="90" cy="188" r="1.8" fill="' + _mix(c, 0.6) + '"/><circle cx="90" cy="200" r="1.8" fill="' + _mix(c, 0.6) + '"/>';
+    case 30: // sweatshirt (feminine)
+      c = C('#e07aa0');
+      return _torso(ctx, c) + _crew(ctx, sk, c)
+        + '<path d="M40 200 L160 200" stroke="' + _mix(c, 0.8) + '" stroke-width="1.6" opacity=".7"/>';
+    case 31: // one-piece swimsuit (feminine)
+      c = C('#2d6aa3');
+      return _skinTorso(ctx, skin)
+        + '<path d="M64 204 L68 178 Q84 170 100 172 Q116 170 132 178 L136 204z" fill="' + ctx.v(c) + '"/>'
+        + '<path d="M80 160 L82 178 M120 160 L118 178" stroke="' + c + '" stroke-width="4" stroke-linecap="round"/>';
+    case 32: // scoop tee (feminine)
+      c = C('#e5b94e');
+      return _torso(ctx, c)
+        + '<path d="M82 157 Q100 180 118 157 Q100 163 82 157z" fill="' + sk + '"/>'
+        + '<path d="M80 156 Q100 182 120 156" stroke="' + _mix(c, 0.78) + '" stroke-width="3.4" fill="none"/>';
     case 5: // open-collar shirt, no jacket (casual)
       return _torso(ctx, '#e6dfcf')
         + '<path d="M92 158 L100 172 L108 158z" fill="' + sk + '"/>'
         + '<path d="M86 156 Q92 166 99 170 L92 178 Q84 168 84 158z" fill="#f6f1e6"/>'
         + '<path d="M114 156 Q108 166 101 170 L108 178 Q116 168 116 158z" fill="#ece5d6"/>';
     case 6: // V-neck blouse (feminine)
-      return _torso(ctx, '#b34a7f')
+      c = C('#b34a7f');
+      return _torso(ctx, c)
         + '<path d="M86 157 L100 184 L114 157 Q100 162 86 157z" fill="' + sk + '"/>'
-        + '<path d="M84 157 L100 186 L116 157" stroke="#c9679a" stroke-width="3" fill="none" stroke-linejoin="round"/>';
+        + '<path d="M84 157 L100 186 L116 157" stroke="' + _mix(c, 1.18) + '" stroke-width="3" fill="none" stroke-linejoin="round"/>';
     case 7: // dark turtleneck
-      return _torso(ctx, '#2f343d')
-        + '<rect x="84" y="140" width="32" height="24" rx="10" fill="' + ctx.v('#3b414c') + '"/>'
-        + '<path d="M86 150 L114 150 M86 156 L114 156" stroke="#2a2f37" stroke-width="1.6"/>';
+      c = C('#2f343d');
+      return _torso(ctx, c)
+        + '<rect x="84" y="140" width="32" height="24" rx="10" fill="' + ctx.v(_mix(c, 1.2)) + '"/>'
+        + '<path d="M86 150 L114 150 M86 156 L114 156" stroke="' + _mix(c, 0.85) + '" stroke-width="1.6"/>';
     case 8: // white dinner jacket, dark shirt, no tie
       return _torso(ctx, '#efe8d8') + _shirtV(ctx, '#2a2e36') + _lapels(ctx, '#f7f2e6');
     case 9: // strapless evening dress (feminine)
@@ -259,8 +393,9 @@ function _outfit(ctx, i, skin) {
         + _lapels(ctx, '#18181c')
         + '<path d="M78 172 L78 200 M122 172 L122 200" stroke="#9aa0aa" stroke-width="1.8"/>';
     case 11: // hoodie
-      return _torso(ctx, '#6a7380')
-        + '<path d="M74 158 Q70 176 100 180 Q130 176 126 158 Q116 170 100 170 Q84 170 74 158z" fill="' + ctx.v('#7d8795') + '"/>'
+      c = C('#6a7380');
+      return _torso(ctx, c)
+        + '<path d="M74 158 Q70 176 100 180 Q130 176 126 158 Q116 170 100 170 Q84 170 74 158z" fill="' + ctx.v(_mix(c, 1.15)) + '"/>'
         + '<path d="M94 176 L92 194 M106 176 L108 194" stroke="#eef1f4" stroke-width="2.4" stroke-linecap="round"/>'
         + '<circle cx="92" cy="196" r="2" fill="#eef1f4"/><circle cx="108" cy="196" r="2" fill="#eef1f4"/>';
     case 12: // V-neck dress with deep neckline (feminine)
@@ -272,7 +407,7 @@ function _outfit(ctx, i, skin) {
         + '<path d="M54 204 L58 184 Q74 172 100 172 Q126 172 142 184 L146 204z" fill="' + ctx.v('#1f7a5c') + '"/>'
         + '<path d="M90 146 L100 174 L110 146" stroke="#1f7a5c" stroke-width="5" fill="none" stroke-linecap="round"/>';
     case 14: // scoop-neck top + gold necklace (feminine)
-      return _torso(ctx, '#8a3f86')
+      return _torso(ctx, C('#8a3f86'))
         + '<path d="M78 158 Q100 186 122 158 Q100 164 78 158z" fill="' + sk + '"/>'
         + '<path d="M84 160 Q100 180 116 160" stroke="#e5b94e" stroke-width="2" fill="none"/>'
         + '<circle cx="100" cy="176" r="3.2" fill="#e5b94e"/>';
@@ -288,8 +423,9 @@ function _outfit(ctx, i, skin) {
         + '<path d="M84 154 Q100 166 116 154 L118 162 Q100 174 82 162z" fill="' + ctx.v('#c0703a') + '"/>'
         + '<path d="M94 166 L106 166 L110 198 L100 204 L90 198z" fill="' + ctx.v('#b0622f') + '"/>';
     case 3: // teal sweater with a round white collar (feminine)
-      return _torso(ctx, '#2a8f86')
-        + '<path d="M80 160 Q100 178 120 160 Q100 168 80 160z" fill="' + ctx.v('#1f746d') + '"/>'
+      c = C('#2a8f86');
+      return _torso(ctx, c)
+        + '<path d="M80 160 Q100 178 120 160 Q100 168 80 160z" fill="' + ctx.v(_mix(c, 0.8)) + '"/>'
         + '<path d="M78 156 Q88 172 100 170 Q112 172 122 156 Q112 164 100 162 Q88 164 78 156z" fill="#f7f4ec"/>'
         + '<circle cx="100" cy="176" r="2.2" fill="#f7f4ec"/><circle cx="100" cy="186" r="2.2" fill="#f7f4ec"/>';
     default: { // 0 charcoal suit, 1 navy + tie, 2 grey + vest + tie, 4 tux + bow tie
@@ -430,6 +566,52 @@ function _hair(ctx, i, hc, face) {
       return [P('M40 100 Q36 24 100 22 Q164 24 160 100 Q168 118 158 136 L142 140 L58 140 L42 136 Q32 118 40 100z', bk),
         P('M42 108 Q36 24 100 22 Q160 24 156 96 Q150 64 128 56 Q108 62 96 52 Q82 68 64 64 Q50 78 58 104 Q44 112 42 108z')
         + '<path d="M60 70 Q72 58 86 66 M112 58 Q126 50 140 62" stroke="' + hl + '" stroke-width="3" fill="none" stroke-linecap="round" opacity=".6"/>'];
+    // ── 2026-09-27 additions ──
+    case 26: // side part (masculine)
+      return ['', P('M44 96 Q40 26 100 24 Q160 26 156 96 Q152 62 140 56 Q116 52 96 60 Q80 52 60 66 Q48 74 44 96z')
+        + '<path d="M70 54 Q78 42 96 38" stroke="' + dk + '" stroke-width="2" fill="none" stroke-linecap="round"/>' + _shine(hl)];
+    case 27: // mid-length, tucked behind the ears (masculine)
+      return [P('M40 96 Q36 26 100 24 Q164 26 160 96 L162 150 Q150 158 138 148 L62 148 Q50 158 38 150z', bk),
+        P('M44 100 Q40 26 100 24 Q160 26 156 100 Q152 62 130 56 Q104 66 88 50 Q76 66 54 70 Q46 82 44 100z') + _shine(hl)];
+    case 28: // ponytail (masculine): slicked back + a low tail
+      return [P('M136 108 Q170 122 160 176 Q150 184 144 176 Q152 146 132 122z', bk),
+        P('M46 88 Q42 24 100 22 Q158 24 154 88 Q152 60 138 52 Q100 42 62 52 Q48 60 46 88z')
+        + '<path d="M70 40 Q100 30 130 40" stroke="' + dk + '" stroke-width="2" fill="none" stroke-linecap="round"/>'
+        + '<circle cx="138" cy="118" r="4.5" fill="' + dk + '"/>' + _shine(hl)];
+    case 29: // buzz cut (masculine): a shadow of hair on the scalp
+      return ['', '', '<path d="M0 0 L200 0 L200 100 Q152 62 100 56 Q48 62 0 100z" fill="' + hc[0] + '" opacity=".55"/>'];
+    case 30: // long curly (masculine)
+      return [P('M36 96 Q32 22 100 20 Q168 22 164 96 L166 150 L34 150z', bk)
+        + [104, 126, 148].map(function (y) { return '<circle cx="36" cy="' + y + '" r="11" fill="' + bk + '"/><circle cx="164" cy="' + y + '" r="11" fill="' + bk + '"/>'; }).join(''),
+        P(CAP_SMOOTH) + _bumps(100, 84, 50, 190, 350, 11, 12, f) + _bumps(100, 84, 50, 200, 340, 6, 4, hl)];
+    case 31: // curtain fringe (masculine)
+      return ['', P('M44 100 Q40 26 100 24 Q160 26 156 100 Q150 70 128 88 Q116 66 100 58 Q84 66 72 88 Q50 70 44 100z') + _shine(hl)];
+    case 32: // short bob, chin length (feminine)
+      return [P('M40 100 Q36 24 100 22 Q164 24 160 100 L162 124 Q150 134 138 126 L62 126 Q50 134 38 124z', bk),
+        P(CAP_SIDE) + _shine(hl)];
+    case 33: // crown braid (feminine)
+      return ['', P(CAP_SMOOTH) + _bumps(100, 84, 52, 200, 340, 12, 6, f)
+        + _bumps(100, 84, 52, 200, 340, 12, 6, f).replace(/fill="[^"]*"/g, 'fill="none" stroke="' + dk + '" stroke-width="1.2"') + _shine(hl)];
+    case 34: // straight fringe, long hair (feminine)
+      return [P('M40 96 Q36 24 100 22 Q164 24 160 96 L164 184 Q146 192 132 178 L68 178 Q54 192 36 184z', bk),
+        P('M44 100 Q40 26 100 24 Q160 26 156 100 L154 78 L46 78z') + _shine(hl)];
+    case 35: // very long straight hair (feminine)
+      return [P('M40 96 Q36 24 100 22 Q164 24 160 96 L168 204 L32 204z', bk), P(CAP_MID) + _shine(hl)];
+    case 36: // cropped (feminine)
+      return ['', P('M46 88 Q42 28 100 26 Q158 28 154 88 Q150 64 134 58 Q112 66 96 54 Q80 66 66 60 Q50 66 46 88z') + _shine(hl)];
+    case 37: // messy high bun + loose strands (feminine)
+      return ['', '<circle cx="100" cy="24" r="17" fill="' + f + '"/>'
+        + '<path d="M86 14 Q90 6 98 10 M104 8 Q112 6 114 14" stroke="' + f + '" stroke-width="4" fill="none" stroke-linecap="round"/>'
+        + P(CAP_SMOOTH)
+        + '<path d="M52 76 Q40 100 50 128 M148 76 Q160 100 150 128" stroke="' + f + '" stroke-width="4" fill="none" stroke-linecap="round"/>'
+        + '<path d="M86 38 Q100 32 114 38" stroke="#d9536a" stroke-width="4" stroke-linecap="round" fill="none"/>' + _shine(hl)];
+    case 38: { // long locs (feminine)
+      var locks2 = '';
+      [34, 46, 58, 70, 130, 142, 154, 166].forEach(function (x, k) {
+        locks2 += '<rect x="' + (x - 6) + '" y="' + (76 + (k % 2) * 8) + '" width="12" height="' + (112 + (k % 3) * 10) + '" rx="6" fill="' + (k % 2 ? bk : f) + '"/>';
+      });
+      return [locks2, P(CAP_SMOOTH) + _bumps(100, 84, 48, 200, 340, 8, 6, f)];
+    }
     default: // 6: wavy senior sweep
       return ['', P('M46 90 Q40 28 100 24 Q156 26 156 88 Q150 62 132 56 Q126 64 112 58 Q96 70 80 56 Q66 64 56 60 Q48 70 46 90z') + _shine(hl)];
   }
@@ -608,10 +790,10 @@ function _glasses(i) {
 // the visor and the bandana leave it visible.
 var HAT_LINE = 60;
 // Hairstyles drawn without the temple underlay (bald, balding, mohawk).
-var AV_NO_UNDERLAY = { 0: 1, 16: 1, 17: 1 };
+var AV_NO_UNDERLAY = { 0: 1, 16: 1, 17: 1, 29: 1 };
 // Short styles: under a covering hat only a thin band below the brim shows
 // (temple tips), long styles keep everything below the hat line.
-var AV_SHORT_HAIR = { 1: 1, 2: 1, 4: 1, 6: 1, 9: 1, 12: 1, 13: 1, 16: 1, 18: 1 };
+var AV_SHORT_HAIR = { 1: 1, 2: 1, 4: 1, 6: 1, 9: 1, 12: 1, 13: 1, 16: 1, 18: 1, 26: 1, 29: 1, 31: 1, 36: 1 };
 var HAT_SHORT_BOTTOM = 86;
 function _hatCovers(i) { return i !== 0 && i !== 3 && i !== 6; }
 
@@ -741,7 +923,7 @@ function avPartSvg(axId, i, recipe, size) {
   switch (axId) {
     case 'face':    body = _earsSkin(skin) + _head(ctx, i, skin); break;
     case 'marks':   body = _earsSkin(skin) + _head(ctx, r.face, skin) + _marks(i, skin[1]); break;
-    case 'outfit':  body = _sx(r.sex === 1 ? 0.86 : 1, _neck(skin) + _outfit(ctx, i, skin)); break;
+    case 'outfit':  body = _sx(r.sex === 1 ? 0.86 : 1, _neck(skin) + _outfit(ctx, i, skin, r.outfitc ? AV_OUTFITC[r.outfitc - 1] : null)); break;
     case 'hair':    h = _hair(ctx, i, hc, r.face);
       body = h[0] + (h[2] ? '<g clip-path="url(#' + _headClip(ctx, r.face, 1.02) + ')">' + h[2] + '</g>' : '') + h[1]; break;
     case 'beard':   body = _beard(ctx, i, hc, r.face); break;
@@ -786,7 +968,7 @@ function avSvg(recipe, size) {
         // the hairline hugs every face shape (no backdrop between hair
         // and skin). Bald, balding and mohawk styles have none.
         + (AV_NO_UNDERLAY[r.hair] ? '' : '<path d="M45 98 Q42 30 100 28 Q158 30 155 98z" fill="' + _mix(hc[0], 0.85) + '"/>')))
-    + _sx(fem ? 0.86 : 1, _neck(skin) + _outfit(ctx, r.outfit, skin))
+    + _sx(fem ? 0.86 : 1, _neck(skin) + _outfit(ctx, r.outfit, skin, r.outfitc ? AV_OUTFITC[r.outfitc - 1] : null))
     + _earsSkin(skin)
     + _head(ctx, r.face, skin)
     + (hair[2] ? clipHair('<g clip-path="url(#' + _headClip(ctx, r.face, 1.02) + ')">' + hair[2] + '</g>') : '')
@@ -813,6 +995,7 @@ function avSwatch(axId, i) {
   if (axId === 'bg') return AV_FELT[i][0];
   if (axId === 'skin') return AV_SKIN[i][0];
   if (axId === 'hairc') return AV_HAIRC[i][0];
+  if (axId === 'outfitc') return i ? AV_OUTFITC[i - 1] : '#888';
   if (axId === 'eyec') return AV_EYEC[i];
   return '#888';
 }

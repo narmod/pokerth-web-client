@@ -1,4 +1,9 @@
-2026-09-27 version 2.1.9-web.186 (current series):
+2026-09-27 version 2.1.9-web.187 (current series):
+- new: portraits of the « Create » tab — 16 more outfits (men: tee, polo, plaid shirt, crew-neck sweater, denim jacket, tank top, football jersey, zip hoodie; women: floral blouse, strap dress, bow blouse, tailored blazer, cardigan, sweatshirt, swimsuit, scoop tee) and 13 more hairstyles (men: side part, mid-length, ponytail, buzz cut, long curly, curtain fringe; women: short bob, crown braid, straight fringe, very long straight, cropped, messy high bun, long locs)
+- new: an « Outfit colour » choice (8 colours, or « Auto » to keep the garment as drawn) for the plain garments — tees, sweaters, hoodies, turtleneck, blouses, dresses, cardigan…
+- improvement: « From a photo » (beta) picks the outfit colour from your clothes and uses the new hairstyles (mid-length, cropped)
+
+2026-09-27 version 2.1.9-web.186:
 - improvement: « From a photo » (beta) — the silhouette (♂ / ♀) is chosen in the framing panel, before the photo; the photo never decides it any more
 
 2026-09-27 version 2.1.9-web.185:

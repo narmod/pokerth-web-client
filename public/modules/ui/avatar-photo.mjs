@@ -36,6 +36,7 @@ const AV_PHOTO_MAXW = 220;
 const P_SKIN = ['#ffe0c7', '#f7c9a2', '#eeb987', '#d99d6c', '#b87a4b', '#8d5a35', '#fff0e3', '#6e4527', '#553219', '#3d2412'];
 const P_HAIR = ['#2b2118', '#4a3222', '#7a5530', '#b14a22', '#dcae50', '#a9a9a9', '#ecd7a2', '#eeeeee'];
 const P_BG = ['#b9dfbe', '#b7cff0', '#f2bcc0', '#d3c1ef', '#d2d6dc', '#b0ded8', '#efcfa9', '#ffffff', '#e9edf2', '#f8eac0', '#cae0f4'];
+const P_OUTFITC = ['#c0392b', '#2d6aa3', '#2e8b57', '#e6b422', '#8e44ad', '#1f1f24', '#f2f2f2', '#e07aa0'];
 
 // ── colour helpers ───────────────────────────────────────────────────────
 function hex2rgb(h) { var n = parseInt(h.slice(1), 16); return [n >> 16, (n >> 8) & 255, n & 255]; }
@@ -53,6 +54,7 @@ function labDist(a, b) { return Math.sqrt((a[0] - b[0]) * (a[0] - b[0]) + (a[1] 
 var P_SKIN_LAB = P_SKIN.map(function (h) { return rgb2lab.apply(null, hex2rgb(h)); });
 var P_HAIR_LAB = P_HAIR.map(function (h) { return rgb2lab.apply(null, hex2rgb(h)); });
 var P_BG_LAB = P_BG.map(function (h) { return rgb2lab.apply(null, hex2rgb(h)); });
+var P_OUTFITC_LAB = P_OUTFITC.map(function (h) { return rgb2lab.apply(null, hex2rgb(h)); });
 function nearestLab(lab, labs) {
   var best = 0, bd = 1e9;
   for (var i = 0; i < labs.length; i++) { var d = labDist(lab, labs[i]); if (d < bd) { bd = d; best = i; } }
@@ -658,8 +660,8 @@ function avPhotoAnalyze(img, opts) {
   var sexF = sexGuess === null ? sex : sexGuess;
 
   // sex-dependent mappings
-  if (sexF === 0) hair = bald ? 0 : (volume ? 10 : (length === 'short' ? 1 : 18));
-  else hair = bald ? 12 : (volume ? 23 : (length === 'long' ? 8 : (length === 'mid' ? 5 : 12)));
+  if (sexF === 0) hair = bald ? 0 : (volume ? 10 : (length === 'short' ? 1 : (length === 'mid' ? 18 : 27)));
+  else hair = bald ? 36 : (volume ? 23 : (length === 'long' ? 8 : (length === 'mid' ? 5 : 12)));
   if (hat) hair = sexF === 0 ? 1 : 12;
   if (sexF === 1) beard = 0;
   if (sexF === 1 && lipstick) mouth = 3;
@@ -669,11 +671,15 @@ function avPhotoAnalyze(img, opts) {
 
   // outfit from the clothes under the chin (dark → hoodie / turtleneck,
   // light → open shirt / sweater), only when that strip is in the photo
-  var outfit;
+  // outfit: a plain garment (tee / hoodie / turtleneck) in the nearest of
+  // the eight outfit colours; a very light top → the open shirt (masculine)
+  var outfit, outfitc;
   if (clothRgb) {
-    var ol = rgb2lab(clothRgb[0], clothRgb[1], clothRgb[2])[0];
-    if (sexF === 0) outfit = ol < 35 ? 11 : (ol > 70 ? 5 : 0);
-    else outfit = ol < 35 ? 7 : 3;
+    var olab = rgb2lab(clothRgb[0], clothRgb[1], clothRgb[2]), ol = olab[0];
+    var oc = nearestLab(olab, P_OUTFITC_LAB);
+    if (sexF === 0) outfit = ol < 35 ? 11 : (ol > 78 ? 5 : 17);
+    else outfit = ol < 35 ? 7 : 32;
+    if (outfit !== 5) outfitc = oc.index + 1;
   }
 
   // 9. background → nearest pastel (neutral corners → white)
@@ -682,10 +688,11 @@ function avPhotoAnalyze(img, opts) {
     : nearestLab(rgb2lab(bgc[0] * 0.35 + 255 * 0.65, bgc[1] * 0.35 + 255 * 0.65, bgc[2] * 0.35 + 255 * 0.65), P_BG_LAB).index;
 
   var recipe = {
-    face: face, skin: skinIndex, hair: hair, hairc: hairc.index, outfit: outfit,
+    face: face, skin: skinIndex, hair: hair, hairc: hairc.index, outfit: outfit, outfitc: outfitc,
     eyes: eyes, eyec: eyec, glasses: glasses, mouth: mouth, beard: beard, hat: hat, bg: bg
   };
   if (outfit === undefined) delete recipe.outfit;
+  if (outfitc === undefined) delete recipe.outfitc;
   if (sexGuess !== null) recipe.sex = sexGuess;
   return {
     recipe: recipe,

@@ -48,7 +48,15 @@ studio = studio.replace(/export \{[^}]*\};?/, '');
 ok(typeof window.avStudioTab === 'function', 'avStudioTab exposed');
 ok(typeof window._avSvg === 'function', 'vector engine exposed');
 const AXES = window._AV_AXES;
-ok(Array.isArray(AXES) && AXES.length === 17, '17 axes defined (' + AXES.length + ')');
+ok(Array.isArray(AXES) && AXES.length === 18, '18 axes defined, incl. the outfit colour (' + AXES.length + ')');
+const axOutfit = AXES.find(a => a.id === 'outfit'), axHair = AXES.find(a => a.id === 'hair'), axOc = AXES.find(a => a.id === 'outfitc');
+ok(axOutfit.n === 33 && axHair.n === 39, '2026-09-27 catalogue: 33 outfits, 39 hairstyles (' + axOutfit.n + '/' + axHair.n + ')');
+ok(axOc && axOc.kind === 'color' && axOc.none && axOc.n === 9, 'outfit colour axis: colour kind, option 0 = as drawn, 8 colours');
+// the colour changes a colourable garment and leaves a fixed one alone
+const stripIds = s => s.replace(/avc\d+/g, 'avc');
+ok(stripIds(window._avSvg(window._avNormalize({ outfit: 17, outfitc: 1 }), 96)) !== stripIds(window._avSvg(window._avNormalize({ outfit: 17, outfitc: 2 }), 96)), 'outfit colour changes the plain tee');
+ok(stripIds(window._avSvg(window._avNormalize({ outfit: 0, outfitc: 1 }), 96)) === stripIds(window._avSvg(window._avNormalize({ outfit: 0, outfitc: 2 }), 96)), 'outfit colour leaves the suit as drawn');
+ok(window._avSwatch('outfitc', 1) === '#c0392b' && window._avSwatch('outfitc', 0) === '#888', 'outfit colour swatches');
 
 // 2. Engine coherence: every option of every axis renders a clean SVG.
 let clean = true, badMsg = '';
@@ -116,11 +124,11 @@ for (const axId of ['hair', 'outfit']) {
   }
 }
 ok(oneSided, 'every hairstyle and outfit is visible for exactly one silhouette');
-ok(nM.hair >= 10 && nF.hair >= 10 && nM.outfit >= 6 && nF.outfit >= 6, 'both silhouettes keep >= 10 hairstyles and >= 6 outfits (' + nM.hair + '/' + nF.hair + ', ' + nM.outfit + '/' + nF.outfit + ')');
+ok(nM.hair === 18 && nF.hair === 21 && nM.outfit === 17 && nF.outfit === 16, 'catalogue split: 18 / 21 hairstyles, 17 / 16 outfits (' + nM.hair + '/' + nF.hair + ', ' + nM.outfit + '/' + nF.outfit + ')');
 ok(vis('outfit', 3, { sex: 1 }) && !vis('outfit', 3, { sex: 0 }) && vis('outfit', 7, { sex: 1 }) && vis('outfit', 16, { sex: 1 }), 'collared sweater, turtleneck and blazer + scarf are feminine');
 ok(!vis('glasses', 3, { sex: 0 }) && !vis('ears', 1, { sex: 0 }) && !vis('hat', 4, { sex: 1 }) && vis('hat', 1, { sex: 1 }), 'cat-eye glasses and pearls hidden for men, bowler hidden for women, cap shared');
 ok(!vis('beard', 2, { sex: 1 }) && vis('beard', 2, { sex: 0 }) && vis('beard', 0, { sex: 1 }), 'beard filtered on feminine silhouette (none stays valid)');
-ok(!vis('hat', 1, { hair: 10 }) && !vis('hat', 2, { hair: 7 }) && !vis('hat', 1, { hair: 17 }) && vis('hat', 0, { hair: 10 }) && vis('hat', 1, { hair: 1 }), 'hats filtered out on afro/bun/mohawk (none stays valid)');
+ok(!vis('hat', 1, { hair: 10 }) && !vis('hat', 2, { hair: 7 }) && !vis('hat', 1, { hair: 17 }) && !vis('hat', 1, { hair: 33 }) && !vis('hat', 1, { hair: 37 }) && vis('hat', 0, { hair: 10 }) && vis('hat', 1, { hair: 1 }), 'hats filtered out on afro/bun/mohawk/crown braid/high bun (none stays valid)');
 ok(!vis('eyec', 1, { eyes: 2 }) && !vis('eyec', 1, { glasses: 5 }) && vis('eyec', 1, { eyes: 0, glasses: 1 }), 'eye color hidden behind closed eyes or sunglasses');
 ok(vis('shoulder', 0, {}) && !vis('shoulder', 1, {}) && !vis('shoulder', 4, {}), 'shoulder accessories retired (only none stays valid)');
 ok(vis('mouth', 3, { sex: 1 }) && !vis('mouth', 3, { sex: 0 }), 'lipstick mouth is feminine-only');

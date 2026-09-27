@@ -34,7 +34,7 @@ const AV_GROUPS = [
   { icon: '\uD83D\uDC65', label: 'avmGrpBody',  axes: ['sex', 'face'] },
   { icon: '\uD83D\uDC64', label: 'avmGrpFace',  axes: ['skin', 'marks', 'eyes', 'eyec', 'nose', 'mouth'] },
   { icon: '\uD83D\uDC87', label: 'avmGrpHair',  axes: ['hair', 'hairc', 'beard'] },
-  { icon: '\uD83D\uDC54', label: 'avmGrpStyle', axes: ['outfit', 'bg'] },
+  { icon: '\uD83D\uDC54', label: 'avmGrpStyle', axes: ['outfit', 'outfitc', 'bg'] },
   { icon: '\u2728',        label: 'avmGrpExtra', axes: ['glasses', 'hat', 'shoulder', 'ears'] }
 ];
 var _avmGroup = 0;
@@ -184,7 +184,8 @@ function _avmRender() {
           b.textContent = i === 0 ? '\u2642' : '\u2640';
         } else if (ax.none && i === 0) {
           b.className = 'avm-opt avm-none-opt' + (sel ? ' selected' : '');
-          b.textContent = t('avmNone');
+          // a colour axis' option 0 keeps the garment as drawn: « Auto »
+          b.textContent = t(ax.kind === 'color' ? 'avmAuto' : 'avmNone');
         } else if (ax.kind === 'color') {
           b.className = 'avm-swatch' + (sel ? ' selected' : '');
           b.innerHTML = '<span style="background:' + avSwatch(ax.id, i) + '"></span>';
