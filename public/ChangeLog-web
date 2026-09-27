@@ -1,4 +1,8 @@
-2026-09-27 version 2.1.9-web.189 (current series):
+2026-09-27 version 2.1.9-web.190 (current series):
+- improvement: « From a photo » (beta) — long hair lying over the shoulders is read as hair (it used to become a dark turtleneck and a short cut); a shaded wall the colour of the hair no longer hides the hair beside the face; a beard is only claimed for a dark, hair-coloured mass — a shaded neck or a collar a little below the oval is not one any more; grey is only guessed for truly colourless hair; the analysis runs on the full frame instead of a small copy of it
+- improvement: the « Take the photo » button is big and full width
+
+2026-09-27 version 2.1.9-web.189:
 - improvement: « From a photo » (beta) — hair is read from the framed photo itself: the band above the hairline you aligned gives the colour, the sides and shoulders the length, and a fringe over the forehead picks a fringed style. Light hair (blonde, light brown) is no longer mistaken for skin, dark hair against a dark backdrop is no longer read as a bald crown, and a photo that stops above the hairline keeps the default hair instead of guessing
 - new: 4 more hair colours in the « Create » tab — light brown, light red, blue, pink (brows and beards stay natural on the last two); « From a photo » matches them too (a dark blonde now lands on light brown instead of brown)
 

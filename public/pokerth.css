@@ -11617,7 +11617,13 @@ body.adv-no-avcreate #avp-tab-create { display: none !important; }
 .avm-cam-guide { position: absolute; inset: 0; pointer-events: none; }
 .avm-cam-guide svg { width: 100%; height: 100%; display: block; }
 .avm-cam-hint { font-size: var(--fs-sm); color: var(--text-hi); text-align: center; max-width: 420px; min-height: 2.4em; }
-.avm-cam-btns { display: flex; gap: var(--sp-2); flex-wrap: wrap; justify-content: center; }
+.avm-cam-btns { display: flex; gap: var(--sp-2); flex-wrap: wrap; justify-content: center; width: min(90vw, 52vh, 420px); }
+/* the shutter is THE action: a big, full-width primary button under the two secondary ones */
+.avm-cam-btns #avm-cam-ok {
+  flex: 1 0 100%; order: 2; min-height: 56px; font-size: var(--fs-lg, 1.15rem); font-weight: 600;
+  background: rgba(var(--gold-rgb), 0.16); border-width: 2px;
+}
+.avm-cam-btns #avm-cam-cancel, .avm-cam-btns #avm-cam-switch { flex: 1 1 0; order: 1; min-height: 44px; }
 .avm-beta {
   font-size: 0.58rem; letter-spacing: 0.1em; text-transform: uppercase; vertical-align: super;
   color: var(--sel,var(--gold)); border: 1px solid var(--gold-dim); border-radius: 999px;
