@@ -483,6 +483,11 @@ function _bumps(cx, cy, rad, from, to, n, r, fill) { // circles along an arc
   }
   return s;
 }
+function _dots(list, fill, extra) { // [[cx, cy, r], ...] circles
+  var s = '';
+  for (var k = 0; k < list.length; k++) s += '<circle cx="' + list[k][0] + '" cy="' + list[k][1] + '" r="' + list[k][2] + '" fill="' + fill + '"' + (extra || '') + '/>';
+  return s;
+}
 function _braid(x0, y0, x1, y1, n, fill, line, yMin) {
   var s = '';
   for (var k = 0; k < n; k++) {
@@ -637,17 +642,23 @@ function _hair(ctx, i, hc, face) {
         + P(CAP_SMOOTH)
         + '<path d="M52 76 Q40 100 50 128 M148 76 Q160 100 150 128" stroke="' + f + '" stroke-width="4" fill="none" stroke-linecap="round"/>'
         + '<path d="M86 38 Q100 32 114 38" stroke="#d9536a" stroke-width="4" stroke-linecap="round" fill="none"/>' + _shine(hl)];
-    case 38: { // long locs (feminine)
-      var locks2 = '';
-      [34, 46, 58, 70, 130, 142, 154, 166].forEach(function (x, k) {
-        locks2 += '<rect x="' + (x - 6) + '" y="' + (76 + (k % 2) * 8) + '" width="12" height="' + (112 + (k % 3) * 10) + '" rx="6" fill="' + (k % 2 ? bk : f) + '"/>';
+    case 38: { // long locs (feminine): twists from the crown, rounded locks of uneven length down to the chest
+      var locks2 = '', tw2 = '';
+      [[36, 118], [46, 132], [56, 124], [66, 110], [76, 100], [124, 100], [134, 110], [144, 124], [154, 132], [164, 118]].forEach(function (p, k) {
+        locks2 += '<rect x="' + (p[0] - 5.5) + '" y="70" width="11" height="' + p[1] + '" rx="5.5" fill="' + (k % 2 ? bk : f) + '"/>'
+          + '<path d="M' + p[0] + ' 84 L' + p[0] + ' ' + (60 + p[1]) + '" stroke="' + dk + '" stroke-width="1.4" stroke-dasharray="2.5 3.5" opacity=".6"/>';
       });
-      return [locks2, P(CAP_SMOOTH) + _bumps(100, 84, 48, 200, 340, 8, 6, f)];
+      for (var ta2 = 196; ta2 <= 344; ta2 += 18.5) {
+        var ang2 = ta2 * Math.PI / 180;
+        tw2 += '<path d="M100 62 Q' + (100 + 28 * Math.cos(ang2)).toFixed(1) + ' ' + (74 + 20 * Math.sin(ang2)).toFixed(1) + ' ' + (100 + 53 * Math.cos(ang2)).toFixed(1) + ' ' + (86 + 48 * Math.sin(ang2)).toFixed(1) + '" stroke="' + dk + '" stroke-width="2.2" fill="none" stroke-linecap="round"/>';
+      }
+      return [locks2, P('M44 96 Q40 24 100 22 Q160 24 156 96 Q152 62 100 56 Q48 62 44 96z') + tw2 + _bumps(100, 84, 50, 205, 335, 6, 3.4, hl).replace(/fill=/g, 'opacity=".45" fill=')];
     }
     // ── 2.1.9-web.192 additions ──
-    case 39: // short voluminous curls (masculine): a tall mop of curls, cut above the ears
+    case 39: // short voluminous curls (masculine): a tall mop of curls of uneven size, cut above the ears
       return ['', P('M40 90 Q36 18 100 14 Q164 18 160 90 Q152 62 100 56 Q48 62 40 90z')
-        + _bumps(100, 80, 56, 200, 340, 11, 11, f) + _bumps(100, 80, 44, 205, 335, 8, 8, f) + _bumps(100, 80, 52, 210, 330, 6, 3.6, hl)];
+        + _dots([[50, 72, 11], [58, 52, 12], [72, 36, 13], [90, 26, 12], [110, 24, 13], [128, 32, 12], [142, 46, 13], [152, 66, 11], [68, 62, 9], [86, 46, 10], [106, 40, 9], [124, 48, 10], [138, 64, 9]], f)
+        + _dots([[74, 32, 3.5], [110, 20, 3.5], [144, 44, 3.5], [58, 50, 3]], hl, ' opacity=".5"')];
     case 40: // pompadour (masculine): a high front swept back, combed sides
       return ['', P('M46 90 Q42 34 60 26 Q76 6 112 8 Q146 14 154 90 Q152 60 138 52 Q100 44 62 52 Q48 60 46 90z')
         + '<path d="M70 42 Q100 28 132 40 M66 50 Q100 38 136 50" stroke="' + dk + '" stroke-width="2" fill="none" stroke-linecap="round"/>'
@@ -665,8 +676,9 @@ function _hair(ctx, i, hc, face) {
       return [P('M40 96 Q36 24 100 22 Q164 24 160 96 L158 150 Q154 172 136 168 L64 168 Q46 172 42 150z', bk),
         P(CAP_MID) + _shine(hl)];
     case 44: // curly ponytail (feminine): a tied cluster of curls behind
-      return [_bumps(160, 78, 26, 250, 420, 6, 11, bk) + _bumps(158, 96, 30, 280, 440, 5, 10, bk) + '<circle cx="164" cy="128" r="11" fill="' + bk + '"/><circle cx="152" cy="140" r="10" fill="' + bk + '"/>',
-        P(CAP_SMOOTH) + _bumps(100, 84, 50, 200, 340, 7, 5, hl).replace(/fill=/g, 'opacity=".5" fill=') + '<circle cx="138" cy="44" r="6" fill="#d9536a"/>' + _shine(hl)];
+      return [_dots([[150, 46, 10], [166, 56, 11], [178, 76, 12], [172, 98, 12], [182, 118, 11], [170, 138, 11], [158, 154, 10], [174, 158, 9]], bk)
+        + _dots([[168, 52, 3.5], [176, 96, 3.5], [172, 136, 3.5]], hl, ' opacity=".4"'),
+        P(CAP_SMOOTH) + _bumps(100, 84, 50, 200, 340, 7, 5, hl).replace(/fill=/g, 'opacity=".5" fill=') + '<circle cx="146" cy="40" r="6" fill="#d9536a"/>' + _shine(hl)];
     case 45: // wavy lob (feminine): mid-length with waved edges
       return [P('M38 100 Q34 24 100 22 Q166 24 162 100 Q170 116 160 130 Q170 146 158 156 Q142 158 134 148 L66 148 Q58 158 42 156 Q30 146 40 130 Q30 116 38 100z', bk),
         P(CAP_SIDE) + '<path d="M56 100 Q50 116 56 132 M144 100 Q150 116 144 132" stroke="' + hl + '" stroke-width="3" fill="none" stroke-linecap="round" opacity=".5"/>' + _shine(hl)];
@@ -675,7 +687,8 @@ function _hair(ctx, i, hc, face) {
         + [100, 124, 148, 172].map(function (y) { return '<circle cx="32" cy="' + y + '" r="12" fill="' + bk + '"/><circle cx="168" cy="' + y + '" r="12" fill="' + bk + '"/>'; }).join(''),
         P('M44 100 Q40 26 100 24 Q160 26 156 100 L154 70 L46 70z') + _bumps(100, 70, 54, 180, 360, 10, 6, f) + _shine(hl)];
     case 47: // low braided bun (feminine): a plaited knot at the nape, one side
-      return ['<circle cx="50" cy="134" r="18" fill="' + bk + '"/>' + _bumps(50, 134, 11, 0, 300, 6, 4.5, f).replace(/\/>/g, ' stroke="' + dk + '" stroke-width="1"/>'),
+      return ['<circle cx="50" cy="134" r="18" fill="' + bk + '"/>' + _bumps(50, 134, 11, 0, 300, 6, 4.5, f).replace(/\/>/g, ' stroke="' + hl + '" stroke-width="1.2" opacity=".85"/>')
+        + '<circle cx="50" cy="134" r="18" fill="none" stroke="' + hl + '" stroke-width="1.2" opacity=".5"/>',
         P(CAP_SMOOTH) + '<path d="M62 30 Q100 22 138 30 M56 44 Q100 34 144 44" stroke="' + dk + '" stroke-width="2" fill="none" stroke-linecap="round"/>' + _shine(hl)];
     case 48: // short natural afro (feminine): a curly outline, a little volume
       return ['', P('M40 92 Q36 20 100 16 Q164 20 160 92 Q152 60 100 54 Q48 60 40 92z')
@@ -686,7 +699,7 @@ function _hair(ctx, i, hc, face) {
         P(CAP_SMOOTH) + '<path d="M86 34 Q100 28 114 34" stroke="#d9536a" stroke-width="4" stroke-linecap="round" fill="none"/>' + _shine(hl)];
     case 50: // bed head (masculine): tufts sticking out every which way, a flattened side
       return ['', P('M42 96 Q38 40 56 30 L48 12 L66 24 L74 6 L84 22 L98 0 L106 20 L120 6 L124 24 L142 10 L140 30 L158 22 L152 40 Q160 60 156 96 Q152 66 100 58 Q48 66 42 96z')
-        + '<path d="M40 74 Q28 68 30 58 M160 70 Q174 66 170 56 M150 44 Q168 40 172 48" stroke="' + f + '" stroke-width="4" fill="none" stroke-linecap="round"/>'
+        + '<path d="M46 76 Q30 70 34 58 M154 72 Q170 68 168 56 M146 42 Q160 34 168 42" stroke="' + f + '" stroke-width="4" fill="none" stroke-linecap="round"/>'
         + '<path d="M60 40 Q70 28 84 32 M108 30 Q122 22 134 34" stroke="' + hl + '" stroke-width="3" fill="none" stroke-linecap="round" opacity=".5"/>'];
     case 51: // bed head (feminine): mid-length, tousled, flyaway strands
       return [P('M38 100 Q34 24 100 22 Q166 24 162 100 Q170 118 158 136 Q166 156 150 160 Q138 156 132 146 L68 146 Q62 156 50 160 Q34 156 42 136 Q30 118 38 100z', bk)
@@ -724,10 +737,10 @@ function _beard(ctx, i, hc, face) {
     case 3: return jaw(BEARD_SHORT, 1.05) + MOUS; // short beard
     case 5: return '<g opacity=".3">' + jaw(BEARD_SHORT, 1, hc[0]) // stubble
       + '<path d="M84 124 Q100 118 116 124" stroke="' + hc[0] + '" stroke-width="4" fill="none" stroke-linecap="round"/></g>';
-    case 6: return jaw(BEARD_FULL, 1.09) // long beard: a rounded mass under the chin, combed strands (2.1.9-web.198)
-      + '<path d="M62 138 Q100 150 138 138 Q144 166 128 184 Q100 202 72 184 Q56 166 62 138z" fill="' + f + '"/>'
-      + '<path d="M82 160 Q86 176 82 190 M100 156 Q102 176 100 194 M118 160 Q114 176 118 190" stroke="' + _mix(hc[0], 0.78) + '" stroke-width="2.2" fill="none" stroke-linecap="round" opacity=".75"/>'
-      + '<path d="M70 150 Q66 168 74 182 M130 150 Q134 168 126 182" stroke="' + _mix(hc[0], 1.25) + '" stroke-width="2" fill="none" stroke-linecap="round" opacity=".45"/>' + MOUS;
+    case 6: return jaw(BEARD_FULL, 1.09) // long beard: grows out of the jaw beard and tapers to a rounded point on the chest (2.1.9-web.202)
+      + '<path d="M56 128 Q70 146 100 146 Q130 146 144 128 Q142 164 124 186 Q110 202 100 204 Q90 202 76 186 Q58 164 56 128z" fill="' + f + '"/>'
+      + '<path d="M84 156 Q88 176 86 192 M100 152 Q102 176 100 198 M116 156 Q112 176 114 192" stroke="' + _mix(hc[0], 0.78) + '" stroke-width="2.2" fill="none" stroke-linecap="round" opacity=".75"/>'
+      + '<path d="M70 146 Q68 168 78 184 M130 146 Q132 168 122 184" stroke="' + _mix(hc[0], 1.25) + '" stroke-width="2" fill="none" stroke-linecap="round" opacity=".45"/>' + MOUS;
     default: return jaw(BEARD_FULL, 1.1) + MOUS; // 4: full beard
   }
 }
