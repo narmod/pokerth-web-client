@@ -1,4 +1,8 @@
-2026-09-27 version 2.1.9-web.176 (current series):
+2026-09-27 version 2.1.9-web.177 (current series):
+- bugfix: portraits of the « Create » tab — hair now hugs the round and square faces (no more gap at the temples), beards follow the shape of the jaw, the balding and mohawk sides stay on the head, and the stray shadow under the chin is gone
+- improvement: the « Random » button now only picks options that suit the chosen silhouette (no bald or mohawk woman, no tie on a woman, no cat-eye glasses or pearls on a man) and adds hats, glasses, earrings and skin marks less often
+
+2026-09-27 version 2.1.9-web.176:
 - improvement: new, friendlier look for the portraits of the « Create » avatar tab — big round head, large expressive eyes, soft colours and a pastel background, still framed in gold; your saved portrait re-opens in the new style
 - improvement: the shoulder accessories (chips, cards, glass) are gone with the new style
 

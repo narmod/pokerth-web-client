@@ -115,6 +115,18 @@ ok(sexKept, 'avRandom(fixedSex) keeps the chosen silhouette (10 draws each)');
 let bgWhite = true;
 for (let k = 0; k < 10; k++) if (window._avRandom().bg !== 7) bgWhite = false;
 ok(bgWhite, 'avRandom always lands on the white background (10 draws)');
+// Dice-only silhouette rules: 200 draws per silhouette never pick an option
+// that reads as the other one (no bald/mohawk woman, no cat-eye man...).
+let diceSex = true;
+const MASC_ONLY = { hair: [0, 1, 13, 17], outfit: [1, 2, 4] }, FEM_ONLY = { glasses: [3], ears: [1] };
+for (let k = 0; k < 200; k++) {
+  const f = window._avRandom(1), m = window._avRandom(0);
+  for (const ax in MASC_ONLY) if (MASC_ONLY[ax].includes(f[ax])) diceSex = false;
+  for (const ax in FEM_ONLY) if (FEM_ONLY[ax].includes(m[ax])) diceSex = false;
+  if (f.beard !== 0 || f.shoulder !== 0 || m.shoulder !== 0) diceSex = false;
+  if (f.hat && (f.hair === 3 || f.hair === 17)) diceSex = false;
+}
+ok(diceSex, 'dice keeps silhouette-coherent options (200 draws each)');
 for (let k = 0; k < 20; k++) {
   const rr = window._avRandom();
   if (!AXES.every(ax => vis(ax.id, rr[ax.id], rr) || wholeAxisHidden(ax, rr))) { ok(false, 'random recipe respects the coherence filter'); break; }

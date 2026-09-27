@@ -109,13 +109,40 @@ function avNormalize(r) {
   return out;
 }
 
+// Dice-only rules (the studio still offers every option to everyone):
+// options that read as the other silhouette are never DRAWN at random, and
+// optional extras are rarer, so random portraits stay coherent instead of
+// piling a hat, glasses, earrings and marks on every face (narmod
+// 2026-09-27).
+const AV_RANDSEX = {
+  hair: { 0: 0, 1: 0, 13: 0, 17: 0 },   // bald, short, close curls, mohawk
+  outfit: { 1: 0, 2: 0, 4: 0 },         // tie, vest + tie, tuxedo bow tie
+  glasses: { 3: 1 },                    // cat-eye
+  ears: { 1: 1 }                        // pearl studs
+};
+// Probability that an optional axis stays on 'none' ([masculine, feminine]).
+const AV_RANDNONE = { marks: [0.65, 0.65], beard: [0.45, 1], glasses: [0.7, 0.7], ears: [0.85, 0.45], hat: [0.7, 0.75] };
+
+function _randOk(axId, i, r) {
+  var tags = AV_RANDSEX[axId];
+  if (tags && (i in tags) && tags[i] !== r.sex) return false;
+  // Tall styles (high ponytail, mohawk) are not drawn under a hat.
+  if (axId === 'hat' && i !== 0 && (r.hair === 3 || r.hair === 17)) return false;
+  return true;
+}
+
 function avRandom(fixedSex) {
   // When a silhouette is already chosen, the dice keeps it and only
   // randomizes within compatible options (narmod 2026-07-31).
   var r = { sex: (fixedSex === 0 || fixedSex === 1) ? fixedSex : Math.floor(Math.random() * 2) };
   var draw = function (ax) {
     var opts = [];
-    for (var i = 0; i < ax.n; i++) if (avVisible(ax.id, i, r)) opts.push(i);
+    for (var i = 0; i < ax.n; i++) if (avVisible(ax.id, i, r) && _randOk(ax.id, i, r)) opts.push(i);
+    var pNone = AV_RANDNONE[ax.id];
+    if (ax.none && opts.length > 1 && pNone) {
+      if (Math.random() < pNone[r.sex]) { r[ax.id] = 0; return; }
+      opts = opts.filter(function (v) { return v !== 0; });
+    }
     r[ax.id] = opts.length ? opts[Math.floor(Math.random() * opts.length)] : 0;
   };
   // 'eyec' depends on 'eyes' and 'glasses': draw it last.
@@ -332,11 +359,11 @@ function _hair(ctx, i, hc) {
       return [locks, P(CAP_SMOOTH) + _bumps(100, 84, 48, 200, 340, 8, 6, f)];
     }
     case 16: // balding crown (masculine)
-      return ['', P('M44 102 Q40 72 58 58 Q62 76 60 100z') + P('M156 102 Q160 72 142 58 Q138 76 140 100z')
-        + '<ellipse cx="84" cy="48" rx="14" ry="7" fill="#fff" opacity=".35"/>'];
+      return ['', '<ellipse cx="84" cy="48" rx="14" ry="7" fill="#fff" opacity=".35"/>',
+        P('M0 58 L66 58 Q58 80 64 108 L0 108z M200 58 L134 58 Q142 80 136 108 L200 108z')];
     case 17: // mohawk crest
-      return ['', P(CAP_SMOOTH, dk).replace('<path', '<path opacity=".45"')
-        + P('M86 60 L80 30 L90 34 L92 6 L100 20 L108 6 L110 34 L120 30 L114 60z')];
+      return ['', P('M86 60 L80 30 L90 34 L92 6 L100 20 L108 6 L110 34 L120 30 L114 60z'),
+        '<path d="M0 0 L200 0 L200 96 Q152 62 100 56 Q48 62 0 96z" fill="' + hc[0] + '" opacity=".4"/>'];
     case 18: // tousled mid-length (surfer)
       return [P('M40 96 Q36 26 100 24 Q164 26 160 96 L160 128 Q148 136 138 126 L62 126 Q52 136 40 128z', bk),
         P('M42 100 Q34 22 100 20 Q166 22 158 100 L150 70 L140 76 L132 60 L118 70 L106 56 L94 70 L80 58 L70 74 L58 64 L50 80z') + _shine(hl)];
@@ -371,18 +398,30 @@ function _hair(ctx, i, hc) {
 }
 
 // ── Beard / moustache (drawn under the mouth) ────────────────────────────
-function _beard(ctx, i, hc) {
+// Jaw beards are the lower part of the HEAD SHAPE itself (clipped to the
+// face outline, grown a little so they overhang the jaw): they follow the
+// oval, round and square faces exactly. Moustache and goatee are local.
+// Outer corners taper under the ears so the grown outline never shows a
+// flat cut beside the temples.
+var BEARD_SHORT = 'M20 170 L38 124 Q42 100 48 98 Q52 128 70 134 Q86 124 100 126 Q114 124 130 134 Q148 128 152 98 Q158 100 162 124 L180 170 L180 220 L20 220z';
+var BEARD_FULL = 'M20 170 L36 120 Q40 94 47 92 Q52 124 72 130 Q86 122 100 124 Q114 122 128 130 Q148 124 153 92 Q160 94 164 120 L180 170 L180 220 L20 220z';
+
+function _beard(ctx, i, hc, face) {
   var f = ctx.v(hc[0]);
   var MOUS = '<path d="M82 124 Q92 116 100 121 Q108 116 118 124 Q116 131 106 127 Q100 126 94 127 Q84 131 82 124z" fill="' + f + '"/>';
+  var jaw = function (mask, grow, extra) {
+    return '<g clip-path="url(#' + _headClip(ctx, face, grow) + ')"><path d="' + mask + '" fill="' + (extra || f) + '"/></g>';
+  };
   switch (i) {
     case 0: return '';
     case 1: return MOUS; // moustache
     case 2: return '<path d="M88 140 Q100 162 112 140 Q106 146 100 146 Q94 146 88 140z" fill="' + f + '"/>' + MOUS; // goatee
-    case 3: return '<path d="M48 100 Q50 152 100 156 Q150 152 152 100 Q148 128 130 136 Q114 126 100 128 Q86 126 70 136 Q52 128 48 100z" fill="' + f + '"/>' + MOUS; // short beard
-    case 5: return '<path d="M48 100 Q50 152 100 156 Q150 152 152 100 Q148 128 130 136 Q114 126 100 128 Q86 126 70 136 Q52 128 48 100z" fill="' + hc[0] + '" opacity=".28"/>'
-      + '<path d="M84 124 Q100 118 116 124" stroke="' + hc[0] + '" stroke-width="4" opacity=".28" fill="none" stroke-linecap="round"/>'; // stubble
-    case 6: return '<path d="M48 100 Q48 150 76 168 Q92 190 100 196 Q108 190 124 168 Q152 150 152 100 Q148 130 128 136 Q114 126 100 128 Q86 126 72 136 Q52 130 48 100z" fill="' + f + '"/>' + MOUS; // long beard
-    default: return '<path d="M46 96 Q46 160 100 166 Q154 160 154 96 Q150 130 128 136 Q114 126 100 128 Q86 126 72 136 Q50 130 46 96z" fill="' + f + '"/>' + MOUS; // 4: full beard
+    case 3: return jaw(BEARD_SHORT, 1.05) + MOUS; // short beard
+    case 5: return '<g opacity=".3">' + jaw(BEARD_SHORT, 1, hc[0]) // stubble
+      + '<path d="M84 124 Q100 118 116 124" stroke="' + hc[0] + '" stroke-width="4" fill="none" stroke-linecap="round"/></g>';
+    case 6: return jaw(BEARD_FULL, 1.09) // long beard
+      + '<path d="M62 142 Q100 156 138 142 Q130 178 100 198 Q70 178 62 142z" fill="' + f + '"/>' + MOUS;
+    default: return jaw(BEARD_FULL, 1.1) + MOUS; // 4: full beard
   }
 }
 
@@ -519,6 +558,8 @@ function _glasses(i) {
 // Hats that sit on the crown hide the hair above HAT_LINE (see avSvg);
 // the visor and the bandana leave it visible.
 var HAT_LINE = 60;
+// Hairstyles drawn without the temple underlay (bald, balding, mohawk).
+var AV_NO_UNDERLAY = { 0: 1, 16: 1, 17: 1 };
 function _hatCovers(i) { return i !== 0 && i !== 3 && i !== 6; }
 
 function _hat(ctx, i) {
@@ -571,14 +612,28 @@ function _ears(i) {
 }
 
 // ── Head shapes ──────────────────────────────────────────────────────────
+function _headD(i) {
+  if (i === 1) return 'M43 94 A57 55 0 1 0 157 94 A57 55 0 1 0 43 94z'; // round
+  if (i === 2) return 'M46 82 Q46 36 100 36 Q154 36 154 82 L154 112 Q154 152 100 152 Q46 152 46 112z'; // square jaw
+  return 'M47 94 A53 58 0 1 0 153 94 A53 58 0 1 0 47 94z'; // oval
+}
+// clipPath of the head outline, scaled by `grow` around the face centre.
+function _headClip(ctx, face, grow) {
+  var id = ctx.cid + 'hc' + face + '_' + Math.round(grow * 100);
+  if (!ctx.seenClip) ctx.seenClip = {};
+  if (!ctx.seenClip[id]) {
+    ctx.seenClip[id] = 1;
+    ctx.defs.push('<clipPath id="' + id + '"><path d="' + _headD(face) + '"'
+      + (grow !== 1 ? ' transform="translate(100,94) scale(' + grow + ') translate(-100,-94)"' : '') + '/></clipPath>');
+  }
+  return id;
+}
 function _head(ctx, i, skin) {
   var id = ctx.cid + 'hd', g = 'url(#' + id + ')';
   ctx.defs.push('<radialGradient id="' + id + '" cx=".38" cy=".32" r=".8">'
     + '<stop offset="0" stop-color="' + _mix(skin[0], 1.12) + '"/><stop offset=".62" stop-color="' + skin[0] + '"/>'
     + '<stop offset="1" stop-color="' + skin[1] + '"/></radialGradient>');
-  if (i === 1) return '<ellipse cx="100" cy="94" rx="57" ry="55" fill="' + g + '"/>'; // round
-  if (i === 2) return '<path d="M46 82 Q46 36 100 36 Q154 36 154 82 L154 112 Q154 152 100 152 Q46 152 46 112z" fill="' + g + '"/>'; // square jaw
-  return '<ellipse cx="100" cy="94" rx="53" ry="58" fill="' + g + '"/>'; // oval
+  return '<path d="' + _headD(i) + '" fill="' + g + '"/>';
 }
 function _earsSkin(skin) {
   return '<circle cx="47" cy="100" r="10.5" fill="' + skin[0] + '"/><circle cx="153" cy="100" r="10.5" fill="' + skin[1] + '"/>'
@@ -634,8 +689,9 @@ function avPartSvg(axId, i, recipe, size) {
     case 'face':    body = _earsSkin(skin) + _head(ctx, i, skin); break;
     case 'marks':   body = _earsSkin(skin) + _head(ctx, r.face, skin) + _marks(i, skin[1]); break;
     case 'outfit':  body = _sx(r.sex === 1 ? 0.86 : 1, _neck(skin) + _outfit(ctx, i, skin)); break;
-    case 'hair':    h = _hair(ctx, i, hc); body = h[0] + h[1]; break;
-    case 'beard':   body = _beard(ctx, i, hc); break;
+    case 'hair':    h = _hair(ctx, i, hc);
+      body = h[0] + (h[2] ? '<g clip-path="url(#' + _headClip(ctx, r.face, 1.02) + ')">' + h[2] + '</g>' : '') + h[1]; break;
+    case 'beard':   body = _beard(ctx, i, hc, r.face); break;
     case 'eyes':    body = _eyes(i, AV_EYEC[r.eyec], skin, r.sex === 1); break;
     case 'nose':    body = _nose(i, skin[1]); break;
     case 'mouth':   body = _mouth(i); break;
@@ -670,16 +726,20 @@ function avSvg(recipe, size) {
     + '<rect x="2.5" y="2.5" width="195" height="195" fill="#c9992e"/>'
     + '<rect x="6" y="6" width="188" height="188" fill="url(#' + cid + 'bg)"/>'
     + '<g clip-path="url(#' + cid + ')">'
-    + _sx(wk, clipHair(hair[0]))
+    + _sx(wk, clipHair(hair[0]
+        // Underlay: the hair mass behind the head fills the temples, so
+        // the hairline hugs every face shape (no backdrop between hair
+        // and skin). Bald, balding and mohawk styles have none.
+        + (AV_NO_UNDERLAY[r.hair] ? '' : '<path d="M45 98 Q42 30 100 28 Q158 30 155 98z" fill="' + _mix(hc[0], 0.85) + '"/>')))
     + _sx(fem ? 0.86 : 1, _neck(skin) + _outfit(ctx, r.outfit, skin))
-    + '<ellipse cx="100" cy="152" rx="30" ry="6" fill="#000" opacity=".12"/>'
     + _earsSkin(skin)
     + _head(ctx, r.face, skin)
+    + (hair[2] ? clipHair('<g clip-path="url(#' + _headClip(ctx, r.face, 1.02) + ')">' + hair[2] + '</g>') : '')
     + _marks(r.marks, skin[1])
     + '<ellipse cx="68" cy="117" rx="9" ry="5.5" fill="#ff7f86" opacity=".32"/>'
     + '<ellipse cx="132" cy="117" rx="9" ry="5.5" fill="#ff7f86" opacity=".32"/>'
     + _nose(r.nose, skin[1])
-    + _sx(wk, _beard(ctx, r.beard, hc))
+    + _beard(ctx, r.beard, hc, r.face)
     + _mouth(r.mouth)
     + _eyes(r.eyes, AV_EYEC[r.eyec], skin, fem)
     // Brows follow hair color
