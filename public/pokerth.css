@@ -11584,8 +11584,12 @@ body.adv-no-avcreate #avp-tab-create { display: none !important; }
   font-family: var(--ff-display); font-size: var(--fs-2xs); letter-spacing: 0.12em;
   text-transform: uppercase; color: var(--sel,var(--gold));
 }
+.avm-cam-sex { display: flex; align-items: center; gap: var(--sp-2); }
+.avm-cam-sex .avm-axis-label { margin: 0 var(--sp-2) 0 0; color: var(--gold-dim); }
+.avm-cam-sex .avm-opt { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.28); color: #fff; }
+.avm-cam-sex .avm-opt.selected { border-color: var(--gold); color: var(--gold); background: rgba(var(--gold-rgb), 0.18); }
 .avm-cam-view {
-  position: relative; width: min(90vw, 56vh, 420px); aspect-ratio: 1 / 1;
+  position: relative; width: min(90vw, 52vh, 420px); aspect-ratio: 1 / 1;
   overflow: hidden; border-radius: var(--r-md); background: #111;
   touch-action: none; user-select: none; -webkit-user-select: none;
 }

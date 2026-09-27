@@ -1,4 +1,7 @@
-2026-09-27 version 2.1.9-web.185 (current series):
+2026-09-27 version 2.1.9-web.186 (current series):
+- improvement: « From a photo » (beta) — the silhouette (♂ / ♀) is chosen in the framing panel, before the photo; the photo never decides it any more
+
+2026-09-27 version 2.1.9-web.185:
 - new: « From a photo » (beta) also picks the silhouette when the photo shows a clear cue — a beard or moustache, lipstick, or long hair; otherwise your choice stands. One tap switches it back
 
 2026-09-27 version 2.1.9-web.184:

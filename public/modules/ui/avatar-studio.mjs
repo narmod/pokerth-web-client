@@ -126,7 +126,7 @@ function _avmRender() {
     });
     document.getElementById('avm-use').addEventListener('click', _avmApply);
     document.getElementById('avm-photo').addEventListener('click', function () {
-      avCaptureOpen({ mode: 'camera', onResult: _avmFromCapture });
+      avCaptureOpen({ mode: 'camera', sex: _avmState.sex, onResult: _avmFromCapture });
     });
     // hidden input kept for drag-and-drop / tests: a dropped file opens the
     // framing panel in photo mode
@@ -222,16 +222,16 @@ function _avmFromPhoto(file) {
   if (!/^image\//.test(file.type)) { _avmWarn('avImgNotImage', 'Please choose an image file.'); return; }
   var MAX = (typeof window._AV_MAX_FILE_BYTES === 'number') ? window._AV_MAX_FILE_BYTES : 30 * 1024 * 1024;
   if (file.size > MAX) { _avmWarn('avImgTooLarge', 'This image is too large. Please choose a smaller one.'); return; }
-  avCaptureOpen({ mode: 'photo', file: file, onResult: _avmFromCapture });
+  avCaptureOpen({ mode: 'photo', file: file, sex: _avmState.sex, onResult: _avmFromCapture });
 }
-// canvas: the framed square; guide: the template oval (fractions).
-function _avmFromCapture(canvas, guide) {
+// canvas: the framed square; guide: the template oval (fractions); sex:
+// the silhouette chosen in the panel (the analysis never guesses it).
+function _avmFromCapture(canvas, guide, sex) {
   var res = null;
-  try { res = avPhotoRecipe(canvas, canvas.width, canvas.height, { sex: _avmState.sex, guide: guide }); } catch (e) { res = null; }
+  var sexSel = (sex === 0 || sex === 1) ? sex : _avmState.sex;
+  try { res = avPhotoRecipe(canvas, canvas.width, canvas.height, { sex: sexSel, guide: guide, guessSex: false }); } catch (e) { res = null; }
   if (!res || !res.recipe) { _avmWarn('avmPhotoNoFace', 'No face found.'); return; }
-  // the analysis sets `sex` only when the photo shows a clear cue (beard,
-  // lipstick, long hair); otherwise the chosen silhouette stands
-  var next = Object.assign({}, _avmState, res.recipe);
+  var next = Object.assign({}, _avmState, res.recipe, { sex: sexSel });
   _avmState = avNormalize(next);
   _avmSanitize();
   _avmPersist(); _avmRender();

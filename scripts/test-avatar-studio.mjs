@@ -179,6 +179,10 @@ ok(!!cam && !!cam.querySelector('.avm-cam-guide svg ellipse'), 'framing panel op
 ok(document.getElementById('avm-cam-title').textContent === 'Frame your face', 'framing panel title falls back to English when the key is untranslated (harness t() echoes keys)');
 const G = window._AV_GUIDE;
 ok(G && G.cx === 0.5 && G.rx > 0 && G.ry > G.rx && G.cy + G.ry < 0.8, 'template oval sits in the upper part of the square with room for shoulders');
+const sexBtns = cam.querySelectorAll('#avm-cam-sex .avm-sex-opt');
+ok(sexBtns.length === 2 && sexBtns[0].classList.contains('selected'), 'framing panel offers the silhouette choice, preset to the current one (masculine)');
+sexBtns[1].click();
+ok(sexBtns[1].classList.contains('selected') && !sexBtns[0].classList.contains('selected'), 'the silhouette can be switched in the panel');
 document.getElementById('avm-cam-cancel').click();
 ok(!document.getElementById('avm-cam'), 'cancel closes the framing panel');
 window.avStudioTab('import');

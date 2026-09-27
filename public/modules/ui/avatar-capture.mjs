@@ -9,7 +9,10 @@
 // Nothing is stored or sent: the video stream is stopped on close and the
 // capture canvas lives only for the analysis.
 //
-// avCaptureOpen({ mode: 'camera' | 'photo', file, sex, onResult(canvas, guide), t })
+// The silhouette (masculine / feminine) is chosen IN the panel, before the
+// photo, so the analysis never has to guess it (narmod 2026-09-27).
+//
+// avCaptureOpen({ mode: 'camera' | 'photo', file, sex, onResult(canvas, guide, sex) })
 
 'use strict';
 
@@ -45,6 +48,11 @@ function _build() {
   root.innerHTML =
     '<div class="avm-cam-card" role="dialog" aria-modal="true">' +
     '<div class="avm-cam-title"><span id="avm-cam-title"></span><sup class="avm-beta">' + _t('avmBeta', 'beta') + '</sup></div>' +
+    '<div class="avm-cam-sex" id="avm-cam-sex" role="radiogroup" aria-label="' + _t('avmSex', 'Silhouette') + '">' +
+    '<span class="avm-axis-label">' + _t('avmSex', 'Silhouette') + '</span>' +
+    '<button type="button" class="avm-opt avm-sex-opt" data-sex="0" role="radio">\u2642</button>' +
+    '<button type="button" class="avm-opt avm-sex-opt" data-sex="1" role="radio">\u2640</button>' +
+    '</div>' +
     '<div class="avm-cam-view" id="avm-cam-view">' +
     '<video id="avm-cam-video" autoplay playsinline muted style="display:none"></video>' +
     '<div class="avm-cam-guide">' + _guideSvg() + '</div>' +
@@ -224,9 +232,19 @@ function avCaptureOpen(opts) {
   var root = _build();
   var st = _st = {
     root: root, view: document.getElementById('avm-cam-view'), video: document.getElementById('avm-cam-video'),
-    img: null, stream: null, noCamera: false, mode: 'camera', s: 1, sMin: 0.1, tx: 0, ty: 0, onResult: opts.onResult
+    img: null, stream: null, noCamera: false, mode: 'camera', s: 1, sMin: 0.1, tx: 0, ty: 0, onResult: opts.onResult,
+    sex: opts.sex === 1 ? 1 : 0
   };
   _photoGestures(st);
+  var sexBtns = root.querySelectorAll('#avm-cam-sex .avm-sex-opt');
+  var paintSex = function () {
+    sexBtns.forEach(function (b) {
+      var on = +b.getAttribute('data-sex') === st.sex;
+      b.classList.toggle('selected', on); b.setAttribute('aria-checked', on ? 'true' : 'false');
+    });
+  };
+  sexBtns.forEach(function (b) { b.addEventListener('click', function () { st.sex = +b.getAttribute('data-sex'); paintSex(); }); });
+  paintSex();
   document.getElementById('avm-cam-cancel').addEventListener('click', avCaptureClose);
   document.getElementById('avm-cam-file').addEventListener('change', function () {
     var f = this.files && this.files[0];
@@ -245,7 +263,7 @@ function avCaptureOpen(opts) {
     if (!cv) return;
     var cb = st.onResult;
     avCaptureClose();
-    if (typeof cb === 'function') cb(cv, AV_GUIDE);
+    if (typeof cb === 'function') cb(cv, AV_GUIDE, st.sex);
   });
   st.onKey = function (e) { if (e.key === 'Escape') avCaptureClose(); };
   document.addEventListener('keydown', st.onKey);
