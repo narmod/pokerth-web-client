@@ -60,7 +60,7 @@ const AV_AXES = [
   { id: 'eyes',  label: 'avmEyeShape',  n: 7,               kind: 'shape', none: false },
   { id: 'eyec',  label: 'avmEyeColor',  n: AV_EYEC.length,  kind: 'color', none: false },
   { id: 'nose',  label: 'avmNose',      n: 5,               kind: 'shape', none: false },
-  { id: 'mouth', label: 'avmMouth',     n: 8,               kind: 'shape', none: false },
+  { id: 'mouth', label: 'avmMouth',     n: 10,              kind: 'shape', none: false },
   { id: 'glasses', label: 'avmGlasses', n: 6,               kind: 'shape', none: true  },
   { id: 'shoulder', label: 'avmShoulder', n: 5,             kind: 'shape', none: true  },
   { id: 'ears',  label: 'avmEarrings',  n: 6,               kind: 'shape', none: true  },
@@ -463,89 +463,100 @@ function _beard(ctx, i, hc, face) {
   }
 }
 
-// ── Noses ────────────────────────────────────────────────────────────────
+// ── Noses — solid Mii-like shapes in the skin shadow ─────────────────────
 function _nose(i, sh) {
-  var st = ' stroke="' + sh + '" stroke-width="3" stroke-linecap="round" fill="none"';
+  var dk = _mix(sh, 0.88);
   switch (i) {
-    case 1: return '<path d="M100 100 L98 114 Q100 118 104 115"' + st + '/>'; // straight, long
-    case 2: return '<ellipse cx="100" cy="112" rx="5.5" ry="4.5" fill="' + sh + '"/>'; // upturned button
-    case 3: return '<path d="M90 114 Q100 122 110 114"' + st + '/><circle cx="92" cy="113" r="2" fill="' + sh + '"/><circle cx="108" cy="113" r="2" fill="' + sh + '"/>'; // wide
-    case 4: return '<path d="M98 98 Q108 108 104 116 Q100 119 96 116"' + st + '/>'; // aquiline
-    default: return '<path d="M95 114 Q100 118 105 114"' + st + '/>'; // fine
+    case 1: return '<path d="M98 98 L95 116 Q100 121 105 116 L102 98z" fill="' + sh + '"/>'; // straight, long
+    case 2: return '<circle cx="100" cy="114" r="5.5" fill="' + sh + '"/><circle cx="98" cy="112" r="1.6" fill="#fff" opacity=".35"/>'; // upturned button
+    case 3: return '<path d="M89 112 Q100 104 111 112 Q113 121 100 122 Q87 121 89 112z" fill="' + sh + '"/>' // wide
+      + '<circle cx="93" cy="116" r="1.8" fill="' + dk + '"/><circle cx="107" cy="116" r="1.8" fill="' + dk + '"/>';
+    case 4: return '<path d="M99 98 Q112 110 105 119 Q100 122 95 118 Q99 110 99 98z" fill="' + sh + '"/>'; // aquiline
+    default: return '<path d="M97 104 Q92 115 95 118 Q100 121 105 118 Q108 115 103 104z" fill="' + sh + '"/>'; // small bulb
   }
 }
 
-// ── Eyes (shape x iris color) ────────────────────────────────────────────
-function _eye(x, y, ec, open) { // open: vertical scale of the sclera
-  return '<ellipse cx="' + x + '" cy="' + y + '" rx="8.5" ry="' + (9.5 * open).toFixed(1) + '" fill="#fff"/>'
-    + '<circle cx="' + x + '" cy="' + (y + 1) + '" r="5.6" fill="' + ec + '"/>'
-    + '<circle cx="' + x + '" cy="' + (y + 1) + '" r="2.8" fill="#15100b"/>'
-    + '<circle cx="' + (x + 2.4) + '" cy="' + (y - 2) + '" r="2" fill="#fff"/>';
+// ── Eyes (shape x iris color) — bold Mii-like outlines ───────────────────
+var EYE_LINE = '#241a12';
+// Open eye: outlined sclera, big iris, pupil, highlight, thick upper lid.
+function _eye(x, y, ec, rx, ry, ir) {
+  rx = rx || 8; ry = ry || 9.5; ir = ir || 5.4;
+  return '<ellipse cx="' + x + '" cy="' + y + '" rx="' + rx + '" ry="' + ry + '" fill="#fff" stroke="' + EYE_LINE + '" stroke-width="1.6"/>'
+    + '<circle cx="' + x + '" cy="' + (y + 1) + '" r="' + ir + '" fill="' + ec + '"/>'
+    + '<circle cx="' + x + '" cy="' + (y + 1) + '" r="' + (ir * 0.55).toFixed(1) + '" fill="#15100b"/>'
+    + '<circle cx="' + (x + ir * 0.4).toFixed(1) + '" cy="' + (y - ir * 0.35).toFixed(1) + '" r="' + (ir * 0.32).toFixed(1) + '" fill="#fff"/>'
+    + '<path d="M' + (x - rx) + ' ' + (y - 1) + ' Q' + x + ' ' + (y - 2 * ry + 1) + ' ' + (x + rx) + ' ' + (y - 1) + '" stroke="' + EYE_LINE + '" stroke-width="3.2" stroke-linecap="round" fill="none"/>';
 }
 function _closed(x, y) {
-  return '<path d="M' + (x - 8) + ' ' + (y + 2) + ' Q' + x + ' ' + (y - 7) + ' ' + (x + 8) + ' ' + (y + 2) + '" stroke="#2a1d14" stroke-width="3.6" stroke-linecap="round" fill="none"/>';
+  return '<path d="M' + (x - 8) + ' ' + (y + 2) + ' Q' + x + ' ' + (y - 8) + ' ' + (x + 8) + ' ' + (y + 2) + '" stroke="' + EYE_LINE + '" stroke-width="3.8" stroke-linecap="round" fill="none"/>';
 }
 function _eyes(shape, ec, skin, fem) {
   var L = 78, R = 122, y = 98, s = '';
   if (shape === 2) return _closed(L, y) + _closed(R, y); // closed smiling
   if (shape === 3) { // wink: left open, right closed
-    s = _eye(L, y, ec, 1) + _closed(R, y);
+    s = _eye(L, y, ec) + _closed(R, y);
   } else if (shape === 4) { // wide, surprised
-    s = [L, R].map(function (x) {
-      return '<ellipse cx="' + x + '" cy="' + y + '" rx="10" ry="11.5" fill="#fff"/>'
-        + '<circle cx="' + x + '" cy="' + y + '" r="4.4" fill="' + ec + '"/><circle cx="' + x + '" cy="' + y + '" r="2.2" fill="#15100b"/>'
-        + '<circle cx="' + (x + 2) + '" cy="' + (y - 2) + '" r="1.5" fill="#fff"/>';
-    }).join('');
+    s = _eye(L, y, ec, 9.5, 11, 4.4) + _eye(R, y, ec, 9.5, 11, 4.4);
   } else if (shape === 5 || shape === 6) { // heavy-lidded / narrowed, determined
     s = [L, R].map(function (x, k) {
       var lid = shape === 5
-        ? 'M' + (x - 10) + ' ' + (y - 11) + ' L' + (x + 10) + ' ' + (y - 11) + ' L' + (x + 10) + ' ' + (y - 1) + ' Q' + x + ' ' + (y + 2) + ' ' + (x - 10) + ' ' + (y - 1) + 'z'
+        ? 'M' + (x - 11) + ' ' + (y - 13) + ' L' + (x + 11) + ' ' + (y - 13) + ' L' + (x + 11) + ' ' + (y - 1) + ' Q' + x + ' ' + (y + 2) + ' ' + (x - 11) + ' ' + (y - 1) + 'z'
         : (k === 0
-          ? 'M' + (x - 10) + ' ' + (y - 12) + ' L' + (x + 10) + ' ' + (y - 12) + ' L' + (x + 10) + ' ' + (y - 1) + ' L' + (x - 10) + ' ' + (y - 6) + 'z'
-          : 'M' + (x - 10) + ' ' + (y - 12) + ' L' + (x + 10) + ' ' + (y - 12) + ' L' + (x + 10) + ' ' + (y - 6) + ' L' + (x - 10) + ' ' + (y - 1) + 'z');
+          ? 'M' + (x - 11) + ' ' + (y - 13) + ' L' + (x + 11) + ' ' + (y - 13) + ' L' + (x + 11) + ' ' + (y - 1) + ' L' + (x - 11) + ' ' + (y - 6) + 'z'
+          : 'M' + (x - 11) + ' ' + (y - 13) + ' L' + (x + 11) + ' ' + (y - 13) + ' L' + (x + 11) + ' ' + (y - 6) + ' L' + (x - 11) + ' ' + (y - 1) + 'z');
       var edge = shape === 5
         ? 'M' + (x - 9) + ' ' + (y - 1) + ' Q' + x + ' ' + (y + 2) + ' ' + (x + 9) + ' ' + (y - 1)
         : (k === 0 ? 'M' + (x - 9) + ' ' + (y - 5.5) + ' L' + (x + 9) + ' ' + (y - 1.5) : 'M' + (x - 9) + ' ' + (y - 1.5) + ' L' + (x + 9) + ' ' + (y - 5.5));
-      return _eye(x, y, ec, 1) + '<path d="' + lid + '" fill="' + skin[0] + '"/>'
-        + '<path d="' + edge + '" stroke="#2a1d14" stroke-width="2.6" stroke-linecap="round" fill="none"/>';
+      return _eye(x, y, ec) + '<path d="' + lid + '" fill="' + skin[0] + '"/>'
+        + '<path d="' + edge + '" stroke="' + EYE_LINE + '" stroke-width="3.4" stroke-linecap="round" fill="none"/>';
     }).join('');
   } else if (shape === 1) { // almond
     s = [L, R].map(function (x) {
-      return '<path d="M' + (x - 10) + ' ' + y + ' Q' + x + ' ' + (y - 11) + ' ' + (x + 10) + ' ' + y + ' Q' + x + ' ' + (y + 8) + ' ' + (x - 10) + ' ' + y + 'z" fill="#fff"/>'
-        + '<circle cx="' + x + '" cy="' + y + '" r="5" fill="' + ec + '"/><circle cx="' + x + '" cy="' + y + '" r="2.5" fill="#15100b"/>'
-        + '<circle cx="' + (x + 2) + '" cy="' + (y - 2) + '" r="1.6" fill="#fff"/>';
+      return '<path d="M' + (x - 10) + ' ' + y + ' Q' + x + ' ' + (y - 11) + ' ' + (x + 10) + ' ' + y + ' Q' + x + ' ' + (y + 8) + ' ' + (x - 10) + ' ' + y + 'z" fill="#fff" stroke="' + EYE_LINE + '" stroke-width="1.4"/>'
+        + '<circle cx="' + x + '" cy="' + y + '" r="5" fill="' + ec + '"/><circle cx="' + x + '" cy="' + y + '" r="2.7" fill="#15100b"/>'
+        + '<circle cx="' + (x + 2) + '" cy="' + (y - 2) + '" r="1.6" fill="#fff"/>'
+        + '<path d="M' + (x - 10) + ' ' + y + ' Q' + x + ' ' + (y - 12) + ' ' + (x + 10) + ' ' + y + '" stroke="' + EYE_LINE + '" stroke-width="3" stroke-linecap="round" fill="none"/>';
     }).join('');
   } else { // 0: round
-    s = _eye(L, y, ec, 1) + _eye(R, y, ec, 1);
+    s = _eye(L, y, ec) + _eye(R, y, ec);
   }
   if (fem && shape !== 3) { // lashes on the outer corners
-    s += '<path d="M69 93 L64 89 M71 90 L67 85 M131 93 L136 89 M129 90 L133 85" stroke="#2a1d14" stroke-width="2" stroke-linecap="round"/>';
+    s += '<path d="M69 93 L64 89 M71 90 L67 85 M131 93 L136 89 M129 90 L133 85" stroke="' + EYE_LINE + '" stroke-width="2" stroke-linecap="round"/>';
   } else if (fem) {
-    s += '<path d="M69 93 L64 89 M71 90 L67 85" stroke="#2a1d14" stroke-width="2" stroke-linecap="round"/>';
+    s += '<path d="M69 93 L64 89 M71 90 L67 85" stroke="' + EYE_LINE + '" stroke-width="2" stroke-linecap="round"/>';
   }
   return s;
 }
 
-// ── Mouths ───────────────────────────────────────────────────────────────
+// ── Mouths — filled Mii-like shapes (mouth dark + lower lip) ─────────────
 function _mouth(i) {
-  var ln = ' stroke="#6b3a2a" stroke-width="3.6" stroke-linecap="round" fill="none"';
+  var M = '#5e2521', LIP = '#e4837c', TEETH = '#fff';
+  var line = function (d) { return '<path d="' + d + '" stroke="' + M + '" stroke-width="4" stroke-linecap="round" fill="none"/>'; };
   switch (i) {
     case 1: // wide grin with teeth
-      return '<path d="M84 128 L116 128 Q114 146 100 146 Q86 146 84 128z" fill="#6b1f24"/>'
-        + '<path d="M92 139 Q100 135 108 139 Q104 146 100 146 Q96 146 92 139z" fill="#ef7b7f"/>'
-        + '<path d="M85 128 L115 128 L114 132 L86 132z" fill="#fff"/>';
-    case 2: return '<path d="M90 134 L110 134"' + ln + '/>'; // neutral
-    case 3: // lipstick smile
-      return '<path d="M86 132 Q93 126 100 129 Q107 126 114 132 Q107 142 100 142 Q93 142 86 132z" fill="#d9375a"/>'
-        + '<path d="M88 132 Q100 136 112 132" stroke="#a8243f" stroke-width="1.4" fill="none"/>';
-    case 4: return '<path d="M88 135 Q102 137 114 126"' + ln + '/>'; // smirk
-    case 5: // pout
-      return '<ellipse cx="100" cy="135" rx="7" ry="5" fill="#d86a6a"/><path d="M95 134 L105 134" stroke="#9c3f3f" stroke-width="1.4"/>';
+      return '<path d="M82 126 Q100 129 118 126 Q116 150 100 150 Q84 150 82 126z" fill="' + M + '"/>'
+        + '<path d="M85 127 Q100 130 115 127 Q114 136 100 137 Q86 136 85 127z" fill="' + TEETH + '"/>'
+        + '<path d="M90 141 Q100 148 110 141 Q100 147 90 141z" fill="' + LIP + '"/>';
+    case 2: return line('M89 133 L111 133'); // neutral
+    case 3: // lipstick
+      return '<path d="M85 131 Q92 123 100 129 Q108 123 115 131 Q108 145 100 145 Q92 145 85 131z" fill="#d8304e"/>'
+        + '<path d="M86 131 Q100 135 114 131" stroke="#a1203a" stroke-width="1.5" fill="none"/>'
+        + '<path d="M94 139 Q100 142 106 139" stroke="#fff" stroke-width="1.6" stroke-linecap="round" fill="none" opacity=".45"/>';
+    case 4: return '<path d="M86 133 Q100 141 116 126 Q104 137 86 133z" fill="' + M + '"/>'; // smirk
+    case 5: // pout / kiss
+      return '<ellipse cx="100" cy="134" rx="6.5" ry="5" fill="#c8635f"/><path d="M95 134 Q100 136 105 134" stroke="#8e3a3a" stroke-width="1.5" fill="none"/>';
     case 6: // open laugh
-      return '<path d="M84 128 Q100 128 116 128 Q114 150 100 150 Q86 150 84 128z" fill="#6b1f24"/>'
-        + '<path d="M90 142 Q100 136 110 142 Q106 150 100 150 Q94 150 90 142z" fill="#ef7b7f"/>';
-    case 7: return '<ellipse cx="100" cy="135" rx="5" ry="6" fill="#6b1f24"/>'; // small o (surprise)
-    default: return '<path d="M86 129 Q100 144 114 129"' + ln + '/>'; // soft smile
+      return '<path d="M82 126 Q100 124 118 126 Q118 154 100 154 Q82 154 82 126z" fill="' + M + '"/>'
+        + '<path d="M84 127 L116 127 L115 132 L85 132z" fill="' + TEETH + '"/>'
+        + '<path d="M90 143 Q100 135 110 143 Q108 154 100 154 Q92 154 90 143z" fill="#ef6f75"/>';
+    case 7: return '<ellipse cx="100" cy="134" rx="5" ry="6.5" fill="' + M + '"/>'; // small o (surprise)
+    case 8: return '<path d="M86 139 Q100 123 114 139 Q100 133 86 139z" fill="' + M + '"/>'; // frown
+    case 9: // tongue out
+      return line('M89 131 L111 131')
+        + '<path d="M94 132 L106 132 Q107 146 100 146 Q93 146 94 132z" fill="#ef6f75"/><path d="M100 136 L100 144" stroke="#c94d58" stroke-width="1.2"/>';
+    default: // smile: filled crescent with a lower lip
+      return '<path d="M84 127 Q100 151 116 127 Q100 137 84 127z" fill="' + M + '"/>'
+        + '<path d="M90 133 Q100 143 110 133 Q100 139 90 133z" fill="' + LIP + '"/>';
   }
 }
 
@@ -787,7 +798,7 @@ function avSvg(recipe, size) {
     + _mouth(r.mouth)
     + _eyes(r.eyes, AV_EYEC[r.eyec], skin, fem)
     // Brows follow hair color
-    + '<path d="M68 80 Q78 74 88 79 M112 79 Q122 74 132 80" stroke="' + hc[0] + '" stroke-width="4.6" stroke-linecap="round" fill="none"/>'
+    + '<path d="M68 80 Q78 74 88 79 M112 79 Q122 74 132 80" stroke="' + hc[0] + '" stroke-width="' + (fem ? 4 : 5.4) + '" stroke-linecap="round" fill="none"/>'
     + _ears(r.ears)
     + _sx(wk, clipHair(hair[1]))
     + _glasses(r.glasses)
