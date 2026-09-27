@@ -229,7 +229,9 @@ function _avmFromCapture(canvas, guide) {
   var res = null;
   try { res = avPhotoRecipe(canvas, canvas.width, canvas.height, { sex: _avmState.sex, guide: guide }); } catch (e) { res = null; }
   if (!res || !res.recipe) { _avmWarn('avmPhotoNoFace', 'No face found.'); return; }
-  var next = Object.assign({}, _avmState, res.recipe, { sex: _avmState.sex });
+  // the analysis sets `sex` only when the photo shows a clear cue (beard,
+  // lipstick, long hair); otherwise the chosen silhouette stands
+  var next = Object.assign({}, _avmState, res.recipe);
   _avmState = avNormalize(next);
   _avmSanitize();
   _avmPersist(); _avmRender();

@@ -216,6 +216,16 @@ ok(!!resBald && resBald.recipe.hair === 0, 'no hair cap → bald');
 const resGuided = window._avPhotoAnalyze(synthFace({ hair: true }), { sex: 0, guide: { cx: 0.5, cy: 0.5, rx: 46 / 160, ry: 58 / 200 } });
 ok(!!resGuided && resGuided.debug.guided && resGuided.recipe.skin <= 2 && resGuided.recipe.hair !== 0, 'guided analysis uses the template and finds the same face');
 ok(window._avPhotoAnalyze(synthFace({ hair: true }), { sex: 0, guide: { cx: 0.1, cy: 0.9, rx: 0.05, ry: 0.05 } }) === null, 'guided analysis with nobody in the oval → no face');
+// silhouette guess: the plain synthetic face has no cue → no `sex` in the recipe;
+// a dark hair-coloured band under the chin (beard) → masculine even when analysed as feminine
+const noCue = window._avPhotoAnalyze(synthFace({ hair: true }), { sex: 1 });
+ok(!!noCue && !('sex' in noCue.recipe) && noCue.recipe.beard === 0, 'no clear cue → the chosen silhouette stands (no sex in the recipe)');
+const bearded = synthFace({ hair: true });
+for (let y = 142; y <= 162; y++) for (let x = 44; x <= 116; x++) { const ex = (x - 80) / 46, ey = (y - 100) / 58; if (ex * ex + ey * ey <= 1) { const i = (y * 160 + x) * 4; bearded.data[i] = 40; bearded.data[i + 1] = 35; bearded.data[i + 2] = 32; } }
+const withBeard = window._avPhotoAnalyze(bearded, { sex: 1 });
+ok(!!withBeard && withBeard.recipe.sex === 0 && withBeard.recipe.beard >= 3, 'a beard → masculine silhouette guessed with the beard (' + (withBeard && withBeard.recipe.sex) + '/' + (withBeard && withBeard.recipe.beard) + ')');
+const noGuess = window._avPhotoAnalyze(bearded, { sex: 1, guessSex: false });
+ok(!!noGuess && !('sex' in noGuess.recipe) && noGuess.recipe.beard === 0, 'guessSex:false keeps the feminine silhouette (and no beard on it)');
 const blank = { width: 64, height: 64, data: new Uint8ClampedArray(64 * 64 * 4).fill(255) };
 ok(window._avPhotoAnalyze(blank, { sex: 0 }) === null, 'blank image → no face');
 window.avStudioReset();

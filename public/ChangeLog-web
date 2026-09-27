@@ -1,4 +1,7 @@
-2026-09-27 version 2.1.9-web.184 (current series):
+2026-09-27 version 2.1.9-web.185 (current series):
+- new: « From a photo » (beta) also picks the silhouette when the photo shows a clear cue — a beard or moustache, lipstick, or long hair; otherwise your choice stands. One tap switches it back
+
+2026-09-27 version 2.1.9-web.184:
 - new: « From a photo » (beta) now opens a framing panel — the front camera live, mirrored, with a face template (oval, eye line, shoulders) to line up with, or a photo from your gallery you drag and zoom into the template; the portrait is then read from the framed square, which makes the guess far more reliable. Without a camera (or if you refuse it), the panel switches to the photo mode. Nothing is recorded or sent
 - improvement: « From a photo » — a bald head is recognised in the framed photo, sunglasses are no longer guessed from shadowed eyes, a wide smile with teeth is read as a grin
 

@@ -487,9 +487,7 @@ function avPhotoAnalyze(img, opts) {
   var volume = !bald && capFrac > 0.6 && sideFrac > 0.5 && hairTop < seedTop - 0.9 * Eref && lowFrac < 0.2;
   // a saturated non-hair colour on top of the head is most likely a cap
   if (!bald && hairHsl[1] > 0.45 && hairHsl[2] > 0.2 && (hairHsl[0] < 8 || hairHsl[0] > 50)) { hat = 1; length = 'short'; volume = false; }
-  if (sex === 0) hair = bald ? 0 : (volume ? 10 : (length === 'short' ? 1 : 18));
-  else hair = bald ? 12 : (volume ? 23 : (length === 'long' ? 8 : (length === 'mid' ? 5 : 12)));
-  if (hat) hair = sex === 0 ? 1 : 12;
+  // (the hairstyle itself is chosen at the end, once the silhouette is known)
 
   // 6. glasses: dark frame pixels in the eye band and a dark nose bridge
   var glasses = 0, glassesDbg = '';
@@ -532,7 +530,7 @@ function avPhotoAnalyze(img, opts) {
     i = at(x, y); r = D[i * 4]; g = D[i * 4 + 1]; b = D[i * 4 + 2];
     if (cr[i] > st.cr + 9 && r - g > 30 && r > 70) { lipMask[i] = 1; lipRow[y]++; lipN++; }
   }
-  var mouth = 2, mouthTop = Math.round(top + 0.8 * fh), mouthW = 0, lipMinX = 0, lipMaxX = -1, lipMinY = 0, lipMaxY = -1, mouthDbg = '';
+  var mouth = 2, mouthTop = Math.round(top + 0.8 * fh), mouthW = 0, lipMinX = 0, lipMaxX = -1, lipMinY = 0, lipMaxY = -1, mouthDbg = '', lipstick = false;
   var rowMaxN = 0; for (y = my0; y <= my1; y++) if (lipRow[y] > rowMaxN) rowMaxN = lipRow[y];
   if (rowMaxN >= 0.15 * (mx1 - mx0)) {
     // densest run of rows
@@ -578,17 +576,18 @@ function avPhotoAnalyze(img, opts) {
       else if (ratio > 0.46 || (curve > 0.03 && ratio > 0.28)) mouth = 0;
       else if (mouthH / mouthW > 0.6) mouth = 5;
       else mouth = 2;
-      if (sex === 1 && lipPx.length) {
+      if (lipPx.length) { // lipstick: saturated red lips, far from the skin colour
         var lr = medianRgb(lipPx), lh = rgb2hsl(lr[0], lr[1], lr[2]);
-        if (lh[1] > 0.6 && lr[0] > 130 && labDist(rgb2lab(lr[0], lr[1], lr[2]), rgb2lab(st.rgb[0], st.rgb[1], st.rgb[2])) > 28 && mouth !== 6 && mouth !== 1) mouth = 3;
+        if (lh[1] > 0.6 && lr[0] > 130 && labDist(rgb2lab(lr[0], lr[1], lr[2]), rgb2lab(st.rgb[0], st.rgb[1], st.rgb[2])) > 28 && mouth !== 6 && mouth !== 1) lipstick = true;
       }
     }
   }
 
-  // 8. beard (masculine): dark hair-like mass under the chin, narrower than
-  // a shirt would be; moustache right above the lip
+  // 8. beard: dark hair-like mass under the chin, narrower than a shirt
+  // would be; moustache right above the lip. Measured on every face (it
+  // also drives the silhouette guess), applied to the masculine one only.
   var beard = 0, bFrac = 0, mFrac = 0;
-  if (sex === 0) {
+  {
     // zone: below the mouth down to just under the chin (from the pupils
     // when known: 1.1-1.85 E, which never reaches a shirt collar)
     var bz0 = Math.round(top + 0.8 * fh), bz1 = Math.min(H - 1, Math.round(bottom + 0.15 * fh));
@@ -646,6 +645,25 @@ function avPhotoAnalyze(img, opts) {
     if (d < skinBest) { skinBest = d; skinIndex = k; }
   });
 
+  // Silhouette guess (opts.guessSex !== false): only from clear cues — a
+  // real beard or moustache → masculine; lipstick or long hair → feminine;
+  // otherwise the player's choice stands. It is a starting point like the
+  // rest, the player switches it in one tap.
+  var sexGuess = null;
+  if (opts.guessSex !== false) {
+    if (beard >= 3 || (beard === 1 && mFrac > 0.45)) sexGuess = 0;
+    else if (lipstick) sexGuess = 1;
+    else if (!bald && !hat && length === 'long') sexGuess = 1;
+  }
+  var sexF = sexGuess === null ? sex : sexGuess;
+
+  // sex-dependent mappings
+  if (sexF === 0) hair = bald ? 0 : (volume ? 10 : (length === 'short' ? 1 : 18));
+  else hair = bald ? 12 : (volume ? 23 : (length === 'long' ? 8 : (length === 'mid' ? 5 : 12)));
+  if (hat) hair = sexF === 0 ? 1 : 12;
+  if (sexF === 1) beard = 0;
+  if (sexF === 1 && lipstick) mouth = 3;
+
   // a jaw beard hides the chin: the face shape cannot be measured, keep oval
   if (beard === 3 || beard === 4 || beard === 5 || beard === 6) face = 0;
 
@@ -654,7 +672,7 @@ function avPhotoAnalyze(img, opts) {
   var outfit;
   if (clothRgb) {
     var ol = rgb2lab(clothRgb[0], clothRgb[1], clothRgb[2])[0];
-    if (sex === 0) outfit = ol < 35 ? 11 : (ol > 70 ? 5 : 0);
+    if (sexF === 0) outfit = ol < 35 ? 11 : (ol > 70 ? 5 : 0);
     else outfit = ol < 35 ? 7 : 3;
   }
 
@@ -668,11 +686,12 @@ function avPhotoAnalyze(img, opts) {
     eyes: eyes, eyec: eyec, glasses: glasses, mouth: mouth, beard: beard, hat: hat, bg: bg
   };
   if (outfit === undefined) delete recipe.outfit;
+  if (sexGuess !== null) recipe.sex = sexGuess;
   return {
     recipe: recipe,
     debug: { box: [left, top, fw, fh], eyes: [eL, eR], eyesOk: eyesOk, cands: cL.concat(cR), guided: !!guide, mouth: [lipMinX, lipMinY, lipMaxX, lipMaxY],
              hair: { capFrac: capFrac, sideFrac: sideFrac, lowFrac: lowFrac, top: hairTop, rgb: hairRgb, count: hairCount, border: borderTot ? borderHits / borderTot : 0, forehead: foreheadH, skinTop: skinTop },
-             skinLum: skinLum, skinRgb: st.rgb, bgs: bgs, aspect: aspect, jaw: jaw, mouthW: mouthW, bFrac: bFrac, mFrac: mFrac, glassesDbg: glassesDbg, mouthDbg: mouthDbg }
+             skinLum: skinLum, skinRgb: st.rgb, bgs: bgs, aspect: aspect, jaw: jaw, mouthW: mouthW, bFrac: bFrac, mFrac: mFrac, glassesDbg: glassesDbg, mouthDbg: mouthDbg, sexGuess: sexGuess, lipstick: lipstick, length: length }
   };
 }
 
