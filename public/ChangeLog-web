@@ -1,4 +1,8 @@
-2026-09-27 version 2.1.9-web.206 (current series):
+2026-09-27 version 2.1.9-web.207 (current series):
+- improvement: toon portraits — seven skin tones sorted light to dark instead of ten (the very light double and the two darkest are gone: scars, bruises and tattoos vanished on them); saved portraits keep the nearest tone
+- improvement: « From a photo » — the eyebrows are read (a frown, one raised brow, thick brows, thin arched brows), a beard that goes on below the chin becomes the long beard, and a green or deep red backdrop becomes the matching felt
+
+2026-09-27 version 2.1.9-web.206:
 - new: toon portraits — four poker backdrops: green felt with a chip stack, burgundy felt with gold suits, card back, casino neon (15 backdrops)
 - new: toon portraits — a « Badge » row in the Extras step: a poker token pinned in the corner of the frame — dealer button, red chip, pair of aces, dice, chip stack
 - new: toon portraits — three eyes (scarred shut eye, bloodshot, side glance), a toothpick and a gold-tooth grin, skull studs and an eyebrow ring (the two piercings are available to men too)

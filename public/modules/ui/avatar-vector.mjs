@@ -21,12 +21,19 @@
 'use strict';
 
 // [base, shadow]
+// Seven skin tones, light → dark (2.1.9-web.207, narmod: « enlever des
+// teintes et éviter trop noir » — on the two darkest of the former ten the
+// scars, bruises and tattoos vanished). Index 1 stays the default.
 const AV_SKIN = [
-  ['#ffe0c7', '#f0c1a0'], ['#f7c9a2', '#e5aa80'], ['#eeb987', '#d99c69'],
+  ['#fff0e3', '#f3d6c1'], ['#f7c9a2', '#e5aa80'], ['#eeb987', '#d99c69'],
   ['#d99d6c', '#c08253'], ['#b87a4b', '#9c6238'], ['#8d5a35', '#724426'],
-  ['#fff0e3', '#f3d6c1'], ['#6e4527', '#57341a'],
-  ['#553219', '#41240e'], ['#3d2412', '#2b1809']
+  ['#75482a', '#5c3618']
 ];
+// Recipes saved before web.207 (no `v`) used the former ten-tone palette:
+// very light, light, medium-light, tan, brown, dark brown, porcelain, deep,
+// very deep, darkest → nearest of the seven.
+const AV_SKIN_V1 = [1, 1, 2, 3, 4, 5, 0, 6, 6, 6];
+const AV_RECIPE_V = 2;
 // [base, highlight] — black, dark brown, brown, auburn, golden blonde,
 // grey, light blonde, white, then (2.1.9-web.189) light brown, light red,
 // blue, pink. Brows and beards keep a natural colour on the last two.
@@ -189,15 +196,19 @@ function avVisible(axId, i, recipe) {
   return tags[i] === recipe.sex;
 }
 
-const AV_DEFAULT = { sex: 0, face: 0, bg: 0, outfit: 0, outfitc: 0, skin: 1, marks: 0, hair: 1, hairc: 1,
+const AV_DEFAULT = { v: 2, sex: 0, face: 0, bg: 0, outfit: 0, outfitc: 0, skin: 1, marks: 0, hair: 1, hairc: 1,
                      beard: 0, eyes: 0, eyec: 0, brows: 0, nose: 0, mouth: 0, glasses: 0, shoulder: 0, ears: 0, hat: 0, badge: 0 };
 
 function avNormalize(r) {
   var out = {};
+  // a recipe without a palette version comes from before web.207: its skin
+  // index is in the former ten-tone palette
+  if (r && typeof r.skin === 'number' && !(r.v >= 2)) r = Object.assign({}, r, { skin: AV_SKIN_V1[Math.floor(r.skin)] !== undefined ? AV_SKIN_V1[Math.floor(r.skin)] : AV_DEFAULT.skin });
   AV_AXES.forEach(function (ax) {
     var v = r && typeof r[ax.id] === 'number' ? Math.floor(r[ax.id]) : AV_DEFAULT[ax.id];
     out[ax.id] = (v >= 0 && v < ax.n) ? v : AV_DEFAULT[ax.id];
   });
+  out.v = AV_RECIPE_V;
   return out;
 }
 
@@ -253,6 +264,7 @@ function avRandom(fixedSex) {
   AV_AXES.forEach(function (ax) { if (ax.id !== 'sex' && ax.id !== 'eyec') draw(ax); });
   draw(AV_AXES.filter(function (ax) { return ax.id === 'eyec'; })[0]);
   r.bg = AV_BG_WHITE;
+  r.v = AV_RECIPE_V;
   return r;
 }
 

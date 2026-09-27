@@ -35,7 +35,7 @@ const AV_PHOTO_MAXW = 400;
 
 // Palettes mirrored from avatar-vector.mjs (base colours, same order) —
 // kept local so the analysis stays a leaf module.
-const P_SKIN = ['#ffe0c7', '#f7c9a2', '#eeb987', '#d99d6c', '#b87a4b', '#8d5a35', '#fff0e3', '#6e4527', '#553219', '#3d2412'];
+const P_SKIN = ['#fff0e3', '#f7c9a2', '#eeb987', '#d99d6c', '#b87a4b', '#8d5a35', '#75482a']; // = AV_SKIN bases (seven tones since web.207)
 // what each AV_HAIRC swatch looks like as the MEDIAN of real hair pixels
 // (a photo of blonde hair is far less saturated than the drawn swatch):
 // black, dark brown, brown, auburn, golden blonde, grey, light blonde,
@@ -828,6 +828,55 @@ function avPhotoAnalyze(img, opts) {
     if (rimSides === 2 && (bridge >= 3 || minRowMax > 0.55 || (ftot && frame / ftot > 0.15))) glasses = 2;
   }
 
+  // 6b. eyebrows (2.1.9-web.207): in the band above each pupil (0.12–0.62 E)
+  // every column's longest dark run is the brow; the ends and the thickness
+  // say whether the pair is angry (inner ends down), one raised, thick, or
+  // thin and arched. A fringe over the brows (runs longer than 0.35 E) or a
+  // brow found on fewer than 60 % of the columns leaves the neutral pair.
+  var brows = 0, browsDbg = '';
+  if (eyesOk) {
+    var browOf = function (e, innerRight) {
+      var xs = [], rows = [], ths = [], nCol = 0;
+      for (x = Math.round(e.x - 0.42 * E); x <= e.x + 0.42 * E; x++) {
+        if (x < 0 || x >= W) continue;
+        nCol++;
+        // the dark run whose centre is nearest the expected brow height
+        // (0.35 E above the pupil) — not the longest: a low hairline or a
+        // shadow in the band would win otherwise
+        var best = 0, bestY = -1, bestD = 1e9, run = 0, runY = 0, want = e.y - 0.35 * E;
+        var take = function () { if (run >= 0.025 * E && run <= 0.35 * E) { var d = Math.abs(runY + run / 2 - want); if (d < bestD) { bestD = d; best = run; bestY = runY; } } };
+        for (y = Math.round(e.y - 0.62 * E); y <= e.y - 0.12 * E; y++) {
+          if (y < 0 || y >= H) continue;
+          i = at(x, y);
+          if (lum[i] < skinLum * 0.72 && !skin[i]) { if (!run) runY = y; run++; }
+          else if (run) { take(); run = 0; }
+        }
+        if (run) take();
+        if (bestY >= 0) { xs.push(x); rows.push(bestY + best / 2); ths.push(best); }
+      }
+      var n = xs.length;
+      if (!nCol || n / nCol < 0.6) return null;
+      var q = Math.max(1, Math.round(n / 4)), m0 = Math.round(n / 3);
+      var avg = function (a, b) { var sum = 0, cnt = 0; for (var k = a; k < b; k++) { sum += rows[k]; cnt++; } return cnt ? sum / cnt : 0; };
+      var qL = avg(0, q), qR = avg(n - q, n);
+      return { inner: innerRight ? qR : qL, outer: innerRight ? qL : qR, mid: avg(m0, n - m0), all: avg(0, n) - e.y, th: median(ths) / E }; // `all`: height over its own pupil (a tilted head keeps the pair level)
+    };
+    var bwL = browOf(eL, true), bwR = browOf(eR, false);
+    if (bwL && bwR) {
+      var vL = (bwL.inner - bwL.outer) / E, vR = (bwR.inner - bwR.outer) / E; // > 0: the inner end sits lower (a frown)
+      var asym = Math.abs(bwL.all - bwR.all) / E, bth = (bwL.th + bwR.th) / 2;
+      var arch = ((bwL.inner + bwL.outer) / 2 - bwL.mid + (bwR.inner + bwR.outer) / 2 - bwR.mid) / (2 * E); // > 0: the middle rides higher than the ends
+      browsDbg = 'v=' + vL.toFixed(2) + '/' + vR.toFixed(2) + ' asym=' + asym.toFixed(2) + ' th=' + bth.toFixed(3) + ' arch=' + arch.toFixed(2);
+      // two "brows" more than a quarter of E apart are not a pair (hair or a
+      // shadow on one side): keep the neutral pair
+      if (asym > 0.25) browsDbg += ' (not a pair)';
+      else if (vL > 0.12 && vR > 0.12) brows = 1;
+      else if (asym > 0.16) brows = 2; // (a level pair on a tilted head measures up to ≈ 0.12)
+      else if (bth > 0.15) brows = 3;
+      else if (bth < 0.06 && arch > 0.05) brows = 4;
+    } else browsDbg = 'no brows';
+  }
+
   // 7. mouth: reddish lip band (rows that hold >= 30% of the busiest row)
   var my0 = Math.round(top + 0.66 * fh), my1 = Math.min(H - 1, Math.round(top + 0.96 * fh));
   var mx0 = Math.round(left + 0.2 * fw), mx1 = Math.round(right - 0.2 * fw);
@@ -1024,6 +1073,21 @@ function avPhotoAnalyze(img, opts) {
     if (bearded) beard = (medR < 0.62 && mR < 0.85) ? 4 : 3;
     else if (stubble) beard = 5;
     else if (mR < 0.72) beard = 1;
+    // long beard (2.1.9-web.207, guided): the beard-coloured, grainy mass goes
+    // on below the oval bottom, bounded on both sides — a dark garment fills
+    // the sides too and is smooth
+    if (guide && bearded) {
+      var lz0 = Math.round(gcy + gry + 0.05 * Eref), lz1 = Math.min(H - 1, Math.round(gcy + gry + 0.6 * Eref));
+      if (lz1 > lz0 + 4) {
+        var lpx = [], lz = zoneStats(cx - 0.2 * fw, cx + 0.2 * fw, lz0, lz1, lpx);
+        var spxL = [], szL = zoneStats(left - 0.1 * fw, left + 0.08 * fw, lz0, lz1, spxL), spxR = [], szR = zoneStats(right - 0.08 * fw, right + 0.1 * fw, lz0, lz1, spxR);
+        var lDark = lz.n ? (lpx.length / 3) / lz.n : 0, sDark = (szL.n + szR.n) ? ((spxL.length + spxR.length) / 3) / (szL.n + szR.n) : 0;
+        var lRgb = lpx.length >= 30 ? medianRgb(lpx) : null;
+        var dBeard = (lRgb && beardRgb) ? labDist(rgb2lab.apply(null, lRgb), rgb2lab.apply(null, beardRgb)) : 99;
+        beardDbg += ' long=' + lDark.toFixed(2) + '/' + sDark.toFixed(2) + ' dB=' + dBeard.toFixed(0) + ' lstd=' + lz.std.toFixed(1);
+        if (lDark >= 0.6 && sDark < 0.35 && dBeard < 16 && lz.skin < 0.3 && lz.std >= 4) beard = 6;
+      }
+    }
   }
 
   // skin tone: lightness first (the palette is a lit-skin ramp, peach-toned:
@@ -1055,6 +1119,7 @@ function avPhotoAnalyze(img, opts) {
   if (hat) hair = sexF === 0 ? 1 : 12;
   if (sexF === 1) beard = 0;
   if (sexF === 1 && lipstick) mouth = 3;
+  if (sexF === 0 && brows === 4) brows = 0; // thin arched brows are a feminine option
 
   // a jaw beard hides the chin: the face shape cannot be measured, keep oval
   if (beard === 3 || beard === 4 || beard === 5 || beard === 6) face = 0;
@@ -1076,10 +1141,12 @@ function avPhotoAnalyze(img, opts) {
   var bgc = bgs[0], bhs = rgb2hsl(bgc[0], bgc[1], bgc[2]);
   var bg = (bhs[1] < 0.12 || bhs[2] < 0.25) ? 7
     : nearestLab(rgb2lab(bgc[0] * 0.35 + 255 * 0.65, bgc[1] * 0.35 + 255 * 0.65, bgc[2] * 0.35 + 255 * 0.65), P_BG_LAB).index;
+  // a saturated green or deep red backdrop → the green / burgundy felt (2.1.9-web.207)
+  if (bhs[2] >= 0.12 && bhs[2] <= 0.55) { if (bhs[1] >= 0.3 && bhs[0] >= 80 && bhs[0] <= 170) bg = 11; else if (bhs[1] >= 0.45 && (bhs[0] <= 12 || bhs[0] >= 335)) bg = 12; } // (a dark brown wall is not a red felt)
 
   var recipe = {
-    face: face, skin: skinIndex, hair: hair, hairc: hairc.index, outfit: outfit, outfitc: outfitc,
-    eyes: eyes, eyec: eyec, glasses: glasses, mouth: mouth, beard: beard, hat: hat, bg: bg
+    v: 2, face: face, skin: skinIndex, hair: hair, hairc: hairc.index, outfit: outfit, outfitc: outfitc,
+    eyes: eyes, eyec: eyec, glasses: glasses, mouth: mouth, beard: beard, hat: hat, bg: bg, brows: brows
   };
   if (nose !== undefined) recipe.nose = nose;
   if (outfit === undefined) delete recipe.outfit;
@@ -1089,7 +1156,7 @@ function avPhotoAnalyze(img, opts) {
     recipe: recipe,
     debug: { box: [left, top, fw, fh], eyes: [eL, eR], eyesOk: eyesOk, cands: cL.concat(cR), guided: !!guide, mouth: [lipMinX, lipMinY, lipMaxX, lipMaxY],
              hair: { capFrac: capFrac, sideFrac: sideFrac, lowFrac: lowFrac, top: hairTop, rgb: hairRgb, count: hairCount, border: borderTot ? borderHits / borderTot : 0, forehead: foreheadH, skinTop: skinTop },
-             skinLum: skinLum, skinRgb: st.rgb, bgs: bgs, cloth: clothRgb, faceDbg: faceDbg, noseDbg: noseDbg, noseRow: (typeof yN !== 'undefined' && yN >= 0 ? [cx - 0.12 * Eref, yN, cx + 0.12 * Eref] : null), aspect: aspect, jaw: jaw, mouthW: mouthW, bFrac: bFrac, mFrac: mFrac, glassesDbg: glassesDbg, mouthDbg: mouthDbg, beardDbg: beardDbg, hairDbg: hairDbg, sexGuess: sexGuess, lipstick: lipstick, length: length }
+             skinLum: skinLum, skinRgb: st.rgb, bgs: bgs, cloth: clothRgb, faceDbg: faceDbg, noseDbg: noseDbg, noseRow: (typeof yN !== 'undefined' && yN >= 0 ? [cx - 0.12 * Eref, yN, cx + 0.12 * Eref] : null), aspect: aspect, jaw: jaw, mouthW: mouthW, bFrac: bFrac, mFrac: mFrac, glassesDbg: glassesDbg, browsDbg: browsDbg, mouthDbg: mouthDbg, beardDbg: beardDbg, hairDbg: hairDbg, sexGuess: sexGuess, lipstick: lipstick, length: length }
   };
 }
 

@@ -77,6 +77,9 @@ const axHairc = AXES.find(a => a.id === 'hairc');
 ok(axHairc && axHairc.n === 12 && window._avSwatch('hairc', 11) === '#e88ac2' && window._avSwatch('hairc', 8) === '#9c7b52', '12 hair colours (light brown, light red, blue, pink added)');
 ok(window._avSvg({ sex: 0, hair: 1, hairc: 10, beard: 3 }).indexOf('#3b6fd6') !== -1 && window._avSvg({ sex: 0, hair: 1, hairc: 10, beard: 3 }).indexOf('stroke="#4a3222"') !== -1, 'blue hair keeps dark-brown brows and beard');
 ok(axOc && axOc.kind === 'color' && axOc.none && axOc.n === 9, 'outfit colour axis: colour kind, option 0 = as drawn, 8 colours');
+// 2.1.9-web.207 — seven skin tones (light → dark, no very dark one); recipes saved with the former ten-tone palette carry no `v` and are remapped
+const axSkin = AXES.find(a => a.id === 'skin');
+ok(axSkin.n === 7 && window._avSwatch('skin', 0) === '#fff0e3' && window._avSwatch('skin', 6) === '#75482a' && window._avNormalize({ skin: 9 }).skin === 6 && window._avNormalize({ skin: 6 }).skin === 0 && window._avNormalize({ skin: 6, v: 2 }).skin === 6 && window._avNormalize({ skin: 0 }).skin === 1 && window._avNormalize(null).v === 2 && window._avRandom(0).v === 2, 'skin palette: 7 tones, old recipes remapped (9 → 6, porcelain 6 → 0, very light 0 → 1), new recipes versioned');
 // the colour changes a colourable garment and leaves a fixed one alone
 const stripIds = s => s.replace(/avc\d+/g, 'avc');
 ok(stripIds(window._avSvg(window._avNormalize({ outfit: 17, outfitc: 1 }), 96)) !== stripIds(window._avSvg(window._avNormalize({ outfit: 17, outfitc: 2 }), 96)), 'outfit colour changes the plain tee');
@@ -310,6 +313,23 @@ const withBeard = window._avPhotoAnalyze(bearded, { sex: 1 });
 ok(!!withBeard && withBeard.recipe.sex === 0 && withBeard.recipe.beard >= 3, 'a beard → masculine silhouette guessed with the beard (' + (withBeard && withBeard.recipe.sex) + '/' + (withBeard && withBeard.recipe.beard) + ')');
 const noGuess = window._avPhotoAnalyze(bearded, { sex: 1, guessSex: false });
 ok(!!noGuess && !('sex' in noGuess.recipe) && noGuess.recipe.beard === 0, 'guessSex:false keeps the feminine silhouette (and no beard on it)');
+// 2.1.9-web.207 — eyebrows from the dark runs above the pupils, long beard below the oval, felt backdrop
+const paintBrows = (img, kind) => { const W = 160; const bar = (x0, y0, x1, y1, th) => { for (let x = x0; x <= x1; x++) { const yy = y0 + (y1 - y0) * (x - x0) / (x1 - x0); for (let k = 0; k < th; k++) { const i = (Math.round(yy + k) * W + x) * 4; img.data[i] = 30; img.data[i + 1] = 20; img.data[i + 2] = 15; } } };
+  if (kind === 'angry') { bar(47, 74, 77, 82, 4); bar(83, 82, 113, 74, 4); } else if (kind === 'thick') { bar(47, 76, 77, 76, 8); bar(83, 76, 113, 76, 8); } else if (kind === 'flat') { bar(47, 78, 77, 78, 4); bar(83, 78, 113, 78, 4); } return img; };
+const gPlain = window._avPhotoAnalyze(synthFace({ hair: true, thick: true }), { sex: 0, guide: GS, guessSex: false });
+ok(!!gPlain && gPlain.recipe.brows === 0 && gPlain.debug.browsDbg === 'no brows', 'guided: no brows painted → neutral brows (' + (gPlain && gPlain.debug.browsDbg) + ')');
+const gAngry = window._avPhotoAnalyze(paintBrows(synthFace({ hair: true, thick: true }), 'angry'), { sex: 0, guide: GS, guessSex: false });
+ok(!!gAngry && gAngry.recipe.brows === 1, 'guided: inner ends of the brows lower than the outer ones → angry V (' + (gAngry && gAngry.recipe.brows) + ' ' + (gAngry && gAngry.debug.browsDbg) + ')');
+const gThick = window._avPhotoAnalyze(paintBrows(synthFace({ hair: true, thick: true }), 'thick'), { sex: 0, guide: GS, guessSex: false });
+ok(!!gThick && gThick.recipe.brows === 3, 'guided: thick flat brows → low thick brows (' + (gThick && gThick.recipe.brows) + ' ' + (gThick && gThick.debug.browsDbg) + ')');
+const gFlat = window._avPhotoAnalyze(paintBrows(synthFace({ hair: true, thick: true }), 'flat'), { sex: 0, guide: GS, guessSex: false });
+ok(!!gFlat && gFlat.recipe.brows === 0, 'guided: ordinary flat brows → neutral (' + (gFlat && gFlat.recipe.brows) + ' ' + (gFlat && gFlat.debug.browsDbg) + ')');
+const longB = synthFace({ hair: true, thick: true }); (function () { let seed = 3; for (let y = 139; y <= 190; y++) for (let x = 50; x <= 110; x++) { const ex = (x - 80) / 46, ey = (y - 100) / 58; seed = (seed * 1103515245 + 12345) & 0x7fffffff; if (ex * ex + ey * ey <= 1 || (y > 158 && Math.abs(x - 80) < 26)) { const i = (y * 160 + x) * 4; const g = 30 + (seed % 22); longB.data[i] = g + 8; longB.data[i + 1] = g; longB.data[i + 2] = g - 4; } } })(); // a grainy dark mass from the lip down to 32 px below the oval, narrower than the face
+const gLong = window._avPhotoAnalyze(longB, { sex: 0, guide: GS, guessSex: false });
+ok(!!gLong && gLong.recipe.beard === 6, 'guided: the beard mass goes on below the oval, bounded on both sides → long beard (' + (gLong && gLong.recipe.beard) + ' ' + (gLong && gLong.debug.beardDbg.replace(/^.*long=/, 'long=')) + ')');
+const greenBg = synthFace({ hair: true, thick: true }); (function () { for (let i = 0; i < greenBg.data.length; i += 4) if (greenBg.data[i] === 245 && greenBg.data[i + 1] === 245 && greenBg.data[i + 2] === 245) { greenBg.data[i] = 30; greenBg.data[i + 1] = 110; greenBg.data[i + 2] = 60; } })();
+const gGreen = window._avPhotoAnalyze(greenBg, { sex: 0, guide: GS, guessSex: false });
+ok(!!gGreen && gGreen.recipe.bg === 11 && gPlain.recipe.bg === 7, 'guided: a saturated green backdrop → the green felt, white stays white (' + (gGreen && gGreen.recipe.bg) + ')');
 const blank = { width: 64, height: 64, data: new Uint8ClampedArray(64 * 64 * 4).fill(255) };
 ok(window._avPhotoAnalyze(blank, { sex: 0 }) === null, 'blank image → no face');
 window.avStudioReset();
