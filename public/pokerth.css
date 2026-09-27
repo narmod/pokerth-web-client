@@ -12146,6 +12146,16 @@ html[data-seat-struct="qml"] .seat-narrow .seat-name .seat-note-stars { font-siz
   background: transparent; border: 0; border-bottom: 2px solid transparent;
 }
 .live-lobby .llb-tab:hover { background: rgba(255, 255, 255, .06); }
+/* Players tab search — inside the sticky tab bar, pushed to the right. */
+.live-lobby .llb-search {
+  margin: 4px 6px 4px auto; flex: 0 1 200px; min-width: 0;
+  font: inherit; font-size: var(--fs-xs, .8rem);
+  padding: 4px 10px; border-radius: 6px;
+  color: var(--text-hi); background: var(--inset, rgba(0,0,0,.2));
+  border: 1px solid var(--border);
+}
+.live-lobby .llb-search[hidden] { display: none; }
+.live-lobby .llb-search:focus { outline: none; border-color: var(--gold, #c8a24a); }
 .live-lobby .llb-tab.on {
   color: var(--text-hi); border-bottom-color: var(--gold, #c8a24a);
 }

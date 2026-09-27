@@ -33,6 +33,16 @@ import { _lifeSeedFromServer } from '../game/stats.mjs';
 const T = MSG.T;
 
 function onAnnounce(sub) {
+    // An Announce opens a brand-new server session: the server is about to
+    // resend the COMPLETE PlayerList (one "new" notification per online
+    // player). Pids from the previous session never receive a "left"
+    // notification (they left while we were gone, or were our own old
+    // session), so keeping them inflated the online count after a timeout
+    // + reconnect (sp0ck, /live, 27/09/2026). A transparent proxy rebind
+    // sends no Announce and keeps the set, which is still valid there.
+    S._lobbyPids.clear();
+    S._lobbyPlayerCount = 0;
+    S._pendingNameRequests.clear();
     const pv    = Proto.sub(sub, 1); // protocolVersion (réseau, ex: 5.1)
     const gv    = Proto.sub(sub, 2); // latestGameVersion (appli, ex: 2.0)
     const stype = Proto.u32(sub, 4); // 0=LAN, 1=NoAuth, 2=Auth

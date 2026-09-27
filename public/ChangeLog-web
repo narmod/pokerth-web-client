@@ -1,4 +1,8 @@
-2026-09-27 version 2.1.9-web.215 (current series):
+2026-09-27 version 2.1.9-web.216 (current series):
+- bugfix: live spectator tool — the online player count no longer grows after a timeout and reconnect in the same window (players from the previous session were still counted)
+- new: live spectator tool — a search field on the Players tab to find a player in the list
+
+2026-09-27 version 2.1.9-web.215:
 - new: toon portraits — ten fun starter characters: the Fish, the Maniac, the Surfer, Granny, Grandpa, the Tycoon, the Clown, the Tourist, the Ninja, the King (30 in all)
 - new: toon portraits — a clown nose, a balaclava (wraps the whole head, eyes only), a hawaiian shirt and a clown suit for both silhouettes, a white rhinestone jumpsuit (59 outfits)
 

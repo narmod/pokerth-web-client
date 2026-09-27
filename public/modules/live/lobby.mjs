@@ -26,6 +26,7 @@ import { openSpectateDialog } from './spectate-dialog.mjs';
 
 const expanded = new Set();
 let activeTab = 'games';   // 'games' | 'players'
+let playerFilter = '';     // Players tab search (old spectool parity)
 
 function esc(s) {
   return String(s == null ? '' : s)
@@ -95,6 +96,7 @@ function whereIs(pid) {
 function renderPlayers() {
   const S = state();
   const players = S.players || {};
+  const needle = playerFilter.trim().toLowerCase();
   // S.players is a pid->name cache that only ever grows (see msg-lobby.mjs /
   // msg-game-join.mjs: no entry is deleted when a player disconnects from the
   // server, only when a pid is remapped). Enumerating it directly repaints
@@ -105,10 +107,16 @@ function renderPlayers() {
   const online = S._lobbyPids || null;
   const ids = Object.keys(players)
     .filter(function (pid) { return !online || online.has(parseInt(pid, 10)); })
+    .filter(function (pid) {
+      return !needle || String(players[pid]).toLowerCase().indexOf(needle) !== -1;
+    })
     .sort(function (a, b) {
       return String(players[a]).toLowerCase() < String(players[b]).toLowerCase() ? -1 : 1;
     });
-  if (!ids.length) return '<div class="llb-empty">\u2014</div>';
+  if (!ids.length) {
+    return '<div class="llb-empty">' +
+      (needle ? esc(tr('rankingNoMatch', 'No player found.')) : '\u2014') + '</div>';
+  }
 
   return '<div class="llb-players">' + ids.map(function (pid) {
     const at = whereIs(parseInt(pid, 10));
@@ -195,19 +203,36 @@ let lastSig = null;
 // only happened while scrolling AND expanding, i.e. exactly when render()
 // ran). Keeping the node stable and only touching its text/classes removes
 // the recreate entirely; only the content below it is replaced.
-let tabsEl = null, gamesTabBtn = null, playersTabBtn = null, bodyEl = null;
+let tabsEl = null, gamesTabBtn = null, playersTabBtn = null, bodyEl = null, searchEl = null;
 function ensureSkeleton(host) {
   if (tabsEl && tabsEl.isConnected) return;
   host.innerHTML =
     '<div class="llb-tabs" role="tablist">' +
       '<button type="button" class="llb-tab" role="tab" data-tab="games"></button>' +
       '<button type="button" class="llb-tab" role="tab" data-tab="players"></button>' +
+      // Lives in the sticky tab bar, outside the body that render() rewrites,
+      // so typing never loses focus on a repaint. Shown on the Players tab.
+      '<input type="search" class="llb-search" autocomplete="off" spellcheck="false">' +
     '</div>' +
     '<div class="llb-body"></div>';
   tabsEl = host.querySelector('.llb-tabs');
   gamesTabBtn = tabsEl.children[0];
   playersTabBtn = tabsEl.children[1];
   bodyEl = host.querySelector('.llb-body');
+  searchEl = tabsEl.querySelector('.llb-search');
+  searchEl.value = playerFilter;
+  searchEl.addEventListener('input', function () {
+    playerFilter = searchEl.value;
+    render();
+  });
+  searchEl.addEventListener('keydown', function (ev) {
+    if (ev.key === 'Escape' && searchEl.value) {
+      ev.preventDefault(); ev.stopPropagation();
+      searchEl.value = ''; playerFilter = ''; render();
+    }
+    // Keep lobby / table shortcuts from reacting to what is typed here.
+    ev.stopPropagation();
+  });
 }
 
 function render() {
@@ -230,7 +255,7 @@ function render() {
     const g = p[1];
     return [p[0], g.name, g.mode, g.players, g.maxPlayers, g.type, !!g.priv,
             g.timeout, g.delay, (g.watchers || []).length, (g.seats || []).join(',')];
-  }), [...expanded].sort(), activeTab, S._lobbyPids ? [...S._lobbyPids].sort(function(a,b){return a-b;}).join(',') : Object.keys(S.players || {}).join(',')]);
+  }), [...expanded].sort(), activeTab, playerFilter, S._lobbyPids ? [...S._lobbyPids].sort(function(a,b){return a-b;}).join(',') : Object.keys(S.players || {}).join(',')]);
   if (sig === lastSig) return;
   lastSig = sig;
 
@@ -244,6 +269,9 @@ function render() {
   gamesTabBtn.classList.toggle('on', activeTab === 'games');
   playersTabBtn.textContent = nPlayers + ' ' + tr('playersOnline', 'player(s)');
   playersTabBtn.classList.toggle('on', activeTab === 'players');
+  searchEl.hidden = activeTab !== 'players';
+  searchEl.placeholder = tr('rankingSearch', 'Search a player\u2026');
+  searchEl.setAttribute('aria-label', searchEl.placeholder);
 
   if (activeTab === 'players') { bodyEl.innerHTML = renderPlayers(); return; }
 
