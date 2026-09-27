@@ -29,7 +29,18 @@ const PRESETS = [
   { id: 'popstar', label: 'avmPrePopstar', recipe: { sex: 1, face: 'f-heart', skin: 'medium', hair: 'long-wavy', hairc: 'pink', ears: 'hoops', hat: 'headset-mic', outfit: 'sequin-dress', expression: 'love', bg: 'neon' } },
   { id: 'rapper', label: 'avmPreRapper', recipe: { sex: 0, face: 'm-rugged', skin: 'dark', hair: 'buzz', hairc: 'black', beard: 'goatee', glasses: 'sunglasses', mouth: 'gold-tooth', hat: 'cap-back', outfit: 'tracksuit-chain', bg: 'card-back' } },
   { id: 'boxer', label: 'avmPreBoxer', recipe: { sex: 0, face: 'm-square', skin: 'medium', hair: 'buzz', hairc: 'black', beard: 'stubble', brows: 'angry', marks: 'black-eye', mouth: 'gritted', hat: 'bandana', outfit: 'boxing-robe', bg: 'grey' } },
-  { id: 'streamer', label: 'avmPreStreamer', recipe: { sex: 1, face: 'f-oval', skin: 'light', hair: 'half-up', hairc: 'auburn', glasses: 'rect', eyes: 'side-glance', hat: 'headphones', outfit: 'sweatshirt', outfitc: 'purple', badge: 'stack', bg: 'neon' } }
+  { id: 'streamer', label: 'avmPreStreamer', recipe: { sex: 1, face: 'f-oval', skin: 'light', hair: 'half-up', hairc: 'auburn', glasses: 'rect', eyes: 'side-glance', hat: 'headphones', outfit: 'sweatshirt', outfitc: 'purple', badge: 'stack', bg: 'neon' } },
+  // 2.1.9-web.215 — lot 3: the fun ones
+  { id: 'fish', label: 'avmPreFish', recipe: { sex: 0, face: 'm-round', skin: 'light', hair: 'curtain', hairc: 'light-brown', nose: 'button', expression: 'fear', outfit: 'tee', outfitc: 'green', badge: 'chip', bg: 'sky' } },
+  { id: 'maniac', label: 'avmPreManiac', recipe: { sex: 0, face: 'm-long', skin: 'light', hair: 'bed-head', hairc: 'dark-brown', beard: 'stubble', expression: 'tilt', outfit: 'hoodie', outfitc: 'black', bg: 'neon' } },
+  { id: 'surfer', label: 'avmPreSurfer', recipe: { sex: 0, face: 'm-oval', skin: 'tan', hair: 'surfer', hairc: 'blonde', marks: 'freckles', expression: 'playful', outfit: 'hawaiian', bg: 'sky' } },
+  { id: 'granny', label: 'avmPreGranny', recipe: { sex: 1, face: 'f-round', skin: 'light', hair: 'braided-bun', hairc: 'white', glasses: 'gold-round', ears: 'pearl-studs', marks: 'age-lines', mouth: 'smile', outfit: 'cardigan', outfitc: 'purple', badge: 'aces', bg: 'cream' } },
+  { id: 'grandpa', label: 'avmPreGrandpa', recipe: { sex: 0, face: 'm-square', skin: 'medium', hair: 'senior-sweep', hairc: 'grey', beard: 'moustache', glasses: 'gold-round', marks: 'age-lines', brows: 'thick', mouth: 'pipe', outfit: 'vest-tie', bg: 'felt-green' } },
+  { id: 'tycoon', label: 'avmPreTycoon', recipe: { sex: 0, face: 'm-round', skin: 'light', hair: 'balding', hairc: 'grey', nose: 'bulb', glasses: 'monocle', brows: 'raised', eyes: 'heavy', mouth: 'cigar', outfit: 'tux', badge: 'stack', bg: 'felt-burgundy' } },
+  { id: 'clown', label: 'avmPreClown', recipe: { sex: 0, face: 'm-round', skin: 'porcelain', hair: 'curls-m', hairc: 'blue', nose: 'clown', brows: 'raised', eyes: 'wide', mouth: 'laugh', outfit: 'clown-suit', bg: 'pink' } },
+  { id: 'tourist', label: 'avmPreTourist', recipe: { sex: 0, face: 'm-round', skin: 'light', hair: 'bald', glasses: 'sunglasses', mouth: 'grin', hat: 'panama', outfit: 'hawaiian', badge: 'chip', bg: 'sky' } },
+  { id: 'ninja', label: 'avmPreNinja', recipe: { sex: 0, face: 'm-oval', skin: 'medium', hair: 'short', hairc: 'black', eyes: 'narrowed', brows: 'angry', hat: 'balaclava', outfit: 'tee', outfitc: 'black', bg: 'grey' } },
+  { id: 'king', label: 'avmPreKing', recipe: { sex: 0, face: 'm-oval', skin: 'light', hair: 'pompadour', hairc: 'black', glasses: 'sunglasses', mouth: 'smirk', brows: 'one-raised', outfit: 'vegas-jumpsuit', badge: 'dice', bg: 'neon' } }
 ];
 
 export { PRESETS };

@@ -205,7 +205,7 @@ function _render(r, ctx, opts, bare) {
   var hair = hairP.draw(ctx, r, L);
   var covers = !!hatP.covers, hatLine = hatP.line || HAT_LINE; // a hat whose brim edges sit low lowers the hair line (witch hat)
   var hatClip = hairP.short ? 'hs' : 'hl';
-  var clipHair = function (s) { return covers && s ? '<g clip-path="url(#' + cid + hatClip + ')">' + s + '</g>' : s; };
+  var clipHair = function (s) { return hatP.hideHair ? '' : covers && s ? '<g clip-path="url(#' + cid + hatClip + ')">' + s + '</g>' : s; }; // hideHair: the whole head is wrapped (balaclava)
   ctx.defs.push('<clipPath id="' + cid + '"><rect x="6" y="6" width="188" height="188"/></clipPath>'
     + '<clipPath id="' + cid + 'hl"><rect x="0" y="' + hatLine + '" width="200" height="' + (200 - hatLine) + '"/></clipPath>'
     + '<clipPath id="' + cid + 'hs"><rect x="0" y="' + hatLine + '" width="200" height="' + (HAT_SHORT_BOTTOM - hatLine) + '"/></clipPath>'

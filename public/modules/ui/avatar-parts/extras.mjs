@@ -186,6 +186,14 @@ const HATS = [
       + '<rect x="146" y="92" width="12" height="18" rx="5" fill="' + ctx.v('#2a2d33') + '"/>'
       + '<path d="M150 110 Q140 142 120 138" stroke="#2a2d33" stroke-width="2.4" fill="none" stroke-linecap="round"/><circle cx="119" cy="137" r="3.6" fill="#4a4f5a"/>';
   } },
+  // 2.1.9-web.215 — balaclava: knitted hood over the whole head (grown outline, data-fit) with an eye slit; hides nose, mouth and beard
+  { id: 'balaclava', covers: true, hideHair: true, weight: 0.3, draw: function (ctx, r, L) {
+    var c = ctx.v('#23262d'), slit = 'M69 89 Q100 85 131 89 L131 105 Q100 107 69 105z';
+    return '<g data-fit="1"><rect x="82" y="120" width="36" height="52" rx="10" fill="' + c + '"/>'
+      + '<path d="' + _headScaled(L.k || 0, 1.12, 1.05, 100, 100) + ' ' + slit + '" fill-rule="evenodd" fill="' + c + '"/>'
+      + '<path d="' + slit + '" fill="none" stroke="#3a3e47" stroke-width="2"/>'
+      + '<path d="M70 70 Q100 62 130 70 M68 122 Q100 130 132 122" stroke="#2f333b" stroke-width="1.6" fill="none" opacity=".8"/></g>';
+  } },
   { id: 'crown', weight: 0.3, draw: function (ctx) { // king of the table — sits on the hair, does not cover it
     return '<path d="M50 72 L48 36 L68 52 L84 26 L100 46 L116 26 L132 52 L152 36 L150 72z" fill="' + ctx.v('#e0b23c') + '"/>'
       + '<path d="M50 65 L150 65 L150 72 L50 72z" fill="#b8892a"/>'

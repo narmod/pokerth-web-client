@@ -15,11 +15,11 @@ one object in one file; nothing else changes.
 | `avatar-parts/faces.mjs` | the 10 face shapes (5 per silhouette: `id`, `sex`, `slot`, `key`) |
 | `avatar-parts/colors.mjs` | skin tones, hair colours, eye colours, outfit colours, backdrops (with their SVG `pattern`) |
 | `avatar-parts/hair.mjs` | 52 hairstyles |
-| `avatar-parts/outfits.mjs` | 54 garments |
+| `avatar-parts/outfits.mjs` | 59 garments |
 | `avatar-parts/face-parts.mjs` | eyes, eyebrows, noses, mouths, skin marks, beards |
 | `avatar-parts/extras.mjs` | glasses, earrings / piercings, hats, badges, the retired shoulder axis |
 | `avatar-parts/expressions.mjs` | the 15 expressions (brows + eyes + mouth presets) and their overlays (`FX`) |
-| `avatar-parts/presets.mjs` | the 20 starter characters (whole recipes shown as a gallery at the start of the Create tab) |
+| `avatar-parts/presets.mjs` | the 30 starter characters (whole recipes shown as a gallery at the start of the Create tab) |
 | `avatar-parts/legacy.mjs` | frozen v1 / v2 index tables — the migration of portraits saved before web.209. **Never edit an existing row.** |
 
 `scripts/test-avatar-studio.mjs` renders every part on both silhouettes and
@@ -35,6 +35,7 @@ not listed in `public/sw.js` → `ASSETS`.
   weight: 0.5,           // dice weight, default 1 (rare / striking options)
   covers: true,          // hats: hides the hair above the hat line (visor, bandana, hood, crown leave it)
   line: 66,              // hats: lowers that line (default 60) when the brim's ends sit low (witch hat)
+  hideHair: true,        // hats: no hair at all — the head is wrapped (balaclava)
   draw: function (ctx, r, L) { return '<path d="…" fill="' + ctx.v('#3a3a42') + '"/>'; } }
 ```
 

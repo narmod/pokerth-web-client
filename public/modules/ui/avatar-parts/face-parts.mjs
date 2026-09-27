@@ -126,7 +126,9 @@ const NOSES = [
   { id: 'long', draw: nose(function (sh) { return '<path d="M98 98 L95 116 Q100 121 105 116 L102 98z" fill="' + sh + '"/>'; }) },
   { id: 'button', draw: nose(function (sh) { return '<circle cx="100" cy="114" r="5.5" fill="' + sh + '"/><circle cx="98" cy="112" r="1.6" fill="#fff" opacity=".35"/>'; }) },
   { id: 'wide', draw: nose(function (sh, dk) { return '<path d="M89 112 Q100 104 111 112 Q113 121 100 122 Q87 121 89 112z" fill="' + sh + '"/>' + '<circle cx="93" cy="116" r="1.8" fill="' + dk + '"/><circle cx="107" cy="116" r="1.8" fill="' + dk + '"/>'; }) },
-  { id: 'aquiline', draw: nose(function (sh) { return '<path d="M99 98 Q112 110 105 119 Q100 122 95 118 Q99 110 99 98z" fill="' + sh + '"/>'; }) }
+  { id: 'aquiline', draw: nose(function (sh) { return '<path d="M99 98 Q112 110 105 119 Q100 122 95 118 Q99 110 99 98z" fill="' + sh + '"/>'; }) },
+  // 2.1.9-web.215 — the clown's red ball
+  { id: 'clown', weight: 0.12, draw: function () { return '<circle cx="100" cy="115" r="8.5" fill="#e0312c"/><circle cx="97" cy="112" r="2.8" fill="#fff" opacity=".55"/>'; } }
 ];
 
 // ── Mouths — filled Mii-like shapes (mouth dark + lower lip) ─────────────

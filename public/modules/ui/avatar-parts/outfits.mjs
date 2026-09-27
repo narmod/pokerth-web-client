@@ -486,6 +486,26 @@ const OUTFITS = [
         + '<path d="M84 158 L100 200 L116 158 Q100 166 84 158z" fill="' + sk + '"/>'
         + _lapels(ctx, _mix(c, 0.72))
         + '<path d="M34 196 L166 196" stroke="#f4f0e6" stroke-width="6"/><path d="M96 194 L104 194 L102 204 L98 204z" fill="#f4f0e6"/>';
+    }) },
+  // 2.1.9-web.215 — starter characters, lot 3 (fun): hawaiian shirt, clown suit, Vegas jumpsuit
+  { id: 'hawaiian', sex: 0, weight: 0.6,
+    draw: outfitDraw(function (ctx, sk) { return hawaiian(ctx, sk); }) },
+  { id: 'hawaiian-f', sex: 1, weight: 0.6,
+    draw: outfitDraw(function (ctx, sk) { return hawaiian(ctx, sk); }) },
+  { id: 'clown-suit', sex: 0, weight: 0.3,
+    draw: outfitDraw(function (ctx, sk) { return clownSuit(ctx, sk); }) },
+  { id: 'clown-suit-f', sex: 1, weight: 0.3,
+    draw: outfitDraw(function (ctx, sk) { return clownSuit(ctx, sk); }) },
+  { id: 'vegas-jumpsuit', sex: 0, weight: 0.3,
+    draw: outfitDraw(function (ctx, sk) { // white, deep V, huge collar edged with rhinestones, gold belt
+      var st = '';
+      [[74, 150], [78, 142], [84, 136], [126, 150], [122, 142], [116, 136], [88, 168], [112, 168], [92, 178], [108, 178], [96, 188], [104, 188]].forEach(function (q) { st += '<circle cx="' + q[0] + '" cy="' + q[1] + '" r="1.5" fill="#e0b23c"/>'; });
+      return _torso(ctx, '#f6f3ee')
+        + '<path d="M88 157 L100 190 L112 157 Q100 164 88 157z" fill="' + sk + '"/>'
+        + '<path d="M86 158 L100 190 L74 204 L34 204 L34 196z M114 158 L100 190 L126 204 L166 204 L166 196z" fill="' + ctx.v('#fbfaf7') + '"/>'
+        + '<path d="M88 157 Q76 152 70 130 L94 154z M112 157 Q124 152 130 130 L106 154z" fill="' + ctx.v('#fbfaf7') + '"/>'
+        + '<path d="M70 130 Q76 152 88 157 M130 130 Q124 152 112 157 M86 158 L100 190 L114 158" stroke="#e0b23c" stroke-width="1.4" fill="none"/>' + st
+        + '<rect x="34" y="196" width="132" height="8" fill="#e0b23c"/><rect x="90" y="193" width="20" height="12" rx="2" fill="#c9992e"/><rect x="94" y="196" width="12" height="6" rx="1" fill="#e6c76a"/>';
     }) }
 ];
 
@@ -506,6 +526,27 @@ function breton(ctx, sk, fem) { // white with navy stripes
   for (var y = 166; y <= 204; y += 9) st += '<line x1="30" y1="' + y + '" x2="170" y2="' + y + '"/>';
   return _torso(ctx, '#f4f0e6') + '<g clip-path="' + _bodyClip(ctx) + '" stroke="#1f2f4a" stroke-width="4">' + st + '</g>'
     + (fem ? '<path d="M82 157 Q100 180 118 157 Q100 163 82 157z" fill="' + sk + '"/><path d="M80 156 Q100 182 120 156" stroke="#1f2f4a" stroke-width="3.4" fill="none"/>' : _crew(ctx, sk, '#f4f0e6'));
+}
+function hibiscus(x, y, s, col) { // five round petals + a yellow heart
+  var d = '';
+  for (var i = 0; i < 5; i++) { var a = i * 1.2566 - 1.5708; d += '<circle cx="' + (x + Math.cos(a) * s).toFixed(1) + '" cy="' + (y + Math.sin(a) * s).toFixed(1) + '" r="' + (s * 0.8).toFixed(1) + '" fill="' + col + '"/>'; }
+  return d + '<circle cx="' + x + '" cy="' + y + '" r="' + (s * 0.45).toFixed(1) + '" fill="#ffd54a"/>';
+}
+function hawaiian(ctx, sk) { // teal shirt, hibiscus print, open collar
+  var c = '#2a7f9e', fl = '';
+  [[52, 180], [60, 202], [88, 172], [102, 196], [128, 178], [148, 200], [156, 178]].forEach(function (q, i) { fl += hibiscus(q[0], q[1], 4.2, i % 2 ? '#fff' : '#ff7f50'); });
+  fl += '<g fill="#1d5f4a" opacity=".85"><ellipse cx="72" cy="190" rx="6" ry="2.6" transform="rotate(-30 72 190)"/><ellipse cx="116" cy="184" rx="6" ry="2.6" transform="rotate(25 116 184)"/><ellipse cx="140" cy="194" rx="6" ry="2.6" transform="rotate(-40 140 194)"/><ellipse cx="82" cy="204" rx="6" ry="2.6" transform="rotate(20 82 204)"/></g>';
+  return _torso(ctx, c) + '<g clip-path="' + _bodyClip(ctx) + '">' + fl + '</g>' + _collarFlaps(ctx, sk, c);
+}
+function clownSuit(ctx, sk) { // yellow with big polka dots, ruffled collar, a giant red bow tie, pompom buttons
+  var c = '#f2c230', dots = '', cols = ['#2d6aa3', '#e0312c', '#2e8b57', '#8e44ad'];
+  [[50, 176], [64, 198], [80, 178], [120, 178], [136, 198], [150, 176], [100, 204], [72, 204], [128, 204]].forEach(function (q, i) { dots += '<circle cx="' + q[0] + '" cy="' + q[1] + '" r="4.2" fill="' + cols[i % 4] + '"/>'; });
+  return _torso(ctx, c) + '<g clip-path="' + _bodyClip(ctx) + '">' + dots + '</g>'
+    + '<path d="M78 156 Q100 176 122 156" stroke="#fff" stroke-width="7" fill="none" stroke-linecap="round"/>'
+    + '<path d="M100 172 l-26 -13 0 26z M100 172 l26 -13 0 26z" fill="#e0312c"/>'
+    + '<g fill="#fff" opacity=".85"><circle cx="82" cy="166" r="1.8"/><circle cx="88" cy="178" r="1.8"/><circle cx="118" cy="166" r="1.8"/><circle cx="112" cy="178" r="1.8"/></g>'
+    + '<circle cx="100" cy="172" r="5.5" fill="#b8241f"/>'
+    + '<circle cx="100" cy="190" r="4" fill="#2d6aa3"/><circle cx="100" cy="201" r="4" fill="#2e8b57"/>';
 }
 function chefJacket(ctx, sk) { // white, stand collar, two rows of buttons
   return _torso(ctx, '#f6f2ea')

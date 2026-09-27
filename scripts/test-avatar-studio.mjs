@@ -69,8 +69,8 @@ for (const a of AXES) {
   if (a.kind === 'color' && a.opts.some(p => !Array.isArray(p.colors))) { catOk = false; catMsg += a.id + ':colors '; }
 }
 ok(catOk, 'catalogue: unique stable ids, existing defaults, drawable parts, colour swatches' + (catOk ? '' : ' (' + catMsg + ')'));
-ok(n('hair') === 52 && n('outfit') === 54 && n('hat') === 21 && n('bg') === 15 && n('skin') === 7 && n('hairc') === 12 && n('eyec') === 6 && n('outfitc') === 9 && n('marks') === 11 && n('beard') === 7 && n('nose') === 5 && n('glasses') === 9 && n('ears') === 8 && n('badge') === 6 && n('shoulder') === 1,
-  'catalogue counts: 52 hairstyles, 54 outfits, 21 hats, 15 backdrops, 7 skins, 12 hair colours, 6 eye colours, 9 outfit colours, 11 marks, 7 beards, 5 noses, 9 glasses, 8 piercings, 6 badges, shoulder retired');
+ok(n('hair') === 52 && n('outfit') === 59 && n('hat') === 22 && n('bg') === 15 && n('skin') === 7 && n('hairc') === 12 && n('eyec') === 6 && n('outfitc') === 9 && n('marks') === 11 && n('beard') === 7 && n('nose') === 6 && n('glasses') === 9 && n('ears') === 8 && n('badge') === 6 && n('shoulder') === 1,
+  'catalogue counts: 52 hairstyles, 59 outfits, 22 hats, 15 backdrops, 7 skins, 12 hair colours, 6 eye colours, 9 outfit colours, 11 marks, 7 beards, 6 noses, 9 glasses, 8 piercings, 6 badges, shoulder retired');
 ok(n('eyes') === 14 && n('brows') === 8 && n('mouth') === 17 && n('expression') === 15, 'expressions: 14 eyes (+ shut, hearts, stars, x), 8 brows (+ raised, sad, worried), 16 mouths (+ wavy), 15 expressions (+ proud, bored, playful)');
 const axBadge = ax('badge'), axBrows = ax('brows'), axOc = ax('outfitc');
 ok(axBadge.none && AXES[AXES.length - 1] === axBadge && AXES.indexOf(axBrows) === AXES.findIndex(a => a.id === 'eyec') + 1 && AXES.indexOf(ax('expression')) === AXES.findIndex(a => a.id === 'mouth') + 1, 'axis order: brows after the eye colour, expression after the mouth, badge last');
@@ -126,13 +126,19 @@ ok(sanit.mouth === 'grin' && sanit.hair === 'ponytail-high' && sanit.face === 'f
 
 // 1e. Starter characters (2.1.9-web.210): ten coherent recipes; unlock plumbing for the future rewards system
 const PRE = window._AV_PRESETS;
-ok(Array.isArray(PRE) && PRE.length === 20 && new Set(PRE.map(p => p.id)).size === 20 && PRE.every(p => p.label && p.recipe), '20 starter characters with unique ids, labels and recipes');
+ok(Array.isArray(PRE) && PRE.length === 30 && new Set(PRE.map(p => p.id)).size === 30 && PRE.every(p => p.label && p.recipe), '30 starter characters with unique ids, labels and recipes');
 // 2.1.9-web.211 — lot 2 parts: headphones and the headset mic leave the hair, the witch hat / toque / sailor cap cover it; pipe; wart; new garments in pairs
 ok(!ax('hat').byId.headphones.covers && !ax('hat').byId['headset-mic'].covers && ax('hat').byId['witch-hat'].covers && ax('hat').byId['chef-toque'].covers && ax('hat').byId['sailor-cap'].covers && !vis('hat', 'headphones', { hair: 'afro' }) && svg({ hat: 'headphones', hair: 'short' }).indexOf('<rect x="36" y="84"') !== -1, 'lot 2 hats: covering flags, headphones offered only where a hat fits, ear cups drawn');
 // 2.1.9-web.214 — the witch hat's crown wraps the skull and lowers the hair line to its brim; the fedora / panama / stetson crowns start 3 px wider (no skull sliver on the square face)
 ok(ax('hat').byId['witch-hat'].line === 66 && !!svg({ hat: 'witch-hat', hair: 'long-middle' }).match(/clip-path="url\(#[a-z0-9]+hl\)"/) && svg({ hat: 'witch-hat' }).indexOf('<rect x="0" y="66" width="200" height="134"/>') !== -1 && svg({ hat: 'cap', hair: 'long-middle' }).indexOf('<rect x="0" y="60" width="200" height="140"/>') !== -1
   && svg({ hat: 'witch-hat' }).indexOf('M46 72 C50 50 66 34 86 22') !== -1 && svg({ hat: 'fedora' }).indexOf('M51 67 Q49 22 76 17') !== -1 && svg({ hat: 'stetson' }).indexOf('M50 66 Q48 30 72 22') !== -1,
   'witch hat: hair line lowered to 66 (others keep 60), crown wrapping the skull; fedora and stetson crowns widened');
+// 2.1.9-web.215 — lot 3 (fun): clown nose, balaclava built on the outline (eye slit, hides the mouth), hawaiian / clown suit pairs, Vegas jumpsuit
+ok(ax('nose').byId.clown && svg({ nose: 'clown' }).indexOf('<circle cx="100" cy="115" r="8.5" fill="#e0312c"/>') !== -1
+  && ax('hat').byId.balaclava.covers && svg({ face: 'm-round', hat: 'balaclava' }).indexOf('data-fit="1"><rect x="82" y="120"') !== -1 && svg({ hat: 'balaclava' }).indexOf('fill-rule="evenodd"') !== -1 && !/scale\(1\.1132[\d]*,1\)/.test(svg({ face: 'm-round', hat: 'balaclava' }))
+  && ax('outfit').byId.hawaiian.sex === 0 && ax('outfit').byId['hawaiian-f'].sex === 1 && ax('outfit').byId['clown-suit'].sex === 0 && ax('outfit').byId['clown-suit-f'].sex === 1 && ax('outfit').byId['vegas-jumpsuit'].sex === 0
+  && svg({ outfit: 'hawaiian' }).indexOf('fill="#ffd54a"') !== -1 && svg({ outfit: 'clown-suit' }).indexOf('M100 172 l-26 -13 0 26z') !== -1 && svg({ outfit: 'vegas-jumpsuit' }).indexOf('<rect x="34" y="196" width="132" height="8" fill="#e0b23c"/>') !== -1,
+  'lot 3 parts: clown nose, balaclava on the outline (unscaled), garment pairs, rhinestone jumpsuit');
 ok(svg({ mouth: 'pipe' }).indexOf('M121 137 Q135 134 134 148') !== -1 && svg({ marks: 'wart' }).indexOf('<circle cx="117" cy="141" r="2.7"') !== -1 && svg({ outfit: 'breton' }).indexOf('<line x1="30" y1="166"') !== -1 && svg({ outfit: 'tracksuit-chain' }).indexOf('M84 160 Q100 192 116 160') !== -1 && svg({ sex: 1, outfit: 'sequin-dress' }).split('<circle').length > 12, 'pipe, wart, breton stripes, gold chain, sequins are drawn');
 let preOk = true, preMsg = '';
 for (const p of PRE) {
@@ -208,7 +214,7 @@ for (const axId of ['hair', 'outfit']) for (const p of ax(axId).opts) {
   if (m) nM[axId]++; if (f) nF[axId]++;
 }
 ok(oneSided, 'every hairstyle and outfit is visible for exactly one silhouette');
-ok(nM.hair === 24 && nF.hair === 28 && nM.outfit === 28 && nF.outfit === 26, 'catalogue split: 24 / 28 hairstyles, 28 / 26 outfits (' + nM.hair + '/' + nF.hair + ', ' + nM.outfit + '/' + nF.outfit + ')');
+ok(nM.hair === 24 && nF.hair === 28 && nM.outfit === 31 && nF.outfit === 28, 'catalogue split: 24 / 28 hairstyles, 31 / 28 outfits (' + nM.hair + '/' + nF.hair + ', ' + nM.outfit + '/' + nF.outfit + ')');
 ok(vis('outfit', 'sweater-collar', { sex: 1 }) && !vis('outfit', 'sweater-collar', { sex: 0 }) && vis('outfit', 'turtleneck', { sex: 1 }) && vis('outfit', 'blazer-scarf', { sex: 1 }) && vis('outfit', 'blouse-v', { sex: 1 }) && !vis('outfit', 'blouse-v', { sex: 0 }), 'collared sweater, turtleneck, blazer + scarf and V-neck blouse are feminine');
 ok(!vis('glasses', 'cat-eye', { sex: 0 }) && !vis('ears', 'pearl-studs', { sex: 0 }) && !vis('hat', 'bowler', { sex: 1 }) && vis('hat', 'cap', { sex: 1 }) && !vis('hat', 'top-hat', { sex: 1 }) && vis('hat', 'hood', { sex: 1 }) && vis('hat', 'stetson', { sex: 1 }), 'cat-eye glasses and pearls hidden for men, bowler and top hat hidden for women, cap / hood / stetson shared');
 ok(!vis('beard', 'goatee', { sex: 1 }) && vis('beard', 'goatee', { sex: 0 }) && vis('beard', 'none', { sex: 1 }), 'beard filtered on feminine silhouette (none stays valid)');
@@ -247,7 +253,7 @@ window.avStudioTab('create');
 ok(document.getElementById('avp-pane-create').style.display === '', 'create pane visible');
 ok(!!document.getElementById('avm-step-label') && document.getElementById('avm-step-label').textContent.indexOf('1/6') !== -1, 'step header shows category 1/6 (starter characters first)');
 const preCards = document.querySelectorAll('#avm-rows .avm-preset');
-ok(preCards.length === 20 && preCards[0].querySelector('svg') && preCards[0].querySelector('.avm-preset-name').textContent === 'avmPreGodfather' && preCards[19].querySelector('.avm-preset-name').textContent === 'avmPreStreamer', 'the first step shows the 20 starter characters as portrait cards with their names');
+ok(preCards.length === 30 && preCards[0].querySelector('svg') && preCards[0].querySelector('.avm-preset-name').textContent === 'avmPreGodfather' && preCards[19].querySelector('.avm-preset-name').textContent === 'avmPreStreamer' && preCards[29].querySelector('.avm-preset-name').textContent === 'avmPreKing', 'the first step shows the 30 starter characters as portrait cards with their names');
 preCards[2].click(); // the Diva
 const afterPreset = JSON.parse(localStorage.getItem('pth_avatar_vec'));
 ok(afterPreset.sex === 1 && afterPreset.hair === 'hollywood' && afterPreset.glasses === 'cat-eye' && afterPreset.v === 3, 'tapping a character loads its whole recipe (the Diva: feminine, hollywood waves, cat-eye glasses)');
@@ -430,6 +436,7 @@ const KEYS = ['avmSex','avmFace','avmHat','avmGrpBody','avmGrpFace','avmGrpHair'
   'avTabGallery','avTabCreate','avTabImport','avmRandom','avmReset','avmUse','avmGlasses','avmBrows','avmBadge','avmExpression','avmOutfitColor',
   'avmGrpPresets','avmLocked','avmPreGodfather','avmPreCowboy','avmPreDiva','avmPreShark','avmPreDealer','avmPrePirate','avmPreRocker','avmPreGeek','avmPreQueen','avmPrePro',
   'avmPreDetective','avmPreMagician','avmPreVampire','avmPreWitch','avmPreChef','avmPreSailor','avmPrePopstar','avmPreRapper','avmPreBoxer','avmPreStreamer',
+  'avmPreFish','avmPreManiac','avmPreSurfer','avmPreGranny','avmPreGrandpa','avmPreTycoon','avmPreClown','avmPreTourist','avmPreNinja','avmPreKing',
   'avImportDrop','avImportOr','avImportBtn','avImportHint','advAvatarCreate'];
 // every axis label must be in the list (a new axis without a label would show its key)
 ok(AXES.every(a => KEYS.indexOf(a.label) !== -1) && PRE.every(p => KEYS.indexOf(p.label) !== -1), 'every axis and character label key is covered by the i18n check');
