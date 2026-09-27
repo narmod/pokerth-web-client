@@ -231,7 +231,9 @@ function _avmFromPhoto(file) {
 function _avmFromCapture(canvas, guide, sex) {
   var res = null;
   var sexSel = (sex === 0 || sex === 1) ? sex : _avmState.sex;
-  try { res = avPhotoRecipe(canvas, canvas.width, canvas.height, { sex: sexSel, guide: guide, guessSex: false }); } catch (e) { res = null; }
+  try { res = avPhotoRecipe(canvas, canvas.width, canvas.height, { sex: sexSel, guide: guide, guessSex: false }); }
+  catch (e) { res = null; try { console.error('[avatar-photo] analysis failed', e); } catch (e2) {} }
+  try { window._avPhotoLast = { recipe: res && res.recipe, debug: res && res.debug, sex: sexSel, at: Date.now() }; } catch (e) {} // (beta: inspectable from the console)
   if (!res || !res.recipe) { _avmWarn('avmPhotoNoFace', 'No face found.'); return; }
   var next = Object.assign({}, _avmState, res.recipe, { sex: sexSel });
   _avmState = avNormalize(next);

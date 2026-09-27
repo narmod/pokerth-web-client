@@ -1,4 +1,8 @@
-2026-09-27 version 2.1.9-web.199 (current series):
+2026-09-27 version 2.1.9-web.200 (current series):
+- bugfix: « From a photo » — grey or short stubble is recognised again (the chin is judged on its dark colourless grain, not only on being darker than the cheeks), and a beard must start right under the lip (a shaded neck or a collar under a chin framed a little high is not one)
+- improvement: « From a photo » — the skin of THIS photo is learnt from the middle of the oval (a flushed face, a colour cast or a very dark skin no longer fall out of the fixed rule); a pale wall can no longer become a cap or white hair; a mid-grey wall above a head framed low no longer becomes grey hair; with an imported photo the backdrop is read inside the photo, not in the blank margin around it
+
+2026-09-27 version 2.1.9-web.199:
 - bugfix: « From a photo » — a man in a dark top came out with long straight hair (the dark garment under the chin passed for hair over the shoulders since web.192); a man's hair is long only when it also covers the sides of the face at ear level
 
 2026-09-27 version 2.1.9-web.198:

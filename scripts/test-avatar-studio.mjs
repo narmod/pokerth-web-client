@@ -265,6 +265,10 @@ const gFringe = window._avPhotoAnalyze(synthFace({ hair: true, sides: true, thic
 ok(!!gFringe && gFringe.recipe.hair === 31, 'guided: hair over the forehead and down the sides → curtain fringe, mid length (' + (gFringe && gFringe.recipe.hair) + ')');
 const gFringeF = window._avPhotoAnalyze(synthFace({ hair: true, sides: true, thick: true }), { sex: 1, guide: GS, guessSex: false });
 ok(!!gFringeF && gFringeF.recipe.hair === 34, 'guided, feminine: the same photo → straight fringe (' + (gFringeF && gFringeF.recipe.hair) + ')');
+// grey stubble: the chin is not darker as a whole, but a third of it is dark colourless grain
+const stubbly = synthFace({ hair: true, thick: true }); (function () { let seed = 7; for (let y = 139; y <= 156; y++) for (let x = 44; x <= 116; x++) { const ex = (x - 80) / 46, ey = (y - 100) / 58; seed = (seed * 1103515245 + 12345) & 0x7fffffff; if (ex * ex + ey * ey <= 1 && (seed % 100) < 32) { const i = (y * 160 + x) * 4; stubbly.data[i] = 42; stubbly.data[i + 1] = 42; stubbly.data[i + 2] = 42; } } })();
+const gStubble = window._avPhotoAnalyze(stubbly, { sex: 0, guide: GS, guessSex: false });
+ok(!!gStubble && gStubble.recipe.beard === 5, 'guided: grey stubble grain under the lip → stubble (' + (gStubble && gStubble.recipe.beard) + ')');
 const gCut = window._avPhotoAnalyze(synthFace({ hair: false }), { sex: 0, guide: Object.assign({ valid: [0, 0.3, 1, 1] }, GS) });
 ok(!!gCut && gCut.recipe.hair !== 0, 'guided: photo cut above the hairline → the default hair stays, never bald (' + (gCut && gCut.recipe.hair) + ')');
 // silhouette guess: the plain synthetic face has no cue → no `sex` in the recipe;
@@ -272,7 +276,7 @@ ok(!!gCut && gCut.recipe.hair !== 0, 'guided: photo cut above the hairline → t
 const noCue = window._avPhotoAnalyze(synthFace({ hair: true }), { sex: 1 });
 ok(!!noCue && !('sex' in noCue.recipe) && noCue.recipe.beard === 0, 'no clear cue → the chosen silhouette stands (no sex in the recipe)');
 const bearded = synthFace({ hair: true });
-for (let y = 142; y <= 162; y++) for (let x = 44; x <= 116; x++) { const ex = (x - 80) / 46, ey = (y - 100) / 58; if (ex * ex + ey * ey <= 1) { const i = (y * 160 + x) * 4; bearded.data[i] = 40; bearded.data[i + 1] = 35; bearded.data[i + 2] = 32; } }
+for (let y = 139; y <= 162; y++) for (let x = 44; x <= 116; x++) { const ex = (x - 80) / 46, ey = (y - 100) / 58; if (ex * ex + ey * ey <= 1) { const i = (y * 160 + x) * 4; bearded.data[i] = 40; bearded.data[i + 1] = 35; bearded.data[i + 2] = 32; } } // (a beard starts right under the lip)
 const withBeard = window._avPhotoAnalyze(bearded, { sex: 1 });
 ok(!!withBeard && withBeard.recipe.sex === 0 && withBeard.recipe.beard >= 3, 'a beard → masculine silhouette guessed with the beard (' + (withBeard && withBeard.recipe.sex) + '/' + (withBeard && withBeard.recipe.beard) + ')');
 const noGuess = window._avPhotoAnalyze(bearded, { sex: 1, guessSex: false });

@@ -131,7 +131,12 @@ function avPhotoAnalyze(img, opts) {
 
   // background colours: the four corners
   var cs = Math.max(4, Math.round(Math.min(W, H) * 0.08)), bgs = [];
-  [[0, 0], [W - cs, 0], [0, H - cs], [W - cs, H - cs]].forEach(function (c) {
+  // (a panned photo leaves a plain fill around it: the corners are taken
+  // inside the part of the frame the photo covers — guide.valid)
+  var vX0 = 0, vY0 = 0, vX1 = W, vY1 = H;
+  if (opts.guide && opts.guide.valid) { vX0 = Math.max(0, Math.round(opts.guide.valid[0] * W)); vY0 = Math.max(0, Math.round(opts.guide.valid[1] * H)); vX1 = Math.min(W, Math.round(opts.guide.valid[2] * W)); vY1 = Math.min(H, Math.round(opts.guide.valid[3] * H)); }
+  if (vX1 - vX0 < 2 * cs || vY1 - vY0 < 2 * cs) { vX0 = 0; vY0 = 0; vX1 = W; vY1 = H; }
+  [[vX0, vY0], [vX1 - cs, vY0], [vX0, vY1 - cs], [vX1 - cs, vY1 - cs]].forEach(function (c) {
     var px = [];
     for (y = c[1]; y < c[1] + cs; y++) for (x = c[0]; x < c[0] + cs; x++) { i = at(x, y); px.push(D[i * 4], D[i * 4 + 1], D[i * 4 + 2]); }
     bgs.push(medianRgb(px));
@@ -141,6 +146,22 @@ function avPhotoAnalyze(img, opts) {
     for (var k = 0; k < (topOnly ? 2 : bgLabs.length); k++) if (dLab(idx, bgLabs[k]) < (tol || 22)) return true;
     return false;
   };
+  // Guided: the middle of the oval (nose and cheeks, between the eye line
+  // and the mouth) IS skin by construction — its median colour extends the
+  // fixed YCbCr rule to this photo's own skin under this photo's own light
+  // (a colour cast, a flushed or a very dark face fall outside the fixed
+  // bounds). Union with the rule: it only adds pixels.
+  var skinSeed = null;
+  if (guide) {
+    var gcx0 = guide.cx * W, gcy0 = guide.cy * H, grx0 = guide.rx * W, gry0 = guide.ry * H, seedPx0 = [];
+    for (y = Math.round(gcy0 - 0.1 * gry0); y <= gcy0 + 0.3 * gry0; y += 2) for (x = Math.round(gcx0 - 0.3 * grx0); x <= gcx0 + 0.3 * grx0; x += 2) {
+      if (x < 0 || y < 0 || x >= W || y >= H) continue; i = at(x, y); seedPx0.push(D[i * 4], D[i * 4 + 1], D[i * 4 + 2]);
+    }
+    if (seedPx0.length >= 60) {
+      var sm = medianRgb(seedPx0); skinSeed = rgb2lab(sm[0], sm[1], sm[2]);
+      for (i = 0; i < N; i++) if (!skin[i] && lum[i] > 25 && dLab(i, skinSeed) < 16) skin[i] = 1;
+    }
+  }
   // a skin-coloured wall must not become the face
   for (i = 0; i < N; i++) if (skin[i] && isBg(i, 16)) skin[i] = 0;
 
@@ -600,8 +621,8 @@ function avPhotoAnalyze(img, opts) {
     // hair (a wall is smooth) — otherwise what is above the head is the wall.
     var hairBg = [];
     for (var kc = 0; kc < 2; kc++) {
-      var cxs = kc === 0 ? 0 : W - cs, cStd = 0, cN = 0;
-      for (y = 0; y < cs; y += 3) for (x = cxs; x < cxs + cs; x += 3) { cStd += localStd(x, y, 2); cN++; }
+      var cxs = kc === 0 ? vX0 : vX1 - cs, cStd = 0, cN = 0;
+      for (y = vY0; y < vY0 + cs; y += 3) for (x = cxs; x < cxs + cs; x += 3) { cStd += localStd(x, y, 2); cN++; }
       cStd = cN ? cStd / cN : 0;
       if (nBand && bandCorner[kc] / nBand >= 0.7 && bandStd > Math.max(6, 2.5 * cStd)) continue;
       hairBg.push({ lab: bgLabs[kc], std: cStd, ambiguous: false });
@@ -646,7 +667,10 @@ function avPhotoAnalyze(img, opts) {
           // shine on the forehead (frame a little low) must not seed white hair
           if (dLab(i, faceLab) > 24) (lab[i * 3] > faceLab[0] + 6 ? farHi : far).push(D[i * 4], D[i * 4 + 1], D[i * 4 + 2]);
         }
-        if (farHi.length > far.length) far = farHi;
+        // hair is darker than the face far more often than brighter: the
+        // brighter group (white hair — or a lit wall above a low-framed head)
+        // only wins when it clearly dominates
+        if (farHi.length > 2 * far.length) far = farHi;
       };
       scan();
       if (!crownKnown) return; // head cut by the photo edge: nothing to say
@@ -656,7 +680,7 @@ function avPhotoAnalyze(img, opts) {
       // band as hair; its length stays unknown (the sides keep the backdrop
       // out). A light wall above the head says nothing (frame a little low,
       // or a bald crown): the default hair stays.
-      if (nAll < 0.25 * nBand && bandSkin < 0.4 && bandLab[0] < 45) { bandRescue = true; scan(); }
+      if (nAll < 0.25 * nBand && bandSkin < 0.4 && bandLab[0] < 36) { bandRescue = true; scan(); }
       hairDbg2 = 'band=' + nBand + '/' + nAll + ' far=' + (nAll ? (far.length / 3 / nAll).toFixed(2) : '-') + ' bandStd=' + bandStd.toFixed(1) + ' hairBg=' + hairBg.length + ' bandSkin=' + bandSkin.toFixed(2) + (bandRescue ? ' RESCUE' : '');
       if (nAll < 0.25 * nBand) return; // the scalp keeps going up: no hair
       if (far.length / 3 >= 0.12 * nAll) hairC = rgb2lab.apply(null, medianRgb(far));
@@ -746,7 +770,7 @@ function avPhotoAnalyze(img, opts) {
   // (masculine only: hair over the shoulders is the feminine norm; the
   // crown colour is compared, the shoulder pixels being the garment in doubt)
   var crownRef = crownRgb || hairRgb;
-  if (sex === 0 && crownRef && clothRgb && labDist(rgb2lab(crownRef[0], crownRef[1], crownRef[2]), rgb2lab(clothRgb[0], clothRgb[1], clothRgb[2])) < 16) lowFrac = 0;
+  if (sex === 0 && crownRef && clothRgb && labDist(rgb2lab(crownRef[0], crownRef[1], crownRef[2]), rgb2lab(clothRgb[0], clothRgb[1], clothRgb[2])) < 30) lowFrac = 0;
   var hairc = { index: 1, dist: 0 };
   if (hairRgb) {
     var hlab = rgb2lab(hairRgb[0], hairRgb[1], hairRgb[2]);
@@ -767,7 +791,8 @@ function avPhotoAnalyze(img, opts) {
   // stops just above it, so the guided path never claims it)
   var volume = !guide && !bald && capFrac > 0.6 && sideFrac > 0.5 && hairTop < seedTop - 0.9 * Eref && lowFrac < 0.2;
   // a saturated non-hair colour on top of the head is most likely a cap
-  if (!bald && hairHsl[1] > 0.45 && hairHsl[2] > 0.2 && (hairHsl[0] < 8 || hairHsl[0] > 50)) { hat = 1; length = 'short'; volume = false; }
+  var hairChroma = hairRgb ? (function (l3) { return Math.hypot(l3[1], l3[2]); })(rgb2lab(hairRgb[0], hairRgb[1], hairRgb[2])) : 0;
+  if (!bald && hairChroma >= 32 && hairHsl[2] > 0.2 && (hairHsl[0] < 8 || hairHsl[0] > 50)) { hat = 1; length = 'short'; volume = false; } // (Lab chroma: HSL saturation is inflated on pale colours)
   // (the hairstyle itself is chosen at the end, once the silhouette is known)
 
   // 6. glasses: dark frame pixels in the eye band and a dark nose bridge
@@ -936,19 +961,31 @@ function avPhotoAnalyze(img, opts) {
   var beard = 0, bFrac = 0, mFrac = 0, beardDbg = '';
   {
     var zoneStats = function (x0, x1, y0, y1, collect) {
-      var ls = [], sk = 0, n = 0;
+      var ls = [], sk = 0, n = 0, sds = [], dn = 0;
       for (var yy = Math.max(0, Math.round(y0)); yy <= Math.min(H - 1, y1); yy++) for (var xx = Math.max(0, Math.round(x0)); xx <= Math.min(W - 1, x1); xx++) {
         var idx = at(xx, yy); if (lipMask[idx] || isBg(idx, 18, true)) continue; // (not the lips, not the backdrop beside a narrow chin)
         ls.push(lum[idx]); n++; if (skin[idx]) sk++;
-        if (collect && lum[idx] < skinLum * 0.68) collect.push(D[idx * 4], D[idx * 4 + 1], D[idx * 4 + 2]);
+        if ((xx % 3) === 0 && (yy % 3) === 0) sds.push(localStd(xx, yy, 2)); // texture: stubble is grainy, skin is smooth
+        if (lum[idx] < skinLum * 0.68) {
+          if (collect) collect.push(D[idx * 4], D[idx * 4 + 1], D[idx * 4 + 2]);
+          // dark AND colourless: a hair (grey stubble, dark beard) — a shaded
+          // patch of skin keeps the skin's chroma
+          if (Math.hypot(lab[idx * 3 + 1], lab[idx * 3 + 2]) <= 12 && lab[idx * 3 + 2] >= -4) dn++;
+        }
       }
-      return { med: median(ls), skin: n ? sk / n : 0, n: n };
+      return { med: median(ls), skin: n ? sk / n : 0, n: n, std: median(sds), darkN: n ? dn / n : 0 };
     };
     var bz0 = Math.round(top + 0.8 * fh), bz1 = Math.min(H - 1, Math.round(bottom + 0.15 * fh));
     if (eyesOk) { bz0 = Math.round(eyeMidY + 1.1 * E); bz1 = Math.min(H - 1, Math.round(eyeMidY + 1.85 * E)); }
-    if (guide) bz1 = Math.min(bz1, Math.round(gcy + gry)); // never below the chin the player aligned
+    if (guide) { // the player aligned the chin on the oval bottom: 74–92 % of the way from the eyes to it (a chin a little above it must not reach the collar)
+      var eyeToChin = gcy + gry - eyeMidY;
+      bz0 = Math.round(eyeMidY + 0.74 * eyeToChin); bz1 = Math.min(H - 1, Math.round(eyeMidY + 0.92 * eyeToChin));
+    }
     var bpx = [];
     var chinS = zoneStats(left + 0.12 * fw, right - 0.12 * fw, bz0, bz1, bpx);
+    // the upper half of the zone, right under the lip: a beard starts there,
+    // a shaded neck or a collar (chin a little above the oval bottom) does not
+    var chinU = zoneStats(left + 0.12 * fw, right - 0.12 * fw, bz0, (bz0 + bz1) / 2);
     // cheeks: between the eyes and the mouth, both sides — beard-free even
     // on most bearded faces
     var cy0 = eyesOk ? eyeMidY + 0.45 * E : top + 0.5 * fh, cy1 = eyesOk ? eyeMidY + 0.95 * E : top + 0.72 * fh;
@@ -960,7 +997,8 @@ function avPhotoAnalyze(img, opts) {
     var mS = zoneStats(cx - 0.4 * Eref, cx + 0.4 * Eref, mz0, mz1);
     var mR = mS.med / cheekMed;
     bFrac = Math.max(0, 1 - medR); mFrac = Math.max(0, 1 - mR);
-    beardDbg = 'medR=' + medR.toFixed(2) + ' mR=' + mR.toFixed(2) + ' skinChin=' + chinS.skin.toFixed(2) + ' skinCheek=' + ((ckL.skin + ckR.skin) / 2).toFixed(2) + ' chin=' + chinS.med.toFixed(0) + '/' + chinS.n + ' cheek=' + cheekMed.toFixed(0) + ' bz=' + bz0 + '-' + bz1;
+    var texR = (ckL.std + ckR.std) / 2 > 0 ? chinS.std / ((ckL.std + ckR.std) / 2) : 0;
+    beardDbg = 'medR=' + medR.toFixed(2) + ' mR=' + mR.toFixed(2) + ' std=' + chinS.std.toFixed(1) + '/' + ((ckL.std + ckR.std) / 2).toFixed(1) + ' texR=' + texR.toFixed(2) + ' mStd=' + mS.std.toFixed(1) + ' skinChin=' + chinS.skin.toFixed(2) + ' skinCheek=' + ((ckL.skin + ckR.skin) / 2).toFixed(2) + ' chin=' + chinS.med.toFixed(0) + '/' + chinS.n + ' cheek=' + cheekMed.toFixed(0) + ' bz=' + bz0 + '-' + bz1;
     // the dark mass must look like hair, not like the collar of a dark
     // garment (free photos only: the guided chin zone never reaches it)
     var beardRgb = bpx.length >= 30 ? medianRgb(bpx) : null, isCollar = false;
@@ -975,10 +1013,16 @@ function avPhotoAnalyze(img, opts) {
     // chroma (≈ 15–20) and only counts with a strong contrast (stubble on
     // skin does too: the contrast then is what shows it).
     var bChroma = 0, bBlue = false;
-    if (beardRgb) { var bl_ = rgb2lab.apply(null, beardRgb); bChroma = Math.hypot(bl_[1], bl_[2]); bBlue = bl_[2] < -4; beardDbg += ' dark=' + beardRgb + ' L' + bl_[0].toFixed(0) + ' a' + bl_[1].toFixed(0) + ' b' + bl_[2].toFixed(0) + ' C' + bChroma.toFixed(0) + ' n=' + (bpx.length / 3); }
+    if (beardRgb) { var bl_ = rgb2lab.apply(null, beardRgb); bChroma = Math.hypot(bl_[1], bl_[2]); bBlue = bl_[2] < -4; beardDbg += ' dark=' + beardRgb + ' L' + bl_[0].toFixed(0) + ' a' + bl_[1].toFixed(0) + ' b' + bl_[2].toFixed(0) + ' C' + bChroma.toFixed(0) + ' n=' + (bpx.length / 3) + ' dF=' + (chinS.n ? (bpx.length / 3 / chinS.n).toFixed(2) : '-'); }
     var hairLike = beardRgb && !bBlue && bChroma <= 30;
-    var bearded = !isCollar && hairLike && (medR < 0.65 || (medR < 0.8 && bChroma <= 12) || (medR < 0.8 && chinS.skin < 0.85 && bChroma <= 14));
+    var upR = chinU.med / cheekMed;
+    var bearded = !isCollar && hairLike && upR < 0.88 && (medR < 0.65 || (medR < 0.8 && bChroma <= 12) || (medR < 0.8 && chinS.skin < 0.85 && bChroma <= 14));
+    // stubble (grey or short): the chin is not darker as a whole, but a
+    // fifth of it is dark colourless grain — a smooth chin has almost none
+    var stubble = !bearded && !isCollar && chinS.darkN >= 0.22 && chinU.darkN >= 0.15 && chinS.std >= 5 && (!beardRgb || !bBlue);
+    beardDbg += ' darkN=' + chinS.darkN.toFixed(2) + '/' + chinU.darkN.toFixed(2) + ' upR=' + upR.toFixed(2) + (stubble ? ' STUBBLE' : '');
     if (bearded) beard = (medR < 0.62 && mR < 0.85) ? 4 : 3;
+    else if (stubble) beard = 5;
     else if (mR < 0.72) beard = 1;
   }
 
