@@ -28,6 +28,7 @@
 // draws any CanvasImageSource on a small canvas first.
 
 'use strict';
+import { V2, V2_FACE } from './avatar-parts/legacy.mjs'; // the analysis reasons on the frozen v2 option order and emits part ids
 
 // (400: the framing panel's own frame size — texture tells hair strands
 // from a wall, which a 220 px downscale blurred away; ~0.1 s on a phone)
@@ -1144,13 +1145,14 @@ function avPhotoAnalyze(img, opts) {
   // a saturated green or deep red backdrop → the green / burgundy felt (2.1.9-web.207)
   if (bhs[2] >= 0.12 && bhs[2] <= 0.55) { if (bhs[1] >= 0.3 && bhs[0] >= 80 && bhs[0] <= 170) bg = 11; else if (bhs[1] >= 0.45 && (bhs[0] <= 12 || bhs[0] >= 335)) bg = 12; } // (a dark brown wall is not a red felt)
 
+  // recipe v3: part ids (the estimates above are indices in the frozen v2 order)
   var recipe = {
-    v: 2, face: face, skin: skinIndex, hair: hair, hairc: hairc.index, outfit: outfit, outfitc: outfitc,
-    eyes: eyes, eyec: eyec, glasses: glasses, mouth: mouth, beard: beard, hat: hat, bg: bg, brows: brows
+    v: 3, face: V2_FACE[sexF][face], skin: V2.skin[skinIndex], hair: V2.hair[hair], hairc: V2.hairc[hairc.index],
+    eyes: V2.eyes[eyes], eyec: V2.eyec[eyec], glasses: V2.glasses[glasses], mouth: V2.mouth[mouth], beard: V2.beard[beard], hat: V2.hat[hat], bg: V2.bg[bg], brows: V2.brows[brows]
   };
-  if (nose !== undefined) recipe.nose = nose;
-  if (outfit === undefined) delete recipe.outfit;
-  if (outfitc === undefined) delete recipe.outfitc;
+  if (nose !== undefined) recipe.nose = V2.nose[nose];
+  if (outfit !== undefined) recipe.outfit = V2.outfit[outfit];
+  if (outfitc !== undefined) recipe.outfitc = V2.outfitc[outfitc];
   if (sexGuess !== null) recipe.sex = sexGuess;
   return {
     recipe: recipe,

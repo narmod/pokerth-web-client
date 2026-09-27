@@ -9,8 +9,8 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PUB = path.join(__dirname, '..', 'public');
 let pass = 0, fail = 0;
 function ok(cond, msg) {
-  if (cond) { pass++; console.log('  \u2713 ' + msg); }
-  else { fail++; console.log('  \u2717 ' + msg); }
+  if (cond) { pass++; console.log('  ✓ ' + msg); }
+  else { fail++; console.log('  ✗ ' + msg); }
 }
 
 const dom = new JSDOM(`<!DOCTYPE html><body>
@@ -28,12 +28,15 @@ global.localStorage = dom.window.localStorage;
 global.Image = dom.window.Image;
 window.t = (k) => k;
 
-// Load both modules in dependency order, stripping ESM import/export.
+// Load the modules in dependency order, stripping ESM import/export.
 function load(p) {
   let src = fs.readFileSync(path.join(PUB, p), 'utf8');
-  src = src.replace(/^import .*$/m, '').replace(/export \{[^}]*\};?/, '');
+  // ESM → one global scope: drop imports, unwrap exports (the parts files
+  // export their lists, the engine its API)
+  src = src.replace(/^import .*$/mg, '').replace(/^export \{[^}]*\};?$/mg, '').replace(/^export (const|var|let|function) /mg, '$1 ').replace(/^(const|let) /mg, 'var ');
   (0, eval)(src.replace(/^'use strict';/m, ''));
 }
+['helpers', 'faces', 'colors', 'hair', 'outfits', 'face-parts', 'extras', 'expressions', 'legacy', 'index'].forEach(f => load('modules/ui/avatar-parts/' + f + '.mjs'));
 load('modules/ui/avatar-vector.mjs');
 load('modules/ui/avatar-photo.mjs');
 global.AV_SEX_SAMPLE = window._AV_SEX_SAMPLE; global.avSvg = window._avSvg; global.avSexIcon = window._avSexIcon;
@@ -41,168 +44,169 @@ load('modules/ui/avatar-capture.mjs');
 // avatar-studio consumes the engines' window._-prefixed exports in the harness.
 let studio = fs.readFileSync(path.join(PUB, 'modules/ui/avatar-studio.mjs'), 'utf8');
 studio = studio.replace(/^import .*$/mg, '');
-studio = 'const AV_AXES = window._AV_AXES, avSvg = window._avSvg, avSwatch = window._avSwatch, avNormalize = window._avNormalize, avRandom = window._avRandom, avVisible = window._avVisible, AV_DEFAULT = window._AV_DEFAULT, AV_CROP = window._AV_CROP, avPartSvg = window._avPartSvg, avPhotoRecipe = window._avPhotoRecipe, avCaptureOpen = window._avCaptureOpen, avSexIcon = window._avSexIcon;\n' + studio;
+studio = 'const AV_AXES = window._AV_AXES, avSvg = window._avSvg, avSwatch = window._avSwatch, avNormalize = window._avNormalize, avRandom = window._avRandom, avVisible = window._avVisible, avSanitize = window._avSanitize, AV_DEFAULT = window._AV_DEFAULT, AV_CROP = window._AV_CROP, avPartSvg = window._avPartSvg, avPhotoRecipe = window._avPhotoRecipe, avCaptureOpen = window._avCaptureOpen, avSexIcon = window._avSexIcon;\n' + studio;
 studio = studio.replace(/export \{[^}]*\};?/, '');
 (0, eval)(studio.replace(/^'use strict';/m, ''));
 
-// 1. APIs
-ok(typeof window.avStudioTab === 'function', 'avStudioTab exposed');
-ok(typeof window._avSvg === 'function', 'vector engine exposed');
-const AXES = window._AV_AXES;
-ok(Array.isArray(AXES) && AXES.length === 20, '20 axes defined, incl. the outfit colour, the eyebrows and the badge (' + AXES.length + ')');
-// 2.1.9-web.206 — lot 3: poker backdrops, badge axis, scarred / bloodshot / side-glance eyes, toothpick / gold tooth, skull studs / brow ring
-const axBadge = AXES.find(a => a.id === 'badge'), axEyes = AXES.find(a => a.id === 'eyes'), axEars = AXES.find(a => a.id === 'ears'), axBg = AXES.find(a => a.id === 'bg');
-ok(axBadge && axBadge.n === 6 && axBadge.none && AXES[AXES.length - 1] === axBadge && axEyes.n === 10 && axEars.n === 8 && axBg.n === 15, 'badge axis (5 tokens, last), eyes 10, earrings 8, backdrops 15');
-ok(window._avSwatch('bg', 13).indexOf('repeating-linear-gradient') === 0 && window._avSwatch('bg', 7) === '#ffffff' && window._avSvg({ sex: 0, bg: 11 }).indexOf('<ellipse cx="176" cy="182"') !== -1 && window._avSvg({ sex: 0, bg: 13 }).indexOf('<rect x="14" y="14" width="172" height="172" rx="6" fill="#b32236"/>') !== -1 && window._avSvg({ sex: 0, bg: 14 }).indexOf('stroke="#ff9cf0"') !== -1 && window._avSvg({ sex: 0, bg: 0 }).indexOf('<ellipse cx="176"') === -1, 'patterned backdrops: CSS swatch, chip stack on the green felt, card back, neon lines; plain felts unchanged');
-ok(window._avSvg({ sex: 0, badge: 1 }).indexOf('<circle cx="30" cy="172" r="14" fill="#f4f0e6"') !== -1 && window._avSvg({ sex: 0, badge: 3 }).indexOf('rotate(-12 30 172)') !== -1 && window._avSvg({ sex: 0, badge: 4 }).split('<rect').length === window._avSvg({ sex: 0, badge: 0 }).split('<rect').length + 2 && window._avPartSvg('badge', 5, { sex: 0 }, 40).indexOf('viewBox="6 148 48 48"') !== -1, 'badge tokens: dealer button, pair of aces, two dice, chip stack vignette');
-ok(window._avSvg({ sex: 0, eyes: 7 }).indexOf('M70 98 L86 98') !== -1 && window._avSvg({ sex: 1, eyes: 7 }).indexOf('M69 93 L64 89') === -1 && window._avSvg({ sex: 1, eyes: 7 }).indexOf('M131 93 L136 89') !== -1 && window._avSvg({ sex: 0, eyes: 8 }).indexOf('fill="#f3d4d4"') !== -1 && window._avSvg({ sex: 0, eyes: 9 }).indexOf('<circle cx="81.5" cy="99"') !== -1, 'scarred eye (lashes only on the open eye), bloodshot sclera, side glance shifts the irises');
-ok(window._avSvg({ sex: 0, mouth: 13 }).indexOf('M106 132.5 L128 126') !== -1 && window._avSvg({ sex: 0, mouth: 14 }).indexOf('fill="#e0b23c"') !== -1 && window._avSvg({ sex: 0, ears: 7 }).indexOf('<circle cx="128" cy="79.5" r="3.4"') !== -1 && window._avSvg({ sex: 0, face: 0, ears: 6 }).indexOf('<circle cx="50" cy="111" r="3.8" fill="#f2eee6"/>') !== -1 && window._avVisible('ears', 6, { sex: 0 }) && window._avVisible('ears', 7, { sex: 0 }) && !window._avVisible('ears', 1, { sex: 0 }), 'toothpick, gold tooth, brow ring, skull studs on the outline (shared with men, unlike the earrings)');
-// 2.1.9-web.204 — "meaner" catalogue, lot 1: eyebrows axis, eye patch / monocle / mirrored aviators, sneer / gritted teeth, nose scar / black eye / temple tattoo
-const axBrows = AXES.find(a => a.id === 'brows'), axGl = AXES.find(a => a.id === 'glasses'), axMo = AXES.find(a => a.id === 'mouth'), axMk = AXES.find(a => a.id === 'marks');
-ok(axBrows && axBrows.n === 5 && axBrows.kind === 'shape' && !axBrows.none && AXES.indexOf(axBrows) === AXES.findIndex(a => a.id === 'eyec') + 1, 'eyebrows axis: 5 shapes, no "none", right after the eye colour');
-ok(axGl.n === 9 && axMo.n === 15 && axMk.n === 10, 'glasses 9 (eye patch, monocle, aviators), mouths 15 (sneer, gritted teeth, toothpick, gold tooth), marks 10 (nose scar, black eye, temple tattoo)');
-ok(window._avSvg({ sex: 0, brows: 1 }).indexOf('M68 75 Q80 77 90 84') !== -1 && window._avSvg({ sex: 0 }).indexOf('M68 80 Q78 74 88 79 M112 79 Q122 74 132 80') !== -1 && window._avPartSvg('brows', 3, { sex: 0 }, 60).indexOf('stroke-width="7.2"') !== -1 && window._avPartSvg('brows', 3, { sex: 1 }, 60).indexOf('stroke-width="5.5"') !== -1, 'brows: default = the former fixed brows, angry V, thick brows heavier on men (vignettes too)');
-ok(window._avSvg({ sex: 0, glasses: 6 }).indexOf('M108 88 Q122 83 136 89') !== -1 && window._avSvg({ sex: 0, glasses: 7 }).indexOf('stroke-dasharray="2 1.6"') !== -1 && window._avSvg({ sex: 0, mouth: 11 }).indexOf('M107 130 L111 137 L113 129z') !== -1 && window._avSvg({ sex: 0, mouth: 12 }).indexOf('<rect x="87" y="130" width="26" height="8"') !== -1, 'eye patch, monocle chain, sneer canine and gritted teeth are drawn');
-ok(window._avSvg({ sex: 0, face: 0, marks: 9 }).indexOf('M141 66 Q153 78 143 92') !== -1 && window._avSvg({ sex: 1, face: 3, marks: 9 }).indexOf('M135 66 Q147 78 137 92') !== -1 && window._avSvg({ sex: 0, marks: 8 }).indexOf('fill="#6a3d8f"') !== -1, 'temple tattoo follows the outline width (oval man x 141, slim woman x 135), black eye is a purple bruise');
-const axOutfit = AXES.find(a => a.id === 'outfit'), axHair = AXES.find(a => a.id === 'hair'), axOc = AXES.find(a => a.id === 'outfitc');
-ok(axOutfit.n === 43 && axHair.n === 52, '2026-09-27 catalogue: 43 outfits, 52 hairstyles (' + axOutfit.n + '/' + axHair.n + ')');
-// 2.1.9-web.205 — lot 2: poker / meaner outfits in masculine-feminine pairs, six hats
-const axHat = AXES.find(a => a.id === 'hat');
-ok(axHat.n === 16 && !window._avVisible('hat', 12, { sex: 1 }) && window._avVisible('hat', 12, { sex: 0 }) && window._avVisible('hat', 10, { sex: 1 }) && window._avVisible('hat', 11, { sex: 1 }), '16 hats: hood, stetson, top hat (masculine), spade cap, ace fedora, crown');
-ok(window._avSvg({ sex: 0, face: 1, hat: 10, hair: 1 }).indexOf('data-fit="1"><path d="M18 200') !== -1 && window._avSvg({ sex: 0, face: 1, hat: 10, hair: 1 }).indexOf('fill-rule="evenodd"') !== -1 && window._avSvg({ sex: 0, face: 1, hat: 10, hair: 1 }).indexOf('" fill="#1c1e23"/>') !== -1, 'the hood is built on the face outline (opening + dark inside behind the head), not warped');
-ok((() => { const s = window._avSvg({ sex: 0, hat: 10, hair: 1 }); const m = s.match(/clip-path="url\(#[a-z0-9]+h[ls]\)"/g); return !m; })() && !!window._avSvg({ sex: 0, hat: 1, hair: 1 }).match(/clip-path="url\(#[a-z0-9]+hs\)"/), 'the hood leaves the hair unclipped (it shows in the opening), a cap still clips it');
-ok(window._avSvg({ sex: 0, outfit: 33 }).indexOf('M60 166 L84 158 L100 190') !== -1 && window._avSvg({ sex: 0, outfit: 35 }).split('<rect').length === window._avSvg({ sex: 0, outfit: 17 }).split('<rect').length + 5 && window._avSvg({ sex: 0, outfit: 39 }).indexOf('<line x1="40" y1="150"') !== -1 && window._avSvg({ sex: 0, outfit: 41 }).indexOf('<circle cx="64" cy="186" r="8"') !== -1, 'dealer vest, five cards on the Royal Flush tee, pinstripes, spade patch');
-ok(window._avSvg({ sex: 0, hat: 13 }).indexOf('<path d="M100 35 Q110.8 42.2') !== -1 && window._avSvg({ sex: 0, hat: 14 }).indexOf('rotate(-14 134 48)') !== -1 && window._avSvg({ sex: 0, hat: 15 }).indexOf('L84 26 L100 46 L116 26') !== -1, 'spade logo on the cap, ace in the fedora band, crown');
-const axHairc = AXES.find(a => a.id === 'hairc');
-ok(axHairc && axHairc.n === 12 && window._avSwatch('hairc', 11) === '#e88ac2' && window._avSwatch('hairc', 8) === '#9c7b52', '12 hair colours (light brown, light red, blue, pink added)');
-ok(window._avSvg({ sex: 0, hair: 1, hairc: 10, beard: 3 }).indexOf('#3b6fd6') !== -1 && window._avSvg({ sex: 0, hair: 1, hairc: 10, beard: 3 }).indexOf('stroke="#4a3222"') !== -1, 'blue hair keeps dark-brown brows and beard');
-ok(axOc && axOc.kind === 'color' && axOc.none && axOc.n === 9, 'outfit colour axis: colour kind, option 0 = as drawn, 8 colours');
-// 2.1.9-web.207 — seven skin tones (light → dark, no very dark one); recipes saved with the former ten-tone palette carry no `v` and are remapped
-const axSkin = AXES.find(a => a.id === 'skin');
-ok(axSkin.n === 7 && window._avSwatch('skin', 0) === '#fff0e3' && window._avSwatch('skin', 6) === '#75482a' && window._avNormalize({ skin: 9 }).skin === 6 && window._avNormalize({ skin: 6 }).skin === 0 && window._avNormalize({ skin: 6, v: 2 }).skin === 6 && window._avNormalize({ skin: 0 }).skin === 1 && window._avNormalize(null).v === 2 && window._avRandom(0).v === 2, 'skin palette: 7 tones, old recipes remapped (9 → 6, porcelain 6 → 0, very light 0 → 1), new recipes versioned');
-// the colour changes a colourable garment and leaves a fixed one alone
-const stripIds = s => s.replace(/avc\d+/g, 'avc');
-ok(stripIds(window._avSvg(window._avNormalize({ outfit: 17, outfitc: 1 }), 96)) !== stripIds(window._avSvg(window._avNormalize({ outfit: 17, outfitc: 2 }), 96)), 'outfit colour changes the plain tee');
-ok(stripIds(window._avSvg(window._avNormalize({ outfit: 0, outfitc: 1 }), 96)) === stripIds(window._avSvg(window._avNormalize({ outfit: 0, outfitc: 2 }), 96)), 'outfit colour leaves the suit as drawn');
-ok(window._avSwatch('outfitc', 1) === '#c0392b' && window._avSwatch('outfitc', 0) === '#888', 'outfit colour swatches');
+const svg = window._avSvg, part = window._avPartSvg, vis = window._avVisible, norm = window._avNormalize;
+const ax = id => AXES.find(a => a.id === id);
+const n = id => ax(id).opts.length;
+const strip = s => s.replace(/avc\d+/g, 'avc');
 
-// 2. Engine coherence: every option of every axis renders a clean SVG.
-let clean = true, badMsg = '';
-for (const ax of AXES) {
-  for (let i = 0; i < ax.n; i++) {
-    const r = {}; r[ax.id] = i;
-    const svg = window._avSvg(window._avNormalize(r), 96);
-    if (!svg.startsWith('<svg') || !svg.endsWith('</svg>') || svg.includes('undefined') || svg.includes('NaN')) {
-      clean = false; badMsg = ax.id + '#' + i;
-    }
-  }
+// 1. APIs and the declarative catalogue (2.1.9-web.209)
+ok(typeof window.avStudioTab === 'function', 'avStudioTab exposed');
+ok(typeof svg === 'function' && typeof window._avPart === 'function' && typeof window._avSanitize === 'function', 'vector engine exposed (avSvg, avPart, avSanitize)');
+const AXES = window._AV_AXES;
+ok(Array.isArray(AXES) && AXES.length === 21, '21 axes defined, incl. the outfit colour, the eyebrows, the expression and the badge (' + AXES.length + ')');
+// every axis: unique string ids (sex is numeric), a default that exists, a draw on every shape part
+let catOk = true, catMsg = '';
+for (const a of AXES) {
+  const ids = a.opts.map(p => p.id);
+  if (new Set(ids).size !== ids.length) { catOk = false; catMsg += a.id + ':dup '; }
+  if (a.id !== 'sex' && ids.some(i => typeof i !== 'string' || !i)) { catOk = false; catMsg += a.id + ':id '; }
+  if (!a.opts.some(p => p.id === a.def)) { catOk = false; catMsg += a.id + ':def '; }
+  if (a.kind === 'shape' && a.id !== 'sex' && a.id !== 'face' && a.id !== 'expression' && a.opts.some(p => typeof p.draw !== 'function')) { catOk = false; catMsg += a.id + ':draw '; }
+  if (a.kind === 'color' && a.opts.some(p => !Array.isArray(p.colors))) { catOk = false; catMsg += a.id + ':colors '; }
 }
-ok(clean, 'every axis option renders a clean SVG' + (clean ? '' : ' (bad: ' + badMsg + ')'));
+ok(catOk, 'catalogue: unique stable ids, existing defaults, drawable parts, colour swatches' + (catOk ? '' : ' (' + catMsg + ')'));
+ok(n('hair') === 52 && n('outfit') === 43 && n('hat') === 16 && n('bg') === 15 && n('skin') === 7 && n('hairc') === 12 && n('eyec') === 6 && n('outfitc') === 9 && n('marks') === 10 && n('beard') === 7 && n('nose') === 5 && n('glasses') === 9 && n('ears') === 8 && n('badge') === 6 && n('shoulder') === 1,
+  'catalogue counts: 52 hairstyles, 43 outfits, 16 hats, 15 backdrops, 7 skins, 12 hair colours, 6 eye colours, 9 outfit colours, 10 marks, 7 beards, 5 noses, 9 glasses, 8 piercings, 6 badges, shoulder retired');
+ok(n('eyes') === 14 && n('brows') === 8 && n('mouth') === 16 && n('expression') === 12, 'expressions: 14 eyes (+ shut, hearts, stars, x), 8 brows (+ raised, sad, worried), 16 mouths (+ wavy), 12 expressions');
+const axBadge = ax('badge'), axBrows = ax('brows'), axOc = ax('outfitc');
+ok(axBadge.none && AXES[AXES.length - 1] === axBadge && AXES.indexOf(axBrows) === AXES.findIndex(a => a.id === 'eyec') + 1 && AXES.indexOf(ax('expression')) === AXES.findIndex(a => a.id === 'mouth') + 1, 'axis order: brows after the eye colour, expression after the mouth, badge last');
+ok(axOc.kind === 'color' && axOc.none && axOc.opts[0].id === 'auto', 'outfit colour axis: colour kind, option « auto » = as drawn');
+
+// 1b. Recipes v3 (ids) and the migration of v1 / v2 (numeric) recipes
+ok(norm(null).v === 3 && norm(null).sex === 0 && norm(null).face === 'm-oval' && norm(null).hair === 'short' && norm(null).skin === 'light' && norm(null).expression === 'neutral', 'default recipe: v3, masculine oval, short dark-brown hair, light skin, neutral expression');
+ok(norm({ v: 2, sex: 0, hair: 43, hat: 15, outfit: 42, skin: 6, bg: 13, marks: 9, eyes: 9, mouth: 14, glasses: 8, ears: 7, badge: 5, brows: 4 }).hair === 'long-straight-m'
+  && norm({ v: 2, hat: 15 }).hat === 'crown' && norm({ v: 2, outfit: 42 }).outfit === 'biker-vest-f' && norm({ v: 2, skin: 6 }).skin === 'deep' && norm({ v: 2, bg: 13 }).bg === 'card-back'
+  && norm({ v: 2, marks: 9 }).marks === 'tattoo-temple' && norm({ v: 2, eyes: 9 }).eyes === 'side-glance' && norm({ v: 2, mouth: 14 }).mouth === 'gold-tooth' && norm({ v: 2, glasses: 8 }).glasses === 'aviators'
+  && norm({ v: 2, ears: 7 }).ears === 'brow-ring' && norm({ v: 2, badge: 5 }).badge === 'stack' && norm({ v: 2, brows: 4 }).brows === 'thin-arched', 'v2 recipes (numeric) migrate to the ids of the frozen v2 order');
+ok(norm({ skin: 9 }).skin === 'deep' && norm({ skin: 6 }).skin === 'porcelain' && norm({ skin: 0 }).skin === 'light' && norm({ v: 2, skin: 6 }).skin === 'deep', 'v1 recipes (no v): the ten-tone skin palette is remapped first (9 → deep, porcelain 6 → porcelain, very light 0 → light)');
+ok(norm({ v: 2, sex: 1, face: 2 }).face === 'f-heart' && norm({ v: 2, sex: 0, face: 2 }).face === 'm-square' && norm({ sex: 1 }).face === 'f-oval' && norm({ v: 3, sex: 1, face: 'm-square' }).face === 'm-square', 'face slots migrate per silhouette; the default face follows the silhouette; a v3 face id is kept as saved');
+ok(norm({ v: 3, hair: 'no-such-style', bg: 'nope' }).hair === 'short' && norm({ v: 3, hair: 'no-such-style' }).bg === 'green' && norm({ bg: 99, hair: -3 }).bg === 'green', 'unknown ids and out-of-range indices fall back to the defaults');
+ok(norm({ v: 2, shoulder: 3 }).shoulder === 'none' && vis('shoulder', 'none', {}) && !vis('shoulder', 'x', {}), 'shoulder accessories retired (only none stays valid)');
+ok(window._avRandom(0).v === 3 && typeof window._avRandom(0).hair === 'string', 'the dice produces v3 recipes');
+
+// 1c. Spot checks of the drawings (unchanged output, verified byte for byte against the previous engine on 1642 portraits at the refactor)
+ok(svg({ bg: 'card-back' }).indexOf('<rect x="14" y="14" width="172" height="172" rx="6" fill="#b32236"/>') !== -1 && svg({ bg: 'felt-green' }).indexOf('<ellipse cx="176" cy="182"') !== -1 && svg({ bg: 'neon' }).indexOf('stroke="#ff9cf0"') !== -1 && svg({ bg: 'green' }).indexOf('<ellipse cx="176"') === -1, 'patterned backdrops: chip stack on the green felt, card back, neon lines; plain felts unchanged');
+ok(window._avSwatch('bg', 'card-back').indexOf('repeating-linear-gradient') === 0 && window._avSwatch('bg', 'white') === '#ffffff' && window._avSwatch('skin', 'porcelain') === '#fff0e3' && window._avSwatch('skin', 'deep') === '#75482a' && window._avSwatch('hairc', 'pink') === '#e88ac2' && window._avSwatch('outfitc', 'red') === '#c0392b' && window._avSwatch('outfitc', 'auto') === '#888', 'swatches: CSS gradient for a patterned backdrop, plain colours otherwise, auto outfit colour grey');
+ok(svg({ badge: 'dealer' }).indexOf('<circle cx="30" cy="172" r="14" fill="#f4f0e6"') !== -1 && svg({ badge: 'aces' }).indexOf('rotate(-12 30 172)') !== -1 && svg({ badge: 'dice' }).split('<rect').length === svg({ badge: 'none' }).split('<rect').length + 2 && part('badge', 'stack', { sex: 0 }, 40).indexOf('viewBox="6 148 48 48"') !== -1, 'badge tokens: dealer button, pair of aces, two dice, chip stack vignette');
+ok(svg({ sex: 0, eyes: 'scarred' }).indexOf('M70 98 L86 98') !== -1 && svg({ sex: 1, eyes: 'scarred' }).indexOf('M69 93 L64 89') === -1 && svg({ sex: 1, eyes: 'scarred' }).indexOf('M131 93 L136 89') !== -1 && svg({ eyes: 'bloodshot' }).indexOf('fill="#f3d4d4"') !== -1 && svg({ eyes: 'side-glance' }).indexOf('<circle cx="81.5" cy="99"') !== -1 && svg({ sex: 1, eyes: 'closed' }).indexOf('M69 93 L64 89') === -1, 'scarred eye (lashes only on the open eye), bloodshot sclera, side glance shifts the irises, no lashes on closed eyes');
+ok(svg({ mouth: 'toothpick' }).indexOf('M106 132.5 L128 126') !== -1 && svg({ mouth: 'gold-tooth' }).indexOf('fill="#e0b23c"') !== -1 && svg({ ears: 'brow-ring' }).indexOf('<circle cx="128" cy="79.5" r="3.4"') !== -1 && svg({ face: 'm-oval', ears: 'skull-studs' }).indexOf('<circle cx="50" cy="111" r="3.8" fill="#f2eee6"/>') !== -1, 'toothpick, gold tooth, brow ring, skull studs on the outline');
+ok(svg({ brows: 'angry' }).indexOf('M68 75 Q80 77 90 84') !== -1 && svg({}).indexOf('M68 80 Q78 74 88 79 M112 79 Q122 74 132 80') !== -1 && part('brows', 'thick', { sex: 0 }, 60).indexOf('stroke-width="7.2"') !== -1 && part('brows', 'thick', { sex: 1 }, 60).indexOf('stroke-width="5.5"') !== -1, 'brows: neutral = the former fixed brows, angry V, thick brows heavier on men (vignettes too)');
+ok(svg({ glasses: 'eye-patch' }).indexOf('M108 88 Q122 83 136 89') !== -1 && svg({ glasses: 'monocle' }).indexOf('stroke-dasharray="2 1.6"') !== -1 && svg({ mouth: 'sneer' }).indexOf('M107 130 L111 137 L113 129z') !== -1 && svg({ mouth: 'gritted' }).indexOf('<rect x="87" y="130" width="26" height="8"') !== -1, 'eye patch, monocle chain, sneer canine and gritted teeth are drawn');
+ok(svg({ sex: 0, face: 'm-oval', marks: 'tattoo-temple' }).indexOf('M141 66 Q153 78 143 92') !== -1 && svg({ sex: 1, face: 'f-slim', marks: 'tattoo-temple' }).indexOf('M135 66 Q147 78 137 92') !== -1 && svg({ marks: 'black-eye' }).indexOf('fill="#6a3d8f"') !== -1, 'temple tattoo follows the outline width (oval man x 141, slim woman x 135), black eye is a purple bruise');
+ok(svg({ sex: 0, face: 'm-round', hat: 'hood', hair: 'short' }).indexOf('data-fit="1"><path d="M18 200') !== -1 && svg({ hat: 'hood' }).indexOf('fill-rule="evenodd"') !== -1 && svg({ hat: 'hood' }).indexOf('" fill="#1c1e23"/>') !== -1, 'the hood is built on the face outline (opening + dark inside behind the head), not warped');
+ok(!svg({ hat: 'hood', hair: 'short' }).match(/clip-path="url\(#[a-z0-9]+h[ls]\)"/) && !!svg({ hat: 'cap', hair: 'short' }).match(/clip-path="url\(#[a-z0-9]+hs\)"/) && !!svg({ hat: 'cap', hair: 'long-middle' }).match(/clip-path="url\(#[a-z0-9]+hl\)"/), 'the hood leaves the hair unclipped, a cap clips a short style to a band and a long one at the hat line');
+ok(svg({ outfit: 'dealer-vest' }).indexOf('M60 166 L84 158 L100 190') !== -1 && svg({ outfit: 'tee-royal-flush' }).split('<rect').length === svg({ outfit: 'tee' }).split('<rect').length + 5 && svg({ outfit: 'pinstripe' }).indexOf('<line x1="40" y1="150"') !== -1 && svg({ outfit: 'biker-vest' }).indexOf('<circle cx="64" cy="186" r="8"') !== -1, 'dealer vest, five cards on the Royal Flush tee, pinstripes, spade patch');
+ok(svg({ hat: 'cap-spade' }).indexOf('<path d="M100 35 Q110.8 42.2') !== -1 && svg({ hat: 'fedora-ace' }).indexOf('rotate(-14 134 48)') !== -1 && svg({ hat: 'crown' }).indexOf('L84 26 L100 46 L116 26') !== -1, 'spade logo on the cap, ace in the fedora band, crown');
+ok(svg({ hair: 'short', hairc: 'blue', beard: 'short' }).indexOf('#3b6fd6') !== -1 && svg({ hair: 'short', hairc: 'blue', beard: 'short' }).indexOf('stroke="#4a3222"') !== -1, 'blue hair keeps dark-brown brows and beard');
+ok(strip(svg({ outfit: 'tee', outfitc: 'red' }, 96)) !== strip(svg({ outfit: 'tee', outfitc: 'blue' }, 96)) && strip(svg({ outfit: 'suit-charcoal', outfitc: 'red' }, 96)) === strip(svg({ outfit: 'suit-charcoal', outfitc: 'blue' }, 96)), 'the outfit colour changes the plain tee and leaves the suit as drawn');
+ok(svg({ mouth: 'cigar' }).indexOf('#ff6a2a') !== -1 && svg({ sex: 0 }).indexOf('opacity=".1"') !== -1 && svg({ sex: 1 }).indexOf('opacity=".32"') !== -1, 'cigar ember drawn; blush faint on men, full on women');
+// faces and landmarks
+ok(svg({ sex: 0, face: 'm-rugged' }).indexOf('L124 150') !== -1 && svg({ sex: 1, face: 'f-slim' }).indexOf('Q51 132') !== -1 && part('face', 'f-slim', { sex: 1 }, 60).indexOf('Q51 132') !== -1 && svg({ sex: 1, face: 'f-diamond' }).indexOf('cx="53" cy="100"') !== -1 && svg({ sex: 0, face: 'm-square' }).indexOf('L154 118') !== -1 && svg({ sex: 1, face: 'f-heart' }).indexOf('Q45 112') !== -1, '5 face shapes per silhouette (rugged man, slim woman, square jaw, heart) with their own ear positions (vignettes too)');
+ok(svg({ sex: 1, face: 'f-oval' }).indexOf('cx="55" cy="100"') !== -1 && svg({ sex: 0, face: 'm-round' }).indexOf('cx="47" cy="100"') !== -1, 'the ears sit on the outline (narrow feminine oval → 55, wide round → 47)');
+ok(svg({ face: 'm-oval', hair: 'short' }).indexOf('M 42.9 98 Q 39.8 30 100 28') !== -1 && svg({ face: 'm-round', hair: 'short' }).indexOf('M 38.8 98 Q 36.1 30 100 28') !== -1 && svg({ face: 'm-rugged', hair: 'short' }).indexOf('M 41.1 98 Q 42.3 30 100 28') !== -1, 'hair follows the outline at every height (round man wider, rugged man narrower at the crown than at the ears)');
+ok(/scale\(1\.1132[\d]*,1\)[^>]*><ellipse cx="100" cy="67" rx="76"/.test(svg({ face: 'm-round', hat: 'fedora' })) && /scale\(1\.0754[\d]*,1\)[^>]*><ellipse cx="100" cy="68" rx="66"/.test(svg({ face: 'm-rugged', hat: 'bowler' })) && !/scale\(1\.0754[\d]*,1\)/.test(svg({ face: 'm-rugged', hat: 'hood' })), 'hats follow the ear-level width uniformly (round man ×1.113, rugged ×1.075), the hood is built on the outline');
+ok(svg({ face: 'm-round', beard: 'full' }).indexOf('M10 170 L27 126 Q35 106 43 103') !== -1 && svg({ face: 'm-long', beard: 'full' }).indexOf('M10 170 L35 126 Q43 106 51 103') !== -1 && svg({ face: 'm-long', beard: 'full' }).indexOf('scale(1.02,1.12)') !== -1 && svg({ face: 'm-long', beard: 'short' }).indexOf('scale(1.01,1.06)') !== -1, 'beards are built from the landmarks: sideburn tip on the edge under the ear, chin-heavy clip');
+ok(svg({ face: 'm-rugged', beard: 'goatee' }).indexOf('M88 142 Q100 164 112 142') !== -1 && svg({ face: 'm-oval', beard: 'goatee' }).indexOf('M88 140 Q100 162 112 140') !== -1 && svg({ face: 'm-rugged', beard: 'long' }).indexOf('M64 128 Q78 146 100 146') !== -1 && svg({ face: 'm-oval', beard: 'long' }).indexOf('M56 128 Q70 146 100 146') !== -1, 'goatee hangs from the chin landmark, long beard as wide as the jaw');
+ok(/data-fit="1"[^>]*><path d="M41 92/.test(svg({ face: 'm-round', hair: 'balding' })), 'the balding ring is the outline itself, not warped');
+
+// 1d. Expressions (2.1.9-web.209): an expression sets brows + eyes + mouth and adds overlays; opts.expression overrides at render time
+const eff = window._avEffective;
+ok(eff(norm({ expression: 'tilt' })).eyes === 'bloodshot' && eff(norm({ expression: 'tilt' })).fx.join() === 'vein,sweat' && eff(norm({ eyes: 'wink' })).eyes === 'wink' && eff(norm({ eyes: 'wink' }), { expression: 'joy' }).eyes === 'closed', 'avEffective resolves the drawn brows / eyes / mouth (recipe, or opts.expression)');
+ok(svg({ expression: 'anger' }).indexOf('M68 75 Q80 77 90 84') !== -1 && svg({ expression: 'anger' }).indexOf('<rect x="87" y="130" width="26" height="8"') !== -1 && svg({ expression: 'anger' }).indexOf('q4 -4 8 0 q4 4 8 0') !== -1, 'anger: angry brows, gritted teeth, the vein overlay');
+ok(svg({ expression: 'sleep' }).indexOf('M70 99 L86 99 M114 99 L130 99') !== -1 && svg({ expression: 'sleep' }).indexOf('M148 42 L160 42 L148 54 L160 54') !== -1 && svg({ expression: 'love' }).indexOf('fill="#e0405a"') !== -1 && svg({ expression: 'win' }).indexOf('fill="#f2c94c"') !== -1 && svg({ expression: 'ko' }).indexOf('M71 91 L85 105') !== -1 && svg({ expression: 'sadness' }).indexOf('fill="#5fa8e8"') !== -1, 'sleep (shut eyes + zzz), love (heart eyes), win (star eyes), ko (crossed eyes), sadness (tear)');
+ok(strip(svg({ eyes: 'wink', mouth: 'grin' }, 96, { expression: 'fear' })) === strip(svg({ eyes: 'wink', mouth: 'grin', expression: 'fear' }, 96)) && strip(svg({ eyes: 'wink' }, 96, { expression: 'neutral' })) === strip(svg({ eyes: 'wink' }, 96)), 'opts.expression renders like the recipe expression and leaves the recipe alone; neutral keeps the player\'s own features');
+ok(!vis('mouth', 'grin', { expression: 'joy' }) && !vis('eyes', 'wink', { expression: 'joy' }) && !vis('brows', 'angry', { expression: 'joy' }) && vis('mouth', 'grin', { expression: 'neutral' }) && !vis('eyec', 'blue', { expression: 'joy' }) && vis('eyec', 'blue', { expression: 'anger' }), 'an active expression hides the brows / eyes / mouth rows, and the eye colour behind closed eyes');
+ok(part('expression', 'tilt', { sex: 0 }, 40).indexOf('viewBox="38 30 124 124"') !== -1 && part('expression', 'tilt', { sex: 0 }, 40).indexOf('fill="#f3d4d4"') !== -1 && part('expression', 'tilt', { sex: 0 }, 40).indexOf('#8f6a1d') === -1, 'expression vignettes show the whole face with the expression, without the frame');
+const sanit = window._avSanitize(norm({ expression: 'joy', mouth: 'grin', sex: 1, hair: 'short', face: 'm-square' }));
+ok(sanit.mouth === 'grin' && sanit.hair === 'ponytail-high' && sanit.face === 'f-heart', 'avSanitize keeps hidden-row values, replaces a foreign hairstyle by the first feminine one and keeps the face slot (square → heart)');
+
+// 2. Engine coherence: every option of every axis renders a clean SVG, on both silhouettes and every face slot.
+let clean = true, badMsg = '';
+for (const a of AXES) for (const p of a.opts) for (const sex of [0, 1]) for (const slot of [0, 2, 4]) {
+  const r = { v: 3, sex, face: (sex ? 'f-' : 'm-') + ['oval', 'round', 'square', 'long', 'rugged'][slot].replace('square', sex ? 'heart' : 'square').replace('long', sex ? 'slim' : 'long').replace('rugged', sex ? 'diamond' : 'rugged') };
+  r[a.id] = p.id;
+  const s = svg(norm(r), 96);
+  if (!s.startsWith('<svg') || !s.endsWith('</svg>') || s.includes('undefined') || s.includes('NaN') || s.includes('null')) { clean = false; badMsg = a.id + '#' + p.id + ' ' + sex + '/' + slot; }
+}
+ok(clean, 'every part renders a clean SVG on both silhouettes and three face slots' + (clean ? '' : ' (bad: ' + badMsg + ')'));
 
 // 2b. Isolated-part vignettes: every option of every framed axis renders
-// a clean standalone SVG containing only that layer over the felt rect.
+// a clean standalone SVG containing only that layer.
 const CROP = window._AV_CROP;
 ok(CROP && Object.keys(CROP).length >= 10, 'AV_CROP defines part frames');
 ok(Object.values(CROP).every(c => c.length === 3 && c[0] >= 0 && c[1] >= 0 && c[0] + c[2] <= 200 && c[1] + c[2] <= 200), 'every part frame fits the 200x200 canvas');
 let partsClean = true, badPart = '';
-for (const ax of AXES.filter(a => a.kind === 'shape' && a.id !== 'sex')) {
-  for (let i = 0; i < ax.n; i++) {
-    const svg = window._avPartSvg(ax.id, i, window._avNormalize(null), 40);
-    if (!svg.startsWith('<svg') || !svg.endsWith('</svg>') || svg.includes('undefined') || svg.includes('NaN')) { partsClean = false; badPart = ax.id + '#' + i; }
-  }
+for (const a of AXES.filter(a => a.kind === 'shape' && a.id !== 'sex')) for (const p of a.opts) for (const sex of [0, 1]) {
+  const s = part(a.id, p.id, norm({ sex }), 40);
+  if (!s.startsWith('<svg') || !s.endsWith('</svg>') || s.includes('undefined') || s.includes('NaN')) { partsClean = false; badPart = a.id + '#' + p.id; }
 }
 ok(partsClean, 'every part vignette renders clean' + (partsClean ? '' : ' (bad: ' + badPart + ')'));
-const nosePart = window._avPartSvg('nose', 3, window._avNormalize(null), 40);
-ok(nosePart.indexOf('viewBox="80 94 40 40"') !== -1, 'nose vignette framed');
-const mouthPart = window._avPartSvg('mouth', 0, window._avNormalize(null), 40);
+ok(part('nose', 'wide', norm(null), 40).indexOf('viewBox="80 94 40 40"') !== -1, 'nose vignette framed');
+const mouthPart = part('mouth', 'smile', norm(null), 40);
 ok(mouthPart.indexOf('viewBox="74 110 52 52"') !== -1 && mouthPart.indexOf('<ellipse cx="100" cy="94"') === -1, 'mouth vignette is framed and contains no head');
+ok(part('hair', 'nope', norm(null), 40) === '', 'a vignette of an unknown part is empty, never a crash');
 
-// 3. Recipes normalize + randomize stay in range
+// 3. Recipes normalize + randomize stay in the catalogue
 const rnd = window._avRandom();
-const norm = window._avNormalize(rnd);
-ok(AXES.every(ax => norm[ax.id] >= 0 && norm[ax.id] < ax.n), 'random recipe normalizes in range');
-ok(window._avNormalize({ bg: 99, hair: -3 }).bg >= 0, 'out-of-range values fall back to defaults');
+ok(AXES.every(a => a.opts.some(p => p.id === norm(rnd)[a.id])), 'random recipe normalizes inside the catalogue');
 
 // 4. Distinct options produce distinct output (spot check per shape axis)
 let distinct = true;
-// 'shoulder' is retired with the toon style (kept for recipe compatibility).
-for (const ax of AXES.filter(a => a.kind === 'shape' && a.id !== 'shoulder')) {
-  const a = window._avSvg(window._avNormalize({ [ax.id]: 0 }), 96);
-  const b = window._avSvg(window._avNormalize({ [ax.id]: 1 }), 96);
-  const strip = s => s.replace(/avc\d+/g, 'avc');
-  if (strip(a) === strip(b)) distinct = false;
+for (const a of AXES.filter(a => a.kind === 'shape' && a.id !== 'shoulder')) {
+  const s1 = svg(norm({ [a.id]: a.opts[0].id }), 96), s2 = svg(norm({ [a.id]: a.opts[1].id }), 96);
+  if (strip(s1) === strip(s2)) distinct = false;
 }
 ok(distinct, 'shape options produce visually distinct SVG');
 
 // 4b. Silhouette filtering
-const vis = window._avVisible;
-ok(typeof vis === 'function', 'avVisible exposed');
-ok(vis('hair', 3, { sex: 1 }) && !vis('hair', 3, { sex: 0 }), 'ponytail is feminine-only');
-ok(vis('hair', 2, { sex: 0 }) && !vis('hair', 2, { sex: 1 }), 'slicked-back is masculine-only');
-ok(vis('hair', 4, { sex: 0 }) && !vis('hair', 4, { sex: 1 }), 'curly is masculine-only');
+ok(vis('hair', 'ponytail-high', { sex: 1 }) && !vis('hair', 'ponytail-high', { sex: 0 }), 'ponytail is feminine-only');
+ok(vis('hair', 'slicked', { sex: 0 }) && !vis('hair', 'slicked', { sex: 1 }) && vis('hair', 'curly', { sex: 0 }) && !vis('hair', 'curly', { sex: 1 }), 'slicked-back and curly are masculine-only');
 // Strict parity (narmod 2026-09-27): every hairstyle and every outfit belongs
 // to exactly one silhouette, and both sides keep a decent choice.
 let oneSided = true, nM = { hair: 0, outfit: 0 }, nF = { hair: 0, outfit: 0 };
-for (const axId of ['hair', 'outfit']) {
-  const ax = AXES.find(a => a.id === axId);
-  for (let i = 0; i < ax.n; i++) {
-    const m = vis(axId, i, { sex: 0 }), f = vis(axId, i, { sex: 1 });
-    if (m === f) oneSided = false;
-    if (m) nM[axId]++; if (f) nF[axId]++;
-  }
+for (const axId of ['hair', 'outfit']) for (const p of ax(axId).opts) {
+  const m = vis(axId, p.id, { sex: 0 }), f = vis(axId, p.id, { sex: 1 });
+  if (m === f) oneSided = false;
+  if (m) nM[axId]++; if (f) nF[axId]++;
 }
 ok(oneSided, 'every hairstyle and outfit is visible for exactly one silhouette');
 ok(nM.hair === 24 && nF.hair === 28 && nM.outfit === 22 && nF.outfit === 21, 'catalogue split: 24 / 28 hairstyles, 22 / 21 outfits (' + nM.hair + '/' + nF.hair + ', ' + nM.outfit + '/' + nF.outfit + ')');
-ok(vis('outfit', 3, { sex: 1 }) && !vis('outfit', 3, { sex: 0 }) && vis('outfit', 7, { sex: 1 }) && vis('outfit', 16, { sex: 1 }), 'collared sweater, turtleneck and blazer + scarf are feminine');
-ok(!vis('glasses', 3, { sex: 0 }) && !vis('ears', 1, { sex: 0 }) && !vis('hat', 4, { sex: 1 }) && vis('hat', 1, { sex: 1 }), 'cat-eye glasses and pearls hidden for men, bowler hidden for women, cap shared');
-ok(!vis('beard', 2, { sex: 1 }) && vis('beard', 2, { sex: 0 }) && vis('beard', 0, { sex: 1 }), 'beard filtered on feminine silhouette (none stays valid)');
-ok(!vis('hat', 1, { hair: 10 }) && !vis('hat', 2, { hair: 7 }) && !vis('hat', 1, { hair: 17 }) && !vis('hat', 1, { hair: 33 }) && !vis('hat', 1, { hair: 37 }) && !vis('hat', 1, { hair: 42 }) && vis('hat', 0, { hair: 10 }) && vis('hat', 1, { hair: 1 }), 'hats filtered out on afro/bun/mohawk/crown braid/high bun (none stays valid)');
-ok(!vis('eyec', 1, { eyes: 2 }) && !vis('eyec', 1, { glasses: 5 }) && !vis('eyec', 1, { glasses: 8 }) && vis('eyec', 1, { eyes: 0, glasses: 1 }) && vis('eyec', 1, { glasses: 6 }), 'eye color hidden behind closed eyes, sunglasses or mirrored aviators (not behind an eye patch)');
-ok(!vis('brows', 4, { sex: 0 }) && vis('brows', 4, { sex: 1 }) && vis('brows', 1, { sex: 1 }) && !vis('glasses', 7, { sex: 1 }) && vis('glasses', 6, { sex: 1 }), 'thin arched brows are feminine, the monocle masculine, the eye patch shared');
-ok(vis('shoulder', 0, {}) && !vis('shoulder', 1, {}) && !vis('shoulder', 4, {}), 'shoulder accessories retired (only none stays valid)');
-ok(vis('mouth', 3, { sex: 1 }) && !vis('mouth', 3, { sex: 0 }), 'lipstick mouth is feminine-only');
-ok(!vis('mouth', 5, { sex: 0 }) && !vis('mouth', 7, { sex: 0 }) && vis('mouth', 10, { sex: 0 }) && !vis('mouth', 10, { sex: 1 }), 'pout and small o are feminine, the cigar is masculine');
-ok([1, 2, 3, 4, 5].every(k => !vis('ears', k, { sex: 0 }) && vis('ears', k, { sex: 1 })) && vis('ears', 0, { sex: 0 }), 'every earring is feminine-only (none stays for men)');
-ok(!vis('marks', 2, { sex: 0 }) && vis('marks', 6, { sex: 0 }) && !vis('marks', 6, { sex: 1 }), 'beauty mark is feminine, the cheek scar masculine');
-ok(AXES.find(a => a.id === 'face').n === 5 && window._avSvg({ sex: 0, face: 4 }).indexOf('L124 150') !== -1 && window._avSvg({ sex: 1, face: 3 }).indexOf('Q51 132') !== -1 && window._avPartSvg('face', 3, { sex: 1 }, 60).indexOf('Q51 132') !== -1 && window._avSvg({ sex: 1, face: 4 }).indexOf('cx="53" cy="100"') !== -1, '5 face shapes per silhouette (rugged man, slim woman) with their own ear positions');
-ok(window._avSvg({ sex: 0, face: 2 }).indexOf('L154 118') !== -1 && window._avSvg({ sex: 1, face: 2 }).indexOf('Q45 112') !== -1 && window._avPartSvg('face', 2, { sex: 1 }, 60).indexOf('Q45 112') !== -1, 'face shapes differ by silhouette: square jaw for men, heart for women (vignettes too)');
-ok(window._avSvg({ sex: 1, face: 0 }).indexOf('cx="55" cy="100"') !== -1 && window._avSvg({ sex: 0, face: 1 }).indexOf('cx="47" cy="100"') !== -1, 'the ears sit on the outline (narrow feminine oval → 55, wide round → 47)');
-// Landmarks (FACE_PTS): the hair underlay is warped by a factor that varies with the height — wider everywhere on the round man, narrower at the crown than at the ears on the rugged one (a narrow crown over wide cheekbones)
-ok(window._avSvg({ sex: 0, face: 0, hair: 1 }).indexOf('M 42.9 98 Q 39.8 30 100 28') !== -1 && window._avSvg({ sex: 0, face: 1, hair: 1 }).indexOf('M 38.8 98 Q 36.1 30 100 28') !== -1 && window._avSvg({ sex: 0, face: 4, hair: 1 }).indexOf('M 41.1 98 Q 42.3 30 100 28') !== -1 && window._avSvg({ sex: 0, face: 1, hair: 1 }).indexOf('scale(1.1132') === -1, 'hair follows the outline at every height (round man wider, rugged man narrower at the crown than at the ears)');
-ok(/scale\(1\.1132[\d]*,1\)[^>]*><ellipse cx="100" cy="67" rx="76"/.test(window._avSvg({ sex: 0, face: 1, hat: 2 })) && /scale\(1\.0754[\d]*,1\)[^>]*><ellipse cx="100" cy="68" rx="66"/.test(window._avSvg({ sex: 0, face: 4, hat: 4 })) && !/scale\(1\.0754[\d]*,1\)/.test(window._avSvg({ sex: 0, face: 4, hat: 10 })), 'hats follow the ear-level width uniformly (round man ×1.113, rugged ×1.075 — not the narrow temples), the hood is built on the outline');
-// Beards: the cheek line starts on the outline's edge under the ear (round man x 43, long man x 51), the clip grows the outline down (chin) more than sideways, the goatee hangs from the chin landmark, the long beard's width from the jaw landmark
-ok(window._avSvg({ sex: 0, face: 1, beard: 4 }).indexOf('M10 170 L27 126 Q35 106 43 103') !== -1 && window._avSvg({ sex: 0, face: 3, beard: 4 }).indexOf('M10 170 L35 126 Q43 106 51 103') !== -1 && window._avSvg({ sex: 0, face: 3, beard: 4 }).indexOf('scale(1.02,1.12)') !== -1 && window._avSvg({ sex: 0, face: 3, beard: 3 }).indexOf('scale(1.01,1.06)') !== -1, 'beards are built from the landmarks: sideburn tip on the edge under the ear, chin-heavy clip');
-ok(window._avSvg({ sex: 0, face: 4, beard: 2 }).indexOf('M88 142 Q100 164 112 142') !== -1 && window._avSvg({ sex: 0, face: 0, beard: 2 }).indexOf('M88 140 Q100 162 112 140') !== -1 && window._avSvg({ sex: 0, face: 4, beard: 6 }).indexOf('M64 128 Q78 146 100 146') !== -1 && window._avSvg({ sex: 0, face: 0, beard: 6 }).indexOf('M56 128 Q70 146 100 146') !== -1, 'goatee hangs from the chin landmark, long beard as wide as the jaw');
-ok(/data-fit="1"[^>]*><path d="M41 92/.test(window._avSvg({ sex: 0, face: 1, hair: 16 })), 'the balding ring is the outline itself, not warped');
-ok(window._avSvg({ sex: 0, mouth: 10 }).indexOf('#ff6a2a') !== -1 && window._avSvg({ sex: 0 }).indexOf('opacity=".1"') !== -1 && window._avSvg({ sex: 1 }).indexOf('opacity=".32"') !== -1, 'cigar ember drawn; blush faint on men, full on women');
-ok(vis('outfit', 6, { sex: 1 }) && !vis('outfit', 6, { sex: 0 }), 'V-neck blouse is feminine-only');
-const wholeAxisHidden = (ax, rr) => { for (let i = 0; i < ax.n; i++) if (vis(ax.id, i, rr)) return false; return true; };
+ok(vis('outfit', 'sweater-collar', { sex: 1 }) && !vis('outfit', 'sweater-collar', { sex: 0 }) && vis('outfit', 'turtleneck', { sex: 1 }) && vis('outfit', 'blazer-scarf', { sex: 1 }) && vis('outfit', 'blouse-v', { sex: 1 }) && !vis('outfit', 'blouse-v', { sex: 0 }), 'collared sweater, turtleneck, blazer + scarf and V-neck blouse are feminine');
+ok(!vis('glasses', 'cat-eye', { sex: 0 }) && !vis('ears', 'pearl-studs', { sex: 0 }) && !vis('hat', 'bowler', { sex: 1 }) && vis('hat', 'cap', { sex: 1 }) && !vis('hat', 'top-hat', { sex: 1 }) && vis('hat', 'hood', { sex: 1 }) && vis('hat', 'stetson', { sex: 1 }), 'cat-eye glasses and pearls hidden for men, bowler and top hat hidden for women, cap / hood / stetson shared');
+ok(!vis('beard', 'goatee', { sex: 1 }) && vis('beard', 'goatee', { sex: 0 }) && vis('beard', 'none', { sex: 1 }), 'beard filtered on feminine silhouette (none stays valid)');
+ok(['afro', 'bun', 'mohawk', 'crown-braid', 'messy-bun', 'man-bun'].every(h => !vis('hat', 'cap', { hair: h }) && vis('hat', 'none', { hair: h })) && vis('hat', 'cap', { hair: 'short' }), 'hats filtered out on afro/bun/mohawk/crown braid/high bun/man bun (none stays valid)');
+ok(!vis('eyec', 'blue', { eyes: 'closed' }) && !vis('eyec', 'blue', { glasses: 'sunglasses' }) && !vis('eyec', 'blue', { glasses: 'aviators' }) && vis('eyec', 'blue', { eyes: 'round', glasses: 'round' }) && vis('eyec', 'blue', { glasses: 'eye-patch' }), 'eye color hidden behind closed eyes, sunglasses or mirrored aviators (not behind an eye patch)');
+ok(!vis('brows', 'thin-arched', { sex: 0 }) && vis('brows', 'thin-arched', { sex: 1 }) && vis('brows', 'angry', { sex: 1 }) && !vis('glasses', 'monocle', { sex: 1 }) && vis('glasses', 'eye-patch', { sex: 1 }), 'thin arched brows are feminine, the monocle masculine, the eye patch shared');
+ok(vis('mouth', 'lipstick', { sex: 1 }) && !vis('mouth', 'lipstick', { sex: 0 }) && !vis('mouth', 'pout', { sex: 0 }) && !vis('mouth', 'small-o', { sex: 0 }) && vis('mouth', 'cigar', { sex: 0 }) && !vis('mouth', 'cigar', { sex: 1 }), 'lipstick, pout and small o are feminine, the cigar masculine');
+ok(['pearl-studs', 'gold-studs', 'hoops', 'hoop-left', 'hoop-right'].every(k => !vis('ears', k, { sex: 0 }) && vis('ears', k, { sex: 1 })) && vis('ears', 'none', { sex: 0 }) && vis('ears', 'skull-studs', { sex: 0 }) && vis('ears', 'brow-ring', { sex: 0 }), 'every earring is feminine-only; skull studs and the brow ring are shared');
+ok(!vis('marks', 'beauty-mark', { sex: 0 }) && vis('marks', 'cheek-scar', { sex: 0 }) && !vis('marks', 'cheek-scar', { sex: 1 }), 'beauty mark is feminine, the cheek scar masculine');
 let sexKept = true;
 for (let k = 0; k < 10; k++) { if (window._avRandom(1).sex !== 1 || window._avRandom(0).sex !== 0) sexKept = false; }
 ok(sexKept, 'avRandom(fixedSex) keeps the chosen silhouette (10 draws each)');
 let bgWhite = true;
-for (let k = 0; k < 10; k++) if (window._avRandom().bg !== 7) bgWhite = false;
+for (let k = 0; k < 10; k++) if (window._avRandom().bg !== 'white') bgWhite = false;
 ok(bgWhite, 'avRandom always lands on the white background (10 draws)');
 // Dice-only silhouette rules: 200 draws per silhouette never pick an option
 // that reads as the other one (no bald/mohawk woman, no cat-eye man...).
-let diceSex = true;
-const MASC_ONLY = { hair: [0, 1, 13, 17], outfit: [1, 2, 4] }, FEM_ONLY = { glasses: [3], ears: [1] };
+let diceSex = true, neutralN = 0;
+const MASC_ONLY = { hair: ['bald', 'short', 'close-curls', 'mohawk'], outfit: ['suit-navy-tie', 'vest-tie', 'tux'] }, FEM_ONLY = { glasses: ['cat-eye'], ears: ['pearl-studs'] };
 for (let k = 0; k < 200; k++) {
   const f = window._avRandom(1), m = window._avRandom(0);
-  for (const ax in MASC_ONLY) if (MASC_ONLY[ax].includes(f[ax])) diceSex = false;
-  for (const ax in FEM_ONLY) if (FEM_ONLY[ax].includes(m[ax])) diceSex = false;
-  if (f.beard !== 0 || f.shoulder !== 0 || m.shoulder !== 0) diceSex = false;
-  if (f.hat && f.hair === 3) diceSex = false;
-  // (eye color is a whole hidden axis behind closed eyes / sunglasses)
-  const coherent = rr => AXES.every(ax => ax.id === 'eyec' || vis(ax.id, rr[ax.id], rr));
+  for (const a in MASC_ONLY) if (MASC_ONLY[a].includes(f[a])) diceSex = false;
+  for (const a in FEM_ONLY) if (FEM_ONLY[a].includes(m[a])) diceSex = false;
+  if (f.beard !== 'none' || f.shoulder !== 'none' || m.shoulder !== 'none') diceSex = false;
+  if (f.hat !== 'none' && f.hair === 'ponytail-high') diceSex = false;
+  if (m.expression === 'neutral') neutralN++;
+  // (eye color is a whole hidden axis behind closed eyes / sunglasses; brows / eyes / mouth hide under an expression)
+  const coherent = rr => AXES.every(a => a.id === 'eyec' || (rr.expression !== 'neutral' && ['brows', 'eyes', 'mouth'].indexOf(a.id) !== -1) || vis(a.id, rr[a.id], rr));
   if (!coherent(f) || !coherent(m)) diceSex = false;
 }
 ok(diceSex, 'dice keeps silhouette-coherent options (200 draws each)');
-for (let k = 0; k < 20; k++) {
-  const rr = window._avRandom();
-  if (!AXES.every(ax => vis(ax.id, rr[ax.id], rr) || wholeAxisHidden(ax, rr))) { ok(false, 'random recipe respects the coherence filter'); break; }
-  if (k === 19) ok(true, 'random recipe respects the coherence filter (20 draws)');
-}
+ok(neutralN > 120, 'the dice mostly leaves the expression neutral (' + neutralN + '/200)');
 
 // 5. Tabs + panes
 window.avStudioTab('create');
@@ -211,7 +215,9 @@ ok(!!document.getElementById('avm-step-label') && document.getElementById('avm-s
 ok(document.getElementById('avm-rows').children.length === 2, 'active group (Silhouette) renders its 2 axis rows');
 ok(document.querySelectorAll('#avm-rows .avm-sex-opt svg').length === 2, 'silhouette chips carry SVG icons instead of glyphs');
 const next = document.getElementById('avm-step-next'), prev = document.getElementById('avm-step-prev');
-next.click(); next.click();
+next.click();
+ok(document.getElementById('avm-rows').children.length === 8, 'Face (2/5) renders 8 rows (skin, marks, eyes, eye colour, brows, nose, mouth, expression)');
+next.click();
 ok(document.getElementById('avm-rows').children.length === 3, 'stepping to Hair (3/5) renders 3 rows');
 next.click(); next.click();
 ok(document.getElementById('avm-rows').children.length === 4, 'Extras (5/5) renders 4 rows on the masculine silhouette (glasses, hat, piercings — skull studs and brow ring are shared —, badge; shoulder accessory retired)');
@@ -219,6 +225,13 @@ next.click();
 ok(document.getElementById('avm-step-label').textContent.indexOf('1/5') !== -1, 'next wraps around to 1/5');
 next.click();
 ok(document.querySelectorAll('#avm-rows .avm-swatch').length > 0, 'color axes render swatches (Face group)');
+// picking an expression hides the brows / eyes / mouth rows; back to neutral shows them again
+const exRow = Array.from(document.querySelectorAll('#avm-rows .avm-axis')).find(d => d.querySelector('.avm-axis-label').textContent === 'avmExpression');
+ok(!!exRow && exRow.querySelectorAll('button').length === 12, 'the expression row shows its 12 vignettes');
+exRow.querySelectorAll('button')[2].click();
+ok(document.getElementById('avm-rows').children.length === 5 && JSON.parse(localStorage.getItem('pth_avatar_vec')).expression === 'anger', 'picking « anger » hides brows / eyes / mouth (5 rows left) and persists the id');
+Array.from(document.querySelectorAll('#avm-rows .avm-axis')).find(d => d.querySelector('.avm-axis-label').textContent === 'avmExpression').querySelectorAll('button')[0].click();
+ok(document.getElementById('avm-rows').children.length === 8, 'back to neutral: the 8 rows return');
 prev.click();
 ok(document.querySelectorAll('#avm-rows .avm-mini').length > 0, 'shape axes render mini previews');
 ok(!!document.getElementById('avm-photo') && !!document.getElementById('avm-photo-input'), 'From-a-photo (beta) button and hidden file input rendered');
@@ -263,73 +276,76 @@ function synthFace(opts) {
   for (let y = 134; y <= 140; y++) for (let x = 64; x <= 96; x++) put(x, y, 200, 70, 70);                                  // lips
   return { width: W, height: H, data };
 }
+const LIGHT = ['porcelain', 'light', 'medium'];
 const resHair = window._avPhotoAnalyze(synthFace({ hair: true }), { sex: 0 });
-ok(!!resHair && !!resHair.recipe, 'photo analysis finds the synthetic face');
+ok(!!resHair && !!resHair.recipe && resHair.recipe.v === 3, 'photo analysis finds the synthetic face and emits a v3 recipe (part ids)');
 if (resHair) {
   ok(resHair.debug.eyesOk, 'both pupils found (box rebuilt from the eyes)');
-  ok(resHair.recipe.skin <= 2, 'light skin tone mapped to a light palette entry (' + resHair.recipe.skin + ')');
-  ok(resHair.recipe.hair !== 0 && resHair.recipe.hairc <= 1, 'dark hair cap → not bald, dark hair colour (' + resHair.recipe.hair + '/' + resHair.recipe.hairc + ')');
-  ok(resHair.recipe.eyes === 0 || resHair.recipe.eyes === 1, 'open eyes (' + resHair.recipe.eyes + ')');
-  ok(resHair.recipe.beard === 0 && resHair.recipe.glasses === 0 && resHair.recipe.hat === 0, 'no beard, glasses or hat on the plain face');
-  ok(AXES.every(ax => !(ax.id in resHair.recipe) || (resHair.recipe[ax.id] >= 0 && resHair.recipe[ax.id] < ax.n)), 'every estimated axis is in range');
+  ok(LIGHT.indexOf(resHair.recipe.skin) !== -1, 'light skin tone mapped to a light palette entry (' + resHair.recipe.skin + ')');
+  ok(resHair.recipe.hair !== 'bald' && ['black', 'dark-brown'].indexOf(resHair.recipe.hairc) !== -1, 'dark hair cap → not bald, dark hair colour (' + resHair.recipe.hair + '/' + resHair.recipe.hairc + ')');
+  ok(resHair.recipe.eyes === 'round' || resHair.recipe.eyes === 'almond', 'open eyes (' + resHair.recipe.eyes + ')');
+  ok(resHair.recipe.beard === 'none' && resHair.recipe.glasses === 'none' && resHair.recipe.hat === 'none', 'no beard, glasses or hat on the plain face');
+  ok(AXES.every(a => !(a.id in resHair.recipe) || a.id === 'sex' || a.opts.some(p => p.id === resHair.recipe[a.id])), 'every estimated axis is a catalogue id');
 }
 const resBald = window._avPhotoAnalyze(synthFace({ hair: false }), { sex: 0 });
-ok(!!resBald && resBald.recipe.hair === 0, 'no hair cap → bald');
+ok(!!resBald && resBald.recipe.hair === 'bald', 'no hair cap → bald');
 // guided: the synthetic face oval (cx 80/160, cy 100/200, rx 46, ry 58) as template
-const resGuided = window._avPhotoAnalyze(synthFace({ hair: true }), { sex: 0, guide: { cx: 0.5, cy: 0.5, rx: 46 / 160, ry: 58 / 200 } });
-ok(!!resGuided && resGuided.debug.guided && resGuided.recipe.skin <= 2 && resGuided.recipe.hair !== 0, 'guided analysis uses the template and finds the same face');
-ok(!!resGuided && resGuided.recipe.face === 0 && !('nose' in resGuided.recipe), 'guided: a face as wide as the oval is oval; no nose shadow → the nose is left alone (' + (resGuided && resGuided.recipe.face) + ')');
+const GS = { cx: 0.5, cy: 0.5, rx: 46 / 160, ry: 58 / 200 };
+const resGuided = window._avPhotoAnalyze(synthFace({ hair: true }), { sex: 0, guide: GS });
+ok(!!resGuided && resGuided.debug.guided && LIGHT.indexOf(resGuided.recipe.skin) !== -1 && resGuided.recipe.hair !== 'bald', 'guided analysis uses the template and finds the same face');
+ok(!!resGuided && resGuided.recipe.face === 'm-oval' && !('nose' in resGuided.recipe), 'guided: a face as wide as the oval is oval; no nose shadow → the nose is left alone (' + (resGuided && resGuided.recipe.face) + ')');
 // a wider synthetic face (rx 56 on the same template) reads round
 const wideFace = synthFace({ hair: true, thick: true }); (function () { const W = 160; for (let y = 0; y < 200; y++) for (let x = 0; x < W; x++) { const ex = (x - 80) / 56, ey = (y - 100) / 58; if (ex * ex + ey * ey <= 1 && y >= 62) { const i = (y * W + x) * 4; wideFace.data[i] = 232; wideFace.data[i + 1] = 190; wideFace.data[i + 2] = 160; } } })();
-const resWide = window._avPhotoAnalyze(wideFace, { sex: 0, guide: { cx: 0.5, cy: 0.5, rx: 46 / 160, ry: 58 / 200 }, guessSex: false });
-ok(!!resWide && resWide.recipe.face === 1, 'guided: a face wider than the oval is round (' + (resWide && resWide.recipe.face) + ')');
+const resWide = window._avPhotoAnalyze(wideFace, { sex: 0, guide: GS, guessSex: false });
+ok(!!resWide && resWide.recipe.face === 'm-round', 'guided: a face wider than the oval is round (' + (resWide && resWide.recipe.face) + ')');
+const resWideF = window._avPhotoAnalyze(wideFace, { sex: 1, guide: GS, guessSex: false });
+ok(!!resWideF && resWideF.recipe.face === 'f-round', 'guided, feminine: the same photo → the feminine round outline (' + (resWideF && resWideF.recipe.face) + ')');
 ok(window._avPhotoAnalyze(synthFace({ hair: true }), { sex: 0, guide: { cx: 0.1, cy: 0.9, rx: 0.05, ry: 0.05 } }) === null, 'guided analysis with nobody in the oval → no face');
 // guided hair (2.1.9-web.189): the band above the oval top is read as the
 // hair — a bald crown (skin keeps going up), blonde hair (close to the skin
 // in lightness, not in chroma), a fringe inside the oval top, and a photo
 // that stops above the hairline (guide.valid) which says nothing.
-const GS = { cx: 0.5, cy: 0.5, rx: 46 / 160, ry: 58 / 200 };
 const gBald = window._avPhotoAnalyze(synthFace({ hair: false }), { sex: 0, guide: GS });
-ok(!!gBald && gBald.recipe.hair === 0, 'guided: skin above the hairline → bald (' + (gBald && gBald.recipe.hair) + ')');
+ok(!!gBald && gBald.recipe.hair === 'bald', 'guided: skin above the hairline → bald (' + (gBald && gBald.recipe.hair) + ')');
 const gBlonde = window._avPhotoAnalyze(synthFace({ hair: true, blonde: true, thick: true }), { sex: 1, guide: GS, guessSex: false });
-ok(!!gBlonde && gBlonde.recipe.hair !== 36 && [4, 6, 8].indexOf(gBlonde.recipe.hairc) !== -1, 'guided: light hair on light skin → not bald, a blonde/light-brown colour (' + (gBlonde && gBlonde.recipe.hair) + '/' + (gBlonde && gBlonde.recipe.hairc) + ')');
+ok(!!gBlonde && gBlonde.recipe.hair !== 'cropped' && ['blonde', 'light-blonde', 'light-brown'].indexOf(gBlonde.recipe.hairc) !== -1, 'guided: light hair on light skin → not bald, a blonde/light-brown colour (' + (gBlonde && gBlonde.recipe.hair) + '/' + (gBlonde && gBlonde.recipe.hairc) + ')');
 const gFringe = window._avPhotoAnalyze(synthFace({ hair: true, sides: true, thick: true }), { sex: 0, guide: GS, guessSex: false });
-ok(!!gFringe && gFringe.recipe.hair === 31, 'guided: hair over the forehead and down the sides → curtain fringe, mid length (' + (gFringe && gFringe.recipe.hair) + ')');
+ok(!!gFringe && gFringe.recipe.hair === 'curtain', 'guided: hair over the forehead and down the sides → curtain fringe, mid length (' + (gFringe && gFringe.recipe.hair) + ')');
 const gFringeF = window._avPhotoAnalyze(synthFace({ hair: true, sides: true, thick: true }), { sex: 1, guide: GS, guessSex: false });
-ok(!!gFringeF && gFringeF.recipe.hair === 34, 'guided, feminine: the same photo → straight fringe (' + (gFringeF && gFringeF.recipe.hair) + ')');
+ok(!!gFringeF && gFringeF.recipe.hair === 'fringe-long', 'guided, feminine: the same photo → straight fringe (' + (gFringeF && gFringeF.recipe.hair) + ')');
 // grey stubble: the chin is not darker as a whole, but a third of it is dark colourless grain
 const stubbly = synthFace({ hair: true, thick: true }); (function () { let seed = 7; for (let y = 139; y <= 156; y++) for (let x = 44; x <= 116; x++) { const ex = (x - 80) / 46, ey = (y - 100) / 58; seed = (seed * 1103515245 + 12345) & 0x7fffffff; if (ex * ex + ey * ey <= 1 && (seed % 100) < 32) { const i = (y * 160 + x) * 4; stubbly.data[i] = 42; stubbly.data[i + 1] = 42; stubbly.data[i + 2] = 42; } } })();
 const gStubble = window._avPhotoAnalyze(stubbly, { sex: 0, guide: GS, guessSex: false });
-ok(!!gStubble && gStubble.recipe.beard === 5, 'guided: grey stubble grain under the lip → stubble (' + (gStubble && gStubble.recipe.beard) + ')');
+ok(!!gStubble && gStubble.recipe.beard === 'stubble', 'guided: grey stubble grain under the lip → stubble (' + (gStubble && gStubble.recipe.beard) + ')');
 const gCut = window._avPhotoAnalyze(synthFace({ hair: false }), { sex: 0, guide: Object.assign({ valid: [0, 0.3, 1, 1] }, GS) });
-ok(!!gCut && gCut.recipe.hair !== 0, 'guided: photo cut above the hairline → the default hair stays, never bald (' + (gCut && gCut.recipe.hair) + ')');
+ok(!!gCut && gCut.recipe.hair !== 'bald', 'guided: photo cut above the hairline → the default hair stays, never bald (' + (gCut && gCut.recipe.hair) + ')');
 // silhouette guess: the plain synthetic face has no cue → no `sex` in the recipe;
 // a dark hair-coloured band under the chin (beard) → masculine even when analysed as feminine
 const noCue = window._avPhotoAnalyze(synthFace({ hair: true }), { sex: 1 });
-ok(!!noCue && !('sex' in noCue.recipe) && noCue.recipe.beard === 0, 'no clear cue → the chosen silhouette stands (no sex in the recipe)');
+ok(!!noCue && !('sex' in noCue.recipe) && noCue.recipe.beard === 'none', 'no clear cue → the chosen silhouette stands (no sex in the recipe)');
 const bearded = synthFace({ hair: true });
 for (let y = 139; y <= 162; y++) for (let x = 44; x <= 116; x++) { const ex = (x - 80) / 46, ey = (y - 100) / 58; if (ex * ex + ey * ey <= 1) { const i = (y * 160 + x) * 4; bearded.data[i] = 40; bearded.data[i + 1] = 35; bearded.data[i + 2] = 32; } } // (a beard starts right under the lip)
 const withBeard = window._avPhotoAnalyze(bearded, { sex: 1 });
-ok(!!withBeard && withBeard.recipe.sex === 0 && withBeard.recipe.beard >= 3, 'a beard → masculine silhouette guessed with the beard (' + (withBeard && withBeard.recipe.sex) + '/' + (withBeard && withBeard.recipe.beard) + ')');
+ok(!!withBeard && withBeard.recipe.sex === 0 && ['short', 'full'].indexOf(withBeard.recipe.beard) !== -1, 'a beard → masculine silhouette guessed with the beard (' + (withBeard && withBeard.recipe.sex) + '/' + (withBeard && withBeard.recipe.beard) + ')');
 const noGuess = window._avPhotoAnalyze(bearded, { sex: 1, guessSex: false });
-ok(!!noGuess && !('sex' in noGuess.recipe) && noGuess.recipe.beard === 0, 'guessSex:false keeps the feminine silhouette (and no beard on it)');
+ok(!!noGuess && !('sex' in noGuess.recipe) && noGuess.recipe.beard === 'none', 'guessSex:false keeps the feminine silhouette (and no beard on it)');
 // 2.1.9-web.207 — eyebrows from the dark runs above the pupils, long beard below the oval, felt backdrop
 const paintBrows = (img, kind) => { const W = 160; const bar = (x0, y0, x1, y1, th) => { for (let x = x0; x <= x1; x++) { const yy = y0 + (y1 - y0) * (x - x0) / (x1 - x0); for (let k = 0; k < th; k++) { const i = (Math.round(yy + k) * W + x) * 4; img.data[i] = 30; img.data[i + 1] = 20; img.data[i + 2] = 15; } } };
   if (kind === 'angry') { bar(47, 74, 77, 82, 4); bar(83, 82, 113, 74, 4); } else if (kind === 'thick') { bar(47, 76, 77, 76, 8); bar(83, 76, 113, 76, 8); } else if (kind === 'flat') { bar(47, 78, 77, 78, 4); bar(83, 78, 113, 78, 4); } return img; };
 const gPlain = window._avPhotoAnalyze(synthFace({ hair: true, thick: true }), { sex: 0, guide: GS, guessSex: false });
-ok(!!gPlain && gPlain.recipe.brows === 0 && gPlain.debug.browsDbg === 'no brows', 'guided: no brows painted → neutral brows (' + (gPlain && gPlain.debug.browsDbg) + ')');
+ok(!!gPlain && gPlain.recipe.brows === 'neutral' && gPlain.debug.browsDbg === 'no brows', 'guided: no brows painted → neutral brows (' + (gPlain && gPlain.debug.browsDbg) + ')');
 const gAngry = window._avPhotoAnalyze(paintBrows(synthFace({ hair: true, thick: true }), 'angry'), { sex: 0, guide: GS, guessSex: false });
-ok(!!gAngry && gAngry.recipe.brows === 1, 'guided: inner ends of the brows lower than the outer ones → angry V (' + (gAngry && gAngry.recipe.brows) + ' ' + (gAngry && gAngry.debug.browsDbg) + ')');
+ok(!!gAngry && gAngry.recipe.brows === 'angry', 'guided: inner ends of the brows lower than the outer ones → angry V (' + (gAngry && gAngry.recipe.brows) + ' ' + (gAngry && gAngry.debug.browsDbg) + ')');
 const gThick = window._avPhotoAnalyze(paintBrows(synthFace({ hair: true, thick: true }), 'thick'), { sex: 0, guide: GS, guessSex: false });
-ok(!!gThick && gThick.recipe.brows === 3, 'guided: thick flat brows → low thick brows (' + (gThick && gThick.recipe.brows) + ' ' + (gThick && gThick.debug.browsDbg) + ')');
+ok(!!gThick && gThick.recipe.brows === 'thick', 'guided: thick flat brows → low thick brows (' + (gThick && gThick.recipe.brows) + ' ' + (gThick && gThick.debug.browsDbg) + ')');
 const gFlat = window._avPhotoAnalyze(paintBrows(synthFace({ hair: true, thick: true }), 'flat'), { sex: 0, guide: GS, guessSex: false });
-ok(!!gFlat && gFlat.recipe.brows === 0, 'guided: ordinary flat brows → neutral (' + (gFlat && gFlat.recipe.brows) + ' ' + (gFlat && gFlat.debug.browsDbg) + ')');
+ok(!!gFlat && gFlat.recipe.brows === 'neutral', 'guided: ordinary flat brows → neutral (' + (gFlat && gFlat.recipe.brows) + ' ' + (gFlat && gFlat.debug.browsDbg) + ')');
 const longB = synthFace({ hair: true, thick: true }); (function () { let seed = 3; for (let y = 139; y <= 190; y++) for (let x = 50; x <= 110; x++) { const ex = (x - 80) / 46, ey = (y - 100) / 58; seed = (seed * 1103515245 + 12345) & 0x7fffffff; if (ex * ex + ey * ey <= 1 || (y > 158 && Math.abs(x - 80) < 26)) { const i = (y * 160 + x) * 4; const g = 30 + (seed % 22); longB.data[i] = g + 8; longB.data[i + 1] = g; longB.data[i + 2] = g - 4; } } })(); // a grainy dark mass from the lip down to 32 px below the oval, narrower than the face
 const gLong = window._avPhotoAnalyze(longB, { sex: 0, guide: GS, guessSex: false });
-ok(!!gLong && gLong.recipe.beard === 6, 'guided: the beard mass goes on below the oval, bounded on both sides → long beard (' + (gLong && gLong.recipe.beard) + ' ' + (gLong && gLong.debug.beardDbg.replace(/^.*long=/, 'long=')) + ')');
+ok(!!gLong && gLong.recipe.beard === 'long', 'guided: the beard mass goes on below the oval, bounded on both sides → long beard (' + (gLong && gLong.recipe.beard) + ' ' + (gLong && gLong.debug.beardDbg.replace(/^.*long=/, 'long=')) + ')');
 const greenBg = synthFace({ hair: true, thick: true }); (function () { for (let i = 0; i < greenBg.data.length; i += 4) if (greenBg.data[i] === 245 && greenBg.data[i + 1] === 245 && greenBg.data[i + 2] === 245) { greenBg.data[i] = 30; greenBg.data[i + 1] = 110; greenBg.data[i + 2] = 60; } })();
 const gGreen = window._avPhotoAnalyze(greenBg, { sex: 0, guide: GS, guessSex: false });
-ok(!!gGreen && gGreen.recipe.bg === 11 && gPlain.recipe.bg === 7, 'guided: a saturated green backdrop → the green felt, white stays white (' + (gGreen && gGreen.recipe.bg) + ')');
+ok(!!gGreen && gGreen.recipe.bg === 'felt-green' && gPlain.recipe.bg === 'white', 'guided: a saturated green backdrop → the green felt, white stays white (' + (gGreen && gGreen.recipe.bg) + ')');
 const blank = { width: 64, height: 64, data: new Uint8ClampedArray(64 * 64 * 4).fill(255) };
 ok(window._avPhotoAnalyze(blank, { sex: 0 }) === null, 'blank image → no face');
 window.avStudioReset();
@@ -340,6 +356,7 @@ ok(document.getElementById('avp-pane-gallery').style.display === '', 'adv-no-avc
 document.body.classList.remove('adv-no-avcreate');
 
 // 5b. Feminine silhouette hides the facial-hair row in the Hair group
+window.avStudioTab('create');
 document.querySelectorAll('#avm-rows .avm-axis')[0].querySelectorAll('button')[1].click(); // sex -> F
 ok(document.querySelectorAll('#avm-rows .avm-sex-opt').length === 2, 'sex axis renders 2 pictogram chips');
 next.click(); next.click();
@@ -355,27 +372,30 @@ ok(!!document.getElementById('avm-reset'), 'reset button rendered');
 document.querySelectorAll('#avm-rows .avm-axis')[0].querySelectorAll('button')[1].click(); // sex -> F
 document.getElementById('avm-reset').click();
 const afterReset = JSON.parse(localStorage.getItem('pth_avatar_vec'));
-ok(afterReset.sex === 0 && afterReset.hair === 1 && afterReset.glasses === 0, 'reset restores AV_DEFAULT');
+ok(afterReset.v === 3 && afterReset.sex === 0 && afterReset.hair === 'short' && afterReset.glasses === 'none', 'reset restores AV_DEFAULT (v3 ids)');
 
-// 6. Recipe persistence
+// 6. Recipe persistence, and a v2 recipe saved by an older build re-opens
 window.avStudioTab('create');
 document.querySelectorAll('#avm-rows .avm-axis')[0].querySelectorAll('button')[1].click();
 const persisted = JSON.parse(localStorage.getItem('pth_avatar_vec'));
-ok(persisted && persisted.sex === 1, 'clicking an option persists the recipe (pth_avatar_vec)');
+ok(persisted && persisted.sex === 1 && persisted.face === 'f-oval' && persisted.hair === 'ponytail-high', 'clicking the feminine silhouette persists the recipe (pth_avatar_vec) with the feminine oval and hairstyle');
 
 // 7. i18n: axis label keys present in every language file
 const KEYS = ['avmSex','avmFace','avmHat','avmGrpBody','avmGrpFace','avmGrpHair','avmGrpStyle','avmGrpExtra',
   'avmNose','avmBg','avmOutfit','avmSkin','avmMarks','avmHair','avmHairColor','avmBeard',
   'avmEyeShape','avmEyeColor','avmMouth','avmShoulder','avmEarrings','avmNone',
-  'avTabGallery','avTabCreate','avTabImport','avmRandom','avmReset','avmUse','avmGlasses','avmBrows','avmBadge',
+  'avTabGallery','avTabCreate','avTabImport','avmRandom','avmReset','avmUse','avmGlasses','avmBrows','avmBadge','avmExpression','avmOutfitColor',
   'avImportDrop','avImportOr','avImportBtn','avImportHint','advAvatarCreate'];
+// every axis label must be in the list (a new axis without a label would show its key)
+ok(AXES.every(a => KEYS.indexOf(a.label) !== -1), 'every axis label key is covered by the i18n check');
 const langDir = path.join(PUB, 'modules/lang');
-let langsOk = true;
+let langsOk = true, nLang = 0;
 for (const f of fs.readdirSync(langDir).filter(f => f.endsWith('.mjs'))) {
+  nLang++;
   const ls = fs.readFileSync(path.join(langDir, f), 'utf8');
   for (const k of KEYS) if (!ls.includes(k + ':')) { langsOk = false; console.log('    missing ' + k + ' in ' + f); }
 }
-ok(langsOk, 'all avatar keys present in all 45 language files');
+ok(langsOk, 'all avatar keys present in all ' + nLang + ' language files');
 
 console.log(fail === 0 ? 'ALL OK (' + pass + ')' : 'FAIL ' + fail + '/' + (pass + fail));
 process.exit(fail === 0 ? 0 : 1);

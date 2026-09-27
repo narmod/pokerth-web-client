@@ -24,7 +24,7 @@
 
 'use strict';
 
-import { AV_AXES, AV_DEFAULT, avSvg, avPartSvg, avSwatch, avNormalize, avRandom, avVisible, avSexIcon } from './avatar-vector.mjs';
+import { AV_AXES, AV_DEFAULT, avSvg, avPartSvg, avSwatch, avNormalize, avRandom, avVisible, avSanitize, avSexIcon } from './avatar-vector.mjs';
 import { avPhotoRecipe } from './avatar-photo.mjs';
 import { avCaptureOpen } from './avatar-capture.mjs';
 
@@ -32,7 +32,7 @@ import { avCaptureOpen } from './avatar-capture.mjs';
 // active group's rows are rendered, keeping the pane short and tidy.
 const AV_GROUPS = [
   { icon: '\uD83D\uDC65', label: 'avmGrpBody',  axes: ['sex', 'face'] },
-  { icon: '\uD83D\uDC64', label: 'avmGrpFace',  axes: ['skin', 'marks', 'eyes', 'eyec', 'brows', 'nose', 'mouth'] },
+  { icon: '\uD83D\uDC64', label: 'avmGrpFace',  axes: ['skin', 'marks', 'eyes', 'eyec', 'brows', 'nose', 'mouth', 'expression'] },
   { icon: '\uD83D\uDC87', label: 'avmGrpHair',  axes: ['hair', 'hairc', 'beard'] },
   { icon: '\uD83D\uDC54', label: 'avmGrpStyle', axes: ['outfit', 'outfitc', 'bg'] },
   { icon: '\u2728',        label: 'avmGrpExtra', axes: ['glasses', 'hat', 'shoulder', 'ears', 'badge'] }
@@ -59,16 +59,9 @@ function _avmScrollTop() {
 }
 
 // After a silhouette switch, any option filtered out for the new sex is
-// reset to the first visible one, keeping the recipe coherent.
-function _avmSanitize() {
-  AV_AXES.forEach(function (ax) {
-    if (avVisible(ax.id, _avmState[ax.id], _avmState)) return;
-    for (var i = 0; i < ax.n; i++) {
-      if (avVisible(ax.id, i, _avmState)) { _avmState[ax.id] = i; return; }
-    }
-    _avmState[ax.id] = 0;
-  });
-}
+// replaced (same slot for the face shapes, else the first visible one),
+// keeping the recipe coherent — see avSanitize in the engine.
+function _avmSanitize() { avSanitize(_avmState); }
 _avmSanitize();
 
 // ── Tab switching ────────────────────────────────────────────────────────
@@ -159,9 +152,10 @@ function _avmRender() {
   AV_AXES.filter(function (ax) {
     if (active.indexOf(ax.id) === -1) return false;
     // Hide axes whose only remaining choice is 'none' for the current
-    // silhouette (e.g. facial hair on the feminine silhouette).
+    // silhouette (e.g. facial hair on the feminine silhouette), or with
+    // nothing to choose (brows / eyes / mouth under an active expression).
     var visible = 0;
-    for (var i = 0; i < ax.n; i++) if (avVisible(ax.id, i, _avmState)) visible++;
+    ax.opts.forEach(function (p) { if (avVisible(ax.id, p.id, _avmState)) visible++; });
     return ax.none ? visible > 1 : visible > 0;
   }).forEach(function (ax) {
     var d = document.createElement('div');
@@ -172,18 +166,18 @@ function _avmRender() {
     d.appendChild(lab);
     var line = document.createElement('div');
     line.className = 'avm-axis-opts';
-    for (var i = 0; i < ax.n; i++) {
-      if (!avVisible(ax.id, i, _avmState)) continue;
+    ax.opts.forEach(function (p, i) {
+      if (!avVisible(ax.id, p.id, _avmState)) return;
       (function (i) {
         var b = document.createElement('button');
         b.type = 'button';
         var sel = _avmState[ax.id] === i;
-        b.setAttribute('aria-label', t(ax.label) + ' ' + (i + 1));
+        b.setAttribute('aria-label', t(ax.label) + ' ' + (typeof i === 'string' ? i : i + 1));
         if (ax.id === 'sex') {
           b.className = 'avm-opt avm-sex-opt' + (sel ? ' selected' : '');
           b.innerHTML = avSexIcon(i);
           b.title = t(i === 0 ? 'avmMale' : 'avmFemale');
-        } else if (ax.none && i === 0) {
+        } else if (ax.none && p === ax.opts[0]) {
           b.className = 'avm-opt avm-none-opt' + (sel ? ' selected' : '');
           // a colour axis' option 0 keeps the garment as drawn: « Auto »
           b.textContent = t(ax.kind === 'color' ? 'avmAuto' : 'avmNone');
@@ -204,8 +198,8 @@ function _avmRender() {
           _avmPersist(); _avmRender();
         });
         line.appendChild(b);
-      })(i);
-    }
+      })(p.id);
+    });
     d.appendChild(line);
     rows.appendChild(d);
   });

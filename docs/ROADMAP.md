@@ -129,6 +129,10 @@ use too. Items are grouped by status rather than fixed phases.
 - Accessibility & mobile polish: honours `prefers-reduced-motion` and reduced-transparency,
   with touch-comfort tweaks (overscroll containment, touch-callout suppression on cards/buttons).
 - Emoji avatars (500+) and custom image avatars, broadcast live, with anti-flicker caching.
+- Toon portrait creator (« Create » tab): a declarative catalogue of parts with stable ids
+  (52 hairstyles, 43 outfits, 16 hats, 12 expressions, poker backdrops and badges…), fitted
+  to ten face shapes by their landmarks, plus a « From a photo » estimate — see
+  `docs/AVATAR_PARTS.md` to add a part.
 - Session statistics panel (hands, wins, win rate, net result, best/worst hands).
 - In-game and lobby chat, plus 30 emoji reactions that now interoperate cross-client through a
   shared `/emoji` chat channel (and work on pokerth.net too).

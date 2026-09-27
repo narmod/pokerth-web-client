@@ -1,4 +1,9 @@
-2026-09-27 version 2.1.9-web.208 (current series):
+2026-09-27 version 2.1.9-web.209 (current series):
+- new: toon portraits — an « Expression » row in the Face step sets the eyebrows, eyes and mouth in one tap: neutral, joy, anger, sadness, surprise, bluff, tilt, sleep, fear, love, win, KO — with their little extras (anger vein, tear, sweat drop, zzz, hearts, stars, dizzy stars); heart, star, crossed and shut eyes, sad / worried / raised brows and a wavy mouth come with it
+- improvement: toon portraits — every option now has a permanent name inside the saved portrait, so options can be added, removed or reordered in the future without ever changing a saved face (portraits saved by older builds are converted on opening); the portrait engine was rebuilt around a catalogue of parts (same drawings, checked pixel for pixel)
+- bugfix: the « From a photo » panel and its analysis are precached for offline use like the rest of the Create tab
+
+2026-09-27 version 2.1.9-web.208:
 - bugfix: toon portraits — hats are sized on the width of the skull again (a face with narrow temples and wide cheekbones wore a bowler too small for its head since web.203), and the fedora, bowler, panama, stetson and top hat have crowns as wide as the head instead of a narrow one perched on top; the crown sits on the head instead of floating above it
 
 2026-09-27 version 2.1.9-web.207:
