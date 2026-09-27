@@ -72,7 +72,7 @@ const AV_AXES = [
 // avVisible() lets the UI filter rows coherently with the selected sex
 // while the engine still renders any recipe (old recipes stay valid).
 const AV_SEXTAG = {
-  hair: { 2: 0, 3: 1, 5: 1, 6: 0, 7: 1, 8: 1, 9: 0, 11: 1, 12: 1, 14: 1, 16: 0, 19: 1, 21: 1, 22: 1, 23: 1, 24: 1, 25: 1 },
+  hair: { 2: 0, 3: 1, 5: 1, 6: 0, 7: 1, 8: 1, 9: 0, 11: 1, 12: 1, 14: 1, 16: 0, 19: 1, 20: 1, 21: 1, 22: 1, 23: 1, 24: 1, 25: 1 },
   mouth: { 3: 1 },
   outfit: { 6: 1, 9: 1, 12: 1, 13: 1, 14: 1 }
 };
@@ -120,6 +120,10 @@ const AV_RANDSEX = {
   glasses: { 3: 1 },                    // cat-eye
   ears: { 1: 1 }                        // pearl studs
 };
+// Relative dice weights (default 1): striking styles stay possible but rare.
+const AV_RANDWEIGHT = {
+  hair: { 0: 0.35, 10: 0.6, 11: 0.6, 15: 0.5, 16: 0.4, 17: 0.2, 23: 0.6 }
+};
 // Probability that an optional axis stays on 'none' ([masculine, feminine]).
 const AV_RANDNONE = { marks: [0.65, 0.65], beard: [0.45, 1], glasses: [0.7, 0.7], ears: [0.85, 0.45], hat: [0.7, 0.75] };
 
@@ -143,7 +147,14 @@ function avRandom(fixedSex) {
       if (Math.random() < pNone[r.sex]) { r[ax.id] = 0; return; }
       opts = opts.filter(function (v) { return v !== 0; });
     }
-    r[ax.id] = opts.length ? opts[Math.floor(Math.random() * opts.length)] : 0;
+    var w = AV_RANDWEIGHT[ax.id] || {}, total = 0;
+    opts.forEach(function (v) { total += (v in w) ? w[v] : 1; });
+    var pick = Math.random() * total;
+    r[ax.id] = opts.length ? opts[opts.length - 1] : 0;
+    for (var k = 0; k < opts.length; k++) {
+      pick -= (opts[k] in w) ? w[opts[k]] : 1;
+      if (pick < 0) { r[ax.id] = opts[k]; break; }
+    }
   };
   // 'eyec' depends on 'eyes' and 'glasses': draw it last.
   AV_AXES.forEach(function (ax) { if (ax.id !== 'sex' && ax.id !== 'eyec') draw(ax); });
@@ -309,7 +320,7 @@ function _braid(x0, y0, x1, y1, n, fill, line) {
   return s;
 }
 
-function _hair(ctx, i, hc) {
+function _hair(ctx, i, hc, face) {
   var f = ctx.v(hc[0]), dk = _mix(hc[0], 0.78), bk = _mix(hc[0], 0.85), hl = hc[1];
   var P = function (d, fill) { return '<path d="' + d + '" fill="' + (fill || f) + '"/>'; };
   switch (i) {
@@ -358,14 +369,24 @@ function _hair(ctx, i, hc) {
       });
       return [locks, P(CAP_SMOOTH) + _bumps(100, 84, 48, 200, 340, 8, 6, f)];
     }
-    case 16: // balding crown (masculine)
-      return ['', '<ellipse cx="84" cy="48" rx="14" ry="7" fill="#fff" opacity=".35"/>',
-        P('M0 58 L66 58 Q58 80 64 108 L0 108z M200 58 L134 58 Q142 80 136 108 L200 108z')];
+    case 16: { // balding crown (masculine): a crown of hair hugging the head outline
+      var band = ctx.cid + 'bb';
+      if (!ctx.seenClip) ctx.seenClip = {};
+      if (!ctx.seenClip[band]) {
+        ctx.seenClip[band] = 1;
+        ctx.defs.push('<clipPath id="' + band + '"><path d="M0 70 Q30 62 52 72 L52 116 L0 116z M200 70 Q170 62 148 72 L148 116 L200 116z"/></clipPath>');
+      }
+      // Back: the hair round the back of the head peeks out on both sides;
+      // scalp: soft tufts above the ears, inside the head outline.
+      return ['<g clip-path="url(#' + band + ')"><path d="' + _headD(face || 0) + '" fill="' + bk + '" transform="translate(100,94) scale(1.07) translate(-100,-94)"/></g>',
+        '<ellipse cx="84" cy="48" rx="14" ry="7" fill="#fff" opacity=".35"/>',
+        '<ellipse cx="46" cy="90" rx="11" ry="22" fill="' + f + '"/><ellipse cx="154" cy="90" rx="11" ry="22" fill="' + f + '"/>'];
+    }
     case 17: // mohawk crest
       return ['', P('M86 60 L80 30 L90 34 L92 6 L100 20 L108 6 L110 34 L120 30 L114 60z'),
         '<path d="M0 0 L200 0 L200 96 Q152 62 100 56 Q48 62 0 96z" fill="' + hc[0] + '" opacity=".4"/>'];
     case 18: // tousled mid-length (surfer)
-      return [P('M40 96 Q36 26 100 24 Q164 26 160 96 L160 128 Q148 136 138 126 L62 126 Q52 136 40 128z', bk),
+      return [P('M40 96 Q36 26 100 24 Q164 26 160 96 Q164 116 152 126 Q148 112 142 104 L58 104 Q52 112 48 126 Q36 116 40 96z', bk),
         P('M42 100 Q34 22 100 20 Q166 22 158 100 L150 70 L140 76 L132 60 L118 70 L106 56 L94 70 L80 58 L70 74 L58 64 L50 80z') + _shine(hl)];
     case 19: // pigtails (feminine)
       return ['', P('M46 80 Q14 88 18 140 Q22 160 34 166 Q28 120 52 96z') + P('M154 80 Q186 88 182 140 Q178 160 166 166 Q172 120 148 96z')
@@ -380,14 +401,14 @@ function _hair(ctx, i, hc) {
         P(CAP_SIDE) + '<path d="M52 78 Q42 112 56 136 M148 78 Q158 112 144 136" stroke="' + f + '" stroke-width="5" fill="none" stroke-linecap="round"/>' + _shine(hl)];
     case 22: // sleek asymmetric long bob, deep side part
       return [P('M38 100 Q34 24 100 22 Q166 24 162 100 L164 128 L136 130 L64 150 L36 152z', bk),
-        P('M40 120 Q34 24 100 22 Q160 24 156 96 Q150 64 130 54 Q96 60 70 86 Q56 104 58 140z') + _shine(hl)];
+        P('M40 120 Q34 24 100 22 Q160 24 156 96 Q150 64 130 54 Q94 58 70 76 Q56 94 58 140z') + _shine(hl)];
     case 23: // long voluminous curls
       return [P('M36 96 Q32 22 100 20 Q168 22 164 96 L168 180 L32 180z', bk)
         + [100, 124, 148, 172].map(function (y) { return '<circle cx="32" cy="' + y + '" r="12" fill="' + bk + '"/><circle cx="168" cy="' + y + '" r="12" fill="' + bk + '"/>'; }).join(''),
         P(CAP_SIDE) + _bumps(100, 84, 50, 195, 250, 4, 10, f)];
     case 24: // low ponytail swept over one shoulder
-      return ['', P(CAP_SMOOTH) + P('M142 118 Q172 130 162 192 Q152 198 146 188 Q156 150 134 132z')
-        + '<circle cx="142" cy="124" r="5" fill="#d9536a"/>' + _shine(hl)];
+      return ['', P(CAP_SMOOTH) + P('M146 104 Q176 118 168 190 Q158 198 150 188 Q160 150 142 134 Q150 120 146 104z')
+        + '<circle cx="150" cy="112" r="5" fill="#d9536a"/>' + _shine(hl)];
     case 25: // vintage hollywood waves
       return [P('M40 100 Q36 24 100 22 Q164 24 160 100 Q168 118 158 136 L142 140 L58 140 L42 136 Q32 118 40 100z', bk),
         P('M42 108 Q36 24 100 22 Q160 24 156 96 Q150 64 128 56 Q108 62 96 52 Q82 76 64 70 Q50 82 58 104 Q44 112 42 108z')
@@ -689,7 +710,7 @@ function avPartSvg(axId, i, recipe, size) {
     case 'face':    body = _earsSkin(skin) + _head(ctx, i, skin); break;
     case 'marks':   body = _earsSkin(skin) + _head(ctx, r.face, skin) + _marks(i, skin[1]); break;
     case 'outfit':  body = _sx(r.sex === 1 ? 0.86 : 1, _neck(skin) + _outfit(ctx, i, skin)); break;
-    case 'hair':    h = _hair(ctx, i, hc);
+    case 'hair':    h = _hair(ctx, i, hc, r.face);
       body = h[0] + (h[2] ? '<g clip-path="url(#' + _headClip(ctx, r.face, 1.02) + ')">' + h[2] + '</g>' : '') + h[1]; break;
     case 'beard':   body = _beard(ctx, i, hc, r.face); break;
     case 'eyes':    body = _eyes(i, AV_EYEC[r.eyec], skin, r.sex === 1); break;
@@ -716,7 +737,7 @@ function avSvg(recipe, size) {
   // Round face (face 1) is wider than the oval the hair, beard and hats
   // were drawn for: widen them so they hug the head.
   var wk = r.face === 1 ? 1.075 : 1;
-  var hair = _hair(ctx, r.hair, hc);
+  var hair = _hair(ctx, r.hair, hc, r.face);
   var covers = _hatCovers(r.hat);
   var clipHair = function (s) { return covers && s ? '<g clip-path="url(#' + cid + 'hl)">' + s + '</g>' : s; };
   ctx.defs.push('<clipPath id="' + cid + '"><rect x="6" y="6" width="188" height="188"/></clipPath>'

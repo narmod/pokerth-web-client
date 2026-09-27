@@ -1,4 +1,8 @@
-2026-09-27 version 2.1.9-web.177 (current series):
+2026-09-27 version 2.1.9-web.178 (current series):
+- improvement: portraits of the « Create » tab — the balding crown now wraps round the head, the surfer cut and the low ponytail no longer look stuck on the face, and the side-swept bob no longer hides an eye
+- improvement: the long box braids are now offered with the feminine silhouette only, and the « Random » button draws the most striking styles (mohawk, bald, balding, dreadlocks, afro) less often
+
+2026-09-27 version 2.1.9-web.177:
 - bugfix: portraits of the « Create » tab — hair now hugs the round and square faces (no more gap at the temples), beards follow the shape of the jaw, the balding and mohawk sides stay on the head, and the stray shadow under the chin is gone
 - improvement: the « Random » button now only picks options that suit the chosen silhouette (no bald or mohawk woman, no tie on a woman, no cat-eye glasses or pearls on a man) and adds hats, glasses, earrings and skin marks less often
 
