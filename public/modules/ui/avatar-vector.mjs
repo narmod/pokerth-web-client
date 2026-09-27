@@ -46,8 +46,46 @@ const AV_FELT = [
   ['#b9dfbe', '#e2f4e4'], ['#b7cff0', '#e1ecfb'], ['#f2bcc0', '#fbe2e3'],
   ['#d3c1ef', '#ede4fa'], ['#d2d6dc', '#eef0f2'], ['#b0ded8', '#dff3f0'],
   ['#efcfa9', '#faeadb'], ['#ffffff', '#ffffff'], ['#e9edf2', '#fafbfc'],
-  ['#f8eac0', '#fff9e8'], ['#cae0f4', '#eaf3fb']
+  ['#f8eac0', '#fff9e8'], ['#cae0f4', '#eaf3fb'],
+  // 2.1.9-web.206 — poker backdrops, drawn over the gradient by _bgPattern():
+  // 11 green felt with a chip stack, 12 burgundy felt with gold suits,
+  // 13 card back, 14 casino neon
+  ['#1f6b42', '#2f8f5a'], ['#4d1420', '#7a1f2e'], ['#b32236', '#c9364a'], ['#2b1250', '#6a2aa0']
 ];
+// Studio swatches of the patterned backdrops (CSS backgrounds).
+const AV_BG_CSS = {
+  11: 'radial-gradient(circle at 68% 68%, #d33 0 20%, #fff 21% 26%, transparent 27%), linear-gradient(#2f8f5a, #1f6b42)',
+  12: 'radial-gradient(circle at 50% 50%, #e0b23c 0 18%, transparent 19%), linear-gradient(#7a1f2e, #4d1420)',
+  13: 'repeating-linear-gradient(45deg, #b32236 0 3px, #d84a5c 3px 6px)',
+  14: 'linear-gradient(135deg, #3b1d6e, #8e2bb5 60%, #ff4fd8)'
+};
+function _bgPattern(ctx, i) {
+  var k, o = '';
+  if (i === 11) { // chip stack in the bottom-right corner (beside the shoulder)
+    for (k = 0; k < 5; k++) {
+      var cy = 182 - k * 5, col = k % 2 ? '#f2eee6' : '#c62828';
+      o += '<ellipse cx="176" cy="' + cy + '" rx="14" ry="5.5" fill="' + _mix(col, 0.8) + '"/>'
+        + '<ellipse cx="176" cy="' + (cy - 2) + '" rx="14" ry="5.5" fill="' + col + '"/>';
+    }
+    return o + '<ellipse cx="176" cy="160" rx="9" ry="3.4" fill="none" stroke="#f2eee6" stroke-width="1.2" opacity=".8"/>';
+  }
+  if (i === 12) { // gold suits scattered on the burgundy felt
+    for (var gy = 22; gy <= 190; gy += 30) for (var gx = ((gy / 30) % 2 ? 22 : 37); gx <= 190; gx += 30) o += _suit(((gx + gy) / 15) % 4 | 0, gx, gy, 6, '#e0b23c');
+    return '<g opacity=".3">' + o + '</g>';
+  }
+  if (i === 13) { // card back: white margin, lattice inside
+    for (k = -200; k <= 200; k += 14) o += '<path d="M' + k + ' 6 L' + (k + 200) + ' 206 M' + (k + 200) + ' 6 L' + k + ' 206"/>';
+    return '<rect x="6" y="6" width="188" height="188" fill="#fff"/><rect x="14" y="14" width="172" height="172" rx="6" fill="#b32236"/>'
+      + '<g clip-path="url(#' + ctx.cid + 'cb)" stroke="#e8707f" stroke-width="1.6" opacity=".7">' + o + '</g>'
+      + '<rect x="18" y="18" width="164" height="164" rx="5" fill="none" stroke="#fff" stroke-width="1.5" opacity=".7"/>';
+  }
+  if (i === 14) { // casino neon: glowing lines
+    return '<path d="M6 30 L194 30" stroke="#ff4fd8" stroke-width="6" opacity=".25"/><path d="M6 30 L194 30" stroke="#ff9cf0" stroke-width="1.8"/>'
+      + '<path d="M6 44 L194 44" stroke="#3fe0ff" stroke-width="6" opacity=".2"/><path d="M6 44 L194 44" stroke="#9cf0ff" stroke-width="1.6"/>'
+      + '<path d="M6 190 Q100 150 194 190" stroke="#ff4fd8" stroke-width="10" opacity=".18" fill="none"/>';
+  }
+  return '';
+}
 // Index of the white background: forced by the random dice (narmod
 // 2026-07-31: random draws always land on the white backdrop).
 const AV_BG_WHITE = 7;
@@ -67,15 +105,16 @@ const AV_AXES = [
   { id: 'hair',  label: 'avmHair',      n: 52,              kind: 'shape', none: true  },
   { id: 'hairc', label: 'avmHairColor', n: AV_HAIRC.length, kind: 'color', none: false },
   { id: 'beard', label: 'avmBeard',     n: 7,               kind: 'shape', none: true  },
-  { id: 'eyes',  label: 'avmEyeShape',  n: 7,               kind: 'shape', none: false },
+  { id: 'eyes',  label: 'avmEyeShape',  n: 10,              kind: 'shape', none: false },
   { id: 'eyec',  label: 'avmEyeColor',  n: AV_EYEC.length,  kind: 'color', none: false },
   { id: 'brows', label: 'avmBrows',     n: 5,               kind: 'shape', none: false },
   { id: 'nose',  label: 'avmNose',      n: 5,               kind: 'shape', none: false },
-  { id: 'mouth', label: 'avmMouth',     n: 13,              kind: 'shape', none: false },
+  { id: 'mouth', label: 'avmMouth',     n: 15,              kind: 'shape', none: false },
   { id: 'glasses', label: 'avmGlasses', n: 9,               kind: 'shape', none: true  },
   { id: 'shoulder', label: 'avmShoulder', n: 5,             kind: 'shape', none: true  },
-  { id: 'ears',  label: 'avmEarrings',  n: 6,               kind: 'shape', none: true  },
-  { id: 'hat',   label: 'avmHat',       n: 16,              kind: 'shape', none: true  }
+  { id: 'ears',  label: 'avmEarrings',  n: 8,               kind: 'shape', none: true  },
+  { id: 'hat',   label: 'avmHat',       n: 16,              kind: 'shape', none: true  },
+  { id: 'badge', label: 'avmBadge',     n: 6,               kind: 'shape', none: true  }
 ];
 
 // Per-option silhouette tags (0 = masculine, 1 = feminine, missing =
@@ -125,7 +164,7 @@ const AV_SEXTAG = {
   marks: { 2: 1, 6: 0 },                    // beauty mark | cheek scar
   glasses: { 3: 1, 7: 0 },                  // cat-eye | monocle
   brows: { 4: 1 },                          // thin arched
-  ears: { 1: 1, 2: 1, 3: 1, 4: 1, 5: 1 },   // pearl studs, gold studs, hoops, single hoops
+  ears: { 1: 1, 2: 1, 3: 1, 4: 1, 5: 1 },   // pearl studs, gold studs, hoops, single hoops (6 skull studs and 7 the brow ring are shared)
   hat: { 4: 0, 7: 0, 12: 0 }                // bowler, flat cap, top hat
 };
 
@@ -151,7 +190,7 @@ function avVisible(axId, i, recipe) {
 }
 
 const AV_DEFAULT = { sex: 0, face: 0, bg: 0, outfit: 0, outfitc: 0, skin: 1, marks: 0, hair: 1, hairc: 1,
-                     beard: 0, eyes: 0, eyec: 0, brows: 0, nose: 0, mouth: 0, glasses: 0, shoulder: 0, ears: 0, hat: 0 };
+                     beard: 0, eyes: 0, eyec: 0, brows: 0, nose: 0, mouth: 0, glasses: 0, shoulder: 0, ears: 0, hat: 0, badge: 0 };
 
 function avNormalize(r) {
   var out = {};
@@ -170,7 +209,10 @@ function avNormalize(r) {
 const AV_RANDWEIGHT = {
   hair: { 0: 0.35, 10: 0.6, 11: 0.6, 15: 0.5, 16: 0.4, 17: 0.2, 23: 0.6, 28: 0.5, 29: 0.5, 30: 0.5, 33: 0.6, 38: 0.6, 42: 0.4, 48: 0.6 },
   hairc: { 10: 0.25, 11: 0.25 },
-  mouth: { 10: 0.35, 11: 0.5, 12: 0.4 },
+  mouth: { 10: 0.35, 11: 0.5, 12: 0.4, 13: 0.5, 14: 0.4 },
+  eyes: { 7: 0.3, 8: 0.35, 9: 0.6 },
+  ears: { 6: 0.5, 7: 0.5 },
+  bg: { 11: 0.6, 12: 0.6, 13: 0.5, 14: 0.5 },
   outfit: { 31: 0.4, 35: 0.6, 36: 0.6, 37: 0.6, 38: 0.6 },
   brows: { 1: 0.5, 2: 0.6, 3: 0.5, 4: 0.6 },
   glasses: { 6: 0.3, 7: 0.4 },
@@ -178,7 +220,7 @@ const AV_RANDWEIGHT = {
   hat: { 10: 0.5, 12: 0.4, 15: 0.3 }
 };
 // Probability that an optional axis stays on 'none' ([masculine, feminine]).
-const AV_RANDNONE = { marks: [0.65, 0.65], beard: [0.45, 1], glasses: [0.7, 0.7], ears: [0.85, 0.45], hat: [0.7, 0.75] };
+const AV_RANDNONE = { marks: [0.65, 0.65], beard: [0.45, 1], glasses: [0.7, 0.7], ears: [0.85, 0.45], hat: [0.7, 0.75], badge: [0.8, 0.8] };
 
 function _randOk(axId, i, r) {
   // The high ponytail is not drawn under a hat (the studio still allows it).
@@ -857,12 +899,12 @@ function _brows(i, col, fem) {
 // ── Eyes (shape x iris color) — bold Mii-like outlines ───────────────────
 var EYE_LINE = '#241a12';
 // Open eye: outlined sclera, big iris, pupil, highlight, thick upper lid.
-function _eye(x, y, ec, rx, ry, ir) {
-  rx = rx || 8; ry = ry || 9.5; ir = ir || 5.4;
-  return '<ellipse cx="' + x + '" cy="' + y + '" rx="' + rx + '" ry="' + ry + '" fill="#fff" stroke="' + EYE_LINE + '" stroke-width="1.6"/>'
-    + '<circle cx="' + x + '" cy="' + (y + 1) + '" r="' + ir + '" fill="' + ec + '"/>'
-    + '<circle cx="' + x + '" cy="' + (y + 1) + '" r="' + (ir * 0.55).toFixed(1) + '" fill="#15100b"/>'
-    + '<circle cx="' + (x + ir * 0.4).toFixed(1) + '" cy="' + (y - ir * 0.35).toFixed(1) + '" r="' + (ir * 0.32).toFixed(1) + '" fill="#fff"/>'
+function _eye(x, y, ec, rx, ry, ir, sc, dx) { // sc: sclera colour, dx: iris shift (side glance)
+  rx = rx || 8; ry = ry || 9.5; ir = ir || 5.4; dx = dx || 0;
+  return '<ellipse cx="' + x + '" cy="' + y + '" rx="' + rx + '" ry="' + ry + '" fill="' + (sc || '#fff') + '" stroke="' + EYE_LINE + '" stroke-width="1.6"/>'
+    + '<circle cx="' + (x + dx) + '" cy="' + (y + 1) + '" r="' + ir + '" fill="' + ec + '"/>'
+    + '<circle cx="' + (x + dx) + '" cy="' + (y + 1) + '" r="' + (ir * 0.55).toFixed(1) + '" fill="#15100b"/>'
+    + '<circle cx="' + (x + dx + ir * 0.4).toFixed(1) + '" cy="' + (y - ir * 0.35).toFixed(1) + '" r="' + (ir * 0.32).toFixed(1) + '" fill="#fff"/>'
     + '<path d="M' + (x - rx) + ' ' + (y - 1) + ' Q' + x + ' ' + (y - 2 * ry + 1) + ' ' + (x + rx) + ' ' + (y - 1) + '" stroke="' + EYE_LINE + '" stroke-width="3.2" stroke-linecap="round" fill="none"/>';
 }
 function _closed(x, y) {
@@ -888,6 +930,22 @@ function _eyes(shape, ec, skin, fem) {
       return _eye(x, y, ec) + '<path d="' + lid + '" fill="' + skin[0] + '"/>'
         + '<path d="' + edge + '" stroke="' + EYE_LINE + '" stroke-width="3.4" stroke-linecap="round" fill="none"/>';
     }).join('');
+  } else if (shape === 7) { // scarred eye: the left eye shut under a scar, the right one open (2.1.9-web.206)
+    s = '<path d="M70 98 L86 98" stroke="' + EYE_LINE + '" stroke-width="3.8" stroke-linecap="round"/>'
+      + '<path d="M73 84 L83 112" stroke="#f6d3d0" stroke-width="3" stroke-linecap="round"/><path d="M74 90 L79 89 M77 100 L82 99" stroke="#f6d3d0" stroke-width="1.6" stroke-linecap="round"/>'
+      + _eye(R, y, ec);
+  } else if (shape === 8) { // bloodshot: pink sclera, veins, dark circles (2.1.9-web.206)
+    s = [L, R].map(function (x) {
+      return _eye(x, y, ec, 8, 9.5, 5.4, '#f3d4d4')
+        + '<path d="M' + (x - 7) + ' ' + (y + 3) + ' L' + (x - 3) + ' ' + (y + 1) + ' M' + (x + 3) + ' ' + (y + 4) + ' L' + (x + 7) + ' ' + (y + 2) + ' M' + (x - 6) + ' ' + (y - 3) + ' L' + (x - 3) + ' ' + (y - 2) + '" stroke="#c0392b" stroke-width=".9" stroke-linecap="round"/>'
+        + '<path d="M' + (x - 7) + ' ' + (y + 11) + ' Q' + x + ' ' + (y + 15) + ' ' + (x + 7) + ' ' + (y + 11) + '" stroke="#5a3a4a" stroke-width="3" fill="none" opacity=".3"/>';
+    }).join('');
+  } else if (shape === 9) { // side glance: irises to the side under heavy lids (2.1.9-web.206)
+    s = [L, R].map(function (x) {
+      return _eye(x, y, ec, 8, 9.5, 5.4, null, 3.5)
+        + '<path d="M' + (x - 11) + ' ' + (y - 13) + ' L' + (x + 11) + ' ' + (y - 13) + ' L' + (x + 11) + ' ' + (y - 2) + ' Q' + x + ' ' + (y + 1) + ' ' + (x - 11) + ' ' + (y - 2) + 'z" fill="' + skin[0] + '"/>'
+        + '<path d="M' + (x - 9) + ' ' + (y - 2) + ' Q' + x + ' ' + (y + 1) + ' ' + (x + 9) + ' ' + (y - 2) + '" stroke="' + EYE_LINE + '" stroke-width="3.4" stroke-linecap="round" fill="none"/>';
+    }).join('');
   } else if (shape === 1) { // almond
     s = [L, R].map(function (x) {
       return '<path d="M' + (x - 10) + ' ' + y + ' Q' + x + ' ' + (y - 11) + ' ' + (x + 10) + ' ' + y + ' Q' + x + ' ' + (y + 8) + ' ' + (x - 10) + ' ' + y + 'z" fill="#fff" stroke="' + EYE_LINE + '" stroke-width="1.4"/>'
@@ -898,10 +956,12 @@ function _eyes(shape, ec, skin, fem) {
   } else { // 0: round
     s = _eye(L, y, ec) + _eye(R, y, ec);
   }
-  if (fem && shape !== 3) { // lashes on the outer corners
+  if (fem && shape !== 3 && shape !== 7) { // lashes on the outer corners
     s += '<path d="M69 93 L64 89 M71 90 L67 85 M131 93 L136 89 M129 90 L133 85" stroke="' + EYE_LINE + '" stroke-width="2" stroke-linecap="round"/>';
-  } else if (fem) {
+  } else if (fem && shape === 3) {
     s += '<path d="M69 93 L64 89 M71 90 L67 85" stroke="' + EYE_LINE + '" stroke-width="2" stroke-linecap="round"/>';
+  } else if (fem) { // scarred left eye: lashes on the open right eye only
+    s += '<path d="M131 93 L136 89 M129 90 L133 85" stroke="' + EYE_LINE + '" stroke-width="2" stroke-linecap="round"/>';
   }
   return s;
 }
@@ -942,6 +1002,14 @@ function _mouth(i) {
     case 11: // sneer: lip curled up on one side, a canine showing
       return line('M86 136 Q100 138 114 128')
         + '<path d="M107 130 L111 137 L113 129z" fill="' + TEETH + '"/>';
+    case 13: // toothpick in the corner of the mouth (2.1.9-web.206)
+      return line('M89 133 L109 133')
+        + '<path d="M106 132.5 L128 126" stroke="#e8d9b0" stroke-width="2.4" stroke-linecap="round"/><path d="M106 132.5 L128 126" stroke="#b9a476" stroke-width=".8" stroke-linecap="round"/>';
+    case 14: // wide grin with a gold tooth (2.1.9-web.206)
+      return '<path d="M82 126 Q100 129 118 126 Q116 150 100 150 Q84 150 82 126z" fill="' + M + '"/>'
+        + '<path d="M85 127 Q100 130 115 127 Q114 136 100 137 Q86 136 85 127z" fill="' + TEETH + '"/>'
+        + '<path d="M103 128.5 L108 128.5 L107.5 135.5 L103.5 136z" fill="#e0b23c"/><path d="M104 130 L106.5 130" stroke="#fff" stroke-width=".9" opacity=".8"/>'
+        + '<path d="M90 141 Q100 148 110 141 Q100 147 90 141z" fill="' + LIP + '"/>';
     case 12: // gritted teeth
       return '<path d="M84 128 Q100 125 116 128 Q116 141 100 142 Q84 141 84 128z" fill="' + M + '"/>'
         + '<rect x="87" y="130" width="26" height="8" rx="2" fill="' + TEETH + '"/>'
@@ -1102,13 +1170,54 @@ function _hat(ctx, i, face) {
   }
 }
 
+// ── Badge (axis 'badge', 2.1.9-web.206): a poker token pinned in the
+// bottom-left corner of the frame — 1 dealer button, 2 red chip, 3 pair of
+// aces, 4 dice, 5 chip stack.
+function _badge(i) {
+  var x = 30, y = 172, o = '';
+  switch (i) {
+    case 1: return '<circle cx="' + x + '" cy="' + y + '" r="14" fill="#f4f0e6" stroke="#c9a24a" stroke-width="2.4"/>'
+      + '<path d="M' + (x - 4.5) + ' ' + (y - 6.5) + ' L' + (x - 4.5) + ' ' + (y + 6.5) + ' L' + (x + 0.5) + ' ' + (y + 6.5) + ' Q' + (x + 7.5) + ' ' + (y + 6.5) + ' ' + (x + 7.5) + ' ' + y + ' Q' + (x + 7.5) + ' ' + (y - 6.5) + ' ' + (x + 0.5) + ' ' + (y - 6.5) + 'z" fill="none" stroke="#1f1f24" stroke-width="2.6" stroke-linejoin="round"/>';
+    case 2: {
+      for (var k = 0; k < 6; k++) o += '<rect x="' + (x - 2.4) + '" y="' + (y - 14.5) + '" width="4.8" height="5" fill="#f2eee6" transform="rotate(' + (k * 60) + ' ' + x + ' ' + y + ')"/>';
+      return '<circle cx="' + x + '" cy="' + y + '" r="14.5" fill="#c62828"/>' + o
+        + '<circle cx="' + x + '" cy="' + y + '" r="9" fill="none" stroke="#f2eee6" stroke-width="1.4" stroke-dasharray="3 2"/>'
+        + '<circle cx="' + x + '" cy="' + y + '" r="6" fill="#a81f1f"/>';
+    }
+    case 3: return '<g transform="rotate(-12 ' + x + ' ' + y + ')">' + _card(x - 13, y - 12, 15, 0, false) + '</g>'
+      + '<g transform="rotate(10 ' + x + ' ' + y + ')">' + _card(x - 3, y - 12, 15, 1, true) + '</g>';
+    case 4: {
+      var die = function (cx, cy, rot, pips) {
+        var d = '<rect x="' + (cx - 8) + '" y="' + (cy - 8) + '" width="16" height="16" rx="3" fill="#f4f0e6" stroke="#b9b3a8" stroke-width=".8"/>';
+        pips.forEach(function (q) { d += '<circle cx="' + (cx + q[0]) + '" cy="' + (cy + q[1]) + '" r="1.6" fill="#1f1f24"/>'; });
+        return '<g transform="rotate(' + rot + ' ' + cx + ' ' + cy + ')">' + d + '</g>';
+      };
+      return die(x - 7, y + 3, -15, [[-4, -4], [0, 0], [4, 4]]) + die(x + 9, y - 3, 12, [[-4, -4], [4, -4], [-4, 4], [4, 4], [0, 0]]);
+    }
+    case 5: {
+      var cols = ['#2d6aa3', '#c62828', '#2e8b57', '#1f1f24'];
+      for (var j = 0; j < 4; j++) {
+        var cy = y + 9 - j * 5, col = cols[j];
+        o += '<ellipse cx="' + x + '" cy="' + cy + '" rx="14" ry="5.5" fill="' + _mix(col, 0.75) + '"/><ellipse cx="' + x + '" cy="' + (cy - 2) + '" rx="14" ry="5.5" fill="' + col + '"/>'
+          + '<path d="M' + (x - 14) + ' ' + (cy - 2) + ' L' + (x - 14) + ' ' + cy + ' M' + (x + 14) + ' ' + (cy - 2) + ' L' + (x + 14) + ' ' + cy + ' M' + (x - 5) + ' ' + (cy + 3) + ' L' + (x - 5) + ' ' + (cy + 5) + ' M' + (x + 5) + ' ' + (cy + 3) + ' L' + (x + 5) + ' ' + (cy + 5) + '" stroke="#f2eee6" stroke-width="1.6"/>';
+      }
+      return o + '<ellipse cx="' + x + '" cy="' + (y - 8) + '" rx="8.5" ry="3.2" fill="none" stroke="#f2eee6" stroke-width="1.2" opacity=".85"/>';
+    }
+    default: return '';
+  }
+}
+
 // ── Earrings ─────────────────────────────────────────────────────────────
 function _earring(i, x) {
   if (i === 3 || i === 4 || i === 5) return '<circle cx="' + x + '" cy="117" r="5.5" fill="none" stroke="#e0b240" stroke-width="2.4"/>';
+  if (i === 6) return '<circle cx="' + x + '" cy="111" r="3.8" fill="#f2eee6"/><circle cx="' + (x - 1.3) + '" cy="110.4" r=".9" fill="#1f1f24"/><circle cx="' + (x + 1.3) + '" cy="110.4" r=".9" fill="#1f1f24"/><rect x="' + (x - 1.8) + '" y="112.6" width="3.6" height="1.8" fill="#f2eee6"/><path d="M' + (x - 1) + ' 112.8 L' + (x - 1) + ' 114.2 M' + x + ' 112.8 L' + x + ' 114.2 M' + (x + 1) + ' 112.8 L' + (x + 1) + ' 114.2" stroke="#1f1f24" stroke-width=".5"/>'; // skull stud
   return '<circle cx="' + x + '" cy="111" r="3.4" fill="' + (i === 1 ? '#f4f0e8' : '#e0b240') + '"/>';
 }
+// 2.1.9-web.206: 6 skull studs (both ears), 7 eyebrow ring (right brow)
+var BROW_RING = '<circle cx="128" cy="79.5" r="3.4" fill="none" stroke="#d4a437" stroke-width="1.9"/><circle cx="128" cy="83" r="1.1" fill="#f2eee6"/>';
 function _ears(i, hw) {
   if (i === 0) return '';
+  if (i === 7) return BROW_RING;
   var xl = 100 - (hw || 53) + 6, xr = 200 - xl;
   if (i === 4) return _earring(i, xl - 1);  // single hoop, left ear only
   if (i === 5) return _earring(i, xr + 1); // single hoop, right ear only
@@ -1287,7 +1396,8 @@ const AV_CROP = {
   glasses:  [52, 62, 96],
   shoulder: [116, 116, 80],
   ears:     [30, 86, 40],
-  hat:      [16, 2, 168]
+  hat:      [16, 2, 168],
+  badge:    [6, 148, 48]
 };
 
 function _cid() { return 'avc' + Math.floor(Math.random() * 1e9); }
@@ -1319,10 +1429,12 @@ function avPartSvg(axId, i, recipe, size) {
     case 'glasses': body = _glasses(i); break;
     case 'hat':     body = _hatBack(ctx, i, _faceKey(r)) + _hat(ctx, i, _faceKey(r)); break;
     case 'shoulder':body = ''; break;
-    case 'ears':    // one ear + its earring (the right-only hoop is mirrored)
+    case 'ears':    // one ear + its earring (the right-only hoop is mirrored); the brow ring shows on a brow
       body = '<circle cx="47" cy="100" r="10.5" fill="' + skin[0] + '"/>' + _earring(i, 46);
       if (i === 0) body = '<circle cx="47" cy="100" r="10.5" fill="' + skin[0] + '"/>';
+      if (i === 7) { body = '<path d="M112 79 Q122 74 132 80" stroke="' + hcN[0] + '" stroke-width="5.4" stroke-linecap="round" fill="none"/>' + BROW_RING; vb = [108, 60, 40]; }
       break;
+    case 'badge':   body = _badge(i); break;
     default: return avSvg(r, size);
   }
   return _wrap(vb[0] + ' ' + vb[1] + ' ' + vb[2] + ' ' + vb[2], size, ctx, body);
@@ -1341,6 +1453,7 @@ function avSvg(recipe, size) {
   var hatClip = AV_SHORT_HAIR[r.hair] ? 'hs' : 'hl';
   var clipHair = function (s) { return covers && s ? '<g clip-path="url(#' + cid + hatClip + ')">' + s + '</g>' : s; };
   ctx.defs.push('<clipPath id="' + cid + '"><rect x="6" y="6" width="188" height="188"/></clipPath>'
+    + (r.bg === 13 ? '<clipPath id="' + cid + 'cb"><rect x="14" y="14" width="172" height="172" rx="6"/></clipPath>' : '')
     + '<clipPath id="' + cid + 'hl"><rect x="0" y="' + HAT_LINE + '" width="200" height="' + (200 - HAT_LINE) + '"/></clipPath>'
     + '<clipPath id="' + cid + 'hs"><rect x="0" y="' + HAT_LINE + '" width="200" height="' + (HAT_SHORT_BOTTOM - HAT_LINE) + '"/></clipPath>'
     + '<radialGradient id="' + cid + 'bg" cx=".5" cy=".38" r=".75"><stop offset="0" stop-color="' + felt[1] + '"/><stop offset="1" stop-color="' + felt[0] + '"/></radialGradient>');
@@ -1348,6 +1461,7 @@ function avSvg(recipe, size) {
     + '<rect x="2.5" y="2.5" width="195" height="195" fill="#c9992e"/>'
     + '<rect x="6" y="6" width="188" height="188" fill="url(#' + cid + 'bg)"/>'
     + '<g clip-path="url(#' + cid + ')">'
+    + _bgPattern(ctx, r.bg)
     + _hatBack(ctx, r.hat, fk)
     + clipHair(_warp(hair[0]
         // Underlay: the hair mass behind the head fills the temples, so
@@ -1372,6 +1486,7 @@ function avSvg(recipe, size) {
     + clipHair(_warp(hair[1], fk))
     + _glasses(r.glasses)
     + _warp(_hat(ctx, r.hat, fk), fk)
+    + _badge(r.badge)
     + '</g>'
     + '<rect x="6" y="6" width="188" height="188" fill="none" stroke="#8f6a1d" stroke-width="1"/>';
   return _wrap('0 0 200 200', sz, ctx, body);
@@ -1391,7 +1506,7 @@ const AV_SEX_SAMPLE = [
 
 // Swatch color shown on the option chip for 'color' axes.
 function avSwatch(axId, i) {
-  if (axId === 'bg') return AV_FELT[i][0];
+  if (axId === 'bg') return AV_BG_CSS[i] || AV_FELT[i][0];
   if (axId === 'skin') return AV_SKIN[i][0];
   if (axId === 'hairc') return AV_HAIRC[i][0];
   if (axId === 'outfitc') return i ? AV_OUTFITC[i - 1] : '#888';

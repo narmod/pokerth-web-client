@@ -49,11 +49,18 @@ studio = studio.replace(/export \{[^}]*\};?/, '');
 ok(typeof window.avStudioTab === 'function', 'avStudioTab exposed');
 ok(typeof window._avSvg === 'function', 'vector engine exposed');
 const AXES = window._AV_AXES;
-ok(Array.isArray(AXES) && AXES.length === 19, '19 axes defined, incl. the outfit colour and the eyebrows (' + AXES.length + ')');
+ok(Array.isArray(AXES) && AXES.length === 20, '20 axes defined, incl. the outfit colour, the eyebrows and the badge (' + AXES.length + ')');
+// 2.1.9-web.206 — lot 3: poker backdrops, badge axis, scarred / bloodshot / side-glance eyes, toothpick / gold tooth, skull studs / brow ring
+const axBadge = AXES.find(a => a.id === 'badge'), axEyes = AXES.find(a => a.id === 'eyes'), axEars = AXES.find(a => a.id === 'ears'), axBg = AXES.find(a => a.id === 'bg');
+ok(axBadge && axBadge.n === 6 && axBadge.none && AXES[AXES.length - 1] === axBadge && axEyes.n === 10 && axEars.n === 8 && axBg.n === 15, 'badge axis (5 tokens, last), eyes 10, earrings 8, backdrops 15');
+ok(window._avSwatch('bg', 13).indexOf('repeating-linear-gradient') === 0 && window._avSwatch('bg', 7) === '#ffffff' && window._avSvg({ sex: 0, bg: 11 }).indexOf('<ellipse cx="176" cy="182"') !== -1 && window._avSvg({ sex: 0, bg: 13 }).indexOf('<rect x="14" y="14" width="172" height="172" rx="6" fill="#b32236"/>') !== -1 && window._avSvg({ sex: 0, bg: 14 }).indexOf('stroke="#ff9cf0"') !== -1 && window._avSvg({ sex: 0, bg: 0 }).indexOf('<ellipse cx="176"') === -1, 'patterned backdrops: CSS swatch, chip stack on the green felt, card back, neon lines; plain felts unchanged');
+ok(window._avSvg({ sex: 0, badge: 1 }).indexOf('<circle cx="30" cy="172" r="14" fill="#f4f0e6"') !== -1 && window._avSvg({ sex: 0, badge: 3 }).indexOf('rotate(-12 30 172)') !== -1 && window._avSvg({ sex: 0, badge: 4 }).split('<rect').length === window._avSvg({ sex: 0, badge: 0 }).split('<rect').length + 2 && window._avPartSvg('badge', 5, { sex: 0 }, 40).indexOf('viewBox="6 148 48 48"') !== -1, 'badge tokens: dealer button, pair of aces, two dice, chip stack vignette');
+ok(window._avSvg({ sex: 0, eyes: 7 }).indexOf('M70 98 L86 98') !== -1 && window._avSvg({ sex: 1, eyes: 7 }).indexOf('M69 93 L64 89') === -1 && window._avSvg({ sex: 1, eyes: 7 }).indexOf('M131 93 L136 89') !== -1 && window._avSvg({ sex: 0, eyes: 8 }).indexOf('fill="#f3d4d4"') !== -1 && window._avSvg({ sex: 0, eyes: 9 }).indexOf('<circle cx="81.5" cy="99"') !== -1, 'scarred eye (lashes only on the open eye), bloodshot sclera, side glance shifts the irises');
+ok(window._avSvg({ sex: 0, mouth: 13 }).indexOf('M106 132.5 L128 126') !== -1 && window._avSvg({ sex: 0, mouth: 14 }).indexOf('fill="#e0b23c"') !== -1 && window._avSvg({ sex: 0, ears: 7 }).indexOf('<circle cx="128" cy="79.5" r="3.4"') !== -1 && window._avSvg({ sex: 0, face: 0, ears: 6 }).indexOf('<circle cx="50" cy="111" r="3.8" fill="#f2eee6"/>') !== -1 && window._avVisible('ears', 6, { sex: 0 }) && window._avVisible('ears', 7, { sex: 0 }) && !window._avVisible('ears', 1, { sex: 0 }), 'toothpick, gold tooth, brow ring, skull studs on the outline (shared with men, unlike the earrings)');
 // 2.1.9-web.204 — "meaner" catalogue, lot 1: eyebrows axis, eye patch / monocle / mirrored aviators, sneer / gritted teeth, nose scar / black eye / temple tattoo
 const axBrows = AXES.find(a => a.id === 'brows'), axGl = AXES.find(a => a.id === 'glasses'), axMo = AXES.find(a => a.id === 'mouth'), axMk = AXES.find(a => a.id === 'marks');
 ok(axBrows && axBrows.n === 5 && axBrows.kind === 'shape' && !axBrows.none && AXES.indexOf(axBrows) === AXES.findIndex(a => a.id === 'eyec') + 1, 'eyebrows axis: 5 shapes, no "none", right after the eye colour');
-ok(axGl.n === 9 && axMo.n === 13 && axMk.n === 10, 'glasses 9 (eye patch, monocle, aviators), mouths 13 (sneer, gritted teeth), marks 10 (nose scar, black eye, temple tattoo)');
+ok(axGl.n === 9 && axMo.n === 15 && axMk.n === 10, 'glasses 9 (eye patch, monocle, aviators), mouths 15 (sneer, gritted teeth, toothpick, gold tooth), marks 10 (nose scar, black eye, temple tattoo)');
 ok(window._avSvg({ sex: 0, brows: 1 }).indexOf('M68 75 Q80 77 90 84') !== -1 && window._avSvg({ sex: 0 }).indexOf('M68 80 Q78 74 88 79 M112 79 Q122 74 132 80') !== -1 && window._avPartSvg('brows', 3, { sex: 0 }, 60).indexOf('stroke-width="7.2"') !== -1 && window._avPartSvg('brows', 3, { sex: 1 }, 60).indexOf('stroke-width="5.5"') !== -1, 'brows: default = the former fixed brows, angry V, thick brows heavier on men (vignettes too)');
 ok(window._avSvg({ sex: 0, glasses: 6 }).indexOf('M108 88 Q122 83 136 89') !== -1 && window._avSvg({ sex: 0, glasses: 7 }).indexOf('stroke-dasharray="2 1.6"') !== -1 && window._avSvg({ sex: 0, mouth: 11 }).indexOf('M107 130 L111 137 L113 129z') !== -1 && window._avSvg({ sex: 0, mouth: 12 }).indexOf('<rect x="87" y="130" width="26" height="8"') !== -1, 'eye patch, monocle chain, sneer canine and gritted teeth are drawn');
 ok(window._avSvg({ sex: 0, face: 0, marks: 9 }).indexOf('M141 66 Q153 78 143 92') !== -1 && window._avSvg({ sex: 1, face: 3, marks: 9 }).indexOf('M135 66 Q147 78 137 92') !== -1 && window._avSvg({ sex: 0, marks: 8 }).indexOf('fill="#6a3d8f"') !== -1, 'temple tattoo follows the outline width (oval man x 141, slim woman x 135), black eye is a purple bruise');
@@ -204,7 +211,7 @@ const next = document.getElementById('avm-step-next'), prev = document.getElemen
 next.click(); next.click();
 ok(document.getElementById('avm-rows').children.length === 3, 'stepping to Hair (3/5) renders 3 rows');
 next.click(); next.click();
-ok(document.getElementById('avm-rows').children.length === 2, 'Extras (5/5) renders 2 rows on the masculine silhouette (glasses, hat; earrings are feminine, shoulder accessory retired)');
+ok(document.getElementById('avm-rows').children.length === 4, 'Extras (5/5) renders 4 rows on the masculine silhouette (glasses, hat, piercings — skull studs and brow ring are shared —, badge; shoulder accessory retired)');
 next.click();
 ok(document.getElementById('avm-step-label').textContent.indexOf('1/5') !== -1, 'next wraps around to 1/5');
 next.click();
@@ -340,7 +347,7 @@ ok(persisted && persisted.sex === 1, 'clicking an option persists the recipe (pt
 const KEYS = ['avmSex','avmFace','avmHat','avmGrpBody','avmGrpFace','avmGrpHair','avmGrpStyle','avmGrpExtra',
   'avmNose','avmBg','avmOutfit','avmSkin','avmMarks','avmHair','avmHairColor','avmBeard',
   'avmEyeShape','avmEyeColor','avmMouth','avmShoulder','avmEarrings','avmNone',
-  'avTabGallery','avTabCreate','avTabImport','avmRandom','avmReset','avmUse','avmGlasses','avmBrows',
+  'avTabGallery','avTabCreate','avTabImport','avmRandom','avmReset','avmUse','avmGlasses','avmBrows','avmBadge',
   'avImportDrop','avImportOr','avImportBtn','avImportHint','advAvatarCreate'];
 const langDir = path.join(PUB, 'modules/lang');
 let langsOk = true;
