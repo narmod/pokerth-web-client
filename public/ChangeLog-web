@@ -1,4 +1,8 @@
-2026-09-27 version 2.1.9-web.200 (current series):
+2026-09-27 version 2.1.9-web.201 (current series):
+- new: « bed head » hairstyle, one per silhouette in the « Create » tab — tufts every which way for men, a tousled mid-length with flyaway strands for women (52 hairstyles, 24 / 28)
+- improvement: beards start at ear-lobe level instead of framing the face up to the eyes (short, full and long beards, stubble); the men's long curly hair is a wavy mass with curls at the ends instead of sausage curls down the sides
+
+2026-09-27 version 2.1.9-web.200:
 - bugfix: « From a photo » — grey or short stubble is recognised again (the chin is judged on its dark colourless grain, not only on being darker than the cheeks), and a beard must start right under the lip (a shaded neck or a collar under a chin framed a little high is not one)
 - improvement: « From a photo » — the skin of THIS photo is learnt from the middle of the oval (a flushed face, a colour cast or a very dark skin no longer fall out of the fixed rule); a pale wall can no longer become a cap or white hair; a mid-grey wall above a head framed low no longer becomes grey hair; with an imported photo the backdrop is read inside the photo, not in the blank margin around it
 

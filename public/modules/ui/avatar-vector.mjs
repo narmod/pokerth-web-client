@@ -64,7 +64,7 @@ const AV_AXES = [
   { id: 'outfitc', label: 'avmOutfitColor', n: AV_OUTFITC.length + 1, kind: 'color', none: true },
   { id: 'skin',  label: 'avmSkin',      n: AV_SKIN.length,  kind: 'color', none: false },
   { id: 'marks', label: 'avmMarks',     n: 7,               kind: 'shape', none: true  },
-  { id: 'hair',  label: 'avmHair',      n: 50,              kind: 'shape', none: true  },
+  { id: 'hair',  label: 'avmHair',      n: 52,              kind: 'shape', none: true  },
   { id: 'hairc', label: 'avmHairColor', n: AV_HAIRC.length, kind: 'color', none: false },
   { id: 'beard', label: 'avmBeard',     n: 7,               kind: 'shape', none: true  },
   { id: 'eyes',  label: 'avmEyeShape',  n: 7,               kind: 'shape', none: false },
@@ -101,7 +101,9 @@ const AV_SEXTAG = {
           // a wavy quiff, fade, man bun, long straight middle part; feminine:
           // curly ponytail, wavy lob, long curls with a fringe, low braided
           // bun, short natural afro, half-up
-          39: 0, 40: 0, 41: 0, 42: 0, 43: 0, 44: 1, 45: 1, 46: 1, 47: 1, 48: 1, 49: 1 },
+          39: 0, 40: 0, 41: 0, 42: 0, 43: 0, 44: 1, 45: 1, 46: 1, 47: 1, 48: 1, 49: 1,
+          // 2.1.9-web.201 — bed head (just out of bed), one per silhouette
+          50: 0, 51: 1 },
   // 9 masculine: charcoal suit, navy + tie, vest + tie, tux + bow tie, open
   // shirt, white dinner jacket, leather jacket, hoodie, open-collar shirt.
   // 8 feminine: collared sweater, V-neck blouse, turtleneck, strapless
@@ -609,9 +611,10 @@ function _hair(ctx, i, hc, face) {
         + '<circle cx="138" cy="118" r="4.5" fill="' + dk + '"/>' + _shine(hl)];
     case 29: // buzz cut (masculine): a shadow of hair on the scalp
       return ['', '', '<path d="M0 0 L200 0 L200 100 Q152 62 100 56 Q48 62 0 100z" fill="' + hc[0] + '" opacity=".55"/>'];
-    case 30: // long curly (masculine)
-      return [P('M36 96 Q32 22 100 20 Q168 22 164 96 L166 150 L34 150z', bk)
-        + [104, 126, 148].map(function (y) { return '<circle cx="36" cy="' + y + '" r="11" fill="' + bk + '"/><circle cx="164" cy="' + y + '" r="11" fill="' + bk + '"/>'; }).join(''),
+    case 30: // long curly (masculine): a wavy mass to the shoulders, curls along its edge (no side sausages: 2.1.9-web.201)
+      return [P('M38 96 Q34 22 100 20 Q166 22 162 96 Q168 118 160 134 Q170 152 158 164 Q142 170 134 160 L66 160 Q58 170 42 164 Q30 152 40 134 Q32 118 38 96z', bk)
+        + '<circle cx="46" cy="164" r="9" fill="' + bk + '"/><circle cx="62" cy="168" r="8" fill="' + bk + '"/><circle cx="154" cy="164" r="9" fill="' + bk + '"/><circle cx="138" cy="168" r="8" fill="' + bk + '"/>'
+        + '<path d="M44 120 Q38 134 46 148 M156 120 Q162 134 154 148" stroke="' + dk + '" stroke-width="2" fill="none" stroke-linecap="round" opacity=".6"/>',
         P(CAP_SMOOTH) + _bumps(100, 84, 50, 190, 350, 11, 12, f) + _bumps(100, 84, 50, 200, 340, 6, 4, hl)];
     case 31: // curtain fringe (masculine)
       return ['', P('M44 100 Q40 26 100 24 Q160 26 156 100 Q150 70 128 88 Q116 66 100 58 Q84 66 72 88 Q50 70 44 100z') + _shine(hl)];
@@ -681,6 +684,15 @@ function _hair(ctx, i, hc, face) {
       return [P('M40 96 Q36 24 100 22 Q164 24 160 96 L166 184 Q146 192 132 178 L68 178 Q54 192 34 184z', bk)
         + '<ellipse cx="100" cy="22" rx="14" ry="8" fill="' + bk + '"/>',
         P(CAP_SMOOTH) + '<path d="M86 34 Q100 28 114 34" stroke="#d9536a" stroke-width="4" stroke-linecap="round" fill="none"/>' + _shine(hl)];
+    case 50: // bed head (masculine): tufts sticking out every which way, a flattened side
+      return ['', P('M42 96 Q38 40 56 30 L48 12 L66 24 L74 6 L84 22 L98 0 L106 20 L120 6 L124 24 L142 10 L140 30 L158 22 L152 40 Q160 60 156 96 Q152 66 100 58 Q48 66 42 96z')
+        + '<path d="M40 74 Q28 68 30 58 M160 70 Q174 66 170 56 M150 44 Q168 40 172 48" stroke="' + f + '" stroke-width="4" fill="none" stroke-linecap="round"/>'
+        + '<path d="M60 40 Q70 28 84 32 M108 30 Q122 22 134 34" stroke="' + hl + '" stroke-width="3" fill="none" stroke-linecap="round" opacity=".5"/>'];
+    case 51: // bed head (feminine): mid-length, tousled, flyaway strands
+      return [P('M38 100 Q34 24 100 22 Q166 24 162 100 Q170 118 158 136 Q166 156 150 160 Q138 156 132 146 L68 146 Q62 156 50 160 Q34 156 42 136 Q30 118 38 100z', bk)
+        + '<path d="M40 110 Q30 104 32 96 M160 106 Q170 100 168 92 M46 140 Q36 146 38 154 M154 140 Q164 146 162 154 M36 126 Q26 128 28 136" stroke="' + bk + '" stroke-width="3.5" fill="none" stroke-linecap="round"/>',
+        P('M42 100 Q38 34 62 28 L58 12 L72 26 L86 8 L94 26 L108 4 L114 26 L130 12 L134 30 Q160 34 156 100 Q152 70 142 60 Q112 64 88 46 Q78 66 52 72 Q46 84 42 100z')
+        + '<path d="M56 48 Q68 34 84 38" stroke="' + hl + '" stroke-width="3" fill="none" stroke-linecap="round" opacity=".5"/>'];
     default: // 6: wavy senior sweep
       return ['', P('M46 90 Q40 28 100 24 Q156 26 156 88 Q150 62 132 56 Q126 64 112 58 Q96 70 80 56 Q66 64 56 60 Q48 70 46 90z') + _shine(hl)];
   }
@@ -694,8 +706,10 @@ function _hair(ctx, i, hc, face) {
 // flat cut beside the temples.
 // (the outer edges sit well outside every head outline — the clip draws
 // the sideburn line — only the cheek line in the middle matters)
-var BEARD_SHORT = 'M10 170 L24 118 Q30 96 40 96 Q52 128 70 134 Q86 124 100 126 Q114 124 130 134 Q148 128 160 96 Q170 96 176 118 L190 170 L190 220 L10 220z';
-var BEARD_FULL = 'M10 170 L22 114 Q28 90 40 90 Q52 124 72 130 Q86 122 100 124 Q114 122 128 130 Q148 124 160 90 Q172 90 178 114 L190 170 L190 220 L10 220z';
+// (sideburns start at ear-lobe level, y ≈ 104–106 — the former y 90–96
+// framed the face up to the eyes: 2.1.9-web.201)
+var BEARD_SHORT = 'M10 170 L24 126 Q30 108 40 106 Q52 130 70 134 Q86 124 100 126 Q114 124 130 134 Q148 130 160 106 Q170 108 176 126 L190 170 L190 220 L10 220z';
+var BEARD_FULL = 'M10 170 L22 124 Q26 104 40 102 Q52 126 72 130 Q86 122 100 124 Q114 122 128 130 Q148 126 160 102 Q174 104 178 124 L190 170 L190 220 L10 220z';
 
 function _beard(ctx, i, hc, face) {
   var f = ctx.v(hc[0]);
@@ -873,7 +887,7 @@ var HAT_LINE = 60;
 var AV_NO_UNDERLAY = { 0: 1, 16: 1, 17: 1, 29: 1, 41: 1 };
 // Short styles: under a covering hat only a thin band below the brim shows
 // (temple tips), long styles keep everything below the hat line.
-var AV_SHORT_HAIR = { 1: 1, 2: 1, 4: 1, 6: 1, 9: 1, 12: 1, 13: 1, 16: 1, 18: 1, 26: 1, 29: 1, 31: 1, 36: 1, 39: 1, 40: 1, 41: 1, 48: 1 };
+var AV_SHORT_HAIR = { 1: 1, 2: 1, 4: 1, 6: 1, 9: 1, 12: 1, 13: 1, 16: 1, 18: 1, 26: 1, 29: 1, 31: 1, 36: 1, 39: 1, 40: 1, 41: 1, 48: 1, 50: 1 };
 var HAT_SHORT_BOTTOM = 86;
 function _hatCovers(i) { return i !== 0 && i !== 3 && i !== 6; }
 
