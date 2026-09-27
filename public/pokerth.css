@@ -11579,7 +11579,10 @@ body.adv-no-avcreate #avp-tab-create { display: none !important; }
 .avm-none-opt { min-width: 40px; }
 .avm-use { border-color: var(--gold-dim); color: var(--sel,var(--gold)); }
 /* Starter characters (2.1.9-web.210): portrait cards with a name */
-.avm-presets { gap: var(--sp-3); }
+/* Character cards: a grid that fills the pane width (centred columns),
+   the portrait scales to the card (≈ 96 px on a phone, web.213) */
+.avm-presets { display: grid; grid-template-columns: repeat(auto-fill, minmax(92px, 1fr)); gap: var(--sp-3); }
+.avm-preset svg { width: 100%; height: auto; }
 .avm-preset {
   display: flex; flex-direction: column; align-items: center; gap: 4px;
   padding: 4px 4px 6px; border-radius: 10px; background: var(--inset);

@@ -1,4 +1,8 @@
-2026-09-27 version 2.1.9-web.212 (current series):
+2026-09-27 version 2.1.9-web.213 (current series):
+- bugfix: toon portraits — the witch hat no longer lets tufts of hair show above the ends of its brim
+- improvement: avatar « Create » tab — the starter characters fill the width of the window, centred, with bigger portraits
+
+2026-09-27 version 2.1.9-web.212:
 - bugfix: toon portraits — the witch hat was a small perched cone; it is now a proper wide-brimmed witch hat, as wide as the head, with a tall cone and a tip flopped to the side
 - bugfix: avatar picker — opened from the lobby or the login screen, the window now sits at the top of the screen and uses the visible height (it sat too low and its bottom slid under the phone's toolbar)
 - bugfix: avatar picker — on the « Create » tab, the rows scrolled past no longer show through a strip above the pinned preview

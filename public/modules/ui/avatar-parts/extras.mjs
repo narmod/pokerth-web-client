@@ -162,9 +162,9 @@ const HATS = [
       + '<rect x="40" y="89" width="12" height="18" rx="5" fill="#4a4f5a"/><rect x="148" y="89" width="12" height="18" rx="5" fill="#4a4f5a"/>'
       + '<path d="M70 34 Q100 26 130 34" stroke="#5d626e" stroke-width="2" fill="none" stroke-linecap="round" opacity=".7"/>';
   } },
-  { id: 'witch-hat', covers: true, weight: 0.4, draw: function (ctx) { // wide brim, tall head-wide cone with concave sides, tip flopped to the right, purple band (redrawn web.212)
-    return '<ellipse cx="100" cy="73" rx="90" ry="14" fill="' + ctx.v('#1c1526') + '"/>'
-      + '<ellipse cx="100" cy="71" rx="84" ry="11" fill="' + ctx.v('#2b2135') + '"/>'
+  { id: 'witch-hat', covers: true, line: 66, weight: 0.4, draw: function (ctx) { // wide brim, tall head-wide cone with concave sides, tip flopped to the right, purple band (redrawn web.212); line 66: the brim's ends sit low, the hair is hidden down to them
+    return '<ellipse cx="100" cy="73" rx="84" ry="14" fill="' + ctx.v('#1c1526') + '"/>'
+      + '<ellipse cx="100" cy="71" rx="78" ry="11" fill="' + ctx.v('#2b2135') + '"/>'
       + '<path d="M44 72 Q64 52 84 24 Q90 8 104 4 Q126 2 132 20 Q124 10 112 11 Q110 14 114 24 Q134 52 156 72z" fill="' + ctx.v('#2f2439') + '"/>'
       + '<path d="M92 10 Q100 6 112 11" stroke="#1c1526" stroke-width="1.6" fill="none" opacity=".5"/>'
       + '<path d="M50 61 L150 61 L154 72 L46 72z" fill="#6a2a8a"/><path d="M50 61 L150 61 L151 64 L49 64z" fill="#8a3ab0" opacity=".6"/>'

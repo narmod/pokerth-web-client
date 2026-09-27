@@ -34,6 +34,7 @@ not listed in `public/sw.js` → `ASSETS`.
   sex: 0,                // 0 masculine / 1 feminine / absent = shared (every hairstyle and outfit belongs to ONE silhouette)
   weight: 0.5,           // dice weight, default 1 (rare / striking options)
   covers: true,          // hats: hides the hair above the hat line (visor, bandana, hood, crown leave it)
+  line: 66,              // hats: lowers that line (default 60) when the brim's ends sit low (witch hat)
   draw: function (ctx, r, L) { return '<path d="…" fill="' + ctx.v('#3a3a42') + '"/>'; } }
 ```
 
