@@ -1,4 +1,8 @@
-2026-09-27 version 2.1.9-web.175 (current series):
+2026-09-27 version 2.1.9-web.176 (current series):
+- improvement: new, friendlier look for the portraits of the « Create » avatar tab — big round head, large expressive eyes, soft colours and a pastel background, still framed in gold; your saved portrait re-opens in the new style
+- improvement: the shoulder accessories (chips, cards, glass) are gone with the new style
+
+2026-09-27 version 2.1.9-web.175:
 - bugfix: after an update, the loading screen now shows only once instead of twice
 
 2026-09-26 version 2.1.9-web.174:

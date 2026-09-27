@@ -75,9 +75,9 @@ for (const ax of AXES.filter(a => a.kind === 'shape' && a.id !== 'sex')) {
 }
 ok(partsClean, 'every part vignette renders clean' + (partsClean ? '' : ' (bad: ' + badPart + ')'));
 const nosePart = window._avPartSvg('nose', 3, window._avNormalize(null), 40);
-ok(nosePart.indexOf('viewBox="82 76 36 36"') !== -1, 'nose vignette framed');
+ok(nosePart.indexOf('viewBox="80 94 40 40"') !== -1, 'nose vignette framed');
 const mouthPart = window._avPartSvg('mouth', 0, window._avNormalize(null), 40);
-ok(mouthPart.indexOf('viewBox="76 90 48 48"') !== -1 && mouthPart.indexOf('<ellipse cx="100" cy="84"') === -1, 'mouth vignette is framed and contains no head');
+ok(mouthPart.indexOf('viewBox="74 110 52 52"') !== -1 && mouthPart.indexOf('<ellipse cx="100" cy="94"') === -1, 'mouth vignette is framed and contains no head');
 
 // 3. Recipes normalize + randomize stay in range
 const rnd = window._avRandom();
@@ -87,7 +87,8 @@ ok(window._avNormalize({ bg: 99, hair: -3 }).bg >= 0, 'out-of-range values fall 
 
 // 4. Distinct options produce distinct output (spot check per shape axis)
 let distinct = true;
-for (const ax of AXES.filter(a => a.kind === 'shape')) {
+// 'shoulder' is retired with the toon style (kept for recipe compatibility).
+for (const ax of AXES.filter(a => a.kind === 'shape' && a.id !== 'shoulder')) {
   const a = window._avSvg(window._avNormalize({ [ax.id]: 0 }), 96);
   const b = window._avSvg(window._avNormalize({ [ax.id]: 1 }), 96);
   const strip = s => s.replace(/avc\d+/g, 'avc');
@@ -104,6 +105,7 @@ ok(vis('hair', 4, { sex: 0 }) && vis('hair', 4, { sex: 1 }), 'curly is universal
 ok(!vis('beard', 2, { sex: 1 }) && vis('beard', 2, { sex: 0 }) && vis('beard', 0, { sex: 1 }), 'beard filtered on feminine silhouette (none stays valid)');
 ok(!vis('hat', 1, { hair: 10 }) && !vis('hat', 2, { hair: 7 }) && vis('hat', 0, { hair: 10 }) && vis('hat', 1, { hair: 1 }), 'hats filtered out on afro/bun (none stays valid)');
 ok(!vis('eyec', 1, { eyes: 2 }) && !vis('eyec', 1, { glasses: 5 }) && vis('eyec', 1, { eyes: 0, glasses: 1 }), 'eye color hidden behind closed eyes or sunglasses');
+ok(vis('shoulder', 0, {}) && !vis('shoulder', 1, {}) && !vis('shoulder', 4, {}), 'shoulder accessories retired (only none stays valid)');
 ok(vis('mouth', 3, { sex: 1 }) && !vis('mouth', 3, { sex: 0 }), 'lipstick mouth is feminine-only');
 ok(vis('outfit', 6, { sex: 1 }) && !vis('outfit', 6, { sex: 0 }), 'V-neck blouse is feminine-only');
 const wholeAxisHidden = (ax, rr) => { for (let i = 0; i < ax.n; i++) if (vis(ax.id, i, rr)) return false; return true; };
@@ -128,7 +130,7 @@ const next = document.getElementById('avm-step-next'), prev = document.getElemen
 next.click(); next.click();
 ok(document.getElementById('avm-rows').children.length === 3, 'stepping to Hair (3/5) renders 3 rows');
 next.click(); next.click();
-ok(document.getElementById('avm-rows').children.length === 4, 'Extras (5/5) renders 4 rows (incl. hat)');
+ok(document.getElementById('avm-rows').children.length === 3, 'Extras (5/5) renders 3 rows (glasses, hat, earrings; shoulder accessory retired)');
 next.click();
 ok(document.getElementById('avm-step-label').textContent.indexOf('1/5') !== -1, 'next wraps around to 1/5');
 next.click();
