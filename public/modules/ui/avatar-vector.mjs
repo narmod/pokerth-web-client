@@ -535,12 +535,18 @@ function _hair(ctx, i, hc, face) {
     case 14: // long wavy
       return [P('M40 96 Q34 24 100 22 Q166 24 160 96 Q170 116 160 136 Q172 158 162 186 Q146 192 132 178 L68 178 Q54 192 38 186 Q28 158 40 136 Q30 116 40 96z', bk),
         P(CAP_SIDE) + _shine(hl)];
-    case 15: { // dreadlocks
-      var locks = '';
-      [42, 51, 60, 140, 149, 158].forEach(function (x, k) {
-        locks += '<rect x="' + (x - 4.5) + '" y="78" width="9" height="' + (64 + (k % 3) * 10) + '" rx="4.5" fill="' + bk + '"/>';
+    case 15: { // dreadlocks (masculine): twists radiating from the crown, locks of
+      // uneven length down both sides, each with its knotted texture (2.1.9-web.198)
+      var locks = '', tw = '';
+      [[40, 74], [50, 96], [60, 88], [70, 70], [130, 70], [140, 88], [150, 96], [160, 74]].forEach(function (p, k) {
+        locks += '<rect x="' + (p[0] - 5) + '" y="72" width="10" height="' + p[1] + '" rx="5" fill="' + (k % 2 ? bk : f) + '"/>'
+          + '<path d="M' + p[0] + ' 84 L' + p[0] + ' ' + (62 + p[1]) + '" stroke="' + dk + '" stroke-width="1.4" stroke-dasharray="2.5 3.5" opacity=".7"/>';
       });
-      return [locks, P(CAP_SMOOTH) + _bumps(100, 84, 48, 200, 340, 8, 6, f)];
+      for (var ta = 196; ta <= 344; ta += 18.5) {
+        var ang = ta * Math.PI / 180;
+        tw += '<path d="M100 62 Q' + (100 + 28 * Math.cos(ang)).toFixed(1) + ' ' + (74 + 20 * Math.sin(ang)).toFixed(1) + ' ' + (100 + 53 * Math.cos(ang)).toFixed(1) + ' ' + (86 + 48 * Math.sin(ang)).toFixed(1) + '" stroke="' + dk + '" stroke-width="2.2" fill="none" stroke-linecap="round"/>';
+      }
+      return [locks, P('M44 96 Q40 24 100 22 Q160 24 156 96 Q152 62 100 56 Q48 62 44 96z') + tw + _bumps(100, 84, 50, 205, 335, 6, 3.4, hl).replace(/fill=/g, 'opacity=".45" fill=')];
     }
     case 16: { // balding crown (masculine): a crown of hair hugging the head outline
       var band = ctx.cid + 'bb';
@@ -704,8 +710,10 @@ function _beard(ctx, i, hc, face) {
     case 3: return jaw(BEARD_SHORT, 1.05) + MOUS; // short beard
     case 5: return '<g opacity=".3">' + jaw(BEARD_SHORT, 1, hc[0]) // stubble
       + '<path d="M84 124 Q100 118 116 124" stroke="' + hc[0] + '" stroke-width="4" fill="none" stroke-linecap="round"/></g>';
-    case 6: return jaw(BEARD_FULL, 1.09) // long beard
-      + '<path d="M62 142 Q100 156 138 142 Q130 178 100 198 Q70 178 62 142z" fill="' + f + '"/>' + MOUS;
+    case 6: return jaw(BEARD_FULL, 1.09) // long beard: a rounded mass under the chin, combed strands (2.1.9-web.198)
+      + '<path d="M62 138 Q100 150 138 138 Q144 166 128 184 Q100 202 72 184 Q56 166 62 138z" fill="' + f + '"/>'
+      + '<path d="M82 160 Q86 176 82 190 M100 156 Q102 176 100 194 M118 160 Q114 176 118 190" stroke="' + _mix(hc[0], 0.78) + '" stroke-width="2.2" fill="none" stroke-linecap="round" opacity=".75"/>'
+      + '<path d="M70 150 Q66 168 74 182 M130 150 Q134 168 126 182" stroke="' + _mix(hc[0], 1.25) + '" stroke-width="2" fill="none" stroke-linecap="round" opacity=".45"/>' + MOUS;
     default: return jaw(BEARD_FULL, 1.1) + MOUS; // 4: full beard
   }
 }
