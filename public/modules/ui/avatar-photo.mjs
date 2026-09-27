@@ -759,8 +759,10 @@ function avPhotoAnalyze(img, opts) {
   }
   var hairHsl = hairRgb ? rgb2hsl(hairRgb[0], hairRgb[1], hairRgb[2]) : [0, 0, 0];
   var hat = 0, hair;
-  // (a man's shoulders must be well covered before his hair is called long)
-  var length = lowFrac > (sex === 0 ? 0.5 : 0.3) ? 'long' : (sideFrac > 0.3 ? 'mid' : 'short');
+  // (a man's hair is long only when it covers the sides at ear level AND
+  // the shoulders: a dark top under a dark-haired man fills the low zones
+  // on its own and used to make him long-haired)
+  var length = (lowFrac > (sex === 0 ? 0.5 : 0.3) && (sex === 1 || sideFrac > 0.45)) ? 'long' : (sideFrac > 0.3 ? 'mid' : 'short');
   // (big hair needs the crown far above the hairline — the template frame
   // stops just above it, so the guided path never claims it)
   var volume = !guide && !bald && capFrac > 0.6 && sideFrac > 0.5 && hairTop < seedTop - 0.9 * Eref && lowFrac < 0.2;
