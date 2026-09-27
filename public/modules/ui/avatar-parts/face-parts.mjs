@@ -180,7 +180,14 @@ const MOUTHS = [
     return GRIN + '<path d="M103 128.5 L108 128.5 L107.5 135.5 L103.5 136z" fill="#e0b23c"/><path d="M104 130 L106.5 130" stroke="#fff" stroke-width=".9" opacity=".8"/>' + GRIN_LIP;
   } },
   // 2.1.9-web.209 — expression shape: wavy (fear, KO)
-  { id: 'wavy', weight: 0.2, draw: function () { return line('M87 134 Q92 128 97 134 Q100 138 103 134 Q108 128 113 134'); } }
+  { id: 'wavy', weight: 0.2, draw: function () { return line('M87 134 Q92 128 97 134 Q100 138 103 134 Q108 128 113 134'); } },
+  // 2.1.9-web.211 — pipe in the corner of the mouth
+  { id: 'pipe', weight: 0.35, draw: function () {
+    return line('M89 133 L109 133')
+      + '<path d="M107 134 L125 141" stroke="#5a3a22" stroke-width="3" stroke-linecap="round"/>'
+      + '<path d="M121 137 Q135 134 134 148 Q122 150 121 137z" fill="#6b4423"/><path d="M123 139 Q131 137 131 142" stroke="#8a5a30" stroke-width="1.2" fill="none"/>'
+      + '<path d="M130 132 Q134 126 130 120 M134 130 Q138 126 136 122" stroke="#c8c8c8" stroke-width="1.5" fill="none" stroke-linecap="round" opacity=".7"/>';
+  } }
 ];
 
 // ── Skin marks ───────────────────────────────────────────────────────────
@@ -204,7 +211,9 @@ const MARKS = [
   { id: 'tattoo-temple', weight: 0.5, draw: function (ctx, r, L) {
     var b = 100 + (L.hw || 53) - 4;
     return '<path d="M' + (b - 10) + ' 66 Q' + (b + 2) + ' 78 ' + (b - 8) + ' 92 M' + (b - 5) + ' 72 Q' + (b + 3) + ' 82 ' + (b - 3) + ' 90" stroke="#2a2f3a" stroke-width="2.6" fill="none" stroke-linecap="round"/>';
-  } }
+  } },
+  // 2.1.9-web.211 — wart on the chin
+  { id: 'wart', weight: 0.3, draw: function (ctx, r, L) { return '<circle cx="117" cy="141" r="2.7" fill="' + _mix(L.skin[1], 0.72) + '"/><circle cx="116.2" cy="140.2" r=".9" fill="' + _mix(L.skin[1], 1.15) + '" opacity=".8"/>'; } }
 ];
 
 // ── Beard / moustache (drawn under the mouth) ────────────────────────────

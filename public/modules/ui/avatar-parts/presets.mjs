@@ -18,7 +18,18 @@ const PRESETS = [
   { id: 'rocker', label: 'avmPreRocker', recipe: { sex: 0, face: 'm-oval', skin: 'light', hair: 'mohawk', hairc: 'black', beard: 'goatee', mouth: 'tongue', glasses: 'sunglasses', ears: 'brow-ring', outfit: 'leather-jacket', bg: 'purple' } },
   { id: 'geek', label: 'avmPreGeek', recipe: { sex: 0, face: 'm-round', skin: 'porcelain', hair: 'curtain', hairc: 'auburn', eyes: 'wide', glasses: 'rect', mouth: 'grin', outfit: 'hoodie-zip', bg: 'sky', marks: 'freckles' } },
   { id: 'queen', label: 'avmPreQueen', recipe: { sex: 1, face: 'f-diamond', skin: 'dark', hair: 'box-braids', hairc: 'black', eyes: 'almond', eyec: 'brown', mouth: 'smile', ears: 'gold-studs', outfit: 'blazer', hat: 'crown', bg: 'felt-burgundy', badge: 'aces' } },
-  { id: 'pro', label: 'avmPrePro', recipe: { sex: 1, face: 'f-slim', skin: 'light', hair: 'lob', hairc: 'auburn', glasses: 'aviators', hat: 'cap-spade', outfit: 'sweatshirt', outfitc: 'black', bg: 'felt-green', expression: 'bluff', badge: 'stack' } }
+  { id: 'pro', label: 'avmPrePro', recipe: { sex: 1, face: 'f-slim', skin: 'light', hair: 'lob', hairc: 'auburn', glasses: 'aviators', hat: 'cap-spade', outfit: 'sweatshirt', outfitc: 'black', bg: 'felt-green', expression: 'bluff', badge: 'stack' } },
+  // 2.1.9-web.211 — lot 2
+  { id: 'detective', label: 'avmPreDetective', recipe: { sex: 0, face: 'm-oval', skin: 'light', hair: 'short', hairc: 'dark-brown', beard: 'stubble', brows: 'angry', eyes: 'side-glance', mouth: 'pipe', outfit: 'trench', hat: 'fedora', bg: 'grey' } },
+  { id: 'magician', label: 'avmPreMagician', recipe: { sex: 0, face: 'm-oval', skin: 'porcelain', hair: 'slicked', hairc: 'black', beard: 'moustache', brows: 'one-raised', glasses: 'monocle', outfit: 'cape', hat: 'top-hat', bg: 'neon' } },
+  { id: 'vampire', label: 'avmPreVampire', recipe: { sex: 0, face: 'm-long', skin: 'porcelain', hair: 'slicked', hairc: 'black', eyes: 'bloodshot', brows: 'angry', mouth: 'sneer', outfit: 'cape', bg: 'purple' } },
+  { id: 'witch', label: 'avmPreWitch', recipe: { sex: 1, face: 'f-slim', skin: 'porcelain', hair: 'very-long', hairc: 'black', brows: 'thin-arched', eyes: 'narrowed', mouth: 'smirk', marks: 'wart', hat: 'witch-hat', outfit: 'turtleneck', outfitc: 'black', bg: 'felt-burgundy' } },
+  { id: 'chef', label: 'avmPreChef', recipe: { sex: 0, face: 'm-round', skin: 'light', hair: 'short', hairc: 'brown', beard: 'moustache', marks: 'dimples', mouth: 'smile', hat: 'chef-toque', outfit: 'chef-jacket', bg: 'cream' } },
+  { id: 'sailor', label: 'avmPreSailor', recipe: { sex: 0, face: 'm-square', skin: 'tan', hair: 'short', hairc: 'dark-brown', beard: 'full', marks: 'tattoo-temple', mouth: 'grin', hat: 'sailor-cap', outfit: 'breton', bg: 'blue' } },
+  { id: 'popstar', label: 'avmPrePopstar', recipe: { sex: 1, face: 'f-heart', skin: 'medium', hair: 'long-wavy', hairc: 'pink', ears: 'hoops', hat: 'headset-mic', outfit: 'sequin-dress', expression: 'love', bg: 'neon' } },
+  { id: 'rapper', label: 'avmPreRapper', recipe: { sex: 0, face: 'm-rugged', skin: 'dark', hair: 'buzz', hairc: 'black', beard: 'goatee', glasses: 'sunglasses', mouth: 'gold-tooth', hat: 'cap-back', outfit: 'tracksuit-chain', bg: 'card-back' } },
+  { id: 'boxer', label: 'avmPreBoxer', recipe: { sex: 0, face: 'm-square', skin: 'medium', hair: 'buzz', hairc: 'black', beard: 'stubble', brows: 'angry', marks: 'black-eye', mouth: 'gritted', hat: 'bandana', outfit: 'boxing-robe', bg: 'grey' } },
+  { id: 'streamer', label: 'avmPreStreamer', recipe: { sex: 1, face: 'f-oval', skin: 'light', hair: 'half-up', hairc: 'auburn', glasses: 'rect', eyes: 'side-glance', hat: 'headphones', outfit: 'sweatshirt', outfitc: 'purple', badge: 'stack', bg: 'neon' } }
 ];
 
 export { PRESETS };

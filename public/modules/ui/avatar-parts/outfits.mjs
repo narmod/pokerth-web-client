@@ -445,5 +445,73 @@ const OUTFITS = [
         + '<circle cx="64" cy="186" r="8" fill="#101014" stroke="#e5e1d8" stroke-width="1.4"/>' + _suit(0, 64, 186, 4.6, '#f2eee6');
       
     }) },
+  // ── 2.1.9-web.211 (starter characters, lot 2) — trench coat, cape, breton, chef's jacket, sequin dress, tracksuit + chain, boxing robe
+  { id: 'trench', sex: 0, colorable: true,
+    draw: outfitDraw(function (ctx, sk, C) { return trench(ctx, C('#c8b48a')); }) },
+  { id: 'trench-f', sex: 1, colorable: true,
+    draw: outfitDraw(function (ctx, sk, C) { return trench(ctx, C('#c8b48a')); }) },
+  { id: 'cape', sex: 0, colorable: true,
+    draw: outfitDraw(function (ctx, sk, C) { return cape(ctx, sk, C('#1f1f24')); }) },
+  { id: 'cape-f', sex: 1, colorable: true,
+    draw: outfitDraw(function (ctx, sk, C) { return cape(ctx, sk, C('#1f1f24')); }) },
+  { id: 'breton', sex: 0,
+    draw: outfitDraw(function (ctx, sk) { return breton(ctx, sk, false); }) },
+  { id: 'breton-f', sex: 1,
+    draw: outfitDraw(function (ctx, sk) { return breton(ctx, sk, true); }) },
+  { id: 'chef-jacket', sex: 0,
+    draw: outfitDraw(function (ctx, sk) { return chefJacket(ctx, sk); }) },
+  { id: 'chef-jacket-f', sex: 1,
+    draw: outfitDraw(function (ctx, sk) { return chefJacket(ctx, sk); }) },
+  { id: 'sequin-dress', sex: 1, colorable: true,
+    draw: outfitDraw(function (ctx, sk, C, skin) {
+      var c = C('#2e1a5c'), sp = '';
+      [[62, 186], [74, 198], [86, 180], [98, 194], [110, 182], [122, 198], [134, 186], [70, 176], [130, 176], [100, 178], [90, 202], [116, 200]].forEach(function (q) { sp += '<circle cx="' + q[0] + '" cy="' + q[1] + '" r="1.4" fill="#fff" opacity=".8"/>'; });
+      return _skinTorso(ctx, skin)
+        + '<path d="M44 204 L46 182 Q70 172 100 172 Q130 172 154 182 L156 204z" fill="' + ctx.v(c) + '"/>' + sp
+        + '<path d="M46 182 Q70 172 100 172 Q130 172 154 182" stroke="' + _mix(c, 1.6) + '" stroke-width="1.6" fill="none" opacity=".8"/>';
+    }) },
+  { id: 'tracksuit-chain', sex: 0, colorable: true,
+    draw: outfitDraw(function (ctx, sk, C) {
+      var c = C('#1f1f24');
+      return _torso(ctx, c)
+        + '<path d="M42 172 L38 204 M158 172 L162 204" stroke="#f4f0e6" stroke-width="3"/><path d="M47 170 L43 204 M153 170 L157 204" stroke="#f4f0e6" stroke-width="1.6"/>'
+        + '<path d="M84 158 Q100 170 116 158 L116 164 Q100 176 84 164z" fill="' + _mix(c, 1.35) + '"/>'
+        + '<path d="M100 172 L100 204" stroke="' + _mix(c, 1.8) + '" stroke-width="1.6" stroke-dasharray="2 1.6"/>'
+        + '<path d="M84 160 Q100 192 116 160" stroke="#e0b23c" stroke-width="3" fill="none"/>' + _suit(0, 100, 190, 4.6, '#e0b23c');
+    }) },
+  { id: 'boxing-robe', sex: 0, colorable: true,
+    draw: outfitDraw(function (ctx, sk, C) {
+      var c = C('#b3264a');
+      return _torso(ctx, c)
+        + '<path d="M84 158 L100 200 L116 158 Q100 166 84 158z" fill="' + sk + '"/>'
+        + _lapels(ctx, _mix(c, 0.72))
+        + '<path d="M34 196 L166 196" stroke="#f4f0e6" stroke-width="6"/><path d="M96 194 L104 194 L102 204 L98 204z" fill="#f4f0e6"/>';
+    }) }
 ];
+
+function trench(ctx, c) { // double-breasted, belted, dark shirt
+  return _torso(ctx, c) + _shirtV(ctx, '#3a3f47') + _lapels(ctx, _mix(c, 0.9))
+    + '<circle cx="88" cy="184" r="1.8" fill="' + _mix(c, 0.55) + '"/><circle cx="112" cy="184" r="1.8" fill="' + _mix(c, 0.55) + '"/>'
+    + '<rect x="34" y="194" width="132" height="6" fill="' + _mix(c, 0.72) + '"/><rect x="96" y="193" width="8" height="8" fill="' + _mix(c, 0.5) + '"/>';
+}
+function cape(ctx, sk, c) { // high collar rising beside the neck, red lining
+  return _torso(ctx, c)
+    + '<path d="M84 158 L100 204 L116 158 Q100 166 84 158z" fill="' + ctx.v('#8e1c2e') + '"/>'
+    + '<path d="M82 157 Q70 150 62 128 L86 154z M118 157 Q130 150 138 128 L114 154z" fill="' + ctx.v(_mix(c, 1.25)) + '"/>'
+    + '<path d="M62 128 Q70 150 82 157 M138 128 Q130 150 118 157" stroke="#8e1c2e" stroke-width="2" fill="none"/>'
+    + '<circle cx="100" cy="166" r="2.6" fill="#e0b23c"/>';
+}
+function breton(ctx, sk, fem) { // white with navy stripes
+  var st = '';
+  for (var y = 166; y <= 204; y += 9) st += '<line x1="30" y1="' + y + '" x2="170" y2="' + y + '"/>';
+  return _torso(ctx, '#f4f0e6') + '<g clip-path="' + _bodyClip(ctx) + '" stroke="#1f2f4a" stroke-width="4">' + st + '</g>'
+    + (fem ? '<path d="M82 157 Q100 180 118 157 Q100 163 82 157z" fill="' + sk + '"/><path d="M80 156 Q100 182 120 156" stroke="#1f2f4a" stroke-width="3.4" fill="none"/>' : _crew(ctx, sk, '#f4f0e6'));
+}
+function chefJacket(ctx, sk) { // white, stand collar, two rows of buttons
+  return _torso(ctx, '#f6f2ea')
+    + '<path d="M84 156 Q100 166 116 156 L116 163 Q100 173 84 163z" fill="#e4ded2"/>'
+    + '<path d="M100 172 L100 204" stroke="#d8d2c4" stroke-width="1.2"/>'
+    + '<circle cx="91" cy="176" r="1.9" fill="#c9c2b4"/><circle cx="91" cy="188" r="1.9" fill="#c9c2b4"/><circle cx="91" cy="200" r="1.9" fill="#c9c2b4"/>'
+    + '<circle cx="109" cy="176" r="1.9" fill="#c9c2b4"/><circle cx="109" cy="188" r="1.9" fill="#c9c2b4"/><circle cx="109" cy="200" r="1.9" fill="#c9c2b4"/>';
+}
 export { OUTFITS };

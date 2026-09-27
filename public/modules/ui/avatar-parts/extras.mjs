@@ -155,6 +155,33 @@ const HATS = [
       + '<path d="M54 52 L146 52 L146 62 L54 62z" fill="#1f1f24"/>'
       + '<g transform="rotate(-14 134 48)">' + _card(128, 34, 12, 0, false) + '</g>';
   } },
+  // 2.1.9-web.211 (starter characters, lot 2) — headphones, witch hat, chef's toque, sailor cap, headset mic
+  { id: 'headphones', draw: function (ctx) { // over the hair, cups on the ears — leaves the hair
+    return '<path d="M48 98 Q44 28 100 24 Q156 28 152 98" stroke="' + ctx.v('#2a2d33') + '" stroke-width="6" fill="none"/>'
+      + '<rect x="36" y="84" width="20" height="28" rx="8" fill="' + ctx.v('#2a2d33') + '"/><rect x="144" y="84" width="20" height="28" rx="8" fill="' + ctx.v('#2a2d33') + '"/>'
+      + '<rect x="40" y="89" width="12" height="18" rx="5" fill="#4a4f5a"/><rect x="148" y="89" width="12" height="18" rx="5" fill="#4a4f5a"/>'
+      + '<path d="M70 34 Q100 26 130 34" stroke="#5d626e" stroke-width="2" fill="none" stroke-linecap="round" opacity=".7"/>';
+  } },
+  { id: 'witch-hat', covers: true, weight: 0.4, draw: function (ctx) { // pointed, bent tip, purple band
+    return '<ellipse cx="100" cy="68" rx="80" ry="12" fill="' + ctx.v('#221a2e') + '"/>'
+      + '<path d="M58 68 Q80 42 94 12 Q98 4 106 8 Q100 12 100 20 Q118 46 142 68z" fill="' + ctx.v('#2b2135') + '"/>'
+      + '<path d="M64 60 L136 60 L138 68 L62 68z" fill="#6a2a8a"/><rect x="96" y="58" width="8" height="10" rx="1.5" fill="#e0b23c"/>';
+  } },
+  { id: 'chef-toque', covers: true, weight: 0.4, draw: function (ctx) { // white pleated toque
+    return '<path d="M52 56 Q40 30 60 22 Q70 6 100 8 Q130 6 140 22 Q160 30 148 56z" fill="' + ctx.v('#f4f0e6') + '"/>'
+      + '<path d="M72 20 L70 54 M86 12 L86 54 M100 10 L100 54 M114 12 L114 54 M128 20 L130 54" stroke="#d8d2c4" stroke-width="1.6" fill="none"/>'
+      + '<rect x="50" y="52" width="100" height="18" rx="4" fill="' + ctx.v('#fbf8f2') + '"/><path d="M50 54 L150 54" stroke="#d8d2c4" stroke-width="1.4"/>';
+  } },
+  { id: 'sailor-cap', covers: true, weight: 0.4, draw: function (ctx) { // white « bachi », navy band, red pompom
+    return '<path d="M44 70 Q44 24 100 22 Q156 24 156 70z" fill="' + ctx.v('#f4f0e6') + '"/>'
+      + '<rect x="42" y="60" width="116" height="12" rx="3" fill="' + ctx.v('#1f2f4a') + '"/>'
+      + '<circle cx="100" cy="22" r="7" fill="#c62828"/>';
+  } },
+  { id: 'headset-mic', draw: function (ctx) { // thin band, ear piece, boom mic at the mouth — leaves the hair
+    return '<path d="M52 92 Q48 34 100 30 Q152 34 148 92" stroke="#2a2d33" stroke-width="3" fill="none"/>'
+      + '<rect x="146" y="92" width="12" height="18" rx="5" fill="' + ctx.v('#2a2d33') + '"/>'
+      + '<path d="M150 110 Q140 142 120 138" stroke="#2a2d33" stroke-width="2.4" fill="none" stroke-linecap="round"/><circle cx="119" cy="137" r="3.6" fill="#4a4f5a"/>';
+  } },
   { id: 'crown', weight: 0.3, draw: function (ctx) { // king of the table — sits on the hair, does not cover it
     return '<path d="M50 72 L48 36 L68 52 L84 26 L100 46 L116 26 L132 52 L152 36 L150 72z" fill="' + ctx.v('#e0b23c') + '"/>'
       + '<path d="M50 65 L150 65 L150 72 L50 72z" fill="#b8892a"/>'

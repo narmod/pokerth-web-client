@@ -15,11 +15,11 @@ one object in one file; nothing else changes.
 | `avatar-parts/faces.mjs` | the 10 face shapes (5 per silhouette: `id`, `sex`, `slot`, `key`) |
 | `avatar-parts/colors.mjs` | skin tones, hair colours, eye colours, outfit colours, backdrops (with their SVG `pattern`) |
 | `avatar-parts/hair.mjs` | 52 hairstyles |
-| `avatar-parts/outfits.mjs` | 43 garments |
+| `avatar-parts/outfits.mjs` | 54 garments |
 | `avatar-parts/face-parts.mjs` | eyes, eyebrows, noses, mouths, skin marks, beards |
 | `avatar-parts/extras.mjs` | glasses, earrings / piercings, hats, badges, the retired shoulder axis |
 | `avatar-parts/expressions.mjs` | the 15 expressions (brows + eyes + mouth presets) and their overlays (`FX`) |
-| `avatar-parts/presets.mjs` | the 10 starter characters (whole recipes shown as a gallery at the start of the Create tab) |
+| `avatar-parts/presets.mjs` | the 20 starter characters (whole recipes shown as a gallery at the start of the Create tab) |
 | `avatar-parts/legacy.mjs` | frozen v1 / v2 index tables — the migration of portraits saved before web.209. **Never edit an existing row.** |
 
 `scripts/test-avatar-studio.mjs` renders every part on both silhouettes and
