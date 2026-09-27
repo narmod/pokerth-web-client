@@ -259,6 +259,8 @@ function applyAdvOpts() {
     // Glossaire d'abréviations de chat (option chat_abbrev) : re-marque /
     // dé-marque les messages selon l'état de l'option (module chat/abbrev.mjs).
     try { if (typeof window._chatAbbrevRefresh === 'function') window._chatAbbrevRefresh(); } catch (e) {}
+    // Mascotte animée (option mascot, modules/mascot) : arme / désarme le minuteur d'inactivité.
+    try { if (typeof window._mascotApply === 'function') window._mascotApply(); } catch (e) {}
   } catch (e) {}
 }
 window.applyAdvOpts = applyAdvOpts;
@@ -438,6 +440,7 @@ function openAdvancedOptions() {
   sync('adv-tablezoom', 'table_zoom', true);
   sync('adv-browserzoom', 'browser_zoom', false);   // zoom navigateur : bloqué par défaut sur tactile
   sync('adv-backguard', 'back_guard', true);        // bouton Retour Android = Escape (parité QML §6)
+  sync('adv-mascot', 'mascot', false);              // mascotte animée (l'As) — extension web, OFF par défaut
   sync('adv-lobbychat', 'lobby_chat', true);
   sync('adv-polls', 'polls', true);   // sondages produit : visible par defaut, decochable ici
   sync('adv-connpill', 'conn_pill', true);   // pastille de connexion sur le feutre (web)
@@ -11886,7 +11889,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.9-web.216'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.9-web.217'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif ou la palette High contrast
    (Android, Safari, iOS standalone récent). Lit --theme-color et met

@@ -300,6 +300,13 @@ export function closeTop() {
   return true;
 }
 
+// Une surface (fenêtre, menu, confirmation) est-elle ouverte ? Lecture seule,
+// même ordre de recherche que closeTop() — utilisé par la mascotte
+// (modules/mascot) pour ne jamais apparaître par-dessus une fenêtre.
+export function hasOpenSurface() {
+  return !!_topSurface();
+}
+
 // Enregistrement à chaud, pour les surfaces créées dynamiquement.
 // close() doit ANNULER (jamais valider).
 export function registerOverlay(el, close) {
@@ -387,6 +394,7 @@ document.addEventListener('keydown', _onKey, true);   // capture : avant les
                                                       // handlers locaux
 window.keynavRegisterOverlay = registerOverlay;
 window.keynavCloseTop = closeTop;
+window.keynavHasOpenSurface = hasOpenSurface;
 window.keynavFocusInitial = focusInitial;
 window.keynavFocusStart = focusStart;
 window.keynavFocusReading = focusReading;

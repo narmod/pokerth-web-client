@@ -14,6 +14,8 @@ export const meta = {
 };
 
 export const strings = {
+    // Mascotte animée (modules/mascot, extra web)
+    advMascot:'నిష్క్రియంగా ఉన్నప్పుడు హోమ్ స్క్రీన్‌లో మరియు లాబీలో యానిమేటెడ్ మస్కట్ (ఏస్)', mascotHello:'హాయ్!', mascotBye:'మళ్ళీ కలుద్దాం!', mascotTada:'టా-డా!', mascotKing:'టేబుల్ రాజు!',
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'నా గమనిక', nvRating:'రేటింగ్', nvPlaceholder:'ఏ 3-bet కైనా Call చేస్తాడు…', nvSaved:'సేవ్ అయింది', nvTagNone:'లేబుల్ లేదు', nvTagRed:'ప్రమాదం', nvTagOrange:'దూకుడు', nvTagYellow:'గమనించాలి', nvTagGreen:'ఫిష్', nvTagBlue:'టైట్', nvTagPurple:'జిత్తులమారి', nvLabelPh:'లేబుల్ పేరు', nvLabelTip:'ఈ లేబుల్ పేరు మార్చండి — ఈ రంగు ఉన్న ప్రతి ఆటగాడికి వర్తిస్తుంది',
     ppMyStats:'నా గణాంకాలు',

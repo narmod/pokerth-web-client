@@ -16,6 +16,8 @@ export const meta = {
 };
 
 export const strings = {
+    // Mascotte animée (modules/mascot, extra web)
+    advMascot:'Animeeritud maskott (äss) avakuval ja fuajees, kui oled tegevusetu', mascotHello:'Tere!', mascotBye:'Näeme!', mascotTada:'Tadaa!', mascotKing:'Laua kuningas!',
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'Minu märkus', nvRating:'Hinnang', nvPlaceholder:'Maksab iga 3-beti…', nvSaved:'Salvestatud', nvTagNone:'Sildita', nvTagRed:'Ohtlik', nvTagOrange:'Agressiivne', nvTagYellow:'Jälgi', nvTagGreen:'Kala', nvTagBlue:'Kitsas', nvTagPurple:'Kaval', nvLabelPh:'Sildi nimi', nvLabelTip:'Nimeta see silt ümber — kehtib kõigile selle värviga mängijatele',
     ppMyStats:'Minu statistika',

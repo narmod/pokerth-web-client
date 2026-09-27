@@ -9,6 +9,8 @@ export const meta = {
 };
 
 export const strings = {
+    // Mascotte animée (modules/mascot, extra web)
+    advMascot:'Mascote animado (o Ás) na tela inicial e no lobby quando você fica inativo', mascotHello:'Oi!', mascotBye:'Até mais!', mascotTada:'Tcharam!', mascotKing:'O rei da mesa!',
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'Minha nota', nvRating:'Avaliação', nvPlaceholder:'Paga qualquer 3-bet…', nvSaved:'Salvo', nvTagNone:'Sem etiqueta', nvTagRed:'Perigo', nvTagOrange:'Agressivo', nvTagYellow:'Observar', nvTagGreen:'Peixe', nvTagBlue:'Apertado', nvTagPurple:'Traiçoeiro', nvLabelPh:'Nome da etiqueta', nvLabelTip:'Renomear esta etiqueta — vale para todos os jogadores com esta cor',
     ppMyStats:'Minhas estatísticas',

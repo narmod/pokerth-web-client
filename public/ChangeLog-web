@@ -1,4 +1,7 @@
-2026-09-27 version 2.1.9-web.216 (current series):
+2026-09-27 version 2.1.9-web.217 (current series):
+- new: animated mascot (off by default, Advanced options › Appearance) — the Ace, a playing card with arms and legs, shows up now and then on the home screen and in the lobby when you leave them alone: through a door, in a puff of smoke or from the edge of the screen, then a moonwalk, a climb and a fall, a magic trick, the King, the Knight or a string of faces. Any tap or key sends him away; never at a table
+
+2026-09-27 version 2.1.9-web.216:
 - bugfix: live spectator tool — the online player count no longer grows after a timeout and reconnect in the same window (players from the previous session were still counted)
 - new: live spectator tool — a search field on the Players tab to find a player in the list
 

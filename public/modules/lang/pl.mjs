@@ -16,6 +16,8 @@ export const meta = {
 };
 
 export const strings = {
+    // Mascotte animée (modules/mascot, extra web)
+    advMascot:'Animowana maskotka (As) na ekranie startowym i w lobby podczas bezczynności', mascotHello:'Cześć!', mascotBye:'Na razie!', mascotTada:'Tadam!', mascotKing:'Król stołu!',
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'Moja notatka', nvRating:'Ocena', nvPlaceholder:'Sprawdza każdy 3-bet…', nvSaved:'Zapisano', nvTagNone:'Bez etykiety', nvTagRed:'Niebezpieczny', nvTagOrange:'Agresywny', nvTagYellow:'Obserwować', nvTagGreen:'Ryba', nvTagBlue:'Ciasny', nvTagPurple:'Przebiegły', nvLabelPh:'Nazwa etykiety', nvLabelTip:'Zmień nazwę etykiety — dotyczy każdego gracza z tym kolorem',
     ppMyStats:'Moje statystyki',

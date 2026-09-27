@@ -10,6 +10,8 @@ export const meta = {
 };
 
 export const strings = {
+    // Mascotte animée (modules/mascot, extra web)
+    advMascot:'Animált kabala (az ász) a kezdőképernyőn és az előtérben tétlenség esetén', mascotHello:'Szia!', mascotBye:'Viszlát!', mascotTada:'Tadam!', mascotKing:'Az asztal királya!',
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'Jegyzetem', nvRating:'Értékelés', nvPlaceholder:'Minden 3-betet megad…', nvSaved:'Mentve', nvTagNone:'Nincs címke', nvTagRed:'Veszélyes', nvTagOrange:'Agresszív', nvTagYellow:'Figyelni', nvTagGreen:'Hal', nvTagBlue:'Szoros', nvTagPurple:'Ravasz', nvLabelPh:'Címke neve', nvLabelTip:'Címke átnevezése — minden ilyen színű játékosra érvényes',
     ppMyStats:'Statisztikáim',

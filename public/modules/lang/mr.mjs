@@ -14,6 +14,8 @@ export const meta = {
 };
 
 export const strings = {
+    // Mascotte animée (modules/mascot, extra web)
+    advMascot:'निष्क्रिय असताना मुख्य स्क्रीन आणि लॉबीमध्ये ॲनिमेटेड शुभंकर (एक्का)', mascotHello:'नमस्कार!', mascotBye:'पुन्हा भेटू!', mascotTada:'टा-डा!', mascotKing:'टेबलचा राजा!',
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'माझी टीप', nvRating:'रेटिंग', nvPlaceholder:'कुठल्याही 3-bet ला Call करतो…', nvSaved:'सेव्ह झालं', nvTagNone:'लेबल नाही', nvTagRed:'धोका', nvTagOrange:'आक्रमक', nvTagYellow:'सावधान', nvTagGreen:'फिश', nvTagBlue:'टाइट', nvTagPurple:'चलाख', nvLabelPh:'लेबलचं नाव', nvLabelTip:'या लेबलचं नाव बदला — या रंगाच्या सर्व खेळाडूंना लागू',
     ppMyStats:'माझी आकडेवारी',

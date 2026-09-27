@@ -10,6 +10,8 @@ export const meta = {
 };
 
 export const strings = {
+    // Mascotte animée (modules/mascot, extra web)
+    advMascot:'Animovaný maskot (eso) na úvodní obrazovce a v lobby při nečinnosti', mascotHello:'Ahoj!', mascotBye:'Zatím!', mascotTada:'Tadá!', mascotKing:'Král stolu!',
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'Moje poznámka', nvRating:'Hodnocení', nvPlaceholder:'Dorovná každý 3-bet…', nvSaved:'Uloženo', nvTagNone:'Bez štítku', nvTagRed:'Nebezpečný', nvTagOrange:'Agresivní', nvTagYellow:'Sledovat', nvTagGreen:'Ryba', nvTagBlue:'Těsný', nvTagPurple:'Vychytralý', nvLabelPh:'Název štítku', nvLabelTip:'Přejmenovat štítek — platí pro všechny hráče s touto barvou',
     ppMyStats:'Moje statistiky',

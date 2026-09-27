@@ -10,6 +10,8 @@ export const meta = {
 };
 
 export const strings = {
+    // Mascotte animée (modules/mascot, extra web)
+    advMascot:'Geanimeerde gelukbringer (die Aas) op die tuisskerm en in die voorportaal wanneer onaktief', mascotHello:'Hallo!', mascotBye:'Totsiens!', mascotTada:'Tadaa!', mascotKing:'Koning van die tafel!',
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'My nota', nvRating:'Gradering', nvPlaceholder:'Call enige 3-bet…', nvSaved:'Gestoor', nvTagNone:'Geen etiket', nvTagRed:'Gevaarlik', nvTagOrange:'Aggressief', nvTagYellow:'Hou dop', nvTagGreen:'Vis', nvTagBlue:'Styf', nvTagPurple:'Slinks', nvLabelPh:'Etiketnaam', nvLabelTip:'Hernoem hierdie etiket — geld vir elke speler met hierdie kleur',
     ppMyStats:'My statistieke',

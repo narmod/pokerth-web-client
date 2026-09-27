@@ -14,6 +14,8 @@ export const meta = {
 };
 
 export const strings = {
+    // Mascotte animée (modules/mascot, extra web)
+    advMascot:'እንቅስቃሴ በሌለበት ጊዜ በመነሻ ማያ ገጽ እና በሎቢ ውስጥ ተንቀሳቃሽ ምልክት (ኤሱ)', mascotHello:'ሰላም!', mascotBye:'በኋላ እንገናኝ!', mascotTada:'ታ-ዳ!', mascotKing:'የጠረጴዛው ንጉሥ!',
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'የእኔ ማስታወሻ', nvRating:'ደረጃ', nvPlaceholder:'ማንኛውንም 3-bet ይጠራል…', nvSaved:'ተቀምጧል', nvTagNone:'መለያ የለም', nvTagRed:'አደገኛ', nvTagOrange:'ጠበኛ', nvTagYellow:'ይከታተሉ', nvTagGreen:'ደካማ', nvTagBlue:'ጥብቅ', nvTagPurple:'ተንኮለኛ', nvLabelPh:'የመለያ ስም', nvLabelTip:'ይህን መለያ እንደገና ይሰይሙ — በዚህ ቀለም ላለው እያንዳንዱ ተጫዋች ይተገበራል',
     ppMyStats:'የእኔ ስታቲስቲክስ',

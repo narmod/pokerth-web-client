@@ -17,6 +17,8 @@ export const meta = {
 };
 
 export const strings = {
+    // Mascotte animée (modules/mascot, extra web)
+    advMascot:'Аніміраваны талісман (туз) на галоўным экране і ў лобі пры бяздзейнасці', mascotHello:'Прывітанне!', mascotBye:'Да сустрэчы!', mascotTada:'Та-да!', mascotKing:'Кароль стала!',
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'Мая нататка', nvRating:'Ацэнка', nvPlaceholder:'Коліць любы 3-bet…', nvSaved:'Захавана', nvTagNone:'Без меткі', nvTagRed:'Небяспека', nvTagOrange:'Агрэсіўны', nvTagYellow:'Увага', nvTagGreen:'Рыба', nvTagBlue:'Тайтавы', nvTagPurple:'Хітры', nvLabelPh:'Назва меткі', nvLabelTip:'Перайменаваць гэтую метку — прымяняецца да ўсіх гульцоў з гэтым колерам',
     ppMyStats:'Мая статыстыка',

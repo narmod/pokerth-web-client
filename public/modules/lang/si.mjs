@@ -17,6 +17,8 @@ export const meta = {
 };
 
 export const strings = {
+    // Mascotte animée (modules/mascot, extra web)
+    advMascot:'අක්‍රිය විට මුල් තිරයේ සහ ලොබියේ සජීවිකරණ සුරතලා (ඒස්)', mascotHello:'හායි!', mascotBye:'ආයෙත් හම්බවෙමු!', mascotTada:'ටා-ඩා!', mascotKing:'මේසයේ රජා!',
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'මගේ සටහන', nvRating:'ශ්‍රේණිය', nvPlaceholder:'ඕනෑම 3-bet එකකට Call කරයි…', nvSaved:'සුරැකිණි', nvTagNone:'ලේබලයක් නැත', nvTagRed:'අවදානම්', nvTagOrange:'ආක්‍රමණශීලී', nvTagYellow:'අවධානයෙන්', nvTagGreen:'Fish', nvTagBlue:'Tight', nvTagPurple:'කපටි', nvLabelPh:'ලේබලයේ නම', nvLabelTip:'මෙම ලේබලය නැවත නම් කරන්න — මෙම වර්ණය ඇති සෑම ක්‍රීඩකයෙකුටම අදාළ වේ',
     ppMyStats:'මගේ සංඛ්‍යාලේඛන',

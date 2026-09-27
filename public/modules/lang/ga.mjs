@@ -17,6 +17,8 @@ export const meta = {
 };
 
 export const strings = {
+    // Mascotte animée (modules/mascot, extra web)
+    advMascot:'Suaitheantas beoite (an tAon) ar an scáileán baile agus sa stocaireacht nuair atá tú díomhaoin', mascotHello:'Haigh!', mascotBye:'Slán go fóill!', mascotTada:'Ta-da!', mascotKing:'Rí an bhoird!',
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'Mo nóta', nvRating:'Rátáil', nvPlaceholder:'Glaonn sé ar aon 3-bet…', nvSaved:'Sábháilte', nvTagNone:'Gan lipéad', nvTagRed:'Contúirt', nvTagOrange:'Ionsaitheach', nvTagYellow:'Aire', nvTagGreen:'Iasc', nvTagBlue:'Daingean', nvTagPurple:'Glic', nvLabelPh:'Ainm an lipéid', nvLabelTip:'Athainmnigh an lipéad seo — baineann sé le gach imreoir a bhfuil an dath seo air',
     ppMyStats:'Mo staitisticí',

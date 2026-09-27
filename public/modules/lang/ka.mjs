@@ -17,6 +17,8 @@ export const meta = {
 };
 
 export const strings = {
+    // Mascotte animée (modules/mascot, extra web)
+    advMascot:'ანიმირებული თილისმა (ტუზი) მთავარ ეკრანზე და ლობიში უმოქმედობისას', mascotHello:'გამარჯობა!', mascotBye:'შეხვედრამდე!', mascotTada:'ტა-და!', mascotKing:'მაგიდის მეფე!',
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'ჩემი ჩანაწერი', nvRating:'შეფასება', nvPlaceholder:'ნებისმიერ 3-bet-ს Call აკეთებს…', nvSaved:'შენახულია', nvTagNone:'იარლიყის გარეშე', nvTagRed:'საფრთხე', nvTagOrange:'აგრესიული', nvTagYellow:'დაკვირვება', nvTagGreen:'Fish', nvTagBlue:'Tight', nvTagPurple:'Tricky', nvLabelPh:'იარლიყის სახელი', nvLabelTip:'გადაარქვით ამ იარლიყს სახელი — ცვლილება შეეხება ამ ფერის ყველა მოთამაშეს',
     ppMyStats:'ჩემი სტატისტიკა',

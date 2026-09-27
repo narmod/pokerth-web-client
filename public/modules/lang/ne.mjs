@@ -17,6 +17,8 @@ export const meta = {
 };
 
 export const strings = {
+    // Mascotte animée (modules/mascot, extra web)
+    advMascot:'निष्क्रिय हुँदा गृह स्क्रिन र लबीमा एनिमेटेड शुभंकर (एक्का)', mascotHello:'नमस्ते!', mascotBye:'फेरि भेटौँला!', mascotTada:'टा-डा!', mascotKing:'टेबलको राजा!',
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'मेरो टिप्पणी', nvRating:'मूल्याङ्कन', nvPlaceholder:'जुनसुकै 3-bet लाई call गर्छ…', nvSaved:'सुरक्षित गरियो', nvTagNone:'लेबल छैन', nvTagRed:'खतरा', nvTagOrange:'आक्रामक', nvTagYellow:'ध्यान दिनुहोस्', nvTagGreen:'माछा', nvTagBlue:'कसिलो', nvTagPurple:'चलाख', nvLabelPh:'लेबलको नाम', nvLabelTip:'यो लेबलको नाम बदल्नुहोस् — यस रङका सबै खेलाडीमा लागू हुन्छ',
     ppMyStats:'मेरो तथ्याङ्क',

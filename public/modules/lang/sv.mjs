@@ -9,6 +9,8 @@ export const meta = {
 };
 
 export const strings = {
+    // Mascotte animée (modules/mascot, extra web)
+    advMascot:'Animerad maskot (esset) på startskärmen och i lobbyn vid inaktivitet', mascotHello:'Hej!', mascotBye:'Vi ses!', mascotTada:'Tadaa!', mascotKing:'Bordets kung!',
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'Min anteckning', nvRating:'Betyg', nvPlaceholder:'Synar varje 3-bet…', nvSaved:'Sparat', nvTagNone:'Ingen etikett', nvTagRed:'Farlig', nvTagOrange:'Aggressiv', nvTagYellow:'Bevaka', nvTagGreen:'Fisk', nvTagBlue:'Tight', nvTagPurple:'Slug', nvLabelPh:'Etikettnamn', nvLabelTip:'Byt namn på etiketten — gäller alla spelare med den här färgen',
     ppMyStats:'Min statistik',

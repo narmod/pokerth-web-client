@@ -17,6 +17,8 @@ export const meta = {
 };
 
 export const strings = {
+    // Mascotte animée (modules/mascot, extra web)
+    advMascot:'Àmì eré tí ń gbé (Ace) lórí ojú-ìwé àkọ́kọ́ àti nínú gbọ̀ngàn nígbà tí o kò bá ṣe nǹkan', mascotHello:'Báwo!', mascotBye:'Ó dìgbà!', mascotTada:'Tada!', mascotKing:'Ọba tábìlì!',
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'Àkọsílẹ̀ mi', nvRating:'Ìdíwọ̀n', nvPlaceholder:'Ó máa ń ṣe call sí 3-bet èyíkéyìí…', nvSaved:'A ti fipamọ́', nvTagNone:'Kò sí àmì', nvTagRed:'Ewu', nvTagOrange:'Oníjàgídíjàgan', nvTagYellow:'Ṣọ́ra', nvTagGreen:'Ẹja', nvTagBlue:'Afọkànbalẹ̀', nvTagPurple:'Ọlọ́gbọ́n àrékérekè', nvLabelPh:'Orúkọ àmì', nvLabelTip:'Yí orúkọ àmì yìí padà — ó kan gbogbo òṣèré tí ó ní àwọ̀ yìí',
     ppMyStats:'Ìṣirò mi',

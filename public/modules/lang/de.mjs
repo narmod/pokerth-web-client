@@ -15,6 +15,8 @@ export const meta = {
 };
 
 export const strings = {
+    // Mascotte animée (modules/mascot, extra web)
+    advMascot:'Animiertes Maskottchen (das Ass) auf dem Startbildschirm und in der Lobby bei Inaktivität', mascotHello:'Hallo!', mascotBye:'Bis bald!', mascotTada:'Tadaa!', mascotKing:'König des Filzes!',
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'Meine Notiz', nvRating:'Bewertung', nvPlaceholder:'Callt jede 3-Bet…', nvSaved:'Gespeichert', nvTagNone:'Kein Etikett', nvTagRed:'Gefahr', nvTagOrange:'Aggressiv', nvTagYellow:'Beobachten', nvTagGreen:'Fisch', nvTagBlue:'Tight', nvTagPurple:'Trickreich', nvLabelPh:'Name des Etiketts', nvLabelTip:'Etikett umbenennen — gilt für alle Spieler mit dieser Farbe',
     ppMyStats:'Meine Statistiken',

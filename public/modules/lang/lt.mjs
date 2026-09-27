@@ -10,6 +10,8 @@ export const meta = {
 };
 
 export const strings = {
+    // Mascotte animée (modules/mascot, extra web)
+    advMascot:'Animuotas talismanas (tūzas) pradžios ekrane ir fojė, kai esate neaktyvus', mascotHello:'Labas!', mascotBye:'Iki!', mascotTada:'Tadam!', mascotKing:'Stalo karalius!',
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'Mano pastaba', nvRating:'Įvertinimas', nvPlaceholder:'Sumoka bet kokį 3-bet…', nvSaved:'Išsaugota', nvTagNone:'Be žymos', nvTagRed:'Pavojingas', nvTagOrange:'Agresyvus', nvTagYellow:'Stebėti', nvTagGreen:'Žuvis', nvTagBlue:'Ankštas', nvTagPurple:'Gudrus', nvLabelPh:'Žymos pavadinimas', nvLabelTip:'Pervadinti žymą — galioja visiems šios spalvos žaidėjams',
     ppMyStats:'Mano statistika',

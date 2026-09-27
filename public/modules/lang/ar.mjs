@@ -17,6 +17,8 @@ export const meta = {
 };
 
 export const strings = {
+    // Mascotte animée (modules/mascot, extra web)
+    advMascot:'تميمة متحركة (الآص) في الشاشة الرئيسية والردهة عند عدم النشاط', mascotHello:'مرحبًا!', mascotBye:'إلى اللقاء!', mascotTada:'تادا!', mascotKing:'ملك الطاولة!',
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'ملاحظتي', nvRating:'التقييم', nvPlaceholder:'يدفع أي 3-bet…', nvSaved:'تم الحفظ', nvTagNone:'بدون وسم', nvTagRed:'خطير', nvTagOrange:'عدواني', nvTagYellow:'تحت المراقبة', nvTagGreen:'سمكة', nvTagBlue:'متحفّظ', nvTagPurple:'ماكر', nvLabelPh:'اسم الوسم', nvLabelTip:'إعادة تسمية الوسم — ينطبق على كل لاعب بهذا اللون',
     ppMyStats:'إحصائياتي',

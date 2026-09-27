@@ -17,6 +17,8 @@ export const meta = {
 };
 
 export const strings = {
+    // Mascotte animée (modules/mascot, extra web)
+    advMascot:'Әрекетсіз кезде басты экранда және лоббиде анимациялық талисман (тұз)', mascotHello:'Сәлем!', mascotBye:'Көріскенше!', mascotTada:'Та-да!', mascotKing:'Үстел патшасы!',
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'Менің жазбам', nvRating:'Баға', nvPlaceholder:'Кез келген 3-bet-ке Call жасайды…', nvSaved:'Сақталды', nvTagNone:'Белгісіз', nvTagRed:'Қауіпті', nvTagOrange:'Агрессивті', nvTagYellow:'Бақылау', nvTagGreen:'Фиш', nvTagBlue:'Тайт', nvTagPurple:'Қу', nvLabelPh:'Белгі атауы', nvLabelTip:'Бұл белгінің атауын өзгерту — осы түстегі барлық ойыншыға қолданылады',
     ppMyStats:'Менің статистикам',

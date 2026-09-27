@@ -10,6 +10,8 @@ export const meta = {
 };
 
 export const strings = {
+    // Mascotte animée (modules/mascot, extra web)
+    advMascot:'Linh vật hoạt hình (quân Át) ở màn hình chính và sảnh khi không hoạt động', mascotHello:'Chào!', mascotBye:'Hẹn gặp lại!', mascotTada:'Ta-da!', mascotKing:'Vua của bàn chơi!',
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'Ghi chú của tôi', nvRating:'Đánh giá', nvPlaceholder:'Theo mọi 3-bet…', nvSaved:'Đã lưu', nvTagNone:'Không nhãn', nvTagRed:'Nguy hiểm', nvTagOrange:'Hung hăng', nvTagYellow:'Cần theo dõi', nvTagGreen:'Cá', nvTagBlue:'Chặt', nvTagPurple:'Ranh mãnh', nvLabelPh:'Tên nhãn', nvLabelTip:'Đổi tên nhãn — áp dụng cho mọi người chơi mang màu này',
     ppMyStats:'Thống kê của tôi',

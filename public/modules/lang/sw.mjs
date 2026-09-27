@@ -16,6 +16,8 @@ export const meta = {
 };
 
 export const strings = {
+    // Mascotte animée (modules/mascot, extra web)
+    advMascot:'Kinyago cha uhuishaji (Ekaa) kwenye skrini ya mwanzo na ukumbini ukiwa hufanyi kitu', mascotHello:'Habari!', mascotBye:'Tuonane!', mascotTada:'Tada!', mascotKing:'Mfalme wa meza!',
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'Kumbukumbu yangu', nvRating:'Ukadiriaji', nvPlaceholder:'Hulipa kila 3-bet…', nvSaved:'Imehifadhiwa', nvTagNone:'Hakuna lebo', nvTagRed:'Hatari', nvTagOrange:'Mkali', nvTagYellow:'Mwangalie', nvTagGreen:'Samaki', nvTagBlue:'Mbanaji', nvTagPurple:'Mjanja', nvLabelPh:'Jina la lebo', nvLabelTip:'Badilisha jina la lebo — inatumika kwa kila mchezaji mwenye rangi hii',
     ppMyStats:'Takwimu zangu',

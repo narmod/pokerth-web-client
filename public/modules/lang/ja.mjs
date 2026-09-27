@@ -9,6 +9,8 @@ export const meta = {
 };
 
 export const strings = {
+    // Mascotte animée (modules/mascot, extra web)
+    advMascot:'操作がないとき、ホーム画面とロビーにアニメーションのマスコット（エース）を表示', mascotHello:'やあ！', mascotBye:'またね！', mascotTada:'ジャジャーン！', mascotKing:'テーブルの王様！',
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'メモ', nvRating:'評価', nvPlaceholder:'どんな3-betもコールする…', nvSaved:'保存済み', nvTagNone:'ラベルなし', nvTagRed:'危険', nvTagOrange:'アグレッシブ', nvTagYellow:'要注意', nvTagGreen:'フィッシュ', nvTagBlue:'タイト', nvTagPurple:'トリッキー', nvLabelPh:'ラベル名', nvLabelTip:'ラベル名を変更 — この色のすべてのプレイヤーに適用されます',
     ppMyStats:'自分の統計',

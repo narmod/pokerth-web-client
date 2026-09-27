@@ -13,6 +13,8 @@ export const meta = {
 };
 
 export const strings = {
+    // Mascotte animée (modules/mascot, extra web)
+    advMascot:'사용하지 않을 때 홈 화면과 로비에 움직이는 마스코트(에이스) 표시', mascotHello:'안녕!', mascotBye:'또 봐!', mascotTada:'짜잔!', mascotKing:'테이블의 왕!',
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'내 메모', nvRating:'평가', nvPlaceholder:'모든 3-bet을 콜함…', nvSaved:'저장됨', nvTagNone:'라벨 없음', nvTagRed:'위험', nvTagOrange:'공격적', nvTagYellow:'주시', nvTagGreen:'피시', nvTagBlue:'타이트', nvTagPurple:'교활함', nvLabelPh:'라벨 이름', nvLabelTip:'라벨 이름 바꾸기 — 이 색의 모든 플레이어에게 적용됩니다',
     ppMyStats:'내 통계',

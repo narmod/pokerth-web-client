@@ -16,6 +16,8 @@ export const meta = {
 };
 
 export const strings = {
+    // Mascotte animée (modules/mascot, extra web)
+    advMascot:'নিষ্ক্রিয় থাকলে হোম স্ক্রিন ও লবিতে অ্যানিমেটেড মাসকট (টেক্কা)', mascotHello:'হাই!', mascotBye:'আবার দেখা হবে!', mascotTada:'টা-ডা!', mascotKing:'টেবিলের রাজা!',
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'আমার নোট', nvRating:'রেটিং', nvPlaceholder:'যেকোনো 3-bet কল করে…', nvSaved:'সংরক্ষিত', nvTagNone:'কোনো লেবেল নেই', nvTagRed:'বিপজ্জনক', nvTagOrange:'আক্রমণাত্মক', nvTagYellow:'নজরে রাখুন', nvTagGreen:'ফিশ', nvTagBlue:'টাইট', nvTagPurple:'ধূর্ত', nvLabelPh:'লেবেলের নাম', nvLabelTip:'লেবেলের নাম বদলান — এই রঙের সব খেলোয়াড়ের ক্ষেত্রে প্রযোজ্য',
     ppMyStats:'আমার পরিসংখ্যান',

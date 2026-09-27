@@ -14,6 +14,8 @@ export const meta = {
 };
 
 export const strings = {
+    // Mascotte animée (modules/mascot, extra web)
+    advMascot:'ਅਕਿਰਿਆਸ਼ੀਲ ਹੋਣ ’ਤੇ ਹੋਮ ਸਕ੍ਰੀਨ ਅਤੇ ਲਾਬੀ ਵਿੱਚ ਐਨੀਮੇਟਡ ਮਾਸਕੋਟ (ਯੱਕਾ)', mascotHello:'ਸਤ ਸ੍ਰੀ ਅਕਾਲ!', mascotBye:'ਫਿਰ ਮਿਲਾਂਗੇ!', mascotTada:'ਟਾ-ਡਾ!', mascotKing:'ਮੇਜ਼ ਦਾ ਰਾਜਾ!',
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'ਮੇਰਾ ਨੋਟ', nvRating:'ਰੇਟਿੰਗ', nvPlaceholder:'ਹਰ 3-ਬੈਟ ਕਾਲ ਕਰਦਾ ਹੈ…', nvSaved:'ਸੰਭਾਲਿਆ ਗਿਆ', nvTagNone:'ਕੋਈ ਲੇਬਲ ਨਹੀਂ', nvTagRed:'ਖ਼ਤਰਾ', nvTagOrange:'ਹਮਲਾਵਰ', nvTagYellow:'ਧਿਆਨ ਰੱਖੋ', nvTagGreen:'ਕਮਜ਼ੋਰ', nvTagBlue:'ਸਖ਼ਤ', nvTagPurple:'ਚਲਾਕ', nvLabelPh:'ਲੇਬਲ ਦਾ ਨਾਮ', nvLabelTip:'ਇਸ ਲੇਬਲ ਦਾ ਨਾਮ ਬਦਲੋ — ਇਸ ਰੰਗ ਵਾਲੇ ਹਰ ਖਿਡਾਰੀ ਉੱਤੇ ਲਾਗੂ ਹੁੰਦਾ ਹੈ',
     ppMyStats:'ਮੇਰੇ ਅੰਕੜੇ',

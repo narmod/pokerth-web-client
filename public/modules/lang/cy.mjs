@@ -17,6 +17,8 @@ export const meta = {
 };
 
 export const strings = {
+    // Mascotte animée (modules/mascot, extra web)
+    advMascot:'Masgot wedi’i animeiddio (yr As) ar y sgrin gartref ac yn y lobi pan fyddwch yn segur', mascotHello:'Helô!', mascotBye:'Wela i di!', mascotTada:'Ta-da!', mascotKing:'Brenin y bwrdd!',
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'Fy nodyn', nvRating:'Sgôr', nvPlaceholder:'Yn galw unrhyw 3-bet…', nvSaved:'Wedi\'i gadw', nvTagNone:'Dim label', nvTagRed:'Perygl', nvTagOrange:'Ymosodol', nvTagYellow:'Gofal', nvTagGreen:'Pysgodyn', nvTagBlue:'Tynn', nvTagPurple:'Cyfrwys', nvLabelPh:'Enw\'r label', nvLabelTip:'Ailenwi\'r label hwn — mae\'n berthnasol i bob chwaraewr gyda\'r lliw hwn',
     ppMyStats:'Fy ystadegau',

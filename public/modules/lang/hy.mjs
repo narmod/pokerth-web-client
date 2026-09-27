@@ -17,6 +17,8 @@ export const meta = {
 };
 
 export const strings = {
+    // Mascotte animée (modules/mascot, extra web)
+    advMascot:'Անիմացիոն թալիսման (տուզ) գլխավոր էկրանին և լոբբիում անգործության ժամանակ', mascotHello:'Բարև!', mascotBye:'Կհանդիպենք!', mascotTada:'Տա-դա!', mascotKing:'Սեղանի արքան!',
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'Իմ նշումը', nvRating:'Գնահատական', nvPlaceholder:'Call է անում ցանկացած 3-bet…', nvSaved:'Պահպանված է', nvTagNone:'Առանց պիտակի', nvTagRed:'Վտանգ', nvTagOrange:'Ագրեսիվ', nvTagYellow:'Ուշադրություն', nvTagGreen:'Ձուկ', nvTagBlue:'Զուսպ', nvTagPurple:'Խորամանկ', nvLabelPh:'Պիտակի անունը', nvLabelTip:'Վերանվանել այս պիտակը — կիրառվում է այս գույնով բոլոր խաղացողների համար',
     ppMyStats:'Իմ վիճակագրությունը',
