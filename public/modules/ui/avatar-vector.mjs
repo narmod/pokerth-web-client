@@ -27,12 +27,17 @@ const AV_SKIN = [
   ['#fff0e3', '#f3d6c1'], ['#6e4527', '#57341a'],
   ['#553219', '#41240e'], ['#3d2412', '#2b1809']
 ];
-// [base, highlight]
+// [base, highlight] — black, dark brown, brown, auburn, golden blonde,
+// grey, light blonde, white, then (2.1.9-web.189) light brown, light red,
+// blue, pink. Brows and beards keep a natural colour on the last two.
 const AV_HAIRC = [
   ['#2b2118', '#4d3d2f'], ['#4a3222', '#6f4f37'], ['#7a5530', '#a07848'],
   ['#b14a22', '#d8703f'], ['#dcae50', '#f3d68b'], ['#a9a9a9', '#d4d4d4'],
-  ['#ecd7a2', '#fff3cf'], ['#eeeeee', '#ffffff']
+  ['#ecd7a2', '#fff3cf'], ['#eeeeee', '#ffffff'], ['#9c7b52', '#c2a075'],
+  ['#d2874f', '#eeae7c'], ['#3b6fd6', '#6f9af0'], ['#e88ac2', '#f8bfe0']
 ];
+const AV_HAIRC_FANTASY = 10; // from this index on, brows/beard use dark brown
+function _hcNatural(i) { return i >= AV_HAIRC_FANTASY ? AV_HAIRC[1] : AV_HAIRC[i]; }
 const AV_EYEC = ['#6b4526', '#3a7bb5', '#3f8a4a', '#6b7078', '#9a7236', '#2a1c12'];
 // [base, centre glow] — pastel backdrops (same count/order as the former
 // felts: greens, blues, reds, purples, greys, teals, browns, then the
@@ -148,6 +153,7 @@ function avNormalize(r) {
 // Relative dice weights (default 1): striking styles stay possible but rare.
 const AV_RANDWEIGHT = {
   hair: { 0: 0.35, 10: 0.6, 11: 0.6, 15: 0.5, 16: 0.4, 17: 0.2, 23: 0.6, 28: 0.5, 29: 0.5, 30: 0.5, 33: 0.6, 38: 0.6 },
+  hairc: { 10: 0.25, 11: 0.25 },
   outfit: { 22: 0.5, 31: 0.4 }
 };
 // Probability that an optional axis stays on 'none' ([masculine, feminine]).
@@ -916,7 +922,7 @@ function _wrap(vb, size, ctx, body) {
 function avPartSvg(axId, i, recipe, size) {
   var r = avNormalize(recipe);
   r[axId] = i;
-  var skin = AV_SKIN[r.skin], hc = AV_HAIRC[r.hairc];
+  var skin = AV_SKIN[r.skin], hc = AV_HAIRC[r.hairc], hcN = _hcNatural(r.hairc);
   var vb = AV_CROP[axId];
   if (!vb) return avSvg(r, size);
   var ctx = _ctx(_cid()), body = '', h;
@@ -926,7 +932,7 @@ function avPartSvg(axId, i, recipe, size) {
     case 'outfit':  body = _sx(r.sex === 1 ? 0.86 : 1, _neck(skin) + _outfit(ctx, i, skin, r.outfitc ? AV_OUTFITC[r.outfitc - 1] : null)); break;
     case 'hair':    h = _hair(ctx, i, hc, r.face);
       body = h[0] + (h[2] ? '<g clip-path="url(#' + _headClip(ctx, r.face, 1.02) + ')">' + h[2] + '</g>' : '') + h[1]; break;
-    case 'beard':   body = _beard(ctx, i, hc, r.face); break;
+    case 'beard':   body = _beard(ctx, i, hcN, r.face); break;
     case 'eyes':    body = _eyes(i, AV_EYEC[r.eyec], skin, r.sex === 1); break;
     case 'nose':    body = _nose(i, skin[1]); break;
     case 'mouth':   body = _mouth(i); break;
@@ -944,7 +950,7 @@ function avPartSvg(axId, i, recipe, size) {
 
 function avSvg(recipe, size) {
   var r = avNormalize(recipe);
-  var felt = AV_FELT[r.bg], skin = AV_SKIN[r.skin], hc = AV_HAIRC[r.hairc];
+  var felt = AV_FELT[r.bg], skin = AV_SKIN[r.skin], hc = AV_HAIRC[r.hairc], hcN = _hcNatural(r.hairc);
   var sz = size || 200;
   var cid = _cid(), ctx = _ctx(cid);
   var fem = r.sex === 1;
@@ -976,11 +982,11 @@ function avSvg(recipe, size) {
     + '<ellipse cx="68" cy="117" rx="9" ry="5.5" fill="#ff7f86" opacity=".32"/>'
     + '<ellipse cx="132" cy="117" rx="9" ry="5.5" fill="#ff7f86" opacity=".32"/>'
     + _nose(r.nose, skin[1])
-    + _beard(ctx, r.beard, hc, r.face)
+    + _beard(ctx, r.beard, hcN, r.face)
     + _mouth(r.mouth)
     + _eyes(r.eyes, AV_EYEC[r.eyec], skin, fem)
-    // Brows follow hair color
-    + '<path d="M68 80 Q78 74 88 79 M112 79 Q122 74 132 80" stroke="' + hc[0] + '" stroke-width="' + (fem ? 4 : 5.4) + '" stroke-linecap="round" fill="none"/>'
+    // Brows follow hair color (a natural one on fantasy hair)
+    + '<path d="M68 80 Q78 74 88 79 M112 79 Q122 74 132 80" stroke="' + hcN[0] + '" stroke-width="' + (fem ? 4 : 5.4) + '" stroke-linecap="round" fill="none"/>'
     + _ears(r.ears)
     + _sx(wk, clipHair(hair[1]))
     + _glasses(r.glasses)

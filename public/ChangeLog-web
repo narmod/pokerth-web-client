@@ -1,4 +1,8 @@
-2026-09-27 version 2.1.9-web.188 (current series):
+2026-09-27 version 2.1.9-web.189 (current series):
+- improvement: « From a photo » (beta) — hair is read from the framed photo itself: the band above the hairline you aligned gives the colour, the sides and shoulders the length, and a fringe over the forehead picks a fringed style. Light hair (blonde, light brown) is no longer mistaken for skin, dark hair against a dark backdrop is no longer read as a bald crown, and a photo that stops above the hairline keeps the default hair instead of guessing
+- new: 4 more hair colours in the « Create » tab — light brown, light red, blue, pink (brows and beards stay natural on the last two); « From a photo » matches them too (a dark blonde now lands on light brown instead of brown)
+
+2026-09-27 version 2.1.9-web.188:
 - improvement: « From a photo » (beta) — the silhouette is now a first, full-size step: two big cards (Man / Woman, with a sample portrait) before the camera opens; a small button above the viewfinder reopens the choice
 - bugfix: « From a photo » — a photo framed in the template is read from the template again (the previous build searched the face on its own and lost skin tone, hair and beard on a normal selfie); the beard is now judged against the cheeks of the same photo, so lighting no longer hides it; the eye line of the template moves up to where eyes really sit
 - improvement: the ♂ / ♀ chips of the « Create » tab use drawn icons, centred in their box, instead of text symbols that sat off-centre

@@ -199,6 +199,7 @@ function _capture(st) {
   cv.width = C; cv.height = C;
   var ctx = cv.getContext('2d');
   ctx.fillStyle = '#e9e9e9'; ctx.fillRect(0, 0, C, C);
+  st.valid = null; // the part of the frame the photo covers (fractions), null = all
   if (st.mode === 'camera') {
     var v = st.video, vw = v.videoWidth, vh = v.videoHeight;
     if (!vw || !vh) return null;
@@ -209,6 +210,8 @@ function _capture(st) {
     var S = st.view.clientWidth, k = C / S;
     // viewport (0..S) → image (u = (vx - tx) / s)
     ctx.drawImage(st.img, 0, 0, st.img.width, st.img.height, st.tx * k, st.ty * k, st.img.width * st.s * k, st.img.height * st.s * k);
+    var vx0 = st.tx * k / C, vy0 = st.ty * k / C, vx1 = vx0 + st.img.width * st.s * k / C, vy1 = vy0 + st.img.height * st.s * k / C;
+    st.valid = [Math.max(0, vx0), Math.max(0, vy0), Math.min(1, vx1), Math.min(1, vy1)];
   } else return null;
   return cv;
 }
@@ -291,7 +294,9 @@ function avCaptureOpen(opts) {
     if (!cv) return;
     var cb = st.onResult;
     avCaptureClose();
-    if (typeof cb === 'function') cb(cv, AV_GUIDE, st.sex);
+    var guide = Object.assign({}, AV_GUIDE);
+    if (st.valid) guide.valid = st.valid;
+    if (typeof cb === 'function') cb(cv, guide, st.sex);
   });
   st.onKey = function (e) { if (e.key === 'Escape') avCaptureClose(); };
   document.addEventListener('keydown', st.onKey);

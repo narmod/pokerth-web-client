@@ -52,6 +52,9 @@ const AXES = window._AV_AXES;
 ok(Array.isArray(AXES) && AXES.length === 18, '18 axes defined, incl. the outfit colour (' + AXES.length + ')');
 const axOutfit = AXES.find(a => a.id === 'outfit'), axHair = AXES.find(a => a.id === 'hair'), axOc = AXES.find(a => a.id === 'outfitc');
 ok(axOutfit.n === 33 && axHair.n === 39, '2026-09-27 catalogue: 33 outfits, 39 hairstyles (' + axOutfit.n + '/' + axHair.n + ')');
+const axHairc = AXES.find(a => a.id === 'hairc');
+ok(axHairc && axHairc.n === 12 && window._avSwatch('hairc', 11) === '#e88ac2' && window._avSwatch('hairc', 8) === '#9c7b52', '12 hair colours (light brown, light red, blue, pink added)');
+ok(window._avSvg({ sex: 0, hair: 1, hairc: 10, beard: 3 }).indexOf('#3b6fd6') !== -1 && window._avSvg({ sex: 0, hair: 1, hairc: 10, beard: 3 }).indexOf('stroke="#4a3222"') !== -1, 'blue hair keeps dark-brown brows and beard');
 ok(axOc && axOc.kind === 'color' && axOc.none && axOc.n === 9, 'outfit colour axis: colour kind, option 0 = as drawn, 8 colours');
 // the colour changes a colourable garment and leaves a fixed one alone
 const stripIds = s => s.replace(/avc\d+/g, 'avc');
@@ -212,7 +215,9 @@ function synthFace(opts) {
     put(x, y, 245, 245, 245);
     const ex = (x - 80) / 46, ey = (y - 100) / (opts.hair ? 58 : 72); // a bald crown climbs higher
     if (ex * ex + ey * ey <= 1) put(x, y, 232, 190, 160);            // skin oval
-    if (opts.hair && ex * ex + ey * ey <= 1.35 && y < 62) put(x, y, 60, 40, 30); // hair cap
+    const hc = opts.blonde ? [205, 170, 115] : [60, 40, 30];
+    if (opts.hair && ex * ex + ey * ey <= (opts.thick ? 2.2 : 1.35) && y < 62) put(x, y, hc[0], hc[1], hc[2]); // hair cap (thick: fills the band above the hairline, as a framed photo does)
+    if (opts.sides && y >= 60 && y <= 140 && (x < 36 || x > 124) && x >= 12 && x <= 148) put(x, y, hc[0], hc[1], hc[2]); // hair down the sides
   }
   for (const cx of [62, 98]) for (let y = 88; y <= 96; y++) for (let x = cx - 7; x <= cx + 7; x++) put(x, y, 255, 255, 255); // sclera
   for (const cx of [62, 98]) for (let y = 89; y <= 95; y++) for (let x = cx - 3; x <= cx + 3; x++) put(x, y, 20, 15, 10);   // pupils
@@ -235,6 +240,21 @@ ok(!!resBald && resBald.recipe.hair === 0, 'no hair cap → bald');
 const resGuided = window._avPhotoAnalyze(synthFace({ hair: true }), { sex: 0, guide: { cx: 0.5, cy: 0.5, rx: 46 / 160, ry: 58 / 200 } });
 ok(!!resGuided && resGuided.debug.guided && resGuided.recipe.skin <= 2 && resGuided.recipe.hair !== 0, 'guided analysis uses the template and finds the same face');
 ok(window._avPhotoAnalyze(synthFace({ hair: true }), { sex: 0, guide: { cx: 0.1, cy: 0.9, rx: 0.05, ry: 0.05 } }) === null, 'guided analysis with nobody in the oval → no face');
+// guided hair (2.1.9-web.189): the band above the oval top is read as the
+// hair — a bald crown (skin keeps going up), blonde hair (close to the skin
+// in lightness, not in chroma), a fringe inside the oval top, and a photo
+// that stops above the hairline (guide.valid) which says nothing.
+const GS = { cx: 0.5, cy: 0.5, rx: 46 / 160, ry: 58 / 200 };
+const gBald = window._avPhotoAnalyze(synthFace({ hair: false }), { sex: 0, guide: GS });
+ok(!!gBald && gBald.recipe.hair === 0, 'guided: skin above the hairline → bald (' + (gBald && gBald.recipe.hair) + ')');
+const gBlonde = window._avPhotoAnalyze(synthFace({ hair: true, blonde: true, thick: true }), { sex: 1, guide: GS, guessSex: false });
+ok(!!gBlonde && gBlonde.recipe.hair !== 36 && [4, 6, 8].indexOf(gBlonde.recipe.hairc) !== -1, 'guided: light hair on light skin → not bald, a blonde/light-brown colour (' + (gBlonde && gBlonde.recipe.hair) + '/' + (gBlonde && gBlonde.recipe.hairc) + ')');
+const gFringe = window._avPhotoAnalyze(synthFace({ hair: true, sides: true, thick: true }), { sex: 0, guide: GS, guessSex: false });
+ok(!!gFringe && gFringe.recipe.hair === 31, 'guided: hair over the forehead and down the sides → curtain fringe, mid length (' + (gFringe && gFringe.recipe.hair) + ')');
+const gFringeF = window._avPhotoAnalyze(synthFace({ hair: true, sides: true, thick: true }), { sex: 1, guide: GS, guessSex: false });
+ok(!!gFringeF && gFringeF.recipe.hair === 34, 'guided, feminine: the same photo → straight fringe (' + (gFringeF && gFringeF.recipe.hair) + ')');
+const gCut = window._avPhotoAnalyze(synthFace({ hair: false }), { sex: 0, guide: Object.assign({ valid: [0, 0.3, 1, 1] }, GS) });
+ok(!!gCut && gCut.recipe.hair !== 0, 'guided: photo cut above the hairline → the default hair stays, never bald (' + (gCut && gCut.recipe.hair) + ')');
 // silhouette guess: the plain synthetic face has no cue → no `sex` in the recipe;
 // a dark hair-coloured band under the chin (beard) → masculine even when analysed as feminine
 const noCue = window._avPhotoAnalyze(synthFace({ hair: true }), { sex: 1 });
