@@ -2828,51 +2828,41 @@ if ('serviceWorker' in navigator && !window.LIVE_MODE) {
   var knownVer = null, shown = false, latestVer = null;
   var coldBoot = true; // only true for this load's very first check()
 
-  // Cold-boot self-heal ------------------------------------------------
-  // A session that starts fresh (app relaunched, not just brought back to
-  // the foreground) has no in-page baseline to compare against, so the
-  // banner logic below can't tell it just loaded stale SW-cached JS/CSS —
-  // it simply adopts whatever loaded as "current". We persist the last
-  // seen /__ver value in localStorage so a cold boot CAN tell, and if it's
-  // behind, nudge the waiting SW then reload once. Safe here specifically
-  // because this runs before any App.connect() — no live WS/proxy session
-  // exists yet at this point, so unlike the banner's manual reload path,
-  // no App.teardownForReload() is needed.
+  // Cold-boot catch-up ------------------------------------------------
+  // A session that starts fresh (app relaunched, or a plain reload) has no
+  // in-page baseline, so the last seen /__ver value is persisted in
+  // localStorage. When it is behind, this load already runs the new build:
+  // the HTML and all code (.js/.mjs/.css) are network-first (sw.js, since
+  // web.155), so nothing stale reached the page. We only adopt the new value
+  // and let a waiting service worker take over — NO reload. The old version
+  // reloaded here, which on every update showed the boot splash twice (the
+  // banner's reload never stored the new value, so the next boot always saw
+  // a mismatch and reloaded once more).
   function coldBootSelfHeal(v) {
-    var last, applied;
+    var last;
     try {
       last = localStorage.getItem('pth_lastver');
-      applied = localStorage.getItem('pth_verapplied');
+      localStorage.removeItem('pth_verapplied'); // legacy key, no longer used
     } catch (e) { return; }
-    if (last === null) { try { localStorage.setItem('pth_lastver', v); } catch (e) {} return; }
     if (String(last) === String(v)) return; // already current
-    if (String(applied) === String(v)) {
-      // Already tried once for this version — stop nagging (SW may just be
-      // slow, or this browser never keeps a waiting worker) and adopt it.
-      try { localStorage.setItem('pth_lastver', v); } catch (e) {}
-      return;
-    }
-    try { localStorage.setItem('pth_verapplied', v); } catch (e) {}
-    function finish() { try { localStorage.setItem('pth_lastver', v); } catch (e) {} location.reload(); }
-    if (!('serviceWorker' in navigator) || window.LIVE_MODE) { finish(); return; }
+    try { localStorage.setItem('pth_lastver', v); } catch (e) {}
+    if (!('serviceWorker' in navigator) || window.LIVE_MODE) return;
+    // Activating the new SW is safe only before the first connect() (see the
+    // SW-ready gate in pokerth.js, which sets window._swReadyOnce): no
+    // WebSocket exists yet, so the controller switch cannot touch a session.
+    function skip(w) { if (w && !window._swReadyOnce) w.postMessage({ type: 'SKIP_WAITING' }); }
     navigator.serviceWorker.getRegistration().then(function (r) {
-      if (!r) { finish(); return; }
-      if (r.waiting) { r.waiting.postMessage({ type: 'SKIP_WAITING' }); finish(); return; }
-      var done = false;
-      var t = setTimeout(function () { if (!done) { done = true; finish(); } }, 2500);
+      if (!r) return;
+      if (r.waiting) { skip(r.waiting); return; }
       r.addEventListener('updatefound', function () {
         var nw = r.installing;
         if (!nw) return;
         nw.addEventListener('statechange', function () {
-          if (!done && nw.state === 'installed' && r.waiting) {
-            done = true; clearTimeout(t);
-            r.waiting.postMessage({ type: 'SKIP_WAITING' });
-            finish();
-          }
+          if (nw.state === 'installed') skip(r.waiting);
         });
       });
       r.update().catch(function () {});
-    }).catch(function () { finish(); });
+    }).catch(function () {});
   }
 
   function showBanner() {
@@ -2893,6 +2883,9 @@ if ('serviceWorker' in navigator && !window.LIVE_MODE) {
       // to preserve the session across a reload.) Small delay below lets the
       // 4001 close frame reach the proxy before navigation tears the WS down.
       try { if (window.App && App.teardownForReload) App.teardownForReload(); } catch (e) {}
+      // Record the version being applied, so the next boot sees it as current
+      // and does not treat it as an update still to catch up on.
+      try { if (latestVer !== null) localStorage.setItem('pth_lastver', latestVer); } catch (e) {}
       // If a new SW is waiting, activate it; then reload to pull fresh assets
       // (CSS/JS now revalidate server-side, so a normal reload is enough).
       navigator.serviceWorker && navigator.serviceWorker.getRegistration &&

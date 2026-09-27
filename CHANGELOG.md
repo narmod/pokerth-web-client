@@ -17,6 +17,7 @@ highlights below.
 
 ### Fixed
 
+- **Double boot splash after an update** (`web.175`) — the /__ver banner reloaded without storing the applied version in `pth_lastver`, so the next boot always saw a mismatch and `coldBootSelfHeal()` (`pokerth-client.html`) reloaded a second time; a plain reload after a deploy did the same. That extra reload dates from the stale-while-revalidate era — since `web.155` the HTML and all code are network-first, so the first load already runs the new build. The banner now records the version it applies, and the cold-boot path only adopts the new value and activates a waiting service worker (before the first `connect()` only, guarded by `window._swReadyOnce`) — no reload. The `pth_verapplied` key is dropped.
 - **Invite links to a table** (`web.171`) — audit of the « Invite friends » flow, one canonical builder in `public/modules/net/invite-link.mjs` (pinned by `scripts/test-invite-link.mjs`, 57 checks):
   - the game-info 🔗 button (`copyTableLink`) still emitted the legacy `?host=&port=&table=<id>` link, which lands the friend in LAN `unauth` mode even for a pokerth.net table; it now copies the same `#join=<name>&s=<server>` link as the dialog (legacy links are still read);
   - a link opened while the app is already open (same tab, PWA share target) only changed the fragment — no reload, no `hashchange` listener, nothing happened. The module now handles `hashchange`: joins in place when connected to the same server, reloads on the link otherwise, never leaves a table;

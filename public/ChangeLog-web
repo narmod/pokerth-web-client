@@ -1,4 +1,7 @@
-2026-09-26 version 2.1.9-web.174 (current series):
+2026-09-27 version 2.1.9-web.175 (current series):
+- bugfix: after an update, the loading screen now shows only once instead of twice
+
+2026-09-26 version 2.1.9-web.174:
 - improvement: the card suits of the login screen dance again after 30 seconds without touching anything
 
 2026-09-26 version 2.1.9-web.173:
