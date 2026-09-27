@@ -1,4 +1,7 @@
-2026-09-27 version 2.1.9-web.194 (current series):
+2026-09-27 version 2.1.9-web.195 (current series):
+- bugfix: portraits of the « Create » tab — hair, hats, beards and ears now follow the width of each face shape: no more hair floating off a round man's temples or ears sticking out beside a narrow oval; beards reach the sideburns on every jaw; the balding crown is a ring of hair hugging the head instead of two blocks beside it; long masculine hair tapers and rounds off at the ends
+
+2026-09-27 version 2.1.9-web.194:
 - improvement: portraits of the « Create » tab — the three face shapes now differ by silhouette: men get a firmer, wider jaw (oval, round, square), women a softer tapered chin (oval, round, and a heart shape with a pointed chin in place of the square). Beards, hair and the shape vignettes follow the new outlines; saved portraits keep their choice
 
 2026-09-27 version 2.1.9-web.193:
