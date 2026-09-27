@@ -1,4 +1,8 @@
-2026-09-27 version 2.1.9-web.191 (current series):
+2026-09-27 version 2.1.9-web.192 (current series):
+- new: 11 more hairstyles in the « Create » tab — men: short voluminous curls, side part with a wavy quiff, fade, man bun, long straight hair with a middle part; women: curly ponytail, wavy lob, long curls with a fringe, low braided bun, short natural afro, half-up. 50 hairstyles in all (23 / 27)
+- improvement: « From a photo » — a man's hair over the shoulders now picks the long straight style
+
+2026-09-27 version 2.1.9-web.191:
 - improvement: « From a photo » (beta) — the face shape now comes from the face's width against the template (you fitted its height): wider than the oval → round, a wide jaw → square, otherwise oval; a clearly short nose picks the small upturned one, a clearly long one the straight one (the nose is otherwise left as it was); teeth are judged against the lit skin of the same photo, so a smile with teeth in a dim photo or a wide grin with thin lips now gives the grin instead of a neutral mouth
 
 2026-09-27 version 2.1.9-web.190:

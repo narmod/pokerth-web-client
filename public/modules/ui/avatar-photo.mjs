@@ -1004,7 +1004,7 @@ function avPhotoAnalyze(img, opts) {
   var sexF = sexGuess === null ? sex : sexGuess;
 
   // sex-dependent mappings
-  if (sexF === 0) hair = bald ? 0 : (volume ? 10 : (length === 'short' ? 1 : (length === 'mid' ? (fringe ? 31 : 18) : 27)));
+  if (sexF === 0) hair = bald ? 0 : (volume ? 10 : (length === 'short' ? 1 : (length === 'mid' ? (fringe ? 31 : 18) : 43)));
   else hair = bald ? 36 : (volume ? 23 : (length === 'long' ? (fringe ? 34 : 8) : (length === 'mid' ? (fringe ? 34 : 5) : 12)));
   if (hat) hair = sexF === 0 ? 1 : 12;
   if (sexF === 1) beard = 0;

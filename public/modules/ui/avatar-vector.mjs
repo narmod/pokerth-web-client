@@ -64,7 +64,7 @@ const AV_AXES = [
   { id: 'outfitc', label: 'avmOutfitColor', n: AV_OUTFITC.length + 1, kind: 'color', none: true },
   { id: 'skin',  label: 'avmSkin',      n: AV_SKIN.length,  kind: 'color', none: false },
   { id: 'marks', label: 'avmMarks',     n: 6,               kind: 'shape', none: true  },
-  { id: 'hair',  label: 'avmHair',      n: 39,              kind: 'shape', none: true  },
+  { id: 'hair',  label: 'avmHair',      n: 50,              kind: 'shape', none: true  },
   { id: 'hairc', label: 'avmHairColor', n: AV_HAIRC.length, kind: 'color', none: false },
   { id: 'beard', label: 'avmBeard',     n: 7,               kind: 'shape', none: true  },
   { id: 'eyes',  label: 'avmEyeShape',  n: 7,               kind: 'shape', none: false },
@@ -96,7 +96,12 @@ const AV_SEXTAG = {
           // buzz cut, long curly, curtain fringe; feminine: short bob, crown
           // braid, straight fringe, very long straight, cropped, messy high
           // bun, long locs
-          26: 0, 27: 0, 28: 0, 29: 0, 30: 0, 31: 0, 32: 1, 33: 1, 34: 1, 35: 1, 36: 1, 37: 1, 38: 1 },
+          26: 0, 27: 0, 28: 0, 29: 0, 30: 0, 31: 0, 32: 1, 33: 1, 34: 1, 35: 1, 36: 1, 37: 1, 38: 1,
+          // 2.1.9-web.192 — masculine: short voluminous curls, side part with
+          // a wavy quiff, fade, man bun, long straight middle part; feminine:
+          // curly ponytail, wavy lob, long curls with a fringe, low braided
+          // bun, short natural afro, half-up
+          39: 0, 40: 0, 41: 0, 42: 0, 43: 0, 44: 1, 45: 1, 46: 1, 47: 1, 48: 1, 49: 1 },
   // 9 masculine: charcoal suit, navy + tie, vest + tie, tux + bow tie, open
   // shirt, white dinner jacket, leather jacket, hoodie, open-collar shirt.
   // 8 feminine: collared sweater, V-neck blouse, turtleneck, strapless
@@ -123,7 +128,7 @@ function avVisible(axId, i, recipe) {
   if (recipe && axId === 'hat' && i !== 0) {
     // Voluminous or tall hairstyles (bun, afro, mohawk, crown braid, high
     // bun) don't fit under a hat.
-    if (recipe.hair === 7 || recipe.hair === 10 || recipe.hair === 17 || recipe.hair === 33 || recipe.hair === 37) return false;
+    if (recipe.hair === 7 || recipe.hair === 10 || recipe.hair === 17 || recipe.hair === 33 || recipe.hair === 37 || recipe.hair === 42) return false;
   }
   if (recipe && axId === 'eyec') {
     // Eye color is meaningless behind closed eyes or sunglasses.
@@ -152,7 +157,7 @@ function avNormalize(r) {
 // AV_SEXTAG through avVisible(), shared with the studio rows.
 // Relative dice weights (default 1): striking styles stay possible but rare.
 const AV_RANDWEIGHT = {
-  hair: { 0: 0.35, 10: 0.6, 11: 0.6, 15: 0.5, 16: 0.4, 17: 0.2, 23: 0.6, 28: 0.5, 29: 0.5, 30: 0.5, 33: 0.6, 38: 0.6 },
+  hair: { 0: 0.35, 10: 0.6, 11: 0.6, 15: 0.5, 16: 0.4, 17: 0.2, 23: 0.6, 28: 0.5, 29: 0.5, 30: 0.5, 33: 0.6, 38: 0.6, 42: 0.4, 48: 0.6 },
   hairc: { 10: 0.25, 11: 0.25 },
   outfit: { 22: 0.5, 31: 0.4 }
 };
@@ -618,6 +623,47 @@ function _hair(ctx, i, hc, face) {
       });
       return [locks2, P(CAP_SMOOTH) + _bumps(100, 84, 48, 200, 340, 8, 6, f)];
     }
+    // ── 2.1.9-web.192 additions ──
+    case 39: // short voluminous curls (masculine): a taller, wider mop of curls
+      return [P('M34 96 Q30 14 100 10 Q170 14 166 96 L166 108 L34 108z', bk),
+        P('M38 94 Q34 18 100 14 Q166 18 162 94 Q152 62 100 56 Q48 62 38 94z')
+        + _bumps(100, 84, 58, 185, 355, 13, 12, f) + _bumps(100, 84, 46, 195, 345, 9, 9, f) + _bumps(100, 84, 54, 200, 340, 7, 4, hl)];
+    case 40: // side part with a wavy quiff (masculine): the top swept up and over to one side
+      return ['', P('M40 96 Q34 22 96 18 Q160 26 156 96 Q152 62 140 56 Q124 50 114 62 Q112 40 94 30 Q70 30 62 56 Q48 68 40 96z')
+        + '<path d="M112 60 Q120 52 132 54" stroke="' + dk + '" stroke-width="1.6" fill="none" stroke-linecap="round"/>'
+        + '<path d="M62 44 Q76 28 96 30" stroke="' + hl + '" stroke-width="6" stroke-linecap="round" fill="none" opacity=".55"/>'];
+    case 41: // fade (masculine): hair on top, the sides shaved down to a shadow
+      return ['', P('M50 70 Q46 30 100 26 Q154 30 150 70 Q140 62 100 60 Q60 62 50 70z') + _shine(hl),
+        '<path d="M0 62 L200 62 L200 96 Q152 72 100 66 Q48 72 0 96z" fill="' + hc[0] + '" opacity=".3"/>'
+        + '<path d="M0 96 L200 96 L200 116 Q152 92 100 88 Q48 92 0 116z" fill="' + hc[0] + '" opacity=".14"/>'];
+    case 42: // man bun (masculine): slicked back, a small knot at the crown
+      return ['<circle cx="100" cy="30" r="13" fill="' + bk + '"/>',
+        P('M46 88 Q42 24 100 22 Q158 24 154 88 Q152 60 138 52 Q100 42 62 52 Q48 60 46 88z')
+        + '<path d="M70 40 Q100 30 130 40 M66 48 Q100 36 134 48" stroke="' + dk + '" stroke-width="2" fill="none" stroke-linecap="round"/>'
+        + '<path d="M90 30 Q100 26 110 30" stroke="' + dk + '" stroke-width="3" fill="none" stroke-linecap="round"/>' + _shine(hl)];
+    case 43: // long straight hair, middle part (masculine)
+      return [P('M40 96 Q36 24 100 22 Q164 24 160 96 L162 164 Q146 170 134 162 L66 162 Q54 170 38 164z', bk),
+        P(CAP_MID) + _shine(hl)];
+    case 44: // curly ponytail (feminine): a tied cluster of curls behind
+      return [_bumps(160, 78, 26, 250, 420, 6, 11, bk) + _bumps(158, 96, 30, 280, 440, 5, 10, bk) + '<circle cx="164" cy="128" r="11" fill="' + bk + '"/><circle cx="152" cy="140" r="10" fill="' + bk + '"/>',
+        P(CAP_SMOOTH) + _bumps(100, 84, 50, 200, 340, 7, 5, hl).replace(/fill=/g, 'opacity=".5" fill=') + '<circle cx="138" cy="44" r="6" fill="#d9536a"/>' + _shine(hl)];
+    case 45: // wavy lob (feminine): mid-length with waved edges
+      return [P('M38 100 Q34 24 100 22 Q166 24 162 100 Q170 116 160 130 Q170 146 158 156 Q142 158 134 148 L66 148 Q58 158 42 156 Q30 146 40 130 Q30 116 38 100z', bk),
+        P(CAP_SIDE) + '<path d="M56 100 Q50 116 56 132 M144 100 Q150 116 144 132" stroke="' + hl + '" stroke-width="3" fill="none" stroke-linecap="round" opacity=".5"/>' + _shine(hl)];
+    case 46: // long curls with a fringe (feminine)
+      return [P('M36 96 Q32 22 100 20 Q168 22 164 96 L168 180 L32 180z', bk)
+        + [100, 124, 148, 172].map(function (y) { return '<circle cx="32" cy="' + y + '" r="12" fill="' + bk + '"/><circle cx="168" cy="' + y + '" r="12" fill="' + bk + '"/>'; }).join(''),
+        P('M44 100 Q40 26 100 24 Q160 26 156 100 L154 70 L46 70z') + _bumps(100, 70, 54, 180, 360, 10, 6, f) + _shine(hl)];
+    case 47: // low braided bun (feminine): a plaited knot at the nape, one side
+      return ['<circle cx="50" cy="134" r="18" fill="' + bk + '"/>' + _bumps(50, 134, 11, 0, 300, 6, 4.5, f).replace(/\/>/g, ' stroke="' + dk + '" stroke-width="1"/>'),
+        P(CAP_SMOOTH) + '<path d="M62 30 Q100 22 138 30 M56 44 Q100 34 144 44" stroke="' + dk + '" stroke-width="2" fill="none" stroke-linecap="round"/>' + _shine(hl)];
+    case 48: // short natural afro (feminine): a curly outline, a little volume
+      return ['', P('M40 92 Q36 20 100 16 Q164 20 160 92 Q152 60 100 54 Q48 60 40 92z')
+        + _bumps(100, 84, 58, 188, 352, 21, 4.5, f) + _bumps(100, 84, 62, 192, 348, 19, 4, f) + _bumps(100, 84, 50, 205, 335, 6, 3.5, hl).replace(/fill=/g, 'opacity=".3" fill=')];
+    case 49: // half-up (feminine): the top tied at the crown, the rest down
+      return [P('M40 96 Q36 24 100 22 Q164 24 160 96 L166 184 Q146 192 132 178 L68 178 Q54 192 34 184z', bk)
+        + '<ellipse cx="100" cy="22" rx="14" ry="8" fill="' + bk + '"/>',
+        P(CAP_SMOOTH) + '<path d="M86 34 Q100 28 114 34" stroke="#d9536a" stroke-width="4" stroke-linecap="round" fill="none"/>' + _shine(hl)];
     default: // 6: wavy senior sweep
       return ['', P('M46 90 Q40 28 100 24 Q156 26 156 88 Q150 62 132 56 Q126 64 112 58 Q96 70 80 56 Q66 64 56 60 Q48 70 46 90z') + _shine(hl)];
   }
@@ -796,10 +842,10 @@ function _glasses(i) {
 // the visor and the bandana leave it visible.
 var HAT_LINE = 60;
 // Hairstyles drawn without the temple underlay (bald, balding, mohawk).
-var AV_NO_UNDERLAY = { 0: 1, 16: 1, 17: 1, 29: 1 };
+var AV_NO_UNDERLAY = { 0: 1, 16: 1, 17: 1, 29: 1, 41: 1 };
 // Short styles: under a covering hat only a thin band below the brim shows
 // (temple tips), long styles keep everything below the hat line.
-var AV_SHORT_HAIR = { 1: 1, 2: 1, 4: 1, 6: 1, 9: 1, 12: 1, 13: 1, 16: 1, 18: 1, 26: 1, 29: 1, 31: 1, 36: 1 };
+var AV_SHORT_HAIR = { 1: 1, 2: 1, 4: 1, 6: 1, 9: 1, 12: 1, 13: 1, 16: 1, 18: 1, 26: 1, 29: 1, 31: 1, 36: 1, 39: 1, 40: 1, 41: 1, 48: 1 };
 var HAT_SHORT_BOTTOM = 86;
 function _hatCovers(i) { return i !== 0 && i !== 3 && i !== 6; }
 
