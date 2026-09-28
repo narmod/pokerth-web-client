@@ -9100,6 +9100,8 @@ a.ev-row { color: inherit; text-decoration: none; }
 .fnp-body hr { border: none; border-top: 1px solid var(--border); margin: 8px 0; }
 .fnp-body dl.file dt { margin: 6px 0; }
 .fnp-body.fnp-translated { font-style: italic; white-space: pre-wrap; }
+/* Traduction en place (web.244) : le HTML du post reste (images, listes). */
+.fnp-body.fnp-translated.fnp-tr-html { white-space: normal; }
 .fn-foot .fnp-error { flex: 1; align-self: center; text-align: right; font-size: var(--fs-2xs); color: var(--red); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .rk-tab.fn-btn-off, .rk-tab:disabled { opacity: 0.5; cursor: default; }
 .fn-dot { flex-shrink: 0; box-sizing: border-box; width: 8px; height: 8px; border-radius: 50%; background: var(--gold); margin-top: 6px; box-shadow: 0 0 4px rgba(var(--gold-rgb), 0.55); }

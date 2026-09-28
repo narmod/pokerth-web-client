@@ -105,6 +105,19 @@ export function fnBlockText(html, limit) {
   return s;
 }
 
+// Traduction « en place » (web.244) : les textes du post partent en une seule
+// requete, un segment par ligne, et reviennent a leur place dans le HTML rendu
+// — images, couleurs et listes restent. `segs` = textes source (sans saut de
+// ligne), `out` = reponse du service. Renvoie les segments traduits, ou null si
+// le decoupage ne correspond pas (repli : texte brut, comme avant).
+export function fnSplitTranslated(segs, out) {
+  if (!Array.isArray(segs) || !segs.length) return null;
+  const lines = String(out || '').replace(/\r/g, '').split('\n');
+  while (lines.length > segs.length && lines[lines.length - 1].trim() === '') lines.pop();
+  if (lines.length !== segs.length) return null;
+  return lines.map(function (l) { return l.trim(); });
+}
+
 // Texte brut aplati (compat/tests) — pendant de plainText() QML.
 export function fnPlainText(html, limit) {
   let s = String(html || '')
@@ -468,6 +481,27 @@ function _trTarget() {
   return String(l).split('-')[0] || 'en';
 }
 
+// Re-rend le post d'origine dans `el` et renvoie ses noeuds texte a traduire
+// (au moins une lettre, hors code/pre), chacun avec son texte source aplati
+// (_src) et ses espaces de bord (_lead/_trail) a conserver.
+function _trTextNodes(el, html) {
+  el.classList.remove('fnp-translated', 'fnp-tr-html');
+  _renderPostBody(el, html);
+  const out = [];
+  const w = document.createTreeWalker(el, NodeFilter.SHOW_TEXT, null);
+  let n;
+  while ((n = w.nextNode())) {
+    const v = n.nodeValue || '';
+    if (!/\p{L}/u.test(v)) continue;
+    if (n.parentElement && n.parentElement.closest('code, pre')) continue;
+    const m = /^(\s*)([\s\S]*?)(\s*)$/.exec(v);
+    n._lead = m[1] ? ' ' : ''; n._trail = m[3] ? ' ' : '';
+    n._src = m[2].replace(/\s+/g, ' ');
+    out.push(n);
+  }
+  return out;
+}
+
 function forumTranslatePost() {
   const p = _curPost;
   const body = document.getElementById('fnp-body');
@@ -476,19 +510,34 @@ function forumTranslatePost() {
   if (!p || !body) return;
   // 2e tap : revenir a l'original (le HTML est re-rendu depuis le cache).
   if (body.classList.contains('fnp-translated')) {
-    body.classList.remove('fnp-translated');
+    body.classList.remove('fnp-translated', 'fnp-tr-html');
     _renderPostBody(body, p.html || '');
     if (btn) { btn.classList.remove('tr-active'); btn.title = _t('forumTranslate', 'Translate the post'); btn.setAttribute('aria-label', btn.title); }
     return;
   }
-  const show = function (text) {
-    body.classList.add('fnp-translated');
-    body.textContent = text;   // texte brut, italique via CSS (parite QML)
+  const mark = function () {
     body.scrollTop = 0;
     if (btn) { btn.classList.add('tr-active'); btn.title = _t('forumShowOriginal', 'Show the original post'); btn.setAttribute('aria-label', btn.title); }
   };
+  const show = function (text) {
+    body.classList.remove('fnp-tr-html');
+    body.classList.add('fnp-translated');
+    body.textContent = text;   // repli : texte brut, italique via CSS (parite QML)
+    mark();
+  };
+  // En place : le post est re-rendu, puis chaque texte recoit sa traduction.
+  const nodes = _trTextNodes(body, p.html || '');
+  const showInPlace = function (tr) {
+    const ns = _trTextNodes(body, p.html || '');
+    ns.forEach(function (n, i) { if (i < tr.length && tr[i]) n.nodeValue = n._lead + tr[i] + n._trail; });
+    body.classList.add('fnp-translated', 'fnp-tr-html');
+    mark();
+  };
+  if (_trState && _trState.segs) { showInPlace(_trState.segs); return; }
   if (_trState && _trState.text) { show(_trState.text); return; }
-  const source = fnBlockText(p.html || p.excerpt || '', TRANSLATE_MAX);
+  const segs = nodes.map(function (n) { return n._src; });
+  const inPlace = segs.length > 0 && segs.join('\n').length <= TRANSLATE_MAX;
+  const source = inPlace ? segs.join('\n') : fnBlockText(p.html || p.excerpt || '', TRANSLATE_MAX);
   if (!source) return;
   if (errEl) errEl.textContent = '';
   if (btn) btn.disabled = true;
@@ -496,6 +545,16 @@ function forumTranslatePost() {
   window._gtxTranslate(source, _trTarget()).then(function (res) {
     const out = res.text;
     if (!out.trim()) throw new Error('empty');
+    const tr = inPlace ? fnSplitTranslated(segs, out) : null;
+    if (tr) { _trState = { segs: tr }; showInPlace(tr); return; }
+    if (inPlace) {
+      // Decoupage perdu : repli sur la traduction texte brut d'avant.
+      return window._gtxTranslate(fnBlockText(p.html || p.excerpt || '', TRANSLATE_MAX), _trTarget()).then(function (r2) {
+        if (!String(r2.text || '').trim()) throw new Error('empty');
+        _trState = { text: r2.text };
+        show(r2.text);
+      });
+    }
     _trState = { text: out };
     show(out);
   }).catch(function () {

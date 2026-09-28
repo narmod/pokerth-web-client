@@ -137,6 +137,8 @@ ok(cleaned.indexOf('color:goldenrod') >= 0, 'cleanHtml keeps colors (theme adapt
 // ── 6) client-side helpers: plain text + readable colors ───────────────
 ok(F.fnPlainText('<div>Hello <b>world</b><br>x &amp; y</div>') === 'Hello world x & y', 'fnPlainText strips tags and decodes entities');
 ok(F.fnPlainText('a'.repeat(300), 100).endsWith('\u2026'), 'fnPlainText truncates with an ellipsis');
+ok(JSON.stringify(F.fnSplitTranslated(['one', 'two'], 'un\n deux \n')) === '["un","deux"]', 'in-place translation: one line per text segment, trimmed');
+ok(F.fnSplitTranslated(['one', 'two'], 'un deux') === null && F.fnSplitTranslated([], 'x') === null, 'in-place translation: lost split -> null (plain-text fallback)');
 ok(F.fnBlockText('<div>1. one</div><div>2. two</div><p>para</p>') === '1. one\n2. two\npara', 'fnBlockText keeps block structure as newlines (translation source)');
 ok(F.fnReadableColor('black', true) !== 'black' && F.fnReadableColor('black', false) === 'black', 'black is lightened on dark themes only');
 ok(F.fnReadableColor('#ffff00', false) !== '#ffff00' && F.fnReadableColor('#ffff00', true) === '#ffff00', 'light yellow is darkened on light themes only');

@@ -347,6 +347,7 @@ function _toggle(id) {
   if (_open.has(id)) { _open.delete(id); evRerender(); return; }
   const e = _games.get(id);
   if (!e) return;
+  _open.clear();                 // one game unfolded at a time (narmod, web.244)
   _open.add(id);
   _loadRegs(e);
   evRerender();

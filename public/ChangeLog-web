@@ -1,4 +1,8 @@
-2026-09-28 version 2.1.9-web.243 (current series):
+2026-09-28 version 2.1.9-web.244 (current series):
+- improvement: forum news — a translated post keeps its images, colours and lists: each text is translated in place
+- improvement: forum news, Events tab — only one BBC game unfolds at a time: opening another one folds the previous list of registered players
+
+2026-09-28 version 2.1.9-web.243:
 - improvement: forum news — reading a post keeps the Events / Posts tabs on top, and the post opens inside the « Posts » frame (back arrow in its header)
 
 2026-09-28 version 2.1.9-web.242:
