@@ -1,4 +1,7 @@
-2026-09-28 version 2.1.9-web.227 (current series):
+2026-09-28 version 2.1.9-web.228 (current series):
+- new: animated mascot — a hidden test panel (add ?mascot=panel to the address) to play any of his appearances right away: entry, act, exit, hat and tool, slow motion or fast forward, loop
+
+2026-09-28 version 2.1.9-web.227:
 - bugfix: action bar in very low landscape windows (under 380 px high) — scaled down so it no longer runs off the bottom of the screen
 - bugfix: action bar in the phone layout on a computer — the mode list no longer sticks out of the bar's frame
 

@@ -180,6 +180,7 @@ const YAWN = ['ec', 'mu'], ASLEEP = ['ez', 'mf'], FOCUS = ['eo', 'mt'];
 
 // ── Appearance state ─────────────────────────────────────────────────
 let cur = null;   // { root, st, E, anims, timers, dead, x, costume }
+let speed = 1;    // playback speed (test panel: slow motion / fast forward)
 
 class Aborted extends Error {}
 
@@ -233,6 +234,7 @@ function build(st, costume) {
 function play(node, frames, opts) {
   if (!cur || !node || typeof node.animate !== 'function') return null;
   const a = node.animate(frames, opts);
+  if (speed !== 1) a.playbackRate = speed;
   cur.anims.push(a);
   return a;
 }
@@ -256,7 +258,7 @@ function wait(ms) {
   return new Promise((resolve, reject) => {
     if (!cur || cur.dead) { reject(new Aborted()); return; }
     const c = cur;
-    const id = setTimeout(() => { c.timers.delete(id); if (c.dead) reject(new Aborted()); else resolve(); }, ms);
+    const id = setTimeout(() => { c.timers.delete(id); if (c.dead) reject(new Aborted()); else resolve(); }, ms / speed);
     c.timers.add(id);
     c.rejects.add(reject);
   });
@@ -784,29 +786,46 @@ export function dismiss() {
   track(c.E.bob, 330, [[0, { transform: 'translateY(0px)' }], [130, { transform: 'translateY(-14px)' }], [330, { transform: 'translateY(0px)' }]]);
   if (c.clipT !== undefined && c.clipT !== null) floorFx('puff', x + c.st.w / 2, c.clipT + 30 * c.st.k, 300, 700);
   else puffAt(x, y, 300, 700);
-  const id = setTimeout(() => { if (cur === c) teardown(); }, 1050);
+  const id = setTimeout(() => { if (cur === c) teardown(); }, 1050 / speed);
   c.timers.add(id);
 }
 
+/** Entries, actions, exits, hats and tools the test panel can offer. */
+export const CATALOG = {
+  entries: ['door', 'poof', 'edge', 'peek'],
+  actions: ['moon', 'climb', 'magic', 'king', 'knight', 'grim', 'sleep', 'juggle', 'none'],
+  exits: ['door', 'poof', 'edge', 'duck'],
+  hats: ['none', 'tophat', 'wizard', 'crown', 'helmet', 'fedora', 'nightcap'],
+  tools: ['none', 'wand', 'scepter', 'sword', 'cane'],
+};
+
 /**
  * One appearance. Resolves when he is gone (or was dismissed / aborted).
- * @param {{ action?: string, entry?: string, exit?: string, rnd?: () => number }} [opts]
+ * Test options: action 'none' (greeting only), hat / tool (costume override),
+ * speed (0.25–4, slows down or speeds up the whole appearance).
+ * @param {{ action?: string, entry?: string, exit?: string, hat?: string, tool?: string, speed?: number, rnd?: () => number }} [opts]
  */
 export async function appear(opts = {}) {
   if (cur) teardown();
+  speed = Math.max(0.1, Math.min(4, +opts.speed || 1));
   const rnd = opts.rnd || Math.random;
   const st = stageOf(window.innerWidth, window.innerHeight, safeBottom());
   const rects = panelRects();
   const plan = pickPanel(st, rects);
   const peek = pickPeek(st, rects, rnd);
-  const seq = pickSequence(rnd, { climb: !!plan, peek: !!peek, force: opts.action });
+  const none = opts.action === 'none';
+  const seq = pickSequence(rnd, { climb: !!plan, peek: !!peek, force: none ? undefined : opts.action });
+  if (none) seq.actions = [];
   if (opts.entry && (opts.entry !== 'peek' || peek)) seq.entry = opts.entry;
   if (opts.exit && (opts.exit !== 'duck' || seq.entry === 'peek')) seq.exit = opts.exit;
-  if (seq.entry === 'peek' && opts.entry === 'peek' && !opts.action && !seq.actions.length) seq.exit = 'duck';
+  if (seq.entry === 'peek' && opts.entry === 'peek' && !opts.action && !seq.actions.length && !opts.exit) seq.exit = 'duck';
   if (seq.entry !== 'peek' && seq.exit === 'duck') seq.exit = 'poof';
   if (seq.exit === 'duck') seq.actions = [];
   if (opts.action && seq.actions[0] !== opts.action && opts.action !== 'climb') seq.actions = [opts.action];
   seq.costume = costumeFor(seq.actions[0] || 'peek', rnd);
+  if (opts.hat) seq.costume.hat = opts.hat;
+  if (opts.tool) seq.costume.tool = opts.tool;
+  seq.peekable = !!peek; seq.climbable = !!plan;
   cur = { st, anims: [], timers: new Set(), rejects: new Set(), dead: false, leaving: false, x: st.vw / 2, costume: seq.costume, E: null, clipT: null };
   const c = cur;
   c.E = build(st, seq.costume);
@@ -829,7 +848,7 @@ export async function appear(opts = {}) {
   } catch (e) {
     if (!(e instanceof Aborted)) { try { console.warn('[mascot]', e); } catch (e2) {} }
     // dismissed: let the puff finish
-    if (c.leaving) await new Promise((r) => setTimeout(r, 1100));
+    if (c.leaving) await new Promise((r) => setTimeout(r, 1100 / speed));
   } finally {
     if (cur === c) teardown();
   }

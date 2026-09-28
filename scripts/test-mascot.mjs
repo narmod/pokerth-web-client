@@ -111,10 +111,17 @@ const js = fs.readFileSync('public/pokerth.js', 'utf8');
 ok(/sync\('adv-mascot', 'mascot', false\)/.test(js), 'option OFF by default');
 ok(js.indexOf("window._mascotApply") >= 0, 'applyAdvOpts forwards the option to the loader');
 const sw = fs.readFileSync('public/sw.js', 'utf8');
-ok(['index', 'engine', 'plan'].every((n) => sw.indexOf(`'/modules/mascot/${n}.mjs'`) >= 0), 'mascot modules precached');
+ok(['index', 'engine', 'plan', 'panel'].every((n) => sw.indexOf(`'/modules/mascot/${n}.mjs'`) >= 0), 'mascot modules precached');
 const loader = fs.readFileSync('public/modules/mascot/index.mjs', 'utf8');
 ok(/SCREENS = \['s-connect', 's-lobby'\]/.test(loader) && loader.indexOf("'s-game'") >= 0, 'only the home screen and the lobby (a table stops him)');
 ok(/import\('\.\/engine\.mjs'\)/.test(loader) && !/^import .*engine/m.test(loader), 'engine loaded on demand only');
+ok(/import\('\.\/panel\.mjs'\)/.test(loader) && !/^import .*panel/m.test(loader), 'test panel loaded on demand only');
+ok(/q === 'panel'/.test(loader) && loader.indexOf('window.mascotPanel') >= 0, 'test panel: ?mascot=panel and mascotPanel()');
+ok(/closest\('#mascot-panel'\)/.test(loader), 'clicks in the test panel do not dismiss the Ace');
+ok(/panel && panel\.isOpen\(\)\) return;/.test(loader), 'idle timer off while the test panel is open');
+const eng = fs.readFileSync('public/modules/mascot/engine.mjs', 'utf8');
+const cat = eng.slice(eng.indexOf('export const CATALOG'), eng.indexOf('};', eng.indexOf('export const CATALOG')));
+ok(P.ACTIONS.every((a) => cat.indexOf(`'${a}'`) >= 0) && P.ENTRIES.every((a) => cat.indexOf(`'${a}'`) >= 0) && P.EXITS.every((a) => cat.indexOf(`'${a}'`) >= 0), 'panel catalogue lists every entry, action and exit');
 
 console.log(`${pass}/${pass + fail} passed`);
 process.exit(fail ? 1 : 0);

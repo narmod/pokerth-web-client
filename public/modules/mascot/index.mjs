@@ -17,6 +17,9 @@
 // grim, sleep, juggle — or ?mascot=peek for the hello from behind a panel's
 // top edge) makes him appear a few seconds after the home screen or the lobby is
 // shown, even with the option off. Console: mascotDemo('climb').
+// Test panel (hidden): ?mascot=panel or mascotPanel() in the console opens
+// modules/mascot/panel.mjs — every entry / action / exit / costume on demand,
+// slow motion, loop. The idle timer is off while it is open.
 // ═══════════════════════════════════════════════════════════════════
 
 const IDLE_MS = 45000;
@@ -29,6 +32,7 @@ let lastEnd = 0;
 let engine = null;
 let running = false;
 let preview = null;   // { action } from ?mascot=
+let panel = null;     // modules/mascot/panel.mjs once opened
 
 function optionOn() {
   try { return localStorage.getItem('pth_mascot') === '1'; } catch (e) { return false; }
@@ -71,6 +75,7 @@ function disarm() { if (timer) { clearTimeout(timer); timer = 0; } }
 function arm() {
   disarm();
   if (running) return;
+  if (panel && panel.isOpen()) return;
   if (preview) { timer = setTimeout(fire, 3000); return; }
   if (!enabled) return;
   const wait = Math.max(IDLE_MS, lastEnd ? lastEnd + COOLDOWN_MS - Date.now() : 0);
@@ -102,7 +107,8 @@ async function fire() {
 
 function stopNow() { try { if (engine) engine.abort(); } catch (e) {} }
 
-function onInput() {
+function onInput(ev) {
+  try { if (ev && ev.target && ev.target.closest && ev.target.closest('#mascot-panel')) return; } catch (e) {}
   try { if (engine && engine.isPlaying()) engine.dismiss(); } catch (e) {}
   if (!running) arm();
 }
@@ -123,7 +129,8 @@ function onScreenChange() {
 function init() {
   try {
     const q = new URLSearchParams(location.search).get('mascot');
-    if (q) preview = { action: /^(moon|climb|magic|king|knight|grim|sleep|juggle|peek)$/.test(q) ? q : '' };
+    if (q === 'panel') setTimeout(() => window.mascotPanel(), 800);
+    else if (q) preview = { action: /^(moon|climb|magic|king|knight|grim|sleep|juggle|peek)$/.test(q) ? q : '' };
   } catch (e) {}
   enabled = optionOn();
   ['pointerdown', 'keydown', 'wheel', 'input'].forEach((ev) =>
@@ -156,6 +163,23 @@ window.mascotDemo = async (action) => {
   const o = action === 'peek' ? { entry: 'peek' } : action ? { action } : {};
   try { return await (await loadEngine()).appear(o); }
   finally { running = false; lastEnd = Date.now(); arm(); }
+};
+
+/** Plays one appearance now with any options (test panel). */
+async function playNow(o) {
+  disarm();
+  stopNow();
+  running = true;
+  try { return await (await loadEngine()).appear(o || {}); }
+  finally { running = false; lastEnd = Date.now(); arm(); }
+}
+
+/** Hidden test panel: mascotPanel() in the console, or ?mascot=panel. */
+window.mascotPanel = async () => {
+  const eng = await loadEngine();
+  if (!panel) panel = await import('./panel.mjs');
+  disarm();
+  return panel.open({ play: playNow, stop: stopNow, catalog: eng.CATALOG, onClose: () => { if (!running) arm(); } });
 };
 
 if (typeof document !== 'undefined') {
