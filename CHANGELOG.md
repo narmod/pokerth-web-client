@@ -17,6 +17,7 @@ highlights below.
 
 ### Changed
 
+- **Forum news — post view inside the Posts card, tabs kept** (`web.243`, narmod) — `modules/ui/forumnews.mjs` `_openPostView` no longer hides `#fn-tabs` (a tab click already returns to the list through `forumSelectTab`); `pokerth-client.html`: `#fn-post` is an `.ev-card` whose `.ev-ch` header holds the back button, the posts icon and `forumTabPosts`; `pokerth.css` pads the head/body and gives post lists `padding-inline-start: 1.8em` (the card clips overflow, the global reset had left the markers outside).
 - **Forum news window — one card look for both tabs, no leaders card** (`web.242`, narmod) — `modules/ui/forum-events.mjs`: the server clock is now a header-only `.ev-card` (`#ev-clock`, same frame as « Upcoming »), and the Ranking card (`data.leaders`) is no longer rendered — removal asked by narmod; `evLeaderMeta` and its tests removed. The relay still returns `leaders` (unused by the client). `modules/ui/forumnews.mjs` + `pokerth-client.html`: `#fn-list` is an `.ev-card` with an `.ev-ch` header (posts icon, `forumTabPosts`, count), rows unchanged.
 
 ### Added

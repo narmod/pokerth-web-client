@@ -3164,8 +3164,9 @@ if ('serviceWorker' in navigator && !window.LIVE_MODE) {
       </div>
       <!-- Vue post (parite QML ForumPostPage) : lecture du post entier dans
            la fenetre, globe de traduction (meme reglage que le chat). -->
-      <div id="fn-post" style="display:none">
-        <button type="button" class="rk-back" onclick="forumBackToList()" title="Back" data-i18n-title="rankingBack" aria-label="Back">←</button>
+      <div id="fn-post" class="ev-card" style="display:none">
+        <!-- web.243 : le post reste dans le cadre « Posts », onglets visibles. -->
+        <div class="ev-ch fnp-ch"><button type="button" class="rk-back" onclick="forumBackToList()" title="Back" data-i18n-title="rankingBack" aria-label="Back">←</button><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 6h3a1 1 0 0 1 1 1v11a2 2 0 0 1-4 0V5a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v12a3 3 0 0 0 3 3h11"/><path d="M8 8h4M8 12h4M8 16h4"/></svg><span class="ev-cl" data-i18n="forumTabPosts">Posts</span></div>
         <div class="fn-post-head">
           <span class="fn-forum" id="fnp-badge"></span>
           <div class="fn-main"><div class="fn-pt" id="fnp-title"></div><div class="fn-meta" id="fnp-meta"></div></div>

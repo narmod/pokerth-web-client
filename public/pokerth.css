@@ -9083,6 +9083,13 @@ a.ev-row { color: inherit; text-decoration: none; }
 .fn-golink:hover, .fn-golink:focus-visible { color: var(--gold); opacity: 1; outline: none; }
 /* ── Vue post (parite QML ForumPostPage) : post entier dans la fenetre ── */
 .fn-post-head { display: flex; gap: var(--sp-3); align-items: flex-start; padding: 2px 2px 8px; border-bottom: 1px solid var(--border); }
+/* Post view inside the « Posts » card (web.243): back button in the card
+   header, head and body padded like the list rows. */
+#fn-post.ev-card .fnp-ch .rk-back { width: 26px; height: 22px; margin: -2px 2px -2px 0; font-size: var(--fs-md, 16px); flex-shrink: 0; }
+#fn-post.ev-card .fn-post-head { padding: 8px var(--sp-3); }
+#fn-post.ev-card .fnp-body { padding: 10px var(--sp-3); }
+/* Lists of the post keep their markers inside the card (it clips overflow). */
+#fn-post.ev-card .fnp-body ol, #fn-post.ev-card .fnp-body ul { padding-inline-start: 1.8em; margin: 4px 0; }
 .fn-pt { font-size: var(--fs-base); font-weight: 600; color: var(--text-hi); overflow-wrap: break-word; }
 .fnp-globe { flex-shrink: 0; }
 .fnp-globe.tr-active { color: var(--gold); }

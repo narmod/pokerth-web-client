@@ -415,8 +415,8 @@ function _openPostView(p) {
   const footP = document.getElementById('fn-foot-post');
   if (!post) return;
   if (lw) lw.style.display = 'none';
-  // La vue post occupe toute la fenetre : ni onglets ni liste d'evenements.
-  const tabs = document.getElementById('fn-tabs'); if (tabs) tabs.style.display = 'none';
+  // La vue post s'affiche dans le cadre « Posts » ; les onglets restent
+  // visibles (web.243) et ramenent a la liste (forumSelectTab).
   const evBox = document.getElementById('fn-events'); if (evBox) evBox.style.display = 'none';
   post.style.display = '';
   if (footL) footL.style.display = 'none';
