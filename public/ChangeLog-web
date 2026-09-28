@@ -1,4 +1,8 @@
-2026-09-28 version 2.1.9-web.226 (current series):
+2026-09-28 version 2.1.9-web.227 (current series):
+- bugfix: action bar in very low landscape windows (under 380 px high) — scaled down so it no longer runs off the bottom of the screen
+- bugfix: action bar in the phone layout on a computer — the mode list no longer sticks out of the bar's frame
+
+2026-09-28 version 2.1.9-web.226:
 - improvement: action bar on a computer — a small window (portrait up to 740 px wide, landscape up to 500 px high) switches back to the phone layout, handy to check the mobile look from a computer
 
 2026-09-28 version 2.1.9-web.225:

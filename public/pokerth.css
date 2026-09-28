@@ -11084,6 +11084,12 @@ body.chat-tr-on .pm-line .chat-tr-btn.tr-same { visibility: visible; }
     transform: none;
     margin-left: auto; margin-right: auto; margin-bottom: 8px;
     bottom: auto !important;
+    /* web.227 : pas la largeur du format ordinateur (≈ 370 px) — c'est le
+       format téléphone ; sa grille « bet | mid » (≤ 400 px de haut) demande
+       ≈ 440 px et débordait (liste de mode hors du cadre). Comme sur un vrai
+       téléphone : pleine largeur, la grille se borne elle-même (≤ 620 px,
+       --abar-w au-delà de 400 px de haut) et se centre. */
+    width: 100% !important;
   }
 }
 
@@ -13230,3 +13236,8 @@ html[data-abar-desk="1"] body.adv-hide-pbar #s-game#s-game .my-zone .act-buttons
 html[data-abar-desk="1"] body.adv-hide-pbar #s-game#s-game .my-zone .act-buttons-row .btn-action .raise-btn-amt {
   display: block !important; font-size: 15px !important; line-height: 1.05 !important; white-space: nowrap !important;
 }
+
+/* ── Format téléphone, paysage très bas (< 380 px de haut) : la barre est
+   réduite d'un bloc, polices comprises (--abar-kp = h/380, plancher 0.75,
+   posé par updateBottomLayout) pour ne jamais sortir de l'écran (web.227). */
+html[data-abar-short="1"] #s-game#s-game .my-zone { zoom: var(--abar-kp, 1); }

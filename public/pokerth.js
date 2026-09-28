@@ -5426,6 +5426,19 @@ const App = (() => {
       } else if (_de.hasAttribute('data-abar-desk')) {
         _de.removeAttribute('data-abar-desk'); _de.style.removeProperty('--abar-k'); window.__abarK = null;
       }
+      // web.227 (narmod) : format TÉLÉPHONE en paysage très bas (< 380 px de
+      // haut, souris ou tactile) — la barre (≈ 93 px) plus la table au
+      // plancher d'échelle dépassaient la fenêtre : barre coupée de 17 à 20 px
+      // en bas à 682×297 (déjà vrai en web.215). Réduction d'un bloc, polices
+      // comprises : --abar-kp = h/380, plancher 0.75. Voir pokerth.css.
+      var _shortPh = !(_fine && !_phoneWin) && _bw >= _bh && _bh < 380;
+      if (_shortPh) {
+        var _kp = Math.round(Math.max(0.75, Math.min(1, _bh / 380)) * 1000) / 1000;
+        if (_de.getAttribute('data-abar-short') !== '1') _de.setAttribute('data-abar-short', '1');
+        if (window.__abarKp !== _kp) { window.__abarKp = _kp; _de.style.setProperty('--abar-kp', _kp); }
+      } else if (_de.hasAttribute('data-abar-short')) {
+        _de.removeAttribute('data-abar-short'); _de.style.removeProperty('--abar-kp'); window.__abarKp = null;
+      }
     } catch (e) {}
     var pb = document.querySelector('.player-bar');
     var mz = document.querySelector('.my-zone');
@@ -11927,7 +11940,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.9-web.226'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.9-web.227'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif ou la palette High contrast
    (Android, Safari, iOS standalone récent). Lit --theme-color et met
