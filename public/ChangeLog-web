@@ -1,4 +1,7 @@
-2026-09-28 version 2.1.9-web.248 (current series):
+2026-09-28 version 2.1.9-web.249 (current series):
+- improvement: forum news, Events tab — BBC games show their sign-ups in full words, as in the desktop client: « (3 players registered) »
+
+2026-09-28 version 2.1.9-web.248:
 - bugfix: ranking tables — the waiting line under the buttons no longer says the admin will start the game: it now says the game starts automatically as soon as the table is full
 
 2026-09-28 version 2.1.9-web.247:

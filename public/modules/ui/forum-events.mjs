@@ -196,6 +196,14 @@ export function evSignupText(e, label) {
   return String(label || 'Signed up: {n}').replace('{n}', String(e.signups));
 }
 
+// Sign-ups of a BBC game in full words, as QML BbcGameDates.playersText:
+// "1 player registered" / "3 players registered" (singular only for 1).
+export function evPlayersText(n, one, many) {
+  const k = typeof n === 'number' && isFinite(n) ? n : 0;
+  return k === 1 ? String(one || '1 player registered')
+    : String(many || '{n} players registered').replace('{n}', String(k));
+}
+
 // Server clock line on top of the tab: "Server time (Berlin): 14:05", plus the
 // player's own time when it differs — the event times below are shown in the
 // player's zone, the community sites announce them in server time.
@@ -392,7 +400,7 @@ function _gameRow(e, loc, stepWord) {
   const full = e.seats > 0 && e.signups >= e.seats;
   const text = e.kind === 'daily' ? _t('evWecDaily', 'Daily game · no registration')
     : e.src === 'bbc'
-    ? [e.title, sign ? '(' + sign + ')' : ''].filter(Boolean).join(' ')
+    ? [e.title, e.signups != null ? '(' + evPlayersText(e.signups, _t('evPlayers1', '1 player registered'), _t('evPlayersN', '{n} players registered')) + ')' : ''].filter(Boolean).join(' ')
     : [evUpcomingTitle(e, loc, stepWord), sign].filter(Boolean).join(' · ');
   const inner = '<span class="ev-time">' + esc(evTime(e.at, loc)) + '</span>'
     + '<span class="fn-forum ' + evSrcClass(e.src) + '">' + esc(evSrcName(e.src)) + '</span>'
