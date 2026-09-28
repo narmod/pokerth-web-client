@@ -5398,6 +5398,26 @@ const App = (() => {
         document.documentElement.style.setProperty('--bar-k', _bk);
         document.documentElement.style.setProperty('--bar-kf', _bkf);
       }
+      // ── Barre d'action ORDINATEUR : un seul format + un seul facteur (web.225)
+      // Souris (hover + pointer fine) : la barre garde le gabarit QML desktop
+      // (115 px, polices 13/11/12/11/15) quelle que soit la forme de la fenêtre
+      // — plus de bascule vers les formats téléphone (portrait < 740 px,
+      // paysage ≤ 500 px de haut) qui la faisaient sauter de 131 à 104 px et
+      // changer de polices en redimensionnant. Les petites fenêtres la
+      // réduisent d'un bloc : --abar-k = min(h/720, w/760) borné [0.8, 1]
+      // (0.8 = gabarit téléphone QML, polices 12/15). Voir pokerth.css
+      // « data-abar-desk ». Téléphones / tablettes tactiles : inchangés.
+      var _fine = false;
+      try { _fine = window.matchMedia('(hover: hover) and (pointer: fine)').matches; } catch (eF) {}
+      var _de = document.documentElement;
+      if (_fine) {
+        var _ak = Math.max(0.8, Math.min(1, _bh / 720, _bw / 760));
+        _ak = Math.round(_ak * 1000) / 1000;
+        if (_de.getAttribute('data-abar-desk') !== '1') _de.setAttribute('data-abar-desk', '1');
+        if (window.__abarK !== _ak) { window.__abarK = _ak; _de.style.setProperty('--abar-k', _ak); }
+      } else if (_de.hasAttribute('data-abar-desk')) {
+        _de.removeAttribute('data-abar-desk'); _de.style.removeProperty('--abar-k'); window.__abarK = null;
+      }
     } catch (e) {}
     var pb = document.querySelector('.player-bar');
     var mz = document.querySelector('.my-zone');
@@ -5420,11 +5440,18 @@ const App = (() => {
       if (ga) {
         var _fixed = false;
         try { _fixed = getComputedStyle(mz).position === 'fixed'; } catch (e) {}
+        // web.225 : barre ordinateur (data-abar-desk) — hauteur VISUELLE
+        // (zoom --abar-k compris, offsetHeight l'ignore) et réserve posée en
+        // !important : en fenêtre basse (≤ 500 px) le CSS téléphone force
+        // padding-bottom:0 !important sur .game-area, or la barre ordinateur
+        // reste flottante (fixed) et recouvrait les sièges du bas.
+        var _desk = document.documentElement.getAttribute('data-abar-desk') === '1';
         if (_fixed) {
-          var _res = pbH + (mz.offsetHeight || 0);
+          var _res = pbH + (_desk ? Math.round(mz.getBoundingClientRect().height) : (mz.offsetHeight || 0));
           var _cur = parseInt(ga.style.paddingBottom, 10) || 0;
-          if (_cur !== _res) {
-            ga.style.paddingBottom = _res + 'px';
+          if (_cur !== _res || (_desk && ga.style.getPropertyPriority('padding-bottom') !== 'important')) {
+            if (_desk) ga.style.setProperty('padding-bottom', _res + 'px', 'important');
+            else ga.style.paddingBottom = _res + 'px';
             // La hauteur visible de la zone vient de changer : replacer les
             // sieges (guard _cur!==_res -> pas de boucle de re-rendu).
             setTimeout(function () { try { if (typeof renderSeats === 'function' && typeof S.seats !== 'undefined' && S.seats.length) renderSeats(); } catch (e) {} }, 50);
@@ -11892,7 +11919,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.9-web.224'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.9-web.225'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif ou la palette High contrast
    (Android, Safari, iOS standalone récent). Lit --theme-color et met

@@ -1,4 +1,7 @@
-2026-09-28 version 2.1.9-web.224 (current series):
+2026-09-28 version 2.1.9-web.225 (current series):
+- improvement: action bar on a computer — one layout at every window size, scaled down as a whole (text included) in small windows so it keeps the same proportion with the table; it no longer jumps between formats while resizing
+
+2026-09-28 version 2.1.9-web.224:
 - bugfix: action bar — in low windows (500 px high or less) on a computer it no longer slides half off the screen to the left
 
 2026-09-28 version 2.1.9-web.223:

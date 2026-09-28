@@ -13147,3 +13147,86 @@ body.conn-lost #s-game .my-zone .action-grid {
   #s-game .my-zone .action-grid.kp-open > .bet-keypad .kp-grid button { height: 29px; min-height: 29px; }
   #s-game .my-zone .action-grid.kp-open > .bet-keypad .kp-foot .btn-action { height: 29px !important; min-height: 29px !important; max-height: 29px !important; }
 }
+
+
+/* ══ Barre d'action ORDINATEUR : format unique + facteur continu (web.225) ══
+   html[data-abar-desk="1"] est posé par updateBottomLayout dès que la souris
+   est le pointeur principal (hover + pointer fine). La barre y garde TOUJOURS
+   le gabarit QML desktop (GameActionBar.qml : raiseSection 4/26/3/26/2 +
+   rangée 54 à marges 5/5, côtés 8, polices 13 · 11 · 12 · 11 · 15, largeur
+   max(264·cs, 380), flottante à 8 px du bas), quelle que soit la forme de la
+   fenêtre : les blocs téléphone (portrait ≤ 740 px, paysage ≤ 500/400/360 px
+   de haut, portrait ≤ 899 px) ne s'appliquent plus à elle. Les petites
+   fenêtres la réduisent d'UN BLOC via zoom: var(--abar-k) (0.8–1), polices
+   comprises — la barre garde la même proportion avec la table, sans sauts.
+   Écart web assumé (narmod 28/09) : le QML desktop ne réduit jamais.
+   Valeurs = styles calculés relevés à 800×600 (format de référence).
+   #s-game#s-game : dépasse les blocs « :root:not(…) #s-game .my-zone … »
+   des tailles d'interface / paysage très court (ID + !important). */
+html[data-abar-desk="1"] body.adv-hide-pbar #s-game#s-game .my-zone {
+  position: fixed !important;
+  top: auto !important; bottom: 8px !important;
+  left: 50% !important; right: auto !important;
+  transform: translateX(-50%) !important;
+  width: clamp(380px, calc(264px * var(--comm-scale, 1)), 96vw) !important;
+  min-height: 0 !important;
+  margin: 0 !important; padding: 0 !important;
+  order: 0 !important;
+  zoom: var(--abar-k, 1);
+}
+html[data-abar-desk="1"] body.adv-hide-pbar #s-game#s-game .my-zone .action-grid {
+  display: flex !important; flex-direction: column !important;
+  grid-template-columns: none !important; grid-template-rows: none !important; grid-template-areas: none !important;
+  width: 100% !important; max-width: none !important;
+  margin: 0 !important;
+  padding: 4px 8px 0 !important;
+  gap: 3px !important;
+  align-items: normal !important;
+  border-radius: var(--r-bar, 12px) !important;
+}
+html[data-abar-desk="1"] body.adv-hide-pbar #s-game#s-game .my-zone .bet-row,
+html[data-abar-desk="1"] body.adv-hide-pbar #s-game#s-game .my-zone .mid-row,
+html[data-abar-desk="1"] body.adv-hide-pbar #s-game#s-game .my-zone .act-buttons-row { grid-area: auto !important; }
+html[data-abar-desk="1"] body.adv-hide-pbar #s-game#s-game .my-zone .bet-row .raise-amt-field {
+  width: 78px !important; height: 26px !important; min-height: 26px !important;
+  padding: 8px 6px !important; font-size: 13px !important; flex: 0 0 auto !important;
+}
+html[data-abar-desk="1"] body.adv-hide-pbar #s-game#s-game .my-zone .bet-row .raise-slider { flex: 1 1 0% !important; }
+html[data-abar-desk="1"] body.adv-hide-pbar #s-game#s-game .my-zone .mid-row {
+  align-items: stretch !important; justify-content: normal !important; gap: 4px !important;
+}
+html[data-abar-desk="1"] body.adv-hide-pbar #s-game#s-game .my-zone .mid-row .pct-row { gap: 5px !important; }
+html[data-abar-desk="1"] body.adv-hide-pbar #s-game#s-game .my-zone .pct-row .btn-pct {
+  height: 26px !important; min-height: 26px !important;
+  flex: 0 0 38px !important; width: 38px !important; min-width: 38px !important;
+  padding: 0 2px !important; font-size: 11px !important; line-height: 11px !important;
+  border-radius: 7px !important;
+}
+html[data-abar-desk="1"] body.adv-hide-pbar #s-game#s-game .my-zone .pct-row .btn-pct .pct-p { font-size: 11px !important; line-height: 11px !important; }
+html[data-abar-desk="1"] body.adv-hide-pbar #s-game#s-game .my-zone .mid-row > .btn-action.btn-allin {
+  height: 26px !important; min-height: 26px !important;
+  flex: 0 0 52px !important; width: 52px !important;
+  padding: 0 !important; font-size: 12px !important; letter-spacing: 0.3px !important;
+}
+html[data-abar-desk="1"] body.adv-hide-pbar #s-game#s-game .my-zone .mid-row .mode-sel-wrap,
+html[data-abar-desk="1"] body.adv-hide-pbar #s-game#s-game .my-zone .mid-row .sel-wrap { margin-left: auto !important; flex: 0 0 132px !important; }
+html[data-abar-desk="1"] body.adv-hide-pbar #s-game#s-game .my-zone .mid-row .mode-sel-wrap select,
+html[data-abar-desk="1"] body.adv-hide-pbar #s-game#s-game .my-zone .mid-row .sel-wrap select {
+  height: 26px !important; padding-top: 4px !important; padding-bottom: 4px !important;
+  font-size: 11.2px !important; line-height: normal !important;
+}
+html[data-abar-desk="1"] body.adv-hide-pbar #s-game#s-game .my-zone .act-buttons-row {
+  height: 54px !important; box-sizing: border-box !important;
+  padding: 5px 0 !important; margin: -1px 0 0 !important;
+  gap: 8px !important; align-items: stretch !important;
+}
+html[data-abar-desk="1"] body.adv-hide-pbar #s-game#s-game .my-zone .act-buttons-row .btn-action {
+  min-height: 0 !important; max-height: 44px !important;
+  padding: 0 10px !important;
+  font-size: 15px !important; line-height: 1.05 !important;
+  flex: 1 1 0px !important; white-space: nowrap !important;
+}
+html[data-abar-desk="1"] body.adv-hide-pbar #s-game#s-game .my-zone .act-buttons-row .btn-action > b,
+html[data-abar-desk="1"] body.adv-hide-pbar #s-game#s-game .my-zone .act-buttons-row .btn-action .raise-btn-amt {
+  display: block !important; font-size: 15px !important; line-height: 1.05 !important; white-space: nowrap !important;
+}
