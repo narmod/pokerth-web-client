@@ -215,7 +215,8 @@ export const help = {
         { id: 'forumnews', t: 'Foorumi uudised fuajees',
           b: ['Fuajee päises olev ajalehenupp avab pokerth.net foorumi viimased postitused, üks kirje teema kohta, igal foorumil oma värv. Nupul olev märgis loendab lugemata postitusi; postituse avamine (uus vahekaart) märgib selle loetuks ja „Märgi kõik loetuks“ tühjendab kõik korraga.',
               'See on veebi lisa: nupu saab peita täpsemates valikutes („Foorumi nupp fuajee päises“).',
-              'Vahekaart „Sündmused“ näitab tulevasi BBC mänge ja järgmist Monthly Cupi koos registreerunud mängijate arvuga ning viimaseid BBC, WEC-i ja Monthly Cupi võitjaid. Kellaajad on sinu kohalikus ajas ja puudutus avab kogukonna saidi. Valik „Näita kogukonna sisu (BBC / WEC)“ peidab selle vahekaardi.'] },
+              'Vahekaart „Sündmused“ näitab tulevasi BBC mänge ja järgmist Monthly Cupi koos registreerunud mängijate arvuga ning viimaseid BBC, WEC-i ja Monthly Cupi võitjaid. Kellaajad on sinu kohalikus ajas ja puudutus avab kogukonna saidi. Valik „Näita kogukonna sisu (BBC / WEC)“ peidab selle vahekaardi.',
+              'Tulevased mängud on rühmitatud õhtute kaupa, sealhulgas igapäevane WEC-i mäng kell 22:00 serveri aja järgi (registreerumist pole vaja). Puuduta registreerumistega BBC mängu, et näha, kes on kirjas — BBC administraatorid kullaga; ikoon ↗ ja „Registreeru BBC-le“ avavad BBC saidi.'] },
         { id: 'avatars', t: 'Avatarid ja lipud',
           b: ['pokerth.net-is jagatakse sinu avatari teistele mängijatele avatariserveri kaudu ning mängijakastidel saab kuvada väikest riigilippu. Mõlemad on valikulised ja valikutes seadistatavad.'] }
       ]

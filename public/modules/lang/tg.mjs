@@ -481,7 +481,7 @@ export const strings = {
     piNoCupData:'Барои ин бозингар рейтинги ҷом нест.',
     rankingTooltip:'Рейтинг', rankingTitle:'Рейтинг', rankingPth:'PokerTH', rankingBbc:'BBC', rankingWec:'WEC',
     rankingLoading:'Бор шуда истодааст…', rankingSoon:'Рейтинг ба наздикӣ.', rankingError:'Рейтингро бор кардан ғайриимкон шуд.', rankingEmpty:'Ҳеҷ чиз нест.',
-    forumTabPosts:'Паёмҳо', forumTabEvents:'Чорабиниҳо', evUpcoming:'Дарпешистода', evChampions:'Қаҳрамонони рӯз', evResults:'Натиҷаҳои охирин', evSignups:'Бақайдгирифтаҳо: {n}', evWecDaily:'Бозии ҳаррӯза · бе бақайдгирӣ', evError:'Чорабиниҳоро бор кардан ғайриимкон шуд.', evNone:'Чорабинии дарпешистода нест.', evOpenSite:'Кушодани сайт',
+    forumTabPosts:'Паёмҳо', forumTabEvents:'Чорабиниҳо', evUpcoming:'Дарпешистода', evChampions:'Қаҳрамонони рӯз', evResults:'Натиҷаҳои охирин', evSignups:'Бақайдгирифтаҳо: {n}', evWecDaily:'Бозии ҳаррӯза · бе бақайдгирӣ', evRegsError:'Бақайдгириҳоро бор кардан нашуд.', evBbcRegister:'Барои BBC сабти ном', evError:'Чорабиниҳоро бор кардан ғайриимкон шуд.', evNone:'Чорабинии дарпешистода нест.', evOpenSite:'Кушодани сайт',
     forumTooltip:'Форум', forumTitle:'Хабарҳои форум', forumMarkRead:'Ҳамаро хондашуда қайд кардан', forumOpen:'Кушодани форум', forumError:'Хабарҳои форумро бор кардан ғайриимкон шуд.', advForumNews:'Тугмаи форум дар сарлавҳаи лобби', forumOpenPost:'Кушодани паём', forumOpenInForum:'Кушодан дар форум', forumTranslate:'Тарҷумаи паём', forumShowOriginal:'Нишон додани паёми аслӣ', forumTranslateFailed:'Тарҷума ноком шуд.',
     rankingSearch:'Ҷустуҷӯи бозингар…', rankingNoMatch:'Бозингар ёфт нашуд.',
     rankingSeason:'Мавсим', rankingAllTime:'Тамоми вақт',

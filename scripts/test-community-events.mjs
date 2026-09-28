@@ -38,6 +38,16 @@ const sch = ce.parseBbcSchedule(bbcReg, NOW);
 ok(sch.ok && sch.upcoming.length === 3, 'past games are dropped, upcoming ones kept (' + (sch.upcoming || []).length + ')');
 ok(sch.upcoming[0].at === Date.parse('2026-09-20T23:15:00+02:00') && sch.upcoming[0].signups === 3, 'the next game comes first, with its sign-up count');
 ok(sch.upcoming[2].step === 2, 'the step number is carried');
+ok(sch.upcoming[0].id === 9779 && sch.upcoming[2].id === 9794, 'the game id is carried (registrations lookup)');
+// -- BBC registrations of one game (JSON, as read by QML BbcGameDates.loadRegs) --
+ok(ce.bbcRegsUrl(9779) === 'https://bbc.pokerth.net/registration/date/get/9779', 'registrations URL');
+{ const rg = ce.parseBbcRegs(JSON.stringify({ success: true, date: { id: 9779, regs: [
+    { player: { nickname: 'spoof', admin: false } }, { player: { nickname: 'Jogy', admin: true } },
+    { player: { nickname: '  ' } }, { player: null }, { player: { nickname: 'R&D <b>' } }] } }));
+  ok(rg.ok && rg.players.map(p => p.nick).join('|') === 'spoof|Jogy|R&D <b>', 'nicknames kept as typed (no HTML decoding), blanks dropped');
+  ok(rg.players[1].admin === true && rg.players[0].admin === false && rg.players[2].admin === false, 'admin flag only when true'); }
+ok(ce.parseBbcRegs('{"success":false}').ok === false && ce.parseBbcRegs('<html>').ok === false && ce.parseBbcRegs('{"success":true,"date":{}}').ok === false, 'failure, HTML or wrong shape is an error');
+ok(ce.parseBbcRegs(JSON.stringify({ success: true, date: { regs: Array.from({ length: 50 }, (_, i) => ({ player: { nickname: 'p' + i } })) } })).players.length === 20, 'bounded list');
 ok(sch.upcoming.every(u => u.seats === 10), 'BBC entries carry the 10 seats the site itself shows ("Players: n/10")');
 ok(sch.upcoming.every(u => u.src === 'bbc' && u.url === 'https://bbc.pokerth.net/registration'), 'every entry links to the BBC registration page');
 const many = Array.from({ length: 40 }, (_, i) => ({ step: 1, date: '2026-10-' + String(1 + (i % 28)).padStart(2, '0') + ' 19:30:00', num: 0 }));

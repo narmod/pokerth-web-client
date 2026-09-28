@@ -320,31 +320,139 @@ function _row(src, url, title, meta, winner) {
     + '</a>';
 }
 
+// ── Registered players of a BBC game (QML BbcGameDates.loadRegs) ─────
+// A row with sign-ups unfolds to the nicknames, read through the relay
+// /api/events/bbcregs (the BBC site sends no CORS header). Kept by game id so
+// a refreshed list keeps what is open.
+const REGS_URL = '/api/events/bbcregs?id=';
+const REGS_TTL_MS = 2 * 60 * 1000;          // as QML regsTtlMs
+const BBC_REGISTER_URL = 'https://bbc.pokerth.net/registration';
+const _open = new Set();                     // expanded game ids (strings)
+const _regs = new Map();                     // id -> { players, loading, error, at }
+const _games = new Map();                    // id -> game of the last render
+
+// A BBC game with sign-ups and an id can unfold.
+export function evExpandable(e) {
+  return !!(e && e.src === 'bbc' && e.id != null && e.signups > 0);
+}
+
+// Fresh = same number of players as announced, fetched less than 2 min ago.
+export function evRegsFresh(r, signups, now) {
+  return !!(r && !r.error && !r.loading && Array.isArray(r.players) && r.players.length === signups && now - r.at < REGS_TTL_MS);
+}
+
+function _loadRegs(e) {
+  const id = String(e.id), old = _regs.get(id);
+  if (old && (old.loading || evRegsFresh(old, e.signups, Date.now()))) return;
+  _regs.set(id, { players: old ? old.players : [], loading: true, error: false, at: old ? old.at : 0 });
+  fetch(REGS_URL + encodeURIComponent(id), { cache: 'no-store' })
+    .then(function (r) { if (!r.ok) throw new Error('http_' + r.status); return r.json(); })
+    .then(function (j) {
+      if (!j || j.ok !== true || !Array.isArray(j.players)) throw new Error((j && j.error) || 'no_data');
+      _regs.set(id, { players: j.players, loading: false, error: false, at: Date.now() });
+    })
+    .catch(function () {
+      const prev = _regs.get(id);
+      _regs.set(id, { players: prev ? prev.players : [], loading: false, error: true, at: prev ? prev.at : 0 });
+    })
+    .finally(function () { if (_open.has(id)) evRerender(); });
+}
+
+function _toggle(id) {
+  if (_open.has(id)) { _open.delete(id); evRerender(); return; }
+  const e = _games.get(id);
+  if (!e) return;
+  _open.add(id);
+  _loadRegs(e);
+  evRerender();
+}
+
+// Unfolded part: nickname chips (BBC admins: gold outline + "Admin" tag), or
+// a loading / error line. Left bar in the step colour, as in QML.
+function _regsPanel(e) {
+  const r = _regs.get(String(e.id));
+  const players = r && Array.isArray(r.players) ? r.players : [];
+  const bar = e.step >= 1 && e.step <= 4 ? ' ev-step' + e.step : '';
+  let body;
+  if (players.length) {
+    const tag = esc(_t('piRoleAdmin', 'Admin'));
+    body = '<div class="ev-chips">' + players.map(function (p) {
+      const nick = String((p && p.nick) || '');
+      return '<span class="ev-chip' + (p && p.admin ? ' ev-admin' : '') + '"><span class="ev-chip-n">' + esc(nick) + '</span>'
+        + (p && p.admin ? '<span class="ev-chip-a">' + tag + '</span>' : '') + '</span>';
+    }).join('') + '</div>';
+  } else if (r && r.error) {
+    body = '<div class="ev-regs-msg ev-err">' + esc(_t('evRegsError', 'The registrations could not be loaded.')) + '</div>';
+  } else {
+    body = '<div class="ev-regs-msg">' + esc(_t('rankingLoading', 'Loading…')) + '</div>';
+  }
+  return '<div class="ev-regs' + bar + '">' + body + '</div>';
+}
+
+const ICON_CHEV = '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>';
+
 // One game of the Upcoming list, QML BBC-tab layout: time · source badge ·
 // step badge (BBC) · sign-ups. Sign-ups are dimmed at 0, green when full.
+// A BBC row with sign-ups unfolds on click (chevron); the ↗ icon still opens
+// the site. Other rows are one link to the site.
 function _gameRow(e, loc, stepWord) {
   const safe = evSafeUrl(e.url);
-  const open = _t('evOpenSite', 'Open the site');
+  const open = esc(_t('evOpenSite', 'Open the site')).replace(/"/g, '&quot;');
+  const href = safe ? ' href="' + esc(safe).replace(/"/g, '&quot;') + '" target="_blank" rel="noopener noreferrer"' : '';
   const step = evStepBadge(e);
   const sign = evSignupText(e, _t('evSignups', 'Signed up: {n}'));
   const full = e.seats > 0 && e.signups >= e.seats;
-  const text = e.kind === 'daily' ? _t('evWecDaily', 'Daily game \u00b7 no registration')
+  const text = e.kind === 'daily' ? _t('evWecDaily', 'Daily game · no registration')
     : e.src === 'bbc'
     ? [e.title, sign ? '(' + sign + ')' : ''].filter(Boolean).join(' ')
-    : [evUpcomingTitle(e, loc, stepWord), sign].filter(Boolean).join(' \u00b7 ');
-  return '<a class="fn-row ev-row ev-game"' + (safe ? ' href="' + esc(safe).replace(/"/g, '&quot;') + '" target="_blank" rel="noopener noreferrer"' : '')
-    + ' title="' + esc(open).replace(/"/g, '&quot;') + '">'
-    + '<span class="ev-time">' + esc(evTime(e.at, loc)) + '</span>'
+    : [evUpcomingTitle(e, loc, stepWord), sign].filter(Boolean).join(' · ');
+  const inner = '<span class="ev-time">' + esc(evTime(e.at, loc)) + '</span>'
     + '<span class="fn-forum ' + evSrcClass(e.src) + '">' + esc(evSrcName(e.src)) + '</span>'
     + (step ? '<span class="' + step.cls + '">' + esc(step.text) + '</span>' : '')
-    + '<span class="ev-sub' + (full ? ' ev-full' : (e.signups === 0 ? ' ev-zero' : '')) + '">' + esc(text) + '</span>'
-    + '<span class="fn-golink" aria-hidden="true">' + ICON_OUT + '</span>'
-    + '</a>';
+    + '<span class="ev-sub' + (full ? ' ev-full' : (e.signups === 0 ? ' ev-zero' : '')) + '">' + esc(text) + '</span>';
+  if (!evExpandable(e)) {
+    return '<a class="fn-row ev-row ev-game"' + href + ' title="' + open + '">' + inner
+      + '<span class="fn-golink" aria-hidden="true">' + ICON_OUT + '</span></a>';
+  }
+  const id = String(e.id), on = _open.has(id);
+  _games.set(id, e);
+  return '<div class="fn-row ev-row ev-game ev-exp' + (on ? ' ev-open' : '') + '" role="button" tabindex="0" aria-expanded="' + on + '" data-gid="' + esc(id) + '">'
+    + inner + '<span class="ev-chev" aria-hidden="true">' + ICON_CHEV + '</span>'
+    + '<a class="fn-golink"' + href + ' title="' + open + '" aria-label="' + open + '">' + ICON_OUT + '</a></div>'
+    + (on ? _regsPanel(e) : '');
 }
+
+// Row clicks / keys (one listener on the box, set once).
+function _wireBox(box) {
+  if (box._evWired) return;
+  box._evWired = true;
+  const hit = function (ev) {
+    if (ev.target && ev.target.closest && ev.target.closest('a')) return null;
+    const row = ev.target && ev.target.closest ? ev.target.closest('.ev-exp[data-gid]') : null;
+    return row && box.contains(row) ? row : null;
+  };
+  box.addEventListener('click', function (ev) { const row = hit(ev); if (row) _toggle(row.getAttribute('data-gid')); });
+  box.addEventListener('keydown', function (ev) {
+    if (ev.key !== 'Enter' && ev.key !== ' ') return;
+    const row = hit(ev);
+    if (!row) return;
+    ev.preventDefault();
+    _toggle(row.getAttribute('data-gid'));
+  });
+}
+
+// "Register for the BBC" button of the window footer (Events tab), as the
+// QML BBC tab's Register button: registering needs a login on the BBC site.
+export function evBbcRegister() {
+  try { window.open(BBC_REGISTER_URL, '_blank', 'noopener'); } catch (e) {}
+}
+try { window.evBbcRegister = evBbcRegister; } catch (e) {}
 
 function _render(data) {
   const box = document.getElementById('fn-events');
   if (!box) return;
+  _wireBox(box);
+  _games.clear();
   const now = Date.now(), loc = _locale();
   const stepWord = _t('rankingStep', 'Step');
   let up = (data.upcoming || []).filter(function (e) { return e && typeof e.at === 'number'; });
@@ -380,7 +488,11 @@ function _render(data) {
     for (const l of lead) rows += _row(l.src, l.url, l.player, evLeaderMeta(l, loc, w), true);
     html += _card(ICON_BARS, _t('rankingTitle', 'Ranking'), lead.length, rows);
   }
+  // A re-render (registrations landing) must not steal the keyboard focus.
+  const act = document.activeElement;
+  const fgid = act && box.contains(act) && act.getAttribute ? act.getAttribute('data-gid') : null;
   box.innerHTML = '<div class="ev-clock" id="ev-clock" hidden>' + ICON_CLOCK + '<span></span></div>' + html;
+  if (fgid) { const again = box.querySelector('.ev-exp[data-gid="' + fgid + '"]'); if (again) again.focus(); }
   _clockPaint();
 }
 

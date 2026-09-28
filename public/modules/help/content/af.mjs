@@ -213,7 +213,8 @@ export const help = {
         { id: 'forumnews', t: 'Forumnuus in die lobby',
           b: ['Die koerantknoppie in die lobby-kopstuk maak die nuutste plasings van die pokerth.net-forum oop, een inskrywing per onderwerp, elke forum met sy eie kleur. Die kenteken op die knoppie tel die ongeleeste plasings; om \'n plasing oop te maak (nuwe oortjie) merk dit as gelees, en “Merk alles as gelees” vee alles in een slag uit.',
               'Dit is \'n web-ekstra: die knoppie kan in Gevorderde opsies versteek word (“Forum-knoppie in die lobby-kopstuk”).',
-              'Die oortjie “Geleenthede” wys die komende BBC-speletjies en die volgende Monthly Cup met die aantal ingeskrewe spelers, asook die jongste BBC-, WEC- en Monthly Cup-wenners. Tye is in jou plaaslike tyd, en ’n tik maak die gemeenskapswerf oop. Die opsie “Wys gemeenskapsinhoud (BBC / WEC)” versteek hierdie oortjie.'] },
+              'Die oortjie “Geleenthede” wys die komende BBC-speletjies en die volgende Monthly Cup met die aantal ingeskrewe spelers, asook die jongste BBC-, WEC- en Monthly Cup-wenners. Tye is in jou plaaslike tyd, en ’n tik maak die gemeenskapswerf oop. Die opsie “Wys gemeenskapsinhoud (BBC / WEC)” versteek hierdie oortjie.',
+              'Komende spele word per aand gegroepeer, met die daaglikse WEC-spel om 22:00 bedienertyd (geen registrasie nodig nie). Tik op ’n BBC-spel met inskrywings om te sien wie ingeskryf is — BBC-admins in goud; die ↗-ikoon en “Skryf in vir die BBC” maak die BBC-webwerf oop.'] },
         { id: 'avatars', t: 'Avatars en vlae',
           b: ['Op pokerth.net word jou avatar deur die avatarbediener aan ander spelers versprei, en \u2019n klein landsvlag kan op die spelerblokkies verskyn. Albei is opsioneel en in die opsies instelbaar.'] }
       ]

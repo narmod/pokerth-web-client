@@ -9051,6 +9051,25 @@ a.ev-row { color: inherit; text-decoration: none; }
 .ev-sub { flex: 1; min-width: 0; font-size: var(--fs-sm); color: var(--text); overflow-wrap: anywhere; }
 .ev-sub.ev-zero { opacity: 0.55; }
 .ev-sub.ev-full { color: rgb(80,200,120); font-weight: 700; }
+/* Registered players of a BBC game (QML BBC tab collapsible): the row unfolds
+   on click; chips below, BBC admins with a gold outline and an "Admin" tag;
+   left bar in the step colour. */
+.ev-row.ev-exp { cursor: pointer; }
+.ev-row.ev-exp:focus-visible { outline: 1px solid var(--gold); outline-offset: -1px; }
+.ev-chev { flex-shrink: 0; display: flex; align-items: center; color: var(--text); opacity: 0.55; }
+.ev-chev svg { transition: transform 0.18s ease-out; }
+.ev-open .ev-chev svg { transform: rotate(180deg); }
+.ev-exp .fn-golink { margin-top: 0; color: var(--text); }
+.ev-regs { position: relative; padding: 8px var(--sp-3) 8px 20px; background: var(--inset); border-bottom: 1px solid var(--border); }
+.ev-regs::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: rgb(var(--fn-c, 138,151,168)); opacity: 0.6; }
+.ev-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.ev-chip { display: inline-flex; align-items: center; gap: 5px; padding: 3px 8px; border: 1px solid var(--border); border-radius: var(--r-pill); background: var(--inset-hi, rgba(255,255,255,0.08)); font-size: var(--fs-2xs); color: var(--text-hi); max-width: 100%; }
+.ev-chip-n { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ev-chip.ev-admin { --adm: 227,200,0; border-color: rgba(var(--adm), 0.6); background: rgba(var(--adm), 0.14); }
+:root[data-theme="pokerth-light"] .ev-chip.ev-admin { --adm: 176,154,0; }
+.ev-chip-a { flex-shrink: 0; font-size: var(--fs-3xs); font-weight: 700; letter-spacing: 0.04em; color: rgb(var(--adm)); }
+.ev-regs-msg { font-size: var(--fs-2xs); color: var(--text); opacity: 0.7; }
+.ev-regs-msg.ev-err { color: var(--red); opacity: 1; }
 .fn-main { flex: 1; min-width: 0; }
 .fn-t { font-size: var(--fs-sm); color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .fn-meta { font-size: var(--fs-2xs); color: var(--text); opacity: 0.6; margin-top: 1px; }

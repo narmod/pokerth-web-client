@@ -353,6 +353,9 @@ function _applyTab() {
   if (lw) lw.style.display = ev ? 'none' : '';
   if (box) box.style.display = ev ? '' : 'none';
   if (mr) mr.style.display = ev ? 'none' : '';   // « tout marquer lu » ne concerne que les posts
+  // Events tab: « S'inscrire à la BBC » (QML BBC tab Register button).
+  const br = document.getElementById('fn-bbcreg');
+  if (br) br.style.display = ev ? '' : 'none';
   if (ev) evShow(false);
 }
 

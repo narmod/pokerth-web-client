@@ -481,7 +481,7 @@ export const strings = {
     piNoCupData:'Bu oýunçy üçin kubok reýtingi ýok.',
     rankingTooltip:'Reýting', rankingTitle:'Reýting', rankingPth:'PokerTH', rankingBbc:'BBC', rankingWec:'WEC',
     rankingLoading:'Ýüklenýär…', rankingSoon:'Reýting ýakynda.', rankingError:'Reýtingi ýükläp bolmady.', rankingEmpty:'Hiç zat ýok.',
-    forumTabPosts:'Ýazgylar', forumTabEvents:'Çäreler', evUpcoming:'Geljekki', evChampions:'Günüň çempionlary', evResults:'Soňky netijeler', evSignups:'Ýazylanlar: {n}', evWecDaily:'Gündelik oýun · hasaba alyş gerek däl', evError:'Çäreleri ýükläp bolmady.', evNone:'Geljekki çäre ýok.', evOpenSite:'Saýty aç',
+    forumTabPosts:'Ýazgylar', forumTabEvents:'Çäreler', evUpcoming:'Geljekki', evChampions:'Günüň çempionlary', evResults:'Soňky netijeler', evSignups:'Ýazylanlar: {n}', evWecDaily:'Gündelik oýun · hasaba alyş gerek däl', evRegsError:'Hasaba alyşlary ýükläp bolmady.', evBbcRegister:'BBC-ä hasaba dur', evError:'Çäreleri ýükläp bolmady.', evNone:'Geljekki çäre ýok.', evOpenSite:'Saýty aç',
     forumTooltip:'Forum', forumTitle:'Forum habarlary', forumMarkRead:'Hemmesini okalan diýip belle', forumOpen:'Forumy aç', forumError:'Forum habarlaryny ýükläp bolmady.', advForumNews:'Lobbiniň sözbaşysynda forum düwmesi', forumOpenPost:'Ýazgyny aç', forumOpenInForum:'Forumda aç', forumTranslate:'Ýazgyny terjime et', forumShowOriginal:'Asyl ýazgyny görkez', forumTranslateFailed:'Terjime başartmady.',
     rankingSearch:'Oýunçy gözle…', rankingNoMatch:'Oýunçy tapylmady.',
     rankingSeason:'Möwsüm', rankingAllTime:'Ähli döwür',

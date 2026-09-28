@@ -215,7 +215,8 @@ export const help = {
         { id: 'forumnews', t: 'Novice foruma v predverju',
           b: ['Gumb s časopisom v glavi predverja odpre najnovejše objave s foruma pokerth.net, po en vnos na temo, vsak forum pa ima svojo barvo. Značka na gumbu šteje neprebrane objave; odpiranje objave (nov zavihek) jo označi kot prebrano, »Označi vse kot prebrano« pa vse pobriše naenkrat.',
               'To je spletna dodatnost: gumb lahko skriješ v Naprednih možnostih (»Gumb foruma v glavi predverja«).',
-              'Zavihek „Dogodki“ prikazuje prihajajoče igre BBC in naslednji Monthly Cup s številom prijavljenih igralcev ter zadnje zmagovalce BBC, WEC in Monthly Cupa. Ure so v vašem lokalnem času, dotik pa odpre spletno mesto skupnosti. Možnost „Prikaži vsebino skupnosti (BBC / WEC)“ skrije ta zavihek.'] },
+              'Zavihek „Dogodki“ prikazuje prihajajoče igre BBC in naslednji Monthly Cup s številom prijavljenih igralcev ter zadnje zmagovalce BBC, WEC in Monthly Cupa. Ure so v vašem lokalnem času, dotik pa odpre spletno mesto skupnosti. Možnost „Prikaži vsebino skupnosti (BBC / WEC)“ skrije ta zavihek.',
+              'Prihajajoče igre so združene po večerih, vključno z dnevno igro WEC ob 22:00 po strežniškem času (brez prijave). Tapnite igro BBC s prijavami, da vidite, kdo je prijavljen — skrbniki BBC v zlati barvi; ikona ↗ in »Prijava na BBC« odpreta stran BBC.'] },
         { id: 'avatars', t: 'Avatarji in zastave',
           b: ['Na pokerth.net je tvoj avatar drugim igralcem posredovan prek strežnika za avatarje, na poljih igralcev pa se lahko prikaže majhna zastava države. Oboje je neobvezno in nastavljivo v možnostih.'] }
       ]

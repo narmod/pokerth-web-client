@@ -213,7 +213,8 @@ export const help = {
         { id: 'forumnews', t: 'Forumnieuws in de lobby',
           b: ['De krantenknop in de lobbykoptekst opent de nieuwste berichten van het pokerth.net-forum, één regel per onderwerp, elk forum met een eigen kleur. De badge op de knop telt de ongelezen berichten; een bericht openen (nieuw tabblad) markeert het als gelezen, en “Alles als gelezen markeren” wist alles in één keer.',
               'Dit is een webextra: de knop kan worden verborgen in de Geavanceerde opties (“Forumknop in de lobbykoptekst”).',
-              'Het tabblad “Evenementen” toont de komende BBC-spellen en de volgende Monthly Cup met het aantal ingeschreven spelers, en de laatste winnaars van BBC, WEC en Monthly Cup. De tijden zijn in je lokale tijd, en een tik opent de site van de community. De optie “Community-inhoud tonen (BBC / WEC)” verbergt dit tabblad.'] },
+              'Het tabblad “Evenementen” toont de komende BBC-spellen en de volgende Monthly Cup met het aantal ingeschreven spelers, en de laatste winnaars van BBC, WEC en Monthly Cup. De tijden zijn in je lokale tijd, en een tik opent de site van de community. De optie “Community-inhoud tonen (BBC / WEC)” verbergt dit tabblad.',
+              'Komende spellen zijn per avond gegroepeerd, inclusief het dagelijkse WEC-spel om 22:00 servertijd (geen inschrijving nodig). Tik op een BBC-spel met inschrijvingen om te zien wie er ingeschreven is — BBC-admins in goud; het ↗-pictogram en “Inschrijven voor de BBC” openen de BBC-site.'] },
         { id: 'avatars', t: 'Avatars en vlaggen',
           b: ['Op pokerth.net wordt je avatar via de avatarserver naar andere spelers verspreid, en kan een kleine landvlag op de spelersvakken verschijnen. Beide zijn optioneel en instelbaar in de opties.'] }
       ]

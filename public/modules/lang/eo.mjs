@@ -481,7 +481,7 @@ export const strings = {
     piNoCupData:'Neniu pokala rangigo por ĉi tiu ludanto.',
     rankingTooltip:'Rangigo', rankingTitle:'Rangigo', rankingPth:'PokerTH', rankingBbc:'BBC', rankingWec:'WEC',
     rankingLoading:'Ŝargado…', rankingSoon:'Rangigo baldaŭ.', rankingError:'Ne eblis ŝargi la rangigon.', rankingEmpty:'Neniuj eroj.',
-    forumTabPosts:'Afiŝoj', forumTabEvents:'Eventoj', evUpcoming:'Venontaj', evChampions:'Ĉampionoj de la tago', evResults:'Lastatempaj rezultoj', evSignups:'Aliĝintoj: {n}', evWecDaily:'Ĉiutaga ludo · sen aliĝo', evError:'Ne eblis ŝargi la eventojn.', evNone:'Neniuj venontaj eventoj.', evOpenSite:'Malfermi la retejon',
+    forumTabPosts:'Afiŝoj', forumTabEvents:'Eventoj', evUpcoming:'Venontaj', evChampions:'Ĉampionoj de la tago', evResults:'Lastatempaj rezultoj', evSignups:'Aliĝintoj: {n}', evWecDaily:'Ĉiutaga ludo · sen aliĝo', evRegsError:'Ne eblis ŝargi la aliĝojn.', evBbcRegister:'Aliĝi al la BBC', evError:'Ne eblis ŝargi la eventojn.', evNone:'Neniuj venontaj eventoj.', evOpenSite:'Malfermi la retejon',
     forumTooltip:'Forumo', forumTitle:'Novaĵoj de la forumo', forumMarkRead:'Marki ĉion legita', forumOpen:'Malfermi la forumon', forumError:'Ne eblis ŝargi la forumfluon.', advForumNews:'Forumbutono en la kaplinio de la halo', forumOpenPost:'Malfermi la afiŝon', forumOpenInForum:'Malfermi en la forumo', forumTranslate:'Traduki la afiŝon', forumShowOriginal:'Montri la originalan afiŝon', forumTranslateFailed:'Tradukado malsukcesis.',
     rankingSearch:'Serĉi ludanton…', rankingNoMatch:'Neniu ludanto trovita.',
     rankingSeason:'Sezono', rankingAllTime:'Ĉiam',

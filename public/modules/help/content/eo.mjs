@@ -318,7 +318,8 @@ export const help = {
           b: [
             "La gazeta butono en la kaplinio de la halo malfermas la lastajn afiŝojn de la forumo de pokerth.net, unu ero por ĉiu temo, ĉiu forumo en sia propra koloro. Insigno sur la butono nombras nelegitajn afiŝojn; malfermi afiŝon (en nova langeto) markas ĝin legita, kaj “Marki ĉion legita” vakigas ĉion samtempe.",
             "Tio estas reta aldonaĵo: la butono estas kaŝebla en Altnivelaj opcioj (“Forumbutono en la kaplinio de la halo”).",
-            "La langeto “Eventoj” montras la venontajn BBC-ludojn kaj la sekvan Monthly Cup kun la nombro de aliĝintaj ludantoj, kaj ankaŭ la lastajn gajnintojn de BBC, WEC kaj Monthly Cup. La horoj estas en via loka horo, kaj tuŝo malfermas la retejon de la komunumo. La opcio “Montri komunuman enhavon (BBC / WEC)” kaŝas ĉi tiun langeton."] },
+            "La langeto “Eventoj” montras la venontajn BBC-ludojn kaj la sekvan Monthly Cup kun la nombro de aliĝintaj ludantoj, kaj ankaŭ la lastajn gajnintojn de BBC, WEC kaj Monthly Cup. La horoj estas en via loka horo, kaj tuŝo malfermas la retejon de la komunumo. La opcio “Montri komunuman enhavon (BBC / WEC)” kaŝas ĉi tiun langeton.",
+            "Venontaj ludoj estas grupigitaj laŭ vesperoj, kun la ĉiutaga WEC-ludo je 22:00 laŭ servila horo (sen aliĝo). Tuŝu BBC-ludon kun aliĝoj por vidi, kiu aliĝis — BBC-administrantoj ore; la piktogramo ↗ kaj “Aliĝi al la BBC” malfermas la BBC-retejon."] },
         { id: "avatars",
           t: "Avataroj kaj flagoj",
           b: [

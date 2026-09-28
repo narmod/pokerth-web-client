@@ -480,7 +480,7 @@ export const strings = {
     piNoCupData:'Нема рангирање на купови за овој играч.',
     rankingTooltip:'Рангирање', rankingTitle:'Рангирање', rankingPth:'PokerTH', rankingBbc:'BBC', rankingWec:'WEC',
     rankingLoading:'Вчитување…', rankingSoon:'Рангирањето наскоро ќе биде достапно.', rankingError:'Рангирањето не можеше да се вчита.', rankingEmpty:'Нема записи.',
-    forumTabPosts:'Објави', forumTabEvents:'Настани', evUpcoming:'Претстојни', evChampions:'Шампиони на денот', evResults:'Последни резултати', evSignups:'Пријавени: {n}', evWecDaily:'Дневна игра · без пријава', evError:'Настаните не можеа да се вчитаат.', evNone:'Нема претстојни настани.', evOpenSite:'Отвори ја страницата',
+    forumTabPosts:'Објави', forumTabEvents:'Настани', evUpcoming:'Претстојни', evChampions:'Шампиони на денот', evResults:'Последни резултати', evSignups:'Пријавени: {n}', evWecDaily:'Дневна игра · без пријава', evRegsError:'Пријавите не можеа да се вчитаат.', evBbcRegister:'Пријава за BBC', evError:'Настаните не можеа да се вчитаат.', evNone:'Нема претстојни настани.', evOpenSite:'Отвори ја страницата',
     forumTooltip:'Форум', forumTitle:'Вести од форумот', forumMarkRead:'Означи ги сите како прочитани', forumOpen:'Отвори го форумот', forumError:'Изворот на форумот не можеше да се вчита.', advForumNews:'Копче за форум во заглавието на предворјето', forumOpenPost:'Отвори ја објавата', forumOpenInForum:'Отвори на форумот', forumTranslate:'Преведи ја објавата', forumShowOriginal:'Прикажи ја оригиналната објава', forumTranslateFailed:'Преводот не успеа.',
     rankingSearch:'Пребарувај играч…', rankingNoMatch:'Не е најден играч.',
     rankingSeason:'Сезона', rankingAllTime:'Сите времиња',

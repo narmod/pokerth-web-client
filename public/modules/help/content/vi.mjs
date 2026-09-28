@@ -213,7 +213,8 @@ export const help = {
         { id: 'forumnews', t: 'Tin tức diễn đàn trong sảnh',
           b: ['Nút tờ báo trên tiêu đề sảnh mở các bài viết mới nhất từ diễn đàn pokerth.net, mỗi chủ đề một dòng, mỗi diễn đàn có màu riêng. Huy hiệu trên nút đếm số bài chưa đọc; mở một bài (thẻ mới) sẽ đánh dấu là đã đọc, còn “Đánh dấu tất cả là đã đọc” xóa tất cả cùng lúc.',
               'Đây là tiện ích web: có thể ẩn nút trong Tùy chọn nâng cao (“Nút diễn đàn trên tiêu đề sảnh”).',
-              'Thẻ “Sự kiện” hiển thị các ván BBC sắp diễn ra và Monthly Cup tiếp theo cùng số người chơi đã đăng ký, cũng như những người thắng gần nhất của BBC, WEC và Monthly Cup. Giờ được hiển thị theo giờ địa phương của bạn, và một lần chạm sẽ mở trang của cộng đồng. Tùy chọn “Hiển thị nội dung cộng đồng (BBC / WEC)” sẽ ẩn thẻ này.'] },
+              'Thẻ “Sự kiện” hiển thị các ván BBC sắp diễn ra và Monthly Cup tiếp theo cùng số người chơi đã đăng ký, cũng như những người thắng gần nhất của BBC, WEC và Monthly Cup. Giờ được hiển thị theo giờ địa phương của bạn, và một lần chạm sẽ mở trang của cộng đồng. Tùy chọn “Hiển thị nội dung cộng đồng (BBC / WEC)” sẽ ẩn thẻ này.',
+              'Các ván sắp tới được nhóm theo buổi tối, gồm cả ván WEC hằng ngày lúc 22:00 giờ máy chủ (không cần đăng ký). Chạm vào một ván BBC có người đăng ký để xem ai đã đăng ký — quản trị viên BBC màu vàng kim; biểu tượng ↗ và “Đăng ký BBC” mở trang BBC.'] },
         { id: 'avatars', t: 'Ảnh đại diện và cờ',
           b: ['Trên pokerth.net, ảnh đại diện của bạn được phân phối tới người chơi khác qua máy chủ ảnh đại diện, và một lá cờ quốc gia nhỏ có thể hiện trên ô người chơi. Cả hai đều tùy chọn và cấu hình được trong tùy chọn.'] }
       ]

@@ -215,7 +215,8 @@ export const help = {
         { id: 'forumnews', t: 'Habari za jukwaa ukumbini',
           b: ['Kitufe cha gazeti kwenye kichwa cha ukumbi hufungua machapisho ya hivi karibuni kutoka jukwaa la pokerth.net, kiingilio kimoja kwa kila mada, kila jukwaa na rangi yake. Beji kwenye kitufe huhesabu machapisho ambayo hayajasomwa; kufungua chapisho (kichupo kipya) hukiweka alama ya kusomwa, na “Weka zote kama zimesomwa” husafisha zote kwa pamoja.',
               'Hii ni nyongeza ya wavuti: kitufe kinaweza kufichwa kwenye chaguo za kina (“Kitufe cha jukwaa kwenye kichwa cha ukumbi”).',
-              'Kichupo cha “Matukio” kinaonyesha michezo ijayo ya BBC na Monthly Cup inayofuata pamoja na idadi ya wachezaji waliojisajili, na washindi wa hivi karibuni wa BBC, WEC na Monthly Cup. Saa ziko katika saa za eneo lako, na kugusa hufungua tovuti ya jumuiya. Chaguo la “Onyesha maudhui ya jumuiya (BBC / WEC)” huficha kichupo hiki.'] },
+              'Kichupo cha “Matukio” kinaonyesha michezo ijayo ya BBC na Monthly Cup inayofuata pamoja na idadi ya wachezaji waliojisajili, na washindi wa hivi karibuni wa BBC, WEC na Monthly Cup. Saa ziko katika saa za eneo lako, na kugusa hufungua tovuti ya jumuiya. Chaguo la “Onyesha maudhui ya jumuiya (BBC / WEC)” huficha kichupo hiki.',
+              'Michezo ijayo imepangwa kwa jioni, pamoja na mchezo wa kila siku wa WEC saa 22:00 kwa saa ya seva (bila usajili). Gusa mchezo wa BBC wenye usajili kuona waliojisajili — wasimamizi wa BBC kwa rangi ya dhahabu; aikoni ↗ na “Jisajili kwa BBC” hufungua tovuti ya BBC.'] },
         { id: 'avatars', t: 'Avatari na bendera',
           b: ['Kwenye pokerth.net, avatari yako husambazwa kwa wachezaji wengine kupitia seva ya avatari, na bendera ndogo ya nchi inaweza kuonyeshwa kwenye visanduku vya wachezaji. Zote ni za hiari na zinaweza kusanidiwa kwenye chaguo.'] }
       ]

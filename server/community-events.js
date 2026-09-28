@@ -164,11 +164,30 @@ function parseBbcSchedule(html, now) {
     const at = zonedToEpoch(g.date);
     if (at === null || at < now) continue;
     const step = count(g.step);
-    up.push({ src: 'bbc', kind: 'step', step: step, title: name(g.title), at: at,
+    up.push({ src: 'bbc', kind: 'step', id: count(g.id), step: step, title: name(g.title), at: at,
       signups: count(g.num), seats: BBC_SEATS, url: LINKS.bbcRegister });
   }
   up.sort(function (a, b) { return a.at - b.at; });
   return { ok: true, upcoming: up.slice(0, MAX_UPCOMING_BBC) };
+}
+
+// Registrations of one BBC game: GET /registration/date/get/<id>, JSON
+// { success, date: { regs: [{ player: { nickname, admin } }] } } -- the endpoint
+// the QML client reads (BbcGameDates.qml loadRegs). Admins get a gold tag.
+const MAX_REGS = 20;
+function bbcRegsUrl(id) { return 'https://bbc.pokerth.net/registration/date/get/' + id; }
+function parseBbcRegs(text) {
+  let j;
+  try { j = JSON.parse(String(text)); } catch (e) { j = null; }
+  if (!j || j.success !== true || !j.date || !Array.isArray(j.date.regs)) return { ok: false, error: 'parse_no_regs' };
+  const players = [];
+  for (const r of j.date.regs) {
+    const p = r && r.player;
+    const n = p && name(p.nickname);
+    if (n) players.push({ nick: n, admin: p.admin === true });
+    if (players.length >= MAX_REGS) break;
+  }
+  return { ok: true, players: players };
 }
 
 function parseResults(html, src, idKey, url) {
@@ -302,5 +321,6 @@ module.exports = {
   decodeHtml, attrOf, propJson, zonedToEpoch,
   parseBbcSchedule, parseBbcResults, parseWecResults, parseMcHome,
   parseBbcRanking, parseWecRanking, parseCod,
+  bbcRegsUrl, parseBbcRegs,
   buildEvents
 };

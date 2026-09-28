@@ -318,7 +318,8 @@ export const help = {
           b: [
             "Bọ́tìnì ìwé ìròyìn ní orí gbọ̀ngàn ń ṣí àwọn àròkọ tuntun láti àpéjọ pokerth.net, ìwọlé kan fún àkọlé kọ̀ọ̀kan, àpéjọ kọ̀ọ̀kan pẹ̀lú àwọ̀ tirẹ̀. Àmì lórí bọ́tìnì ń ka àwọn àròkọ tí a kò tíì kà; ṣíṣí àròkọ kan (ojú-ewé tuntun) ń sàmì sí i bí èyí tí a ti kà, “Sàmì sí gbogbo rẹ̀ bí èyí tí a ti kà” sì ń pa gbogbo rẹ̀ rẹ́ lẹ́ẹ̀kan.",
             "Àfikún wẹ́ẹ̀bù ni èyí: a lè fi bọ́tìnì pamọ́ nínú Àṣàyàn ìlọsíwájú (“Bọ́tìnì àpéjọ ní orí gbọ̀ngàn”).",
-            "Ojú-ewé “Àwọn ìṣẹ̀lẹ̀” ń fi eré BBC tí ń bọ̀ hàn àti Monthly Cup tó kàn pẹ̀lú iye àwọn òṣèré tí ó ti forúkọ sílẹ̀, àti àwọn olùborí BBC, WEC àti Monthly Cup tuntun. Àkókò wà ní àkókò agbègbè rẹ, ìfọwọ́kàn sì ń ṣí ojú-òpó àwùjọ. Àṣàyàn “Fi àkóónú àwùjọ hàn (BBC / WEC)” ń fi ojú-ewé yìí pamọ́."] },
+            "Ojú-ewé “Àwọn ìṣẹ̀lẹ̀” ń fi eré BBC tí ń bọ̀ hàn àti Monthly Cup tó kàn pẹ̀lú iye àwọn òṣèré tí ó ti forúkọ sílẹ̀, àti àwọn olùborí BBC, WEC àti Monthly Cup tuntun. Àkókò wà ní àkókò agbègbè rẹ, ìfọwọ́kàn sì ń ṣí ojú-òpó àwùjọ. Àṣàyàn “Fi àkóónú àwùjọ hàn (BBC / WEC)” ń fi ojú-ewé yìí pamọ́.",
+            "A ṣe àkójọ àwọn eré tí ń bọ̀ ní ìrọ̀lẹ́ kọ̀ọ̀kan, pẹ̀lú eré WEC ojoojúmọ́ ní 22:00 ní àkókò olupin (kò sí ìforúkọsílẹ̀). Tẹ eré BBC tí ó ní ìforúkọsílẹ̀ láti rí àwọn tí ó forúkọ sílẹ̀ — àwọn alábòójútó BBC ní àwọ̀ wúrà; àmì ↗ àti “Forúkọ sílẹ̀ fún BBC” ń ṣí ojú-ìwé BBC."] },
         { id: "avatars",
           t: "Afàtá àti àsíá",
           b: [

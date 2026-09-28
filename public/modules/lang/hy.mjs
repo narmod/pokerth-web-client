@@ -481,7 +481,7 @@ export const strings = {
     piNoCupData:'Այս խաղացողի համար գավաթների վարկանիշ չկա։',
     rankingTooltip:'Վարկանիշ', rankingTitle:'Վարկանիշ', rankingPth:'PokerTH', rankingBbc:'BBC', rankingWec:'WEC',
     rankingLoading:'Բեռնվում է…', rankingSoon:'Վարկանիշը շուտով։', rankingError:'Չհաջողվեց բեռնել վարկանիշը։', rankingEmpty:'Գրառումներ չկան։',
-    forumTabPosts:'Գրառումներ', forumTabEvents:'Միջոցառումներ', evUpcoming:'Առաջիկա', evChampions:'Օրվա չեմպիոններ', evResults:'Վերջին արդյունքներ', evSignups:'Գրանցված՝ {n}', evWecDaily:'Ամենօրյա խաղ · առանց գրանցման', evError:'Չհաջողվեց բեռնել միջոցառումները։', evNone:'Առաջիկա միջոցառումներ չկան։', evOpenSite:'Բացել կայքը',
+    forumTabPosts:'Գրառումներ', forumTabEvents:'Միջոցառումներ', evUpcoming:'Առաջիկա', evChampions:'Օրվա չեմպիոններ', evResults:'Վերջին արդյունքներ', evSignups:'Գրանցված՝ {n}', evWecDaily:'Ամենօրյա խաղ · առանց գրանցման', evRegsError:'Չհաջողվեց բեռնել գրանցումները։', evBbcRegister:'Գրանցվել BBC-ին', evError:'Չհաջողվեց բեռնել միջոցառումները։', evNone:'Առաջիկա միջոցառումներ չկան։', evOpenSite:'Բացել կայքը',
     forumTooltip:'Ֆորում', forumTitle:'Ֆորումի նորություններ', forumMarkRead:'Նշել բոլորը որպես կարդացված', forumOpen:'Բացել ֆորումը', forumError:'Չհաջողվեց բեռնել ֆորումի հոսքը։', advForumNews:'Ֆորումի կոճակ լոբբիի վերնագրում', forumOpenPost:'Բացել գրառումը', forumOpenInForum:'Բացել ֆորումում', forumTranslate:'Թարգմանել գրառումը', forumShowOriginal:'Ցույց տալ բնօրինակ գրառումը', forumTranslateFailed:'Թարգմանությունը ձախողվեց։',
     rankingSearch:'Որոնել խաղացող…', rankingNoMatch:'Խաղացող չի գտնվել։',
     rankingSeason:'Մրցաշրջան', rankingAllTime:'Բոլոր ժամանակներ',

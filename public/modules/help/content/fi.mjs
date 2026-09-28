@@ -213,7 +213,8 @@ export const help = {
         { id: 'forumnews', t: 'Foorumin uutiset aulassa',
           b: ['Aulan yläpalkin sanomalehtipainike avaa pokerth.net-foorumin uusimmat viestit, yksi rivi aihetta kohden, kullakin foorumilla oma värinsä. Painikkeen merkki laskee lukemattomat viestit; viestin avaaminen (uusi välilehti) merkitsee sen luetuksi, ja ”Merkitse kaikki luetuiksi” tyhjentää kaiken kerralla.',
               'Tämä on web-lisä: painikkeen voi piilottaa lisäasetuksista (”Foorumipainike aulan yläpalkissa”).',
-              'Välilehti ”Tapahtumat” näyttää tulevat BBC-pelit ja seuraavan Monthly Cupin ilmoittautuneiden pelaajien määrän kanssa sekä viimeisimmät BBC:n, WEC:n ja Monthly Cupin voittajat. Ajat ovat paikallista aikaasi, ja napautus avaa yhteisön sivuston. Asetus ”Näytä yhteisösisältö (BBC / WEC)” piilottaa tämän välilehden.'] },
+              'Välilehti ”Tapahtumat” näyttää tulevat BBC-pelit ja seuraavan Monthly Cupin ilmoittautuneiden pelaajien määrän kanssa sekä viimeisimmät BBC:n, WEC:n ja Monthly Cupin voittajat. Ajat ovat paikallista aikaasi, ja napautus avaa yhteisön sivuston. Asetus ”Näytä yhteisösisältö (BBC / WEC)” piilottaa tämän välilehden.',
+              'Tulevat pelit on ryhmitelty illoittain, mukana päivittäinen WEC-peli klo 22:00 palvelimen aikaa (ei ilmoittautumista). Napauta BBC-peliä, jossa on ilmoittautuneita, nähdäksesi keitä ne ovat — BBC:n ylläpitäjät kullalla; ↗-kuvake ja ”Ilmoittaudu BBC:hen” avaavat BBC:n sivuston.'] },
         { id: 'avatars', t: 'Avatarit ja liput',
           b: ['pokerth.netissä avatarisi jaetaan muille pelaajille avatar-palvelimen kautta, ja pelaajalaatikoissa voi näkyä pieni maan lippu. Molemmat ovat valinnaisia ja säädettävissä asetuksista.'] }
       ]

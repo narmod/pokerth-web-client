@@ -481,7 +481,7 @@ export const strings = {
     piNoCupData:'Kò sí ipò ife fún òṣèré yìí.',
     rankingTooltip:'Ipò', rankingTitle:'Ipò', rankingPth:'PokerTH', rankingBbc:'BBC', rankingWec:'WEC',
     rankingLoading:'Ó ń gbé…', rankingSoon:'Ipò ń bọ̀ láìpẹ́.', rankingError:'A kò lè gbé ipò.', rankingEmpty:'Kò sí nǹkan kan.',
-    forumTabPosts:'Àwọn àròkọ', forumTabEvents:'Àwọn ìṣẹ̀lẹ̀', evUpcoming:'Tí ń bọ̀', evChampions:'Àwọn akọni ọjọ́', evResults:'Àbájáde àìpẹ́', evSignups:'Tí ó forúkọ sílẹ̀: {n}', evWecDaily:'Eré ojoojúmọ́ · kò sí ìforúkọsílẹ̀', evError:'A kò lè gbé àwọn ìṣẹ̀lẹ̀.', evNone:'Kò sí ìṣẹ̀lẹ̀ tí ń bọ̀.', evOpenSite:'Ṣí ojú-òpó',
+    forumTabPosts:'Àwọn àròkọ', forumTabEvents:'Àwọn ìṣẹ̀lẹ̀', evUpcoming:'Tí ń bọ̀', evChampions:'Àwọn akọni ọjọ́', evResults:'Àbájáde àìpẹ́', evSignups:'Tí ó forúkọ sílẹ̀: {n}', evWecDaily:'Eré ojoojúmọ́ · kò sí ìforúkọsílẹ̀', evRegsError:'Kò ṣeé ṣe láti gbé àwọn ìforúkọsílẹ̀ wọlé.', evBbcRegister:'Forúkọ sílẹ̀ fún BBC', evError:'A kò lè gbé àwọn ìṣẹ̀lẹ̀.', evNone:'Kò sí ìṣẹ̀lẹ̀ tí ń bọ̀.', evOpenSite:'Ṣí ojú-òpó',
     forumTooltip:'Àpéjọ', forumTitle:'Ìròyìn àpéjọ', forumMarkRead:'Sàmì sí gbogbo rẹ̀ bí èyí tí a ti kà', forumOpen:'Ṣí àpéjọ', forumError:'A kò lè gbé ìròyìn àpéjọ.', advForumNews:'Bọ́tìnì àpéjọ ní orí gbọ̀ngàn', forumOpenPost:'Ṣí àròkọ', forumOpenInForum:'Ṣí i nínú àpéjọ', forumTranslate:'Túmọ̀ àròkọ', forumShowOriginal:'Fi àròkọ àtilẹ̀wá hàn', forumTranslateFailed:'Ìtúmọ̀ kùnà.',
     rankingSearch:'Wá òṣèré…', rankingNoMatch:'A kò rí òṣèré kankan.',
     rankingSeason:'Sáà', rankingAllTime:'Láti ìbẹ̀rẹ̀',

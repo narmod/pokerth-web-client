@@ -11222,6 +11222,55 @@ function handleCommunityEvents(req, res) {
   });
 }
 
+// ── BBC registrations of one game (GET /api/events/bbcregs?id=N) ─────────
+// The nicknames behind a game's sign-up count, for the collapsible rows of the
+// Events tab (QML BbcGameDates.qml loadRegs reads the same endpoint directly;
+// the browser cannot: no CORS header). Only ids of the games currently listed
+// by /api/events are relayed, so the endpoint cannot be used to walk the BBC
+// site; one upstream read per id and minute at most. Never a 5xx.
+const BBC_REGS_TTL_MS = 60 * 1000;
+const _bbcRegsInflight = new Map();       // id -> Promise
+
+function _bbcListedIds() {
+  const hit = RANKING_CACHE.get('communityevents');
+  const ids = new Set();
+  if (!hit) return ids;
+  try {
+    const d = JSON.parse(hit.body);
+    (d.upcoming || []).forEach(function (u) { if (u && u.src === 'bbc' && u.id != null) ids.add(String(u.id)); });
+  } catch (e) {}
+  return ids;
+}
+
+function handleBbcRegs(req, res, query) {
+  const send = function (obj, note) {
+    res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store', 'X-Events-Cache': note });
+    res.end(typeof obj === 'string' ? obj : JSON.stringify(obj));
+  };
+  const id = String((query && query.id) || '');
+  if (!/^\d{1,9}$/.test(id) || !_bbcListedIds().has(id)) { send({ ok: false, error: 'unknown_game' }, 'none'); return; }
+  const key = 'bbcregs:' + id;
+  const hit = RANKING_CACHE.get(key);
+  if (hit && (Date.now() - hit.at) < BBC_REGS_TTL_MS) { send(hit.body, 'hit'); return; }
+  let job = _bbcRegsInflight.get(id);
+  if (!job) {
+    job = rankingFetch(communityEvents.bbcRegsUrl(id), { 'Accept': 'application/json, */*' })
+      .then(function (r) { if (!r.ok) throw new Error('upstream_' + r.status); return r.text(); })
+      .then(communityEvents.parseBbcRegs)
+      .finally(function () { _bbcRegsInflight.delete(id); });
+    _bbcRegsInflight.set(id, job);
+  }
+  job.then(function (data) {
+    if (!data.ok) { if (hit) send(hit.body, 'stale'); else send(data, 'fail'); return; }
+    const body = JSON.stringify(data);
+    RANKING_CACHE.set(key, { at: Date.now(), status: 200, body: body });
+    send(body, 'miss');
+  }).catch(function (err) {
+    if (hit) { send(hit.body, 'stale'); return; }
+    send({ ok: false, error: 'relay_failed', detail: String((err && err.message) || err).slice(0, 80) }, 'fail');
+  });
+}
+
 // ── Translation relay (POST /api/translate) ──────────────────────────────
 // The client calls the gtx endpoint directly first, so the player's own IP
 // carries the quota — the method the QML client uses, and the reason nothing
@@ -11657,6 +11706,10 @@ const httpServer = http.createServer((req, res) => {
   }
   if (reqPathOnly === '/api/events') {
     handleCommunityEvents(req, res);
+    return;
+  }
+  if (reqPathOnly === '/api/events/bbcregs') {
+    handleBbcRegs(req, res, query);
     return;
   }
   if (reqPathOnly === '/api/forumimg') {

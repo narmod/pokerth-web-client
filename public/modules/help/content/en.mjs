@@ -217,7 +217,8 @@ export const help = {
         { id: 'forumnews', t: 'Forum news in the lobby',
           b: ['The newspaper button in the lobby header opens the latest posts from the pokerth.net forum, one entry per topic, each forum with its own colour. The badge on the button counts unread posts; opening a post (new tab) marks it as read, and “Mark all as read” clears everything at once.',
               'This is a web extra: the button can be hidden in Advanced options (“Forum button in the lobby header”).',
-              'The “Events” tab shows the upcoming BBC games and the next Monthly Cup with the number of players signed up, and the latest BBC, WEC and Monthly Cup winners. Times are in your local time, and a tap opens the community site. The option “Show community content (BBC / WEC)” hides this tab.'] },
+              'The “Events” tab shows the upcoming BBC games and the next Monthly Cup with the number of players signed up, and the latest BBC, WEC and Monthly Cup winners. Times are in your local time, and a tap opens the community site. The option “Show community content (BBC / WEC)” hides this tab.',
+              'Upcoming games are grouped by evening, with the daily WEC game at 22:00 server time (no registration needed). Tap a BBC game that has sign-ups to see who is registered — BBC admins in gold; the ↗ icon and “Register for the BBC” open the BBC site.'] },
         { id: 'avatars', t: 'Avatars and flags',
           b: ['On pokerth.net your avatar is distributed to other players through the avatar server, and a small country flag can be shown on player boxes. Both are optional and configurable in the options.'] }
       ]

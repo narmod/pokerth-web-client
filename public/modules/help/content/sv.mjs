@@ -213,7 +213,8 @@ export const help = {
         { id: 'forumnews', t: 'Forumnyheter i lobbyn',
           b: ['Tidningsknappen i lobbyns sidhuvud öppnar de senaste inläggen från pokerth.net-forumet, en rad per ämne, varje forum med sin egen färg. Märket på knappen räknar olästa inlägg; öppnas ett inlägg (ny flik) markeras det som läst, och “Markera allt som läst” rensar allt på en gång.',
               'Det är ett webbtillägg: knappen kan döljas i Avancerade alternativ (“Forumknapp i lobbyns sidhuvud”).',
-              'Fliken ”Evenemang” visar kommande BBC-spel och nästa Monthly Cup med antalet anmälda spelare, samt de senaste vinnarna av BBC, WEC och Monthly Cup. Tiderna visas i din lokala tid, och ett tryck öppnar gemenskapens webbplats. Alternativet ”Visa community-innehåll (BBC / WEC)” döljer den här fliken.'] },
+              'Fliken ”Evenemang” visar kommande BBC-spel och nästa Monthly Cup med antalet anmälda spelare, samt de senaste vinnarna av BBC, WEC och Monthly Cup. Tiderna visas i din lokala tid, och ett tryck öppnar gemenskapens webbplats. Alternativet ”Visa community-innehåll (BBC / WEC)” döljer den här fliken.',
+              'Kommande spel är grupperade per kväll, inklusive det dagliga WEC-spelet kl. 22:00 servertid (ingen anmälan). Tryck på ett BBC-spel med anmälningar för att se vilka som är anmälda — BBC-administratörer i guld; ↗-ikonen och ”Anmäl dig till BBC” öppnar BBC-sidan.'] },
         { id: 'avatars', t: 'Avatarer och flaggor',
           b: ['På pokerth.net distribueras din avatar till andra spelare via avatarservern, och en liten landsflagga kan visas på spelarrutorna. Båda är valfria och kan ställas in i inställningarna.'] }
       ]

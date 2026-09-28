@@ -213,7 +213,8 @@ export const help = {
         { id: 'forumnews', t: 'Novità dal forum nella lobby',
           b: ['Il pulsante giornale nell\'intestazione della lobby apre gli ultimi messaggi del forum di pokerth.net, una voce per argomento, ogni forum con il proprio colore. Il badge sul pulsante conta i messaggi non letti; aprire un messaggio (nuova scheda) lo segna come letto, e “Segna tutto come letto” azzera tutto in una volta.',
               'È un extra web: il pulsante può essere nascosto nelle Opzioni avanzate (“Pulsante forum nell\'intestazione della lobby”).',
-              'La scheda «Eventi» mostra le prossime partite BBC e la prossima Monthly Cup con il numero di giocatori iscritti, e gli ultimi vincitori di BBC, WEC e Monthly Cup. Gli orari sono nella tua ora locale, e un tocco apre il sito della community. L\'opzione «Mostra i contenuti della community (BBC / WEC)» nasconde questa scheda.'] },
+              'La scheda «Eventi» mostra le prossime partite BBC e la prossima Monthly Cup con il numero di giocatori iscritti, e gli ultimi vincitori di BBC, WEC e Monthly Cup. Gli orari sono nella tua ora locale, e un tocco apre il sito della community. L\'opzione «Mostra i contenuti della community (BBC / WEC)» nasconde questa scheda.',
+              'Le prossime partite sono raggruppate per serata, con la partita giornaliera della WEC alle 22:00 ora del server (senza iscrizione). Tocca una partita BBC con iscritti per vedere chi si è iscritto — gli admin BBC in oro; l’icona ↗ e «Iscriviti alla BBC» aprono il sito della BBC.'] },
         { id: 'avatars', t: 'Avatar e bandiere',
           b: ['Su pokerth.net il tuo avatar viene distribuito agli altri giocatori tramite il server degli avatar, e una piccola bandiera del paese può apparire sui riquadri dei giocatori. Entrambi sono opzionali e configurabili nelle opzioni.'] }
       ]

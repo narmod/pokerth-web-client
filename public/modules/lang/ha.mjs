@@ -481,7 +481,7 @@ export const strings = {
     piNoCupData:'Babu matsayin kofi ga wannan ɗan wasa.',
     rankingTooltip:'Matsayi', rankingTitle:'Matsayi', rankingPth:'PokerTH', rankingBbc:'BBC', rankingWec:'WEC',
     rankingLoading:'Ana lodawa…', rankingSoon:'Matsayi nan ba da jimawa ba.', rankingError:'Ba a iya loda matsayi ba.', rankingEmpty:'Babu shigarwa.',
-    forumTabPosts:'Rubuce-rubuce', forumTabEvents:'Abubuwan da ke faruwa', evUpcoming:'Masu zuwa', evChampions:'Zakarun rana', evResults:'Sakamakon kwanan nan', evSignups:'An yi rajista: {n}', evWecDaily:'Wasan yau da kullum · babu rajista', evError:'Ba a iya loda abubuwan da ke faruwa ba.', evNone:'Babu abin da ke tafe.', evOpenSite:'Buɗe shafin',
+    forumTabPosts:'Rubuce-rubuce', forumTabEvents:'Abubuwan da ke faruwa', evUpcoming:'Masu zuwa', evChampions:'Zakarun rana', evResults:'Sakamakon kwanan nan', evSignups:'An yi rajista: {n}', evWecDaily:'Wasan yau da kullum · babu rajista', evRegsError:'Ba a iya loda rajistocin ba.', evBbcRegister:'Yi rajista don BBC', evError:'Ba a iya loda abubuwan da ke faruwa ba.', evNone:'Babu abin da ke tafe.', evOpenSite:'Buɗe shafin',
     forumTooltip:'Dandali', forumTitle:'Labaran dandali', forumMarkRead:'Yi wa duka alamar an karanta', forumOpen:'Buɗe dandali', forumError:'Ba a iya loda labaran dandali ba.', advForumNews:'Maɓallin dandali a saman zaure', forumOpenPost:'Buɗe rubutu', forumOpenInForum:'Buɗe a dandali', forumTranslate:'Fassara rubutu', forumShowOriginal:'Nuna asalin rubutu', forumTranslateFailed:'Fassara ta kasa.',
     rankingSearch:'Nemi ɗan wasa…', rankingNoMatch:'Ba a sami ɗan wasa ba.',
     rankingSeason:'Kaka', rankingAllTime:'Duk lokaci',

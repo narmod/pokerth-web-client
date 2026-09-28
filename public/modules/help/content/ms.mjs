@@ -215,7 +215,8 @@ export const help = {
         { id: 'forumnews', t: 'Berita forum di lobi',
           b: ['Tombol koran di kepala lobi membuka postingan terbaru dari forum pokerth.net, satu entri per topik, setiap forum dengan warnanya sendiri. Lencana pada tombol menghitung postingan belum dibaca; membuka postingan (tab baru) menandainya telah dibaca, dan “Tandai semua telah dibaca” membersihkan semuanya sekaligus.',
               'Ini tambahan web: tombolnya boleh disembunyikan di Opsi lanjutan (“Tombol forum di kepala lobi”).',
-              'Tab “Acara” memaparkan permainan BBC akan datang dan Monthly Cup seterusnya berserta bilangan pemain yang berdaftar, serta pemenang terkini BBC, WEC dan Monthly Cup. Masa dipaparkan dalam waktu tempatan anda, dan ketikan membuka laman komuniti. Pilihan “Tampilkan konten komunitas (BBC / WEC)” menyembunyikan tab ini.'] },
+              'Tab “Acara” memaparkan permainan BBC akan datang dan Monthly Cup seterusnya berserta bilangan pemain yang berdaftar, serta pemenang terkini BBC, WEC dan Monthly Cup. Masa dipaparkan dalam waktu tempatan anda, dan ketikan membuka laman komuniti. Pilihan “Tampilkan konten komunitas (BBC / WEC)” menyembunyikan tab ini.',
+              'Permainan akan datang dikumpulkan mengikut malam, termasuk permainan harian WEC pada 22:00 waktu pelayan (tanpa pendaftaran). Ketik permainan BBC yang ada pendaftaran untuk melihat siapa yang berdaftar — admin BBC berwarna emas; ikon ↗ dan “Daftar untuk BBC” membuka laman BBC.'] },
         { id: 'avatars', t: 'Avatar dan bendera',
           b: ['Di pokerth.net, avatar Anda didistribusikan ke pemain lain lewat server avatar, dan bendera negara kecil dapat ditampilkan di kotak pemain. Keduanya opsional dan dapat dikonfigurasi di opsi.'] }
       ]

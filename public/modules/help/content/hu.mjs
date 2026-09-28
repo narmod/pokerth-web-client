@@ -213,7 +213,8 @@ export const help = {
         { id: 'forumnews', t: 'Fórumhírek a lobbiban',
           b: ['A lobbi fejlécének újság gombja megnyitja a pokerth.net fórum legfrissebb bejegyzéseit, témánként egy sorral, minden fórum saját színnel. A gombon lévő jelvény a olvasatlan bejegyzéseket számolja; egy bejegyzés megnyitása (új lap) olvasottnak jelöli, az „Összes megjelölése olvasottként” pedig egyszerre töröl mindent.',
               'Ez webes extra: a gomb elrejthető a speciális beállításokban („Fórum gomb a lobbi fejlécében”).',
-              'A(z) „Események” fül a közelgő BBC-játékokat és a következő Monthly Cupot mutatja a jelentkezett játékosok számával, valamint a legutóbbi BBC-, WEC- és Monthly Cup-győzteseket. Az időpontok a helyi időd szerint jelennek meg, egy koppintás pedig megnyitja a közösség oldalát. A(z) „Közösségi tartalom megjelenítése (BBC / WEC)” beállítás elrejti ezt a fület.'] },
+              'A(z) „Események” fül a közelgő BBC-játékokat és a következő Monthly Cupot mutatja a jelentkezett játékosok számával, valamint a legutóbbi BBC-, WEC- és Monthly Cup-győzteseket. Az időpontok a helyi időd szerint jelennek meg, egy koppintás pedig megnyitja a közösség oldalát. A(z) „Közösségi tartalom megjelenítése (BBC / WEC)” beállítás elrejti ezt a fület.',
+              'A közelgő játékok estékre csoportosítva jelennek meg, a napi WEC-játékkal együtt szerveridő szerint 22:00-kor (regisztráció nélkül). Koppints egy jelentkezőkkel rendelkező BBC-játékra, hogy lásd, kik jelentkeztek — a BBC adminok aranyszínűek; a ↗ ikon és a „Jelentkezés a BBC-re” megnyitja a BBC oldalát.'] },
         { id: 'avatars', t: 'Avatárok és zászlók',
           b: ['A pokerth.net oldalon az avatárodat az avatárszerver juttatja el a többi játékoshoz, és a játékosdobozokon egy kis országzászló jelenhet meg. Mindkettő választható, és a beállításokban konfigurálható.'] }
       ]

@@ -35,6 +35,10 @@ ok(E.evUpcomingTitle({ src: 'bbc', step: 2, title: null }, 'en', 'Step') === 'St
 ok(E.evUpcomingTitle({ src: 'bbc', step: 1, title: 'Special' }, 'en', 'Etape') === 'Etape 1 \u00b7 Special', 'with the translated word and the optional title');
 ok(E.evStepBadge({ src: 'bbc', step: 3 }).text === 'STEP 3' && E.evStepBadge({ src: 'bbc', step: 3 }).cls === 'fn-forum ev-stepb ev-step3', 'BBC step badge = STEP n, coloured per step (QML stepColor)');
 ok(E.evStepBadge({ src: 'bbc', step: 0 }) === null && E.evStepBadge({ src: 'mc', month: 9 }) === null, 'no step badge for special games and other sources');
+// Collapsible registrations (QML BbcGameDates.loadRegs / expandable).
+ok(E.evExpandable({ src: 'bbc', id: 9779, signups: 3 }) && !E.evExpandable({ src: 'bbc', id: 9779, signups: 0 }) && !E.evExpandable({ src: 'bbc', signups: 3 }) && !E.evExpandable({ src: 'mc', id: 1, signups: 53 }), 'only BBC games with sign-ups (and an id) unfold');
+{ const t = 1e12, r = { players: [1, 2, 3], at: t, loading: false, error: false };
+  ok(E.evRegsFresh(r, 3, t + 60000) && !E.evRegsFresh(r, 4, t + 60000) && !E.evRegsFresh(r, 3, t + 121000) && !E.evRegsFresh(Object.assign({}, r, { error: true }), 3, t), 'registrations are re-read when the count changed, after 2 min, or after an error'); }
 // WEC daily game: 22:00 server time (Europe/Berlin), one per evening.
 ok(E.evGameTimeToUtc(2026, 9, 28, 22, 0) === Date.UTC(2026, 8, 28, 20, 0) && E.evGameTimeToUtc(2026, 12, 1, 22, 0) === Date.UTC(2026, 11, 1, 21, 0), 'Berlin wall time -> UTC, summer and winter');
 { const w = E.evWecDaily('2026-10-24', '2026-10-26');

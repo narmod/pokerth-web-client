@@ -481,7 +481,7 @@ export const strings = {
     piNoCupData:'此玩家沒有獎盃排名。',
     rankingTooltip:'排行榜', rankingTitle:'排行榜', rankingPth:'PokerTH', rankingBbc:'BBC', rankingWec:'WEC',
     rankingLoading:'載入中…', rankingSoon:'排行榜即將推出。', rankingError:'無法載入排行榜。', rankingEmpty:'沒有項目。',
-    forumTabPosts:'帖子', forumTabEvents:'活動', evUpcoming:'即將開始', evChampions:'今日冠軍', evResults:'最新結果', evSignups:'已報名：{n}', evWecDaily:'每日比賽 · 毋須報名', evError:'無法載入活動。', evNone:'暫無即將開始的活動。', evOpenSite:'開啟網站',
+    forumTabPosts:'帖子', forumTabEvents:'活動', evUpcoming:'即將開始', evChampions:'今日冠軍', evResults:'最新結果', evSignups:'已報名：{n}', evWecDaily:'每日比賽 · 毋須報名', evRegsError:'無法載入報名名單。', evBbcRegister:'報名 BBC', evError:'無法載入活動。', evNone:'暫無即將開始的活動。', evOpenSite:'開啟網站',
     forumTooltip:'論壇', forumTitle:'論壇消息', forumMarkRead:'全部標為已讀', forumOpen:'開啟論壇', forumError:'無法載入論壇摘要。', advForumNews:'大廳標題列的論壇按鈕', forumOpenPost:'開啟帖子', forumOpenInForum:'在論壇中開啟', forumTranslate:'翻譯帖子', forumShowOriginal:'顯示原始帖子', forumTranslateFailed:'翻譯失敗。',
     rankingSearch:'搜尋玩家…', rankingNoMatch:'找不到玩家。',
     rankingSeason:'賽季', rankingAllTime:'歷來',
