@@ -1116,7 +1116,9 @@ function _plUserActive() { return Date.now() - _plUserAt < PL_IDLE_MS; }
 // de la page). smooth=false pour un re-rendu (pas d'animation parasite).
 function _plFollow(smooth) {
   var ul = _plUl();
-  if (!ul || ul.hidden || !ul.clientHeight) return;
+  // Pas de test ul.hidden : .music-pl est en display:flex, ce qui l'emporte sur
+  // l'attribut [hidden] — la liste reste affichée. On se fie à la hauteur réelle.
+  if (!ul || !ul.clientHeight) return;
   var li = ul.querySelector('.music-pl-item.is-cur');
   if (!li) return;
   var ur = ul.getBoundingClientRect(), lr = li.getBoundingClientRect();

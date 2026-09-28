@@ -1,4 +1,7 @@
-2026-09-28 version 2.1.9-web.233 (current series):
+2026-09-28 version 2.1.9-web.234 (current series):
+- bugfix: music player — the playlist now really scrolls to the track being played (it stayed at the top)
+
+2026-09-28 version 2.1.9-web.233:
 - improvement: music player — the playlist follows the track being played: it scrolls to it and highlights it; scroll freely, it comes back to the current track after a few seconds without touching the list
 
 2026-09-28 version 2.1.9-web.232:
