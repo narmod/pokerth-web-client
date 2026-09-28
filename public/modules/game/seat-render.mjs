@@ -1400,24 +1400,31 @@ function renderSeatsImmediate() {
         }
       }
       if (!_commSkip3) {
-      // web.221 : en paysage, _csComm est en px d'ÉCRAN (comme la
-      // communityScale QML, calculée en px de zone). #g-comm vit dans
-      // #g-table-scaler (autofit ×0.x–1.4) : on divise par l'échelle
-      // effective pour que la taille À L'ÉCRAN soit celle du QML (le portrait
-      // le fait déjà plus haut). Garde-fou : la rangée (264×64 locaux) reste
-      // dans le feutre, sinon l'autofit oscillerait.
-      var _csWrite = _csComm;
-      if (!_forceSeatPortrait && _commEffL > 0.05 && Math.abs(_commEffL - 1) > 0.001) {
-        _csWrite = _csComm / _commEffL;
-        try {
-          var _fEl5 = document.querySelector('.felt-oval');
-          if (_fEl5 && _fEl5.offsetWidth > 0) {
-            var _capIn5 = Math.min((_fEl5.offsetWidth - 12) / 264, (_fEl5.offsetHeight - 12) / 64);
-            if (_capIn5 > 0.4 && _csWrite > _capIn5) _csWrite = _capIn5;
-          }
-        } catch (eF5) {}
+      // web.221/222 : en paysage, _csComm est en px d'ÉCRAN (comme la
+      // communityScale QML, calculée en px de zone). La racine garde cette
+      // valeur : les consommateurs HORS table (cartes de la self-box, largeur
+      // de la barre d'action = 264·cs, pastilles, mini-board) la lisent telle
+      // quelle. Seul #g-table-scaler (autofit ×0.x–1.4 : rangée, badge du pot,
+      // badge de main gagnante) reçoit la valeur divisée par l'échelle
+      // effective, pour que la taille À L'ÉCRAN soit celle du QML. Garde-fou :
+      // la rangée (264×64 locaux) reste dans le feutre (sinon l'autofit oscille).
+      document.documentElement.style.setProperty('--comm-scale', _csComm.toFixed(3));
+      var _scEl = document.getElementById('g-table-scaler');
+      if (_scEl) {
+        if (!_forceSeatPortrait && _commEffL > 0.05 && Math.abs(_commEffL - 1) > 0.001) {
+          var _csLoc = _csComm / _commEffL;
+          try {
+            var _fEl5 = document.querySelector('.felt-oval');
+            if (_fEl5 && _fEl5.offsetWidth > 0) {
+              var _capIn5 = Math.min((_fEl5.offsetWidth - 12) / 264, (_fEl5.offsetHeight - 12) / 64);
+              if (_capIn5 > 0.4 && _csLoc > _capIn5) _csLoc = _capIn5;
+            }
+          } catch (eF5) {}
+          _scEl.style.setProperty('--comm-scale', _csLoc.toFixed(3));
+        } else {
+          _scEl.style.removeProperty('--comm-scale');
+        }
       }
-      document.documentElement.style.setProperty('--comm-scale', _csWrite.toFixed(3));
       // ── Fond de table (parité QML tableBackgroundImage, mode fullscreen) ──
       // align:center : image agrandie pour couvrir, CENTRÉE sur (milieu zone,
       // communityCenterY), × TableBackgroundZoom — le tapis du visuel tombe
@@ -1485,6 +1492,7 @@ function renderSeatsImmediate() {
     } else if (window._commScalePending) {
       window._commScalePending = false;
       document.documentElement.style.removeProperty('--comm-scale');
+      try { var _scEl0 = document.getElementById('g-table-scaler'); if (_scEl0) _scEl0.style.removeProperty('--comm-scale'); } catch (eSc0) {}
       document.documentElement.style.removeProperty('--comm-shift-y');
       document.documentElement.style.removeProperty('--wallpaper-dyn-size');
       document.documentElement.style.removeProperty('--wallpaper-dyn-pos');

@@ -1,4 +1,7 @@
-2026-09-28 version 2.1.9-web.221 (current series):
+2026-09-28 version 2.1.9-web.222 (current series):
+- bugfix: action bar — on large screens it is again as wide as the community cards (it was stuck at its minimum width since the previous version)
+
+2026-09-28 version 2.1.9-web.221:
 - bugfix: community cards — their size no longer jumps or shrinks when the window gets wider, and is no longer oversized on large screens: it now follows the official client
 - bugfix: community cards and pot no longer slide under a player box at 4–5 players on some window sizes
 
