@@ -8716,6 +8716,9 @@ html[data-seat-edit="1"] #g-seats .seat.seat-ghost { outline: none; cursor: defa
   font-weight: 600;
 }
 .music-pl { scroll-behavior: auto; overscroll-behavior: contain; }
+/* display:flex ci-dessus l'emporte sur [hidden] : sans cette règle le bouton
+   ▸/▾ ne repliait jamais la liste. */
+.music-pl[hidden] { display: none; }
 .music-pl-num { flex: 0 0 auto; width: 1.4em; text-align: right; color: var(--gold-dim); font-variant-numeric: tabular-nums; font-size: var(--fs-sm); }
 .music-pl-ttl { flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .music-pl-eq { flex: 0 0 auto; color: var(--sel, var(--gold)); font-size: var(--fs-sm); }
