@@ -11,7 +11,7 @@ export const meta = {
 
 export const strings = {
     // Mascotte animée (modules/mascot, extra web)
-    advMascot:'Animirana maskota (as) na početnom zaslonu i u predvorju kad ste neaktivni', mascotHello:'Bok!', mascotBye:'Vidimo se!', mascotTada:'Tadaa!', mascotKing:'Kralj stola!',
+    advMascot:'Animirana maskota (as) na početnom zaslonu i u predvorju kad ste neaktivni', mascotHello:'Bok!', mascotBye:'Vidimo se!', mascotTada:'Tadaa!', mascotKing:'Kralj stola!', mascotAnyone:'Ima li koga?', mascotCheese:'Sir!', mascotTable:'Novi stol!', mascotMail:'Imaš poruku!', mascotBravo:'Bravo!',
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'Moja bilješka', nvRating:'Ocjena', nvPlaceholder:'Plaća svaki 3-bet…', nvSaved:'Spremljeno', nvTagNone:'Bez oznake', nvTagRed:'Opasan', nvTagOrange:'Agresivan', nvTagYellow:'Promatrati', nvTagGreen:'Riba', nvTagBlue:'Tijesan', nvTagPurple:'Lukav', nvLabelPh:'Naziv oznake', nvLabelTip:'Preimenuj oznaku — vrijedi za sve igrače s ovom bojom',
     ppMyStats:'Moja statistika',

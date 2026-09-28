@@ -18,7 +18,7 @@ export const meta = {
 
 export const strings = {
     // Mascotte animée (modules/mascot, extra web)
-    advMascot:'Идэвхгүй үед нүүр дэлгэц болон лоббид хөдөлгөөнт сахиус (тамга)', mascotHello:'Сайн уу!', mascotBye:'Дараа уулзъя!', mascotTada:'Та-да!', mascotKing:'Ширээний хаан!',
+    advMascot:'Идэвхгүй үед нүүр дэлгэц болон лоббид хөдөлгөөнт сахиус (тамга)', mascotHello:'Сайн уу!', mascotBye:'Дараа уулзъя!', mascotTada:'Та-да!', mascotKing:'Ширээний хаан!', mascotAnyone:'Хүн байна уу?', mascotCheese:'Бяслаг!', mascotTable:'Шинэ ширээ!', mascotMail:'Танд захидал ирлээ!', mascotBravo:'Сайн байна!',
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'Миний тэмдэглэл', nvRating:'Үнэлгээ', nvPlaceholder:'Ямар ч 3-bet-д call хийдэг…', nvSaved:'Хадгалсан', nvTagNone:'Шошгогүй', nvTagRed:'Аюул', nvTagOrange:'Түрэмгий', nvTagYellow:'Болгоомжтой', nvTagGreen:'Загас', nvTagBlue:'Тайт', nvTagPurple:'Зальтай', nvLabelPh:'Шошгоны нэр', nvLabelTip:'Энэ шошгоны нэрийг өөрчлөх — энэ өнгөтэй бүх тоглогчид нөлөөлнө',
     ppMyStats:'Миний статистик',

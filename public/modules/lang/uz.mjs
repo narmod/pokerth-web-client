@@ -18,7 +18,7 @@ export const meta = {
 
 export const strings = {
     // Mascotte animée (modules/mascot, extra web)
-    advMascot:'Faol bo‘lmaganingizda bosh ekranda va lobbida animatsion maskot (Tuz)', mascotHello:'Salom!', mascotBye:'Ko‘rishguncha!', mascotTada:'Tadaa!', mascotKing:'Stol qiroli!',
+    advMascot:'Faol bo‘lmaganingizda bosh ekranda va lobbida animatsion maskot (Tuz)', mascotHello:'Salom!', mascotBye:'Ko‘rishguncha!', mascotTada:'Tadaa!', mascotKing:'Stol qiroli!', mascotAnyone:'Kimdir bormi?', mascotCheese:'Pishloq!', mascotTable:'Yangi stol!', mascotMail:'Sizga xat keldi!', mascotBravo:'Barakalla!',
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'Mening eslatmam', nvRating:'Baho', nvPlaceholder:'Har qanday 3-betga call qiladi…', nvSaved:'Saqlandi', nvTagNone:'Yorliqsiz', nvTagRed:'Xavfli', nvTagOrange:'Agressiv', nvTagYellow:'Kuzatish', nvTagGreen:'Fish', nvTagBlue:'Tayt', nvTagPurple:'Ayyor', nvLabelPh:'Yorliq nomi', nvLabelTip:'Bu yorliq nomini oʻzgartirish — shu rangdagi barcha oʻyinchilarga qoʻllanadi',
     ppMyStats:'Mening statistikam',

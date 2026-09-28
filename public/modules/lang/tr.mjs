@@ -13,7 +13,7 @@ export const meta = {
 
 export const strings = {
     // Mascotte animée (modules/mascot, extra web)
-    advMascot:'Boştayken ana ekranda ve lobide animasyonlu maskot (As)', mascotHello:'Selam!', mascotBye:'Görüşürüz!', mascotTada:'Tadaa!', mascotKing:'Masanın kralı!',
+    advMascot:'Boştayken ana ekranda ve lobide animasyonlu maskot (As)', mascotHello:'Selam!', mascotBye:'Görüşürüz!', mascotTada:'Tadaa!', mascotKing:'Masanın kralı!', mascotAnyone:'Kimse yok mu?', mascotCheese:'Peynir!', mascotTable:'Yeni bir masa!', mascotMail:'Mesajın var!', mascotBravo:'Aferin!',
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'Notum', nvRating:'Değerlendirme', nvPlaceholder:'Her 3-bet’i öder…', nvSaved:'Kaydedildi', nvTagNone:'Etiket yok', nvTagRed:'Tehlikeli', nvTagOrange:'Agresif', nvTagYellow:'İzle', nvTagGreen:'Balık', nvTagBlue:'Sıkı', nvTagPurple:'Kurnaz', nvLabelPh:'Etiket adı', nvLabelTip:'Etiketi yeniden adlandır — bu renkteki tüm oyuncular için geçerli',
     ppMyStats:'İstatistiklerim',

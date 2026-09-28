@@ -18,7 +18,7 @@ export const meta = {
 
 export const strings = {
     // Mascotte animée (modules/mascot, extra web)
-    advMascot:'အသုံးမပြုချိန်တွင် ပင်မစခရင်နှင့် လော်ဘီတွင် လှုပ်ရှားသော မက်စကော့ (တစ်ကွက်)', mascotHello:'ဟိုင်း!', mascotBye:'နောက်မှတွေ့မယ်!', mascotTada:'တာဒါ!', mascotKing:'စားပွဲရဲ့ ဘုရင်!',
+    advMascot:'အသုံးမပြုချိန်တွင် ပင်မစခရင်နှင့် လော်ဘီတွင် လှုပ်ရှားသော မက်စကော့ (တစ်ကွက်)', mascotHello:'ဟိုင်း!', mascotBye:'နောက်မှတွေ့မယ်!', mascotTada:'တာဒါ!', mascotKing:'စားပွဲရဲ့ ဘုရင်!', mascotAnyone:'ဘယ်သူရှိလဲ?', mascotCheese:'ချိစ်!', mascotTable:'စားပွဲအသစ်!', mascotMail:'သင့်ထံ စာရောက်နေပြီ!', mascotBravo:'တော်လိုက်တာ!',
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'ကျွန်ုပ်၏ မှတ်စု', nvRating:'အဆင့်သတ်မှတ်ချက်', nvPlaceholder:'3-bet တိုင်း လိုက်တယ်…', nvSaved:'သိမ်းပြီးပါပြီ', nvTagNone:'အညွှန်းမရှိ', nvTagRed:'အန္တရာယ်', nvTagOrange:'ကြမ်းတမ်း', nvTagYellow:'စောင့်ကြည့်ရန်', nvTagGreen:'ငါး', nvTagBlue:'တင်းကျပ်', nvTagPurple:'လှည့်စားတတ်', nvLabelPh:'အညွှန်းအမည်', nvLabelTip:'ဤအညွှန်းကို အမည်ပြောင်းပါ — ဤအရောင်ရှိသော ကစားသမားတိုင်းအတွက် သက်ရောက်သည်',
     ppMyStats:'ကျွန်ုပ်၏ စာရင်းအင်းများ',

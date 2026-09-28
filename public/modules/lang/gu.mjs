@@ -15,7 +15,7 @@ export const meta = {
 
 export const strings = {
     // Mascotte animée (modules/mascot, extra web)
-    advMascot:'નિષ્ક્રિય હોય ત્યારે હોમ સ્ક્રીન અને લૉબીમાં એનિમેટેડ માસ્કોટ (એક્કો)', mascotHello:'નમસ્તે!', mascotBye:'ફરી મળીશું!', mascotTada:'ટા-ડા!', mascotKing:'ટેબલનો રાજા!',
+    advMascot:'નિષ્ક્રિય હોય ત્યારે હોમ સ્ક્રીન અને લૉબીમાં એનિમેટેડ માસ્કોટ (એક્કો)', mascotHello:'નમસ્તે!', mascotBye:'ફરી મળીશું!', mascotTada:'ટા-ડા!', mascotKing:'ટેબલનો રાજા!', mascotAnyone:'કોઈ છે?', mascotCheese:'ચીઝ!', mascotTable:'એક નવું ટેબલ!', mascotMail:'તમારો સંદેશ આવ્યો છે!', mascotBravo:'શાબાશ!',
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'મારી નોંધ', nvRating:'રેટિંગ', nvPlaceholder:'કોઈ પણ 3-bet ને Call કરે છે…', nvSaved:'સેવ થયું', nvTagNone:'લેબલ નથી', nvTagRed:'જોખમ', nvTagOrange:'આક્રમક', nvTagYellow:'સાવધાન', nvTagGreen:'ફિશ', nvTagBlue:'ટાઇટ', nvTagPurple:'ચાલાક', nvLabelPh:'લેબલનું નામ', nvLabelTip:'આ લેબલનું નામ બદલો — આ રંગના બધા ખેલાડીઓને લાગુ પડે છે',
     ppMyStats:'મારા આંકડા',

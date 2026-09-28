@@ -18,7 +18,7 @@ export const meta = {
 
 export const strings = {
     // Mascotte animée (modules/mascot, extra web)
-    advMascot:'Animita maskoto (la Aso) sur la hejma ekrano kaj en la vestiblo dum neaktiveco', mascotHello:'Saluton!', mascotBye:'Ĝis!', mascotTada:'Tada!', mascotKing:'Reĝo de la tablo!',
+    advMascot:'Animita maskoto (la Aso) sur la hejma ekrano kaj en la vestiblo dum neaktiveco', mascotHello:'Saluton!', mascotBye:'Ĝis!', mascotTada:'Tada!', mascotKing:'Reĝo de la tablo!', mascotAnyone:'Ĉu iu estas?', mascotCheese:'Fromaĝo!', mascotTable:'Nova tablo!', mascotMail:'Vi havas poŝton!', mascotBravo:'Brave!',
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'Mia noto', nvRating:'Taksado', nvPlaceholder:'Vokas ĉiun ajn 3-bet…', nvSaved:'Konservita', nvTagNone:'Sen etikedo', nvTagRed:'Danĝero', nvTagOrange:'Agresema', nvTagYellow:'Atentu', nvTagGreen:'Fiŝo', nvTagBlue:'Streta', nvTagPurple:'Ruza', nvLabelPh:'Nomo de la etikedo', nvLabelTip:'Alinomi ĉi tiun etikedon — validas por ĉiuj ludantoj kun ĉi tiu koloro',
     ppMyStats:'Miaj statistikoj',

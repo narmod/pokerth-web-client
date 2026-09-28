@@ -10,7 +10,7 @@ export const meta = {
 
 export const strings = {
     // Mascotte animée (modules/mascot, extra web)
-    advMascot:'Animert maskot (esset) på startskjermen og i lobbyen ved inaktivitet', mascotHello:'Hei!', mascotBye:'Vi ses!', mascotTada:'Tada!', mascotKing:'Kongen av bordet!',
+    advMascot:'Animert maskot (esset) på startskjermen og i lobbyen ved inaktivitet', mascotHello:'Hei!', mascotBye:'Vi ses!', mascotTada:'Tada!', mascotKing:'Kongen av bordet!', mascotAnyone:'Noen her?', mascotCheese:'Si appelsin!', mascotTable:'Et nytt bord!', mascotMail:'Du har fått post!', mascotBravo:'Godt jobbet!',
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'Mitt notat', nvRating:'Vurdering', nvPlaceholder:'Caller enhver 3-bet…', nvSaved:'Lagret', nvTagNone:'Ingen etikett', nvTagRed:'Farlig', nvTagOrange:'Aggressiv', nvTagYellow:'Følg med', nvTagGreen:'Fisk', nvTagBlue:'Tight', nvTagPurple:'Slu', nvLabelPh:'Etikettnavn', nvLabelTip:'Gi etiketten nytt navn — gjelder alle spillere med denne fargen',
     ppMyStats:'Min statistikk',

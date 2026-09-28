@@ -18,7 +18,7 @@ export const meta = {
 
 export const strings = {
     // Mascotte animée (modules/mascot, extra web)
-    advMascot:'Аракетсиз турганда башкы экранда жана лоббиде анимациялык талисман (туз)', mascotHello:'Салам!', mascotBye:'Көрүшкөнчө!', mascotTada:'Та-да!', mascotKing:'Үстөлдүн падышасы!',
+    advMascot:'Аракетсиз турганда башкы экранда жана лоббиде анимациялык талисман (туз)', mascotHello:'Салам!', mascotBye:'Көрүшкөнчө!', mascotTada:'Та-да!', mascotKing:'Үстөлдүн падышасы!', mascotAnyone:'Бирөө барбы?', mascotCheese:'Сыр!', mascotTable:'Жаңы стол!', mascotMail:'Сизге кат келди!', mascotBravo:'Азаматсың!',
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'Менин эскертмелерим', nvRating:'Баа', nvPlaceholder:'Ар кандай 3-bet\'ке call кылат…', nvSaved:'Сакталды', nvTagNone:'Белгисиз', nvTagRed:'Коркунуч', nvTagOrange:'Агрессивдүү', nvTagYellow:'Этият бол', nvTagGreen:'Балык', nvTagBlue:'Тайт', nvTagPurple:'Амалкөй', nvLabelPh:'Белгинин аталышы', nvLabelTip:'Бул белгинин атын өзгөртүү — ушул түстөгү бардык оюнчуларга таасир этет',
     ppMyStats:'Менин статистикам',

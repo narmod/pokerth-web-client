@@ -47,7 +47,8 @@ const LABELS = {
   door: 'Door', poof: 'Puff', edge: 'Screen edge', peek: 'Peek (window top)',
   moon: 'Moonwalk', climb: 'Climb & fall', magic: 'Magic', king: 'King', knight: 'Knight', grim: 'Grimaces',
   sleep: 'Nap', juggle: 'Juggling', pistol: 'Cowboy (BANG!)', rope: 'Skipping rope',
-  banana: 'Banana peel', bluff: 'Bluff (7-2)', ledge: 'Sit on a window', hang: 'Hang under a window', knock: 'Knock on the screen', push: 'Push the edge', none: '— greeting only —', duck: 'Duck (after peek)',
+  banana: 'Banana peel', bluff: 'Bluff (7-2)', ledge: 'Sit on a window', hang: 'Hang under a window', knock: 'Knock on the screen', push: 'Push the edge',
+  dealer: 'Dealer', tower: 'Chip tower', felt: 'Lonely felt', umbrella: 'Rain cloud', selfie: 'Selfie', bubbles: 'Soap bubbles', guitar: 'Guitar', dance: 'Dance', none: '— greeting only —', duck: 'Duck (after peek)',
   tophat: 'Top hat', wizard: 'Wizard', crown: 'Crown', helmet: 'Helmet', fedora: 'Fedora', nightcap: 'Nightcap', cowboy: 'Cowboy hat',
   wand: 'Wand', scepter: 'Scepter', sword: 'Sword', cane: 'Cane', pistol: 'Pistol',
 };

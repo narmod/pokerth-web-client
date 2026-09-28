@@ -11,7 +11,7 @@ export const meta = {
 
 export const strings = {
     // Mascotte animée (modules/mascot, extra web)
-    advMascot:'Mascotă animată (Asul) pe ecranul de start și în lobby când ești inactiv', mascotHello:'Salut!', mascotBye:'Pe curând!', mascotTada:'Tadaa!', mascotKing:'Regele mesei!',
+    advMascot:'Mascotă animată (Asul) pe ecranul de start și în lobby când ești inactiv', mascotHello:'Salut!', mascotBye:'Pe curând!', mascotTada:'Tadaa!', mascotKing:'Regele mesei!', mascotAnyone:'E cineva?', mascotCheese:'Zâmbiți!', mascotTable:'O masă nouă!', mascotMail:'Ai un mesaj!', mascotBravo:'Bravo!',
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'Nota mea', nvRating:'Evaluare', nvPlaceholder:'Plătește orice 3-bet…', nvSaved:'Salvat', nvTagNone:'Fără etichetă', nvTagRed:'Periculos', nvTagOrange:'Agresiv', nvTagYellow:'De urmărit', nvTagGreen:'Pește', nvTagBlue:'Strâns', nvTagPurple:'Viclean', nvLabelPh:'Numele etichetei', nvLabelTip:'Redenumește eticheta — se aplică tuturor jucătorilor cu această culoare',
     ppMyStats:'Statisticile mele',

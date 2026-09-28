@@ -178,7 +178,8 @@ export function pickWith(fn, st, rects, rnd = Math.random) {
 export const ENTRIES = ['door', 'poof', 'edge', 'peek'];
 export const EXITS = ['door', 'poof', 'edge', 'duck'];
 export const ACTIONS = ['moon', 'climb', 'magic', 'king', 'knight', 'grim', 'sleep', 'juggle', 'pistol', 'rope',
-  'banana', 'bluff', 'ledge', 'hang', 'knock', 'push'];
+  'banana', 'bluff', 'ledge', 'hang', 'knock', 'push',
+  'dealer', 'tower', 'felt', 'umbrella', 'selfie', 'bubbles', 'guitar', 'dance'];
 /** Actions that need a panel: climb (side or front), ledge (its top), hang (its bottom). */
 export const NEEDS = { climb: 'climb', ledge: 'ledge', hang: 'hang' };
 
@@ -193,7 +194,10 @@ export function costumeFor(action, rnd = Math.random) {
     case 'pistol': return { hat: 'cowboy', tool: 'pistol', mood: 'smile' };
     case 'rope': return { hat: 'none', tool: 'none', mood: 'smile' };
     case 'bluff': return { hat: 'fedora', tool: 'none', mood: 'smile' };
-    case 'hang': case 'knock': case 'push': return { hat: 'none', tool: 'none', mood: 'smile' };
+    case 'hang': case 'knock': case 'push': case 'umbrella': case 'bubbles': case 'selfie': return { hat: 'none', tool: 'none', mood: 'smile' };
+    case 'guitar': return { hat: 'cowboy', tool: 'none', mood: 'smile' };
+    case 'dance': return { hat: 'fedora', tool: 'none', mood: 'smile' };
+    case 'dealer': case 'tower': case 'felt': return { hat: rnd() < 0.5 ? 'tophat' : 'none', tool: 'none', mood: 'smile' };
     default: return { hat: rnd() < 0.5 ? 'tophat' : 'none', tool: 'none', mood: 'smile' };
   }
 }

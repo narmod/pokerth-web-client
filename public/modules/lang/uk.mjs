@@ -10,7 +10,7 @@ export const meta = {
 
 export const strings = {
     // Mascotte animée (modules/mascot, extra web)
-    advMascot:'Анімований талісман (туз) на головному екрані та в лобі під час бездіяльності', mascotHello:'Привіт!', mascotBye:'До зустрічі!', mascotTada:'Та-да!', mascotKing:'Король столу!',
+    advMascot:'Анімований талісман (туз) на головному екрані та в лобі під час бездіяльності', mascotHello:'Привіт!', mascotBye:'До зустрічі!', mascotTada:'Та-да!', mascotKing:'Король столу!', mascotAnyone:'Є тут хтось?', mascotCheese:'Скажи «сир»!', mascotTable:'Новий стіл!', mascotMail:'Вам лист!', mascotBravo:'Молодець!',
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'Моя нотатка', nvRating:'Оцінка', nvPlaceholder:'Колує будь-який 3-бет…', nvSaved:'Збережено', nvTagNone:'Без мітки', nvTagRed:'Небезпечний', nvTagOrange:'Агресивний', nvTagYellow:'Спостерігати', nvTagGreen:'Фіш', nvTagBlue:'Тайтовий', nvTagPurple:'Хитрий', nvLabelPh:'Назва мітки', nvLabelTip:'Перейменувати мітку — стосується всіх гравців із цим кольором',
     ppMyStats:'Моя статистика',

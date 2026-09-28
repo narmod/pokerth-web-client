@@ -115,7 +115,7 @@ ok(P.fallMs(0) === 350 && P.fallMs(100000) === 900, 'fall time bounded 350–900
 
 // ── Wiring ──
 const LANG_DIR = path.resolve('public/modules/lang');
-const keys = ['advMascot', 'mascotHello', 'mascotBye', 'mascotTada', 'mascotKing'];
+const keys = ['advMascot', 'mascotHello', 'mascotBye', 'mascotTada', 'mascotKing', 'mascotAnyone', 'mascotCheese', 'mascotTable', 'mascotMail', 'mascotBravo'];
 let missing = [];
 for (const f of fs.readdirSync(LANG_DIR).filter((n) => n.endsWith('.mjs'))) {
   const m = await import(pathToFileURL(path.join(LANG_DIR, f)).href);
@@ -129,7 +129,7 @@ const js = fs.readFileSync('public/pokerth.js', 'utf8');
 ok(/sync\('adv-mascot', 'mascot', false\)/.test(js), 'option OFF by default');
 ok(js.indexOf("window._mascotApply") >= 0, 'applyAdvOpts forwards the option to the loader');
 const sw = fs.readFileSync('public/sw.js', 'utf8');
-ok(['index', 'engine', 'plan', 'panel', 'acts-extra'].every((n) => sw.indexOf(`'/modules/mascot/${n}.mjs'`) >= 0), 'mascot modules precached');
+ok(['index', 'engine', 'plan', 'panel', 'acts-extra', 'acts-props'].every((n) => sw.indexOf(`'/modules/mascot/${n}.mjs'`) >= 0), 'mascot modules precached');
 const loader = fs.readFileSync('public/modules/mascot/index.mjs', 'utf8');
 ok(/SCREENS = \['s-connect', 's-lobby'\]/.test(loader) && loader.indexOf("'s-game'") >= 0, 'only the home screen and the lobby (a table stops him)');
 ok(/import\('\.\/engine\.mjs'\)/.test(loader) && !/^import .*engine/m.test(loader), 'engine loaded on demand only');

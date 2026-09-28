@@ -17,7 +17,7 @@ export const meta = {
 
 export const strings = {
     // Mascotte animée (modules/mascot, extra web)
-    advMascot:'Animēts talismans (dūzis) sākuma ekrānā un vestibilā, kad esi neaktīvs', mascotHello:'Sveiks!', mascotBye:'Uz redzēšanos!', mascotTada:'Tadā!', mascotKing:'Galda karalis!',
+    advMascot:'Animēts talismans (dūzis) sākuma ekrānā un vestibilā, kad esi neaktīvs', mascotHello:'Sveiks!', mascotBye:'Uz redzēšanos!', mascotTada:'Tadā!', mascotKing:'Galda karalis!', mascotAnyone:'Vai kāds ir?', mascotCheese:'Saki sieru!', mascotTable:'Jauns galds!', mascotMail:'Tev ir vēstule!', mascotBravo:'Labi padarīts!',
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'Mana piezīme', nvRating:'Vērtējums', nvPlaceholder:'Izlīdzina jebkuru 3-bet…', nvSaved:'Saglabāts', nvTagNone:'Bez etiķetes', nvTagRed:'Bīstams', nvTagOrange:'Agresīvs', nvTagYellow:'Vērot', nvTagGreen:'Zivs', nvTagBlue:'Šaurs', nvTagPurple:'Viltīgs', nvLabelPh:'Etiķetes nosaukums', nvLabelTip:'Pārdēvē šo etiķeti — tā attiecas uz visiem šīs krāsas spēlētājiem',
     ppMyStats:'Mana statistika',

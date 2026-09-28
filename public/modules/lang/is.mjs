@@ -14,7 +14,7 @@ export const meta = {
 
 export const strings = {
     // Mascotte animée (modules/mascot, extra web)
-    advMascot:'Hreyfimyndað lukkudýr (ásinn) á upphafsskjá og í anddyri við aðgerðaleysi', mascotHello:'Hæ!', mascotBye:'Sjáumst!', mascotTada:'Tadaa!', mascotKing:'Konungur borðsins!',
+    advMascot:'Hreyfimyndað lukkudýr (ásinn) á upphafsskjá og í anddyri við aðgerðaleysi', mascotHello:'Hæ!', mascotBye:'Sjáumst!', mascotTada:'Tadaa!', mascotKing:'Konungur borðsins!', mascotAnyone:'Er einhver?', mascotCheese:'Sís!', mascotTable:'Nýtt borð!', mascotMail:'Þú átt póst!', mascotBravo:'Vel gert!',
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'Minnispunktur', nvRating:'Einkunn', nvPlaceholder:'Segir Call við hvaða 3-bet sem er…', nvSaved:'Vistað', nvTagNone:'Enginn miði', nvTagRed:'Hætta', nvTagOrange:'Ágengur', nvTagYellow:'Varúð', nvTagGreen:'Fiskur', nvTagBlue:'Þéttur', nvTagPurple:'Slóttugur', nvLabelPh:'Heiti miða', nvLabelTip:'Endurnefna þennan miða — gildir um alla leikmenn með þennan lit',
     ppMyStats:'Tölfræðin mín',

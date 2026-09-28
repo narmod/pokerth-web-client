@@ -11,7 +11,7 @@ export const meta = {
 
 export const strings = {
     // Mascotte animée (modules/mascot, extra web)
-    advMascot:'Κινούμενη μασκότ (ο Άσος) στην αρχική οθόνη και στο λόμπι όταν είσαι ανενεργός', mascotHello:'Γεια!', mascotBye:'Τα λέμε!', mascotTada:'Τα-ντα!', mascotKing:'Ο βασιλιάς του τραπεζιού!',
+    advMascot:'Κινούμενη μασκότ (ο Άσος) στην αρχική οθόνη και στο λόμπι όταν είσαι ανενεργός', mascotHello:'Γεια!', mascotBye:'Τα λέμε!', mascotTada:'Τα-ντα!', mascotKing:'Ο βασιλιάς του τραπεζιού!', mascotAnyone:'Είναι κανείς εδώ;', mascotCheese:'Τυράκι!', mascotTable:'Νέο τραπέζι!', mascotMail:'Έχεις μήνυμα!', mascotBravo:'Μπράβο!',
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'Η σημείωσή μου', nvRating:'Βαθμολογία', nvPlaceholder:'Πληρώνει κάθε 3-bet…', nvSaved:'Αποθηκεύτηκε', nvTagNone:'Χωρίς ετικέτα', nvTagRed:'Επικίνδυνος', nvTagOrange:'Επιθετικός', nvTagYellow:'Παρακολούθηση', nvTagGreen:'Ψάρι', nvTagBlue:'Σφιχτός', nvTagPurple:'Πονηρός', nvLabelPh:'Όνομα ετικέτας', nvLabelTip:'Μετονομασία ετικέτας — ισχύει για κάθε παίκτη με αυτό το χρώμα',
     ppMyStats:'Τα στατιστικά μου',

@@ -21,6 +21,7 @@ export const RULES = [
   [/\bcuenta atrás\b/g, 'cuenta regresiva'],
   [/\bvídeos\b/g, 'videos'], [/\bvídeo\b/g, 'video'], [/\bVídeo\b/g, 'Video'],
   [/\bbotes\b/g, 'pozos'], [/\bBotes\b/g, 'Pozos'], [/\bbote\b/g, 'pozo'], [/\bBote\b/g, 'Pozo'],
+  [/¡Patata!/g, '¡Whisky!'],
   [/\bfallos\b/g, 'errores'], [/\bun fallo\b/g, 'un error'], [/\bfallo\b/g, 'error'],
 ];
 export function derive(text) {

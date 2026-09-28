@@ -15,7 +15,7 @@ export const meta = {
 
 export const strings = {
     // Mascotte animée (modules/mascot, extra web)
-    advMascot:'សញ្ញាសំណាងមានចលនា (អាត់) នៅលើអេក្រង់ដើម និងក្នុងឡប់ប៊ី ពេលអសកម្ម', mascotHello:'សួស្តី!', mascotBye:'ជួបគ្នាពេលក្រោយ!', mascotTada:'តាដា!', mascotKing:'ស្ដេចនៃតុ!',
+    advMascot:'សញ្ញាសំណាងមានចលនា (អាត់) នៅលើអេក្រង់ដើម និងក្នុងឡប់ប៊ី ពេលអសកម្ម', mascotHello:'សួស្តី!', mascotBye:'ជួបគ្នាពេលក្រោយ!', mascotTada:'តាដា!', mascotKing:'ស្ដេចនៃតុ!', mascotAnyone:'មានអ្នកណានៅទេ?', mascotCheese:'ឈីស!', mascotTable:'តុថ្មីមួយ!', mascotMail:'អ្នកមានសារ!', mascotBravo:'ល្អណាស់!',
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'កំណត់ចំណាំរបស់ខ្ញុំ', nvRating:'ការវាយតម្លៃ', nvPlaceholder:'Call គ្រប់ 3-bet…', nvSaved:'បានរក្សាទុក', nvTagNone:'គ្មានស្លាក', nvTagRed:'គ្រោះថ្នាក់', nvTagOrange:'ឈ្លានពាន', nvTagYellow:'តាមដាន', nvTagGreen:'ខ្សោយ', nvTagBlue:'តឹងរ៉ឹង', nvTagPurple:'ល្បិច', nvLabelPh:'ឈ្មោះស្លាក', nvLabelTip:'ប្ដូរឈ្មោះស្លាកនេះ — អនុវត្តចំពោះអ្នកលេងគ្រប់រូបដែលមានពណ៌នេះ',
     ppMyStats:'ស្ថិតិរបស់ខ្ញុំ',

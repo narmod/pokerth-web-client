@@ -18,7 +18,7 @@ export const meta = {
 
 export const strings = {
     // Mascotte animée (modules/mascot, extra web)
-    advMascot:'Uphawu olupopayi (i-Ace) esikrinini sasekhaya nasemnyango lapho ungenzi lutho', mascotHello:'Sawubona!', mascotBye:'Sizobonana!', mascotTada:'Tada!', mascotKing:'Inkosi yetafula!',
+    advMascot:'Uphawu olupopayi (i-Ace) esikrinini sasekhaya nasemnyango lapho ungenzi lutho', mascotHello:'Sawubona!', mascotBye:'Sizobonana!', mascotTada:'Tada!', mascotKing:'Inkosi yetafula!', mascotAnyone:'Ukhona umuntu?', mascotCheese:'Moyizela!', mascotTable:'Itafula elisha!', mascotMail:'Unomlayezo!', mascotBravo:'Wenze kahle!',
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'Amanothi ami', nvRating:'Isilinganiso', nvPlaceholder:'U-call noma iyiphi i-3-bet…', nvSaved:'Kulondoloziwe', nvTagNone:'Akukho maki', nvTagRed:'Ingozi', nvTagOrange:'Onolaka', nvTagYellow:'Qaphela', nvTagGreen:'Inhlanzi', nvTagBlue:'Oqinile', nvTagPurple:'Onobuqili', nvLabelPh:'Igama lemaki', nvLabelTip:'Qamba kabusha le maki — kuthinta bonke abadlali abanalo mbala',
     ppMyStats:'Izibalo zami',

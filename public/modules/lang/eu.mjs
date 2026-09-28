@@ -18,7 +18,7 @@ export const meta = {
 
 export const strings = {
     // Mascotte animée (modules/mascot, extra web)
-    advMascot:'Maskota animatua (Batekoa) hasierako pantailan eta atondoan jarduerarik ez dagoenean', mascotHello:'Kaixo!', mascotBye:'Gero arte!', mascotTada:'Tatxan!', mascotKing:'Mahaiaren erregea!',
+    advMascot:'Maskota animatua (Batekoa) hasierako pantailan eta atondoan jarduerarik ez dagoenean', mascotHello:'Kaixo!', mascotBye:'Gero arte!', mascotTada:'Tatxan!', mascotKing:'Mahaiaren erregea!', mascotAnyone:'Inor ba al dago?', mascotCheese:'Patata!', mascotTable:'Mahai berri bat!', mascotMail:'Mezu bat duzu!', mascotBravo:'Ondo egina!',
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'Nire oharra', nvRating:'Balorazioa', nvPlaceholder:'Edozein 3-bet deitzen du…', nvSaved:'Gordeta', nvTagNone:'Etiketarik gabe', nvTagRed:'Arriskua', nvTagOrange:'Oldarkorra', nvTagYellow:'Kontuz', nvTagGreen:'Arraina', nvTagBlue:'Estua', nvTagPurple:'Maltzurra', nvLabelPh:'Etiketaren izena', nvLabelTip:'Aldatu etiketa honen izena — kolore hau duten jokalari guztiei aplikatzen zaie',
     ppMyStats:'Nire estatistikak',

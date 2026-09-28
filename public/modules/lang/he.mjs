@@ -15,7 +15,7 @@ export const meta = {
 
 export const strings = {
     // Mascotte animée (modules/mascot, extra web)
-    advMascot:'קמע מונפש (האס) במסך הבית ובלובי בזמן חוסר פעילות', mascotHello:'היי!', mascotBye:'להתראות!', mascotTada:'טה-דה!', mascotKing:'מלך השולחן!',
+    advMascot:'קמע מונפש (האס) במסך הבית ובלובי בזמן חוסר פעילות', mascotHello:'היי!', mascotBye:'להתראות!', mascotTada:'טה-דה!', mascotKing:'מלך השולחן!', mascotAnyone:'יש פה מישהו?', mascotCheese:'צ׳יז!', mascotTable:'שולחן חדש!', mascotMail:'יש לך הודעה!', mascotBravo:'כל הכבוד!',
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'ההערה שלי', nvRating:'דירוג', nvPlaceholder:'משלם כל 3-bet…', nvSaved:'נשמר', nvTagNone:'ללא תווית', nvTagRed:'מסוכן', nvTagOrange:'אגרסיבי', nvTagYellow:'במעקב', nvTagGreen:'דג', nvTagBlue:'הדוק', nvTagPurple:'ערמומי', nvLabelPh:'שם התווית', nvLabelTip:'שינוי שם התווית — חל על כל שחקן בצבע הזה',
     ppMyStats:'הסטטיסטיקות שלי',

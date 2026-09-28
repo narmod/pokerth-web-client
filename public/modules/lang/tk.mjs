@@ -18,7 +18,7 @@ export const meta = {
 
 export const strings = {
     // Mascotte animée (modules/mascot, extra web)
-    advMascot:'Işjeň däl wagtyňyz baş ekranda we lobbide animasiýaly maskot (Tuz)', mascotHello:'Salam!', mascotBye:'Görüşeris!', mascotTada:'Tadaa!', mascotKing:'Stoluň patyşasy!',
+    advMascot:'Işjeň däl wagtyňyz baş ekranda we lobbide animasiýaly maskot (Tuz)', mascotHello:'Salam!', mascotBye:'Görüşeris!', mascotTada:'Tadaa!', mascotKing:'Stoluň patyşasy!', mascotAnyone:'Kimdir barmy?', mascotCheese:'Peýnir!', mascotTable:'Täze stol!', mascotMail:'Size hat geldi!', mascotBravo:'Berekella!',
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'Meniň belliklerim', nvRating:'Baha', nvPlaceholder:'Islendik 3-bet-e call edýär…', nvSaved:'Ýatda saklandy', nvTagNone:'Belgisiz', nvTagRed:'Howp', nvTagOrange:'Agressiw', nvTagYellow:'Seresap boluň', nvTagGreen:'Balyk', nvTagBlue:'Taýt', nvTagPurple:'Hilegär', nvLabelPh:'Belginiň ady', nvLabelTip:'Bu belginiň adyny üýtgetmek — şu reňkdäki ähli oýunçylara täsir edýär',
     ppMyStats:'Meniň statistikam',

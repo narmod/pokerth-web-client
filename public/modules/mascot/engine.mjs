@@ -21,6 +21,7 @@ import {
   walkMs, stepCycles, fallMs, ledgePlan, hangPlan, pickWith,
 } from './plan.mjs';
 import { EXTRA } from './acts-extra.mjs';
+import { PROPS } from './acts-props.mjs';
 
 const tr = (k, d) => { try { const s = window.t ? window.t(k) : d; return s && s !== k ? s : d; } catch (e) { return d; } };
 
@@ -962,7 +963,8 @@ export function dismiss() {
 export const CATALOG = {
   entries: ['door', 'poof', 'edge', 'peek'],
   actions: ['moon', 'climb', 'magic', 'king', 'knight', 'grim', 'sleep', 'juggle', 'pistol', 'rope',
-    'banana', 'bluff', 'ledge', 'hang', 'knock', 'push', 'none'],
+    'banana', 'bluff', 'ledge', 'hang', 'knock', 'push',
+    'dealer', 'tower', 'felt', 'umbrella', 'selfie', 'bubbles', 'guitar', 'dance', 'none'],
   exits: ['door', 'poof', 'edge', 'duck'],
   hats: ['none', 'tophat', 'wizard', 'crown', 'helmet', 'fedora', 'nightcap', 'cowboy'],
   tools: ['none', 'wand', 'scepter', 'sword', 'cane', 'pistol'],
@@ -1011,7 +1013,8 @@ export async function appear(opts = {}) {
   const ENTRY = { door: enterDoor, poof: enterPoof, edge: enterEdge, peek: () => enterPeek(peek) };
   const ACT = { moon: actMoon, climb: () => actClimb(plan), magic: () => actMagic(plan), king: actKing, knight: actKnight, grim: actGrim, sleep: actSleep, juggle: actJuggle, pistol: actPistol, rope: actRope };
   const where = { plan, peek, ledge, hang, rects };
-  Object.keys(EXTRA).forEach((a) => { ACT[a] = async () => { try { await EXTRA[a](H, where); } finally { if (cur === c) clearProps(); } }; });
+  const MORE = Object.assign({}, EXTRA, PROPS);
+  Object.keys(MORE).forEach((a) => { ACT[a] = async () => { try { await MORE[a](H, where); } finally { if (cur === c) clearProps(); } }; });
   const EXIT = { door: exitDoor, poof: exitPoof, edge: exitEdge, duck: () => exitDuck(peek) };
   try {
     await ENTRY[seq.entry](rnd);

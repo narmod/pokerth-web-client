@@ -12,7 +12,7 @@ export const meta = {
 
 export const strings = {
     // Mascotte animée (modules/mascot, extra web)
-    advMascot:'செயலற்ற நிலையில் முகப்புத் திரையிலும் லாபியிலும் அசையும் சின்னம் (ஏஸ்)', mascotHello:'வணக்கம்!', mascotBye:'மீண்டும் சந்திப்போம்!', mascotTada:'டா-டா!', mascotKing:'மேசையின் ராஜா!',
+    advMascot:'செயலற்ற நிலையில் முகப்புத் திரையிலும் லாபியிலும் அசையும் சின்னம் (ஏஸ்)', mascotHello:'வணக்கம்!', mascotBye:'மீண்டும் சந்திப்போம்!', mascotTada:'டா-டா!', mascotKing:'மேசையின் ராஜா!', mascotAnyone:'யாராவது இருக்கீங்களா?', mascotCheese:'சீஸ்!', mascotTable:'ஒரு புதிய மேசை!', mascotMail:'உங்களுக்குச் செய்தி வந்துள்ளது!', mascotBravo:'சபாஷ்!',
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'என் குறிப்பு', nvRating:'மதிப்பீடு', nvPlaceholder:'எந்த 3-bet-ஐயும் கால் செய்கிறார்…', nvSaved:'சேமிக்கப்பட்டது', nvTagNone:'லேபிள் இல்லை', nvTagRed:'ஆபத்தானவர்', nvTagOrange:'தாக்குதல்காரர்', nvTagYellow:'கவனிக்க', nvTagGreen:'ஃபிஷ்', nvTagBlue:'டைட்', nvTagPurple:'தந்திரமானவர்', nvLabelPh:'லேபிள் பெயர்', nvLabelTip:'லேபிளின் பெயரை மாற்று — இந்த நிறமுள்ள எல்லா வீரர்களுக்கும் பொருந்தும்',
     ppMyStats:'என் புள்ளிவிவரங்கள்',

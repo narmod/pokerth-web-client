@@ -12,7 +12,7 @@ export const meta = {
 
 export const strings = {
     // Mascotte animée (modules/mascot, extra web)
-    advMascot:'闲置时在主屏幕和大厅显示动画吉祥物（A 牌）', mascotHello:'嗨！', mascotBye:'回头见！', mascotTada:'当当！', mascotKing:'牌桌之王！',
+    advMascot:'闲置时在主屏幕和大厅显示动画吉祥物（A 牌）', mascotHello:'嗨！', mascotBye:'回头见！', mascotTada:'当当！', mascotKing:'牌桌之王！', mascotAnyone:'有人吗？', mascotCheese:'茄子！', mascotTable:'新牌桌！', mascotMail:'你有新消息！', mascotBravo:'干得好！',
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'我的笔记', nvRating:'评分', nvPlaceholder:'跟注任何 3-bet…', nvSaved:'已保存', nvTagNone:'无标签', nvTagRed:'危险', nvTagOrange:'激进', nvTagYellow:'关注', nvTagGreen:'鱼', nvTagBlue:'紧凶', nvTagPurple:'狡猾', nvLabelPh:'标签名称', nvLabelTip:'重命名标签 — 适用于所有使用此颜色的玩家',
     ppMyStats:'我的统计',
