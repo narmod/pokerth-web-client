@@ -16,6 +16,7 @@ export const meta = {
 };
 
 export const strings = {
+    rankWaitFull: "Gra rankingowa — oczekiwanie na {max} graczy ({n}/{max}). Gra rozpocznie się, gdy stół będzie pełny.",
     // Mascotte animée (modules/mascot, extra web)
     advMascot:'Animowana maskotka (As) na ekranie startowym i w lobby podczas bezczynności', mascotHello:'Cześć!', mascotBye:'Na razie!', mascotTada:'Tadam!', mascotKing:'Król stołu!', mascotAnyone:'Jest tu ktoś?', mascotCheese:'Uśmiech!', mascotTable:'Nowy stół!', mascotMail:'Masz wiadomość!', mascotBravo:'Brawo!',
     // Notes de joueur + étiquettes (modules/notes, extra web)

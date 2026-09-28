@@ -14,6 +14,7 @@ export const meta = {
 };
 
 export const strings = {
+    rankWaitFull: "የደረጃ ጨዋታ — {max} ተጫዋቾችን በመጠበቅ ላይ ({n}/{max})። ጠረጴዛው ሲሞላ ጨዋታው ይጀምራል።",
     // Mascotte animée (modules/mascot, extra web)
     advMascot:'እንቅስቃሴ በሌለበት ጊዜ በመነሻ ማያ ገጽ እና በሎቢ ውስጥ ተንቀሳቃሽ ምልክት (ኤሱ)', mascotHello:'ሰላም!', mascotBye:'በኋላ እንገናኝ!', mascotTada:'ታ-ዳ!', mascotKing:'የጠረጴዛው ንጉሥ!', mascotAnyone:'ማንም አለ?', mascotCheese:'ፈገግ በሉ!', mascotTable:'አዲስ ጠረጴዛ!', mascotMail:'መልዕክት አለዎት!', mascotBravo:'ጎበዝ!',
     // Notes de joueur + étiquettes (modules/notes, extra web)

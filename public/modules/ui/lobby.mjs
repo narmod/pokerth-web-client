@@ -225,6 +225,16 @@ function renderGameInfoPanel(gid) {
            + esc(g.manualBlinds.map(function(v){ return _groupThousands(v); }).join(' \u2192 ')) + '</div>';
   }
   var _dly  = g.delay || 0;
+  // Bandeau « partie classée » (pokerth.net uniquement, tables ranking et
+  // Cups — type 4) : explique aux nouveaux joueurs qu'il faut une table
+  // pleine (10) pour que la partie démarre et compte au classement.
+  // Masqué dès que la table est complète ou si la partie a démarré.
+  var _rkMax = g.maxPlayers || 10;
+  var _rkBanner = (g.type === 4 && !window._offlineMode
+      && (S._currentLoginMode === 'auth' || S._currentLoginMode === 'guest')
+      && (_mine || g.mode === 1) && _count < _rkMax)
+    ? '<div class="lgi-rankwait" role="status">' + esc(t('rankWaitFull', { n: _count, max: _rkMax })) + '</div>'
+    : '';
 
   el.innerHTML =
     '<div class="g-chat-panel-header">'
@@ -240,6 +250,7 @@ function renderGameInfoPanel(gid) {
       + (_blUp ? '<div class="lgi-row"><span data-i18n="infoBlindsUp">' + t('infoBlindsUp') + '</span> : ' + _blUp + '</div>' : '')
       + _mbRow
       + '<div class="lgi-row"><span data-i18n="gameTimeLabel">' + t('gameTimeLabel') + '</span> : ' + (g.timeout || 0) + 's' + (_dly ? '/' + _dly + 's' : '') + '</div>'
+      + _rkBanner
       + '<div class="lgi-ptitle"><span data-i18n="infoPlayersInGame">' + t('infoPlayersInGame') + '</span> (' + _count + ')</div>'
       + '<div class="lgi-players">' + _rows + '</div>'
     + '</div>';

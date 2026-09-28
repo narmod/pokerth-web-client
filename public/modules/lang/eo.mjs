@@ -17,6 +17,7 @@ export const meta = {
 };
 
 export const strings = {
+    rankWaitFull: "Rangiga ludo — atendante {max} ludantojn ({n}/{max}). La ludo komenciĝos kiam la tablo estos plena.",
     // Mascotte animée (modules/mascot, extra web)
     advMascot:'Animita maskoto (la Aso) sur la hejma ekrano kaj en la vestiblo dum neaktiveco', mascotHello:'Saluton!', mascotBye:'Ĝis!', mascotTada:'Tada!', mascotKing:'Reĝo de la tablo!', mascotAnyone:'Ĉu iu estas?', mascotCheese:'Fromaĝo!', mascotTable:'Nova tablo!', mascotMail:'Vi havas poŝton!', mascotBravo:'Brave!',
     // Notes de joueur + étiquettes (modules/notes, extra web)

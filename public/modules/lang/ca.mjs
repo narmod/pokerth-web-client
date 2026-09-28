@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+    rankWaitFull: "Partida de classificació — esperant {max} jugadors ({n}/{max}). La partida començarà quan la taula estigui plena.",
     // Mascotte animée (modules/mascot, extra web)
     advMascot:'Mascota animada (l’As) a la pantalla d’inici i al vestíbul quan no hi ha activitat', mascotHello:'Hola!', mascotBye:'Fins aviat!', mascotTada:'Tatxan!', mascotKing:'El rei del tapet!', mascotAnyone:'Hi ha algú?', mascotCheese:'Patata!', mascotTable:'Una taula nova!', mascotMail:'Tens un missatge!', mascotBravo:'Ben fet!',
     // Notes de joueur + étiquettes (modules/notes, extra web)

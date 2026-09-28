@@ -14,6 +14,7 @@ export const meta = {
 };
 
 export const strings = {
+    rankWaitFull: "משחק דירוג — ממתינים ל־{max} שחקנים ({n}/{max}). המשחק יתחיל כשהשולחן יתמלא.",
     // Mascotte animée (modules/mascot, extra web)
     advMascot:'קמע מונפש (האס) במסך הבית ובלובי בזמן חוסר פעילות', mascotHello:'היי!', mascotBye:'להתראות!', mascotTada:'טה-דה!', mascotKing:'מלך השולחן!', mascotAnyone:'יש פה מישהו?', mascotCheese:'צ׳יז!', mascotTable:'שולחן חדש!', mascotMail:'יש לך הודעה!', mascotBravo:'כל הכבוד!',
     // Notes de joueur + étiquettes (modules/notes, extra web)

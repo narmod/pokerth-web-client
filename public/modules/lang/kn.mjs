@@ -14,6 +14,7 @@ export const meta = {
 };
 
 export const strings = {
+    rankWaitFull: "ರ‍್ಯಾಂಕಿಂಗ್ ಗೇಮ್ — {max} ಆಟಗಾರರಿಗಾಗಿ ಕಾಯಲಾಗುತ್ತಿದೆ ({n}/{max}). ಟೇಬಲ್ ತುಂಬಿದಾಗ ಆಟ ಆರಂಭವಾಗುತ್ತದೆ.",
     // Mascotte animée (modules/mascot, extra web)
     advMascot:'ನಿಷ್ಕ್ರಿಯವಾಗಿದ್ದಾಗ ಮುಖಪುಟ ಪರದೆ ಮತ್ತು ಲಾಬಿಯಲ್ಲಿ ಅನಿಮೇಟೆಡ್ ಮ್ಯಾಸ್ಕಾಟ್ (ಎಕ್ಕ)', mascotHello:'ನಮಸ್ಕಾರ!', mascotBye:'ಮತ್ತೆ ಸಿಗೋಣ!', mascotTada:'ಟಾ-ಡಾ!', mascotKing:'ಮೇಜಿನ ರಾಜ!', mascotAnyone:'ಯಾರಾದರೂ ಇದ್ದೀರಾ?', mascotCheese:'ಚೀಸ್!', mascotTable:'ಒಂದು ಹೊಸ ಟೇಬಲ್!', mascotMail:'ನಿಮಗೆ ಸಂದೇಶ ಬಂದಿದೆ!', mascotBravo:'ಶಭಾಷ್!',
     // Notes de joueur + étiquettes (modules/notes, extra web)

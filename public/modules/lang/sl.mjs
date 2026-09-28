@@ -16,6 +16,7 @@ export const meta = {
 };
 
 export const strings = {
+    rankWaitFull: "Igra z uvrstitvijo — čakamo na {max} igralcev ({n}/{max}). Igra se bo začela, ko bo miza polna.",
     // Mascotte animée (modules/mascot, extra web)
     advMascot:'Animirana maskota (as) na začetnem zaslonu in v preddverju, ko ste nedejavni', mascotHello:'Živjo!', mascotBye:'Se vidimo!', mascotTada:'Tadaa!', mascotKing:'Kralj mize!', mascotAnyone:'Je kdo tu?', mascotCheese:'Sir!', mascotTable:'Nova miza!', mascotMail:'Imaš pošto!', mascotBravo:'Bravo!',
     // Notes de joueur + étiquettes (modules/notes, extra web)

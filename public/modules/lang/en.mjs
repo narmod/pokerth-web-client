@@ -17,6 +17,7 @@ export const meta = {
 };
 
 export const strings = {
+    rankWaitFull: "Ranking game — waiting for {max} players ({n}/{max}). The game will start when the table is full.",
     // Mascotte animée (modules/mascot, extra web)
     advMascot:'Animated mascot (the Ace) on the home screen and in the lobby when idle', mascotHello:'Hi!', mascotBye:'See you!', mascotTada:'Ta-da!', mascotKing:'King of the felt!', mascotAnyone:'Anyone?', mascotCheese:'Cheese!', mascotTable:'A new table!', mascotMail:'You’ve got mail!', mascotBravo:'Well done!',
     // Notes de joueur + étiquettes (modules/notes, extra web)

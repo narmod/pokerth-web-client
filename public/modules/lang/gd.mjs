@@ -11,6 +11,7 @@ export const meta = {
 };
 
 export const strings = {
+    rankWaitFull: "Geama rangachaidh — a' feitheamh ri {max} cluicheadairean ({n}/{max}). Tòisichidh an geama nuair a bhios am bòrd làn.",
     // Mascotte animée (modules/mascot, extra web)
     advMascot:'Suaichnean beòthaichte (an t-Aon) air an sgrìn-dachaigh is san lobaidh nuair a bhios tu na thàmh', mascotHello:'Haidh!', mascotBye:'Chì mi a-rithist thu!', mascotTada:'Ta-da!', mascotKing:'Rìgh a’ bhùird!', mascotAnyone:'A bheil duine ann?', mascotCheese:'Càise!', mascotTable:'Bòrd ùr!', mascotMail:'Tha post agad!', mascotBravo:'Math fhèin!',
     // Notes de joueur + étiquettes (modules/notes, extra web)

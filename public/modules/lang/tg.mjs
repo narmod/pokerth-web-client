@@ -17,6 +17,7 @@ export const meta = {
 };
 
 export const strings = {
+    rankWaitFull: "Бозии рейтингӣ — интизори {max} бозингар ({n}/{max}). Бозӣ вақте оғоз мешавад, ки миз пур шавад.",
     // Mascotte animée (modules/mascot, extra web)
     advMascot:'Талисмани аниматсионӣ (туз) дар экрани асосӣ ва лобби ҳангоми бефаъолиятӣ', mascotHello:'Салом!', mascotBye:'То дидор!', mascotTada:'Та-да!', mascotKing:'Шоҳи миз!', mascotAnyone:'Касе ҳаст?', mascotCheese:'Панир!', mascotTable:'Мизи нав!', mascotMail:'Ба шумо мактуб омад!', mascotBravo:'Офарин!',
     // Notes de joueur + étiquettes (modules/notes, extra web)

@@ -14,6 +14,7 @@ export const meta = {
 };
 
 export const strings = {
+    rankWaitFull: "रैंकिंग गेम — {max} खिलाड़ियों की प्रतीक्षा ({n}/{max})। टेबल भरते ही गेम शुरू होगा।",
     // Mascotte animée (modules/mascot, extra web)
     advMascot:'निष्क्रिय होने पर होम स्क्रीन और लॉबी में एनिमेटेड शुभंकर (इक्का)', mascotHello:'नमस्ते!', mascotBye:'फिर मिलेंगे!', mascotTada:'टा-डा!', mascotKing:'मेज़ का राजा!', mascotAnyone:'कोई है?', mascotCheese:'चीज़!', mascotTable:'एक नई मेज़!', mascotMail:'आपके लिए संदेश है!', mascotBravo:'शाबाश!',
     // Notes de joueur + étiquettes (modules/notes, extra web)

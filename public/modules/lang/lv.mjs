@@ -16,6 +16,7 @@ export const meta = {
 };
 
 export const strings = {
+    rankWaitFull: "Reitinga spēle — gaidām {max} spēlētājus ({n}/{max}). Spēle sāksies, kad galds būs pilns.",
     // Mascotte animée (modules/mascot, extra web)
     advMascot:'Animēts talismans (dūzis) sākuma ekrānā un vestibilā, kad esi neaktīvs', mascotHello:'Sveiks!', mascotBye:'Uz redzēšanos!', mascotTada:'Tadā!', mascotKing:'Galda karalis!', mascotAnyone:'Vai kāds ir?', mascotCheese:'Saki sieru!', mascotTable:'Jauns galds!', mascotMail:'Tev ir vēstule!', mascotBravo:'Labi padarīts!',
     // Notes de joueur + étiquettes (modules/notes, extra web)

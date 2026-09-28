@@ -14,6 +14,7 @@ export const meta = {
 };
 
 export const strings = {
+    rankWaitFull: "بازی رتبه‌بندی — در انتظار {max} بازیکن ({n}/{max}). بازی وقتی میز پر شود شروع می‌شود.",
     // Mascotte animée (modules/mascot, extra web)
     advMascot:'طلسم متحرک (آس) در صفحهٔ اصلی و لابی هنگام بی‌فعالیتی', mascotHello:'سلام!', mascotBye:'بعداً می‌بینمت!', mascotTada:'تادا!', mascotKing:'پادشاه میز!', mascotAnyone:'کسی هست؟', mascotCheese:'سیب!', mascotTable:'یک میز جدید!', mascotMail:'نامه داری!', mascotBravo:'آفرین!',
     // Notes de joueur + étiquettes (modules/notes, extra web)

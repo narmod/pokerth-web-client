@@ -17,6 +17,7 @@ export const meta = {
 };
 
 export const strings = {
+    rankWaitFull: "Umdlalo wezinga — kulindwe abadlali abangu-{max} ({n}/{max}). Umdlalo uzoqala uma itafula seligcwele.",
     // Mascotte animée (modules/mascot, extra web)
     advMascot:'Uphawu olupopayi (i-Ace) esikrinini sasekhaya nasemnyango lapho ungenzi lutho', mascotHello:'Sawubona!', mascotBye:'Sizobonana!', mascotTada:'Tada!', mascotKing:'Inkosi yetafula!', mascotAnyone:'Ukhona umuntu?', mascotCheese:'Moyizela!', mascotTable:'Itafula elisha!', mascotMail:'Unomlayezo!', mascotBravo:'Wenze kahle!',
     // Notes de joueur + étiquettes (modules/notes, extra web)

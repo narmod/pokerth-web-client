@@ -17,6 +17,7 @@ export const meta = {
 };
 
 export const strings = {
+    rankWaitFull: "სარეიტინგო თამაში — ველოდებით {max} მოთამაშეს ({n}/{max}). თამაში დაიწყება, როცა მაგიდა შეივსება.",
     // Mascotte animée (modules/mascot, extra web)
     advMascot:'ანიმირებული თილისმა (ტუზი) მთავარ ეკრანზე და ლობიში უმოქმედობისას', mascotHello:'გამარჯობა!', mascotBye:'შეხვედრამდე!', mascotTada:'ტა-და!', mascotKing:'მაგიდის მეფე!', mascotAnyone:'ვინმე არის?', mascotCheese:'ყველი!', mascotTable:'ახალი მაგიდა!', mascotMail:'წერილი გაქვს!', mascotBravo:'ყოჩაღ!',
     // Notes de joueur + étiquettes (modules/notes, extra web)

@@ -9,6 +9,7 @@ export const meta = {
 };
 
 export const strings = {
+    rankWaitFull: "Jogo ranqueado — aguardando {max} jogadores ({n}/{max}). O jogo começa quando a mesa estiver cheia.",
     // Mascotte animée (modules/mascot, extra web)
     advMascot:'Mascote animado (o Ás) na tela inicial e no lobby quando você fica inativo', mascotHello:'Oi!', mascotBye:'Até mais!', mascotTada:'Tcharam!', mascotKing:'O rei da mesa!', mascotAnyone:'Tem alguém aí?', mascotCheese:'Xis!', mascotTable:'Uma mesa nova!', mascotMail:'Você tem mensagem!', mascotBravo:'Mandou bem!',
     // Notes de joueur + étiquettes (modules/notes, extra web)

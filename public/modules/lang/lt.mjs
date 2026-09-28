@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+    rankWaitFull: "Reitinguojamas žaidimas — laukiama {max} žaidėjų ({n}/{max}). Žaidimas prasidės, kai stalas bus pilnas.",
     // Mascotte animée (modules/mascot, extra web)
     advMascot:'Animuotas talismanas (tūzas) pradžios ekrane ir fojė, kai esate neaktyvus', mascotHello:'Labas!', mascotBye:'Iki!', mascotTada:'Tadam!', mascotKing:'Stalo karalius!', mascotAnyone:'Ar kas nors yra?', mascotCheese:'Sūris!', mascotTable:'Naujas stalas!', mascotMail:'Tau laiškas!', mascotBravo:'Puikiai!',
     // Notes de joueur + étiquettes (modules/notes, extra web)

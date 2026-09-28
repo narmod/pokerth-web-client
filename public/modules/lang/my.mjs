@@ -17,6 +17,7 @@ export const meta = {
 };
 
 export const strings = {
+    rankWaitFull: "အဆင့်သတ်မှတ်ဂိမ်း — ကစားသမား {max} ဦးကို စောင့်နေသည် ({n}/{max})။ စားပွဲပြည့်သောအခါ ဂိမ်းစတင်ပါမည်။",
     // Mascotte animée (modules/mascot, extra web)
     advMascot:'အသုံးမပြုချိန်တွင် ပင်မစခရင်နှင့် လော်ဘီတွင် လှုပ်ရှားသော မက်စကော့ (တစ်ကွက်)', mascotHello:'ဟိုင်း!', mascotBye:'နောက်မှတွေ့မယ်!', mascotTada:'တာဒါ!', mascotKing:'စားပွဲရဲ့ ဘုရင်!', mascotAnyone:'ဘယ်သူရှိလဲ?', mascotCheese:'ချိစ်!', mascotTable:'စားပွဲအသစ်!', mascotMail:'သင့်ထံ စာရောက်နေပြီ!', mascotBravo:'တော်လိုက်တာ!',
     // Notes de joueur + étiquettes (modules/notes, extra web)

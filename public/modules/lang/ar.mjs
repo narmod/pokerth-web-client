@@ -17,6 +17,7 @@ export const meta = {
 };
 
 export const strings = {
+    rankWaitFull: "لعبة تصنيف — في انتظار {max} لاعبين ({n}/{max}). ستبدأ اللعبة عندما تكتمل الطاولة.",
     // Mascotte animée (modules/mascot, extra web)
     advMascot:'تميمة متحركة (الآص) في الشاشة الرئيسية والردهة عند عدم النشاط', mascotHello:'مرحبًا!', mascotBye:'إلى اللقاء!', mascotTada:'تادا!', mascotKing:'ملك الطاولة!', mascotAnyone:'هل من أحد؟', mascotCheese:'ابتسم!', mascotTable:'طاولة جديدة!', mascotMail:'لديك رسالة!', mascotBravo:'أحسنت!',
     // Notes de joueur + étiquettes (modules/notes, extra web)

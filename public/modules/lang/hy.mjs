@@ -17,6 +17,7 @@ export const meta = {
 };
 
 export const strings = {
+    rankWaitFull: "Վարկանիշային խաղ — սպասում ենք {max} խաղացողի ({n}/{max}). Խաղը կսկսվի, երբ սեղանը լրանա։",
     // Mascotte animée (modules/mascot, extra web)
     advMascot:'Անիմացիոն թալիսման (տուզ) գլխավոր էկրանին և լոբբիում անգործության ժամանակ', mascotHello:'Բարև!', mascotBye:'Կհանդիպենք!', mascotTada:'Տա-դա!', mascotKing:'Սեղանի արքան!', mascotAnyone:'Մեկը կա՞', mascotCheese:'Պանիր!', mascotTable:'Նոր սեղան!', mascotMail:'Նամակ ունես!', mascotBravo:'Ապրե՛ս!',
     // Notes de joueur + étiquettes (modules/notes, extra web)

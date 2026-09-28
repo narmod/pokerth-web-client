@@ -9,6 +9,7 @@ export const meta = {
 };
 
 export const strings = {
+    rankWaitFull: "Jogo de classificação — a aguardar {max} jogadores ({n}/{max}). O jogo começa quando a mesa estiver completa.",
     // Mascotte animée (modules/mascot, extra web)
     advMascot:'Mascote animada (o Ás) no ecrã inicial e no lobby quando estás inativo', mascotHello:'Olá!', mascotBye:'Até já!', mascotTada:'Tcharam!', mascotKing:'O rei da mesa!', mascotAnyone:'Está aí alguém?', mascotCheese:'Olha o passarinho!', mascotTable:'Uma mesa nova!', mascotMail:'Tens correio!', mascotBravo:'Muito bem!',
     // Notes de joueur + étiquettes (modules/notes, extra web)

@@ -9,6 +9,7 @@ export const meta = {
 };
 
 export const strings = {
+    rankWaitFull: "Rankingspel — väntar på {max} spelare ({n}/{max}). Spelet startar när bordet är fullt.",
     // Mascotte animée (modules/mascot, extra web)
     advMascot:'Animerad maskot (esset) på startskärmen och i lobbyn vid inaktivitet', mascotHello:'Hej!', mascotBye:'Vi ses!', mascotTada:'Tadaa!', mascotKing:'Bordets kung!', mascotAnyone:'Någon där?', mascotCheese:'Säg omelett!', mascotTable:'Ett nytt bord!', mascotMail:'Du har fått post!', mascotBravo:'Bra jobbat!',
     // Notes de joueur + étiquettes (modules/notes, extra web)

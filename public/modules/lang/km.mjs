@@ -14,6 +14,7 @@ export const meta = {
 };
 
 export const strings = {
+    rankWaitFull: "ហ្គេមចំណាត់ថ្នាក់ — កំពុងរង់ចាំអ្នកលេង {max} នាក់ ({n}/{max})។ ហ្គេមនឹងចាប់ផ្ដើមនៅពេលតុពេញ។",
     // Mascotte animée (modules/mascot, extra web)
     advMascot:'សញ្ញាសំណាងមានចលនា (អាត់) នៅលើអេក្រង់ដើម និងក្នុងឡប់ប៊ី ពេលអសកម្ម', mascotHello:'សួស្តី!', mascotBye:'ជួបគ្នាពេលក្រោយ!', mascotTada:'តាដា!', mascotKing:'ស្ដេចនៃតុ!', mascotAnyone:'មានអ្នកណានៅទេ?', mascotCheese:'ឈីស!', mascotTable:'តុថ្មីមួយ!', mascotMail:'អ្នកមានសារ!', mascotBravo:'ល្អណាស់!',
     // Notes de joueur + étiquettes (modules/notes, extra web)

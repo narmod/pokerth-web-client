@@ -15,6 +15,7 @@ export const meta = {
 };
 
 export const strings = {
+    rankWaitFull: "Partita valida per la classifica — in attesa di {max} giocatori ({n}/{max}). La partita inizierà quando il tavolo sarà completo.",
     // Mascotte animée (modules/mascot, extra web)
     advMascot:'Mascotte animata (l’Asso) nella schermata iniziale e nella lobby quando sei inattivo', mascotHello:'Ciao!', mascotBye:'A presto!', mascotTada:'Ta-dà!', mascotKing:'Il re del tavolo!', mascotAnyone:'C’è qualcuno?', mascotCheese:'Cheese!', mascotTable:'Un nuovo tavolo!', mascotMail:'Hai posta!', mascotBravo:'Ben fatto!',
     // Notes de joueur + étiquettes (modules/notes, extra web)

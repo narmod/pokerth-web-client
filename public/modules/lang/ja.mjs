@@ -9,6 +9,7 @@ export const meta = {
 };
 
 export const strings = {
+    rankWaitFull: "ランキングゲーム — {max}人のプレイヤーを待っています（{n}/{max}）。テーブルが満席になるとゲームが始まります。",
     // Mascotte animée (modules/mascot, extra web)
     advMascot:'操作がないとき、ホーム画面とロビーにアニメーションのマスコット（エース）を表示', mascotHello:'やあ！', mascotBye:'またね！', mascotTada:'ジャジャーン！', mascotKing:'テーブルの王様！', mascotAnyone:'誰かいる？', mascotCheese:'はい、チーズ！', mascotTable:'新しいテーブル！', mascotMail:'メッセージが届いたよ！', mascotBravo:'よくやった！',
     // Notes de joueur + étiquettes (modules/notes, extra web)

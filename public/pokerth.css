@@ -10723,6 +10723,7 @@ html[data-buttons="pokerth"] .btn-action[disabled] { filter: grayscale(0.55) bri
 .lgi-row .lgi-ico { opacity:0.85; }
 .lgi-blinds { color:var(--text-dim,#8b93a7); }
 .lgi-ptitle { font-weight:700; color:var(--text); font-size:var(--fs-base); margin-top:6px; }
+.lgi-rankwait { margin-top:6px; padding:6px 10px; border:1px solid var(--gold-dim); border-left-width:3px; border-radius:6px; background:rgba(212,175,55,0.08); color:var(--cream); font-size:var(--fs-sm); line-height:1.35; }
 .lgi-players { display:flex; flex-direction:column; gap:5px; }
 .lgi-gname { font-weight:700; color:var(--cream); font-size:var(--fs-md); }
 /* Barre du bas (centre) : options d'attente qui remplacent « + Créer une

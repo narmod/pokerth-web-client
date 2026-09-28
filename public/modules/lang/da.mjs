@@ -9,6 +9,7 @@ export const meta = {
 };
 
 export const strings = {
+    rankWaitFull: "Ranglistespil — venter på {max} spillere ({n}/{max}). Spillet starter, når bordet er fuldt.",
     // Mascotte animée (modules/mascot, extra web)
     advMascot:'Animeret maskot (esset) på startskærmen og i lobbyen ved inaktivitet', mascotHello:'Hej!', mascotBye:'Vi ses!', mascotTada:'Tada!', mascotKing:'Kongen af bordet!', mascotAnyone:'Er der nogen?', mascotCheese:'Sig appelsin!', mascotTable:'Et nyt bord!', mascotMail:'Du har fået post!', mascotBravo:'Godt gået!',
     // Notes de joueur + étiquettes (modules/notes, extra web)

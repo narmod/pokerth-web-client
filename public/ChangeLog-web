@@ -1,4 +1,7 @@
-2026-09-28 version 2.1.9-web.245 (current series):
+2026-09-28 version 2.1.9-web.246 (current series):
+- new: pokerth.net, ranking and Cup tables — the game info panel shows how many players are still missing (e.g. 3/10): a ranking game only starts, and counts, with a full table of 10
+
+2026-09-28 version 2.1.9-web.245:
 - improvement: forum news — the translate button of a post turns yellow while the translation is shown, like the active tabs
 
 2026-09-28 version 2.1.9-web.244:

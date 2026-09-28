@@ -17,6 +17,7 @@ export const meta = {
 };
 
 export const strings = {
+    rankWaitFull: "Рэйтынгавая гульня — чакаем {max} гульцоў ({n}/{max}). Гульня пачнецца, калі стол запоўніцца.",
     // Mascotte animée (modules/mascot, extra web)
     advMascot:'Аніміраваны талісман (туз) на галоўным экране і ў лобі пры бяздзейнасці', mascotHello:'Прывітанне!', mascotBye:'Да сустрэчы!', mascotTada:'Та-да!', mascotKing:'Кароль стала!', mascotAnyone:'Ёсць тут хто?', mascotCheese:'Скажы «сыр»!', mascotTable:'Новы стол!', mascotMail:'Вам ліст!', mascotBravo:'Малайчына!',
     // Notes de joueur + étiquettes (modules/notes, extra web)

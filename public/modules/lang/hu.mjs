@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+    rankWaitFull: "Ranglistás játék — {max} játékosra várunk ({n}/{max}). A játék akkor indul, amikor megtelik az asztal.",
     // Mascotte animée (modules/mascot, extra web)
     advMascot:'Animált kabala (az ász) a kezdőképernyőn és az előtérben tétlenség esetén', mascotHello:'Szia!', mascotBye:'Viszlát!', mascotTada:'Tadam!', mascotKing:'Az asztal királya!', mascotAnyone:'Van itt valaki?', mascotCheese:'Csíz!', mascotTable:'Új asztal!', mascotMail:'Leveled jött!', mascotBravo:'Szép munka!',
     // Notes de joueur + étiquettes (modules/notes, extra web)

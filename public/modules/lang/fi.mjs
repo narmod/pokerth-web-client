@@ -9,6 +9,7 @@ export const meta = {
 };
 
 export const strings = {
+    rankWaitFull: "Ranking-peli — odotetaan {max} pelaajaa ({n}/{max}). Peli alkaa, kun pöytä on täynnä.",
     // Mascotte animée (modules/mascot, extra web)
     advMascot:'Animoitu maskotti (ässä) aloitusnäytössä ja aulassa, kun et tee mitään', mascotHello:'Moi!', mascotBye:'Nähdään!', mascotTada:'Tadaa!', mascotKing:'Pöydän kuningas!', mascotAnyone:'Onko ketään?', mascotCheese:'Muikku!', mascotTable:'Uusi pöytä!', mascotMail:'Sinulle on postia!', mascotBravo:'Hienoa!',
     // Notes de joueur + étiquettes (modules/notes, extra web)
