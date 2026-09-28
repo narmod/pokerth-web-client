@@ -307,6 +307,19 @@ export function hasOpenSurface() {
   return !!_topSurface();
 }
 
+// Toutes les surfaces ouvertes (éléments visibles), lecture seule — la
+// mascotte (modules/mascot) s'en sert pour distinguer une fenêtre flottante
+// (elle peut jouer dessus) d'une modale ou d'un menu (elle attend).
+export function openSurfaces() {
+  var out = [];
+  for (var i = 0; i < REG.length; i++) if (_visible(REG[i].el)) out.push(REG[i].el);
+  for (var j = 0; j < SURFACES.length; j++) {
+    var el = document.getElementById(SURFACES[j][0]);
+    if (_visible(el)) out.push(el);
+  }
+  return out;
+}
+
 // Enregistrement à chaud, pour les surfaces créées dynamiquement.
 // close() doit ANNULER (jamais valider).
 export function registerOverlay(el, close) {
@@ -395,6 +408,7 @@ document.addEventListener('keydown', _onKey, true);   // capture : avant les
 window.keynavRegisterOverlay = registerOverlay;
 window.keynavCloseTop = closeTop;
 window.keynavHasOpenSurface = hasOpenSurface;
+window.keynavOpenSurfaces = openSurfaces;
 window.keynavFocusInitial = focusInitial;
 window.keynavFocusStart = focusStart;
 window.keynavFocusReading = focusReading;

@@ -5,7 +5,7 @@
 // from the UI. Plays any appearance right away instead of waiting for the
 // idle timer: pick the entry, the action, the exit, a hat and a tool (or
 // leave « auto »), slow it down or speed it up, chain appearances in a loop.
-// It sits under the Ace (z-index 240 < 250) and fades while he plays.
+// It sits under the Ace (z-index 393 < 395) and fades while he plays.
 // While the panel is open the idle timer is off and clicks inside it do not
 // send the Ace away (clicks elsewhere still do, to test the dismissal).
 // Settings are remembered in localStorage (pth_mascot_panel). English only:
@@ -17,7 +17,7 @@ const KEY = 'pth_mascot_panel';
 const SPEEDS = [0.25, 0.5, 1, 1.5, 2];
 
 const CSS = `
-#mascot-panel{position:fixed;top:calc(52px + env(safe-area-inset-top,0px));right:10px;z-index:240;transition:opacity .25s;width:236px;max-width:calc(100vw - 20px);
+#mascot-panel{position:fixed;top:calc(52px + env(safe-area-inset-top,0px));right:10px;z-index:393;transition:opacity .25s;width:236px;max-width:calc(100vw - 20px);
   background:rgba(20,24,32,.94);color:#e8ecf2;border:1px solid #3a4456;border-radius:12px;box-shadow:0 10px 28px rgba(0,0,0,.5);
   font:13px/1.3 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;touch-action:none;user-select:none;-webkit-user-select:none}
 #mascot-panel .mp-head{display:flex;align-items:center;gap:6px;padding:7px 8px 7px 10px;cursor:grab;border-bottom:1px solid #2c3444}
@@ -46,9 +46,9 @@ const CSS = `
 const LABELS = {
   door: 'Door', poof: 'Puff', edge: 'Screen edge', peek: 'Peek (window top)',
   moon: 'Moonwalk', climb: 'Climb & fall', magic: 'Magic', king: 'King', knight: 'Knight', grim: 'Grimaces',
-  sleep: 'Nap', juggle: 'Juggling', none: '— greeting only —', duck: 'Duck (after peek)',
-  tophat: 'Top hat', wizard: 'Wizard', crown: 'Crown', helmet: 'Helmet', fedora: 'Fedora', nightcap: 'Nightcap',
-  wand: 'Wand', scepter: 'Scepter', sword: 'Sword', cane: 'Cane',
+  sleep: 'Nap', juggle: 'Juggling', pistol: 'Cowboy (BANG!)', rope: 'Skipping rope', none: '— greeting only —', duck: 'Duck (after peek)',
+  tophat: 'Top hat', wizard: 'Wizard', crown: 'Crown', helmet: 'Helmet', fedora: 'Fedora', nightcap: 'Nightcap', cowboy: 'Cowboy hat',
+  wand: 'Wand', scepter: 'Scepter', sword: 'Sword', cane: 'Cane', pistol: 'Pistol',
 };
 
 let el = null;

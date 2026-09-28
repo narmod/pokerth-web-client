@@ -25,7 +25,7 @@ const tr = (k, d) => { try { const s = window.t ? window.t(k) : d; return s && s
 
 // ── Static CSS (injected once) ───────────────────────────────────────
 const CSS = `
-#mascot-root{position:fixed;left:0;top:0;right:0;bottom:0;pointer-events:none;z-index:250;overflow:hidden}
+#mascot-root{position:fixed;left:0;top:0;right:0;bottom:0;pointer-events:none;z-index:395;overflow:hidden}
 #mascot-root .mc-pos{position:absolute;left:0;top:0;will-change:transform,opacity}
 #mascot-root .mc-scale{position:absolute;left:0;top:0;width:${BASE_W}px;height:${BASE_H}px;transform-origin:0 0}
 #mascot-root .mc-lean,#mascot-root .mc-flip,#mascot-root .mc-squash,#mascot-root .mc-bob,#mascot-root .mc-breath{position:absolute;left:0;top:0;width:${BASE_W}px;height:${BASE_H}px;transform-origin:84px 212px}
@@ -41,13 +41,17 @@ const CSS = `
 #mascot-root .mc-armL{transform-origin:36px 84px}#mascot-root .mc-armR{transform-origin:104px 84px}
 #mascot-root .mc-hat{transform-origin:70px 32px}#mascot-root .mc-stars-rot{transform-origin:84px 14px}
 #mascot-root .mc-f-eo,#mascot-root .mc-tw,#mascot-root .mc-z{transform-box:fill-box;transform-origin:center}
-#mascot-root .mc-f,#mascot-root .mc-fx,#mascot-root .mc-chip{opacity:0}
+#mascot-root .mc-f,#mascot-root .mc-fx,#mascot-root .mc-chip,#mascot-root .mc-suit,#mascot-root .mc-rope{opacity:0}
+#mascot-root .mc-suit-S{opacity:1}
+#mascot-root .mc-rope{transform-box:view-box;transform-origin:70px 113px}
+#mascot-root .mc-bang{transform-box:fill-box;transform-origin:0% 50%;opacity:0}
+#mascot-root .mc-gun{transform-box:view-box}
 #mascot-root .mc-m-smile .mc-f-eo,#mascot-root .mc-m-smile .mc-f-ms,
 #mascot-root .mc-m-cool .mc-f-gl,#mascot-root .mc-m-cool .mc-f-ms,
 #mascot-root .mc-m-fierce .mc-f-eo,#mascot-root .mc-m-fierce .mc-f-br,#mascot-root .mc-m-fierce .mc-f-mf{opacity:1}
 #mascot-root .mc-h,#mascot-root .mc-t{display:none}
 #mascot-root .mc-hat-tophat .mc-h-tophat,#mascot-root .mc-hat-wizard .mc-h-wizard,#mascot-root .mc-hat-crown .mc-h-crown,
-#mascot-root .mc-hat-helmet .mc-h-helmet,#mascot-root .mc-hat-fedora .mc-h-fedora,#mascot-root .mc-hat-nightcap .mc-h-nightcap,
+#mascot-root .mc-hat-helmet .mc-h-helmet,#mascot-root .mc-hat-fedora .mc-h-fedora,#mascot-root .mc-hat-nightcap .mc-h-nightcap,#mascot-root .mc-hat-cowboy .mc-h-cowboy,#mascot-root .mc-tool-pistol .mc-t-pistol,
 #mascot-root .mc-tool-wand .mc-t-wand,#mascot-root .mc-tool-scepter .mc-t-scepter,#mascot-root .mc-tool-sword .mc-t-sword,#mascot-root .mc-tool-cane .mc-t-cane{display:inline}
 #mascot-root .mc-bubble{position:absolute;left:0;top:0;opacity:0;white-space:nowrap;background:#fbf7ee;color:#141414;font:800 15px/1.2 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;padding:7px 12px;border-radius:14px;box-shadow:0 6px 16px rgba(0,0,0,.4);transform-origin:0 100%}
 #mascot-root .mc-bubble::after{content:"";position:absolute;left:12px;bottom:-7px;border-style:solid;border-width:8px 8px 0 0;border-color:#fbf7ee transparent transparent transparent}
@@ -67,6 +71,9 @@ const CSS = `
 
 // ── The Ace (base 168 × 228 px, SVG viewBox 0 0 140 190) ────────────
 const SPADE = 'M0 -6 C2.5 -2.5 6.5 -0.5 5 3 C4 5.2 1.6 5 0.7 3.4 L1.8 6.5 L-1.8 6.5 L-0.7 3.4 C-1.6 5 -4 5.2 -5 3 C-6.5 -0.5 -2.5 -2.5 0 -6Z';
+const HEART = 'M0 5.5 C-6.5 1 -6.5 -4.5 -3.2 -5 C-1.4 -5.3 0 -4 0 -2.6 C0 -4 1.4 -5.3 3.2 -5 C6.5 -4.5 6.5 1 0 5.5Z';
+const DIAMOND = 'M0 -6.2 L4.6 0 L0 6.2 L-4.6 0Z';
+const CLUB = 'M-2.8 -3.4 a2.8 2.8 0 1 0 5.6 0 a2.8 2.8 0 1 0 -5.6 0Z M-5.8 1 a2.8 2.8 0 1 0 5.6 0 a2.8 2.8 0 1 0 -5.6 0Z M0.2 1 a2.8 2.8 0 1 0 5.6 0 a2.8 2.8 0 1 0 -5.6 0Z M-0.8 1.5 L0.8 1.5 L1.9 6.5 L-1.9 6.5Z';
 const STAR4 = 'M0 -6 L1.8 -1.8 L6 0 L1.8 1.8 L0 6 L-1.8 1.8 L-6 0 L-1.8 -1.8Z';
 const SW = (w) => `style="stroke-width:${w}px;stroke-linecap:round;stroke-linejoin:round"`;
 const K = '#141414';
@@ -77,16 +84,24 @@ const LEGS = `<svg class="mc-layer" viewBox="0 0 140 190" width="168" height="22
 <g class="mc-legR"><path d="M82 126 Q83 150 88 166" fill="none" stroke="${K}" ${SW(5)}/><ellipse cx="93" cy="169" rx="11.5" ry="6.2" fill="#1b1b1b"/><ellipse cx="96" cy="167" rx="4" ry="1.6" fill="#4a4a4a"/></g>
 </svg>`;
 
+const SUIT_D = { S: SPADE, H: HEART, D: DIAMOND, C: CLUB };
+const corner = (k) => { const c = k === 'H' || k === 'D' ? '#c62828' : K;
+  const one = `<text x="41" y="46" fill="${c}" style="font:700 13px Georgia,serif">A</text><path transform="translate(45.5 56)" fill="${c}" d="${SUIT_D[k]}"/>`;
+  return `<g class="mc-suit mc-suit-${k}">${one}<g transform="rotate(180 70 80)">${one}</g></g>`; };
+const SUITS = ['S', 'H', 'D', 'C'].map(corner).join('');
+
 const FACE = `<svg viewBox="35 30 70 100" width="84" height="120">
 <defs><linearGradient id="mc-sheen" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".55"/><stop offset=".5" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#b9a98a" stop-opacity=".25"/></linearGradient></defs>
 <rect x="36.5" y="31.5" width="67" height="97" rx="8" fill="#fbf7ee" stroke="${K}" style="stroke-width:3px"/>
 <rect x="36.5" y="31.5" width="67" height="97" rx="8" fill="url(#mc-sheen)"/>
-<text x="41" y="46" fill="${K}" style="font:700 13px Georgia,serif">A</text><path transform="translate(45.5 56)" fill="${K}" d="${SPADE}"/>
-<g transform="rotate(180 70 80)"><text x="41" y="46" fill="${K}" style="font:700 13px Georgia,serif">A</text><path transform="translate(45.5 56)" fill="${K}" d="${SPADE}"/></g>
+${SUITS}
+<g class="mc-f mc-f-fl"><rect x="36.5" y="31.5" width="67" height="97" rx="8" fill="#e53935" opacity=".22"/></g>
 <circle cx="54" cy="84" r="4" fill="#f28b82" opacity=".55"/><circle cx="86" cy="84" r="4" fill="#f28b82" opacity=".55"/>
 <g class="mc-f mc-f-eo"><ellipse cx="61" cy="72" rx="4" ry="5.5" fill="${K}"/><ellipse cx="79" cy="72" rx="4" ry="5.5" fill="${K}"/><circle cx="62.4" cy="70" r="1.4" fill="#fff"/><circle cx="80.4" cy="70" r="1.4" fill="#fff"/></g>
 <g class="mc-f mc-f-ec" fill="none" stroke="${K}" ${SW(2.8)}><path d="M56 73 Q61 66 66 73"/><path d="M74 73 Q79 66 84 73"/></g>
 <g class="mc-f mc-f-ew"><ellipse cx="61" cy="72" rx="4" ry="5.5" fill="${K}"/><circle cx="62.4" cy="70" r="1.4" fill="#fff"/><path d="M74 72 Q79 67 84 72" fill="none" stroke="${K}" ${SW(2.8)}/></g>
+<g class="mc-f mc-f-eh" fill="#e0245e"><path transform="translate(61 72) scale(1.25)" d="${HEART}"/><path transform="translate(79 72) scale(1.25)" d="${HEART}"/></g>
+<g class="mc-f mc-f-et" fill="#6ec6ff" stroke="#2b7bb9" style="stroke-width:.8px"><path d="M58 77 C55.5 81 55.5 84 58 84 C60.5 84 60.5 81 58 77Z"/><path d="M82 77 C79.5 81 79.5 84 82 84 C84.5 84 84.5 81 82 77Z"/></g>
 <g class="mc-f mc-f-ez" fill="none" stroke="${K}" ${SW(2.8)}><path d="M56 72 Q61 77 66 72"/><path d="M74 72 Q79 77 84 72"/></g>
 <g class="mc-f mc-f-ed" fill="none" stroke="${K}" ${SW(2.6)}><path d="M57 67 L65 76 M65 67 L57 76"/><path d="M75 67 L83 76 M83 67 L75 76"/></g>
 <g class="mc-f mc-f-ex"><circle cx="61" cy="72" r="6" fill="#fff" stroke="${K}" style="stroke-width:1.6px"/><circle cx="79" cy="72" r="6" fill="#fff" stroke="${K}" style="stroke-width:1.6px"/><circle cx="64.4" cy="72.5" r="2.8" fill="${K}"/><circle cx="75.6" cy="72.5" r="2.8" fill="${K}"/></g>
@@ -99,7 +114,7 @@ const FACE = `<svg viewBox="35 30 70 100" width="84" height="120">
 <ellipse class="mc-f mc-f-mu" cx="70" cy="88" rx="4" ry="5.5" fill="${K}"/>
 <path class="mc-f mc-f-mw" d="M60 88 Q63 85 66 88 Q69 91 72 88 Q75 85 78 88 Q80 90 81 88" fill="none" stroke="${K}" ${SW(2.5)}/>
 <path class="mc-f mc-f-mf" d="M63 88 L77 86" stroke="${K}" ${SW(3)}/>
-<path transform="translate(70 110) scale(1.4)" fill="${K}" d="${SPADE}"/>
+<g class="mc-f mc-f-mg"><rect x="61" y="84" width="18" height="8" rx="2.5" fill="#fff" stroke="${K}" style="stroke-width:1.8px"/><path d="M61 88 L79 88 M65.5 84 L65.5 92 M70 84 L70 92 M74.5 84 L74.5 92" stroke="${K}" style="stroke-width:1px"/></g>
 </svg>`;
 
 const ARMS = `<svg class="mc-layer" viewBox="0 0 140 190" width="168" height="228">
@@ -108,6 +123,13 @@ const ARMS = `<svg class="mc-layer" viewBox="0 0 140 190" width="168" height="22
 <g class="mc-t mc-t-wand" transform="translate(123 113) rotate(-33.3)"><path d="M0 -4 L0 34" stroke="${K}" ${SW(4)}/><path d="M0 27 L0 34" stroke="#fbf7ee" ${SW(4)}/></g>
 <g class="mc-t mc-t-scepter" transform="translate(123 113) rotate(-33.3)"><path d="M0 -8 L0 46" stroke="#b8860b" ${SW(4)}/><circle cx="0" cy="51" r="6" fill="#f5c518" stroke="${K}" style="stroke-width:1.5px"/><path d="M0 57 L0 64 M-3.5 60.5 L3.5 60.5" stroke="#f5c518" ${SW(2.2)}/><circle cx="0" cy="-9" r="2.8" fill="#f5c518" stroke="${K}" style="stroke-width:1px"/></g>
 <g class="mc-t mc-t-sword" transform="translate(123 113) rotate(-33.3)"><circle cx="0" cy="-9" r="3" fill="#f5c518" stroke="${K}" style="stroke-width:1.2px"/><rect x="-2" y="-7" width="4" height="13" fill="#6b3d22"/><rect x="-10" y="6" width="20" height="4" rx="2" fill="#f5c518" stroke="${K}" style="stroke-width:1.2px"/><path d="M-3 10 L3 10 L3 58 L0 65 L-3 58Z" fill="#dfe4eb" stroke="${K}" ${SW(1.4)}/><path d="M0 12 L0 57" stroke="#9aa3ae" style="stroke-width:1px"/></g>
+<g class="mc-t mc-t-pistol"><g class="mc-gun" transform="translate(123 113) rotate(55) scale(1.25)">
+<path d="M-3 -2 L5 -2 L2 11 L-6 10Z" fill="#6b3d22" stroke="${K}" ${SW(1.3)}/>
+<rect x="-5" y="-9" width="25" height="7" rx="1.5" fill="#4a4f57" stroke="${K}" style="stroke-width:1.3px"/>
+<rect x="19" y="-8" width="9" height="4.5" rx="1" fill="#6b717b" stroke="${K}" style="stroke-width:1.1px"/>
+<circle cx="5" cy="-5.5" r="4.2" fill="#8b929c" stroke="${K}" style="stroke-width:1.1px"/><path d="M3 -2 Q6 5 10 -2" fill="none" stroke="${K}" ${SW(1.3)}/>
+<g class="mc-bang"><path d="M28 -5.8 L50 -5.8" stroke="#8a5a2b" ${SW(1.6)}/><rect x="50" y="-15" width="38" height="17" rx="1.5" fill="#fff" stroke="${K}" style="stroke-width:1.2px"/><text class="mc-bang-t" x="69" y="-2.4" text-anchor="middle" fill="#c62828" style="font:900 11px Impact,'Arial Black',sans-serif">BANG!</text></g>
+</g></g>
 <g class="mc-t mc-t-cane"><path d="M125 114 L131 176" stroke="${K}" ${SW(3.6)}/><path d="M125 114 Q122 103 114 106" fill="none" stroke="${K}" ${SW(3.6)}/><path d="M130.6 171 L131 176" stroke="#fbf7ee" ${SW(3.6)}/></g>
 <circle cx="123" cy="113" r="7.5" fill="#fff" stroke="${K}" style="stroke-width:2.5px"/></g>
 </svg>`;
@@ -118,6 +140,7 @@ const HATS = `<svg class="mc-layer" viewBox="0 0 140 190" width="168" height="22
 <g class="mc-h mc-h-crown"><path d="M49 34 L51 13 L61 23 L70 7 L79 23 L89 13 L91 34Z" fill="#f5c518" stroke="${K}" ${SW(2.2)}/><rect x="49" y="28" width="42" height="6" fill="#d4a017" stroke="${K}" style="stroke-width:1.5px"/><circle cx="70" cy="21" r="3" fill="#c62828"/><circle cx="58" cy="31" r="2" fill="#2a6fdb"/><circle cx="82" cy="31" r="2" fill="#2a6fdb"/><circle cx="51" cy="12" r="2.4" fill="#f5c518" stroke="${K}" style="stroke-width:1px"/><circle cx="89" cy="12" r="2.4" fill="#f5c518" stroke="${K}" style="stroke-width:1px"/><circle cx="70" cy="6" r="2.6" fill="#f5c518" stroke="${K}" style="stroke-width:1px"/></g>
 <g class="mc-h mc-h-helmet"><path d="M70 7 Q76 -16 94 -17 Q86 -5 81 6Z" fill="#c62828" stroke="${K}" style="stroke-width:1.6px"/><path d="M37 50 L37 42 Q37 8 70 6 Q103 8 103 42 L103 50Z" fill="#b8c0cc" stroke="${K}" style="stroke-width:2px"/><rect x="37" y="43" width="66" height="7" fill="#8b95a5" stroke="${K}" style="stroke-width:1.5px"/><rect x="68" y="47" width="4" height="15" rx="1.5" fill="#8b95a5" stroke="${K}" style="stroke-width:1.3px"/><path d="M50 16 Q58 10 66 10" fill="none" stroke="#e8ecf2" ${SW(3)}/><circle cx="44" cy="46.5" r="1.3" fill="${K}"/><circle cx="96" cy="46.5" r="1.3" fill="${K}"/></g>
 <g class="mc-h mc-h-fedora" transform="rotate(-8 70 32)"><path d="M51 30 Q50 9 58 6 Q70 12 82 6 Q90 9 89 30Z" fill="#1b1b1b" stroke="${K}" style="stroke-width:2px"/><rect x="51" y="21" width="38" height="5" fill="#f4f1ea"/><ellipse cx="70" cy="31" rx="33" ry="5" fill="#1b1b1b" stroke="${K}" style="stroke-width:2px"/></g>
+<g class="mc-h mc-h-cowboy"><path d="M52 31 Q49 9 61 9 Q70 15 79 9 Q91 9 88 31Z" fill="#9a6532" stroke="${K}" ${SW(2)}/><path d="M53 25 Q70 28 87 25 L87 30 Q70 33 53 30Z" fill="#3b2412"/><path d="M30 26 Q38 36 70 36 Q102 36 110 26 Q104 40 70 41 Q36 40 30 26Z" fill="#9a6532" stroke="${K}" ${SW(2)}/></g>
 <g class="mc-h mc-h-nightcap"><path d="M47 33 C48 12 64 2 84 5 C100 8 110 20 113 36 L106 37 C103 27 96 20 88 19 C92 24 93 29 93 33Z" fill="#3b5bdb" stroke="${K}" ${SW(2)}/><path d="M60 12 L66 26 M74 6 L78 22 M90 10 L90 20" stroke="#dbe4ff" ${SW(2.4)}/><rect x="45" y="27" width="50" height="8" rx="4" fill="#f4f1ea" stroke="${K}" style="stroke-width:1.8px"/><circle cx="110" cy="40" r="5.5" fill="#f4f1ea" stroke="${K}" style="stroke-width:1.6px"/></g>
 </g></svg>`;
 
@@ -141,11 +164,17 @@ const FX2 = `<svg class="mc-layer" viewBox="0 0 140 190" width="168" height="228
 <g class="mc-fx mc-fx-thrust" stroke="#e8f0ff" ${SW(3)}><path d="M170 58 L205 58"/><path d="M166 70 L196 70"/><path d="M172 82 L200 82"/></g>
 </svg>`;
 
+// Skipping rope: the same loop drawn behind him (upper half of its turn) and
+// in front of him (lower half), flipped around the hands' height.
+const ROPE_D = 'M17 113 C8 206 132 206 123 113';
+const ROPE_B = `<svg class="mc-layer" viewBox="0 0 140 190" width="168" height="228"><g class="mc-rope mc-rope-b" fill="none"><path d="${ROPE_D}" stroke="${K}" ${SW(4.6)}/><path d="${ROPE_D}" stroke="#f5c518" ${SW(2.4)}/></g></svg>`;
+const ROPE_F = `<svg class="mc-layer" viewBox="0 0 140 190" width="168" height="228"><g class="mc-rope mc-rope-f" fill="none"><path d="${ROPE_D}" stroke="${K}" ${SW(4.6)}/><path d="${ROPE_D}" stroke="#f5c518" ${SW(2.4)}/></g></svg>`;
+
 const ACTOR = `<div class="mc-scale"><div class="mc-lean"><div class="mc-flip">
 <div class="mc-squash"><div class="mc-bob"><div class="mc-breath">
-${LEGS}
+${ROPE_B}${LEGS}
 <div class="mc-cardwrap"><div class="mc-card3d"><div class="mc-face">${FACE}</div><div class="mc-back"><i></i><img src="/logo-chip.png" alt=""></div></div></div>
-${ARMS}${HATS}${CHIPS}
+${ARMS}${ROPE_F}${HATS}${CHIPS}
 </div></div></div>${FX2}
 </div></div>${FX}</div><div class="mc-bubble"></div>`;
 
@@ -174,9 +203,10 @@ const mwFrames = (D) => { const a = -9 * D, b = 7 * D;   // flat foot slides wit
     { transform: `translate(${a}px,0px) rotate(0deg)` }]; };
 const mwFramesB = (D) => { const f = mwFrames(D); return [f[2], { ...f[3], offset: 0.42 }, { ...f[4], offset: 0.5 }, { ...f[1], offset: 0.96 }, { ...f[2], offset: 1 }].map((o, i) => (i === 0 ? { transform: o.transform } : o)); };
 
-const FACES = ['eo', 'ec', 'ew', 'ez', 'ed', 'ex', 'es', 'gl', 'br', 'ms', 'mo', 'mt', 'mu', 'mw', 'mf'];
+const FACES = ['eo', 'ec', 'ew', 'ez', 'eh', 'et', 'ed', 'ex', 'es', 'gl', 'br', 'fl', 'ms', 'mo', 'mt', 'mu', 'mw', 'mf', 'mg'];
 const GRIN = ['ec', 'mo'], SURPRISED = ['es', 'mu'], DIZZY = ['ed', 'mw'], WINK = ['ew', 'ms'];
 const YAWN = ['ec', 'mu'], ASLEEP = ['ez', 'mf'], FOCUS = ['eo', 'mt'];
+const LOVE = ['eh', 'ms'], ANGRY = ['eo', 'br', 'mg', 'fl'], CRY = ['ez', 'et', 'mw'], TEETH = ['ec', 'mg'];
 
 // ── Appearance state ─────────────────────────────────────────────────
 let cur = null;   // { root, st, E, anims, timers, dead, x, costume }
@@ -222,8 +252,10 @@ function build(st, costume) {
     armL: q('.mc-armL'), armR: q('.mc-armR'), hat: q('.mc-hat'), bubble: q('.mc-bubble'),
     stars: q('.mc-fx-stars'), starsRot: q('.mc-stars-rot'), spark: q('.mc-fx-spark'),
     slash: q('.mc-fx-slash'), thrust: q('.mc-fx-thrust'), zz: q('.mc-fx-zz'),
-    chips: Array.prototype.slice.call(pos.querySelectorAll('.mc-chip')), face: {},
+    chips: Array.prototype.slice.call(pos.querySelectorAll('.mc-chip')), face: {}, suit: {},
+    ropeB: q('.mc-rope-b'), ropeF: q('.mc-rope-f'), gun: q('.mc-gun'), bang: q('.mc-bang'),
   };
+  ['S', 'H', 'D', 'C'].forEach((k) => { E.suit[k] = q('.mc-suit-' + k); });
   FACES.forEach((f) => { E.face[f] = q('.mc-f-' + f); });
   E.scale.style.transform = `scale(${st.k})`;
   pos.style.opacity = '0';
@@ -279,6 +311,13 @@ function faceWin(t0, t1, show) {
   for (const f of FACES) {
     const v = show.indexOf(f) >= 0 ? 1 : 0;
     play(cur.E.face[f], [{ opacity: v }, { opacity: v }], { duration: Math.max(1, t1 - t0), delay: t0, fill: 'none' });
+  }
+}
+/** Suit shown in the card's corners from t0 to t1 (S ♠, H ♥, D ♦, C ♣). */
+function suitWin(t0, t1, k) {
+  for (const s of ['S', 'H', 'D', 'C']) {
+    const v = s === k ? 1 : 0;
+    play(cur.E.suit[s], [{ opacity: v }, { opacity: v }], { duration: Math.max(1, t1 - t0), delay: t0, fill: 'none' });
   }
 }
 function fxWin(node, t0, t1) {
@@ -471,6 +510,7 @@ async function actClimb(plan) {
   const { st, E } = cur;
   if (!plan) return actGrim();
   const x0 = cur.x, S = plan.dir, k = st.k;
+  const CL = plan.front ? 180 : 125 * S;   // side view on a panel's side, back to us on its front
   const pos = [[0, P(x0, st.yF)]], card = [[0, ry(0)]];
   let t = 0;
   // 1. walk to the foot of the panel
@@ -485,9 +525,9 @@ async function actClimb(plan) {
     yStart = plan.yHang;
     squashPts.push([t, sq(1, 1)], [t + 250, sq(1.1, 0.88)], [t + 330, sq(0.92, 1.1)], [t + 650, sq(1, 1)]);
     pos.push([t + 250, P(plan.xClimb, st.yF), 'ease-out'], [t + 470, P(plan.xClimb, yStart - 0.12 * st.h), 'ease-in'], [t + 650, P(plan.xClimb, yStart)]);
-    card.push([t + 300, ry(125 * S)]);
+    card.push([t + 300, ry(CL)]);
     t += 650;
-  } else card.push([t + 300, ry(125 * S)]);
+  } else card.push([t + 300, ry(CL)]);
   // 3. climb, pull by pull
   const dy = yStart - plan.yGrab;
   const climbMs = Math.max(900, Math.min(3800, dy / (70 * k) * 1000));
@@ -499,7 +539,7 @@ async function actClimb(plan) {
   cycle(E.armL, CLIMB_L, cp, t, nP); cycle(E.armR, CLIMB_R, cp, t, nP);
   cycle(E.legL, KICK_F, cp, t, nP); cycle(E.legR, KICK_B, cp, t, nP);
   t += climbMs;
-  card.push([t, ry(125 * S)]);
+  card.push([t, ry(CL)]);
   // 4. mantle onto the top
   pos.push([t + 250, P((plan.xClimb + plan.xTop) / 2, plan.yP - 0.1 * st.h), 'ease-out'], [t + 450, P(plan.xTop, plan.yP)]);
   card.push([t + 450, facing(S)]);
@@ -596,8 +636,17 @@ async function actKnight() {
 
 async function actGrim() {
   const { E } = cur;
-  const seq = [['ew', 'mt'], ['ex', 'mt'], SURPRISED, GRIN, DIZZY, ['eo', 'ms']];
-  seq.forEach((f, i) => faceWin(i * 1000, (i + 1) * 1000, f));
+  const seq = [['ew', 'mt'], ['ex', 'mt'], LOVE, ANGRY, CRY, TEETH, DIZZY, ['eo', 'ms']];
+  const D = 6000 / seq.length;
+  seq.forEach((f, i) => faceWin(i * D, (i + 1) * D, f));
+  suitWin(2 * D, 3 * D, 'H');                  // in love: hearts in the corners
+  suitWin(3 * D, 4 * D, 'C');                  // angry: clubs
+  suitWin(4 * D, 5 * D, 'D');                  // tears: diamonds
+  // big grin: the corners flick through the four suits
+  ['H', 'D', 'C', 'S'].forEach((k, i) => suitWin(5 * D + i * D / 4, 5 * D + (i + 1) * D / 4, k));
+  // heart eyes beat, angry shakes
+  play(E.face.eh, [{ transform: 'scale(1)' }, { offset: 0.5, transform: 'scale(1.12)' }, { transform: 'scale(1)' }], { duration: D / 3, delay: 2 * D, iterations: 3, fill: 'none' });
+  play(E.pos.querySelector('.mc-cardwrap'), [{ transform: 'translateX(0px)' }, { offset: 0.25, transform: 'translateX(-1.5px)' }, { offset: 0.75, transform: 'translateX(1.5px)' }, { transform: 'translateX(0px)' }], { duration: 90, delay: 3 * D + 150, iterations: Math.floor((D - 250) / 90), fill: 'none' });
   track(E.lean, 6000, [[0, rot(0)], [480, rot(-7)], [960, rot(0)], [1500, rot(7)], [1980, rot(0)], [2520, rot(-4)], [3000, rot(0)], [3480, rot(6)], [3960, rot(0)], [4500, rot(-8)], [4800, rot(8)], [5100, rot(0)]]);
   track(E.card, 6000, [[0, ry(0)], [720, ry(22)], [1680, ry(-18)], [2700, ry(0)], [3720, ry(16)], [4800, ry(-12)], [5400, ry(0)]]);
   track(E.squash, 6000, [[0, sq(1, 1)], [1980, sq(1, 1)], [2160, sq(0.92, 1.12)], [2640, sq(1, 1)], [3120, sq(1.08, 0.92)], [3600, sq(1, 1)]]);
@@ -723,6 +772,75 @@ async function actJuggle() {
   await wait(total + 50);
 }
 
+// ── Cowboy: draws, twirls, aims… BANG! (a flag pops out of the barrel) ─
+async function actPistol() {
+  const { st, E } = cur;
+  const x = cur.x, D = (st.maxX - x) >= (x - st.minX) ? 1 : -1, total = 6400;
+  track(E.flip, total, [[0, { transform: `scaleX(${D})` }], [total, { transform: `scaleX(${D})` }]], 'none');
+  // shooting to the left, the whole Ace is mirrored: un-mirror the flag's text
+  const bt = E.bang.querySelector('.mc-bang-t');
+  if (bt) { if (D < 0) bt.setAttribute('transform', 'translate(138 0) scale(-1 1)'); else bt.removeAttribute('transform'); }
+  // quick draw: the arm flicks up and the revolver twirls twice
+  track(E.armR, total, [[0, rot(0)], [300, rot(-150)], [900, rot(-150)], [1200, rot(-55)], [4300, rot(-55)], [4600, rot(-100)], [5100, rot(-100)], [5500, rot(0)]]);
+  track(E.gun, 1100, [[0, { transform: 'rotate(0deg)' }], [300, { transform: 'rotate(0deg)' }], [900, { transform: 'rotate(720deg)' }], [1100, { transform: 'rotate(720deg)' }]], 'none');
+  track(E.armL, total, [[0, rot(0)], [1200, rot(0)], [1500, rot(-40)], [2600, rot(-40)], [2700, rot(0)], [4600, rot(0)], [5000, rot(60)], [5300, rot(60)], [5600, rot(0)]]);
+  track(E.card, total, [[0, ry(0)], [1200, ry(0)], [1500, ry(20)], [2600, ry(20)], [2900, ry(0)]]);
+  track(E.lean, total, [[0, rot(0)], [1200, rot(0)], [1500, rot(-5)], [2550, rot(-5)], [2650, rot(-12), 'ease-out'], [3000, rot(0)], [4600, rot(0)], [4800, rot(-4)], [5100, rot(4)], [5400, rot(0)]]);
+  track(E.legL, total, [[0, rot(0)], [1200, rot(0)], [1500, rot(14)], [2900, rot(14)], [3200, rot(0)]]);
+  track(E.legR, total, [[0, rot(0)], [1200, rot(0)], [1500, rot(-14)], [2900, rot(-14)], [3200, rot(0)]]);
+  faceWin(1300, 2550, ['ew', 'mf']);          // squints, takes aim
+  faceWin(2550, 3500, SURPRISED);               // BANG?!
+  faceWin(3500, 4600, ['ex', 'mo']);            // cross-eyed at the flag
+  faceWin(4600, 5800, TEETH);                   // sheepish grin, shrug
+  suitWin(2550, 3500, 'D');
+  // the flag shoots out, wobbles, droops, then goes back in
+  track(E.bang, 4400, [[0, { transform: 'scale(0,1) rotate(0deg)', opacity: 0 }], [2500, { transform: 'scale(0,1) rotate(0deg)', opacity: 0 }],
+    [2560, { transform: 'scale(.2,1) rotate(0deg)', opacity: 1 }], [2700, { transform: 'scale(1.15,1.1) rotate(-6deg)', opacity: 1 }],
+    [2850, { transform: 'scale(.95,1) rotate(4deg)', opacity: 1 }], [3000, { transform: 'scale(1,1) rotate(0deg)', opacity: 1 }],
+    [3600, { transform: 'scale(1,1) rotate(0deg)', opacity: 1 }], [3900, { transform: 'scale(1,1) rotate(28deg)', opacity: 1 }],
+    [4150, { transform: 'scale(1,1) rotate(28deg)', opacity: 1 }], [4400, { transform: 'scale(0,1) rotate(28deg)', opacity: 0 }]]);
+  track(E.squash, total, [[0, sq(1, 1)], [2550, sq(1, 1)], [2650, sq(0.9, 1.12)], [2900, sq(1, 1)], [4700, sq(1, 1)], [4850, sq(1.05, 0.95)], [5000, sq(1, 1)]]);
+  track(E.hat, total, [[0, { transform: 'translate(0px,0px) rotate(0deg)' }], [2550, { transform: 'translate(0px,0px) rotate(0deg)' }], [2700, { transform: 'translate(-2px,-16px) rotate(-14deg)' }], [2950, { transform: 'translate(0px,0px) rotate(-4deg)' }], [3200, { transform: 'translate(0px,0px) rotate(0deg)' }]]);
+  await wait(total + 50);
+}
+
+// ── Skipping rope: a steady rhythm, faster and faster… then he trips ─
+async function actRope() {
+  const { st, E } = cur, k = st.k, x = cur.x;
+  const slow = 640, nS = 6, fast = 400, nF = 4, t0 = 500;
+  const tF = t0 + nS * slow, tT = tF + nF * fast;   // tT: the rope catches his feet
+  const turn = [{ transform: 'scaleY(1)' }, { offset: 0.25, transform: 'scaleY(0)' }, { offset: 0.5, transform: 'scaleY(-1.4)' }, { offset: 0.75, transform: 'scaleY(0)' }, { transform: 'scaleY(1)' }];
+  const front = (on) => [{ opacity: on }, { offset: 0.25, opacity: on }, { offset: 0.2501, opacity: 1 - on }, { offset: 0.7499, opacity: 1 - on }, { offset: 0.75, opacity: on }, { opacity: on }];
+  const jump = [{ transform: 'translateY(-15px)', easing: 'ease-in' }, { offset: 0.5, transform: 'translateY(0px)', easing: 'ease-out' }, { transform: 'translateY(-15px)' }];
+  const tuck = (a) => [rot(a), { offset: 0.5, ...rot(0) }, rot(a)];
+  const turnArm = (a) => [rot(a), { offset: 0.5, ...rot(-a) }, rot(a)];
+  // the rope appears in his hands (start: lying behind his heels, up and over)
+  play(E.ropeB, [{ opacity: 0 }, { opacity: 1 }], { duration: 300, delay: 150, fill: 'none' });
+  for (const [ms, n, d] of [[slow, nS, t0], [fast, nF, tF]]) {
+    cycle(E.ropeF, turn, ms, d, n); cycle(E.ropeB, turn, ms, d, n);
+    play(E.ropeF, front(1), { duration: ms, delay: d, iterations: n, fill: 'none' });
+    play(E.ropeB, front(0), { duration: ms, delay: d, iterations: n, fill: 'none' });
+    cycle(E.bob, jump, ms, d, n);
+    cycle(E.legL, tuck(12), ms, d, n); cycle(E.legR, tuck(-12), ms, d, n);
+    cycle(E.armL, turnArm(10), ms, d, n); cycle(E.armR, turnArm(-10), ms, d, n);
+  }
+  faceWin(t0, tF, ['eo', 'ms']);
+  faceWin(tF, tT, SURPRISED);
+  // tripped: the rope stays under his feet, he goes flat on his face
+  const ti = tT + 260, total = ti + 2300;
+  play(E.ropeF, [{ opacity: 1, transform: 'scaleY(1)' }, { opacity: 1, transform: 'scaleY(1)' }], { duration: ti + 1500 - tT, delay: tT, fill: 'none' });
+  track(E.pos, total, [[0, P(x, st.yF)], [tT, P(x, st.yF), 'ease-in'], [ti, P(x, st.yF + 6 * k)], [ti + 1400, P(x, st.yF + 6 * k), 'ease-out'], [ti + 1700, P(x, st.yF)]]);
+  track(E.lean, total, [[0, rot(0)], [tT, rot(0)], [tT + 120, rot(-10)], [ti, rot(8)], [ti + 60, rot(0)], [ti + 1700, rot(0)], [ti + 1850, rot(-7)], [ti + 2000, rot(6)], [ti + 2150, rot(0)]]);
+  track(E.squash, total, [[0, sq(1, 1)], [tT, sq(1, 1)], [ti - 20, sq(0.95, 1.08)], [ti + 60, sq(1.7, 0.3)], [ti + 1350, sq(1.65, 0.32)], [ti + 1600, sq(0.86, 1.18)], [ti + 1800, sq(1.08, 0.92)], [ti + 1950, sq(1, 1)]]);
+  track(E.armL, total, [[0, rot(0)], [tT, rot(0)], [tT + 150, rot(150)], [ti, rot(110)], [ti + 1500, rot(110)], [ti + 1800, rot(0)]], 'none');
+  track(E.armR, total, [[0, rot(0)], [tT, rot(0)], [tT + 150, rot(-150)], [ti, rot(-110)], [ti + 1500, rot(-110)], [ti + 1800, rot(0)]], 'none');
+  faceWin(ti, ti + 1700, DIZZY);
+  fxWin(E.stars, ti, ti + 1700);
+  track(E.stars, ti + 1600, [[0, { transform: 'translate(0px,130px)' }], [ti + 1350, { transform: 'translate(0px,130px)' }], [ti + 1600, { transform: 'translate(0px,0px)' }]]);
+  floorFx('dust', x + st.w / 2, st.floor + 4 * k, ti, 800);
+  await wait(total + 50);
+}
+
 // ── Public API ───────────────────────────────────────────────────────
 function panelRects() {
   const scr = document.querySelector('.screen.active');
@@ -743,6 +861,15 @@ function panelRects() {
       if (alpha < 0.5 && cs.borderTopStyle === 'none') continue;
     }
     out.push({ left: r.left, top: r.top, right: r.right, bottom: r.bottom });
+  }
+  // Open floating windows (ranking, forum, private messages, player info…):
+  // he climbs them, peeks over them and teleports onto them first.
+  for (const el of document.querySelectorAll('.floating-win')) {
+    if (el.closest('#mascot-panel')) continue;
+    const r = el.getBoundingClientRect();
+    if (r.width < 120 || r.height < 60) continue;
+    try { const cs = getComputedStyle(el); if (cs.display === 'none' || cs.visibility === 'hidden') continue; } catch (e) { continue; }
+    out.push({ left: r.left, top: r.top, right: r.right, bottom: r.bottom, win: true });
   }
   return out;
 }
@@ -793,10 +920,10 @@ export function dismiss() {
 /** Entries, actions, exits, hats and tools the test panel can offer. */
 export const CATALOG = {
   entries: ['door', 'poof', 'edge', 'peek'],
-  actions: ['moon', 'climb', 'magic', 'king', 'knight', 'grim', 'sleep', 'juggle', 'none'],
+  actions: ['moon', 'climb', 'magic', 'king', 'knight', 'grim', 'sleep', 'juggle', 'pistol', 'rope', 'none'],
   exits: ['door', 'poof', 'edge', 'duck'],
-  hats: ['none', 'tophat', 'wizard', 'crown', 'helmet', 'fedora', 'nightcap'],
-  tools: ['none', 'wand', 'scepter', 'sword', 'cane'],
+  hats: ['none', 'tophat', 'wizard', 'crown', 'helmet', 'fedora', 'nightcap', 'cowboy'],
+  tools: ['none', 'wand', 'scepter', 'sword', 'cane', 'pistol'],
 };
 
 /**
@@ -811,8 +938,9 @@ export async function appear(opts = {}) {
   const rnd = opts.rnd || Math.random;
   const st = stageOf(window.innerWidth, window.innerHeight, safeBottom());
   const rects = panelRects();
-  const plan = pickPanel(st, rects);
-  const peek = pickPeek(st, rects, rnd);
+  const wins = rects.filter((r) => r.win);
+  const plan = pickPanel(st, wins) || pickPanel(st, rects);
+  const peek = pickPeek(st, wins, rnd) || pickPeek(st, rects, rnd);
   const none = opts.action === 'none';
   const seq = pickSequence(rnd, { climb: !!plan, peek: !!peek, force: none ? undefined : opts.action });
   if (none) seq.actions = [];
@@ -837,7 +965,7 @@ export async function appear(opts = {}) {
   play(E.starsRot, [{ transform: 'rotate(0deg)' }, { transform: 'rotate(360deg)' }], { duration: 1100, iterations: Infinity });
   E.spark.querySelectorAll('.mc-tw').forEach((s, i) => play(s, TWINKLE, { duration: 600, delay: i * 130, iterations: Infinity }));
   const ENTRY = { door: enterDoor, poof: enterPoof, edge: enterEdge, peek: () => enterPeek(peek) };
-  const ACT = { moon: actMoon, climb: () => actClimb(plan), magic: () => actMagic(plan), king: actKing, knight: actKnight, grim: actGrim, sleep: actSleep, juggle: actJuggle };
+  const ACT = { moon: actMoon, climb: () => actClimb(plan), magic: () => actMagic(plan), king: actKing, knight: actKnight, grim: actGrim, sleep: actSleep, juggle: actJuggle, pistol: actPistol, rope: actRope };
   const EXIT = { door: exitDoor, poof: exitPoof, edge: exitEdge, duck: () => exitDuck(peek) };
   try {
     await ENTRY[seq.entry](rnd);

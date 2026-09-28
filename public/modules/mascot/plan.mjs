@@ -11,9 +11,9 @@ export const BASE_W = 168;
 export const BASE_H = 228;
 export const FEET = 212;
 
-/** Scale factor: the Ace is ~17 % of the short side, 80–160 px tall. */
+/** Scale factor: the Ace is ~15 % of the short side, 70–140 px tall. */
 export function mascotScale(vw, vh) {
-  const h = Math.max(80, Math.min(160, Math.min(vh * 0.17, vw * 0.25)));
+  const h = Math.max(70, Math.min(140, Math.min(vh * 0.15, vw * 0.22)));
   return h / BASE_H;
 }
 
@@ -70,7 +70,17 @@ export function climbPlan(st, rect) {
     const yHang = Math.min(st.yF, rect.bottom - 0.6 * h);
     plans.push({ side, dir, xClimb, xTop, xEdge, xLand, yP, yHang, yGrab: rect.top - 0.5 * h, rect });
   }
-  if (!plans.length) return null;
+  if (!plans.length) {
+    // No side he can reach (a panel as wide as a phone screen): he climbs up
+    // its FRONT, back to us, walks to the edge nearest the centre of the
+    // panel's free side and falls down in front of it.
+    const x0 = Math.max(st.minX, rect.left + 0.1 * w), x1 = Math.min(st.maxX, rect.right - 1.1 * w);
+    if (x1 - x0 < 0.7 * w) return null;
+    const xClimb = x0 + (x1 - x0) * 0.25, dir = 1;
+    const xEdge = x1, xLand = Math.min(st.maxX, xEdge + 0.3 * w);
+    const yHang = Math.min(st.yF, rect.bottom - 0.6 * h);
+    return { side: 'F', front: true, dir, xClimb, xTop: xClimb, xEdge, xLand, yP, yHang, yGrab: rect.top - 0.5 * h, rect };
+  }
   // Prefer the plan whose landing spot is nearest the screen centre.
   plans.sort((a, b) => Math.abs(a.xLand + w / 2 - st.vw / 2) - Math.abs(b.xLand + w / 2 - st.vw / 2));
   return plans[0];
@@ -125,7 +135,7 @@ export function pickPeek(st, rects, rnd = Math.random) {
 
 export const ENTRIES = ['door', 'poof', 'edge', 'peek'];
 export const EXITS = ['door', 'poof', 'edge', 'duck'];
-export const ACTIONS = ['moon', 'climb', 'magic', 'king', 'knight', 'grim', 'sleep', 'juggle'];
+export const ACTIONS = ['moon', 'climb', 'magic', 'king', 'knight', 'grim', 'sleep', 'juggle', 'pistol', 'rope'];
 
 /** Costume (hat, tool, mood) of an action. rnd() is in [0, 1). */
 export function costumeFor(action, rnd = Math.random) {
@@ -135,6 +145,8 @@ export function costumeFor(action, rnd = Math.random) {
     case 'king': return { hat: 'crown', tool: 'scepter', mood: 'smile' };
     case 'knight': return { hat: 'helmet', tool: 'sword', mood: 'fierce' };
     case 'sleep': return { hat: 'nightcap', tool: 'none', mood: 'smile' };
+    case 'pistol': return { hat: 'cowboy', tool: 'pistol', mood: 'smile' };
+    case 'rope': return { hat: 'none', tool: 'none', mood: 'smile' };
     default: return { hat: rnd() < 0.5 ? 'tophat' : 'none', tool: 'none', mood: 'smile' };
   }
 }

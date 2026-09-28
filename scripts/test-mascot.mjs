@@ -17,10 +17,10 @@ function ok(cond, label) {
 }
 
 // ── Size: readable on a phone, never huge on a desktop ──
-const phone = P.stageOf(390, 844), desk = P.stageOf(1920, 1080), tiny = P.stageOf(320, 480), land = P.stageOf(844, 390);
-ok(phone.h >= 80 && phone.h <= 110, `phone portrait: ${Math.round(phone.h)} px tall (80–110)`);
-ok(desk.h === 160, 'desktop: capped at 160 px');
-ok(tiny.h === 80, 'very small screen: floor of 80 px');
+const phone = P.stageOf(390, 844), desk = P.stageOf(1920, 1080), tiny = P.stageOf(280, 440), land = P.stageOf(844, 390);
+ok(phone.h >= 70 && phone.h <= 95, `phone portrait: ${Math.round(phone.h)} px tall (70–95)`);
+ok(desk.h === 140, 'desktop: capped at 140 px');
+ok(tiny.h === 70, 'very small screen: floor of 70 px');
 ok(land.h < land.vh * 0.3, 'phone landscape: under 30 % of the height');
 ok(Math.abs(phone.w / phone.h - P.BASE_W / P.BASE_H) < 1e-9, 'aspect ratio kept');
 ok(phone.yF + P.FEET * phone.k === phone.floor, 'standing box top puts the feet on the floor line');
@@ -45,10 +45,16 @@ if (plan) {
 ok(P.climbPlan(st, { left: 440, top: 60, right: 840, bottom: 700 }) === null, 'no headroom under the header: not climbable');
 ok(P.climbPlan(st, { left: 440, top: 700, right: 840, bottom: 790 }) === null, 'too low: not worth climbing');
 ok(P.climbPlan(st, { left: 600, top: 300, right: 700, bottom: 700 }) === null, 'too narrow to walk on');
-ok(P.climbPlan(st, { left: 0, top: 300, right: 1280, bottom: 700 }) === null, 'full-width panel: no side to climb');
+const full = P.climbPlan(st, { left: 0, top: 300, right: 1280, bottom: 700 });
+ok(!!full && full.front && full.side === 'F', 'full-width panel: no side, he climbs its front');
+if (full) ok(full.xClimb >= st.minX && full.xEdge <= st.maxX && full.xLand >= st.minX && full.xLand <= st.maxX && full.xEdge - full.xTop >= 0.6 * st.w, 'front climb: on screen, walks on top, lands on screen');
+const ph = P.stageOf(390, 844), phCard = { left: 16, top: 152, right: 374, bottom: 650 };
+const phPlan = P.climbPlan(ph, phCard);
+ok(!!phPlan && phPlan.front, 'phone home card (as wide as the screen): climbable by its front');
 const leftish = P.climbPlan(st, { left: 150, top: 300, right: 600, bottom: 700 });
 ok(!!leftish && leftish.side === 'L', 'panel left of centre: climbs its left side, lands towards the middle');
-ok(P.climbPlan(st, { left: 30, top: 300, right: 500, bottom: 700 }) === null, 'panel against the edge: no side to climb or no room to land');
+const edgeP = P.climbPlan(st, { left: 30, top: 300, right: 500, bottom: 700 });
+ok(!!edgeP && (edgeP.front || edgeP.side === 'R'), 'panel against the edge: climbs the free side or the front');
 ok(P.pickPanel(st, [{ left: 600, top: 300, right: 700, bottom: 700 }, card]).rect === card, 'pickPanel skips unusable rects');
 ok(P.pickPanel(st, []) === null && P.climbPlan(st, null) === null, 'no panel → null');
 
@@ -86,6 +92,7 @@ ok(climbs > 0 && badClimb === 0, 'climb only when a panel is available');
 ok(peeks > 0 && badPeek === 0 && ducks > 0 && ducks < peeks, 'peek only with a panel; some peeks are short visits (duck), others hop down');
 ok(sleeps > 0 && juggles > 0, 'nap and juggling are drawn');
 ok(P.costumeFor('sleep').hat === 'nightcap', 'nightcap for the nap');
+ok(P.costumeFor('pistol').hat === 'cowboy' && P.costumeFor('pistol').tool === 'pistol', 'cowboy hat and pistol for the BANG! act');
 ok(P.pickSequence(P.seeded(1), { force: 'king' }).actions[0] === 'king', 'forced action honoured');
 ok(P.costumeFor('knight').tool === 'sword' && P.costumeFor('magic').hat === 'wizard' && P.costumeFor('moon').mood === 'cool', 'costumes follow the action');
 ok(JSON.stringify(P.pickSequence(P.seeded(42))) === JSON.stringify(P.pickSequence(P.seeded(42))), 'seeded sequences are reproducible');

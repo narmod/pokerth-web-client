@@ -66,8 +66,21 @@ export function canAppear() {
   if (document.hidden) return false;
   if (!onMascotScreen() || !splashGone()) return false;
   if (motionOff()) return false;
-  try { if (window.keynavHasOpenSurface && window.keynavHasOpenSurface()) return false; } catch (e) {}
+  if (blockingSurface()) return false;
   return true;
+}
+
+// A floating window (ranking, forum, private messages… on a large screen) or
+// the music / hands panel does not stop him — he even plays on it. A modal,
+// a menu or a page does.
+const FREE = ['music-panel', 'hands-overlay'];
+function blockingSurface() {
+  try {
+    if (!window.keynavHasOpenSurface || !window.keynavHasOpenSurface()) return false;
+    const list = window.keynavOpenSurfaces ? window.keynavOpenSurfaces() : null;
+    if (!list) return true;
+    return list.some((el) => !(FREE.indexOf(el.id) >= 0 || el.classList.contains('floating-win') || el.querySelector('.floating-win')));
+  } catch (e) { return false; }
 }
 
 function disarm() { if (timer) { clearTimeout(timer); timer = 0; } }
