@@ -318,8 +318,8 @@ export const help = {
           b: [
             "Lobbiniň sözbaşysyndaky gazet düwmesi pokerth.net forumynyň iň soňky ýazgylaryny açýar, her tema üçin bir ýazgy, her forumyň öz reňki bar. Düwmedäki belgi okalmadyk ýazgylary sanaýar; ýazgyny açmak (täze goýma) ony okalan diýip belleýär, «Hemmesini okalan diýip belle» bolsa hemme zady birbada arassalaýar.",
             "Bu web goşundysy: düwmäni Giňişleýin sazlamalarda gizläp bolýar («Lobbiniň sözbaşysynda forum düwmesi»).",
-            "«Çäreler» goýmasy geljekki BBC oýunlaryny we hasaba alnan oýunçylaryň sany bilen indiki Monthly Cup-y, şeýle hem soňky BBC, WEC we Monthly Cup ýeňijilerini görkezýär. Wagtlar ýerli wagtyňyz boýunça, basmak bolsa jemgyýet saýtyny açýar. «Jemgyýet mazmunyny görkez (BBC / WEC)» opsiýasy bu goýmany gizleýär.",
-            "Geljek oýunlar agşamlar boýunça toparlanýar, serwer wagty bilen 22:00-da gündelik WEC oýny hem bar (hasaba alyş gerek däl). Kimleriň hasaba durandygyny görmek üçin hasaba alyşlary bolan BBC oýnuna basyň — BBC administratorlary altyn reňkde; ↗ nyşany we “BBC-ä hasaba dur” BBC saýtyny açýar."] },
+            "«Çäreler» goýmasy geljek BBC oýunlaryny, gündelik WEC oýnuny we indiki Monthly Cup-y hasaba alnan oýunçylaryň sany bilen, şeýle hem BBC, WEC we Monthly Cup-yň soňky ýeňijilerini görkezýär. Wagtlar ýerli wagtyňyz boýunça; jemgyýetiň saýtyny diňe ↗ nyşany açýar. «Jemgyýet mazmunyny görkez (BBC / WEC)» opsiýasy bu goýmany gizleýär.",
+            "Geljek oýunlar agşamlar boýunça toparlanýar. Wakany saýlamak üçin oňa basyň: aşakdaky düwme oňa eýerýär (BBC ýa-da Monthly Cup-a hasaba durmak; serwer wagty bilen 22:00-daky gündelik WEC oýnuna hasaba durmak gerek däl). Hasaba alyşlary bolan BBC oýny kimleriň hasaba durandygyny görkezmek üçin hem açylýar, BBC administratorlary altyn reňkde."] },
         { id: "avatars",
           t: "Awatarlar we baýdaklar",
           b: [

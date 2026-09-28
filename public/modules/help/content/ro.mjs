@@ -213,8 +213,8 @@ export const help = {
         { id: 'forumnews', t: 'Noutăți de pe forum în lobby',
           b: ['Butonul cu ziar din antetul lobby-ului deschide cele mai noi mesaje de pe forumul pokerth.net, o intrare pe subiect, fiecare forum cu propria culoare. Insigna de pe buton numără mesajele necitite; deschiderea unui mesaj (filă nouă) îl marchează drept citit, iar „Marchează tot ca citit” golește totul dintr-odată.',
               'Este un extra web: butonul poate fi ascuns din Opțiuni avansate („Buton forum în antetul lobby-ului”).',
-              'Fila „Evenimente” arată următoarele jocuri BBC și următoarea Monthly Cup cu numărul de jucători înscriși, precum și ultimii câștigători BBC, WEC și Monthly Cup. Orele sunt în ora ta locală, iar o atingere deschide site-ul comunității. Opțiunea „Arată conținutul comunității (BBC / WEC)” ascunde această filă.',
-              'Jocurile viitoare sunt grupate pe seri, inclusiv jocul zilnic WEC la 22:00 ora serverului (fără înscriere). Atinge un joc BBC cu înscrieri pentru a vedea cine s-a înscris — adminii BBC în auriu; pictograma ↗ și „Înscrie-te la BBC” deschid site-ul BBC.'] },
+              'Fila „Evenimente” arată jocurile BBC viitoare, jocul zilnic WEC și următoarea Monthly Cup cu numărul de jucători înscriși, precum și cei mai recenți câștigători BBC, WEC și Monthly Cup. Orele sunt în ora ta locală; doar pictograma ↗ deschide site-ul comunității. Opțiunea „Arată conținutul comunității (BBC / WEC)” ascunde această filă.',
+              'Jocurile viitoare sunt grupate pe seri. Atinge un eveniment pentru a-l selecta: butonul de jos îl urmează (înscriere la BBC sau la Monthly Cup; jocul zilnic WEC la 22:00 ora serverului nu necesită înscriere). Un joc BBC cu înscrieri se și desfășoară pentru a arăta cine s-a înscris, adminii BBC în auriu.'] },
         { id: 'avatars', t: 'Avataruri și steaguri',
           b: ['Pe pokerth.net, avatarul tău este distribuit celorlalți jucători prin serverul de avataruri, iar un mic steag de țară poate apărea pe casetele jucătorilor. Ambele sunt opționale și configurabile din opțiuni.'] }
       ]

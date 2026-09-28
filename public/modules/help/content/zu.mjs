@@ -318,8 +318,8 @@ export const help = {
           b: [
             "Inkinobho yephephandaba esihlokweni selobhi ivula okuthunyelwe kwakamuva kweforamu ye-pokerth.net, into eyodwa ngendikimba ngayinye, iforamu ngayinye inombala wayo. Uphawu enkinobhweni lubala okuthunyelwe okungafundiwe; ukuvula okuthunyelwe (ithebhu entsha) kukumaka njengokufundiwe, futhi u-“Maka konke njengokufundiwe” usula konke kanyekanye.",
             "Lokhu kuyingezo lewebhu: inkinobho ingafihlwa ku-Izinketho ezithuthukisiwe (“Inkinobho yeforamu esihlokweni selobhi”).",
-            "Ithebhu ethi “Imicimbi” ibonisa imidlalo ye-BBC ezayo ne-Monthly Cup elandelayo nenani labadlali ababhalisile, kanye nabanqobi bakamuva be-BBC, be-WEC nabe-Monthly Cup. Izikhathi zisesikhathini sakho sendawo, futhi ukuthepha kuvula iwebhusayithi yomphakathi. Inketho ethi “Bonisa okuqukethwe komphakathi (BBC / WEC)” iyayifihla le thebhu.",
-            "Imidlalo ezayo ihlelwe ngokwakusihlwa, kuhlanganise nomdlalo wansuku zonke we-WEC ngo-22:00 ngesikhathi seseva (akudingeki ukubhalisa). Thepha umdlalo we-BBC onababhalisile ukuze ubone ukuthi obani ababhalisile — abaphathi be-BBC ngegolide; isithonjana ↗ ne-“Bhalisela i-BBC” kuvula isayithi le-BBC."] },
+            "Ithebhu ethi “Imicimbi” ibonisa imidlalo ye-BBC ezayo, umdlalo wansuku zonke we-WEC kanye ne-Monthly Cup elandelayo nenani labadlali ababhalisile, kanye nabawine bakamuva be-BBC, WEC ne-Monthly Cup. Izikhathi zisesikhathini sakho sendawo; isithonjana ↗ kuphela esivula isayithi lomphakathi. Inketho ethi “Bonisa okuqukethwe komphakathi (BBC / WEC)” iyayifihla le thebhu.",
+            "Imidlalo ezayo ihlelwe ngokwakusihlwa. Thepha umcimbi ukuze uwukhethe: inkinobho engezansi iyawulandela (ukubhalisela i-BBC noma i-Monthly Cup; umdlalo wansuku zonke we-WEC ngo-22:00 ngesikhathi seseva awudingi ukubhalisa). Umdlalo we-BBC onababhalisile nawo uyavuleka ukuze ubonise ababhalisile, abaphathi be-BBC ngegolide."] },
         { id: "avatars",
           t: "Ama-avatar namafulegi",
           b: [

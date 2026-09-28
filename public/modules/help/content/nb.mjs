@@ -213,8 +213,8 @@ export const help = {
         { id: 'forumnews', t: 'Forumnyheter i lobbyen',
           b: ['Avisknappen i lobbyens topplinje åpner de nyeste innleggene fra pokerth.net-forumet, én oppføring per emne, hvert forum med sin egen farge. Merket på knappen teller uleste innlegg; åpnes et innlegg (ny fane), markeres det som lest, og “Merk alt som lest” tømmer alt på én gang.',
               'Dette er et web-tillegg: knappen kan skjules i Avanserte valg (“Forumknapp i lobbyens topplinje”).',
-              'Fanen «Arrangementer» viser de kommende BBC-spillene og neste Monthly Cup med antall påmeldte spillere, samt de siste vinnerne av BBC, WEC og Monthly Cup. Tidene er i din lokale tid, og et trykk åpner fellesskapets nettsted. Valget «Vis fellesskapsinnhold (BBC / WEC)» skjuler denne fanen.',
-              'Kommende spill er gruppert etter kveld, inkludert det daglige WEC-spillet kl. 22:00 servertid (ingen påmelding). Trykk på et BBC-spill med påmeldinger for å se hvem som er påmeldt — BBC-administratorer i gull; ↗-ikonet og «Meld deg på BBC» åpner BBC-siden.'] },
+              'Fanen «Arrangementer» viser kommende BBC-spill, det daglige WEC-spillet og neste Monthly Cup med antall påmeldte spillere, samt de siste vinnerne av BBC, WEC og Monthly Cup. Tidene er i din lokale tid; bare ↗-ikonet åpner fellesskapets side. Valget «Vis fellesskapsinnhold (BBC / WEC)» skjuler denne fanen.',
+              'Kommende spill er gruppert etter kveld. Trykk på en hendelse for å velge den: knappen nederst følger den (påmelding til BBC eller Monthly Cup; det daglige WEC-spillet kl. 22:00 servertid trenger ingen). Et BBC-spill med påmeldinger folder seg også ut og viser hvem som er påmeldt, BBC-administratorer i gull.'] },
         { id: 'avatars', t: 'Avatarer og flagg',
           b: ['På pokerth.net distribueres avataren din til andre spillere via avatarserveren, og et lite landflagg kan vises på spillerboksene. Begge deler er valgfrie og kan stilles inn i innstillingene.'] }
       ]

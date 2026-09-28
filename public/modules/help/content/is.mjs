@@ -318,8 +318,8 @@ export const help = {
           b: [
             "Dagblaðshnappurinn í haus anddyrisins opnar nýjustu innleggin á spjallborði pokerth.net, eina færslu fyrir hvert efni, hvert spjallborð í sínum lit. Merki á hnappinum telur ólesin innlegg; ef innlegg er opnað (nýr flipi) er það merkt sem lesið, og „Merkja allt sem lesið“ hreinsar allt í einu.",
             "Þetta er vefviðbót: hægt er að fela hnappinn í ítarlegum valkostum („Spjallborðshnappur í haus anddyris“).",
-            "Flipinn „Viðburðir“ sýnir næstu BBC-leiki og næsta Monthly Cup með fjölda skráðra spilara, og nýjustu sigurvegara BBC, WEC og Monthly Cup. Tímar eru á staðartíma þínum og snerting opnar vef samfélagsins. Valkosturinn „Sýna samfélagsefni (BBC / WEC)“ felur þennan flipa.",
-            "Komandi leikir eru flokkaðir eftir kvöldum, þar á meðal daglegi WEC-leikurinn kl. 22:00 að tíma netþjóns (engin skráning). Pikkaðu á BBC-leik með skráningum til að sjá hverjir eru skráðir — BBC-stjórnendur í gulli; ↗-táknið og „Skrá sig í BBC“ opna vef BBC."] },
+            "Flipinn „Viðburðir“ sýnir komandi BBC-leiki, daglega WEC-leikinn og næsta Monthly Cup með fjölda skráðra leikmanna, auk nýjustu sigurvegara BBC, WEC og Monthly Cup. Tímarnir eru í þínum staðartíma; aðeins ↗-táknið opnar vef samfélagsins. Valkosturinn „Sýna samfélagsefni (BBC / WEC)“ felur þennan flipa.",
+            "Komandi leikir eru flokkaðir eftir kvöldum. Pikkaðu á viðburð til að velja hann: hnappurinn neðst fylgir honum (skráning í BBC eða Monthly Cup; daglegi WEC-leikurinn kl. 22:00 að tíma netþjóns þarf enga skráningu). BBC-leikur með skráningum opnast líka og sýnir hverjir eru skráðir, BBC-stjórnendur í gulli."] },
         { id: "avatars",
           t: "Avatarar og fánar",
           b: [

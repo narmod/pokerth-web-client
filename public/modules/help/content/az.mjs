@@ -318,8 +318,8 @@ export const help = {
           b: [
             "Lobbi başlığındakı qəzet düyməsi pokerth.net forumunun son yazılarını açır, hər mövzu üçün bir qeyd, hər forum öz rəngində. Düymədəki nişan oxunmamış yazıları sayır; yazını açmaq (yeni vərəqdə) onu oxunmuş kimi qeyd edir, “Hamısını oxunmuş kimi qeyd et” isə hər şeyi birdəfəyə təmizləyir.",
             "Bu, veb əlavəsidir: düymə Əlavə seçimlərdə gizlədilə bilər (“Lobbinin başlığında forum düyməsi”).",
-            "“Tədbirlər” vərəqi qarşıdan gələn BBC oyunlarını və növbəti Monthly Cup-ı qeydiyyatdan keçmiş oyunçuların sayı ilə, həmçinin son BBC, WEC və Monthly Cup qaliblərini göstərir. Vaxtlar sizin yerli vaxtınızladır, toxunuş isə icma saytını açır. “İcma məzmununu göstər (BBC / WEC)” seçimi bu vərəqi gizlədir.",
-            "Qarşıdan gələn oyunlar axşamlara görə qruplaşdırılır, gündəlik WEC oyunu da server vaxtı ilə 22:00-da (qeydiyyat tələb olunmur). Qeydiyyatı olan BBC oyununa toxunun və kimin yazıldığını görün — BBC adminləri qızılı rəngdə; ↗ işarəsi və “BBC-yə qeydiyyat” BBC saytını açır."] },
+            "“Tədbirlər” vərəqi qarşıdan gələn BBC oyunlarını, gündəlik WEC oyununu və növbəti Monthly Cup-ı qeydiyyatdan keçmiş oyunçuların sayı ilə, həmçinin son BBC, WEC və Monthly Cup qaliblərini göstərir. Vaxtlar yerli vaxtınızladır; icma saytını yalnız ↗ işarəsi açır. “İcma məzmununu göstər (BBC / WEC)” seçimi bu vərəqi gizlədir.",
+            "Qarşıdan gələn oyunlar axşamlara görə qruplaşdırılır. Tədbiri seçmək üçün ona toxunun: aşağıdakı düymə onu izləyir (BBC və ya Monthly Cup üçün qeydiyyat; server vaxtı ilə 22:00-dakı gündəlik WEC oyunu qeydiyyat tələb etmir). Qeydiyyatı olan BBC oyunu kimin yazıldığını göstərmək üçün açılır, BBC adminləri qızılı rəngdə."] },
         { id: "avatars",
           t: "Avatarlar və bayraqlar",
           b: [

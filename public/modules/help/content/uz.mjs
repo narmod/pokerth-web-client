@@ -318,8 +318,8 @@ export const help = {
           b: [
             "Lobbi sarlavhasidagi gazeta tugmasi pokerth.net forumidagi eng soʻnggi postlarni ochadi — har bir mavzu uchun bitta yozuv, har bir forum oʻz rangida. Tugmadagi belgi oʻqilmagan postlarni sanaydi; postni ochish (yangi varaqda) uni oʻqilgan deb belgilaydi, “Hammasini oʻqilgan deb belgilash” esa hammasini birdan tozalaydi.",
             "Bu veb-qoʻshimcha: tugmani Kengaytirilgan sozlamalarda yashirish mumkin (“Lobbi sarlavhasida Forum tugmasi”).",
-            "“Tadbirlar” yorlig‘i yaqinlashayotgan BBC o‘yinlari va navbatdagi Monthly Cup’ni ro‘yxatdan o‘tgan o‘yinchilar soni bilan, shuningdek, BBC, WEC va Monthly Cup’ning so‘nggi g‘oliblarini ko‘rsatadi. Vaqtlar mahalliy vaqtingizda, bosish esa hamjamiyat saytini ochadi. “Hamjamiyat kontentini koʻrsatish (BBC / WEC)” sozlamasi bu yorliqni yashiradi.",
-            "Yaqinlashayotgan o‘yinlar oqshomlar bo‘yicha guruhlangan, server vaqti bilan 22:00 dagi kundalik WEC o‘yini ham bor (ro‘yxatdan o‘tish shart emas). Kim ro‘yxatdan o‘tganini ko‘rish uchun ro‘yxatlari bor BBC o‘yiniga bosing — BBC adminlari oltin rangda; ↗ belgisi va “BBC’ga ro‘yxatdan o‘tish” BBC saytini ochadi."] },
+            "“Tadbirlar” yorlig‘i yaqinlashayotgan BBC o‘yinlarini, kundalik WEC o‘yinini va keyingi Monthly Cup’ni ro‘yxatdan o‘tgan o‘yinchilar soni bilan, shuningdek BBC, WEC va Monthly Cup’ning so‘nggi g‘oliblarini ko‘rsatadi. Vaqtlar mahalliy vaqtingizda; hamjamiyat saytini faqat ↗ belgisi ochadi. “Hamjamiyat kontentini koʻrsatish (BBC / WEC)” sozlamasi bu yorliqni yashiradi.",
+            "Yaqinlashayotgan o‘yinlar oqshomlar bo‘yicha guruhlangan. Tadbirni tanlash uchun uni bosing: pastdagi tugma unga moslashadi (BBC yoki Monthly Cup’ga ro‘yxatdan o‘tish; server vaqti bilan 22:00 dagi kundalik WEC o‘yini ro‘yxatdan o‘tishni talab qilmaydi). Ro‘yxatlari bor BBC o‘yini kim ro‘yxatdan o‘tganini ko‘rsatish uchun ham ochiladi, BBC adminlari oltin rangda."] },
         { id: "avatars",
           t: "Avatarlar va bayroqlar",
           b: [

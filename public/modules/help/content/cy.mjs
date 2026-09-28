@@ -318,8 +318,8 @@ export const help = {
           b: [
             "Mae'r botwm papur newydd ym mhennyn y lobi yn agor y negeseuon diweddaraf o fforwm pokerth.net, un cofnod i bob pwnc, pob fforwm yn ei liw ei hun. Mae bathodyn ar y botwm yn cyfrif negeseuon heb eu darllen; mae agor neges (mewn tab newydd) yn ei marcio fel wedi'i darllen, ac mae “Marcio'r cyfan fel wedi'i ddarllen” yn clirio popeth ar unwaith.",
             "Ychwanegiad gwe yw hwn: gellir cuddio'r botwm yn y Dewisiadau uwch (“Botwm fforwm ym mhennyn y lobi”).",
-            "Mae'r tab “Digwyddiadau” yn dangos y gemau BBC sydd i ddod a'r Monthly Cup nesaf gyda nifer y chwaraewyr sydd wedi cofrestru, ynghyd ag enillwyr diweddaraf BBC, WEC a'r Monthly Cup. Mae'r amseroedd yn eich amser lleol, ac mae tapio'n agor gwefan y gymuned. Mae'r dewis “Dangos cynnwys y gymuned (BBC / WEC)” yn cuddio'r tab hwn.",
-            "Mae’r gemau i ddod wedi’u grwpio fesul noson, gan gynnwys gêm ddyddiol WEC am 22:00 amser y gweinydd (dim angen cofrestru). Tapiwch gêm BBC sydd â chofrestriadau i weld pwy sydd wedi cofrestru — gweinyddwyr BBC mewn aur; mae’r eicon ↗ a “Cofrestru ar gyfer y BBC” yn agor gwefan y BBC."] },
+            "Mae’r tab “Digwyddiadau” yn dangos gemau BBC i ddod, gêm ddyddiol WEC a’r Monthly Cup nesaf gyda nifer y chwaraewyr sydd wedi cofrestru, ynghyd ag enillwyr diweddaraf BBC, WEC a’r Monthly Cup. Mae’r amseroedd yn eich amser lleol; dim ond yr eicon ↗ sy’n agor gwefan y gymuned. Mae'r dewis “Dangos cynnwys y gymuned (BBC / WEC)” yn cuddio'r tab hwn.",
+            "Mae’r gemau i ddod wedi’u grwpio fesul noson. Tapiwch ddigwyddiad i’w ddewis: mae’r botwm ar y gwaelod yn ei ddilyn (cofrestru ar gyfer y BBC neu’r Monthly Cup; nid oes angen cofrestru ar gyfer gêm ddyddiol WEC am 22:00 amser y gweinydd). Mae gêm BBC â chofrestriadau hefyd yn agor i ddangos pwy sydd wedi cofrestru, gweinyddwyr BBC mewn aur."] },
         { id: "avatars",
           t: "Afatarau a baneri",
           b: [

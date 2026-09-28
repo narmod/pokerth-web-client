@@ -213,8 +213,8 @@ export const help = {
         { id: 'forumnews', t: 'Novidades do fórum no lobby',
           b: ['O botão de jornal no cabeçalho do lobby abre as últimas mensagens do fórum pokerth.net, uma entrada por tópico, cada fórum com sua cor. O selo no botão conta as mensagens não lidas; abrir uma mensagem (nova aba) a marca como lida, e “Marcar tudo como lido” limpa tudo de uma vez.',
               'É um extra web: o botão pode ser ocultado nas Opções avançadas (“Botão do fórum no cabeçalho do lobby”).',
-              'A aba “Eventos” mostra os próximos jogos da BBC e a próxima Monthly Cup com o número de jogadores inscritos, e os últimos vencedores da BBC, da WEC e da Monthly Cup. Os horários estão no seu horário local, e um toque abre o site da comunidade. A opção “Mostrar conteúdo da comunidade (BBC / WEC)” oculta esta aba.',
-              'As próximas partidas são agrupadas por noite, incluindo a partida diária da WEC às 22:00 no horário do servidor (sem inscrição). Toque em uma partida da BBC com inscritos para ver quem se inscreveu — os admins da BBC em dourado; o ícone ↗ e “Inscrever-se na BBC” abrem o site da BBC.'] },
+              'A aba “Eventos” mostra as próximas partidas da BBC, a partida diária da WEC e a próxima Monthly Cup com o número de jogadores inscritos, além dos últimos vencedores da BBC, da WEC e da Monthly Cup. Os horários estão no seu horário local; só o ícone ↗ abre o site da comunidade. A opção “Mostrar conteúdo da comunidade (BBC / WEC)” oculta esta aba.',
+              'As próximas partidas são agrupadas por noite. Toque em um evento para selecioná-lo: o botão de baixo o acompanha (inscrição na BBC ou na Monthly Cup; a partida diária da WEC às 22:00 no horário do servidor não precisa). Uma partida da BBC com inscritos também se abre para mostrar quem se inscreveu, os admins da BBC em dourado.'] },
         { id: 'avatars', t: 'Avatares e bandeiras',
           b: ['No pokerth.net, seu avatar é distribuído aos outros jogadores pelo servidor de avatares, e uma pequena bandeira do país pode aparecer nas caixas de jogadores. Ambos são opcionais e configuráveis nas opções.'] }
       ]

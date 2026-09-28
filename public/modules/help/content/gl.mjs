@@ -213,8 +213,8 @@ export const help = {
         { id: 'forumnews', t: 'Novidades do foro no lobby',
           b: ['O botón de xornal na cabeceira do lobby abre as últimas mensaxes do foro de pokerth.net, unha entrada por tema e cada foro coa súa cor. A insignia do botón conta as mensaxes sen ler; abrir unha mensaxe (nova lapela) márcaa como lida, e «Marcar todo como lido» límpao todo dunha vez.',
               'É un extra web: o botón pódese agochar nas Opcións avanzadas («Botón do foro na cabeceira do lobby»).',
-              'A lapela «Eventos» amosa as próximas partidas da BBC e a próxima Monthly Cup co número de xogadores inscritos, e os últimos gañadores da BBC, a WEC e a Monthly Cup. As horas están na túa hora local, e un toque abre o sitio da comunidade. A opción «Amosar contido da comunidade (BBC / WEC)» oculta esta lapela.',
-              'As próximas partidas agrúpanse por noite, coa partida diaria da WEC ás 22:00 hora do servidor (sen inscrición). Toca unha partida da BBC con inscritos para ver quen se apuntou — os administradores da BBC en dourado; a icona ↗ e «Inscribirse na BBC» abren a web da BBC.'] },
+              'A lapela «Eventos» amosa as próximas partidas da BBC, a partida diaria da WEC e a próxima Monthly Cup co número de xogadores inscritos, así como os últimos gañadores da BBC, a WEC e a Monthly Cup. As horas están na túa hora local; só a icona ↗ abre a web da comunidade. A opción «Amosar contido da comunidade (BBC / WEC)» oculta esta lapela.',
+              'As próximas partidas agrúpanse por noite. Toca un evento para seleccionalo: o botón de abaixo ségueo (inscrición na BBC ou na Monthly Cup; a partida diaria da WEC ás 22:00 hora do servidor non a precisa). Unha partida da BBC con inscritos tamén se desprega para amosar quen se apuntou, os administradores da BBC en dourado.'] },
         { id: 'avatars', t: 'Avatares e bandeiras',
           b: ['En pokerth.net, o teu avatar distribúese aos demais xogadores a través do servidor de avatares, e pode aparecer unha pequena bandeira do país nas caixas de xogador. Ambas as cousas son opcionais e configurables nas opcións.'] }
       ]

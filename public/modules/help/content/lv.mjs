@@ -219,8 +219,8 @@ export const help = {
         { id: 'forumnews', t: 'Foruma jaunumi vestibilā',
           b: ['Avīzes poga vestibila galvenē atver jaunākos pokerth.net foruma ierakstus, pa vienam ierakstam no katras tēmas, katram forumam savā krāsā. Nozīmīte uz pogas skaita neizlasītos ierakstus; ieraksta atvēršana (jaunā cilnē) to atzīmē kā izlasītu, un “Atzīmēt visus kā lasītus” notīra visu uzreiz.',
               'Šis ir tīmekļa papildinājums: pogu var paslēpt papildu opcijās (“Foruma poga vestibila galvenē”).',
-              'Cilne “Pasākumi” rāda gaidāmās BBC spēles un nākamo Monthly Cup ar pieteikušos spēlētāju skaitu, kā arī jaunākos BBC, WEC un Monthly Cup uzvarētājus. Laiki ir tavā vietējā laikā, un pieskāriens atver kopienas vietni. Opcija “Rādīt kopienas saturu (BBC / WEC)” paslēpj šo cilni.',
-              'Gaidāmās spēles ir sagrupētas pa vakariem, ieskaitot ikdienas WEC spēli plkst. 22:00 pēc servera laika (bez reģistrācijas). Pieskarieties BBC spēlei ar reģistrācijām, lai redzētu, kas pieteicies — BBC administratori zeltā; ikona ↗ un “Reģistrēties BBC” atver BBC vietni.'] },
+              'Cilne “Pasākumi” rāda gaidāmās BBC spēles, ikdienas WEC spēli un nākamo Monthly Cup ar pieteikušos spēlētāju skaitu, kā arī jaunākos BBC, WEC un Monthly Cup uzvarētājus. Laiki ir jūsu vietējā laikā; kopienas vietni atver tikai ikona ↗. Opcija “Rādīt kopienas saturu (BBC / WEC)” paslēpj šo cilni.',
+              'Gaidāmās spēles ir sagrupētas pa vakariem. Pieskarieties notikumam, lai to atlasītu: poga apakšā tam seko (reģistrācija BBC vai Monthly Cup; ikdienas WEC spēlei plkst. 22:00 pēc servera laika reģistrācija nav vajadzīga). BBC spēle ar reģistrācijām arī izvēršas un parāda, kas pieteicies, BBC administratori zeltā.'] },
         { id: 'avatars', t: 'Avatari un karogi',
           b: ['pokerth.net serverī tavs avatars tiek izplatīts citiem spēlētājiem caur avataru serveri, un uz spēlētāju lodziņiem var rādīt mazu valsts karogu. Abas iespējas ir brīvi izvēlamas un konfigurējamas opcijās.'] }
       ]

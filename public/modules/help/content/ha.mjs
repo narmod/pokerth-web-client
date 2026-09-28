@@ -318,8 +318,8 @@ export const help = {
           b: [
             "Maɓallin jarida a saman zaure yana buɗe sababbin rubuce-rubucen dandalin pokerth.net, shigarwa ɗaya ga kowane batu, kowane dandali da launinsa. Alama a maɓallin tana ƙirga rubuce-rubucen da ba a karanta ba; buɗe rubutu (a sabon shafi) yana yi masa alamar an karanta, kuma “Yi wa duka alamar an karanta” yana share komai a lokaci ɗaya.",
             "Wannan ƙari ne na yanar gizo: ana iya ɓoye maɓallin a Zaɓuɓɓuka na ci gaba (“Maɓallin dandali a saman zaure”).",
-            "Shafin “Abubuwan da ke faruwa” yana nuna wasannin BBC masu zuwa da Monthly Cup na gaba tare da adadin 'yan wasan da suka yi rajista, da kuma masu nasarar BBC, WEC da Monthly Cup na ƙarshe. Lokutan suna a lokacinka na gida, kuma taɓawa tana buɗe shafin al'umma. Zaɓin “Nuna abubuwan al'umma (BBC / WEC)” yana ɓoye wannan shafin.",
-            "An jera wasannin da ke tafe bisa maraice, tare da wasan WEC na kullum da ƙarfe 22:00 lokacin sabar (babu rajista). Taɓa wasan BBC mai rajista don ganin waɗanda suka yi rajista — masu kula da BBC da launin zinariya; alamar ↗ da “Yi rajista don BBC” suna buɗe shafin BBC."] },
+            "Shafin “Abubuwan da ke faruwa” yana nuna wasannin BBC masu zuwa, wasan WEC na kullum da Monthly Cup na gaba tare da adadin ’yan wasan da suka yi rajista, da kuma waɗanda suka ci BBC, WEC da Monthly Cup na baya-bayan nan. Lokutan suna cikin lokacinka na gida; alamar ↗ kaɗai ke buɗe shafin al’umma. Zaɓin “Nuna abubuwan al'umma (BBC / WEC)” yana ɓoye wannan shafin.",
+            "An jera wasannin da ke tafe bisa maraice. Taɓa wani taron don zaɓa shi: maɓallin da ke ƙasa yana bin sa (rajista don BBC ko Monthly Cup; wasan WEC na kullum da ƙarfe 22:00 lokacin sabar ba ya buƙatar rajista). Wasan BBC mai rajista shi ma yana buɗewa don nuna waɗanda suka yi rajista, masu kula da BBC da launin zinariya."] },
         { id: "avatars",
           t: "Avatar da tutoci",
           b: [

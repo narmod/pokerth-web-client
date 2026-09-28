@@ -318,8 +318,8 @@ export const help = {
           b: [
             "Osclaíonn an cnaipe nuachtáin i gceanntásc an fhorhalla na postálacha is déanaí ó fhóram pokerth.net, iontráil amháin do gach ábhar, gach fóram ina dhath féin. Comhaireann suaitheantas ar an gcnaipe na postálacha nár léadh; marcáiltear postáil mar léite nuair a osclaítear í (i gcluaisín nua), agus glanann “Marcáil gach rud mar léite” gach rud le chéile.",
             "Breiseán gréasáin é seo: is féidir an cnaipe a fholú sna hArdroghanna (“Cnaipe fóraim i gceanntásc an fhorhalla”).",
-            "Taispeánann an cluaisín “Imeachtaí” na cluichí BBC atá le teacht agus an chéad Monthly Cup eile le líon na n-imreoirí cláraithe, chomh maith le buaiteoirí is déanaí BBC, WEC agus an Monthly Cup. Tá na hamanna i d'am áitiúil, agus osclaíonn tapáil suíomh an phobail. Folaíonn an rogha “Taispeáin ábhar an phobail (BBC / WEC)” an cluaisín seo.",
-            "Tá na cluichí atá le teacht grúpáilte de réir tráthnóna, lena n-áirítear cluiche laethúil WEC ag 22:00 am an fhreastalaí (gan clárú). Tapáil cluiche BBC a bhfuil clárúcháin air le feiceáil cé atá cláraithe — riarthóirí BBC in ór; osclaíonn an deilbhín ↗ agus “Cláraigh don BBC” suíomh an BBC."] },
+            "Taispeánann an cluaisín “Imeachtaí” na cluichí BBC atá le teacht, cluiche laethúil WEC agus an chéad Monthly Cup eile le líon na n-imreoirí cláraithe, chomh maith leis na buaiteoirí is déanaí de BBC, WEC agus Monthly Cup. Tá na hamanna i d’am áitiúil; ní osclaíonn ach an deilbhín ↗ suíomh an phobail. Folaíonn an rogha “Taispeáin ábhar an phobail (BBC / WEC)” an cluaisín seo.",
+            "Tá na cluichí atá le teacht grúpáilte de réir tráthnóna. Tapáil imeacht chun é a roghnú: leanann an cnaipe thíos é (clárú don BBC nó don Monthly Cup; níl clárú ag teastáil don chluiche laethúil WEC ag 22:00 am an fhreastalaí). Osclaíonn cluiche BBC a bhfuil clárúcháin air freisin chun a thaispeáint cé atá cláraithe, riarthóirí BBC in ór."] },
         { id: "avatars",
           t: "Abhatáir agus bratacha",
           b: [

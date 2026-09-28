@@ -215,8 +215,8 @@ export const help = {
         { id: 'forumnews', t: 'Berita forum di lobi',
           b: ['Tombol koran di kepala lobi membuka postingan terbaru dari forum pokerth.net, satu entri per topik, setiap forum dengan warnanya sendiri. Lencana pada tombol menghitung postingan belum dibaca; membuka postingan (tab baru) menandainya telah dibaca, dan “Tandai semua telah dibaca” membersihkan semuanya sekaligus.',
               'Ini tambahan web: tombolnya bisa disembunyikan di Opsi lanjutan (“Tombol forum di kepala lobi”).',
-              'Tab “Acara” menampilkan permainan BBC mendatang dan Monthly Cup berikutnya beserta jumlah pemain yang terdaftar, serta pemenang terbaru BBC, WEC, dan Monthly Cup. Waktu ditampilkan dalam waktu lokal Anda, dan ketukan membuka situs komunitas. Opsi “Tampilkan konten komunitas (BBC / WEC)” menyembunyikan tab ini.',
-              'Permainan mendatang dikelompokkan per malam, termasuk permainan harian WEC pukul 22:00 waktu server (tanpa pendaftaran). Ketuk permainan BBC yang memiliki pendaftar untuk melihat siapa saja yang terdaftar — admin BBC berwarna emas; ikon ↗ dan “Daftar ke BBC” membuka situs BBC.'] },
+              'Tab “Acara” menampilkan permainan BBC mendatang, permainan harian WEC, dan Monthly Cup berikutnya beserta jumlah pemain yang mendaftar, serta pemenang terbaru BBC, WEC, dan Monthly Cup. Waktu ditampilkan dalam waktu lokal Anda; hanya ikon ↗ yang membuka situs komunitas. Opsi “Tampilkan konten komunitas (BBC / WEC)” menyembunyikan tab ini.',
+              'Permainan mendatang dikelompokkan per malam. Ketuk sebuah acara untuk memilihnya: tombol di bawah mengikutinya (pendaftaran ke BBC atau Monthly Cup; permainan harian WEC pukul 22:00 waktu server tidak memerlukannya). Permainan BBC yang memiliki pendaftar juga terbuka untuk menampilkan siapa saja yang terdaftar, admin BBC berwarna emas.'] },
         { id: 'avatars', t: 'Avatar dan bendera',
           b: ['Di pokerth.net, avatar Anda didistribusikan ke pemain lain lewat server avatar, dan bendera negara kecil dapat ditampilkan di kotak pemain. Keduanya opsional dan dapat dikonfigurasi di opsi.'] }
       ]

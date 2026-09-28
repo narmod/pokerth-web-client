@@ -318,8 +318,8 @@ export const help = {
           b: [
             "Egongelaren goiburuko egunkari-botoiak pokerth.net foroko azken mezuak irekitzen ditu, sarrera bat gai bakoitzeko, foro bakoitza bere kolorearekin. Botoiko bereizgarriak irakurri gabeko mezuak zenbatzen ditu; mezu bat irekitzeak (fitxa berri batean) irakurritzat markatzen du, eta «Markatu guztiak irakurritzat»-ek dena batera garbitzen du.",
             "Web gehigarri bat da: botoia Aukera aurreratuetan ezkuta daiteke («Foroaren botoia egongelaren goiburuan»).",
-            "«Ekitaldiak» fitxak hurrengo BBC partidak eta hurrengo Monthly Cup erakusten ditu izena emandako jokalarien kopuruarekin, baita azken BBC, WEC eta Monthly Cup irabazleak ere. Orduak zure tokiko orduan daude, eta ukitzeak komunitatearen webgunea irekitzen du. «Erakutsi komunitateko edukia (BBC / WEC)» aukerak fitxa hau ezkutatzen du.",
-            "Hurrengo partidak arratsaldeka taldekatzen dira, WECen eguneroko partida barne, zerbitzariaren orduko 22:00etan (izena eman gabe). Sakatu izen-emateak dituen BBC partida bat nork eman duen izena ikusteko — BBCko administratzaileak urrez; ↗ ikonoak eta «Eman izena BBCn» botoiak BBCren webgunea irekitzen dute."] },
+            "«Ekitaldiak» fitxak hurrengo BBC partidak, WECen eguneroko partida eta hurrengo Monthly Cup erakusten ditu, izena emandako jokalarien kopuruarekin, baita BBC, WEC eta Monthly Cupeko azken irabazleak ere. Orduak zure tokiko orduan daude; ↗ ikonoak bakarrik irekitzen du komunitatearen webgunea. «Erakutsi komunitateko edukia (BBC / WEC)» aukerak fitxa hau ezkutatzen du.",
+            "Hurrengo partidak arratsaldeka taldekatzen dira. Sakatu gertaera bat hautatzeko: beheko botoiak jarraitzen dio (BBCn edo Monthly Cupen izena ematea; WECen eguneroko partidak, zerbitzariaren orduko 22:00etan, ez du behar). Izen-emateak dituen BBC partida bat ere zabaltzen da nork eman duen izena erakusteko, BBCko administratzaileak urrez."] },
         { id: "avatars",
           t: "Abatarrak eta banderak",
           b: [
