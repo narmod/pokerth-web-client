@@ -39,6 +39,11 @@ ok(E.evStepBadge({ src: 'bbc', step: 0 }) === null && E.evStepBadge({ src: 'mc',
 ok(E.evExpandable({ src: 'bbc', id: 9779, signups: 3 }) && !E.evExpandable({ src: 'bbc', id: 9779, signups: 0 }) && !E.evExpandable({ src: 'bbc', signups: 3 }) && !E.evExpandable({ src: 'mc', id: 1, signups: 53 }), 'only BBC games with sign-ups (and an id) unfold');
 { const t = 1e12, r = { players: [1, 2, 3], at: t, loading: false, error: false };
   ok(E.evRegsFresh(r, 3, t + 60000) && !E.evRegsFresh(r, 4, t + 60000) && !E.evRegsFresh(r, 3, t + 121000) && !E.evRegsFresh(Object.assign({}, r, { error: true }), 3, t), 'registrations are re-read when the count changed, after 2 min, or after an error'); }
+// Footer button follows the selected upcoming event (web.247).
+ok(E.evSelKey({ src: 'bbc', id: 9779, at: 1 }) === 'bbc:9779' && E.evSelKey({ src: 'wec', kind: 'daily', at: 5 }) === 'wec:5', 'selection keys: BBC by id, others by source + time');
+ok(E.evRegisterAction(null).key === 'evBbcRegister' && /bbc\.pokerth\.net\/registration/.test(E.evRegisterAction(null).url), 'nothing selected: register for the BBC');
+ok(E.evRegisterAction({ src: 'mc', url: 'https://monthlycup.pokerth.net/registration' }).key === 'evMcRegister' && E.evRegisterAction({ src: 'mc', url: 'https://evil.example/' }).url === 'https://monthlycup.pokerth.net/registration', 'Monthly Cup: its own sign-up page, safe URLs only');
+ok(E.evRegisterAction({ src: 'wec', kind: 'daily' }).none === true, 'WEC daily game: no registration, button disabled');
 // WEC daily game: 22:00 server time (Europe/Berlin), one per evening.
 ok(E.evGameTimeToUtc(2026, 9, 28, 22, 0) === Date.UTC(2026, 8, 28, 20, 0) && E.evGameTimeToUtc(2026, 12, 1, 22, 0) === Date.UTC(2026, 11, 1, 21, 0), 'Berlin wall time -> UTC, summer and winter');
 { const w = E.evWecDaily('2026-10-24', '2026-10-26');

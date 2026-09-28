@@ -293,16 +293,20 @@ function _card(icon, label, count, body) {
     + (count > 0 ? '<span class="ev-cnt">' + count + '</span>' : '') + '</div>' + body + '</section>';
 }
 
-function _row(src, url, title, meta, winner) {
+// Only the ↗ icon opens the site (web.247, narmod): the row itself is inert.
+function _goLink(url) {
   const safe = evSafeUrl(url);
-  const open = _t('evOpenSite', 'Open the site');
-  return '<a class="fn-row ev-row"' + (safe ? ' href="' + esc(safe).replace(/"/g, '&quot;') + '" target="_blank" rel="noopener noreferrer"' : '')
-    + ' title="' + esc(open).replace(/"/g, '&quot;') + '">'
+  if (!safe) return '';
+  const open = esc(_t('evOpenSite', 'Open the site')).replace(/"/g, '&quot;');
+  return '<a class="fn-golink" href="' + esc(safe).replace(/"/g, '&quot;') + '" target="_blank" rel="noopener noreferrer" title="' + open + '" aria-label="' + open + '">' + ICON_OUT + '</a>';
+}
+
+function _row(src, url, title, meta, winner) {
+  return '<div class="fn-row ev-row ev-static">'
     + '<span class="fn-forum ' + evSrcClass(src) + '">' + esc(evSrcName(src)) + '</span>'
     + '<div class="fn-main"><div class="fn-t' + (winner ? ' ev-win' : '') + '">' + (winner ? ICON_CUP : '') + esc(title) + '</div>'
     + (meta ? '<div class="fn-meta">' + esc(meta) + '</div>' : '') + '</div>'
-    + '<span class="fn-golink" aria-hidden="true">' + ICON_OUT + '</span>'
-    + '</a>';
+    + _goLink(url) + '</div>';
 }
 
 // ── Registered players of a BBC game (QML BbcGameDates.loadRegs) ─────
@@ -312,6 +316,7 @@ function _row(src, url, title, meta, winner) {
 const REGS_URL = '/api/events/bbcregs?id=';
 const REGS_TTL_MS = 2 * 60 * 1000;          // as QML regsTtlMs
 const BBC_REGISTER_URL = 'https://bbc.pokerth.net/registration';
+const MC_REGISTER_URL = 'https://monthlycup.pokerth.net/registration';
 const _open = new Set();                     // expanded game ids (strings)
 const _regs = new Map();                     // id -> { players, loading, error, at }
 const _games = new Map();                    // id -> game of the last render
@@ -382,9 +387,6 @@ const ICON_CHEV = '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" s
 // A BBC row with sign-ups unfolds on click (chevron); the ↗ icon still opens
 // the site. Other rows are one link to the site.
 function _gameRow(e, loc, stepWord) {
-  const safe = evSafeUrl(e.url);
-  const open = esc(_t('evOpenSite', 'Open the site')).replace(/"/g, '&quot;');
-  const href = safe ? ' href="' + esc(safe).replace(/"/g, '&quot;') + '" target="_blank" rel="noopener noreferrer"' : '';
   const step = evStepBadge(e);
   const sign = evSignupText(e, _t('evSignups', 'Signed up: {n}'));
   const full = e.seats > 0 && e.signups >= e.seats;
@@ -396,17 +398,50 @@ function _gameRow(e, loc, stepWord) {
     + '<span class="fn-forum ' + evSrcClass(e.src) + '">' + esc(evSrcName(e.src)) + '</span>'
     + (step ? '<span class="' + step.cls + '">' + esc(step.text) + '</span>' : '')
     + '<span class="ev-sub' + (full ? ' ev-full' : (e.signups === 0 ? ' ev-zero' : '')) + '">' + esc(text) + '</span>';
+  // Every upcoming row can be selected (the footer button follows it); a BBC
+  // row with sign-ups also unfolds. Only the ↗ icon opens the site.
+  const key = evSelKey(e), sel = key === _selKey;
+  _rowsByKey.set(key, e);
+  const cls = 'fn-row ev-row ev-game' + (sel ? ' ev-sel' : '');
   if (!evExpandable(e)) {
-    return '<a class="fn-row ev-row ev-game"' + href + ' title="' + open + '">' + inner
-      + '<span class="fn-golink" aria-hidden="true">' + ICON_OUT + '</span></a>';
+    return '<div class="' + cls + '" role="button" tabindex="0" aria-pressed="' + sel + '" data-sel="' + esc(key) + '">'
+      + inner + _goLink(e.url) + '</div>';
   }
   const id = String(e.id), on = _open.has(id);
   _games.set(id, e);
-  return '<div class="fn-row ev-row ev-game ev-exp' + (on ? ' ev-open' : '') + '" role="button" tabindex="0" aria-expanded="' + on + '" data-gid="' + esc(id) + '">'
+  return '<div class="' + cls + ' ev-exp' + (on ? ' ev-open' : '') + '" role="button" tabindex="0" aria-expanded="' + on + '" data-sel="' + esc(key) + '" data-gid="' + esc(id) + '">'
     + inner + '<span class="ev-chev" aria-hidden="true">' + ICON_CHEV + '</span>'
-    + '<a class="fn-golink"' + href + ' title="' + open + '" aria-label="' + open + '">' + ICON_OUT + '</a></div>'
+    + _goLink(e.url) + '</div>'
     + (on ? _regsPanel(e) : '');
 }
+
+// ── Selected upcoming event → footer button (web.247) ─────────────────
+// Key of a row: BBC game id, else source + time. Nothing selected = the next
+// BBC game (the button reads « Register for the BBC », as before).
+let _selKey = '';
+const _rowsByKey = new Map();
+export function evSelKey(e) {
+  if (!e) return '';
+  return e.src === 'bbc' && e.id != null ? 'bbc:' + e.id : e.src + ':' + e.at;
+}
+// What the footer button does for an event: { label key, fallback, url } or
+// { none: true } when the event takes no registration (WEC daily game).
+export function evRegisterAction(e) {
+  if (e && e.kind === 'daily') return { none: true, key: 'evWecDaily', fallback: 'Daily game \u00b7 no registration' };
+  if (e && e.src === 'mc') return { key: 'evMcRegister', fallback: 'Register for the Monthly Cup', url: evSafeUrl(e.url) || MC_REGISTER_URL };
+  return { key: 'evBbcRegister', fallback: 'Register for the BBC', url: (e && evSafeUrl(e.url)) || BBC_REGISTER_URL };
+}
+function _selected() { return _selKey ? _rowsByKey.get(_selKey) || null : null; }
+function _paintRegister() {
+  const b = document.getElementById('fn-bbcreg');
+  if (!b) return;
+  const a = evRegisterAction(_selected());
+  const sp = b.querySelector('span');
+  if (sp) { sp.setAttribute('data-i18n', a.key); sp.textContent = _t(a.key, a.fallback); }
+  b.disabled = !!a.none;
+  b.setAttribute('aria-disabled', a.none ? 'true' : 'false');
+}
+
 
 // Row clicks / keys (one listener on the box, set once).
 function _wireBox(box) {
@@ -414,23 +449,32 @@ function _wireBox(box) {
   box._evWired = true;
   const hit = function (ev) {
     if (ev.target && ev.target.closest && ev.target.closest('a')) return null;
-    const row = ev.target && ev.target.closest ? ev.target.closest('.ev-exp[data-gid]') : null;
+    const row = ev.target && ev.target.closest ? ev.target.closest('.ev-game[data-sel]') : null;
     return row && box.contains(row) ? row : null;
   };
-  box.addEventListener('click', function (ev) { const row = hit(ev); if (row) _toggle(row.getAttribute('data-gid')); });
+  // Select the row (footer button), and unfold / fold a BBC game with sign-ups.
+  const act = function (row) {
+    _selKey = row.getAttribute('data-sel') || _selKey;
+    const gid = row.getAttribute('data-gid');
+    if (gid) _toggle(gid); else evRerender();
+  };
+  box.addEventListener('click', function (ev) { const row = hit(ev); if (row) act(row); });
   box.addEventListener('keydown', function (ev) {
     if (ev.key !== 'Enter' && ev.key !== ' ') return;
     const row = hit(ev);
     if (!row) return;
     ev.preventDefault();
-    _toggle(row.getAttribute('data-gid'));
+    act(row);
   });
 }
 
-// "Register for the BBC" button of the window footer (Events tab), as the
-// QML BBC tab's Register button: registering needs a login on the BBC site.
+// Register button of the window footer (Events tab), as the QML BBC tab's
+// Register button: registering needs a login on the cup's site. Follows the
+// selected upcoming event (web.247); nothing to open for the WEC daily game.
 export function evBbcRegister() {
-  try { window.open(BBC_REGISTER_URL, '_blank', 'noopener'); } catch (e) {}
+  const a = evRegisterAction(_selected());
+  if (a.none || !a.url) return;
+  try { window.open(a.url, '_blank', 'noopener'); } catch (e) {}
 }
 try { window.evBbcRegister = evBbcRegister; } catch (e) {}
 
@@ -439,6 +483,7 @@ function _render(data) {
   if (!box) return;
   _wireBox(box);
   _games.clear();
+  _rowsByKey.clear();
   const now = Date.now(), loc = _locale();
   const stepWord = _t('rankingStep', 'Step');
   let up = (data.upcoming || []).filter(function (e) { return e && typeof e.at === 'number'; });
@@ -470,10 +515,13 @@ function _render(data) {
   // No leaders card since web.242 (narmod): the rankings have their own window.
   // A re-render (registrations landing) must not steal the keyboard focus.
   const act = document.activeElement;
-  const fgid = act && box.contains(act) && act.getAttribute ? act.getAttribute('data-gid') : null;
+  const fsel = act && box.contains(act) && act.getAttribute ? act.getAttribute('data-sel') : null;
   // Server clock in a card of its own, framed like the Upcoming card (web.242).
   box.innerHTML = '<section class="ev-card ev-clock" id="ev-clock" hidden><div class="ev-ch">' + ICON_CLOCK + '<span class="ev-cl"></span></div></section>' + html;
-  if (fgid) { const again = box.querySelector('.ev-exp[data-gid="' + fgid + '"]'); if (again) again.focus(); }
+  if (fsel) { const again = box.querySelector('.ev-game[data-sel="' + fsel + '"]'); if (again) again.focus(); }
+  // A selection whose event is gone (started) falls back to the default.
+  if (_selKey && !_rowsByKey.has(_selKey)) _selKey = '';
+  _paintRegister();
   _clockPaint();
 }
 

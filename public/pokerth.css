@@ -9058,6 +9058,13 @@ a.ev-row { color: inherit; text-decoration: none; }
    on click; chips below, BBC admins with a gold outline and an "Admin" tag;
    left bar in the step colour. */
 .ev-row.ev-exp { cursor: pointer; }
+/* web.247: rows are inert, only the ↗ icon opens a site. Upcoming rows are
+   selectable (the footer button follows the selection). */
+.ev-row.ev-static { cursor: default; }
+.ev-row.ev-static:hover { background: none; }
+.ev-row.ev-game { cursor: pointer; }
+.ev-row.ev-game:focus-visible { outline: 1px solid var(--gold); outline-offset: -1px; }
+.ev-row.ev-sel { background: rgba(var(--sel-rgb,var(--gold-rgb)), 0.10); box-shadow: inset 3px 0 0 var(--sel,var(--gold)); }
 .ev-row.ev-exp:focus-visible { outline: 1px solid var(--gold); outline-offset: -1px; }
 .ev-chev { flex-shrink: 0; display: flex; align-items: center; color: var(--text); opacity: 0.55; }
 .ev-chev svg { transition: transform 0.18s ease-out; }

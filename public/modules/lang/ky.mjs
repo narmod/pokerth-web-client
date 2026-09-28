@@ -482,7 +482,7 @@ export const strings = {
     piNoCupData:'Бул оюнчу үчүн кубок рейтинги жок.',
     rankingTooltip:'Рейтинг', rankingTitle:'Рейтинг', rankingPth:'PokerTH', rankingBbc:'BBC', rankingWec:'WEC',
     rankingLoading:'Жүктөлүүдө…', rankingSoon:'Рейтинг жакында болот.', rankingError:'Рейтингди жүктөө мүмкүн болгон жок.', rankingEmpty:'Эч нерсе жок.',
-    forumTabPosts:'Посттор', forumTabEvents:'Иш-чаралар', evUpcoming:'Алдыдагы', evChampions:'Күндүн чемпиондору', evResults:'Акыркы жыйынтыктар', evSignups:'Катталгандар: {n}', evWecDaily:'Күнүмдүк оюн · каттоосуз', evRegsError:'Каттоолорду жүктөө мүмкүн болгон жок.', evBbcRegister:'BBC’ге катталуу', evError:'Иш-чараларды жүктөө мүмкүн болгон жок.', evNone:'Алдыдагы иш-чаралар жок.', evOpenSite:'Сайтты ачуу',
+    forumTabPosts:'Посттор', forumTabEvents:'Иш-чаралар', evUpcoming:'Алдыдагы', evChampions:'Күндүн чемпиондору', evResults:'Акыркы жыйынтыктар', evSignups:'Катталгандар: {n}', evWecDaily:'Күнүмдүк оюн · каттоосуз', evRegsError:'Каттоолорду жүктөө мүмкүн болгон жок.', evBbcRegister:'BBC’ге катталуу', evMcRegister:'Monthly Cup’ка катталуу', evError:'Иш-чараларды жүктөө мүмкүн болгон жок.', evNone:'Алдыдагы иш-чаралар жок.', evOpenSite:'Сайтты ачуу',
     forumTooltip:'Форум', forumTitle:'Форум жаңылыктары', forumMarkRead:'Баарын окулду деп белгилөө', forumOpen:'Форумду ачуу', forumError:'Форум жаңылыктарын жүктөө мүмкүн болгон жок.', advForumNews:'Лоббинин башында форум баскычы', forumOpenPost:'Постту ачуу', forumOpenInForum:'Форумда ачуу', forumTranslate:'Постту которуу', forumShowOriginal:'Түпнуска постту көрсөтүү', forumTranslateFailed:'Которуу ишке ашкан жок.',
     rankingSearch:'Оюнчу издөө…', rankingNoMatch:'Оюнчу табылган жок.',
     rankingSeason:'Сезон', rankingAllTime:'Бардык убакыт',
