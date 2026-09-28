@@ -481,7 +481,7 @@ export const strings = {
     piNoCupData:'यो खेलाडीको कुनै कप र्‍याङ्किङ छैन।',
     rankingTooltip:'र्‍याङ्किङ', rankingTitle:'र्‍याङ्किङ', rankingPth:'PokerTH', rankingBbc:'BBC', rankingWec:'WEC',
     rankingLoading:'लोड हुँदैछ…', rankingSoon:'र्‍याङ्किङ छिट्टै आउँदैछ।', rankingError:'र्‍याङ्किङ लोड गर्न सकिएन।', rankingEmpty:'कुनै प्रविष्टि छैन।',
-    forumTabPosts:'पोस्टहरू', forumTabEvents:'कार्यक्रमहरू', evUpcoming:'आगामी', evChampions:'दिनका च्याम्पियनहरू', evResults:'पछिल्ला नतिजाहरू', evSignups:'दर्ता: {n}', evError:'कार्यक्रमहरू लोड गर्न सकिएन।', evNone:'कुनै आगामी कार्यक्रम छैन।', evOpenSite:'साइट खोल्नुहोस्',
+    forumTabPosts:'पोस्टहरू', forumTabEvents:'कार्यक्रमहरू', evUpcoming:'आगामी', evChampions:'दिनका च्याम्पियनहरू', evResults:'पछिल्ला नतिजाहरू', evSignups:'दर्ता: {n}', evWecDaily:'दैनिक खेल · दर्ता आवश्यक छैन', evError:'कार्यक्रमहरू लोड गर्न सकिएन।', evNone:'कुनै आगामी कार्यक्रम छैन।', evOpenSite:'साइट खोल्नुहोस्',
     forumTooltip:'फोरम', forumTitle:'फोरमका समाचार', forumMarkRead:'सबै पढेको चिन्ह लगाउनुहोस्', forumOpen:'फोरम खोल्नुहोस्', forumError:'फोरम फिड लोड गर्न सकिएन।', advForumNews:'लबीको हेडरमा फोरम बटन', forumOpenPost:'पोस्ट खोल्नुहोस्', forumOpenInForum:'फोरममा खोल्नुहोस्', forumTranslate:'पोस्ट अनुवाद गर्नुहोस्', forumShowOriginal:'मूल पोस्ट देखाउनुहोस्', forumTranslateFailed:'अनुवाद असफल भयो।',
     rankingSearch:'खेलाडी खोज्नुहोस्…', rankingNoMatch:'कुनै खेलाडी भेटिएन।',
     rankingSeason:'सिजन', rankingAllTime:'सबै समय',

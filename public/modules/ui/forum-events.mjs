@@ -4,7 +4,8 @@
 // counterpart. Shows what is coming up on the community sites (BBC step
 // games with their sign-up count, the next Monthly Cup), who won last
 // (BBC / WEC / Monthly Cup podium) and who leads the BBC season and the WEC
-// month. WEC publishes no schedule, so it only appears in the last two.
+// month. WEC publishes no schedule: its daily game (22:00 server time, no
+// registration — sp0ck, 28/09/2026) is added to each evening by evWecDaily.
 //
 // Data: GET /api/events, the relay in proxy.js (server/community-events.js)
 // that reads the three sites once per five minutes for everyone. Times come
@@ -102,17 +103,53 @@ export function evStepBadge(e) {
 // (Europe/Berlin): a game before 14:00 there (the 01:00 game) belongs to the
 // evening of the previous day, as on the BBC calendar.
 const GAME_TZ = 'Europe/Berlin';
+// Wall clock of `ms` in GAME_TZ: { year, month, day, hour, minute } (numbers), or null.
+function _gameWall(ms) {
+  try {
+    const p = {};
+    new Intl.DateTimeFormat('en-GB', { timeZone: GAME_TZ, year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' })
+      .formatToParts(new Date(ms)).forEach(function (x) { p[x.type] = +x.value; });
+    return p;
+  } catch (e) { return null; }
+}
 export function evGameDay(ms) {
   if (typeof ms !== 'number' || !isFinite(ms)) return '';
-  let p;
-  try {
-    p = {};
-    new Intl.DateTimeFormat('en-GB', { timeZone: GAME_TZ, year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', hourCycle: 'h23' })
-      .formatToParts(new Date(ms)).forEach(function (x) { p[x.type] = x.value; });
-  } catch (e) { return ''; }
-  const d = new Date(Date.UTC(+p.year, +p.month - 1, +p.day));
-  if (+p.hour < 14) d.setUTCDate(d.getUTCDate() - 1);
+  const p = _gameWall(ms);
+  if (!p) return '';
+  const d = new Date(Date.UTC(p.year, p.month - 1, p.day));
+  if (p.hour < 14) d.setUTCDate(d.getUTCDate() - 1);
   return d.toISOString().slice(0, 10);
+}
+
+// Epoch ms of a GAME_TZ wall time (summer / winter time handled by Intl).
+export function evGameTimeToUtc(y, mo, d, h, mi) {
+  const want = Date.UTC(y, mo - 1, d, h, mi);
+  let t = want - 3600000;
+  for (let i = 0; i < 3; i++) {
+    const p = _gameWall(t);
+    if (!p) return NaN;
+    const diff = want - Date.UTC(p.year, p.month - 1, p.day, p.hour, p.minute);
+    if (!diff) break;
+    t += diff;
+  }
+  return t;
+}
+
+// WEC daily game, one per evening from day key `from` to `to` (inclusive):
+// 22:00 server time, no registration.
+const WEC_DAILY_HOUR = 22;
+const WEC_URL = 'https://wec.pokerth.net/';
+export function evWecDaily(from, to) {
+  const out = [];
+  const a = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(from || '')), b = /^\d{4}-\d{2}-\d{2}$/.test(String(to || ''));
+  if (!a || !b) return out;
+  const d = new Date(Date.UTC(+a[1], +a[2] - 1, +a[3]));
+  for (let i = 0; i < 14 && d.toISOString().slice(0, 10) <= to; i++) {
+    const at = evGameTimeToUtc(d.getUTCFullYear(), d.getUTCMonth() + 1, d.getUTCDate(), WEC_DAILY_HOUR, 0);
+    if (isFinite(at)) out.push({ src: 'wec', kind: 'daily', at: at, url: WEC_URL });
+    d.setUTCDate(d.getUTCDate() + 1);
+  }
+  return out;
 }
 
 // Section header: "Aujourd'hui · lundi, 28/09/2026", "Demain · …", then the
@@ -291,7 +328,8 @@ function _gameRow(e, loc, stepWord) {
   const step = evStepBadge(e);
   const sign = evSignupText(e, _t('evSignups', 'Signed up: {n}'));
   const full = e.seats > 0 && e.signups >= e.seats;
-  const text = e.src === 'bbc'
+  const text = e.kind === 'daily' ? _t('evWecDaily', 'Daily game \u00b7 no registration')
+    : e.src === 'bbc'
     ? [e.title, sign ? '(' + sign + ')' : ''].filter(Boolean).join(' ')
     : [evUpcomingTitle(e, loc, stepWord), sign].filter(Boolean).join(' \u00b7 ');
   return '<a class="fn-row ev-row ev-game"' + (safe ? ' href="' + esc(safe).replace(/"/g, '&quot;') + '" target="_blank" rel="noopener noreferrer"' : '')
@@ -309,7 +347,14 @@ function _render(data) {
   if (!box) return;
   const now = Date.now(), loc = _locale();
   const stepWord = _t('rankingStep', 'Step');
-  const up = (data.upcoming || []).filter(function (e) { return e && typeof e.at === 'number' && e.at >= now - 5 * 60 * 1000; });
+  let up = (data.upcoming || []).filter(function (e) { return e && typeof e.at === 'number'; });
+  // WEC daily game on every evening covered by the BBC calendar (at least today).
+  const today = evGameDay(now);
+  let last = today;
+  up.forEach(function (e) { if (e.src === 'bbc') { const k = evGameDay(e.at); if (k > last) last = k; } });
+  up = up.concat(evWecDaily(today, last))
+    .filter(function (e) { return e.at >= now - 5 * 60 * 1000; })
+    .sort(function (a, b) { return a.at - b.at; });
   const res = data.results || [];
   let html = '', rows = '';
   // Grouped by game evening under a day header (QML BBC tab).

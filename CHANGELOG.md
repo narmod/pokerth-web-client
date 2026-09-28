@@ -15,6 +15,10 @@ release. Per-build detail is on the
 [GitHub Releases](https://github.com/narmod/pokerth-web-client/releases) page;
 highlights below.
 
+### Added
+
+- **Events tab — WEC daily game** (`web.240`, narmod; schedule from sp0ck 28/09: “daily games at 22 every day, no registration”) — WEC publishes no schedule, so `modules/ui/forum-events.mjs` generates the rows (`evWecDaily`): one `WEC` row per evening from today to the last BBC game evening, at 22:00 Europe/Berlin (`evGameTimeToUtc`, summer/winter time via Intl), grouped with the BBC games, text `evWecDaily` (new key, 83 catalogues), link `https://wec.pokerth.net/`. `evGameDay` now shares `_gameWall`. Tests: CEST/CET conversion, October time change, empty ranges.
+
 ### Changed
 
 - **Events tab — STEP badge sized like the BBC badge** (`web.239`, narmod) — the `web.238` `.ev-stepb` pill had its own metrics (`--fs-sm`, 8 px padding) and read too big next to the `BBC` badge. It now carries `.fn-forum` (same font, padding, radius as every badge of the window, scaled with the floating-window `--wz` zoom); `.fn-forum.ev-stepb` only adds bold and `nowrap`, colours unchanged. Measured in the real window (Chromium): both badges 14 / 17 / 21 px high at `--wz` 0.8 / 1 / 1.27.

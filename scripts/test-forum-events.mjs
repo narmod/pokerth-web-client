@@ -35,6 +35,12 @@ ok(E.evUpcomingTitle({ src: 'bbc', step: 2, title: null }, 'en', 'Step') === 'St
 ok(E.evUpcomingTitle({ src: 'bbc', step: 1, title: 'Special' }, 'en', 'Etape') === 'Etape 1 \u00b7 Special', 'with the translated word and the optional title');
 ok(E.evStepBadge({ src: 'bbc', step: 3 }).text === 'STEP 3' && E.evStepBadge({ src: 'bbc', step: 3 }).cls === 'fn-forum ev-stepb ev-step3', 'BBC step badge = STEP n, coloured per step (QML stepColor)');
 ok(E.evStepBadge({ src: 'bbc', step: 0 }) === null && E.evStepBadge({ src: 'mc', month: 9 }) === null, 'no step badge for special games and other sources');
+// WEC daily game: 22:00 server time (Europe/Berlin), one per evening.
+ok(E.evGameTimeToUtc(2026, 9, 28, 22, 0) === Date.UTC(2026, 8, 28, 20, 0) && E.evGameTimeToUtc(2026, 12, 1, 22, 0) === Date.UTC(2026, 11, 1, 21, 0), 'Berlin wall time -> UTC, summer and winter');
+{ const w = E.evWecDaily('2026-10-24', '2026-10-26');
+  ok(w.length === 3 && w.every(function (e) { return e.src === 'wec' && e.kind === 'daily' && E.evGameDay(e.at) === new Date(e.at).toISOString().slice(0, 10); }), 'one WEC row per evening, grouped under its own day');
+  ok(w[1].at === Date.UTC(2026, 9, 25, 21, 0) && E.evSafeUrl(w[0].url) !== '', 'across the October time change; the link is allowed');
+  ok(E.evWecDaily('2026-10-24', '2026-10-23').length === 0 && E.evWecDaily('x', 'y').length === 0, 'empty range / bad keys'); }
 // Day grouping (QML BbcGameDates._gameDay): Berlin clock, before 14:00 = previous evening.
 ok(E.evGameDay(Date.UTC(2026, 8, 28, 17, 30)) === '2026-09-28', '19:30 Berlin (CEST) belongs to that day');
 ok(E.evGameDay(Date.UTC(2026, 8, 28, 23, 0)) === '2026-09-28', 'the 01:00 Berlin game belongs to the previous evening');
