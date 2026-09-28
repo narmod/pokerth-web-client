@@ -98,10 +98,45 @@ export function evStepBadge(e) {
   return { text: 'BBC', cls: 'ev-step ev-step0' };
 }
 
-// Title of a BBC row once its step is on the badge: the cup, plus the name
-// of a special game.
-export function evStepRowTitle(e) {
-  return ['BBC', e && e.title].filter(Boolean).join(' \u00b7 ');
+// ── Day grouping of the Upcoming list (QML BbcGameDates.qml _gameDay/dayLabel) ──
+// Key "YYYY-MM-DD" of the game evening, read on the BBC site's clock
+// (Europe/Berlin): a game before 14:00 there (the 01:00 game) belongs to the
+// evening of the previous day, as on the BBC calendar.
+const GAME_TZ = 'Europe/Berlin';
+export function evGameDay(ms) {
+  if (typeof ms !== 'number' || !isFinite(ms)) return '';
+  let p;
+  try {
+    p = {};
+    new Intl.DateTimeFormat('en-GB', { timeZone: GAME_TZ, year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', hourCycle: 'h23' })
+      .formatToParts(new Date(ms)).forEach(function (x) { p[x.type] = x.value; });
+  } catch (e) { return ''; }
+  const d = new Date(Date.UTC(+p.year, +p.month - 1, +p.day));
+  if (+p.hour < 14) d.setUTCDate(d.getUTCDate() - 1);
+  return d.toISOString().slice(0, 10);
+}
+
+// Section header: "Aujourd'hui · lundi, 28/09/2026", "Demain · …", then the
+// bare date. Distance counted from the player's local today, as in QML.
+export function evDayLabel(key, now, locale) {
+  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(key || ''));
+  if (!m) return '';
+  const d = new Date(+m[1], +m[2] - 1, +m[3]);
+  const loc = locale || undefined;
+  let name = '';
+  try { name = d.toLocaleDateString(loc, { weekday: 'long' }) + ', ' + d.toLocaleDateString(loc); } catch (e) { name = key; }
+  const diff = Math.round((d.getTime() - _dayStart(now)) / DAY_MS);
+  if (diff === 0 || diff === 1) {
+    let rel = '';
+    try { rel = new Intl.RelativeTimeFormat(loc, { numeric: 'auto' }).format(diff, 'day'); } catch (e) { rel = ''; }
+    if (rel) return rel.charAt(0).toLocaleUpperCase(loc) + rel.slice(1) + ' \u00b7 ' + name;
+  }
+  return name;
+}
+
+// Time of a game row, in the player's zone and language.
+export function evTime(ms, locale) {
+  try { return new Date(ms).toLocaleTimeString(locale || undefined, { hour: '2-digit', minute: '2-digit' }); } catch (e) { return ''; }
 }
 
 // Meta line of a result row: "#9743 · 2. ElmoEGO · 3. il Buono · yesterday · 21:45".
@@ -237,17 +272,34 @@ function _card(icon, label, count, body) {
     + (count > 0 ? '<span class="ev-cnt">' + count + '</span>' : '') + '</div>' + body + '</section>';
 }
 
-// `badge` (optional, see evStepBadge) replaces the source badge.
-function _row(src, url, title, meta, winner, badge) {
+function _row(src, url, title, meta, winner) {
   const safe = evSafeUrl(url);
   const open = _t('evOpenSite', 'Open the site');
   return '<a class="fn-row ev-row"' + (safe ? ' href="' + esc(safe).replace(/"/g, '&quot;') + '" target="_blank" rel="noopener noreferrer"' : '')
     + ' title="' + esc(open).replace(/"/g, '&quot;') + '">'
-    + (badge
-      ? '<span class="fn-forum ' + badge.cls + '">' + esc(badge.text) + '</span>'
-      : '<span class="fn-forum ' + evSrcClass(src) + '">' + esc(evSrcName(src)) + '</span>')
+    + '<span class="fn-forum ' + evSrcClass(src) + '">' + esc(evSrcName(src)) + '</span>'
     + '<div class="fn-main"><div class="fn-t' + (winner ? ' ev-win' : '') + '">' + (winner ? ICON_CUP : '') + esc(title) + '</div>'
     + (meta ? '<div class="fn-meta">' + esc(meta) + '</div>' : '') + '</div>'
+    + '<span class="fn-golink" aria-hidden="true">' + ICON_OUT + '</span>'
+    + '</a>';
+}
+
+// One game of the Upcoming list, QML BBC-tab layout: time · badge · sign-ups.
+// Sign-ups are dimmed at 0 and green once the table is full.
+function _gameRow(e, loc, stepWord) {
+  const safe = evSafeUrl(e.url);
+  const open = _t('evOpenSite', 'Open the site');
+  const badge = evStepBadge(e) || { text: evSrcName(e.src), cls: evSrcClass(e.src) };
+  const sign = evSignupText(e, _t('evSignups', 'Signed up: {n}'));
+  const full = e.seats > 0 && e.signups >= e.seats;
+  const text = e.src === 'bbc'
+    ? [e.title, sign ? '(' + sign + ')' : ''].filter(Boolean).join(' ')
+    : [evUpcomingTitle(e, loc, stepWord), sign].filter(Boolean).join(' \u00b7 ');
+  return '<a class="fn-row ev-row ev-game"' + (safe ? ' href="' + esc(safe).replace(/"/g, '&quot;') + '" target="_blank" rel="noopener noreferrer"' : '')
+    + ' title="' + esc(open).replace(/"/g, '&quot;') + '">'
+    + '<span class="ev-time">' + esc(evTime(e.at, loc)) + '</span>'
+    + '<span class="fn-forum ' + badge.cls + '">' + esc(badge.text) + '</span>'
+    + '<span class="ev-sub' + (full ? ' ev-full' : (e.signups === 0 ? ' ev-zero' : '')) + '">' + esc(text) + '</span>'
     + '<span class="fn-golink" aria-hidden="true">' + ICON_OUT + '</span>'
     + '</a>';
 }
@@ -260,11 +312,12 @@ function _render(data) {
   const up = (data.upcoming || []).filter(function (e) { return e && typeof e.at === 'number' && e.at >= now - 5 * 60 * 1000; });
   const res = data.results || [];
   let html = '', rows = '';
+  // Grouped by game evening under a day header (QML BBC tab).
+  let day = null;
   for (const e of up) {
-    const meta = [evWhen(e.at, now, loc)];
-    meta.push(evSignupText(e, _t('evSignups', 'Signed up: {n}')));
-    const badge = evStepBadge(e);
-    rows += _row(e.src, e.url, badge ? evStepRowTitle(e) : evUpcomingTitle(e, loc, stepWord), meta.filter(Boolean).join(' \u00b7 '), false, badge);
+    const k = evGameDay(e.at);
+    if (k !== day) { day = k; rows += '<div class="ev-day">' + esc(evDayLabel(k, now, loc)) + '</div>'; }
+    rows += _gameRow(e, loc, stepWord);
   }
   html += _card(ICON_CAL, _t('evUpcoming', 'Upcoming'), up.length,
     up.length ? rows : '<div class="rk-msg">' + esc(_t('evNone', 'No upcoming events.')) + '</div>');

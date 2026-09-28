@@ -17,6 +17,7 @@ highlights below.
 
 ### Changed
 
+- **Events tab — upcoming games grouped by evening, QML BBC-tab rows** (`web.237`, narmod) — parity with upstream `BbcGameDates.qml` / `ForumNewsPage.qml` (pokerth/pokerth `f0ea7de`): `modules/ui/forum-events.mjs` groups the Upcoming card under day headers keyed by `evGameDay` (Europe/Berlin wall clock, a game before 14:00 belongs to the previous evening — the 01:00 game) and labelled by `evDayLabel` (Today / Tomorrow · weekday, date, from the player's local today); each row is time (large) · badge · sign-ups, dimmed at 0 and green when full. Times stay in the player's zone. Replaces the `web.236` “BBC” row title (`evStepRowTitle` removed). Tests in `scripts/test-forum-events.mjs` (CEST/CET, year change, fr/en labels).
 - **Events tab — BBC step badges coloured as in QML** (`web.236`, narmod) — parity with upstream `ForumNewsPage.qml` BBC tab (pokerth/pokerth `f0ea7de`, `stepColor`): `modules/ui/forum-events.mjs` gives BBC upcoming rows a `STEP n` badge (English in every language, the cup's own word) instead of the `BBC` source badge, and titles the row `BBC` (+ special game name); `pokerth.css` `.ev-step1…4` = `#E3C800` (light theme `#b09a00`) / `#50c878` / `#e89a30` / `#e05050`, special game (step 0) `#6E9CEC`. `evStepBadge` / `evStepRowTitle` covered by `scripts/test-forum-events.mjs`.
 
 ### Fixed

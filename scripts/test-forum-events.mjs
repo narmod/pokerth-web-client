@@ -35,7 +35,13 @@ ok(E.evUpcomingTitle({ src: 'bbc', step: 2, title: null }, 'en', 'Step') === 'St
 ok(E.evUpcomingTitle({ src: 'bbc', step: 1, title: 'Special' }, 'en', 'Etape') === 'Etape 1 \u00b7 Special', 'with the translated word and the optional title');
 ok(E.evStepBadge({ src: 'bbc', step: 3 }).text === 'STEP 3' && E.evStepBadge({ src: 'bbc', step: 3 }).cls === 'ev-step ev-step3', 'BBC badge = STEP n, coloured per step (QML stepColor)');
 ok(E.evStepBadge({ src: 'bbc', step: 0 }).cls === 'ev-step ev-step0' && E.evStepBadge({ src: 'mc', month: 9 }) === null, 'special game = BBC in blue; other sources keep their badge');
-ok(E.evStepRowTitle({ src: 'bbc', step: 1, title: null }) === 'BBC' && E.evStepRowTitle({ src: 'bbc', step: 0, title: 'Xmas' }) === 'BBC \u00b7 Xmas', 'badged BBC rows are titled by the cup (+ special name)');
+// Day grouping (QML BbcGameDates._gameDay): Berlin clock, before 14:00 = previous evening.
+ok(E.evGameDay(Date.UTC(2026, 8, 28, 17, 30)) === '2026-09-28', '19:30 Berlin (CEST) belongs to that day');
+ok(E.evGameDay(Date.UTC(2026, 8, 28, 23, 0)) === '2026-09-28', 'the 01:00 Berlin game belongs to the previous evening');
+ok(E.evGameDay(Date.UTC(2026, 11, 31, 23, 0)) === '2026-12-31' && E.evGameDay(Date.UTC(2027, 0, 1, 13, 0)) === '2027-01-01', 'winter time (CET) and year change');
+{ const n = new Date(2026, 8, 28, 18, 0).getTime();
+  ok(/^Today · Monday, /.test(E.evDayLabel('2026-09-28', n, 'en')) && /^Tomorrow · /.test(E.evDayLabel('2026-09-29', n, 'en')), 'day headers: Today / Tomorrow + weekday, date');
+  ok(/^Aujourd.hui · lundi, 28\/09\/2026$/.test(E.evDayLabel('2026-09-28', n, 'fr')) && /^mercredi, /.test(E.evDayLabel('2026-09-30', n, 'fr')), 'localised, capitalised relative word, bare date beyond tomorrow'); }
 ok(E.evUpcomingTitle({ src: 'mc', month: 9 }, 'en') === 'September' && E.evUpcomingTitle({ src: 'mc', month: 9 }, 'fr') === 'septembre', 'the Monthly Cup is titled by its month, in the locale');
 ok(E.evMonthName(13, 'en') === '' && E.evMonthName(0, 'en') === '', 'a month out of range gives nothing');
 ok(E.evResultMeta({ src: 'bbc', id: 9743, podium: ['spoof', 'ElmoEGO', 'il Buono'], at: Date.parse('2026-09-20T21:15:00+02:00') }, NOW, 'en').startsWith('#9743 \u00b7 2. ElmoEGO \u00b7 3. il Buono \u00b7 today'), 'result meta: id, runners-up, when');
