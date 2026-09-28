@@ -1,4 +1,9 @@
-2026-09-28 version 2.1.9-web.222 (current series):
+2026-09-28 version 2.1.9-web.223 (current series):
+- improvement: action bar on desktop — same height as the official client (115 px instead of 130) and floating 8 px above the bottom edge; the table gains the difference
+- bugfix: action bar — the buttons were 2 px taller in windows 600–900 px wide
+- bugfix: community cards no longer touch the side player boxes in narrow windows
+
+2026-09-28 version 2.1.9-web.222:
 - bugfix: action bar — on large screens it is again as wide as the community cards (it was stuck at its minimum width since the previous version)
 
 2026-09-28 version 2.1.9-web.221:

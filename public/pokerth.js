@@ -5388,7 +5388,10 @@ const App = (() => {
       var _coarse = false;
       try { _coarse = window.matchMedia('(pointer: coarse)').matches; } catch (e2) {}
       var _lcB = _bw > _bh && _bh < 600 && _coarse;
-      var _bk = _lcB ? 0.741 : (_bw < 900 ? 1.037 : 1);
+      // web.223 : Theme.compact QML = windowWidth < 600 (config/Theme.qml),
+      // PAS < 900 (seuil de Responsive, 3 colonnes) — GameActionBar lit bien
+      // Config.Theme.compact. Les boutons faisaient 56 px entre 600 et 900.
+      var _bk = _lcB ? 0.741 : (_bw < 600 ? 1.037 : 1);
       var _bkf = _lcB ? 0.8 : 1;
       if (window.__barK !== _bk) {
         window.__barK = _bk;
@@ -11889,7 +11892,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.9-web.222'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.9-web.223'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif ou la palette High contrast
    (Android, Safari, iOS standalone récent). Lit --theme-color et met

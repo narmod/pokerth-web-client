@@ -1349,7 +1349,11 @@ function renderSeatsImmediate() {
             }
           }
           var _freeH3 = Math.min(_zW3 / 2 - _freeL3, _freeR3 - _zW3 / 2) - 8;
-          var _csMaxH3 = _freeH3 / 121;
+          // web.223 : demi-largeur réelle de la rangée = 132·cs (264/2 : 5
+          // cartes 46 + espacements + marges de .comm-row), pas 121·cs — les
+          // cartes mordaient de 1 à 3 px les boîtes latérales en fenêtre
+          // étroite (640×600, 3–5 joueurs).
+          var _csMaxH3 = _freeH3 / 132;
           if (_freeH3 > 0 && _csMaxH3 < _csComm) _csComm = Math.max(0.55, _csMaxH3);
           try { window._seatDbg.commCapH = +_csMaxH3.toFixed(3); window._seatDbg.commEff = +_fEffH.toFixed(3); } catch (eDbg) {}
         } catch (eHc) {}

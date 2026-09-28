@@ -11053,6 +11053,25 @@ body.chat-tr-on .pm-line .chat-tr-btn.tr-same { visibility: visible; }
 }
 
 
+/* ── Barre d'action QML — géométrie verticale exacte (web.223) ──
+   Les valeurs QML ci-dessus (padding 4/8/2, flottant à 8 px du bas) étaient
+   écrasées par deux règles plus fortes : « body.adv-hide-pbar .my-zone
+   { bottom: 0 !important } » (barre collée au bord) et, en table plein écran
+   (le défaut), « :root[data-table-fs="1"] .my-zone .action-grid
+   { padding: 8px 10px } ». Résultat : 130 px de haut au lieu de 115, collée
+   au bas de l'écran. Budget QML (GameActionBar.qml) : raiseSection topPadding
+   4 + ligne 26 + spacing 3 + ligne 26 + bottomPadding 2, puis la rangée
+   d'action de 54 (marges 5/5 incluses) ; côtés 8 ; bottomMargin 8 en paysage
+   desktop. Scopé souris + ≥ 600 px : téléphones et portrait inchangés. */
+@media (min-width: 600px) and (hover: hover) and (pointer: fine) {
+  html body.adv-hide-pbar .my-zone { bottom: 8px !important; padding-bottom: 0 !important; }
+  :root[data-table-fs] body.adv-hide-pbar .my-zone .action-grid,
+  :root:not([data-table-fs]) body.adv-hide-pbar .my-zone .action-grid { padding: 4px 8px 0; }
+  :root[data-table-fs] body.adv-hide-pbar .my-zone .act-buttons-row,
+  :root:not([data-table-fs]) body.adv-hide-pbar .my-zone .act-buttons-row { margin-top: -1px; }
+}
+
+
 /* ── Barre d'action QML — finitions desktop/tablette (suite 0.3.541) ── */
 @media (min-width: 600px) and (hover: hover) and (pointer: fine) {
   /* Les effets « mon tour » (cadre/glow dorés) sont CONSERVÉS — retrait
