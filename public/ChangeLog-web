@@ -1,4 +1,7 @@
-2026-09-28 version 2.1.9-web.218 (current series):
+2026-09-28 version 2.1.9-web.219 (current series):
+- bugfix: theme window — the Table / Cards / Card back / Seats tab bar now stays flush with the top while scrolling (a strip of the list showed through above it)
+
+2026-09-28 version 2.1.9-web.218:
 - improvement: animated mascot — the Ace is a little smaller
 - new: animated mascot — he now also says hello from behind the top of a window, then ducks back down or climbs over and jumps down; two new acts: a nap (big yawn, zZz, wakes with a start) and juggling with three poker chips
 

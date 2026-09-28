@@ -1535,7 +1535,8 @@ function _render(){
   // naturelle -> libelles TOUJOURS en toutes lettres (« Dos de carte » se
   // tronquait en « Dos de ca… » sur iPhone portrait) ; on glisse au doigt.
   // Scrollbar masquee via .st-tabbar (pokerth.css).
-  tabbar.style.cssText = 'display:flex;gap:2px;margin:0 0 11px;border-bottom:1px solid var(--border,rgba(200,168,74,0.18));'
+  var _float = _body.getAttribute('data-st-float') === '1';
+  tabbar.style.cssText = 'display:flex;gap:2px;margin:' + (_float ? '11px 0 11px' : '0 0 11px') + ';border-bottom:1px solid var(--border,rgba(200,168,74,0.18));'
     + 'position:sticky;top:0;z-index:5;background:var(--modal-bg,#1d222b);'
     + 'overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch';
   _TABS.forEach(function(tb){
@@ -1691,7 +1692,12 @@ function openThemePanel(ev) {
   panel.appendChild(header);
 
   _body = document.createElement('div');
-  _body.style.cssText = 'flex:1 1 auto;min-height:0;overflow-y:auto;overflow-x:hidden;padding:11px 13px 13px';
+  // No top padding: a position:sticky child sticks at the scroller's padding
+  // edge, so the 11px of padding stayed as a gap above the pinned tab bar with
+  // the rows scrolling through it (narmod, /live, 28/09/2026). The spacing moves
+  // onto the tab bar's own top margin (see _render), which scrolls away.
+  _body.style.cssText = 'flex:1 1 auto;min-height:0;overflow-y:auto;overflow-x:hidden;padding:0 13px 13px';
+  _body.setAttribute('data-st-float', '1');
   panel.appendChild(_body);
   _activeTab = _savedStyleTab();
   _render();
