@@ -100,6 +100,14 @@ let _bypass  = false;   // true = la lecture courante passe par _radioEl
 let _corsTried = false; // un flux vient d'être tenté en CORS (erreur ⇒ repli)
 let _mode  = 'pl';      // onglet actif de la liste : 'pl' (pistes) | 'radio' (flux live)
 let _plOpen = false;    // liste dépliée (préservé à travers les re-rendus)
+// Suivi de la piste en cours dans la liste : la liste se centre sur la piste
+// jouée ; si l'utilisateur la fait défiler, on le laisse faire et on y revient
+// après PL_IDLE_MS sans activité dans la liste.
+const PL_IDLE_MS = 4000;
+let _plScroll = 0;       // scrollTop mémorisé (restauré après un re-rendu pendant l'activité)
+let _plUserAt = 0;       // dernière activité utilisateur dans la liste (ms)
+let _plAutoUntil = 0;    // les événements scroll avant cette date viennent de nous
+let _plIdleT = 0;        // minuterie de retour sur la piste en cours
 let _fadePauseTimer = null;
 const FADE = 0.45;   // durée du fondu (s)
 // ── Lecture hors-réseau (préchargement Blob) ──
@@ -1098,6 +1106,56 @@ function _wire() {
   if (bal) { bal.addEventListener('input', function () { setBalance((parseInt(bal.value, 10) || 0) / 100); }); }
   _updateMarquee();
   if (isPlaying()) _startVU();
+  _plWire();
+}
+
+// ── Liste : suivi de la piste en cours ──
+function _plUl() { return _bodyEl ? _bodyEl.querySelector('.music-pl') : null; }
+function _plUserActive() { return Date.now() - _plUserAt < PL_IDLE_MS; }
+// Centre la piste en cours dans la liste (défilement de la liste seule, jamais
+// de la page). smooth=false pour un re-rendu (pas d'animation parasite).
+function _plFollow(smooth) {
+  var ul = _plUl();
+  if (!ul || ul.hidden || !ul.clientHeight) return;
+  var li = ul.querySelector('.music-pl-item.is-cur');
+  if (!li) return;
+  var ur = ul.getBoundingClientRect(), lr = li.getBoundingClientRect();
+  var max = ul.scrollHeight - ul.clientHeight;
+  var top = Math.max(0, Math.min(max, ul.scrollTop + (lr.top - ur.top) - (ul.clientHeight - lr.height) / 2));
+  if (Math.abs(top - ul.scrollTop) < 2) { _plScroll = ul.scrollTop; return; }
+  var reduce = false;
+  try { reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) {}
+  _plAutoUntil = Date.now() + (smooth && !reduce ? 900 : 150);
+  try { ul.scrollTo({ top: top, behavior: (smooth && !reduce) ? 'smooth' : 'auto' }); }
+  catch (e) { ul.scrollTop = top; }
+  _plScroll = top;
+}
+function _plArm() {
+  _plUserAt = Date.now();
+  if (_plIdleT) clearTimeout(_plIdleT);
+  _plIdleT = setTimeout(function () { _plIdleT = 0; _plFollow(true); }, PL_IDLE_MS);
+}
+// Appelé après chaque rendu : le <ul> vient d'être recréé.
+function _plWire() {
+  var ul = _plUl();
+  if (!ul) return;
+  var onUser = function () { _plArm(); };
+  ['pointerdown', 'touchstart', 'touchmove', 'wheel', 'keydown'].forEach(function (ev) {
+    ul.addEventListener(ev, onUser, { passive: true });
+  });
+  ul.addEventListener('scroll', function () {
+    _plScroll = ul.scrollTop;
+    if (Date.now() > _plAutoUntil) _plArm();   // défilement utilisateur (inertie, barre de défilement)
+  }, { passive: true });
+  // Pendant l'activité : on garde la position de l'utilisateur ; sinon on suit la piste.
+  if (_plUserActive()) {
+    _plAutoUntil = Date.now() + 150;
+    ul.scrollTop = _plScroll;
+  } else {
+    _plFollow(false);
+    // Panneau qui vient de s'ouvrir : la mise en page peut ne pas être prête.
+    if (!ul.clientHeight) requestAnimationFrame(function () { if (!_plUserActive()) _plFollow(false); });
+  }
 }
 
 // Expand/collapse the playlist and flip the caret. Kept off the render path so
@@ -1112,6 +1170,7 @@ function _togglePlaylist() {
   if (_plOpen) ul.removeAttribute('hidden'); else ul.setAttribute('hidden', '');
   tg.setAttribute('aria-expanded', String(_plOpen));
   if (cr) cr.textContent = _plOpen ? '\u25BE' : '\u25B8';
+  if (_plOpen) { _plUserAt = 0; _plFollow(false); }
 }
 
 // Start the title marquee only when the text actually overflows its LCD width

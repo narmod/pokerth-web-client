@@ -1,4 +1,7 @@
-2026-09-28 version 2.1.9-web.232 (current series):
+2026-09-28 version 2.1.9-web.233 (current series):
+- improvement: music player — the playlist follows the track being played: it scrolls to it and highlights it; scroll freely, it comes back to the current track after a few seconds without touching the list
+
+2026-09-28 version 2.1.9-web.232:
 - new: animated mascot — he reacts in the lobby: a new table appears (he points at the list), a private message arrives (he waves an envelope), you climb the LAN ranking (confetti)
 - new: animated mascot — his friends drop by: a western duel with the King of hearts, and the Joker who plays a trick on him
 - new: animated mascot — seasonal hats: Santa hat in December, a pumpkin for Halloween, a beanie in winter, sunglasses in summer

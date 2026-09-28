@@ -8711,7 +8711,11 @@ html[data-seat-edit="1"] #g-seats .seat.seat-ghost { outline: none; cursor: defa
 .music-pl-item.is-cur {
   background: rgba(var(--sel-rgb, var(--gold-rgb)), 0.16);
   color: var(--sel, var(--gold));
+  /* piste en cours bien repérable quand la liste la recentre */
+  box-shadow: inset 3px 0 0 var(--sel, var(--gold));
+  font-weight: 600;
 }
+.music-pl { scroll-behavior: auto; overscroll-behavior: contain; }
 .music-pl-num { flex: 0 0 auto; width: 1.4em; text-align: right; color: var(--gold-dim); font-variant-numeric: tabular-nums; font-size: var(--fs-sm); }
 .music-pl-ttl { flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .music-pl-eq { flex: 0 0 auto; color: var(--sel, var(--gold)); font-size: var(--fs-sm); }
