@@ -18,9 +18,9 @@ function ok(cond, label) {
 
 // ── Size: readable on a phone, never huge on a desktop ──
 const phone = P.stageOf(390, 844), desk = P.stageOf(1920, 1080), tiny = P.stageOf(320, 480), land = P.stageOf(844, 390);
-ok(phone.h >= 96 && phone.h <= 130, `phone portrait: ${Math.round(phone.h)} px tall (96–130)`);
-ok(desk.h === 190, 'desktop: capped at 190 px');
-ok(tiny.h === 96, 'very small screen: floor of 96 px');
+ok(phone.h >= 80 && phone.h <= 110, `phone portrait: ${Math.round(phone.h)} px tall (80–110)`);
+ok(desk.h === 160, 'desktop: capped at 160 px');
+ok(tiny.h === 80, 'very small screen: floor of 80 px');
 ok(land.h < land.vh * 0.3, 'phone landscape: under 30 % of the height');
 ok(Math.abs(phone.w / phone.h - P.BASE_W / P.BASE_H) < 1e-9, 'aspect ratio kept');
 ok(phone.yF + P.FEET * phone.k === phone.floor, 'standing box top puts the feet on the floor line');
@@ -52,25 +52,46 @@ ok(P.climbPlan(st, { left: 30, top: 300, right: 500, bottom: 700 }) === null, 'p
 ok(P.pickPanel(st, [{ left: 600, top: 300, right: 700, bottom: 700 }, card]).rect === card, 'pickPanel skips unusable rects');
 ok(P.pickPanel(st, []) === null && P.climbPlan(st, null) === null, 'no panel → null');
 
+// ── Peek over a panel's top edge ──
+const pk = P.peekPlan(st, card, () => 0.5);
+ok(!!pk, 'a centred login card can be peeked over');
+if (pk) {
+  ok(pk.T === card.top && pk.yUp < pk.T && pk.yDown > pk.T - 30 * st.k, 'pops up above the line, hides below it');
+  ok(pk.yUp + 118 * st.k === pk.T, 'the line cuts him under the mouth');
+  ok(pk.x >= card.left && pk.x + st.w <= card.right, 'peeks from within the panel width');
+  ok(Math.abs(pk.yP + 210 * st.k - card.top) < 1e-6, 'can stand on the panel top before jumping down');
+}
+ok(P.peekPlan(st, { left: 440, top: 40, right: 840, bottom: 700 }) === null, 'panel right under the header: no peek');
+ok(P.peekPlan(st, { left: 600, top: 300, right: 700, bottom: 700 }) === null, 'too narrow to peek from');
+ok(P.pickPeek(st, [{ left: 600, top: 300, right: 700, bottom: 700 }, card], () => 0.5).rect === card, 'pickPeek skips unusable rects');
+
 // ── Sequences ──
 const rnd = P.seeded(7);
-let climbs = 0, badClimb = 0, allOk = true;
+let climbs = 0, badClimb = 0, allOk = true, peeks = 0, badPeek = 0, ducks = 0, sleeps = 0, juggles = 0;
 for (let i = 0; i < 500; i++) {
   const withPanel = i % 2 === 0;
-  const s = P.pickSequence(rnd, { climb: withPanel });
+  const s = P.pickSequence(rnd, { climb: withPanel, peek: withPanel });
   if (P.ENTRIES.indexOf(s.entry) < 0 || P.EXITS.indexOf(s.exit) < 0) allOk = false;
-  if (!s.actions.length || s.actions.some((a) => P.ACTIONS.indexOf(a) < 0)) allOk = false;
+  if (s.actions.some((a) => P.ACTIONS.indexOf(a) < 0)) allOk = false;
+  if (!s.actions.length && !(s.entry === 'peek' && s.exit === 'duck')) allOk = false;
+  if (s.exit === 'duck' && (s.entry !== 'peek' || s.actions.length)) allOk = false;
+  if (s.entry === 'peek') { peeks++; if (!withPanel) badPeek++; if (s.exit === 'duck') ducks++; }
+  if (s.actions.indexOf('sleep') >= 0) sleeps++;
+  if (s.actions.indexOf('juggle') >= 0) juggles++;
   if (s.actions.indexOf('climb') >= 0) { climbs++; if (!withPanel) badClimb++; }
   if (!s.costume || !s.costume.hat || !s.costume.tool || !s.costume.mood) allOk = false;
 }
 ok(allOk, '500 sequences: valid entry, actions, exit and costume');
 ok(climbs > 0 && badClimb === 0, 'climb only when a panel is available');
+ok(peeks > 0 && badPeek === 0 && ducks > 0 && ducks < peeks, 'peek only with a panel; some peeks are short visits (duck), others hop down');
+ok(sleeps > 0 && juggles > 0, 'nap and juggling are drawn');
+ok(P.costumeFor('sleep').hat === 'nightcap', 'nightcap for the nap');
 ok(P.pickSequence(P.seeded(1), { force: 'king' }).actions[0] === 'king', 'forced action honoured');
 ok(P.costumeFor('knight').tool === 'sword' && P.costumeFor('magic').hat === 'wizard' && P.costumeFor('moon').mood === 'cool', 'costumes follow the action');
 ok(JSON.stringify(P.pickSequence(P.seeded(42))) === JSON.stringify(P.pickSequence(P.seeded(42))), 'seeded sequences are reproducible');
 
 // ── Timing helpers ──
-ok(P.walkMs(desk, 0, 0) === 300 && Math.abs(P.walkMs(desk, 0, 190 * desk.k) - 1000) < 1e-6, 'walking speed ~190 px/s at full size');
+ok(P.walkMs(desk, 0, 0) === 300 && Math.abs(P.walkMs(desk, 0, 190 * desk.k) - 1000) < 1e-6, 'walking speed 190 base px/s');
 ok(P.stepCycles(100) === 1 && P.stepCycles(2200) === 4, 'step cycles ~0.55 s');
 ok(P.fallMs(0) === 350 && P.fallMs(100000) === 900, 'fall time bounded 350–900 ms');
 

@@ -14,7 +14,8 @@
 // is imported the first time the Ace actually appears.
 //
 // Preview: ?mascot=1 (or ?mascot=<action>: moon, climb, magic, king, knight,
-// grim) makes him appear a few seconds after the home screen or the lobby is
+// grim, sleep, juggle — or ?mascot=peek for the hello from behind a panel's
+// top edge) makes him appear a few seconds after the home screen or the lobby is
 // shown, even with the option off. Console: mascotDemo('climb').
 // ═══════════════════════════════════════════════════════════════════
 
@@ -87,7 +88,11 @@ async function fire() {
   if (!canAppear()) { arm(); return; }
   running = true;
   const opts = {};
-  if (preview) { if (preview.action) opts.action = preview.action; preview = null; }
+  if (preview) {
+    if (preview.action === 'peek') opts.entry = 'peek';
+    else if (preview.action) opts.action = preview.action;
+    preview = null;
+  }
   try { await (await loadEngine()).appear(opts); }
   catch (e) { try { console.warn('[mascot]', e); } catch (e2) {} }
   running = false;
@@ -118,7 +123,7 @@ function onScreenChange() {
 function init() {
   try {
     const q = new URLSearchParams(location.search).get('mascot');
-    if (q) preview = { action: /^(moon|climb|magic|king|knight|grim)$/.test(q) ? q : '' };
+    if (q) preview = { action: /^(moon|climb|magic|king|knight|grim|sleep|juggle|peek)$/.test(q) ? q : '' };
   } catch (e) {}
   enabled = optionOn();
   ['pointerdown', 'keydown', 'wheel', 'input'].forEach((ev) =>
@@ -143,12 +148,13 @@ function init() {
 }
 
 window._mascotApply = apply;
-/** Console / test hook: mascotDemo('climb') plays one appearance now. */
+/** Console / test hook: mascotDemo('climb') plays one appearance now ('peek': hello from a panel's top). */
 window.mascotDemo = async (action) => {
   disarm();
   stopNow();
   running = true;
-  try { return await (await loadEngine()).appear(action ? { action } : {}); }
+  const o = action === 'peek' ? { entry: 'peek' } : action ? { action } : {};
+  try { return await (await loadEngine()).appear(o); }
   finally { running = false; lastEnd = Date.now(); arm(); }
 };
 

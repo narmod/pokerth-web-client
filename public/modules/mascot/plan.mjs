@@ -11,9 +11,9 @@ export const BASE_W = 168;
 export const BASE_H = 228;
 export const FEET = 212;
 
-/** Scale factor: the Ace is ~20 % of the short side, 96–190 px tall. */
+/** Scale factor: the Ace is ~17 % of the short side, 80–160 px tall. */
 export function mascotScale(vw, vh) {
-  const h = Math.max(96, Math.min(190, Math.min(vh * 0.2, vw * 0.3)));
+  const h = Math.max(80, Math.min(160, Math.min(vh * 0.17, vw * 0.25)));
   return h / BASE_H;
 }
 
@@ -88,9 +88,44 @@ export function pickPanel(st, rects) {
   return best;
 }
 
-export const ENTRIES = ['door', 'poof', 'edge'];
-export const EXITS = ['door', 'poof', 'edge'];
-export const ACTIONS = ['moon', 'climb', 'magic', 'king', 'knight', 'grim'];
+/**
+ * Peek from behind the top edge of a panel (« hello from the top of a
+ * window »), or null. The Ace pops up behind the panel's top line — only his
+ * hat and face show above it — waves, then either ducks back down or climbs
+ * over and jumps down in front of it.
+ * x: box left; T: the panel's top line; yUp: box top when peeking (the line
+ * cuts him under the mouth); yDown: box top when hidden; yP: box top standing
+ * on the panel. rnd() picks the spot along the panel (30–70 % of its width).
+ */
+export function peekPlan(st, rect, rnd = Math.random) {
+  const { w, h, k } = st;
+  if (!rect) return null;
+  const width = rect.right - rect.left;
+  if (width < 1.4 * w) return null;
+  const T = rect.top;
+  if (T < 0.62 * h + 8) return null;                  // no room above the line for his head
+  if (T > st.floor - 0.9 * h) return null;            // too low: he would just be standing there
+  const cx = rect.left + width * (0.3 + 0.4 * rnd());
+  const x = Math.max(rect.left + 0.05 * w, Math.min(rect.right - 1.05 * w, cx - w / 2));
+  if (x < st.minX || x > st.maxX) return null;
+  return { x, T, yUp: T - 118 * k, yDown: T + 24 * k, yP: T - 210 * k, rect };
+}
+
+/** Best panel to peek from (widest usable wins). */
+export function pickPeek(st, rects, rnd = Math.random) {
+  let best = null, width = 0;
+  const r0 = rnd();
+  for (const r of rects || []) {
+    const p = peekPlan(st, r, () => r0);
+    if (!p) continue;
+    if (r.right - r.left > width) { width = r.right - r.left; best = p; }
+  }
+  return best;
+}
+
+export const ENTRIES = ['door', 'poof', 'edge', 'peek'];
+export const EXITS = ['door', 'poof', 'edge', 'duck'];
+export const ACTIONS = ['moon', 'climb', 'magic', 'king', 'knight', 'grim', 'sleep', 'juggle'];
 
 /** Costume (hat, tool, mood) of an action. rnd() is in [0, 1). */
 export function costumeFor(action, rnd = Math.random) {
@@ -99,22 +134,30 @@ export function costumeFor(action, rnd = Math.random) {
     case 'magic': return { hat: 'wizard', tool: 'wand', mood: 'smile' };
     case 'king': return { hat: 'crown', tool: 'scepter', mood: 'smile' };
     case 'knight': return { hat: 'helmet', tool: 'sword', mood: 'fierce' };
+    case 'sleep': return { hat: 'nightcap', tool: 'none', mood: 'smile' };
     default: return { hat: rnd() < 0.5 ? 'tophat' : 'none', tool: 'none', mood: 'smile' };
   }
 }
 
 /**
  * One appearance: entry → greeting → action (+ sometimes grimaces) → exit.
+ * The peek entry (only when can.peek) carries its own greeting; a short
+ * peek visit has no action and ducks back behind the panel (exit 'duck').
  * @param {() => number} rnd  random in [0, 1)
- * @param {{ climb?: boolean, force?: string }} [can]
+ * @param {{ climb?: boolean, peek?: boolean, force?: string }} [can]
  */
 export function pickSequence(rnd = Math.random, can = {}) {
   const pick = (list) => list[Math.floor(rnd() * list.length) % list.length];
   const pool = ACTIONS.filter((a) => a !== 'climb' || can.climb);
   const action = can.force && pool.indexOf(can.force) >= 0 ? can.force : pick(pool);
   const actions = [action];
-  if (action !== 'grim' && rnd() < 0.3) actions.push('grim');
-  return { entry: pick(ENTRIES), actions, exit: pick(EXITS), costume: costumeFor(action, rnd) };
+  if (action !== 'grim' && action !== 'sleep' && rnd() < 0.3) actions.push('grim');
+  const entry = pick(ENTRIES.filter((e) => e !== 'peek' || can.peek));
+  const exits = EXITS.filter((e) => e !== 'duck');
+  if (entry === 'peek' && !can.force && rnd() < 0.45) {
+    return { entry, actions: [], exit: 'duck', costume: costumeFor('peek', rnd) };
+  }
+  return { entry, actions, exit: pick(exits), costume: costumeFor(action, rnd) };
 }
 
 /** Walking time (ms) between two x, at the stage speed (min 300 ms). */

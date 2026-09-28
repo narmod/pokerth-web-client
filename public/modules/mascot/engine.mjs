@@ -7,15 +7,17 @@
 // modules/mascot/index.mjs (never while the option is off, never at a table).
 //
 // Everything is SVG + Web Animations: no library, no canvas, no network.
-// One appearance = entry (door / poof / edge) → greeting → one action
-// (moonwalk, climb & fall, magic, king, knight, grimaces) → exit.
+// One appearance = entry (door / poof / edge / peek over a panel's top edge)
+// → greeting → one action (moonwalk, climb & fall, magic, king, knight,
+// grimaces, nap, juggling) → exit. A short peek visit just says hello from
+// behind the panel and ducks back down.
 // Positions come from modules/mascot/plan.mjs and scale with the screen.
 // The overlay never takes a click (pointer-events: none); any input makes
 // the Ace vanish in a puff (index.mjs calls dismiss()).
 // ═══════════════════════════════════════════════════════════════════
 
 import {
-  BASE_W, BASE_H, stageOf, clampX, xAt, pickPanel, pickSequence, costumeFor,
+  BASE_W, BASE_H, stageOf, clampX, xAt, pickPanel, pickPeek, pickSequence, costumeFor,
   walkMs, stepCycles, fallMs,
 } from './plan.mjs';
 
@@ -38,14 +40,14 @@ const CSS = `
 #mascot-root .mc-legL{transform-origin:58px 128px}#mascot-root .mc-legR{transform-origin:82px 128px}
 #mascot-root .mc-armL{transform-origin:36px 84px}#mascot-root .mc-armR{transform-origin:104px 84px}
 #mascot-root .mc-hat{transform-origin:70px 32px}#mascot-root .mc-stars-rot{transform-origin:84px 14px}
-#mascot-root .mc-f-eo,#mascot-root .mc-tw{transform-box:fill-box;transform-origin:center}
-#mascot-root .mc-f,#mascot-root .mc-fx{opacity:0}
+#mascot-root .mc-f-eo,#mascot-root .mc-tw,#mascot-root .mc-z{transform-box:fill-box;transform-origin:center}
+#mascot-root .mc-f,#mascot-root .mc-fx,#mascot-root .mc-chip{opacity:0}
 #mascot-root .mc-m-smile .mc-f-eo,#mascot-root .mc-m-smile .mc-f-ms,
 #mascot-root .mc-m-cool .mc-f-gl,#mascot-root .mc-m-cool .mc-f-ms,
 #mascot-root .mc-m-fierce .mc-f-eo,#mascot-root .mc-m-fierce .mc-f-br,#mascot-root .mc-m-fierce .mc-f-mf{opacity:1}
 #mascot-root .mc-h,#mascot-root .mc-t{display:none}
 #mascot-root .mc-hat-tophat .mc-h-tophat,#mascot-root .mc-hat-wizard .mc-h-wizard,#mascot-root .mc-hat-crown .mc-h-crown,
-#mascot-root .mc-hat-helmet .mc-h-helmet,#mascot-root .mc-hat-fedora .mc-h-fedora,
+#mascot-root .mc-hat-helmet .mc-h-helmet,#mascot-root .mc-hat-fedora .mc-h-fedora,#mascot-root .mc-hat-nightcap .mc-h-nightcap,
 #mascot-root .mc-tool-wand .mc-t-wand,#mascot-root .mc-tool-scepter .mc-t-scepter,#mascot-root .mc-tool-sword .mc-t-sword,#mascot-root .mc-tool-cane .mc-t-cane{display:inline}
 #mascot-root .mc-bubble{position:absolute;left:0;top:0;opacity:0;white-space:nowrap;background:#fbf7ee;color:#141414;font:800 15px/1.2 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;padding:7px 12px;border-radius:14px;box-shadow:0 6px 16px rgba(0,0,0,.4);transform-origin:0 100%}
 #mascot-root .mc-bubble::after{content:"";position:absolute;left:12px;bottom:-7px;border-style:solid;border-width:8px 8px 0 0;border-color:#fbf7ee transparent transparent transparent}
@@ -85,6 +87,7 @@ const FACE = `<svg viewBox="35 30 70 100" width="84" height="120">
 <g class="mc-f mc-f-eo"><ellipse cx="61" cy="72" rx="4" ry="5.5" fill="${K}"/><ellipse cx="79" cy="72" rx="4" ry="5.5" fill="${K}"/><circle cx="62.4" cy="70" r="1.4" fill="#fff"/><circle cx="80.4" cy="70" r="1.4" fill="#fff"/></g>
 <g class="mc-f mc-f-ec" fill="none" stroke="${K}" ${SW(2.8)}><path d="M56 73 Q61 66 66 73"/><path d="M74 73 Q79 66 84 73"/></g>
 <g class="mc-f mc-f-ew"><ellipse cx="61" cy="72" rx="4" ry="5.5" fill="${K}"/><circle cx="62.4" cy="70" r="1.4" fill="#fff"/><path d="M74 72 Q79 67 84 72" fill="none" stroke="${K}" ${SW(2.8)}/></g>
+<g class="mc-f mc-f-ez" fill="none" stroke="${K}" ${SW(2.8)}><path d="M56 72 Q61 77 66 72"/><path d="M74 72 Q79 77 84 72"/></g>
 <g class="mc-f mc-f-ed" fill="none" stroke="${K}" ${SW(2.6)}><path d="M57 67 L65 76 M65 67 L57 76"/><path d="M75 67 L83 76 M83 67 L75 76"/></g>
 <g class="mc-f mc-f-ex"><circle cx="61" cy="72" r="6" fill="#fff" stroke="${K}" style="stroke-width:1.6px"/><circle cx="79" cy="72" r="6" fill="#fff" stroke="${K}" style="stroke-width:1.6px"/><circle cx="64.4" cy="72.5" r="2.8" fill="${K}"/><circle cx="75.6" cy="72.5" r="2.8" fill="${K}"/></g>
 <g class="mc-f mc-f-es"><circle cx="61" cy="71" r="7" fill="#fff" stroke="${K}" style="stroke-width:1.6px"/><circle cx="79" cy="71" r="7" fill="#fff" stroke="${K}" style="stroke-width:1.6px"/><circle cx="61" cy="71" r="2" fill="${K}"/><circle cx="79" cy="71" r="2" fill="${K}"/></g>
@@ -115,6 +118,7 @@ const HATS = `<svg class="mc-layer" viewBox="0 0 140 190" width="168" height="22
 <g class="mc-h mc-h-crown"><path d="M49 34 L51 13 L61 23 L70 7 L79 23 L89 13 L91 34Z" fill="#f5c518" stroke="${K}" ${SW(2.2)}/><rect x="49" y="28" width="42" height="6" fill="#d4a017" stroke="${K}" style="stroke-width:1.5px"/><circle cx="70" cy="21" r="3" fill="#c62828"/><circle cx="58" cy="31" r="2" fill="#2a6fdb"/><circle cx="82" cy="31" r="2" fill="#2a6fdb"/><circle cx="51" cy="12" r="2.4" fill="#f5c518" stroke="${K}" style="stroke-width:1px"/><circle cx="89" cy="12" r="2.4" fill="#f5c518" stroke="${K}" style="stroke-width:1px"/><circle cx="70" cy="6" r="2.6" fill="#f5c518" stroke="${K}" style="stroke-width:1px"/></g>
 <g class="mc-h mc-h-helmet"><path d="M70 7 Q76 -16 94 -17 Q86 -5 81 6Z" fill="#c62828" stroke="${K}" style="stroke-width:1.6px"/><path d="M37 50 L37 42 Q37 8 70 6 Q103 8 103 42 L103 50Z" fill="#b8c0cc" stroke="${K}" style="stroke-width:2px"/><rect x="37" y="43" width="66" height="7" fill="#8b95a5" stroke="${K}" style="stroke-width:1.5px"/><rect x="68" y="47" width="4" height="15" rx="1.5" fill="#8b95a5" stroke="${K}" style="stroke-width:1.3px"/><path d="M50 16 Q58 10 66 10" fill="none" stroke="#e8ecf2" ${SW(3)}/><circle cx="44" cy="46.5" r="1.3" fill="${K}"/><circle cx="96" cy="46.5" r="1.3" fill="${K}"/></g>
 <g class="mc-h mc-h-fedora" transform="rotate(-8 70 32)"><path d="M51 30 Q50 9 58 6 Q70 12 82 6 Q90 9 89 30Z" fill="#1b1b1b" stroke="${K}" style="stroke-width:2px"/><rect x="51" y="21" width="38" height="5" fill="#f4f1ea"/><ellipse cx="70" cy="31" rx="33" ry="5" fill="#1b1b1b" stroke="${K}" style="stroke-width:2px"/></g>
+<g class="mc-h mc-h-nightcap"><path d="M47 33 C48 12 64 2 84 5 C100 8 110 20 113 36 L106 37 C103 27 96 20 88 19 C92 24 93 29 93 33Z" fill="#3b5bdb" stroke="${K}" ${SW(2)}/><path d="M60 12 L66 26 M74 6 L78 22 M90 10 L90 20" stroke="#dbe4ff" ${SW(2.4)}/><rect x="45" y="27" width="50" height="8" rx="4" fill="#f4f1ea" stroke="${K}" style="stroke-width:1.8px"/><circle cx="110" cy="40" r="5.5" fill="#f4f1ea" stroke="${K}" style="stroke-width:1.6px"/></g>
 </g></svg>`;
 
 const FX_STAR = (x, y, s, c) => `<g transform="translate(${x} ${y}) scale(${s})"><path class="mc-tw" fill="${c}" d="${STAR4}"/></g>`;
@@ -125,7 +129,12 @@ const FX = `<svg class="mc-layer" viewBox="0 0 140 190" width="168" height="228"
 </g></g>
 <g class="mc-fx mc-fx-spark">${FX_STAR(120, 20, 1.3, '#f5c518')}${FX_STAR(142, 44, 1, '#fff')}${FX_STAR(100, -4, 1, '#9fd3ff')}${FX_STAR(132, 4, .85, '#f5c518')}
 <circle cx="112" cy="36" r="2.2" fill="#fff"/><circle cx="150" cy="22" r="1.8" fill="#f5c518"/><circle cx="90" cy="12" r="1.6" fill="#fff"/></g>
+<g class="mc-fx mc-fx-zz" style="font:900 24px Georgia,serif" fill="#fbf7ee" stroke="${K}" stroke-width="1.2" paint-order="stroke">
+<text class="mc-z" x="108" y="34">Z</text><text class="mc-z" x="108" y="34" style="font-size:19px">z</text><text class="mc-z" x="108" y="34" style="font-size:15px">z</text></g>
 </svg>`;
+// Poker chips for the juggling act (each one animated on its own path).
+const CHIP = '<g class="mc-chip"><circle r="10.5" fill="#b3261e" stroke="#141414" style="stroke-width:1.6px"/><circle r="7.8" fill="none" stroke="#fbf7ee" style="stroke-width:3px;stroke-dasharray:4.4 3.6"/><circle r="4.2" fill="#f5c518"/></g>';
+const CHIPS = `<svg class="mc-layer" viewBox="0 0 140 190" width="168" height="228">${CHIP}${CHIP}${CHIP}</svg>`;
 // Knight effects live inside the flip wrapper (mirrored with the Ace).
 const FX2 = `<svg class="mc-layer" viewBox="0 0 140 190" width="168" height="228">
 <path class="mc-fx mc-fx-slash" d="M84 -18 Q176 10 166 120" fill="none" stroke="#e8f0ff" ${SW(7)}/>
@@ -136,7 +145,7 @@ const ACTOR = `<div class="mc-scale"><div class="mc-lean"><div class="mc-flip">
 <div class="mc-squash"><div class="mc-bob"><div class="mc-breath">
 ${LEGS}
 <div class="mc-cardwrap"><div class="mc-card3d"><div class="mc-face">${FACE}</div><div class="mc-back"><i></i><img src="/logo-chip.png" alt=""></div></div></div>
-${ARMS}${HATS}
+${ARMS}${HATS}${CHIPS}
 </div></div></div>${FX2}
 </div></div>${FX}</div><div class="mc-bubble"></div>`;
 
@@ -165,8 +174,9 @@ const mwFrames = (D) => { const a = -9 * D, b = 7 * D;   // flat foot slides wit
     { transform: `translate(${a}px,0px) rotate(0deg)` }]; };
 const mwFramesB = (D) => { const f = mwFrames(D); return [f[2], { ...f[3], offset: 0.42 }, { ...f[4], offset: 0.5 }, { ...f[1], offset: 0.96 }, { ...f[2], offset: 1 }].map((o, i) => (i === 0 ? { transform: o.transform } : o)); };
 
-const FACES = ['eo', 'ec', 'ew', 'ed', 'ex', 'es', 'gl', 'br', 'ms', 'mo', 'mt', 'mu', 'mw', 'mf'];
+const FACES = ['eo', 'ec', 'ew', 'ez', 'ed', 'ex', 'es', 'gl', 'br', 'ms', 'mo', 'mt', 'mu', 'mw', 'mf'];
 const GRIN = ['ec', 'mo'], SURPRISED = ['es', 'mu'], DIZZY = ['ed', 'mw'], WINK = ['ew', 'ms'];
+const YAWN = ['ec', 'mu'], ASLEEP = ['ez', 'mf'], FOCUS = ['eo', 'mt'];
 
 // ── Appearance state ─────────────────────────────────────────────────
 let cur = null;   // { root, st, E, anims, timers, dead, x, costume }
@@ -210,7 +220,8 @@ function build(st, costume) {
     bob: q('.mc-bob'), breath: q('.mc-breath'), card: q('.mc-card3d'), legL: q('.mc-legL'), legR: q('.mc-legR'),
     armL: q('.mc-armL'), armR: q('.mc-armR'), hat: q('.mc-hat'), bubble: q('.mc-bubble'),
     stars: q('.mc-fx-stars'), starsRot: q('.mc-stars-rot'), spark: q('.mc-fx-spark'),
-    slash: q('.mc-fx-slash'), thrust: q('.mc-fx-thrust'), face: {},
+    slash: q('.mc-fx-slash'), thrust: q('.mc-fx-thrust'), zz: q('.mc-fx-zz'),
+    chips: Array.prototype.slice.call(pos.querySelectorAll('.mc-chip')), face: {},
   };
   FACES.forEach((f) => { E.face[f] = q('.mc-f-' + f); });
   E.scale.style.transform = `scale(${st.k})`;
@@ -591,6 +602,125 @@ async function actGrim() {
   await wait(6050);
 }
 
+// ── Peek: hello from behind the top edge of a panel ─────────────────
+// The overlay is clipped under the panel's top line, so the Ace seems to
+// stand behind the panel: only his hat, face and waving hand show above it.
+function clipAt(T) {
+  const v = T === null ? '' : `inset(0px 0px ${Math.max(0, cur.st.vh - T)}px 0px)`;
+  const r = cur.E.root.style;
+  r.clipPath = v; r.webkitClipPath = v;
+  cur.clipT = T;
+}
+
+async function enterPeek(plan) {
+  const { st, E } = cur, k = st.k, x = plan.x;
+  const yHalf = plan.T - 96 * k;   // hat and eyes above the line
+  cur.x = x;
+  clipAt(plan.T);
+  track(E.pos, 2500, [[0, P(x, plan.yDown, 1)], [400, P(x, plan.yDown), 'ease-out'], [800, P(x, yHalf)],
+    [2150, P(x, yHalf), 'cubic-bezier(.3,1.5,.5,1)'], [2500, P(x, plan.yUp)]]);
+  // looks left, looks right… someone's there!
+  track(E.card, 2100, [[0, ry(0)], [900, ry(0), EIO], [1150, facing(-1)], [1450, facing(-1), EIO], [1700, facing(1)], [1950, facing(1), EIO], [2100, ry(0)]]);
+  track(E.squash, 2750, [[0, sq(1, 1)], [2150, sq(1, 1)], [2350, sq(0.9, 1.12)], [2600, sq(1.04, 0.97)], [2750, sq(1, 1)]]);
+  faceWin(1950, 2550, SURPRISED);
+  await wait(2600);
+  await greet();
+}
+
+/** From the peek: climbs over the panel's top and jumps down in front of it. */
+async function hopDown(plan) {
+  const { st, E } = cur, k = st.k, x = plan.x;
+  const up = 650;
+  track(E.pos, up, [[0, P(x, plan.yUp)], [150, P(x, plan.yUp), 'ease-out'], [up, P(x, plan.yP)]]);
+  track(E.armL, 900, [[0, rot(0)], [150, rot(150)], [up, rot(120)], [900, rot(0)]]);
+  track(E.armR, 900, [[0, rot(0)], [150, rot(-150)], [up, rot(-120)], [900, rot(0)]]);
+  cycle(E.legL, KICK_F, 250, 150, 2); cycle(E.legR, KICK_B, 250, 150, 2);
+  track(E.squash, 850, [[0, sq(1, 1)], [150, sq(1.05, 0.93)], [300, sq(0.95, 1.06)], [up, sq(1, 1)], [up + 80, sq(1.08, 0.92)], [850, sq(1, 1)]]);
+  await wait(up);
+  clipAt(null);   // feet on the line: he is now standing on the panel
+  // looks down (gulp), then jumps
+  const t0 = 250, tj = t0 + 700, apex = plan.yP - 30 * k, fm = fallMs(st.yF - apex), ti = tj + 200 + fm;
+  faceWin(t0, tj, SURPRISED);
+  track(E.card, tj, [[0, ry(0)], [t0, ry(0)], [t0 + 200, { transform: 'rotateX(24deg)' }], [tj - 150, { transform: 'rotateX(24deg)' }], [tj, ry(0)]]);
+  track(E.pos, ti, [[0, P(x, plan.yP)], [tj, P(x, plan.yP), 'ease-out'], [tj + 200, P(x, apex), 'ease-in'], [ti, P(x, st.yF)]]);
+  track(E.squash, ti + 400, [[0, sq(1, 1)], [tj - 180, sq(1, 1)], [tj - 20, sq(1.12, 0.86)], [tj + 80, sq(0.9, 1.14)], [ti - 20, sq(0.94, 1.08)], [ti + 60, sq(1.3, 0.72)], [ti + 250, sq(0.96, 1.05)], [ti + 400, sq(1, 1)]]);
+  track(E.armL, ti + 300, [[0, rot(0)], [tj, rot(0)], [tj + 120, rot(150)], [ti, rot(130)], [ti + 300, rot(0)]]);
+  track(E.armR, ti + 300, [[0, rot(0)], [tj, rot(0)], [tj + 120, rot(-150)], [ti, rot(-130)], [ti + 300, rot(0)]]);
+  track(E.hat, ti + 350, [[0, { transform: 'translate(0px,0px)' }], [tj + 200, { transform: 'translate(0px,0px)' }], [ti, { transform: 'translate(0px,-12px)' }], [ti + 350, { transform: 'translate(0px,0px)' }]]);
+  floorFx('dust', x + st.w / 2, st.floor + 4 * k, ti, 800);
+  cur.x = x;
+  await wait(ti + 500);
+}
+
+/** Short peek visit: a wink, a little wave, and he ducks back behind the panel. */
+async function exitDuck(plan) {
+  const { E } = cur, x = plan.x;
+  faceWin(0, 700, WINK);
+  bubble(tr('mascotBye', 'See you!'), 100, 1200);
+  waveArm(cur.costume.tool !== 'none', 0, 1);
+  track(E.squash, 1500, [[0, sq(1, 1)], [1100, sq(1, 1)], [1200, sq(1.06, 0.94)], [1500, sq(0.94, 1.06)]]);
+  track(E.pos, 1500, [[0, P(x, plan.yUp)], [1200, P(x, plan.yUp), 'cubic-bezier(.5,0,1,.5)'], [1500, P(x, plan.yDown)]]);
+  track(E.hat, 1650, [[0, { transform: 'translate(0px,0px)' }], [1200, { transform: 'translate(0px,0px)' }], [1350, { transform: 'translate(0px,-14px)' }], [1650, { transform: 'translate(0px,0px)' }]]);
+  await wait(1750);
+}
+
+// ── Nap: a big yawn, he sits down and dozes off (zZz), then wakes with a start
+async function actSleep() {
+  const { st, E } = cur, k = st.k, x = cur.x;
+  const tS = 1700, tW = 6700, total = 8000;
+  track(E.armL, total, [[0, rot(0)], [500, rot(150)], [1300, rot(150)], [tS, rot(14)], [tW, rot(14)], [tW + 150, rot(120)], [tW + 500, rot(0)]]);
+  track(E.armR, total, [[0, rot(0)], [500, rot(-150)], [1300, rot(-150)], [tS, rot(-14)], [tW, rot(-14)], [tW + 150, rot(-120)], [tW + 500, rot(0)]]);
+  track(E.squash, total, [[0, sq(1, 1)], [500, sq(0.95, 1.08)], [1300, sq(0.95, 1.08)], [tS, sq(1, 1)], [tW, sq(1, 1)], [tW + 120, sq(0.9, 1.15)], [tW + 350, sq(1.05, 0.95)], [tW + 500, sq(1, 1)]]);
+  track(E.pos, total, [[0, P(x, st.yF)], [tS, P(x, st.yF), EIO], [tS + 400, P(x, st.yF + 30 * k)], [tW, P(x, st.yF + 30 * k), 'ease-out'], [tW + 200, P(x, st.yF - 18 * k), 'ease-in'], [tW + 400, P(x, st.yF)]]);
+  track(E.legL, total, [[0, rot(0)], [tS, rot(0)], [tS + 400, rot(68)], [tW, rot(68)], [tW + 200, rot(0)]]);
+  track(E.legR, total, [[0, rot(0)], [tS, rot(0)], [tS + 400, rot(-68)], [tW, rot(-68)], [tW + 200, rot(0)]]);
+  track(E.hat, total, [[0, { transform: 'translate(0px,0px) rotate(0deg)' }], [tS + 400, { transform: 'translate(0px,0px) rotate(0deg)' }], [tS + 800, { transform: 'translate(2px,3px) rotate(8deg)' }], [tW, { transform: 'translate(2px,3px) rotate(8deg)' }], [tW + 200, { transform: 'translate(0px,-16px) rotate(-6deg)' }], [tW + 500, { transform: 'translate(0px,0px) rotate(0deg)' }]]);
+  faceWin(200, 1450, YAWN);
+  faceWin(1450, tW, ASLEEP);
+  faceWin(tW, tW + 900, SURPRISED);
+  // head nods while he snores
+  cycle(E.lean, [{ transform: 'rotate(0deg)', easing: EIO }, { offset: 0.5, transform: 'rotate(5deg)', easing: EIO }, { transform: 'rotate(0deg)' }], 1800, tS + 500, Math.floor((tW - tS - 500) / 1800));
+  fxWin(E.zz, tS + 500, tW - 100);
+  E.zz.querySelectorAll('.mc-z').forEach((z, i) => play(z, [
+    { transform: 'translate(0px,0px) scale(.5)', opacity: 0 }, { offset: 0.2, transform: 'translate(4px,-8px) scale(.8)', opacity: 1 },
+    { transform: 'translate(22px,-44px) scale(1.25)', opacity: 0 }], { duration: 1800, delay: tS + 500 + i * 600, iterations: 3, fill: 'none' }));
+  // shakes himself awake
+  play(E.lean, [rot(0), { offset: 0.25, ...rot(-7) }, { offset: 0.5, ...rot(6) }, { offset: 0.75, ...rot(-3) }, rot(0)], { duration: 700, delay: tW + 450, fill: 'none' });
+  await wait(total + 50);
+}
+
+// ── Juggling three poker chips (shower pattern), then « Ta-da! » ───────
+function chipFrames() {
+  const f = [];
+  for (let i = 0; i <= 6; i++) {   // thrown from the right hand, over his head, caught left
+    const u = i / 6, x = 123 - 106 * u, y = 110 - 640 * u * (1 - u);
+    f.push({ offset: 0.7 * u, transform: `translate(${x}px,${y}px) rotate(${u * 540}deg)`, opacity: 1 });
+  }
+  f.push({ offset: 0.85, transform: 'translate(70px,121px) rotate(600deg)', opacity: 1 });
+  f.push({ offset: 1, transform: 'translate(123px,110px) rotate(720deg)', opacity: 1 });
+  return f;
+}
+async function actJuggle() {
+  const { E } = cur;
+  const Pd = 1200, N = 3, t0 = 500, beat = Pd / 3, tEnd = t0 + 2 * beat + N * Pd;
+  const frames = chipFrames();
+  E.chips.forEach((c, i) => play(c, frames, { duration: Pd, delay: t0 + i * beat, iterations: N, fill: 'none', easing: 'linear' }));
+  const toss = (a) => [rot(0), { offset: 0.3, ...rot(a) }, rot(0)];
+  cycle(E.armR, toss(-18), beat, t0 - 60, 3 * N);
+  cycle(E.armL, toss(18), beat, t0 + 0.7 * Pd - 60, 3 * N - 1);
+  cycle(E.bob, HOP, beat, t0, 3 * N);
+  faceWin(t0, tEnd, FOCUS);
+  track(E.card, tEnd, [[0, ry(0)], [t0, ry(0)], [t0 + 600, ry(10)], [t0 + 1800, ry(-10)], [t0 + 3000, ry(10)], [tEnd, ry(0)]]);
+  // catches them all: arms up, ta-da
+  const tt = tEnd + 100, total = tt + 1700;
+  track(E.armL, total, [[0, rot(0)], [tt, rot(0)], [tt + 250, rot(150)], [tt + 1300, rot(150)], [total, rot(0)]], 'none');
+  track(E.armR, total, [[0, rot(0)], [tt, rot(0)], [tt + 250, rot(-150)], [tt + 1300, rot(-150)], [total, rot(0)]], 'none');
+  track(E.squash, total, [[0, sq(1, 1)], [tt, sq(1, 1)], [tt + 150, sq(1.08, 0.92)], [tt + 350, sq(0.96, 1.06)], [tt + 500, sq(1, 1)]]);
+  faceWin(tt, tt + 1400, GRIN);
+  bubble(tr('mascotTada', 'Ta-da!'), tt + 100, tt + 1500);
+  await wait(total + 50);
+}
+
 // ── Public API ───────────────────────────────────────────────────────
 function panelRects() {
   const scr = document.querySelector('.screen.active');
@@ -652,7 +782,8 @@ export function dismiss() {
   faceWin(0, 700, SURPRISED);
   track(c.E.squash, 480, [[0, sq(1, 1)], [120, sq(0.9, 1.18)], [260, sq(1.05, 0.95)], [330, sq(1.05, 0.95)], [480, sq(0, 0)]]);
   track(c.E.bob, 330, [[0, { transform: 'translateY(0px)' }], [130, { transform: 'translateY(-14px)' }], [330, { transform: 'translateY(0px)' }]]);
-  puffAt(x, y, 300, 700);
+  if (c.clipT !== undefined && c.clipT !== null) floorFx('puff', x + c.st.w / 2, c.clipT + 30 * c.st.k, 300, 700);
+  else puffAt(x, y, 300, 700);
   const id = setTimeout(() => { if (cur === c) teardown(); }, 1050);
   c.timers.add(id);
 }
@@ -665,13 +796,18 @@ export async function appear(opts = {}) {
   if (cur) teardown();
   const rnd = opts.rnd || Math.random;
   const st = stageOf(window.innerWidth, window.innerHeight, safeBottom());
-  const plan = pickPanel(st, panelRects());
-  const seq = pickSequence(rnd, { climb: !!plan, force: opts.action });
-  if (opts.entry) seq.entry = opts.entry;
-  if (opts.exit) seq.exit = opts.exit;
+  const rects = panelRects();
+  const plan = pickPanel(st, rects);
+  const peek = pickPeek(st, rects, rnd);
+  const seq = pickSequence(rnd, { climb: !!plan, peek: !!peek, force: opts.action });
+  if (opts.entry && (opts.entry !== 'peek' || peek)) seq.entry = opts.entry;
+  if (opts.exit && (opts.exit !== 'duck' || seq.entry === 'peek')) seq.exit = opts.exit;
+  if (seq.entry === 'peek' && opts.entry === 'peek' && !opts.action && !seq.actions.length) seq.exit = 'duck';
+  if (seq.entry !== 'peek' && seq.exit === 'duck') seq.exit = 'poof';
+  if (seq.exit === 'duck') seq.actions = [];
   if (opts.action && seq.actions[0] !== opts.action && opts.action !== 'climb') seq.actions = [opts.action];
-  seq.costume = costumeFor(seq.actions[0], rnd);
-  cur = { st, anims: [], timers: new Set(), rejects: new Set(), dead: false, leaving: false, x: st.vw / 2, costume: seq.costume, E: null };
+  seq.costume = costumeFor(seq.actions[0] || 'peek', rnd);
+  cur = { st, anims: [], timers: new Set(), rejects: new Set(), dead: false, leaving: false, x: st.vw / 2, costume: seq.costume, E: null, clipT: null };
   const c = cur;
   c.E = build(st, seq.costume);
   const E = c.E;
@@ -681,12 +817,13 @@ export async function appear(opts = {}) {
   play(E.face.eo, BLINK, { duration: 4200, iterations: Infinity, delay: 900 });
   play(E.starsRot, [{ transform: 'rotate(0deg)' }, { transform: 'rotate(360deg)' }], { duration: 1100, iterations: Infinity });
   E.spark.querySelectorAll('.mc-tw').forEach((s, i) => play(s, TWINKLE, { duration: 600, delay: i * 130, iterations: Infinity }));
-  const ENTRY = { door: enterDoor, poof: enterPoof, edge: enterEdge };
-  const ACT = { moon: actMoon, climb: () => actClimb(plan), magic: () => actMagic(plan), king: actKing, knight: actKnight, grim: actGrim };
-  const EXIT = { door: exitDoor, poof: exitPoof, edge: exitEdge };
+  const ENTRY = { door: enterDoor, poof: enterPoof, edge: enterEdge, peek: () => enterPeek(peek) };
+  const ACT = { moon: actMoon, climb: () => actClimb(plan), magic: () => actMagic(plan), king: actKing, knight: actKnight, grim: actGrim, sleep: actSleep, juggle: actJuggle };
+  const EXIT = { door: exitDoor, poof: exitPoof, edge: exitEdge, duck: () => exitDuck(peek) };
   try {
     await ENTRY[seq.entry](rnd);
-    await greet();
+    if (seq.entry !== 'peek') await greet();
+    else if (seq.exit !== 'duck') await hopDown(peek);
     for (const a of seq.actions) { await ACT[a](); await wait(350); }
     await EXIT[seq.exit]();
   } catch (e) {

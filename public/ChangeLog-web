@@ -1,4 +1,8 @@
-2026-09-27 version 2.1.9-web.217 (current series):
+2026-09-28 version 2.1.9-web.218 (current series):
+- improvement: animated mascot — the Ace is a little smaller
+- new: animated mascot — he now also says hello from behind the top of a window, then ducks back down or climbs over and jumps down; two new acts: a nap (big yawn, zZz, wakes with a start) and juggling with three poker chips
+
+2026-09-27 version 2.1.9-web.217:
 - new: animated mascot (off by default, Advanced options › Appearance) — the Ace, a playing card with arms and legs, shows up now and then on the home screen and in the lobby when you leave them alone: through a door, in a puff of smoke or from the edge of the screen, then a moonwalk, a climb and a fall, a magic trick, the King, the Knight or a string of faces. Any tap or key sends him away; never at a table
 
 2026-09-27 version 2.1.9-web.216:
