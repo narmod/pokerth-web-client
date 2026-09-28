@@ -1139,6 +1139,7 @@ function renderSeatsImmediate() {
       var _csComm, _zW3 = zRect.width, _zH3 = zRect.height;
       var _commSkip3 = false; // garde : 0 plate adverse mesurée (voir plus bas)
       var _commTargetY = null; // centre Y cible (px zone) — parité anchors QML
+      var _commEffL = 1;       // paysage : échelle effective du scaler (autofit), compensée à l'écriture
       if (_forceSeatPortrait) {
         // 06db9866 (portrait MOBILE) : la bande centrale n'est plus le ruban
         // fixe 0.305·H — c'est exactement le reste entre groupe haut et
@@ -1296,18 +1297,16 @@ function renderSeatsImmediate() {
           _selfTop3 = _botTop3;
           _commC3 = (_minB3 + _selfTop3) / 2;
         }
-        // BUGFIX narmod (rapport screenshots 14/09) : cette marge ne réservait
-        // de la place que pour la rangée de cartes elle-même — jamais pour le
-        // badge du pot, qui se dessine ENCORE au-dessus via --pot-badge-lift
-        // (40px x commScale, cf. .pot-badge dans pokerth.css) + sa propre boîte
-        // (~25px x commScale : padding + police + bordure). Sans cette réserve,
-        // _avail3 était surestimé -> _csComm grossissait trop (rangée
-        // surdimensionnée vs QML) ET, avec peu de joueurs (ellipse plus plate,
-        // boîte du haut plus proche du centre), le badge chevauchait carrément
-        // cette boîte. _seatBoxScale sert de proxy pour commScale (inconnu à ce
-        // stade du calcul, circulaire) — cohérent avec floor3/cap3 ci-dessous.
-        var _potBadgeReserve3 = 65 * _seatBoxScale;
-        var _topB3 = (_minB3 < Infinity ? _minB3 : 0) + (_isCmp3 ? 39 : 26) * _seatBoxScale + _potBadgeReserve3;
+        // STRICT QML (web.221) : topB = bas de la box la plus haute + 26·s
+        // (39·s compact), sans autre réserve. La réserve « badge du pot »
+        // 65·boxScale ajoutée le 14/09 est retirée : elle retranchait la même
+        // hauteur quel que soit l'espace réel, et les cartes rétrécissaient
+        // quand la fenêtre s'élargissait (jusqu'à −35 % vs QML, 1000×700
+        // spectateur 10 joueurs). Le « surdimensionné vs QML » qui l'avait
+        // motivée venait en fait de l'autofit non compensé en paysage (voir
+        // _commEffL plus bas) ; le chevauchement badge/box du haut est traité
+        // par une mesure réelle (cap « dégagement du badge » ci-dessous).
+        var _topB3 = (_minB3 < Infinity ? _minB3 : 0) + (_isCmp3 ? 39 : 26) * _seatBoxScale;
         var _avail3 = Math.min(_commC3 - _topB3 - 6, _selfTop3 - _commC3 - 6);
         var _gapF3 = _avail3 > 0 ? _avail3 / (_isCmp3 ? 66 : 84) : 0;
         var _cap3 = Math.min(_isCmp3 ? 2.6 : 1.8, _seatBoxScale * 2.0, (0.70 * _zW3) / 264);
@@ -1337,7 +1336,10 @@ function renderSeatsImmediate() {
             var _eH = _frH.height / _fElH.offsetHeight;
             if (_eH > 0.05) _fEffH = _eH;
           }
-          var _bandT3 = _commC3 - 32 * _csComm * _fEffH - 8, _bandB3 = _commC3 + 32 * _csComm * _fEffH + 8;
+          _commEffL = _fEffH;
+          // web.221 : _csComm est désormais en px d'ÉCRAN (sémantique QML,
+          // l'autofit est compensé à l'écriture) — plus de facteur _fEffH ici.
+          var _bandT3 = _commC3 - 32 * _csComm - 8, _bandB3 = _commC3 + 32 * _csComm + 8;
           var _freeL3 = 0, _freeR3 = _zW3;
           for (var _hc = 0; _hc < _rects3.length; _hc++) {
             var _rh = _rects3[_hc];
@@ -1347,10 +1349,27 @@ function renderSeatsImmediate() {
             }
           }
           var _freeH3 = Math.min(_zW3 / 2 - _freeL3, _freeR3 - _zW3 / 2) - 8;
-          var _csMaxH3 = _freeH3 / (121 * _fEffH);
+          var _csMaxH3 = _freeH3 / 121;
           if (_freeH3 > 0 && _csMaxH3 < _csComm) _csComm = Math.max(0.55, _csMaxH3);
           try { window._seatDbg.commCapH = +_csMaxH3.toFixed(3); window._seatDbg.commEff = +_fEffH.toFixed(3); } catch (eDbg) {}
         } catch (eHc) {}
+        // ── Dégagement du badge du pot (web.221, remplace la réserve fixe) :
+        // le badge se dessine au-dessus de la rangée (haut ≈ centre − 69·cs).
+        // Seule une box AU-DESSUS du badge, dans sa colonne, compte ; si elle
+        // descend plus bas que le haut du badge − 6 px, on réduit cs juste
+        // assez (plancher 0.55). Sans effet quand la place existe. ──
+        (function () {
+          var _hpB = 40 * _csComm, _topCB = -Infinity;
+          for (var _ib = 0; _ib < _rects3.length; _ib++) {
+            var _rb = _rects3[_ib];
+            if (_rb.r > _zW3 / 2 - _hpB && _rb.l < _zW3 / 2 + _hpB && _rb.b <= _commC3 && _rb.b > _topCB) _topCB = _rb.b;
+          }
+          if (_topCB > -Infinity) {
+            var _csB = (_commC3 - _topCB - 6) / 69;
+            if (_csB < _csComm) _csComm = Math.max(0.55, _csB);
+            try { window._seatDbg.commCapBadge = +_csB.toFixed(3); } catch (eDb) {}
+          }
+        })();
         // QML (communityArea, branche wide) : verticalCenterOffset =
         // communityCenterY - height/2 -> centre de la rangee = barycentre.
         _commTargetY = _commC3;
@@ -1367,7 +1386,7 @@ function renderSeatsImmediate() {
         // joueurs les boîtes du haut sont sur les côtés, rien à dégager. Et le
         // décalage ne descend jamais la rangée à moins de 8 px du siège du bas.
         if (_isCmp3 && _selfTop3 > 0) {
-          var _eB3 = (typeof _fEffH === 'number' && _fEffH > 0.05) ? _fEffH : 1;
+          var _eB3 = 1;   // web.221 : _csComm en px d'écran
           var _hp3 = 40 * _csComm * _eB3, _topC3 = -Infinity;
           for (var _tb = 0; _tb < _rects3.length; _tb++) {
             var _rt = _rects3[_tb];
@@ -1381,7 +1400,24 @@ function renderSeatsImmediate() {
         }
       }
       if (!_commSkip3) {
-      document.documentElement.style.setProperty('--comm-scale', _csComm.toFixed(3));
+      // web.221 : en paysage, _csComm est en px d'ÉCRAN (comme la
+      // communityScale QML, calculée en px de zone). #g-comm vit dans
+      // #g-table-scaler (autofit ×0.x–1.4) : on divise par l'échelle
+      // effective pour que la taille À L'ÉCRAN soit celle du QML (le portrait
+      // le fait déjà plus haut). Garde-fou : la rangée (264×64 locaux) reste
+      // dans le feutre, sinon l'autofit oscillerait.
+      var _csWrite = _csComm;
+      if (!_forceSeatPortrait && _commEffL > 0.05 && Math.abs(_commEffL - 1) > 0.001) {
+        _csWrite = _csComm / _commEffL;
+        try {
+          var _fEl5 = document.querySelector('.felt-oval');
+          if (_fEl5 && _fEl5.offsetWidth > 0) {
+            var _capIn5 = Math.min((_fEl5.offsetWidth - 12) / 264, (_fEl5.offsetHeight - 12) / 64);
+            if (_capIn5 > 0.4 && _csWrite > _capIn5) _csWrite = _capIn5;
+          }
+        } catch (eF5) {}
+      }
+      document.documentElement.style.setProperty('--comm-scale', _csWrite.toFixed(3));
       // ── Fond de table (parité QML tableBackgroundImage, mode fullscreen) ──
       // align:center : image agrandie pour couvrir, CENTRÉE sur (milieu zone,
       // communityCenterY), × TableBackgroundZoom — le tapis du visuel tombe

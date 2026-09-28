@@ -1,4 +1,8 @@
-2026-09-28 version 2.1.9-web.220 (current series):
+2026-09-28 version 2.1.9-web.221 (current series):
+- bugfix: community cards — their size no longer jumps or shrinks when the window gets wider, and is no longer oversized on large screens: it now follows the official client
+- bugfix: community cards and pot no longer slide under a player box at 4–5 players on some window sizes
+
+2026-09-28 version 2.1.9-web.220:
 - improvement: spectator view — the seats around the bottom player are now spaced like the ones around the top player, so the table looks symmetric (they were spread wider at the bottom)
 
 2026-09-28 version 2.1.9-web.219:
