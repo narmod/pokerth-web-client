@@ -1,22 +1,17 @@
 # Notes for Claude
 
-## Git: author vs committer
+## Git: commits show narmod only
 
-Commits made from a Claude session must stay **Verified** on GitHub. GitHub checks
-the signature against the **committer**, and the session signs with Claude's own
-SSH key, so:
+On GitHub, every commit must appear as made by **narmod alone** (no "narmod and claude").
 
-- **Author** = narmod: pass `--author="narmod <arnaud.obscur@gmail.com>"` on every commit.
-- **Committer** = keep the session default (`Claude <noreply@anthropic.com>`).
-  Never override it: do not change `user.name` / `user.email`, and do not set
-  `GIT_COMMITTER_NAME` / `GIT_COMMITTER_EMAIL`.
-- Keep commit signing on (`commit.gpgsign=true`, the session default).
+- **Author and committer** = `narmod <arnaud.obscur@gmail.com>`.
+- **No `Co-Authored-By:` trailer** in commit messages (it adds Claude as a co-author).
+- **No signing**: the session key is Claude's, so a commit signed with it under
+  narmod's identity shows **Unverified**. Unsigned commits show no badge.
 
-If the committer is set to narmod while the commit is signed with the session key,
-GitHub shows **Unverified** (`unknown_key`).
-
-Example:
+Commit like this:
 
 ```sh
-git commit --author="narmod <arnaud.obscur@gmail.com>" -m "…"
+git -c user.name=narmod -c user.email=arnaud.obscur@gmail.com -c commit.gpgsign=false \
+  commit -m "…"
 ```
