@@ -87,15 +87,14 @@ export function evUpcomingTitle(e, locale, stepWord) {
   return parts.join(' \u00b7 ') || evSrcName(e.src);
 }
 
-// Badge of a BBC game, as in the QML BBC tab (ForumNewsPage.qml stepColor,
-// pokerth/pokerth f0ea7de): "STEP 1".."STEP 4", one colour per step, always in
-// English (the cup's own word, like the table presets). A special game (step 0)
-// keeps the "BBC" word in the QML special-game blue. null = not a BBC game.
+// Step badge of a BBC game, shown next to the BBC source badge, colours of the
+// QML BBC tab (ForumNewsPage.qml stepColor, pokerth/pokerth f0ea7de):
+// "STEP 1".."STEP 4", always in English (the cup's own word, like the table
+// presets). null = no step (special game, other sources).
 export function evStepBadge(e) {
   if (!e || e.src !== 'bbc') return null;
   const s = e.step;
-  if (s >= 1 && s <= 4) return { text: 'STEP ' + s, cls: 'ev-step ev-step' + s };
-  return { text: 'BBC', cls: 'ev-step ev-step0' };
+  return (s >= 1 && s <= 4) ? { text: 'STEP ' + s, cls: 'ev-stepb ev-step' + s } : null;
 }
 
 // ── Day grouping of the Upcoming list (QML BbcGameDates.qml _gameDay/dayLabel) ──
@@ -284,12 +283,12 @@ function _row(src, url, title, meta, winner) {
     + '</a>';
 }
 
-// One game of the Upcoming list, QML BBC-tab layout: time · badge · sign-ups.
-// Sign-ups are dimmed at 0 and green once the table is full.
+// One game of the Upcoming list, QML BBC-tab layout: time · source badge ·
+// step badge (BBC) · sign-ups. Sign-ups are dimmed at 0, green when full.
 function _gameRow(e, loc, stepWord) {
   const safe = evSafeUrl(e.url);
   const open = _t('evOpenSite', 'Open the site');
-  const badge = evStepBadge(e) || { text: evSrcName(e.src), cls: evSrcClass(e.src) };
+  const step = evStepBadge(e);
   const sign = evSignupText(e, _t('evSignups', 'Signed up: {n}'));
   const full = e.seats > 0 && e.signups >= e.seats;
   const text = e.src === 'bbc'
@@ -298,7 +297,8 @@ function _gameRow(e, loc, stepWord) {
   return '<a class="fn-row ev-row ev-game"' + (safe ? ' href="' + esc(safe).replace(/"/g, '&quot;') + '" target="_blank" rel="noopener noreferrer"' : '')
     + ' title="' + esc(open).replace(/"/g, '&quot;') + '">'
     + '<span class="ev-time">' + esc(evTime(e.at, loc)) + '</span>'
-    + '<span class="fn-forum ' + badge.cls + '">' + esc(badge.text) + '</span>'
+    + '<span class="fn-forum ' + evSrcClass(e.src) + '">' + esc(evSrcName(e.src)) + '</span>'
+    + (step ? '<span class="' + step.cls + '">' + esc(step.text) + '</span>' : '')
     + '<span class="ev-sub' + (full ? ' ev-full' : (e.signups === 0 ? ' ev-zero' : '')) + '">' + esc(text) + '</span>'
     + '<span class="fn-golink" aria-hidden="true">' + ICON_OUT + '</span>'
     + '</a>';

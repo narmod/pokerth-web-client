@@ -9032,23 +9032,23 @@ a.ev-row { color: inherit; text-decoration: none; }
 .fn-c5 { --fn-c: 93,164,93; }
 .fn-c6 { --fn-c: 200,106,154; }
 .fn-c7 { --fn-c: 138,151,168; }
-/* BBC games in the Events tab: one colour per step, as in the QML BBC tab
-   (ForumNewsPage.qml stepColor) — step 1 accent yellow (dimmed on the light
-   theme), 2 green, 3 orange, 4 red, special game blue. */
-.fn-forum.ev-step { font-weight: 700; }
+/* BBC games in the Events tab: step badge next to the BBC badge, at the size
+   of the row text, one colour per step as in the QML BBC tab (ForumNewsPage.qml
+   stepColor) — 1 accent yellow (dimmed on the light theme), 2 green, 3 orange,
+   4 red. */
+.ev-stepb { flex-shrink: 0; font-family: var(--ff-mono); font-size: var(--fs-sm); font-weight: 700; letter-spacing: 0.04em; line-height: 1.3; padding: 1px 8px; border: 1px solid rgba(var(--fn-c), 0.45); border-radius: var(--r-pill); color: rgb(var(--fn-c)); background: rgba(var(--fn-c), 0.12); white-space: nowrap; }
 .ev-step1 { --fn-c: 227,200,0; }
 :root[data-theme="pokerth-light"] .ev-step1 { --fn-c: 176,154,0; }
 .ev-step2 { --fn-c: 80,200,120; }
 .ev-step3 { --fn-c: 232,154,48; }
 .ev-step4 { --fn-c: 224,80,80; }
-.ev-step0 { --fn-c: 110,156,236; }
 /* Upcoming list grouped by game evening (QML BBC tab): day header, then
    time (large) · badge · sign-ups (dimmed at 0, green when the table is full). */
 .ev-day { padding: 4px var(--sp-3); font-size: var(--fs-2xs); font-weight: 700; color: var(--text-hi); background: rgba(var(--fn-c-day, 138,151,168), 0.22); border-bottom: 1px solid var(--border); }
 .ev-row.ev-game { align-items: center; }
 .ev-game .fn-forum { margin-top: 0; }
 .ev-time { flex-shrink: 0; min-width: 3.2em; font-family: var(--ff-mono); font-size: var(--fs-md, 16px); font-weight: 700; color: var(--text-hi); font-variant-numeric: tabular-nums; }
-.ev-sub { flex: 1; min-width: 0; font-size: var(--fs-2xs); color: var(--text); overflow-wrap: anywhere; }
+.ev-sub { flex: 1; min-width: 0; font-size: var(--fs-sm); color: var(--text); overflow-wrap: anywhere; }
 .ev-sub.ev-zero { opacity: 0.55; }
 .ev-sub.ev-full { color: rgb(80,200,120); font-weight: 700; }
 .fn-main { flex: 1; min-width: 0; }

@@ -1,4 +1,7 @@
-2026-09-28 version 2.1.9-web.237 (current series):
+2026-09-28 version 2.1.9-web.238 (current series):
+- improvement: forum news, Events tab — BBC games keep their BBC badge; the coloured STEP badge now sits next to it, as large as the text
+
+2026-09-28 version 2.1.9-web.237:
 - improvement: forum news, Events tab — upcoming games are grouped by evening (Today, Tomorrow, then the date), as in the desktop client: large time, step badge and sign-ups (dimmed at 0, green when the table is full); the 01:00 game stays with the evening before
 
 2026-09-28 version 2.1.9-web.236:
