@@ -179,7 +179,9 @@ export const ENTRIES = ['door', 'poof', 'edge', 'peek'];
 export const EXITS = ['door', 'poof', 'edge', 'duck'];
 export const ACTIONS = ['moon', 'climb', 'magic', 'king', 'knight', 'grim', 'sleep', 'juggle', 'pistol', 'rope',
   'banana', 'bluff', 'ledge', 'hang', 'knock', 'push',
-  'dealer', 'tower', 'felt', 'umbrella', 'selfie', 'bubbles', 'guitar', 'dance'];
+  'dealer', 'tower', 'felt', 'umbrella', 'selfie', 'bubbles', 'guitar', 'dance', 'duel', 'joker'];
+/** Reactions to lobby events: played by the loader when the event happens, never drawn at random. */
+export const REACTIONS = ['r-table', 'r-mail', 'r-bravo'];
 /** Actions that need a panel: climb (side or front), ledge (its top), hang (its bottom). */
 export const NEEDS = { climb: 'climb', ledge: 'ledge', hang: 'hang' };
 
@@ -197,6 +199,10 @@ export function costumeFor(action, rnd = Math.random) {
     case 'hang': case 'knock': case 'push': case 'umbrella': case 'bubbles': case 'selfie': return { hat: 'none', tool: 'none', mood: 'smile' };
     case 'guitar': return { hat: 'cowboy', tool: 'none', mood: 'smile' };
     case 'dance': return { hat: 'fedora', tool: 'none', mood: 'smile' };
+    case 'duel': return { hat: 'cowboy', tool: 'pistol', mood: 'smile' };
+    case 'joker': case 'r-mail': return { hat: 'none', tool: 'none', mood: 'smile' };
+    case 'r-bravo': return { hat: 'crown', tool: 'none', mood: 'smile' };
+    case 'r-table': return { hat: 'tophat', tool: 'none', mood: 'smile' };
     case 'dealer': case 'tower': case 'felt': return { hat: rnd() < 0.5 ? 'tophat' : 'none', tool: 'none', mood: 'smile' };
     default: return { hat: rnd() < 0.5 ? 'tophat' : 'none', tool: 'none', mood: 'smile' };
   }
@@ -221,6 +227,21 @@ export function pickSequence(rnd = Math.random, can = {}) {
     return { entry, actions: [], exit: 'duck', costume: costumeFor('peek', rnd) };
   }
   return { entry, actions, exit: pick(exits), costume: costumeFor(action, rnd) };
+}
+
+/**
+ * Seasonal touch for a date: a Santa hat in December (to 6 January), a
+ * pumpkin around Halloween (20 October – 2 November), a beanie in winter
+ * (7 January – end of February), sunglasses in summer (21 June – 31 August).
+ * Returns { hat } or { mood } or null.
+ */
+export function seasonFor(date) {
+  const m = date.getMonth() + 1, d = date.getDate();
+  if (m === 12 || (m === 1 && d <= 6)) return { hat: 'santa' };
+  if ((m === 10 && d >= 20) || (m === 11 && d <= 2)) return { hat: 'pumpkin' };
+  if (m === 1 || m === 2) return { hat: 'beanie' };
+  if ((m === 6 && d >= 21) || m === 7 || m === 8) return { mood: 'cool' };
+  return null;
 }
 
 /** Walking time (ms) between two x, at the stage speed (min 300 ms). */

@@ -520,6 +520,8 @@ function setOwner(name) {
 
 function onIncoming(name, text) {
   if (!name || !text) return;
+  // Mascotte (extension web) : l'As agite une enveloppe dans le lobby.
+  try { if (typeof window.mascotReact === 'function') window.mascotReact('mail'); } catch (e) {}
   store.ready().then(function () {
     store.append(name, text, false).then(function () {
       // An open dialogue on that partner counts as read straight away —

@@ -18,10 +18,11 @@
 
 import {
   BASE_W, BASE_H, stageOf, clampX, xAt, pickPanel, pickPeek, pickSequence, costumeFor,
-  walkMs, stepCycles, fallMs, ledgePlan, hangPlan, pickWith,
+  walkMs, stepCycles, fallMs, ledgePlan, hangPlan, pickWith, seasonFor,
 } from './plan.mjs';
 import { EXTRA } from './acts-extra.mjs';
 import { PROPS } from './acts-props.mjs';
+import { SOCIAL } from './acts-social.mjs';
 
 const tr = (k, d) => { try { const s = window.t ? window.t(k) : d; return s && s !== k ? s : d; } catch (e) { return d; } };
 
@@ -53,7 +54,7 @@ const CSS = `
 #mascot-root .mc-m-fierce .mc-f-eo,#mascot-root .mc-m-fierce .mc-f-br,#mascot-root .mc-m-fierce .mc-f-mf{opacity:1}
 #mascot-root .mc-h,#mascot-root .mc-t{display:none}
 #mascot-root .mc-hat-tophat .mc-h-tophat,#mascot-root .mc-hat-wizard .mc-h-wizard,#mascot-root .mc-hat-crown .mc-h-crown,
-#mascot-root .mc-hat-helmet .mc-h-helmet,#mascot-root .mc-hat-fedora .mc-h-fedora,#mascot-root .mc-hat-nightcap .mc-h-nightcap,#mascot-root .mc-hat-cowboy .mc-h-cowboy,#mascot-root .mc-tool-pistol .mc-t-pistol,
+#mascot-root .mc-hat-helmet .mc-h-helmet,#mascot-root .mc-hat-fedora .mc-h-fedora,#mascot-root .mc-hat-nightcap .mc-h-nightcap,#mascot-root .mc-hat-cowboy .mc-h-cowboy,#mascot-root .mc-hat-santa .mc-h-santa,#mascot-root .mc-hat-pumpkin .mc-h-pumpkin,#mascot-root .mc-hat-beanie .mc-h-beanie,#mascot-root .mc-hat-jester .mc-h-jester,#mascot-root .mc-tool-pistol .mc-t-pistol,
 #mascot-root .mc-tool-wand .mc-t-wand,#mascot-root .mc-tool-scepter .mc-t-scepter,#mascot-root .mc-tool-sword .mc-t-sword,#mascot-root .mc-tool-cane .mc-t-cane{display:inline}
 #mascot-root .mc-bubble{position:absolute;left:0;top:0;opacity:0;white-space:nowrap;background:#fbf7ee;color:#141414;font:800 15px/1.2 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;padding:7px 12px;border-radius:14px;box-shadow:0 6px 16px rgba(0,0,0,.4);transform-origin:0 100%}
 #mascot-root .mc-bubble::after{content:"";position:absolute;left:12px;bottom:-7px;border-style:solid;border-width:8px 8px 0 0;border-color:#fbf7ee transparent transparent transparent}
@@ -145,6 +146,10 @@ const HATS = `<svg class="mc-layer" viewBox="0 0 140 190" width="168" height="22
 <g class="mc-h mc-h-helmet"><path d="M70 7 Q76 -16 94 -17 Q86 -5 81 6Z" fill="#c62828" stroke="${K}" style="stroke-width:1.6px"/><path d="M37 50 L37 42 Q37 8 70 6 Q103 8 103 42 L103 50Z" fill="#b8c0cc" stroke="${K}" style="stroke-width:2px"/><rect x="37" y="43" width="66" height="7" fill="#8b95a5" stroke="${K}" style="stroke-width:1.5px"/><rect x="68" y="47" width="4" height="15" rx="1.5" fill="#8b95a5" stroke="${K}" style="stroke-width:1.3px"/><path d="M50 16 Q58 10 66 10" fill="none" stroke="#e8ecf2" ${SW(3)}/><circle cx="44" cy="46.5" r="1.3" fill="${K}"/><circle cx="96" cy="46.5" r="1.3" fill="${K}"/></g>
 <g class="mc-h mc-h-fedora" transform="rotate(-8 70 32)"><path d="M51 30 Q50 9 58 6 Q70 12 82 6 Q90 9 89 30Z" fill="#1b1b1b" stroke="${K}" style="stroke-width:2px"/><rect x="51" y="21" width="38" height="5" fill="#f4f1ea"/><ellipse cx="70" cy="31" rx="33" ry="5" fill="#1b1b1b" stroke="${K}" style="stroke-width:2px"/></g>
 <g class="mc-h mc-h-cowboy"><path d="M52 31 Q49 9 61 9 Q70 15 79 9 Q91 9 88 31Z" fill="#9a6532" stroke="${K}" ${SW(2)}/><path d="M53 25 Q70 28 87 25 L87 30 Q70 33 53 30Z" fill="#3b2412"/><path d="M30 26 Q38 36 70 36 Q102 36 110 26 Q104 40 70 41 Q36 40 30 26Z" fill="#9a6532" stroke="${K}" ${SW(2)}/></g>
+<g class="mc-h mc-h-santa"><path d="M47 33 C48 12 64 2 84 5 C100 8 110 20 113 36 L106 37 C103 27 96 20 88 19 C92 24 93 29 93 33Z" fill="#c62828" stroke="${K}" ${SW(2)}/><rect x="44" y="26" width="52" height="10" rx="5" fill="#fbf7ee" stroke="${K}" style="stroke-width:1.8px"/><circle cx="110" cy="40" r="6" fill="#fbf7ee" stroke="${K}" style="stroke-width:1.6px"/></g>
+<g class="mc-h mc-h-pumpkin"><path d="M68 9 Q70 1 76 0" fill="none" stroke="#2e7d32" ${SW(3)}/><ellipse cx="70" cy="21" rx="24" ry="14" fill="#f28c28" stroke="${K}" ${SW(2)}/><path d="M60 8 Q55 21 60 34 M80 8 Q85 21 80 34 M70 7 L70 35" fill="none" stroke="#c96a12" ${SW(1.6)}/><path d="M60 18 L64 15 L66 19Z M80 18 L76 15 L74 19Z M62 25 Q70 31 78 25 L75 27 L72 25 L70 28 L68 25 L65 27Z" fill="#3b2412"/></g>
+<g class="mc-h mc-h-beanie"><circle cx="70" cy="4" r="6" fill="#fbf7ee" stroke="${K}" style="stroke-width:1.6px"/><path d="M47 34 Q46 8 70 8 Q94 8 93 34Z" fill="#1f5fbf" stroke="${K}" ${SW(2)}/><path d="M50 20 Q70 14 90 20" fill="none" stroke="#fbf7ee" ${SW(3)}/><rect x="45" y="27" width="50" height="9" rx="3" fill="#174a96" stroke="${K}" style="stroke-width:1.6px"/><path d="M50 28 L50 35 M55 28 L55 35 M60 28 L60 35 M65 28 L65 35 M70 28 L70 35 M75 28 L75 35 M80 28 L80 35 M85 28 L85 35 M90 28 L90 35" stroke="#0f356e" style="stroke-width:1px"/></g>
+<g class="mc-h mc-h-jester"><path d="M50 33 Q42 10 22 14 Q34 20 38 34Z" fill="#7b2cbf" stroke="${K}" ${SW(2)}/><path d="M90 33 Q98 10 118 14 Q106 20 102 34Z" fill="#2e9d4c" stroke="${K}" ${SW(2)}/><path d="M48 34 Q56 4 70 2 Q84 4 92 34Z" fill="#f5c518" stroke="${K}" ${SW(2)}/><circle cx="22" cy="14" r="4" fill="#f5c518" stroke="${K}" style="stroke-width:1.3px"/><circle cx="118" cy="14" r="4" fill="#f5c518" stroke="${K}" style="stroke-width:1.3px"/><circle cx="70" cy="2" r="4" fill="#c62828" stroke="${K}" style="stroke-width:1.3px"/><rect x="44" y="28" width="52" height="7" rx="3" fill="#c62828" stroke="${K}" style="stroke-width:1.5px"/></g>
 <g class="mc-h mc-h-nightcap"><path d="M47 33 C48 12 64 2 84 5 C100 8 110 20 113 36 L106 37 C103 27 96 20 88 19 C92 24 93 29 93 33Z" fill="#3b5bdb" stroke="${K}" ${SW(2)}/><path d="M60 12 L66 26 M74 6 L78 22 M90 10 L90 20" stroke="#dbe4ff" ${SW(2.4)}/><rect x="45" y="27" width="50" height="8" rx="4" fill="#f4f1ea" stroke="${K}" style="stroke-width:1.8px"/><circle cx="110" cy="40" r="5.5" fill="#f4f1ea" stroke="${K}" style="stroke-width:1.6px"/></g>
 </g></svg>`;
 
@@ -251,6 +256,14 @@ function build(st, costume) {
   pos.innerHTML = ACTOR;
   root.appendChild(pos);
   document.body.appendChild(root);
+  const E = refs(root, pos);
+  E.scale.style.transform = `scale(${st.k})`;
+  pos.style.opacity = '0';
+  return E;
+}
+
+/** Handles on every animated part of an actor (the Ace or a friend). */
+function refs(root, pos) {
   const q = (s) => pos.querySelector(s);
   const E = {
     root, pos, scale: q('.mc-scale'), lean: q('.mc-lean'), flip: q('.mc-flip'), squash: q('.mc-squash'),
@@ -265,9 +278,30 @@ function build(st, costume) {
   };
   ['S', 'H', 'D', 'C'].forEach((k) => { E.suit[k] = q('.mc-suit-' + k); });
   FACES.forEach((f) => { E.face[f] = q('.mc-f-' + f); });
-  E.scale.style.transform = `scale(${st.k})`;
-  pos.style.opacity = '0';
   return E;
+}
+
+/**
+ * A friend for a scene: the King of hearts (crown, moustache) or the Joker
+ * (jester's cap). Same body as the Ace, drawn behind him (behind = true) or
+ * in front; the engine removes it with the rest of the overlay.
+ */
+function friend(kind, behind) {
+  const st = cur.st, pos = document.createElement('div');
+  const hat = kind === 'king' ? 'crown' : 'jester';
+  pos.className = `mc-pos mc-friend mc-m-smile mc-hat-${hat} mc-tool-none`;
+  pos.innerHTML = ACTOR;
+  if (behind) cur.E.root.insertBefore(pos, cur.E.pos); else cur.E.root.appendChild(pos);
+  const F = refs(cur.E.root, pos);
+  F.scale.style.transform = `scale(${st.k})`;
+  const letter = kind === 'king' ? 'K' : 'J', show = kind === 'king' ? 'H' : 'D';
+  ['S', 'H', 'D', 'C'].forEach((s) => { F.suit[s].style.opacity = s === show ? '1' : '0'; });
+  pos.querySelectorAll('.mc-suit text').forEach((t) => { t.textContent = letter; });
+  if (kind === 'joker') pos.querySelectorAll('.mc-suit-D path, .mc-suit-D text').forEach((p) => p.setAttribute('fill', '#7b2cbf'));
+  const face = pos.querySelector('.mc-face svg');
+  if (kind === 'king' && face) face.insertAdjacentHTML('beforeend', `<path d="M58 83 Q63 78 70 82 Q77 78 82 83 Q77 87 70 84.5 Q63 87 58 83Z" fill="#5a3a22"/>`);
+  pos.style.opacity = '0';
+  return F;
 }
 
 // ── Animation helpers ────────────────────────────────────────────────
@@ -308,17 +342,17 @@ const facing = (d) => ({ transform: `rotateY(${d * 30}deg)` });
 const ry = (deg) => ({ transform: `rotateY(${deg}deg)` });
 const sq = (sx, sy) => ({ transform: `scale(${sx},${sy})` });
 
-function walkWin(t0, ms) {
-  const E = cur.E, n = stepCycles(ms), c = ms / n;
+function walkWin(t0, ms, E = cur.E) {
+  const n = stepCycles(ms), c = ms / n;
   cycle(E.legL, STEP_F, c, t0, n); cycle(E.legR, STEP_B, c, t0, n);
   cycle(E.armL, SWING_B, c, t0, n); cycle(E.armR, SWING_F, c, t0, n);
   cycle(E.bob, HOP, c / 2, t0, 2 * n);
 }
 /** Face shown from t0 to t1 (overrides the costume's mood meanwhile). */
-function faceWin(t0, t1, show) {
+function faceWin(t0, t1, show, E = cur.E) {
   for (const f of FACES) {
     const v = show.indexOf(f) >= 0 ? 1 : 0;
-    play(cur.E.face[f], [{ opacity: v }, { opacity: v }], { duration: Math.max(1, t1 - t0), delay: t0, fill: 'none' });
+    play(E.face[f], [{ opacity: v }, { opacity: v }], { duration: Math.max(1, t1 - t0), delay: t0, fill: 'none' });
   }
 }
 /** Suit shown in the card's corners from t0 to t1 (S ♠, H ♥, D ♦, C ♣). */
@@ -331,12 +365,12 @@ function suitWin(t0, t1, k) {
 function fxWin(node, t0, t1) {
   play(node, [{ opacity: 0 }, { offset: 0.08, opacity: 1 }, { offset: 0.9, opacity: 1 }, { opacity: 0 }], { duration: Math.max(1, t1 - t0), delay: t0, fill: 'none' });
 }
-function bubble(text, t0, t1) {
-  const b = cur.E.bubble, st = cur.st;
+function bubble(text, t0, t1, who) {
+  const b = (who ? who.E : cur.E).bubble, st = cur.st, bx = who ? who.x : cur.x;
   b.textContent = text;
   b.style.fontSize = Math.round(Math.max(12, Math.min(16, 15 * st.k + 4))) + 'px';
   const bw = b.offsetWidth, bh = b.offsetHeight;
-  const right = cur.x + 0.72 * st.w + bw > st.vw - 6;
+  const right = bx + 0.72 * st.w + bw > st.vw - 6;
   b.classList.toggle('mc-bubble-r', right);
   b.style.left = (right ? 0.28 * st.w - bw : 0.72 * st.w) + 'px';
   b.style.top = (0.04 * st.h - bh) + 'px';
@@ -874,7 +908,7 @@ function notesWin(t0, t1) {
     { transform: `translate(${12 + i * 5}px,-38px) rotate(12deg)`, opacity: 0 }], { duration: 1500, delay: t0 + i * 500, iterations: n, fill: 'none' }));
 }
 const H = {
-  get cur() { return cur; }, get E() { return cur.E; }, get st() { return cur.st; },
+  get cur() { return cur; }, get E() { return cur.E; }, get st() { return cur.st; }, friend, refs,
   play, track, cycle, wait, faceWin, suitWin, fxWin, bubble, floorFx, puffAt, walkWin, notesWin, worldProp, clearProps,
   walkMs, stepCycles, fallMs, clampX, tr,
   P, rot, sq, ry, facing, K, SW, EIO, HOP, STEP_F, STEP_B, SWING_F, SWING_B, KICK_F, KICK_B, FLAIL_L, FLAIL_R,
@@ -964,9 +998,10 @@ export const CATALOG = {
   entries: ['door', 'poof', 'edge', 'peek'],
   actions: ['moon', 'climb', 'magic', 'king', 'knight', 'grim', 'sleep', 'juggle', 'pistol', 'rope',
     'banana', 'bluff', 'ledge', 'hang', 'knock', 'push',
-    'dealer', 'tower', 'felt', 'umbrella', 'selfie', 'bubbles', 'guitar', 'dance', 'none'],
+    'dealer', 'tower', 'felt', 'umbrella', 'selfie', 'bubbles', 'guitar', 'dance', 'duel', 'joker',
+    'r-table', 'r-mail', 'r-bravo', 'none'],
   exits: ['door', 'poof', 'edge', 'duck'],
-  hats: ['none', 'tophat', 'wizard', 'crown', 'helmet', 'fedora', 'nightcap', 'cowboy'],
+  hats: ['none', 'tophat', 'wizard', 'crown', 'helmet', 'fedora', 'nightcap', 'cowboy', 'santa', 'pumpkin', 'beanie', 'jester'],
   tools: ['none', 'wand', 'scepter', 'sword', 'cane', 'pistol'],
 };
 
@@ -997,6 +1032,12 @@ export async function appear(opts = {}) {
   if (seq.exit === 'duck') seq.actions = [];
   if (opts.action && seq.actions[0] !== opts.action && opts.action !== 'climb') seq.actions = [opts.action];
   seq.costume = costumeFor(seq.actions[0] || 'peek', rnd);
+  // seasonal touch (Santa hat, pumpkin, beanie, summer shades) instead of a plain hat
+  const season = seasonFor(opts.date ? new Date(opts.date) : new Date());
+  if (season && !opts.hat && (seq.costume.hat === 'none' || seq.costume.hat === 'tophat') && seq.costume.mood === 'smile' && rnd() < 0.75) {
+    if (season.hat) seq.costume.hat = season.hat; else seq.costume.mood = season.mood;
+    seq.season = season.hat || season.mood;
+  }
   if (opts.hat) seq.costume.hat = opts.hat;
   if (opts.tool) seq.costume.tool = opts.tool;
   seq.peekable = !!peek; seq.climbable = !!plan;
@@ -1013,13 +1054,14 @@ export async function appear(opts = {}) {
   const ENTRY = { door: enterDoor, poof: enterPoof, edge: enterEdge, peek: () => enterPeek(peek) };
   const ACT = { moon: actMoon, climb: () => actClimb(plan), magic: () => actMagic(plan), king: actKing, knight: actKnight, grim: actGrim, sleep: actSleep, juggle: actJuggle, pistol: actPistol, rope: actRope };
   const where = { plan, peek, ledge, hang, rects };
-  const MORE = Object.assign({}, EXTRA, PROPS);
+  const MORE = Object.assign({}, EXTRA, PROPS, SOCIAL);
   Object.keys(MORE).forEach((a) => { ACT[a] = async () => { try { await MORE[a](H, where); } finally { if (cur === c) clearProps(); } }; });
   const EXIT = { door: exitDoor, poof: exitPoof, edge: exitEdge, duck: () => exitDuck(peek) };
   try {
     await ENTRY[seq.entry](rnd);
-    if (seq.entry !== 'peek') await greet();
-    else if (seq.exit !== 'duck') await hopDown(peek);
+    const react = /^r-/.test(seq.actions[0] || '');
+    if (seq.entry === 'peek') { if (seq.exit !== 'duck') await hopDown(peek); }
+    else if (!react) await greet();   // a reaction skips the greeting
     for (const a of seq.actions) { await ACT[a](); if (c.gone) break; await wait(350); }
     if (!c.gone) await EXIT[seq.exit]();   // an act may leave the screen by itself
   } catch (e) {

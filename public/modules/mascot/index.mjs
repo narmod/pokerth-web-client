@@ -17,6 +17,11 @@
 // grim, sleep, juggle — or ?mascot=peek for the hello from behind a panel's
 // top edge) makes him appear a few seconds after the home screen or the lobby is
 // shown, even with the option off. Console: mascotDemo('climb').
+// Reactions: mascotReact('table' | 'mail' | 'bravo') — called by the lobby
+// code when a table is created, a private message arrives or the LAN rank
+// improves — makes him pop up right away (no idle wait) in the lobby, at
+// most once a minute per kind, never in the first seconds after the lobby
+// opens (the server sends the whole table list then).
 // Test panel (hidden): ?mascot=panel or mascotPanel() in the console opens
 // modules/mascot/panel.mjs — every entry / action / exit / costume on demand,
 // slow motion, loop. The idle timer is off while it is open.
@@ -33,6 +38,9 @@ let engine = null;
 let running = false;
 let preview = null;   // { action } from ?mascot=
 let panel = null;     // modules/mascot/panel.mjs once opened
+let lobbySince = 0;   // when #s-lobby last became active
+const REACT_GAP = 60000, REACT_WARMUP = 8000;
+const lastReact = {};
 
 function optionOn() {
   try { return localStorage.getItem('pth_mascot') === '1'; } catch (e) { return false; }
@@ -135,6 +143,10 @@ function apply() {
 }
 
 function onScreenChange() {
+  const lob = document.getElementById('s-lobby');
+  const inLobby = !!(lob && lob.classList.contains('active'));
+  if (inLobby && !lobbySince) lobbySince = Date.now();
+  if (!inLobby) lobbySince = 0;
   if (!onMascotScreen()) { stopNow(); disarm(); return; }
   if (!running) arm();
 }
@@ -186,6 +198,22 @@ async function playNow(o) {
   try { return await (await loadEngine()).appear(o || {}); }
   finally { running = false; lastEnd = Date.now(); arm(); }
 }
+
+/** A lobby event: the Ace reacts right away (see the header). */
+window.mascotReact = (kind) => {
+  try {
+    if (!enabled || running || (panel && panel.isOpen())) return;
+    if (['table', 'mail', 'bravo'].indexOf(kind) < 0) return;
+    const lob = document.getElementById('s-lobby');
+    if (!lob || !lob.classList.contains('active')) return;
+    if (!lobbySince) lobbySince = Date.now();
+    const now = Date.now();
+    if (now - lobbySince < REACT_WARMUP || now - (lastReact[kind] || 0) < REACT_GAP) return;
+    if (!canAppear()) return;
+    lastReact[kind] = now;
+    playNow({ action: 'r-' + kind, entry: 'poof', exit: 'poof' }).catch(() => {});
+  } catch (e) {}
+};
 
 /** Hidden test panel: mascotPanel() in the console, or ?mascot=panel. */
 window.mascotPanel = async () => {

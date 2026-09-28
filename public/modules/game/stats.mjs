@@ -337,6 +337,15 @@ function renderBoard(targetId, filterNames) {
       // My rank under the current criterion — shown even if far down the list.
       var myIdx = -1;
       for (var k=0;k<arr.length;k++){ if (arr[k].name===S.myName){ myIdx=k; break; } }
+      // Mascotte (extension web) : meilleur rang LAN qu'au dernier affichage
+      // pour ce critère → l'As fait la fête (rang mémorisé par critère).
+      if (myIdx >= 0 && !filterNames) {
+        try {
+          var _rk = 'pth_mascot_rank_' + S._boardSort, _prev = parseInt(localStorage.getItem(_rk) || '0', 10);
+          localStorage.setItem(_rk, String(myIdx + 1));
+          if (_prev && myIdx + 1 < _prev && typeof window.mascotReact === 'function') window.mascotReact('bravo');
+        } catch (e) {}
+      }
       var rankLine = (myIdx>=0)
         ? '<div class="board-myrank">'+t('boardYourRank', { n: myIdx+1, m: arr.length })+'</div>' : '';
       var rows = arr.map(function(p, i){

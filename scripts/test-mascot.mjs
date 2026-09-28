@@ -108,6 +108,20 @@ ok(P.pickSequence(P.seeded(1), { force: 'king' }).actions[0] === 'king', 'forced
 ok(P.costumeFor('knight').tool === 'sword' && P.costumeFor('magic').hat === 'wizard' && P.costumeFor('moon').mood === 'cool', 'costumes follow the action');
 ok(JSON.stringify(P.pickSequence(P.seeded(42))) === JSON.stringify(P.pickSequence(P.seeded(42))), 'seeded sequences are reproducible');
 
+// ── Seasons, reactions ──
+const d = (m, day) => new Date(2026, m - 1, day, 12);
+ok(P.seasonFor(d(12, 24)).hat === 'santa' && P.seasonFor(d(1, 6)).hat === 'santa', 'Santa hat in December, until 6 January');
+ok(P.seasonFor(d(10, 31)).hat === 'pumpkin' && P.seasonFor(d(11, 2)).hat === 'pumpkin' && P.seasonFor(d(10, 19)) === null, 'pumpkin around Halloween only');
+ok(P.seasonFor(d(1, 7)).hat === 'beanie' && P.seasonFor(d(2, 28)).hat === 'beanie' && P.seasonFor(d(3, 1)) === null, 'beanie from 7 January to the end of February');
+ok(P.seasonFor(d(7, 14)).mood === 'cool' && P.seasonFor(d(6, 20)) === null && P.seasonFor(d(9, 28)) === null, 'sunglasses in summer, nothing in autumn');
+let rDrawn = 0;
+const rr = P.seeded(11);
+for (let i = 0; i < 400; i++) { const q = P.pickSequence(rr, { climb: true, peek: true, ledge: true, hang: true }); if (q.actions.some((a) => P.REACTIONS.indexOf(a) >= 0)) rDrawn++; }
+ok(rDrawn === 0 && P.REACTIONS.length === 3, 'lobby reactions are never drawn at random');
+const idx = fs.readFileSync('public/modules/mascot/index.mjs', 'utf8');
+ok(/REACT_GAP = 60000, REACT_WARMUP = 8000/.test(idx) && idx.indexOf('window.mascotReact') >= 0, 'reactions: at most once a minute per kind, not during the initial table list');
+ok(/mascotReact\('table'\)/.test(fs.readFileSync('public/modules/net/msg-lobby.mjs', 'utf8')) && /mascotReact\('mail'\)/.test(fs.readFileSync('public/modules/ui/pm.mjs', 'utf8')) && /mascotReact\('bravo'\)/.test(fs.readFileSync('public/modules/game/stats.mjs', 'utf8')), 'reactions wired: new table, private message, better LAN rank');
+
 // ── Timing helpers ──
 ok(P.walkMs(desk, 0, 0) === 300 && Math.abs(P.walkMs(desk, 0, 190 * desk.k) - 1000) < 1e-6, 'walking speed 190 base px/s');
 ok(P.stepCycles(100) === 1 && P.stepCycles(2200) === 4, 'step cycles ~0.55 s');
@@ -129,7 +143,7 @@ const js = fs.readFileSync('public/pokerth.js', 'utf8');
 ok(/sync\('adv-mascot', 'mascot', false\)/.test(js), 'option OFF by default');
 ok(js.indexOf("window._mascotApply") >= 0, 'applyAdvOpts forwards the option to the loader');
 const sw = fs.readFileSync('public/sw.js', 'utf8');
-ok(['index', 'engine', 'plan', 'panel', 'acts-extra', 'acts-props'].every((n) => sw.indexOf(`'/modules/mascot/${n}.mjs'`) >= 0), 'mascot modules precached');
+ok(['index', 'engine', 'plan', 'panel', 'acts-extra', 'acts-props', 'acts-social'].every((n) => sw.indexOf(`'/modules/mascot/${n}.mjs'`) >= 0), 'mascot modules precached');
 const loader = fs.readFileSync('public/modules/mascot/index.mjs', 'utf8');
 ok(/SCREENS = \['s-connect', 's-lobby'\]/.test(loader) && loader.indexOf("'s-game'") >= 0, 'only the home screen and the lobby (a table stops him)');
 ok(/import\('\.\/engine\.mjs'\)/.test(loader) && !/^import .*engine/m.test(loader), 'engine loaded on demand only');

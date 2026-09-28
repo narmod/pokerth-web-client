@@ -708,6 +708,9 @@ function onGameListNew(sub) {
     // GameAdminBadge, commit upstream 12f5eaf du 09/08/2026).
     const gadm = Proto.u32(sub, 5) || 0;
     const name = Proto.str(gi, 1) || `#${id}`;
+    // Mascotte (extension web) : une table vient d'être créée → l'As la
+    // montre du doigt (le module ignore la rafale de la liste initiale).
+    if (mode === 1) { try { if (typeof window.mascotReact === 'function') window.mascotReact('table'); } catch (e) {} }
     const gtype= Proto.u32(gi, 2);
     const maxp = Proto.u32(gi, 3);
 
