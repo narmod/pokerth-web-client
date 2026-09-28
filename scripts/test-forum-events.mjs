@@ -33,7 +33,7 @@ ok(E.evWhen(NOW, NOW, 'xx-invalid-locale-') !== undefined, 'a bad locale never t
 // -- labels -------------------------------------------------------------------
 ok(E.evUpcomingTitle({ src: 'bbc', step: 2, title: null }, 'en', 'Step') === 'Step 2', 'BBC rows are titled by their step');
 ok(E.evUpcomingTitle({ src: 'bbc', step: 1, title: 'Special' }, 'en', 'Etape') === 'Etape 1 \u00b7 Special', 'with the translated word and the optional title');
-ok(E.evStepBadge({ src: 'bbc', step: 3 }).text === 'STEP 3' && E.evStepBadge({ src: 'bbc', step: 3 }).cls === 'ev-stepb ev-step3', 'BBC step badge = STEP n, coloured per step (QML stepColor)');
+ok(E.evStepBadge({ src: 'bbc', step: 3 }).text === 'STEP 3' && E.evStepBadge({ src: 'bbc', step: 3 }).cls === 'fn-forum ev-stepb ev-step3', 'BBC step badge = STEP n, coloured per step (QML stepColor)');
 ok(E.evStepBadge({ src: 'bbc', step: 0 }) === null && E.evStepBadge({ src: 'mc', month: 9 }) === null, 'no step badge for special games and other sources');
 // Day grouping (QML BbcGameDates._gameDay): Berlin clock, before 14:00 = previous evening.
 ok(E.evGameDay(Date.UTC(2026, 8, 28, 17, 30)) === '2026-09-28', '19:30 Berlin (CEST) belongs to that day');

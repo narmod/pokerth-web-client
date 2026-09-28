@@ -94,7 +94,7 @@ export function evUpcomingTitle(e, locale, stepWord) {
 export function evStepBadge(e) {
   if (!e || e.src !== 'bbc') return null;
   const s = e.step;
-  return (s >= 1 && s <= 4) ? { text: 'STEP ' + s, cls: 'ev-stepb ev-step' + s } : null;
+  return (s >= 1 && s <= 4) ? { text: 'STEP ' + s, cls: 'fn-forum ev-stepb ev-step' + s } : null;
 }
 
 // ── Day grouping of the Upcoming list (QML BbcGameDates.qml _gameDay/dayLabel) ──

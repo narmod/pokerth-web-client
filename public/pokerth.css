@@ -9032,11 +9032,11 @@ a.ev-row { color: inherit; text-decoration: none; }
 .fn-c5 { --fn-c: 93,164,93; }
 .fn-c6 { --fn-c: 200,106,154; }
 .fn-c7 { --fn-c: 138,151,168; }
-/* BBC games in the Events tab: step badge next to the BBC badge, at the size
-   of the row text, one colour per step as in the QML BBC tab (ForumNewsPage.qml
-   stepColor) — 1 accent yellow (dimmed on the light theme), 2 green, 3 orange,
-   4 red. */
-.ev-stepb { flex-shrink: 0; font-family: var(--ff-mono); font-size: var(--fs-sm); font-weight: 700; letter-spacing: 0.04em; line-height: 1.3; padding: 1px 8px; border: 1px solid rgba(var(--fn-c), 0.45); border-radius: var(--r-pill); color: rgb(var(--fn-c)); background: rgba(var(--fn-c), 0.12); white-space: nowrap; }
+/* BBC games in the Events tab: step badge next to the BBC badge, same size
+   rules as every badge of the window (.fn-forum, scaled with the window zoom),
+   one colour per step as in the QML BBC tab (ForumNewsPage.qml stepColor) —
+   1 accent yellow (dimmed on the light theme), 2 green, 3 orange, 4 red. */
+.fn-forum.ev-stepb { font-weight: 700; white-space: nowrap; }
 .ev-step1 { --fn-c: 227,200,0; }
 :root[data-theme="pokerth-light"] .ev-step1 { --fn-c: 176,154,0; }
 .ev-step2 { --fn-c: 80,200,120; }
