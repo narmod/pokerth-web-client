@@ -1,4 +1,7 @@
-2026-09-28 version 2.1.9-web.244 (current series):
+2026-09-28 version 2.1.9-web.245 (current series):
+- improvement: forum news — the translate button of a post turns yellow while the translation is shown, like the active tabs
+
+2026-09-28 version 2.1.9-web.244:
 - improvement: forum news — a translated post keeps its images, colours and lists: each text is translated in place
 - improvement: forum news, Events tab — only one BBC game unfolds at a time: opening another one folds the previous list of registered players
 

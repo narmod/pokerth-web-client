@@ -9092,7 +9092,9 @@ a.ev-row { color: inherit; text-decoration: none; }
 #fn-post.ev-card .fnp-body ol, #fn-post.ev-card .fnp-body ul { padding-inline-start: 1.8em; margin: 4px 0; }
 .fn-pt { font-size: var(--fs-base); font-weight: 600; color: var(--text-hi); overflow-wrap: break-word; }
 .fnp-globe { flex-shrink: 0; }
-.fnp-globe.tr-active { color: var(--gold); }
+/* Translation on: same look as the active tabs (web.245), id selector so the
+   .btn-icon colours cannot win. */
+#fnp-translate.fnp-globe.tr-active { background: rgba(var(--sel-rgb,var(--gold-rgb)), 0.18); border-color: var(--sel,var(--gold)); color: var(--sel-hi,var(--gold-hi)); }
 .fnp-body { padding: 10px 2px; font-size: var(--fs-sm); line-height: var(--lh-base); color: var(--text); overflow-wrap: break-word; }
 .fnp-body img { max-width: 100%; height: auto; display: block; margin: 6px 0; }
 .fnp-body img.smilies { display: inline; margin: 0 1px; vertical-align: -3px; }
