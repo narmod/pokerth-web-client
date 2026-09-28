@@ -133,9 +133,54 @@ export function pickPeek(st, rects, rnd = Math.random) {
   return best;
 }
 
+/**
+ * Sit on a panel's top edge, legs dangling in front of it, or null.
+ * x: box left; ySit: box top when sitting (the card's bottom on the line).
+ */
+export function ledgePlan(st, rect, rnd = Math.random) {
+  const { w, h, k } = st;
+  if (!rect) return null;
+  const width = rect.right - rect.left, T = rect.top;
+  if (width < 1.3 * w) return null;
+  if (T < 0.72 * h + 8) return null;                    // his head must stay under the header
+  if (T > st.floor - 0.75 * h) return null;             // too low to be worth a jump
+  const lo = Math.max(st.minX, rect.left - 0.1 * w), hi = Math.min(st.maxX, rect.right - 0.9 * w);
+  if (hi < lo) return null;
+  const x = lo + (hi - lo) * (0.2 + 0.6 * rnd());
+  return { x, T, ySit: T - 156 * k, rect };
+}
+
+/**
+ * Hang from a panel's bottom edge, feet in the air, or null.
+ * x: box left; yHang: box top with his hands on the edge.
+ */
+export function hangPlan(st, rect, rnd = Math.random) {
+  const { w, h, k } = st;
+  if (!rect) return null;
+  const width = rect.right - rect.left, B = rect.bottom;
+  if (width < 1.3 * w) return null;
+  if (B > st.floor - 1.15 * h) return null;             // his feet would touch the floor
+  if (B < 0.45 * h + 40) return null;
+  const lo = Math.max(st.minX, rect.left), hi = Math.min(st.maxX, rect.right - w);
+  if (hi < lo) return null;
+  const x = lo + (hi - lo) * (0.25 + 0.5 * rnd());
+  return { x, B, yHang: B - 66 * k, rect };
+}
+
+/** First usable plan among rects with fn (ledgePlan / hangPlan), windows first. */
+export function pickWith(fn, st, rects, rnd = Math.random) {
+  const r0 = rnd();
+  const list = (rects || []).slice().sort((a, b) => (b.win ? 1 : 0) - (a.win ? 1 : 0));
+  for (const r of list) { const p = fn(st, r, () => r0); if (p) return p; }
+  return null;
+}
+
 export const ENTRIES = ['door', 'poof', 'edge', 'peek'];
 export const EXITS = ['door', 'poof', 'edge', 'duck'];
-export const ACTIONS = ['moon', 'climb', 'magic', 'king', 'knight', 'grim', 'sleep', 'juggle', 'pistol', 'rope'];
+export const ACTIONS = ['moon', 'climb', 'magic', 'king', 'knight', 'grim', 'sleep', 'juggle', 'pistol', 'rope',
+  'banana', 'bluff', 'ledge', 'hang', 'knock', 'push'];
+/** Actions that need a panel: climb (side or front), ledge (its top), hang (its bottom). */
+export const NEEDS = { climb: 'climb', ledge: 'ledge', hang: 'hang' };
 
 /** Costume (hat, tool, mood) of an action. rnd() is in [0, 1). */
 export function costumeFor(action, rnd = Math.random) {
@@ -147,6 +192,8 @@ export function costumeFor(action, rnd = Math.random) {
     case 'sleep': return { hat: 'nightcap', tool: 'none', mood: 'smile' };
     case 'pistol': return { hat: 'cowboy', tool: 'pistol', mood: 'smile' };
     case 'rope': return { hat: 'none', tool: 'none', mood: 'smile' };
+    case 'bluff': return { hat: 'fedora', tool: 'none', mood: 'smile' };
+    case 'hang': case 'knock': case 'push': return { hat: 'none', tool: 'none', mood: 'smile' };
     default: return { hat: rnd() < 0.5 ? 'tophat' : 'none', tool: 'none', mood: 'smile' };
   }
 }
@@ -160,10 +207,10 @@ export function costumeFor(action, rnd = Math.random) {
  */
 export function pickSequence(rnd = Math.random, can = {}) {
   const pick = (list) => list[Math.floor(rnd() * list.length) % list.length];
-  const pool = ACTIONS.filter((a) => a !== 'climb' || can.climb);
+  const pool = ACTIONS.filter((a) => !NEEDS[a] || can[NEEDS[a]]);
   const action = can.force && pool.indexOf(can.force) >= 0 ? can.force : pick(pool);
   const actions = [action];
-  if (action !== 'grim' && action !== 'sleep' && rnd() < 0.3) actions.push('grim');
+  if (action !== 'grim' && action !== 'sleep' && action !== 'bluff' && rnd() < 0.3) actions.push('grim');
   const entry = pick(ENTRIES.filter((e) => e !== 'peek' || can.peek));
   const exits = EXITS.filter((e) => e !== 'duck');
   if (entry === 'peek' && !can.force && rnd() < 0.45) {

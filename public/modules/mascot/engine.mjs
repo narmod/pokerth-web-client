@@ -18,8 +18,9 @@
 
 import {
   BASE_W, BASE_H, stageOf, clampX, xAt, pickPanel, pickPeek, pickSequence, costumeFor,
-  walkMs, stepCycles, fallMs,
+  walkMs, stepCycles, fallMs, ledgePlan, hangPlan, pickWith,
 } from './plan.mjs';
+import { EXTRA } from './acts-extra.mjs';
 
 const tr = (k, d) => { try { const s = window.t ? window.t(k) : d; return s && s !== k ? s : d; } catch (e) { return d; } };
 
@@ -102,6 +103,8 @@ ${SUITS}
 <g class="mc-f mc-f-ew"><ellipse cx="61" cy="72" rx="4" ry="5.5" fill="${K}"/><circle cx="62.4" cy="70" r="1.4" fill="#fff"/><path d="M74 72 Q79 67 84 72" fill="none" stroke="${K}" ${SW(2.8)}/></g>
 <g class="mc-f mc-f-eh" fill="#e0245e"><path transform="translate(61 72) scale(1.25)" d="${HEART}"/><path transform="translate(79 72) scale(1.25)" d="${HEART}"/></g>
 <g class="mc-f mc-f-et" fill="#6ec6ff" stroke="#2b7bb9" style="stroke-width:.8px"><path d="M58 77 C55.5 81 55.5 84 58 84 C60.5 84 60.5 81 58 77Z"/><path d="M82 77 C79.5 81 79.5 84 82 84 C84.5 84 84.5 81 82 77Z"/></g>
+<g class="mc-f mc-f-el"><ellipse cx="61" cy="72" rx="4.6" ry="5.8" fill="#fff" stroke="${K}" style="stroke-width:1.4px"/><ellipse cx="79" cy="72" rx="4.6" ry="5.8" fill="#fff" stroke="${K}" style="stroke-width:1.4px"/><circle cx="58.2" cy="73" r="2.6" fill="${K}"/><circle cx="76.2" cy="73" r="2.6" fill="${K}"/><path d="M55 65 L66 67 M73 67 L84 65" stroke="${K}" ${SW(2.2)}/></g>
+<g class="mc-f mc-f-er"><ellipse cx="61" cy="72" rx="4.6" ry="5.8" fill="#fff" stroke="${K}" style="stroke-width:1.4px"/><ellipse cx="79" cy="72" rx="4.6" ry="5.8" fill="#fff" stroke="${K}" style="stroke-width:1.4px"/><circle cx="63.8" cy="73" r="2.6" fill="${K}"/><circle cx="81.8" cy="73" r="2.6" fill="${K}"/><path d="M55 65 L66 67 M73 67 L84 65" stroke="${K}" ${SW(2.2)}/></g>
 <g class="mc-f mc-f-ez" fill="none" stroke="${K}" ${SW(2.8)}><path d="M56 72 Q61 77 66 72"/><path d="M74 72 Q79 77 84 72"/></g>
 <g class="mc-f mc-f-ed" fill="none" stroke="${K}" ${SW(2.6)}><path d="M57 67 L65 76 M65 67 L57 76"/><path d="M75 67 L83 76 M83 67 L75 76"/></g>
 <g class="mc-f mc-f-ex"><circle cx="61" cy="72" r="6" fill="#fff" stroke="${K}" style="stroke-width:1.6px"/><circle cx="79" cy="72" r="6" fill="#fff" stroke="${K}" style="stroke-width:1.6px"/><circle cx="64.4" cy="72.5" r="2.8" fill="${K}"/><circle cx="75.6" cy="72.5" r="2.8" fill="${K}"/></g>
@@ -118,7 +121,7 @@ ${SUITS}
 </svg>`;
 
 const ARMS = `<svg class="mc-layer" viewBox="0 0 140 190" width="168" height="228">
-<g class="mc-armL"><path d="M36 84 Q22 94 18 110" fill="none" stroke="${K}" ${SW(5)}/><circle cx="17" cy="113" r="7.5" fill="#fff" stroke="${K}" style="stroke-width:2.5px"/></g>
+<g class="mc-armL"><path d="M36 84 Q22 94 18 110" fill="none" stroke="${K}" ${SW(5)}/><g class="mc-hl"></g><circle cx="17" cy="113" r="7.5" fill="#fff" stroke="${K}" style="stroke-width:2.5px"/></g>
 <g class="mc-armR"><path d="M104 84 Q118 94 122 110" fill="none" stroke="${K}" ${SW(5)}/>
 <g class="mc-t mc-t-wand" transform="translate(123 113) rotate(-33.3)"><path d="M0 -4 L0 34" stroke="${K}" ${SW(4)}/><path d="M0 27 L0 34" stroke="#fbf7ee" ${SW(4)}/></g>
 <g class="mc-t mc-t-scepter" transform="translate(123 113) rotate(-33.3)"><path d="M0 -8 L0 46" stroke="#b8860b" ${SW(4)}/><circle cx="0" cy="51" r="6" fill="#f5c518" stroke="${K}" style="stroke-width:1.5px"/><path d="M0 57 L0 64 M-3.5 60.5 L3.5 60.5" stroke="#f5c518" ${SW(2.2)}/><circle cx="0" cy="-9" r="2.8" fill="#f5c518" stroke="${K}" style="stroke-width:1px"/></g>
@@ -131,7 +134,7 @@ const ARMS = `<svg class="mc-layer" viewBox="0 0 140 190" width="168" height="22
 <g class="mc-bang"><path d="M28 -5.8 L50 -5.8" stroke="#8a5a2b" ${SW(1.6)}/><rect x="50" y="-15" width="38" height="17" rx="1.5" fill="#fff" stroke="${K}" style="stroke-width:1.2px"/><text class="mc-bang-t" x="69" y="-2.4" text-anchor="middle" fill="#c62828" style="font:900 11px Impact,'Arial Black',sans-serif">BANG!</text></g>
 </g></g>
 <g class="mc-t mc-t-cane"><path d="M125 114 L131 176" stroke="${K}" ${SW(3.6)}/><path d="M125 114 Q122 103 114 106" fill="none" stroke="${K}" ${SW(3.6)}/><path d="M130.6 171 L131 176" stroke="#fbf7ee" ${SW(3.6)}/></g>
-<circle cx="123" cy="113" r="7.5" fill="#fff" stroke="${K}" style="stroke-width:2.5px"/></g>
+<g class="mc-hr"></g><circle cx="123" cy="113" r="7.5" fill="#fff" stroke="${K}" style="stroke-width:2.5px"/></g>
 </svg>`;
 
 const HATS = `<svg class="mc-layer" viewBox="0 0 140 190" width="168" height="228"><g class="mc-hat">
@@ -152,6 +155,8 @@ const FX = `<svg class="mc-layer" viewBox="0 0 140 190" width="168" height="228"
 </g></g>
 <g class="mc-fx mc-fx-spark">${FX_STAR(120, 20, 1.3, '#f5c518')}${FX_STAR(142, 44, 1, '#fff')}${FX_STAR(100, -4, 1, '#9fd3ff')}${FX_STAR(132, 4, .85, '#f5c518')}
 <circle cx="112" cy="36" r="2.2" fill="#fff"/><circle cx="150" cy="22" r="1.8" fill="#f5c518"/><circle cx="90" cy="12" r="1.6" fill="#fff"/></g>
+<g class="mc-fx mc-fx-notes" style="font:900 20px Georgia,serif" fill="#f5c518" stroke="${K}" stroke-width="1" paint-order="stroke">
+<text class="mc-z" x="104" y="44">♪</text><text class="mc-z" x="104" y="44">♫</text><text class="mc-z" x="104" y="44">♪</text></g>
 <g class="mc-fx mc-fx-zz" style="font:900 24px Georgia,serif" fill="#fbf7ee" stroke="${K}" stroke-width="1.2" paint-order="stroke">
 <text class="mc-z" x="108" y="34">Z</text><text class="mc-z" x="108" y="34" style="font-size:19px">z</text><text class="mc-z" x="108" y="34" style="font-size:15px">z</text></g>
 </svg>`;
@@ -172,9 +177,9 @@ const ROPE_F = `<svg class="mc-layer" viewBox="0 0 140 190" width="168" height="
 
 const ACTOR = `<div class="mc-scale"><div class="mc-lean"><div class="mc-flip">
 <div class="mc-squash"><div class="mc-bob"><div class="mc-breath">
-${ROPE_B}${LEGS}
+${ROPE_B}<svg class="mc-layer" viewBox="0 0 140 190" width="168" height="228"><g class="mc-backp"></g></svg>${LEGS}
 <div class="mc-cardwrap"><div class="mc-card3d"><div class="mc-face">${FACE}</div><div class="mc-back"><i></i><img src="/logo-chip.png" alt=""></div></div></div>
-${ARMS}${ROPE_F}${HATS}${CHIPS}
+${ARMS}${ROPE_F}${HATS}${CHIPS}<svg class="mc-layer" viewBox="0 0 140 190" width="168" height="228"><g class="mc-bodyp"></g></svg>
 </div></div></div>${FX2}
 </div></div>${FX}</div><div class="mc-bubble"></div>`;
 
@@ -203,7 +208,7 @@ const mwFrames = (D) => { const a = -9 * D, b = 7 * D;   // flat foot slides wit
     { transform: `translate(${a}px,0px) rotate(0deg)` }]; };
 const mwFramesB = (D) => { const f = mwFrames(D); return [f[2], { ...f[3], offset: 0.42 }, { ...f[4], offset: 0.5 }, { ...f[1], offset: 0.96 }, { ...f[2], offset: 1 }].map((o, i) => (i === 0 ? { transform: o.transform } : o)); };
 
-const FACES = ['eo', 'ec', 'ew', 'ez', 'eh', 'et', 'ed', 'ex', 'es', 'gl', 'br', 'fl', 'ms', 'mo', 'mt', 'mu', 'mw', 'mf', 'mg'];
+const FACES = ['eo', 'ec', 'ew', 'ez', 'el', 'er', 'eh', 'et', 'ed', 'ex', 'es', 'gl', 'br', 'fl', 'ms', 'mo', 'mt', 'mu', 'mw', 'mf', 'mg'];
 const GRIN = ['ec', 'mo'], SURPRISED = ['es', 'mu'], DIZZY = ['ed', 'mw'], WINK = ['ew', 'ms'];
 const YAWN = ['ec', 'mu'], ASLEEP = ['ez', 'mf'], FOCUS = ['eo', 'mt'];
 const LOVE = ['eh', 'ms'], ANGRY = ['eo', 'br', 'mg', 'fl'], CRY = ['ez', 'et', 'mw'], TEETH = ['ec', 'mg'];
@@ -254,6 +259,8 @@ function build(st, costume) {
     slash: q('.mc-fx-slash'), thrust: q('.mc-fx-thrust'), zz: q('.mc-fx-zz'),
     chips: Array.prototype.slice.call(pos.querySelectorAll('.mc-chip')), face: {}, suit: {},
     ropeB: q('.mc-rope-b'), ropeF: q('.mc-rope-f'), gun: q('.mc-gun'), bang: q('.mc-bang'),
+    hl: q('.mc-hl'), hr: q('.mc-hr'), bodyp: q('.mc-bodyp'), backp: q('.mc-backp'), notes: q('.mc-fx-notes'),
+    cardwrap: q('.mc-cardwrap'),
   };
   ['S', 'H', 'D', 'C'].forEach((k) => { E.suit[k] = q('.mc-suit-' + k); });
   FACES.forEach((f) => { E.face[f] = q('.mc-f-' + f); });
@@ -841,6 +848,40 @@ async function actRope() {
   await wait(total + 50);
 }
 
+// ── Toolkit handed to the extra acts (modules/mascot/acts-extra.mjs) ─
+/** A prop drawn in the Ace's own scale (× s), placed in the page (viewport px). */
+function worldProp(vbW, vbH, inner, x, y, front = true, s = 1) {
+  const st = cur.st, el = document.createElement('div');
+  const w = vbW * 1.2 * st.k * s, h = vbH * 1.2 * st.k * s;
+  el.style.cssText = `position:absolute;left:${x}px;top:${y}px;width:${w}px;height:${h}px;transform-origin:50% 100%`;
+  el.innerHTML = `<svg viewBox="0 0 ${vbW} ${vbH}" width="${w}" height="${h}" style="overflow:visible;display:block">${inner}</svg>`;
+  if (front) cur.E.root.appendChild(el); else cur.E.root.insertBefore(el, cur.E.pos);
+  return el;
+}
+/** Empties the hand / body prop groups and puts the lean origin back. */
+function clearProps() {
+  const E = cur.E;
+  [E.hl, E.hr, E.bodyp, E.backp].forEach((g) => { g.innerHTML = ''; });
+  E.lean.style.transformOrigin = '';
+}
+function notesWin(t0, t1) {
+  const E = cur.E;
+  fxWin(E.notes, t0, t1);
+  const n = Math.max(1, Math.floor((t1 - t0) / 1500));
+  E.notes.querySelectorAll('.mc-z').forEach((z, i) => play(z, [
+    { transform: 'translate(0px,0px) rotate(0deg)', opacity: 0 }, { offset: 0.2, transform: 'translate(3px,-8px) rotate(-8deg)', opacity: 1 },
+    { transform: `translate(${12 + i * 5}px,-38px) rotate(12deg)`, opacity: 0 }], { duration: 1500, delay: t0 + i * 500, iterations: n, fill: 'none' }));
+}
+const H = {
+  get cur() { return cur; }, get E() { return cur.E; }, get st() { return cur.st; },
+  play, track, cycle, wait, faceWin, suitWin, fxWin, bubble, floorFx, puffAt, walkWin, notesWin, worldProp, clearProps,
+  walkMs, stepCycles, fallMs, clampX, tr,
+  P, rot, sq, ry, facing, K, SW, EIO, HOP, STEP_F, STEP_B, SWING_F, SWING_B, KICK_F, KICK_B, FLAIL_L, FLAIL_R,
+  SPADE, HEART, DIAMOND, CLUB,
+  F: { GRIN, SURPRISED, DIZZY, WINK, YAWN, ASLEEP, FOCUS, LOVE, ANGRY, CRY, TEETH },
+  grim: () => actGrim(),
+};
+
 // ── Public API ───────────────────────────────────────────────────────
 function panelRects() {
   const scr = document.querySelector('.screen.active');
@@ -920,7 +961,8 @@ export function dismiss() {
 /** Entries, actions, exits, hats and tools the test panel can offer. */
 export const CATALOG = {
   entries: ['door', 'poof', 'edge', 'peek'],
-  actions: ['moon', 'climb', 'magic', 'king', 'knight', 'grim', 'sleep', 'juggle', 'pistol', 'rope', 'none'],
+  actions: ['moon', 'climb', 'magic', 'king', 'knight', 'grim', 'sleep', 'juggle', 'pistol', 'rope',
+    'banana', 'bluff', 'ledge', 'hang', 'knock', 'push', 'none'],
   exits: ['door', 'poof', 'edge', 'duck'],
   hats: ['none', 'tophat', 'wizard', 'crown', 'helmet', 'fedora', 'nightcap', 'cowboy'],
   tools: ['none', 'wand', 'scepter', 'sword', 'cane', 'pistol'],
@@ -941,8 +983,10 @@ export async function appear(opts = {}) {
   const wins = rects.filter((r) => r.win);
   const plan = pickPanel(st, wins) || pickPanel(st, rects);
   const peek = pickPeek(st, wins, rnd) || pickPeek(st, rects, rnd);
+  const ledge = pickWith(ledgePlan, st, rects, rnd);
+  const hang = pickWith(hangPlan, st, rects, rnd);
   const none = opts.action === 'none';
-  const seq = pickSequence(rnd, { climb: !!plan, peek: !!peek, force: none ? undefined : opts.action });
+  const seq = pickSequence(rnd, { climb: !!plan, peek: !!peek, ledge: !!ledge, hang: !!hang, force: none ? undefined : opts.action });
   if (none) seq.actions = [];
   if (opts.entry && (opts.entry !== 'peek' || peek)) seq.entry = opts.entry;
   if (opts.exit && (opts.exit !== 'duck' || seq.entry === 'peek')) seq.exit = opts.exit;
@@ -966,13 +1010,15 @@ export async function appear(opts = {}) {
   E.spark.querySelectorAll('.mc-tw').forEach((s, i) => play(s, TWINKLE, { duration: 600, delay: i * 130, iterations: Infinity }));
   const ENTRY = { door: enterDoor, poof: enterPoof, edge: enterEdge, peek: () => enterPeek(peek) };
   const ACT = { moon: actMoon, climb: () => actClimb(plan), magic: () => actMagic(plan), king: actKing, knight: actKnight, grim: actGrim, sleep: actSleep, juggle: actJuggle, pistol: actPistol, rope: actRope };
+  const where = { plan, peek, ledge, hang, rects };
+  Object.keys(EXTRA).forEach((a) => { ACT[a] = async () => { try { await EXTRA[a](H, where); } finally { if (cur === c) clearProps(); } }; });
   const EXIT = { door: exitDoor, poof: exitPoof, edge: exitEdge, duck: () => exitDuck(peek) };
   try {
     await ENTRY[seq.entry](rnd);
     if (seq.entry !== 'peek') await greet();
     else if (seq.exit !== 'duck') await hopDown(peek);
-    for (const a of seq.actions) { await ACT[a](); await wait(350); }
-    await EXIT[seq.exit]();
+    for (const a of seq.actions) { await ACT[a](); if (c.gone) break; await wait(350); }
+    if (!c.gone) await EXIT[seq.exit]();   // an act may leave the screen by itself
   } catch (e) {
     if (!(e instanceof Aborted)) { try { console.warn('[mascot]', e); } catch (e2) {} }
     // dismissed: let the puff finish

@@ -71,6 +71,16 @@ ok(P.peekPlan(st, { left: 440, top: 40, right: 840, bottom: 700 }) === null, 'pa
 ok(P.peekPlan(st, { left: 600, top: 300, right: 700, bottom: 700 }) === null, 'too narrow to peek from');
 ok(P.pickPeek(st, [{ left: 600, top: 300, right: 700, bottom: 700 }, card], () => 0.5).rect === card, 'pickPeek skips unusable rects');
 
+// ── Sit on a panel's top / hang from its bottom ──
+const lp = P.ledgePlan(ph, phCard, () => 0.5);
+ok(!!lp && Math.abs(lp.ySit + 156 * ph.k - phCard.top) < 1e-6 && lp.x >= ph.minX && lp.x <= ph.maxX, 'ledge: sits with the card bottom on the panel top, on screen');
+ok(P.ledgePlan(ph, { left: 16, top: 40, right: 374, bottom: 650 }) === null, 'ledge: no room under the header');
+const hp = P.hangPlan(ph, phCard, () => 0.5);
+ok(!!hp && hp.yHang + 66 * ph.k === phCard.bottom && hp.yHang + ph.h < ph.floor, 'hang: hands on the bottom edge, feet off the floor');
+ok(P.hangPlan(ph, { left: 16, top: 152, right: 374, bottom: ph.floor - 20 }) === null, 'hang: a panel down to the floor cannot be hung from');
+const winFirst = P.pickWith(P.ledgePlan, st, [card, Object.assign({ win: true }, { left: 100, top: 400, right: 500, bottom: 700 })], () => 0.5);
+ok(!!winFirst && winFirst.rect.win, 'open windows are used first');
+
 // ── Sequences ──
 const rnd = P.seeded(7);
 let climbs = 0, badClimb = 0, allOk = true, peeks = 0, badPeek = 0, ducks = 0, sleeps = 0, juggles = 0;
@@ -89,6 +99,7 @@ for (let i = 0; i < 500; i++) {
 }
 ok(allOk, '500 sequences: valid entry, actions, exit and costume');
 ok(climbs > 0 && badClimb === 0, 'climb only when a panel is available');
+ok(P.pickSequence(P.seeded(5), { ledge: true, hang: true, force: 'hang' }).actions[0] === 'hang' && P.pickSequence(P.seeded(5), { force: 'hang' }).actions[0] !== 'hang', 'hang forced only when a panel allows it');
 ok(peeks > 0 && badPeek === 0 && ducks > 0 && ducks < peeks, 'peek only with a panel; some peeks are short visits (duck), others hop down');
 ok(sleeps > 0 && juggles > 0, 'nap and juggling are drawn');
 ok(P.costumeFor('sleep').hat === 'nightcap', 'nightcap for the nap');
@@ -118,7 +129,7 @@ const js = fs.readFileSync('public/pokerth.js', 'utf8');
 ok(/sync\('adv-mascot', 'mascot', false\)/.test(js), 'option OFF by default');
 ok(js.indexOf("window._mascotApply") >= 0, 'applyAdvOpts forwards the option to the loader');
 const sw = fs.readFileSync('public/sw.js', 'utf8');
-ok(['index', 'engine', 'plan', 'panel'].every((n) => sw.indexOf(`'/modules/mascot/${n}.mjs'`) >= 0), 'mascot modules precached');
+ok(['index', 'engine', 'plan', 'panel', 'acts-extra'].every((n) => sw.indexOf(`'/modules/mascot/${n}.mjs'`) >= 0), 'mascot modules precached');
 const loader = fs.readFileSync('public/modules/mascot/index.mjs', 'utf8');
 ok(/SCREENS = \['s-connect', 's-lobby'\]/.test(loader) && loader.indexOf("'s-game'") >= 0, 'only the home screen and the lobby (a table stops him)');
 ok(/import\('\.\/engine\.mjs'\)/.test(loader) && !/^import .*engine/m.test(loader), 'engine loaded on demand only');
