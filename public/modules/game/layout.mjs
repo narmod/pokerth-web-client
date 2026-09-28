@@ -204,6 +204,24 @@ function _qmlLandscapeLayout(oppCnt, zW, zH, compact, zoomMul, spectating, opts)
     return [cosV, vFactor];
   }
 
+  // ── AJUSTEMENT WEB (narmod 2026-09-28) : anneau spectateur en MIROIR ──
+  // Le QML ne resserre horizontalement que l'arc du HAUT (topCosSquash 1.4
+  // sur |cos|) : en spectateur, les voisins de la perle du bas etaient ~20 %
+  // plus ecartes que ceux du siege du haut (0.588 vs 0.475·radiusX a 10
+  // joueurs). Chaque siege de la moitie basse prend l'ecart HORIZONTAL du
+  // point de l'arc du haut a l'angle miroir (360 - deg) et garde sa hauteur
+  // QML. (Miroir vertical complet essaye puis ecarte : les paires laterales
+  // se retrouvaient presque a la meme hauteur, echelle 1.51 -> 0.82 a 10
+  // joueurs.) Utilise PARTOUT (bisection comprise) : la separation des paires
+  // reste garantie. Mode assis : strict QML, inchange.
+  function ringVec(g, deg, withPairSpread) {
+    if (!spectating) return slotVec(g, deg, withPairSpread);
+    var d = ((deg % 360) + 360) % 360;
+    if (Math.sin(d * Math.PI / 180) <= 1e-9) return slotVec(g, d, withPairSpread);
+    var vb = slotVec(g, d, withPairSpread);
+    return [slotVec(g, 360 - d, withPairSpread)[0], vb[1]];
+  }
+
   function feasibleAt(s) {
     if (oppCnt < 2) return true;
     var g = geom(s, true);
@@ -252,8 +270,8 @@ function _qmlLandscapeLayout(oppCnt, zW, zH, compact, zoomMul, spectating, opts)
     // les configs denses concernees.
     var yNeeded = s * oppBaseH + Math.max(gap, 26 * s);
     for (var iPair = 1; iPair < ringSeats; iPair++) {
-      var v1 = slotVec(g, ringFirst + (iPair - 1) * stepDeg, false);
-      var v2 = slotVec(g, ringFirst + iPair * stepDeg, false);
+      var v1 = ringVec(g, ringFirst + (iPair - 1) * stepDeg, false);
+      var v2 = ringVec(g, ringFirst + iPair * stepDeg, false);
       if (Math.abs(v1[0] - v2[0]) * radiusXpix < xNeeded
           && Math.abs(v1[1] - v2[1]) * radiusYpix < yNeeded)
         return false;
@@ -336,11 +354,11 @@ function _qmlLandscapeLayout(oppCnt, zW, zH, compact, zoomMul, spectating, opts)
   }
   for (var k = 0; k < oppCnt; k++) {
     var dK = firstAngle + k * stepDeg;
-    var v = slotVec(gF, dK, true);
+    var v = ringVec(gF, dK, true);
     slots.push({ x: zW * (0.5 + gF.radiusX * v[0]), y: zH * (gF.centerY + gF.radiusY * v[1]) });
     // Slots SANS pairSpread : l'invariant de séparation garanti par la
     // bisection (exposé pour les tests déterministes).
-    var v0 = slotVec(gF, dK, false);
+    var v0 = ringVec(gF, dK, false);
     raw.push({ x: zW * (0.5 + gF.radiusX * v0[0]), y: zH * (gF.centerY + gF.radiusY * v0[1]) });
   }
   // ── flankWide (QML seatNudge/slotForSeat, 2.1.3 vérifié dans le source

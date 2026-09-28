@@ -1,4 +1,7 @@
-2026-09-28 version 2.1.9-web.219 (current series):
+2026-09-28 version 2.1.9-web.220 (current series):
+- improvement: spectator view — the seats around the bottom player are now spaced like the ones around the top player, so the table looks symmetric (they were spread wider at the bottom)
+
+2026-09-28 version 2.1.9-web.219:
 - bugfix: theme window — the Table / Cards / Card back / Seats tab bar now stays flush with the top while scrolling (a strip of the list showed through above it)
 
 2026-09-28 version 2.1.9-web.218:
