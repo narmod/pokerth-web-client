@@ -64,9 +64,6 @@ ok(E.evSignupText({ signups: 2 }, 'Inscrits : {n}') === 'Inscrits : 2', 'no tabl
 ok(E.evSignupText({ signups: null, seats: 10 }) === '' && E.evSignupText(null) === '', 'no count, no text');
 
 // -- leaders ------------------------------------------------------------------
-ok(E.evLeaderMeta({ src: 'wec', period: { year: 2026, month: 9 }, points: 650, games: 16, next: ['boehmi', 'Yes', 'MagE'] }, 'en') === 'September 2026 \u00b7 650 Points \u00b7 16 Games \u00b7 2. boehmi \u00b7 3. Yes', 'WEC leader meta: month, points, games, two runners-up');
-ok(E.evLeaderMeta({ src: 'bbc', period: { season: 12 }, points: 900, games: 22, next: [] }, 'fr', { season: 'Saison', points: 'Points', games: 'Parties' }) === 'Saison 12 \u00b7 900 Points \u00b7 22 Parties', 'BBC leader meta: season, with the translated words');
-ok(E.evLeaderMeta({ src: 'wec', period: {}, points: null, games: null }, 'en') === '', 'nothing known, nothing shown');
 
 // -- server clock line --------------------------------------------------------
 // TZ = Europe/Paris, server Europe/Berlin: same wall time → no « your time ».

@@ -3,8 +3,8 @@
 // "Events" tab of the Forum news window — web extension, no QML
 // counterpart. Shows what is coming up on the community sites (BBC step
 // games with their sign-up count, the next Monthly Cup), who won last
-// (BBC / WEC / Monthly Cup podium) and who leads the BBC season and the WEC
-// month. WEC publishes no schedule: its daily game (22:00 server time, no
+// (BBC / WEC / Monthly Cup podium); the leaders card is gone since web.242
+// (the rankings have their own window). WEC publishes no schedule: its daily game (22:00 server time, no
 // registration — sp0ck, 28/09/2026) is added to each evening by evWecDaily.
 //
 // Data: GET /api/events, the relay in proxy.js (server/community-events.js)
@@ -187,20 +187,6 @@ export function evResultMeta(r, now, locale) {
   return parts.join(' \u00b7 ');
 }
 
-// Meta line of a leader row: "September 2026 · 650 Points · 16 Games · 2. boehmi · 3. Yes".
-// `w` carries the translated words { season, points, games } (existing ranking keys).
-export function evLeaderMeta(l, locale, w) {
-  if (!l) return '';
-  const words = w || {}, parts = [], p = l.period || {};
-  if (p.season != null) parts.push((words.season || 'Season') + ' ' + p.season);
-  else { const m = evMonthName(p.month, locale, p.year); if (m) parts.push(m); }
-  if (l.points != null) parts.push(l.points + ' ' + (words.points || 'Points'));
-  if (l.games != null) parts.push(l.games + ' ' + (words.games || 'Games'));
-  const next = Array.isArray(l.next) ? l.next : [];
-  for (let i = 0; i < next.length && i < 2; i++) parts.push((i + 2) + '. ' + next[i]);
-  return parts.join(' \u00b7 ');
-}
-
 // Sign-up text of an upcoming row. With a known table size it reads like the
 // BBC calendar itself ("4/10"): these are advance sign-ups, not attendance, and
 // the scale says so better than a bare number. Otherwise the translated label.
@@ -273,7 +259,6 @@ const ICON_CUP = '<svg viewBox="0 0 24 24" width="13" height="13" fill="none" st
 function _ico(d) { return '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + d + '</svg>'; }
 const ICON_CAL = _ico('<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>');
 const ICON_FLAG = _ico('<path d="M5 21V4M5 4h11l-2 4 2 4H5"/>');
-const ICON_BARS = _ico('<path d="M6 20V10M12 20V4M18 20v-7"/>');
 const ICON_CLOCK = _ico('<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>');
 const ICON_SUN = _ico('<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>');
 
@@ -481,17 +466,12 @@ function _render(data) {
     rows += _row(r.src, r.url, pod[0], evResultMeta(r, now, loc), true); n++;
   }
   if (n) html += _card(ICON_FLAG, _t('evResults', 'Latest results'), n, rows);
-  const lead = (data.leaders || []).filter(function (l) { return l && l.player; });
-  if (lead.length) {
-    const w = { season: _t('rankingSeason', 'Season'), points: _t('rankingColPoints', 'Points'), games: _t('rankingColGames', 'Games') };
-    rows = '';
-    for (const l of lead) rows += _row(l.src, l.url, l.player, evLeaderMeta(l, loc, w), true);
-    html += _card(ICON_BARS, _t('rankingTitle', 'Ranking'), lead.length, rows);
-  }
+  // No leaders card since web.242 (narmod): the rankings have their own window.
   // A re-render (registrations landing) must not steal the keyboard focus.
   const act = document.activeElement;
   const fgid = act && box.contains(act) && act.getAttribute ? act.getAttribute('data-gid') : null;
-  box.innerHTML = '<div class="ev-clock" id="ev-clock" hidden>' + ICON_CLOCK + '<span></span></div>' + html;
+  // Server clock in a card of its own, framed like the Upcoming card (web.242).
+  box.innerHTML = '<section class="ev-card ev-clock" id="ev-clock" hidden><div class="ev-ch">' + ICON_CLOCK + '<span class="ev-cl"></span></div></section>' + html;
   if (fgid) { const again = box.querySelector('.ev-exp[data-gid="' + fgid + '"]'); if (again) again.focus(); }
   _clockPaint();
 }

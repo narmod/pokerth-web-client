@@ -1,4 +1,8 @@
-2026-09-28 version 2.1.9-web.241 (current series):
+2026-09-28 version 2.1.9-web.242 (current series):
+- improvement: forum news — the server time sits in its own frame, like « Upcoming », and the Posts tab list gets the same frame as the Events tab
+- improvement: forum news, Events tab — the Ranking section is gone (the rankings have their own window)
+
+2026-09-28 version 2.1.9-web.241:
 - new: forum news, Events tab — tap a BBC game that has sign-ups to see who is registered, as in the desktop client (BBC admins in gold); the ↗ icon and the new “Register for the BBC” button open the BBC site
 
 2026-09-28 version 2.1.9-web.240:

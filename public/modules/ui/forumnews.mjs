@@ -261,7 +261,9 @@ function _renderList(posts) {
   if (!posts.length) { if (empty) empty.style.display = ''; list.style.display = 'none'; return; }
   if (empty) empty.style.display = 'none';
   const ids = _readIds(); const base = _readBase();
-  let html = '';
+  // Card header, same frame as the Events tab cards (web.242).
+  let html = '<div class="ev-ch"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 6h3a1 1 0 0 1 1 1v11a2 2 0 0 1-4 0V5a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v12a3 3 0 0 0 3 3h11"/><path d="M8 8h4M8 12h4M8 16h4"/></svg>'
+    + '<span class="ev-cl">' + esc(_t('forumTabPosts', 'Posts')) + '</span><span class="ev-cnt">' + posts.length + '</span></div>';
   for (let i = 0; i < posts.length; i++) {
     const p = posts[i];
     const unread = fnIsUnread(p, ids, base);

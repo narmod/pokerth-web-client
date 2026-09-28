@@ -15,6 +15,10 @@ release. Per-build detail is on the
 [GitHub Releases](https://github.com/narmod/pokerth-web-client/releases) page;
 highlights below.
 
+### Changed
+
+- **Forum news window — one card look for both tabs, no leaders card** (`web.242`, narmod) — `modules/ui/forum-events.mjs`: the server clock is now a header-only `.ev-card` (`#ev-clock`, same frame as « Upcoming »), and the Ranking card (`data.leaders`) is no longer rendered — removal asked by narmod; `evLeaderMeta` and its tests removed. The relay still returns `leaders` (unused by the client). `modules/ui/forumnews.mjs` + `pokerth-client.html`: `#fn-list` is an `.ev-card` with an `.ev-ch` header (posts icon, `forumTabPosts`, count), rows unchanged.
+
 ### Added
 
 - **Events tab — collapsible BBC registrations** (`web.241`, narmod) — parity with upstream `BbcGameDates.qml` `loadRegs` / `ForumNewsPage.qml` (pokerth/pokerth `f0ea7de`). Server: `server/community-events.js` carries the BBC game `id` in `upcoming` and adds `bbcRegsUrl` / `parseBbcRegs` (`/registration/date/get/<id>` JSON → `{ nick, admin }`, bounded to 20, no HTML decoding); `proxy.js` `GET /api/events/bbcregs?id=N` relays it (no CORS upstream), only for ids listed by the cached `/api/events`, 60 s cache per id, in-flight dedup, never a 5xx. Client (`modules/ui/forum-events.mjs`): a BBC row with sign-ups is a `role="button"` row (click / Enter / Space, `aria-expanded`, chevron) that unfolds nickname chips — BBC admins gold outline + `Admin` tag (`piRoleAdmin`), left bar in the step colour; loading (`rankingLoading`) / error (`evRegsError`) line; re-read after 2 min or when the count changed (`evRegsFresh`, QML `regsTtlMs`); keyboard focus kept across re-renders. The ↗ icon stays a link to the site. Footer button `#fn-bbcreg` “Register for the BBC” (`evBbcRegister`) in the Events tab (QML Register button). New keys `evRegsError`, `evBbcRegister` in 83 catalogues; help (`forumnews` section, 83 corpora) gains a paragraph on evening grouping, the WEC daily game and the registrations.
