@@ -1,4 +1,7 @@
-2026-09-28 version 2.1.9-web.235 (current series):
+2026-09-28 version 2.1.9-web.236 (current series):
+- improvement: forum news, Events tab — each BBC game now shows its step on a coloured badge, as in the desktop client: STEP 1 yellow, STEP 2 green, STEP 3 orange, STEP 4 red (special games in blue)
+
+2026-09-28 version 2.1.9-web.235:
 - bugfix: music player — the ▸/▾ button now really folds and unfolds the track list (it is folded when the player opens; the Playlist and Radios tabs unfold it)
 
 2026-09-28 version 2.1.9-web.234:

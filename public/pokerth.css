@@ -9032,6 +9032,16 @@ a.ev-row { color: inherit; text-decoration: none; }
 .fn-c5 { --fn-c: 93,164,93; }
 .fn-c6 { --fn-c: 200,106,154; }
 .fn-c7 { --fn-c: 138,151,168; }
+/* BBC games in the Events tab: one colour per step, as in the QML BBC tab
+   (ForumNewsPage.qml stepColor) — step 1 accent yellow (dimmed on the light
+   theme), 2 green, 3 orange, 4 red, special game blue. */
+.fn-forum.ev-step { font-weight: 700; }
+.ev-step1 { --fn-c: 227,200,0; }
+:root[data-theme="pokerth-light"] .ev-step1 { --fn-c: 176,154,0; }
+.ev-step2 { --fn-c: 80,200,120; }
+.ev-step3 { --fn-c: 232,154,48; }
+.ev-step4 { --fn-c: 224,80,80; }
+.ev-step0 { --fn-c: 110,156,236; }
 .fn-main { flex: 1; min-width: 0; }
 .fn-t { font-size: var(--fs-sm); color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .fn-meta { font-size: var(--fs-2xs); color: var(--text); opacity: 0.6; margin-top: 1px; }

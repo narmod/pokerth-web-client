@@ -15,6 +15,10 @@ release. Per-build detail is on the
 [GitHub Releases](https://github.com/narmod/pokerth-web-client/releases) page;
 highlights below.
 
+### Changed
+
+- **Events tab — BBC step badges coloured as in QML** (`web.236`, narmod) — parity with upstream `ForumNewsPage.qml` BBC tab (pokerth/pokerth `f0ea7de`, `stepColor`): `modules/ui/forum-events.mjs` gives BBC upcoming rows a `STEP n` badge (English in every language, the cup's own word) instead of the `BBC` source badge, and titles the row `BBC` (+ special game name); `pokerth.css` `.ev-step1…4` = `#E3C800` (light theme `#b09a00`) / `#50c878` / `#e89a30` / `#e05050`, special game (step 0) `#6E9CEC`. `evStepBadge` / `evStepRowTitle` covered by `scripts/test-forum-events.mjs`.
+
 ### Fixed
 
 - **Music player — the ▸/▾ button never folded the list** (`web.235`, narmod) — long-standing: `_togglePlaylist` set the `hidden` attribute and flipped the caret, but `.music-pl { display: flex }` overrides the UA `[hidden]` rule, so the list stayed visible. `pokerth.css`: `.music-pl[hidden] { display: none }`. Visible change approved by narmod: the list is now folded when the panel opens (`_plOpen` defaults to false, not persisted) and unfolds on the caret or on the Playlist / Radios tabs, centred on the current track. Real app in Chromium, 1280×900 and 390×844.

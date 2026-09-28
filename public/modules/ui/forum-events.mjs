@@ -87,6 +87,23 @@ export function evUpcomingTitle(e, locale, stepWord) {
   return parts.join(' \u00b7 ') || evSrcName(e.src);
 }
 
+// Badge of a BBC game, as in the QML BBC tab (ForumNewsPage.qml stepColor,
+// pokerth/pokerth f0ea7de): "STEP 1".."STEP 4", one colour per step, always in
+// English (the cup's own word, like the table presets). A special game (step 0)
+// keeps the "BBC" word in the QML special-game blue. null = not a BBC game.
+export function evStepBadge(e) {
+  if (!e || e.src !== 'bbc') return null;
+  const s = e.step;
+  if (s >= 1 && s <= 4) return { text: 'STEP ' + s, cls: 'ev-step ev-step' + s };
+  return { text: 'BBC', cls: 'ev-step ev-step0' };
+}
+
+// Title of a BBC row once its step is on the badge: the cup, plus the name
+// of a special game.
+export function evStepRowTitle(e) {
+  return ['BBC', e && e.title].filter(Boolean).join(' \u00b7 ');
+}
+
 // Meta line of a result row: "#9743 · 2. ElmoEGO · 3. il Buono · yesterday · 21:45".
 export function evResultMeta(r, now, locale) {
   if (!r) return '';
@@ -220,12 +237,15 @@ function _card(icon, label, count, body) {
     + (count > 0 ? '<span class="ev-cnt">' + count + '</span>' : '') + '</div>' + body + '</section>';
 }
 
-function _row(src, url, title, meta, winner) {
+// `badge` (optional, see evStepBadge) replaces the source badge.
+function _row(src, url, title, meta, winner, badge) {
   const safe = evSafeUrl(url);
   const open = _t('evOpenSite', 'Open the site');
   return '<a class="fn-row ev-row"' + (safe ? ' href="' + esc(safe).replace(/"/g, '&quot;') + '" target="_blank" rel="noopener noreferrer"' : '')
     + ' title="' + esc(open).replace(/"/g, '&quot;') + '">'
-    + '<span class="fn-forum ' + evSrcClass(src) + '">' + esc(evSrcName(src)) + '</span>'
+    + (badge
+      ? '<span class="fn-forum ' + badge.cls + '">' + esc(badge.text) + '</span>'
+      : '<span class="fn-forum ' + evSrcClass(src) + '">' + esc(evSrcName(src)) + '</span>')
     + '<div class="fn-main"><div class="fn-t' + (winner ? ' ev-win' : '') + '">' + (winner ? ICON_CUP : '') + esc(title) + '</div>'
     + (meta ? '<div class="fn-meta">' + esc(meta) + '</div>' : '') + '</div>'
     + '<span class="fn-golink" aria-hidden="true">' + ICON_OUT + '</span>'
@@ -243,7 +263,8 @@ function _render(data) {
   for (const e of up) {
     const meta = [evWhen(e.at, now, loc)];
     meta.push(evSignupText(e, _t('evSignups', 'Signed up: {n}')));
-    rows += _row(e.src, e.url, evUpcomingTitle(e, loc, stepWord), meta.filter(Boolean).join(' \u00b7 '), false);
+    const badge = evStepBadge(e);
+    rows += _row(e.src, e.url, badge ? evStepRowTitle(e) : evUpcomingTitle(e, loc, stepWord), meta.filter(Boolean).join(' \u00b7 '), false, badge);
   }
   html += _card(ICON_CAL, _t('evUpcoming', 'Upcoming'), up.length,
     up.length ? rows : '<div class="rk-msg">' + esc(_t('evNone', 'No upcoming events.')) + '</div>');

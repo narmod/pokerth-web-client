@@ -33,6 +33,9 @@ ok(E.evWhen(NOW, NOW, 'xx-invalid-locale-') !== undefined, 'a bad locale never t
 // -- labels -------------------------------------------------------------------
 ok(E.evUpcomingTitle({ src: 'bbc', step: 2, title: null }, 'en', 'Step') === 'Step 2', 'BBC rows are titled by their step');
 ok(E.evUpcomingTitle({ src: 'bbc', step: 1, title: 'Special' }, 'en', 'Etape') === 'Etape 1 \u00b7 Special', 'with the translated word and the optional title');
+ok(E.evStepBadge({ src: 'bbc', step: 3 }).text === 'STEP 3' && E.evStepBadge({ src: 'bbc', step: 3 }).cls === 'ev-step ev-step3', 'BBC badge = STEP n, coloured per step (QML stepColor)');
+ok(E.evStepBadge({ src: 'bbc', step: 0 }).cls === 'ev-step ev-step0' && E.evStepBadge({ src: 'mc', month: 9 }) === null, 'special game = BBC in blue; other sources keep their badge');
+ok(E.evStepRowTitle({ src: 'bbc', step: 1, title: null }) === 'BBC' && E.evStepRowTitle({ src: 'bbc', step: 0, title: 'Xmas' }) === 'BBC \u00b7 Xmas', 'badged BBC rows are titled by the cup (+ special name)');
 ok(E.evUpcomingTitle({ src: 'mc', month: 9 }, 'en') === 'September' && E.evUpcomingTitle({ src: 'mc', month: 9 }, 'fr') === 'septembre', 'the Monthly Cup is titled by its month, in the locale');
 ok(E.evMonthName(13, 'en') === '' && E.evMonthName(0, 'en') === '', 'a month out of range gives nothing');
 ok(E.evResultMeta({ src: 'bbc', id: 9743, podium: ['spoof', 'ElmoEGO', 'il Buono'], at: Date.parse('2026-09-20T21:15:00+02:00') }, NOW, 'en').startsWith('#9743 \u00b7 2. ElmoEGO \u00b7 3. il Buono \u00b7 today'), 'result meta: id, runners-up, when');
