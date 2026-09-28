@@ -16,6 +16,7 @@ export const meta = {
 };
 
 export const strings = {
+    waitingHintRanked: "Mäng algab automaatselt kohe, kui laud on täis",
     rankWaitFull: "Edetabelimäng — ootame {max} mängijat ({n}/{max}). Mäng algab, kui laud on täis.",
     // Mascotte animée (modules/mascot, extra web)
     advMascot:'Animeeritud maskott (äss) avakuval ja fuajees, kui oled tegevusetu', mascotHello:'Tere!', mascotBye:'Näeme!', mascotTada:'Tadaa!', mascotKing:'Laua kuningas!', mascotAnyone:'Kas keegi on?', mascotCheese:'Hiir!', mascotTable:'Uus laud!', mascotMail:'Sulle on kiri!', mascotBravo:'Hästi tehtud!',

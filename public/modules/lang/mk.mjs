@@ -16,6 +16,7 @@ export const meta = {
 };
 
 export const strings = {
+    waitingHintRanked: "Играта ќе започне автоматски штом масата ќе се пополни",
     rankWaitFull: "Игра со рангирање — се чекаат {max} играчи ({n}/{max}). Играта ќе започне кога масата ќе се пополни.",
     // Mascotte animée (modules/mascot, extra web)
     advMascot:'Анимирана маскота (кецот) на почетниот екран и во фоајето кога сте неактивни', mascotHello:'Здраво!', mascotBye:'Се гледаме!', mascotTada:'Тадаа!', mascotKing:'Кралот на масата!', mascotAnyone:'Има ли некој?', mascotCheese:'Сирење!', mascotTable:'Нова маса!', mascotMail:'Имаш порака!', mascotBravo:'Браво!',

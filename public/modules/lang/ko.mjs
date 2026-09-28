@@ -13,6 +13,7 @@ export const meta = {
 };
 
 export const strings = {
+    waitingHintRanked: "테이블이 가득 차면 게임이 자동으로 시작됩니다",
     rankWaitFull: "랭킹 게임 — {max}명의 플레이어를 기다리는 중 ({n}/{max}). 테이블이 가득 차면 게임이 시작됩니다.",
     // Mascotte animée (modules/mascot, extra web)
     advMascot:'사용하지 않을 때 홈 화면과 로비에 움직이는 마스코트(에이스) 표시', mascotHello:'안녕!', mascotBye:'또 봐!', mascotTada:'짜잔!', mascotKing:'테이블의 왕!', mascotAnyone:'누구 없어요?', mascotCheese:'김치!', mascotTable:'새 테이블!', mascotMail:'메시지가 왔어요!', mascotBravo:'잘했어요!',

@@ -17,6 +17,7 @@ export const meta = {
 };
 
 export const strings = {
+    waitingHintRanked: "枱坐滿後遊戲將自動開始",
     rankWaitFull: "排名遊戲 — 等待 {max} 名玩家（{n}/{max}）。枱坐滿後遊戲將開始。",
     // Mascotte animée (modules/mascot, extra web)
     advMascot:'閒置時在主畫面和大堂顯示動畫吉祥物（A 牌）', mascotHello:'嗨！', mascotBye:'遲啲見！', mascotTada:'噹噹！', mascotKing:'牌枱之王！', mascotAnyone:'有冇人呀？', mascotCheese:'笑一個！', mascotTable:'新牌枱！', mascotMail:'你有新訊息！', mascotBravo:'做得好！',

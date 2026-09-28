@@ -15,6 +15,7 @@ export const meta = {
 };
 
 export const strings = {
+    waitingHintRanked: "Het spel start automatisch zodra de tafel vol is",
     rankWaitFull: "Rankingspel — wachten op {max} spelers ({n}/{max}). Het spel start zodra de tafel vol is.",
     // Mascotte animée (modules/mascot, extra web)
     advMascot:'Geanimeerde mascotte (de Aas) op het startscherm en in de lobby bij inactiviteit', mascotHello:'Hoi!', mascotBye:'Tot ziens!', mascotTada:'Tadaa!', mascotKing:'Koning van het laken!', mascotAnyone:'Iemand?', mascotCheese:'Cheese!', mascotTable:'Een nieuwe tafel!', mascotMail:'Je hebt post!', mascotBravo:'Goed gedaan!',

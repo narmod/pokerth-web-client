@@ -17,6 +17,7 @@ export const meta = {
 };
 
 export const strings = {
+    waitingHintRanked: "Stol dolan badyna oýun awtomatik başlar",
     rankWaitFull: "Reýting oýny — {max} oýunçy garaşylýar ({n}/{max}). Stol dolanda oýun başlar.",
     // Mascotte animée (modules/mascot, extra web)
     advMascot:'Işjeň däl wagtyňyz baş ekranda we lobbide animasiýaly maskot (Tuz)', mascotHello:'Salam!', mascotBye:'Görüşeris!', mascotTada:'Tadaa!', mascotKing:'Stoluň patyşasy!', mascotAnyone:'Kimdir barmy?', mascotCheese:'Peýnir!', mascotTable:'Täze stol!', mascotMail:'Size hat geldi!', mascotBravo:'Berekella!',

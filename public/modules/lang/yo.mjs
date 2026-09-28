@@ -17,6 +17,7 @@ export const meta = {
 };
 
 export const strings = {
+    waitingHintRanked: "Eré yóò bẹ̀rẹ̀ fúnra rẹ̀ ní kété tí tábìlì bá kún",
     rankWaitFull: "Eré ipò — ń dúró de àwọn olùṣeré {max} ({n}/{max}). Eré yóò bẹ̀rẹ̀ nígbà tí tábìlì bá kún.",
     // Mascotte animée (modules/mascot, extra web)
     advMascot:'Àmì eré tí ń gbé (Ace) lórí ojú-ìwé àkọ́kọ́ àti nínú gbọ̀ngàn nígbà tí o kò bá ṣe nǹkan', mascotHello:'Báwo!', mascotBye:'Ó dìgbà!', mascotTada:'Tada!', mascotKing:'Ọba tábìlì!', mascotAnyone:'Ṣé ẹnìkan wà?', mascotCheese:'Rẹ́rìn-ín!', mascotTable:'Tábìlì tuntun!', mascotMail:'O ní ìfiránṣẹ́!', mascotBravo:'O ṣeun!',

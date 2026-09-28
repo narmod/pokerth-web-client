@@ -16,6 +16,7 @@ export const meta = {
 };
 
 export const strings = {
+    waitingHintRanked: "Permainan akan bermula secara automatik sebaik sahaja meja penuh",
     rankWaitFull: "Permainan berperingkat — menunggu {max} pemain ({n}/{max}). Permainan akan bermula apabila meja penuh.",
     // Mascotte animée (modules/mascot, extra web)
     advMascot:'Maskot animasi (si Sat) di skrin utama dan lobi semasa tidak aktif', mascotHello:'Hai!', mascotBye:'Jumpa lagi!', mascotTada:'Tada!', mascotKing:'Raja meja!', mascotAnyone:'Ada sesiapa?', mascotCheese:'Senyum!', mascotTable:'Meja baharu!', mascotMail:'Anda ada mesej!', mascotBravo:'Syabas!',

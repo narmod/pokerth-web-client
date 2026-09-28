@@ -14,6 +14,7 @@ export const meta = {
 };
 
 export const strings = {
+    waitingHintRanked: "ടേബിൾ നിറഞ്ഞാലുടൻ ഗെയിം സ്വയമേവ ആരംഭിക്കും",
     rankWaitFull: "റാങ്കിംഗ് ഗെയിം — {max} കളിക്കാരെ കാത്തിരിക്കുന്നു ({n}/{max}). ടേബിൾ നിറയുമ്പോൾ ഗെയിം ആരംഭിക്കും.",
     // Mascotte animée (modules/mascot, extra web)
     advMascot:'നിഷ്ക്രിയമായിരിക്കുമ്പോൾ ഹോം സ്ക്രീനിലും ലോബിയിലും ആനിമേറ്റഡ് ഭാഗ്യചിഹ്നം (എയ്സ്)', mascotHello:'ഹായ്!', mascotBye:'വീണ്ടും കാണാം!', mascotTada:'ടാ-ഡാ!', mascotKing:'മേശയുടെ രാജാവ്!', mascotAnyone:'ആരെങ്കിലുമുണ്ടോ?', mascotCheese:'ചീസ്!', mascotTable:'ഒരു പുതിയ മേശ!', mascotMail:'നിങ്ങൾക്ക് സന്ദേശമുണ്ട്!', mascotBravo:'കൊള്ളാം!',

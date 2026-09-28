@@ -14,6 +14,7 @@ export const meta = {
 };
 
 export const strings = {
+    waitingHintRanked: "میز بھرتے ہی گیم خودبخود شروع ہو جائے گا",
     rankWaitFull: "درجہ بندی گیم — {max} کھلاڑیوں کا انتظار ({n}/{max})۔ میز بھرنے پر گیم شروع ہو گا۔",
     // Mascotte animée (modules/mascot, extra web)
     advMascot:'غیر فعال ہونے پر ہوم اسکرین اور لابی میں متحرک میسکوٹ (اِکا)', mascotHello:'ہیلو!', mascotBye:'پھر ملیں گے!', mascotTada:'ٹا ڈا!', mascotKing:'میز کا بادشاہ!', mascotAnyone:'کوئی ہے؟', mascotCheese:'چیز!', mascotTable:'ایک نئی میز!', mascotMail:'آپ کا پیغام آیا ہے!', mascotBravo:'شاباش!',

@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+    waitingHintRanked: "Ván sẽ tự động bắt đầu ngay khi bàn đủ người",
     rankWaitFull: "Ván xếp hạng — đang chờ {max} người chơi ({n}/{max}). Ván sẽ bắt đầu khi bàn đủ người.",
     // Mascotte animée (modules/mascot, extra web)
     advMascot:'Linh vật hoạt hình (quân Át) ở màn hình chính và sảnh khi không hoạt động', mascotHello:'Chào!', mascotBye:'Hẹn gặp lại!', mascotTada:'Ta-da!', mascotKing:'Vua của bàn chơi!', mascotAnyone:'Có ai không?', mascotCheese:'Cười nào!', mascotTable:'Một bàn mới!', mascotMail:'Bạn có thư!', mascotBravo:'Giỏi lắm!',

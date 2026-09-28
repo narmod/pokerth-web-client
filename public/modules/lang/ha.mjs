@@ -17,6 +17,7 @@ export const meta = {
 };
 
 export const strings = {
+    waitingHintRanked: "Wasan zai fara kai tsaye da zarar tebur ya cika",
     rankWaitFull: "Wasan matsayi — ana jiran 'yan wasa {max} ({n}/{max}). Wasan zai fara idan tebur ya cika.",
     // Mascotte animée (modules/mascot, extra web)
     advMascot:'Alama mai motsi (Aas) a allon farko da cikin falo lokacin da ba ka aiki', mascotHello:'Sannu!', mascotBye:'Sai anjima!', mascotTada:'Tada!', mascotKing:'Sarkin tebur!', mascotAnyone:'Akwai wani?', mascotCheese:'Murmushi!', mascotTable:'Sabon tebur!', mascotMail:'Kana da saƙo!', mascotBravo:'Madalla!',

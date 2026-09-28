@@ -17,6 +17,7 @@ export const meta = {
 };
 
 export const strings = {
+    waitingHintRanked: "මේසය පිරුණු වහාම ක්‍රීඩාව ස්වයංක්‍රීයව ආරම්භ වේ",
     rankWaitFull: "ශ්‍රේණිගත ක්‍රීඩාව — ක්‍රීඩකයින් {max} දෙනෙකු එනතුරු රැඳී සිටී ({n}/{max}). මේසය පිරුණු විට ක්‍රීඩාව ආරම්භ වේ.",
     // Mascotte animée (modules/mascot, extra web)
     advMascot:'අක්‍රිය විට මුල් තිරයේ සහ ලොබියේ සජීවිකරණ සුරතලා (ඒස්)', mascotHello:'හායි!', mascotBye:'ආයෙත් හම්බවෙමු!', mascotTada:'ටා-ඩා!', mascotKing:'මේසයේ රජා!', mascotAnyone:'කවුරුහරි ඉන්නවද?', mascotCheese:'චීස්!', mascotTable:'අලුත් මේසයක්!', mascotMail:'ඔබට පණිවිඩයක්!', mascotBravo:'නියමයි!',

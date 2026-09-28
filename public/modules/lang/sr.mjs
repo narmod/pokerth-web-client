@@ -10,6 +10,7 @@ export const meta = {
 };
 
 export const strings = {
+    waitingHintRanked: "Igra počinje automatski čim se sto popuni",
     rankWaitFull: "Rangirana igra — čeka se {max} igrača ({n}/{max}). Igra počinje kada se sto popuni.",
     // Mascotte animée (modules/mascot, extra web)
     advMascot:'Анимирана маскота (кец) на почетном екрану и у предворју када сте неактивни', mascotHello:'Здраво!', mascotBye:'Видимо се!', mascotTada:'Тадаа!', mascotKing:'Краљ стола!', mascotAnyone:'Има ли кога?', mascotCheese:'Сир!', mascotTable:'Нови сто!', mascotMail:'Имаш поруку!', mascotBravo:'Браво!',

@@ -17,6 +17,7 @@ export const meta = {
 };
 
 export const strings = {
+    waitingHintRanked: "Bydd y gêm yn dechrau'n awtomatig cyn gynted ag y bydd y bwrdd yn llawn",
     rankWaitFull: "Gêm gyda safle — yn aros am {max} chwaraewr ({n}/{max}). Bydd y gêm yn dechrau pan fydd y bwrdd yn llawn.",
     // Mascotte animée (modules/mascot, extra web)
     advMascot:'Masgot wedi’i animeiddio (yr As) ar y sgrin gartref ac yn y lobi pan fyddwch yn segur', mascotHello:'Helô!', mascotBye:'Wela i di!', mascotTada:'Ta-da!', mascotKing:'Brenin y bwrdd!', mascotAnyone:'Oes rhywun yma?', mascotCheese:'Caws!', mascotTable:'Bwrdd newydd!', mascotMail:'Mae gen ti bost!', mascotBravo:'Da iawn!',

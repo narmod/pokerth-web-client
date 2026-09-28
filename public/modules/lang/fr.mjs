@@ -16,6 +16,7 @@ export const meta = {
 };
 
 export const strings = {
+    waitingHintRanked: "La partie démarrera automatiquement dès que la table sera complète",
     rankWaitFull: "Partie classée — en attente de {max} joueurs ({n}/{max}). La partie démarrera quand la table sera complète.",
     // Mascotte animée (modules/mascot, extra web)
     advMascot:'Mascotte animée (l’As) sur l’accueil et dans le lobby quand tu ne touches à rien', mascotHello:'Salut !', mascotBye:'À plus !', mascotTada:'Tadaa !', mascotKing:'Le roi du tapis !', mascotAnyone:'Y a quelqu’un ?', mascotCheese:'Ouistiti !', mascotTable:'Une nouvelle table !', mascotMail:'Tu as du courrier !', mascotBravo:'Bravo !',

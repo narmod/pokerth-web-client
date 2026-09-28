@@ -1,4 +1,7 @@
-2026-09-28 version 2.1.9-web.247 (current series):
+2026-09-28 version 2.1.9-web.248 (current series):
+- bugfix: ranking tables — the waiting line under the buttons no longer says the admin will start the game: it now says the game starts automatically as soon as the table is full
+
+2026-09-28 version 2.1.9-web.247:
 - improvement: forum news, Events tab — the rows no longer open the sites: only the ↗ icon does (upcoming games and latest results)
 - improvement: forum news, Events tab — tap an upcoming event to select it: the button at the bottom follows it (Register for the BBC, Register for the Monthly Cup; greyed out for the WEC daily game, which needs no registration)
 

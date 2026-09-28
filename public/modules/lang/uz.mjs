@@ -17,6 +17,7 @@ export const meta = {
 };
 
 export const strings = {
+    waitingHintRanked: "Stol toʻlishi bilan oʻyin avtomatik boshlanadi",
     rankWaitFull: "Reyting oʻyini — {max} oʻyinchi kutilmoqda ({n}/{max}). Stol toʻlganda oʻyin boshlanadi.",
     // Mascotte animée (modules/mascot, extra web)
     advMascot:'Faol bo‘lmaganingizda bosh ekranda va lobbida animatsion maskot (Tuz)', mascotHello:'Salom!', mascotBye:'Ko‘rishguncha!', mascotTada:'Tadaa!', mascotKing:'Stol qiroli!', mascotAnyone:'Kimdir bormi?', mascotCheese:'Pishloq!', mascotTable:'Yangi stol!', mascotMail:'Sizga xat keldi!', mascotBravo:'Barakalla!',

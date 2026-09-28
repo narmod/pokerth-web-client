@@ -14,6 +14,7 @@ export const meta = {
 };
 
 export const strings = {
+    waitingHintRanked: "ਟੇਬਲ ਭਰਦੇ ਹੀ ਖੇਡ ਆਪਣੇ-ਆਪ ਸ਼ੁਰੂ ਹੋ ਜਾਵੇਗੀ",
     rankWaitFull: "ਰੈਂਕਿੰਗ ਖੇਡ — {max} ਖਿਡਾਰੀਆਂ ਦੀ ਉਡੀਕ ({n}/{max})। ਟੇਬਲ ਭਰਨ 'ਤੇ ਖੇਡ ਸ਼ੁਰੂ ਹੋਵੇਗੀ।",
     // Mascotte animée (modules/mascot, extra web)
     advMascot:'ਅਕਿਰਿਆਸ਼ੀਲ ਹੋਣ ’ਤੇ ਹੋਮ ਸਕ੍ਰੀਨ ਅਤੇ ਲਾਬੀ ਵਿੱਚ ਐਨੀਮੇਟਡ ਮਾਸਕੋਟ (ਯੱਕਾ)', mascotHello:'ਸਤ ਸ੍ਰੀ ਅਕਾਲ!', mascotBye:'ਫਿਰ ਮਿਲਾਂਗੇ!', mascotTada:'ਟਾ-ਡਾ!', mascotKing:'ਮੇਜ਼ ਦਾ ਰਾਜਾ!', mascotAnyone:'ਕੋਈ ਹੈ?', mascotCheese:'ਚੀਜ਼!', mascotTable:'ਇੱਕ ਨਵਾਂ ਮੇਜ਼!', mascotMail:'ਤੁਹਾਡਾ ਸੁਨੇਹਾ ਆਇਆ ਹੈ!', mascotBravo:'ਸ਼ਾਬਾਸ਼!',

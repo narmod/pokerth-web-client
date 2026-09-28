@@ -17,6 +17,7 @@ export const meta = {
 };
 
 export const strings = {
+    waitingHintRanked: "Ширээ дүүрмэгц тоглолт автоматаар эхэлнэ",
     rankWaitFull: "Эрэмбийн тоглолт — {max} тоглогч хүлээж байна ({n}/{max}). Ширээ дүүрэхэд тоглолт эхэлнэ.",
     // Mascotte animée (modules/mascot, extra web)
     advMascot:'Идэвхгүй үед нүүр дэлгэц болон лоббид хөдөлгөөнт сахиус (тамга)', mascotHello:'Сайн уу!', mascotBye:'Дараа уулзъя!', mascotTada:'Та-да!', mascotKing:'Ширээний хаан!', mascotAnyone:'Хүн байна уу?', mascotCheese:'Бяслаг!', mascotTable:'Шинэ ширээ!', mascotMail:'Танд захидал ирлээ!', mascotBravo:'Сайн байна!',

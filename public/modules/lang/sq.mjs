@@ -16,6 +16,7 @@ export const meta = {
 };
 
 export const strings = {
+    waitingHintRanked: "Loja do të fillojë automatikisht sapo tavolina të mbushet",
     rankWaitFull: "Lojë me renditje — në pritje të {max} lojtarëve ({n}/{max}). Loja do të fillojë kur tavolina të mbushet.",
     // Mascotte animée (modules/mascot, extra web)
     advMascot:'Maskotë e animuar (Asi) në ekranin kryesor dhe në holl kur je joaktiv', mascotHello:'Përshëndetje!', mascotBye:'Shihemi!', mascotTada:'Ta-da!', mascotKing:'Mbreti i tavolinës!', mascotAnyone:'A ka njeri?', mascotCheese:'Buzëqesh!', mascotTable:'Një tavolinë e re!', mascotMail:'Ke një mesazh!', mascotBravo:'Të lumtë!',

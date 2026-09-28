@@ -13,6 +13,7 @@ export const meta = {
 };
 
 export const strings = {
+    waitingHintRanked: "Leikurinn hefst sjálfkrafa um leið og borðið er fullt",
     rankWaitFull: "Stigaleikur — beðið eftir {max} leikmönnum ({n}/{max}). Leikurinn hefst þegar borðið er fullt.",
     // Mascotte animée (modules/mascot, extra web)
     advMascot:'Hreyfimyndað lukkudýr (ásinn) á upphafsskjá og í anddyri við aðgerðaleysi', mascotHello:'Hæ!', mascotBye:'Sjáumst!', mascotTada:'Tadaa!', mascotKing:'Konungur borðsins!', mascotAnyone:'Er einhver?', mascotCheese:'Sís!', mascotTable:'Nýtt borð!', mascotMail:'Þú átt póst!', mascotBravo:'Vel gert!',

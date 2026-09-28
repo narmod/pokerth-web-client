@@ -15,6 +15,7 @@ export const meta = {
 };
 
 export const strings = {
+    waitingHintRanked: "Das Spiel startet automatisch, sobald der Tisch voll ist",
     rankWaitFull: "Ranglistenspiel — warte auf {max} Spieler ({n}/{max}). Das Spiel startet, sobald der Tisch voll ist.",
     // Mascotte animée (modules/mascot, extra web)
     advMascot:'Animiertes Maskottchen (das Ass) auf dem Startbildschirm und in der Lobby bei Inaktivität', mascotHello:'Hallo!', mascotBye:'Bis bald!', mascotTada:'Tadaa!', mascotKing:'König des Filzes!', mascotAnyone:'Jemand da?', mascotCheese:'Cheese!', mascotTable:'Ein neuer Tisch!', mascotMail:'Du hast Post!', mascotBravo:'Gut gemacht!',

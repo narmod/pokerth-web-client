@@ -320,7 +320,9 @@ function _renderLobbyWaitActions() {
   var startBtn = isHost
     ? '<button class="wp-btn wp-btn-start" onclick="App.startFromWait()"' + (canStart ? '' : ' disabled') + ' title="' + t('wpStartHumansTip') + '">' + t('wpStartGame') + '</button>'
     : '';
-  var hint = isHost ? '' : '<div class="lfb-waithint">' + t(S._amSpectator ? 'waitingHintSpectator' : 'waitingHintGuest') + '</div>';
+  // Table classée (type 4) : pas de lancement par un admin, la partie part
+  // seule quand la table est pleine → hint dédié au lieu de waitingHintGuest.
+  var hint = isHost ? '' : '<div class="lfb-waithint">' + t(S._amSpectator ? 'waitingHintSpectator' : (isRank ? 'waitingHintRanked' : 'waitingHintGuest')) + '</div>';
   bar.innerHTML = fillRow + '<div class="wp-actions">' + leaveBtn + inviteBtn + startBtn + '</div>' + hint;
   bar.style.display = 'flex';
   if (create) create.style.display = 'none';

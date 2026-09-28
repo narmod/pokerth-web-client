@@ -9,6 +9,7 @@ export const meta = {
 };
 
 export const strings = {
+    waitingHintRanked: "Гра почнеться автоматично, щойно стіл заповниться",
     rankWaitFull: "Рейтингова гра — очікування {max} гравців ({n}/{max}). Гра почнеться, коли стіл заповниться.",
     // Mascotte animée (modules/mascot, extra web)
     advMascot:'Анімований талісман (туз) на головному екрані та в лобі під час бездіяльності', mascotHello:'Привіт!', mascotBye:'До зустрічі!', mascotTada:'Та-да!', mascotKing:'Король столу!', mascotAnyone:'Є тут хтось?', mascotCheese:'Скажи «сир»!', mascotTable:'Новий стіл!', mascotMail:'Вам лист!', mascotBravo:'Молодець!',

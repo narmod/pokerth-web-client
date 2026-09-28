@@ -17,6 +17,7 @@ export const meta = {
 };
 
 export const strings = {
+    waitingHintRanked: "Tosóidh an cluiche go huathoibríoch a luaithe a bheidh an bord lán",
     rankWaitFull: "Cluiche rangaithe — ag fanacht le {max} imreoir ({n}/{max}). Tosóidh an cluiche nuair a bheidh an bord lán.",
     // Mascotte animée (modules/mascot, extra web)
     advMascot:'Suaitheantas beoite (an tAon) ar an scáileán baile agus sa stocaireacht nuair atá tú díomhaoin', mascotHello:'Haigh!', mascotBye:'Slán go fóill!', mascotTada:'Ta-da!', mascotKing:'Rí an bhoird!', mascotAnyone:'An bhfuil aon duine ann?', mascotCheese:'Cáis!', mascotTable:'Bord nua!', mascotMail:'Tá post agat!', mascotBravo:'Maith thú!',
