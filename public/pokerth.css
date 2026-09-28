@@ -11072,6 +11072,22 @@ body.chat-tr-on .pm-line .chat-tr-btn.tr-same { visibility: visible; }
 }
 
 
+/* ── Fenêtre basse (≤ 500 px, paysage) sur ordinateur (web.224) : le bloc
+   « (max-height: 500px) and (orientation: landscape) » remet .my-zone dans le
+   flux (position: relative, left: auto) — mais le translateX(-50%) du
+   centrage desktop restait appliqué : la barre partait de la moitié de sa
+   largeur hors écran à gauche (constaté narmod, 620×420 ; déjà présent avant
+   web.221). Dans le flux on centre par marges auto, sans transform, et le
+   décalage QML de 8 px devient une marge basse (bottom relatif = remontée). */
+@media (min-width: 600px) and (hover: hover) and (pointer: fine) and (max-height: 500px) and (orientation: landscape) {
+  html body.adv-hide-pbar .my-zone {
+    transform: none;
+    margin-left: auto; margin-right: auto; margin-bottom: 8px;
+    bottom: auto !important;
+  }
+}
+
+
 /* ── Barre d'action QML — finitions desktop/tablette (suite 0.3.541) ── */
 @media (min-width: 600px) and (hover: hover) and (pointer: fine) {
   /* Les effets « mon tour » (cadre/glow dorés) sont CONSERVÉS — retrait
