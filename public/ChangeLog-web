@@ -1,4 +1,7 @@
-2026-09-28 version 2.1.9-web.225 (current series):
+2026-09-28 version 2.1.9-web.226 (current series):
+- improvement: action bar on a computer — a small window (portrait up to 740 px wide, landscape up to 500 px high) switches back to the phone layout, handy to check the mobile look from a computer
+
+2026-09-28 version 2.1.9-web.225:
 - improvement: action bar on a computer — one layout at every window size, scaled down as a whole (text included) in small windows so it keeps the same proportion with the table; it no longer jumps between formats while resizing
 
 2026-09-28 version 2.1.9-web.224:

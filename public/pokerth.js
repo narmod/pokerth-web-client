@@ -5409,8 +5409,16 @@ const App = (() => {
       // « data-abar-desk ». Téléphones / tablettes tactiles : inchangés.
       var _fine = false;
       try { _fine = window.matchMedia('(hover: hover) and (pointer: fine)').matches; } catch (eF) {}
+      // web.226 (narmod) : une PETITE fenêtre d'ordinateur repasse en mode
+      // TÉLÉPHONE, exactement aux seuils des blocs CSS téléphone — portrait
+      // ≤ 740 px de large, paysage ≤ 500 px de haut — pour pouvoir vérifier
+      // le rendu mobile depuis un ordinateur. Au-dessus : format ordinateur
+      // unique, réduit par --abar-k.
+      var _phoneWin = (_bh > _bw && _bw <= 740) || (_bw >= _bh && _bh <= 500);
       var _de = document.documentElement;
-      if (_fine) {
+      if (_fine && !_phoneWin) {
+        // Plancher 0.8 atteint vers 576 px de haut / 608 px de large : le
+        // passage au mode téléphone (≤ 500 / ≤ 740) se fait depuis ce palier.
         var _ak = Math.max(0.8, Math.min(1, _bh / 720, _bw / 760));
         _ak = Math.round(_ak * 1000) / 1000;
         if (_de.getAttribute('data-abar-desk') !== '1') _de.setAttribute('data-abar-desk', '1');
@@ -11919,7 +11927,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.9-web.225'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.9-web.226'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif ou la palette High contrast
    (Android, Safari, iOS standalone récent). Lit --theme-color et met
