@@ -1,4 +1,7 @@
-2026-09-29 version 2.1.9-web.254 (current series):
+2026-09-29 version 2.1.9-web.255 (current series):
+- bugfix: lobby — the server time panel (tap the clock at the bottom right) opens in front of the chat and the open windows instead of behind them
+
+2026-09-29 version 2.1.9-web.254:
 - improvement: rankings, player cards, forum news, live figures and events answer faster and ask the community sites far less often (shared copies, no retry storm when a site is down)
 - new: server admins can turn the Events tab off or set how often the community sites are read
 

@@ -21,6 +21,9 @@ const SEL = [
   '#g-chat-panel', '#lobby-chat-panel', '#g-log-panel', '#g-assist-panel',
   '#g-reaction-panel', '#music-panel', '#hands-overlay', '#stats-overlay',
   '#odds-monitor', '#assist-win',
+  // Panneau de l'horloge serveur (lobby-clock.mjs, web.255) : porté sous <body>
+  // à l'ouverture, il passe devant le chat et les fenêtres flottantes.
+  '#lsb-clock-pop',
   '#g-overflow-menu', '#l-overflow-menu', '#cr-overflow-menu',
   '#connect-overflow-menu', '#pv-overflow-menu'
 ].join(',');

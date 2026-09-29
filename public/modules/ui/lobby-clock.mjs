@@ -112,6 +112,30 @@ function _sync() {
     .finally(function () { _syncing = false; });
 }
 
+// The panel lived inside the status bar with z-index 30: the lobby chat and
+// every floating window (z-order.mjs band 300-390) covered it. Since web.255
+// it is moved under <body> when opened, fixed just above the pill, and raised
+// by z-order.mjs like any other surface: the last thing opened comes to front.
+function _place() {
+  const pop = document.getElementById('lsb-clock-pop');
+  const btn = document.getElementById('lsb-clock');
+  if (!pop || !btn || pop.hidden) return;
+  if (pop.parentNode !== document.body) document.body.appendChild(pop);
+  const r = btn.getBoundingClientRect();
+  const vw = window.innerWidth || document.documentElement.clientWidth;
+  const vh = window.innerHeight || document.documentElement.clientHeight;
+  pop.style.position = 'fixed';
+  pop.style.left = 'auto';
+  pop.style.top = 'auto';
+  pop.style.right = Math.max(10, Math.round(vw - r.right)) + 'px';
+  pop.style.bottom = Math.max(10, Math.round(vh - r.top + 6)) + 'px';
+}
+
+function _raise() {
+  const pop = document.getElementById('lsb-clock-pop');
+  try { if (pop && typeof window.zRaise === 'function') window.zRaise(pop); } catch (e) {}
+}
+
 function _close() {
   const pop = document.getElementById('lsb-clock-pop');
   const btn = document.getElementById('lsb-clock');
@@ -153,7 +177,9 @@ function _render() {
   if (on && (!_syncAt || Date.now() - _syncAt > SYNC_MS)) _sync();
   const show = on && !!_tz;
   btn.hidden = !show;
-  if (!show) { _close(); return; }
+  // Pill gone from the screen (lobby left for a table, window hidden): the
+  // panel, now under <body>, must not stay behind on its own.
+  if (!show || !btn.getClientRects().length) { _close(); if (!show) return; }
   const now = Date.now() + _skew;
   const hm = _hm(now, _tz), city = lcCity(_tz);
   const title = _t('lsbClockTitle', 'Server time');
@@ -168,6 +194,7 @@ function _render() {
   btn.title = title;
   btn.setAttribute('aria-label', title + ' ' + hm + ' ' + city);
   _fillPop();
+  _place();
 }
 
 function _init() {
@@ -179,8 +206,9 @@ function _init() {
     const open = pop.hidden;
     pop.hidden = !open;
     btn.setAttribute('aria-expanded', open ? 'true' : 'false');
-    if (open) _fillPop();
+    if (open) { _fillPop(); _place(); _raise(); }
   });
+  window.addEventListener('resize', _place);
   document.addEventListener('click', function (ev) {
     if (pop.hidden) return;
     const tg = /** @type {Node} */ (ev.target);
