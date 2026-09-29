@@ -17,6 +17,7 @@ highlights below.
 
 ### Fixed
 
+- **Server time panel in front of the lobby windows** (`web.255`, narmod) — `#lsb-clock-pop` sat in the status bar with `z-index: 30`, below the lobby chat and the floating windows (`z-order.mjs` band 300–390). `modules/ui/lobby-clock.mjs` now moves it under `<body>` when opened, `position: fixed` just above the pill (re-placed on resize and on each tick, closed when the pill leaves the screen), and `#lsb-clock-pop` joins the `z-order.mjs` surfaces, so it comes to front when opened or touched.
 - **Header menus in front of windows on phones** (`web.252`, narmod) — below the `_winGate` threshold the nested windows (ranking, forum, options, help…) stay in modal mode with their CSS `z-index: 1200`, outside the 300–390 band of `modules/ui/z-order.mjs`, so the header overflow menus (`#connect-/#l-/#cr-/#g-/#pv-overflow-menu`) opened behind them. A header menu raised while such a modal-mode host is visible now goes one level above it; on the login screen the menu is trapped in `div.header.connect-header` (own stacking context, z 20), so that header is lifted instead and gets its z back when the menu closes. Covered by `scripts/test-z-order.mjs` (24 checks).
 
 ### Changed
