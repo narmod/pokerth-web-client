@@ -11197,27 +11197,38 @@ function _eventsFetchText(u) {
   });
 }
 
+// One upstream round at a time; a good round refreshes the cache, a round
+// where every site failed never evicts the previous answer.
+function _eventsRefresh() {
+  if (!_eventsInflight) {
+    _eventsInflight = communityEvents.buildEvents(_eventsFetchText, Date.now())
+      .then(function (data) {
+        const body = JSON.stringify(data);
+        if (data.ok) RANKING_CACHE.set('communityevents', { at: Date.now(), status: 200, body: body });
+        return body;
+      })
+      .finally(function () { _eventsInflight = null; });
+  }
+  return _eventsInflight;
+}
+
 function handleCommunityEvents(req, res) {
-  const key = 'communityevents';
   const send = function (body, note) {
     res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store', 'X-Events-Cache': note });
     res.end(body);
   };
-  const hit = RANKING_CACHE.get(key);
-  if (hit && (Date.now() - hit.at) < EVENTS_TTL_MS) { send(hit.body, 'hit'); return; }
-  if (!_eventsInflight) {
-    _eventsInflight = communityEvents.buildEvents(_eventsFetchText, Date.now())
-      .finally(function () { _eventsInflight = null; });
+  const hit = RANKING_CACHE.get('communityevents');
+  if (hit) {
+    // Stale-while-revalidate (web.253): an old answer goes out at once and the
+    // round runs behind it, so no player waits for the slowest of the sites.
+    const fresh = (Date.now() - hit.at) < EVENTS_TTL_MS;
+    if (!fresh) _eventsRefresh().catch(function () {});
+    send(hit.body, fresh ? 'hit' : 'stale');
+    return;
   }
-  _eventsInflight.then(function (data) {
-    // A round where every site failed must not evict a good answer.
-    if (!data.ok && hit) { send(hit.body, 'stale'); return; }
-    const body = JSON.stringify(data);
-    if (data.ok) RANKING_CACHE.set(key, { at: Date.now(), status: 200, body: body });
-    send(body, 'miss');
-  }).catch(function (err) {
+  // Nothing yet (first request since boot and the warm-up has not landed).
+  _eventsRefresh().then(function (body) { send(body, 'miss'); }).catch(function (err) {
     // Never a 5xx: the Forum news window must stay usable without this tab.
-    if (hit) { send(hit.body, 'stale'); return; }
     send(JSON.stringify({ ok: false, error: 'relay_failed', detail: String((err && err.message) || err) }), 'fail');
   });
 }
@@ -12695,5 +12706,8 @@ httpServer.listen(PROXY_PORT, () => {
   // équivalents. Coût : quelques dizaines de ms. Les packs uploadés par l'admin
   // restent listés (les scripts scannent le disque, ils n'effacent rien).
   try { ['deck', 'table', 'theme', 'seat'].forEach(function (k) { regenManifest(k); }); } catch (e) {}
+  // Community events warm-up (web.253): the first Events tab after a restart
+  // is served from the cache instead of waiting for the five community pages.
+  setTimeout(function () { try { _eventsRefresh().catch(function () {}); } catch (e) {} }, 3000);
   console.log('Ready → http://localhost:' + PROXY_PORT + '/\n');
 });

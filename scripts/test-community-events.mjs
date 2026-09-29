@@ -115,7 +115,9 @@ const all = await ce.buildEvents(u => Promise.resolve(pages[u]), NOW);
 ok(all.ok && all.upcoming.length === 4 && !all.errors, 'all sources merge into one payload');
 ok(all.upcoming.map(u => u.src).join(',') === 'bbc,bbc,bbc,mc', 'upcoming events are sorted by time across sites');
 ok(all.results.map(r => r.src).join(',') === 'bbc,wec,mc', 'results keep a fixed site order');
-ok(all.leaders.map(r => r.src + ':' + r.player).join(',') === 'bbc:spoof,wec:Blupher', 'leaders ride along, in the same site order');
+ok(Array.isArray(all.leaders) && all.leaders.length === 0, 'leaders stay in the payload, empty (ranking pages no longer read)');
+{ const seen = []; await ce.buildEvents(u => { seen.push(u); return Promise.resolve(pages[u]); }, NOW);
+  ok(!seen.includes(ce.SOURCES.bbcRanking) && !seen.includes(ce.SOURCES.wecRanking) && seen.length === 5, 'one round reads five pages, not the two rankings'); }
 ok(all.champions && all.champions.top.length === 3 && all.champions.url === ce.LINKS.pthLeaderboard, 'Champions of the Day ride along');
 const part = await ce.buildEvents(u => u === ce.SOURCES.wecResults ? Promise.reject(new Error('upstream_503')) : Promise.resolve(pages[u]), NOW);
 ok(part.ok && part.errors && part.errors.wec === 'upstream_503' && part.results.length === 2, 'one site down does not hide the others');

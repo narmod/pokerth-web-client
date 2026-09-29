@@ -286,8 +286,10 @@ async function buildEvents(fetchText, now) {
     ['bbc', SOURCES.bbcResults, parseBbcResults],
     ['wec', SOURCES.wecResults, parseWecResults],
     ['mc', SOURCES.mcHome, function (h) { return parseMcHome(h, now); }],
-    ['bbc_ranking', SOURCES.bbcRanking, parseBbcRanking],
-    ['wec_ranking', SOURCES.wecRanking, parseWecRanking],
+    // The BBC / WEC ranking pages are no longer read (web.253): nothing shows
+    // `leaders` since the leaders card left in web.242, and those two slow pages
+    // held back every round. parseBbcRanking / parseWecRanking stay exported
+    // (tested); `leaders` stays in the payload, empty, for older clients.
     ['cod', SOURCES.pthCod, parseCod]
   ];
   const settled = await Promise.all(jobs.map(function (j) {

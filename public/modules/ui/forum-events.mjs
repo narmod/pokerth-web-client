@@ -566,6 +566,11 @@ export function evShow(force) {
   });
 }
 
+// Background prefetch (web.253), same moments as the Posts badge (page load,
+// lobby shown): the Events tab, first tab of the window, then paints from the
+// cache at once instead of waiting for the network. Errors are silent.
+export function evPrefetch() { _fetch(false).catch(function () {}); }
+
 // Language switch while the tab is open: same data, new wording.
 export function evRerender() { if (_cache) _render(_cache.data); }
 

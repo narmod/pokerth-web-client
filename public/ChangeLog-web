@@ -1,4 +1,7 @@
-2026-09-29 version 2.1.9-web.252 (current series):
+2026-09-29 version 2.1.9-web.253 (current series):
+- improvement: forum news, Events tab — opens at once: the events are loaded in the background like the posts, and the server always answers from its last copy while it refreshes the community sites
+
+2026-09-29 version 2.1.9-web.252:
 - bugfix: on phones, the header menus (login, lobby, waiting room, game) open in front of an open window (ranking, forum, options, help…) instead of behind it
 
 2026-09-29 version 2.1.9-web.251:

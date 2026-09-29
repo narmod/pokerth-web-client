@@ -23,7 +23,7 @@
 //                        cote QML upstream, Config.ForumNews.isUnread.)
 // ═══════════════════════════════════════════════════════════════════
 import { esc } from './misc.mjs';
-import { evShow, evRerender } from './forum-events.mjs';
+import { evShow, evRerender, evPrefetch } from './forum-events.mjs';
 
 const FEED_URL = '/api/forumfeed';
 const FORUM_HOME = 'https://www.pokerth.net/';
@@ -252,6 +252,8 @@ function _updateBadge(posts) {
 function _refreshBadge(force) {
   if (!_advOn()) return;
   _fetchPosts(force).then(function (p) { _updateBadge(p); }).catch(function () {});
+  // Events tab data too, so opening the window is instant (web.253).
+  if (_eventsAllowed()) evPrefetch();
 }
 
 // ── Vue liste ──────────────────────────────────────────────────────────
