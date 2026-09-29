@@ -1,4 +1,7 @@
-2026-09-28 version 2.1.9-web.250 (current series):
+2026-09-29 version 2.1.9-web.251 (current series):
+- improvement: reporting an avatar or a game name is reserved for players logged in with a pokerth.net account, as in the desktop clients — guests no longer see the 🚩 report buttons (the server refuses guest reports)
+
+2026-09-28 version 2.1.9-web.250:
 - improvement: help — the forum news section describes the Events tab as it is now: only the ↗ icon opens a site, tap an event to select it (the button at the bottom follows it), the WEC daily game, the registered players
 
 2026-09-28 version 2.1.9-web.249:

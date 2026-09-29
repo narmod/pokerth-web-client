@@ -92,9 +92,11 @@ function itemsFor(pid) {
                label: ign ? tt('piUnignore', 'Unignore') : tt('piIgnore', 'Ignore'),
                run: () => { try { window._toggleIgnore(pid); } catch (e) {} } });
   }
-  // Signalement d'avatar : seulement si le joueur en a réellement un.
+  // Signalement d'avatar : seulement si le joueur en a réellement un, et
+  // jamais pour un invite (parite QML canReportAvatar, upstream 04f5839).
   const av = S._pthAvatarHashes[pid];
-  if (!isMe && !isBot && av && av.hashHex) {
+  const meGuest = (() => { try { return !!window._amMyPlayerGuest(); } catch (e) { return false; } })();
+  if (!isMe && !isBot && !meGuest && av && av.hashHex) {
     out.push({ ico: '🚩', label: tt('piReportAvatar', 'Report avatar'),
                run: () => { try { window._reportAvatar(pid); } catch (e) {} } });
   }

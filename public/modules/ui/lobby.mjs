@@ -239,7 +239,9 @@ function renderGameInfoPanel(gid) {
   el.innerHTML =
     '<div class="g-chat-panel-header">'
       + '<span class="lgi-htitle" data-i18n="gameInfoTitle">' + t('gameInfoTitle') + '</span>'
-      + '<button class="lgi-report" type="button" onclick="App.reportGameName(' + parseInt(gid) + ')" title="' + t('reportGameTitle') + '" data-i18n-title="reportGameTitle" aria-label="' + t('reportGameTitle') + '">🚩</button>'
+      // Drapeau de signalement masque pour les invites (parite QML, upstream 04f5839).
+      + ((typeof window._amMyPlayerGuest === 'function' && window._amMyPlayerGuest()) ? ''
+         : '<button class="lgi-report" type="button" onclick="App.reportGameName(' + parseInt(gid) + ')" title="' + t('reportGameTitle') + '" data-i18n-title="reportGameTitle" aria-label="' + t('reportGameTitle') + '">🚩</button>')
     + '</div>'
     + '<div class="lgi-scroll">'
       + (_mine && g.name ? '<div class="lgi-row lgi-gname">' + esc(g.name) + '</div>' : '')

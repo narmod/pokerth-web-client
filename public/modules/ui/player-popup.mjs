@@ -563,7 +563,8 @@ function _otherPlayerInfoHtml(pid) {
   // avec le PlayerInfo — c'est la même condition vue du protocole). Le QML
   // réserve son menu contextuel au desktop ; ici l'action vit dans le popup
   // joueur, donc elle reste accessible au doigt.
-  if (!_readOnly && !window.isBot(pid) && pid !== S.myId && S._pthAvatarHashes[pid] && S._pthAvatarHashes[pid].hashHex) {
+  // Invites exclus (parite QML canReportAvatar, upstream 04f5839).
+  if (!_readOnly && !window.isBot(pid) && pid !== S.myId && !(typeof window._amMyPlayerGuest === 'function' && window._amMyPlayerGuest()) && S._pthAvatarHashes[pid] && S._pthAvatarHashes[pid].hashHex) {
     html += '<button type="button" class="pim-report-avatar-btn" onclick="window._reportAvatar(' + pid + ')" '
           + 'style="display:block;width:100%;margin-top:8px;padding:8px 0;border:1px solid var(--border-hi,rgba(200,168,74,.4));border-radius:8px;cursor:pointer;background:transparent;color:var(--text,#eff1f5);font-weight:600">'
           + '\uD83D\uDEA9 ' + esc(tt('piReportAvatar', 'Report avatar')) + '</button>';

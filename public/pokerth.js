@@ -5633,6 +5633,15 @@ const App = (() => {
   window._amGuestMode = function () {
     try { return S._currentLoginMode === 'guest'; } catch (e) { return false; }
   };
+  // Suis-je un joueur invite (droits serveur 1, ou mode de connexion invite) ?
+  // Parite QML Lobby.isMyPlayerGuest (upstream 04f5839) : les invites ne
+  // peuvent plus signaler d'avatar ni de nom de table, le serveur refuse.
+  window._amMyPlayerGuest = function () {
+    try {
+      if (S._currentLoginMode === 'guest') return true;
+      return ((S._playerRights && S.myId) ? (S._playerRights[S.myId] || 0) : 0) === 1;
+    } catch (e) { return false; }
+  };
   // Suis-je connecte avec un COMPTE pokerth.net ? (miroir de _amGuestMode,
   // utilise par la notice operateur des comptes enregistres.)
   window._amAuthMode = function () {
@@ -7685,6 +7694,8 @@ const App = (() => {
       if (modal) modal.style.display = 'flex';
     },
     reportGameName(gid) {
+      // Invites exclus (parite QML LobbyHandler::reportGameName, upstream 04f5839).
+      if (window._amMyPlayerGuest()) return;
       var g = S.games[gid]; if (!g) return;
       this._reportGid = gid;
       this._openReportModal('game', 'reportGameTitle',
@@ -7696,6 +7707,8 @@ const App = (() => {
     // elle reste atteignable au doigt (choix web, cf. ROADMAP).
     reportAvatar(pid) {
       if (pid == null || pid === S.myId) return;
+      // Invites exclus (parite QML GameHandler::reportAvatar, upstream 04f5839).
+      if (window._amMyPlayerGuest()) return;
       var h = S._pthAvatarHashes[pid];
       if (!h || !h.hashHex) return;   // pas d'avatar chargé → rien à signaler
       this._reportPid = pid;
@@ -7711,6 +7724,7 @@ const App = (() => {
     doReport() {
       var kind = this._reportKind, gid = this._reportGid, pid = this._reportPid;
       this.cancelReport();
+      if (window._amMyPlayerGuest()) return;   // invites : le serveur refuse
       if (kind === 'avatar') {
         if (pid == null) return;
         var h = S._pthAvatarHashes[pid];
@@ -11940,7 +11954,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.9-web.250'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.9-web.251'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif ou la palette High contrast
    (Android, Safari, iOS standalone récent). Lit --theme-color et met
