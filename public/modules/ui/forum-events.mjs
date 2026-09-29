@@ -245,6 +245,10 @@ function _locale() {
   try { return Intl.DateTimeFormat.supportedLocalesOf([tag]).length ? tag : undefined; } catch (e) { return undefined; }
 }
 
+function _setOff(off) {
+  try { document.body.classList.toggle('ev-relay-off', off); } catch (e) {}
+}
+
 function _fetch(force) {
   const now = Date.now();
   if (!force && _cache && (now - _cache.at) < CLIENT_TTL_MS) return Promise.resolve(_cache.data);
@@ -252,6 +256,9 @@ function _fetch(force) {
   _fetching = fetch(EVENTS_URL, { cache: 'no-store' })
     .then(function (r) { if (!r.ok) throw new Error('http_' + r.status); return r.json(); })
     .then(function (j) {
+      // Turned off in the admin dashboard (web.254): body.ev-relay-off hides
+      // the Events tab like the "community content" option does.
+      _setOff(!!(j && j.error === 'disabled'));
       if (!j || j.ok !== true) throw new Error((j && j.error) || 'no_data');
       _cache = { at: Date.now(), data: j };
       return j;
@@ -562,6 +569,10 @@ export function evShow(force) {
   _clockTick();
   if (_cache) _render(_cache.data); else _msg(_t('rankingLoading', 'Loading\u2026'));
   _fetch(!!force).then(_render).catch(function () {
+    // Relay turned off while the tab was open: back to the Posts.
+    let off = false;
+    try { off = document.body.classList.contains('ev-relay-off'); } catch (e) {}
+    if (off && typeof window.forumSelectTab === 'function') { window.forumSelectTab('posts'); return; }
     if (!_cache) _msg(_t('evError', 'Could not load the events.'));
   });
 }

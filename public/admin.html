@@ -728,6 +728,19 @@
         </div>
         <div id="lsMsg" class="msg"></div>
       </div>
+      <div class="card">
+        <div class="boardhead"><h2>Community events</h2><button id="ceSave" class="use">Save</button></div>
+        <p class="muted">The <b>Events</b> tab of the Forum news window lists the upcoming BBC games and Monthly Cup, the latest results, and the Champions of the Day shown above the PokerTH ranking. The proxy is the only reader: one round reads the five community pages (bbc, wec, monthlycup, pokerth.net) and every player is served from that one copy; an expired copy is served at once while the next round runs, and a round where every site failed keeps the previous answer and is not retried for a minute. Turned off, the proxy reads nothing and players no longer see the Events tab nor the Champions of the Day.</p>
+        <label style="display:inline-flex;align-items:center;gap:6px;margin-bottom:10px">
+          <input type="checkbox" id="ceOn" style="width:auto"> Read the community sites and show the Events tab
+        </label>
+        <div class="f">
+          <label for="ceSec">Refresh every</label>
+          <input id="ceSec" type="number" min="60" max="3600" step="30" style="width:100px">
+          <p class="muted">Seconds, 60–3600 (default 300). At most one round per interval for the whole server, and only while someone looks at the tab.</p>
+        </div>
+        <div id="ceMsg" class="msg"></div>
+      </div>
     </div>
 
     <div id="panel-defaults" style="display:none">
@@ -3998,6 +4011,7 @@
   function renderFeatureSwitches(d){
     var box=$('fsList'); if(!box) return;
     renderLiveStats(d);
+    renderCommunityEvents(d);
     var list=(d&&d.featureSwitches)||[], off=(d&&d.featureOff)||[];
     if(!list.length){ box.textContent='This server exposes no kill switch.'; return; }
     box.innerHTML=''; box.style.cssText='display:flex;flex-wrap:wrap;gap:6px 18px';
@@ -4125,6 +4139,29 @@
           var q=d.result||{};
           if(q.ok){ m.textContent='Answered \u2014 '+q.online+' online'+(q.today!=null?(', '+q.today+' games today'):'')+'. Players would see the line.'; m.className='msg ok'; }
           else { m.textContent='Answered, but the figures are unusable ('+(q.error||'?')+') \u2014 the line would stay hidden.'; m.className='msg err'; }
+        }).catch(function(){ m.textContent='Network error.'; m.className='msg err'; });
+    });
+  })();
+
+  // -- Community events relay (master only, web.254) -------------------------
+  // Same /admin/config payload as the live figures above.
+  function renderCommunityEvents(d){
+    var c=(d&&d.communityEvents)||{};
+    if($('ceOn')) $('ceOn').checked=(c.on!==false);
+    if($('ceSec')) $('ceSec').value=(typeof c.sec==='number'?c.sec:300);
+  }
+  (function(){
+    var sb=$('ceSave');
+    if(sb) sb.addEventListener('click', function(){
+      var m=$('ceMsg');
+      var sec=parseInt($('ceSec')?$('ceSec').value:'',10);
+      if(!isFinite(sec)) sec=300;
+      sec=Math.min(3600,Math.max(60,sec));
+      if($('ceSec')) $('ceSec').value=sec;
+      api('/admin/config',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({communityEvents:{on:!!($('ceOn')&&$('ceOn').checked),sec:sec},token:tok()})})
+        .then(function(r){return r.json();}).then(function(d){
+          if(d&&d.ok){ renderCommunityEvents(d); var c=d.communityEvents||{}; m.textContent=(c.on===false)?'Saved \u2014 the community sites are no longer read; the Events tab is hidden.':('Saved \u2014 at most one round every '+(c.sec||300)+' s.'); m.className='msg ok'; }
+          else { m.textContent='Failed: '+((d&&d.error)||'error'); m.className='msg err'; }
         }).catch(function(){ m.textContent='Network error.'; m.className='msg err'; });
     });
   })();

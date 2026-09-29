@@ -252,8 +252,11 @@ function _updateBadge(posts) {
 function _refreshBadge(force) {
   if (!_advOn()) return;
   _fetchPosts(force).then(function (p) { _updateBadge(p); }).catch(function () {});
-  // Events tab data too, so opening the window is instant (web.253).
-  if (_eventsAllowed()) evPrefetch();
+  // Events tab data too, so opening the window is instant (web.253). Not gated
+  // by ev-relay-off: that answer is what clears the class once turned back on.
+  let _cc = true;
+  try { _cc = !document.body.classList.contains('adv-no-communitycontent'); } catch (e) {}
+  if (_cc) evPrefetch();
 }
 
 // ── Vue liste ──────────────────────────────────────────────────────────
@@ -349,7 +352,8 @@ function _showListView() {
 // contenu communautaire (BBC / WEC) » masque la barre d'onglets (CSS,
 // body.adv-no-communitycontent) et la fenetre redevient la liste seule.
 function _eventsAllowed() {
-  try { return !document.body.classList.contains('adv-no-communitycontent'); } catch (e) { return true; }
+  // ev-relay-off: the Events relay is turned off in the admin dashboard (web.254).
+  try { return !document.body.classList.contains('adv-no-communitycontent') && !document.body.classList.contains('ev-relay-off'); } catch (e) { return true; }
 }
 
 function _applyTab() {

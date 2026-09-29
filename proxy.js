@@ -8907,7 +8907,7 @@ function handleAdmin(req, res, reqPathOnly, query) {
   if (reqPathOnly === '/admin/config') {
     if (req.method === 'GET') {
       if (!adminAuthed(query)) return adminJson(res, 403, { ok: false, error: STATS_ADMIN_TOKEN ? 'forbidden' : 'admin disabled (no token set)' });
-      return adminJson(res, 200, { ok: true, resetPeriod: STATS_RESET_PERIOD, modes: appModes(), welcome: _welcomeAdmin(), guestNotice: _guestNoticeAdmin(), authNotice: _authNoticeAdmin(), lanNotice: _lanNoticeAdmin(), showLoginTitle: !!_adminConfig.showLoginTitle, defaultTheme: _adminConfig.defaultTheme, liveDefaults: _liveDefaults() || '', defaults: _adminConfig.defaults || {}, loginDefaults: _loginDefaults(false), proxyCfg: _adminConfig.proxyCfg || {}, tableDefaults: _adminConfig.tableDefaults || {}, tableNames: _adminConfig.tableNames || {}, serverName: _adminConfig.serverName || '', serverTagline: _adminConfig.serverTagline || '', discordChatWebhookUrl: _adminConfig.discordChatWebhookUrl || '', featureSwitches: FEATURE_SWITCHES, featureOff: featureOffList(), liveStats: _liveStatsCfg(), musicEnabled: musicEnabled(), seo: _seoAdmin() });
+      return adminJson(res, 200, { ok: true, resetPeriod: STATS_RESET_PERIOD, modes: appModes(), welcome: _welcomeAdmin(), guestNotice: _guestNoticeAdmin(), authNotice: _authNoticeAdmin(), lanNotice: _lanNoticeAdmin(), showLoginTitle: !!_adminConfig.showLoginTitle, defaultTheme: _adminConfig.defaultTheme, liveDefaults: _liveDefaults() || '', defaults: _adminConfig.defaults || {}, loginDefaults: _loginDefaults(false), proxyCfg: _adminConfig.proxyCfg || {}, tableDefaults: _adminConfig.tableDefaults || {}, tableNames: _adminConfig.tableNames || {}, serverName: _adminConfig.serverName || '', serverTagline: _adminConfig.serverTagline || '', discordChatWebhookUrl: _adminConfig.discordChatWebhookUrl || '', featureSwitches: FEATURE_SWITCHES, featureOff: featureOffList(), liveStats: _liveStatsCfg(), communityEvents: _eventsCfg(), musicEnabled: musicEnabled(), seo: _seoAdmin() });
     }
     if (req.method === 'POST') {
       return readJsonBody(req, function (d) {
@@ -9111,6 +9111,14 @@ function handleAdmin(req, res, reqPathOnly, query) {
             sec: Number.isFinite(_sec) ? Math.min(LIVE_SEC_MAX, Math.max(LIVE_SEC_MIN, _sec)) : _cur.sec
           };
         }
+        if (d.communityEvents && typeof d.communityEvents === 'object') {
+          const _ecur = _eventsCfg(), _ein = d.communityEvents;
+          const _esec = parseInt(_ein.sec, 10);
+          _adminConfig.communityEvents = {
+            on: (typeof _ein.on === 'boolean') ? _ein.on : _ecur.on,
+            sec: Number.isFinite(_esec) ? Math.min(EVENTS_SEC_MAX, Math.max(EVENTS_SEC_MIN, _esec)) : _ecur.sec
+          };
+        }
         if (d.seo && typeof d.seo === 'object') {
           var _so = (_adminConfig.seo && typeof _adminConfig.seo === 'object') ? _adminConfig.seo : {};
           if (typeof d.seo.enabled === 'boolean') _so.enabled = d.seo.enabled;
@@ -9151,7 +9159,7 @@ function handleAdmin(req, res, reqPathOnly, query) {
           }
         }
         saveAdminConfig();
-        return adminJson(res, 200, { ok: true, resetPeriod: STATS_RESET_PERIOD, modes: appModes(), welcome: _welcomeAdmin(), guestNotice: _guestNoticeAdmin(), authNotice: _authNoticeAdmin(), lanNotice: _lanNoticeAdmin(), showLoginTitle: !!_adminConfig.showLoginTitle, defaultTheme: _adminConfig.defaultTheme, liveDefaults: _liveDefaults() || '', defaults: _adminConfig.defaults || {}, loginDefaults: _loginDefaults(false), proxyCfg: _adminConfig.proxyCfg || {}, tableDefaults: _adminConfig.tableDefaults || {}, tableNames: _adminConfig.tableNames || {}, serverName: _adminConfig.serverName || '', serverTagline: _adminConfig.serverTagline || '', discordChatWebhookUrl: _adminConfig.discordChatWebhookUrl || '', featureSwitches: FEATURE_SWITCHES, featureOff: featureOffList(), liveStats: _liveStatsCfg(), musicEnabled: musicEnabled(), seo: _seoAdmin() });
+        return adminJson(res, 200, { ok: true, resetPeriod: STATS_RESET_PERIOD, modes: appModes(), welcome: _welcomeAdmin(), guestNotice: _guestNoticeAdmin(), authNotice: _authNoticeAdmin(), lanNotice: _lanNoticeAdmin(), showLoginTitle: !!_adminConfig.showLoginTitle, defaultTheme: _adminConfig.defaultTheme, liveDefaults: _liveDefaults() || '', defaults: _adminConfig.defaults || {}, loginDefaults: _loginDefaults(false), proxyCfg: _adminConfig.proxyCfg || {}, tableDefaults: _adminConfig.tableDefaults || {}, tableNames: _adminConfig.tableNames || {}, serverName: _adminConfig.serverName || '', serverTagline: _adminConfig.serverTagline || '', discordChatWebhookUrl: _adminConfig.discordChatWebhookUrl || '', featureSwitches: FEATURE_SWITCHES, featureOff: featureOffList(), liveStats: _liveStatsCfg(), communityEvents: _eventsCfg(), musicEnabled: musicEnabled(), seo: _seoAdmin() });
       }, 2 * 1024 * 1024);
     }
     res.writeHead(405); res.end('Method not allowed'); return;
@@ -9853,7 +9861,7 @@ function handleAdmin(req, res, reqPathOnly, query) {
       // config reset SEO to Off. Keep in sync with the keys the code reads.
       const ALLOWED = ['resetPeriod', 'modes', 'welcome', 'guestNotice', 'authNotice', 'lanNotice', 'defaultTheme', 'liveDefaults', 'defaults', 'loginDefaults',
                        'proxyCfg', 'tableDefaults', 'tableNames', 'serverName', 'serverTagline', 'clockZones', 'clockRef',
-                       'discordChatWebhookUrl', 'showLoginTitle', 'lobbyClockTz', 'featureOff', 'liveStats', 'bannedIps',
+                       'discordChatWebhookUrl', 'showLoginTitle', 'lobbyClockTz', 'featureOff', 'liveStats', 'communityEvents', 'bannedIps',
                        'pkgDisabled', 'pkgFull', 'pkgFullscreen', 'pkgAlign', 'musicTracks',
                        'musicEnabled', 'musicHidden', 'musicOrder',
                        'seo', 'servers', 'activeServerId', 'pokerthnetSource',
@@ -10272,8 +10280,20 @@ function rankingParseWec(html) {
 }
 
 const RANKING_CACHE = new Map();        // cacheKey -> { at, status, body }
-const RANKING_TTL_MS = 60 * 1000;       // short cache to spare the upstream
+// Rankings, player cards and table stats move slowly: 5 min (was 60 s until
+// web.253). The browser side keeps its own short max-age.
+const RANKING_TTL_MS = 5 * 60 * 1000;
 const RANKING_TIMEOUT_MS = 8000;
+
+// Shared relay core (server/relay-cache.js, web.254): one upstream read per key
+// at a time, failures remembered 60 s (no retry storm on a site that is down,
+// the last good copy is served meanwhile), stale-while-revalidate where asked,
+// and a purge so searches and old pages do not pile up in memory forever.
+const RELAY = require('./server/relay-cache.js').createRelayCache({
+  cache: RANKING_CACHE, failTtlMs: 60 * 1000, keepMs: 6 * 3600 * 1000, max: 3000,
+  pinned: ['communityevents', 'forumfeed']
+});
+setInterval(function () { try { RELAY.purge(); } catch (e) {} }, 10 * 60 * 1000);
 
 function rankingFetch(targetUrl, extraHeaders, opts) {
   const ctl = new AbortController();
@@ -10411,19 +10431,9 @@ function handleRanking(req, res, query) {
     return;
   }
   const cacheKey = key + '|' + (req.url.split('?')[1] || '');
-  const hit = RANKING_CACHE.get(cacheKey);
-  if (hit && (Date.now() - hit.at) < RANKING_TTL_MS) {
-    res.writeHead(hit.status, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'public, max-age=30', 'X-Ranking-Cache': 'hit' });
-    res.end(hit.body);
-    return;
-  }
-  rankingUpstream(src, query).then(function (out) {
-    RANKING_CACHE.set(cacheKey, { at: Date.now(), status: out.status, body: out.body });
-    res.writeHead(out.status, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'public, max-age=30', 'X-Ranking-Cache': 'miss' });
+  RELAY.get(cacheKey, RANKING_TTL_MS, function () { return rankingUpstream(src, query); }).then(function (out) {
+    res.writeHead(out.status, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': out.status === 200 ? 'public, max-age=30' : 'no-store', 'X-Ranking-Cache': out.note });
     res.end(out.body);
-  }).catch(function (err) {
-    res.writeHead(502, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' });
-    res.end(JSON.stringify({ ok: false, error: 'relay_failed', detail: String((err && err.message) || err) }));
   });
 }
 
@@ -10461,32 +10471,18 @@ function handleBotfile(req, res, query) {
     res.end(JSON.stringify({ ok: false, error: 'unknown_file', allowed: Object.keys(BOTFILE_NAMES) }));
     return;
   }
-  const cacheKey = 'botfile|' + key;
-  const hit = RANKING_CACHE.get(cacheKey);
-  if (hit && (Date.now() - hit.at) < BOTFILE_TTL_MS) {
-    res.writeHead(hit.status, { 'Content-Type': 'text/plain; charset=utf-8', 'Cache-Control': 'public, max-age=300', 'X-Botfile-Cache': 'hit' });
-    res.end(hit.body);
-    return;
-  }
-  rankingFetch(BOTFILE_BASE + name).then(function (r) {
-    return r.text().then(function (body) { return { status: r.ok ? 200 : 502, body: body }; });
+  // Seul un succes est garde (une page d'erreur Cloudflare cachee quinze
+  // minutes couperait la fonction bien apres le retablissement) ; en cas
+  // d'echec on sert la copie precedente, comme QML (RELAY, web.254).
+  RELAY.get('botfile|' + key, BOTFILE_TTL_MS, function () {
+    return rankingFetch(BOTFILE_BASE + name).then(function (r) {
+      if (!r.ok) return { status: 502, body: JSON.stringify({ ok: false, error: 'upstream_' + r.status }) };
+      return r.text().then(function (body) { return { status: 200, body: body }; });
+    });
   }).then(function (out) {
-    // Ne cacher qu'un succes : une page d'erreur Cloudflare mise en cache
-    // quinze minutes couperait la fonction bien apres le retablissement.
-    if (out.status === 200) RANKING_CACHE.set(cacheKey, { at: Date.now(), status: 200, body: out.body });
-    res.writeHead(out.status, { 'Content-Type': 'text/plain; charset=utf-8', 'Cache-Control': out.status === 200 ? 'public, max-age=300' : 'no-store', 'X-Botfile-Cache': 'miss' });
+    const ok = out.status === 200;
+    res.writeHead(out.status, { 'Content-Type': ok ? 'text/plain; charset=utf-8' : 'application/json; charset=utf-8', 'Cache-Control': (ok && out.note !== 'stale') ? 'public, max-age=300' : 'no-store', 'X-Botfile-Cache': out.note });
     res.end(out.body);
-  }).catch(function (err) {
-    // Repli sur des donnees perimees plutot que rien, comme le fait QML quand
-    // le chargement echoue et que le cache precedent existe encore.
-    const stale = RANKING_CACHE.get(cacheKey);
-    if (stale) {
-      res.writeHead(200, { 'Content-Type': 'text/plain; charset=utf-8', 'Cache-Control': 'no-store', 'X-Botfile-Cache': 'stale' });
-      res.end(stale.body);
-      return;
-    }
-    res.writeHead(502, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' });
-    res.end(JSON.stringify({ ok: false, error: 'relay_failed', detail: String((err && err.message) || err) }));
   });
 }
 
@@ -10510,15 +10506,9 @@ function handleTableRanking(req, res, query) {
     return;
   }
   const cacheKey = 'tbl|' + nicks.join(',').toLowerCase();
-  const hit = RANKING_CACHE.get(cacheKey);
-  if (hit && (Date.now() - hit.at) < RANKING_TTL_MS) {
-    res.writeHead(hit.status, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'public, max-age=30', 'X-Ranking-Cache': 'hit' });
-    res.end(hit.body);
-    return;
-  }
   const payload = {};
   for (let i = 1; i <= 10; i++) payload['u' + i] = nicks[i - 1] || '';
-  rankingFetch('https://www.pokerth.net/pthranking/gametable/show', {
+  RELAY.get(cacheKey, RANKING_TTL_MS, function () { return rankingFetch('https://www.pokerth.net/pthranking/gametable/show', {
     'Content-Type': 'application/json',
     'X-Requested-With': 'XMLHttpRequest',
     'Accept': 'application/json'
@@ -10549,13 +10539,10 @@ function handleTableRanking(req, res, query) {
           out = { status: 200, body: JSON.stringify({ ok: true, source: 'PTH', rows: rows }) };
         }
       }
-      RANKING_CACHE.set(cacheKey, { at: Date.now(), status: out.status, body: out.body });
-      res.writeHead(out.status, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'public, max-age=30', 'X-Ranking-Cache': 'miss' });
+      return out;
+    }); }).then(function (out) {
+      res.writeHead(out.status, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': out.status === 200 ? 'public, max-age=30' : 'no-store', 'X-Ranking-Cache': out.note });
       res.end(out.body);
-    })
-    .catch(function (err) {
-      res.writeHead(502, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' });
-      res.end(JSON.stringify({ ok: false, error: 'relay_failed', detail: String((err && err.message) || err) }));
     });
 }
 
@@ -10826,19 +10813,9 @@ function handlePlayer(req, res, query) {
     return;
   }
   const cacheKey = 'player|' + key + '|' + nick.toLowerCase();
-  const hit = RANKING_CACHE.get(cacheKey);
-  if (hit && (Date.now() - hit.at) < RANKING_TTL_MS) {
-    res.writeHead(hit.status, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'public, max-age=30', 'X-Ranking-Cache': 'hit' });
-    res.end(hit.body);
-    return;
-  }
-  playerUpstream(src, nick).then(function (out) {
-    RANKING_CACHE.set(cacheKey, { at: Date.now(), status: out.status, body: out.body });
-    res.writeHead(out.status, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'public, max-age=30', 'X-Ranking-Cache': 'miss' });
+  RELAY.get(cacheKey, RANKING_TTL_MS, function () { return playerUpstream(src, nick); }).then(function (out) {
+    res.writeHead(out.status, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': out.status === 200 ? 'public, max-age=30' : 'no-store', 'X-Ranking-Cache': out.note });
     res.end(out.body);
-  }).catch(function (err) {
-    res.writeHead(502, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' });
-    res.end(JSON.stringify({ ok: false, error: 'relay_failed', detail: String((err && err.message) || err) }));
   });
 }
 
@@ -10863,14 +10840,8 @@ function handlePlayerSeason(req, res, query) {
     return;
   }
   const cacheKey = 'pseason|' + id + '|' + season;
-  const hit = RANKING_CACHE.get(cacheKey);
-  if (hit && (Date.now() - hit.at) < RANKING_TTL_MS) {
-    res.writeHead(hit.status, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'public, max-age=300', 'X-Ranking-Cache': 'hit' });
-    res.end(hit.body);
-    return;
-  }
   const targetUrl = PLAYER_SOURCES.pth.base + '/pthranking/player/season/get/' + id + '/' + season;
-  rankingFetch(targetUrl).then(function (r) {
+  RELAY.get(cacheKey, RANKING_TTL_MS, function () { return rankingFetch(targetUrl).then(function (r) {
     return r.text().then(function (body) {
       let out;
       if (!r.ok) out = { status: 502, body: JSON.stringify({ ok: false, error: 'upstream_' + r.status }) };
@@ -10878,16 +10849,14 @@ function handlePlayerSeason(req, res, query) {
         try { out = { status: 200, body: JSON.stringify(playerSeasonParsePth(JSON.parse(body))) }; }
         catch (e) { out = { status: 502, body: JSON.stringify({ ok: false, error: 'parse_failed' }) }; }
       }
-      // Une saison close ne bouge plus : cache long cote relais comme cote
-      // navigateur. La saison en cours est de toute facon rechargee au
-      // prochain passage (TTL du relais).
-      if (out.status === 200) RANKING_CACHE.set(cacheKey, { at: Date.now(), status: out.status, body: out.body });
-      res.writeHead(out.status, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'public, max-age=300', 'X-Ranking-Cache': 'miss' });
-      res.end(out.body);
+      // Une saison close ne bouge plus : cache long cote navigateur. La
+      // saison en cours est de toute facon rechargee au prochain passage
+      // (TTL du relais). Seul un succes est garde (RELAY).
+      return out;
     });
-  }).catch(function (err) {
-    res.writeHead(502, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' });
-    res.end(JSON.stringify({ ok: false, error: 'relay_failed', detail: String((err && err.message) || err) }));
+  }); }).then(function (out) {
+    res.writeHead(out.status, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': out.status === 200 ? 'public, max-age=300' : 'no-store', 'X-Ranking-Cache': out.note });
+    res.end(out.body);
   });
 }
 
@@ -11049,32 +11018,20 @@ function forumParseAtom(xml) {
 }
 
 function handleForumFeed(req, res) {
-  const cacheKey = 'forumfeed';
-  const hit = RANKING_CACHE.get(cacheKey);
-  if (hit && (Date.now() - hit.at) < FORUM_TTL_MS) {
-    res.writeHead(hit.status, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'public, max-age=120', 'X-Forum-Cache': 'hit' });
-    res.end(hit.body);
-    return;
-  }
-  rankingFetch(FORUM_FEED_URL, { 'Accept': 'application/atom+xml, application/xml, text/xml, */*' }).then(function (r) {
-    if (!r.ok) throw new Error('upstream_' + r.status);
-    return r.text();
-  }).then(function (xml) {
-    const posts = forumParseAtom(xml);
-    if (!posts.length) throw new Error('parse_empty');
-    const body = JSON.stringify({ ok: true, at: Date.now(), posts: posts });
-    RANKING_CACHE.set(cacheKey, { at: Date.now(), status: 200, body: body });
-    res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'public, max-age=120', 'X-Forum-Cache': 'miss' });
-    res.end(body);
-  }).catch(function (err) {
-    const stale = RANKING_CACHE.get(cacheKey);
-    if (stale && stale.status === 200) {
-      res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store', 'X-Forum-Cache': 'stale' });
-      res.end(stale.body);
-      return;
-    }
-    res.writeHead(502, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' });
-    res.end(JSON.stringify({ ok: false, error: 'relay_failed', detail: String((err && err.message) || err) }));
+  // Stale-while-revalidate (web.254): an expired copy goes out at once and
+  // the feed is re-read behind it; a failed read keeps the previous copy.
+  RELAY.get('forumfeed', FORUM_TTL_MS, function () {
+    return rankingFetch(FORUM_FEED_URL, { 'Accept': 'application/atom+xml, application/xml, text/xml, */*' }).then(function (r) {
+      if (!r.ok) throw new Error('upstream_' + r.status);
+      return r.text();
+    }).then(function (xml) {
+      const posts = forumParseAtom(xml);
+      if (!posts.length) throw new Error('parse_empty');
+      return { status: 200, body: JSON.stringify({ ok: true, at: Date.now(), posts: posts }) };
+    });
+  }, { swr: true }).then(function (out) {
+    res.writeHead(out.status, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': out.note === 'hit' ? 'public, max-age=120' : 'no-store', 'X-Forum-Cache': out.note });
+    res.end(out.body);
   });
 }
 
@@ -11137,29 +11094,23 @@ function handleLiveStats(req, res) {
   const cfg = _liveStatsCfg();
   const send = function (obj, note) {
     res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store', 'X-Live-Cache': note });
-    res.end(JSON.stringify(obj));
+    res.end(typeof obj === 'string' ? obj : JSON.stringify(obj));
   };
   if (!cfg.on) { send({ ok: false, error: 'disabled', sec: cfg.sec }, 'off'); return; }
-  const key = 'livestats\u0000' + cfg.url;
-  const hit = RANKING_CACHE.get(key);
-  if (hit && (Date.now() - hit.at) < (cfg.sec * 1000)) {
-    res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store', 'X-Live-Cache': 'hit' });
-    res.end(hit.body);
-    return;
-  }
-  rankingFetch(cfg.url).then(function (r) {
-    if (!r.ok) throw new Error('upstream_' + r.status);
-    return r.json();
-  }).then(function (d) {
-    const body = JSON.stringify(_liveShape(d, cfg.sec));
-    RANKING_CACHE.set(key, { at: Date.now(), status: 200, body: body });
-    res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store', 'X-Live-Cache': 'miss' });
-    res.end(body);
-  }).catch(function (err) {
+  // One read per interval for the whole server, shared by every open login
+  // screen even when they all poll at the same second; an expired copy is
+  // served while the next one is read (RELAY, web.254).
+  RELAY.get('livestats\u0000' + cfg.url, cfg.sec * 1000, function () {
+    return rankingFetch(cfg.url).then(function (r) {
+      if (!r.ok) throw new Error('upstream_' + r.status);
+      return r.json();
+    }).then(function (d) { return { status: 200, body: JSON.stringify(_liveShape(d, cfg.sec)) }; });
+  }, {
+    swr: true,
     // Never surface a 5xx here: the login screen must stay usable when the
     // upstream is unreachable (offline LAN install, blocked egress).
-    send({ ok: false, error: 'relay_failed', detail: String((err && err.message) || err), sec: cfg.sec }, 'fail');
-  });
+    failBody: function (err) { return JSON.stringify({ ok: false, error: 'relay_failed', detail: String((err && err.message) || err), sec: cfg.sec }); }
+  }).then(function (out) { send(out.body, out.note); });
 }
 
 // Dashboard "Test" button: read a candidate URL once, bypassing the cache and
@@ -11187,8 +11138,16 @@ function handleLiveTest(req, res) {
 // browser cannot read those hosts (no CORS header), and four page reads per open
 // tab would be rude -- so the proxy reads them once per interval for everyone.
 const communityEvents = require('./server/community-events.js');
-const EVENTS_TTL_MS = 5 * 60 * 1000;
-let _eventsInflight = null;               // one upstream round at a time
+// Admin "Community events" card (web.254): on/off and the refresh interval.
+const EVENTS_SEC_DEFAULT = 300, EVENTS_SEC_MIN = 60, EVENTS_SEC_MAX = 3600;
+function _eventsCfg() {
+  const c = (_adminConfig && _adminConfig.communityEvents) || {};
+  const n = parseInt(c.sec, 10);
+  return {
+    on: (c.on !== false),
+    sec: Number.isFinite(n) ? Math.min(EVENTS_SEC_MAX, Math.max(EVENTS_SEC_MIN, n)) : EVENTS_SEC_DEFAULT
+  };
+}
 
 function _eventsFetchText(u) {
   return rankingFetch(u, { 'Accept': 'text/html,application/xhtml+xml,*/*' }).then(function (r) {
@@ -11197,19 +11156,18 @@ function _eventsFetchText(u) {
   });
 }
 
-// One upstream round at a time; a good round refreshes the cache, a round
-// where every site failed never evicts the previous answer.
+// One round = the five community pages. A round where every site failed is a
+// failure for RELAY: it never evicts the previous answer and is not retried
+// for 60 s.
+function _eventsProduce() {
+  return communityEvents.buildEvents(_eventsFetchText, Date.now()).then(function (data) {
+    return { status: data.ok ? 200 : 503, body: JSON.stringify(data) };
+  });
+}
 function _eventsRefresh() {
-  if (!_eventsInflight) {
-    _eventsInflight = communityEvents.buildEvents(_eventsFetchText, Date.now())
-      .then(function (data) {
-        const body = JSON.stringify(data);
-        if (data.ok) RANKING_CACHE.set('communityevents', { at: Date.now(), status: 200, body: body });
-        return body;
-      })
-      .finally(function () { _eventsInflight = null; });
-  }
-  return _eventsInflight;
+  const cfg = _eventsCfg();
+  if (!cfg.on) return Promise.resolve(null);
+  return RELAY.warm('communityevents', cfg.sec * 1000, _eventsProduce);
 }
 
 function handleCommunityEvents(req, res) {
@@ -11217,20 +11175,13 @@ function handleCommunityEvents(req, res) {
     res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store', 'X-Events-Cache': note });
     res.end(body);
   };
-  const hit = RANKING_CACHE.get('communityevents');
-  if (hit) {
-    // Stale-while-revalidate (web.253): an old answer goes out at once and the
-    // round runs behind it, so no player waits for the slowest of the sites.
-    const fresh = (Date.now() - hit.at) < EVENTS_TTL_MS;
-    if (!fresh) _eventsRefresh().catch(function () {});
-    send(hit.body, fresh ? 'hit' : 'stale');
-    return;
-  }
-  // Nothing yet (first request since boot and the warm-up has not landed).
-  _eventsRefresh().then(function (body) { send(body, 'miss'); }).catch(function (err) {
-    // Never a 5xx: the Forum news window must stay usable without this tab.
-    send(JSON.stringify({ ok: false, error: 'relay_failed', detail: String((err && err.message) || err) }), 'fail');
-  });
+  const cfg = _eventsCfg();
+  // Turned off by the admin: the client hides the Events tab.
+  if (!cfg.on) { send(JSON.stringify({ ok: false, error: 'disabled' }), 'off'); return; }
+  // Stale-while-revalidate (web.253): an old answer goes out at once and the
+  // round runs behind it, so no player waits for the slowest of the sites.
+  // Never a 5xx: the Forum news window must stay usable without this tab.
+  RELAY.get('communityevents', cfg.sec * 1000, _eventsProduce, { swr: true }).then(function (out) { send(out.body, out.note); });
 }
 
 // ── BBC registrations of one game (GET /api/events/bbcregs?id=N) ─────────
@@ -11240,7 +11191,6 @@ function handleCommunityEvents(req, res) {
 // by /api/events are relayed, so the endpoint cannot be used to walk the BBC
 // site; one upstream read per id and minute at most. Never a 5xx.
 const BBC_REGS_TTL_MS = 60 * 1000;
-const _bbcRegsInflight = new Map();       // id -> Promise
 
 function _bbcListedIds() {
   const hit = RANKING_CACHE.get('communityevents');
@@ -11259,27 +11209,14 @@ function handleBbcRegs(req, res, query) {
     res.end(typeof obj === 'string' ? obj : JSON.stringify(obj));
   };
   const id = String((query && query.id) || '');
-  if (!/^\d{1,9}$/.test(id) || !_bbcListedIds().has(id)) { send({ ok: false, error: 'unknown_game' }, 'none'); return; }
-  const key = 'bbcregs:' + id;
-  const hit = RANKING_CACHE.get(key);
-  if (hit && (Date.now() - hit.at) < BBC_REGS_TTL_MS) { send(hit.body, 'hit'); return; }
-  let job = _bbcRegsInflight.get(id);
-  if (!job) {
-    job = rankingFetch(communityEvents.bbcRegsUrl(id), { 'Accept': 'application/json, */*' })
+  if (!_eventsCfg().on || !/^\d{1,9}$/.test(id) || !_bbcListedIds().has(id)) { send({ ok: false, error: 'unknown_game' }, 'none'); return; }
+  // One read per id at a time, failures not retried for 60 s (RELAY, web.254).
+  RELAY.get('bbcregs:' + id, BBC_REGS_TTL_MS, function () {
+    return rankingFetch(communityEvents.bbcRegsUrl(id), { 'Accept': 'application/json, */*' })
       .then(function (r) { if (!r.ok) throw new Error('upstream_' + r.status); return r.text(); })
       .then(communityEvents.parseBbcRegs)
-      .finally(function () { _bbcRegsInflight.delete(id); });
-    _bbcRegsInflight.set(id, job);
-  }
-  job.then(function (data) {
-    if (!data.ok) { if (hit) send(hit.body, 'stale'); else send(data, 'fail'); return; }
-    const body = JSON.stringify(data);
-    RANKING_CACHE.set(key, { at: Date.now(), status: 200, body: body });
-    send(body, 'miss');
-  }).catch(function (err) {
-    if (hit) { send(hit.body, 'stale'); return; }
-    send({ ok: false, error: 'relay_failed', detail: String((err && err.message) || err).slice(0, 80) }, 'fail');
-  });
+      .then(function (data) { return { status: data.ok ? 200 : 502, body: JSON.stringify(data) }; });
+  }).then(function (out) { send(out.body, out.note); });
 }
 
 // ── Translation relay (POST /api/translate) ──────────────────────────────

@@ -1,4 +1,8 @@
-2026-09-29 version 2.1.9-web.253 (current series):
+2026-09-29 version 2.1.9-web.254 (current series):
+- improvement: rankings, player cards, forum news, live figures and events answer faster and ask the community sites far less often (shared copies, no retry storm when a site is down)
+- new: server admins can turn the Events tab off or set how often the community sites are read
+
+2026-09-29 version 2.1.9-web.253:
 - improvement: forum news, Events tab — opens at once: the events are loaded in the background like the posts, and the server always answers from its last copy while it refreshes the community sites
 
 2026-09-29 version 2.1.9-web.252:

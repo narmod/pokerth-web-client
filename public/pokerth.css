@@ -774,7 +774,9 @@ body.adv-no-communitycontent #ranking-modal .rk-tab[data-src="wec"] { display: n
 /* Forum news: the Events tab is community content too -- without it the tab bar
    has a single entry, so the whole bar goes and the window is the post list. */
 body.adv-no-communitycontent #forum-modal #fn-tabs,
-body.adv-no-communitycontent #forum-modal #fn-events { display: none !important; }
+body.adv-no-communitycontent #forum-modal #fn-events,
+body.ev-relay-off #forum-modal #fn-tabs,
+body.ev-relay-off #forum-modal #fn-events { display: none !important; }
 body.adv-no-communitycontent .adv-row:has(#adv-defcommunity) { display: none !important; }
 
 /* Verrous du formulaire de création (parité QML : classé / invité) */
