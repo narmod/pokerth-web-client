@@ -10,7 +10,8 @@ function ok(cond, label) {
   else { fail++; console.log('  \u2717 ' + label); }
 }
 
-const dom = new JSDOM(`<!doctype html><body>
+const dom = new JSDOM(`<!doctype html><head><style>#ranking-modal{z-index:1200} .connect-header{position:absolute;z-index:20}</style></head><body>
+  <div class="header connect-header"><span><div id="connect-overflow-menu" style="display:none"></div></span></div>
   <div id="g-chat-panel" style="display:none"></div>
   <div id="g-log-panel" style="display:none"></div>
   <div id="music-panel" style="display:none"></div>
@@ -119,6 +120,27 @@ rk.style.display = 'none'; await tick();
 rk.style.display = 'flex'; await tick();
 ok(!$('ranking-modal').style.zIndex,
    'mode modale (sans .floating-win) : le conteneur garde son z CSS 1200');
+
+// Mobile : un menu du header ouvert pendant qu'une fenêtre est en mode modale
+// (z CSS 1200, hors bande) doit passer devant elle (rapport narmod 29/09).
+const ovf = $('g-overflow-menu');
+ovf.style.display = 'none'; await tick();
+ovf.style.display = 'block'; await tick();
+ok(z('g-overflow-menu') > 1200, 'menu du header ouvert sur le classement en modale : passe devant (> 1200)');
+Z.raise(ovf);
+ok(z('g-overflow-menu') > 1200, 'menu déjà devant, re-sélectionné : reste au-dessus de la modale');
+ok(!$('ranking-modal').style.zIndex, 'la modale garde son z CSS (non modifiée)');
+// Écran de connexion : le menu est enfermé dans l'en-tête (contexte z 20) →
+// c'est l'en-tête qui passe au-dessus de la modale, puis reprend son z.
+const hdr = w.document.querySelector('.connect-header'), cov = $('connect-overflow-menu');
+cov.style.display = 'block'; await tick();
+ok(parseInt(hdr.style.zIndex, 10) > 1200, 'login : l\'en-tête du menu passe au-dessus de la modale');
+cov.style.display = 'none'; await tick();
+ok(hdr.style.zIndex === '' && getComputedStyle(hdr).zIndex === '20', 'login : menu fermé, l\'en-tête reprend son z CSS (20)');
+rk.style.display = 'none'; jr.style.display = 'none'; await tick();
+ovf.style.display = 'none'; await tick();
+ovf.style.display = 'block'; await tick();
+ok(z('g-overflow-menu') >= 300 && z('g-overflow-menu') <= 390, 'sans modale visible : le menu reste dans la bande 300–390');
 
 console.log(fail ? `\nFAIL ${pass}/${pass + fail}` : `\nPASS ${pass}/${pass}`);
 process.exit(fail ? 1 : 0);

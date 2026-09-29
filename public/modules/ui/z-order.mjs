@@ -35,6 +35,12 @@ const SEL = [
 // (rapport forum : la dernière ouverte/touchée doit passer devant).
 const HOSTS = '#ranking-modal,#tableranking-modal,#forum-modal,#pm-modal,#pp-modal,#player-info-modal,#game-info-modal,#adv-modal,#jr-modal,#help-modal,#range-modal';
 
+// Menus du header (login, lobby, salle d'attente, partie). Sur mobile, les
+// fenêtres imbriquées restent en mode modale (conteneur à z CSS 1200, hors
+// bande) : un menu ouvert par-dessus passait dessous. Un menu du header qui
+// passe devant se place donc aussi au-dessus de ces conteneurs modaux visibles.
+const MENUS = '#g-overflow-menu,#l-overflow-menu,#cr-overflow-menu,#connect-overflow-menu,#pv-overflow-menu';
+
 const BASE = 300, TOP = 390;
 let _z = BASE;
 const stack = [];          // surfaces déjà remontées, de la plus ancienne à la plus récente
@@ -82,12 +88,72 @@ function _visible(el) {
   return st.display !== 'none' && st.visibility !== 'hidden';
 }
 
+// z le plus haut des conteneurs visibles en mode modale (fenêtre non flottante).
+function _modalTop() {
+  let m = 0;
+  try {
+    document.querySelectorAll(HOSTS).forEach(function (h) {
+      if (!_visible(h) || _hostFloating(h)) return;
+      const z = parseInt(window.getComputedStyle(h).zIndex, 10) || 0;
+      if (z > m) m = z;
+    });
+  } catch (e) {}
+  return m;
+}
+
+// En-tête qui enferme le menu dans son propre contexte d'empilement (écran de
+// connexion : div.header.connect-header, position absolute + z-index 20) : le z du
+// menu y est plafonné, c'est l'en-tête qu'il faut remonter.
+function _ctxHeader(el) {
+  try {
+    const h = el.parentElement && el.parentElement.closest('.header,header');
+    if (!h) return null;
+    const c = window.getComputedStyle(h);
+    return (c.position !== 'static' && c.zIndex !== 'auto') ? h : null;
+  } catch (e) { return null; }
+}
+
+// Rend à l'en-tête son z d'origine (menu fermé, ou plus de modale visible).
+function _unboost(el) {
+  try {
+    const h = el.parentElement && el.parentElement.closest('.header,header');
+    if (h && h.dataset && 'zBoost' in h.dataset) {
+      h.style.zIndex = h.dataset.zBoost;
+      delete h.dataset.zBoost;
+    }
+  } catch (e) {}
+}
+
+// Menu du header : au-dessus d'une fenêtre modale visible (mobile).
+function _overModal(el) {
+  try {
+    if (!el.matches(MENUS)) return;
+    const m = _modalTop(), cur = parseInt(el.style.zIndex, 10) || 0;
+    if (m) {
+      if (cur <= m) el.style.zIndex = String(m + 1);
+      const h = _ctxHeader(el);
+      if (h) {
+        if (!('zBoost' in h.dataset)) h.dataset.zBoost = h.style.zIndex || '';
+        h.style.zIndex = String(m + 1);
+      }
+      return;
+    }
+    _unboost(el);
+    // Plus de modale visible : un menu resté au-dessus revient dans la bande.
+    if (cur > TOP) {
+      if (_z >= TOP) _renumber();
+      else el.style.zIndex = String(++_z);
+    }
+  } catch (e) {}
+}
+
 // Renumérote de BASE en haut quand le plafond est atteint : l'ordre relatif est
 // conservé, on ne dérive jamais au-dessus de la bande.
 function _renumber() {
   _z = BASE;
   for (const el of stack) {
     try { el.style.zIndex = String(++_z); } catch (e) {}
+    _overModal(el);
   }
 }
 
@@ -95,12 +161,13 @@ function _renumber() {
 export function raise(el) {
   el = _target(el);
   if (!(_matches(el) || (_isHost(el) && _hostFloating(el)))) return false;
-  if (stack.length && stack[stack.length - 1] === el) return true;   // déjà devant
+  if (stack.length && stack[stack.length - 1] === el) { _overModal(el); return true; }   // déjà devant
   const i = stack.indexOf(el);
   if (i >= 0) stack.splice(i, 1);
   stack.push(el);
   if (++_z > TOP) _renumber();
   else { try { el.style.zIndex = String(_z); } catch (e) {} }
+  _overModal(el);
   return true;
 }
 
@@ -149,7 +216,10 @@ const _obs = new MutationObserver((muts) => {
       else _release(t);
       continue;
     }
-    if (_matches(t) && _visChanged(t) && _visible(t)) raise(t);
+    if (_matches(t) && _visChanged(t)) {
+      if (_visible(t)) raise(t);
+      else if (t.matches(MENUS)) _unboost(t);   // menu refermé : l'en-tête reprend son z
+    }
   }
 });
 

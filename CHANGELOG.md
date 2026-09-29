@@ -15,6 +15,10 @@ release. Per-build detail is on the
 [GitHub Releases](https://github.com/narmod/pokerth-web-client/releases) page;
 highlights below.
 
+### Fixed
+
+- **Header menus in front of windows on phones** (`web.252`, narmod) — below the `_winGate` threshold the nested windows (ranking, forum, options, help…) stay in modal mode with their CSS `z-index: 1200`, outside the 300–390 band of `modules/ui/z-order.mjs`, so the header overflow menus (`#connect-/#l-/#cr-/#g-/#pv-overflow-menu`) opened behind them. A header menu raised while such a modal-mode host is visible now goes one level above it; on the login screen the menu is trapped in `div.header.connect-header` (own stacking context, z 20), so that header is lifted instead and gets its z back when the menu closes. Covered by `scripts/test-z-order.mjs` (24 checks).
+
 ### Changed
 
 - **Reports reserved for registered players** (`web.251`, narmod) — parity with upstream `04f5839` (sp0ck): guests can no longer report an avatar or a game name, because the server stored those reports without a reporter and now rejects them. New `window._amMyPlayerGuest()` (server rights 1, or guest login mode — QML `Lobby.isMyPlayerGuest`) hides the 🚩 in the lobby game info (`modules/ui/lobby.mjs`), the player popup (`modules/ui/player-popup.mjs`) and the seat menu (`modules/ui/seat-menu.mjs`), and guards `App.reportGameName` / `App.reportAvatar` / `App.doReport`.

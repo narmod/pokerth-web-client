@@ -1,4 +1,7 @@
-2026-09-29 version 2.1.9-web.251 (current series):
+2026-09-29 version 2.1.9-web.252 (current series):
+- bugfix: on phones, the header menus (login, lobby, waiting room, game) open in front of an open window (ranking, forum, options, help…) instead of behind it
+
+2026-09-29 version 2.1.9-web.251:
 - improvement: reporting an avatar or a game name is reserved for players logged in with a pokerth.net account, as in the desktop clients — guests no longer see the 🚩 report buttons (the server refuses guest reports)
 
 2026-09-28 version 2.1.9-web.250:
