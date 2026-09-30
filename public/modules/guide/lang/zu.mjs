@@ -106,4 +106,8 @@ export default {
   hsPassword: 'Ivikela itafula ngephasiwedi (hhayi emidlalweni yezinga).',
   hsSavePrefs: 'Ilondoloza lawa masethingi njengawakho, ukuze uwalayishe ngokuzayo.',
   hsCreateTable: 'Idala itafula ngalawa masethingi bese ikuhlalisa kulo.',
+  moreHelp: 'Usizo olwengeziwe',
+  allTopics: 'Izihloko zonke',
+  helpWindow: 'Iwindi losizo',
+  back: 'Emuva',
 };

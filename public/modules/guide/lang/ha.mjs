@@ -106,4 +106,8 @@ export default {
   hsPassword: 'Yana kare tebur da kalmar sirri (ba don wasannin matsayi ba).',
   hsSavePrefs: 'Yana adana waɗannan saituna a matsayin naka, don ka loda su a gaba.',
   hsCreateTable: 'Yana ƙirƙirar tebur da waɗannan saituna kuma ya zaunar da kai a kansa.',
+  moreHelp: 'Ƙarin taimako',
+  allTopics: 'Dukkan batutuwa',
+  helpWindow: 'Taga na taimako',
+  back: 'Koma baya',
 };

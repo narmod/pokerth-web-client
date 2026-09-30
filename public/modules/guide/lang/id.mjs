@@ -106,4 +106,8 @@ export default {
   hsPassword: 'Melindungi meja dengan kata sandi (tidak untuk permainan berperingkat).',
   hsSavePrefs: 'Menyimpan pengaturan ini sebagai milik Anda, untuk dimuat lain kali.',
   hsCreateTable: 'Membuat meja dengan pengaturan ini dan mendudukkan Anda di sana.',
+  moreHelp: 'Bantuan lainnya',
+  allTopics: 'Semua topik',
+  helpWindow: 'Jendela bantuan',
+  back: 'Kembali',
 };

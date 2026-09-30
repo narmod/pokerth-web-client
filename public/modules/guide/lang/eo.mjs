@@ -106,4 +106,8 @@ export default {
   hsPassword: 'Protektas la tablon per pasvorto (ne por rangigaj ludoj).',
   hsSavePrefs: 'Konservas ĉi tiujn agordojn kiel viajn proprajn, por ŝargi ilin venontfoje.',
   hsCreateTable: 'Kreas la tablon kun ĉi tiuj agordoj kaj sidigas vin ĉe ĝi.',
+  moreHelp: 'Pli da helpo',
+  allTopics: 'Ĉiuj temoj',
+  helpWindow: 'Helpa fenestro',
+  back: 'Reen',
 };

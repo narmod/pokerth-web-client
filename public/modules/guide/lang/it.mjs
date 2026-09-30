@@ -106,4 +106,8 @@ export default {
   hsPassword: 'Protegge il tavolo con una password (non per le partite classificate).',
   hsSavePrefs: 'Salva queste impostazioni come tue, per ricaricarle la prossima volta.',
   hsCreateTable: 'Crea il tavolo con queste impostazioni e ti ci fa sedere.',
+  moreHelp: 'Altro aiuto',
+  allTopics: 'Tutti gli argomenti',
+  helpWindow: 'Finestra di aiuto',
+  back: 'Indietro',
 };

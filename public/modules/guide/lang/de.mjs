@@ -106,4 +106,8 @@ export default {
   hsPassword: 'Schützt den Tisch mit einem Passwort (nicht bei Ranglistenspielen).',
   hsSavePrefs: 'Speichert diese Einstellungen als deine eigenen, um sie beim nächsten Mal zu laden.',
   hsCreateTable: 'Erstellt den Tisch mit diesen Einstellungen und setzt dich daran.',
+  moreHelp: 'Mehr Hilfe',
+  allTopics: 'Alle Themen',
+  helpWindow: 'Hilfefenster',
+  back: 'Zurück',
 };

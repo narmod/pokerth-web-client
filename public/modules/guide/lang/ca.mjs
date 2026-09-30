@@ -106,4 +106,8 @@ export default {
   hsPassword: 'Protegeix la taula amb una contrasenya (no per a partides de classificació).',
   hsSavePrefs: 'Desa aquesta configuració com a teva, per carregar-la la propera vegada.',
   hsCreateTable: 'Crea la taula amb aquesta configuració i t’hi asseu.',
+  moreHelp: 'Més ajuda',
+  allTopics: 'Tots els temes',
+  helpWindow: 'Finestra d’ajuda',
+  back: 'Enrere',
 };

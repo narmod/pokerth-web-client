@@ -1,4 +1,8 @@
-2026-09-30 version 2.1.9-web.266 (current series):
+2026-09-30 version 2.1.9-web.267 (current series):
+- new: Ace’s Help — « More help »: the whole help, read by the Ace in his bubble: the topics of the screen you are on, every chapter, a search, and each section page by page
+- improvement: the Help entry of the menus now brings the Ace with the help, even if his tips are off (he leaves when you close it); the classic help window is still one tap away, and still opens at the table
+
+2026-09-30 version 2.1.9-web.266:
 - new: Ace’s Help — « Well done! »: back in the lobby after a game won, points in a Ranking game or a trophy unlocked in training, the Ace celebrates with confetti (once, when no tip is on screen)
 - improvement: Ace’s Help — for a new table or a private message, the Ace only takes a couple of steps out of his spot
 

@@ -106,4 +106,8 @@ export default {
   hsPassword: 'Suojaa pöydän salasanalla (ei ranking-peleissä).',
   hsSavePrefs: 'Tallentaa nämä asetukset omiksesi, jotta voit ladata ne ensi kerralla.',
   hsCreateTable: 'Luo pöydän näillä asetuksilla ja istuttaa sinut siihen.',
+  moreHelp: 'Lisää ohjeita',
+  allTopics: 'Kaikki aiheet',
+  helpWindow: 'Ohjeikkuna',
+  back: 'Takaisin',
 };

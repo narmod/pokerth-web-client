@@ -106,4 +106,8 @@ export default {
   hsPassword: 'Ó ń dáàbò bo tábìlì pẹ̀lú ọ̀rọ̀ aṣínà (kì í ṣe fún eré ipò).',
   hsSavePrefs: 'Ó ń fi àwọn ètò yìí pamọ́ gẹ́gẹ́ bí tìrẹ, láti ṣí wọn nígbà míì.',
   hsCreateTable: 'Ó ń ṣẹ̀dá tábìlì pẹ̀lú àwọn ètò yìí, ó sì ń fi ọ́ jókòó síbẹ̀.',
+  moreHelp: 'Ìrànlọ́wọ́ síi',
+  allTopics: 'Gbogbo àkòrí',
+  helpWindow: 'Fèrèsé ìrànlọ́wọ́',
+  back: 'Padà',
 };

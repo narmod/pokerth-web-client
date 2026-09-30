@@ -12,7 +12,9 @@
 //
 // API:  dock({ plain, label, onTap }) · undock() · say({ text, buttons,
 //       onButton, point, avoid, ask }) · hush() · badge(on) · react(kind) · point(on)
-//       homeBox() · away(on, pop) · hasBadge() · isPlain()
+//       homeBox() · away(on, pop) · hasBadge() · isPlain() · bubbleEl()
+//       say({ html, wide }) — ready-made (escaped) markup in a wider bubble:
+//       « More help », the help pages (H1, web.267)
 //       guide({ text, buttons, onButton, point }) = dock + say
 // ═══════════════════════════════════════════════════════════════════
 
@@ -49,6 +51,26 @@ body.guide-ask #ace-dock *{cursor:pointer!important}
 #ace-dock .ad-btn.ad-primary{background:#141414;color:#fbf7ee}
 #ace-dock .ad-btn:focus-visible{outline:3px solid #f5c518;outline-offset:1px}
 [dir=rtl] #ace-dock .ad-text{direction:rtl;text-align:right}
+#ace-dock .ad-bubble.ad-wide{width:min(420px,calc(100vw - 24px));max-width:min(420px,calc(100vw - 24px));max-height:calc(100vh - 24px);overflow:auto}
+#ace-dock .ad-bubble.ad-wide .ad-ask{right:6px;top:6px;width:28px;height:28px}
+#ace-dock .ad-kicker{margin:0 30px 6px 0;font:800 12px/1.3 system-ui,sans-serif;color:#6b5a2e}
+#ace-dock .ad-count{float:right;margin-left:8px;font:700 11px/1.6 system-ui,sans-serif;opacity:.55}
+#ace-dock .ad-search{display:block;width:100%;box-sizing:border-box;border:1.5px solid #141414;border-radius:10px;padding:7px 10px;font:600 14px/1.2 system-ui,sans-serif;background:#fff;color:#141414;margin:0 0 8px;min-height:36px}
+#ace-dock .ad-list{display:flex;flex-direction:column;gap:4px;max-height:min(38vh,260px);overflow:auto;margin:0 0 8px;overscroll-behavior:contain}
+#ace-dock .ad-item{appearance:none;display:block;width:100%;text-align:start;border:0;border-radius:8px;background:rgba(20,20,20,.07);color:#141414;padding:8px 10px;font:700 13.5px/1.3 system-ui,sans-serif;cursor:pointer;min-height:36px}
+#ace-dock .ad-item small{display:block;font-weight:600;opacity:.65;font-size:11.5px}
+#ace-dock .ad-item:focus-visible,#ace-dock .ad-chap:focus-visible{outline:3px solid #f5c518;outline-offset:1px}
+#ace-dock .ad-empty{margin:4px 0;opacity:.7}
+#ace-dock .ad-chaps{display:flex;flex-wrap:wrap;gap:4px}
+#ace-dock .ad-chap{appearance:none;border:1.5px solid rgba(20,20,20,.25);background:transparent;border-radius:999px;padding:4px 9px;font:600 12px/1.2 system-ui,sans-serif;color:#141414;cursor:pointer;min-height:30px}
+#ace-dock .ad-chap.ad-on{background:#141414;color:#fbf7ee;border-color:#141414}
+#ace-dock .ad-page p{margin:0 0 6px}
+#ace-dock .ad-page ul{margin:0;padding-inline-start:18px}
+#ace-dock .ad-page li{margin:0 0 4px}
+#ace-dock .ad-keys{display:grid;grid-template-columns:auto 1fr;gap:5px 10px;align-items:baseline}
+#ace-dock .ad-keys code{font:700 12px/1.3 ui-monospace,Menlo,Consolas,monospace;background:#141414;color:#fbf7ee;border-radius:5px;padding:2px 6px;white-space:nowrap}
+#ace-dock .ad-note{border-inline-start:3px solid #f5c518;padding-inline-start:8px;font-style:italic}
+[dir=rtl] #ace-dock .ad-page,[dir=rtl] #ace-dock .ad-kicker,[dir=rtl] #ace-dock .ad-list{direction:rtl;text-align:right}
 `;
 
 let root = null;      // #ace-dock
@@ -342,7 +364,10 @@ export function say(o) {
   const btns = (o.buttons || []).map((b) =>
     `<button type="button" class="ad-btn${b.primary ? ' ad-primary' : ''}" data-ad-btn="${esc(b.id)}">${esc(b.label)}</button>`).join('');
   const ask = o.ask ? `<button type="button" class="ad-ask" data-ad-btn="ask" aria-label="${esc(o.ask)}" title="${esc(o.ask)}">?</button>` : '';
-  bub.innerHTML = ask + `<p class="ad-text">${rich(o.text)}</p>` + (btns ? `<div class="ad-btns">${btns}</div>` : '');
+  const body = o.html != null ? o.html : `<p class="ad-text">${rich(o.text)}</p>`;   // html: already escaped by the caller
+  bub.innerHTML = ask + body + (btns ? `<div class="ad-btns">${btns}</div>` : '');
+  bub.classList.toggle('ad-wide', !!o.wide);
+  bub.scrollTop = 0;
   avoidEl = o.avoid || null;
   bub.classList.add('ad-open');
   placeBubble();
@@ -357,7 +382,7 @@ export function say(o) {
 /** Closes the bubble; the Ace stays docked. */
 export function hush() {
   if (!bub) return;
-  bub.classList.remove('ad-open');
+  bub.classList.remove('ad-open', 'ad-wide');
   bub.innerHTML = '';
   onBtnCb = null;
   point(false);
@@ -365,6 +390,11 @@ export function hush() {
 }
 
 export function bubbleOpen() { return !!(bub && bub.classList.contains('ad-open')); }
+
+/** The bubble element (the « More help » search field and list live in it). */
+export function bubbleEl() { return bub; }
+/** Places the bubble again after its content changed (search results). */
+export function replace() { placeBubble(); }
 
 /** Small red « ! » on the Ace: a tip is waiting (the player said « Later »). */
 export function badge(on) { if (ace) ace.classList.toggle('ad-has-badge', !!on); }

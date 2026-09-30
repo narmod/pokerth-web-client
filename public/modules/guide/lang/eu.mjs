@@ -106,4 +106,8 @@ export default {
   hsPassword: 'Mahaia pasahitz batekin babesten du (ez sailkapeneko partidetan).',
   hsSavePrefs: 'Ezarpen hauek zureak bezala gordetzen ditu, hurrengoan kargatzeko.',
   hsCreateTable: 'Mahaia ezarpen hauekin sortu eta bertan esertzen zaitu.',
+  moreHelp: 'Laguntza gehiago',
+  allTopics: 'Gai guztiak',
+  helpWindow: 'Laguntza-leihoa',
+  back: 'Atzera',
 };

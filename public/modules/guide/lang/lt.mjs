@@ -106,4 +106,8 @@ export default {
   hsPassword: 'Apsaugo stalą slaptažodžiu (ne reitinguojamiems žaidimams).',
   hsSavePrefs: 'Išsaugo šiuos nustatymus kaip tavo, kad kitą kartą galėtum juos įkelti.',
   hsCreateTable: 'Sukuria stalą su šiais nustatymais ir pasodina tave prie jo.',
+  moreHelp: 'Daugiau pagalbos',
+  allTopics: 'Visos temos',
+  helpWindow: 'Žinyno langas',
+  back: 'Atgal',
 };

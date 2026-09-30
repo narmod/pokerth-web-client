@@ -277,6 +277,41 @@ Keys (all 83 languages; `es-419` is derived from `es` with `scripts/es-419-rules
 
 The help has an *Ace's Help* section (`start.acehelp`) in all 83 languages.
 
+## More help (`web.267`, H1)
+
+The help window's knowledge now lives in the Ace's bubble. The goal is to merge the help
+into Ace's Help, in steps:
+
+1. **H1:** the help in the bubble.
+2. **H2:** « ? » everywhere, with *More about it*.
+3. **H3:** « ? » at the table.
+4. **H4:** the window removed, with the maintainer's agreement.
+
+The texts are the window's own: `modules/help/content/<lang>.mjs`, in 83 languages. No
+text was rewritten.
+
+- **Entries.** The Help entries of the header menus (`toggleHelp`) call
+  `window._guideMoreHelp` first. The Ace takes over where he can speak: the login screen,
+  the lobby, the waiting room and game creation, not under automation. Elsewhere (at a
+  table, for now) the window opens as before. *More help* is also the first entry of his
+  menu.
+- **Tips off.** It works even with the tips off. He comes on demand and leaves when the
+  bubble closes, whether by *Close*, Escape or a tap on him. The same goes for « ? » mode
+  opened from there.
+- **Topics.** The bubble opens on the chapter of the current screen, as the window does
+  (`knowledge.mjs::chapterFor`). It shows that chapter's sections, chips for the other
+  chapters and a search field. The search is case- and accent-insensitive, starts at 2
+  characters and returns at most 40 results. It also offers *Help window*, which opens the
+  classic window for now.
+- **A section, page by page.** One page per paragraph; long paragraphs are cut at
+  sentence ends, including the CJK, Indic and Burmese ones. Lists come 5 items to a page,
+  keyboard keys 6 to a page, then the notes. The buttons are *Back*, *Next*, *All topics*
+  and *Close*. The page count shows in the corner.
+- **Statistics.** `more-help` counts `shown`, `section`, `search` (once per opening) and
+  `window`. The admin card rows now show each context's own events.
+- **New texts.** `moreHelp`, `allTopics`, `helpWindow`, `back`. The search field and
+  *No results* reuse the UI keys `helpSearchPh` and `helpNoResults`.
+
 ## Idle scenes (`web.265`)
 
 The scenes of `modules/mascot/engine.mjs` (26 of them, drawn at random) play on the login
@@ -330,6 +365,9 @@ makes him vanish in a puff. Scenes still play in the lobby.
   beacons (no identifier, the offline queue) and the admin card.
 - `npm run test:guide-ask`: every static hotspot selector exists in the page, every key
   resolves in every language, and the first matching entry wins (jsdom).
+- `npm run test:guide-help`: the 83 help corpora cut into pages. It checks that every
+  section is reachable, no word is lost and no page is too long, plus the search, the
+  chapter of each screen and the wiring.
 - `npm run test:mascot`: the scenes' size, the ways back to his spot and the
   loader rules (no option, rhythm, reactions with the help only).
 - `npm run test:guide-browser`: a real browser on phones and a desktop. It checks the
@@ -354,4 +392,8 @@ makes him vanish in a puff. Scenes still play in the lobby.
 | L5 | C5 game creation page and windows (`web.263`) |
 | L6 | C6 « ? » mode (`hotspots.mjs`, `web.264`) |
 | M1 | Idle scenes folded into Ace's Help: no option, one size, from his spot and back (`web.265`) |
-| **M2** | « Well done! »: a game won, Ranking points, a trophy (`web.266`) |
+| M2 | « Well done! »: a game won, Ranking points, a trophy (`web.266`) |
+| **H1** | « More help »: the help window's knowledge in the Ace's bubble, on demand even with the tips off (`web.267`) |
+| H2 | « ? » on the windows and the lobby leftovers, *More about it* → the matching help section |
+| H3 | « ? » and « More help » at the table, on demand, even during a hand |
+| H4 | The help window removed (explicit agreement) |

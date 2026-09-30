@@ -106,4 +106,8 @@ export default {
   hsPassword: 'Dìonaidh e am bòrd le facal-faire (chan ann airson geamannan rangachaidh).',
   hsSavePrefs: 'Sàbhailidh e na roghainnean seo mar an fheadhainn agad fhèin, airson an luchdadh an ath thuras.',
   hsCreateTable: 'Cruthaichidh e am bòrd leis na roghainnean seo agus cuiridh e nad shuidhe aige thu.',
+  moreHelp: 'Barrachd cobhair',
+  allTopics: 'A h-uile cuspair',
+  helpWindow: 'Uinneag cobhair',
+  back: 'Air ais',
 };

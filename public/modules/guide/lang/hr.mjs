@@ -106,4 +106,8 @@ export default {
   hsPassword: 'Štiti stol lozinkom (ne za rangirane igre).',
   hsSavePrefs: 'Sprema ove postavke kao tvoje, da ih učitaš idući put.',
   hsCreateTable: 'Stvara stol s ovim postavkama i smješta te za njega.',
+  moreHelp: 'Više pomoći',
+  allTopics: 'Sve teme',
+  helpWindow: 'Prozor pomoći',
+  back: 'Natrag',
 };

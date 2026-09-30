@@ -106,4 +106,8 @@ export default {
   hsPassword: 'Protejează masa cu o parolă (nu pentru jocuri clasate).',
   hsSavePrefs: 'Salvează aceste setări ca fiind ale tale, ca să le încarci data viitoare.',
   hsCreateTable: 'Creează masa cu aceste setări și te așază la ea.',
+  moreHelp: 'Mai mult ajutor',
+  allTopics: 'Toate subiectele',
+  helpWindow: 'Fereastra de ajutor',
+  back: 'Înapoi',
 };

@@ -106,4 +106,8 @@ export default {
   hsPassword: 'Verndar borðið með lykilorði (ekki fyrir stigaleiki).',
   hsSavePrefs: 'Vistar þessar stillingar sem þínar eigin, til að hlaða þeim inn næst.',
   hsCreateTable: 'Býr til borðið með þessum stillingum og setur þig við það.',
+  moreHelp: 'Meiri hjálp',
+  allTopics: 'Öll efni',
+  helpWindow: 'Hjálpargluggi',
+  back: 'Til baka',
 };

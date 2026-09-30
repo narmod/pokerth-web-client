@@ -106,4 +106,8 @@ export default {
   hsPassword: 'Bảo vệ bàn bằng mật khẩu (không áp dụng cho ván xếp hạng).',
   hsSavePrefs: 'Lưu các cài đặt này làm của riêng bạn, để tải lại lần sau.',
   hsCreateTable: 'Tạo bàn với các cài đặt này và xếp bạn ngồi vào.',
+  moreHelp: 'Thêm trợ giúp',
+  allTopics: 'Tất cả chủ đề',
+  helpWindow: 'Cửa sổ trợ giúp',
+  back: 'Quay lại',
 };

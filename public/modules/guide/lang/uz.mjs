@@ -106,4 +106,8 @@ export default {
   hsPassword: 'Stolni parol bilan himoyalaydi (reyting oʻyinlari uchun emas).',
   hsSavePrefs: 'Keyingi safar yuklash uchun bu sozlamalarni oʻzingizniki sifatida saqlaydi.',
   hsCreateTable: 'Shu sozlamalar bilan stol yaratadi va sizni unga oʻtqazadi.',
+  moreHelp: 'Qo‘shimcha yordam',
+  allTopics: 'Barcha mavzular',
+  helpWindow: 'Yordam oynasi',
+  back: 'Orqaga',
 };

@@ -106,4 +106,8 @@ export default {
   hsPassword: 'Beskytter bordet med en adgangskode (ikke til ranglistespil).',
   hsSavePrefs: 'Gemmer disse indstillinger som dine egne, så du kan indlæse dem næste gang.',
   hsCreateTable: 'Opretter bordet med disse indstillinger og sætter dig ved det.',
+  moreHelp: 'Mere hjælp',
+  allTopics: 'Alle emner',
+  helpWindow: 'Hjælpevindue',
+  back: 'Tilbage',
 };

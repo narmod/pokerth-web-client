@@ -2913,7 +2913,7 @@
   }
   // ── Ace's Help (L3) — acceptance, tips, Ranking funnel ──
   var _guideKnown=false, _guideData=null, _guidePeriodDays=0, _guideSince=0;
-  var GUIDE_CTX=[['welcome','Welcome (after saying yes)'],['lobby-ranking','Lobby — join a Ranking table'],['lobby-ranking-create','Lobby — create a Ranking table'],['lobby-guest','Lobby — guest: free account'],['wait-ranking','Ranked waiting room — the facts'],['ranked-result','After a ranked game — place & points'],['login','Login — the three modes, account vs guest'],['login-profile','Login — nickname & avatar'],['wait-normal','Normal / training waiting room'],['create-game','Game creation page'],['w-ranking','Window — Ranking'],['w-events','Window — Forum events'],['w-help','Window — Help'],['w-adv','Window — Advanced options'],['w-theme','Window — Theme'],['w-music','Window — Music player'],['w-avatar','Window — Avatar'],['w-players','Window — Players online'],['w-profile','Window — Player card'],['w-logs','Window — Logs'],['ask','« ? » mode — entered · elements explained · left']];
+  var GUIDE_CTX=[['welcome','Welcome (after saying yes)'],['lobby-ranking','Lobby — join a Ranking table'],['lobby-ranking-create','Lobby — create a Ranking table'],['lobby-guest','Lobby — guest: free account'],['wait-ranking','Ranked waiting room — the facts'],['ranked-result','After a ranked game — place & points'],['login','Login — the three modes, account vs guest'],['login-profile','Login — nickname & avatar'],['wait-normal','Normal / training waiting room'],['create-game','Game creation page'],['w-ranking','Window — Ranking'],['w-events','Window — Forum events'],['w-help','Window — Help'],['w-adv','Window — Advanced options'],['w-theme','Window — Theme'],['w-music','Window — Music player'],['w-avatar','Window — Avatar'],['w-players','Window — Players online'],['w-profile','Window — Player card'],['w-logs','Window — Logs'],['ask','« ? » mode — entered · elements explained · left',['shown','explained','done']],['more-help','« More help » — opened · sections read · searches · help window',['shown','section','search','window']]];
   function _gPct(r){ return r==null?'—':(r*100<1&&r>0?(r*100).toFixed(1):Math.round(r*100))+'%'; }
   function _gBar(label,n,max,sub,color){
     var pc=max? n*100/max : 0;
@@ -2945,8 +2945,8 @@
     h+='<h4 style="margin:14px 0 4px">Tips</h4>';
     h+='<div class="envrow" style="opacity:.75;font-size:.76rem"><span class="nmx">Context</span><span class="pct">shown · done · later</span></div>';
     GUIDE_CTX.forEach(function(c){
-      var x=(g.contexts||{})[c[0]]||{shown:0,done:0,dismissed:0};
-      h+='<div class="envrow"><span class="nmx">'+c[1]+'</span><span class="pct">'+x.shown+' · '+x.done+' · '+x.dismissed+'</span></div>';
+      var x=(g.contexts||{})[c[0]]||{}, evs=c[2]||['shown','done','dismissed'];
+      h+='<div class="envrow"><span class="nmx">'+c[1]+'</span><span class="pct">'+evs.map(function(e){ return x[e]||0; }).join(' · ')+'</span></div>';
     });
     h+='<div class="muted" style="margin-top:6px">Guests: free-account bubble shown '+g.guests.shown+' · « Create an account » tapped '+g.guests.redirect+'.</div>';
     box.innerHTML=h;

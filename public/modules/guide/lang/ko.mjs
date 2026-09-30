@@ -106,4 +106,8 @@ export default {
   hsPassword: '비밀번호로 테이블을 보호해요(랭킹 게임에는 사용할 수 없어요).',
   hsSavePrefs: '이 설정을 내 설정으로 저장해서 다음에 불러올 수 있어요.',
   hsCreateTable: '이 설정으로 테이블을 만들고 바로 그 자리에 앉아요.',
+  moreHelp: '도움말 더 보기',
+  allTopics: '모든 주제',
+  helpWindow: '도움말 창',
+  back: '뒤로',
 };

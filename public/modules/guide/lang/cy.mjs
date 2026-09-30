@@ -106,4 +106,8 @@ export default {
   hsPassword: 'Yn diogelu’r bwrdd gyda chyfrinair (nid ar gyfer gemau gyda safle).',
   hsSavePrefs: 'Yn cadw’r gosodiadau hyn fel eich rhai chi, i’w llwytho y tro nesaf.',
   hsCreateTable: 'Yn creu’r bwrdd gyda’r gosodiadau hyn ac yn rhoi sedd i chi wrtho.',
+  moreHelp: 'Mwy o gymorth',
+  allTopics: 'Yr holl bynciau',
+  helpWindow: 'Ffenestr cymorth',
+  back: 'Yn ôl',
 };

@@ -106,4 +106,8 @@ export default {
   hsPassword: 'Stoly parol bilen goraýar (reýting oýunlary üçin däl).',
   hsSavePrefs: 'Bu sazlamalary indiki gezek ýüklemek üçin özüňiziňki hökmünde ýatda saklaýar.',
   hsCreateTable: 'Bu sazlamalar bilen stol döredýär we sizi oňa oturdýar.',
+  moreHelp: 'Has köp kömek',
+  allTopics: 'Ähli mowzuklar',
+  helpWindow: 'Kömek penjiresi',
+  back: 'Yza',
 };

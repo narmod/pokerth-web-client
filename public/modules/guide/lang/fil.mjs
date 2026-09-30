@@ -106,4 +106,8 @@ export default {
   hsPassword: 'Pinoprotektahan ang mesa gamit ang password (hindi para sa ranking game).',
   hsSavePrefs: 'Sine-save ang mga setting na ito bilang sa iyo, para ma-load mo sa susunod.',
   hsCreateTable: 'Ginagawa ang mesa gamit ang mga setting na ito at pinapaupo ka roon.',
+  moreHelp: 'Higit pang tulong',
+  allTopics: 'Lahat ng paksa',
+  helpWindow: 'Window ng tulong',
+  back: 'Bumalik',
 };

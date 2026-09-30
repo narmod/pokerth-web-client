@@ -106,4 +106,8 @@ export default {
   hsPassword: 'Mbron tavolinën me fjalëkalim (jo për lojërat me renditje).',
   hsSavePrefs: 'Ruan këto cilësime si të tuat, për t’i ngarkuar herën tjetër.',
   hsCreateTable: 'Krijon tavolinën me këto cilësime dhe të ul në të.',
+  moreHelp: 'Më shumë ndihmë',
+  allTopics: 'Të gjitha temat',
+  helpWindow: 'Dritarja e ndihmës',
+  back: 'Kthehu',
 };

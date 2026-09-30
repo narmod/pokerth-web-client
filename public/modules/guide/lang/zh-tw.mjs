@@ -106,4 +106,8 @@ export default {
   hsPassword: '用密碼保護牌桌（排名遊戲不適用）。',
   hsSavePrefs: '將這些設定儲存為你自己的設定，下次即可載入。',
   hsCreateTable: '以這些設定建立牌桌，並讓你入座。',
+  moreHelp: '更多說明',
+  allTopics: '所有主題',
+  helpWindow: '說明視窗',
+  back: '返回',
 };

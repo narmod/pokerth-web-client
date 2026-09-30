@@ -106,4 +106,8 @@ export default {
   hsPassword: 'Masanı parolla qoruyur (reytinq oyunları üçün deyil).',
   hsSavePrefs: 'Bu parametrləri özünüzünkü kimi saxlayır ki, növbəti dəfə yükləyəsiniz.',
   hsCreateTable: 'Bu parametrlərlə masanı yaradır və sizi ona oturdur.',
+  moreHelp: 'Daha çox kömək',
+  allTopics: 'Bütün mövzular',
+  helpWindow: 'Kömək pəncərəsi',
+  back: 'Geri',
 };

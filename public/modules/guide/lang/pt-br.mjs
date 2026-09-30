@@ -106,4 +106,8 @@ export default {
   hsPassword: 'Protege a mesa com uma senha (não para partidas ranqueadas).',
   hsSavePrefs: 'Salva estas configurações como suas, para carregá-las da próxima vez.',
   hsCreateTable: 'Cria a mesa com estas configurações e coloca você sentado nela.',
+  moreHelp: 'Mais ajuda',
+  allTopics: 'Todos os tópicos',
+  helpWindow: 'Janela de ajuda',
+  back: 'Voltar',
 };

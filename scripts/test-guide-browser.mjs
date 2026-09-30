@@ -277,7 +277,7 @@ async function runDevice(browser, name, descriptor) {
     await openTable(page, base, { stopAt: 'lobby', seats: 6 });
     const bubbleText = () => page.evaluate(() => (document.querySelector('#ace-dock .ad-bubble.ad-open .ad-text') || {}).textContent || '');
     await check(`${name}: C5 — first opening of Help: he explains it, on top of the window`, async () => {
-      await page.evaluate(() => window.toggleHelp());
+      await page.evaluate(() => window.openHelp()   /* the window itself (the Help entries now bring the Ace, H1) */);
       await page.waitForFunction(() => /Everything about the app/.test((document.querySelector('#ace-dock .ad-bubble.ad-open .ad-text') || {}).textContent || ''), null, { timeout: 5000 });
       const onTop = await page.evaluate(() => { const b = document.querySelector('#ace-dock .ad-bubble.ad-open').getBoundingClientRect(); const e = document.elementFromPoint(b.left + b.width / 2, b.top + b.height / 2); return !!(e && e.closest('#ace-dock')); });
       assert.ok(onTop, 'the bubble is under the window');
@@ -288,7 +288,7 @@ async function runDevice(browser, name, descriptor) {
       await click(page, btn('gotIt'));
       await page.evaluate(() => window.closeHelp && window.closeHelp());
       await page.waitForTimeout(1600);
-      await page.evaluate(() => window.toggleHelp());
+      await page.evaluate(() => window.openHelp()   /* the window itself (the Help entries now bring the Ace, H1) */);
       await page.waitForTimeout(2200);
       assert.doesNotMatch(await bubbleText(), /Everything about the app/);
       await page.evaluate(() => window.closeHelp && window.closeHelp());
@@ -433,6 +433,80 @@ async function runDevice(browser, name, descriptor) {
       await page.evaluate(() => window.mascotCheer('win'));
       await page.waitForTimeout(2500);
       assert.equal(await page.locator('#mascot-root').count(), 0);
+    });
+    await ctx.close();
+  }
+
+  // ── « More help » (H1): the help window in the Ace's bubble, even with the tips off ──
+  {
+    const ctx = await browser.newContext({ ...descriptor, serviceWorkers: 'block' });
+    await ctx.addInitScript(() => { try { if (!sessionStorage.getItem('g8')) { sessionStorage.setItem('g8', '1'); localStorage.setItem('pth_guide_on', '0'); localStorage.setItem('pth_guide_offered', '1'); } } catch (_e) {} });
+    const page = await ctx.newPage(); watch(page);
+    await openTable(page, base, { stopAt: 'lobby', seats: 6 });
+    await page.waitForTimeout(600);
+    const helpShown = () => page.evaluate(() => { const m = document.getElementById('help-modal'); return !!m && getComputedStyle(m).display !== 'none'; });
+    const kicker = () => page.evaluate(() => (document.querySelector('#ace-dock .ad-bubble.ad-open .ad-kicker') || {}).textContent || '');
+    await check(`${name}: More help — the Help entry brings the Ace with the help (tips off), not the window`, async () => {
+      assert.equal(await page.locator('#ace-dock').count(), 0, 'Ace already there with the tips off');
+      await page.evaluate(() => window.toggleHelp());
+      await page.locator(bubble + ' .ad-search').waitFor({ timeout: 5000 });
+      assert.equal(await helpShown(), false, 'the help window opened');
+      assert.match(await kicker(), /More help · .*Lobby/);
+      assert.ok(await page.locator(bubble + ' .ad-item').count() >= 3, 'no sections listed');
+      inside(await box(page, bubble), 'bubble');
+      const it = await box(page, bubble + ' .ad-item'); assert.ok(it.h >= 34, `items ${Math.round(it.h)}px tall`);
+    });
+    await shot(page, name, 'guide-morehelp');
+    await check(`${name}: More help — a section read page by page, then back to the topics`, async () => {
+      await page.locator(bubble + ' .ad-item').first().click();
+      await page.waitForFunction(() => /›/.test((document.querySelector('#ace-dock .ad-bubble.ad-open .ad-kicker') || {}).textContent || ''), null, { timeout: 3000 });
+      let guard = 0;
+      while (await page.locator(btn('next')).count() && guard++ < 12) { await click(page, btn('next')); await page.waitForTimeout(80); }
+      assert.equal(await page.locator(btn('close')).count(), 1, 'no Close on the last page');
+      inside(await box(page, bubble), 'bubble on the last page');
+      await click(page, btn('allTopics'));
+      await page.locator(bubble + ' .ad-search').waitFor({ timeout: 3000 });
+    });
+    await check(`${name}: More help — search and chapters`, async () => {
+      await page.locator(bubble + ' .ad-search').fill('side pot');
+      await page.waitForTimeout(150);
+      const hits = await page.locator(bubble + ' .ad-item').allInnerTexts();
+      assert.ok(hits.length >= 1, 'no result for « side pot »');
+      await page.locator(bubble + ' .ad-search').fill('zzzqqq');
+      await page.waitForTimeout(150);
+      assert.equal(await page.locator(bubble + ' .ad-empty').count(), 1, 'no « no results »');
+      await page.locator(bubble + ' .ad-search').fill('');
+      await page.locator(bubble + ' .ad-chap[data-ad-btn="ch:rules"]').click();
+      await page.waitForFunction(() => /Poker rules/.test((document.querySelector('#ace-dock .ad-bubble.ad-open .ad-kicker') || {}).textContent || ''), null, { timeout: 3000 });
+    });
+    await check(`${name}: More help — « Help window » opens the classic window; Close sends him away`, async () => {
+      await click(page, btn('helpWindow'));
+      await page.waitForFunction(() => { const m = document.getElementById('help-modal'); return !!m && getComputedStyle(m).display !== 'none'; }, null, { timeout: 3000 });
+      await page.waitForFunction(() => !document.getElementById('ace-dock'), null, { timeout: 3000 });
+      await page.evaluate(() => window.closeHelp());
+      await page.evaluate(() => window.toggleHelp());
+      await page.locator(bubble + ' .ad-search').waitFor({ timeout: 5000 });
+      await click(page, btn('close'));
+      await page.waitForFunction(() => !document.getElementById('ace-dock'), null, { timeout: 3000 });
+      assert.equal((await store(page)).on, '0', 'the tips were switched on');
+    });
+    await check(`${name}: More help — tips on: first entry of his menu`, async () => {
+      await page.evaluate(() => { window.setAdvOpt('guide_on', true); });
+      await page.waitForTimeout(900);
+      for (let i = 0; i < 4 && await page.locator(bubble).count(); i++) { const g = page.locator(btn('gotIt')); if (await g.count()) await g.first().click(); else await page.locator(bubble + ' .ad-btns [data-ad-btn]').last().click(); await page.waitForTimeout(400); }
+      await page.evaluate(() => window.guideToggle());
+      await page.locator(btn('moreHelp')).waitFor({ timeout: 3000 });
+      await click(page, btn('moreHelp'));
+      await page.locator(bubble + ' .ad-search').waitFor({ timeout: 3000 });
+      await click(page, btn('close'));
+      await page.waitForTimeout(300);
+      assert.equal(await page.locator('#ace-dock .ad-ace').count(), 1, 'he left with the tips on');
+    });
+    await enterTable(page, { seats: 6 });
+    await check(`${name}: More help — at a table the Help entry still opens the window (for now)`, async () => {
+      await page.evaluate(() => window.toggleHelp());
+      await page.waitForFunction(() => { const m = document.getElementById('help-modal'); return !!m && getComputedStyle(m).display !== 'none'; }, null, { timeout: 3000 });
+      await page.evaluate(() => window.closeHelp());
     });
     await ctx.close();
   }

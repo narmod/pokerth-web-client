@@ -106,4 +106,8 @@ export default {
   hsPassword: 'Chráni stôl heslom (nie pre hodnotené hry).',
   hsSavePrefs: 'Uloží tieto nastavenia ako tvoje, aby sa dali nabudúce načítať.',
   hsCreateTable: 'Vytvorí stôl s týmito nastaveniami a posadí ťa k nemu.',
+  moreHelp: 'Viac pomoci',
+  allTopics: 'Všetky témy',
+  helpWindow: 'Okno pomocníka',
+  back: 'Späť',
 };

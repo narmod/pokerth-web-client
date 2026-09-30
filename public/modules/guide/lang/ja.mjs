@@ -106,4 +106,8 @@ export default {
   hsPassword: 'テーブルをパスワードで保護します（ランキングゲームでは不可）。',
   hsSavePrefs: 'この設定を自分用に保存し、次回読み込めるようにします。',
   hsCreateTable: 'この設定でテーブルを作成し、あなたを着席させます。',
+  moreHelp: 'さらにヘルプ',
+  allTopics: 'すべてのトピック',
+  helpWindow: 'ヘルプウィンドウ',
+  back: '戻る',
 };

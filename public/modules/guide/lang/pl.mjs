@@ -106,4 +106,8 @@ export default {
   hsPassword: 'Chroni stół hasłem (nie dla gier rankingowych).',
   hsSavePrefs: 'Zapisuje te ustawienia jako twoje, aby wczytać je następnym razem.',
   hsCreateTable: 'Tworzy stół z tymi ustawieniami i sadza cię przy nim.',
+  moreHelp: 'Więcej pomocy',
+  allTopics: 'Wszystkie tematy',
+  helpWindow: 'Okno pomocy',
+  back: 'Wstecz',
 };

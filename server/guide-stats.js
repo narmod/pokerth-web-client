@@ -45,6 +45,8 @@ const EVENTS = Object.freeze({
   'w-logs': ['shown', 'done', 'dismissed'],
   // L6 — « ? » mode: entered, an element explained, left
   ask: ['shown', 'explained', 'done'],
+  // H1 — « More help »: opened, a section read, a search typed, the help window opened from it
+  'more-help': ['shown', 'section', 'search', 'window'],
 });
 
 /** Is this (context, event) pair one we count? */
@@ -100,6 +102,7 @@ function summary(g) {
   for (const ctx of Object.keys(EVENTS)) {
     if (ctx === 'offer') continue;
     contexts[ctx] = { shown: n(ctx, 'shown'), done: n(ctx, 'done'), dismissed: n(ctx, 'dismissed') };
+    for (const ev of EVENTS[ctx]) contexts[ctx][ev] = n(ctx, ev);   // their own events too (ask, more-help)
   }
   const highlighted = n('lobby-ranking', 'shown'), joined = n('lobby-ranking', 'join'), started = n('lobby-ranking', 'started');
   return {

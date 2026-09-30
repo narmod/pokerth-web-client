@@ -21,7 +21,9 @@
 // luck! », the result of the game back in the lobby). L3 (web.261):
 // statistics (beacons.mjs). L4 (web.262): C3 login screen, C4 Normal /
 // training waiting room. L5 (web.263): C5 create page and windows.
-// L6 (web.264): « ? » mode (hotspots.mjs). Console: guideDebug().
+// L6 (web.264): « ? » mode (hotspots.mjs). H1 (web.267): « More help », the
+// help window's knowledge read in his bubble (knowledge.mjs), on demand even
+// with the tips off. Console: guideDebug().
 // ═══════════════════════════════════════════════════════════════════
 
 import { createState, mergeIn, KEY_ON } from './state.mjs';
@@ -32,6 +34,7 @@ import { gt, ready } from './i18n.mjs';
 import * as hl from './highlight.mjs';
 import { beacon } from './beacons.mjs';
 import { hotspotFor, tappableFor } from './hotspots.mjs';
+import { loadHelp, chapterFor, search as helpSearch, findSection, pages as helpPages } from './knowledge.mjs';
 
 /** L2: public for everyone (L1 was behind ?guide=1). */
 const PUBLIC = true;
@@ -48,7 +51,7 @@ let offerTimer = 0;
 let stepTimer = 0;            // auto-advance of a step (waiting-room facts)
 let foldTimer = 0;            // unanswered bubble → badge
 let noteTimer = 0;            // transient line (« Just one more! »)
-let showing = null;           // { run, kind: 'ctx' | 'offer' | 'menu' | 'note' | 'flash' }
+let showing = null;           // { run, kind: 'ctx' | 'offer' | 'menu' | 'note' | 'flash' | 'ask' | 'help' }
 let lastWhere = null;
 let lastWait = null;          // { gid, n } seen in the waiting room (arrivals)
 let result = null;            // { gid, place, tied } of my last Ranking game
@@ -379,7 +382,8 @@ async function note(key, buttons, onButton, vars) {
 }
 
 async function showMenu() {
-  await note('menuOn', [btn('askMenu'), btn('turnOff'), btn('resetTips'), btn('close', true)], (id) => {
+  await note('menuOn', [btn('moreHelp'), btn('askMenu'), btn('turnOff'), btn('resetTips'), btn('close', true)], (id) => {
+    if (id === 'moreHelp') { openMoreHelp(); return; }
     if (id === 'askMenu' || id === 'ask') { enterAsk(); return; }
     if (id === 'turnOff') { turnOff(); return; }
     if (id === 'resetTips') { resetTips(); return; }
@@ -418,7 +422,7 @@ function exitAsk(silent) {
   try { document.body.classList.remove('guide-ask'); } catch (e) {}
   const was = showing && showing.kind === 'ask';
   armed = null;
-  if (was) { beacon('ask', 'done'); if (!silent) closeBubble(); }
+  if (was) { beacon('ask', 'done'); if (!silent) { closeBubble(); if (!state.isOn()) leave(); } }   // tips off: he came on demand
 }
 function askTarget(t) {
   if (!t || (t.closest && t.closest('#ace-dock'))) return null;
@@ -447,6 +451,121 @@ function onAskKey(ev) {
   if (ev.key === 'Escape') { ev.stopPropagation(); exitAsk(); }
 }
 
+// ── « More help » (H1, web.267) ────────────────────────────────────
+// The help window's knowledge in his bubble: the sections of the chapter
+// that fits this screen, chips for the other chapters, a search field; a
+// section is read page by page (« Next »). The texts are the help window's
+// own (modules/help/content/<lang>.mjs, 83 languages). Works with the tips
+// off: he comes, answers, and leaves when the bubble is closed.
+let help = null;              // { content, ch, q, sec, chObj, pages, i, searched }
+const uiT = (k) => { try { const s = window.t ? window.t(k) : k; return s && s !== k ? s : k; } catch (e) { return k; } };
+function esc(s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+function helpLang() { try { return (localStorage.getItem('pth_lang') || document.documentElement.lang || 'en').toLowerCase(); } catch (e) { return 'en'; } }
+
+/** Opens « More help » (Ace's menu, the Help entries of the menus). Resolves false when he cannot come here. */
+async function openMoreHelp(o = {}) {
+  if (!available() || !canSpeakHere()) return false;
+  exitAsk(true);
+  const m = await ensureDock();
+  clearTimers(); hl.clear();
+  const content = await loadHelp(helpLang());
+  const w = where();
+  help = { content, ch: o.ch || chapterFor(w.screen), q: '', searched: false };
+  if (!content.chapters.some((c) => c.id === help.ch) && content.chapters.length) help.ch = content.chapters[0].id;
+  showing = { kind: 'help' };
+  if (o.ch && o.sec && findSection(content, o.ch, o.sec)) openHelpSection(o.ch, o.sec);
+  else renderTopics();
+  beacon('more-help', 'shown');
+  return !!m;
+}
+
+function helpList() {
+  const hits = help.q.trim().length >= 2 ? helpSearch(help.content, help.q) : null;
+  if (hits) {
+    if (!hits.length) return `<p class="ad-empty">${esc(uiT('helpNoResults'))}</p>`;
+    return hits.map((h) => `<button type="button" class="ad-item" data-ad-btn="sec:${esc(h.ch.id)}:${esc(h.sec.id)}"><small>${esc((h.ch.icon ? h.ch.icon + ' ' : '') + h.ch.title)}</small>${esc(h.sec.t)}</button>`).join('');
+  }
+  const ch = help.content.chapters.find((c) => c.id === help.ch);
+  return ((ch && ch.sections) || []).map((s) => `<button type="button" class="ad-item" data-ad-btn="sec:${esc(ch.id)}:${esc(s.id)}">${esc(s.t)}</button>`).join('');
+}
+
+function renderTopics() {
+  if (!M || !help) return;
+  help.sec = null;
+  const ch = help.content.chapters.find((c) => c.id === help.ch);
+  const chips = help.content.chapters.map((c) => `<button type="button" class="ad-chap${c.id === help.ch && !help.q ? ' ad-on' : ''}" data-ad-btn="ch:${esc(c.id)}" aria-pressed="${c.id === help.ch && !help.q}">${esc((c.icon ? c.icon + ' ' : '') + c.title)}</button>`).join('');
+  const html = `<p class="ad-kicker">${esc(gt('moreHelp'))}${ch ? ' · ' + esc((ch.icon ? ch.icon + ' ' : '') + ch.title) : ''}</p>`
+    + `<input type="search" class="ad-search" enterkeyhint="search" autocomplete="off" placeholder="${esc(uiT('helpSearchPh'))}" aria-label="${esc(uiT('helpSearchPh'))}" value="${esc(help.q)}">`
+    + `<div class="ad-list" role="list">${helpList()}</div><div class="ad-chaps">${chips}</div>`;
+  M.say({ html, wide: true, buttons: [btn('helpWindow'), btn('close', true)], ask: gt('askLabel'), onButton: onHelpButton });
+  const bub = M.bubbleEl();
+  const inp = bub && bub.querySelector('.ad-search');
+  if (inp) {
+    inp.addEventListener('input', () => {
+      help.q = inp.value;
+      const list = bub.querySelector('.ad-list');
+      if (list) list.innerHTML = helpList();
+      bub.querySelectorAll('.ad-chap').forEach((b) => b.classList.toggle('ad-on', !help.q && b.getAttribute('data-ad-btn') === 'ch:' + help.ch));
+      if (!help.searched && help.q.trim().length >= 2) { help.searched = true; beacon('more-help', 'search'); }
+      M.replace();
+    });
+    inp.addEventListener('keydown', (ev) => { if (ev.key === 'Escape') { ev.stopPropagation(); closeMoreHelp(); } });
+  }
+}
+
+function openHelpSection(chId, secId) {
+  const f = findSection(help.content, chId, secId);
+  if (!f) { renderTopics(); return; }
+  help.ch = chId; help.chObj = f.ch; help.sec = f.sec; help.pages = helpPages(f.sec); help.i = 0;
+  beacon('more-help', 'section');
+  renderHelpPage();
+}
+
+function renderHelpPage() {
+  const p = help.pages[help.i], n = help.pages.length, last = help.i >= n - 1;
+  let body = '';
+  if (p.kind === 'list') body = `<ul>${p.items.map((x) => `<li>${esc(x)}</li>`).join('')}</ul>`;
+  else if (p.kind === 'keys') body = `<div class="ad-keys">${p.items.map((r) => `<code>${esc(r[0])}</code><span>${esc(r[1])}</span>`).join('')}</div>`;
+  else if (p.kind === 'note') body = `<p class="ad-note">${esc(p.items[0])}</p>`;
+  else body = `<p>${esc(p.items[0])}</p>`;
+  const html = `<p class="ad-kicker">${n > 1 ? `<span class="ad-count">${help.i + 1}/${n}</span>` : ''}${esc((help.chObj.icon ? help.chObj.icon + ' ' : '') + help.chObj.title)} › ${esc(help.sec.t)}</p>`
+    + `<div class="ad-page">${body}</div>`;
+  const buttons = [help.i > 0 ? btn('back') : btn('allTopics')];
+  if (!last) buttons.push(btn('next', true));
+  else { if (help.i > 0) buttons.push(btn('allTopics')); buttons.push(btn('close', true)); }
+  M.say({ html, wide: true, buttons, ask: gt('askLabel'), onButton: onHelpButton });
+}
+
+function onHelpButton(id) {
+  if (!help) { closeBubble(); return; }
+  if (id === 'ask') { enterAsk(); return; }
+  if (id === 'close' || id === 'escape') { closeMoreHelp(); return; }
+  if (id === 'helpWindow') { beacon('more-help', 'window'); closeMoreHelp(); try { if (window.openHelp) window.openHelp(); } catch (e) {} return; }
+  if (id === 'allTopics') { renderTopics(); return; }
+  if (id === 'next' && help.sec) { help.i = Math.min(help.pages.length - 1, help.i + 1); renderHelpPage(); return; }
+  if (id === 'back' && help.sec) { help.i = Math.max(0, help.i - 1); renderHelpPage(); return; }
+  if (id.indexOf('ch:') === 0) { help.ch = id.slice(3); help.q = ''; renderTopics(); return; }
+  if (id.indexOf('sec:') === 0) { const [, c, s] = id.split(':'); openHelpSection(c, s); }
+}
+
+function closeMoreHelp() {
+  help = null;
+  closeBubble();
+  if (!state.isOn()) leave();                     // tips off: he came on demand, he goes
+  else schedule();
+}
+
+/**
+ * A Help entry of the menus: « More help » in the Ace's bubble when he can
+ * come here (not at a table yet, not under automation unless a test opts in).
+ * Returns true when he takes it; false → the help window opens as before.
+ */
+function helpEntry(o) {
+  if (!available() || automated() || !canSpeakHere()) return false;
+  openMoreHelp(o || {});
+  return true;
+}
+
 /**
  * A short line over the current bubble (no buttons), then the bubble comes
  * back as it was — « Just one more! » in the waiting room.
@@ -471,6 +590,7 @@ function onTap() {
   if (M && M.bubbleOpen()) {
     if (showing && showing.kind === 'offer') return;
     if (showing && showing.kind === 'ask') { exitAsk(); return; }
+    if (showing && showing.kind === 'help') { closeMoreHelp(); return; }
     if (showing && showing.kind === 'ctx') { onCtxButton('later'); return; }
     closeBubble(); return;
   }
@@ -554,7 +674,7 @@ function maybeOffer() {
   offerTimer = setTimeout(async () => {
     if (!available() || state.isOn() || state.wasOffered()) return;
     const w = where();
-    if (!(w.screen === 'connect' || w.screen === 'lobby') || !splashGone() || blocked() || document.hidden || bannerUp()) { maybeOffer(); return; }
+    if (!(w.screen === 'connect' || w.screen === 'lobby') || !splashGone() || blocked() || document.hidden || bannerUp() || showing) { maybeOffer(); return; }
     const m = await ensureDock();
     showing = { kind: 'offer' };
     beacon('offer', 'offered');
@@ -584,7 +704,9 @@ async function evaluate() {
   try { trackResult(w, prev); } catch (e) {}
   if (!available()) { if (!(showing && showing.kind === 'offer')) leave(); return; }
   if (!state.isOn()) {
-    if (!(showing && (showing.kind === 'offer' || showing.kind === 'note'))) leave();
+    // tips off: only the offer, a last word, or what the player asked for (« More help », « ? » mode)
+    if (!(showing && (showing.kind === 'offer' || showing.kind === 'note' || showing.kind === 'help' || showing.kind === 'ask'))) leave();
+    else if ((showing.kind === 'help' || showing.kind === 'ask') && !canSpeakHere()) leave();
     maybeOffer();
     return;
   }
@@ -609,6 +731,7 @@ async function evaluate() {
     return;
   }
   if (showing && showing.kind === 'ask') { armed = armed && armed.isConnected ? armed : null; return; }   // « ? » mode: the player leads
+  if (showing && showing.kind === 'help') return;                                                      // « More help »: the player reads
   const moved = !prev || prev.screen !== w.screen;
   if (moved && M && M.isDocked()) M.settle(true);       // new layout: a free spot again, bubble or not
   if (M && M.bubbleOpen()) {
@@ -771,6 +894,9 @@ function init() {
 
 window._guideApply = apply;
 window.guideToggle = toggle;
+/** « More help » (H1): the Help entries of the menus (modules/help/index.mjs). */
+window._guideMoreHelp = helpEntry;
+window.guideMoreHelp = (o) => { if (available()) openMoreHelp(o || {}); };
 window.guideResetTips = () => { if (available()) resetTips(); };
 /** « ? » mode: tap anything to hear what it does (C6). */
 window.guideAsk = () => { if (available() && state.isOn() && canSpeakHere()) enterAsk(); };

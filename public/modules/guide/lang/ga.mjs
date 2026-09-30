@@ -106,4 +106,8 @@ export default {
   hsPassword: 'Cosnaíonn sé an bord le pasfhocal (ní do chluichí rangaithe).',
   hsSavePrefs: 'Sábhálann sé na socruithe seo mar do chuid féin, chun iad a lódáil an chéad uair eile.',
   hsCreateTable: 'Cruthaíonn sé an bord leis na socruithe seo agus cuireann sé i do shuí ann thú.',
+  moreHelp: 'Tuilleadh cabhrach',
+  allTopics: 'Gach ábhar',
+  helpWindow: 'Fuinneog chabhrach',
+  back: 'Ar ais',
 };

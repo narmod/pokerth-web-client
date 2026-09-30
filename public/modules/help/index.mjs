@@ -244,6 +244,10 @@ function closeHelp() {
 function toggleHelp() {
   var m = $('help-modal');
   if (m && m.style.display && m.style.display !== 'none') { closeHelp(); return; }
+  // Ace's Help H1 (web.267) : l'aide se lit dans la bulle de l'As (« Plus d'aide »)
+  // quand il peut venir ici ; sinon (table, automatisation) la fenêtre, comme avant.
+  // La fenêtre reste accessible depuis la bulle (« Fenêtre d'aide »).
+  try { if (typeof window._guideMoreHelp === 'function' && window._guideMoreHelp()) return; } catch (e) {}
   openHelp();
 }
 window.openHelp = openHelp;

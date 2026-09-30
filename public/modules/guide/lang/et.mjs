@@ -106,4 +106,8 @@ export default {
   hsPassword: 'Kaitseb lauda parooliga (mitte edetabelimängude jaoks).',
   hsSavePrefs: 'Salvestab need seaded sinu omadena, et saaksid need järgmine kord laadida.',
   hsCreateTable: 'Loob laua nende seadetega ja paneb sind selle taha istuma.',
+  moreHelp: 'Rohkem abi',
+  allTopics: 'Kõik teemad',
+  helpWindow: 'Abiaken',
+  back: 'Tagasi',
 };

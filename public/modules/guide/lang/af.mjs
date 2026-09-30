@@ -106,4 +106,8 @@ export default {
   hsPassword: 'Beskerm die tafel met ’n wagwoord (nie vir ranglysspelle nie).',
   hsSavePrefs: 'Stoor hierdie instellings as jou eie, om hulle volgende keer te laai.',
   hsCreateTable: 'Skep die tafel met hierdie instellings en plaas jou daaraan.',
+  moreHelp: 'Meer hulp',
+  allTopics: 'Alle onderwerpe',
+  helpWindow: 'Hulpvenster',
+  back: 'Terug',
 };

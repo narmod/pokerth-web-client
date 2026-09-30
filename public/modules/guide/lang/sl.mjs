@@ -106,4 +106,8 @@ export default {
   hsPassword: 'Zaščiti mizo z geslom (ne za igre z uvrstitvijo).',
   hsSavePrefs: 'Shrani te nastavitve kot tvoje, da jih naslednjič naložiš.',
   hsCreateTable: 'Ustvari mizo s temi nastavitvami in te posede zanjo.',
+  moreHelp: 'Več pomoči',
+  allTopics: 'Vse teme',
+  helpWindow: 'Okno pomoči',
+  back: 'Nazaj',
 };

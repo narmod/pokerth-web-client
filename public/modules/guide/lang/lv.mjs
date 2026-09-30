@@ -106,4 +106,8 @@ export default {
   hsPassword: 'Aizsargā galdu ar paroli (ne reitinga spēlēm).',
   hsSavePrefs: 'Saglabā šos iestatījumus kā tavus, lai nākamreiz tos ielādētu.',
   hsCreateTable: 'Izveido galdu ar šiem iestatījumiem un apsēdina tevi pie tā.',
+  moreHelp: 'Vairāk palīdzības',
+  allTopics: 'Visas tēmas',
+  helpWindow: 'Palīdzības logs',
+  back: 'Atpakaļ',
 };

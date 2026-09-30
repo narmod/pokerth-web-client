@@ -120,4 +120,9 @@ export default {
   hsPassword: 'Protects the table with a password (not for ranked games).',
   hsSavePrefs: 'Saves these settings as your own, to load them next time.',
   hsCreateTable: 'Creates the table with these settings and seats you at it.',
+  // H1 (web.267): « More help » — the help window's knowledge in the Ace's bubble
+  moreHelp: 'More help',
+  allTopics: 'All topics',
+  helpWindow: 'Help window',
+  back: 'Back',
 };

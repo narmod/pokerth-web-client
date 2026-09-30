@@ -106,4 +106,8 @@ export default {
   hsPassword: 'Hulinda meza kwa nenosiri (si kwa michezo ya viwango).',
   hsSavePrefs: 'Huhifadhi mipangilio hii kama yako mwenyewe, ili uipakie wakati ujao.',
   hsCreateTable: 'Huunda meza kwa mipangilio hii na kukuketisha hapo.',
+  moreHelp: 'Msaada zaidi',
+  allTopics: 'Mada zote',
+  helpWindow: 'Dirisha la msaada',
+  back: 'Rudi',
 };

@@ -106,4 +106,8 @@ export default {
   hsPassword: 'Protexe a mesa cun contrasinal (non para partidas de clasificación).',
   hsSavePrefs: 'Garda estes axustes como teus, para cargalos a próxima vez.',
   hsCreateTable: 'Crea a mesa con estes axustes e séntate nela.',
+  moreHelp: 'Máis axuda',
+  allTopics: 'Todos os temas',
+  helpWindow: 'Xanela de axuda',
+  back: 'Atrás',
 };

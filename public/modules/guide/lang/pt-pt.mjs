@@ -106,4 +106,8 @@ export default {
   hsPassword: 'Protege a mesa com uma palavra-passe (não para partidas classificadas).',
   hsSavePrefs: 'Guarda estas definições como tuas, para as carregares da próxima vez.',
   hsCreateTable: 'Cria a mesa com estas definições e senta-te nela.',
+  moreHelp: 'Mais ajuda',
+  allTopics: 'Todos os tópicos',
+  helpWindow: 'Janela de ajuda',
+  back: 'Voltar',
 };

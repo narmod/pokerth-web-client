@@ -106,4 +106,8 @@ export default {
   hsPassword: 'Jelszóval védi az asztalt (ranglistás játékoknál nem).',
   hsSavePrefs: 'Elmenti ezeket a beállításokat sajátodként, hogy legközelebb betölthesd őket.',
   hsCreateTable: 'Létrehozza az asztalt ezekkel a beállításokkal, és leültet hozzá.',
+  moreHelp: 'További súgó',
+  allTopics: 'Összes téma',
+  helpWindow: 'Súgóablak',
+  back: 'Vissza',
 };

@@ -106,4 +106,8 @@ export default {
   hsPassword: 'Protège la table par un mot de passe (pas pour les parties classées).',
   hsSavePrefs: 'Enregistre ces réglages comme les tiens, pour les recharger la prochaine fois.',
   hsCreateTable: 'Crée la table avec ces réglages et t’y installe.',
+  moreHelp: 'Plus d’aide',
+  allTopics: 'Tous les sujets',
+  helpWindow: 'Fenêtre d’aide',
+  back: 'Retour',
 };

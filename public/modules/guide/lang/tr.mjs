@@ -106,4 +106,8 @@ export default {
   hsPassword: 'Masayı bir parolayla korur (sıralama oyunları için değil).',
   hsSavePrefs: 'Bu ayarları, bir dahaki sefere yüklemek üzere kendi ayarların olarak kaydeder.',
   hsCreateTable: 'Masayı bu ayarlarla oluşturur ve seni masaya oturtur.',
+  moreHelp: 'Daha fazla yardım',
+  allTopics: 'Tüm konular',
+  helpWindow: 'Yardım penceresi',
+  back: 'Geri',
 };
