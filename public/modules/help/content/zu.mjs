@@ -291,7 +291,8 @@ export const help = {
         { id: "ranked",
           t: "Imidlalo yezinga namasizini",
           b: [
-            "Imidlalo yohlobo lwe-Ranking ibalelwa ezingeni lesizini elisemthethweni. Iphrofayela yakho ohlelweni ibonisa ukuthi wajoyina nini, iZinga lakho lesizini yamanje, Amaphuzu, isilinganiso nemidlalo edlaliwe, kanye nemiphumela yakho yakamuva. Imidlalo ejwayelekile (engeyona eyezinga) ingeyokuzijabulisa nje futhi ayishintshi lutho."] },
+            "Imidlalo yohlobo lwe-Ranking ibalelwa ezingeni lesizini elisemthethweni. Iphrofayela yakho ohlelweni ibonisa ukuthi wajoyina nini, iZinga lakho lesizini yamanje, Amaphuzu, isilinganiso nemidlalo edlaliwe, kanye nemiphumela yakho yakamuva. Imidlalo ejwayelekile (engeyona eyezinga) ingeyokuzijabulisa nje futhi ayishintshi lutho.",
+            "Noma yimuphi umdlali one-akhawunti ye-pokerth.net angadala itafula le-Ranking; izivakashi azikwazi ukujoyina noma ukudala imidlalo yezinga futhi zidlala imidlalo ejwayelekile kuphela. Itafula le-Ranking linezindawo eziyi-10, alinayo iphasiwedi futhi liqala ngokuzenzakalelayo ngokushesha nje uma seligcwele. Lisebenzisa isilungiselelo esingaphambili se-Ranking, ifomethi ethi “5/5”: imizuzwana emi-5 yokwenza isenzo, imizuzwana emi-5 phakathi kwezandla, ama-chip ayi-10,000 ne-blind encane engu-50 ephindeka kabili njalo ngemuva kwezandla eziyi-11 — kuyashesha futhi kuyafana kubo bonke, ngakho imidlalo ihlala imifushane futhi iqhathaniseka kuyo yonke isizini."] },
         { id: "rankhow",
           t: "Indlela izinga elibalwa ngayo",
           b: [
@@ -306,13 +307,13 @@ export const help = {
           t: "Izindebe zomphakathi: BBC ne-WeCup",
           b: [
             "Imiphakathi emibili iqhuba imiqhudelwano yayo ku-pokerth.net, ngamunye unewebhusayithi nezinga lawo. I-Best Brainies Cup (BBC) ingumqhudelwano wezinyathelo owazalwa ngo-2013: ukhuphuka kusukela ku-Step 1 kuya ku-Step 4, futhi isizini entsha iqala ngemuva komdlalo ngamunye we-Step 4, lapho kunikezwa indebe. I-WeCup (WEC) inesikali sayo, esisabalele kakhulu — amaphuzu angu-75 endaweni yokuqala, bese kuba ngu-45, 30, 20… — futhi amaphuzu ayo alungisa isilinganiso sakho ngokwenani lemidlalo oyidlalile uma kuqhathaniswa namanye amalungu.",
-            "Womabili amazinga avuleka enkinobhweni yendondo, eduze kwezinga le-PokerTH. Izilungiselelo zamatafula ale miqhudelwano zitholakala njengezilungiselelo ezingaphambili lapho udala umdlalo (BBC Step 1 kuya ku-4, WEC, WEC Monthly Final ne-WEC Grand Final), ukuze uziqeqeshe ngaphansi kwezimo ezifanayo. Ukuhlanganyela kudinga ukubhalisa kuwebhusayithi yendebe ethintekayo."],
+            "Womabili amazinga avuleka enkinobhweni yendondo, eduze kwezinga le-PokerTH. Izilungiselelo zamatafula ale miqhudelwano zitholakala njengezilungiselelo ezingaphambili lapho udala umdlalo (BBC Step 1 kuya ku-4, WEC, WEC Monthly Final ne-WEC Grand Final), ukuze uziqeqeshe ngaphansi kwezimo ezifanayo. Abaphathi bendebe kuphela abadala imidlalo esemthethweni: abadlali babhalisa kuwebhusayithi yendebe noma endikimbeni yayo yeforamu, futhi umdlalo wansuku zonke we-WEC ngo-22:00 (ngesikhathi seseva) awudingi ukubhalisa. Izilungiselelo ezingaphambili zingezokuzijwayeza kuphela futhi azidali umdlalo wendebe wangempela."],
           note: "Lokhu okuqukethwe kungafihlwa kanye ku-Izinketho ezithuthukisiwe → Umphakathi uma izindebe zingakuthandi." },
         { id: "forumcups",
           t: "Izindebe zeforamu nemicimbi",
           b: [
             "Iforamu ye-pokerth.net iphinde isingathe i-Monthly Cup, uchungechunge lwanyanga zonke lapho abadlali behlukaniswa ngamatafula e-Gold, Silver ne-Bronze ngaphambi kokuthweswa umqhele iqhawe lenyanga, kanye nezindebe ezikhethekile ngezikhathi ezithile ngonyaka.",
-            "Ukubhalisa, izinhlelo, izilungiselelo zamatafula nemiphumela kushicilelwa kuforamu, futhi imidlalo idlalwa kuseva esemthethweni njenganoma yimuphi omunye. I-akhawunti ye-pokerth.net yanele ukulandela imiphumela; ukungena endebeni kwenziwa ngendikimba yeforamu efanele."] },
+            "Ukubhalisa, izinhlelo, izilungiselelo zamatafula nemiphumela kushicilelwa kuforamu, futhi imidlalo idlalwa kuseva esemthethweni njenganoma yimuphi omunye. I-akhawunti ye-pokerth.net yanele ukulandela imiphumela; ukungena endebeni kwenziwa ngendikimba yeforamu efanele. Abadlali bangabhalisela i-Monthly Cup ngqo nakuwebhusayithi yayo, monthlycup.pokerth.net."] },
         { id: "forumnews",
           t: "Izindaba zeforamu elobhini",
           b: [

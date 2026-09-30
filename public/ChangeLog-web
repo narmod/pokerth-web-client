@@ -1,4 +1,8 @@
-2026-09-29 version 2.1.9-web.255 (current series):
+2026-09-30 version 2.1.9-web.256 (current series):
+- improvement: help — Ranking games: any player with a pokerth.net account can create one (guests can neither join nor create them), 10 players, no password, starts when full, and the “5/5” format explained
+- improvement: help — cups: official games are created by the cup admins, players register on the cup’s site or in its forum thread, the Monthly Cup can also be joined on monthlycup.pokerth.net
+
+2026-09-29 version 2.1.9-web.255:
 - bugfix: lobby — the server time panel (tap the clock at the bottom right) opens in front of the chat and the open windows instead of behind them
 
 2026-09-29 version 2.1.9-web.254:

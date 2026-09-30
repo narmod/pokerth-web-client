@@ -291,7 +291,8 @@ export const help = {
         { id: "ranked",
           t: "Gemau gyda safle a thymhorau",
           b: [
-            "Mae gemau o'r math Ranking yn cyfrif tuag at safleoedd swyddogol y tymor. Mae eich proffil yn yr ap yn dangos pryd ymunoch chi, eich Safle, eich Sgôr, eich cyfartaledd a'r gemau a chwaraewyd yn y tymor presennol, ynghyd â'ch canlyniadau diweddaraf. Mae gemau arferol (heb safle) er hwyl yn unig ac nid ydynt yn newid dim."] },
+            "Mae gemau o'r math Ranking yn cyfrif tuag at safleoedd swyddogol y tymor. Mae eich proffil yn yr ap yn dangos pryd ymunoch chi, eich Safle, eich Sgôr, eich cyfartaledd a'r gemau a chwaraewyd yn y tymor presennol, ynghyd â'ch canlyniadau diweddaraf. Mae gemau arferol (heb safle) er hwyl yn unig ac nid ydynt yn newid dim.",
+            "Gall unrhyw chwaraewr sydd â chyfrif pokerth.net greu bwrdd Ranking; ni all gwesteion ymuno â gemau gyda safle na'u creu, a dim ond gemau Arferol y maent yn eu chwarae. Mae lle i 10 chwaraewr wrth fwrdd Ranking, nid oes cyfrinair iddo ac mae'n dechrau'n awtomatig cyn gynted ag y bydd yn llawn. Mae'n defnyddio'r rhagosodiad Ranking, y fformat “5/5”: 5 eiliad i weithredu, 5 eiliad rhwng dwylo, 10,000 o sglodion a blind bach o 50 sy'n dyblu bob 11 llaw — cyflym ac yr un fath i bawb, fel bod gemau'n aros yn fyr ac yn gymaradwy drwy'r tymor."] },
         { id: "rankhow",
           t: "Sut mae'r safle'n cael ei gyfrifo",
           b: [
@@ -306,13 +307,13 @@ export const help = {
           t: "Cwpanau cymunedol: BBC a WeCup",
           b: [
             "Mae dwy gymuned yn cynnal eu cystadlaethau eu hunain ar pokerth.net, pob un gyda'i gwefan a'i safleoedd ei hun. Twrnamaint grisiog a ddechreuodd yn 2013 yw Best Brainies Cup (BBC): rydych chi'n symud ymlaen o Step 1 i Step 4, ac mae tymor newydd yn dechrau ar ôl pob gêm Step 4, pan gyflwynir y cwpan. Mae gan WeCup (WEC) ei raddfa ei hun, wedi'i lledaenu'n llawer ehangach — 75 pwynt am y lle cyntaf, yna 45, 30, 20… — ac mae ei sgôr yn normaleiddio eich cyfartaledd yn ôl nifer y gemau rydych chi wedi'u chwarae o'u cymharu ag aelodau eraill.",
-            "Mae'r ddau safle'n agor o'r botwm tlws, wrth ymyl safleoedd PokerTH. Mae gosodiadau byrddau'r cystadlaethau hyn ar gael fel rhagosodiadau wrth greu gêm (BBC Step 1 i 4, WEC, WEC Monthly Final a WEC Grand Final), fel y gallwch ymarfer dan yr un amodau. I gymryd rhan, rhaid cofrestru ar wefan y cwpan dan sylw."],
+            "Mae'r ddau safle'n agor o'r botwm tlws, wrth ymyl safleoedd PokerTH. Mae gosodiadau byrddau'r cystadlaethau hyn ar gael fel rhagosodiadau wrth greu gêm (BBC Step 1 i 4, WEC, WEC Monthly Final a WEC Grand Final), fel y gallwch ymarfer dan yr un amodau. Dim ond gweinyddwyr y cwpan sy'n creu'r gemau swyddogol: mae chwaraewyr yn cofrestru ar wefan y cwpan neu yn ei edefyn fforwm, ac nid oes angen cofrestru ar gyfer gêm ddyddiol WEC am 22:00 (amser y gweinydd). Ar gyfer ymarfer yn unig y mae'r rhagosodiadau, ac nid ydynt yn creu gêm gwpan go iawn."],
           note: "Gellir cuddio'r holl gynnwys hwn ar unwaith yn Dewisiadau uwch → Cymuned os nad oes gennych ddiddordeb yn y cwpanau." },
         { id: "forumcups",
           t: "Cwpanau a digwyddiadau'r fforwm",
           b: [
             "Mae fforwm pokerth.net hefyd yn cynnal y Monthly Cup — cyfres fisol lle mae chwaraewyr yn cael eu rhannu rhwng byrddau Gold, Silver a Bronze cyn i bencampwr y mis gael ei benderfynu — ynghyd â chwpanau arbennig unwaith yn unig drwy'r flwyddyn.",
-            "Mae cofrestriadau, amserlenni, gosodiadau byrddau a chanlyniadau'n cael eu cyhoeddi ar y fforwm, ac mae'r gemau'n cael eu chwarae ar y gweinydd swyddogol fel unrhyw rai eraill. Mae cyfrif pokerth.net yn ddigon i ddilyn y canlyniadau; mae cymryd rhan mewn cwpan drwy'r edefyn fforwm perthnasol."] },
+            "Mae cofrestriadau, amserlenni, gosodiadau byrddau a chanlyniadau'n cael eu cyhoeddi ar y fforwm, ac mae'r gemau'n cael eu chwarae ar y gweinydd swyddogol fel unrhyw rai eraill. Mae cyfrif pokerth.net yn ddigon i ddilyn y canlyniadau; mae cymryd rhan mewn cwpan drwy'r edefyn fforwm perthnasol. Gall chwaraewyr hefyd gofrestru ar gyfer y Monthly Cup yn uniongyrchol ar ei wefan, monthlycup.pokerth.net."] },
         { id: "forumnews",
           t: "Newyddion y fforwm yn y lobi",
           b: [

@@ -291,7 +291,8 @@ export const help = {
         { id: "ranked",
           t: "Rangigaj ludoj kaj sezonoj",
           b: [
-            "Ludoj de la tipo Ranking kalkuliĝas en la oficiala sezona rangigo. Via profilo en la aplikaĵo montras kiam vi aliĝis, vian Lokon, Poentaron, mezumon kaj luditajn ludojn en la nuna sezono, plus viajn lastajn rezultojn. Normalaj (nerangigaj) ludoj estas nur por amuzo kaj ŝanĝas nenion."] },
+            "Ludoj de la tipo Ranking kalkuliĝas en la oficiala sezona rangigo. Via profilo en la aplikaĵo montras kiam vi aliĝis, vian Lokon, Poentaron, mezumon kaj luditajn ludojn en la nuna sezono, plus viajn lastajn rezultojn. Normalaj (nerangigaj) ludoj estas nur por amuzo kaj ŝanĝas nenion.",
+            "Ĉiu ludanto kun konto ĉe pokerth.net povas krei Ranking-tablon; gastoj povas nek aliĝi al rangigaj ludoj nek krei tiajn kaj ludas nur Normalajn ludojn. Ranking-tablo havas 10 lokojn, neniun pasvorton kaj ekas aŭtomate tuj kiam ĝi pleniĝas. Ĝi uzas la ŝablonon Ranking, la formaton “5/5”: 5 sekundoj por agi, 5 sekundoj inter manoj, 10 000 ĵetonoj kaj malgranda blindo de 50, kiu duobliĝas ĉiujn 11 manojn — rapide kaj same por ĉiuj, do la ludoj restas mallongaj kaj kompareblaj dum la tuta sezono."] },
         { id: "rankhow",
           t: "Kiel la rangigo estas kalkulata",
           b: [
@@ -306,13 +307,13 @@ export const help = {
           t: "Komunumaj pokaloj: BBC kaj WeCup",
           b: [
             "Du komunumoj organizas siajn proprajn konkursojn ĉe pokerth.net, ĉiu kun sia retejo kaj rangigo. Best Brainies Cup (BBC) estas ŝtupa turniro naskita en 2013: vi progresas de Step 1 ĝis Step 4, kaj nova sezono komenciĝas post ĉiu Step 4-ludo, kiam la pokalo estas transdonita. WeCup (WEC) havas sian propran, multe pli disvastigitan skalon — 75 poentoj por la unua loko, poste 45, 30, 20… — kaj ĝia poentaro normaligas vian mezumon laŭ la nombro de ludoj, kiujn vi ludis kompare kun aliaj membroj.",
-            "Ambaŭ rangigoj malfermiĝas el la trofea butono, apud la rangigo de PokerTH. La tablaj agordoj de ĉi tiuj konkursoj venas kiel ŝablonoj dum kreado de ludo (BBC Step 1 ĝis 4, WEC, WEC Monthly Final kaj WEC Grand Final), por ke vi povu trejni en la samaj kondiĉoj. Por partopreni, necesas registriĝi en la retejo de la koncerna pokalo."],
+            "Ambaŭ rangigoj malfermiĝas el la trofea butono, apud la rangigo de PokerTH. La tablaj agordoj de ĉi tiuj konkursoj venas kiel ŝablonoj dum kreado de ludo (BBC Step 1 ĝis 4, WEC, WEC Monthly Final kaj WEC Grand Final), por ke vi povu trejni en la samaj kondiĉoj. Nur la pokalaj administrantoj kreas la oficialajn ludojn: ludantoj aliĝas en la retejo de la pokalo aŭ en ĝia forumfadeno, kaj la ĉiutaga WEC-ludo je 22:00 (laŭ servila horo) ne bezonas aliĝon. La ŝablonoj estas nur por trejnado kaj ne kreas veran pokalan ludon."],
           note: "Ĉi tiu enhavo estas kaŝebla per unu klako en Altnivelaj opcioj → Komunumo, se la pokaloj ne interesas vin." },
         { id: "forumcups",
           t: "Forumaj pokaloj kaj eventoj",
           b: [
             "La forumo de pokerth.net ankaŭ gastigas la Monthly Cup — monatan serion, en kiu ludantoj estas disdividitaj inter tabloj Gold, Silver kaj Bronze antaŭ ol la ĉampiono de la monato estas decidita — plus unufojajn specialajn pokalojn dum la jaro.",
-            "Aliĝoj, horaroj, tablaj agordoj kaj rezultoj estas publikigataj en la forumo, kaj la ludoj okazas ĉe la oficiala servilo kiel ĉiuj aliaj. Konto ĉe pokerth.net sufiĉas por sekvi la rezultojn; partopreno en pokalo okazas tra la koncerna forumfadeno."] },
+            "Aliĝoj, horaroj, tablaj agordoj kaj rezultoj estas publikigataj en la forumo, kaj la ludoj okazas ĉe la oficiala servilo kiel ĉiuj aliaj. Konto ĉe pokerth.net sufiĉas por sekvi la rezultojn; partopreno en pokalo okazas tra la koncerna forumfadeno. Ludantoj povas ankaŭ aliĝi al la Monthly Cup rekte en ĝia retejo, monthlycup.pokerth.net."] },
         { id: "forumnews",
           t: "Forumaj novaĵoj en la halo",
           b: [

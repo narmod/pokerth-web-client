@@ -291,7 +291,8 @@ export const help = {
         { id: "ranked",
           t: "Reýting oýunlary we möwsümler",
           b: [
-            "Ranking görnüşli oýunlar resmi möwsüm reýtingine hasaplanýar. Programmadaky profiliňiz haçan goşulandygyňyzy, häzirki möwsümdäki ornuňyzy, utugyňyzy, ortaça görkezijiňizi we oýnalan oýunlary, şeýle hem soňky netijeleriňizi görkezýär. Adaty (reýting däl) oýunlar diňe güýmenje üçin we hiç zady üýtgetmeýär."] },
+            "Ranking görnüşli oýunlar resmi möwsüm reýtingine hasaplanýar. Programmadaky profiliňiz haçan goşulandygyňyzy, häzirki möwsümdäki ornuňyzy, utugyňyzy, ortaça görkezijiňizi we oýnalan oýunlary, şeýle hem soňky netijeleriňizi görkezýär. Adaty (reýting däl) oýunlar diňe güýmenje üçin we hiç zady üýtgetmeýär.",
+            "pokerth.net hasaby bolan islendik oýunçy Ranking stolunu döredip biler; myhmanlar reýting oýunlaryna ne goşulyp, ne-de olary döredip bilýärler we diňe adaty oýunlary oýnaýarlar. Ranking stolunda 10 orun bar, paroly ýok we dolan badyna awtomatik başlaýar. Ol Ranking şablonyny, ýagny «5/5» formatyny ulanýar: her hereket üçin 5 sekunt, elleriň arasynda 5 sekunt, 10 000 fişka we her 11 elde iki esse artýan 50-lik kiçi blaýnd — çalt we hemmeler üçin birmeňzeş, şonuň üçin oýunlar gysga bolýar we tutuş möwsümiň dowamynda deňeşdirip bolýar."] },
         { id: "rankhow",
           t: "Reýting nähili hasaplanýar",
           b: [
@@ -306,13 +307,13 @@ export const help = {
           t: "Jemgyýet kuboklary: BBC we WeCup",
           b: [
             "pokerth.net-de iki jemgyýet öz ýaryşlaryny geçirýär, olaryň her biriniň öz saýty we reýtingi bar. Best Brainies Cup (BBC) — 2013-nji ýylda döredilen basgançakly ýaryş: Step 1-den Step 4-e çenli ýokary galýarsyňyz, her Step 4 oýnundan soň, kubok gowşurylanda, täze möwsüm başlaýar. WeCup (WEC) has giň öz şkalasyna eýe — birinji orun üçin 75 utuk, soňra 45, 30, 20… — onuň utugy bolsa ortaça görkezijiňizi beýleki agzalar bilen deňeşdirilende oýnan oýunlaryňyzyň sanyna görä kadalaşdyrýar.",
-            "Iki reýting hem PokerTH reýtinginiň ýanyndaky kubok düwmesinden açylýar. Bu ýaryşlaryň stol sazlamalary oýun döredilende şablon hökmünde berilýär (BBC Step 1-den 4-e çenli, WEC, WEC Monthly Final we WEC Grand Final), şonuň üçin şol bir şertlerde türgenleşip bilersiňiz. Gatnaşmak üçin degişli kubogyň saýtynda hasaba alynmaly."],
+            "Iki reýting hem PokerTH reýtinginiň ýanyndaky kubok düwmesinden açylýar. Bu ýaryşlaryň stol sazlamalary oýun döredilende şablon hökmünde berilýär (BBC Step 1-den 4-e çenli, WEC, WEC Monthly Final we WEC Grand Final), şonuň üçin şol bir şertlerde türgenleşip bilersiňiz. Resmi oýunlary diňe kubogyň administratorlary döredýär: oýunçylar kubogyň saýtynda ýa-da onuň forum temasynda hasaba durýarlar, 22:00-daky (serwer wagty bilen) gündelik WEC oýnuna bolsa hasaba durmak gerek däl. Şablonlar diňe türgenleşik üçin bolup, hakyky kubok oýnuny döretmeýär."],
           note: "Kuboklar sizi gyzyklandyrmaýan bolsa, bu mazmuny Giňişleýin sazlamalar → Jemgyýet bölüminde bir gezekde gizläp bolýar." },
         { id: "forumcups",
           t: "Forum kuboklary we çäreler",
           b: [
             "pokerth.net forumy Monthly Cup-y hem geçirýär — aýyň çempiony kesgitlenmezden öň oýunçylaryň Gold, Silver we Bronze stollaryna paýlanýan aýlyk tapgyry, şeýle hem ýylyň dowamynda birgezeklik ýörite kuboklar.",
-            "Hasaba alyş, tertipler, stol sazlamalary we netijeler forumda çap edilýär, oýunlar bolsa beýlekiler ýaly resmi serwerde oýnalýar. Netijeleri yzarlamak üçin pokerth.net hasaby ýeterlik; kuboga gatnaşmak degişli forum temasy arkaly bolýar."] },
+            "Hasaba alyş, tertipler, stol sazlamalary we netijeler forumda çap edilýär, oýunlar bolsa beýlekiler ýaly resmi serwerde oýnalýar. Netijeleri yzarlamak üçin pokerth.net hasaby ýeterlik; kuboga gatnaşmak degişli forum temasy arkaly bolýar. Oýunçylar Monthly Cup-a göni onuň saýtynda, monthlycup.pokerth.net-de hem hasaba durup bilýärler."] },
         { id: "forumnews",
           t: "Lobbidäki forum habarlary",
           b: [

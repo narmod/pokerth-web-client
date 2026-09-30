@@ -291,7 +291,8 @@ export const help = {
         { id: "ranked",
           t: "Cluichí rangaithe agus séasúir",
           b: [
-            "Comhairtear cluichí den chineál Ranking sa rangú séasúrach oifigiúil. Taispeánann do phróifíl san aip cathain a chláraigh tú, d'Áit, do Scór, do mheán agus na cluichí a d'imir tú sa séasúr reatha, móide do thorthaí is déanaí. Is chun spraoi amháin na gnáthchluichí (gan rangú) agus ní athraíonn siad dada."] },
+            "Comhairtear cluichí den chineál Ranking sa rangú séasúrach oifigiúil. Taispeánann do phróifíl san aip cathain a chláraigh tú, d'Áit, do Scór, do mheán agus na cluichí a d'imir tú sa séasúr reatha, móide do thorthaí is déanaí. Is chun spraoi amháin na gnáthchluichí (gan rangú) agus ní athraíonn siad dada.",
+            "Is féidir le haon imreoir a bhfuil cuntas pokerth.net aige bord Ranking a chruthú; ní féidir le haíonna dul isteach i gcluichí rangaithe ná iad a chruthú, agus ní imríonn siad ach gnáthchluichí. Tá 10 suíochán ag bord Ranking, níl pasfhocal air agus tosaíonn sé go huathoibríoch a luaithe a bhíonn sé lán. Úsáideann sé an réamhshocrú Ranking, an fhormáid “5/5”: 5 soicind le beart a dhéanamh, 5 soicind idir lámha, 10,000 sliseog agus blind beag de 50 a dhúblaítear gach 11 lámh — tapa agus mar an gcéanna do chách, ionas go bhfanann na cluichí gearr agus inchomparáide ar feadh an tséasúir."] },
         { id: "rankhow",
           t: "Conas a ríomhtar an rangú",
           b: [
@@ -306,13 +307,13 @@ export const help = {
           t: "Cupáin phobail: BBC agus WeCup",
           b: [
             "Reáchtálann dhá phobal a gcomórtais féin ar pokerth.net, gach ceann lena shuíomh agus lena rangú féin. Comórtas céimnithe is ea Best Brainies Cup (BBC) a thosaigh in 2013: téann tú ar aghaidh ó Step 1 go Step 4, agus tosaíonn séasúr nua tar éis gach cluiche Step 4, nuair a bhronntar an cupán. Tá a scála féin ag WeCup (WEC), i bhfad níos leithne — 75 pointe don chéad áit, ansin 45, 30, 20… — agus normalaíonn a scór do mheán de réir líon na gcluichí a d'imir tú i gcomparáid le baill eile.",
-            "Osclaítear an dá rangú ón gcnaipe trófaí, in aice le rangú PokerTH. Tagann socruithe boird na gcomórtas seo mar réamhshocruithe nuair a chruthaíonn tú cluiche (BBC Step 1 go 4, WEC, WEC Monthly Final agus WEC Grand Final), ionas gur féidir leat cleachtadh faoi na coinníollacha céanna. Chun páirt a ghlacadh, caithfear clárú ar shuíomh an chupáin atá i gceist."],
+            "Osclaítear an dá rangú ón gcnaipe trófaí, in aice le rangú PokerTH. Tagann socruithe boird na gcomórtas seo mar réamhshocruithe nuair a chruthaíonn tú cluiche (BBC Step 1 go 4, WEC, WEC Monthly Final agus WEC Grand Final), ionas gur féidir leat cleachtadh faoi na coinníollacha céanna. Ní chruthaíonn ach riarthóirí an chupáin na cluichí oifigiúla: cláraíonn imreoirí ar shuíomh an chupáin nó ina shnáithe fóraim, agus níl clárú ag teastáil don chluiche laethúil WEC ag 22:00 (am an fhreastalaí). Is le haghaidh cleachtaidh amháin na réamhshocruithe agus ní chruthaíonn siad fíorchluiche cupáin."],
           note: "Is féidir an t-ábhar seo ar fad a fholú d'aon iarraidh in Ardroghanna → Pobal mura bhfuil suim agat sna cupáin." },
         { id: "forumcups",
           t: "Cupáin agus imeachtaí an fhóraim",
           b: [
             "Óstálann fóram pokerth.net an Monthly Cup freisin — sraith mhíosúil ina ndáiltear imreoirí ar bhoird Gold, Silver agus Bronze sula socraítear curadh na míosa — móide cupáin speisialta aon uaire i rith na bliana.",
-            "Foilsítear clárúcháin, sceidil, socruithe boird agus torthaí ar an bhfóram, agus imrítear na cluichí ar an bhfreastalaí oifigiúil cosúil le haon chluiche eile. Is leor cuntas pokerth.net chun na torthaí a leanúint; glactar páirt i gcupán tríd an snáithe fóraim ábhartha."] },
+            "Foilsítear clárúcháin, sceidil, socruithe boird agus torthaí ar an bhfóram, agus imrítear na cluichí ar an bhfreastalaí oifigiúil cosúil le haon chluiche eile. Is leor cuntas pokerth.net chun na torthaí a leanúint; glactar páirt i gcupán tríd an snáithe fóraim ábhartha. Is féidir le himreoirí clárú don Monthly Cup go díreach ar a shuíomh freisin, monthlycup.pokerth.net."] },
         { id: "forumnews",
           t: "Nuacht an fhóraim san fhorhalla",
           b: [

@@ -291,7 +291,8 @@ export const help = {
         { id: "ranked",
           t: "Eré ipò àti sáà",
           b: [
-            "Eré irú Ranking ń kà fún ipò sáà ìjọba. Àkọsílẹ̀ rẹ nínú ìṣàfilọ́lẹ̀ ń fi hàn ìgbà tí o darapọ̀, Ipò rẹ ní sáà lọ́wọ́lọ́wọ́, Àmì, àròpín àti eré tí o ṣe, pẹ̀lú àbájáde rẹ tuntun. Eré déédéé (tí kì í ṣe ti ipò) jẹ́ fún ìgbádùn nìkan, kò sì yí nǹkan kan padà."] },
+            "Eré irú Ranking ń kà fún ipò sáà ìjọba. Àkọsílẹ̀ rẹ nínú ìṣàfilọ́lẹ̀ ń fi hàn ìgbà tí o darapọ̀, Ipò rẹ ní sáà lọ́wọ́lọ́wọ́, Àmì, àròpín àti eré tí o ṣe, pẹ̀lú àbájáde rẹ tuntun. Eré déédéé (tí kì í ṣe ti ipò) jẹ́ fún ìgbádùn nìkan, kò sì yí nǹkan kan padà.",
+            "Òṣèré èyíkéyìí tí ó ní àkáǹtì pokerth.net lè ṣẹ̀dá tábìlì Ranking; àwọn àlejò kò lè darapọ̀ mọ́ eré ipò tàbí ṣẹ̀dá wọn, eré déédéé nìkan ni wọ́n ń ṣe. Tábìlì Ranking ní àyè fún òṣèré 10, kò ní ọ̀rọ̀ aṣínà, ó sì ń bẹ̀rẹ̀ fúnra rẹ̀ ní kété tí ó bá kún. Ó ń lo àpẹẹrẹ Ranking, ìyẹn ọ̀nà “5/5”: ìṣẹ́jú-àáyá 5 fún ìgbésẹ̀ kọ̀ọ̀kan, ìṣẹ́jú-àáyá 5 láàárín àwọn ọwọ́, chip 10,000 àti blind kékeré 50 tí ó ń di ìlọ́po méjì ní gbogbo ọwọ́ 11 — ó yára, ó sì dọ́gba fún gbogbo ènìyàn, nítorí náà àwọn eré máa ń kúrú, a sì lè fi wọ́n wé ara wọn jálẹ̀ sáà."] },
         { id: "rankhow",
           t: "Bí a ṣe ń ṣírò ipò",
           b: [
@@ -306,13 +307,13 @@ export const help = {
           t: "Àwọn ife àwùjọ: BBC àti WeCup",
           b: [
             "Àwùjọ méjì ń ṣe ìdíje tiwọn lórí pokerth.net, ọ̀kọ̀ọ̀kan pẹ̀lú ojú-òpó àti ipò tirẹ̀. Best Brainies Cup (BBC) jẹ́ ìdíje onípele tí a bí ní 2013: o ń gòkè láti Step 1 dé Step 4, sáà tuntun sì ń bẹ̀rẹ̀ lẹ́yìn eré Step 4 kọ̀ọ̀kan, nígbà tí a bá fún ẹnìkan ní ife. WeCup (WEC) ní ìwọ̀n tirẹ̀, tí ó tàn kálẹ̀ jù — àmì 75 fún ipò àkọ́kọ́, lẹ́yìn náà 45, 30, 20… — àmì rẹ̀ sì ń ṣàtúnṣe àròpín rẹ gẹ́gẹ́ bí iye eré tí o ti ṣe ní ìfiwéra pẹ̀lú àwọn ọmọ ẹgbẹ́ mìíràn.",
-            "Àwọn ipò méjèèjì ń ṣí láti bọ́tìnì ife ẹ̀yẹ, lẹ́gbẹ̀ẹ́ ipò PokerTH. Ètò tábìlì àwọn ìdíje wọ̀nyí wà gẹ́gẹ́ bí àpẹẹrẹ nígbà tí o bá ń ṣẹ̀dá eré (BBC Step 1 dé 4, WEC, WEC Monthly Final àti WEC Grand Final), kí o lè ṣe ìdánrawò lábẹ́ ipò kan náà. Láti kópa, o gbọ́dọ̀ forúkọ sílẹ̀ lórí ojú-òpó ife tí ó kàn."],
+            "Àwọn ipò méjèèjì ń ṣí láti bọ́tìnì ife ẹ̀yẹ, lẹ́gbẹ̀ẹ́ ipò PokerTH. Ètò tábìlì àwọn ìdíje wọ̀nyí wà gẹ́gẹ́ bí àpẹẹrẹ nígbà tí o bá ń ṣẹ̀dá eré (BBC Step 1 dé 4, WEC, WEC Monthly Final àti WEC Grand Final), kí o lè ṣe ìdánrawò lábẹ́ ipò kan náà. Àwọn alábòójútó ife nìkan ló ń ṣẹ̀dá àwọn eré ìjọba: àwọn òṣèré ń forúkọ sílẹ̀ lórí ojú-òpó ife náà tàbí nínú àkọlé àpéjọ rẹ̀, eré WEC ojoojúmọ́ ní 22:00 (àkókò olùpín) kò sì nílò ìforúkọsílẹ̀. Àwọn àpẹẹrẹ wà fún ìdánrawò nìkan, wọn kò sì ṣẹ̀dá eré ife gidi."],
           note: "A lè fi àwọn àkóónú wọ̀nyí pamọ́ lẹ́ẹ̀kan nínú Àṣàyàn ìlọsíwájú → Àwùjọ bí àwọn ife kò bá wù ọ́." },
         { id: "forumcups",
           t: "Ife àpéjọ àti ìṣẹ̀lẹ̀",
           b: [
             "Àpéjọ pokerth.net tún ń gbàlejò Monthly Cup, ìdíje oṣooṣù níbi tí a ti ń pín àwọn òṣèré sí tábìlì Gold, Silver àti Bronze kí a tó dé akọni oṣù náà ládé, pẹ̀lú ife pàtàkì lẹ́ẹ̀kọ̀ọ̀kan jálẹ̀ ọdún.",
-            "A ń tẹ ìforúkọsílẹ̀, àkókò, ètò tábìlì àti àbájáde jáde lórí àpéjọ, a sì ń ṣe àwọn eré lórí olùpín ìjọba bí èyíkéyìí mìíràn. Àkáǹtì pokerth.net tó láti tẹ̀lé àbájáde; láti wọ ife kan, lo àkọlé àpéjọ tí ó bá a mu."] },
+            "A ń tẹ ìforúkọsílẹ̀, àkókò, ètò tábìlì àti àbájáde jáde lórí àpéjọ, a sì ń ṣe àwọn eré lórí olùpín ìjọba bí èyíkéyìí mìíràn. Àkáǹtì pokerth.net tó láti tẹ̀lé àbájáde; láti wọ ife kan, lo àkọlé àpéjọ tí ó bá a mu. Àwọn òṣèré tún lè forúkọ sílẹ̀ fún Monthly Cup tààrà lórí ojú-òpó rẹ̀, monthlycup.pokerth.net."] },
         { id: "forumnews",
           t: "Ìròyìn àpéjọ ní gbọ̀ngàn",
           b: [

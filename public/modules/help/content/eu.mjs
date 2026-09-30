@@ -291,7 +291,8 @@ export const help = {
         { id: "ranked",
           t: "Sailkapeneko partidak eta denboraldiak",
           b: [
-            "Ranking motako partidak denboraldiko sailkapen ofizialean zenbatzen dira. Aplikazioko zure profilak noiz sartu zinen, uneko denboraldiko zure Postua, Puntuazioa, batez bestekoa eta jokatutako partidak erakusten ditu, gehi zure azken emaitzak. Partida arruntak (sailkapenik gabekoak) dibertsiorako dira eta ez dute ezer aldatzen."] },
+            "Ranking motako partidak denboraldiko sailkapen ofizialean zenbatzen dira. Aplikazioko zure profilak noiz sartu zinen, uneko denboraldiko zure Postua, Puntuazioa, batez bestekoa eta jokatutako partidak erakusten ditu, gehi zure azken emaitzak. Partida arruntak (sailkapenik gabekoak) dibertsiorako dira eta ez dute ezer aldatzen.",
+            "pokerth.net kontua duen edozein jokalarik sor dezake Ranking mahai bat; gonbidatuek ezin dute sailkapeneko partidetan sartu ez halakorik sortu, eta partida arruntak baino ez dituzte jokatzen. Ranking mahai batek 10 jokalarirentzako lekua du, ez du pasahitzik eta automatikoki hasten da bete bezain laster. Ranking txantiloia erabiltzen du, «5/5» formatua: 5 segundo jokatzeko, 5 segundo eskuen artean, 10.000 txip eta 50eko blind txikia, 11 eskutik behin bikoizten dena — azkarra eta berdina guztientzat, partidak laburrak eta denboraldi osoan alderagarriak izan daitezen."] },
         { id: "rankhow",
           t: "Nola kalkulatzen den sailkapena",
           b: [
@@ -306,13 +307,13 @@ export const help = {
           t: "Komunitateko kopak: BBC eta WeCup",
           b: [
             "Bi komunitatek beren lehiaketak antolatzen dituzte pokerth.net-en, bakoitza bere webgune eta sailkapenarekin. Best Brainies Cup (BBC) 2013an sortutako mailaka egindako txapelketa da: Step 1etik Step 4ra aurrera egiten duzu, eta denboraldi berri bat hasten da Step 4 partida bakoitzaren ondoren, kopa ematen denean. WeCup-ek (WEC) bere eskala propioa du, askoz zabalagoa — 75 puntu lehen postuarentzat, gero 45, 30, 20… — eta bere puntuazioak zure batez bestekoa normalizatzen du jokatu dituzun partiden kopuruaren arabera, beste kideekin alderatuta.",
-            "Bi sailkapenak garaikur-botoitik irekitzen dira, PokerTH sailkapenaren ondoan. Lehiaketa hauen mahai-ezarpenak txantiloi gisa datoz partida bat sortzean (BBC Step 1etik 4ra, WEC, WEC Monthly Final eta WEC Grand Final), baldintza berdinetan entrenatu ahal izateko. Parte hartzeko, dagokion kopako webgunean izena eman behar da."],
+            "Bi sailkapenak garaikur-botoitik irekitzen dira, PokerTH sailkapenaren ondoan. Lehiaketa hauen mahai-ezarpenak txantiloi gisa datoz partida bat sortzean (BBC Step 1etik 4ra, WEC, WEC Monthly Final eta WEC Grand Final), baldintza berdinetan entrenatu ahal izateko. Kopako administratzaileek bakarrik sortzen dituzte partida ofizialak: jokalariek kopako webgunean edo haren foroko harian ematen dute izena, eta WECen eguneroko partidak, 22:00etan (zerbitzariaren orduan), ez du izen-ematerik behar. Txantiloiak entrenatzeko baino ez dira, eta ez dute benetako kopa-partidarik sortzen."],
           note: "Kopek interesik ez badizute, eduki hau guztia batera ezkuta daiteke Aukera aurreratuak → Komunitatea atalean." },
         { id: "forumcups",
           t: "Foroko kopak eta ekitaldiak",
           b: [
             "pokerth.net-eko foroak Monthly Cup ere antolatzen du — hileko serie bat, non jokalariak Gold, Silver eta Bronze mahaietan banatzen diren hilabeteko txapelduna erabaki aurretik — gehi urtean zehar behin bakarrik egiten diren kopa bereziak.",
-            "Izen-emateak, egutegiak, mahai-ezarpenak eta emaitzak foroan argitaratzen dira, eta partidak zerbitzari ofizialean jokatzen dira, beste edozein bezala. Emaitzei jarraitzeko pokerth.net kontu bat nahikoa da; kopa batean parte hartzea dagokion foroko harian egiten da."] },
+            "Izen-emateak, egutegiak, mahai-ezarpenak eta emaitzak foroan argitaratzen dira, eta partidak zerbitzari ofizialean jokatzen dira, beste edozein bezala. Emaitzei jarraitzeko pokerth.net kontu bat nahikoa da; kopa batean parte hartzea dagokion foroko harian egiten da. Jokalariek Monthly Cupen zuzenean ere eman dezakete izena haren webgunean, monthlycup.pokerth.net."] },
         { id: "forumnews",
           t: "Foroko berriak egongelan",
           b: [

@@ -291,7 +291,8 @@ export const help = {
         { id: "ranked",
           t: "Reyting oʻyinlari va mavsumlar",
           b: [
-            "Reyting turidagi oʻyinlar rasmiy mavsum reytingiga hisoblanadi. Ilovadagi profilingiz qachon qoʻshilganingizni, joriy mavsumdagi Oʻrin, Hisob, oʻrtacha koʻrsatkich va oʻynalgan oʻyinlaringizni hamda soʻnggi natijalaringizni koʻrsatadi. Oddiy (reytingsiz) oʻyinlar shunchaki koʻngilochar va hech narsani oʻzgartirmaydi."] },
+            "Reyting turidagi oʻyinlar rasmiy mavsum reytingiga hisoblanadi. Ilovadagi profilingiz qachon qoʻshilganingizni, joriy mavsumdagi Oʻrin, Hisob, oʻrtacha koʻrsatkich va oʻynalgan oʻyinlaringizni hamda soʻnggi natijalaringizni koʻrsatadi. Oddiy (reytingsiz) oʻyinlar shunchaki koʻngilochar va hech narsani oʻzgartirmaydi.",
+            "pokerth.net hisobiga ega har qanday oʻyinchi reyting stolini yaratishi mumkin; mehmonlar reyting oʻyinlariga qoʻshila ham, ularni yarata ham olmaydi va faqat oddiy oʻyinlarni oʻynaydi. Reyting stolida 10 ta oʻrin bor, paroli yoʻq va toʻlishi bilanoq avtomatik boshlanadi. U Reyting shablonidan, yaʼni «5/5» formatidan foydalanadi: har bir harakat uchun 5 soniya, qoʻllar orasida 5 soniya, 10 000 fishka va har 11 qoʻlda ikki baravar oshadigan 50 lik kichik blaynd — tez va hamma uchun bir xil, shuning uchun oʻyinlar qisqa boʻlib qoladi va butun mavsum davomida solishtirish mumkin boʻladi."] },
         { id: "rankhow",
           t: "Reyting qanday hisoblanadi",
           b: [
@@ -306,13 +307,13 @@ export const help = {
           t: "Hamjamiyat kuboklari: BBC va WeCup",
           b: [
             "Ikki hamjamiyat pokerth.net’da oʻz musobaqalarini oʻtkazadi, har birining oʻz sayti va reytingi bor. Best Brainies Cup (BBC) — 2013-yilda paydo boʻlgan bosqichli turnir: siz 1-bosqichdan 4-bosqichgacha koʻtarilasiz va har bir 4-bosqich oʻyinidan soʻng, kubok topshirilgach, yangi mavsum boshlanadi. WeCup (WEC) oʻzining ancha keng yoyilgan shkalasiga ega — birinchi oʻrin uchun 75 ochko, soʻng 45, 30, 20… — va uning hisobi oʻrtacha koʻrsatkichingizni boshqa aʼzolarga nisbatan oʻynagan oʻyinlaringiz soniga qarab meʼyorlashtiradi.",
-            "Ikkala reyting ham sovrin tugmasidan, PokerTH reytingi yonida ochiladi. Bu musobaqalarning stol sozlamalari oʻyin yaratishda tayyor shablonlar sifatida keladi (BBC 1–4-bosqich, WEC, WEC Monthly Final va WEC Grand Final), shuning uchun xuddi shunday sharoitda mashq qilishingiz mumkin. Qatnashish uchun tegishli kubok saytida roʻyxatdan oʻtish kerak."],
+            "Ikkala reyting ham sovrin tugmasidan, PokerTH reytingi yonida ochiladi. Bu musobaqalarning stol sozlamalari oʻyin yaratishda tayyor shablonlar sifatida keladi (BBC 1–4-bosqich, WEC, WEC Monthly Final va WEC Grand Final), shuning uchun xuddi shunday sharoitda mashq qilishingiz mumkin. Rasmiy oʻyinlarni faqat kubok adminlari yaratadi: oʻyinchilar kubok saytida yoki uning forum mavzusida roʻyxatdan oʻtadi, 22:00 dagi (server vaqti bilan) kundalik WEC oʻyini esa roʻyxatdan oʻtishni talab qilmaydi. Shablonlar faqat mashq uchun va haqiqiy kubok oʻyinini yaratmaydi."],
           note: "Agar kuboklar sizga qiziq boʻlmasa, bu kontentni Kengaytirilgan sozlamalar → Hamjamiyat boʻlimida bir yoʻla yashirish mumkin." },
         { id: "forumcups",
           t: "Forum kuboklari va tadbirlar",
           b: [
             "pokerth.net forumida Monthly Cup ham oʻtkaziladi — bu oylik seriya boʻlib, unda oy chempioni aniqlanishidan oldin oʻyinchilar Oltin, Kumush va Bronza stollariga taqsimlanadi; bundan tashqari yil davomida bir martalik maxsus kuboklar ham boʻladi.",
-            "Roʻyxatga olish, jadvallar, stol sozlamalari va natijalar forumda eʼlon qilinadi, oʻyinlar esa boshqa har qanday oʻyin kabi rasmiy serverda oʻynaladi. Natijalarni kuzatish uchun pokerth.net hisobi yetarli; kubokka qoʻshilish tegishli forum mavzusi orqali amalga oshiriladi."] },
+            "Roʻyxatga olish, jadvallar, stol sozlamalari va natijalar forumda eʼlon qilinadi, oʻyinlar esa boshqa har qanday oʻyin kabi rasmiy serverda oʻynaladi. Natijalarni kuzatish uchun pokerth.net hisobi yetarli; kubokka qoʻshilish tegishli forum mavzusi orqali amalga oshiriladi. Oʻyinchilar Monthly Cup’ga bevosita uning saytida, monthlycup.pokerth.net orqali ham roʻyxatdan oʻtishi mumkin."] },
         { id: "forumnews",
           t: "Lobbida forum yangiliklari",
           b: [

@@ -291,7 +291,8 @@ export const help = {
         { id: "ranked",
           t: "Reytinq oyunları və mövsümlər",
           b: [
-            "Ranking növlü oyunlar rəsmi mövsüm reytinqinə sayılır. Tətbiqdaxili profiliniz nə vaxt qoşulduğunuzu, cari mövsümdəki Yerinizi, Nəticənizi, orta göstəricinizi və oynanılan oyunları, üstəgəl son nəticələrinizi göstərir. Adi (reytinqsiz) oyunlar sadəcə əyləncə üçündür və heç nəyi dəyişmir."] },
+            "Ranking növlü oyunlar rəsmi mövsüm reytinqinə sayılır. Tətbiqdaxili profiliniz nə vaxt qoşulduğunuzu, cari mövsümdəki Yerinizi, Nəticənizi, orta göstəricinizi və oynanılan oyunları, üstəgəl son nəticələrinizi göstərir. Adi (reytinqsiz) oyunlar sadəcə əyləncə üçündür və heç nəyi dəyişmir.",
+            "pokerth.net hesabı olan istənilən oyunçu Ranking masası yarada bilər; qonaqlar reytinq oyunlarına nə qoşula, nə də onları yarada bilər və yalnız Normal oyunlar oynayırlar. Ranking masasında 10 oyunçu yeri var, parolu yoxdur və dolan kimi avtomatik başlayır. O, Ranking şablonundan, yəni “5/5” formatından istifadə edir: hərəkət üçün 5 saniyə, əllər arasında 5 saniyə, 10 000 fiş və hər 11 əldən bir ikiqat artan 50-lik kiçik blaind — sürətli və hamı üçün eyni, beləliklə oyunlar qısa qalır və mövsüm boyu müqayisə oluna bilir."] },
         { id: "rankhow",
           t: "Reytinq necə hesablanır",
           b: [
@@ -306,13 +307,13 @@ export const help = {
           t: "İcma kubokları: BBC və WeCup",
           b: [
             "İki icma pokerth.net-də öz yarışlarını keçirir, hər birinin öz saytı və reytinqi var. Best Brainies Cup (BBC) 2013-cü ildə yaranmış pilləli turnirdir: Step 1-dən Step 4-ə qədər irəliləyirsiniz və hər Step 4 oyunundan sonra, kubok təqdim olunanda yeni mövsüm başlayır. WeCup (WEC) öz şkalasına malikdir, daha geniş paylanmış — birinci yer üçün 75 xal, sonra 45, 30, 20… — və onun nəticəsi ortanızı digər üzvlərlə müqayisədə oynadığınız oyunların sayına görə normallaşdırır.",
-            "Hər iki reytinq kubok düyməsindən, PokerTH reytinqinin yanından açılır. Bu yarışların masa parametrləri oyun yaradanda şablonlar kimi gəlir (BBC Step 1-dən 4-ə, WEC, WEC Monthly Final və WEC Grand Final), beləliklə eyni şərtlərdə məşq edə bilərsiniz. İştirak üçün müvafiq kubokun saytında qeydiyyat lazımdır."],
+            "Hər iki reytinq kubok düyməsindən, PokerTH reytinqinin yanından açılır. Bu yarışların masa parametrləri oyun yaradanda şablonlar kimi gəlir (BBC Step 1-dən 4-ə, WEC, WEC Monthly Final və WEC Grand Final), beləliklə eyni şərtlərdə məşq edə bilərsiniz. Rəsmi oyunları yalnız kubok adminləri yaradır: oyunçular kubokun saytında və ya onun forum mövzusunda qeydiyyatdan keçir, 22:00-dakı (server vaxtı ilə) gündəlik WEC oyunu isə qeydiyyat tələb etmir. Şablonlar yalnız məşq üçündür və əsl kubok oyunu yaratmır."],
           note: "Kuboklar sizə maraqlı deyilsə, bu məzmun Əlavə seçimlər → İcma bölməsində birdəfəyə gizlədilə bilər." },
         { id: "forumcups",
           t: "Forum kubokları və tədbirlər",
           b: [
             "pokerth.net forumu həmçinin Monthly Cup-a ev sahibliyi edir — ayın çempionu müəyyən edilməzdən əvvəl oyunçuların Gold, Silver və Bronze masalarına bölündüyü aylıq seriya — üstəgəl il ərzində birdəfəlik xüsusi kuboklar.",
-            "Qeydiyyatlar, cədvəllər, masa parametrləri və nəticələr forumda dərc olunur, oyunlar isə digərləri kimi rəsmi serverdə oynanılır. Nəticələri izləmək üçün pokerth.net hesabı kifayətdir; kubokda iştirak müvafiq forum mövzusu vasitəsilədir."] },
+            "Qeydiyyatlar, cədvəllər, masa parametrləri və nəticələr forumda dərc olunur, oyunlar isə digərləri kimi rəsmi serverdə oynanılır. Nəticələri izləmək üçün pokerth.net hesabı kifayətdir; kubokda iştirak müvafiq forum mövzusu vasitəsilədir. Oyunçular Monthly Cup üçün birbaşa onun saytında, monthlycup.pokerth.net-də də qeydiyyatdan keçə bilərlər."] },
         { id: "forumnews",
           t: "Lobbidə forum xəbərləri",
           b: [

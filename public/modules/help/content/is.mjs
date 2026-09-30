@@ -291,7 +291,8 @@ export const help = {
         { id: "ranked",
           t: "Stigaleikir og tímabil",
           b: [
-            "Leikir af gerðinni Stigaleikur telja í opinberu stigatöflu tímabilsins. Prófíllinn þinn í forritinu sýnir hvenær þú skráðir þig, sæti þitt á yfirstandandi tímabili, skor, meðaltal og spilaða leiki, auk nýjustu úrslita þinna. Venjulegir leikir (ekki stigaleikir) eru bara til gamans og breyta engu."] },
+            "Leikir af gerðinni Stigaleikur telja í opinberu stigatöflu tímabilsins. Prófíllinn þinn í forritinu sýnir hvenær þú skráðir þig, sæti þitt á yfirstandandi tímabili, skor, meðaltal og spilaða leiki, auk nýjustu úrslita þinna. Venjulegir leikir (ekki stigaleikir) eru bara til gamans og breyta engu.",
+            "Allir leikmenn með pokerth.net aðgang geta búið til stigaleikjaborð; gestir geta hvorki tekið þátt í stigaleikjum né búið þá til og spila aðeins venjulega leiki. Stigaleikjaborð tekur 10 leikmenn, hefur ekkert lykilorð og fer sjálfkrafa af stað um leið og það er fullt. Það notar forstillinguna Stigaleikur, „5/5“ sniðið: 5 sekúndur fyrir hverja aðgerð, 5 sekúndur milli handa, 10.000 spilapeningar og litli blindur upp á 50 sem tvöfaldast á 11 handa fresti — hratt og eins fyrir alla, svo leikirnir haldast stuttir og sambærilegir allt tímabilið."] },
         { id: "rankhow",
           t: "Hvernig stigataflan er reiknuð",
           b: [
@@ -306,13 +307,13 @@ export const help = {
           t: "Bikarar samfélaganna: BBC og WeCup",
           b: [
             "Tvö samfélög halda eigin keppnir á pokerth.net, hvort með sína síðu og sína stigatöflu. Best Brainies Cup (BBC) er þrepamót sem varð til 2013: þú klifrar úr Step 1 upp í Step 4, og bikar er veittur eftir hvern Step 4 leik og nýtt tímabil hefst. WeCup (WEC) hefur sinn eigin, mun breiðari skala — 75 stig fyrir fyrsta sæti, síðan 45, 30, 20… — og skorið staðlar meðaltalið þitt eftir fjölda spilaðra leikja miðað við aðra meðlimi.",
-            "Báðar stigatöflurnar opnast úr bikarhnappinum, við hlið PokerTH stigatöflunnar. Borðstillingar þessara keppna eru í boði sem forstillingar þegar leikur er búinn til (BBC Step 1 til 4, WEC, WEC Monthly Final, WEC Grand Final), svo þú getur æft við sömu aðstæður. Til að taka þátt þarf að skrá sig á síðu viðkomandi bikars."],
+            "Báðar stigatöflurnar opnast úr bikarhnappinum, við hlið PokerTH stigatöflunnar. Borðstillingar þessara keppna eru í boði sem forstillingar þegar leikur er búinn til (BBC Step 1 til 4, WEC, WEC Monthly Final, WEC Grand Final), svo þú getur æft við sömu aðstæður. Aðeins stjórnendur bikarsins búa til opinberu leikina: leikmenn skrá sig á síðu bikarsins eða í þræði hans á spjallborðinu, og daglegi WEC-leikurinn kl. 22:00 (að tíma netþjóns) þarf enga skráningu. Forstillingarnar eru aðeins til æfinga og búa ekki til raunverulegan bikarleik."],
           note: "Ef þú hefur ekki áhuga á bikurunum er hægt að fela þetta efni í einu lagi í Ítarlegir valkostir → Samfélag." },
         { id: "forumcups",
           t: "Bikarar og viðburðir spjallborðsins",
           b: [
             "Spjallborð pokerth.net heldur líka Monthly Cup, mánaðarlega mótaröð sem skiptir leikmönnum á Gold, Silver og Bronze borð áður en meistari mánaðarins er krýndur, auk sérstakra bikara yfir árið.",
-            "Skráningar, dagskrá, borðstillingar og úrslit eru birt á spjallborðinu og leikirnir eru spilaðir á opinbera þjóninum eins og allir aðrir leikir. pokerth.net aðgangur nægir til að fylgjast með úrslitum; þátttaka í bikar fer fram í gegnum viðkomandi þráð á spjallborðinu."] },
+            "Skráningar, dagskrá, borðstillingar og úrslit eru birt á spjallborðinu og leikirnir eru spilaðir á opinbera þjóninum eins og allir aðrir leikir. pokerth.net aðgangur nægir til að fylgjast með úrslitum; þátttaka í bikar fer fram í gegnum viðkomandi þráð á spjallborðinu. Leikmenn geta líka skráð sig í Monthly Cup beint á síðu hans, monthlycup.pokerth.net."] },
         { id: "forumnews",
           t: "Fréttir af spjallborðinu í anddyrinu",
           b: [

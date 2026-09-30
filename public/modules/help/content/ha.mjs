@@ -291,7 +291,8 @@ export const help = {
         { id: "ranked",
           t: "Wasannin matsayi da kaka",
           b: [
-            "Wasannin nau'in Ranking ana ƙirga su a matsayin kaka na hukuma. Bayaninka a cikin manhaja yana nuna lokacin da ka shiga, Matsayinka, Makinka, matsakaicinka da wasannin da ka buga a kakar yanzu, tare da sakamakonka na ƙarshe. Wasanni na al'ada (marasa matsayi) don nishaɗi ne kawai kuma ba sa canja komai."] },
+            "Wasannin nau'in Ranking ana ƙirga su a matsayin kaka na hukuma. Bayaninka a cikin manhaja yana nuna lokacin da ka shiga, Matsayinka, Makinka, matsakaicinka da wasannin da ka buga a kakar yanzu, tare da sakamakonka na ƙarshe. Wasanni na al'ada (marasa matsayi) don nishaɗi ne kawai kuma ba sa canja komai.",
+            "Duk ɗan wasan da ke da asusun pokerth.net zai iya ƙirƙirar teburin Ranking; baƙi ba za su iya shiga ko ƙirƙirar wasannin matsayi ba, kuma wasanni na al'ada kawai suke bugawa. Teburin Ranking yana da kujeru 10, ba shi da kalmar sirri kuma yana farawa kai tsaye da zarar ya cika. Yana amfani da samfurin Ranking, tsarin “5/5”: daƙiƙa 5 don yin motsi, daƙiƙa 5 tsakanin hannaye, chips 10,000 da ƙaramin blind na 50 da ke ninkuwa bayan kowane hannaye 11 — da sauri kuma iri ɗaya ga kowa, don haka wasanni suna zama gajeru kuma ana iya kwatanta su a duk tsawon kakar."] },
         { id: "rankhow",
           t: "Yadda ake lissafa matsayi",
           b: [
@@ -306,13 +307,13 @@ export const help = {
           t: "Kofunan al'umma: BBC da WeCup",
           b: [
             "Al'ummomi biyu suna gudanar da gasa nasu a pokerth.net, kowane da shafinsa da matsayinsa. Best Brainies Cup (BBC) gasa ce ta matakai da aka fara a 2013: kana ci gaba daga Step 1 zuwa Step 4, kuma sabuwar kaka tana farawa bayan kowane wasan Step 4, lokacin da aka ba da kofi. WeCup (WEC) yana da ma'aunin kansa, wanda ya fi yaɗuwa sosai — maki 75 ga matsayi na farko, sannan 45, 30, 20… — kuma makinsa yana daidaita matsakaicinka bisa adadin wasannin da ka buga idan aka kwatanta da sauran membobi.",
-            "Duka matsayin biyu suna buɗewa daga maɓallin kofi, kusa da matsayin PokerTH. Saitunan tebur na waɗannan gasa suna zuwa a matsayin samfura lokacin ƙirƙirar wasa (BBC Step 1 zuwa 4, WEC, WEC Monthly Final da WEC Grand Final), don ka iya yin horo a yanayi ɗaya. Don shiga, dole ne ka yi rajista a shafin kofin da abin ya shafa."],
+            "Duka matsayin biyu suna buɗewa daga maɓallin kofi, kusa da matsayin PokerTH. Saitunan tebur na waɗannan gasa suna zuwa a matsayin samfura lokacin ƙirƙirar wasa (BBC Step 1 zuwa 4, WEC, WEC Monthly Final da WEC Grand Final), don ka iya yin horo a yanayi ɗaya. Masu kula da kofin ne kaɗai ke ƙirƙirar wasannin hukuma: 'yan wasa suna yin rajista a shafin kofin ko a zaren dandalinsa, kuma wasan WEC na kullum da ƙarfe 22:00 (lokacin sabar) ba ya buƙatar rajista. Samfuran don horo ne kawai kuma ba sa ƙirƙirar ainihin wasan kofi."],
           note: "Ana iya ɓoye duk waɗannan abubuwan a lokaci ɗaya a Zaɓuɓɓuka na ci gaba → Al'umma idan kofuna ba su burge ka ba." },
         { id: "forumcups",
           t: "Kofunan dandali da abubuwan da ke faruwa",
           b: [
             "Dandalin pokerth.net yana kuma ɗaukar Monthly Cup — jerin wasa na wata-wata inda ake raba 'yan wasa tsakanin teburan Gold, Silver da Bronze kafin a tantance zakaran wata — da kofuna na musamman na lokaci ɗaya a cikin shekara.",
-            "Ana buga rajista, jadawali, saitunan tebur da sakamako a dandali, kuma ana buga wasannin a sabar hukuma kamar kowane. Asusun pokerth.net ya isa don bibiyar sakamako; shiga kofi yana gudana ta zaren dandalin da abin ya shafa."] },
+            "Ana buga rajista, jadawali, saitunan tebur da sakamako a dandali, kuma ana buga wasannin a sabar hukuma kamar kowane. Asusun pokerth.net ya isa don bibiyar sakamako; shiga kofi yana gudana ta zaren dandalin da abin ya shafa. 'Yan wasa kuma za su iya yin rajista don Monthly Cup kai tsaye a shafinsa, monthlycup.pokerth.net."] },
         { id: "forumnews",
           t: "Labaran dandali a zaure",
           b: [
