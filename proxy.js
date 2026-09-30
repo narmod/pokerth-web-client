@@ -6610,7 +6610,8 @@ function emptyVisitsStore() {
     days: {}, totalV: 0, totalRet: 0, allU: {}, totalLV: 0, allLU: {},
     allM: { pokerthnet: 0, lan: 0, offline: 0, live: 0 },
     env: {}, envSince: 0, music: {}, musicSince: 0, hourSince: 0,
-    musicVotes: {}, musicVotesSince: 0
+    musicVotes: {}, musicVotesSince: 0,
+    guide: {}, guideSince: 0
   };
 }
 let visitsStore = emptyVisitsStore();
@@ -6632,6 +6633,8 @@ try {
     visitsStore.musicVotes = (_vs.musicVotes && typeof _vs.musicVotes === 'object') ? _vs.musicVotes : {};
     visitsStore.musicVotesSince = (typeof _vs.musicVotesSince === 'number') ? _vs.musicVotesSince : 0;
     visitsStore.hourSince = (typeof _vs.hourSince === 'number') ? _vs.hourSince : 0;
+    visitsStore.guide = (_vs.guide && typeof _vs.guide === 'object') ? _vs.guide : {};
+    visitsStore.guideSince = (typeof _vs.guideSince === 'number') ? _vs.guideSince : 0;
   }
 } catch (e) { /* first run — start empty */ }
 let _visitsSaveTimer = null;
@@ -6743,6 +6746,25 @@ function recordMusicPlay(id) {
   if (!bucket.mu) bucket.mu = {};
   bucket.mu[id] = (bucket.mu[id] || 0) + 1;
   saveVisitsSoon();
+}
+// ── Aide de l'As (modules/guide) : compteurs anonymes ─────────────────────
+// POST /__guide { ctx, ev } — aucun identifiant de visiteur, aucun pseudo,
+// aucune table. Seules les paires (contexte, événement) de
+// server/guide-stats.js sont comptées : la cardinalité est bornée quoi qu'on
+// envoie. Même fichier, même rétention, même remise à zéro que la musique.
+const GUIDE_STATS = require('./server/guide-stats.js');
+function recordGuideEvent(ctx, ev) {
+  if (!GUIDE_STATS.valid(ctx, ev)) return false;
+  const day = visitDayKey();
+  let bucket = visitsStore.days[day];
+  if (!bucket) { bucket = visitsStore.days[day] = { v: 0, ids: {} }; pruneVisitDays(); }
+  GUIDE_STATS.record(visitsStore, bucket, ctx, ev, Date.now());
+  saveVisitsSoon();
+  return true;
+}
+function visitGuidePeriod(daysBack) {
+  const today = visitDayIndex();
+  return GUIDE_STATS.period(daysBack, function (i) { return visitsStore.days[visitDayKeyFromIndex(today - i)] || null; });
 }
 // ── Pouces haut / bas sur la musique ──────────────────────────────────────
 // Le lecteur montre deux pouces sur la piste EN COURS uniquement. Un clic poste
@@ -6899,7 +6921,7 @@ function _envBump(key, val) {
 // indiscernables — code non déployé, ping jamais émis, ou personne n'est
 // passé — et on ne peut que deviner laquelle. En mémoire, non persisté : c'est
 // une mesure du processus courant, pas une statistique.
-const _pingStats = { boot: Date.now(), n: 0, nMode: 0, nLive: 0, nMusic: 0, last: 0 };
+const _pingStats = { boot: Date.now(), n: 0, nMode: 0, nLive: 0, nMusic: 0, nGuide: 0, last: 0 };
 // ── Langues traduites ─────────────────────────────────────────────────────
 // Lues sur le disque, pas recopiees : public/modules/lang/ est la seule source
 // de verite, et une liste tenue a la main a cote finit toujours par diverger.
@@ -7281,7 +7303,11 @@ function visitsSummary(periodDays) {
     music: visitsStore.music || {},
     musicTitles: musicPlayTitles(),
     musicSince: visitsStore.musicSince || 0,
-    pings: { boot: _pingStats.boot, visits: _pingStats.n, modes: _pingStats.nMode, live: _pingStats.nLive, music: _pingStats.nMusic, last: _pingStats.last },
+    // Aide de l'As : totaux depuis le début, et sur la période choisie (jours comptés)
+    guide: GUIDE_STATS.summary(visitsStore.guide || {}),
+    guidePeriod: (function () { const p = visitGuidePeriod(P); return { days: p.days, summary: GUIDE_STATS.summary(p.guide) }; })(),
+    guideSince: visitsStore.guideSince || 0,
+    pings: { boot: _pingStats.boot, visits: _pingStats.n, modes: _pingStats.nMode, live: _pingStats.nLive, music: _pingStats.nMusic, guide: _pingStats.nGuide, last: _pingStats.last },
     db: { enabled: _dbStatus.enabled, connected: _dbStatus.connected, error: _dbStatus.error, lastWrite: _dbStatus.lastWrite, source: _dbStatus.source }
   };
 }
@@ -11707,6 +11733,23 @@ const httpServer = http.createServer((req, res) => {
       res.writeHead(204, { 'Cache-Control': 'no-store' });
       res.end();
     });
+    return;
+  }
+
+  // ── Ace's Help counter (anonymous, modules/guide/beacons.mjs) ──
+  // POST { ctx, ev }: one event of the contextual assistant (offer answered,
+  // tip shown / done / dismissed, Join from the bubble, ranked game started).
+  // No visitor id. Pairs outside server/guide-stats.js are refused with 400
+  // and create no key; a counted event gets an empty 204, like /__music.
+  if (reqPathOnly === '/__guide') {
+    if (req.method !== 'POST') { res.writeHead(405); res.end('Method not allowed'); return; }
+    readJsonBody(req, function (d) {
+      let okEv = false;
+      try { okEv = !!(d && recordGuideEvent(d.ctx, d.ev)); } catch (e) { okEv = false; }
+      if (okEv) { _pingStats.nGuide++; _pingStats.last = Date.now(); }
+      res.writeHead(okEv ? 204 : 400, { 'Cache-Control': 'no-store' });
+      res.end();
+    }, 512);
     return;
   }
 

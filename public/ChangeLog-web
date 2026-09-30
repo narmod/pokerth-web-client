@@ -1,4 +1,8 @@
-2026-09-30 version 2.1.9-web.260 (current series):
+2026-09-30 version 2.1.9-web.261 (current series):
+- new: server admins — Ace’s Help statistics (anonymous, no identifier): how many players accept the help, which tips are read or put off, and the Ranking funnel (table shown → joined → game started)
+- improvement: privacy page — the Ace’s Help counters are listed
+
+2026-09-30 version 2.1.9-web.260:
 - new: Ace’s Help — the Ace can guide you through the app as you go: offered once at first launch, then on or off with the button on the login screen, in the menus next to Help, or in Advanced options → Assistance
 - new: Ace’s Help, pokerth.net lobby — he points at the ranked table closest to starting and offers to join it, or to create one when none is open (players with an account; guests are shown how to get a free account)
 - new: Ace’s Help, ranked waiting room — while the table fills up he explains the ranking (points, Score, seasons, why 5/5 is everyone’s favourite), wishes you good luck, and back in the lobby tells you your place and points

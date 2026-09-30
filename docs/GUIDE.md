@@ -1,6 +1,7 @@
 # Ace's Help — contextual assistant
 
-Status: **L2 shipped in `2.1.9-web.260`, public, 83 languages.** L1 (the foundation)
+Status: **L3 shipped in `2.1.9-web.261`: anonymous statistics and the admin card.** L2
+(`web.260`) is public in 83 languages. L1 (the foundation)
 shipped in `web.259` behind `?guide=1`. L2 adds the Ranking contexts: C1 in the lobby and
 C2 in the waiting room, including the result of the game.
 
@@ -141,6 +142,47 @@ The first-launch offer is not made in an automated browser (`navigator.webdriver
 other tests' screenshots stay unchanged. `test-guide-browser` opts in with
 `pth_guide_webdriver`.
 
+## Statistics (L3)
+
+`modules/guide/beacons.mjs` posts `POST /__guide { ctx, ev }`. The request carries no
+visitor id, no name and no table. Offline, events wait in `localStorage pth_guide_q` (at
+most 50) and go out when the network is back. *Do not count my visits* on the admin
+side (`pth_no_count`) switches them off.
+
+The proxy only counts the pairs below (`server/guide-stats.js`). Any other pair gets a 400
+and creates no key. The counts are stored in `visits.json` under `guide`, with a per-day
+series in the visit buckets (`gd`), and share the visit counter's retention and reset.
+
+| ctx | events |
+|---|---|
+| `offer` | `offered`, `accepted`, `dismissed` |
+| `welcome` | `shown`, `done` |
+| `lobby-ranking` | `shown`, `done`, `dismissed`, `join`, `started` |
+| `lobby-ranking-create` | `shown`, `done`, `dismissed`, `create` |
+| `lobby-guest` | `shown`, `done`, `dismissed`, `guest_redirect` |
+| `wait-ranking` | `shown`, `done`, `dismissed`, `started` |
+| `ranked-result` | `shown`, `done`, `dismissed` |
+
+What each event means:
+
+- `shown` is counted once per session per context. For the game result, it is counted
+  once per game.
+- `done` means *Got it*, the last *Next*, or an action button.
+- `dismissed` means *Later*, Escape, a tap on the Ace, or 25 s without an answer.
+- `lobby-ranking.started` means the table the player joined from the bubble started. A
+  Ranking game only starts with 10/10 players.
+- `wait-ranking.started` means a Ranking game started while the help was on.
+
+The admin card is in the *Traffic* tab, under *Ace's Help*, and follows the selected
+period. It shows:
+
+- the acceptance of the first-launch offer;
+- the **Ranking funnel**: table highlighted → joined from the bubble → game started;
+- shown, done and *Later* for each tip;
+- guests on their own line.
+
+Because `proxy.js` changed, the container has to be restarted after the deploy.
+
 ## Texts (`modules/guide/lang/<code>.mjs`)
 
 The Ace's texts live in their own catalogues, loaded on demand. English (`en.mjs`) is the
@@ -171,6 +213,9 @@ The help has an *Ace's Help* section (`start.acehelp`) in all 83 languages.
 - `npm run test:guide-pick`: the table choice, the point scale and the finishing place.
 - `npm run test:guide-contexts`: the right context in each situation, no repeats, and the
   guest rules; every text, button and `{placeholder}` resolves.
+- `npm run test:guide-admin`: `server/guide-stats.js`, the real `/__guide` route
+  (spawned on a scratch file: 204, 400 for unknown pairs, 405, nothing stored), the
+  beacons (no identifier, the offline queue) and the admin card.
 - `npm run test:guide-browser`: a real browser on phones and a desktop. It checks the
   offer, the buttons, the menu, the lobby, that the Ace leaves when a hand starts, that the
   option switches him off, the plain mode, and that the docked Ace hides nothing
@@ -187,8 +232,8 @@ The help has an *Ace's Help* section (`start.acehelp`) in all 83 languages.
 |---|---|
 | L0 | Help sections `ranked` / `cups` / `forumcups` clarified in 83 languages (`web.256`) |
 | L1 | The foundation, behind `?guide=1` (`web.259`) |
-| **L2** | C1 lobby "join a Ranking table" (`pickRankingTable`), C2 ranked waiting room and game result, 83 languages, help section, public (`web.260`) |
-| L3 | Admin: `POST /__guide` anonymous counters, and the Ranking funnel card |
+| L2 | C1 lobby "join a Ranking table" (`pickRankingTable`), C2 ranked waiting room and game result, 83 languages, help section, public (`web.260`) |
+| **L3** | Admin: `POST /__guide` anonymous counters, and the Ranking funnel card (`web.261`, restart needed) |
 | L4 | C3 login screen, C4 normal waiting room |
 | L5 | C5 windows |
 | L6 | C6 "?" mode (`hotspots.mjs`) |

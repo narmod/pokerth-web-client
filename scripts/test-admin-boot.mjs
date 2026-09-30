@@ -28,6 +28,10 @@ const CANNED = {
   '/admin/audit': { ok: true, entries: Array.from({ length: 25 }, (_, i) => ({ at: Date.now() - i * 1000, action: 'config', master: true, ip: '203.0.113.7', ok: true })) },
   '/admin/music-list': { ok: true, enabled: true, tracks: [{ id: 't1', title: 'One' }, { id: 'r1', title: 'Radio', stream: true }], plays: { t1: 3 } },
   '/admin/traffic': { ok: true, series: [], env: {}, music: {}, musicTitles: {}, pings: {} },
+  '/admin/visits': { ok: true, series: [], env: {}, music: {}, musicTitles: {}, pings: {},
+    guide: { acceptance: { offered: 5, accepted: 2, declined: 1, rate: 0.4 }, contexts: { 'lobby-ranking': { shown: 10, done: 2, dismissed: 3 } },
+      funnel: { highlighted: 10, joined: 4, started: 2, joinRate: 0.4, startRate: 0.5 }, create: { shown: 1, created: 0 }, guests: { shown: 2, redirect: 1 }, rankedStarts: 3 },
+    guidePeriod: { days: 0, summary: null }, guideSince: 1700000000000 },
 };
 function canned(url) {
   const path = String(url).split('?')[0];
@@ -97,5 +101,11 @@ ok(logs && !/T\d\d:\d\d:\d\dZ/.test(logs.textContent),
 ok($('logsCopy') && $('updlogCopy'), 'both Copy buttons are present');
 ok($('auList') && $('auList').children.length > 0, 'the audit log rendered its entries');
 
+// ── Ace's Help card (traffic tab, L3) ────────────────────────────────────
+await new Promise((r) => setTimeout(r, 300));
+const tg = $('trafGuide');
+ok(tg && /Ranking funnel/.test(tg.textContent) && /40% of highlighted/.test(tg.textContent) && /2 of 5 offered/.test(tg.textContent),
+  'the Ace’s Help card renders acceptance and the Ranking funnel');
+ok(errors.length === 0, 'nothing threw while rendering it' + (errors.length ? ': ' + errors[0].split('\n')[0] : ''));
 console.log(fail ? `FAIL ${fail}/${n}` : `OK ${n}/${n}`);
 process.exit(fail ? 1 : 0);

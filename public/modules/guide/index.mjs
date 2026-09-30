@@ -27,6 +27,7 @@ import { pickRankingTable, finishPlace, RANKED_TYPE } from './ranking-pick.mjs';
 import { CONTEXTS } from './contexts/index.mjs';
 import { gt, ready } from './i18n.mjs';
 import * as hl from './highlight.mjs';
+import { beacon } from './beacons.mjs';
 
 /** L2: public for everyone (L1 was behind ?guide=1). */
 const PUBLIC = true;
@@ -49,6 +50,8 @@ let lastWait = null;          // { gid, n } seen in the waiting room (arrivals)
 let result = null;            // { gid, place, tied } of my last Ranking game
 let tracker = null;           // { gid, hand, snap, last, done } while I play a Ranking game
 const snoozed = new Set();    // contexts put off with « Later » this session
+const counted = new Set();    // « shown » already counted this session (statistics, L3)
+let joinedGid = 0;            // Ranking table joined from the bubble (funnel: → started)
 
 const state = createState(
   (() => { try { return window.localStorage; } catch (e) { return null; } })() || { getItem: () => null, setItem() {} },
@@ -234,8 +237,10 @@ function renderStep(opts = {}) {
   }
 }
 
+const ACTION_EV = { join: 'join', createRanking: 'create', signup: 'guest_redirect' };
 function doAction(id, w) {
   try {
+    if (id === 'join' && w.rankPick) joinedGid = w.rankPick.id;
     if (id === 'join' && w.rankPick && window.App && window.App.joinGame) window.App.joinGame(w.rankPick.id);
     else if (id === 'createRanking' && window.App && window.App.openCreatePage) window.App.openCreatePage({ ranking: true });
     else if (id === 'signup') window.open(SIGNUP_URL, '_blank', 'noopener');
@@ -247,10 +252,16 @@ function onCtxButton(id) {
   const run = showing && showing.run;
   if (!run) { closeBubble(); return; }
   const cid = run.ctx.id;
-  if (id === 'next') { if (run.next()) renderStep(); else finish(cid); return; }
-  if (id === 'gotIt') { finish(cid); return; }
-  if (ACTIONS.indexOf(id) >= 0) { const w = where(); finish(cid); doAction(id, w); return; }
+  if (id === 'next') { if (run.next()) renderStep(); else { beacon(cid, 'done'); finish(cid); } return; }
+  if (id === 'gotIt') { beacon(cid, 'done'); finish(cid); return; }
+  if (ACTIONS.indexOf(id) >= 0) {
+    const w = where();
+    beacon(cid, 'done');
+    if (ACTION_EV[id]) beacon(cid, ACTION_EV[id]);
+    finish(cid); doAction(id, w); return;
+  }
   // « Later », Escape, no answer: put off for this session, badge on the Ace
+  beacon(cid, 'dismissed');
   snoozed.add(cid);
   closeBubble();
   if (M) M.badge(true);
@@ -275,6 +286,9 @@ async function showContext(ctx) {
   await ensureDock();
   showing = { run: createRun(ctx), kind: 'ctx' };
   renderStep();
+  // statistics: once per session per context (the result: once per game)
+  const key = ctx.id + (ctx.repeat && result ? ':' + result.gid : '');
+  if (!counted.has(key)) { counted.add(key); beacon(ctx.id, 'shown'); }
 }
 
 async function note(key, buttons, onButton, vars) {
@@ -403,13 +417,14 @@ function maybeOffer() {
     if (!(w.screen === 'connect' || w.screen === 'lobby') || !splashGone() || blocked() || document.hidden || bannerUp()) { maybeOffer(); return; }
     const m = await ensureDock();
     showing = { kind: 'offer' };
+    beacon('offer', 'offered');
     m.say({
       text: gt('offer'),
       buttons: [btn('offerNo'), btn('offerYes', true)],
       onButton: (id) => {
         state.markOffered();
-        if (id === 'offerYes') { closeBubble(); turnOn(); }
-        else leave();
+        if (id === 'offerYes') { beacon('offer', 'accepted'); closeBubble(); turnOn(); }
+        else { beacon('offer', 'dismissed'); leave(); }
       },
     });
   }, OFFER_DELAY_MS);
@@ -432,6 +447,13 @@ async function evaluate() {
     if (!(showing && (showing.kind === 'offer' || showing.kind === 'note'))) leave();
     maybeOffer();
     return;
+  }
+  // statistics: a Ranking game started from its waiting room (it only starts
+  // full) — and was it the table the Ace pointed at? (funnel, L3)
+  if (prev && prev.screen === 'wait' && prev.ranked && w.screen === 'game') {
+    beacon('wait-ranking', 'started');
+    if (joinedGid && joinedGid === prev.gid) beacon('lobby-ranking', 'started');
+    joinedGid = 0;
   }
   if (!canSpeak(w)) {
     // a ranked game just started from its waiting room: « Good luck! », then he leaves (D8)

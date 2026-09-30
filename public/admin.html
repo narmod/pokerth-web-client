@@ -526,6 +526,11 @@
           <p class="muted">Counts a play each time a track starts in the players’ music panel — resuming after a pause is not a new play. No visitor id, no listening time. Radio stations are not measured: a live stream has no track end, so “a play” would mean nothing there. The ranking follows the period selected above (all-time before per-day counting started); the bars stack the top five titles by day, with the rest grouped.</p>
           <div id="trafMusic"><div class="empty">Loading…</div></div>
         </div>
+        <div class="tsec" id="guideSec">
+          <div class="boardhead"><h3>Ace’s Help</h3><span id="guideSince" class="muted" style="margin:0"></span></div>
+          <p class="muted">The contextual assistant (the Ace). Anonymous counters: no visitor id, no name, no table — only which tips are shown, done (Got it or the button) or put off (Later), whether the first-launch offer is accepted, and the Ranking funnel: a table highlighted in the lobby → joined from the bubble → that game started (a Ranking game only starts when its 10 seats are full). Guests are counted apart: they cannot play Ranking games and only get the free-account bubble. Follows the period selected above.</p>
+          <div id="trafGuide"><div class="empty">Loading…</div></div>
+        </div>
       </div>
       <div class="card">
         <h2>Bottom line</h2>
@@ -2906,6 +2911,46 @@
     return '<div class="muted" style="margin:14px 0 4px">Plays per day \u2014 since '+_annEsc(s[0].date||'')+'</div>'
          + '<div id="musDayChart"></div>';
   }
+  // ── Ace's Help (L3) — acceptance, tips, Ranking funnel ──
+  var _guideKnown=false, _guideData=null, _guidePeriodDays=0, _guideSince=0;
+  var GUIDE_CTX=[['welcome','Welcome (after saying yes)'],['lobby-ranking','Lobby — join a Ranking table'],['lobby-ranking-create','Lobby — create a Ranking table'],['lobby-guest','Lobby — guest: free account'],['wait-ranking','Ranked waiting room — the facts'],['ranked-result','After a ranked game — place & points']];
+  function _gPct(r){ return r==null?'—':(r*100<1&&r>0?(r*100).toFixed(1):Math.round(r*100))+'%'; }
+  function _gBar(label,n,max,sub,color){
+    var pc=max? n*100/max : 0;
+    return '<div class="envrow"><span class="dot" style="background:'+color+'"></span><span class="nmx">'+label+'</span>'
+      + '<span class="barx"><i style="width:'+Math.max(n?2:0,pc).toFixed(1)+'%;background:'+color+'"></i></span>'
+      + '<span class="pct">'+n+(sub?' \u00b7 '+sub:'')+'</span></div>';
+  }
+  function renderGuide(){
+    var box=$('trafGuide'); if(!box) return;
+    var since=$('guideSince');
+    if(since) since.textContent=_guidePeriodDays?(_perLabel(_trafPeriod)+(_guidePeriodDays<_trafPeriod?(' \u2014 '+_guidePeriodDays+' days counted'):'')):(_guideSince?('all time since '+new Date(_guideSince).toLocaleDateString()):'');
+    var g=_guideData;
+    var any=g&&(g.acceptance.offered||g.acceptance.accepted||g.funnel.highlighted||Object.keys(g.contexts||{}).some(function(k){ var c=g.contexts[k]; return c.shown||c.done||c.dismissed; }));
+    if(!any){
+      box.innerHTML='<div class="empty">'+(!_guideKnown
+        ? 'This proxy is not recording it yet — the running process predates the feature. Restart it (pm2 restart pokerth-web, or restart the container); a static update alone swaps the served files, not the process.'
+        : 'Nothing recorded yet — players are offered the help once, on first launch, and events start with them.')+'</div>';
+      return;
+    }
+    var a=g.acceptance, f=g.funnel, h='';
+    h+='<h4 style="margin:10px 0 4px">Offer on first launch</h4>';
+    h+='<div class="srow"><span>Accepted</span><b>'+a.accepted+' of '+a.offered+' offered · '+_gPct(a.rate)+(a.declined?' · '+a.declined+' said no':'')+'</b></div>';
+    h+='<h4 style="margin:14px 0 4px">Ranking funnel</h4>';
+    var fmax=Math.max(f.highlighted,f.joined,f.started,1);
+    h+=_gBar('Table highlighted in the lobby',f.highlighted,fmax,'','#d4a017');
+    h+=_gBar('Joined from the bubble',f.joined,fmax,_gPct(f.joinRate)+' of highlighted','#5ec269');
+    h+=_gBar('Game started (10/10)',f.started,fmax,_gPct(f.startRate)+' of joined','#4f8fe6');
+    h+='<div class="muted" style="margin-top:6px">No open table: « Create a Ranking table » shown '+g.create.shown+' · used '+g.create.created+'. Ranked games started with the help on: '+g.rankedStarts+'.</div>';
+    h+='<h4 style="margin:14px 0 4px">Tips</h4>';
+    h+='<div class="envrow" style="opacity:.75;font-size:.76rem"><span class="nmx">Context</span><span class="pct">shown · done · later</span></div>';
+    GUIDE_CTX.forEach(function(c){
+      var x=(g.contexts||{})[c[0]]||{shown:0,done:0,dismissed:0};
+      h+='<div class="envrow"><span class="nmx">'+c[1]+'</span><span class="pct">'+x.shown+' · '+x.done+' · '+x.dismissed+'</span></div>';
+    });
+    h+='<div class="muted" style="margin-top:6px">Guests: free-account bubble shown '+g.guests.shown+' · « Create an account » tapped '+g.guests.redirect+'.</div>';
+    box.innerHTML=h;
+  }
   function renderMusic(){
     var box=$('trafMusic'); if(!box) return;
     var since=$('musSince');
@@ -3141,6 +3186,7 @@
       _envKnown=(d.env!==undefined); _envData=_envPick(d.env||{}, d.envPeriod||null); _envTrend=d.langTrend||null; _envPeriod=d.envPeriod||null; _envColorReset(); _envSince=d.envSince||0; _envPings=d.pings||null;
       _envLangsKnown=Array.isArray(d.langs); _envLangs=_envLangsKnown?d.langs:[]; _envLangN=d.langN||0; renderEnv();
       _musKnown=(d.music!==undefined); _musPeriodDays=(d.musicPeriod&&d.musicPeriod.days)||0; _musData=_musPeriodDays?(d.musicPeriod.plays||{}):(d.music||{}); _musTitles=d.musicTitles||{}; _musSince=d.musicSince||0; renderMusic();
+      _guideKnown=(d.guide!==undefined); _guidePeriodDays=(d.guidePeriod&&d.guidePeriod.days)||0; _guideData=_guidePeriodDays?(d.guidePeriod.summary||null):(d.guide||null); _guideSince=d.guideSince||0; renderGuide();
       var dbx=$('trafDb');
       if(dbx){
         var db=d.db||{};
