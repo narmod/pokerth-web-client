@@ -34,4 +34,10 @@ export default {
   goodLuck: 'Veiksmi!',
   c2Result: 'Spēle beigusies — tu ieguvi **{place}**. vietu: **+{points}** punkti. Skatīt savu reitingu?',
   c2ResultTie: 'Spēle beigusies! Vairāki spēlētāji izkrita vienā partijā, tāpēc tava precīzā vieta ir redzama reitinga lapā. Skatīt savu reitingu?',
+  c3Modes: 'Trīs spēles veidi: **Internets** vietnē pokerth.net ar oficiālajiem reitingiem; **Lokāli / treniņš** pret datora spēlētājiem, pat bezsaistē; un **LAN / Dedicētais serveris** privātam serverim.',
+  c3Account: 'Internetā spēlē ar savu bezmaksas pokerth.net kontu — vai atzīmē **Viesa režīms**. Viesi var spēlēt tikai parastās spēles: bez reitinga spēlēm un bez tērzēšanas. Konts ir bezmaksas, un tā izveide aizņem minūti.',
+  c3Profile: 'Pirms savienošanās izvēlies segvārdu un avataru: pieskaries avataram un izvēlies kādu cilnē **Galerija**, uzzīmē savu cilnē **Izveidot** (var sākt pat no fotoattēla) vai pievieno attēlu ar **Importēt**.',
+  c4Host: 'Šis galds ir tavs: nospied **Sākt spēli**, kad visi ir klāt — vai atzīmē **Aizpildīt ar datora spēlētājiem**, lai aizpildītu tukšās vietas. **Uzaicināt draugus** nosūta viņiem saiti uz šo galdu.',
+  c4Guest: 'Spēli sāk galda saimnieks. Tikmēr **Uzaicināt draugus** nosūta taviem draugiem saiti uz šo galdu.',
+  c4Offline: 'Treniņa galds: nospied **Sākt spēli** — tukšās vietas aizpilda datora spēlētāji.',
 };

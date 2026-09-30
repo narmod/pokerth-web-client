@@ -30,6 +30,7 @@ const CSS = `
 #ace-dock .ad-bubble{position:absolute;pointer-events:auto;box-sizing:border-box;max-width:min(340px,calc(100vw - 24px));min-width:180px;background:#fbf7ee;color:#141414;border-radius:14px;padding:11px 13px 10px;box-shadow:0 8px 22px rgba(0,0,0,.45);font:600 14px/1.4 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;white-space:normal;overflow-wrap:anywhere;display:none}
 #ace-dock .ad-bubble.ad-open{display:block}
 #ace-dock .ad-bubble::after{content:"";position:absolute;right:18px;bottom:-8px;border-style:solid;border-width:9px 9px 0 9px;border-color:#fbf7ee transparent transparent transparent}
+#ace-dock .ad-bubble.ad-top::after{display:none}
 #ace-dock .ad-bubble.ad-side::after{right:-8px;bottom:18px;border-width:9px 0 9px 9px;border-color:transparent transparent transparent #fbf7ee}
 #ace-dock .ad-text{margin:0}
 #ace-dock .ad-text b{font-weight:800}
@@ -246,19 +247,47 @@ export function settle(force) {   // force: the layout changed — move even wit
   lift(best.up);
 }
 
+let avoidEl = null;      // the element the bubble is about (highlighted): never cover it if avoidable
+
+/**
+ * Where the bubble goes: next to the Ace (above him on a narrow screen, on
+ * his left on a wide one) — or, when that would hide the element it talks
+ * about or more controls, at the top right under the header (no tail).
+ */
 function placeBubble() {
   if (!bub || !ace) return;
-  const vw = window.innerWidth;
+  const vw = window.innerWidth, vh = window.innerHeight;
   const r = ace.getBoundingClientRect();
   const side = vw >= 560;                       // wide screen: bubble on the Ace's left
-  bub.classList.toggle('ad-side', side);
-  if (side) {
-    bub.style.right = Math.round(vw - r.left + 10) + 'px';
-    bub.style.bottom = Math.round(window.innerHeight - r.bottom + Math.min(12, r.height / 3)) + 'px';
-  } else {
-    bub.style.right = '12px';
-    bub.style.bottom = Math.round(window.innerHeight - r.top + 10) + 'px';
-  }
+  const near = side
+    ? { right: Math.round(vw - r.left + 10), bottom: Math.round(vh - r.bottom + Math.min(12, r.height / 3)) }
+    : { right: 12, bottom: Math.round(vh - r.top + 10) };
+  const apply = (p, top) => {
+    bub.classList.toggle('ad-side', side && !top);
+    bub.classList.toggle('ad-top', !!top);
+    bub.style.right = p.right + 'px';
+    if (top) { bub.style.top = p.top + 'px'; bub.style.bottom = 'auto'; }
+    else { bub.style.bottom = p.bottom + 'px'; bub.style.top = 'auto'; }
+  };
+  apply(near, false);
+  if (!bub.classList.contains('ad-open')) return;
+  const bw = bub.offsetWidth, bh = bub.offsetHeight;
+  let hdr = 0;
+  try { const h = document.querySelector('.screen.active .header') || document.querySelector('.screen.active [class*="header"]'); if (h) hdr = Math.max(0, h.getBoundingClientRect().bottom); } catch (e) {}
+  const topP = { right: 12, top: Math.round(Math.min(Math.max(hdr, 8) + 8, Math.max(8, vh - bh - 8))) };
+  const rectNear = { left: vw - near.right - bw, top: vh - near.bottom - bh, right: vw - near.right, bottom: vh - near.bottom };
+  const rectTop = { left: vw - 12 - bw, top: topP.top, right: vw - 12, bottom: topP.top + bh };
+  // what each spot would hide (the Ace's own bubble aside)
+  const targets = tapTargets(0);
+  const av = avoidEl && avoidEl.isConnected ? avoidEl.getBoundingClientRect() : null;
+  const cost = (b) => {
+    const ov = (r2) => { const ix = Math.min(b.right, r2.right) - Math.max(b.left, r2.left), iy = Math.min(b.bottom, r2.bottom) - Math.max(b.top, r2.top); return ix > 0 && iy > 0 ? ix * iy : 0; };
+    let c = targets.reduce((sum, t) => sum + ov(t) * t.weight, 0);
+    if (av) c += ov(av) * 100;
+    if (b.top < 0 || b.bottom > vh) c += 1e9;
+    return c;
+  };
+  if (cost(rectTop) < cost(rectNear) * 0.8) apply(topP, true);
 }
 window.addEventListener('resize', () => { settle(); placeBubble(); }, { passive: true });
 
@@ -273,6 +302,7 @@ export function say(o) {
   const btns = (o.buttons || []).map((b) =>
     `<button type="button" class="ad-btn${b.primary ? ' ad-primary' : ''}" data-ad-btn="${esc(b.id)}">${esc(b.label)}</button>`).join('');
   bub.innerHTML = `<p class="ad-text">${rich(o.text)}</p>` + (btns ? `<div class="ad-btns">${btns}</div>` : '');
+  avoidEl = o.avoid || null;
   bub.classList.add('ad-open');
   placeBubble();
   badge(false);

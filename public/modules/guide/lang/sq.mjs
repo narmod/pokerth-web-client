@@ -34,4 +34,10 @@ export default {
   goodLuck: 'Suksese!',
   c2Result: 'Loja mbaroi — përfundove në vendin **{place}**: **+{points}** pikë. Do ta shohësh renditjen tënde?',
   c2ResultTie: 'Loja mbaroi! Disa lojtarë dolën në të njëjtën dorë, ndaj vendi yt i saktë është në faqen e renditjes. Do ta shohësh renditjen tënde?',
+  c3Modes: 'Tri mënyra për të luajtur: **Internet** në pokerth.net, me renditjet zyrtare; **Lokal / stërvitje** kundër lojtarëve kompjuterikë, madje edhe offline; dhe **LAN / server i dedikuar** për një server privat.',
+  c3Account: 'Në Internet, luaj me llogarinë tënde falas pokerth.net — ose shëno **Modaliteti vizitor**. Mysafirët mund të luajnë vetëm lojëra normale: pa lojëra me renditje dhe pa bisedë. Llogaria është falas dhe merr vetëm një minutë.',
+  c3Profile: 'Para se të lidhesh, zgjidh pseudonimin dhe avatarin tënd: prek avatarin për të zgjedhur një nga **Galeria**, vizato tëndin te **Krijo** (mund të nisë edhe nga një foto) ose **Importo** një figurë.',
+  c4Host: 'Kjo tavolinë është e jotja: shtyp **Nis lojën** kur të jenë të gjithë këtu — ose shëno **Plotëso me lojtarë kompjuterikë** për të mbushur vendet bosh. **Fto miq** u dërgon atyre një lidhje për në këtë tavolinë.',
+  c4Guest: 'Lojën e nis pritësi i tavolinës. Ndërkohë, **Fto miq** u dërgon miqve të tu një lidhje për në këtë tavolinë.',
+  c4Offline: 'Tavolinë stërvitjeje: shtyp **Nis lojën** — vendet bosh mbushen me lojtarë kompjuterikë.',
 };

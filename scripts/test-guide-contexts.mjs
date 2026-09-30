@@ -21,7 +21,7 @@ function ok(cond, label) {
 }
 const TABLE = { id: 12, type: 4, players: 7, max: 10, mode: 1 };
 const W = (o) => Object.assign({ gid: 405, helpOn: true, screen: 'lobby', playing: false, online: true, guest: false, ranked: false, net: true,
-  spectator: false, gamesLoaded: true, rankPick: TABLE, waitCount: 7, waitMax: 10, result: null, windows: [] }, o);
+  spectator: false, host: false, offline: false, loginStep: 0, gamesLoaded: true, rankPick: TABLE, waitCount: 7, waitMax: 10, result: null, windows: [] }, o);
 const pick = (w, seen = [], snoozed = []) => {
   const c = C.pickContext(W(w), CONTEXTS, { seen: (id) => seen.includes(id), snoozed: (id) => snoozed.includes(id) });
   return c ? c.id : null;
@@ -42,12 +42,16 @@ ok(pick({ helpOn: false }) === null, 'help off → silent');
 
 // ── C2 waiting room ──
 ok(pick({ screen: 'wait', ranked: true, rankPick: null }) === 'wait-ranking', 'ranked waiting room → the facts');
-ok(pick({ screen: 'wait', ranked: false, rankPick: null }) === null, 'normal waiting room: nothing yet (C4 comes with L4)');
+ok(pick({ screen: 'wait', ranked: false, rankPick: null }) === 'wait-normal', 'normal waiting room → C4');
+ok(pick({ screen: 'wait', ranked: false, rankPick: null, spectator: true }) === null, 'a spectator waiting for the next hand: nothing');
 ok(pick({ screen: 'wait', ranked: true }, ['wait-ranking']) === null, 'facts told once');
 ok(pick({ screen: 'game', ranked: true, playing: true }) === null, 'silent during a hand (D8)');
 ok(pick({ screen: 'game', ranked: true, playing: false }) === null, 'silent at the table');
 ok(pick({ screen: 'create' }) === null, 'nothing on game creation yet (C5)');
-ok(pick({ screen: 'connect', net: false, online: false }) === null, 'nothing on the login screen yet (C3)');
+ok(pick({ screen: 'connect', net: false, online: false, loginStep: 1 }) === 'login', 'login screen, mode cards → C3 modes + account');
+ok(pick({ screen: 'connect', net: false, online: false, loginStep: 2 }) === 'login-profile', 'login form → C3 nickname + avatar');
+ok(pick({ screen: 'connect', net: false, online: false, loginStep: 1 }, ['login']) === null, 'C3 told once');
+ok(pick({ screen: 'connect', loginStep: 1, helpOn: false }) === null, 'help off: silent on the login screen');
 
 // ── C2.4 result ──
 ok(pick({ result: { place: 4 } }) === 'ranked-result', 'back in the lobby after a ranked game → the result first');
@@ -55,8 +59,15 @@ ok(pick({ result: { place: 4 } }, ['ranked-result']) === 'ranked-result', 'the r
 ok(pick({ result: { place: 4 } }, [], ['ranked-result']) === 'lobby-ranking', '« Later » on the result → the next tip');
 ok(pick({ screen: 'wait', ranked: true, result: { place: 2 } }) === 'wait-ranking', 'not in the waiting room');
 
+// C4 by role
+const wn = CONTEXTS.find((c) => c.id === 'wait-normal').steps[0];
+ok(wn.text(W({ screen: 'wait', host: true })) === 'c4Host', 'host → start / fill up with bots / invite');
+ok(wn.text(W({ screen: 'wait', host: false })) === 'c4Guest', 'seated player → the host starts, invite friends');
+ok(wn.text(W({ screen: 'wait', offline: true, host: true })) === 'c4Offline', 'training → start, bots fill the seats');
+ok([].concat(wn.target(W({ host: true })))[0].includes('wp-btn-start') && [].concat(wn.target(W({})))[0].includes('wp-btn-invite'), 'C4 points at Start (host) or Invite (others)');
+
 // ── texts, buttons, targets ──
-const samples = [W({}), W({ rankPick: null }), W({ guest: true }), W({ screen: 'wait', ranked: true }), W({ result: { place: 4 } }), W({ result: { place: null, tied: true } })];
+const samples = [W({ screen: 'connect', loginStep: 1 }), W({ screen: 'connect', loginStep: 2 }), W({ screen: 'wait', host: true }), W({ screen: 'wait' }), W({ screen: 'wait', offline: true }), W({}), W({ rankPick: null }), W({ guest: true }), W({ screen: 'wait', ranked: true }), W({ result: { place: 4 } }), W({ result: { place: null, tied: true } })];
 const vars = (s) => (String(s).match(/\{\w+\}/g) || []).map((x) => x.slice(1, -1));
 const BTN = new Set(['later', 'gotIt', 'next', 'join', 'createRanking', 'signup', 'seeRanking']);
 for (const c of CONTEXTS) {

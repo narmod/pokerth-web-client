@@ -34,4 +34,10 @@ export default {
   goodLuck: 'Üstünlik!',
   c2Result: 'Oýun gutardy — ornuňyz: **{place}**, utugyňyz: **+{points}**. Reýtingiňize seredesiňiz gelýärmi?',
   c2ResultTie: 'Oýun gutardy! Birnäçe oýunçy şol bir elde çykdy, şonuň üçin takyk ornuňyz reýting sahypasynda. Reýtingiňize seredesiňiz gelýärmi?',
+  c3Modes: 'Oýnamagyň üç usuly: resmi reýtingli pokerth.net-de **Onlaýn**; hatda internetsiz hem kompýuter oýunçylaryna garşy **Ýerli / türgenleşik**; we hususy serwer üçin **LAN / Aýratyn serwer**.',
+  c3Account: 'Onlaýnda mugt pokerth.net hasabyňyz bilen oýnaň — ýa-da **Myhman režimi** belgiläň. Myhmanlar diňe adaty oýunlary oýnap bilýärler: reýting oýunlary we çat ýok. Hasap mugt we bary-ýogy bir minut alýar.',
+  c3Profile: 'Birikmezden öň lakamyňyzy we awataryňyzy saýlaň: awatara basyp, **Galereýa** bölüminden birini saýlaň, **Döret** bölüminde özüňizinkini çekiň (hatda fotosuratdan başlap bolýar) ýa-da **Import** arkaly surat goşuň.',
+  c4Host: 'Bu stol siziňki: hemmeler ýygnananda **Oýny başla** basyň — ýa-da boş orunlary doldurmak üçin **Kompýuter oýunçylary bilen doldur** belgiläň. **Dostlary çagyr** olara bu stoluň baglanyşygyny iberýär.',
+  c4Guest: 'Oýny stoluň eýesi başlaýar. Şol aralykda **Dostlary çagyr** dostlaryňyza bu stoluň baglanyşygyny iberýär.',
+  c4Offline: 'Türgenleşik stoly: **Oýny başla** basyň — boş orunlar kompýuter oýunçylary bilen doldurylýar.',
 };

@@ -29,7 +29,7 @@ ok(!G.valid('nope', 'shown') && !G.valid('lobby-ranking', 'nope'), 'unknown cont
 ok(!G.valid('__proto__', 'shown') && !G.valid('constructor', 'shown') && !G.valid('toString', 'shown'), 'prototype keys refused');
 ok(!G.valid(null, 'shown') && !G.valid('offer', 7) && !G.valid(['offer'], 'offered'), 'non-strings refused');
 const pairs = Object.keys(G.EVENTS).reduce((n, k) => n + G.EVENTS[k].length, 0);
-ok(pairs <= 32, 'bounded key set (' + pairs + ' pairs)');
+ok(pairs <= 40, 'bounded key set (' + pairs + ' pairs)');
 const contexts = (await import(path.join(root, 'public/modules/guide/contexts/index.mjs'))).CONTEXTS.map((c) => c.id);
 ok(contexts.every((id) => G.EVENTS[id]), 'every shipped context can be counted');
 
@@ -99,7 +99,7 @@ for (const [c, e] of [['offer', 'offered'], ['offer', 'accepted'], ['offer', 'di
   ok(idx.includes(`beacon('${c}', '${e}')`), `client sends ${c}.${e}`);
 }
 ok(/beacon\(ctx\.id, 'shown'\)/.test(idx) && /beacon\(cid, 'done'\)/.test(idx) && /beacon\(cid, 'dismissed'\)/.test(idx), 'client sends shown / done / dismissed');
-ok(/join: 'join', createRanking: 'create', signup: 'guest_redirect'/.test(idx), 'actions mapped to join / create / guest_redirect');
+ok(/join: 'join', createRanking: 'create', signup: 'signup'/.test(idx) && /cid === 'lobby-guest' \? 'guest_redirect'/.test(idx), 'actions mapped to join / create / signup (guest_redirect for a guest in the lobby)');
 const proxySrc = fs.readFileSync(path.join(root, 'proxy.js'), 'utf8');
 ok(/guide: \{\}, guideSince: 0/.test(proxySrc), 'the counters are part of the empty store (reset clears them)');
 ok(/guidePeriod:/.test(proxySrc) && /guide: GUIDE_STATS\.summary/.test(proxySrc), 'the traffic summary carries all-time and period figures');

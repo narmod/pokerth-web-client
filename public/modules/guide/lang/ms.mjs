@@ -34,4 +34,10 @@ export default {
   goodLuck: 'Semoga berjaya!',
   c2Result: 'Permainan tamat — Anda menduduki tempat **{place}**: **+{points}** mata. Lihat peringkat Anda?',
   c2ResultTie: 'Permainan tamat! Beberapa pemain tersingkir dalam tangan yang sama, jadi tempat tepat Anda ada di halaman peringkat. Lihat peringkat Anda?',
+  c3Modes: 'Tiga cara untuk bermain: **Internet** di pokerth.net, dengan kedudukan rasmi; **Lokal / latihan** menentang pemain komputer, walaupun di luar talian; dan **LAN / Server khusus** untuk pelayan peribadi.',
+  c3Account: 'Di Internet, bermain dengan akaun pokerth.net percuma Anda — atau tandakan **Mode tamu**. Tetamu hanya boleh bermain permainan Normal: tiada permainan berperingkat dan tiada sembang. Akaun adalah percuma dan hanya mengambil masa seminit.',
+  c3Profile: 'Sebelum menyambung, pilih nama samaran dan avatar Anda: ketik avatar untuk memilih satu daripada **Galeri**, lukis avatar sendiri dalam **Buat** (boleh juga bermula daripada foto) atau muat naik gambar melalui **Impor**.',
+  c4Host: 'Meja ini milik Anda: tekan **Mulai Permainan** apabila semua sudah ada — atau tandakan **Isi dengan pemain komputer** untuk mengisi tempat duduk kosong. **Undang teman** menghantar pautan ke meja ini kepada mereka.',
+  c4Guest: 'Hos meja yang memulakan permainan. Sementara itu, **Undang teman** menghantar pautan ke meja ini kepada mereka.',
+  c4Offline: 'Meja latihan: tekan **Mulai Permainan** — tempat duduk kosong akan diisi oleh pemain komputer.',
 };

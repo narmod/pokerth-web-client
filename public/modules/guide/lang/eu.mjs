@@ -34,4 +34,10 @@ export default {
   goodLuck: 'Zorte on!',
   c2Result: 'Partida amaitu da — **{place}**. postuan geratu zara: **+{points}** puntu. Zure sailkapena ikusi nahi duzu?',
   c2ResultTie: 'Partida amaitu da! Hainbat jokalari esku berean kanporatu dira, beraz zure postu zehatza sailkapen-orrian dago. Zure sailkapena ikusi nahi duzu?',
+  c3Modes: 'Jokatzeko hiru modu: **Internet** pokerth.net-en, sailkapen ofizialekin; **Lokala / entrenamendua** ordenagailuko jokalarien aurka, baita konexiorik gabe ere; eta **LAN / Zerbitzari dedikatua** zerbitzari pribatu baterako.',
+  c3Account: 'Interneten, jokatu zure pokerth.net kontu doakoarekin — edo markatu **Gonbidatu modua**. Gonbidatuek partida arruntak soilik joka ditzakete: ez dago sailkapeneko partidarik ez txatik. Kontua doakoa da eta minutu bat besterik ez da behar.',
+  c3Profile: 'Konektatu aurretik, aukeratu zure ezizena eta abatarra: sakatu abatarra **Galeria** ataletik bat hautatzeko, marraztu zeurea **Sortu** atalean (argazki batetik ere abia daiteke) edo **Inportatu** irudi bat.',
+  c4Host: 'Mahai hau zurea da: sakatu **Hasi partida** denak hemen daudenean — edo markatu **Bete ordenagailuko jokalariekin** eserleku hutsak betetzeko. **Gonbidatu lagunak** aukerak mahai honetarako esteka bat bidaltzen die.',
+  c4Guest: 'Mahaiaren anfitrioiak hasten du partida. Bitartean, **Gonbidatu lagunak** aukerak mahai honetarako esteka bat bidaltzen die zure lagunei.',
+  c4Offline: 'Entrenamendu-mahaia: sakatu **Hasi partida** — eserleku hutsak ordenagailuko jokalariekin betetzen dira.',
 };

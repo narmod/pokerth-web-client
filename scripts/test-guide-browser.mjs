@@ -106,24 +106,50 @@ async function runDevice(browser, name, descriptor) {
       const s = await store(page);
       assert.equal(s.on, '1'); assert.equal(s.offered, '1');
     });
-    await check(`${name}: « Got it » folds the bubble, the Ace stays`, async () => {
+    const waitText = (re, ms = 4000) => page.waitForFunction((src) => new RegExp(src).test((document.querySelector('#ace-dock .ad-bubble.ad-open .ad-text') || {}).textContent || ''), re.source, { timeout: ms });
+    await check(`${name}: « Got it » — then C3 on the login screen: the three modes, highlighted`, async () => {
       await click(page, btn('gotIt'));
+      assert.match((await store(page)).seen || '', /"welcome"/);
+      await waitText(/Three ways to play/);
+      assert.equal(await page.locator('#ace-dock .ad-ace').count(), 1, 'Ace gone');
+      await page.waitForFunction(() => { const r = document.getElementById('ag-ring'), c = document.querySelector('#login-step1 .login-cards');
+        if (!r || !c || !r.classList.contains('ag-on')) return false; const a = r.getBoundingClientRect(), b = c.getBoundingClientRect(); return Math.abs(a.top - b.top) < 10; }, null, { timeout: 3000 });
+    });
+    await shot(page, name, 'guide-c3');
+    await check(`${name}: C3 — « Next »: account versus guest, with « Create an account »`, async () => {
+      await click(page, btn('next'));
+      await waitText(/Guest mode/);
+      assert.equal(await page.locator(btn('signup')).count(), 1);
+    });
+    await check(`${name}: « Later » folds it into a badge; a tap on the Ace shows it again`, async () => {
+      await click(page, btn('later'));
       await page.waitForTimeout(300);
       assert.equal(await page.locator(bubble).count(), 0, 'bubble still open');
-      assert.equal(await page.locator('#ace-dock .ad-ace').count(), 1, 'Ace gone');
-      assert.match((await store(page)).seen || '', /"welcome"/);
-    });
-    await check(`${name}: a tap on the Ace opens his menu`, async () => {
+      assert.equal(await page.locator('#ace-dock .ad-ace.ad-has-badge').count(), 1, 'no badge');
       await click(page, '#ace-dock .ad-ace');
-      await page.locator(bubble).waitFor({ timeout: 3000 });
-      assert.match(await text(page), /is on/);
+      await waitText(/Three ways to play/);
+      await click(page, btn('next')); await click(page, btn('gotIt'));
+      await page.waitForTimeout(300);
+      assert.match((await store(page)).seen || '', /"login"/);
+    });
+    await check(`${name}: the « Ace’s Help » button opens his menu (show all tips again)`, async () => {
+      await page.evaluate(() => window.guideToggle());
+      await waitText(/is on/, 3000);
       assert.equal(await page.locator(btn('resetTips')).count(), 1);
       await click(page, btn('resetTips'));
-      await page.waitForFunction(() => /every tip/.test((document.querySelector('#ace-dock .ad-bubble.ad-open .ad-text') || {}).textContent || ''), null, { timeout: 3000 });
-      assert.doesNotMatch((await store(page)).seen || '', /"welcome"/);
+      await waitText(/every tip/, 3000);
+      assert.doesNotMatch((await store(page)).seen || '', /"welcome"|"login"/);
       await click(page, btn('close'));
     });
     await shot(page, name, 'guide-menu');
+    await check(`${name}: C3 — a mode chosen: nickname and avatar, the avatar highlighted`, async () => {
+      await page.waitForTimeout(600);
+      if (await page.locator(bubble).count()) { await click(page, btn('later')); }
+      await page.locator('.login-card').nth(2).click();
+      await waitText(/nickname and your avatar/, 5000);
+      await page.waitForFunction(() => { const r = document.getElementById('ag-ring'); return !!(r && r.classList.contains('ag-on')); }, null, { timeout: 3000 });
+      await click(page, btn('gotIt'));
+    });
     await check(`${name}: the offer never comes back after a reload`, async () => {
       await page.evaluate(() => localStorage.setItem('pth_guide_on', '0'));
       await openTable(page, base, { stopAt: 'login' }); await noBanner(page);
@@ -136,7 +162,7 @@ async function runDevice(browser, name, descriptor) {
   // ── lobby → a hand starts: he leaves (D8); option off sends him away ──
   {
     const ctx = await browser.newContext({ ...descriptor, serviceWorkers: 'block' });
-    await ctx.addInitScript(() => { try { localStorage.setItem('pth_guide_dev', '1'); if (!sessionStorage.getItem('g1')) { sessionStorage.setItem('g1', '1'); localStorage.setItem('pth_guide_on', '1'); localStorage.setItem('pth_guide_offered', '1'); } } catch (_e) {} });
+    await ctx.addInitScript(() => { try { localStorage.setItem('pth_guide_dev', '1'); if (!sessionStorage.getItem('g1')) { sessionStorage.setItem('g1', '1'); localStorage.setItem('pth_guide_on', '1'); localStorage.setItem('pth_guide_offered', '1'); localStorage.setItem('pth_guide_seen', JSON.stringify({ r: 0, s: { welcome: 1, login: 1, 'login-profile': 1 } })); } } catch (_e) {} });
     const page = await ctx.newPage(); watch(page);
     await openTable(page, base, { stopAt: 'lobby', seats: 6 });
     await check(`${name}: docked in the lobby`, async () => {
@@ -148,6 +174,13 @@ async function runDevice(browser, name, descriptor) {
       assert.deepEqual(under, []);
     });
     await shot(page, name, 'guide-lobby');
+    await check(`${name}: C4 — seated at a Normal table: the host starts, invite friends`, async () => {
+      await page.evaluate(() => { const f = window.__fx; f.socket.receive(f.envelope(f.MSG.T.JoinGameAck, 25, [[1, 0, f.GAME], [2, 0, 0]])); });
+      await page.locator('#s-lobby.lobby-waiting').waitFor({ timeout: 4000 });
+      await page.waitForFunction(() => /host of the table starts/.test((document.querySelector('#ace-dock .ad-bubble.ad-open .ad-text') || {}).textContent || ''), null, { timeout: 5000 });
+      const u = await underAce(page); assert.equal(u.length, 0, 'covered: ' + u.join(', '));
+    });
+    await shot(page, name, 'guide-c4');
     await enterTable(page, { seats: 6 });
     await check(`${name}: silent during a hand — he leaves the table (D8)`, async () => {
       await page.waitForFunction(() => !document.getElementById('ace-dock'), null, { timeout: 3000 });
@@ -166,7 +199,7 @@ async function runDevice(browser, name, descriptor) {
   // ── C1 → C2: a Ranking table on pokerth.net, joined, filled, started ──
   {
     const ctx = await browser.newContext({ ...descriptor, serviceWorkers: 'block' });
-    await ctx.addInitScript(() => { try { if (!sessionStorage.getItem('g2')) { sessionStorage.setItem('g2', '1'); localStorage.setItem('pth_guide_on', '1'); localStorage.setItem('pth_guide_offered', '1'); localStorage.setItem('pth_guide_seen', JSON.stringify({ r: 0, s: { welcome: 1 } })); } } catch (_e) {} });
+    await ctx.addInitScript(() => { try { if (!sessionStorage.getItem('g2')) { sessionStorage.setItem('g2', '1'); localStorage.setItem('pth_guide_on', '1'); localStorage.setItem('pth_guide_offered', '1'); localStorage.setItem('pth_guide_seen', JSON.stringify({ r: 0, s: { welcome: 1, login: 1, 'login-profile': 1 } })); } } catch (_e) {} });
     const page = await ctx.newPage(); watch(page);
     await openTable(page, base, { stopAt: 'lobby', seats: 6 });
     // pokerth.net login, two open Ranking tables: 404 (7 players) and 405 (3)
@@ -238,7 +271,7 @@ async function runDevice(browser, name, descriptor) {
   // ── C1 for a guest: no Ranking table pointed at, a free account instead (D16) ──
   {
     const ctx = await browser.newContext({ ...descriptor, serviceWorkers: 'block' });
-    await ctx.addInitScript(() => { try { if (!sessionStorage.getItem('g3')) { sessionStorage.setItem('g3', '1'); localStorage.setItem('pth_guide_on', '1'); localStorage.setItem('pth_guide_offered', '1'); localStorage.setItem('pth_guide_seen', JSON.stringify({ r: 0, s: { welcome: 1 } })); } } catch (_e) {} });
+    await ctx.addInitScript(() => { try { if (!sessionStorage.getItem('g3')) { sessionStorage.setItem('g3', '1'); localStorage.setItem('pth_guide_on', '1'); localStorage.setItem('pth_guide_offered', '1'); localStorage.setItem('pth_guide_seen', JSON.stringify({ r: 0, s: { welcome: 1, login: 1, 'login-profile': 1 } })); } } catch (_e) {} });
     const page = await ctx.newPage(); watch(page);
     await openTable(page, base, { stopAt: 'lobby', seats: 6 });
     await page.evaluate(() => {

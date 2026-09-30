@@ -1,7 +1,8 @@
 # Ace's Help — contextual assistant
 
-Status: **L3 shipped in `2.1.9-web.261`: anonymous statistics and the admin card.** L2
-(`web.260`) is public in 83 languages. L1 (the foundation)
+Status: **L4 shipped in `2.1.9-web.262`: C3 on the login screen and C4 in the Normal /
+training waiting room.** L3 (`web.261`) added the statistics, and L2 (`web.260`) made the
+assistant public in 83 languages. L1 (the foundation)
 shipped in `web.259` behind `?guide=1`. L2 adds the Ranking contexts: C1 in the lobby and
 C2 in the waiting room, including the result of the game.
 
@@ -142,6 +143,18 @@ The first-launch offer is not made in an automated browser (`navigator.webdriver
 other tests' screenshots stay unchanged. `test-guide-browser` opts in with
 `pth_guide_webdriver`.
 
+## Login screen and Normal waiting room (L4)
+
+| id | where | what the Ace says |
+|---|---|---|
+| `login` | login screen, the mode cards (step 1) | two steps. First the three ways to play: Internet (pokerth.net, official rankings), Local / training (bots, even offline), LAN / Dedicated server. Then account versus guest: guests play Normal games only, with no ranked games and no chat. It offers **Create an account** |
+| `login-profile` | login screen, the form of the chosen mode (step 2) | the nickname and the avatar: Gallery, Create (which can start from a photo), Import. The avatar is highlighted |
+| `wait-normal` | seated at a Normal or training table that has not started, not as a spectator | one bubble that depends on the player's role. **Host**: Start Game, or fill up with computer players, and Invite friends. **Other players**: the host starts the game, and Invite friends. **Training**: Start Game, and the empty seats get bots. It highlights Start (host, training) or Invite |
+
+The bubble normally sits next to the Ace. It moves to the top right, under the header,
+when it would hide the element it is talking about or more controls. Parts of the current
+screen registered for Escape, such as the login form, do not stop the Ace from speaking.
+
 ## Statistics (L3)
 
 `modules/guide/beacons.mjs` posts `POST /__guide { ctx, ev }`. The request carries no
@@ -162,6 +175,9 @@ series in the visit buckets (`gd`), and share the visit counter's retention and 
 | `lobby-guest` | `shown`, `done`, `dismissed`, `guest_redirect` |
 | `wait-ranking` | `shown`, `done`, `dismissed`, `started` |
 | `ranked-result` | `shown`, `done`, `dismissed` |
+| `login` | `shown`, `done`, `dismissed`, `signup` |
+| `login-profile` | `shown`, `done`, `dismissed` |
+| `wait-normal` | `shown`, `done`, `dismissed` |
 
 What each event means:
 
@@ -195,6 +211,7 @@ Keys (all 83 languages; `es-419` is derived from `es` with `scripts/es-419-rules
 - L1: `name`, `aceLabel`, `offer`, `offerYes`, `offerNo`, `gotIt`, `later`, `next`,
   `close`, `welcome`, `menuOn`, `turnOff`, `resetTips`, `resetDone`, `turnedOff`,
   `nothingHere`.
+- L4: `c3Modes`, `c3Account`, `c3Profile`, `c4Host`, `c4Guest`, `c4Offline`.
 - L2: `join`, `createRanking`, `signup`, `seeRanking`, `c1Join` `{n}` `{max}`, `c1None`,
   `c1Guest`, `c2Wait` `{n}` `{max}`, `c2Points`, `c2Score`, `c2Seasons`, `c2Why55`,
   `c2Where`, `oneMore`, `goodLuck`, `c2Result` `{place}` `{points}`, `c2ResultTie`.
@@ -233,7 +250,7 @@ The help has an *Ace's Help* section (`start.acehelp`) in all 83 languages.
 | L0 | Help sections `ranked` / `cups` / `forumcups` clarified in 83 languages (`web.256`) |
 | L1 | The foundation, behind `?guide=1` (`web.259`) |
 | L2 | C1 lobby "join a Ranking table" (`pickRankingTable`), C2 ranked waiting room and game result, 83 languages, help section, public (`web.260`) |
-| **L3** | Admin: `POST /__guide` anonymous counters, and the Ranking funnel card (`web.261`, restart needed) |
-| L4 | C3 login screen, C4 normal waiting room |
+| L3 | Admin: `POST /__guide` anonymous counters, and the Ranking funnel card (`web.261`, restart needed) |
+| **L4** | C3 login screen, C4 normal waiting room (`web.262`) |
 | L5 | C5 windows |
 | L6 | C6 "?" mode (`hotspots.mjs`) |

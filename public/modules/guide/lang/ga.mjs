@@ -34,4 +34,10 @@ export default {
   goodLuck: 'Ádh mór!',
   c2Result: 'Cluiche thart — chríochnaigh tú san áit **{place}**: **+{points}** pointe. Ar mhaith leat do rangú a fheiceáil?',
   c2ResultTie: 'Cluiche thart! Chuaigh roinnt imreoirí amach sa lámh chéanna, mar sin tá d\'áit bheacht ar leathanach an rangaithe. Ar mhaith leat do rangú a fheiceáil?',
+  c3Modes: 'Trí bhealach le himirt: **Idirlíon** ar pokerth.net, leis na rangúcháin oifigiúla; **Áitiúil / cleachtadh** in aghaidh imreoirí ríomhaire, fiú as líne; agus **LAN / Freastalaí tiomnaithe** le haghaidh freastalaí príobháideach.',
+  c3Account: 'Ar an Idirlíon, imir le do chuntas pokerth.net saor in aisce — nó cuir tic le **Mód aoi**. Ní féidir le haíonna ach gnáthchluichí a imirt: gan cluichí rangaithe agus gan comhrá. Tá cuntas saor in aisce agus ní thógann sé ach nóiméad.',
+  c3Profile: 'Sula gceanglaíonn tú, roghnaigh do leasainm agus d’abhatár: tapáil an t-abhatár chun ceann a roghnú ón gcluaisín **Gailearaí**, tarraing do cheann féin sa chluaisín **Cruthaigh** (is féidir tosú fiú ó ghrianghraf) nó cuir pictiúr isteach leis an gcluaisín **Iompórtáil**.',
+  c4Host: 'Is leatsa an bord seo: brúigh **Tosaigh an cluiche** nuair a bheidh gach duine anseo — nó cuir tic le **Líon le himreoirí ríomhaire** chun na suíocháin fholmha a líonadh. Seolann **Tabhair cuireadh do chairde** nasc don bhord seo chucu.',
+  c4Guest: 'Is é óstach an bhoird a thosaíonn an cluiche. Idir an dá linn, seolann **Tabhair cuireadh do chairde** nasc don bhord seo chuig do chairde.',
+  c4Offline: 'Bord cleachtaidh: brúigh **Tosaigh an cluiche** — líonfar na suíocháin fholmha le himreoirí ríomhaire.',
 };

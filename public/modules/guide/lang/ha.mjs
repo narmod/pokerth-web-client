@@ -34,4 +34,10 @@ export default {
   goodLuck: 'Allah ya ba da sa\'a!',
   c2Result: 'Wasan ya ƙare — ka gama a matsayi na **{place}**: maki **+{points}**. Kana so ka duba matsayinka?',
   c2ResultTie: 'Wasan ya ƙare! \'Yan wasa da yawa sun fita a hannu ɗaya, don haka ainihin matsayinka yana shafin matsayi. Kana so ka duba matsayinka?',
+  c3Modes: 'Hanyoyi uku na yin wasa: **Intanet** a pokerth.net, tare da matsayi na hukuma; **Na gida / horo** da ’yan wasan kwamfuta, ko da ba tare da intanet ba; da **LAN / Keɓaɓɓiyar sabar** don sabar ta sirri.',
+  c3Account: 'A Intanet, yi wasa da asusunka na pokerth.net kyauta — ko ka zaɓi **Yanayin baƙo**. Baƙi za su iya buga wasanni na al’ada kawai: babu wasannin matsayi kuma babu hira. Asusu kyauta ne kuma yana ɗaukar minti ɗaya kawai.',
+  c3Profile: 'Kafin ka haɗa, zaɓi laƙabinka da avatar ɗinka: taɓa avatar don zaɓar ɗaya daga **Hotuna**, zana naka a **Ƙirƙira** (har ma zai iya farawa daga hoto) ko ka yi amfani da **Shigo da** don shigo da hoto.',
+  c4Host: 'Wannan teburin naka ne: danna **Fara wasa** idan kowa ya zo — ko ka zaɓi **Cika da ’yan wasan kwamfuta** don cike kujerun da babu kowa. **Gayyaci abokai** yana aika musu hanyar haɗi zuwa wannan teburin.',
+  c4Guest: 'Mai teburin ne ke fara wasan. Kafin nan, **Gayyaci abokai** yana aika wa abokanka hanyar haɗi zuwa wannan teburin.',
+  c4Offline: 'Teburin horo: danna **Fara wasa** — za a cike kujerun da babu kowa da ’yan wasan kwamfuta.',
 };

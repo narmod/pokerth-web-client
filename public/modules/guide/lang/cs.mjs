@@ -34,4 +34,10 @@ export default {
   goodLuck: 'Hodně štěstí!',
   c2Result: 'Konec hry — jsi na **{place}.** místě a máš **+{points}** bodů. Zobrazit tvoje pořadí?',
   c2ResultTie: 'Konec hry! Několik hráčů vypadlo ve stejné ruce, takže tvoje přesné umístění najdeš na stránce žebříčku. Zobrazit tvoje pořadí?',
+  c3Modes: 'Tři způsoby hry: **Internet** na pokerth.net s oficiálními žebříčky; **Místní / trénink** proti počítačovým hráčům, i offline; a **LAN / Vyhrazený server** pro soukromý server.',
+  c3Account: 'Na Internetu hraj se svým bezplatným účtem pokerth.net — nebo zaškrtni **Režim hosta**. Hosté mohou hrát jen normální hry: žádné hodnocené hry a žádný chat. Účet je zdarma a zabere minutu.',
+  c3Profile: 'Než se připojíš, vyber si přezdívku a avatar: klepni na avatar a vyber si jeden v záložce **Galerie**, nakresli vlastní v záložce **Vytvořit** (může vzniknout i z fotky) nebo nahraj obrázek přes **Import**.',
+  c4Host: 'Tenhle stůl je tvůj: až budou všichni tady, stiskni **Spustit hru** — nebo zaškrtni **Doplnit počítačovými hráči** a volná místa se zaplní. **Pozvat přátele** jim pošle odkaz na tento stůl.',
+  c4Guest: 'Hru spouští hostitel stolu. Mezitím **Pozvat přátele** pošle tvým přátelům odkaz na tento stůl.',
+  c4Offline: 'Tréninkový stůl: stiskni **Spustit hru** — volná místa se zaplní počítačovými hráči.',
 };

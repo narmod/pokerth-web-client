@@ -34,4 +34,10 @@ export default {
   goodLuck: 'Kila la heri!',
   c2Result: 'Mchezo umekwisha — umemaliza katika nafasi ya **{place}**: pointi **+{points}**. Ungependa kuona viwango vyako?',
   c2ResultTie: 'Mchezo umekwisha! Wachezaji kadhaa walitoka katika mkono mmoja, hivyo nafasi yako kamili iko kwenye ukurasa wa viwango. Ungependa kuona viwango vyako?',
+  c3Modes: 'Njia tatu za kucheza: **Intaneti** kwenye pokerth.net, pamoja na viwango rasmi; **Ndani / mazoezi** dhidi ya wachezaji wa kompyuta, hata nje ya mtandao; na **LAN / Seva maalum** kwa seva binafsi.',
+  c3Account: 'Kwenye Intaneti, cheza ukitumia akaunti yako ya bure ya pokerth.net — au weka alama kwenye **Hali ya mgeni**. Wageni wanaweza kucheza michezo ya Kawaida pekee: hakuna michezo ya viwango wala gumzo. Akaunti ni bure na inachukua dakika moja tu.',
+  c3Profile: 'Kabla ya kuunganisha, chagua jina lako la utani na avatari yako: gusa avatari ili uchague moja kutoka **Matunzio**, chora yako mwenyewe katika **Unda** (inaweza hata kuanzia kwenye picha) au **Ingiza** picha.',
+  c4Host: 'Meza hii ni yako: bonyeza **Anza Mchezo** kila mtu akishafika — au weka alama kwenye **Jaza kwa wachezaji wa kompyuta** ili kujaza viti vilivyo wazi. **Alika marafiki** huwatumia kiungo cha meza hii.',
+  c4Guest: 'Mwenyeji wa meza ndiye huanzisha mchezo. Wakati huo huo, **Alika marafiki** huwatumia marafiki zako kiungo cha meza hii.',
+  c4Offline: 'Meza ya mazoezi: bonyeza **Anza Mchezo** — viti vilivyo wazi hujazwa na wachezaji wa kompyuta.',
 };

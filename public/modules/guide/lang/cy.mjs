@@ -34,4 +34,10 @@ export default {
   goodLuck: 'Pob lwc!',
   c2Result: 'Gêm drosodd — fe orffennoch chi yn safle **{place}**: **+{points}** pwynt. Gweld eich safle?',
   c2ResultTie: 'Gêm drosodd! Aeth sawl chwaraewr allan yn yr un llaw, felly mae eich union safle ar y dudalen safleoedd. Gweld eich safle?',
+  c3Modes: 'Tair ffordd o chwarae: **Rhyngrwyd** ar pokerth.net, gyda’r safleoedd swyddogol; **Lleol / ymarfer** yn erbyn chwaraewyr cyfrifiadur, hyd yn oed all-lein; a **LAN / Gweinydd pwrpasol** ar gyfer gweinydd preifat.',
+  c3Account: 'Ar y Rhyngrwyd, chwaraewch gyda’ch cyfrif pokerth.net am ddim — neu ticiwch **Modd gwestai**. Dim ond gemau Arferol y gall gwesteion eu chwarae: dim gemau gyda safle a dim sgwrsio. Mae cyfrif am ddim ac yn cymryd munud.',
+  c3Profile: 'Cyn cysylltu, dewiswch eich llysenw a’ch afatar: tapiwch yr afatar i ddewis un o’r tab **Oriel**, lluniwch eich un eich hun yn y tab **Creu** (gall hyd yn oed ddechrau o lun) neu ychwanegwch ddelwedd drwy **Mewnforio**.',
+  c4Host: 'Eich bwrdd chi yw hwn: pwyswch **Dechrau’r gêm** pan fydd pawb yma — neu ticiwch **Llenwi â chwaraewyr cyfrifiadur** i lenwi’r seddi gwag. Mae **Gwahodd ffrindiau** yn anfon dolen i’r bwrdd hwn atyn nhw.',
+  c4Guest: 'Gwesteiwr y bwrdd sy’n dechrau’r gêm. Yn y cyfamser, mae **Gwahodd ffrindiau** yn anfon dolen i’r bwrdd hwn atyn nhw.',
+  c4Offline: 'Bwrdd ymarfer: pwyswch **Dechrau’r gêm** — caiff y seddi gwag eu llenwi â chwaraewyr cyfrifiadur.',
 };

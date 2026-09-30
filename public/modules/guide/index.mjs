@@ -18,7 +18,9 @@
 //
 // L1 (web.259): foundation. L2 (web.260): public; C1 « join a Ranking
 // table » (lobby) and C2 (ranked waiting room, facts while waiting, « Good
-// luck! », the result of the game back in the lobby). Console: guideDebug().
+// luck! », the result of the game back in the lobby). L3 (web.261):
+// statistics (beacons.mjs). L4 (web.262): C3 login screen, C4 Normal /
+// training waiting room. Console: guideDebug().
 // ═══════════════════════════════════════════════════════════════════
 
 import { createState, mergeIn, KEY_ON } from './state.mjs';
@@ -94,7 +96,9 @@ function blocked() {
     if (!window.keynavHasOpenSurface || !window.keynavHasOpenSurface()) return false;
     const list = window.keynavOpenSurfaces ? window.keynavOpenSurfaces() : null;
     if (!list) return true;
-    return list.some((el) => !(el.classList.contains('floating-win') || el.querySelector('.floating-win') || el.id === 'music-panel'));
+    // parts of the current screen registered for Escape (the login form…) do not block him
+    return list.some((el) => !(el.classList.contains('floating-win') || el.querySelector('.floating-win') || el.id === 'music-panel'
+      || (el.closest && el.closest('.screen'))));
   } catch (e) { return false; }
 }
 
@@ -110,6 +114,11 @@ function splashGone() {
   try { const c = getComputedStyle(sp); return c.display === 'none' || c.visibility === 'hidden'; } catch (e) { return true; }
 }
 
+function shown(id) {
+  const el = document.getElementById(id);
+  if (!el) return false;
+  try { return getComputedStyle(el).display !== 'none'; } catch (e) { return el.style.display !== 'none'; }
+}
 function myTable(s) { try { return s.gId && s.games ? s.games[s.gId] || null : null; } catch (e) { return null; } }
 function isGuest(s) {
   if (s._currentLoginMode === 'guest') return true;
@@ -151,6 +160,9 @@ export function where() {
     net,
     spectator: !!s._amSpectator,
     gid: s.gId || 0,
+    host: !!(s.gId && s.amGameAdmin && !s._amSpectator),
+    offline: !!window._offlineMode,
+    loginStep: screen === 'connect' ? (shown('login-step2') ? 2 : 1) : 0,
     gamesLoaded: !!s.loaded,
     rankPick: net && online && !guest && !s.gId ? pickRankingTable(games) : null,
     waitCount: s.gId ? presentCount(s) : 0,
@@ -228,7 +240,7 @@ function renderStep(opts = {}) {
     hl.clear();
     if (target) hl.highlight(target);
   }
-  M.say({ text: gt(text, vars), buttons: list, point: !!hl.current(), onButton: onCtxButton });
+  M.say({ text: gt(text, vars), buttons: list, point: !!hl.current(), avoid: hl.current(), onButton: onCtxButton });
   clearTimeout(stepTimer); stepTimer = 0;
   if (step.auto && !last) stepTimer = setTimeout(() => { if (showing && showing.run === run && run.next()) renderStep(); }, step.auto);
   if (!opts.keepFold) {
@@ -237,7 +249,7 @@ function renderStep(opts = {}) {
   }
 }
 
-const ACTION_EV = { join: 'join', createRanking: 'create', signup: 'guest_redirect' };
+const ACTION_EV = { join: 'join', createRanking: 'create', signup: 'signup' };
 function doAction(id, w) {
   try {
     if (id === 'join' && w.rankPick) joinedGid = w.rankPick.id;
@@ -257,7 +269,7 @@ function onCtxButton(id) {
   if (ACTIONS.indexOf(id) >= 0) {
     const w = where();
     beacon(cid, 'done');
-    if (ACTION_EV[id]) beacon(cid, ACTION_EV[id]);
+    if (ACTION_EV[id]) beacon(cid, id === 'signup' && cid === 'lobby-guest' ? 'guest_redirect' : ACTION_EV[id]);
     finish(cid); doAction(id, w); return;
   }
   // « Later », Escape, no answer: put off for this session, badge on the Ace
@@ -598,6 +610,11 @@ function init() {
   for (const id of ['s-connect', 's-lobby', 's-create', 's-game']) {
     const el = document.getElementById(id);
     if (el) mo.observe(el, { attributes: true, attributeFilter: ['class'] });
+  }
+  // login screen: mode cards (step 1) ↔ form of the chosen mode (step 2)
+  for (const id of ['login-step1', 'login-step2']) {
+    const el = document.getElementById(id);
+    if (el) mo.observe(el, { attributes: true, attributeFilter: ['style', 'class'] });
   }
   document.addEventListener('visibilitychange', () => { if (!document.hidden) schedule(); });
   window.addEventListener('online', schedule);

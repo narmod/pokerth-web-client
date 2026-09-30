@@ -34,4 +34,10 @@ export default {
   goodLuck: 'Srečno!',
   c2Result: 'Igre je konec — končal si na **{place}**. mestu: **+{points}** točk. Pogledaš svojo uvrstitev?',
   c2ResultTie: 'Igre je konec! Več igralcev je izpadlo v isti roki, zato je tvoje natančno mesto na strani z uvrstitvijo. Pogledaš svojo uvrstitev?',
+  c3Modes: 'Trije načini igranja: **Splet** na pokerth.net z uradnimi lestvicami; **Lokalno / vadba** proti računalniškim igralcem, tudi brez povezave; in **LAN / lastni strežnik** za zasebni strežnik.',
+  c3Account: 'Na spletu igraj s svojim brezplačnim računom pokerth.net — ali označi **Način gosta**. Gostje lahko igrajo samo navadne igre: brez iger z uvrstitvijo in brez klepeta. Račun je brezplačen in ga ustvariš v minuti.',
+  c3Profile: 'Pred povezavo izberi vzdevek in avatar: tapni avatar in ga izberi v zavihku **Galerija**, nariši svojega v zavihku **Ustvari** (začneš lahko celo s fotografijo) ali dodaj sliko prek zavihka **Uvozi**.',
+  c4Host: 'Ta miza je tvoja: pritisni **Začni igro**, ko so vsi tukaj — ali označi **Zapolni z računalniškimi igralci**, da zapolniš prazna mesta. **Povabi prijatelje** jim pošlje povezavo do te mize.',
+  c4Guest: 'Igro začne gostitelj mize. Medtem **Povabi prijatelje** tvojim prijateljem pošlje povezavo do te mize.',
+  c4Offline: 'Miza za vadbo: pritisni **Začni igro** — prazna mesta se zapolnijo z računalniškimi igralci.',
 };

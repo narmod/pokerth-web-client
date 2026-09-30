@@ -34,4 +34,10 @@ export default {
   goodLuck: 'Omad!',
   c2Result: 'Oʻyin tugadi — siz **{place}**-oʻrinni egalladingiz: **+{points}** ochko. Reytingingizni koʻrasizmi?',
   c2ResultTie: 'Oʻyin tugadi! Bir nechta oʻyinchi bitta qoʻlda chiqib ketdi, shuning uchun aniq oʻrningiz reyting sahifasida. Reytingingizni koʻrasizmi?',
+  c3Modes: 'Oʻynashning uch yoʻli: pokerth.net saytida rasmiy reyting bilan **Internet**; kompyuter oʻyinchilariga qarshi, hatto oflayn ham **Lokal / mashgʻulot**; va xususiy server uchun **LAN / Maxsus server**.',
+  c3Account: 'Internet rejimida bepul pokerth.net hisobingiz bilan oʻynang — yoki **Mehmon rejimi** belgisini qoʻying. Mehmonlar faqat oddiy oʻyinlarni oʻynay oladi: reyting oʻyinlari ham, chat ham yoʻq. Hisob bepul va bor-yoʻgʻi bir daqiqa vaqt oladi.',
+  c3Profile: 'Ulanishdan oldin taxallusingiz va avataringizni tanlang: **Galereya** boʻlimidan birini tanlash uchun avatarni bosing, **Yaratish** boʻlimida oʻzingiznikini chizing (hatto fotosuratdan boshlash mumkin) yoki **Import** orqali rasm yuklang.',
+  c4Host: 'Bu stol sizniki: hamma kelganda **Oʻyinni boshlash** tugmasini bosing — yoki boʻsh joylarni toʻldirish uchun **Kompyuter oʻyinchilari bilan toʻldirish** belgisini qoʻying. **Doʻstlarni taklif qilish** ularga ushbu stolga havola yuboradi.',
+  c4Guest: 'Oʻyinni stol egasi boshlaydi. Bu orada **Doʻstlarni taklif qilish** doʻstlaringizga ushbu stolga havola yuboradi.',
+  c4Offline: 'Mashgʻulot stoli: **Oʻyinni boshlash** tugmasini bosing — boʻsh joylar kompyuter oʻyinchilari bilan toʻldiriladi.',
 };

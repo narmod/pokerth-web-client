@@ -34,4 +34,10 @@ export default {
   goodLuck: 'Sok szerencsét!',
   c2Result: 'Vége a játéknak — helyezésed: **{place}**., szerzett pontok: **+{points}**. Megnézed a ranglistát?',
   c2ResultTie: 'Vége a játéknak! Több játékos ugyanabban a leosztásban esett ki, ezért a pontos helyezésedet a ranglista oldalán találod. Megnézed a ranglistát?',
+  c3Modes: 'Háromféleképpen játszhatsz: **Internet** a pokerth.net-en, a hivatalos ranglistákkal; **Helyi / gyakorlás** számítógépes játékosok ellen, akár offline is; és **LAN / Dedikált szerver** egy privát szerverhez.',
+  c3Account: 'Az interneten játssz az ingyenes pokerth.net-fiókoddal — vagy jelöld be a **Vendég mód** lehetőséget. A vendégek csak normál játékokat játszhatnak: nincs ranglistás játék és nincs chat. A fiók ingyenes, és egy perc alatt elkészül.',
+  c3Profile: 'Csatlakozás előtt válassz becenevet és avatart: koppints az avatarra, és válassz egyet a **Galéria** lapon, rajzold meg a sajátodat a **Létrehozás** lapon (akár egy fotóból is kiindulhat), vagy tölts be egy képet az **Importálás** lapon.',
+  c4Host: 'Ez az asztal a tiéd: nyomd meg a **Játék indítása** gombot, ha mindenki itt van — vagy jelöld be a **Feltöltés számítógépes játékosokkal** lehetőséget az üres helyek kitöltéséhez. A **Barátok meghívása** linket küld nekik ehhez az asztalhoz.',
+  c4Guest: 'A játékot az asztal házigazdája indítja. Addig is a **Barátok meghívása** linket küld nekik ehhez az asztalhoz.',
+  c4Offline: 'Gyakorlóasztal: nyomd meg a **Játék indítása** gombot — az üres helyekre számítógépes játékosok ülnek.',
 };

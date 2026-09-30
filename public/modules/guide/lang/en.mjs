@@ -43,4 +43,12 @@ export default {
   // C2.4 — back in the lobby after a ranked game
   c2Result: 'Game over — you finished in place **{place}**: **+{points}** points. See your ranking?',
   c2ResultTie: 'Game over! Several players went out in the same hand, so your exact place is on the ranking page. See your ranking?',
+  // C3 — login screen
+  c3Modes: 'Three ways to play: **Internet** on pokerth.net, with the official rankings; **Local / training** against computer players, even offline; and **LAN / Dedicated server** for a private server.',
+  c3Account: 'On Internet, play with your free pokerth.net account — or tick **Guest mode**. Guests can only play Normal games: no ranked games and no chat. An account is free and takes a minute.',
+  c3Profile: 'Before you connect, choose your nickname and your avatar: tap the avatar to pick one from the **Gallery**, draw your own in **Create** (it can even start from a photo) or **Import** a picture.',
+  // C4 — Normal / training waiting room
+  c4Host: 'This table is yours: press **Start Game** when everyone is here — or tick **Fill up with computer players** to fill the empty seats. **Invite friends** sends them a link to this table.',
+  c4Guest: 'The host of the table starts the game. Meanwhile, **Invite friends** sends them a link to this table.',
+  c4Offline: 'Training table: press **Start Game** — the empty seats are filled with computer players.',
 };

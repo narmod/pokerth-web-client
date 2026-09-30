@@ -27,6 +27,10 @@ const EVENTS = Object.freeze({
   'lobby-guest': ['shown', 'done', 'dismissed', 'guest_redirect'],
   'wait-ranking': ['shown', 'done', 'dismissed', 'started'],
   'ranked-result': ['shown', 'done', 'dismissed'],
+  // L4
+  login: ['shown', 'done', 'dismissed', 'signup'],
+  'login-profile': ['shown', 'done', 'dismissed'],
+  'wait-normal': ['shown', 'done', 'dismissed'],
 });
 
 /** Is this (context, event) pair one we count? */

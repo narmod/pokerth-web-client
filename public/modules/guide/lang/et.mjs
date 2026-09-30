@@ -34,4 +34,10 @@ export default {
   goodLuck: 'Edu!',
   c2Result: 'Mäng läbi — lõpetasid kohal **{place}**: **+{points}** punkti. Kas vaatad oma kohta edetabelis?',
   c2ResultTie: 'Mäng läbi! Mitu mängijat langes välja samas käes, nii et sinu täpne koht on edetabeli lehel. Kas vaatad oma kohta edetabelis?',
+  c3Modes: 'Kolm viisi mängida: **Internet** saidil pokerth.net koos ametlike edetabelitega; **Kohalik / treening** arvutimängijate vastu, isegi võrguühenduseta; ning **LAN / pühendatud server** privaatse serveri jaoks.',
+  c3Account: 'Internetis mängi oma tasuta pokerth.net kontoga — või märgi **Külalisrežiim**. Külalised saavad mängida ainult tavalisi mänge: ei edetabelimänge ega vestlust. Konto on tasuta ja selle loomine võtab minuti.',
+  c3Profile: 'Enne ühendumist vali oma hüüdnimi ja avatar: puuduta avatari ja vali üks vahekaardilt **Galerii**, joonista oma vahekaardil **Loo** (alustada saab isegi fotost) või lisa pilt vahekaardilt **Impordi**.',
+  c4Host: 'See laud on sinu: vajuta **Alusta mängu**, kui kõik on kohal — või märgi **Täida arvutimängijatega**, et tühjad kohad täita. **Kutsu sõpru** saadab neile lingi sellele lauale.',
+  c4Guest: 'Mängu alustab laua korraldaja. Seniks saadab **Kutsu sõpru** sinu sõpradele lingi sellele lauale.',
+  c4Offline: 'Treeningulaud: vajuta **Alusta mängu** — tühjad kohad täidetakse arvutimängijatega.',
 };

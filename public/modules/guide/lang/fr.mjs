@@ -34,4 +34,10 @@ export default {
   goodLuck: 'Bonne chance !',
   c2Result: 'Partie terminée — tu as fini à la place **{place}** : **+{points}** points. Voir ton classement ?',
   c2ResultTie: 'Partie terminée ! Plusieurs joueurs sont sortis sur la même main, ta place exacte est donc sur la page du classement. Voir ton classement ?',
+  c3Modes: 'Trois façons de jouer : **Internet** sur pokerth.net, avec les classements officiels ; **Local / entraînement** contre des joueurs ordinateur, même hors ligne ; et **LAN / Serveur dédié** pour un serveur privé.',
+  c3Account: 'Sur Internet, joue avec ton compte pokerth.net gratuit — ou coche **Mode invité**. Les invités ne peuvent jouer que des parties normales : pas de parties classées ni de chat. Un compte est gratuit et se crée en une minute.',
+  c3Profile: 'Avant de te connecter, choisis ton pseudo et ton avatar : touche l’avatar pour en prendre un dans la **Galerie**, dessine le tien dans **Créer** (il peut même partir d’une photo) ou ajoute une image avec **Importer**.',
+  c4Host: 'Cette table est à toi : appuie sur **Démarrer la partie** quand tout le monde est là — ou coche **Compléter avec des joueurs ordinateur** pour remplir les places vides. **Inviter des amis** leur envoie un lien vers cette table.',
+  c4Guest: 'C’est l’hôte de la table qui lance la partie. En attendant, **Inviter des amis** leur envoie un lien vers cette table.',
+  c4Offline: 'Table d’entraînement : appuie sur **Démarrer la partie** — les places vides sont occupées par des joueurs ordinateur.',
 };

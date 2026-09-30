@@ -34,4 +34,10 @@ export default {
   goodLuck: 'Boa sorte!',
   c2Result: 'Fin da partida — o teu posto: **{place}**, puntos: **+{points}**. Queres ver a túa clasificación?',
   c2ResultTie: 'Fin da partida! Varios xogadores quedaron fóra na mesma man, así que o teu posto exacto está na páxina da clasificación. Queres ver a túa clasificación?',
+  c3Modes: 'Tres xeitos de xogar: **Internet** en pokerth.net, coas clasificacións oficiais; **Local / adestramento** contra xogadores de ordenador, mesmo sen conexión; e **LAN / Servidor dedicado** para un servidor privado.',
+  c3Account: 'En Internet, xoga coa túa conta gratuíta de pokerth.net — ou marca **Modo convidado**. Os convidados só poden xogar partidas normais: nin partidas de clasificación nin chat. A conta é de balde e créase nun minuto.',
+  c3Profile: 'Antes de conectarte, escolle o teu alcume e o teu avatar: toca o avatar para escoller un da **Galería**, debuxa o teu en **Crear** (mesmo pode partir dunha foto) ou sobe unha imaxe con **Importar**.',
+  c4Host: 'Esta mesa é túa: preme **Iniciar partida** cando estean todos — ou marca **Completar con xogadores de ordenador** para ocupar os asentos baleiros. **Convidar amigos** mándalles unha ligazón a esta mesa.',
+  c4Guest: 'O anfitrión da mesa inicia a partida. Mentres tanto, **Convidar amigos** mándalles unha ligazón a esta mesa.',
+  c4Offline: 'Mesa de adestramento: preme **Iniciar partida** — os asentos baleiros énchense con xogadores de ordenador.',
 };

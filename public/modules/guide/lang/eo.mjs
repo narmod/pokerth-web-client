@@ -34,4 +34,10 @@ export default {
   goodLuck: 'Bonŝancon!',
   c2Result: 'Ludo finita — vi finis sur la loko **{place}**: **+{points}** poentoj. Ĉu vidi vian rangigon?',
   c2ResultTie: 'Ludo finita! Pluraj ludantoj eliminiĝis en la sama mano, do via preciza loko estas sur la rangiga paĝo. Ĉu vidi vian rangigon?',
+  c3Modes: 'Tri manieroj ludi: **Interreto** ĉe pokerth.net, kun la oficialaj rangolistoj; **Loka / trejnado** kontraŭ komputilaj ludantoj, eĉ senkonekte; kaj **LAN / Dediĉita servilo** por privata servilo.',
+  c3Account: 'En Interreto, ludu per via senpaga konto ĉe pokerth.net — aŭ marku **Gasta reĝimo**. Gastoj povas ludi nur Normalajn ludojn: neniuj rangigaj ludoj kaj neniu babilejo. Konto estas senpaga kaj kreiĝas en unu minuto.',
+  c3Profile: 'Antaŭ ol konektiĝi, elektu vian kaŝnomon kaj vian avataron: tuŝetu la avataron por elekti unu el **Galerio**, desegnu vian propran en **Krei** (ĝi eĉ povas komenciĝi de foto) aŭ enportu bildon per **Importi**.',
+  c4Host: 'Ĉi tiu tablo estas via: premu **Komenci la ludon** kiam ĉiuj ĉeestas — aŭ marku **Plenigi per komputilaj ludantoj** por plenigi la malplenajn seĝojn. **Inviti amikojn** sendas al ili ligilon al ĉi tiu tablo.',
+  c4Guest: 'La gastiganto de la tablo komencas la ludon. Intertempe, **Inviti amikojn** sendas al viaj amikoj ligilon al ĉi tiu tablo.',
+  c4Offline: 'Trejna tablo: premu **Komenci la ludon** — la malplenaj seĝoj pleniĝas per komputilaj ludantoj.',
 };

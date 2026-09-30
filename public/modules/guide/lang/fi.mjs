@@ -34,4 +34,10 @@ export default {
   goodLuck: 'Onnea!',
   c2Result: 'Peli päättyi — sijoituit sijalle **{place}**: **+{points}** pistettä. Näytetäänkö sijoituksesi?',
   c2ResultTie: 'Peli päättyi! Useampi pelaaja putosi samassa kädessä, joten tarkka sijoituksesi näkyy sijoituslistan sivulla. Näytetäänkö sijoituksesi?',
+  c3Modes: 'Kolme tapaa pelata: **Internet** osoitteessa pokerth.net virallisine ranking-listoineen; **Paikallinen / harjoittelu** tietokonepelaajia vastaan, myös ilman verkkoyhteyttä; ja **LAN / Oma palvelin** yksityiselle palvelimelle.',
+  c3Account: 'Internetissä pelaat ilmaisella pokerth.net-tililläsi — tai valitse **Vierastila**. Vieraat voivat pelata vain normaaleja pelejä: ei ranking-pelejä eikä chattia. Tili on ilmainen ja sen luominen vie minuutin.',
+  c3Profile: 'Valitse ennen yhdistämistä nimimerkkisi ja avatarisi: napauta avataria ja valitse yksi välilehdeltä **Galleria**, piirrä oma välilehdellä **Luo** (voit aloittaa jopa valokuvasta) tai tuo kuva välilehdeltä **Tuo**.',
+  c4Host: 'Tämä pöytä on sinun: paina **Aloita peli**, kun kaikki ovat paikalla — tai valitse **Täytä tietokonepelaajilla** täyttääksesi tyhjät paikat. **Kutsu ystäviä** lähettää heille linkin tähän pöytään.',
+  c4Guest: 'Pöydän isäntä aloittaa pelin. Sillä välin **Kutsu ystäviä** lähettää ystävillesi linkin tähän pöytään.',
+  c4Offline: 'Harjoituspöytä: paina **Aloita peli** — tyhjät paikat täytetään tietokonepelaajilla.',
 };

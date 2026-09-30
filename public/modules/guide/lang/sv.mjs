@@ -34,4 +34,10 @@ export default {
   goodLuck: 'Lycka till!',
   c2Result: 'Spelet är slut — du kom på plats **{place}**: **+{points}** poäng. Vill du se din ranking?',
   c2ResultTie: 'Spelet är slut! Flera spelare åkte ut i samma hand, så din exakta placering finns på rankingsidan. Vill du se din ranking?',
+  c3Modes: 'Tre sätt att spela: **Internet** på pokerth.net, med de officiella rankinglistorna; **Lokal / träning** mot datorspelare, även offline; och **LAN / Dedikerad server** för en privat server.',
+  c3Account: 'På Internet spelar du med ditt gratis pokerth.net-konto — eller kryssa i **Gästläge**. Gäster kan bara spela normala spel: inga rankingspel och ingen chatt. Ett konto är gratis och tar en minut att skapa.',
+  c3Profile: 'Välj ditt smeknamn och din avatar innan du ansluter: tryck på avataren för att välja en i **Galleri**, rita en egen i **Skapa** (den kan till och med utgå från ett foto) eller hämta en bild med **Importera**.',
+  c4Host: 'Det här bordet är ditt: tryck på **Starta spelet** när alla är här — eller kryssa i **Fyll upp med datorspelare** för att fylla de tomma platserna. **Bjud in vänner** skickar dem en länk till det här bordet.',
+  c4Guest: 'Bordets värd startar spelet. Under tiden skickar **Bjud in vänner** dina vänner en länk till det här bordet.',
+  c4Offline: 'Träningsbord: tryck på **Starta spelet** — de tomma platserna fylls med datorspelare.',
 };

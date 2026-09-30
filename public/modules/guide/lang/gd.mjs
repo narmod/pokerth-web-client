@@ -34,4 +34,10 @@ export default {
   goodLuck: 'Gun èirich leat!',
   c2Result: 'Tha an geama seachad — chrìochnaich thu san àite **{place}**: **+{points}** puingean. A bheil thu airson an rangachadh agad fhaicinn?',
   c2ResultTie: 'Tha an geama seachad! Chaidh grunn chluicheadairean a-mach san aon làimh, mar sin tha an dearbh àite agad air duilleag an rangachaidh. A bheil thu airson an rangachadh agad fhaicinn?',
+  c3Modes: 'Trì dòighean air cluich: **Eadar-lìon** air pokerth.net, leis na clàran-rangachaidh oifigeil; **Ionadail / trèanadh** an aghaidh chluicheadairean coimpiutair, fiù ’s far-loidhne; agus **LAN / Frithealadair sònraichte** airson frithealaiche prìobhaideach.',
+  c3Account: 'Air an eadar-lìon, cluich leis a’ chunntas pokerth.net an-asgaidh agad — no cuir strìochag ri **Modh aoigh**. Chan fhaod aoighean ach geamannan àbhaisteach a chluich: gun gheamannan rangachaidh agus gun chabadaich. Tha cunntas an-asgaidh agus cha toir e ach mionaid.',
+  c3Profile: 'Mus ceangail thu, tagh am far-ainm agus an avatar agad: thoir gnogag air an avatar gus fear a thaghadh on **Gailearaidh**, tarraing fear agad fhèin ann an **Cruthaich** (faodaidh e tòiseachadh fiù ’s o dhealbh) no cleachd **Ion-phortaich** airson dealbh a thoirt a-steach.',
+  c4Host: '’S ann leatsa a tha am bòrd seo: brùth **Tòisich an geama** nuair a bhios càch an seo — no cuir strìochag ri **Lìon le cluicheadairean coimpiutair** gus na suidheachain falamh a lìonadh. Cuiridh **Thoir cuireadh do charaidean** ceangal dhan bhòrd seo thuca.',
+  c4Guest: 'Tòisichidh òstair a’ bhùird an geama. San eadar-àm, cuiridh **Thoir cuireadh do charaidean** ceangal dhan bhòrd seo gu do charaidean.',
+  c4Offline: 'Bòrd trèanaidh: brùth **Tòisich an geama** — thèid na suidheachain falamh a lìonadh le cluicheadairean coimpiutair.',
 };

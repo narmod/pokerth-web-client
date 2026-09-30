@@ -34,4 +34,10 @@ export default {
   goodLuck: 'Chúc may mắn!',
   c2Result: 'Kết thúc ván — bạn về hạng **{place}**: **+{points}** điểm. Xem thứ hạng của bạn?',
   c2ResultTie: 'Kết thúc ván! Nhiều người chơi bị loại trong cùng một ván bài, nên thứ hạng chính xác của bạn nằm ở trang xếp hạng. Xem thứ hạng của bạn?',
+  c3Modes: 'Ba cách chơi: **Internet** trên pokerth.net, với bảng xếp hạng chính thức; **Cục bộ / luyện tập** với người chơi máy tính, kể cả khi không có mạng; và **LAN / Máy chủ riêng** cho máy chủ riêng tư.',
+  c3Account: 'Trên Internet, hãy chơi bằng tài khoản pokerth.net miễn phí của bạn — hoặc đánh dấu **Chế độ khách**. Khách chỉ chơi được ván thường: không có ván xếp hạng và không có trò chuyện. Tài khoản miễn phí và chỉ mất một phút để tạo.',
+  c3Profile: 'Trước khi kết nối, hãy chọn biệt danh và avatar: chạm vào avatar để chọn một cái trong **Thư viện**, tự vẽ trong **Tạo** (thậm chí có thể bắt đầu từ ảnh) hoặc tải ảnh lên qua **Nhập**.',
+  c4Host: 'Bàn này là của bạn: nhấn **Bắt đầu ván** khi mọi người đã đến — hoặc đánh dấu **Bổ sung người chơi máy tính** để lấp các ghế trống. **Mời bạn bè** gửi cho họ đường dẫn tới bàn này.',
+  c4Guest: 'Chủ bàn sẽ bắt đầu ván. Trong lúc chờ, **Mời bạn bè** gửi cho họ đường dẫn tới bàn này.',
+  c4Offline: 'Bàn luyện tập: nhấn **Bắt đầu ván** — các ghế trống sẽ được lấp bằng người chơi máy tính.',
 };

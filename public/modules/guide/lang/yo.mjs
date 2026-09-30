@@ -34,4 +34,10 @@ export default {
   goodLuck: 'Orí rere o!',
   c2Result: 'Eré ti parí — o parí sí ipò **{place}**: àmì **+{points}**. Ṣé o fẹ́ wo ipò rẹ?',
   c2ResultTie: 'Eré ti parí! Òṣèré púpọ̀ jáde nínú ọwọ́ kan náà, nítorí náà ipò rẹ gan-an wà lójú-ìwé ipò. Ṣé o fẹ́ wo ipò rẹ?',
+  c3Modes: 'Ọ̀nà mẹ́ta láti ṣeré: **Ayélujára** lórí pokerth.net, pẹ̀lú àwọn ipò òṣìṣẹ́; **Agbègbè / ìdánrawò** lòdì sí àwọn òṣèré kọ̀ǹpútà, kódà láìsí ìsopọ̀; àti **LAN / Olùpín àdáni** fún olùpín ìkọ̀kọ̀.',
+  c3Account: 'Lórí Ayélujára, ṣeré pẹ̀lú àkáǹtì pokerth.net rẹ tí ó jẹ́ ọ̀fẹ́ — tàbí sàmì sí **Ọ̀nà àlejò**. Àwọn àlejò lè ṣe eré Déédéé nìkan: kò sí eré ipò, kò sì sí ìbánisọ̀rọ̀. Àkáǹtì jẹ́ ọ̀fẹ́, ó sì gba ìṣẹ́jú kan péré.',
+  c3Profile: 'Kí o tó sopọ̀, yan orúkọ ìnagijẹ rẹ àti afàtá rẹ: tẹ afàtá náà láti yan ọ̀kan nínú **Àwòrán**, ya tìrẹ nínú **Ṣẹ̀dá** (ó tilẹ̀ lè bẹ̀rẹ̀ láti fọ́tò kan) tàbí mú àwòrán wọlé pẹ̀lú **Kó wọlé**.',
+  c4Host: 'Tìrẹ ni tábìlì yìí: tẹ **Bẹ̀rẹ̀ eré** nígbà tí gbogbo ènìyàn bá ti dé — tàbí sàmì sí **Fi àwọn òṣèré kọ̀ǹpútà kún un** láti kún àwọn ìjókòó òfo. **Pe àwọn ọ̀rẹ́** yóò fi ìjápọ̀ tábìlì yìí ránṣẹ́ sí wọn.',
+  c4Guest: 'Olùgbàlejò tábìlì ni yóò bẹ̀rẹ̀ eré. Ní báyìí ná, **Pe àwọn ọ̀rẹ́** yóò fi ìjápọ̀ tábìlì yìí ránṣẹ́ sí àwọn ọ̀rẹ́ rẹ.',
+  c4Offline: 'Tábìlì ìdánrawò: tẹ **Bẹ̀rẹ̀ eré** — a ó fi àwọn òṣèré kọ̀ǹpútà kún àwọn ìjókòó òfo.',
 };

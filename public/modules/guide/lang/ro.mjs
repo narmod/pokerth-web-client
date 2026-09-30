@@ -34,4 +34,10 @@ export default {
   goodLuck: 'Mult noroc!',
   c2Result: 'Partidă încheiată — ai terminat pe locul **{place}**: **+{points}** puncte. Vezi clasamentul tău?',
   c2ResultTie: 'Partidă încheiată! Mai mulți jucători au ieșit în aceeași mână, așa că locul tău exact e pe pagina clasamentului. Vezi clasamentul tău?',
+  c3Modes: 'Trei moduri de joc: **Internet** pe pokerth.net, cu clasamentele oficiale; **Local / antrenament** împotriva jucătorilor computer, chiar și offline; și **LAN / Server dedicat** pentru un server privat.',
+  c3Account: 'Pe Internet, joacă cu contul tău gratuit pokerth.net — sau bifează **Mod invitat**. Invitații pot juca doar partide normale: fără partide clasate și fără chat. Un cont e gratuit și se face într-un minut.',
+  c3Profile: 'Înainte să te conectezi, alege-ți porecla și avatarul: atinge avatarul ca să alegi unul din **Galerie**, desenează-l pe al tău în **Creează** (poate porni chiar de la o fotografie) sau adaugă o imagine cu **Import**.',
+  c4Host: 'Masa asta e a ta: apasă **Pornește jocul** când sunt toți aici — sau bifează **Completează cu jucători computer** ca să umpli locurile libere. **Invită prieteni** le trimite un link către această masă.',
+  c4Guest: 'Gazda mesei pornește jocul. Între timp, **Invită prieteni** le trimite un link către această masă.',
+  c4Offline: 'Masă de antrenament: apasă **Pornește jocul** — locurile libere sunt ocupate de jucători computer.',
 };

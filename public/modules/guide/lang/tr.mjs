@@ -34,4 +34,10 @@ export default {
   goodLuck: 'Bol şans!',
   c2Result: 'Oyun bitti — **{place}**. sırada bitirdin: **+{points}** puan. Sıralamanı görmek ister misin?',
   c2ResultTie: 'Oyun bitti! Birkaç oyuncu aynı elde elendi, bu yüzden kesin sıran sıralama sayfasında. Sıralamanı görmek ister misin?',
+  c3Modes: 'Üç oynama şekli: resmi sıralamalarla pokerth.net üzerinde **İnternet**; bilgisayar oyuncularına karşı, çevrimdışı bile **Yerel / antrenman**; ve özel bir sunucu için **LAN / Özel sunucu**.',
+  c3Account: 'İnternet’te ücretsiz pokerth.net hesabınla oyna — ya da **Misafir modu** seçeneğini işaretle. Misafirler yalnızca Normal oyunlar oynayabilir: sıralama oyunu yok, sohbet yok. Hesap ücretsizdir ve bir dakikanı alır.',
+  c3Profile: 'Bağlanmadan önce takma adını ve avatarını seç: **Galeri** sekmesinden bir tane seçmek için avatara dokun, **Oluştur** sekmesinde kendininkini çiz (bir fotoğraftan bile başlayabilir) ya da **İçe aktar** ile bir resim ekle.',
+  c4Host: 'Bu masa senin: herkes geldiğinde **Oyunu başlat** düğmesine bas — ya da boş koltukları doldurmak için **Bilgisayar oyuncularıyla doldur** seçeneğini işaretle. **Arkadaşlarını davet et** onlara bu masanın bağlantısını gönderir.',
+  c4Guest: 'Oyunu masanın sahibi başlatır. Bu arada **Arkadaşlarını davet et** arkadaşlarına bu masanın bağlantısını gönderir.',
+  c4Offline: 'Antrenman masası: **Oyunu başlat** düğmesine bas — boş koltuklar bilgisayar oyuncularıyla doldurulur.',
 };

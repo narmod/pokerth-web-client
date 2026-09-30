@@ -34,4 +34,10 @@ export default {
   goodLuck: 'Sretno!',
   c2Result: 'Kraj igre — tvoje završno mjesto: **{place}**. Dobivaš **+{points}** bodova. Pogledati svoj poredak?',
   c2ResultTie: 'Kraj igre! Nekoliko je igrača ispalo u istoj ruci, pa je tvoje točno mjesto na stranici poretka. Pogledati svoj poredak?',
+  c3Modes: 'Tri načina igranja: **Internet** na pokerth.net, sa službenim ljestvicama; **Lokalno / trening** protiv računalnih igrača, čak i offline; i **LAN / Namjenski poslužitelj** za privatni poslužitelj.',
+  c3Account: 'Na Internetu igraj sa svojim besplatnim pokerth.net računom — ili označi **Gostujući način**. Gosti mogu igrati samo normalne partije: bez rangiranih partija i bez chata. Račun je besplatan i otvara se za minutu.',
+  c3Profile: 'Prije spajanja odaberi nadimak i avatar: dodirni avatar i odaberi jedan u kartici **Galerija**, nacrtaj svoj u kartici **Stvori** (može krenuti čak i od fotografije) ili dodaj sliku preko **Uvoz**.',
+  c4Host: 'Ovaj stol je tvoj: pritisni **Pokreni igru** kad svi stignu — ili označi **Popuni računalnim igračima** da se popune prazna mjesta. **Pozovi prijatelje** šalje im poveznicu na ovaj stol.',
+  c4Guest: 'Igru pokreće domaćin stola. U međuvremenu, **Pozovi prijatelje** šalje tvojim prijateljima poveznicu na ovaj stol.',
+  c4Offline: 'Stol za trening: pritisni **Pokreni igru** — prazna mjesta popunjavaju se računalnim igračima.',
 };

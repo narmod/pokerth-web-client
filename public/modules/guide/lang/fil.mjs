@@ -34,4 +34,10 @@ export default {
   goodLuck: 'Suwertehin ka!',
   c2Result: 'Tapos na ang laro — nagtapos ka sa pwestong **{place}**: **+{points}** na puntos. Tingnan ang ranking mo?',
   c2ResultTie: 'Tapos na ang laro! Ilang manlalaro ang natanggal sa iisang kamay, kaya nasa ranking page ang eksaktong pwesto mo. Tingnan ang ranking mo?',
+  c3Modes: 'Tatlong paraan ng paglalaro: **Internet** sa pokerth.net, may opisyal na mga ranking; **Lokal / pagsasanay** laban sa mga computer player, kahit offline; at **LAN / Dedicated server** para sa pribadong server.',
+  c3Account: 'Sa Internet, maglaro gamit ang libre mong pokerth.net account — o i-tick ang **Guest mode**. Mga Normal na laro lang ang puwedeng laruin ng mga guest: walang ranking game at walang chat. Libre ang account at isang minuto lang ang kailangan.',
+  c3Profile: 'Bago kumonekta, piliin ang iyong palayaw at avatar: i-tap ang avatar para pumili ng isa sa **Gallery**, gumuhit ng sarili mo sa **Gumawa** (puwede pang magsimula sa isang larawan) o gamitin ang **Mag-import** para maglagay ng larawan.',
+  c4Host: 'Sa iyo ang mesang ito: pindutin ang **Simulan ang Laro** kapag nandito na ang lahat — o i-tick ang **Punan ng mga computer player** para mapuno ang mga bakanteng upuan. Ang **Mag-imbita ng mga kaibigan** ay nagpapadala sa kanila ng link sa mesang ito.',
+  c4Guest: 'Ang host ng mesa ang magsisimula ng laro. Samantala, ang **Mag-imbita ng mga kaibigan** ay nagpapadala sa iyong mga kaibigan ng link sa mesang ito.',
+  c4Offline: 'Mesa para sa pagsasanay: pindutin ang **Simulan ang Laro** — pupunuin ng mga computer player ang mga bakanteng upuan.',
 };

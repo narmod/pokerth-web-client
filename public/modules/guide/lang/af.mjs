@@ -34,4 +34,10 @@ export default {
   goodLuck: 'Sterkte!',
   c2Result: 'Spel verby — jy het in plek **{place}** geëindig: **+{points}** punte. Sien jou ranglys?',
   c2ResultTie: 'Spel verby! Verskeie spelers het in dieselfde hand uitgeval, dus is jou presiese plek op die ranglysbladsy. Sien jou ranglys?',
+  c3Modes: 'Drie maniere om te speel: **Internet** op pokerth.net, met die amptelike ranglyste; **Plaaslik / oefening** teen rekenaarspelers, selfs vanlyn; en **LAN / Toegewyde bediener** vir ’n private bediener.',
+  c3Account: 'Op Internet speel jy met jou gratis pokerth.net-rekening — of merk **Gasmodus**. Gaste kan net Normale spelle speel: geen ranglysspelle en geen klets nie. ’n Rekening is gratis en neem ’n minuut.',
+  c3Profile: 'Kies jou bynaam en jou avatar voordat jy koppel: tik op die avatar om een uit die **Galery** te kies, teken jou eie in **Skep** (dit kan selfs met ’n foto begin) of laai ’n prent op via **Voer in**.',
+  c4Host: 'Hierdie tafel is joune: druk **Begin spel** wanneer almal hier is — of merk **Vul aan met rekenaarspelers** om die leë sitplekke te vul. **Nooi vriende** stuur vir hulle ’n skakel na hierdie tafel.',
+  c4Guest: 'Die gasheer van die tafel begin die spel. Intussen stuur **Nooi vriende** vir jou vriende ’n skakel na hierdie tafel.',
+  c4Offline: 'Oefentafel: druk **Begin spel** — die leë sitplekke word met rekenaarspelers gevul.',
 };

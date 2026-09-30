@@ -34,4 +34,10 @@ export default {
   goodLuck: 'Gangi þér vel!',
   c2Result: 'Leik lokið — þú endaðir í sæti **{place}**: **+{points}** stig. Sjá stöðu þína?',
   c2ResultTie: 'Leik lokið! Nokkrir leikmenn duttu út í sömu hendinni, svo nákvæmt sæti þitt er á stigatöflusíðunni. Sjá stöðu þína?',
+  c3Modes: 'Þrjár leiðir til að spila: **Internet** á pokerth.net, með opinberu stigatöflunum; **Staðbundið / æfing** gegn tölvuleikmönnum, jafnvel án tengingar; og **LAN / sérþjónn** fyrir einkaþjón.',
+  c3Account: 'Á netinu spilarðu með ókeypis pokerth.net aðganginum þínum — eða hakar við **Gestahamur**. Gestir geta aðeins spilað venjulega leiki: engir stigaleikir og ekkert spjall. Aðgangur er ókeypis og tekur eina mínútu að stofna.',
+  c3Profile: 'Áður en þú tengist skaltu velja gælunafn og avatar: ýttu á avatarinn til að velja einn úr **Myndasafn**, teiknaðu þinn eigin í **Búa til** (hann getur jafnvel byrjað út frá ljósmynd) eða sæktu mynd með **Flytja inn**.',
+  c4Host: 'Þetta er þitt borð: ýttu á **Hefja leik** þegar allir eru mættir — eða hakaðu við **Fylla með tölvuleikmönnum** til að fylla auðu sætin. **Bjóða vinum** sendir þeim tengil á þetta borð.',
+  c4Guest: 'Gestgjafi borðsins hefur leikinn. Á meðan sendir **Bjóða vinum** þeim tengil á þetta borð.',
+  c4Offline: 'Æfingaborð: ýttu á **Hefja leik** — auðu sætin eru fyllt með tölvuleikmönnum.',
 };

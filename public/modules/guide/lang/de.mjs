@@ -34,4 +34,10 @@ export default {
   goodLuck: 'Viel Glück!',
   c2Result: 'Spiel vorbei — du bist auf Platz **{place}** gelandet: **+{points}** Punkte. Deine Rangliste ansehen?',
   c2ResultTie: 'Spiel vorbei! Mehrere Spieler sind in derselben Hand ausgeschieden, daher steht dein genauer Platz auf der Ranglistenseite. Deine Rangliste ansehen?',
+  c3Modes: 'Drei Arten zu spielen: **Internet** auf pokerth.net, mit den offiziellen Ranglisten; **Lokal / Training** gegen Computerspieler, sogar offline; und **LAN / Dedizierter Server** für einen privaten Server.',
+  c3Account: 'Im Internet spielst du mit deinem kostenlosen pokerth.net-Konto — oder du setzt ein Häkchen bei **Gast-Modus**. Gäste können nur normale Spiele spielen: keine Ranglistenspiele und kein Chat. Ein Konto ist kostenlos und in einer Minute erstellt.',
+  c3Profile: 'Bevor du dich verbindest, wähle deinen Spitznamen und deinen Avatar: Tippe auf den Avatar, um einen aus der **Galerie** zu wählen, zeichne unter **Erstellen** deinen eigenen (sogar ausgehend von einem Foto) oder lade unter **Importieren** ein Bild hoch.',
+  c4Host: 'Dieser Tisch gehört dir: Drücke **Spiel starten**, wenn alle da sind — oder setze ein Häkchen bei **Mit Computerspielern auffüllen**, um die freien Plätze zu füllen. **Freunde einladen** schickt ihnen einen Link zu diesem Tisch.',
+  c4Guest: 'Der Gastgeber des Tisches startet das Spiel. Inzwischen schickt **Freunde einladen** deinen Freunden einen Link zu diesem Tisch.',
+  c4Offline: 'Trainingstisch: Drücke **Spiel starten** — die freien Plätze werden mit Computerspielern besetzt.',
 };

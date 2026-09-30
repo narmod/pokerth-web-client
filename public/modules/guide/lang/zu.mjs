@@ -34,4 +34,10 @@ export default {
   goodLuck: 'Inhlanhla enhle!',
   c2Result: 'Umdlalo uphelile — uqede endaweni **{place}**: **+{points}** amaphuzu. Ufuna ukubona izinga lakho?',
   c2ResultTie: 'Umdlalo uphelile! Abadlali abaningana baphume esandleni esifanayo, ngakho indawo yakho ngqo isekhasini lezinga. Ufuna ukubona izinga lakho?',
+  c3Modes: 'Izindlela ezintathu zokudlala: **Ku-inthanethi** ku-pokerth.net, ngokulinganiswa okusemthethweni; **Okwasendaweni / ukuziqeqesha** ubhekene nabadlali bekhompyutha, ngisho ungaxhunyiwe; kanye ne-**LAN / Iseva ezinikele** yeseva yangasese.',
+  c3Account: 'Ku-inthanethi, dlala nge-akhawunti yakho ye-pokerth.net yamahhala — noma uthikhe **Imodi yesivakashi**. Izivakashi zingadlala imidlalo ejwayelekile kuphela: ayikho imidlalo yezinga futhi ayikho ingxoxo. I-akhawunti ingeyamahhala futhi ithatha umzuzu owodwa nje.',
+  c3Profile: 'Ngaphambi kokuxhuma, khetha igama lakho lokudlala ne-avatar yakho: thepha i-avatar ukuze ukhethe eyodwa kuthebhu ethi **Igalari**, dweba eyakho kuthebhu ethi **Dala** (ingaqala ngisho nesithombe) noma **Ngenisa** isithombe.',
+  c4Host: 'Leli tafula ngelakho: cindezela **Qala umdlalo** uma wonke umuntu esefikile — noma uthikhe **Gcwalisa ngabadlali bekhompyutha** ukuze kugcwaliswe izihlalo ezingenalutho. **Mema abangani** ibathumelela isixhumanisi saleli tafula.',
+  c4Guest: 'Umsingathi wetafula nguyena oqala umdlalo. Okwamanje, **Mema abangani** ithumelela abangani bakho isixhumanisi saleli tafula.',
+  c4Offline: 'Itafula lokuziqeqesha: cindezela **Qala umdlalo** — izihlalo ezingenalutho zigcwaliswa ngabadlali bekhompyutha.',
 };

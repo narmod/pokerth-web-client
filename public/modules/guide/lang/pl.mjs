@@ -34,4 +34,10 @@ export default {
   goodLuck: 'Powodzenia!',
   c2Result: 'Koniec gry — twoje miejsce: **{place}**, zdobyte punkty: **+{points}**. Pokazać twój ranking?',
   c2ResultTie: 'Koniec gry! Kilku graczy odpadło w tym samym rozdaniu, więc twoje dokładne miejsce znajdziesz na stronie rankingu. Pokazać twój ranking?',
+  c3Modes: 'Trzy sposoby gry: **Internet** na pokerth.net, z oficjalnymi rankingami; **Lokalna / trening** przeciwko graczom komputerowym, nawet offline; oraz **LAN / Serwer dedykowany** dla prywatnego serwera.',
+  c3Account: 'W Internecie graj ze swoim darmowym kontem pokerth.net — albo zaznacz **Tryb gościa**. Goście mogą grać tylko w gry normalne: bez gier rankingowych i bez czatu. Konto jest darmowe i zakłada się je w minutę.',
+  c3Profile: 'Zanim się połączysz, wybierz pseudonim i awatar: dotknij awatara, aby wybrać jeden z zakładki **Galeria**, narysuj własny w zakładce **Utwórz** (może nawet powstać ze zdjęcia) albo wczytaj obraz przez **Importuj**.',
+  c4Host: 'Ten stół należy do ciebie: naciśnij **Rozpocznij grę**, gdy wszyscy będą na miejscu — albo zaznacz **Uzupełnij graczami komputerowymi**, aby zapełnić wolne miejsca. **Zaproś znajomych** wysyła im link do tego stołu.',
+  c4Guest: 'Grę rozpoczyna gospodarz stołu. W międzyczasie **Zaproś znajomych** wysyła im link do tego stołu.',
+  c4Offline: 'Stół treningowy: naciśnij **Rozpocznij grę** — wolne miejsca zajmą gracze komputerowi.',
 };

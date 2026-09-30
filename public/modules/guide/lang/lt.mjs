@@ -34,4 +34,10 @@ export default {
   goodLuck: 'Sėkmės!',
   c2Result: 'Žaidimas baigtas — tavo vieta: **{place}**, taškai: **+{points}**. Pažiūrėti savo reitingą?',
   c2ResultTie: 'Žaidimas baigtas! Keli žaidėjai iškrito toje pačioje rankoje, todėl tikslią savo vietą rasi reitingo puslapyje. Pažiūrėti savo reitingą?',
+  c3Modes: 'Trys būdai žaisti: **Internetas** — pokerth.net su oficialiais reitingais; **Vietinis / treniruotė** — prieš kompiuterinius žaidėjus, net be ryšio; ir **LAN / Skirtasis serveris** — privačiam serveriui.',
+  c3Account: 'Internete žaisk su savo nemokama pokerth.net paskyra — arba pažymėk **Svečio režimas**. Svečiai gali žaisti tik įprastus žaidimus: jokių reitinguojamų žaidimų ir jokių pokalbių. Paskyra nemokama, o susikurti ją užtrunka minutę.',
+  c3Profile: 'Prieš prisijungdamas pasirink slapyvardį ir avatarą: bakstelėk avatarą ir pasirink jį skirtuke **Galerija**, nupiešk savo skirtuke **Kurti** (galima pradėti net nuo nuotraukos) arba įkelk paveikslėlį per **Importuoti**.',
+  c4Host: 'Šis stalas tavo: paspausk **Pradėti žaidimą**, kai visi susirinks, — arba pažymėk **Papildyti kompiuteriniais žaidėjais**, kad užpildytum tuščias vietas. **Pakviesti draugus** nusiunčia jiems nuorodą į šį stalą.',
+  c4Guest: 'Žaidimą pradeda stalo šeimininkas. Tuo metu **Pakviesti draugus** nusiunčia jiems nuorodą į šį stalą.',
+  c4Offline: 'Treniruočių stalas: paspausk **Pradėti žaidimą** — tuščias vietas užims kompiuteriniai žaidėjai.',
 };

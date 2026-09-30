@@ -34,4 +34,10 @@ export default {
   goodLuck: 'Veel succes!',
   c2Result: 'Spel afgelopen — je bent op plaats **{place}** geëindigd: **+{points}** punten. Je positie in de ranglijst bekijken?',
   c2ResultTie: 'Spel afgelopen! Meerdere spelers lagen er in dezelfde hand uit, dus je exacte plaats staat op de ranglijstpagina. Je positie in de ranglijst bekijken?',
+  c3Modes: 'Drie manieren om te spelen: **Internet** op pokerth.net, met de officiële ranglijsten; **Lokaal / oefenen** tegen computerspelers, zelfs offline; en **LAN / Toegewijde server** voor een privéserver.',
+  c3Account: 'Op Internet speel je met je gratis pokerth.net-account — of vink **Gastmodus** aan. Gasten kunnen alleen normale spellen spelen: geen rankingspellen en geen chat. Een account is gratis en maak je in een minuut.',
+  c3Profile: 'Kies voordat je verbindt je bijnaam en je avatar: tik op de avatar om er een te kiezen uit de **Galerij**, teken je eigen avatar bij **Maken** (dat kan zelfs vanaf een foto) of haal een afbeelding binnen via **Importeren**.',
+  c4Host: 'Deze tafel is van jou: druk op **Spel starten** als iedereen er is — of vink **Aanvullen met computerspelers** aan om de lege plaatsen te vullen. **Vrienden uitnodigen** stuurt ze een link naar deze tafel.',
+  c4Guest: 'De host van de tafel start het spel. Ondertussen stuurt **Vrienden uitnodigen** je vrienden een link naar deze tafel.',
+  c4Offline: 'Oefentafel: druk op **Spel starten** — de lege plaatsen worden gevuld met computerspelers.',
 };

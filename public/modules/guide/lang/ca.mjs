@@ -34,4 +34,10 @@ export default {
   goodLuck: 'Bona sort!',
   c2Result: 'Partida acabada — has quedat en la posició **{place}**: **+{points}** punts. Vols veure la teva classificació?',
   c2ResultTie: 'Partida acabada! Diversos jugadors han quedat eliminats en la mateixa mà, així que el teu lloc exacte és a la pàgina de classificació. Vols veure la teva classificació?',
+  c3Modes: 'Tres maneres de jugar: **Internet** a pokerth.net, amb les classificacions oficials; **Local / entrenament** contra jugadors d’ordinador, fins i tot sense connexió; i **LAN / Servidor dedicat** per a un servidor privat.',
+  c3Account: 'A Internet, juga amb el teu compte gratuït de pokerth.net — o marca **Mode convidat**. Els convidats només poden jugar partides normals: sense partides de classificació i sense xat. Un compte és gratuït i es fa en un minut.',
+  c3Profile: 'Abans de connectar-te, tria el teu sobrenom i el teu avatar: toca l’avatar per triar-ne un de la **Galeria**, dibuixa el teu a **Crea** (fins i tot pot partir d’una foto) o **Importa** una imatge.',
+  c4Host: 'Aquesta taula és teva: prem **Inicia la partida** quan tothom hi sigui — o marca **Completar amb jugadors d’ordinador** per omplir els seients buits. **Convida amics** els envia un enllaç a aquesta taula.',
+  c4Guest: 'L’amfitrió de la taula inicia la partida. Mentrestant, **Convida amics** envia als teus amics un enllaç a aquesta taula.',
+  c4Offline: 'Taula d’entrenament: prem **Inicia la partida** — els seients buits s’omplen amb jugadors d’ordinador.',
 };

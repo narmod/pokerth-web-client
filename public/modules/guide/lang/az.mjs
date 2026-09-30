@@ -34,4 +34,10 @@ export default {
   goodLuck: 'Uğurlar!',
   c2Result: 'Oyun bitdi — yeriniz: **{place}**, qazancınız: **+{points}** xal. Reytinqinizə baxmaq istəyirsiniz?',
   c2ResultTie: 'Oyun bitdi! Bir neçə oyunçu eyni əldə oyundan çıxdı, ona görə dəqiq yeriniz reytinq səhifəsindədir. Reytinqinizə baxmaq istəyirsiniz?',
+  c3Modes: 'Oynamağın üç yolu: rəsmi reytinqlərlə pokerth.net-də **İnternet**; kompüter oyunçularına qarşı, hətta oflayn da **Lokal / məşq**; və şəxsi server üçün **LAN / Xüsusi server**.',
+  c3Account: 'İnternet rejimində pulsuz pokerth.net hesabınızla oynayın — və ya **Qonaq rejimi** seçimini işarələyin. Qonaqlar yalnız Normal oyunlar oynaya bilər: reytinq oyunları və söhbət yoxdur. Hesab pulsuzdur və bir dəqiqə çəkir.',
+  c3Profile: 'Qoşulmazdan əvvəl ləqəbinizi və avatarınızı seçin: **Qalereya** bölməsindən birini seçmək üçün avatara toxunun, **Yarat** bölməsində özünüz çəkin (hətta fotodan da başlaya bilər) və ya **İdxal** ilə şəkil yükləyin.',
+  c4Host: 'Bu masa sizindir: hamı gələndə **Oyunu başlat** düyməsini basın — və ya boş yerləri doldurmaq üçün **Kompüter oyunçuları ilə doldur** seçimini işarələyin. **Dostları dəvət et** onlara bu masanın linkini göndərir.',
+  c4Guest: 'Oyunu masanın sahibi başladır. Bu arada **Dostları dəvət et** dostlarınıza bu masanın linkini göndərir.',
+  c4Offline: 'Məşq masası: **Oyunu başlat** düyməsini basın — boş yerlər kompüter oyunçuları ilə doldurulur.',
 };

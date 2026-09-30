@@ -6,5 +6,8 @@ import lobbyRankingCreate from './lobby-ranking-create.mjs';
 import lobbyGuest from './lobby-guest.mjs';
 import waitRanking from './wait-ranking.mjs';
 import rankedResult from './ranked-result.mjs';
+import login from './login.mjs';
+import loginProfile from './login-profile.mjs';
+import waitNormal from './wait-normal.mjs';
 
-export const CONTEXTS = [rankedResult, lobbyRanking, lobbyRankingCreate, lobbyGuest, waitRanking, welcome];
+export const CONTEXTS = [rankedResult, lobbyRanking, lobbyRankingCreate, lobbyGuest, waitRanking, waitNormal, login, loginProfile, welcome];
