@@ -1,7 +1,10 @@
 // Ace's Help — every context, as plain data (see modules/guide/core.mjs for
 // the format). One file per context; the order here breaks priority ties.
-// L1 ships the foundation only; the lobby / waiting-room contexts (C1, C2)
-// arrive with L2.
 import welcome from './welcome.mjs';
+import lobbyRanking from './lobby-ranking.mjs';
+import lobbyRankingCreate from './lobby-ranking-create.mjs';
+import lobbyGuest from './lobby-guest.mjs';
+import waitRanking from './wait-ranking.mjs';
+import rankedResult from './ranked-result.mjs';
 
-export const CONTEXTS = [welcome];
+export const CONTEXTS = [rankedResult, lobbyRanking, lobbyRankingCreate, lobbyGuest, waitRanking, welcome];

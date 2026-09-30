@@ -17,6 +17,10 @@ export const help = {
             "Intanet — yi wasa a kan layi a sabar hukuma ta pokerth.net tare da matsayi. Ana buƙatar asusun pokerth.net; yi rajista kyauta a pokerth.net.",
             "Na gida / horo — yi wasa ba tare da intanet ba da bots. Babu abin da za a saita, yana aiki ba tare da haɗi ba kuma yana buɗe kofuna yayin da kake ci gaba.",
             "LAN / Keɓaɓɓiyar sabar — haɗa da sabar PokerTH ta sirri a hanyar sadarwarka ta gida ko a kwamfutarka."] },
+        { id: "acehelp", t: "Taimakon Aas",
+          b: ["Taimakon Aas yana mai da Aas, alamar manhajar yanar gizo, ya zama jagora: da zarar ka amince, ƙaramin Aas yana zaune a ƙasan dama kuma yana bayyana abin da ke da muhimmanci a inda kake — a cikin manhaja ta gaske, a teburori na gaske. Ana ba da shi sau ɗaya a farkon buɗewa; kunna ko kashe shi a kowane lokaci da maɓallin “Taimakon Aas” a allon shiga, a menu na saman shafi kusa da Taimako, ko a Zaɓuɓɓuka na ci gaba → Mataimaki.",
+              "A falon pokerth.net yana nuna wasan matsayi mafi kusa da farawa kuma yana ba ka damar shiga — ko ƙirƙirar ɗaya idan babu wanda ke buɗe (duk ɗan wasan da ke da asusu zai iya; baƙi suna buga wasanni na al'ada). A teburin matsayi da ke jiran 'yan wasa, yana bayyana matsayi yayin da teburin ke cika, bayan haka kuma yana gaya maka matsayinka da makinka. Ana nuna kowace shawara sau ɗaya: “Anjima” yana naɗe ta cikin alama a kan Aas, kuma taɓa shi yana sake nuna ta. Ba ya magana yayin da ake buga hannu. Taɓa shi lokacin da babu abin da za a bayyana don buɗe menu nasa: kashe shi, ko sake nuna duk shawarwari."],
+          note: "Ya bambanta da zaɓin “Alama mai motsi”, wanda kawai ke nuna al'amuran jira. Da rage tasiri ko rage motsi, kumfar rubutu mai sauƙi tana maye gurbin Aas. Abin da ka riga ka gani yana bin asusunka na pokerth.net." },
         { id: "lan",
           t: "LAN / keɓaɓɓiyar sabar",
           b: [

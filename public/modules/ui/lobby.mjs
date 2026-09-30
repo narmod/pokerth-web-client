@@ -381,7 +381,32 @@ function updateLobbyStatsBar() {
     + running + ' ' + t('lsbRunning') + ' \u00b7 ' + open + ' ' + t('lsbOpen');
 }
 
+// Aide de l'As (modules/guide) : la liste des tables pour qui l'écoute —
+// instantané (id, type, joueurs, max, état) et événement « pth:games » émis
+// après chaque rendu de la liste. Écoute seule : le rendu n'en dépend pas.
+function gameListSnapshot() {
+  var out = [];
+  try {
+    Object.keys(S.games).forEach(function (id) {
+      var g = S.games[id]; if (!g) return;
+      out.push({ id: parseInt(id, 10), type: g.type, players: g.players | 0, max: g.maxPlayers || 10,
+                 mode: g.mode, started: g.mode === 2, priv: !!g.priv, name: g.name });
+    });
+  } catch (e) {}
+  return out;
+}
+var _gamesEvtTimer = 0;
+function _emitGamesSoon() {
+  if (_gamesEvtTimer) return;
+  _gamesEvtTimer = setTimeout(function () {
+    _gamesEvtTimer = 0;
+    try { window.dispatchEvent(new CustomEvent('pth:games', { detail: gameListSnapshot() })); } catch (e) {}
+  }, 0);
+}
+window._gameListSnapshot = gameListSnapshot;
+
 function renderGames() {
+  _emitGamesSoon();   // Aide de l'As : après ce rendu (quel que soit le chemin de sortie)
   // Utiliser entries() pour avoir l'id ET l'objet
   const entries = Object.entries(S.games);
   entries.sort(([,a],[,b]) => a.mode - b.mode);

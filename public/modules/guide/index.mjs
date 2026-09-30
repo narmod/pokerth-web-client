@@ -14,28 +14,40 @@
 //    on the Ace shows it again (D7). Silent during a hand (D8).
 //  · Progress: modules/guide/state.mjs (merged with the account, D9).
 //  · Texts: modules/guide/lang/<code>.mjs through ./i18n.mjs (D12).
-//  · Decisions: modules/guide/core.mjs (no DOM — portable to QML, D13).
+//  · Decisions: modules/guide/core.mjs + ranking-pick.mjs (no DOM, D13).
 //
-// L1 (web.259): foundation only, behind ?guide=1 (remembered in
-// localStorage pth_guide_dev; ?guide=0 forgets it). Console: guideDebug().
+// L1 (web.259): foundation. L2 (web.260): public; C1 « join a Ranking
+// table » (lobby) and C2 (ranked waiting room, facts while waiting, « Good
+// luck! », the result of the game back in the lobby). Console: guideDebug().
 // ═══════════════════════════════════════════════════════════════════
 
 import { createState, mergeIn, KEY_ON } from './state.mjs';
 import { canSpeak, pickContext, replayContext, applies, createRun } from './core.mjs';
+import { pickRankingTable, finishPlace, RANKED_TYPE } from './ranking-pick.mjs';
 import { CONTEXTS } from './contexts/index.mjs';
 import { gt, ready } from './i18n.mjs';
 import * as hl from './highlight.mjs';
 
-/** L1: hidden behind ?guide=1. L2 turns this on for everyone. */
-const PUBLIC = false;
+/** L2: public for everyone (L1 was behind ?guide=1). */
+const PUBLIC = true;
 const OFFER_DELAY_MS = 2500;
 const EVAL_DEBOUNCE_MS = 350;
+const SIGNUP_URL = 'https://www.pokerth.net/ucp.php?mode=register';
+/** Buttons that do something (primary), besides later / next / gotIt. */
+const ACTIONS = ['join', 'createRanking', 'signup', 'seeRanking'];
 
 let M = null;                 // modules/mascot/guide.mjs once loaded
 let wasOn = false;
 let evalTimer = 0;
 let offerTimer = 0;
-let showing = null;           // { run, kind: 'ctx' | 'offer' | 'menu' | 'note' }
+let stepTimer = 0;            // auto-advance of a step (waiting-room facts)
+let foldTimer = 0;            // unanswered bubble → badge
+let noteTimer = 0;            // transient line (« Just one more! »)
+let showing = null;           // { run, kind: 'ctx' | 'offer' | 'menu' | 'note' | 'flash' }
+let lastWhere = null;
+let lastWait = null;          // { gid, n } seen in the waiting room (arrivals)
+let result = null;            // { gid, place, tied } of my last Ranking game
+let tracker = null;           // { gid, hand, snap, last, done } while I play a Ranking game
 const snoozed = new Set();    // contexts put off with « Later » this session
 
 const state = createState(
@@ -43,7 +55,9 @@ const state = createState(
   (k) => { try { if (typeof window._cfgSyncMark === 'function') window._cfgSyncMark(String(k).replace(/^pth_/, '')); } catch (e) {} },
 );
 
-// ── Availability (L1 gate) ─────────────────────────────────────────
+// ── Availability ───────────────────────────────────────────────────
+// ?guide=1 is kept from L1 (remembered in pth_guide_dev) for testing a
+// build where PUBLIC is false; ?guide=0 forgets it.
 function devFlag() {
   try {
     const q = new URLSearchParams(location.search).get('guide');
@@ -93,7 +107,23 @@ function splashGone() {
   try { const c = getComputedStyle(sp); return c.display === 'none' || c.visibility === 'hidden'; } catch (e) { return true; }
 }
 
-/** The `where` snapshot read by core.mjs. */
+function myTable(s) { try { return s.gId && s.games ? s.games[s.gId] || null : null; } catch (e) { return null; } }
+function isGuest(s) {
+  if (s._currentLoginMode === 'guest') return true;
+  try { return !!(window._amMyPlayerGuest && window._amMyPlayerGuest()); } catch (e) { return false; }
+}
+/** Players at my (waiting) table — the same count as the lobby's game info panel. */
+function presentCount(s) {
+  try {
+    const pids = Object.keys(s.seatData || {}).map(Number).filter((p) => s.seatData[p] && !s.seatData[p].gone);
+    if (!s._amSpectator && s.myId && pids.indexOf(s.myId) === -1) pids.push(s.myId);
+    if (pids.length) return pids.length;
+  } catch (e) {}
+  const g = myTable(s);
+  return g ? g.players | 0 : 0;
+}
+
+/** The `where` snapshot read by core.mjs (see its header). */
 export function where() {
   const s = S();
   let screen = 'other';
@@ -101,11 +131,13 @@ export function where() {
   else if (active('s-create')) screen = 'create';
   else if (active('s-lobby')) screen = document.getElementById('s-lobby').classList.contains('lobby-waiting') ? 'wait' : 'lobby';
   else if (active('s-connect')) screen = 'connect';
-  let ranked = false;
-  try { const g = s.games && s.gId ? s.games[s.gId] : null; ranked = !!(g && g.type === 4) || !!(s._gameMeta && s._gameMeta.type === 4 && s.gId); } catch (e) {}
-  let guest = false;
-  try { guest = !!(window._amMyPlayerGuest && window._amMyPlayerGuest()); } catch (e) {}
+  const g = myTable(s);
+  const ranked = !!(g && g.type === RANKED_TYPE) || !!(s._gameMeta && s._gameMeta.type === RANKED_TYPE && s.gId);
+  const guest = isGuest(s);
+  const net = !window._offlineMode && (s._currentLoginMode === 'auth' || s._currentLoginMode === 'guest');
   const online = screen !== 'connect' && !window._offlineMode && (typeof navigator === 'undefined' || navigator.onLine !== false);
+  let games = [];
+  try { games = window._gameListSnapshot ? window._gameListSnapshot() : []; } catch (e) {}
   return {
     helpOn: state.isOn(),
     screen,
@@ -113,6 +145,14 @@ export function where() {
     online,
     guest,
     ranked,
+    net,
+    spectator: !!s._amSpectator,
+    gid: s.gId || 0,
+    gamesLoaded: !!s.loaded,
+    rankPick: net && online && !guest && !s.gId ? pickRankingTable(games) : null,
+    waitCount: s.gId ? presentCount(s) : 0,
+    waitMax: g ? g.maxPlayers || 10 : 10,
+    result,
     windows: openWindows(),
   };
 }
@@ -133,7 +173,14 @@ async function ensureDock() {
   return m;
 }
 
+function clearTimers() {
+  clearTimeout(stepTimer); stepTimer = 0;
+  clearTimeout(foldTimer); foldTimer = 0;
+  clearTimeout(noteTimer); noteTimer = 0;
+}
+
 function leave() {
+  clearTimers();
   hl.clear();
   showing = null;
   if (M) M.undock();
@@ -141,24 +188,59 @@ function leave() {
 }
 
 function btn(id, primary) { return { id, label: gt(id), primary: !!primary }; }
+const val = (v, w) => (typeof v === 'function' ? v(w) : v);
+/** A step target: one selector or several, the first one visible on screen wins. */
+function firstVisible(sel) {
+  const list = Array.isArray(sel) ? sel : sel ? [sel] : [];
+  for (const q of list) {
+    let el = null;
+    try { el = document.querySelector(q); } catch (e) { el = null; }
+    if (!el) continue;
+    const r = el.getBoundingClientRect();
+    if (!(r.width > 0 && r.height > 0 && r.bottom > 0 && r.top < window.innerHeight && r.right > 0 && r.left < window.innerWidth)) continue;
+    try { const c = getComputedStyle(el); if (c.visibility === 'hidden') continue; } catch (e) {}
+    return el;
+  }
+  return null;
+}
 
-/** Shows one step of a context run. */
-function renderStep() {
+/** Shows the current step of the context run (again, after a live update). */
+function renderStep(opts = {}) {
   const run = showing && showing.run;
   const step = run && run.step();
   if (!step) { closeBubble(); return; }
+  const w = where();
   const last = run.isLast();
-  const buttons = [btn('later')];
-  if (!last) buttons.push(btn('next', true));
-  else buttons.push(btn('gotIt', true));
-  // a context may ask for fewer buttons (e.g. welcome: « Got it » only)
-  const own = Array.isArray(step.buttons) ? step.buttons : null;
-  const list = own ? own.map((id) => btn(id, id === 'gotIt' || id === 'next')) : buttons;
-  const vars = typeof step.vars === 'function' ? step.vars(where()) : step.vars;
-  hl.clear();
-  let pointed = false;
-  if (step.target) pointed = hl.highlight(step.target);
-  M.say({ text: gt(step.text, vars), buttons: list, point: pointed, onButton: onCtxButton });
+  let list;
+  if (Array.isArray(step.buttons)) {
+    const hasAction = step.buttons.some((id) => ACTIONS.indexOf(id) >= 0);
+    list = step.buttons.map((id) => btn(id, ACTIONS.indexOf(id) >= 0 || (!hasAction && (id === 'gotIt' || id === 'next'))));
+  } else {
+    list = [btn('later'), last ? btn('gotIt', true) : btn('next', true)];
+  }
+  let text, vars, target;
+  try { text = val(step.text, w); vars = val(step.vars, w); target = firstVisible(val(step.target, w)); }
+  catch (e) { closeBubble(); schedule(); return; }        // the situation changed under the step
+  if (!opts.keepHighlight || (target && hl.current() !== target)) {
+    hl.clear();
+    if (target) hl.highlight(target);
+  }
+  M.say({ text: gt(text, vars), buttons: list, point: !!hl.current(), onButton: onCtxButton });
+  clearTimeout(stepTimer); stepTimer = 0;
+  if (step.auto && !last) stepTimer = setTimeout(() => { if (showing && showing.run === run && run.next()) renderStep(); }, step.auto);
+  if (!opts.keepFold) {
+    clearTimeout(foldTimer); foldTimer = 0;
+    if (run.ctx.fold) foldTimer = setTimeout(() => { if (showing && showing.run === run) onCtxButton('later'); }, run.ctx.fold);
+  }
+}
+
+function doAction(id, w) {
+  try {
+    if (id === 'join' && w.rankPick && window.App && window.App.joinGame) window.App.joinGame(w.rankPick.id);
+    else if (id === 'createRanking' && window.App && window.App.openCreatePage) window.App.openCreatePage({ ranking: true });
+    else if (id === 'signup') window.open(SIGNUP_URL, '_blank', 'noopener');
+    else if (id === 'seeRanking' && typeof window.toggleRankingModal === 'function') window.toggleRankingModal();
+  } catch (e) {}
 }
 
 function onCtxButton(id) {
@@ -167,7 +249,8 @@ function onCtxButton(id) {
   const cid = run.ctx.id;
   if (id === 'next') { if (run.next()) renderStep(); else finish(cid); return; }
   if (id === 'gotIt') { finish(cid); return; }
-  // « Later », Escape: put off for this session, badge on the Ace
+  if (ACTIONS.indexOf(id) >= 0) { const w = where(); finish(cid); doAction(id, w); return; }
+  // « Later », Escape, no answer: put off for this session, badge on the Ace
   snoozed.add(cid);
   closeBubble();
   if (M) M.badge(true);
@@ -176,11 +259,13 @@ function onCtxButton(id) {
 function finish(cid) {
   state.markSeen(cid);
   snoozed.delete(cid);
+  if (cid === 'ranked-result') result = null;       // told once per game
   closeBubble();
   schedule();
 }
 
 function closeBubble() {
+  clearTimers();
   hl.clear();
   showing = null;
   if (M) M.hush();
@@ -192,11 +277,12 @@ async function showContext(ctx) {
   renderStep();
 }
 
-async function note(key, buttons, onButton) {
+async function note(key, buttons, onButton, vars) {
   const m = await ensureDock();
+  clearTimers();
   hl.clear();
   showing = { kind: 'note' };
-  m.say({ text: gt(key), buttons, onButton: onButton || (() => closeBubble()) });
+  m.say({ text: gt(key, vars), buttons, onButton: onButton || (() => closeBubble()) });
 }
 
 async function showMenu() {
@@ -208,9 +294,32 @@ async function showMenu() {
   showing.kind = 'menu';
 }
 
+/**
+ * A short line over the current bubble (no buttons), then the bubble comes
+ * back as it was — « Just one more! » in the waiting room.
+ */
+function flash(key, ms) {
+  if (!M || !M.isDocked()) return;
+  const back = showing && showing.kind === 'ctx' ? showing : null;
+  clearTimeout(noteTimer);
+  clearTimeout(stepTimer); stepTimer = 0;
+  M.say({ text: gt(key), buttons: [] });
+  showing = { kind: 'flash', back };
+  noteTimer = setTimeout(() => {
+    noteTimer = 0;
+    if (!showing || showing.kind !== 'flash') return;
+    if (back) { showing = back; renderStep({ keepFold: true }); }
+    else closeBubble();
+  }, ms);
+}
+
 /** Tap on the Ace: closes the bubble, or replays the tip of this place, or opens the menu. */
 function onTap() {
-  if (M && M.bubbleOpen()) { if (showing && showing.kind === 'offer') return; closeBubble(); return; }
+  if (M && M.bubbleOpen()) {
+    if (showing && showing.kind === 'offer') return;
+    if (showing && showing.kind === 'ctx') { onCtxButton('later'); return; }
+    closeBubble(); return;
+  }
   const w = where();
   const ctx = canSpeak(w) ? replayContext(w, CONTEXTS) : null;
   if (ctx) { snoozed.delete(ctx.id); showContext(ctx); return; }
@@ -279,9 +388,15 @@ function apply() {
 }
 
 // ── First-launch offer (D3) ────────────────────────────────────────
+// Not under automation (navigator.webdriver): the other browser tests and
+// their canonical screenshots must not get a bubble 2.5 s after loading.
+// scripts/test-guide-browser.mjs opts in with localStorage pth_guide_webdriver.
+function automated() {
+  try { return !!navigator.webdriver && localStorage.getItem('pth_guide_webdriver') !== '1'; } catch (e) { return false; }
+}
 function maybeOffer() {
   clearTimeout(offerTimer);
-  if (!available() || state.isOn() || state.wasOffered()) return;
+  if (!available() || state.isOn() || state.wasOffered() || automated()) return;
   offerTimer = setTimeout(async () => {
     if (!available() || state.isOn() || state.wasOffered()) return;
     const w = where();
@@ -308,14 +423,31 @@ function schedule() {
 
 async function evaluate() {
   evalTimer = 0;
+  const prev = lastWhere;
+  const w = where();
+  lastWhere = w;
+  try { trackResult(w, prev); } catch (e) {}
   if (!available()) { if (!(showing && showing.kind === 'offer')) leave(); return; }
   if (!state.isOn()) {
     if (!(showing && (showing.kind === 'offer' || showing.kind === 'note'))) leave();
     maybeOffer();
     return;
   }
-  const w = where();
-  if (!canSpeak(w)) { leave(); return; }                 // silent during a hand (D8)
+  if (!canSpeak(w)) {
+    // a ranked game just started from its waiting room: « Good luck! », then he leaves (D8)
+    if (prev && prev.screen === 'wait' && prev.ranked && w.screen === 'game' && M && M.isDocked() && !(showing && showing.kind === 'luck')) {
+      clearTimers(); hl.clear();
+      M.say({ text: gt('goodLuck'), buttons: [] });
+      M.react('wave');
+      showing = { kind: 'luck' };
+      noteTimer = setTimeout(() => { if (showing && showing.kind === 'luck') leave(); }, 1800);
+      return;
+    }
+    if (!(showing && showing.kind === 'luck')) leave();   // silent during a hand (D8)
+    return;
+  }
+  const moved = !prev || prev.screen !== w.screen;
+  if (moved && M && M.isDocked()) M.settle(true);       // new layout: a free spot again, bubble or not
   if (M && M.bubbleOpen()) {
     // the tip on screen no longer applies (the player moved on): fold it away
     if (showing && showing.kind === 'ctx' && !applies(showing.run.ctx, w)) closeBubble();
@@ -327,6 +459,95 @@ async function evaluate() {
   const ctx = pickContext(w, CONTEXTS, { seen: state.seen, snoozed: (id) => snoozed.has(id) });
   if (ctx) { showContext(ctx); return; }
   m.badge(CONTEXTS.some((c) => !c.manual && snoozed.has(c.id) && applies(c, w)));
+}
+
+// ── Live game list (C1 / C2) ───────────────────────────────────────
+function onGames() {
+  if (!available() || !state.isOn()) return;
+  const w = where();
+  // waiting room: arrivals make the Ace hop, « Just one more! » at 9/10
+  if (w.screen === 'wait' && w.ranked && M && M.isDocked()) {
+    const gid = S().gId;
+    if (lastWait && lastWait.gid === gid && w.waitCount > lastWait.n) {
+      M.react('hop');
+      if (w.waitCount === w.waitMax - 1) flash('oneMore', 4000);
+    }
+    lastWait = { gid, n: w.waitCount };
+  } else if (w.screen !== 'wait') lastWait = null;
+  // the tip on screen follows the list (another table fuller, this one started…)
+  if (showing && showing.kind === 'ctx' && showing.run.ctx.live && M && M.bubbleOpen()) {
+    if (!applies(showing.run.ctx, w)) { closeBubble(); schedule(); return; }
+    renderStep({ keepHighlight: true, keepFold: true });
+    return;
+  }
+  if (!(M && M.bubbleOpen())) schedule();
+}
+
+// A guest taps a Ranking (or registered-only) table anyway: the Ace explains
+// again instead of leaving the bare « account required » (D16).
+function onListTap(ev) {
+  if (!available() || !state.isOn()) return;
+  const row = ev.target && ev.target.closest ? ev.target.closest('#g-list .game-row[data-gid]') : null;
+  if (!row) return;
+  const s = S();
+  if (!isGuest(s)) return;
+  const g = s.games ? s.games[row.getAttribute('data-gid')] : null;
+  if (!g || g.type === 1) return;
+  const ctx = CONTEXTS.find((c) => c.id === 'lobby-guest');
+  if (ctx && canSpeak(where())) { snoozed.delete(ctx.id); showContext(ctx); }
+}
+
+// ── My place in a Ranking game (C2.4) ──────────────────────────────
+// Stacks are read at every new hand (and when the end-of-game screen shows
+// up); ranking-pick.mjs::finishPlace decides. The Ace tells it back in the lobby.
+function stacks(s) {
+  const out = {};
+  for (const pid of s.seats || []) {
+    const d = s.seatData ? s.seatData[pid] : null;
+    out[pid] = d && typeof d.money === 'number' ? d.money : null;
+  }
+  return out;
+}
+function endScreenUp() {
+  const el = document.getElementById('g-endgame-overlay');
+  if (!el) return false;
+  try { const c = getComputedStyle(el); return c.display !== 'none' && c.visibility !== 'hidden'; } catch (e) { return false; }
+}
+function trackResult(w, prev) {
+  const s = S();
+  const inRanked = w.screen === 'game' && w.ranked && w.net && !w.spectator && s.myId && s.gId;
+  if (!inRanked) {
+    // left the table: settle with the last stacks seen (out in the last hand, then left)
+    if (tracker && !tracker.done && tracker.last) {
+      const r = finishPlace(tracker.snap, tracker.last, tracker.me);
+      if (r && r.place !== 1) result = { gid: tracker.gid, place: r.place, tied: !!r.tied };
+    }
+    if (w.screen !== 'game') tracker = null;
+    return;
+  }
+  const snap = stacks(s);
+  if (!tracker || tracker.gid !== s.gId) { tracker = { gid: s.gId, me: s.myId, hand: s.handNum, snap, last: snap, done: false }; return; }
+  tracker.last = snap;
+  if (tracker.done) return;
+  let r = null;
+  if (s.handNum !== tracker.hand) {
+    r = finishPlace(tracker.snap, snap, s.myId);
+    if (r && r.place === 1) r = null;                  // a winner is only known at the end screen
+    tracker.hand = s.handNum; tracker.snap = snap;
+  }
+  if (!r && endScreenUp()) {
+    const e = finishPlace(tracker.snap, snap, s.myId);
+    if (e && e.place === 1) r = e;
+  }
+  if (r) { tracker.done = true; result = { gid: s.gId, place: r.place, tied: !!r.tied }; }
+}
+let tickTimer = 0;
+function tick() {
+  // while seated at a Ranking game: follow the stacks (cheap, once a second)
+  const w = lastWhere;
+  if (w && (w.screen === 'game' || tracker)) {
+    try { const now = where(); trackResult(now, w); lastWhere = now; } catch (e) {}
+  }
 }
 
 // ── Account sync bridge (pokerth.js _guideMergeIn) ─────────────────
@@ -359,6 +580,9 @@ function init() {
   document.addEventListener('visibilitychange', () => { if (!document.hidden) schedule(); });
   window.addEventListener('online', schedule);
   window.addEventListener('offline', schedule);
+  window.addEventListener('pth:games', onGames);
+  document.addEventListener('click', onListTap, true);
+  if (!tickTimer) tickTimer = setInterval(tick, 1000);
   schedule();
 }
 
@@ -366,7 +590,7 @@ window._guideApply = apply;
 window.guideToggle = toggle;
 window.guideResetTips = () => { if (available()) resetTips(); };
 /** Console: the current situation and saved progress. */
-window.guideDebug = () => ({ available: available(), on: state.isOn(), offered: state.wasOffered(), seen: state.seenIds(), snoozed: [...snoozed], where: where(), key: KEY_ON });
+window.guideDebug = () => ({ available: available(), on: state.isOn(), offered: state.wasOffered(), seen: state.seenIds(), snoozed: [...snoozed], where: where(), result, key: KEY_ON });
 
 if (typeof document !== 'undefined') {
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);

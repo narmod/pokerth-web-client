@@ -74,7 +74,7 @@ for (const c of CONTEXTS) {
   ok(c.window || (Array.isArray(c.screens) && c.screens.every((s) => C.TALK_SCREENS.includes(s))), c.id + ': only on screens where the Ace may speak');
   ok(Array.isArray(c.steps) && c.steps.length > 0, c.id + ': has steps');
   for (const s of c.steps) {
-    ok(EN[s.text] != null, c.id + ': text key exists in English: ' + s.text);
+    if (typeof s.text === 'string') ok(EN[s.text] != null, c.id + ': text key exists in English: ' + s.text);   // text functions: test-guide-contexts
     for (const b of s.buttons || []) ok(EN[b] != null, c.id + ': button key exists: ' + b);
   }
 }
@@ -96,7 +96,7 @@ const assistSec = html.slice(html.indexOf('data-i18n="advSecHelp"'), html.indexO
 ok(assistSec.includes('id="adv-guide"'), 'option sits in the Assistance section');
 ok(/sync\('adv-guide', 'guide_on', false\)/.test(js), 'option OFF by default (D3)');
 ok(/window\._guideApply\(\)/.test(js), 'applyAdvOpts wakes the guide');
-ok(/body:not\(\.guide-avail\) \.guide-only\{display:none!important\}/.test(css), 'L1: hidden unless ?guide=1');
+ok(/body:not\(\.guide-avail\) \.guide-only\{display:none!important\}/.test(css), 'buttons and option shown only where the module is available (body.guide-avail)');
 ok(/if \(window\._guideBusy\) return false;/.test(fs.readFileSync('public/modules/mascot/index.mjs', 'utf8')), 'scenes wait while the Ace helps (D6)');
 for (const f of ['index', 'core', 'state', 'i18n', 'highlight', 'contexts/index', 'contexts/welcome', 'lang/en']) {
   ok(sw.includes(`'/modules/guide/${f}.mjs'`), 'precached: guide/' + f);

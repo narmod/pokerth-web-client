@@ -17,6 +17,10 @@ export const help = {
             "Internet — rasmiy pokerth.net serverida reyting bilan onlayn oʻynang. pokerth.net hisobi talab qilinadi; pokerth.net saytida bepul roʻyxatdan oʻting.",
             "Lokal / mashgʻulot — botlarga qarshi oflayn oʻynang. Hech narsa sozlash shart emas, ulanishsiz ishlaydi va oʻsib borganingiz sari sovrinlar ochiladi.",
             "LAN / Maxsus server — lokal tarmogʻingizdagi yoki oʻz kompyuteringizdagi xususiy PokerTH serveriga ulaning."] },
+        { id: "acehelp", t: "Tuzning yordami",
+          b: ["Tuzning yordami veb-mijozning maskoti boʻlgan Tuzni yoʻlboshchiga aylantiradi: rozi boʻlganingizdan soʻng kichkina Tuz pastki oʻng burchakka joylashadi va siz turgan joyda nima muhimligini tushuntiradi — haqiqiy ilovada, haqiqiy stollarda. U birinchi ishga tushirishda bir marta taklif qilinadi; uni istalgan vaqtda kirish ekranidagi «Tuzning yordami» tugmasi, sarlavha menyularida Yordam yonida yoki Kengaytirilgan sozlamalar → Yordamchi boʻlimida yoqing yoki oʻchiring.",
+              "pokerth.net lobbisida u boshlanishga eng yaqin reyting oʻyinini koʻrsatadi va unga qoʻshilishni taklif qiladi — ochiq oʻyin boʻlmasa, bittasini yaratishni (hisobi bor har qanday oʻyinchi yarata oladi; mehmonlar oddiy oʻyinlarni oʻynaydi). Oʻyinchilarni kutayotgan reyting stolida u stol toʻlayotgan paytda reytingni tushuntiradi, keyin esa oʻrningiz va ochkolaringizni aytadi. Har bir maslahat bir marta koʻrsatiladi: «Keyinroq» uni Tuz ustidagi nishonchaga yigʻib qoʻyadi, uni bossangiz esa yana koʻrsatiladi. U qoʻl oʻynalayotganda hech qachon gapirmaydi. Tushuntiradigan narsa boʻlmaganda menyusini ochish uchun uni bosing: uni oʻchiring yoki barcha maslahatlarni qayta koʻrsating."],
+          note: "«Animatsion maskot» sozlamasidan alohida — u faqat kutish sahnalarini koʻrsatadi. Effektlar yoki harakat kamaytirilganda Tuz oʻrniga oddiy pufakcha chiqadi. Allaqachon koʻrganlaringiz pokerth.net hisobingiz bilan saqlanadi." },
         { id: "lan",
           t: "LAN / maxsus server",
           b: [

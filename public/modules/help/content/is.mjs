@@ -17,6 +17,10 @@ export const help = {
             "Internet — spilaðu á netinu með stigatöflu á opinbera pokerth.net þjóninum. Krefst pokerth.net aðgangs; skráðu þig ókeypis á pokerth.net.",
             "Staðbundið / æfing — spilaðu ótengt gegn bottum. Ekkert þarf að setja upp, virkar án tengingar og opnar verðlaun eftir því sem þér miðar áfram.",
             "LAN / sérþjónn — tengstu PokerTH einkaþjóni á staðarnetinu þínu eða á þinni eigin vél."] },
+        { id: "acehelp", t: "Hjálp ássins",
+          b: ["Hjálp ássins gerir ásinn, lukkudýr vefbiðlarans, að leiðsögumanni: um leið og þú samþykkir sest lítill ás neðst til hægri og útskýrir það sem skiptir máli þar sem þú ert — í alvöru forritinu, við alvöru borðin. Hún er boðin einu sinni við fyrstu ræsingu; kveiktu eða slökktu á henni hvenær sem er með hnappnum „Hjálp ássins“ á innskráningarskjánum, í valmyndum hausins við hliðina á Hjálp, eða í Ítarlegir valkostir → Aðstoð.",
+              "Í anddyri pokerth.net bendir hann á stigaleikinn sem er næst því að hefjast og býður þér að vera með — eða að búa einn til þegar enginn er opinn (allir leikmenn með aðgang geta það; gestir spila venjulega leiki). Við stigaleikjaborð sem bíður eftir leikmönnum útskýrir hann stigatöfluna á meðan borðið fyllist, og á eftir segir hann þér sætið þitt og stigin þín. Hver ábending birtist einu sinni: „Seinna“ leggur hana saman í merki á ásnum og ef ýtt er á ásinn birtist hún aftur. Hann talar aldrei á meðan hönd er spiluð. Ýttu á hann þegar ekkert er að útskýra til að opna valmyndina hans: slökkva á honum eða sýna allar ábendingar aftur."],
+          note: "Óháð valkostinum „Hreyfimyndað lukkudýr“, sem spilar aðeins atriði við aðgerðaleysi. Með minni áhrifum eða minni hreyfingu kemur einföld talbóla í stað ássins. Það sem þú hefur þegar séð fylgir pokerth.net aðganginum þínum." },
         { id: "lan",
           t: "LAN / sérþjónn",
           b: [

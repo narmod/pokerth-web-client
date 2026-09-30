@@ -17,6 +17,10 @@ export const help = {
             "Idirlíon — imir ar líne ar fhreastalaí oifigiúil pokerth.net le rangú. Tá cuntas pokerth.net ag teastáil; cláraigh saor in aisce ar pokerth.net.",
             "Áitiúil / cleachtadh — imir as líne in aghaidh róbónna. Níl dada le socrú, oibríonn sé gan cheangal agus díghlasálann sé trófaithe de réir mar a théann tú chun cinn.",
             "LAN / Freastalaí tiomnaithe — ceangail le freastalaí príobháideach PokerTH ar do líonra áitiúil nó ar do ríomhaire féin."] },
+        { id: "acehelp", t: "Cabhair an Aoin",
+          b: ["Déanann Cabhair an Aoin treoraí den Aon, suaitheantas an chliaint gréasáin: nuair a ghlacann tú leis, suíonn Aon beag ag an mbun ar dheis agus míníonn sé a bhfuil tábhachtach san áit ina bhfuil tú — san fhíor-aip, ag na fíorbhoird. Tairgtear é uair amháin ar an gcéad seoladh; cuir ar siúl nó múch é am ar bith leis an gcnaipe “Cabhair an Aoin” ar an scáileán logála isteach, sna roghchláir cheanntáisc in aice le Cabhair, nó in Ardroghanna → Cúntóir.",
+              "I stocaireacht pokerth.net, taispeánann sé an cluiche rangaithe is gaire do thosú agus tairgeann sé dul isteach ann — nó ceann a chruthú nuair nach bhfuil aon cheann oscailte (is féidir le haon imreoir a bhfuil cuntas aige; imríonn aíonna gnáthchluichí). Ag bord rangaithe atá ag fanacht le himreoirí, míníonn sé an rangú fad a bhíonn an bord ag líonadh, agus ina dhiaidh sin insíonn sé duit d'áit agus do phointí. Taispeántar gach leid uair amháin: filleann “Níos déanaí” í ina comhartha ar an Aon, agus nuair a thapálann tú é, taispeántar arís í. Ní labhraíonn sé riamh le linn láimhe. Tapáil é nuair nach bhfuil aon rud le míniú chun a roghchlár a oscailt: é a mhúchadh, nó gach leid a thaispeáint arís."],
+          note: "Ar leith ón rogha “Suaitheantas beoite”, nach seinneann ach radhairc díomhaoine. Le héifeachtaí laghdaithe nó gluaiseacht laghdaithe, cuirtear bolgán simplí in áit an Aoin. Leanann a bhfuil feicthe agat cheana do chuntas pokerth.net." },
         { id: "lan",
           t: "LAN / freastalaí tiomnaithe",
           b: [

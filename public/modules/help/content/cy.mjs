@@ -17,6 +17,10 @@ export const help = {
             "Rhyngrwyd — chwaraewch ar-lein ar weinydd swyddogol pokerth.net gyda safleoedd. Mae angen cyfrif pokerth.net; cofrestrwch am ddim ar pokerth.net.",
             "Lleol / ymarfer — chwaraewch all-lein yn erbyn botiaid. Dim byd i'w osod, mae'n gweithio heb gysylltiad ac yn datgloi tlysau wrth i chi fynd yn eich blaen.",
             "LAN / Gweinydd pwrpasol — cysylltwch â gweinydd PokerTH preifat ar eich rhwydwaith lleol neu ar eich cyfrifiadur eich hun."] },
+        { id: "acehelp", t: "Cymorth yr As",
+          b: ["Mae Cymorth yr As yn troi’r As, masgot y cleient gwe, yn dywysydd: unwaith y byddwch yn derbyn, mae As bach yn eistedd ar y gwaelod ar y dde ac yn esbonio beth sy’n bwysig lle rydych chi — yn yr ap go iawn, wrth y byrddau go iawn. Caiff ei gynnig unwaith ar y lansiad cyntaf; trowch ef ymlaen neu i ffwrdd unrhyw bryd gyda’r botwm “Cymorth yr As” ar y sgrin mewngofnodi, yn newislenni’r pennyn wrth ymyl Cymorth, neu yn Dewisiadau uwch → Cynorthwyydd.",
+              "Yn lobi pokerth.net mae’n pwyntio at y gêm gyda safle sydd agosaf at ddechrau ac yn cynnig ymuno â hi — neu greu un pan nad oes un ar agor (gall unrhyw chwaraewr sydd â chyfrif; mae gwesteion yn chwarae gemau Arferol). Wrth fwrdd gyda safle sy’n aros am chwaraewyr, mae’n esbonio’r safleoedd tra bo’r bwrdd yn llenwi, ac wedyn mae’n dweud wrthych eich safle a’ch pwyntiau. Caiff pob cyngor ei ddangos unwaith: mae “Nes ymlaen” yn ei blygu i fathodyn ar yr As, ac mae tapio’r As yn ei ddangos eto. Nid yw byth yn siarad yn ystod llaw. Tapiwch ef pan nad oes dim i’w esbonio i agor ei ddewislen: ei ddiffodd, neu ddangos pob cyngor eto."],
+          note: "Ar wahân i’r dewis “Masgot wedi’i animeiddio”, sydd ond yn chwarae golygfeydd segur. Gydag effeithiau llai neu symudiad llai, mae swigen plaen yn cymryd lle’r As. Mae’r hyn rydych wedi’i weld eisoes yn dilyn eich cyfrif pokerth.net." },
         { id: "lan",
           t: "LAN / gweinydd pwrpasol",
           b: [

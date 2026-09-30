@@ -41,7 +41,7 @@ for (const f of files) {
   const bad = enKeys.filter((k) => k in L && vars(L[k]) !== vars(EN[k]));
   ok(!bad.length, code + ': same {placeholders}' + (bad.length ? ' — ' + bad.join(', ') : ''));
 }
-console.log('  (guide catalogues: ' + files.length + ' of ' + codes.size + ' languages; missing ones fall back to English)');
+ok(files.length === codes.size, 'a guide catalogue for every language the client ships (' + files.length + '/' + codes.size + ')');
 
 // UI catalogue keys
 for (const f of fs.readdirSync('public/modules/lang').filter((x) => x.endsWith('.mjs'))) {

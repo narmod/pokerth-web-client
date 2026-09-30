@@ -1,7 +1,8 @@
 # Ace's Help — contextual assistant
 
-Status: **L1 (foundation) shipped in `2.1.9-web.259`, hidden behind `?guide=1`.**
-The contexts that explain Ranking games (C1 lobby, C2 waiting room) come with L2.
+Status: **L2 shipped in `2.1.9-web.260`, public, 83 languages.** L1 (the foundation)
+shipped in `web.259` behind `?guide=1`. L2 adds the Ranking contexts: C1 in the lobby and
+C2 in the waiting room, including the result of the game.
 
 This page is the reference for the feature: what it does, the rules it follows and
 the data it keeps, written so the same behaviour can later be brought to the QML
@@ -101,6 +102,45 @@ Merging `pth_guide_seen`:
 If a device knows more than the account, it pushes its data back. Guests have no
 `/prefs-web` channel, so their progress stays on the device.
 
+## The Ranking contexts (L2)
+
+sp0ck's idea (Discord, 29/09) is to get players onto the **same** Ranking table so it
+fills up, and to use the waiting time to explain the ranking. These contexts only apply on
+pokerth.net (login as an account holder or as a guest), never in LAN or offline mode.
+
+| id | where | what the Ace does |
+|---|---|---|
+| `lobby-ranking` | lobby, account holder, an open Ranking table exists | highlights the picked table's row. Bubble: *"A ranked game is waiting for you: 7/10 players…"* with the buttons Later, Got it and **Join**. It updates live when the list changes. With no answer after 25 s it folds into the badge |
+| `lobby-ranking-create` | lobby, account holder, no open Ranking table | *"No ranked game open right now. Create one — any player with an account can!"* **Create a Ranking table** opens game creation with the Ranking type and the Ranking preset (5/5) selected |
+| `lobby-guest` | lobby, guest | a single bubble: Ranking games need a (free) pokerth.net account, and guests play Normal games. **Create an account** is offered, with no highlight and no Join. If the guest taps a Ranking or registered-only table anyway, the bubble comes back |
+| `wait-ranking` | seated at a Ranking table that has not started | highlights *x/10*: the notice in the game info panel, or on a phone the row of the table. It then gives one fact every ~20 s: the point scale 15/9/6/4/3/2/1 (40 per table), the Score (an average tempered by regularity), quarterly seasons, why 5/5 (5 s to act, 5 s between hands, 10,000 chips, blinds ×2 every 11 hands, fast and the same for everyone), and where to see the ranking (the trophy button and the podium at the table). Each arrival makes him hop, and at 9/10 he says *"Just one more player!"*. When the game starts he says *"Good luck!"* and leaves |
+| `ranked-result` | back in the lobby after a Ranking game (repeats after every game) | *"Game over — you finished in place 4: +4 points. See your ranking?"* If two players went out in the same hand, he gives no place or points and points to the ranking page |
+
+**Which table?** This is `ranking-pick.mjs::pickRankingTable`, and the QML client must use
+the same rule so every client points at the same table:
+
+```
+candidates = games where type == 4 (Ranking) and mode == 1 (open, not started)
+             and players < max and no password
+if the player is a guest: none
+pick the candidate with the most players; on a tie, the lowest game id (the oldest)
+```
+
+**Which place?** This is `ranking-pick.mjs::finishPlace`. The stacks are read at every new
+hand and when the end-of-game screen shows.
+
+```
+my chips went from > 0 to 0 between two hands:
+   if another player also went out between those two hands: place unknown (no guess)
+   else: place = players still holding chips + 1
+at the end-of-game screen, I hold chips and every other known stack is 0: place 1
+points = 15, 9, 6, 4, 3, 2, 1 for places 1 to 7; 0 from 8th
+```
+
+The first-launch offer is not made in an automated browser (`navigator.webdriver`), so
+other tests' screenshots stay unchanged. `test-guide-browser` opts in with
+`pth_guide_webdriver`.
+
 ## Texts (`modules/guide/lang/<code>.mjs`)
 
 The Ace's texts live in their own catalogues, loaded on demand. English (`en.mjs`) is the
@@ -109,9 +149,16 @@ then English, then the key. Placeholders are written `{name}`. Only the two labe
 exist before the help is on live in the UI catalogues: `guideBtn` (button and menu entry)
 and `advGuide` (the option).
 
-L1 keys: `name`, `aceLabel`, `offer`, `offerYes`, `offerNo`, `gotIt`, `later`, `next`,
-`close`, `welcome`, `menuOn`, `turnOff`, `resetTips`, `resetDone`, `turnedOff`,
-`nothingHere`.
+Keys (all 83 languages; `es-419` is derived from `es` with `scripts/es-419-rules.mjs`):
+- L1: `name`, `aceLabel`, `offer`, `offerYes`, `offerNo`, `gotIt`, `later`, `next`,
+  `close`, `welcome`, `menuOn`, `turnOff`, `resetTips`, `resetDone`, `turnedOff`,
+  `nothingHere`.
+- L2: `join`, `createRanking`, `signup`, `seeRanking`, `c1Join` `{n}` `{max}`, `c1None`,
+  `c1Guest`, `c2Wait` `{n}` `{max}`, `c2Points`, `c2Score`, `c2Seasons`, `c2Why55`,
+  `c2Where`, `oneMore`, `goodLuck`, `c2Result` `{place}` `{points}`, `c2ResultTie`.
+  `**…**` marks bold.
+
+The help has an *Ace's Help* section (`start.acehelp`) in all 83 languages.
 
 ## Tests
 
@@ -121,18 +168,26 @@ L1 keys: `name`, `aceLabel`, `offer`, `offerYes`, `offerNo`, `gotIt`, `later`, `
   *Later*, windows), the shipped contexts and the page wiring.
 - `npm run test:guide-lang`: catalogue parity (keys and `{placeholders}`) and the two UI keys in
   every language.
+- `npm run test:guide-pick`: the table choice, the point scale and the finishing place.
+- `npm run test:guide-contexts`: the right context in each situation, no repeats, and the
+  guest rules; every text, button and `{placeholder}` resolves.
 - `npm run test:guide-browser`: a real browser on phones and a desktop. It checks the
   offer, the buttons, the menu, the lobby, that the Ace leaves when a hand starts, that the
   option switches him off, the plain mode, and that the docked Ace hides nothing
-  tappable.
+  tappable. For L2 it also checks the following:
+  - C1: the highlight on the fullest table, the live move to another table, and Join.
+  - C2: x/10 is highlighted, the facts, *Good luck!* and his exit.
+  - C2.4: the result shows in the lobby.
+  - Guests: only the account bubble.
+  - The offer appears in French and in Arabic.
 
 ## Deliveries
 
 | # | contents |
 |---|---|
 | L0 | Help sections `ranked` / `cups` / `forumcups` clarified in 83 languages (`web.256`) |
-| **L1** | This foundation, behind `?guide=1` (`web.259`) |
-| L2 | C1 lobby "join a Ranking table" (`pickRankingTable`) and C2 ranked waiting room, 83 languages, public |
+| L1 | The foundation, behind `?guide=1` (`web.259`) |
+| **L2** | C1 lobby "join a Ranking table" (`pickRankingTable`), C2 ranked waiting room and game result, 83 languages, help section, public (`web.260`) |
 | L3 | Admin: `POST /__guide` anonymous counters, and the Ranking funnel card |
 | L4 | C3 login screen, C4 normal waiting room |
 | L5 | C5 windows |

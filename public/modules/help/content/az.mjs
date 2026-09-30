@@ -17,6 +17,10 @@ export const help = {
             "İnternet — rəsmi pokerth.net serverində reytinqlərlə onlayn oynayın. pokerth.net hesabı tələb olunur; pokerth.net-də pulsuz qeydiyyatdan keçin.",
             "Lokal / məşq — botlara qarşı oflayn oynayın. Heç nə quraşdırmaq lazım deyil, bağlantısız işləyir və irəlilədikcə kubokları açır.",
             "LAN / Xüsusi server — lokal şəbəkənizdəki və ya öz kompüterinizdəki şəxsi PokerTH serverinə qoşulun."] },
+        { id: "acehelp", t: "Tuzun köməyi",
+          b: ["Tuzun köməyi veb-klientin maskotu olan Tuzu bələdçiyə çevirir: razılaşdıqdan sonra kiçik Tuz sağ aşağı küncdə yerləşir və olduğunuz yerdə vacib olanı izah edir — əsl tətbiqdə, əsl masalarda. O, ilk açılışda bir dəfə təklif olunur; istənilən vaxt giriş ekranındakı “Tuzun köməyi” düyməsi ilə, başlıq menyularında Köməyin yanında və ya Əlavə seçimlər → Köməkçi bölməsində onu aktivləşdirin və ya söndürün.",
+              "pokerth.net lobbisində o, başlamağa ən yaxın olan reytinq oyununu göstərir və ona qoşulmağı təklif edir — açıq oyun yoxdursa, birini yaratmağı (hesabı olan istənilən oyunçu yarada bilər; qonaqlar Normal oyunlar oynayır). Oyunçu gözləyən reytinq masasında masa dolarkən reytinqi izah edir, sonra isə yerinizi və xallarınızı bildirir. Hər məsləhət bir dəfə göstərilir: “Sonra” onu Tuzun üzərindəki nişana yığır, ona toxunduqda isə yenidən göstərilir. O, əl gedərkən heç vaxt danışmır. İzah ediləcək bir şey olmadıqda menyusunu açmaq üçün ona toxunun: onu söndürün və ya bütün məsləhətləri yenidən göstərin."],
+          note: "“Animasiyalı maskot” seçimindən ayrıdır — o yalnız fasilə səhnələrini oynadır. Azaldılmış effektlər və ya azaldılmış hərəkət rejimində Tuzun yerinə sadə mətn balonu görünür. Artıq gördükləriniz pokerth.net hesabınızla birlikdə saxlanılır." },
         { id: "lan",
           t: "LAN / xüsusi server",
           b: [

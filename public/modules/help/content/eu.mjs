@@ -17,6 +17,10 @@ export const help = {
             "Internet — jokatu linean pokerth.net zerbitzari ofizialean, sailkapenekin. pokerth.net kontu bat behar da; erregistratu doan pokerth.net-en.",
             "Lokala / entrenamendua — jokatu lineaz kanpo boten aurka. Ez da ezer konfiguratu behar, konexiorik gabe dabil eta garaikurrak desblokeatzen ditu aurrera egin ahala.",
             "LAN / Zerbitzari dedikatua — konektatu zure tokiko sareko edo zure ordenagailuko PokerTH zerbitzari pribatu batera."] },
+        { id: "acehelp", t: "Batekoaren laguntza",
+          b: ["Batekoaren laguntzak Batekoa, web-bezeroaren maskota, gidari bihurtzen du: onartzen duzunean, Bateko txiki bat behean eskuinean esertzen da eta zauden lekuan garrantzitsua dena azaltzen du — benetako aplikazioan, benetako mahaietan. Lehen abiaraztean behin eskaintzen da; aktibatu edo desaktibatu edonoiz saio-hasierako pantailako «Batekoaren laguntza» botoiarekin, goiburuko menuetan Laguntzaren ondoan, edo Aukera aurreratuak → Laguntzailea atalean.",
+              "pokerth.net-eko atondoan, hasteko gertuen dagoen sailkapeneko partida seinalatzen du eta bertan sartzea proposatzen dizu — edo bat sortzea, bat ere irekita ez dagoenean (kontua duen edozein jokalarik egin dezake; gonbidatuek partida arruntak jokatzen dituzte). Jokalarien zain dagoen sailkapeneko mahai batean, sailkapena azaltzen du mahaia betetzen den bitartean, eta gero zure postua eta zure puntuak esaten dizkizu. Aholku bakoitza behin erakusten da: «Geroago» botoiak Batekoaren gaineko ikur batean biltzen du, eta hura sakatzean berriro erakusten da. Ez du inoiz hitz egiten esku batean zehar. Saka ezazu azaltzeko ezer ez dagoenean bere menua irekitzeko: desaktibatu, edo erakutsi aholku guztiak berriro."],
+          note: "«Maskota animatua» aukeratik bereizia da, jarduerarik gabeko eszenak besterik ez baititu erakusten. Efektu murriztuekin edo mugimendu murriztuarekin, burbuila soil batek ordezten du Batekoa. Dagoeneko ikusi duzuna zure pokerth.net kontuarekin batera doa." },
         { id: "lan",
           t: "LAN / zerbitzari dedikatua",
           b: [

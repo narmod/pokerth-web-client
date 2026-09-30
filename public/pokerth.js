@@ -8081,7 +8081,7 @@ const App = (() => {
     // Ouvre l'écran dédié « Créer une partie ». Le formulaire existant
     // (#create-form, tous ses champs/handlers) est déplacé une seule fois dans
     // la page, ce qui préserve toute la logique de createGame().
-    openCreatePage() {
+    openCreatePage(opts) {
       // Parité officielle ShowGameSettingsDialogOnNewGame (startwindowimpl.cpp,
       // callNewGameDialog) : en mode entraînement, si l'option « afficher les
       // réglages à chaque nouvelle partie » est décochée, on saute l'écran de
@@ -8139,6 +8139,16 @@ const App = (() => {
         if (S._currentLoginMode === 'guest') { var _gts = document.getElementById('cf-game-type'); if (_gts) _gts.value = '1'; }
         if (window._gtypeDdRefresh) window._gtypeDdRefresh();
         this._syncGameTypeConstraints();
+      } catch (e) {}
+      // Aide de l'As (modules/guide) : openCreatePage({ ranking: true }) ouvre
+      // la création sur une table classée avec le preset Ranking (format 5/5)
+      // — jamais pour un invité (le serveur refuse ranking aux invités).
+      try {
+        if (opts && opts.ranking && S._currentLoginMode !== 'guest') {
+          var _gt4 = document.getElementById('cf-game-type');
+          if (_gt4) { _gt4.value = '4'; if (window._gtypeDdRefresh) window._gtypeDdRefresh(); this._syncGameTypeConstraints(); }
+          this.applyPreset('ranking', document.querySelector('.cf-preset[data-preset="ranking"]'));
+        }
       } catch (e) {}
       show('s-create');
     },
@@ -12002,7 +12012,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.9-web.259'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.9-web.260'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif ou la palette High contrast
    (Android, Safari, iOS standalone récent). Lit --theme-color et met

@@ -17,6 +17,10 @@ export const help = {
             "Ayélujára — ṣeré lórí ayélujára lórí olùpín ìjọba pokerth.net pẹ̀lú ipò. O nílò àkáǹtì pokerth.net; forúkọ sílẹ̀ lọ́fẹ̀ẹ́ lórí pokerth.net.",
             "Agbègbè / ìdánrawò — ṣeré láìsí ayélujára pẹ̀lú àwọn bot. Kò sí nǹkan láti ṣètò, ó ń ṣiṣẹ́ láìsí ìsopọ̀, ó sì ń ṣí ife ẹ̀yẹ bí o ṣe ń tẹ̀síwájú.",
             "LAN / Olùpín àdáni — sopọ̀ mọ́ olùpín PokerTH àṣírí lórí nẹ́tíwọ̀ọ̀kì agbègbè rẹ tàbí lórí kọ̀ǹpútà rẹ."] },
+        { id: "acehelp", t: "Ìrànlọ́wọ́ Ace",
+          b: ["Ìrànlọ́wọ́ Ace ń sọ Ace, àmì eré oníbàárà wẹ́ẹ̀bù, di amọ̀nà: ní kété tí o bá gbà, Ace kékeré kan yóò jókòó sí ìsàlẹ̀ lápá ọ̀tún, yóò sì ṣàlàyé ohun tó ṣe pàtàkì níbi tí o wà — nínú áàpù gidi, ní àwọn tábìlì gidi. A máa ń fi lọ̀ ọ́ lẹ́ẹ̀kan ní ìgbà àkọ́kọ́ tí o ṣí i; tàn án tàbí pa á nígbàkígbà pẹ̀lú bọ́tìnì “Ìrànlọ́wọ́ Ace” lójú ìwọlé, nínú àwọn àkójọ orí ìwé lẹ́gbẹ̀ẹ́ Ìrànlọ́wọ́, tàbí nínú Àṣàyàn ìlọsíwájú → Olùrànlọ́wọ́.",
+              "Nínú gbọ̀ngàn pokerth.net, ó ń tọ́ka sí eré ipò tó sún mọ́ bíbẹ̀rẹ̀ jù, ó sì ń fi lọ̀ ọ́ láti darapọ̀ mọ́ ọn — tàbí láti ṣẹ̀dá ọ̀kan nígbà tí kò sí èyí tó ṣí sílẹ̀ (òṣèré èyíkéyìí tí ó ní àkáǹtì lè ṣe é; àwọn àlejò ń ṣe eré Déédéé). Ní tábìlì ipò tó ń dúró de àwọn òṣèré, ó ń ṣàlàyé ipò bí tábìlì ṣe ń kún, lẹ́yìn náà ó ń sọ ipò rẹ àti àmì rẹ fún ọ. A ń fi ìmọ̀ràn kọ̀ọ̀kan hàn lẹ́ẹ̀kan: “Nígbà míì” ń ká a sínú àmì kékeré lára Ace, títẹ̀ ẹ́ sì ń tún un fi hàn. Kò sọ̀rọ̀ rí nígbà ọwọ́ kan. Tẹ̀ ẹ́ nígbà tí kò sí nǹkan láti ṣàlàyé láti ṣí àkójọ rẹ̀: pa á, tàbí fi gbogbo ìmọ̀ràn hàn lẹ́ẹ̀kan sí i."],
+          note: "Ó yàtọ̀ sí àṣàyàn “Àmì eré tí ń gbé”, èyí tí ń ṣe àwọn ìran ìdúró nìkan. Pẹ̀lú ipa dídínkù tàbí ìṣípòpadà dídínkù, àfẹ́fẹ́ ọ̀rọ̀ lásán ni yóò rọ́pò Ace. Ohun tí o ti rí tẹ́lẹ̀ ń tẹ̀lé àkáǹtì pokerth.net rẹ." },
         { id: "lan",
           t: "LAN / olùpín àdáni",
           b: [

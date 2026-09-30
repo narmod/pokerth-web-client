@@ -22,4 +22,25 @@ export default {
   resetDone: 'Done — every tip will show again.',
   turnedOff: 'Ace’s Help is off. You can turn it back on from the menu at any time.',
   nothingHere: 'Nothing to explain here for now — carry on!',
+  // action buttons
+  join: 'Join',
+  createRanking: 'Create a Ranking table',
+  signup: 'Create an account',
+  seeRanking: 'See the ranking',
+  // C1 — pokerth.net lobby
+  c1Join: 'A ranked game is waiting for you: **{n}/{max}** players. It starts as soon as it’s full!',
+  c1None: 'No ranked game open right now. Create one — any player with an account can! It starts by itself as soon as 10 players have joined.',
+  c1Guest: 'Ranked games need a (free) pokerth.net account. As a guest you can play Normal games.',
+  // C2 — ranked waiting room (one fact every ~20 s)
+  c2Wait: 'Ranked game: **{n}/{max}** players. It starts by itself as soon as the table is full — meanwhile, here is how the ranking works.',
+  c2Points: 'Each ranked game hands out points by finishing place: **15, 9, 6, 4, 3, 2, 1** from 1st to 7th, nothing from 8th to 10th — 40 points per table.',
+  c2Score: 'Your **Score** is not the sum of your points but your average per game, tempered by how many games you have played: playing regularly matters.',
+  c2Seasons: 'The ranking runs in **quarterly seasons**: at each new season the counters are archived and start again from zero.',
+  c2Why55: 'Why is **5/5** everyone’s favourite? 5 seconds to act, 5 seconds between hands, 10,000 chips and blinds doubling every 11 hands: fast and the same for everyone, so games stay short and comparable.',
+  c2Where: 'To see where you stand: the **trophy** button in the lobby — and at the table, the **podium** button shows the season ranking of the players you sit with.',
+  oneMore: 'Just one more player!',
+  goodLuck: 'Good luck!',
+  // C2.4 — back in the lobby after a ranked game
+  c2Result: 'Game over — you finished in place **{place}**: **+{points}** points. See your ranking?',
+  c2ResultTie: 'Game over! Several players went out in the same hand, so your exact place is on the ranking page. See your ranking?',
 };

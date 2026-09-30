@@ -17,6 +17,10 @@ export const help = {
             "Ku-inthanethi — dlala ku-inthanethi kuseva esemthethweni ye-pokerth.net ngokulinganiswa. Udinga i-akhawunti ye-pokerth.net; bhalisa mahhala ku-pokerth.net.",
             "Okwasendaweni / ukuziqeqesha — dlala ungaxhunyiwe namabhothi. Akukho okumele kusethwe, kusebenza ngaphandle koxhumano, futhi kuvula izindondo njengoba uqhubeka.",
             "LAN / Iseva ezinikele — xhuma kuseva yangasese ye-PokerTH kunethiwekhi yakho yendawo noma kukhompyutha yakho."] },
+        { id: "acehelp", t: "Usizo luka-Ace",
+          b: ["Usizo luka-Ace lwenza i-Ace, uphawu lweklayenti lewebhu, lube umhlahlandlela: uma usuvumile, i-Ace encane ihlala ezansi ngakwesokudla futhi ichaze okubalulekile lapho ukhona — kuhlelo lokusebenza langempela, ematafuleni angempela. Lunikezwa kanye lapho uqala ukuvula; lukhanyise noma ulucishe noma nini ngenkinobho ethi “Usizo luka-Ace” esikrinini sokungena, kumamenyu enhloko eduze kokuthi Usizo, noma ku-Izinketho ezithuthukisiwe → Umsizi.",
+              "Emnyango we-pokerth.net ikhomba umdlalo wezinga oseduze kakhulu nokuqala futhi ikunikeze ukuwujoyina — noma ukudala owodwa uma kungekho ovuliwe (noma yimuphi umdlali one-akhawunti angakwenza; izivakashi zidlala imidlalo ejwayelekile). Etafuleni lezinga elilinde abadlali, ichaza izinga ngesikhathi itafula ligcwala, bese ikutshela indawo yakho namaphuzu akho. Iseluleko ngasinye siboniswa kanye: “Kamuva” kusigoqela ebhejini eliku-Ace, futhi ukuyithepha kuphinde kusibonise. Ayikhulumi neze ngesikhathi kudlalwa isandla. Yithephe lapho kungekho okufanele kuchazwe ukuze uvule imenyu yayo: yicishe, noma uphinde ubonise zonke izeluleko."],
+          note: "Kuhlukile enketho ethi “Uphawu olupopayi”, edlala kuphela izigcawu zokulinda. Uma imiphumela incishisiwe noma ukunyakaza kuncishisiwe, ibhamuza elilula lithatha indawo ye-Ace. Okuseke wakubona kulandela i-akhawunti yakho ye-pokerth.net." },
         { id: "lan",
           t: "LAN / iseva ezinikele",
           b: [

@@ -26,8 +26,18 @@
 //   needs:    { online: true, guest: false, ranked: true }   exact matches
 //   when:     (where) => boolean         extra condition (optional)
 //   manual:   true                       only when asked (never picked here)
-//   steps:    [{ text: 'key', vars?, target?: 'css selector', buttons?: [...] }]
+//   repeat:   true                       may speak again after being seen
+//                                        (an event, e.g. the result of a game)
+//   live:     true                       re-rendered when the game list changes
+//   fold:     ms                         unanswered bubble folds into the badge
+//   steps:    [{ text: 'key', vars?, target?, buttons?: [...], auto?: ms }]
+//             vars / target may be functions of `where`; target may list
+//             several selectors (the first one visible wins); auto = next step
+//             after that many ms (waiting-room facts)
 // }
+// Extra snapshot fields used by the Ranking contexts (L2):
+//   net (pokerth.net login), rankPick (ranking-pick.mjs choice, or null),
+//   gamesLoaded, waitCount / waitMax (my table), result (my last ranked game)
 // ═══════════════════════════════════════════════════════════════════
 
 export const SCREENS = ['connect', 'lobby', 'wait', 'create', 'game', 'other'];
@@ -73,7 +83,7 @@ export function pickContext(where, contexts, progress = {}) {
   for (const ctx of contexts) {
     if (!ctx || ctx.manual) continue;
     if (!applies(ctx, where)) continue;
-    if (seen(ctx.id) || snoozed(ctx.id)) continue;
+    if ((!ctx.repeat && seen(ctx.id)) || snoozed(ctx.id)) continue;
     const p = Number(ctx.priority) || 0;
     if (p > bestP) { best = ctx; bestP = p; }
   }

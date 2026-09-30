@@ -20,7 +20,7 @@ const K = 0.42;          // the docked Ace: 42 % of the scene size (~96 px tall)
 const CSS = `
 #ace-dock{z-index:1210!important;overflow:visible!important}
 #ace-dock .ad-ace,#ace-dock .ad-bubble{transition:none!important}
-#ace-dock .ad-ace{position:absolute;right:calc(10px + env(safe-area-inset-right,0px));bottom:calc(8px + var(--ad-lift,0px) + env(safe-area-inset-bottom,0px));pointer-events:auto;cursor:pointer;border-radius:12px;-webkit-tap-highlight-color:transparent;outline:none}
+#ace-dock .ad-ace{position:absolute;right:calc(10px + var(--ad-shift,0px) + env(safe-area-inset-right,0px));bottom:calc(8px + var(--ad-lift,0px) + env(safe-area-inset-bottom,0px));pointer-events:auto;cursor:pointer;border-radius:12px;-webkit-tap-highlight-color:transparent;outline:none}
 #ace-dock .ad-ace:focus-visible{box-shadow:0 0 0 3px #f5c518}
 #ace-dock .ad-ace .mc-pos{position:absolute;left:0;top:0}
 #ace-dock .ad-ace .mc-bubble{display:none}
@@ -178,24 +178,28 @@ function tapTargets(minTop) {
   const out = [];
   const own = (n) => !!(root && root.contains(n)) || n.id === 'ag-ring';
   const seen = new Set();
-  const add = (el) => {
+  const add = (el, weight) => {
     if (seen.has(el) || own(el)) return;
     seen.add(el);
     const r = el.getBoundingClientRect();
     if (r.width < 4 || r.height < 4 || r.bottom < minTop || r.top > window.innerHeight) return;
     const x = Math.min(Math.max(r.left + r.width / 2, 0), window.innerWidth - 1);
     const y = Math.min(Math.max(r.top + r.height / 2, 0), window.innerHeight - 1);
-    const hit = document.elementFromPoint(x, y);
+    // what is on top there, the Ace himself left aside (he may be standing on it right now)
+    const hit = typeof document.elementsFromPoint === 'function'
+      ? document.elementsFromPoint(x, y).find((n) => !own(n)) : document.elementFromPoint(x, y);
     if (!hit || !(hit === el || el.contains(hit) || hit.contains(el))) return;   // hidden, clipped or covered
-    out.push(r);
+    out.push({ left: r.left, top: r.top, right: r.right, bottom: r.bottom, weight: weight || 10 });
   };
-  document.querySelectorAll('button,a[href],input,select,textarea,label,summary,[role=button],[role=link],[role=tab],[onclick]').forEach(add);
+  document.querySelectorAll('button,a[href],input,select,textarea,label,summary,[role=button],[role=link],[role=tab]').forEach((el) => add(el, 10));
+  // a whole clickable row / card counts less than a real control inside it
+  document.querySelectorAll('[onclick]').forEach((el) => add(el, /^(BUTTON|A|INPUT|SELECT)$/.test(el.tagName) ? 10 : 1));
   // clickable rows drawn as plain elements (hand cursor), sampled on a grid
   if (typeof document.elementsFromPoint === 'function') {
     for (let y = Math.max(0, minTop); y < window.innerHeight; y += 16) {
       for (let x = window.innerWidth - 8; x > window.innerWidth - 220 && x > 0; x -= 16) {
         const hit = document.elementsFromPoint(x, y).find((n) => !own(n));
-        if (hit && !seen.has(hit) && tappable(hit)) add(hit);
+        if (hit && !seen.has(hit) && tappable(hit)) add(hit, 1);
       }
     }
   }
@@ -208,26 +212,38 @@ function tapTargets(minTop) {
  * button, a game row…), and docks him there. Not while his bubble is open
  * (he does not move under the player's eyes).
  */
-export function settle() {
-  if (!root || !ace || bubbleOpen()) return;
+export function settle(force) {   // force: the layout changed — move even with the bubble open
+  if (!root || !ace || (bubbleOpen() && !force)) return;
   const vh = window.innerHeight, vw = window.innerWidth;
-  const was = root.style.getPropertyValue('--ad-lift');
+  const wasUp = parseFloat(root.style.getPropertyValue('--ad-lift')) || 0;
+  const wasShift = parseFloat(root.style.getPropertyValue('--ad-shift')) || 0;
   root.style.setProperty('--ad-lift', '0px');
+  root.style.setProperty('--ad-shift', '0px');
   const base = ace.getBoundingClientRect();
   const w = base.width, h = base.height;
-  let best = 0;
+  let best = { up: wasUp, shift: wasShift };
   if (w && h) {
-    const minTop = vh * 0.35;
+    const minTop = vh * 0.35, maxShift = Math.min(vw * 0.3, 240);
     const targets = tapTargets(minTop - h);
-    const left = Math.min(base.left, vw - w) - 2, right = left + w + 4;
-    const hits = (top) => targets.some((r) => r.left < right && r.right > left && r.top < top + h && r.bottom > top);
-    best = -1;
-    for (let up = 0; base.top - up > minTop; up += 6) {
-      if (!hits(base.top - up)) { best = up; break; }
+    // how much he would hide there (real controls weigh more than clickable rows)
+    const cost = (left, top) => targets.reduce((sum, r) => {
+      const ix = Math.min(left + w + 2, r.right) - Math.max(left - 2, r.left), iy = Math.min(top + h, r.bottom) - Math.max(top, r.top);
+      return ix > 0 && iy > 0 ? sum + ix * iy * r.weight : sum;
+    }, 0);
+    // right edge first, lowest first; then a little further left; the first
+    // free spot wins, else the spot that hides the least
+    let bestCost = Infinity;
+    search:
+    for (let shift = 0; shift <= maxShift; shift += 24) {
+      for (let up = 0; base.top - up > minTop; up += 6) {
+        const c = cost(base.left - shift, base.top - up) + (shift + up) * 0.01;   // tie-break: stay low and right
+        if (c < bestCost) { bestCost = c; best = { up, shift }; }
+        if (c < 1 + (shift + up) * 0.01) break search;
+      }
     }
-    if (best < 0) best = was ? parseFloat(was) || 0 : 0;   // nowhere free: stay where he was
   }
-  lift(best);
+  if (root) root.style.setProperty('--ad-shift', Math.round(best.shift) + 'px');
+  lift(best.up);
 }
 
 function placeBubble() {

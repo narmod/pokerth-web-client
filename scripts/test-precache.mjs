@@ -9,7 +9,8 @@
 //
 // Walks the ES module graph from every <script src> of pokerth-client.html
 // (static imports, re-exports and literal dynamic imports), adds the per-
-// language files loaded by computed dynamic imports (lang/, help/content/),
+// language files loaded by computed dynamic imports (lang/, help/content/,
+// guide/lang/ — the Ace's texts),
 // and fails if any of them is absent from ASSETS. Also guards the default deck
 // and table style (cards and felt of an offline game) and checks every ASSETS
 // entry exists on disk. Dependency-free.
@@ -67,7 +68,7 @@ ok(entries.includes('/pokerth.js'), 'pokerth-client.html loads pokerth.js');
 for (const e of entries) walk(e, 'pokerth-client.html');
 
 // Computed dynamic imports: one file per language.
-for (const dir of ['modules/lang', 'modules/help/content']) {
+for (const dir of ['modules/lang', 'modules/help/content', 'modules/guide/lang']) {
   for (const f of fs.readdirSync(path.join(PUB, dir))) {
     if (f.endsWith('.mjs')) seen.set('/' + dir + '/' + f, '(per-language import)');
   }

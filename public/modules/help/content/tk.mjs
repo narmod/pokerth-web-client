@@ -17,6 +17,10 @@ export const help = {
             "Onlaýn — resmi pokerth.net serwerinde reýting bilen internetde oýnaň. Size pokerth.net hasaby gerek; pokerth.net-de mugt hasaba alnyň.",
             "Ýerli / türgenleşik — botlar bilen oflaýn oýnaň. Hiç zat sazlamak gerek däl, birikmesiz işleýär we öňe gidişiňize görä baýraklary açýar.",
             "LAN / Aýratyn serwer — ýerli toruňyzdaky ýa-da kompýuteriňizdäki hususy PokerTH serwerine birigiň."] },
+        { id: "acehelp", t: "Tuzuň kömegi",
+          b: ["Tuzuň kömegi web müşderiniň maskoty bolan Tuzy ýol görkezijä öwürýär: razylyk bereniňizden soň, kiçijik Tuz aşaky sag burçda oturýar we bolýan ýeriňizde möhüm zatlary düşündirýär — hakyky programmada, hakyky stollarda. Ol ilkinji açylyşda bir gezek hödürlenýär; ony islän wagtyňyz giriş ekranyndaky «Tuzuň kömegi» düwmesi, sözbaşy menýularynda Kömegiň ýanynda ýa-da Giňişleýin sazlamalar → Kömekçi arkaly açyp ýa-da öçürip bilersiňiz.",
+              "pokerth.net lobbisinde ol başlamaga iň ýakyn reýting oýnuny görkezýär we oňa goşulmagy teklip edýär — ýa-da açyk oýun ýok bolsa, täzesini döretmegi (hasaby bolan islendik oýunçy döredip biler; myhmanlar adaty oýunlary oýnaýarlar). Oýunçylara garaşýan reýting stolunda ol stol dolýança reýtingi düşündirýär, soňra bolsa size ornuňyzy we utuklaryňyzy aýdýar. Her maslahat bir gezek görkezilýär: «Soňrak» ony Tuzuň üstündäki nyşana öwrüp ýygnaýar, Tuza basanyňyzda bolsa ol täzeden görkezilýär. Ol el dowam edýärkä hiç haçan gürlemeýär. Düşündirere zat ýok wagty menýusyny açmak üçin oňa basyň: ony öçüriň ýa-da ähli maslahatlary täzeden görkeziň."],
+          note: "Bu diňe işjeň däl wagty sahnalary görkezýän «Animasiýaly maskot» sazlamasyndan aýratyn. Azaldylan effektlerde ýa-da azaldylan hereketde Tuzuň ýerine ýönekeý habar köpürjigi görünýär. Eýýäm gören zatlaryňyz pokerth.net hasabyňyza baglanýar." },
         { id: "lan",
           t: "LAN / aýratyn serwer",
           b: [
