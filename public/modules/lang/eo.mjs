@@ -439,6 +439,7 @@ export const strings = {
     playersOnline:'ludantoj',
     playersOnlineTitle:'Enretaj ludantoj',
     playersSearchPlaceholder:'Serĉi…',
+    plSearchClear:'Viŝi la serĉon',
     tableCount:'tabloj',
     // ── Tooltips wired from previously-hardcoded title= attributes ──
     handsHelpTooltip:'Pokeraj manoj', soundTooltip:'Silentigi / ŝalti sonon', soundVolume:'Ludsonoj', logTooltip:'Protokolo',

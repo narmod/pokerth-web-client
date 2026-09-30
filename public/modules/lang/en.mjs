@@ -439,6 +439,7 @@ export const strings = {
     playersOnline:'player(s)',
     playersOnlineTitle:'Players online',
     playersSearchPlaceholder:'Search\u2026',
+    plSearchClear:'Clear search',
     tableCount:'table(s)',
     // ── Tooltips wired from previously-hardcoded title= attributes ──
     handsHelpTooltip:'Poker hand rankings', soundTooltip:'Mute / unmute', soundVolume:'Game sounds', logTooltip:'Log',

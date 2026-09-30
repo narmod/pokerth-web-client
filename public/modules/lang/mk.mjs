@@ -438,6 +438,7 @@ export const strings = {
     playersOnline:'играч(и)',
     playersOnlineTitle:'Играчи онлајн',
     playersSearchPlaceholder:'Пребарувај…',
+    plSearchClear:'Исчисти пребарување',
     tableCount:'маса(и)',
     // ── Tooltips wired from previously-hardcoded title= attributes ──
     handsHelpTooltip:'Редослед на покер раце', soundTooltip:'Исклучи / вклучи звук', soundVolume:'Звуци на играта', logTooltip:'Дневник',

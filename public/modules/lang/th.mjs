@@ -437,6 +437,7 @@ export const strings = {
     playersOnline:'ผู้เล่น',
     playersOnlineTitle:'ผู้เล่นออนไลน์',
     playersSearchPlaceholder:'ค้นหา\u2026',
+    plSearchClear:'ล้างการค้นหา',
     tableCount:'โต๊ะ',
     // ── Tooltips wired from previously-hardcoded title= attributes ──
     handsHelpTooltip:'อันดับมือโป๊กเกอร์', soundTooltip:'ปิด / เปิดเสียง', soundVolume:'เสียงเกม', logTooltip:'บันทึก',

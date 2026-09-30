@@ -676,6 +676,7 @@ export const strings = {
     playersOnline: 'jucători',
     playersOnlineTitle: 'Jucători online',
     playersSearchPlaceholder: 'Caută…',
+    plSearchClear: 'Șterge căutarea',
     tableCount: 'mese',
     handsHelpTooltip: 'Clasamentul mâinilor de poker',
     soundTooltip: 'Dezactivează / activează sunetul',

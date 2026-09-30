@@ -439,6 +439,7 @@ export const strings = {
     playersOnline:'ක්‍රීඩකයන්',
     playersOnlineTitle:'මාර්ගගත ක්‍රීඩකයන්',
     playersSearchPlaceholder:'සොයන්න…',
+    plSearchClear:'සෙවුම හිස් කරන්න',
     tableCount:'මේස',
     // ── Tooltips wired from previously-hardcoded title= attributes ──
     handsHelpTooltip:'පෝකර් අත් ශ්‍රේණිගත කිරීම', soundTooltip:'නිහඬ කරන්න / ශබ්දය යළි සක්‍රිය කරන්න', soundVolume:'ක්‍රීඩා ශබ්ද', logTooltip:'ලොගය',

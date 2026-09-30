@@ -439,6 +439,7 @@ export const strings = {
     playersOnline:'imreoir',
     playersOnlineTitle:'Imreoirí ar líne',
     playersSearchPlaceholder:'Cuardaigh…',
+    plSearchClear:'Glan an cuardach',
     tableCount:'bord',
     // ── Tooltips wired from previously-hardcoded title= attributes ──
     handsHelpTooltip:'Lámha pócair', soundTooltip:'Balbhaigh / cuir fuaim ar siúl', soundVolume:'Fuaimeanna an chluiche', logTooltip:'Loga',

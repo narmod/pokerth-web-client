@@ -676,6 +676,7 @@ export const strings = {
     playersOnline: 'người chơi',
     playersOnlineTitle: 'Người chơi trực tuyến',
     playersSearchPlaceholder: 'Tìm…',
+    plSearchClear: 'Xóa tìm kiếm',
     tableCount: 'bàn',
     handsHelpTooltip: 'Xếp hạng các bộ bài poker',
     soundTooltip: 'Tắt / bật âm thanh',

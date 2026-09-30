@@ -439,6 +439,7 @@ export const strings = {
     playersOnline:'\'yan wasa',
     playersOnlineTitle:'\'Yan wasa a kan layi',
     playersSearchPlaceholder:'Nema…',
+    plSearchClear:'Share bincike',
     tableCount:'teburi',
     // ── Tooltips wired from previously-hardcoded title= attributes ──
     handsHelpTooltip:'Hannayen poker', soundTooltip:'Kashe / kunna sauti', soundVolume:'Sautukan wasa', logTooltip:'Log',

@@ -435,6 +435,7 @@ export const strings = {
     playersOnline:'کھلاڑی',
     playersOnlineTitle:'آن لائن کھلاڑی',
     playersSearchPlaceholder:'تلاش…',
+    plSearchClear:'تلاش صاف کریں',
     tableCount:'میزیں',
     // ── Tooltips wired from previously-hardcoded title= attributes ──
     handsHelpTooltip:'پوکر ہاتھوں کی درجہ بندی', soundTooltip:'خاموش / آواز', soundVolume:'گیم کی آوازیں', logTooltip:'لاگ',

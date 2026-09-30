@@ -10682,6 +10682,22 @@ html[data-buttons="pokerth"] .btn-action[disabled] { filter: grayscale(0.55) bri
   padding:0 !important; background:transparent !important; border:none !important;
 }
 .lobby-topbar .players-search input { flex:1 1 auto; width:auto; }
+/* Champ recherche joueur + ✕ d'effacement (type=search : on neutralise l'apparence
+   native et la croix WebKit pour garder un rendu identique partout). */
+.players-search .pls-field { position:relative; display:flex; align-items:center; flex:1 1 auto; min-width:0; }
+.players-search .pls-field input { flex:1 1 auto; width:100%; min-width:0; padding-right:30px;
+  -webkit-appearance:none; appearance:none; }
+#players-search-in::-webkit-search-cancel-button,
+#players-search-in::-webkit-search-decoration { -webkit-appearance:none; appearance:none; display:none; }
+.players-search-clr {
+  position:absolute; right:4px; top:50%; transform:translateY(-50%);
+  width:22px; height:22px; padding:0; border:none; border-radius:50%;
+  background:transparent; color:var(--text); font-size:0.8rem; line-height:1; cursor:pointer;
+  display:inline-flex; align-items:center; justify-content:center;
+}
+.players-search-clr:hover, .players-search-clr:focus-visible { color:var(--gold); background:var(--inset, rgba(255,255,255,0.08)); outline:none; }
+.players-search-clr[hidden] { display:none; }
+:root[data-theme="pokerth-light"] .players-search-clr { color:#3a4150; }
 .lobby-topbar #g-filter-bar { flex:1 1 260px; padding:0 !important; margin:0; display:flex; align-items:center; gap:var(--sp-3); }
 .lobby-topbar #g-filter-bar .gfilt-wrap { flex:1 1 auto; }
 /* En mobile la barre s'empile proprement (recherche puis filtre) */

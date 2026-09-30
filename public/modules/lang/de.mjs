@@ -683,6 +683,7 @@ export const strings = {
     playersOnline: 'Spieler',
     playersOnlineTitle: 'Spieler online',
     playersSearchPlaceholder: 'Suchen…',
+    plSearchClear: 'Suche löschen',
     tableCount: 'Tisch(e)',
     handsHelpTooltip: 'Poker-Handwertungen',
     soundTooltip: 'Stumm / laut',

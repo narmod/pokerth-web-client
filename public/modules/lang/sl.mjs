@@ -438,6 +438,7 @@ export const strings = {
     playersOnline:'igralec(-cev)',
     playersOnlineTitle:'Igralci na spletu',
     playersSearchPlaceholder:'Išči…',
+    plSearchClear:'Počisti iskanje',
     tableCount:'miz(e)',
     // ── Tooltips wired from previously-hardcoded title= attributes ──
     handsHelpTooltip:'Uvrstitve pokrskih rok', soundTooltip:'Izklopi / vklopi zvok', soundVolume:'Zvoki igre', logTooltip:'Dnevnik',

@@ -676,6 +676,7 @@ export const strings = {
     playersOnline: 'hráčov',
     playersOnlineTitle: 'Hráči online',
     playersSearchPlaceholder: 'Hľadať…',
+    plSearchClear: 'Vymazať hľadanie',
     tableCount: 'stolov',
     handsHelpTooltip: 'Poradie pokerových kombinácií',
     soundTooltip: 'Stlmiť / zapnúť zvuk',

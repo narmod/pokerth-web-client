@@ -439,6 +439,7 @@ export const strings = {
     playersOnline:'oyunçu',
     playersOnlineTitle:'Onlayn oyunçular',
     playersSearchPlaceholder:'Axtar…',
+    plSearchClear:'Axtarışı təmizlə',
     tableCount:'masa',
     // ── Tooltips wired from previously-hardcoded title= attributes ──
     handsHelpTooltip:'Poker kombinasiyaları', soundTooltip:'Səsi söndür / aç', soundVolume:'Oyun səsləri', logTooltip:'Jurnal',

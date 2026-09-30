@@ -676,6 +676,7 @@ export const strings = {
     playersOnline: 'jugadors',
     playersOnlineTitle: 'Jugadors en línia',
     playersSearchPlaceholder: 'Cerca…',
+    plSearchClear: 'Esborra la cerca',
     tableCount: 'taules',
     handsHelpTooltip: 'Classificació de les mans de pòquer',
     soundTooltip: 'Silencia / activa el so',

@@ -676,6 +676,7 @@ export const strings = {
     playersOnline: 'παίκτες',
     playersOnlineTitle: 'Παίκτες σε σύνδεση',
     playersSearchPlaceholder: 'Αναζήτηση…',
+    plSearchClear: 'Εκκαθάριση αναζήτησης',
     tableCount: 'τραπέζια',
     handsHelpTooltip: 'Κατάταξη χεριών πόκερ',
     soundTooltip: 'Σίγαση / κατάργηση σίγασης',

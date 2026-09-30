@@ -436,6 +436,7 @@ export const strings = {
     playersOnline:'കളിക്കാരൻ(ർ)',
     playersOnlineTitle:'ഓൺലൈൻ കളിക്കാർ',
     playersSearchPlaceholder:'തിരയുക…',
+    plSearchClear:'തിരയൽ മായ്ക്കുക',
     tableCount:'ടേബിൾ(കൾ)',
     // ── Tooltips wired from previously-hardcoded title= attributes ──
     handsHelpTooltip:'പോക്കർ ഹാൻഡ് റാങ്കിംഗുകൾ', soundTooltip:'മ്യൂട്ട് / അൺമ്യൂട്ട്', soundVolume:'ഗെയിം ശബ്ദങ്ങൾ', logTooltip:'ലോഗ്',

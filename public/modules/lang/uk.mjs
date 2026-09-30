@@ -675,6 +675,7 @@ export const strings = {
     playersOnline: 'гравців',
     playersOnlineTitle: 'Гравці онлайн',
     playersSearchPlaceholder: 'Пошук…',
+    plSearchClear: 'Очистити пошук',
     tableCount: 'столів',
     handsHelpTooltip: 'Рейтинг покерних комбінацій',
     soundTooltip: 'Звук увімк./вимк.',

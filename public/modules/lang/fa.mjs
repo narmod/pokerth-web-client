@@ -435,6 +435,7 @@ export const strings = {
     playersOnline:'بازیکن',
     playersOnlineTitle:'بازیکنان آنلاین',
     playersSearchPlaceholder:'جستجو…',
+    plSearchClear:'پاک کردن جستجو',
     tableCount:'میز',
     // ── Tooltips wired from previously-hardcoded title= attributes ──
     handsHelpTooltip:'رتبه‌بندی دست‌های پوکر', soundTooltip:'بی‌صدا / باصدا', soundVolume:'صداهای بازی', logTooltip:'گزارش',

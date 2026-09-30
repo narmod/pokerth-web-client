@@ -676,6 +676,7 @@ export const strings = {
     playersOnline: 'играчи',
     playersOnlineTitle: 'Играчи онлайн',
     playersSearchPlaceholder: 'Търсене…',
+    plSearchClear: 'Изчистване на търсенето',
     tableCount: 'маси',
     handsHelpTooltip: 'Подреждане на покер ръцете',
     soundTooltip: 'Заглуши / включи звука',

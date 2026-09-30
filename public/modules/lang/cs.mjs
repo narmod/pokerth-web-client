@@ -676,6 +676,7 @@ export const strings = {
     playersOnline: 'hráčů',
     playersOnlineTitle: 'Hráči online',
     playersSearchPlaceholder: 'Hledat…',
+    plSearchClear: 'Vymazat hledání',
     tableCount: 'stolů',
     handsHelpTooltip: 'Pořadí pokerových kombinací',
     soundTooltip: 'Ztlumit / zapnout zvuk',

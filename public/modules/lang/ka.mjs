@@ -439,6 +439,7 @@ export const strings = {
     playersOnline:'მოთამაშე',
     playersOnlineTitle:'ონლაინ მოთამაშეები',
     playersSearchPlaceholder:'ძიება…',
+    plSearchClear:'ძიების გასუფთავება',
     tableCount:'მაგიდა',
     // ── Tooltips wired from previously-hardcoded title= attributes ──
     handsHelpTooltip:'პოკერის ხელების რეიტინგი', soundTooltip:'ხმის ჩართვა / გამორთვა', soundVolume:'თამაშის ხმები', logTooltip:'ჟურნალი',

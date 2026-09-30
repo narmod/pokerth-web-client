@@ -437,6 +437,7 @@ export const strings = {
     playersOnline:'wachezaji',
     playersOnlineTitle:'Wachezaji mtandaoni',
     playersSearchPlaceholder:'Tafuta\u2026',
+    plSearchClear:'Futa utafutaji',
     tableCount:'meza',
     // ── Tooltips wired from previously-hardcoded title= attributes ──
     handsHelpTooltip:'Viwango vya mikono ya poker', soundTooltip:'Nyamazisha / rejesha sauti', soundVolume:'Sauti za mchezo', logTooltip:'Kumbukumbu',

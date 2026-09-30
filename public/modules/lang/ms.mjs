@@ -437,6 +437,7 @@ export const strings = {
     playersOnline:'pemain',
     playersOnlineTitle:'Pemain daring',
     playersSearchPlaceholder:'Cari\u2026',
+    plSearchClear:'Kosongkan carian',
     tableCount:'meja',
     // ── Tooltips wired from previously-hardcoded title= attributes ──
     handsHelpTooltip:'Peringkat tangan poker', soundTooltip:'Bisukan / bunyikan', soundVolume:'Suara permainan', logTooltip:'Log',

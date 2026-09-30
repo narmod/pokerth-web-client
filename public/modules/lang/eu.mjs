@@ -439,6 +439,7 @@ export const strings = {
     playersOnline:'jokalari',
     playersOnlineTitle:'Linean dauden jokalariak',
     playersSearchPlaceholder:'Bilatu…',
+    plSearchClear:'Garbitu bilaketa',
     tableCount:'mahai',
     // ── Tooltips wired from previously-hardcoded title= attributes ──
     handsHelpTooltip:'Pokerreko eskuak', soundTooltip:'Isilarazi / aktibatu soinua', soundVolume:'Jokoaren soinuak', logTooltip:'Egunkaria',

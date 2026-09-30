@@ -497,6 +497,7 @@ export const strings = {
     playersOnline:'명',
     playersOnlineTitle:'접속 중인 플레이어',
     playersSearchPlaceholder:'검색\u2026',
+    plSearchClear:'검색 지우기',
     tableCount:'개 테이블',
     handsHelpTooltip:'포커 핸드 순위', soundTooltip:'음소거 / 해제', logTooltip:'로그',
     chatTooltip:'채팅', moreTooltip:'더보기', closeTooltip:'닫기', refreshTooltip:'새로고침',

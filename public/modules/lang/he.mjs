@@ -435,6 +435,7 @@ export const strings = {
     playersOnline:'שחקנים',
     playersOnlineTitle:'שחקנים מקוונים',
     playersSearchPlaceholder:'חיפוש…',
+    plSearchClear:'ניקוי החיפוש',
     tableCount:'שולחנות',
     // ── Tooltips wired from previously-hardcoded title= attributes ──
     handsHelpTooltip:'דירוג ידיים בפוקר', soundTooltip:'השתקה / ביטול השתקה', soundVolume:'צלילי המשחק', logTooltip:'יומן',

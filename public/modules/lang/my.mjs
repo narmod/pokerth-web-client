@@ -439,6 +439,7 @@ export const strings = {
     playersOnline:'ကစားသမား',
     playersOnlineTitle:'အွန်လိုင်း ကစားသမားများ',
     playersSearchPlaceholder:'ရှာရန်…',
+    plSearchClear:'ရှာဖွေမှုကို ရှင်းရန်',
     tableCount:'စားပွဲ',
     // ── Tooltips wired from previously-hardcoded title= attributes ──
     handsHelpTooltip:'ပိုကာ ဖဲလက် အဆင့်များ', soundTooltip:'အသံပိတ် / ဖွင့်', soundVolume:'ဂိမ်းအသံများ', logTooltip:'မှတ်တမ်း',

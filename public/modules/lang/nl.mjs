@@ -679,6 +679,7 @@ export const strings = {
     playersOnline: 'speler(s)',
     playersOnlineTitle: 'Spelers online',
     playersSearchPlaceholder: 'Zoeken…',
+    plSearchClear: 'Zoekopdracht wissen',
     tableCount: 'tafel(s)',
     handsHelpTooltip: 'Pokerhand-rangschikking',
     soundTooltip: 'Dempen / aanzetten',

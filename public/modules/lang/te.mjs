@@ -436,6 +436,7 @@ export const strings = {
     playersOnline:'ఆటగాడు(ళ్లు)',
     playersOnlineTitle:'ఆన్‌లైన్ ఆటగాళ్లు',
     playersSearchPlaceholder:'వెతుకు…',
+    plSearchClear:'శోధనను క్లియర్ చేయి',
     tableCount:'టేబుల్(లు)',
     // ── Tooltips wired from previously-hardcoded title= attributes ──
     handsHelpTooltip:'పోకర్ హ్యాండ్ ర్యాంకింగ్‌లు', soundTooltip:'మ్యూట్ / అన్‌మ్యూట్', soundVolume:'గేమ్ ధ్వనులు', logTooltip:'లాగ్',

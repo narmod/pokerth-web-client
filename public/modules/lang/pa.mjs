@@ -350,6 +350,7 @@ export const strings = {
     playersOnline:'ਖਿਡਾਰੀ',
     playersOnlineTitle:'ਆਨਲਾਈਨ ਖਿਡਾਰੀ',
     playersSearchPlaceholder:'ਖੋਜੋ\u2026',
+    plSearchClear:'ਖੋਜ ਸਾਫ਼ ਕਰੋ',
     tableCount:'ਟੇਬਲ',
     // ── Tooltips wired from previously-hardcoded title= attributes ──
     handsHelpTooltip:'ਪੋਕਰ ਹੱਥ ਰੈਂਕਿੰਗ', soundTooltip:'ਮਿਊਟ / ਅਨਮਿਊਟ', soundVolume:'ਖੇਡ ਆਵਾਜ਼ਾਂ', logTooltip:'ਲੌਗ',

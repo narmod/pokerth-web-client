@@ -436,6 +436,7 @@ export const strings = {
     playersOnline:'ખેલાડી',
     playersOnlineTitle:'ઓનલાઇન ખેલાડીઓ',
     playersSearchPlaceholder:'શોધો…',
+    plSearchClear:'શોધ સાફ કરો',
     tableCount:'ટેબલ(્સ)',
     // ── Tooltips wired from previously-hardcoded title= attributes ──
     handsHelpTooltip:'પોકર હેન્ડ રેન્કિંગ', soundTooltip:'મ્યૂટ / અનમ્યૂટ', soundVolume:'ગેમના અવાજો', logTooltip:'લોગ',

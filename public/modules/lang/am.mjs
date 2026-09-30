@@ -436,6 +436,7 @@ export const strings = {
     playersOnline:'ተጫዋች(ቾች)',
     playersOnlineTitle:'የመስመር ላይ ተጫዋቾች',
     playersSearchPlaceholder:'ፈልግ\u2026',
+    plSearchClear:'ፍለጋን አጽዳ',
     tableCount:'ጠረጴዛ(ዎች)',
     // ── Tooltips wired from previously-hardcoded title= attributes ──
     handsHelpTooltip:'የፖከር እጅ ደረጃዎች', soundTooltip:'ድምጽ አጥፋ / አብራ', soundVolume:'የጨዋታ ድምጾች', logTooltip:'መዝገብ',

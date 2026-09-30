@@ -675,6 +675,7 @@ export const strings = {
     playersOnline: 'pelaajaa',
     playersOnlineTitle: 'Pelaajat verkossa',
     playersSearchPlaceholder: 'Hae…',
+    plSearchClear: 'Tyhjennä haku',
     tableCount: 'pöytää',
     handsHelpTooltip: 'Pokerikäsien järjestys',
     soundTooltip: 'Mykistä / poista mykistys',

@@ -682,6 +682,7 @@ export const strings = {
     playersOnline: 'igrača',
     playersOnlineTitle: 'Igrači na mreži',
     playersSearchPlaceholder: 'Traži…',
+    plSearchClear: 'Obriši pretragu',
     tableCount: 'stolova',
     handsHelpTooltip: 'Rang poker ruku',
     soundTooltip: 'Utišaj / uključi zvuk',

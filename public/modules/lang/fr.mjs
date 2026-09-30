@@ -439,6 +439,7 @@ export const strings = {
     playersOnline:'joueur(s)',
     playersOnlineTitle:'Joueurs en ligne',
     playersSearchPlaceholder:'Rechercher\u2026',
+    plSearchClear:'Effacer la recherche',
     tableCount:'table(s)',
     // ── Infobulles (auparavant codées en dur dans title=) ──
     handsHelpTooltip:'Combinaisons du poker', soundTooltip:'Couper / réactiver le son', soundVolume:'Sons du jeu', logTooltip:'Journal',

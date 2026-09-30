@@ -678,6 +678,7 @@ export const strings = {
     playersOnline: 'oyuncu',
     playersOnlineTitle: 'Çevrimiçi oyuncular',
     playersSearchPlaceholder: 'Ara…',
+    plSearchClear: 'Aramayı temizle',
     tableCount: 'masa',
     handsHelpTooltip: 'Poker el sıralaması',
     soundTooltip: 'Sesi aç / kapat',

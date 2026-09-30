@@ -438,6 +438,7 @@ export const strings = {
     playersOnline:'لاعب/لاعبين',
     playersOnlineTitle:'اللاعبون المتصلون',
     playersSearchPlaceholder:'بحث…',
+    plSearchClear:'مسح البحث',
     tableCount:'طاولة/طاولات',
     // ── Tooltips wired from previously-hardcoded title= attributes ──
     handsHelpTooltip:'ترتيب أيدي البوكر', soundTooltip:'كتم / إلغاء الكتم', soundVolume:'أصوات اللعبة', logTooltip:'السجل',

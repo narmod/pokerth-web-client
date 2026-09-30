@@ -439,6 +439,7 @@ export const strings = {
     playersOnline:'खेलाडी',
     playersOnlineTitle:'अनलाइन खेलाडीहरू',
     playersSearchPlaceholder:'खोज्नुहोस्…',
+    plSearchClear:'खोज खाली गर्नुहोस्',
     tableCount:'टेबल',
     // ── Tooltips wired from previously-hardcoded title= attributes ──
     handsHelpTooltip:'पोकर ह्यान्डको क्रम', soundTooltip:'आवाज बन्द / खोल्नुहोस्', soundVolume:'खेलका आवाजहरू', logTooltip:'लग',

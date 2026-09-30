@@ -438,6 +438,7 @@ export const strings = {
     playersOnline:'lojtar(ë)',
     playersOnlineTitle:'Lojtarët online',
     playersSearchPlaceholder:'Kërko…',
+    plSearchClear:'Pastro kërkimin',
     tableCount:'tavolinë/a',
     // ── Tooltips wired from previously-hardcoded title= attributes ──
     handsHelpTooltip:'Renditja e duarve në poker', soundTooltip:'Hesht / aktivizo zërin', soundVolume:'Zërat e lojës', logTooltip:'Regjistri',

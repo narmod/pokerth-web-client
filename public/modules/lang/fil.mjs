@@ -437,6 +437,7 @@ export const strings = {
     playersOnline:'(na) manlalaro',
     playersOnlineTitle:'Mga manlalarong online',
     playersSearchPlaceholder:'Maghanap\u2026',
+    plSearchClear:'I-clear ang paghahanap',
     tableCount:'(na) mesa',
     // ── Tooltips wired from previously-hardcoded title= attributes ──
     handsHelpTooltip:'Mga ranggo ng kamay sa poker', soundTooltip:'I-mute / i-unmute', soundVolume:'Mga tunog ng laro', logTooltip:'Log',

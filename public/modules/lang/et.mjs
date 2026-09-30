@@ -671,6 +671,7 @@ export const strings = {
     playersOnline:'mängija(t)',
     playersOnlineTitle:'Mängijad võrgus',
     playersSearchPlaceholder:'Otsi\u2026',
+    plSearchClear:'Tühjenda otsing',
     tableCount:'laud(a)',
 };
 

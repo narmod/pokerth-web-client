@@ -439,6 +439,7 @@ export const strings = {
     playersOnline:'бозингар',
     playersOnlineTitle:'Бозингарони онлайн',
     playersSearchPlaceholder:'Ҷустуҷӯ…',
+    plSearchClear:'Тоза кардани ҷустуҷӯ',
     tableCount:'миз',
     // ── Tooltips wired from previously-hardcoded title= attributes ──
     handsHelpTooltip:'Комбинатсияҳои покер', soundTooltip:'Хомӯш / фаъол кардани садо', soundVolume:'Садоҳои бозӣ', logTooltip:'Журнал',

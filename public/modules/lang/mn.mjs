@@ -439,6 +439,7 @@ export const strings = {
     playersOnline:'тоглогч',
     playersOnlineTitle:'Онлайн тоглогчид',
     playersSearchPlaceholder:'Хайх…',
+    plSearchClear:'Хайлтыг цэвэрлэх',
     tableCount:'ширээ',
     // ── Tooltips wired from previously-hardcoded title= attributes ──
     handsHelpTooltip:'Покерын хослолууд', soundTooltip:'Дууг хаах / нээх', soundVolume:'Тоглолтын дуу', logTooltip:'Журнал',

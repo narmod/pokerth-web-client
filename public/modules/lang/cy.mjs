@@ -439,6 +439,7 @@ export const strings = {
     playersOnline:'chwaraewr',
     playersOnlineTitle:'Chwaraewyr ar-lein',
     playersSearchPlaceholder:'Chwilio…',
+    plSearchClear:'Clirio’r chwiliad',
     tableCount:'bwrdd',
     // ── Tooltips wired from previously-hardcoded title= attributes ──
     handsHelpTooltip:'Dwylo pocer', soundTooltip:'Tawelu / troi\'r sain ymlaen', soundVolume:'Synau\'r gêm', logTooltip:'Log',

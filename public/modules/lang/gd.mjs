@@ -677,6 +677,7 @@ export const strings = {
     playersOnline: 'cluicheadairean',
     playersOnlineTitle: 'Cluicheadairean air loidhne',
     playersSearchPlaceholder: 'Lorg…',
+    plSearchClear: 'Falamhaich an lorg',
     tableCount: 'bùird',
     handsHelpTooltip: 'Rangachadh làmhan a\' phòcair',
     soundTooltip: 'Mùch / cuir air an fhuaim',

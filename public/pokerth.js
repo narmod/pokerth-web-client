@@ -11221,6 +11221,15 @@ function togglePlayersPanel() {
   }
 }
 
+// ✕ du champ de recherche joueur : vide le filtre, rafraîchit la liste, garde le focus.
+window.plSearchClear = function () {
+  var inp = document.getElementById('players-search-in');
+  if (!inp) return;
+  inp.value = '';
+  try { renderPlayersList(); } catch (e) {}
+  try { inp.focus(); } catch (e) {}
+};
+
 // Bascule du tri du panneau Joueurs (A–Z / pays), persistée.
 window.setPlSort = function (m) {
   try { localStorage.setItem('pth_pl_sort', m === 'cc' ? 'cc' : 'az'); } catch (e) {}
@@ -11432,7 +11441,20 @@ function renderPlayersList() {
     if (_mine) rows = rows.filter(function(r){ return r.isMe || r.name !== _mine; });
   })();
   // Filter by search input
-  var q = (document.getElementById('players-search-in') || {}).value || '';
+  var _qIn = document.getElementById('players-search-in');
+  // Garde anti-autoremplissage : un gestionnaire de mots de passe peut
+  // injecter un identifiant enregistré (ex. « admin ») sans action du
+  // joueur — la liste se vidait alors toute seule. Valeur autoremplie = ignorée.
+  if (_qIn && _qIn.value) {
+    var _af = false;
+    try { _af = _qIn.matches(':autofill'); } catch (e) {}
+    if (!_af) { try { _af = _qIn.matches(':-webkit-autofill'); } catch (e) {} }
+    if (_af) _qIn.value = '';
+  }
+  var q = (_qIn || {}).value || '';
+  // ✕ d'effacement visible seulement quand le champ contient du texte.
+  var _qClr = document.getElementById('players-search-clr');
+  if (_qClr) _qClr.hidden = !q;
   q = q.toLowerCase().trim();
   if (q) rows = rows.filter(function(r) { return r.name.toLowerCase().includes(q); });
   // Tri : A–Z ou par pays (parité tri joueurs QML, bible §16) — je me
@@ -11954,7 +11976,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.9-web.256'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.9-web.257'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif ou la palette High contrast
    (Android, Safari, iOS standalone récent). Lit --theme-color et met

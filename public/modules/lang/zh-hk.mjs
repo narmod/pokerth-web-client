@@ -439,6 +439,7 @@ export const strings = {
     playersOnline:'名玩家',
     playersOnlineTitle:'網上玩家',
     playersSearchPlaceholder:'搜尋…',
+    plSearchClear:'清除搜尋',
     tableCount:'張牌桌',
     // ── Tooltips wired from previously-hardcoded title= attributes ──
     handsHelpTooltip:'撲克牌型大小', soundTooltip:'靜音 / 取消靜音', soundVolume:'遊戲音效', logTooltip:'日誌',

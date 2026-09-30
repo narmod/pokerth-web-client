@@ -677,6 +677,7 @@ export const strings = {
     playersOnline: 'வீரர்கள்',
     playersOnlineTitle: 'நிகழ்நிலையில் உள்ள வீரர்கள்',
     playersSearchPlaceholder: 'தேடு…',
+    plSearchClear: 'தேடலை அழி',
     tableCount: 'மேசைகள்',
     handsHelpTooltip: 'போக்கர் கைகளின் தரவரிசை',
     soundTooltip: 'ஒலியை அமைதி / இயக்கு',

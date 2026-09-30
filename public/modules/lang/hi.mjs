@@ -498,6 +498,7 @@ export const strings = {
     playersOnline:'खिलाड़ी',
     playersOnlineTitle:'ऑनलाइन खिलाड़ी',
     playersSearchPlaceholder:'खोजें\u2026',
+    plSearchClear:'खोज साफ़ करें',
     tableCount:'टेबल',
     handsHelpTooltip:'पोकर हैंड रैंकिंग', soundTooltip:'म्यूट / अनम्यूट', logTooltip:'लॉग',
     chatTooltip:'चैट', moreTooltip:'अधिक', closeTooltip:'बंद करें', refreshTooltip:'रिफ्रेश',

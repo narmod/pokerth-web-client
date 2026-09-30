@@ -438,6 +438,7 @@ export const strings = {
     playersOnline:'spēlētājs(-i)',
     playersOnlineTitle:'Spēlētāji tiešsaistē',
     playersSearchPlaceholder:'Meklēt…',
+    plSearchClear:'Notīrīt meklēšanu',
     tableCount:'galds(-i)',
     // ── Tooltips wired from previously-hardcoded title= attributes ──
     handsHelpTooltip:'Pokera kombināciju stiprums', soundTooltip:'Apklusināt / ieslēgt skaņu', soundVolume:'Spēles skaņas', logTooltip:'Žurnāls',

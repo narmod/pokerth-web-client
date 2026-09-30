@@ -435,6 +435,7 @@ export const strings = {
     playersOnline:'leikmenn',
     playersOnlineTitle:'Leikmenn á netinu',
     playersSearchPlaceholder:'Leita…',
+    plSearchClear:'Hreinsa leit',
     tableCount:'borð',
     // ── Tooltips wired from previously-hardcoded title= attributes ──
     handsHelpTooltip:'Röðun pókerhanda', soundTooltip:'Þagga / afþagga', soundVolume:'Leikhljóð', logTooltip:'Skrá',

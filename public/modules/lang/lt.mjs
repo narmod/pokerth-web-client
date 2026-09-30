@@ -676,6 +676,7 @@ export const strings = {
     playersOnline: 'žaidėjai',
     playersOnlineTitle: 'Žaidėjai prisijungę',
     playersSearchPlaceholder: 'Ieškoti…',
+    plSearchClear: 'Išvalyti paiešką',
     tableCount: 'stalai',
     handsHelpTooltip: 'Pokerio derinių rikiuotė',
     soundTooltip: 'Nutildyti / įjungti garsą',

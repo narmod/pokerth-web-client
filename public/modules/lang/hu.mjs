@@ -676,6 +676,7 @@ export const strings = {
     playersOnline: 'játékos',
     playersOnlineTitle: 'Online játékosok',
     playersSearchPlaceholder: 'Keresés…',
+    plSearchClear: 'Keresés törlése',
     tableCount: 'asztal',
     handsHelpTooltip: 'Pókerkezek rangsora',
     soundTooltip: 'Némítás / hang be',

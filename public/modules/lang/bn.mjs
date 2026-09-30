@@ -437,6 +437,7 @@ export const strings = {
     playersOnline:'জন খেলোয়াড়',
     playersOnlineTitle:'অনলাইন খেলোয়াড়',
     playersSearchPlaceholder:'খুঁজুন\u2026',
+    plSearchClear:'অনুসন্ধান মুছুন',
     tableCount:'টি টেবিল',
     // ── Tooltips wired from previously-hardcoded title= attributes ──
     handsHelpTooltip:'পোকার হাতের র‍্যাংক', soundTooltip:'নিঃশব্দ / সশব্দ', soundVolume:'গেমের শব্দ', logTooltip:'লগ',

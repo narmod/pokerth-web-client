@@ -439,6 +439,7 @@ export const strings = {
     playersOnline:'òṣèré',
     playersOnlineTitle:'Àwọn òṣèré lórí ayélujára',
     playersSearchPlaceholder:'Wá…',
+    plSearchClear:'Pa ìwádìí rẹ́',
     tableCount:'tábìlì',
     // ── Tooltips wired from previously-hardcoded title= attributes ──
     handsHelpTooltip:'Àwọn ọwọ́ poker', soundTooltip:'Pa / tan ohùn', soundVolume:'Ohùn eré', logTooltip:'Ìwé-àkọsílẹ̀',

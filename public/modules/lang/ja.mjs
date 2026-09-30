@@ -675,6 +675,7 @@ export const strings = {
     playersOnline: '人',
     playersOnlineTitle: 'オンラインのプレイヤー',
     playersSearchPlaceholder: '検索…',
+    plSearchClear: '検索をクリア',
     tableCount: 'テーブル',
     handsHelpTooltip: 'ポーカーの役一覧',
     soundTooltip: 'ミュート / 解除',

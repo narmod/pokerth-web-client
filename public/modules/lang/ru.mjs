@@ -678,6 +678,7 @@ export const strings = {
     playersOnline: 'игроков',
     playersOnlineTitle: 'Игроки онлайн',
     playersSearchPlaceholder: 'Поиск…',
+    plSearchClear: 'Очистить поиск',
     tableCount: 'стол(ов)',
     handsHelpTooltip: 'Покерные комбинации',
     soundTooltip: 'Звук вкл./выкл.',

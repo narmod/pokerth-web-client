@@ -1,4 +1,7 @@
-2026-09-30 version 2.1.9-web.256 (current series):
+2026-09-30 version 2.1.9-web.257 (current series):
+- bugfix: lobby — the player search box no longer fills itself with a saved login name (e.g. "admin") emptying the players list, and it now has a ✕ to clear it
+
+2026-09-30 version 2.1.9-web.256:
 - improvement: help — Ranking games: any player with a pokerth.net account can create one (guests can neither join nor create them), 10 players, no password, starts when full, and the “5/5” format explained
 - improvement: help — cups: official games are created by the cup admins, players register on the cup’s site or in its forum thread, the Monthly Cup can also be joined on monthlycup.pokerth.net
 

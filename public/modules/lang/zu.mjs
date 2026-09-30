@@ -439,6 +439,7 @@ export const strings = {
     playersOnline:'abadlali',
     playersOnlineTitle:'Abadlali abaku-inthanethi',
     playersSearchPlaceholder:'Sesha…',
+    plSearchClear:'Sula usesho',
     tableCount:'amatafula',
     // ── Tooltips wired from previously-hardcoded title= attributes ──
     handsHelpTooltip:'Izandla ze-poker', soundTooltip:'Thulisa / vula umsindo', soundVolume:'Imisindo yomdlalo', logTooltip:'Ilogi',

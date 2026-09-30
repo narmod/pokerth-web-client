@@ -677,6 +677,7 @@ export const strings = {
     playersOnline: '名玩家',
     playersOnlineTitle: '線上玩家',
     playersSearchPlaceholder: '搜尋…',
+    plSearchClear: '清除搜尋',
     tableCount: '張牌桌',
     handsHelpTooltip: '撲克牌型大小',
     soundTooltip: '靜音 / 取消靜音',

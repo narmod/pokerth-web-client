@@ -436,6 +436,7 @@ export const strings = {
     playersOnline:'ಆಟಗಾರ(ರು)',
     playersOnlineTitle:'ಆನ್‌ಲೈನ್ ಆಟಗಾರರು',
     playersSearchPlaceholder:'ಹುಡುಕಿ…',
+    plSearchClear:'ಹುಡುಕಾಟ ತೆರವುಗೊಳಿಸಿ',
     tableCount:'ಟೇಬಲ್(ಗಳು)',
     // ── Tooltips wired from previously-hardcoded title= attributes ──
     handsHelpTooltip:'ಪೋಕರ್ ಹ್ಯಾಂಡ್ ಶ್ರೇಯಾಂಕಗಳು', soundTooltip:'ಮ್ಯೂಟ್ / ಅನ್‌ಮ್ಯೂಟ್', soundVolume:'ಗೇಮ್ ಧ್ವನಿಗಳು', logTooltip:'ಲಾಗ್',
