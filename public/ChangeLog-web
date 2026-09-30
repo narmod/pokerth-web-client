@@ -1,4 +1,8 @@
-2026-09-30 version 2.1.9-web.265 (current series):
+2026-09-30 version 2.1.9-web.266 (current series):
+- new: Ace’s Help — « Well done! »: back in the lobby after a game won, points in a Ranking game or a trophy unlocked in training, the Ace celebrates with confetti (once, when no tip is on screen)
+- improvement: Ace’s Help — for a new table or a private message, the Ace only takes a couple of steps out of his spot
+
+2026-09-30 version 2.1.9-web.265:
 - improvement: the Ace’s funny scenes are part of Ace’s Help — no more « Animated mascot » option; they play on the login screen and in the lobby after 30 s without touching anything (then every 2 min at most), except with reduced effects
 - improvement: with Ace’s Help on, the Ace leaves his spot for his scene and comes back to it (on foot, through a door or in a puff), never while a tip waits; tap the screen and he walks back
 - improvement: the Ace has the same size everywhere, docked or playing a scene

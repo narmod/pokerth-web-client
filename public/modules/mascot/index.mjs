@@ -24,11 +24,17 @@
 // grim, sleep, juggle — or ?mascot=peek for the hello from behind a panel's
 // top edge) makes him appear a few seconds after the home screen or the lobby is
 // shown, even with the option off. Console: mascotDemo('climb').
-// Reactions: mascotReact('table' | 'mail' | 'bravo') — called by the lobby
-// code when a table is created, a private message arrives or the LAN rank
-// improves — Ace's Help on only: he leaves his spot right away (no idle
-// wait) in the lobby, at most once a minute per kind, never in the first
-// seconds after the lobby opens (the server sends the whole table list then).
+// Reactions: mascotReact('table' | 'mail') — called by the lobby code when a
+// table is created or a private message arrives — Ace's Help on only: he
+// leaves his spot right away (no idle wait) in the lobby, at most once a
+// minute per kind, never in the first seconds after the lobby opens (the
+// server sends the whole table list then).
+// « Well done! » (web.266): mascotCheer('win' | 'ranked' | 'trophy') — a game
+// won (end screen), points in a Ranking game (the Ace's result bubble), a
+// trophy unlocked in training (event pth-achievement) — waits, Ace's Help on
+// only, until the player is back on the home screen or in the lobby and no
+// tip is on screen, then he cheers once (several reasons: one cheer; kept
+// CHEER_TTL at most).
 // Test panel (hidden): ?mascot=panel or mascotPanel() in the console opens
 // modules/mascot/panel.mjs — every entry / action / exit / costume on demand,
 // slow motion, loop. The idle timer is off while it is open.
@@ -46,8 +52,11 @@ let running = false;
 let preview = null;   // { action } from ?mascot=
 let panel = null;     // modules/mascot/panel.mjs once opened
 let lobbySince = 0;   // when #s-lobby last became active
+let screenSince = 0;  // when the home screen or the lobby last became active
 const REACT_GAP = 60000, REACT_WARMUP = 8000;
 const lastReact = {};
+let cheer = 0, cheerTimer = 0;   // a pending « Well done! » (when it was earned)
+const CHEER_TTL = 600000, CHEER_SETTLE = 1500;
 
 /** Idle scenes are always on — except under automation, unless a test opts in. */
 function allowed() {
@@ -175,7 +184,8 @@ function onScreenChange() {
   const inLobby = !!(lob && lob.classList.contains('active'));
   if (inLobby && !lobbySince) lobbySince = Date.now();
   if (!inLobby) lobbySince = 0;
-  if (!onMascotScreen()) { stopNow(); disarm(); return; }
+  if (!onMascotScreen()) { screenSince = 0; stopNow(); disarm(); return; }
+  if (!screenSince) screenSince = Date.now();
   if (!running) arm();
 }
 
@@ -186,6 +196,7 @@ function init() {
     else if (q) preview = { action: /^(moon|climb|magic|king|knight|grim|sleep|juggle|peek)$/.test(q) ? q : '' };
   } catch (e) {}
   enabled = allowed();
+  if (onMascotScreen()) screenSince = Date.now();
   ['pointerdown', 'keydown', 'wheel', 'input'].forEach((ev) =>
     document.addEventListener(ev, onInput, { capture: true, passive: true }));
   document.addEventListener('visibilitychange', () => { if (document.hidden) { stopNow(); disarm(); } else if (!running) arm(); });
@@ -239,8 +250,8 @@ async function playNow(o) {
 /** A lobby event: the Ace reacts right away (see the header). */
 window.mascotReact = (kind) => {
   try {
-    if (!enabled || running || (panel && panel.isOpen())) return;
-    if (['table', 'mail', 'bravo'].indexOf(kind) < 0) return;
+    if (running || (panel && panel.isOpen())) return;   // event-driven: Ace's Help decides, not the idle opt-out
+    if (['table', 'mail'].indexOf(kind) < 0) return;
     const G = window._guideScene;
     if (!G || !G.on()) return;                     // reactions belong to Ace's Help
     const lob = document.getElementById('s-lobby');
@@ -253,6 +264,25 @@ window.mascotReact = (kind) => {
     playNow(withHome({ action: 'r-' + kind })).catch(() => {});
   } catch (e) {}
 };
+
+/** « Well done! » is waiting: play it as soon as the player is back and nothing else is on screen. */
+function tryCheer() {
+  if (!cheer) return;
+  if (Date.now() - cheer > CHEER_TTL) { cheer = 0; return; }
+  if (running || (panel && panel.isOpen())) return;   // event-driven: not tied to the automation opt-out of idle scenes
+  const G = window._guideScene;
+  if (!G || !G.on()) return;                       // Ace's Help only (kept while it is off, until CHEER_TTL)
+  if (!onMascotScreen() || !screenSince || Date.now() - screenSince < CHEER_SETTLE) return;
+  if (!canAppear()) return;
+  cheer = 0;
+  playNow(withHome({ action: 'r-bravo' })).catch(() => {});
+}
+window.mascotCheer = (why) => {
+  if (['win', 'ranked', 'trophy'].indexOf(why) < 0) return;
+  cheer = Date.now();
+  if (!cheerTimer) cheerTimer = setInterval(() => { tryCheer(); if (!cheer) { clearInterval(cheerTimer); cheerTimer = 0; } }, 1000);
+};
+if (typeof window !== 'undefined') window.addEventListener('pth-achievement', () => window.mascotCheer('trophy'));
 
 /** Hidden test panel: mascotPanel() in the console, or ?mascot=panel. */
 window.mascotPanel = async () => {

@@ -403,8 +403,37 @@ async function runDevice(browser, name, descriptor) {
       assert.equal(await page.locator('#mascot-root').count(), 0, 'still out');
       assert.equal(await aceVisible(), true);
       await page.evaluate(() => window.__demo);
+      await click(page, btn('close'));
+      await page.waitForTimeout(400);
     });
     await shot(page, name, 'guide-scene-back');
+    const waitScene = (ms) => page.waitForFunction(() => /Well done/.test((document.querySelector('#mascot-root .mc-bubble') || {}).textContent || ''), null, { timeout: ms });
+    const sceneGone = () => page.waitForFunction(() => !document.getElementById('mascot-root'), null, { timeout: 12000 });
+    await check(`${name}: « Well done! » — a game won: he cheers from his spot, then comes back`, async () => {
+      await page.evaluate(() => window.mascotCheer('win'));
+      await waitScene(7000);
+      assert.equal(await aceVisible(), false, 'two Aces on screen');
+      await sceneGone();
+      await page.waitForTimeout(200);
+      assert.equal(await aceVisible(), true);
+    });
+    await check(`${name}: « Well done! » — waits while a bubble is open (the tip first)`, async () => {
+      await page.evaluate(() => window.guideToggle());
+      await page.locator(bubble).waitFor({ timeout: 3000 });
+      await page.evaluate(() => window.dispatchEvent(new CustomEvent('pth-achievement', { detail: { id: 'x' } })));
+      await page.waitForTimeout(2500);
+      assert.equal(await page.locator('#mascot-root').count(), 0, 'cheered over the bubble');
+      await click(page, btn('close'));
+      await waitScene(7000);
+      await sceneGone();
+    });
+    await check(`${name}: « Well done! » — nothing with Ace’s Help off`, async () => {
+      await page.evaluate(() => { window.setAdvOpt('guide_on', false); });
+      await page.waitForTimeout(600);
+      await page.evaluate(() => window.mascotCheer('win'));
+      await page.waitForTimeout(2500);
+      assert.equal(await page.locator('#mascot-root').count(), 0);
+    });
     await ctx.close();
   }
 

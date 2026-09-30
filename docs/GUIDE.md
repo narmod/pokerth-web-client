@@ -304,8 +304,15 @@ makes him vanish in a puff. Scenes still play in the lobby.
   (`recallHome`), instead of the puff.
 - A tip that comes up while he is out calls him back (`window._mascotRecall`), then he
   speaks.
-- Lobby reactions (`mascotReact`: new table, private message) play only with the help on,
-  from his spot.
+- Lobby reactions (`mascotReact`: new table, private message) play only with the help on.
+  He takes a couple of steps out of his spot for them.
+- **« Well done! »** (`web.266`, `mascotCheer`) plays when the player comes back to the home
+  screen or the lobby after one of these, with the help on and nothing else on screen. It
+  plays once, even for several reasons, and is dropped after 10 minutes. The reasons are:
+  - a game won, from the end screen (`game/showdown.mjs`);
+  - points in a Ranking game, after the result bubble;
+  - a trophy unlocked in training (`pth-achievement` event).
+  The old trigger, a better LAN rank (`game/stats.mjs`), is gone.
 
 ## Tests
 
@@ -346,4 +353,5 @@ makes him vanish in a puff. Scenes still play in the lobby.
 | L4 | C3 login screen, C4 normal waiting room (`web.262`) |
 | L5 | C5 game creation page and windows (`web.263`) |
 | L6 | C6 « ? » mode (`hotspots.mjs`, `web.264`) |
-| **M1** | Idle scenes folded into Ace's Help: no option, one size, from his spot and back (`web.265`) |
+| M1 | Idle scenes folded into Ace's Help: no option, one size, from his spot and back (`web.265`) |
+| **M2** | « Well done! »: a game won, Ranking points, a trophy (`web.266`) |

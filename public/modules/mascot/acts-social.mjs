@@ -1,7 +1,7 @@
 // ═══════════════════════════════════════════════════════════════════
 // Mascot — social acts (web extension, narmod 2026-09-28): reactions to
-// what happens in the lobby (a new table, a private message, a better
-// rank) and scenes with a friend (a western duel with the King of hearts,
+// what happens in the lobby (a new table, a private message, « Well done! »
+// for a win, Ranking points or a trophy) and scenes with a friend (a western duel with the King of hearts,
 // the Joker's prank). Same contract as modules/mascot/acts-extra.mjs.
 // The reactions (r-table, r-mail, r-bravo) are never drawn at random:
 // modules/mascot/index.mjs plays them when the event happens.
@@ -67,7 +67,7 @@ async function rMail(H) {
   await H.wait(3500);
 }
 
-// ── Climbed the ranking: confetti, jumps for joy ───────────────────────
+// ── Well done! (a game won, Ranking points, a trophy): confetti, jumps for joy ──
 async function rBravo(H) {
   const { st, E } = H, k = st.k, x = H.cur.x;
   const cols = ['#c62828', '#f5c518', '#1f5fbf', '#2e7d32', '#7b2cbf', '#fbf7ee'];

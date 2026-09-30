@@ -49,7 +49,11 @@ function showEndGameOverlay(winnerPid, opts) {
   const eliminated = !!opts.eliminated;
   const place = opts.place || 0;
   const isMyWin = (winnerPid === S.myId) && !eliminated;
-  if (!S._gameCounted) { S._gameCounted = true; window._lifeRecordGame(isMyWin); }
+  if (!S._gameCounted) {
+    S._gameCounted = true; window._lifeRecordGame(isMyWin);
+    // Ace's Help: « Well done! » back in the lobby after a win (modules/mascot/index.mjs, web.266)
+    if (isMyWin) { try { if (typeof window.mascotCheer === 'function') window.mascotCheer('win'); } catch (e) {} }
+  }
   const winnerName = S.players[winnerPid] || (isMyWin
     ? (document.getElementById('nick') ? document.getElementById('nick').value : 'You')
     : ('#' + winnerPid));

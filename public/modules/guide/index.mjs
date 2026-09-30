@@ -26,7 +26,7 @@
 
 import { createState, mergeIn, KEY_ON } from './state.mjs';
 import { canSpeak, pickContext, replayContext, applies, createRun } from './core.mjs';
-import { pickRankingTable, finishPlace, RANKED_TYPE } from './ranking-pick.mjs';
+import { pickRankingTable, finishPlace, RANKED_TYPE, pointsFor } from './ranking-pick.mjs';
 import { CONTEXTS } from './contexts/index.mjs';
 import { gt, ready } from './i18n.mjs';
 import * as hl from './highlight.mjs';
@@ -363,6 +363,8 @@ async function showContext(ctx) {
   await ensureDock();
   showing = { run: createRun(ctx), kind: 'ctx' };
   renderStep();
+  // points in a Ranking game: « Well done! » once the bubble is closed (modules/mascot/index.mjs, web.266)
+  if (ctx.id === 'ranked-result' && result && result.place && pointsFor(result.place) > 0 && typeof window.mascotCheer === 'function') window.mascotCheer('ranked');
   // statistics: once per session per context (the result: once per game)
   const key = ctx.id + (ctx.repeat && result ? ':' + result.gid : '');
   if (!counted.has(key)) { counted.add(key); beacon(ctx.id, 'shown'); }

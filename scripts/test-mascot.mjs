@@ -125,14 +125,19 @@ ok(/if \(!G \|\| !G\.on\(\)\) return;\s+\/\/ reactions belong to Ace's Help/.tes
 ok(/IDLE_MS = 30000;/.test(idx) && /COOLDOWN_MS = 120000;/.test(idx), 'idle scenes: first after 30 s, then at most every 2 min');
 ok(!/pth_mascot'/.test(idx) && /navigator\.webdriver/.test(idx) && /pth_mascot_webdriver/.test(idx), 'always on, except under automation (opt-in for tests)');
 ok(/if \(G && G\.on\(\)\) \{ if \(!G\.ready\(\)\) return false; \}/.test(idx), 'Ace\'s Help on: only when no tip waits');
-ok(/mascotReact\('table'\)/.test(fs.readFileSync('public/modules/net/msg-lobby.mjs', 'utf8')) && /mascotReact\('mail'\)/.test(fs.readFileSync('public/modules/ui/pm.mjs', 'utf8')) && /mascotReact\('bravo'\)/.test(fs.readFileSync('public/modules/game/stats.mjs', 'utf8')), 'reactions wired: new table, private message, better LAN rank');
+ok(/mascotReact\('table'\)/.test(fs.readFileSync('public/modules/net/msg-lobby.mjs', 'utf8')) && /mascotReact\('mail'\)/.test(fs.readFileSync('public/modules/ui/pm.mjs', 'utf8')), 'reactions wired: new table, private message');
+ok(!/mascotReact|pth_mascot_rank/.test(fs.readFileSync('public/modules/game/stats.mjs', 'utf8')) && /\['table', 'mail'\]\.indexOf\(kind\)/.test(idx), '« Well done! » no longer follows the LAN rank');
+ok(/if \(isMyWin\) \{ try \{ if \(typeof window\.mascotCheer === 'function'\) window\.mascotCheer\('win'\)/.test(fs.readFileSync('public/modules/game/showdown.mjs', 'utf8')), '« Well done! » after a game won (end screen, any mode)');
+ok(/ctx\.id === 'ranked-result' && result && result\.place && pointsFor\(result\.place\) > 0[^\n]*mascotCheer\('ranked'\)/.test(fs.readFileSync('public/modules/guide/index.mjs', 'utf8')), '« Well done! » after points in a Ranking game');
+ok(/addEventListener\('pth-achievement', \(\) => window\.mascotCheer\('trophy'\)\)/.test(idx) && /pth-achievement/.test(fs.readFileSync('public/modules/offline/server.mjs', 'utf8')), '« Well done! » for a trophy unlocked in training');
+ok(/CHEER_TTL = 600000, CHEER_SETTLE = 1500/.test(idx) && /if \(!G \|\| !G\.on\(\)\) return;\s+\/\/ Ace's Help only/.test(idx) && /playNow\(withHome\(\{ action: 'r-bravo' \}\)\)/.test(idx), '« Well done! » waits for the lobby / home screen and a free Ace, Ace\'s Help only, from his spot');
 
 // ── Ace's Help: from his spot and back ──
 const hx = P.seeded(3), hc = {};
 for (let i = 0; i < 400; i++) { const e = P.pickHomeExit(hx); hc[e] = (hc[e] || 0) + 1; }
 ok(Object.keys(hc).every((e) => P.HOME_EXITS.indexOf(e) >= 0) && hc.home > hc.homeDoor && hc.homeDoor > 0 && hc.homePoof > 0, 'way back: on foot most often, sometimes a door or a puff');
 const engSrc = fs.readFileSync('public/modules/mascot/engine.mjs', 'utf8');
-ok(/home: enterHome/.test(engSrc) && /home: exitHome, homeDoor: exitHomeDoor, homePoof: exitHomePoof/.test(engSrc), 'engine: home entry and the three ways back');
+ok(/home: \(r\) => enterHome\(r, \/\^r-\/\.test/.test(engSrc) && /home: exitHome, homeDoor: exitHomeDoor, homePoof: exitHomePoof/.test(engSrc), 'engine: home entry and the three ways back');
 ok(/if \(c\.home\) \{ recallHome\(c\); return; \}/.test(engSrc), 'tapped while out: he walks back instead of vanishing');
 ok(/seq\.entry !== 'home'\) await greet\(\)/.test(engSrc), 'no « Hi! » when he leaves his spot');
 ok(/arrive\(c, !c\.landed\)/.test(engSrc), 'the docked Ace always comes back (pops up unless he walked in)');

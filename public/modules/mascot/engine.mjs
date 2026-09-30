@@ -541,10 +541,12 @@ function arrive(c, pop) {
   try { if (c.arriveCb) c.arriveCb(!!pop); } catch (e) {}
 }
 
-async function enterHome(rnd) {
+async function enterHome(rnd, near) {   // near: a reaction — a couple of steps out, not across the screen
   const { st, E } = cur;
   const b = homeBox() || { x: st.maxX, y: st.yF };
-  const x0 = b.x, y0 = Math.min(b.y, st.yF), xT = targetX(st, rnd, x0), dir = Math.sign(xT - x0) || -1;
+  const x0 = b.x, y0 = Math.min(b.y, st.yF);
+  const xT = near ? clampX(st, x0 + (x0 + st.w / 2 > st.vw / 2 ? -1 : 1) * 1.4 * st.w) : targetX(st, rnd, x0);
+  const dir = Math.sign(xT - x0) || -1;
   const pos = [[0, P(x0, y0, 1)]];
   let t = 0;
   if (st.yF - y0 > LIFTED) {   // lifted above a control: hop down first
@@ -1187,7 +1189,7 @@ export async function appear(opts = {}) {
   play(E.face.eo, BLINK, { duration: 4200, iterations: Infinity, delay: 900 });
   play(E.starsRot, [{ transform: 'rotate(0deg)' }, { transform: 'rotate(360deg)' }], { duration: 1100, iterations: Infinity });
   E.spark.querySelectorAll('.mc-tw').forEach((s, i) => play(s, TWINKLE, { duration: 600, delay: i * 130, iterations: Infinity }));
-  const ENTRY = { door: enterDoor, poof: enterPoof, edge: enterEdge, peek: () => enterPeek(peek), home: enterHome };
+  const ENTRY = { door: enterDoor, poof: enterPoof, edge: enterEdge, peek: () => enterPeek(peek), home: (r) => enterHome(r, /^r-/.test(seq.actions[0] || '')) };
   const ACT = { moon: actMoon, climb: () => actClimb(plan), magic: () => actMagic(plan), king: actKing, knight: actKnight, grim: actGrim, sleep: actSleep, juggle: actJuggle, pistol: actPistol, rope: actRope };
   const where = { plan, peek, ledge, hang, rects };
   const MORE = Object.assign({}, EXTRA, PROPS, SOCIAL);
