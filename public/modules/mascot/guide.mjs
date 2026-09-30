@@ -64,6 +64,7 @@ body.guide-ask #ace-dock *{cursor:pointer!important}
 #ace-dock .ad-chaps{display:flex;flex-wrap:wrap;gap:4px}
 #ace-dock .ad-chap{appearance:none;border:1.5px solid rgba(20,20,20,.25);background:transparent;border-radius:999px;padding:4px 9px;font:600 12px/1.2 system-ui,sans-serif;color:#141414;cursor:pointer;min-height:30px}
 #ace-dock .ad-chap.ad-on{background:#141414;color:#fbf7ee;border-color:#141414}
+#ace-dock .ad-page{font-weight:500}
 #ace-dock .ad-page p{margin:0 0 6px}
 #ace-dock .ad-page ul{margin:0;padding-inline-start:18px}
 #ace-dock .ad-page li{margin:0 0 4px}

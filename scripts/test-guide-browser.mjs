@@ -337,6 +337,26 @@ async function runDevice(browser, name, descriptor) {
       await page.waitForFunction(() => getComputedStyle(document.getElementById('ranking-modal')).display !== 'none', null, { timeout: 3000 });
       await page.evaluate(() => window.closeRankingModal && window.closeRankingModal());
     });
+    await check(`${name}: H2 — in Advanced options an option says its own name; « More about it » opens the help section`, async () => {
+      await page.evaluate(() => window.toggleAdvancedOptions());
+      await page.waitForTimeout(700);
+      await page.evaluate(() => window.guideAsk());
+      await page.waitForFunction(() => document.body.classList.contains('guide-ask'), null, { timeout: 3000 });
+      const row = page.locator('#adv-modal label.adv-row:visible').first();
+      const name = (await row.locator('span').first().innerText()).trim();
+      const before = await row.locator('input[type="checkbox"]').isChecked();
+      await row.locator('span').first().click();
+      await page.waitForTimeout(400);
+      assert.ok((await txt()).includes(name), `the option's name « ${name} » is not said: ${await txt()}`);
+      assert.equal(await row.locator('input[type="checkbox"]').isChecked(), before, 'the option changed on the first tap');
+      await click(page, btn('moreAbout'));
+      await page.waitForFunction(() => /›/.test((document.querySelector('#ace-dock .ad-bubble.ad-open .ad-kicker') || {}).textContent || ''), null, { timeout: 3000 });
+      assert.match(await page.evaluate(() => document.querySelector('#ace-dock .ad-bubble.ad-open .ad-kicker').textContent), /Options & shortcuts/);
+      assert.ok(!(await page.evaluate(() => document.body.classList.contains('guide-ask'))), '« ? » mode still on');
+      await click(page, btn('close'));
+      await page.evaluate(() => window.closeAdvancedOptions && window.closeAdvancedOptions());
+    });
+    await shot(page, name, 'guide-h2-more');
     await ctx.close();
   }
 

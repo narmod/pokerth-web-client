@@ -33,7 +33,7 @@ import { CONTEXTS } from './contexts/index.mjs';
 import { gt, ready } from './i18n.mjs';
 import * as hl from './highlight.mjs';
 import { beacon } from './beacons.mjs';
-import { hotspotFor, tappableFor } from './hotspots.mjs';
+import { hotspotFor, tappableFor, windowFor } from './hotspots.mjs';
 import { loadHelp, chapterFor, search as helpSearch, findSection, pages as helpPages } from './knowledge.mjs';
 
 /** L2: public for everyone (L1 was behind ?guide=1). */
@@ -398,10 +398,20 @@ async function showMenu() {
 // dock is never intercepted. Ends with « Done », Escape, the help switched
 // off, or a hand starting (D8).
 let armed = null;
-function askSay(key, extra) {
+let askMore = null;           // 'chapter:section' of the help about the element explained (H2)
+function askSay(key, extra, more, vars) {
   if (!M) return;
-  M.say({ text: gt(key) + (extra ? ' ' + gt(extra) : ''), buttons: [btn('askDone', true)], avoid: hl.current(),
-    point: !!hl.current(), onButton: () => exitAsk() });
+  askMore = more || null;
+  const buttons = more ? [btn('moreAbout'), btn('askDone', true)] : [btn('askDone', true)];
+  M.say({ text: gt(key, vars || undefined) + (extra ? ' ' + gt(extra) : ''), buttons, avoid: hl.current(),
+    point: !!hl.current(), onButton: (id) => {
+      if (id === 'moreAbout' && askMore) {   // « More about it »: that section of the help, in his bubble
+        const [ch, sec] = askMore.split(':');
+        exitAsk(true); beacon('ask', 'more'); openMoreHelp({ ch, sec });
+        return;
+      }
+      exitAsk();
+    } });
 }
 async function enterAsk() {
   await ensureDock();
@@ -426,7 +436,7 @@ function exitAsk(silent) {
 }
 function askTarget(t) {
   if (!t || (t.closest && t.closest('#ace-dock'))) return null;
-  const hs = hotspotFor(t);
+  const hs = hotspotFor(t) || windowFor(t);   // a listed element, else the window it belongs to (H2)
   if (hs) return hs;
   const el = tappableFor(t);
   return el ? { el, key: null } : null;
@@ -444,7 +454,7 @@ function onAskClick(ev) {
   ev.preventDefault(); ev.stopPropagation(); ev.stopImmediatePropagation();
   armed = hit.el;
   hl.highlight(hit.el);
-  if (hit.key) { askSay(hit.key, 'askAgain'); beacon('ask', 'explained'); }
+  if (hit.key) { askSay(hit.key, 'askAgain', hit.more, hit.vars); beacon('ask', 'explained'); }
   else askSay('askUnknown');
 }
 function onAskKey(ev) {

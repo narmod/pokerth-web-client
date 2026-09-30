@@ -44,7 +44,7 @@ const EVENTS = Object.freeze({
   'w-profile': ['shown', 'done', 'dismissed'],
   'w-logs': ['shown', 'done', 'dismissed'],
   // L6 — « ? » mode: entered, an element explained, left
-  ask: ['shown', 'explained', 'done'],
+  ask: ['shown', 'explained', 'done', 'more'],   // more (H2): « More about it » → the help section
   // H1 — « More help »: opened, a section read, a search typed, the help window opened from it
   'more-help': ['shown', 'section', 'search', 'window'],
 });

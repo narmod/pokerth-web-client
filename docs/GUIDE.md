@@ -312,6 +312,29 @@ text was rewritten.
 - **New texts.** `moreHelp`, `allTopics`, `helpWindow`, `back`. The search field and
   *No results* reuse the UI keys `helpSearchPh` and `helpNoResults`.
 
+## « ? » everywhere, *More about it* (`web.268`, H2)
+
+`hotspots.mjs` entries are `[selector, key, dynamic?, more?, vars?]`:
+
+- `more` is a help section (`chapter:section`). The Ace then adds *More about it*
+  (`moreAbout`), which leaves « ? » mode and opens that section in his bubble.
+- `vars(el)` fills placeholders. An Advanced option says its own name: `{label}` is the
+  first text of its row.
+- A label is explained as its control, whether through `label[for]` or the control inside
+  it (a radio text, a switch track), and the label is highlighted.
+- `WINDOWS` covers unlisted controls inside a known window (Advanced options, theme, music,
+  ranking, forum, avatar, private messages, logs, player card, help, players). The Ace
+  explains the window rather than giving the generic line. Plain text is still never
+  stopped.
+
+It lists 110 elements (90 of them with a help section) and 11 windows: the rest of the login screen and the lobby (links, About,
+Privacy, the players list actions, send, my card), every field of the creation page, every
+close button, Advanced options (categories, sections, each option by its name, keys,
+language), ranking, forum, avatar studio, private messages, logs, the player card and
+music.
+
+Statistics: `ask.more` counts the taps on *More about it*.
+
 ## Idle scenes (`web.265`)
 
 The scenes of `modules/mascot/engine.mjs` (26 of them, drawn at random) play on the login
@@ -393,7 +416,7 @@ makes him vanish in a puff. Scenes still play in the lobby.
 | L6 | C6 « ? » mode (`hotspots.mjs`, `web.264`) |
 | M1 | Idle scenes folded into Ace's Help: no option, one size, from his spot and back (`web.265`) |
 | M2 | « Well done! »: a game won, Ranking points, a trophy (`web.266`) |
-| **H1** | « More help »: the help window's knowledge in the Ace's bubble, on demand even with the tips off (`web.267`) |
-| H2 | « ? » on the windows and the lobby leftovers, *More about it* → the matching help section |
+| H1 | « More help »: the help window's knowledge in the Ace's bubble, on demand even with the tips off (`web.267`) |
+| **H2** | « ? » on the windows and the lobby leftovers, *More about it* → the matching help section (`web.268`) |
 | H3 | « ? » and « More help » at the table, on demand, even during a hand |
 | H4 | The help window removed (explicit agreement) |

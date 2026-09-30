@@ -1,4 +1,8 @@
-2026-09-30 version 2.1.9-web.267 (current series):
+2026-09-30 version 2.1.9-web.268 (current series):
+- improvement: Ace’s Help « ? » mode — over 100 elements explained: Advanced options (each option says its own name), ranking, forum, avatar studio, private messages, logs, a player’s card, music, every field of the creation page, the players list and the rest of the lobby and login screen
+- new: Ace’s Help « ? » mode — « More about it » opens the matching help section in the Ace’s bubble
+
+2026-09-30 version 2.1.9-web.267:
 - new: Ace’s Help — « More help »: the whole help, read by the Ace in his bubble: the topics of the screen you are on, every chapter, a search, and each section page by page
 - improvement: the Help entry of the menus now brings the Ace with the help, even if his tips are off (he leaves when you close it); the classic help window is still one tap away, and still opens at the table
 
