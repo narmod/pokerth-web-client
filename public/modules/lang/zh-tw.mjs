@@ -15,6 +15,8 @@ export const strings = {
     rankWaitFull: "排名遊戲 — 等待 {max} 名玩家（{n}/{max}）。牌桌坐滿後遊戲將開始。",
     // Mascotte animée (modules/mascot, extra web)
     advMascot:'閒置時在主畫面和大廳顯示動畫吉祥物（A 牌）', mascotHello:'嗨！', mascotBye:'待會見！', mascotTada:'噹噹！', mascotKing:'牌桌之王！', mascotAnyone:'有人嗎？', mascotCheese:'笑一個！', mascotTable:'新牌桌！', mascotMail:'你有新訊息！', mascotBravo:'做得好！',
+    // Aide de l'As (modules/guide) — bouton / entrée de menu + option
+    guideBtn:'A 牌小幫手', advGuide:'A 牌小幫手：使用時由 A 牌逐步講解應用程式',
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'我的筆記', nvRating:'評分', nvPlaceholder:'跟注任何 3-bet…', nvSaved:'已儲存', nvTagNone:'無標籤', nvTagRed:'危險', nvTagOrange:'激進', nvTagYellow:'關注', nvTagGreen:'魚', nvTagBlue:'緊手', nvTagPurple:'狡猾', nvLabelPh:'標籤名稱', nvLabelTip:'重新命名標籤 — 適用於所有使用此顏色的玩家',
     ppMyStats:'我的統計',

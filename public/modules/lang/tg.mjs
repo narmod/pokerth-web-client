@@ -21,6 +21,8 @@ export const strings = {
     rankWaitFull: "Бозии рейтингӣ — интизори {max} бозингар ({n}/{max}). Бозӣ вақте оғоз мешавад, ки миз пур шавад.",
     // Mascotte animée (modules/mascot, extra web)
     advMascot:'Талисмани аниматсионӣ (туз) дар экрани асосӣ ва лобби ҳангоми бефаъолиятӣ', mascotHello:'Салом!', mascotBye:'То дидор!', mascotTada:'Та-да!', mascotKing:'Шоҳи миз!', mascotAnyone:'Касе ҳаст?', mascotCheese:'Панир!', mascotTable:'Мизи нав!', mascotMail:'Ба шумо мактуб омад!', mascotBravo:'Офарин!',
+    // Aide de l'As (modules/guide) — bouton / entrée de menu + option
+    guideBtn:'Кӯмаки туз', advGuide:'Кӯмаки туз: туз барномаро қадам ба қадам шарҳ медиҳад',
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'Ёддоштҳои ман', nvRating:'Баҳо', nvPlaceholder:'Ба ҳар гуна 3-bet call мекунад…', nvSaved:'Нигоҳ дошта шуд', nvTagNone:'Бе тамға', nvTagRed:'Хатар', nvTagOrange:'Хашмгин', nvTagYellow:'Эҳтиёт шавед', nvTagGreen:'Моҳӣ', nvTagBlue:'Устувор', nvTagPurple:'Маккор', nvLabelPh:'Номи тамға', nvLabelTip:'Иваз кардани номи ин тамға — ба ҳамаи бозингарони дорои ин ранг таъсир мерасонад',
     ppMyStats:'Омори ман',

@@ -21,6 +21,8 @@ export const strings = {
     rankWaitFull: "ශ්‍රේණිගත ක්‍රීඩාව — ක්‍රීඩකයින් {max} දෙනෙකු එනතුරු රැඳී සිටී ({n}/{max}). මේසය පිරුණු විට ක්‍රීඩාව ආරම්භ වේ.",
     // Mascotte animée (modules/mascot, extra web)
     advMascot:'අක්‍රිය විට මුල් තිරයේ සහ ලොබියේ සජීවිකරණ සුරතලා (ඒස්)', mascotHello:'හායි!', mascotBye:'ආයෙත් හම්බවෙමු!', mascotTada:'ටා-ඩා!', mascotKing:'මේසයේ රජා!', mascotAnyone:'කවුරුහරි ඉන්නවද?', mascotCheese:'චීස්!', mascotTable:'අලුත් මේසයක්!', mascotMail:'ඔබට පණිවිඩයක්!', mascotBravo:'නියමයි!',
+    // Aide de l'As (modules/guide) — bouton / entrée de menu + option
+    guideBtn:'ඒස්ගේ උදව්', advGuide:'ඒස්ගේ උදව්: ඒස් යෙදුම පියවරෙන් පියවර පැහැදිලි කරයි',
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'මගේ සටහන', nvRating:'ශ්‍රේණිය', nvPlaceholder:'ඕනෑම 3-bet එකකට Call කරයි…', nvSaved:'සුරැකිණි', nvTagNone:'ලේබලයක් නැත', nvTagRed:'අවදානම්', nvTagOrange:'ආක්‍රමණශීලී', nvTagYellow:'අවධානයෙන්', nvTagGreen:'Fish', nvTagBlue:'Tight', nvTagPurple:'කපටි', nvLabelPh:'ලේබලයේ නම', nvLabelTip:'මෙම ලේබලය නැවත නම් කරන්න — මෙම වර්ණය ඇති සෑම ක්‍රීඩකයෙකුටම අදාළ වේ',
     ppMyStats:'මගේ සංඛ්‍යාලේඛන',

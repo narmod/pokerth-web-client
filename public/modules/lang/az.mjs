@@ -21,6 +21,8 @@ export const strings = {
     rankWaitFull: "Reytinq oyunu — {max} oyunçu gözlənilir ({n}/{max}). Masa dolduqda oyun başlayacaq.",
     // Mascotte animée (modules/mascot, extra web)
     advMascot:'Fəaliyyətsiz olduqda əsas ekranda və lobbidə animasiyalı maskot (Tuz)', mascotHello:'Salam!', mascotBye:'Görüşərik!', mascotTada:'Tadaa!', mascotKing:'Masanın kralı!', mascotAnyone:'Kimsə var?', mascotCheese:'Pendir!', mascotTable:'Yeni masa!', mascotMail:'Sizə məktub var!', mascotBravo:'Əla!',
+    // Aide de l'As (modules/guide) — bouton / entrée de menu + option
+    guideBtn:'Tuzun köməyi', advGuide:'Tuzun köməyi: Tuz tətbiqi addım-addım izah edir',
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'Qeydim', nvRating:'Qiymət', nvPlaceholder:'İstənilən 3-bet-i call edir…', nvSaved:'Saxlanıldı', nvTagNone:'Etiket yoxdur', nvTagRed:'Təhlükə', nvTagOrange:'Aqressiv', nvTagYellow:'Diqqət', nvTagGreen:'Balıq', nvTagBlue:'Sıx', nvTagPurple:'Hiyləgər', nvLabelPh:'Etiketin adı', nvLabelTip:'Bu etiketin adını dəyişin — bu rəngli bütün oyunçulara tətbiq olunur',
     ppMyStats:'Statistikam',

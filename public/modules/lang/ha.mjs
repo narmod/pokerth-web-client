@@ -21,6 +21,8 @@ export const strings = {
     rankWaitFull: "Wasan matsayi — ana jiran 'yan wasa {max} ({n}/{max}). Wasan zai fara idan tebur ya cika.",
     // Mascotte animée (modules/mascot, extra web)
     advMascot:'Alama mai motsi (Aas) a allon farko da cikin falo lokacin da ba ka aiki', mascotHello:'Sannu!', mascotBye:'Sai anjima!', mascotTada:'Tada!', mascotKing:'Sarkin tebur!', mascotAnyone:'Akwai wani?', mascotCheese:'Murmushi!', mascotTable:'Sabon tebur!', mascotMail:'Kana da saƙo!', mascotBravo:'Madalla!',
+    // Aide de l'As (modules/guide) — bouton / entrée de menu + option
+    guideBtn:'Taimakon Aas', advGuide:'Taimakon Aas: Aas yana bayyana manhajar mataki-mataki',
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'Bayanina', nvRating:'Kimantawa', nvPlaceholder:'Yana yin call ga kowane 3-bet…', nvSaved:'An adana', nvTagNone:'Babu lakabi', nvTagRed:'Haɗari', nvTagOrange:'Mai tsauri', nvTagYellow:'Hattara', nvTagGreen:'Kifi', nvTagBlue:'Mai taka-tsantsan', nvTagPurple:'Mai wayo', nvLabelPh:'Sunan lakabin', nvLabelTip:'Sake sunan wannan lakabin — ya shafi duk \'yan wasa masu wannan launi',
     ppMyStats:'Ƙididdigana',

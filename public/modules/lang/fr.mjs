@@ -20,6 +20,8 @@ export const strings = {
     rankWaitFull: "Partie classée — en attente de {max} joueurs ({n}/{max}). La partie démarrera quand la table sera complète.",
     // Mascotte animée (modules/mascot, extra web)
     advMascot:'Mascotte animée (l’As) sur l’accueil et dans le lobby quand tu ne touches à rien', mascotHello:'Salut !', mascotBye:'À plus !', mascotTada:'Tadaa !', mascotKing:'Le roi du tapis !', mascotAnyone:'Y a quelqu’un ?', mascotCheese:'Ouistiti !', mascotTable:'Une nouvelle table !', mascotMail:'Tu as du courrier !', mascotBravo:'Bravo !',
+    // Aide de l'As (modules/guide) — bouton / entrée de menu + option
+    guideBtn:'Aide de l’As', advGuide:'Aide de l’As : l’As explique l’appli au fur et à mesure',
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'Ma note', nvRating:'Évaluation', nvPlaceholder:'Paie n’importe quel 3-bet…', nvSaved:'Enregistré', nvTagNone:'Aucune étiquette', nvTagRed:'Danger', nvTagOrange:'Agressif', nvTagYellow:'À surveiller', nvTagGreen:'Poisson', nvTagBlue:'Serré', nvTagPurple:'Retors', nvLabelPh:'Nom de l’étiquette', nvLabelTip:'Renommer cette étiquette — s’applique à tous les joueurs qui la portent',
     ppMyStats:'Mes statistiques',

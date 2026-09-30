@@ -20,6 +20,8 @@ export const strings = {
     rankWaitFull: "Edetabelimäng — ootame {max} mängijat ({n}/{max}). Mäng algab, kui laud on täis.",
     // Mascotte animée (modules/mascot, extra web)
     advMascot:'Animeeritud maskott (äss) avakuval ja fuajees, kui oled tegevusetu', mascotHello:'Tere!', mascotBye:'Näeme!', mascotTada:'Tadaa!', mascotKing:'Laua kuningas!', mascotAnyone:'Kas keegi on?', mascotCheese:'Hiir!', mascotTable:'Uus laud!', mascotMail:'Sulle on kiri!', mascotBravo:'Hästi tehtud!',
+    // Aide de l'As (modules/guide) — bouton / entrée de menu + option
+    guideBtn:'Ässa abi', advGuide:'Ässa abi: äss selgitab rakendust samm-sammult',
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'Minu märkus', nvRating:'Hinnang', nvPlaceholder:'Maksab iga 3-beti…', nvSaved:'Salvestatud', nvTagNone:'Sildita', nvTagRed:'Ohtlik', nvTagOrange:'Agressiivne', nvTagYellow:'Jälgi', nvTagGreen:'Kala', nvTagBlue:'Kitsas', nvTagPurple:'Kaval', nvLabelPh:'Sildi nimi', nvLabelTip:'Nimeta see silt ümber — kehtib kõigile selle värviga mängijatele',
     ppMyStats:'Minu statistika',

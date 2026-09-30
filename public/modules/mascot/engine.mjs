@@ -993,6 +993,16 @@ export function dismiss() {
   c.timers.add(id);
 }
 
+/**
+ * Ace's Help (modules/mascot/guide.mjs): the Ace's markup, the static CSS
+ * scoped to another root element id, and the parts lookup — so the docked
+ * helper looks exactly like the Ace of the scenes without sharing their
+ * overlay (#mascot-root, torn down after every appearance).
+ */
+export function actorKit(rootId) {
+  return { css: CSS.split('#mascot-root').join('#' + rootId), html: ACTOR, refs, BASE_W, BASE_H };
+}
+
 /** Entries, actions, exits, hats and tools the test panel can offer. */
 export const CATALOG = {
   entries: ['door', 'poof', 'edge', 'peek'],

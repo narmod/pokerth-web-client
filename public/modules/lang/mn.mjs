@@ -21,6 +21,8 @@ export const strings = {
     rankWaitFull: "Эрэмбийн тоглолт — {max} тоглогч хүлээж байна ({n}/{max}). Ширээ дүүрэхэд тоглолт эхэлнэ.",
     // Mascotte animée (modules/mascot, extra web)
     advMascot:'Идэвхгүй үед нүүр дэлгэц болон лоббид хөдөлгөөнт сахиус (тамга)', mascotHello:'Сайн уу!', mascotBye:'Дараа уулзъя!', mascotTada:'Та-да!', mascotKing:'Ширээний хаан!', mascotAnyone:'Хүн байна уу?', mascotCheese:'Бяслаг!', mascotTable:'Шинэ ширээ!', mascotMail:'Танд захидал ирлээ!', mascotBravo:'Сайн байна!',
+    // Aide de l'As (modules/guide) — bouton / entrée de menu + option
+    guideBtn:'Тамгын тусламж', advGuide:'Тамгын тусламж: тамга аппыг алхам алхмаар тайлбарлана',
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'Миний тэмдэглэл', nvRating:'Үнэлгээ', nvPlaceholder:'Ямар ч 3-bet-д call хийдэг…', nvSaved:'Хадгалсан', nvTagNone:'Шошгогүй', nvTagRed:'Аюул', nvTagOrange:'Түрэмгий', nvTagYellow:'Болгоомжтой', nvTagGreen:'Загас', nvTagBlue:'Тайт', nvTagPurple:'Зальтай', nvLabelPh:'Шошгоны нэр', nvLabelTip:'Энэ шошгоны нэрийг өөрчлөх — энэ өнгөтэй бүх тоглогчид нөлөөлнө',
     ppMyStats:'Миний статистик',

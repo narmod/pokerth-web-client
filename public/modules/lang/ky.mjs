@@ -21,6 +21,8 @@ export const strings = {
     rankWaitFull: "Рейтингдик оюн — {max} оюнчу күтүлүүдө ({n}/{max}). Стол толгондо оюн башталат.",
     // Mascotte animée (modules/mascot, extra web)
     advMascot:'Аракетсиз турганда башкы экранда жана лоббиде анимациялык талисман (туз)', mascotHello:'Салам!', mascotBye:'Көрүшкөнчө!', mascotTada:'Та-да!', mascotKing:'Үстөлдүн падышасы!', mascotAnyone:'Бирөө барбы?', mascotCheese:'Сыр!', mascotTable:'Жаңы стол!', mascotMail:'Сизге кат келди!', mascotBravo:'Азаматсың!',
+    // Aide de l'As (modules/guide) — bouton / entrée de menu + option
+    guideBtn:'Туздун жардамы', advGuide:'Туздун жардамы: туз колдонмону кадам сайын түшүндүрөт',
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'Менин эскертмелерим', nvRating:'Баа', nvPlaceholder:'Ар кандай 3-bet\'ке call кылат…', nvSaved:'Сакталды', nvTagNone:'Белгисиз', nvTagRed:'Коркунуч', nvTagOrange:'Агрессивдүү', nvTagYellow:'Этият бол', nvTagGreen:'Балык', nvTagBlue:'Тайт', nvTagPurple:'Амалкөй', nvLabelPh:'Белгинин аталышы', nvLabelTip:'Бул белгинин атын өзгөртүү — ушул түстөгү бардык оюнчуларга таасир этет',
     ppMyStats:'Менин статистикам',

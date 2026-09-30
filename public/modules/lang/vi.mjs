@@ -14,6 +14,8 @@ export const strings = {
     rankWaitFull: "Ván xếp hạng — đang chờ {max} người chơi ({n}/{max}). Ván sẽ bắt đầu khi bàn đủ người.",
     // Mascotte animée (modules/mascot, extra web)
     advMascot:'Linh vật hoạt hình (quân Át) ở màn hình chính và sảnh khi không hoạt động', mascotHello:'Chào!', mascotBye:'Hẹn gặp lại!', mascotTada:'Ta-da!', mascotKing:'Vua của bàn chơi!', mascotAnyone:'Có ai không?', mascotCheese:'Cười nào!', mascotTable:'Một bàn mới!', mascotMail:'Bạn có thư!', mascotBravo:'Giỏi lắm!',
+    // Aide de l'As (modules/guide) — bouton / entrée de menu + option
+    guideBtn:'Trợ giúp của quân Át', advGuide:'Trợ giúp của quân Át: quân Át giải thích ứng dụng từng bước',
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'Ghi chú của tôi', nvRating:'Đánh giá', nvPlaceholder:'Theo mọi 3-bet…', nvSaved:'Đã lưu', nvTagNone:'Không nhãn', nvTagRed:'Nguy hiểm', nvTagOrange:'Hung hăng', nvTagYellow:'Cần theo dõi', nvTagGreen:'Cá', nvTagBlue:'Chặt', nvTagPurple:'Ranh mãnh', nvLabelPh:'Tên nhãn', nvLabelTip:'Đổi tên nhãn — áp dụng cho mọi người chơi mang màu này',
     ppMyStats:'Thống kê của tôi',

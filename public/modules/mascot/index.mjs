@@ -75,6 +75,8 @@ export function canAppear() {
   if (!onMascotScreen() || !splashGone()) return false;
   if (motionOff()) return false;
   if (blockingSurface()) return false;
+  // Ace's Help (modules/guide) is on screen: the scenes wait (D6).
+  if (window._guideBusy) return false;
   return true;
 }
 

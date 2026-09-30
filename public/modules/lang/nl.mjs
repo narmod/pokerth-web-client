@@ -19,6 +19,8 @@ export const strings = {
     rankWaitFull: "Rankingspel — wachten op {max} spelers ({n}/{max}). Het spel start zodra de tafel vol is.",
     // Mascotte animée (modules/mascot, extra web)
     advMascot:'Geanimeerde mascotte (de Aas) op het startscherm en in de lobby bij inactiviteit', mascotHello:'Hoi!', mascotBye:'Tot ziens!', mascotTada:'Tadaa!', mascotKing:'Koning van het laken!', mascotAnyone:'Iemand?', mascotCheese:'Cheese!', mascotTable:'Een nieuwe tafel!', mascotMail:'Je hebt post!', mascotBravo:'Goed gedaan!',
+    // Aide de l'As (modules/guide) — bouton / entrée de menu + option
+    guideBtn:'Hulp van de Aas', advGuide:'Hulp van de Aas: de Aas legt de app stap voor stap uit',
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'Mijn notitie', nvRating:'Beoordeling', nvPlaceholder:'Callt elke 3-bet…', nvSaved:'Opgeslagen', nvTagNone:'Geen label', nvTagRed:'Gevaar', nvTagOrange:'Agressief', nvTagYellow:'In de gaten houden', nvTagGreen:'Vis', nvTagBlue:'Tight', nvTagPurple:'Sluw', nvLabelPh:'Labelnaam', nvLabelTip:'Label hernoemen — geldt voor elke speler met deze kleur',
     ppMyStats:'Mijn statistieken',

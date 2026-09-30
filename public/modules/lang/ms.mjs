@@ -20,6 +20,8 @@ export const strings = {
     rankWaitFull: "Permainan berperingkat — menunggu {max} pemain ({n}/{max}). Permainan akan bermula apabila meja penuh.",
     // Mascotte animée (modules/mascot, extra web)
     advMascot:'Maskot animasi (si Sat) di skrin utama dan lobi semasa tidak aktif', mascotHello:'Hai!', mascotBye:'Jumpa lagi!', mascotTada:'Tada!', mascotKing:'Raja meja!', mascotAnyone:'Ada sesiapa?', mascotCheese:'Senyum!', mascotTable:'Meja baharu!', mascotMail:'Anda ada mesej!', mascotBravo:'Syabas!',
+    // Aide de l'As (modules/guide) — bouton / entrée de menu + option
+    guideBtn:'Bantuan si Sat', advGuide:'Bantuan si Sat: si Sat menerangkan aplikasi langkah demi langkah',
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'Catatan saya', nvRating:'Penilaian', nvPlaceholder:'Call semua 3-bet…', nvSaved:'Tersimpan', nvTagNone:'Tanpa label', nvTagRed:'Berbahaya', nvTagOrange:'Agresif', nvTagYellow:'Awasi', nvTagGreen:'Ikan', nvTagBlue:'Ketat', nvTagPurple:'Licik', nvLabelPh:'Nama label', nvLabelTip:'Ganti nama label — berlaku untuk semua pemain dengan warna ini',
     ppMyStats:'Statistik saya',

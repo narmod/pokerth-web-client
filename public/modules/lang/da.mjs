@@ -13,6 +13,8 @@ export const strings = {
     rankWaitFull: "Ranglistespil — venter på {max} spillere ({n}/{max}). Spillet starter, når bordet er fuldt.",
     // Mascotte animée (modules/mascot, extra web)
     advMascot:'Animeret maskot (esset) på startskærmen og i lobbyen ved inaktivitet', mascotHello:'Hej!', mascotBye:'Vi ses!', mascotTada:'Tada!', mascotKing:'Kongen af bordet!', mascotAnyone:'Er der nogen?', mascotCheese:'Sig appelsin!', mascotTable:'Et nyt bord!', mascotMail:'Du har fået post!', mascotBravo:'Godt gået!',
+    // Aide de l'As (modules/guide) — bouton / entrée de menu + option
+    guideBtn:'Essets hjælp', advGuide:'Essets hjælp: esset forklarer appen undervejs',
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'Min note', nvRating:'Bedømmelse', nvPlaceholder:'Caller enhver 3-bet…', nvSaved:'Gemt', nvTagNone:'Intet mærkat', nvTagRed:'Farlig', nvTagOrange:'Aggressiv', nvTagYellow:'Hold øje', nvTagGreen:'Fisk', nvTagBlue:'Tight', nvTagPurple:'Snu', nvLabelPh:'Mærkatnavn', nvLabelTip:'Omdøb mærkatet — gælder for alle spillere med denne farve',
     ppMyStats:'Min statistik',

@@ -20,6 +20,8 @@ export const strings = {
     rankWaitFull: "Igra z uvrstitvijo — čakamo na {max} igralcev ({n}/{max}). Igra se bo začela, ko bo miza polna.",
     // Mascotte animée (modules/mascot, extra web)
     advMascot:'Animirana maskota (as) na začetnem zaslonu in v preddverju, ko ste nedejavni', mascotHello:'Živjo!', mascotBye:'Se vidimo!', mascotTada:'Tadaa!', mascotKing:'Kralj mize!', mascotAnyone:'Je kdo tu?', mascotCheese:'Sir!', mascotTable:'Nova miza!', mascotMail:'Imaš pošto!', mascotBravo:'Bravo!',
+    // Aide de l'As (modules/guide) — bouton / entrée de menu + option
+    guideBtn:'Pomoč asa', advGuide:'Pomoč asa: as sproti razlaga aplikacijo',
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'Moj zapisek', nvRating:'Ocena', nvPlaceholder:'Vedno plača na 3-bet…', nvSaved:'Shranjeno', nvTagNone:'Brez oznake', nvTagRed:'Nevarno', nvTagOrange:'Agresivno', nvTagYellow:'Pazi', nvTagGreen:'Riba', nvTagBlue:'Trdno', nvTagPurple:'Zvijačno', nvLabelPh:'Ime oznake', nvLabelTip:'Preimenuj to oznako — velja za vse igralce s to barvo',
     ppMyStats:'Moja statistika',

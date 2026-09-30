@@ -21,6 +21,8 @@ export const strings = {
     rankWaitFull: "र्‍याङ्किङ खेल — {max} खेलाडीको प्रतीक्षा ({n}/{max})। टेबल भरिएपछि खेल सुरु हुनेछ।",
     // Mascotte animée (modules/mascot, extra web)
     advMascot:'निष्क्रिय हुँदा गृह स्क्रिन र लबीमा एनिमेटेड शुभंकर (एक्का)', mascotHello:'नमस्ते!', mascotBye:'फेरि भेटौँला!', mascotTada:'टा-डा!', mascotKing:'टेबलको राजा!', mascotAnyone:'कोही छ?', mascotCheese:'चिज!', mascotTable:'एउटा नयाँ टेबल!', mascotMail:'तपाईंलाई सन्देश आयो!', mascotBravo:'स्याबास!',
+    // Aide de l'As (modules/guide) — bouton / entrée de menu + option
+    guideBtn:'एक्काको मद्दत', advGuide:'एक्काको मद्दत: एक्काले एपलाई चरणबद्ध रूपमा बुझाउँछ',
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'मेरो टिप्पणी', nvRating:'मूल्याङ्कन', nvPlaceholder:'जुनसुकै 3-bet लाई call गर्छ…', nvSaved:'सुरक्षित गरियो', nvTagNone:'लेबल छैन', nvTagRed:'खतरा', nvTagOrange:'आक्रामक', nvTagYellow:'ध्यान दिनुहोस्', nvTagGreen:'माछा', nvTagBlue:'कसिलो', nvTagPurple:'चलाख', nvLabelPh:'लेबलको नाम', nvLabelTip:'यो लेबलको नाम बदल्नुहोस् — यस रङका सबै खेलाडीमा लागू हुन्छ',
     ppMyStats:'मेरो तथ्याङ्क',

@@ -1044,6 +1044,7 @@ function _processAvatarFile(file) {
       <button class="btn-sm" id="music-toggle-connect-mob" onclick="closeConnectOverflow();toggleMusicPanel()"><span style="margin-right:7px">🎵</span><span data-i18n="musicPanelTitle">Music player</span></button>
       <button class="btn-sm" id="adv-opts-connect-mob" onclick="closeConnectOverflow();toggleAdvancedOptions()"><span style="margin-right:7px">⚙️</span><span data-i18n="advTitle">Advanced options</span></button>
       <button class="btn-sm help-menu-btn" onclick="closeConnectOverflow();if(window.toggleHelp)window.toggleHelp()"><span style="margin-right:7px" aria-hidden="true"><svg viewBox="0 0 24 24" style="display:inline-block;width:16px;height:16px;vertical-align:-3px" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.4 2.3c-.8.3-.9 1-.9 1.7M12 16.6h.01"/></svg></span><span data-i18n="helpTitle">Help</span></button>
+      <button class="btn-sm guide-menu-btn guide-only" onclick="closeConnectOverflow();if(window.guideToggle)window.guideToggle()"><span class="guide-ico" aria-hidden="true">A♠</span><span data-i18n="guideBtn">Ace’s Help</span></button>
       <button class="btn-sm" onclick="location.reload()"><span style="margin-right:5px">↺</span><span data-i18n="refreshTooltip">Refresh</span></button>
     </div></span>
     </div>
@@ -1089,6 +1090,8 @@ function _processAvatarFile(file) {
           <span class="lc-go">›</span>
         </button>
       </div>
+      <!-- Aide de l'As (modules/guide) : allume l'assistant ou ouvre son menu. -->
+      <button type="button" class="guide-login-btn guide-only" onclick="window.guideToggle&&window.guideToggle()"><span class="guide-ico" aria-hidden="true">A♠</span><span data-i18n="guideBtn">Ace’s Help</span></button>
     </div>
 
     <!-- ÉTAPE 2 — formulaire du mode choisi. Enveloppe le bloc mode +
@@ -1801,6 +1804,7 @@ function _processAvatarFile(file) {
       <button class="btn-sm" id="music-toggle-lobby-mob" onclick="closeLobbyOverflow();toggleMusicPanel()"><span style="margin-right:7px">🎵</span><span data-i18n="musicPanelTitle">Music player</span></button>
       <button class="btn-sm" id="adv-opts-lobby-mob" onclick="closeLobbyOverflow();toggleAdvancedOptions()"><span style="margin-right:7px">⚙️</span><span data-i18n="advTitle">Advanced options</span></button>
       <button class="btn-sm help-menu-btn" onclick="closeLobbyOverflow();if(window.toggleHelp)window.toggleHelp()"><span style="margin-right:7px" aria-hidden="true"><svg viewBox="0 0 24 24" style="display:inline-block;width:16px;height:16px;vertical-align:-3px" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.4 2.3c-.8.3-.9 1-.9 1.7M12 16.6h.01"/></svg></span><span data-i18n="helpTitle">Help</span></button>
+      <button class="btn-sm guide-menu-btn guide-only" onclick="closeLobbyOverflow();if(window.guideToggle)window.guideToggle()"><span class="guide-ico" aria-hidden="true">A♠</span><span data-i18n="guideBtn">Ace’s Help</span></button>
     </div></span>
   </div>
 
@@ -2149,6 +2153,7 @@ function _processAvatarFile(file) {
       <button class="btn-sm" id="music-toggle-create-mob" onclick="closeCreateOverflow();toggleMusicPanel()"><span style="margin-right:7px">🎵</span><span data-i18n="musicPanelTitle">Music player</span></button>
       <button class="btn-sm" id="adv-opts-create-mob" onclick="closeCreateOverflow();toggleAdvancedOptions()"><span style="margin-right:7px">⚙️</span><span data-i18n="advTitle">Advanced options</span></button>
       <button class="btn-sm help-menu-btn" onclick="closeCreateOverflow();if(window.toggleHelp)window.toggleHelp()"><span style="margin-right:7px" aria-hidden="true"><svg viewBox="0 0 24 24" style="display:inline-block;width:16px;height:16px;vertical-align:-3px" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.4 2.3c-.8.3-.9 1-.9 1.7M12 16.6h.01"/></svg></span><span data-i18n="helpTitle">Help</span></button>
+      <button class="btn-sm guide-menu-btn guide-only" onclick="closeCreateOverflow();if(window.guideToggle)window.guideToggle()"><span class="guide-ico" aria-hidden="true">A♠</span><span data-i18n="guideBtn">Ace’s Help</span></button>
     </div></span>
   </div>
   <div class="cp-scroll">
@@ -2186,6 +2191,7 @@ function _processAvatarFile(file) {
       <button class="btn-sm" id="music-toggle-game-mob" onclick="closeHeaderOverflow();toggleMusicPanel()"><span style="margin-right:7px">🎵</span><span data-i18n="musicPanelTitle">Music player</span></button>
       <button class="btn-sm" id="adv-opts-mob" onclick="closeHeaderOverflow();toggleAdvancedOptions()"><span style="margin-right:7px">⚙️</span><span data-i18n="advTitle">Advanced options</span></button>
       <button class="btn-sm help-menu-btn" onclick="closeHeaderOverflow();if(window.toggleHelp)window.toggleHelp()"><span style="margin-right:7px" aria-hidden="true"><svg viewBox="0 0 24 24" style="display:inline-block;width:16px;height:16px;vertical-align:-3px" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.4 2.3c-.8.3-.9 1-.9 1.7M12 16.6h.01"/></svg></span><span data-i18n="helpTitle">Help</span></button>
+      <button class="btn-sm guide-menu-btn guide-only" onclick="closeHeaderOverflow();if(window.guideToggle)window.guideToggle()"><span class="guide-ico" aria-hidden="true">A♠</span><span data-i18n="guideBtn">Ace’s Help</span></button>
       <!-- Admin (séparateur + boutons révélés ensemble) -->
       <div class="menu-sep menu-sep-admin" id="admin-sep-mob" style="display:none"><span data-i18n="menuAdmin">Admin</span></div>
       <button class="btn-sm" id="admin-close-mob" onclick="App.closeTable();closeHeaderOverflow()" style="display:none"><span style="margin-right:7px">🔒</span><span data-i18n="closeTableTooltip">Close table</span></button>
@@ -2692,6 +2698,7 @@ function _processAvatarFile(file) {
 <script type="module" src="modules/ui/lobby-clock.mjs"></script>
 <script type="module" src="modules/ui/login-flourish.mjs"></script>
 <script type="module" src="modules/mascot/index.mjs"></script>
+<script type="module" src="modules/guide/index.mjs"></script>
 <script type="module" src="modules/ui/pm.mjs"></script>
 <script type="module" src="modules/game/showdown.mjs"></script>
 <script type="module" src="modules/net/session.mjs"></script>
@@ -3389,6 +3396,7 @@ if ('serviceWorker' in navigator && !window.LIVE_MODE) {
       <label class="adv-row"><input type="checkbox" id="adv-handsbtn" onchange="setAdvOpt('hands_btn',this.checked)"><span data-i18n="advHandsBtn">Show the poker hands icon on the table</span><em class="adv-webtag">web</em></label>
       <label class="adv-row"><input type="checkbox" id="adv-hudon" onchange="setAdvOpt('hud_on',this.checked)"><span data-i18n="advHudOn">Show the stats HUD on player seats</span><em class="adv-webtag">web</em></label>
       <label class="adv-row"><input type="checkbox" id="adv-helpbtn" onchange="setAdvOpt('help_btn',this.checked)"><span data-i18n="advHelpBtn">Show the Help entry in menus</span><em class="adv-webtag">web</em></label>
+      <label class="adv-row guide-only"><input type="checkbox" id="adv-guide" onchange="setAdvOpt('guide_on',this.checked)"><span data-i18n="advGuide">Ace’s Help: the Ace explains the app as you go</span><em class="adv-webtag">web</em></label>
       </details>
       <details class="adv-fold"><summary class="adv-sec"><span class="adv-sec-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="9" r="3"/><path d="M3.5 19a5.5 5.5 0 0 1 11 0"/><path d="M15.5 6.5a3 3 0 0 1 0 5.4M17 13.6a5.5 5.5 0 0 1 3.5 5.4"/></svg></span><span data-i18n="advSecCommunity">Community</span></summary>
       <label class="adv-row"><input type="checkbox" id="adv-community" onchange="setAdvOpt('show_community',this.checked)"><span data-i18n="advShowCommunity">Show Ranking entry</span></label>

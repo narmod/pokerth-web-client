@@ -19,6 +19,8 @@ export const strings = {
     rankWaitFull: "Рейтинговая игра — ожидание {max} игроков ({n}/{max}). Игра начнётся, когда стол заполнится.",
     // Mascotte animée (modules/mascot, extra web)
     advMascot:'Анимированный талисман (туз) на главном экране и в лобби при бездействии', mascotHello:'Привет!', mascotBye:'До встречи!', mascotTada:'Та-да!', mascotKing:'Король стола!', mascotAnyone:'Есть кто-нибудь?', mascotCheese:'Скажи «сыр»!', mascotTable:'Новый стол!', mascotMail:'Вам письмо!', mascotBravo:'Молодец!',
+    // Aide de l'As (modules/guide) — bouton / entrée de menu + option
+    guideBtn:'Помощь туза', advGuide:'Помощь туза: туз объясняет приложение по ходу работы',
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'Моя заметка', nvRating:'Оценка', nvPlaceholder:'Коллирует любой 3-бет…', nvSaved:'Сохранено', nvTagNone:'Без метки', nvTagRed:'Опасен', nvTagOrange:'Агрессивный', nvTagYellow:'Наблюдать', nvTagGreen:'Фиш', nvTagBlue:'Тайтовый', nvTagPurple:'Хитрый', nvLabelPh:'Название метки', nvLabelTip:'Переименовать метку — применяется ко всем игрокам с этим цветом',
     ppMyStats:'Моя статистика',

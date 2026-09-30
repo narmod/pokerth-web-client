@@ -20,6 +20,8 @@ export const strings = {
     rankWaitFull: "Lojë me renditje — në pritje të {max} lojtarëve ({n}/{max}). Loja do të fillojë kur tavolina të mbushet.",
     // Mascotte animée (modules/mascot, extra web)
     advMascot:'Maskotë e animuar (Asi) në ekranin kryesor dhe në holl kur je joaktiv', mascotHello:'Përshëndetje!', mascotBye:'Shihemi!', mascotTada:'Ta-da!', mascotKing:'Mbreti i tavolinës!', mascotAnyone:'A ka njeri?', mascotCheese:'Buzëqesh!', mascotTable:'Një tavolinë e re!', mascotMail:'Ke një mesazh!', mascotBravo:'Të lumtë!',
+    // Aide de l'As (modules/guide) — bouton / entrée de menu + option
+    guideBtn:'Ndihma e Asit', advGuide:'Ndihma e Asit: Asi e shpjegon aplikacionin hap pas hapi',
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'Shënimi im', nvRating:'Vlerësimi', nvPlaceholder:'Paguan çdo 3-bet…', nvSaved:'U ruajt', nvTagNone:'Pa etiketë', nvTagRed:'I rrezikshëm', nvTagOrange:'Agresiv', nvTagYellow:'Vëzhgoje', nvTagGreen:'Peshk', nvTagBlue:'I ngushtë', nvTagPurple:'Dinak', nvLabelPh:'Emri i etiketës', nvLabelTip:'Riemërto këtë etiketë — vlen për të gjithë lojtarët me këtë ngjyrë',
     ppMyStats:'Statistikat e mia',

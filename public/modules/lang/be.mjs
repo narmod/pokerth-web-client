@@ -21,6 +21,8 @@ export const strings = {
     rankWaitFull: "Рэйтынгавая гульня — чакаем {max} гульцоў ({n}/{max}). Гульня пачнецца, калі стол запоўніцца.",
     // Mascotte animée (modules/mascot, extra web)
     advMascot:'Аніміраваны талісман (туз) на галоўным экране і ў лобі пры бяздзейнасці', mascotHello:'Прывітанне!', mascotBye:'Да сустрэчы!', mascotTada:'Та-да!', mascotKing:'Кароль стала!', mascotAnyone:'Ёсць тут хто?', mascotCheese:'Скажы «сыр»!', mascotTable:'Новы стол!', mascotMail:'Вам ліст!', mascotBravo:'Малайчына!',
+    // Aide de l'As (modules/guide) — bouton / entrée de menu + option
+    guideBtn:'Дапамога туза', advGuide:'Дапамога туза: туз тлумачыць праграму крок за крокам',
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'Мая нататка', nvRating:'Ацэнка', nvPlaceholder:'Коліць любы 3-bet…', nvSaved:'Захавана', nvTagNone:'Без меткі', nvTagRed:'Небяспека', nvTagOrange:'Агрэсіўны', nvTagYellow:'Увага', nvTagGreen:'Рыба', nvTagBlue:'Тайтавы', nvTagPurple:'Хітры', nvLabelPh:'Назва меткі', nvLabelTip:'Перайменаваць гэтую метку — прымяняецца да ўсіх гульцоў з гэтым колерам',
     ppMyStats:'Мая статыстыка',

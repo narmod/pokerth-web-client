@@ -261,6 +261,8 @@ function applyAdvOpts() {
     try { if (typeof window._chatAbbrevRefresh === 'function') window._chatAbbrevRefresh(); } catch (e) {}
     // Mascotte animée (option mascot, modules/mascot) : arme / désarme le minuteur d'inactivité.
     try { if (typeof window._mascotApply === 'function') window._mascotApply(); } catch (e) {}
+    // Aide de l'As (option guide_on, modules/guide) : allume / éteint l'assistant.
+    try { if (typeof window._guideApply === 'function') window._guideApply(); } catch (e) {}
   } catch (e) {}
 }
 window.applyAdvOpts = applyAdvOpts;
@@ -441,6 +443,7 @@ function openAdvancedOptions() {
   sync('adv-browserzoom', 'browser_zoom', false);   // zoom navigateur : bloqué par défaut sur tactile
   sync('adv-backguard', 'back_guard', true);        // bouton Retour Android = Escape (parité QML §6)
   sync('adv-mascot', 'mascot', false);              // mascotte animée (l'As) — extension web, OFF par défaut
+  sync('adv-guide', 'guide_on', false);             // Aide de l'As (modules/guide) — OFF tant que le joueur n'a pas dit oui
   sync('adv-lobbychat', 'lobby_chat', true);
   sync('adv-polls', 'polls', true);   // sondages produit : visible par defaut, decochable ici
   sync('adv-connpill', 'conn_pill', true);   // pastille de connexion sur le feutre (web)
@@ -1479,6 +1482,7 @@ var _CFG_WEB_SYNC_KEYS = [
   'pth_winner_popup', 'pth_remove_gone', 'pth_tooltips', 'pth_big_own_cards',
   'pth_chat_translate', 'pth_chat_abbrev', 'pth_pin_actionbar', 'pth_confirm_social',
   'pth_help_btn',
+  'pth_guide_on',   // Aide de l'As (modules/guide) : allumée / éteinte
   // Valeurs (thème web, sièges, clavier, langue, divers)
   'pth_theme', 'pth_buttons', 'pth_pucks', 'pth_seat', 'pth_seat_layout',
   'pth_seat_custom', 'pth_keys', 'pth_lang', 'pth_offline_skill',
@@ -1582,6 +1586,21 @@ function _noticeMergeIn(o) {
   } catch (e) {}
   return needPush;
 }
+// Aide de l'As (modules/guide) : proposition déjà faite + astuces déjà vues.
+// Même réconciliation par FUSION que les succès : proposée quelque part =
+// proposée partout ; une astuce vue sur le téléphone ne revient pas sur le
+// bureau ; « Revoir toutes les astuces » pose une date de remise à zéro qui
+// gagne partout. La logique vit dans modules/guide/state.mjs::mergeIn (pont
+// window._guideStore) ; si le module n'est pas encore chargé, le blob est
+// mis de côté (window._guidePendingSync) et fusionné à son chargement.
+var _GUIDE_SYNC_KEYS = ['pth_guide_offered', 'pth_guide_seen'];
+function _guideMergeIn(o) {
+  try {
+    var st = window._guideStore;
+    if (!st || typeof st.mergeIn !== 'function') { window._guidePendingSync = o; return false; }
+    return !!st.mergeIn(o);
+  } catch (e) { return false; }
+}
 var _cfgWebForcePush = false;   // le local était plus riche : repousser après fusion
 function _achNorm(k, v) {       // sérialisation stable (comparaisons fiables)
   try {
@@ -1652,6 +1671,10 @@ function _cfgWebCollect() {
     var v = _cfgLs(k);
     if (v != null && v.length <= 32) o[k] = v;
   });
+  _GUIDE_SYNC_KEYS.forEach(function (k) {
+    var v = _cfgLs(k);
+    if (v != null && v.length <= 20000) o[k] = v;
+  });
   return o;
 }
 function _cfgWebDirty() {
@@ -1694,6 +1717,9 @@ function _cfgWebApply(o) {
   } catch (e) {}
   try {
     if (_noticeMergeIn(o)) { _cfgWebForcePush = true; _cfgSyncPushSoon(1500); }
+  } catch (e) {}
+  try {
+    if (_guideMergeIn(o)) { _cfgWebForcePush = true; _cfgSyncPushSoon(1500); }
   } catch (e) {}
   // Même fusion que pour le config.xml : une clé modifiée ici depuis le dernier
   // envoi (elle diffère de l'instantané poussé) n'est PAS écrasée par le
@@ -11976,7 +12002,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.9-web.258'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.9-web.259'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif ou la palette High contrast
    (Android, Safari, iOS standalone récent). Lit --theme-color et met

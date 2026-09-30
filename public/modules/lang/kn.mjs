@@ -18,6 +18,8 @@ export const strings = {
     rankWaitFull: "ರ‍್ಯಾಂಕಿಂಗ್ ಗೇಮ್ — {max} ಆಟಗಾರರಿಗಾಗಿ ಕಾಯಲಾಗುತ್ತಿದೆ ({n}/{max}). ಟೇಬಲ್ ತುಂಬಿದಾಗ ಆಟ ಆರಂಭವಾಗುತ್ತದೆ.",
     // Mascotte animée (modules/mascot, extra web)
     advMascot:'ನಿಷ್ಕ್ರಿಯವಾಗಿದ್ದಾಗ ಮುಖಪುಟ ಪರದೆ ಮತ್ತು ಲಾಬಿಯಲ್ಲಿ ಅನಿಮೇಟೆಡ್ ಮ್ಯಾಸ್ಕಾಟ್ (ಎಕ್ಕ)', mascotHello:'ನಮಸ್ಕಾರ!', mascotBye:'ಮತ್ತೆ ಸಿಗೋಣ!', mascotTada:'ಟಾ-ಡಾ!', mascotKing:'ಮೇಜಿನ ರಾಜ!', mascotAnyone:'ಯಾರಾದರೂ ಇದ್ದೀರಾ?', mascotCheese:'ಚೀಸ್!', mascotTable:'ಒಂದು ಹೊಸ ಟೇಬಲ್!', mascotMail:'ನಿಮಗೆ ಸಂದೇಶ ಬಂದಿದೆ!', mascotBravo:'ಶಭಾಷ್!',
+    // Aide de l'As (modules/guide) — bouton / entrée de menu + option
+    guideBtn:'ಎಕ್ಕದ ಸಹಾಯ', advGuide:'ಎಕ್ಕದ ಸಹಾಯ: ಎಕ್ಕ ಹಂತ ಹಂತವಾಗಿ ಆ್ಯಪ್ ಅನ್ನು ವಿವರಿಸುತ್ತದೆ',
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'ನನ್ನ ಟಿಪ್ಪಣಿ', nvRating:'ರೇಟಿಂಗ್', nvPlaceholder:'ಯಾವುದೇ 3-bet ಗೆ Call ಮಾಡುತ್ತಾನೆ…', nvSaved:'ಉಳಿಸಲಾಗಿದೆ', nvTagNone:'ಲೇಬಲ್ ಇಲ್ಲ', nvTagRed:'ಅಪಾಯ', nvTagOrange:'ಆಕ್ರಮಣಕಾರಿ', nvTagYellow:'ಎಚ್ಚರಿಕೆ', nvTagGreen:'ಫಿಶ್', nvTagBlue:'ಟೈಟ್', nvTagPurple:'ಚಾಲಾಕಿ', nvLabelPh:'ಲೇಬಲ್ ಹೆಸರು', nvLabelTip:'ಈ ಲೇಬಲ್ ಹೆಸರನ್ನು ಬದಲಿಸಿ — ಈ ಬಣ್ಣದ ಎಲ್ಲ ಆಟಗಾರರಿಗೂ ಅನ್ವಯಿಸುತ್ತದೆ',
     ppMyStats:'ನನ್ನ ಅಂಕಿಅಂಶಗಳು',

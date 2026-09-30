@@ -11562,6 +11562,12 @@ html[data-seat-struct="qml"] .seat:not(.me) .seat-narrow .seat-holecards .pk { w
 #help-modal .km-backdrop{display:none}
 #help-modal .km-card{pointer-events:auto}
 body.adv-no-helpbtn .help-menu-btn{display:none}
+/* Aide de l'As (modules/guide) — boutons de l'écran de connexion, des menus
+   des headers et option. L1 : visibles seulement avec ?guide=1 (body.guide-avail). */
+body:not(.guide-avail) .guide-only{display:none!important}
+.guide-ico{display:inline-flex;align-items:center;justify-content:center;min-width:22px;height:18px;margin-right:7px;padding:0 3px;border-radius:4px;background:#fbf7ee;color:#141414;border:1.5px solid #141414;font:900 11px/1 Georgia,serif;vertical-align:-3px;box-sizing:border-box}
+.guide-login-btn{display:flex;align-items:center;justify-content:center;gap:2px;margin:12px auto 0;padding:7px 14px;min-height:36px;border-radius:999px;border:1px solid var(--gold-dim,#b8963e);background:transparent;color:var(--gold,#f5c518);font-family:inherit;font-weight:600;font-size:0.85rem;line-height:1.2;cursor:pointer}
+.guide-login-btn:hover,.guide-login-btn:focus-visible{background:rgba(245,197,24,.1)}
 .help-search{margin-top:8px}
 .help-search input{width:100%;box-sizing:border-box;background:var(--field-bg);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:7px 10px;font-size:0.85rem}
 .help-search input:focus{outline:none;border-color:var(--gold-dim)}

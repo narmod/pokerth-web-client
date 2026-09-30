@@ -14,6 +14,8 @@ export const strings = {
     rankWaitFull: "Hodnocená hra — čeká se na {max} hráčů ({n}/{max}). Hra začne, až bude stůl plný.",
     // Mascotte animée (modules/mascot, extra web)
     advMascot:'Animovaný maskot (eso) na úvodní obrazovce a v lobby při nečinnosti', mascotHello:'Ahoj!', mascotBye:'Zatím!', mascotTada:'Tadá!', mascotKing:'Král stolu!', mascotAnyone:'Je tu někdo?', mascotCheese:'Sýr!', mascotTable:'Nový stůl!', mascotMail:'Máš poštu!', mascotBravo:'Dobrá práce!',
+    // Aide de l'As (modules/guide) — bouton / entrée de menu + option
+    guideBtn:'Nápověda od esa', advGuide:'Nápověda od esa: eso vysvětluje aplikaci krok za krokem',
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'Moje poznámka', nvRating:'Hodnocení', nvPlaceholder:'Dorovná každý 3-bet…', nvSaved:'Uloženo', nvTagNone:'Bez štítku', nvTagRed:'Nebezpečný', nvTagOrange:'Agresivní', nvTagYellow:'Sledovat', nvTagGreen:'Ryba', nvTagBlue:'Těsný', nvTagPurple:'Vychytralý', nvLabelPh:'Název štítku', nvLabelTip:'Přejmenovat štítek — platí pro všechny hráče s touto barvou',
     ppMyStats:'Moje statistiky',

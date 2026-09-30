@@ -14,6 +14,8 @@ export const strings = {
     rankWaitFull: "Παιχνίδι κατάταξης — αναμονή για {max} παίκτες ({n}/{max}). Το παιχνίδι θα ξεκινήσει όταν γεμίσει το τραπέζι.",
     // Mascotte animée (modules/mascot, extra web)
     advMascot:'Κινούμενη μασκότ (ο Άσος) στην αρχική οθόνη και στο λόμπι όταν είσαι ανενεργός', mascotHello:'Γεια!', mascotBye:'Τα λέμε!', mascotTada:'Τα-ντα!', mascotKing:'Ο βασιλιάς του τραπεζιού!', mascotAnyone:'Είναι κανείς εδώ;', mascotCheese:'Τυράκι!', mascotTable:'Νέο τραπέζι!', mascotMail:'Έχεις μήνυμα!', mascotBravo:'Μπράβο!',
+    // Aide de l'As (modules/guide) — bouton / entrée de menu + option
+    guideBtn:'Βοήθεια του Άσου', advGuide:'Βοήθεια του Άσου: ο Άσος εξηγεί την εφαρμογή βήμα βήμα',
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'Η σημείωσή μου', nvRating:'Βαθμολογία', nvPlaceholder:'Πληρώνει κάθε 3-bet…', nvSaved:'Αποθηκεύτηκε', nvTagNone:'Χωρίς ετικέτα', nvTagRed:'Επικίνδυνος', nvTagOrange:'Επιθετικός', nvTagYellow:'Παρακολούθηση', nvTagGreen:'Ψάρι', nvTagBlue:'Σφιχτός', nvTagPurple:'Πονηρός', nvLabelPh:'Όνομα ετικέτας', nvLabelTip:'Μετονομασία ετικέτας — ισχύει για κάθε παίκτη με αυτό το χρώμα',
     ppMyStats:'Τα στατιστικά μου',

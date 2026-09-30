@@ -15,6 +15,8 @@ export const strings = {
     rankWaitFull: "Geama rangachaidh — a' feitheamh ri {max} cluicheadairean ({n}/{max}). Tòisichidh an geama nuair a bhios am bòrd làn.",
     // Mascotte animée (modules/mascot, extra web)
     advMascot:'Suaichnean beòthaichte (an t-Aon) air an sgrìn-dachaigh is san lobaidh nuair a bhios tu na thàmh', mascotHello:'Haidh!', mascotBye:'Chì mi a-rithist thu!', mascotTada:'Ta-da!', mascotKing:'Rìgh a’ bhùird!', mascotAnyone:'A bheil duine ann?', mascotCheese:'Càise!', mascotTable:'Bòrd ùr!', mascotMail:'Tha post agad!', mascotBravo:'Math fhèin!',
+    // Aide de l'As (modules/guide) — bouton / entrée de menu + option
+    guideBtn:'Cobhair an Aoin', advGuide:'Cobhair an Aoin: mìnichidh an t-Aon an aplacaid ceum air cheum',
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'An nòta agam', nvRating:'Rangachadh', nvPlaceholder:'A’ gairm gach 3-bet…', nvSaved:'Air a shàbhaladh', nvTagNone:'Gun leubail', nvTagRed:'Cunnartach', nvTagOrange:'Ionnsaigheach', nvTagYellow:'Cùm sùil', nvTagGreen:'Iasg', nvTagBlue:'Teann', nvTagPurple:'Carach', nvLabelPh:'Ainm na leubail', nvLabelTip:'Thoir ainm ùr air an leubail — buinidh e ri gach cluicheadair leis an dath seo',
     ppMyStats:'Na staitistigean agam',

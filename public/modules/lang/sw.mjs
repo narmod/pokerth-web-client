@@ -20,6 +20,8 @@ export const strings = {
     rankWaitFull: "Mchezo wa viwango — inasubiri wachezaji {max} ({n}/{max}). Mchezo utaanza meza ikijaa.",
     // Mascotte animée (modules/mascot, extra web)
     advMascot:'Kinyago cha uhuishaji (Ekaa) kwenye skrini ya mwanzo na ukumbini ukiwa hufanyi kitu', mascotHello:'Habari!', mascotBye:'Tuonane!', mascotTada:'Tada!', mascotKing:'Mfalme wa meza!', mascotAnyone:'Kuna mtu?', mascotCheese:'Tabasamu!', mascotTable:'Meza mpya!', mascotMail:'Una ujumbe!', mascotBravo:'Hongera!',
+    // Aide de l'As (modules/guide) — bouton / entrée de menu + option
+    guideBtn:'Msaada wa Ekaa', advGuide:'Msaada wa Ekaa: Ekaa inaeleza programu hatua kwa hatua',
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'Kumbukumbu yangu', nvRating:'Ukadiriaji', nvPlaceholder:'Hulipa kila 3-bet…', nvSaved:'Imehifadhiwa', nvTagNone:'Hakuna lebo', nvTagRed:'Hatari', nvTagOrange:'Mkali', nvTagYellow:'Mwangalie', nvTagGreen:'Samaki', nvTagBlue:'Mbanaji', nvTagPurple:'Mjanja', nvLabelPh:'Jina la lebo', nvLabelTip:'Badilisha jina la lebo — inatumika kwa kila mchezaji mwenye rangi hii',
     ppMyStats:'Takwimu zangu',

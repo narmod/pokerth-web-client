@@ -21,6 +21,8 @@ export const strings = {
     rankWaitFull: "Cluiche rangaithe — ag fanacht le {max} imreoir ({n}/{max}). Tosóidh an cluiche nuair a bheidh an bord lán.",
     // Mascotte animée (modules/mascot, extra web)
     advMascot:'Suaitheantas beoite (an tAon) ar an scáileán baile agus sa stocaireacht nuair atá tú díomhaoin', mascotHello:'Haigh!', mascotBye:'Slán go fóill!', mascotTada:'Ta-da!', mascotKing:'Rí an bhoird!', mascotAnyone:'An bhfuil aon duine ann?', mascotCheese:'Cáis!', mascotTable:'Bord nua!', mascotMail:'Tá post agat!', mascotBravo:'Maith thú!',
+    // Aide de l'As (modules/guide) — bouton / entrée de menu + option
+    guideBtn:'Cabhair an Aoin', advGuide:'Cabhair an Aoin: míníonn an tAon an aip céim ar chéim',
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'Mo nóta', nvRating:'Rátáil', nvPlaceholder:'Glaonn sé ar aon 3-bet…', nvSaved:'Sábháilte', nvTagNone:'Gan lipéad', nvTagRed:'Contúirt', nvTagOrange:'Ionsaitheach', nvTagYellow:'Aire', nvTagGreen:'Iasc', nvTagBlue:'Daingean', nvTagPurple:'Glic', nvLabelPh:'Ainm an lipéid', nvLabelTip:'Athainmnigh an lipéad seo — baineann sé le gach imreoir a bhfuil an dath seo air',
     ppMyStats:'Mo staitisticí',

@@ -14,6 +14,8 @@ export const strings = {
     rankWaitFull: "Ranglysspel — wag vir {max} spelers ({n}/{max}). Die spel begin wanneer die tafel vol is.",
     // Mascotte animée (modules/mascot, extra web)
     advMascot:'Geanimeerde gelukbringer (die Aas) op die tuisskerm en in die voorportaal wanneer onaktief', mascotHello:'Hallo!', mascotBye:'Totsiens!', mascotTada:'Tadaa!', mascotKing:'Koning van die tafel!', mascotAnyone:'Iemand daar?', mascotCheese:'Kaas!', mascotTable:'’n Nuwe tafel!', mascotMail:'Jy het pos!', mascotBravo:'Mooi so!',
+    // Aide de l'As (modules/guide) — bouton / entrée de menu + option
+    guideBtn:'Die Aas se Hulp', advGuide:'Die Aas se Hulp: die Aas verduidelik die toep stap vir stap',
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'My nota', nvRating:'Gradering', nvPlaceholder:'Call enige 3-bet…', nvSaved:'Gestoor', nvTagNone:'Geen etiket', nvTagRed:'Gevaarlik', nvTagOrange:'Aggressief', nvTagYellow:'Hou dop', nvTagGreen:'Vis', nvTagBlue:'Styf', nvTagPurple:'Slinks', nvLabelPh:'Etiketnaam', nvLabelTip:'Hernoem hierdie etiket — geld vir elke speler met hierdie kleur',
     ppMyStats:'My statistieke',

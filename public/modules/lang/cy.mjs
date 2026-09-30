@@ -21,6 +21,8 @@ export const strings = {
     rankWaitFull: "Gêm gyda safle — yn aros am {max} chwaraewr ({n}/{max}). Bydd y gêm yn dechrau pan fydd y bwrdd yn llawn.",
     // Mascotte animée (modules/mascot, extra web)
     advMascot:'Masgot wedi’i animeiddio (yr As) ar y sgrin gartref ac yn y lobi pan fyddwch yn segur', mascotHello:'Helô!', mascotBye:'Wela i di!', mascotTada:'Ta-da!', mascotKing:'Brenin y bwrdd!', mascotAnyone:'Oes rhywun yma?', mascotCheese:'Caws!', mascotTable:'Bwrdd newydd!', mascotMail:'Mae gen ti bost!', mascotBravo:'Da iawn!',
+    // Aide de l'As (modules/guide) — bouton / entrée de menu + option
+    guideBtn:'Cymorth yr As', advGuide:'Cymorth yr As: mae’r As yn esbonio’r ap gam wrth gam',
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'Fy nodyn', nvRating:'Sgôr', nvPlaceholder:'Yn galw unrhyw 3-bet…', nvSaved:'Wedi\'i gadw', nvTagNone:'Dim label', nvTagRed:'Perygl', nvTagOrange:'Ymosodol', nvTagYellow:'Gofal', nvTagGreen:'Pysgodyn', nvTagBlue:'Tynn', nvTagPurple:'Cyfrwys', nvLabelPh:'Enw\'r label', nvLabelTip:'Ailenwi\'r label hwn — mae\'n berthnasol i bob chwaraewr gyda\'r lliw hwn',
     ppMyStats:'Fy ystadegau',
