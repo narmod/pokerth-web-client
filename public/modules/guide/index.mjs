@@ -20,7 +20,8 @@
 // table » (lobby) and C2 (ranked waiting room, facts while waiting, « Good
 // luck! », the result of the game back in the lobby). L3 (web.261):
 // statistics (beacons.mjs). L4 (web.262): C3 login screen, C4 Normal /
-// training waiting room. Console: guideDebug().
+// training waiting room. L5 (web.263): C5 create page and windows.
+// Console: guideDebug().
 // ═══════════════════════════════════════════════════════════════════
 
 import { createState, mergeIn, KEY_ON } from './state.mjs';
@@ -83,11 +84,37 @@ function motionOff() {
   try { return !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches); } catch (e) { return false; }
 }
 
+// The windows the Ace explains (C5), by key: the first opening of each one
+// while the help is on. Order = priority when several are open.
+function vis(sel) {
+  const el = document.querySelector(sel);
+  if (!el || el.hidden) return false;
+  try { const c = getComputedStyle(el); if (c.display === 'none' || c.visibility === 'hidden') return false; } catch (e) { return false; }
+  const r = el.getBoundingClientRect();
+  return r.width > 0 && r.height > 0 && r.right > 1 && r.left < window.innerWidth - 1 && r.bottom > 1 && r.top < window.innerHeight - 1;
+}
+/** Shown over the page (a drawer / dropdown), not laid out as a column of the screen. */
+function overlay(sel) {
+  if (!vis(sel)) return false;
+  try { const p = getComputedStyle(document.querySelector(sel)).position; return p === 'fixed' || p === 'absolute'; } catch (e) { return false; }
+}
+const WINDOWS = [
+  ['profile', () => vis('#player-info-modal')],
+  ['avatar', () => vis('#avatar-popup')],
+  ['events', () => vis('#forum-modal') && vis('#fn-events')],
+  ['ranking', () => vis('#ranking-modal')],
+  ['help', () => vis('#help-modal')],
+  ['adv', () => vis('#adv-modal')],
+  ['theme', () => vis('#theme-panel')],
+  ['music', () => vis('#music-panel')],
+  ['logs', () => vis('#jr-modal')],
+  // the players list is a column of the lobby on wide screens: a « window » only as a drawer
+  ['players', () => overlay('#players-panel')],
+];
 function openWindows() {
-  try {
-    const list = window.keynavOpenSurfaces ? window.keynavOpenSurfaces() : [];
-    return (list || []).map((el) => el.id).filter(Boolean);
-  } catch (e) { return []; }
+  const out = [];
+  for (const [k, test] of WINDOWS) { try { if (test()) out.push(k); } catch (e) {} }
+  return out;
 }
 
 /** A modal, a menu or a full page is open (floating windows do not count). */
@@ -485,12 +512,16 @@ async function evaluate() {
   if (M && M.bubbleOpen()) {
     // the tip on screen no longer applies (the player moved on): fold it away
     if (showing && showing.kind === 'ctx' && !applies(showing.run.ctx, w)) closeBubble();
+    // a window just opened over a screen tip: the window's explanation comes first
+    else if (showing && showing.kind === 'ctx' && !showing.run.ctx.window
+      && (pickContext(w, CONTEXTS, { seen: state.seen, snoozed: (id) => snoozed.has(id) }) || {}).window) closeBubble();
     else return;
   }
   const m = await ensureDock();
   m.settle();                                          // the screen changed: a free spot again
-  if (blocked()) return;
   const ctx = pickContext(w, CONTEXTS, { seen: state.seen, snoozed: (id) => snoozed.has(id) });
+  // over a modal / menu only a window's own explanation speaks (C5)
+  if (blocked() && !(ctx && ctx.window)) return;
   if (ctx) { showContext(ctx); return; }
   m.badge(CONTEXTS.some((c) => !c.manual && snoozed.has(c.id) && applies(c, w)));
 }
@@ -576,7 +607,13 @@ function trackResult(w, prev) {
   if (r) { tracker.done = true; result = { gid: s.gId, place: r.place, tied: !!r.tied }; }
 }
 let tickTimer = 0;
+let lastWins = '';
 function tick() {
+  // windows opened / closed (C5): re-evaluate
+  if (available() && state.isOn()) {
+    const wins = openWindows().join(',');
+    if (wins !== lastWins) { lastWins = wins; schedule(); }
+  }
   // while seated at a Ranking game: follow the stacks (cheap, once a second)
   const w = lastWhere;
   if (w && (w.screen === 'game' || tracker)) {

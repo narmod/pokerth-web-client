@@ -18,7 +18,7 @@ const ROOT = 'ace-dock';
 const K = 0.42;          // the docked Ace: 42 % of the scene size (~96 px tall)
 
 const CSS = `
-#ace-dock{z-index:1210!important;overflow:visible!important}
+#ace-dock{z-index:10020!important;overflow:visible!important}
 #ace-dock .ad-ace,#ace-dock .ad-bubble{transition:none!important}
 #ace-dock .ad-ace{position:absolute;right:calc(10px + var(--ad-shift,0px) + env(safe-area-inset-right,0px));bottom:calc(8px + var(--ad-lift,0px) + env(safe-area-inset-bottom,0px));pointer-events:auto;cursor:pointer;border-radius:12px;-webkit-tap-highlight-color:transparent;outline:none}
 #ace-dock .ad-ace:focus-visible{box-shadow:0 0 0 3px #f5c518}

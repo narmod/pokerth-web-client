@@ -29,7 +29,7 @@ ok(!G.valid('nope', 'shown') && !G.valid('lobby-ranking', 'nope'), 'unknown cont
 ok(!G.valid('__proto__', 'shown') && !G.valid('constructor', 'shown') && !G.valid('toString', 'shown'), 'prototype keys refused');
 ok(!G.valid(null, 'shown') && !G.valid('offer', 7) && !G.valid(['offer'], 'offered'), 'non-strings refused');
 const pairs = Object.keys(G.EVENTS).reduce((n, k) => n + G.EVENTS[k].length, 0);
-ok(pairs <= 40, 'bounded key set (' + pairs + ' pairs)');
+ok(pairs <= 80, 'bounded key set (' + pairs + ' pairs)');
 const contexts = (await import(path.join(root, 'public/modules/guide/contexts/index.mjs'))).CONTEXTS.map((c) => c.id);
 ok(contexts.every((id) => G.EVENTS[id]), 'every shipped context can be counted');
 

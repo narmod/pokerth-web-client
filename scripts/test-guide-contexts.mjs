@@ -47,7 +47,19 @@ ok(pick({ screen: 'wait', ranked: false, rankPick: null, spectator: true }) === 
 ok(pick({ screen: 'wait', ranked: true }, ['wait-ranking']) === null, 'facts told once');
 ok(pick({ screen: 'game', ranked: true, playing: true }) === null, 'silent during a hand (D8)');
 ok(pick({ screen: 'game', ranked: true, playing: false }) === null, 'silent at the table');
-ok(pick({ screen: 'create' }) === null, 'nothing on game creation yet (C5)');
+ok(pick({ screen: 'create' }) === 'create-game', 'game creation page → the types, Ranking for account holders, presets are practice');
+const cg = CONTEXTS.find((c) => c.id === 'create-game').steps[0];
+ok(cg.text(W({ screen: 'create', guest: true })) === 'c5CreateGuest' && cg.text(W({ screen: 'create', offline: true })) === 'c5CreateOffline' && cg.text(W({ screen: 'create' })) === 'c5Create', 'create page: account / guest / training lines');
+ok(/Any player with an account can create a Ranking table/.test(EN.c5Create) && /practice only/.test(EN.c5Create), 'D16 wording and presets = practice');
+// C5 windows
+for (const [key, id] of [['ranking', 'w-ranking'], ['events', 'w-events'], ['help', 'w-help'], ['adv', 'w-adv'], ['theme', 'w-theme'], ['music', 'w-music'], ['avatar', 'w-avatar'], ['players', 'w-players'], ['profile', 'w-profile'], ['logs', 'w-logs']]) {
+  ok(pick({ windows: [key] }) === id, 'window « ' + key + ' » opened in the lobby → ' + id);
+  ok(pick({ windows: [key] }, [id]) !== id, id + ' explained once');
+}
+ok(pick({ windows: ['ranking'] }, [], []) === 'w-ranking' && pick({}) === 'lobby-ranking', 'a window outranks the lobby tip behind it');
+ok(pick({ screen: 'game', playing: true, windows: ['help'] }) === null, 'never during a hand, even over a window (D8)');
+ok(pick({ screen: 'wait', ranked: true, windows: ['events'] }) === 'w-events', 'windows also in the waiting room');
+ok(/created by the cup admins/.test(EN.c5Events) && /needs no registration/.test(EN.c5Events), 'events: cups created by admins, WEC needs no registration (D14)');
 ok(pick({ screen: 'connect', net: false, online: false, loginStep: 1 }) === 'login', 'login screen, mode cards → C3 modes + account');
 ok(pick({ screen: 'connect', net: false, online: false, loginStep: 2 }) === 'login-profile', 'login form → C3 nickname + avatar');
 ok(pick({ screen: 'connect', net: false, online: false, loginStep: 1 }, ['login']) === null, 'C3 told once');

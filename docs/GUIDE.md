@@ -1,7 +1,7 @@
 # Ace's Help — contextual assistant
 
-Status: **L4 shipped in `2.1.9-web.262`: C3 on the login screen and C4 in the Normal /
-training waiting room.** L3 (`web.261`) added the statistics, and L2 (`web.260`) made the
+Status: **L5 shipped in `2.1.9-web.263`: C5, the game creation page and the windows (first
+opening).** L4 (`web.262`) covered the login screen and the Normal waiting room. L3 (`web.261`) added the statistics, and L2 (`web.260`) made the
 assistant public in 83 languages. L1 (the foundation)
 shipped in `web.259` behind `?guide=1`. L2 adds the Ranking contexts: C1 in the lobby and
 C2 in the waiting room, including the result of the game.
@@ -155,6 +155,33 @@ The bubble normally sits next to the Ace. It moves to the top right, under the h
 when it would hide the element it is talking about or more controls. Parts of the current
 screen registered for Escape, such as the login form, do not stop the Ace from speaking.
 
+## Game creation and windows (L5)
+
+`create-game` (screen `create`) explains the four game types. Any player **with an
+account** can create a Ranking table: 10 players, no password, and it starts when full.
+Cup presets are practice only. Guests and the offline training mode get their own line.
+
+Window contexts (`contexts/windows.mjs`, priority 50) speak the first time each window
+opens while the help is on. A window outranks the tip of the screen behind it. Over a
+modal or a menu, only a window's own explanation speaks. The dock and the highlight sit
+above the windows (z-index 10020 / 10019).
+
+| id | window key | detected by |
+|---|---|---|
+| `w-profile` | `profile` | `#player-info-modal` visible |
+| `w-avatar` | `avatar` | `#avatar-popup` |
+| `w-events` | `events` | `#forum-modal` with the `#fn-events` tab shown |
+| `w-ranking` | `ranking` | `#ranking-modal` |
+| `w-help` | `help` | `#help-modal` (highlights the search box) |
+| `w-adv` | `adv` | `#adv-modal` (the search box, the *web* tag) |
+| `w-theme` | `theme` | `#theme-panel` |
+| `w-music` | `music` | `#music-panel` |
+| `w-logs` | `logs` | `#jr-modal` |
+| `w-players` | `players` | `#players-panel` only as a drawer (fixed or absolute position). On wide screens it is a column of the lobby, not a window |
+
+A window is "open" when it is displayed and inside the viewport. The open windows are
+re-read every second.
+
 ## Statistics (L3)
 
 `modules/guide/beacons.mjs` posts `POST /__guide { ctx, ev }`. The request carries no
@@ -178,6 +205,7 @@ series in the visit buckets (`gd`), and share the visit counter's retention and 
 | `login` | `shown`, `done`, `dismissed`, `signup` |
 | `login-profile` | `shown`, `done`, `dismissed` |
 | `wait-normal` | `shown`, `done`, `dismissed` |
+| `create-game`, `w-…` (10 windows) | `shown`, `done`, `dismissed` |
 
 What each event means:
 
@@ -211,6 +239,8 @@ Keys (all 83 languages; `es-419` is derived from `es` with `scripts/es-419-rules
 - L1: `name`, `aceLabel`, `offer`, `offerYes`, `offerNo`, `gotIt`, `later`, `next`,
   `close`, `welcome`, `menuOn`, `turnOff`, `resetTips`, `resetDone`, `turnedOff`,
   `nothingHere`.
+- L5: `c5Create`, `c5CreateGuest`, `c5CreateOffline`, `c5Ranking`, `c5Events`, `c5Help`, `c5Adv`,
+  `c5Theme`, `c5Music`, `c5Avatar`, `c5Players`, `c5Profile`, `c5Logs`.
 - L4: `c3Modes`, `c3Account`, `c3Profile`, `c4Host`, `c4Guest`, `c4Offline`.
 - L2: `join`, `createRanking`, `signup`, `seeRanking`, `c1Join` `{n}` `{max}`, `c1None`,
   `c1Guest`, `c2Wait` `{n}` `{max}`, `c2Points`, `c2Score`, `c2Seasons`, `c2Why55`,
@@ -251,6 +281,6 @@ The help has an *Ace's Help* section (`start.acehelp`) in all 83 languages.
 | L1 | The foundation, behind `?guide=1` (`web.259`) |
 | L2 | C1 lobby "join a Ranking table" (`pickRankingTable`), C2 ranked waiting room and game result, 83 languages, help section, public (`web.260`) |
 | L3 | Admin: `POST /__guide` anonymous counters, and the Ranking funnel card (`web.261`, restart needed) |
-| **L4** | C3 login screen, C4 normal waiting room (`web.262`) |
-| L5 | C5 windows |
+| L4 | C3 login screen, C4 normal waiting room (`web.262`) |
+| **L5** | C5 game creation page and windows (`web.263`) |
 | L6 | C6 "?" mode (`hotspots.mjs`) |

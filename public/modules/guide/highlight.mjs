@@ -9,7 +9,7 @@
 // ═══════════════════════════════════════════════════════════════════
 
 const CSS = `
-#ag-ring{position:fixed;left:0;top:0;width:0;height:0;pointer-events:none;z-index:1205;border-radius:10px;
+#ag-ring{position:fixed;left:0;top:0;width:0;height:0;pointer-events:none;z-index:10019;border-radius:10px;
 box-shadow:0 0 0 3px #f5c518,0 0 14px 4px rgba(245,197,24,.55);opacity:0;transition:opacity .2s}
 #ag-ring.ag-on{opacity:1;animation:ag-pulse 1.4s ease-in-out infinite}
 @keyframes ag-pulse{0%,100%{box-shadow:0 0 0 3px #f5c518,0 0 10px 2px rgba(245,197,24,.45)}50%{box-shadow:0 0 0 4px #ffe27a,0 0 22px 8px rgba(245,197,24,.7)}}

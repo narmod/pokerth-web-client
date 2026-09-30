@@ -31,6 +31,18 @@ const EVENTS = Object.freeze({
   login: ['shown', 'done', 'dismissed', 'signup'],
   'login-profile': ['shown', 'done', 'dismissed'],
   'wait-normal': ['shown', 'done', 'dismissed'],
+  // L5 — game creation page and windows (first opening)
+  'create-game': ['shown', 'done', 'dismissed'],
+  'w-ranking': ['shown', 'done', 'dismissed'],
+  'w-events': ['shown', 'done', 'dismissed'],
+  'w-help': ['shown', 'done', 'dismissed'],
+  'w-adv': ['shown', 'done', 'dismissed'],
+  'w-theme': ['shown', 'done', 'dismissed'],
+  'w-music': ['shown', 'done', 'dismissed'],
+  'w-avatar': ['shown', 'done', 'dismissed'],
+  'w-players': ['shown', 'done', 'dismissed'],
+  'w-profile': ['shown', 'done', 'dismissed'],
+  'w-logs': ['shown', 'done', 'dismissed'],
 });
 
 /** Is this (context, event) pair one we count? */

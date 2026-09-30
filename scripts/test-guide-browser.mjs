@@ -268,6 +268,39 @@ async function runDevice(browser, name, descriptor) {
     await ctx.close();
   }
 
+  // ── C5: the game creation page and a window, first opening ──
+  {
+    const ctx = await browser.newContext({ ...descriptor, serviceWorkers: 'block' });
+    await ctx.addInitScript(() => { try { if (!sessionStorage.getItem('g5')) { sessionStorage.setItem('g5', '1'); localStorage.setItem('pth_guide_on', '1'); localStorage.setItem('pth_guide_offered', '1'); localStorage.setItem('pth_guide_seen', JSON.stringify({ r: 0, s: { welcome: 1, login: 1, 'login-profile': 1 } })); } } catch (_e) {} });
+    const page = await ctx.newPage(); watch(page);
+    await openTable(page, base, { stopAt: 'lobby', seats: 6 });
+    const bubbleText = () => page.evaluate(() => (document.querySelector('#ace-dock .ad-bubble.ad-open .ad-text') || {}).textContent || '');
+    await check(`${name}: C5 — first opening of Help: he explains it, on top of the window`, async () => {
+      await page.evaluate(() => window.toggleHelp());
+      await page.waitForFunction(() => /Everything about the app/.test((document.querySelector('#ace-dock .ad-bubble.ad-open .ad-text') || {}).textContent || ''), null, { timeout: 5000 });
+      const onTop = await page.evaluate(() => { const b = document.querySelector('#ace-dock .ad-bubble.ad-open').getBoundingClientRect(); const e = document.elementFromPoint(b.left + b.width / 2, b.top + b.height / 2); return !!(e && e.closest('#ace-dock')); });
+      assert.ok(onTop, 'the bubble is under the window');
+      inside(await box(page, bubble), 'bubble');
+    });
+    await shot(page, name, 'guide-c5-help');
+    await check(`${name}: C5 — the window closes: the bubble folds; reopened: not explained twice`, async () => {
+      await click(page, btn('gotIt'));
+      await page.evaluate(() => window.closeHelp && window.closeHelp());
+      await page.waitForTimeout(1600);
+      await page.evaluate(() => window.toggleHelp());
+      await page.waitForTimeout(2200);
+      assert.doesNotMatch(await bubbleText(), /Everything about the app/);
+      await page.evaluate(() => window.closeHelp && window.closeHelp());
+    });
+    await check(`${name}: C5 — the game creation page: the four types, Ranking for players with an account`, async () => {
+      await page.waitForTimeout(800);
+      await page.evaluate(() => window.App.openCreatePage());
+      await page.waitForFunction(() => /Four game types/.test((document.querySelector('#ace-dock .ad-bubble.ad-open .ad-text') || {}).textContent || ''), null, { timeout: 5000 });
+    });
+    await shot(page, name, 'guide-c5-create');
+    await ctx.close();
+  }
+
   // ── C1 for a guest: no Ranking table pointed at, a free account instead (D16) ──
   {
     const ctx = await browser.newContext({ ...descriptor, serviceWorkers: 'block' });

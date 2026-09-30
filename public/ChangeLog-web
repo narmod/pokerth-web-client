@@ -1,4 +1,8 @@
-2026-09-30 version 2.1.9-web.262 (current series):
+2026-09-30 version 2.1.9-web.263 (current series):
+- new: Ace’s Help, game creation — the four game types, who can create a Ranking table (any player with an account), cup presets are for practice only
+- new: Ace’s Help, windows — a short explanation the first time you open the ranking, the forum events, help, advanced options, theme, music player, avatar, players list, a player’s card and the logs
+
+2026-09-30 version 2.1.9-web.262:
 - new: Ace’s Help, login screen — he explains the three ways to play, account versus guest (what guests cannot do, the free account), then the nickname and the avatar (Gallery, Create — even from a photo — and Import)
 - new: Ace’s Help, waiting room of a normal or training table — who starts the game, filling up with computer players, inviting friends
 - improvement: Ace’s Help — his bubble moves to the top of the screen when it would hide what it talks about

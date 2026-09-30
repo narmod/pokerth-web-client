@@ -9,5 +9,7 @@ import rankedResult from './ranked-result.mjs';
 import login from './login.mjs';
 import loginProfile from './login-profile.mjs';
 import waitNormal from './wait-normal.mjs';
+import createGame from './create.mjs';
+import windows from './windows.mjs';
 
-export const CONTEXTS = [rankedResult, lobbyRanking, lobbyRankingCreate, lobbyGuest, waitRanking, waitNormal, login, loginProfile, welcome];
+export const CONTEXTS = [...windows, rankedResult, createGame, lobbyRanking, lobbyRankingCreate, lobbyGuest, waitRanking, waitNormal, login, loginProfile, welcome];

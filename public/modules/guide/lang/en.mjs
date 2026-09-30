@@ -51,4 +51,19 @@ export default {
   c4Host: 'This table is yours: press **Start Game** when everyone is here — or tick **Fill up with computer players** to fill the empty seats. **Invite friends** sends them a link to this table.',
   c4Guest: 'The host of the table starts the game. Meanwhile, **Invite friends** sends them a link to this table.',
   c4Offline: 'Training table: press **Start Game** — the empty seats are filled with computer players.',
+  // C5 — game creation page
+  c5Create: 'Four game types: **Normal** (open to all), **Registered players only**, **Invited players only** and **Ranking game**. Any player with an account can create a Ranking table: 10 players, no password, it starts by itself when full. The cup presets (BBC, WeCup…) are for practice only — they don’t create a real cup game.',
+  c5CreateGuest: 'As a guest you can create **Normal** games. Ranking tables and registered-only games need a (free) pokerth.net account.',
+  c5CreateOffline: 'Training table: choose the number of players, a game style (the pace) and the level of the computer players, then create the table. Nothing here counts towards a ranking.',
+  // C5 — windows (first opening)
+  c5Ranking: 'The official **PokerTH** ranking and the community ones (**BBC**, **WEC**) in tabs. Search a player, pick a **Season** or **All-Time**, and tap a name to open the profile — tapping its chart switches between bars and pie.',
+  c5Events: 'The upcoming cup games. They are created by the cup admins; players register on the cup’s site or in its forum thread — the WEC game at 22:00 (server time) needs no registration. Times are shown in server time and in your local time; tap an event and the button at the bottom follows it.',
+  c5Help: 'Everything about the app, chapter by chapter. The search box finds any word in the help.',
+  c5Adv: 'Every option, by section. Type in the search box to find one; each switch applies at once. Options marked **web** exist only in this web client.',
+  c5Theme: 'The look of the game: palette, table, cards, card back, buttons and pucks, or a ready-made theme. Changes show at once.',
+  c5Music: 'The music player: tracks and radio stations. The thumbs up or down on the current track tell the admins what to keep.',
+  c5Avatar: 'Your avatar: pick one in the **Gallery**, draw your own in **Create** — it can even start from a photo — or **Import** a picture. On pokerth.net the other players see it too.',
+  c5Players: 'Who is online. Search and sort the list; tap a player for the profile, a private message or an invitation to your table.',
+  c5Profile: 'A player’s card: profile and statistics. From here you can invite them to your table, or ignore them — their chat messages are hidden, and you can undo it at any time.',
+  c5Logs: 'Your logs: every game played on this device is recorded here, with a preview, HTML and text exports and an analysis of your play.',
 };
