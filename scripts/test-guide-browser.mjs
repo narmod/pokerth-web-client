@@ -301,6 +301,44 @@ async function runDevice(browser, name, descriptor) {
     await ctx.close();
   }
 
+  // ── C6: « ? » mode — a tap explains, a second tap acts ──
+  {
+    const ctx = await browser.newContext({ ...descriptor, serviceWorkers: 'block' });
+    await ctx.addInitScript(() => { try { if (!sessionStorage.getItem('g6')) { sessionStorage.setItem('g6', '1'); localStorage.setItem('pth_guide_on', '1'); localStorage.setItem('pth_guide_offered', '1'); localStorage.setItem('pth_guide_seen', JSON.stringify({ r: 0, s: { welcome: 1, login: 1, 'login-profile': 1, 'w-ranking': 1 } })); } } catch (_e) {} });
+    const page = await ctx.newPage(); watch(page);
+    await openTable(page, base, { stopAt: 'lobby', seats: 6 });
+    const txt = () => page.evaluate(() => (document.querySelector('#ace-dock .ad-bubble.ad-open .ad-text') || {}).textContent || '');
+    await check(`${name}: C6 — the menu opens « ? » mode`, async () => {
+      await page.evaluate(() => window.guideToggle());
+      await page.locator(btn('askMenu')).waitFor({ timeout: 4000 });
+      await click(page, btn('askMenu'));
+      await page.waitForFunction(() => /second time to use it/.test((document.querySelector('#ace-dock .ad-bubble.ad-open .ad-text') || {}).textContent || ''), null, { timeout: 3000 });
+      assert.ok(await page.evaluate(() => document.body.classList.contains('guide-ask')));
+    });
+    await check(`${name}: C6 — first tap on Ranking: explained, nothing opens`, async () => {
+      await page.locator('#ranking-btn-lobby').click();
+      await page.waitForTimeout(400);
+      assert.match(await txt(), /official PokerTH ranking/);
+      assert.equal(await page.evaluate(() => getComputedStyle(document.getElementById('ranking-modal')).display), 'none', 'the ranking opened on the first tap');
+      await page.waitForFunction(() => { const r = document.getElementById('ag-ring'); return !!(r && r.classList.contains('ag-on')); }, null, { timeout: 2000 });
+    });
+    await shot(page, name, 'guide-c6');
+    await check(`${name}: C6 — second tap: it opens`, async () => {
+      await page.locator('#ranking-btn-lobby').click();
+      await page.waitForFunction(() => getComputedStyle(document.getElementById('ranking-modal')).display !== 'none', null, { timeout: 3000 });
+      await page.evaluate(() => window.closeRankingModal && window.closeRankingModal());
+    });
+    await check(`${name}: C6 — « Done » ends the mode, taps act again`, async () => {
+      await click(page, btn('askDone'));
+      await page.waitForTimeout(300);
+      assert.ok(!(await page.evaluate(() => document.body.classList.contains('guide-ask'))), 'still in « ? » mode');
+      await page.locator('#ranking-btn-lobby').click();
+      await page.waitForFunction(() => getComputedStyle(document.getElementById('ranking-modal')).display !== 'none', null, { timeout: 3000 });
+      await page.evaluate(() => window.closeRankingModal && window.closeRankingModal());
+    });
+    await ctx.close();
+  }
+
   // ── C1 for a guest: no Ranking table pointed at, a free account instead (D16) ──
   {
     const ctx = await browser.newContext({ ...descriptor, serviceWorkers: 'block' });

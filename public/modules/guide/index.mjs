@@ -21,7 +21,7 @@
 // luck! », the result of the game back in the lobby). L3 (web.261):
 // statistics (beacons.mjs). L4 (web.262): C3 login screen, C4 Normal /
 // training waiting room. L5 (web.263): C5 create page and windows.
-// Console: guideDebug().
+// L6 (web.264): « ? » mode (hotspots.mjs). Console: guideDebug().
 // ═══════════════════════════════════════════════════════════════════
 
 import { createState, mergeIn, KEY_ON } from './state.mjs';
@@ -31,6 +31,7 @@ import { CONTEXTS } from './contexts/index.mjs';
 import { gt, ready } from './i18n.mjs';
 import * as hl from './highlight.mjs';
 import { beacon } from './beacons.mjs';
+import { hotspotFor, tappableFor } from './hotspots.mjs';
 
 /** L2: public for everyone (L1 was behind ?guide=1). */
 const PUBLIC = true;
@@ -222,6 +223,7 @@ function clearTimers() {
 }
 
 function leave() {
+  exitAsk(true);
   clearTimers();
   hl.clear();
   showing = null;
@@ -267,7 +269,7 @@ function renderStep(opts = {}) {
     hl.clear();
     if (target) hl.highlight(target);
   }
-  M.say({ text: gt(text, vars), buttons: list, point: !!hl.current(), avoid: hl.current(), onButton: onCtxButton });
+  M.say({ text: gt(text, vars), buttons: list, point: !!hl.current(), avoid: hl.current(), ask: gt('askLabel'), onButton: onCtxButton });
   clearTimeout(stepTimer); stepTimer = 0;
   if (step.auto && !last) stepTimer = setTimeout(() => { if (showing && showing.run === run && run.next()) renderStep(); }, step.auto);
   if (!opts.keepFold) {
@@ -288,6 +290,7 @@ function doAction(id, w) {
 }
 
 function onCtxButton(id) {
+  if (id === 'ask') { enterAsk(); return; }
   const run = showing && showing.run;
   if (!run) { closeBubble(); return; }
   const cid = run.ctx.id;
@@ -339,12 +342,72 @@ async function note(key, buttons, onButton, vars) {
 }
 
 async function showMenu() {
-  await note('menuOn', [btn('turnOff'), btn('resetTips'), btn('close', true)], (id) => {
+  await note('menuOn', [btn('askMenu'), btn('turnOff'), btn('resetTips'), btn('close', true)], (id) => {
+    if (id === 'askMenu' || id === 'ask') { enterAsk(); return; }
     if (id === 'turnOff') { turnOff(); return; }
     if (id === 'resetTips') { resetTips(); return; }
     closeBubble();
   });
   showing.kind = 'menu';
+}
+
+// ── « ? » mode (C6) ────────────────────────────────────────────────
+// A tap on any element makes the Ace say what it does (hotspots.mjs) instead
+// of acting; a second tap on the same element lets it through. The Ace's own
+// dock is never intercepted. Ends with « Done », Escape, the help switched
+// off, or a hand starting (D8).
+let armed = null;
+function askSay(key, extra) {
+  if (!M) return;
+  M.say({ text: gt(key) + (extra ? ' ' + gt(extra) : ''), buttons: [btn('askDone', true)], avoid: hl.current(),
+    point: !!hl.current(), onButton: () => exitAsk() });
+}
+async function enterAsk() {
+  await ensureDock();
+  clearTimers(); hl.clear();
+  armed = null;
+  showing = { kind: 'ask' };
+  try { document.body.classList.add('guide-ask'); } catch (e) {}
+  document.addEventListener('click', onAskClick, true);
+  document.addEventListener('pointerdown', onAskDown, true);
+  document.addEventListener('keydown', onAskKey, true);
+  askSay('askIntro');
+  beacon('ask', 'shown');
+}
+function exitAsk(silent) {
+  document.removeEventListener('click', onAskClick, true);
+  document.removeEventListener('pointerdown', onAskDown, true);
+  document.removeEventListener('keydown', onAskKey, true);
+  try { document.body.classList.remove('guide-ask'); } catch (e) {}
+  const was = showing && showing.kind === 'ask';
+  armed = null;
+  if (was) { beacon('ask', 'done'); if (!silent) closeBubble(); }
+}
+function askTarget(t) {
+  if (!t || (t.closest && t.closest('#ace-dock'))) return null;
+  const hs = hotspotFor(t);
+  if (hs) return hs;
+  const el = tappableFor(t);
+  return el ? { el, key: null } : null;
+}
+function onAskDown(ev) {
+  // a <select> opens on press: keep it closed until it has been explained
+  const hit = askTarget(ev.target);
+  if (hit && hit.el !== armed && hit.el.tagName === 'SELECT') ev.preventDefault();
+}
+function onAskClick(ev) {
+  const hit = askTarget(ev.target);
+  if (!hit) return;                                   // plain text, the Ace: nothing to stop
+  // 2nd tap on the explained element: let it act (it stays « armed », so a label's own click on its box goes through too)
+  if (armed && (hit.el === armed || armed.contains(ev.target) || hit.el.contains(armed))) return;
+  ev.preventDefault(); ev.stopPropagation(); ev.stopImmediatePropagation();
+  armed = hit.el;
+  hl.highlight(hit.el);
+  if (hit.key) { askSay(hit.key, 'askAgain'); beacon('ask', 'explained'); }
+  else askSay('askUnknown');
+}
+function onAskKey(ev) {
+  if (ev.key === 'Escape') { ev.stopPropagation(); exitAsk(); }
 }
 
 /**
@@ -370,6 +433,7 @@ function flash(key, ms) {
 function onTap() {
   if (M && M.bubbleOpen()) {
     if (showing && showing.kind === 'offer') return;
+    if (showing && showing.kind === 'ask') { exitAsk(); return; }
     if (showing && showing.kind === 'ctx') { onCtxButton('later'); return; }
     closeBubble(); return;
   }
@@ -507,6 +571,7 @@ async function evaluate() {
     if (!(showing && showing.kind === 'luck')) leave();   // silent during a hand (D8)
     return;
   }
+  if (showing && showing.kind === 'ask') { armed = armed && armed.isConnected ? armed : null; return; }   // « ? » mode: the player leads
   const moved = !prev || prev.screen !== w.screen;
   if (moved && M && M.isDocked()) M.settle(true);       // new layout: a free spot again, bubble or not
   if (M && M.bubbleOpen()) {
@@ -665,6 +730,8 @@ function init() {
 window._guideApply = apply;
 window.guideToggle = toggle;
 window.guideResetTips = () => { if (available()) resetTips(); };
+/** « ? » mode: tap anything to hear what it does (C6). */
+window.guideAsk = () => { if (available() && state.isOn() && canSpeakHere()) enterAsk(); };
 /** Console: the current situation and saved progress. */
 window.guideDebug = () => ({ available: available(), on: state.isOn(), offered: state.wasOffered(), seen: state.seenIds(), snoozed: [...snoozed], where: where(), result, key: KEY_ON });
 

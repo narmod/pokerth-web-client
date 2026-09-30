@@ -43,6 +43,8 @@ const EVENTS = Object.freeze({
   'w-players': ['shown', 'done', 'dismissed'],
   'w-profile': ['shown', 'done', 'dismissed'],
   'w-logs': ['shown', 'done', 'dismissed'],
+  // L6 — « ? » mode: entered, an element explained, left
+  ask: ['shown', 'explained', 'done'],
 });
 
 /** Is this (context, event) pair one we count? */

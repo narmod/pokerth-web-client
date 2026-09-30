@@ -10,7 +10,7 @@
 // Ace at all (D4): a plain bubble, and a small static A♠ chip to reopen it.
 //
 // API:  dock({ plain, label, onTap }) · undock() · say({ text, buttons,
-//       onButton, point }) · hush() · badge(on) · react(kind) · point(on)
+//       onButton, point, avoid, ask }) · hush() · badge(on) · react(kind) · point(on)
 //       guide({ text, buttons, onButton, point }) = dock + say
 // ═══════════════════════════════════════════════════════════════════
 
@@ -33,6 +33,10 @@ const CSS = `
 #ace-dock .ad-bubble.ad-top::after{display:none}
 #ace-dock .ad-bubble.ad-side::after{right:-8px;bottom:18px;border-width:9px 0 9px 9px;border-color:transparent transparent transparent #fbf7ee}
 #ace-dock .ad-text{margin:0}
+#ace-dock .ad-ask{position:absolute;right:-9px;top:-11px;width:30px;height:30px;border-radius:50%;border:2px solid #141414;background:#f5c518;color:#141414;font:900 16px/1 Georgia,serif;cursor:pointer;box-shadow:0 2px 6px rgba(0,0,0,.35);padding:0}
+#ace-dock .ad-ask:focus-visible{outline:3px solid #fbf7ee;outline-offset:1px}
+body.guide-ask *{cursor:help!important}
+body.guide-ask #ace-dock *{cursor:pointer!important}
 #ace-dock .ad-text b{font-weight:800}
 #ace-dock .ad-btns{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:6px;margin-top:9px}
 #ace-dock .ad-btn{appearance:none;border:1.5px solid #141414;background:transparent;color:#141414;border-radius:999px;padding:6px 14px;font:700 13px/1.2 system-ui,sans-serif;cursor:pointer;min-height:36px}
@@ -301,7 +305,8 @@ export function say(o) {
   onBtnCb = o.onButton || null;
   const btns = (o.buttons || []).map((b) =>
     `<button type="button" class="ad-btn${b.primary ? ' ad-primary' : ''}" data-ad-btn="${esc(b.id)}">${esc(b.label)}</button>`).join('');
-  bub.innerHTML = `<p class="ad-text">${rich(o.text)}</p>` + (btns ? `<div class="ad-btns">${btns}</div>` : '');
+  const ask = o.ask ? `<button type="button" class="ad-ask" data-ad-btn="ask" aria-label="${esc(o.ask)}" title="${esc(o.ask)}">?</button>` : '';
+  bub.innerHTML = ask + `<p class="ad-text">${rich(o.text)}</p>` + (btns ? `<div class="ad-btns">${btns}</div>` : '');
   avoidEl = o.avoid || null;
   bub.classList.add('ad-open');
   placeBubble();

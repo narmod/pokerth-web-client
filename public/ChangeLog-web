@@ -1,4 +1,7 @@
-2026-09-30 version 2.1.9-web.263 (current series):
+2026-09-30 version 2.1.9-web.264 (current series):
+- new: Ace’s Help, « ? » mode — tap « ? » in his bubble or menu, then tap anything on the screen: the Ace says what it does instead of doing it; tap it again to use it, « Done » or Escape to leave
+
+2026-09-30 version 2.1.9-web.263:
 - new: Ace’s Help, game creation — the four game types, who can create a Ranking table (any player with an account), cup presets are for practice only
 - new: Ace’s Help, windows — a short explanation the first time you open the ranking, the forum events, help, advanced options, theme, music player, avatar, players list, a player’s card and the logs
 

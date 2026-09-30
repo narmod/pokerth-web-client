@@ -1,7 +1,8 @@
 # Ace's Help — contextual assistant
 
-Status: **L5 shipped in `2.1.9-web.263`: C5, the game creation page and the windows (first
-opening).** L4 (`web.262`) covered the login screen and the Normal waiting room. L3 (`web.261`) added the statistics, and L2 (`web.260`) made the
+Status: **L6 shipped in `2.1.9-web.264`: C6, the « ? » mode — all planned deliveries are
+shipped.** L5 (`web.263`) covered the game creation page and the windows (first
+opening). L4 (`web.262`) covered the login screen and the Normal waiting room. L3 (`web.261`) added the statistics, and L2 (`web.260`) made the
 assistant public in 83 languages. L1 (the foundation)
 shipped in `web.259` behind `?guide=1`. L2 adds the Ranking contexts: C1 in the lobby and
 C2 in the waiting room, including the result of the game.
@@ -182,7 +183,31 @@ above the windows (z-index 10020 / 10019).
 A window is "open" when it is displayed and inside the viewport. The open windows are
 re-read every second.
 
-## Statistics (L3)
+## « ? » mode (L6)
+
+The « ? » chip at the corner of every tip bubble, and *What's this?* in the Ace's menu,
+start the mode. While it is on, the first tap on an element does not act: the element
+gets the gold outline and the Ace says what it does. A second tap on the same element
+lets it through. The mode ends with *Done*, Escape, a tap on the Ace, the help switched
+off, or a hand starting (D8). Screen tips wait while it is on.
+
+The map is `modules/guide/hotspots.mjs`, data only: `HOTSPOTS` is a list of
+`[selector, text key, dynamic?]`. The first entry whose selector matches the tapped
+element or one of its ancestors wins, so specific entries (a Join button) come before
+generic ones (its game row). `dynamic` marks elements drawn by script (game rows,
+waiting-room buttons), which the page check skips. A control without an entry (button,
+link, field, `[onclick]`…) gets the generic line `askUnknown`; plain text and the Ace's
+own dock are never stopped.
+
+Rules:
+
+- Clicks are caught in the capture phase and stopped only for the first tap. The
+  explained element stays armed, so a label's own click on its checkbox goes through too.
+- A `<select>` is kept closed (`pointerdown`) until it has been explained.
+- `body.guide-ask` shows the help cursor.
+- To port the mode to QML, keep the same keys and give each control the key of its entry.
+
+
 
 `modules/guide/beacons.mjs` posts `POST /__guide { ctx, ev }`. The request carries no
 visitor id, no name and no table. Offline, events wait in `localStorage pth_guide_q` (at
@@ -206,6 +231,7 @@ series in the visit buckets (`gd`), and share the visit counter's retention and 
 | `login-profile` | `shown`, `done`, `dismissed` |
 | `wait-normal` | `shown`, `done`, `dismissed` |
 | `create-game`, `w-…` (10 windows) | `shown`, `done`, `dismissed` |
+| `ask` | `shown` (mode entered), `explained` (an element with an entry), `done` (mode left) |
 
 What each event means:
 
@@ -241,6 +267,8 @@ Keys (all 83 languages; `es-419` is derived from `es` with `scripts/es-419-rules
   `nothingHere`.
 - L5: `c5Create`, `c5CreateGuest`, `c5CreateOffline`, `c5Ranking`, `c5Events`, `c5Help`, `c5Adv`,
   `c5Theme`, `c5Music`, `c5Avatar`, `c5Players`, `c5Profile`, `c5Logs`.
+- L6: `askLabel`, `askMenu`, `askIntro`, `askAgain`, `askUnknown`, `askDone`, and one
+  `hs…` key per hotspot (47).
 - L4: `c3Modes`, `c3Account`, `c3Profile`, `c4Host`, `c4Guest`, `c4Offline`.
 - L2: `join`, `createRanking`, `signup`, `seeRanking`, `c1Join` `{n}` `{max}`, `c1None`,
   `c1Guest`, `c2Wait` `{n}` `{max}`, `c2Points`, `c2Score`, `c2Seasons`, `c2Why55`,
@@ -263,6 +291,8 @@ The help has an *Ace's Help* section (`start.acehelp`) in all 83 languages.
 - `npm run test:guide-admin`: `server/guide-stats.js`, the real `/__guide` route
   (spawned on a scratch file: 204, 400 for unknown pairs, 405, nothing stored), the
   beacons (no identifier, the offline queue) and the admin card.
+- `npm run test:guide-ask`: every static hotspot selector exists in the page, every key
+  resolves in every language, and the first matching entry wins (jsdom).
 - `npm run test:guide-browser`: a real browser on phones and a desktop. It checks the
   offer, the buttons, the menu, the lobby, that the Ace leaves when a hand starts, that the
   option switches him off, the plain mode, and that the docked Ace hides nothing
@@ -282,5 +312,5 @@ The help has an *Ace's Help* section (`start.acehelp`) in all 83 languages.
 | L2 | C1 lobby "join a Ranking table" (`pickRankingTable`), C2 ranked waiting room and game result, 83 languages, help section, public (`web.260`) |
 | L3 | Admin: `POST /__guide` anonymous counters, and the Ranking funnel card (`web.261`, restart needed) |
 | L4 | C3 login screen, C4 normal waiting room (`web.262`) |
-| **L5** | C5 game creation page and windows (`web.263`) |
-| L6 | C6 "?" mode (`hotspots.mjs`) |
+| L5 | C5 game creation page and windows (`web.263`) |
+| **L6** | C6 « ? » mode (`hotspots.mjs`, `web.264`) |
