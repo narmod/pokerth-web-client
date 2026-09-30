@@ -10698,6 +10698,13 @@ html[data-buttons="pokerth"] .btn-action[disabled] { filter: grayscale(0.55) bri
 .players-search-clr:hover, .players-search-clr:focus-visible { color:var(--gold); background:var(--inset, rgba(255,255,255,0.08)); outline:none; }
 .players-search-clr[hidden] { display:none; }
 :root[data-theme="pokerth-light"] .players-search-clr { color:#3a4150; }
+/* Barre du haut (wide) : le champ recherche prend exactement la hauteur du filtre
+   « Aucun filtre » à sa droite (stretch sur la ligne flex → suit aussi les tailles
+   d'interface agrandies). */
+.lobby-topbar { align-items:stretch; }
+.lobby-topbar .players-search { align-items:stretch; }
+.lobby-topbar .players-search .pls-field { align-items:stretch; }
+.lobby-topbar .players-search .pls-field input { height:auto; align-self:stretch; box-sizing:border-box; }
 .lobby-topbar #g-filter-bar { flex:1 1 260px; padding:0 !important; margin:0; display:flex; align-items:center; gap:var(--sp-3); }
 .lobby-topbar #g-filter-bar .gfilt-wrap { flex:1 1 auto; }
 /* En mobile la barre s'empile proprement (recherche puis filtre) */
