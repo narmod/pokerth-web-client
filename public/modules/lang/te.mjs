@@ -17,7 +17,7 @@ export const strings = {
     waitingHintRanked: "టేబుల్ నిండిన వెంటనే ఆట ఆటోమేటిగ్గా మొదలవుతుంది",
     rankWaitFull: "ర్యాంకింగ్ గేమ్ — {max} మంది ఆటగాళ్ల కోసం వేచి ఉంది ({n}/{max}). టేబుల్ నిండినప్పుడు ఆట మొదలవుతుంది.",
     // Mascotte animée (modules/mascot, extra web)
-    advMascot:'నిష్క్రియంగా ఉన్నప్పుడు హోమ్ స్క్రీన్‌లో మరియు లాబీలో యానిమేటెడ్ మస్కట్ (ఏస్)', mascotHello:'హాయ్!', mascotBye:'మళ్ళీ కలుద్దాం!', mascotTada:'టా-డా!', mascotKing:'టేబుల్ రాజు!', mascotAnyone:'ఎవరైనా ఉన్నారా?', mascotCheese:'చీజ్!', mascotTable:'ఒక కొత్త టేబుల్!', mascotMail:'మీకు సందేశం వచ్చింది!', mascotBravo:'శభాష్!',
+    mascotHello:'హాయ్!', mascotBye:'మళ్ళీ కలుద్దాం!', mascotTada:'టా-డా!', mascotKing:'టేబుల్ రాజు!', mascotAnyone:'ఎవరైనా ఉన్నారా?', mascotCheese:'చీజ్!', mascotTable:'ఒక కొత్త టేబుల్!', mascotMail:'మీకు సందేశం వచ్చింది!', mascotBravo:'శభాష్!',
     // Aide de l'As (modules/guide) — bouton / entrée de menu + option
     guideBtn:'ఏస్ సహాయం', advGuide:'ఏస్ సహాయం: ఏస్ యాప్‌ను దశలవారీగా వివరిస్తుంది',
     // Notes de joueur + étiquettes (modules/notes, extra web)

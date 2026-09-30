@@ -19,7 +19,7 @@ export const strings = {
     waitingHintRanked: "เกมจะเริ่มโดยอัตโนมัติทันทีที่โต๊ะเต็ม",
     rankWaitFull: "เกมจัดอันดับ — กำลังรอผู้เล่น {max} คน ({n}/{max}) เกมจะเริ่มเมื่อโต๊ะเต็ม",
     // Mascotte animée (modules/mascot, extra web)
-    advMascot:'มาสคอตเคลื่อนไหว (ไพ่เอซ) บนหน้าจอหลักและล็อบบี้เมื่อไม่มีการใช้งาน', mascotHello:'หวัดดี!', mascotBye:'แล้วเจอกัน!', mascotTada:'ทาดา!', mascotKing:'ราชาแห่งโต๊ะ!', mascotAnyone:'มีใครอยู่ไหม?', mascotCheese:'ยิ้ม!', mascotTable:'โต๊ะใหม่!', mascotMail:'มีข้อความถึงคุณ!', mascotBravo:'เยี่ยมมาก!',
+    mascotHello:'หวัดดี!', mascotBye:'แล้วเจอกัน!', mascotTada:'ทาดา!', mascotKing:'ราชาแห่งโต๊ะ!', mascotAnyone:'มีใครอยู่ไหม?', mascotCheese:'ยิ้ม!', mascotTable:'โต๊ะใหม่!', mascotMail:'มีข้อความถึงคุณ!', mascotBravo:'เยี่ยมมาก!',
     // Aide de l'As (modules/guide) — bouton / entrée de menu + option
     guideBtn:'ตัวช่วยไพ่เอซ', advGuide:'ตัวช่วยไพ่เอซ: ไพ่เอซอธิบายแอปทีละขั้นตอน',
     // Notes de joueur + étiquettes (modules/notes, extra web)

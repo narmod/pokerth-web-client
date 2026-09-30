@@ -20,7 +20,7 @@ export const strings = {
     waitingHintRanked: "La ludo aŭtomate komenciĝos tuj kiam la tablo estos plena",
     rankWaitFull: "Rangiga ludo — atendante {max} ludantojn ({n}/{max}). La ludo komenciĝos kiam la tablo estos plena.",
     // Mascotte animée (modules/mascot, extra web)
-    advMascot:'Animita maskoto (la Aso) sur la hejma ekrano kaj en la vestiblo dum neaktiveco', mascotHello:'Saluton!', mascotBye:'Ĝis!', mascotTada:'Tada!', mascotKing:'Reĝo de la tablo!', mascotAnyone:'Ĉu iu estas?', mascotCheese:'Fromaĝo!', mascotTable:'Nova tablo!', mascotMail:'Vi havas poŝton!', mascotBravo:'Brave!',
+    mascotHello:'Saluton!', mascotBye:'Ĝis!', mascotTada:'Tada!', mascotKing:'Reĝo de la tablo!', mascotAnyone:'Ĉu iu estas?', mascotCheese:'Fromaĝo!', mascotTable:'Nova tablo!', mascotMail:'Vi havas poŝton!', mascotBravo:'Brave!',
     // Aide de l'As (modules/guide) — bouton / entrée de menu + option
     guideBtn:'Helpo de la Aso', advGuide:'Helpo de la Aso: la Aso klarigas la aplikaĵon paŝon post paŝo',
     // Notes de joueur + étiquettes (modules/notes, extra web)

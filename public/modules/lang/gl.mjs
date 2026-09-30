@@ -13,7 +13,7 @@ export const strings = {
     waitingHintRanked: "A partida comezará automaticamente en canto a mesa estea chea",
     rankWaitFull: "Partida de clasificación — agardando por {max} xogadores ({n}/{max}). A partida comezará cando a mesa estea chea.",
     // Mascotte animée (modules/mascot, extra web)
-    advMascot:'Mascota animada (o Ás) na pantalla de inicio e no vestíbulo cando non hai actividade', mascotHello:'Ola!', mascotBye:'Ata logo!', mascotTada:'Tachán!', mascotKing:'O rei do tapete!', mascotAnyone:'Hai alguén?', mascotCheese:'Patacas!', mascotTable:'Unha mesa nova!', mascotMail:'Tes unha mensaxe!', mascotBravo:'Ben feito!',
+    mascotHello:'Ola!', mascotBye:'Ata logo!', mascotTada:'Tachán!', mascotKing:'O rei do tapete!', mascotAnyone:'Hai alguén?', mascotCheese:'Patacas!', mascotTable:'Unha mesa nova!', mascotMail:'Tes unha mensaxe!', mascotBravo:'Ben feito!',
     // Aide de l'As (modules/guide) — bouton / entrée de menu + option
     guideBtn:'Axuda do Ás', advGuide:'Axuda do Ás: o Ás explica a aplicación paso a paso',
     // Notes de joueur + étiquettes (modules/notes, extra web)

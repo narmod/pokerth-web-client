@@ -12,7 +12,7 @@ export const strings = {
     waitingHintRanked: "O jogo começa automaticamente assim que a mesa estiver cheia",
     rankWaitFull: "Jogo ranqueado — aguardando {max} jogadores ({n}/{max}). O jogo começa quando a mesa estiver cheia.",
     // Mascotte animée (modules/mascot, extra web)
-    advMascot:'Mascote animado (o Ás) na tela inicial e no lobby quando você fica inativo', mascotHello:'Oi!', mascotBye:'Até mais!', mascotTada:'Tcharam!', mascotKing:'O rei da mesa!', mascotAnyone:'Tem alguém aí?', mascotCheese:'Xis!', mascotTable:'Uma mesa nova!', mascotMail:'Você tem mensagem!', mascotBravo:'Mandou bem!',
+    mascotHello:'Oi!', mascotBye:'Até mais!', mascotTada:'Tcharam!', mascotKing:'O rei da mesa!', mascotAnyone:'Tem alguém aí?', mascotCheese:'Xis!', mascotTable:'Uma mesa nova!', mascotMail:'Você tem mensagem!', mascotBravo:'Mandou bem!',
     // Aide de l'As (modules/guide) — bouton / entrée de menu + option
     guideBtn:'Ajuda do Ás', advGuide:'Ajuda do Ás: o Ás explica o aplicativo passo a passo',
     // Notes de joueur + étiquettes (modules/notes, extra web)

@@ -18,7 +18,7 @@ export const strings = {
     waitingHintRanked: "La partita inizierà automaticamente appena il tavolo sarà completo",
     rankWaitFull: "Partita valida per la classifica — in attesa di {max} giocatori ({n}/{max}). La partita inizierà quando il tavolo sarà completo.",
     // Mascotte animée (modules/mascot, extra web)
-    advMascot:'Mascotte animata (l’Asso) nella schermata iniziale e nella lobby quando sei inattivo', mascotHello:'Ciao!', mascotBye:'A presto!', mascotTada:'Ta-dà!', mascotKing:'Il re del tavolo!', mascotAnyone:'C’è qualcuno?', mascotCheese:'Cheese!', mascotTable:'Un nuovo tavolo!', mascotMail:'Hai posta!', mascotBravo:'Ben fatto!',
+    mascotHello:'Ciao!', mascotBye:'A presto!', mascotTada:'Ta-dà!', mascotKing:'Il re del tavolo!', mascotAnyone:'C’è qualcuno?', mascotCheese:'Cheese!', mascotTable:'Un nuovo tavolo!', mascotMail:'Hai posta!', mascotBravo:'Ben fatto!',
     // Aide de l'As (modules/guide) — bouton / entrée de menu + option
     guideBtn:'Aiuto dell’Asso', advGuide:'Aiuto dell’Asso: l’Asso spiega l’app passo dopo passo',
     // Notes de joueur + étiquettes (modules/notes, extra web)

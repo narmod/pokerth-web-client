@@ -13,7 +13,7 @@ export const strings = {
     waitingHintRanked: "Το παιχνίδι θα ξεκινήσει αυτόματα μόλις γεμίσει το τραπέζι",
     rankWaitFull: "Παιχνίδι κατάταξης — αναμονή για {max} παίκτες ({n}/{max}). Το παιχνίδι θα ξεκινήσει όταν γεμίσει το τραπέζι.",
     // Mascotte animée (modules/mascot, extra web)
-    advMascot:'Κινούμενη μασκότ (ο Άσος) στην αρχική οθόνη και στο λόμπι όταν είσαι ανενεργός', mascotHello:'Γεια!', mascotBye:'Τα λέμε!', mascotTada:'Τα-ντα!', mascotKing:'Ο βασιλιάς του τραπεζιού!', mascotAnyone:'Είναι κανείς εδώ;', mascotCheese:'Τυράκι!', mascotTable:'Νέο τραπέζι!', mascotMail:'Έχεις μήνυμα!', mascotBravo:'Μπράβο!',
+    mascotHello:'Γεια!', mascotBye:'Τα λέμε!', mascotTada:'Τα-ντα!', mascotKing:'Ο βασιλιάς του τραπεζιού!', mascotAnyone:'Είναι κανείς εδώ;', mascotCheese:'Τυράκι!', mascotTable:'Νέο τραπέζι!', mascotMail:'Έχεις μήνυμα!', mascotBravo:'Μπράβο!',
     // Aide de l'As (modules/guide) — bouton / entrée de menu + option
     guideBtn:'Βοήθεια του Άσου', advGuide:'Βοήθεια του Άσου: ο Άσος εξηγεί την εφαρμογή βήμα βήμα',
     // Notes de joueur + étiquettes (modules/notes, extra web)

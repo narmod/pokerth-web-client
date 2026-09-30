@@ -17,7 +17,7 @@ export const strings = {
     waitingHintRanked: "ટેબલ ભરાતાં જ ગેમ આપમેળે શરૂ થશે",
     rankWaitFull: "રેન્કિંગ ગેમ — {max} ખેલાડીઓની રાહ ({n}/{max}). ટેબલ ભરાય ત્યારે ગેમ શરૂ થશે.",
     // Mascotte animée (modules/mascot, extra web)
-    advMascot:'નિષ્ક્રિય હોય ત્યારે હોમ સ્ક્રીન અને લૉબીમાં એનિમેટેડ માસ્કોટ (એક્કો)', mascotHello:'નમસ્તે!', mascotBye:'ફરી મળીશું!', mascotTada:'ટા-ડા!', mascotKing:'ટેબલનો રાજા!', mascotAnyone:'કોઈ છે?', mascotCheese:'ચીઝ!', mascotTable:'એક નવું ટેબલ!', mascotMail:'તમારો સંદેશ આવ્યો છે!', mascotBravo:'શાબાશ!',
+    mascotHello:'નમસ્તે!', mascotBye:'ફરી મળીશું!', mascotTada:'ટા-ડા!', mascotKing:'ટેબલનો રાજા!', mascotAnyone:'કોઈ છે?', mascotCheese:'ચીઝ!', mascotTable:'એક નવું ટેબલ!', mascotMail:'તમારો સંદેશ આવ્યો છે!', mascotBravo:'શાબાશ!',
     // Aide de l'As (modules/guide) — bouton / entrée de menu + option
     guideBtn:'એક્કાની મદદ', advGuide:'એક્કાની મદદ: એક્કો ઍપને પગલું-દર-પગલું સમજાવે છે',
     // Notes de joueur + étiquettes (modules/notes, extra web)

@@ -20,7 +20,7 @@ export const strings = {
     waitingHintRanked: "Ширээ дүүрмэгц тоглолт автоматаар эхэлнэ",
     rankWaitFull: "Эрэмбийн тоглолт — {max} тоглогч хүлээж байна ({n}/{max}). Ширээ дүүрэхэд тоглолт эхэлнэ.",
     // Mascotte animée (modules/mascot, extra web)
-    advMascot:'Идэвхгүй үед нүүр дэлгэц болон лоббид хөдөлгөөнт сахиус (тамга)', mascotHello:'Сайн уу!', mascotBye:'Дараа уулзъя!', mascotTada:'Та-да!', mascotKing:'Ширээний хаан!', mascotAnyone:'Хүн байна уу?', mascotCheese:'Бяслаг!', mascotTable:'Шинэ ширээ!', mascotMail:'Танд захидал ирлээ!', mascotBravo:'Сайн байна!',
+    mascotHello:'Сайн уу!', mascotBye:'Дараа уулзъя!', mascotTada:'Та-да!', mascotKing:'Ширээний хаан!', mascotAnyone:'Хүн байна уу?', mascotCheese:'Бяслаг!', mascotTable:'Шинэ ширээ!', mascotMail:'Танд захидал ирлээ!', mascotBravo:'Сайн байна!',
     // Aide de l'As (modules/guide) — bouton / entrée de menu + option
     guideBtn:'Тамгын тусламж', advGuide:'Тамгын тусламж: тамга аппыг алхам алхмаар тайлбарлана',
     // Notes de joueur + étiquettes (modules/notes, extra web)

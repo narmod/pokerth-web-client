@@ -6,7 +6,8 @@
 //     finger; « Yes » turns the help on and he says what he does; « Got it »
 //     folds the bubble and he stays; a tap on him opens his menu; the offer
 //     never comes back after a reload;
-//   · the idle scenes are paused while he is there (D6);
+//   · the idle scenes wait while he offers his help (D6); with the help on
+//     they start from his spot and bring him back, one size for both (web.265);
 //   · in the lobby he is docked; the moment a hand starts he leaves (D8);
 //   · switching the option off in Advanced options sends him away;
 //   · with reduced motion there is no Ace, only a plain bubble (D4);
@@ -336,6 +337,74 @@ async function runDevice(browser, name, descriptor) {
       await page.waitForFunction(() => getComputedStyle(document.getElementById('ranking-modal')).display !== 'none', null, { timeout: 3000 });
       await page.evaluate(() => window.closeRankingModal && window.closeRankingModal());
     });
+    await ctx.close();
+  }
+
+  // ── idle scenes from his spot (web.265): same size, out and back, tapped, called back by a tip ──
+  {
+    const ctx = await browser.newContext({ ...descriptor, serviceWorkers: 'block' });
+    await ctx.addInitScript(() => { try { if (!sessionStorage.getItem('g7')) { sessionStorage.setItem('g7', '1'); localStorage.setItem('pth_guide_on', '1'); localStorage.setItem('pth_guide_offered', '1'); localStorage.setItem('pth_guide_seen', JSON.stringify({ r: 0, s: { welcome: 1, login: 1, 'login-profile': 1 } })); } } catch (_e) {} });
+    const page = await ctx.newPage(); watch(page);
+    await openTable(page, base, { stopAt: 'lobby', seats: 6 });
+    await page.locator('#ace-dock .ad-ace').waitFor({ timeout: 5000 });
+    await page.waitForTimeout(800);
+    for (let i = 0; i < 5 && await page.locator(bubble).count(); i++) {   // tips of this screen first
+      const g = page.locator(btn('gotIt'));
+      if (await g.count()) await g.first().click(); else await page.locator(bubble + ' .ad-btns [data-ad-btn]').last().click();
+      await page.waitForTimeout(600);
+    }
+    const aceVisible = () => page.evaluate(() => { const a = document.querySelector('#ace-dock .ad-ace'); return !!a && getComputedStyle(a).visibility !== 'hidden'; });
+    await check(`${name}: scenes — one size for the docked Ace and the scenes (80–110 px)`, async () => {
+      const a = await box(page, '#ace-dock .ad-ace');
+      const h = Math.max(80, Math.min(110, Math.min(a.vh * 0.15, a.vw * 0.22)));
+      assert.ok(Math.abs(a.h - h) <= 1.5, `docked Ace ${a.h}px, scenes ${h}px`);
+    });
+    await check(`${name}: scenes — ready when no tip waits, not with a bubble open`, async () => {
+      assert.equal(await page.evaluate(() => window._guideScene.ready()), true);
+      await page.evaluate(() => window.guideToggle());
+      await page.locator(bubble).waitFor({ timeout: 3000 });
+      assert.equal(await page.evaluate(() => window._guideScene.ready()), false);
+      await click(page, btn('close'));
+      await page.waitForTimeout(400);
+      assert.equal(await page.evaluate(() => window._guideScene.ready()), true);
+    });
+    await check(`${name}: scenes — he leaves his spot, plays, and walks back to it`, async () => {
+      const home = await box(page, '#ace-dock .ad-ace');
+      await page.evaluate(() => { window.__demo = window.mascotDemo('grim', { home: true, exit: 'home' }); });
+      await page.locator('#mascot-root .mc-pos').waitFor({ state: 'attached', timeout: 3000 });
+      const start = await page.evaluate(() => { const m = new DOMMatrixReadOnly(getComputedStyle(document.querySelector('#mascot-root .mc-pos')).transform); return { x: m.m41, y: m.m42 }; });
+      assert.ok(Math.abs(start.x - home.left) < 40 && Math.abs(start.y - home.top) < 40, `starts at ${Math.round(start.x)},${Math.round(start.y)}, his spot is ${Math.round(home.left)},${Math.round(home.top)}`);
+      assert.equal(await aceVisible(), false, 'two Aces on screen');
+      const seq = await page.evaluate(() => window.__demo.then((s) => ({ entry: s.entry, exit: s.exit })));
+      assert.deepEqual(seq, { entry: 'home', exit: 'home' });
+      assert.equal(await page.locator('#mascot-root').count(), 0, 'scene still on screen');
+      assert.equal(await aceVisible(), true, 'the docked Ace did not come back');
+      const back = await box(page, '#ace-dock .ad-ace');
+      assert.ok(Math.abs(back.left - home.left) < 2 && Math.abs(back.top - home.top) < 2, 'not back at his spot');
+    });
+    await check(`${name}: scenes — a tap while he is out: he walks back (~1 s), no puff`, async () => {
+      await page.evaluate(() => { window.__demo = window.mascotDemo('sleep', { home: true }); });
+      await page.locator('#mascot-root .mc-pos').waitFor({ state: 'attached', timeout: 3000 });
+      await page.waitForTimeout(2500);
+      const t0 = Date.now();
+      await page.evaluate(() => document.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true })));
+      assert.equal(await page.locator('#mascot-root .mc-puff').count(), 0, 'vanished in a puff');
+      await page.waitForFunction(() => !document.getElementById('mascot-root'), null, { timeout: 2500 });
+      assert.ok(Date.now() - t0 < 2000, 'too slow: ' + (Date.now() - t0) + ' ms');
+      assert.equal(await aceVisible(), true);
+      await page.evaluate(() => window.__demo);
+    });
+    await check(`${name}: scenes — a tip calls him back, then he speaks`, async () => {
+      await page.evaluate(() => { window.__demo = window.mascotDemo('sleep', { home: true }); });
+      await page.locator('#mascot-root .mc-pos').waitFor({ state: 'attached', timeout: 3000 });
+      await page.waitForTimeout(1500);
+      await page.evaluate(() => window.guideResetTips());
+      await page.waitForFunction(() => /every tip/.test((document.querySelector('#ace-dock .ad-bubble.ad-open .ad-text') || {}).textContent || ''), null, { timeout: 4000 });
+      assert.equal(await page.locator('#mascot-root').count(), 0, 'still out');
+      assert.equal(await aceVisible(), true);
+      await page.evaluate(() => window.__demo);
+    });
+    await shot(page, name, 'guide-scene-back');
     await ctx.close();
   }
 

@@ -18,7 +18,7 @@ export const strings = {
     waitingHintRanked: "Das Spiel startet automatisch, sobald der Tisch voll ist",
     rankWaitFull: "Ranglistenspiel — warte auf {max} Spieler ({n}/{max}). Das Spiel startet, sobald der Tisch voll ist.",
     // Mascotte animée (modules/mascot, extra web)
-    advMascot:'Animiertes Maskottchen (das Ass) auf dem Startbildschirm und in der Lobby bei Inaktivität', mascotHello:'Hallo!', mascotBye:'Bis bald!', mascotTada:'Tadaa!', mascotKing:'König des Filzes!', mascotAnyone:'Jemand da?', mascotCheese:'Cheese!', mascotTable:'Ein neuer Tisch!', mascotMail:'Du hast Post!', mascotBravo:'Gut gemacht!',
+    mascotHello:'Hallo!', mascotBye:'Bis bald!', mascotTada:'Tadaa!', mascotKing:'König des Filzes!', mascotAnyone:'Jemand da?', mascotCheese:'Cheese!', mascotTable:'Ein neuer Tisch!', mascotMail:'Du hast Post!', mascotBravo:'Gut gemacht!',
     // Aide de l'As (modules/guide) — bouton / entrée de menu + option
     guideBtn:'Ass-Hilfe', advGuide:'Ass-Hilfe: das Ass erklärt die App Schritt für Schritt',
     // Notes de joueur + étiquettes (modules/notes, extra web)

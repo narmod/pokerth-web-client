@@ -13,7 +13,7 @@ export const strings = {
     waitingHintRanked: "Die spel begin outomaties sodra die tafel vol is",
     rankWaitFull: "Ranglysspel — wag vir {max} spelers ({n}/{max}). Die spel begin wanneer die tafel vol is.",
     // Mascotte animée (modules/mascot, extra web)
-    advMascot:'Geanimeerde gelukbringer (die Aas) op die tuisskerm en in die voorportaal wanneer onaktief', mascotHello:'Hallo!', mascotBye:'Totsiens!', mascotTada:'Tadaa!', mascotKing:'Koning van die tafel!', mascotAnyone:'Iemand daar?', mascotCheese:'Kaas!', mascotTable:'’n Nuwe tafel!', mascotMail:'Jy het pos!', mascotBravo:'Mooi so!',
+    mascotHello:'Hallo!', mascotBye:'Totsiens!', mascotTada:'Tadaa!', mascotKing:'Koning van die tafel!', mascotAnyone:'Iemand daar?', mascotCheese:'Kaas!', mascotTable:'’n Nuwe tafel!', mascotMail:'Jy het pos!', mascotBravo:'Mooi so!',
     // Aide de l'As (modules/guide) — bouton / entrée de menu + option
     guideBtn:'Die Aas se Hulp', advGuide:'Die Aas se Hulp: die Aas verduidelik die toep stap vir stap',
     // Notes de joueur + étiquettes (modules/notes, extra web)

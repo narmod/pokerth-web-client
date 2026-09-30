@@ -17,7 +17,7 @@ export const strings = {
     waitingHintRanked: "टेबल भरताच गेम आपोआप सुरू होईल",
     rankWaitFull: "रँकिंग गेम — {max} खेळाडूंची प्रतीक्षा ({n}/{max}). टेबल भरल्यावर गेम सुरू होईल.",
     // Mascotte animée (modules/mascot, extra web)
-    advMascot:'निष्क्रिय असताना मुख्य स्क्रीन आणि लॉबीमध्ये ॲनिमेटेड शुभंकर (एक्का)', mascotHello:'नमस्कार!', mascotBye:'पुन्हा भेटू!', mascotTada:'टा-डा!', mascotKing:'टेबलचा राजा!', mascotAnyone:'कोणी आहे का?', mascotCheese:'चीज!', mascotTable:'एक नवीन टेबल!', mascotMail:'तुम्हाला संदेश आला आहे!', mascotBravo:'शाब्बास!',
+    mascotHello:'नमस्कार!', mascotBye:'पुन्हा भेटू!', mascotTada:'टा-डा!', mascotKing:'टेबलचा राजा!', mascotAnyone:'कोणी आहे का?', mascotCheese:'चीज!', mascotTable:'एक नवीन टेबल!', mascotMail:'तुम्हाला संदेश आला आहे!', mascotBravo:'शाब्बास!',
     // Aide de l'As (modules/guide) — bouton / entrée de menu + option
     guideBtn:'एक्क्याची मदत', advGuide:'एक्क्याची मदत: एक्का ॲप टप्प्याटप्प्याने समजावून सांगतो',
     // Notes de joueur + étiquettes (modules/notes, extra web)

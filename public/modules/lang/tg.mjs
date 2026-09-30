@@ -20,7 +20,7 @@ export const strings = {
     waitingHintRanked: "Ҳамин ки миз пур шавад, бозӣ худкор оғоз мешавад",
     rankWaitFull: "Бозии рейтингӣ — интизори {max} бозингар ({n}/{max}). Бозӣ вақте оғоз мешавад, ки миз пур шавад.",
     // Mascotte animée (modules/mascot, extra web)
-    advMascot:'Талисмани аниматсионӣ (туз) дар экрани асосӣ ва лобби ҳангоми бефаъолиятӣ', mascotHello:'Салом!', mascotBye:'То дидор!', mascotTada:'Та-да!', mascotKing:'Шоҳи миз!', mascotAnyone:'Касе ҳаст?', mascotCheese:'Панир!', mascotTable:'Мизи нав!', mascotMail:'Ба шумо мактуб омад!', mascotBravo:'Офарин!',
+    mascotHello:'Салом!', mascotBye:'То дидор!', mascotTada:'Та-да!', mascotKing:'Шоҳи миз!', mascotAnyone:'Касе ҳаст?', mascotCheese:'Панир!', mascotTable:'Мизи нав!', mascotMail:'Ба шумо мактуб омад!', mascotBravo:'Офарин!',
     // Aide de l'As (modules/guide) — bouton / entrée de menu + option
     guideBtn:'Кӯмаки туз', advGuide:'Кӯмаки туз: туз барномаро қадам ба қадам шарҳ медиҳад',
     // Notes de joueur + étiquettes (modules/notes, extra web)

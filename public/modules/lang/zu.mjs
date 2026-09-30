@@ -20,7 +20,7 @@ export const strings = {
     waitingHintRanked: "Umdlalo uzoqala ngokuzenzakalela uma itafula seligcwele",
     rankWaitFull: "Umdlalo wezinga — kulindwe abadlali abangu-{max} ({n}/{max}). Umdlalo uzoqala uma itafula seligcwele.",
     // Mascotte animée (modules/mascot, extra web)
-    advMascot:'Uphawu olupopayi (i-Ace) esikrinini sasekhaya nasemnyango lapho ungenzi lutho', mascotHello:'Sawubona!', mascotBye:'Sizobonana!', mascotTada:'Tada!', mascotKing:'Inkosi yetafula!', mascotAnyone:'Ukhona umuntu?', mascotCheese:'Moyizela!', mascotTable:'Itafula elisha!', mascotMail:'Unomlayezo!', mascotBravo:'Wenze kahle!',
+    mascotHello:'Sawubona!', mascotBye:'Sizobonana!', mascotTada:'Tada!', mascotKing:'Inkosi yetafula!', mascotAnyone:'Ukhona umuntu?', mascotCheese:'Moyizela!', mascotTable:'Itafula elisha!', mascotMail:'Unomlayezo!', mascotBravo:'Wenze kahle!',
     // Aide de l'As (modules/guide) — bouton / entrée de menu + option
     guideBtn:'Usizo luka-Ace', advGuide:'Usizo luka-Ace: i-Ace ichaza uhlelo lokusebenza isinyathelo ngesinyathelo',
     // Notes de joueur + étiquettes (modules/notes, extra web)

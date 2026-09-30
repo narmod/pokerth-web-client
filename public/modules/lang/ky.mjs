@@ -20,7 +20,7 @@ export const strings = {
     waitingHintRanked: "Стол толоору менен оюн автоматтык түрдө башталат",
     rankWaitFull: "Рейтингдик оюн — {max} оюнчу күтүлүүдө ({n}/{max}). Стол толгондо оюн башталат.",
     // Mascotte animée (modules/mascot, extra web)
-    advMascot:'Аракетсиз турганда башкы экранда жана лоббиде анимациялык талисман (туз)', mascotHello:'Салам!', mascotBye:'Көрүшкөнчө!', mascotTada:'Та-да!', mascotKing:'Үстөлдүн падышасы!', mascotAnyone:'Бирөө барбы?', mascotCheese:'Сыр!', mascotTable:'Жаңы стол!', mascotMail:'Сизге кат келди!', mascotBravo:'Азаматсың!',
+    mascotHello:'Салам!', mascotBye:'Көрүшкөнчө!', mascotTada:'Та-да!', mascotKing:'Үстөлдүн падышасы!', mascotAnyone:'Бирөө барбы?', mascotCheese:'Сыр!', mascotTable:'Жаңы стол!', mascotMail:'Сизге кат келди!', mascotBravo:'Азаматсың!',
     // Aide de l'As (modules/guide) — bouton / entrée de menu + option
     guideBtn:'Туздун жардамы', advGuide:'Туздун жардамы: туз колдонмону кадам сайын түшүндүрөт',
     // Notes de joueur + étiquettes (modules/notes, extra web)

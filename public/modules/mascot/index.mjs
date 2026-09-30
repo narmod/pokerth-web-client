@@ -1,14 +1,21 @@
 // ═══════════════════════════════════════════════════════════════════
-// Mascot loader (web extension, narmod 2026-09-27).
+// Mascot loader (web extension, narmod 2026-09-27; part of Ace's Help since
+// web.265 — the « Animated mascot » option is gone).
 //
-// Option « Animated mascot » (Advanced options › User interface ›
-// Appearance, localStorage pth_mascot, OFF by default). When it is on, and
-// only on the home screen (#s-connect) or in the lobby (#s-lobby) — never at a
-// table — the Ace shows up after IDLE_MS without any click, tap or key press,
-// then at most once every COOLDOWN_MS while the player stays idle. Any input
-// makes him vanish in a puff. Nothing happens while a window is open, the tab
-// is hidden, under « Reduced effects » or prefers-reduced-motion, or in the
-// live (spectator) embed.
+// Only on the home screen (#s-connect) or in the lobby (#s-lobby) — never at
+// a table — the Ace plays a scene after IDLE_MS without any click, tap or key
+// press, then at most once every COOLDOWN_MS while the player stays idle.
+// Nothing happens while a window is open, the tab is hidden, under « Reduced
+// effects » or prefers-reduced-motion, in the live (spectator) embed, or under
+// automation (navigator.webdriver: other tests' screenshots; opt in with
+// localStorage pth_mascot_webdriver = 1).
+// Ace's Help off: he enters by a door, a puff or the screen edge, and any
+// input makes him vanish in a puff.
+// Ace's Help on (window._guideScene, modules/guide/index.mjs): the scene
+// starts from the docked Ace and brings him back to his spot; only when no
+// bubble, badge or « ? » mode waits (the tip first); any input makes him walk
+// back (~1 s); a tip that comes up meanwhile calls him back too
+// (window._mascotRecall).
 //
 // This file is tiny and always loaded; the engine (modules/mascot/engine.mjs)
 // is imported the first time the Ace actually appears.
@@ -19,16 +26,16 @@
 // shown, even with the option off. Console: mascotDemo('climb').
 // Reactions: mascotReact('table' | 'mail' | 'bravo') — called by the lobby
 // code when a table is created, a private message arrives or the LAN rank
-// improves — makes him pop up right away (no idle wait) in the lobby, at
-// most once a minute per kind, never in the first seconds after the lobby
-// opens (the server sends the whole table list then).
+// improves — Ace's Help on only: he leaves his spot right away (no idle
+// wait) in the lobby, at most once a minute per kind, never in the first
+// seconds after the lobby opens (the server sends the whole table list then).
 // Test panel (hidden): ?mascot=panel or mascotPanel() in the console opens
 // modules/mascot/panel.mjs — every entry / action / exit / costume on demand,
 // slow motion, loop. The idle timer is off while it is open.
 // ═══════════════════════════════════════════════════════════════════
 
-const IDLE_MS = 45000;
-const COOLDOWN_MS = 180000;
+const IDLE_MS = 30000;
+const COOLDOWN_MS = 120000;
 const SCREENS = ['s-connect', 's-lobby'];
 
 let enabled = false;
@@ -42,8 +49,23 @@ let lobbySince = 0;   // when #s-lobby last became active
 const REACT_GAP = 60000, REACT_WARMUP = 8000;
 const lastReact = {};
 
-function optionOn() {
-  try { return localStorage.getItem('pth_mascot') === '1'; } catch (e) { return false; }
+/** Idle scenes are always on — except under automation, unless a test opts in. */
+function allowed() {
+  try { return !navigator.webdriver || localStorage.getItem('pth_mascot_webdriver') === '1'; } catch (e) { return true; }
+}
+
+/**
+ * Ace's Help on and ready: the scene starts from the docked Ace (engine
+ * option home) and gives him back to the dock (arrive). Idempotent back.
+ */
+function withHome(o) {
+  const G = window._guideScene;
+  if (!G || !G.on() || !G.ready()) return o;
+  let done = false;
+  G.away();
+  o.home = G.home;
+  o.arrive = (pop) => { if (!done) { done = true; try { G.back(pop); } catch (e) {} } };
+  return o;
 }
 
 function motionOff() {
@@ -75,8 +97,10 @@ export function canAppear() {
   if (!onMascotScreen() || !splashGone()) return false;
   if (motionOff()) return false;
   if (blockingSurface()) return false;
-  // Ace's Help (modules/guide) is on screen: the scenes wait (D6).
-  if (window._guideBusy) return false;
+  // Ace's Help on: from his spot, only when no tip waits; off: not over the first-launch offer.
+  const G = window._guideScene;
+  if (G && G.on()) { if (!G.ready()) return false; }
+  else if (window._guideBusy) return false;
   return true;
 }
 
@@ -121,8 +145,10 @@ async function fire() {
     else if (preview.action) opts.action = preview.action;
     preview = null;
   }
+  withHome(opts);
   try { await (await loadEngine()).appear(opts); }
   catch (e) { try { console.warn('[mascot]', e); } catch (e2) {} }
+  if (opts.arrive) opts.arrive(true);   // whatever happened, the docked Ace is back
   running = false;
   lastEnd = Date.now();
   arm();
@@ -139,7 +165,7 @@ function onInput(ev) {
 /** Applies the option (called by applyAdvOpts in pokerth.js on every change). */
 function apply() {
   const was = enabled;
-  enabled = optionOn();
+  enabled = allowed();
   if (!enabled && was) stopNow();
   if (!running) arm();
 }
@@ -159,7 +185,7 @@ function init() {
     if (q === 'panel') setTimeout(() => window.mascotPanel(), 800);
     else if (q) preview = { action: /^(moon|climb|magic|king|knight|grim|sleep|juggle|peek)$/.test(q) ? q : '' };
   } catch (e) {}
-  enabled = optionOn();
+  enabled = allowed();
   ['pointerdown', 'keydown', 'wheel', 'input'].forEach((ev) =>
     document.addEventListener(ev, onInput, { capture: true, passive: true }));
   document.addEventListener('visibilitychange', () => { if (document.hidden) { stopNow(); disarm(); } else if (!running) arm(); });
@@ -182,23 +208,32 @@ function init() {
 }
 
 window._mascotApply = apply;
-/** Console / test hook: mascotDemo('climb') plays one appearance now ('peek': hello from a panel's top). */
-window.mascotDemo = async (action) => {
+/** Ace's Help: a tip calls him back from his scene (he walks in). */
+window._mascotRecall = () => { try { if (engine && engine.isPlaying()) engine.dismiss(); } catch (e) {} };
+/**
+ * Console / test hook: mascotDemo('climb') plays one appearance now ('peek':
+ * hello from a panel's top); mascotDemo('grim', { home: true }) starts it from
+ * the docked Ace when Ace's Help is on and ready.
+ */
+window.mascotDemo = async (action, x) => {
   disarm();
   stopNow();
   running = true;
   const o = action === 'peek' ? { entry: 'peek' } : action ? { action } : {};
+  if (x && x.home) withHome(o);
+  if (x && x.exit) o.exit = x.exit;
   try { return await (await loadEngine()).appear(o); }
-  finally { running = false; lastEnd = Date.now(); arm(); }
+  finally { if (o.arrive) o.arrive(true); running = false; lastEnd = Date.now(); arm(); }
 };
 
-/** Plays one appearance now with any options (test panel). */
+/** Plays one appearance now with any options (test panel, reactions). */
 async function playNow(o) {
   disarm();
   stopNow();
   running = true;
-  try { return await (await loadEngine()).appear(o || {}); }
-  finally { running = false; lastEnd = Date.now(); arm(); }
+  o = o || {};
+  try { return await (await loadEngine()).appear(o); }
+  finally { if (o.arrive) o.arrive(true); running = false; lastEnd = Date.now(); arm(); }
 }
 
 /** A lobby event: the Ace reacts right away (see the header). */
@@ -206,6 +241,8 @@ window.mascotReact = (kind) => {
   try {
     if (!enabled || running || (panel && panel.isOpen())) return;
     if (['table', 'mail', 'bravo'].indexOf(kind) < 0) return;
+    const G = window._guideScene;
+    if (!G || !G.on()) return;                     // reactions belong to Ace's Help
     const lob = document.getElementById('s-lobby');
     if (!lob || !lob.classList.contains('active')) return;
     if (!lobbySince) lobbySince = Date.now();
@@ -213,7 +250,7 @@ window.mascotReact = (kind) => {
     if (now - lobbySince < REACT_WARMUP || now - (lastReact[kind] || 0) < REACT_GAP) return;
     if (!canAppear()) return;
     lastReact[kind] = now;
-    playNow({ action: 'r-' + kind, entry: 'poof', exit: 'poof' }).catch(() => {});
+    playNow(withHome({ action: 'r-' + kind })).catch(() => {});
   } catch (e) {}
 };
 

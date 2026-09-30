@@ -20,7 +20,7 @@ export const strings = {
     waitingHintRanked: "The game will start automatically as soon as the table is full",
     rankWaitFull: "Ranking game — waiting for {max} players ({n}/{max}). The game will start when the table is full.",
     // Mascotte animée (modules/mascot, extra web)
-    advMascot:'Animated mascot (the Ace) on the home screen and in the lobby when idle', mascotHello:'Hi!', mascotBye:'See you!', mascotTada:'Ta-da!', mascotKing:'King of the felt!', mascotAnyone:'Anyone?', mascotCheese:'Cheese!', mascotTable:'A new table!', mascotMail:'You’ve got mail!', mascotBravo:'Well done!',
+    mascotHello:'Hi!', mascotBye:'See you!', mascotTada:'Ta-da!', mascotKing:'King of the felt!', mascotAnyone:'Anyone?', mascotCheese:'Cheese!', mascotTable:'A new table!', mascotMail:'You’ve got mail!', mascotBravo:'Well done!',
     // Aide de l'As (modules/guide) — bouton / entrée de menu + option
     guideBtn:'Ace’s Help', advGuide:'Ace’s Help: the Ace explains the app as you go',
     // Notes de joueur + étiquettes (modules/notes, extra web)

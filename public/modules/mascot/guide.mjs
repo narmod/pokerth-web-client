@@ -1,21 +1,27 @@
 // ═══════════════════════════════════════════════════════════════════
 // Ace's Help — the docked Ace and his bubble (web extension, narmod 2026-09-30).
 //
-// Used by modules/guide/index.mjs. Separate from the idle scenes of
-// modules/mascot/engine.mjs (option « Animated mascot »): a small Ace docked
-// at the bottom right who STAYS while his bubble is open, a multi-line bubble
-// with buttons, a pointing pose and a few reactions. Unlike the scenes, he
-// takes clicks: tapping him replays the tip (D7).
+// Used by modules/guide/index.mjs: the Ace docked at the bottom right who
+// STAYS while his bubble is open, a multi-line bubble with buttons, a pointing
+// pose and a few reactions. Unlike the scenes, he takes clicks: tapping him
+// replays the tip (D7). Same size as the Ace of the idle scenes
+// (plan.mjs::mascotScale, web.265); a scene starts from his spot and brings
+// him back (homeBox / away, driven by modules/mascot/index.mjs).
 // With « Reduced effects » or prefers-reduced-motion (plain: true) there is no
 // Ace at all (D4): a plain bubble, and a small static A♠ chip to reopen it.
 //
 // API:  dock({ plain, label, onTap }) · undock() · say({ text, buttons,
 //       onButton, point, avoid, ask }) · hush() · badge(on) · react(kind) · point(on)
+//       homeBox() · away(on, pop) · hasBadge() · isPlain()
 //       guide({ text, buttons, onButton, point }) = dock + say
 // ═══════════════════════════════════════════════════════════════════
 
+import { mascotScale } from './plan.mjs';
+
 const ROOT = 'ace-dock';
-const K = 0.42;          // the docked Ace: 42 % of the scene size (~96 px tall)
+/** The docked Ace's scale: the same as the scenes' Ace on this screen (80–110 px tall). */
+const scaleNow = () => mascotScale(window.innerWidth, window.innerHeight);
+let K = 0.42;
 
 const CSS = `
 #ace-dock{z-index:10020!important;overflow:visible!important}
@@ -114,12 +120,9 @@ export async function dock(o = {}) {
     aceW = 46; aceH = 46;
     E = null;
   } else {
-    aceW = Math.round(kit.BASE_W * K); aceH = Math.round(kit.BASE_H * K);
-    ace.style.width = aceW + 'px';
-    ace.style.height = aceH + 'px';
     ace.innerHTML = '<div class="mc-pos mc-m-smile mc-hat-none mc-tool-none">' + kit.html + '</div><span class="ad-badge" aria-hidden="true">!</span>';
     E = kit.refs(root, ace.querySelector('.mc-pos'));
-    E.scale.style.transform = `scale(${K})`;
+    resize();
   }
   bub = document.createElement('div');
   bub.className = 'ad-bubble';
@@ -151,6 +154,39 @@ export async function dock(o = {}) {
   settle();
   placeBubble();
 }
+
+/** Sizes the docked Ace like the scenes' Ace on this screen. */
+function resize() {
+  if (!E || !ace || !kit) return;
+  K = scaleNow();
+  aceW = Math.round(kit.BASE_W * K); aceH = Math.round(kit.BASE_H * K);
+  ace.style.width = aceW + 'px';
+  ace.style.height = aceH + 'px';
+  E.scale.style.transform = `scale(${K})`;
+}
+
+/**
+ * His spot, for a scene that starts from it: the top-left corner of his box
+ * (the scenes' box at the same scale), or null (not docked, plain mode).
+ */
+export function homeBox() {
+  if (!root || !ace || !E || plainMode) return null;
+  const r = ace.getBoundingClientRect();
+  if (!r.width || !r.height) return null;
+  return { x: r.left, y: r.top, k: K };
+}
+
+/** Out for a scene (hidden, his bubble stays closed) — or back at his spot, with a little pop. */
+export function away(on, pop) {
+  if (!ace) return;
+  ace.style.visibility = on ? 'hidden' : '';
+  if (!on && pop && E && !reduce()) {
+    anim(E.squash, [{ transform: 'scale(0,0)' }, { offset: 0.6, transform: 'scale(1.12,1.12)' }, { transform: 'scale(1,1)' }], { duration: 420, easing: 'ease-out' });
+  }
+}
+
+export function hasBadge() { return !!(ace && ace.classList.contains('ad-has-badge')); }
+export function isPlain() { return !!root && plainMode; }
 
 /** Removes the helper and his bubble at once. */
 export function undock() {
@@ -293,7 +329,7 @@ function placeBubble() {
   };
   if (cost(rectTop) < cost(rectNear) * 0.8) apply(topP, true);
 }
-window.addEventListener('resize', () => { settle(); placeBubble(); }, { passive: true });
+window.addEventListener('resize', () => { resize(); settle(); placeBubble(); }, { passive: true });
 
 /**
  * Opens the bubble.

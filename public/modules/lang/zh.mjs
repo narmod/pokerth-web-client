@@ -14,7 +14,7 @@ export const strings = {
     waitingHintRanked: "桌子坐满后游戏将自动开始",
     rankWaitFull: "排名游戏 — 等待 {max} 名玩家（{n}/{max}）。桌子坐满后游戏将开始。",
     // Mascotte animée (modules/mascot, extra web)
-    advMascot:'闲置时在主屏幕和大厅显示动画吉祥物（A 牌）', mascotHello:'嗨！', mascotBye:'回头见！', mascotTada:'当当！', mascotKing:'牌桌之王！', mascotAnyone:'有人吗？', mascotCheese:'茄子！', mascotTable:'新牌桌！', mascotMail:'你有新消息！', mascotBravo:'干得好！',
+    mascotHello:'嗨！', mascotBye:'回头见！', mascotTada:'当当！', mascotKing:'牌桌之王！', mascotAnyone:'有人吗？', mascotCheese:'茄子！', mascotTable:'新牌桌！', mascotMail:'你有新消息！', mascotBravo:'干得好！',
     // Aide de l'As (modules/guide) — bouton / entrée de menu + option
     guideBtn:'A 牌小助手', advGuide:'A 牌小助手：使用时由 A 牌逐步讲解应用',
     // Notes de joueur + étiquettes (modules/notes, extra web)

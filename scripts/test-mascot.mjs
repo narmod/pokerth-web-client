@@ -2,7 +2,8 @@
 // Deterministic test of the mascot planning helpers (modules/mascot/plan.mjs)
 // and of its wiring: size across screens, climbable panel choice (headroom,
 // reachable side, landing on screen), sequences, i18n keys in every language,
-// option OFF by default, loader + engine precached.
+// no option any more (always on, part of Ace's Help since web.265), one size
+// shared with the docked Ace, scenes from his spot, loader + engine precached.
 // Run: node scripts/test-mascot.mjs
 import fs from 'fs';
 import path from 'path';
@@ -18,9 +19,9 @@ function ok(cond, label) {
 
 // ── Size: readable on a phone, never huge on a desktop ──
 const phone = P.stageOf(390, 844), desk = P.stageOf(1920, 1080), tiny = P.stageOf(280, 440), land = P.stageOf(844, 390);
-ok(phone.h >= 70 && phone.h <= 95, `phone portrait: ${Math.round(phone.h)} px tall (70–95)`);
-ok(desk.h === 140, 'desktop: capped at 140 px');
-ok(tiny.h === 70, 'very small screen: floor of 70 px');
+ok(phone.h >= 80 && phone.h <= 95, `phone portrait: ${Math.round(phone.h)} px tall (80–95)`);
+ok(desk.h === 110, 'desktop: capped at 110 px');
+ok(tiny.h === 80, 'very small screen: floor of 80 px');
 ok(land.h < land.vh * 0.3, 'phone landscape: under 30 % of the height');
 ok(Math.abs(phone.w / phone.h - P.BASE_W / P.BASE_H) < 1e-9, 'aspect ratio kept');
 ok(phone.yF + P.FEET * phone.k === phone.floor, 'standing box top puts the feet on the floor line');
@@ -120,8 +121,23 @@ for (let i = 0; i < 400; i++) { const q = P.pickSequence(rr, { climb: true, peek
 ok(rDrawn === 0 && P.REACTIONS.length === 3, 'lobby reactions are never drawn at random');
 const idx = fs.readFileSync('public/modules/mascot/index.mjs', 'utf8');
 ok(/REACT_GAP = 60000, REACT_WARMUP = 8000/.test(idx) && idx.indexOf('window.mascotReact') >= 0, 'reactions: at most once a minute per kind, not during the initial table list');
+ok(/if \(!G \|\| !G\.on\(\)\) return;\s+\/\/ reactions belong to Ace's Help/.test(idx) && /playNow\(withHome\(\{ action: 'r-' \+ kind \}\)\)/.test(idx), 'reactions: Ace\'s Help on only, from his spot');
+ok(/IDLE_MS = 30000;/.test(idx) && /COOLDOWN_MS = 120000;/.test(idx), 'idle scenes: first after 30 s, then at most every 2 min');
+ok(!/pth_mascot'/.test(idx) && /navigator\.webdriver/.test(idx) && /pth_mascot_webdriver/.test(idx), 'always on, except under automation (opt-in for tests)');
+ok(/if \(G && G\.on\(\)\) \{ if \(!G\.ready\(\)\) return false; \}/.test(idx), 'Ace\'s Help on: only when no tip waits');
 ok(/mascotReact\('table'\)/.test(fs.readFileSync('public/modules/net/msg-lobby.mjs', 'utf8')) && /mascotReact\('mail'\)/.test(fs.readFileSync('public/modules/ui/pm.mjs', 'utf8')) && /mascotReact\('bravo'\)/.test(fs.readFileSync('public/modules/game/stats.mjs', 'utf8')), 'reactions wired: new table, private message, better LAN rank');
 
+// ── Ace's Help: from his spot and back ──
+const hx = P.seeded(3), hc = {};
+for (let i = 0; i < 400; i++) { const e = P.pickHomeExit(hx); hc[e] = (hc[e] || 0) + 1; }
+ok(Object.keys(hc).every((e) => P.HOME_EXITS.indexOf(e) >= 0) && hc.home > hc.homeDoor && hc.homeDoor > 0 && hc.homePoof > 0, 'way back: on foot most often, sometimes a door or a puff');
+const engSrc = fs.readFileSync('public/modules/mascot/engine.mjs', 'utf8');
+ok(/home: enterHome/.test(engSrc) && /home: exitHome, homeDoor: exitHomeDoor, homePoof: exitHomePoof/.test(engSrc), 'engine: home entry and the three ways back');
+ok(/if \(c\.home\) \{ recallHome\(c\); return; \}/.test(engSrc), 'tapped while out: he walks back instead of vanishing');
+ok(/seq\.entry !== 'home'\) await greet\(\)/.test(engSrc), 'no « Hi! » when he leaves his spot');
+ok(/arrive\(c, !c\.landed\)/.test(engSrc), 'the docked Ace always comes back (pops up unless he walked in)');
+const dockSrc = fs.readFileSync('public/modules/mascot/guide.mjs', 'utf8');
+ok(/import \{ mascotScale \} from '\.\/plan\.mjs'/.test(dockSrc) && /mascotScale\(window\.innerWidth, window\.innerHeight\)/.test(dockSrc), 'the docked Ace has the scenes\' size');
 // ── Timing helpers ──
 ok(P.walkMs(desk, 0, 0) === 300 && Math.abs(P.walkMs(desk, 0, 190 * desk.k) - 1000) < 1e-6, 'walking speed 190 base px/s');
 ok(P.stepCycles(100) === 1 && P.stepCycles(2200) === 4, 'step cycles ~0.55 s');
@@ -129,7 +145,7 @@ ok(P.fallMs(0) === 350 && P.fallMs(100000) === 900, 'fall time bounded 350–900
 
 // ── Wiring ──
 const LANG_DIR = path.resolve('public/modules/lang');
-const keys = ['advMascot', 'mascotHello', 'mascotBye', 'mascotTada', 'mascotKing', 'mascotAnyone', 'mascotCheese', 'mascotTable', 'mascotMail', 'mascotBravo'];
+const keys = ['mascotHello', 'mascotBye', 'mascotTada', 'mascotKing', 'mascotAnyone', 'mascotCheese', 'mascotTable', 'mascotMail', 'mascotBravo'];
 let missing = [];
 for (const f of fs.readdirSync(LANG_DIR).filter((n) => n.endsWith('.mjs'))) {
   const m = await import(pathToFileURL(path.join(LANG_DIR, f)).href);
@@ -137,11 +153,11 @@ for (const f of fs.readdirSync(LANG_DIR).filter((n) => n.endsWith('.mjs'))) {
 }
 ok(!missing.length, 'mascot keys translated in every language' + (missing.length ? ' — missing ' + missing.slice(0, 5).join(', ') : ''));
 const html = fs.readFileSync('public/pokerth-client.html', 'utf8');
-ok(/<input type="checkbox" id="adv-mascot" onchange="setAdvOpt\('mascot',this\.checked\)">/.test(html), 'option row in Advanced options');
+ok(html.indexOf('adv-mascot') < 0 && html.indexOf('advMascot') < 0, 'no « Animated mascot » option any more');
 ok(html.indexOf('<script type="module" src="modules/mascot/index.mjs"></script>') >= 0, 'loader script included');
 const js = fs.readFileSync('public/pokerth.js', 'utf8');
-ok(/sync\('adv-mascot', 'mascot', false\)/.test(js), 'option OFF by default');
-ok(js.indexOf("window._mascotApply") >= 0, 'applyAdvOpts forwards the option to the loader');
+ok(!/sync\('adv-mascot'/.test(js), 'option no longer synced');
+ok(js.indexOf("window._mascotApply") >= 0, 'applyAdvOpts still re-arms the loader');
 const sw = fs.readFileSync('public/sw.js', 'utf8');
 ok(['index', 'engine', 'plan', 'panel', 'acts-extra', 'acts-props', 'acts-social'].every((n) => sw.indexOf(`'/modules/mascot/${n}.mjs'`) >= 0), 'mascot modules precached');
 const loader = fs.readFileSync('public/modules/mascot/index.mjs', 'utf8');

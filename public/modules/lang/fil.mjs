@@ -19,7 +19,7 @@ export const strings = {
     waitingHintRanked: "Awtomatikong magsisimula ang laro kapag puno na ang mesa",
     rankWaitFull: "Ranking game — naghihintay ng {max} manlalaro ({n}/{max}). Magsisimula ang laro kapag puno na ang mesa.",
     // Mascotte animée (modules/mascot, extra web)
-    advMascot:'Animated na maskot (ang Alas) sa home screen at sa lobby kapag hindi aktibo', mascotHello:'Hi!', mascotBye:'Kita-kits!', mascotTada:'Ta-da!', mascotKing:'Hari ng mesa!', mascotAnyone:'May tao ba?', mascotCheese:'Cheese!', mascotTable:'Bagong mesa!', mascotMail:'May mensahe ka!', mascotBravo:'Galing!',
+    mascotHello:'Hi!', mascotBye:'Kita-kits!', mascotTada:'Ta-da!', mascotKing:'Hari ng mesa!', mascotAnyone:'May tao ba?', mascotCheese:'Cheese!', mascotTable:'Bagong mesa!', mascotMail:'May mensahe ka!', mascotBravo:'Galing!',
     // Aide de l'As (modules/guide) — bouton / entrée de menu + option
     guideBtn:'Tulong ng Alas', advGuide:'Tulong ng Alas: ipinapaliwanag ng Alas ang app nang paisa-isang hakbang',
     // Notes de joueur + étiquettes (modules/notes, extra web)

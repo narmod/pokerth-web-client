@@ -15,7 +15,7 @@ export const strings = {
     waitingHintRanked: "Masa dolar dolmaz oyun otomatik olarak başlayacak",
     rankWaitFull: "Sıralama oyunu — {max} oyuncu bekleniyor ({n}/{max}). Masa dolduğunda oyun başlayacak.",
     // Mascotte animée (modules/mascot, extra web)
-    advMascot:'Boştayken ana ekranda ve lobide animasyonlu maskot (As)', mascotHello:'Selam!', mascotBye:'Görüşürüz!', mascotTada:'Tadaa!', mascotKing:'Masanın kralı!', mascotAnyone:'Kimse yok mu?', mascotCheese:'Peynir!', mascotTable:'Yeni bir masa!', mascotMail:'Mesajın var!', mascotBravo:'Aferin!',
+    mascotHello:'Selam!', mascotBye:'Görüşürüz!', mascotTada:'Tadaa!', mascotKing:'Masanın kralı!', mascotAnyone:'Kimse yok mu?', mascotCheese:'Peynir!', mascotTable:'Yeni bir masa!', mascotMail:'Mesajın var!', mascotBravo:'Aferin!',
     // Aide de l'As (modules/guide) — bouton / entrée de menu + option
     guideBtn:'As’ın yardımı', advGuide:'As’ın yardımı: As uygulamayı adım adım açıklar',
     // Notes de joueur + étiquettes (modules/notes, extra web)

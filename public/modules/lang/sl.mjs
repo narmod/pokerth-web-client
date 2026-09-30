@@ -19,7 +19,7 @@ export const strings = {
     waitingHintRanked: "Igra se bo samodejno začela, ko bo miza polna",
     rankWaitFull: "Igra z uvrstitvijo — čakamo na {max} igralcev ({n}/{max}). Igra se bo začela, ko bo miza polna.",
     // Mascotte animée (modules/mascot, extra web)
-    advMascot:'Animirana maskota (as) na začetnem zaslonu in v preddverju, ko ste nedejavni', mascotHello:'Živjo!', mascotBye:'Se vidimo!', mascotTada:'Tadaa!', mascotKing:'Kralj mize!', mascotAnyone:'Je kdo tu?', mascotCheese:'Sir!', mascotTable:'Nova miza!', mascotMail:'Imaš pošto!', mascotBravo:'Bravo!',
+    mascotHello:'Živjo!', mascotBye:'Se vidimo!', mascotTada:'Tadaa!', mascotKing:'Kralj mize!', mascotAnyone:'Je kdo tu?', mascotCheese:'Sir!', mascotTable:'Nova miza!', mascotMail:'Imaš pošto!', mascotBravo:'Bravo!',
     // Aide de l'As (modules/guide) — bouton / entrée de menu + option
     guideBtn:'Pomoč asa', advGuide:'Pomoč asa: as sproti razlaga aplikacijo',
     // Notes de joueur + étiquettes (modules/notes, extra web)

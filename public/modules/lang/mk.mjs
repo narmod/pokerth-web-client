@@ -19,7 +19,7 @@ export const strings = {
     waitingHintRanked: "Играта ќе започне автоматски штом масата ќе се пополни",
     rankWaitFull: "Игра со рангирање — се чекаат {max} играчи ({n}/{max}). Играта ќе започне кога масата ќе се пополни.",
     // Mascotte animée (modules/mascot, extra web)
-    advMascot:'Анимирана маскота (кецот) на почетниот екран и во фоајето кога сте неактивни', mascotHello:'Здраво!', mascotBye:'Се гледаме!', mascotTada:'Тадаа!', mascotKing:'Кралот на масата!', mascotAnyone:'Има ли некој?', mascotCheese:'Сирење!', mascotTable:'Нова маса!', mascotMail:'Имаш порака!', mascotBravo:'Браво!',
+    mascotHello:'Здраво!', mascotBye:'Се гледаме!', mascotTada:'Тадаа!', mascotKing:'Кралот на масата!', mascotAnyone:'Има ли некој?', mascotCheese:'Сирење!', mascotTable:'Нова маса!', mascotMail:'Имаш порака!', mascotBravo:'Браво!',
     // Aide de l'As (modules/guide) — bouton / entrée de menu + option
     guideBtn:'Помош од кецот', advGuide:'Помош од кецот: кецот ја објаснува апликацијата чекор по чекор',
     // Notes de joueur + étiquettes (modules/notes, extra web)

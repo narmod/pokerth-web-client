@@ -14,7 +14,7 @@ export const strings = {
     waitingHintRanked: "மேசை நிரம்பியதும் ஆட்டம் தானாகவே தொடங்கும்",
     rankWaitFull: "தரவரிசை ஆட்டம் — {max} வீரர்களுக்காகக் காத்திருக்கிறது ({n}/{max}). மேசை நிரம்பியதும் ஆட்டம் தொடங்கும்.",
     // Mascotte animée (modules/mascot, extra web)
-    advMascot:'செயலற்ற நிலையில் முகப்புத் திரையிலும் லாபியிலும் அசையும் சின்னம் (ஏஸ்)', mascotHello:'வணக்கம்!', mascotBye:'மீண்டும் சந்திப்போம்!', mascotTada:'டா-டா!', mascotKing:'மேசையின் ராஜா!', mascotAnyone:'யாராவது இருக்கீங்களா?', mascotCheese:'சீஸ்!', mascotTable:'ஒரு புதிய மேசை!', mascotMail:'உங்களுக்குச் செய்தி வந்துள்ளது!', mascotBravo:'சபாஷ்!',
+    mascotHello:'வணக்கம்!', mascotBye:'மீண்டும் சந்திப்போம்!', mascotTada:'டா-டா!', mascotKing:'மேசையின் ராஜா!', mascotAnyone:'யாராவது இருக்கீங்களா?', mascotCheese:'சீஸ்!', mascotTable:'ஒரு புதிய மேசை!', mascotMail:'உங்களுக்குச் செய்தி வந்துள்ளது!', mascotBravo:'சபாஷ்!',
     // Aide de l'As (modules/guide) — bouton / entrée de menu + option
     guideBtn:'ஏஸின் உதவி', advGuide:'ஏஸின் உதவி: ஏஸ் செயலியைப் படிப்படியாக விளக்குகிறது',
     // Notes de joueur + étiquettes (modules/notes, extra web)

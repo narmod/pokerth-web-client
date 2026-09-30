@@ -11,9 +11,13 @@ export const BASE_W = 168;
 export const BASE_H = 228;
 export const FEET = 212;
 
-/** Scale factor: the Ace is ~15 % of the short side, 70–140 px tall. */
+/**
+ * Scale factor: the Ace is ~15 % of the short side, 80–110 px tall. One size
+ * everywhere (web.265): the scenes and the docked Ace of Ace's Help
+ * (modules/mascot/guide.mjs) use this same value.
+ */
 export function mascotScale(vw, vh) {
-  const h = Math.max(70, Math.min(140, Math.min(vh * 0.15, vw * 0.22)));
+  const h = Math.max(80, Math.min(110, Math.min(vh * 0.15, vw * 0.22)));
   return h / BASE_H;
 }
 
@@ -180,6 +184,17 @@ export const EXITS = ['door', 'poof', 'edge', 'duck'];
 export const ACTIONS = ['moon', 'climb', 'magic', 'king', 'knight', 'grim', 'sleep', 'juggle', 'pistol', 'rope',
   'banana', 'bluff', 'ledge', 'hang', 'knock', 'push',
   'dealer', 'tower', 'felt', 'umbrella', 'selfie', 'bubbles', 'guitar', 'dance', 'duel', 'joker'];
+/**
+ * Ace's Help on (web.265): a scene starts from the docked Ace (entry 'home')
+ * and brings him back to his spot — on foot, or through a door or a puff
+ * that drops him there.
+ */
+export const HOME_EXITS = ['home', 'homeDoor', 'homePoof'];
+/** Way back to the dock: on foot half of the time, else a door or a puff. */
+export function pickHomeExit(rnd = Math.random) {
+  const r = rnd();
+  return r < 0.5 ? 'home' : r < 0.75 ? 'homeDoor' : 'homePoof';
+}
 /** Reactions to lobby events: played by the loader when the event happens, never drawn at random. */
 export const REACTIONS = ['r-table', 'r-mail', 'r-bravo'];
 /** Actions that need a panel: climb (side or front), ledge (its top), hang (its bottom). */

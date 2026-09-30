@@ -19,7 +19,7 @@ export const strings = {
     waitingHintRanked: "La partida empezará automáticamente en cuanto la mesa esté llena",
     rankWaitFull: "Partida de clasificación — esperando a {max} jugadores ({n}/{max}). La partida empezará cuando la mesa esté llena.",
     // Mascotte animée (modules/mascot, extra web)
-    advMascot:'Mascota animada (el As) en la pantalla de inicio y en el lobby cuando no hay actividad', mascotHello:'¡Hola!', mascotBye:'¡Hasta luego!', mascotTada:'¡Tachán!', mascotKing:'¡El rey del tapete!', mascotAnyone:'¿Hay alguien?', mascotCheese:'¡Patata!', mascotTable:'¡Una mesa nueva!', mascotMail:'¡Tienes un mensaje!', mascotBravo:'¡Bien hecho!',
+    mascotHello:'¡Hola!', mascotBye:'¡Hasta luego!', mascotTada:'¡Tachán!', mascotKing:'¡El rey del tapete!', mascotAnyone:'¿Hay alguien?', mascotCheese:'¡Patata!', mascotTable:'¡Una mesa nueva!', mascotMail:'¡Tienes un mensaje!', mascotBravo:'¡Bien hecho!',
     // Aide de l'As (modules/guide) — bouton / entrée de menu + option
     guideBtn:'Ayuda del As', advGuide:'Ayuda del As: el As explica la aplicación paso a paso',
     // Notes de joueur + étiquettes (modules/notes, extra web)

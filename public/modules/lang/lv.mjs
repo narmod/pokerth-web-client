@@ -19,7 +19,7 @@ export const strings = {
     waitingHintRanked: "Spēle sāksies automātiski, tiklīdz galds būs pilns",
     rankWaitFull: "Reitinga spēle — gaidām {max} spēlētājus ({n}/{max}). Spēle sāksies, kad galds būs pilns.",
     // Mascotte animée (modules/mascot, extra web)
-    advMascot:'Animēts talismans (dūzis) sākuma ekrānā un vestibilā, kad esi neaktīvs', mascotHello:'Sveiks!', mascotBye:'Uz redzēšanos!', mascotTada:'Tadā!', mascotKing:'Galda karalis!', mascotAnyone:'Vai kāds ir?', mascotCheese:'Saki sieru!', mascotTable:'Jauns galds!', mascotMail:'Tev ir vēstule!', mascotBravo:'Labi padarīts!',
+    mascotHello:'Sveiks!', mascotBye:'Uz redzēšanos!', mascotTada:'Tadā!', mascotKing:'Galda karalis!', mascotAnyone:'Vai kāds ir?', mascotCheese:'Saki sieru!', mascotTable:'Jauns galds!', mascotMail:'Tev ir vēstule!', mascotBravo:'Labi padarīts!',
     // Aide de l'As (modules/guide) — bouton / entrée de menu + option
     guideBtn:'Dūža palīdzība', advGuide:'Dūža palīdzība: dūzis soli pa solim izskaidro lietotni',
     // Notes de joueur + étiquettes (modules/notes, extra web)

@@ -13,7 +13,7 @@ export const strings = {
     waitingHintRanked: "Hra sa začne automaticky, len čo bude stôl plný",
     rankWaitFull: "Hodnotená hra — čaká sa na {max} hráčov ({n}/{max}). Hra sa začne, keď bude stôl plný.",
     // Mascotte animée (modules/mascot, extra web)
-    advMascot:'Animovaný maskot (eso) na úvodnej obrazovke a v lobby pri nečinnosti', mascotHello:'Ahoj!', mascotBye:'Zatiaľ!', mascotTada:'Tadá!', mascotKing:'Kráľ stola!', mascotAnyone:'Je tu niekto?', mascotCheese:'Syr!', mascotTable:'Nový stôl!', mascotMail:'Máš poštu!', mascotBravo:'Dobrá práca!',
+    mascotHello:'Ahoj!', mascotBye:'Zatiaľ!', mascotTada:'Tadá!', mascotKing:'Kráľ stola!', mascotAnyone:'Je tu niekto?', mascotCheese:'Syr!', mascotTable:'Nový stôl!', mascotMail:'Máš poštu!', mascotBravo:'Dobrá práca!',
     // Aide de l'As (modules/guide) — bouton / entrée de menu + option
     guideBtn:'Pomoc od esa', advGuide:'Pomoc od esa: eso vysvetľuje aplikáciu krok za krokom',
     // Notes de joueur + étiquettes (modules/notes, extra web)

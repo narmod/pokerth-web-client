@@ -20,7 +20,7 @@ export const strings = {
     waitingHintRanked: "Partida automatikoki hasiko da mahaia betetzen den bezain laster",
     rankWaitFull: "Sailkapeneko partida — {max} jokalariren zain ({n}/{max}). Partida mahaia betetzen denean hasiko da.",
     // Mascotte animée (modules/mascot, extra web)
-    advMascot:'Maskota animatua (Batekoa) hasierako pantailan eta atondoan jarduerarik ez dagoenean', mascotHello:'Kaixo!', mascotBye:'Gero arte!', mascotTada:'Tatxan!', mascotKing:'Mahaiaren erregea!', mascotAnyone:'Inor ba al dago?', mascotCheese:'Patata!', mascotTable:'Mahai berri bat!', mascotMail:'Mezu bat duzu!', mascotBravo:'Ondo egina!',
+    mascotHello:'Kaixo!', mascotBye:'Gero arte!', mascotTada:'Tatxan!', mascotKing:'Mahaiaren erregea!', mascotAnyone:'Inor ba al dago?', mascotCheese:'Patata!', mascotTable:'Mahai berri bat!', mascotMail:'Mezu bat duzu!', mascotBravo:'Ondo egina!',
     // Aide de l'As (modules/guide) — bouton / entrée de menu + option
     guideBtn:'Batekoaren laguntza', advGuide:'Batekoaren laguntza: Batekoak aplikazioa urratsez urrats azaltzen du',
     // Notes de joueur + étiquettes (modules/notes, extra web)

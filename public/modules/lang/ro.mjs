@@ -13,7 +13,7 @@ export const strings = {
     waitingHintRanked: "Jocul va începe automat imediat ce masa este completă",
     rankWaitFull: "Joc clasat — se așteaptă {max} jucători ({n}/{max}). Jocul va începe când masa este completă.",
     // Mascotte animée (modules/mascot, extra web)
-    advMascot:'Mascotă animată (Asul) pe ecranul de start și în lobby când ești inactiv', mascotHello:'Salut!', mascotBye:'Pe curând!', mascotTada:'Tadaa!', mascotKing:'Regele mesei!', mascotAnyone:'E cineva?', mascotCheese:'Zâmbiți!', mascotTable:'O masă nouă!', mascotMail:'Ai un mesaj!', mascotBravo:'Bravo!',
+    mascotHello:'Salut!', mascotBye:'Pe curând!', mascotTada:'Tadaa!', mascotKing:'Regele mesei!', mascotAnyone:'E cineva?', mascotCheese:'Zâmbiți!', mascotTable:'O masă nouă!', mascotMail:'Ai un mesaj!', mascotBravo:'Bravo!',
     // Aide de l'As (modules/guide) — bouton / entrée de menu + option
     guideBtn:'Ajutorul Asului', advGuide:'Ajutorul Asului: Asul explică aplicația pas cu pas',
     // Notes de joueur + étiquettes (modules/notes, extra web)

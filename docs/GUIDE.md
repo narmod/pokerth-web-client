@@ -30,8 +30,8 @@ tables, with no tutorial mode and no fake data.
 - **Silent during a hand.** The Ace speaks on the login screen, in the lobby, in the
   waiting room and in game creation, never at the table while a game runs. He leaves as
   soon as the game starts.
-- **Separate from "Animated mascot"**, which only plays idle scenes. Those scenes wait
-  while the Ace is helping.
+- **Idle scenes belong to Ace's Help** (since `web.265`, the "Animated mascot" option is
+  gone). See *Idle scenes* below.
 - **Reduced effects / reduced motion**: there is no Ace, only a plain bubble and a small
   static A♠ chip to reopen it.
 - **Placement**: he docks at the lowest free spot along the right edge. He never covers
@@ -277,6 +277,36 @@ Keys (all 83 languages; `es-419` is derived from `es` with `scripts/es-419-rules
 
 The help has an *Ace's Help* section (`start.acehelp`) in all 83 languages.
 
+## Idle scenes (`web.265`)
+
+The scenes of `modules/mascot/engine.mjs` (26 of them, drawn at random) play on the login
+screen and in the lobby after **30 s** without a click, tap or key, then at most every
+**2 min**. There is no option any more. There are no scenes with reduced effects or
+reduced motion, at a table, over a modal, in the live embed, or under automation
+(`navigator.webdriver`; tests opt in with `pth_mascot_webdriver`).
+
+**One size.** The docked Ace and the Ace of the scenes share `plan.mjs::mascotScale`:
+about 15 % of the short side, 80 to 110 px tall.
+
+**Help off.** He comes in through a door, a puff or the screen edge, as before. Any input
+makes him vanish in a puff. Scenes still play in the lobby.
+
+**Help on.** `modules/mascot/index.mjs` asks `window._guideScene` (from `guide/index.mjs`):
+
+- `ready()` is true only when the Ace is docked, not in plain mode, with no bubble, no
+  badge and no « ? » mode. The tip comes first.
+- The scene starts from his spot (engine entry `home`, no « Hi! »). A spot lifted above a
+  control is left with a hop.
+- He comes back on foot (`home`, half of the time), through a door that grows under his
+  spot (`homeDoor`), or in a puff (`homePoof`). The docked Ace then takes over (`away` /
+  `arrive`), with a small pop unless he walked in.
+- A tap anywhere while he is out makes him walk straight back in about 1 s
+  (`recallHome`), instead of the puff.
+- A tip that comes up while he is out calls him back (`window._mascotRecall`), then he
+  speaks.
+- Lobby reactions (`mascotReact`: new table, private message) play only with the help on,
+  from his spot.
+
 ## Tests
 
 - `npm run test:guide-state`: parsing, marking tips seen, resets, the two-device
@@ -293,6 +323,8 @@ The help has an *Ace's Help* section (`start.acehelp`) in all 83 languages.
   beacons (no identifier, the offline queue) and the admin card.
 - `npm run test:guide-ask`: every static hotspot selector exists in the page, every key
   resolves in every language, and the first matching entry wins (jsdom).
+- `npm run test:mascot`: the scenes' size, the ways back to his spot and the
+  loader rules (no option, rhythm, reactions with the help only).
 - `npm run test:guide-browser`: a real browser on phones and a desktop. It checks the
   offer, the buttons, the menu, the lobby, that the Ace leaves when a hand starts, that the
   option switches him off, the plain mode, and that the docked Ace hides nothing
@@ -313,4 +345,5 @@ The help has an *Ace's Help* section (`start.acehelp`) in all 83 languages.
 | L3 | Admin: `POST /__guide` anonymous counters, and the Ranking funnel card (`web.261`, restart needed) |
 | L4 | C3 login screen, C4 normal waiting room (`web.262`) |
 | L5 | C5 game creation page and windows (`web.263`) |
-| **L6** | C6 « ? » mode (`hotspots.mjs`, `web.264`) |
+| L6 | C6 « ? » mode (`hotspots.mjs`, `web.264`) |
+| **M1** | Idle scenes folded into Ace's Help: no option, one size, from his spot and back (`web.265`) |

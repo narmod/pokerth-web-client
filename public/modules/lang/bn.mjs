@@ -19,7 +19,7 @@ export const strings = {
     waitingHintRanked: "টেবিল পূর্ণ হলেই খেলা স্বয়ংক্রিয়ভাবে শুরু হবে",
     rankWaitFull: "র‍্যাংকিং গেম — {max} জন খেলোয়াড়ের অপেক্ষায় ({n}/{max})। টেবিল পূর্ণ হলে খেলা শুরু হবে।",
     // Mascotte animée (modules/mascot, extra web)
-    advMascot:'নিষ্ক্রিয় থাকলে হোম স্ক্রিন ও লবিতে অ্যানিমেটেড মাসকট (টেক্কা)', mascotHello:'হাই!', mascotBye:'আবার দেখা হবে!', mascotTada:'টা-ডা!', mascotKing:'টেবিলের রাজা!', mascotAnyone:'কেউ আছেন?', mascotCheese:'চিজ!', mascotTable:'একটা নতুন টেবিল!', mascotMail:'আপনার বার্তা এসেছে!', mascotBravo:'সাবাশ!',
+    mascotHello:'হাই!', mascotBye:'আবার দেখা হবে!', mascotTada:'টা-ডা!', mascotKing:'টেবিলের রাজা!', mascotAnyone:'কেউ আছেন?', mascotCheese:'চিজ!', mascotTable:'একটা নতুন টেবিল!', mascotMail:'আপনার বার্তা এসেছে!', mascotBravo:'সাবাশ!',
     // Aide de l'As (modules/guide) — bouton / entrée de menu + option
     guideBtn:'টেক্কার সহায়তা', advGuide:'টেক্কার সহায়তা: টেক্কা ধাপে ধাপে অ্যাপটি বুঝিয়ে দেয়',
     // Notes de joueur + étiquettes (modules/notes, extra web)

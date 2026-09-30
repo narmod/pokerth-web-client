@@ -18,7 +18,7 @@
 
 import {
   BASE_W, BASE_H, stageOf, clampX, xAt, pickPanel, pickPeek, pickSequence, costumeFor,
-  walkMs, stepCycles, fallMs, ledgePlan, hangPlan, pickWith, seasonFor,
+  walkMs, stepCycles, fallMs, ledgePlan, hangPlan, pickWith, seasonFor, HOME_EXITS, pickHomeExit,
 } from './plan.mjs';
 import { EXTRA } from './acts-extra.mjs';
 import { PROPS } from './acts-props.mjs';
@@ -394,12 +394,12 @@ function floorFx(kind, cx, yBottom, t0, ms) {
     { opacity: 0, transform: `scale(${1.4 * k})` }], { duration: ms, delay: t0, fill: 'both' });
 }
 function puffAt(x, y, t0, ms = 800) { const st = cur.st; floorFx('puff', x + st.w / 2, y + 196 * st.k, t0, ms); }
-function makeDoor(side) {
+function makeDoor(side, at) {   // at: door left (px) instead of the screen edge
   const st = cur.st, el = document.createElement('div');
   el.className = 'mc-door';
   el.innerHTML = DOOR;
   const margin = Math.max(8, st.vw * 0.05), dw = 120 * st.k;
-  const left = side === 'L' ? margin : st.vw - margin - dw;
+  const left = at !== undefined ? at : side === 'L' ? margin : st.vw - margin - dw;
   el.style.left = left + 'px';
   el.style.top = (st.floor - 220) + 'px';
   el.style.transform = `scale(${st.k})`;
@@ -523,6 +523,125 @@ async function exitEdge() {
   track(E.pos, t0 + wd, [[0, P(cur.x, st.yF, 1)], [t0, P(cur.x, st.yF, 1)], [t0 + wd, P(x1, st.yF, 1)]]);
   walkWin(t0, wd);
   await wait(t0 + wd + 50);
+}
+
+// ── Ace's Help on: from his spot and back (web.265) ──────────────────
+// The docked Ace (modules/mascot/guide.mjs) is hidden while he plays: the
+// scene starts where he stood and brings him back there. cur.home() gives
+// his spot now (box top-left, same size as the scene's Ace); cur.arriveCb(pop)
+// shows the docked Ace again (pop: with his little « pop » when he did not
+// walk in). A spot lifted above a control is reached with a hop.
+const LIFTED = 24;   // px above the scene floor: under that he just walks
+function homeBox() {
+  try { const b = cur.home && cur.home(); return b && isFinite(b.x) && isFinite(b.y) ? b : null; } catch (e) { return null; }
+}
+function arrive(c, pop) {
+  if (!c || c.arrived) return;
+  c.arrived = true;
+  try { if (c.arriveCb) c.arriveCb(!!pop); } catch (e) {}
+}
+
+async function enterHome(rnd) {
+  const { st, E } = cur;
+  const b = homeBox() || { x: st.maxX, y: st.yF };
+  const x0 = b.x, y0 = Math.min(b.y, st.yF), xT = targetX(st, rnd, x0), dir = Math.sign(xT - x0) || -1;
+  const pos = [[0, P(x0, y0, 1)]];
+  let t = 0;
+  if (st.yF - y0 > LIFTED) {   // lifted above a control: hop down first
+    const fm = fallMs(st.yF - y0);
+    pos.push([180, P(x0, y0 - 14 * st.k), 'ease-in'], [180 + fm, P(x0, st.yF)]);
+    track(E.squash, 180 + fm + 260, [[0, sq(1, 1)], [180 + fm - 10, sq(0.95, 1.08)], [180 + fm + 60, sq(1.15, 0.85)], [180 + fm + 260, sq(1, 1)]]);
+    t = 180 + fm + 260;
+    pos.push([t, P(x0, st.yF)]);
+  }
+  const wd = walkMs(st, x0, xT);
+  pos.push([t + wd, P(xT, st.yF)]);
+  track(E.pos, t + wd, pos);
+  track(E.card, t + wd + 350, [[0, ry(0)], [t, ry(0)], [t + 150, facing(dir)], [t + wd - 80, facing(dir)], [t + wd + 350, ry(0)]]);
+  walkWin(t, wd);
+  cur.x = xT;
+  await wait(t + wd + 400);
+}
+
+/** Walks back to his spot (hop up if it is lifted); the docked Ace takes over where he stands. */
+async function exitHome() {
+  const c = cur, { st, E } = c;
+  const b = homeBox() || { x: c.x, y: st.yF };
+  const x0 = c.x, x1 = b.x, y1 = Math.min(b.y, st.yF), dir = Math.sign(x1 - x0) || 1;
+  const wd = walkMs(st, x0, x1), up = st.yF - y1 > LIFTED;
+  const pos = [[0, P(x0, st.yF, 1)], [wd, P(x1, up ? st.yF : y1, 1)]];
+  let t = wd + 250;
+  if (up) {
+    const tj = wd + 120, ta = tj + 260, tl = ta + 200;
+    pos.push([tj, P(x1, st.yF), 'ease-out'], [ta, P(x1, y1 - 14 * st.k), 'ease-in'], [tl, P(x1, y1)]);
+    track(E.squash, tl + 220, [[0, sq(1, 1)], [wd, sq(1, 1)], [tj, sq(1.1, 0.88)], [tj + 80, sq(0.92, 1.1)], [tl, sq(1, 1)], [tl + 90, sq(1.08, 0.92)], [tl + 220, sq(1, 1)]]);
+    t = tl + 250;
+  }
+  track(E.pos, t, pos);
+  track(E.card, wd + 300, [[0, ry(0)], [150, facing(dir)], [wd - 80, facing(dir)], [wd + 300, ry(0)]]);
+  walkWin(0, wd);
+  c.x = x1;
+  await wait(t + 60);
+  c.landed = true;
+  arrive(c, false);
+}
+
+/** A puff where he stands… and another one at his spot, where he pops up again. */
+async function exitHomePoof() {
+  const c = cur, { st, E } = c;
+  const b = homeBox() || { x: c.x, y: st.yF };
+  faceWin(0, 420, WINK);
+  track(E.squash, 460, [[0, sq(1, 1)], [260, sq(1.08, 0.9)], [320, sq(0.95, 1.1)], [460, sq(0, 0)]]);
+  puffAt(c.x, st.yF, 250, 800);
+  puffAt(b.x, b.y, 800, 800);
+  await wait(1050);
+  arrive(c, true);
+  await wait(600);
+}
+
+/** A door grows under his spot: in he goes, and out he pops at his place. */
+async function exitHomeDoor() {
+  const c = cur, { st, E } = c;
+  const b = homeBox() || { x: c.x, y: st.yF };
+  const dw = 120 * st.k, left = Math.max(4, Math.min(st.vw - dw - 4, b.x + st.w / 2 - dw / 2));
+  const d = makeDoor(b.x + st.w / 2 < st.vw / 2 ? 'L' : 'R', left);
+  const x0 = c.x, dir = Math.sign(d.x - x0) || 1, wd = walkMs(st, x0, d.x);
+  const tw = 500, ta = tw + wd;
+  doorAnim(d, 0, Math.max(350, ta - 650), ta + 700, ta + 1150);
+  track(E.card, ta, [[0, ry(0)], [tw - 200, ry(0), 'ease-in-out'], [tw, ry(150 * dir)], [ta, ry(150 * dir)]]);
+  track(E.pos, ta + 600, [[0, P(x0, st.yF, 1)], [tw, P(x0, st.yF, 1)], [ta, P(d.x, st.yF, 1)], [ta + 600, P(d.x, st.yF - 4 * st.k, 0)]]);
+  track(E.squash, ta + 600, [[0, sq(1, 1)], [ta, sq(1, 1)], [ta + 600, sq(0.88, 0.88)]]);
+  walkWin(tw, wd);
+  await wait(ta + 1250);
+  arrive(c, true);
+  await wait(300);
+  d.el.remove();
+}
+
+/** Tapped while out (Ace's Help on): everything stops and he walks back to his spot (~1 s). */
+function recallHome(c) {
+  const st = c.st, E = c.E;
+  let x = c.x, y = st.yF;
+  try { const m = new DOMMatrixReadOnly(getComputedStyle(E.pos).transform); x = m.m41; y = m.m42; } catch (e) {}
+  c.timers.forEach((id) => clearTimeout(id));
+  c.rejects.forEach((rj) => { try { rj(new Aborted()); } catch (e) {} });
+  c.timers.clear(); c.rejects.clear();
+  c.anims.forEach((a) => { try { a.cancel(); } catch (e) {} });
+  c.anims = [];
+  Array.prototype.slice.call(E.root.children).forEach((n) => { if (n !== E.pos) n.remove(); });   // doors, friends, props, dust
+  clearProps();
+  clipAt(null);
+  E.pos.style.opacity = '1';
+  const b = homeBox() || { x, y: st.yF };
+  const dist = Math.hypot(b.x - x, b.y - y), dir = Math.sign(b.x - x) || 1;
+  const ms = Math.max(600, Math.min(1200, dist / (st.speed * 2) * 1000));
+  c.leaveMs = ms + 350;
+  track(E.pos, ms, [[0, P(x, y, 1)], [ms, P(b.x, b.y, 1)]]);
+  track(E.card, ms + 250, [[0, ry(0)], [120, facing(dir)], [ms - 60, facing(dir)], [ms + 200, ry(0)]]);
+  faceWin(0, 500, SURPRISED);
+  walkWin(0, ms);
+  const id = setTimeout(() => { if (cur !== c) return; c.landed = true; arrive(c, false); teardown(); }, (ms + 250) / speed);
+  c.timers.add(id);
 }
 
 // ── Actions ──────────────────────────────────────────────────────────
@@ -971,6 +1090,7 @@ export function dismiss() {
   if (!cur || cur.dead || cur.leaving) return;
   const c = cur;
   c.leaving = true;
+  if (c.home) { recallHome(c); return; }
   let x = c.x, y = c.st.yF;
   try {
     const m = new DOMMatrixReadOnly(getComputedStyle(c.E.pos).transform);
@@ -1033,7 +1153,8 @@ export async function appear(opts = {}) {
   const ledge = pickWith(ledgePlan, st, rects, rnd);
   const hang = pickWith(hangPlan, st, rects, rnd);
   const none = opts.action === 'none';
-  const seq = pickSequence(rnd, { climb: !!plan, peek: !!peek, ledge: !!ledge, hang: !!hang, force: none ? undefined : opts.action });
+  const home = typeof opts.home === 'function' ? opts.home : null;   // Ace's Help on: his spot
+  const seq = pickSequence(rnd, { climb: !!plan, peek: !!peek && !home, ledge: !!ledge, hang: !!hang, force: none ? undefined : opts.action });
   if (none) seq.actions = [];
   if (opts.entry && (opts.entry !== 'peek' || peek)) seq.entry = opts.entry;
   if (opts.exit && (opts.exit !== 'duck' || seq.entry === 'peek')) seq.exit = opts.exit;
@@ -1041,6 +1162,10 @@ export async function appear(opts = {}) {
   if (seq.entry !== 'peek' && seq.exit === 'duck') seq.exit = 'poof';
   if (seq.exit === 'duck') seq.actions = [];
   if (opts.action && seq.actions[0] !== opts.action && opts.action !== 'climb') seq.actions = [opts.action];
+  if (home) {   // from his spot and back to it: no door / puff / edge entry, no « Hi! »
+    seq.entry = 'home';
+    seq.exit = HOME_EXITS.indexOf(opts.exit) >= 0 ? opts.exit : pickHomeExit(rnd);
+  }
   seq.costume = costumeFor(seq.actions[0] || 'peek', rnd);
   // seasonal touch (Santa hat, pumpkin, beanie, summer shades) instead of a plain hat
   const season = seasonFor(opts.date ? new Date(opts.date) : new Date());
@@ -1051,7 +1176,8 @@ export async function appear(opts = {}) {
   if (opts.hat) seq.costume.hat = opts.hat;
   if (opts.tool) seq.costume.tool = opts.tool;
   seq.peekable = !!peek; seq.climbable = !!plan;
-  cur = { st, anims: [], timers: new Set(), rejects: new Set(), dead: false, leaving: false, x: st.vw / 2, costume: seq.costume, E: null, clipT: null };
+  cur = { st, anims: [], timers: new Set(), rejects: new Set(), dead: false, leaving: false, x: st.vw / 2, costume: seq.costume, E: null, clipT: null,
+    home, arriveCb: typeof opts.arrive === 'function' ? opts.arrive : null, arrived: false, landed: false, leaveMs: 1100 };
   const c = cur;
   c.E = build(st, seq.costume);
   const E = c.E;
@@ -1061,24 +1187,25 @@ export async function appear(opts = {}) {
   play(E.face.eo, BLINK, { duration: 4200, iterations: Infinity, delay: 900 });
   play(E.starsRot, [{ transform: 'rotate(0deg)' }, { transform: 'rotate(360deg)' }], { duration: 1100, iterations: Infinity });
   E.spark.querySelectorAll('.mc-tw').forEach((s, i) => play(s, TWINKLE, { duration: 600, delay: i * 130, iterations: Infinity }));
-  const ENTRY = { door: enterDoor, poof: enterPoof, edge: enterEdge, peek: () => enterPeek(peek) };
+  const ENTRY = { door: enterDoor, poof: enterPoof, edge: enterEdge, peek: () => enterPeek(peek), home: enterHome };
   const ACT = { moon: actMoon, climb: () => actClimb(plan), magic: () => actMagic(plan), king: actKing, knight: actKnight, grim: actGrim, sleep: actSleep, juggle: actJuggle, pistol: actPistol, rope: actRope };
   const where = { plan, peek, ledge, hang, rects };
   const MORE = Object.assign({}, EXTRA, PROPS, SOCIAL);
   Object.keys(MORE).forEach((a) => { ACT[a] = async () => { try { await MORE[a](H, where); } finally { if (cur === c) clearProps(); } }; });
-  const EXIT = { door: exitDoor, poof: exitPoof, edge: exitEdge, duck: () => exitDuck(peek) };
+  const EXIT = { door: exitDoor, poof: exitPoof, edge: exitEdge, duck: () => exitDuck(peek), home: exitHome, homeDoor: exitHomeDoor, homePoof: exitHomePoof };
   try {
     await ENTRY[seq.entry](rnd);
     const react = /^r-/.test(seq.actions[0] || '');
     if (seq.entry === 'peek') { if (seq.exit !== 'duck') await hopDown(peek); }
-    else if (!react) await greet();   // a reaction skips the greeting
+    else if (!react && seq.entry !== 'home') await greet();   // a reaction (and the docked Ace) skips the greeting
     for (const a of seq.actions) { await ACT[a](); if (c.gone) break; await wait(350); }
     if (!c.gone) await EXIT[seq.exit]();   // an act may leave the screen by itself
   } catch (e) {
     if (!(e instanceof Aborted)) { try { console.warn('[mascot]', e); } catch (e2) {} }
     // dismissed: let the puff finish
-    if (c.leaving) await new Promise((r) => setTimeout(r, 1100 / speed));
+    if (c.leaving) await new Promise((r) => setTimeout(r, c.leaveMs / speed));
   } finally {
+    arrive(c, !c.landed);   // Ace's Help: the docked Ace is back (pops up unless he walked in)
     if (cur === c) teardown();
   }
   return seq;

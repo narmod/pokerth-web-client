@@ -17,7 +17,7 @@ export const strings = {
     waitingHintRanked: "ጠረጴዛው እንደሞላ ጨዋታው በራሱ ይጀምራል",
     rankWaitFull: "የደረጃ ጨዋታ — {max} ተጫዋቾችን በመጠበቅ ላይ ({n}/{max})። ጠረጴዛው ሲሞላ ጨዋታው ይጀምራል።",
     // Mascotte animée (modules/mascot, extra web)
-    advMascot:'እንቅስቃሴ በሌለበት ጊዜ በመነሻ ማያ ገጽ እና በሎቢ ውስጥ ተንቀሳቃሽ ምልክት (ኤሱ)', mascotHello:'ሰላም!', mascotBye:'በኋላ እንገናኝ!', mascotTada:'ታ-ዳ!', mascotKing:'የጠረጴዛው ንጉሥ!', mascotAnyone:'ማንም አለ?', mascotCheese:'ፈገግ በሉ!', mascotTable:'አዲስ ጠረጴዛ!', mascotMail:'መልዕክት አለዎት!', mascotBravo:'ጎበዝ!',
+    mascotHello:'ሰላም!', mascotBye:'በኋላ እንገናኝ!', mascotTada:'ታ-ዳ!', mascotKing:'የጠረጴዛው ንጉሥ!', mascotAnyone:'ማንም አለ?', mascotCheese:'ፈገግ በሉ!', mascotTable:'አዲስ ጠረጴዛ!', mascotMail:'መልዕክት አለዎት!', mascotBravo:'ጎበዝ!',
     // Aide de l'As (modules/guide) — bouton / entrée de menu + option
     guideBtn:'የኤሱ እገዛ', advGuide:'የኤሱ እገዛ፦ ኤሱ መተግበሪያውን ደረጃ በደረጃ ያብራራል',
     // Notes de joueur + étiquettes (modules/notes, extra web)

@@ -13,7 +13,7 @@ export const strings = {
     waitingHintRanked: "Igra počinje automatski čim se sto popuni",
     rankWaitFull: "Rangirana igra — čeka se {max} igrača ({n}/{max}). Igra počinje kada se sto popuni.",
     // Mascotte animée (modules/mascot, extra web)
-    advMascot:'Анимирана маскота (кец) на почетном екрану и у предворју када сте неактивни', mascotHello:'Здраво!', mascotBye:'Видимо се!', mascotTada:'Тадаа!', mascotKing:'Краљ стола!', mascotAnyone:'Има ли кога?', mascotCheese:'Сир!', mascotTable:'Нови сто!', mascotMail:'Имаш поруку!', mascotBravo:'Браво!',
+    mascotHello:'Здраво!', mascotBye:'Видимо се!', mascotTada:'Тадаа!', mascotKing:'Краљ стола!', mascotAnyone:'Има ли кога?', mascotCheese:'Сир!', mascotTable:'Нови сто!', mascotMail:'Имаш поруку!', mascotBravo:'Браво!',
     // Aide de l'As (modules/guide) — bouton / entrée de menu + option
     guideBtn:'Помоћ кеца', advGuide:'Помоћ кеца: кец објашњава апликацију корак по корак',
     // Notes de joueur + étiquettes (modules/notes, extra web)

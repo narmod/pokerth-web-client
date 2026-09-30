@@ -12,7 +12,7 @@ export const strings = {
     waitingHintRanked: "Spillet starter automatisk så snart bordet er fullt",
     rankWaitFull: "Rangeringsspill — venter på {max} spillere ({n}/{max}). Spillet starter når bordet er fullt.",
     // Mascotte animée (modules/mascot, extra web)
-    advMascot:'Animert maskot (esset) på startskjermen og i lobbyen ved inaktivitet', mascotHello:'Hei!', mascotBye:'Vi ses!', mascotTada:'Tada!', mascotKing:'Kongen av bordet!', mascotAnyone:'Noen her?', mascotCheese:'Si appelsin!', mascotTable:'Et nytt bord!', mascotMail:'Du har fått post!', mascotBravo:'Godt jobbet!',
+    mascotHello:'Hei!', mascotBye:'Vi ses!', mascotTada:'Tada!', mascotKing:'Kongen av bordet!', mascotAnyone:'Noen her?', mascotCheese:'Si appelsin!', mascotTable:'Et nytt bord!', mascotMail:'Du har fått post!', mascotBravo:'Godt jobbet!',
     // Aide de l'As (modules/guide) — bouton / entrée de menu + option
     guideBtn:'Essets hjelp', advGuide:'Essets hjelp: esset forklarer appen underveis',
     // Notes de joueur + étiquettes (modules/notes, extra web)

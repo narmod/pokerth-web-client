@@ -17,7 +17,7 @@ export const strings = {
     waitingHintRanked: "ហ្គេមនឹងចាប់ផ្ដើមដោយស្វ័យប្រវត្តិ ពេលតុពេញ",
     rankWaitFull: "ហ្គេមចំណាត់ថ្នាក់ — កំពុងរង់ចាំអ្នកលេង {max} នាក់ ({n}/{max})។ ហ្គេមនឹងចាប់ផ្ដើមនៅពេលតុពេញ។",
     // Mascotte animée (modules/mascot, extra web)
-    advMascot:'សញ្ញាសំណាងមានចលនា (អាត់) នៅលើអេក្រង់ដើម និងក្នុងឡប់ប៊ី ពេលអសកម្ម', mascotHello:'សួស្តី!', mascotBye:'ជួបគ្នាពេលក្រោយ!', mascotTada:'តាដា!', mascotKing:'ស្ដេចនៃតុ!', mascotAnyone:'មានអ្នកណានៅទេ?', mascotCheese:'ឈីស!', mascotTable:'តុថ្មីមួយ!', mascotMail:'អ្នកមានសារ!', mascotBravo:'ល្អណាស់!',
+    mascotHello:'សួស្តី!', mascotBye:'ជួបគ្នាពេលក្រោយ!', mascotTada:'តាដា!', mascotKing:'ស្ដេចនៃតុ!', mascotAnyone:'មានអ្នកណានៅទេ?', mascotCheese:'ឈីស!', mascotTable:'តុថ្មីមួយ!', mascotMail:'អ្នកមានសារ!', mascotBravo:'ល្អណាស់!',
     // Aide de l'As (modules/guide) — bouton / entrée de menu + option
     guideBtn:'ជំនួយរបស់អាត់', advGuide:'ជំនួយរបស់អាត់៖ អាត់ពន្យល់កម្មវិធីមួយជំហានម្ដងៗ',
     // Notes de joueur + étiquettes (modules/notes, extra web)

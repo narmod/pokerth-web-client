@@ -211,6 +211,7 @@ function setBusy(on) { window._guideBusy = !!on; }
 async function ensureDock() {
   const m = await mascot();
   await ready();
+  if (out) await callBack();                          // out playing a scene: he comes back first
   await m.dock({ plain: motionOff(), label: gt('aceLabel'), onTap });
   setBusy(true);
   return m;
@@ -230,6 +231,40 @@ function leave() {
   if (M) M.undock();
   setBusy(false);
 }
+
+// ── Idle scenes from his spot (web.265) ────────────────────────────
+// modules/mascot/index.mjs asks window._guideScene before an idle scene or a
+// lobby reaction. With the help on, the scene starts from the docked Ace and
+// brings him back (engine entry 'home', exits home / homeDoor / homePoof),
+// and only when nothing waits for the player: no bubble, no badge, no « ? »
+// mode — the tip first. A tip that comes up while he is out calls him back
+// (he walks in, ~1 s), then speaks.
+let out = false;              // the docked Ace is out playing a scene
+let backWaiters = [];
+function sceneReady() {
+  return !!(M && M.isDocked() && !M.isPlain() && !showing && !M.bubbleOpen() && !M.hasBadge() && M.homeBox());
+}
+function recall() {
+  if (out && typeof window._mascotRecall === 'function') { try { window._mascotRecall(); } catch (e) {} }
+}
+function callBack() {
+  recall();
+  return new Promise((resolve) => { backWaiters.push(resolve); setTimeout(resolve, 2500); });
+}
+function sceneBack(pop) {
+  out = false;
+  if (M && M.isDocked()) M.away(false, pop);
+  const w = backWaiters; backWaiters = [];
+  w.forEach((r) => r());
+  schedule();
+}
+window._guideScene = {
+  on: () => available() && state.isOn(),
+  ready: sceneReady,
+  home: () => (M ? M.homeBox() : null),
+  away: () => { out = true; if (M) M.away(true); },
+  back: sceneBack,
+};
 
 function btn(id, primary) { return { id, label: gt(id), primary: !!primary }; }
 const val = (v, w) => (typeof v === 'function' ? v(w) : v);
@@ -415,7 +450,7 @@ function onAskKey(ev) {
  * back as it was — « Just one more! » in the waiting room.
  */
 function flash(key, ms) {
-  if (!M || !M.isDocked()) return;
+  if (!M || !M.isDocked() || out) return;
   const back = showing && showing.kind === 'ctx' ? showing : null;
   clearTimeout(noteTimer);
   clearTimeout(stepTimer); stepTimer = 0;
@@ -581,6 +616,11 @@ async function evaluate() {
     else if (showing && showing.kind === 'ctx' && !showing.run.ctx.window
       && (pickContext(w, CONTEXTS, { seen: state.seen, snoozed: (id) => snoozed.has(id) }) || {}).window) closeBubble();
     else return;
+  }
+  if (out) {                                           // out playing a scene: a tip calls him back, then speaks (sceneBack re-evaluates)
+    const c0 = pickContext(w, CONTEXTS, { seen: state.seen, snoozed: (id) => snoozed.has(id) });
+    if (c0 && !(blocked() && !c0.window)) recall();
+    return;
   }
   const m = await ensureDock();
   m.settle();                                          // the screen changed: a free spot again

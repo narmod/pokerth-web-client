@@ -19,7 +19,7 @@ export const strings = {
     waitingHintRanked: "Mchezo utaanza wenyewe mara meza itakapojaa",
     rankWaitFull: "Mchezo wa viwango — inasubiri wachezaji {max} ({n}/{max}). Mchezo utaanza meza ikijaa.",
     // Mascotte animée (modules/mascot, extra web)
-    advMascot:'Kinyago cha uhuishaji (Ekaa) kwenye skrini ya mwanzo na ukumbini ukiwa hufanyi kitu', mascotHello:'Habari!', mascotBye:'Tuonane!', mascotTada:'Tada!', mascotKing:'Mfalme wa meza!', mascotAnyone:'Kuna mtu?', mascotCheese:'Tabasamu!', mascotTable:'Meza mpya!', mascotMail:'Una ujumbe!', mascotBravo:'Hongera!',
+    mascotHello:'Habari!', mascotBye:'Tuonane!', mascotTada:'Tada!', mascotKing:'Mfalme wa meza!', mascotAnyone:'Kuna mtu?', mascotCheese:'Tabasamu!', mascotTable:'Meza mpya!', mascotMail:'Una ujumbe!', mascotBravo:'Hongera!',
     // Aide de l'As (modules/guide) — bouton / entrée de menu + option
     guideBtn:'Msaada wa Ekaa', advGuide:'Msaada wa Ekaa: Ekaa inaeleza programu hatua kwa hatua',
     // Notes de joueur + étiquettes (modules/notes, extra web)

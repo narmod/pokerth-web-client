@@ -13,7 +13,7 @@ export const strings = {
     waitingHintRanked: "Играта ще започне автоматично, щом масата се запълни",
     rankWaitFull: "Класирана игра — изчакване на {max} играчи ({n}/{max}). Играта ще започне, когато масата се запълни.",
     // Mascotte animée (modules/mascot, extra web)
-    advMascot:'Анимиран талисман (асото) на началния екран и във фоайето при неактивност', mascotHello:'Здрасти!', mascotBye:'До скоро!', mascotTada:'Тадаа!', mascotKing:'Кралят на масата!', mascotAnyone:'Има ли някой?', mascotCheese:'Зеле!', mascotTable:'Нова маса!', mascotMail:'Имаш поща!', mascotBravo:'Браво!',
+    mascotHello:'Здрасти!', mascotBye:'До скоро!', mascotTada:'Тадаа!', mascotKing:'Кралят на масата!', mascotAnyone:'Има ли някой?', mascotCheese:'Зеле!', mascotTable:'Нова маса!', mascotMail:'Имаш поща!', mascotBravo:'Браво!',
     // Aide de l'As (modules/guide) — bouton / entrée de menu + option
     guideBtn:'Помощ от асото', advGuide:'Помощ от асото: асото обяснява приложението стъпка по стъпка',
     // Notes de joueur + étiquettes (modules/notes, extra web)

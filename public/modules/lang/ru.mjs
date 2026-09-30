@@ -18,7 +18,7 @@ export const strings = {
     waitingHintRanked: "Игра начнётся автоматически, как только стол заполнится",
     rankWaitFull: "Рейтинговая игра — ожидание {max} игроков ({n}/{max}). Игра начнётся, когда стол заполнится.",
     // Mascotte animée (modules/mascot, extra web)
-    advMascot:'Анимированный талисман (туз) на главном экране и в лобби при бездействии', mascotHello:'Привет!', mascotBye:'До встречи!', mascotTada:'Та-да!', mascotKing:'Король стола!', mascotAnyone:'Есть кто-нибудь?', mascotCheese:'Скажи «сыр»!', mascotTable:'Новый стол!', mascotMail:'Вам письмо!', mascotBravo:'Молодец!',
+    mascotHello:'Привет!', mascotBye:'До встречи!', mascotTada:'Та-да!', mascotKing:'Король стола!', mascotAnyone:'Есть кто-нибудь?', mascotCheese:'Скажи «сыр»!', mascotTable:'Новый стол!', mascotMail:'Вам письмо!', mascotBravo:'Молодец!',
     // Aide de l'As (modules/guide) — bouton / entrée de menu + option
     guideBtn:'Помощь туза', advGuide:'Помощь туза: туз объясняет приложение по ходу работы',
     // Notes de joueur + étiquettes (modules/notes, extra web)

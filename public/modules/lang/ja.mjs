@@ -12,7 +12,7 @@ export const strings = {
     waitingHintRanked: "テーブルが満席になると自動的にゲームが始まります",
     rankWaitFull: "ランキングゲーム — {max}人のプレイヤーを待っています（{n}/{max}）。テーブルが満席になるとゲームが始まります。",
     // Mascotte animée (modules/mascot, extra web)
-    advMascot:'操作がないとき、ホーム画面とロビーにアニメーションのマスコット（エース）を表示', mascotHello:'やあ！', mascotBye:'またね！', mascotTada:'ジャジャーン！', mascotKing:'テーブルの王様！', mascotAnyone:'誰かいる？', mascotCheese:'はい、チーズ！', mascotTable:'新しいテーブル！', mascotMail:'メッセージが届いたよ！', mascotBravo:'よくやった！',
+    mascotHello:'やあ！', mascotBye:'またね！', mascotTada:'ジャジャーン！', mascotKing:'テーブルの王様！', mascotAnyone:'誰かいる？', mascotCheese:'はい、チーズ！', mascotTable:'新しいテーブル！', mascotMail:'メッセージが届いたよ！', mascotBravo:'よくやった！',
     // Aide de l'As (modules/guide) — bouton / entrée de menu + option
     guideBtn:'エースのヘルプ', advGuide:'エースのヘルプ：操作に合わせてエースがアプリを説明',
     // Notes de joueur + étiquettes (modules/notes, extra web)
