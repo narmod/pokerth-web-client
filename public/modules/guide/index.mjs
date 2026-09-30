@@ -432,7 +432,7 @@ function exitAsk(silent) {
   try { document.body.classList.remove('guide-ask'); } catch (e) {}
   const was = showing && showing.kind === 'ask';
   armed = null;
-  if (was) { beacon('ask', 'done'); if (!silent) { closeBubble(); if (!state.isOn()) leave(); } }   // tips off: he came on demand
+  if (was) { beacon('ask', 'done'); if (!silent) { closeBubble(); if (!state.isOn() || where().screen === 'game') leave(); else schedule(); } }   // on demand: he goes
 }
 function askTarget(t) {
   if (!t || (t.closest && t.closest('#ace-dock'))) return null;
@@ -441,12 +441,17 @@ function askTarget(t) {
   const el = tappableFor(t);
   return el ? { el, key: null } : null;
 }
+function atMyTurnAction(ev) {
+  try { return myTurn() && ev.target && ev.target.closest && ev.target.closest(ACTION_ZONE); } catch (e) { return false; }
+}
 function onAskDown(ev) {
+  if (atMyTurnAction(ev)) { endOnDemand(); return; }   // my turn: the action goes through (H3)
   // a <select> opens on press: keep it closed until it has been explained
   const hit = askTarget(ev.target);
   if (hit && hit.el !== armed && hit.el.tagName === 'SELECT') ev.preventDefault();
 }
 function onAskClick(ev) {
+  if (atMyTurnAction(ev)) { endOnDemand(); return; }
   const hit = askTarget(ev.target);
   if (!hit) return;                                   // plain text, the Ace: nothing to stop
   // 2nd tap on the explained element: let it act (it stays « armed », so a label's own click on its box goes through too)
@@ -474,7 +479,7 @@ function helpLang() { try { return (localStorage.getItem('pth_lang') || document
 
 /** Opens « More help » (Ace's menu, the Help entries of the menus). Resolves false when he cannot come here. */
 async function openMoreHelp(o = {}) {
-  if (!available() || !canSpeakHere()) return false;
+  if (!available() || !canComeHere()) return false;
   exitAsk(true);
   const m = await ensureDock();
   clearTimers(); hl.clear();
@@ -561,7 +566,7 @@ function onHelpButton(id) {
 function closeMoreHelp() {
   help = null;
   closeBubble();
-  if (!state.isOn()) leave();                     // tips off: he came on demand, he goes
+  if (!state.isOn() || where().screen === 'game') leave();   // on demand (tips off, the table): he goes
   else schedule();
 }
 
@@ -571,7 +576,7 @@ function closeMoreHelp() {
  * Returns true when he takes it; false → the help window opens as before.
  */
 function helpEntry(o) {
-  if (!available() || automated() || !canSpeakHere()) return false;
+  if (!available() || automated() || !canComeHere()) return false;
   openMoreHelp(o || {});
   return true;
 }
@@ -646,11 +651,45 @@ function canSpeakHere() {
   return canSpeak(w);
 }
 
+// ── On demand, at the table too (H3, web.269) ──────────────────────
+// What the player asks for (« More help », « ? » mode, his menu) is answered
+// on every screen where the Ace may stand, the table included — even during
+// a hand. He never speaks there by himself (D8). When the player's turn
+// comes, the on-demand bubble folds and « ? » mode ends, so nothing stands
+// between him and the action buttons; a tap on an action button at his turn
+// always acts.
+const ON_DEMAND = ['help', 'ask', 'menu', 'note'];
+const ACTION_ZONE = '.act-buttons-row, .btn-action, #raise-amt, #raise-slider, .btn-pct, #mode-sel';
+function canComeHere() {
+  if (!available() || window.LIVE_MODE) return false;
+  const w = where();
+  return TALK.indexOf(w.screen) >= 0;
+}
+const TALK = ['connect', 'lobby', 'wait', 'create', 'game'];
+/** It is my turn to act at the table (action buttons shown and enabled). */
+function myTurn() {
+  const s = S();
+  if (s.myId == null || s.turnPid !== s.myId) return false;
+  const btns = document.querySelectorAll('.act-buttons-row .btn-action');
+  for (const b of btns) if (!b.disabled && b.offsetParent !== null) return true;
+  return false;
+}
+function onDemand() { return !!(showing && ON_DEMAND.indexOf(showing.kind) >= 0); }
+/** Folds what the player asked for; at the table (or with the tips off) he leaves. */
+function endOnDemand() {
+  exitAsk(true);
+  help = null;
+  closeBubble();
+  if (where().screen === 'game' || !state.isOn()) leave();
+  else schedule();
+}
+let turnWas = false;
+
 /** Button « Ace's Help » (login screen, header menus). */
 function toggle() {
   if (!available()) return;
   if (!state.isOn()) { turnOn(); return; }
-  if (!canSpeakHere()) return;
+  if (!canComeHere()) return;                          // his menu on demand, at the table too (H3)
   showMenu();
 }
 
@@ -716,7 +755,7 @@ async function evaluate() {
   if (!state.isOn()) {
     // tips off: only the offer, a last word, or what the player asked for (« More help », « ? » mode)
     if (!(showing && (showing.kind === 'offer' || showing.kind === 'note' || showing.kind === 'help' || showing.kind === 'ask'))) leave();
-    else if ((showing.kind === 'help' || showing.kind === 'ask') && !canSpeakHere()) leave();
+    else if ((showing.kind === 'help' || showing.kind === 'ask') && !canComeHere()) leave();
     maybeOffer();
     return;
   }
@@ -728,6 +767,8 @@ async function evaluate() {
     joinedGid = 0;
   }
   if (!canSpeak(w)) {
+    // what the player asked for stays, at the table too (H3); he never speaks there by himself (D8)
+    if (onDemand() && canComeHere()) return;
     // a ranked game just started from its waiting room: « Good luck! », then he leaves (D8)
     if (prev && prev.screen === 'wait' && prev.ranked && w.screen === 'game' && M && M.isDocked() && !(showing && showing.kind === 'luck')) {
       clearTimers(); hl.clear();
@@ -849,6 +890,10 @@ function trackResult(w, prev) {
 let tickTimer = 0;
 let lastWins = '';
 function tick() {
+  // my turn comes at the table: what the player asked for folds (H3)
+  const turn = myTurn();
+  if (turn && !turnWas && onDemand() && where().screen === 'game') endOnDemand();
+  turnWas = turn;
   // windows opened / closed (C5): re-evaluate
   if (available() && state.isOn()) {
     const wins = openWindows().join(',');
@@ -909,7 +954,7 @@ window._guideMoreHelp = helpEntry;
 window.guideMoreHelp = (o) => { if (available()) openMoreHelp(o || {}); };
 window.guideResetTips = () => { if (available()) resetTips(); };
 /** « ? » mode: tap anything to hear what it does (C6). */
-window.guideAsk = () => { if (available() && state.isOn() && canSpeakHere()) enterAsk(); };
+window.guideAsk = () => { if (canComeHere()) enterAsk(); };
 /** Console: the current situation and saved progress. */
 window.guideDebug = () => ({ available: available(), on: state.isOn(), offered: state.wasOffered(), seen: state.seenIds(), snoozed: [...snoozed], where: where(), result, key: KEY_ON });
 

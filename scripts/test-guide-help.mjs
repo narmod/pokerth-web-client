@@ -63,9 +63,9 @@ ok(fr.chapters[0].title !== en.chapters[0].title && xx.chapters[0].title === en.
 const idx = fs.readFileSync(path.join(root, 'public/modules/guide/index.mjs'), 'utf8');
 const helpIdx = fs.readFileSync(path.join(root, 'public/modules/help/index.mjs'), 'utf8');
 ok(/window\._guideMoreHelp\(\)\) return;\s*\} catch \(e\) \{\}\s*openHelp\(\);/.test(helpIdx), 'Help entries of the menus: the Ace first, the window as fallback');
-ok(/function helpEntry\(o\) \{\s*if \(!available\(\) \|\| automated\(\) \|\| !canSpeakHere\(\)\) return false;/.test(idx), 'the Ace takes it only where he can speak (not at a table yet), never under automation');
+ok(/function helpEntry\(o\) \{\s*if \(!available\(\) \|\| automated\(\) \|\| !canComeHere\(\)\) return false;/.test(idx), 'the Ace takes it wherever he may stand, the table included (H3), never under automation');
 ok(/btn\('moreHelp'\), btn\('askMenu'\)/.test(idx), '« More help » first in the Ace\'s menu');
-ok(/showing\.kind === 'help' \|\| showing\.kind === 'ask'/.test(idx) && /if \(!state\.isOn\(\)\) leave\(\);\s+\/\/ tips off: he came on demand, he goes/.test(idx), 'tips off: he comes on demand and leaves when the bubble closes');
+ok(/showing\.kind === 'help' \|\| showing\.kind === 'ask'/.test(idx) && /if \(!state\.isOn\(\) \|\| where\(\)\.screen === 'game'\) leave\(\);\s+\/\/ on demand \(tips off, the table\): he goes/.test(idx), 'tips off: he comes on demand and leaves when the bubble closes');
 ok(/btn\('helpWindow'\)/.test(idx) && /window\.openHelp\(\)/.test(idx), 'the help window stays reachable from the bubble');
 const en2 = (await import(pathToFileURL(path.join(root, 'public/modules/guide/lang/en.mjs')).href)).default;
 ok(['moreHelp', 'allTopics', 'helpWindow', 'back'].every((k) => typeof en2[k] === 'string' && en2[k]), 'texts: moreHelp, allTopics, helpWindow, back');

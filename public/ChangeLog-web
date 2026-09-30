@@ -1,4 +1,9 @@
-2026-09-30 version 2.1.9-web.268 (current series):
+2026-09-30 version 2.1.9-web.269 (current series):
+- new: Ace’s Help at the table — the Help entry and the « ? » mode work there too, even during a hand: the action buttons, your bet, the auto modes, the seats, the board, the pot, the chat, the reactions, the info panel…; the Ace still never speaks there by himself
+- improvement: when your turn comes, the Ace folds his bubble and the « ? » mode ends — a tap on an action button always plays
+- improvement: the Ace’s bubble finds a better spot (left, middle or right under the header) and never covers him
+
+2026-09-30 version 2.1.9-web.268:
 - improvement: Ace’s Help « ? » mode — over 100 elements explained: Advanced options (each option says its own name), ranking, forum, avatar studio, private messages, logs, a player’s card, music, every field of the creation page, the players list and the rest of the lobby and login screen
 - new: Ace’s Help « ? » mode — « More about it » opens the matching help section in the Ace’s bubble
 

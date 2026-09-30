@@ -335,6 +335,33 @@ music.
 
 Statistics: `ask.more` counts the taps on *More about it*.
 
+## At the table, on demand (`web.269`, H3)
+
+The Ace still never speaks at the table by himself (D8). What the player asks for is
+answered there too, even during a hand: *More help* (it opens on *The game screen*), his
+menu and « ? » mode. `canComeHere()` covers the login screen, the lobby, the waiting room,
+game creation and the table, never the live embed. `evaluate()` keeps the on-demand kinds
+(`help`, `ask`, `menu`, `note`) where `canSpeak` would send him away. When the bubble
+closes at the table, he leaves.
+
+**His turn comes.** When it becomes the player's turn to act (`myTurn()`: `turnPid ===
+myId` and the action buttons shown and enabled), the on-demand bubble folds and « ? » mode
+ends, so the buttons are free (`tick`, on the change only). In « ? » mode at his turn, a
+tap on an action control (`.act-buttons-row`, `.btn-action`, the bet field, slider, quick
+amounts, auto mode) always acts and ends the mode.
+
+**What « ? » explains at the table** (34 texts): the action buttons (Fold, Check / Call,
+Raise, All-In, and pre-selection), the bet field, slider and quick amounts, the auto modes,
+the seats (yours, the others), the board, the pot, the next blinds, the header buttons
+(quit, game details, sound, table ranking), the felt buttons (chat, reactions, hands, info
+panel, zoom), the table chat, the reactions and the info panel tabs (log, chances, stats,
+export, assistance). Four more windows are covered: the info panel, the table chat, the
+reactions and the hand rankings.
+
+**Bubble placement.** Under the header it can now sit on the right, on the left or in the
+middle, whichever hides the fewest controls (a wide screen has felt buttons in its
+corners). It never goes down over the Ace: a tall bubble scrolls instead.
+
 ## Idle scenes (`web.265`)
 
 The scenes of `modules/mascot/engine.mjs` (26 of them, drawn at random) play on the login
@@ -417,6 +444,6 @@ makes him vanish in a puff. Scenes still play in the lobby.
 | M1 | Idle scenes folded into Ace's Help: no option, one size, from his spot and back (`web.265`) |
 | M2 | « Well done! »: a game won, Ranking points, a trophy (`web.266`) |
 | H1 | « More help »: the help window's knowledge in the Ace's bubble, on demand even with the tips off (`web.267`) |
-| **H2** | « ? » on the windows and the lobby leftovers, *More about it* → the matching help section (`web.268`) |
-| H3 | « ? » and « More help » at the table, on demand, even during a hand |
+| H2 | « ? » on the windows and the lobby leftovers, *More about it* → the matching help section (`web.268`) |
+| **H3** | « ? » and « More help » at the table, on demand, even during a hand; folds when the player's turn comes (`web.269`) |
 | H4 | The help window removed (explicit agreement) |

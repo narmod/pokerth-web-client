@@ -328,16 +328,25 @@ function placeBubble() {
   const apply = (p, top) => {
     bub.classList.toggle('ad-side', side && !top);
     bub.classList.toggle('ad-top', !!top);
-    bub.style.right = p.right + 'px';
+    if (p.left != null) { bub.style.left = p.left + 'px'; bub.style.right = 'auto'; }
+    else { bub.style.right = p.right + 'px'; bub.style.left = 'auto'; }
     if (top) { bub.style.top = p.top + 'px'; bub.style.bottom = 'auto'; }
     else { bub.style.bottom = p.bottom + 'px'; bub.style.top = 'auto'; }
   };
+  bub.style.maxHeight = ''; bub.style.overflowY = '';
   apply(near, false);
   if (!bub.classList.contains('ad-open')) return;
-  const bw = bub.offsetWidth, bh = bub.offsetHeight;
+  const bw = bub.offsetWidth;
+  let bh = bub.offsetHeight;
   let hdr = 0;
   try { const h = document.querySelector('.screen.active .header') || document.querySelector('.screen.active [class*="header"]'); if (h) hdr = Math.max(0, h.getBoundingClientRect().bottom); } catch (e) {}
-  const topP = { right: 12, top: Math.round(Math.min(Math.max(hdr, 8) + 8, Math.max(8, vh - bh - 8))) };
+  const top0 = Math.max(hdr, 8) + 8;
+  // under the header, the bubble never goes down over the Ace (a tall one scrolls instead, H3)
+  if (top0 + bh > r.top - 8 && r.left < vw - 12 && r.right > vw - 12 - bw) {
+    const cap = Math.max(160, Math.round(r.top - 8 - top0));
+    if (cap < bh) { bub.style.maxHeight = cap + 'px'; bub.style.overflowY = 'auto'; bh = bub.offsetHeight; }
+  }
+  const topP = { right: 12, top: Math.round(Math.min(top0, Math.max(8, vh - bh - 8))) };
   const rectNear = { left: vw - near.right - bw, top: vh - near.bottom - bh, right: vw - near.right, bottom: vh - near.bottom };
   const rectTop = { left: vw - 12 - bw, top: topP.top, right: vw - 12, bottom: topP.top + bh };
   // what each spot would hide (the Ace's own bubble aside)
@@ -350,7 +359,20 @@ function placeBubble() {
     if (b.top < 0 || b.bottom > vh) c += 1e9;
     return c;
   };
-  if (cost(rectTop) < cost(rectNear) * 0.8) apply(topP, true);
+  // also under the header on the left and in the middle (a wide screen: the felt buttons sit in its corners)
+  const leftP = { left: 12, top: topP.top }, midP = { left: Math.max(12, Math.round((vw - bw) / 2)), top: topP.top };
+  const rectLeft = { left: 12, top: topP.top, right: 12 + bw, bottom: topP.top + bh };
+  const rectMid = { left: midP.left, top: topP.top, right: midP.left + bw, bottom: topP.top + bh };
+  const cands = [[near, false, cost(rectNear)], [topP, true, cost(rectTop) / 0.8]];
+  if (vw - 24 > bw * 1.5) cands.push([leftP, true, cost(rectLeft) / 0.8 + 1], [midP, true, cost(rectMid) / 0.8 + 2]);
+  const best = cands.reduce((a, b) => (b[2] < a[2] ? b : a));
+  if (best[0] !== near) {
+    apply(best[0], true);
+    if (best[0] === topP) return;
+    // left / middle: not over the Ace either
+    const cap = Math.max(160, Math.round(r.top - 8 - topP.top));
+    if (best[0].left + bw > r.left && topP.top + bh > r.top - 8 && cap < bh) { bub.style.maxHeight = cap + 'px'; bub.style.overflowY = 'auto'; }
+  }
 }
 window.addEventListener('resize', () => { resize(); settle(); placeBubble(); }, { passive: true });
 

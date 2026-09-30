@@ -14,7 +14,7 @@
 //   · no page error along the way.
 // Run: node scripts/test-guide-browser.mjs   (PTH_MOBILE / PTH_DEVICES as the other browser tests)
 import assert from 'node:assert/strict';
-import { startServer, createReporter, shot, openTable, enterTable, runPlan } from './lib/mobile-harness.mjs';
+import { startServer, createReporter, shot, openTable, enterTable, runPlan, turnTo, ME } from './lib/mobile-harness.mjs';
 
 const MATRIX = [
   { name: 'iPhone SE (3rd gen)', family: 'ios' },
@@ -464,6 +464,7 @@ async function runDevice(browser, name, descriptor) {
     const page = await ctx.newPage(); watch(page);
     await openTable(page, base, { stopAt: 'lobby', seats: 6 });
     await page.waitForTimeout(600);
+    await noBanner(page);
     const helpShown = () => page.evaluate(() => { const m = document.getElementById('help-modal'); return !!m && getComputedStyle(m).display !== 'none'; });
     const kicker = () => page.evaluate(() => (document.querySelector('#ace-dock .ad-bubble.ad-open .ad-kicker') || {}).textContent || '');
     await check(`${name}: More help — the Help entry brings the Ace with the help (tips off), not the window`, async () => {
@@ -522,11 +523,41 @@ async function runDevice(browser, name, descriptor) {
       await page.waitForTimeout(300);
       assert.equal(await page.locator('#ace-dock .ad-ace').count(), 1, 'he left with the tips on');
     });
-    await enterTable(page, { seats: 6 });
-    await check(`${name}: More help — at a table the Help entry still opens the window (for now)`, async () => {
+    await enterTable(page, { seats: 6, turn: 'other' });
+    await page.waitForTimeout(600);
+    await check(`${name}: H3 — at the table, silent by himself; the Help entry brings him with « The game screen »`, async () => {
+      assert.equal(await page.locator('#ace-dock').count(), 0, 'he came by himself during a hand');
       await page.evaluate(() => window.toggleHelp());
-      await page.waitForFunction(() => { const m = document.getElementById('help-modal'); return !!m && getComputedStyle(m).display !== 'none'; }, null, { timeout: 3000 });
-      await page.evaluate(() => window.closeHelp());
+      await page.locator(bubble + ' .ad-search').waitFor({ timeout: 5000 });
+      assert.match(await kicker(), /The game screen/);
+      assert.equal(await helpShown(), false, 'the help window opened');
+      inside(await box(page, bubble), 'bubble');
+      await click(page, btn('close'));
+      await page.waitForFunction(() => !document.getElementById('ace-dock'), null, { timeout: 3000 });
+    });
+    await check(`${name}: H3 — « ? » at the table during a hand: the info panel button explained, not opened`, async () => {
+      await page.evaluate(() => window.guideAsk());
+      await page.waitForFunction(() => document.body.classList.contains('guide-ask'), null, { timeout: 3000 });
+      const shownBefore = await page.evaluate(() => { const p = document.getElementById('g-log-panel'); return !!p && getComputedStyle(p).display !== 'none'; });
+      await page.locator('#log-toggle-btn').click();
+      await page.waitForTimeout(400);
+      assert.match(await page.evaluate(() => (document.querySelector('#ace-dock .ad-bubble.ad-open .ad-text') || {}).textContent || ''), /info panel/);
+      const shownAfter = await page.evaluate(() => { const p = document.getElementById('g-log-panel'); return !!p && getComputedStyle(p).display !== 'none'; });
+      assert.equal(shownAfter, shownBefore, 'the panel toggled on the first tap');
+      assert.equal(await page.locator(btn('moreAbout')).count(), 1, 'no « More about it »');
+    });
+    await shot(page, name, 'guide-h3-table');
+    await check(`${name}: H3 — my turn comes: « ? » mode ends and he leaves, the action buttons are free`, async () => {
+      await turnTo(page, ME);
+      await page.waitForFunction(() => !document.body.classList.contains('guide-ask') && !document.getElementById('ace-dock'), null, { timeout: 3000 });
+    });
+    await check(`${name}: H3 — « ? » at my turn: a tap on Fold acts at once and ends the mode`, async () => {
+      await page.evaluate(() => window.guideAsk());
+      await page.waitForFunction(() => document.body.classList.contains('guide-ask'), null, { timeout: 3000 });
+      await page.locator('.btn-action.btn-fold').first().click();
+      await page.waitForTimeout(400);
+      assert.ok(!(await page.evaluate(() => document.body.classList.contains('guide-ask'))), 'still in « ? » mode');
+      assert.doesNotMatch(await page.evaluate(() => (document.querySelector('#ace-dock .ad-bubble.ad-open .ad-text') || {}).textContent || ''), /Fold:/, 'Fold was explained instead of acting');
     });
     await ctx.close();
   }
