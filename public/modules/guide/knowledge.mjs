@@ -63,9 +63,9 @@ export function search(help, q, max = 40) {
 export function splitText(text, maxChars = 420) {
   const s = String(text || '').trim();
   if (s.length <= maxChars) return s ? [s] : [];
-  // a sentence ends with . ! ? (and the Indic । ॥, the Burmese ။) followed by a space — not
+  // a sentence ends with . ! ? (and the Indic । ॥, the Burmese ။, the Urdu ۔ and Arabic ؟) followed by a space — not
   // « pokerth.net » or « 2.5 » —, or with the CJK 。！？
-  const parts = s.split(/(?<=[.!?…।॥။][)»”’"]*)\s+|(?<=[。！？])/).filter(Boolean);
+  const parts = s.split(/(?<=[.!?…।॥။۔؟][)»”’"]*)\s+|(?<=[。！？])/).filter(Boolean);
   const out = [];
   let cur = '';
   for (const p of parts) {

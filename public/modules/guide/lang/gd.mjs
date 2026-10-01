@@ -10,8 +10,8 @@ export default {
   later: 'Nas anmoiche',
   next: 'Air adhart',
   close: 'Dùin',
-  welcome: 'Sgoinneil! Nochdaidh mi shìos an seo uair sam bith a bhios rudeigin feumail ri mhìneachadh. Thoir gnogag orm uair sam bith airson a’ mholadh fhaicinn a-rithist.',
-  menuOn: 'Tha Cobhair an Aoin air.',
+  welcome: 'Sgoinneil! Nochdaidh mi shìos an seo uair sam bith a bhios rudeigin feumail ri mhìneachadh. Thoir gnogag orm uair sam bith airson an clàr-taice agam: barrachd cobhair, moladh na sgrìn seo agus “Dè tha seo?” — an uair sin thoir gnogag air rud sam bith agus mìnichidh mi e. Bidh an “?” buidhe air na builgeanan-cainnte agam a’ dèanamh an aon rud.',
+  menuOn: 'Tha Cobhair an Aoin air. “Dè tha seo?”: thoir gnogag air, an uair sin thoir gnogag air rud sam bith air an sgrìn agus innsidh mi dhut dè a nì e (bidh an “?” buidhe air na builgeanan-cainnte agam a’ dèanamh an aon rud).',
   turnOff: 'Cuir dheth',
   resetTips: 'Seall gach moladh a-rithist',
   resetDone: 'Dèanta — nochdaidh gach moladh a-rithist.',
@@ -216,4 +216,5 @@ export default {
   hsGameChatWin: 'Cabadaich a’ bhùird seo.',
   hsReactWin: 'Na freagairtean emoji: tagh fear, chì a h-uile duine aig a’ bhòrd e.',
   hsHandsWin: 'Na 10 làmhan pòcair, on tè as laige chun tè as làidire.',
+  replayTip: 'Moladh na sgrìn seo',
 };

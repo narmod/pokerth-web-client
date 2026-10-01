@@ -10,8 +10,8 @@ export default {
   later: 'Baadaye',
   next: 'Endelea',
   close: 'Funga',
-  welcome: 'Safi! Nitajitokeza hapa chini kila kunapokuwa na jambo la manufaa la kueleza. Niguse wakati wowote ili kuona dokezo tena.',
-  menuOn: 'Msaada wa Ekaa umewashwa.',
+  welcome: 'Safi! Nitajitokeza hapa chini kila kunapokuwa na jambo la manufaa la kueleza. Niguse wakati wowote ili kufungua menyu yangu: msaada zaidi, dokezo la skrini hii na “Hiki ni nini?” — kisha gusa chochote nami nitakieleza. Alama ya “?” ya manjano kwenye viputo vyangu hufanya vivyo hivyo.',
+  menuOn: 'Msaada wa Ekaa umewashwa. “Hiki ni nini?”: kiguse, kisha gusa chochote kwenye skrini nami nitakuambia kinafanya nini (alama ya “?” ya manjano kwenye viputo vyangu hufanya vivyo hivyo).',
   turnOff: 'Zima',
   resetTips: 'Onyesha madokezo yote tena',
   resetDone: 'Imekamilika — kila dokezo litaonyeshwa tena.',
@@ -216,4 +216,5 @@ export default {
   hsGameChatWin: 'Chati ya meza hii.',
   hsReactWin: 'Miitikio ya emoji: chagua mmoja, kila mtu mezani huuona.',
   hsHandsWin: 'Mikono 10 ya poker, kutoka dhaifu zaidi hadi yenye nguvu zaidi.',
+  replayTip: 'Dokezo la skrini hii',
 };

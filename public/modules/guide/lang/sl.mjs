@@ -10,8 +10,8 @@ export default {
   later: 'Pozneje',
   next: 'Naprej',
   close: 'Zapri',
-  welcome: 'Odlično! Pokazal se bom tukaj spodaj, kadar bo kaj koristnega za razložiti. Tapni me kadar koli, da znova vidiš nasvet.',
-  menuOn: 'Pomoč asa je vklopljena.',
+  welcome: 'Odlično! Pokazal se bom tukaj spodaj, kadar bo kaj koristnega za razložiti. Tapni me kadar koli, da odpreš moj meni: več pomoči, nasvet za ta zaslon in „Kaj je to?“ — nato tapni karkoli in ti razložim. Rumeni „?“ na mojih oblačkih naredi isto.',
+  menuOn: 'Pomoč asa je vklopljena. „Kaj je to?“: tapni ga, nato tapni karkoli na zaslonu in ti povem, kaj to naredi (rumeni „?“ na mojih oblačkih naredi isto).',
   turnOff: 'Izklopi',
   resetTips: 'Znova prikaži vse nasvete',
   resetDone: 'Končano — vsi nasveti bodo znova prikazani.',
@@ -216,4 +216,5 @@ export default {
   hsGameChatWin: 'Klepet te mize.',
   hsReactWin: 'Reakcije z emoji: izberi eno, vidijo jo vsi za mizo.',
   hsHandsWin: '10 pokrskih rok, od najšibkejše do najmočnejše.',
+  replayTip: 'Nasvet za ta zaslon',
 };

@@ -10,8 +10,8 @@ export default {
   later: 'Później',
   next: 'Dalej',
   close: 'Zamknij',
-  welcome: 'Świetnie! Pojawię się tu na dole, gdy tylko będzie coś przydatnego do wyjaśnienia. Dotknij mnie w dowolnej chwili, aby znów zobaczyć wskazówkę.',
-  menuOn: 'Pomoc Asa jest włączona.',
+  welcome: 'Świetnie! Pojawię się tu na dole, gdy tylko będzie coś przydatnego do wyjaśnienia. Dotknij mnie w dowolnej chwili, aby otworzyć moje menu: więcej pomocy, wskazówka do tego ekranu i „Co to jest?” — potem dotknij czegokolwiek, a ja to wyjaśnię. Żółty „?” na moich dymkach robi to samo.',
+  menuOn: 'Pomoc Asa jest włączona. „Co to jest?”: dotknij go, potem dotknij czegokolwiek na ekranie, a powiem ci, co to robi (żółty „?” na moich dymkach robi to samo).',
   turnOff: 'Wyłącz',
   resetTips: 'Pokaż znów wszystkie wskazówki',
   resetDone: 'Gotowe — każda wskazówka pojawi się ponownie.',
@@ -216,4 +216,5 @@ export default {
   hsGameChatWin: 'Czat tego stołu.',
   hsReactWin: 'Reakcje emoji: wybierz jedną, widzą ją wszyscy przy stole.',
   hsHandsWin: '10 układów pokerowych, od najsłabszego do najsilniejszego.',
+  replayTip: 'Wskazówka do ekranu',
 };

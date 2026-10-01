@@ -10,8 +10,8 @@ export default {
   later: 'Sonra',
   next: 'İleri',
   close: 'Kapat',
-  welcome: 'Harika! Açıklanacak faydalı bir şey olduğunda burada, aşağıda belireceğim. İpucunu yeniden görmek için istediğin zaman bana dokun.',
-  menuOn: 'As’ın yardımı açık.',
+  welcome: 'Harika! Açıklanacak faydalı bir şey olduğunda burada, aşağıda belireceğim. Menümü açmak için istediğin zaman bana dokun: daha fazla yardım, bu ekranın ipucu ve “Bu ne?” — sonra herhangi bir şeye dokun, ben açıklayayım. Konuşma balonlarımdaki sarı “?” da aynı işi yapar.',
+  menuOn: 'As’ın yardımı açık. “Bu ne?”: ona dokun, sonra ekrandaki herhangi bir şeye dokun, ne işe yaradığını söyleyeyim (konuşma balonlarımdaki sarı “?” da aynı işi yapar).',
   turnOff: 'Devre dışı bırak',
   resetTips: 'Tüm ipuçlarını yeniden göster',
   resetDone: 'Tamam — her ipucu yeniden gösterilecek.',
@@ -216,4 +216,5 @@ export default {
   hsGameChatWin: 'Bu masanın sohbeti.',
   hsReactWin: 'Emoji tepkileri: birini seç, masadaki herkes görür.',
   hsHandsWin: '10 poker eli, en zayıftan en güçlüye.',
+  replayTip: 'Bu ekranın ipucu',
 };

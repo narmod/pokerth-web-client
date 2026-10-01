@@ -10,8 +10,8 @@ export default {
   later: 'Mais tarde',
   next: 'Seguinte',
   close: 'Fechar',
-  welcome: 'Ótimo! Vou aparecer aqui em baixo sempre que houver algo útil para explicar. Toca em mim a qualquer momento para voltares a ver a dica.',
-  menuOn: 'A Ajuda do Ás está ativada.',
+  welcome: 'Ótimo! Vou aparecer aqui em baixo sempre que houver algo útil para explicar. Toca em mim a qualquer momento para abrires o meu menu: mais ajuda, a dica deste ecrã e «O que é isto?» — depois toca em qualquer coisa e eu explico. O «?» amarelo nos meus balões faz o mesmo.',
+  menuOn: 'A Ajuda do Ás está ativada. «O que é isto?»: toca nele, depois toca em qualquer coisa no ecrã e eu digo-te o que faz (o «?» amarelo nos meus balões faz o mesmo).',
   turnOff: 'Desativar',
   resetTips: 'Mostrar todas as dicas outra vez',
   resetDone: 'Feito — todas as dicas voltam a aparecer.',
@@ -216,4 +216,5 @@ export default {
   hsGameChatWin: 'O chat desta mesa.',
   hsReactWin: 'As reações com emojis: escolhe uma, todos na mesa a veem.',
   hsHandsWin: 'As 10 mãos de póquer, da mais fraca à mais forte.',
+  replayTip: 'Dica deste ecrã',
 };

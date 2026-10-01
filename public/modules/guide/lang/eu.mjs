@@ -10,8 +10,8 @@ export default {
   later: 'Geroago',
   next: 'Hurrengoa',
   close: 'Itxi',
-  welcome: 'Primeran! Hemen behean agertuko naiz azaltzeko zerbait baliagarria dagoen bakoitzean. Saka nazazu edonoiz aholkua berriro ikusteko.',
-  menuOn: 'Batekoaren laguntza aktibatuta dago.',
+  welcome: 'Primeran! Hemen behean agertuko naiz azaltzeko zerbait baliagarria dagoen bakoitzean. Saka nazazu edonoiz nire menua ikusteko: laguntza gehiago, pantaila honen aholkua eta «Zer da hau?» — gero saka ezazu edozer eta azalduko dizut. Nire hizketa-globoetako «?» horiak gauza bera egiten du.',
+  menuOn: 'Batekoaren laguntza aktibatuta dago. «Zer da hau?»: saka ezazu, gero saka ezazu pantailako edozer eta zer egiten duen esango dizut (nire hizketa-globoetako «?» horiak gauza bera egiten du).',
   turnOff: 'Desaktibatu',
   resetTips: 'Erakutsi aholku guztiak berriro',
   resetDone: 'Eginda — aholku guztiak berriro agertuko dira.',
@@ -216,4 +216,5 @@ export default {
   hsGameChatWin: 'Mahai honetako txata.',
   hsReactWin: 'Emoji erreakzioak: aukeratu bat, mahaian denek ikusten dute.',
   hsHandsWin: 'Pokerreko 10 eskuak, ahulenetik indartsuenera.',
+  replayTip: 'Pantailaren aholkua',
 };

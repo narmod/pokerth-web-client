@@ -10,8 +10,8 @@ export default {
   later: 'Keyinroq',
   next: 'Keyingi',
   close: 'Yopish',
-  welcome: 'Ajoyib! Tushuntirishga arziydigan narsa boʻlganda shu yerda, pastda paydo boʻlaman. Maslahatni qayta koʻrish uchun istalgan vaqtda meni bosing.',
-  menuOn: 'Tuzning yordami yoqilgan.',
+  welcome: 'Ajoyib! Tushuntirishga arziydigan narsa boʻlganda shu yerda, pastda paydo boʻlaman. Menyumni ochish uchun istalgan vaqtda meni bosing: qo‘shimcha yordam, shu ekranning maslahati va “Bu nima?” — keyin istalgan narsani bosing, men tushuntiraman. Pufakchalarimdagi sariq “?” belgisi ham shunday qiladi.',
+  menuOn: 'Tuzning yordami yoqilgan. “Bu nima?”: uni bosing, keyin ekrandagi istalgan narsani bosing, men u nima qilishini aytaman (pufakchalarimdagi sariq “?” belgisi ham shunday qiladi).',
   turnOff: 'Oʻchirish',
   resetTips: 'Barcha maslahatlarni qayta koʻrsatish',
   resetDone: 'Tayyor — har bir maslahat yana koʻrsatiladi.',
@@ -216,4 +216,5 @@ export default {
   hsGameChatWin: 'Shu stolning chati.',
   hsReactWin: 'Emoji reaksiyalari: birini tanlang, stoldagi hamma koʻradi.',
   hsHandsWin: '10 ta poker kombinatsiyasi, eng kuchsizidan eng kuchlisigacha.',
+  replayTip: 'Ekran maslahati',
 };

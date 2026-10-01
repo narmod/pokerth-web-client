@@ -381,8 +381,15 @@ async function note(key, buttons, onButton, vars) {
 }
 
 async function showMenu() {
-  await note('menuOn', [btn('moreHelp'), btn('askMenu'), btn('turnOff'), btn('resetTips'), btn('close', true)], (id) => {
+  // the tip of this screen, to read it again (web.271: a tap on the Ace opens this menu, it no longer replays the tip)
+  const w = where();
+  const tip = canSpeak(Object.assign({}, w, { helpOn: true })) ? replayContext(w, CONTEXTS) : null;
+  const list = [btn('moreHelp'), btn('askMenu')];
+  if (tip) list.push(btn('replayTip'));
+  list.push(btn('turnOff'), btn('resetTips'), btn('close', true));
+  await note('menuOn', list, (id) => {
     if (id === 'moreHelp') { openMoreHelp(); return; }
+    if (id === 'replayTip' && tip) { snoozed.delete(tip.id); showContext(tip); return; }
     if (id === 'askMenu' || id === 'ask') { enterAsk(); return; }
     if (id === 'turnOff') { turnOff(); return; }
     if (id === 'resetTips') { resetTips(); return; }
@@ -603,7 +610,7 @@ function flash(key, ms) {
   }, ms);
 }
 
-/** Tap on the Ace: closes the bubble, or replays the tip of this place, or opens the menu. */
+/** Tap on the Ace: closes the bubble, or shows a tip put off with « Later », or opens his menu. */
 function onTap() {
   if (M && M.bubbleOpen()) {
     if (showing && showing.kind === 'offer') return;
@@ -612,9 +619,11 @@ function onTap() {
     if (showing && showing.kind === 'ctx') { onCtxButton('later'); return; }
     closeBubble(); return;
   }
+  // a tip put off with « Later » (red badge) that still applies here: the tap shows it;
+  // otherwise his menu (web.271 — the tap used to replay the screen's tip again and again)
   const w = where();
-  const ctx = canSpeak(w) ? replayContext(w, CONTEXTS) : null;
-  if (ctx) { snoozed.delete(ctx.id); showContext(ctx); return; }
+  const waiting = canSpeak(w) ? CONTEXTS.find((c) => !c.manual && snoozed.has(c.id) && applies(c, w)) : null;
+  if (waiting) { snoozed.delete(waiting.id); showContext(waiting); return; }
   showMenu();
 }
 

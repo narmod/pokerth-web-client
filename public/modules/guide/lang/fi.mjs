@@ -10,8 +10,8 @@ export default {
   later: 'Myöhemmin',
   next: 'Seuraava',
   close: 'Sulje',
-  welcome: 'Hienoa! Ilmestyn tänne alas aina, kun on jotain hyödyllistä selitettävää. Napauta minua milloin tahansa nähdäksesi vinkin uudelleen.',
-  menuOn: 'Ässän apu on päällä.',
+  welcome: 'Hienoa! Ilmestyn tänne alas aina, kun on jotain hyödyllistä selitettävää. Napauta minua milloin tahansa nähdäksesi valikkoni: lisää ohjeita, tämän näytön vinkki ja ”Mikä tämä on?” — napauta sitten mitä tahansa, niin selitän sen. Puhekuplieni keltainen ”?” tekee saman.',
+  menuOn: 'Ässän apu on päällä. ”Mikä tämä on?”: napauta sitä, napauta sitten mitä tahansa näytöllä, niin kerron, mitä se tekee (puhekuplieni keltainen ”?” tekee saman).',
   turnOff: 'Poista käytöstä',
   resetTips: 'Näytä kaikki vinkit uudelleen',
   resetDone: 'Valmis — kaikki vinkit näytetään uudelleen.',
@@ -216,4 +216,5 @@ export default {
   hsGameChatWin: 'Tämän pöydän chat.',
   hsReactWin: 'Emoji-reaktiot: valitse yksi, kaikki pöydässä näkevät sen.',
   hsHandsWin: '10 pokerikättä heikoimmasta vahvimpaan.',
+  replayTip: 'Tämän näytön vinkki',
 };

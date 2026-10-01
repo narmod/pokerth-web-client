@@ -10,8 +10,8 @@ export default {
   later: 'Vėliau',
   next: 'Toliau',
   close: 'Uždaryti',
-  welcome: 'Puiku! Pasirodysiu čia apačioje, kai tik bus ką naudingo paaiškinti. Bakstelėk mane bet kada, kad vėl pamatytum patarimą.',
-  menuOn: 'Tūzo pagalba įjungta.',
+  welcome: 'Puiku! Pasirodysiu čia apačioje, kai tik bus ką naudingo paaiškinti. Bakstelėk mane bet kada, kad atsidarytų mano meniu: daugiau pagalbos, šio ekrano patarimas ir „Kas tai?“ — tada bakstelėk bet ką, o aš paaiškinsiu. Geltonas „?“ ant mano debesėlių daro tą patį.',
+  menuOn: 'Tūzo pagalba įjungta. „Kas tai?“: bakstelėk jį, paskui bakstelėk bet ką ekrane, ir aš pasakysiu, ką tai daro (geltonas „?“ ant mano debesėlių daro tą patį).',
   turnOff: 'Išjungti',
   resetTips: 'Vėl rodyti visus patarimus',
   resetDone: 'Atlikta — visi patarimai vėl bus rodomi.',
@@ -216,4 +216,5 @@ export default {
   hsGameChatWin: 'Šio stalo pokalbis.',
   hsReactWin: 'Jaustukų reakcijos: pasirink vieną, ją mato visi prie stalo.',
   hsHandsWin: '10 pokerio derinių, nuo silpniausio iki stipriausio.',
+  replayTip: 'Šio ekrano patarimas',
 };

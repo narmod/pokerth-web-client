@@ -10,8 +10,8 @@ export default {
   later: 'Mai târziu',
   next: 'Următorul',
   close: 'Închide',
-  welcome: 'Super! Voi apărea aici jos de fiecare dată când e ceva util de explicat. Atinge-mă oricând ca să revezi sfatul.',
-  menuOn: 'Ajutorul Asului este activat.',
+  welcome: 'Super! Voi apărea aici jos de fiecare dată când e ceva util de explicat. Atinge-mă oricând ca să-mi deschizi meniul: mai mult ajutor, sfatul acestui ecran și „Ce e asta?” — apoi atinge orice și îți explic. Semnul „?” galben de pe baloanele mele face la fel.',
+  menuOn: 'Ajutorul Asului este activat. „Ce e asta?”: atinge-l, apoi atinge orice de pe ecran și îți spun ce face (semnul „?” galben de pe baloanele mele face la fel).',
   turnOff: 'Dezactivează',
   resetTips: 'Arată din nou toate sfaturile',
   resetDone: 'Gata — fiecare sfat va fi afișat din nou.',
@@ -216,4 +216,5 @@ export default {
   hsGameChatWin: 'Chatul acestei mese.',
   hsReactWin: 'Reacțiile cu emoji: alege una, o văd toți cei de la masă.',
   hsHandsWin: 'Cele 10 mâini de poker, de la cea mai slabă la cea mai puternică.',
+  replayTip: 'Sfatul acestui ecran',
 };

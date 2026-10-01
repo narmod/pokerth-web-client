@@ -10,8 +10,8 @@ export default {
   later: 'Mamaya',
   next: 'Susunod',
   close: 'Isara',
-  welcome: 'Ayos! Lalabas ako rito sa ibaba tuwing may kapaki-pakinabang na dapat ipaliwanag. I-tap mo ako anumang oras para makita ulit ang tip.',
-  menuOn: 'Naka-on ang Tulong ng Alas.',
+  welcome: 'Ayos! Lalabas ako rito sa ibaba tuwing may kapaki-pakinabang na dapat ipaliwanag. I-tap mo ako anumang oras para sa menu ko: higit pang tulong, ang tip ng screen na ito, at “Ano ito?” — pagkatapos ay i-tap mo ang kahit ano at ipapaliwanag ko ito. Ganoon din ang ginagawa ng dilaw na “?” sa mga bubble ko.',
+  menuOn: 'Naka-on ang Tulong ng Alas. “Ano ito?”: i-tap mo ito, pagkatapos ay i-tap mo ang kahit ano sa screen at sasabihin ko sa iyo kung ano ang ginagawa nito (ganoon din ang dilaw na “?” sa mga bubble ko).',
   turnOff: 'I-off',
   resetTips: 'Ipakita ulit ang lahat ng tip',
   resetDone: 'Tapos na — lalabas ulit ang bawat tip.',
@@ -216,4 +216,5 @@ export default {
   hsGameChatWin: 'Ang chat ng mesang ito.',
   hsReactWin: 'Mga emoji reaction: pumili ng isa, nakikita ito ng lahat sa mesa.',
   hsHandsWin: 'Ang 10 kamay sa poker, mula sa pinakamahina hanggang sa pinakamalakas.',
+  replayTip: 'Tip ng screen na ito',
 };

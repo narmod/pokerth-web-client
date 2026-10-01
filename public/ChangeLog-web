@@ -1,4 +1,8 @@
-2026-10-01 version 2.1.9-web.270 (current series):
+2026-10-01 version 2.1.9-web.271 (current series):
+- improvement: Ace’s Help — tapping the Ace now opens his menu (More help, « What’s this? », this screen’s tip, turn off, show all tips again) instead of repeating the same tip; a tip you put off with « Later » still comes back with a tap
+- improvement: Ace’s Help — his welcome and his menu explain « What’s this? » and the yellow « ? » on his bubbles; the help section on Ace’s Help lists his menu
+
+2026-10-01 version 2.1.9-web.270:
 - improvement: the help now lives in Ace’s Help — the Help entry of the menus opens « More help » in the Ace’s bubble on every screen, at the table and in the spectator view too; the separate help window is gone (same texts, same search, in 83 languages)
 
 2026-09-30 version 2.1.9-web.269:

@@ -10,8 +10,8 @@ export default {
   later: 'Soňrak',
   next: 'Indiki',
   close: 'Ýap',
-  welcome: 'Ajaýyp! Düşündirmäge peýdaly bir zat bolanda, men şu aşakda peýda bolaryn. Maslahaty täzeden görmek üçin islän wagtyňyz maňa basyň.',
-  menuOn: 'Tuzuň kömegi açyk.',
+  welcome: 'Ajaýyp! Düşündirmäge peýdaly bir zat bolanda, men şu aşakda peýda bolaryn. Meniň menýumy açmak üçin islän wagtyňyz maňa basyň: has köp kömek, bu ekranyň maslahaty we “Bu näme?” — soň islendik zada basyň, men düşündirerin. Gepleşik bulutlarymdaky sary “?” belgisi hem şuny edýär.',
+  menuOn: 'Tuzuň kömegi açyk. “Bu näme?”: oňa basyň, soň ekranda islendik zada basyň, men onuň näme edýändigini aýdaryn (gepleşik bulutlarymdaky sary “?” belgisi hem şuny edýär).',
   turnOff: 'Öçür',
   resetTips: 'Ähli maslahatlary täzeden görkez',
   resetDone: 'Taýýar — her maslahat täzeden görkeziler.',
@@ -216,4 +216,5 @@ export default {
   hsGameChatWin: 'Şu stoluň çaty.',
   hsReactWin: 'Emoji reaksiýalary: birini saýlaň, stoldaky hemmeler görýär.',
   hsHandsWin: '10 poker eli, iň gowşagyndan iň güýçlüsine çenli.',
+  replayTip: 'Ekranyň maslahaty',
 };

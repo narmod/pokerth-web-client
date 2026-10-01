@@ -10,8 +10,8 @@ export default {
   later: 'Hiljem',
   next: 'Edasi',
   close: 'Sulge',
-  welcome: 'Suurepärane! Ilmun siia alla alati, kui on midagi kasulikku selgitada. Puuduta mind millal tahes, et näpunäidet uuesti näha.',
-  menuOn: 'Ässa abi on sees.',
+  welcome: 'Suurepärane! Ilmun siia alla alati, kui on midagi kasulikku selgitada. Puuduta mind millal tahes, et avada minu menüü: rohkem abi, selle ekraani näpunäide ja „Mis see on?“ — seejärel puuduta mida tahes ja ma selgitan seda. Kollane „?“ minu jutumullidel teeb sedasama.',
+  menuOn: 'Ässa abi on sees. „Mis see on?“: puuduta seda, seejärel puuduta ekraanil mida tahes ja ma ütlen, mida see teeb (kollane „?“ minu jutumullidel teeb sedasama).',
   turnOff: 'Lülita välja',
   resetTips: 'Näita kõiki näpunäiteid uuesti',
   resetDone: 'Tehtud — iga näpunäidet näidatakse uuesti.',
@@ -216,4 +216,5 @@ export default {
   hsGameChatWin: 'Selle laua vestlus.',
   hsReactWin: 'Emoji-reaktsioonid: vali üks, kõik laua taga näevad seda.',
   hsHandsWin: '10 pokkerikätt, nõrgimast tugevaimani.',
+  replayTip: 'Ekraani näpunäide',
 };

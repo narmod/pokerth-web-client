@@ -15,8 +15,8 @@ export default {
   next: 'Next',
   close: 'Close',
   // turning the help on / off, menu bubble
-  welcome: 'Great! I’ll pop up down here whenever there is something useful to explain. Tap me any time to see the tip again.',
-  menuOn: 'Ace’s Help is on.',
+  welcome: 'Great! I’ll pop up down here whenever there is something useful to explain. Tap me any time for my menu: more help, the tip of this screen, and « What’s this? » — then tap anything and I explain it. The yellow « ? » on my bubbles does that too.',
+  menuOn: 'Ace’s Help is on. « What’s this? »: tap it, then tap anything on the screen and I tell you what it does (the yellow « ? » on my bubbles does the same).',
   turnOff: 'Turn off',
   resetTips: 'Show all tips again',
   resetDone: 'Done — every tip will show again.',
@@ -123,6 +123,8 @@ export default {
   moreHelp: 'More help',
   allTopics: 'All topics',
   back: 'Back',
+  // web.271: tapping the Ace opens his menu; this entry replays the tip of the screen
+  replayTip: 'This screen’s tip',
   // H2 (web.268): « ? » on the windows and the rest of the lobby, « More about it »
   moreAbout: 'More about it',
   hsAbout: 'About PokerTH: the version, the credits and what changed.',

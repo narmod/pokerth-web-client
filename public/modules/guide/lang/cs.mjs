@@ -10,8 +10,8 @@ export default {
   later: 'Později',
   next: 'Další',
   close: 'Zavřít',
-  welcome: 'Skvělé! Objevím se tady dole pokaždé, když bude co užitečného vysvětlit. Kdykoli na mě klepni a tip se znovu zobrazí.',
-  menuOn: 'Nápověda od esa je zapnutá.',
+  welcome: 'Skvělé! Objevím se tady dole pokaždé, když bude co užitečného vysvětlit. Kdykoli na mě klepni a otevře se moje nabídka: další nápověda, tip k této obrazovce a „Co je to?“ — pak klepni na cokoli a já ti to vysvětlím. Žlutý „?“ na mých bublinách dělá totéž.',
+  menuOn: 'Nápověda od esa je zapnutá. „Co je to?“: klepni na to, pak klepni na cokoli na obrazovce a já ti řeknu, k čemu to je (žlutý „?“ na mých bublinách dělá totéž).',
   turnOff: 'Vypnout',
   resetTips: 'Znovu zobrazit všechny tipy',
   resetDone: 'Hotovo — všechny tipy se znovu zobrazí.',
@@ -216,4 +216,5 @@ export default {
   hsGameChatWin: 'Chat tohoto stolu.',
   hsReactWin: 'Emoji reakce: vyber jednu, vidí ji všichni u stolu.',
   hsHandsWin: '10 pokerových kombinací od nejslabší po nejsilnější.',
+  replayTip: 'Tip k této obrazovce',
 };

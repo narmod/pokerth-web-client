@@ -10,8 +10,8 @@ export default {
   later: 'Nanti',
   next: 'Berikutnya',
   close: 'Tutup',
-  welcome: 'Bagus! Saya akan muncul di bawah sini setiap kali ada hal berguna untuk dijelaskan. Ketuk saya kapan saja untuk melihat tipnya lagi.',
-  menuOn: 'Bantuan si As aktif.',
+  welcome: 'Bagus! Saya akan muncul di bawah sini setiap kali ada hal berguna untuk dijelaskan. Ketuk saya kapan saja untuk membuka menu saya: bantuan lainnya, tip layar ini, dan “Apa ini?” — lalu ketuk apa saja dan saya jelaskan. Tanda “?” kuning di gelembung saya juga begitu.',
+  menuOn: 'Bantuan si As aktif. “Apa ini?”: ketuk, lalu ketuk apa saja di layar dan saya beri tahu fungsinya (tanda “?” kuning di gelembung saya juga begitu).',
   turnOff: 'Matikan',
   resetTips: 'Tampilkan lagi semua tip',
   resetDone: 'Selesai — semua tip akan tampil lagi.',
@@ -216,4 +216,5 @@ export default {
   hsGameChatWin: 'Obrolan meja ini.',
   hsReactWin: 'Reaksi emoji: pilih satu, semua orang di meja melihatnya.',
   hsHandsWin: '10 tangan poker, dari yang terlemah hingga terkuat.',
+  replayTip: 'Tip layar ini',
 };

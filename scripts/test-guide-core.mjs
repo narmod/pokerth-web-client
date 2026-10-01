@@ -54,7 +54,7 @@ ok(pick({ windows: ['ranking-modal'] }, { seen: (id) => 'abg'.includes(id) }) ==
 ok(pick({ helpOn: false }) === null, 'nothing while the help is off');
 ok(C.pickContext(W({ screen: 'game', playing: true }), ctxs) === null, 'silence during a hand even if a context lists the table');
 ok(pick({}, { seen: () => true }) === null, 'manual contexts are never picked');
-ok(C.replayContext(W({}), ctxs).id === 'b', 'tap on the Ace replays the best tip, seen or not');
+ok(C.replayContext(W({}), ctxs).id === 'b', '« This screen’s tip » (his menu) replays the best tip, seen or not');
 ok(C.applies(ctxs[0], W({})) && !C.applies(ctxs[7], W({})), 'a throwing condition does not apply');
 
 // ── runs and placeholders ──

@@ -10,8 +10,8 @@ export default {
   later: 'Nanti',
   next: 'Seterusnya',
   close: 'Tutup',
-  welcome: 'Bagus! Saya akan muncul di bawah sini setiap kali ada sesuatu yang berguna untuk diterangkan. Ketik saya bila-bila masa untuk melihat petua itu sekali lagi.',
-  menuOn: 'Bantuan si Sat dihidupkan.',
+  welcome: 'Bagus! Saya akan muncul di bawah sini setiap kali ada sesuatu yang berguna untuk diterangkan. Ketik saya bila-bila masa untuk membuka menu saya: lagi bantuan, petua skrin ini dan “Apakah ini?” — kemudian ketik apa-apa sahaja dan saya akan menerangkannya. Tanda “?” kuning pada gelembung saya pun berfungsi sama.',
+  menuOn: 'Bantuan si Sat dihidupkan. “Apakah ini?”: ketik padanya, kemudian ketik apa-apa sahaja pada skrin dan saya akan beritahu apa fungsinya (tanda “?” kuning pada gelembung saya pun berfungsi sama).',
   turnOff: 'Matikan',
   resetTips: 'Tunjukkan semua petua semula',
   resetDone: 'Selesai — setiap petua akan ditunjukkan semula.',
@@ -216,4 +216,5 @@ export default {
   hsGameChatWin: 'Sembang meja ini.',
   hsReactWin: 'Reaksi emoji: pilih satu, semua orang di meja melihatnya.',
   hsHandsWin: '10 tangan poker, dari yang paling lemah ke yang paling kuat.',
+  replayTip: 'Petua skrin ini',
 };

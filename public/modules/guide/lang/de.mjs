@@ -10,8 +10,8 @@ export default {
   later: 'Später',
   next: 'Weiter',
   close: 'Schließen',
-  welcome: 'Super! Ich tauche hier unten auf, wann immer es etwas Nützliches zu erklären gibt. Tippe jederzeit auf mich, um den Tipp erneut zu sehen.',
-  menuOn: 'Die Ass-Hilfe ist an.',
+  welcome: 'Super! Ich tauche hier unten auf, wann immer es etwas Nützliches zu erklären gibt. Tippe jederzeit auf mich, um mein Menü zu öffnen: mehr Hilfe, der Tipp zu diesem Bildschirm und „Was ist das?“ — tippe dann auf irgendetwas, und ich erkläre es dir. Das gelbe „?“ an meinen Sprechblasen macht das auch.',
+  menuOn: 'Die Ass-Hilfe ist an. „Was ist das?“: tippe darauf, tippe dann auf irgendetwas auf dem Bildschirm, und ich sage dir, was es macht (das gelbe „?“ an meinen Sprechblasen macht dasselbe).',
   turnOff: 'Ausschalten',
   resetTips: 'Alle Tipps erneut zeigen',
   resetDone: 'Erledigt — jeder Tipp wird wieder angezeigt.',
@@ -216,4 +216,5 @@ export default {
   hsGameChatWin: 'Der Chat dieses Tisches.',
   hsReactWin: 'Die Emoji-Reaktionen: wähle eine, alle am Tisch sehen sie.',
   hsHandsWin: 'Die 10 Pokerhände, von der schwächsten zur stärksten.',
+  replayTip: 'Tipp dieses Bildschirms',
 };

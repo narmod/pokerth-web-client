@@ -10,8 +10,8 @@ export default {
   later: 'Vēlāk',
   next: 'Tālāk',
   close: 'Aizvērt',
-  welcome: 'Lieliski! Parādīšos šeit lejā ikreiz, kad būs kaut kas noderīgs, ko paskaidrot. Pieskaries man jebkurā brīdī, lai vēlreiz redzētu padomu.',
-  menuOn: 'Dūža palīdzība ir ieslēgta.',
+  welcome: 'Lieliski! Parādīšos šeit lejā ikreiz, kad būs kaut kas noderīgs, ko paskaidrot. Pieskaries man jebkurā brīdī, lai atvērtu manu izvēlni: vairāk palīdzības, šī ekrāna padoms un „Kas tas ir?“ — pēc tam pieskaries jebkam, un es to paskaidrošu. Dzeltenā „?“ uz maniem teksta burbuļiem dara to pašu.',
+  menuOn: 'Dūža palīdzība ir ieslēgta. „Kas tas ir?“: pieskaries tam, pēc tam pieskaries jebkam ekrānā, un es pateikšu, ko tas dara (dzeltenā „?“ uz maniem teksta burbuļiem dara to pašu).',
   turnOff: 'Izslēgt',
   resetTips: 'Rādīt visus padomus vēlreiz',
   resetDone: 'Gatavs — visi padomi tiks rādīti vēlreiz.',
@@ -216,4 +216,5 @@ export default {
   hsGameChatWin: 'Šī galda tērzēšana.',
   hsReactWin: 'Emocijzīmju reakcijas: izvēlies vienu, to redz visi pie galda.',
   hsHandsWin: '10 pokera kombinācijas no vājākās līdz stiprākajai.',
+  replayTip: 'Šī ekrāna padoms',
 };

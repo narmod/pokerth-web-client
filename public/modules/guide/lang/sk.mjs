@@ -10,8 +10,8 @@ export default {
   later: 'Neskôr',
   next: 'Ďalej',
   close: 'Zavrieť',
-  welcome: 'Výborne! Objavím sa tu dole vždy, keď bude niečo užitočné na vysvetlenie. Kedykoľvek na mňa ťukni a tip sa zobrazí znova.',
-  menuOn: 'Pomoc od esa je zapnutá.',
+  welcome: 'Výborne! Objavím sa tu dole vždy, keď bude niečo užitočné na vysvetlenie. Kedykoľvek na mňa ťukni a otvorí sa moja ponuka: viac pomoci, tip k tejto obrazovke a „Čo je to?“ — potom ťukni na čokoľvek a ja ti to vysvetlím. Žltý „?“ na mojich bublinách robí to isté.',
+  menuOn: 'Pomoc od esa je zapnutá. „Čo je to?“: ťukni na to, potom ťukni na čokoľvek na obrazovke a poviem ti, na čo to je (žltý „?“ na mojich bublinách robí to isté).',
   turnOff: 'Vypnúť',
   resetTips: 'Znova zobraziť všetky tipy',
   resetDone: 'Hotovo — každý tip sa zobrazí znova.',
@@ -216,4 +216,5 @@ export default {
   hsGameChatWin: 'Chat tohto stola.',
   hsReactWin: 'Emoji reakcie: vyber jednu, uvidia ju všetci pri stole.',
   hsHandsWin: '10 pokrových kombinácií, od najslabšej po najsilnejšiu.',
+  replayTip: 'Tip k tejto obrazovke',
 };

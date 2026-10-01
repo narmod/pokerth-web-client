@@ -10,8 +10,8 @@ export default {
   later: 'Sonra',
   next: 'Növbəti',
   close: 'Bağla',
-  welcome: 'Əla! İzah etməyə dəyər bir şey olanda burada, aşağıda görünəcəyəm. Məsləhəti yenidən görmək üçün istənilən vaxt mənə toxunun.',
-  menuOn: 'Tuzun köməyi aktivdir.',
+  welcome: 'Əla! İzah etməyə dəyər bir şey olanda burada, aşağıda görünəcəyəm. Menyum üçün istənilən vaxt mənə toxunun: daha çox kömək, bu ekranın məsləhəti və “Bu nədir?” — sonra istənilən şeyə toxunun, mən izah edim. Balonlarımdakı sarı “?” də eyni işi görür.',
+  menuOn: 'Tuzun köməyi aktivdir. “Bu nədir?”: ona toxunun, sonra ekranda istənilən şeyə toxunun, mən də nə işə yaradığını deyim (balonlarımdakı sarı “?” də eyni işi görür).',
   turnOff: 'Söndür',
   resetTips: 'Bütün məsləhətləri yenidən göstər',
   resetDone: 'Hazırdır — bütün məsləhətlər yenidən göstəriləcək.',
@@ -216,4 +216,5 @@ export default {
   hsGameChatWin: 'Bu masanın çatı.',
   hsReactWin: 'Emoji reaksiyaları: birini seçin, masadakı hər kəs görür.',
   hsHandsWin: '10 poker kombinasiyası, ən zəifdən ən güclüyə.',
+  replayTip: 'Ekranın məsləhəti',
 };

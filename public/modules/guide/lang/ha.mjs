@@ -10,8 +10,8 @@ export default {
   later: 'Anjima',
   next: 'Na gaba',
   close: 'Rufe',
-  welcome: 'Madalla! Zan bayyana a nan ƙasa duk lokacin da akwai wani abu mai amfani da za a bayyana. Taɓa ni a kowane lokaci don sake ganin shawarar.',
-  menuOn: 'Taimakon Aas yana kunne.',
+  welcome: 'Madalla! Zan bayyana a nan ƙasa duk lokacin da akwai wani abu mai amfani da za a bayyana. Taɓa ni a kowane lokaci don ganin menu na: ƙarin taimako, shawarar wannan allo da “Mene ne wannan?” — sai ka taɓa kowane abu in bayyana maka shi. Alamar “?” mai rawaya a kan kumfunana ma tana yin haka.',
+  menuOn: 'Taimakon Aas yana kunne. “Mene ne wannan?”: ka taɓa shi, sannan ka taɓa kowane abu a kan allo in gaya maka abin da yake yi (alamar “?” mai rawaya a kan kumfunana ma tana yin haka).',
   turnOff: 'Kashe',
   resetTips: 'Sake nuna duk shawarwari',
   resetDone: 'An gama — kowace shawara za ta sake bayyana.',
@@ -216,4 +216,5 @@ export default {
   hsGameChatWin: 'Hirar wannan tebur.',
   hsReactWin: 'Martanin emoji: zaɓi ɗaya, kowa a teburin yana ganinsa.',
   hsHandsWin: 'Hannayen poker 10, daga mafi rauni zuwa mafi ƙarfi.',
+  replayTip: 'Shawarar wannan allo',
 };

@@ -10,8 +10,8 @@ export default {
   later: 'Kamuva',
   next: 'Okulandelayo',
   close: 'Vala',
-  welcome: 'Kuhle! Ngizovela lapha phansi noma nini lapho kukhona okuwusizo okufanele kuchazwe. Ngithephe noma nini ukuze uphinde ubone iseluleko.',
-  menuOn: 'Usizo luka-Ace luvuliwe.',
+  welcome: 'Kuhle! Ngizovela lapha phansi noma nini lapho kukhona okuwusizo okufanele kuchazwe. Ngithephe noma nini ukuze ubone imenyu yami: usizo olwengeziwe, iseluleko sale skrini, kanye “Kuyini lokhu?” — bese uthinta noma yini ngikuchazele. Uphawu “?” oluphuzi ezinhlamvwini zami nalo lwenza okufanayo.',
+  menuOn: 'Usizo luka-Ace luvuliwe. “Kuyini lokhu?”: kuthephe, bese uthinta noma yini esikrinini ngikutshele ukuthi yenzani (uphawu “?” oluphuzi ezinhlamvwini zami nalo lwenza okufanayo).',
   turnOff: 'Cisha',
   resetTips: 'Bonisa zonke izeluleko futhi',
   resetDone: 'Kwenziwe — zonke izeluleko zizophinde ziboniswe.',
@@ -216,4 +216,5 @@ export default {
   hsGameChatWin: 'Ingxoxo yaleli tafula.',
   hsReactWin: 'Ukusabela nge-emoji: khetha oyedwa, bonke abasetafuleni bayakubona.',
   hsHandsWin: 'Izandla ezingu-10 ze-poker, kusukela kwesibuthaka kakhulu kuya kweso namandla kakhulu.',
+  replayTip: 'Iseluleko sale skrini',
 };

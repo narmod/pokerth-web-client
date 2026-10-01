@@ -10,8 +10,8 @@ export default {
   later: 'Később',
   next: 'Tovább',
   close: 'Bezárás',
-  welcome: 'Remek! Itt lent bukkanok fel, valahányszor van valami hasznos, amit elmagyarázhatok. Koppints rám bármikor, és újra látod a tippet.',
-  menuOn: 'Az ász súgója be van kapcsolva.',
+  welcome: 'Remek! Itt lent bukkanok fel, valahányszor van valami hasznos, amit elmagyarázhatok. Koppints rám bármikor a menümért: további súgó, e képernyő tippje és „Mi ez?” — aztán koppints bármire, és elmagyarázom. A buborékjaimon lévő sárga „?” ugyanezt teszi.',
+  menuOn: 'Az ász súgója be van kapcsolva. „Mi ez?”: koppints rá, aztán koppints bármire a képernyőn, és megmondom, mire jó (a buborékjaimon lévő sárga „?” ugyanezt teszi).',
   turnOff: 'Kikapcsolás',
   resetTips: 'Az összes tipp újra',
   resetDone: 'Kész — minden tipp újra megjelenik.',
@@ -216,4 +216,5 @@ export default {
   hsGameChatWin: 'Az asztal chatje.',
   hsReactWin: 'Az emoji reakciók: válassz egyet, mindenki látja az asztalnál.',
   hsHandsWin: 'A 10 pókerkéz, a leggyengébbtől a legerősebbig.',
+  replayTip: 'A képernyő tippje',
 };

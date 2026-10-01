@@ -10,8 +10,8 @@ export default {
   later: 'Più tardi',
   next: 'Avanti',
   close: 'Chiudi',
-  welcome: 'Perfetto! Comparirò qui in basso ogni volta che ci sarà qualcosa di utile da spiegare. Toccami quando vuoi per rivedere il consiglio.',
-  menuOn: 'L’Aiuto dell’Asso è attivo.',
+  welcome: 'Perfetto! Comparirò qui in basso ogni volta che ci sarà qualcosa di utile da spiegare. Toccami quando vuoi per aprire il mio menu: altro aiuto, il consiglio di questa schermata e «Cos’è?» — poi tocca qualsiasi cosa e te la spiego. Anche il «?» giallo sui miei fumetti fa lo stesso.',
+  menuOn: 'L’Aiuto dell’Asso è attivo. «Cos’è?»: toccalo, poi tocca qualsiasi cosa sullo schermo e ti dico cosa fa (anche il «?» giallo sui miei fumetti fa lo stesso).',
   turnOff: 'Disattiva',
   resetTips: 'Mostra di nuovo tutti i consigli',
   resetDone: 'Fatto — ogni consiglio verrà mostrato di nuovo.',
@@ -216,4 +216,5 @@ export default {
   hsGameChatWin: 'La chat di questo tavolo.',
   hsReactWin: 'Le reazioni emoji: scegline una, tutti al tavolo la vedono.',
   hsHandsWin: 'Le 10 mani del poker, dalla più debole alla più forte.',
+  replayTip: 'Consiglio dello schermo',
 };

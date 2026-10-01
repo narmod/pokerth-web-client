@@ -10,8 +10,8 @@ export default {
   later: 'Senere',
   next: 'Næste',
   close: 'Luk',
-  welcome: 'Fint! Jeg dukker op hernede, hver gang der er noget nyttigt at forklare. Tryk på mig når som helst for at se tippet igen.',
-  menuOn: 'Essets hjælp er slået til.',
+  welcome: 'Fint! Jeg dukker op hernede, hver gang der er noget nyttigt at forklare. Tryk på mig når som helst for at se min menu: mere hjælp, tippet til denne skærm og »Hvad er det?« — tryk så på hvad som helst, så forklarer jeg det. Den gule »?« på mine bobler gør det samme.',
+  menuOn: 'Essets hjælp er slået til. »Hvad er det?«: tryk på den, og tryk så på hvad som helst på skærmen, så fortæller jeg, hvad det gør (den gule »?« på mine bobler gør det samme).',
   turnOff: 'Slå fra',
   resetTips: 'Vis alle tips igen',
   resetDone: 'Klaret — alle tips vises igen.',
@@ -216,4 +216,5 @@ export default {
   hsGameChatWin: 'Chatten ved dette bord.',
   hsReactWin: 'Emoji-reaktionerne: vælg en, alle ved bordet kan se den.',
   hsHandsWin: 'De 10 pokerhænder, fra den svageste til den stærkeste.',
+  replayTip: 'Tip til denne skærm',
 };

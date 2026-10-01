@@ -10,8 +10,8 @@ export default {
   later: 'Níos déanaí',
   next: 'Ar aghaidh',
   close: 'Dún',
-  welcome: 'Go hiontach! Beidh mé le feiceáil thíos anseo aon uair a bhíonn rud éigin úsáideach le míniú. Tapáil mé am ar bith chun an leid a fheiceáil arís.',
-  menuOn: 'Tá Cabhair an Aoin ar siúl.',
+  welcome: 'Go hiontach! Beidh mé le feiceáil thíos anseo aon uair a bhíonn rud éigin úsáideach le míniú. Tapáil mé am ar bith le haghaidh mo roghchláir: tuilleadh cabhrach, leid an scáileáin seo agus “Cad é seo?” — ansin tapáil aon rud agus míneoidh mé é. Déanann an “?” buí ar mo bholgáin chainte an rud céanna.',
+  menuOn: 'Tá Cabhair an Aoin ar siúl. “Cad é seo?”: tapáil é, ansin tapáil aon rud ar an scáileán agus inseoidh mé duit cad a dhéanann sé (déanann an “?” buí ar mo bholgáin chainte an rud céanna).',
   turnOff: 'Múch',
   resetTips: 'Taispeáin gach leid arís',
   resetDone: 'Déanta — taispeánfar gach leid arís.',
@@ -216,4 +216,5 @@ export default {
   hsGameChatWin: 'Comhrá an bhoird seo.',
   hsReactWin: 'Na frithghníomhartha emoji: roghnaigh ceann, feiceann gach duine ag an mbord é.',
   hsHandsWin: 'Na 10 lámh pócair, ón lámh is laige go dtí an lámh is láidre.',
+  replayTip: 'Leid an scáileáin seo',
 };

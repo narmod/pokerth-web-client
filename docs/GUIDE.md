@@ -333,6 +333,23 @@ music.
 
 Statistics: `ask.more` counts the taps on *More about it*.
 
+## A tap on the Ace opens his menu (`web.271`)
+
+A tap on the Ace used to replay the tip of the screen, so players who tapped him for his
+options got the same tip again and again. Now:
+
+- **A tip is waiting.** If a tip was put off with *Later* (red badge) and still applies
+  here, the tap shows that tip.
+- **Otherwise** the tap opens his menu: *More help*, « What’s this? », *This screen’s tip*
+  (`replayTip`, only when the screen has one), *Turn off*, *Show all tips again*, *Close*.
+
+The texts say where « ? » mode is. `welcome` now explains that tapping him opens the menu
+and that the yellow « ? » on his bubbles does the same as « What’s this? ». `menuOn`
+explains « What’s this? ». The help section `acehelp` (paragraph 2, 83 languages) lists
+the menu, and says he can be asked at the table.
+
+`knowledge.mjs` also cuts sentences at the Urdu ۔ and the Arabic ؟.
+
 ## The help window removed (`web.270`, H4)
 
 The Ace is now the only help. The window (`#help-modal`, `modules/help/index.mjs`) is

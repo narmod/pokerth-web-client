@@ -10,8 +10,8 @@ export default {
   later: 'Later',
   next: 'Volgende',
   close: 'Sluiten',
-  welcome: 'Top! Ik verschijn hier onderaan zodra er iets nuttigs uit te leggen valt. Tik op mij wanneer je wilt om de tip opnieuw te zien.',
-  menuOn: 'Hulp van de Aas staat aan.',
+  welcome: 'Top! Ik verschijn hier onderaan zodra er iets nuttigs uit te leggen valt. Tik op mij wanneer je wilt voor mijn menu: meer hulp, de tip van dit scherm en “Wat is dit?” — tik daarna op iets en ik leg het uit. Het gele “?” op mijn tekstballonnen doet hetzelfde.',
+  menuOn: 'Hulp van de Aas staat aan. “Wat is dit?”: tik erop, tik daarna op iets op het scherm en ik vertel je wat het doet (het gele “?” op mijn tekstballonnen doet hetzelfde).',
   turnOff: 'Uitzetten',
   resetTips: 'Alle tips opnieuw tonen',
   resetDone: 'Klaar — elke tip wordt opnieuw getoond.',
@@ -216,4 +216,5 @@ export default {
   hsGameChatWin: 'De chat van deze tafel.',
   hsReactWin: 'De emoji-reacties: kies er een, iedereen aan tafel ziet hem.',
   hsHandsWin: 'De 10 pokerhanden, van de zwakste tot de sterkste.',
+  replayTip: 'Tip van dit scherm',
 };

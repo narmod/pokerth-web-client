@@ -10,8 +10,8 @@ export default {
   later: 'Poste',
   next: 'Sekva',
   close: 'Fermi',
-  welcome: 'Bonege! Mi aperos ĉi tie malsupre kiam ajn estos io utila por klarigi. Tuŝetu min iam ajn por revidi la konsilon.',
-  menuOn: 'Helpo de la Aso estas ŝaltita.',
+  welcome: 'Bonege! Mi aperos ĉi tie malsupre kiam ajn estos io utila por klarigi. Tuŝetu min iam ajn por mia menuo: pli da helpo, la konsilo de ĉi tiu ekrano kaj “Kio estas tio?” — poste tuŝetu ion ajn kaj mi klarigos ĝin. La flava “?” sur miaj bobeloj faras same.',
+  menuOn: 'Helpo de la Aso estas ŝaltita. “Kio estas tio?”: tuŝetu ĝin, poste tuŝetu ion ajn sur la ekrano kaj mi diros al vi kion ĝi faras (la flava “?” sur miaj bobeloj faras same).',
   turnOff: 'Malŝalti',
   resetTips: 'Montri ĉiujn konsilojn denove',
   resetDone: 'Farite — ĉiu konsilo aperos denove.',
@@ -216,4 +216,5 @@ export default {
   hsGameChatWin: 'La babilo de ĉi tiu tablo.',
   hsReactWin: 'La emoĝiaj reagoj: elektu unu, ĉiuj ĉe la tablo vidas ĝin.',
   hsHandsWin: 'La 10 pokeraj manoj, de la plej malforta ĝis la plej forta.',
+  replayTip: 'Konsilo de la ekrano',
 };

@@ -10,8 +10,8 @@ export default {
   later: 'Nes ymlaen',
   next: 'Nesaf',
   close: 'Cau',
-  welcome: 'Gwych! Byddaf yn ymddangos yma ar y gwaelod pryd bynnag y bydd rhywbeth defnyddiol i’w esbonio. Tapiwch fi unrhyw bryd i weld y cyngor eto.',
-  menuOn: 'Mae Cymorth yr As ymlaen.',
+  welcome: 'Gwych! Byddaf yn ymddangos yma ar y gwaelod pryd bynnag y bydd rhywbeth defnyddiol i’w esbonio. Tapiwch fi unrhyw bryd am fy newislen: mwy o gymorth, cyngor y sgrin hon a “Beth yw hwn?” — yna tapiwch unrhyw beth ac esboniaf ef. Mae’r “?” melyn ar fy swigod yn gwneud yr un peth.',
+  menuOn: 'Mae Cymorth yr As ymlaen. “Beth yw hwn?”: tapiwch arno, yna tapiwch unrhyw beth ar y sgrin a dywedaf wrthych beth mae’n ei wneud (mae’r “?” melyn ar fy swigod yn gwneud yr un peth).',
   turnOff: 'Diffodd',
   resetTips: 'Dangos pob cyngor eto',
   resetDone: 'Wedi’i wneud — bydd pob cyngor yn ymddangos eto.',
@@ -216,4 +216,5 @@ export default {
   hsGameChatWin: 'Sgwrs y bwrdd hwn.',
   hsReactWin: 'Yr ymatebion emoji: dewiswch un, mae pawb wrth y bwrdd yn ei weld.',
   hsHandsWin: 'Y 10 llaw pocer, o’r gwannaf i’r cryfaf.',
+  replayTip: 'Cyngor y sgrin hon',
 };

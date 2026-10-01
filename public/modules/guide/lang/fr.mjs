@@ -10,8 +10,8 @@ export default {
   later: 'Plus tard',
   next: 'Suivant',
   close: 'Fermer',
-  welcome: 'Super ! J’apparaîtrai ici, en bas, chaque fois qu’il y aura quelque chose d’utile à expliquer. Touche-moi quand tu veux pour revoir le conseil.',
-  menuOn: 'L’Aide de l’As est activée.',
+  welcome: 'Super ! J’apparaîtrai ici, en bas, chaque fois qu’il y aura quelque chose d’utile à expliquer. Touche-moi quand tu veux pour ouvrir mon menu : plus d’aide, le conseil de cet écran et « C’est quoi ? » — touche ensuite n’importe quoi et je te l’explique. Le « ? » jaune sur mes bulles fait la même chose.',
+  menuOn: 'L’Aide de l’As est activée. « C’est quoi ? » : touche-le, puis touche n’importe quoi à l’écran et je te dis ce que ça fait (le « ? » jaune sur mes bulles fait la même chose).',
   turnOff: 'Désactiver',
   resetTips: 'Revoir tous les conseils',
   resetDone: 'C’est fait — chaque conseil s’affichera de nouveau.',
@@ -216,4 +216,5 @@ export default {
   hsGameChatWin: 'Le chat de cette table.',
   hsReactWin: 'Les réactions emoji : choisis-en une, tout le monde à la table la voit.',
   hsHandsWin: 'Les 10 combinaisons du poker, de la plus faible à la plus forte.',
+  replayTip: 'Conseil de cet écran',
 };

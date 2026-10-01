@@ -133,6 +133,18 @@ async function runDevice(browser, name, descriptor) {
       await page.waitForTimeout(300);
       assert.match((await store(page)).seen || '', /"login"/);
     });
+    await check(`${name}: a tap on the Ace opens his menu — not the same tip again; « This screen’s tip » replays it`, async () => {
+      await page.waitForTimeout(400);
+      await click(page, '#ace-dock .ad-ace');
+      await waitText(/is on\. « What’s this\? »/, 3000);
+      assert.equal(await page.locator(btn('askMenu')).count(), 1, 'no « What’s this? » in the menu');
+      assert.equal(await page.locator(btn('replayTip')).count(), 1, 'no « This screen’s tip »');
+      await click(page, btn('replayTip'));
+      await waitText(/Three ways to play/);
+      await click(page, btn('next')); await click(page, btn('gotIt'));
+      await page.waitForTimeout(1500);
+      assert.equal(await page.locator(bubble).count(), 0, 'the tip came back by itself after « Got it »');
+    });
     await check(`${name}: the « Ace’s Help » button opens his menu (show all tips again)`, async () => {
       await page.evaluate(() => window.guideToggle());
       await waitText(/is on/, 3000);

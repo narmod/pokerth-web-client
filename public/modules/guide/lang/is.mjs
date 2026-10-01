@@ -10,8 +10,8 @@ export default {
   later: 'Seinna',
   next: 'Næsta',
   close: 'Loka',
-  welcome: 'Frábært! Ég birtist hér niðri í hvert sinn sem eitthvað gagnlegt er að útskýra. Ýttu á mig hvenær sem er til að sjá ábendinguna aftur.',
-  menuOn: 'Kveikt er á Hjálp ássins.',
+  welcome: 'Frábært! Ég birtist hér niðri í hvert sinn sem eitthvað gagnlegt er að útskýra. Ýttu á mig hvenær sem er til að opna valmyndina mína: meiri hjálp, ábendingu þessa skjás og „Hvað er þetta?“ — ýttu síðan á hvað sem er og ég útskýri það. Guli „?“ á talblöðrunum mínum gerir það líka.',
+  menuOn: 'Kveikt er á Hjálp ássins. „Hvað er þetta?“: ýttu á það, ýttu síðan á hvað sem er á skjánum og ég segi þér hvað það gerir (guli „?“ á talblöðrunum mínum gerir það sama).',
   turnOff: 'Slökkva',
   resetTips: 'Sýna allar ábendingar aftur',
   resetDone: 'Búið — allar ábendingar birtast aftur.',
@@ -216,4 +216,5 @@ export default {
   hsGameChatWin: 'Spjallið við þetta borð.',
   hsReactWin: 'Emoji-viðbrögðin: veldu eitt, allir við borðið sjá það.',
   hsHandsWin: 'Hendurnar 10 í póker, frá þeirri veikustu til þeirrar sterkustu.',
+  replayTip: 'Ábending skjásins',
 };

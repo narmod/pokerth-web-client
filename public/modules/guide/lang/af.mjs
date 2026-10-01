@@ -10,8 +10,8 @@ export default {
   later: 'Later',
   next: 'Volgende',
   close: 'Maak toe',
-  welcome: 'Wonderlik! Ek sal hier onder opduik wanneer daar iets nuttigs is om te verduidelik. Tik enige tyd op my om die wenk weer te sien.',
-  menuOn: 'Die Aas se Hulp is aan.',
+  welcome: 'Wonderlik! Ek sal hier onder opduik wanneer daar iets nuttigs is om te verduidelik. Tik enige tyd op my vir my kieslys: meer hulp, die wenk van hierdie skerm en „Wat is dit?” — tik dan op enigiets en ek verduidelik dit. Die geel „?” op my borrels doen dit ook.',
+  menuOn: 'Die Aas se Hulp is aan. „Wat is dit?”: tik daarop, tik dan op enigiets op die skerm en ek sê vir jou wat dit doen (die geel „?” op my borrels doen dieselfde).',
   turnOff: 'Skakel af',
   resetTips: 'Wys alle wenke weer',
   resetDone: 'Klaar — elke wenk sal weer gewys word.',
@@ -216,4 +216,5 @@ export default {
   hsGameChatWin: 'Die klets van hierdie tafel.',
   hsReactWin: 'Die emoji-reaksies: kies een, almal by die tafel sien dit.',
   hsHandsWin: 'Die 10 pokerhande, van die swakste tot die sterkste.',
+  replayTip: 'Wenk van dié skerm',
 };

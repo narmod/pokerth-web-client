@@ -10,8 +10,8 @@ export default {
   later: 'Më vonë',
   next: 'Tjetra',
   close: 'Mbyll',
-  welcome: 'Shkëlqyeshëm! Do të shfaqem këtu poshtë sa herë që ka diçka të dobishme për të shpjeguar. Më prek kurdo për ta parë sërish këshillën.',
-  menuOn: 'Ndihma e Asit është aktive.',
+  welcome: 'Shkëlqyeshëm! Do të shfaqem këtu poshtë sa herë që ka diçka të dobishme për të shpjeguar. Më prek kurdo për të parë menunë time: më shumë ndihmë, këshilla e këtij ekrani dhe «Çfarë është kjo?» — pastaj prek çfarëdo gjëje dhe do ta shpjegoj. Shenja «?» e verdhë mbi flluskat e mia bën të njëjtën gjë.',
+  menuOn: 'Ndihma e Asit është aktive. «Çfarë është kjo?»: prek atë, pastaj prek çfarëdo gjëje në ekran dhe do të të them çfarë bën (shenja «?» e verdhë mbi flluskat e mia bën të njëjtën gjë).',
   turnOff: 'Çaktivizo',
   resetTips: 'Shfaq sërish të gjitha këshillat',
   resetDone: 'U bë — çdo këshillë do të shfaqet sërish.',
@@ -216,4 +216,5 @@ export default {
   hsGameChatWin: 'Biseda e kësaj tavoline.',
   hsReactWin: 'Reagimet me emoji: zgjidh një, e shohin të gjithë në tavolinë.',
   hsHandsWin: '10 duart e pokerit, nga më e dobëta te më e forta.',
+  replayTip: 'Këshilla e ekranit',
 };

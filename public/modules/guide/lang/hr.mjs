@@ -10,8 +10,8 @@ export default {
   later: 'Kasnije',
   next: 'Dalje',
   close: 'Zatvori',
-  welcome: 'Super! Pojavit ću se ovdje dolje kad god bude nešto korisno za objasniti. Dodirni me bilo kad za ponovni prikaz savjeta.',
-  menuOn: 'Pomoć asa je uključena.',
+  welcome: 'Super! Pojavit ću se ovdje dolje kad god bude nešto korisno za objasniti. Dodirni me bilo kad za moj izbornik: više pomoći, savjet za ovaj zaslon i „Što je ovo?“ — zatim dodirni bilo što i ja ću ti to objasniti. Žuti „?“ na mojim oblačićima radi isto.',
+  menuOn: 'Pomoć asa je uključena. „Što je ovo?“: dodirni to, zatim dodirni bilo što na zaslonu i reći ću ti što radi (žuti „?“ na mojim oblačićima radi isto).',
   turnOff: 'Isključi',
   resetTips: 'Ponovno prikaži sve savjete',
   resetDone: 'Gotovo — svaki će se savjet ponovno prikazati.',
@@ -216,4 +216,5 @@ export default {
   hsGameChatWin: 'Chat ovog stola.',
   hsReactWin: 'Emoji reakcije: odaberi jednu, svi za stolom je vide.',
   hsHandsWin: '10 pokerskih ruku, od najslabije do najjače.',
+  replayTip: 'Savjet za ovaj zaslon',
 };

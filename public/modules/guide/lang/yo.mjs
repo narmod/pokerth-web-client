@@ -10,8 +10,8 @@ export default {
   later: 'Nígbà míì',
   next: 'Èyí tó kàn',
   close: 'Pa á dé',
-  welcome: 'Ó dára! Màá yọjú sí ìsàlẹ̀ yìí nígbàkígbà tí nǹkan tó wúlò bá wà láti ṣàlàyé. Tẹ̀ mí nígbàkígbà láti rí ìmọ̀ràn náà lẹ́ẹ̀kan sí i.',
-  menuOn: 'Ìrànlọ́wọ́ Ace ti tàn.',
+  welcome: 'Ó dára! Màá yọjú sí ìsàlẹ̀ yìí nígbàkígbà tí nǹkan tó wúlò bá wà láti ṣàlàyé. Tẹ̀ mí nígbàkígbà láti ṣí àtòjọ mi: ìrànlọ́wọ́ síi, ìmọ̀ràn ojú-ìwé yìí àti “Kí ni èyí?” — lẹ́yìn náà tẹ nǹkan kan, màá sì ṣàlàyé rẹ̀. Àmì “?” aláwọ̀ ofeefee lórí àwọn àpò ọ̀rọ̀ mi náà ń ṣe bẹ́ẹ̀.',
+  menuOn: 'Ìrànlọ́wọ́ Ace ti tàn. “Kí ni èyí?”: tẹ̀ ẹ́, lẹ́yìn náà tẹ nǹkan kan lórí ojú-ìwé, màá sì sọ ohun tó ń ṣe fún ọ (àmì “?” aláwọ̀ ofeefee lórí àwọn àpò ọ̀rọ̀ mi náà ń ṣe bẹ́ẹ̀).',
   turnOff: 'Pa á',
   resetTips: 'Fi gbogbo ìmọ̀ràn hàn lẹ́ẹ̀kan sí i',
   resetDone: 'Ó ti parí — gbogbo ìmọ̀ràn yóò tún hàn.',
@@ -216,4 +216,5 @@ export default {
   hsGameChatWin: 'Ìjíròrò tábìlì yìí.',
   hsReactWin: 'Ìhùwàsí emoji: yan ọ̀kan, gbogbo ẹni tó wà ní tábìlì ń rí i.',
   hsHandsWin: 'Àwọn ọwọ́ poker mẹ́wàá, láti èyí tó jẹ́ aláìlágbára jù dé èyí tó lágbára jù.',
+  replayTip: 'Ìmọ̀ràn ojú-ìwé',
 };

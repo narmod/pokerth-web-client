@@ -10,8 +10,8 @@ export default {
   later: 'Més tard',
   next: 'Següent',
   close: 'Tanca',
-  welcome: 'Genial! Apareixeré aquí baix sempre que hi hagi alguna cosa útil per explicar. Toca’m quan vulguis per tornar a veure el consell.',
-  menuOn: 'L’Ajuda de l’As està activada.',
+  welcome: 'Genial! Apareixeré aquí baix sempre que hi hagi alguna cosa útil per explicar. Toca’m quan vulguis per veure el meu menú: més ajuda, el consell d’aquesta pantalla i «Què és això?» — després toca qualsevol cosa i t’ho explico. El «?» groc de les meves bafarades fa el mateix.',
+  menuOn: 'L’Ajuda de l’As està activada. «Què és això?»: toca-ho, després toca qualsevol cosa de la pantalla i t’explicaré què fa (el «?» groc de les meves bafarades fa el mateix).',
   turnOff: 'Desactiva',
   resetTips: 'Torna a mostrar tots els consells',
   resetDone: 'Fet — tots els consells es tornaran a mostrar.',
@@ -216,4 +216,5 @@ export default {
   hsGameChatWin: 'El xat d’aquesta taula.',
   hsReactWin: 'Les reaccions amb emojis: tria’n una, tothom a la taula la veu.',
   hsHandsWin: 'Les 10 mans de pòquer, de la més feble a la més forta.',
+  replayTip: 'Consell de la pantalla',
 };

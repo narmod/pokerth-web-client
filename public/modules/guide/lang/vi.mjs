@@ -10,8 +10,8 @@ export default {
   later: 'Để sau',
   next: 'Tiếp',
   close: 'Đóng',
-  welcome: 'Tuyệt! Mình sẽ xuất hiện ở dưới này mỗi khi có điều gì hữu ích cần giải thích. Chạm vào mình bất cứ lúc nào để xem lại mẹo.',
-  menuOn: 'Trợ giúp của quân Át đang bật.',
+  welcome: 'Tuyệt! Mình sẽ xuất hiện ở dưới này mỗi khi có điều gì hữu ích cần giải thích. Chạm vào mình bất cứ lúc nào để mở menu của mình: thêm trợ giúp, mẹo của màn hình này và “Đây là gì?” — rồi chạm vào bất kỳ thứ gì, mình sẽ giải thích. Dấu “?” màu vàng trên bong bóng thoại của mình cũng làm điều đó.',
+  menuOn: 'Trợ giúp của quân Át đang bật. “Đây là gì?”: chạm vào đó, rồi chạm vào bất kỳ thứ gì trên màn hình, mình sẽ cho bạn biết nó làm gì (dấu “?” màu vàng trên bong bóng thoại của mình cũng vậy).',
   turnOff: 'Tắt',
   resetTips: 'Hiện lại tất cả mẹo',
   resetDone: 'Xong — mọi mẹo sẽ hiện lại.',
@@ -216,4 +216,5 @@ export default {
   hsGameChatWin: 'Trò chuyện của bàn này.',
   hsReactWin: 'Biểu cảm emoji: chọn một cái, mọi người ở bàn đều thấy.',
   hsHandsWin: '10 bộ bài poker, từ yếu nhất đến mạnh nhất.',
+  replayTip: 'Mẹo của màn hình này',
 };
