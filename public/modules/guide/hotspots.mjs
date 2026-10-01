@@ -11,6 +11,7 @@
 //    the static page, scripts/test-guide-ask.mjs skips it when checking;
 //  · more = 'chapter:section' of the help (modules/help/content): the Ace
 //    offers « More about it », which opens that section in his bubble (H2);
+//    or more(el) → 'chapter:section' (the BBC preset / ranking tab → the BBC section);
 //  · vars(el) = the text's {placeholders} (an option's own label).
 // A label pointing at a control (label[for]) is explained as that control.
 // WINDOWS: what an unlisted control inside a window is about (H2).
@@ -96,7 +97,7 @@ export const HOTSPOTS = [
   ['#lobby-wait-actions .wp-fillbots', 'hsFillBots', true, 'offline:setup'],
   // ── game creation page ──
   ['#cf-gtype-btn, #cf-game-type', 'hsGameType', false, 'pthnet:ranked'],
-  ['.cf-preset[data-preset]', 'hsPreset', false, 'pthnet:cups'],
+  ['.cf-preset[data-preset]', 'hsPreset', false, (el) => (el.getAttribute('data-preset') === 'bbc' ? 'pthnet:bbc' : 'pthnet:cups')],
   ['#cf-preset-perso', 'hsPresetPerso', false, 'lobby:create'],
   ['#cf-style-toggle', 'hsCfStyle', false, 'lobby:create'],
   ['#cf-name', 'hsGameName', false, 'lobby:create'],
@@ -183,14 +184,14 @@ export const HOTSPOTS = [
   ['#adv-modal .adv-row input[type="checkbox"], #adv-modal label.adv-row', 'hsAdvOption', false, 'options:sync', optionVars],
   ['#adv-modal .adv-row', 'hsAdvField', false, 'options:where', optionVars],
   // ── Ranking ──
-  ['#ranking-modal .rk-tab, #tableranking-modal .rk-tab', 'hsRkTab', false, 'pthnet:rankings'],
+  ['#ranking-modal .rk-tab, #tableranking-modal .rk-tab', 'hsRkTab', false, (el) => (/'bbc'/.test(el.getAttribute('onclick') || '') ? 'pthnet:bbc' : 'pthnet:rankings')],
   ['#rk-season', 'hsRkSeason', false, 'pthnet:ranked'],
   ['#rk-alltime', 'hsRkAllTime', false, 'pthnet:ranked'],
   ['#rk-search', 'hsRkSearch', false, 'pthnet:rankings'],
   ['#ranking-modal select, #tableranking-modal select', 'hsRkSort', true, 'start:famboard'],
   ['.rk-back', 'hsRkBack'],
   // ── Forum ──
-  ['#fn-bbcreg', 'hsBbcReg', false, 'pthnet:cups'],
+  ['#fn-bbcreg', 'hsBbcReg', false, 'pthnet:bbc'],
   ['#fn-markread', 'hsFnRead', false, 'pthnet:forumnews'],
   ['#fn-open', 'hsFnOpen', false, 'pthnet:forumnews'],
   ['#fnp-translate', 'hsFnTranslate', false, 'pthnet:forumnews'],
@@ -266,7 +267,9 @@ const TAPPABLE = 'button, a[href], input, select, textarea, label, summary, [rol
 function entry(e, el) {
   let vars = null;
   try { vars = typeof e[4] === 'function' ? e[4](el) : null; } catch (x) { vars = null; }
-  return { el, key: e[1], more: e[3] || null, vars };
+  let more = e[3] || null;
+  try { if (typeof more === 'function') more = more(el) || null; } catch (x) { more = null; }
+  return { el, key: e[1], more, vars };
 }
 
 function firstMatch(target) {

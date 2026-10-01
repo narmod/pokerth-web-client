@@ -35,8 +35,10 @@ ok(HOTSPOTS.length >= 100, HOTSPOTS.length + ' elements explained');
 // H2: « More about it » points at a real help section, windows have their own text
 const HELP = (await imp('public/modules/help/content/en.mjs')).help;
 const secIds = new Set(HELP.chapters.flatMap((c) => c.sections.map((s) => c.id + ':' + s.id)));
-const badMore = HOTSPOTS.filter((e) => e[3] && !secIds.has(e[3])).map((e) => e[1]).concat(WINDOWS.filter((w) => w[2] && !secIds.has(w[2])).map((w) => w[1]));
+const moreOf = (e) => (typeof e[3] === 'function' ? [e[3]({ getAttribute: (a) => (a === 'data-preset' ? 'bbc' : a === 'onclick' ? "rankingSelect('bbc')" : '') }), e[3]({ getAttribute: () => '' })] : [e[3]]);
+const badMore = HOTSPOTS.filter((e) => e[3] && moreOf(e).some((m) => !secIds.has(m))).map((e) => e[1]).concat(WINDOWS.filter((w) => w[2] && !secIds.has(w[2])).map((w) => w[1]));
 ok(!badMore.length, '« More about it » always opens an existing help section' + (badMore.length ? ' — ' + badMore.join(', ') : ''));
+ok(hotspotFor(doc.querySelector('.cf-preset[data-preset="bbc"]')).more === 'pthnet:bbc' && hotspotFor(doc.querySelector('.cf-preset[data-preset="wecup"]')).more === 'pthnet:cups' && hotspotFor(doc.getElementById('fn-bbcreg')).more === 'pthnet:bbc', 'the BBC preset, the BBC ranking tab and « Register for the BBC » open the BBC section');
 ok(HOTSPOTS.filter((e) => e[3]).length >= 80, HOTSPOTS.filter((e) => e[3]).length + ' elements link to the help');
 for (const [sel, key] of WINDOWS) { ok(typeof EN[key] === 'string' && EN[key].length > 10, 'window worded: ' + key); try { doc.querySelectorAll(sel); ok(true, 'valid window selector: ' + sel); } catch (e) { ok(false, 'valid window selector: ' + sel); } }
 ok(/\{label\}/.test(EN.hsAdvOption) && /\{label\}/.test(EN.hsAdvSelect), 'options: their own label in the text');

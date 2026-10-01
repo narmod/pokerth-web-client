@@ -333,6 +333,26 @@ music.
 
 Statistics: `ask.more` counts the taps on *More about it*.
 
+## The BBC section (`web.273`)
+
+A new help section, `pthnet:bbc` « The BBC (Best Brainies Cup) », sits after `cups` in the
+83 corpora (es-419 derived). It is built from the BBC players manual and the BBC site's
+*About* page, and keeps what a player needs:
+
+- the four steps and the tickets (3rd place keeps the ticket in Steps 2 and 3);
+- the daily times, Berlin time;
+- that only the admins open games, the 10 players, and the Step 4 scheduling;
+- registration and cancellation, both 20 minutes before the start, with the ticket lost
+  otherwise, and the requirements to take part;
+- the points per step and the score (points per game × (1 + log₂ games), in words);
+- restarts and how to report a result with the log analysis link;
+- conduct, in the note.
+
+Left out: the history and the PHP code.
+
+*More about it* opens this section from « Register for the BBC », from the BBC preset and
+from the BBC ranking tab. A hotspot's `more` can now be a function of the element.
+
 ## « ? » answers everywhere (`web.272`)
 
 `npm run test:guide-coverage` checks it. A real browser, on a desktop and on a phone,

@@ -1,4 +1,7 @@
-2026-10-01 version 2.1.9-web.272 (current series):
+2026-10-01 version 2.1.9-web.273 (current series):
+- new: help — a section on the BBC (Best Brainies Cup): the four steps and tickets, the daily times (Berlin time), registering and cancelling (20 minutes before), the requirements, the season points and score, restarts and results; Ace’s Help « ? » opens it from « Register for the BBC », the BBC preset and the BBC ranking tab
+
+2026-10-01 version 2.1.9-web.272:
 - improvement: Ace’s Help « ? » — a real answer everywhere: menus, language list, accessibility, About, privacy, the login fields, the game list, the players, the theme panel, the avatar creator, the sound settings, the seat menu at the table, the end of the game, statistics…; for anything else he names the element and points to the help that talks about it
 
 2026-10-01 version 2.1.9-web.271:
