@@ -68,6 +68,8 @@ ok(hotspotFor(doc.getElementById('cf-use-password').closest('label').querySelect
 const fw = doc.createElement('div'); fw.id = 'music-panel'; fw.innerHTML = '<button class="mx-unlisted">x</button><p class="txt">t</p>'; doc.body.appendChild(fw);
 ok(windowFor(fw.querySelector('.mx-unlisted')).key === 'hsMusicWin' && windowFor(fw.querySelector('.txt')) === null, 'an unlisted control of a window → the window; its plain text → nothing');
 const idxSrc = fs.readFileSync('public/modules/guide/index.mjs', 'utf8');
+ok(/else if \(label\) \{ askSay\('hsLabelled', 'askAgain', moreFor\(label\), \{ label \}\)/.test(idxSrc) && /hit\.win && label/.test(idxSrc) && /\{label\}/.test(EN.hsLabelled), 'never a bare « no explanation »: the element\'s own name (and the help section found for it), or its window with its name');
+ok(/getComputedStyle\(n\)\.cursor === 'pointer'/.test(fs.readFileSync('public/modules/guide/hotspots.mjs', 'utf8')), 'controls drawn by script (hand cursor) are recognised too');
 ok(/hotspotFor\(t\) \|\| windowFor\(t\)/.test(idxSrc) && /btn\('moreAbout'\)/.test(idxSrc) && /openMoreHelp\(\{ ch, sec \}\)/.test(idxSrc), 'the Ace offers « More about it » and opens that section');
 
 // wiring

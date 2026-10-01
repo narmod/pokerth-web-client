@@ -405,11 +405,11 @@ async function showMenu() {
 // off, or a hand starting (D8).
 let armed = null;
 let askMore = null;           // 'chapter:section' of the help about the element explained (H2)
-function askSay(key, extra, more, vars) {
+function askSay(key, extra, more, vars, pre) {
   if (!M) return;
   askMore = more || null;
   const buttons = more ? [btn('moreAbout'), btn('askDone', true)] : [btn('askDone', true)];
-  M.say({ text: gt(key, vars || undefined) + (extra ? ' ' + gt(extra) : ''), buttons, avoid: hl.current(),
+  M.say({ text: (pre ? pre + ' ' : '') + gt(key, vars || undefined) + (extra ? ' ' + gt(extra) : ''), buttons, avoid: hl.current(),
     point: !!hl.current(), onButton: (id) => {
       if (id === 'moreAbout' && askMore) {   // « More about it »: that section of the help, in his bubble
         const [ch, sec] = askMore.split(':');
@@ -430,6 +430,24 @@ async function enterAsk() {
   document.addEventListener('keydown', onAskKey, true);
   askSay('askIntro');
   beacon('ask', 'shown');
+  loadHelp(helpLang()).then((c) => { askHelp = c; }).catch(() => {});   // « More about it » for elements without their own text
+}
+// ── Elements without their own entry (web.272) ─────────────────────
+// Never a bare « no explanation »: the element's own name (its tooltip,
+// label or text, already in the player's language) is said, with the help
+// section that talks about it (search) behind « More about it ».
+let askHelp = null;
+function labelOf(el) {
+  if (!el || !el.getAttribute) return '';
+  let s = el.getAttribute('aria-label') || el.getAttribute('title') || el.getAttribute('placeholder') || el.getAttribute('alt') || '';
+  if (!s) s = (el.textContent || '').replace(/\s+/g, ' ').trim();
+  s = s.replace(/[✕×▾▸›‹]/g, '').trim();
+  return s.length >= 2 && s.length <= 60 ? s : '';
+}
+function moreFor(label) {
+  if (!askHelp || !label) return null;
+  const hit = helpSearch(askHelp, label, 1)[0];
+  return hit ? hit.ch.id + ':' + hit.sec.id : null;
 }
 function exitAsk(silent) {
   document.removeEventListener('click', onAskClick, true);
@@ -465,7 +483,10 @@ function onAskClick(ev) {
   ev.preventDefault(); ev.stopPropagation(); ev.stopImmediatePropagation();
   armed = hit.el;
   hl.highlight(hit.el);
-  if (hit.key) { askSay(hit.key, 'askAgain', hit.more, hit.vars); beacon('ask', 'explained'); }
+  const label = labelOf(hit.el);
+  if (hit.key && hit.win && label) { askSay(hit.key, 'askAgain', hit.more, hit.vars, gt('hsLabelled', { label })); beacon('ask', 'explained'); }   // a window's control: its name + the window
+  else if (hit.key) { askSay(hit.key, 'askAgain', hit.more, hit.vars); beacon('ask', 'explained'); }
+  else if (label) { askSay('hsLabelled', 'askAgain', moreFor(label), { label }); beacon('ask', 'explained'); }
   else askSay('askUnknown');
 }
 function onAskKey(ev) {

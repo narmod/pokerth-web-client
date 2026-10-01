@@ -333,6 +333,47 @@ music.
 
 Statistics: `ask.more` counts the taps on *More about it*.
 
+## « ? » answers everywhere (`web.272`)
+
+`npm run test:guide-coverage` checks it. A real browser, on a desktop and on a phone,
+walks through about 60 screens and states:
+
+- the login screen (its 3 modes), the menus, the language menu, accessibility, About and
+  privacy;
+- the lobby: a table row, the chat, the players;
+- every Advanced options category, with every section open;
+- the theme, music, ranking (every tab), forum, avatar studio (3 tabs), private messages,
+  logs and player card windows;
+- game creation with every style, and the waiting room;
+- the table: others' turn, my turn, the header menu, game details, sound, table ranking,
+  chat, reactions, hands, the info panel tabs, a seat's menu, the end of the game.
+
+It lists every visible, tappable, top-most element (including the ones drawn by script,
+with a hand cursor) that « ? » cannot explain, and fails if one has no answer at all.
+
+There are 189 entries and 20 windows. The new ones cover:
+
+- overflow menu items (by their `onclick`) and the language menu;
+- About tabs, privacy back, the password, password reset and more connection options;
+- reporting a table, a player at a table, inviting a player, the list itself;
+- sound popover, copy invite link, end of game, statistics buttons, logs divider;
+- Advanced options search, reset, theme presets, links, custom sound *Play*;
+- the avatar portrait creator, accessibility, the theme panel and a seat's menu.
+
+`theme.mjs` and `seat-menu.mjs` gained classes or `data-ctx-k` for this, additively.
+
+Fallbacks, so the Ace never answers a bare *no explanation*:
+
+- **A label without `for`.** It is explained as the control of its row (for example the
+  creation page field labels).
+- **An element with no entry.** The Ace says its own name (`hsLabelled`: its tooltip,
+  label or text, already translated). *More about it* opens the help section the search
+  finds for that name.
+- **An unlisted control in a known window.** The Ace says its name, then the window's
+  text.
+- **Recognising controls.** `tappableFor` also accepts elements drawn by script with a
+  hand cursor.
+
 ## A tap on the Ace opens his menu (`web.271`)
 
 A tap on the Ace used to replay the tip of the screen, so players who tapped him for his
@@ -452,6 +493,8 @@ makes him vanish in a puff. Scenes still play in the lobby.
   chapter of each screen and the wiring.
 - `npm run test:mascot`: the scenes' size, the ways back to his spot and the
   loader rules (no option, rhythm, reactions with the help only).
+- `npm run test:guide-coverage`: « ? » has an answer for every tappable element of about
+  60 screens and states (desktop and phone).
 - `npm run test:guide-browser`: a real browser on phones and a desktop. It checks the
   offer, the buttons, the menu, the lobby, that the Ace leaves when a hand starts, that the
   option switches him off, the plain mode, and that the docked Ace hides nothing

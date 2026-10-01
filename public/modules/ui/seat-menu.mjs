@@ -75,7 +75,7 @@ function itemsFor(pid) {
   // Les bots y ont droit, comme dans la carte — en entraînement c'est
   // justement là qu'on apprend à lire un adversaire.
   if (!isMe && typeof window._nvBlockHtml === 'function') {
-    out.push({ ico: '📝', label: tt('nvTitle', 'My note'), run: () => openNoteFor(pid) });
+    out.push({ k: 'note', ico: '📝', label: tt('nvTitle', 'My note'), run: () => openNoteFor(pid) });
   }
   // Profil / statistiques : même condition que le bloc coupes de la carte
   // (joueur enregistré, partie en réseau).
@@ -83,12 +83,12 @@ function itemsFor(pid) {
   const modeEl = document.getElementById('login-mode');
   const onNet = !!(modeEl && (modeEl.value === 'guest' || modeEl.value === 'auth'));
   if (!isBot && onNet && (rights === 2 || rights === 3) && name) {
-    out.push({ ico: '📊', label: tt('ppOpen', 'Player profile'),
+    out.push({ k: 'profile', ico: '📊', label: tt('ppOpen', 'Player profile'),
                run: () => { try { window._pimOpenStats(pid); } catch (e) {} } });
   }
   if (!isMe && !isBot && name) {
     const ign = (() => { try { return !!window._isIgnored(name); } catch (e) { return false; } })();
-    out.push({ ico: ign ? '🔔' : '🔕',
+    out.push({ k: 'ignore', ico: ign ? '🔔' : '🔕',
                label: ign ? tt('piUnignore', 'Unignore') : tt('piIgnore', 'Ignore'),
                run: () => { try { window._toggleIgnore(pid); } catch (e) {} } });
   }
@@ -97,13 +97,13 @@ function itemsFor(pid) {
   const av = S._pthAvatarHashes[pid];
   const meGuest = (() => { try { return !!window._amMyPlayerGuest(); } catch (e) { return false; } })();
   if (!isMe && !isBot && !meGuest && av && av.hashHex) {
-    out.push({ ico: '🚩', label: tt('piReportAvatar', 'Report avatar'),
+    out.push({ k: 'report', ico: '🚩', label: tt('piReportAvatar', 'Report avatar'),
                run: () => { try { window._reportAvatar(pid); } catch (e) {} } });
   }
   // Kickban : administrateurs pokerth.net uniquement.
   if (!isMe && !isBot && (S._playerRights[S.myId] || 0) === 3) {
     out.push({ sep: true });
-    out.push({ ico: '🔨', label: tt('piKickban', 'Total kickban'), danger: true,
+    out.push({ k: 'kickban', ico: '🔨', label: tt('piKickban', 'Total kickban'), danger: true,
                run: () => { try { window._adminBanPlayer(pid); } catch (e) {} } });
   }
   return out;
@@ -121,7 +121,7 @@ export function openSeatMenu(pid, x, y) {
   items.forEach((it, i) => {
     if (it.sep) { html += '<div class="menu-sep"></div>'; return; }
     html += '<button type="button" class="btn-sm' + (it.danger ? ' ctx-danger' : '') + '"'
-          + ' role="menuitem" data-ctx-i="' + i + '">'
+          + ' role="menuitem" data-ctx-i="' + i + '"' + (it.k ? ' data-ctx-k="' + it.k + '"' : '') + '>'   // data-ctx-k: Ace's Help « ? »
           + '<span style="margin-right:7px" aria-hidden="true">' + it.ico + '</span>'
           + esc(it.label) + '</button>';
   });

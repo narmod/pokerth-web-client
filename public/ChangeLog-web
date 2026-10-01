@@ -1,4 +1,7 @@
-2026-10-01 version 2.1.9-web.271 (current series):
+2026-10-01 version 2.1.9-web.272 (current series):
+- improvement: Ace’s Help « ? » — a real answer everywhere: menus, language list, accessibility, About, privacy, the login fields, the game list, the players, the theme panel, the avatar creator, the sound settings, the seat menu at the table, the end of the game, statistics…; for anything else he names the element and points to the help that talks about it
+
+2026-10-01 version 2.1.9-web.271:
 - improvement: Ace’s Help — tapping the Ace now opens his menu (More help, « What’s this? », this screen’s tip, turn off, show all tips again) instead of repeating the same tip; a tip you put off with « Later » still comes back with a tap
 - improvement: Ace’s Help — his welcome and his menu explain « What’s this? » and the yellow « ? » on his bubbles; the help section on Ace’s Help lists his menu
 

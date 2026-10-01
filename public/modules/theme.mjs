@@ -1499,6 +1499,7 @@ function _styleAuthor(kind, item){
 }
 function _styleRow(kind, item, name, author, active, onClick){
   var row = document.createElement('div');
+  row.className = 'tp-row';   // Ace's Help « ? » (modules/guide/hotspots.mjs)
   row.style.cssText = 'display:flex;align-items:center;gap:11px;padding:9px 10px;cursor:pointer;border-radius:9px;'
     + (active ? 'background:rgba(var(--sel-rgb,227,200,0),0.12);box-shadow:inset 0 0 0 1.5px var(--sel,#E3C800);'
               : 'border:1px solid var(--border,rgba(200,168,74,0.18));background:rgba(255,255,255,0.02);');
@@ -1509,7 +1510,7 @@ function _styleRow(kind, item, name, author, active, onClick){
     + '</div>';
   row.innerHTML = _previewHTML(kind, item, true) + txt;
   if (item && item._imported) {
-    var del=document.createElement('button'); del.type='button'; del.textContent='\u2715'; del.title=_t('delete','Delete');
+    var del=document.createElement('button'); del.type='button'; del.className='tp-del'; del.textContent='\u2715'; del.title=_t('delete','Delete');
     del.style.cssText='flex:0 0 auto;background:none;border:0;color:var(--text,#9aaa92);cursor:pointer;font-size:0.95rem;padding:2px 6px;line-height:1';
     del.addEventListener('click', function(e){ e.stopPropagation(); try{ if(confirm(_t('confirmDeleteStyle','Delete this imported style?'))) _deleteImported(item.id); }catch(_){ _deleteImported(item.id); } });
     row.appendChild(del);
@@ -1541,7 +1542,7 @@ function _render(){
     + 'overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch';
   _TABS.forEach(function(tb){
     var act = _activeTab === tb.id;
-    var b = document.createElement('button'); b.type='button'; b.textContent = _t(tb.titleKey, tb.fallback);
+    var b = document.createElement('button'); b.type='button'; b.className='tp-tab'; b.textContent = _t(tb.titleKey, tb.fallback);
     // Badge « bêta » sur l'entête Sièges (les packs de sièges sont encore en
     // rodage sur le cadre virtuel QML). Micro-pilule « β » or (variante B,
     // choix narmod 2026-07-19) : un seul caractère -> ne tronque jamais
@@ -1619,7 +1620,7 @@ function _render(){
   });
   if (_activeTab === 'table' || _activeTab === 'deck' || _activeTab === 'seat') {
     var _ik=_activeTab;
-    var imp=document.createElement('button'); imp.type='button';
+    var imp=document.createElement('button'); imp.type='button'; imp.className='tp-import';
     imp.textContent='\u2795 '+(_ik==='table'?_t('importTable','Import a table (.zip)'):_ik==='deck'?_t('importDeck','Import a deck (.zip)'):_t('importSeat','Import a seat pack (.zip)'));
     imp.style.cssText='margin-top:5px;padding:10px;border:1px dashed var(--border,rgba(200,168,74,0.4));border-radius:9px;background:none;color:var(--gold,#c8a84a);cursor:pointer;font-size:0.82rem;font-weight:600;text-align:center';
     imp.addEventListener('click', function(e){ e.stopPropagation(); if(_ik==='table') _pickTableImport(); else if(_ik==='deck') _pickDeckImport(); else _pickSeatImport(); });
@@ -1685,7 +1686,7 @@ function openThemePanel(ev) {
   title.setAttribute('data-i18n', 'themeTooltip'); // suit le changement de langue comme le reste (setLang)
   title.style.cssText = 'font-size:0.95rem;font-weight:700;color:var(--cream,#f0e6d2)';
   var x = document.createElement('button');
-  x.type = 'button'; x.innerHTML = '\u2715';
+  x.type = 'button'; x.className = 'tp-close'; x.innerHTML = '\u2715';
   x.style.cssText = 'background:none;border:0;color:var(--text,#9aaa92);cursor:pointer;font-size:1rem;padding:0 2px;line-height:1';
   x.addEventListener('click', function (e) { e.stopPropagation(); closeThemePanel(); });
   header.appendChild(title); header.appendChild(x);
