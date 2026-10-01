@@ -272,4 +272,11 @@ export default {
   hsCtxReport: 'Nahlási moderátorom avatar tohto hráča, ak je urážlivý.',
   hsCtxKickban: 'Len pre administrátorov: zabanuje tohto hráča na serveri.',
   hsChip: 'Žetón PokerTH — ťukni naň a roztočí sa.',
+  installApp: 'Nainštalovať aplikáciu',
+  instNow: 'Nainštalovať teraz',
+  instWhy: 'Po inštalácii sa PokerTH otvorí na celú obrazovku s vlastnou ikonou, spustí sa okamžite a tréningový režim funguje offline.',
+  instPrompt: 'Ťukni na „Nainštalovať teraz“ a potvrď: to je všetko.',
+  instIos: 'Na iPhone a iPade: ťukni na tlačidlo Zdieľať (štvorec so šípkou nahor — na novšom iOS môže byť v ponuke ⋯), vyber „Pridať na plochu“ a potom „Pridať“. Funguje v Safari a na novšom iOS aj v Chrome a Edge.',
+  instAndroid: 'Otvor ponuku prehliadača (⋮ alebo ≡), vyber „Nainštalovať aplikáciu“ alebo „Pridať na plochu“ a potvrď: ikona sa objaví na tvojej ploche.',
+  instDesktop: 'V Chrome alebo Edge: klikni na ikonu inštalácie vpravo v adresnom riadku alebo na ponuku ⋮ / ⋯ → „Nainštalovať“ (Edge: Aplikácie → „Nainštalovať túto lokalitu ako aplikáciu“). V Safari na Macu: Súbor → „Pridať do Docku“. V iných prehliadačoch hľadaj v ponuke „Nainštalovať“ alebo „Pridať na plochu“.',
 };

@@ -28,7 +28,10 @@ export const help = {
           b: ['Liides on saadaval 83 keeles. Muuda seda millal tahes täpsemates valikutes (hammasrattamenüü) jaotises Kasutajaliides. Pokkeri käiguterminid (Fold, Check, Call, Bet, Raise, All-In) jäävad kokkuleppeliselt inglise keelde, täpselt nagu töölauakliendis.'] },
         { id: 'pwa', t: 'Paigalda rakendusena',
           b: ['See klient on progressiivne veebirakendus (PWA): saad selle brauseri menüüst (või päises olevast paigaldusnupust) paigaldada ja saada täisekraanirakenduse oma ikooniga. Pärast paigaldamist käivitub see kohe ja treeningrežiim töötab täielikult võrguvabalt.'],
-          note: 'Androidis ja töölaua Chrome\u2019is/Edge\u2019is teeb paigaldusnupp kõik ära. iPhone\u2019is/iPadis lubab Apple paigaldamist ainult Safari kaudu: jagamisnupp \u2192 \u201cLisa avakuvale\u201d \u2014 klient näitab neid samme vajaduse korral. Nupp kaob, kui rakendus on paigaldatud.' },
+          list: ["Android (Chrome, Edge, Samsung Internet, Firefox): puuduta päises olevat paigaldusnuppu või ava brauseri menüü (⋮ või ≡), vali „Paigalda rakendus“ või „Lisa avakuvale“ ja kinnita.",
+            "iPhone / iPad: puuduta jagamisnuppu (ruut ülesnoolega; uuemas iOS-is võib see olla menüüs ⋯), vali „Lisa avakuvale“ ja seejärel „Lisa“. Safaris see töötab; uuemad iOS-i versioonid lubavad seda ka Chrome’ist ja Edge’ist.",
+            "Arvuti: klõpsa Chrome’is või Edge’is päises olevat paigaldusnuppu või aadressiriba paremas servas olevat paigaldusikooni (või menüü ⋮ / ⋯ → „Paigalda“); Maci Safaris: Fail → „Lisa Dock’i“."],
+          note: "Ässa abi näitab sinu seadme samme: puuduta Ässa → „Paigalda rakendus“. Paigaldusnupp ja see menüükirje kaovad, kui kasutad paigaldatud rakendust; edaspidi ava see selle ikooni kaudu." },
         { id: 'platforms', t: 'Platvormid ja brauserid',
           b: ['Klient töötab igas kaasaegses brauseris igas süsteemis \u2014 Windows, macOS, Linux, Android, iOS. Mõni funktsioon tugineb uuematele brauseri API-dele; kui API puudub, peidab funktsioon end ära või selgitab põhjust, selle asemel et katki minna. Peamised erinevused, mida teada:'],
           list: [

@@ -32,7 +32,10 @@ export const help = {
           b: ['Saskarne ir pieejama 83 valodās. To jebkurā laikā vari mainīt papildu opcijās (zobrata izvēlne) sadaļā Lietotāja saskarne. Pokera darbību termini (Fold, Check, Call, Bet, Raise, All-In) pēc vienošanās paliek angliski, tieši tāpat kā darbvirsmas klientā.'] },
         { id: 'pwa', t: 'Instalēt kā lietotni',
           b: ['Šis klients ir progresīva tīmekļa lietotne (PWA): to vari instalēt no pārlūka izvēlnes (vai ar instalēšanas pogu galvenē) un iegūt pilnekrāna lietotni ar savu ikonu. Pēc instalēšanas tā startē uzreiz, un treniņa režīms pilnībā darbojas bezsaistē.'],
-          note: 'Android un darbvirsmas Chrome/Edge pārlūkā visu izdara instalēšanas poga. iPhone un iPad ierīcēs Apple atļauj instalēt tikai caur Safari: kopīgošanas poga → “Pievienot sākuma ekrānam” — klients šos soļus parāda, kad tie ir vajadzīgi. Kad lietotne ir instalēta, poga pazūd.' },
+          list: ["Android (Chrome, Edge, Samsung Internet, Firefox): pieskaries instalēšanas pogai galvenē vai atver pārlūka izvēlni (⋮ vai ≡), izvēlies “Instalēt lietotni” vai “Pievienot sākuma ekrānam” un apstiprini.",
+            "iPhone / iPad: pieskaries kopīgošanas pogai (kvadrāts ar bultiņu uz augšu; jaunākajā iOS tā var būt izvēlnē ⋯), izvēlies “Pievienot sākuma ekrānam”, pēc tam “Pievienot”. To dara Safari; jaunākajās iOS versijās to var arī no Chrome un Edge.",
+            "Dators: pārlūkā Chrome vai Edge noklikšķini uz instalēšanas pogas galvenē vai instalēšanas ikonas adreses joslas labajā pusē (vai izvēlnē ⋮ / ⋯ → “Instalēt”); Safari datorā Mac: Fails → “Pievienot Dock”."],
+          note: "Dūža palīdzība parāda soļus tavai ierīcei: pieskaries Dūzim → “Instalēt lietotni”. Instalēšanas poga un šis izvēlnes ieraksts pazūd, kad izmanto instalēto lietotni; turpmāk atver to no tās ikonas." },
         { id: 'platforms', t: 'Platformas un pārlūki',
           b: ['Klients darbojas jebkurā mūsdienīgā pārlūkā jebkurā sistēmā — Windows, macOS, Linux, Android, iOS. Dažas funkcijas balstās uz jaunākām pārlūka saskarnēm (API); ja kādas trūkst, funkcija paslēpjas vai paskaidro, kāpēc tā nav pieejama, nevis salūzt. Galvenās atšķirības, kas jāzina:'],
           list: [

@@ -272,4 +272,11 @@ export default {
   hsCtxReport: 'Yn adrodd avatar y chwaraewr hwn i’r safonwyr os yw’n sarhaus.',
   hsCtxKickban: 'Gweinyddwyr yn unig: yn gwahardd y chwaraewr hwn o’r gweinydd.',
   hsChip: 'Sglodyn PokerTH — tapiwch arno a bydd yn troelli.',
+  installApp: 'Gosod yr ap',
+  instNow: 'Gosod nawr',
+  instWhy: 'Ar ôl ei osod, mae PokerTH yn agor ar sgrin lawn gyda’i eicon ei hun, yn cychwyn ar unwaith, ac mae’r modd ymarfer yn gweithio all-lein.',
+  instPrompt: 'Tapiwch “Gosod nawr” a chadarnhewch: dyna i gyd.',
+  instIos: 'Ar iPhone ac iPad: tapiwch y botwm Rhannu (sgwâr gyda saeth i fyny — ar iOS diweddar gall fod yn y ddewislen ⋯), dewiswch “Ychwanegu at y Sgrin Gartref”, yna “Ychwanegu”. Mae’n gweithio yn Safari, ac ar iOS diweddar yn Chrome ac Edge hefyd.',
+  instAndroid: 'Agorwch ddewislen eich porwr (⋮ neu ≡), dewiswch “Gosod yr ap” neu “Ychwanegu at y sgrin gartref”, yna cadarnhewch: bydd yr eicon yn ymddangos ar eich sgrin gartref.',
+  instDesktop: 'Yn Chrome neu Edge: cliciwch yr eicon gosod ar ochr dde’r bar cyfeiriad, neu’r ddewislen ⋮ / ⋯ → “Gosod” (Edge: Apiau → “Gosod y wefan hon fel ap”). Yn Safari ar Mac: Ffeil → “Ychwanegu at y Doc”. Porwyr eraill: chwiliwch yn y ddewislen am “Gosod” neu “Ychwanegu at y Sgrin Gartref”.',
 };

@@ -3519,6 +3519,9 @@ _hideFullscreenIfUnsupported();
     }
     _openManualPopup();   // no native prompt → manual instructions
   };
+  // Ace's Help (web.274): can « Install now » open the browser's own install prompt?
+  window.pwaCanPrompt = function () { return !!_deferredPrompt && !_isStandalone(); };
+  window.pwaInstalled = _isStandalone;
   window.pwaInstallClose = function () {
     var pop = document.getElementById('install-popup');
     if (pop) pop.style.display = 'none';
@@ -12011,7 +12014,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.9-web.273'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.9-web.274'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif ou la palette High contrast
    (Android, Safari, iOS standalone récent). Lit --theme-color et met

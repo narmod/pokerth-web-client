@@ -272,4 +272,11 @@ export default {
   hsCtxReport: 'Prijavljuje moderatorima avatar ovog igrača ako je uvredljiv.',
   hsCtxKickban: 'Samo za administratore: zabranjuje ovog igrača na serveru.',
   hsChip: 'PokerTH žeton — dodirni ga i zavrtjet će se.',
+  installApp: 'Instaliraj aplikaciju',
+  instNow: 'Instaliraj sada',
+  instWhy: 'Kad je instaliran, PokerTH se otvara preko cijelog zaslona sa svojom ikonom, pokreće se odmah, a trening način radi offline.',
+  instPrompt: 'Dodirni „Instaliraj sada“ i potvrdi: to je sve.',
+  instIos: 'Na iPhoneu i iPadu: dodirni gumb Dijeli (kvadrat sa strelicom prema gore — na novijem iOS-u može biti u meniju ⋯), odaberi „Dodaj na početni zaslon“, zatim „Dodaj“. Radi u Safariju, a na novijem iOS-u i u Chromeu i Edgeu.',
+  instAndroid: 'Otvori meni pregledača (⋮ ili ≡), odaberi „Instaliraj aplikaciju“ ili „Dodaj na početni zaslon“ i potvrdi: ikona se pojavljuje na tvom početnom zaslonu.',
+  instDesktop: 'U Chromeu ili Edgeu: klikni ikonu za instalaciju desno od adresne trake ili meni ⋮ / ⋯ → „Instaliraj“ (Edge: Aplikacije → „Instaliraj ovu stranicu kao aplikaciju“). U Safariju na Macu: Datoteka → „Dodaj u Dock“. Ostali pregledači: potraži u meniju „Instaliraj“ ili „Dodaj na početni zaslon“.',
 };

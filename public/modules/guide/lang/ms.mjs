@@ -272,4 +272,11 @@ export default {
   hsCtxReport: 'Melaporkan avatar pemain ini kepada moderator jika ia menyinggung.',
   hsCtxKickban: 'Untuk pentadbir sahaja: melarang pemain ini daripada pelayan.',
   hsChip: 'Cip PokerTH — ketik dan ia berputar.',
+  installApp: 'Pasang aplikasi',
+  instNow: 'Pasang sekarang',
+  instWhy: 'Setelah dipasang, PokerTH dibuka dalam skrin penuh dengan ikonnya sendiri, bermula serta-merta dan mod latihan berfungsi tanpa internet.',
+  instPrompt: 'Ketik “Pasang sekarang” dan sahkan: itu sahaja.',
+  instIos: 'Pada iPhone dan iPad: ketik butang Kongsi (petak dengan anak panah ke atas — pada iOS terkini ia mungkin berada dalam menu ⋯), pilih “Tambah ke Skrin Utama”, kemudian “Tambah”. Ia berfungsi dalam Safari, dan pada iOS terkini dalam Chrome dan Edge juga.',
+  instAndroid: 'Buka menu pelayar anda (⋮ atau ≡), pilih “Pasang aplikasi” atau “Tambah ke skrin utama”, kemudian sahkan: ikon akan muncul pada skrin utama anda.',
+  instDesktop: 'Dalam Chrome atau Edge: klik ikon pemasangan di sebelah kanan bar alamat, atau menu ⋮ / ⋯ → “Pasang” (Edge: Aplikasi → “Pasang tapak ini sebagai aplikasi”). Dalam Safari pada Mac: Fail → “Tambah ke Dok”. Pelayar lain: cari “Pasang” atau “Tambah ke skrin utama” dalam menu.',
 };

@@ -26,7 +26,10 @@ export const help = {
           b: ['A felület 83 nyelven érhető el. Bármikor átválthatod a Speciális beállításokban (fogaskerék menü), a Felhasználói felület kategóriában. A póker akciókifejezései (Fold, Check, Call, Bet, Raise, All-In) konvenció szerint angolul maradnak, pontosan úgy, mint az asztali kliensben.'] },
         { id: 'pwa', t: 'Telepítés alkalmazásként',
           b: ['Ez a kliens egy Progressive Web App: telepítheted a böngésző menüjéből (vagy a fejléc telepítés gombjával), és saját ikonnal rendelkező, teljes képernyős alkalmazást kapsz. Telepítés után azonnal indul, a gyakorlómód pedig teljesen offline működik.'],
-          note: 'Androidon és asztali Chrome/Edge böngészőben a telepítés gomb mindent elintéz. iPhone-on/iPaden az Apple csak a Safarin keresztül engedi a telepítést: Megosztás gomb \u2192 \u201eHozzáadás a Főképernyőhöz\u201d — a kliens szükség esetén megmutatja ezeket a lépéseket. A gomb eltűnik, amint az alkalmazás telepítve van.' },
+          list: ["Android (Chrome, Edge, Samsung Internet, Firefox): koppints a fejlécben lévő telepítés gombra, vagy nyisd meg a böngésző menüjét (⋮ vagy ≡), és válaszd az „Alkalmazás telepítése” vagy a „Hozzáadás a kezdőképernyőhöz” lehetőséget, majd erősítsd meg.",
+            "iPhone / iPad: koppints a Megosztás gombra (felfelé mutató nyilas négyzet; újabb iOS-en a ⋯ menüben lehet), válaszd a „Főképernyőhöz adás” lehetőséget, majd a „Hozzáadás” gombot. Safariban megy; az újabb iOS-verziók Chrome-ból és Edge-ből is engedik.",
+            "Számítógép: Chrome-ban vagy Edge-ben kattints a fejlécben lévő telepítés gombra vagy a címsor jobb oldalán lévő telepítés ikonra (vagy ⋮ / ⋯ menü → „Telepítés”); Safariban Macen: Fájl → „Hozzáadás a Dockhoz”."],
+          note: "Az ász súgója megmutatja az eszközödhöz tartozó lépéseket: koppints az ászra → „Alkalmazás telepítése”. A telepítés gomb és ez a menüpont eltűnik, ha a telepített alkalmazást használod; ettől kezdve az ikonjáról nyisd meg." },
         { id: 'platforms', t: 'Platformok és böngészők',
           b: ['A kliens minden modern böngészőben fut, minden rendszeren — Windows, macOS, Linux, Android, iOS. Néhány funkció újabb böngésző-API-kra támaszkodik; ha egy API hiányzik, a funkció elrejtőzik vagy elmagyarázza a helyzetet, ahelyett hogy elromlana. A főbb különbségek, amiket érdemes tudni:'],
           list: [

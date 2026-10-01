@@ -38,7 +38,10 @@ export const help = {
           t: "Fi sórí ẹ̀rọ gẹ́gẹ́ bí ìṣàfilọ́lẹ̀",
           b: [
             "Oníbàárà yìí jẹ́ Progressive Web App: o lè fi sórí ẹ̀rọ láti inú àkójọ aṣàwákiri rẹ (tàbí bọ́tìnì ìfisórí ní orí ojú-ewé) láti ní ìṣàfilọ́lẹ̀ ojú kíkún pẹ̀lú àmì tirẹ̀. Nígbà tí o bá ti fi sórí ẹ̀rọ, ó ń ṣí lójú ẹsẹ̀, ọ̀nà ìdánrawò sì ń ṣiṣẹ́ láìsí ayélujára pátápátá."],
-          note: "Lórí Android àti Chrome/Edge kọ̀ǹpútà, bọ́tìnì ìfisórí ń ṣe gbogbo rẹ̀. Lórí iPhone/iPad Apple gba ìfisórí láàyè nípasẹ̀ Safari nìkan: bọ́tìnì Pín → “Fi kún Ojú Ilé” — oníbàárà ń fi àwọn ìgbésẹ̀ wọ̀nyí hàn nígbà tí ó bá pọn dandan. Bọ́tìnì náà ń pòórá nígbà tí a bá ti fi ìṣàfilọ́lẹ̀ sórí ẹ̀rọ." },
+          list: ["Android (Chrome, Edge, Samsung Internet, Firefox): tẹ bọ́tìnì ìfisórí ní orí ojú-ewé, tàbí ṣí àkójọ aṣàwákiri (⋮ tàbí ≡) kí o sì yan “Fi ìṣàfilọ́lẹ̀ sórí ẹ̀rọ” tàbí “Fi kún ojú ilé”, lẹ́yìn náà jẹ́rìísí.",
+            "iPhone / iPad: tẹ bọ́tìnì Pín (onígun mẹ́rin pẹ̀lú ọfà tó ń tọ́ka sókè; lórí iOS tuntun ó lè wà nínú àkójọ ⋯), yan “Fi kún Ojú Ilé”, lẹ́yìn náà “Fi kún un”. Safari ló ń ṣe é; àwọn ẹ̀yà iOS tuntun tún gbà á láàyè láti Chrome àti Edge.",
+            "Kọ̀ǹpútà: nínú Chrome tàbí Edge, tẹ bọ́tìnì ìfisórí ní orí ojú-ewé tàbí àmì ìfisórí ní ọ̀tún ọ̀pá àdírẹ́sì (tàbí àkójọ ⋮ / ⋯ → “Fi sórí ẹ̀rọ”); nínú Safari lórí Mac: Fáìlì → “Fi kún Dock”."],
+          note: "Ìrànlọ́wọ́ Ace ń fi àwọn ìgbésẹ̀ fún ẹ̀rọ rẹ hàn: tẹ Ace → “Fi ìṣàfilọ́lẹ̀ sórí ẹ̀rọ”. Bọ́tìnì ìfisórí àti àṣàyàn àkójọ yẹn ń pòórá nígbà tí o bá ń lo ìṣàfilọ́lẹ̀ tí a ti fi sórí ẹ̀rọ; láti ìgbà náà, ṣí i láti àmì rẹ̀." },
         { id: "platforms",
           t: "Pẹpẹ àti aṣàwákiri",
           b: [

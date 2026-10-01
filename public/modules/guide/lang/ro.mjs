@@ -272,4 +272,11 @@ export default {
   hsCtxReport: 'Raportează moderatorilor avatarul acestui jucător, dacă este jignitor.',
   hsCtxKickban: 'Doar pentru administratori: interzice acest jucător pe server.',
   hsChip: 'Jetonul PokerTH — atinge-l și se rotește.',
+  installApp: 'Instalează aplicația',
+  instNow: 'Instalează acum',
+  instWhy: 'Odată instalat, PokerTH se deschide pe tot ecranul, cu propria pictogramă, pornește instantaneu, iar modul de antrenament funcționează offline.',
+  instPrompt: 'Atinge „Instalează acum” și confirmă: asta e tot.',
+  instIos: 'Pe iPhone și iPad: atinge butonul Partajare (un pătrat cu o săgeată în sus — pe iOS recent poate fi în meniul ⋯), alege „Adaugă la ecranul principal”, apoi „Adaugă”. Funcționează în Safari, iar pe iOS recent și în Chrome și Edge.',
+  instAndroid: 'Deschide meniul browserului (⋮ sau ≡), alege „Instalează aplicația” sau „Adaugă la ecranul principal” și confirmă: pictograma apare pe ecranul tău principal.',
+  instDesktop: 'În Chrome sau Edge: dă clic pe pictograma de instalare din dreapta barei de adrese sau pe meniul ⋮ / ⋯ → „Instalează” (Edge: Aplicații → „Instalează acest site ca aplicație”). În Safari pe Mac: Fișier → „Adaugă în Dock”. Alte browsere: caută în meniu „Instalează” sau „Adaugă la ecranul principal”.',
 };

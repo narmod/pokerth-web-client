@@ -26,7 +26,10 @@ export const help = {
           b: ['Sąsaja prieinama 83 kalbomis. Keisk ją bet kada Išplėstinėse parinktyse (krumpliaračio meniu), kategorijoje Naudotojo sąsaja. Pokerio veiksmų terminai (Fold, Check, Call, Bet, Raise, All-In) pagal susitarimą lieka anglų kalba, lygiai kaip darbalaukio kliente.'] },
         { id: 'pwa', t: 'Įdiek kaip programėlę',
           b: ['Šis klientas yra Progressive Web App: gali jį įdiegti iš naršyklės meniu (ar diegimo mygtuku antraštėje) ir gauti viso ekrano programėlę su sava piktograma. Įdiegus paleidžiama akimirksniu, o treniruotės režimas veikia visiškai neprisijungus.'],
-          note: '\u201eAndroid\u201c ir darbalaukio \u201eChrome\u201c/\u201eEdge\u201c diegimo mygtukas padaro viską. \u201eiPhone\u201c/\u201eiPad\u201c įrenginiuose \u201eApple\u201c leidžia diegti tik per \u201eSafari\u201c: mygtukas Bendrinti \u2192 \u201ePridėti prie pagrindinio ekrano\u201c — klientas prireikus parodo šiuos žingsnius. Mygtukas dingsta, kai tik programėlė įdiegta.' },
+          list: ["Android (Chrome, Edge, Samsung Internet, Firefox): bakstelėk diegimo mygtuką antraštėje arba atverk naršyklės meniu (⋮ arba ≡), pasirink „Įdiegti programėlę“ arba „Pridėti į pradžios ekraną“ ir patvirtink.",
+            "iPhone / iPad: bakstelėk bendrinimo mygtuką (kvadratas su rodykle aukštyn; naujesnėje iOS jis gali būti meniu ⋯), pasirink „Pridėti prie pagrindinio ekrano“, tada „Pridėti“. Tai atlieka Safari; naujesnės iOS versijos leidžia tai daryti ir per Chrome bei Edge.",
+            "Kompiuteris: Chrome ar Edge naršyklėje spustelėk diegimo mygtuką antraštėje arba diegimo piktogramą adreso juostos dešinėje (arba meniu ⋮ / ⋯ → „Įdiegti“); Safari naršyklėje Mac kompiuteryje: Failas → „Pridėti prie Dock“."],
+          note: "Tūzo pagalba parodo žingsnius tavo įrenginiui: bakstelėk Tūzą → „Įdiegti programėlę“. Diegimo mygtukas ir šis meniu punktas dingsta, kai naudoji įdiegtą programėlę; nuo tada ją atverk iš jos piktogramos." },
         { id: 'platforms', t: 'Platformos ir naršyklės',
           b: ['Klientas veikia bet kurioje šiuolaikinėje naršyklėje bet kurioje sistemoje — Windows, macOS, Linux, Android, iOS. Kelios funkcijos priklauso nuo naujesnių naršyklių API; kai API trūksta, funkcija pasislepia arba paaiškina padėtį, užuot sugedusi. Pagrindiniai skirtumai, kuriuos verta žinoti:'],
           list: [

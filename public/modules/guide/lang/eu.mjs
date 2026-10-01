@@ -272,4 +272,11 @@ export default {
   hsCtxReport: 'Jokalari honen avatarra moderatzaileei salatzen die, iraingarria bada.',
   hsCtxKickban: 'Administratzaileentzat bakarrik: jokalari hau zerbitzaritik debekatzen du.',
   hsChip: 'PokerTH fitxa — sakatu eta biratu egiten da.',
+  installApp: 'Instalatu aplikazioa',
+  instNow: 'Instalatu orain',
+  instWhy: 'Instalatuta, PokerTH pantaila osoan irekitzen da bere ikonoarekin, berehala abiarazten da eta entrenamendu-modua lineaz kanpo dabil.',
+  instPrompt: 'Sakatu «Instalatu orain» eta berretsi: hori da guztia.',
+  instIos: 'iPhone eta iPad-en: sakatu Partekatu botoia (gezi bat gora duen koadroa; iOS berrietan ⋯ menuan egon daiteke), aukeratu «Gehitu hasierako pantailan» eta gero «Gehitu». Safarin dabil, eta iOS berrietan Chrome eta Edge-n ere bai.',
+  instAndroid: 'Ireki nabigatzailearen menua (⋮ edo ≡), aukeratu «Instalatu aplikazioa» edo «Gehitu hasierako pantailan» eta berretsi: ikonoa zure hasierako pantailan agertuko da.',
+  instDesktop: 'Chrome edo Edge-n: egin klik helbide-barraren eskuinaldeko instalatzeko ikonoan, edo ⋮ / ⋯ menua → «Instalatu» (Edge: Aplikazioak → «Instalatu gune hau aplikazio gisa»). Mac-eko Safarin: Fitxategia → «Gehitu Dock-era». Beste nabigatzaile batzuk: bilatu menuan «Instalatu» edo «Gehitu hasierako pantailan».',
 };

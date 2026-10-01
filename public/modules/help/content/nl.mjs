@@ -26,7 +26,10 @@ export const help = {
           b: ['De interface is beschikbaar in 83 talen. Wijzig hem op elk moment in de Geavanceerde opties (tandwielmenu), categorie Gebruikersinterface. De pokeractietermen (Fold, Check, Call, Bet, Raise, All-In) blijven per conventie Engels, precies zoals in de desktopclient.'] },
         { id: 'pwa', t: 'Installeren als app',
           b: ['Deze client is een Progressive Web App: je kunt hem installeren via het browsermenu (of de installatieknop in de header) voor een schermvullende app met eigen pictogram. Eenmaal geïnstalleerd start hij direct en werkt de trainingsmodus volledig offline.'],
-          note: 'Op Android en desktop-Chrome/Edge doet de installatieknop alles. Op iPhone/iPad staat Apple installatie alleen toe via Safari: Deel-knop \u2192 \u201cZet op beginscherm\u201d — de client toont deze stappen wanneer nodig. De knop verdwijnt zodra de app geïnstalleerd is.' },
+          list: ["Android (Chrome, Edge, Samsung Internet, Firefox): tik op de installatieknop in de header, of open het browsermenu (⋮ of ≡) en kies “App installeren” of “Toevoegen aan startscherm”, en bevestig.",
+            "iPhone / iPad: tik op de Deel-knop (een vierkant met een pijl omhoog; op recente iOS kan die in het ⋯-menu staan), kies “Zet op beginscherm” en daarna “Voeg toe”. Safari doet het; recente iOS-versies staan het ook toe vanuit Chrome en Edge.",
+            "Computer: klik in Chrome of Edge op de installatieknop in de header of op het installatiepictogram rechts in de adresbalk (of menu ⋮ / ⋯ → “Installeren”); in Safari op een Mac: Archief → “Zet in Dock”."],
+          note: "De hulp van de Aas toont de stappen voor je apparaat: tik op de Aas → “De app installeren”. De installatieknop en dit menu-item verdwijnen wanneer je de geïnstalleerde app gebruikt; open hem vanaf dat moment via zijn pictogram." },
         { id: 'platforms', t: 'Platformen en browsers',
           b: ['De client draait in elke moderne browser op elk systeem — Windows, macOS, Linux, Android, iOS. Enkele functies steunen op nieuwere browser-API\u2019s; ontbreekt een API, dan verbergt de functie zich of legt ze het uit in plaats van kapot te gaan. De belangrijkste verschillen:'],
           list: [

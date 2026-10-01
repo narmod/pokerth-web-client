@@ -272,4 +272,11 @@ export default {
   hsCtxReport: 'Denuncia el avatar de este jugador a los moderadores si es ofensivo.',
   hsCtxKickban: 'Solo para administradores: veta a este jugador del servidor.',
   hsChip: 'La ficha de PokerTH — tócala y gira.',
+  installApp: 'Instalar la app',
+  instNow: 'Instalar ahora',
+  instWhy: 'Una vez instalado, PokerTH se abre a pantalla completa con su propio icono, arranca al instante y el modo entrenamiento funciona sin conexión.',
+  instPrompt: 'Toca «Instalar ahora» y confirma: ya está.',
+  instIos: 'En iPhone y iPad: toca el botón Compartir (un cuadrado con una flecha hacia arriba; en iOS recientes puede estar en el menú ⋯), elige «Añadir a pantalla de inicio» y luego «Añadir». Funciona en Safari y, en iOS recientes, también en Chrome y Edge.',
+  instAndroid: 'Abre el menú del navegador (⋮ o ≡), elige «Instalar aplicación» o «Añadir a pantalla de inicio» y confirma: el icono aparece en tu pantalla de inicio.',
+  instDesktop: 'En Chrome o Edge: haz clic en el icono de instalación a la derecha de la barra de direcciones, o en el menú ⋮ / ⋯ → «Instalar» (Edge: Aplicaciones → «Instalar este sitio como aplicación»). En Safari en un Mac: Archivo → «Añadir al Dock». Otros navegadores: busca en el menú «Instalar» o «Añadir a pantalla de inicio».',
 };

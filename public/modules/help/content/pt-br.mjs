@@ -26,7 +26,10 @@ export const help = {
           b: ['A interface está disponível em 83 idiomas. Troque a qualquer momento nas Opções avançadas (menu da engrenagem), categoria Interface do usuário. Os termos de ação do pôquer (Fold, Check, Call, Bet, Raise, All-In) permanecem em inglês por convenção, exatamente como no cliente de desktop.'] },
         { id: 'pwa', t: 'Instalar como aplicativo',
           b: ['Este cliente é um Progressive Web App: você pode instalá-lo pelo menu do navegador (ou pelo botão de instalação no cabeçalho) para ter um aplicativo em tela cheia com ícone próprio. Depois de instalado, ele abre na hora e o modo treino funciona totalmente offline.'],
-          note: 'No Android e no Chrome/Edge de desktop, o botão de instalação faz tudo. No iPhone/iPad, a Apple só permite a instalação pelo Safari: botão Compartilhar \u2192 \u201cAdicionar à Tela de Início\u201d — o cliente mostra esses passos quando necessário. O botão some depois que o aplicativo é instalado.' },
+          list: ["Android (Chrome, Edge, Samsung Internet, Firefox): toque no botão de instalação no cabeçalho ou abra o menu do navegador (⋮ ou ≡) e escolha “Instalar app” ou “Adicionar à tela inicial”, depois confirme.",
+            "iPhone / iPad: toque no botão Compartilhar (um quadrado com uma seta para cima; no iOS recente ele pode estar no menu ⋯), escolha “Adicionar à Tela de Início” e depois “Adicionar”. O Safari faz isso; versões recentes do iOS também permitem pelo Chrome e pelo Edge.",
+            "Computador: no Chrome ou no Edge, clique no botão de instalação no cabeçalho ou no ícone de instalação à direita da barra de endereço (ou menu ⋮ / ⋯ → “Instalar”); no Safari do Mac: Arquivo → “Adicionar ao Dock”."],
+          note: "A Ajuda do Ás mostra os passos para o seu dispositivo: toque no Ás → “Instalar o aplicativo”. O botão de instalação e este item do menu somem quando você usa o aplicativo instalado; a partir daí, abra-o pelo ícone." },
         { id: 'platforms', t: 'Plataformas e navegadores',
           b: ['O cliente roda em qualquer navegador moderno em qualquer sistema — Windows, macOS, Linux, Android, iOS. Alguns recursos dependem de APIs recentes dos navegadores; quando uma API falta, o recurso se esconde ou se explica em vez de quebrar. As principais diferenças:'],
           list: [

@@ -26,7 +26,10 @@ export const help = {
           b: ['Interfejs je dostupan na 83 jezika. Promijeni ga bilo kada u Naprednim opcijama (meni sa zupčanikom), kategorija Korisničko interfejs. Pokerski izrazi za akcije (Fold, Check, Call, Bet, Raise, All-In) ostaju na engleskom prema konvenciji, točno kao u desktop klijentu.'] },
         { id: 'pwa', t: 'Instaliraj kao aplikaciju',
           b: ['Ovaj klijent je Progressive Web App: možeš ga instalirati iz menia pregledača (ili gumbom za instalaciju u zaglavlju) i dobiti aplikaciju preko cijelog zaslona s vlastitom ikonom. Nakon instalacije pokreće se trenutačno, a trening način radi potpuno offline.'],
-          note: 'Na Androidu i u Chromeu/Edgeu na računaru gumb za instalaciju obavlja sve. Na iPhoneu/iPadu Apple dopušta instalaciju samo kroz Safari: gumb Dijeli \u2192 \u201eDodaj na početni zaslon\u201c — klijent prikazuje te korake kad je potrebno. Gumb nestaje čim je aplikacija instalirana.' },
+          list: ["Android (Chrome, Edge, Samsung Internet, Firefox): dodirni gumb za instalaciju u zaglavlju ili otvori meni pregledača (⋮ ili ≡) i odaberi „Instaliraj aplikaciju“ ili „Dodaj na početni zaslon“, zatim potvrdi.",
+            "iPhone / iPad: dodirni gumb Dijeli (kvadrat sa strelicom prema gore; na novijem iOS-u može biti u meniju ⋯), odaberi „Dodaj na početni zaslon“, zatim „Dodaj“. To radi Safari; novije verzije iOS-a to dopuštaju i iz Chromea i Edgea.",
+            "Računar: u Chromeu ili Edgeu klikni gumb za instalaciju u zaglavlju ili ikonu za instalaciju desno od adresne trake (ili meni ⋮ / ⋯ → „Instaliraj“); u Safariju na Macu: Datoteka → „Dodaj u Dock“."],
+          note: "Pomoć asa prikazuje korake za tvoj uređaj: dodirni asa → „Instaliraj aplikaciju“. Gumb za instalaciju i ta stavka menija nestaju kad koristiš instaliranu aplikaciju; odatle je otvaraj preko njene ikone." },
         { id: 'platforms', t: 'Platforme i preglednici',
           b: ['Klijent radi u svakom modernom pregledaču na svakom sustavu — Windows, macOS, Linux, Android, iOS. Nekoliko funkcija oslanja se na novije API-je pregledača; kad API nedostaje, funkcija se sakrije ili objasni situaciju umjesto da se pokvari. Glavne razlike koje treba znati:'],
           list: [

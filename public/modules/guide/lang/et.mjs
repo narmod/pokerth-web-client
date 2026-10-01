@@ -272,4 +272,11 @@ export default {
   hsCtxReport: 'Teatab selle mängija avatari moderaatoritele, kui see on solvav.',
   hsCtxKickban: 'Ainult administraatoritele: keelab selle mängija serverist.',
   hsChip: 'PokerTH žetoon — puuduta seda ja see hakkab pöörlema.',
+  installApp: 'Paigalda rakendus',
+  instNow: 'Paigalda kohe',
+  instWhy: 'Paigaldatuna avaneb PokerTH täisekraanil oma ikooniga, käivitub kohe ja treeningrežiim töötab ka ilma võrguühenduseta.',
+  instPrompt: 'Puuduta „Paigalda kohe“ ja kinnita: see on kõik.',
+  instIos: 'iPhone’is ja iPadis: puuduta jagamisnuppu (ruut ülesnoolega; uuemas iOS-is võib see olla menüüs ⋯), vali „Lisa avakuvale“ ja seejärel „Lisa“. See töötab Safaris ning uuemas iOS-is ka Chrome’is ja Edge’is.',
+  instAndroid: 'Ava brauseri menüü (⋮ või ≡), vali „Paigalda rakendus“ või „Lisa avakuvale“ ja kinnita: ikoon ilmub sinu avakuvale.',
+  instDesktop: 'Chrome’is või Edge’is: klõpsa aadressiriba paremas servas olevat paigaldusikooni või vali menüü ⋮ / ⋯ → „Paigalda“ (Edge: Rakendused → „Paigalda see sait rakendusena“). Maci Safaris: Fail → „Lisa Dock’i“. Muud brauserid: otsi menüüst „Paigalda“ või „Lisa avakuvale“.',
 };

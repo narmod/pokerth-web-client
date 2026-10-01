@@ -272,4 +272,11 @@ export default {
   hsCtxReport: 'Melaporkan avatar pemain ini kepada moderator jika menyinggung.',
   hsCtxKickban: 'Khusus administrator: melarang pemain ini dari server.',
   hsChip: 'Chip PokerTH — ketuk dan chip ini berputar.',
+  installApp: 'Instal aplikasi',
+  instNow: 'Instal sekarang',
+  instWhy: 'Setelah terinstal, PokerTH terbuka layar penuh dengan ikonnya sendiri, langsung berjalan, dan mode latihan bisa dipakai offline.',
+  instPrompt: 'Ketuk “Instal sekarang” lalu konfirmasi: hanya itu.',
+  instIos: 'Di iPhone dan iPad: ketuk tombol Bagikan (kotak dengan panah ke atas — di iOS terbaru bisa ada di menu ⋯), pilih “Tambah ke Layar Utama”, lalu “Tambah”. Berfungsi di Safari, dan di iOS terbaru juga di Chrome dan Edge.',
+  instAndroid: 'Buka menu peramban Anda (⋮ atau ≡), pilih “Instal aplikasi” atau “Tambahkan ke Layar utama”, lalu konfirmasi: ikon akan muncul di layar utama Anda.',
+  instDesktop: 'Di Chrome atau Edge: klik ikon instal di sisi kanan bilah alamat, atau menu ⋮ / ⋯ → “Instal” (Edge: Aplikasi → “Instal situs ini sebagai aplikasi”). Di Safari pada Mac: Berkas → “Tambahkan ke Dock”. Peramban lain: cari “Instal” atau “Tambahkan ke Layar utama” di menu.',
 };

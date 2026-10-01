@@ -38,7 +38,10 @@ export const help = {
           t: "Programma hökmünde gurnamak",
           b: [
             "Bu müşderi Progressive Web App: öz nyşany bolan doly ekranly programma almak üçin ony brauzeriňiziň menýusyndan (ýa-da sözbaşydaky gurnamak düwmesinden) gurnap bilersiňiz. Gurnalandan soň ol derrew açylýar, türgenleşik režimi bolsa internetsiz doly işleýär."],
-          note: "Android-de we iş stoly Chrome/Edge-de gurnamak düwmesi hemme zady edýär. iPhone/iPad-de Apple gurnamaga diňe Safari arkaly rugsat berýär: Paýlaş düwmesi → «Baş ekrana goş» — müşderi zerur bolanda bu ädimleri görkezýär. Programma gurnalandan soň düwme ýitýär." },
+          list: ["Android (Chrome, Edge, Samsung Internet, Firefox): sözbaşydaky gurnamak düwmesine basyň ýa-da brauzeriň menýusyny (⋮ ýa-da ≡) açyp «Programmany gurna» ýa-da «Baş ekrana goş» saýlaň, soň tassyklaň.",
+            "iPhone / iPad: Paýlaş düwmesine basyň (ýokaryk ok bilen inedördül; soňky iOS-da ol ⋯ menýusynda bolup biler), «Baş ekrana goş» saýlaň, soň «Goş». Muny Safari edýär; soňky iOS wersiýalary Chrome we Edge-den hem rugsat berýär.",
+            "Kompýuter: Chrome ýa-da Edge-de sözbaşydaky gurnamak düwmesine ýa-da salgy setiriniň sag tarapyndaky gurnamak nyşanyna basyň (ýa-da ⋮ / ⋯ menýusy → «Gurna»); Mac-daky Safari-de: Faýl → «Dock-a goş»."],
+          note: "Tuzuň kömegi enjamyňyz üçin ädimleri görkezýär: Tuza basyň → «Programmany gurnaň». Gurnalan programmany ulananyňyzda gurnamak düwmesi we menýudaky bu bölüm ýitýär; şondan soň ony nyşanyndan açyň." },
         { id: "platforms",
           t: "Platformalar we brauzerler",
           b: [

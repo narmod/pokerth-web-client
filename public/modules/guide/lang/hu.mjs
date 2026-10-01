@@ -272,4 +272,11 @@ export default {
   hsCtxReport: 'Jelenti a moderátoroknak a játékos avatarját, ha sértő.',
   hsCtxKickban: 'Csak adminisztrátoroknak: kitiltja ezt a játékost a szerverről.',
   hsChip: 'A PokerTH zseton — koppints rá, és megpörög.',
+  installApp: 'Alkalmazás telepítése',
+  instNow: 'Telepítés most',
+  instWhy: 'Telepítve a PokerTH teljes képernyőn, saját ikonnal nyílik meg, azonnal elindul, a gyakorlómód pedig offline is működik.',
+  instPrompt: 'Koppints a „Telepítés most” gombra, és erősítsd meg: ennyi az egész.',
+  instIos: 'iPhone-on és iPaden: koppints a Megosztás gombra (felfelé mutató nyilas négyzet — újabb iOS-en a ⋯ menüben lehet), válaszd a „Főképernyőhöz adás” lehetőséget, majd a „Hozzáadás” gombot. Safariban működik, újabb iOS-en pedig Chrome-ban és Edge-ben is.',
+  instAndroid: 'Nyisd meg a böngésző menüjét (⋮ vagy ≡), válaszd az „Alkalmazás telepítése” vagy a „Hozzáadás a kezdőképernyőhöz” lehetőséget, majd erősítsd meg: az ikon a kezdőképernyőre kerül.',
+  instDesktop: 'Chrome-ban vagy Edge-ben: kattints a címsor jobb oldalán lévő telepítés ikonra, vagy a ⋮ / ⋯ menü → „Telepítés” (Edge: Alkalmazások → „Webhely telepítése alkalmazásként”). Safariban Macen: Fájl → „Hozzáadás a Dockhoz”. Más böngészők: keresd a menüben a „Telepítés” vagy a „Hozzáadás a kezdőképernyőhöz” lehetőséget.',
 };

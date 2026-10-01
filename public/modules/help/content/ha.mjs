@@ -38,7 +38,10 @@ export const help = {
           t: "Sanya a matsayin manhaja",
           b: [
             "Wannan abokin ciniki Progressive Web App ne: za ka iya sanya shi daga menu na burauzarka (ko maɓallin sanyawa a saman shafi) don samun manhaja ta cikakken allo mai alamarta. Da zarar an sanya shi, yana buɗewa nan take kuma yanayin horo yana aiki gaba ɗaya ba tare da intanet ba."],
-          note: "A Android da Chrome/Edge na kwamfuta, maɓallin sanyawa yana yin komai. A iPhone/iPad Apple yana ba da damar sanyawa ta Safari kawai: maɓallin Raba → “Ƙara zuwa Allon Gida” — abokin ciniki yana nuna waɗannan matakan idan ana buƙata. Maɓallin yana ɓacewa da zarar an sanya manhajar." },
+          list: ["Android (Chrome, Edge, Samsung Internet, Firefox): taɓa maɓallin sanyawa a saman shafi, ko buɗe menu na burauza (⋮ ko ≡) ka zaɓi “Sanya manhaja” ko “Ƙara zuwa allon gida”, sannan ka tabbatar.",
+            "iPhone / iPad: taɓa maɓallin Raba (murabba’i mai kibiya sama; a sabbin iOS yana iya kasancewa a menu na ⋯), zaɓi “Ƙara zuwa Allon Gida”, sannan “Ƙara”. Safari yana yin hakan; sabbin nau’ikan iOS suna ba da damar hakan daga Chrome da Edge ma.",
+            "Kwamfuta: a Chrome ko Edge, danna maɓallin sanyawa a saman shafi ko alamar sanyawa a dama na sandar adireshi (ko menu ⋮ / ⋯ → “Sanya”); a Safari a kan Mac: Fayil → “Ƙara zuwa Dock”."],
+          note: "Taimakon Aas yana nuna matakan na’urarka: taɓa Aas → “Sanya manhaja”. Maɓallin sanyawa da wannan shigarwar menu suna ɓacewa idan kana amfani da manhajar da aka sanya; daga nan, buɗe ta daga alamarta." },
         { id: "platforms",
           t: "Dandamali da burauzoji",
           b: [

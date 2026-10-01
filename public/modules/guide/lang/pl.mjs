@@ -272,4 +272,11 @@ export default {
   hsCtxReport: 'Zgłasza awatar tego gracza moderatorom, jeśli jest obraźliwy.',
   hsCtxKickban: 'Tylko dla administratorów: banuje tego gracza na serwerze.',
   hsChip: 'Żeton PokerTH — dotknij go, a zakręci się.',
+  installApp: 'Zainstaluj aplikację',
+  instNow: 'Zainstaluj teraz',
+  instWhy: 'Po instalacji PokerTH otwiera się na pełnym ekranie z własną ikoną, startuje natychmiast, a tryb treningowy działa offline.',
+  instPrompt: 'Dotknij „Zainstaluj teraz” i potwierdź: to wszystko.',
+  instIos: 'Na iPhonie i iPadzie: dotknij przycisku Udostępnij (kwadrat ze strzałką w górę — w nowszym iOS może być w menu ⋯), wybierz „Dodaj do ekranu początkowego”, potem „Dodaj”. Działa w Safari, a w nowszym iOS także w Chrome i Edge.',
+  instAndroid: 'Otwórz menu przeglądarki (⋮ lub ≡), wybierz „Zainstaluj aplikację” lub „Dodaj do ekranu głównego” i potwierdź: ikona trafi na twój ekran główny.',
+  instDesktop: 'W Chrome lub Edge: kliknij ikonę instalacji po prawej stronie paska adresu albo menu ⋮ / ⋯ → „Zainstaluj” (Edge: Aplikacje → „Zainstaluj tę witrynę jako aplikację”). W Safari na Macu: Plik → „Dodaj do Docka”. Inne przeglądarki: poszukaj w menu „Zainstaluj” lub „Dodaj do ekranu głównego”.',
 };

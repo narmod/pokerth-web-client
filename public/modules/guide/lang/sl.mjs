@@ -272,4 +272,11 @@ export default {
   hsCtxReport: 'Moderatorjem prijavi avatar tega igralca, če je žaljiv.',
   hsCtxKickban: 'Samo za skrbnike: prepove tega igralca na strežniku.',
   hsChip: 'Žeton PokerTH — tapni ga in se zavrti.',
+  installApp: 'Namesti aplikacijo',
+  instNow: 'Namesti zdaj',
+  instWhy: 'Ko je nameščen, se PokerTH odpre na celem zaslonu z lastno ikono, zažene se takoj, vadbeni način pa deluje brez povezave.',
+  instPrompt: 'Tapni „Namesti zdaj“ in potrdi: to je vse.',
+  instIos: 'Na iPhone in iPadu: tapni gumb Deli (kvadrat s puščico navzgor — v novejšem iOS je lahko v meniju ⋯), izberi „Dodaj na domači zaslon“ in nato „Dodaj“. Deluje v brskalniku Safari, v novejšem iOS pa tudi v brskalnikih Chrome in Edge.',
+  instAndroid: 'Odpri meni brskalnika (⋮ ali ≡), izberi „Namesti aplikacijo“ ali „Dodaj na domači zaslon“ in potrdi: ikona se znajde na tvojem domačem zaslonu.',
+  instDesktop: 'V brskalniku Chrome ali Edge: klikni ikono za namestitev na desni strani naslovne vrstice ali meni ⋮ / ⋯ → „Namesti“ (Edge: Aplikacije → „Namesti to spletno mesto kot aplikacijo“). V brskalniku Safari na računalniku Mac: Datoteka → „Dodaj v Dock“. V drugih brskalnikih poišči v meniju „Namesti“ ali „Dodaj na domači zaslon“.',
 };

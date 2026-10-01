@@ -272,4 +272,11 @@ export default {
   hsCtxReport: 'Bu oʻyinchining avatari nomaqbul boʻlsa, moderatorlarga xabar beradi.',
   hsCtxKickban: 'Faqat administratorlar uchun: bu oʻyinchini serverdan bloklaydi.',
   hsChip: 'PokerTH fishkasi — unga bosing, u aylanadi.',
+  installApp: 'Ilovani oʻrnatish',
+  instNow: 'Hozir oʻrnatish',
+  instWhy: 'Oʻrnatilgach, PokerTH oʻz belgisi bilan toʻliq ekranda ochiladi, bir zumda ishga tushadi va mashgʻulot rejimi oflayn ishlaydi.',
+  instPrompt: '“Hozir oʻrnatish” tugmasini bosing va tasdiqlang: hammasi shu.',
+  instIos: 'iPhone va iPad’da: Ulashish tugmasini bosing (yuqoriga strelkali kvadrat — yangi iOS’da u ⋯ menyusida boʻlishi mumkin), “Bosh ekranga qoʻshish” bandini tanlang, soʻng “Qoʻshish” ni bosing. U Safari’da, yangi iOS’da esa Chrome va Edge’da ham ishlaydi.',
+  instAndroid: 'Brauzer menyusini oching (⋮ yoki ≡), “Ilovani oʻrnatish” yoki “Bosh ekranga qoʻshish” bandini tanlang va tasdiqlang: belgi bosh ekraningizda paydo boʻladi.',
+  instDesktop: 'Chrome yoki Edge’da: manzil qatorining oʻng tomonidagi oʻrnatish belgisini bosing yoki ⋮ / ⋯ menyusi → “Oʻrnatish” (Edge: Ilovalar → “Bu saytni ilova sifatida oʻrnatish”). Mac’dagi Safari’da: Fayl → “Dock’ka qoʻshish”. Boshqa brauzerlarda menyuda “Oʻrnatish” yoki “Bosh ekranga qoʻshish” bandini qidiring.',
 };

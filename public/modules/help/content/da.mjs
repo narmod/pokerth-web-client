@@ -26,7 +26,10 @@ export const help = {
           b: ['Grænsefladen findes på 83 sprog. Skift det når som helst i Avancerede indstillinger (tandhjulsmenuen), kategorien Brugergrænseflade. Pokerens handlingstermer (Fold, Check, Call, Bet, Raise, All-In) forbliver på engelsk efter konventionen, nøjagtigt som i skrivebordsklienten.'] },
         { id: 'pwa', t: 'Installér som app',
           b: ['Denne klient er en Progressive Web App: du kan installere den fra browserens menu (eller installationsknappen i headeren) og få en fuldskærmsapp med sit eget ikon. Når den er installeret, starter den øjeblikkeligt, og træningstilstanden virker helt offline.'],
-          note: 'På Android og i Chrome/Edge til computer klarer installationsknappen det hele. På iPhone/iPad tillader Apple kun installation via Safari: Del-knappen \u2192 \u201cFøj til hjemmeskærm\u201d — klienten viser disse trin, når det er nødvendigt. Knappen forsvinder, når appen er installeret.' },
+          list: ["Android (Chrome, Edge, Samsung Internet, Firefox): tryk på installationsknappen i headeren, eller åbn browserens menu (⋮ eller ≡) og vælg “Installer app” eller “Føj til hjemmeskærm”, og bekræft.",
+            "iPhone / iPad: tryk på Del-knappen (en firkant med en pil op; på nyere iOS kan den ligge i ⋯-menuen), vælg “Føj til hjemmeskærm” og derefter “Tilføj”. Safari kan det; nyere iOS-versioner tillader det også fra Chrome og Edge.",
+            "Computer: i Chrome eller Edge klik på installationsknappen i headeren eller installationsikonet yderst til højre i adresselinjen (eller menuen ⋮ / ⋯ → “Installer”); i Safari på en Mac: Arkiv → “Føj til Dock”."],
+          note: "Essets hjælp viser trinnene til din enhed: tryk på esset → “Installer appen”. Installationsknappen og det menupunkt forsvinder, når du bruger den installerede app; åbn den derefter fra dens ikon." },
         { id: 'platforms', t: 'Platforme og browsere',
           b: ['Klienten kører i enhver moderne browser på ethvert system — Windows, macOS, Linux, Android, iOS. Nogle få funktioner afhænger af nyere browser-API\u2019er; når en API mangler, skjuler funktionen sig eller forklarer det i stedet for at gå i stykker. De vigtigste forskelle at kende:'],
           list: [

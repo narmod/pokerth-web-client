@@ -272,4 +272,11 @@ export default {
   hsCtxReport: 'Tilkynnir avatar þessa leikmanns til umsjónarmanna ef hann er móðgandi.',
   hsCtxKickban: 'Aðeins fyrir stjórnendur: bannar þennan leikmann af þjóninum.',
   hsChip: 'PokerTH-spilapeningurinn — ýttu á hann og hann snýst.',
+  installApp: 'Setja upp forritið',
+  instNow: 'Setja upp núna',
+  instWhy: 'Eftir uppsetningu opnast PokerTH á öllum skjánum með sitt eigið tákn, ræsist samstundis og æfingahamurinn virkar án nettengingar.',
+  instPrompt: 'Ýttu á „Setja upp núna“ og staðfestu: það er allt og sumt.',
+  instIos: 'Á iPhone og iPad: ýttu á deilihnappinn (ferningur með ör upp — í nýlegu iOS getur hann verið í ⋯ valmyndinni), veldu „Bæta við heimaskjá“ og síðan „Bæta við“. Þetta virkar í Safari og í nýlegu iOS einnig í Chrome og Edge.',
+  instAndroid: 'Opnaðu valmynd vafrans (⋮ eða ≡), veldu „Setja upp forrit“ eða „Bæta við heimaskjá“ og staðfestu: táknið birtist á heimaskjánum.',
+  instDesktop: 'Í Chrome eða Edge: smelltu á uppsetningartáknið hægra megin í veffangastikunni, eða valmynd ⋮ / ⋯ → „Setja upp“ (Edge: Forrit → „Setja þessa vefsíðu upp sem forrit“). Í Safari á Mac: Skrá → „Bæta við Dock“. Aðrir vafrar: leitaðu í valmyndinni að „Setja upp“ eða „Bæta við heimaskjá“.',
 };

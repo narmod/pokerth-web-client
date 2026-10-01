@@ -26,7 +26,10 @@ export const help = {
           b: ['Interfejs jest dostępny w 83 językach. Zmień go w każdej chwili w Opcjach zaawansowanych (menu z zębatką), kategoria Interfejs użytkownika. Pokerowe terminy akcji (Fold, Check, Call, Bet, Raise, All-In) pozostają po angielsku zgodnie z konwencją, dokładnie tak jak w kliencie desktopowym.'] },
         { id: 'pwa', t: 'Instalacja jako aplikacja',
           b: ['Ten klient to Progressive Web App: możesz go zainstalować z menu przeglądarki (lub przyciskiem instalacji w nagłówku), aby uzyskać pełnoekranową aplikację z własną ikoną. Po instalacji uruchamia się natychmiast, a tryb treningowy działa całkowicie offline.'],
-          note: 'Na Androidzie i w desktopowym Chrome/Edge przycisk instalacji robi wszystko. Na iPhonie/iPadzie Apple pozwala na instalację tylko przez Safari: przycisk Udostępnij \u2192 \u201eDo ekranu początkowego\u201d — klient pokazuje te kroki, gdy trzeba. Przycisk znika po zainstalowaniu aplikacji.' },
+          list: ["Android (Chrome, Edge, Samsung Internet, Firefox): dotknij przycisku instalacji w nagłówku albo otwórz menu przeglądarki (⋮ lub ≡) i wybierz „Zainstaluj aplikację” lub „Dodaj do ekranu głównego”, a następnie potwierdź.",
+            "iPhone / iPad: dotknij przycisku Udostępnij (kwadrat ze strzałką w górę; w nowszym iOS może być w menu ⋯), wybierz „Dodaj do ekranu początkowego”, potem „Dodaj”. Robi to Safari; nowsze wersje iOS pozwalają na to także w Chrome i Edge.",
+            "Komputer: w Chrome lub Edge kliknij przycisk instalacji w nagłówku albo ikonę instalacji po prawej stronie paska adresu (lub menu ⋮ / ⋯ → „Zainstaluj”); w Safari na Macu: Plik → „Dodaj do Docka”."],
+          note: "Pomoc Asa pokazuje kroki dla twojego urządzenia: dotknij Asa → „Zainstaluj aplikację”. Przycisk instalacji i ta pozycja menu znikają, gdy korzystasz z zainstalowanej aplikacji; od tej pory otwieraj ją z jej ikony." },
         { id: 'platforms', t: 'Platformy i przeglądarki',
           b: ['Klient działa w każdej nowoczesnej przeglądarce na każdym systemie — Windows, macOS, Linux, Android, iOS. Kilka funkcji opiera się na nowszych API przeglądarek; gdy API brakuje, funkcja ukrywa się lub wyjaśnia, zamiast się psuć. Najważniejsze różnice:'],
           list: [

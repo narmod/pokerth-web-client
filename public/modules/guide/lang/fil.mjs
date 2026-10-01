@@ -272,4 +272,11 @@ export default {
   hsCtxReport: 'Ini-report ang avatar ng manlalarong ito sa mga moderator kung nakakasakit ito.',
   hsCtxKickban: 'Para sa mga administrator lang: ibinabawal ang manlalarong ito sa server.',
   hsChip: 'Ang chip ng PokerTH — i-tap ito at iikot ito.',
+  installApp: 'I-install ang app',
+  instNow: 'I-install ngayon',
+  instWhy: 'Kapag naka-install, nagbubukas ang PokerTH nang full screen na may sariling icon, agad na nagsisimula, at gumagana offline ang training mode.',
+  instPrompt: 'I-tap ang “I-install ngayon” at kumpirmahin: tapos na.',
+  instIos: 'Sa iPhone at iPad: i-tap ang Share button (parisukat na may arrow na pataas — sa mga bagong iOS, maaaring nasa ⋯ menu ito), piliin ang “Add to Home Screen”, pagkatapos ay “Add”. Gumagana ito sa Safari, at sa mga bagong iOS, pati sa Chrome at Edge.',
+  instAndroid: 'Buksan ang menu ng browser mo (⋮ o ≡), piliin ang “Install app” o “Add to Home Screen”, pagkatapos ay kumpirmahin: mapupunta ang icon sa home screen mo.',
+  instDesktop: 'Sa Chrome o Edge: i-click ang install icon sa kanan ng address bar, o ang menu ⋮ / ⋯ → “Install” (Edge: Apps → “Install this site as an app”). Sa Safari sa Mac: File → “Add to Dock”. Sa ibang mga browser: hanapin sa menu ang “Install” o “Add to Home Screen”.',
 };

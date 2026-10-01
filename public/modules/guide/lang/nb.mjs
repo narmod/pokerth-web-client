@@ -272,4 +272,11 @@ export default {
   hsCtxReport: 'Melder avataren til denne spilleren til moderatorene hvis den er støtende.',
   hsCtxKickban: 'Kun for administratorer: utestenger denne spilleren fra serveren.',
   hsChip: 'PokerTH-sjetongen — trykk på den, så snurrer den.',
+  installApp: 'Installer appen',
+  instNow: 'Installer nå',
+  instWhy: 'Når PokerTH er installert, åpnes det i fullskjerm med eget ikon, starter umiddelbart, og treningsmodusen fungerer offline.',
+  instPrompt: 'Trykk på «Installer nå» og bekreft: det er alt.',
+  instIos: 'På iPhone og iPad: trykk på Del-knappen (en firkant med en pil opp — på nyere iOS kan den ligge i ⋯-menyen), velg «Legg til på Hjem-skjerm», og deretter «Legg til». Det fungerer i Safari, og på nyere iOS også i Chrome og Edge.',
+  instAndroid: 'Åpne nettlesermenyen (⋮ eller ≡), velg «Installer app» eller «Legg til på Hjem-skjerm», og bekreft: ikonet havner på Hjem-skjermen.',
+  instDesktop: 'I Chrome eller Edge: klikk på installeringsikonet til høyre i adressefeltet, eller meny ⋮ / ⋯ → «Installer» (Edge: Apper → «Installer dette nettstedet som en app»). I Safari på Mac: Arkiv → «Legg til i Dock». Andre nettlesere: se etter «Installer» eller «Legg til på Hjem-skjerm» i menyen.',
 };

@@ -28,7 +28,10 @@ export const help = {
           b: ['Vmesnik je na voljo v 83 jezikih. Spremeniš ga lahko kadar koli v Naprednih možnostih (meni z zobnikom) pod Uporabniški vmesnik. Pokrski izrazi za poteze (Fold, Check, Call, Bet, Raise, All-In) po dogovoru ostanejo v angleščini, tako kot pri namiznem odjemalcu.'] },
         { id: 'pwa', t: 'Namesti kot aplikacijo',
           b: ['Ta odjemalec je progresivna spletna aplikacija (PWA): namestiš jo lahko iz menija brskalnika (ali z gumbom za namestitev v glavi), da dobiš celozaslonsko aplikacijo z lastno ikono. Ko je nameščena, se zažene takoj, vadbeni način pa deluje popolnoma brez povezave.'],
-          note: 'Na Androidu in namiznih Chrome/Edge gumb za namestitev poskrbi za vse. Na iPhone/iPad Apple dovoljuje namestitev samo prek Safarija: gumb Deli → »Dodaj na domači zaslon« — odjemalec te korake prikaže, ko je potrebno. Gumb izgine, ko je aplikacija nameščena.' },
+          list: ["Android (Chrome, Edge, Samsung Internet, Firefox): tapni gumb za namestitev v glavi ali odpri meni brskalnika (⋮ ali ≡), izberi »Namesti aplikacijo« ali »Dodaj na domači zaslon« in potrdi.",
+            "iPhone / iPad: tapni gumb Deli (kvadrat s puščico navzgor; v novejšem iOS je lahko v meniju ⋯), izberi »Dodaj na domači zaslon« in nato »Dodaj«. To omogoča Safari; novejše različice iOS to omogočajo tudi iz brskalnikov Chrome in Edge.",
+            "Računalnik: v brskalniku Chrome ali Edge klikni gumb za namestitev v glavi ali ikono za namestitev na desni strani naslovne vrstice (ali meni ⋮ / ⋯ → »Namesti«); v brskalniku Safari na računalniku Mac: Datoteka → »Dodaj v Dock«."],
+          note: "Pomoč asa prikaže korake za tvojo napravo: tapni asa → »Namesti aplikacijo«. Gumb za namestitev in ta vnos v meniju izgineta, ko uporabljaš nameščeno aplikacijo; odtlej jo odpiraj z ikone." },
         { id: 'platforms', t: 'Platforme in brskalniki',
           b: ['Odjemalec deluje v vsakem sodobnem brskalniku na vsakem sistemu — Windows, macOS, Linux, Android, iOS. Nekatere funkcije se zanašajo na novejše API-je brskalnika; kadar API manjka, se funkcija skrije ali pojasni zakaj, namesto da bi se pokvarila. Glavne razlike, ki jih velja poznati:'],
           list: [

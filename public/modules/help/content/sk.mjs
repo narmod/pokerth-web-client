@@ -26,7 +26,10 @@ export const help = {
           b: ['Rozhranie je k dispozícii v 83 jazykoch. Kedykoľvek ho zmeníš v Pokročilých možnostiach (menu s ozubeným kolieskom), kategória Používateľské rozhranie. Pokrové akčné termíny (Fold, Check, Call, Bet, Raise, All-In) zostávajú podľa konvencie po anglicky, presne ako v desktopovom klientovi.'] },
         { id: 'pwa', t: 'Inštalácia ako aplikácia',
           b: ['Tento klient je Progressive Web App: môžeš ho nainštalovať z menu prehliadača (alebo tlačidlom inštalácie v hlavičke) a získať celoobrazovkovú aplikáciu s vlastnou ikonou. Po inštalácii sa spúšťa okamžite a tréningový režim funguje úplne offline.'],
-          note: 'Na Androide a v desktopovom Chrome/Edge zariadi všetko tlačidlo inštalácie. Na iPhone/iPade Apple povoľuje inštaláciu len cez Safari: tlačidlo Zdieľať \u2192 \u201ePridať na plochu\u201c — klient tieto kroky v prípade potreby zobrazí. Po inštalácii aplikácie tlačidlo zmizne.' },
+          list: ["Android (Chrome, Edge, Samsung Internet, Firefox): ťukni na tlačidlo inštalácie v hlavičke alebo otvor ponuku prehliadača (⋮ alebo ≡), vyber „Nainštalovať aplikáciu“ alebo „Pridať na plochu“ a potvrď.",
+            "iPhone / iPad: ťukni na tlačidlo Zdieľať (štvorec so šípkou nahor; na novšom iOS môže byť v ponuke ⋯), vyber „Pridať na plochu“ a potom „Pridať“. Funguje v Safari; novšie verzie iOS to umožňujú aj z Chrome a Edge.",
+            "Počítač: v Chrome alebo Edge klikni na tlačidlo inštalácie v hlavičke alebo na ikonu inštalácie vpravo v adresnom riadku (alebo ponuka ⋮ / ⋯ → „Nainštalovať“); v Safari na Macu: Súbor → „Pridať do Docku“."],
+          note: "Pomoc od esa ukáže kroky pre tvoje zariadenie: ťukni na eso → „Nainštalovať aplikáciu“. Tlačidlo inštalácie a táto položka ponuky zmiznú, keď používaš nainštalovanú aplikáciu; odvtedy ju otváraj z jej ikony." },
         { id: 'platforms', t: 'Platformy a prehliadače',
           b: ['Klient beží v každom modernom prehliadači na každom systéme — Windows, macOS, Linux, Android, iOS. Niekoľko funkcií sa spolieha na novšie API prehliadačov; keď API chýba, funkcia sa skryje alebo vysvetlí situáciu, namiesto toho, aby sa pokazila. Hlavné rozdiely, ktoré treba poznať:'],
           list: [

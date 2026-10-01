@@ -26,7 +26,10 @@ export const help = {
           b: ['Die Oberfläche ist in 83 Sprachen verfügbar. Ändere sie jederzeit in den Erweiterten Optionen (Zahnrad-Menü) unter Benutzeroberfläche. Die Poker-Aktionsbegriffe (Fold, Check, Call, Bet, Raise, All-In) bleiben per Konvention englisch, genau wie im Desktop-Client.'] },
         { id: 'pwa', t: 'Als App installieren',
           b: ['Dieser Client ist eine Progressive Web App: Du kannst ihn über das Browser-Menü (oder den Installieren-Knopf im Header) installieren und bekommst eine Vollbild-App mit eigenem Symbol. Einmal installiert startet sie sofort, und der Trainingsmodus funktioniert vollständig offline.'],
-          note: 'Auf Android und in Desktop-Chrome/Edge erledigt der Installieren-Knopf alles. Auf iPhone/iPad erlaubt Apple die Installation nur über Safari: Teilen-Knopf \u2192 \u201eZum Home-Bildschirm\u201c — der Client zeigt diese Schritte bei Bedarf an. Der Knopf verschwindet, sobald die App installiert ist.' },
+          list: ["Android (Chrome, Edge, Samsung Internet, Firefox): Tippe auf den Installieren-Knopf im Header, oder öffne das Browser-Menü (⋮ oder ≡) und wähle „App installieren“ oder „Zum Startbildschirm hinzufügen“, dann bestätige.",
+            "iPhone / iPad: Tippe auf den Teilen-Knopf (ein Quadrat mit Pfeil nach oben; bei neuerem iOS kann er im ⋯-Menü sein), wähle „Zum Home-Bildschirm“, dann „Hinzufügen“. Das geht in Safari; neuere iOS-Versionen erlauben es auch in Chrome und Edge.",
+            "Computer: Klicke in Chrome oder Edge auf den Installieren-Knopf im Header oder auf das Installieren-Symbol rechts in der Adressleiste (oder Menü ⋮ / ⋯ → „Installieren“); in Safari auf dem Mac: Ablage → „Zum Dock hinzufügen“."],
+          note: "Die Ass-Hilfe zeigt dir die Schritte für dein Gerät: Tippe auf das Ass → „App installieren“. Der Installieren-Knopf und dieser Menüeintrag verschwinden, sobald du die installierte App benutzt; öffne sie danach über ihr Symbol." },
         { id: 'platforms', t: 'Plattformen und Browser',
           b: ['Der Client läuft in jedem modernen Browser auf jedem System — Windows, macOS, Linux, Android, iOS. Einige Funktionen beruhen auf neueren Browser-APIs; fehlt eine API, blendet sich die Funktion aus oder erklärt sich, statt kaputtzugehen. Die wichtigsten Unterschiede:'],
           list: [

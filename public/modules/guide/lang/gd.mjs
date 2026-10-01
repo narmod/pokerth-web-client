@@ -272,4 +272,11 @@ export default {
   hsCtxReport: 'Aithrisidh e avatar a’ chluicheadair seo dha na maoir ma tha e oilbheumach.',
   hsCtxKickban: 'Rianadairean a-mhàin: toirmisgidh e an cluicheadair seo on fhrithealaiche.',
   hsChip: 'An t-sliseag PokerTH — thoir gnogag oirre agus tionndaidhidh i.',
+  installApp: 'Stàlaich an aplacaid',
+  instNow: 'Stàlaich a-nis',
+  instWhy: 'Às dèidh a stàladh, fosglaidh PokerTH làn-sgrìn le ìomhaigheag fhèin, tòisichidh e sa bhad, agus obraichidh am modh trèanaidh far-loidhne.',
+  instPrompt: 'Thoir gnogag air “Stàlaich a-nis” agus dearbh: sin e.',
+  instIos: 'Air iPhone is iPad: thoir gnogag air a’ phutan Co-roinn (ceàrnag le saighead suas — air iOS o chionn ghoirid, faodaidh e a bhith sa chlàr-taice ⋯), tagh “Cuir ris an sgrìn-dhachaigh”, an uair sin “Cuir ris”. Obraichidh e ann an Safari, agus air iOS o chionn ghoirid ann an Chrome is Edge cuideachd.',
+  instAndroid: 'Fosgail clàr-taice a’ bhrabhsair (⋮ no ≡), tagh “Stàlaich an aplacaid” no “Cuir ris an sgrìn-dhachaigh”, an uair sin dearbh: nochdaidh an ìomhaigheag air an sgrìn-dhachaigh agad.',
+  instDesktop: 'Ann an Chrome no Edge: briog air an ìomhaigheag stàlaidh air taobh deas bàr an t-seòlaidh, no clàr-taice ⋮ / ⋯ → “Stàlaich” (Edge: Aplacaidean → “Stàlaich an làrach seo mar aplacaid”). Ann an Safari air Mac: Faidhle → “Cuir ris an Dock”. Brabhsairean eile: lorg “Stàlaich” no “Cuir ris an sgrìn-dhachaigh” sa chlàr-taice.',
 };

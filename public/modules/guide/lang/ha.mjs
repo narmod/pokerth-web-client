@@ -272,4 +272,11 @@ export default {
   hsCtxReport: 'Yana kai rahoton avatar na wannan ɗan wasa ga masu kula idan yana da cin zarafi.',
   hsCtxKickban: 'Masu gudanarwa kawai: yana hana wannan ɗan wasa shiga uwar garken.',
   hsChip: 'Guntun PokerTH — taɓa shi sai ya juya.',
+  installApp: 'Sanya manhaja',
+  instNow: 'Sanya yanzu',
+  instWhy: 'Idan an sanya shi, PokerTH yana buɗewa a cikakken allo da alamarsa, yana farawa nan take, kuma yanayin horo yana aiki ba tare da intanet ba.',
+  instPrompt: 'Taɓa “Sanya yanzu” ka tabbatar: shi ke nan.',
+  instIos: 'A iPhone da iPad: taɓa maɓallin Raba (murabba’i mai kibiya sama — a sabbin iOS yana iya kasancewa a menu na ⋯), zaɓi “Ƙara zuwa Allon Gida”, sannan “Ƙara”. Yana aiki a Safari, kuma a sabbin iOS a Chrome da Edge ma.',
+  instAndroid: 'Buɗe menu na burauzarka (⋮ ko ≡), zaɓi “Sanya manhaja” ko “Ƙara zuwa allon gida”, sannan ka tabbatar: alamar za ta bayyana a allon gidanka.',
+  instDesktop: 'A Chrome ko Edge: danna alamar sanyawa a dama na sandar adireshi, ko menu ⋮ / ⋯ → “Sanya” (Edge: Manhajoji → “Sanya wannan shafin a matsayin manhaja”). A Safari a kan Mac: Fayil → “Ƙara zuwa Dock”. Sauran burauzoci: nemo “Sanya” ko “Ƙara zuwa Allon Gida” a menu.',
 };

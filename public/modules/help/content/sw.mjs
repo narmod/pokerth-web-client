@@ -28,7 +28,10 @@ export const help = {
           b: ['Kiolesura kinapatikana kwa lugha 83. Kibadilishe wakati wowote kwenye chaguo za kina (menyu ya gia) chini ya Kiolesura cha mtumiaji. Maneno ya hatua za poker (Fold, Check, Call, Bet, Raise, All-In) hubaki kwa Kiingereza kwa desturi, sawasawa na kiteja cha kompyuta.'] },
         { id: 'pwa', t: 'Sakinisha kama programu',
           b: ['Kiteja hiki ni Progressive Web App: unaweza kukisakinisha kutoka menyu ya kivinjari (au kitufe cha kusakinisha kwenye kichwa) ili kupata programu ya skrini nzima yenye ikoni yake. Baada ya kusakinishwa hufunguka mara moja na hali ya mazoezi hufanya kazi kikamilifu nje ya mtandao.'],
-          note: 'Kwenye Android na Chrome/Edge za kompyuta, kitufe cha kusakinisha hufanya yote. Kwenye iPhone/iPad, Apple huruhusu usakinishaji kupitia Safari pekee: kitufe cha Kushiriki \u2192 \u201cAdd to Home Screen\u201d \u2014 kiteja huonyesha hatua hizi inapohitajika. Kitufe hupotea programu ikishasakinishwa.' },
+          list: ["Android (Chrome, Edge, Samsung Internet, Firefox): gusa kitufe cha kusakinisha kwenye kichwa, au fungua menyu ya kivinjari (⋮ au ≡) na uchague “Install app” au “Add to Home Screen”, kisha thibitisha.",
+            "iPhone / iPad: gusa kitufe cha Kushiriki (mraba wenye mshale unaoelekea juu; kwenye iOS mpya kinaweza kuwa kwenye menyu ya ⋯), chagua “Add to Home Screen”, kisha “Add”. Safari hufanya hivyo; matoleo mapya ya iOS huruhusu pia kutoka Chrome na Edge.",
+            "Kompyuta: kwenye Chrome au Edge, bofya kitufe cha kusakinisha kwenye kichwa au ikoni ya kusakinisha upande wa kulia wa upau wa anwani (au menyu ⋮ / ⋯ → “Install”); kwenye Safari ya Mac: File → “Add to Dock”."],
+          note: "Msaada wa Ekaa huonyesha hatua za kifaa chako: gusa Ekaa → “Sakinisha programu”. Kitufe cha kusakinisha na kipengee hiki cha menyu hupotea unapotumia programu iliyosakinishwa; kuanzia hapo, ifungue kwa ikoni yake." },
         { id: 'platforms', t: 'Mifumo na vivinjari',
           b: ['Kiteja huendesha kwenye kivinjari chochote cha kisasa kwenye mfumo wowote \u2014 Windows, macOS, Linux, Android, iOS. Vipengele vichache hutegemea API mpya za vivinjari; API ikikosekana, kipengele hujificha au kueleza sababu badala ya kuvunjika. Tofauti kuu za kujua:'],
           list: [

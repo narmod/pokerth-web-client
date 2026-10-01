@@ -272,4 +272,11 @@ export default {
   hsCtxReport: '如果這位玩家的頭像不當，就向管理員檢舉。',
   hsCtxKickban: '只限管理員：將這位玩家從伺服器封鎖。',
   hsChip: 'PokerTH 籌碼 —— 輕按它就會旋轉。',
+  installApp: '安裝應用程式',
+  instNow: '立即安裝',
+  instWhy: '安裝後，PokerTH 會以全屏幕開啟並帶有自己的圖示，啟動更快，訓練模式還能離線使用。',
+  instPrompt: '輕按「立即安裝」並確認：就是這麼簡單。',
+  instIos: '在 iPhone 和 iPad 上：點按分享按鈕（帶向上箭嘴的方框——在較新的 iOS 上它可能位於 ⋯ 選單中），選擇「加入主畫面」，然後點按「加入」。它可在 Safari 使用，在較新的 iOS 上 Chrome 和 Edge 也可以。',
+  instAndroid: '開啟瀏覽器選單（⋮ 或 ≡），選擇「安裝應用程式」或「加至主畫面」，然後確認：圖示就會出現在你的主畫面上。',
+  instDesktop: '在 Chrome 或 Edge 中：點擊網址列右側的安裝圖示，或選單 ⋮ / ⋯ →「安裝」（Edge：應用程式 →「將此網站安裝為應用程式」）。在 Mac 的 Safari 中：檔案 →「加至 Dock」。其他瀏覽器：在選單裏找「安裝」或「加入主畫面」。',
 };

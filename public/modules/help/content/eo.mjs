@@ -38,7 +38,10 @@ export const help = {
           t: "Instali kiel aplikaĵon",
           b: [
             "Ĉi tiu kliento estas Progressive Web App: vi povas instali ĝin el la menuo de via retumilo (aŭ per la instala butono en la kaplinio) por akiri plenekranan aplikaĵon kun propra piktogramo. Post instalo ĝi lanĉiĝas tuj kaj la trejna reĝimo funkcias tute senkonekte."],
-          note: "Ĉe Android kaj labortablaj Chrome/Edge, la instala butono faras ĉion. Ĉe iPhone/iPad Apple permesas instaladon nur per Safari: butono Kunhavigi → “Aldoni al hejmekrano” — la kliento montras tiujn paŝojn kiam necese. La butono malaperas post instalo de la aplikaĵo." },
+          list: ["Android (Chrome, Edge, Samsung Internet, Firefox): tuŝetu la instalan butonon en la kaplinio, aŭ malfermu la menuon de la retumilo (⋮ aŭ ≡) kaj elektu “Instali la aplikaĵon” aŭ “Aldoni al hejmekrano”, poste konfirmu.",
+            "iPhone / iPad: tuŝetu la butonon Kunhavigi (kvadrato kun sago supren; ĉe novaj iOS-versioj ĝi povas troviĝi en la menuo ⋯), elektu “Aldoni al hejmekrano”, poste “Aldoni”. Safari kapablas tion; novaj iOS-versioj permesas tion ankaŭ el Chrome kaj Edge.",
+            "Komputilo: en Chrome aŭ Edge, alklaku la instalan butonon en la kaplinio aŭ la instalan piktogramon dekstre de la adresbreto (aŭ la menuon ⋮ / ⋯ → “Instali”); en Safari ĉe Mac: Dosiero → “Aldoni al Dock”."],
+          note: "La Helpo de la Aso montras la paŝojn por via aparato: tuŝetu la Ason → “Instali la aplikaĵon”. La instala butono kaj tiu menuero malaperas kiam vi uzas la instalitan aplikaĵon; de tiam malfermu ĝin per ĝia piktogramo." },
         { id: "platforms",
           t: "Platformoj kaj retumiloj",
           b: [

@@ -38,7 +38,10 @@ export const help = {
           t: "Setja upp sem forrit",
           b: [
             "Þessi biðlari er Progressive Web App: þú getur sett hann upp úr valmynd vafrans (eða með uppsetningarhnappinum í hausnum) og fengið forrit á öllum skjánum með eigin tákni. Eftir uppsetningu ræsist það samstundis og æfingahamurinn virkar alveg ótengt."],
-          note: "Á Android og í Chrome/Edge á tölvu sér uppsetningarhnappurinn um allt. Á iPhone/iPad leyfir Apple aðeins uppsetningu í gegnum Safari: deilihnappurinn → “Bæta við heimaskjá” — biðlarinn sýnir þessi skref þegar þarf. Hnappurinn hverfur þegar forritið hefur verið sett upp." },
+          list: ["Android (Chrome, Edge, Samsung Internet, Firefox): ýttu á uppsetningarhnappinn í hausnum eða opnaðu valmynd vafrans (⋮ eða ≡) og veldu “Setja upp forrit” eða “Bæta við heimaskjá” og staðfestu.",
+            "iPhone / iPad: ýttu á deilihnappinn (ferningur með ör upp; í nýlegu iOS getur hann verið í ⋯ valmyndinni), veldu “Bæta við heimaskjá” og síðan “Bæta við”. Safari getur þetta; nýlegar útgáfur iOS leyfa það líka úr Chrome og Edge.",
+            "Tölva: í Chrome eða Edge, smelltu á uppsetningarhnappinn í hausnum eða uppsetningartáknið hægra megin í veffangastikunni (eða valmynd ⋮ / ⋯ → “Setja upp”); í Safari á Mac: Skrá → “Bæta við Dock”."],
+          note: "Hjálp ássins sýnir skrefin fyrir tækið þitt: ýttu á ásinn → “Setja upp forritið”. Uppsetningarhnappurinn og þessi valmyndarlína hverfa þegar þú notar uppsetta forritið; opnaðu það héðan í frá með tákninu." },
         { id: "platforms",
           t: "Stýrikerfi og vafrar",
           b: [

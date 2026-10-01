@@ -272,4 +272,11 @@ export default {
   hsCtxReport: 'Tuairiscíonn sé avatar an imreora seo do na modhnóirí má tá sé maslach.',
   hsCtxKickban: 'Riarthóirí amháin: cuireann sé cosc ar an imreoir seo ón bhfreastalaí.',
   hsChip: 'Sceallóg PokerTH — tapáil í agus casfaidh sí.',
+  installApp: 'Suiteáil an aip',
+  instNow: 'Suiteáil anois',
+  instWhy: 'Nuair atá PokerTH suiteáilte, osclaíonn sé ar an scáileán iomlán lena dheilbhín féin, tosaíonn sé láithreach, agus oibríonn an mód cleachtaidh as líne.',
+  instPrompt: 'Tapáil “Suiteáil anois” agus deimhnigh: sin é.',
+  instIos: 'Ar iPhone agus iPad: tapáil an cnaipe Comhroinn (cearnóg le saighead suas — ar iOS le déanaí, d’fhéadfadh sé a bheith sa roghchlár ⋯), roghnaigh “Cuir leis an Scáileán Baile”, ansin “Cuir leis”. Oibríonn sé i Safari, agus ar iOS le déanaí i Chrome agus Edge freisin.',
+  instAndroid: 'Oscail roghchlár do bhrabhsálaí (⋮ nó ≡), roghnaigh “Suiteáil an aip” nó “Cuir leis an scáileán baile”, ansin deimhnigh: socróidh an deilbhín ar do scáileán baile.',
+  instDesktop: 'I Chrome nó in Edge: cliceáil an deilbhín suiteála ar dheis de bharra an tseolta, nó roghchlár ⋮ / ⋯ → “Suiteáil” (Edge: Aipeanna → “Suiteáil an suíomh seo mar aip”). I Safari ar Mac: Comhad → “Cuir leis an Dock”. Brabhsálaithe eile: lorg “Suiteáil” nó “Cuir leis an scáileán baile” sa roghchlár.',
 };

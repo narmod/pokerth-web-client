@@ -30,7 +30,10 @@ export const help = {
           b: ['The interface is available in 83 languages. Change it any time in Advanced options (gear menu) under User interface. Poker action terms (Fold, Check, Call, Bet, Raise, All-In) stay in English by convention, exactly like the desktop client.'] },
         { id: 'pwa', t: 'Install as an app',
           b: ['This client is a Progressive Web App: you can install it from your browser menu (or the install button in the header) to get a full-screen app with its own icon. Once installed it starts instantly and the training mode works fully offline.'],
-          note: 'On Android and desktop Chrome/Edge, the install button does everything. On iPhone/iPad, Apple only allows installation through Safari: Share button \u2192 \u201cAdd to Home Screen\u201d \u2014 the client shows these steps when needed. The button disappears once the app is installed.' },
+          list: ["Android (Chrome, Edge, Samsung Internet, Firefox): tap the install button in the header, or open the browser menu (⋮ or ≡) and choose “Install app” or “Add to Home screen”, then confirm.",
+            "iPhone / iPad: tap the Share button (a square with an arrow up; on recent iOS it may be in the ⋯ menu), choose “Add to Home Screen”, then “Add”. Safari does it; recent iOS versions also allow it from Chrome and Edge.",
+            "Computer: in Chrome or Edge, click the install button in the header or the install icon at the right of the address bar (or menu ⋮ / ⋯ → “Install”); in Safari on a Mac: File → “Add to Dock”."],
+          note: "Ace’s Help shows the steps for your device: tap the Ace → “Install the app”. The install button and that menu entry disappear when you use the installed app; from then on, open it from its icon." },
         { id: 'platforms', t: 'Platforms and browsers',
           b: ['The client runs in any modern browser on any system \u2014 Windows, macOS, Linux, Android, iOS. A few features rely on newer browser APIs; when an API is missing, the feature hides itself or explains why instead of breaking. The main differences to know:'],
           list: [

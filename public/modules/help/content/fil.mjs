@@ -28,7 +28,10 @@ export const help = {
           b: ['Available ang interface sa 83 wika. Palitan ito anumang oras sa Advanced options (gear menu) sa ilalim ng User interface. Ang mga terminong aksyon sa poker (Fold, Check, Call, Bet, Raise, All-In) ay nananatili sa Ingles ayon sa kaugalian, eksaktong tulad ng desktop client.'] },
         { id: 'pwa', t: 'I-install bilang app',
           b: ['Ang client na ito ay isang Progressive Web App: maaari mo itong i-install mula sa menu ng browser (o sa install button sa header) para makakuha ng full-screen app na may sariling icon. Kapag naka-install na, agad itong nagbubukas at ganap na gumagana offline ang training mode.'],
-          note: 'Sa Android at desktop Chrome/Edge, ginagawa lahat ng install button. Sa iPhone/iPad, pinapayagan lang ng Apple ang pag-install sa pamamagitan ng Safari: Share button \u2192 \u201cAdd to Home Screen\u201d \u2014 ipinapakita ng client ang mga hakbang na ito kapag kailangan. Nawawala ang button kapag naka-install na ang app.' },
+          list: ["Android (Chrome, Edge, Samsung Internet, Firefox): i-tap ang install button sa header, o buksan ang menu ng browser (⋮ o ≡) at piliin ang “Install app” o “Add to Home Screen”, pagkatapos ay kumpirmahin.",
+            "iPhone / iPad: i-tap ang Share button (parisukat na may arrow na pataas; sa mga bagong iOS, maaaring nasa ⋯ menu ito), piliin ang “Add to Home Screen”, pagkatapos ay “Add”. Gumagana ito sa Safari; pinapayagan din ito ng mga bagong bersyon ng iOS sa Chrome at Edge.",
+            "Computer: sa Chrome o Edge, i-click ang install button sa header o ang install icon sa kanan ng address bar (o ang menu ⋮ / ⋯ → “Install”); sa Safari sa Mac: File → “Add to Dock”."],
+          note: "Ipinapakita ng Tulong ng Alas ang mga hakbang para sa device mo: i-tap ang Alas → “I-install ang app”. Nawawala ang install button at ang menu entry na iyon kapag ginagamit mo na ang naka-install na app; mula noon, buksan ito gamit ang icon nito." },
         { id: 'platforms', t: 'Mga platform at browser',
           b: ['Tumatakbo ang client sa anumang modernong browser sa anumang sistema \u2014 Windows, macOS, Linux, Android, iOS. Ilang feature ang umaasa sa mas bagong browser API; kapag nawawala ang isang API, nagtatago ang feature o nagpapaliwanag kung bakit sa halip na masira. Ang mga pangunahing pagkakaiba:'],
           list: [

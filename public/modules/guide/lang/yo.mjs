@@ -272,4 +272,11 @@ export default {
   hsCtxReport: 'Ó ń ròyìn àwòrán àṣojú òṣèré yìí fún àwọn alábòójútó tí kò bá bójú mu.',
   hsCtxKickban: 'Fún àwọn alákòóso nìkan: ó ń dènà òṣèré yìí lórí olupin.',
   hsChip: 'Ṣípì PokerTH — tẹ̀ ẹ́ yóò sì yí po.',
+  installApp: 'Fi ìṣàfilọ́lẹ̀ sórí ẹ̀rọ',
+  instNow: 'Fi sórí ẹ̀rọ báyìí',
+  instWhy: 'Nígbà tí a bá ti fi sórí ẹ̀rọ, PokerTH ń ṣí ní ojú kíkún pẹ̀lú àmì tirẹ̀, ó ń bẹ̀rẹ̀ lójú ẹsẹ̀, ọ̀nà ìdánrawò sì ń ṣiṣẹ́ láìsí ayélujára.',
+  instPrompt: 'Tẹ “Fi sórí ẹ̀rọ báyìí” kí o sì jẹ́rìísí: ìyẹn ni gbogbo rẹ̀.',
+  instIos: 'Lórí iPhone àti iPad: tẹ bọ́tìnì Pín (onígun mẹ́rin pẹ̀lú ọfà tó ń tọ́ka sókè — lórí iOS tuntun ó lè wà nínú àkójọ ⋯), yan “Fi kún Ojú Ilé”, lẹ́yìn náà “Fi kún un”. Ó ń ṣiṣẹ́ nínú Safari, àti lórí iOS tuntun nínú Chrome àti Edge pẹ̀lú.',
+  instAndroid: 'Ṣí àkójọ aṣàwákiri rẹ (⋮ tàbí ≡), yan “Fi ìṣàfilọ́lẹ̀ sórí ẹ̀rọ” tàbí “Fi kún ojú ilé”, lẹ́yìn náà jẹ́rìísí: àmì náà yóò hàn lórí ojú ilé rẹ.',
+  instDesktop: 'Nínú Chrome tàbí Edge: tẹ àmì ìfisórí ní ọ̀tún ọ̀pá àdírẹ́sì, tàbí àkójọ ⋮ / ⋯ → “Fi sórí ẹ̀rọ” (Edge: Àwọn ìṣàfilọ́lẹ̀ → “Fi ojú-ìwé yìí sórí ẹ̀rọ gẹ́gẹ́ bí ìṣàfilọ́lẹ̀”). Nínú Safari lórí Mac: Fáìlì → “Fi kún Dock”. Àwọn aṣàwákiri míì: wá “Fi sórí ẹ̀rọ” tàbí “Fi kún ojú ilé” nínú àkójọ.',
 };

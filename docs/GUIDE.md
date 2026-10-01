@@ -333,6 +333,23 @@ music.
 
 Statistics: `ask.more` counts the taps on *More about it*.
 
+## Install the app, one Ace (`web.274`)
+
+**Install the app.** The Ace's menu gets « Install the app » (`installApp`), hidden when the
+client runs installed (`window.pwaInstalled`, from the PWA block of `pokerth.js`). He says
+`instWhy` and the steps for the device: `instIos` (iPhone / iPad, iPadOS seen as a Mac with
+touch), `instAndroid`, or `instDesktop` (Chrome / Edge, Safari on a Mac, other browsers). When
+the browser holds its own install prompt (`window.pwaCanPrompt()`), he says `instPrompt` and
+offers « Install now » (`instNow`, calls `pwaInstall()`). *More about it* opens `start:pwa`,
+which now lists the steps for Android, iPhone / iPad and a computer (83 corpora, es-419
+derived; RTL languages keep their ← in menu paths).
+
+**One Ace.** `dock()` is serialized (a promise chain), `undock()` bumps a generation that
+cancels a dock still waiting for the engine, and a stray `#ace-dock` is removed before a new
+one is appended. `npm run test:guide-dock` delays `engine.mjs` by 3 s, fires Help and « What's
+this? » during the first dock, and checks one Ace; it also walks the install entry on an
+iPhone, a Pixel and a desktop, and its absence in the installed app.
+
 ## The BBC section (`web.273`)
 
 A new help section, `pthnet:bbc` « The BBC (Best Brainies Cup) », sits after `cups` in the

@@ -26,7 +26,10 @@ export const help = {
           b: ['Käyttöliittymä on saatavilla 83 kielellä. Vaihda se milloin tahansa Lisäasetuksista (ratasvalikko), kohdasta Käyttöliittymä. Pokerin toimintotermit (Fold, Check, Call, Bet, Raise, All-In) pysyvät käytännön mukaan englanniksi, aivan kuten työpöytäasiakkaassa.'] },
         { id: 'pwa', t: 'Asenna sovellukseksi',
           b: ['Tämä asiakasohjelma on Progressive Web App: voit asentaa sen selaimen valikosta (tai yläpalkin asennuspainikkeesta) ja saada koko näytön sovelluksen omalla kuvakkeella. Asennuksen jälkeen se käynnistyy heti, ja harjoittelutila toimii täysin offline-tilassa.'],
-          note: 'Androidilla ja työpöydän Chromessa/Edgessä asennuspainike hoitaa kaiken. iPhonella/iPadilla Apple sallii asennuksen vain Safarin kautta: Jaa-painike \u2192 \u201dLisää Koti-valikkoon\u201d — asiakasohjelma näyttää nämä vaiheet tarvittaessa. Painike katoaa, kun sovellus on asennettu.' },
+          list: ["Android (Chrome, Edge, Samsung Internet, Firefox): napauta yläpalkin asennuspainiketta tai avaa selaimen valikko (⋮ tai ≡), valitse ”Asenna sovellus” tai ”Lisää aloitusnäyttöön” ja vahvista.",
+            "iPhone / iPad: napauta Jaa-painiketta (neliö ja ylöspäin osoittava nuoli; uudessa iOS:ssä se voi olla ⋯-valikossa), valitse ”Lisää Koti-valikkoon” ja sitten ”Lisää”. Safari hoitaa tämän; uudet iOS-versiot sallivat sen myös Chromesta ja Edgestä.",
+            "Tietokone: napsauta Chromessa tai Edgessä yläpalkin asennuspainiketta tai osoitepalkin oikeassa reunassa olevaa asennuskuvaketta (tai valikko ⋮ / ⋯ → ”Asenna”); Macin Safarissa: Arkisto → ”Lisää Dockiin”."],
+          note: "Ässän apu näyttää laitteesi vaiheet: napauta Ässää → ”Asenna sovellus”. Asennuspainike ja tämä valikkokohta katoavat, kun käytät asennettua sovellusta; avaa se tästä lähtien sen kuvakkeesta." },
         { id: 'platforms', t: 'Alustat ja selaimet',
           b: ['Asiakasohjelma toimii jokaisessa modernissa selaimessa kaikilla järjestelmillä — Windows, macOS, Linux, Android, iOS. Muutama ominaisuus nojaa uudempiin selain-API:hin; kun API puuttuu, ominaisuus piiloutuu tai selittää tilanteen sen sijaan että hajoaisi. Tärkeimmät erot:'],
           list: [

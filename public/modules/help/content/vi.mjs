@@ -26,7 +26,10 @@ export const help = {
           b: ['Giao diện có sẵn ở 83 ngôn ngữ. Hãy đổi bất cứ lúc nào trong Tùy chọn nâng cao (menu bánh răng), mục Giao diện người dùng. Các thuật ngữ hành động của poker (Fold, Check, Call, Bet, Raise, All-In) vẫn giữ tiếng Anh theo quy ước, đúng như ứng dụng máy tính để bàn.'] },
         { id: 'pwa', t: 'Cài đặt như một ứng dụng',
           b: ['Ứng dụng này là một Progressive Web App: bạn có thể cài từ menu của trình duyệt (hoặc nút cài đặt trên thanh tiêu đề) để có một ứng dụng toàn màn hình với biểu tượng riêng. Sau khi cài, nó khởi động tức thì và chế độ luyện tập chạy hoàn toàn ngoại tuyến.'],
-          note: 'Trên Android và Chrome/Edge máy tính, nút cài đặt lo hết mọi thứ. Trên iPhone/iPad, Apple chỉ cho phép cài qua Safari: nút Chia sẻ \u2192 \u201cThêm vào Màn hình chính\u201d — ứng dụng sẽ hiện các bước này khi cần. Nút biến mất ngay khi đã cài xong.' },
+          list: ["Android (Chrome, Edge, Samsung Internet, Firefox): chạm nút cài đặt trên thanh tiêu đề, hoặc mở menu trình duyệt (⋮ hoặc ≡) và chọn “Cài đặt ứng dụng” hoặc “Thêm vào Màn hình chính”, rồi xác nhận.",
+            "iPhone / iPad: chạm nút Chia sẻ (hình vuông có mũi tên hướng lên; trên iOS mới nó có thể nằm trong menu ⋯), chọn “Thêm vào Màn hình chính”, rồi “Thêm”. Safari làm được; các bản iOS mới cũng cho phép từ Chrome và Edge.",
+            "Máy tính: trong Chrome hoặc Edge, nhấp nút cài đặt trên thanh tiêu đề hoặc biểu tượng cài đặt ở bên phải thanh địa chỉ (hoặc menu ⋮ / ⋯ → “Cài đặt”); trong Safari trên Mac: Tệp → “Thêm vào Dock”."],
+          note: "Trợ giúp của quân Át hiển thị các bước cho thiết bị của bạn: chạm quân Át → “Cài đặt ứng dụng”. Nút cài đặt và mục menu đó biến mất khi bạn dùng ứng dụng đã cài; từ đó hãy mở ứng dụng từ biểu tượng của nó." },
         { id: 'platforms', t: 'Nền tảng và trình duyệt',
           b: ['Ứng dụng chạy trên mọi trình duyệt hiện đại, mọi hệ điều hành — Windows, macOS, Linux, Android, iOS. Vài tính năng phụ thuộc vào các API trình duyệt mới; khi thiếu một API, tính năng sẽ ẩn đi hoặc giải thích thay vì hỏng. Những khác biệt chính nên biết:'],
           list: [

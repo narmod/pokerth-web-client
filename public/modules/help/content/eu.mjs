@@ -38,7 +38,10 @@ export const help = {
           t: "Instalatu aplikazio gisa",
           b: [
             "Bezero hau Progressive Web App bat da: nabigatzailearen menutik (edo goiburuko instalatzeko botoitik) instala dezakezu eta pantaila osoko aplikazio bat izango duzu bere ikonoarekin. Instalatu ondoren, berehala abiarazten da eta entrenamendu-modua erabat lineaz kanpo dabil."],
-          note: "Android-en eta mahaigaineko Chrome/Edge-n instalatzeko botoiak dena egiten du. iPhone/iPad-en Apple-k Safariren bidez soilik baimentzen du instalazioa: Partekatu botoia → «Gehitu hasierako pantailan» — bezeroak urrats horiek erakusten ditu behar denean. Botoia desagertu egiten da aplikazioa instalatuta dagoenean." },
+          list: ["Android (Chrome, Edge, Samsung Internet, Firefox): sakatu goiburuko instalatzeko botoia, edo ireki nabigatzailearen menua (⋮ edo ≡) eta aukeratu «Instalatu aplikazioa» edo «Gehitu hasierako pantailan», gero berretsi.",
+            "iPhone / iPad: sakatu Partekatu botoia (gezi bat gora duen koadroa; iOS berrietan ⋯ menuan egon daiteke), aukeratu «Gehitu hasierako pantailan» eta gero «Gehitu». Safarik egiten du; iOS bertsio berriek Chrome eta Edge-tik ere onartzen dute.",
+            "Ordenagailua: Chrome edo Edge-n, egin klik goiburuko instalatzeko botoian edo helbide-barraren eskuinaldeko instalatzeko ikonoan (edo ⋮ / ⋯ menua → «Instalatu»); Mac-eko Safarin: Fitxategia → «Gehitu Dock-era»."],
+          note: "Batekoaren laguntzak zure gailuaren urratsak erakusten ditu: sakatu Batekoa → «Instalatu aplikazioa». Instalatzeko botoia eta menuko sarrera hori desagertu egiten dira instalatutako aplikazioa erabiltzen duzunean; ordutik aurrera, ireki ikonotik." },
         { id: "platforms",
           t: "Plataformak eta nabigatzaileak",
           b: [

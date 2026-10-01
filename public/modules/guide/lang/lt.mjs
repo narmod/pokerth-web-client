@@ -272,4 +272,11 @@ export default {
   hsCtxReport: 'Praneša moderatoriams apie šio žaidėjo avatarą, jei jis įžeidžiantis.',
   hsCtxKickban: 'Tik administratoriams: užblokuoja šį žaidėją serveryje.',
   hsChip: 'PokerTH žetonas — bakstelėk jį ir jis sukasi.',
+  installApp: 'Įdiegti programėlę',
+  instNow: 'Įdiegti dabar',
+  instWhy: 'Įdiegtas PokerTH atsidaro per visą ekraną su sava piktograma, paleidžiamas akimirksniu, o treniruotės režimas veikia be interneto.',
+  instPrompt: 'Bakstelėk „Įdiegti dabar“ ir patvirtink — viskas.',
+  instIos: 'iPhone ir iPad įrenginiuose: bakstelėk bendrinimo mygtuką (kvadratas su rodykle aukštyn — naujesnėje iOS jis gali būti meniu ⋯), pasirink „Pridėti į pradžios ekraną“, tada „Pridėti“. Tai veikia per Safari, o naujesnėje iOS — ir per Chrome bei Edge.',
+  instAndroid: 'Atverk naršyklės meniu (⋮ arba ≡), pasirink „Įdiegti programėlę“ arba „Pridėti į pradžios ekraną“ ir patvirtink: piktograma atsiras pradžios ekrane.',
+  instDesktop: 'Chrome ar Edge naršyklėje: spustelėk diegimo piktogramą adreso juostos dešinėje arba meniu ⋮ / ⋯ → „Įdiegti“ (Edge: Programos → „Įdiegti šią svetainę kaip programą“). Safari naršyklėje Mac kompiuteryje: Failas → „Pridėti prie Dock“. Kitos naršyklės: meniu ieškok „Įdiegti“ arba „Pridėti į pradžios ekraną“.',
 };

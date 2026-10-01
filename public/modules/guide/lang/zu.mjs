@@ -272,4 +272,11 @@ export default {
   hsCtxReport: 'Ibikela abaphathi i-avatar yalo mdlali uma ithuka.',
   hsCtxKickban: 'Abaphathi kuphela: ivimbela lo mdlali kuseva.',
   hsChip: 'Ishipi le-PokerTH — lithephe futhi liyajikeleza.',
+  installApp: 'Faka uhlelo',
+  instNow: 'Faka manje',
+  instWhy: 'Uma selifakiwe, i-PokerTH ivula isikrini esigcwele nesithonjana sayo, iqala ngokushesha, futhi imodi yokuziqeqesha isebenza ngaphandle kwe-inthanethi.',
+  instPrompt: 'Thepha “Faka manje” bese uqinisekisa: kuphelele lapho.',
+  instIos: 'Ku-iPhone nase-iPad: thepha inkinobho ethi Yabelana (isikwele esinomcibisholo oya phezulu — ku-iOS entsha kungase kube semenyu ethi ⋯), khetha “Engeza Esikrinini Sasekhaya”, bese “Engeza”. Isebenza ku-Safari, nakuba ku-iOS entsha ne-Chrome ne-Edge.',
+  instAndroid: 'Vula imenyu yesiphequluli sakho (⋮ noma ≡), khetha “Faka uhlelo” noma “Engeza esikrinini sasekhaya”, bese uqinisekisa: isithonjana sifika esikrinini sakho sasekhaya.',
+  instDesktop: 'Ku-Chrome noma ku-Edge: chofoza isithonjana sokufaka ngakwesokudla sebha yekheli, noma imenyu ⋮ / ⋯ → “Faka” (Edge: Izinhlelo zokusebenza → “Faka leli sayithi njengohlelo”). Ku-Safari ku-Mac: Ifayela → “Engeza ku-Dock”. Ezinye iziphequluli: funa “Faka” noma “Engeza Esikrinini Sasekhaya” kumenyu.',
 };

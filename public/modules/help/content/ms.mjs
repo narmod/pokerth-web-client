@@ -28,7 +28,10 @@ export const help = {
           b: ['Antarmuka tersedia dalam 83 bahasa. Ubah kapan saja di Opsi lanjutan (menu roda gigi) di bawah Antarmuka pengguna. Istilah aksi poker (Fold, Check, Call, Bet, Raise, All-In) tetap dalam bahasa Inggris sesuai konvensi, persis seperti klien desktop.'] },
         { id: 'pwa', t: 'Instal sebagai aplikasi',
           b: ['Klien ini adalah Progressive Web App: Anda dapat menginstalnya dari menu peskrin (atau tombol instal di kepala halaman) untuk mendapatkan aplikasi skrin penuh dengan ikonnya sendiri. Setelah terinstal, aplikasi langsung terbuka dan mode latihan berfungsi sepenuhnya offline.'],
-          note: 'Di Android dan Chrome/Edge desktop, tombol instal melakukan semuanya. Di iPhone/iPad, Apple hanya mengizinkan instalasi lewat Safari: tombol Bagikan \u2192 \u201cTambah ke Skrin Utama\u201d \u2014 klien menampilkan langkah-langkah ini saat diperlukan. Tombol hilang setelah aplikasi terinstal.' },
+          list: ["Android (Chrome, Edge, Samsung Internet, Firefox): ketik butang pasang di pengepala, atau buka menu pelayar (⋮ atau ≡) dan pilih “Pasang aplikasi” atau “Tambah ke skrin utama”, kemudian sahkan.",
+            "iPhone / iPad: ketik butang Kongsi (petak dengan anak panah ke atas; pada iOS terkini ia mungkin berada dalam menu ⋯), pilih “Tambah ke Skrin Utama”, kemudian “Tambah”. Safari boleh melakukannya; versi iOS terkini turut membenarkannya daripada Chrome dan Edge.",
+            "Komputer: dalam Chrome atau Edge, klik butang pasang di pengepala atau ikon pemasangan di sebelah kanan bar alamat (atau menu ⋮ / ⋯ → “Pasang”); dalam Safari pada Mac: Fail → “Tambah ke Dok”."],
+          note: "Bantuan si Sat menunjukkan langkah untuk peranti anda: ketik si Sat → “Pasang aplikasi”. Butang pasang dan entri menu ini hilang apabila anda menggunakan aplikasi yang telah dipasang; selepas itu, buka dari ikonnya." },
         { id: 'platforms', t: 'Platform dan peskrin',
           b: ['Klien berjalan di peskrin modern mana pun di sistem apa pun \u2014 Windows, macOS, Linux, Android, iOS. Beberapa fitur bergantung pada API peskrin yang lebih baru; saat sebuah API tidak ada, fiturnya menyembunyikan diri atau menjelaskan alasannya alih-alih rusak. Perbedaan utama yang perlu diketahui:'],
           list: [

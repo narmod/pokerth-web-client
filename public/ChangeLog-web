@@ -1,4 +1,8 @@
-2026-10-01 version 2.1.9-web.273 (current series):
+2026-10-01 version 2.1.9-web.274 (current series):
+- bugfix: Ace’s Help — the Ace could show up twice (two Aces at the bottom right) when a tip and a tap came while he was still loading
+- new: Ace’s Help — « Install the app » in his menu: the steps for your device (iPhone/iPad, Android, computer), « Install now » when the browser offers it; the help section « Install as an app » gives the steps for every platform
+
+2026-10-01 version 2.1.9-web.273:
 - new: help — a section on the BBC (Best Brainies Cup): the four steps and tickets, the daily times (Berlin time), registering and cancelling (20 minutes before), the requirements, the season points and score, restarts and results; Ace’s Help « ? » opens it from « Register for the BBC », the BBC preset and the BBC ranking tab
 
 2026-10-01 version 2.1.9-web.272:

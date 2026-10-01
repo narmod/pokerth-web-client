@@ -28,7 +28,10 @@ export const help = {
           b: ['Ndërfaqja është e disponueshme në 83 gjuhë. Ndryshoje kur të duash te Opsionet e avancuara (menyja me ingranazh) te Ndërfaqja e përdoruesit. Termat e veprimeve të pokerit (Fold, Check, Call, Bet, Raise, All-In) mbeten në anglisht sipas konventës, saktësisht si te klienti desktop.'] },
         { id: 'pwa', t: 'Instalo si aplikacion',
           b: ['Ky klient është një Progressive Web App: mund ta instalosh nga menyja e shfletuesit (ose butoni i instalimit në krye) për të pasur një aplikacion me ekran të plotë me ikonën e vet. Pasi të instalohet, hapet menjëherë dhe modaliteti i stërvitjes funksionon plotësisht offline.'],
-          note: 'Në Android dhe në Chrome/Edge desktop, butoni i instalimit bën gjithçka. Në iPhone/iPad, Apple lejon instalimin vetëm përmes Safari-t: butoni Shpërndaje → “Shto në ekranin fillestar” — klienti i tregon këto hapa kur nevojitet. Butoni zhduket sapo aplikacioni instalohet.' },
+          list: ["Android (Chrome, Edge, Samsung Internet, Firefox): prek butonin e instalimit në krye ose hap menynë e shfletuesit (⋮ ose ≡) dhe zgjidh “Instalo aplikacionin” ose “Shto në ekranin fillestar”, pastaj konfirmo.",
+            "iPhone / iPad: prek butonin Shpërndaje (një katror me shigjetë lart; në iOS-in e fundit mund të jetë në menynë ⋯), zgjidh “Shto në ekranin fillestar”, pastaj “Shto”. Safari e bën këtë; versionet e fundit të iOS e lejojnë edhe nga Chrome dhe Edge.",
+            "Kompjuter: në Chrome ose Edge, kliko butonin e instalimit në krye ose ikonën e instalimit në të djathtë të shiritit të adresës (ose menyja ⋮ / ⋯ → “Instalo”); në Safari në Mac: Skedari → “Shto te Dock”."],
+          note: "Ndihma e Asit tregon hapat për pajisjen tënde: prek Asin → “Instalo aplikacionin”. Butoni i instalimit dhe ky zë i menysë zhduken kur përdor aplikacionin e instaluar; nga ajo kohë e hap nga ikona e tij." },
         { id: 'platforms', t: 'Platformat dhe shfletuesit',
           b: ['Klienti funksionon në çdo shfletues modern në çdo sistem — Windows, macOS, Linux, Android, iOS. Disa funksione mbështeten te API-të më të reja të shfletuesit; kur një API mungon, funksioni fshihet ose shpjegon arsyen në vend që të prishet. Dallimet kryesore që duhen njohur:'],
           list: [

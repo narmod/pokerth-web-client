@@ -272,4 +272,11 @@ export default {
   hsCtxReport: 'Saldırgansa bu oyuncunun avatarını moderatörlere bildirir.',
   hsCtxKickban: 'Yalnızca yöneticiler için: bu oyuncuyu sunucudan yasaklar.',
   hsChip: 'PokerTH fişi — dokunursan döner.',
+  installApp: 'Uygulamayı yükle',
+  instNow: 'Şimdi yükle',
+  instWhy: 'Yüklendiğinde PokerTH kendi simgesiyle tam ekran açılır, anında başlar ve antrenman modu çevrimdışı çalışır.',
+  instPrompt: '“Şimdi yükle”ye dokun ve onayla: hepsi bu.',
+  instIos: 'iPhone ve iPad’de: Paylaş düğmesine dokun (yukarı oklu bir kare — yeni iOS’ta ⋯ menüsünde olabilir), “Ana Ekrana Ekle”yi seç, ardından “Ekle”ye dokun. Safari’de çalışır, yeni iOS’ta Chrome ve Edge’de de.',
+  instAndroid: 'Tarayıcı menünü aç (⋮ veya ≡), “Uygulamayı yükle” veya “Ana ekrana ekle”yi seç, sonra onayla: simge ana ekranına gelir.',
+  instDesktop: 'Chrome veya Edge’de: adres çubuğunun sağındaki yükleme simgesine tıkla ya da ⋮ / ⋯ menüsü → “Yükle” (Edge: Uygulamalar → “Bu siteyi uygulama olarak yükle”). Mac’te Safari’de: Dosya → “Dock’a Ekle”. Diğer tarayıcılar: menüde “Yükle” veya “Ana Ekrana Ekle” seçeneğine bak.',
 };

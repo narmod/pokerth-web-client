@@ -272,4 +272,11 @@ export default {
   hsCtxReport: 'Meldt de avatar van deze speler bij de moderators als hij aanstootgevend is.',
   hsCtxKickban: 'Alleen voor beheerders: verbant deze speler van de server.',
   hsChip: 'De PokerTH-chip — tik erop en hij draait.',
+  installApp: 'De app installeren',
+  instNow: 'Nu installeren',
+  instWhy: 'Eenmaal geïnstalleerd opent PokerTH schermvullend met een eigen pictogram, start het direct en werkt de trainingsmodus offline.',
+  instPrompt: 'Tik op “Nu installeren” en bevestig: dat is alles.',
+  instIos: 'Op iPhone en iPad: tik op de Deel-knop (een vierkant met een pijl omhoog — op recente iOS kan die in het ⋯-menu staan), kies “Zet op beginscherm” en daarna “Voeg toe”. Het werkt in Safari en op recente iOS ook in Chrome en Edge.',
+  instAndroid: 'Open het browsermenu (⋮ of ≡), kies “App installeren” of “Toevoegen aan startscherm” en bevestig: het pictogram verschijnt op je beginscherm.',
+  instDesktop: 'In Chrome of Edge: klik op het installatiepictogram rechts in de adresbalk, of menu ⋮ / ⋯ → “Installeren” (Edge: Apps → “Deze site als app installeren”). In Safari op een Mac: Archief → “Zet in Dock”. Andere browsers: zoek in het menu naar “Installeren” of “Toevoegen aan startscherm”.',
 };

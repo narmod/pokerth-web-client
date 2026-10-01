@@ -38,7 +38,10 @@ export const help = {
           t: "Faka njengohlelo",
           b: [
             "Leli klayenti liyi-Progressive Web App: ungalifaka usebenzisa imenyu yesiphequluli sakho (noma inkinobho yokufaka esihlokweni) ukuze uthole uhlelo lwesikrini esigcwele olunesithonjana salo. Uma selifakiwe, liqala ngokushesha futhi imodi yokuziqeqesha isebenza ngokuphelele ngaphandle kwe-inthanethi."],
-          note: "Ku-Android nase-Chrome/Edge yedeskithophu, inkinobho yokufaka yenza konke. Ku-iPhone/iPad i-Apple ivumela ukufaka nge-Safari kuphela: inkinobho ethi Yabelana → “Engeza Esikrinini Sasekhaya” — iklayenti likubonisa lezi zinyathelo lapho kudingeka. Inkinobho iyanyamalala uma uhlelo selufakiwe." },
+          list: ["Android (Chrome, Edge, Samsung Internet, Firefox): thepha inkinobho yokufaka esihlokweni, noma vula imenyu yesiphequluli (⋮ noma ≡) bese ukhetha “Faka uhlelo” noma “Engeza esikrinini sasekhaya”, bese uqinisekisa.",
+            "iPhone / iPad: thepha inkinobho ethi Yabelana (isikwele esinomcibisholo oya phezulu; ku-iOS entsha kungase kube semenyu ethi ⋯), khetha “Engeza Esikrinini Sasekhaya”, bese “Engeza”. I-Safari iyakwenza; izinguqulo ze-iOS ezintsha ziyakuvumela nase-Chrome ne-Edge.",
+            "Ikhompyutha: ku-Chrome noma ku-Edge, chofoza inkinobho yokufaka esihlokweni noma isithonjana sokufaka ngakwesokudla sebha yekheli (noma imenyu ⋮ / ⋯ → “Faka”); ku-Safari ku-Mac: Ifayela → “Engeza ku-Dock”."],
+          note: "Usizo luka-Ace lubonisa izinyathelo zedivayisi yakho: thepha i-Ace → “Faka uhlelo”. Inkinobho yokufaka nale nketho yemenyu kuyanyamalala lapho usebenzisa uhlelo olufakiwe; kusukela lapho, luvule esithonjaneni salo." },
         { id: "platforms",
           t: "Izinkundla neziphequluli",
           b: [

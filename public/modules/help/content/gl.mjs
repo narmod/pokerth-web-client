@@ -26,7 +26,10 @@ export const help = {
           b: ['A interface está dispoñible en 83 idiomas. Cámbiao cando queiras nas Opcións avanzadas (menú da engrenaxe), categoría Interface de usuario. Os termos de acción do póker (Fold, Check, Call, Bet, Raise, All-In) manteñen o inglés por convención, igual ca no cliente de escritorio.'] },
         { id: 'pwa', t: 'Instálao como aplicación',
           b: ['Este cliente é unha Progressive Web App: podes instalalo desde o menú do navegador (ou co botón de instalación da cabeceira) e obter unha aplicación a pantalla completa coa súa propia icona. Unha vez instalada, ábrese ao instante e o modo adestramento funciona totalmente sen conexión.'],
-          note: 'En Android e no Chrome/Edge de escritorio, o botón de instalación faino todo. No iPhone/iPad, Apple só permite a instalación a través de Safari: botón Compartir \u2192 \u00abEngadir á pantalla de inicio\u00bb — o cliente amosa estes pasos cando cómpre. O botón desaparece unha vez instalada a aplicación.' },
+          list: ["Android (Chrome, Edge, Samsung Internet, Firefox): toca o botón de instalación da cabeceira, ou abre o menú do navegador (⋮ ou ≡) e escolle «Instalar a app» ou «Engadir á pantalla de inicio», despois confirma.",
+            "iPhone / iPad: toca o botón Compartir (un cadrado cunha frecha cara arriba; en iOS recentes pode estar no menú ⋯), escolle «Engadir á pantalla de inicio» e despois «Engadir». Safari permíteo; as versións recentes de iOS tamén o permiten desde Chrome e Edge.",
+            "Ordenador: en Chrome ou Edge, fai clic no botón de instalación da cabeceira ou na icona de instalación á dereita da barra de enderezos (ou menú ⋮ / ⋯ → «Instalar»); en Safari nun Mac: Ficheiro → «Engadir ao Dock»."],
+          note: "A Axuda do Ás mostra os pasos para o teu dispositivo: toca o Ás → «Instalar a app». O botón de instalación e esa entrada do menú desaparecen cando usas a app instalada; a partir de aí, ábrea desde a súa icona." },
         { id: 'platforms', t: 'Plataformas e navegadores',
           b: ['O cliente funciona en calquera navegador moderno, en calquera sistema — Windows, macOS, Linux, Android, iOS. Algunhas funcións dependen de API de navegador recentes; cando falta unha API, a función agóchase ou explícase en vez de romper. As diferenzas principais que convén coñecer:'],
           list: [

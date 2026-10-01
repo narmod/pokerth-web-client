@@ -272,4 +272,11 @@ export default {
   hsCtxReport: 'Huwaripoti wasimamizi avatar ya mchezaji huyu ikiwa ina matusi.',
   hsCtxKickban: 'Kwa wasimamizi pekee: humzuia mchezaji huyu kwenye seva.',
   hsChip: 'Chipu ya PokerTH — iguse nayo huzunguka.',
+  installApp: 'Sakinisha programu',
+  instNow: 'Sakinisha sasa',
+  instWhy: 'Ikishasakinishwa, PokerTH hufunguka kwenye skrini nzima ikiwa na ikoni yake, huanza mara moja, na hali ya mazoezi hufanya kazi nje ya mtandao.',
+  instPrompt: 'Gusa “Sakinisha sasa” kisha thibitisha: ni hivyo tu.',
+  instIos: 'Kwenye iPhone na iPad: gusa kitufe cha Kushiriki (mraba wenye mshale unaoelekea juu — kwenye iOS mpya kinaweza kuwa kwenye menyu ya ⋯), chagua “Add to Home Screen”, kisha “Add”. Hufanya kazi kwenye Safari, na kwenye iOS mpya pia kwenye Chrome na Edge.',
+  instAndroid: 'Fungua menyu ya kivinjari chako (⋮ au ≡), chagua “Install app” au “Add to Home Screen”, kisha thibitisha: ikoni itaonekana kwenye skrini yako ya nyumbani.',
+  instDesktop: 'Kwenye Chrome au Edge: bofya ikoni ya kusakinisha upande wa kulia wa upau wa anwani, au menyu ⋮ / ⋯ → “Install” (Edge: Apps → “Install this site as an app”). Kwenye Safari ya Mac: File → “Add to Dock”. Vivinjari vingine: tafuta kwenye menyu “Install” au “Add to Home Screen”.',
 };

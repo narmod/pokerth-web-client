@@ -272,4 +272,11 @@ export default {
   hsCtxReport: 'Rapporteer hierdie speler se avatar aan die moderators as dit aanstootlik is.',
   hsCtxKickban: 'Net administrateurs: verban hierdie speler van die bediener.',
   hsChip: 'Die PokerTH-skyfie — tik daarop en dit draai.',
+  installApp: 'Installeer die toep',
+  instNow: 'Installeer nou',
+  instWhy: 'Wanneer dit geïnstalleer is, open PokerTH op volle skerm met sy eie ikoon, begin dit dadelik en werk die oefenmodus vanlyn.',
+  instPrompt: 'Tik „Installeer nou” en bevestig: dis al.',
+  instIos: 'Op iPhone en iPad: tik die Deel-knoppie (’n vierkant met ’n pyltjie op — op onlangse iOS kan dit in die ⋯-kieslys wees), kies „Voeg by tuisskerm”, dan „Voeg by”. Dit werk in Safari, en op onlangse iOS ook in Chrome en Edge.',
+  instAndroid: 'Maak jou blaaier se kieslys oop (⋮ of ≡), kies „Installeer app” of „Voeg by tuisskerm”, en bevestig: die ikoon verskyn op jou tuisskerm.',
+  instDesktop: 'In Chrome of Edge: klik op die installeerikoon regs van die adresbalk, of kieslys ⋮ / ⋯ → „Installeer” (Edge: Toepassings → „Installeer hierdie werf as ’n toep”). In Safari op ’n Mac: Lêer → „Voeg by Dock”. Ander blaaiers: soek in die kieslys na „Installeer” of „Voeg by tuisskerm”.',
 };

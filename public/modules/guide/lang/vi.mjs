@@ -272,4 +272,11 @@ export default {
   hsCtxReport: 'Báo cho ban quản trị ảnh đại diện của người chơi này nếu nó phản cảm.',
   hsCtxKickban: 'Chỉ dành cho quản trị viên: cấm người chơi này khỏi máy chủ.',
   hsChip: 'Chip PokerTH — chạm vào là nó xoay.',
+  installApp: 'Cài đặt ứng dụng',
+  instNow: 'Cài đặt ngay',
+  instWhy: 'Sau khi cài, PokerTH mở toàn màn hình với biểu tượng riêng, khởi động tức thì và chế độ luyện tập chạy được ngoại tuyến.',
+  instPrompt: 'Chạm “Cài đặt ngay” rồi xác nhận: vậy là xong.',
+  instIos: 'Trên iPhone và iPad: chạm nút Chia sẻ (hình vuông có mũi tên hướng lên — trên iOS mới nó có thể nằm trong menu ⋯), chọn “Thêm vào Màn hình chính”, rồi chạm “Thêm”. Cách này dùng được trong Safari, và trên iOS mới cả trong Chrome và Edge.',
+  instAndroid: 'Mở menu trình duyệt (⋮ hoặc ≡), chọn “Cài đặt ứng dụng” hoặc “Thêm vào Màn hình chính”, rồi xác nhận: biểu tượng sẽ xuất hiện trên màn hình chính của bạn.',
+  instDesktop: 'Trong Chrome hoặc Edge: nhấp biểu tượng cài đặt ở bên phải thanh địa chỉ, hoặc menu ⋮ / ⋯ → “Cài đặt” (Edge: Ứng dụng → “Cài đặt trang web này dưới dạng ứng dụng”). Trong Safari trên Mac: Tệp → “Thêm vào Dock”. Trình duyệt khác: tìm “Cài đặt” hoặc “Thêm vào Màn hình chính” trong menu.',
 };

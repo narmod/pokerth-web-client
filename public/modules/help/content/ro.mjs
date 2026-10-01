@@ -26,7 +26,10 @@ export const help = {
           b: ['Interfața este disponibilă în 83 de limbi. Schimb-o oricând în Opțiuni avansate (meniul cu rotiță), categoria Interfață utilizator. Termenii de acțiune din poker (Fold, Check, Call, Bet, Raise, All-In) rămân în engleză prin convenție, exact ca în clientul desktop.'] },
         { id: 'pwa', t: 'Instalează ca aplicație',
           b: ['Acest client este o Progressive Web App: o poți instala din meniul browserului (sau cu butonul de instalare din antet) și obții o aplicație pe tot ecranul, cu propria pictogramă. Odată instalată, pornește instantaneu, iar modul de antrenament funcționează complet offline.'],
-          note: 'Pe Android și în Chrome/Edge pe desktop, butonul de instalare face totul. Pe iPhone/iPad, Apple permite instalarea doar prin Safari: butonul Partajează \u2192 \u201eAdaugă la ecranul principal\u201d — clientul arată acești pași când e nevoie. Butonul dispare după ce aplicația e instalată.' },
+          list: ["Android (Chrome, Edge, Samsung Internet, Firefox): atinge butonul de instalare din antet sau deschide meniul browserului (⋮ sau ≡), alege „Instalează aplicația” sau „Adaugă la ecranul principal” și confirmă.",
+            "iPhone / iPad: atinge butonul Partajare (un pătrat cu o săgeată în sus; pe iOS recent poate fi în meniul ⋯), alege „Adaugă la ecranul principal”, apoi „Adaugă”. Safari o permite; versiunile recente de iOS o permit și din Chrome și Edge.",
+            "Computer: în Chrome sau Edge, dă clic pe butonul de instalare din antet sau pe pictograma de instalare din dreapta barei de adrese (sau meniul ⋮ / ⋯ → „Instalează”); în Safari pe Mac: Fișier → „Adaugă în Dock”."],
+          note: "Ajutorul Asului arată pașii pentru dispozitivul tău: atinge Asul → „Instalează aplicația”. Butonul de instalare și această intrare din meniu dispar când folosești aplicația instalată; de atunci, deschide-o din pictogramă." },
         { id: 'platforms', t: 'Platforme și browsere',
           b: ['Clientul rulează în orice browser modern, pe orice sistem — Windows, macOS, Linux, Android, iOS. Câteva funcții depind de API-uri de browser mai noi; când un API lipsește, funcția se ascunde sau explică situația, în loc să se strice. Principalele diferențe de știut:'],
           list: [

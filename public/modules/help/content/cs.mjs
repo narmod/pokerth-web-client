@@ -25,7 +25,10 @@ export const help = {
           b: ['Rozhraní je k dispozici ve 83 jazycích. Kdykoli ho změníš v Pokročilých možnostech (menu s ozubeným kolem), kategorie Uživatelské rozhraní. Pokerové akční termíny (Fold, Check, Call, Bet, Raise, All-In) zůstávají podle konvence anglicky, přesně jako v desktopovém klientu.'] },
         { id: 'pwa', t: 'Instalace jako aplikace',
           b: ['Tento klient je Progressive Web App: můžeš ho nainstalovat z menu prohlížeče (nebo tlačítkem instalace v záhlaví) a získat celoobrazovkovou aplikaci s vlastní ikonou. Po instalaci startuje okamžitě a tréninkový režim funguje zcela offline.'],
-          note: 'Na Androidu a v desktopovém Chrome/Edge zařídí vše tlačítko instalace. Na iPhonu/iPadu Apple povoluje instalaci jen přes Safari: tlačítko Sdílet \u2192 \u201ePřidat na plochu\u201c — klient tyto kroky v případě potřeby zobrazí. Po instalaci aplikace tlačítko zmizí.' },
+          list: ["Android (Chrome, Edge, Samsung Internet, Firefox): klepni na tlačítko instalace v záhlaví, nebo otevři nabídku prohlížeče (⋮ nebo ≡) a vyber „Nainstalovat aplikaci“ nebo „Přidat na plochu“, pak potvrď.",
+            "iPhone / iPad: klepni na tlačítko Sdílet (čtverec se šipkou nahoru; v novějším iOS může být v nabídce ⋯), vyber „Přidat na plochu“ a pak „Přidat“. Zvládne to Safari; novější verze iOS to umožňují i z Chrome a Edge.",
+            "Počítač: v Chrome nebo Edge klikni na tlačítko instalace v záhlaví nebo na ikonu instalace vpravo v adresním řádku (nebo nabídka ⋮ / ⋯ → „Nainstalovat“); v Safari na Macu: Soubor → „Přidat do Docku“."],
+          note: "Nápověda od esa ukáže kroky pro tvé zařízení: klepni na eso → „Nainstalovat aplikaci“. Tlačítko instalace i tato položka nabídky zmizí, když používáš nainstalovanou aplikaci; odtud ji otevírej z její ikony." },
         { id: 'platforms', t: 'Platformy a prohlížeče',
           b: ['Klient běží v každém moderním prohlížeči na každém systému — Windows, macOS, Linux, Android, iOS. Několik funkcí spoléhá na novější API prohlížečů; když API chybí, funkce se schová nebo vysvětlí, místo aby se rozbila. Hlavní rozdíly, které stojí za to znát:'],
           list: [

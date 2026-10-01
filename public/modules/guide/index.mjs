@@ -386,9 +386,11 @@ async function showMenu() {
   const tip = canSpeak(Object.assign({}, w, { helpOn: true })) ? replayContext(w, CONTEXTS) : null;
   const list = [btn('moreHelp'), btn('askMenu')];
   if (tip) list.push(btn('replayTip'));
+  if (!appInstalled()) list.push(btn('installApp'));
   list.push(btn('turnOff'), btn('resetTips'), btn('close', true));
   await note('menuOn', list, (id) => {
     if (id === 'moreHelp') { openMoreHelp(); return; }
+    if (id === 'installApp') { showInstall(); return; }
     if (id === 'replayTip' && tip) { snoozed.delete(tip.id); showContext(tip); return; }
     if (id === 'askMenu' || id === 'ask') { enterAsk(); return; }
     if (id === 'turnOff') { turnOff(); return; }
@@ -396,6 +398,37 @@ async function showMenu() {
     closeBubble();
   });
   showing.kind = 'menu';
+}
+
+// ── Install the app (web.274) ──────────────────────────────────────
+// « Install the app » in his menu (hidden once the app runs installed): the
+// steps for this device, « Install now » when the browser offers its own
+// prompt (pokerth.js window.pwaCanPrompt), and the help section start:pwa.
+function appInstalled() {
+  try { if (typeof window.pwaInstalled === 'function') return !!window.pwaInstalled(); } catch (e) {}
+  try { return navigator.standalone === true || matchMedia('(display-mode: standalone)').matches; } catch (e) { return false; }
+}
+/** The steps that fit this device: 'instIos', 'instAndroid' or 'instDesktop'. */
+function installKey(ua, touch) {
+  ua = String(ua || '');
+  if (/iP(hone|ad|od)/.test(ua) || (/Macintosh/.test(ua) && touch > 1)) return 'instIos';
+  if (/Android/.test(ua)) return 'instAndroid';
+  return 'instDesktop';
+}
+async function showInstall() {
+  let prompt = false;
+  try { prompt = typeof window.pwaCanPrompt === 'function' && !!window.pwaCanPrompt(); } catch (e) {}
+  const key = prompt ? 'instPrompt' : installKey(navigator.userAgent, navigator.maxTouchPoints || 0);
+  const buttons = prompt ? [btn('instNow', true), btn('moreAbout'), btn('close')] : [btn('moreAbout'), btn('close', true)];
+  const m = await ensureDock();
+  clearTimers();
+  hl.clear();
+  showing = { kind: 'note' };
+  m.say({ text: gt('instWhy') + ' ' + gt(key), buttons, onButton: (id) => {
+    if (id === 'instNow') { closeBubble(); try { window.pwaInstall(); } catch (e) {} return; }
+    if (id === 'moreAbout') { openMoreHelp({ ch: 'start', sec: 'pwa' }); return; }
+    closeBubble();
+  } });
 }
 
 // ── « ? » mode (C6) ────────────────────────────────────────────────

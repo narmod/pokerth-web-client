@@ -28,7 +28,10 @@ export const help = {
           b: ['Antarmuka tersedia dalam 83 bahasa. Ubah kapan saja di Opsi lanjutan (menu roda gigi) di bawah Antarmuka pengguna. Istilah aksi poker (Fold, Check, Call, Bet, Raise, All-In) tetap dalam bahasa Inggris sesuai konvensi, persis seperti klien desktop.'] },
         { id: 'pwa', t: 'Instal sebagai aplikasi',
           b: ['Klien ini adalah Progressive Web App: Anda dapat menginstalnya dari menu peramban (atau tombol instal di kepala halaman) untuk mendapatkan aplikasi layar penuh dengan ikonnya sendiri. Setelah terinstal, aplikasi langsung terbuka dan mode latihan berfungsi sepenuhnya offline.'],
-          note: 'Di Android dan Chrome/Edge desktop, tombol instal melakukan semuanya. Di iPhone/iPad, Apple hanya mengizinkan instalasi lewat Safari: tombol Bagikan \u2192 \u201cTambah ke Layar Utama\u201d \u2014 klien menampilkan langkah-langkah ini saat diperlukan. Tombol hilang setelah aplikasi terinstal.' },
+          list: ["Android (Chrome, Edge, Samsung Internet, Firefox): ketuk tombol instal di kepala halaman, atau buka menu peramban (⋮ atau ≡) dan pilih “Instal aplikasi” atau “Tambahkan ke Layar utama”, lalu konfirmasi.",
+            "iPhone / iPad: ketuk tombol Bagikan (kotak dengan panah ke atas; di iOS terbaru bisa ada di menu ⋯), pilih “Tambah ke Layar Utama”, lalu “Tambah”. Safari bisa melakukannya; iOS terbaru juga mengizinkannya dari Chrome dan Edge.",
+            "Komputer: di Chrome atau Edge, klik tombol instal di kepala halaman atau ikon instal di sisi kanan bilah alamat (atau menu ⋮ / ⋯ → “Instal”); di Safari pada Mac: Berkas → “Tambahkan ke Dock”."],
+          note: "Bantuan si As menampilkan langkah untuk perangkat Anda: ketuk si As → “Instal aplikasi”. Tombol instal dan menu itu hilang saat Anda memakai aplikasi yang sudah terinstal; selanjutnya, buka dari ikonnya." },
         { id: 'platforms', t: 'Platform dan peramban',
           b: ['Klien berjalan di peramban modern mana pun di sistem apa pun \u2014 Windows, macOS, Linux, Android, iOS. Beberapa fitur bergantung pada API peramban yang lebih baru; saat sebuah API tidak ada, fiturnya menyembunyikan diri atau menjelaskan alasannya alih-alih rusak. Perbedaan utama yang perlu diketahui:'],
           list: [

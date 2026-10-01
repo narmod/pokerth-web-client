@@ -26,7 +26,10 @@ export const help = {
           b: ['Gränssnittet finns på 83 språk. Byt när som helst i Avancerade inställningar (kugghjulsmenyn), kategorin Användargränssnitt. Pokerns handlingstermer (Fold, Check, Call, Bet, Raise, All-In) förblir på engelska enligt konventionen, precis som i skrivbordsklienten.'] },
         { id: 'pwa', t: 'Installera som app',
           b: ['Den här klienten är en Progressive Web App: du kan installera den från webbläsarens meny (eller installationsknappen i sidhuvudet) och få en helskärmsapp med egen ikon. När den är installerad startar den direkt, och träningsläget fungerar helt offline.'],
-          note: 'På Android och i Chrome/Edge på dator sköter installationsknappen allt. På iPhone/iPad tillåter Apple installation endast via Safari: Dela-knappen \u2192 \u201dLägg till på hemskärmen\u201d — klienten visar dessa steg när det behövs. Knappen försvinner när appen är installerad.' },
+          list: ["Android (Chrome, Edge, Samsung Internet, Firefox): tryck på installationsknappen i sidhuvudet, eller öppna webbläsarens meny (⋮ eller ≡) och välj ”Installera app” eller ”Lägg till på startskärmen” och bekräfta.",
+            "iPhone / iPad: tryck på Dela-knappen (en ruta med en pil uppåt; på nyare iOS kan den finnas i ⋯-menyn), välj ”Lägg till på hemskärmen” och sedan ”Lägg till”. Det går i Safari; nyare iOS-versioner tillåter det även från Chrome och Edge.",
+            "Dator: i Chrome eller Edge, klicka på installationsknappen i sidhuvudet eller på installationsikonen till höger i adressfältet (eller menyn ⋮ / ⋯ → ”Installera”); i Safari på en Mac: Arkiv → ”Lägg till i Dock”."],
+          note: "Essets hjälp visar stegen för din enhet: tryck på Esset → ”Installera appen”. Installationsknappen och den här menyposten försvinner när du använder den installerade appen; därefter öppnar du den från ikonen." },
         { id: 'platforms', t: 'Plattformar och webbläsare',
           b: ['Klienten körs i alla moderna webbläsare på alla system — Windows, macOS, Linux, Android, iOS. Några funktioner beror på nyare webbläsar-API:er; när ett API saknas döljer sig funktionen eller förklarar läget i stället för att gå sönder. De viktigaste skillnaderna att känna till:'],
           list: [

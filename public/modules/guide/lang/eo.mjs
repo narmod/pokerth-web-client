@@ -272,4 +272,11 @@ export default {
   hsCtxReport: 'Raportas la avataron de ĉi tiu ludanto al la moderigantoj, se ĝi estas ofenda.',
   hsCtxKickban: 'Nur por administrantoj: forbaras ĉi tiun ludanton de la servilo.',
   hsChip: 'La PokerTH-ĵetono — tuŝetu ĝin kaj ĝi turniĝas.',
+  installApp: 'Instali la aplikaĵon',
+  instNow: 'Instali nun',
+  instWhy: 'Instalita, PokerTH malfermiĝas plenekrane kun propra piktogramo, lanĉiĝas tuj, kaj la trejna reĝimo funkcias senkonekte.',
+  instPrompt: 'Tuŝetu “Instali nun” kaj konfirmu: jen ĉio.',
+  instIos: 'Ĉe iPhone kaj iPad: tuŝetu la butonon Kunhavigi (kvadrato kun sago supren — ĉe novaj iOS-versioj ĝi povas troviĝi en la menuo ⋯), elektu “Aldoni al hejmekrano”, poste “Aldoni”. Ĝi funkcias en Safari, kaj ĉe novaj iOS-versioj ankaŭ en Chrome kaj Edge.',
+  instAndroid: 'Malfermu la menuon de via retumilo (⋮ aŭ ≡), elektu “Instali la aplikaĵon” aŭ “Aldoni al hejmekrano”, poste konfirmu: la piktogramo aperos sur via hejmekrano.',
+  instDesktop: 'En Chrome aŭ Edge: alklaku la instalan piktogramon dekstre de la adresbreto, aŭ la menuon ⋮ / ⋯ → “Instali” (Edge: Aplikaĵoj → “Instali ĉi tiun retejon kiel aplikaĵon”). En Safari ĉe Mac: Dosiero → “Aldoni al Dock”. Aliaj retumiloj: serĉu en la menuo “Instali” aŭ “Aldoni al hejmekrano”.',
 };

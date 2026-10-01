@@ -272,4 +272,11 @@ export default {
   hsCtxReport: 'Ilmoittaa tämän pelaajan avatarin valvojille, jos se on loukkaava.',
   hsCtxKickban: 'Vain ylläpitäjille: estää tämän pelaajan palvelimelta.',
   hsChip: 'PokerTH-pelimerkki — napauta sitä, niin se pyörii.',
+  installApp: 'Asenna sovellus',
+  instNow: 'Asenna nyt',
+  instWhy: 'Asennettuna PokerTH avautuu koko näytölle omalla kuvakkeellaan, käynnistyy heti ja harjoittelutila toimii offline-tilassa.',
+  instPrompt: 'Napauta ”Asenna nyt” ja vahvista: siinä kaikki.',
+  instIos: 'iPhonessa ja iPadissa: napauta Jaa-painiketta (neliö ja ylöspäin osoittava nuoli; uudessa iOS:ssä se voi olla ⋯-valikossa), valitse ”Lisää Koti-valikkoon” ja sitten ”Lisää”. Se toimii Safarissa ja uudessa iOS:ssä myös Chromessa ja Edgessä.',
+  instAndroid: 'Avaa selaimen valikko (⋮ tai ≡), valitse ”Asenna sovellus” tai ”Lisää aloitusnäyttöön” ja vahvista: kuvake ilmestyy aloitusnäytölle.',
+  instDesktop: 'Chromessa tai Edgessä: napsauta osoitepalkin oikeassa reunassa olevaa asennuskuvaketta tai valitse valikko ⋮ / ⋯ → ”Asenna” (Edge: Sovellukset → ”Asenna tämä sivusto sovellukseksi”). Macin Safarissa: Arkisto → ”Lisää Dockiin”. Muut selaimet: etsi valikosta ”Asenna” tai ”Lisää aloitusnäyttöön”.',
 };

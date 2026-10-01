@@ -26,7 +26,10 @@ export const help = {
           b: ['Arayüz 83 dilde mevcut. İstediğin an Gelişmiş seçeneklerden (dişli menüsü), Kullanıcı arayüzü kategorisinden değiştirebilirsin. Poker aksiyon terimleri (Fold, Check, Call, Bet, Raise, All-In) gelenek gereği İngilizce kalır — masaüstü istemcideki gibi.'] },
         { id: 'pwa', t: 'Uygulama olarak yükleme',
           b: ['Bu istemci bir Progressive Web App: tarayıcı menüsünden (veya başlıktaki yükleme düğmesinden) yükleyerek kendi simgesi olan tam ekran bir uygulama elde edebilirsin. Yüklendikten sonra anında açılır ve antrenman modu tamamen çevrimdışı çalışır.'],
-          note: 'Android\u2019de ve masaüstü Chrome/Edge\u2019de yükleme düğmesi her şeyi halleder. iPhone/iPad\u2019de Apple, yüklemeye yalnızca Safari üzerinden izin verir: Paylaş düğmesi \u2192 \u201cAna Ekrana Ekle\u201d — gerektiğinde istemci bu adımları gösterir. Uygulama yüklendikten sonra düğme kaybolur.' },
+          list: ["Android (Chrome, Edge, Samsung Internet, Firefox): başlıktaki yükleme düğmesine dokun ya da tarayıcı menüsünü (⋮ veya ≡) açıp “Uygulamayı yükle” veya “Ana ekrana ekle”yi seç, sonra onayla.",
+            "iPhone / iPad: Paylaş düğmesine dokun (yukarı oklu bir kare; yeni iOS’ta ⋯ menüsünde olabilir), “Ana Ekrana Ekle”yi, ardından “Ekle”yi seç. Safari bunu yapar; yeni iOS sürümleri Chrome ve Edge’den de izin verir.",
+            "Bilgisayar: Chrome veya Edge’de başlıktaki yükleme düğmesine ya da adres çubuğunun sağındaki yükleme simgesine tıkla (veya ⋮ / ⋯ menüsü → “Yükle”); Mac’te Safari’de: Dosya → “Dock’a Ekle”."],
+          note: "As’ın yardımı cihazın için adımları gösterir: As’a dokun → “Uygulamayı yükle”. Yüklü uygulamayı kullandığında yükleme düğmesi ve bu menü öğesi kaybolur; o andan sonra uygulamayı simgesinden aç." },
         { id: 'platforms', t: 'Platformlar ve tarayıcılar',
           b: ['İstemci her sistemdeki her modern tarayıcıda çalışır — Windows, macOS, Linux, Android, iOS. Birkaç özellik yeni tarayıcı API\u2019lerine dayanır; bir API yoksa özellik bozulmak yerine gizlenir ya da durumu açıklar. Bilinmesi gereken başlıca farklar:'],
           list: [

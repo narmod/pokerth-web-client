@@ -272,4 +272,11 @@ export default {
   hsCtxReport: 'Anmelder denne spillers avatar til moderatorerne, hvis den er stødende.',
   hsCtxKickban: 'Kun for administratorer: udelukker denne spiller fra serveren.',
   hsChip: 'PokerTH-jetonen — tryk på den, så snurrer den.',
+  installApp: 'Installer appen',
+  instNow: 'Installer nu',
+  instWhy: 'Når den er installeret, åbner PokerTH i fuld skærm med sit eget ikon, starter med det samme, og træningstilstanden virker offline.',
+  instPrompt: 'Tryk på »Installer nu« og bekræft: det er det hele.',
+  instIos: 'På iPhone og iPad: tryk på Del-knappen (en firkant med en pil op — på nyere iOS kan den ligge i ⋯-menuen), vælg »Føj til hjemmeskærm« og derefter »Tilføj«. Det virker i Safari, og på nyere iOS også i Chrome og Edge.',
+  instAndroid: 'Åbn browserens menu (⋮ eller ≡), vælg »Installer app« eller »Føj til hjemmeskærm«, og bekræft: ikonet lander på din hjemmeskærm.',
+  instDesktop: 'I Chrome eller Edge: klik på installationsikonet yderst til højre i adresselinjen, eller menuen ⋮ / ⋯ → »Installer« (Edge: Apps → »Installer dette websted som en app«). I Safari på en Mac: Arkiv → »Føj til Dock«. Andre browsere: se i menuen efter »Installer« eller »Føj til hjemmeskærm«.',
 };

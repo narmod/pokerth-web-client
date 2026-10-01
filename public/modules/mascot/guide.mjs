@@ -118,15 +118,31 @@ export function isDocked() { return !!root; }
  * Shows the docked helper. Resolves once he is on screen.
  * @param {{ plain?: boolean, label?: string, onTap?: () => void }} [o]
  */
-export async function dock(o = {}) {
+// One dock at a time (web.274): two calls close together (a tip and a scene's
+// return, say) both passed the « already docked? » check while the engine was
+// loading, and two Aces stayed on screen. The calls now run one after the
+// other, and an undock() during the loading cancels the pending dock.
+let docking = Promise.resolve();
+let dockGen = 0;
+export function dock(o = {}) {
+  const run = () => doDock(o);
+  const p = docking.then(run, run);
+  docking = p.catch(() => {});
+  return p;
+}
+
+async function doDock(o) {
   onTapCb = o.onTap || null;
   const wantPlain = o.plain != null ? !!o.plain : reduce();
   if (root && wantPlain === plainMode) { if (o.label && ace) ace.setAttribute('aria-label', o.label); return; }
   if (root) undock();
+  const gen = dockGen;
   plainMode = wantPlain;
   if (!plainMode && !kit) {
     try { kit = (await import('./engine.mjs')).actorKit(ROOT); } catch (e) { plainMode = true; }
   }
+  if (gen !== dockGen || root) return;                 // undocked meanwhile, or docked by another way
+  document.querySelectorAll('#' + ROOT).forEach((n) => { try { n.remove(); } catch (e) {} });   // never two
   styleOnce();
   root = document.createElement('div');
   root.id = ROOT;
@@ -213,6 +229,7 @@ export function isPlain() { return !!root && plainMode; }
 
 /** Removes the helper and his bubble at once. */
 export function undock() {
+  dockGen++;
   anims.forEach((a) => { try { a.cancel(); } catch (e) {} });
   anims = []; pointAnim = null;
   if (root) { try { root.remove(); } catch (e) {} }

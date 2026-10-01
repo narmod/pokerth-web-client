@@ -26,7 +26,10 @@ export const help = {
           b: ['Die koppelvlak is in 83 tale beskikbaar. Verander dit enige tyd in Gevorderde opsies (die ratkieslys), kategorie Gebruikerskoppelvlak. Poker se aksieterme (Fold, Check, Call, Bet, Raise, All-In) bly volgens konvensie Engels, presies soos in die werkskermkliënt.'] },
         { id: 'pwa', t: 'Installeer as \u2019n program',
           b: ['Hierdie kliënt is \u2019n Progressive Web App: jy kan dit vanuit die blaaier se kieslys installeer (of met die installeerknoppie in die kopstuk) en \u2019n volskermprogram met sy eie ikoon kry. Nadat dit geïnstalleer is, begin dit onmiddellik, en die oefenmodus werk heeltemal vanlyn.'],
-          note: 'Op Android en op werkskerm-Chrome/Edge doen die installeerknoppie alles. Op iPhone/iPad laat Apple installasie slegs deur Safari toe: Deel-knoppie \u2192 \u201cVoeg by tuisskerm\u201d — die kliënt wys hierdie stappe wanneer nodig. Die knoppie verdwyn sodra die program geïnstalleer is.' },
+          list: ["Android (Chrome, Edge, Samsung Internet, Firefox): tik die installeerknoppie in die kopstuk, of maak die blaaier se kieslys oop (⋮ of ≡) en kies “Installeer app” of “Voeg by tuisskerm”, en bevestig.",
+            "iPhone / iPad: tik die Deel-knoppie (’n vierkant met ’n pyltjie op; op onlangse iOS kan dit in die ⋯-kieslys wees), kies “Voeg by tuisskerm”, dan “Voeg by”. Safari doen dit; onlangse iOS-weergawes laat dit ook toe vanuit Chrome en Edge.",
+            "Rekenaar: klik in Chrome of Edge op die installeerknoppie in die kopstuk of die installeerikoon regs van die adresbalk (of kieslys ⋮ / ⋯ → “Installeer”); in Safari op ’n Mac: Lêer → “Voeg by Dock”."],
+          note: "Die Aas se Hulp wys die stappe vir jou toestel: tik die Aas → “Installeer die toep”. Die installeerknoppie en daardie kieslysinskrywing verdwyn wanneer jy die geïnstalleerde toep gebruik; maak dit van daar af oop met sy ikoon." },
         { id: 'platforms', t: 'Platforms en blaaiers',
           b: ['Die kliënt loop in enige moderne blaaier op enige stelsel — Windows, macOS, Linux, Android, iOS. \u2019n Paar funksies steun op nuwer blaaier-API\u2019s; wanneer \u2019n API ontbreek, versteek die funksie hom of verduidelik dit, in plaas daarvan om te breek. Die vernaamste verskille om te weet:'],
           list: [

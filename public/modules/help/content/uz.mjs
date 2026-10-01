@@ -38,7 +38,10 @@ export const help = {
           t: "Ilova sifatida oʻrnatish",
           b: [
             "Bu mijoz — Progressive Web App: uni brauzer menyusidan (yoki sarlavhadagi oʻrnatish tugmasi orqali) oʻrnatib, oʻz belgisiga ega toʻliq ekranli ilovaga ega boʻlishingiz mumkin. Oʻrnatilgach, u bir zumda ishga tushadi va mashgʻulot rejimi toʻliq oflayn ishlaydi."],
-          note: "Android va kompyuterdagi Chrome/Edge’da oʻrnatish tugmasi hammasini oʻzi bajaradi. iPhone/iPad’da Apple faqat Safari orqali oʻrnatishga ruxsat beradi: Ulashish tugmasi → “Bosh ekranga qoʻshish” — kerak boʻlganda mijoz bu qadamlarni koʻrsatadi. Ilova oʻrnatilgach, tugma yoʻqoladi." },
+          list: ["Android (Chrome, Edge, Samsung Internet, Firefox): sarlavhadagi oʻrnatish tugmasini bosing yoki brauzer menyusini (⋮ yoki ≡) ochib, “Ilovani oʻrnatish” yoki “Bosh ekranga qoʻshish” bandini tanlang, soʻng tasdiqlang.",
+            "iPhone / iPad: Ulashish tugmasini bosing (yuqoriga strelkali kvadrat; yangi iOS’da u ⋯ menyusida boʻlishi mumkin), “Bosh ekranga qoʻshish” bandini, soʻng “Qoʻshish” ni tanlang. Buni Safari bajaradi; yangi iOS versiyalari Chrome va Edge’dan ham ruxsat beradi.",
+            "Kompyuter: Chrome yoki Edge’da sarlavhadagi oʻrnatish tugmasini yoki manzil qatorining oʻng tomonidagi oʻrnatish belgisini bosing (yoki ⋮ / ⋯ menyusi → “Oʻrnatish”); Mac’dagi Safari’da: Fayl → “Dock’ka qoʻshish”."],
+          note: "Tuzning yordami qurilmangiz uchun qadamlarni koʻrsatadi: Tuzni bosing → “Ilovani oʻrnatish”. Oʻrnatilgan ilovadan foydalanayotganingizda oʻrnatish tugmasi va menyudagi bu band yoʻqoladi; shundan keyin uni belgisidan oching." },
         { id: "platforms",
           t: "Platformalar va brauzerlar",
           b: [

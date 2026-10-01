@@ -38,7 +38,10 @@ export const help = {
           t: "Tətbiq kimi quraşdırın",
           b: [
             "Bu klient Progressive Web App-dır: onu brauzer menyusundan (və ya başlıqdakı quraşdırma düyməsindən) quraşdıraraq öz ikonu olan tam ekran tətbiq əldə edə bilərsiniz. Quraşdırıldıqdan sonra dərhal açılır və məşq rejimi tamamilə oflayn işləyir."],
-          note: "Android-də və masaüstü Chrome/Edge-də quraşdırma düyməsi hər şeyi edir. iPhone/iPad-də Apple quraşdırmaya yalnız Safari vasitəsilə icazə verir: Paylaş düyməsi → “Əsas ekrana əlavə et” — lazım olanda klient bu addımları göstərir. Tətbiq quraşdırıldıqdan sonra düymə yox olur." },
+          list: ["Android (Chrome, Edge, Samsung Internet, Firefox): başlıqdakı quraşdırma düyməsinə toxunun və ya brauzer menyusunu (⋮ və ya ≡) açıb “Tətbiqi quraşdır” və ya “Əsas ekrana əlavə et” seçin, sonra təsdiqləyin.",
+            "iPhone / iPad: Paylaş düyməsinə toxunun (yuxarı oxlu kvadrat; son iOS-da ⋯ menyusunda ola bilər), “Əsas ekrana əlavə et” seçin, sonra “Əlavə et”. Safari bunu edir; son iOS versiyalarında Chrome və Edge-dən də mümkündür.",
+            "Kompüter: Chrome və ya Edge-də başlıqdakı quraşdırma düyməsinə və ya ünvan çubuğunun sağındakı quraşdırma ikonuna klikləyin (yaxud menyu ⋮ / ⋯ → “Quraşdır”); Mac-də Safari-də: Fayl → “Dok-a əlavə et”."],
+          note: "Tuzun köməyi cihazınız üçün addımları göstərir: Tuza toxunun → “Tətbiqi quraşdırın”. Quraşdırılmış tətbiqdən istifadə edərkən quraşdırma düyməsi və bu menyu bəndi yox olur; bundan sonra onu ikonundan açın." },
         { id: "platforms",
           t: "Platformalar və brauzerlər",
           b: [

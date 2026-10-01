@@ -38,7 +38,10 @@ export const help = {
           t: "Gosod fel ap",
           b: [
             "Mae'r cleient hwn yn Progressive Web App: gallwch ei osod o ddewislen eich porwr (neu'r botwm gosod yn y pennyn) i gael ap sgrin lawn gyda'i eicon ei hun. Unwaith y bydd wedi'i osod, mae'n agor ar unwaith ac mae'r modd ymarfer yn gweithio'n gyfan gwbl all-lein."],
-          note: "Ar Android ac ar Chrome/Edge ar y bwrdd gwaith, mae'r botwm gosod yn gwneud y cyfan. Ar iPhone/iPad dim ond drwy Safari y mae Apple yn caniatáu gosod: botwm Rhannu → “Ychwanegu at y Sgrin Gartref” — mae'r cleient yn dangos y camau hyn pan fo angen. Mae'r botwm yn diflannu unwaith y bydd yr ap wedi'i osod." },
+          list: ["Android (Chrome, Edge, Samsung Internet, Firefox): tapiwch y botwm gosod yn y pennyn, neu agorwch ddewislen y porwr (⋮ neu ≡) a dewiswch “Gosod yr ap” neu “Ychwanegu at y sgrin gartref”, yna cadarnhewch.",
+            "iPhone / iPad: tapiwch y botwm Rhannu (sgwâr gyda saeth i fyny; ar iOS diweddar gall fod yn y ddewislen ⋯), dewiswch “Ychwanegu at y Sgrin Gartref”, yna “Ychwanegu”. Mae Safari yn ei wneud; mae fersiynau diweddar o iOS hefyd yn caniatáu hyn o Chrome ac Edge.",
+            "Cyfrifiadur: yn Chrome neu Edge, cliciwch y botwm gosod yn y pennyn neu’r eicon gosod ar ochr dde’r bar cyfeiriad (neu’r ddewislen ⋮ / ⋯ → “Gosod”); yn Safari ar Mac: Ffeil → “Ychwanegu at y Doc”."],
+          note: "Mae Cymorth yr As yn dangos y camau ar gyfer eich dyfais: tapiwch yr As → “Gosod yr ap”. Mae’r botwm gosod a’r cofnod hwnnw yn y ddewislen yn diflannu pan fyddwch yn defnyddio’r ap sydd wedi’i osod; o hynny ymlaen, agorwch ef o’i eicon." },
         { id: "platforms",
           t: "Platfformau a phorwyr",
           b: [

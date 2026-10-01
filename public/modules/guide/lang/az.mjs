@@ -272,4 +272,11 @@ export default {
   hsCtxReport: 'Təhqiramizdirsə, bu oyunçunun avatarını moderatorlara bildirir.',
   hsCtxKickban: 'Yalnız administratorlar üçün: bu oyunçunu serverdən qadağan edir.',
   hsChip: 'PokerTH çipi — toxunun, fırlanacaq.',
+  installApp: 'Tətbiqi quraşdırın',
+  instNow: 'İndi quraşdır',
+  instWhy: 'Quraşdırıldıqdan sonra PokerTH öz ikonu ilə tam ekranda açılır, dərhal başlayır və məşq rejimi oflayn işləyir.',
+  instPrompt: '“İndi quraşdır” düyməsinə toxunun və təsdiqləyin: hamısı budur.',
+  instIos: 'iPhone və iPad-də: Paylaş düyməsinə toxunun (yuxarı oxlu kvadrat — son iOS-da ⋯ menyusunda ola bilər), “Əsas ekrana əlavə et” seçin, sonra “Əlavə et”. Safari-də işləyir, son iOS-da Chrome və Edge-də də.',
+  instAndroid: 'Brauzer menyusunu (⋮ və ya ≡) açın, “Tətbiqi quraşdır” və ya “Əsas ekrana əlavə et” seçin, sonra təsdiqləyin: ikon əsas ekranınızda görünəcək.',
+  instDesktop: 'Chrome və ya Edge-də: ünvan çubuğunun sağındakı quraşdırma ikonuna klikləyin və ya menyu ⋮ / ⋯ → “Quraşdır” (Edge: Tətbiqlər → “Bu saytı tətbiq kimi quraşdır”). Mac-də Safari-də: Fayl → “Dok-a əlavə et”. Digər brauzerlər: menyuda “Quraşdır” və ya “Əsas ekrana əlavə et” axtarın.',
 };

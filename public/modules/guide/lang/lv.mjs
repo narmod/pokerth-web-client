@@ -272,4 +272,11 @@ export default {
   hsCtxReport: 'Ziņo moderatoriem par šī spēlētāja avatāru, ja tas ir aizskarošs.',
   hsCtxKickban: 'Tikai administratoriem: bloķē šo spēlētāju serverī.',
   hsChip: 'PokerTH žetons — pieskaries tam, un tas griežas.',
+  installApp: 'Instalēt lietotni',
+  instNow: 'Instalēt tagad',
+  instWhy: 'Pēc instalēšanas PokerTH atveras pilnā ekrānā ar savu ikonu, startē uzreiz, un treniņa režīms darbojas bezsaistē.',
+  instPrompt: 'Pieskaries „Instalēt tagad“ un apstiprini — tas ir viss.',
+  instIos: 'iPhone un iPad ierīcēs: pieskaries kopīgošanas pogai (kvadrāts ar bultiņu uz augšu — jaunākajā iOS tā var būt izvēlnē ⋯), izvēlies „Pievienot sākuma ekrānam“, pēc tam „Pievienot“. Tas darbojas Safari, bet jaunākajā iOS arī Chrome un Edge.',
+  instAndroid: 'Atver pārlūka izvēlni (⋮ vai ≡), izvēlies „Instalēt lietotni“ vai „Pievienot sākuma ekrānam“ un apstiprini: ikona nonāks tavā sākuma ekrānā.',
+  instDesktop: 'Pārlūkā Chrome vai Edge: noklikšķini uz instalēšanas ikonas adreses joslas labajā pusē vai izvēlnē ⋮ / ⋯ → „Instalēt“ (Edge: Lietotnes → „Instalēt šo vietni kā lietotni“). Safari datorā Mac: Fails → „Pievienot Dock“. Citos pārlūkos izvēlnē meklē „Instalēt“ vai „Pievienot sākuma ekrānam“.',
 };

@@ -38,7 +38,10 @@ export const help = {
           t: "Suiteáil mar aip",
           b: [
             "Is Progressive Web App an cliant seo: is féidir leat é a shuiteáil ó roghchlár do bhrabhsálaí (nó ón gcnaipe suiteála sa cheanntásc) chun aip lánscáileáin a fháil lena deilbhín féin. Nuair atá sí suiteáilte, osclaíonn sí láithreach agus oibríonn an mód cleachtaidh go hiomlán as líne."],
-          note: "Ar Android agus ar Chrome/Edge deisce, déanann an cnaipe suiteála gach rud. Ar iPhone/iPad ní cheadaíonn Apple suiteáil ach trí Safari: cnaipe Comhroinn → “Cuir leis an Scáileán Baile” — taispeánann an cliant na céimeanna seo nuair is gá. Imíonn an cnaipe nuair atá an aip suiteáilte." },
+          list: ["Android (Chrome, Edge, Samsung Internet, Firefox): tapáil an cnaipe suiteála sa cheanntásc, nó oscail roghchlár an bhrabhsálaí (⋮ nó ≡) agus roghnaigh “Suiteáil an aip” nó “Cuir leis an scáileán baile”, ansin deimhnigh.",
+            "iPhone / iPad: tapáil an cnaipe Comhroinn (cearnóg le saighead suas; ar iOS le déanaí, d’fhéadfadh sé a bheith sa roghchlár ⋯), roghnaigh “Cuir leis an Scáileán Baile”, ansin “Cuir leis”. Déanann Safari é; ceadaíonn leaganacha iOS le déanaí é ó Chrome agus Edge freisin.",
+            "Ríomhaire: i Chrome nó in Edge, cliceáil an cnaipe suiteála sa cheanntásc nó an deilbhín suiteála ar dheis de bharra an tseolta (nó roghchlár ⋮ / ⋯ → “Suiteáil”); i Safari ar Mac: Comhad → “Cuir leis an Dock”."],
+          note: "Taispeánann Cabhair an Aoin na céimeanna do do ghléas: tapáil an tAon → “Suiteáil an aip”. Imíonn an cnaipe suiteála agus an iontráil roghchláir sin nuair a úsáideann tú an aip shuiteáilte; as sin amach, oscail í óna deilbhín." },
         { id: "platforms",
           t: "Ardáin agus brabhsálaithe",
           b: [
