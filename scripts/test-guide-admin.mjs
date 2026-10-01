@@ -52,7 +52,7 @@ ok(S.contexts['lobby-ranking'].shown === 10 && !S.contexts.offer, 'per-context t
 rec(1, 'more-help', 'shown'); rec(1, 'more-help', 'section'); rec(1, 'more-help', 'section'); rec(1, 'ask', 'explained');
 const S2 = G.summary(store.guide);
 ok(S2.contexts['more-help'].section === 2 && S2.contexts['more-help'].shown === 1 && S2.contexts.ask.explained === 1, 'contexts carry their own events (« More help » sections, « ? » explained)');
-ok(/\['more-help','« More help »[^\]]*\['shown','section','search','window'\]\]/.test(require('fs').readFileSync(path.join(root, 'public/admin.html'), 'utf8')), 'admin row for « More help » with its own events');
+ok(/\['more-help','« More help »[^\]]*\['shown','section','search'\]\]/.test(require('fs').readFileSync(path.join(root, 'public/admin.html'), 'utf8')), 'admin row for « More help » with its own events');
 ok(G.summary({}).acceptance.rate === null && G.summary(null).funnel.joinRate === null, 'no data → no invented rate');
 const P1 = G.period(1, (i) => days[i]), P3 = G.period(3, (i) => days[i]);
 ok(P1.days === 1 && P1.guide.offer.offered === 1 && !P1.guide.offer.dismissed, 'period of 1 day');

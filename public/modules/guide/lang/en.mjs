@@ -58,7 +58,6 @@ export default {
   // C5 — windows (first opening)
   c5Ranking: 'The official **PokerTH** ranking and the community ones (**BBC**, **WEC**) in tabs. Search a player, pick a **Season** or **All-Time**, and tap a name to open the profile — tapping its chart switches between bars and pie.',
   c5Events: 'The upcoming cup games. They are created by the cup admins; players register on the cup’s site or in its forum thread — the WEC game at 22:00 (server time) needs no registration. Times are shown in server time and in your local time; tap an event and the button at the bottom follows it.',
-  c5Help: 'Everything about the app, chapter by chapter. The search box finds any word in the help.',
   c5Adv: 'Every option, by section. Type in the search box to find one; each switch applies at once. Options marked **web** exist only in this web client.',
   c5Theme: 'The look of the game: palette, table, cards, card back, buttons and pucks, or a ready-made theme. Changes show at once.',
   c5Music: 'The music player: tracks and radio stations. The thumbs up or down on the current track tell the admins what to keep.',
@@ -123,7 +122,6 @@ export default {
   // H1 (web.267): « More help » — the help window's knowledge in the Ace's bubble
   moreHelp: 'More help',
   allTopics: 'All topics',
-  helpWindow: 'Help window',
   back: 'Back',
   // H2 (web.268): « ? » on the windows and the rest of the lobby, « More about it »
   moreAbout: 'More about it',
@@ -199,7 +197,6 @@ export default {
   hsPmWin: 'Your private conversations with other players.',
   hsLogsWin: 'Your hand logs: every hand you played, kept on this device, to read, search, export or analyse.',
   hsPlayerWin: 'A player’s card: avatar, country, table, and what you can do (message, invite, ignore).',
-  hsHelpWin: 'The classic help window: the same texts as « More help » in my bubble.',
   hsPlayersWin: 'The players online: search, sort, and tap a name for their card.',
   // H3 (web.269): « ? » at the table
   hsQuit: 'Leaves this table and goes back to the lobby.',

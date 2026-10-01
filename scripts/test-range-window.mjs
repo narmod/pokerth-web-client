@@ -76,7 +76,7 @@ ok(calls.length === 0, 'conteneur sans carte → no-op');
   const block = css.slice(css.indexOf('#range-modal{'), css.indexOf('#range-modal{') + 400);
   ok(!/background:rgba\(0,0,0/.test(block), 'plus aucun voile sombre sur le conteneur');
   ok(/pointer-events:none/.test(block), 'le conteneur laisse passer les clics vers le jeu');
-  ok(/z-index:1200/.test(block), 'bande de z-index dialogue, comme #adv-modal et #help-modal');
+  ok(/z-index:1200/.test(block), 'bande de z-index dialogue, comme #adv-modal');
   ok(/#range-modal \.range-card\{pointer-events:auto/.test(css), 'la carte, elle, reste cliquable');
   ok(/#range-modal \.range-card\.floating-win\{position:fixed/.test(css), 'règle de fenêtre flottante présente');
 }

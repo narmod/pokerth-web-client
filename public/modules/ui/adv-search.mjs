@@ -1,7 +1,7 @@
 // ═══════════════════════════════════════════════════════════════════
 // Advanced options search — one field, every setting.
 //
-// Same shell as the Help window search (modules/help/index.mjs): a field
+// Same shell as the former Help window search (now « More help » in the Ace's bubble): a field
 // under the title, and a flat result list that takes the place of the
 // category panels while typing. Picking a result puts the reader back on
 // the setting itself — right category, right sub-tab, section unfolded,

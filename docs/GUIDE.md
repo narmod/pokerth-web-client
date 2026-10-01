@@ -173,7 +173,6 @@ above the windows (z-index 10020 / 10019).
 | `w-avatar` | `avatar` | `#avatar-popup` |
 | `w-events` | `events` | `#forum-modal` with the `#fn-events` tab shown |
 | `w-ranking` | `ranking` | `#ranking-modal` |
-| `w-help` | `help` | `#help-modal` (highlights the search box) |
 | `w-adv` | `adv` | `#adv-modal` (the search box, the *web* tag) |
 | `w-theme` | `theme` | `#theme-panel` |
 | `w-music` | `music` | `#music-panel` |
@@ -265,7 +264,7 @@ Keys (all 83 languages; `es-419` is derived from `es` with `scripts/es-419-rules
 - L1: `name`, `aceLabel`, `offer`, `offerYes`, `offerNo`, `gotIt`, `later`, `next`,
   `close`, `welcome`, `menuOn`, `turnOff`, `resetTips`, `resetDone`, `turnedOff`,
   `nothingHere`.
-- L5: `c5Create`, `c5CreateGuest`, `c5CreateOffline`, `c5Ranking`, `c5Events`, `c5Help`, `c5Adv`,
+- L5: `c5Create`, `c5CreateGuest`, `c5CreateOffline`, `c5Ranking`, `c5Events`, `c5Adv`,
   `c5Theme`, `c5Music`, `c5Avatar`, `c5Players`, `c5Profile`, `c5Logs`.
 - L6: `askLabel`, `askMenu`, `askIntro`, `askAgain`, `askUnknown`, `askDone`, and one
   `hs…` key per hotspot (47).
@@ -301,15 +300,14 @@ text was rewritten.
 - **Topics.** The bubble opens on the chapter of the current screen, as the window does
   (`knowledge.mjs::chapterFor`). It shows that chapter's sections, chips for the other
   chapters and a search field. The search is case- and accent-insensitive, starts at 2
-  characters and returns at most 40 results. It also offers *Help window*, which opens the
-  classic window for now.
+  characters and returns at most 40 results. Until H4 it also offered *Help window*.
 - **A section, page by page.** One page per paragraph; long paragraphs are cut at
   sentence ends, including the CJK, Indic and Burmese ones. Lists come 5 items to a page,
   keyboard keys 6 to a page, then the notes. The buttons are *Back*, *Next*, *All topics*
   and *Close*. The page count shows in the corner.
-- **Statistics.** `more-help` counts `shown`, `section`, `search` (once per opening) and
-  `window`. The admin card rows now show each context's own events.
-- **New texts.** `moreHelp`, `allTopics`, `helpWindow`, `back`. The search field and
+- **Statistics.** `more-help` counts `shown`, `section` and `search` (once per opening).
+  The admin card rows now show each context's own events. (`window` was counted until H4.)
+- **New texts.** `moreHelp`, `allTopics`, `back` (`helpWindow` until H4). The search field and
   *No results* reuse the UI keys `helpSearchPh` and `helpNoResults`.
 
 ## « ? » everywhere, *More about it* (`web.268`, H2)
@@ -334,6 +332,23 @@ language), ranking, forum, avatar studio, private messages, logs, the player car
 music.
 
 Statistics: `ask.more` counts the taps on *More about it*.
+
+## The help window removed (`web.270`, H4)
+
+The Ace is now the only help. The window (`#help-modal`, `modules/help/index.mjs`) is
+removed, along with its styles, its precache entry, and its Escape and z-order surfaces.
+Its texts (`modules/help/content/<lang>.mjs`) stay: *More help* reads them.
+
+- The 5 Help entries of the header menus call `window.toggleHelp`, which is now in
+  `guide/index.mjs`. It opens *More help*, or closes it if it is open. The *Show the Help
+  button* option (`pth_help_btn`) is kept.
+- On demand (`canComeHere`) also works in the live spectator embed. His own tips stay off
+  there (`available()`).
+- Removed: the Help window's own tip `w-help`, its « ? » window text, the *Help window*
+  button, and the keys `c5Help`, `hsHelpWin` and `helpWindow` in 83 languages. The
+  statistics server is unchanged (no restart); the admin card drops the `w-help` row.
+- The CSS classes `.help-search`, `.help-body`, `.help-p`, `.help-wip` and `.help-result*`
+  stay: the Advanced options search uses them.
 
 ## At the table, on demand (`web.269`, H3)
 
@@ -445,5 +460,5 @@ makes him vanish in a puff. Scenes still play in the lobby.
 | M2 | « Well done! »: a game won, Ranking points, a trophy (`web.266`) |
 | H1 | « More help »: the help window's knowledge in the Ace's bubble, on demand even with the tips off (`web.267`) |
 | H2 | « ? » on the windows and the lobby leftovers, *More about it* → the matching help section (`web.268`) |
-| **H3** | « ? » and « More help » at the table, on demand, even during a hand; folds when the player's turn comes (`web.269`) |
-| H4 | The help window removed (explicit agreement) |
+| H3 | « ? » and « More help » at the table, on demand, even during a hand; folds when the player's turn comes (`web.269`) |
+| **H4** | The help window removed (explicit agreement, `web.270`): the Ace is the only help |

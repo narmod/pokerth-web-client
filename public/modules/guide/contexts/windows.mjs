@@ -7,7 +7,6 @@ const W = (id, key, text, target) => ({ id, window: key, priority: 50, steps: [{
 export default [
   W('w-ranking', 'ranking', 'c5Ranking', ['#ranking-modal .rk-tabs']),
   W('w-events', 'events', 'c5Events', ['#fn-events']),
-  W('w-help', 'help', 'c5Help', ['#help-search-in']),
   W('w-adv', 'adv', 'c5Adv', ['#adv-search-in']),
   W('w-theme', 'theme', 'c5Theme', null),
   W('w-music', 'music', 'c5Music', null),

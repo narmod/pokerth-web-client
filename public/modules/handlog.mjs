@@ -2268,7 +2268,7 @@ function _positionDetail(pop) {
 }
 
 // ── Grille de range 13×13 ───────────────────────────────────────────────────
-// Fenetre du systeme generique (meme patron que #adv-modal / #help-modal) :
+// Fenetre du systeme generique (meme patron que #adv-modal) :
 // conteneur transparent qui laisse passer les clics, carte promue en
 // .floating-win au-dessus de 600 px -> deplacable par son titre,
 // redimensionnable, geometrie memorisee, integree au z-order des fenetres.

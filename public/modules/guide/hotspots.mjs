@@ -198,7 +198,6 @@ export const WINDOWS = [
   ['#pm-modal', 'hsPmWin', 'chat:privatemsg'],
   ['#jr-modal', 'hsLogsWin', 'info:journal'],
   ['#player-info-modal', 'hsPlayerWin', 'chat:social'],
-  ['#help-modal', 'hsHelpWin', 'start:acehelp'],
   ['#players-panel', 'hsPlayersWin', 'chat:social'],
   ['#g-log-panel', 'hsInfoWin', 'info:open'],
   ['#tableranking-modal', 'hsRankingWin', 'pthnet:rankings'],

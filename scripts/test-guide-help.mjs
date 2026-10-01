@@ -61,14 +61,18 @@ ok(fr.chapters[0].title !== en.chapters[0].title && xx.chapters[0].title === en.
 
 // ── wiring ──
 const idx = fs.readFileSync(path.join(root, 'public/modules/guide/index.mjs'), 'utf8');
-const helpIdx = fs.readFileSync(path.join(root, 'public/modules/help/index.mjs'), 'utf8');
-ok(/window\._guideMoreHelp\(\)\) return;\s*\} catch \(e\) \{\}\s*openHelp\(\);/.test(helpIdx), 'Help entries of the menus: the Ace first, the window as fallback');
-ok(/function helpEntry\(o\) \{\s*if \(!available\(\) \|\| automated\(\) \|\| !canComeHere\(\)\) return false;/.test(idx), 'the Ace takes it wherever he may stand, the table included (H3), never under automation');
+// H4: the help window is gone — the Help entries are the Ace's
+ok(!fs.existsSync(path.join(root, 'public/modules/help/index.mjs')) && fs.existsSync(path.join(root, 'public/modules/help/content/en.mjs')), 'help window module removed, its texts kept (the Ace reads them)');
+const page = fs.readFileSync(path.join(root, 'public/pokerth-client.html'), 'utf8');
+ok(!/id="help-modal"/.test(page) && !/modules\/help\/index\.mjs/.test(page) && (page.match(/class="btn-sm help-menu-btn"[^>]*toggleHelp/g) || []).length === 5, 'no help window in the page; the 5 Help entries stay');
+ok(/window\.toggleHelp = toggleHelpEntry;/.test(idx), 'the Help entries open « More help »');
+ok(!/help-modal|openHelp|closeHelp/.test(fs.readFileSync(path.join(root, 'public/modules/ui/keynav.mjs'), 'utf8') + fs.readFileSync(path.join(root, 'public/modules/ui/z-order.mjs'), 'utf8') + fs.readFileSync(path.join(root, 'public/sw.js'), 'utf8').replace(/help\/content/g, '')), 'no leftover of the window (Escape, z-order, precache)');
+ok(/function helpEntry\(o\) \{\s*if \(!canComeHere\(\)\) return false;/.test(idx) && /function canComeHere\(\) \{\s*if \(!avail\) return false;/.test(idx), 'the Ace answers on every screen, the table and the live embed included');
 ok(/btn\('moreHelp'\), btn\('askMenu'\)/.test(idx), '« More help » first in the Ace\'s menu');
 ok(/showing\.kind === 'help' \|\| showing\.kind === 'ask'/.test(idx) && /if \(!state\.isOn\(\) \|\| where\(\)\.screen === 'game'\) leave\(\);\s+\/\/ on demand \(tips off, the table\): he goes/.test(idx), 'tips off: he comes on demand and leaves when the bubble closes');
-ok(/btn\('helpWindow'\)/.test(idx) && /window\.openHelp\(\)/.test(idx), 'the help window stays reachable from the bubble');
+ok(!/helpWindow|window\.openHelp/.test(idx), 'no « Help window » button any more');
 const en2 = (await import(pathToFileURL(path.join(root, 'public/modules/guide/lang/en.mjs')).href)).default;
-ok(['moreHelp', 'allTopics', 'helpWindow', 'back'].every((k) => typeof en2[k] === 'string' && en2[k]), 'texts: moreHelp, allTopics, helpWindow, back');
+ok(['moreHelp', 'allTopics', 'back'].every((k) => typeof en2[k] === 'string' && en2[k]) && !('helpWindow' in en2) && !('c5Help' in en2) && !('hsHelpWin' in en2), 'texts: moreHelp, allTopics, back (the window\'s texts removed)');
 ok(fs.readFileSync(path.join(root, 'public/sw.js'), 'utf8').includes("'/modules/guide/knowledge.mjs'"), 'knowledge.mjs precached (the help works offline)');
 ok(/'more-help': \['shown', 'section', 'search', 'window'\]/.test(fs.readFileSync(path.join(root, 'server/guide-stats.js'), 'utf8')), 'statistics: opened, sections read, searches, help window');
 

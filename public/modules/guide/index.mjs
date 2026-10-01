@@ -107,7 +107,6 @@ const WINDOWS = [
   ['avatar', () => vis('#avatar-popup')],
   ['events', () => vis('#forum-modal') && vis('#fn-events')],
   ['ranking', () => vis('#ranking-modal')],
-  ['help', () => vis('#help-modal')],
   ['adv', () => vis('#adv-modal')],
   ['theme', () => vis('#theme-panel')],
   ['music', () => vis('#music-panel')],
@@ -479,7 +478,7 @@ function helpLang() { try { return (localStorage.getItem('pth_lang') || document
 
 /** Opens « More help » (Ace's menu, the Help entries of the menus). Resolves false when he cannot come here. */
 async function openMoreHelp(o = {}) {
-  if (!available() || !canComeHere()) return false;
+  if (!canComeHere()) return false;
   exitAsk(true);
   const m = await ensureDock();
   clearTimers(); hl.clear();
@@ -512,7 +511,7 @@ function renderTopics() {
   const html = `<p class="ad-kicker">${esc(gt('moreHelp'))}${ch ? ' · ' + esc((ch.icon ? ch.icon + ' ' : '') + ch.title) : ''}</p>`
     + `<input type="search" class="ad-search" enterkeyhint="search" autocomplete="off" placeholder="${esc(uiT('helpSearchPh'))}" aria-label="${esc(uiT('helpSearchPh'))}" value="${esc(help.q)}">`
     + `<div class="ad-list" role="list">${helpList()}</div><div class="ad-chaps">${chips}</div>`;
-  M.say({ html, wide: true, buttons: [btn('helpWindow'), btn('close', true)], ask: gt('askLabel'), onButton: onHelpButton });
+  M.say({ html, wide: true, buttons: [btn('close', true)], ask: gt('askLabel'), onButton: onHelpButton });
   const bub = M.bubbleEl();
   const inp = bub && bub.querySelector('.ad-search');
   if (inp) {
@@ -555,7 +554,6 @@ function onHelpButton(id) {
   if (!help) { closeBubble(); return; }
   if (id === 'ask') { enterAsk(); return; }
   if (id === 'close' || id === 'escape') { closeMoreHelp(); return; }
-  if (id === 'helpWindow') { beacon('more-help', 'window'); closeMoreHelp(); try { if (window.openHelp) window.openHelp(); } catch (e) {} return; }
   if (id === 'allTopics') { renderTopics(); return; }
   if (id === 'next' && help.sec) { help.i = Math.min(help.pages.length - 1, help.i + 1); renderHelpPage(); return; }
   if (id === 'back' && help.sec) { help.i = Math.max(0, help.i - 1); renderHelpPage(); return; }
@@ -571,14 +569,19 @@ function closeMoreHelp() {
 }
 
 /**
- * A Help entry of the menus: « More help » in the Ace's bubble when he can
- * come here (not at a table yet, not under automation unless a test opts in).
- * Returns true when he takes it; false → the help window opens as before.
+ * A Help entry of the menus: « More help » in the Ace's bubble — the only help
+ * since the help window was removed (H4, web.270), on every screen, the live
+ * spectator embed included. Returns false when he cannot come here.
  */
 function helpEntry(o) {
-  if (!available() || automated() || !canComeHere()) return false;
+  if (!canComeHere()) return false;
   openMoreHelp(o || {});
   return true;
+}
+/** The Help entries of the header menus (they used to open the help window). */
+function toggleHelpEntry() {
+  if (showing && showing.kind === 'help') { closeMoreHelp(); return; }
+  helpEntry();
 }
 
 /**
@@ -661,7 +664,7 @@ function canSpeakHere() {
 const ON_DEMAND = ['help', 'ask', 'menu', 'note'];
 const ACTION_ZONE = '.act-buttons-row, .btn-action, #raise-amt, #raise-slider, .btn-pct, #mode-sel';
 function canComeHere() {
-  if (!available() || window.LIVE_MODE) return false;
+  if (!avail) return false;            // on demand: the live spectator embed too (H4); tips stay off there (available())
   const w = where();
   return TALK.indexOf(w.screen) >= 0;
 }
@@ -751,7 +754,7 @@ async function evaluate() {
   const w = where();
   lastWhere = w;
   try { trackResult(w, prev); } catch (e) {}
-  if (!available()) { if (!(showing && showing.kind === 'offer')) leave(); return; }
+  if (!available()) { if (!(showing && (showing.kind === 'offer' || (onDemand() && canComeHere())))) leave(); return; }   // live embed: only what the player asked for
   if (!state.isOn()) {
     // tips off: only the offer, a last word, or what the player asked for (« More help », « ? » mode)
     if (!(showing && (showing.kind === 'offer' || showing.kind === 'note' || showing.kind === 'help' || showing.kind === 'ask'))) leave();
@@ -951,6 +954,8 @@ window._guideApply = apply;
 window.guideToggle = toggle;
 /** « More help » (H1): the Help entries of the menus (modules/help/index.mjs). */
 window._guideMoreHelp = helpEntry;
+/** The Help entries of the menus (H4: the help window is gone, the Ace answers). */
+window.toggleHelp = toggleHelpEntry;
 window.guideMoreHelp = (o) => { if (available()) openMoreHelp(o || {}); };
 window.guideResetTips = () => { if (available()) resetTips(); };
 /** « ? » mode: tap anything to hear what it does (C6). */

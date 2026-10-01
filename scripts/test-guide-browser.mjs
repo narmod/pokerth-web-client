@@ -276,22 +276,22 @@ async function runDevice(browser, name, descriptor) {
     const page = await ctx.newPage(); watch(page);
     await openTable(page, base, { stopAt: 'lobby', seats: 6 });
     const bubbleText = () => page.evaluate(() => (document.querySelector('#ace-dock .ad-bubble.ad-open .ad-text') || {}).textContent || '');
-    await check(`${name}: C5 — first opening of Help: he explains it, on top of the window`, async () => {
-      await page.evaluate(() => window.openHelp()   /* the window itself (the Help entries now bring the Ace, H1) */);
-      await page.waitForFunction(() => /Everything about the app/.test((document.querySelector('#ace-dock .ad-bubble.ad-open .ad-text') || {}).textContent || ''), null, { timeout: 5000 });
+    await check(`${name}: C5 — first opening of Advanced options: he explains it, on top of the window`, async () => {
+      await page.evaluate(() => window.toggleAdvancedOptions());
+      await page.waitForFunction(() => /Every option, by section/.test((document.querySelector('#ace-dock .ad-bubble.ad-open .ad-text') || {}).textContent || ''), null, { timeout: 5000 });
       const onTop = await page.evaluate(() => { const b = document.querySelector('#ace-dock .ad-bubble.ad-open').getBoundingClientRect(); const e = document.elementFromPoint(b.left + b.width / 2, b.top + b.height / 2); return !!(e && e.closest('#ace-dock')); });
       assert.ok(onTop, 'the bubble is under the window');
       inside(await box(page, bubble), 'bubble');
     });
-    await shot(page, name, 'guide-c5-help');
+    await shot(page, name, 'guide-c5-adv');
     await check(`${name}: C5 — the window closes: the bubble folds; reopened: not explained twice`, async () => {
       await click(page, btn('gotIt'));
-      await page.evaluate(() => window.closeHelp && window.closeHelp());
+      await page.evaluate(() => window.closeAdvancedOptions && window.closeAdvancedOptions());
       await page.waitForTimeout(1600);
-      await page.evaluate(() => window.openHelp()   /* the window itself (the Help entries now bring the Ace, H1) */);
+      await page.evaluate(() => window.toggleAdvancedOptions());
       await page.waitForTimeout(2200);
-      assert.doesNotMatch(await bubbleText(), /Everything about the app/);
-      await page.evaluate(() => window.closeHelp && window.closeHelp());
+      assert.doesNotMatch(await bubbleText(), /Every option, by section/);
+      await page.evaluate(() => window.closeAdvancedOptions && window.closeAdvancedOptions());
     });
     await check(`${name}: C5 — the game creation page: the four types, Ranking for players with an account`, async () => {
       await page.waitForTimeout(800);
@@ -465,7 +465,7 @@ async function runDevice(browser, name, descriptor) {
     await openTable(page, base, { stopAt: 'lobby', seats: 6 });
     await page.waitForTimeout(600);
     await noBanner(page);
-    const helpShown = () => page.evaluate(() => { const m = document.getElementById('help-modal'); return !!m && getComputedStyle(m).display !== 'none'; });
+    const helpShown = () => page.evaluate(() => !!document.getElementById('help-modal'));   // H4: the window is gone
     const kicker = () => page.evaluate(() => (document.querySelector('#ace-dock .ad-bubble.ad-open .ad-kicker') || {}).textContent || '');
     await check(`${name}: More help — the Help entry brings the Ace with the help (tips off), not the window`, async () => {
       assert.equal(await page.locator('#ace-dock').count(), 0, 'Ace already there with the tips off');
@@ -500,11 +500,11 @@ async function runDevice(browser, name, descriptor) {
       await page.locator(bubble + ' .ad-chap[data-ad-btn="ch:rules"]').click();
       await page.waitForFunction(() => /Poker rules/.test((document.querySelector('#ace-dock .ad-bubble.ad-open .ad-kicker') || {}).textContent || ''), null, { timeout: 3000 });
     });
-    await check(`${name}: More help — « Help window » opens the classic window; Close sends him away`, async () => {
-      await click(page, btn('helpWindow'));
-      await page.waitForFunction(() => { const m = document.getElementById('help-modal'); return !!m && getComputedStyle(m).display !== 'none'; }, null, { timeout: 3000 });
+    await check(`${name}: More help — no help window any more (H4); the Help entry again closes it; Close sends him away`, async () => {
+      assert.equal(await page.locator('#help-modal').count(), 0, 'the help window is still in the page');
+      assert.equal(await page.locator(btn('helpWindow')).count(), 0, '« Help window » button still there');
+      await page.evaluate(() => window.toggleHelp());
       await page.waitForFunction(() => !document.getElementById('ace-dock'), null, { timeout: 3000 });
-      await page.evaluate(() => window.closeHelp());
       await page.evaluate(() => window.toggleHelp());
       await page.locator(bubble + ' .ad-search').waitFor({ timeout: 5000 });
       await click(page, btn('close'));

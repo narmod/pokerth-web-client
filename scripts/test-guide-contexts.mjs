@@ -52,7 +52,7 @@ const cg = CONTEXTS.find((c) => c.id === 'create-game').steps[0];
 ok(cg.text(W({ screen: 'create', guest: true })) === 'c5CreateGuest' && cg.text(W({ screen: 'create', offline: true })) === 'c5CreateOffline' && cg.text(W({ screen: 'create' })) === 'c5Create', 'create page: account / guest / training lines');
 ok(/Any player with an account can create a Ranking table/.test(EN.c5Create) && /practice only/.test(EN.c5Create), 'D16 wording and presets = practice');
 // C5 windows
-for (const [key, id] of [['ranking', 'w-ranking'], ['events', 'w-events'], ['help', 'w-help'], ['adv', 'w-adv'], ['theme', 'w-theme'], ['music', 'w-music'], ['avatar', 'w-avatar'], ['players', 'w-players'], ['profile', 'w-profile'], ['logs', 'w-logs']]) {
+for (const [key, id] of [['ranking', 'w-ranking'], ['events', 'w-events'], ['adv', 'w-adv'], ['theme', 'w-theme'], ['music', 'w-music'], ['avatar', 'w-avatar'], ['players', 'w-players'], ['profile', 'w-profile'], ['logs', 'w-logs']]) {
   ok(pick({ windows: [key] }) === id, 'window « ' + key + ' » opened in the lobby → ' + id);
   ok(pick({ windows: [key] }, [id]) !== id, id + ' explained once');
 }

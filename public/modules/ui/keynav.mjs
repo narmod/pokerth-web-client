@@ -41,7 +41,6 @@ const SURFACES = [
   ['avatar-popup',         'toggleAvatarPopup'],
   ['install-popup',        'pwaInstallClose'],
   ['adv-modal',            'closeAdvancedOptions'],
-  ['help-modal',           'closeHelp'],
   ['poll-modal',           'closePollModal'],
   ['about-page',           'closeAboutPage'],
   ['privacy-page',         'closePrivacyPage'],

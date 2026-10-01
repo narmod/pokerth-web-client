@@ -1,4 +1,7 @@
-2026-09-30 version 2.1.9-web.269 (current series):
+2026-10-01 version 2.1.9-web.270 (current series):
+- improvement: the help now lives in Ace’s Help — the Help entry of the menus opens « More help » in the Ace’s bubble on every screen, at the table and in the spectator view too; the separate help window is gone (same texts, same search, in 83 languages)
+
+2026-09-30 version 2.1.9-web.269:
 - new: Ace’s Help at the table — the Help entry and the « ? » mode work there too, even during a hand: the action buttons, your bet, the auto modes, the seats, the board, the pot, the chat, the reactions, the info panel…; the Ace still never speaks there by himself
 - improvement: when your turn comes, the Ace folds his bubble and the « ? » mode ends — a tap on an action button always plays
 - improvement: the Ace’s bubble finds a better spot (left, middle or right under the header) and never covers him

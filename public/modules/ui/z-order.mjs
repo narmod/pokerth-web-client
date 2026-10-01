@@ -36,7 +36,7 @@ const SEL = [
 // leur priorité de dialogue. #jr-modal (Gérer les logs) suit la même règle —
 // sans lui, son z CSS 9999 écrasait toujours les autres fenêtres flottantes
 // (rapport forum : la dernière ouverte/touchée doit passer devant).
-const HOSTS = '#ranking-modal,#tableranking-modal,#forum-modal,#pm-modal,#pp-modal,#player-info-modal,#game-info-modal,#adv-modal,#jr-modal,#help-modal,#range-modal';
+const HOSTS = '#ranking-modal,#tableranking-modal,#forum-modal,#pm-modal,#pp-modal,#player-info-modal,#game-info-modal,#adv-modal,#jr-modal,#range-modal';
 
 // Menus du header (login, lobby, salle d'attente, partie). Sur mobile, les
 // fenêtres imbriquées restent en mode modale (conteneur à z CSS 1200, hors
