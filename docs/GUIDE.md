@@ -333,6 +333,19 @@ music.
 
 Statistics: `ask.more` counts the taps on *More about it*.
 
+## Ace's Help, the only help entry (`web.275`)
+
+The header menus (login, lobby, create page, table, privacy page) have one help entry left,
+« Ace's Help » (`.guide-menu-btn`, `guideToggle()`); the « Help » entries (`.help-menu-btn`)
+and the *Show the Help entry in menus* option (`help_btn`) are removed — the stored key
+`pth_help_btn` is simply ignored.
+
+`toggle()` opens his menu wherever he can come (`canComeHere`), tips on or off. Tips off, the
+menu says `menuOff` and offers *More help*, « What's this? », *Install the app* and *Turn on
+tips* (`turnOn`); closing it sends him away (on demand). Where he cannot come, the old
+behaviour stays: the entry turns the tips on. `hsGuide` and the help paragraph `acehelp` b[0]
+say so (83 languages, es-419 derived). `test-guide-dock.mjs` checks it in a browser.
+
 ## Install the app, one Ace (`web.274`)
 
 **Install the app.** The Ace's menu gets « Install the app » (`installApp`), hidden when the

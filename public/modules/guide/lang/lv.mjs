@@ -58,7 +58,7 @@ export default {
   askAgain: 'Pieskaries vēlreiz, lai to izmantotu.',
   askUnknown: 'Šim vēl nav skaidrojuma — pieskaries vēlreiz, lai to izmantotu.',
   askDone: 'Gatavs',
-  hsGuide: 'Dūža palīdzība: ieslēdz vai izslēdz mani, un mana izvēlne (rādīt visus padomus vēlreiz, šis “?” režīms).',
+  hsGuide: 'Dūža palīdzība: mana izvēlne — visa palīdzība, „Kas tas ir?“ un manu padomu ieslēgšana vai izslēgšana.',
   hsForum: 'Foruma jaunumi: jaunākie pokerth.net foruma ieraksti un cilne Pasākumi ar gaidāmajām kausa spēlēm.',
   hsRanking: 'Reitingi: oficiālais PokerTH reitings un kopienas reitingi (BBC, WEC), ar katra spēlētāja profilu.',
   hsPm: 'Tavas privātās ziņas ar citiem spēlētājiem.',
@@ -279,4 +279,6 @@ export default {
   instIos: 'iPhone un iPad ierīcēs: pieskaries kopīgošanas pogai (kvadrāts ar bultiņu uz augšu — jaunākajā iOS tā var būt izvēlnē ⋯), izvēlies „Pievienot sākuma ekrānam“, pēc tam „Pievienot“. Tas darbojas Safari, bet jaunākajā iOS arī Chrome un Edge.',
   instAndroid: 'Atver pārlūka izvēlni (⋮ vai ≡), izvēlies „Instalēt lietotni“ vai „Pievienot sākuma ekrānam“ un apstiprini: ikona nonāks tavā sākuma ekrānā.',
   instDesktop: 'Pārlūkā Chrome vai Edge: noklikšķini uz instalēšanas ikonas adreses joslas labajā pusē vai izvēlnē ⋮ / ⋯ → „Instalēt“ (Edge: Lietotnes → „Instalēt šo vietni kā lietotni“). Safari datorā Mac: Fails → „Pievienot Dock“. Citos pārlūkos izvēlnē meklē „Instalēt“ vai „Pievienot sākuma ekrānam“.',
+  menuOff: 'Mani padomi ir izslēgti, bet es joprojām atbildu: „Vairāk palīdzības“ — visa palīdzība ar meklēšanu, „Kas tas ir?“ — pieskaries jebkam un uzzini, ko tas dara. Ar „Ieslēgt padomus“ es tevi vadīšu soli pa solim.',
+  turnOn: 'Ieslēgt padomus',
 };

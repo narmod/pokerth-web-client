@@ -58,7 +58,7 @@ export default {
   askAgain: 'I-tap ulit para gamitin ito.',
   askUnknown: 'Wala pang paliwanag para dito — i-tap ulit para gamitin ito.',
   askDone: 'Tapos na',
-  hsGuide: 'Tulong ng Alas: ino-on o ino-off ako, at ang menu ko (ipakita ulit ang lahat ng tip, itong “?” mode).',
+  hsGuide: 'Tulong ng Alas: ang menu ko — ang buong tulong, “Ano ito?”, at ang pag-on o pag-off ng mga tip ko.',
   hsForum: 'Balita sa forum: ang mga pinakabagong post sa forum ng pokerth.net, at ang tab na Mga kaganapan na may mga paparating na laro ng cup.',
   hsRanking: 'Ang mga ranking: ang opisyal na ranking ng PokerTH at ang sa komunidad (BBC, WEC), kasama ang profile ng bawat manlalaro.',
   hsPm: 'Ang mga pribadong mensahe mo sa ibang manlalaro.',
@@ -279,4 +279,6 @@ export default {
   instIos: 'Sa iPhone at iPad: i-tap ang Share button (parisukat na may arrow na pataas — sa mga bagong iOS, maaaring nasa ⋯ menu ito), piliin ang “Add to Home Screen”, pagkatapos ay “Add”. Gumagana ito sa Safari, at sa mga bagong iOS, pati sa Chrome at Edge.',
   instAndroid: 'Buksan ang menu ng browser mo (⋮ o ≡), piliin ang “Install app” o “Add to Home Screen”, pagkatapos ay kumpirmahin: mapupunta ang icon sa home screen mo.',
   instDesktop: 'Sa Chrome o Edge: i-click ang install icon sa kanan ng address bar, o ang menu ⋮ / ⋯ → “Install” (Edge: Apps → “Install this site as an app”). Sa Safari sa Mac: File → “Add to Dock”. Sa ibang mga browser: hanapin sa menu ang “Install” o “Add to Home Screen”.',
+  menuOff: 'Naka-off ang mga tip ko, pero sumasagot pa rin ako: “Higit pang tulong” para sa buong tulong na may paghahanap, “Ano ito?” para mag-tap ng kahit ano at marinig kung ano ang ginagawa nito. “I-on ang mga tip” at gagabayan kita habang nagpapatuloy ka.',
+  turnOn: 'I-on ang mga tip',
 };

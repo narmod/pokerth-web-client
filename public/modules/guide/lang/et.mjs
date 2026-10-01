@@ -58,7 +58,7 @@ export default {
   askAgain: 'Puuduta uuesti, et seda kasutada.',
   askUnknown: 'Selle kohta pole veel selgitust — puuduta uuesti, et seda kasutada.',
   askDone: 'Valmis',
-  hsGuide: 'Ässa abi: lülitab mind sisse või välja, ja minu menüü (näita kõiki näpunäiteid uuesti, see „?“-režiim).',
+  hsGuide: 'Ässa abi: minu menüü — kogu abi, „Mis see on?“ ja minu näpunäited sees või väljas.',
   hsForum: 'Foorumi uudised: pokerth.net foorumi viimased postitused ja vahekaart Sündmused eelseisvate karikamängudega.',
   hsRanking: 'Edetabelid: PokerTH ametlik edetabel ja kogukonna edetabelid (BBC, WEC), iga mängija profiiliga.',
   hsPm: 'Sinu privaatsõnumid teiste mängijatega.',
@@ -279,4 +279,6 @@ export default {
   instIos: 'iPhone’is ja iPadis: puuduta jagamisnuppu (ruut ülesnoolega; uuemas iOS-is võib see olla menüüs ⋯), vali „Lisa avakuvale“ ja seejärel „Lisa“. See töötab Safaris ning uuemas iOS-is ka Chrome’is ja Edge’is.',
   instAndroid: 'Ava brauseri menüü (⋮ või ≡), vali „Paigalda rakendus“ või „Lisa avakuvale“ ja kinnita: ikoon ilmub sinu avakuvale.',
   instDesktop: 'Chrome’is või Edge’is: klõpsa aadressiriba paremas servas olevat paigaldusikooni või vali menüü ⋮ / ⋯ → „Paigalda“ (Edge: Rakendused → „Paigalda see sait rakendusena“). Maci Safaris: Fail → „Lisa Dock’i“. Muud brauserid: otsi menüüst „Paigalda“ või „Lisa avakuvale“.',
+  menuOff: 'Minu näpunäited on väljas, aga ma vastan ikka: „Rohkem abi“ kogu abi jaoks koos otsinguga, „Mis see on?“ et puudutada mida tahes ja kuulda, mida see teeb. „Lülita näpunäited sisse“ ja ma juhendan sind edasi.',
+  turnOn: 'Lülita näpunäited sisse',
 };

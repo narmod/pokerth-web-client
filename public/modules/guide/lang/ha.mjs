@@ -58,7 +58,7 @@ export default {
   askAgain: 'Sake taɓa shi don amfani da shi.',
   askUnknown: 'Babu bayani kan wannan tukuna — sake taɓa shi don amfani da shi.',
   askDone: 'An gama',
-  hsGuide: 'Taimakon Aas: yana kunna ni ko kashe ni, da menu na (sake nuna duk shawarwari, wannan yanayin “?”).',
+  hsGuide: 'Taimakon Aas: menu na — cikakken taimako, “Mene ne wannan?”, da shawarwarina a kunne ko a kashe.',
   hsForum: 'Labaran dandali: sabbin rubuce-rubuce na dandalin pokerth.net, da shafin Abubuwan da ke faruwa mai wasannin kofi masu zuwa.',
   hsRanking: 'Matsayi: matsayin hukuma na PokerTH da na al’umma (BBC, WEC), tare da bayanin kowane ɗan wasa.',
   hsPm: 'Saƙonninka na sirri da sauran ’yan wasa.',
@@ -279,4 +279,6 @@ export default {
   instIos: 'A iPhone da iPad: taɓa maɓallin Raba (murabba’i mai kibiya sama — a sabbin iOS yana iya kasancewa a menu na ⋯), zaɓi “Ƙara zuwa Allon Gida”, sannan “Ƙara”. Yana aiki a Safari, kuma a sabbin iOS a Chrome da Edge ma.',
   instAndroid: 'Buɗe menu na burauzarka (⋮ ko ≡), zaɓi “Sanya manhaja” ko “Ƙara zuwa allon gida”, sannan ka tabbatar: alamar za ta bayyana a allon gidanka.',
   instDesktop: 'A Chrome ko Edge: danna alamar sanyawa a dama na sandar adireshi, ko menu ⋮ / ⋯ → “Sanya” (Edge: Manhajoji → “Sanya wannan shafin a matsayin manhaja”). A Safari a kan Mac: Fayil → “Ƙara zuwa Dock”. Sauran burauzoci: nemo “Sanya” ko “Ƙara zuwa Allon Gida” a menu.',
+  menuOff: 'Shawarwarina a kashe suke, amma har yanzu ina amsawa: “Ƙarin taimako” don cikakken taimako tare da bincike, “Mene ne wannan?” don taɓa kowane abu ka ji abin da yake yi. “Kunna shawarwari” sai in jagorance ka yayin da kake ci gaba.',
+  turnOn: 'Kunna shawarwari',
 };

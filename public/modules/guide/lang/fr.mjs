@@ -58,7 +58,7 @@ export default {
   askAgain: 'Touche-le encore pour l’utiliser.',
   askUnknown: 'Pas encore d’explication pour celui-ci — touche-le encore pour l’utiliser.',
   askDone: 'Terminé',
-  hsGuide: 'Aide de l’As : m’active ou me désactive, et mon menu (revoir tous les conseils, ce mode « ? »).',
+  hsGuide: 'Aide de l’As : mon menu — toute l’aide, « C’est quoi ? », et mes conseils activés ou désactivés.',
   hsForum: 'Actualités du forum : les derniers messages du forum pokerth.net, et l’onglet Événements avec les prochaines parties de coupe.',
   hsRanking: 'Les classements : le classement officiel PokerTH et ceux de la communauté (BBC, WEC), avec le profil de chaque joueur.',
   hsPm: 'Tes messages privés avec les autres joueurs.',
@@ -279,4 +279,6 @@ export default {
   instIos: 'Sur iPhone et iPad : touche le bouton Partager (un carré avec une flèche vers le haut — sur les iOS récents, il peut se trouver dans le menu ⋯), choisis « Sur l’écran d’accueil », puis « Ajouter ». Ça marche dans Safari, et sur les iOS récents dans Chrome et Edge aussi.',
   instAndroid: 'Ouvre le menu de ton navigateur (⋮ ou ≡), choisis « Installer l’application » ou « Ajouter à l’écran d’accueil », puis confirme : l’icône atterrit sur ton écran d’accueil.',
   instDesktop: 'Dans Chrome ou Edge : clique sur l’icône d’installation à droite de la barre d’adresse, ou menu ⋮ / ⋯ → « Installer » (Edge : Applications → « Installer ce site en tant qu’application »). Dans Safari sur Mac : Fichier → « Ajouter au Dock ». Autres navigateurs : cherche « Installer » ou « Ajouter à l’écran d’accueil » dans le menu.',
+  menuOff: 'Mes conseils sont désactivés, mais je réponds quand même : « Plus d’aide » pour toute l’aide avec une recherche, « C’est quoi ? » pour toucher n’importe quoi et entendre ce que ça fait. « Activer les conseils » et je te guide au fil de l’eau.',
+  turnOn: 'Activer les conseils',
 };

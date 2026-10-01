@@ -58,7 +58,7 @@ export default {
   askAgain: 'Kullanmak için tekrar dokun.',
   askUnknown: 'Bunun için henüz bir açıklama yok — kullanmak için tekrar dokun.',
   askDone: 'Tamam',
-  hsGuide: 'As’ın yardımı: beni açar veya kapatır, bir de menüm (tüm ipuçlarını yeniden göster, bu “?” modu).',
+  hsGuide: 'As’ın yardımı: menüm — tüm yardım, “Bu ne?” ve ipuçlarımı açma ya da kapatma.',
   hsForum: 'Forum haberleri: pokerth.net forumundaki son gönderiler ve yaklaşan kupa oyunlarını gösteren Etkinlikler sekmesi.',
   hsRanking: 'Sıralamalar: resmî PokerTH sıralaması ve topluluk sıralamaları (BBC, WEC), her oyuncunun profiliyle.',
   hsPm: 'Diğer oyuncularla özel mesajların.',
@@ -279,4 +279,6 @@ export default {
   instIos: 'iPhone ve iPad’de: Paylaş düğmesine dokun (yukarı oklu bir kare — yeni iOS’ta ⋯ menüsünde olabilir), “Ana Ekrana Ekle”yi seç, ardından “Ekle”ye dokun. Safari’de çalışır, yeni iOS’ta Chrome ve Edge’de de.',
   instAndroid: 'Tarayıcı menünü aç (⋮ veya ≡), “Uygulamayı yükle” veya “Ana ekrana ekle”yi seç, sonra onayla: simge ana ekranına gelir.',
   instDesktop: 'Chrome veya Edge’de: adres çubuğunun sağındaki yükleme simgesine tıkla ya da ⋮ / ⋯ menüsü → “Yükle” (Edge: Uygulamalar → “Bu siteyi uygulama olarak yükle”). Mac’te Safari’de: Dosya → “Dock’a Ekle”. Diğer tarayıcılar: menüde “Yükle” veya “Ana Ekrana Ekle” seçeneğine bak.',
+  menuOff: 'İpuçlarım kapalı ama yine de yanıt veriyorum: “Daha fazla yardım” aramalı tüm yardım için, “Bu ne?” ise herhangi bir şeye dokunup ne işe yaradığını duymak için. “İpuçlarını aç” dersen ilerledikçe sana rehberlik ederim.',
+  turnOn: 'İpuçlarını aç',
 };

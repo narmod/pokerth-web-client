@@ -58,7 +58,7 @@ export default {
   askAgain: 'İstifadə etmək üçün yenidən toxunun.',
   askUnknown: 'Bunun üçün hələ izah yoxdur — istifadə etmək üçün yenidən toxunun.',
   askDone: 'Hazır',
-  hsGuide: 'Tuzun köməyi: məni yandırır və ya söndürür, həm də mənim menyum (bütün məsləhətləri yenidən göstər, bu “?” rejimi).',
+  hsGuide: 'Tuzun köməyi: mənim menyum — bütün kömək, “Bu nədir?” və məsləhətlərimin yandırılması və ya söndürülməsi.',
   hsForum: 'Forum xəbərləri: pokerth.net forumunun son yazıları və qarşıdakı kubok oyunları ilə Tədbirlər bölməsi.',
   hsRanking: 'Reytinqlər: rəsmi PokerTH reytinqi və icma reytinqləri (BBC, WEC), hər oyunçunun profili ilə.',
   hsPm: 'Digər oyunçularla şəxsi mesajlarınız.',
@@ -279,4 +279,6 @@ export default {
   instIos: 'iPhone və iPad-də: Paylaş düyməsinə toxunun (yuxarı oxlu kvadrat — son iOS-da ⋯ menyusunda ola bilər), “Əsas ekrana əlavə et” seçin, sonra “Əlavə et”. Safari-də işləyir, son iOS-da Chrome və Edge-də də.',
   instAndroid: 'Brauzer menyusunu (⋮ və ya ≡) açın, “Tətbiqi quraşdır” və ya “Əsas ekrana əlavə et” seçin, sonra təsdiqləyin: ikon əsas ekranınızda görünəcək.',
   instDesktop: 'Chrome və ya Edge-də: ünvan çubuğunun sağındakı quraşdırma ikonuna klikləyin və ya menyu ⋮ / ⋯ → “Quraşdır” (Edge: Tətbiqlər → “Bu saytı tətbiq kimi quraşdır”). Mac-də Safari-də: Fayl → “Dok-a əlavə et”. Digər brauzerlər: menyuda “Quraşdır” və ya “Əsas ekrana əlavə et” axtarın.',
+  menuOff: 'Məsləhətlərim söndürülüb, amma yenə də cavab verirəm: bütün kömək və axtarış üçün “Daha çox kömək”, istənilən şeyə toxunub nə etdiyini eşitmək üçün “Bu nədir?”. “Məsləhətləri yandır” düyməsinə toxunun, mən də addım-addım sizə bələdçilik edim.',
+  turnOn: 'Məsləhətləri yandır',
 };

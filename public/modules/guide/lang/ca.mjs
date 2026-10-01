@@ -58,7 +58,7 @@ export default {
   askAgain: 'Torna-la a tocar per fer-la servir.',
   askUnknown: 'Encara no tinc explicació per a això — torna-ho a tocar per fer-ho servir.',
   askDone: 'Fet',
-  hsGuide: 'Ajuda de l’As: m’activa o em desactiva, i el meu menú (tornar a mostrar tots els consells, aquest mode «?»).',
+  hsGuide: 'Ajuda de l’As: el meu menú — tota l’ajuda, «Què és això?» i els meus consells activats o desactivats.',
   hsForum: 'Notícies del fòrum: les últimes publicacions del fòrum de pokerth.net i la pestanya Esdeveniments amb les properes partides de copa.',
   hsRanking: 'Les classificacions: la classificació oficial de PokerTH i les de la comunitat (BBC, WEC), amb el perfil de cada jugador.',
   hsPm: 'Els teus missatges privats amb altres jugadors.',
@@ -279,4 +279,6 @@ export default {
   instIos: 'A l’iPhone i l’iPad: toca el botó Comparteix (un quadrat amb una fletxa cap amunt — a les versions recents d’iOS pot ser al menú ⋯), tria «Afegeix a la pantalla d’inici» i després «Afegeix». Funciona al Safari i, a les versions recents d’iOS, també al Chrome i a l’Edge.',
   instAndroid: 'Obre el menú del navegador (⋮ o ≡), tria «Instal·la l’aplicació» o «Afegeix a la pantalla d’inici» i confirma: la icona apareix a la pantalla d’inici.',
   instDesktop: 'Al Chrome o a l’Edge: fes clic a la icona d’instal·lació a la dreta de la barra d’adreces, o al menú ⋮ / ⋯ → «Instal·la» (Edge: Aplicacions → «Instal·la aquest lloc com a aplicació»). Al Safari d’un Mac: Arxiu → «Afegeix al Dock». Altres navegadors: busca al menú «Instal·la» o «Afegeix a la pantalla d’inici».',
+  menuOff: 'Els meus consells estan desactivats, però encara responc: «Més ajuda» per a tota l’ajuda amb cercador, «Què és això?» per tocar qualsevol cosa i saber què fa. «Activa els consells» i et guio pas a pas.',
+  turnOn: 'Activa els consells',
 };

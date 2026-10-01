@@ -58,7 +58,7 @@ export default {
   askAgain: 'Kuthephe futhi ukuze ukusebenzise.',
   askUnknown: 'Ayikho incazelo yalokhu okwamanje — kuthephe futhi ukuze ukusebenzise.',
   askDone: 'Kuqediwe',
-  hsGuide: 'Usizo luka-Ace: luyangivula noma lungivale, kanye nemenyu yami (bonisa zonke izeluleko futhi, le modi ethi “?”).',
+  hsGuide: 'Usizo luka-Ace: imenyu yami — usizo lonke, “Kuyini lokhu?”, nokuvula noma ukucisha izeluleko zami.',
   hsForum: 'Izindaba zeforamu: okuthunyelwe kwakamuva kweforamu ye-pokerth.net, kanye nethebhu ethi Imicimbi enemidlalo yendebe ezayo.',
   hsRanking: 'Izinga: izinga elisemthethweni le-PokerTH nalawo omphakathi (BBC, WEC), nephrofayela yomdlali ngamunye.',
   hsPm: 'Imilayezo yakho eyimfihlo nabanye abadlali.',
@@ -279,4 +279,6 @@ export default {
   instIos: 'Ku-iPhone nase-iPad: thepha inkinobho ethi Yabelana (isikwele esinomcibisholo oya phezulu — ku-iOS entsha kungase kube semenyu ethi ⋯), khetha “Engeza Esikrinini Sasekhaya”, bese “Engeza”. Isebenza ku-Safari, nakuba ku-iOS entsha ne-Chrome ne-Edge.',
   instAndroid: 'Vula imenyu yesiphequluli sakho (⋮ noma ≡), khetha “Faka uhlelo” noma “Engeza esikrinini sasekhaya”, bese uqinisekisa: isithonjana sifika esikrinini sakho sasekhaya.',
   instDesktop: 'Ku-Chrome noma ku-Edge: chofoza isithonjana sokufaka ngakwesokudla sebha yekheli, noma imenyu ⋮ / ⋯ → “Faka” (Edge: Izinhlelo zokusebenza → “Faka leli sayithi njengohlelo”). Ku-Safari ku-Mac: Ifayela → “Engeza ku-Dock”. Ezinye iziphequluli: funa “Faka” noma “Engeza Esikrinini Sasekhaya” kumenyu.',
+  menuOff: 'Izeluleko zami zivaliwe, kodwa ngisaphendula: “Usizo olwengeziwe” kusizo lonke olunosesho, “Kuyini lokhu?” ukuze uthinte noma yini uzwe ukuthi yenzani. “Vula izeluleko” bese ngikuqondisa njengoba uqhubeka.',
+  turnOn: 'Vula izeluleko',
 };

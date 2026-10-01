@@ -58,7 +58,7 @@ export default {
   askAgain: 'Tẹ ẹ́ lẹ́ẹ̀kan sí i láti lò ó.',
   askUnknown: 'Kò sí àlàyé fún èyí síbẹ̀ — tẹ ẹ́ lẹ́ẹ̀kan sí i láti lò ó.',
   askDone: 'Ó ti parí',
-  hsGuide: 'Ìrànlọ́wọ́ Ace: ó ń tàn mí tàbí pa mí, àti àkójọ-àṣàyàn mi (fi gbogbo ìmọ̀ràn hàn lẹ́ẹ̀kan sí i, ọ̀nà “?” yìí).',
+  hsGuide: 'Ìrànlọ́wọ́ Ace: àkójọ-àṣàyàn mi — gbogbo ìrànlọ́wọ́, “Kí ni èyí?”, àti títan tàbí pípa àwọn ìmọ̀ràn mi.',
   hsForum: 'Ìròyìn àpéjọ: àwọn ìfiránṣẹ́ tuntun jù lọ ti àpéjọ pokerth.net, àti táàbù Àwọn ìṣẹ̀lẹ̀ pẹ̀lú àwọn eré ife-ẹ̀yẹ tó ń bọ̀.',
   hsRanking: 'Àwọn ipò: ipò PokerTH ti ìjọba àti ti àwùjọ (BBC, WEC), pẹ̀lú àkọsílẹ̀ òṣèré kọ̀ọ̀kan.',
   hsPm: 'Àwọn ìfiránṣẹ́ àṣírí rẹ pẹ̀lú àwọn òṣèré mìíràn.',
@@ -279,4 +279,6 @@ export default {
   instIos: 'Lórí iPhone àti iPad: tẹ bọ́tìnì Pín (onígun mẹ́rin pẹ̀lú ọfà tó ń tọ́ka sókè — lórí iOS tuntun ó lè wà nínú àkójọ ⋯), yan “Fi kún Ojú Ilé”, lẹ́yìn náà “Fi kún un”. Ó ń ṣiṣẹ́ nínú Safari, àti lórí iOS tuntun nínú Chrome àti Edge pẹ̀lú.',
   instAndroid: 'Ṣí àkójọ aṣàwákiri rẹ (⋮ tàbí ≡), yan “Fi ìṣàfilọ́lẹ̀ sórí ẹ̀rọ” tàbí “Fi kún ojú ilé”, lẹ́yìn náà jẹ́rìísí: àmì náà yóò hàn lórí ojú ilé rẹ.',
   instDesktop: 'Nínú Chrome tàbí Edge: tẹ àmì ìfisórí ní ọ̀tún ọ̀pá àdírẹ́sì, tàbí àkójọ ⋮ / ⋯ → “Fi sórí ẹ̀rọ” (Edge: Àwọn ìṣàfilọ́lẹ̀ → “Fi ojú-ìwé yìí sórí ẹ̀rọ gẹ́gẹ́ bí ìṣàfilọ́lẹ̀”). Nínú Safari lórí Mac: Fáìlì → “Fi kún Dock”. Àwọn aṣàwákiri míì: wá “Fi sórí ẹ̀rọ” tàbí “Fi kún ojú ilé” nínú àkójọ.',
+  menuOff: 'Àwọn ìmọ̀ràn mi wà ní pípa, ṣùgbọ́n mo ṣì ń dáhùn: “Ìrànlọ́wọ́ síi” fún gbogbo ìrànlọ́wọ́ pẹ̀lú ìwádìí, “Kí ni èyí?” láti tẹ nǹkan kan kí o sì gbọ́ ohun tó ń ṣe. Tẹ “Tàn ìmọ̀ràn”, màá sì máa tọ́ ọ sọ́nà bí o ṣe ń lọ.',
+  turnOn: 'Tàn ìmọ̀ràn',
 };

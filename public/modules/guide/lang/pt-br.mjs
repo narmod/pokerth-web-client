@@ -58,7 +58,7 @@ export default {
   askAgain: 'Toque de novo para usar.',
   askUnknown: 'Ainda não tenho explicação para isto — toque de novo para usar.',
   askDone: 'Pronto',
-  hsGuide: 'Ajuda do Ás: me liga ou desliga, e o meu menu (mostrar todas as dicas de novo, este modo “?”).',
+  hsGuide: 'Ajuda do Ás: o meu menu — a ajuda completa, “O que é isto?”, e as minhas dicas ativadas ou desativadas.',
   hsForum: 'Novidades do fórum: os últimos posts do fórum pokerth.net, e a aba Eventos com os próximos jogos de copa.',
   hsRanking: 'Os rankings: o ranking oficial do PokerTH e os da comunidade (BBC, WEC), com o perfil de cada jogador.',
   hsPm: 'Suas mensagens privadas com outros jogadores.',
@@ -279,4 +279,6 @@ export default {
   instIos: 'No iPhone e no iPad: toque no botão Compartilhar (um quadrado com uma seta para cima — no iOS recente ele pode estar no menu ⋯), escolha “Adicionar à Tela de Início” e depois “Adicionar”. Funciona no Safari e, no iOS recente, também no Chrome e no Edge.',
   instAndroid: 'Abra o menu do navegador (⋮ ou ≡), escolha “Instalar app” ou “Adicionar à tela inicial” e confirme: o ícone vai para a sua tela inicial.',
   instDesktop: 'No Chrome ou no Edge: clique no ícone de instalação à direita da barra de endereço, ou no menu ⋮ / ⋯ → “Instalar” (Edge: Aplicativos → “Instalar este site como um aplicativo”). No Safari do Mac: Arquivo → “Adicionar ao Dock”. Outros navegadores: procure “Instalar” ou “Adicionar à tela inicial” no menu.',
+  menuOff: 'Minhas dicas estão desativadas, mas eu ainda respondo: “Mais ajuda” para a ajuda completa com busca, “O que é isto?” para tocar em qualquer coisa e ouvir o que ela faz. Com “Ativar dicas”, eu guio você pelo caminho.',
+  turnOn: 'Ativar dicas',
 };

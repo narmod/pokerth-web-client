@@ -58,7 +58,7 @@ export default {
   askAgain: 'Ýttu aftur til að nota það.',
   askUnknown: 'Engin skýring á þessu enn — ýttu aftur til að nota það.',
   askDone: 'Lokið',
-  hsGuide: 'Hjálp ássins: kveikir eða slekkur á mér, og valmyndin mín (sýna allar ábendingar aftur, þessi „?“-hamur).',
+  hsGuide: 'Hjálp ássins: valmyndin mín — öll hjálpin, „Hvað er þetta?“ og ábendingarnar mínar kveiktar eða slökktar.',
   hsForum: 'Fréttir af spjallborðinu: nýjustu færslurnar á spjallborði pokerth.net, og flipinn Viðburðir með næstu bikarleikjum.',
   hsRanking: 'Stigatöflurnar: opinbera stigatafla PokerTH og töflur samfélagsins (BBC, WEC), með prófíl hvers leikmanns.',
   hsPm: 'Einkaskilaboðin þín við aðra leikmenn.',
@@ -279,4 +279,6 @@ export default {
   instIos: 'Á iPhone og iPad: ýttu á deilihnappinn (ferningur með ör upp — í nýlegu iOS getur hann verið í ⋯ valmyndinni), veldu „Bæta við heimaskjá“ og síðan „Bæta við“. Þetta virkar í Safari og í nýlegu iOS einnig í Chrome og Edge.',
   instAndroid: 'Opnaðu valmynd vafrans (⋮ eða ≡), veldu „Setja upp forrit“ eða „Bæta við heimaskjá“ og staðfestu: táknið birtist á heimaskjánum.',
   instDesktop: 'Í Chrome eða Edge: smelltu á uppsetningartáknið hægra megin í veffangastikunni, eða valmynd ⋮ / ⋯ → „Setja upp“ (Edge: Forrit → „Setja þessa vefsíðu upp sem forrit“). Í Safari á Mac: Skrá → „Bæta við Dock“. Aðrir vafrar: leitaðu í valmyndinni að „Setja upp“ eða „Bæta við heimaskjá“.',
+  menuOff: 'Slökkt er á ábendingunum mínum en ég svara samt: „Meiri hjálp“ fyrir alla hjálpina með leit, „Hvað er þetta?“ til að smella á hvað sem er og sjá hvað það gerir. „Kveikja á ábendingum“ og ég leiðbeini þér jafnóðum.',
+  turnOn: 'Kveikja á ábendingum',
 };

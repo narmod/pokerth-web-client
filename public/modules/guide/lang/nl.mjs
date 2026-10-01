@@ -58,7 +58,7 @@ export default {
   askAgain: 'Tik er nog eens op om het te gebruiken.',
   askUnknown: 'Hiervoor is nog geen uitleg — tik er nog eens op om het te gebruiken.',
   askDone: 'Klaar',
-  hsGuide: 'Hulp van de Aas: zet mij aan of uit, en mijn menu (alle tips opnieuw tonen, deze ‘?’-modus).',
+  hsGuide: 'Hulp van de Aas: mijn menu — de volledige hulp, “Wat is dit?” en mijn tips aan of uit.',
   hsForum: 'Forumnieuws: de nieuwste berichten van het pokerth.net-forum, en het tabblad Evenementen met de komende bekerwedstrijden.',
   hsRanking: 'De ranglijsten: de officiële PokerTH-ranglijst en die van de community (BBC, WEC), met het profiel van elke speler.',
   hsPm: 'Je privéberichten met andere spelers.',
@@ -279,4 +279,6 @@ export default {
   instIos: 'Op iPhone en iPad: tik op de Deel-knop (een vierkant met een pijl omhoog — op recente iOS kan die in het ⋯-menu staan), kies “Zet op beginscherm” en daarna “Voeg toe”. Het werkt in Safari en op recente iOS ook in Chrome en Edge.',
   instAndroid: 'Open het browsermenu (⋮ of ≡), kies “App installeren” of “Toevoegen aan startscherm” en bevestig: het pictogram verschijnt op je beginscherm.',
   instDesktop: 'In Chrome of Edge: klik op het installatiepictogram rechts in de adresbalk, of menu ⋮ / ⋯ → “Installeren” (Edge: Apps → “Deze site als app installeren”). In Safari op een Mac: Archief → “Zet in Dock”. Andere browsers: zoek in het menu naar “Installeren” of “Toevoegen aan startscherm”.',
+  menuOff: 'Mijn tips staan uit, maar ik antwoord nog steeds: “Meer hulp” voor de volledige hulp met zoekfunctie, “Wat is dit?” om op iets te tikken en te horen wat het doet. Met “Tips aanzetten” begeleid ik je onderweg.',
+  turnOn: 'Tips aanzetten',
 };

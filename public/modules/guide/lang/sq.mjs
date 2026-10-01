@@ -58,7 +58,7 @@ export default {
   askAgain: 'Preke sërish për ta përdorur.',
   askUnknown: 'Ende s’ka shpjegim për këtë — preke sërish për ta përdorur.',
   askDone: 'U krye',
-  hsGuide: 'Ndihma e Asit: më ndez ose më fik, dhe menyja ime (shfaq sërish të gjitha këshillat, ky modalitet “?”).',
+  hsGuide: 'Ndihma e Asit: menyja ime — gjithë ndihma, «Çfarë është kjo?» dhe këshillat e mia të aktivizuara ose të çaktivizuara.',
   hsForum: 'Lajmet e forumit: postimet më të fundit të forumit pokerth.net dhe skeda Ngjarje me lojërat e ardhshme të kupës.',
   hsRanking: 'Renditjet: renditja zyrtare e PokerTH dhe ato të komunitetit (BBC, WEC), me profilin e çdo lojtari.',
   hsPm: 'Mesazhet e tua private me lojtarët e tjerë.',
@@ -279,4 +279,6 @@ export default {
   instIos: 'Në iPhone dhe iPad: prek butonin Shpërndaje (një katror me shigjetë lart — në iOS-in e fundit mund të jetë në menynë ⋯), zgjidh «Shto në ekranin fillestar», pastaj «Shto». Funksionon në Safari, dhe në iOS-in e fundit edhe në Chrome e Edge.',
   instAndroid: 'Hap menynë e shfletuesit (⋮ ose ≡), zgjidh «Instalo aplikacionin» ose «Shto në ekranin fillestar» dhe konfirmo: ikona shfaqet në ekranin tënd fillestar.',
   instDesktop: 'Në Chrome ose Edge: kliko ikonën e instalimit në të djathtë të shiritit të adresës, ose menyja ⋮ / ⋯ → «Instalo» (Edge: Aplikacionet → «Instalo këtë sajt si aplikacion»). Në Safari në Mac: Skedari → «Shto te Dock». Në shfletues të tjerë: kërko në meny «Instalo» ose «Shto në ekranin fillestar».',
+  menuOff: 'Këshillat e mia janë të çaktivizuara, por prapë përgjigjem: «Më shumë ndihmë» për gjithë ndihmën me kërkim, «Çfarë është kjo?» për të prekur çfarëdo gjëje e për të dëgjuar çfarë bën. Me «Aktivizo këshillat» të udhëheq gjatë rrugës.',
+  turnOn: 'Aktivizo këshillat',
 };

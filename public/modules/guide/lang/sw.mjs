@@ -58,7 +58,7 @@ export default {
   askAgain: 'Kiguse tena ili kukitumia.',
   askUnknown: 'Bado hakuna maelezo ya hiki — kiguse tena ili kukitumia.',
   askDone: 'Nimemaliza',
-  hsGuide: 'Msaada wa Ekaa: huniwasha au kunizima, pamoja na menyu yangu (onyesha madokezo yote tena, hali hii ya “?”).',
+  hsGuide: 'Msaada wa Ekaa: menyu yangu — msaada mzima, “Hiki ni nini?”, na madokezo yangu yakiwashwa au kuzimwa.',
   hsForum: 'Habari za jukwaa: machapisho ya karibuni ya jukwaa la pokerth.net, na kichupo cha Matukio chenye michezo ijayo ya vikombe.',
   hsRanking: 'Viwango: kiwango rasmi cha PokerTH na vile vya jumuiya (BBC, WEC), pamoja na wasifu wa kila mchezaji.',
   hsPm: 'Ujumbe wako wa faragha na wachezaji wengine.',
@@ -279,4 +279,6 @@ export default {
   instIos: 'Kwenye iPhone na iPad: gusa kitufe cha Kushiriki (mraba wenye mshale unaoelekea juu — kwenye iOS mpya kinaweza kuwa kwenye menyu ya ⋯), chagua “Add to Home Screen”, kisha “Add”. Hufanya kazi kwenye Safari, na kwenye iOS mpya pia kwenye Chrome na Edge.',
   instAndroid: 'Fungua menyu ya kivinjari chako (⋮ au ≡), chagua “Install app” au “Add to Home Screen”, kisha thibitisha: ikoni itaonekana kwenye skrini yako ya nyumbani.',
   instDesktop: 'Kwenye Chrome au Edge: bofya ikoni ya kusakinisha upande wa kulia wa upau wa anwani, au menyu ⋮ / ⋯ → “Install” (Edge: Apps → “Install this site as an app”). Kwenye Safari ya Mac: File → “Add to Dock”. Vivinjari vingine: tafuta kwenye menyu “Install” au “Add to Home Screen”.',
+  menuOff: 'Madokezo yangu yamezimwa, lakini bado ninajibu: “Msaada zaidi” kwa msaada mzima wenye utafutaji, “Hiki ni nini?” ili uguse chochote na usikie kinafanya nini. Ukigusa “Washa madokezo” nitakuongoza njiani.',
+  turnOn: 'Washa madokezo',
 };

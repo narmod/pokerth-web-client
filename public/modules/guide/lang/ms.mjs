@@ -58,7 +58,7 @@ export default {
   askAgain: 'Ketik sekali lagi untuk menggunakannya.',
   askUnknown: 'Belum ada penerangan untuk yang ini — ketik sekali lagi untuk menggunakannya.',
   askDone: 'Selesai',
-  hsGuide: 'Bantuan si Sat: menghidupkan atau mematikan saya, dan menu saya (tunjukkan semua petua semula, mode “?” ini).',
+  hsGuide: 'Bantuan si Sat: menu saya — keseluruhan bantuan, “Apakah ini?”, dan petua saya dihidupkan atau dimatikan.',
   hsForum: 'Berita forum: siaran terkini forum pokerth.net, dan tab Acara dengan perlawanan piala yang akan datang.',
   hsRanking: 'Peringkat: peringkat rasmi PokerTH dan peringkat komuniti (BBC, WEC), dengan profil setiap pemain.',
   hsPm: 'Mesej peribadi Anda dengan pemain lain.',
@@ -279,4 +279,6 @@ export default {
   instIos: 'Pada iPhone dan iPad: ketik butang Kongsi (petak dengan anak panah ke atas — pada iOS terkini ia mungkin berada dalam menu ⋯), pilih “Tambah ke Skrin Utama”, kemudian “Tambah”. Ia berfungsi dalam Safari, dan pada iOS terkini dalam Chrome dan Edge juga.',
   instAndroid: 'Buka menu pelayar anda (⋮ atau ≡), pilih “Pasang aplikasi” atau “Tambah ke skrin utama”, kemudian sahkan: ikon akan muncul pada skrin utama anda.',
   instDesktop: 'Dalam Chrome atau Edge: klik ikon pemasangan di sebelah kanan bar alamat, atau menu ⋮ / ⋯ → “Pasang” (Edge: Aplikasi → “Pasang tapak ini sebagai aplikasi”). Dalam Safari pada Mac: Fail → “Tambah ke Dok”. Pelayar lain: cari “Pasang” atau “Tambah ke skrin utama” dalam menu.',
+  menuOff: 'Petua saya dimatikan, tetapi saya masih menjawab: “Lagi bantuan” untuk keseluruhan bantuan dengan carian, “Apakah ini?” untuk mengetik apa-apa sahaja dan mendengar fungsinya. “Hidupkan petua” dan saya akan membimbing Anda sepanjang jalan.',
+  turnOn: 'Hidupkan petua',
 };

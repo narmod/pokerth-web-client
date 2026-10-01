@@ -58,7 +58,7 @@ export default {
   askAgain: 'Dodirni ponovno da ga upotrijebiš.',
   askUnknown: 'Za ovo još nemam objašnjenje — dodirni ponovno da ga upotrijebiš.',
   askDone: 'Gotovo',
-  hsGuide: 'Pomoć asa: uključuje me ili isključuje, uz moj izbornik (ponovno prikaži sve savjete, ovaj „?“ način).',
+  hsGuide: 'Pomoć asa: moj izbornik — cijela pomoć, „Što je ovo?“ i moji savjeti uključeni ili isključeni.',
   hsForum: 'Novosti s foruma: najnovije objave na forumu pokerth.net i kartica Događaji s nadolazećim kup igrama.',
   hsRanking: 'Poretci: službeni poredak PokerTH i oni zajednice (BBC, WEC), s profilom svakog igrača.',
   hsPm: 'Tvoje privatne poruke s drugim igračima.',
@@ -279,4 +279,6 @@ export default {
   instIos: 'Na iPhoneu i iPadu: dodirni gumb Dijeli (kvadrat sa strelicom prema gore — na novijem iOS-u može biti u izborniku ⋯), odaberi „Dodaj na početni zaslon“, zatim „Dodaj“. Radi u Safariju, a na novijem iOS-u i u Chromeu i Edgeu.',
   instAndroid: 'Otvori izbornik preglednika (⋮ ili ≡), odaberi „Instaliraj aplikaciju“ ili „Dodaj na početni zaslon“, zatim potvrdi: ikona se pojavljuje na početnom zaslonu.',
   instDesktop: 'U Chromeu ili Edgeu: klikni ikonu za instalaciju desno u adresnoj traci ili izbornik ⋮ / ⋯ → „Instaliraj“ (Edge: Aplikacije → „Instaliraj ovu web-lokaciju kao aplikaciju“). U Safariju na Macu: Datoteka → „Dodaj u Dock“. Ostali preglednici: potraži u izborniku „Instaliraj“ ili „Dodaj na početni zaslon“.',
+  menuOff: 'Savjeti su mi isključeni, ali i dalje odgovaram: „Više pomoći“ za cijelu pomoć s pretraživanjem, „Što je ovo?“ da dodirneš bilo što i saznaš što radi. „Uključi savjete“ i vodim te usput.',
+  turnOn: 'Uključi savjete',
 };

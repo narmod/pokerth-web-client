@@ -58,7 +58,7 @@ export default {
   askAgain: 'Tik weer daarop om dit te gebruik.',
   askUnknown: 'Nog geen verduideliking vir hierdie een nie — tik weer daarop om dit te gebruik.',
   askDone: 'Klaar',
-  hsGuide: 'Die Aas se Hulp: skakel my aan of af, plus my kieslys (wys alle wenke weer, hierdie “?”-modus).',
+  hsGuide: 'Die Aas se Hulp: my kieslys — die hele hulp, “Wat is dit?” en my wenke aan of af.',
   hsForum: 'Forumnuus: die jongste plasings op die pokerth.net-forum, en die oortjie Geleenthede met die komende bekerspelle.',
   hsRanking: 'Die ranglyste: die amptelike PokerTH-ranglys en dié van die gemeenskap (BBC, WEC), met elke speler se profiel.',
   hsPm: 'Jou privaat boodskappe met ander spelers.',
@@ -279,4 +279,6 @@ export default {
   instIos: 'Op iPhone en iPad: tik die Deel-knoppie (’n vierkant met ’n pyltjie op — op onlangse iOS kan dit in die ⋯-kieslys wees), kies „Voeg by tuisskerm”, dan „Voeg by”. Dit werk in Safari, en op onlangse iOS ook in Chrome en Edge.',
   instAndroid: 'Maak jou blaaier se kieslys oop (⋮ of ≡), kies „Installeer app” of „Voeg by tuisskerm”, en bevestig: die ikoon verskyn op jou tuisskerm.',
   instDesktop: 'In Chrome of Edge: klik op die installeerikoon regs van die adresbalk, of kieslys ⋮ / ⋯ → „Installeer” (Edge: Toepassings → „Installeer hierdie werf as ’n toep”). In Safari op ’n Mac: Lêer → „Voeg by Dock”. Ander blaaiers: soek in die kieslys na „Installeer” of „Voeg by tuisskerm”.',
+  menuOff: 'My wenke is af, maar ek antwoord steeds: „Meer hulp” vir die hele hulp met ’n soekfunksie, „Wat is dit?” om op enigiets te tik en te hoor wat dit doen. „Skakel wenke aan” en ek lei jou gaandeweg.',
+  turnOn: 'Skakel wenke aan',
 };

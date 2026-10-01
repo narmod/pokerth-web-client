@@ -58,7 +58,7 @@ export default {
   askAgain: 'Tocca di nuovo per usarlo.',
   askUnknown: 'Per questo non ho ancora una spiegazione — tocca di nuovo per usarlo.',
   askDone: 'Fatto',
-  hsGuide: 'Aiuto dell’Asso: mi attiva o disattiva, e il mio menu (mostra di nuovo tutti i consigli, questa modalità «?»).',
+  hsGuide: 'Aiuto dell’Asso: il mio menu — tutto l’aiuto, «Cos’è?» e i miei consigli attivati o disattivati.',
   hsForum: 'Novità dal forum: gli ultimi messaggi del forum di pokerth.net, e la scheda Eventi con le prossime partite di coppa.',
   hsRanking: 'Le classifiche: la classifica ufficiale PokerTH e quelle della comunità (BBC, WEC), con il profilo di ogni giocatore.',
   hsPm: 'I tuoi messaggi privati con gli altri giocatori.',
@@ -279,4 +279,6 @@ export default {
   instIos: 'Su iPhone e iPad: tocca il pulsante Condividi (un quadrato con una freccia verso l’alto — sulle versioni recenti di iOS può trovarsi nel menu ⋯), scegli «Aggiungi alla schermata Home», poi «Aggiungi». Funziona in Safari e, sulle versioni recenti di iOS, anche in Chrome ed Edge.',
   instAndroid: 'Apri il menu del browser (⋮ o ≡), scegli «Installa app» o «Aggiungi a schermata Home», poi conferma: l’icona compare nella schermata Home.',
   instDesktop: 'In Chrome o Edge: clicca l’icona di installazione a destra della barra degli indirizzi, oppure menu ⋮ / ⋯ → «Installa» (Edge: App → «Installa questo sito come app»). In Safari su Mac: File → «Aggiungi al Dock». Altri browser: cerca nel menu «Installa» o «Aggiungi a schermata Home».',
+  menuOff: 'I miei consigli sono disattivati, ma rispondo lo stesso: «Altro aiuto» per tutto l’aiuto con una ricerca, «Cos’è?» per toccare qualsiasi cosa e scoprire a cosa serve. «Attiva i consigli» e ti guido man mano.',
+  turnOn: 'Attiva i consigli',
 };

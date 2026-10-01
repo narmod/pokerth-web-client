@@ -11558,7 +11558,6 @@ html[data-seat-struct="qml"] .seat:not(.me) .seat-narrow .seat-holecards .pk { w
    retirée. Option « bouton Aide » (pth_help_btn) conservée. Les classes
    .help-search / .help-body / .help-p / .help-wip / .help-result* servent à la
    recherche des Options avancées (modules/ui/adv-search.mjs). */
-body.adv-no-helpbtn .help-menu-btn{display:none}
 /* Aide de l'As (modules/guide) — boutons de l'écran de connexion, des menus
    des headers et option. Visibles dès que le module est disponible
    (body.guide-avail : public depuis L2 ; jamais en mode spectateur /live). */

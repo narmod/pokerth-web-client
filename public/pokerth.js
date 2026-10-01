@@ -249,7 +249,6 @@ function applyAdvOpts() {
     b.classList.remove('adv-no-winopen'); // bouton dore tant que sa fenetre est ouverte : toujours actif — option retiree (narmod 2026-07-30), le CSS reste keye sur la classe
     try { if (typeof window._syncWinBtns === 'function') window._syncWinBtns(); } catch (e) {}
     b.classList.toggle('adv-no-handsbtn', !_advGet('hands_btn', true)); // icone combinaisons de poker sur le tapis (extension web)
-    b.classList.toggle('adv-no-helpbtn', !_advGet('help_btn', true)); // entree « Aide » des menus des headers (extension web)
     b.classList.toggle('adv-no-avcreate', !_advGet('avatar_create', true)); // onglet « Créer » de la fenêtre avatar (avatar-studio)
     try { if (typeof window.applyTableZoom === 'function') window.applyTableZoom(); } catch (e) {}
     try { var _slm = localStorage.getItem('pth_seat_layout'); _slm = (_slm === 'pokerth-official' || _slm === 'pokerth-ellipse' || _slm === 'custom') ? _slm : 'auto'; document.documentElement.setAttribute('data-seat-layout', _slm); } catch (e) {}
@@ -432,7 +431,6 @@ function openAdvancedOptions() {
   sync('adv-assist', 'assist', true);
   sync('adv-showodds', 'show_odds', true);
   sync('adv-handsbtn', 'hands_btn', true);
-  sync('adv-helpbtn', 'help_btn', true);   // entree « Aide » dans les menus des headers
   sync('adv-voice', 'voice', false);
   sync('adv-haptic', 'haptic', true);
   sync('adv-displaybb', 'display_bb', false);
@@ -12014,7 +12012,7 @@ window.App = App;
   }, { passive:false });
 })();
 
-window.BUILD_VERSION='2.1.9-web.274'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
+window.BUILD_VERSION='2.1.9-web.275'; try{ var b=document.getElementById('cf-build'); if(b) b.textContent='\u00b7 build '+window.BUILD_VERSION; }catch(e){} })();
 
 /* theme-color du navigateur : suit le thème actif ou la palette High contrast
    (Android, Safari, iOS standalone récent). Lit --theme-color et met

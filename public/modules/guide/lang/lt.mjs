@@ -58,7 +58,7 @@ export default {
   askAgain: 'Bakstelėk dar kartą, kad panaudotum.',
   askUnknown: 'Šiam elementui paaiškinimo dar nėra — bakstelėk dar kartą, kad panaudotum.',
   askDone: 'Baigta',
-  hsGuide: 'Tūzo pagalba: įjungia arba išjungia mane, ir mano meniu (vėl rodyti visus patarimus, šis „?“ režimas).',
+  hsGuide: 'Tūzo pagalba: mano meniu — visa pagalba, „Kas tai?“ ir mano patarimų įjungimas ar išjungimas.',
   hsForum: 'Forumo naujienos: naujausi pokerth.net forumo įrašai ir skirtukas Renginiai su artėjančiais taurės žaidimais.',
   hsRanking: 'Reitingai: oficialus PokerTH reitingas ir bendruomenės reitingai (BBC, WEC), su kiekvieno žaidėjo profiliu.',
   hsPm: 'Tavo privačios žinutės su kitais žaidėjais.',
@@ -279,4 +279,6 @@ export default {
   instIos: 'iPhone ir iPad įrenginiuose: bakstelėk bendrinimo mygtuką (kvadratas su rodykle aukštyn — naujesnėje iOS jis gali būti meniu ⋯), pasirink „Pridėti į pradžios ekraną“, tada „Pridėti“. Tai veikia per Safari, o naujesnėje iOS — ir per Chrome bei Edge.',
   instAndroid: 'Atverk naršyklės meniu (⋮ arba ≡), pasirink „Įdiegti programėlę“ arba „Pridėti į pradžios ekraną“ ir patvirtink: piktograma atsiras pradžios ekrane.',
   instDesktop: 'Chrome ar Edge naršyklėje: spustelėk diegimo piktogramą adreso juostos dešinėje arba meniu ⋮ / ⋯ → „Įdiegti“ (Edge: Programos → „Įdiegti šią svetainę kaip programą“). Safari naršyklėje Mac kompiuteryje: Failas → „Pridėti prie Dock“. Kitos naršyklės: meniu ieškok „Įdiegti“ arba „Pridėti į pradžios ekraną“.',
+  menuOff: 'Mano patarimai išjungti, bet vis tiek atsakau: „Daugiau pagalbos“ — visa pagalba su paieška, „Kas tai?“ — bakstelėk bet ką ir sužinosi, ką tai daro. Paspausk „Įjungti patarimus“, ir aš tave vesiu žingsnis po žingsnio.',
+  turnOn: 'Įjungti patarimus',
 };

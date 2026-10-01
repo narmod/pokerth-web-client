@@ -58,7 +58,7 @@ export default {
   askAgain: 'Chạm lần nữa để sử dụng.',
   askUnknown: 'Chưa có giải thích cho mục này — chạm lần nữa để sử dụng.',
   askDone: 'Xong',
-  hsGuide: 'Trợ giúp của quân Át: bật hoặc tắt tôi, và menu của tôi (hiện lại tất cả mẹo, chế độ “?” này).',
+  hsGuide: 'Trợ giúp của quân Át: menu của tôi — toàn bộ trợ giúp, “Đây là gì?”, và bật hoặc tắt mẹo của tôi.',
   hsForum: 'Tin tức diễn đàn: các bài viết mới nhất trên diễn đàn pokerth.net, và thẻ Sự kiện với các ván cúp sắp diễn ra.',
   hsRanking: 'Bảng xếp hạng: bảng xếp hạng chính thức của PokerTH và của cộng đồng (BBC, WEC), kèm hồ sơ của từng người chơi.',
   hsPm: 'Tin nhắn riêng của bạn với những người chơi khác.',
@@ -279,4 +279,6 @@ export default {
   instIos: 'Trên iPhone và iPad: chạm nút Chia sẻ (hình vuông có mũi tên hướng lên — trên iOS mới nó có thể nằm trong menu ⋯), chọn “Thêm vào Màn hình chính”, rồi chạm “Thêm”. Cách này dùng được trong Safari, và trên iOS mới cả trong Chrome và Edge.',
   instAndroid: 'Mở menu trình duyệt (⋮ hoặc ≡), chọn “Cài đặt ứng dụng” hoặc “Thêm vào Màn hình chính”, rồi xác nhận: biểu tượng sẽ xuất hiện trên màn hình chính của bạn.',
   instDesktop: 'Trong Chrome hoặc Edge: nhấp biểu tượng cài đặt ở bên phải thanh địa chỉ, hoặc menu ⋮ / ⋯ → “Cài đặt” (Edge: Ứng dụng → “Cài đặt trang web này dưới dạng ứng dụng”). Trong Safari trên Mac: Tệp → “Thêm vào Dock”. Trình duyệt khác: tìm “Cài đặt” hoặc “Thêm vào Màn hình chính” trong menu.',
+  menuOff: 'Mẹo của mình đang tắt, nhưng mình vẫn trả lời: “Thêm trợ giúp” cho toàn bộ phần trợ giúp có tìm kiếm, “Đây là gì?” để chạm vào bất kỳ thứ gì và nghe nó làm gì. “Bật mẹo” rồi mình sẽ hướng dẫn bạn dần dần.',
+  turnOn: 'Bật mẹo',
 };

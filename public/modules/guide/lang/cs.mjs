@@ -58,7 +58,7 @@ export default {
   askAgain: 'Klepni znovu a použiješ to.',
   askUnknown: 'K tomuhle zatím vysvětlení nemám — klepni znovu a použiješ to.',
   askDone: 'Hotovo',
-  hsGuide: 'Nápověda od esa: zapíná a vypíná mě a otevírá moji nabídku (znovu zobrazit všechny tipy, tento režim „?“).',
+  hsGuide: 'Nápověda od esa: moje nabídka — celá nápověda, „Co je to?“ a zapnutí či vypnutí mých tipů.',
   hsForum: 'Novinky z fóra: nejnovější příspěvky fóra pokerth.net a záložka Události s nadcházejícími pohárovými hrami.',
   hsRanking: 'Žebříčky: oficiální žebříček PokerTH a komunitní žebříčky (BBC, WEC), s profilem každého hráče.',
   hsPm: 'Tvoje soukromé zprávy s ostatními hráči.',
@@ -279,4 +279,6 @@ export default {
   instIos: 'Na iPhonu a iPadu: klepni na tlačítko Sdílet (čtverec se šipkou nahoru — v novějším iOS může být v nabídce ⋯), vyber „Přidat na plochu“ a pak „Přidat“. Funguje v Safari a v novějším iOS i v Chrome a Edge.',
   instAndroid: 'Otevři nabídku prohlížeče (⋮ nebo ≡), vyber „Nainstalovat aplikaci“ nebo „Přidat na plochu“ a potvrď: ikona se objeví na ploše.',
   instDesktop: 'V Chrome nebo Edge: klikni na ikonu instalace vpravo v adresním řádku, nebo nabídka ⋮ / ⋯ → „Nainstalovat“ (Edge: Aplikace → „Nainstalovat tento web jako aplikaci“). V Safari na Macu: Soubor → „Přidat do Docku“. Jiné prohlížeče: hledej v nabídce „Nainstalovat“ nebo „Přidat na plochu“.',
+  menuOff: 'Moje tipy jsou vypnuté, ale pořád odpovídám: „Další nápověda“ pro celou nápovědu s vyhledáváním, „Co je to?“ — klepni na cokoli a řeknu ti, k čemu to je. „Zapnout tipy“ a budu tě provázet krok za krokem.',
+  turnOn: 'Zapnout tipy',
 };

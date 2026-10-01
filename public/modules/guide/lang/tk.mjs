@@ -58,7 +58,7 @@ export default {
   askAgain: 'Ulanmak üçin oňa ýene basyň.',
   askUnknown: 'Munuň üçin entek düşündiriş ýok — ulanmak üçin oňa ýene basyň.',
   askDone: 'Taýýar',
-  hsGuide: 'Tuzuň kömegi: meni açýar ýa-da ýapýar, hem-de meniň menýum (ähli maslahatlary täzeden görkez, şu «?» režimi).',
+  hsGuide: 'Tuzuň kömegi: meniň menýum — doly kömek, «Bu näme?» we maslahatlarymy açmak ýa-da öçürmek.',
   hsForum: 'Forum habarlary: pokerth.net forumynyň iň soňky ýazgylary we ýakynlaşýan kubok oýunlary bilen Çäreler bölümi.',
   hsRanking: 'Reýtingler: resmi PokerTH reýtingi we jemgyýetiň reýtingleri (BBC, WEC), her oýunçynyň profili bilen.',
   hsPm: 'Beýleki oýunçylar bilen hususy habarlaryňyz.',
@@ -279,4 +279,6 @@ export default {
   instIos: 'iPhone we iPad-de: Paýlaş düwmesine basyň (ýokaryk ok bilen inedördül — soňky iOS-da ol ⋯ menýusynda bolup biler), “Baş ekrana goş” saýlaň, soň “Goş” düwmesine basyň. Ol Safari-de, soňky iOS-da bolsa Chrome we Edge-de hem işleýär.',
   instAndroid: 'Brauzeriňiziň menýusyny açyň (⋮ ýa-da ≡), “Programmany gurna” ýa-da “Baş ekrana goş” saýlaň, soň tassyklaň: nyşan baş ekranyňyza düşýär.',
   instDesktop: 'Chrome ýa-da Edge-de: salgy setiriniň sag tarapyndaky gurnamak nyşanyna basyň ýa-da ⋮ / ⋯ menýusy → “Gurna” (Edge: Programmalar → “Bu sahypany programma hökmünde gurna”). Mac-daky Safari-de: Faýl → “Dock-a goş”. Başga brauzerlerde menýuda “Gurna” ýa-da “Baş ekrana goş” gözläň.',
+  menuOff: 'Maslahatlarym öçük, ýöne men henizem jogap berýärin: “Has köp kömek” — gözleg bilen doly kömek, “Bu näme?” — islendik zada basyp, onuň näme edýändigini eşitmek üçin. “Maslahatlary aç” diýseňiz, men size ýoluň ugruna ýol görkezerin.',
+  turnOn: 'Maslahatlary aç',
 };

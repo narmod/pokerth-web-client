@@ -39,7 +39,6 @@ export const HOTSPOTS = [
   ['#fs-btn-lobby, [onclick*="toggleFullscreen"]', 'hsFullscreen'],
   ['[onclick*="confirmDisconnect"]', 'hsDisconnect'],
   ['#l-overflow-btn, #connect-overflow-btn, #cr-overflow-btn, #g-overflow-btn, #pv-overflow-btn', 'hsMenu'],
-  ['.help-menu-btn', 'hsHelp'],
   ['#adv-opts-lobby-mob, #adv-opts-connect-mob, [onclick*="toggleAdvancedOptions"]', 'hsAdv', false, 'options:where'],
   ['[onclick*="liveCycleThemeMode"]', 'hsThemeMode', true, 'style:themes'],
   ['[onclick*="openThemePanel"]', 'hsThemeBtn', false, 'style:tablelook'],

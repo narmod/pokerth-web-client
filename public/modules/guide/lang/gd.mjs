@@ -58,7 +58,7 @@ export default {
   askAgain: 'Thoir gnogag air a-rithist gus a chleachdadh.',
   askUnknown: 'Chan eil mìneachadh agam air an fhear seo fhathast — thoir gnogag air a-rithist gus a chleachdadh.',
   askDone: 'Deiseil',
-  hsGuide: 'Cobhair an Aoin: cuiridh e air no dheth mi, agus an clàr-taice agam (seall gach moladh a-rithist, am modh “?” seo).',
+  hsGuide: 'Cobhair an Aoin: an clàr-taice agam — a’ chobhair slàn, “Dè tha seo?”, agus na molaidhean agam air no dheth.',
   hsForum: 'Naidheachdan an fhòraim: na puist as ùire air fòram pokerth.net, agus an taba Tachartasan leis na geamannan cupa a tha ri thighinn.',
   hsRanking: 'Na rangachaidhean: rangachadh oifigeil PokerTH agus feadhainn na coimhearsnachd (BBC, WEC), le pròifil gach cluicheadair.',
   hsPm: 'Na teachdaireachdan prìobhaideach agad le cluicheadairean eile.',
@@ -279,4 +279,6 @@ export default {
   instIos: 'Air iPhone is iPad: thoir gnogag air a’ phutan Co-roinn (ceàrnag le saighead suas — air iOS o chionn ghoirid, faodaidh e a bhith sa chlàr-taice ⋯), tagh “Cuir ris an sgrìn-dhachaigh”, an uair sin “Cuir ris”. Obraichidh e ann an Safari, agus air iOS o chionn ghoirid ann an Chrome is Edge cuideachd.',
   instAndroid: 'Fosgail clàr-taice a’ bhrabhsair (⋮ no ≡), tagh “Stàlaich an aplacaid” no “Cuir ris an sgrìn-dhachaigh”, an uair sin dearbh: nochdaidh an ìomhaigheag air an sgrìn-dhachaigh agad.',
   instDesktop: 'Ann an Chrome no Edge: briog air an ìomhaigheag stàlaidh air taobh deas bàr an t-seòlaidh, no clàr-taice ⋮ / ⋯ → “Stàlaich” (Edge: Aplacaidean → “Stàlaich an làrach seo mar aplacaid”). Ann an Safari air Mac: Faidhle → “Cuir ris an Dock”. Brabhsairean eile: lorg “Stàlaich” no “Cuir ris an sgrìn-dhachaigh” sa chlàr-taice.',
+  menuOff: 'Tha na molaidhean agam dheth, ach freagraidh mi fhathast: “Barrachd cobhair” airson a’ chobhair slàn le lorg, “Dè tha seo?” airson gnogag a thoirt air rud sam bith is cluinntinn dè a nì e. “Cuir air na molaidhean” agus bidh mi gad stiùireadh mar a thèid thu air adhart.',
+  turnOn: 'Cuir air na molaidhean',
 };

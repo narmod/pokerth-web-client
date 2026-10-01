@@ -58,7 +58,7 @@ export default {
   askAgain: 'Foydalanish uchun yana bosing.',
   askUnknown: 'Buning uchun hozircha izoh yoʻq — foydalanish uchun yana bosing.',
   askDone: 'Tayyor',
-  hsGuide: 'Tuzning yordami: meni yoqadi yoki oʻchiradi, hamda mening menyum (barcha maslahatlarni qayta koʻrsatish, shu «?» rejimi).',
+  hsGuide: 'Tuzning yordami: mening menyum — toʻliq yordam, «Bu nima?» va maslahatlarimni yoqish yoki oʻchirish.',
   hsForum: 'Forum yangiliklari: pokerth.net forumidagi soʻnggi xabarlar va yaqinlashayotgan kubok oʻyinlari bilan Tadbirlar boʻlimi.',
   hsRanking: 'Reytinglar: rasmiy PokerTH reytingi va hamjamiyat reytinglari (BBC, WEC), har bir oʻyinchining profili bilan.',
   hsPm: 'Boshqa oʻyinchilar bilan shaxsiy xabarlaringiz.',
@@ -279,4 +279,6 @@ export default {
   instIos: 'iPhone va iPad’da: Ulashish tugmasini bosing (yuqoriga strelkali kvadrat — yangi iOS’da u ⋯ menyusida boʻlishi mumkin), “Bosh ekranga qoʻshish” bandini tanlang, soʻng “Qoʻshish” ni bosing. U Safari’da, yangi iOS’da esa Chrome va Edge’da ham ishlaydi.',
   instAndroid: 'Brauzer menyusini oching (⋮ yoki ≡), “Ilovani oʻrnatish” yoki “Bosh ekranga qoʻshish” bandini tanlang va tasdiqlang: belgi bosh ekraningizda paydo boʻladi.',
   instDesktop: 'Chrome yoki Edge’da: manzil qatorining oʻng tomonidagi oʻrnatish belgisini bosing yoki ⋮ / ⋯ menyusi → “Oʻrnatish” (Edge: Ilovalar → “Bu saytni ilova sifatida oʻrnatish”). Mac’dagi Safari’da: Fayl → “Dock’ka qoʻshish”. Boshqa brauzerlarda menyuda “Oʻrnatish” yoki “Bosh ekranga qoʻshish” bandini qidiring.',
+  menuOff: 'Maslahatlarim oʻchiq, lekin baribir javob beraman: “Qo‘shimcha yordam” — qidiruvli toʻliq yordam, “Bu nima?” — istalgan narsani bosib, u nima qilishini eshitish uchun. “Maslahatlarni yoqish” tugmasini bossangiz, yoʻl-yoʻlakay sizga yoʻl koʻrsataman.',
+  turnOn: 'Maslahatlarni yoqish',
 };

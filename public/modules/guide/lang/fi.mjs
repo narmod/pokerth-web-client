@@ -58,7 +58,7 @@ export default {
   askAgain: 'Napauta uudelleen käyttääksesi sitä.',
   askUnknown: 'Tälle ei ole vielä selitystä — napauta uudelleen käyttääksesi sitä.',
   askDone: 'Valmis',
-  hsGuide: 'Ässän apu: kytkee minut päälle tai pois, ja valikkoni (näytä kaikki vinkit uudelleen, tämä «?»-tila).',
+  hsGuide: 'Ässän apu: valikkoni — koko ohje, ”Mikä tämä on?” sekä vinkkieni kytkeminen päälle tai pois.',
   hsForum: 'Foorumin uutiset: pokerth.net-foorumin uusimmat viestit sekä Tapahtumat-välilehti tulevine cup-peleineen.',
   hsRanking: 'Sijoituslistat: PokerTH:n virallinen ranking ja yhteisön listat (BBC, WEC) sekä jokaisen pelaajan profiili.',
   hsPm: 'Yksityisviestisi muiden pelaajien kanssa.',
@@ -279,4 +279,6 @@ export default {
   instIos: 'iPhonessa ja iPadissa: napauta Jaa-painiketta (neliö ja ylöspäin osoittava nuoli; uudessa iOS:ssä se voi olla ⋯-valikossa), valitse ”Lisää Koti-valikkoon” ja sitten ”Lisää”. Se toimii Safarissa ja uudessa iOS:ssä myös Chromessa ja Edgessä.',
   instAndroid: 'Avaa selaimen valikko (⋮ tai ≡), valitse ”Asenna sovellus” tai ”Lisää aloitusnäyttöön” ja vahvista: kuvake ilmestyy aloitusnäytölle.',
   instDesktop: 'Chromessa tai Edgessä: napsauta osoitepalkin oikeassa reunassa olevaa asennuskuvaketta tai valitse valikko ⋮ / ⋯ → ”Asenna” (Edge: Sovellukset → ”Asenna tämä sivusto sovellukseksi”). Macin Safarissa: Arkisto → ”Lisää Dockiin”. Muut selaimet: etsi valikosta ”Asenna” tai ”Lisää aloitusnäyttöön”.',
+  menuOff: 'Vinkkini ovat pois päältä, mutta vastaan silti: ”Lisää ohjeita” koko ohjeeseen hakuineen, ”Mikä tämä on?” kun haluat napauttaa mitä tahansa ja kuulla, mitä se tekee. ”Ota vinkit käyttöön”, niin opastan sinua matkan varrella.',
+  turnOn: 'Ota vinkit käyttöön',
 };

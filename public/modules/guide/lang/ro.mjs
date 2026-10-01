@@ -58,7 +58,7 @@ export default {
   askAgain: 'Atinge-l din nou ca să-l folosești.',
   askUnknown: 'Încă nu există o explicație pentru asta — atinge-l din nou ca să-l folosești.',
   askDone: 'Gata',
-  hsGuide: 'Ajutorul Asului: mă pornește sau mă oprește, plus meniul meu (arată din nou toate sfaturile, acest mod „?”).',
+  hsGuide: 'Ajutorul Asului: meniul meu — tot ajutorul, „Ce e asta?” și sfaturile mele pornite sau oprite.',
   hsForum: 'Noutăți de pe forum: cele mai noi postări de pe forumul pokerth.net și fila Evenimente cu următoarele jocuri de cupă.',
   hsRanking: 'Clasamentele: clasamentul oficial PokerTH și cele ale comunității (BBC, WEC), cu profilul fiecărui jucător.',
   hsPm: 'Mesajele tale private cu alți jucători.',
@@ -279,4 +279,6 @@ export default {
   instIos: 'Pe iPhone și iPad: atinge butonul Partajare (un pătrat cu o săgeată în sus — pe iOS recent poate fi în meniul ⋯), alege „Adaugă la ecranul principal”, apoi „Adaugă”. Funcționează în Safari, iar pe iOS recent și în Chrome și Edge.',
   instAndroid: 'Deschide meniul browserului (⋮ sau ≡), alege „Instalează aplicația” sau „Adaugă la ecranul principal” și confirmă: pictograma apare pe ecranul tău principal.',
   instDesktop: 'În Chrome sau Edge: dă clic pe pictograma de instalare din dreapta barei de adrese sau pe meniul ⋮ / ⋯ → „Instalează” (Edge: Aplicații → „Instalează acest site ca aplicație”). În Safari pe Mac: Fișier → „Adaugă în Dock”. Alte browsere: caută în meniu „Instalează” sau „Adaugă la ecranul principal”.',
+  menuOff: 'Sfaturile mele sunt oprite, dar tot îți răspund: „Mai mult ajutor” pentru tot ajutorul, cu căutare, „Ce e asta?” ca să atingi orice și să auzi ce face. Cu „Pornește sfaturile” te ghidez pe parcurs.',
+  turnOn: 'Pornește sfaturile',
 };

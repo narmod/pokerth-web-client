@@ -58,7 +58,7 @@ export default {
   askAgain: 'Tapáil arís é chun é a úsáid.',
   askUnknown: 'Níl míniú agam air seo fós — tapáil arís é chun é a úsáid.',
   askDone: 'Déanta',
-  hsGuide: 'Cabhair an Aoin: cuireann sé mé ar siúl nó as, agus mo roghchlár (taispeáin gach leid arís, an mód “?” seo).',
+  hsGuide: 'Cabhair an Aoin: mo roghchlár — an chabhair iomlán, “Cad é seo?”, agus mo leideanna ar siúl nó múchta.',
   hsForum: 'Nuacht an fhóraim: na postálacha is déanaí ar fhóram pokerth.net, agus an cluaisín Imeachtaí leis na cluichí corn atá le teacht.',
   hsRanking: 'Na rangúcháin: rangú oifigiúil PokerTH agus rangúcháin an phobail (BBC, WEC), le próifíl gach imreora.',
   hsPm: 'Do theachtaireachtaí príobháideacha le himreoirí eile.',
@@ -279,4 +279,6 @@ export default {
   instIos: 'Ar iPhone agus iPad: tapáil an cnaipe Comhroinn (cearnóg le saighead suas — ar iOS le déanaí, d’fhéadfadh sé a bheith sa roghchlár ⋯), roghnaigh “Cuir leis an Scáileán Baile”, ansin “Cuir leis”. Oibríonn sé i Safari, agus ar iOS le déanaí i Chrome agus Edge freisin.',
   instAndroid: 'Oscail roghchlár do bhrabhsálaí (⋮ nó ≡), roghnaigh “Suiteáil an aip” nó “Cuir leis an scáileán baile”, ansin deimhnigh: socróidh an deilbhín ar do scáileán baile.',
   instDesktop: 'I Chrome nó in Edge: cliceáil an deilbhín suiteála ar dheis de bharra an tseolta, nó roghchlár ⋮ / ⋯ → “Suiteáil” (Edge: Aipeanna → “Suiteáil an suíomh seo mar aip”). I Safari ar Mac: Comhad → “Cuir leis an Dock”. Brabhsálaithe eile: lorg “Suiteáil” nó “Cuir leis an scáileán baile” sa roghchlár.',
+  menuOff: 'Tá mo leideanna múchta, ach freagraím fós: “Tuilleadh cabhrach” don chabhair iomlán le cuardach, “Cad é seo?” chun aon rud a thapáil agus a chloisteáil cad a dhéanann sé. “Cuir leideanna ar siúl” agus treoróidh mé thú agus tú ag dul ar aghaidh.',
+  turnOn: 'Cuir leideanna ar siúl',
 };

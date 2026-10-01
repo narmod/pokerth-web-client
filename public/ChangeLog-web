@@ -1,4 +1,7 @@
-2026-10-01 version 2.1.9-web.274 (current series):
+2026-10-02 version 2.1.9-web.275 (current series):
+- improvement: the header menus keep only « Ace’s Help » (the separate « Help » entry and its option are gone); it opens the Ace’s menu at any time, even with his tips off: More help (the whole help, with a search), « What’s this? », and « Turn on tips »
+
+2026-10-01 version 2.1.9-web.274:
 - bugfix: Ace’s Help — the Ace could show up twice (two Aces at the bottom right) when a tip and a tap came while he was still loading
 - new: Ace’s Help — « Install the app » in his menu: the steps for your device (iPhone/iPad, Android, computer), « Install now » when the browser offers it; the help section « Install as an app » gives the steps for every platform
 

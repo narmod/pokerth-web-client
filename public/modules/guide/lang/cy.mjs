@@ -58,7 +58,7 @@ export default {
   askAgain: 'Tapiwch eto i’w ddefnyddio.',
   askUnknown: 'Dim esboniad ar gyfer hwn eto — tapiwch eto i’w ddefnyddio.',
   askDone: 'Wedi gorffen',
-  hsGuide: 'Cymorth yr As: yn fy nhroi ymlaen neu i ffwrdd, a fy newislen (dangos pob cyngor eto, y modd “?” hwn).',
+  hsGuide: 'Cymorth yr As: fy newislen — yr holl gymorth, “Beth yw hwn?”, a throi fy nghyngor ymlaen neu i ffwrdd.',
   hsForum: 'Newyddion y fforwm: y negeseuon diweddaraf ar fforwm pokerth.net, a’r tab Digwyddiadau gyda’r gemau cwpan sydd i ddod.',
   hsRanking: 'Y safleoedd: safle swyddogol PokerTH a rhai’r gymuned (BBC, WEC), gyda phroffil pob chwaraewr.',
   hsPm: 'Eich negeseuon preifat gyda chwaraewyr eraill.',
@@ -279,4 +279,6 @@ export default {
   instIos: 'Ar iPhone ac iPad: tapiwch y botwm Rhannu (sgwâr gyda saeth i fyny — ar iOS diweddar gall fod yn y ddewislen ⋯), dewiswch “Ychwanegu at y Sgrin Gartref”, yna “Ychwanegu”. Mae’n gweithio yn Safari, ac ar iOS diweddar yn Chrome ac Edge hefyd.',
   instAndroid: 'Agorwch ddewislen eich porwr (⋮ neu ≡), dewiswch “Gosod yr ap” neu “Ychwanegu at y sgrin gartref”, yna cadarnhewch: bydd yr eicon yn ymddangos ar eich sgrin gartref.',
   instDesktop: 'Yn Chrome neu Edge: cliciwch yr eicon gosod ar ochr dde’r bar cyfeiriad, neu’r ddewislen ⋮ / ⋯ → “Gosod” (Edge: Apiau → “Gosod y wefan hon fel ap”). Yn Safari ar Mac: Ffeil → “Ychwanegu at y Doc”. Porwyr eraill: chwiliwch yn y ddewislen am “Gosod” neu “Ychwanegu at y Sgrin Gartref”.',
+  menuOff: 'Mae fy nghyngor i ffwrdd, ond rwy’n dal i ateb: “Mwy o gymorth” ar gyfer yr holl gymorth gyda chwiliad, “Beth yw hwn?” i dapio unrhyw beth a chlywed beth mae’n ei wneud. Tapiwch “Troi cyngor ymlaen” a byddaf yn eich tywys wrth i chi fynd.',
+  turnOn: 'Troi cyngor ymlaen',
 };

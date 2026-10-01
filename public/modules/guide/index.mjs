@@ -383,13 +383,19 @@ async function note(key, buttons, onButton, vars) {
 async function showMenu() {
   // the tip of this screen, to read it again (web.271: a tap on the Ace opens this menu, it no longer replays the tip)
   const w = where();
-  const tip = canSpeak(Object.assign({}, w, { helpOn: true })) ? replayContext(w, CONTEXTS) : null;
+  // tips off (web.275): the same menu without the tips, and « Turn on tips » — the header
+  // menus only have « Ace's Help » now, so the whole help stays one tap away
+  const on = state.isOn();
+  const tip = on && canSpeak(Object.assign({}, w, { helpOn: true })) ? replayContext(w, CONTEXTS) : null;
   const list = [btn('moreHelp'), btn('askMenu')];
   if (tip) list.push(btn('replayTip'));
   if (!appInstalled()) list.push(btn('installApp'));
-  list.push(btn('turnOff'), btn('resetTips'), btn('close', true));
-  await note('menuOn', list, (id) => {
+  if (on) list.push(btn('turnOff'), btn('resetTips'));
+  else list.push(btn('turnOn'));
+  list.push(btn('close', true));
+  await note(on ? 'menuOn' : 'menuOff', list, (id) => {
     if (id === 'moreHelp') { openMoreHelp(); return; }
+    if (id === 'turnOn') { turnOn(); return; }
     if (id === 'installApp') { showInstall(); return; }
     if (id === 'replayTip' && tip) { snoozed.delete(tip.id); showContext(tip); return; }
     if (id === 'askMenu' || id === 'ask') { enterAsk(); return; }
@@ -754,9 +760,8 @@ let turnWas = false;
 /** Button « Ace's Help » (login screen, header menus). */
 function toggle() {
   if (!available()) return;
-  if (!state.isOn()) { turnOn(); return; }
-  if (!canComeHere()) return;                          // his menu on demand, at the table too (H3)
-  showMenu();
+  if (!canComeHere()) { if (!state.isOn()) turnOn(); return; }
+  showMenu();                                          // his menu on demand, tips on or off, at the table too (H3, web.275)
 }
 
 /** Called by applyAdvOpts (pokerth.js) on every option change. */

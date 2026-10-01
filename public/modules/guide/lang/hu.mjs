@@ -58,7 +58,7 @@ export default {
   askAgain: 'Koppints rá újra a használatához.',
   askUnknown: 'Ehhez még nincs magyarázat — koppints rá újra a használatához.',
   askDone: 'Kész',
-  hsGuide: 'Az ász súgója: be- vagy kikapcsol engem, és a menüm (az összes tipp újra, ez a „?” mód).',
+  hsGuide: 'Az ász súgója: a menüm — az egész súgó, a „Mi ez?”, és a tippjeim be- vagy kikapcsolása.',
   hsForum: 'Fórumhírek: a pokerth.net fórum legfrissebb bejegyzései és az Események lap a közelgő kupajátékokkal.',
   hsRanking: 'A rangsorok: a hivatalos PokerTH rangsor és a közösségiek (BBC, WEC), minden játékos profiljával.',
   hsPm: 'Privát üzeneteid más játékosokkal.',
@@ -279,4 +279,6 @@ export default {
   instIos: 'iPhone-on és iPaden: koppints a Megosztás gombra (felfelé mutató nyilas négyzet — újabb iOS-en a ⋯ menüben lehet), válaszd a „Főképernyőhöz adás” lehetőséget, majd a „Hozzáadás” gombot. Safariban működik, újabb iOS-en pedig Chrome-ban és Edge-ben is.',
   instAndroid: 'Nyisd meg a böngésző menüjét (⋮ vagy ≡), válaszd az „Alkalmazás telepítése” vagy a „Hozzáadás a kezdőképernyőhöz” lehetőséget, majd erősítsd meg: az ikon a kezdőképernyőre kerül.',
   instDesktop: 'Chrome-ban vagy Edge-ben: kattints a címsor jobb oldalán lévő telepítés ikonra, vagy a ⋮ / ⋯ menü → „Telepítés” (Edge: Alkalmazások → „Webhely telepítése alkalmazásként”). Safariban Macen: Fájl → „Hozzáadás a Dockhoz”. Más böngészők: keresd a menüben a „Telepítés” vagy a „Hozzáadás a kezdőképernyőhöz” lehetőséget.',
+  menuOff: 'A tippjeim ki vannak kapcsolva, de azért válaszolok: a „További súgó” az egész súgót hozza kereséssel, a „Mi ez?” segítségével pedig bármit megérinthetsz, és megtudod, mire való. A „Tippek bekapcsolása” után menet közben vezetlek.',
+  turnOn: 'Tippek bekapcsolása',
 };

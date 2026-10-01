@@ -58,7 +58,7 @@ export default {
   askAgain: 'Tócao outra vez para usalo.',
   askUnknown: 'Aínda non hai explicación para isto — tócao outra vez para usalo.',
   askDone: 'Feito',
-  hsGuide: 'Axuda do Ás: actívame ou desactívame, e o meu menú (amosar de novo todos os consellos, este modo «?»).',
+  hsGuide: 'Axuda do Ás: o meu menú — toda a axuda, «Que é isto?» e os meus consellos activados ou desactivados.',
   hsForum: 'Novas do foro: as últimas publicacións do foro de pokerth.net e a lapela Eventos coas próximas partidas de copa.',
   hsRanking: 'As clasificacións: a clasificación oficial de PokerTH e as da comunidade (BBC, WEC), co perfil de cada xogador.',
   hsPm: 'As túas mensaxes privadas con outros xogadores.',
@@ -279,4 +279,6 @@ export default {
   instIos: 'En iPhone e iPad: toca o botón Compartir (un cadrado cunha frecha cara arriba; en iOS recentes pode estar no menú ⋯), escolle «Engadir á pantalla de inicio» e despois «Engadir». Funciona en Safari e, en iOS recentes, tamén en Chrome e Edge.',
   instAndroid: 'Abre o menú do navegador (⋮ ou ≡), escolle «Instalar a app» ou «Engadir á pantalla de inicio» e confirma: a icona aparece na túa pantalla de inicio.',
   instDesktop: 'En Chrome ou Edge: fai clic na icona de instalación á dereita da barra de enderezos, ou no menú ⋮ / ⋯ → «Instalar» (Edge: Aplicacións → «Instalar este sitio como aplicación»). En Safari nun Mac: Ficheiro → «Engadir ao Dock». Outros navegadores: busca no menú «Instalar» ou «Engadir á pantalla de inicio».',
+  menuOff: 'Os meus consellos están desactivados, pero sigo respondendo: «Máis axuda» para toda a axuda con busca, «Que é isto?» para tocar calquera cousa e escoitar para que serve. «Activar consellos» e guíote sobre a marcha.',
+  turnOn: 'Activar consellos',
 };

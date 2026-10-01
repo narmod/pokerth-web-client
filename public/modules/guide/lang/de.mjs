@@ -58,7 +58,7 @@ export default {
   askAgain: 'Tippe noch einmal darauf, um es zu benutzen.',
   askUnknown: 'Dafür habe ich noch keine Erklärung — tippe noch einmal darauf, um es zu benutzen.',
   askDone: 'Fertig',
-  hsGuide: 'Ass-Hilfe: schaltet mich ein oder aus, dazu mein Menü (alle Tipps erneut zeigen, dieser „?“-Modus).',
+  hsGuide: 'Ass-Hilfe: mein Menü — die gesamte Hilfe, „Was ist das?“ und meine Tipps an oder aus.',
   hsForum: 'Forum-News: die neuesten Beiträge aus dem pokerth.net-Forum und der Tab Termine mit den kommenden Cup-Spielen.',
   hsRanking: 'Die Ranglisten: die offizielle PokerTH-Rangliste und die der Community (BBC, WEC), mit dem Profil jedes Spielers.',
   hsPm: 'Deine privaten Nachrichten mit anderen Spielern.',
@@ -279,4 +279,6 @@ export default {
   instIos: 'Auf iPhone und iPad: Tippe auf den Teilen-Knopf (ein Quadrat mit Pfeil nach oben — bei neuerem iOS kann er im ⋯-Menü sein), wähle „Zum Home-Bildschirm“ und dann „Hinzufügen“. Das klappt in Safari, bei neuerem iOS auch in Chrome und Edge.',
   instAndroid: 'Öffne das Browser-Menü (⋮ oder ≡), wähle „App installieren“ oder „Zum Startbildschirm hinzufügen“ und bestätige: Das Symbol landet auf deinem Startbildschirm.',
   instDesktop: 'In Chrome oder Edge: Klicke auf das Installieren-Symbol rechts in der Adressleiste oder auf Menü ⋮ / ⋯ → „Installieren“ (Edge: Apps → „Diese Website als App installieren“). In Safari auf dem Mac: Ablage → „Zum Dock hinzufügen“. Andere Browser: Suche im Menü nach „Installieren“ oder „Zum Startbildschirm hinzufügen“.',
+  menuOff: 'Meine Tipps sind aus, aber ich antworte trotzdem: „Mehr Hilfe“ für die gesamte Hilfe mit Suche, „Was ist das?“, um irgendetwas anzutippen und zu hören, was es macht. „Tipps einschalten“, und ich begleite dich Schritt für Schritt.',
+  turnOn: 'Tipps einschalten',
 };

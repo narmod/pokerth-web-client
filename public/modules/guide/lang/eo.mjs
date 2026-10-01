@@ -58,7 +58,7 @@ export default {
   askAgain: 'Tuŝetu ĝin denove por uzi ĝin.',
   askUnknown: 'Ankoraŭ neniu klarigo por tio — tuŝetu ĝin denove por uzi ĝin.',
   askDone: 'Farite',
-  hsGuide: 'Helpo de la Aso: ŝaltas aŭ malŝaltas min, kaj mia menuo (montri ĉiujn konsilojn denove, ĉi tiu “?”-reĝimo).',
+  hsGuide: 'Helpo de la Aso: mia menuo — la tuta helpo, “Kio estas tio?”, kaj miaj konsiloj ŝaltitaj aŭ malŝaltitaj.',
   hsForum: 'Novaĵoj de la forumo: la lastaj afiŝoj de la forumo de pokerth.net, kaj la langeto Eventoj kun la venontaj pokalaj ludoj.',
   hsRanking: 'La rangigoj: la oficiala rangigo de PokerTH kaj tiuj de la komunumo (BBC, WEC), kun la profilo de ĉiu ludanto.',
   hsPm: 'Viaj privataj mesaĝoj kun aliaj ludantoj.',
@@ -279,4 +279,6 @@ export default {
   instIos: 'Ĉe iPhone kaj iPad: tuŝetu la butonon Kunhavigi (kvadrato kun sago supren — ĉe novaj iOS-versioj ĝi povas troviĝi en la menuo ⋯), elektu “Aldoni al hejmekrano”, poste “Aldoni”. Ĝi funkcias en Safari, kaj ĉe novaj iOS-versioj ankaŭ en Chrome kaj Edge.',
   instAndroid: 'Malfermu la menuon de via retumilo (⋮ aŭ ≡), elektu “Instali la aplikaĵon” aŭ “Aldoni al hejmekrano”, poste konfirmu: la piktogramo aperos sur via hejmekrano.',
   instDesktop: 'En Chrome aŭ Edge: alklaku la instalan piktogramon dekstre de la adresbreto, aŭ la menuon ⋮ / ⋯ → “Instali” (Edge: Aplikaĵoj → “Instali ĉi tiun retejon kiel aplikaĵon”). En Safari ĉe Mac: Dosiero → “Aldoni al Dock”. Aliaj retumiloj: serĉu en la menuo “Instali” aŭ “Aldoni al hejmekrano”.',
+  menuOff: 'Miaj konsiloj estas malŝaltitaj, sed mi ankoraŭ respondas: “Pli da helpo” por la tuta helpo kun serĉo, “Kio estas tio?” por tuŝeti ion ajn kaj aŭdi kion ĝi faras. “Ŝalti la konsilojn” kaj mi gvidas vin dum vi progresas.',
+  turnOn: 'Ŝalti la konsilojn',
 };

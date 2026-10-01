@@ -77,6 +77,25 @@ for (const [dev, re] of [['iPhone 13', /Share/], ['Pixel 7', /browser menu/], ['
   ok(await openMenu(page) && await page.locator(bubble + ' [data-ad-btn="installApp"]').count() === 0, 'installed app: no « Install the app »');
   await ctx.close();
 }
+{ // tips off: « Ace's Help » (header menus, login button) opens his menu with the whole help (web.275)
+  const ctx = await browser.newContext({ ...devices['iPhone 13'], serviceWorkers: 'block' });
+  await ctx.addInitScript(() => { try { localStorage.setItem('pth_guide_webdriver', '1'); localStorage.setItem('pth_guide_on', '0'); localStorage.setItem('pth_guide_offered', '1'); } catch (_e) {} });
+  const page = await ctx.newPage();
+  page.on('pageerror', (e) => errors.push(String(e && e.message || e)));
+  await openTable(page, base, { stopAt: 'login' });
+  await page.waitForTimeout(1500);
+  ok(await page.locator('.help-menu-btn').count() === 0 && await page.locator('.guide-menu-btn').count() === 5, 'no « Help » entry in the header menus, « Ace\'s Help » in all 5');
+  await page.locator('.guide-login-btn').click();
+  await page.waitForSelector(bubble + ' [data-ad-btn="moreHelp"]', { timeout: 6000 });
+  const ids = await page.evaluate(() => [...document.querySelectorAll('#ace-dock .ad-bubble.ad-open [data-ad-btn]')].map((b) => b.getAttribute('data-ad-btn')));
+  ok(ids.includes('turnOn') && ids.includes('askMenu') && !ids.includes('turnOff') && !ids.includes('resetTips'), 'tips off: his menu — More help, What\'s this?, Turn on tips (' + ids.join(',') + ')');
+  ok(/tips are off/.test(await page.locator(bubble + ' .ad-text').innerText()), 'tips off: he says his tips are off but he still answers');
+  await page.click(bubble + ' [data-ad-btn="moreHelp"]');
+  await page.waitForTimeout(600);
+  ok(await page.locator(bubble + ' [data-ad-btn^="ch:"], ' + bubble + ' [data-ad-btn^="sec:"], ' + bubble + ' input').count() > 0, 'tips off: « More help » opens the help in his bubble');
+  ok(await page.evaluate(() => localStorage.getItem('pth_guide_on')) !== '1', 'tips stay off');
+  await ctx.close();
+}
 ok(!errors.length, 'no page error' + (errors.length ? ' — ' + errors.slice(0, 3).join(' | ') : ''));
 await browser.close(); server.close();
 console.log(`\n${pass} passed, ${fail} failed`);

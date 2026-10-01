@@ -58,7 +58,7 @@ export default {
   askAgain: 'Sakatu berriro erabiltzeko.',
   askUnknown: 'Honetarako ez dago azalpenik oraindik — sakatu berriro erabiltzeko.',
   askDone: 'Eginda',
-  hsGuide: 'Batekoaren laguntza: ni aktibatu edo desaktibatzeko, eta nire menua (erakutsi aholku guztiak berriro, «?» modu hau).',
+  hsGuide: 'Batekoaren laguntza: nire menua — laguntza osoa, «Zer da hau?» eta nire aholkuak aktibatuta edo desaktibatuta.',
   hsForum: 'Foroko berriak: pokerth.net foroko azken mezuak, eta Ekitaldiak fitxa, datozen kopako partidekin.',
   hsRanking: 'Sailkapenak: PokerTH sailkapen ofiziala eta komunitatekoak (BBC, WEC), jokalari bakoitzaren profilarekin.',
   hsPm: 'Beste jokalariekin dituzun mezu pribatuak.',
@@ -279,4 +279,6 @@ export default {
   instIos: 'iPhone eta iPad-en: sakatu Partekatu botoia (gezi bat gora duen koadroa; iOS berrietan ⋯ menuan egon daiteke), aukeratu «Gehitu hasierako pantailan» eta gero «Gehitu». Safarin dabil, eta iOS berrietan Chrome eta Edge-n ere bai.',
   instAndroid: 'Ireki nabigatzailearen menua (⋮ edo ≡), aukeratu «Instalatu aplikazioa» edo «Gehitu hasierako pantailan» eta berretsi: ikonoa zure hasierako pantailan agertuko da.',
   instDesktop: 'Chrome edo Edge-n: egin klik helbide-barraren eskuinaldeko instalatzeko ikonoan, edo ⋮ / ⋯ menua → «Instalatu» (Edge: Aplikazioak → «Instalatu gune hau aplikazio gisa»). Mac-eko Safarin: Fitxategia → «Gehitu Dock-era». Beste nabigatzaile batzuk: bilatu menuan «Instalatu» edo «Gehitu hasierako pantailan».',
+  menuOff: 'Nire aholkuak desaktibatuta daude, baina erantzuten jarraitzen dut: «Laguntza gehiago» laguntza osoa bilaketarekin ikusteko, «Zer da hau?» edozer sakatu eta zer egiten duen entzuteko. «Aktibatu aholkuak» eta bidean gidatuko zaitut.',
+  turnOn: 'Aktibatu aholkuak',
 };

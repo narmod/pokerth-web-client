@@ -58,7 +58,7 @@ export default {
   askAgain: 'Trykk igjen for å bruke det.',
   askUnknown: 'Ingen forklaring på denne ennå — trykk igjen for å bruke den.',
   askDone: 'Ferdig',
-  hsGuide: 'Essets hjelp: slår meg på eller av, og menyen min (vis alle tips igjen, denne «?»-modusen).',
+  hsGuide: 'Essets hjelp: menyen min — hele hjelpen, «Hva er dette?» og tipsene mine på eller av.',
   hsForum: 'Forumnytt: de siste innleggene i pokerth.net-forumet, og fanen Arrangementer med de kommende cupspillene.',
   hsRanking: 'Rangeringene: den offisielle PokerTH-rangeringen og fellesskapets egne (BBC, WEC), med hver spillers profil.',
   hsPm: 'Dine private meldinger med andre spillere.',
@@ -279,4 +279,6 @@ export default {
   instIos: 'På iPhone og iPad: trykk på Del-knappen (en firkant med en pil opp — på nyere iOS kan den ligge i ⋯-menyen), velg «Legg til på Hjem-skjerm», og deretter «Legg til». Det fungerer i Safari, og på nyere iOS også i Chrome og Edge.',
   instAndroid: 'Åpne nettlesermenyen (⋮ eller ≡), velg «Installer app» eller «Legg til på Hjem-skjerm», og bekreft: ikonet havner på Hjem-skjermen.',
   instDesktop: 'I Chrome eller Edge: klikk på installeringsikonet til høyre i adressefeltet, eller meny ⋮ / ⋯ → «Installer» (Edge: Apper → «Installer dette nettstedet som en app»). I Safari på Mac: Arkiv → «Legg til i Dock». Andre nettlesere: se etter «Installer» eller «Legg til på Hjem-skjerm» i menyen.',
+  menuOff: 'Tipsene mine er av, men jeg svarer fortsatt: «Mer hjelp» for hele hjelpen med søk, «Hva er dette?» for å trykke på hva som helst og høre hva det gjør. «Slå på tips», så guider jeg deg underveis.',
+  turnOn: 'Slå på tips',
 };
