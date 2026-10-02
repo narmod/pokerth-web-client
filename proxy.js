@@ -313,7 +313,7 @@ const FEATURE_SWITCHES = [
   { key: 'err_report', label: 'Client error reporting' },
   { key: 'polls', label: 'Product polls' },
   { key: 'hud_on', label: 'Stats HUD on player seats' },
-  { key: 'show_odds', label: 'Odds in the Chances panel' },
+  { key: 'show_odds', label: 'Odds in the Odds tab' },
   { key: 'chat_abbrev', label: 'Chat abbreviation glossary' },
   { key: 'anim_cards', label: 'Card animations' },
   { key: 'table_zoom', label: 'Table zoom (magnifier buttons)' },
@@ -5882,7 +5882,7 @@ function seoHandsPage(res, method, lang) {
     'wins. Two pair looks common and is still ahead of most of what it meets.</li>' +
     '</ul>' +
     '<h2>Seeing it at the table</h2>' +
-    '<p>In PokerTH the Chances tab names your current best hand and your chance of winning as the cards come out, so you ' +
+    '<p>In PokerTH the Odds tab names your current best hand and your chance of winning as the cards come out, so you ' +
     'never have to work it out under time pressure, and at showdown the winning combination is named under the community ' +
     'cards. Practising in Local / training mode against the computer opponents is the fastest way to get the rankings ' +
     'into your fingers.</p>';
@@ -5937,7 +5937,7 @@ var _SEO_HOWTO = [
    'Raise or All-In. The bet amount can be typed, dragged on the slider, or set with one tap to a third of the pot, ' +
    'half the pot or the pot.'],
   ['Read the table',
-   'The Chances tab names your current best hand and your chance of winning as the cards come out. The pot, every ' +
+   'The Odds tab names your current best hand and your chance of winning as the cards come out. The pot, every ' +
    'stack and the blind level are on screen at all times, the dealer button shows who acts last, and a countdown shows ' +
    'how long you have. At showdown the winning combination is named under the community cards.'],
   ['Win the tournament',

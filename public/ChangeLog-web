@@ -1,4 +1,7 @@
-2026-10-02 version 2.1.9-web.278 (current series):
+2026-10-02 version 2.1.9-web.279 (current series):
+- improvement: English — the info panel tabs are named like the official client: History and Odds (were Log and Odds, with « Chances » in the help, an option and the public pages)
+
+2026-10-02 version 2.1.9-web.278:
 - bugfix: Korean rules page — typo in « big blind » (빅 블라인드)
 
 2026-10-02 version 2.1.9-web.277:
