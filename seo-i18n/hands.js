@@ -62,7 +62,7 @@ var PARTS = {
       'Les pourcentages ci-dessus indiquent à quelle fréquence chaque main apparaît à la river sur sept cartes, pas à quelle fréquence elle gagne. Deux paires semblent banales et restent devant la plupart de ce qu’elles rencontrent.'
     ],
     seeH2: 'Le voir à la table',
-    seeP: 'PokerTH nomme votre meilleure combinaison sous le tableau pendant la partie, pour que vous n’ayez jamais à la reconstituer sous la pression du temps, et affiche au showdown chaque main dévoilée avec les cinq cartes qui ont compté mises en évidence. S’entraîner hors ligne contre les adversaires gérés par l’ordinateur reste le moyen le plus rapide de faire entrer ce classement dans les doigts.'
+    seeP: "Dans PokerTH, l’onglet Chances nomme votre meilleure combinaison du moment et vos chances de gagner au fur et à mesure que les cartes sortent, pour que vous n’ayez jamais à la reconstituer sous la pression du temps, et au showdown la combinaison gagnante est nommée sous les cartes communes. S’entraîner en mode Local / entraînement contre les adversaires gérés par l’ordinateur reste le moyen le plus rapide de faire entrer ce classement dans les doigts."
   },
   ga: {
     title: "Lámha pócair — ord na lámh in Texas Hold’em",
@@ -107,7 +107,7 @@ var PARTS = {
       "Taispeánann na céatadáin thuas cé chomh minic a fheictear gach lámh ar an river le seacht gcárta, ní cé chomh minic a bhuann sí. Breathnaíonn dhá phéire coitianta ach fanann siad chun tosaigh ar fhormhór a mbuaileann siad leo.",
     ],
     seeH2: "Feic ag an mbord é",
-    seeP: "Le linn cluiche ainmníonn PokerTH do theaglaim is fearr faoin mbord, ionas nach gá duit í a athchruthú faoi bhrú ama riamh, agus ag an showdown taispeánann sé gach lámh a nochtadh leis na cúig chárta a comhaireadh aibhsithe. Is é cleachtadh as líne in aghaidh céilí comhraic faoi stiúir ríomhaire an bealach is tapúla fós chun an t-ord seo a fhoghlaim.",
+    seeP: "In PokerTH ainmníonn an cluaisín Seans do lámh is fearr reatha agus do sheans buaite de réir mar a nochtar na cártaí, ionas nach gá duit é a oibriú amach faoi bhrú ama riamh, agus ag an showdown ainmnítear an teaglaim bhuaiteach faoi na cártaí pobail. Is é cleachtadh sa mhód Áitiúil / cleachtadh in aghaidh céilí comhraic faoi stiúir ríomhaire an bealach is tapúla fós chun an t-ord seo a fhoghlaim.",
   },
 
   de: {
@@ -142,7 +142,7 @@ var PARTS = {
       'Die Prozentwerte oben sagen, wie oft ein Blatt bis zum River über sieben Karten überhaupt entsteht, nicht wie oft es gewinnt. Zwei Paare wirken alltäglich und liegen trotzdem vor dem meisten, was ihnen begegnet.'
     ],
     seeH2: 'Am Tisch sichtbar',
-    seeP: 'PokerTH benennt Ihr aktuell bestes Blatt während des Spiels unterhalb des Boards, sodass Sie es nie unter Zeitdruck selbst zusammensetzen müssen, und zeigt beim Showdown jedes aufgedeckte Blatt mit den fünf Karten, die gezählt haben, hervorgehoben. Offline gegen die Computergegner zu üben ist der schnellste Weg, diese Reihenfolge in die Finger zu bekommen.'
+    seeP: "In PokerTH benennt der Reiter Chancen Ihr aktuell bestes Blatt und Ihre Gewinnchance, während die Karten kommen, sodass Sie es nie unter Zeitdruck selbst zusammensetzen müssen, und beim Showdown wird die Gewinnkombination unter den Gemeinschaftskarten benannt. Im Modus Lokal / Training gegen die Computergegner zu üben ist der schnellste Weg, diese Reihenfolge in die Finger zu bekommen."
   },
 
   es: {
@@ -177,7 +177,7 @@ var PARTS = {
       'Los porcentajes de arriba indican con qué frecuencia aparece cada jugada al llegar al river sobre siete cartas, no con qué frecuencia gana. La doble pareja parece común y aún así va por delante de casi todo lo que se encuentra.'
     ],
     seeH2: 'Verlo en la mesa',
-    seeP: 'PokerTH nombra tu mejor jugada actual bajo la mesa mientras juegas, de modo que nunca tengas que deducirla con el reloj en contra, y en el showdown muestra cada mano revelada con las cinco cartas que contaron resaltadas. Practicar sin conexión contra los oponentes del ordenador es la forma más rápida de aprenderse el orden de memoria.'
+    seeP: "En PokerTH la pestaña Probabilidades nombra tu mejor mano actual y tu probabilidad de ganar según van saliendo las cartas, de modo que nunca tengas que deducirla con el reloj en contra, y en el showdown la combinación ganadora se nombra bajo las cartas comunitarias. Practicar en el modo Local / entrenamiento contra los oponentes del ordenador es la forma más rápida de aprenderse el orden de memoria."
   },
   'es-419': {
     title: 'Jugadas de póker — orden de las manos en Texas Hold’em',
@@ -211,7 +211,7 @@ var PARTS = {
       'Los porcentajes de arriba indican con qué frecuencia aparece cada jugada al llegar al river sobre siete cartas, no con qué frecuencia gana. La doble pareja parece común y aún así va por delante de casi todo lo que se encuentra.'
     ],
     seeH2: 'Verlo en la mesa',
-    seeP: 'PokerTH nombra tu mejor jugada actual bajo la mesa mientras juegas, de modo que nunca tengas que deducirla con el reloj en contra, y en el showdown muestra cada mano revelada con las cinco cartas que contaron resaltadas. Practicar sin conexión contra los oponentes de la computadora es la forma más rápida de aprenderse el orden de memoria.'
+    seeP: "En PokerTH la pestaña Probabilidades nombra tu mejor mano actual y tu probabilidad de ganar según van saliendo las cartas, de modo que nunca tengas que deducirla con el reloj en contra, y en el showdown la combinación ganadora se nombra bajo las cartas comunitarias. Practicar en el modo Local / entrenamiento contra los oponentes de la computadora es la forma más rápida de aprenderse el orden de memoria."
   },
 
   'pt-BR': {
@@ -246,7 +246,7 @@ var PARTS = {
       'As porcentagens acima dizem com que frequência cada mão aparece até o river em sete cartas, não com que frequência ela vence. Dois pares parecem banais e ainda assim estão à frente da maior parte do que encontram.'
     ],
     seeH2: 'Vendo na mesa',
-    seeP: 'O PokerTH mostra o nome da sua melhor mão atual logo abaixo da mesa enquanto você joga, para que você nunca precise montar isso com o relógio correndo, e no showdown exibe cada mão revelada com as cinco cartas que contaram em destaque. Treinar offline contra os oponentes do computador é a forma mais rápida de gravar essa ordem.'
+    seeP: "No PokerTH a aba Probabilidades mostra o nome da sua melhor mão atual e a sua chance de vitória conforme as cartas saem, para que você nunca precise montar isso com o relógio correndo, e no showdown a combinação vencedora aparece nomeada abaixo das cartas comunitárias. Treinar no modo Local / treino contra os oponentes do computador é a forma mais rápida de gravar essa ordem."
   },
 
   it: {
@@ -281,7 +281,7 @@ var PARTS = {
       'Le percentuali qui sopra dicono quanto spesso ogni punto si forma entro il river su sette carte, non quanto spesso vince. La doppia coppia sembra banale ed è comunque avanti alla maggior parte di ciò che incontra.'
     ],
     seeH2: 'Vederlo al tavolo',
-    seeP: 'PokerTH indica il tuo punto migliore sotto il tavolo mentre giochi, così non devi mai ricostruirlo con il tempo che scorre, e allo showdown mostra ogni mano scoperta con in evidenza le cinque carte che hanno contato. Allenarsi offline contro gli avversari gestiti dal computer è il modo più rapido per farsi entrare l’ordine nelle dita.'
+    seeP: "In PokerTH la scheda Probabilità indica il tuo punto migliore del momento e la tua probabilità di vincere mentre escono le carte, così non devi mai ricostruirlo con il tempo che scorre, e allo showdown la combinazione vincente è indicata sotto le carte comuni. Allenarsi nella modalità Locale / allenamento contro gli avversari gestiti dal computer è il modo più rapido per farsi entrare l’ordine nelle dita."
   },
 
   nl: {
@@ -316,7 +316,7 @@ var PARTS = {
       'De percentages hierboven zeggen hoe vaak elke hand tot en met de river over zeven kaarten voorkomt, niet hoe vaak hij wint. Twee paar lijkt gewoon en staat toch voor op het meeste wat het tegenkomt.'
     ],
     seeH2: 'Aan tafel zien',
-    seeP: 'PokerTH noemt je huidige beste hand onder het bord terwijl je speelt, zodat je hem nooit onder tijdsdruk zelf hoeft uit te rekenen, en toont bij de showdown elke open hand met de vijf kaarten die telden gemarkeerd. Offline oefenen tegen de computertegenstanders is de snelste manier om de volgorde in je vingers te krijgen.'
+    seeP: "In PokerTH noemt het tabblad Kansen je huidige beste hand en je kans om te winnen terwijl de kaarten komen, zodat je hem nooit onder tijdsdruk zelf hoeft uit te rekenen, en bij de showdown wordt de winnende combinatie onder de gedeelde kaarten benoemd. Oefenen in de modus Lokaal / oefenen tegen de computertegenstanders is de snelste manier om de volgorde in je vingers te krijgen."
   }
 ,
 
@@ -352,7 +352,7 @@ var PARTS = {
       "Powyższe procenty mówią, jak często dany układ w ogóle powstaje do rivera na siedmiu kartach, a nie jak często wygrywa. Dwie pary wyglądają pospolicie, a i tak biją większość tego, co spotykają."
     ],
     seeH2: "Jak to wygląda przy stole",
-    seeP: "PokerTH podaje nazwę twojego aktualnie najlepszego układu pod stołem w trakcie gry, więc nigdy nie musisz go składać pod presją czasu, a przy showdownie pokazuje każdy odkryty układ z podświetlonymi pięcioma kartami, które się liczyły. Trening offline przeciwko przeciwnikom sterowanym przez komputer to najszybszy sposób, żeby wbić sobie tę kolejność w palce."
+    seeP: "W PokerTH zakładka Szanse podaje nazwę twojego aktualnie najlepszego układu i twoją szansę na wygraną w miarę wychodzenia kart, więc nigdy nie musisz go składać pod presją czasu, a przy showdownie zwycięski układ jest nazwany pod kartami wspólnymi. Trening w trybie Lokalna / trening przeciwko przeciwnikom sterowanym przez komputer to najszybszy sposób, żeby wbić sobie tę kolejność w palce."
   },
 
   ru: {
@@ -387,7 +387,7 @@ var PARTS = {
       "Проценты выше показывают, как часто комбинация вообще складывается к риверу на семи картах, а не как часто она выигрывает. Две пары выглядят обыденно и всё же опережают большую часть того, что им встречается."
     ],
     seeH2: "Как это видно за столом",
-    seeP: "PokerTH называет вашу текущую лучшую комбинацию под бордом прямо во время игры, так что её никогда не приходится собирать в голове под таймер, а на вскрытии показывает каждую открытую руку с подсветкой тех пяти карт, которые сыграли. Тренировка офлайн против компьютерных соперников — самый быстрый способ довести это старшинство до автоматизма."
+    seeP: "В PokerTH вкладка «Шансы» называет вашу текущую лучшую комбинацию и ваш шанс на победу по мере выхода карт, так что её никогда не приходится собирать в голове под таймер, а на вскрытии выигрышная комбинация подписана под общими картами. Тренировка в режиме «Локальная / тренировка» против компьютерных соперников — самый быстрый способ довести это старшинство до автоматизма."
   },
 
   tr: {
@@ -422,7 +422,7 @@ var PARTS = {
       "Yukarıdaki yüzdeler her elin yedi kart üzerinden river’a kadar ne sıklıkta oluştuğunu gösterir, ne sıklıkta kazandığını değil. İki çift sıradan görünür ama karşılaştığı şeylerin çoğunun önündedir."
     ],
     seeH2: "Masada görmek",
-    seeP: "PokerTH oynarken mevcut en iyi elinizin adını masanın altında gösterir, böylece süre baskısı altında bunu kafanızdan çıkarmak zorunda kalmazsınız; showdown’da ise açılan her eli, sayılan beş kart vurgulanmış olarak gösterir. Bilgisayar rakiplerine karşı çevrimdışı çalışmak bu sıralamayı parmaklarınıza yerleştirmenin en hızlı yoludur."
+    seeP: "PokerTH’de Olasılıklar sekmesi, kartlar açıldıkça mevcut en iyi elinizin adını ve kazanma şansınızı gösterir, böylece süre baskısı altında bunu kafanızdan çıkarmak zorunda kalmazsınız; showdown’da ise kazanan kombinasyon ortak kartların altında adıyla yazılır. Bilgisayar rakiplerine karşı Yerel / antrenman modunda çalışmak bu sıralamayı parmaklarınıza yerleştirmenin en hızlı yoludur."
   },
 
   uk: {
@@ -457,7 +457,7 @@ var PARTS = {
       "Відсотки вище показують, як часто комбінація взагалі складається до риверу на семи картах, а не як часто вона виграє. Дві пари виглядають буденно і все одно випереджають більшість того, що їм трапляється."
     ],
     seeH2: "Як це видно за столом",
-    seeP: "PokerTH називає вашу поточну найкращу комбінацію під бордом просто під час гри, тож її ніколи не доводиться складати подумки під таймер, а на розкритті показує кожну відкриту руку з підсвіченими п’ятьма картами, які зіграли. Тренування офлайн проти комп’ютерних суперників — найшвидший спосіб довести це старшинство до автоматизму."
+    seeP: "У PokerTH вкладка «Шанси» називає вашу поточну найкращу комбінацію та ваші шанси на виграш у міру виходу карт, тож її ніколи не доводиться складати подумки під таймер, а на розкритті переможна комбінація підписана під спільними картами. Тренування в режимі «Локальна / тренування» проти комп’ютерних суперників — найшвидший спосіб довести це старшинство до автоматизму."
   },
 
   zh: {
@@ -492,7 +492,7 @@ var PARTS = {
       "上面的百分比表示每种牌型在七张牌中到河牌为止出现的频率，而不是它获胜的频率。两对看起来很普通，却依然领先于它所遇到的大部分牌。"
     ],
     seeH2: "在牌桌上看到它",
-    seeP: "游戏过程中，PokerTH 会在公共牌下方标出你当前的最佳牌型，你不必在时间压力下自己去凑；摊牌时则会把每一手亮出的牌连同真正生效的那五张一起高亮显示。离线对战电脑对手是把这套牌型大小练成本能的最快方式。"
+    seeP: "在 PokerTH 中，「胜率」标签页会随着公共牌发出，标明你当前的最佳牌型和获胜几率，你不必在时间压力下自己去凑；摊牌时，获胜牌型会标注在公共牌下方。在「本地 / 训练」模式下对战电脑对手是把这套牌型大小练成本能的最快方式。"
   },
 
   ja: {
@@ -527,7 +527,7 @@ var PARTS = {
       "上の百分率は、7枚のうちリバーまでにその役が完成する頻度であって、勝つ頻度ではありません。ツーペアはありふれて見えますが、それでも出会う相手の大半より上です。"
     ],
     seeH2: "テーブルでの見え方",
-    seeP: "PokerTH はプレイ中、ボードの下に現在の最強の役の名前を表示するので、時間に追われながら自分で組み立てる必要はありません。ショーダウンでは、公開された各ハンドについて実際に使われた5枚がハイライトされます。オフラインでコンピュータの相手と練習するのが、この順位を体に覚えさせる一番の近道です。"
+    seeP: "PokerTH では「オッズ」タブに、カードが開かれるたびに現在の最強の役と勝つ確率が表示されるので、時間に追われながら自分で組み立てる必要はありません。ショーダウンでは、勝った組み合わせの名前が共通カードの下に表示されます。「ローカル / 練習」モードでコンピュータの相手と練習するのが、この順位を体に覚えさせる一番の近道です。"
   },
 
   ko: {
@@ -562,7 +562,7 @@ var PARTS = {
       "위의 백분율은 일곱 장 기준으로 리버까지 각 핸드가 만들어지는 빈도이지 이기는 빈도가 아닙니다. 투페어는 흔해 보이지만 마주치는 대부분의 핸드보다 앞섭니다."
     ],
     seeH2: "테이블에서 확인하기",
-    seeP: "PokerTH는 게임 중 보드 아래에 현재 내 최고 핸드의 이름을 표시하므로 시간에 쫓기며 직접 계산할 필요가 없습니다. 쇼다운에서는 공개된 각 핸드에서 실제로 쓰인 다섯 장을 강조해 보여 줍니다. 컴퓨터 상대와 오프라인으로 연습하는 것이 이 순위를 몸에 익히는 가장 빠른 방법입니다."
+    seeP: "PokerTH에서는 「확률」 탭이 카드가 열릴 때마다 현재 내 최고 핸드 이름과 이길 확률을 보여 주므로 시간에 쫓기며 직접 계산할 필요가 없습니다. 쇼다운에서는 이긴 조합의 이름이 공유 카드 아래에 표시됩니다. 「로컬 / 연습」 모드에서 컴퓨터 상대와 연습하는 것이 이 순위를 몸에 익히는 가장 빠른 방법입니다."
   },
 
   id: {
@@ -597,7 +597,7 @@ var PARTS = {
       "Persentase di atas menunjukkan seberapa sering tiap susunan terbentuk sampai river dari tujuh kartu, bukan seberapa sering ia menang. Two pair terlihat biasa saja tetapi tetap unggul atas sebagian besar yang ditemuinya."
     ],
     seeH2: "Melihatnya di meja",
-    seeP: "PokerTH menuliskan nama susunan terbaik Anda saat itu di bawah meja selama permainan, jadi Anda tidak pernah harus menghitungnya sendiri dikejar waktu, dan saat showdown menampilkan setiap kartu yang dibuka dengan lima kartu yang benar-benar dipakai disorot. Berlatih offline melawan lawan komputer adalah cara tercepat membuat urutan ini melekat."
+    seeP: "Di PokerTH, tab Peluang menyebutkan susunan terbaik Anda saat itu dan peluang menang Anda seiring kartu dibuka, jadi Anda tidak pernah harus menghitungnya sendiri dikejar waktu, dan saat showdown kombinasi pemenang disebutkan di bawah kartu bersama. Berlatih di mode Lokal / latihan melawan lawan komputer adalah cara tercepat membuat urutan ini melekat."
   },
 
   vi: {
@@ -632,7 +632,7 @@ var PARTS = {
       "Các tỉ lệ ở trên cho biết mỗi tay bài hình thành đến vòng river trên bảy lá thường xuyên đến mức nào, chứ không phải nó thắng thường xuyên đến mức nào. Hai đôi trông tầm thường nhưng vẫn trên cơ phần lớn những gì nó gặp."
     ],
     seeH2: "Nhìn thấy ngay tại bàn",
-    seeP: "PokerTH hiển thị tên tay bài mạnh nhất hiện tại của bạn ngay dưới bài chung trong lúc chơi, nên bạn không bao giờ phải tự ghép bài khi đồng hồ đang chạy; đến vòng lật bài, mỗi tay bài được mở đều hiện rõ năm lá thực sự có giá trị. Luyện tập ngoại tuyến với đối thủ máy là cách nhanh nhất để thuộc nằm lòng thứ tự này."
+    seeP: "Trong PokerTH, tab Tỷ lệ thắng ghi tên tay bài mạnh nhất hiện tại của bạn và khả năng thắng của bạn khi các lá được lật, nên bạn không bao giờ phải tự ghép bài khi đồng hồ đang chạy; đến vòng lật bài, tay bài thắng được ghi tên ngay dưới bài chung. Luyện tập ở chế độ Cục bộ / luyện tập với đối thủ máy là cách nhanh nhất để thuộc nằm lòng thứ tự này."
   },
   yo: {
     title: "Àwọn ọwọ́ poker — ìtòlẹ́sẹẹsẹ ọwọ́ nínú Texas Hold’em",
@@ -677,7 +677,7 @@ var PARTS = {
       "Ìdá-ọgọ́rùn-ún tí ó wà lókè ń fi bí ọwọ́ kọ̀ọ̀kan ṣe máa ń hàn tó ní river pẹ̀lú káàdì méje hàn, kì í ṣe bí ó ṣe máa ń borí tó. Two Pair dà bí ohun tí ó wọ́pọ̀, ṣùgbọ́n síbẹ̀ ó ṣì ń ṣíwájú ọ̀pọ̀ nínú ohun tí ó ń bá pàdé.",
     ],
     seeH2: "Wò ó ní tábìlì",
-    seeP: "Nígbà eré, PokerTH ń dárúkọ àkópọ̀ rẹ tó dára jù nísàlẹ̀ tábìlì, kí o má bàa tún un ṣírò lábẹ́ ìfúnpá àkókò, ní showdown ó sì ń fi ọwọ́ kọ̀ọ̀kan tí a ṣí hàn pẹ̀lú káàdì márùn-ún tí a kà ní àfihàn. Ìdánrawò láìsí ayélujára pẹ̀lú alátakò tí kọ̀ǹpútà ń darí ṣì ni ọ̀nà tó yára jù láti kọ́ ìtòlẹ́sẹẹsẹ yìí.",
+    seeP: "Nínú PokerTH, táàbù Àǹfààní ń dárúkọ àkópọ̀ rẹ tó dára jù lọ́wọ́lọ́wọ́ àti àǹfààní rẹ láti borí bí a ṣe ń ṣí àwọn káàdì, kí o má bàa tún un ṣírò lábẹ́ ìfúnpá àkókò, ní showdown sì ni a ń dárúkọ àkópọ̀ tó borí nísàlẹ̀ àwọn káàdì gbangba. Ìdánrawò ní ọ̀nà Agbègbè / ìdánrawò pẹ̀lú alátakò tí kọ̀ǹpútà ń darí ṣì ni ọ̀nà tó yára jù láti kọ́ ìtòlẹ́sẹẹsẹ yìí.",
   },
   zu: {
     title: "Izandla ze-poker — ukulandelana kwezandla ku-Texas Hold’em",
@@ -722,7 +722,7 @@ var PARTS = {
       "Amaphesenti angenhla abonisa ukuthi isandla ngasinye sivela kangaki ku-river ngamakhadi ayisikhombisa, hhayi ukuthi siwina kangaki. I-Two Pair ibukeka ivamile kodwa isengaphambi kwengxenye enkulu yalokho ehlangana nakho.",
     ],
     seeH2: "Kubone etafuleni",
-    seeP: "Phakathi nomdlalo i-PokerTH iqamba inhlanganisela yakho engcono kakhulu ngaphansi kwetafula, ukuze ungaphinde uyakhe ngaphansi kwengcindezi yesikhathi, futhi ku-showdown ibonisa isandla ngasinye esivezwe namakhadi amahlanu abaliwe egqanyisiwe. Ukuziqeqesha ungaxhunyiwe nabaphikisi abalawulwa yikhompyutha kuseyindlela esheshayo kakhulu yokufunda lokhu kulandelana.",
+    seeP: "Ku-PokerTH ithebhu elithi Amathuba iqamba inhlanganisela yakho engcono kakhulu samanje kanye namathuba akho okuwina njengoba amakhadi evezwa, ukuze ungaphinde uyakhe ngaphansi kwengcindezi yesikhathi, futhi ku-showdown inhlanganisela ewinile iqanjwa ngaphansi kwamakhadi omphakathi. Ukuziqeqesha kumodi Okwasendaweni / ukuziqeqesha nabaphikisi abalawulwa yikhompyutha kuseyindlela esheshayo kakhulu yokufunda lokhu kulandelana.",
   },
 
   th: {
@@ -757,7 +757,7 @@ var PARTS = {
       "เปอร์เซ็นต์ข้างต้นบอกว่าแต่ละมือเกิดขึ้นบ่อยแค่ไหนเมื่อครบเจ็ดใบถึงไพ่ริเวอร์ ไม่ได้บอกว่าชนะบ่อยแค่ไหน สองคู่ดูธรรมดาแต่ก็ยังเหนือกว่าไพ่ส่วนใหญ่ที่มันเจอ"
     ],
     seeH2: "ดูได้จริงที่โต๊ะ",
-    seeP: "ระหว่างเล่น PokerTH จะบอกชื่อมือที่ดีที่สุดของคุณไว้ใต้กองกลาง คุณจึงไม่ต้องมานั่งประกอบเองตอนเวลากำลังจะหมด และเมื่อถึงตอนเปิดไพ่ ระบบจะเน้นห้าใบที่ใช้จริงของทุกมือที่เปิดออกมา การฝึกออฟไลน์กับคู่แข่งคอมพิวเตอร์คือวิธีที่เร็วที่สุดที่จะจำลำดับนี้ได้ขึ้นใจ"
+    seeP: "ใน PokerTH แท็บโอกาสจะบอกชื่อมือที่ดีที่สุดของคุณ ณ ตอนนั้นและโอกาสชนะของคุณเมื่อไพ่ทยอยเปิด คุณจึงไม่ต้องมานั่งประกอบเองตอนเวลากำลังจะหมด และเมื่อถึงตอนเปิดไพ่ ระบบจะบอกชื่อไพ่ชุดที่ชนะไว้ใต้ไพ่กองกลาง การฝึกในโหมดในเครื่อง / ฝึกซ้อมกับคู่แข่งคอมพิวเตอร์คือวิธีที่เร็วที่สุดที่จะจำลำดับนี้ได้ขึ้นใจ"
   },
   tk: {
     title: "Poker kombinasiýalary — Texas Hold’em-de kombinasiýalaryň tertibi",
@@ -791,7 +791,7 @@ var PARTS = {
       "Ýokardaky göterimler her kombinasiýanyň ýedi kart bilen riwerde näçe gezek çykýandygyny görkezýär, näçe gezek utýandygyny däl. Iki jübüt adaty ýaly görünýär, ýöne duş gelýän zatlarynyň köpüsinden henizem öňde.",
     ],
     seeH2: "Stolda görüň",
-    seeP: "Oýun wagtynda PokerTH iň gowy kombinasiýaňyzy stoluň aşagynda atlandyrýar, şonuň üçin ony wagt basyşy astynda täzeden düzmeli däl, şoudaunda bolsa her açylan eli hasaplanan bäş karty bellenen görnüşde görkezýär. Kompýuteriň dolandyrýan garşydaşlary bilen oflaýn türgenleşik bu tertibi öwrenmegiň iň çalt ýoly bolmagynda galýar.",
+    seeP: "PokerTH-de Mümkinçilikler goýmasy kartlar açyldygyça iň gowy häzirki kombinasiýaňyzy we utmak mümkinçiligiňizi atlandyrýar, şonuň üçin ony wagt basyşy astynda täzeden düzmeli däl, şoudaunda bolsa ýeňiji kombinasiýa umumy kartlaryň aşagynda atlandyrylýar. Kompýuteriň dolandyrýan garşydaşlary bilen Ýerli / türgenleşik režiminde türgenleşmek bu tertibi öwrenmegiň iň çalt ýoly bolmagynda galýar.",
   },
 
   hi: {
@@ -826,7 +826,7 @@ var PARTS = {
       "ऊपर दिए प्रतिशत बताते हैं कि सात कार्डों में रिवर तक हर हाथ कितनी बार बनता है, यह नहीं कि वह कितनी बार जीतता है। दो जोड़े आम लगते हैं, फिर भी उन्हें जो मिलता है उसमें से ज़्यादातर से आगे रहते हैं।"
     ],
     seeH2: "मेज़ पर इसे देखना",
-    seeP: "खेलते समय PokerTH बोर्ड के नीचे आपका मौजूदा सबसे अच्छा हाथ नाम सहित दिखाता है, ताकि घड़ी चलते हुए आपको ख़ुद जोड़-घटाव न करना पड़े, और शोडाउन पर हर खुले हाथ में वही पाँच कार्ड उभारकर दिखाता है जो असल में गिने गए। कंप्यूटर विरोधियों के साथ ऑफ़लाइन अभ्यास इस क्रम को याद कराने का सबसे तेज़ तरीक़ा है।"
+    seeP: "PokerTH में संभावनाएँ टैब, जैसे-जैसे कार्ड खुलते हैं, आपका मौजूदा सबसे अच्छा हाथ नाम सहित और आपके जीतने की संभावना बताता है, ताकि घड़ी चलते हुए आपको ख़ुद जोड़-घटाव न करना पड़े, और शोडाउन पर जीतने वाला संयोजन साझा कार्डों के नीचे नाम सहित दिखाया जाता है। लोकल / अभ्यास मोड में कंप्यूटर विरोधियों के साथ अभ्यास इस क्रम को याद कराने का सबसे तेज़ तरीक़ा है।"
   },
 
   bn: {
@@ -861,7 +861,7 @@ var PARTS = {
       "উপরের শতাংশগুলো বলে সাত কার্ডে রিভার পর্যন্ত প্রতিটি হাত কত ঘন ঘন তৈরি হয়, কত ঘন ঘন জেতে তা নয়। দুই জোড়া সাধারণ মনে হলেও যা যা সামনে পড়ে তার বেশিরভাগের চেয়ে এগিয়ে থাকে।"
     ],
     seeH2: "টেবিলেই দেখা",
-    seeP: "খেলার সময় PokerTH বোর্ডের নিচে আপনার এখনকার সেরা হাতের নাম দেখায়, তাই ঘড়ির চাপে নিজে হিসাব কষতে হয় না; শোডাউনে খোলা প্রতিটি হাতের ঠিক যে পাঁচটি কার্ড গোনা হয়েছে সেগুলো আলাদা করে দেখানো হয়। কম্পিউটার প্রতিপক্ষের বিরুদ্ধে অফলাইনে অনুশীলনই এই ক্রম মুখস্থ করার দ্রুততম উপায়।"
+    seeP: "PokerTH-এ Odds ট্যাব কার্ড খুলতে খুলতে আপনার এখনকার সেরা হাতের নাম এবং জেতার সম্ভাবনা দেখায়, তাই ঘড়ির চাপে নিজে হিসাব কষতে হয় না; শোডাউনে বিজয়ী মিলটির নাম সাধারণ কার্ডগুলোর নিচে লেখা হয়। স্থানীয় / অনুশীলন মোডে কম্পিউটার প্রতিপক্ষের বিরুদ্ধে অনুশীলনই এই ক্রম মুখস্থ করার দ্রুততম উপায়।"
   },
 
   ar: {
@@ -896,7 +896,7 @@ var PARTS = {
       "النسب أعلاه تبيّن كم مرة تتكوّن كل يد حتى الريفر ضمن سبع أوراق، لا كم مرة تفوز. الزوجان يبدوان عاديين ومع ذلك يتقدمان على معظم ما يواجهانه."
     ],
     seeH2: "رؤيتها على الطاولة",
-    seeP: "يعرض PokerTH اسم أفضل يد لديك أسفل الطاولة أثناء اللعب، فلا تضطر إلى تركيبها والوقت يداهمك، ويُبرز عند كشف الأوراق الخمس التي احتُسبت فعلًا في كل يد مكشوفة. والتدرّب دون اتصال أمام خصوم الحاسوب أسرع طريقة لترسيخ هذا الترتيب."
+    seeP: "في PokerTH تذكر علامة التبويب «الاحتمالات» اسم أفضل يد لديك وفرصتك في الفوز كلما ظهرت ورقة جديدة، فلا تضطر إلى تركيبها والوقت يداهمك، وعند كشف الأوراق تُذكر التركيبة الفائزة أسفل الأوراق المشتركة. والتدرّب في وضع «محلي / تدريب» أمام خصوم الحاسوب أسرع طريقة لترسيخ هذا الترتيب."
   },
 
   fa: {
@@ -931,7 +931,7 @@ var PARTS = {
       "درصدهای بالا می‌گویند هر دست تا ریور روی هفت کارت چقدر تشکیل می‌شود، نه اینکه چقدر برنده می‌شود. دو جفت معمولی به نظر می‌رسد و با این حال از بیشتر آنچه با آن روبه‌رو می‌شود جلوتر است."
     ],
     seeH2: "دیدن آن سر میز",
-    seeP: "PokerTH در جریان بازی نام بهترین دست فعلی شما را زیر میز نشان می‌دهد تا هرگز مجبور نباشید زیر فشار زمان آن را در ذهن بچینید، و در شودان هر دست رو شده را با برجسته‌کردن همان پنج کارتی که به حساب آمده‌اند نمایش می‌دهد. تمرین آفلاین مقابل حریفان رایانه‌ای سریع‌ترین راه برای ملکهٔ ذهن شدن این ترتیب است."
+    seeP: "در PokerTH زبانهٔ «شانس‌ها» بهترین دست فعلی شما و شانس بردنتان را با باز شدن کارت‌ها نام می‌برد تا هرگز مجبور نباشید زیر فشار زمان آن را در ذهن بچینید، و در شودان ترکیب برنده زیر کارت‌های مشترک نام برده می‌شود. تمرین در حالت «محلی / تمرین» مقابل حریفان رایانه‌ای سریع‌ترین راه برای ملکهٔ ذهن شدن این ترتیب است."
   },
 
   ur: {
@@ -966,7 +966,7 @@ var PARTS = {
       "اوپر دیے گئے فیصد بتاتے ہیں کہ سات کارڈوں میں ریور تک ہر ہاتھ کتنی بار بنتا ہے، یہ نہیں کہ کتنی بار جیتتا ہے۔ دو جوڑے عام لگتے ہیں، پھر بھی جن سے سامنا ہوتا ہے ان میں سے اکثر سے آگے رہتے ہیں۔"
     ],
     seeH2: "میز پر اسے دیکھنا",
-    seeP: "کھیل کے دوران PokerTH میز کے نیچے آپ کے موجودہ بہترین ہاتھ کا نام دکھاتا ہے، تاکہ وقت کے دباؤ میں آپ کو خود جوڑ توڑ نہ کرنا پڑے، اور شوڈاؤن پر ہر کھلے ہاتھ کے وہی پانچ کارڈ نمایاں کر دیتا ہے جو واقعی گنے گئے۔ کمپیوٹر حریفوں کے ساتھ آف لائن مشق اس ترتیب کو ذہن نشین کرنے کا تیز ترین طریقہ ہے۔"
+    seeP: "PokerTH میں امکانات ٹیب کارڈ کھلتے ہی آپ کے موجودہ بہترین ہاتھ کا نام اور آپ کے جیتنے کا امکان بتاتا ہے، تاکہ وقت کے دباؤ میں آپ کو خود جوڑ توڑ نہ کرنا پڑے، اور شوڈاؤن پر جیتنے والا مجموعہ مشترکہ کارڈز کے نیچے نام سمیت لکھا آتا ہے۔ مقامی / مشق موڈ میں کمپیوٹر حریفوں کے ساتھ مشق اس ترتیب کو ذہن نشین کرنے کا تیز ترین طریقہ ہے۔"
   },
 
   he: {
@@ -1001,7 +1001,7 @@ var PARTS = {
       "האחוזים שלמעלה מציינים כמה פעמים כל יד נוצרת עד לריבר מתוך שבעה קלפים, ולא כמה פעמים היא מנצחת. שני זוגות נראים שגרתיים ובכל זאת גוברים על רוב מה שהם פוגשים."
     ],
     seeH2: "לראות את זה בשולחן",
-    seeP: "במהלך המשחק PokerTH מציג את שם היד הטובה ביותר שלכם מתחת לשולחן, כך שלעולם אינכם צריכים להרכיב אותה בעצמכם בלחץ הזמן, ובשואודאון הוא מדגיש בכל יד חשופה בדיוק את חמשת הקלפים שנספרו. אימון לא־מקוון מול יריבי המחשב הוא הדרך המהירה ביותר להטמיע את הסדר הזה."
+    seeP: "ב־PokerTH לשונית סיכויים מציגה את שם היד הטובה ביותר שלכם ברגע נתון ואת סיכויי הניצחון שלכם ככל שהקלפים יוצאים, כך שלעולם אינכם צריכים להרכיב אותה בעצמכם בלחץ הזמן, ובשואודאון הצירוף המנצח נקרא בשמו מתחת לקלפים המשותפים. אימון במצב מקומי / אימון מול יריבי המחשב הוא הדרך המהירה ביותר להטמיע את הסדר הזה."
   },
 
   sv: {
@@ -1036,7 +1036,7 @@ var PARTS = {
       "Procenttalen ovan visar hur ofta varje hand över huvud taget uppstår fram till river över sju kort, inte hur ofta den vinner. Två par ser vardagligt ut och ligger ändå före det mesta det möter."
     ],
     seeH2: "Se det vid bordet",
-    seeP: "PokerTH skriver ut din just nu bästa hand under bordet medan du spelar, så du aldrig behöver räkna ut den under tidspress, och vid showdown visas varje uppvisad hand med de fem kort som faktiskt räknades markerade. Att träna offline mot datamotståndarna är det snabbaste sättet att få ordningen i fingrarna."
+    seeP: "I PokerTH namnger fliken Odds din just nu bästa hand och din chans att vinna allteftersom korten kommer, så du aldrig behöver räkna ut den under tidspress, och vid showdown namnges den vinnande kombinationen under de gemensamma korten. Att träna i läget Lokal / träning mot datamotståndarna är det snabbaste sättet att få ordningen i fingrarna."
   },
 
   da: {
@@ -1071,7 +1071,7 @@ var PARTS = {
       "Procenterne ovenfor viser, hvor ofte hver hånd overhovedet opstår frem til river over syv kort, ikke hvor ofte den vinder. To par ser dagligdags ud og ligger alligevel foran det meste, det møder."
     ],
     seeH2: "Se det ved bordet",
-    seeP: "PokerTH skriver navnet på din bedste hånd lige nu under bordet, mens du spiller, så du aldrig skal regne den ud under tidspres, og ved showdown vises hver åbnet hånd med de fem kort, der rent faktisk talte, fremhævet. At træne offline mod computermodstanderne er den hurtigste vej til at få rækkefølgen ind i fingrene."
+    seeP: "I PokerTH navngiver fanen Odds din bedste hånd lige nu og din chance for at vinde, efterhånden som kortene kommer, så du aldrig skal regne den ud under tidspres, og ved showdown navngives den vindende kombination under fælleskortene. At træne i tilstanden Lokal / træning mod computermodstanderne er den hurtigste vej til at få rækkefølgen ind i fingrene."
   },
 
   nb: {
@@ -1106,7 +1106,7 @@ var PARTS = {
       "Prosentene over viser hvor ofte hver hånd i det hele tatt oppstår fram til river over sju kort, ikke hvor ofte den vinner. To par ser hverdagslig ut og ligger likevel foran det meste den møter."
     ],
     seeH2: "Se det ved bordet",
-    seeP: "PokerTH skriver navnet på den beste hånden du har akkurat nå under bordet mens du spiller, så du aldri trenger å regne den ut under tidspress, og ved showdown vises hver åpnet hånd med de fem kortene som faktisk talte, uthevet. Å trene offline mot datamotstanderne er den raskeste måten å få rekkefølgen inn i fingrene på."
+    seeP: "I PokerTH navngir Odds-fanen den beste hånden du har akkurat nå og sjansen din til å vinne etter hvert som kortene kommer, så du aldri trenger å regne den ut under tidspress, og ved showdown navngis vinnerkombinasjonen under felleskortene. Å trene i modusen Lokal / trening mot datamotstanderne er den raskeste måten å få rekkefølgen inn i fingrene på."
   },
   ne: {
     title: "पोकर ह्यान्ड — Texas Hold’em मा ह्यान्डको क्रम",
@@ -1151,7 +1151,7 @@ var PARTS = {
       "माथिका प्रतिशतले सात कार्डसहित रिभरमा हरेक ह्यान्ड कति पटक देखिन्छ भन्छन्, कति पटक जित्छ भन्दैनन्। टु पेयर साधारण लाग्छ तर भेटिनेमध्ये धेरैजसोभन्दा अगाडि रहन्छ।",
     ],
     seeH2: "टेबलमा हेर्नुहोस्",
-    seeP: "खेलको बेला PokerTH ले तपाईंको उत्कृष्ट संयोजन टेबलमुनि बताउँछ, ताकि समयको दबाबमा आफैं जोड्नु नपरोस्, र शोडाउनमा हरेक खुलेको ह्यान्ड गनिएका पाँच कार्ड हाइलाइट गरेर देखाउँछ। कम्प्युटरले चलाउने प्रतिद्वन्द्वीविरुद्ध अफलाइन अभ्यास यो क्रम कण्ठ गर्ने सबैभन्दा छिटो तरिका हो।",
+    seeP: "PokerTH ले कार्ड खुल्दै जाँदा सम्भावना ट्याबमा तपाईंको हालको उत्कृष्ट ह्यान्डको नाम र जित्ने सम्भावना बताउँछ, ताकि समयको दबाबमा आफैं जोड्नु नपरोस्, र शोडाउनमा जित्ने संयोजनको नाम साझा कार्डमुनि देखिन्छ। स्थानीय / अभ्यास मोडमा कम्प्युटरले चलाउने प्रतिद्वन्द्वीविरुद्ध अभ्यास यो क्रम कण्ठ गर्ने सबैभन्दा छिटो तरिका हो।",
   },
 
   fi: {
@@ -1186,7 +1186,7 @@ var PARTS = {
       "Yllä olevat prosentit kertovat, kuinka usein kukin käsi ylipäätään syntyy riveriin mennessä seitsemästä kortista, ei kuinka usein se voittaa. Kaksi paria näyttää arkiselta ja on silti edellä useimpia vastaantulijoita."
     ],
     seeH2: "Näin se näkyy pöydässä",
-    seeP: "PokerTH kertoo pelin aikana pöydän alla, mikä on tällä hetkellä paras kätesi, joten sitä ei tarvitse koskaan koota itse kellon käydessä, ja showdownissa jokaisesta avatusta kädestä korostetaan ne viisi korttia, jotka todella ratkaisivat. Offline-harjoittelu tietokonevastustajia vastaan on nopein tapa saada järjestys sormiin."
+    seeP: "PokerTH:ssa Todennäköisyydet-välilehti kertoo, mikä on tällä hetkellä paras kätesi ja kuinka todennäköisesti voitat, sitä mukaa kuin kortit tulevat, joten sitä ei tarvitse koskaan koota itse kellon käydessä, ja showdownissa voittava yhdistelmä nimetään yhteisten korttien alla. Harjoittelu Paikallinen / harjoittelu -tilassa tietokonevastustajia vastaan on nopein tapa saada järjestys sormiin."
   },
 
   cs: {
@@ -1221,7 +1221,7 @@ var PARTS = {
       "Procenta výše říkají, jak často každá kombinace do riveru ze sedmi karet vůbec vznikne, ne jak často vyhraje. Dvě dvojice vypadají všedně a přesto jsou před většinou toho, co potkají."
     ],
     seeH2: "Jak to vidíte u stolu",
-    seeP: "PokerTH během hry pod stolem pojmenuje vaši aktuálně nejlepší kombinaci, takže ji nikdy nemusíte skládat pod časovým tlakem, a při showdownu u každé odkryté kombinace zvýrazní právě těch pět karet, které se počítaly. Trénink offline proti počítačovým soupeřům je nejrychlejší způsob, jak si pořadí zafixovat."
+    seeP: "V PokerTH karta „Šance” pojmenuje vaši aktuálně nejlepší kombinaci a vaši šanci na výhru, jak karty přicházejí, takže ji nikdy nemusíte skládat pod časovým tlakem, a při showdownu je vítězná kombinace pojmenovaná pod společnými kartami. Trénink v režimu Místní / trénink proti počítačovým soupeřům je nejrychlejší způsob, jak si pořadí zafixovat."
   },
   cy: {
     title: "Dwylo pocer — trefn y dwylo yn Texas Hold’em",
@@ -1266,7 +1266,7 @@ var PARTS = {
       "Mae'r canrannau uchod yn dangos pa mor aml mae pob llaw yn ymddangos ar y river gyda saith cerdyn, nid pa mor aml mae'n ennill. Mae dau bâr yn edrych yn gyffredin ac eto'n aros o flaen y rhan fwyaf o'r hyn y mae'n ei wynebu.",
     ],
     seeH2: "Ei weld wrth y bwrdd",
-    seeP: "Yn ystod gêm mae PokerTH yn enwi eich cyfuniad gorau o dan y bwrdd, fel nad oes rhaid i chi fyth ei ailadeiladu dan bwysau amser, ac yn y showdown mae'n dangos pob llaw a ddatgelwyd gyda'r pum cerdyn a gyfrifwyd wedi'u hamlygu. Ymarfer all-lein yn erbyn gwrthwynebwyr a reolir gan gyfrifiadur yw'r ffordd gyflymaf o hyd i ddysgu'r drefn hon.",
+    seeP: "Yn PokerTH mae'r tab “Siawns” yn enwi eich llaw orau bresennol a'ch siawns o ennill wrth i'r cardiau gael eu datgelu, fel nad oes rhaid i chi fyth ei ailadeiladu dan bwysau amser, ac yn y showdown enwir y cyfuniad buddugol o dan y cardiau cymunedol. Ymarfer yn y modd Lleol / ymarfer yn erbyn gwrthwynebwyr a reolir gan gyfrifiadur yw'r ffordd gyflymaf o hyd i ddysgu'r drefn hon.",
   },
 
   sk: {
@@ -1301,7 +1301,7 @@ var PARTS = {
       "Percentá vyššie hovoria, ako často každá kombinácia do riveru zo siedmich kariet vôbec vznikne, nie ako často vyhrá. Dve dvojice vyzerajú všedne a napriek tomu sú pred väčšinou toho, čo stretnú."
     ],
     seeH2: "Ako to vidíte pri stole",
-    seeP: "PokerTH počas hry pod stolom pomenuje vašu aktuálne najlepšiu kombináciu, takže ju nikdy nemusíte skladať pod časovým tlakom, a pri showdowne pri každej odkrytej kombinácii zvýrazní práve tých päť kariet, ktoré sa rátali. Tréning offline proti počítačovým súperom je najrýchlejší spôsob, ako si poradie zafixovať."
+    seeP: "V PokerTH karta Šance pomenuje vašu aktuálne najlepšiu kombináciu a vašu šancu na výhru, ako karty prichádzajú, takže ju nikdy nemusíte skladať pod časovým tlakom, a pri showdowne je víťazná kombinácia pomenovaná pod spoločnými kartami. Tréning v režime Lokálne / tréning proti počítačovým súperom je najrýchlejší spôsob, ako si poradie zafixovať."
   },
 
   ro: {
@@ -1336,7 +1336,7 @@ var PARTS = {
       "Procentele de mai sus arată cât de des se formează fiecare mână până la river din șapte cărți, nu cât de des câștigă. Două perechi par banale și totuși sunt înaintea celor mai multe mâini pe care le întâlnesc."
     ],
     seeH2: "Cum se vede la masă",
-    seeP: "În timpul jocului, PokerTH scrie sub masă numele celei mai bune mâini pe care o ai în acel moment, așa că nu trebuie să o calculezi niciodată cu ceasul pornit, iar la showdown evidențiază, pentru fiecare mână descoperită, exact cele cinci cărți care au contat. Antrenamentul offline împotriva adversarilor controlați de calculator este cea mai rapidă cale de a-ți intra ordinea în reflexe."
+    seeP: "În PokerTH, fila Șanse scrie numele celei mai bune mâini pe care o ai în acel moment și șansa ta de a câștiga pe măsură ce ies cărțile, așa că nu trebuie să o calculezi niciodată cu ceasul pornit, iar la showdown combinația câștigătoare este numită sub cărțile comune. Antrenamentul în modul Local / antrenament împotriva adversarilor controlați de calculator este cea mai rapidă cale de a-ți intra ordinea în reflexe."
   },
 
   hu: {
@@ -1371,7 +1371,7 @@ var PARTS = {
       "A fenti százalékok azt mutatják, milyen gyakran jön össze egyáltalán az adott kéz a riverig hét lapból, nem azt, milyen gyakran nyer. A két pár hétköznapinak tűnik, mégis a legtöbb szembejövő kéz előtt jár."
     ],
     seeH2: "Így látszik az asztalnál",
-    seeP: "A PokerTH játék közben az asztal alatt kiírja az éppen legjobb kezed nevét, így soha nem kell időzavarban fejben összeraknod, a showdownnál pedig minden felfedett kéznél kiemeli azt az öt lapot, amelyik ténylegesen számított. A gép ellenfelek elleni offline gyakorlás a leggyorsabb módja annak, hogy a sorrend az ujjaidba álljon."
+    seeP: "A PokerTH-ban az Esélyek fül megnevezi az éppen legjobb kezedet és a nyerési esélyedet, ahogy jönnek a lapok, így soha nem kell időzavarban fejben összeraknod, a showdownnál pedig a nyertes kombináció neve ott áll a közös lapok alatt. A Helyi / gyakorlás módban a gép ellenfelek elleni gyakorlás a leggyorsabb módja annak, hogy a sorrend az ujjaidba álljon."
   },
   hy: {
     title: "Պոկերի կոմբինացիաներ — կոմբինացիաների կարգը Texas Hold’em-ում",
@@ -1416,7 +1416,7 @@ var PARTS = {
       "Վերևի տոկոսները ցույց են տալիս, թե որքան հաճախ է յուրաքանչյուր կոմբինացիա հայտնվում river-ում յոթ խաղաթղթով, ոչ թե որքան հաճախ է այն հաղթում։ Երկու զույգը սովորական է թվում և մնում է առջևում իր հանդիպածների մեծ մասից։",
     ],
     seeH2: "Տեսնել սեղանի մոտ",
-    seeP: "PokerTH-ը խաղի ընթացքում անվանում է ձեր լավագույն կոմբինացիան սեղանի տակ, որպեսզի երբեք ստիպված չլինեք այն վերակազմել ժամանակի ճնշման տակ, իսկ showdown-ում ցույց է տալիս յուրաքանչյուր բացված ձեռքը՝ ընդգծելով հաշվի առնված հինգ խաղաթղթերը։ Համակարգչով կառավարվող մրցակիցների դեմ անցանց մարզումը մնում է այս դասակարգումը յուրացնելու ամենաարագ ճանապարհը։",
+    seeP: "PokerTH-ում Հավանականություններ ներդիրը անվանում է ձեր ընթացիկ լավագույն կոմբինացիան և հաղթելու ձեր հավանականությունը՝ խաղաթղթերի բացվելուն զուգընթաց, որպեսզի երբեք ստիպված չլինեք այն վերակազմել ժամանակի ճնշման տակ, իսկ showdown-ում հաղթող կոմբինացիան անվանվում է ընդհանուր խաղաթղթերի տակ։ Տեղային / մարզում ռեժիմում համակարգչով կառավարվող մրցակիցների դեմ մարզումը մնում է այս դասակարգումը յուրացնելու ամենաարագ ճանապարհը։",
   },
 
   'pt-PT': {
@@ -1451,7 +1451,7 @@ var PARTS = {
       "As percentagens acima indicam com que frequência cada mão se forma até ao river a partir de sete cartas, e não com que frequência ganha. Dois pares parecem banais e ainda assim estão à frente da maior parte do que encontram."
     ],
     seeH2: "Ver isto na mesa",
-    seeP: "Durante o jogo, o PokerTH escreve por baixo da mesa o nome da sua melhor mão nesse momento, para que nunca tenha de a montar com o relógio a correr, e no showdown mostra cada mão revelada com as cinco cartas que realmente contaram em destaque. Treinar offline contra os adversários do computador é a forma mais rápida de fixar esta ordem."
+    seeP: "No PokerTH, o separador Probabilidades escreve o nome da sua melhor mão nesse momento e a sua probabilidade de ganhar à medida que as cartas saem, para que nunca tenha de a montar com o relógio a correr, e no showdown a combinação vencedora fica nomeada por baixo das cartas comunitárias. Treinar no modo Local / treino contra os adversários do computador é a forma mais rápida de fixar esta ordem."
   },
 
   'zh-TW': {
@@ -1486,7 +1486,7 @@ var PARTS = {
       "上面的百分比表示每種牌型在七張牌中到河牌為止出現的頻率，而不是它獲勝的頻率。兩對看起來很普通，卻依然領先於它所遇到的大部分牌。"
     ],
     seeH2: "在牌桌上看到它",
-    seeP: "遊戲過程中，PokerTH 會在公共牌下方標出你目前的最佳牌型，你不必在時間壓力下自己去湊；攤牌時則會把每一手亮出的牌連同真正生效的那五張一起高亮顯示。離線對戰電腦對手是把這套牌型大小練成本能的最快方式。"
+    seeP: "在 PokerTH 中，「勝率」分頁會隨著公共牌發出，標明你目前的最佳牌型和獲勝機率，你不必在時間壓力下自己去湊；攤牌時，獲勝牌型會標註在公共牌下方。在「本機 / 練習」模式下對戰電腦對手是把這套牌型大小練成本能的最快方式。"
   },
   'zh-HK': {
     title: "撲克牌型大小 — 德州撲克牌型排名",
@@ -1520,7 +1520,7 @@ var PARTS = {
       "上面的百分比表示每種牌型在七張牌中到河牌為止出現的頻率，而不是它獲勝的頻率。兩對看起來很普通，卻依然領先於它所遇到的大部分牌。",
     ],
     seeH2: "在牌桌上看到它",
-    seeP: "遊戲過程中，PokerTH 會在公共牌下方標出你目前的最佳牌型，你不必在時間壓力下自己去湊；攤牌時則會把每一手亮出的牌連同真正生效的那五張一起高亮顯示。離線對戰電腦對手是把這套牌型大小練成本能的最快方式。",
+    seeP: "在 PokerTH 中，「勝率」分頁會隨著公共牌發出，標明你目前的最佳牌型和獲勝機率，你不必在時間壓力下自己去湊；攤牌時，獲勝牌型會標註在公共牌下方。在「本機 / 練習」模式下對戰電腦對手是把這套牌型大小練成本能的最快方式。",
   },
 
   el: {
@@ -1555,7 +1555,7 @@ var PARTS = {
       "Τα παραπάνω ποσοστά δείχνουν πόσο συχνά σχηματίζεται κάθε χέρι ως το ριβέρ μέσα σε εφτά φύλλα, όχι πόσο συχνά κερδίζει. Τα δύο ζευγάρια μοιάζουν κοινότοπα κι όμως προηγούνται των περισσότερων που συναντούν."
     ],
     seeH2: "Πώς φαίνεται στο τραπέζι",
-    seeP: "Κατά τη διάρκεια του παιχνιδιού το PokerTH γράφει κάτω από το τραπέζι το όνομα του καλύτερου χεριού σας εκείνη τη στιγμή, ώστε να μη χρειάζεται να το συνθέσετε μόνοι σας με τον χρόνο να τρέχει, και στο σόουνταουν δείχνει κάθε αποκαλυμμένο χέρι με τονισμένα τα πέντε φύλλα που πράγματι μέτρησαν. Η προπόνηση εκτός σύνδεσης απέναντι στους αντιπάλους του υπολογιστή είναι ο γρηγορότερος τρόπος να εμπεδώσετε αυτή τη σειρά."
+    seeP: "Στο PokerTH η καρτέλα Πιθανότητες γράφει το καλύτερο χέρι σας και την πιθανότητά σας να κερδίσετε καθώς βγαίνουν τα φύλλα, ώστε να μη χρειάζεται να το συνθέσετε μόνοι σας με τον χρόνο να τρέχει, και στο σόουνταουν ο νικηφόρος συνδυασμός γράφεται κάτω από τα κοινά φύλλα. Η εξάσκηση στη λειτουργία Τοπικό / εξάσκηση απέναντι στους αντιπάλους του υπολογιστή είναι ο γρηγορότερος τρόπος να εμπεδώσετε αυτή τη σειρά."
   },
   eo: {
     title: "Pokeraj manoj — rangordo de manoj en Texas Hold’em",
@@ -1600,7 +1600,7 @@ var PARTS = {
       "La supraj procentoj montras kiom ofte ĉiu mano aperas ĉe la river kun sep kartoj, ne kiom ofte ĝi gajnas. Du paroj ŝajnas ordinaraj kaj tamen restas antaŭ la plimulto de tio, kion ili renkontas.",
     ],
     seeH2: "Vidi ĝin ĉe la tablo",
-    seeP: "Dum ludo PokerTH nomas vian plej bonan kombinaĵon sub la tablo, por ke vi neniam devu rekonstrui ĝin sub tempopremo, kaj ĉe la showdown ĝi montras ĉiun malkaŝitan manon kun la kvin kalkulitaj kartoj emfazitaj. Senkonekta trejnado kontraŭ komputile regataj kontraŭuloj restas la plej rapida maniero lerni ĉi tiun rangordon.",
+    seeP: "En PokerTH la langeto Ŝancoj nomas vian nunan plej bonan manon kaj vian ŝancon gajni dum la kartoj malkaŝiĝas, por ke vi neniam devu rekonstrui ĝin sub tempopremo, kaj ĉe la showdown la gajna kombinaĵo estas nomata sub la komunaj kartoj. Trejnado en la reĝimo Loka / trejnado kontraŭ komputile regataj kontraŭuloj restas la plej rapida maniero lerni ĉi tiun rangordon.",
   },
 
   bg: {
@@ -1635,7 +1635,7 @@ var PARTS = {
       "Процентите по-горе показват колко често всяка комбинация изобщо се получава до ривъра от седем карти, а не колко често печели. Двата чифта изглеждат обикновени и въпреки това изпреварват повечето от онова, което срещат."
     ],
     seeH2: "Как изглежда на масата",
-    seeP: "По време на игра PokerTH изписва под борда името на текущата ви най-добра комбинация, така че никога не се налага да я подреждате наум под напрежение, а на разкриването показва всяка отворена ръка с осветени тъкмо онези пет карти, които са се броили. Тренировката офлайн срещу компютърните съперници е най-бързият начин подредбата да ви влезе в ръцете."
+    seeP: "В PokerTH разделът „Шансове” назовава най-добрата ви в момента комбинация и шанса ви да спечелите, докато излизат картите, така че никога не се налага да я подреждате наум под напрежение, а на разкриването печелившата комбинация се назовава под общите карти. Тренировката в режим „Локална / тренировка” срещу компютърните съперници е най-бързият начин подредбата да ви влезе в ръцете."
   },
 
   hr: {
@@ -1670,7 +1670,7 @@ var PARTS = {
       "Postoci iznad govore koliko se često svaka ruka uopće sastavi do rivera od sedam karata, a ne koliko često pobjeđuje. Dva para djeluju obično, a ipak su ispred većine onoga na što naiđu."
     ],
     seeH2: "Kako to izgleda za stolom",
-    seeP: "Tijekom igre PokerTH ispod stola ispisuje naziv vaše trenutačno najbolje ruke, pa je nikada ne morate slagati u glavi dok vrijeme istječe, a na otvaranju karata svaku otkrivenu ruku prikazuje s istaknutih pet karata koje su doista vrijedile. Vježbanje offline protiv računalnih protivnika najbrži je način da vam redoslijed uđe u prste."
+    seeP: "U PokerTH-u kartica Izgledi imenuje vašu trenutačno najbolju kombinaciju i vaše izglede za pobjedu kako karte izlaze, pa to nikada ne morate računati u glavi dok vrijeme istječe, a na otvaranju karata pobjednička je kombinacija imenovana ispod zajedničkih karata. Vježbanje u načinu Lokalno / trening protiv računalnih protivnika najbrži je način da vam redoslijed uđe u prste."
   },
 
   sr: {
@@ -1705,7 +1705,7 @@ var PARTS = {
       "Procenti iznad govore koliko često se svaka ruka uopšte sastavi do rivera od sedam karata, a ne koliko često pobeđuje. Dva para deluju obično, a ipak su ispred većine onoga na šta naiđu."
     ],
     seeH2: "Kako to izgleda za stolom",
-    seeP: "Tokom igre PokerTH ispod stola ispisuje naziv vaše trenutno najbolje ruke, pa je nikada ne morate slagati u glavi dok vreme ističe, a pri otvaranju karata svaku otkrivenu ruku prikazuje sa istaknutih pet karata koje su zaista vredele. Vežbanje oflajn protiv računarskih protivnika najbrži je način da vam redosled uđe u prste."
+    seeP: "U PokerTH-u kartica Šanse imenuje vašu trenutno najbolju ruku i vašu šansu za pobedu kako karte izlaze, pa je nikada ne morate slagati u glavi dok vreme ističe, a pri otvaranju karata pobednička kombinacija imenovana je ispod zajedničkih karata. Vežbanje u režimu Lokalno / vežbanje protiv računarskih protivnika najbrži je način da vam redosled uđe u prste."
   },
 
   ca: {
@@ -1740,7 +1740,7 @@ var PARTS = {
       "Els percentatges de dalt indiquen amb quina freqüència es forma cada jugada fins al river a partir de set cartes, no amb quina freqüència guanya. Les dobles parelles semblen corrents i tot i així van per davant de la major part del que es troben."
     ],
     seeH2: "Veure-ho a la taula",
-    seeP: "Mentre jugues, el PokerTH escriu sota la taula el nom de la teva millor jugada del moment, de manera que mai no l’has de muntar tu amb el rellotge corrent, i a l’obertura de cartes mostra cada mà revelada amb les cinc cartes que realment han comptat destacades. Practicar fora de línia contra els oponents de l’ordinador és la manera més ràpida de tenir l’ordre a la punta dels dits."
+    seeP: "A PokerTH la pestanya «Probabilitats» anomena la teva millor jugada del moment i la teva probabilitat de guanyar a mesura que van sortint les cartes, de manera que mai no l’has de muntar tu amb el rellotge corrent, i a l’obertura de cartes la combinació guanyadora s’anomena sota les cartes comunitàries. Practicar en mode Local / entrenament contra els oponents de l’ordinador és la manera més ràpida de tenir l’ordre a la punta dels dits."
   },
 
   gl: {
@@ -1775,7 +1775,7 @@ var PARTS = {
       "As porcentaxes de arriba indican con que frecuencia se forma cada xogada ata o river a partir de sete cartas, non con que frecuencia gaña. A dobre parella parece corrente e aínda así vai por diante da maior parte do que atopa."
     ],
     seeH2: "Velo na mesa",
-    seeP: "Mentres xogas, o PokerTH escribe debaixo da mesa o nome da túa mellor xogada nese momento, así nunca tes que montala ti co reloxo a correr, e na apertura de cartas amosa cada man revelada coas cinco cartas que realmente contaron destacadas. Practicar sen conexión contra os adversarios do ordenador é a forma máis rápida de ter a orde na punta dos dedos."
+    seeP: "En PokerTH, a pestana Probabilidades nomea a túa mellor xogada do momento e a túa probabilidade de gañar a medida que saen as cartas, así nunca tes que montala ti co reloxo a correr, e na apertura de cartas a combinación gañadora nómease baixo as cartas comunitarias. Practicar no modo Local / adestramento contra os adversarios do ordenador é a forma máis rápida de ter a orde na punta dos dedos."
   },
 
   af: {
@@ -1810,7 +1810,7 @@ var PARTS = {
       "Die persentasies hierbo sê hoe dikwels elke hand teen die river uit sewe kaarte gevorm word, nie hoe dikwels dit wen nie. Twee pare lyk alledaags en is nogtans voor die meeste van wat dit teëkom."
     ],
     seeH2: "Om dit by die tafel te sien",
-    seeP: "Terwyl jy speel, skryf PokerTH die naam van jou beste hand op daardie oomblik onder die tafel, sodat jy dit nooit onder tyddruk self hoef uit te werk nie, en by die showdown word elke oop hand gewys met die vyf kaarte wat werklik getel het, uitgelig. Om aflyn teen die rekenaarteenstanders te oefen is die vinnigste manier om die volgorde in jou vingers te kry."
+    seeP: "In PokerTH noem die Kanse-oortjie jou beste hand op daardie oomblik en jou kans om te wen soos die kaarte kom, sodat jy dit nooit onder tyddruk self hoef uit te werk nie, en by die showdown word die wenkombinasie onder die gemeenskaplike kaarte benoem. Om in die modus Plaaslik / oefening teen die rekenaarteenstanders te oefen is die vinnigste manier om die volgorde in jou vingers te kry."
   },
 
   fil: {
@@ -1845,7 +1845,7 @@ var PARTS = {
       "Ipinapakita ng mga porsyento sa itaas kung gaano kadalas nabubuo ang bawat kamay hanggang river mula sa pitong baraha, hindi kung gaano kadalas ito nananalo. Mukhang pangkaraniwan ang two pair pero nangunguna pa rin ito sa karamihan ng nakakasalubong nito."
     ],
     seeH2: "Makikita mo ito sa mesa",
-    seeP: "Habang naglalaro, isinusulat ng PokerTH sa ilalim ng mesa ang pangalan ng pinakamalakas mong kamay sa sandaling iyon, kaya hindi mo na kailangang isipin ito habang tumatakbo ang oras, at sa showdown ay itinatampok nito sa bawat bukás na kamay ang limang barahang talagang nagsilbi. Ang pagsasanay offline laban sa mga kalaban ng kompyuter ang pinakamabilis na paraan para maisaulo ang pagkakasunod-sunod na ito."
+    seeP: "Sa PokerTH, isinusulat ng tab na Odds ang pangalan ng pinakamalakas mong kamay sa sandaling iyon at ang tsansa mong manalo habang lumalabas ang mga baraha, kaya hindi mo na kailangang isipin ito habang tumatakbo ang oras, at sa showdown ay pinangangalanan sa ilalim ng mga karaniwang karta ang nanalong kombinasyon. Ang pagsasanay sa Lokal / pagsasanay na mode laban sa mga kalaban ng kompyuter ang pinakamabilis na paraan para maisaulo ang pagkakasunod-sunod na ito."
   },
 
   gd: {
@@ -1880,7 +1880,7 @@ var PARTS = {
       "Tha na ceudadan gu h-àrd ag innse dè cho tric ’s a thig gach làmh ri chèile ron river à seachd cairtean, chan e dè cho tric ’s a bhuannaicheas i. Tha coltas cumanta air dà phaidhir agus tha i fhathast air thoiseach air a’ mhòr-chuid de na thachras rithe."
     ],
     seeH2: "Ga fhaicinn aig a’ bhòrd",
-    seeP: "Fhad ’s a bhios tu a’ cluich, sgrìobhaidh PokerTH ainm na làimhe as fheàrr a th’ agad fon bhòrd, agus mar sin cha leig thu leas a cur ri chèile fhad ’s a tha an ùine a’ ruith, agus aig an showdown seallaidh e gach làmh fhosgailte leis na còig cairtean a bha gu diofar air an comharrachadh. ’S e cleachdadh far-loidhne an aghaidh nan co-fharpaiseach coimpiutair an dòigh as luaithe air an t-òrdugh seo a chur nad chorragan."
+    seeP: "Ann am PokerTH, ainmichidh an taba Seansan an làmh as fheàrr a th’ agad an-dràsta agus an cothrom a th’ agad air buannachadh mar a thig na cairtean a-mach, agus mar sin cha leig thu leas a cur ri chèile fhad ’s a tha an ùine a’ ruith, agus aig an showdown thèid an cur-ri-chèile buadhach ainmeachadh fo na cairtean coitcheann. ’S e cleachdadh sa mhodh Ionadail / trèanadh an aghaidh nan co-fharpaiseach coimpiutair an dòigh as luaithe air an t-òrdugh seo a chur nad chorragan."
   },
 
   lt: {
@@ -1915,7 +1915,7 @@ var PARTS = {
       "Pirmiau pateikti procentai rodo, kaip dažnai kiekvienas derinys apskritai susidaro iki riverio iš septynių kortų, o ne kaip dažnai jis laimi. Dvi poros atrodo kasdieniškai ir vis dėlto pranoksta didžiąją dalį to, ką sutinka."
     ],
     seeH2: "Kaip tai matyti prie stalo",
-    seeP: "Žaidžiant PokerTH po stalu parašo dabartinės geriausios jūsų rankos pavadinimą, tad jos niekada nereikia dėliotis mintyse spaudžiant laikui, o atskleidžiant kortas kiekvienoje atverstoje rankoje išryškina būtent tas penkias kortas, kurios iš tikrųjų buvo skaičiuojamos. Treniruotis neprisijungus prieš kompiuterio varžovus — greičiausias būdas šį eiliškumą įsiminti."
+    seeP: "Žaidžiant PokerTH skirtukas Šansai parašo dabartinės geriausios jūsų rankos pavadinimą ir laimėjimo tikimybę, kortoms atsiverčiant, tad jos niekada nereikia dėliotis mintyse spaudžiant laikui, o atskleidžiant kortas po bendromis kortomis įvardijamas laimintis derinys. Treniruotis režimu Vietinis / treniruotė prieš kompiuterio varžovus — greičiausias būdas šį eiliškumą įsiminti."
   },
 
 
@@ -1951,7 +1951,7 @@ var PARTS = {
       "Ülaltoodud protsendid näitavad, kui sageli iga kombinatsioon seitsmest kaardist riveriks üldse tekib, mitte kui sageli see võidab. Kaks paari tunduvad igapäevased ja löövad siiski suurema osa sellest, mida nad kohtavad."
     ],
     seeH2: "Kuidas seda lauas näha",
-    seeP: "PokerTH-s mängides kirjutatakse laua alla sinu praeguse parima käe nimi, nii et seda ei pea kunagi ajasurve all peast kokku panema, ning kaartide avamisel tõstetakse igas näidatud käes esile just need viis kaarti, mis tegelikult arvesse läksid. Võrguvaba treening arvutivastaste vastu on kiireim viis see järjestus meelde jätta."
+    seeP: "PokerTH-s nimetab vahekaart Šansid sinu praeguse parima käe ja võiduvõimaluse kaartide avanedes, nii et seda ei pea kunagi ajasurve all peast kokku panema, ning showdownil nimetatakse võitnud kombinatsioon ühiste kaartide all. Treening režiimis Kohalik / treening arvutivastaste vastu on kiireim viis see järjestus meelde jätta."
   },
   eu: {
     title: "Pokerreko eskuak — eskuen hurrenkera Texas Hold’em-en",
@@ -1996,7 +1996,7 @@ var PARTS = {
       "Goiko ehunekoek adierazten dute esku bakoitza zenbatetan agertzen den river-ean zazpi kartarekin, ez zenbatetan irabazten duen. Bi bikotek arrunta dirudi, eta hala ere aurkitzen duenaren gehiengoaren aurretik dago.",
     ],
     seeH2: "Ikusi mahaian",
-    seeP: "Partidan zehar, PokerTH-k zure konbinaziorik onena izendatzen du mahaiaren azpian, denbora-presiopean zuk berreraiki behar izan ez dezazun, eta showdown-ean agerian jarritako esku bakoitza erakusten du kontuan hartutako bost kartak nabarmenduta. Ordenagailuak kontrolatutako aurkarien aurkako lineaz kanpoko entrenamendua da hurrenkera hau ikasteko biderik azkarrena.",
+    seeP: "PokerTH-n Aukerak fitxak zure uneko eskurik onena eta irabazteko aukera izendatzen ditu kartak agertu ahala, denbora-presiopean zuk berreraiki behar izan ez dezazun, eta showdown-ean konbinazio irabazlea karta komunen azpian izendatzen da. Lokala / entrenamendua moduan ordenagailuak kontrolatutako aurkarien aurka entrenatzea da hurrenkera hau ikasteko biderik azkarrena.",
   },
   lv: {
     title: "Pokera kombināciju stiprums — kombināciju secība Teksasas Hold’emā",
@@ -2030,7 +2030,7 @@ var PARTS = {
       "Iepriekš norādītie procenti rāda, cik bieži katra kombinācija no septiņām kārtīm vispār izveidojas līdz river, nevis cik bieži tā uzvar. Divi pāri šķiet ikdienišķi un tomēr pārspēj lielāko daļu no tā, ko sastop."
     ],
     seeH2: "Kā to redzēt pie galda",
-    seeP: "Spēlējot PokerTH, tavas pašreizējās labākās kombinācijas nosaukums tiek rakstīts zem galda, tāpēc to nekad nav jāsaliek galvā laika spiedienā, un kāršu atklāšanā katrā parādītajā kombinācijā tiek izceltas tieši tās piecas kārtis, kas patiešām skaitījās. Bezsaistes treniņš pret datora pretiniekiem ir ātrākais veids, kā šo secību iegaumēt."
+    seeP: "Spēlējot PokerTH, cilnē Izredzes tiek rakstīts tavas pašreizējās labākās kombinācijas nosaukums un uzvaras iespēja, kārtīm atklājoties, tāpēc to nekad nav jāsaliek galvā laika spiedienā, un kāršu atklāšanā zem kopīgajām kārtīm tiek nosaukta uzvarošā kombinācija. Trenēšanās režīmā Lokāli / treniņš pret datora pretiniekiem ir ātrākais veids, kā šo secību iegaumēt."
   },
 
   sl: {
@@ -2065,7 +2065,7 @@ var PARTS = {
       "Zgornji odstotki kažejo, kako pogosto se posamezna kombinacija sploh pojavi med sedmimi kartami do rivera, ne kako pogosto zmaga. Dva para se zdita vsakdanja, a vseeno premagata večino tega, kar srečata."
     ],
     seeH2: "Kako to vidiš pri mizi",
-    seeP: "Med igro PokerTH se pod mizo izpiše ime tvoje trenutno najboljše roke, tako da je nikoli ni treba sestavljati na pamet pod časovnim pritiskom, ob razkritju kart pa je v vsaki prikazani roki poudarjenih točno tistih pet kart, ki so dejansko štele. Brezpovezavna vadba proti računalniškim nasprotnikom je najhitrejši način, da si to zapomniš."
+    seeP: "V PokerTH zavihek Kvote ob razkritju kart poimenuje tvojo trenutno najboljšo roko in tvojo možnost za zmago, tako da je nikoli ni treba sestavljati na pamet pod časovnim pritiskom, ob razkritju pa je pod skupnimi kartami imenovana zmagovalna kombinacija. Vadba v načinu Lokalno / vadba proti računalniškim nasprotnikom je najhitrejši način, da si to zapomniš."
   },
 
   bs: {
@@ -2100,7 +2100,7 @@ var PARTS = {
       "Procenti iznad govore koliko se često svaka ruka uopšte sastavi do rivera od sedam karata, a ne koliko često pobjeđuje. Dva para djeluju obično, a ipak su ispred većine onoga na šta naiđu."
     ],
     seeH2: "Kako to izgleda za stolom",
-    seeP: "Tokom igre PokerTH ispod stola ispisuje naziv tvoje trenutne najbolje ruke, pa je nikad ne moraš slagati u glavi dok vrijeme ističe, a na otvaranju karata svaku otkrivenu ruku prikazuje s istaknutih pet karata koje su zaista vrijedile. Vježbanje offline protiv računarskih protivnika najbrži je način da ti redoslijed uđe u prste."
+    seeP: "U PokerTH-u kartica „Izgledi” navodi tvoju trenutno najbolju ruku i šansu za pobjedu kako karte izlaze, pa je nikad ne moraš slagati u glavi dok vrijeme ističe, a na otvaranju karata pobjednička kombinacija navedena je ispod zajedničkih karata. Vježbanje u načinu Lokalno / trening protiv računarskih protivnika najbrži je način da ti redoslijed uđe u prste."
   },
 
   mk: {
@@ -2135,7 +2135,7 @@ var PARTS = {
       "Процентите погоре покажуваат колку често секоја комбинација воопшто се составува до риверот од седум карти, не колку често победува. Двата пара изгледаат обични, а сепак победуваат поголемиот дел од тоа на што наидуваат."
     ],
     seeH2: "Како тоа изгледа за масата",
-    seeP: "Додека играш PokerTH, под масата се испишува името на твојата тековна најдобра рака, така што никогаш не мораш да ја составуваш во главата под временски притисок, а при покажување на картите, секоја откриена рака ги прикажува истакнати точно тие пет карти што навистина важеле. Вежбањето офлајн против компјутерски противници е најбрзиот начин ова да ти влезе во прсти."
+    seeP: "Додека играш PokerTH, табот Изгледи ја именува твојата тековна најдобра рака и шансата да победиш како што излегуваат картите, така што никогаш не мораш да ја составуваш во главата под временски притисок, а при покажување на картите победничката комбинација е именувана под заедничките карти. Вежбањето во режимот Локално / тренинг против компјутерски противници е најбрзиот начин ова да ти влезе во прсти."
   },
 
 
@@ -2171,7 +2171,7 @@ var PARTS = {
       "Peratusan di atas menunjukkan seberapa kerap setiap kombinasi terbentuk langsung sehingga river daripada tujuh kad, bukan seberapa kerap ia menang. Dua pasangan kelihatan biasa namun masih mengalahkan kebanyakan apa yang ditemuinya."
     ],
     seeH2: "Cara Melihatnya di Meja",
-    seeP: "Semasa bermain PokerTH, nama kombinasi terbaik anda pada masa itu dipaparkan di bawah meja, jadi anda tidak perlu menyusunnya dalam kepala di bawah tekanan masa, dan semasa penunjukan kad, setiap tangan yang didedahkan menonjolkan tepat lima kad yang benar-benar dikira. Berlatih luar talian menentang lawan komputer adalah cara paling pantas untuk menjadikan susunan ini sebati."
+    seeP: "Dalam PokerTH, tab Peluang menamakan tangan terbaik anda pada masa itu dan peluang anda untuk menang semasa kad keluar, jadi anda tidak perlu menyusunnya dalam kepala di bawah tekanan masa, dan semasa penunjukan kad, kombinasi yang menang dinamakan di bawah kad komuniti. Berlatih dalam mod Lokal / latihan menentang lawan komputer adalah cara paling pantas untuk menjadikan susunan ini sebati."
   },
 
   sq: {
@@ -2206,7 +2206,7 @@ var PARTS = {
       "Përqindjet më sipër tregojnë sa shpesh formohet fare çdo kombinim deri te river-i nga shtatë letra, jo sa shpesh fiton. Dy çiftet duken të zakonshme e prapëseprapë mundin shumicën e asaj që hasin."
     ],
     seeH2: "Si Duket te Tavolina",
-    seeP: "Ndërsa luan PokerTH, nën tavolinë shkruhet emri i kombinimit tënd më të mirë aktual, kështu që s’të duhet ta ndërtosh kurrë në mendje nën presionin e kohës, dhe në zbulimin e letrave, çdo dorë e zbuluar i thekson saktësisht ato pesë letra që vërtet numëroheshin. Stërvitja offline kundër kundërshtarëve kompjuterikë është mënyra më e shpejtë për ta bërë këtë renditje refleks."
+    seeP: "Në PokerTH skeda Shanset emërton kombinimin tënd aktualisht më të mirë dhe shansin tënd për të fituar ndërsa dalin letrat, kështu që s’të duhet ta ndërtosh kurrë në mendje nën presionin e kohës, dhe në zbulimin e letrave kombinimi fitues emërtohet nën letrat e përbashkëta. Stërvitja në modalitetin Lokal / stërvitje kundër kundërshtarëve kompjuterikë është mënyra më e shpejtë për ta bërë këtë renditje refleks."
   },
   pa: {
     title: "ਪੋਕਰ ਹੱਥ ਰੈਂਕਿੰਗ — Texas Hold’em ਵਿੱਚ ਹੱਥਾਂ ਦਾ ਦਰਜਾ",
@@ -2240,7 +2240,7 @@ var PARTS = {
       "ਉੱਪਰਲੀਆਂ ਪ੍ਰਤੀਸ਼ਤਾਂ ਦੱਸਦੀਆਂ ਹਨ ਕਿ ਸੱਤ ਪੱਤਿਆਂ ਤੋਂ ਰਿਵਰ ਤੱਕ ਹਰ ਸੁਮੇਲ ਕਿੰਨੀ ਵਾਰ ਬਣਦਾ ਹੈ, ਕਿੰਨੀ ਵਾਰ ਜਿੱਤਦਾ ਹੈ ਨਹੀਂ। Two Pair ਆਮ ਲੱਗਦਾ ਹੈ ਪਰ ਫੇਰ ਵੀ ਜ਼ਿਆਦਾਤਰ ਨੂੰ ਹਰਾ ਦਿੰਦਾ ਹੈ।"
     ],
     seeH2: "ਟੇਬਲ \u2019ਤੇ ਇਹ ਕਿਵੇਂ ਦਿਖਦਾ ਹੈ",
-    seeP: "PokerTH ਖੇਡਦੇ ਸਮੇਂ, ਟੇਬਲ ਹੇਠਾਂ ਤੁਹਾਡੇ ਮੌਜੂਦਾ ਸਭ ਤੋਂ ਵਧੀਆ ਸੁਮੇਲ ਦਾ ਨਾਮ ਲਿਖਿਆ ਹੁੰਦਾ ਹੈ, ਤਾਂ ਜੋ ਤੁਹਾਨੂੰ ਸਮੇਂ ਦੇ ਦਬਾਅ ਹੇਠ ਕਦੇ ਇਸਨੂੰ ਦਿਮਾਗ਼ ਵਿੱਚ ਬਣਾਉਣਾ ਨਾ ਪਵੇ, ਅਤੇ ਸ਼ੋਡਾਊਨ \u2019ਤੇ ਹਰ ਖੁੱਲ੍ਹਾ ਹੱਥ ਬਿਲਕੁਲ ਓਹ ਪੰਜ ਪੱਤੇ ਉਭਾਰਦਾ ਹੈ ਜੋ ਅਸਲ ਵਿੱਚ ਗਿਣੇ ਗਏ। ਕੰਪਿਊਟਰ ਵਿਰੋਧੀਆਂ ਵਿਰੁੱਧ ਆਫਲਾਈਨ ਅਭਿਆਸ ਇਸ ਰੈਂਕਿੰਗ ਨੂੰ ਆਦਤ ਬਣਾਉਣ ਦਾ ਸਭ ਤੋਂ ਤੇਜ਼ ਤਰੀਕਾ ਹੈ।"
+    seeP: "PokerTH ਵਿੱਚ ਓਡਸ ਟੈਬ ਪੱਤੇ ਆਉਣ ਦੇ ਨਾਲ ਤੁਹਾਡੇ ਮੌਜੂਦਾ ਸਭ ਤੋਂ ਵਧੀਆ ਸੁਮੇਲ ਅਤੇ ਜਿੱਤਣ ਦੀ ਸੰਭਾਵਨਾ ਦਾ ਨਾਮ ਦੱਸਦਾ ਹੈ, ਤਾਂ ਜੋ ਤੁਹਾਨੂੰ ਸਮੇਂ ਦੇ ਦਬਾਅ ਹੇਠ ਕਦੇ ਇਸਨੂੰ ਦਿਮਾਗ਼ ਵਿੱਚ ਬਣਾਉਣਾ ਨਾ ਪਵੇ, ਅਤੇ ਸ਼ੋਡਾਊਨ ’ਤੇ ਜਿੱਤਣ ਵਾਲਾ ਸੁਮੇਲ ਕਮਿਊਨਿਟੀ ਪੱਤਿਆਂ ਹੇਠਾਂ ਲਿਖਿਆ ਜਾਂਦਾ ਹੈ। ਲੋਕਲ / ਅਭਿਆਸ ਮੋਡ ਵਿੱਚ ਕੰਪਿਊਟਰ ਵਿਰੋਧੀਆਂ ਵਿਰੁੱਧ ਅਭਿਆਸ ਇਸ ਰੈਂਕਿੰਗ ਨੂੰ ਆਦਤ ਬਣਾਉਣ ਦਾ ਸਭ ਤੋਂ ਤੇਜ਼ ਤਰੀਕਾ ਹੈ।"
   },
   am: {
     title: "የፖከር እጅ ደረጃዎች — በ Texas Hold’em ውስጥ የእጆች ደረጃ",
@@ -2274,7 +2274,7 @@ var PARTS = {
       "ከላይ ያሉት መቶኛዎች እያንዳንዱ ጥምረት ከሰባት ካርታዎች እስከ ሪቨር ምን ያህል ጊዜ እንደሚሠራ ይናገራሉ፣ ምን ያህል ጊዜ እንደሚያሸንፍ አይደለም። Two Pair የተለመደ ይመስላል ግን አሁንም የሚያጋጥመውን አብዛኛውን ያሸንፋል።"
     ],
     seeH2: "በጠረጴዛው ላይ እንዴት እንደሚታይ",
-    seeP: "PokerTH ሲጫወቱ የአሁኑ ምርጥ ጥምረትዎ ስም ከጠረጴዛው በታች ይጻፋል፣ በጊዜ ግፊት ውስጥ በአእምሮዎ መገንባት እንዳይኖርብዎ፣ እና በ showdown ላይ እያንዳንዱ የተገለጠ እጅ በእውነት የተቆጠሩትን አምስት ካርታዎች በትክክል ያደምቃል። ከኮምፒውተር ተቃዋሚዎች ጋር ከመስመር ውጪ መለማመድ ይህን ደረጃ ልማድ ለማድረግ ፈጣኑ መንገድ ነው።"
+    seeP: "በ PokerTH ውስጥ የ“ዕድሎች” ትር የአሁኑን ምርጥ እጅዎን እና የማሸነፍ ዕድልዎን ካርታዎች ሲወጡ ይጠራል፣ በጊዜ ግፊት ውስጥ በአእምሮዎ መገንባት እንዳይኖርብዎ፣ እና በ showdown ላይ አሸናፊው ጥምረት ከጋራ ካርታዎቹ በታች ይጠራል። በአካባቢያዊ / ልምምድ ሁነታ ከኮምፒውተር ተቃዋሚዎች ጋር መለማመድ ይህን ደረጃ ልማድ ለማድረግ ፈጣኑ መንገድ ነው።"
   },
   az: {
     title: "Poker kombinasiyaları — Texas Hold’em-də kombinasiyaların sırası",
@@ -2308,7 +2308,7 @@ var PARTS = {
       "Yuxarıdakı faizlər hər kombinasiyanın yeddi kartla river-də nə qədər tez-tez göründüyünü göstərir, nə qədər tez-tez qazandığını deyil. İki cüt adi görünür və qarşılaşdığı əksər əllərdən öndə qalır.",
     ],
     seeH2: "Masada görmək",
-    seeP: "PokerTH oyun zamanı ən yaxşı kombinasiyanızı masanın altında adlandırır ki, onu heç vaxt vaxt təzyiqi altında yenidən qurmalı olmayasınız, showdown-da isə hər açılan əli nəzərə alınan beş kart vurğulanmış şəkildə göstərir. Kompüterin idarə etdiyi rəqiblərə qarşı oflayn məşq bu sıralamanı əzbərləməyin ən sürətli yolu olaraq qalır.",
+    seeP: "PokerTH-də “Ehtimallar” sekməsi kartlar açıldıqca ən yaxşı kombinasiyanızı və qalib gəlmək şansınızı adlandırır ki, onu heç vaxt vaxt təzyiqi altında yenidən qurmalı olmayasınız, showdown-da isə qalib kombinasiya ümumi kartların altında adlandırılır. Lokal / məşq rejimində kompüterin idarə etdiyi rəqiblərə qarşı məşq bu sıralamanı əzbərləməyin ən sürətli yolu olaraq qalır.",
   },
   be: {
     title: "Покерныя камбінацыі — старшынства рук у Texas Hold’em",
@@ -2353,7 +2353,7 @@ var PARTS = {
       "Працэнты вышэй паказваюць, як часта кожная камбінацыя выпадае на рыверы з сямі карт, а не як часта яна перамагае. Дзве пары здаюцца звычайнымі і ўсё ж апярэджваюць большасць таго, што сустракаюць.",
     ],
     seeH2: "Як гэта выглядае за сталом",
-    seeP: "Падчас гульні PokerTH называе вашу лепшую камбінацыю пад сталом, каб вам ніколі не даводзілася складаць яе пад ціскам часу, а на шоўдаўне паказвае кожную адкрытую руку з вылучанымі пяццю картамі, якія лічыліся. Афлайн-трэніроўка супраць камп'ютарных супернікаў застаецца самым хуткім спосабам засвоіць гэтае старшынство.",
+    seeP: "У PokerTH укладка «Шанцы» называе вашу лепшую камбінацыю і шанец выйграць па меры адкрыцця карт, каб вам ніколі не даводзілася складаць яе пад ціскам часу, а на шоўдаўне пераможная камбінацыя называецца пад агульнымі картамі. Трэніроўка ў рэжыме «Лакальна / трэніроўка» супраць камп'ютарных супернікаў застаецца самым хуткім спосабам засвоіць гэтае старшынство.",
   },
   km: {
     title: "ចំណាត់ថ្នាក់ដៃបៀ — របៀបដែលដៃត្រូវបានចាត់ថ្នាក់ក្នុង Texas Hold’em",
@@ -2387,7 +2387,7 @@ var PARTS = {
       "ភាគរយខាងលើប្រាប់ថាការផ្គុំនីមួយៗកើតឡើងញឹកញាប់ប៉ុណ្ណាពីប្រាំពីរសន្លឹកដល់ river មិនមែនញឹកញាប់ប៉ុណ្ណាដែលវាឈ្នះ។ Two Pair មើលទៅសាមញ្ញ ប៉ុន្តែនៅតែឈ្នះភាគច្រើនដែលវាជួប។"
     ],
     seeH2: "របៀបដែលវាមើលទៅនៅតុ",
-    seeP: "ពេលលេង PokerTH ឈ្មោះការផ្គុំល្អបំផុតបច្ចុប្បន្នរបស់អ្នកត្រូវបានសរសេរក្រោមតុ ដើម្បីកុំឱ្យអ្នកត្រូវសាងសង់វាក្នុងគំនិតក្រោមសម្ពាធពេលវេលា ហើយនៅ showdown ដៃដែលបើកនីមួយៗបន្លិចបៀប្រាំសន្លឹកពិតប្រាកដដែលរាប់។ ការហ្វឹកហាត់ក្រៅបណ្ដាញជាមួយគូប្រកួតកុំព្យូទ័រជាវិធីលឿនបំផុតដើម្បីធ្វើឱ្យចំណាត់ថ្នាក់នេះក្លាយជាទម្លាប់។"
+    seeP: "ក្នុង PokerTH ផ្ទាំង “ឱកាស” ប្រាប់ឈ្មោះការផ្គុំល្អបំផុតបច្ចុប្បន្នរបស់អ្នក និងឱកាសឈ្នះរបស់អ្នក នៅពេលបៀចេញ ដើម្បីកុំឱ្យអ្នកត្រូវសាងសង់វាក្នុងគំនិតក្រោមសម្ពាធពេលវេលា ហើយនៅ showdown ការផ្គុំដែលឈ្នះត្រូវបានដាក់ឈ្មោះនៅក្រោមបៀរួម។ ការហ្វឹកហាត់ក្នុងរបៀប “ក្នុងម៉ាស៊ីន / ហ្វឹកហាត់” ជាមួយគូប្រកួតកុំព្យូទ័រជាវិធីលឿនបំផុតដើម្បីធ្វើឱ្យចំណាត់ថ្នាក់នេះក្លាយជាទម្លាប់។"
   },
   te: {
     title: 'పోకర్ హ్యాండ్ ర్యాంకింగ్‌లు — Texas Hold’em లో హ్యాండ్‌ల క్రమం',
@@ -2421,7 +2421,7 @@ var PARTS = {
       'పైన ఉన్న శాతాలు రివర్ నాటికి ఏడు కార్డులలో ప్రతి హ్యాండ్ ఎంత తరచుగా వస్తుందో చెబుతాయి, అది ఎంత తరచుగా గెలుస్తుందో కాదు. Two Pair సాధారణంగా అనిపించినా, అది ఎదుర్కొనే చాలా వాటి కంటే ముందే ఉంటుంది.'
     ],
     seeH2: 'టేబుల్ వద్ద దీన్ని చూడండి',
-    seeP: 'PokerTH ఆట సమయంలో బోర్డు కింద మీ అత్యుత్తమ కలయిక పేరును చూపిస్తుంది, కాబట్టి సమయ ఒత్తిడిలో మీరే లెక్కించుకోవాల్సిన అవసరం ఉండదు, షోడౌన్‌లో చూపబడిన ప్రతి హ్యాండ్‌ను లెక్కలోకి వచ్చిన ఐదు కార్డులను హైలైట్ చేసి ప్రదర్శిస్తుంది. కంప్యూటర్ నియంత్రించే ప్రత్యర్థులతో ఆఫ్‌లైన్‌లో సాధన చేయడమే ఈ క్రమాన్ని అలవాటు చేసుకోవడానికి అత్యంత వేగవంతమైన మార్గం.'
+    seeP: "PokerTH లో ఆడ్స్ ట్యాబ్ కార్డులు వచ్చే కొద్దీ మీ ప్రస్తుత అత్యుత్తమ హ్యాండ్ పేరును మరియు గెలిచే అవకాశాన్ని చూపిస్తుంది, కాబట్టి సమయ ఒత్తిడిలో మీరే లెక్కించుకోవాల్సిన అవసరం ఉండదు, షోడౌన్‌లో గెలిచిన కలయిక పేరు కమ్యూనిటీ కార్డుల కింద చూపబడుతుంది. లోకల్ / శిక్షణ మోడ్‌లో కంప్యూటర్ నియంత్రించే ప్రత్యర్థులతో సాధన చేయడమే ఈ క్రమాన్ని అలవాటు చేసుకోవడానికి అత్యంత వేగవంతమైన మార్గం."
   },
   tg: {
     title: "Комбинатсияҳои покер — тартиби комбинатсияҳо дар Texas Hold’em",
@@ -2455,7 +2455,7 @@ var PARTS = {
       "Фоизҳои боло нишон медиҳанд, ки ҳар комбинатсия бо ҳафт корт дар ривер чанд маротиба пайдо мешавад, на чанд маротиба мебарад. Ду ҷуфт оддӣ менамояд, вале ба ҳар ҳол аз аксари он чизе, ки бо он рӯ ба рӯ мешавад, пеш аст.",
     ],
     seeH2: "Инро дар сари миз бинед",
-    seeP: "Ҳангоми бозӣ PokerTH беҳтарин комбинатсияи шуморо дар зери миз ном мебарад, то шумо онро зери фишори вақт аз нав насозед, ва дар шоудаун ҳар дасти кушодашударо бо панҷ корти ҳисобшудаи равшаншуда нишон медиҳад. Машқи офлайн бо рақибони компютерӣ ҳоло ҳам зудтарин роҳи омӯхтани ин тартиб аст.",
+    seeP: "Дар PokerTH варақаи Имкониятҳо беҳтарин комбинатсияи ҷории шумо ва имкони бурдатонро ҳангоми кушода шудани кортҳо ном мебарад, то шумо онро зери фишори вақт аз нав насозед, ва дар шоудаун комбинатсияи бурда дар зери кортҳои умумӣ ном бурда мешавад. Машқ дар реҷаи Маҳаллӣ / машқ бо рақибони компютерӣ ҳоло ҳам зудтарин роҳи омӯхтани ин тартиб аст.",
   },
   ml: {
     title: 'പോക്കർ ഹാൻഡ് റാങ്കിംഗുകൾ — Texas Hold’em ലെ ഹാൻഡുകളുടെ ക്രമം',
@@ -2489,7 +2489,7 @@ var PARTS = {
       'മുകളിലെ ശതമാനങ്ങൾ റിവറോടെ ഏഴ് കാർഡുകളിൽ ഓരോ ഹാൻഡും എത്ര തവണ വരുന്നുവെന്ന് പറയുന്നു, അത് എത്ര തവണ ജയിക്കുന്നുവെന്നല്ല. Two Pair സാധാരണമെന്ന് തോന്നിയാലും, അത് നേരിടുന്ന മിക്കതിനേക്കാളും മുന്നിലാണ്.'
     ],
     seeH2: 'ടേബിളിൽ ഇത് കാണുക',
-    seeP: 'PokerTH കളിക്കിടയിൽ ബോർഡിന് താഴെ നിങ്ങളുടെ ഏറ്റവും നല്ല കോമ്പിനേഷന്റെ പേര് കാണിക്കുന്നു, അതിനാൽ സമയ സമ്മർദ്ദത്തിൽ നിങ്ങൾ തന്നെ കണക്കാക്കേണ്ടിവരില്ല, ഷോഡൗണിൽ കാണിച്ച ഓരോ ഹാൻഡും കണക്കിലെടുത്ത അഞ്ച് കാർഡുകൾ ഹൈലൈറ്റ് ചെയ്ത് പ്രദർശിപ്പിക്കുന്നു. കമ്പ്യൂട്ടർ നിയന്ത്രിക്കുന്ന എതിരാളികൾക്കെതിരെ ഓഫ്‌ലൈനിൽ പരിശീലിക്കുന്നതാണ് ഈ ക്രമം ശീലമാക്കാനുള്ള ഏറ്റവും വേഗമേറിയ വഴി.'
+    seeP: "PokerTH ൽ കാർഡുകൾ വരുന്തോറും ഓഡ്സ് ടാബ് നിങ്ങളുടെ നിലവിലെ ഏറ്റവും നല്ല ഹാൻഡിന്റെ പേരും ജയിക്കാനുള്ള സാധ്യതയും കാണിക്കുന്നു, അതിനാൽ സമയ സമ്മർദ്ദത്തിൽ നിങ്ങൾ തന്നെ കണക്കാക്കേണ്ടിവരില്ല, ഷോഡൗണിൽ വിജയിച്ച കോമ്പിനേഷന്റെ പേര് കമ്മ്യൂണിറ്റി കാർഡുകൾക്ക് താഴെ കാണിക്കുന്നു. ലോക്കൽ / പരിശീലനം മോഡിൽ കമ്പ്യൂട്ടർ നിയന്ത്രിക്കുന്ന എതിരാളികൾക്കെതിരെ പരിശീലിക്കുന്നതാണ് ഈ ക്രമം ശീലമാക്കാനുള്ള ഏറ്റവും വേഗമേറിയ വഴി."
   },
   mn: {
     title: "Покерын хослол — Texas Hold’em дахь хослолын эрэмбэ",
@@ -2523,7 +2523,7 @@ var PARTS = {
       "Дээрх хувь нь хослол бүр долоон хөзрөөр ривер дээр хэдэн удаа гарахыг харуулдаг, хэдэн удаа хожихыг биш. Хоёр хос энгийн мэт харагдах боловч тааралддаг зүйлсийн ихэнхээс түрүүлсэн хэвээр байдаг.",
     ],
     seeH2: "Ширээн дээр харах",
-    seeP: "Тоглолтын үеэр PokerTH таны хамгийн сайн хослолыг ширээний доор нэрлэдэг тул цаг хугацааны дарамтанд дахин бүтээх шаардлагагүй, мөн шоудаунд нээгдсэн гар бүрийг тооцсон таван хөзрийг нь тодруулан харуулна. Компьютерийн удирдлагатай өрсөлдөгчтэй офлайн дадлага нь энэ эрэмбийг сурах хамгийн хурдан арга хэвээр байна.",
+    seeP: "PokerTH дээр Боломж таб хөзөр нээгдэх тусам таны одоогийн хамгийн сайн хослол болон ялах магадлалыг нэрлэдэг тул цаг хугацааны дарамтанд дахин бүтээх шаардлагагүй, мөн шоудаунд ялсан хослолыг нийтийн хөзрийн доор нэрлэнэ. Дотоод / дадлага горимд компьютерийн удирдлагатай өрсөлдөгчтэй дадлага хийх нь энэ эрэмбийг сурах хамгийн хурдан арга хэвээр байна.",
   },
   mr: {
     title: 'पोकर हँड क्रमवारी — Texas Hold’em मधील हँड्सचा क्रम',
@@ -2557,7 +2557,7 @@ var PARTS = {
       'वरील टक्केवाऱ्या रिव्हरपर्यंत सात कार्ड्समध्ये प्रत्येक हँड किती वेळा येतो ते सांगतात, तो किती वेळा जिंकतो ते नाही. Two Pair सामान्य वाटला तरी, त्याला भेटणाऱ्या बहुतेक हँड्सच्या तो खूप पुढे असतो.'
     ],
     seeH2: 'हे टेबलवर बघा',
-    seeP: 'PokerTH खेळताना बोर्डच्या खाली तुमच्या सर्वोत्तम कॉम्बिनेशनचं नाव दाखवतो, त्यामुळे वेळेच्या दबावाखाली तुम्हाला ते स्वतः काढावं लागत नाही, आणि शोडाउनला दाखवलेला प्रत्येक हँड मोजल्या गेलेल्या पाच कार्ड्सना हायलाइट करून दाखवला जातो. संगणक नियंत्रित प्रतिस्पर्ध्यांविरुद्ध ऑफलाइन सराव करणं हा हा क्रम अंगवळणी पाडण्याचा सर्वात जलद मार्ग आहे.'
+    seeP: "PokerTH मध्ये कार्ड्स येतात तसं ऑड्स टॅब तुमचा सध्याचा सर्वोत्तम हँड आणि जिंकण्याची शक्यता सांगतो, त्यामुळे वेळेच्या दबावाखाली तुम्हाला ते स्वतः काढावं लागत नाही, आणि शोडाउनला जिंकणारं कॉम्बिनेशन कम्युनिटी कार्ड्सच्या खाली नमूद केलं जातं. लोकल / सराव मोडमध्ये संगणक नियंत्रित प्रतिस्पर्ध्यांविरुद्ध सराव करणं हा हा क्रम अंगवळणी पाडण्याचा सर्वात जलद मार्ग आहे."
   },
   kn: {
     title: 'ಪೋಕರ್ ಹ್ಯಾಂಡ್ ಶ್ರೇಯಾಂಕಗಳು — Texas Hold’em ನಲ್ಲಿ ಹ್ಯಾಂಡ್‌ಗಳ ಕ್ರಮ',
@@ -2591,7 +2591,7 @@ var PARTS = {
       'ಮೇಲಿನ ಶೇಕಡಾವಾರುಗಳು ರಿವರ್‌ವರೆಗಿನ ಏಳು ಕಾರ್ಡ್‌ಗಳಲ್ಲಿ ಪ್ರತಿ ಹ್ಯಾಂಡ್ ಎಷ್ಟು ಬಾರಿ ಬರುತ್ತದೆ ಎಂದು ಹೇಳುತ್ತವೆ, ಅದು ಎಷ್ಟು ಬಾರಿ ಗೆಲ್ಲುತ್ತದೆ ಎಂದಲ್ಲ. Two Pair ಸಾಮಾನ್ಯವೆನಿಸಿದರೂ, ಅದು ಎದುರಿಸುವ ಹೆಚ್ಚಿನ ಹ್ಯಾಂಡ್‌ಗಳಿಗಿಂತ ತುಂಬಾ ಮುಂದಿರುತ್ತದೆ.'
     ],
     seeH2: 'ಇದನ್ನು ಟೇಬಲ್‌ನಲ್ಲಿ ನೋಡಿ',
-    seeP: 'PokerTH ನೀವು ಆಡುವಾಗ ಬೋರ್ಡ್ ಕೆಳಗೆ ನಿಮ್ಮ ಅತ್ಯುತ್ತಮ ಸಂಯೋಜನೆಯ ಹೆಸರನ್ನು ತೋರಿಸುತ್ತದೆ, ಆದ್ದರಿಂದ ಸಮಯದ ಒತ್ತಡದಲ್ಲಿ ನೀವೇ ಅದನ್ನು ಕಂಡುಹಿಡಿಯಬೇಕಿಲ್ಲ, ಮತ್ತು ಶೋಡೌನ್‌ನಲ್ಲಿ ತೋರಿಸುವ ಪ್ರತಿ ಹ್ಯಾಂಡ್ ಪರಿಗಣಿಸಲಾದ ಐದು ಕಾರ್ಡ್‌ಗಳನ್ನು ಹೈಲೈಟ್ ಮಾಡಿ ಕಾಣಿಸುತ್ತದೆ. ಕಂಪ್ಯೂಟರ್ ನಿಯಂತ್ರಿತ ಎದುರಾಳಿಗಳ ವಿರುದ್ಧ ಆಫ್‌ಲೈನ್‌ನಲ್ಲಿ ಅಭ್ಯಾಸ ಮಾಡುವುದು ಈ ಕ್ರಮವನ್ನು ರೂಢಿಯಾಗಿಸಲು ಅತಿ ವೇಗದ ಮಾರ್ಗ.'
+    seeP: "PokerTH ನಲ್ಲಿ “ಆಡ್ಸ್” ಟ್ಯಾಬ್ ಕಾರ್ಡ್‌ಗಳು ಬರುತ್ತಿದ್ದಂತೆ ನಿಮ್ಮ ಪ್ರಸ್ತುತ ಅತ್ಯುತ್ತಮ ಹ್ಯಾಂಡ್‌ನ ಹೆಸರನ್ನು ಮತ್ತು ನಿಮ್ಮ ಗೆಲ್ಲುವ ಸಾಧ್ಯತೆಯನ್ನು ತೋರಿಸುತ್ತದೆ, ಆದ್ದರಿಂದ ಸಮಯದ ಒತ್ತಡದಲ್ಲಿ ನೀವೇ ಅದನ್ನು ಕಂಡುಹಿಡಿಯಬೇಕಿಲ್ಲ, ಮತ್ತು ಶೋಡೌನ್‌ನಲ್ಲಿ ಗೆಲ್ಲುವ ಸಂಯೋಜನೆಯ ಹೆಸರನ್ನು ಕಮ್ಯೂನಿಟಿ ಕಾರ್ಡ್‌ಗಳ ಕೆಳಗೆ ತೋರಿಸಲಾಗುತ್ತದೆ. “ಲೋಕಲ್ / ಅಭ್ಯಾಸ” ಮೋಡ್‌ನಲ್ಲಿ ಕಂಪ್ಯೂಟರ್ ನಿಯಂತ್ರಿತ ಎದುರಾಳಿಗಳ ವಿರುದ್ಧ ಅಭ್ಯಾಸ ಮಾಡುವುದು ಈ ಕ್ರಮವನ್ನು ರೂಢಿಯಾಗಿಸಲು ಅತಿ ವೇಗದ ಮಾರ್ಗ."
   },
   gu: {
     title: 'પોકર હેન્ડ રેન્કિંગ — Texas Hold’em માં હેન્ડ્સનો ક્રમ',
@@ -2625,7 +2625,7 @@ var PARTS = {
       'ઉપરની ટકાવારીઓ રિવર સુધીનાં સાત કાર્ડ્સમાં દરેક હેન્ડ કેટલી વાર આવે છે તે કહે છે, તે કેટલી વાર જીતે છે તે નહીં. Two Pair સામાન્ય લાગે તોય, તે સામે આવતા મોટા ભાગના હેન્ડ્સથી ઘણો આગળ હોય છે.'
     ],
     seeH2: 'આ ટેબલ પર જુઓ',
-    seeP: 'PokerTH તમે રમો ત્યારે બોર્ડની નીચે તમારા શ્રેષ્ઠ કોમ્બિનેશનનું નામ બતાવે છે, તેથી સમયના દબાણ હેઠળ તમારે તે જાતે શોધવું પડતું નથી, અને શોડાઉનમાં બતાવાતો દરેક હેન્ડ ગણાયેલાં પાંચ કાર્ડ્સ હાઇલાઇટ કરીને દેખાય છે. કમ્પ્યુટર નિયંત્રિત પ્રતિસ્પર્ધીઓ સામે ઓફલાઇન પ્રેક્ટિસ કરવી એ આ ક્રમને આદત બનાવવાની સૌથી ઝડપી રીત છે.'
+    seeP: "PokerTH માં ઓડ્સ ટેબ કાર્ડ્સ આવે તેમ તમારા હાલના શ્રેષ્ઠ કોમ્બિનેશનનું નામ અને તમારી જીતવાની શક્યતા બતાવે છે, તેથી સમયના દબાણ હેઠળ તમારે તે જાતે શોધવું પડતું નથી, અને શોડાઉનમાં વિજેતા કોમ્બિનેશનનું નામ કમ્યુનિટી કાર્ડ્સની નીચે બતાવાય છે. લોકલ / પ્રેક્ટિસ મોડમાં કમ્પ્યુટર નિયંત્રિત પ્રતિસ્પર્ધીઓ સામે પ્રેક્ટિસ કરવી એ આ ક્રમને આદત બનાવવાની સૌથી ઝડપી રીત છે."
   },
   ha: {
     title: "Hannayen poker — tsarin hannaye a Texas Hold’em",
@@ -2670,7 +2670,7 @@ var PARTS = {
       "Kashin da ke sama suna nuna sau nawa kowane hannu ke bayyana a river da katuna bakwai, ba sau nawa yake cin nasara ba. Two Pair yana kama da na yau da kullum amma duk da haka yana gaba da yawancin abin da yake haɗuwa da shi.",
     ],
     seeH2: "Duba shi a tebur",
-    seeP: "Yayin wasa PokerTH yana ambaton mafi kyawun haɗuwarka a ƙarƙashin tebur, don kada ka taɓa sake haɗa shi a ƙarƙashin matsin lokaci, kuma a showdown yana nuna kowane hannu da aka bayyana tare da katuna biyar da aka ƙirga a haskake. Horo ba tare da intanet ba da abokan hamayya da kwamfuta ke sarrafawa har yanzu ita ce hanya mafi sauri ta koyon wannan tsari.",
+    seeP: "A PokerTH shafin Dama yana ambaton mafi kyawun hannunka na yanzu da damarka ta cin nasara yayin da ake bayyana katuna, don kada ka taɓa sake haɗa shi a ƙarƙashin matsin lokaci, kuma a showdown ana ambaton haɗuwar da ta ci nasara a ƙarƙashin katunan jama'a. Yin horo a yanayin Na gida / horo da abokan hamayya da kwamfuta ke sarrafawa har yanzu ita ce hanya mafi sauri ta koyon wannan tsari.",
   },
   is: {
     title: 'Röðun pókerhanda — röð handa í Texas Hold’em',
@@ -2704,7 +2704,7 @@ var PARTS = {
       'Prósenturnar hér að ofan segja hve oft hver hönd kemur upp í sjö spilum fram að river, ekki hve oft hún vinnur. Tvö pör virðast algeng en eru samt langt á undan flestu sem þau mæta.'
     ],
     seeH2: 'Sjáðu þetta við borðið',
-    seeP: 'PokerTH nefnir bestu samsetninguna þína fyrir neðan borðið meðan þú spilar, svo þú þarft aldrei að finna út úr henni undir tímapressu, og hver hönd sem sýnd er í uppgjöri birtist með spilunum fimm sem telja auðkenndum. Að æfa sig ótengt gegn tölvustýrðum andstæðingum er fljótlegasta leiðin til að gera röðunina að öðru eðli.'
+    seeP: "Í PokerTH nefnir flipinn Líkur bestu samsetninguna þína og líkurnar á að þú vinnir eftir því sem spilin koma, svo þú þarft aldrei að finna út úr því undir tímapressu, og í uppgjöri er vinningssamsetningin nefnd fyrir neðan sameiginlegu spilin. Að æfa sig í hamnum „Staðbundið / æfing“ gegn tölvustýrðum andstæðingum er fljótlegasta leiðin til að gera röðunina að öðru eðli."
   },
 
    sw: {
@@ -2740,7 +2740,7 @@ var PARTS = {
       "Asilimia zilizo hapo juu zinaonyesha ni mara ngapi kila mkono huundwa hadi river kutoka karata saba, si mara ngapi hushinda. Jozi mbili zinaonekana za kawaida na bado ziko mbele ya mengi zinayokutana nayo."
     ],
     seeH2: "Kuiona mezani",
-    seeP: "Wakati unacheza, PokerTH huandika chini ya meza jina la mkono wako bora kwa wakati huo, hivyo huhitaji kamwe kuuunda kichwani huku saa ikienda, na wakati wa showdown huonyesha kila mkono uliofunuliwa ukiangazia karata tano zilizohesabiwa kweli. Kufanya mazoezi nje ya mtandao dhidi ya wapinzani wa kompyuta ndiyo njia ya haraka zaidi ya kuweka mpangilio huu vidoleni."
+    seeP: "Katika PokerTH kichupo cha Uwezekano hutaja mkono wako bora kwa wakati huo na nafasi yako ya kushinda karata zinapotolewa, hivyo huhitaji kamwe kuutafuta kichwani huku saa ikienda, na wakati wa showdown mchanganyiko ulioshinda hutajwa chini ya karata za pamoja. Kufanya mazoezi katika hali ya Ndani / mazoezi dhidi ya wapinzani wa kompyuta ndiyo njia ya haraka zaidi ya kuweka mpangilio huu vidoleni."
   },
 
   uz: {
@@ -2775,7 +2775,7 @@ var PARTS = {
       "Yuqoridagi foizlar har bir qoʻl rivergacha yetti kartada qanchalik tez-tez chiqishini bildiradi, qanchalik tez-tez yutishini emas. Ikki juftlik keng tarqalgandek koʻrinadi, shunga qaramay u duch keladigan qoʻllarning aksariyatidan oldinda."
     ],
     seeH2: "Buni stolda koʻring",
-    seeP: "PokerTH oʻyin davomida joriy eng yaxshi qoʻlingizni stol ostida nomlab turadi, shuning uchun uni vaqt bosimi ostida oʻzingiz hisoblashingizga hojat yoʻq, shoudaunda esa har bir ochilgan qoʻlni hisobga olingan beshta kartani ajratib koʻrsatgan holda namoyish etadi. Kompyuter raqiblariga qarshi oflayn mashq qilish — reytingni yod olishning eng tez yoʻli."
+    seeP: "PokerTH’da Ehtimollar yorligʻi kartalar ochilgani sari joriy eng yaxshi qoʻlingizni va gʻalaba qozonish ehtimolingizni nomlaydi, shuning uchun uni vaqt bosimi ostida oʻzingiz hisoblashingizga hojat yoʻq, shoudaunda esa gʻolib kombinatsiya umumiy kartalar ostida nomlanadi. Kompyuter raqiblariga qarshi Lokal / mashgʻulot rejimida mashq qilish — reytingni yod olishning eng tez yoʻli."
   },
   my: {
     title: "ပိုကာ ဖဲလက် အဆင့်များ — Texas Hold’em ဖဲလက်များ၏ အစဉ်",
@@ -2809,7 +2809,7 @@ var PARTS = {
       "အထက်ပါ ရာခိုင်နှုန်းများသည် ဖဲလက်တစ်ခုစီ river အထိ ဖဲခုနစ်ချပ်တွင် မည်မျှမကြာခဏ ပေါ်သည်ကို ပြခြင်းဖြစ်ပြီး မည်မျှမကြာခဏ နိုင်သည်ကို မဟုတ်ပါ။ two pair သည် သာမန်ဟု ထင်ရသော်လည်း ၎င်းတွေ့ရသည့် ဖဲလက်အများစုထက် ရှေ့ရောက်နေဆဲဖြစ်သည်။"
     ],
     seeH2: "စားပွဲတွင် ကြည့်ပါ",
-    seeP: "PokerTH သည် သင်ကစားနေစဉ် သင့်လက်ရှိ အကောင်းဆုံးဖဲလက်ကို စားပွဲဖဲများအောက်တွင် အမည်ဖော်ပြပေးသဖြင့် အချိန်ဖိအားအောက်တွင် ကိုယ်တိုင် တွက်ရန် မလိုပါ၊ ရှိုးဒေါင်းတွင် လှန်ပြသော ဖဲလက်တိုင်းကို ထည့်တွက်သည့် ဖဲငါးချပ်ကို မီးမောင်းထိုးလျက် ပြသည်။ ကွန်ပျူတာပြိုင်ဘက်များနှင့် အော့ဖ်လိုင်း လေ့ကျင့်ခြင်းသည် အဆင့်များကို အလွတ်ရရန် အမြန်ဆုံးနည်းဖြစ်သည်။"
+    seeP: "PokerTH သည် ဖြစ်နိုင်ခြေ တက်ဘ်တွင် ဖဲများထွက်လာသည်နှင့်အမျှ သင့်လက်ရှိ အကောင်းဆုံးဖဲလက်နှင့် နိုင်ခြေကို အမည်ဖော်ပြပေးသဖြင့် အချိန်ဖိအားအောက်တွင် ကိုယ်တိုင် တွက်ရန် မလိုပါ၊ ရှိုးဒေါင်းတွင် နိုင်သော ပေါင်းစပ်မှုကို အများသုံးဖဲများအောက်တွင် အမည်ဖော်ပြသည်။ ဒေသတွင်း / လေ့ကျင့်ရေး မုဒ်တွင် ကွန်ပျူတာပြိုင်ဘက်များနှင့် လေ့ကျင့်ခြင်းသည် အဆင့်များကို အလွတ်ရရန် အမြန်ဆုံးနည်းဖြစ်သည်။"
   },
   ka: {
     title: "პოკერის კომბინაციები — Texas Hold’em ხელების რეიტინგი",
@@ -2854,7 +2854,7 @@ var PARTS = {
       "ზემოთ მოცემული პროცენტები აჩვენებს, რამდენად ხშირად იქმნება თითოეული ხელი River-მდე შვიდ კარტზე და არა რამდენად ხშირად იგებს. ორი წყვილი შეიძლება ჩვეულებრივად გამოიყურებოდეს, მაგრამ მაინც სჯობნის ხელების უმეტესობას.",
     ],
     seeH2: "როგორ ჩანს ეს მაგიდასთან",
-    seeP: "თამაშის დროს PokerTH Board-ის ქვემოთ ასახელებს თქვენს მიმდინარე საუკეთესო კომბინაციას, რათა დროის წნეხში მისი გამოთვლა არ დაგჭირდეთ, ხოლო Showdown-ზე თითოეულ გახსნილ ხელს აჩვენებს იმ ხუთი კარტის გამოკვეთით, რომლებმაც შედეგი შექმნა. ოფლაინ ვარჯიში კომპიუტერული მოწინააღმდეგეების წინააღმდეგ ამ რეიტინგის ავტომატურად დასამახსოვრებლად ყველაზე სწრაფი გზაა.",
+    seeP: "PokerTH-ში ჩანართი “ალბათობები” ასახელებს თქვენს მიმდინარე საუკეთესო ხელს და მოგების შანსს კარტების გახსნისას, რათა დროის წნეხში მისი გამოთვლა არ დაგჭირდეთ, ხოლო Showdown-ზე მოგებული კომბინაცია დასახელებულია საერთო კარტების ქვემოთ. ვარჯიში “ლოკალური / სავარჯიშო” რეჟიმში კომპიუტერული მოწინააღმდეგეების წინააღმდეგ ამ რეიტინგის ავტომატურად დასამახსოვრებლად ყველაზე სწრაფი გზაა.",
   },
   kk: {
     title: "Покер комбинациялары — Texas Hold’em-дегі қолдардың реті",
@@ -2888,7 +2888,7 @@ var PARTS = {
       "Жоғарыдағы пайыздар әр комбинацияның риверде жеті картадан қаншалықты жиі шығатынын көрсетеді, оның қаншалықты жиі ұтатынын емес. Екі жұп қарапайым көрінеді, бірақ кездестіретінінің көбінен алда тұрады.",
     ],
     seeH2: "Мұны үстел басында көру",
-    seeP: "PokerTH ойын кезінде ең үздік комбинацияңызды бордтың астында атап көрсетеді, сондықтан оны уақыт қысымында өзіңіз құрастырудың қажеті жоқ, ал шоудаунда ашылған әр қолды есепке алынған бес картасын бөлектеп көрсетеді. Компьютер басқаратын қарсыластарға қарсы офлайн жаттығу — бұл ретті жаттап алудың ең жылдам жолы.",
+    seeP: "PokerTH-те «Ықтималдық» қойындысы карталар ашылған сайын ең үздік комбинацияңызды және ұту мүмкіндігіңізді атап көрсетеді, сондықтан оны уақыт қысымында өзіңіз құрастырудың қажеті жоқ, ал шоудаунда ұтқан комбинация ортақ карталардың астында аталады. «Жергілікті / жаттығу» режимінде компьютер басқаратын қарсыластарға қарсы жаттығу — бұл ретті жаттап алудың ең жылдам жолы.",
   },
   ky: {
     title: "Покер комбинациялары — Texas Hold’em'деги комбинациялардын тартиби",
@@ -2922,7 +2922,7 @@ var PARTS = {
       "Жогорудагы пайыздар ар бир комбинация жети карта менен риверде канча жолу чыгарын көрсөтөт, канча жолу утарын эмес. Эки жуп кадимки көрүнөт, бирок ал туш болгон нерселердин көбүнөн дагы эле алдыда.",
     ],
     seeH2: "Үстөлдө көрүңүз",
-    seeP: "Оюн учурунда PokerTH эң мыкты комбинацияңызды үстөлдүн астында атап турат, ошондуктан аны убакыт басымы астында кайра түзүүнүн кереги жок, ал эми шоудаунда ар бир ачылган колду эсептелген беш картасы белгиленген түрдө көрсөтөт. Компьютер башкарган атаандаштар менен оффлайн машыгуу бул тартипти үйрөнүүнүн эң тез жолу бойдон калууда.",
+    seeP: "PokerTH'те «Мүмкүнчүлүктөр» өтмөгү карталар ачылган сайын эң мыкты колуңузду жана жеңүү мүмкүнчүлүгүңүздү атап турат, ошондуктан аны убакыт басымы астында кайра түзүүнүн кереги жок, ал эми шоудаунда жеңген комбинация жалпы карталардын астында аталат. «Локалдык / машыгуу» режиминде компьютер башкарган атаандаштар менен машыгуу бул тартипти үйрөнүүнүн эң тез жолу бойдон калууда.",
   },
   si: {
     title: "පෝකර් අත් — Texas Hold’em අත් ශ්‍රේණිගත කිරීම",
@@ -2967,7 +2967,7 @@ var PARTS = {
       "ඉහත ප්‍රතිශත පෙන්වන්නේ කාඩ් හතක් මත රිවර් එකේදී එක් එක් අත කොපමණ වාරයක් දිස්වේද යන්නයි, එය කොපමණ වාරයක් දිනයිද යන්න නොවේ. Two Pair සාමාන්‍ය දෙයක් සේ පෙනුණත් එයට හමුවන බොහෝ දේට වඩා ඉදිරියෙන් සිටී.",
     ],
     seeH2: "මේසයේදී එය දැකීම",
-    seeP: "ක්‍රීඩාව අතරතුර PokerTH ඔබේ හොඳම සංයෝජනය බෝඩ් එකට යටින් නම් කරයි; එබැවින් කාල පීඩනය යටතේ ඔබට එය කිසිවිටෙක තනිවම සෙවීමට සිදු නොවේ. ෂෝඩවුන්හිදී හෙළි වූ සෑම අතක්ම, ගණන් ගැනුණු කාඩ් පහ උද්දීපනය කර පෙන්වයි. පරිගණකය පාලනය කරන ප්‍රතිවාදීන්ට එරෙහිව මාර්ගගත නොවී පුහුණු වීම මෙම ශ්‍රේණිගත කිරීම හුරු කරගැනීමට ඇති වේගවත්ම මඟයි.",
+    seeP: "PokerTH හි සම්භාවිතා ටැබය කාඩ් එළියට එන විට ඔබේ වත්මන් හොඳම සංයෝජනය සහ ජය ගැනීමේ ඔබේ සම්භාවිතාව නම් කරයි; එබැවින් කාල පීඩනය යටතේ ඔබට එය කිසිවිටෙක තනිවම සෙවීමට සිදු නොවේ. ෂෝඩවුන්හිදී ජයග්‍රාහී සංයෝජනය පොදු කාඩ්වලට යටින් නම් කෙරේ. දේශීය / පුහුණුව ප්‍රකාරයේ පරිගණකය පාලනය කරන ප්‍රතිවාදීන්ට එරෙහිව පුහුණු වීම මෙම ශ්‍රේණිගත කිරීම හුරු කරගැනීමට ඇති වේගවත්ම මඟයි.",
   },
   ta: {
     title: "போக்கர் சீட்டுக் கோர்வைகள் — டெக்சாஸ் ஹோல்டெம் வரிசை",
@@ -3001,7 +3001,7 @@ var PARTS = {
       "மேலுள்ள சதவீதங்கள் ஏழு சீட்டுகளில் ரிவர் வரை ஒவ்வொரு கையும் எத்தனை முறை அமைகிறது என்பதைக் காட்டுகின்றன, எத்தனை முறை வெல்கிறது என்பதை அல்ல. இரட்டை ஜோடி சாதாரணமாகத் தோன்றினாலும் அது எதிர்கொள்ளும் பெரும்பாலானவற்றை விட முன்னிலையிலேயே இருக்கிறது."
     ],
     seeH2: "மேசையில் இதைப் பார்ப்பது",
-    seeP: "விளையாடும்போது PokerTH உங்கள் தற்போதைய சிறந்த கையின் பெயரை மேசைக்குக் கீழே காட்டுகிறது, எனவே நேரம் ஓடும் அழுத்தத்தில் அதை நீங்களே கணக்கிட வேண்டியதில்லை; சீட்டு திறக்கும்போது வெளிப்படுத்தப்பட்ட ஒவ்வொரு கையிலும் உண்மையில் கணக்கில் வந்த ஐந்து சீட்டுகள் தனித்துக் காட்டப்படும். கணினி எதிரிகளுடன் இணையம் இல்லாமல் பயிற்சி செய்வதே இந்த வரிசையை மனதில் பதிய வைக்கும் விரைவான வழி."
+    seeP: "PokerTH-இல் வாய்ப்புகள் தாவல் சீட்டுகள் திறக்கத் திறக்க உங்கள் தற்போதைய சிறந்த கையின் பெயரையும் வெல்லும் வாய்ப்பையும் காட்டுகிறது, எனவே நேரம் ஓடும் அழுத்தத்தில் அதை நீங்களே கணக்கிட வேண்டியதில்லை; சீட்டு திறக்கும்போது வெற்றிபெற்ற கோர்வையின் பெயர் பொதுச் சீட்டுகளுக்குக் கீழே காட்டப்படும். உள்ளூர் / பயிற்சி முறையில் கணினி எதிரிகளுடன் பயிற்சி செய்வதே இந்த வரிசையை மனதில் பதிய வைக்கும் விரைவான வழி."
   }
 };
 

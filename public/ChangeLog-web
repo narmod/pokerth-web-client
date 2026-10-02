@@ -1,4 +1,7 @@
-2026-10-02 version 2.1.9-web.276 (current series):
+2026-10-02 version 2.1.9-web.277 (current series):
+- improvement: the FAQ, rules, how-to-play, glossary and hand-rankings pages in 82 languages now say what the English pages say: three new FAQ answers (Ranking games and seasons, watching a game, Ace’s Help), the Ranking-game rules, the « Bet » action, the minimum raise, heads-up blinds, the order of showing cards at showdown, guest play, the « Local / training » mode, installing the app and settings that follow your account
+
+2026-10-02 version 2.1.9-web.276:
 - bugfix: Ace’s Help — « Close » in his menu with the tips off now sends him away (he stayed, and the funny scenes stopped)
 - bugfix: Ace’s Help « ? » — the mode ends when another bubble takes its place (taps were still caught); it now explains the clickable rows and cards drawn by the app instead of running them; « My prefs » and « Save my prefs » on the create page get their own explanation
 - bugfix: Ace’s Help — the first-launch offer no longer stays over the table; « Just one more! » no longer covers what you are reading; his menu no longer vanishes when you switch apps

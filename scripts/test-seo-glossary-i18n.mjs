@@ -105,7 +105,8 @@ for (const code of codes) {
   PARTS[code].terms.forEach((t, i) => {
     // Strip markup first: a definition may legitimately carry <span class="ltr">
     // around a rank sequence, and its tag names are not untranslated prose.
-    const text = t[1].replace(/<[^>]+>/g, '');
+    // pokerth.net is the network's name (a domain), not untranslated prose.
+    const text = t[1].replace(/<[^>]+>/g, '').replace(/pokerth\.net/g, '');
     if (!NON_LATIN.test(text)) return;
     // Trailing hyphens are not part of the word: Bengali and Tamil attach case
     // endings to a Latin name with one (PokerTH-এ, PokerTH-இல்), which would

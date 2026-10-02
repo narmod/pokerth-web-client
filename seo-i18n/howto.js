@@ -33,24 +33,24 @@ var PARTS = {
     lead: function (h, c) { return "Voici la version courte, de l’onglet vide à votre première main de Texas Hold’em sur PokerTH. Si ce sont les règles elles-mêmes qui vous intéressent — blindes, tours d’enchères, ce qui bat quoi — commencez plutôt par la <a href=\"{rules}\">page des règles</a> et les <a href=\"{hands}\">combinaisons</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); },
     steps: [
       ["Ouvrez le site — il n’y a rien à installer",
-       "PokerTH tourne dans le navigateur. Pas de téléchargement, pas de compte, pas de greffon. Sur téléphone, vous pouvez l’ajouter à l’écran d’accueil depuis le menu du navigateur : il s’ouvre alors comme une application, en plein écran, et fonctionne hors ligne."],
+       "PokerTH tourne dans le navigateur. Pas de téléchargement, pas de greffon, et pas de compte pour l’entraînement ni pour les parties en invité. Vous pouvez l’installer comme une application — Partager → Sur l’écran d’accueil sur iPhone et iPad, le menu du navigateur ou le bouton d’installation ailleurs — et il s’ouvre en plein écran, utilisable hors ligne. Si vous le souhaitez, l’Aide de l’As, l’As dans le coin, explique chaque écran."],
       ["Choisissez où vous voulez jouer",
-       "Trois modes. L’<strong>entraînement hors ligne</strong> vous installe immédiatement à une table d’adversaires gérés par l’ordinateur et ne demande aucune connexion — c’est là qu’on apprend. <strong>pokerth.net</strong> est le réseau officiel : de vrais adversaires, des classements saisonniers, un pseudo gratuit à enregistrer une seule fois. <strong>LAN / serveur privé</strong> vous connecte à un serveur PokerTH dédié, le vôtre ou celui de quelqu’un d’autre."],
+       "Trois modes. Le mode <strong>Local / entraînement</strong> vous installe immédiatement à une table d’adversaires gérés par l’ordinateur et ne demande aucune connexion — c’est là qu’on apprend. <strong>pokerth.net</strong> est le réseau officiel : de vrais adversaires, des parties de type Normale ouvertes aux invités, et des parties classées avec classements saisonniers pour les joueurs ayant un compte gratuit. <strong>LAN / serveur privé</strong> vous connecte à un serveur PokerTH dédié, le vôtre ou celui de quelqu’un d’autre."],
       ["Asseyez-vous à une table",
-       "Dans le lobby, vous rejoignez une table de la liste ou vous créez la vôtre. En la créant, vous fixez le nombre de sièges, le tapis de départ, la vitesse de montée des blindes et, si vous le souhaitez, un mot de passe. Partagez le lien d’invitation : votre ami arrive directement à votre table, dans son navigateur, sans rien avoir à enregistrer."],
+       "Dans le lobby, vous rejoignez une table de la liste, vous regardez une partie en cours, ou vous créez la vôtre. En la créant, vous choisissez le type de partie (Normale, joueurs enregistrés uniquement, joueurs invités uniquement ou Partie classée) et fixez le nombre de sièges, le tapis de départ, la vitesse de montée des blindes, le temps pour agir, si les spectateurs peuvent regarder et si la table est protégée par un mot de passe. Partagez le lien d’invitation : votre ami arrive directement à votre table, dans son navigateur — dans une partie Normale, sans rien avoir à enregistrer."],
       ["Jouez la main",
-       "Vous recevez deux cartes privées. Les enchères font le tour de la table avant le flop, puis après le flop, la turn et la river. Quand c’est à vous, la barre d’action s’allume et ne propose que ce qui est autorisé : Fold, Check ou Call, Raise ou All-In. Le montant se tape, se règle au curseur, ou se pose d’un seul geste sur Min, la moitié du pot, le pot ou votre tapis entier."],
+       "Vous recevez deux cartes privées. Les enchères font le tour de la table avant le flop, puis après le flop, la turn et la river. Quand c’est à vous, la barre d’action s’allume et ne propose que ce qui est autorisé : Fold, Check ou Call, Raise ou All-In. Le montant se tape, se règle au curseur, ou se pose d’un seul geste sur le tiers du pot, la moitié du pot ou le pot."],
       ["Lisez la table",
-       "Votre meilleure combinaison du moment est nommée sous le tableau au fur et à mesure que les cartes sortent. Le pot, chaque tapis et le niveau de blindes restent affichés en permanence, le bouton du donneur indique qui parle en dernier, et un compte à rebours montre le temps qu’il vous reste. Au showdown, les cinq cartes qui ont formé chaque main sont mises en évidence."],
+       "L’onglet Chances nomme votre meilleure combinaison du moment et vos chances de gagner au fur et à mesure que les cartes sortent. Le pot, chaque tapis et le niveau de blindes restent affichés en permanence, le bouton du donneur indique qui parle en dernier, et un compte à rebours montre le temps qu’il vous reste. Au showdown, la combinaison gagnante est nommée sous les cartes communes."],
       ["Gagnez le tournoi",
-       "Les parties PokerTH sont des tournois sit-and-go : tout le monde démarre avec le même tapis, les blindes montent à intervalles réguliers, et les joueurs sont éliminés jusqu’à ce qu’un seul détienne tous les jetons. Rien ne coûte d’argent et aucun jeton ne s’achète — tout est en argent fictif, si bien que le seul enjeu est la partie elle-même."]
+       "Les parties PokerTH sont des tournois : tout le monde démarre avec le même tapis, les blindes montent toutes les quelques mains ou minutes, et les joueurs sont éliminés jusqu’à ce qu’un seul détienne tous les jetons. Rien ne coûte d’argent et aucun jeton ne s’achète — tout est en argent fictif, si bien que le seul enjeu est la partie elle-même."]
     ],
     phoneH2: "Jouer sur téléphone",
     phoneP: "La table est pensée pour l’écran tactile autant que pour l’ordinateur : toucher le champ de mise ouvre un pavé numérique à l’intérieur de la barre d’action plutôt que le clavier du système, si bien que la table ne saute jamais, et le curseur avance par les mêmes paliers que le client de bureau. Les notifications de tour peuvent vous parvenir avec les boutons Fold et Check/Call directement dessus : une main se joue sans revenir dans l’onglet.",
     friendsH2: "Jouer entre amis",
     friendsP: "Créez une table, mettez un mot de passe si vous la voulez privée, et envoyez le lien d’invitation. Il ouvre la table directement — dans l’application installée si vos amis l’ont ajoutée à leur écran d’accueil, dans un onglet de navigateur sinon. Personne n’a rien à installer ni d’adresse e-mail à donner.",
     faqH2: "Questions fréquentes",
-    faqP: function (h, c) { return "Aucun argent n’intervient jamais, dans aucun mode. Vos réglages, vos packs de style et votre progression hors ligne restent sur votre appareil. L’interface existe en 83 langues, tandis que les cinq mots d’action — Fold, Check, Call, Raise, All-In — restent en anglais, comme à toutes les tables du monde. La suite dans la <a href=\"{faq}\">FAQ</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
+    faqP: function (h, c) { return "Aucun argent n’intervient jamais, dans aucun mode. Vos réglages, vos packs de style et votre progression d’entraînement restent sur votre appareil, et vous suivent sur vos autres appareils quand vous vous connectez avec un compte pokerth.net. L’interface existe en 83 langues, tandis que les cinq mots d’action — Fold, Check, Call, Raise, All-In — restent en anglais, comme à toutes les tables du monde. La suite dans la <a href=\"{faq}\">FAQ</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
   },
   ga: {
     title: "Conas pócar a imirt ar líne saor in aisce — PokerTH Web",
@@ -60,37 +60,25 @@ var PARTS = {
     h1: "Conas pócar a imirt ar líne, saor in aisce, i do bhrabhsálaí",
     lead: function (h, c) { return "Seo an leagan gearr: ó chluaisín folamh go dtí do chéad lámh Texas Hold’em in PokerTH. Más iad na rialacha féin atá uait — blinds, babhtaí gealltóireachta, cad a bhuaileann cad — tosaigh le <a href=\"{rules}\">leathanach na rialacha</a> agus <a href=\"{hands}\">na lámha</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); },
     steps: [
-      [
-        "Oscail an suíomh — níl aon rud le suiteáil",
-        "Ritheann PokerTH sa bhrabhsálaí. Gan íoslódáil, gan chuntas, gan breiseán. Ar fhón is féidir leat é a chur leis an scáileán baile ó roghchlár an bhrabhsálaí, agus osclaítear é mar aip, ar lánscáileán agus in ann oibriú as líne.",
-      ],
-      [
-        "Roghnaigh cá n-imreoidh tú",
-        "Trí mhód. Tugann <strong>cleachtadh as líne</strong> bord de chéilí comhraic ríomhaire duit láithreach agus níl ceangal ar bith ag teastáil — an áit le foghlaim. Is é <strong>pokerth.net</strong> an líonra oifigiúil: céilí comhraic fíora, rangú séasúrach, leasainm saor in aisce a chláraíonn tú uair amháin. Ceanglaíonn <strong>LAN / freastalaí príobháideach</strong> le freastalaí tiomnaithe PokerTH, do cheann féin nó ceann duine eile.",
-      ],
-      [
-        "Suigh ag bord",
-        "San fhorhalla glacann tú páirt ag bord ón liosta nó cruthaíonn tú do bhord féin. Ligeann an cruthú duit líon na suíochán, an chruach tosaigh, cé chomh tapa a ardaítear na blinds agus an bhfuil pasfhocal ar an mbord a shocrú. Roinn an nasc cuiridh agus tiocfaidh cara díreach chuig do bhord, ina bhrabhsálaí féin, gan aon rud a chlárú.",
-      ],
-      [
-        "Imir an lámh",
-        "Déileáiltear dhá chárta phríobháideacha duit. Téann an ghealltóireacht timpeall an bhoird roimh an flop, agus arís tar éis an flop, an turn agus an river. Nuair is é do shealsa é, lasann barra na mbeart agus ní thairgeann sé ach an méid atá dlíthiúil: Fold, Check nó Call, Raise nó All-In. Is féidir méid an gheall a chlóscríobh, a tharraingt ar an sleamhnán nó a shocrú le tapáil amháin go dtí an t-íosmhéid, leath an phota, an pota nó do chruach ar fad.",
-      ],
-      [
-        "Léigh an bord",
-        "Ainmnítear do lámh is fearr reatha faoin mbord de réir mar a nochtar na cártaí. Bíonn an pota, gach cruach agus leibhéal na blinds ar an scáileán i gcónaí, taispeánann cnaipe an déileálaí cé a labhraíonn deireanach, agus taispeánann comhaireamh síos cé mhéad ama atá agat. Ag an showdown, aibhsítear na cúig chárta a rinne gach lámh.",
-      ],
-      [
-        "Buaigh an comórtas",
-        "Is comórtais sit-and-go iad cluichí PokerTH: tosaíonn gach duine leis an gcruach chéanna, ardaítear na blinds de réir amadóra, agus cuirtear imreoirí amach go dtí go mbíonn na sceallóga ar fad ag duine amháin. Ní chosnaíonn dada airgead agus ní féidir sceallóga a cheannach — is airgead cluiche é ar fad, mar sin is é an cluiche féin an t-aon rud atá i gceist.",
-      ],
+      ["Oscail an suíomh — níl aon rud le suiteáil",
+       "Ritheann PokerTH sa bhrabhsálaí. Gan íoslódáil, gan breiseán, agus gan chuntas don chleachtadh ná do chluichí aoi. Is féidir leat é a shuiteáil mar aip — Comhroinn → Cuir leis an Scáileán Baile ar iPhone agus iPad, roghchlár an bhrabhsálaí nó an cnaipe suiteála in áiteanna eile — agus osclaítear é ar lánscáileán, in ann oibriú as líne. Más mian leat, míníonn Cabhair an Aoin, an tAon sa chúinne, gach scáileán."],
+      ["Roghnaigh cá n-imreoidh tú",
+       "Trí mhód. Tugann <strong>Áitiúil / cleachtadh</strong> bord de chéilí comhraic ríomhaire duit láithreach agus níl ceangal ar bith ag teastáil — an áit le foghlaim. Is é <strong>pokerth.net</strong> an líonra oifigiúil: céilí comhraic fíora, cluichí Gnáth atá oscailte d’aoi, agus cluichí rangaithe le rangú séasúrach d’imreoirí a bhfuil cuntas saor in aisce acu. Ceanglaíonn <strong>LAN / freastalaí príobháideach</strong> le freastalaí tiomnaithe PokerTH, do cheann féin nó ceann duine eile."],
+      ["Suigh ag bord",
+       "San fhorhalla glacann tú páirt ag bord ón liosta, féachann tú ar chluiche atá ar siúl, nó cruthaíonn tú do bhord féin. Ligeann an cruthú duit cineál an chluiche a roghnú (Gnáth, imreoirí cláraithe amháin, imreoirí le cuireadh amháin nó cluiche rangaithe) agus líon na suíochán, an chruach tosaigh, cé chomh tapa a ardaítear na blinds, an t-am le gníomhú, an bhfuil cead ag lucht féachana féachaint agus an bhfuil pasfhocal ar an mbord a shocrú. Roinn an nasc cuiridh agus tiocfaidh cara díreach chuig do bhord, ina bhrabhsálaí féin — i gcluiche Gnáth, gan aon rud a chlárú."],
+      ["Imir an lámh",
+       "Déileáiltear dhá chárta phríobháideacha duit. Téann an ghealltóireacht timpeall an bhoird roimh an flop, agus arís tar éis an flop, an turn agus an river. Nuair is é do shealsa é, lasann barra na mbeart agus ní thairgeann sé ach an méid atá dlíthiúil: Fold, Check nó Call, Raise nó All-In. Is féidir méid an gheall a chlóscríobh, a tharraingt ar an sleamhnán nó a shocrú le tapáil amháin go dtí tríú cuid den phota, leath an phota nó an pota."],
+      ["Léigh an bord",
+       "Ainmníonn an cluaisín Seans do lámh is fearr reatha agus do sheans buaite de réir mar a nochtar na cártaí. Bíonn an pota, gach cruach agus leibhéal na blinds ar an scáileán i gcónaí, taispeánann cnaipe an déileálaí cé a labhraíonn deireanach, agus taispeánann comhaireamh síos cé mhéad ama atá agat. Ag an showdown, ainmnítear an teaglaim bhuaiteach faoi na cártaí pobail."],
+      ["Buaigh an comórtas",
+       "Is comórtais iad cluichí PokerTH: tosaíonn gach duine leis an gcruach chéanna, ardaítear na blinds gach cúpla lámh nó nóiméad, agus cuirtear imreoirí amach go dtí go mbíonn na sceallóga ar fad ag duine amháin. Ní chosnaíonn dada airgead agus ní féidir sceallóga a cheannach — is airgead cluiche é ar fad, mar sin is é an cluiche féin an t-aon rud atá i gceist."]
     ],
     phoneH2: "Imirt ar fhón",
     phoneP: "Tá an bord deartha don scáileán tadhaill chomh maith leis an ríomhaire: osclaíonn tapáil ar réimse an gheall eochaircheap uimhreacha laistigh de bharra na mbeart in áit mhéarchlár an chórais, mar sin ní léimeann an bord riamh, agus bogann an sleamhnán sna céimeanna céanna leis an gcliant deisce. Is féidir le fógraí seal teacht le cnaipí Fold agus Check/Call orthu go díreach: is féidir an lámh a imirt gan filleadh ar an gcluaisín.",
     friendsH2: "Imirt le cairde",
     friendsP: "Cruthaigh bord, cuir pasfhocal air más mian leat é a bheith príobháideach, agus seol an nasc cuiridh. Osclaíonn sé an bord go díreach — san aip shuiteáilte má chuir do chairde lena scáileán baile í, nó i gcluaisín brabhsálaí murar chuir. Níl ar aon duine aon rud a shuiteáil ná seoladh ríomhphoist a thabhairt.",
     faqH2: "Ceisteanna coitianta",
-    faqP: function (h, c) { return "Ní bhíonn airgead i gceist riamh, in aon mhód. Fanann do shocruithe, do phacaí stíle agus do dhul chun cinn as líne ar do ghléas. Tá an comhéadan ar fáil i 83 teanga, agus fanann na cúig fhocal bhirt — Fold, Check, Call, Raise, All-In — i mBéarla, mar a bhíonn ag gach bord ar domhan. Tuilleadh sna <a href=\"{faq}\">ceisteanna coitianta</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); },
+    faqP: function (h, c) { return "Ní bhíonn airgead i gceist riamh, in aon mhód. Fanann do shocruithe, do phacaí stíle agus do dhul chun cinn oiliúna ar do ghléas, agus leanann siad thú chuig do ghléasanna eile nuair a logálann tú isteach le cuntas pokerth.net. Tá an comhéadan ar fáil i 83 teanga, agus fanann na cúig fhocal bhirt — Fold, Check, Call, Raise, All-In — i mBéarla, mar a bhíonn ag gach bord ar domhan. Tuilleadh sna <a href=\"{faq}\">ceisteanna coitianta</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); },
   },
 
   de: {
@@ -102,24 +90,24 @@ var PARTS = {
     lead: function (h, c) { return "Das hier ist die Kurzfassung: vom leeren Tab zur ersten Hand Texas Hold’em in PokerTH. Wenn es Ihnen um die Regeln selbst geht — Blinds, Setzrunden, was was schlägt — lesen Sie zuerst die <a href=\"{rules}\">Regelseite</a> und die <a href=\"{hands}\">Pokerblätter</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); },
     steps: [
       ["Seite öffnen — es gibt nichts zu installieren",
-       "PokerTH läuft im Browser. Kein Download, kein Konto, kein Plugin. Auf dem Handy können Sie es über das Browsermenü zum Startbildschirm hinzufügen; dann öffnet es sich wie eine App, im Vollbild und offlinefähig."],
+       "PokerTH läuft im Browser. Kein Download, kein Plugin und kein Konto für Training oder Gastspiele. Sie können es wie eine App installieren — Teilen → Zum Home-Bildschirm auf iPhone und iPad, sonst über das Browsermenü oder die Installationsschaltfläche —, dann öffnet es sich im Vollbild und offlinefähig. Wenn Sie möchten, erklärt Ihnen die Ass-Hilfe, das Ass in der Ecke, jeden Bildschirm."],
       ["Wählen Sie, wo Sie spielen möchten",
-       "Drei Modi. Das <strong>Offline-Training</strong> setzt Sie sofort an einen Tisch mit Computergegnern und braucht überhaupt keine Verbindung — hier lernt man. <strong>pokerth.net</strong> ist das offizielle Netzwerk: echte Gegner, Saisonranglisten, ein kostenloser Nickname, den Sie einmal registrieren. <strong>LAN / privater Server</strong> verbindet Sie mit einem dedizierten PokerTH-Server, Ihrem eigenen oder dem eines anderen."],
+       "Drei Modi. <strong>Lokal / Training</strong> setzt Sie sofort an einen Tisch mit Computergegnern und braucht überhaupt keine Verbindung — hier lernt man. <strong>pokerth.net</strong> ist das offizielle Netzwerk: echte Gegner, Normal-Spiele offen für Gäste und Ranglistenspiele mit Saisonranglisten für Spieler mit kostenlosem Konto. <strong>LAN / privater Server</strong> verbindet Sie mit einem dedizierten PokerTH-Server, Ihrem eigenen oder dem eines anderen."],
       ["Setzen Sie sich an einen Tisch",
-       "In der Lobby treten Sie entweder einem Tisch aus der Liste bei oder erstellen Ihren eigenen. Beim Erstellen legen Sie die Zahl der Plätze fest, den Startstack, wie schnell die Blinds steigen und ob der Tisch mit Passwort geschützt ist. Teilen Sie den Einladungslink, und ein Freund landet direkt an Ihrem Tisch, in seinem Browser, ohne sich irgendwo anzumelden."],
+       "In der Lobby treten Sie entweder einem Tisch aus der Liste bei, sehen einem laufenden Spiel zu oder erstellen Ihren eigenen. Beim Erstellen wählen Sie die Spielart (Normal, nur registrierte Spieler, nur auf Einladung oder Ranglistenspiel) und legen die Zahl der Plätze fest, den Startstack, wie schnell die Blinds steigen, die Bedenkzeit, ob Zuschauer zusehen dürfen und ob der Tisch mit Passwort geschützt ist. Teilen Sie den Einladungslink, und ein Freund landet direkt an Ihrem Tisch, in seinem Browser — in einem Normal-Spiel, ohne sich irgendwo anzumelden."],
       ["Spielen Sie die Hand",
-       "Sie erhalten zwei verdeckte Karten. Gesetzt wird reihum vor dem Flop und noch einmal nach Flop, Turn und River. Wenn Sie an der Reihe sind, leuchtet die Aktionsleiste auf und bietet nur an, was erlaubt ist: Fold, Check oder Call, Raise oder All-In. Den Betrag können Sie eintippen, am Schieberegler ziehen oder mit einem Tipp auf Min, halben Pot, Pot oder Ihren ganzen Stack setzen."],
+       "Sie erhalten zwei verdeckte Karten. Gesetzt wird reihum vor dem Flop und noch einmal nach Flop, Turn und River. Wenn Sie an der Reihe sind, leuchtet die Aktionsleiste auf und bietet nur an, was erlaubt ist: Fold, Check oder Call, Raise oder All-In. Den Betrag können Sie eintippen, am Schieberegler ziehen oder mit einem Tipp auf ein Drittel des Pots, den halben Pot oder den Pot setzen."],
       ["Lesen Sie den Tisch",
-       "Ihr aktuell bestes Blatt wird unter dem Board benannt, während die Karten kommen. Pot, jeder Stack und die Blind-Stufe stehen jederzeit auf dem Bildschirm, der Dealer-Button zeigt, wer zuletzt handelt, und ein Countdown zeigt Ihre verbleibende Zeit. Beim Showdown werden die fünf Karten hervorgehoben, die das jeweilige Blatt gebildet haben."],
+       "Der Reiter Chancen benennt Ihr aktuell bestes Blatt und Ihre Gewinnchance, während die Karten kommen. Pot, jeder Stack und die Blind-Stufe stehen jederzeit auf dem Bildschirm, der Dealer-Button zeigt, wer zuletzt handelt, und ein Countdown zeigt Ihre verbleibende Zeit. Beim Showdown wird die Gewinnkombination unter den Gemeinschaftskarten benannt."],
       ["Gewinnen Sie das Turnier",
-       "PokerTH-Partien sind Sit-and-go-Turniere: alle starten mit demselben Stack, die Blinds steigen nach Uhr, und es wird ausgeschieden, bis einer alle Chips hält. Nichts kostet Geld und Chips lassen sich nicht kaufen — es ist durchweg Spielgeld, auf dem Spiel steht also nur das Spiel selbst."]
+       "PokerTH-Partien sind Turniere: alle starten mit demselben Stack, die Blinds steigen alle paar Hände oder Minuten, und es wird ausgeschieden, bis einer alle Chips hält. Nichts kostet Geld und Chips lassen sich nicht kaufen — es ist durchweg Spielgeld, auf dem Spiel steht also nur das Spiel selbst."]
     ],
     phoneH2: "Am Telefon spielen",
     phoneP: "Der Tisch ist ebenso für den Touchscreen gebaut wie für den Desktop: Ein Tippen auf das Einsatzfeld öffnet ein Ziffernfeld innerhalb der Aktionsleiste statt der Systemtastatur, sodass der Tisch nie herumspringt, und der Schieberegler bewegt sich in denselben Schritten wie im Desktop-Client. Zug-Benachrichtigungen können Sie mit Fold- und Check/Call-Schaltflächen darauf erreichen, sodass sich eine Hand spielen lässt, ohne in den Tab zurückzuwechseln.",
     friendsH2: "Mit Freunden spielen",
     friendsP: "Erstellen Sie einen Tisch, vergeben Sie ein Passwort, wenn er privat sein soll, und schicken Sie den Einladungslink. Er öffnet den Tisch direkt — in der installierten App, falls sie auf dem Startbildschirm liegt, sonst in einem Browser-Tab. Niemand muss etwas installieren oder eine E-Mail-Adresse herausgeben.",
     faqH2: "Häufige Fragen",
-    faqP: function (h, c) { return "Geld ist in keinem Modus jemals im Spiel. Ihre Einstellungen, Stilpakete und der Offline-Fortschritt bleiben auf Ihrem eigenen Gerät. Die Oberfläche gibt es in 83 Sprachen, während die fünf Aktionswörter — Fold, Check, Call, Raise, All-In — auf Englisch bleiben, wie an jedem Tisch der Welt. Mehr in den <a href=\"{faq}\">FAQ</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
+    faqP: function (h, c) { return "Geld ist in keinem Modus jemals im Spiel. Ihre Einstellungen, Stilpakete und der Trainingsfortschritt bleiben auf Ihrem eigenen Gerät und folgen Ihnen auf Ihre anderen Geräte, wenn Sie sich mit einem pokerth.net-Konto anmelden. Die Oberfläche gibt es in 83 Sprachen, während die fünf Aktionswörter — Fold, Check, Call, Raise, All-In — auf Englisch bleiben, wie an jedem Tisch der Welt. Mehr in den <a href=\"{faq}\">FAQ</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
   },
 
   es: {
@@ -131,24 +119,24 @@ var PARTS = {
     lead: function (h, c) { return "Esta es la versión corta: de una pestaña en blanco a tu primera mano de Texas Hold’em en PokerTH. Si lo que buscas son las reglas en sí — ciegas, rondas de apuestas, qué gana a qué — empieza por la <a href=\"{rules}\">página de reglas</a> y por las <a href=\"{hands}\">jugadas de póker</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); },
     steps: [
       ["Abre el sitio — no hay nada que instalar",
-       "PokerTH funciona en el navegador. Sin descargas, sin cuenta, sin complementos. En el móvil puedes añadirlo a la pantalla de inicio desde el menú del navegador y se abre como una aplicación, a pantalla completa y con soporte sin conexión."],
+       "PokerTH funciona en el navegador. Sin descargas, sin complementos y sin cuenta para entrenar ni para jugar como invitado. Puedes instalarlo como una aplicación — Compartir → Añadir a pantalla de inicio en iPhone y iPad, el menú del navegador o el botón de instalación en el resto — y se abre a pantalla completa y con soporte sin conexión. Si quieres, la Ayuda del As, el As de la esquina, explica cada pantalla."],
       ["Elige dónde quieres jugar",
-       "Tres modos. La <strong>práctica sin conexión</strong> te sienta de inmediato a una mesa de oponentes controlados por el ordenador y no necesita conexión alguna: es donde se aprende. <strong>pokerth.net</strong> es la red oficial: rivales reales, clasificaciones por temporada y un apodo gratuito que registras una sola vez. <strong>LAN / servidor privado</strong> te conecta a un servidor PokerTH dedicado, tuyo o de otra persona."],
+       "Tres modos. El modo <strong>Local / entrenamiento</strong> te sienta de inmediato a una mesa de oponentes controlados por el ordenador y no necesita conexión alguna: es donde se aprende. <strong>pokerth.net</strong> es la red oficial: rivales reales, partidas Normal abiertas a invitados y partidas de clasificación con clasificaciones por temporada para jugadores con cuenta gratuita. <strong>LAN / servidor privado</strong> te conecta a un servidor PokerTH dedicado, tuyo o de otra persona."],
       ["Siéntate a una mesa",
-       "En el lobby puedes unirte a una mesa de la lista o crear la tuya. Al crearla eliges el número de asientos, la pila inicial, la rapidez con la que suben las ciegas y si la mesa lleva contraseña. Comparte el enlace de invitación y tu amigo aparece directamente en tu mesa, en su navegador, sin registrar nada."],
+       "En el lobby puedes unirte a una mesa de la lista, ver una partida en curso o crear la tuya. Al crearla eliges el tipo de partida (Normal, solo jugadores registrados, solo por invitación o de clasificación) y el número de asientos, la pila inicial, la rapidez con la que suben las ciegas, el tiempo para actuar, si se permiten espectadores y si la mesa lleva contraseña. Comparte el enlace de invitación y tu amigo aparece directamente en tu mesa, en su navegador — en una partida Normal, sin registrar nada."],
       ["Juega la mano",
-       "Recibes dos cartas privadas. Se apuesta alrededor de la mesa antes del flop y otra vez después del flop, el turn y el river. Cuando te toca, la barra de acciones se enciende y ofrece solo lo que es legal: Fold, Check o Call, Raise o All-In. La cantidad se puede escribir, arrastrar en el deslizador o fijar con un toque en Min, la mitad del bote, el bote o toda tu pila."],
+       "Recibes dos cartas privadas. Se apuesta alrededor de la mesa antes del flop y otra vez después del flop, el turn y el river. Cuando te toca, la barra de acciones se enciende y ofrece solo lo que es legal: Fold, Check o Call, Raise o All-In. La cantidad se puede escribir, arrastrar en el deslizador o fijar con un toque en un tercio del bote, la mitad del bote o el bote."],
       ["Lee la mesa",
-       "Tu mejor jugada actual aparece nombrada bajo la mesa según van saliendo las cartas. El bote, cada pila y el nivel de ciegas están siempre en pantalla, el botón de repartidor indica quién habla último y una cuenta atrás muestra el tiempo que te queda. En el showdown se resaltan las cinco cartas que formaron cada mano."],
+       "La pestaña Probabilidades nombra tu mejor mano actual y tu probabilidad de ganar según van saliendo las cartas. El bote, cada pila y el nivel de ciegas están siempre en pantalla, el botón de repartidor indica quién habla último y una cuenta atrás muestra el tiempo que te queda. En el showdown, la combinación ganadora se nombra bajo las cartas comunitarias."],
       ["Gana el torneo",
-       "Las partidas de PokerTH son torneos sit-and-go: todos empiezan con la misma pila, las ciegas suben por reloj y los jugadores van cayendo hasta que uno tiene todas las fichas. Nada cuesta dinero y no se pueden comprar fichas — todo es dinero ficticio, así que lo único en juego es la propia partida."]
+       "Las partidas de PokerTH son torneos: todos empiezan con la misma pila, las ciegas suben cada pocas manos o minutos y los jugadores van cayendo hasta que uno tiene todas las fichas. Nada cuesta dinero y no se pueden comprar fichas — todo es dinero ficticio, así que lo único en juego es la propia partida."]
     ],
     phoneH2: "Jugar en el móvil",
     phoneP: "La mesa está pensada tanto para pantalla táctil como para ordenador: tocar el campo de apuesta abre un teclado numérico dentro de la barra de acciones en lugar del teclado del sistema, así la mesa nunca da saltos, y el deslizador avanza en los mismos pasos que el cliente de escritorio. Las notificaciones de turno pueden llegarte con los botones Fold y Check/Call incorporados, de modo que se puede jugar una mano sin volver a la pestaña.",
     friendsH2: "Jugar con amigos",
     friendsP: "Crea una mesa, ponle contraseña si la quieres privada y envía el enlace de invitación. Abre la mesa directamente: en la aplicación instalada si la han añadido a su pantalla de inicio, y en una pestaña del navegador si no. Nadie tiene que instalar nada ni dar una dirección de correo.",
     faqH2: "Preguntas frecuentes",
-    faqP: function (h, c) { return "Nunca hay dinero de por medio, en ningún modo. Tus ajustes, tus paquetes de estilo y tu progreso sin conexión se quedan en tu propio dispositivo. La interfaz está disponible en 83 idiomas, mientras que las cinco palabras de acción — Fold, Check, Call, Raise, All-In — se mantienen en inglés, como en cualquier mesa del mundo. Más en las <a href=\"{faq}\">preguntas frecuentes</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
+    faqP: function (h, c) { return "Nunca hay dinero de por medio, en ningún modo. Tus ajustes, tus paquetes de estilo y tu progreso de entrenamiento se quedan en tu propio dispositivo y te siguen a tus otros dispositivos cuando inicias sesión con una cuenta de pokerth.net. La interfaz está disponible en 83 idiomas, mientras que las cinco palabras de acción — Fold, Check, Call, Raise, All-In — se mantienen en inglés, como en cualquier mesa del mundo. Más en las <a href=\"{faq}\">preguntas frecuentes</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
   },
   'es-419': {
     title: "Cómo jugar al póker online gratis — PokerTH Web",
@@ -159,24 +147,24 @@ var PARTS = {
     lead: function (h, c) { return "Esta es la versión corta: de una pestaña en blanco a tu primera mano de Texas Hold’em en PokerTH. Si lo que buscas son las reglas en sí — ciegas, rondas de apuestas, qué gana a qué — empieza por la <a href=\"{rules}\">página de reglas</a> y por las <a href=\"{hands}\">jugadas de póker</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); },
     steps: [
       ["Abre el sitio — no hay nada que instalar",
-       "PokerTH funciona en el navegador. Sin descargas, sin cuenta, sin complementos. En el celular puedes añadirlo a la pantalla de inicio desde el menú del navegador y se abre como una aplicación, a pantalla completa y con soporte sin conexión."],
+       "PokerTH funciona en el navegador. Sin descargas, sin complementos y sin cuenta para entrenar ni para jugar como invitado. Puedes instalarlo como una aplicación — Compartir → Añadir a pantalla de inicio en iPhone y iPad, el menú del navegador o el botón de instalación en el resto — y se abre a pantalla completa y con soporte sin conexión. Si quieres, la Ayuda del As, el As de la esquina, explica cada pantalla."],
       ["Elige dónde quieres jugar",
-       "Tres modos. La <strong>práctica sin conexión</strong> te sienta de inmediato a una mesa de oponentes controlados por la computadora y no necesita conexión alguna: es donde se aprende. <strong>pokerth.net</strong> es la red oficial: rivales reales, clasificaciones por temporada y un apodo gratuito que registras una sola vez. <strong>LAN / servidor privado</strong> te conecta a un servidor PokerTH dedicado, tuyo o de otra persona."],
+       "Tres modos. El modo <strong>Local / entrenamiento</strong> te sienta de inmediato a una mesa de oponentes controlados por la computadora y no necesita conexión alguna: es donde se aprende. <strong>pokerth.net</strong> es la red oficial: rivales reales, partidas Normal abiertas a invitados y partidas de clasificación con clasificaciones por temporada para jugadores con cuenta gratuita. <strong>LAN / servidor privado</strong> te conecta a un servidor PokerTH dedicado, tuyo o de otra persona."],
       ["Siéntate a una mesa",
-       "En el lobby puedes unirte a una mesa de la lista o crear la tuya. Al crearla eliges el número de asientos, la pila inicial, la rapidez con la que suben las ciegas y si la mesa lleva contraseña. Comparte el enlace de invitación y tu amigo aparece directamente en tu mesa, en su navegador, sin registrar nada."],
+       "En el lobby puedes unirte a una mesa de la lista, ver una partida en curso o crear la tuya. Al crearla eliges el tipo de partida (Normal, solo jugadores registrados, solo por invitación o de clasificación) y el número de asientos, la pila inicial, la rapidez con la que suben las ciegas, el tiempo para actuar, si se permiten espectadores y si la mesa lleva contraseña. Comparte el enlace de invitación y tu amigo aparece directamente en tu mesa, en su navegador — en una partida Normal, sin registrar nada."],
       ["Juega la mano",
-       "Recibes dos cartas privadas. Se apuesta alrededor de la mesa antes del flop y otra vez después del flop, el turn y el river. Cuando te toca, la barra de acciones se enciende y ofrece solo lo que es legal: Fold, Check o Call, Raise o All-In. La cantidad se puede escribir, arrastrar en el deslizador o fijar con un toque en Min, la mitad del pozo, el pozo o toda tu pila."],
+       "Recibes dos cartas privadas. Se apuesta alrededor de la mesa antes del flop y otra vez después del flop, el turn y el river. Cuando te toca, la barra de acciones se enciende y ofrece solo lo que es legal: Fold, Check o Call, Raise o All-In. La cantidad se puede escribir, arrastrar en el deslizador o fijar con un toque en un tercio del pozo, la mitad del pozo o el pozo."],
       ["Lee la mesa",
-       "Tu mejor jugada actual aparece nombrada bajo la mesa según van saliendo las cartas. El pozo, cada pila y el nivel de ciegas están siempre en pantalla, el botón de repartidor indica quién habla último y una cuenta regresiva muestra el tiempo que te queda. En el showdown se resaltan las cinco cartas que formaron cada mano."],
+       "La pestaña Probabilidades nombra tu mejor mano actual y tu probabilidad de ganar según van saliendo las cartas. El pozo, cada pila y el nivel de ciegas están siempre en pantalla, el botón de repartidor indica quién habla último y una cuenta regresiva muestra el tiempo que te queda. En el showdown, la combinación ganadora se nombra bajo las cartas comunitarias."],
       ["Gana el torneo",
-       "Las partidas de PokerTH son torneos sit-and-go: todos empiezan con la misma pila, las ciegas suben por reloj y los jugadores van cayendo hasta que uno tiene todas las fichas. Nada cuesta dinero y no se pueden comprar fichas — todo es dinero ficticio, así que lo único en juego es la propia partida."]
+       "Las partidas de PokerTH son torneos: todos empiezan con la misma pila, las ciegas suben cada pocas manos o minutos y los jugadores van cayendo hasta que uno tiene todas las fichas. Nada cuesta dinero y no se pueden comprar fichas — todo es dinero ficticio, así que lo único en juego es la propia partida."]
     ],
     phoneH2: "Jugar en el celular",
     phoneP: "La mesa está pensada tanto para pantalla táctil como para computadora: tocar el campo de apuesta abre un teclado numérico dentro de la barra de acciones en lugar del teclado del sistema, así la mesa nunca da saltos, y el deslizador avanza en los mismos pasos que el cliente de escritorio. Las notificaciones de turno pueden llegarte con los botones Fold y Check/Call incorporados, de modo que se puede jugar una mano sin volver a la pestaña.",
     friendsH2: "Jugar con amigos",
     friendsP: "Crea una mesa, ponle contraseña si la quieres privada y envía el enlace de invitación. Abre la mesa directamente: en la aplicación instalada si la han añadido a su pantalla de inicio, y en una pestaña del navegador si no. Nadie tiene que instalar nada ni dar una dirección de correo.",
     faqH2: "Preguntas frecuentes",
-    faqP: function (h, c) { return "Nunca hay dinero de por medio, en ningún modo. Tus ajustes, tus paquetes de estilo y tu progreso sin conexión se quedan en tu propio dispositivo. La interfaz está disponible en 83 idiomas, mientras que las cinco palabras de acción — Fold, Check, Call, Raise, All-In — se mantienen en inglés, como en cualquier mesa del mundo. Más en las <a href=\"{faq}\">preguntas frecuentes</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
+    faqP: function (h, c) { return "Nunca hay dinero de por medio, en ningún modo. Tus ajustes, tus paquetes de estilo y tu progreso de entrenamiento se quedan en tu propio dispositivo y te siguen a tus otros dispositivos cuando inicias sesión con una cuenta de pokerth.net. La interfaz está disponible en 83 idiomas, mientras que las cinco palabras de acción — Fold, Check, Call, Raise, All-In — se mantienen en inglés, como en cualquier mesa del mundo. Más en las <a href=\"{faq}\">preguntas frecuentes</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
   },
 
   'pt-BR': {
@@ -188,24 +176,24 @@ var PARTS = {
     lead: function (h, c) { return "Esta é a versão curta: da aba em branco até a sua primeira mão de Texas Hold’em no PokerTH. Se o que você quer são as regras em si — blinds, rodadas de apostas, o que ganha de quê — comece pela <a href=\"{rules}\">página de regras</a> e pelas <a href=\"{hands}\">mãos do pôquer</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); },
     steps: [
       ["Abra o site — não há nada para instalar",
-       "O PokerTH roda no navegador. Sem download, sem cadastro, sem plugin. No celular dá para adicioná-lo à tela de início pelo menu do navegador: ele abre como um aplicativo, em tela cheia, e funciona offline."],
+       "O PokerTH roda no navegador. Sem download, sem plugin e sem cadastro para o treino ou para as partidas como convidado. Dá para instalá-lo como um aplicativo — Compartilhar → Adicionar à Tela de Início no iPhone e no iPad, o menu do navegador ou o botão de instalação nos demais casos — e ele abre em tela cheia, com suporte offline. Se quiser, a Ajuda do Ás, o Ás no canto da tela, explica cada tela."],
       ["Escolha onde quer jogar",
-       "Três modos. O <strong>treino offline</strong> coloca você na hora numa mesa de oponentes controlados pelo computador e não precisa de conexão nenhuma — é onde se aprende. O <strong>pokerth.net</strong> é a rede oficial: adversários de verdade, rankings por temporada e um apelido gratuito que você registra uma única vez. <strong>LAN / servidor privado</strong> conecta a um servidor PokerTH dedicado, seu ou de outra pessoa."],
+       "Três modos. O <strong>Local / treino</strong> coloca você na hora numa mesa de oponentes controlados pelo computador e não precisa de conexão nenhuma — é onde se aprende. O <strong>pokerth.net</strong> é a rede oficial: adversários de verdade, partidas Normal abertas a convidados e jogos ranqueados com rankings por temporada para quem tem uma conta gratuita. <strong>LAN / servidor privado</strong> conecta a um servidor PokerTH dedicado, seu ou de outra pessoa."],
       ["Sente-se a uma mesa",
-       "No lobby você entra numa mesa da lista ou cria a sua. Ao criar, define o número de lugares, as fichas iniciais, a velocidade com que os blinds sobem e se a mesa tem senha. Compartilhe o link de convite e o amigo cai direto na sua mesa, no navegador dele, sem cadastrar nada."],
+       "No lobby você entra numa mesa da lista, assiste a um jogo em andamento ou cria a sua. Ao criar, escolhe o tipo de jogo (Normal, somente jogadores registrados, somente jogadores convidados ou ranqueado) e define o número de lugares, as fichas iniciais, a velocidade com que os blinds sobem, o tempo para agir, se espectadores podem assistir e se a mesa tem senha. Compartilhe o link de convite e o amigo cai direto na sua mesa, no navegador dele — numa partida Normal, sem cadastrar nada."],
       ["Jogue a mão",
-       "Você recebe duas cartas fechadas. As apostas dão a volta na mesa antes do flop e de novo depois do flop, do turn e do river. Quando chega a sua vez, a barra de ações acende e oferece só o que é permitido: Fold, Check ou Call, Raise ou All-In. O valor pode ser digitado, arrastado no controle deslizante ou definido com um toque em Min, metade do pote, o pote ou todas as suas fichas."],
+       "Você recebe duas cartas fechadas. As apostas dão a volta na mesa antes do flop e de novo depois do flop, do turn e do river. Quando chega a sua vez, a barra de ações acende e oferece só o que é permitido: Fold, Check ou Call, Raise ou All-In. O valor pode ser digitado, arrastado no controle deslizante ou definido com um toque em um terço do pote, metade do pote ou o pote."],
       ["Leia a mesa",
-       "Sua melhor mão do momento aparece nomeada abaixo da mesa conforme as cartas saem. O pote, cada pilha de fichas e o nível dos blinds ficam sempre na tela, o botão do dealer mostra quem fala por último e uma contagem regressiva indica quanto tempo você tem. No showdown, as cinco cartas que formaram cada mão ficam destacadas."],
+       "A aba Probabilidades mostra o nome da sua melhor mão do momento e a sua chance de vitória conforme as cartas saem. O pote, cada pilha de fichas e o nível dos blinds ficam sempre na tela, o botão do dealer mostra quem fala por último e uma contagem regressiva indica quanto tempo você tem. No showdown, a combinação vencedora aparece nomeada abaixo das cartas comunitárias."],
       ["Vença o torneio",
-       "As partidas do PokerTH são torneios sit-and-go: todos começam com as mesmas fichas, os blinds sobem no relógio e os jogadores vão sendo eliminados até que um fique com tudo. Nada custa dinheiro e não dá para comprar fichas — é tudo dinheiro fictício, então o único risco é o do próprio jogo."]
+       "As partidas do PokerTH são torneios: todos começam com as mesmas fichas, os blinds sobem a cada poucas mãos ou minutos e os jogadores vão sendo eliminados até que um fique com tudo. Nada custa dinheiro e não dá para comprar fichas — é tudo dinheiro fictício, então o único risco é o do próprio jogo."]
     ],
     phoneH2: "Jogando no celular",
     phoneP: "A mesa foi feita tanto para tela sensível ao toque quanto para computador: tocar no campo de aposta abre um teclado numérico dentro da barra de ações em vez do teclado do sistema, então a mesa nunca dá pulos, e o controle deslizante anda nos mesmos passos do cliente desktop. As notificações de vez podem chegar com os botões Fold e Check/Call nelas, de modo que dá para jogar uma mão sem voltar para a aba.",
     friendsH2: "Jogando com amigos",
     friendsP: "Crie uma mesa, ponha senha se quiser que seja privada e mande o link de convite. Ele abre a mesa direto — no aplicativo instalado, se a pessoa já o adicionou à tela de início, ou numa aba do navegador. Ninguém precisa instalar nada nem informar um e-mail.",
     faqH2: "Perguntas frequentes",
-    faqP: function (h, c) { return "Dinheiro nunca entra em jogo, em modo nenhum. Suas configurações, seus pacotes de estilo e seu progresso offline ficam no seu próprio aparelho. A interface está disponível em 83 idiomas, enquanto as cinco palavras de ação — Fold, Check, Call, Raise, All-In — continuam em inglês, como em qualquer mesa do mundo. Mais no <a href=\"{faq}\">FAQ</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
+    faqP: function (h, c) { return "Dinheiro nunca entra em jogo, em modo nenhum. Suas configurações, seus pacotes de estilo e seu progresso de treino ficam no seu próprio aparelho e o acompanham nos seus outros aparelhos quando você entra com uma conta pokerth.net. A interface está disponível em 83 idiomas, enquanto as cinco palavras de ação — Fold, Check, Call, Raise, All-In — continuam em inglês, como em qualquer mesa do mundo. Mais no <a href=\"{faq}\">FAQ</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
   },
 
   it: {
@@ -217,24 +205,24 @@ var PARTS = {
     lead: function (h, c) { return "Questa è la versione breve: da una scheda vuota alla prima mano di Texas Hold’em su PokerTH. Se quello che cerchi sono le regole vere e proprie — bui, giri di puntate, cosa batte cosa — parti dalla <a href=\"{rules}\">pagina delle regole</a> e dai <a href=\"{hands}\">punti del poker</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); },
     steps: [
       ["Apri il sito — non c’è niente da installare",
-       "PokerTH gira nel browser. Nessun download, nessun account, nessun plugin. Sul telefono puoi aggiungerlo alla schermata iniziale dal menu del browser: si apre come un’app, a schermo intero, e funziona anche offline."],
+       "PokerTH gira nel browser. Nessun download, nessun plugin e nessun account per l’allenamento o per le partite da ospite. Puoi installarlo come un’app — Condividi → Aggiungi a Home su iPhone e iPad, il menu del browser o il pulsante di installazione altrove — e si apre a schermo intero e funziona anche offline. Se vuoi, l’Aiuto dell’Asso, l’Asso nell’angolo, ti spiega ogni schermata."],
       ["Scegli dove vuoi giocare",
-       "Tre modalità. L’<strong>allenamento offline</strong> ti mette subito a un tavolo di avversari gestiti dal computer e non richiede alcuna connessione: è lì che si impara. <strong>pokerth.net</strong> è la rete ufficiale: avversari veri, classifiche stagionali e un nickname gratuito da registrare una volta sola. <strong>LAN / server privato</strong> ti collega a un server PokerTH dedicato, tuo o di qualcun altro."],
+       "Tre modalità. La modalità <strong>Locale / allenamento</strong> ti mette subito a un tavolo di avversari gestiti dal computer e non richiede alcuna connessione: è lì che si impara. <strong>pokerth.net</strong> è la rete ufficiale: avversari veri, partite Normali aperte agli ospiti e partite valide per la classifica, con classifiche stagionali, per chi ha un account gratuito. <strong>LAN / server privato</strong> ti collega a un server PokerTH dedicato, tuo o di qualcun altro."],
       ["Siediti a un tavolo",
-       "Nella lobby puoi unirti a un tavolo dell’elenco o crearne uno tuo. Creandolo scegli il numero di posti, lo stack iniziale, la velocità con cui salgono i bui e se il tavolo ha una password. Condividi il link d’invito e l’amico arriva direttamente al tuo tavolo, nel suo browser, senza registrare nulla."],
+       "Nella lobby puoi unirti a un tavolo dell’elenco, guardare una partita in corso o crearne uno tuo. Creandolo scegli il tipo di partita (Normale, Solo utenti registrati, Solo utenti invitati o Valida per la classifica) e imposti il numero di posti, lo stack iniziale, la velocità con cui salgono i bui, il tempo per agire, se gli spettatori possono guardare e se il tavolo ha una password. Condividi il link d’invito e l’amico arriva direttamente al tuo tavolo, nel suo browser — in una partita Normale senza registrare nulla."],
       ["Gioca la mano",
-       "Ricevi due carte coperte. Si punta in giro per il tavolo prima del flop e di nuovo dopo il flop, il turn e il river. Quando tocca a te la barra delle azioni si accende e propone solo ciò che è consentito: Fold, Check o Call, Raise o All-In. L’importo si può digitare, trascinare sullo slider oppure impostare con un tocco su Min, metà piatto, piatto o tutto il tuo stack."],
+       "Ricevi due carte coperte. Si punta in giro per il tavolo prima del flop e di nuovo dopo il flop, il turn e il river. Quando tocca a te la barra delle azioni si accende e propone solo ciò che è consentito: Fold, Check o Call, Raise o All-In. L’importo si può digitare, trascinare sullo slider oppure impostare con un tocco su un terzo del piatto, metà piatto o piatto."],
       ["Leggi il tavolo",
-       "Il tuo punto migliore del momento viene indicato sotto il board mentre escono le carte. Il piatto, ogni stack e il livello dei bui restano sempre a schermo, il bottone del mazziere mostra chi parla per ultimo e un conto alla rovescia indica quanto tempo hai. Allo showdown vengono evidenziate le cinque carte che hanno formato ogni mano."],
+       "La scheda Probabilità indica il tuo punto migliore del momento e la tua probabilità di vincere mentre escono le carte. Il piatto, ogni stack e il livello dei bui restano sempre a schermo, il bottone del mazziere mostra chi parla per ultimo e un conto alla rovescia indica quanto tempo hai. Allo showdown la combinazione vincente è indicata sotto le carte comuni."],
       ["Vinci il torneo",
-       "Le partite di PokerTH sono tornei sit-and-go: tutti partono con lo stesso stack, i bui salgono a tempo e i giocatori vengono eliminati finché uno solo non ha tutte le fiche. Niente costa denaro e le fiche non si comprano — è tutto denaro finto, quindi l’unica posta in gioco è la partita stessa."]
+       "Le partite di PokerTH sono tornei: tutti partono con lo stesso stack, i bui salgono ogni poche mani o minuti e i giocatori vengono eliminati finché uno solo non ha tutte le fiche. Niente costa denaro e le fiche non si comprano — è tutto denaro finto, quindi l’unica posta in gioco è la partita stessa."]
     ],
     phoneH2: "Giocare da telefono",
     phoneP: "Il tavolo è pensato per il touch tanto quanto per il desktop: toccare il campo della puntata apre un tastierino dentro la barra delle azioni invece della tastiera di sistema, così il tavolo non salta mai, e lo slider si muove con gli stessi passi del client desktop. Le notifiche del turno possono arrivarti con i pulsanti Fold e Check/Call già sopra, così una mano si gioca senza tornare nella scheda.",
     friendsH2: "Giocare con gli amici",
     friendsP: "Crea un tavolo, metti una password se lo vuoi privato e manda il link d’invito. Apre il tavolo direttamente — nell’app installata se l’hanno aggiunta alla schermata iniziale, altrimenti in una scheda del browser. Nessuno deve installare niente né lasciare un indirizzo email.",
     faqH2: "Domande frequenti",
-    faqP: function (h, c) { return "Non c’è mai denaro in gioco, in nessuna modalità. Le tue impostazioni, i pacchetti di stile e i progressi offline restano sul tuo dispositivo. L’interfaccia è disponibile in 83 lingue, mentre le cinque parole d’azione — Fold, Check, Call, Raise, All-In — restano in inglese, come a qualsiasi tavolo del mondo. Il resto nelle <a href=\"{faq}\">FAQ</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
+    faqP: function (h, c) { return "Non c’è mai denaro in gioco, in nessuna modalità. Le tue impostazioni, i pacchetti di stile e i progressi dell’allenamento restano sul tuo dispositivo e ti seguono sugli altri dispositivi quando accedi con un account pokerth.net. L’interfaccia è disponibile in 83 lingue, mentre le cinque parole d’azione — Fold, Check, Call, Raise, All-In — restano in inglese, come a qualsiasi tavolo del mondo. Il resto nelle <a href=\"{faq}\">FAQ</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
   },
 
   pl: {
@@ -246,24 +234,24 @@ var PARTS = {
     lead: function (h, c) { return "To jest wersja skrócona: od pustej karty przeglądarki do pierwszego rozdania Texas Hold’em w PokerTH. Jeśli szukasz samych zasad — ciemne, rundy licytacji, co co bije — zacznij od <a href=\"{rules}\">strony z zasadami</a> i od <a href=\"{hands}\">układów w pokerze</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); },
     steps: [
       ["Otwórz stronę — nie ma czego instalować",
-       "PokerTH działa w przeglądarce. Bez pobierania, bez konta, bez wtyczek. Na telefonie możesz dodać go do ekranu głównego z menu przeglądarki: otwiera się wtedy jak aplikacja, na pełnym ekranie, i działa offline."],
+       "PokerTH działa w przeglądarce. Bez pobierania, bez wtyczek i bez konta do treningu oraz do gier jako gość. Możesz zainstalować go jak aplikację — Udostępnij → Dodaj do ekranu początkowego na iPhonie i iPadzie, a gdzie indziej menu przeglądarki lub przycisk instalacji — i otwiera się na pełnym ekranie, działając offline. Jeśli chcesz, Pomoc Asa, As w rogu ekranu, objaśnia każdy ekran."],
       ["Wybierz, gdzie chcesz grać",
-       "Trzy tryby. <strong>Trening offline</strong> od razu sadza cię przy stole z przeciwnikami sterowanymi przez komputer i w ogóle nie wymaga połączenia — tu się uczysz. <strong>pokerth.net</strong> to oficjalna sieć: prawdziwi przeciwnicy, rankingi sezonowe, darmowy nick rejestrowany raz. <strong>LAN / serwer prywatny</strong> łączy cię z dedykowanym serwerem PokerTH, twoim albo cudzym."],
+       "Trzy tryby. <strong>Lokalna / trening</strong> od razu sadza cię przy stole z przeciwnikami sterowanymi przez komputer i w ogóle nie wymaga połączenia — tu się uczysz. <strong>pokerth.net</strong> to oficjalna sieć: prawdziwi przeciwnicy, gry Normalna otwarte dla gości oraz gry rankingowe z rankingami sezonowymi dla graczy z bezpłatnym kontem. <strong>LAN / serwer prywatny</strong> łączy cię z dedykowanym serwerem PokerTH, twoim albo cudzym."],
       ["Usiądź przy stole",
-       "W lobby albo dołączasz do stołu z listy, albo tworzysz własny. Tworząc, ustawiasz liczbę miejsc, stack początkowy, tempo wzrostu ciemnych i to, czy stół jest chroniony hasłem. Udostępnij link z zaproszeniem, a znajomy trafi prosto do twojego stołu, w swojej przeglądarce, bez żadnej rejestracji."],
+       "W lobby albo dołączasz do stołu z listy, albo oglądasz trwającą grę, albo tworzysz własny stół. Tworząc, wybierasz typ gry (Normalna, Tylko zarejestrowani gracze, Tylko zaproszeni gracze lub Gra rankingowa) i ustawiasz liczbę miejsc, stack początkowy, tempo wzrostu ciemnych, czas na ruch, to, czy obserwatorzy mogą oglądać, i to, czy stół jest chroniony hasłem. Udostępnij link z zaproszeniem, a znajomy trafi prosto do twojego stołu, w swojej przeglądarce — w grze Normalna bez żadnej rejestracji."],
       ["Rozegraj rozdanie",
-       "Dostajesz dwie zakryte karty. Licytacja idzie dookoła stołu przed flopem, a potem jeszcze raz po flopie, turnie i riverze. Kiedy przychodzi twoja kolej, pasek akcji się rozświetla i proponuje tylko to, co dozwolone: Fold, Check lub Call, Raise albo All-In. Kwotę można wpisać, przeciągnąć suwakiem albo ustawić jednym dotknięciem na Min, połowę puli, pulę lub cały swój stack."],
+       "Dostajesz dwie zakryte karty. Licytacja idzie dookoła stołu przed flopem, a potem jeszcze raz po flopie, turnie i riverze. Kiedy przychodzi twoja kolej, pasek akcji się rozświetla i proponuje tylko to, co dozwolone: Fold, Check lub Call, Raise albo All-In. Kwotę można wpisać, przeciągnąć suwakiem albo ustawić jednym dotknięciem na trzecią część puli, połowę puli lub pulę."],
       ["Czytaj stół",
-       "Twój aktualnie najlepszy układ jest nazwany pod stołem w miarę wychodzenia kart. Pula, każdy stack i poziom ciemnych są cały czas na ekranie, żeton rozdającego pokazuje, kto mówi ostatni, a odliczanie pokazuje, ile masz czasu. Przy showdownie podświetlane jest tych pięć kart, które utworzyły każdy układ."],
+       "Zakładka Szanse nazywa twój aktualnie najlepszy układ i twoją szansę na wygraną w miarę wychodzenia kart. Pula, każdy stack i poziom ciemnych są cały czas na ekranie, żeton rozdającego pokazuje, kto mówi ostatni, a odliczanie pokazuje, ile masz czasu. Przy showdownie zwycięski układ jest nazwany pod kartami wspólnymi."],
       ["Wygraj turniej",
-       "Gry w PokerTH to turnieje sit-and-go: wszyscy zaczynają z tym samym stackiem, ciemne rosną według zegara, a gracze odpadają, aż jeden zgarnie wszystkie żetony. Nic nie kosztuje pieniędzy i żetonów nie da się kupić — wszystko jest na wirtualne pieniądze, więc jedyną stawką jest sama gra."]
+       "Gry w PokerTH to turnieje: wszyscy zaczynają z tym samym stackiem, ciemne rosną co kilka rozdań lub minut, a gracze odpadają, aż jeden zgarnie wszystkie żetony. Nic nie kosztuje pieniędzy i żetonów nie da się kupić — wszystko jest na wirtualne pieniądze, więc jedyną stawką jest sama gra."]
     ],
     phoneH2: "Gra na telefonie",
     phoneP: "Stół jest zrobiony pod ekran dotykowy tak samo jak pod komputer: dotknięcie pola zakładu otwiera klawiaturę numeryczną wewnątrz paska akcji zamiast klawiatury systemowej, więc stół nigdy nie skacze, a suwak przesuwa się tymi samymi krokami co w kliencie desktopowym. Powiadomienia o turze mogą dotrzeć do ciebie z przyciskami Fold i Check/Call na nich, więc rozdanie da się rozegrać bez wracania do karty przeglądarki.",
     friendsH2: "Gra ze znajomymi",
     friendsP: "Utwórz stół, ustaw hasło, jeśli ma być prywatny, i wyślij link z zaproszeniem. Otwiera on stół bezpośrednio — w zainstalowanej aplikacji, jeśli znajomy dodał ją do ekranu głównego, a w przeciwnym razie w karcie przeglądarki. Nikt nie musi niczego instalować ani podawać adresu e-mail.",
     faqH2: "Częste pytania",
-    faqP: function (h, c) { return "W żadnym trybie nie ma prawdziwych pieniędzy. Twoje ustawienia, paczki stylów i postępy offline zostają na twoim urządzeniu. Interfejs jest dostępny w 83 językach, a pięć słów akcji — Fold, Check, Call, Raise, All-In — pozostaje po angielsku, tak jak przy każdym stole na świecie. Więcej w <a href=\"{faq}\">FAQ</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
+    faqP: function (h, c) { return "W żadnym trybie nie ma prawdziwych pieniędzy. Twoje ustawienia, paczki stylów i postępy w treningu zostają na twoim urządzeniu i podążają za tobą na inne urządzenia, gdy logujesz się kontem pokerth.net. Interfejs jest dostępny w 83 językach, a pięć słów akcji — Fold, Check, Call, Raise, All-In — pozostaje po angielsku, tak jak przy każdym stole na świecie. Więcej w <a href=\"{faq}\">FAQ</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
   },
 
   ru: {
@@ -275,24 +263,24 @@ var PARTS = {
     lead: function (h, c) { return "Это краткая версия: от пустой вкладки до первой раздачи техасского холдема в PokerTH. Если вам нужны сами правила — блайнды, круги торговли, что чем бьётся — начните со <a href=\"{rules}\">страницы правил</a> и с <a href=\"{hands}\">комбинаций</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); },
     steps: [
       ["Откройте сайт — устанавливать нечего",
-       "PokerTH работает в браузере. Без загрузки, без аккаунта, без плагинов. На телефоне его можно добавить на домашний экран из меню браузера: тогда он открывается как приложение, на весь экран, и работает офлайн."],
+       "PokerTH работает в браузере. Без загрузки, без плагинов, а для тренировки и гостевых игр — без аккаунта. Его можно установить как приложение — «Поделиться» → «На экран «Домой»» на iPhone и iPad, меню браузера или кнопка установки в остальных случаях — и он открывается на весь экран, работая офлайн. По желанию «Помощь туза» — Туз в углу экрана — объясняет каждый экран."],
       ["Выберите, где играть",
-       "Три режима. <strong>Офлайн-тренировка</strong> сразу сажает вас за стол с компьютерными соперниками и вообще не требует соединения — здесь и учатся. <strong>pokerth.net</strong> — официальная сеть: живые соперники, сезонные рейтинги, бесплатный ник, который регистрируется один раз. <strong>LAN / частный сервер</strong> подключает к выделенному серверу PokerTH — вашему или чужому."],
+       "Три режима. <strong>Локальная / тренировка</strong> сразу сажает вас за стол с компьютерными соперниками и вообще не требует соединения — здесь и учатся. <strong>pokerth.net</strong> — официальная сеть: живые соперники, обычные игры, открытые для гостей, и рейтинговые игры с сезонными рейтингами для игроков с бесплатным аккаунтом. <strong>LAN / частный сервер</strong> подключает к выделенному серверу PokerTH — вашему или чужому."],
       ["Сядьте за стол",
-       "В лобби вы либо присоединяетесь к столу из списка, либо создаёте свой. При создании задаются число мест, стартовый стек, скорость роста блайндов и пароль, если стол должен быть закрытым. Поделитесь ссылкой-приглашением — и друг попадёт прямо за ваш стол, в своём браузере, ничего не регистрируя."],
+       "В лобби вы либо присоединяетесь к столу из списка, либо смотрите идущую игру, либо создаёте свой. При создании выбирается тип игры (Обычная, только зарегистрированные игроки, только приглашённые игроки или Рейтинговая игра) и задаются число мест, стартовый стек, скорость роста блайндов, время на ход, могут ли зрители смотреть игру и пароль, если стол должен быть закрытым. Поделитесь ссылкой-приглашением — и друг попадёт прямо за ваш стол, в своём браузере, а в обычной игре — ничего не регистрируя."],
       ["Разыграйте руку",
-       "Вам сдают две закрытые карты. Торговля идёт по кругу до флопа и затем ещё раз после флопа, тёрна и ривера. Когда очередь доходит до вас, панель действий загорается и предлагает только допустимое: Fold, Check или Call, Raise или All-In. Сумму можно ввести, потянуть ползунком или задать одним касанием — Min, половина банка, банк или весь стек."],
+       "Вам сдают две закрытые карты. Торговля идёт по кругу до флопа и затем ещё раз после флопа, тёрна и ривера. Когда очередь доходит до вас, панель действий загорается и предлагает только допустимое: Fold, Check или Call, Raise или All-In. Сумму можно ввести, потянуть ползунком или задать одним касанием — треть банка, половина банка или банк."],
       ["Читайте стол",
-       "Ваша лучшая на данный момент комбинация подписана под бордом по мере выхода карт. Банк, каждый стек и уровень блайндов всё время на экране, кнопка дилера показывает, кто говорит последним, а обратный отсчёт — сколько у вас времени. На вскрытии подсвечиваются те пять карт, которые составили каждую руку."],
+       "Вкладка «Шансы» называет вашу лучшую на данный момент комбинацию и ваш шанс на победу по мере выхода карт. Банк, каждый стек и уровень блайндов всё время на экране, кнопка дилера показывает, кто говорит последним, а обратный отсчёт — сколько у вас времени. На вскрытии выигрышная комбинация подписана под общими картами."],
       ["Выиграйте турнир",
-       "Игры в PokerTH — это турниры sit-and-go: все начинают с одинаковым стеком, блайнды растут по таймеру, игроки выбывают, пока у одного не окажутся все фишки. Ничто не стоит денег, и фишки нельзя купить — всё на условные фишки, так что на кону только сама игра."]
+       "Игры в PokerTH — это турниры: все начинают с одинаковым стеком, блайнды растут каждые несколько раздач или минут, игроки выбывают, пока у одного не окажутся все фишки. Ничто не стоит денег, и фишки нельзя купить — всё на условные фишки, так что на кону только сама игра."]
     ],
     phoneH2: "Игра на телефоне",
     phoneP: "Стол рассчитан на сенсорный экран не меньше, чем на компьютер: касание поля ставки открывает цифровую клавиатуру внутри панели действий, а не системную, поэтому стол никогда не прыгает, и ползунок движется теми же шагами, что и в настольном клиенте. Уведомления о ходе могут приходить с кнопками Fold и Check/Call прямо на них, так что руку можно разыграть, не возвращаясь во вкладку.",
     friendsH2: "Игра с друзьями",
     friendsP: "Создайте стол, поставьте пароль, если хотите закрытый, и отправьте ссылку-приглашение. Она открывает стол напрямую — в установленном приложении, если его добавили на домашний экран, иначе во вкладке браузера. Никому не нужно ничего устанавливать и оставлять адрес почты.",
     faqH2: "Частые вопросы",
-    faqP: function (h, c) { return "Реальные деньги не участвуют ни в одном режиме. Ваши настройки, стилевые паки и офлайн-прогресс остаются на вашем устройстве. Интерфейс доступен на 83 языках, а пять слов действий — Fold, Check, Call, Raise, All-In — остаются английскими, как за любым столом в мире. Подробнее в <a href=\"{faq}\">FAQ</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
+    faqP: function (h, c) { return "Реальные деньги не участвуют ни в одном режиме. Ваши настройки, стилевые паки и тренировочный прогресс остаются на вашем устройстве и следуют за вами на другие устройства, когда вы входите с аккаунтом pokerth.net. Интерфейс доступен на 83 языках, а пять слов действий — Fold, Check, Call, Raise, All-In — остаются английскими, как за любым столом в мире. Подробнее в <a href=\"{faq}\">FAQ</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
   },
 
   zh: {
@@ -304,24 +292,24 @@ var PARTS = {
     lead: function (h, c) { return "这是精简版：从一个空白标签页到你在 PokerTH 的第一手德州扑克。如果你想了解的是规则本身——盲注、下注轮次、什么牌大过什么牌——请先看<a href=\"{rules}\">规则页面</a>和<a href=\"{hands}\">牌型大小</a>。".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); },
     steps: [
       ["打开网站——没有任何东西需要安装",
-       "PokerTH 在浏览器里运行。无需下载、无需注册、无需插件。在手机上，你可以从浏览器菜单把它添加到主屏幕，之后它就像一个应用一样全屏打开，并且支持离线使用。"],
+       "PokerTH 在浏览器里运行。无需下载、无需插件，训练和访客游戏也无需账号。你可以把它像应用一样安装——在 iPhone 和 iPad 上通过 分享 → 添加到主屏幕，其他设备通过浏览器菜单或安装按钮——之后它会全屏打开，并且支持离线使用。如果你愿意，A 牌小助手——角落里的那张 A 牌——会为你讲解每个界面。"],
       ["选择你想在哪里玩",
-       "共三种模式。<strong>离线练习</strong>会立刻为你安排一桌电脑对手，完全不需要联网——这是学习的地方。<strong>pokerth.net</strong> 是官方网络：真人对手、赛季排名，注册一次即可获得免费昵称。<strong>局域网／私人服务器</strong>连接到专用的 PokerTH 服务器，你自己的或别人的都行。"],
+       "共三种模式。<strong>本地 / 训练</strong>会立刻为你安排一桌电脑对手，完全不需要联网——这是学习的地方。<strong>pokerth.net</strong> 是官方网络：真人对手、向访客开放的「普通」游戏，以及为拥有免费账号的玩家提供赛季排名的「排名游戏」。<strong>局域网／私人服务器</strong>连接到专用的 PokerTH 服务器，你自己的或别人的都行。"],
       ["坐到牌桌前",
-       "在大厅里，你可以从列表加入一桌，也可以自己开一桌。开桌时可以设置座位数、起始筹码、盲注上涨的速度，以及是否设密码。把邀请链接分享出去，朋友就会直接落座在你的牌桌上，在他自己的浏览器里，什么都不用注册。"],
+       "在大厅里，你可以从列表加入一桌、旁观一场进行中的牌局，也可以自己开一桌。开桌时可以选择游戏类型（「普通」、仅限注册玩家、仅限受邀玩家或「排名游戏」），并设置座位数、起始筹码、盲注上涨的速度、行动时间、是否允许旁观，以及是否设密码。把邀请链接分享出去，朋友就会直接落座在你的牌桌上，在他自己的浏览器里——在「普通」游戏中什么都不用注册。"],
       ["打这手牌",
-       "你会拿到两张底牌。翻牌前绕桌下注一轮，翻牌、转牌、河牌之后各再下注一轮。轮到你时，操作栏会亮起，并且只提供当前合法的选项：Fold、Check 或 Call、Raise 或 All-In。下注金额可以输入、可以拖动滑杆，也可以一键设为最小注、半池、一池或全部筹码。"],
+       "你会拿到两张底牌。翻牌前绕桌下注一轮，翻牌、转牌、河牌之后各再下注一轮。轮到你时，操作栏会亮起，并且只提供当前合法的选项：Fold、Check 或 Call、Raise 或 All-In。下注金额可以输入、可以拖动滑杆，也可以一键设为三分之一池、半池或一池。"],
       ["读懂牌桌",
-       "随着公共牌发出，你当前的最佳牌型会标注在牌桌下方。底池、每个人的筹码和盲注级别始终显示在屏幕上，庄家按钮标明谁最后行动，倒计时显示你还剩多少时间。摊牌时，组成每一手牌的那五张会被高亮。"],
+       "「胜率」标签页会随着公共牌发出，标明你当前的最佳牌型和获胜几率。底池、每个人的筹码和盲注级别始终显示在屏幕上，庄家按钮标明谁最后行动，倒计时显示你还剩多少时间。摊牌时，获胜牌型会标注在公共牌下方。"],
       ["赢下比赛",
-       "PokerTH 的牌局是 sit-and-go 锦标赛：所有人以相同筹码开局，盲注按时上涨，玩家陆续被淘汰，直到一人赢下全部筹码。不花一分钱，也无法购买筹码——全部是虚拟筹码，因此唯一的赌注就是这局牌本身。"]
+       "PokerTH 的牌局是锦标赛：所有人以相同筹码开局，盲注每隔几手牌或几分钟上涨，玩家陆续被淘汰，直到一人赢下全部筹码。不花一分钱，也无法购买筹码——全部是虚拟筹码，因此唯一的赌注就是这局牌本身。"]
     ],
     phoneH2: "在手机上玩",
     phoneP: "牌桌为触摸屏所做的考虑不亚于桌面端：点击下注框会在操作栏内打开数字键盘，而不是弹出系统键盘，因此牌桌永远不会跳动；滑杆的步进也与桌面客户端一致。轮到你时的通知上可以直接带有 Fold 和 Check/Call 按钮，因此一手牌无需切回标签页也能打完。",
     friendsH2: "和朋友一起玩",
     friendsP: "开一桌，想私密就设个密码，然后把邀请链接发出去。链接会直接打开牌桌——如果对方已把应用添加到主屏幕，就在应用里打开，否则在浏览器标签页里打开。谁都不用安装任何东西，也不用交出电子邮箱。",
     faqH2: "常见问题",
-    faqP: function (h, c) { return "任何模式都不涉及金钱。你的设置、样式包和离线进度都保存在你自己的设备上。界面提供 83 种语言，而 Fold、Check、Call、Raise、All-In 这五个动作词保持英文，和全世界的牌桌一样。更多内容见<a href=\"{faq}\">常见问题</a>。".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
+    faqP: function (h, c) { return "任何模式都不涉及金钱。你的设置、样式包和训练进度都保存在你自己的设备上，使用 pokerth.net 账号登录后还会同步到你的其他设备。界面提供 83 种语言，而 Fold、Check、Call、Raise、All-In 这五个动作词保持英文，和全世界的牌桌一样。更多内容见<a href=\"{faq}\">常见问题</a>。".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
   },
 
   nl: {
@@ -333,24 +321,24 @@ var PARTS = {
     lead: function (h, c) { return "Dit is de korte versie: van een leeg tabblad naar je eerste hand Texas Hold’em in PokerTH. Gaat het je om de regels zelf — blinds, biedrondes, wat wint van wat — begin dan eerst bij de <a href=\"{rules}\">regelpagina</a> en de <a href=\"{hands}\">pokerhanden</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); },
     steps: [
       ["Open de site — er valt niets te installeren",
-       "PokerTH draait in de browser. Geen download, geen account, geen plug-in. Op een telefoon kun je het via het browsermenu aan je beginscherm toevoegen; het opent dan als een app, schermvullend, en werkt ook offline."],
+       "PokerTH draait in de browser. Geen download, geen plug-in en geen account voor oefenen of gastspellen. Je kunt het als een app installeren — Deel → Zet op beginscherm op iPhone en iPad, elders het browsermenu of de installatieknop — en het opent schermvullend en werkt ook offline. Als je wilt, legt Hulp van de Aas, de Aas in de hoek, elk scherm uit."],
       ["Kies waar je wilt spelen",
-       "Drie modi. <strong>Offline oefenen</strong> zet je meteen aan een tafel met computertegenstanders en heeft helemaal geen verbinding nodig — daar leer je het. <strong>pokerth.net</strong> is het officiële netwerk: echte tegenstanders, seizoensranglijsten en een gratis bijnaam die je één keer registreert. <strong>LAN / eigen server</strong> verbindt met een toegewijde PokerTH-server, van jou of van iemand anders."],
+       "Drie modi. <strong>Lokaal / oefenen</strong> zet je meteen aan een tafel met computertegenstanders en heeft helemaal geen verbinding nodig — daar leer je het. <strong>pokerth.net</strong> is het officiële netwerk: echte tegenstanders, Normale spellen open voor gasten en Rankingspellen met seizoensranglijsten voor spelers met een gratis account. <strong>LAN / eigen server</strong> verbindt met een toegewijde PokerTH-server, van jou of van iemand anders."],
       ["Ga aan een tafel zitten",
-       "In de lobby sluit je je aan bij een tafel uit de lijst of maak je er zelf een. Bij het aanmaken kies je het aantal plaatsen, de startstack, hoe snel de blinds stijgen en of de tafel een wachtwoord heeft. Deel de uitnodigingslink en een vriend komt rechtstreeks aan jouw tafel terecht, in zijn eigen browser, zonder zich ergens aan te melden."],
+       "In de lobby sluit je je aan bij een tafel uit de lijst, kijk je mee met een lopend spel of maak je er zelf een. Bij het aanmaken kies je het speltype (Normaal, Alleen geregistreerde spelers, Alleen uitgenodigde spelers of Rankingspel) en bepaal je het aantal plaatsen, de startstack, hoe snel de blinds stijgen, de tijd om te handelen, of toeschouwers mogen meekijken en of de tafel een wachtwoord heeft. Deel de uitnodigingslink en een vriend komt rechtstreeks aan jouw tafel terecht, in zijn eigen browser — bij een Normaal spel zonder zich ergens aan te melden."],
       ["Speel de hand",
-       "Je krijgt twee gesloten kaarten. Er wordt rondom de tafel geboden vóór de flop, en daarna opnieuw na de flop, de turn en de river. Als jij aan de beurt bent, licht de actiebalk op en biedt alleen aan wat is toegestaan: Fold, Check of Call, Raise of All-In. Het bedrag kun je intypen, met de schuifregelaar slepen of met één tik zetten op Min, de helft van de pot, de pot of je hele stack."],
+       "Je krijgt twee gesloten kaarten. Er wordt rondom de tafel geboden vóór de flop, en daarna opnieuw na de flop, de turn en de river. Als jij aan de beurt bent, licht de actiebalk op en biedt alleen aan wat is toegestaan: Fold, Check of Call, Raise of All-In. Het bedrag kun je intypen, met de schuifregelaar slepen of met één tik zetten op een derde van de pot, de helft van de pot of de pot."],
       ["Lees de tafel",
-       "Je op dat moment beste hand staat onder het bord benoemd terwijl de kaarten komen. De pot, elke stack en het blindniveau staan permanent in beeld, de dealerknop laat zien wie als laatste handelt, en een aftelling toont hoeveel tijd je nog hebt. Bij de showdown worden de vijf kaarten uitgelicht die elke hand vormden."],
+       "Het tabblad Kansen noemt je op dat moment beste hand en je kans om te winnen terwijl de kaarten komen. De pot, elke stack en het blindniveau staan permanent in beeld, de dealerknop laat zien wie als laatste handelt, en een aftelling toont hoeveel tijd je nog hebt. Bij de showdown wordt de winnende combinatie onder de gedeelde kaarten benoemd."],
       ["Win het toernooi",
-       "Partijen in PokerTH zijn sit-and-go-toernooien: iedereen begint met dezelfde stack, de blinds stijgen op de klok en spelers vallen af tot er één alle fiches heeft. Niets kost geld en fiches zijn niet te koop — het is allemaal speelgeld, dus het enige wat op het spel staat is het spel zelf."]
+       "Partijen in PokerTH zijn toernooien: iedereen begint met dezelfde stack, de blinds stijgen om de zoveel handen of minuten en spelers vallen af tot er één alle fiches heeft. Niets kost geld en fiches zijn niet te koop — het is allemaal speelgeld, dus het enige wat op het spel staat is het spel zelf."]
     ],
     phoneH2: "Spelen op een telefoon",
     phoneP: "De tafel is net zo goed voor een aanraakscherm gemaakt als voor een computer: op het inzetveld tikken opent een cijferblok binnen de actiebalk in plaats van het systeemtoetsenbord, waardoor de tafel nooit verspringt, en de schuifregelaar beweegt in dezelfde stappen als de desktopclient. Meldingen dat je aan de beurt bent kunnen Fold- en Check/Call-knoppen bevatten, zodat je een hand kunt spelen zonder terug te gaan naar het tabblad.",
     friendsH2: "Spelen met vrienden",
     friendsP: "Maak een tafel, zet er een wachtwoord op als je hem privé wilt, en stuur de uitnodigingslink. Die opent de tafel rechtstreeks — in de geïnstalleerde app als ze die aan hun beginscherm hebben toegevoegd, anders in een browsertabblad. Niemand hoeft iets te installeren of een e-mailadres af te staan.",
     faqH2: "Veelgestelde vragen",
-    faqP: function (h, c) { return "Er komt in geen enkele modus geld aan te pas. Je instellingen, stijlpakketten en offline voortgang blijven op je eigen apparaat. De interface is beschikbaar in 83 talen, terwijl de vijf actiewoorden — Fold, Check, Call, Raise, All-In — in het Engels blijven, zoals aan elke tafel ter wereld. Meer in de <a href=\"{faq}\">veelgestelde vragen</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
+    faqP: function (h, c) { return "Er komt in geen enkele modus geld aan te pas. Je instellingen, stijlpakketten en oefenvoortgang blijven op je eigen apparaat en volgen je naar je andere apparaten als je inlogt met een pokerth.net-account. De interface is beschikbaar in 83 talen, terwijl de vijf actiewoorden — Fold, Check, Call, Raise, All-In — in het Engels blijven, zoals aan elke tafel ter wereld. Meer in de <a href=\"{faq}\">veelgestelde vragen</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
   },
 
   tr: {
@@ -362,24 +350,24 @@ var PARTS = {
     lead: function (h, c) { return "Bu, boş bir sekmeden PokerTH’deki ilk Texas Hold’em elinize kadar olan kısa yol. Aradığınız kuralların kendisiyse — körler, bahis turları, hangi el hangisini yener — önce <a href=\"{rules}\">kurallar sayfasına</a> ve <a href=\"{hands}\">el sıralamasına</a> bakın.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); },
     steps: [
       ["Siteyi açın — kurulacak bir şey yok",
-       "PokerTH tarayıcıda çalışır. İndirme yok, hesap yok, eklenti yok. Telefonda tarayıcı menüsünden ana ekrana ekleyebilirsiniz; o zaman bir uygulama gibi tam ekran açılır ve çevrimdışı da çalışır."],
+       "PokerTH tarayıcıda çalışır. İndirme yok, eklenti yok; antrenman için de misafir oyunları için de hesap yok. Bir uygulama gibi kurabilirsiniz — iPhone ve iPad’de Paylaş → Ana Ekrana Ekle, diğer cihazlarda tarayıcı menüsü ya da kur düğmesi — ve tam ekran açılır, çevrimdışı da çalışır. İsterseniz köşedeki As, yani As’ın yardımı, her ekranı açıklar."],
       ["Nerede oynamak istediğinizi seçin",
-       "Üç mod var. <strong>Çevrimdışı çalışma</strong> sizi doğrudan bilgisayar rakiplerinin olduğu bir masaya oturtur ve hiç bağlantı gerektirmez — öğrenmenin yeri burasıdır. <strong>pokerth.net</strong> resmî ağdır: gerçek rakipler, sezonluk sıralamalar ve bir kez kaydettiğiniz ücretsiz bir takma ad. <strong>LAN / özel sunucu</strong> sizinki ya da bir başkasınınki olsun, adanmış bir PokerTH sunucusuna bağlanır."],
+       "Üç mod var. <strong>Yerel / antrenman</strong> sizi doğrudan bilgisayar rakiplerinin olduğu bir masaya oturtur ve hiç bağlantı gerektirmez — öğrenmenin yeri burasıdır. <strong>pokerth.net</strong> resmî ağdır: gerçek rakipler, misafirlere açık Normal oyunlar ve ücretsiz hesabı olan oyuncular için sezonluk sıralamalı Sıralama oyunları. <strong>LAN / özel sunucu</strong> sizinki ya da bir başkasınınki olsun, adanmış bir PokerTH sunucusuna bağlanır."],
       ["Bir masaya oturun",
-       "Lobide ya listedeki bir masaya katılırsınız ya da kendi masanızı kurarsınız. Kurarken koltuk sayısını, başlangıç çipini, körlerin ne kadar hızlı yükseleceğini ve masanın parolalı olup olmayacağını belirlersiniz. Davet bağlantısını paylaşın; arkadaşınız hiçbir yere kayıt olmadan, kendi tarayıcısında doğrudan masanıza gelir."],
+       "Lobide ya listedeki bir masaya katılırsınız, devam eden bir oyunu izlersiniz ya da kendi masanızı kurarsınız. Kurarken oyun türünü (Normal, yalnızca kayıtlı oyuncular, yalnızca davetli oyuncular veya Sıralama oyunu) seçer; koltuk sayısını, başlangıç çipini, körlerin ne kadar hızlı yükseleceğini, hamle süresini, izleyicilerin izleyip izleyemeyeceğini ve masanın parolalı olup olmayacağını belirlersiniz. Davet bağlantısını paylaşın; arkadaşınız kendi tarayıcısında doğrudan masanıza gelir — Normal bir oyunda hiçbir yere kayıt olmadan."],
       ["Eli oynayın",
-       "Size kapalı iki kart dağıtılır. Bahis flop öncesinde masayı dolaşır, sonra flop, turn ve river’dan sonra yeniden. Sıra size geldiğinde işlem çubuğu yanar ve yalnızca kurallara uyanı sunar: Fold, Check ya da Call, Raise ya da All-In. Tutarı yazabilir, kaydırıcıyla sürükleyebilir ya da tek dokunuşla Min, potun yarısı, pot veya tüm çipiniz olarak ayarlayabilirsiniz."],
+       "Size kapalı iki kart dağıtılır. Bahis flop öncesinde masayı dolaşır, sonra flop, turn ve river’dan sonra yeniden. Sıra size geldiğinde işlem çubuğu yanar ve yalnızca kurallara uyanı sunar: Fold, Check ya da Call, Raise ya da All-In. Tutarı yazabilir, kaydırıcıyla sürükleyebilir ya da tek dokunuşla potun üçte biri, potun yarısı veya pot olarak ayarlayabilirsiniz."],
       ["Masayı okuyun",
-       "Kartlar açıldıkça o anki en iyi eliniz masanın altında adıyla yazılır. Pot, herkesin çipi ve kör seviyesi sürekli ekrandadır, dağıtıcı düğmesi en son kimin konuşacağını gösterir, geri sayım ise ne kadar süreniz kaldığını. Açılışta her eli oluşturan beş kart vurgulanır."],
+       "Kartlar açıldıkça Olasılıklar sekmesi o anki en iyi elinizi ve kazanma şansınızı adlandırır. Pot, herkesin çipi ve kör seviyesi sürekli ekrandadır, dağıtıcı düğmesi en son kimin konuşacağını gösterir, geri sayım ise ne kadar süreniz kaldığını. Açılışta kazanan kombinasyon ortak kartların altında adıyla yazılır."],
       ["Turnuvayı kazanın",
-       "PokerTH oyunları sit-and-go turnuvalarıdır: herkes aynı çiple başlar, körler saate göre yükselir ve tüm çipler tek kişide toplanana dek oyuncular elenir. Hiçbir şey para tutmaz ve çip satın alınamaz — hepsi oyun parasıdır, dolayısıyla ortada yalnızca oyunun kendisi vardır."]
+       "PokerTH oyunları turnuvalardır: herkes aynı çiple başlar, körler birkaç elde veya dakikada bir yükselir ve tüm çipler tek kişide toplanana dek oyuncular elenir. Hiçbir şey para tutmaz ve çip satın alınamaz — hepsi oyun parasıdır, dolayısıyla ortada yalnızca oyunun kendisi vardır."]
     ],
     phoneH2: "Telefonda oynamak",
     phoneP: "Masa, masaüstü kadar dokunmatik ekran için de tasarlandı: bahis alanına dokunmak sistem klavyesi yerine işlem çubuğunun içinde bir tuş takımı açar, böylece masa hiç yerinden oynamaz; kaydırıcı da masaüstü istemcisiyle aynı adımlarla ilerler. Sıra bildirimleri üzerlerinde Fold ve Check/Call düğmeleriyle gelebilir, yani bir el sekmeye dönmeden oynanabilir.",
     friendsH2: "Arkadaşlarla oynamak",
     friendsP: "Bir masa kurun, özel olsun istiyorsanız parola koyun ve davet bağlantısını gönderin. Bağlantı masayı doğrudan açar — uygulamayı ana ekranına eklemişlerse kurulu uygulamada, aksi hâlde bir tarayıcı sekmesinde. Kimsenin bir şey kurması ya da e-posta adresi vermesi gerekmez.",
     faqH2: "Sık sorulanlar",
-    faqP: function (h, c) { return "Hiçbir modda para söz konusu değildir. Ayarlarınız, stil paketleriniz ve çevrimdışı ilerlemeniz kendi cihazınızda kalır. Arayüz 83 dilde sunulur; beş işlem sözcüğü — Fold, Check, Call, Raise, All-In — dünyanın her masasında olduğu gibi İngilizce kalır. Gerisi <a href=\"{faq}\">SSS</a> sayfasında.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
+    faqP: function (h, c) { return "Hiçbir modda para söz konusu değildir. Ayarlarınız, stil paketleriniz ve antrenman ilerlemeniz kendi cihazınızda kalır ve bir pokerth.net hesabıyla giriş yaptığınızda diğer cihazlarınıza da sizinle gelir. Arayüz 83 dilde sunulur; beş işlem sözcüğü — Fold, Check, Call, Raise, All-In — dünyanın her masasında olduğu gibi İngilizce kalır. Gerisi <a href=\"{faq}\">SSS</a> sayfasında.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
   },
 
   uk: {
@@ -391,24 +379,24 @@ var PARTS = {
     lead: function (h, c) { return "Це коротка версія: від порожньої вкладки до вашої першої роздачі техаського холдему в PokerTH. Якщо вам потрібні самі правила — блайнди, кола торгів, що чим б’ється — почніть зі <a href=\"{rules}\">сторінки правил</a> і з <a href=\"{hands}\">комбінацій</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); },
     steps: [
       ["Відкрийте сайт — установлювати нічого не треба",
-       "PokerTH працює в браузері. Без завантаження, без облікового запису, без плагінів. На телефоні його можна додати на головний екран із меню браузера: тоді він відкривається як застосунок, на весь екран, і працює офлайн."],
+       "PokerTH працює в браузері. Без завантаження, без плагінів і без облікового запису для тренування чи гостьових ігор. Його можна встановити як застосунок — Поділитися → Додати на екран «Початок» на iPhone та iPad, меню браузера чи кнопка встановлення в інших випадках — і він відкривається на весь екран та працює офлайн. За бажання Допомога туза, Туз у куті, пояснює кожен екран."],
       ["Оберіть, де хочете грати",
-       "Три режими. <strong>Офлайн-тренування</strong> одразу садить вас за стіл із комп’ютерними суперниками й узагалі не потребує з’єднання — саме тут і вчаться. <strong>pokerth.net</strong> — офіційна мережа: живі суперники, сезонні рейтинги, безкоштовний нік, який реєструють один раз. <strong>LAN / приватний сервер</strong> під’єднує до виділеного сервера PokerTH — вашого або чужого."],
+       "Три режими. <strong>Локальна / тренування</strong> одразу садить вас за стіл із комп’ютерними суперниками й узагалі не потребує з’єднання — саме тут і вчаться. <strong>pokerth.net</strong> — офіційна мережа: живі суперники, «Звичайні» ігри, відкриті для гостей, і рейтингові ігри із сезонними рейтингами для гравців із безкоштовним акаунтом. <strong>LAN / приватний сервер</strong> під’єднує до виділеного сервера PokerTH — вашого або чужого."],
       ["Сядьте за стіл",
-       "У лобі ви або приєднуєтеся до столу зі списку, або створюєте власний. Створюючи, задаєте кількість місць, стартовий стек, швидкість зростання блайндів і те, чи буде стіл під паролем. Поділіться посиланням-запрошенням — і друг потрапить прямо за ваш стіл, у своєму браузері, нічого не реєструючи."],
+       "У лобі ви або приєднуєтеся до столу зі списку, або спостерігаєте за грою, що триває, або створюєте власний стіл. Створюючи, обираєте тип гри («Звичайна», лише для зареєстрованих, лише за запрошенням або «Рейтингова гра») і задаєте кількість місць, стартовий стек, швидкість зростання блайндів, час на хід, чи можуть глядачі спостерігати, і те, чи буде стіл під паролем. Поділіться посиланням-запрошенням — і друг потрапить прямо за ваш стіл, у своєму браузері — у «Звичайній» грі нічого не реєструючи."],
       ["Розіграйте роздачу",
-       "Вам роздають дві закриті карти. Торги йдуть по колу до флопу, а потім ще раз після флопу, терну й риверу. Коли черга доходить до вас, панель дій засвічується й пропонує лише дозволене: Fold, Check або Call, Raise чи All-In. Суму можна ввести, потягнути повзунком або задати одним дотиком — Min, половина банку, банк чи весь стек."],
+       "Вам роздають дві закриті карти. Торги йдуть по колу до флопу, а потім ще раз після флопу, терну й риверу. Коли черга доходить до вас, панель дій засвічується й пропонує лише дозволене: Fold, Check або Call, Raise чи All-In. Суму можна ввести, потягнути повзунком або задати одним дотиком — третина банку, половина банку чи банк."],
       ["Читайте стіл",
-       "Ваша найкраща на цю мить комбінація підписана під бордом у міру виходу карт. Банк, кожен стек і рівень блайндів увесь час на екрані, кнопка дилера показує, хто говорить останнім, а зворотний відлік — скільки у вас часу. На розкритті підсвічуються ті п’ять карт, які склали кожну руку."],
+       "Вкладка «Шанси» називає вашу найкращу на цю мить комбінацію та ваші шанси на виграш у міру виходу карт. Банк, кожен стек і рівень блайндів увесь час на екрані, кнопка дилера показує, хто говорить останнім, а зворотний відлік — скільки у вас часу. На розкритті переможна комбінація підписана під спільними картами."],
       ["Виграйте турнір",
-       "Ігри в PokerTH — це турніри sit-and-go: усі починають з однаковим стеком, блайнди зростають за таймером, гравці вибувають, доки в одного не опиняться всі фішки. Ніщо не коштує грошей, і фішки не можна купити — усе на умовні фішки, тож на кону лише сама гра."]
+       "Ігри в PokerTH — це турніри: усі починають з однаковим стеком, блайнди зростають кожні кілька роздач або хвилин, гравці вибувають, доки в одного не опиняться всі фішки. Ніщо не коштує грошей, і фішки не можна купити — усе на умовні фішки, тож на кону лише сама гра."]
     ],
     phoneH2: "Гра на телефоні",
     phoneP: "Стіл розрахований на сенсорний екран не менше, ніж на комп’ютер: дотик до поля ставки відкриває цифрову клавіатуру всередині панелі дій, а не системну, тому стіл ніколи не стрибає, а повзунок рухається тими самими кроками, що й у настільному клієнті. Сповіщення про хід можуть приходити з кнопками Fold і Check/Call прямо на них, тож роздачу можна зіграти, не повертаючись у вкладку.",
     friendsH2: "Гра з друзями",
     friendsP: "Створіть стіл, поставте пароль, якщо хочете зробити його приватним, і надішліть посилання-запрошення. Воно відкриває стіл напряму — у встановленому застосунку, якщо його додали на головний екран, інакше у вкладці браузера. Нікому не треба нічого встановлювати чи лишати адресу пошти.",
     faqH2: "Часті запитання",
-    faqP: function (h, c) { return "Справжні гроші не беруть участі в жодному режимі. Ваші налаштування, набори стилів і офлайн-прогрес лишаються на вашому пристрої. Інтерфейс доступний 83 мовами, а п’ять слів дій — Fold, Check, Call, Raise, All-In — лишаються англійськими, як за будь-яким столом у світі. Докладніше в <a href=\"{faq}\">FAQ</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
+    faqP: function (h, c) { return "Справжні гроші не беруть участі в жодному режимі. Ваші налаштування, набори стилів і тренувальний прогрес лишаються на вашому пристрої та йдуть за вами на інші пристрої, коли ви входите з акаунтом pokerth.net. Інтерфейс доступний 83 мовами, а п’ять слів дій — Fold, Check, Call, Raise, All-In — лишаються англійськими, як за будь-яким столом у світі. Докладніше в <a href=\"{faq}\">FAQ</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
   },
 
   ja: {
@@ -420,24 +408,24 @@ var PARTS = {
     lead: function (h, c) { return "空のタブから PokerTH で最初のテキサスホールデムを配られるまでの、短い手順です。ルールそのもの——ブラインド、ベットラウンド、役の強さ——を知りたい場合は、まず<a href=\"{rules}\">ルールのページ</a>と<a href=\"{hands}\">役の強さ</a>をご覧ください。".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); },
     steps: [
       ["サイトを開く——インストールするものはありません",
-       "PokerTH はブラウザで動きます。ダウンロードもアカウントもプラグインも不要です。スマートフォンではブラウザのメニューからホーム画面に追加でき、アプリのように全画面で開き、オフラインでも動作します。"],
+       "PokerTH はブラウザで動きます。ダウンロードもプラグインも不要で、練習やゲストとしてのゲームにアカウントも要りません。アプリのようにインストールでき（iPhone と iPad では「共有」→「ホーム画面に追加」、それ以外ではブラウザのメニューかインストールボタン）、全画面で開き、オフラインでも動作します。希望すれば、隅にいるエースのヘルプが画面ごとに説明してくれます。"],
       ["どこで遊ぶかを選ぶ",
-       "モードは3つです。<strong>オフライン練習</strong>はすぐにコンピュータ相手のテーブルを用意し、通信はいっさい不要です——覚えるならここから。<strong>pokerth.net</strong> は公式ネットワークで、実際の対戦相手、シーズンごとのランキング、一度登録するだけの無料のニックネームがあります。<strong>LAN／プライベートサーバー</strong>は、自分または誰かの専用 PokerTH サーバーに接続します。"],
+       "モードは3つです。<strong>ローカル / 練習</strong>はすぐにコンピュータ相手のテーブルを用意し、通信はいっさい不要です——覚えるならここから。<strong>pokerth.net</strong> は公式ネットワークで、実際の対戦相手がいて、「通常」ゲームはゲストにも開放され、無料アカウントを持つプレイヤーはシーズンランキングのある「ランキングゲーム」に参加できます。<strong>LAN／プライベートサーバー</strong>は、自分または誰かの専用 PokerTH サーバーに接続します。"],
       ["テーブルに着く",
-       "ロビーでは一覧からテーブルに参加するか、自分で作成します。作成時には座席数、開始スタック、ブラインドの上がる速さ、パスワードの有無を設定できます。招待リンクを共有すれば、友達は何も登録せずに自分のブラウザからそのままあなたのテーブルに着きます。"],
+       "ロビーでは一覧からテーブルに参加するか、進行中のゲームを観戦するか、自分で作成します。作成時にはゲームの種類（「通常」、登録プレイヤーのみ、招待プレイヤーのみ、「ランキングゲーム」）を選び、座席数、開始スタック、ブラインドの上がる速さ、行動の持ち時間、観戦を許可するか、パスワードの有無を設定できます。招待リンクを共有すれば、友達は自分のブラウザからそのままあなたのテーブルに着きます。「通常」ゲームなら何も登録する必要はありません。"],
       ["ハンドをプレイする",
-       "手札が2枚配られます。ベットはフロップ前にテーブルを一周し、フロップ、ターン、リバーの後にもう一度行われます。自分の番になるとアクションバーが点灯し、その場で認められている選択肢だけを表示します：Fold、Check または Call、Raise または All-In。金額は入力、スライダー操作、あるいはワンタップで Min・ポットの半分・ポット・全スタックに設定できます。"],
+       "手札が2枚配られます。ベットはフロップ前にテーブルを一周し、フロップ、ターン、リバーの後にもう一度行われます。自分の番になるとアクションバーが点灯し、その場で認められている選択肢だけを表示します：Fold、Check または Call、Raise または All-In。金額は入力、スライダー操作、あるいはワンタップでポットの3分の1・ポットの半分・ポットに設定できます。"],
       ["テーブルを読む",
-       "カードが開かれるたびに、現在のあなたの最強の役がボードの下に表示されます。ポット、各プレイヤーのスタック、ブラインドのレベルは常に画面上にあり、ディーラーボタンは誰が最後に行動するかを示し、カウントダウンが残り時間を知らせます。ショーダウンでは、それぞれの役を作った5枚が強調表示されます。"],
+       "「オッズ」タブには、カードが開かれるたびに現在のあなたの最強の役と勝つ確率が表示されます。ポット、各プレイヤーのスタック、ブラインドのレベルは常に画面上にあり、ディーラーボタンは誰が最後に行動するかを示し、カウントダウンが残り時間を知らせます。ショーダウンでは、勝った組み合わせの名前が共通カードの下に表示されます。"],
       ["トーナメントで勝つ",
-       "PokerTH のゲームはシット＆ゴー形式のトーナメントです。全員が同じスタックで始まり、ブラインドは時間で上がり、1人がすべてのチップを持つまで脱落が続きます。費用は一切かからず、チップを購入することもできません——すべて遊び用のチップなので、賭かっているのはゲームそのものだけです。"]
+       "PokerTH のゲームはトーナメントです。全員が同じスタックで始まり、ブラインドは数ハンドまたは数分ごとに上がり、1人がすべてのチップを持つまで脱落が続きます。費用は一切かからず、チップを購入することもできません——すべて遊び用のチップなので、賭かっているのはゲームそのものだけです。"]
     ],
     phoneH2: "スマートフォンで遊ぶ",
     phoneP: "テーブルはデスクトップと同じくらいタッチ操作を前提に作られています。ベット欄をタップするとシステムのキーボードではなくアクションバー内にテンキーが開くため、テーブルがずれることがありません。スライダーの刻み幅もデスクトップ版と同じです。手番の通知には Fold と Check/Call のボタンを付けられるので、タブに戻らなくても1ハンド打ち切れます。",
     friendsH2: "友達と遊ぶ",
     friendsP: "テーブルを作り、非公開にしたければパスワードを設定して、招待リンクを送るだけです。リンクはテーブルを直接開きます——ホーム画面に追加済みならインストールされたアプリで、そうでなければブラウザのタブで。誰も何かをインストールする必要はなく、メールアドレスを渡す必要もありません。",
     faqH2: "よくある質問",
-    faqP: function (h, c) { return "どのモードでもお金は一切関係ありません。設定、スタイルパック、オフラインの進行状況はすべて自分の端末に残ります。インターフェイスは83言語で利用でき、5つのアクション用語——Fold、Check、Call、Raise、All-In——は世界中のテーブルと同じく英語のままです。詳しくは<a href=\"{faq}\">よくある質問</a>をご覧ください。".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
+    faqP: function (h, c) { return "どのモードでもお金は一切関係ありません。設定、スタイルパック、練習の進行状況はすべて自分の端末に残り、pokerth.net アカウントでログインすれば他の端末にも引き継がれます。インターフェイスは83言語で利用でき、5つのアクション用語——Fold、Check、Call、Raise、All-In——は世界中のテーブルと同じく英語のままです。詳しくは<a href=\"{faq}\">よくある質問</a>をご覧ください。".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
   },
 
   ko: {
@@ -449,24 +437,24 @@ var PARTS = {
     lead: function (h, c) { return "빈 탭에서 시작해 PokerTH에서 첫 텍사스 홀덤 핸드를 받기까지의 간단한 안내입니다. 규칙 자체 — 블라인드, 베팅 라운드, 무엇이 무엇을 이기는지 — 가 궁금하시다면 <a href=\"{rules}\">규칙 페이지</a>와 <a href=\"{hands}\">포커 족보</a>를 먼저 보세요.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); },
     steps: [
       ["사이트를 엽니다 — 설치할 것은 없습니다",
-       "PokerTH는 브라우저에서 돌아갑니다. 다운로드도, 계정도, 플러그인도 필요 없습니다. 휴대폰에서는 브라우저 메뉴로 홈 화면에 추가할 수 있고, 그러면 앱처럼 전체 화면으로 열리며 오프라인에서도 동작합니다."],
+       "PokerTH는 브라우저에서 돌아갑니다. 다운로드도 플러그인도 필요 없고, 연습이나 게스트 게임에는 계정도 필요 없습니다. 앱처럼 설치할 수 있습니다 — iPhone과 iPad에서는 공유 → 「홈 화면에 추가」, 그 밖의 기기에서는 브라우저 메뉴나 설치 버튼 — 그러면 전체 화면으로 열리고 오프라인에서도 동작합니다. 원하면 구석에 있는 에이스, 즉 에이스 도움말이 화면마다 설명해 줍니다."],
       ["어디서 플레이할지 고릅니다",
-       "세 가지 모드가 있습니다. <strong>오프라인 연습</strong>은 곧바로 컴퓨터 상대가 앉은 테이블을 열어 주고 연결이 전혀 필요 없습니다 — 배우기에 가장 좋은 곳입니다. <strong>pokerth.net</strong>은 공식 네트워크로, 실제 상대와 시즌 랭킹이 있고 닉네임은 한 번만 무료로 등록하면 됩니다. <strong>LAN / 개인 서버</strong>는 본인이나 다른 사람의 전용 PokerTH 서버에 접속합니다."],
+       "세 가지 모드가 있습니다. <strong>로컬 / 연습</strong>은 곧바로 컴퓨터 상대가 앉은 테이블을 열어 주고 연결이 전혀 필요 없습니다 — 배우기에 가장 좋은 곳입니다. <strong>pokerth.net</strong>은 공식 네트워크로, 실제 상대가 있고 「일반」 게임은 게스트에게 열려 있으며, 무료 계정이 있는 플레이어는 시즌 랭킹이 있는 「랭킹 게임」에 참여할 수 있습니다. <strong>LAN / 개인 서버</strong>는 본인이나 다른 사람의 전용 PokerTH 서버에 접속합니다."],
       ["테이블에 앉습니다",
-       "로비에서 목록의 테이블에 참여하거나 직접 하나를 만들 수 있습니다. 만들 때는 좌석 수, 시작 칩, 블라인드가 오르는 속도, 비밀번호 설정 여부를 정합니다. 초대 링크를 공유하면 친구는 아무것도 등록하지 않고 자기 브라우저에서 곧장 당신의 테이블로 들어옵니다."],
+       "로비에서 목록의 테이블에 참여하거나, 진행 중인 게임을 관전하거나, 직접 하나를 만들 수 있습니다. 만들 때는 게임 종류(「일반」, 등록된 플레이어만, 초대된 플레이어만, 「랭킹 게임」)를 고르고 좌석 수, 시작 칩, 블라인드가 오르는 속도, 행동 제한 시간, 관전 허용 여부, 비밀번호 설정 여부를 정합니다. 초대 링크를 공유하면 친구는 자기 브라우저에서 곧장 당신의 테이블로 들어옵니다. 「일반」 게임에서는 아무것도 등록할 필요가 없습니다."],
       ["핸드를 플레이합니다",
-       "비공개 카드 두 장을 받습니다. 베팅은 플롭 전에 테이블을 한 바퀴 돌고, 플롭·턴·리버 뒤에 다시 돌아갑니다. 차례가 오면 액션 바가 켜지면서 지금 가능한 선택지만 보여 줍니다: Fold, Check 또는 Call, Raise 또는 All-In. 금액은 직접 입력하거나 슬라이더로 끌거나, 최소·팟의 절반·팟·전체 칩 중 하나를 한 번에 누를 수 있습니다."],
+       "비공개 카드 두 장을 받습니다. 베팅은 플롭 전에 테이블을 한 바퀴 돌고, 플롭·턴·리버 뒤에 다시 돌아갑니다. 차례가 오면 액션 바가 켜지면서 지금 가능한 선택지만 보여 줍니다: Fold, Check 또는 Call, Raise 또는 All-In. 금액은 직접 입력하거나 슬라이더로 끌거나, 팟의 3분의 1·팟의 절반·팟 중 하나를 한 번에 누를 수 있습니다."],
       ["테이블을 읽습니다",
-       "카드가 열릴 때마다 현재 당신의 최고 핸드 이름이 보드 아래에 표시됩니다. 팟, 각자의 칩, 블라인드 레벨이 항상 화면에 있고, 딜러 버튼은 누가 마지막에 행동하는지 알려 주며, 카운트다운이 남은 시간을 보여 줍니다. 쇼다운에서는 각 핸드를 이룬 다섯 장이 강조됩니다."],
+       "「확률」 탭은 카드가 열릴 때마다 현재 당신의 최고 핸드 이름과 이길 확률을 보여 줍니다. 팟, 각자의 칩, 블라인드 레벨이 항상 화면에 있고, 딜러 버튼은 누가 마지막에 행동하는지 알려 주며, 카운트다운이 남은 시간을 보여 줍니다. 쇼다운에서는 이긴 조합의 이름이 공유 카드 아래에 표시됩니다."],
       ["토너먼트에서 우승합니다",
-       "PokerTH의 게임은 싯앤고 토너먼트입니다. 모두 같은 칩으로 시작하고 블라인드는 시간에 따라 오르며, 한 사람이 모든 칩을 가질 때까지 탈락이 이어집니다. 돈이 드는 일은 전혀 없고 칩을 살 수도 없습니다 — 전부 가상 칩이라 걸린 것은 게임 그 자체뿐입니다."]
+       "PokerTH의 게임은 토너먼트입니다. 모두 같은 칩으로 시작하고 블라인드는 몇 핸드 또는 몇 분마다 오르며, 한 사람이 모든 칩을 가질 때까지 탈락이 이어집니다. 돈이 드는 일은 전혀 없고 칩을 살 수도 없습니다 — 전부 가상 칩이라 걸린 것은 게임 그 자체뿐입니다."]
     ],
     phoneH2: "휴대폰에서 플레이하기",
     phoneP: "테이블은 데스크톱만큼이나 터치 화면을 염두에 두고 만들었습니다. 베팅 칸을 누르면 시스템 키보드 대신 액션 바 안에 숫자판이 열리므로 테이블이 흔들리지 않고, 슬라이더도 데스크톱 클라이언트와 같은 단위로 움직입니다. 차례 알림에는 Fold와 Check/Call 버튼을 함께 띄울 수 있어서 탭으로 돌아가지 않고도 한 핸드를 끝낼 수 있습니다.",
     friendsH2: "친구와 플레이하기",
     friendsP: "테이블을 만들고, 비공개로 하고 싶다면 비밀번호를 걸고, 초대 링크를 보내면 됩니다. 링크는 테이블을 바로 엽니다 — 홈 화면에 앱을 추가해 두었다면 설치된 앱에서, 아니면 브라우저 탭에서. 아무도 무언가를 설치하거나 이메일 주소를 넘길 필요가 없습니다.",
     faqH2: "자주 묻는 질문",
-    faqP: function (h, c) { return "어떤 모드에서도 돈이 오가지 않습니다. 설정, 스타일 팩, 오프라인 진행 상황은 모두 본인 기기에 남습니다. 인터페이스는 83개 언어로 제공되며, 다섯 개의 액션 단어 — Fold, Check, Call, Raise, All-In — 는 전 세계 어느 테이블에서나 그렇듯 영어 그대로입니다. 자세한 내용은 <a href=\"{faq}\">자주 묻는 질문</a>에 있습니다.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
+    faqP: function (h, c) { return "어떤 모드에서도 돈이 오가지 않습니다. 설정, 스타일 팩, 연습 진행 상황은 모두 본인 기기에 남고, pokerth.net 계정으로 로그인하면 다른 기기에서도 이어집니다. 인터페이스는 83개 언어로 제공되며, 다섯 개의 액션 단어 — Fold, Check, Call, Raise, All-In — 는 전 세계 어느 테이블에서나 그렇듯 영어 그대로입니다. 자세한 내용은 <a href=\"{faq}\">자주 묻는 질문</a>에 있습니다.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
   },
 
   id: {
@@ -478,24 +466,24 @@ var PARTS = {
     lead: function (h, c) { return "Ini versi singkatnya: dari tab kosong sampai kartu Texas Hold’em pertama Anda di PokerTH. Kalau yang Anda cari aturan mainnya sendiri — blind, ronde taruhan, kartu apa mengalahkan apa — mulailah dari <a href=\"{rules}\">halaman aturan</a> dan <a href=\"{hands}\">peringkat kartu</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); },
     steps: [
       ["Buka situsnya — tidak ada yang perlu dipasang",
-       "PokerTH berjalan di peramban. Tanpa unduhan, tanpa akun, tanpa pengaya. Di ponsel Anda bisa menambahkannya ke layar utama lewat menu peramban; ia lalu terbuka seperti aplikasi, layar penuh, dan tetap jalan tanpa koneksi."],
+       "PokerTH berjalan di peramban. Tanpa unduhan, tanpa pengaya, dan tanpa akun untuk latihan maupun permainan tamu. Anda bisa memasangnya seperti aplikasi — Bagikan → Tambah ke Layar Utama di iPhone dan iPad, menu peramban atau tombol pasang di perangkat lain — lalu ia terbuka layar penuh dan tetap jalan tanpa koneksi. Bila mau, Bantuan si As, si As di sudut layar, menjelaskan setiap layar."],
       ["Pilih tempat Anda ingin bermain",
-       "Ada tiga mode. <strong>Latihan offline</strong> langsung mendudukkan Anda di meja berisi lawan komputer dan sama sekali tidak perlu koneksi — di sinilah tempat belajar. <strong>pokerth.net</strong> adalah jaringan resmi: lawan sungguhan, peringkat musiman, dan nama panggilan gratis yang didaftarkan sekali saja. <strong>LAN / server pribadi</strong> menyambung ke server PokerTH khusus, milik Anda atau milik orang lain."],
+       "Ada tiga mode. <strong>Lokal / latihan</strong> langsung mendudukkan Anda di meja berisi lawan komputer dan sama sekali tidak perlu koneksi — di sinilah tempat belajar. <strong>pokerth.net</strong> adalah jaringan resmi: lawan sungguhan, permainan Normal terbuka untuk tamu, dan permainan berperingkat dengan peringkat musiman bagi pemain berakun gratis. <strong>LAN / server pribadi</strong> menyambung ke server PokerTH khusus, milik Anda atau milik orang lain."],
       ["Duduk di sebuah meja",
-       "Di lobi, Anda bisa bergabung ke meja dari daftar atau membuat meja sendiri. Saat membuatnya, Anda menentukan jumlah kursi, chip awal, seberapa cepat blind naik, dan apakah meja dilindungi kata sandi. Bagikan tautan undangan, dan teman Anda mendarat langsung di meja Anda, lewat peramban mereka, tanpa mendaftar apa pun."],
+       "Di lobi, Anda bisa bergabung ke meja dari daftar, menonton permainan yang sedang berjalan, atau membuat meja sendiri. Saat membuatnya, Anda memilih tipe permainan (Normal, Hanya pemain terdaftar, Hanya pemain yang diundang, atau Permainan berperingkat) dan menentukan jumlah kursi, chip awal, seberapa cepat blind naik, waktu untuk bertindak, apakah penonton boleh menonton, dan apakah meja dilindungi kata sandi. Bagikan tautan undangan, dan teman Anda mendarat langsung di meja Anda, lewat peramban mereka — di permainan Normal tanpa mendaftar apa pun."],
       ["Mainkan kartunya",
-       "Anda dibagikan dua kartu tertutup. Taruhan berputar mengelilingi meja sebelum flop, lalu sekali lagi setelah flop, turn, dan river. Ketika giliran Anda, bilah aksi menyala dan hanya menawarkan yang sah: Fold, Check atau Call, Raise atau All-In. Jumlah taruhan bisa diketik, digeser lewat penggeser, atau disetel sekali sentuh ke Min, separuh pot, seluruh pot, atau semua chip Anda."],
+       "Anda dibagikan dua kartu tertutup. Taruhan berputar mengelilingi meja sebelum flop, lalu sekali lagi setelah flop, turn, dan river. Ketika giliran Anda, bilah aksi menyala dan hanya menawarkan yang sah: Fold, Check atau Call, Raise atau All-In. Jumlah taruhan bisa diketik, digeser lewat penggeser, atau disetel sekali sentuh ke sepertiga pot, separuh pot, atau seluruh pot."],
       ["Baca mejanya",
-       "Susunan terbaik Anda saat itu tertulis di bawah meja seiring kartu dibuka. Pot, chip setiap pemain, dan tingkat blind selalu ada di layar, tombol dealer menunjukkan siapa yang bicara terakhir, dan hitung mundur menampilkan sisa waktu Anda. Saat showdown, lima kartu yang membentuk tiap susunan disorot."],
+       "Tab Peluang menyebutkan susunan terbaik Anda saat itu dan peluang menang Anda seiring kartu dibuka. Pot, chip setiap pemain, dan tingkat blind selalu ada di layar, tombol dealer menunjukkan siapa yang bicara terakhir, dan hitung mundur menampilkan sisa waktu Anda. Saat showdown, kombinasi pemenang disebutkan di bawah kartu bersama."],
       ["Menangkan turnamennya",
-       "Permainan di PokerTH berbentuk turnamen sit-and-go: semua mulai dengan chip yang sama, blind naik menurut waktu, dan pemain tersingkir satu per satu sampai satu orang memegang seluruh chip. Tidak ada yang berbayar dan chip tidak bisa dibeli — semuanya chip main-main, jadi yang dipertaruhkan hanyalah permainannya sendiri."]
+       "Permainan di PokerTH berbentuk turnamen: semua mulai dengan chip yang sama, blind naik setiap beberapa ronde atau menit, dan pemain tersingkir satu per satu sampai satu orang memegang seluruh chip. Tidak ada yang berbayar dan chip tidak bisa dibeli — semuanya chip main-main, jadi yang dipertaruhkan hanyalah permainannya sendiri."]
     ],
     phoneH2: "Bermain di ponsel",
     phoneP: "Meja dirancang untuk layar sentuh sama seriusnya dengan untuk komputer: menyentuh kolom taruhan membuka papan angka di dalam bilah aksi, bukan papan ketik sistem, sehingga meja tidak pernah melompat-lompat, dan penggeser bergerak dengan langkah yang sama seperti klien desktop. Notifikasi giliran bisa datang lengkap dengan tombol Fold dan Check/Call, jadi satu putaran bisa dimainkan tanpa kembali ke tab.",
     friendsH2: "Bermain bersama teman",
     friendsP: "Buat meja, beri kata sandi kalau ingin privat, lalu kirim tautan undangan. Tautan itu membuka mejanya langsung — di aplikasi yang terpasang bila mereka sudah menambahkannya ke layar utama, atau di tab peramban bila belum. Tidak ada yang perlu memasang apa pun atau menyerahkan alamat surel.",
     faqH2: "Pertanyaan umum",
-    faqP: function (h, c) { return "Tidak ada uang yang terlibat, di mode mana pun. Pengaturan, paket gaya, dan kemajuan offline Anda tetap di perangkat sendiri. Antarmukanya tersedia dalam 83 bahasa, sementara lima kata aksi — Fold, Check, Call, Raise, All-In — tetap dalam bahasa Inggris, seperti di meja mana pun di dunia. Selengkapnya di <a href=\"{faq}\">tanya jawab</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
+    faqP: function (h, c) { return "Tidak ada uang yang terlibat, di mode mana pun. Pengaturan, paket gaya, dan kemajuan latihan Anda tetap di perangkat sendiri, dan ikut ke perangkat Anda yang lain saat Anda masuk dengan akun pokerth.net. Antarmukanya tersedia dalam 83 bahasa, sementara lima kata aksi — Fold, Check, Call, Raise, All-In — tetap dalam bahasa Inggris, seperti di meja mana pun di dunia. Selengkapnya di <a href=\"{faq}\">tanya jawab</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
   },
 
   vi: {
@@ -507,24 +495,24 @@ var PARTS = {
     lead: function (h, c) { return "Đây là bản rút gọn: từ một tab trống đến ván Texas Hold’em đầu tiên của bạn trên PokerTH. Nếu bạn cần chính luật chơi — tiền cược mù, các vòng cược, bài nào thắng bài nào — hãy bắt đầu từ <a href=\"{rules}\">trang luật chơi</a> và <a href=\"{hands}\">thứ tự các tay bài</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); },
     steps: [
       ["Mở trang web — không có gì phải cài đặt",
-       "PokerTH chạy ngay trong trình duyệt. Không tải về, không tài khoản, không tiện ích mở rộng. Trên điện thoại, bạn có thể thêm vào màn hình chính từ menu trình duyệt: khi đó nó mở như một ứng dụng, toàn màn hình, và vẫn dùng được khi không có mạng."],
+       "PokerTH chạy ngay trong trình duyệt. Không tải về, không tiện ích mở rộng, và không cần tài khoản để luyện tập hay chơi ván khách. Bạn có thể cài nó như một ứng dụng — Chia sẻ → Thêm vào màn hình chính trên iPhone và iPad, menu trình duyệt hoặc nút cài đặt ở nơi khác — và nó mở toàn màn hình, vẫn dùng được khi không có mạng. Nếu muốn, Trợ giúp của quân Át, quân Át ở góc màn hình, sẽ giải thích từng màn hình."],
       ["Chọn nơi bạn muốn chơi",
-       "Có ba chế độ. <strong>Luyện tập ngoại tuyến</strong> xếp bạn vào bàn với các đối thủ máy ngay lập tức và hoàn toàn không cần kết nối — đây là chỗ để học. <strong>pokerth.net</strong> là mạng chính thức: đối thủ thật, bảng xếp hạng theo mùa, một biệt danh miễn phí chỉ cần đăng ký một lần. <strong>LAN / máy chủ riêng</strong> kết nối tới một máy chủ PokerTH chuyên dụng, của bạn hoặc của người khác."],
+       "Có ba chế độ. <strong>Cục bộ / luyện tập</strong> xếp bạn vào bàn với các đối thủ máy ngay lập tức và hoàn toàn không cần kết nối — đây là chỗ để học. <strong>pokerth.net</strong> là mạng chính thức: đối thủ thật, các ván “Thường” mở cho khách, và các ván xếp hạng với bảng xếp hạng theo mùa dành cho người chơi có tài khoản miễn phí. <strong>LAN / máy chủ riêng</strong> kết nối tới một máy chủ PokerTH chuyên dụng, của bạn hoặc của người khác."],
       ["Ngồi vào bàn",
-       "Ở sảnh, bạn có thể vào một bàn trong danh sách hoặc tự tạo bàn. Khi tạo, bạn đặt số ghế, số chip khởi đầu, tốc độ tăng tiền cược mù và có đặt mật khẩu hay không. Chia sẻ liên kết mời, bạn bè sẽ vào thẳng bàn của bạn, ngay trên trình duyệt của họ, không phải đăng ký gì cả."],
+       "Ở sảnh, bạn có thể vào một bàn trong danh sách, xem một ván đang diễn ra hoặc tự tạo bàn. Khi tạo, bạn chọn loại ván (“Thường”, chỉ người chơi đã đăng ký, chỉ theo lời mời hoặc xếp hạng) và đặt số ghế, số chip khởi đầu, tốc độ tăng tiền cược mù, thời gian hành động, có cho phép khán giả xem hay không và có đặt mật khẩu hay không. Chia sẻ liên kết mời, bạn bè sẽ vào thẳng bàn của bạn, ngay trên trình duyệt của họ — với ván “Thường” thì không phải đăng ký gì cả."],
       ["Chơi ván bài",
-       "Bạn được chia hai lá tẩy. Vòng cược đi quanh bàn trước khi lật bài chung, rồi lặp lại sau flop, turn và river. Đến lượt bạn, thanh thao tác sáng lên và chỉ đưa ra những lựa chọn hợp lệ: Fold, Check hoặc Call, Raise hoặc All-In. Số tiền cược có thể gõ vào, kéo trên thanh trượt, hoặc đặt bằng một chạm ở mức Min, nửa pot, cả pot hay toàn bộ chip của bạn."],
+       "Bạn được chia hai lá tẩy. Vòng cược đi quanh bàn trước khi lật bài chung, rồi lặp lại sau flop, turn và river. Đến lượt bạn, thanh thao tác sáng lên và chỉ đưa ra những lựa chọn hợp lệ: Fold, Check hoặc Call, Raise hoặc All-In. Số tiền cược có thể gõ vào, kéo trên thanh trượt, hoặc đặt bằng một chạm ở mức một phần ba pot, nửa pot hay cả pot."],
       ["Đọc bàn chơi",
-       "Tay bài mạnh nhất hiện tại của bạn được ghi tên ngay dưới bài chung khi các lá được lật. Pot, số chip của từng người và mức cược mù luôn hiển thị trên màn hình, nút chia bài cho biết ai nói sau cùng, và đồng hồ đếm ngược cho biết bạn còn bao nhiêu thời gian. Khi lật bài, năm lá tạo nên mỗi tay bài được làm nổi bật."],
+       "Tab Tỷ lệ thắng ghi tên tay bài mạnh nhất hiện tại của bạn và khả năng thắng của bạn khi các lá được lật. Pot, số chip của từng người và mức cược mù luôn hiển thị trên màn hình, nút chia bài cho biết ai nói sau cùng, và đồng hồ đếm ngược cho biết bạn còn bao nhiêu thời gian. Khi lật bài, tay bài thắng được ghi tên ngay dưới bài chung."],
       ["Thắng giải đấu",
-       "Các ván PokerTH là giải sit-and-go: mọi người bắt đầu với cùng số chip, tiền cược mù tăng theo đồng hồ, và người chơi lần lượt bị loại cho đến khi một người giữ toàn bộ chip. Không tốn tiền và cũng không mua được chip — tất cả đều là chip ảo, nên thứ duy nhất đặt cược chính là ván bài."]
+       "Các ván PokerTH là giải đấu: mọi người bắt đầu với cùng số chip, tiền cược mù tăng sau vài ván hoặc vài phút, và người chơi lần lượt bị loại cho đến khi một người giữ toàn bộ chip. Không tốn tiền và cũng không mua được chip — tất cả đều là chip ảo, nên thứ duy nhất đặt cược chính là ván bài."]
     ],
     phoneH2: "Chơi trên điện thoại",
     phoneP: "Bàn chơi được thiết kế cho màn hình cảm ứng không kém gì cho máy tính: chạm vào ô cược sẽ mở bàn phím số ngay trong thanh thao tác thay vì bàn phím hệ thống, nên bàn chơi không bao giờ bị nhảy, và thanh trượt di chuyển theo đúng các bước như ứng dụng máy tính. Thông báo đến lượt có thể kèm sẵn nút Fold và Check/Call, nhờ vậy bạn chơi hết một ván mà không cần quay lại tab.",
     friendsH2: "Chơi cùng bạn bè",
     friendsP: "Tạo một bàn, đặt mật khẩu nếu muốn riêng tư, rồi gửi liên kết mời. Liên kết mở thẳng bàn chơi — trong ứng dụng đã cài nếu họ đã thêm vào màn hình chính, còn không thì trong một tab trình duyệt. Không ai phải cài gì hay đưa địa chỉ email.",
     faqH2: "Câu hỏi thường gặp",
-    faqP: function (h, c) { return "Không có tiền thật ở bất kỳ chế độ nào. Cài đặt, gói giao diện và tiến trình ngoại tuyến của bạn đều nằm trên thiết bị của bạn. Giao diện có 83 ngôn ngữ, còn năm từ thao tác — Fold, Check, Call, Raise, All-In — vẫn giữ nguyên tiếng Anh, như ở mọi bàn poker trên thế giới. Xem thêm ở <a href=\"{faq}\">câu hỏi thường gặp</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
+    faqP: function (h, c) { return "Không có tiền thật ở bất kỳ chế độ nào. Cài đặt, gói giao diện và tiến trình luyện tập của bạn đều nằm trên thiết bị của bạn, và đi cùng bạn sang các thiết bị khác khi bạn đăng nhập bằng tài khoản pokerth.net. Giao diện có 83 ngôn ngữ, còn năm từ thao tác — Fold, Check, Call, Raise, All-In — vẫn giữ nguyên tiếng Anh, như ở mọi bàn poker trên thế giới. Xem thêm ở <a href=\"{faq}\">câu hỏi thường gặp</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
   },
   yo: {
     title: "Bí a ṣe ń ṣe poker lórí ayélujára lọ́fẹ̀ẹ́ — PokerTH Web",
@@ -534,37 +522,25 @@ var PARTS = {
     h1: "Bí a ṣe ń ṣe poker lórí ayélujára, lọ́fẹ̀ẹ́, nínú aṣàwákiri rẹ",
     lead: function (h, c) { return "Àkópọ̀ kúkúrú nìyí: láti ojú-ewé òfìfo dé ọwọ́ Texas Hold’em àkọ́kọ́ rẹ nínú PokerTH. Bí òfin fúnra wọn bá wù ọ́ — blinds, yíká tẹ́tẹ́, ohun tí ó ń borí kí — bẹ̀rẹ̀ pẹ̀lú <a href=\"{rules}\">ojú-ewé òfin</a> àti <a href=\"{hands}\">àwọn ọwọ́</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); },
     steps: [
-      [
-        "Ṣí ojú-ewé — kò sí nǹkan láti fi sórí ẹ̀rọ",
-        "PokerTH ń ṣiṣẹ́ nínú aṣàwákiri. Kò sí gbígbàsílẹ̀, kò sí àkáǹtì, kò sí ètò àfikún. Lórí fóònù o lè fi í kún ojú ilé láti inú àkójọ aṣàwákiri, yóò sì ṣí bí ìṣàfilọ́lẹ̀, ní ojú kíkún, ó sì lè ṣiṣẹ́ láìsí ayélujára.",
-      ],
-      [
-        "Yan ibi tí o fẹ́ ṣeré",
-        "Ọ̀nà mẹ́ta. <strong>Ìdánrawò láìsí ayélujára</strong> ń fún ọ ní tábìlì alátakò kọ̀ǹpútà lójú ẹsẹ̀, kò sì nílò ìsopọ̀ kankan — ibi láti kẹ́kọ̀ọ́. <strong>pokerth.net</strong> ni nẹ́tíwọ̀ọ̀kì ìjọba: alátakò gidi, ipò sáà, orúkọ ìnagijẹ ọ̀fẹ́ tí o forúkọ sílẹ̀ lẹ́ẹ̀kan. <strong>LAN / olùpín àṣírí</strong> ń sopọ̀ mọ́ olùpín àdáni PokerTH, tìrẹ tàbí ti ẹlòmíràn.",
-      ],
-      [
-        "Jókòó ní tábìlì",
-        "Ní gbọ̀ngàn, yálà darapọ̀ mọ́ tábìlì láti inú àkójọ tàbí ṣẹ̀dá tìrẹ. Ṣíṣẹ̀dá ń jẹ́ kí o ṣètò iye ìjókòó, àkójọ ìbẹ̀rẹ̀, bí blinds ṣe ń ga sí i kíákíá àti bóyá ọ̀rọ̀ aṣínà ń dáàbò bo tábìlì. Pín ìjápọ̀ ìpè, ọ̀rẹ́ kan yóò sì dé tábìlì rẹ tààrà, nínú aṣàwákiri rẹ̀, láìforúkọ sílẹ̀ fún nǹkan kan.",
-      ],
-      [
-        "Ṣe ọwọ́ kan",
-        "A ń pín káàdì àṣírí méjì fún ọ. Tẹ́tẹ́ ń yí tábìlì ká ṣáájú flop, àti lẹ́yìn flop, turn àti river. Nígbà tí ó bá kan ọ́, ọ̀pá ìgbésẹ̀ ń tàn, ó sì ń fún ọ ní ohun tí a gbà láàyè nìkan: Fold, Check tàbí Call, Raise tàbí All-In. A lè tẹ iye tẹ́tẹ́, fà á lórí ọ̀pá ìfàsẹ́yìn tàbí ṣètò rẹ̀ pẹ̀lú ìfọwọ́kàn kan sí tó kéré jù, ìdajì pot, pot tàbí gbogbo àkójọ rẹ.",
-      ],
-      [
-        "Ka tábìlì",
-        "A ń dárúkọ ọwọ́ rẹ tó dára jù lọ́wọ́lọ́wọ́ nísàlẹ̀ tábìlì bí a ṣe ń ṣí àwọn káàdì. Pot, àkójọ kọ̀ọ̀kan àti ìpele blinds máa ń wà lójú nígbà gbogbo, bọ́tìnì olùpín káàdì ń fi ẹni tí ó sọ̀rọ̀ kẹ́yìn hàn, ìkàsẹ̀yìn sì ń fi àkókò tí o ní hàn. Ní showdown, a ń ṣe àfihàn káàdì márùn-ún tí ó ṣe ọwọ́ kọ̀ọ̀kan.",
-      ],
-      [
-        "Borí ìdíje",
-        "Eré PokerTH jẹ́ ìdíje sit-and-go: gbogbo ènìyàn ń bẹ̀rẹ̀ pẹ̀lú àkójọ kan náà, blinds ń ga sí i gẹ́gẹ́ bí aago, a sì ń yọ àwọn òṣèré kúrò títí ẹnìkan yóò fi ní gbogbo chips. Kò sí nǹkan tí ó ń náni lówó, a kò sì lè ra chips — owó eré ni gbogbo rẹ̀, nítorí náà eré fúnra rẹ̀ nìkan ni ohun tí ó wà nínú ewu.",
-      ],
+      ["Ṣí ojú-ewé — kò sí nǹkan láti fi sórí ẹ̀rọ",
+       "PokerTH ń ṣiṣẹ́ nínú aṣàwákiri. Kò sí gbígbàsílẹ̀, kò sí ètò àfikún, kò sì sí àkáǹtì fún ìdánrawò tàbí fún eré àlejò. O lè fi í sórí ẹ̀rọ bí ìṣàfilọ́lẹ̀ — Pín → Fi kún Ojú Ilé lórí iPhone àti iPad, àkójọ aṣàwákiri tàbí bọ́tìnì ìfisórí níbòmíràn — yóò sì ṣí ní ojú kíkún, ó sì lè ṣiṣẹ́ láìsí ayélujára. Bí o bá fẹ́, Ìrànlọ́wọ́ Ace, Ace tí ó wà ní igun, ń ṣàlàyé ojú-ewé kọ̀ọ̀kan."],
+      ["Yan ibi tí o fẹ́ ṣeré",
+       "Ọ̀nà mẹ́ta. <strong>Agbègbè / ìdánrawò</strong> ń fún ọ ní tábìlì alátakò kọ̀ǹpútà lójú ẹsẹ̀, kò sì nílò ìsopọ̀ kankan — ibi láti kẹ́kọ̀ọ́. <strong>pokerth.net</strong> ni nẹ́tíwọ̀ọ̀kì ìjọba: alátakò gidi, eré Déédéé tí ó ṣí sílẹ̀ fún àwọn àlejò, àti eré ipò pẹ̀lú ipò sáà fún àwọn òṣèré tí wọ́n ní àkáǹtì ọ̀fẹ́. <strong>LAN / olùpín àṣírí</strong> ń sopọ̀ mọ́ olùpín àdáni PokerTH, tìrẹ tàbí ti ẹlòmíràn."],
+      ["Jókòó ní tábìlì",
+       "Ní gbọ̀ngàn, yálà darapọ̀ mọ́ tábìlì láti inú àkójọ, wo eré tí ń lọ lọ́wọ́, tàbí ṣẹ̀dá tìrẹ. Ṣíṣẹ̀dá ń jẹ́ kí o yan irú eré (Déédéé, àwọn òṣèré tí a forúkọ sílẹ̀ nìkan, ìpè nìkan tàbí eré ipò) kí o sì ṣètò iye ìjókòó, àkójọ ìbẹ̀rẹ̀, bí blinds ṣe ń ga sí i kíákíá, àkókò láti ṣe ìgbésẹ̀, bóyá àwọn olùwòran lè wò àti bóyá ọ̀rọ̀ aṣínà ń dáàbò bo tábìlì. Pín ìjápọ̀ ìpè, ọ̀rẹ́ kan yóò sì dé tábìlì rẹ tààrà, nínú aṣàwákiri rẹ̀ — nínú eré Déédéé láìforúkọ sílẹ̀ fún nǹkan kan."],
+      ["Ṣe ọwọ́ kan",
+       "A ń pín káàdì àṣírí méjì fún ọ. Tẹ́tẹ́ ń yí tábìlì ká ṣáájú flop, àti lẹ́yìn flop, turn àti river. Nígbà tí ó bá kan ọ́, ọ̀pá ìgbésẹ̀ ń tàn, ó sì ń fún ọ ní ohun tí a gbà láàyè nìkan: Fold, Check tàbí Call, Raise tàbí All-In. A lè tẹ iye tẹ́tẹ́, fà á lórí ọ̀pá ìfàsẹ́yìn tàbí ṣètò rẹ̀ pẹ̀lú ìfọwọ́kàn kan sí ìdá kẹta pot, ìdajì pot tàbí pot."],
+      ["Ka tábìlì",
+       "Táàbù Àǹfààní ń dárúkọ ọwọ́ rẹ tó dára jù lọ́wọ́lọ́wọ́ àti àǹfààní rẹ láti borí bí a ṣe ń ṣí àwọn káàdì. Pot, àkójọ kọ̀ọ̀kan àti ìpele blinds máa ń wà lójú nígbà gbogbo, bọ́tìnì olùpín káàdì ń fi ẹni tí ó sọ̀rọ̀ kẹ́yìn hàn, ìkàsẹ̀yìn sì ń fi àkókò tí o ní hàn. Ní showdown, a ń dárúkọ àkópọ̀ tó borí nísàlẹ̀ àwọn káàdì gbangba."],
+      ["Borí ìdíje",
+       "Eré PokerTH jẹ́ ìdíje: gbogbo ènìyàn ń bẹ̀rẹ̀ pẹ̀lú àkójọ kan náà, blinds ń ga sí i ní ọwọ́ díẹ̀ tàbí ìṣẹ́jú díẹ̀ lẹ́ẹ̀kan, a sì ń yọ àwọn òṣèré kúrò títí ẹnìkan yóò fi ní gbogbo chips. Kò sí nǹkan tí ó ń náni lówó, a kò sì lè ra chips — owó eré ni gbogbo rẹ̀, nítorí náà eré fúnra rẹ̀ nìkan ni ohun tí ó wà nínú ewu."]
     ],
     phoneH2: "Ṣíṣeré lórí fóònù",
     phoneP: "A ṣe tábìlì fún ojú ìfọwọ́kàn gẹ́gẹ́ bí a ṣe ṣe é fún kọ̀ǹpútà: fífọwọ́kan àyè tẹ́tẹ́ ń ṣí pátákó nọ́ńbà nínú ọ̀pá ìgbésẹ̀ dípò pátákó kọ́kọ́rọ́ ètò, nítorí náà tábìlì kì í fò rárá, ọ̀pá ìfàsẹ́yìn sì ń lọ ní ìgbésẹ̀ kan náà pẹ̀lú ìṣàfilọ́lẹ̀ kọ̀ǹpútà. Ìkìlọ̀ àkókò lè wá pẹ̀lú bọ́tìnì Fold àti Check/Call lórí rẹ̀ tààrà: a lè ṣe ọwọ́ láìpadà sí ojú-ewé.",
     friendsH2: "Ṣíṣeré pẹ̀lú àwọn ọ̀rẹ́",
     friendsP: "Ṣẹ̀dá tábìlì, fi ọ̀rọ̀ aṣínà sí i bí o bá fẹ́ kí ó jẹ́ àṣírí, kí o sì fi ìjápọ̀ ìpè ránṣẹ́. Ó ń ṣí tábìlì tààrà — nínú ìṣàfilọ́lẹ̀ tí a fi sórí ẹ̀rọ bí àwọn ọ̀rẹ́ rẹ bá ti fi kún ojú ilé wọn, bí bẹ́ẹ̀ kọ́ nínú ojú-ewé aṣàwákiri. Kò sí ẹni tí ó nílò láti fi nǹkan sórí ẹ̀rọ tàbí fún ni ní àdírẹ́sì ímeèlì.",
     faqH2: "Àwọn ìbéèrè tí a máa ń béèrè",
-    faqP: function (h, c) { return "Kò sí owó nínú rẹ̀ ní ọ̀nà kankan. Ètò rẹ, àpò ọ̀nà àti ìlọsíwájú àìsí-ayélujára ń wà lórí ẹ̀rọ rẹ. Ojú olùlò wà ní èdè 83, nígbà tí ọ̀rọ̀ ìgbésẹ̀ márùn-ún — Fold, Check, Call, Raise, All-In — ń wà ní èdè Gẹ̀ẹ́sì, bí ó ti rí ní gbogbo tábìlì lágbàáyé. Púpọ̀ sí i nínú <a href=\"{faq}\">àwọn ìbéèrè tí a máa ń béèrè</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); },
+    faqP: function (h, c) { return "Kò sí owó nínú rẹ̀ ní ọ̀nà kankan. Ètò rẹ, àpò ọ̀nà àti ìlọsíwájú ìdánrawò ń wà lórí ẹ̀rọ rẹ, wọ́n sì ń tẹ̀lé ọ lọ sórí àwọn ẹ̀rọ rẹ mìíràn nígbà tí o bá wọlé pẹ̀lú àkáǹtì pokerth.net. Ojú olùlò wà ní èdè 83, nígbà tí ọ̀rọ̀ ìgbésẹ̀ márùn-ún — Fold, Check, Call, Raise, All-In — ń wà ní èdè Gẹ̀ẹ́sì, bí ó ti rí ní gbogbo tábìlì lágbàáyé. Púpọ̀ sí i nínú <a href=\"{faq}\">àwọn ìbéèrè tí a máa ń béèrè</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); },
   },
   zu: {
     title: "Indlela yokudlala i-poker ku-inthanethi mahhala — PokerTH Web",
@@ -574,37 +550,25 @@ var PARTS = {
     h1: "Indlela yokudlala i-poker ku-inthanethi, mahhala, esipheqululini sakho",
     lead: function (h, c) { return "Nakhu okufushane: kusukela ekhasini elingenalutho kuya esandleni sakho sokuqala se-Texas Hold’em ku-PokerTH. Uma imithetho ngokwayo ikuthakasela — ama-blinds, imizuliswano yokubheja, yini ehlula yini — qala nge-<a href=\"{rules}\">khasi lemithetho</a> nezi-<a href=\"{hands}\">zandla</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); },
     steps: [
-      [
-        "Vula ikhasi — akukho okufanele kufakwe",
-        "I-PokerTH isebenza esipheqululini. Akukho ukulanda, akukho i-akhawunti, akukho uhlelo olwengeziwe. Kufoni ungayengeza esikrinini sasekhaya usebenzisa imenyu yesiphequluli, futhi ivuleka njengohlelo, esikrinini esigcwele futhi ikwazi ukusebenza ingaxhunyiwe.",
-      ],
-      [
-        "Khetha lapho uzodlala khona",
-        "Amamodi amathathu. <strong>Ukuziqeqesha ungaxhunyiwe</strong> kukunika itafula labaphikisi bekhompyutha ngokushesha futhi akudingi uxhumano — indawo yokufunda. <strong>pokerth.net</strong> yinethiwekhi esemthethweni: abaphikisi bangempela, izinga lesizini, isiteketiso samahhala osibhalisa kanye. <strong>LAN / iseva yangasese</strong> ixhuma kuseva ezinikele ye-PokerTH, eyakho noma yomunye umuntu.",
-      ],
-      [
-        "Hlala etafuleni",
-        "Elobhini ungajoyina itafula ohlwini noma udale elakho. Ukudala kukuvumela ukusetha inani lezihlalo, isitaki sokuqala, ukuthi ama-blinds akhuphuka ngokushesha kangakanani nokuthi itafula livikelwe yini ngephasiwedi. Yabelana ngesixhumanisi sesimemo futhi umngane uzofika ngqo etafuleni lakho, esipheqululini sakhe, ngaphandle kokubhalisela lutho.",
-      ],
-      [
-        "Dlala isandla",
-        "Wabiwa amakhadi amabili ayimfihlo. Ukubheja kuzungeza itafula ngaphambi kwe-flop, nangemuva kwe-flop, i-turn ne-river. Lapho kuyithuba lakho, ibha yezenzo iyakhanya futhi inikeza kuphela okuvumelekile: Fold, Check noma Call, Raise noma All-In. Inani lokubheja lingabhalwa, lihudulwe esilayidini noma lisethwe ngokuthepha kanye libe ubuncane, ingxenye ye-pot, i-pot noma isitaki sakho sonke.",
-      ],
-      [
-        "Funda itafula",
-        "Isandla sakho esingcono kakhulu samanje siqanjwa ngaphansi kwetafula njengoba amakhadi evezwa. I-pot, isitaki ngasinye nezinga lama-blinds kuhlala kusesikrinini, inkinobho yomabi ibonisa ukuthi ubani okhuluma ekugcineni, futhi ukubala emuva kubonisa ukuthi unesikhathi esingakanani. Ku-showdown, amakhadi amahlanu akhe isandla ngasinye ayagqanyiswa.",
-      ],
-      [
-        "Wina umqhudelwano",
-        "Imidlalo ye-PokerTH iyimiqhudelwano ye-sit-and-go: wonke umuntu uqala ngesitaki esifanayo, ama-blinds akhuphuka ngokwewashi, futhi abadlali bayakhishwa kuze kube munye onawo wonke ama-chip. Akukho okubiza imali futhi ama-chip awakwazi ukuthengwa — konke kuyimali yokudlala, ngakho okusengcupheni kungumdlalo ngokwawo kuphela.",
-      ],
+      ["Vula ikhasi — akukho okufanele kufakwe",
+       "I-PokerTH isebenza esipheqululini. Akukho ukulanda, akukho uhlelo olwengeziwe, futhi akukho i-akhawunti ekuziqeqesheni noma emidlalweni yesivakashi. Ungayifaka njengohlelo — Yabelana → Engeza Esikrinini Sasekhaya ku-iPhone ne-iPad, imenyu yesiphequluli noma inkinobho yokufaka kwenye indawo — futhi ivuleka esikrinini esigcwele, ikwazi ukusebenza ingaxhunyiwe. Uma uthanda, Usizo luka-Ace, i-Ace ekhoneni, lichaza isikrini ngasinye."],
+      ["Khetha lapho uzodlala khona",
+       "Amamodi amathathu. <strong>Okwasendaweni / ukuziqeqesha</strong> kukunika itafula labaphikisi bekhompyutha ngokushesha futhi akudingi uxhumano — indawo yokufunda. <strong>pokerth.net</strong> yinethiwekhi esemthethweni: abaphikisi bangempela, imidlalo ethi “Okujwayelekile” evulekele izivakashi, nemidlalo yezinga enezinga lesizini kubadlali abane-akhawunti yamahhala. <strong>LAN / iseva yangasese</strong> ixhuma kuseva ezinikele ye-PokerTH, eyakho noma yomunye umuntu."],
+      ["Hlala etafuleni",
+       "Elobhini ungajoyina itafula ohlwini, ubuke umdlalo oqhubekayo noma udale elakho. Ukudala kukuvumela ukukhetha uhlobo lomdlalo (“Okujwayelekile”, abadlali ababhalisiwe kuphela, ngesimemo kuphela noma Umdlalo wezinga) bese usetha inani lezihlalo, isitaki sokuqala, ukuthi ama-blinds akhuphuka ngokushesha kangakanani, isikhathi sokwenza isinyathelo, ukuthi ababukeli bangabuka yini nokuthi itafula livikelwe yini ngephasiwedi. Yabelana ngesixhumanisi sesimemo futhi umngane uzofika ngqo etafuleni lakho, esipheqululini sakhe — emdlalweni othi “Okujwayelekile” ngaphandle kokubhalisela lutho."],
+      ["Dlala isandla",
+       "Wabiwa amakhadi amabili ayimfihlo. Ukubheja kuzungeza itafula ngaphambi kwe-flop, nangemuva kwe-flop, i-turn ne-river. Lapho kuyithuba lakho, ibha yezenzo iyakhanya futhi inikeza kuphela okuvumelekile: Fold, Check noma Call, Raise noma All-In. Inani lokubheja lingabhalwa, lihudulwe esilayidini noma lisethwe ngokuthepha kanye libe ingxenye yesithathu ye-pot, uhhafu we-pot noma i-pot."],
+      ["Funda itafula",
+       "Ithebhu elithi Amathuba liqamba isandla sakho esingcono kakhulu samanje kanye namathuba akho okuwina njengoba amakhadi evezwa. I-pot, isitaki ngasinye nezinga lama-blinds kuhlala kusesikrinini, inkinobho yomabi ibonisa ukuthi ubani okhuluma ekugcineni, futhi ukubala emuva kubonisa ukuthi unesikhathi esingakanani. Ku-showdown, inhlanganisela ewinile iqanjwa ngaphansi kwamakhadi omphakathi."],
+      ["Wina umqhudelwano",
+       "Imidlalo ye-PokerTH iyimiqhudelwano: wonke umuntu uqala ngesitaki esifanayo, ama-blinds akhuphuka ngezandla ezimbalwa noma ngemizuzu embalwa, futhi abadlali bayakhishwa kuze kube munye onawo wonke ama-chip. Akukho okubiza imali futhi ama-chip awakwazi ukuthengwa — konke kuyimali yokudlala, ngakho okusengcupheni kungumdlalo ngokwawo kuphela."]
     ],
     phoneH2: "Ukudlala kufoni",
     phoneP: "Itafula lakhelwe izikrini zokuthinta ngendlela efanayo nedeskithophu: ukuthinta inkambu yokubheja kuvula ikhiphedi yezinombolo ngaphakathi kwebha yezenzo esikhundleni sekhibhodi yohlelo, ngakho itafula alilokothi lweqe, futhi isilayida sihamba ngezinyathelo ezifanayo nohlelo lwedeskithophu. Isaziso sethuba singafika nezinkinobho ze-Fold ne-Check/Call kuso ngqo: isandla singadlalwa ngaphandle kokubuyela ekhasini.",
     friendsH2: "Ukudlala nabangani",
     friendsP: "Dala itafula, ufake iphasiwedi uma ufuna libe ngelangasese, bese uthumela isixhumanisi sesimemo. Sivula itafula ngqo — ohlelweni olufakiwe uma abangani bakho beluyengeze esikrinini sabo sasekhaya, uma kungenjalo ethebhini yesiphequluli. Akekho odinga ukufaka lutho noma ukunikeza ikheli le-imeyili.",
     faqH2: "Imibuzo evame ukubuzwa",
-    faqP: function (h, c) { return "Ayikho imali ehilelekile kunoma iyiphi imodi. Izilungiselelo zakho, amaphakethe ezitayela nenqubekelaphambili engaxhunyiwe kuhlala kudivayisi yakho. Isixhumi esibonakalayo sitholakala ngezilimi ezingu-83, kanti amagama ezenzo ayisihlanu — Fold, Check, Call, Raise, All-In — ahlala esesiNgisini, njengakuwo wonke amatafula emhlabeni. Okuningi ku-<a href=\"{faq}\">mibuzo evame ukubuzwa</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); },
+    faqP: function (h, c) { return "Ayikho imali ehilelekile kunoma iyiphi imodi. Izilungiselelo zakho, amaphakethe ezitayela nenqubekelaphambili yokuziqeqesha kuhlala kudivayisi yakho, futhi kukulandela kwezinye izidivayisi zakho uma ungena nge-akhawunti ye-pokerth.net. Isixhumi esibonakalayo sitholakala ngezilimi ezingu-83, kanti amagama ezenzo ayisihlanu — Fold, Check, Call, Raise, All-In — ahlala esesiNgisini, njengakuwo wonke amatafula emhlabeni. Okuningi ku-<a href=\"{faq}\">mibuzo evame ukubuzwa</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); },
   },
 
   ar: {
@@ -616,24 +580,24 @@ var PARTS = {
     lead: function (h, c) { return "هذه النسخة المختصرة: من لسان تبويب فارغ إلى أول يد تكساس هولدم لك في PokerTH. أما إن كنت تبحث عن القواعد نفسها — الرهانات العمياء، جولات المراهنة، وأي يد تغلب أيها — فابدأ من <a href=\"{rules}\">صفحة القواعد</a> ومن <a href=\"{hands}\">ترتيب الأيدي</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); },
     steps: [
       ["افتح الموقع — لا شيء لتثبيته",
-       "يعمل PokerTH داخل المتصفح. لا تنزيل ولا حساب ولا إضافات. على الهاتف يمكنك إضافته إلى الشاشة الرئيسية من قائمة المتصفح، فيفتح عندها كتطبيق بملء الشاشة ويعمل دون اتصال."],
+       "يعمل PokerTH داخل المتصفح. لا تنزيل ولا إضافات، ولا حساب للتدرّب أو للعب كضيف. يمكنك تثبيته كتطبيق — مشاركة ← إضافة إلى الشاشة الرئيسية على iPhone وiPad، وقائمة المتصفح أو زر التثبيت في غيرهما — فيفتح بملء الشاشة ويعمل دون اتصال. وإن شئت، فـ«مساعدة الآص»، أي الآص في الزاوية، تشرح كل شاشة."],
       ["اختر أين تريد اللعب",
-       "ثلاثة أوضاع. <strong>التدرّب دون اتصال</strong> يجلسك فورًا إلى طاولة من خصوم يديرهم الحاسوب ولا يحتاج اتصالًا البتة — وهو المكان الذي تتعلم فيه. <strong>pokerth.net</strong> هي الشبكة الرسمية: خصوم حقيقيون وتصنيفات موسمية واسم لاعب مجاني تسجّله مرة واحدة. أما <strong>الشبكة المحلية / الخادم الخاص</strong> فيصلك بخادم PokerTH مخصّص، خادمك أو خادم شخص آخر."],
+       "ثلاثة أوضاع. <strong>محلي / تدريب</strong> يجلسك فورًا إلى طاولة من خصوم يديرهم الحاسوب ولا يحتاج اتصالًا البتة — وهو المكان الذي تتعلم فيه. <strong>pokerth.net</strong> هي الشبكة الرسمية: خصوم حقيقيون، وألعاب عادية مفتوحة للضيوف، وألعاب تصنيف بتصنيفات موسمية للاعبين بحساب مجاني. أما <strong>الشبكة المحلية / الخادم الخاص</strong> فيصلك بخادم PokerTH مخصّص، خادمك أو خادم شخص آخر."],
       ["اجلس إلى طاولة",
-       "في الردهة إمّا تنضم إلى طاولة من القائمة أو تنشئ طاولتك. عند الإنشاء تحدّد عدد المقاعد ورصيد البداية وسرعة ارتفاع الرهانات العمياء وما إذا كانت الطاولة محمية بكلمة مرور. شارك رابط الدعوة، فيصل صديقك مباشرة إلى طاولتك، من متصفحه، دون أن يسجّل أي شيء."],
+       "في الردهة إمّا تنضم إلى طاولة من القائمة أو تشاهد لعبة جارية أو تنشئ طاولتك. عند الإنشاء تختار نوع اللعبة (عادية أو للمسجّلين فقط أو بدعوة فقط أو تصنيف) وتحدّد عدد المقاعد ورصيد البداية وسرعة ارتفاع الرهانات العمياء ومهلة التصرف وما إذا كان يُسمح للمتفرجين بالمشاهدة وما إذا كانت الطاولة محمية بكلمة مرور. شارك رابط الدعوة، فيصل صديقك مباشرة إلى طاولتك، من متصفحه — وفي اللعبة العادية دون أن يسجّل أي شيء."],
       ["العب اليد",
-       "تُوزَّع لك ورقتان مغلقتان. تدور المراهنة حول الطاولة قبل الفلوب، ثم مرة أخرى بعد الفلوب والتيرن والريفر. حين يحين دورك يضيء شريط الإجراءات ولا يعرض إلا ما هو مسموح: Fold أو Check أو Call أو Raise أو All-In. ويمكن كتابة المبلغ أو سحبه على المؤشر أو ضبطه بلمسة واحدة على الحد الأدنى أو نصف القدر أو القدر كله أو كامل رصيدك."],
+       "تُوزَّع لك ورقتان مغلقتان. تدور المراهنة حول الطاولة قبل الفلوب، ثم مرة أخرى بعد الفلوب والتيرن والريفر. حين يحين دورك يضيء شريط الإجراءات ولا يعرض إلا ما هو مسموح: Fold أو Check أو Call أو Raise أو All-In. ويمكن كتابة المبلغ أو سحبه على المؤشر أو ضبطه بلمسة واحدة على ثلث القدر أو نصف القدر أو القدر."],
       ["اقرأ الطاولة",
-       "تُكتب أفضل يد لديك في تلك اللحظة أسفل أوراق الطاولة كلما ظهرت ورقة جديدة. يبقى القدر ورصيد كل لاعب ومستوى الرهانات العمياء على الشاشة طوال الوقت، ويبيّن زر الموزّع من يتكلم أخيرًا، ويعرض العدّاد كم بقي لك من وقت. وعند كشف الأوراق تُبرَز الأوراق الخمس التي كوّنت كل يد."],
+       "تذكر علامة التبويب «الاحتمالات» أفضل يد لديك في تلك اللحظة وفرصتك في الفوز كلما ظهرت ورقة جديدة. يبقى القدر ورصيد كل لاعب ومستوى الرهانات العمياء على الشاشة طوال الوقت، ويبيّن زر الموزّع من يتكلم أخيرًا، ويعرض العدّاد كم بقي لك من وقت. وعند كشف الأوراق تُذكر التركيبة الفائزة أسفل الأوراق المشتركة."],
       ["اربح البطولة",
-       "مباريات PokerTH بطولات من نوع sit-and-go: يبدأ الجميع برصيد واحد، وترتفع الرهانات العمياء بحسب المؤقّت، ويخرج اللاعبون تباعًا حتى يجمع واحد كل الرقائق. لا شيء يكلّف مالًا ولا يمكن شراء الرقائق — كلها رقائق لعب، فالمطروح على الطاولة هو اللعبة نفسها لا غير."]
+       "مباريات PokerTH بطولات: يبدأ الجميع برصيد واحد، وترتفع الرهانات العمياء كل بضع أيدٍ أو دقائق، ويخرج اللاعبون تباعًا حتى يجمع واحد كل الرقائق. لا شيء يكلّف مالًا ولا يمكن شراء الرقائق — كلها رقائق لعب، فالمطروح على الطاولة هو اللعبة نفسها لا غير."]
     ],
     phoneH2: "اللعب على الهاتف",
     phoneP: "صُمّمت الطاولة لشاشة اللمس بقدر ما صُمّمت للحاسوب: لمس حقل الرهان يفتح لوحة أرقام داخل شريط الإجراءات بدل لوحة مفاتيح النظام، فلا تقفز الطاولة أبدًا، ويتحرك المؤشر بالخطوات نفسها المعتمدة في عميل سطح المكتب. وقد تصلك إشعارات الدور وعليها زرّا Fold وCheck/Call مباشرة، فتلعب اليد كاملة دون العودة إلى لسان التبويب.",
     friendsH2: "اللعب مع الأصدقاء",
     friendsP: "أنشئ طاولة، وضع كلمة مرور إن أردتها خاصة، وأرسل رابط الدعوة. يفتح الرابط الطاولة مباشرة — في التطبيق المثبّت إن كانوا قد أضافوه إلى شاشتهم الرئيسية، وفي لسان تبويب في المتصفح إن لم يفعلوا. لا أحد مضطر إلى تثبيت شيء أو إعطاء بريده الإلكتروني.",
     faqH2: "أسئلة شائعة",
-    faqP: function (h, c) { return "لا مال في الأمر إطلاقًا، في أي وضع. تبقى إعداداتك وحزم الأنماط وتقدّمك دون اتصال على جهازك أنت. الواجهة متاحة بثلاث وثمانين لغة، بينما تبقى كلمات الإجراءات الخمس — Fold وCheck وCall وRaise وAll-In — بالإنجليزية، كما هي على كل طاولة في العالم. والمزيد في <a href=\"{faq}\">الأسئلة الشائعة</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
+    faqP: function (h, c) { return "لا مال في الأمر إطلاقًا، في أي وضع. تبقى إعداداتك وحزم الأنماط وتقدّمك في التدرّب على جهازك أنت، وتنتقل معك إلى أجهزتك الأخرى عند تسجيل الدخول بحساب pokerth.net. الواجهة متاحة بثلاث وثمانين لغة، بينما تبقى كلمات الإجراءات الخمس — Fold وCheck وCall وRaise وAll-In — بالإنجليزية، كما هي على كل طاولة في العالم. والمزيد في <a href=\"{faq}\">الأسئلة الشائعة</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
   },
 
   fa: {
@@ -645,24 +609,24 @@ var PARTS = {
     lead: function (h, c) { return "این نسخهٔ کوتاه است: از یک زبانهٔ خالی تا نخستین دست تگزاس هولدم شما در PokerTH. اگر خودِ قوانین را می‌خواهید — بلایندها، دورهای شرط‌بندی، اینکه چه دستی چه دستی را می‌برد — نخست <a href=\"{rules}\">صفحهٔ قوانین</a> و <a href=\"{hands}\">رتبه‌بندی دست‌ها</a> را بخوانید.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); },
     steps: [
       ["سایت را باز کنید — چیزی برای نصب وجود ندارد",
-       "PokerTH در مرورگر اجرا می‌شود. بدون دانلود، بدون حساب کاربری، بدون افزونه. روی گوشی می‌توانید از منوی مرورگر آن را به صفحهٔ اصلی اضافه کنید؛ آن‌گاه مثل یک برنامه تمام‌صفحه باز می‌شود و آفلاین هم کار می‌کند."],
+       "PokerTH در مرورگر اجرا می‌شود. بدون دانلود، بدون افزونه، و بدون حساب کاربری برای تمرین یا بازی مهمان. می‌توانید آن را مانند یک برنامه نصب کنید — روی iPhone و iPad با اشتراک ← افزودن به صفحهٔ اصلی، در جاهای دیگر از منوی مرورگر یا دکمهٔ نصب — و تمام‌صفحه باز می‌شود و آفلاین هم کار می‌کند. اگر بخواهید، «راهنمای آس»، آسِ گوشهٔ صفحه، هر صفحه را توضیح می‌دهد."],
       ["انتخاب کنید کجا بازی کنید",
-       "سه حالت وجود دارد. <strong>تمرین آفلاین</strong> بی‌درنگ شما را سر میزی از حریفان رایانه‌ای می‌نشاند و اصلاً به اتصال نیاز ندارد — جای یادگیری همین‌جاست. <strong>pokerth.net</strong> شبکهٔ رسمی است: حریفان واقعی، رتبه‌بندی فصلی، و یک نام مستعار رایگان که یک‌بار ثبت می‌کنید. <strong>شبکهٔ محلی / سرور خصوصی</strong> شما را به یک سرور اختصاصی PokerTH وصل می‌کند، مال خودتان یا کس دیگری."],
+       "سه حالت وجود دارد. <strong>محلی / تمرین</strong> بی‌درنگ شما را سر میزی از حریفان رایانه‌ای می‌نشاند و اصلاً به اتصال نیاز ندارد — جای یادگیری همین‌جاست. <strong>pokerth.net</strong> شبکهٔ رسمی است: حریفان واقعی، بازی‌های «معمولی» باز برای مهمانان، و بازی‌های رتبه‌بندی با رتبه‌بندی فصلی برای بازیکنان دارای حساب رایگان. <strong>شبکهٔ محلی / سرور خصوصی</strong> شما را به یک سرور اختصاصی PokerTH وصل می‌کند، مال خودتان یا کس دیگری."],
       ["سر یک میز بنشینید",
-       "در لابی یا به میزی از فهرست می‌پیوندید یا میز خودتان را می‌سازید. هنگام ساختن، تعداد صندلی‌ها، موجودی آغازین، سرعت بالا رفتن بلایندها و داشتن یا نداشتن رمز را تعیین می‌کنید. پیوند دعوت را بفرستید تا دوستتان مستقیم سر میز شما بیاید، در مرورگر خودش، بدون ثبت‌نام هیچ چیزی."],
+       "در لابی یا به میزی از فهرست می‌پیوندید، یا بازی در جریانی را تماشا می‌کنید، یا میز خودتان را می‌سازید. هنگام ساختن، نوع بازی را برمی‌گزینید («معمولی»، فقط بازیکنان ثبت‌نام‌شده، فقط با دعوت یا «بازی رتبه‌بندی») و تعداد صندلی‌ها، موجودی آغازین، سرعت بالا رفتن بلایندها، زمان حرکت، اجازهٔ تماشاگران و داشتن یا نداشتن رمز را تعیین می‌کنید. پیوند دعوت را بفرستید تا دوستتان مستقیم سر میز شما بیاید، در مرورگر خودش — در بازی «معمولی» بدون ثبت‌نام هیچ چیزی."],
       ["دست را بازی کنید",
-       "دو کارت بسته به شما داده می‌شود. شرط‌بندی پیش از فلاپ دور میز می‌چرخد و پس از فلاپ، ترن و ریور دوباره تکرار می‌شود. وقتی نوبت شما شد، نوار کنش روشن می‌شود و فقط گزینه‌های مجاز را نشان می‌دهد: Fold، Check یا Call، Raise یا All-In. مبلغ را می‌توان تایپ کرد، با لغزنده کشید، یا با یک لمس روی حداقل، نصف پات، کل پات یا تمام موجودی گذاشت."],
+       "دو کارت بسته به شما داده می‌شود. شرط‌بندی پیش از فلاپ دور میز می‌چرخد و پس از فلاپ، ترن و ریور دوباره تکرار می‌شود. وقتی نوبت شما شد، نوار کنش روشن می‌شود و فقط گزینه‌های مجاز را نشان می‌دهد: Fold، Check یا Call، Raise یا All-In. مبلغ را می‌توان تایپ کرد، با لغزنده کشید، یا با یک لمس روی یک‌سوم پات، نصف پات یا کل پات گذاشت."],
       ["میز را بخوانید",
-       "با باز شدن کارت‌ها، بهترین دست فعلی شما زیر میز نوشته می‌شود. پات، موجودی هر بازیکن و سطح بلایند همیشه روی صفحه‌اند، دکمهٔ دیلر نشان می‌دهد چه کسی آخر حرف می‌زند، و شمارش معکوس می‌گوید چقدر وقت دارید. در شودان، همان پنج کارتی که هر دست را ساخته‌اند برجسته می‌شوند."],
+       "زبانهٔ «شانس‌ها» بهترین دست فعلی شما و شانس بردنتان را با باز شدن کارت‌ها نام می‌برد. پات، موجودی هر بازیکن و سطح بلایند همیشه روی صفحه‌اند، دکمهٔ دیلر نشان می‌دهد چه کسی آخر حرف می‌زند، و شمارش معکوس می‌گوید چقدر وقت دارید. در شودان، ترکیب برنده زیر کارت‌های مشترک نام برده می‌شود."],
       ["مسابقه را ببرید",
-       "بازی‌های PokerTH تورنمنت‌های sit-and-go هستند: همه با موجودی یکسان شروع می‌کنند، بلایندها با زمان بالا می‌روند و بازیکنان حذف می‌شوند تا یک نفر همهٔ ژتون‌ها را در دست بگیرد. هیچ چیز پول نمی‌خواهد و ژتون هم خریدنی نیست — همه‌چیز ژتون بازی است، پس تنها چیزی که در میان است خودِ بازی است."]
+       "بازی‌های PokerTH تورنمنت هستند: همه با موجودی یکسان شروع می‌کنند، بلایندها هر چند دست یا چند دقیقه یک‌بار بالا می‌روند و بازیکنان حذف می‌شوند تا یک نفر همهٔ ژتون‌ها را در دست بگیرد. هیچ چیز پول نمی‌خواهد و ژتون هم خریدنی نیست — همه‌چیز ژتون بازی است، پس تنها چیزی که در میان است خودِ بازی است."]
     ],
     phoneH2: "بازی روی گوشی",
     phoneP: "میز به همان اندازه که برای رایانه ساخته شده برای صفحهٔ لمسی هم طراحی شده است: لمس کادر شرط به‌جای صفحه‌کلید سیستم، یک صفحه‌کلید عددی درون نوار کنش باز می‌کند، بنابراین میز هرگز جابه‌جا نمی‌شود، و لغزنده با همان گام‌های کلاینت دسکتاپ حرکت می‌کند. اعلان نوبت می‌تواند با دکمه‌های Fold و Check/Call روی خودش برسد، پس می‌شود یک دست را بدون بازگشت به زبانه بازی کرد.",
     friendsH2: "بازی با دوستان",
     friendsP: "میزی بسازید، اگر می‌خواهید خصوصی باشد رمز بگذارید، و پیوند دعوت را بفرستید. این پیوند میز را مستقیم باز می‌کند — در برنامهٔ نصب‌شده اگر آن را به صفحهٔ اصلی افزوده باشند، وگرنه در یک زبانهٔ مرورگر. هیچ‌کس لازم نیست چیزی نصب کند یا نشانی ایمیلش را بدهد.",
     faqH2: "پرسش‌های پرتکرار",
-    faqP: function (h, c) { return "در هیچ حالتی پول واقعی در کار نیست. تنظیمات، بسته‌های ظاهری و پیشرفت آفلاین شما روی دستگاه خودتان می‌ماند. رابط کاربری به ۸۳ زبان در دسترس است، در حالی که پنج واژهٔ کنش — Fold، Check، Call، Raise، All-In — مانند هر میز دیگری در جهان انگلیسی می‌مانند. بیشتر در <a href=\"{faq}\">پرسش‌های پرتکرار</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
+    faqP: function (h, c) { return "در هیچ حالتی پول واقعی در کار نیست. تنظیمات، بسته‌های ظاهری و پیشرفت تمرین شما روی دستگاه خودتان می‌ماند و وقتی با حساب pokerth.net وارد شوید به دستگاه‌های دیگرتان هم می‌آید. رابط کاربری به ۸۳ زبان در دسترس است، در حالی که پنج واژهٔ کنش — Fold، Check، Call، Raise، All-In — مانند هر میز دیگری در جهان انگلیسی می‌مانند. بیشتر در <a href=\"{faq}\">پرسش‌های پرتکرار</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
   },
 
   he: {
@@ -674,24 +638,24 @@ var PARTS = {
     lead: function (h, c) { return "זו הגרסה הקצרה: מלשונית ריקה ועד היד הראשונה שלכם בטקסס הולדם ב־PokerTH. אם מה שאתם מחפשים הוא החוקים עצמם — עיוורים, סבבי הימורים, מה מנצח את מה — התחילו דווקא ב<a href=\"{rules}\">עמוד החוקים</a> וב<a href=\"{hands}\">דירוג הידיים</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); },
     steps: [
       ["פותחים את האתר — אין מה להתקין",
-       "PokerTH רץ בדפדפן. בלי הורדה, בלי חשבון, בלי תוסף. בטלפון אפשר להוסיף אותו למסך הבית מתפריט הדפדפן, ואז הוא נפתח כמו אפליקציה, במסך מלא, ועובד גם ללא חיבור."],
+       "PokerTH רץ בדפדפן. בלי הורדה, בלי תוסף, ובלי חשבון לאימון או למשחקי אורח. אפשר להתקין אותו כמו אפליקציה — שיתוף ← הוספה למסך הבית באייפון ובאייפד, תפריט הדפדפן או כפתור ההתקנה במכשירים אחרים — והוא נפתח במסך מלא, ועובד גם ללא חיבור. אם רוצים, עזרת האס, האס שבפינה, מסביר כל מסך."],
       ["בוחרים איפה לשחק",
-       "שלושה מצבים. <strong>אימון לא מקוון</strong> מושיב אתכם מיד לשולחן של יריבי מחשב ואינו דורש חיבור כלל — כאן לומדים. <strong>pokerth.net</strong> היא הרשת הרשמית: יריבים אמיתיים, דירוגים עונתיים וכינוי חינמי שנרשם פעם אחת. <strong>רשת מקומית / שרת פרטי</strong> מתחבר לשרת PokerTH ייעודי, שלכם או של מישהו אחר."],
+       "שלושה מצבים. <strong>מקומי / אימון</strong> מושיב אתכם מיד לשולחן של יריבי מחשב ואינו דורש חיבור כלל — כאן לומדים. <strong>pokerth.net</strong> היא הרשת הרשמית: יריבים אמיתיים, משחקים רגילים הפתוחים לאורחים, ומשחקי דירוג עם דירוגים עונתיים לשחקנים עם חשבון חינמי. <strong>רשת מקומית / שרת פרטי</strong> מתחבר לשרת PokerTH ייעודי, שלכם או של מישהו אחר."],
       ["מתיישבים לשולחן",
-       "בלובי אפשר להצטרף לשולחן מהרשימה או ליצור שולחן משלכם. ביצירה קובעים את מספר המושבים, את הערימה ההתחלתית, את קצב עליית העיוורים ואם השולחן מוגן בסיסמה. שתפו את קישור ההזמנה וחבר יגיע ישירות לשולחן שלכם, בדפדפן שלו, בלי להירשם לשום דבר."],
+       "בלובי אפשר להצטרף לשולחן מהרשימה, לצפות במשחק פעיל או ליצור שולחן משלכם. ביצירה בוחרים את סוג המשחק (רגיל, שחקנים רשומים בלבד, שחקנים מוזמנים בלבד או משחק דירוג) וקובעים את מספר המושבים, את הערימה ההתחלתית, את קצב עליית העיוורים, את זמן הפעולה, אם צופים רשאים לצפות ואם השולחן מוגן בסיסמה. שתפו את קישור ההזמנה וחבר יגיע ישירות לשולחן שלכם, בדפדפן שלו — במשחק רגיל, בלי להירשם לשום דבר."],
       ["משחקים את היד",
-       "מחלקים לכם שני קלפים סגורים. ההימורים עוברים סביב השולחן לפני הפלופ, ושוב אחרי הפלופ, הטרן והריבר. כשמגיע תורכם, סרגל הפעולות נדלק ומציע רק את מה שמותר: Fold, Check או Call, Raise או All-In. את הסכום אפשר להקליד, לגרור על המחוון, או לקבוע בנגיעה אחת על מינימום, חצי מהקופה, הקופה כולה או כל הערימה שלכם."],
+       "מחלקים לכם שני קלפים סגורים. ההימורים עוברים סביב השולחן לפני הפלופ, ושוב אחרי הפלופ, הטרן והריבר. כשמגיע תורכם, סרגל הפעולות נדלק ומציע רק את מה שמותר: Fold, Check או Call, Raise או All-In. את הסכום אפשר להקליד, לגרור על המחוון, או לקבוע בנגיעה אחת על שליש מהקופה, חצי מהקופה או הקופה כולה."],
       ["קוראים את השולחן",
-       "היד הטובה ביותר שלכם ברגע נתון נכתבת מתחת לשולחן ככל שהקלפים יוצאים. הקופה, כל ערימה ורמת העיוורים מוצגות כל הזמן, כפתור הדילר מראה מי מדבר אחרון, וספירה לאחור מראה כמה זמן נותר לכם. בשואודאון מודגשים חמשת הקלפים שהרכיבו כל יד."],
+       "לשונית סיכויים מציגה את שם היד הטובה ביותר שלכם ברגע נתון ואת סיכויי הניצחון שלכם ככל שהקלפים יוצאים. הקופה, כל ערימה ורמת העיוורים מוצגות כל הזמן, כפתור הדילר מראה מי מדבר אחרון, וספירה לאחור מראה כמה זמן נותר לכם. בשואודאון הצירוף המנצח נקרא בשמו מתחת לקלפים המשותפים."],
       ["מנצחים בטורניר",
-       "המשחקים ב־PokerTH הם טורנירי sit-and-go: כולם מתחילים עם אותה ערימה, העיוורים עולים לפי שעון, ושחקנים נפלטים עד שאחד מחזיק בכל הז'טונים. שום דבר לא עולה כסף ואי אפשר לקנות ז'טונים — הכול כסף משחק, ולכן היחיד שמונח על השולחן הוא המשחק עצמו."]
+       "המשחקים ב־PokerTH הם טורנירים: כולם מתחילים עם אותה ערימה, העיוורים עולים כל כמה ידיים או דקות, ושחקנים נפלטים עד שאחד מחזיק בכל הז'טונים. שום דבר לא עולה כסף ואי אפשר לקנות ז'טונים — הכול כסף משחק, ולכן היחיד שמונח על השולחן הוא המשחק עצמו."]
     ],
     phoneH2: "לשחק בטלפון",
     phoneP: "השולחן בנוי למסך מגע לא פחות מאשר למחשב: נגיעה בשדה ההימור פותחת לוח מקשים מספרי בתוך סרגל הפעולות במקום את מקלדת המערכת, כך שהשולחן לעולם אינו קופץ, והמחוון זז באותם צעדים כמו בלקוח שולחן העבודה. התראות תור יכולות להגיע אליכם עם כפתורי Fold ו־Check/Call עליהן, כך שאפשר לשחק יד שלמה בלי לחזור ללשונית.",
     friendsH2: "לשחק עם חברים",
     friendsP: "צרו שולחן, הוסיפו סיסמה אם אתם רוצים אותו פרטי, ושלחו את קישור ההזמנה. הוא פותח את השולחן ישירות — באפליקציה המותקנת אם הוסיפו אותה למסך הבית, ובלשונית דפדפן אם לא. אף אחד לא צריך להתקין כלום או למסור כתובת דוא\"ל.",
     faqH2: "שאלות נפוצות",
-    faqP: function (h, c) { return "כסף אמיתי אינו מעורב בשום מצב. ההגדרות שלכם, חבילות העיצוב וההתקדמות הלא מקוונת נשארות במכשיר שלכם. הממשק זמין ב־83 שפות, בעוד חמש מילות הפעולה — Fold, Check, Call, Raise, All-In — נשארות באנגלית, כמו בכל שולחן בעולם. עוד ב<a href=\"{faq}\">שאלות הנפוצות</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
+    faqP: function (h, c) { return "כסף אמיתי אינו מעורב בשום מצב. ההגדרות שלכם, חבילות העיצוב וההתקדמות באימון נשארות במכשיר שלכם, ועוברות איתכם למכשירים האחרים כשנכנסים עם חשבון pokerth.net. הממשק זמין ב־83 שפות, בעוד חמש מילות הפעולה — Fold, Check, Call, Raise, All-In — נשארות באנגלית, כמו בכל שולחן בעולם. עוד ב<a href=\"{faq}\">שאלות הנפוצות</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
   },
 
   ur: {
@@ -703,24 +667,24 @@ var PARTS = {
     lead: function (h, c) { return "یہ مختصر صورت ہے: ایک خالی ٹیب سے لے کر PokerTH پر آپ کے پہلے ٹیکساس ہولڈم ہاتھ تک۔ اگر آپ کو خود قواعد درکار ہیں — بلائنڈز، بیٹنگ کے راؤنڈ، کون سا ہاتھ کس کو ہراتا ہے — تو پہلے <a href=\"{rules}\">قواعد کا صفحہ</a> اور <a href=\"{hands}\">ہاتھوں کی درجہ بندی</a> دیکھ لیں۔".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); },
     steps: [
       ["سائٹ کھولیں — انسٹال کرنے کو کچھ نہیں",
-       "PokerTH براؤزر میں چلتا ہے۔ نہ ڈاؤن لوڈ، نہ اکاؤنٹ، نہ کوئی پلگ ان۔ فون پر آپ اسے براؤزر کے مینو سے ہوم اسکرین پر شامل کر سکتے ہیں؛ پھر یہ ایک ایپ کی طرح پوری اسکرین پر کھلتا ہے اور آف لائن بھی کام کرتا ہے۔"],
+       "PokerTH براؤزر میں چلتا ہے۔ نہ ڈاؤن لوڈ، نہ کوئی پلگ ان، اور مشق یا مہمان گیمز کے لیے اکاؤنٹ بھی نہیں۔ آپ اسے ایپ کی طرح انسٹال کر سکتے ہیں — iPhone اور iPad پر شیئر ← ہوم اسکرین میں شامل کریں، دوسری جگہ براؤزر کا مینو یا انسٹال بٹن — اور یہ پوری اسکرین پر کھلتا ہے اور آف لائن بھی کام کرتا ہے۔ چاہیں تو اِکا کی مدد، یعنی کونے میں اِکا، ہر اسکرین سمجھاتی ہے۔"],
       ["منتخب کریں کہ کہاں کھیلنا ہے",
-       "تین طریقے ہیں۔ <strong>آف لائن مشق</strong> آپ کو فوراً کمپیوٹر کے حریفوں والی میز پر بٹھا دیتی ہے اور اسے کسی کنیکشن کی ضرورت ہی نہیں — سیکھنے کی جگہ یہی ہے۔ <strong>pokerth.net</strong> سرکاری نیٹ ورک ہے: اصلی حریف، موسمی درجہ بندیاں، اور ایک مفت عرفی نام جو ایک بار رجسٹر کرنا ہوتا ہے۔ <strong>LAN / نجی سرور</strong> آپ کو کسی مخصوص PokerTH سرور سے جوڑتا ہے، خواہ آپ کا اپنا ہو یا کسی اور کا۔"],
+       "تین طریقے ہیں۔ <strong>مقامی / مشق</strong> آپ کو فوراً کمپیوٹر کے حریفوں والی میز پر بٹھا دیتی ہے اور اسے کسی کنیکشن کی ضرورت ہی نہیں — سیکھنے کی جگہ یہی ہے۔ <strong>pokerth.net</strong> سرکاری نیٹ ورک ہے: اصلی حریف، مہمانوں کے لیے کھلے «عام» گیمز، اور مفت اکاؤنٹ والے کھلاڑیوں کے لیے موسمی درجہ بندیوں والے درجہ بندی گیمز۔ <strong>LAN / نجی سرور</strong> آپ کو کسی مخصوص PokerTH سرور سے جوڑتا ہے، خواہ آپ کا اپنا ہو یا کسی اور کا۔"],
       ["کسی میز پر بیٹھیں",
-       "لابی میں آپ فہرست میں سے کسی میز میں شامل ہو سکتے ہیں یا اپنی میز بنا سکتے ہیں۔ بناتے وقت آپ نشستوں کی تعداد، ابتدائی چپس، بلائنڈز کے بڑھنے کی رفتار، اور یہ طے کرتے ہیں کہ میز پاس ورڈ سے محفوظ ہو یا نہیں۔ دعوتی لنک بھیجیں، اور دوست بغیر کچھ رجسٹر کیے، اپنے براؤزر میں سیدھا آپ کی میز پر آ جائے گا۔"],
+       "لابی میں آپ فہرست میں سے کسی میز میں شامل ہو سکتے ہیں، جاری گیم دیکھ سکتے ہیں، یا اپنی میز بنا سکتے ہیں۔ بناتے وقت آپ گیم کی قسم («عام»، صرف رجسٹرڈ کھلاڑی، صرف دعوت پر، یا درجہ بندی گیم) چنتے ہیں اور نشستوں کی تعداد، ابتدائی چپس، بلائنڈز کے بڑھنے کی رفتار، چال کا وقت، تماشائیوں کی اجازت، اور یہ طے کرتے ہیں کہ میز پاس ورڈ سے محفوظ ہو یا نہیں۔ دعوتی لنک بھیجیں، اور دوست اپنے براؤزر میں سیدھا آپ کی میز پر آ جائے گا — «عام» گیم میں بغیر کچھ رجسٹر کیے۔"],
       ["ہاتھ کھیلیں",
-       "آپ کو دو بند کارڈ ملتے ہیں۔ فلاپ سے پہلے بولی میز کے گرد گھومتی ہے، اور پھر فلاپ، ٹرن اور ریور کے بعد دوبارہ۔ جب آپ کی باری آتی ہے تو ایکشن بار روشن ہو جاتا ہے اور صرف وہی پیش کرتا ہے جو جائز ہے: Fold، Check یا Call، Raise یا All-In۔ رقم ٹائپ کی جا سکتی ہے، سلائیڈر سے گھسیٹی جا سکتی ہے، یا ایک ٹچ سے کم از کم، آدھا پاٹ، پورا پاٹ یا آپ کے سارے چپس پر رکھی جا سکتی ہے۔"],
+       "آپ کو دو بند کارڈ ملتے ہیں۔ فلاپ سے پہلے بولی میز کے گرد گھومتی ہے، اور پھر فلاپ، ٹرن اور ریور کے بعد دوبارہ۔ جب آپ کی باری آتی ہے تو ایکشن بار روشن ہو جاتا ہے اور صرف وہی پیش کرتا ہے جو جائز ہے: Fold، Check یا Call، Raise یا All-In۔ رقم ٹائپ کی جا سکتی ہے، سلائیڈر سے گھسیٹی جا سکتی ہے، یا ایک ٹچ سے پاٹ کے تہائی، آدھے پاٹ یا پورے پاٹ پر رکھی جا سکتی ہے۔"],
       ["میز پڑھیں",
-       "جیسے جیسے کارڈ کھلتے ہیں، آپ کا اُس وقت کا بہترین ہاتھ میز کے نیچے نام سمیت لکھا آتا ہے۔ پاٹ، ہر کھلاڑی کے چپس اور بلائنڈ کی سطح ہر وقت اسکرین پر رہتے ہیں، ڈیلر بٹن بتاتا ہے کہ آخر میں کون بولے گا، اور الٹی گنتی دکھاتی ہے کہ آپ کے پاس کتنا وقت ہے۔ شوڈاؤن پر ہر ہاتھ بنانے والے وہی پانچ کارڈ نمایاں کیے جاتے ہیں۔"],
+       "جیسے جیسے کارڈ کھلتے ہیں، امکانات ٹیب آپ کا اُس وقت کا بہترین ہاتھ اور آپ کے جیتنے کا امکان بتاتا ہے۔ پاٹ، ہر کھلاڑی کے چپس اور بلائنڈ کی سطح ہر وقت اسکرین پر رہتے ہیں، ڈیلر بٹن بتاتا ہے کہ آخر میں کون بولے گا، اور الٹی گنتی دکھاتی ہے کہ آپ کے پاس کتنا وقت ہے۔ شوڈاؤن پر جیتنے والا مجموعہ مشترکہ کارڈز کے نیچے نام سمیت لکھا آتا ہے۔"],
       ["ٹورنامنٹ جیتیں",
-       "PokerTH کے کھیل sit-and-go ٹورنامنٹ ہوتے ہیں: سب ایک جیسے چپس سے شروع کرتے ہیں، بلائنڈز گھڑی کے مطابق بڑھتے ہیں، اور کھلاڑی باہر ہوتے جاتے ہیں یہاں تک کہ سارے چپس ایک کے پاس آ جائیں۔ کچھ بھی پیسوں کا نہیں اور چپس خریدے نہیں جا سکتے — سب کھیل کے چپس ہیں، سو داؤ پر صرف کھیل ہی لگا ہوتا ہے۔"]
+       "PokerTH کے کھیل ٹورنامنٹ ہوتے ہیں: سب ایک جیسے چپس سے شروع کرتے ہیں، بلائنڈز ہر چند ہاتھوں یا منٹوں بعد بڑھتے ہیں، اور کھلاڑی باہر ہوتے جاتے ہیں یہاں تک کہ سارے چپس ایک کے پاس آ جائیں۔ کچھ بھی پیسوں کا نہیں اور چپس خریدے نہیں جا سکتے — سب کھیل کے چپس ہیں، سو داؤ پر صرف کھیل ہی لگا ہوتا ہے۔"]
     ],
     phoneH2: "فون پر کھیلنا",
     phoneP: "میز جتنی کمپیوٹر کے لیے بنی ہے اتنی ہی ٹچ اسکرین کے لیے بھی: بیٹ کے خانے کو چھونے پر سسٹم کی بورڈ کے بجائے ایکشن بار کے اندر ہی نمبر پیڈ کھلتا ہے، اس لیے میز کبھی اچھلتی نہیں، اور سلائیڈر انہی مرحلوں میں چلتا ہے جن میں ڈیسک ٹاپ کلائنٹ کا۔ باری کی اطلاعات پر Fold اور Check/Call کے بٹن بھی ہو سکتے ہیں، سو ایک ہاتھ ٹیب پر واپس آئے بغیر کھیلا جا سکتا ہے۔",
     friendsH2: "دوستوں کے ساتھ کھیلنا",
     friendsP: "ایک میز بنائیں، نجی رکھنی ہو تو پاس ورڈ لگا دیں، اور دعوتی لنک بھیج دیں۔ لنک میز کو سیدھا کھولتا ہے — اگر انہوں نے ایپ ہوم اسکرین پر شامل کر رکھی ہے تو نصب شدہ ایپ میں، ورنہ براؤزر کے ٹیب میں۔ کسی کو کچھ انسٹال کرنے یا ای میل پتہ دینے کی ضرورت نہیں۔",
     faqH2: "عام سوالات",
-    faqP: function (h, c) { return "کسی بھی طریقے میں اصلی پیسہ شامل نہیں ہوتا۔ آپ کی ترتیبات، اسٹائل پیک اور آف لائن پیش رفت آپ ہی کے آلے پر رہتی ہیں۔ انٹرفیس 83 زبانوں میں دستیاب ہے، جبکہ پانچ ایکشن الفاظ — Fold، Check، Call، Raise، All-In — دنیا کی ہر میز کی طرح انگریزی ہی میں رہتے ہیں۔ مزید <a href=\"{faq}\">عام سوالات</a> میں۔".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
+    faqP: function (h, c) { return "کسی بھی طریقے میں اصلی پیسہ شامل نہیں ہوتا۔ آپ کی ترتیبات، اسٹائل پیک اور تربیتی پیش رفت آپ ہی کے آلے پر رہتی ہیں، اور pokerth.net اکاؤنٹ سے لاگ اِن کرنے پر آپ کے دوسرے آلات پر بھی آپ کے ساتھ آ جاتی ہیں۔ انٹرفیس 83 زبانوں میں دستیاب ہے، جبکہ پانچ ایکشن الفاظ — Fold، Check، Call، Raise، All-In — دنیا کی ہر میز کی طرح انگریزی ہی میں رہتے ہیں۔ مزید <a href=\"{faq}\">عام سوالات</a> میں۔".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
   },
 
   hi: {
@@ -732,24 +696,24 @@ var PARTS = {
     lead: function (h, c) { return "यह छोटा रास्ता है: एक ख़ाली टैब से PokerTH पर आपके पहले टेक्सास होल्डम हाथ तक। अगर आपको नियम ही चाहिए — ब्लाइंड, दांव के दौर, कौन सा हाथ किसे हराता है — तो पहले <a href=\"{rules}\">नियमों का पन्ना</a> और <a href=\"{hands}\">हैंड रैंकिंग</a> पढ़ लें।".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); },
     steps: [
       ["साइट खोलिए — इंस्टॉल करने को कुछ नहीं है",
-       "PokerTH ब्राउज़र में चलता है। न डाउनलोड, न खाता, न कोई प्लगइन। फ़ोन पर आप इसे ब्राउज़र के मेन्यू से होम स्क्रीन पर जोड़ सकते हैं; तब यह किसी ऐप की तरह पूरी स्क्रीन पर खुलता है और ऑफ़लाइन भी चलता है।"],
+       "PokerTH ब्राउज़र में चलता है। न डाउनलोड, न कोई प्लगइन, और अभ्यास या अतिथि खेलों के लिए न खाता। आप इसे ऐप की तरह इंस्टॉल कर सकते हैं — iPhone और iPad पर शेयर → होम स्क्रीन में जोड़ें, बाकी जगह ब्राउज़र का मेन्यू या इंस्टॉल बटन — और यह पूरी स्क्रीन पर खुलता है और ऑफ़लाइन भी चलता है। चाहें तो इक्के की सहायता, कोने वाला इक्का, हर स्क्रीन को समझाता है।"],
       ["चुनिए कि कहाँ खेलना है",
-       "तीन तरीक़े हैं। <strong>ऑफ़लाइन अभ्यास</strong> आपको तुरंत कंप्यूटर के प्रतिद्वंद्वियों वाली मेज़ पर बैठा देता है और इसे किसी कनेक्शन की ज़रूरत ही नहीं — सीखने की जगह यही है। <strong>pokerth.net</strong> आधिकारिक नेटवर्क है: असली प्रतिद्वंद्वी, सीज़न की रैंकिंग, और एक मुफ़्त उपनाम जो एक ही बार दर्ज करना होता है। <strong>LAN / निजी सर्वर</strong> आपको किसी समर्पित PokerTH सर्वर से जोड़ता है, आपका अपना हो या किसी और का।"],
+       "तीन तरीक़े हैं। <strong>लोकल / अभ्यास</strong> आपको तुरंत कंप्यूटर के प्रतिद्वंद्वियों वाली मेज़ पर बैठा देता है और इसे किसी कनेक्शन की ज़रूरत ही नहीं — सीखने की जगह यही है। <strong>pokerth.net</strong> आधिकारिक नेटवर्क है: असली प्रतिद्वंद्वी, अतिथियों के लिए खुले सामान्य खेल, और मुफ़्त खाते वाले खिलाड़ियों के लिए सीज़न की रैंकिंग वाले रैंकिंग गेम। <strong>LAN / निजी सर्वर</strong> आपको किसी समर्पित PokerTH सर्वर से जोड़ता है, आपका अपना हो या किसी और का।"],
       ["किसी मेज़ पर बैठिए",
-       "लॉबी में या तो आप सूची से किसी मेज़ में शामिल होते हैं या अपनी मेज़ बनाते हैं। बनाते समय आप सीटों की संख्या, शुरुआती चिप्स, ब्लाइंड कितनी तेज़ी से बढ़ें, और मेज़ पर पासवर्ड होगा या नहीं, यह तय करते हैं। न्योते का लिंक साझा कीजिए और दोस्त बिना कुछ दर्ज किए, अपने ब्राउज़र में सीधे आपकी मेज़ पर पहुँच जाएगा।"],
+       "लॉबी में आप सूची से किसी मेज़ में शामिल होते हैं, चल रहा खेल देखते हैं या अपनी मेज़ बनाते हैं। बनाते समय आप खेल का प्रकार (सामान्य, केवल पंजीकृत खिलाड़ी, केवल आमंत्रित खिलाड़ी या रैंकिंग गेम) चुनते हैं और सीटों की संख्या, शुरुआती चिप्स, ब्लाइंड कितनी तेज़ी से बढ़ें, खेलने का समय, दर्शक देख सकें या नहीं, और मेज़ पर पासवर्ड होगा या नहीं, यह तय करते हैं। न्योते का लिंक साझा कीजिए और दोस्त अपने ब्राउज़र में सीधे आपकी मेज़ पर पहुँच जाएगा — सामान्य खेल में बिना कुछ दर्ज किए।"],
       ["हाथ खेलिए",
-       "आपको दो निजी कार्ड मिलते हैं। फ़्लॉप से पहले दांव मेज़ के चारों ओर घूमता है, और फिर फ़्लॉप, टर्न तथा रिवर के बाद दोबारा। जब आपकी बारी आती है तो एक्शन बार जल उठता है और सिर्फ़ वही दिखाता है जो नियमों के भीतर है: Fold, Check या Call, Raise या All-In। रक़म टाइप की जा सकती है, स्लाइडर से खींची जा सकती है, या एक ही टैप में न्यूनतम, आधा पॉट, पूरा पॉट या आपके सारे चिप्स पर रखी जा सकती है।"],
+       "आपको दो निजी कार्ड मिलते हैं। फ़्लॉप से पहले दांव मेज़ के चारों ओर घूमता है, और फिर फ़्लॉप, टर्न तथा रिवर के बाद दोबारा। जब आपकी बारी आती है तो एक्शन बार जल उठता है और सिर्फ़ वही दिखाता है जो नियमों के भीतर है: Fold, Check या Call, Raise या All-In। रक़म टाइप की जा सकती है, स्लाइडर से खींची जा सकती है, या एक ही टैप में पॉट के तिहाई, आधे या पूरे पॉट पर रखी जा सकती है।"],
       ["मेज़ पढ़िए",
-       "जैसे-जैसे कार्ड खुलते हैं, इस समय आपका सबसे अच्छा हाथ बोर्ड के नीचे नाम सहित लिखा रहता है। पॉट, हर खिलाड़ी के चिप्स और ब्लाइंड का स्तर हर वक़्त स्क्रीन पर रहते हैं, डीलर बटन बताता है कि आख़िर में कौन बोलेगा, और उल्टी गिनती दिखाती है कि आपके पास कितना समय है। शोडाउन पर हर हाथ बनाने वाले वही पाँच कार्ड उभारकर दिखाए जाते हैं।"],
+       "संभावनाएँ टैब, जैसे-जैसे कार्ड खुलते हैं, आपका मौजूदा सबसे अच्छा हाथ नाम सहित और आपके जीतने की संभावना बताता है। पॉट, हर खिलाड़ी के चिप्स और ब्लाइंड का स्तर हर वक़्त स्क्रीन पर रहते हैं, डीलर बटन बताता है कि आख़िर में कौन बोलेगा, और उल्टी गिनती दिखाती है कि आपके पास कितना समय है। शोडाउन पर जीतने वाला संयोजन साझा कार्डों के नीचे नाम सहित दिखाया जाता है।"],
       ["टूर्नामेंट जीतिए",
-       "PokerTH की बाज़ियाँ sit-and-go टूर्नामेंट होती हैं: सब एक जैसे चिप्स से शुरू करते हैं, ब्लाइंड घड़ी के हिसाब से बढ़ते हैं, और खिलाड़ी बाहर होते जाते हैं जब तक सारे चिप्स एक के पास न आ जाएँ। कुछ भी पैसे का नहीं है और चिप्स ख़रीदे नहीं जा सकते — सब खेल के चिप्स हैं, इसलिए दांव पर सिर्फ़ खेल ही लगा होता है।"]
+       "PokerTH की बाज़ियाँ टूर्नामेंट होती हैं: सब एक जैसे चिप्स से शुरू करते हैं, ब्लाइंड हर कुछ हाथों या मिनटों में बढ़ते हैं, और खिलाड़ी बाहर होते जाते हैं जब तक सारे चिप्स एक के पास न आ जाएँ। कुछ भी पैसे का नहीं है और चिप्स ख़रीदे नहीं जा सकते — सब खेल के चिप्स हैं, इसलिए दांव पर सिर्फ़ खेल ही लगा होता है।"]
     ],
     phoneH2: "फ़ोन पर खेलना",
     phoneP: "मेज़ जितनी कंप्यूटर के लिए बनी है उतनी ही टच स्क्रीन के लिए भी: दांव के ख़ाने को छूने पर सिस्टम का कीबोर्ड नहीं, बल्कि एक्शन बार के भीतर ही नंबर पैड खुलता है, इसलिए मेज़ कभी उछलती नहीं, और स्लाइडर उन्हीं चरणों में चलता है जिनमें डेस्कटॉप क्लाइंट का। बारी की सूचनाएँ Fold और Check/Call बटनों के साथ आ सकती हैं, तो एक हाथ टैब पर लौटे बिना खेला जा सकता है।",
     friendsH2: "दोस्तों के साथ खेलना",
     friendsP: "एक मेज़ बनाइए, निजी रखनी हो तो पासवर्ड लगा दीजिए, और न्योते का लिंक भेज दीजिए। लिंक मेज़ को सीधे खोलता है — अगर उन्होंने ऐप होम स्क्रीन पर जोड़ रखी है तो इंस्टॉल की गई ऐप में, वरना ब्राउज़र के टैब में। किसी को कुछ इंस्टॉल करने या ईमेल पता देने की ज़रूरत नहीं।",
     faqH2: "आम सवाल",
-    faqP: function (h, c) { return "किसी भी मोड में पैसा शामिल नहीं होता। आपकी सेटिंग्स, स्टाइल पैक और ऑफ़लाइन प्रगति आपके ही डिवाइस पर रहती हैं। इंटरफ़ेस 83 भाषाओं में उपलब्ध है, जबकि पाँच एक्शन शब्द — Fold, Check, Call, Raise, All-In — दुनिया की हर मेज़ की तरह अंग्रेज़ी में ही रहते हैं। और जानकारी <a href=\"{faq}\">आम सवालों</a> में।".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
+    faqP: function (h, c) { return "किसी भी मोड में पैसा शामिल नहीं होता। आपकी सेटिंग्स, स्टाइल पैक और अभ्यास की प्रगति आपके ही डिवाइस पर रहती हैं, और pokerth.net खाते से लॉग इन करने पर आपके दूसरे डिवाइसों पर भी आपके साथ आती हैं। इंटरफ़ेस 83 भाषाओं में उपलब्ध है, जबकि पाँच एक्शन शब्द — Fold, Check, Call, Raise, All-In — दुनिया की हर मेज़ की तरह अंग्रेज़ी में ही रहते हैं। और जानकारी <a href=\"{faq}\">आम सवालों</a> में।".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
   },
 
   th: {
@@ -761,24 +725,24 @@ var PARTS = {
     lead: function (h, c) { return "นี่คือฉบับย่อ ตั้งแต่แท็บว่างเปล่าจนถึงไพ่เท็กซัสโฮลด์เอ็มมือแรกของคุณใน PokerTH ถ้าสิ่งที่คุณต้องการคือกติกาเอง — ไพ่บังคับ รอบการเดิมพัน อะไรชนะอะไร — ให้เริ่มที่<a href=\"{rules}\">หน้ากติกา</a>และ<a href=\"{hands}\">ลำดับไพ่</a>ก่อน".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); },
     steps: [
       ["เปิดเว็บไซต์ — ไม่มีอะไรต้องติดตั้ง",
-       "PokerTH ทำงานในเบราว์เซอร์ ไม่ต้องดาวน์โหลด ไม่ต้องสมัคร ไม่ต้องใช้ปลั๊กอิน บนมือถือคุณเพิ่มลงหน้าจอหลักได้จากเมนูของเบราว์เซอร์ จากนั้นมันจะเปิดเหมือนแอปเต็มหน้าจอ และใช้งานแบบออฟไลน์ได้ด้วย"],
+       "PokerTH ทำงานในเบราว์เซอร์ ไม่ต้องดาวน์โหลด ไม่ต้องใช้ปลั๊กอิน และไม่ต้องสมัครบัญชีสำหรับการฝึกซ้อมหรือเกมแบบแขก คุณติดตั้งได้เหมือนแอป — แชร์ → เพิ่มไปยังหน้าจอโฮมบน iPhone และ iPad หรือเมนูของเบราว์เซอร์หรือปุ่มติดตั้งบนอุปกรณ์อื่น — แล้วมันจะเปิดเต็มหน้าจอและใช้งานแบบออฟไลน์ได้ด้วย หากต้องการ ตัวช่วยไพ่เอซ หรือเอซที่มุมจอ จะอธิบายแต่ละหน้าจอให้"],
       ["เลือกว่าจะเล่นที่ไหน",
-       "มีสามโหมด <strong>ฝึกซ้อมออฟไลน์</strong> จัดโต๊ะที่มีคู่แข่งคอมพิวเตอร์ให้คุณทันทีและไม่ต้องใช้การเชื่อมต่อเลย — ที่นี่คือที่สำหรับหัดเล่น <strong>pokerth.net</strong> คือเครือข่ายทางการ มีคู่แข่งจริง อันดับประจำฤดูกาล และชื่อผู้เล่นฟรีที่สมัครเพียงครั้งเดียว ส่วน <strong>LAN / เซิร์ฟเวอร์ส่วนตัว</strong> จะเชื่อมต่อไปยังเซิร์ฟเวอร์ PokerTH เฉพาะ ไม่ว่าจะของคุณเองหรือของคนอื่น"],
+       "มีสามโหมด <strong>ในเครื่อง / ฝึกซ้อม</strong> จัดโต๊ะที่มีคู่แข่งคอมพิวเตอร์ให้คุณทันทีและไม่ต้องใช้การเชื่อมต่อเลย — ที่นี่คือที่สำหรับหัดเล่น <strong>pokerth.net</strong> คือเครือข่ายทางการ มีคู่แข่งจริง เกมปกติที่เปิดให้แขกเล่นได้ และเกมจัดอันดับที่มีอันดับประจำฤดูกาลสำหรับผู้เล่นที่มีบัญชีฟรี ส่วน <strong>LAN / เซิร์ฟเวอร์ส่วนตัว</strong> จะเชื่อมต่อไปยังเซิร์ฟเวอร์ PokerTH เฉพาะ ไม่ว่าจะของคุณเองหรือของคนอื่น"],
       ["นั่งลงที่โต๊ะ",
-       "ในล็อบบี้คุณจะเข้าร่วมโต๊ะจากรายการหรือสร้างโต๊ะของตัวเองก็ได้ ตอนสร้าง คุณกำหนดจำนวนที่นั่ง ชิปเริ่มต้น ความเร็วในการขึ้นของไพ่บังคับ และจะตั้งรหัสผ่านหรือไม่ แชร์ลิงก์เชิญ แล้วเพื่อนจะมาโผล่ที่โต๊ะของคุณโดยตรง ในเบราว์เซอร์ของเขาเอง โดยไม่ต้องสมัครอะไรเลย"],
+       "ในล็อบบี้คุณจะเข้าร่วมโต๊ะจากรายการ ดูเกมที่กำลังเล่นอยู่ หรือสร้างโต๊ะของตัวเองก็ได้ ตอนสร้าง คุณเลือกประเภทเกม (ปกติ เฉพาะผู้เล่นลงทะเบียน เฉพาะผู้เล่นที่ได้รับเชิญ หรือเกมจัดอันดับ) และกำหนดจำนวนที่นั่ง ชิปเริ่มต้น ความเร็วในการขึ้นของไพ่บังคับ เวลาในการลงมือ จะให้ผู้ชมดูได้หรือไม่ และจะตั้งรหัสผ่านหรือไม่ แชร์ลิงก์เชิญ แล้วเพื่อนจะมาโผล่ที่โต๊ะของคุณโดยตรง ในเบราว์เซอร์ของเขาเอง — ในเกมปกติโดยไม่ต้องสมัครอะไรเลย"],
       ["เล่นไพ่มือนั้น",
-       "คุณจะได้ไพ่ปิดสองใบ การเดิมพันจะวนรอบโต๊ะก่อนไพ่ฟลอป แล้ววนอีกครั้งหลังฟลอป เทิร์น และริเวอร์ เมื่อถึงตาคุณ แถบปฏิบัติการจะสว่างขึ้นและเสนอเฉพาะสิ่งที่ทำได้: Fold, Check หรือ Call, Raise หรือ All-In จำนวนเงินพิมพ์เองก็ได้ ลากแถบเลื่อนก็ได้ หรือแตะครั้งเดียวเพื่อตั้งเป็นขั้นต่ำ ครึ่งกองกลาง เต็มกองกลาง หรือชิปทั้งหมดของคุณ"],
+       "คุณจะได้ไพ่ปิดสองใบ การเดิมพันจะวนรอบโต๊ะก่อนไพ่ฟลอป แล้ววนอีกครั้งหลังฟลอป เทิร์น และริเวอร์ เมื่อถึงตาคุณ แถบปฏิบัติการจะสว่างขึ้นและเสนอเฉพาะสิ่งที่ทำได้: Fold, Check หรือ Call, Raise หรือ All-In จำนวนเงินพิมพ์เองก็ได้ ลากแถบเลื่อนก็ได้ หรือแตะครั้งเดียวเพื่อตั้งเป็นหนึ่งในสามของกองกลาง ครึ่งกองกลาง หรือเต็มกองกลาง"],
       ["อ่านโต๊ะ",
-       "เมื่อไพ่ทยอยเปิด ระบบจะเขียนชื่อไพ่ที่ดีที่สุดของคุณ ณ ตอนนั้นไว้ใต้กองกลาง กองกลาง ชิปของทุกคน และระดับไพ่บังคับอยู่บนจอตลอดเวลา ปุ่มดีลเลอร์บอกว่าใครพูดคนสุดท้าย และตัวนับถอยหลังบอกว่าคุณเหลือเวลาเท่าไร ตอนเปิดไพ่ ระบบจะเน้นไพ่ห้าใบที่ประกอบเป็นมือของแต่ละคน"],
+       "แท็บโอกาสจะบอกชื่อไพ่ที่ดีที่สุดของคุณ ณ ตอนนั้นและโอกาสชนะของคุณเมื่อไพ่ทยอยเปิด กองกลาง ชิปของทุกคน และระดับไพ่บังคับอยู่บนจอตลอดเวลา ปุ่มดีลเลอร์บอกว่าใครพูดคนสุดท้าย และตัวนับถอยหลังบอกว่าคุณเหลือเวลาเท่าไร ตอนเปิดไพ่ ระบบจะบอกชื่อไพ่ชุดที่ชนะไว้ใต้ไพ่กองกลาง"],
       ["ชนะทัวร์นาเมนต์",
-       "เกมใน PokerTH เป็นทัวร์นาเมนต์แบบ sit-and-go ทุกคนเริ่มด้วยชิปเท่ากัน ไพ่บังคับขึ้นตามเวลา และผู้เล่นทยอยตกรอบจนเหลือคนเดียวที่ถือชิปทั้งหมด ไม่มีอะไรเสียเงินและซื้อชิปไม่ได้ — ทั้งหมดเป็นชิปสมมติ สิ่งเดียวที่วางเดิมพันไว้จึงเป็นตัวเกมเอง"]
+       "เกมใน PokerTH เป็นทัวร์นาเมนต์ ทุกคนเริ่มด้วยชิปเท่ากัน ไพ่บังคับขึ้นทุกไม่กี่ตาหรือไม่กี่นาที และผู้เล่นทยอยตกรอบจนเหลือคนเดียวที่ถือชิปทั้งหมด ไม่มีอะไรเสียเงินและซื้อชิปไม่ได้ — ทั้งหมดเป็นชิปสมมติ สิ่งเดียวที่วางเดิมพันไว้จึงเป็นตัวเกมเอง"]
     ],
     phoneH2: "เล่นบนมือถือ",
     phoneP: "โต๊ะถูกออกแบบมาเพื่อจอสัมผัสไม่แพ้เดสก์ท็อป การแตะช่องเดิมพันจะเปิดแป้นตัวเลขภายในแถบปฏิบัติการแทนแป้นพิมพ์ของระบบ โต๊ะจึงไม่กระโดดไปมา และแถบเลื่อนก็ขยับเป็นขั้นเท่ากับไคลเอนต์เดสก์ท็อป การแจ้งเตือนเมื่อถึงตาคุณสามารถมีปุ่ม Fold และ Check/Call ติดมาด้วย จึงเล่นจบหนึ่งมือได้โดยไม่ต้องกลับไปที่แท็บ",
     friendsH2: "เล่นกับเพื่อน",
     friendsP: "สร้างโต๊ะ ตั้งรหัสผ่านถ้าอยากให้เป็นส่วนตัว แล้วส่งลิงก์เชิญไป ลิงก์จะเปิดโต๊ะให้ทันที — ในแอปที่ติดตั้งไว้ถ้าเขาเพิ่มลงหน้าจอหลักแล้ว ไม่อย่างนั้นก็ในแท็บเบราว์เซอร์ ไม่มีใครต้องติดตั้งอะไรหรือให้อีเมล",
     faqH2: "คำถามที่พบบ่อย",
-    faqP: function (h, c) { return "ไม่มีเงินจริงเข้ามาเกี่ยวข้องในโหมดใดเลย การตั้งค่า ชุดตกแต่ง และความคืบหน้าแบบออฟไลน์ของคุณอยู่บนเครื่องของคุณเอง ส่วนติดต่อผู้ใช้มีให้เลือก 83 ภาษา ขณะที่คำสั่งห้าคำ — Fold, Check, Call, Raise, All-In — ยังคงเป็นภาษาอังกฤษ เหมือนโต๊ะโป๊กเกอร์ทุกแห่งในโลก อ่านเพิ่มเติมได้ที่<a href=\"{faq}\">คำถามที่พบบ่อย</a>".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
+    faqP: function (h, c) { return "ไม่มีเงินจริงเข้ามาเกี่ยวข้องในโหมดใดเลย การตั้งค่า ชุดตกแต่ง และความคืบหน้าการฝึกซ้อมของคุณอยู่บนเครื่องของคุณเอง และตามคุณไปยังอุปกรณ์เครื่องอื่นเมื่อคุณเข้าสู่ระบบด้วยบัญชี pokerth.net ส่วนติดต่อผู้ใช้มีให้เลือก 83 ภาษา ขณะที่คำสั่งห้าคำ — Fold, Check, Call, Raise, All-In — ยังคงเป็นภาษาอังกฤษ เหมือนโต๊ะโป๊กเกอร์ทุกแห่งในโลก อ่านเพิ่มเติมได้ที่<a href=\"{faq}\">คำถามที่พบบ่อย</a>".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
   },
   tk: {
     title: "Onlaýn pokeri mugt nädip oýnamaly — PokerTH Web",
@@ -788,37 +752,25 @@ var PARTS = {
     h1: "Onlaýn pokeri brauzeriňizde mugt nädip oýnamaly",
     lead: function (h, c) { return "Gysgaça şeýle: boş sahypadan PokerTH-däki ilkinji Texas Hold’em eliňize çenli. Düzgünleriň özi gyzyklandyrýan bolsa — blaýndlar, stawka tapgyrlary, näme nämäni ýeňýär — <a href=\"{rules}\">düzgünler sahypasyndan</a> we <a href=\"{hands}\">kombinasiýalardan</a> başlaň.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); },
     steps: [
-      [
-        "Sahypany açyň — gurnamaly zat ýok",
-        "PokerTH brauzerde işleýär. Ýüklemek ýok, hasap ýok, goşmaça programma ýok. Telefonda ony brauzeriň menýusyndan baş ekrana goşup bilersiňiz, şonda ol programma ýaly doly ekranda açylýar we oflaýn işläp bilýär.",
-      ],
-      [
-        "Nirede oýnajakdygyňyzy saýlaň",
-        "Üç režim. <strong>Oflaýn türgenleşik</strong> derrew kompýuter garşydaşlary bolan stol berýär we hiç hili birikme talap etmeýär — öwrenmek üçin ýer. <strong>pokerth.net</strong> — resmi tor: hakyky garşydaşlar, möwsüm reýtingi, bir gezek hasaba alynýan mugt lakam. <strong>LAN / hususy serwer</strong> öz ýa-da başga biriniň PokerTH aýratyn serwerine birigýär.",
-      ],
-      [
-        "Stola oturyň",
-        "Lobbide sanawdan stola goşulyň ýa-da özüňiziňkini dörediň. Döretmekde orunlaryň sanyny, başlangyç stegi, blaýndlaryň näçe çalt ýokarlanýandygyny we stoluň parol bilen goralýandygyny belläp bilersiňiz. Çakylyk salgysyny paýlaşyň — dostuňyz hiç zada hasaba alynman, öz brauzerinde göni stoluňyza geler.",
-      ],
-      [
-        "Eli oýnaň",
-        "Size iki şahsy kart paýlanýar. Stawkalar flopdan öň, şeýle hem flopdan, ternden we riwerden soň stoluň töweregine aýlanýar. Nobatyňyz gelende hereket paneli ýanýar we diňe rugsat berlen zady hödürleýär: Fold, Check ýa-da Call, Raise ýa-da All-In. Stawka mukdaryny ýazyp, süýşürijide süýräp ýa-da bir basmak bilen iň azyna, bankyň ýarysyna, banka ýa-da tutuş stegiňize belläp bolýar.",
-      ],
-      [
-        "Stoly okaň",
-        "Kartlar açyldygyça häzirki iň gowy kombinasiýaňyz stoluň aşagynda atlandyrylýar. Bank, her stek we blaýndlaryň derejesi hemişe ekranda, diler düwmesi kimiň soňky gürleýändigini görkezýär, yza sanamak bolsa näçe wagtyňyzyň bardygyny görkezýär. Şoudaunda her kombinasiýany düzen bäş kart bellenýär.",
-      ],
-      [
-        "Ýaryşda ýeňiň",
-        "PokerTH oýunlary sit-and-go ýaryşlarydyr: hemmeler birmeňzeş stek bilen başlaýar, blaýndlar sagat boýunça ýokarlanýar we kimdir biri ähli çiplere eýe bolýança oýunçylar çykýar. Hiç zat pul durmaýar we çipleri satyn alyp bolmaýar — hemmesi oýun puly, şonuň üçin howp astynda diňe oýnuň özi bar.",
-      ],
+      ["Sahypany açyň — gurnamaly zat ýok",
+       "PokerTH brauzerde işleýär. Ýüklemek ýok, goşmaça programma ýok, türgenleşik ýa-da myhman oýunlary üçin hasap hem gerek däl. Ony programma ýaly gurnap bilersiňiz — iPhone-da we iPad-da Paýlaş → Baş ekrana goş, başga ýerlerde brauzer menýusy ýa-da gurnama düwmesi — şonda ol doly ekranda açylýar we oflaýn işläp bilýär. Isleseňiz, burçdaky Tuz, ýagny Tuzuň kömegi, her ekrany düşündirýär."],
+      ["Nirede oýnajakdygyňyzy saýlaň",
+       "Üç režim. <strong>Ýerli / türgenleşik</strong> derrew kompýuter garşydaşlary bolan stol berýär we hiç hili birikme talap etmeýär — öwrenmek üçin ýer. <strong>pokerth.net</strong> — resmi tor: hakyky garşydaşlar, myhmanlar üçin açyk Adaty oýunlar we mugt hasaby bolan oýunçylar üçin möwsüm reýtingli Reýting oýunlary. <strong>LAN / hususy serwer</strong> öz ýa-da başga biriniň PokerTH aýratyn serwerine birigýär."],
+      ["Stola oturyň",
+       "Lobbide sanawdan stola goşulyň, dowam edýän oýuna syn ediň ýa-da özüňiziňkini dörediň. Döretmekde oýun görnüşini (Adaty, Diňe hasaba alnan oýunçylar, Diňe çagyrylan oýunçylar ýa-da Reýting oýny) saýlap, orunlaryň sanyny, başlangyç stegi, blaýndlaryň näçe çalt ýokarlanýandygyny, hereket wagtyny, synçylaryň syn edip biljekdigini we stoluň parol bilen goralýandygyny belläp bilersiňiz. Çakylyk salgysyny paýlaşyň — dostuňyz öz brauzerinde göni stoluňyza geler, Adaty oýunda hiç zada hasaba alynman."],
+      ["Eli oýnaň",
+       "Size iki şahsy kart paýlanýar. Stawkalar flopdan öň, şeýle hem flopdan, ternden we riwerden soň stoluň töweregine aýlanýar. Nobatyňyz gelende hereket paneli ýanýar we diňe rugsat berlen zady hödürleýär: Fold, Check ýa-da Call, Raise ýa-da All-In. Stawka mukdaryny ýazyp, süýşürijide süýräp ýa-da bir basmak bilen bankyň üçden birine, bankyň ýarysyna ýa-da banka belläp bolýar."],
+      ["Stoly okaň",
+       "Mümkinçilikler goýmasy kartlar açyldygyça häzirki iň gowy kombinasiýaňyzy we utmak mümkinçiligiňizi atlandyrýar. Bank, her stek we blaýndlaryň derejesi hemişe ekranda, diler düwmesi kimiň soňky gürleýändigini görkezýär, yza sanamak bolsa näçe wagtyňyzyň bardygyny görkezýär. Şoudaunda ýeňiji kombinasiýa umumy kartlaryň aşagynda atlandyrylýar."],
+      ["Ýaryşda ýeňiň",
+       "PokerTH oýunlary ýaryşlardyr: hemmeler birmeňzeş stek bilen başlaýar, blaýndlar her birnäçe elde ýa-da minutda ýokarlanýar we kimdir biri ähli çiplere eýe bolýança oýunçylar çykýar. Hiç zat pul durmaýar we çipleri satyn alyp bolmaýar — hemmesi oýun puly, şonuň üçin howp astynda diňe oýnuň özi bar."]
     ],
     phoneH2: "Telefonda oýnamak",
     phoneP: "Stol kompýuter üçin nähili uýgunlaşdyrylan bolsa, sensor ekranlar üçin hem şeýle uýgunlaşdyryldy: stawka meýdanyna degmek ulgam klawiaturasynyň deregine hereket paneliniň içinde san klawiaturasyny açýar, şonuň üçin stol hiç haçan böküp gitmeýär, süýşüriji bolsa iş stoly programmasyndaky ýaly ädimler bilen hereket edýär. Nobat barada duýduryş göni Fold we Check/Call düwmeleri bilen gelip biler: eli sahypa dolanman oýnap bolýar.",
     friendsH2: "Dostlar bilen oýnamak",
     friendsP: "Stol dörediň, hususy bolmagyny isleseňiz parol goýuň we çakylyk salgysyny ugradyň. Ol stoly göni açýar — dostlaryňyz ony baş ekranyna goşan bolsa gurnalan programmada, ýogsam brauzeriň goýmasynda. Hiç kime hiç zat gurnamak ýa-da e-poçta salgysyny bermek gerek däl.",
     faqH2: "Ýygy berilýän soraglar",
-    faqP: function (h, c) { return "Hiç bir režimde pul gatnaşmaýar. Sazlamalaryňyz, stil toplumlaryňyz we oflaýn öňegidişligiňiz enjamyňyzda galýar. Interfeýs 83 dilde elýeterli, bäş hereket sözi bolsa — Fold, Check, Call, Raise, All-In — dünýäniň her stolundaky ýaly iňlis dilinde galýar. Has köp maglumat <a href=\"{faq}\">ýygy berilýän soraglarda</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); },
+    faqP: function (h, c) { return "Hiç bir režimde pul gatnaşmaýar. Sazlamalaryňyz, stil toplumlaryňyz we türgenleşik öňegidişligiňiz enjamyňyzda galýar we pokerth.net hasaby bilen girseňiz beýleki enjamlaryňyza hem eýerýär. Interfeýs 83 dilde elýeterli, bäş hereket sözi bolsa — Fold, Check, Call, Raise, All-In — dünýäniň her stolundaky ýaly iňlis dilinde galýar. Has köp maglumat <a href=\"{faq}\">ýygy berilýän soraglarda</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); },
   },
 
   bn: {
@@ -830,24 +782,24 @@ var PARTS = {
     lead: function (h, c) { return "এটি সংক্ষিপ্ত পথ: একটি ফাঁকা ট্যাব থেকে PokerTH-এ আপনার প্রথম টেক্সাস হোল্ডেম হাত পর্যন্ত। আপনি যদি নিয়মগুলোই খুঁজছেন — ব্লাইন্ড, বাজির রাউন্ড, কোন হাত কাকে হারায় — তবে আগে <a href=\"{rules}\">নিয়মের পাতা</a> আর <a href=\"{hands}\">হ্যান্ড র‍্যাঙ্কিং</a> দেখে নিন।".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); },
     steps: [
       ["সাইটটি খুলুন — ইনস্টল করার কিছু নেই",
-       "PokerTH ব্রাউজারেই চলে। ডাউনলোড নেই, অ্যাকাউন্ট নেই, প্লাগইন নেই। ফোনে ব্রাউজারের মেনু থেকে একে হোম স্ক্রিনে যোগ করা যায়; তখন এটি অ্যাপের মতো পুরো পর্দায় খোলে এবং অফলাইনেও কাজ করে।"],
+       "PokerTH ব্রাউজারেই চলে। ডাউনলোড নেই, প্লাগইন নেই, আর অনুশীলন বা অতিথি গেমের জন্য অ্যাকাউন্টও নেই। একে অ্যাপের মতো ইনস্টল করা যায় — iPhone ও iPad-এ শেয়ার → Add to Home Screen, অন্য ডিভাইসে ব্রাউজার মেনু বা ইনস্টল বোতাম — তখন এটি পুরো পর্দায় খোলে এবং অফলাইনেও কাজ করে। চাইলে টেক্কার সহায়তা, কোণে থাকা টেক্কা, প্রতিটি পর্দা ব্যাখ্যা করে।"],
       ["কোথায় খেলবেন বেছে নিন",
-       "তিনটি ধরন। <strong>অফলাইন অনুশীলন</strong> সঙ্গে সঙ্গেই আপনাকে কম্পিউটার প্রতিপক্ষের টেবিলে বসিয়ে দেয় এবং কোনো সংযোগই লাগে না — শেখার জায়গা এটিই। <strong>pokerth.net</strong> হলো সরকারি নেটওয়ার্ক: সত্যিকারের প্রতিপক্ষ, মৌসুমি র‍্যাঙ্কিং, আর একবার নিবন্ধন করা বিনামূল্যের ডাকনাম। <strong>LAN / ব্যক্তিগত সার্ভার</strong> আপনাকে কোনো নির্দিষ্ট PokerTH সার্ভারে যুক্ত করে, আপনার নিজের হোক বা অন্য কারও।"],
+       "তিনটি ধরন। <strong>স্থানীয় / অনুশীলন</strong> সঙ্গে সঙ্গেই আপনাকে কম্পিউটার প্রতিপক্ষের টেবিলে বসিয়ে দেয় এবং কোনো সংযোগই লাগে না — শেখার জায়গা এটিই। <strong>pokerth.net</strong> হলো সরকারি নেটওয়ার্ক: সত্যিকারের প্রতিপক্ষ, অতিথিদের জন্য খোলা সাধারণ গেম, আর বিনামূল্যের অ্যাকাউন্টওয়ালা খেলোয়াড়দের জন্য মৌসুমি র‍্যাঙ্কিংসহ র‍্যাংকিং গেম। <strong>LAN / ব্যক্তিগত সার্ভার</strong> আপনাকে কোনো নির্দিষ্ট PokerTH সার্ভারে যুক্ত করে, আপনার নিজের হোক বা অন্য কারও।"],
       ["একটি টেবিলে বসুন",
-       "লবিতে আপনি তালিকা থেকে কোনো টেবিলে যোগ দিতে পারেন, নয়তো নিজের টেবিল বানাতে পারেন। বানানোর সময় আসনসংখ্যা, শুরুর চিপ, ব্লাইন্ড কত দ্রুত বাড়বে, আর টেবিলে পাসওয়ার্ড থাকবে কি না তা ঠিক করেন। আমন্ত্রণের লিঙ্কটি পাঠান, বন্ধু কিছু নিবন্ধন না করেই নিজের ব্রাউজারে সোজা আপনার টেবিলে এসে হাজির হবে।"],
+       "লবিতে আপনি তালিকা থেকে কোনো টেবিলে যোগ দিতে পারেন, চলমান কোনো গেম দেখতে পারেন, নয়তো নিজের টেবিল বানাতে পারেন। বানানোর সময় গেমের ধরন (সাধারণ, শুধু নিবন্ধিত খেলোয়াড়, শুধু আমন্ত্রিত খেলোয়াড় বা র‍্যাংকিং গেম) বেছে নেন এবং আসনসংখ্যা, শুরুর চিপ, ব্লাইন্ড কত দ্রুত বাড়বে, চাল দেওয়ার সময়, দর্শকেরা দেখতে পারবেন কি না আর টেবিলে পাসওয়ার্ড থাকবে কি না তা ঠিক করেন। আমন্ত্রণের লিঙ্কটি পাঠান, বন্ধু নিজের ব্রাউজারে সোজা আপনার টেবিলে এসে হাজির হবে — সাধারণ গেমে কিছু নিবন্ধন না করেই।"],
       ["হাতটি খেলুন",
-       "আপনাকে দুটি গোপন কার্ড দেওয়া হয়। ফ্লপের আগে বাজি টেবিল ঘুরে আসে, তারপর ফ্লপ, টার্ন ও রিভারের পরে আবার। আপনার পালা এলে অ্যাকশন বার জ্বলে ওঠে এবং কেবল যা বৈধ তা-ই দেখায়: Fold, Check বা Call, Raise বা All-In। পরিমাণটা টাইপ করা যায়, স্লাইডারে টেনে নেওয়া যায়, কিংবা এক ছোঁয়ায় সর্বনিম্ন, পটের অর্ধেক, পুরো পট বা আপনার সব চিপে বসানো যায়।"],
+       "আপনাকে দুটি গোপন কার্ড দেওয়া হয়। ফ্লপের আগে বাজি টেবিল ঘুরে আসে, তারপর ফ্লপ, টার্ন ও রিভারের পরে আবার। আপনার পালা এলে অ্যাকশন বার জ্বলে ওঠে এবং কেবল যা বৈধ তা-ই দেখায়: Fold, Check বা Call, Raise বা All-In। পরিমাণটা টাইপ করা যায়, স্লাইডারে টেনে নেওয়া যায়, কিংবা এক ছোঁয়ায় পটের এক-তৃতীয়াংশ, পটের অর্ধেক বা পুরো পট বসানো যায়।"],
       ["টেবিল পড়ুন",
-       "কার্ড খুলতে খুলতে আপনার তখনকার সেরা হাতটির নাম বোর্ডের নিচে লেখা থাকে। পট, প্রত্যেকের চিপ আর ব্লাইন্ডের স্তর সবসময় পর্দায় থাকে, ডিলার বোতাম দেখায় কে শেষে বলবে, আর কাউন্টডাউন দেখায় আপনার কত সময় বাকি। শোডাউনে প্রতিটি হাত গড়ে তোলা ঠিক পাঁচটি কার্ড আলাদা করে দেখানো হয়।"],
+       "Odds ট্যাব কার্ড খুলতে খুলতে আপনার তখনকার সেরা হাতের নাম এবং জেতার সম্ভাবনা দেখায়। পট, প্রত্যেকের চিপ আর ব্লাইন্ডের স্তর সবসময় পর্দায় থাকে, ডিলার বোতাম দেখায় কে শেষে বলবে, আর কাউন্টডাউন দেখায় আপনার কত সময় বাকি। শোডাউনে বিজয়ী মিলটির নাম সাধারণ কার্ডগুলোর নিচে লেখা হয়।"],
       ["টুর্নামেন্ট জিতুন",
-       "PokerTH-এর খেলা sit-and-go টুর্নামেন্ট: সবাই একই চিপ নিয়ে শুরু করে, ব্লাইন্ড ঘড়ি ধরে বাড়ে, আর একজনের হাতে সব চিপ না আসা পর্যন্ত খেলোয়াড়েরা বাদ পড়তে থাকেন। কিছুতেই টাকা লাগে না আর চিপ কেনাও যায় না — সবই খেলার চিপ, তাই বাজি ধরা থাকে কেবল খেলাটাই।"]
+       "PokerTH-এর খেলা টুর্নামেন্ট: সবাই একই চিপ নিয়ে শুরু করে, ব্লাইন্ড কয়েক হাত বা কয়েক মিনিট পরপর বাড়ে, আর একজনের হাতে সব চিপ না আসা পর্যন্ত খেলোয়াড়েরা বাদ পড়তে থাকেন। কিছুতেই টাকা লাগে না আর চিপ কেনাও যায় না — সবই খেলার চিপ, তাই বাজি ধরা থাকে কেবল খেলাটাই।"]
     ],
     phoneH2: "ফোনে খেলা",
     phoneP: "টেবিলটি কম্পিউটারের জন্য যতটা, স্পর্শপর্দার জন্যও ঠিক ততটাই বানানো: বাজির ঘরে ছোঁয়া দিলে সিস্টেমের কি-বোর্ডের বদলে অ্যাকশন বারের ভেতরেই সংখ্যার প্যাড খোলে, ফলে টেবিল কখনও লাফায় না, আর স্লাইডারও ডেস্কটপ ক্লায়েন্টের মতো একই ধাপে নড়ে। পালা আসার বিজ্ঞপ্তিতে Fold আর Check/Call বোতাম থাকতে পারে, তাই ট্যাবে না ফিরেও একটি হাত খেলে ফেলা যায়।",
     friendsH2: "বন্ধুদের সঙ্গে খেলা",
     friendsP: "একটি টেবিল বানান, ব্যক্তিগত রাখতে চাইলে পাসওয়ার্ড দিন, আর আমন্ত্রণের লিঙ্কটি পাঠিয়ে দিন। লিঙ্কটি টেবিলটি সরাসরি খোলে — অ্যাপ হোম স্ক্রিনে যোগ করা থাকলে ইনস্টল করা অ্যাপে, নয়তো ব্রাউজারের ট্যাবে। কাউকে কিছু ইনস্টল করতে বা ইমেইল ঠিকানা দিতে হয় না।",
     faqH2: "সাধারণ প্রশ্ন",
-    faqP: function (h, c) { return "কোনো ধরনেই আসল টাকা জড়িত নয়। আপনার সেটিংস, স্টাইল প্যাক আর অফলাইন অগ্রগতি আপনার নিজের যন্ত্রেই থাকে। ইন্টারফেস ৮৩টি ভাষায় পাওয়া যায়, আর পাঁচটি অ্যাকশন শব্দ — Fold, Check, Call, Raise, All-In — দুনিয়ার যেকোনো টেবিলের মতোই ইংরেজিতে থাকে। আরও জানুন <a href=\"{faq}\">সাধারণ প্রশ্নে</a>।".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
+    faqP: function (h, c) { return "কোনো ধরনেই আসল টাকা জড়িত নয়। আপনার সেটিংস, স্টাইল প্যাক আর অনুশীলনের অগ্রগতি আপনার নিজের যন্ত্রেই থাকে, আর pokerth.net অ্যাকাউন্টে লগ ইন করলে আপনার অন্য ডিভাইসেও আপনার সঙ্গে থাকে। ইন্টারফেস ৮৩টি ভাষায় পাওয়া যায়, আর পাঁচটি অ্যাকশন শব্দ — Fold, Check, Call, Raise, All-In — দুনিয়ার যেকোনো টেবিলের মতোই ইংরেজিতে থাকে। আরও জানুন <a href=\"{faq}\">সাধারণ প্রশ্নে</a>।".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
   },
 
   'pt-PT': {
@@ -859,24 +811,24 @@ var PARTS = {
     lead: function (h, c) { return "Esta é a versão curta: de um separador vazio até à sua primeira mão de Texas Hold’em no PokerTH. Se o que procura são as regras em si — blinds, rondas de apostas, o que ganha a quê — comece pela <a href=\"{rules}\">página das regras</a> e pelas <a href=\"{hands}\">mãos do póquer</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); },
     steps: [
       ["Abra o site — não há nada para instalar",
-       "O PokerTH corre no navegador. Sem transferências, sem registo, sem extensões. No telemóvel pode adicioná-lo ao ecrã principal a partir do menu do navegador: abre então como uma aplicação, em ecrã inteiro, e funciona offline."],
+       "O PokerTH corre no navegador. Sem transferências, sem extensões e sem registo para o treino ou para os jogos como convidado. Pode instalá-lo como uma aplicação — Partilhar → Adicionar ao ecrã principal no iPhone e no iPad, o menu do navegador ou o botão de instalação nos restantes casos — e abre em ecrã inteiro, com suporte offline. Se quiser, a Ajuda do Ás, o Ás no canto do ecrã, explica cada ecrã."],
       ["Escolha onde quer jogar",
-       "Três modos. O <strong>treino offline</strong> senta-o de imediato numa mesa de adversários controlados pelo computador e não precisa de ligação nenhuma — é aqui que se aprende. O <strong>pokerth.net</strong> é a rede oficial: adversários reais, classificações por época e uma alcunha gratuita que regista uma só vez. <strong>LAN / servidor privado</strong> liga-o a um servidor PokerTH dedicado, seu ou de outra pessoa."],
+       "Três modos. O <strong>Local / treino</strong> senta-o de imediato numa mesa de adversários controlados pelo computador e não precisa de ligação nenhuma — é aqui que se aprende. O <strong>pokerth.net</strong> é a rede oficial: adversários reais, jogos Normal abertos a convidados e jogos de classificação, com classificações por época, para quem tem uma conta gratuita. <strong>LAN / servidor privado</strong> liga-o a um servidor PokerTH dedicado, seu ou de outra pessoa."],
       ["Sente-se a uma mesa",
-       "No lobby, junta-se a uma mesa da lista ou cria a sua. Ao criá-la define o número de lugares, as fichas iniciais, a rapidez com que os blinds sobem e se a mesa tem palavra-passe. Partilhe a ligação de convite e o amigo chega directamente à sua mesa, no navegador dele, sem registar nada."],
+       "No lobby, junta-se a uma mesa da lista, vê um jogo a decorrer ou cria a sua. Ao criá-la escolhe o tipo de jogo (Normal, apenas jogadores registados, apenas jogadores convidados ou de classificação) e define o número de lugares, as fichas iniciais, a rapidez com que os blinds sobem, o tempo para jogar, se os espetadores podem ver e se a mesa tem palavra-passe. Partilhe a ligação de convite e o amigo chega directamente à sua mesa, no navegador dele — num jogo Normal, sem registar nada."],
       ["Jogue a mão",
-       "Recebe duas cartas fechadas. As apostas dão a volta à mesa antes do flop e outra vez depois do flop, do turn e do river. Quando é a sua vez, a barra de acções acende-se e oferece apenas o que é permitido: Fold, Check ou Call, Raise ou All-In. O valor pode ser escrito, arrastado no cursor ou definido com um toque em Mín., metade do pote, o pote ou todas as suas fichas."],
+       "Recebe duas cartas fechadas. As apostas dão a volta à mesa antes do flop e outra vez depois do flop, do turn e do river. Quando é a sua vez, a barra de acções acende-se e oferece apenas o que é permitido: Fold, Check ou Call, Raise ou All-In. O valor pode ser escrito, arrastado no cursor ou definido com um toque num terço do pote, em metade do pote ou no pote."],
       ["Leia a mesa",
-       "A sua melhor mão do momento aparece nomeada por baixo da mesa à medida que as cartas saem. O pote, as fichas de cada jogador e o nível dos blinds estão sempre no ecrã, o botão do dealer mostra quem fala em último e uma contagem decrescente indica o tempo que lhe resta. No showdown ficam destacadas as cinco cartas que formaram cada mão."],
+       "O separador Probabilidades indica o nome da sua melhor mão do momento e a sua probabilidade de ganhar à medida que as cartas saem. O pote, as fichas de cada jogador e o nível dos blinds estão sempre no ecrã, o botão do dealer mostra quem fala em último e uma contagem decrescente indica o tempo que lhe resta. No showdown, a combinação vencedora fica nomeada por baixo das cartas comunitárias."],
       ["Ganhe o torneio",
-       "Os jogos do PokerTH são torneios sit-and-go: toda a gente começa com as mesmas fichas, os blinds sobem ao relógio e os jogadores vão sendo eliminados até um deles ficar com tudo. Nada custa dinheiro e não se compram fichas — é tudo dinheiro fictício, por isso o único risco é o do próprio jogo."]
+       "Os jogos do PokerTH são torneios: toda a gente começa com as mesmas fichas, os blinds sobem a cada poucas mãos ou minutos e os jogadores vão sendo eliminados até um deles ficar com tudo. Nada custa dinheiro e não se compram fichas — é tudo dinheiro fictício, por isso o único risco é o do próprio jogo."]
     ],
     phoneH2: "Jogar no telemóvel",
     phoneP: "A mesa foi pensada tanto para o ecrã táctil como para o computador: tocar no campo da aposta abre um teclado numérico dentro da barra de acções em vez do teclado do sistema, pelo que a mesa nunca salta, e o cursor avança nos mesmos passos do cliente de secretária. As notificações de vez podem chegar-lhe já com os botões Fold e Check/Call, de modo que se joga uma mão sem voltar ao separador.",
     friendsH2: "Jogar com amigos",
     friendsP: "Crie uma mesa, ponha palavra-passe se a quiser privada e envie a ligação de convite. Ela abre a mesa directamente — na aplicação instalada, se a tiverem adicionado ao ecrã principal, ou num separador do navegador. Ninguém tem de instalar seja o que for nem dar um endereço de email.",
     faqH2: "Perguntas frequentes",
-    faqP: function (h, c) { return "Nunca há dinheiro envolvido, em modo nenhum. As suas definições, pacotes de estilo e progresso offline ficam no seu próprio aparelho. A interface está disponível em 83 idiomas, ao passo que as cinco palavras de acção — Fold, Check, Call, Raise, All-In — continuam em inglês, tal como em qualquer mesa do mundo. Mais nas <a href=\"{faq}\">perguntas frequentes</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
+    faqP: function (h, c) { return "Nunca há dinheiro envolvido, em modo nenhum. As suas definições, pacotes de estilo e progresso de treino ficam no seu próprio aparelho e acompanham-no nos seus outros aparelhos quando inicia sessão com uma conta pokerth.net. A interface está disponível em 83 idiomas, ao passo que as cinco palavras de acção — Fold, Check, Call, Raise, All-In — continuam em inglês, tal como em qualquer mesa do mundo. Mais nas <a href=\"{faq}\">perguntas frequentes</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
   },
 
   'zh-TW': {
@@ -888,24 +840,24 @@ var PARTS = {
     lead: function (h, c) { return "這是精簡版：從一個空白分頁到你在 PokerTH 的第一手德州撲克。如果你想了解的是規則本身——盲注、下注輪次、什麼牌大過什麼牌——請先看<a href=\"{rules}\">規則頁面</a>和<a href=\"{hands}\">牌型大小</a>。".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); },
     steps: [
       ["打開網站——沒有任何東西需要安裝",
-       "PokerTH 在瀏覽器裡執行。不必下載、不必註冊、不必外掛。在手機上，你可以從瀏覽器選單把它加到主畫面，之後它就像一個應用程式一樣全螢幕開啟，而且支援離線使用。"],
+       "PokerTH 在瀏覽器裡執行。不必下載、不必外掛，練習和訪客遊戲也不需要帳號。你可以把它像應用程式一樣安裝——在 iPhone 和 iPad 上透過 分享 → 加入主畫面，其他裝置透過瀏覽器選單或安裝按鈕——之後它會全螢幕開啟，而且支援離線使用。如果你願意，A 牌小幫手——角落裡的那張 A 牌——會為你講解每個畫面。"],
       ["選擇你想在哪裡玩",
-       "共三種模式。<strong>離線練習</strong>會立刻為你安排一桌電腦對手，完全不需要連線——這是學習的地方。<strong>pokerth.net</strong> 是官方網路：真人對手、賽季排名，註冊一次即可取得免費暱稱。<strong>區域網路／私人伺服器</strong>連接到專用的 PokerTH 伺服器，你自己的或別人的都行。"],
+       "共三種模式。<strong>本機 / 練習</strong>會立刻為你安排一桌電腦對手，完全不需要連線——這是學習的地方。<strong>pokerth.net</strong> 是官方網路：真人對手、向訪客開放的「一般」遊戲，以及為擁有免費帳號的玩家提供賽季排名的「排名遊戲」。<strong>區域網路／私人伺服器</strong>連接到專用的 PokerTH 伺服器，你自己的或別人的都行。"],
       ["坐到牌桌前",
-       "在大廳裡，你可以從清單加入一桌，也可以自己開一桌。開桌時可以設定座位數、起始籌碼、盲注上漲的速度，以及是否設密碼。把邀請連結分享出去，朋友就會直接落座在你的牌桌上，在他自己的瀏覽器裡，什麼都不用註冊。"],
+       "在大廳裡，你可以從清單加入一桌、旁觀一場進行中的牌局，也可以自己開一桌。開桌時可以選擇遊戲類型（「一般」、僅限註冊玩家、僅限受邀玩家或「排名遊戲」），並設定座位數、起始籌碼、盲注上漲的速度、行動時間、是否允許旁觀，以及是否設密碼。把邀請連結分享出去，朋友就會直接落座在你的牌桌上，在他自己的瀏覽器裡——在「一般」遊戲中什麼都不用註冊。"],
       ["打這手牌",
-       "你會拿到兩張底牌。翻牌前繞桌下注一輪，翻牌、轉牌、河牌之後各再下注一輪。輪到你時，操作列會亮起，而且只提供當下合法的選項：Fold、Check 或 Call、Raise 或 All-In。下注金額可以輸入、可以拖曳滑桿，也可以一鍵設為最小注、半池、一池或全部籌碼。"],
+       "你會拿到兩張底牌。翻牌前繞桌下注一輪，翻牌、轉牌、河牌之後各再下注一輪。輪到你時，操作列會亮起，而且只提供當下合法的選項：Fold、Check 或 Call、Raise 或 All-In。下注金額可以輸入、可以拖曳滑桿，也可以一鍵設為三分之一池、半池或一池。"],
       ["讀懂牌桌",
-       "隨著公共牌發出，你目前的最佳牌型會標註在牌桌下方。底池、每個人的籌碼和盲注級別始終顯示在螢幕上，莊家按鈕標明誰最後行動，倒數計時顯示你還剩多少時間。攤牌時，組成每一手牌的那五張會被高亮。"],
+       "「勝率」分頁會隨著公共牌發出，標明你目前的最佳牌型和獲勝機率。底池、每個人的籌碼和盲注級別始終顯示在螢幕上，莊家按鈕標明誰最後行動，倒數計時顯示你還剩多少時間。攤牌時，獲勝牌型會標註在公共牌下方。"],
       ["贏下比賽",
-       "PokerTH 的牌局是 sit-and-go 錦標賽：所有人以相同籌碼開局，盲注按時上漲，玩家陸續被淘汰，直到一人贏下全部籌碼。不花一分錢，也無法購買籌碼——全部是虛擬籌碼，因此唯一的賭注就是這局牌本身。"]
+       "PokerTH 的牌局是錦標賽：所有人以相同籌碼開局，盲注每隔幾手牌或幾分鐘上漲，玩家陸續被淘汰，直到一人贏下全部籌碼。不花一分錢，也無法購買籌碼——全部是虛擬籌碼，因此唯一的賭注就是這局牌本身。"]
     ],
     phoneH2: "在手機上玩",
     phoneP: "牌桌為觸控螢幕所做的考量不亞於桌面端：點擊下注框會在操作列內開啟數字鍵盤，而不是彈出系統鍵盤，因此牌桌永遠不會跳動；滑桿的級距也與桌面用戶端一致。輪到你時的通知上可以直接帶有 Fold 和 Check/Call 按鈕，因此一手牌不必切回分頁也能打完。",
     friendsH2: "和朋友一起玩",
     friendsP: "開一桌，想私密就設個密碼，然後把邀請連結發出去。連結會直接開啟牌桌——如果對方已把應用程式加到主畫面，就在應用程式裡開啟，否則在瀏覽器分頁裡開啟。誰都不用安裝任何東西，也不用交出電子郵件。",
     faqH2: "常見問題",
-    faqP: function (h, c) { return "任何模式都不涉及金錢。你的設定、樣式包和離線進度都保存在你自己的裝置上。介面提供 83 種語言，而 Fold、Check、Call、Raise、All-In 這五個動作詞維持英文，和全世界的牌桌一樣。更多內容見<a href=\"{faq}\">常見問題</a>。".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
+    faqP: function (h, c) { return "任何模式都不涉及金錢。你的設定、樣式包和練習進度都保存在你自己的裝置上，使用 pokerth.net 帳號登入後還會同步到你的其他裝置。介面提供 83 種語言，而 Fold、Check、Call、Raise、All-In 這五個動作詞維持英文，和全世界的牌桌一樣。更多內容見<a href=\"{faq}\">常見問題</a>。".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
   },
   'zh-HK': {
     title: "如何免費網上玩撲克 — PokerTH 網頁版",
@@ -915,31 +867,25 @@ var PARTS = {
     h1: "如何在瀏覽器裡免費網上玩撲克",
     lead: function (h, c) { return "這是精簡版：從一個空白分頁到你在 PokerTH 的第一手德州撲克。如果你想了解的是規則本身——盲注、下注輪次、什麼牌大過什麼牌——請先看<a href=\"{rules}\">規則頁面</a>和<a href=\"{hands}\">牌型大小</a>。".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); },
     steps: [
-      ["打開網站——沒有任何東西需要安裝", "PokerTH 在瀏覽器裡執行。不必下載、不必註冊、不必外掛。在手機上，你可以從瀏覽器選單把它加到主畫面，之後它就像一個應用程式一樣全屏幕開啟，而且支援離線使用。"],
-      [
-        "選擇你想在哪裡玩",
-        "共三種模式。<strong>離線練習</strong>會立刻為你安排一桌電腦對手，完全不需要連線——這是學習的地方。<strong>pokerth.net</strong> 是官方網絡：真人對手、賽季排名，註冊一次即可取得免費暱稱。<strong>區域網絡／私人伺服器</strong>連接到專用的 PokerTH 伺服器，你自己的或別人的都行。",
-      ],
-      [
-        "坐到牌桌前",
-        "在大廳裡，你可以從清單加入一桌，也可以自己開一桌。開桌時可以設定座位數、起始籌碼、盲注上漲的速度，以及是否設密碼。把邀請連結分享出去，朋友就會直接落座在你的牌桌上，在他自己的瀏覽器裡，什麼都不用註冊。",
-      ],
-      [
-        "打這手牌",
-        "你會拿到兩張底牌。翻牌前繞桌下注一輪，翻牌、轉牌、河牌之後各再下注一輪。輪到你時，操作列會亮起，而且只提供當下合法的選項：Fold、Check 或 Call、Raise 或 All-In。下注金額可以輸入、可以拖曳滑桿，也可以一鍵設為最小注、半池、一池或全部籌碼。",
-      ],
-      ["讀懂牌桌", "隨著公共牌發出，你目前的最佳牌型會標註在牌桌下方。底池、每個人的籌碼和盲注級別始終顯示在屏幕上，莊家按鈕標明誰最後行動，倒數計時顯示你還剩多少時間。攤牌時，組成每一手牌的那五張會被高亮。"],
-      [
-        "贏下比賽",
-        "PokerTH 的牌局是 sit-and-go 錦標賽：所有人以相同籌碼開局，盲注按時上漲，玩家陸續被淘汰，直到一人贏下全部籌碼。不花一分錢，也無法購買籌碼——全部是虛擬籌碼，因此唯一的賭注就是這局牌本身。",
-      ],
+      ["打開網站——沒有任何東西需要安裝",
+       "PokerTH 在瀏覽器裡執行。不必下載、不必外掛，練習和訪客遊戲也不需要帳戶。你可以把它像應用程式一樣安裝——在 iPhone 和 iPad 上透過 分享 → 加入主畫面，其他裝置透過瀏覽器選單或安裝按鈕——之後它會全屏幕開啟，而且支援離線使用。如果你願意，A 牌小幫手——角落裡的那張 A 牌——會為你講解每個畫面。"],
+      ["選擇你想在哪裡玩",
+       "共三種模式。<strong>本機 / 練習</strong>會立刻為你安排一桌電腦對手，完全不需要連線——這是學習的地方。<strong>pokerth.net</strong> 是官方網絡：真人對手、向訪客開放的「一般」遊戲，以及為擁有免費帳戶的玩家提供賽季排名的「排名遊戲」。<strong>區域網絡／私人伺服器</strong>連接到專用的 PokerTH 伺服器，你自己的或別人的都行。"],
+      ["坐到牌桌前",
+       "在大廳裡，你可以從清單加入一桌、旁觀一場進行中的牌局，也可以自己開一桌。開桌時可以選擇遊戲類型（「一般」、僅限註冊玩家、僅限受邀玩家或「排名遊戲」），並設定座位數、起始籌碼、盲注上漲的速度、行動時間、是否允許旁觀，以及是否設密碼。把邀請連結分享出去，朋友就會直接落座在你的牌桌上，在他自己的瀏覽器裡——在「一般」遊戲中什麼都不用註冊。"],
+      ["打這手牌",
+       "你會拿到兩張底牌。翻牌前繞桌下注一輪，翻牌、轉牌、河牌之後各再下注一輪。輪到你時，操作列會亮起，而且只提供當下合法的選項：Fold、Check 或 Call、Raise 或 All-In。下注金額可以輸入、可以拖曳滑桿，也可以一鍵設為三分之一池、半池或一池。"],
+      ["讀懂牌桌",
+       "「勝率」分頁會隨著公共牌發出，標明你目前的最佳牌型和獲勝機率。底池、每個人的籌碼和盲注級別始終顯示在屏幕上，莊家按鈕標明誰最後行動，倒數計時顯示你還剩多少時間。攤牌時，獲勝牌型會標註在公共牌下方。"],
+      ["贏下比賽",
+       "PokerTH 的牌局是錦標賽：所有人以相同籌碼開局，盲注每隔幾手牌或幾分鐘上漲，玩家陸續被淘汰，直到一人贏下全部籌碼。不花一分錢，也無法購買籌碼——全部是虛擬籌碼，因此唯一的賭注就是這局牌本身。"]
     ],
     phoneH2: "在手機上玩",
     phoneP: "牌桌為觸控屏幕所做的考量不亞於桌面端：點擊下注框會在操作列內開啟數字鍵盤，而不是彈出系統鍵盤，因此牌桌永遠不會跳動；滑桿的級距也與桌面客戶端一致。輪到你時的通知上可以直接帶有 Fold 和 Check/Call 按鈕，因此一手牌不必切回分頁也能打完。",
     friendsH2: "和朋友一起玩",
     friendsP: "開一桌，想私密就設個密碼，然後把邀請連結發出去。連結會直接開啟牌桌——如果對方已把應用程式加到主畫面，就在應用程式裡開啟，否則在瀏覽器分頁裡開啟。誰都不用安裝任何東西，也不用交出電子郵件。",
     faqH2: "常見問題",
-    faqP: function (h, c) { return "任何模式都不涉及金錢。你的設定、樣式包和離線進度都保存在你自己的裝置上。介面提供 83 種語言，而 Fold、Check、Call、Raise、All-In 這五個動作詞維持英文，和全世界的牌桌一樣。更多內容見<a href=\"{faq}\">常見問題</a>。".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); },
+    faqP: function (h, c) { return "任何模式都不涉及金錢。你的設定、樣式包和練習進度都保存在你自己的裝置上，使用 pokerth.net 帳戶登入後還會同步到你的其他裝置。介面提供 83 種語言，而 Fold、Check、Call、Raise、All-In 這五個動作詞維持英文，和全世界的牌桌一樣。更多內容見<a href=\"{faq}\">常見問題</a>。".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); },
   },
 
   sv: {
@@ -951,24 +897,24 @@ var PARTS = {
     lead: function (h, c) { return "Det här är kortversionen: från en tom flik till din första hand Texas Hold’em i PokerTH. Är det reglerna i sig du är ute efter — mörkar, budrundor, vad som slår vad — börja hellre med <a href=\"{rules}\">regelsidan</a> och <a href=\"{hands}\">pokerhänderna</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); },
     steps: [
       ["Öppna sajten — det finns inget att installera",
-       "PokerTH körs i webbläsaren. Ingen nedladdning, inget konto, inget tillägg. På en telefon kan du lägga till den på hemskärmen från webbläsarmenyn; då öppnas den som en app, i helskärm, och fungerar även offline."],
+       "PokerTH körs i webbläsaren. Ingen nedladdning, inget tillägg, och inget konto för träning eller gästspel. Du kan installera den som en app — Dela → Lägg till på hemskärmen på iPhone och iPad, webbläsarmenyn eller installationsknappen på andra enheter — och den öppnas i helskärm och fungerar även offline. Om du vill förklarar Essets hjälp, Esset i hörnet, varje skärm."],
       ["Välj var du vill spela",
-       "Tre lägen. <strong>Offlineträning</strong> sätter dig direkt vid ett bord med datormotståndare och kräver ingen uppkoppling alls — det är här man lär sig. <strong>pokerth.net</strong> är det officiella nätverket: riktiga motståndare, säsongsrankningar och ett gratis smeknamn som du registrerar en gång. <strong>LAN / privat server</strong> ansluter till en dedikerad PokerTH-server, din egen eller någon annans."],
+       "Tre lägen. <strong>Lokal / träning</strong> sätter dig direkt vid ett bord med datormotståndare och kräver ingen uppkoppling alls — det är här man lär sig. <strong>pokerth.net</strong> är det officiella nätverket: riktiga motståndare, Normal-spel öppna för gäster och Rankingspel med säsongsrankningar för spelare med ett gratis konto. <strong>LAN / privat server</strong> ansluter till en dedikerad PokerTH-server, din egen eller någon annans."],
       ["Sätt dig vid ett bord",
-       "I lobbyn går du antingen med i ett bord från listan eller skapar ett eget. När du skapar ett väljer du antal platser, startstack, hur snabbt mörkarna höjs och om bordet ska ha lösenord. Dela inbjudningslänken så hamnar en vän direkt vid ditt bord, i sin egen webbläsare, utan att registrera något."],
+       "I lobbyn går du antingen med i ett bord från listan, tittar på ett pågående spel eller skapar ett eget. När du skapar ett väljer du speltyp (Normal, Endast registrerade spelare, Endast inbjudna spelare eller Rankingspel) och antal platser, startstack, hur snabbt mörkarna höjs, tid att agera, om åskådare får titta och om bordet ska ha lösenord. Dela inbjudningslänken så hamnar en vän direkt vid ditt bord, i sin egen webbläsare — i ett Normal-spel utan att registrera något."],
       ["Spela handen",
-       "Du får två dolda kort. Budgivningen går runt bordet före floppen och sedan igen efter floppen, turn och river. När det blir din tur tänds åtgärdsraden och erbjuder bara det som är tillåtet: Fold, Check eller Call, Raise eller All-In. Beloppet kan skrivas in, dras på reglaget eller sättas med en tryckning på Min, halva potten, potten eller hela din stack."],
+       "Du får två dolda kort. Budgivningen går runt bordet före floppen och sedan igen efter floppen, turn och river. När det blir din tur tänds åtgärdsraden och erbjuder bara det som är tillåtet: Fold, Check eller Call, Raise eller All-In. Beloppet kan skrivas in, dras på reglaget eller sättas med en tryckning på en tredjedel av potten, halva potten eller potten."],
       ["Läs bordet",
-       "Din bästa hand för stunden namnges under bordet allteftersom korten kommer. Potten, varje stack och mörknivån syns hela tiden, dealerknappen visar vem som agerar sist och en nedräkning visar hur lång tid du har. Vid showdown markeras de fem kort som utgjorde varje hand."],
+       "Fliken Odds namnger din bästa hand för stunden och din chans att vinna allteftersom korten kommer. Potten, varje stack och mörknivån syns hela tiden, dealerknappen visar vem som agerar sist och en nedräkning visar hur lång tid du har. Vid showdown namnges den vinnande kombinationen under de gemensamma korten."],
       ["Vinn turneringen",
-       "Spelen i PokerTH är sit-and-go-turneringar: alla börjar med samma stack, mörkarna höjs på klockan och spelare slås ut tills en enda har alla marker. Ingenting kostar pengar och marker går inte att köpa — allt är låtsaspengar, så det enda som står på spel är själva spelet."]
+       "Spelen i PokerTH är turneringar: alla börjar med samma stack, mörkarna höjs med några givars eller minuters mellanrum och spelare slås ut tills en enda har alla marker. Ingenting kostar pengar och marker går inte att köpa — allt är låtsaspengar, så det enda som står på spel är själva spelet."]
     ],
     phoneH2: "Spela på telefon",
     phoneP: "Bordet är byggt lika mycket för pekskärm som för dator: att trycka på insatsfältet öppnar en sifferknappsats inuti åtgärdsraden i stället för systemtangentbordet, så bordet hoppar aldrig omkring, och reglaget rör sig i samma steg som skrivbordsklienten. Aviseringar om att det är din tur kan komma med Fold- och Check/Call-knappar på sig, så en hand går att spela utan att växla tillbaka till fliken.",
     friendsH2: "Spela med vänner",
     friendsP: "Skapa ett bord, sätt lösenord om du vill ha det privat och skicka inbjudningslänken. Den öppnar bordet direkt — i den installerade appen om de har lagt till den på hemskärmen, annars i en webbläsarflik. Ingen behöver installera något eller lämna ifrån sig en e-postadress.",
     faqH2: "Vanliga frågor",
-    faqP: function (h, c) { return "Inga pengar är någonsin inblandade, i något läge. Dina inställningar, stilpaket och offlineframsteg stannar på din egen enhet. Gränssnittet finns på 83 språk, medan de fem åtgärdsorden — Fold, Check, Call, Raise, All-In — förblir på engelska, precis som vid alla bord i världen. Mer i <a href=\"{faq}\">vanliga frågor</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
+    faqP: function (h, c) { return "Inga pengar är någonsin inblandade, i något läge. Dina inställningar, stilpaket och träningsframsteg stannar på din egen enhet och följer med till dina andra enheter när du loggar in med ett pokerth.net-konto. Gränssnittet finns på 83 språk, medan de fem åtgärdsorden — Fold, Check, Call, Raise, All-In — förblir på engelska, precis som vid alla bord i världen. Mer i <a href=\"{faq}\">vanliga frågor</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
   },
 
   da: {
@@ -980,24 +926,24 @@ var PARTS = {
     lead: function (h, c) { return "Det her er kortversionen: fra en tom fane til din første hånd Texas Hold’em i PokerTH. Er det selve reglerne, du er ude efter — blinds, budrunder, hvad der slår hvad — så start hellere med <a href=\"{rules}\">reglerne</a> og <a href=\"{hands}\">pokerhænderne</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); },
     steps: [
       ["Åbn siden — der er intet at installere",
-       "PokerTH kører i browseren. Ingen download, ingen konto, ingen udvidelse. På en telefon kan du lægge den på hjemmeskærmen fra browsermenuen; så åbner den som en app, i fuld skærm, og virker også offline."],
+       "PokerTH kører i browseren. Ingen download, ingen udvidelse, og ingen konto til træning eller gæstespil. Du kan installere den som en app — Del → Føj til hjemmeskærm på iPhone og iPad, browsermenuen eller installationsknappen andre steder — og den åbner i fuld skærm og virker også offline. Hvis du vil, forklarer Essets hjælp, Esset i hjørnet, hver skærm."],
       ["Vælg hvor du vil spille",
-       "Tre tilstande. <strong>Offlinetræning</strong> sætter dig med det samme ved et bord med computermodstandere og kræver slet ingen forbindelse — det er her, man lærer det. <strong>pokerth.net</strong> er det officielle netværk: rigtige modstandere, sæsonrangliste og et gratis kaldenavn, du registrerer én gang. <strong>LAN / privat server</strong> forbinder til en dedikeret PokerTH-server, din egen eller en andens."],
+       "Tre tilstande. <strong>Lokal / træning</strong> sætter dig med det samme ved et bord med computermodstandere og kræver slet ingen forbindelse — det er her, man lærer det. <strong>pokerth.net</strong> er det officielle netværk: rigtige modstandere, Normal-spil åbne for gæster og Ranglistespil med sæsonranglister for spillere med en gratis konto. <strong>LAN / privat server</strong> forbinder til en dedikeret PokerTH-server, din egen eller en andens."],
       ["Sæt dig ved et bord",
-       "I lobbyen kan du enten gå med i et bord fra listen eller oprette dit eget. Når du opretter, vælger du antal pladser, startstakken, hvor hurtigt blinds stiger, og om bordet skal have adgangskode. Del invitationslinket, så lander en ven direkte ved dit bord, i sin egen browser, uden at registrere noget."],
+       "I lobbyen kan du enten gå med i et bord fra listen, se et igangværende spil eller oprette dit eget. Når du opretter, vælger du spiltype (Normal, kun registrerede spillere, kun inviterede eller Ranglistespil) og indstiller antal pladser, startstakken, hvor hurtigt blinds stiger, tid til at handle, om tilskuere må se med, og om bordet skal have adgangskode. Del invitationslinket, så lander en ven direkte ved dit bord, i sin egen browser — i et Normal-spil uden at registrere noget."],
       ["Spil hånden",
-       "Du får to lukkede kort. Der bydes rundt om bordet før floppen og igen efter floppen, turn og river. Når det bliver din tur, lyser handlingslinjen op og tilbyder kun det, der er tilladt: Fold, Check eller Call, Raise eller All-In. Beløbet kan tastes, trækkes på skyderen eller sættes med ét tryk på Min, halvdelen af puljen, puljen eller hele din stak."],
+       "Du får to lukkede kort. Der bydes rundt om bordet før floppen og igen efter floppen, turn og river. Når det bliver din tur, lyser handlingslinjen op og tilbyder kun det, der er tilladt: Fold, Check eller Call, Raise eller All-In. Beløbet kan tastes, trækkes på skyderen eller sættes med ét tryk til en tredjedel af puljen, halvdelen af puljen eller puljen."],
       ["Læs bordet",
-       "Din bedste hånd lige nu står navngivet under bordet, efterhånden som kortene kommer. Puljen, hver stak og blindniveauet er på skærmen hele tiden, dealerknappen viser, hvem der handler sidst, og en nedtælling viser, hvor lang tid du har. Ved showdown fremhæves de fem kort, der udgjorde hver hånd."],
+       "Fanen Odds navngiver din bedste hånd lige nu og din chance for at vinde, efterhånden som kortene kommer. Puljen, hver stak og blindniveauet er på skærmen hele tiden, dealerknappen viser, hvem der handler sidst, og en nedtælling viser, hvor lang tid du har. Ved showdown navngives den vindende kombination under fælleskortene."],
       ["Vind turneringen",
-       "Spillene i PokerTH er sit-and-go-turneringer: alle starter med samme stak, blinds stiger efter uret, og spillere ryger ud, indtil én sidder med alle jetoner. Intet koster penge, og jetoner kan ikke købes — det hele er legepenge, så det eneste, der står på spil, er selve spillet."]
+       "Spillene i PokerTH er turneringer: alle starter med samme stak, blinds stiger hver få hænder eller minutter, og spillere ryger ud, indtil én sidder med alle jetoner. Intet koster penge, og jetoner kan ikke købes — det hele er legepenge, så det eneste, der står på spil, er selve spillet."]
     ],
     phoneH2: "Spil på telefonen",
     phoneP: "Bordet er lavet til touchskærm lige så meget som til computer: et tryk på indsatsfeltet åbner et taltastatur inde i handlingslinjen i stedet for systemtastaturet, så bordet aldrig hopper rundt, og skyderen bevæger sig i samme trin som desktopklienten. Notifikationer om, at det er din tur, kan komme med Fold- og Check/Call-knapper på, så en hånd kan spilles uden at skifte tilbage til fanen.",
     friendsH2: "Spil med venner",
     friendsP: "Opret et bord, sæt en adgangskode hvis det skal være privat, og send invitationslinket. Det åbner bordet direkte — i den installerede app, hvis de har lagt den på hjemmeskærmen, ellers i en browserfane. Ingen skal installere noget eller aflevere en mailadresse.",
     faqH2: "Ofte stillede spørgsmål",
-    faqP: function (h, c) { return "Der er aldrig penge involveret, i nogen tilstand. Dine indstillinger, stilpakker og offlinefremskridt bliver på din egen enhed. Brugerfladen findes på 83 sprog, mens de fem handlingsord — Fold, Check, Call, Raise, All-In — forbliver på engelsk, ligesom ved ethvert bord i verden. Mere i <a href=\"{faq}\">ofte stillede spørgsmål</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
+    faqP: function (h, c) { return "Der er aldrig penge involveret, i nogen tilstand. Dine indstillinger, stilpakker og træningsfremskridt bliver på din egen enhed og følger med til dine andre enheder, når du logger ind med en pokerth.net-konto. Brugerfladen findes på 83 sprog, mens de fem handlingsord — Fold, Check, Call, Raise, All-In — forbliver på engelsk, ligesom ved ethvert bord i verden. Mere i <a href=\"{faq}\">ofte stillede spørgsmål</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
   },
 
   nb: {
@@ -1009,24 +955,24 @@ var PARTS = {
     lead: function (h, c) { return "Dette er kortversjonen: fra en tom fane til din første hånd Texas Hold’em i PokerTH. Er det selve reglene du er ute etter — blindene, budrundene, hva som slår hva — start heller med <a href=\"{rules}\">regelsiden</a> og <a href=\"{hands}\">pokerhendene</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); },
     steps: [
       ["Åpne nettstedet — det er ingenting å installere",
-       "PokerTH kjører i nettleseren. Ingen nedlasting, ingen konto, ingen utvidelse. På telefonen kan du legge det til på startskjermen fra nettlesermenyen; da åpnes det som en app, i fullskjerm, og virker også uten nett."],
+       "PokerTH kjører i nettleseren. Ingen nedlasting, ingen utvidelse, og ingen konto for trening eller gjestespill. Du kan installere det som en app — Del → Legg til på Hjem-skjerm på iPhone og iPad, nettlesermenyen eller installeringsknappen ellers — og det åpnes i fullskjerm og virker også uten nett. Hvis du vil, forklarer Essets hjelp, Esset i hjørnet, hver skjerm."],
       ["Velg hvor du vil spille",
-       "Tre moduser. <strong>Offlinetrening</strong> setter deg straks ved et bord med datamotstandere og trenger ingen forbindelse i det hele tatt — det er her man lærer. <strong>pokerth.net</strong> er det offisielle nettverket: ekte motstandere, sesongrangeringer og et gratis kallenavn du registrerer én gang. <strong>LAN / privat server</strong> kobler deg til en dedikert PokerTH-server, din egen eller en annens."],
+       "Tre moduser. <strong>Lokal / trening</strong> setter deg straks ved et bord med datamotstandere og trenger ingen forbindelse i det hele tatt — det er her man lærer. <strong>pokerth.net</strong> er det offisielle nettverket: ekte motstandere, Normal-spill åpne for gjester og Rangeringsspill med sesongrangeringer for spillere med en gratis konto. <strong>LAN / privat server</strong> kobler deg til en dedikert PokerTH-server, din egen eller en annens."],
       ["Sett deg ved et bord",
-       "I lobbyen blir du enten med på et bord fra listen eller lager ditt eget. Når du lager ett, velger du antall plasser, startstacken, hvor raskt blindene stiger og om bordet skal ha passord. Del invitasjonslenken, så havner en venn rett ved bordet ditt, i sin egen nettleser, uten å registrere noe."],
+       "I lobbyen blir du enten med på et bord fra listen, ser på et pågående spill eller lager ditt eget. Når du lager ett, velger du spilltype (Normal, Kun registrerte spillere, Kun inviterte spillere eller Rangeringsspill) og angir antall plasser, startstacken, hvor raskt blindene stiger, tid til å handle, om tilskuere får se på og om bordet skal ha passord. Del invitasjonslenken, så havner en venn rett ved bordet ditt, i sin egen nettleser — i et Normal-spill uten å registrere noe."],
       ["Spill hånden",
-       "Du får to lukkede kort. Det bys rundt bordet før floppen, og igjen etter floppen, turn og river. Når turen kommer til deg, lyser handlingslinjen opp og tilbyr bare det som er lov: Fold, Check eller Call, Raise eller All-In. Beløpet kan skrives inn, dras på glidebryteren eller settes med ett trykk på Min, halve potten, potten eller hele stacken din."],
+       "Du får to lukkede kort. Det bys rundt bordet før floppen, og igjen etter floppen, turn og river. Når turen kommer til deg, lyser handlingslinjen opp og tilbyr bare det som er lov: Fold, Check eller Call, Raise eller All-In. Beløpet kan skrives inn, dras på glidebryteren eller settes med ett trykk på en tredjedel av potten, halve potten eller potten."],
       ["Les bordet",
-       "Den beste hånden du har akkurat nå, står navngitt under bordet etter hvert som kortene kommer. Potten, hver stack og blindnivået vises hele tiden, dealerknappen viser hvem som handler sist, og en nedtelling viser hvor lang tid du har. Ved showdown fremheves de fem kortene som utgjorde hver hånd."],
+       "Odds-fanen navngir den beste hånden du har akkurat nå og sjansen din til å vinne etter hvert som kortene kommer. Potten, hver stack og blindnivået vises hele tiden, dealerknappen viser hvem som handler sist, og en nedtelling viser hvor lang tid du har. Ved showdown navngis vinnerkombinasjonen under felleskortene."],
       ["Vinn turneringen",
-       "Spillene i PokerTH er sit-and-go-turneringer: alle starter med samme stack, blindene stiger etter klokka, og spillere slås ut til én sitter med alle sjetongene. Ingenting koster penger, og sjetonger kan ikke kjøpes — alt er lekepenger, så det eneste som står på spill, er selve spillet."]
+       "Spillene i PokerTH er turneringer: alle starter med samme stack, blindene stiger etter noen få hender eller minutter, og spillere slås ut til én sitter med alle sjetongene. Ingenting koster penger, og sjetonger kan ikke kjøpes — alt er lekepenger, så det eneste som står på spill, er selve spillet."]
     ],
     phoneH2: "Spille på telefon",
     phoneP: "Bordet er laget for berøringsskjerm like mye som for datamaskin: å trykke på innsatsfeltet åpner et talltastatur inne i handlingslinjen i stedet for systemtastaturet, slik at bordet aldri hopper rundt, og glidebryteren beveger seg i de samme trinnene som skrivebordsklienten. Varsler om at det er din tur kan komme med Fold- og Check/Call-knapper på seg, så en hånd kan spilles uten å gå tilbake til fanen.",
     friendsH2: "Spille med venner",
     friendsP: "Lag et bord, sett passord hvis du vil ha det privat, og send invitasjonslenken. Den åpner bordet direkte — i den installerte appen hvis de har lagt den til på startskjermen, ellers i en nettleserfane. Ingen trenger å installere noe eller gi fra seg en e-postadresse.",
     faqH2: "Vanlige spørsmål",
-    faqP: function (h, c) { return "Det er aldri penger inne i bildet, i noen modus. Innstillingene dine, stilpakkene og offlinefremgangen blir liggende på din egen enhet. Grensesnittet finnes på 83 språk, mens de fem handlingsordene — Fold, Check, Call, Raise, All-In — forblir på engelsk, som ved ethvert bord i verden. Mer i <a href=\"{faq}\">vanlige spørsmål</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
+    faqP: function (h, c) { return "Det er aldri penger inne i bildet, i noen modus. Innstillingene dine, stilpakkene og treningsfremgangen blir liggende på din egen enhet, og følger deg til de andre enhetene dine når du logger inn med en pokerth.net-konto. Grensesnittet finnes på 83 språk, mens de fem handlingsordene — Fold, Check, Call, Raise, All-In — forblir på engelsk, som ved ethvert bord i verden. Mer i <a href=\"{faq}\">vanlige spørsmål</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
   },
   ne: {
     title: "अनलाइन निःशुल्क पोकर कसरी खेल्ने — PokerTH Web",
@@ -1036,37 +982,25 @@ var PARTS = {
     h1: "अनलाइन पोकर कसरी खेल्ने, निःशुल्क, तपाईंको ब्राउजरमा",
     lead: function (h, c) { return "यहाँ छोटो संस्करण छ: खाली ट्याबदेखि PokerTH मा तपाईंको पहिलो Texas Hold’em ह्यान्डसम्म। नियमहरू आफैंमा रुचि छ भने — ब्लाइन्ड, बाजीका चरण, कसले कसलाई हराउँछ — पहिले <a href=\"{rules}\">नियमको पेज</a> र <a href=\"{hands}\">ह्यान्डहरू</a> बाट सुरु गर्नुहोस्।".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); },
     steps: [
-      [
-        "साइट खोल्नुहोस् — इन्स्टल गर्नुपर्ने केही छैन",
-        "PokerTH ब्राउजरमा चल्छ। डाउनलोड छैन, खाता छैन, प्लगइन छैन। फोनमा ब्राउजर मेनुबाट होम स्क्रिनमा थप्न सकिन्छ र यो एपजस्तै, पूरा स्क्रिनमा र अफलाइन चल्न सक्ने गरी खुल्छ।",
-      ],
-      [
-        "कहाँ खेल्ने छान्नुहोस्",
-        "तीन मोड। <strong>अफलाइन अभ्यास</strong> ले तुरुन्तै कम्प्युटर प्रतिद्वन्द्वीको टेबल दिन्छ र कुनै जडान चाहिँदैन — सिक्ने ठाउँ। <strong>pokerth.net</strong> आधिकारिक नेटवर्क हो: वास्तविक प्रतिद्वन्द्वी, सिजनल र्‍याङ्किङ, एकपटक दर्ता गरिने निःशुल्क उपनाम। <strong>LAN / निजी सर्भर</strong> ले तपाईंको वा अरू कसैको समर्पित PokerTH सर्भरमा जडान गर्छ।",
-      ],
-      [
-        "टेबलमा बस्नुहोस्",
-        "लबीमा तपाईं सूचीको टेबलमा सामेल हुनुहुन्छ वा आफ्नै बनाउनुहुन्छ। बनाउँदा सिटको सङ्ख्या, सुरुको स्ट्याक, ब्लाइन्ड कति छिटो बढ्छन् र टेबल पासवर्डले सुरक्षित छ कि छैन तय गर्न सकिन्छ। निम्तो लिङ्क साझा गर्नुहोस् र साथी केही दर्ता नगरी आफ्नै ब्राउजरमा सीधै तपाईंको टेबलमा आइपुग्छ।",
-      ],
-      [
-        "ह्यान्ड खेल्नुहोस्",
-        "तपाईंलाई दुई निजी कार्ड बाँडिन्छन्। बाजी फ्लपअघि टेबलवरिपरि घुम्छ, र फेरि फ्लप, टर्न र रिभरपछि। तपाईंको पालो आउँदा एक्सन बार बल्छ र वैध चाल मात्र देखाउँछ: Fold, Check वा Call, Raise वा All-In। बाजीको रकम टाइप गर्न, स्लाइडरमा तान्न, वा एकै छुवाइमा न्यूनतम, आधा पोट, पोट वा सम्पूर्ण स्ट्याक तय गर्न सकिन्छ।",
-      ],
-      [
-        "टेबल बुझ्नुहोस्",
-        "कार्ड खुल्दै जाँदा तपाईंको हालको उत्कृष्ट ह्यान्डको नाम टेबलमुनि देखिन्छ। पोट, हरेक स्ट्याक र ब्लाइन्डको तह सधैं स्क्रिनमा हुन्छन्, डिलर बटनले अन्तिममा को बोल्छ देखाउँछ, र उल्टो गन्तीले तपाईंसँग कति समय छ देखाउँछ। शोडाउनमा हरेक ह्यान्ड बनाउने पाँच कार्ड हाइलाइट हुन्छन्।",
-      ],
-      [
-        "प्रतियोगिता जित्नुहोस्",
-        "PokerTH का खेलहरू sit-and-go प्रतियोगिता हुन्: सबै उही स्ट्याकबाट सुरु गर्छन्, टाइमरअनुसार ब्लाइन्ड बढ्छन्, र एक जनाले सबै चिप्स नलिएसम्म खेलाडीहरू बाहिरिँदै जान्छन्। केही पनि पैसा पर्दैन र चिप्स किन्न सकिँदैन — सबै खेलकै पैसा हो, त्यसैले दाउमा खेल मात्र हुन्छ।",
-      ],
+      ["साइट खोल्नुहोस् — इन्स्टल गर्नुपर्ने केही छैन",
+       "PokerTH ब्राउजरमा चल्छ। डाउनलोड छैन, प्लगइन छैन, र अभ्यास वा अतिथि खेलका लागि खाता पनि चाहिँदैन। तपाईं यसलाई एपजस्तै इन्स्टल गर्न सक्नुहुन्छ — iPhone र iPad मा साझा गर्नुहोस् → होम स्क्रिनमा थप्नुहोस्, अन्यत्र ब्राउजर मेनु वा इन्स्टल बटन — र यो पूरा स्क्रिनमा र अफलाइन चल्न सक्ने गरी खुल्छ। चाहनुभयो भने कुनामा रहेको एक्का, एक्काको मद्दतले, हरेक स्क्रिन बुझाउँछ।"],
+      ["कहाँ खेल्ने छान्नुहोस्",
+       "तीन मोड। <strong>स्थानीय / अभ्यास</strong> ले तुरुन्तै कम्प्युटर प्रतिद्वन्द्वीको टेबल दिन्छ र कुनै जडान चाहिँदैन — सिक्ने ठाउँ। <strong>pokerth.net</strong> आधिकारिक नेटवर्क हो: वास्तविक प्रतिद्वन्द्वी, अतिथिका लागि खुला सामान्य खेल, र निःशुल्क खाता भएका खेलाडीका लागि सिजनल र्‍याङ्किङसहितका र्‍याङ्किङ खेल। <strong>LAN / निजी सर्भर</strong> ले तपाईंको वा अरू कसैको समर्पित PokerTH सर्भरमा जडान गर्छ।"],
+      ["टेबलमा बस्नुहोस्",
+       "लबीमा तपाईं सूचीको टेबलमा सामेल हुनुहुन्छ, चलिरहेको खेल हेर्नुहुन्छ वा आफ्नै बनाउनुहुन्छ। बनाउँदा खेलको प्रकार (सामान्य, दर्ता भएका खेलाडी मात्र, निम्तो पाएका खेलाडी मात्र वा र्‍याङ्किङ खेल) छान्न र सिटको सङ्ख्या, सुरुको स्ट्याक, ब्लाइन्ड कति छिटो बढ्छन्, चाल चल्ने समय, दर्शकले हेर्न पाउने कि नपाउने र टेबल पासवर्डले सुरक्षित छ कि छैन तय गर्न सकिन्छ। निम्तो लिङ्क साझा गर्नुहोस् र साथी आफ्नै ब्राउजरमा सीधै तपाईंको टेबलमा आइपुग्छ — सामान्य खेलमा केही दर्ता नगरी।"],
+      ["ह्यान्ड खेल्नुहोस्",
+       "तपाईंलाई दुई निजी कार्ड बाँडिन्छन्। बाजी फ्लपअघि टेबलवरिपरि घुम्छ, र फेरि फ्लप, टर्न र रिभरपछि। तपाईंको पालो आउँदा एक्सन बार बल्छ र वैध चाल मात्र देखाउँछ: Fold, Check वा Call, Raise वा All-In। बाजीको रकम टाइप गर्न, स्लाइडरमा तान्न, वा एकै छुवाइमा पोटको एक तिहाइ, आधा पोट वा पोट तय गर्न सकिन्छ।"],
+      ["टेबल बुझ्नुहोस्",
+       "सम्भावना ट्याबले कार्ड खुल्दै जाँदा तपाईंको हालको उत्कृष्ट ह्यान्डको नाम र जित्ने सम्भावना देखाउँछ। पोट, हरेक स्ट्याक र ब्लाइन्डको तह सधैं स्क्रिनमा हुन्छन्, डिलर बटनले अन्तिममा को बोल्छ देखाउँछ, र उल्टो गन्तीले तपाईंसँग कति समय छ देखाउँछ। शोडाउनमा जित्ने संयोजनको नाम साझा कार्डमुनि देखिन्छ।"],
+      ["प्रतियोगिता जित्नुहोस्",
+       "PokerTH का खेलहरू प्रतियोगिता हुन्: सबै उही स्ट्याकबाट सुरु गर्छन्, केही ह्यान्ड वा मिनेटमा ब्लाइन्ड बढ्छन्, र एक जनाले सबै चिप्स नलिएसम्म खेलाडीहरू बाहिरिँदै जान्छन्। केही पनि पैसा पर्दैन र चिप्स किन्न सकिँदैन — सबै खेलकै पैसा हो, त्यसैले दाउमा खेल मात्र हुन्छ।"]
     ],
     phoneH2: "फोनमा खेल्ने",
     phoneP: "टेबल कम्प्युटरजत्तिकै टच स्क्रिनका लागि पनि बनाइएको छ: बाजी फिल्ड छुँदा प्रणालीको किबोर्डको सट्टा एक्सन बारभित्रै अङ्क प्याड खुल्छ, त्यसैले टेबल कहिल्यै उफ्रिँदैन, र स्लाइडर डेस्कटप क्लाइन्टकै चरणमा सर्छ। पालोका सूचना सीधै Fold र Check/Call बटनसहित आउन सक्छन्: ट्याबमा नफर्की ह्यान्ड खेल्न सकिन्छ।",
     friendsH2: "साथीहरूसँग खेल्ने",
     friendsP: "टेबल बनाउनुहोस्, निजी राख्न चाहे पासवर्ड राख्नुहोस्, र निम्तो लिङ्क पठाउनुहोस्। यसले टेबल सीधै खोल्छ — साथीहरूले होम स्क्रिनमा थपेका भए इन्स्टल गरिएको एपमा, नत्र ब्राउजर ट्याबमा। कसैले केही इन्स्टल गर्न वा इमेल ठेगाना दिनु पर्दैन।",
     faqH2: "बारम्बार सोधिने प्रश्न",
-    faqP: function (h, c) { return "कुनै पनि मोडमा कहिल्यै पैसा संलग्न हुँदैन। तपाईंका सेटिङ, शैली प्याक र अफलाइन प्रगति तपाईंको उपकरणमै रहन्छन्। इन्टरफेस 83 भाषामा उपलब्ध छ, जबकि पाँच चालका शब्द — Fold, Check, Call, Raise, All-In — संसारका सबै टेबलमा जस्तै अङ्ग्रेजीमै रहन्छन्। थप <a href=\"{faq}\">FAQ</a> मा।".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); },
+    faqP: function (h, c) { return "कुनै पनि मोडमा कहिल्यै पैसा संलग्न हुँदैन। तपाईंका सेटिङ, शैली प्याक र अभ्यासको प्रगति तपाईंको उपकरणमै रहन्छन्, र pokerth.net खाताबाट लग इन गर्दा तपाईंका अन्य उपकरणमा पनि पछ्याउँछन्। इन्टरफेस 83 भाषामा उपलब्ध छ, जबकि पाँच चालका शब्द — Fold, Check, Call, Raise, All-In — संसारका सबै टेबलमा जस्तै अङ्ग्रेजीमै रहन्छन्। थप <a href=\"{faq}\">FAQ</a> मा।".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); },
   },
 
   fi: {
@@ -1078,24 +1012,24 @@ var PARTS = {
     lead: function (h, c) { return "Tämä on lyhyt versio: tyhjästä välilehdestä ensimmäiseen Texas Hold’em -käteesi PokerTH:ssa. Jos etsit itse sääntöjä — blindit, panostuskierrokset, mikä voittaa minkä — aloita mieluummin <a href=\"{rules}\">sääntösivulta</a> ja <a href=\"{hands}\">pokerikäsistä</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); },
     steps: [
       ["Avaa sivusto — mitään ei tarvitse asentaa",
-       "PokerTH toimii selaimessa. Ei latausta, ei tiliä, ei lisäosia. Puhelimessa voit lisätä sen aloitusnäytölle selaimen valikosta; silloin se avautuu kuin sovellus, koko näytölle, ja toimii myös ilman verkkoyhteyttä."],
+       "PokerTH toimii selaimessa. Ei latausta, ei lisäosia, eikä tiliä harjoitteluun tai vieraspeleihin. Voit asentaa sen kuin sovelluksen — iPhonessa ja iPadissa Jaa → Lisää Koti-valikkoon, muualla selaimen valikosta tai asennuspainikkeesta — ja se avautuu koko näytölle ja toimii myös ilman verkkoyhteyttä. Halutessasi Ässän apu, nurkassa oleva Ässä, selittää jokaisen näkymän."],
       ["Valitse missä haluat pelata",
-       "Kolme tapaa. <strong>Offline-harjoittelu</strong> istuttaa sinut heti pöytään tietokonevastustajien kanssa eikä vaadi yhteyttä lainkaan — täällä opitaan. <strong>pokerth.net</strong> on virallinen verkko: oikeita vastustajia, kausikohtaiset sijoitukset ja ilmainen nimimerkki, jonka rekisteröit kerran. <strong>LAN / oma palvelin</strong> yhdistää omaan tai jonkun toisen PokerTH-palvelimeen."],
+       "Kolme tapaa. <strong>Paikallinen / harjoittelu</strong> istuttaa sinut heti pöytään tietokonevastustajien kanssa eikä vaadi yhteyttä lainkaan — täällä opitaan. <strong>pokerth.net</strong> on virallinen verkko: oikeita vastustajia, vieraille avoimia Normaali-pelejä ja Ranking-pelejä kausisijoituksineen maksuttoman tilin omistajille. <strong>LAN / oma palvelin</strong> yhdistää omaan tai jonkun toisen PokerTH-palvelimeen."],
       ["Istu pöytään",
-       "Aulassa liityt joko listalta löytyvään pöytään tai luot oman. Luodessasi valitset paikkojen määrän, aloituspinon, kuinka nopeasti blindit nousevat ja onko pöydässä salasana. Jaa kutsulinkki, niin kaveri päätyy suoraan pöytääsi omassa selaimessaan rekisteröimättä mitään."],
+       "Aulassa liityt joko listalta löytyvään pöytään, katsot käynnissä olevaa peliä tai luot oman. Luodessasi valitset pelityypin (Normaali, vain rekisteröityneet pelaajat, vain kutsutut tai Ranking-peli) sekä paikkojen määrän, aloituspinon, kuinka nopeasti blindit nousevat, toimia-ajan, saavatko katsojat seurata peliä ja onko pöydässä salasana. Jaa kutsulinkki, niin kaveri päätyy suoraan pöytääsi omassa selaimessaan — Normaali-pelissä rekisteröimättä mitään."],
       ["Pelaa käsi",
-       "Saat kaksi omaa korttia. Panostus kiertää pöydän ennen floppia ja uudelleen flopin, turnin ja riverin jälkeen. Kun vuoro on sinun, toimintopalkki syttyy ja tarjoaa vain sallitut vaihtoehdot: Fold, Check tai Call, Raise tai All-In. Summan voi kirjoittaa, vetää liukusäätimellä tai asettaa yhdellä napautuksella minimiin, puoleen pottiin, koko pottiin tai koko pinoosi."],
+       "Saat kaksi omaa korttia. Panostus kiertää pöydän ennen floppia ja uudelleen flopin, turnin ja riverin jälkeen. Kun vuoro on sinun, toimintopalkki syttyy ja tarjoaa vain sallitut vaihtoehdot: Fold, Check tai Call, Raise tai All-In. Summan voi kirjoittaa, vetää liukusäätimellä tai asettaa yhdellä napautuksella kolmasosaan potista, puoleen pottiin tai pottiin."],
       ["Lue pöytää",
-       "Paras sen hetkinen kätesi nimetään pöydän alle sitä mukaa kuin kortit tulevat. Potti, jokaisen pino ja blinditaso näkyvät koko ajan, jakajanappula kertoo kuka puhuu viimeisenä, ja lähtölaskenta näyttää paljonko aikaa sinulla on. Korttien näyttövaiheessa korostetaan ne viisi korttia, jotka muodostivat kunkin käden."],
+       "Todennäköisyydet-välilehti nimeää parhaan käden ja voittotodennäköisyytesi sitä mukaa kuin kortit tulevat. Potti, jokaisen pino ja blinditaso näkyvät koko ajan, jakajanappula kertoo kuka puhuu viimeisenä, ja lähtölaskenta näyttää paljonko aikaa sinulla on. Korttien näyttövaiheessa voittava yhdistelmä nimetään yhteisten korttien alla."],
       ["Voita turnaus",
-       "PokerTH:n pelit ovat sit-and-go-turnauksia: kaikki aloittavat samalla pinolla, blindit nousevat kellon mukaan ja pelaajia putoaa, kunnes yhdellä on kaikki pelimerkit. Mikään ei maksa rahaa eikä pelimerkkejä voi ostaa — kaikki on leikkirahaa, joten pelissä on vain peli itse."]
+       "PokerTH:n pelit ovat turnauksia: kaikki aloittavat samalla pinolla, blindit nousevat muutaman jaon tai minuutin välein ja pelaajia putoaa, kunnes yhdellä on kaikki pelimerkit. Mikään ei maksa rahaa eikä pelimerkkejä voi ostaa — kaikki on leikkirahaa, joten pelissä on vain peli itse."]
     ],
     phoneH2: "Pelaaminen puhelimella",
     phoneP: "Pöytä on rakennettu kosketusnäytölle yhtä lailla kuin tietokoneelle: panoskentän napauttaminen avaa numeronäppäimistön toimintopalkin sisään järjestelmän näppäimistön sijaan, joten pöytä ei hyppele, ja liukusäädin liikkuu samoin askelin kuin työpöytäversiossa. Vuoroilmoitukset voivat sisältää Fold- ja Check/Call-painikkeet, joten käden voi pelata palaamatta välilehdelle.",
     friendsH2: "Pelaaminen kavereiden kanssa",
     friendsP: "Luo pöytä, aseta salasana jos haluat sen yksityiseksi, ja lähetä kutsulinkki. Se avaa pöydän suoraan — asennetussa sovelluksessa, jos he ovat lisänneet sen aloitusnäytölle, muuten selaimen välilehdessä. Kenenkään ei tarvitse asentaa mitään eikä luovuttaa sähköpostiosoitetta.",
     faqH2: "Usein kysyttyä",
-    faqP: function (h, c) { return "Rahaa ei ole missään pelimuodossa mukana. Asetuksesi, tyylipaketit ja offline-edistyminen pysyvät omalla laitteellasi. Käyttöliittymä on saatavilla 83 kielellä, kun taas viisi toimintosanaa — Fold, Check, Call, Raise, All-In — pysyvät englanniksi, kuten jokaisessa pöydässä maailmassa. Lisää <a href=\"{faq}\">usein kysytyissä kysymyksissä</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
+    faqP: function (h, c) { return "Rahaa ei ole missään pelimuodossa mukana. Asetuksesi, tyylipaketit ja harjoitteluedistyminen pysyvät omalla laitteellasi ja seuraavat sinua muille laitteillesi, kun kirjaudut sisään pokerth.net-tilillä. Käyttöliittymä on saatavilla 83 kielellä, kun taas viisi toimintosanaa — Fold, Check, Call, Raise, All-In — pysyvät englanniksi, kuten jokaisessa pöydässä maailmassa. Lisää <a href=\"{faq}\">usein kysytyissä kysymyksissä</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
   },
 
   cs: {
@@ -1107,24 +1041,24 @@ var PARTS = {
     lead: function (h, c) { return "Tohle je krátká verze: od prázdné karty prohlížeče k vašemu prvnímu rozdání Texas Hold’em v PokerTH. Pokud hledáte samotná pravidla — blindy, kola sázek, co co přebíjí — začněte raději <a href=\"{rules}\">stránkou s pravidly</a> a <a href=\"{hands}\">pokerovými kombinacemi</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); },
     steps: [
       ["Otevřete web — není co instalovat",
-       "PokerTH běží v prohlížeči. Žádné stahování, žádný účet, žádný doplněk. Na telefonu si ho můžete z nabídky prohlížeče přidat na plochu; pak se otevírá jako aplikace, na celou obrazovku, a funguje i bez připojení."],
+       "PokerTH běží v prohlížeči. Žádné stahování, žádný doplněk a pro trénink ani pro hru jako host není potřeba účet. Můžete si ho nainstalovat jako aplikaci — Sdílet → Přidat na plochu na iPhonu a iPadu, jinde nabídka prohlížeče nebo tlačítko instalace — a otevírá se na celou obrazovku a funguje i bez připojení. Chcete-li, Nápověda od esa, Eso v rohu, vysvětlí každou obrazovku."],
       ["Vyberte, kde chcete hrát",
-       "Tři režimy. <strong>Trénink offline</strong> vás okamžitě posadí ke stolu s počítačovými soupeři a nepotřebuje vůbec žádné připojení — tady se člověk učí. <strong>pokerth.net</strong> je oficiální síť: skuteční soupeři, sezónní žebříčky a přezdívka zdarma, kterou zaregistrujete jednou. <strong>LAN / vlastní server</strong> vás připojí k vyhrazenému serveru PokerTH, vašemu nebo cizímu."],
+       "Tři režimy. <strong>Místní / trénink</strong> vás okamžitě posadí ke stolu s počítačovými soupeři a nepotřebuje vůbec žádné připojení — tady se člověk učí. <strong>pokerth.net</strong> je oficiální síť: skuteční soupeři, normální hry otevřené hostům a hodnocené hry se sezónními žebříčky pro hráče s bezplatným účtem. <strong>LAN / vlastní server</strong> vás připojí k vyhrazenému serveru PokerTH, vašemu nebo cizímu."],
       ["Sedněte si ke stolu",
-       "V lobby se buď připojíte ke stolu ze seznamu, nebo si vytvoříte vlastní. Při vytváření nastavíte počet míst, počáteční stack, jak rychle rostou blindy a jestli má stůl heslo. Sdílejte odkaz s pozvánkou a kamarád přistane rovnou u vašeho stolu, ve svém prohlížeči, aniž by cokoli registroval."],
+       "V lobby se buď připojíte ke stolu ze seznamu, sledujete probíhající hru, nebo si vytvoříte vlastní stůl. Při vytváření zvolíte typ hry (normální, jen pro registrované hráče, jen na pozvání nebo hodnocená) a nastavíte počet míst, počáteční stack, jak rychle rostou blindy, čas na tah, zda smějí diváci sledovat a jestli má stůl heslo. Sdílejte odkaz s pozvánkou a kamarád přistane rovnou u vašeho stolu, ve svém prohlížeči — v normální hře aniž by cokoli registroval."],
       ["Zahrajte rozdání",
-       "Dostanete dvě vlastní karty. Sází se dokola před flopem a pak znovu po flopu, turnu a riveru. Když jste na řadě, akční lišta se rozsvítí a nabídne jen to, co je povolené: Fold, Check nebo Call, Raise či All-In. Částku můžete napsat, přetáhnout posuvníkem nebo jedním klepnutím nastavit na minimum, polovinu banku, celý bank nebo celý svůj stack."],
+       "Dostanete dvě vlastní karty. Sází se dokola před flopem a pak znovu po flopu, turnu a riveru. Když jste na řadě, akční lišta se rozsvítí a nabídne jen to, co je povolené: Fold, Check nebo Call, Raise či All-In. Částku můžete napsat, přetáhnout posuvníkem nebo jedním klepnutím nastavit na třetinu banku, polovinu banku nebo celý bank."],
       ["Čtěte stůl",
-       "Vaše aktuálně nejlepší kombinace je pojmenovaná pod stolem, jak karty přicházejí. Bank, každý stack i úroveň blindů jsou pořád na obrazovce, tlačítko dealera ukazuje, kdo mluví poslední, a odpočet ukazuje, kolik máte času. Při showdownu se u každé odkryté kombinace zvýrazní těch pět karet, které se počítaly."],
+       "Karta „Šance” pojmenuje vaši aktuálně nejlepší kombinaci a vaši šanci na výhru, jak karty přicházejí. Bank, každý stack i úroveň blindů jsou pořád na obrazovce, tlačítko dealera ukazuje, kdo mluví poslední, a odpočet ukazuje, kolik máte času. Při showdownu je vítězná kombinace pojmenovaná pod společnými kartami."],
       ["Vyhrajte turnaj",
-       "Hry v PokerTH jsou turnaje sit-and-go: všichni začínají se stejným stackem, blindy rostou podle hodin a hráči vypadávají, dokud jeden nemá všechny žetony. Nic nestojí peníze a žetony se nedají koupit — všechno jsou herní peníze, takže ve hře je jen hra sama."]
+       "Hry v PokerTH jsou turnaje: všichni začínají se stejným stackem, blindy rostou po několika rozdáních nebo minutách a hráči vypadávají, dokud jeden nemá všechny žetony. Nic nestojí peníze a žetony se nedají koupit — všechno jsou herní peníze, takže ve hře je jen hra sama."]
     ],
     phoneH2: "Hraní na telefonu",
     phoneP: "Stůl je stavěný pro dotykovou obrazovku stejně jako pro počítač: klepnutí na pole sázky otevře číselnou klávesnici přímo v akční liště místo systémové klávesnice, takže stůl nikdy neposkakuje, a posuvník se pohybuje po stejných krocích jako v desktopovém klientu. Upozornění na váš tah může přijít rovnou s tlačítky Fold a Check/Call, takže rozdání se dá dohrát bez přepínání zpět na kartu prohlížeče.",
     friendsH2: "Hraní s přáteli",
     friendsP: "Vytvořte stůl, nastavte heslo, pokud ho chcete soukromý, a pošlete odkaz s pozvánkou. Otevře stůl přímo — v nainstalované aplikaci, pokud si ji přidali na plochu, jinak na kartě prohlížeče. Nikdo nemusí nic instalovat ani dávat e-mailovou adresu.",
     faqH2: "Časté dotazy",
-    faqP: function (h, c) { return "V žádném režimu nejsou ve hře skutečné peníze. Vaše nastavení, stylové balíčky i offline postup zůstávají ve vašem zařízení. Rozhraní je k dispozici ve 83 jazycích, zatímco pět akčních slov — Fold, Check, Call, Raise, All-In — zůstává anglicky, jako u každého stolu na světě. Více v <a href=\"{faq}\">častých dotazech</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
+    faqP: function (h, c) { return "V žádném režimu nejsou ve hře skutečné peníze. Vaše nastavení, stylové balíčky i tréninkový postup zůstávají ve vašem zařízení a po přihlášení účtem pokerth.net vás následují na další zařízení. Rozhraní je k dispozici ve 83 jazycích, zatímco pět akčních slov — Fold, Check, Call, Raise, All-In — zůstává anglicky, jako u každého stolu na světě. Více v <a href=\"{faq}\">častých dotazech</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
   },
   cy: {
     title: "Sut i chwarae pocer ar-lein am ddim — PokerTH Web",
@@ -1134,37 +1068,25 @@ var PARTS = {
     h1: "Sut i chwarae pocer ar-lein, am ddim, yn eich porwr",
     lead: function (h, c) { return "Dyma'r fersiwn fer: o dab gwag i'ch llaw Texas Hold’em gyntaf yn PokerTH. Os mai'r rheolau eu hunain sydd o ddiddordeb — blinds, rowndiau betio, beth sy'n curo beth — dechreuwch gyda <a href=\"{rules}\">tudalen y rheolau</a> a'r <a href=\"{hands}\">dwylo</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); },
     steps: [
-      [
-        "Agorwch y wefan — does dim i'w osod",
-        "Mae PokerTH yn rhedeg yn y porwr. Dim lawrlwytho, dim cyfrif, dim ategyn. Ar ffôn gallwch ei ychwanegu at y sgrin gartref o ddewislen y porwr, ac mae'n agor fel ap, ar sgrin lawn ac yn gallu gweithio all-lein.",
-      ],
-      [
-        "Dewiswch ble i chwarae",
-        "Tri modd. Mae <strong>ymarfer all-lein</strong> yn rhoi bwrdd o wrthwynebwyr cyfrifiadur i chi ar unwaith heb fod angen unrhyw gysylltiad — y lle i ddysgu. <strong>pokerth.net</strong> yw'r rhwydwaith swyddogol: gwrthwynebwyr go iawn, safleoedd tymhorol, llysenw am ddim rydych chi'n ei gofrestru unwaith. Mae <strong>LAN / gweinydd preifat</strong> yn cysylltu â gweinydd PokerTH pwrpasol, eich un chi neu un rhywun arall.",
-      ],
-      [
-        "Eisteddwch wrth fwrdd",
-        "Yn y lobi rydych chi naill ai'n ymuno â bwrdd o'r rhestr neu'n creu eich un eich hun. Mae creu'n gadael i chi osod nifer y seddi, y stac cychwynnol, pa mor gyflym mae'r blinds yn codi ac a yw'r bwrdd wedi'i ddiogelu â chyfrinair. Rhannwch y ddolen wahodd a bydd ffrind yn glanio'n syth wrth eich bwrdd, yn ei borwr ei hun, heb gofrestru dim.",
-      ],
-      [
-        "Chwaraewch y llaw",
-        "Mae dau gerdyn preifat yn cael eu delio i chi. Mae'r betio'n mynd o amgylch y bwrdd cyn y flop, ac eto ar ôl y flop, y turn a'r river. Pan mai eich tro chi yw hi, mae'r bar gweithredu'n goleuo ac yn cynnig dim ond yr hyn sy'n gyfreithlon: Fold, Check neu Call, Raise neu All-In. Gellir teipio swm y bet, ei lusgo ar y llithrydd neu ei osod ag un tap i'r lleiafswm, hanner y pot, y pot neu eich stac cyfan.",
-      ],
-      [
-        "Darllenwch y bwrdd",
-        "Mae eich llaw orau bresennol yn cael ei henwi o dan y bwrdd wrth i'r cardiau gael eu datgelu. Mae'r pot, pob stac a lefel y blinds bob amser ar y sgrin, mae botwm y deliwr yn dangos pwy sy'n siarad olaf, ac mae cyfrif i lawr yn dangos faint o amser sydd gennych. Yn y showdown, mae'r pum cerdyn a wnaeth bob llaw yn cael eu hamlygu.",
-      ],
-      [
-        "Enillwch y twrnamaint",
-        "Twrnameintiau sit-and-go yw gemau PokerTH: mae pawb yn dechrau gyda'r un stac, mae'r blinds yn codi ar amserydd, ac mae chwaraewyr yn cael eu bwrw allan nes bod un yn dal yr holl sglodion. Does dim yn costio arian ac ni ellir prynu sglodion — arian gêm yw'r cyfan, felly yr unig beth yn y fantol yw'r gêm ei hun.",
-      ],
+      ["Agorwch y wefan — does dim i'w osod",
+       "Mae PokerTH yn rhedeg yn y porwr. Dim lawrlwytho, dim ategyn, a dim cyfrif ar gyfer ymarfer neu gemau gwestai. Gallwch ei osod fel ap — Rhannu → Ychwanegu at y Sgrin Gartref ar iPhone ac iPad, dewislen y porwr neu'r botwm gosod mewn mannau eraill — ac mae'n agor ar sgrin lawn ac yn gallu gweithio all-lein. Os ydych eisiau, mae Cymorth yr As, yr As yn y gornel, yn esbonio pob sgrin."],
+      ["Dewiswch ble i chwarae",
+       "Tri modd. Mae <strong>Lleol / ymarfer</strong> yn rhoi bwrdd o wrthwynebwyr cyfrifiadur i chi ar unwaith heb fod angen unrhyw gysylltiad — y lle i ddysgu. <strong>pokerth.net</strong> yw'r rhwydwaith swyddogol: gwrthwynebwyr go iawn, gemau arferol sy'n agored i westeion, a gemau gyda safle â safleoedd tymhorol i chwaraewyr â chyfrif am ddim. Mae <strong>LAN / gweinydd preifat</strong> yn cysylltu â gweinydd PokerTH pwrpasol, eich un chi neu un rhywun arall."],
+      ["Eisteddwch wrth fwrdd",
+       "Yn y lobi rydych chi naill ai'n ymuno â bwrdd o'r rhestr, yn gwylio gêm sy'n rhedeg, neu'n creu eich un eich hun. Mae creu'n gadael i chi ddewis math y gêm (arferol, chwaraewyr cofrestredig yn unig, chwaraewyr gwahoddedig yn unig neu gêm gyda safle) a gosod nifer y seddi, y stac cychwynnol, pa mor gyflym mae'r blinds yn codi, yr amser i weithredu, a yw gwylwyr yn cael gwylio ac a yw'r bwrdd wedi'i ddiogelu â chyfrinair. Rhannwch y ddolen wahodd a bydd ffrind yn glanio'n syth wrth eich bwrdd, yn ei borwr ei hun — mewn gêm arferol heb gofrestru dim."],
+      ["Chwaraewch y llaw",
+       "Mae dau gerdyn preifat yn cael eu delio i chi. Mae'r betio'n mynd o amgylch y bwrdd cyn y flop, ac eto ar ôl y flop, y turn a'r river. Pan mai eich tro chi yw hi, mae'r bar gweithredu'n goleuo ac yn cynnig dim ond yr hyn sy'n gyfreithlon: Fold, Check neu Call, Raise neu All-In. Gellir teipio swm y bet, ei lusgo ar y llithrydd neu ei osod ag un tap i draean y pot, hanner y pot neu'r pot."],
+      ["Darllenwch y bwrdd",
+       "Mae'r tab “Siawns” yn enwi eich llaw orau bresennol a'ch siawns o ennill wrth i'r cardiau gael eu datgelu. Mae'r pot, pob stac a lefel y blinds bob amser ar y sgrin, mae botwm y deliwr yn dangos pwy sy'n siarad olaf, ac mae cyfrif i lawr yn dangos faint o amser sydd gennych. Yn y showdown, enwir y cyfuniad buddugol o dan y cardiau cymunedol."],
+      ["Enillwch y twrnamaint",
+       "Twrnameintiau yw gemau PokerTH: mae pawb yn dechrau gyda'r un stac, mae'r blinds yn codi bob ychydig o ddwylo neu funudau, ac mae chwaraewyr yn cael eu bwrw allan nes bod un yn dal yr holl sglodion. Does dim yn costio arian ac ni ellir prynu sglodion — arian gêm yw'r cyfan, felly yr unig beth yn y fantol yw'r gêm ei hun."]
     ],
     phoneH2: "Chwarae ar ffôn",
     phoneP: "Mae'r bwrdd wedi'i ddylunio ar gyfer sgrin gyffwrdd cymaint ag ar gyfer cyfrifiadur: mae tapio'r maes bet yn agor bysellbad rhifau y tu mewn i'r bar gweithredu yn lle bysellfwrdd y system, felly dydy'r bwrdd byth yn neidio, ac mae'r llithrydd yn symud yn yr un camau â'r cleient bwrdd gwaith. Gall hysbysiadau tro gyrraedd gyda botymau Fold a Check/Call yn syth arnynt: gellir chwarae'r llaw heb fynd yn ôl i'r tab.",
     friendsH2: "Chwarae gyda ffrindiau",
     friendsP: "Crëwch fwrdd, rhowch gyfrinair arno os ydych am iddo fod yn breifat, ac anfonwch y ddolen wahodd. Mae'n agor y bwrdd yn uniongyrchol — yn yr ap wedi'i osod os yw eich ffrindiau wedi'i ychwanegu at eu sgrin gartref, neu mewn tab porwr fel arall. Does dim rhaid i neb osod dim na rhoi cyfeiriad e-bost.",
     faqH2: "Cwestiynau cyffredin",
-    faqP: function (h, c) { return "Nid oes arian byth yn y fantol, mewn unrhyw fodd. Mae eich gosodiadau, pecynnau arddull a chynnydd all-lein yn aros ar eich dyfais. Mae'r rhyngwyneb ar gael mewn 83 iaith, tra bod y pum gair symud — Fold, Check, Call, Raise, All-In — yn aros yn Saesneg, fel wrth bob bwrdd yn y byd. Rhagor yn y <a href=\"{faq}\">cwestiynau cyffredin</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); },
+    faqP: function (h, c) { return "Nid oes arian byth yn y fantol, mewn unrhyw fodd. Mae eich gosodiadau, pecynnau arddull a chynnydd ymarfer yn aros ar eich dyfais, ac yn eich dilyn i'ch dyfeisiau eraill pan fyddwch yn mewngofnodi gyda chyfrif pokerth.net. Mae'r rhyngwyneb ar gael mewn 83 iaith, tra bod y pum gair symud — Fold, Check, Call, Raise, All-In — yn aros yn Saesneg, fel wrth bob bwrdd yn y byd. Rhagor yn y <a href=\"{faq}\">cwestiynau cyffredin</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); },
   },
 
   sk: {
@@ -1176,24 +1098,24 @@ var PARTS = {
     lead: function (h, c) { return "Toto je krátka verzia: od prázdnej karty prehliadača k vášmu prvému rozdaniu Texas Hold’em v PokerTH. Ak hľadáte samotné pravidlá — blindy, kolá stávok, čo čo prebíja — začnite radšej <a href=\"{rules}\">stránkou s pravidlami</a> a <a href=\"{hands}\">pokerovými kombináciami</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); },
     steps: [
       ["Otvorte web — nie je čo inštalovať",
-       "PokerTH beží v prehliadači. Žiadne sťahovanie, žiadny účet, žiadny doplnok. Na telefóne si ho z ponuky prehliadača môžete pridať na plochu; potom sa otvára ako aplikácia, na celú obrazovku, a funguje aj bez pripojenia."],
+       "PokerTH beží v prehliadači. Žiadne sťahovanie, žiadny doplnok a na tréning či hry ako hosť ani účet. Môžete si ho nainštalovať ako aplikáciu — Zdieľať → Pridať na plochu na iPhone a iPade, inde ponuka prehliadača alebo tlačidlo inštalácie — a otvára sa na celú obrazovku, s podporou offline. Ak chcete, Pomoc od esa, Eso v rohu obrazovky, vysvetlí každú obrazovku."],
       ["Vyberte si, kde chcete hrať",
-       "Tri režimy. <strong>Tréning offline</strong> vás okamžite posadí k stolu s počítačovými súpermi a nepotrebuje vôbec žiadne pripojenie — tu sa človek učí. <strong>pokerth.net</strong> je oficiálna sieť: skutoční súperi, sezónne rebríčky a prezývka zadarmo, ktorú zaregistrujete raz. <strong>LAN / vlastný server</strong> vás pripojí k vyhradenému serveru PokerTH, vášmu alebo cudziemu."],
+       "Tri režimy. <strong>Lokálne / tréning</strong> vás okamžite posadí k stolu s počítačovými súpermi a nepotrebuje vôbec žiadne pripojenie — tu sa človek učí. <strong>pokerth.net</strong> je oficiálna sieť: skutoční súperi, hry Normálna otvorené hosťom a hodnotené hry so sezónnymi rebríčkami pre hráčov s bezplatným účtom. <strong>LAN / vlastný server</strong> vás pripojí k vyhradenému serveru PokerTH, vášmu alebo cudziemu."],
       ["Sadnite si k stolu",
-       "V lobby sa buď pripojíte k stolu zo zoznamu, alebo si vytvoríte vlastný. Pri vytváraní nastavíte počet miest, počiatočný stack, ako rýchlo rastú blindy a či má stôl heslo. Zdieľajte odkaz s pozvánkou a kamarát pristane rovno pri vašom stole, vo svojom prehliadači, bez toho aby čokoľvek registroval."],
+       "V lobby sa buď pripojíte k stolu zo zoznamu, alebo sledujete bežiacu hru, alebo si vytvoríte vlastný. Pri vytváraní vyberiete typ hry (Normálna, iba registrovaní hráči, iba pozvaní hráči alebo Hodnotená hra) a nastavíte počet miest, počiatočný stack, ako rýchlo rastú blindy, čas na ťah, či smú diváci sledovať a či má stôl heslo. Zdieľajte odkaz s pozvánkou a kamarát pristane rovno pri vašom stole, vo svojom prehliadači — v hre Normálna bez toho, aby čokoľvek registroval."],
       ["Zahrajte rozdanie",
-       "Dostanete dve vlastné karty. Stávkuje sa dookola pred flopom a potom znova po flope, turne a riveri. Keď ste na rade, akčná lišta sa rozsvieti a ponúkne len to, čo je dovolené: Fold, Check alebo Call, Raise či All-In. Sumu môžete napísať, potiahnuť posuvníkom alebo jedným klepnutím nastaviť na minimum, polovicu banku, celý bank či celý svoj stack."],
+       "Dostanete dve vlastné karty. Stávkuje sa dookola pred flopom a potom znova po flope, turne a riveri. Keď ste na rade, akčná lišta sa rozsvieti a ponúkne len to, čo je dovolené: Fold, Check alebo Call, Raise či All-In. Sumu môžete napísať, potiahnuť posuvníkom alebo jedným klepnutím nastaviť na tretinu banku, polovicu banku alebo celý bank."],
       ["Čítajte stôl",
-       "Vaša aktuálne najlepšia kombinácia je pomenovaná pod stolom, ako karty prichádzajú. Bank, každý stack aj úroveň blindov sú stále na obrazovke, tlačidlo dealera ukazuje, kto hovorí posledný, a odpočet ukazuje, koľko máte času. Pri showdowne sa pri každej odkrytej kombinácii zvýrazní tých päť kariet, ktoré sa rátali."],
+       "Karta Šance pomenuje vašu aktuálne najlepšiu kombináciu a vašu šancu na výhru, ako karty prichádzajú. Bank, každý stack aj úroveň blindov sú stále na obrazovke, tlačidlo dealera ukazuje, kto hovorí posledný, a odpočet ukazuje, koľko máte času. Pri showdowne je víťazná kombinácia pomenovaná pod spoločnými kartami."],
       ["Vyhrajte turnaj",
-       "Hry v PokerTH sú turnaje sit-and-go: všetci začínajú s rovnakým stackom, blindy rastú podľa hodín a hráči vypadávajú, kým jeden nemá všetky žetóny. Nič nestojí peniaze a žetóny sa nedajú kúpiť — všetko sú herné peniaze, takže v hre je len hra sama."]
+       "Hry v PokerTH sú turnaje: všetci začínajú s rovnakým stackom, blindy rastú každých pár rozdaní alebo minút a hráči vypadávajú, kým jeden nemá všetky žetóny. Nič nestojí peniaze a žetóny sa nedajú kúpiť — všetko sú herné peniaze, takže v hre je len hra sama."]
     ],
     phoneH2: "Hranie na telefóne",
     phoneP: "Stôl je stavaný pre dotykovú obrazovku rovnako ako pre počítač: klepnutie na pole stávky otvorí číselnú klávesnicu priamo v akčnej lište namiesto systémovej klávesnice, takže stôl nikdy nepodskakuje, a posuvník sa pohybuje po rovnakých krokoch ako v desktopovom klientovi. Upozornenie na váš ťah môže prísť rovno s tlačidlami Fold a Check/Call, takže rozdanie sa dá dohrať bez prepínania späť na kartu prehliadača.",
     friendsH2: "Hranie s priateľmi",
     friendsP: "Vytvorte stôl, nastavte heslo, ak ho chcete súkromný, a pošlite odkaz s pozvánkou. Otvorí stôl priamo — v nainštalovanej aplikácii, ak si ju pridali na plochu, inak na karte prehliadača. Nikto nemusí nič inštalovať ani dávať e-mailovú adresu.",
     faqH2: "Časté otázky",
-    faqP: function (h, c) { return "V žiadnom režime nie sú v hre skutočné peniaze. Vaše nastavenia, štýlové balíčky aj offline postup zostávajú vo vašom zariadení. Rozhranie je k dispozícii v 83 jazykoch, zatiaľ čo päť akčných slov — Fold, Check, Call, Raise, All-In — zostáva po anglicky, ako pri každom stole na svete. Viac v <a href=\"{faq}\">častých otázkach</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
+    faqP: function (h, c) { return "V žiadnom režime nie sú v hre skutočné peniaze. Vaše nastavenia, štýlové balíčky aj tréningový postup zostávajú vo vašom zariadení a nasledujú vás na ďalšie zariadenia, keď sa prihlásite účtom pokerth.net. Rozhranie je k dispozícii v 83 jazykoch, zatiaľ čo päť akčných slov — Fold, Check, Call, Raise, All-In — zostáva po anglicky, ako pri každom stole na svete. Viac v <a href=\"{faq}\">častých otázkach</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
   },
 
   ro: {
@@ -1205,24 +1127,24 @@ var PARTS = {
     lead: function (h, c) { return "Aceasta e versiunea scurtă: de la o filă goală până la prima ta mână de Texas Hold’em în PokerTH. Dacă ceea ce cauți sunt regulile în sine — blindurile, rundele de pariere, ce bate ce — începe mai bine cu <a href=\"{rules}\">pagina de reguli</a> și cu <a href=\"{hands}\">combinațiile la poker</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); },
     steps: [
       ["Deschide site-ul — nu ai ce instala",
-       "PokerTH rulează în browser. Fără descărcare, fără cont, fără extensii. Pe telefon îl poți adăuga pe ecranul principal din meniul browserului; atunci se deschide ca o aplicație, pe tot ecranul, și funcționează și fără conexiune."],
+       "PokerTH rulează în browser. Fără descărcare, fără extensii și fără cont pentru antrenament sau pentru jocurile ca invitat. Îl poți instala ca pe o aplicație — Partajare → Adaugă la ecranul principal pe iPhone și iPad, meniul browserului sau butonul de instalare în rest — și se deschide pe tot ecranul, funcționând și fără conexiune. Dacă vrei, Ajutorul Asului, Asul din colț, îți explică fiecare ecran."],
       ["Alege unde vrei să joci",
-       "Trei moduri. <strong>Antrenamentul offline</strong> te așază imediat la o masă cu adversari controlați de calculator și nu are nevoie de nicio conexiune — aici se învață. <strong>pokerth.net</strong> este rețeaua oficială: adversari reali, clasamente sezoniere și o poreclă gratuită pe care o înregistrezi o singură dată. <strong>LAN / server privat</strong> te conectează la un server PokerTH dedicat, al tău sau al altcuiva."],
+       "Trei moduri. <strong>Local / antrenament</strong> te așază imediat la o masă cu adversari controlați de calculator și nu are nevoie de nicio conexiune — aici se învață. <strong>pokerth.net</strong> este rețeaua oficială: adversari reali, jocuri Normal deschise invitaților și jocuri clasate cu clasamente sezoniere pentru jucătorii cu un cont gratuit. <strong>LAN / server privat</strong> te conectează la un server PokerTH dedicat, al tău sau al altcuiva."],
       ["Așază-te la o masă",
-       "În lobby fie te alături unei mese din listă, fie îți creezi una. Când o creezi, stabilești numărul de locuri, stiva de start, cât de repede cresc blindurile și dacă masa are parolă. Trimite linkul de invitație și prietenul ajunge direct la masa ta, în browserul lui, fără să înregistreze nimic."],
+       "În lobby fie te alături unei mese din listă, fie urmărești un joc în desfășurare, fie îți creezi una. Când o creezi, alegi tipul de joc (Normal, doar jucători înregistrați, doar jucători invitați sau clasat) și stabilești numărul de locuri, stiva de start, cât de repede cresc blindurile, timpul de acțiune, dacă spectatorii pot urmări și dacă masa are parolă. Trimite linkul de invitație și prietenul ajunge direct la masa ta, în browserul lui — într-un joc Normal, fără să înregistreze nimic."],
       ["Joacă mâna",
-       "Primești două cărți proprii. Se pariază în jurul mesei înainte de flop și încă o dată după flop, turn și river. Când îți vine rândul, bara de acțiuni se aprinde și oferă doar ce este permis: Fold, Check sau Call, Raise ori All-In. Suma poate fi scrisă, trasă pe cursor sau fixată dintr-o atingere pe Min, jumătate din pot, potul întreg sau toată stiva ta."],
+       "Primești două cărți proprii. Se pariază în jurul mesei înainte de flop și încă o dată după flop, turn și river. Când îți vine rândul, bara de acțiuni se aprinde și oferă doar ce este permis: Fold, Check sau Call, Raise ori All-In. Suma poate fi scrisă, trasă pe cursor sau fixată dintr-o atingere pe o treime din pot, jumătate din pot sau potul întreg."],
       ["Citește masa",
-       "Cea mai bună mână a ta de moment este scrisă sub masă pe măsură ce ies cărțile. Potul, stiva fiecăruia și nivelul blindurilor sunt permanent pe ecran, butonul de dealer arată cine vorbește ultimul, iar o numărătoare inversă arată cât timp mai ai. La showdown sunt evidențiate cele cinci cărți care au format fiecare mână."],
+       "Fila Șanse numește cea mai bună mână a ta de moment și șansa ta de a câștiga pe măsură ce ies cărțile. Potul, stiva fiecăruia și nivelul blindurilor sunt permanent pe ecran, butonul de dealer arată cine vorbește ultimul, iar o numărătoare inversă arată cât timp mai ai. La showdown, combinația câștigătoare este numită sub cărțile comune."],
       ["Câștigă turneul",
-       "Partidele din PokerTH sunt turnee sit-and-go: toată lumea începe cu aceeași stivă, blindurile cresc după ceas, iar jucătorii sunt eliminați până când unul singur are toate jetoanele. Nimic nu costă bani și jetoanele nu se pot cumpăra — totul este bani de joc, așa că singurul lucru pus în joc este partida însăși."]
+       "Partidele din PokerTH sunt turnee: toată lumea începe cu aceeași stivă, blindurile cresc la fiecare câteva mâini sau minute, iar jucătorii sunt eliminați până când unul singur are toate jetoanele. Nimic nu costă bani și jetoanele nu se pot cumpăra — totul este bani de joc, așa că singurul lucru pus în joc este partida însăși."]
     ],
     phoneH2: "Jocul pe telefon",
     phoneP: "Masa este gândită pentru ecranul tactil la fel de mult ca pentru calculator: atingerea câmpului de pariu deschide o tastatură numerică chiar în bara de acțiuni, nu tastatura sistemului, așa că masa nu sare niciodată, iar cursorul se mișcă în aceiași pași ca la clientul de desktop. Notificările de rând pot ajunge la tine cu butoanele Fold și Check/Call pe ele, astfel încât o mână se poate juca fără a reveni în filă.",
     friendsH2: "Jocul cu prietenii",
     friendsP: "Creează o masă, pune o parolă dacă o vrei privată și trimite linkul de invitație. Acesta deschide masa direct — în aplicația instalată, dacă au adăugat-o pe ecranul principal, altfel într-o filă de browser. Nimeni nu trebuie să instaleze ceva sau să dea o adresă de e-mail.",
     faqH2: "Întrebări frecvente",
-    faqP: function (h, c) { return "Nu sunt bani implicați niciodată, în niciun mod. Setările tale, pachetele de stil și progresul offline rămân pe propriul tău dispozitiv. Interfața este disponibilă în 83 de limbi, în timp ce cele cinci cuvinte de acțiune — Fold, Check, Call, Raise, All-In — rămân în engleză, ca la orice masă din lume. Mai multe în <a href=\"{faq}\">întrebările frecvente</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
+    faqP: function (h, c) { return "Nu sunt bani implicați niciodată, în niciun mod. Setările tale, pachetele de stil și progresul de antrenament rămân pe propriul tău dispozitiv și te urmează pe celelalte dispozitive când te conectezi cu un cont pokerth.net. Interfața este disponibilă în 83 de limbi, în timp ce cele cinci cuvinte de acțiune — Fold, Check, Call, Raise, All-In — rămân în engleză, ca la orice masă din lume. Mai multe în <a href=\"{faq}\">întrebările frecvente</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
   },
 
   hu: {
@@ -1234,24 +1156,24 @@ var PARTS = {
     lead: function (h, c) { return "Ez a rövid változat: az üres fültől az első Texas Hold’em leosztásodig a PokerTH-ben. Ha maguk a szabályok érdekelnek — vakok, licitkörök, mi mit ver — kezdd inkább a <a href=\"{rules}\">szabályok oldalával</a> és a <a href=\"{hands}\">kézsorrenddel</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); },
     steps: [
       ["Nyisd meg az oldalt — nincs mit telepíteni",
-       "A PokerTH a böngészőben fut. Se letöltés, se fiók, se bővítmény. Telefonon a böngésző menüjéből hozzáadhatod a kezdőképernyőhöz; ekkor alkalmazásként nyílik meg, teljes képernyőn, és offline is működik."],
+       "A PokerTH a böngészőben fut. Se letöltés, se bővítmény, és gyakorláshoz vagy vendégjátékhoz fiók sem kell. Telepítheted alkalmazásként — iPhone-on és iPaden Megosztás → Főképernyőhöz adás, máshol a böngészőmenü vagy a telepítés gomb —, és teljes képernyőn nyílik meg, offline is működik. Ha akarod, az Ász súgója, a sarokban lévő Ász, végigmagyarázza az egyes képernyőket."],
       ["Válaszd ki, hol akarsz játszani",
-       "Három mód van. Az <strong>offline gyakorlás</strong> azonnal leültet egy asztalhoz gépi ellenfelekkel, és egyáltalán nem igényel kapcsolatot — itt lehet megtanulni. A <strong>pokerth.net</strong> a hivatalos hálózat: valódi ellenfelek, szezonális ranglisták és egy ingyenes becenév, amit egyszer kell regisztrálni. A <strong>LAN / saját szerver</strong> egy dedikált PokerTH-szerverhez csatlakoztat, a sajátodhoz vagy valaki máséhoz."],
+       "Három mód van. A <strong>Helyi / gyakorlás</strong> azonnal leültet egy asztalhoz gépi ellenfelekkel, és egyáltalán nem igényel kapcsolatot — itt lehet megtanulni. A <strong>pokerth.net</strong> a hivatalos hálózat: valódi ellenfelek, vendégeknek is nyitott Normál játékok, és szezonális ranglistával járó Ranglistás játékok az ingyenes fiókkal rendelkezőknek. A <strong>LAN / saját szerver</strong> egy dedikált PokerTH-szerverhez csatlakoztat, a sajátodhoz vagy valaki máséhoz."],
       ["Ülj le egy asztalhoz",
-       "A lobbiban vagy csatlakozol egy asztalhoz a listáról, vagy létrehozod a sajátodat. Létrehozáskor megadod a helyek számát, a kezdő zsetonmennyiséget, a vakok emelkedésének ütemét, és hogy legyen-e jelszó. Oszd meg a meghívó linket, és a barátod egyenesen a te asztalodnál köt ki, a saját böngészőjében, anélkül hogy bármit regisztrálna."],
+       "A lobbiban csatlakozhatsz egy asztalhoz a listáról, megnézhetsz egy folyamatban lévő játékot, vagy létrehozhatod a sajátodat. Létrehozáskor kiválasztod a játék típusát (Normál, Csak regisztrált játékosok, Csak meghívott játékosok vagy Ranglistás játék), és megadod a helyek számát, a kezdő zsetonmennyiséget, a vakok emelkedésének ütemét, a lépésre adott időt, hogy nézhetnek-e nézők, és hogy legyen-e jelszó. Oszd meg a meghívó linket, és a barátod egyenesen a te asztalodnál köt ki, a saját böngészőjében — Normál játékban anélkül, hogy bármit regisztrálna."],
       ["Játszd le a leosztást",
-       "Két saját lapot kapsz. A licit körbemegy az asztalon a flop előtt, majd újra a flop, a turn és a river után. Amikor rád kerül a sor, a műveletsáv kigyullad, és csak azt kínálja fel, ami szabályos: Fold, Check vagy Call, Raise vagy All-In. Az összeget beírhatod, húzhatod a csúszkán, vagy egy koppintással beállíthatod a minimumra, a pot felére, a teljes potra vagy az összes zsetonodra."],
+       "Két saját lapot kapsz. A licit körbemegy az asztalon a flop előtt, majd újra a flop, a turn és a river után. Amikor rád kerül a sor, a műveletsáv kigyullad, és csak azt kínálja fel, ami szabályos: Fold, Check vagy Call, Raise vagy All-In. Az összeget beírhatod, húzhatod a csúszkán, vagy egy koppintással beállíthatod a pot harmadára, a pot felére vagy a teljes potra."],
       ["Olvasd az asztalt",
-       "Ahogy jönnek a lapok, az éppen legjobb kezed neve ott áll az asztal alatt. A pot, mindenki zsetonmennyisége és a vakszint végig a képernyőn van, az osztógomb mutatja, ki beszél utoljára, a visszaszámláló pedig azt, mennyi időd maradt. A leosztás végén minden felfedett kéznél kiemelődik az az öt lap, amelyik számított."],
+       "Az Esélyek fül megnevezi az éppen legjobb kezedet és a nyerési esélyedet, ahogy jönnek a lapok. A pot, mindenki zsetonmennyisége és a vakszint végig a képernyőn van, az osztógomb mutatja, ki beszél utoljára, a visszaszámláló pedig azt, mennyi időd maradt. A leosztás végén a nyertes kombináció neve ott áll a közös lapok alatt."],
       ["Nyerd meg a versenyt",
-       "A PokerTH játékai sit-and-go versenyek: mindenki ugyanannyi zsetonnal kezd, a vakok óra szerint nőnek, és sorra esnek ki a játékosok, amíg valakinél össze nem gyűlik az összes zseton. Semmi sem kerül pénzbe, és zsetont sem lehet venni — minden játékpénz, így csak maga a játék a tét."]
+       "A PokerTH játékai versenyek: mindenki ugyanannyi zsetonnal kezd, a vakok néhány leosztásonként vagy percenként nőnek, és sorra esnek ki a játékosok, amíg valakinél össze nem gyűlik az összes zseton. Semmi sem kerül pénzbe, és zsetont sem lehet venni — minden játékpénz, így csak maga a játék a tét."]
     ],
     phoneH2: "Játék telefonon",
     phoneP: "Az asztal ugyanúgy érintőképernyőre készült, mint számítógépre: a tétmezőre koppintva a rendszerbillentyűzet helyett a műveletsávon belül nyílik egy számbillentyűzet, így az asztal soha nem ugrál, a csúszka pedig ugyanolyan lépésekben mozog, mint az asztali kliensben. A soron következést jelző értesítés Fold és Check/Call gombokkal is érkezhet, így egy leosztás lejátszható anélkül, hogy visszaváltanál a fülre.",
     friendsH2: "Játék barátokkal",
     friendsP: "Hozz létre egy asztalt, tegyél rá jelszót, ha zártnak szeretnéd, és küldd el a meghívó linket. Ez közvetlenül megnyitja az asztalt — a telepített alkalmazásban, ha felvették a kezdőképernyőre, egyébként egy böngészőfülön. Senkinek nem kell semmit telepítenie vagy e-mail-címet megadnia.",
     faqH2: "Gyakori kérdések",
-    faqP: function (h, c) { return "Egyik módban sincs szó pénzről. A beállításaid, a stíluscsomagok és az offline haladásod a saját eszközödön maradnak. A felület 83 nyelven érhető el, míg az öt műveletszó — Fold, Check, Call, Raise, All-In — angolul marad, ahogy a világ minden asztalánál. Bővebben a <a href=\"{faq}\">gyakori kérdések</a> között.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
+    faqP: function (h, c) { return "Egyik módban sincs szó pénzről. A beállításaid, a stíluscsomagok és a gyakorlásban elért haladásod a saját eszközödön maradnak, és pokerth.net-fiókkal bejelentkezve követnek a többi eszközödre is. A felület 83 nyelven érhető el, míg az öt műveletszó — Fold, Check, Call, Raise, All-In — angolul marad, ahogy a világ minden asztalánál. Bővebben a <a href=\"{faq}\">gyakori kérdések</a> között.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
   },
   hy: {
     title: "Ինչպես խաղալ պոկեր առցանց անվճար — PokerTH Web",
@@ -1261,37 +1183,25 @@ var PARTS = {
     h1: "Ինչպես խաղալ պոկեր առցանց, անվճար, ձեր դիտարկիչում",
     lead: function (h, c) { return "Ահա կարճ տարբերակը՝ դատարկ ներդիրից մինչև ձեր առաջին Texas Hold’em ձեռքը PokerTH-ում։ Եթե ձեզ հետաքրքրում են բուն կանոնները — բլայնդներ, խաղադրույքների փուլեր, ինչն է ինչին հաղթում — սկսեք <a href=\"{rules}\">կանոնների էջից</a> և <a href=\"{hands}\">կոմբինացիաներից</a>։".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); },
     steps: [
-      [
-        "Բացեք կայքը — տեղադրելու ոչինչ չկա",
-        "PokerTH-ն աշխատում է դիտարկիչում։ Առանց ներբեռնման, առանց հաշվի, առանց փլագինի։ Հեռախոսում կարող եք այն ավելացնել գլխավոր էկրանին դիտարկիչի ընտրացանկից, և այն կբացվի հավելվածի պես՝ լիաէկրան և անցանց աշխատելու հնարավորությամբ։",
-      ],
-      [
-        "Ընտրեք, թե որտեղ եք ուզում խաղալ",
-        "Երեք ռեժիմ։ <strong>Անցանց մարզումը</strong> անմիջապես տալիս է ձեզ համակարգչային մրցակիցներով սեղան և որևէ կապ չի պահանջում — սովորելու վայրը։ <strong>pokerth.net</strong>-ը պաշտոնական ցանցն է՝ իրական մրցակիցներ, մրցաշրջանային վարկանիշներ, անվճար մականուն, որը գրանցում եք մեկ անգամ։ <strong>LAN / մասնավոր սերվերը</strong> միանում է հատուկ PokerTH սերվերի՝ ձեր կամ ուրիշինը։",
-      ],
-      [
-        "Նստեք սեղանի մոտ",
-        "Լոբբիում կամ միանում եք ցանկի սեղանին, կամ ստեղծում եք ձեր սեփականը։ Ստեղծումը թույլ է տալիս սահմանել տեղերի քանակը, սկզբնական սթեքը, թե որքան արագ են աճում բլայնդները և արդյոք սեղանը պաշտպանված է գաղտնաբառով։ Կիսվեք հրավերի հղումով, և ընկերը կհայտնվի անմիջապես ձեր սեղանի մոտ՝ իր դիտարկիչում, առանց որևէ բան գրանցելու։",
-      ],
-      [
-        "Խաղացեք ձեռքը",
-        "Ձեզ բաժանվում է երկու անձնական խաղաթուղթ։ Խաղադրույքները շրջում են սեղանի շուրջ flop-ից առաջ և կրկին flop-ից, turn-ից և river-ից հետո։ Երբ ձեր հերթն է, գործողությունների վահանակը լուսավորվում է և առաջարկում միայն թույլատրելին՝ Fold, Check կամ Call, Raise կամ All-In։ Խաղադրույքի գումարը կարելի է մուտքագրել, քաշել սահիչով կամ մեկ հպումով սահմանել Min, բանկի կեսը, բանկը կամ ձեր ամբողջ սթեքը։",
-      ],
-      [
-        "Կարդացեք սեղանը",
-        "Ձեր ընթացիկ լավագույն կոմբինացիան անվանվում է սեղանի տակ՝ խաղաթղթերի բացվելուն զուգընթաց։ Բանկը, յուրաքանչյուր սթեք և բլայնդների մակարդակը միշտ էկրանին են, դիլերի կոճակը ցույց է տալիս, թե ով է խոսում վերջինը, իսկ հետհաշվարկը ցույց է տալիս, թե որքան ժամանակ ունեք։ Showdown-ում յուրաքանչյուր կոմբինացիան կազմած հինգ խաղաթղթերը ընդգծվում են։",
-      ],
-      [
-        "Հաղթեք մրցաշարում",
-        "PokerTH-ի խաղերը sit-and-go մրցաշարեր են. բոլորը սկսում են նույն սթեքով, բլայնդները աճում են ժամանակաչափով, և խաղացողները դուրս են մնում, մինչև մեկը տիրանա բոլոր ֆիշկաներին։ Ոչինչ փող չարժե, և ֆիշկաներ գնել հնարավոր չէ — ամեն ինչ խաղային փող է, այնպես որ վտանգված միակ բանը բուն խաղն է։",
-      ],
+      ["Բացեք կայքը — տեղադրելու ոչինչ չկա",
+       "PokerTH-ն աշխատում է դիտարկիչում։ Առանց ներբեռնման, առանց փլագինի, և մարզման կամ հյուրի խաղերի համար առանց հաշվի։ Կարող եք այն տեղադրել հավելվածի պես՝ iPhone-ում և iPad-ում Կիսվել → Ավելացնել գլխավոր էկրանին, այլուր՝ դիտարկիչի ընտրացանկից կամ տեղադրման կոճակից, և այն կբացվի լիաէկրան և անցանց աշխատելու հնարավորությամբ։ Ցանկության դեպքում Տուզի օգնությունը՝ անկյունի Տուզը, բացատրում է յուրաքանչյուր էկրանը։"],
+      ["Ընտրեք, թե որտեղ եք ուզում խաղալ",
+       "Երեք ռեժիմ։ <strong>Տեղային / մարզումը</strong> անմիջապես տալիս է ձեզ համակարգչային մրցակիցներով սեղան և որևէ կապ չի պահանջում — սովորելու վայրը։ <strong>pokerth.net</strong>-ը պաշտոնական ցանցն է՝ իրական մրցակիցներ, հյուրերի համար բաց Սովորական խաղեր և մրցաշրջանային վարկանիշներով Վարկանիշային խաղեր անվճար հաշվով խաղացողների համար։ <strong>LAN / մասնավոր սերվերը</strong> միանում է հատուկ PokerTH սերվերի՝ ձեր կամ ուրիշինը։"],
+      ["Նստեք սեղանի մոտ",
+       "Լոբբիում կամ միանում եք ցանկի սեղանին, դիտում եք ընթացիկ խաղ, կամ ստեղծում եք ձեր սեփականը։ Ստեղծումը թույլ է տալիս ընտրել խաղի տեսակը (Սովորական, Միայն գրանցված խաղացողներ, Միայն հրավիրված խաղացողներ կամ Վարկանիշային խաղ) և սահմանել տեղերի քանակը, սկզբնական սթեքը, թե որքան արագ են աճում բլայնդները, գործելու ժամանակը, թույլատրվում է արդյոք դիտորդներին դիտել և արդյոք սեղանը պաշտպանված է գաղտնաբառով։ Կիսվեք հրավերի հղումով, և ընկերը կհայտնվի անմիջապես ձեր սեղանի մոտ՝ իր դիտարկիչում — Սովորական խաղում առանց որևէ բան գրանցելու։"],
+      ["Խաղացեք ձեռքը",
+       "Ձեզ բաժանվում է երկու անձնական խաղաթուղթ։ Խաղադրույքները շրջում են սեղանի շուրջ flop-ից առաջ և կրկին flop-ից, turn-ից և river-ից հետո։ Երբ ձեր հերթն է, գործողությունների վահանակը լուսավորվում է և առաջարկում միայն թույլատրելին՝ Fold, Check կամ Call, Raise կամ All-In։ Խաղադրույքի գումարը կարելի է մուտքագրել, քաշել սահիչով կամ մեկ հպումով սահմանել բանկի մեկ երրորդը, բանկի կեսը կամ բանկը։"],
+      ["Կարդացեք սեղանը",
+       "Հավանականություններ ներդիրը անվանում է ձեր ընթացիկ լավագույն կոմբինացիան և հաղթելու ձեր հավանականությունը՝ խաղաթղթերի բացվելուն զուգընթաց։ Բանկը, յուրաքանչյուր սթեք և բլայնդների մակարդակը միշտ էկրանին են, դիլերի կոճակը ցույց է տալիս, թե ով է խոսում վերջինը, իսկ հետհաշվարկը ցույց է տալիս, թե որքան ժամանակ ունեք։ Showdown-ում հաղթող կոմբինացիան անվանվում է ընդհանուր խաղաթղթերի տակ։"],
+      ["Հաղթեք մրցաշարում",
+       "PokerTH-ի խաղերը մրցաշարեր են. բոլորը սկսում են նույն սթեքով, բլայնդները աճում են մի քանի ձեռքը մեկ կամ րոպեն մեկ, և խաղացողները դուրս են մնում, մինչև մեկը տիրանա բոլոր ֆիշկաներին։ Ոչինչ փող չարժե, և ֆիշկաներ գնել հնարավոր չէ — ամեն ինչ խաղային փող է, այնպես որ վտանգված միակ բանը բուն խաղն է։"]
     ],
     phoneH2: "Խաղ հեռախոսում",
     phoneP: "Սեղանը մտածված է սենսորային էկրանի համար նույնքան, որքան համակարգչի. խաղադրույքի դաշտին հպելը բացում է թվային վահանակ գործողությունների վահանակի ներսում՝ համակարգի ստեղնաշարի փոխարեն, այնպես որ սեղանը երբեք չի ցատկում, իսկ սահիչն առաջ է շարժվում համակարգչային կլիենտի նույն քայլերով։ Հերթի ծանուցումները կարող են գալ Fold և Check/Call կոճակներով անմիջապես դրանց վրա. ձեռքը կարելի է խաղալ առանց ներդիր վերադառնալու։",
     friendsH2: "Խաղ ընկերների հետ",
     friendsP: "Ստեղծեք սեղան, դրեք գաղտնաբառ, եթե ուզում եք այն մասնավոր լինի, և ուղարկեք հրավերի հղումը։ Այն բացում է սեղանն անմիջապես — տեղադրված հավելվածում, եթե ձեր ընկերներն այն ավելացրել են իրենց գլխավոր էկրանին, հակառակ դեպքում՝ դիտարկիչի ներդիրում։ Ոչ ոք ոչինչ տեղադրելու կամ էլ. հասցե տալու կարիք չունի։",
     faqH2: "Հաճախ տրվող հարցեր",
-    faqP: function (h, c) { return "Ոչ մի ռեժիմում երբեք փող չի ներգրավվում։ Ձեր կարգավորումները, ոճի փաթեթները և անցանց առաջընթացը մնում են ձեր սարքում։ Ինտերֆեյսը հասանելի է 83 լեզվով, իսկ գործողությունների հինգ բառը — Fold, Check, Call, Raise, All-In — մնում են անգլերեն, ինչպես աշխարհի բոլոր սեղանների մոտ։ Շարունակությունը <a href=\"{faq}\">FAQ</a>-ում։".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); },
+    faqP: function (h, c) { return "Ոչ մի ռեժիմում երբեք փող չի ներգրավվում։ Ձեր կարգավորումները, ոճի փաթեթները և մարզման առաջընթացը մնում են ձեր սարքում և հետևում են ձեզ ձեր մյուս սարքերում, երբ մուտք եք գործում pokerth.net հաշվով։ Ինտերֆեյսը հասանելի է 83 լեզվով, իսկ գործողությունների հինգ բառը — Fold, Check, Call, Raise, All-In — մնում են անգլերեն, ինչպես աշխարհի բոլոր սեղանների մոտ։ Շարունակությունը <a href=\"{faq}\">FAQ</a>-ում։".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); },
   },
 
   el: {
@@ -1303,24 +1213,24 @@ var PARTS = {
     lead: function (h, c) { return "Αυτή είναι η σύντομη εκδοχή: από μια κενή καρτέλα ως το πρώτο σας χέρι Texas Hold’em στο PokerTH. Αν αυτό που ψάχνετε είναι οι ίδιοι οι κανόνες — τυφλά, γύροι στοιχηματισμού, τι κερδίζει τι — ξεκινήστε καλύτερα από τη <a href=\"{rules}\">σελίδα των κανόνων</a> και την <a href=\"{hands}\">κατάταξη των χεριών</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); },
     steps: [
       ["Ανοίξτε τον ιστότοπο — δεν υπάρχει τίποτα να εγκαταστήσετε",
-       "Το PokerTH τρέχει μέσα στον περιηγητή. Καμία λήψη, κανένας λογαριασμός, καμία επέκταση. Στο κινητό μπορείτε να το προσθέσετε στην αρχική οθόνη από το μενού του περιηγητή· τότε ανοίγει σαν εφαρμογή, σε πλήρη οθόνη, και λειτουργεί και εκτός σύνδεσης."],
+       "Το PokerTH τρέχει μέσα στον περιηγητή. Καμία λήψη, καμία επέκταση, κανένας λογαριασμός για εξάσκηση ή για παιχνίδια ως επισκέπτης. Μπορείτε να το εγκαταστήσετε σαν εφαρμογή — Κοινή χρήση → Προσθήκη στην αρχική οθόνη σε iPhone και iPad, το μενού του περιηγητή ή το κουμπί εγκατάστασης αλλού — και ανοίγει σε πλήρη οθόνη και λειτουργεί και εκτός σύνδεσης. Αν θέλετε, η Βοήθεια του Άσου, ο Άσος στη γωνία, εξηγεί κάθε οθόνη."],
       ["Διαλέξτε πού θέλετε να παίξετε",
-       "Τρεις τρόποι. Η <strong>εξάσκηση εκτός σύνδεσης</strong> σας βάζει αμέσως σε τραπέζι με αντιπάλους του υπολογιστή και δεν χρειάζεται καμία σύνδεση — εδώ μαθαίνει κανείς. Το <strong>pokerth.net</strong> είναι το επίσημο δίκτυο: αληθινοί αντίπαλοι, κατατάξεις ανά σεζόν και ένα δωρεάν ψευδώνυμο που δηλώνετε μία φορά. Το <strong>LAN / ιδιωτικός διακομιστής</strong> σας συνδέει σε έναν αποκλειστικό διακομιστή PokerTH, δικό σας ή κάποιου άλλου."],
+       "Τρεις τρόποι. Η λειτουργία <strong>Τοπικό / εξάσκηση</strong> σας βάζει αμέσως σε τραπέζι με αντιπάλους του υπολογιστή και δεν χρειάζεται καμία σύνδεση — εδώ μαθαίνει κανείς. Το <strong>pokerth.net</strong> είναι το επίσημο δίκτυο: αληθινοί αντίπαλοι, κανονικά παιχνίδια ανοιχτά σε επισκέπτες και παιχνίδια κατάταξης με βαθμολογίες ανά σεζόν για παίκτες με δωρεάν λογαριασμό. Το <strong>LAN / ιδιωτικός διακομιστής</strong> σας συνδέει σε έναν αποκλειστικό διακομιστή PokerTH, δικό σας ή κάποιου άλλου."],
       ["Καθίστε σε ένα τραπέζι",
-       "Στο λόμπι είτε μπαίνετε σε τραπέζι από τη λίστα είτε φτιάχνετε το δικό σας. Φτιάχνοντάς το ορίζετε τον αριθμό των θέσεων, το αρχικό κεφάλαιο, πόσο γρήγορα ανεβαίνουν τα τυφλά και αν το τραπέζι έχει κωδικό. Μοιραστείτε τον σύνδεσμο πρόσκλησης και ο φίλος σας προσγειώνεται κατευθείαν στο τραπέζι σας, από τον δικό του περιηγητή, χωρίς να δηλώσει τίποτα."],
+       "Στο λόμπι είτε μπαίνετε σε τραπέζι από τη λίστα, είτε παρακολουθείτε ένα παιχνίδι που τρέχει, είτε φτιάχνετε το δικό σας. Φτιάχνοντάς το επιλέγετε τον τύπο παιχνιδιού (Κανονικό, μόνο εγγεγραμμένοι παίκτες, μόνο με πρόσκληση ή Παιχνίδι κατάταξης) και ορίζετε τον αριθμό των θέσεων, το αρχικό κεφάλαιο, πόσο γρήγορα ανεβαίνουν τα τυφλά, τον χρόνο για να παίξετε, αν επιτρέπονται θεατές και αν το τραπέζι έχει κωδικό. Μοιραστείτε τον σύνδεσμο πρόσκλησης και ο φίλος σας προσγειώνεται κατευθείαν στο τραπέζι σας, από τον δικό του περιηγητή — σε κανονικό παιχνίδι χωρίς να δηλώσει τίποτα."],
       ["Παίξτε το χέρι",
-       "Σας μοιράζονται δύο κλειστά φύλλα. Ο στοιχηματισμός γυρίζει το τραπέζι πριν από το φλοπ και ξανά μετά το φλοπ, το τερν και το ριβέρ. Όταν έρθει η σειρά σας, η μπάρα ενεργειών ανάβει και προσφέρει μόνο ό,τι επιτρέπεται: Fold, Check ή Call, Raise ή All-In. Το ποσό μπορείτε να το πληκτρολογήσετε, να το σύρετε στον ολισθητή ή να το ορίσετε με ένα άγγιγμα σε Min, μισό πότ, ολόκληρο πότ ή όλο σας το κεφάλαιο."],
+       "Σας μοιράζονται δύο κλειστά φύλλα. Ο στοιχηματισμός γυρίζει το τραπέζι πριν από το φλοπ και ξανά μετά το φλοπ, το τερν και το ριβέρ. Όταν έρθει η σειρά σας, η μπάρα ενεργειών ανάβει και προσφέρει μόνο ό,τι επιτρέπεται: Fold, Check ή Call, Raise ή All-In. Το ποσό μπορείτε να το πληκτρολογήσετε, να το σύρετε στον ολισθητή ή να το ορίσετε με ένα άγγιγμα σε ένα τρίτο του πότ, μισό πότ ή ολόκληρο το πότ."],
       ["Διαβάστε το τραπέζι",
-       "Το καλύτερο χέρι που έχετε τη στιγμή εκείνη γράφεται κάτω από το τραπέζι καθώς βγαίνουν τα φύλλα. Το πότ, το κεφάλαιο του καθενός και το επίπεδο των τυφλών είναι διαρκώς στην οθόνη, το κουμπί του ντίλερ δείχνει ποιος μιλά τελευταίος και μια αντίστροφη μέτρηση δείχνει πόσο χρόνο έχετε. Στο σόουνταουν τονίζονται τα πέντε φύλλα που σχημάτισαν κάθε χέρι."],
+       "Η καρτέλα Πιθανότητες γράφει το καλύτερο χέρι σας και την πιθανότητά σας να κερδίσετε καθώς βγαίνουν τα φύλλα. Το πότ, το κεφάλαιο του καθενός και το επίπεδο των τυφλών είναι διαρκώς στην οθόνη, το κουμπί του ντίλερ δείχνει ποιος μιλά τελευταίος και μια αντίστροφη μέτρηση δείχνει πόσο χρόνο έχετε. Στο σόουνταουν ο νικηφόρος συνδυασμός γράφεται κάτω από τα κοινά φύλλα."],
       ["Κερδίστε το τουρνουά",
-       "Οι παρτίδες στο PokerTH είναι τουρνουά sit-and-go: όλοι ξεκινούν με το ίδιο κεφάλαιο, τα τυφλά ανεβαίνουν με το ρολόι και οι παίκτες αποκλείονται ώσπου ένας να έχει όλες τις μάρκες. Τίποτα δεν κοστίζει χρήματα και μάρκες δεν αγοράζονται — όλα είναι πλασματικά, οπότε το μόνο που παίζεται είναι το ίδιο το παιχνίδι."]
+       "Οι παρτίδες στο PokerTH είναι τουρνουά: όλοι ξεκινούν με το ίδιο κεφάλαιο, τα τυφλά ανεβαίνουν κάθε λίγα χέρια ή λεπτά και οι παίκτες αποκλείονται ώσπου ένας να έχει όλες τις μάρκες. Τίποτα δεν κοστίζει χρήματα και μάρκες δεν αγοράζονται — όλα είναι πλασματικά, οπότε το μόνο που παίζεται είναι το ίδιο το παιχνίδι."]
     ],
     phoneH2: "Παίζοντας από κινητό",
     phoneP: "Το τραπέζι είναι φτιαγμένο για οθόνη αφής όσο και για υπολογιστή: το άγγιγμα στο πεδίο του ποντάρισματος ανοίγει ένα αριθμητικό πληκτρολόγιο μέσα στη μπάρα ενεργειών αντί για το πληκτρολόγιο του συστήματος, ώστε το τραπέζι να μην αναπηδά ποτέ, και ο ολισθητής κινείται με τα ίδια βήματα όπως στον πελάτη υπολογιστή. Οι ειδοποιήσεις σειράς μπορούν να φτάνουν με κουμπιά Fold και Check/Call επάνω τους, οπότε ένα χέρι παίζεται χωρίς να γυρίσετε στην καρτέλα.",
     friendsH2: "Παίζοντας με φίλους",
     friendsP: "Φτιάξτε τραπέζι, βάλτε κωδικό αν το θέλετε ιδιωτικό, και στείλτε τον σύνδεσμο πρόσκλησης. Ανοίγει το τραπέζι απευθείας — στην εγκατεστημένη εφαρμογή αν την έχουν προσθέσει στην αρχική οθόνη, αλλιώς σε μια καρτέλα του περιηγητή. Κανείς δεν χρειάζεται να εγκαταστήσει κάτι ούτε να δώσει διεύθυνση email.",
     faqH2: "Συχνές ερωτήσεις",
-    faqP: function (h, c) { return "Χρήματα δεν εμπλέκονται ποτέ, σε κανέναν τρόπο παιχνιδιού. Οι ρυθμίσεις σας, τα πακέτα εμφάνισης και η πρόοδος εκτός σύνδεσης μένουν στη δική σας συσκευή. Η διεπαφή διατίθεται σε 83 γλώσσες, ενώ οι πέντε λέξεις ενεργειών — Fold, Check, Call, Raise, All-In — παραμένουν στα αγγλικά, όπως σε κάθε τραπέζι του κόσμου. Περισσότερα στις <a href=\"{faq}\">συχνές ερωτήσεις</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
+    faqP: function (h, c) { return "Χρήματα δεν εμπλέκονται ποτέ, σε κανέναν τρόπο παιχνιδιού. Οι ρυθμίσεις σας, τα πακέτα εμφάνισης και η πρόοδος εξάσκησης μένουν στη δική σας συσκευή και σας ακολουθούν στις άλλες συσκευές σας όταν συνδέεστε με λογαριασμό pokerth.net. Η διεπαφή διατίθεται σε 83 γλώσσες, ενώ οι πέντε λέξεις ενεργειών — Fold, Check, Call, Raise, All-In — παραμένουν στα αγγλικά, όπως σε κάθε τραπέζι του κόσμου. Περισσότερα στις <a href=\"{faq}\">συχνές ερωτήσεις</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
   },
   eo: {
     title: "Kiel ludi pokeron rete senpage — PokerTH Web",
@@ -1330,37 +1240,25 @@ var PARTS = {
     h1: "Kiel ludi pokeron rete, senpage, en via retumilo",
     lead: function (h, c) { return "Jen la mallonga versio: de malplena langeto ĝis via unua Texas Hold’em-mano en PokerTH. Se interesas vin la reguloj mem — blindoj, vetrondoj, kio batas kion — komencu per <a href=\"{rules}\">la regula paĝo</a> kaj <a href=\"{hands}\">la manoj</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); },
     steps: [
-      [
-        "Malfermu la retejon — nenio por instali",
-        "PokerTH funkcias en la retumilo. Sen elŝuto, sen konto, sen kromprogramo. Sur telefono vi povas aldoni ĝin al la hejmekrano per la menuo de la retumilo, kaj ĝi malfermiĝas kiel aplikaĵo, plenekrane kaj kapabla funkcii senkonekte.",
-      ],
-      [
-        "Elektu kie ludi",
-        "Tri reĝimoj. <strong>Senkonekta trejnado</strong> tuj donas al vi tablon de komputilaj kontraŭuloj kaj bezonas neniun konekton — la loko por lerni. <strong>pokerth.net</strong> estas la oficiala reto: veraj kontraŭuloj, sezonaj rangigoj, senpaga kaŝnomo, kiun vi registras unufoje. <strong>LAN / privata servilo</strong> konektiĝas al dediĉita PokerTH-servilo, via aŭ ies alia.",
-      ],
-      [
-        "Sidiĝu ĉe tablo",
-        "En la halo vi aŭ aliĝas al tablo el la listo aŭ kreas vian propran. Kreado lasas vin fiksi la nombron de sidlokoj, la komencan stakon, kiom rapide la blindoj altiĝas kaj ĉu la tablo estas protektita per pasvorto. Kunhavigu la invitan ligilon kaj amiko alvenos rekte ĉe via tablo, en sia propra retumilo, sen registri ion ajn.",
-      ],
-      [
-        "Ludu la manon",
-        "Oni disdonas al vi du privatajn kartojn. La vetado rondiras ĉirkaŭ la tablo antaŭ la flop, kaj denove post la flop, la turn kaj la river. Kiam estas via vico, la agobreto ekbrilas kaj proponas nur tion, kio estas laŭleĝa: Fold, Check aŭ Call, Raise aŭ All-In. La vetsumo estas tajpebla, trenebla per la ŝovilo aŭ fiksebla per unu tuŝo al la minimumo, duona poto, poto aŭ via tuta stako.",
-      ],
-      [
-        "Legu la tablon",
-        "Via nuna plej bona mano estas nomata sub la tablo dum la kartoj malkaŝiĝas. La poto, ĉiu stako kaj la blinda nivelo ĉiam estas sur la ekrano, la butono de la disdonanto montras kiu parolas laste, kaj retronombrado montras kiom da tempo vi havas. Ĉe la showdown, la kvin kartoj kiuj formis ĉiun manon estas emfazitaj.",
-      ],
-      [
-        "Gajnu la turniron",
-        "La ludoj de PokerTH estas sit-and-go-turniroj: ĉiuj komencas kun la sama stako, la blindoj altiĝas laŭ tempilo, kaj ludantoj eliminiĝas ĝis unu havas ĉiujn ĵetonojn. Nenio kostas monon kaj ĵetonoj ne estas aĉeteblaj — ĉio estas ludmono, do la sola afero en risko estas la ludo mem.",
-      ],
+      ["Malfermu la retejon — nenio por instali",
+       "PokerTH funkcias en la retumilo. Sen elŝuto, sen kromprogramo, kaj sen konto por trejnado aŭ gastaj ludoj. Vi povas instali ĝin kiel aplikaĵon — Kunhavigi → Aldoni al hejmekrano sur iPhone kaj iPad, la menuo de la retumilo aŭ la instala butono aliloke — kaj ĝi malfermiĝas plenekrane, kapabla funkcii senkonekte. Se vi volas, la Helpo de la Aso, la Aso en la angulo, klarigas ĉiun ekranon."],
+      ["Elektu kie ludi",
+       "Tri reĝimoj. <strong>Loka / trejnado</strong> tuj donas al vi tablon de komputilaj kontraŭuloj kaj bezonas neniun konekton — la loko por lerni. <strong>pokerth.net</strong> estas la oficiala reto: veraj kontraŭuloj, Normalaj ludoj malfermitaj al gastoj, kaj Rangigaj ludoj kun sezonaj rangigoj por ludantoj kun senpaga konto. <strong>LAN / privata servilo</strong> konektiĝas al dediĉita PokerTH-servilo, via aŭ ies alia."],
+      ["Sidiĝu ĉe tablo",
+       "En la halo vi aŭ aliĝas al tablo el la listo, spektas kurantan ludon, aŭ kreas vian propran. Kreado lasas vin elekti la ludotipon (Normala, nur registritaj ludantoj, nur invititaj ludantoj aŭ Rangiga) kaj fiksi la nombron de sidlokoj, la komencan stakon, kiom rapide la blindoj altiĝas, la tempon por agi, ĉu spektantoj rajtas spekti kaj ĉu la tablo estas protektita per pasvorto. Kunhavigu la invitan ligilon kaj amiko alvenos rekte ĉe via tablo, en sia propra retumilo — en Normala ludo sen registri ion ajn."],
+      ["Ludu la manon",
+       "Oni disdonas al vi du privatajn kartojn. La vetado rondiras ĉirkaŭ la tablo antaŭ la flop, kaj denove post la flop, la turn kaj la river. Kiam estas via vico, la agobreto ekbrilas kaj proponas nur tion, kio estas laŭleĝa: Fold, Check aŭ Call, Raise aŭ All-In. La vetsumo estas tajpebla, trenebla per la ŝovilo aŭ fiksebla per unu tuŝo al triono de la poto, duono de la poto aŭ la poto."],
+      ["Legu la tablon",
+       "La langeto Ŝancoj nomas vian nunan plej bonan manon kaj vian ŝancon gajni dum la kartoj malkaŝiĝas. La poto, ĉiu stako kaj la blinda nivelo ĉiam estas sur la ekrano, la butono de la disdonanto montras kiu parolas laste, kaj retronombrado montras kiom da tempo vi havas. Ĉe la showdown, la gajna kombinaĵo estas nomata sub la komunaj kartoj."],
+      ["Gajnu la turniron",
+       "La ludoj de PokerTH estas turniroj: ĉiuj komencas kun la sama stako, la blindoj altiĝas ĉiujn kelkajn manojn aŭ minutojn, kaj ludantoj eliminiĝas ĝis unu havas ĉiujn ĵetonojn. Nenio kostas monon kaj ĵetonoj ne estas aĉeteblaj — ĉio estas ludmono, do la sola afero en risko estas la ludo mem."]
     ],
     phoneH2: "Ludi per telefono",
     phoneP: "La tablo estas desegnita por tuŝekrano same kiel por komputilo: tuŝi la vetkampon malfermas ciferan klavareton ene de la agobreto anstataŭ la sistema klavaro, do la tablo neniam saltas, kaj la ŝovilo moviĝas per la samaj paŝoj kiel la labortabla kliento. Vicaj sciigoj povas alveni kun butonoj Fold kaj Check/Call rekte sur ili: la mano estas ludebla sen reveni al la langeto.",
     friendsH2: "Ludi kun amikoj",
     friendsP: "Kreu tablon, metu pasvorton se vi volas ke ĝi estu privata, kaj sendu la invitan ligilon. Ĝi malfermas la tablon rekte — en la instalita aplikaĵo se viaj amikoj aldonis ĝin al sia hejmekrano, alie en retumila langeto. Neniu devas instali ion ajn aŭ doni retpoŝtadreson.",
     faqH2: "Oftaj demandoj",
-    faqP: function (h, c) { return "Mono neniam estas implikita, en neniu reĝimo. Viaj agordoj, stilpakoj kaj senkonekta progreso restas en via aparato. La interfaco disponeblas en 83 lingvoj, dum la kvin agovortoj — Fold, Check, Call, Raise, All-In — restas en la angla, kiel ĉe ĉiu tablo en la mondo. Pli en la <a href=\"{faq}\">oftaj demandoj</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); },
+    faqP: function (h, c) { return "Mono neniam estas implikita, en neniu reĝimo. Viaj agordoj, stilpakoj kaj trejnada progreso restas en via aparato kaj sekvas vin al viaj aliaj aparatoj kiam vi ensalutas per konto ĉe pokerth.net. La interfaco disponeblas en 83 lingvoj, dum la kvin agovortoj — Fold, Check, Call, Raise, All-In — restas en la angla, kiel ĉe ĉiu tablo en la mondo. Pli en la <a href=\"{faq}\">oftaj demandoj</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); },
   },
 
   bg: {
@@ -1372,24 +1270,24 @@ var PARTS = {
     lead: function (h, c) { return "Това е кратката версия: от празен раздел до първата ви ръка Тексас Холдем в PokerTH. Ако търсите самите правила — тъмни залози, кръгове на наддаване, коя ръка коя бие — започнете по-скоро със <a href=\"{rules}\">страницата с правилата</a> и с <a href=\"{hands}\">комбинациите</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); },
     steps: [
       ["Отворете сайта — няма какво да инсталирате",
-       "PokerTH работи в браузъра. Без изтегляне, без регистрация, без добавки. На телефон можете да го добавите към началния екран от менюто на браузъра; тогава се отваря като приложение, на цял екран, и работи и офлайн."],
+       "PokerTH работи в браузъра. Без изтегляне, без добавки и без регистрация за тренировка или за игра като гост. Можете да го инсталирате като приложение — Споделяне → „Добави към началния екран” на iPhone и iPad, менюто на браузъра или бутона за инсталиране на другите устройства — и тогава се отваря на цял екран и работи и офлайн. Ако искате, „Помощ от асото”, Асото в ъгъла, обяснява всеки екран."],
       ["Изберете къде искате да играете",
-       "Три режима. <strong>Офлайн тренировката</strong> веднага ви сяда на маса с компютърни съперници и изобщо не се нуждае от връзка — тук се учи. <strong>pokerth.net</strong> е официалната мрежа: истински съперници, сезонни класирания и безплатен псевдоним, който регистрирате веднъж. <strong>LAN / частен сървър</strong> ви свързва със специален сървър на PokerTH, ваш или на някой друг."],
+       "Три режима. <strong>Локална / тренировка</strong> веднага ви сяда на маса с компютърни съперници и изобщо не се нуждае от връзка — тук се учи. <strong>pokerth.net</strong> е официалната мрежа: истински съперници, нормални игри, отворени за гости, и класирани игри със сезонни класирания за играчи с безплатен профил. <strong>LAN / частен сървър</strong> ви свързва със специален сървър на PokerTH, ваш или на някой друг."],
       ["Седнете на маса",
-       "В лобито или се присъединявате към маса от списъка, или създавате своя. При създаването задавате броя места, началния стек, колко бързо растат тъмните залози и дали масата е с парола. Споделете поканата и приятелят ви попада направо на вашата маса, в своя браузър, без да регистрира каквото и да било."],
+       "В лобито или се присъединявате към маса от списъка, или гледате текуща игра, или създавате своя. При създаването избирате типа игра (нормална, само за регистрирани играчи, само по покана или класирана) и задавате броя места, началния стек, колко бързо растат тъмните залози, времето за действие, дали зрителите могат да гледат и дали масата е с парола. Споделете поканата и приятелят ви попада направо на вашата маса, в своя браузър — в нормална игра без да регистрира каквото и да било."],
       ["Изиграйте ръката",
-       "Получавате две закрити карти. Наддаването обикаля масата преди флопа и отново след флопа, търна и ривъра. Когато дойде вашият ред, лентата с действия светва и предлага само позволеното: Fold, Check или Call, Raise или All-In. Сумата може да се въведе, да се плъзне с плъзгача или да се зададе с едно докосване на Min, половин пот, целия пот или целия ви стек."],
+       "Получавате две закрити карти. Наддаването обикаля масата преди флопа и отново след флопа, търна и ривъра. Когато дойде вашият ред, лентата с действия светва и предлага само позволеното: Fold, Check или Call, Raise или All-In. Сумата може да се въведе, да се плъзне с плъзгача или да се зададе с едно докосване на една трета от пота, половин пот или целия пот."],
       ["Четете масата",
-       "Най-добрата ви в момента комбинация се изписва под масата, докато излизат картите. Потът, стекът на всеки и нивото на тъмните залози са през цялото време на екрана, бутонът на дилъра показва кой говори последен, а отброяването — с колко време разполагате. При разкриването се откроят онези пет карти, които са съставили всяка ръка."],
+       "Разделът „Шансове” назовава най-добрата ви в момента комбинация и шанса ви да спечелите, докато излизат картите. Потът, стекът на всеки и нивото на тъмните залози са през цялото време на екрана, бутонът на дилъра показва кой говори последен, а отброяването — с колко време разполагате. При разкриването печелившата комбинация се назовава под общите карти."],
       ["Спечелете турнира",
-       "Игрите в PokerTH са турнири sit-and-go: всички започват с еднакъв стек, тъмните залози растат по часовник, а играчите отпадат, докато един не събере всички чипове. Нищо не струва пари и чипове не могат да се купуват — всичко е на игрални чипове, така че заложена е само самата игра."]
+       "Игрите в PokerTH са турнири: всички започват с еднакъв стек, тъмните залози растат на всеки няколко ръце или минути, а играчите отпадат, докато един не събере всички чипове. Нищо не струва пари и чипове не могат да се купуват — всичко е на игрални чипове, така че заложена е само самата игра."]
     ],
     phoneH2: "Игра на телефон",
     phoneP: "Масата е направена за сензорен екран точно толкова, колкото и за компютър: докосването на полето за залог отваря цифрова клавиатура вътре в лентата с действия вместо системната, така че масата никога не подскача, а плъзгачът се движи със същите стъпки като в настолния клиент. Известията за вашия ред могат да идват с бутони Fold и Check/Call върху тях, така че една ръка може да се изиграе, без да се връщате в раздела.",
     friendsH2: "Игра с приятели",
     friendsP: "Създайте маса, сложете парола, ако я искате частна, и изпратете поканата. Тя отваря масата направо — в инсталираното приложение, ако са го добавили към началния екран, иначе в раздел на браузъра. Никой не трябва да инсталира нищо, нито да дава имейл адрес.",
     faqH2: "Чести въпроси",
-    faqP: function (h, c) { return "В нито един режим не участват истински пари. Настройките, стиловите пакети и офлайн напредъкът ви остават на собственото ви устройство. Интерфейсът е достъпен на 83 езика, докато петте думи за действие — Fold, Check, Call, Raise, All-In — остават на английски, както на всяка маса по света. Повече в <a href=\"{faq}\">честите въпроси</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
+    faqP: function (h, c) { return "В нито един режим не участват истински пари. Настройките, стиловите пакети и тренировъчният ви напредък остават на собственото ви устройство и ви следват на другите ви устройства, когато влезете с профил в pokerth.net. Интерфейсът е достъпен на 83 езика, докато петте думи за действие — Fold, Check, Call, Raise, All-In — остават на английски, както на всяка маса по света. Повече в <a href=\"{faq}\">честите въпроси</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
   },
 
   hr: {
@@ -1401,24 +1299,24 @@ var PARTS = {
     lead: function (h, c) { return "Ovo je kratka verzija: od prazne kartice do vaše prve ruke Texas Hold’ema u PokerTH-u. Ako tražite sama pravila — mali i veliki ulog, krugove klađenja, što što pobjeđuje — krenite radije od <a href=\"{rules}\">stranice s pravilima</a> i <a href=\"{hands}\">jačine kombinacija</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); },
     steps: [
       ["Otvorite stranicu — nema se što instalirati",
-       "PokerTH radi u pregledniku. Bez preuzimanja, bez računa, bez dodataka. Na telefonu ga možete iz izbornika preglednika dodati na početni zaslon; tada se otvara kao aplikacija, preko cijelog zaslona, i radi i bez veze."],
+       "PokerTH radi u pregledniku. Bez preuzimanja, bez dodataka i bez računa za vježbanje ili igre kao gost. Možete ga instalirati kao aplikaciju — Dijeli → Dodaj na početni zaslon na iPhoneu i iPadu, izbornik preglednika ili gumb za instalaciju drugdje — i otvara se preko cijelog zaslona te radi i bez veze. Ako želite, Pomoć asa, As u kutu, objašnjava svaki zaslon."],
       ["Odaberite gdje želite igrati",
-       "Tri načina. <strong>Vježbanje offline</strong> odmah vas posjeda za stol s računalnim protivnicima i uopće ne treba vezu — tu se uči. <strong>pokerth.net</strong> je službena mreža: pravi protivnici, sezonske ljestvice i besplatan nadimak koji registrirate jednom. <strong>LAN / privatni poslužitelj</strong> spaja vas na namjenski PokerTH poslužitelj, vaš ili tuđi."],
+       "Tri načina. <strong>Lokalno / trening</strong> odmah vas posjeda za stol s računalnim protivnicima i uopće ne treba vezu — tu se uči. <strong>pokerth.net</strong> je službena mreža: pravi protivnici, Normalne igre otvorene gostima i Rang igre sa sezonskim ljestvicama za igrače s besplatnim računom. <strong>LAN / privatni poslužitelj</strong> spaja vas na namjenski PokerTH poslužitelj, vaš ili tuđi."],
       ["Sjednite za stol",
-       "U predvorju se pridružujete stolu s popisa ili stvarate vlastiti. Pri stvaranju određujete broj mjesta, početni stog, koliko brzo rastu ulozi i ima li stol lozinku. Podijelite poveznicu s pozivom i prijatelj slijeće ravno za vaš stol, u svom pregledniku, bez ikakve registracije."],
+       "U predvorju se pridružujete stolu s popisa, gledate igru u tijeku ili stvarate vlastiti stol. Pri stvaranju birate tip igre (Normalna, samo registrirani igrači, samo pozvani igrači ili Rang igra) i određujete broj mjesta, početni stog, koliko brzo rastu ulozi, vrijeme za potez, smiju li gledatelji gledati i ima li stol lozinku. Podijelite poveznicu s pozivom i prijatelj slijeće ravno za vaš stol, u svom pregledniku — u Normalnoj igri bez ikakve registracije."],
       ["Odigrajte ruku",
-       "Dobivate dvije zatvorene karte. Kladi se ukrug prije flopa, pa ponovno nakon flopa, turna i rivera. Kad dođete na red, traka radnji zasvijetli i nudi samo ono što je dopušteno: Fold, Check ili Call, Raise ili All-In. Iznos možete upisati, povući klizačem ili jednim dodirom postaviti na najmanji, pola pota, cijeli pot ili cijeli svoj stog."],
+       "Dobivate dvije zatvorene karte. Kladi se ukrug prije flopa, pa ponovno nakon flopa, turna i rivera. Kad dođete na red, traka radnji zasvijetli i nudi samo ono što je dopušteno: Fold, Check ili Call, Raise ili All-In. Iznos možete upisati, povući klizačem ili jednim dodirom postaviti na trećinu pota, pola pota ili cijeli pot."],
       ["Čitajte stol",
-       "Vaša trenutačno najbolja kombinacija ispisana je ispod stola kako karte izlaze. Pot, svaki stog i razina uloga stalno su na zaslonu, gumb djelitelja pokazuje tko govori zadnji, a odbrojavanje koliko vam je vremena ostalo. Pri otvaranju karata istaknuto je onih pet karata koje su činile svaku ruku."],
+       "Kartica Izgledi imenuje vašu trenutačno najbolju kombinaciju i vaše izglede za pobjedu kako karte izlaze. Pot, svaki stog i razina uloga stalno su na zaslonu, gumb djelitelja pokazuje tko govori zadnji, a odbrojavanje koliko vam je vremena ostalo. Pri otvaranju karata pobjednička kombinacija imenovana je ispod zajedničkih karata."],
       ["Pobijedite na turniru",
-       "Igre u PokerTH-u su sit-and-go turniri: svi počinju s istim stogom, ulozi rastu po satu, a igrači ispadaju dok jedan ne ostane sa svim žetonima. Ništa ne stoji novca i žetoni se ne mogu kupiti — sve je igrački novac, pa je na kocki samo sama igra."]
+       "Igre u PokerTH-u su turniri: svi počinju s istim stogom, ulozi rastu svakih nekoliko ruku ili minuta, a igrači ispadaju dok jedan ne ostane sa svim žetonima. Ništa ne stoji novca i žetoni se ne mogu kupiti — sve je igrački novac, pa je na kocki samo sama igra."]
     ],
     phoneH2: "Igranje na telefonu",
     phoneP: "Stol je jednako građen za dodirni zaslon kao i za računalo: dodir na polje uloga otvara brojčanu tipkovnicu unutar trake radnji umjesto sistemske, pa stol nikada ne poskakuje, a klizač se pomiče istim koracima kao u stolnom klijentu. Obavijesti da ste na redu mogu stići s gumbima Fold i Check/Call na sebi, pa se ruka može odigrati bez vraćanja u karticu.",
     friendsH2: "Igranje s prijateljima",
     friendsP: "Stvorite stol, stavite lozinku ako ga želite privatnim, i pošaljite poveznicu s pozivom. Ona otvara stol izravno — u instaliranoj aplikaciji ako su je dodali na početni zaslon, inače u kartici preglednika. Nitko ne mora ništa instalirati ni davati adresu e-pošte.",
     faqH2: "Česta pitanja",
-    faqP: function (h, c) { return "Ni u jednom načinu nema pravog novca. Vaše postavke, paketi stilova i offline napredak ostaju na vašem uređaju. Sučelje je dostupno na 83 jezika, dok pet riječi za radnje — Fold, Check, Call, Raise, All-In — ostaju na engleskom, kao za svakim stolom na svijetu. Više u <a href=\"{faq}\">čestim pitanjima</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
+    faqP: function (h, c) { return "Ni u jednom načinu nema pravog novca. Vaše postavke, paketi stilova i napredak u treningu ostaju na vašem uređaju te vas prate na drugim uređajima kad se prijavite pokerth.net računom. Sučelje je dostupno na 83 jezika, dok pet riječi za radnje — Fold, Check, Call, Raise, All-In — ostaju na engleskom, kao za svakim stolom na svijetu. Više u <a href=\"{faq}\">čestim pitanjima</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
   },
 
   bs: {
@@ -1430,24 +1328,24 @@ var PARTS = {
     lead: function (h, c) { return "Ovo je kratka verzija: od prazne kartice do tvoje prve ruke Texas Hold’ema u PokerTH-u. Ako tražiš sama pravila — mali i veliki ulog, krugove klađenja, šta pobjeđuje šta — kreni radije od <a href=\"{rules}\">stranice s pravilima</a> i <a href=\"{hands}\">jačine kombinacija</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); },
     steps: [
       ["Otvori stranicu — nema se šta instalirati",
-       "PokerTH radi u pregledaču. Bez preuzimanja, bez računa, bez dodataka. Na telefonu ga možeš iz menija pregledača dodati na početni ekran; tada se otvara kao aplikacija, preko cijelog ekrana, i radi i bez veze."],
+       "PokerTH radi u pregledaču. Bez preuzimanja, bez dodataka, a za vježbanje i gostujuće igre ni račun ne treba. Možeš ga instalirati kao aplikaciju — Dijeli → Dodaj na početni zaslon na iPhoneu i iPadu, meni preglednika ili dugme za instalaciju drugdje — i otvara se preko cijelog ekrana te radi i bez veze. Ako želiš, Pomoć asa, As u uglu, objašnjava svaki ekran."],
       ["Odaberi gdje želiš igrati",
-       "Tri načina. <strong>Vježbanje offline</strong> te odmah posjeda za sto sa računarskim protivnicima i uopšte ne treba vezu — tu se najviše uči. <strong>pokerth.net</strong> je zvanična mreža: pravi protivnici, sezonske ljestvice i besplatan nadimak koji registruješ jednom. <strong>LAN / privatni server</strong> te povezuje na namjenski PokerTH server, tvoj ili tuđi."],
+       "Tri načina. <strong>Lokalno / trening</strong> te odmah posjeda za sto sa računarskim protivnicima i uopšte ne treba vezu — tu se najviše uči. <strong>pokerth.net</strong> je zvanična mreža: pravi protivnici, normalne igre otvorene za goste i rang igre sa sezonskim ljestvicama za igrače s besplatnim računom. <strong>LAN / privatni server</strong> te povezuje na namjenski PokerTH server, tvoj ili tuđi."],
       ["Sjedni za sto",
-       "U predvorju se pridružuješ stolu s liste ili praviš sopstveni. Pri pravljenju određuješ broj mjesta, početni stek, koliko brzo rastu ulozi i ima li sto lozinku. Podijeli link sa pozivom i prijatelj slijeće pravo za tvoj sto, u svom pregledaču, bez ikakve registracije."],
+       "U predvorju se pridružuješ stolu s liste, gledaš igru u toku ili praviš sopstveni sto. Pri pravljenju biraš vrstu igre (normalna, samo za registrovane igrače, samo uz poziv ili rang igra) i određuješ broj mjesta, početni stek, koliko brzo rastu ulozi, vrijeme za potez, smiju li gledaoci gledati i ima li sto lozinku. Podijeli link sa pozivom i prijatelj slijeće pravo za tvoj sto, u svom pregledaču — u normalnoj igri bez ikakve registracije."],
       ["Odigraj ruku",
-       "Dobijaš dvije zatvorene karte. Klađenje ide u krugu prije flopa, pa ponovo nakon flopa, turna i rivera. Kad dođeš na red, traka radnji zasvijetli i nudi samo ono što je dozvoljeno: Fold, Check ili Call, Raise ili All-In. Iznos možeš upisati, povući klizačem ili jednim dodirom postaviti na najmanji, pola pota, cijeli pot ili cijeli svoj stek."],
+       "Dobijaš dvije zatvorene karte. Klađenje ide u krugu prije flopa, pa ponovo nakon flopa, turna i rivera. Kad dođeš na red, traka radnji zasvijetli i nudi samo ono što je dozvoljeno: Fold, Check ili Call, Raise ili All-In. Iznos možeš upisati, povući klizačem ili jednim dodirom postaviti na trećinu pota, pola pota ili cijeli pot."],
       ["Čitaj sto",
-       "Tvoja trenutno najbolja kombinacija ispisana je ispod stola kako karte izlaze. Pot, stek svakog igrača i nivo uloga stalno su na ekranu, dugme djelitelja pokazuje ko govori posljednji, a odbrojavanje koliko ti je vremena ostalo. Pri otvaranju karata istaknuto je onih pet karata koje su činile svaku ruku."],
+       "Kartica „Izgledi” navodi tvoju trenutno najbolju kombinaciju i šansu za pobjedu kako karte izlaze. Pot, stek svakog igrača i nivo uloga stalno su na ekranu, dugme djelitelja pokazuje ko govori posljednji, a odbrojavanje koliko ti je vremena ostalo. Pri otvaranju karata pobjednička kombinacija navedena je ispod zajedničkih karata."],
       ["Pobijedi na turniru",
-       "Igre u PokerTH-u su sit-and-go turniri: svi počinju sa istim stekom, ulozi rastu po satu, a igrači ispadaju dok jedan ne ostane sa svim žetonima. Ništa ne staje novca i žetoni se ne mogu dokupiti — sve je igrački novac, pa je na kocki samo sama partija."]
+       "Igre u PokerTH-u su turniri: svi počinju sa istim stekom, ulozi rastu svakih nekoliko ruku ili minuta, a igrači ispadaju dok jedan ne ostane sa svim žetonima. Ništa ne staje novca i žetoni se ne mogu dokupiti — sve je igrački novac, pa je na kocki samo sama partija."]
     ],
     phoneH2: "Igranje na telefonu",
     phoneP: "Sto je jednako dobro prilagođen dodirnom ekranu kao i računaru: dodir na polje uloga otvara brojčanu tastaturu unutar trake radnji umjesto sistemske, pa sto nikad ne skače, a klizač se pomjera istim koracima kao u desktop klijentu. Obavještenja da si na redu mogu stići sa dugmadima Fold i Check/Call na sebi, pa se ruka može odigrati bez vraćanja na karticu.",
     friendsH2: "Igranje sa prijateljima",
     friendsP: "Napravi sto, stavi lozinku ako ga želiš privatnim, i pošalji link sa pozivom. On otvara sto direktno — u instaliranoj aplikaciji ako su je dodali na početni ekran, inače u kartici pregledača. Niko ne mora ništa instalirati ni davati adresu e-pošte.",
     faqH2: "Česta pitanja",
-    faqP: function (h, c) { return "Ni u jednom načinu nema pravog novca. Tvoje postavke, paketi stilova i offline napredak ostaju na tvom uređaju. Interfejs je dostupan na 83 jezika, dok pet riječi za radnje — Fold, Check, Call, Raise, All-In — ostaju na engleskom, kao za svakim stolom na svijetu. Više u <a href=\"{faq}\">čestim pitanjima</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
+    faqP: function (h, c) { return "Ni u jednom načinu nema pravog novca. Tvoje postavke, paketi stilova i napredak u treningu ostaju na tvom uređaju i prate te na tvojim drugim uređajima kad se prijaviš pokerth.net računom. Interfejs je dostupan na 83 jezika, dok pet riječi za radnje — Fold, Check, Call, Raise, All-In — ostaju na engleskom, kao za svakim stolom na svijetu. Više u <a href=\"{faq}\">čestim pitanjima</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
   },
 
   mk: {
@@ -1459,24 +1357,24 @@ var PARTS = {
     lead: function (h, c) { return "Ова е кратка верзија: од празно јазиче до твојата прва рака Texas Hold’em во PokerTH. Ако бараш само правила — мал и голем блајнд, кругови на влагање, што победува што — почни радije од <a href=\"{rules}\">страницата со правила</a> и <a href=\"{hands}\">јачината на комбинациите</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); },
     steps: [
       ["Отвори ја страницата — нема што да се инсталира",
-       "PokerTH работи во прелистувачот. Без преземање, без сметка, без додатоци. На телефон можеш од менито на прелистувачот да го додадеш на почетниот екран; тогаш се отвора како апликација, преку цел екран, и работи и без врска."],
+       "PokerTH работи во прелистувачот. Без преземање, без додатоци и без сметка за тренинг или за игри како гостин. Можеш да го инсталираш како апликација — Сподели → Додади на почетниот екран на iPhone и iPad, од менито на прелистувачот или од копчето за инсталирање на другите места — и се отвора преку цел екран и работи и без врска. Ако сакаш, Помош од кецот, кецот во аголот, го објаснува секој екран."],
       ["Избери каде сакаш да играш",
-       "Три начини. <strong>Вежбање офлајн</strong> те седнува веднаш за маса со компјутерски противници и воопшто не бара врска — тука најмногу се учи. <strong>pokerth.net</strong> е официјалната мрежа: вистински противници, сезонски ранг-листи и бесплатен прекар што го регистрираш еднаш. <strong>LAN / приватен сервер</strong> те поврзува со наменски PokerTH сервер, твој или туѓ."],
+       "Три начини. <strong>Локално / тренинг</strong> те седнува веднаш за маса со компјутерски противници и воопшто не бара врска — тука најмногу се учи. <strong>pokerth.net</strong> е официјалната мрежа: вистински противници, Нормални игри отворени за гости и игри со рангирање со сезонски ранг-листи за играчи со бесплатна сметка. <strong>LAN / приватен сервер</strong> те поврзува со наменски PokerTH сервер, твој или туѓ."],
       ["Седни за маса",
-       "Во предворјето се приклучуваш на маса од листата или создаваш своја. При создавањето, определуваш број на места, почетен стек, колку брзо растат блајндовите и дали масата има лозинка. Сподели линк со покана и пријателот слетува право на твојата маса, во својот прелистувач, без никаква регистрација."],
+       "Во предворјето се приклучуваш на маса од листата, гледаш игра во тек или создаваш своја. При создавањето го избираш типот на игра (Нормална, Само регистрирани играчи, Само поканети играчи или Игра со рангирање) и определуваш број на места, почетен стек, колку брзо растат блајндовите, време за потег, дали гледачите смеат да гледаат и дали масата има лозинка. Сподели линк со покана и пријателот слетува право на твојата маса, во својот прелистувач — во Нормална игра без никаква регистрација."],
       ["Одиграј рака",
-       "Добиваш две скриени карти. Се влага во круг пред флопот, па повторно по флопот, терн и ривер. Кога ќе дојдеш на ред, лентата со потези светнува и нуди само она што е дозволено: Fold, Check или Call, Raise или All-In. Износот можеш да го внесеш, да го повлечеш со лизгачот или со еден допир да го поставиш на минимум, половина пот, цел пот или целиот свој стек."],
+       "Добиваш две скриени карти. Се влага во круг пред флопот, па повторно по флопот, терн и ривер. Кога ќе дојдеш на ред, лентата со потези светнува и нуди само она што е дозволено: Fold, Check или Call, Raise или All-In. Износот можеш да го внесеш, да го повлечеш со лизгачот или со еден допир да го поставиш на третина од потот, половина пот или цел пот."],
       ["Читај ја масата",
-       "Твојата тековно најдобра комбинација е испишана под масата како што излегуваат картите. Потот, стекот на секој играч и нивото на блајндовите постојано се на екранот, копчето на делачот покажува кој зборува последен, а одбројувањето колку време ти преостанува. При покажување на картите, истакнати се тие пет карти што ја составувале секоја рака."],
+       "Табот Изгледи ја именува твојата тековно најдобра рака и шансата да победиш како што излегуваат картите. Потот, стекот на секој играч и нивото на блајндовите постојано се на екранот, копчето на делачот покажува кој зборува последен, а одбројувањето колку време ти преостанува. При покажување на картите, победничката комбинација е именувана под заедничките карти."],
       ["Победи на турнирот",
-       "Игрите во PokerTH се sit-and-go турнири: сите почнуваат со ист стек, блајндовите растат по часовник, а играчите испаѓаат додека еден не остане со сите жетони. Ништо не чини пари и жетоните не можат да се докупат — сè е играчки пари, така што на коцка е само самата партија."]
+       "Игрите во PokerTH се турнири: сите почнуваат со ист стек, блајндовите растат на секои неколку раки или минути, а играчите испаѓаат додека еден не остане со сите жетони. Ништо не чини пари и жетоните не можат да се докупат — сè е играчки пари, така што на коцка е само самата партија."]
     ],
     phoneH2: "Играње на телефон",
     phoneP: "Масата е подеднакво добро прилагодена за екран на допир како и за компјутер: допир на полето за влог отвора бројчана тастатура во рамки на лентата со потези наместо системската, така што масата никогаш не скока, а лизгачот се движи со истите чекори како во десктоп-клиентот. Известувањата дека си на ред можат да пристигнат со копчињата Fold и Check/Call на себе, така што раката може да се одигра без враќање на јазичето.",
     friendsH2: "Играње со пријатели",
     friendsP: "Создај маса, стави лозинка ако сакаш да биде приватна, и испрати линк со покана. Тој ја отвора масата директно — во инсталираната апликација ако ја додале на почетниот екран, инаку во јазиче на прелистувачот. Никој не мора ништо да инсталира ниту да дава е-пошта адреса.",
     faqH2: "Чести прашања",
-    faqP: function (h, c) { return "Во ниту еден режим нема вистински пари. Твоите поставки, пакети стилови и офлајн напредокот остануваат на твојот уред. Интерфејсот е достапен на 83 јазици, додека пет зборови за потези — Fold, Check, Call, Raise, All-In — остануваат на англиски, како на секоја маса во светот. Повеќе во <a href=\"{faq}\">честите прашања</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
+    faqP: function (h, c) { return "Во ниту еден режим нема вистински пари. Твоите поставки, пакети стилови и тренинг-напредокот остануваат на твојот уред и те следат на другите твои уреди кога ќе се најавиш со pokerth.net сметка. Интерфејсот е достапен на 83 јазици, додека пет зборови за потези — Fold, Check, Call, Raise, All-In — остануваат на англиски, како на секоја маса во светот. Повеќе во <a href=\"{faq}\">честите прашања</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
   },
 
   sr: {
@@ -1489,24 +1387,24 @@ var PARTS = {
     lead: function (h, c) { return "Ovo je kratka verzija: od prazne kartice do vaše prve ruke Teksas Holdema u PokerTH-u. Ako tražite sama pravila — mali i veliki ulog, krugove klađenja, šta šta pobeđuje — krenite radije od <a href=\"{rules}\">stranice sa pravilima</a> i <a href=\"{hands}\">jačine kombinacija</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); },
     steps: [
       ["Otvorite sajt — nema šta da se instalira",
-       "PokerTH radi u pregledaču. Bez preuzimanja, bez naloga, bez dodataka. Na telefonu ga iz menija pregledača možete dodati na početni ekran; tada se otvara kao aplikacija, preko celog ekrana, i radi i bez veze."],
+       "PokerTH radi u pregledaču. Bez preuzimanja, bez dodataka, a za vežbanje i gostujuće igre i bez naloga. Možete ga instalirati kao aplikaciju — Podeli → Dodaj na početni ekran na iPhone-u i iPad-u, meni pregledača ili dugme za instalaciju drugde — i otvara se preko celog ekrana, uz rad i bez veze. Ako želite, Pomoć keca, Kec u uglu, objašnjava svaki ekran."],
       ["Izaberite gde želite da igrate",
-       "Tri načina. <strong>Vežbanje oflajn</strong> vas odmah posadi za sto sa računarskim protivnicima i uopšte ne traži vezu — tu se uči. <strong>pokerth.net</strong> je zvanična mreža: pravi protivnici, sezonske liste i besplatan nadimak koji registrujete jednom. <strong>LAN / privatni server</strong> vas povezuje na namenski PokerTH server, vaš ili tuđi."],
+       "Tri načina. <strong>Lokalno / vežbanje</strong> vas odmah posadi za sto sa računarskim protivnicima i uopšte ne traži vezu — tu se uči. <strong>pokerth.net</strong> je zvanična mreža: pravi protivnici, normalne igre otvorene za goste i rangirane igre sa sezonskim listama za igrače sa besplatnim nalogom. <strong>LAN / privatni server</strong> vas povezuje na namenski PokerTH server, vaš ili tuđi."],
       ["Sedite za sto",
-       "U predvorju se pridružujete stolu sa spiska ili pravite svoj. Pri pravljenju određujete broj mesta, početni stek, koliko brzo rastu ulozi i da li sto ima lozinku. Podelite pozivnu vezu i prijatelj sleti pravo za vaš sto, u svom pregledaču, bez ikakve registracije."],
+       "U predvorju se pridružujete stolu sa spiska, gledate igru u toku ili pravite svoj. Pri pravljenju birate vrstu igre (Normalna, Samo registrovani igrači, Samo pozvani igrači ili Rangirana igra) i određujete broj mesta, početni stek, koliko brzo rastu ulozi, vreme za potez, smeju li gledaoci da prate i da li sto ima lozinku. Podelite pozivnu vezu i prijatelj sleti pravo za vaš sto, u svom pregledaču — u normalnoj igri bez ikakve registracije."],
       ["Odigrajte ruku",
-       "Dobijate dve zatvorene karte. Kladi se ukrug pre flopa, pa ponovo posle flopa, terna i rivera. Kada dođete na red, traka radnji zasvetli i nudi samo ono što je dozvoljeno: Fold, Check ili Call, Raise ili All-In. Iznos možete upisati, povući klizačem ili jednim dodirom postaviti na najmanji, pola pota, ceo pot ili ceo svoj stek."],
+       "Dobijate dve zatvorene karte. Kladi se ukrug pre flopa, pa ponovo posle flopa, terna i rivera. Kada dođete na red, traka radnji zasvetli i nudi samo ono što je dozvoljeno: Fold, Check ili Call, Raise ili All-In. Iznos možete upisati, povući klizačem ili jednim dodirom postaviti na trećinu pota, pola pota ili ceo pot."],
       ["Čitajte sto",
-       "Vaša trenutno najbolja kombinacija ispisana je ispod stola kako karte izlaze. Pot, svaki stek i nivo uloga stalno su na ekranu, dugme delioca pokazuje ko govori poslednji, a odbrojavanje koliko vam je vremena ostalo. Pri otvaranju karata istaknuto je onih pet karata koje su činile svaku ruku."],
+       "Kartica Šanse imenuje vašu trenutno najbolju kombinaciju i vašu šansu za pobedu kako karte izlaze. Pot, svaki stek i nivo uloga stalno su na ekranu, dugme delioca pokazuje ko govori poslednji, a odbrojavanje koliko vam je vremena ostalo. Pri otvaranju karata pobednička kombinacija imenovana je ispod zajedničkih karata."],
       ["Pobedite na turniru",
-       "Igre u PokerTH-u su sit-and-go turniri: svi počinju sa istim stekom, ulozi rastu po satu, a igrači ispadaju dok jedan ne ostane sa svim žetonima. Ništa ne košta novca i žetoni se ne mogu kupiti — sve je igrački novac, pa je na kocki samo sama igra."]
+       "Igre u PokerTH-u su turniri: svi počinju sa istim stekom, ulozi rastu na svakih nekoliko ruku ili minuta, a igrači ispadaju dok jedan ne ostane sa svim žetonima. Ništa ne košta novca i žetoni se ne mogu kupiti — sve je igrački novac, pa je na kocki samo sama igra."]
     ],
     phoneH2: "Igranje na telefonu",
     phoneP: "Sto je podjednako pravljen za dodirni ekran kao i za računar: dodir na polje uloga otvara brojčanu tastaturu unutar trake radnji umesto sistemske, pa sto nikada ne poskakuje, a klizač se pomera istim koracima kao u desktop klijentu. Obaveštenja da ste na redu mogu stići sa dugmadima Fold i Check/Call na sebi, pa se ruka može odigrati bez vraćanja u karticu.",
     friendsH2: "Igranje sa prijateljima",
     friendsP: "Napravite sto, stavite lozinku ako želite da bude privatan, i pošaljite pozivnu vezu. Ona otvara sto direktno — u instaliranoj aplikaciji ako su je dodali na početni ekran, inače u kartici pregledača. Niko ne mora ništa da instalira niti da daje adresu e-pošte.",
     faqH2: "Česta pitanja",
-    faqP: function (h, c) { return "Ni u jednom režimu nema pravog novca. Vaša podešavanja, paketi stilova i oflajn napredak ostaju na vašem uređaju. Interfejs je dostupan na 83 jezika, dok pet reči za radnje — Fold, Check, Call, Raise, All-In — ostaju na engleskom, kao za svakim stolom na svetu. Više u <a href=\"{faq}\">čestim pitanjima</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
+    faqP: function (h, c) { return "Ni u jednom režimu nema pravog novca. Vaša podešavanja, paketi stilova i napredak u vežbanju ostaju na vašem uređaju i prate vas na druge uređaje kada se prijavite pokerth.net nalogom. Interfejs je dostupan na 83 jezika, dok pet reči za radnje — Fold, Check, Call, Raise, All-In — ostaju na engleskom, kao za svakim stolom na svetu. Više u <a href=\"{faq}\">čestim pitanjima</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
   },
 
   ca: {
@@ -1518,24 +1416,24 @@ var PARTS = {
     lead: function (h, c) { return "Aquesta és la versió curta: d’una pestanya en blanc a la teva primera mà de Texas Hold’em a PokerTH. Si el que busques són les regles mateixes — cegues, rondes d’apostes, què guanya a què — comença per la <a href=\"{rules}\">pàgina de regles</a> i per les <a href=\"{hands}\">jugades de pòquer</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); },
     steps: [
       ["Obre el lloc — no hi ha res per instal·lar",
-       "PokerTH funciona al navegador. Sense descàrregues, sense compte, sense connectors. Al mòbil el pots afegir a la pantalla d’inici des del menú del navegador; llavors s’obre com una aplicació, a pantalla completa, i funciona fora de línia."],
+       "PokerTH funciona al navegador. Sense descàrregues, sense connectors i sense compte per entrenar-te ni per jugar com a convidat. Pots instal·lar-lo com una aplicació — Comparteix → Afegeix a la pantalla d’inici a l’iPhone i l’iPad, el menú del navegador o el botó d’instal·lació a la resta — i s’obre a pantalla completa i funciona fora de línia. Si vols, l’Ajuda de l’As, l’As de la cantonada, t’explica cada pantalla."],
       ["Tria on vols jugar",
-       "Tres modes. La <strong>pràctica fora de línia</strong> et fa seure de seguida en una taula d’oponents controlats per l’ordinador i no necessita cap connexió: aquí és on s’aprèn. <strong>pokerth.net</strong> és la xarxa oficial: rivals reals, classificacions per temporada i un sobrenom gratuït que registres una sola vegada. <strong>LAN / servidor privat</strong> et connecta a un servidor PokerTH dedicat, teu o d’algú altre."],
+       "Tres modes. El mode <strong>Local / entrenament</strong> et fa seure de seguida en una taula d’oponents controlats per l’ordinador i no necessita cap connexió: aquí és on s’aprèn. <strong>pokerth.net</strong> és la xarxa oficial: rivals reals, partides normals obertes als convidats i partides de classificació amb classificacions per temporada per als jugadors amb un compte gratuït. <strong>LAN / servidor privat</strong> et connecta a un servidor PokerTH dedicat, teu o d’algú altre."],
       ["Seu en una taula",
-       "Al vestíbul t’afegeixes a una taula de la llista o crees la teva. En crear-la tries el nombre de seients, la pila inicial, la rapidesa amb què pugen les cegues i si la taula té contrasenya. Comparteix l’enllaç d’invitació i un amic aterra directament a la teva taula, al seu navegador, sense registrar res."],
+       "Al vestíbul t’afegeixes a una taula de la llista, mires una partida en curs o crees la teva. En crear-la tries el tipus de partida (normal, només per a jugadors registrats, només per invitació o de classificació) i fixes el nombre de seients, la pila inicial, la rapidesa amb què pugen les cegues, el temps per actuar, si els espectadors poden mirar i si la taula té contrasenya. Comparteix l’enllaç d’invitació i un amic aterra directament a la teva taula, al seu navegador — en una partida normal, sense registrar res."],
       ["Juga la mà",
-       "Reps dues cartes tapades. S’aposta al voltant de la taula abans del flop i un altre cop després del flop, el turn i el river. Quan et toca, la barra d’accions s’encén i només ofereix el que és permès: Fold, Check o Call, Raise o All-In. L’import es pot escriure, arrossegar amb el control lliscant o fixar amb un toc a Mín., mig pot, el pot o tota la teva pila."],
+       "Reps dues cartes tapades. S’aposta al voltant de la taula abans del flop i un altre cop després del flop, el turn i el river. Quan et toca, la barra d’accions s’encén i només ofereix el que és permès: Fold, Check o Call, Raise o All-In. L’import es pot escriure, arrossegar amb el control lliscant o fixar amb un toc a un terç del pot, mig pot o el pot."],
       ["Llegeix la taula",
-       "La teva millor jugada del moment surt anomenada sota la taula a mesura que van sortint les cartes. El pot, cada pila i el nivell de cegues són sempre a la pantalla, el botó de repartidor indica qui parla últim i un compte enrere mostra el temps que et queda. A l’obertura de cartes es destaquen les cinc cartes que van formar cada mà."],
+       "La pestanya «Probabilitats» anomena la teva millor jugada del moment i la teva probabilitat de guanyar a mesura que van sortint les cartes. El pot, cada pila i el nivell de cegues són sempre a la pantalla, el botó de repartidor indica qui parla últim i un compte enrere mostra el temps que et queda. A l’obertura de cartes, la combinació guanyadora s’anomena sota les cartes comunitàries."],
       ["Guanya el torneig",
-       "Les partides de PokerTH són tornejos sit-and-go: tothom comença amb la mateixa pila, les cegues pugen per rellotge i els jugadors van caient fins que un té totes les fitxes. Res no costa diners i no es poden comprar fitxes — tot són diners ficticis, així que l’única cosa en joc és la partida mateixa."]
+       "Les partides de PokerTH són tornejos: tothom comença amb la mateixa pila, les cegues pugen cada unes quantes mans o minuts i els jugadors van caient fins que un té totes les fitxes. Res no costa diners i no es poden comprar fitxes — tot són diners ficticis, així que l’única cosa en joc és la partida mateixa."]
     ],
     phoneH2: "Jugar al mòbil",
     phoneP: "La taula està feta tant per a pantalla tàctil com per a ordinador: tocar el camp d’aposta obre un teclat numèric dins la barra d’accions en comptes del teclat del sistema, de manera que la taula no salta mai, i el control lliscant avança amb els mateixos passos que el client d’escriptori. Les notificacions de torn poden arribar amb els botons Fold i Check/Call incorporats, així es pot jugar una mà sense tornar a la pestanya.",
     friendsH2: "Jugar amb amics",
     friendsP: "Crea una taula, posa-hi contrasenya si la vols privada i envia l’enllaç d’invitació. Obre la taula directament — a l’aplicació instal·lada si l’han afegida a la pantalla d’inici, o en una pestanya del navegador si no. Ningú no ha d’instal·lar res ni donar cap adreça de correu.",
     faqH2: "Preguntes freqüents",
-    faqP: function (h, c) { return "No hi ha mai diners pel mig, en cap mode. La teva configuració, els paquets d’estil i el progrés fora de línia es queden al teu propi dispositiu. La interfície està disponible en 83 idiomes, mentre que les cinc paraules d’acció — Fold, Check, Call, Raise, All-In — es mantenen en anglès, com a qualsevol taula del món. Més a les <a href=\"{faq}\">preguntes freqüents</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
+    faqP: function (h, c) { return "No hi ha mai diners pel mig, en cap mode. La teva configuració, els paquets d’estil i el progrés d’entrenament es queden al teu propi dispositiu, i et segueixen als altres dispositius quan inicies la sessió amb un compte pokerth.net. La interfície està disponible en 83 idiomes, mentre que les cinc paraules d’acció — Fold, Check, Call, Raise, All-In — es mantenen en anglès, com a qualsevol taula del món. Més a les <a href=\"{faq}\">preguntes freqüents</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
   },
 
   gl: {
@@ -1547,24 +1445,24 @@ var PARTS = {
     lead: function (h, c) { return "Esta é a versión curta: dunha lapela en branco á túa primeira man de Texas Hold’em en PokerTH. Se o que buscas son as regras mesmas — cegas, roldas de apostas, que gaña a que — comeza pola <a href=\"{rules}\">páxina de regras</a> e polas <a href=\"{hands}\">xogadas de póker</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); },
     steps: [
       ["Abre o sitio — non hai nada que instalar",
-       "PokerTH funciona no navegador. Sen descargas, sen conta, sen complementos. No móbil podes engadilo á pantalla de inicio desde o menú do navegador; entón ábrese como unha aplicación, a pantalla completa, e funciona sen conexión."],
+       "PokerTH funciona no navegador. Sen descargas, sen complementos e sen conta para adestrar nin para as partidas de convidado. Podes instalalo como unha aplicación — Compartir → Engadir á pantalla de inicio en iPhone e iPad, o menú do navegador ou o botón de instalación noutros dispositivos — e ábrese a pantalla completa, con funcionamento sen conexión. Se queres, a Axuda do Ás, o Ás da esquina, explica cada pantalla."],
       ["Escolle onde queres xogar",
-       "Tres modos. A <strong>práctica sen conexión</strong> senta-te de contado nunha mesa de adversarios controlados polo computador e non precisa conexión ningunha: aquí é onde se aprende. <strong>pokerth.net</strong> é a rede oficial: rivais reais, clasificacións por tempada e unha alcuma de balde que rexistras unha soa vez. <strong>LAN / servidor privado</strong> conéctate a un servidor PokerTH dedicado, teu ou doutra persoa."],
+       "Tres modos. O modo <strong>Local / adestramento</strong> senta-te de contado nunha mesa de adversarios controlados polo computador e non precisa conexión ningunha: aquí é onde se aprende. <strong>pokerth.net</strong> é a rede oficial: rivais reais, partidas Normal abertas a convidados e partidas de clasificación con clasificacións por tempada para os xogadores cunha conta gratuíta. <strong>LAN / servidor privado</strong> conéctate a un servidor PokerTH dedicado, teu ou doutra persoa."],
       ["Senta nunha mesa",
-       "No vestíbulo únesche a unha mesa da lista ou creas a túa. Ao crear escolles o número de asentos, as fichas iniciais, a rapidez coa que soben as cegas e se a mesa leva contrasinal. Comparte a ligazón de convite e o amigo chega directamente á túa mesa, no seu navegador, sen rexistrar nada."],
+       "No vestíbulo únesche a unha mesa da lista, ves unha partida en curso ou creas a túa. Ao crear escolles o tipo de partida (Normal, só xogadores rexistrados, só xogadores convidados ou partida de clasificación) e axustas o número de asentos, as fichas iniciais, a rapidez coa que soben as cegas, o tempo para actuar, se os espectadores poden mirar e se a mesa leva contrasinal. Comparte a ligazón de convite e o amigo chega directamente á túa mesa, no seu navegador — nunha partida Normal, sen rexistrar nada."],
       ["Xoga a man",
-       "Recibes dúas cartas tapadas. Apóstase arredor da mesa antes do flop e outra vez despois do flop, o turn e o river. Cando che toca, a barra de accións acéndese e só ofrece o permitido: Fold, Check ou Call, Raise ou All-In. A cantidade pódese escribir, arrastrar no desprazador ou fixar cun toque en Mín., a metade do bote, o bote ou todas as túas fichas."],
+       "Recibes dúas cartas tapadas. Apóstase arredor da mesa antes do flop e outra vez despois do flop, o turn e o river. Cando che toca, a barra de accións acéndese e só ofrece o permitido: Fold, Check ou Call, Raise ou All-In. A cantidade pódese escribir, arrastrar no desprazador ou fixar cun toque nun terzo do bote, na metade do bote ou no bote."],
       ["Le a mesa",
-       "A túa mellor xogada do momento aparece nomeada baixo a mesa a medida que saen as cartas. O bote, as fichas de cada quen e o nivel das cegas están sempre na pantalla, o botón de repartidor indica quen fala en último lugar e unha conta atrás amosa canto tempo che queda. Na apertura de cartas destácanse as cinco cartas que formaron cada man."],
+       "A pestana Probabilidades nomea a túa mellor xogada do momento e a túa probabilidade de gañar a medida que saen as cartas. O bote, as fichas de cada quen e o nivel das cegas están sempre na pantalla, o botón de repartidor indica quen fala en último lugar e unha conta atrás amosa canto tempo che queda. Na apertura de cartas, a combinación gañadora nómease baixo as cartas comunitarias."],
       ["Gaña o torneo",
-       "As partidas de PokerTH son torneos sit-and-go: todo o mundo comeza coas mesmas fichas, as cegas soben por reloxo e os xogadores van caendo ata que un ten todas as fichas. Nada custa cartos e non se poden mercar fichas — todo son cartos ficticios, así que o único en xogo é a propia partida."]
+       "As partidas de PokerTH son torneos: todo o mundo comeza coas mesmas fichas, as cegas soben cada poucas mans ou minutos e os xogadores van caendo ata que un ten todas as fichas. Nada custa cartos e non se poden mercar fichas — todo son cartos ficticios, así que o único en xogo é a propia partida."]
     ],
     phoneH2: "Xogar no móbil",
     phoneP: "A mesa está pensada tanto para pantalla táctil como para computador: tocar o campo da aposta abre un teclado numérico dentro da barra de accións en lugar do teclado do sistema, así a mesa nunca dá saltos, e o desprazador avanza cos mesmos pasos que o cliente de escritorio. As notificacións de quenda poden chegar cos botóns Fold e Check/Call postos, de xeito que se pode xogar unha man sen volver á lapela.",
     friendsH2: "Xogar cos amigos",
     friendsP: "Crea unha mesa, ponlle contrasinal se a queres privada e envía a ligazón de convite. Abre a mesa directamente — na aplicación instalada se a engadiron á pantalla de inicio, ou nunha lapela do navegador se non. Ninguén ten que instalar nada nin dar un enderezo de correo.",
     faqH2: "Preguntas frecuentes",
-    faqP: function (h, c) { return "Nunca hai cartos polo medio, en ningún modo. A túa configuración, os paquetes de estilo e o progreso sen conexión quedan no teu propio dispositivo. A interface está dispoñible en 83 idiomas, mentres que as cinco palabras de acción — Fold, Check, Call, Raise, All-In — quedan en inglés, coma en calquera mesa do mundo. Máis nas <a href=\"{faq}\">preguntas frecuentes</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
+    faqP: function (h, c) { return "Nunca hai cartos polo medio, en ningún modo. A túa configuración, os paquetes de estilo e o progreso de adestramento quedan no teu propio dispositivo e acompáñante aos teus outros dispositivos cando inicias sesión cunha conta pokerth.net. A interface está dispoñible en 83 idiomas, mentres que as cinco palabras de acción — Fold, Check, Call, Raise, All-In — quedan en inglés, coma en calquera mesa do mundo. Máis nas <a href=\"{faq}\">preguntas frecuentes</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
   },
 
   lt: {
@@ -1576,24 +1474,24 @@ var PARTS = {
     lead: function (h, c) { return "Tai trumpoji versija: nuo tuščios kortelės iki pirmosios jūsų Texas Hold’em rankos PokerTH. Jei ieškote pačių taisyklių — aklųjų statymų, statymų ratų, kas ką muša — pradėkite geriau nuo <a href=\"{rules}\">taisyklių puslapio</a> ir <a href=\"{hands}\">derinių eiliškumo</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); },
     steps: [
       ["Atverkite svetainę — nieko diegti nereikia",
-       "PokerTH veikia naršyklėje. Jokio atsisiuntimo, jokios paskyros, jokių papildinių. Telefone jį galite pridėti į pradžios ekraną iš naršyklės meniu; tada jis atsiveria kaip programėlė, visame ekrane, ir veikia net be ryšio."],
+       "PokerTH veikia naršyklėje. Jokio atsisiuntimo, jokių papildinių, o treniruotei ar svečio žaidimams — ir jokios paskyros. Galite jį įdiegti kaip programėlę — iPhone ir iPad per Bendrinti → Pridėti į pradžios ekraną, kitur per naršyklės meniu arba diegimo mygtuką — ir jis atsiveria visame ekrane, veikia net be ryšio. Jei norite, Tūzo pagalba — Tūzas kampe — paaiškina kiekvieną ekraną."],
       ["Pasirinkite, kur norite žaisti",
-       "Trys būdai. <strong>Treniruotė neprisijungus</strong> iškart pasodina jus prie stalo su kompiuterio varžovais ir jai visai nereikia ryšio — čia ir mokomasi. <strong>pokerth.net</strong> yra oficialus tinklas: tikri varžovai, sezono reitingai ir nemokamas slapyvardis, kurį užregistruojate vieną kartą. <strong>LAN / privatus serveris</strong> prijungia prie skirtojo PokerTH serverio — jūsų ar kieno nors kito."],
+       "Trys būdai. <strong>Vietinis / treniruotė</strong> iškart pasodina jus prie stalo su kompiuterio varžovais ir jai visai nereikia ryšio — čia ir mokomasi. <strong>pokerth.net</strong> yra oficialus tinklas: tikri varžovai, Įprasti žaidimai, atviri svečiams, ir Reitinguojami žaidimai su sezono reitingais žaidėjams su nemokama paskyra. <strong>LAN / privatus serveris</strong> prijungia prie skirtojo PokerTH serverio — jūsų ar kieno nors kito."],
       ["Atsisėskite prie stalo",
-       "Vestibiulyje arba prisijungiate prie stalo iš sąrašo, arba susikuriate savo. Kurdami nustatote vietų skaičių, pradinį žetonų kiekį, kaip greitai kyla aklieji statymai ir ar stalas apsaugotas slaptažodžiu. Pasidalykite pakvietimo nuoroda — draugas atsidurs tiesiai prie jūsų stalo, savo naršyklėje, nieko neregistruodamas."],
+       "Vestibiulyje arba prisijungiate prie stalo iš sąrašo, arba stebite vykstantį žaidimą, arba susikuriate savo. Kurdami pasirenkate žaidimo tipą (Įprastas, Tik registruoti žaidėjai, Tik pakviesti žaidėjai arba Reitinguojamas žaidimas) ir nustatote vietų skaičių, pradinį žetonų kiekį, kaip greitai kyla aklieji statymai, laiką veiksmui, ar žiūrovams leidžiama stebėti ir ar stalas apsaugotas slaptažodžiu. Pasidalykite pakvietimo nuoroda — draugas atsidurs tiesiai prie jūsų stalo, savo naršyklėje — Įprastame žaidime nieko neregistruodamas."],
       ["Sužaiskite ranką",
-       "Jums išdalijamos dvi uždaros kortos. Statoma ratu prieš flopą ir dar kartą po flopo, terno bei riverio. Kai ateina jūsų eilė, veiksmų juosta įsižiebia ir siūlo tik tai, kas leidžiama: Fold, Check arba Call, Raise ar All-In. Sumą galima įvesti, patempti šliaužikliu arba vienu palietimu nustatyti į minimumą, pusę banko, visą banką ar visus savo žetonus."],
+       "Jums išdalijamos dvi uždaros kortos. Statoma ratu prieš flopą ir dar kartą po flopo, terno bei riverio. Kai ateina jūsų eilė, veiksmų juosta įsižiebia ir siūlo tik tai, kas leidžiama: Fold, Check arba Call, Raise ar All-In. Sumą galima įvesti, patempti šliaužikliu arba vienu palietimu nustatyti į trečdalį banko, pusę banko ar visą banką."],
       ["Skaitykite stalą",
-       "Kortoms atsiverčiant, geriausias tuo metu jūsų derinys užrašomas po stalu. Bankas, kiekvieno žetonai ir aklųjų statymų lygis visą laiką matomi ekrane, dalytojo mygtukas rodo, kas kalba paskutinis, o atgalinis laikmatis — kiek jums liko laiko. Atskleidžiant kortas kiekvienoje atverstoje rankoje paryškinamos tos penkios kortos, kurios iš tikrųjų buvo skaičiuojamos."],
+       "Skirtuke Šansai nurodomas jūsų geriausias esamas derinys ir laimėjimo tikimybė, kortoms atsiverčiant. Bankas, kiekvieno žetonai ir aklųjų statymų lygis visą laiką matomi ekrane, dalytojo mygtukas rodo, kas kalba paskutinis, o atgalinis laikmatis — kiek jums liko laiko. Atskleidžiant kortas po bendromis kortomis įvardijamas laimintis derinys."],
       ["Laimėkite turnyrą",
-       "PokerTH žaidimai yra sit-and-go turnyrai: visi pradeda su tokiu pat žetonų kiekiu, aklieji statymai kyla pagal laikrodį, o žaidėjai iškrenta, kol vienam atitenka visi žetonai. Niekas nekainuoja pinigų ir žetonų nusipirkti negalima — visi jie žaidimo, tad statoma tik pati partija."]
+       "PokerTH žaidimai yra turnyrai: visi pradeda su tokiu pat žetonų kiekiu, aklieji statymai kyla kas kelis išdalijimus ar minutes, o žaidėjai iškrenta, kol vienam atitenka visi žetonai. Niekas nekainuoja pinigų ir žetonų nusipirkti negalima — visi jie žaidimo, tad statoma tik pati partija."]
     ],
     phoneH2: "Žaidimas telefonu",
     phoneP: "Stalas pritaikytas jutikliniam ekranui ne mažiau nei kompiuteriui: palietus statymo lauką, vietoj sistemos klaviatūros veiksmų juostoje atsiveria skaitmenų klaviatūra, todėl stalas niekada nešokinėja, o šliaužiklis juda tokiais pat žingsniais kaip staliniame kliente. Pranešimai apie jūsų eilę gali ateiti su Fold ir Check/Call mygtukais, tad ranką galima sužaisti negrįžtant į kortelę.",
     friendsH2: "Žaidimas su draugais",
     friendsP: "Sukurkite stalą, uždėkite slaptažodį, jei norite, kad būtų privatus, ir išsiųskite pakvietimo nuorodą. Ji atveria stalą tiesiogiai — įdiegtoje programėlėje, jei ją pridėjo į pradžios ekraną, kitu atveju naršyklės kortelėje. Niekam nereikia nieko diegti ar palikti el. pašto adreso.",
     faqH2: "Dažni klausimai",
-    faqP: function (h, c) { return "Nė viename režime tikri pinigai nedalyvauja. Jūsų nustatymai, stiliaus paketai ir pažanga neprisijungus lieka jūsų pačių įrenginyje. Sąsaja pateikiama 83 kalbomis, o penki veiksmų žodžiai — Fold, Check, Call, Raise, All-In — lieka angliški, kaip ir prie bet kurio stalo pasaulyje. Daugiau <a href=\"{faq}\">dažnuose klausimuose</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
+    faqP: function (h, c) { return "Nė viename režime tikri pinigai nedalyvauja. Jūsų nustatymai, stiliaus paketai ir treniruočių pažanga lieka jūsų pačių įrenginyje ir persikelia į kitus jūsų įrenginius, kai prisijungiate su pokerth.net paskyra. Sąsaja pateikiama 83 kalbomis, o penki veiksmų žodžiai — Fold, Check, Call, Raise, All-In — lieka angliški, kaip ir prie bet kurio stalo pasaulyje. Daugiau <a href=\"{faq}\">dažnuose klausimuose</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
   },
 
   et: {
@@ -1605,24 +1503,24 @@ var PARTS = {
     lead: function (h, c) { return "See on lühike versioon: tühjast vahekaardist sinu esimese Texas Hold’emi käeni PokerTH-s. Kui otsid reegleid endid — blindid, panustamisvoorud, mis mida lööb — alusta pigem <a href=\"{rules}\">reeglite lehelt</a> ja <a href=\"{hands}\">käte tugevusest</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); },
     steps: [
       ["Ava sait — midagi ei ole vaja paigaldada",
-       "PokerTH töötab brauseris. Allalaadimist ei ole, kontot ei ole, pistikprogramme ei ole. Telefonis saad selle brauseri menüüst avakuvale lisada; siis avaneb see nagu rakendus, täisekraanil, ja töötab ka ilma ühenduseta."],
+       "PokerTH töötab brauseris. Allalaadimist ei ole, pistikprogramme ei ole ning treeninguks ja külalismängudeks pole kontot vaja. Saad selle paigaldada nagu rakenduse — iPhone’is ja iPadis Jaga → Lisa avakuvale, mujal brauseri menüüst või paigaldusnupust — ja see avaneb täisekraanil ning töötab ka ilma ühenduseta. Soovi korral selgitab Ässa abi, Äss nurgas, iga ekraani."],
       ["Vali, kus soovid mängida",
-       "Kolm viisi. <strong>Võrguvaba treening</strong> paneb sind kohe lauda arvutivastastega ja ei vaja üldse ühendust — siin õpitaksegi. <strong>pokerth.net</strong> on ametlik võrk: päris vastased, hooaja edetabelid ja tasuta hüüdnimi, mille registreerid ühe korra. <strong>LAN / privaatserver</strong> ühendab pühendatud PokerTH serveriga — sinu või kellegi teise omaga."],
+       "Kolm viisi. <strong>Kohalik / treening</strong> paneb sind kohe lauda arvutivastastega ja ei vaja üldse ühendust — siin õpitaksegi. <strong>pokerth.net</strong> on ametlik võrk: päris vastased, külalistele avatud Tavaline-mängud ja edetabelimängud hooajaliste edetabelitega tasuta konto omanikele. <strong>LAN / privaatserver</strong> ühendab pühendatud PokerTH serveriga — sinu või kellegi teise omaga."],
       ["Istu lauda",
-       "Fuajees kas liitud loendist mõne lauaga või lood enda oma. Luues määrad kohtade arvu, algžetoonid, kui kiiresti blindid tõusevad ja kas laual on parool. Jaga kutselinki — sõber satub otse sinu lauda, oma brauseris, ilma midagi registreerimata."],
+       "Fuajees liitud kas loendist mõne lauaga, vaatad käimasolevat mängu või lood enda oma. Luues valid mängutüübi (Tavaline, ainult registreeritud mängijad, ainult kutsega või Edetabelimäng) ning määrad kohtade arvu, algžetoonid, kui kiiresti blindid tõusevad, tegutsemisaja, kas pealtvaatajad tohivad vaadata ja kas laual on parool. Jaga kutselinki — sõber satub otse sinu lauda, oma brauseris — Tavaline-mängus ilma midagi registreerimata."],
       ["Mängi käsi",
-       "Sulle jagatakse kaks varjatud kaarti. Panustatakse ringiga enne floppi ning uuesti pärast floppi, turni ja riverit. Kui sinu kord kätte jõuab, süttib käiguriba ja pakub ainult seda, mis on lubatud: Fold, Check või Call, Raise või All-In. Summa saab sisse tippida, liuguriga lohistada või ühe puudutusega seada miinimumile, poolele potile, kogu potile või kõigile oma žetoonidele."],
+       "Sulle jagatakse kaks varjatud kaarti. Panustatakse ringiga enne floppi ning uuesti pärast floppi, turni ja riverit. Kui sinu kord kätte jõuab, süttib käiguriba ja pakub ainult seda, mis on lubatud: Fold, Check või Call, Raise või All-In. Summa saab sisse tippida, liuguriga lohistada või ühe puudutusega seada kolmandikule potist, poolele potile või potile."],
       ["Loe lauda",
-       "Kaartide avanedes kirjutatakse sinu hetke parim kombinatsioon laua alla. Pott, igaühe žetoonid ja blindide tase on kogu aeg ekraanil, jagaja nupp näitab, kes räägib viimasena, ja taimer seda, kui palju sul aega on jäänud. Kaartide näitamisel tõstetakse igas avatud käes esile need viis kaarti, mis tegelikult arvesse läksid."],
+       "Vahekaart Šansid nimetab sinu hetke parima käe ja võiduvõimaluse kaartide avanedes. Pott, igaühe žetoonid ja blindide tase on kogu aeg ekraanil, jagaja nupp näitab, kes räägib viimasena, ja taimer seda, kui palju sul aega on jäänud. Showdownil nimetatakse võitnud kombinatsioon ühiste kaartide all."],
       ["Võida turniir",
-       "PokerTH mängud on sit-and-go turniirid: kõik alustavad sama žetoonihulgaga, blindid tõusevad kella järgi ja mängijad langevad välja, kuni ühel on kõik žetoonid. Miski ei maksa raha ja žetoone ei saa juurde osta — need kõik on mängulised, nii et kaalul on ainult partii ise."]
+       "PokerTH mängud on turniirid: kõik alustavad sama žetoonihulgaga, blindid tõusevad iga mõne käe või minuti järel ja mängijad langevad välja, kuni ühel on kõik žetoonid. Miski ei maksa raha ja žetoone ei saa juurde osta — need kõik on mängulised, nii et kaalul on ainult partii ise."]
     ],
     phoneH2: "Telefonis mängimine",
     phoneP: "Laud on puuteekraani jaoks sama hästi kohandatud kui arvuti jaoks: panuse välja puudutades avaneb süsteemi klaviatuuri asemel käigureal numbriklaviatuur, nii et laud ei hüppa kunagi paigast, ja liugur liigub samade sammudega nagu töölauakliendis. Teated sinu käigu kohta võivad tulla koos nuppudega Fold ja Check/Call, nii et käe saab ära mängida vahekaardile naasmata.",
     friendsH2: "Sõpradega mängimine",
     friendsP: "Loo laud, pane sellele parool, kui soovid, et see oleks privaatne, ja saada kutselink. See avab laua otse — paigaldatud rakenduses, kui sõber selle avakuvale lisas, muidu brauseri vahekaardil. Kellelgi ei ole vaja midagi paigaldada ega e-posti aadressi jätta.",
     faqH2: "Korduvad küsimused",
-    faqP: function (h, c) { return "Üheski režiimis ei ole mängus päris raha. Sinu seaded, stiilipakid ja võrguvaba edenemine jäävad sinu enda seadmesse. Liides on saadaval 83 keeles ja viis käigusõna — Fold, Check, Call, Raise, All-In — jäävad inglise keelde, nagu igas lauas üle maailma. Rohkem <a href=\"{faq}\">korduvates küsimustes</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
+    faqP: function (h, c) { return "Üheski režiimis ei ole mängus päris raha. Sinu seaded, stiilipakid ja treeningu edenemine jäävad sinu enda seadmesse ning järgnevad sulle teistesse seadmetesse, kui logid sisse pokerth.net kontoga. Liides on saadaval 83 keeles ja viis käigusõna — Fold, Check, Call, Raise, All-In — jäävad inglise keelde, nagu igas lauas üle maailma. Rohkem <a href=\"{faq}\">korduvates küsimustes</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
   },
   eu: {
     title: "Nola jokatu pokerrean linean doan — PokerTH Web",
@@ -1632,37 +1530,25 @@ var PARTS = {
     h1: "Nola jokatu pokerrean linean, doan, zure nabigatzailean",
     lead: function (h, c) { return "Hona hemen bertsio laburra: fitxa huts batetik zure lehen Texas Hold’em eskura PokerTH-n. Arauak berak interesatzen bazaizkizu — blindak, apustu-txandak, zerk zer gainditzen duen — hasi <a href=\"{rules}\">arauen orritik</a> eta <a href=\"{hands}\">eskuetatik</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); },
     steps: [
-      [
-        "Ireki webgunea — ez dago ezer instalatzeko",
-        "PokerTH nabigatzailean dabil. Deskargarik ez, konturik ez, pluginik ez. Telefonoan hasierako pantailan gehi dezakezu nabigatzailearen menutik, eta aplikazio bat bezala irekitzen da, pantaila osoan eta lineaz kanpo ibiltzeko gai.",
-      ],
-      [
-        "Aukeratu non jokatu nahi duzun",
-        "Hiru modu. <strong>Lineaz kanpoko entrenamenduak</strong> berehala ematen dizu ordenagailuko aurkariz betetako mahai bat eta ez du inolako konexiorik behar — ikasteko tokia. <strong>pokerth.net</strong> sare ofiziala da: benetako aurkariak, denboraldiko sailkapenak, behin erregistratzen duzun ezizen doakoa. <strong>LAN / zerbitzari pribatua</strong> PokerTH zerbitzari dedikatu batera konektatzen da, zurea edo beste norbaitena.",
-      ],
-      [
-        "Eseri mahai batean",
-        "Egongelan, zerrendako mahai batean sartzen zara edo zurea sortzen duzu. Sortzean, eserleku kopurua, hasierako txipak, blindak zein azkar igotzen diren eta mahaia pasahitzez babestuta dagoen erabaki dezakezu. Partekatu gonbidapen-esteka eta lagun bat zuzenean iritsiko da zure mahaira, bere nabigatzailean, ezer erregistratu gabe.",
-      ],
-      [
-        "Jokatu eskua",
-        "Bi karta pribatu banatzen zaizkizu. Apustuek mahaiaren inguruan bira egiten dute flop-aren aurretik, eta berriro flop-aren, turn-aren eta river-aren ondoren. Zure txanda denean, ekintza-barra pizten da eta legala dena soilik eskaintzen du: Fold, Check edo Call, Raise edo All-In. Apustuaren kopurua idatz daiteke, graduatzailean arrastatu, edo ukitu batez ezarri: Min, pote erdia, potea edo zure txip guztiak.",
-      ],
-      [
-        "Irakurri mahaia",
-        "Zure uneko eskurik onena mahaiaren azpian izendatzen da kartak agertu ahala. Potea, txip-pila bakoitza eta blind-maila beti pantailan daude, banatzailearen botoiak adierazten du nork hitz egiten duen azkena, eta atzerako kontaketak zenbat denbora duzun. Showdown-ean, esku bakoitza osatu duten bost kartak nabarmentzen dira.",
-      ],
-      [
-        "Irabazi txapelketa",
-        "PokerTH-ko partidak sit-and-go txapelketak dira: denak txip kopuru berarekin hasten dira, blindak kronometro batekin igotzen dira, eta jokalariak kanporatzen dira batek txip guztiak izan arte. Ezerk ez du dirurik kostatzen eta ezin da txiprik erosi — dena joko-dirua da, beraz jokoan dagoen gauza bakarra jokoa bera da.",
-      ],
+      ["Ireki webgunea — ez dago ezer instalatzeko",
+       "PokerTH nabigatzailean dabil. Deskargarik ez, pluginik ez, eta konturik ez entrenamendurako edo gonbidatu gisa jokatzeko. Aplikazio bat bezala instala dezakezu — Partekatu → Gehitu hasierako pantailan iPhone-n eta iPad-en, nabigatzailearen menua edo instalazio-botoia beste lekuetan — eta pantaila osoan irekitzen da, lineaz kanpo ibiltzeko gai. Nahi baduzu, Batekoaren laguntzak, izkinako Batekoak, pantaila bakoitza azaltzen du."],
+      ["Aukeratu non jokatu nahi duzun",
+       "Hiru modu. <strong>Lokala / entrenamendua</strong> berehala ematen dizu ordenagailuko aurkariz betetako mahai bat eta ez du inolako konexiorik behar — ikasteko tokia. <strong>pokerth.net</strong> sare ofiziala da: benetako aurkariak, gonbidatuentzat irekita dauden Arrunta partidak, eta denboraldiko sailkapena duten Sailkapeneko partidak kontu doakoa duten jokalarientzat. <strong>LAN / zerbitzari pribatua</strong> PokerTH zerbitzari dedikatu batera konektatzen da, zurea edo beste norbaitena."],
+      ["Eseri mahai batean",
+       "Egongelan, zerrendako mahai batean sartzen zara, abian dagoen partida bat ikusten duzu edo zurea sortzen duzu. Sortzean, partida mota aukeratzen duzu (Arrunta, erregistratutako jokalariak soilik, gonbidatuak soilik edo Sailkapeneko partida) eta eserleku kopurua, hasierako txipak, blindak zein azkar igotzen diren, jokatzeko denbora, ikusleek ikus dezaketen eta mahaia pasahitzez babestuta dagoen ezartzen dituzu. Partekatu gonbidapen-esteka eta lagun bat zuzenean iritsiko da zure mahaira, bere nabigatzailean — Arrunta partida batean, ezer erregistratu gabe."],
+      ["Jokatu eskua",
+       "Bi karta pribatu banatzen zaizkizu. Apustuek mahaiaren inguruan bira egiten dute flop-aren aurretik, eta berriro flop-aren, turn-aren eta river-aren ondoren. Zure txanda denean, ekintza-barra pizten da eta legala dena soilik eskaintzen du: Fold, Check edo Call, Raise edo All-In. Apustuaren kopurua idatz daiteke, graduatzailean arrastatu, edo ukitu batez ezarri: potearen heren bat, pote erdia edo potea."],
+      ["Irakurri mahaia",
+       "Aukerak fitxak zure uneko eskurik onena eta irabazteko aukera izendatzen ditu kartak agertu ahala. Potea, txip-pila bakoitza eta blind-maila beti pantailan daude, banatzailearen botoiak adierazten du nork hitz egiten duen azkena, eta atzerako kontaketak zenbat denbora duzun. Showdown-ean, konbinazio irabazlea karta komunen azpian izendatzen da."],
+      ["Irabazi txapelketa",
+       "PokerTH-ko partidak txapelketak dira: denak txip kopuru berarekin hasten dira, blindak esku edo minutu batzuetik behin igotzen dira, eta jokalariak kanporatzen dira batek txip guztiak izan arte. Ezerk ez du dirurik kostatzen eta ezin da txiprik erosi — dena joko-dirua da, beraz jokoan dagoen gauza bakarra jokoa bera da."]
     ],
     phoneH2: "Telefonoan jokatzea",
     phoneP: "Mahaia ukipen-pantailarako pentsatuta dago ordenagailurako bezainbeste: apustu-eremua ukitzeak zenbaki-teklatu bat irekitzen du ekintza-barraren barruan sistemaren teklatuaren ordez, beraz mahaiak ez du inoiz salto egiten, eta graduatzaileak mahaigaineko bezeroaren urrats berberetan egiten du aurrera. Txandaren jakinarazpenak Fold eta Check/Call botoiekin irits daitezke zuzenean: eskua jokatu daiteke fitxara itzuli gabe.",
     friendsH2: "Lagunekin jokatzea",
     friendsP: "Sortu mahai bat, jarri pasahitz bat pribatua izatea nahi baduzu, eta bidali gonbidapen-esteka. Mahaia zuzenean irekitzen du — instalatutako aplikazioan, zure lagunek hasierako pantailan gehitu badute, bestela nabigatzailearen fitxa batean. Inork ez du ezer instalatu behar edo helbide elektronikorik eman behar.",
     faqH2: "Ohiko galderak",
-    faqP: function (h, c) { return "Ez dago inoiz dirurik tartean, ez modu batean ere. Zure ezarpenak, estilo-paketeak eta lineaz kanpoko aurrerapena zure gailuan geratzen dira. Interfazea 83 hizkuntzatan dago eskuragarri, eta bost jokaldi-hitzak — Fold, Check, Call, Raise, All-In — ingelesez geratzen dira, munduko mahai guztietan bezala. Gehiago <a href=\"{faq}\">FAQ</a> atalean.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); },
+    faqP: function (h, c) { return "Ez dago inoiz dirurik tartean, ez modu batean ere. Zure ezarpenak, estilo-paketeak eta entrenamenduko aurrerapena zure gailuan geratzen dira, eta zure beste gailuetara jarraitzen dute pokerth.net kontu batekin saioa hasten duzunean. Interfazea 83 hizkuntzatan dago eskuragarri, eta bost jokaldi-hitzak — Fold, Check, Call, Raise, All-In — ingelesez geratzen dira, munduko mahai guztietan bezala. Gehiago <a href=\"{faq}\">FAQ</a> atalean.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); },
   },
   lv: {
     title: "Kā spēlēt bezmaksas pokeru tiešsaistē — PokerTH Web",
@@ -1673,24 +1559,24 @@ var PARTS = {
     lead: function (h, c) { return "Šī ir īsā versija: no tukšas cilnes līdz tavai pirmajai Teksasas Hold’ema partijai PokerTH. Ja meklē pašus noteikumus — aklās likmes, likmju kārtas, kas ko pārspēj — sāc labāk ar <a href=\"{rules}\">noteikumu lapu</a> un <a href=\"{hands}\">kombināciju stiprumu</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); },
     steps: [
       ["Atver vietni — nekas nav jāinstalē",
-       "PokerTH darbojas pārlūkā. Nav lejupielādes, nav konta, nav spraudņu. Telefonā to no pārlūka izvēlnes vari pievienot sākuma ekrānam; tad tā atveras kā lietotne, pilnekrāna režīmā, un darbojas arī bez savienojuma."],
+       "PokerTH darbojas pārlūkā. Nav lejupielādes, nav spraudņu, un treniņam vai viesu spēlēm nav vajadzīgs konts. Vari to instalēt kā lietotni — iPhone un iPad ar Kopīgot → Pievienot sākuma ekrānam, citur ar pārlūka izvēlni vai instalēšanas pogu — un tā atveras pilnekrāna režīmā un darbojas arī bez savienojuma. Ja vēlies, Dūža palīdzība — Dūzis stūrī — izskaidro katru ekrānu."],
       ["Izvēlies, kur spēlēt",
-       "Trīs veidi. <strong>Bezsaistes treniņš</strong> uzreiz apsēdina tevi pie galda ar datora pretiniekiem, un savienojums tam nav vajadzīgs vispār — tieši šeit mācās. <strong>pokerth.net</strong> ir oficiālais tīkls: īsti pretinieki, sezonas reitingi un bezmaksas segvārds, ko reģistrē vienu reizi. <strong>LAN / privāts serveris</strong> savienojas ar dedicētu PokerTH serveri — tavu vai kāda cita."],
+       "Trīs veidi. <strong>Lokāli / treniņš</strong> uzreiz apsēdina tevi pie galda ar datora pretiniekiem, un savienojums tam nav vajadzīgs vispār — tieši šeit mācās. <strong>pokerth.net</strong> ir oficiālais tīkls: īsti pretinieki, Parastās spēles, kas atvērtas viesiem, un Reitinga spēles ar sezonas reitingiem spēlētājiem ar bezmaksas kontu. <strong>LAN / privāts serveris</strong> savienojas ar dedicētu PokerTH serveri — tavu vai kāda cita."],
       ["Apsēdies pie galda",
-       "Vestibilā vari vai nu pievienoties kādam galdam no saraksta, vai izveidot savējo. Izveidojot nosaki vietu skaitu, sākuma žetonus, cik ātri pieaug aklās likmes un vai galdam ir parole. Kopīgo uzaicinājuma saiti — draugs nonāks tieši pie tava galda, savā pārlūkā, neko nereģistrējot."],
+       "Vestibilā vari vai nu pievienoties kādam galdam no saraksta, vai skatīties notiekošu spēli, vai izveidot savējo. Izveidojot izvēlies spēles veidu (Parasta, Tikai reģistrētiem spēlētājiem, Tikai uzaicinātiem spēlētājiem vai Reitinga spēle) un nosaki vietu skaitu, sākuma žetonus, cik ātri pieaug aklās likmes, laiku gājienam, vai skatītāji drīkst skatīties un vai galdam ir parole. Kopīgo uzaicinājuma saiti — draugs nonāks tieši pie tava galda, savā pārlūkā, Parastā spēlē neko nereģistrējot."],
       ["Nospēlē partiju",
-       "Tev izdala divas slēptās kārtis. Likmes tiek liktas pa apli pirms flopa un vēlreiz pēc flopa, turn un river. Kad pienāk tava kārta, iedegas darbību josla un piedāvā tikai to, kas ir atļauts: Fold, Check vai Call, Raise vai All-In. Summu vari ierakstīt, aizvilkt ar slīdni vai ar vienu pieskārienu iestatīt uz minimumu, pusi bankas, visu banku vai visiem saviem žetoniem."],
+       "Tev izdala divas slēptās kārtis. Likmes tiek liktas pa apli pirms flopa un vēlreiz pēc flopa, turn un river. Kad pienāk tava kārta, iedegas darbību josla un piedāvā tikai to, kas ir atļauts: Fold, Check vai Call, Raise vai All-In. Summu vari ierakstīt, aizvilkt ar slīdni vai ar vienu pieskārienu iestatīt uz trešdaļu bankas, pusi bankas vai visu banku."],
       ["Lasi galdu",
-       "Kārtīm atklājoties, tava pašreizējā labākā kombinācija tiek rakstīta zem galda. Banka, katra žetoni un aklo likmju līmenis visu laiku ir uz ekrāna, dalītāja poga rāda, kurš runā pēdējais, bet taimeris — cik tev atlicis laika. Kāršu atklāšanā katrā parādītajā kombinācijā tiek izceltas tieši tās piecas kārtis, kas patiešām skaitījās."],
+       "Cilnē Izredzes tiek nosaukta tava pašreizējā labākā kombinācija un uzvaras iespēja, kārtīm atklājoties. Banka, katra žetoni un aklo likmju līmenis visu laiku ir uz ekrāna, dalītāja poga rāda, kurš runā pēdējais, bet taimeris — cik tev atlicis laika. Kāršu atklāšanā zem kopīgajām kārtīm tiek nosaukta uzvarošā kombinācija."],
       ["Uzvari turnīrā",
-       "PokerTH spēles ir sit-and-go turnīri: visi sāk ar vienādu žetonu skaitu, aklās likmes pieaug pēc pulksteņa, un spēlētāji izstājas, līdz vienam ir visi žetoni. Nekas nemaksā naudu, un žetonus piepirkt nevar — tie visi ir spēles žetoni, tāpēc uz spēles likta ir tikai pati partija."]
+       "PokerTH spēles ir turnīri: visi sāk ar vienādu žetonu skaitu, aklās likmes pieaug ik pēc dažām rokām vai minūtēm, un spēlētāji izstājas, līdz vienam ir visi žetoni. Nekas nemaksā naudu, un žetonus piepirkt nevar — tie visi ir spēles žetoni, tāpēc uz spēles likta ir tikai pati partija."]
     ],
     phoneH2: "Spēlēšana telefonā",
     phoneP: "Galds skārienekrānam ir pielāgots tikpat labi kā datoram: pieskaroties likmes laukam, sistēmas tastatūras vietā darbību joslā atveras ciparu tastatūra, tāpēc galds nekad neizlec no vietas, un slīdnis kustas ar tiem pašiem soļiem kā darbvirsmas klientā. Paziņojumi par tavu gājienu var atnākt kopā ar pogām Fold un Check/Call, tāpēc partiju var nospēlēt, neatgriežoties cilnē.",
     friendsH2: "Spēlēšana ar draugiem",
     friendsP: "Izveido galdu, uzliec tam paroli, ja vēlies, lai tas būtu privāts, un nosūti uzaicinājuma saiti. Tā atver galdu tieši — instalētajā lietotnē, ja draugs to ir pievienojis sākuma ekrānam, citādi pārlūka cilnē. Nevienam nekas nav jāinstalē un nav jāatstāj e-pasta adrese.",
     faqH2: "Biežāk uzdotie jautājumi",
-    faqP: function (h, c) { return "Nevienā režīmā spēlē nav īstas naudas. Tavi iestatījumi, stilu komplekti un bezsaistes progress paliek tavā paša ierīcē. Saskarne ir pieejama 83 valodās, bet pieci darbību vārdi — Fold, Check, Call, Raise, All-In — paliek angliski, tāpat kā pie ikviena galda pasaulē. Vairāk <a href=\"{faq}\">biežāk uzdotajos jautājumos</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
+    faqP: function (h, c) { return "Nevienā režīmā spēlē nav īstas naudas. Tavi iestatījumi, stilu komplekti un treniņa progress paliek tavā paša ierīcē un seko tev uz citām ierīcēm, kad piesakies ar pokerth.net kontu. Saskarne ir pieejama 83 valodās, bet pieci darbību vārdi — Fold, Check, Call, Raise, All-In — paliek angliski, tāpat kā pie ikviena galda pasaulē. Vairāk <a href=\"{faq}\">biežāk uzdotajos jautājumos</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
   },
 
   sl: {
@@ -1702,24 +1588,24 @@ var PARTS = {
     lead: function (h, c) { return "To je kratka različica: od praznega zavihka do tvoje prve roke Texas Hold\u2019ema v PokerTH. Če iščeš sama pravila — blinde, kroge stav, kaj kaj premaga — začni raje pri <a href=\"{rules}\">strani s pravili</a> in <a href=\"{hands}\">moči rok</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); },
     steps: [
       ["Odpri stran — ni česa namestiti",
-       "PokerTH deluje v brskalniku. Prenosa ni, računa ni, vtičnikov ni. Na telefonu ga lahko iz menija brskalnika dodaš na domači zaslon; nato se odpre kot aplikacija, celozaslonsko, in deluje tudi brez povezave."],
+       "PokerTH deluje v brskalniku. Prenosa ni, vtičnikov ni, za vadbo in gostujoče igre pa tudi računa ne. Namestiš ga lahko kot aplikacijo — Deli → Dodaj na domači zaslon na iPhonu in iPadu, drugje meni brskalnika ali gumb za namestitev — in se odpre celozaslonsko ter deluje tudi brez povezave. Če želiš, ti Pomoč asa, As v kotu, razloži vsak zaslon."],
       ["Izberi, kje želiš igrati",
-       "Trije načini. <strong>Brezpovezavna vadba</strong> te takoj posadi za mizo z računalniškimi nasprotniki in sploh ne potrebuje povezave — tu se največ naučiš. <strong>pokerth.net</strong> je uradno omrežje: prava nasprotnika, sezonske lestvice in brezplačen vzdevek, ki ga registriraš enkrat. <strong>LAN / zasebni strežnik</strong> te poveže z lastnim strežnikom PokerTH — tvojim ali od nekoga drugega."],
+       "Trije načini. <strong>Lokalno / vadba</strong> te takoj posadi za mizo z računalniškimi nasprotniki in sploh ne potrebuje povezave — tu se največ naučiš. <strong>pokerth.net</strong> je uradno omrežje: pravi nasprotniki, navadne igre, odprte za goste, in igre z uvrstitvijo s sezonskimi lestvicami za igralce z brezplačnim računom. <strong>LAN / zasebni strežnik</strong> te poveže z lastnim strežnikom PokerTH — tvojim ali od nekoga drugega."],
       ["Sedi za mizo",
-       "V predverju se ali pridružiš mizi s seznama ali ustvariš svojo. Pri ustvarjanju določiš število mest, začetne žetone, kako hitro se zvišujejo blindi in ali je za mizo geslo. Deli povabilno povezavo — prijatelj pristane naravnost pri tvoji mizi, v svojem brskalniku, brez kakršne koli registracije."],
+       "V predverju se ali pridružiš mizi s seznama, gledaš tekočo igro ali ustvariš svojo. Pri ustvarjanju izbereš vrsto igre (Navadna, Samo registrirani igralci, Samo povabljeni igralci ali Igra z uvrstitvijo) in določiš število mest, začetne žetone, kako hitro se zvišujejo blindi, čas za potezo, ali smejo gledalci opazovati in ali je za mizo geslo. Deli povabilno povezavo — prijatelj pristane naravnost pri tvoji mizi, v svojem brskalniku, pri navadni igri brez kakršne koli registracije."],
       ["Odigraj roko",
-       "Dobiš dve skriti karti. Stavi se v krogu pred flopom ter znova po flopu, turnu in riverju. Ko prideš na vrsto, se vrstica potez osvetli in ponudi samo tisto, kar je dovoljeno: Fold, Check ali Call, Raise ali All-In. Znesek lahko vtipkaš, povlečeš z drsnikom ali z enim dotikom nastaviš na minimum, polovico banke, celo banko ali vse svoje žetone."],
+       "Dobiš dve skriti karti. Stavi se v krogu pred flopom ter znova po flopu, turnu in riverju. Ko prideš na vrsto, se vrstica potez osvetli in ponudi samo tisto, kar je dovoljeno: Fold, Check ali Call, Raise ali All-In. Znesek lahko vtipkaš, povlečeš z drsnikom ali z enim dotikom nastaviš na tretjino banke, polovico banke ali celo banko."],
       ["Beri mizo",
-       "Ob razkritju kart se pod mizo izpiše tvoja trenutna najboljša kombinacija. Banka, žetoni vsakega igralca in raven blindov so ves čas na zaslonu, gumb delivca pokaže, kdo govori zadnji, časovnik pa, koliko časa ti je še ostalo. Ob prikazu kart so v vsaki razkriti roki poudarjenih tistih pet kart, ki so dejansko štele."],
+       "Zavihek Kvote ob razkritju kart poimenuje tvojo trenutno najboljšo kombinacijo in tvojo možnost za zmago. Banka, žetoni vsakega igralca in raven blindov so ves čas na zaslonu, gumb delivca pokaže, kdo govori zadnji, časovnik pa, koliko časa ti je še ostalo. Ob razkritju je pod skupnimi kartami imenovana zmagovalna kombinacija."],
       ["Zmagaj turnir",
-       "Igre PokerTH so turnirji sit-and-go: vsi začnejo z enako količino žetonov, blindi se zvišujejo po urniku, igralci pa izpadajo, dokler jih vsi žetoni nima en sam. Nič ne stane denarja in žetonov ni mogoče dokupiti — vse je igralno, tako da je na kocki samo partija sama."]
+       "Igre PokerTH so turnirji: vsi začnejo z enako količino žetonov, blindi se zvišujejo vsakih nekaj rok ali minut, igralci pa izpadajo, dokler jih vsi žetoni nima en sam. Nič ne stane denarja in žetonov ni mogoče dokupiti — vse je igralno, tako da je na kocki samo partija sama."]
     ],
     phoneH2: "Igranje na telefonu",
     phoneP: "Miza je enako dobro prilagojena zaslonu na dotik kot računalniku: dotik polja za stavo odpre številčnico v vrstici potez namesto sistemske tipkovnice, tako da miza nikoli ne skoči s svojega mesta, drsnik pa se premika z enakimi koraki kot v namiznem odjemalcu. Obvestila o tvoji potezi lahko pridejo skupaj z gumboma Fold in Check/Call, tako da lahko roko odigraš, ne da bi se vrnil na zavihek.",
     friendsH2: "Igranje s prijatelji",
     friendsP: "Ustvari mizo, po želji nastavi geslo, če naj bo zasebna, in pošlji povabilno povezavo. Ta odpre mizo neposredno — v nameščeni aplikaciji, če jo je prijatelj dodal na domači zaslon, sicer v zavihku brskalnika. Nikomur ni treba ničesar namestiti ali pustiti e-poštnega naslova.",
     faqH2: "Pogosta vprašanja",
-    faqP: function (h, c) { return "V nobenem načinu ni v igri pravega denarja. Tvoje nastavitve, slogovni paketi in brezpovezavni napredek ostanejo na tvoji napravi. Vmesnik je na voljo v 83 jezikih, pet izrazov za poteze — Fold, Check, Call, Raise, All-In — pa ostane v angleščini, tako kot pri vsaki mizi po svetu. Več v <a href=\"{faq}\">pogostih vprašanjih</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
+    faqP: function (h, c) { return "V nobenem načinu ni v igri pravega denarja. Tvoje nastavitve, slogovni paketi in vadbeni napredek ostanejo na tvoji napravi in te spremljajo na druge naprave, ko se prijaviš z računom pokerth.net. Vmesnik je na voljo v 83 jezikih, pet izrazov za poteze — Fold, Check, Call, Raise, All-In — pa ostane v angleščini, tako kot pri vsaki mizi po svetu. Več v <a href=\"{faq}\">pogostih vprašanjih</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
   },
 
 
@@ -1732,24 +1618,24 @@ var PARTS = {
     lead: function (h, c) { return "Ini versi ringkas: dari tab kosong hingga tangan Texas Hold’em pertama anda dalam PokerTH. Jika anda mencari peraturan sahaja — small dan big blind, pusingan pertaruhan, apa yang mengalahkan apa — mulakan dengan <a href=\"{rules}\">halaman peraturan</a> dan <a href=\"{hands}\">kekuatan kombinasi</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); },
     steps: [
       ["Buka Laman — Tiada Apa untuk Dipasang",
-       "PokerTH berjalan dalam pelayar. Tiada muat turun, tiada akaun, tiada plugin. Pada telefon, anda boleh menambahnya ke skrin utama dari menu pelayar; ia kemudian terbuka seperti aplikasi, skrin penuh, dan berfungsi walaupun tanpa sambungan."],
+       "PokerTH berjalan dalam pelayar. Tiada muat turun, tiada plugin, dan tiada akaun untuk latihan atau permainan tetamu. Anda boleh memasangnya seperti aplikasi — Bagikan → Tambah ke Skrin Utama pada iPhone dan iPad, menu pelayar atau butang pasang di tempat lain — dan ia terbuka skrin penuh, serta berfungsi walaupun tanpa sambungan. Jika anda mahu, Bantuan si Sat, si Sat di sudut, menerangkan setiap skrin."],
       ["Pilih Tempat Anda Ingin Bermain",
-       "Tiga cara. <strong>Berlatih luar talian</strong> terus mendudukkan anda di meja dengan lawan komputer dan langsung tidak memerlukan sambungan — di sinilah anda belajar paling banyak. <strong>pokerth.net</strong> adalah rangkaian rasmi: lawan sebenar, papan pendahulu bermusim dan nama panggilan percuma yang anda daftar sekali. <strong>LAN / pelayan khusus</strong> menghubungkan anda ke pelayan PokerTH khusus, milik anda atau orang lain."],
+       "Tiga cara. <strong>Lokal / latihan</strong> terus mendudukkan anda di meja dengan lawan komputer dan langsung tidak memerlukan sambungan — di sinilah anda belajar paling banyak. <strong>pokerth.net</strong> adalah rangkaian rasmi: lawan sebenar, permainan Normal terbuka kepada tetamu, dan permainan berperingkat dengan kedudukan bermusim untuk pemain yang mempunyai akaun percuma. <strong>LAN / pelayan khusus</strong> menghubungkan anda ke pelayan PokerTH khusus, milik anda atau orang lain."],
       ["Duduk di Meja",
-       "Di lobi, anda menyertai meja dari senarai atau mencipta meja sendiri. Semasa mencipta, anda menentukan bilangan kerusi, stack permulaan, seberapa cepat blind meningkat dan sama ada meja mempunyai kata laluan. Kongsi pautan jemputan dan rakan anda terus mendarat di meja anda, dalam pelayar mereka sendiri, tanpa sebarang pendaftaran."],
+       "Di lobi, anda menyertai meja dari senarai, menonton permainan yang sedang berjalan atau mencipta meja sendiri. Semasa mencipta, anda memilih jenis permainan (Normal, Hanya pemain terdaftar, Hanya pemain yang diundang atau Permainan berperingkat) dan menentukan bilangan kerusi, stack permulaan, seberapa cepat blind meningkat, masa untuk bertindak, sama ada penonton dibenarkan menonton dan sama ada meja mempunyai kata laluan. Kongsi pautan jemputan dan rakan anda terus mendarat di meja anda, dalam pelayar mereka sendiri — dalam permainan Normal tanpa sebarang pendaftaran."],
       ["Mainkan Tangan",
-       "Anda menerima dua kad tertutup. Pertaruhan berlaku dalam pusingan sebelum flop, kemudian sekali lagi selepas flop, turn dan river. Apabila giliran anda tiba, bar tindakan menyala dan hanya menawarkan apa yang dibenarkan: Fold, Check atau Call, Raise atau All-In. Anda boleh menaip jumlah, menyeretnya dengan penggelangsar atau dengan satu ketukan menetapkannya kepada minimum, separuh pot, keseluruhan pot atau seluruh stack anda."],
+       "Anda menerima dua kad tertutup. Pertaruhan berlaku dalam pusingan sebelum flop, kemudian sekali lagi selepas flop, turn dan river. Apabila giliran anda tiba, bar tindakan menyala dan hanya menawarkan apa yang dibenarkan: Fold, Check atau Call, Raise atau All-In. Anda boleh menaip jumlah, menyeretnya dengan penggelangsar atau dengan satu ketukan menetapkannya kepada satu pertiga pot, separuh pot atau keseluruhan pot."],
       ["Baca Meja",
-       "Kombinasi terbaik anda pada masa itu dipaparkan di bawah meja semasa kad keluar. Pot, stack setiap pemain dan tahap blind sentiasa berada pada skrin, butang dealer menunjukkan siapa bercakap terakhir, dan pengiraan detik menunjukkan berapa banyak masa yang anda ada. Semasa penunjukan kad, lima kad yang benar-benar membentuk setiap tangan ditonjolkan."],
+       "Tab Peluang menamakan tangan terbaik anda pada masa itu dan peluang anda untuk menang semasa kad keluar. Pot, stack setiap pemain dan tahap blind sentiasa berada pada skrin, butang dealer menunjukkan siapa bercakap terakhir, dan pengiraan detik menunjukkan berapa banyak masa yang anda ada. Semasa penunjukan kad, kombinasi yang menang dinamakan di bawah kad komuniti."],
       ["Menangi Kejohanan",
-       "Permainan dalam PokerTH ialah kejohanan sit-and-go: semua orang bermula dengan stack yang sama, blind meningkat mengikut jam, dan pemain tersingkir sehingga seorang sahaja tinggal dengan semua cip. Tiada apa yang memerlukan wang dan cip tidak boleh dibeli semula — semuanya wang permainan, jadi hanya permainan itu sendiri yang dipertaruhkan."]
+       "Permainan dalam PokerTH ialah kejohanan: semua orang bermula dengan stack yang sama, blind meningkat setiap beberapa tangan atau minit, dan pemain tersingkir sehingga seorang sahaja tinggal dengan semua cip. Tiada apa yang memerlukan wang dan cip tidak boleh dibeli semula — semuanya wang permainan, jadi hanya permainan itu sendiri yang dipertaruhkan."]
     ],
     phoneH2: "Bermain pada Telefon",
     phoneP: "Meja disesuaikan sama baik untuk skrin sentuh seperti komputer: sentuhan pada medan pertaruhan membuka papan angka dalam bar tindakan dan bukannya papan kekunci sistem, jadi meja tidak pernah melompat, dan penggelangsar bergerak dengan langkah yang sama seperti dalam klien desktop. Pemberitahuan bahawa anda bergilir boleh datang dengan butang Fold dan Check/Call padanya, jadi tangan boleh dimainkan tanpa kembali ke tab.",
     friendsH2: "Bermain bersama Rakan",
     friendsP: "Cipta meja, tetapkan kata laluan jika anda ingin ia peribadi, dan hantar pautan jemputan. Ia membuka meja terus — dalam aplikasi yang dipasang jika mereka menambahnya ke skrin utama, jika tidak dalam tab pelayar. Tiada sesiapa perlu memasang apa-apa atau memberikan alamat e-mel.",
     faqH2: "Soalan Lazim",
-    faqP: function (h, c) { return "Tiada wang sebenar dalam mana-mana mod. Tetapan, pakej gaya dan kemajuan luar talian anda kekal pada peranti anda. Antara muka tersedia dalam 83 bahasa, sementara lima perkataan tindakan — Fold, Check, Call, Raise, All-In — kekal dalam bahasa Inggeris, seperti di setiap meja di dunia. Lebih lanjut dalam <a href=\"{faq}\">soalan lazim</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
+    faqP: function (h, c) { return "Tiada wang sebenar dalam mana-mana mod. Tetapan, pakej gaya dan kemajuan latihan anda kekal pada peranti anda, dan mengikut anda ke peranti lain apabila anda log masuk dengan akaun pokerth.net. Antara muka tersedia dalam 83 bahasa, sementara lima perkataan tindakan — Fold, Check, Call, Raise, All-In — kekal dalam bahasa Inggeris, seperti di setiap meja di dunia. Lebih lanjut dalam <a href=\"{faq}\">soalan lazim</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
   },
 
   sq: {
@@ -1761,24 +1647,24 @@ var PARTS = {
     lead: function (h, c) { return "Kjo është versioni i shkurtër: nga një skedë bosh te dora jote e parë e Texas Hold’em në PokerTH. Nëse kërkon vetëm rregullat — blindin e vogël dhe të madh, raundet e bastit, çfarë mund çfarë — fillo më mirë nga <a href=\"{rules}\">faqja e rregullave</a> dhe <a href=\"{hands}\">fuqia e kombinimeve</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); },
     steps: [
       ["Hap Faqen — Asgjë për t’u Instaluar",
-       "PokerTH funksionon në shfletues. Pa shkarkim, pa llogari, pa shtesa. Në telefon, mund ta shtosh në ekranin fillestar nga menyja e shfletuesit; ai pastaj hapet si aplikacion, ekran i plotë, dhe funksionon edhe pa lidhje."],
+       "PokerTH funksionon në shfletues. Pa shkarkim, pa shtesa, dhe pa llogari për stërvitje ose për lojëra si mysafir. Mund ta instalosh si aplikacion — Shpërndaje → Shto në ekranin fillestar në iPhone dhe iPad, menyja e shfletuesit ose butoni i instalimit gjetkë — dhe hapet në ekran të plotë, i aftë të punojë pa lidhje. Nëse dëshiron, Ndihma e Asit, Asi në qoshe, shpjegon çdo ekran."],
       ["Zgjidh Ku Dëshiron të Luash",
-       "Tri mënyra. <strong>Stërvitja offline</strong> të vendos menjëherë te tavolina me kundërshtarë kompjuterikë dhe s’kërkon fare lidhje — aty mësohet më shumë. <strong>pokerth.net</strong> është rrjeti zyrtar: kundërshtarë të vërtetë, renditje sezonale dhe një pseudonim falas që e regjistron një herë. <strong>LAN / server privat</strong> të lidh me një server të dedikuar PokerTH, tëndin ose të dikujt tjetër."],
+       "Tri mënyra. <strong>Lokal / stërvitje</strong> të vendos menjëherë te tavolina me kundërshtarë kompjuterikë dhe s’kërkon fare lidhje — aty mësohet më shumë. <strong>pokerth.net</strong> është rrjeti zyrtar: kundërshtarë të vërtetë, lojëra Normale të hapura për mysafirë dhe lojëra me renditje sezonale për lojtarët me llogari falas. <strong>LAN / server privat</strong> të lidh me një server të dedikuar PokerTH, tëndin ose të dikujt tjetër."],
       ["Ulu në Tavolinë",
-       "Në lobi, bashkohesh me një tavolinë nga lista ose krijon të tënden. Gjatë krijimit, cakton numrin e vendeve, stokun fillestar, sa shpejt rriten blindet dhe nëse tavolina ka fjalëkalim. Ndaj lidhjen e ftesës dhe miku yt zbret drejt e në tavolinën tënde, në shfletuesin e vet, pa asnjë regjistrim."],
+       "Në lobi, bashkohesh me një tavolinë nga lista, ndjek një lojë në vazhdim ose krijon të tënden. Gjatë krijimit, zgjedh llojin e lojës (Normale, Vetëm lojtarë të regjistruar, Vetëm lojtarë të ftuar ose Lojë me renditje) dhe cakton numrin e vendeve, stokun fillestar, sa shpejt rriten blindet, kohën për të vepruar, nëse vëzhguesit mund të ndjekin dhe nëse tavolina ka fjalëkalim. Ndaj lidhjen e ftesës dhe miku yt zbret drejt e në tavolinën tënde, në shfletuesin e vet — në një lojë Normale pa asnjë regjistrim."],
       ["Luaj një Dorë",
-       "Merr dy letra private. Basti bëhet në një raund para flopit, pastaj sërish pas flopit, turnit dhe river-it. Kur vjen radha jote, shiriti i veprimeve ndizet dhe ofron vetëm atë që lejohet: Fold, Check ose Call, Raise ose All-In. Mund ta shkruash shumën, ta tërheqësh me rrëshqitësin, ose me një prekje ta caktosh te minimumi, gjysma e bankës, e gjithë banka, ose gjithë stoku yt."],
+       "Merr dy letra private. Basti bëhet në një raund para flopit, pastaj sërish pas flopit, turnit dhe river-it. Kur vjen radha jote, shiriti i veprimeve ndizet dhe ofron vetëm atë që lejohet: Fold, Check ose Call, Raise ose All-In. Mund ta shkruash shumën, ta tërheqësh me rrëshqitësin, ose me një prekje ta caktosh te një e treta e bankës, gjysma e bankës ose banka."],
       ["Lexo Tavolinën",
-       "Kombinimi yt aktualisht më i mirë shkruhet nën tavolinë ndërsa dalin letrat. Banka, stoku i çdo lojtari dhe niveli i blindeve janë vazhdimisht në ekran, butoni i dhënësit tregon kush flet i fundit, dhe numërimi mbrapsht tregon sa kohë të ka mbetur. Në zbulimin e letrave, theksohen pesë letrat që vërtet formuan çdo dorë."],
+       "Skeda Shanset emërton kombinimin tënd aktualisht më të mirë dhe shansin tënd për të fituar ndërsa dalin letrat. Banka, stoku i çdo lojtari dhe niveli i blindeve janë vazhdimisht në ekran, butoni i dhënësit tregon kush flet i fundit, dhe numërimi mbrapsht tregon sa kohë të ka mbetur. Në zbulimin e letrave, kombinimi fitues emërtohet nën letrat e përbashkëta."],
       ["Fito Turneun",
-       "Lojërat në PokerTH janë turne sit-and-go: të gjithë fillojnë me të njëjtin stok, blindet rriten me kohën, dhe lojtarët eliminohen derisa vetëm një të mbetet me gjithë zhetonët. Asgjë s’kushton para dhe zhetonët s’mund të riblihen — gjithçka është para lojëra, kështu që në rrezik është vetëm vetë partia."]
+       "Lojërat në PokerTH janë turne: të gjithë fillojnë me të njëjtin stok, blindet rriten çdo disa duar ose minuta, dhe lojtarët eliminohen derisa vetëm një të mbetet me gjithë zhetonët. Asgjë s’kushton para dhe zhetonët s’mund të riblihen — gjithçka është para lojëra, kështu që në rrezik është vetëm vetë partia."]
     ],
     phoneH2: "Të Luash në Telefon",
     phoneP: "Tavolina është përshtatur po aq mirë për ekran me prekje sa edhe për kompjuter: prekja e fushës së bastit hap një tastierë numerike brenda shiritit të veprimeve në vend të asaj të sistemit, kështu që tavolina kurrë s’kërcen, dhe rrëshqitësi lëviz me të njëjtat hapa si te klienti desktop. Njoftimet që je në radhë mund të vijnë me butonat Fold dhe Check/Call mbi to, kështu që dora mund të luhet pa u kthyer te skeda.",
     friendsH2: "Të Luash me Miq",
     friendsP: "Krijo një tavolinë, vendos një fjalëkalim nëse dëshiron ta bësh private, dhe dërgo lidhjen e ftesës. Ajo e hap tavolinën direkt — në aplikacionin e instaluar nëse e kanë shtuar në ekranin fillestar, përndryshe në një skedë të shfletuesit. Askush s’duhet të instalojë asgjë apo të japë një adresë email-i.",
     faqH2: "Pyetjet e Shpeshta",
-    faqP: function (h, c) { return "Në asnjë modalitet s’ka para të vërteta. Cilësimet e tua, paketat e stileve dhe përparimi offline mbeten në pajisjen tënde. Ndërfaqja është e disponueshme në 83 gjuhë, ndërsa pesë fjalët e veprimeve — Fold, Check, Call, Raise, All-In — mbeten në anglisht, si te çdo tavolinë në botë. Më shumë te <a href=\"{faq}\">pyetjet e shpeshta</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
+    faqP: function (h, c) { return "Në asnjë modalitet s’ka para të vërteta. Cilësimet e tua, paketat e stileve dhe përparimi i stërvitjes mbeten në pajisjen tënde dhe të ndjekin në pajisjet e tua të tjera kur hyn me një llogari pokerth.net. Ndërfaqja është e disponueshme në 83 gjuhë, ndërsa pesë fjalët e veprimeve — Fold, Check, Call, Raise, All-In — mbeten në anglisht, si te çdo tavolinë në botë. Më shumë te <a href=\"{faq}\">pyetjet e shpeshta</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
   },
   pa: {
     title: "ਆਨਲਾਈਨ ਮੁਫ਼ਤ ਪੋਕਰ ਕਿਵੇਂ ਖੇਡੀਏ — PokerTH Web",
@@ -1789,24 +1675,24 @@ var PARTS = {
     lead: function (h, c) { return "ਇਹ ਛੋਟਾ ਸੰਸਕਰਣ ਹੈ: ਖਾਲੀ ਟੈਬ ਤੋਂ PokerTH ਵਿੱਚ ਤੁਹਾਡੇ ਪਹਿਲੇ Texas Hold’em ਹੱਥ ਤੱਕ। ਜੇ ਤੁਸੀਂ ਸਿਰਫ਼ ਨਿਯਮ ਲੱਭ ਰਹੇ ਹੋ — ਸਮਾਲ ਅਤੇ ਬਿਗ ਬਲਾਇੰਡ, ਬੈਟਿੰਗ ਦੌਰ, ਕੀ ਕਿਸਨੂੰ ਹਰਾਉਂਦਾ ਹੈ — ਤਾਂ <a href=\"{rules}\">ਨਿਯਮਾਂ ਵਾਲੇ ਪੇਜ</a> ਅਤੇ <a href=\"{hands}\">ਹੱਥ ਰੈਂਕਿੰਗ</a> ਤੋਂ ਸ਼ੁਰੂ ਕਰੋ।".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); },
     steps: [
       ["ਪੇਜ ਖੋਲ੍ਹੋ — ਕੁਝ ਇੰਸਟਾਲ ਕਰਨ ਦੀ ਲੋੜ ਨਹੀਂ",
-       "PokerTH ਬ੍ਰਾਊਜ਼ਰ ਵਿੱਚ ਚੱਲਦਾ ਹੈ। ਕੋਈ ਡਾਊਨਲੋਡ ਨਹੀਂ, ਕੋਈ ਖਾਤਾ ਨਹੀਂ, ਕੋਈ ਪਲੱਗਇਨ ਨਹੀਂ। ਫੋਨ \u2019ਤੇ, ਤੁਸੀਂ ਬ੍ਰਾਊਜ਼ਰ ਮੀਨੂ ਤੋਂ ਇਸਨੂੰ ਹੋਮ ਸਕ੍ਰੀਨ \u2019ਤੇ ਸ਼ਾਮਲ ਕਰ ਸਕਦੇ ਹੋ; ਫੇਰ ਇਹ ਐਪ ਵਾਂਗ, ਪੂਰੀ ਸਕ੍ਰੀਨ \u2019ਤੇ ਖੁੱਲ੍ਹਦਾ ਹੈ, ਅਤੇ ਬਿਨਾਂ ਕਨੈਕਸ਼ਨ ਵੀ ਕੰਮ ਕਰਦਾ ਹੈ।"],
+       "PokerTH ਬ੍ਰਾਊਜ਼ਰ ਵਿੱਚ ਚੱਲਦਾ ਹੈ। ਕੋਈ ਡਾਊਨਲੋਡ ਨਹੀਂ, ਕੋਈ ਪਲੱਗਇਨ ਨਹੀਂ, ਅਤੇ ਅਭਿਆਸ ਜਾਂ ਮਹਿਮਾਨ ਖੇਡਾਂ ਲਈ ਕੋਈ ਖਾਤਾ ਨਹੀਂ। ਤੁਸੀਂ ਇਸਨੂੰ ਐਪ ਵਾਂਗ ਇੰਸਟਾਲ ਕਰ ਸਕਦੇ ਹੋ — iPhone ਅਤੇ iPad ’ਤੇ ਸ਼ੇਅਰ → ਹੋਮ ਸਕ੍ਰੀਨ ’ਤੇ ਸ਼ਾਮਲ ਕਰੋ, ਹੋਰ ਥਾਵਾਂ ’ਤੇ ਬ੍ਰਾਊਜ਼ਰ ਮੀਨੂ ਜਾਂ ਇੰਸਟਾਲ ਬਟਨ — ਅਤੇ ਇਹ ਪੂਰੀ ਸਕ੍ਰੀਨ ’ਤੇ ਖੁੱਲ੍ਹਦਾ ਹੈ, ਬਿਨਾਂ ਕਨੈਕਸ਼ਨ ਵੀ ਕੰਮ ਕਰਦਾ ਹੈ। ਜੇ ਤੁਸੀਂ ਚਾਹੋ, ਯੱਕੇ ਦੀ ਮਦਦ, ਕੋਨੇ ਵਿੱਚ ਯੱਕਾ, ਹਰ ਸਕ੍ਰੀਨ ਸਮਝਾਉਂਦਾ ਹੈ।"],
       ["ਚੁਣੋ ਕਿ ਤੁਸੀਂ ਕਿੱਥੇ ਖੇਡਣਾ ਚਾਹੁੰਦੇ ਹੋ",
-       "ਤਿੰਨ ਤਰੀਕੇ। <strong>ਆਫਲਾਈਨ ਅਭਿਆਸ</strong> ਤੁਹਾਨੂੰ ਤੁਰੰਤ ਕੰਪਿਊਟਰ ਵਿਰੋਧੀਆਂ ਵਾਲੇ ਟੇਬਲ \u2019ਤੇ ਬਿਠਾਉਂਦਾ ਹੈ ਅਤੇ ਕਿਸੇ ਕਨੈਕਸ਼ਨ ਦੀ ਲੋੜ ਨਹੀਂ — ਸਿੱਖਣ ਦੀ ਸਭ ਤੋਂ ਵਧੀਆ ਥਾਂ। <strong>pokerth.net</strong> ਅਧਿਕਾਰਤ ਨੈੱਟਵਰਕ ਹੈ: ਅਸਲੀ ਵਿਰੋਧੀ, ਸੀਜ਼ਨ ਰੈਂਕਿੰਗ ਅਤੇ ਇੱਕ ਮੁਫ਼ਤ ਨਾਮ ਜੋ ਤੁਸੀਂ ਇੱਕ ਵਾਰ ਰਜਿਸਟਰ ਕਰਦੇ ਹੋ। <strong>LAN / ਨਿੱਜੀ ਸਰਵਰ</strong> ਤੁਹਾਨੂੰ ਇੱਕ ਸਮਰਪਿਤ PokerTH ਸਰਵਰ ਨਾਲ ਜੋੜਦਾ ਹੈ, ਤੁਹਾਡਾ ਆਪਣਾ ਜਾਂ ਕਿਸੇ ਹੋਰ ਦਾ।"],
-      ["ਟੇਬਲ \u2019ਤੇ ਬੈਠੋ",
-       "ਲਾਬੀ ਵਿੱਚ, ਤੁਸੀਂ ਸੂਚੀ ਵਿੱਚੋਂ ਕਿਸੇ ਟੇਬਲ ਵਿੱਚ ਸ਼ਾਮਲ ਹੁੰਦੇ ਹੋ ਜਾਂ ਆਪਣਾ ਬਣਾਉਂਦੇ ਹੋ। ਬਣਾਉਂਦੇ ਸਮੇਂ, ਤੁਸੀਂ ਸੀਟਾਂ ਦੀ ਗਿਣਤੀ, ਸ਼ੁਰੂਆਤੀ ਸਟੈਕ, ਬਲਾਇੰਡ ਕਿੰਨੀ ਤੇਜ਼ੀ ਨਾਲ ਵਧਣ ਅਤੇ ਕੀ ਟੇਬਲ \u2019ਤੇ ਪਾਸਵਰਡ ਹੋਵੇ, ਤੈਅ ਕਰਦੇ ਹੋ। ਸੱਦਾ ਲਿੰਕ ਸਾਂਝਾ ਕਰੋ ਅਤੇ ਤੁਹਾਡਾ ਦੋਸਤ ਬਿਨਾਂ ਕਿਸੇ ਰਜਿਸਟ੍ਰੇਸ਼ਨ, ਆਪਣੇ ਬ੍ਰਾਊਜ਼ਰ ਵਿੱਚ ਸਿੱਧਾ ਤੁਹਾਡੇ ਟੇਬਲ \u2019ਤੇ ਆ ਜਾਂਦਾ ਹੈ।"],
+       "ਤਿੰਨ ਤਰੀਕੇ। <strong>ਲੋਕਲ / ਅਭਿਆਸ</strong> ਤੁਹਾਨੂੰ ਤੁਰੰਤ ਕੰਪਿਊਟਰ ਵਿਰੋਧੀਆਂ ਵਾਲੇ ਟੇਬਲ ’ਤੇ ਬਿਠਾਉਂਦਾ ਹੈ ਅਤੇ ਕਿਸੇ ਕਨੈਕਸ਼ਨ ਦੀ ਲੋੜ ਨਹੀਂ — ਸਿੱਖਣ ਦੀ ਸਭ ਤੋਂ ਵਧੀਆ ਥਾਂ। <strong>pokerth.net</strong> ਅਧਿਕਾਰਤ ਨੈੱਟਵਰਕ ਹੈ: ਅਸਲੀ ਵਿਰੋਧੀ, ਮਹਿਮਾਨਾਂ ਲਈ ਖੁੱਲ੍ਹੀਆਂ ਸਧਾਰਨ ਖੇਡਾਂ, ਅਤੇ ਮੁਫ਼ਤ ਖਾਤੇ ਵਾਲੇ ਖਿਡਾਰੀਆਂ ਲਈ ਸੀਜ਼ਨ ਰੈਂਕਿੰਗ ਵਾਲੀਆਂ ਰੈਂਕਿੰਗ ਖੇਡਾਂ। <strong>LAN / ਨਿੱਜੀ ਸਰਵਰ</strong> ਤੁਹਾਨੂੰ ਇੱਕ ਸਮਰਪਿਤ PokerTH ਸਰਵਰ ਨਾਲ ਜੋੜਦਾ ਹੈ, ਤੁਹਾਡਾ ਆਪਣਾ ਜਾਂ ਕਿਸੇ ਹੋਰ ਦਾ।"],
+      ["ਟੇਬਲ ’ਤੇ ਬੈਠੋ",
+       "ਲਾਬੀ ਵਿੱਚ, ਤੁਸੀਂ ਸੂਚੀ ਵਿੱਚੋਂ ਕਿਸੇ ਟੇਬਲ ਵਿੱਚ ਸ਼ਾਮਲ ਹੁੰਦੇ ਹੋ, ਕੋਈ ਚੱਲਦੀ ਖੇਡ ਵੇਖਦੇ ਹੋ, ਜਾਂ ਆਪਣਾ ਬਣਾਉਂਦੇ ਹੋ। ਬਣਾਉਂਦੇ ਸਮੇਂ, ਤੁਸੀਂ ਖੇਡ ਦੀ ਕਿਸਮ (ਸਧਾਰਨ, ਸਿਰਫ਼ ਰਜਿਸਟਰਡ ਖਿਡਾਰੀ, ਸਿਰਫ਼ ਸੱਦੇ ਗਏ ਖਿਡਾਰੀ ਜਾਂ ਰੈਂਕਿੰਗ) ਚੁਣਦੇ ਹੋ ਅਤੇ ਸੀਟਾਂ ਦੀ ਗਿਣਤੀ, ਸ਼ੁਰੂਆਤੀ ਸਟੈਕ, ਬਲਾਇੰਡ ਕਿੰਨੀ ਤੇਜ਼ੀ ਨਾਲ ਵਧਣ, ਕਾਰਵਾਈ ਲਈ ਸਮਾਂ, ਕੀ ਦਰਸ਼ਕ ਵੇਖ ਸਕਦੇ ਹਨ ਅਤੇ ਕੀ ਟੇਬਲ ’ਤੇ ਪਾਸਵਰਡ ਹੋਵੇ, ਤੈਅ ਕਰਦੇ ਹੋ। ਸੱਦਾ ਲਿੰਕ ਸਾਂਝਾ ਕਰੋ ਅਤੇ ਤੁਹਾਡਾ ਦੋਸਤ ਆਪਣੇ ਬ੍ਰਾਊਜ਼ਰ ਵਿੱਚ ਸਿੱਧਾ ਤੁਹਾਡੇ ਟੇਬਲ ’ਤੇ ਆ ਜਾਂਦਾ ਹੈ — ਸਧਾਰਨ ਖੇਡ ਵਿੱਚ ਬਿਨਾਂ ਕਿਸੇ ਰਜਿਸਟ੍ਰੇਸ਼ਨ।"],
       ["ਇੱਕ ਹੱਥ ਖੇਡੋ",
-       "ਤੁਹਾਨੂੰ ਦੋ ਨਿੱਜੀ ਪੱਤੇ ਮਿਲਦੇ ਹਨ। ਬੈਟਿੰਗ ਫਲਾਪ ਤੋਂ ਪਹਿਲਾਂ ਇੱਕ ਦੌਰ ਵਿੱਚ ਹੁੰਦੀ ਹੈ, ਫੇਰ ਫਲਾਪ, ਟਰਨ ਅਤੇ ਰਿਵਰ ਤੋਂ ਬਾਅਦ ਦੁਬਾਰਾ। ਜਦੋਂ ਤੁਹਾਡੀ ਵਾਰੀ ਆਵੇ, ਕਾਰਵਾਈ ਪੱਟੀ ਜਗਦੀ ਹੈ ਅਤੇ ਸਿਰਫ਼ ਓਹ ਪੇਸ਼ ਕਰਦੀ ਹੈ ਜਿਸਦੀ ਆਗਿਆ ਹੈ: Fold, Check ਜਾਂ Call, Raise ਜਾਂ All-In। ਤੁਸੀਂ ਰਾਸ਼ੀ ਟਾਈਪ ਕਰ ਸਕਦੇ ਹੋ, ਸਲਾਈਡਰ ਨਾਲ ਖਿੱਚ ਸਕਦੇ ਹੋ, ਜਾਂ ਇੱਕ ਟੈਪ ਨਾਲ ਘੱਟੋ-ਘੱਟ, ਅੱਧਾ ਪਾਟ, ਪੂਰਾ ਪਾਟ ਜਾਂ ਆਪਣਾ ਪੂਰਾ ਸਟੈਕ ਸੈੱਟ ਕਰ ਸਕਦੇ ਹੋ।"],
+       "ਤੁਹਾਨੂੰ ਦੋ ਨਿੱਜੀ ਪੱਤੇ ਮਿਲਦੇ ਹਨ। ਬੈਟਿੰਗ ਫਲਾਪ ਤੋਂ ਪਹਿਲਾਂ ਇੱਕ ਦੌਰ ਵਿੱਚ ਹੁੰਦੀ ਹੈ, ਫੇਰ ਫਲਾਪ, ਟਰਨ ਅਤੇ ਰਿਵਰ ਤੋਂ ਬਾਅਦ ਦੁਬਾਰਾ। ਜਦੋਂ ਤੁਹਾਡੀ ਵਾਰੀ ਆਵੇ, ਕਾਰਵਾਈ ਪੱਟੀ ਜਗਦੀ ਹੈ ਅਤੇ ਸਿਰਫ਼ ਓਹ ਪੇਸ਼ ਕਰਦੀ ਹੈ ਜਿਸਦੀ ਆਗਿਆ ਹੈ: Fold, Check ਜਾਂ Call, Raise ਜਾਂ All-In। ਤੁਸੀਂ ਰਾਸ਼ੀ ਟਾਈਪ ਕਰ ਸਕਦੇ ਹੋ, ਸਲਾਈਡਰ ਨਾਲ ਖਿੱਚ ਸਕਦੇ ਹੋ, ਜਾਂ ਇੱਕ ਟੈਪ ਨਾਲ ਪਾਟ ਦਾ ਤੀਜਾ ਹਿੱਸਾ, ਅੱਧਾ ਪਾਟ ਜਾਂ ਪੂਰਾ ਪਾਟ ਸੈੱਟ ਕਰ ਸਕਦੇ ਹੋ।"],
       ["ਟੇਬਲ ਪੜ੍ਹੋ",
-       "ਪੱਤੇ ਆਉਣ ਦੇ ਨਾਲ ਤੁਹਾਡਾ ਮੌਜੂਦਾ ਸਭ ਤੋਂ ਵਧੀਆ ਸੁਮੇਲ ਟੇਬਲ ਹੇਠਾਂ ਲਿਖਿਆ ਜਾਂਦਾ ਹੈ। ਪਾਟ, ਹਰ ਖਿਡਾਰੀ ਦਾ ਸਟੈਕ ਅਤੇ ਬਲਾਇੰਡ ਪੱਧਰ ਹਮੇਸ਼ਾ ਸਕ੍ਰੀਨ \u2019ਤੇ ਹਨ, ਡੀਲਰ ਬਟਨ ਵਿਖਾਉਂਦਾ ਹੈ ਕਿ ਆਖਰੀ ਕੌਣ ਬੋਲਦਾ ਹੈ, ਅਤੇ ਕਾਊਂਟਡਾਊਨ ਦੱਸਦਾ ਹੈ ਕਿ ਤੁਹਾਡੇ ਕੋਲ ਕਿੰਨਾ ਸਮਾਂ ਬਾਕੀ ਹੈ। ਸ਼ੋਡਾਊਨ \u2019ਤੇ, ਓਹ ਪੰਜ ਪੱਤੇ ਉਭਾਰੇ ਜਾਂਦੇ ਹਨ ਜਿਨ੍ਹਾਂ ਨੇ ਅਸਲ ਵਿੱਚ ਹਰ ਹੱਥ ਬਣਾਇਆ।"],
+       "ਓਡਸ ਟੈਬ ਪੱਤੇ ਆਉਣ ਦੇ ਨਾਲ ਤੁਹਾਡੇ ਮੌਜੂਦਾ ਸਭ ਤੋਂ ਵਧੀਆ ਸੁਮੇਲ ਅਤੇ ਜਿੱਤਣ ਦੀ ਸੰਭਾਵਨਾ ਦਾ ਨਾਮ ਦੱਸਦਾ ਹੈ। ਪਾਟ, ਹਰ ਖਿਡਾਰੀ ਦਾ ਸਟੈਕ ਅਤੇ ਬਲਾਇੰਡ ਪੱਧਰ ਹਮੇਸ਼ਾ ਸਕ੍ਰੀਨ ’ਤੇ ਹਨ, ਡੀਲਰ ਬਟਨ ਵਿਖਾਉਂਦਾ ਹੈ ਕਿ ਆਖਰੀ ਕੌਣ ਬੋਲਦਾ ਹੈ, ਅਤੇ ਕਾਊਂਟਡਾਊਨ ਦੱਸਦਾ ਹੈ ਕਿ ਤੁਹਾਡੇ ਕੋਲ ਕਿੰਨਾ ਸਮਾਂ ਬਾਕੀ ਹੈ। ਸ਼ੋਡਾਊਨ ’ਤੇ, ਜਿੱਤਣ ਵਾਲਾ ਸੁਮੇਲ ਕਮਿਊਨਿਟੀ ਪੱਤਿਆਂ ਹੇਠਾਂ ਲਿਖਿਆ ਜਾਂਦਾ ਹੈ।"],
       ["ਟੂਰਨਾਮੈਂਟ ਜਿੱਤੋ",
-       "PokerTH ਦੀਆਂ ਖੇਡਾਂ sit-and-go ਟੂਰਨਾਮੈਂਟ ਹਨ: ਸਭ ਇੱਕੋ ਸਟੈਕ ਨਾਲ ਸ਼ੁਰੂ ਕਰਦੇ ਹਨ, ਬਲਾਇੰਡ ਸਮੇਂ ਨਾਲ ਵਧਦੇ ਹਨ, ਅਤੇ ਖਿਡਾਰੀ ਬਾਹਰ ਹੁੰਦੇ ਜਾਂਦੇ ਹਨ ਜਦੋਂ ਤੱਕ ਸਾਰੇ ਚਿਪਸ ਨਾਲ ਸਿਰਫ਼ ਇੱਕ ਨਾ ਬਚੇ। ਕੁਝ ਵੀ ਪੈਸੇ ਦਾ ਨਹੀਂ ਅਤੇ ਚਿਪਸ ਦੁਬਾਰਾ ਖ਼ਰੀਦੇ ਨਹੀਂ ਜਾ ਸਕਦੇ — ਸਭ ਕੁਝ ਖੇਡ ਦਾ ਪੈਸਾ ਹੈ, ਇਸ ਲਈ ਦਾਅ \u2019ਤੇ ਸਿਰਫ਼ ਖੇਡ ਹੀ ਹੁੰਦੀ ਹੈ।"]
+       "PokerTH ਦੀਆਂ ਖੇਡਾਂ ਟੂਰਨਾਮੈਂਟ ਹਨ: ਸਭ ਇੱਕੋ ਸਟੈਕ ਨਾਲ ਸ਼ੁਰੂ ਕਰਦੇ ਹਨ, ਬਲਾਇੰਡ ਹਰ ਕੁਝ ਹੱਥਾਂ ਜਾਂ ਮਿੰਟਾਂ ਬਾਅਦ ਵਧਦੇ ਹਨ, ਅਤੇ ਖਿਡਾਰੀ ਬਾਹਰ ਹੁੰਦੇ ਜਾਂਦੇ ਹਨ ਜਦੋਂ ਤੱਕ ਸਾਰੇ ਚਿਪਸ ਨਾਲ ਸਿਰਫ਼ ਇੱਕ ਨਾ ਬਚੇ। ਕੁਝ ਵੀ ਪੈਸੇ ਦਾ ਨਹੀਂ ਅਤੇ ਚਿਪਸ ਦੁਬਾਰਾ ਖ਼ਰੀਦੇ ਨਹੀਂ ਜਾ ਸਕਦੇ — ਸਭ ਕੁਝ ਖੇਡ ਦਾ ਪੈਸਾ ਹੈ, ਇਸ ਲਈ ਦਾਅ ’ਤੇ ਸਿਰਫ਼ ਖੇਡ ਹੀ ਹੁੰਦੀ ਹੈ।"]
     ],
     phoneH2: "ਫੋਨ \u2019ਤੇ ਖੇਡਣਾ",
     phoneP: "ਟੇਬਲ ਟੱਚ ਸਕ੍ਰੀਨ ਲਈ ਓਨਾ ਹੀ ਢੁੱਕਵਾਂ ਹੈ ਜਿੰਨਾ ਕੰਪਿਊਟਰ ਲਈ: ਬੈਟ ਫੀਲਡ \u2019ਤੇ ਟੈਪ ਕਰਨ ਨਾਲ ਸਿਸਟਮ ਦੀ ਬਜਾਏ ਕਾਰਵਾਈ ਪੱਟੀ ਦੇ ਅੰਦਰ ਨੰਬਰ ਪੈਡ ਖੁੱਲ੍ਹਦਾ ਹੈ, ਇਸ ਲਈ ਟੇਬਲ ਕਦੇ ਉਛਲਦਾ ਨਹੀਂ, ਅਤੇ ਸਲਾਈਡਰ ਡੈਸਕਟਾਪ ਕਲਾਇਂਟ ਵਾਂਗ ਹੀ ਕਦਮਾਂ ਵਿੱਚ ਚੱਲਦਾ ਹੈ। ਤੁਹਾਡੀ ਵਾਰੀ ਦੀਆਂ ਸੂਚਨਾਵਾਂ Fold ਅਤੇ Check/Call ਬਟਨਾਂ ਸਮੇਤ ਆ ਸਕਦੀਆਂ ਹਨ, ਇਸ ਲਈ ਹੱਥ ਟੈਬ \u2019ਤੇ ਵਾਪਸ ਗਏ ਬਿਨਾਂ ਖੇਡਿਆ ਜਾ ਸਕਦਾ ਹੈ।",
     friendsH2: "ਦੋਸਤਾਂ ਨਾਲ ਖੇਡਣਾ",
     friendsP: "ਟੇਬਲ ਬਣਾਓ, ਨਿੱਜੀ ਰੱਖਣ ਲਈ ਚਾਹੋ ਤਾਂ ਪਾਸਵਰਡ ਲਾਓ, ਅਤੇ ਸੱਦਾ ਲਿੰਕ ਭੇਜੋ। ਇਹ ਸਿੱਧਾ ਟੇਬਲ ਖੋਲ੍ਹਦਾ ਹੈ — ਜੇ ਉਹਨਾਂ ਨੇ ਐਪ ਹੋਮ ਸਕ੍ਰੀਨ \u2019ਤੇ ਸ਼ਾਮਲ ਕੀਤੀ ਹੈ ਤਾਂ ਓਸ ਵਿੱਚ, ਨਹੀਂ ਤਾਂ ਬ੍ਰਾਊਜ਼ਰ ਟੈਬ ਵਿੱਚ। ਕਿਸੇ ਨੂੰ ਕੁਝ ਇੰਸਟਾਲ ਕਰਨ ਜਾਂ ਈਮੇਲ ਪਤਾ ਦੇਣ ਦੀ ਲੋੜ ਨਹੀਂ।",
     faqH2: "ਅਕਸਰ ਪੁੱਛੇ ਜਾਂਦੇ ਸਵਾਲ",
-    faqP: function (h, c) { return "ਕਿਸੇ ਵੀ ਮੋਡ ਵਿੱਚ ਅਸਲੀ ਪੈਸਾ ਨਹੀਂ। ਤੁਹਾਡੀਆਂ ਸੈਟਿੰਗਾਂ, ਸ਼ੈਲੀ ਪੈਕ ਅਤੇ ਆਫਲਾਈਨ ਪ੍ਰਗਤੀ ਤੁਹਾਡੇ ਯੰਤਰ \u2019ਤੇ ਰਹਿੰਦੇ ਹਨ। ਇੰਟਰਫੇਸ 83 ਭਾਸ਼ਾਵਾਂ ਵਿੱਚ ਉਪਲਬਧ ਹੈ, ਜਦਕਿ ਪੰਜ ਕਾਰਵਾਈ ਸ਼ਬਦ — Fold, Check, Call, Raise, All-In — ਦੁਨੀਆ ਦੇ ਹਰ ਟੇਬਲ ਵਾਂਗ ਅੰਗਰੇਜ਼ੀ ਵਿੱਚ ਰਹਿੰਦੇ ਹਨ। ਹੋਰ <a href=\"{faq}\">ਅਕਸਰ ਪੁੱਛੇ ਜਾਂਦੇ ਸਵਾਲਾਂ</a> ਵਿੱਚ।".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
+    faqP: function (h, c) { return "ਕਿਸੇ ਵੀ ਮੋਡ ਵਿੱਚ ਅਸਲੀ ਪੈਸਾ ਨਹੀਂ। ਤੁਹਾਡੀਆਂ ਸੈਟਿੰਗਾਂ, ਸ਼ੈਲੀ ਪੈਕ ਅਤੇ ਅਭਿਆਸ ਪ੍ਰਗਤੀ ਤੁਹਾਡੇ ਯੰਤਰ \u2019ਤੇ ਰਹਿੰਦੇ ਹਨ, ਅਤੇ ਜਦੋਂ ਤੁਸੀਂ pokerth.net ਖਾਤੇ ਨਾਲ ਲਾਗਇਨ ਕਰਦੇ ਹੋ, ਤੁਹਾਡੇ ਹੋਰ ਯੰਤਰਾਂ \u2019ਤੇ ਵੀ ਤੁਹਾਡੇ ਨਾਲ ਚੱਲਦੇ ਹਨ। ਇੰਟਰਫੇਸ 83 ਭਾਸ਼ਾਵਾਂ ਵਿੱਚ ਉਪਲਬਧ ਹੈ, ਜਦਕਿ ਪੰਜ ਕਾਰਵਾਈ ਸ਼ਬਦ — Fold, Check, Call, Raise, All-In — ਦੁਨੀਆ ਦੇ ਹਰ ਟੇਬਲ ਵਾਂਗ ਅੰਗਰੇਜ਼ੀ ਵਿੱਚ ਰਹਿੰਦੇ ਹਨ। ਹੋਰ <a href=\"{faq}\">ਅਕਸਰ ਪੁੱਛੇ ਜਾਂਦੇ ਸਵਾਲਾਂ</a> ਵਿੱਚ।".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
   },
   am: {
     title: "በመስመር ላይ በነጻ ፖከር እንዴት እንደሚጫወቱ — PokerTH Web",
@@ -1817,24 +1703,24 @@ var PARTS = {
     lead: function (h, c) { return "ይህ አጭሩ ሥሪት ነው፦ ከባዶ ትር እስከ በ PokerTH ውስጥ የመጀመሪያው Texas Hold’em እጅዎ። ደንቦቹን ብቻ የሚፈልጉ ከሆነ — ስሞል እና ቢግ ብላይንድ፣ የውርርድ ዙሮች፣ ምን ምንን እንደሚያሸንፍ — ከ<a href=\"{rules}\">የደንቦች ገጽ</a> እና ከ<a href=\"{hands}\">የእጅ ደረጃዎች</a> ይጀምሩ።".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); },
     steps: [
       ["ገጹን ይክፈቱ — ምንም የሚጫን ነገር የለም",
-       "PokerTH በአሳሽ ውስጥ ይሠራል። ማውረድ የለም፣ መለያ የለም፣ ተሰኪ የለም። በስልክ ላይ ከአሳሽ ምናሌው ወደ መነሻ ማያ ማከል ይችላሉ፤ ከዚያ እንደ መተግበሪያ፣ በሙሉ ማያ ይከፈታል፣ እና ያለ ግንኙነትም ይሠራል።"],
+       "PokerTH በአሳሽ ውስጥ ይሠራል። ማውረድ የለም፣ ተሰኪ የለም፣ እና ለልምምድ ወይም ለእንግዳ ጨዋታዎች መለያ የለም። እንደ መተግበሪያ መጫን ይችላሉ — በ iPhone እና iPad ላይ ማጋሪያ → ወደ መነሻ ማያ ጨምር፣ በሌላ ቦታ የአሳሽ ምናሌው ወይም የመጫኛ አዝራሩ — እና በሙሉ ማያ ይከፈታል፣ ያለ ግንኙነትም ይሠራል። ከፈለጉ፣ የኤሱ እገዛ፣ በማዕዘኑ ያለው ኤሱ፣ እያንዳንዱን ማያ ያብራራል።"],
       ["የት መጫወት እንደሚፈልጉ ይምረጡ",
-       "ሦስት መንገዶች። <strong>ከመስመር ውጪ ልምምድ</strong> ወዲያውኑ ከኮምፒውተር ተቃዋሚዎች ጋር ጠረጴዛ ላይ ያስቀምጥዎታል እና ምንም ግንኙነት አይፈልግም — ለመማር ምርጡ ቦታ። <strong>pokerth.net</strong> ኦፊሴላዊው አውታረ መረብ ነው፦ እውነተኛ ተቃዋሚዎች፣ የወቅት ደረጃ እና አንድ ጊዜ የሚመዘግቡት ነጻ ቅጽል ስም። <strong>LAN / የግል አገልጋይ</strong> ከተወሰነ PokerTH አገልጋይ ጋር ያገናኝዎታል፣ የራስዎ ወይም የሌላ ሰው።"],
+       "ሦስት መንገዶች። <strong>አካባቢያዊ / ልምምድ</strong> ወዲያውኑ ከኮምፒውተር ተቃዋሚዎች ጋር ጠረጴዛ ላይ ያስቀምጥዎታል እና ምንም ግንኙነት አይፈልግም — ለመማር ምርጡ ቦታ። <strong>pokerth.net</strong> ኦፊሴላዊው አውታረ መረብ ነው፦ እውነተኛ ተቃዋሚዎች፣ ለእንግዶች ክፍት የሆኑ መደበኛ ጨዋታዎች፣ እና ነጻ መለያ ላላቸው ተጫዋቾች የወቅት ደረጃ ያላቸው የደረጃ ጨዋታዎች። <strong>LAN / የግል አገልጋይ</strong> ከተወሰነ PokerTH አገልጋይ ጋር ያገናኝዎታል፣ የራስዎ ወይም የሌላ ሰው።"],
       ["ጠረጴዛ ላይ ይቀመጡ",
-       "በሎቢ ውስጥ ከዝርዝሩ ጠረጴዛ ይቀላቀላሉ ወይም የራስዎን ይፈጥራሉ። ሲፈጥሩ የመቀመጫዎችን ብዛት፣ መነሻ ስታክ፣ ብላይንዶች ምን ያህል በፍጥነት እንደሚጨምሩ እና ጠረጴዛው የይለፍ ቃል እንዳለው ያዘጋጃሉ። የግብዣ አገናኙን ያጋሩ እና ጓደኛዎ ያለ ምንም ምዝገባ በራሱ አሳሽ በቀጥታ ጠረጴዛዎ ላይ ይደርሳል።"],
+       "በሎቢ ውስጥ ከዝርዝሩ ጠረጴዛ ይቀላቀላሉ፣ በመካሄድ ላይ ያለ ጨዋታ ይመለከታሉ፣ ወይም የራስዎን ይፈጥራሉ። ሲፈጥሩ የጨዋታውን ዓይነት (መደበኛ፣ ለተመዘገቡ ተጫዋቾች ብቻ፣ ለተጋበዙ ተጫዋቾች ብቻ ወይም የደረጃ ጨዋታ) ይመርጣሉ እና የመቀመጫዎችን ብዛት፣ መነሻ ስታክ፣ ብላይንዶች ምን ያህል በፍጥነት እንደሚጨምሩ፣ ለመንቀሳቀስ የሚሰጠውን ጊዜ፣ ተመልካቾች እንዲመለከቱ መፈቀዱን እና ጠረጴዛው የይለፍ ቃል እንዳለው ያዘጋጃሉ። የግብዣ አገናኙን ያጋሩ እና ጓደኛዎ በራሱ አሳሽ በቀጥታ ጠረጴዛዎ ላይ ይደርሳል — በመደበኛ ጨዋታ ውስጥ ምንም ሳይመዘገብ።"],
       ["እጅ ይጫወቱ",
-       "ሁለት የግል ካርታዎች ያገኛሉ። ውርርድ ከፍሎፕ በፊት በአንድ ዙር ይካሄዳል፣ ከዚያ ከፍሎፕ፣ ተርን እና ሪቨር በኋላ እንደገና። ተራዎ ሲደርስ የእርምጃ አሞሌው ይበራል እና የተፈቀደውን ብቻ ያቀርባል፦ Fold፣ Check ወይም Call፣ Raise ወይም All-In። መጠኑን መተየብ፣ በተንሸራታቹ መጎተት፣ ወይም በአንድ ንክኪ ወደ ዝቅተኛው፣ ግማሽ ፖት፣ ሙሉ ፖት ወይም ሙሉ ስታክዎ ማዘጋጀት ይችላሉ።"],
+       "ሁለት የግል ካርታዎች ያገኛሉ። ውርርድ ከፍሎፕ በፊት በአንድ ዙር ይካሄዳል፣ ከዚያ ከፍሎፕ፣ ተርን እና ሪቨር በኋላ እንደገና። ተራዎ ሲደርስ የእርምጃ አሞሌው ይበራል እና የተፈቀደውን ብቻ ያቀርባል፦ Fold፣ Check ወይም Call፣ Raise ወይም All-In። መጠኑን መተየብ፣ በተንሸራታቹ መጎተት፣ ወይም በአንድ ንክኪ ወደ የፖቱ ሲሶ፣ ግማሽ ፖት ወይም ሙሉ ፖት ማዘጋጀት ይችላሉ።"],
       ["ጠረጴዛውን ያንብቡ",
-       "ካርታዎች ሲወጡ የአሁኑ ምርጥ ጥምረትዎ ከጠረጴዛው በታች ይጻፋል። ፖቱ፣ የእያንዳንዱ ተጫዋች ስታክ እና የብላይንድ ደረጃ ሁልጊዜ በማያው ላይ አሉ፣ የአከፋፋይ አዝራሩ የመጨረሻ ማን እንደሚናገር ያሳያል፣ እና ቆጠራው ምን ያህል ጊዜ እንደቀረዎት ይናገራል። በ showdown ላይ እያንዳንዱን እጅ በእውነት የሠሩት አምስት ካርታዎች ይደምቃሉ።"],
+       "የ“ዕድሎች” ትር የአሁኑን ምርጥ እጅዎን እና የማሸነፍ ዕድልዎን ካርታዎች ሲወጡ ይጠራል። ፖቱ፣ የእያንዳንዱ ተጫዋች ስታክ እና የብላይንድ ደረጃ ሁልጊዜ በማያው ላይ አሉ፣ የአከፋፋይ አዝራሩ የመጨረሻ ማን እንደሚናገር ያሳያል፣ እና ቆጠራው ምን ያህል ጊዜ እንደቀረዎት ይናገራል። በ showdown ላይ አሸናፊው ጥምረት ከጋራ ካርታዎቹ በታች ይጠራል።"],
       ["ውድድሩን ያሸንፉ",
-       "የ PokerTH ጨዋታዎች sit-and-go ውድድሮች ናቸው፦ ሁሉም በተመሳሳይ ስታክ ይጀምራል፣ ብላይንዶች በጊዜ ይጨምራሉ፣ እና ሁሉንም ቺፖች የያዘ አንድ ብቻ እስኪቀር ድረስ ተጫዋቾች ይወገዳሉ። ምንም ገንዘብ አይከፍልም እና ቺፖች እንደገና ሊገዙ አይችሉም — ሁሉም የጨዋታ ገንዘብ ነው፣ ስለዚህ አደጋ ላይ ያለው ጨዋታው ራሱ ብቻ ነው።"]
+       "የ PokerTH ጨዋታዎች ውድድሮች ናቸው፦ ሁሉም በተመሳሳይ ስታክ ይጀምራል፣ ብላይንዶች በየጥቂት እጆች ወይም ደቂቃዎች ይጨምራሉ፣ እና ሁሉንም ቺፖች የያዘ አንድ ብቻ እስኪቀር ድረስ ተጫዋቾች ይወገዳሉ። ምንም ገንዘብ አይከፍልም እና ቺፖች እንደገና ሊገዙ አይችሉም — ሁሉም የጨዋታ ገንዘብ ነው፣ ስለዚህ አደጋ ላይ ያለው ጨዋታው ራሱ ብቻ ነው።"]
     ],
     phoneH2: "በስልክ መጫወት",
     phoneP: "ጠረጴዛው ለንክኪ ማያ ልክ ለኮምፒውተር እንደተስተካከለ ነው፦ የውርርድ መስኩን መንካት ከስርዓቱ ይልቅ በእርምጃ አሞሌው ውስጥ የቁጥር ሰሌዳ ይከፍታል፣ ስለዚህ ጠረጴዛው በጭራሽ አይዘልም፣ እና ተንሸራታቹ እንደ ዴስክቶፕ ደንበኛው በተመሳሳይ ደረጃዎች ይንቀሳቀሳል። ተራዎ መሆኑን የሚያሳውቁ ማሳወቂያዎች Fold እና Check/Call አዝራሮች ጋር ሊመጡ ይችላሉ፣ ስለዚህ እጁ ወደ ትሩ ሳይመለሱ ሊጫወት ይችላል።",
     friendsH2: "ከጓደኞች ጋር መጫወት",
     friendsP: "ጠረጴዛ ይፍጠሩ፣ የግል ለማድረግ ከፈለጉ የይለፍ ቃል ያዘጋጁ፣ እና የግብዣ አገናኙን ይላኩ። በቀጥታ ጠረጴዛውን ይከፍታል — መተግበሪያውን ወደ መነሻ ማያ ካከሉ በተጫነው ውስጥ፣ አለበለዚያ በአሳሽ ትር ውስጥ። ማንም ምንም መጫን ወይም የኢሜይል አድራሻ መስጠት አይጠበቅበትም።",
     faqH2: "ተደጋጋሚ ጥያቄዎች",
-    faqP: function (h, c) { return "በማንኛውም ሁነታ ውስጥ እውነተኛ ገንዘብ የለም። ቅንብሮችዎ፣ የዘይቤ ጥቅሎችዎ እና ከመስመር ውጪ እድገትዎ በመሣሪያዎ ላይ ይቆያሉ። በይነገጹ በ83 ቋንቋዎች ይገኛል፣ አምስቱ የእርምጃ ቃላት — Fold፣ Check፣ Call፣ Raise፣ All-In — በዓለም ላይ እንዳለ እያንዳንዱ ጠረጴዛ በእንግሊዝኛ ይቆያሉ። ተጨማሪ በ<a href=\"{faq}\">ተደጋጋሚ ጥያቄዎች</a> ውስጥ።".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
+    faqP: function (h, c) { return "በማንኛውም ሁነታ ውስጥ እውነተኛ ገንዘብ የለም። ቅንብሮችዎ፣ የዘይቤ ጥቅሎችዎ እና የልምምድ እድገትዎ በመሣሪያዎ ላይ ይቆያሉ፣ እና በ pokerth.net መለያ ሲገቡ ወደ ሌሎች መሣሪያዎችዎ ይከተሉዎታል። በይነገጹ በ83 ቋንቋዎች ይገኛል፣ አምስቱ የእርምጃ ቃላት — Fold፣ Check፣ Call፣ Raise፣ All-In — በዓለም ላይ እንዳለ እያንዳንዱ ጠረጴዛ በእንግሊዝኛ ይቆያሉ። ተጨማሪ በ<a href=\"{faq}\">ተደጋጋሚ ጥያቄዎች</a> ውስጥ።".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
   },
   az: {
     title: "Onlayn pulsuz poker necə oynanılır — PokerTH Web",
@@ -1844,37 +1730,25 @@ var PARTS = {
     h1: "Onlayn poker necə oynanılır, pulsuz, brauzerinizdə",
     lead: function (h, c) { return "Budur qısa versiya: boş vərəqdən PokerTH-də ilk Texas Hold’em əlinizə qədər. Sizi qaydaların özü maraqlandırırsa — blaindlər, mərc raundları, nə nəyi məğlub edir — əvvəlcə <a href=\"{rules}\">qaydalar səhifəsindən</a> və <a href=\"{hands}\">kombinasiyalardan</a> başlayın.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); },
     steps: [
-      [
-        "Saytı açın — quraşdırılacaq heç nə yoxdur",
-        "PokerTH brauzerdə işləyir. Yükləmə yoxdur, hesab yoxdur, plagin yoxdur. Telefonda onu brauzer menyusundan əsas ekrana əlavə edə bilərsiniz və o, tətbiq kimi, tam ekranda və oflayn işləmək imkanı ilə açılır.",
-      ],
-      [
-        "Harada oynamaq istədiyinizi seçin",
-        "Üç rejim. <strong>Oflayn məşq</strong> sizə dərhal kompüter rəqiblərdən ibarət masa verir və heç bir bağlantı tələb etmir — öyrənmək üçün yer. <strong>pokerth.net</strong> rəsmi şəbəkədir: real rəqiblər, mövsümi reytinqlər, bir dəfə qeydiyyatdan keçirdiyiniz pulsuz ləqəb. <strong>LAN / şəxsi server</strong> sizin və ya başqasının xüsusi PokerTH serverinə qoşulur.",
-      ],
-      [
-        "Masaya oturun",
-        "Lobbidə ya siyahıdan masaya qoşulursunuz, ya da öz masanızı yaradırsınız. Masa yaratmaq yerlərin sayını, başlanğıc steki, blaindlərin nə qədər sürətlə artdığını və masanın parolla qorunub-qorunmadığını təyin etməyə imkan verir. Dəvət linkini paylaşın və dostunuz heç nə qeydiyyatdan keçirmədən, öz brauzerində birbaşa masanıza düşür.",
-      ],
-      [
-        "Əli oynayın",
-        "Sizə iki şəxsi kart paylanır. Mərclər flopdan əvvəl, sonra yenidən flopdan, turn-dən və river-dən sonra masa ətrafında dövr edir. Növbəniz gələndə hərəkət paneli işıqlanır və yalnız qanuni olanı təklif edir: Fold, Check və ya Call, Raise və ya All-In. Mərc məbləği yazıla, sürüşdürücüdə dartıla və ya bir toxunuşla Min, bankın yarısı, bank və ya bütün stekiniz kimi təyin edilə bilər.",
-      ],
-      [
-        "Masanı oxuyun",
-        "Kartlar açıldıqca cari ən yaxşı kombinasiyanız masanın altında adlandırılır. Bank, hər stek və blaind səviyyəsi həmişə ekrandadır, diler düyməsi kimin sonuncu danışdığını göstərir, geri sayım isə nə qədər vaxtınız qaldığını göstərir. Showdown-da hər kombinasiyanı düzəldən beş kart vurğulanır.",
-      ],
-      [
-        "Turniri qazanın",
-        "PokerTH oyunları sit-and-go turnirləridir: hamı eyni steklə başlayır, blaindlər taymerlə artır və oyunçular biri bütün fişkalara sahib olana qədər çıxarılır. Heç nə pula başa gəlmir və fişka almaq mümkün deyil — hər şey oyun pullarıdır, beləliklə riskdə olan yeganə şey oyunun özüdür.",
-      ],
+      ["Saytı açın — quraşdırılacaq heç nə yoxdur",
+       "PokerTH brauzerdə işləyir. Yükləmə yoxdur, plagin yoxdur, məşq və ya qonaq oyunları üçün hesab da lazım deyil. Onu tətbiq kimi quraşdıra bilərsiniz — iPhone və iPad-də Paylaş → Əsas ekrana əlavə et, digər cihazlarda brauzer menyusu və ya quraşdırma düyməsi — və o, tam ekranda, oflayn işləmək imkanı ilə açılır. İstəsəniz, Tuzun köməyi, küncdəki Tuz, hər ekranı izah edir."],
+      ["Harada oynamaq istədiyinizi seçin",
+       "Üç rejim. <strong>Lokal / məşq</strong> sizə dərhal kompüter rəqiblərdən ibarət masa verir və heç bir bağlantı tələb etmir — öyrənmək üçün yer. <strong>pokerth.net</strong> rəsmi şəbəkədir: real rəqiblər, qonaqlar üçün açıq Normal oyunlar və pulsuz hesabı olan oyunçular üçün mövsümi reytinqli Reytinq oyunları. <strong>LAN / şəxsi server</strong> sizin və ya başqasının xüsusi PokerTH serverinə qoşulur."],
+      ["Masaya oturun",
+       "Lobbidə ya siyahıdan masaya qoşulursunuz, ya gedən oyuna baxırsınız, ya da öz masanızı yaradırsınız. Masa yaratmaq oyun növünü (Normal, yalnız qeydiyyatlı oyunçular, yalnız dəvətlilər və ya Reytinq oyunu) seçməyə və yerlərin sayını, başlanğıc steki, blaindlərin nə qədər sürətlə artdığını, hərəkət üçün vaxtı, tamaşaçıların baxıb-baxmaya biləcəyini və masanın parolla qorunub-qorunmadığını təyin etməyə imkan verir. Dəvət linkini paylaşın və dostunuz öz brauzerində birbaşa masanıza düşür — Normal oyunda heç nə qeydiyyatdan keçirmədən."],
+      ["Əli oynayın",
+       "Sizə iki şəxsi kart paylanır. Mərclər flopdan əvvəl, sonra yenidən flopdan, turn-dən və river-dən sonra masa ətrafında dövr edir. Növbəniz gələndə hərəkət paneli işıqlanır və yalnız qanuni olanı təklif edir: Fold, Check və ya Call, Raise və ya All-In. Mərc məbləği yazıla, sürüşdürücüdə dartıla və ya bir toxunuşla bankın üçdə biri, bankın yarısı və ya bank kimi təyin edilə bilər."],
+      ["Masanı oxuyun",
+       "“Ehtimallar” sekməsi kartlar açıldıqca cari ən yaxşı kombinasiyanızı və qalib gəlmək şansınızı adlandırır. Bank, hər stek və blaind səviyyəsi həmişə ekrandadır, diler düyməsi kimin sonuncu danışdığını göstərir, geri sayım isə nə qədər vaxtınız qaldığını göstərir. Showdown-da qalib kombinasiya ümumi kartların altında adlandırılır."],
+      ["Turniri qazanın",
+       "PokerTH oyunları turnirlərdir: hamı eyni steklə başlayır, blaindlər bir neçə əldən və ya dəqiqədən bir artır və oyunçular biri bütün fişkalara sahib olana qədər çıxarılır. Heç nə pula başa gəlmir və fişka almaq mümkün deyil — hər şey oyun pullarıdır, beləliklə riskdə olan yeganə şey oyunun özüdür."]
     ],
     phoneH2: "Telefonda oynamaq",
     phoneP: "Masa kompüter qədər sensor ekran üçün də düşünülüb: mərc sahəsinə toxunmaq sistem klaviaturası əvəzinə hərəkət panelinin içində rəqəm paneli açır, beləliklə masa heç vaxt tullanmır, sürüşdürücü isə masaüstü klientdəki eyni addımlarla irəliləyir. Növbə bildirişləri üzərində birbaşa Fold və Check/Call düymələri ilə gələ bilər: əli vərəqə qayıtmadan oynamaq olar.",
     friendsH2: "Dostlarla oynamaq",
     friendsP: "Masa yaradın, şəxsi olmasını istəyirsinizsə parol qoyun və dəvət linkini göndərin. O, masanı birbaşa açır — dostlarınız onu əsas ekranlarına əlavə ediblərsə quraşdırılmış tətbiqdə, əks halda brauzer vərəqində. Heç kim heç nə quraşdırmalı və ya e-poçt ünvanı verməli deyil.",
     faqH2: "Tez-tez verilən suallar",
-    faqP: function (h, c) { return "Heç bir rejimdə heç vaxt pul iştirak etmir. Parametrləriniz, üslub paketləriniz və oflayn irəliləyişiniz cihazınızda qalır. İnterfeys 83 dildə mövcuddur, beş hərəkət sözü isə — Fold, Check, Call, Raise, All-In — dünyanın bütün masalarında olduğu kimi ingiliscə qalır. Davamı <a href=\"{faq}\">FAQ</a> səhifəsində.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); },
+    faqP: function (h, c) { return "Heç bir rejimdə heç vaxt pul iştirak etmir. Parametrləriniz, üslub paketləriniz və məşq irəliləyişiniz cihazınızda qalır və pokerth.net hesabı ilə daxil olduqda digər cihazlarınızda da sizi izləyir. İnterfeys 83 dildə mövcuddur, beş hərəkət sözü isə — Fold, Check, Call, Raise, All-In — dünyanın bütün masalarında olduğu kimi ingiliscə qalır. Davamı <a href=\"{faq}\">FAQ</a> səhifəsində.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); },
   },
   be: {
     title: "Як гуляць у покер анлайн бясплатна — PokerTH Web",
@@ -1884,37 +1758,25 @@ var PARTS = {
     h1: "Як гуляць у покер анлайн, бясплатна, у вашым браўзеры",
     lead: function (h, c) { return "Вось кароткая версія — ад пустой укладкі да вашай першай раздачы Texas Hold’em у PokerTH. Калі вас цікавяць самі правілы — блайнды, раўнды ставак, што што б'е — пачніце са <a href=\"{rules}\">старонкі правілаў</a> і <a href=\"{hands}\">камбінацый</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); },
     steps: [
-      [
-        "Адкрыйце сайт — нічога ўсталёўваць не трэба",
-        "PokerTH працуе ў браўзеры. Без спампоўвання, без уліковага запісу, без плагіна. На тэлефоне яго можна дадаць на галоўны экран праз меню браўзера, і ён адкрываецца як праграма, на ўвесь экран і з магчымасцю працы афлайн.",
-      ],
-      [
-        "Выберыце, дзе хочаце гуляць",
-        "Тры рэжымы. <strong>Афлайн-трэніроўка</strong> адразу дае вам стол з камп'ютарнымі супернікамі і зусім не патрабуе злучэння — месца для навучання. <strong>pokerth.net</strong> — афіцыйная сетка: сапраўдныя супернікі, сезонныя рэйтынгі, бясплатны нікнэйм, які рэгіструецца адзін раз. <strong>LAN / прыватны сервер</strong> падключаецца да выдзеленага сервера PokerTH, вашага або чужога.",
-      ],
-      [
-        "Сядайце за стол",
-        "У лобі вы або далучаецеся да стала са спіса, або ствараеце свой. Стварэнне дазваляе задаць колькасць месцаў, пачатковы стэк, хуткасць росту блайндаў і ці абаронены стол паролем. Падзяліцеся спасылкай-запрашэннем, і сябар трапіць адразу за ваш стол, у сваім браўзеры, нічога не рэгіструючы.",
-      ],
-      [
-        "Згуляйце раздачу",
-        "Вам здаюць дзве асабістыя карты. Стаўкі ідуць па крузе перад флопам і зноў пасля флопа, тэрна і рывера. Калі ваш ход, панэль дзеянняў загараецца і прапануе толькі дапушчальнае: Fold, Check або Call, Raise або All-In. Суму стаўкі можна ўвесці, перацягнуць паўзунком або задаць адным дотыкам: Min, палова банка, банк або ўвесь стэк.",
-      ],
-      [
-        "Чытайце стол",
-        "Ваша бягучая лепшая камбінацыя называецца пад сталом па меры адкрыцця карт. Банк, кожны стэк і ўзровень блайндаў заўсёды на экране, кнопка дылера паказвае, хто гаворыць апошнім, а зваротны адлік — колькі ў вас часу. На шоўдаўне вылучаюцца пяць карт, якія склалі кожную камбінацыю.",
-      ],
-      [
-        "Выйграйце турнір",
-        "Гульні PokerTH — турніры sit-and-go: усе пачынаюць з аднолькавым стэкам, блайнды растуць па таймеры, і гульцы выбываюць, пакуль адзін не збярэ ўсе фішкі. Нічога не каштуе грошай, і фішкі купіць нельга — усё на гульнявыя грошы, так што на кону толькі сама гульня.",
-      ],
+      ["Адкрыйце сайт — нічога ўсталёўваць не трэба",
+       "PokerTH працуе ў браўзеры. Без спампоўвання, без плагіна і без уліковага запісу для трэніроўкі або гасцявых гульняў. Яго можна ўсталяваць як праграму — на iPhone і iPad праз «Падзяліцца» → «На экран “Дадому”», у астатніх выпадках праз меню браўзера або кнопку ўсталёўкі — і ён адкрываецца на ўвесь экран і з магчымасцю працы афлайн. Калі хочаце, «Дапамога туза» — Туз у куце — тлумачыць кожны экран."],
+      ["Выберыце, дзе хочаце гуляць",
+       "Тры рэжымы. <strong>Лакальна / трэніроўка</strong> адразу дае вам стол з камп'ютарнымі супернікамі і зусім не патрабуе злучэння — месца для навучання. <strong>pokerth.net</strong> — афіцыйная сетка: сапраўдныя супернікі, звычайныя гульні, адкрытыя для гасцей, і рэйтынгавыя гульні з сезоннымі рэйтынгамі для гульцоў з бясплатным уліковым запісам. <strong>LAN / прыватны сервер</strong> падключаецца да выдзеленага сервера PokerTH, вашага або чужога."],
+      ["Сядайце за стол",
+       "У лобі вы або далучаецеся да стала са спіса, або глядзіце бягучую гульню, або ствараеце свой стол. Стварэнне дазваляе выбраць тып гульні (звычайная, толькі для зарэгістраваных гульцоў, толькі па запрашэнні або рэйтынгавая) і задаць колькасць месцаў, пачатковы стэк, хуткасць росту блайндаў, час на ход, ці могуць назіральнікі глядзець і ці абаронены стол паролем. Падзяліцеся спасылкай-запрашэннем, і сябар трапіць адразу за ваш стол, у сваім браўзеры — у звычайнай гульні нічога не рэгіструючы."],
+      ["Згуляйце раздачу",
+       "Вам здаюць дзве асабістыя карты. Стаўкі ідуць па крузе перад флопам і зноў пасля флопа, тэрна і рывера. Калі ваш ход, панэль дзеянняў загараецца і прапануе толькі дапушчальнае: Fold, Check або Call, Raise або All-In. Суму стаўкі можна ўвесці, перацягнуць паўзунком або задаць адным дотыкам: трэць банка, палова банка або ўвесь банк."],
+      ["Чытайце стол",
+       "Укладка «Шанцы» называе вашу бягучую лепшую камбінацыю і шанец выйграць па меры адкрыцця карт. Банк, кожны стэк і ўзровень блайндаў заўсёды на экране, кнопка дылера паказвае, хто гаворыць апошнім, а зваротны адлік — колькі ў вас часу. На шоўдаўне пераможная камбінацыя называецца пад агульнымі картамі."],
+      ["Выйграйце турнір",
+       "Гульні PokerTH — турніры: усе пачынаюць з аднолькавым стэкам, блайнды растуць праз некалькі раздач або хвілін, і гульцы выбываюць, пакуль адзін не збярэ ўсе фішкі. Нічога не каштуе грошай, і фішкі купіць нельга — усё на гульнявыя грошы, так што на кону толькі сама гульня."]
     ],
     phoneH2: "Гульня на тэлефоне",
     phoneP: "Стол распрацаваны для сэнсарнага экрана гэтак жа, як для камп'ютара: дотык да поля стаўкі адкрывае лічбавую панэль унутры панэлі дзеянняў замест сістэмнай клавіятуры, таму стол ніколі не скача, а паўзунок рухаецца тымі ж крокамі, што і ў настольным кліенце. Апавяшчэнні пра ход могуць прыходзіць з кнопкамі Fold і Check/Call прама на іх: раздачу можна згуляць, не вяртаючыся ва ўкладку.",
     friendsH2: "Гульня з сябрамі",
     friendsP: "Стварыце стол, пастаўце пароль, калі хочаце, каб ён быў прыватным, і адпраўце спасылку-запрашэнне. Яна адкрывае стол адразу — ва ўсталяванай праграме, калі сябры дадалі яе на галоўны экран, інакш ва ўкладцы браўзера. Нікому не трэба нічога ўсталёўваць або паведамляць адрас электроннай пошты.",
     faqH2: "Частыя пытанні",
-    faqP: function (h, c) { return "Грошы ніколі не ўдзельнічаюць ні ў адным рэжыме. Вашы налады, пакеты стыляў і афлайн-прагрэс застаюцца на вашай прыладзе. Інтэрфейс даступны на 83 мовах, а пяць слоў дзеянняў — Fold, Check, Call, Raise, All-In — застаюцца па-англійску, як за ўсімі сталамі свету. Больш — у <a href=\"{faq}\">FAQ</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); },
+    faqP: function (h, c) { return "Грошы ніколі не ўдзельнічаюць ні ў адным рэжыме. Вашы налады, пакеты стыляў і трэніровачны прагрэс застаюцца на вашай прыладзе і ідуць за вамі на іншыя прылады, калі вы ўваходзіце ва ўліковы запіс pokerth.net. Інтэрфейс даступны на 83 мовах, а пяць слоў дзеянняў — Fold, Check, Call, Raise, All-In — застаюцца па-англійску, як за ўсімі сталамі свету. Больш — у <a href=\"{faq}\">FAQ</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); },
   },
   km: {
     title: "របៀបលេងបៀអនឡាញឥតគិតថ្លៃ — PokerTH Web",
@@ -1925,24 +1787,24 @@ var PARTS = {
     lead: function (h, c) { return "នេះជាកំណែខ្លី៖ ពីផ្ទាំងទទេដល់ដៃ Texas Hold’em ដំបូងរបស់អ្នកក្នុង PokerTH។ បើអ្នកគ្រាន់តែស្វែងរកច្បាប់ — small និង big blind ជុំភ្នាល់ អ្វីឈ្នះអ្វី — ចាប់ផ្ដើមដោយ<a href=\"{rules}\">ទំព័រច្បាប់</a> និង<a href=\"{hands}\">ចំណាត់ថ្នាក់ដៃ</a>។".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); },
     steps: [
       ["បើកទំព័រ — គ្មានអ្វីត្រូវដំឡើង",
-       "PokerTH ដំណើរការក្នុងកម្មវិធីរុករក។ គ្មានការទាញយក គ្មានគណនី គ្មានកម្មវិធីជំនួយ។ លើទូរស័ព្ទ អ្នកអាចបន្ថែមវាទៅអេក្រង់ដើមពីម៉ឺនុយកម្មវិធីរុករក; បន្ទាប់មកវាបើកដូចកម្មវិធី ពេញអេក្រង់ ហើយដំណើរការដោយគ្មានការភ្ជាប់ផងដែរ។"],
+       "PokerTH ដំណើរការក្នុងកម្មវិធីរុករក។ គ្មានការទាញយក គ្មានកម្មវិធីជំនួយ ហើយគ្មានគណនីសម្រាប់ការហ្វឹកហាត់ ឬហ្គេមជាភ្ញៀវ។ អ្នកអាចដំឡើងវាដូចកម្មវិធី — ចែករំលែក → បន្ថែមទៅអេក្រង់ដើម លើ iPhone និង iPad ម៉ឺនុយកម្មវិធីរុករក ឬប៊ូតុងដំឡើងនៅកន្លែងផ្សេង — ហើយវាបើកពេញអេក្រង់ ហើយដំណើរការដោយគ្មានការភ្ជាប់ផងដែរ។ បើអ្នកចង់ ជំនួយរបស់អាត់ ដែលជាអាត់នៅជ្រុងអេក្រង់ ពន្យល់អេក្រង់នីមួយៗ។"],
       ["ជ្រើសរើសកន្លែងដែលអ្នកចង់លេង",
-       "បីវិធី។ <strong>ការហ្វឹកហាត់ក្រៅបណ្ដាញ</strong> ដាក់អ្នកនៅតុជាមួយគូប្រកួតកុំព្យូទ័រភ្លាមៗ ហើយមិនត្រូវការការភ្ជាប់ — កន្លែងល្អបំផុតដើម្បីរៀន។ <strong>pokerth.net</strong> ជាបណ្ដាញផ្លូវការ៖ គូប្រកួតពិត ចំណាត់ថ្នាក់រដូវកាល និងឈ្មោះឥតគិតថ្លៃដែលអ្នកចុះឈ្មោះម្ដង។ <strong>LAN / ម៉ាស៊ីនមេឯកជន</strong> ភ្ជាប់អ្នកទៅម៉ាស៊ីនមេ PokerTH ឯកទេស របស់អ្នក ឬអ្នកដទៃ។"],
+       "បីវិធី។ <strong>ក្នុងម៉ាស៊ីន / ហ្វឹកហាត់</strong> ដាក់អ្នកនៅតុជាមួយគូប្រកួតកុំព្យូទ័រភ្លាមៗ ហើយមិនត្រូវការការភ្ជាប់ — កន្លែងល្អបំផុតដើម្បីរៀន។ <strong>pokerth.net</strong> ជាបណ្ដាញផ្លូវការ៖ គូប្រកួតពិត ហ្គេម “ធម្មតា” បើកសម្រាប់ភ្ញៀវ និង “ហ្គេមចំណាត់ថ្នាក់” ជាមួយចំណាត់ថ្នាក់រដូវកាលសម្រាប់អ្នកលេងដែលមានគណនីឥតគិតថ្លៃ។ <strong>LAN / ម៉ាស៊ីនមេឯកជន</strong> ភ្ជាប់អ្នកទៅម៉ាស៊ីនមេ PokerTH ឯកទេស របស់អ្នក ឬអ្នកដទៃ។"],
       ["អង្គុយនៅតុ",
-       "ក្នុងបន្ទប់រង់ចាំ អ្នកចូលរួមតុពីបញ្ជី ឬបង្កើតតុផ្ទាល់ខ្លួន។ ពេលបង្កើត អ្នកកំណត់ចំនួនកៅអី ស្តាក់ចាប់ផ្ដើម ល្បឿនកើនឡើង blind និងថាតើតុមានពាក្យសម្ងាត់ឬអត់។ ចែករំលែកតំណអញ្ជើញ ហើយមិត្តភក្តិរបស់អ្នកមកដល់តុរបស់អ្នកដោយផ្ទាល់ក្នុងកម្មវិធីរុករករបស់ពួកគេ ដោយគ្មានការចុះឈ្មោះ។"],
+       "ក្នុងបន្ទប់រង់ចាំ អ្នកចូលរួមតុពីបញ្ជី មើលហ្គេមដែលកំពុងដំណើរការ ឬបង្កើតតុផ្ទាល់ខ្លួន។ ពេលបង្កើត អ្នកជ្រើសប្រភេទហ្គេម (“ធម្មតា” តែអ្នកលេងដែលបានចុះឈ្មោះ តែអ្នកលេងដែលបានអញ្ជើញ ឬ “ហ្គេមចំណាត់ថ្នាក់”) ហើយកំណត់ចំនួនកៅអី ស្តាក់ចាប់ផ្ដើម ល្បឿនកើនឡើង blind ពេលវេលាធ្វើសកម្មភាព ថាតើអ្នកមើលអាចមើលបានឬអត់ និងថាតើតុមានពាក្យសម្ងាត់ឬអត់។ ចែករំលែកតំណអញ្ជើញ ហើយមិត្តភក្តិរបស់អ្នកមកដល់តុរបស់អ្នកដោយផ្ទាល់ក្នុងកម្មវិធីរុករករបស់ពួកគេ — ក្នុងហ្គេម “ធម្មតា” ដោយគ្មានការចុះឈ្មោះ។"],
       ["លេងមួយដៃ",
-       "អ្នកទទួលបានបៀឯកជនពីរសន្លឹក។ ការភ្នាល់កើតឡើងក្នុងជុំមួយមុន flop បន្ទាប់មកម្ដងទៀតបន្ទាប់ពី flop, turn និង river។ ពេលដល់វេនអ្នក របារសកម្មភាពភ្លឺ ហើយផ្ដល់តែអ្វីដែលអនុញ្ញាត៖ Fold, Check ឬ Call, Raise ឬ All-In។ អ្នកអាចវាយចំនួន អូសដោយរបាររំកិល ឬកំណត់ក្នុងការចុចមួយទៅអប្បបរមា ពាក់កណ្ដាល pot ពេញ pot ឬស្តាក់ទាំងអស់។"],
+       "អ្នកទទួលបានបៀឯកជនពីរសន្លឹក។ ការភ្នាល់កើតឡើងក្នុងជុំមួយមុន flop បន្ទាប់មកម្ដងទៀតបន្ទាប់ពី flop, turn និង river។ ពេលដល់វេនអ្នក របារសកម្មភាពភ្លឺ ហើយផ្ដល់តែអ្វីដែលអនុញ្ញាត៖ Fold, Check ឬ Call, Raise ឬ All-In។ អ្នកអាចវាយចំនួន អូសដោយរបាររំកិល ឬកំណត់ក្នុងការចុចមួយទៅមួយភាគបីនៃ pot ពាក់កណ្ដាល pot ឬពេញ pot។"],
       ["អានតុ",
-       "ការផ្គុំល្អបំផុតបច្ចុប្បន្នរបស់អ្នកត្រូវបានសរសេរក្រោមតុនៅពេលបៀចេញ។ Pot ស្តាក់អ្នកលេងម្នាក់ៗ និងកម្រិត blind តែងតែនៅលើអេក្រង់ ប៊ូតុងអ្នកចែកបង្ហាញអ្នកណានិយាយចុងក្រោយ ហើយការរាប់ថយក្រោយប្រាប់អ្នកថាមានពេលប៉ុន្មាន។ នៅ showdown បៀប្រាំសន្លឹកដែលបង្កើតដៃនីមួយៗពិតប្រាកដត្រូវបានបន្លិច។"],
+       "ផ្ទាំង “ឱកាស” ប្រាប់ឈ្មោះការផ្គុំល្អបំផុតបច្ចុប្បន្នរបស់អ្នក និងឱកាសឈ្នះរបស់អ្នក នៅពេលបៀចេញ។ Pot ស្តាក់អ្នកលេងម្នាក់ៗ និងកម្រិត blind តែងតែនៅលើអេក្រង់ ប៊ូតុងអ្នកចែកបង្ហាញអ្នកណានិយាយចុងក្រោយ ហើយការរាប់ថយក្រោយប្រាប់អ្នកថាមានពេលប៉ុន្មាន។ នៅ showdown ការផ្គុំដែលឈ្នះត្រូវបានដាក់ឈ្មោះនៅក្រោមបៀរួម។"],
       ["ឈ្នះការប្រកួត",
-       "ហ្គេម PokerTH ជាការប្រកួត sit-and-go៖ អ្នកគ្រប់គ្នាចាប់ផ្ដើមដោយស្តាក់ដូចគ្នា blind កើនឡើងតាមពេលវេលា ហើយអ្នកលេងត្រូវបានលុបចេញរហូតដល់នៅសល់តែម្នាក់ជាមួយស៊ីបទាំងអស់។ គ្មានអ្វីត្រូវចំណាយលុយ ហើយស៊ីបមិនអាចទិញឡើងវិញ — អ្វីៗជាលុយហ្គេម ដូច្នេះអ្វីដែលប្រថុយគឺតែហ្គេមខ្លួនឯង។"]
+       "ហ្គេម PokerTH ជាការប្រកួត៖ អ្នកគ្រប់គ្នាចាប់ផ្ដើមដោយស្តាក់ដូចគ្នា blind កើនឡើងរៀងរាល់ប៉ុន្មានដៃ ឬប៉ុន្មាននាទី ហើយអ្នកលេងត្រូវបានលុបចេញរហូតដល់នៅសល់តែម្នាក់ជាមួយស៊ីបទាំងអស់។ គ្មានអ្វីត្រូវចំណាយលុយ ហើយស៊ីបមិនអាចទិញឡើងវិញ — អ្វីៗជាលុយហ្គេម ដូច្នេះអ្វីដែលប្រថុយគឺតែហ្គេមខ្លួនឯង។"]
     ],
     phoneH2: "លេងលើទូរស័ព្ទ",
     phoneP: "តុត្រូវបានកែសម្រួលសម្រាប់អេក្រង់ប៉ះដូចកុំព្យូទ័រ៖ ការចុចវាលភ្នាល់បើកបន្ទះលេខក្នុងរបារសកម្មភាពជំនួសរបស់ប្រព័ន្ធ ដូច្នេះតុមិនដែលលោត ហើយរបាររំកិលផ្លាស់ទីតាមជំហានដូចកម្មវិធីលើកុំព្យូទ័រ។ ការជូនដំណឹងវេនរបស់អ្នកអាចមកជាមួយប៊ូតុង Fold និង Check/Call ដូច្នេះដៃអាចលេងបានដោយមិនត្រឡប់ទៅផ្ទាំង។",
     friendsH2: "លេងជាមួយមិត្តភក្តិ",
     friendsP: "បង្កើតតុ ដាក់ពាក្យសម្ងាត់បើអ្នកចង់ឱ្យវាឯកជន ហើយផ្ញើតំណអញ្ជើញ។ វាបើកតុដោយផ្ទាល់ — ក្នុងកម្មវិធីដែលបានដំឡើងបើពួកគេបានបន្ថែមវាទៅអេក្រង់ដើម បើមិនដូច្នេះក្នុងផ្ទាំងកម្មវិធីរុករក។ គ្មាននរណាត្រូវដំឡើងអ្វី ឬផ្ដល់អាសយដ្ឋានអ៊ីមែលទេ។",
     faqH2: "សំណួរដែលសួរញឹកញាប់",
-    faqP: function (h, c) { return "គ្មានលុយពិតក្នុងរបៀបណាមួយទេ។ ការកំណត់ កញ្ចប់រចនាប័ទ្ម និងវឌ្ឍនភាពក្រៅបណ្ដាញរបស់អ្នកនៅលើឧបករណ៍របស់អ្នក។ ចំណុចប្រទាក់មានជា ៨៣ ភាសា ខណៈពាក្យសកម្មភាពទាំងប្រាំ — Fold, Check, Call, Raise, All-In — នៅជាភាសាអង់គ្លេសដូចគ្រប់តុនៅលើពិភពលោក។ បន្ថែមទៀតក្នុង<a href=\"{faq}\">សំណួរដែលសួរញឹកញាប់</a>។".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
+    faqP: function (h, c) { return "គ្មានលុយពិតក្នុងរបៀបណាមួយទេ។ ការកំណត់ កញ្ចប់រចនាប័ទ្ម និងវឌ្ឍនភាពហ្វឹកហាត់របស់អ្នកនៅលើឧបករណ៍របស់អ្នក ហើយតាមអ្នកទៅឧបករណ៍ផ្សេងទៀត នៅពេលអ្នកចូលដោយគណនី pokerth.net។ ចំណុចប្រទាក់មានជា ៨៣ ភាសា ខណៈពាក្យសកម្មភាពទាំងប្រាំ — Fold, Check, Call, Raise, All-In — នៅជាភាសាអង់គ្លេសដូចគ្រប់តុនៅលើពិភពលោក។ បន្ថែមទៀតក្នុង<a href=\"{faq}\">សំណួរដែលសួរញឹកញាប់</a>។".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
   },
   te: {
     title: "ఆన్‌లైన్‌లో ఉచితంగా పోకర్ ఎలా ఆడాలి — PokerTH Web",
@@ -1953,24 +1815,24 @@ var PARTS = {
     lead: function (h, c) { return "ఇది సంక్షిప్త రూపం, ఖాళీ ట్యాబ్ నుండి PokerTH లో మీ మొదటి Texas Hold’em హ్యాండ్ వరకు. మీకు కావాల్సింది నియమాలే అయితే — బ్లైండ్‌లు, బెట్టింగ్ రౌండ్‌లు, ఏది దేన్ని ఓడిస్తుంది — ముందుగా <a href=\"{rules}\">నియమాల పేజీ</a> మరియు <a href=\"{hands}\">హ్యాండ్ ర్యాంకింగ్‌లు</a> చూడండి.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); },
     steps: [
       ["సైట్‌ను తెరవండి — ఇన్‌స్టాల్ చేయాల్సింది ఏమీ లేదు",
-       "PokerTH బ్రౌజర్‌లో నడుస్తుంది. డౌన్‌లోడ్ లేదు, ఖాతా లేదు, ప్లగిన్ లేదు. ఫోన్‌లో బ్రౌజర్ మెనూ నుండి దీన్ని హోమ్ స్క్రీన్‌కు జోడించవచ్చు: అప్పుడు ఇది యాప్ లాగా, పూర్తి స్క్రీన్‌లో తెరుచుకుంటుంది, ఆఫ్‌లైన్‌లోనూ పనిచేస్తుంది."],
+       "PokerTH బ్రౌజర్‌లో నడుస్తుంది. డౌన్‌లోడ్ లేదు, ప్లగిన్ లేదు, శిక్షణకు లేదా అతిథి గేమ్‌లకు ఖాతా అవసరం లేదు. దీన్ని యాప్ లాగా ఇన్‌స్టాల్ చేయవచ్చు — iPhone మరియు iPad లో షేర్ → హోమ్ స్క్రీన్‌కు జోడించు, ఇతర చోట్ల బ్రౌజర్ మెనూ లేదా ఇన్‌స్టాల్ బటన్ — అప్పుడు ఇది పూర్తి స్క్రీన్‌లో తెరుచుకుంటుంది, ఆఫ్‌లైన్‌లోనూ పనిచేస్తుంది. మీరు కోరుకుంటే, మూలలో ఉన్న ఏస్ సహాయం ప్రతి స్క్రీన్‌ను వివరిస్తుంది."],
       ["ఎక్కడ ఆడాలో ఎంచుకోండి",
-       "మూడు మోడ్‌లు. <strong>ఆఫ్‌లైన్ శిక్షణ</strong> మిమ్మల్ని వెంటనే కంప్యూటర్ నియంత్రించే ప్రత్యర్థుల టేబుల్ వద్ద కూర్చోబెడుతుంది, ఏ కనెక్షన్ అవసరం లేదు — నేర్చుకునేది ఇక్కడే. <strong>pokerth.net</strong> అధికారిక నెట్‌వర్క్: నిజమైన ప్రత్యర్థులు, సీజన్ ర్యాంకింగ్‌లు, ఒక్కసారి నమోదు చేసుకునే ఉచిత మారుపేరు. <strong>LAN / ప్రైవేట్ సర్వర్</strong> మిమ్మల్ని ఒక డెడికేటెడ్ PokerTH సర్వర్‌కు కనెక్ట్ చేస్తుంది, మీది లేదా మరొకరిది."],
+       "మూడు మోడ్‌లు. <strong>లోకల్ / శిక్షణ</strong> మిమ్మల్ని వెంటనే కంప్యూటర్ నియంత్రించే ప్రత్యర్థుల టేబుల్ వద్ద కూర్చోబెడుతుంది, ఏ కనెక్షన్ అవసరం లేదు — నేర్చుకునేది ఇక్కడే. <strong>pokerth.net</strong> అధికారిక నెట్‌వర్క్: నిజమైన ప్రత్యర్థులు, అతిథులకు తెరిచి ఉన్న సాధారణం గేమ్‌లు, మరియు ఉచిత ఖాతా ఉన్న ఆటగాళ్లకు సీజన్ ర్యాంకింగ్‌లతో ర్యాంకింగ్ గేమ్‌లు. <strong>LAN / ప్రైవేట్ సర్వర్</strong> మిమ్మల్ని ఒక డెడికేటెడ్ PokerTH సర్వర్‌కు కనెక్ట్ చేస్తుంది, మీది లేదా మరొకరిది."],
       ["ఒక టేబుల్ వద్ద కూర్చోండి",
-       "లాబీలో, జాబితాలోని టేబుల్‌లో చేరండి లేదా మీ సొంతది సృష్టించండి. సృష్టించేటప్పుడు సీట్ల సంఖ్య, ప్రారంభ స్టాక్, బ్లైండ్‌లు పెరిగే వేగం, కావాలంటే పాస్‌వర్డ్ నిర్ణయిస్తారు. ఆహ్వాన లింక్‌ను షేర్ చేయండి: మీ స్నేహితుడు ఏమీ నమోదు చేయకుండానే, తన బ్రౌజర్‌లో నేరుగా మీ టేబుల్‌కు చేరుకుంటారు."],
+       "లాబీలో, జాబితాలోని టేబుల్‌లో చేరండి, నడుస్తున్న గేమ్‌ను చూడండి లేదా మీ సొంతది సృష్టించండి. సృష్టించేటప్పుడు గేమ్ రకాన్ని (సాధారణం, నమోదిత ఆటగాళ్లు మాత్రమే, ఆహ్వానిత ఆటగాళ్లు మాత్రమే లేదా ర్యాంకింగ్ గేమ్) ఎంచుకుని, సీట్ల సంఖ్య, ప్రారంభ స్టాక్, బ్లైండ్‌లు పెరిగే వేగం, చర్య తీసుకోవడానికి సమయం, ప్రేక్షకులు చూడవచ్చో లేదో, కావాలంటే పాస్‌వర్డ్ నిర్ణయిస్తారు. ఆహ్వాన లింక్‌ను షేర్ చేయండి: మీ స్నేహితుడు తన బ్రౌజర్‌లో నేరుగా మీ టేబుల్‌కు చేరుకుంటారు — సాధారణం గేమ్‌లో ఏమీ నమోదు చేయకుండానే."],
       ["హ్యాండ్ ఆడండి",
-       "మీకు రెండు హోల్ కార్డులు అందుతాయి. ఫ్లాప్‌కు ముందు, ఆపై ఫ్లాప్, టర్న్ మరియు రివర్ తర్వాత బెట్టింగ్ టేబుల్ చుట్టూ తిరుగుతుంది. మీ వంతు వచ్చినప్పుడు, యాక్షన్ బార్ వెలిగి అనుమతించిన వాటినే చూపిస్తుంది: Fold, Check లేదా Call, Raise లేదా All-In. మొత్తాన్ని టైప్ చేయవచ్చు, స్లైడర్‌తో సర్దవచ్చు, లేదా ఒక్క ట్యాప్‌తో Min, సగం పాట్, పాట్ లేదా మీ మొత్తం స్టాక్‌కు సెట్ చేయవచ్చు."],
+       "మీకు రెండు హోల్ కార్డులు అందుతాయి. ఫ్లాప్‌కు ముందు, ఆపై ఫ్లాప్, టర్న్ మరియు రివర్ తర్వాత బెట్టింగ్ టేబుల్ చుట్టూ తిరుగుతుంది. మీ వంతు వచ్చినప్పుడు, యాక్షన్ బార్ వెలిగి అనుమతించిన వాటినే చూపిస్తుంది: Fold, Check లేదా Call, Raise లేదా All-In. మొత్తాన్ని టైప్ చేయవచ్చు, స్లైడర్‌తో సర్దవచ్చు, లేదా ఒక్క ట్యాప్‌తో పాట్‌లో మూడవ వంతు, సగం పాట్ లేదా పాట్‌కు సెట్ చేయవచ్చు."],
       ["టేబుల్‌ను చదవండి",
-       "కార్డులు వచ్చే కొద్దీ మీ ప్రస్తుత అత్యుత్తమ కలయిక పేరు బోర్డు కింద చూపబడుతుంది. పాట్, ప్రతి స్టాక్ మరియు బ్లైండ్ స్థాయి ఎప్పుడూ కనిపిస్తూనే ఉంటాయి, డీలర్ బటన్ చివరిగా ఎవరు ఆడతారో చూపిస్తుంది, కౌంట్‌డౌన్ మీకు మిగిలిన సమయాన్ని చూపిస్తుంది. షోడౌన్‌లో, ప్రతి హ్యాండ్‌ను రూపొందించిన ఐదు కార్డులు హైలైట్ చేయబడతాయి."],
+       "ఆడ్స్ ట్యాబ్ కార్డులు వచ్చే కొద్దీ మీ ప్రస్తుత అత్యుత్తమ హ్యాండ్ పేరును మరియు గెలిచే అవకాశాన్ని చూపుతుంది. పాట్, ప్రతి స్టాక్ మరియు బ్లైండ్ స్థాయి ఎప్పుడూ కనిపిస్తూనే ఉంటాయి, డీలర్ బటన్ చివరిగా ఎవరు ఆడతారో చూపిస్తుంది, కౌంట్‌డౌన్ మీకు మిగిలిన సమయాన్ని చూపిస్తుంది. షోడౌన్‌లో, గెలిచిన కలయిక పేరు కమ్యూనిటీ కార్డుల కింద చూపబడుతుంది."],
       ["టోర్నమెంట్ గెలవండి",
-       "PokerTH గేమ్‌లు sit-and-go టోర్నమెంట్‌లు: అందరూ ఒకే స్టాక్‌తో మొదలుపెడతారు, బ్లైండ్‌లు క్రమ విరామాలలో పెరుగుతాయి, ఒక్కరి దగ్గరే అన్ని చిప్స్ మిగిలే వరకు ఆటగాళ్లు ఎలిమినేట్ అవుతారు. దేనికీ డబ్బు ఖర్చు కాదు, ఏ చిప్స్ కొనలేరు — అంతా ఆట డబ్బే, కాబట్టి పణంగా ఉండేది ఆట మాత్రమే."]
+       "PokerTH గేమ్‌లు టోర్నమెంట్‌లు: అందరూ ఒకే స్టాక్‌తో మొదలుపెడతారు, బ్లైండ్‌లు ప్రతి కొన్ని హ్యాండ్‌లకు లేదా నిమిషాలకు పెరుగుతాయి, ఒక్కరి దగ్గరే అన్ని చిప్స్ మిగిలే వరకు ఆటగాళ్లు ఎలిమినేట్ అవుతారు. దేనికీ డబ్బు ఖర్చు కాదు, ఏ చిప్స్ కొనలేరు — అంతా ఆట డబ్బే, కాబట్టి పణంగా ఉండేది ఆట మాత్రమే."]
     ],
     phoneH2: "ఫోన్‌లో ఆడటం",
     phoneP: "టేబుల్ కంప్యూటర్‌కు ఎంతగానో టచ్ స్క్రీన్‌కూ అంతే అనువుగా రూపొందించబడింది: బెట్ ఫీల్డ్‌ను నొక్కితే సిస్టమ్ కీబోర్డ్‌కు బదులు యాక్షన్ బార్ లోపలే నంబర్ ప్యాడ్ తెరుచుకుంటుంది, కాబట్టి టేబుల్ ఎప్పుడూ కదలదు, స్లైడర్ డెస్క్‌టాప్ క్లయింట్‌లోని అవే దశలలో కదులుతుంది. వంతు నోటిఫికేషన్‌లు Fold మరియు Check/Call బటన్‌లతో సహా మీకు చేరగలవు: ట్యాబ్‌కు తిరిగి రాకుండానే ఒక హ్యాండ్ ఆడవచ్చు.",
     friendsH2: "స్నేహితులతో ఆడటం",
     friendsP: "ఒక టేబుల్ సృష్టించండి, ప్రైవేట్‌గా ఉండాలంటే పాస్‌వర్డ్ పెట్టండి, ఆహ్వాన లింక్‌ను పంపండి. అది టేబుల్‌ను నేరుగా తెరుస్తుంది — మీ స్నేహితులు దాన్ని హోమ్ స్క్రీన్‌కు జోడించి ఉంటే ఇన్‌స్టాల్ చేసిన యాప్‌లో, లేకపోతే బ్రౌజర్ ట్యాబ్‌లో. ఎవరూ ఏమీ ఇన్‌స్టాల్ చేయనవసరం లేదు, ఇమెయిల్ చిరునామా ఇవ్వనవసరం లేదు.",
     faqH2: "తరచుగా అడిగే ప్రశ్నలు",
-    faqP: function (h, c) { return "ఏ మోడ్‌లోనూ, ఎప్పుడూ డబ్బు ప్రమేయం ఉండదు. మీ సెట్టింగ్‌లు, స్టైల్ ప్యాక్‌లు మరియు ఆఫ్‌లైన్ పురోగతి మీ పరికరంలోనే ఉంటాయి. ఇంటర్‌ఫేస్ 83 భాషల్లో ఉంది, అయితే ఐదు చర్య పదాలు — Fold, Check, Call, Raise, All-In — ప్రపంచంలోని ప్రతి టేబుల్ వద్ద లాగే ఇంగ్లీష్‌లోనే ఉంటాయి. మరిన్ని వివరాలు <a href=\"{faq}\">FAQ</a> లో.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
+    faqP: function (h, c) { return "ఏ మోడ్‌లోనూ, ఎప్పుడూ డబ్బు ప్రమేయం ఉండదు. మీ సెట్టింగ్‌లు, స్టైల్ ప్యాక్‌లు మరియు శిక్షణ పురోగతి మీ పరికరంలోనే ఉంటాయి, మీరు pokerth.net ఖాతాతో లాగిన్ అయినప్పుడు మీ ఇతర పరికరాల్లోనూ అనుసరిస్తాయి. ఇంటర్‌ఫేస్ 83 భాషల్లో ఉంది, అయితే ఐదు చర్య పదాలు — Fold, Check, Call, Raise, All-In — ప్రపంచంలోని ప్రతి టేబుల్ వద్ద లాగే ఇంగ్లీష్‌లోనే ఉంటాయి. మరిన్ని వివరాలు <a href=\"{faq}\">FAQ</a> లో.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
   },
   tg: {
     title: "Чӣ тавр покери онлайнро ройгон бозӣ кардан мумкин аст — PokerTH Web",
@@ -1980,37 +1842,25 @@ var PARTS = {
     h1: "Чӣ тавр покери онлайнро ройгон дар браузери худ бозӣ кардан мумкин аст",
     lead: function (h, c) { return "Мухтасар чунин аст: аз саҳифаи холӣ то дасти аввалини Texas Hold’em-и шумо дар PokerTH. Агар худи қоидаҳо шуморо шавқманд кунанд — блайндҳо, даврҳои гаровгузорӣ, чӣ чиро мағлуб мекунад — аз <a href=\"{rules}\">саҳифаи қоидаҳо</a> ва <a href=\"{hands}\">комбинатсияҳо</a> оғоз кунед.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); },
     steps: [
-      [
-        "Саҳифаро кушоед — насб лозим нест",
-        "PokerTH дар браузер кор мекунад. Боргирӣ нест, ҳисоб нест, барномаи иловагӣ нест. Дар телефон шумо метавонед онро аз менюи браузер ба экрани асосӣ илова кунед ва он мисли барнома дар экрани пурра кушода мешавад ва офлайн кор карда метавонад.",
-      ],
-      [
-        "Интихоб кунед, ки дар куҷо бозӣ мекунед",
-        "Се реҷа. <strong>Машқи офлайн</strong> фавран мизи рақибони компютериро медиҳад ва ягон пайвастро талаб намекунад — ҷои омӯзиш. <strong>pokerth.net</strong> шабакаи расмӣ аст: рақибони воқеӣ, рейтинги мавсимӣ, тахаллуси ройгоне, ки як бор бақайд мегиред. <strong>LAN / сервери хусусӣ</strong> ба сервери махсуси PokerTH, аз они худ ё касе дигар, пайваст мешавад.",
-      ],
-      [
-        "Дар сари миз нишинед",
-        "Дар лобби ё аз рӯйхат ба миз ҳамроҳ шавед ё мизи худро созед. Сохтан имкон медиҳад шумораи ҷойҳо, стеки ибтидоӣ, суръати баланд шудани блайндҳо ва оё миз бо парол ҳифз шудааст, муқаррар кунед. Пайванди даъватро мубодила кунед ва дӯстатон мустақиман ба мизи шумо, дар браузери худ, бе бақайдгирӣ меояд.",
-      ],
-      [
-        "Дастро бозӣ кунед",
-        "Ба шумо ду корти шахсӣ тақсим мешавад. Гаровгузорӣ пеш аз флоп ва пас аз флоп, тёрн ва ривер дар атрофи миз давр мезанад. Вақте ки навбати шумост, панели амалҳо равшан шуда, танҳо чизи иҷозатдодашударо пешниҳод мекунад: Fold, Check ё Call, Raise ё All-In. Маблағи гаровро навиштан, дар лағжанда кашидан ё бо як ламс ба ҳадди ақал, нисфи банк, банк ё тамоми стеки худ муқаррар кардан мумкин аст.",
-      ],
-      [
-        "Мизро хонед",
-        "Ҳангоми кушода шудани кортҳо беҳтарин комбинатсияи ҷории шумо дар зери миз ном бурда мешавад. Банк, ҳар стек ва сатҳи блайндҳо ҳамеша дар экран ҳастанд, тугмаи дилер нишон медиҳад, ки кӣ охирин сухан мегӯяд ва ҳисоби баръакс нишон медиҳад, ки чӣ қадар вақт доред. Дар шоудаун панҷ корте, ки ҳар комбинатсияро сохтаанд, равшан карда мешаванд.",
-      ],
-      [
-        "Турнирро бибаред",
-        "Бозиҳои PokerTH турнирҳои sit-and-go мебошанд: ҳама бо стеки якхела оғоз мекунанд, блайндҳо аз рӯи соат баланд мешаванд ва бозингарон то он даме берун мешаванд, ки як нафар ҳамаи чипҳоро соҳиб шавад. Ҳеҷ чиз пул намеарзад ва чипҳоро харидан мумкин нест — ҳама пули бозӣ аст, бинобар ин танҳо худи бозӣ зери хатар аст.",
-      ],
+      ["Саҳифаро кушоед — насб лозим нест",
+       "PokerTH дар браузер кор мекунад. Боргирӣ нест, барномаи иловагӣ нест ва барои машқ ё бозиҳои меҳмонӣ ҳисоб лозим нест. Шумо онро мисли барнома насб карда метавонед — дар iPhone ва iPad бо Мубодила → Ба экрани асосӣ илова кардан, дар дигар ҷо аз менюи браузер ё бо тугмаи насб — ва он дар экрани пурра кушода мешавад ва офлайн кор карда метавонад. Агар хоҳед, Кӯмаки туз, Туз дар кунҷ, ҳар экранро шарҳ медиҳад."],
+      ["Интихоб кунед, ки дар куҷо бозӣ мекунед",
+       "Се реҷа. <strong>Маҳаллӣ / машқ</strong> фавран мизи рақибони компютериро медиҳад ва ягон пайвастро талаб намекунад — ҷои омӯзиш. <strong>pokerth.net</strong> шабакаи расмӣ аст: рақибони воқеӣ, бозиҳои Муқаррарӣ барои меҳмонон кушода ва бозиҳои рейтингӣ бо рейтинги мавсимӣ барои бозингарони дорои ҳисоби ройгон. <strong>LAN / сервери хусусӣ</strong> ба сервери махсуси PokerTH, аз они худ ё касе дигар, пайваст мешавад."],
+      ["Дар сари миз нишинед",
+       "Дар лобби ё аз рӯйхат ба миз ҳамроҳ шавед, бозии ҷориро тамошо кунед ё мизи худро созед. Сохтан имкон медиҳад навъи бозӣ (Муқаррарӣ, Танҳо бозингарони бақайдгирифта, Танҳо бозингарони даъватшуда ё Бозии рейтингӣ), шумораи ҷойҳо, стеки ибтидоӣ, суръати баланд шудани блайндҳо, вақти амал, оё тамошобинон метавонанд тамошо кунанд ва оё миз бо парол ҳифз шудааст, муқаррар кунед. Пайванди даъватро мубодила кунед ва дӯстатон мустақиман ба мизи шумо, дар браузери худ меояд — дар бозии Муқаррарӣ бе ягон бақайдгирӣ."],
+      ["Дастро бозӣ кунед",
+       "Ба шумо ду корти шахсӣ тақсим мешавад. Гаровгузорӣ пеш аз флоп ва пас аз флоп, тёрн ва ривер дар атрофи миз давр мезанад. Вақте ки навбати шумост, панели амалҳо равшан шуда, танҳо чизи иҷозатдодашударо пешниҳод мекунад: Fold, Check ё Call, Raise ё All-In. Маблағи гаровро навиштан, дар лағжанда кашидан ё бо як ламс ба сеяки банк, нисфи банк ё банк муқаррар кардан мумкин аст."],
+      ["Мизро хонед",
+       "Варақаи Имкониятҳо беҳтарин комбинатсияи ҷории шумо ва имкони бурдатонро ҳангоми кушода шудани кортҳо ном мебарад. Банк, ҳар стек ва сатҳи блайндҳо ҳамеша дар экран ҳастанд, тугмаи дилер нишон медиҳад, ки кӣ охирин сухан мегӯяд ва ҳисоби баръакс нишон медиҳад, ки чӣ қадар вақт доред. Дар шоудаун комбинатсияи бурда дар зери кортҳои умумӣ ном бурда мешавад."],
+      ["Турнирро бибаред",
+       "Бозиҳои PokerTH турнирҳо мебошанд: ҳама бо стеки якхела оғоз мекунанд, блайндҳо ҳар чанд даст ё дақиқа баланд мешаванд ва бозингарон то он даме берун мешаванд, ки як нафар ҳамаи чипҳоро соҳиб шавад. Ҳеҷ чиз пул намеарзад ва чипҳоро харидан мумкин нест — ҳама пули бозӣ аст, бинобар ин танҳо худи бозӣ зери хатар аст."]
     ],
     phoneH2: "Бозӣ дар телефон",
     phoneP: "Миз барои экранҳои ламсӣ ҳамон тавр мутобиқ карда шудааст, ки барои компютер: ламс ба майдони гаров ба ҷои клавиатураи системавӣ дар дохили панели амалҳо клавиатураи рақамиро мекушояд, бинобар ин миз ҳеҷ гоҳ намеҷаҳад ва лағжанда бо ҳамон қадамҳои барномаи мизи корӣ ҳаракат мекунад. Огоҳии навбат метавонад мустақиман бо тугмаҳои Fold ва Check/Call ояд: дастро бе бозгашт ба саҳифа бозӣ кардан мумкин аст.",
     friendsH2: "Бозӣ бо дӯстон",
     friendsP: "Миз созед, агар хоҳед хусусӣ бошад, парол гузоред ва пайванди даъватро фиристед. Он мизро мустақиман мекушояд — дар барномаи насбшуда, агар дӯстонатон онро ба экрани асосӣ илова карда бошанд, вагарна дар ҷадвали браузер. Ба ҳеҷ кас насби чизе ё додани суроғаи почтаи электронӣ лозим нест.",
     faqH2: "Саволҳои маъмул",
-    faqP: function (h, c) { return "Дар ҳеҷ реҷа пул иштирок намекунад. Танзимот, маҷмӯаҳои услуб ва пешрафти офлайни шумо дар дастгоҳи шумо мемонанд. Интерфейс ба 83 забон дастрас аст, дар ҳоле ки панҷ калимаи амал — Fold, Check, Call, Raise, All-In — мисли ҳар мизи ҷаҳон бо забони англисӣ мемонанд. Маълумоти бештар дар <a href=\"{faq}\">саволҳои маъмул</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); },
+    faqP: function (h, c) { return "Дар ҳеҷ реҷа пул иштирок намекунад. Танзимот, маҷмӯаҳои услуб ва пешрафти машқи шумо дар дастгоҳи шумо мемонанд ва ҳангоми воридшавӣ бо ҳисоби pokerth.net ба дастгоҳҳои дигари шумо ҳам пайравӣ мекунанд. Интерфейс ба 83 забон дастрас аст, дар ҳоле ки панҷ калимаи амал — Fold, Check, Call, Raise, All-In — мисли ҳар мизи ҷаҳон бо забони англисӣ мемонанд. Маълумоти бештар дар <a href=\"{faq}\">саволҳои маъмул</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); },
   },
   ml: {
     title: "ഓൺലൈനിൽ സൗജന്യമായി പോക്കർ എങ്ങനെ കളിക്കാം — PokerTH Web",
@@ -2021,24 +1871,24 @@ var PARTS = {
     lead: function (h, c) { return "ഇതാണ് ചുരുക്കരൂപം, ഒഴിഞ്ഞ ടാബിൽ നിന്ന് PokerTH ലെ നിങ്ങളുടെ ആദ്യ Texas Hold’em ഹാൻഡ് വരെ. നിങ്ങൾക്ക് വേണ്ടത് നിയമങ്ങളാണെങ്കിൽ — ബ്ലൈൻഡുകൾ, ബെറ്റിംഗ് റൗണ്ടുകൾ, ഏത് ഏതിനെ തോൽപ്പിക്കും — ആദ്യം <a href=\"{rules}\">നിയമങ്ങളുടെ പേജും</a> <a href=\"{hands}\">ഹാൻഡ് റാങ്കിംഗുകളും</a> കാണുക.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); },
     steps: [
       ["സൈറ്റ് തുറക്കുക — ഇൻസ്റ്റാൾ ചെയ്യാൻ ഒന്നുമില്ല",
-       "PokerTH ബ്രൗസറിൽ പ്രവർത്തിക്കുന്നു. ഡൗൺലോഡില്ല, അക്കൗണ്ടില്ല, പ്ലഗിനില്ല. ഫോണിൽ ബ്രൗസർ മെനുവിൽ നിന്ന് ഇത് ഹോം സ്ക്രീനിലേക്ക് ചേർക്കാം: അപ്പോൾ ഇത് ഒരു ആപ്പ് പോലെ, ഫുൾ സ്ക്രീനിൽ തുറക്കും, ഓഫ്‌ലൈനിലും പ്രവർത്തിക്കും."],
+       "PokerTH ബ്രൗസറിൽ പ്രവർത്തിക്കുന്നു. ഡൗൺലോഡില്ല, പ്ലഗിനില്ല, പരിശീലനത്തിനോ അതിഥി ഗെയിമുകൾക്കോ അക്കൗണ്ടും വേണ്ട. ഇത് ഒരു ആപ്പ് പോലെ ഇൻസ്റ്റാൾ ചെയ്യാം — iPhone, iPad എന്നിവയിൽ ഷെയർ → ഹോം സ്ക്രീനിലേക്ക് ചേർക്കുക, മറ്റിടങ്ങളിൽ ബ്രൗസർ മെനു അല്ലെങ്കിൽ ഇൻസ്റ്റാൾ ബട്ടൺ — അപ്പോൾ ഇത് ഫുൾ സ്ക്രീനിൽ തുറക്കും, ഓഫ്‌ലൈനിലും പ്രവർത്തിക്കും. വേണമെങ്കിൽ, മൂലയിലെ എയ്സ് ആയ എയ്സിന്റെ സഹായം ഓരോ സ്ക്രീനും വിശദീകരിക്കും."],
       ["എവിടെ കളിക്കണമെന്ന് തിരഞ്ഞെടുക്കുക",
-       "മൂന്ന് മോഡുകൾ. <strong>ഓഫ്‌ലൈൻ പരിശീലനം</strong> നിങ്ങളെ ഉടൻ തന്നെ കമ്പ്യൂട്ടർ നിയന്ത്രിക്കുന്ന എതിരാളികളുടെ ടേബിളിൽ ഇരുത്തുന്നു, ഒരു കണക്ഷനും വേണ്ട — പഠിക്കേണ്ടത് ഇവിടെയാണ്. <strong>pokerth.net</strong> ഔദ്യോഗിക നെറ്റ്‌വർക്കാണ്: യഥാർത്ഥ എതിരാളികൾ, സീസൺ റാങ്കിംഗുകൾ, ഒരിക്കൽ മാത്രം രജിസ്റ്റർ ചെയ്യേണ്ട സൗജന്യ വിളിപ്പേര്. <strong>LAN / സ്വകാര്യ സെർവർ</strong> നിങ്ങളെ ഒരു ഡെഡിക്കേറ്റഡ് PokerTH സെർവറുമായി ബന്ധിപ്പിക്കുന്നു, നിങ്ങളുടേതോ മറ്റൊരാളുടേതോ."],
+       "മൂന്ന് മോഡുകൾ. <strong>ലോക്കൽ / പരിശീലനം</strong> നിങ്ങളെ ഉടൻ തന്നെ കമ്പ്യൂട്ടർ നിയന്ത്രിക്കുന്ന എതിരാളികളുടെ ടേബിളിൽ ഇരുത്തുന്നു, ഒരു കണക്ഷനും വേണ്ട — പഠിക്കേണ്ടത് ഇവിടെയാണ്. <strong>pokerth.net</strong> ഔദ്യോഗിക നെറ്റ്‌വർക്കാണ്: യഥാർത്ഥ എതിരാളികൾ, അതിഥികൾക്കായി തുറന്ന സാധാരണ ഗെയിമുകൾ, സൗജന്യ അക്കൗണ്ടുള്ള കളിക്കാർക്ക് സീസൺ റാങ്കിംഗുകളുള്ള റാങ്കിംഗ് ഗെയിമുകൾ. <strong>LAN / സ്വകാര്യ സെർവർ</strong> നിങ്ങളെ ഒരു ഡെഡിക്കേറ്റഡ് PokerTH സെർവറുമായി ബന്ധിപ്പിക്കുന്നു, നിങ്ങളുടേതോ മറ്റൊരാളുടേതോ."],
       ["ഒരു ടേബിളിൽ ഇരിക്കുക",
-       "ലോബിയിൽ, പട്ടികയിലെ ഒരു ടേബിളിൽ ചേരുക അല്ലെങ്കിൽ സ്വന്തമായി ഒന്ന് സൃഷ്ടിക്കുക. സൃഷ്ടിക്കുമ്പോൾ സീറ്റുകളുടെ എണ്ണം, തുടക്ക സ്റ്റാക്ക്, ബ്ലൈൻഡുകൾ കൂടുന്ന വേഗത, വേണമെങ്കിൽ ഒരു പാസ്‌വേഡ് എന്നിവ നിശ്ചയിക്കാം. ക്ഷണ ലിങ്ക് പങ്കിടുക: നിങ്ങളുടെ സുഹൃത്ത് ഒന്നും രജിസ്റ്റർ ചെയ്യാതെ, സ്വന്തം ബ്രൗസറിൽ നേരിട്ട് നിങ്ങളുടെ ടേബിളിലെത്തും."],
+       "ലോബിയിൽ, പട്ടികയിലെ ഒരു ടേബിളിൽ ചേരുക, നടക്കുന്ന ഒരു ഗെയിം കാണുക, അല്ലെങ്കിൽ സ്വന്തമായി ഒന്ന് സൃഷ്ടിക്കുക. സൃഷ്ടിക്കുമ്പോൾ ഗെയിം തരം (സാധാരണ, രജിസ്റ്റർ ചെയ്ത കളിക്കാർ മാത്രം, ക്ഷണിക്കപ്പെട്ട കളിക്കാർ മാത്രം, അല്ലെങ്കിൽ റാങ്കിംഗ് ഗെയിം) തിരഞ്ഞെടുക്കാം, കൂടാതെ സീറ്റുകളുടെ എണ്ണം, തുടക്ക സ്റ്റാക്ക്, ബ്ലൈൻഡുകൾ കൂടുന്ന വേഗത, കളിക്കാനുള്ള സമയം, കാണികളെ അനുവദിക്കണോ, പാസ്‌വേഡ് വേണോ എന്നിവ നിശ്ചയിക്കാം. ക്ഷണ ലിങ്ക് പങ്കിടുക: നിങ്ങളുടെ സുഹൃത്ത് സ്വന്തം ബ്രൗസറിൽ നേരിട്ട് നിങ്ങളുടെ ടേബിളിലെത്തും — സാധാരണ ഗെയിമിൽ ഒന്നും രജിസ്റ്റർ ചെയ്യാതെ."],
       ["ഹാൻഡ് കളിക്കുക",
-       "നിങ്ങൾക്ക് രണ്ട് ഹോൾ കാർഡുകൾ ലഭിക്കും. ഫ്ലോപ്പിന് മുമ്പും, പിന്നെ ഫ്ലോപ്പ്, ടേൺ, റിവർ എന്നിവയ്ക്ക് ശേഷവും ബെറ്റിംഗ് ടേബിളിന് ചുറ്റും നീങ്ങുന്നു. നിങ്ങളുടെ ഊഴം വരുമ്പോൾ, ആക്ഷൻ ബാർ തെളിഞ്ഞ് അനുവദനീയമായവ മാത്രം കാണിക്കും: Fold, Check അല്ലെങ്കിൽ Call, Raise അല്ലെങ്കിൽ All-In. തുക ടൈപ്പ് ചെയ്യാം, സ്ലൈഡർ കൊണ്ട് ക്രമീകരിക്കാം, അല്ലെങ്കിൽ ഒറ്റ ടാപ്പിൽ Min, പകുതി പോട്ട്, പോട്ട്, അല്ലെങ്കിൽ നിങ്ങളുടെ മുഴുവൻ സ്റ്റാക്ക് എന്നിവയിലേക്ക് സജ്ജമാക്കാം."],
+       "നിങ്ങൾക്ക് രണ്ട് ഹോൾ കാർഡുകൾ ലഭിക്കും. ഫ്ലോപ്പിന് മുമ്പും, പിന്നെ ഫ്ലോപ്പ്, ടേൺ, റിവർ എന്നിവയ്ക്ക് ശേഷവും ബെറ്റിംഗ് ടേബിളിന് ചുറ്റും നീങ്ങുന്നു. നിങ്ങളുടെ ഊഴം വരുമ്പോൾ, ആക്ഷൻ ബാർ തെളിഞ്ഞ് അനുവദനീയമായവ മാത്രം കാണിക്കും: Fold, Check അല്ലെങ്കിൽ Call, Raise അല്ലെങ്കിൽ All-In. തുക ടൈപ്പ് ചെയ്യാം, സ്ലൈഡർ കൊണ്ട് ക്രമീകരിക്കാം, അല്ലെങ്കിൽ ഒറ്റ ടാപ്പിൽ പോട്ടിന്റെ മൂന്നിലൊന്ന്, പകുതി പോട്ട്, അല്ലെങ്കിൽ പോട്ട് എന്നിവയിലേക്ക് സജ്ജമാക്കാം."],
       ["ടേബിൾ വായിക്കുക",
-       "കാർഡുകൾ വരുന്തോറും നിങ്ങളുടെ നിലവിലെ ഏറ്റവും നല്ല കോമ്പിനേഷന്റെ പേര് ബോർഡിന് താഴെ കാണിക്കും. പോട്ട്, ഓരോ സ്റ്റാക്കും, ബ്ലൈൻഡ് ലെവലും എപ്പോഴും കാണാം, ഡീലർ ബട്ടൺ അവസാനം ആര് കളിക്കുമെന്ന് കാണിക്കുന്നു, ഒരു കൗണ്ട്ഡൗൺ നിങ്ങൾക്ക് ബാക്കിയുള്ള സമയം കാണിക്കുന്നു. ഷോഡൗണിൽ, ഓരോ ഹാൻഡും ഉണ്ടാക്കിയ അഞ്ച് കാർഡുകൾ ഹൈലൈറ്റ് ചെയ്യും."],
+       "ഓഡ്സ് ടാബ് കാർഡുകൾ വരുന്തോറും നിങ്ങളുടെ നിലവിലെ ഏറ്റവും നല്ല ഹാൻഡിന്റെ പേരും ജയിക്കാനുള്ള സാധ്യതയും കാണിക്കും. പോട്ട്, ഓരോ സ്റ്റാക്കും, ബ്ലൈൻഡ് ലെവലും എപ്പോഴും കാണാം, ഡീലർ ബട്ടൺ അവസാനം ആര് കളിക്കുമെന്ന് കാണിക്കുന്നു, ഒരു കൗണ്ട്ഡൗൺ നിങ്ങൾക്ക് ബാക്കിയുള്ള സമയം കാണിക്കുന്നു. ഷോഡൗണിൽ, വിജയിച്ച കോമ്പിനേഷന്റെ പേര് കമ്മ്യൂണിറ്റി കാർഡുകൾക്ക് താഴെ കാണിക്കും."],
       ["ടൂർണമെന്റ് ജയിക്കുക",
-       "PokerTH ഗെയിമുകൾ sit-and-go ടൂർണമെന്റുകളാണ്: എല്ലാവരും ഒരേ സ്റ്റാക്കിൽ തുടങ്ങുന്നു, ബ്ലൈൻഡുകൾ കൃത്യമായ ഇടവേളകളിൽ കൂടുന്നു, ഒരാളുടെ കൈയിൽ എല്ലാ ചിപ്പുകളും എത്തുന്നത് വരെ കളിക്കാർ പുറത്താകുന്നു. ഒന്നിനും പണച്ചെലവില്ല, ഒരു ചിപ്പും വാങ്ങാനാവില്ല — എല്ലാം കളിപ്പണമാണ്, അതിനാൽ പണയത്തിലുള്ളത് കളി മാത്രം."]
+       "PokerTH ഗെയിമുകൾ ടൂർണമെന്റുകളാണ്: എല്ലാവരും ഒരേ സ്റ്റാക്കിൽ തുടങ്ങുന്നു, ഏതാനും ഹാൻഡുകൾ കൂടുമ്പോഴോ മിനിറ്റുകൾ കൂടുമ്പോഴോ ബ്ലൈൻഡുകൾ കൂടുന്നു, ഒരാളുടെ കൈയിൽ എല്ലാ ചിപ്പുകളും എത്തുന്നത് വരെ കളിക്കാർ പുറത്താകുന്നു. ഒന്നിനും പണച്ചെലവില്ല, ഒരു ചിപ്പും വാങ്ങാനാവില്ല — എല്ലാം കളിപ്പണമാണ്, അതിനാൽ പണയത്തിലുള്ളത് കളി മാത്രം."]
     ],
     phoneH2: "ഫോണിൽ കളിക്കൽ",
     phoneP: "ടേബിൾ കമ്പ്യൂട്ടറിനെന്നപോലെ ടച്ച് സ്ക്രീനിനും അനുയോജ്യമായി രൂപകൽപ്പന ചെയ്തിരിക്കുന്നു: ബെറ്റ് ഫീൽഡിൽ തൊട്ടാൽ സിസ്റ്റം കീബോർഡിന് പകരം ആക്ഷൻ ബാറിനുള്ളിൽ തന്നെ ഒരു നമ്പർ പാഡ് തുറക്കും, അതിനാൽ ടേബിൾ ഒരിക്കലും ചാടില്ല, സ്ലൈഡർ ഡെസ്ക്ടോപ്പ് ക്ലയന്റിലെ അതേ ഘട്ടങ്ങളിൽ നീങ്ങും. ഊഴ അറിയിപ്പുകൾ Fold, Check/Call ബട്ടണുകളോടെ നിങ്ങളിലെത്താം: ടാബിലേക്ക് മടങ്ങാതെ തന്നെ ഒരു ഹാൻഡ് കളിക്കാം.",
     friendsH2: "സുഹൃത്തുക്കളോടൊപ്പം കളിക്കൽ",
     friendsP: "ഒരു ടേബിൾ സൃഷ്ടിക്കുക, സ്വകാര്യമാക്കണമെങ്കിൽ പാസ്‌വേഡ് വെക്കുക, ക്ഷണ ലിങ്ക് അയയ്ക്കുക. അത് ടേബിൾ നേരിട്ട് തുറക്കും — സുഹൃത്തുക്കൾ അത് ഹോം സ്ക്രീനിലേക്ക് ചേർത്തിട്ടുണ്ടെങ്കിൽ ഇൻസ്റ്റാൾ ചെയ്ത ആപ്പിൽ, അല്ലെങ്കിൽ ബ്രൗസർ ടാബിൽ. ആരും ഒന്നും ഇൻസ്റ്റാൾ ചെയ്യേണ്ട, ഇമെയിൽ വിലാസം നൽകേണ്ട.",
     faqH2: "പതിവ് ചോദ്യങ്ങൾ",
-    faqP: function (h, c) { return "ഒരു മോഡിലും, ഒരിക്കലും പണം ഉൾപ്പെടുന്നില്ല. നിങ്ങളുടെ ക്രമീകരണങ്ങൾ, സ്റ്റൈൽ പാക്കുകൾ, ഓഫ്‌ലൈൻ പുരോഗതി എന്നിവ നിങ്ങളുടെ ഉപകരണത്തിൽ തന്നെ നിൽക്കും. ഇന്റർഫേസ് 83 ഭാഷകളിലുണ്ട്, എന്നാൽ അഞ്ച് പ്രവൃത്തി പദങ്ങൾ — Fold, Check, Call, Raise, All-In — ലോകത്തിലെ എല്ലാ ടേബിളിലെയും പോലെ ഇംഗ്ലീഷിൽ തന്നെ തുടരും. കൂടുതൽ വിവരങ്ങൾ <a href=\"{faq}\">FAQ</a> ൽ.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
+    faqP: function (h, c) { return "ഒരു മോഡിലും, ഒരിക്കലും പണം ഉൾപ്പെടുന്നില്ല. നിങ്ങളുടെ ക്രമീകരണങ്ങൾ, സ്റ്റൈൽ പാക്കുകൾ, പരിശീലന പുരോഗതി എന്നിവ നിങ്ങളുടെ ഉപകരണത്തിൽ തന്നെ നിൽക്കും, pokerth.net അക്കൗണ്ടിൽ ലോഗിൻ ചെയ്യുമ്പോൾ നിങ്ങളുടെ മറ്റ് ഉപകരണങ്ങളിലും ലഭിക്കും. ഇന്റർഫേസ് 83 ഭാഷകളിലുണ്ട്, എന്നാൽ അഞ്ച് പ്രവൃത്തി പദങ്ങൾ — Fold, Check, Call, Raise, All-In — ലോകത്തിലെ എല്ലാ ടേബിളിലെയും പോലെ ഇംഗ്ലീഷിൽ തന്നെ തുടരും. കൂടുതൽ വിവരങ്ങൾ <a href=\"{faq}\">FAQ</a> ൽ.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
   },
   mn: {
     title: "Онлайн покерыг үнэгүй хэрхэн тоглох вэ — PokerTH Web",
@@ -2048,37 +1898,25 @@ var PARTS = {
     h1: "Онлайн покерыг хөтөч дээрээ үнэгүй хэрхэн тоглох вэ",
     lead: function (h, c) { return "Товчхондоо: хоосон хуудаснаас PokerTH дээрх анхны Texas Hold’em гар хүртэл. Хэрэв дүрэм өөрөө таныг сонирхуулж байвал — блайнд, бооцооны шат, юу юуг ялдаг — <a href=\"{rules}\">дүрмийн хуудас</a> болон <a href=\"{hands}\">хослолоос</a> эхлээрэй.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); },
     steps: [
-      [
-        "Хуудсаа нээнэ — юу ч суулгах шаардлагагүй",
-        "PokerTH хөтөч дээр ажилладаг. Татах шаардлагагүй, бүртгэлгүй, нэмэлт програмгүй. Утсан дээр хөтчийн цэснээс үндсэн дэлгэцэд нэмж болох ба програм шиг бүтэн дэлгэцээр нээгдэж, офлайн ажиллах боломжтой.",
-      ],
-      [
-        "Хаана тоглохоо сонгох",
-        "Гурван горим. <strong>Офлайн дадлага</strong> тэр даруй компьютерийн өрсөлдөгчтэй ширээ өгөх ба ямар ч холболт шаардахгүй — сурах газар. <strong>pokerth.net</strong> бол албан ёсны сүлжээ: жинхэнэ өрсөлдөгч, улирлын эрэмбэ, нэг удаа бүртгүүлдэг үнэгүй хоч. <strong>LAN / хувийн сервер</strong> нь өөрийн эсвэл өөр хэн нэгний PokerTH тусгай серверт холбогдоно.",
-      ],
-      [
-        "Ширээнд суух",
-        "Лоббид жагсаалтаас ширээнд нэгдэх эсвэл өөрийнхөө ширээг үүсгэнэ үү. Үүсгэхдээ суудлын тоо, эхлэлийн стек, блайнд хэр хурдан өсөх болон ширээг нууц үгээр хамгаалах эсэхийг тохируулж болно. Урилгын холбоосоо хуваалцвал найз тань юунд ч бүртгүүлэлгүйгээр өөрийн хөтчөөр шууд ширээнд тань ирнэ.",
-      ],
-      [
-        "Гар тоглох",
-        "Танд хоёр хувийн хөзөр тарааж өгнө. Бооцоо флопоос өмнө, мөн флоп, терн, риверийн дараа ширээг тойрно. Таны ээлж ирэхэд үйлдлийн самбар асаж, зөвхөн зөвшөөрөгдсөн зүйлийг санал болгоно: Fold, Check эсвэл Call, Raise эсвэл All-In. Бооцооны дүнг бичих, гулсуураар чирэх эсвэл нэг дарахаар хамгийн бага, банкны тал, банк эсвэл бүх стекээр тохируулж болно.",
-      ],
-      [
-        "Ширээг унших",
-        "Хөзөр нээгдэх тусам таны одоогийн хамгийн сайн хослолыг ширээний доор нэрлэнэ. Банк, стек бүр болон блайндын түвшин үргэлж дэлгэц дээр, дилерийн товч хэн сүүлд ярихыг, буцаах тоолуур хэр их хугацаа байгааг харуулна. Шоудаунд хослол бүрийг бүрдүүлсэн таван хөзрийг тодруулна.",
-      ],
-      [
-        "Тэмцээнд ялах",
-        "PokerTH-ийн тоглолт бол sit-and-go тэмцээн: бүгд ижил стекээр эхэлж, блайнд цагийн дагуу өсөх ба нэг хүн бүх чипийг эзэмших хүртэл тоглогчид хасагдана. Юу ч мөнгө шаарддаггүй, чип худалдаж авах боломжгүй — бүгд тоглоомын мөнгө, тиймээс зөвхөн тоглоом өөрөө л эрсдэлд байна.",
-      ],
+      ["Хуудсаа нээнэ — юу ч суулгах шаардлагагүй",
+       "PokerTH хөтөч дээр ажилладаг. Татах шаардлагагүй, нэмэлт програмгүй, дадлага болон зочны тоглолтод бүртгэл ч хэрэггүй. Та үүнийг програм шиг суулгаж болно — iPhone болон iPad дээр Хуваалцах → Үндсэн дэлгэцэд нэмэх, бусад дээр хөтчийн цэс эсвэл суулгах товч — тэгвэл бүтэн дэлгэцээр нээгдэж, офлайн ажиллах боломжтой. Хүсвэл буланд байгаа Тамга буюу Тамгын тусламж дэлгэц бүрийг тайлбарлана."],
+      ["Хаана тоглохоо сонгох",
+       "Гурван горим. <strong>Дотоод / дадлага</strong> тэр даруй компьютерийн өрсөлдөгчтэй ширээ өгөх ба ямар ч холболт шаардахгүй — сурах газар. <strong>pokerth.net</strong> бол албан ёсны сүлжээ: жинхэнэ өрсөлдөгч, зочдод нээлттэй Энгийн тоглолт, мөн үнэгүй бүртгэлтэй тоглогчдод зориулсан улирлын эрэмбэтэй Эрэмбийн тоглолт. <strong>LAN / хувийн сервер</strong> нь өөрийн эсвэл өөр хэн нэгний PokerTH тусгай серверт холбогдоно."],
+      ["Ширээнд суух",
+       "Лоббид жагсаалтаас ширээнд нэгдэх, явагдаж буй тоглолтыг үзэх эсвэл өөрийнхөө ширээг үүсгэнэ үү. Үүсгэхдээ тоглолтын төрлийг (Энгийн, Зөвхөн бүртгэлтэй тоглогчид, Зөвхөн урьсан тоглогчид эсвэл Эрэмбийн тоглолт) сонгож, суудлын тоо, эхлэлийн стек, блайнд хэр хурдан өсөх, ээлжийн хугацаа, үзэгчид үзэж болох эсэх болон ширээг нууц үгээр хамгаалах эсэхийг тохируулж болно. Урилгын холбоосоо хуваалцвал найз тань өөрийн хөтчөөр шууд ширээнд тань ирнэ — Энгийн тоглолтод юунд ч бүртгүүлэлгүйгээр."],
+      ["Гар тоглох",
+       "Танд хоёр хувийн хөзөр тарааж өгнө. Бооцоо флопоос өмнө, мөн флоп, терн, риверийн дараа ширээг тойрно. Таны ээлж ирэхэд үйлдлийн самбар асаж, зөвхөн зөвшөөрөгдсөн зүйлийг санал болгоно: Fold, Check эсвэл Call, Raise эсвэл All-In. Бооцооны дүнг бичих, гулсуураар чирэх эсвэл нэг дарахаар банкны гуравны нэг, банкны тал эсвэл банкаар тохируулж болно."],
+      ["Ширээг унших",
+       "Боломж таб хөзөр нээгдэх тусам таны одоогийн хамгийн сайн гар болон ялах магадлалыг нэрлэнэ. Банк, стек бүр болон блайндын түвшин үргэлж дэлгэц дээр, дилерийн товч хэн сүүлд ярихыг, буцаах тоолуур хэр их хугацаа байгааг харуулна. Шоудаунд ялсан хослолыг нийтийн хөзрийн доор нэрлэнэ."],
+      ["Тэмцээнд ялах",
+       "PokerTH-ийн тоглолт бол тэмцээн: бүгд ижил стекээр эхэлж, блайнд хэдэн гар эсвэл минут тутамд өсөх ба нэг хүн бүх чипийг эзэмших хүртэл тоглогчид хасагдана. Юу ч мөнгө шаарддаггүй, чип худалдаж авах боломжгүй — бүгд тоглоомын мөнгө, тиймээс зөвхөн тоглоом өөрөө л эрсдэлд байна."]
     ],
     phoneH2: "Утсан дээр тоглох",
     phoneP: "Ширээг компьютерт тохируулсны адил мэдрэгч дэлгэцэд ч тохируулсан: бооцооны талбарт хүрэхэд системийн гарын оронд үйлдлийн самбар дотор тоон товчлуур нээгдэх тул ширээ хэзээ ч үсрэхгүй, гулсуур десктоп програмтай ижил алхмаар хөдөлнө. Ээлжийн мэдэгдэл шууд Fold болон Check/Call товчтой ирж болно: хуудас руу буцалгүйгээр гар тоглож болно.",
     friendsH2: "Найзуудтайгаа тоглох",
     friendsP: "Ширээ үүсгэж, хувийн байлгахыг хүсвэл нууц үг тавиад урилгын холбоосоо илгээнэ үү. Энэ нь ширээг шууд нээнэ — найзууд тань үндсэн дэлгэцдээ нэмсэн бол суулгасан програмд, эс бөгөөс хөтчийн табд. Хэн ч юу ч суулгах эсвэл имэйл хаягаа өгөх шаардлагагүй.",
     faqH2: "Түгээмэл асуулт",
-    faqP: function (h, c) { return "Ямар ч горимд мөнгө оролцдоггүй. Таны тохиргоо, хэв маягийн багц болон офлайн ахиц таны төхөөрөмжид үлдэнэ. Интерфейс 83 хэлээр боломжтой, харин таван үйлдлийн үг — Fold, Check, Call, Raise, All-In — дэлхийн ширээ бүрийн адил англи хэвээр үлдэнэ. Дэлгэрэнгүйг <a href=\"{faq}\">түгээмэл асуултаас</a> үзнэ үү.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); },
+    faqP: function (h, c) { return "Ямар ч горимд мөнгө оролцдоггүй. Таны тохиргоо, хэв маягийн багц болон дадлагын ахиц таны төхөөрөмжид үлдэх ба pokerth.net бүртгэлээр нэвтрэхэд бусад төхөөрөмж дээр тань дагалдана. Интерфейс 83 хэлээр боломжтой, харин таван үйлдлийн үг — Fold, Check, Call, Raise, All-In — дэлхийн ширээ бүрийн адил англи хэвээр үлдэнэ. Дэлгэрэнгүйг <a href=\"{faq}\">түгээмэл асуултаас</a> үзнэ үү.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); },
   },
   mr: {
     title: "ऑनलाइन मोफत पोकर कसा खेळायचा — PokerTH Web",
@@ -2089,24 +1927,24 @@ var PARTS = {
     lead: function (h, c) { return "ही संक्षिप्त आवृत्ती आहे, रिकाम्या टॅबपासून PokerTH मधल्या तुमच्या पहिल्या Texas Hold’em हँडपर्यंत. तुम्हाला नियम हवे असतील — ब्लाइंड्स, बेटिंग फेऱ्या, काय कशाला हरवतं — तर आधी <a href=\"{rules}\">नियमांचं पेज</a> आणि <a href=\"{hands}\">हँड क्रमवारी</a> बघा.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); },
     steps: [
       ["साइट उघडा — इन्स्टॉल करायला काहीही नाही",
-       "PokerTH ब्राउझरमध्ये चालतो. डाउनलोड नाही, खातं नाही, प्लगइन नाही. फोनवर तुम्ही ब्राउझर मेनूमधून तो होम स्क्रीनवर जोडू शकता: मग तो अ‍ॅपसारखा, फुल स्क्रीनमध्ये उघडतो, आणि ऑफलाइनही चालतो."],
+       "PokerTH ब्राउझरमध्ये चालतो. डाउनलोड नाही, प्लगइन नाही, आणि सरावासाठी किंवा पाहुणा म्हणून खेळण्यासाठी खातंही नाही. तुम्ही तो अ‍ॅपसारखा इन्स्टॉल करू शकता — iPhone आणि iPad वर शेअर → होम स्क्रीनवर जोडा, इतर ठिकाणी ब्राउझर मेनू किंवा इन्स्टॉल बटण — आणि तो फुल स्क्रीनमध्ये उघडतो, ऑफलाइनही चालतो. हवं असल्यास, कोपऱ्यातला एक्का, म्हणजे एक्क्याची मदत, प्रत्येक स्क्रीन समजावून सांगतो."],
       ["कुठे खेळायचं ते निवडा",
-       "तीन मोड्स. <strong>ऑफलाइन सराव</strong> तुम्हाला लगेच संगणक नियंत्रित प्रतिस्पर्ध्यांच्या टेबलवर बसवतो, कोणतंही कनेक्शन लागत नाही — शिकायचं ते इथे. <strong>pokerth.net</strong> हे अधिकृत नेटवर्क आहे: खरे प्रतिस्पर्धी, सीझन क्रमवारी, आणि एकदाच नोंदवायचं मोफत टोपणनाव. <strong>LAN / खाजगी सर्व्हर</strong> तुम्हाला डेडिकेटेड PokerTH सर्व्हरशी कनेक्ट करतो, तुमच्या किंवा दुसऱ्या कोणाच्या."],
+       "तीन मोड्स. <strong>लोकल / सराव</strong> तुम्हाला लगेच संगणक नियंत्रित प्रतिस्पर्ध्यांच्या टेबलवर बसवतो, कोणतंही कनेक्शन लागत नाही — शिकायचं ते इथे. <strong>pokerth.net</strong> हे अधिकृत नेटवर्क आहे: खरे प्रतिस्पर्धी, पाहुण्यांसाठी खुले सामान्य गेम्स, आणि मोफत खातं असलेल्या खेळाडूंसाठी सीझन क्रमवारी असलेले रँकिंग गेम्स. <strong>LAN / खाजगी सर्व्हर</strong> तुम्हाला डेडिकेटेड PokerTH सर्व्हरशी कनेक्ट करतो, तुमच्या किंवा दुसऱ्या कोणाच्या."],
       ["टेबलवर बसा",
-       "लॉबीत, यादीतल्या टेबलवर सामील व्हा किंवा स्वतःचं तयार करा. तयार करताना तुम्ही सीट्सची संख्या, सुरुवातीचा स्टॅक, ब्लाइंड्स किती वेगाने वाढतात, आणि हवा असल्यास पासवर्ड ठरवू शकता. आमंत्रण लिंक शेअर करा: तुमचा मित्र काहीही नोंदणी न करता, स्वतःच्या ब्राउझरमध्ये थेट तुमच्या टेबलवर पोहोचतो."],
+       "लॉबीत, यादीतल्या टेबलवर सामील व्हा, चालू गेम पहा किंवा स्वतःचं तयार करा. तयार करताना तुम्ही गेमचा प्रकार (सामान्य, फक्त नोंदणीकृत खेळाडू, फक्त आमंत्रित खेळाडू किंवा रँकिंग गेम) निवडू शकता आणि सीट्सची संख्या, सुरुवातीचा स्टॅक, ब्लाइंड्स किती वेगाने वाढतात, खेळी करण्यासाठीचा वेळ, प्रेक्षकांना पाहण्याची परवानगी आहे का आणि टेबलला पासवर्ड हवा का ते ठरवू शकता. आमंत्रण लिंक शेअर करा: तुमचा मित्र स्वतःच्या ब्राउझरमध्ये थेट तुमच्या टेबलवर पोहोचतो — सामान्य गेममध्ये काहीही नोंदणी न करता."],
       ["हँड खेळा",
-       "तुम्हाला दोन होल कार्ड्स मिळतात. फ्लॉपच्या आधी, मग फ्लॉप, टर्न आणि रिव्हरनंतर बेटिंग टेबलभोवती फिरतं. तुमची पाळी आल्यावर, अ‍ॅक्शन बार उजळतो आणि फक्त अनुमत गोष्टीच देतो: Fold, Check किंवा Call, Raise किंवा All-In. तुम्ही रक्कम टाइप करू शकता, स्लायडरने समायोजित करू शकता, किंवा एका टॅपमध्ये Min, अर्धा पॉट, पॉट, किंवा तुमचा संपूर्ण स्टॅक सेट करू शकता."],
+       "तुम्हाला दोन होल कार्ड्स मिळतात. फ्लॉपच्या आधी, मग फ्लॉप, टर्न आणि रिव्हरनंतर बेटिंग टेबलभोवती फिरतं. तुमची पाळी आल्यावर, अ‍ॅक्शन बार उजळतो आणि फक्त अनुमत गोष्टीच देतो: Fold, Check किंवा Call, Raise किंवा All-In. तुम्ही रक्कम टाइप करू शकता, स्लायडरने समायोजित करू शकता, किंवा एका टॅपमध्ये पॉटचा एक तृतीयांश, अर्धा पॉट किंवा पॉट सेट करू शकता."],
       ["टेबल वाचा",
-       "कार्ड्स येतात तसं तुमच्या सध्याच्या सर्वोत्तम कॉम्बिनेशनचं नाव बोर्डच्या खाली दाखवलं जातं. पॉट, प्रत्येक स्टॅक आणि ब्लाइंड लेव्हल नेहमी दिसतात, डीलर बटण शेवटी कोण खेळतं ते दाखवतं, आणि काउंटडाउन तुमच्याकडे उरलेला वेळ दाखवतं. शोडाउनला, प्रत्येक हँड बनवणारी पाच कार्ड्स हायलाइट केली जातात."],
+       "ऑड्स टॅब कार्ड्स येतात तसं तुमचा सध्याचा सर्वोत्तम हँड आणि जिंकण्याची शक्यता सांगतो. पॉट, प्रत्येक स्टॅक आणि ब्लाइंड लेव्हल नेहमी दिसतात, डीलर बटण शेवटी कोण खेळतं ते दाखवतं, आणि काउंटडाउन तुमच्याकडे उरलेला वेळ दाखवतं. शोडाउनला, जिंकणारं कॉम्बिनेशन कम्युनिटी कार्ड्सच्या खाली नमूद केलं जातं."],
       ["टूर्नामेंट जिंका",
-       "PokerTH गेम्स हे sit-and-go टूर्नामेंट्स आहेत: सगळे समान स्टॅकने सुरू करतात, ब्लाइंड्स ठराविक अंतराने वाढतात, आणि एका व्यक्तीकडे सर्व चिप्स येईपर्यंत खेळाडू बाहेर पडत जातात. कशालाही पैसे लागत नाहीत आणि कोणतीही चिप विकत घेता येत नाही — सगळं खेळाचं चलन आहे, त्यामुळे पणाला फक्त खेळच असतो."]
+       "PokerTH गेम्स हे टूर्नामेंट्स आहेत: सगळे समान स्टॅकने सुरू करतात, काही हँड्स किंवा मिनिटांनी ब्लाइंड्स वाढतात, आणि एका व्यक्तीकडे सर्व चिप्स येईपर्यंत खेळाडू बाहेर पडत जातात. कशालाही पैसे लागत नाहीत आणि कोणतीही चिप विकत घेता येत नाही — सगळं खेळाचं चलन आहे, त्यामुळे पणाला फक्त खेळच असतो."]
     ],
     phoneH2: "फोनवर खेळणं",
     phoneP: "टेबल संगणकाइतकंच टच स्क्रीनसाठीही डिझाइन केलं आहे: बेट फील्डला स्पर्श केल्यास सिस्टम कीबोर्डऐवजी अ‍ॅक्शन बारमध्येच अंकांचं पॅड उघडतं, त्यामुळे टेबल कधीच उडी मारत नाही, आणि स्लायडर डेस्कटॉप क्लायंटमधल्याच टप्प्यांनी सरकतो. पाळीच्या सूचना Fold आणि Check/Call बटणांसह तुमच्यापर्यंत पोहोचू शकतात: तुम्ही टॅबवर परत न जाता हँड खेळू शकता.",
     friendsH2: "मित्रांसोबत खेळणं",
     friendsP: "टेबल तयार करा, खाजगी ठेवायचं असेल तर पासवर्ड लावा, आणि आमंत्रण लिंक पाठवा. ती थेट टेबल उघडते — तुमच्या मित्रांनी ते होम स्क्रीनवर जोडलं असेल तर इन्स्टॉल केलेल्या अ‍ॅपमध्ये, नाहीतर ब्राउझर टॅबमध्ये. कोणालाही काहीही इन्स्टॉल करावं लागत नाही किंवा ईमेल पत्ता द्यावा लागत नाही.",
     faqH2: "नेहमीचे प्रश्न",
-    faqP: function (h, c) { return "कोणत्याही मोडमध्ये, कधीही पैशांचा संबंध येत नाही. तुमची सेटिंग्ज, स्टाईल पॅक्स आणि ऑफलाइन प्रगती तुमच्या उपकरणावरच राहते. इंटरफेस 83 भाषांमध्ये आहे, पण पाच कृती शब्द — Fold, Check, Call, Raise, All-In — जगातल्या प्रत्येक टेबलप्रमाणे इंग्रजीतच राहतात. अधिक माहिती <a href=\"{faq}\">FAQ</a> मध्ये.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
+    faqP: function (h, c) { return "कोणत्याही मोडमध्ये, कधीही पैशांचा संबंध येत नाही. तुमची सेटिंग्ज, स्टाईल पॅक्स आणि सरावातली प्रगती तुमच्या उपकरणावरच राहते, आणि तुम्ही pokerth.net खात्याने लॉग इन केल्यावर तुमच्या इतर उपकरणांवर तुमच्यासोबत येते. इंटरफेस 83 भाषांमध्ये आहे, पण पाच कृती शब्द — Fold, Check, Call, Raise, All-In — जगातल्या प्रत्येक टेबलप्रमाणे इंग्रजीतच राहतात. अधिक माहिती <a href=\"{faq}\">FAQ</a> मध्ये.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
   },
   kn: {
     title: "ಆನ್‌ಲೈನ್‌ನಲ್ಲಿ ಉಚಿತ ಪೋಕರ್ ಆಡುವುದು ಹೇಗೆ — PokerTH Web",
@@ -2117,24 +1955,24 @@ var PARTS = {
     lead: function (h, c) { return "ಇದು ಸಂಕ್ಷಿಪ್ತ ಆವೃತ್ತಿ, ಖಾಲಿ ಟ್ಯಾಬ್‌ನಿಂದ PokerTH ನಲ್ಲಿ ನಿಮ್ಮ ಮೊದಲ Texas Hold’em ಹ್ಯಾಂಡ್‌ವರೆಗೆ. ನಿಮಗೆ ನಿಯಮಗಳು ಬೇಕಿದ್ದರೆ — ಬ್ಲೈಂಡ್‌ಗಳು, ಬೆಟ್ಟಿಂಗ್ ಸುತ್ತುಗಳು, ಯಾವುದು ಯಾವುದನ್ನು ಸೋಲಿಸುತ್ತದೆ — ಮೊದಲು <a href=\"{rules}\">ನಿಯಮಗಳ ಪುಟ</a> ಮತ್ತು <a href=\"{hands}\">ಹ್ಯಾಂಡ್ ಶ್ರೇಯಾಂಕಗಳನ್ನು</a> ನೋಡಿ.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); },
     steps: [
       ["ಸೈಟ್ ತೆರೆಯಿರಿ — ಇನ್‌ಸ್ಟಾಲ್ ಮಾಡಲು ಏನೂ ಇಲ್ಲ",
-       "PokerTH ಬ್ರೌಸರ್‌ನಲ್ಲಿ ಕೆಲಸ ಮಾಡುತ್ತದೆ. ಡೌನ್‌ಲೋಡ್ ಇಲ್ಲ, ಖಾತೆಯಿಲ್ಲ, ಪ್ಲಗಿನ್ ಇಲ್ಲ. ಫೋನ್‌ನಲ್ಲಿ ನೀವು ಬ್ರೌಸರ್ ಮೆನುವಿನಿಂದ ಅದನ್ನು ಹೋಮ್ ಸ್ಕ್ರೀನ್‌ಗೆ ಸೇರಿಸಬಹುದು: ಆಗ ಅದು ಆ್ಯಪ್‌ನಂತೆ, ಪೂರ್ಣ ಪರದೆಯಲ್ಲಿ ತೆರೆಯುತ್ತದೆ, ಮತ್ತು ಆಫ್‌ಲೈನ್‌ನಲ್ಲೂ ಕೆಲಸ ಮಾಡುತ್ತದೆ."],
+       "PokerTH ಬ್ರೌಸರ್‌ನಲ್ಲಿ ಕೆಲಸ ಮಾಡುತ್ತದೆ. ಡೌನ್‌ಲೋಡ್ ಇಲ್ಲ, ಪ್ಲಗಿನ್ ಇಲ್ಲ, ಮತ್ತು ಅಭ್ಯಾಸ ಅಥವಾ ಅತಿಥಿ ಗೇಮ್‌ಗಳಿಗೆ ಖಾತೆಯೂ ಇಲ್ಲ. ನೀವು ಅದನ್ನು ಆ್ಯಪ್‌ನಂತೆ ಇನ್‌ಸ್ಟಾಲ್ ಮಾಡಬಹುದು — iPhone ಮತ್ತು iPad ನಲ್ಲಿ ಶೇರ್ → ಹೋಮ್ ಸ್ಕ್ರೀನ್‌ಗೆ ಸೇರಿಸಿ, ಬೇರೆಡೆ ಬ್ರೌಸರ್ ಮೆನು ಅಥವಾ ಇನ್‌ಸ್ಟಾಲ್ ಬಟನ್ — ಆಗ ಅದು ಪೂರ್ಣ ಪರದೆಯಲ್ಲಿ ತೆರೆಯುತ್ತದೆ ಮತ್ತು ಆಫ್‌ಲೈನ್‌ನಲ್ಲೂ ಕೆಲಸ ಮಾಡುತ್ತದೆ. ನೀವು ಬಯಸಿದರೆ, ಮೂಲೆಯಲ್ಲಿರುವ ಎಕ್ಕ, ಎಕ್ಕದ ಸಹಾಯ, ಪ್ರತಿ ಪರದೆಯನ್ನು ವಿವರಿಸುತ್ತದೆ."],
       ["ಎಲ್ಲಿ ಆಡಬೇಕೆಂದು ಆರಿಸಿ",
-       "ಮೂರು ಮೋಡ್‌ಗಳು. <strong>ಆಫ್‌ಲೈನ್ ಅಭ್ಯಾಸ</strong> ನಿಮ್ಮನ್ನು ತಕ್ಷಣ ಕಂಪ್ಯೂಟರ್ ನಿಯಂತ್ರಿತ ಎದುರಾಳಿಗಳ ಟೇಬಲ್‌ನಲ್ಲಿ ಕೂರಿಸುತ್ತದೆ, ಯಾವ ಸಂಪರ್ಕವೂ ಬೇಕಿಲ್ಲ — ಕಲಿಯುವುದು ಇಲ್ಲೇ. <strong>pokerth.net</strong> ಅಧಿಕೃತ ನೆಟ್‌ವರ್ಕ್: ನಿಜವಾದ ಎದುರಾಳಿಗಳು, ಸೀಸನ್ ಶ್ರೇಯಾಂಕ, ಮತ್ತು ಒಮ್ಮೆ ನೋಂದಾಯಿಸಬೇಕಾದ ಉಚಿತ ಅಡ್ಡಹೆಸರು. <strong>LAN / ಖಾಸಗಿ ಸರ್ವರ್</strong> ನಿಮ್ಮನ್ನು ಡೆಡಿಕೇಟೆಡ್ PokerTH ಸರ್ವರ್‌ಗೆ ಸಂಪರ್ಕಿಸುತ್ತದೆ, ನಿಮ್ಮದು ಅಥವಾ ಬೇರೆಯವರದು."],
+       "ಮೂರು ಮೋಡ್‌ಗಳು. <strong>ಲೋಕಲ್ / ಅಭ್ಯಾಸ</strong> ನಿಮ್ಮನ್ನು ತಕ್ಷಣ ಕಂಪ್ಯೂಟರ್ ನಿಯಂತ್ರಿತ ಎದುರಾಳಿಗಳ ಟೇಬಲ್‌ನಲ್ಲಿ ಕೂರಿಸುತ್ತದೆ, ಯಾವ ಸಂಪರ್ಕವೂ ಬೇಕಿಲ್ಲ — ಕಲಿಯುವುದು ಇಲ್ಲೇ. <strong>pokerth.net</strong> ಅಧಿಕೃತ ನೆಟ್‌ವರ್ಕ್: ನಿಜವಾದ ಎದುರಾಳಿಗಳು, ಅತಿಥಿಗಳಿಗೆ ತೆರೆದ “ಸಾಮಾನ್ಯ” ಗೇಮ್‌ಗಳು, ಮತ್ತು ಉಚಿತ ಖಾತೆ ಇರುವ ಆಟಗಾರರಿಗೆ ಸೀಸನ್ ಶ್ರೇಯಾಂಕವಿರುವ “ರ‍್ಯಾಂಕಿಂಗ್ ಗೇಮ್”ಗಳು. <strong>LAN / ಖಾಸಗಿ ಸರ್ವರ್</strong> ನಿಮ್ಮನ್ನು ಡೆಡಿಕೇಟೆಡ್ PokerTH ಸರ್ವರ್‌ಗೆ ಸಂಪರ್ಕಿಸುತ್ತದೆ, ನಿಮ್ಮದು ಅಥವಾ ಬೇರೆಯವರದು."],
       ["ಟೇಬಲ್‌ನಲ್ಲಿ ಕುಳಿತುಕೊಳ್ಳಿ",
-       "ಲಾಬಿಯಲ್ಲಿ, ಪಟ್ಟಿಯಲ್ಲಿರುವ ಟೇಬಲ್‌ಗೆ ಸೇರಿ ಅಥವಾ ನಿಮ್ಮದೇ ರಚಿಸಿ. ರಚಿಸುವಾಗ ನೀವು ಸೀಟ್‌ಗಳ ಸಂಖ್ಯೆ, ಆರಂಭಿಕ ಸ್ಟ್ಯಾಕ್, ಬ್ಲೈಂಡ್‌ಗಳು ಎಷ್ಟು ವೇಗವಾಗಿ ಹೆಚ್ಚುತ್ತವೆ, ಮತ್ತು ಬೇಕಿದ್ದರೆ ಪಾಸ್‌ವರ್ಡ್ ನಿರ್ಧರಿಸಬಹುದು. ಆಹ್ವಾನ ಲಿಂಕ್ ಹಂಚಿಕೊಳ್ಳಿ: ನಿಮ್ಮ ಸ್ನೇಹಿತ ಏನನ್ನೂ ನೋಂದಾಯಿಸದೆ, ತಮ್ಮ ಬ್ರೌಸರ್‌ನಲ್ಲಿ ನೇರವಾಗಿ ನಿಮ್ಮ ಟೇಬಲ್‌ಗೆ ತಲುಪುತ್ತಾರೆ."],
+       "ಲಾಬಿಯಲ್ಲಿ, ಪಟ್ಟಿಯಲ್ಲಿರುವ ಟೇಬಲ್‌ಗೆ ಸೇರಿ, ನಡೆಯುತ್ತಿರುವ ಗೇಮ್ ವೀಕ್ಷಿಸಿ, ಅಥವಾ ನಿಮ್ಮದೇ ರಚಿಸಿ. ರಚಿಸುವಾಗ ನೀವು ಗೇಮ್ ಪ್ರಕಾರ (“ಸಾಮಾನ್ಯ”, ನೋಂದಾಯಿತ ಆಟಗಾರರು ಮಾತ್ರ, ಆಹ್ವಾನಿತ ಆಟಗಾರರು ಮಾತ್ರ, ಅಥವಾ “ರ‍್ಯಾಂಕಿಂಗ್ ಗೇಮ್”) ಆರಿಸಿ, ಸೀಟ್‌ಗಳ ಸಂಖ್ಯೆ, ಆರಂಭಿಕ ಸ್ಟ್ಯಾಕ್, ಬ್ಲೈಂಡ್‌ಗಳು ಎಷ್ಟು ವೇಗವಾಗಿ ಹೆಚ್ಚುತ್ತವೆ, ಆಡಲು ಸಮಯ, ವೀಕ್ಷಕರು ವೀಕ್ಷಿಸಬಹುದೇ, ಮತ್ತು ಬೇಕಿದ್ದರೆ ಪಾಸ್‌ವರ್ಡ್ ನಿರ್ಧರಿಸಬಹುದು. ಆಹ್ವಾನ ಲಿಂಕ್ ಹಂಚಿಕೊಳ್ಳಿ: ನಿಮ್ಮ ಸ್ನೇಹಿತ ತಮ್ಮ ಬ್ರೌಸರ್‌ನಲ್ಲಿ ನೇರವಾಗಿ ನಿಮ್ಮ ಟೇಬಲ್‌ಗೆ ತಲುಪುತ್ತಾರೆ — “ಸಾಮಾನ್ಯ” ಗೇಮ್‌ನಲ್ಲಿ ಏನನ್ನೂ ನೋಂದಾಯಿಸದೆ."],
       ["ಹ್ಯಾಂಡ್ ಆಡಿ",
-       "ನಿಮಗೆ ಎರಡು ಹೋಲ್ ಕಾರ್ಡ್‌ಗಳು ಸಿಗುತ್ತವೆ. ಫ್ಲಾಪ್‌ಗೂ ಮೊದಲು, ನಂತರ ಫ್ಲಾಪ್, ಟರ್ನ್ ಮತ್ತು ರಿವರ್ ನಂತರ ಬೆಟ್ಟಿಂಗ್ ಟೇಬಲ್ ಸುತ್ತ ಸಾಗುತ್ತದೆ. ನಿಮ್ಮ ಸರದಿ ಬಂದಾಗ, ಆ್ಯಕ್ಷನ್ ಬಾರ್ ಬೆಳಗಿ ಅನುಮತಿಸಿದವುಗಳನ್ನು ಮಾತ್ರ ನೀಡುತ್ತದೆ: Fold, Check ಅಥವಾ Call, Raise ಅಥವಾ All-In. ನೀವು ಮೊತ್ತವನ್ನು ಟೈಪ್ ಮಾಡಬಹುದು, ಸ್ಲೈಡರ್‌ನಿಂದ ಹೊಂದಿಸಬಹುದು, ಅಥವಾ ಒಂದೇ ಟ್ಯಾಪ್‌ನಲ್ಲಿ Min, ಅರ್ಧ ಪಾಟ್, ಪಾಟ್, ಅಥವಾ ನಿಮ್ಮ ಸಂಪೂರ್ಣ ಸ್ಟ್ಯಾಕ್ ಹೊಂದಿಸಬಹುದು."],
+       "ನಿಮಗೆ ಎರಡು ಹೋಲ್ ಕಾರ್ಡ್‌ಗಳು ಸಿಗುತ್ತವೆ. ಫ್ಲಾಪ್‌ಗೂ ಮೊದಲು, ನಂತರ ಫ್ಲಾಪ್, ಟರ್ನ್ ಮತ್ತು ರಿವರ್ ನಂತರ ಬೆಟ್ಟಿಂಗ್ ಟೇಬಲ್ ಸುತ್ತ ಸಾಗುತ್ತದೆ. ನಿಮ್ಮ ಸರದಿ ಬಂದಾಗ, ಆ್ಯಕ್ಷನ್ ಬಾರ್ ಬೆಳಗಿ ಅನುಮತಿಸಿದವುಗಳನ್ನು ಮಾತ್ರ ನೀಡುತ್ತದೆ: Fold, Check ಅಥವಾ Call, Raise ಅಥವಾ All-In. ನೀವು ಮೊತ್ತವನ್ನು ಟೈಪ್ ಮಾಡಬಹುದು, ಸ್ಲೈಡರ್‌ನಿಂದ ಹೊಂದಿಸಬಹುದು, ಅಥವಾ ಒಂದೇ ಟ್ಯಾಪ್‌ನಲ್ಲಿ ಪಾಟ್‌ನ ಮೂರನೇ ಒಂದು ಭಾಗ, ಅರ್ಧ ಪಾಟ್ ಅಥವಾ ಪಾಟ್ ಹೊಂದಿಸಬಹುದು."],
       ["ಟೇಬಲ್ ಓದಿ",
-       "ಕಾರ್ಡ್‌ಗಳು ಬರುತ್ತಿದ್ದಂತೆ ನಿಮ್ಮ ಪ್ರಸ್ತುತ ಅತ್ಯುತ್ತಮ ಸಂಯೋಜನೆಯ ಹೆಸರನ್ನು ಬೋರ್ಡ್ ಕೆಳಗೆ ತೋರಿಸಲಾಗುತ್ತದೆ. ಪಾಟ್, ಪ್ರತಿ ಸ್ಟ್ಯಾಕ್ ಮತ್ತು ಬ್ಲೈಂಡ್ ಲೆವೆಲ್ ಯಾವಾಗಲೂ ಕಾಣುತ್ತವೆ, ಡೀಲರ್ ಬಟನ್ ಕೊನೆಯದಾಗಿ ಯಾರು ಆಡುತ್ತಾರೆ ಎಂದು ತೋರಿಸುತ್ತದೆ, ಮತ್ತು ಕೌಂಟ್‌ಡೌನ್ ನಿಮಗೆ ಉಳಿದಿರುವ ಸಮಯವನ್ನು ತೋರಿಸುತ್ತದೆ. ಶೋಡೌನ್‌ನಲ್ಲಿ, ಪ್ರತಿ ಹ್ಯಾಂಡ್ ರೂಪಿಸುವ ಐದು ಕಾರ್ಡ್‌ಗಳನ್ನು ಹೈಲೈಟ್ ಮಾಡಲಾಗುತ್ತದೆ."],
+       "“ಆಡ್ಸ್” ಟ್ಯಾಬ್ ಕಾರ್ಡ್‌ಗಳು ಬರುತ್ತಿದ್ದಂತೆ ನಿಮ್ಮ ಪ್ರಸ್ತುತ ಅತ್ಯುತ್ತಮ ಹ್ಯಾಂಡ್‌ನ ಹೆಸರನ್ನು ಮತ್ತು ನಿಮ್ಮ ಗೆಲ್ಲುವ ಸಾಧ್ಯತೆಯನ್ನು ತೋರಿಸುತ್ತದೆ. ಪಾಟ್, ಪ್ರತಿ ಸ್ಟ್ಯಾಕ್ ಮತ್ತು ಬ್ಲೈಂಡ್ ಲೆವೆಲ್ ಯಾವಾಗಲೂ ಕಾಣುತ್ತವೆ, ಡೀಲರ್ ಬಟನ್ ಕೊನೆಯದಾಗಿ ಯಾರು ಆಡುತ್ತಾರೆ ಎಂದು ತೋರಿಸುತ್ತದೆ, ಮತ್ತು ಕೌಂಟ್‌ಡೌನ್ ನಿಮಗೆ ಉಳಿದಿರುವ ಸಮಯವನ್ನು ತೋರಿಸುತ್ತದೆ. ಶೋಡೌನ್‌ನಲ್ಲಿ, ಗೆಲ್ಲುವ ಸಂಯೋಜನೆಯ ಹೆಸರನ್ನು ಕಮ್ಯೂನಿಟಿ ಕಾರ್ಡ್‌ಗಳ ಕೆಳಗೆ ತೋರಿಸಲಾಗುತ್ತದೆ."],
       ["ಟೂರ್ನಮೆಂಟ್ ಗೆಲ್ಲಿ",
-       "PokerTH ಗೇಮ್‌ಗಳು sit-and-go ಟೂರ್ನಮೆಂಟ್‌ಗಳು: ಎಲ್ಲರೂ ಒಂದೇ ಸ್ಟ್ಯಾಕ್‌ನೊಂದಿಗೆ ಪ್ರಾರಂಭಿಸುತ್ತಾರೆ, ಬ್ಲೈಂಡ್‌ಗಳು ನಿಯಮಿತ ಅಂತರದಲ್ಲಿ ಹೆಚ್ಚುತ್ತವೆ, ಮತ್ತು ಒಬ್ಬರ ಬಳಿ ಎಲ್ಲಾ ಚಿಪ್‌ಗಳು ಸೇರುವವರೆಗೆ ಆಟಗಾರರು ಹೊರಬೀಳುತ್ತಾರೆ. ಯಾವುದಕ್ಕೂ ಹಣ ಬೇಕಿಲ್ಲ ಮತ್ತು ಯಾವ ಚಿಪ್ ಅನ್ನೂ ಖರೀದಿಸಲು ಆಗುವುದಿಲ್ಲ — ಎಲ್ಲವೂ ಆಟದ ಹಣ, ಆದ್ದರಿಂದ ಪಣಕ್ಕಿರುವುದು ಆಟ ಮಾತ್ರ."]
+       "PokerTH ಗೇಮ್‌ಗಳು ಟೂರ್ನಮೆಂಟ್‌ಗಳು: ಎಲ್ಲರೂ ಒಂದೇ ಸ್ಟ್ಯಾಕ್‌ನೊಂದಿಗೆ ಪ್ರಾರಂಭಿಸುತ್ತಾರೆ, ಬ್ಲೈಂಡ್‌ಗಳು ಕೆಲವು ಹ್ಯಾಂಡ್‌ಗಳಿಗೆ ಅಥವಾ ನಿಮಿಷಗಳಿಗೆ ಒಮ್ಮೆ ಹೆಚ್ಚುತ್ತವೆ, ಮತ್ತು ಒಬ್ಬರ ಬಳಿ ಎಲ್ಲಾ ಚಿಪ್‌ಗಳು ಸೇರುವವರೆಗೆ ಆಟಗಾರರು ಹೊರಬೀಳುತ್ತಾರೆ. ಯಾವುದಕ್ಕೂ ಹಣ ಬೇಕಿಲ್ಲ ಮತ್ತು ಯಾವ ಚಿಪ್ ಅನ್ನೂ ಖರೀದಿಸಲು ಆಗುವುದಿಲ್ಲ — ಎಲ್ಲವೂ ಆಟದ ಹಣ, ಆದ್ದರಿಂದ ಪಣಕ್ಕಿರುವುದು ಆಟ ಮಾತ್ರ."]
     ],
     phoneH2: "ಫೋನ್‌ನಲ್ಲಿ ಆಡುವುದು",
     phoneP: "ಟೇಬಲ್ ಅನ್ನು ಕಂಪ್ಯೂಟರ್‌ಗಷ್ಟೇ ಟಚ್ ಸ್ಕ್ರೀನ್‌ಗೂ ವಿನ್ಯಾಸಗೊಳಿಸಲಾಗಿದೆ: ಬೆಟ್ ಫೀಲ್ಡ್ ಸ್ಪರ್ಶಿಸಿದರೆ ಸಿಸ್ಟಮ್ ಕೀಬೋರ್ಡ್ ಬದಲು ಆ್ಯಕ್ಷನ್ ಬಾರ್‌ನಲ್ಲೇ ಸಂಖ್ಯಾ ಪ್ಯಾಡ್ ತೆರೆಯುತ್ತದೆ, ಆದ್ದರಿಂದ ಟೇಬಲ್ ಎಂದಿಗೂ ಜಿಗಿಯುವುದಿಲ್ಲ, ಮತ್ತು ಸ್ಲೈಡರ್ ಡೆಸ್ಕ್‌ಟಾಪ್ ಕ್ಲೈಂಟ್‌ನ ಅದೇ ಹಂತಗಳಲ್ಲಿ ಸರಿಯುತ್ತದೆ. ಸರದಿ ಸೂಚನೆಗಳು Fold ಮತ್ತು Check/Call ಬಟನ್‌ಗಳೊಂದಿಗೆ ನಿಮ್ಮನ್ನು ತಲುಪಬಹುದು: ನೀವು ಟ್ಯಾಬ್‌ಗೆ ಮರಳದೆ ಹ್ಯಾಂಡ್ ಆಡಬಹುದು.",
     friendsH2: "ಸ್ನೇಹಿತರೊಂದಿಗೆ ಆಡುವುದು",
     friendsP: "ಟೇಬಲ್ ರಚಿಸಿ, ಖಾಸಗಿಯಾಗಿ ಇಡಬೇಕೆಂದರೆ ಪಾಸ್‌ವರ್ಡ್ ಇಡಿ, ಮತ್ತು ಆಹ್ವಾನ ಲಿಂಕ್ ಕಳುಹಿಸಿ. ಅದು ನೇರವಾಗಿ ಟೇಬಲ್ ತೆರೆಯುತ್ತದೆ — ನಿಮ್ಮ ಸ್ನೇಹಿತರು ಅದನ್ನು ಹೋಮ್ ಸ್ಕ್ರೀನ್‌ಗೆ ಸೇರಿಸಿದ್ದರೆ ಇನ್‌ಸ್ಟಾಲ್ ಆದ ಆ್ಯಪ್‌ನಲ್ಲಿ, ಇಲ್ಲದಿದ್ದರೆ ಬ್ರೌಸರ್ ಟ್ಯಾಬ್‌ನಲ್ಲಿ. ಯಾರೂ ಏನನ್ನೂ ಇನ್‌ಸ್ಟಾಲ್ ಮಾಡಬೇಕಿಲ್ಲ ಅಥವಾ ಇಮೇಲ್ ವಿಳಾಸ ನೀಡಬೇಕಿಲ್ಲ.",
     faqH2: "ಸಾಮಾನ್ಯ ಪ್ರಶ್ನೆಗಳು",
-    faqP: function (h, c) { return "ಯಾವ ಮೋಡ್‌ನಲ್ಲೂ, ಎಂದಿಗೂ ಹಣದ ಸಂಬಂಧವಿಲ್ಲ. ನಿಮ್ಮ ಸೆಟ್ಟಿಂಗ್‌ಗಳು, ಸ್ಟೈಲ್ ಪ್ಯಾಕ್‌ಗಳು ಮತ್ತು ಆಫ್‌ಲೈನ್ ಪ್ರಗತಿ ನಿಮ್ಮ ಸಾಧನದಲ್ಲೇ ಉಳಿಯುತ್ತವೆ. ಇಂಟರ್‌ಫೇಸ್ 83 ಭಾಷೆಗಳಲ್ಲಿದೆ, ಆದರೆ ಐದು ಕ್ರಿಯಾ ಪದಗಳು — Fold, Check, Call, Raise, All-In — ಜಗತ್ತಿನ ಪ್ರತಿ ಟೇಬಲ್‌ನಲ್ಲಿರುವಂತೆ ಇಂಗ್ಲಿಷ್‌ನಲ್ಲೇ ಉಳಿಯುತ್ತವೆ. ಹೆಚ್ಚಿನ ವಿವರ <a href=\"{faq}\">FAQ</a> ನಲ್ಲಿ.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
+    faqP: function (h, c) { return "ಯಾವ ಮೋಡ್‌ನಲ್ಲೂ, ಎಂದಿಗೂ ಹಣದ ಸಂಬಂಧವಿಲ್ಲ. ನಿಮ್ಮ ಸೆಟ್ಟಿಂಗ್‌ಗಳು, ಸ್ಟೈಲ್ ಪ್ಯಾಕ್‌ಗಳು ಮತ್ತು ಅಭ್ಯಾಸ ಪ್ರಗತಿ ನಿಮ್ಮ ಸಾಧನದಲ್ಲೇ ಉಳಿಯುತ್ತವೆ, ಮತ್ತು pokerth.net ಖಾತೆಯಿಂದ ಲಾಗ್ ಇನ್ ಮಾಡಿದಾಗ ನಿಮ್ಮ ಇತರ ಸಾಧನಗಳಿಗೂ ಬರುತ್ತವೆ. ಇಂಟರ್‌ಫೇಸ್ 83 ಭಾಷೆಗಳಲ್ಲಿದೆ, ಆದರೆ ಐದು ಕ್ರಿಯಾ ಪದಗಳು — Fold, Check, Call, Raise, All-In — ಜಗತ್ತಿನ ಪ್ರತಿ ಟೇಬಲ್‌ನಲ್ಲಿರುವಂತೆ ಇಂಗ್ಲಿಷ್‌ನಲ್ಲೇ ಉಳಿಯುತ್ತವೆ. ಹೆಚ್ಚಿನ ವಿವರ <a href=\"{faq}\">FAQ</a> ನಲ್ಲಿ.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
   },
   gu: {
     title: "ઓનલાઇન મફત પોકર કેવી રીતે રમવું — PokerTH Web",
@@ -2145,24 +1983,24 @@ var PARTS = {
     lead: function (h, c) { return "આ ટૂંકું વર્ઝન છે, ખાલી ટેબથી PokerTH માં તમારા પહેલા Texas Hold’em હેન્ડ સુધી. તમને નિયમો જોઈતા હોય — બ્લાઇન્ડ્સ, બેટિંગ રાઉન્ડ, શું શાને હરાવે — તો પહેલાં <a href=\"{rules}\">નિયમોનું પેજ</a> અને <a href=\"{hands}\">હેન્ડ રેન્કિંગ</a> જુઓ.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); },
     steps: [
       ["સાઇટ ખોલો — ઇન્સ્ટોલ કરવા જેવું કંઈ નથી",
-       "PokerTH બ્રાઉઝરમાં ચાલે છે. ડાઉનલોડ નથી, ખાતું નથી, પ્લગઇન નથી. ફોન પર તમે બ્રાઉઝર મેનૂમાંથી તેને હોમ સ્ક્રીન પર ઉમેરી શકો છો: પછી તે એપની જેમ, ફુલ સ્ક્રીનમાં ખૂલે છે, અને ઓફલાઇન પણ ચાલે છે."],
+       "PokerTH બ્રાઉઝરમાં ચાલે છે. ડાઉનલોડ નથી, પ્લગઇન નથી, અને પ્રેક્ટિસ કે મહેમાન ગેમ્સ માટે ખાતું નથી. તમે તેને એપની જેમ ઇન્સ્ટોલ કરી શકો છો — iPhone અને iPad પર શેર → હોમ સ્ક્રીન પર ઉમેરો, બીજે બ્રાઉઝર મેનૂ કે ઇન્સ્ટોલ બટન — અને તે ફુલ સ્ક્રીનમાં ખૂલે છે, ઓફલાઇન પણ ચાલે છે. ઇચ્છો તો, એક્કાની મદદ, ખૂણામાં રહેલો એક્કો, દરેક સ્ક્રીન સમજાવે છે."],
       ["ક્યાં રમવું તે પસંદ કરો",
-       "ત્રણ મોડ્સ. <strong>ઓફલાઇન પ્રેક્ટિસ</strong> તમને તરત કમ્પ્યુટર નિયંત્રિત પ્રતિસ્પર્ધીઓના ટેબલ પર બેસાડે છે, કોઈ કનેક્શન જોઈતું નથી — શીખવાનું અહીં. <strong>pokerth.net</strong> અધિકૃત નેટવર્ક છે: સાચા પ્રતિસ્પર્ધીઓ, સીઝન રેન્કિંગ, અને એક વાર નોંધાવવાનું મફત ઉપનામ. <strong>LAN / ખાનગી સર્વર</strong> તમને ડેડિકેટેડ PokerTH સર્વર સાથે કનેક્ટ કરે છે, તમારા કે બીજા કોઈના."],
+       "ત્રણ મોડ્સ. <strong>લોકલ / પ્રેક્ટિસ</strong> તમને તરત કમ્પ્યુટર નિયંત્રિત પ્રતિસ્પર્ધીઓના ટેબલ પર બેસાડે છે, કોઈ કનેક્શન જોઈતું નથી — શીખવાનું અહીં. <strong>pokerth.net</strong> અધિકૃત નેટવર્ક છે: સાચા પ્રતિસ્પર્ધીઓ, મહેમાનો માટે ખુલ્લી સામાન્ય ગેમ્સ, અને મફત ખાતું ધરાવતા ખેલાડીઓ માટે સીઝન રેન્કિંગવાળી રેન્કિંગ ગેમ્સ. <strong>LAN / ખાનગી સર્વર</strong> તમને ડેડિકેટેડ PokerTH સર્વર સાથે કનેક્ટ કરે છે, તમારા કે બીજા કોઈના."],
       ["ટેબલ પર બેસો",
-       "લોબીમાં, યાદીમાંના ટેબલમાં જોડાઓ કે તમારું પોતાનું બનાવો. બનાવતી વખતે તમે સીટ્સની સંખ્યા, શરૂઆતનો સ્ટેક, બ્લાઇન્ડ્સ કેટલી ઝડપે વધે, અને જોઈએ તો પાસવર્ડ નક્કી કરી શકો છો. આમંત્રણ લિંક શેર કરો: તમારો મિત્ર કંઈ નોંધણી કર્યા વગર, પોતાના બ્રાઉઝરમાં સીધો તમારા ટેબલ પર પહોંચે છે."],
+       "લોબીમાં, યાદીમાંના ટેબલમાં જોડાઓ, ચાલુ ગેમ જુઓ કે તમારું પોતાનું બનાવો. બનાવતી વખતે તમે ગેમનો પ્રકાર (સામાન્ય, ફક્ત નોંધાયેલ ખેલાડીઓ, ફક્ત આમંત્રિત ખેલાડીઓ કે રેન્કિંગ ગેમ) પસંદ કરો છો અને સીટ્સની સંખ્યા, શરૂઆતનો સ્ટેક, બ્લાઇન્ડ્સ કેટલી ઝડપે વધે, રમવાનો સમય, પ્રેક્ષકો જોઈ શકે કે નહીં, અને ટેબલ પાસવર્ડથી સુરક્ષિત હોય કે નહીં તે નક્કી કરી શકો છો. આમંત્રણ લિંક શેર કરો: તમારો મિત્ર પોતાના બ્રાઉઝરમાં સીધો તમારા ટેબલ પર પહોંચે છે — સામાન્ય ગેમમાં કંઈ નોંધણી કર્યા વગર."],
       ["હેન્ડ રમો",
-       "તમને બે હોલ કાર્ડ્સ મળે છે. ફ્લોપ પહેલાં, પછી ફ્લોપ, ટર્ન અને રિવર પછી બેટિંગ ટેબલની આસપાસ ફરે છે. તમારો વારો આવે ત્યારે, એક્શન બાર ઝળકે છે અને ફક્ત મંજૂર વસ્તુઓ જ આપે છે: Fold, Check કે Call, Raise કે All-In. તમે રકમ ટાઇપ કરી શકો છો, સ્લાઇડરથી ગોઠવી શકો છો, અથવા એક જ ટેપમાં Min, અડધો પોટ, પોટ, કે તમારો આખો સ્ટેક સેટ કરી શકો છો."],
+       "તમને બે હોલ કાર્ડ્સ મળે છે. ફ્લોપ પહેલાં, પછી ફ્લોપ, ટર્ન અને રિવર પછી બેટિંગ ટેબલની આસપાસ ફરે છે. તમારો વારો આવે ત્યારે, એક્શન બાર ઝળકે છે અને ફક્ત મંજૂર વસ્તુઓ જ આપે છે: Fold, Check કે Call, Raise કે All-In. તમે રકમ ટાઇપ કરી શકો છો, સ્લાઇડરથી ગોઠવી શકો છો, અથવા એક જ ટેપમાં પોટનો ત્રીજો ભાગ, અડધો પોટ કે પોટ સેટ કરી શકો છો."],
       ["ટેબલ વાંચો",
-       "કાર્ડ્સ આવે તેમ તમારા હાલના શ્રેષ્ઠ કોમ્બિનેશનનું નામ બોર્ડની નીચે બતાવાય છે. પોટ, દરેક સ્ટેક અને બ્લાઇન્ડ લેવલ હંમેશાં દેખાય છે, ડીલર બટન છેલ્લે કોણ રમે છે તે બતાવે છે, અને કાઉન્ટડાઉન તમારી પાસે બાકી સમય બતાવે છે. શોડાઉનમાં, દરેક હેન્ડ બનાવતાં પાંચ કાર્ડ્સ હાઇલાઇટ થાય છે."],
+       "ઓડ્સ ટેબ કાર્ડ્સ આવે તેમ તમારા હાલના શ્રેષ્ઠ કોમ્બિનેશનનું નામ અને તમારી જીતવાની શક્યતા બતાવે છે. પોટ, દરેક સ્ટેક અને બ્લાઇન્ડ લેવલ હંમેશાં દેખાય છે, ડીલર બટન છેલ્લે કોણ રમે છે તે બતાવે છે, અને કાઉન્ટડાઉન તમારી પાસે બાકી સમય બતાવે છે. શોડાઉનમાં, વિજેતા કોમ્બિનેશનનું નામ કમ્યુનિટી કાર્ડ્સની નીચે બતાવાય છે."],
       ["ટુર્નામેન્ટ જીતો",
-       "PokerTH ગેમ્સ sit-and-go ટુર્નામેન્ટ્સ છે: બધા સરખા સ્ટેકથી શરૂ કરે છે, બ્લાઇન્ડ્સ નિયમિત ગાળે વધે છે, અને એક વ્યક્તિ પાસે બધી ચિપ્સ ન આવે ત્યાં સુધી ખેલાડીઓ બહાર થતા જાય છે. કશાનો ખર્ચ નથી અને કોઈ ચિપ ખરીદી શકાતી નથી — બધું રમતનું ચલણ છે, તેથી દાવ પર ફક્ત રમત જ છે."]
+       "PokerTH ગેમ્સ ટુર્નામેન્ટ્સ છે: બધા સરખા સ્ટેકથી શરૂ કરે છે, બ્લાઇન્ડ્સ દર થોડા હેન્ડ કે મિનિટે વધે છે, અને એક વ્યક્તિ પાસે બધી ચિપ્સ ન આવે ત્યાં સુધી ખેલાડીઓ બહાર થતા જાય છે. કશાનો ખર્ચ નથી અને કોઈ ચિપ ખરીદી શકાતી નથી — બધું રમતનું ચલણ છે, તેથી દાવ પર ફક્ત રમત જ છે."]
     ],
     phoneH2: "ફોન પર રમવું",
     phoneP: "ટેબલ કમ્પ્યુટર જેટલું જ ટચ સ્ક્રીન માટે પણ ડિઝાઇન થયું છે: બેટ ફીલ્ડને સ્પર્શતાં સિસ્ટમ કીબોર્ડને બદલે એક્શન બારમાં જ અંક પેડ ખૂલે છે, તેથી ટેબલ ક્યારેય કૂદતું નથી, અને સ્લાઇડર ડેસ્કટોપ ક્લાયન્ટના જ પગથિયે ખસે છે. વારાની સૂચનાઓ Fold અને Check/Call બટનો સાથે તમારા સુધી પહોંચી શકે છે: તમે ટેબ પર પાછા ગયા વગર હેન્ડ રમી શકો છો.",
     friendsH2: "મિત્રો સાથે રમવું",
     friendsP: "ટેબલ બનાવો, ખાનગી રાખવું હોય તો પાસવર્ડ મૂકો, અને આમંત્રણ લિંક મોકલો. તે સીધું ટેબલ ખોલે છે — તમારા મિત્રોએ તેને હોમ સ્ક્રીન પર ઉમેર્યું હોય તો ઇન્સ્ટોલ થયેલી એપમાં, નહીંતર બ્રાઉઝર ટેબમાં. કોઈએ કંઈ ઇન્સ્ટોલ કરવું પડતું નથી કે ઇમેઇલ સરનામું આપવું પડતું નથી.",
     faqH2: "સામાન્ય પ્રશ્નો",
-    faqP: function (h, c) { return "કોઈ પણ મોડમાં, ક્યારેય પૈસાનો સંબંધ નથી. તમારી સેટિંગ્સ, સ્ટાઇલ પેક્સ અને ઓફલાઇન પ્રગતિ તમારા ઉપકરણ પર જ રહે છે. ઇન્ટરફેસ 83 ભાષાઓમાં છે, પણ પાંચ ક્રિયા શબ્દો — Fold, Check, Call, Raise, All-In — દુનિયાના દરેક ટેબલની જેમ અંગ્રેજીમાં જ રહે છે. વધુ માહિતી <a href=\"{faq}\">FAQ</a> માં.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
+    faqP: function (h, c) { return "કોઈ પણ મોડમાં, ક્યારેય પૈસાનો સંબંધ નથી. તમારી સેટિંગ્સ, સ્ટાઇલ પેક્સ અને પ્રેક્ટિસની પ્રગતિ તમારા ઉપકરણ પર જ રહે છે, અને pokerth.net ખાતાથી લૉગ ઇન કરો ત્યારે તમારા બીજા ઉપકરણો પર પણ તમારી સાથે આવે છે. ઇન્ટરફેસ 83 ભાષાઓમાં છે, પણ પાંચ ક્રિયા શબ્દો — Fold, Check, Call, Raise, All-In — દુનિયાના દરેક ટેબલની જેમ અંગ્રેજીમાં જ રહે છે. વધુ માહિતી <a href=\"{faq}\">FAQ</a> માં.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
   },
   ha: {
     title: "Yadda ake buga poker a kan layi kyauta — PokerTH Web",
@@ -2172,37 +2010,25 @@ var PARTS = {
     h1: "Yadda ake buga poker a kan layi, kyauta, a burauzarka",
     lead: function (h, c) { return "Ga taƙaitaccen bayani: daga shafi mara komai zuwa hannunka na farko na Texas Hold’em a PokerTH. Idan ƙa'idojin kansu ne ke burge ka — blinds, zagayen caca, me ke doke me — fara da <a href=\"{rules}\">shafin ƙa'idoji</a> da <a href=\"{hands}\">hannaye</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); },
     steps: [
-      [
-        "Buɗe shafin — babu abin da za a sanya",
-        "PokerTH yana aiki a burauza. Babu saukewa, babu asusu, babu ƙarin shirin. A waya za ka iya ƙara shi zuwa allon gida daga menu na burauza, kuma yana buɗewa kamar manhaja, a cikakken allo kuma yana iya aiki ba tare da intanet ba.",
-      ],
-      [
-        "Zaɓi inda za ka yi wasa",
-        "Yanayi uku. <strong>Horo ba tare da intanet ba</strong> yana ba ka tebur na abokan hamayya na kwamfuta nan take kuma ba ya buƙatar kowane haɗi — wurin koyo. <strong>pokerth.net</strong> ita ce hanyar sadarwa ta hukuma: abokan hamayya na gaske, matsayin kaka, laƙabi kyauta da kake rajista sau ɗaya. <strong>LAN / sabar sirri</strong> tana haɗawa da keɓaɓɓiyar sabar PokerTH, taka ko ta wani.",
-      ],
-      [
-        "Zauna a tebur",
-        "A zaure ko dai ka shiga tebur daga jeri ko ka ƙirƙiri naka. Ƙirƙira tana ba ka damar saita adadin kujeru, tarin farko, yadda blinds ke ƙaruwa da sauri da ko tebur yana da kariyar kalmar sirri. Raba mahaɗin gayyata kuma aboki zai iso teburinka kai tsaye, a burauzarsa, ba tare da rajistar komai ba.",
-      ],
-      [
-        "Buga hannu",
-        "Ana raba maka katuna biyu na sirri. Caca tana zagayawa tebur kafin flop, da kuma bayan flop, turn da river. Idan lokacinka ne, sandar motsi tana haskakawa kuma tana ba da abin da aka yarda kawai: Fold, Check ko Call, Raise ko All-In. Ana iya rubuta adadin caca, a ja shi a madaidaicin ja ko a saita shi da taɓawa ɗaya zuwa mafi ƙanƙanta, rabin pot, pot ko dukan tarinka.",
-      ],
-      [
-        "Karanta tebur",
-        "Ana ambaton mafi kyawun hannunka na yanzu a ƙarƙashin tebur yayin da ake bayyana katuna. Pot, kowane tari da matakin blinds koyaushe suna kan allo, maɓallin mai rabawa yana nuna wanda ke magana na ƙarshe, kuma ƙirgawa baya yana nuna lokacin da kake da shi. A showdown, ana haskaka katuna biyar da suka yi kowane hannu.",
-      ],
-      [
-        "Ci gasa",
-        "Wasannin PokerTH gasa ce ta sit-and-go: kowa yana farawa da tari ɗaya, blinds suna ƙaruwa bisa agogo, kuma ana fitar da 'yan wasa har sai ɗaya ya mallaki duk chips. Babu abin da ke kashe kuɗi kuma ba za a iya saya chips ba — duka kuɗin wasa ne, don haka abin da ke cikin haɗari shi ne wasan kansa kawai.",
-      ],
+      ["Buɗe shafin — babu abin da za a sanya",
+       "PokerTH yana aiki a burauza. Babu saukewa, babu ƙarin shirin, kuma babu asusu don horo ko wasannin baƙi. Za ka iya sanya shi kamar manhaja — Raba → Ƙara zuwa Allon Gida a iPhone da iPad, menu na burauza ko maɓallin shigarwa a wasu na'urori — kuma yana buɗewa a cikakken allo, yana iya aiki ba tare da intanet ba. Idan kana so, Taimakon Aas, Aas ɗin da ke kusurwa, yana bayyana kowane allo."],
+      ["Zaɓi inda za ka yi wasa",
+       "Yanayi uku. <strong>Na gida / horo</strong> yana ba ka tebur na abokan hamayya na kwamfuta nan take kuma ba ya buƙatar kowane haɗi — wurin koyo. <strong>pokerth.net</strong> ita ce hanyar sadarwa ta hukuma: abokan hamayya na gaske, wasannin Na al'ada a buɗe ga baƙi, da wasannin matsayi masu matsayin kaka ga 'yan wasa masu asusu kyauta. <strong>LAN / sabar sirri</strong> tana haɗawa da keɓaɓɓiyar sabar PokerTH, taka ko ta wani."],
+      ["Zauna a tebur",
+       "A zaure ka shiga tebur daga jeri, ka kalli wasan da ke gudana, ko ka ƙirƙiri naka. Ƙirƙira tana ba ka damar zaɓar nau'in wasa (Na al'ada, 'yan wasa masu rajista kawai, 'yan wasan da aka gayyata kawai ko Wasan matsayi) da saita adadin kujeru, tarin farko, yadda blinds ke ƙaruwa da sauri, lokacin yin motsi, ko masu kallo za su iya kallo da ko tebur yana da kariyar kalmar sirri. Raba mahaɗin gayyata kuma aboki zai iso teburinka kai tsaye, a burauzarsa — a wasan Na al'ada, ba tare da rajistar komai ba."],
+      ["Buga hannu",
+       "Ana raba maka katuna biyu na sirri. Caca tana zagayawa tebur kafin flop, da kuma bayan flop, turn da river. Idan lokacinka ne, sandar motsi tana haskakawa kuma tana ba da abin da aka yarda kawai: Fold, Check ko Call, Raise ko All-In. Ana iya rubuta adadin caca, a ja shi a madaidaicin ja ko a saita shi da taɓawa ɗaya zuwa kashi ɗaya cikin uku na pot, rabin pot ko pot."],
+      ["Karanta tebur",
+       "Shafin Dama yana ambaton mafi kyawun hannunka na yanzu da damarka ta cin nasara yayin da ake bayyana katuna. Pot, kowane tari da matakin blinds koyaushe suna kan allo, maɓallin mai rabawa yana nuna wanda ke magana na ƙarshe, kuma ƙirgawa baya yana nuna lokacin da kake da shi. A showdown, ana ambaton haɗuwar da ta ci nasara a ƙarƙashin katunan jama'a."],
+      ["Ci gasa",
+       "Wasannin PokerTH gasa ce: kowa yana farawa da tari ɗaya, blinds suna ƙaruwa bayan hannaye ko mintuna kaɗan, kuma ana fitar da 'yan wasa har sai ɗaya ya mallaki duk chips. Babu abin da ke kashe kuɗi kuma ba za a iya saya chips ba — duka kuɗin wasa ne, don haka abin da ke cikin haɗari shi ne wasan kansa kawai."]
     ],
     phoneH2: "Wasa a waya",
     phoneP: "An tsara tebur don allon taɓawa kamar yadda aka tsara shi don kwamfuta: taɓa filin caca yana buɗe allon lambobi a cikin sandar motsi maimakon maɓallan tsarin, don haka tebur ba ya taɓa tsalle, kuma madaidaicin ja yana tafiya bisa matakai iri ɗaya da manhajar kwamfuta. Sanarwar lokaci na iya zuwa da maɓallan Fold da Check/Call a kansu kai tsaye: ana iya buga hannu ba tare da komawa shafi ba.",
     friendsH2: "Wasa tare da abokai",
     friendsP: "Ƙirƙiri tebur, saka kalmar sirri idan kana so ya zama na sirri, kuma aika mahaɗin gayyata. Yana buɗe tebur kai tsaye — a manhajar da aka sanya idan abokanka sun ƙara ta zuwa allon gidansu, in ba haka ba a shafin burauza. Babu wanda ke buƙatar sanya komai ko ba da adireshin imel.",
     faqH2: "Tambayoyi da ake yawan yi",
-    faqP: function (h, c) { return "Babu kuɗi a ciki a kowane yanayi. Saitunanka, fakitin salo da ci gaban ba tare da intanet ba suna zama a na'urarka. Fuskar tana samuwa cikin harsuna 83, yayin da kalmomin motsi biyar — Fold, Check, Call, Raise, All-In — suna zama da Turanci, kamar a kowane tebur a duniya. Ƙari a cikin <a href=\"{faq}\">tambayoyi da ake yawan yi</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); },
+    faqP: function (h, c) { return "Babu kuɗi a ciki a kowane yanayi. Saitunanka, fakitin salo da ci gaban horonka suna zama a na'urarka, kuma suna bin ka zuwa sauran na'urorinka idan ka shiga da asusun pokerth.net. Fuskar tana samuwa cikin harsuna 83, yayin da kalmomin motsi biyar — Fold, Check, Call, Raise, All-In — suna zama da Turanci, kamar a kowane tebur a duniya. Ƙari a cikin <a href=\"{faq}\">tambayoyi da ake yawan yi</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); },
   },
   is: {
     title: "Hvernig á að spila ókeypis póker á netinu — PokerTH Web",
@@ -2213,24 +2039,24 @@ var PARTS = {
     lead: function (h, c) { return "Þetta er stutta útgáfan, frá tómum flipa að fyrstu Texas Hold’em höndinni þinni í PokerTH. Ef þú vilt reglurnar — blinda, veðlotur, hvað slær hvað — skaltu byrja á <a href=\"{rules}\">reglusíðunni</a> og <a href=\"{hands}\">röðun handa</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); },
     steps: [
       ["Opnaðu síðuna — ekkert til að setja upp",
-       "PokerTH keyrir í vafranum. Ekkert niðurhal, enginn aðgangur, engin viðbót. Í síma geturðu bætt því við heimaskjáinn úr valmynd vafrans: þá opnast það eins og forrit, á öllum skjánum, og virkar líka ótengt."],
+       "PokerTH keyrir í vafranum. Ekkert niðurhal, engin viðbót og enginn aðgangur fyrir æfingar eða gestaleiki. Þú getur sett það upp eins og forrit — Deila → Bæta við heimaskjá á iPhone og iPad, valmynd vafrans eða uppsetningarhnappurinn annars staðar — og þá opnast það á öllum skjánum og virkar líka ótengt. Ef þú vilt útskýrir Hjálp ássins, ásinn í horninu, hvern skjá."],
       ["Veldu hvar þú spilar",
-       "Þrír hamir. <strong>Ótengd æfing</strong> setur þig strax við borð með tölvustýrðum andstæðingum, engin tenging nauðsynleg — hér er best að læra. <strong>pokerth.net</strong> er opinbera netið: alvöru andstæðingar, stigatafla tímabilsins og ókeypis gælunafn sem þú skráir einu sinni. <strong>LAN / einkaþjónn</strong> tengir þig við sérstakan PokerTH þjón, þinn eigin eða annarra."],
+       "Þrír hamir. <strong>Staðbundið / æfing</strong> setur þig strax við borð með tölvustýrðum andstæðingum, engin tenging nauðsynleg — hér er best að læra. <strong>pokerth.net</strong> er opinbera netið: alvöru andstæðingar, venjulegir leikir opnir gestum og stigaleikir með stigatöflu tímabilsins fyrir leikmenn með ókeypis aðgang. <strong>LAN / einkaþjónn</strong> tengir þig við sérstakan PokerTH þjón, þinn eigin eða annarra."],
       ["Sestu við borð",
-       "Í anddyrinu sestu við borð af listanum eða býrð til þitt eigið. Þegar þú býrð til borð geturðu ákveðið fjölda sæta, upphafsstafla, hve hratt blindarnir hækka og lykilorð ef þú vilt. Deildu boðstenglinum: vinur þinn lendir beint við borðið þitt, í sínum eigin vafra, án þess að skrá neitt."],
+       "Í anddyrinu sestu við borð af listanum, horfir á leik í gangi eða býrð til þitt eigið. Þegar þú býrð til borð geturðu valið leikgerð (Venjulegur, Aðeins skráðir leikmenn, Aðeins boðnir leikmenn eða Stigaleikur) og ákveðið fjölda sæta, upphafsstafla, hve hratt blindarnir hækka, tímann til að bregðast við, hvort áhorfendur megi horfa og lykilorð ef þú vilt. Deildu boðstenglinum: vinur þinn lendir beint við borðið þitt, í sínum eigin vafra — í venjulegum leik án þess að skrá neitt."],
       ["Spilaðu höndina",
-       "Þú færð tvö holuspil. Veðmálin ganga hringinn við borðið fyrir flop, síðan eftir flop, turn og river. Þegar þú átt leik lýsist aðgerðastikan upp og býður aðeins það sem er leyfilegt: Fold, Check eða Call, Raise eða All-In. Þú getur slegið inn upphæð, stillt hana með sleðanum eða stillt Min, hálfan pott, pott eða allan staflann þinn með einni snertingu."],
+       "Þú færð tvö holuspil. Veðmálin ganga hringinn við borðið fyrir flop, síðan eftir flop, turn og river. Þegar þú átt leik lýsist aðgerðastikan upp og býður aðeins það sem er leyfilegt: Fold, Check eða Call, Raise eða All-In. Þú getur slegið inn upphæð, stillt hana með sleðanum eða stillt hana á þriðjung af pottinum, hálfan pott eða pottinn með einni snertingu."],
       ["Lestu borðið",
-       "Besta samsetningin þín hverju sinni er nefnd fyrir neðan borðið eftir því sem spilin koma. Potturinn, allir staflar og blindaþrepið eru alltaf sýnileg, gjafarahnappurinn sýnir hver leikur síðast og niðurtalning sýnir tímann sem þú átt eftir. Í uppgjöri eru spilin fimm sem mynda hverja hönd auðkennd."],
+       "Flipinn Líkur nefnir bestu samsetninguna þína hverju sinni og líkurnar á að þú vinnir eftir því sem spilin koma. Potturinn, allir staflar og blindaþrepið eru alltaf sýnileg, gjafarahnappurinn sýnir hver leikur síðast og niðurtalning sýnir tímann sem þú átt eftir. Í uppgjöri er vinningssamsetningin nefnd fyrir neðan sameiginlegu spilin."],
       ["Vinndu mótið",
-       "Leikir í PokerTH eru sit-and-go mót: allir byrja með sama stafla, blindarnir hækka með reglulegu millibili og leikmenn falla úr leik þar til einn á alla spilapeningana. Ekkert kostar neitt og engan spilapening er hægt að kaupa — þetta er allt leikfé, svo það eina sem er í húfi er leikurinn sjálfur."]
+       "Leikir í PokerTH eru mót: allir byrja með sama stafla, blindarnir hækka á nokkurra handa eða mínútna fresti og leikmenn falla úr leik þar til einn á alla spilapeningana. Ekkert kostar neitt og engan spilapening er hægt að kaupa — þetta er allt leikfé, svo það eina sem er í húfi er leikurinn sjálfur."]
     ],
     phoneH2: "Að spila í síma",
     phoneP: "Borðið er hannað jafnt fyrir snertiskjái og tölvur: ef þú snertir veðmálsreitinn opnast talnaborð í aðgerðastikunni sjálfri í stað lyklaborðs kerfisins, svo borðið hoppar aldrei til, og sleðinn hreyfist í sömu skrefum og í skjáborðsbiðlaranum. Tilkynningar um að þú eigir leik geta borist þér með Fold og Check/Call hnöppum: þú getur spilað höndina án þess að fara aftur í flipann.",
     friendsH2: "Að spila með vinum",
     friendsP: "Búðu til borð, settu lykilorð ef þú vilt hafa það lokað og sendu boðstengilinn. Hann opnar borðið beint — í uppsetta forritinu ef vinir þínir hafa bætt því við heimaskjáinn, annars í vafraflipa. Enginn þarf að setja neitt upp eða gefa upp netfang.",
     faqH2: "Algengar spurningar",
-    faqP: function (h, c) { return "Peningar koma aldrei við sögu, í neinum ham. Stillingarnar þínar, stílpakkar og ótengd framvinda haldast á tækinu þínu. Viðmótið er til á 83 tungumáli, en aðgerðaorðin fimm — Fold, Check, Call, Raise, All-In — haldast á ensku, eins og við öll borð í heiminum. Meira í <a href=\"{faq}\">algengum spurningum</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
+    faqP: function (h, c) { return "Peningar koma aldrei við sögu, í neinum ham. Stillingarnar þínar, stílpakkar og æfingaframvinda haldast á tækinu þínu og fylgja þér í önnur tæki þegar þú skráir þig inn með pokerth.net aðgangi. Viðmótið er til á 83 tungumáli, en aðgerðaorðin fimm — Fold, Check, Call, Raise, All-In — haldast á ensku, eins og við öll borð í heiminum. Meira í <a href=\"{faq}\">algengum spurningum</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
   },
 
 
@@ -2243,24 +2069,24 @@ var PARTS = {
     lead: function (h, c) { return "Dit is die kort weergawe: van ’n leë oortjie tot jou eerste hand Texas Hold’em in PokerTH. As dit die reëls self is wat jy soek — blindes, bierondes, wat wat klop — begin eerder by die <a href=\"{rules}\">reëlsbladsy</a> en die <a href=\"{hands}\">pokerhande</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); },
     steps: [
       ["Maak die werf oop — daar is niks om te installeer nie",
-       "PokerTH loop in die blaaier. Geen aflaai, geen rekening, geen inprop nie. Op ’n foon kan jy dit uit die blaaierkieslys by die tuisskerm voeg; dan open dit soos ’n toep, volskerm, en werk ook vanlyn."],
+       "PokerTH loop in die blaaier. Geen aflaai, geen inprop nie, en geen rekening vir oefening of vir gasspele nie. Jy kan dit soos ’n toep installeer — Deel → Voeg by tuisskerm op iPhone en iPad, elders die blaaierkieslys of die installeerknoppie — en dit open volskerm en werk ook vanlyn. As jy wil, verduidelik Die Aas se Hulp, die Aas in die hoek, elke skerm."],
       ["Kies waar jy wil speel",
-       "Drie maniere. <strong>Vanlyn oefening</strong> laat jou dadelik aan ’n tafel met rekenaarteenstanders sit en het glad nie ’n verbinding nodig nie — hier leer ’n mens. <strong>pokerth.net</strong> is die amptelike netwerk: regte teenstanders, seisoenranglyste en ’n gratis bynaam wat jy een keer registreer. <strong>LAN / privaat bediener</strong> koppel aan ’n toegewyde PokerTH-bediener, joune of iemand anders s’n."],
+       "Drie maniere. <strong>Plaaslik / oefening</strong> laat jou dadelik aan ’n tafel met rekenaarteenstanders sit en het glad nie ’n verbinding nodig nie — hier leer ’n mens. <strong>pokerth.net</strong> is die amptelike netwerk: regte teenstanders, Normaal-spele oop vir gaste, en Ranglysspele met seisoenranglyste vir spelers met ’n gratis rekening. <strong>LAN / privaat bediener</strong> koppel aan ’n toegewyde PokerTH-bediener, joune of iemand anders s’n."],
       ["Sit aan ’n tafel",
-       "In die voorportaal sluit jy by ’n tafel uit die lys aan of skep jy jou eie. Wanneer jy een skep, stel jy die aantal plekke, die beginstapel, hoe vinnig die blindes styg en of die tafel ’n wagwoord het. Deel die uitnodigingskakel en ’n vriend land reg by jou tafel, in sy eie blaaier, sonder om enigiets te registreer."],
+       "In die voorportaal sluit jy by ’n tafel uit die lys aan, kyk jy na ’n lopende spel, of skep jy jou eie. Wanneer jy een skep, kies jy die speltipe (Normaal, net geregistreerde spelers, net op uitnodiging of Ranglysspel) en stel jy die aantal plekke, die beginstapel, hoe vinnig die blindes styg, die tyd om te speel, of toeskouers mag kyk en of die tafel ’n wagwoord het. Deel die uitnodigingskakel en ’n vriend land reg by jou tafel, in sy eie blaaier — in ’n Normaal-spel sonder om enigiets te registreer."],
       ["Speel die hand",
-       "Jy kry twee toe kaarte. Daar word om die tafel gewed voor die flop, en weer ná die flop, die turn en die river. Wanneer dit jou beurt is, gaan die aksiebalk aan en bied net aan wat toegelaat word: Fold, Check of Call, Raise of All-In. Die bedrag kan getik word, op die skuifbalk gesleep word, of met een tik op Min, die helfte van die pot, die pot of jou hele stapel gestel word."],
+       "Jy kry twee toe kaarte. Daar word om die tafel gewed voor die flop, en weer ná die flop, die turn en die river. Wanneer dit jou beurt is, gaan die aksiebalk aan en bied net aan wat toegelaat word: Fold, Check of Call, Raise of All-In. Die bedrag kan getik word, op die skuifbalk gesleep word, of met een tik op ’n derde van die pot, die helfte van die pot of die pot gestel word."],
       ["Lees die tafel",
-       "Jou beste hand op daardie oomblik word onder die tafel benoem soos die kaarte kom. Die pot, elke stapel en die blindevlak is heeltyd op die skerm, die delerknoppie wys wie laaste handel, en ’n aftelling wys hoeveel tyd jy het. By die showdown word die vyf kaarte uitgelig wat elke hand gevorm het."],
+       "Die Kanse-oortjie noem jou beste hand op daardie oomblik en jou kans om te wen soos die kaarte kom. Die pot, elke stapel en die blindevlak is heeltyd op die skerm, die delerknoppie wys wie laaste handel, en ’n aftelling wys hoeveel tyd jy het. By die showdown word die wenkombinasie onder die gemeenskaplike kaarte benoem."],
       ["Wen die toernooi",
-       "Spele in PokerTH is sit-and-go-toernooie: almal begin met dieselfde stapel, die blindes styg op die klok, en spelers val uit totdat een al die fiches het. Niks kos geld nie en fiches kan nie gekoop word nie — dis alles speelgeld, dus die enigste ding op die spel is die spel self."]
+       "Spele in PokerTH is toernooie: almal begin met dieselfde stapel, die blindes styg elke paar hande of minute, en spelers val uit totdat een al die fiches het. Niks kos geld nie en fiches kan nie gekoop word nie — dis alles speelgeld, dus die enigste ding op die spel is die spel self."]
     ],
     phoneH2: "Speel op ’n foon",
     phoneP: "Die tafel is net so goed vir ’n raakskerm gebou as vir ’n rekenaar: as jy op die wedveld tik, open ’n syferbord binne die aksiebalk in plaas van die stelselsleutelbord, sodat die tafel nooit rondspring nie, en die skuifbalk beweeg in dieselfde stappe as die werkskermkliënt. Kennisgewings dat dit jou beurt is, kan met Fold- en Check/Call-knoppies daarop kom, sodat ’n hand gespeel kan word sonder om terug te skakel na die oortjie.",
     friendsH2: "Speel saam met vriende",
     friendsP: "Skep ’n tafel, sit ’n wagwoord op as jy dit privaat wil hê, en stuur die uitnodigingskakel. Dit open die tafel direk — in die geïnstalleerde toep as hulle dit by hul tuisskerm gevoeg het, anders in ’n blaaieroortjie. Niemand hoef iets te installeer of ’n e-posadres af te staan nie.",
     faqH2: "Algemene vrae",
-    faqP: function (h, c) { return "Daar is nooit geld ter sprake nie, in geen modus nie. Jou instellings, stylpakkette en vanlyn vordering bly op jou eie toestel. Die koppelvlak is in 83 tale beskikbaar, terwyl die vyf aksiewoorde — Fold, Check, Call, Raise, All-In — in Engels bly, soos aan enige tafel ter wêreld. Meer by die <a href=\"{faq}\">algemene vrae</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
+    faqP: function (h, c) { return "Daar is nooit geld ter sprake nie, in geen modus nie. Jou instellings, stylpakkette en oefenvordering bly op jou eie toestel, en volg jou na jou ander toestelle wanneer jy met ’n pokerth.net-rekening aanmeld. Die koppelvlak is in 83 tale beskikbaar, terwyl die vyf aksiewoorde — Fold, Check, Call, Raise, All-In — in Engels bly, soos aan enige tafel ter wêreld. Meer by die <a href=\"{faq}\">algemene vrae</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
   },
 
   fil: {
@@ -2272,24 +2098,24 @@ var PARTS = {
     lead: function (h, c) { return "Ito ang maikling bersyon: mula sa blangkong tab hanggang sa unang Texas Hold’em na kamay mo sa PokerTH. Kung ang hinahanap mo ay ang mismong tuntunin — blind, mga ronda ng taya, ano ang tumatalo sa ano — simulan mo muna sa <a href=\"{rules}\">pahina ng tuntunin</a> at sa <a href=\"{hands}\">ranggo ng mga kamay</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); },
     steps: [
       ["Buksan ang site — walang kailangang i-install",
-       "Tumatakbo ang PokerTH sa loob ng browser. Walang download, walang account, walang plugin. Sa telepono, maidaragdag mo ito sa home screen mula sa menu ng browser; bubukas ito na parang app, buong screen, at gumagana kahit walang koneksyon."],
+       "Tumatakbo ang PokerTH sa loob ng browser. Walang download, walang plugin, at walang account para sa pagsasanay o para sa mga larong pambisita. Puwede mo itong i-install na parang app — Share → Add to Home Screen sa iPhone at iPad, ang menu ng browser o ang install button sa iba — at bubukas ito nang buong screen, gumagana kahit offline. Kung gusto mo, ipinapaliwanag ng Tulong ng Alas, ang Alas sa sulok, ang bawat screen."],
       ["Piliin kung saan mo gustong maglaro",
-       "Tatlong paraan. Ang <strong>offline na pagsasanay</strong> ay agad kang pinauupo sa mesang may mga kalaban ng kompyuter at hindi na kailangan ng koneksyon — dito natututo. Ang <strong>pokerth.net</strong> ang opisyal na network: tunay na kalaban, ranggo kada season, at libreng palayaw na minsan lang irerehistro. Ang <strong>LAN / pribadong server</strong> ay kumokonekta sa isang nakalaang PokerTH server, sa iyo o sa iba."],
+       "Tatlong paraan. Ang <strong>Lokal / pagsasanay</strong> ay agad kang pinauupo sa mesang may mga kalaban ng kompyuter at hindi na kailangan ng koneksyon — dito natututo. Ang <strong>pokerth.net</strong> ang opisyal na network: tunay na kalaban, mga larong Normal na bukas sa mga bisita, at mga Ranking game na may ranggo kada season para sa mga manlalarong may libreng account. Ang <strong>LAN / pribadong server</strong> ay kumokonekta sa isang nakalaang PokerTH server, sa iyo o sa iba."],
       ["Umupo sa isang mesa",
-       "Sa lobby, sasali ka sa mesa mula sa listahan o gagawa ng sarili mo. Sa paggawa, itinatakda mo ang bilang ng upuan, panimulang chips, kung gaano kabilis tumaas ang blind, at kung may password ang mesa. Ibahagi ang link ng imbitasyon at diretso sa mesa mo darating ang kaibigan mo, sa sarili niyang browser, nang walang irerehistro."],
+       "Sa lobby, sasali ka sa mesa mula sa listahan, manonood ng tumatakbong laro, o gagawa ng sarili mo. Sa paggawa, pipiliin mo ang uri ng laro (Normal, mga rehistradong manlalaro lang, mga inimbitahang manlalaro lang o Ranking game) at itatakda ang bilang ng upuan, panimulang chips, kung gaano kabilis tumaas ang blind, ang oras para kumilos, kung puwedeng manood ang mga manonood, at kung may password ang mesa. Ibahagi ang link ng imbitasyon at diretso sa mesa mo darating ang kaibigan mo, sa sarili niyang browser — sa larong Normal, nang walang irerehistro."],
       ["Laruin ang kamay",
-       "Bibigyan ka ng dalawang saradong baraha. Umiikot ang taya sa mesa bago ang flop, at muli pagkatapos ng flop, turn at river. Pagdating ng turno mo, magliliwanag ang action bar at ipapakita lang ang pinapayagan: Fold, Check o Call, Raise o All-In. Ang halaga ay puwedeng i-type, i-drag sa slider, o itakda sa isang pindot sa Min, kalahati ng pot, buong pot, o lahat ng chips mo."],
+       "Bibigyan ka ng dalawang saradong baraha. Umiikot ang taya sa mesa bago ang flop, at muli pagkatapos ng flop, turn at river. Pagdating ng turno mo, magliliwanag ang action bar at ipapakita lang ang pinapayagan: Fold, Check o Call, Raise o All-In. Ang halaga ay puwedeng i-type, i-drag sa slider, o itakda sa isang pindot sa ikatlong bahagi ng pot, kalahati ng pot o buong pot."],
       ["Basahin ang mesa",
-       "Habang lumalabas ang mga baraha, nakasulat sa ilalim ng mesa ang pinakamalakas mong kamay sa sandaling iyon. Nasa screen palagi ang pot, ang chips ng bawat isa, at ang antas ng blind; ipinapakita ng dealer button kung sino ang huling magsasalita, at ang countdown kung gaano ka pa katagal. Sa showdown, itinatampok ang limang barahang bumuo ng bawat kamay."],
+       "Ipinapakita ng tab na Odds ang pangalan ng pinakamalakas mong kamay sa sandaling iyon at ang tsansa mong manalo habang lumalabas ang mga baraha. Nasa screen palagi ang pot, ang chips ng bawat isa, at ang antas ng blind; ipinapakita ng dealer button kung sino ang huling magsasalita, at ang countdown kung gaano ka pa katagal. Sa showdown, pinangangalanan sa ilalim ng mga karaniwang baraha ang nanalong kombinasyon."],
       ["Panalunin ang torneo",
-       "Ang mga laro sa PokerTH ay sit-and-go na torneo: pare-pareho ang panimulang chips ng lahat, tumataas ang blind ayon sa oras, at unti-unting natatanggal ang mga manlalaro hanggang isa na lang ang may hawak ng lahat. Walang binabayaran at hindi mabibili ang chips — pawang pantaya-taya lang ang lahat, kaya ang laro mismo lang ang nakataya."]
+       "Ang mga laro sa PokerTH ay mga torneo: pare-pareho ang panimulang chips ng lahat, tumataas ang blind kada ilang kamay o minuto, at unti-unting natatanggal ang mga manlalaro hanggang isa na lang ang may hawak ng lahat. Walang binabayaran at hindi mabibili ang chips — pawang pantaya-taya lang ang lahat, kaya ang laro mismo lang ang nakataya."]
     ],
     phoneH2: "Paglalaro sa telepono",
     phoneP: "Ginawa ang mesa para sa touch screen nang kasinghusay ng para sa desktop: kapag pinindot ang kahon ng taya, isang number pad ang bubukas sa loob mismo ng action bar sa halip na ang keyboard ng sistema, kaya hindi kailanman lumulundag ang mesa, at ang slider ay gumagalaw sa parehong hakbang tulad ng desktop client. Ang abiso ng turno ay puwedeng may kasamang Fold at Check/Call na pindutan, kaya matatapos ang isang kamay nang hindi na bumabalik sa tab.",
     friendsH2: "Paglalaro kasama ang mga kaibigan",
     friendsP: "Gumawa ng mesa, lagyan ng password kung gusto mong pribado, at ipadala ang link ng imbitasyon. Diretsong bubuksan nito ang mesa — sa naka-install na app kung naidagdag na nila ito sa home screen, o sa isang tab ng browser kung hindi. Walang kailangang mag-install ng kahit ano o magbigay ng email.",
     faqH2: "Karaniwang tanong",
-    faqP: function (h, c) { return "Walang perang kasangkot, sa alinmang mode. Nananatili sa sarili mong device ang mga setting, style pack at offline na progreso mo. Available ang interface sa 83 wika, samantalang ang limang salitang aksyon — Fold, Check, Call, Raise, All-In — ay nananatiling Ingles, gaya sa anumang mesa sa mundo. Higit pa sa <a href=\"{faq}\">karaniwang tanong</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
+    faqP: function (h, c) { return "Walang perang kasangkot, sa alinmang mode. Nananatili sa sarili mong device ang mga setting, style pack at progreso mo sa pagsasanay, at sumusunod ang mga ito sa iba mong device kapag nag-log in ka gamit ang pokerth.net account. Available ang interface sa 83 wika, samantalang ang limang salitang aksyon — Fold, Check, Call, Raise, All-In — ay nananatiling Ingles, gaya sa anumang mesa sa mundo. Higit pa sa <a href=\"{faq}\">karaniwang tanong</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
   },
 
   sw: {
@@ -2301,24 +2127,24 @@ var PARTS = {
     lead: function (h, c) { return "Hii ndiyo toleo fupi: kutoka kichupo kitupu hadi mkono wako wa kwanza wa Texas Hold’em katika PokerTH. Kama unachotafuta ni kanuni zenyewe — dau la kulazimishwa, raundi za kuweka dau, mkono upi unashinda upi — anza na <a href=\"{rules}\">ukurasa wa kanuni</a> na <a href=\"{hands}\">mpangilio wa mikono</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); },
     steps: [
       ["Fungua tovuti — hakuna cha kusakinisha",
-       "PokerTH hufanya kazi ndani ya kivinjari. Hakuna kupakua, hakuna akaunti, hakuna programu-jalizi. Kwenye simu unaweza kuiongeza kwenye skrini ya kwanza kupitia menyu ya kivinjari; kisha hufunguka kama programu, skrini nzima, na hufanya kazi hata bila mtandao."],
+       "PokerTH hufanya kazi ndani ya kivinjari. Hakuna kupakua, hakuna programu-jalizi, na hakuna akaunti kwa mazoezi au michezo ya wageni. Unaweza kuisakinisha kama programu — Kushiriki → Add to Home Screen kwenye iPhone na iPad, menyu ya kivinjari au kitufe cha kusakinisha kwingineko — na hufunguka skrini nzima, ikifanya kazi hata bila mtandao. Ukitaka, Msaada wa Ekaa, Ekaa aliye pembeni, hueleza kila skrini."],
       ["Chagua unapotaka kucheza",
-       "Njia tatu. <strong>Mazoezi nje ya mtandao</strong> hukuketisha mara moja kwenye meza ya wapinzani wa kompyuta na haihitaji muunganisho hata kidogo — hapa ndipo mtu hujifunza. <strong>pokerth.net</strong> ni mtandao rasmi: wapinzani halisi, viwango vya msimu, na jina la utani bila malipo unalosajili mara moja tu. <strong>LAN / seva binafsi</strong> hukuunganisha na seva maalum ya PokerTH, yako mwenyewe au ya mtu mwingine."],
+       "Njia tatu. <strong>Ndani / mazoezi</strong> hukuketisha mara moja kwenye meza ya wapinzani wa kompyuta na haihitaji muunganisho hata kidogo — hapa ndipo mtu hujifunza. <strong>pokerth.net</strong> ni mtandao rasmi: wapinzani halisi, michezo ya Kawaida iliyo wazi kwa wageni, na michezo ya viwango yenye viwango vya msimu kwa wachezaji wenye akaunti ya bure. <strong>LAN / seva binafsi</strong> hukuunganisha na seva maalum ya PokerTH, yako mwenyewe au ya mtu mwingine."],
       ["Keti kwenye meza",
-       "Katika ukumbi unaweza kujiunga na meza kutoka orodha au kutengeneza yako. Unapotengeneza, unaweka idadi ya viti, chipu za kuanzia, kasi ya kupanda kwa dau la kulazimishwa, na kama meza itakuwa na nenosiri. Shiriki kiungo cha mwaliko, na rafiki yako atatua moja kwa moja kwenye meza yako, kwenye kivinjari chake, bila kusajili chochote."],
+       "Katika ukumbi unaweza kujiunga na meza kutoka orodha, kutazama mchezo unaoendelea, au kutengeneza yako. Unapotengeneza, unachagua aina ya mchezo (Kawaida, Wachezaji waliosajiliwa pekee, Wachezaji walioalikwa pekee au Mchezo wa viwango) na kuweka idadi ya viti, chipu za kuanzia, kasi ya kupanda kwa dau la kulazimishwa, muda wa kuchukua hatua, kama watazamaji wanaruhusiwa na kama meza itakuwa na nenosiri. Shiriki kiungo cha mwaliko, na rafiki yako atatua moja kwa moja kwenye meza yako, kwenye kivinjari chake — katika mchezo wa Kawaida bila kusajili chochote."],
       ["Cheza mkono",
-       "Unagawiwa karata mbili za siri. Kuweka dau huzunguka meza kabla ya flop, na tena baada ya flop, turn na river. Zamu yako ikifika, upau wa vitendo huwaka na hutoa tu kile kinachoruhusiwa: Fold, Check au Call, Raise au All-In. Kiasi kinaweza kuandikwa, kuvutwa kwenye kitelezi, au kuwekwa kwa mguso mmoja kuwa Min, nusu ya pot, pot nzima, au chipu zako zote."],
+       "Unagawiwa karata mbili za siri. Kuweka dau huzunguka meza kabla ya flop, na tena baada ya flop, turn na river. Zamu yako ikifika, upau wa vitendo huwaka na hutoa tu kile kinachoruhusiwa: Fold, Check au Call, Raise au All-In. Kiasi kinaweza kuandikwa, kuvutwa kwenye kitelezi, au kuwekwa kwa mguso mmoja kuwa theluthi ya pot, nusu ya pot au pot nzima."],
       ["Soma meza",
-       "Karata zinapotolewa, mkono wako bora kwa wakati huo huandikwa chini ya meza. Pot, chipu za kila mtu na kiwango cha dau la kulazimishwa vipo skrini muda wote, kitufe cha mgawaji huonyesha nani anazungumza mwisho, na kihesabu huonyesha muda uliobaki. Wakati wa kufunua karata, zile karata tano zilizounda kila mkono huangaziwa."],
+       "Kichupo cha Uwezekano hutaja mkono wako bora kwa wakati huo na nafasi yako ya kushinda karata zinapotolewa. Pot, chipu za kila mtu na kiwango cha dau la kulazimishwa vipo skrini muda wote, kitufe cha mgawaji huonyesha nani anazungumza mwisho, na kihesabu huonyesha muda uliobaki. Wakati wa kufunua karata, mchanganyiko ulioshinda hutajwa chini ya karata za pamoja."],
       ["Shinda mashindano",
-       "Michezo ya PokerTH ni mashindano ya sit-and-go: kila mtu huanza na chipu sawa, dau la kulazimishwa hupanda kwa saa, na wachezaji hutolewa hadi mmoja abaki na chipu zote. Hakuna kinachogharimu pesa na chipu haziwezi kununuliwa — zote ni za mchezo tu, kwa hivyo kinachowekwa hatarini ni mchezo wenyewe."]
+       "Michezo ya PokerTH ni mashindano: kila mtu huanza na chipu sawa, dau la kulazimishwa hupanda kila baada ya mikono au dakika chache, na wachezaji hutolewa hadi mmoja abaki na chipu zote. Hakuna kinachogharimu pesa na chipu haziwezi kununuliwa — zote ni za mchezo tu, kwa hivyo kinachowekwa hatarini ni mchezo wenyewe."]
     ],
     phoneH2: "Kucheza kwa simu",
     phoneP: "Meza imejengwa kwa skrini ya kugusa kama vile ilivyojengwa kwa kompyuta: kugusa kisanduku cha dau hufungua kibodi ya namba ndani ya upau wa vitendo badala ya kibodi ya mfumo, hivyo meza haizungukizunguki kamwe, na kitelezi husogea kwa hatua zile zile za programu ya kompyuta. Arifa za zamu zinaweza kufika zikiwa na vitufe vya Fold na Check/Call juu yake, hivyo mkono unaweza kuchezwa bila kurudi kwenye kichupo.",
     friendsH2: "Kucheza na marafiki",
     friendsP: "Tengeneza meza, weka nenosiri kama unataka iwe ya faragha, kisha tuma kiungo cha mwaliko. Kiungo hufungua meza moja kwa moja — kwenye programu iliyosakinishwa kama waliiongeza kwenye skrini ya kwanza, vinginevyo kwenye kichupo cha kivinjari. Hakuna anayelazimika kusakinisha chochote wala kutoa anwani ya barua pepe.",
     faqH2: "Maswali ya kawaida",
-    faqP: function (h, c) { return "Hakuna pesa halisi zinazohusika, katika hali yoyote ile. Mipangilio yako, vifurushi vya mtindo na maendeleo yako ya nje ya mtandao hubaki kwenye kifaa chako mwenyewe. Kiolesura kinapatikana katika lugha 83, huku maneno matano ya vitendo — Fold, Check, Call, Raise, All-In — yakibaki Kiingereza, kama ilivyo kwenye kila meza duniani. Zaidi katika <a href=\"{faq}\">maswali ya kawaida</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
+    faqP: function (h, c) { return "Hakuna pesa halisi zinazohusika, katika hali yoyote ile. Mipangilio yako, vifurushi vya mtindo na maendeleo yako ya mazoezi hubaki kwenye kifaa chako mwenyewe, na hukufuata kwenye vifaa vyako vingine ukiingia kwa akaunti ya pokerth.net. Kiolesura kinapatikana katika lugha 83, huku maneno matano ya vitendo — Fold, Check, Call, Raise, All-In — yakibaki Kiingereza, kama ilivyo kwenye kila meza duniani. Zaidi katika <a href=\"{faq}\">maswali ya kawaida</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
   },
 
   gd: {
@@ -2330,24 +2156,24 @@ var PARTS = {
     lead: function (h, c) { return "Seo an dreach goirid: o thaba bhàn gun chiad làmh Texas Hold’em agad ann am PokerTH. Mas e na riaghailtean fhèin a tha thu ag iarraidh — na dallabhan, na cuairtean geallaidh, dè bhuannaicheas air dè — tòisich an àite sin air <a href=\"{rules}\">duilleag nan riaghailtean</a> agus air <a href=\"{hands}\">rangachadh nan làmhan</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); },
     steps: [
       ["Fosgail an làrach — chan eil dad ri stàladh",
-       "Ruithidh PokerTH sa bhrabhsair. Gun luchdachadh a-nuas, gun chunntas, gun phlugan. Air fòn, ’s urrainn dhut a chur ris an sgrion-dachaigh o chlàr-taice a’ bhrabhsair; fosglaidh e an uair sin mar aplacaid, làn-sgrion, agus obraichidh e far-loidhne cuideachd."],
+       "Ruithidh PokerTH sa bhrabhsair. Gun luchdachadh a-nuas, gun phlugan, agus gun chunntas airson trèanadh no airson geamannan aoigh. ’S urrainn dhut a stàladh mar aplacaid — Co-roinn → Cuir ris an sgrìn-dachaigh air iPhone is iPad, clàr-taice a’ bhrabhsair no am putan stàlaidh an àiteigin eile — agus fosglaidh e làn-sgrion, comasach air obrachadh far-loidhne. Ma thogras tu, mìnichidh Cobhair an Aoin, an t-Aon sa choisean, gach sgrion."],
       ["Tagh càite a bheil thu airson cluich",
-       "Trì dòighean. Cuiridh <strong>trèanadh far-loidhne</strong> nad shuidhe sa bhad aig bòrd le co-fharpaisich coimpiutair agus chan fheum e ceangal idir — ’s ann an seo a dh’ionnsaicheas tu. ’S e <strong>pokerth.net</strong> an lìonra oifigeil: co-fharpaisich fhìor, rangachaidhean ràitheil, agus far-ainm an-asgaidh a chlàraicheas tu aon turas. Ceanglaidh <strong>LAN / frithealaiche prìobhaideach</strong> ri frithealaiche PokerTH sònraichte, agad fhèin no aig cuideigin eile."],
+       "Trì dòighean. Cuiridh am modh <strong>Ionadail / trèanadh</strong> nad shuidhe sa bhad thu aig bòrd le co-fharpaisich coimpiutair agus chan fheum e ceangal idir — ’s ann an seo a dh’ionnsaicheas tu. ’S e <strong>pokerth.net</strong> an lìonra oifigeil: co-fharpaisich fhìor, geamannan Àbhaisteach fosgailte do dh’aoighean, agus geamannan rangachaidh le rangachaidhean ràitheil dha na cluicheadairean aig a bheil cunntas an-asgaidh. Ceanglaidh <strong>LAN / frithealaiche prìobhaideach</strong> ri frithealaiche PokerTH sònraichte, agad fhèin no aig cuideigin eile."],
       ["Suidh aig bòrd",
-       "Anns an lobaidh, no thèid thu a-steach do bhòrd on liosta no cruthaichidh tu fear agad fhèin. Nuair a chruthaicheas tu fear, suidhichidh tu an àireamh de shuidheachain, an stoc tòiseachaidh, cho luath ’s a dh’èireas na dallabhan, agus a bheil facal-faire air a’ bhòrd. Roinn an ceangal cuiridh, agus thig caraid dìreach gun bhòrd agad, na bhrabhsair fhèin, gun dad a chlàradh."],
+       "Anns an lobaidh, thèid thu a-steach do bhòrd on liosta, coimheadaidh tu geama a tha a’ dol, no cruthaichidh tu fear agad fhèin. Nuair a chruthaicheas tu fear, taghaidh tu seòrsa a’ gheama (Àbhaisteach, cluicheadairean clàraichte a-mhàin, cluicheadairean le cuireadh a-mhàin no Geama rangachaidh) agus suidhichidh tu an àireamh de shuidheachain, an stoc tòiseachaidh, cho luath ’s a dh’èireas na dallabhan, an ùine airson gnìomh, am faod luchd-amhairc coimhead agus a bheil facal-faire air a’ bhòrd. Roinn an ceangal cuiridh, agus thig caraid dìreach gu do bhòrd, na bhrabhsair fhèin — ann an geama Àbhaisteach, gun dad a chlàradh."],
       ["Cluich an làmh",
-       "Gheibh thu dà chairt dhùinte. Thèid geall a chur mun cuairt a’ bhùird ron fhlop, agus a-rithist às dèidh an fhlop, an turn agus an river. Nuair a thig do chuairt, lasaidh am bàr gnìomhan agus cha nochd ach na tha ceadaichte: Fold, Check no Call, Raise no All-In. Gabhaidh an t-suim a sgrìobhadh, a shlaodadh air an t-sleamhnachan, no a shuidheachadh le aon bhuille air Min, leth a’ phota, am pota, no an stoc agad gu lèir."],
+       "Gheibh thu dà chairt dhùinte. Thèid geall a chur mun cuairt a’ bhùird ron fhlop, agus a-rithist às dèidh an fhlop, an turn agus an river. Nuair a thig do chuairt, lasaidh am bàr gnìomhan agus cha nochd ach na tha ceadaichte: Fold, Check no Call, Raise no All-In. Gabhaidh an t-suim a sgrìobhadh, a shlaodadh air an t-sleamhnachan, no a shuidheachadh le aon bhuille air trian a’ phota, leth a’ phota no am pota."],
       ["Leugh am bòrd",
-       "Mar a thig na cairtean a-mach, thèid an làmh as fheàrr a th’ agad an-dràsta ainmeachadh fon bhòrd. Tha am pota, gach stoc agus ìre nan dallabhan air an sgrion fad na h-ùine, seallaidh putan an neach-riarachaidh cò bhruidhneas mu dheireadh, agus innsidh an cunntas-sìos dè an ùine a th’ agad. Aig an showdown thèid na còig cairtean a rinn gach làmh a chomharrachadh."],
+       "Ainmichidh an taba Seansan an làmh as fheàrr a th’ agad an-dràsta agus an cothrom a th’ agad air buannachadh mar a thig na cairtean a-mach. Tha am pota, gach stoc agus ìre nan dallabhan air an sgrion fad na h-ùine, seallaidh putan an neach-riarachaidh cò bhruidhneas mu dheireadh, agus innsidh an cunntas-sìos dè an ùine a th’ agad. Aig an showdown, thèid an cur-ri-chèile buadhach ainmeachadh fo na cairtean coitcheann."],
       ["Buannaich am farpais",
-       "’S e farpaisean sit-and-go a th’ anns na geamannan ann am PokerTH: tòisichidh a h-uile duine leis an aon stoc, èiridh na dallabhan a rèir a’ ghleoc, agus thèid cluicheadairean a-mach gus am bi na sliseagan uile aig aon neach. Cha chosg dad airgead agus chan urrainn sliseagan a cheannach — ’s e airgead cluiche a th’ anns a h-uile gin, agus mar sin chan eil ach an geama fhèin an geall."]
+       "’S e farpaisean a th’ anns na geamannan ann am PokerTH: tòisichidh a h-uile duine leis an aon stoc, èiridh na dallabhan gach beagan làmhan no mhionaidean, agus thèid cluicheadairean a-mach gus am bi na sliseagan uile aig aon neach. Cha chosg dad airgead agus chan urrainn sliseagan a cheannach — ’s e airgead cluiche a th’ anns a h-uile gin, agus mar sin chan eil ach an geama fhèin an geall."]
     ],
     phoneH2: "A’ cluich air fòn",
     phoneP: "Tha am bòrd air a thogail airson sgrion-suathaidh a cheart cho math ri coimpiutair: nuair a bhuaileas tu air raon a’ gheallaidh, fosglaidh meur-chlàr àireamhan am broinn a’ bhàr gnìomhan an àite meur-chlàr an t-siostaim, mar sin cha leum am bòrd a-riamh, agus gluaisidh an sleamhnachan leis na h-aon cheumannan ris a’ chliant deasg. Faodaidh brathan mun chuairt agad tighinn le putanan Fold agus Check/Call orra, agus mar sin gabhaidh làmh a chluich gun tilleadh dhan taba.",
     friendsH2: "A’ cluich còmhla ri caraidean",
     friendsP: "Cruthaich bòrd, cuir facal-faire air ma tha thu airson gum bi e prìobhaideach, agus cuir an ceangal cuiridh. Fosglaidh e am bòrd gu dìreach — anns an aplacaid stàlaichte ma chuir iad ris an sgrion-dachaigh i, air neo ann an taba brabhsair. Chan fheum duine dad a stàladh no seòladh puist-d a thoirt seachad.",
     faqH2: "Ceistean cumanta",
-    faqP: function (h, c) { return "Chan eil airgead an sàs ann idir, ann am modh sam bith. Fanaidh na roghainnean agad, na pasganan stoidhle agus an adhartas far-loidhne air an uidheam agad fhèin. Tha an eadar-aghaidh ri fhaighinn ann an 83 cànan, fhad ’s a dh’fhanas na còig faclan gnìomh — Fold, Check, Call, Raise, All-In — sa Bheurla, mar a tha aig gach bòrd air an t-saoghal. Barrachd anns na <a href=\"{faq}\">ceistean cumanta</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
+    faqP: function (h, c) { return "Chan eil airgead an sàs ann idir, ann am modh sam bith. Fanaidh na roghainnean agad, na pasganan stoidhle agus an adhartas trèanaidh air an uidheam agad fhèin, agus leanaidh iad thu chun nan uidheaman eile agad nuair a logas tu a-steach le cunntas pokerth.net. Tha an eadar-aghaidh ri fhaighinn ann an 83 cànan, fhad ’s a dh’fhanas na còig faclan gnìomh — Fold, Check, Call, Raise, All-In — sa Bheurla, mar a tha aig gach bòrd air an t-saoghal. Barrachd anns na <a href=\"{faq}\">ceistean cumanta</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
   },
 
   uz: {
@@ -2359,24 +2185,24 @@ var PARTS = {
     lead: function (h, c) { return "Bu — boʻsh varaqdan PokerTH’dagi birinchi Texas Hold’em qoʻlingizgacha boʻlgan yoʻlning qisqa bayoni. Agar sizga qoidalarning oʻzi kerak boʻlsa — blayndlar, savdo raundlari, nima nimani yengadi — avval <a href=\"{rules}\">qoidalar sahifasini</a> va <a href=\"{hands}\">kombinatsiyalar reytingini</a> oʻqing.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); },
     steps: [
       ["Saytni oching — hech narsa oʻrnatish kerak emas",
-       "PokerTH brauzerda ishlaydi. Yuklab olish yoʻq, hisob yoʻq, plagin yoʻq. Telefonda uni brauzer menyusidan bosh ekranga qoʻshishingiz mumkin — shunda u ilova kabi, toʻliq ekranda ochiladi va oflayn ham ishlay oladi."],
+       "PokerTH brauzerda ishlaydi. Yuklab olish yoʻq, plagin yoʻq, mashgʻulot yoki mehmon oʻyinlari uchun hisob ham kerak emas. Uni ilova kabi oʻrnatishingiz mumkin — iPhone va iPad’da Ulashish → Bosh ekranga qoʻshish, boshqa qurilmalarda brauzer menyusi yoki oʻrnatish tugmasi — va u toʻliq ekranda ochiladi, oflayn ham ishlay oladi. Xohlasangiz, Tuzning yordami — burchakdagi Tuz — har bir ekranni tushuntiradi."],
       ["Qayerda oʻynashni tanlang",
-       "Uchta rejim bor. <strong>Oflayn mashgʻulot</strong> sizni darhol kompyuter raqiblari stoliga oʻtqazadi va umuman ulanishni talab qilmaydi — oʻrganish uchun ayni joy. <strong>pokerth.net</strong> — rasmiy tarmoq: haqiqiy raqiblar, mavsumiy reytinglar, bir marta roʻyxatdan oʻtkaziladigan bepul taxallus. <strong>LAN / xususiy server</strong> maxsus PokerTH serveriga ulanadi — oʻzingiznikiga yoki boshqa birovnikiga."],
+       "Uchta rejim bor. <strong>Lokal / mashgʻulot</strong> sizni darhol kompyuter raqiblari stoliga oʻtqazadi va umuman ulanishni talab qilmaydi — oʻrganish uchun ayni joy. <strong>pokerth.net</strong> — rasmiy tarmoq: haqiqiy raqiblar, mehmonlar uchun ochiq “Oddiy” oʻyinlar va bepul hisobli oʻyinchilar uchun mavsumiy reytingli Reyting oʻyinlari. <strong>LAN / xususiy server</strong> maxsus PokerTH serveriga ulanadi — oʻzingiznikiga yoki boshqa birovnikiga."],
       ["Stolga oʻtiring",
-       "Lobbida roʻyxatdagi stolga qoʻshilasiz yoki oʻzingiznikini yaratasiz. Stol yaratishda oʻrinlar sonini, boshlangʻich stekni, blayndlar qanchalik tez oshishini va stol parol bilan himoyalanishini belgilaysiz. Taklif havolasini ulashing — doʻstingiz hech qayerda roʻyxatdan oʻtmasdan, oʻz brauzerida toʻgʻridan-toʻgʻri stolingizga tushadi."],
+       "Lobbida roʻyxatdagi stolga qoʻshilasiz, davom etayotgan oʻyinni kuzatasiz yoki oʻzingiznikini yaratasiz. Stol yaratishda oʻyin turini (“Oddiy”, faqat roʻyxatdan oʻtgan oʻyinchilar, faqat taklif bilan yoki Reyting oʻyini) tanlaysiz va oʻrinlar sonini, boshlangʻich stekni, blayndlar qanchalik tez oshishini, harakat uchun vaqtni, tomoshabinlar kuzata olishini va stol parol bilan himoyalanishini belgilaysiz. Taklif havolasini ulashing — doʻstingiz oʻz brauzerida toʻgʻridan-toʻgʻri stolingizga tushadi — “Oddiy” oʻyinda hech qayerda roʻyxatdan oʻtmasdan."],
       ["Qoʻlni oʻynang",
-       "Sizga ikkita yopiq karta tarqatiladi. Savdo flopdan oldin stol boʻylab aylanadi, soʻng flop, turn va riverdan keyin yana takrorlanadi. Navbat sizga kelganda harakatlar paneli yonadi va faqat ruxsat etilgan harakatlarni taklif qiladi: Fold, Check yoki Call, Raise yoki All-In. Stavka miqdorini yozish, slayderda surish yoki bir bosishda belgilash mumkin: Min, bankning yarmi, bank yoki butun stekingiz."],
+       "Sizga ikkita yopiq karta tarqatiladi. Savdo flopdan oldin stol boʻylab aylanadi, soʻng flop, turn va riverdan keyin yana takrorlanadi. Navbat sizga kelganda harakatlar paneli yonadi va faqat ruxsat etilgan harakatlarni taklif qiladi: Fold, Check yoki Call, Raise yoki All-In. Stavka miqdorini yozish, slayderda surish yoki bir bosishda belgilash mumkin: bankning uchdan biri, bankning yarmi yoki bank."],
       ["Stolni oʻqing",
-       "Kartalar ochilgani sari joriy eng yaxshi qoʻlingiz stol ostida nomlanadi. Bank, har bir stek va blaynd darajasi doim ekranda, diler tugmasi kim oxirgi boʻlib harakat qilishini koʻrsatadi, sanoq esa qancha vaqtingiz qolganini bildiradi. Shoudaunda har bir qoʻlni tashkil etgan beshta karta ajratib koʻrsatiladi."],
+       "Kartalar ochilgani sari Ehtimollar yorligʻi joriy eng yaxshi qoʻlingizni va gʻalaba qozonish ehtimolingizni nomlaydi. Bank, har bir stek va blaynd darajasi doim ekranda, diler tugmasi kim oxirgi boʻlib harakat qilishini koʻrsatadi, sanoq esa qancha vaqtingiz qolganini bildiradi. Shoudaunda gʻolib kombinatsiya umumiy kartalar ostida nomlanadi."],
       ["Turnirda gʻolib boʻling",
-       "PokerTH oʻyinlari — sit-and-go turnirlari: hamma bir xil stek bilan boshlaydi, blayndlar taymer boʻyicha oshadi va oʻyinchilar bittasi barcha fishkalarni yigʻib olmaguncha chiqib ketaveradi. Hech narsa uchun pul toʻlanmaydi va fishkalarni sotib olib boʻlmaydi — hammasi oʻyin puli, shuning uchun yagona tikilgan narsa — oʻyinning oʻzi."]
+       "PokerTH oʻyinlari — turnirlar: hamma bir xil stek bilan boshlaydi, blayndlar har bir necha qoʻl yoki daqiqada oshadi va oʻyinchilar bittasi barcha fishkalarni yigʻib olmaguncha chiqib ketaveradi. Hech narsa uchun pul toʻlanmaydi va fishkalarni sotib olib boʻlmaydi — hammasi oʻyin puli, shuning uchun yagona tikilgan narsa — oʻyinning oʻzi."]
     ],
     phoneH2: "Telefonda oʻynash",
     phoneP: "Stol kompyuter uchun qanchalik moslangan boʻlsa, sensorli ekran uchun ham shunchalik moslangan: stavka maydoniga bosish tizim klaviaturasi oʻrniga harakatlar paneli ichidagi raqamli klaviaturani ochadi, shuning uchun stol hech qachon sakramaydi, slayder esa desktop mijozdagi bilan bir xil qadamlarda siljiydi. Navbat bildirishnomalari sizga Fold va Check/Call tugmalari bilan yetib kelishi mumkin, shuning uchun qoʻlni varaqqa qaytmasdan ham oʻynash mumkin.",
     friendsH2: "Doʻstlar bilan oʻynash",
     friendsP: "Stol yarating, xususiy boʻlishini istasangiz parol qoʻying va taklif havolasini yuboring. U stolni toʻgʻridan-toʻgʻri ochadi — agar ular ilovani bosh ekraniga qoʻshgan boʻlsa, oʻrnatilgan ilovada, aks holda brauzer varagʻida. Hech kim hech narsa oʻrnatishi yoki elektron pochta manzilini berishi shart emas.",
     faqH2: "Koʻp beriladigan savollar",
-    faqP: function (h, c) { return "Hech qaysi rejimda pul ishtirok etmaydi. Sozlamalaringiz, uslub toʻplamlari va oflayn natijalaringiz oʻz qurilmangizda qoladi. Interfeys 83 tilda mavjud, beshta harakat soʻzi esa — Fold, Check, Call, Raise, All-In — dunyodagi har bir stolda boʻlgani kabi ingliz tilida qoladi. Batafsil — <a href=\"{faq}\">FAQ</a> sahifasida.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
+    faqP: function (h, c) { return "Hech qaysi rejimda pul ishtirok etmaydi. Sozlamalaringiz, uslub toʻplamlari va mashgʻulot natijalaringiz oʻz qurilmangizda qoladi va pokerth.net hisobi bilan kirganingizda boshqa qurilmalaringizga ham siz bilan birga oʻtadi. Interfeys 83 tilda mavjud, beshta harakat soʻzi esa — Fold, Check, Call, Raise, All-In — dunyodagi har bir stolda boʻlgani kabi ingliz tilida qoladi. Batafsil — <a href=\"{faq}\">FAQ</a> sahifasida.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
   },
   my: {
     title: "အွန်လိုင်း ပိုကာကို အခမဲ့ ကစားနည်း — PokerTH Web",
@@ -2387,24 +2213,24 @@ var PARTS = {
     lead: function (h, c) { return "ဤသည်မှာ တက်ဘ်အလွတ်တစ်ခုမှ PokerTH ရှိ သင့်ပထမဆုံး Texas Hold’em လက်အထိ ရောက်ရန် အတိုချုပ်ဖြစ်သည်။ စည်းမျဉ်းများကိုယ်တိုင် — ဘလိုင်းများ၊ လောင်းကြေးအကျော့များ၊ ဘယ်ဟာက ဘယ်ဟာကို နိုင်သည် — ကို သိလိုလျှင် <a href=\"{rules}\">စည်းမျဉ်းစာမျက်နှာ</a> နှင့် <a href=\"{hands}\">ဖဲလက် အဆင့်များ</a> ကို ဦးစွာ ဖတ်ပါ။".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); },
     steps: [
       ["ဆိုက်ကို ဖွင့်ပါ — ထည့်သွင်းစရာ ဘာမျှ မရှိပါ",
-       "PokerTH သည် ဘရောက်ဇာတွင် အလုပ်လုပ်သည်။ ဒေါင်းလုဒ်မလို၊ အကောင့်မလို၊ ပလပ်အင်မလို။ ဖုန်းတွင် ဘရောက်ဇာမီနူးမှ ပင်မမျက်နှာပြင်သို့ ထည့်နိုင်ပြီး အက်ပ်တစ်ခုကဲ့သို့ မျက်နှာပြင်အပြည့်ဖြင့် ပွင့်ကာ အော့ဖ်လိုင်းတွင်လည်း အလုပ်လုပ်သည်။"],
+       "PokerTH သည် ဘရောက်ဇာတွင် အလုပ်လုပ်သည်။ ဒေါင်းလုဒ်မလို၊ ပလပ်အင်မလို၊ လေ့ကျင့်ရန် သို့မဟုတ် ဧည့်သည်ဂိမ်းများအတွက် အကောင့်လည်း မလိုပါ။ အက်ပ်တစ်ခုကဲ့သို့ ထည့်သွင်းနိုင်သည် — iPhone နှင့် iPad တွင် မျှဝေရန် → “Add to Home Screen”၊ အခြားနေရာများတွင် ဘရောက်ဇာမီနူး သို့မဟုတ် ထည့်သွင်းခလုတ် — ထို့နောက် မျက်နှာပြင်အပြည့်ဖြင့် ပွင့်ကာ အော့ဖ်လိုင်းတွင်လည်း အလုပ်လုပ်သည်။ လိုလျှင် ထောင့်ရှိ တစ်ကွက်ဖြစ်သော တစ်ကွက်၏ အကူအညီက မျက်နှာပြင်တစ်ခုချင်းစီကို ရှင်းပြပေးသည်။"],
       ["မည်သည့်နေရာတွင် ကစားမည်ကို ရွေးပါ",
-       "မုဒ်သုံးမျိုး။ <strong>အော့ဖ်လိုင်း လေ့ကျင့်ရေး</strong> သည် ကွန်ပျူတာပြိုင်ဘက်များပါသော စားပွဲတစ်ခုကို ချက်ချင်း ပေးပြီး ချိတ်ဆက်မှု လုံးဝ မလိုပါ — လေ့လာရန် နေရာဖြစ်သည်။ <strong>pokerth.net</strong> သည် တရားဝင်ကွန်ရက်ဖြစ်သည်: ပြိုင်ဘက်အစစ်များ၊ ရာသီအလိုက် အဆင့်သတ်မှတ်ချက်များ၊ တစ်ကြိမ်သာ မှတ်ပုံတင်ရသော အခမဲ့ အမည်ပြောင်။ <strong>LAN / ကိုယ်ပိုင်ဆာဗာ</strong> သည် သင့်ကိုယ်ပိုင် သို့မဟုတ် အခြားသူ၏ သီးသန့် PokerTH ဆာဗာသို့ ချိတ်ဆက်သည်။"],
+       "မုဒ်သုံးမျိုး။ <strong>ဒေသတွင်း / လေ့ကျင့်ရေး</strong> သည် ကွန်ပျူတာပြိုင်ဘက်များပါသော စားပွဲတစ်ခုကို ချက်ချင်း ပေးပြီး ချိတ်ဆက်မှု လုံးဝ မလိုပါ — လေ့လာရန် နေရာဖြစ်သည်။ <strong>pokerth.net</strong> သည် တရားဝင်ကွန်ရက်ဖြစ်သည်: ပြိုင်ဘက်အစစ်များ၊ ဧည့်သည်များ ဝင်နိုင်သော ပုံမှန်ဂိမ်းများနှင့် အခမဲ့အကောင့်ရှိသော ကစားသမားများအတွက် ရာသီအလိုက် အဆင့်သတ်မှတ်ချက်များပါသော အဆင့်သတ်မှတ်ဂိမ်းများ။ <strong>LAN / ကိုယ်ပိုင်ဆာဗာ</strong> သည် သင့်ကိုယ်ပိုင် သို့မဟုတ် အခြားသူ၏ သီးသန့် PokerTH ဆာဗာသို့ ချိတ်ဆက်သည်။"],
       ["စားပွဲတစ်ခုတွင် ထိုင်ပါ",
-       "လော်ဘီတွင် စာရင်းမှ စားပွဲတစ်ခုသို့ ဝင်ပါ သို့မဟုတ် သင့်ကိုယ်ပိုင်စားပွဲ ဖန်တီးပါ။ ဖန်တီးသည့်အခါ ထိုင်ခုံအရေအတွက်၊ အစ ချစ်ပ်ပမာဏ၊ ဘလိုင်းများ မည်မျှမြန်မြန် တိုးမည်နှင့် စားပွဲကို စကားဝှက်ဖြင့် ကာကွယ်မည်မကာကွယ်မည်ကို သတ်မှတ်နိုင်သည်။ ဖိတ်ကြားလင့်ခ်ကို မျှဝေလိုက်လျှင် သူငယ်ချင်းသည် ဘာမျှ မှတ်ပုံမတင်ဘဲ သူ၏ဘရောက်ဇာတွင် သင့်စားပွဲသို့ တိုက်ရိုက် ရောက်လာသည်။"],
+       "လော်ဘီတွင် စာရင်းမှ စားပွဲတစ်ခုသို့ ဝင်ပါ၊ ကစားနေသော ဂိမ်းကို ကြည့်ပါ၊ သို့မဟုတ် သင့်ကိုယ်ပိုင်စားပွဲ ဖန်တီးပါ။ ဖန်တီးသည့်အခါ ဂိမ်းအမျိုးအစား (ပုံမှန်၊ မှတ်ပုံတင်ထားသော ကစားသမားများသာ၊ ဖိတ်ထားသော ကစားသမားများသာ သို့မဟုတ် အဆင့်သတ်မှတ်ဂိမ်း) ကို ရွေးနိုင်ပြီး ထိုင်ခုံအရေအတွက်၊ အစ ချစ်ပ်ပမာဏ၊ ဘလိုင်းများ မည်မျှမြန်မြန် တိုးမည်၊ လှုပ်ရှားရန် အချိန်၊ ကြည့်ရှုသူများ ကြည့်ခွင့်ရှိမရှိနှင့် စားပွဲကို စကားဝှက်ဖြင့် ကာကွယ်မည်မကာကွယ်မည်ကို သတ်မှတ်နိုင်သည်။ ဖိတ်ကြားလင့်ခ်ကို မျှဝေလိုက်လျှင် သူငယ်ချင်းသည် သူ၏ဘရောက်ဇာတွင် သင့်စားပွဲသို့ တိုက်ရိုက် ရောက်လာသည် — ပုံမှန်ဂိမ်းတွင် ဘာမျှ မှတ်ပုံမတင်ဘဲ။"],
       ["လက်ကို ကစားပါ",
-       "သင့်ကို ကိုယ်ပိုင်ဖဲ နှစ်ချပ် ဝေပေးသည်။ လောင်းကြေးသည် flop မတိုင်မီ စားပွဲတစ်ပတ် လှည့်ပြီး flop၊ turn နှင့် river အပြီးတွင် ထပ်လှည့်သည်။ သင့်အလှည့်ရောက်သည့်အခါ လှုပ်ရှားမှုဘား လင်းလာပြီး တရားဝင်သည်ကိုသာ ပေးသည်: Fold, Check သို့မဟုတ် Call, Raise သို့မဟုတ် All-In။ လောင်းကြေးပမာဏကို ရိုက်ထည့်နိုင်၊ ဆလိုက်ဒါပေါ်တွင် ဆွဲနိုင်၊ သို့မဟုတ် Min၊ ပေါ့တ်တစ်ဝက်၊ ပေါ့တ် သို့မဟုတ် သင့်ချစ်ပ်အားလုံးမှ တစ်ချက်နှိပ်ရုံဖြင့် သတ်မှတ်နိုင်သည်။"],
+       "သင့်ကို ကိုယ်ပိုင်ဖဲ နှစ်ချပ် ဝေပေးသည်။ လောင်းကြေးသည် flop မတိုင်မီ စားပွဲတစ်ပတ် လှည့်ပြီး flop၊ turn နှင့် river အပြီးတွင် ထပ်လှည့်သည်။ သင့်အလှည့်ရောက်သည့်အခါ လှုပ်ရှားမှုဘား လင်းလာပြီး တရားဝင်သည်ကိုသာ ပေးသည်: Fold, Check သို့မဟုတ် Call, Raise သို့မဟုတ် All-In။ လောင်းကြေးပမာဏကို ရိုက်ထည့်နိုင်၊ ဆလိုက်ဒါပေါ်တွင် ဆွဲနိုင်၊ သို့မဟုတ် ပေါ့တ်၏ သုံးပုံတစ်ပုံ၊ ပေါ့တ်တစ်ဝက် သို့မဟုတ် ပေါ့တ်သို့ တစ်ချက်နှိပ်ရုံဖြင့် သတ်မှတ်နိုင်သည်။"],
       ["စားပွဲကို ဖတ်ပါ",
-       "ဖဲများ ထွက်လာသည်နှင့်အမျှ သင့်လက်ရှိ အကောင်းဆုံးဖဲလက်ကို စားပွဲဖဲများအောက်တွင် အမည်ဖော်ပြသည်။ ပေါ့တ်၊ ချစ်ပ်ပမာဏတိုင်းနှင့် ဘလိုင်းအဆင့်ကို မျက်နှာပြင်ပေါ်တွင် အချိန်တိုင်း မြင်ရပြီး ဒီလာခလုတ်က မည်သူ နောက်ဆုံးကစားသည်ကို ပြကာ အချိန်ရေတွက်မှုက သင့်တွင် အချိန်မည်မျှ ကျန်သည်ကို ပြသည်။ ရှိုးဒေါင်းတွင် ဖဲလက်တစ်ခုစီကို ဖြစ်စေသော ဖဲငါးချပ်ကို မီးမောင်းထိုးပြသည်။"],
+       "ဖြစ်နိုင်ခြေ တက်ဘ်က ဖဲများ ထွက်လာသည်နှင့်အမျှ သင့်လက်ရှိ အကောင်းဆုံးဖဲလက်နှင့် နိုင်ခြေကို အမည်ဖော်ပြသည်။ ပေါ့တ်၊ ချစ်ပ်ပမာဏတိုင်းနှင့် ဘလိုင်းအဆင့်ကို မျက်နှာပြင်ပေါ်တွင် အချိန်တိုင်း မြင်ရပြီး ဒီလာခလုတ်က မည်သူ နောက်ဆုံးကစားသည်ကို ပြကာ အချိန်ရေတွက်မှုက သင့်တွင် အချိန်မည်မျှ ကျန်သည်ကို ပြသည်။ ရှိုးဒေါင်းတွင် နိုင်သော ပေါင်းစပ်မှုကို အများသုံးဖဲများအောက်တွင် အမည်ဖော်ပြသည်။"],
       ["ပြိုင်ပွဲကို နိုင်ပါ",
-       "PokerTH ဂိမ်းများသည် sit-and-go ပြိုင်ပွဲများဖြစ်သည်: လူတိုင်း တူညီသော ချစ်ပ်ပမာဏဖြင့် စပြီး ဘလိုင်းများသည် အချိန်အလိုက် တိုးကာ တစ်ဦးတည်းက ချစ်ပ်အားလုံး ကိုင်သည်အထိ ကစားသမားများ ထွက်ရသည်။ ဘာမျှ ငွေမကုန်ဘဲ ချစ်ပ်များကို ဝယ်၍မရပါ — အားလုံးသည် ကစားငွေဖြစ်သဖြင့် လောင်းထားသည့် တစ်ခုတည်းသောအရာမှာ ဂိမ်းကိုယ်တိုင်ဖြစ်သည်။"]
+       "PokerTH ဂိမ်းများသည် ပြိုင်ပွဲများဖြစ်သည်: လူတိုင်း တူညီသော ချစ်ပ်ပမာဏဖြင့် စပြီး ဘလိုင်းများသည် လက်အနည်းငယ် သို့မဟုတ် မိနစ်အနည်းငယ်တိုင်း တိုးကာ တစ်ဦးတည်းက ချစ်ပ်အားလုံး ကိုင်သည်အထိ ကစားသမားများ ထွက်ရသည်။ ဘာမျှ ငွေမကုန်ဘဲ ချစ်ပ်များကို ဝယ်၍မရပါ — အားလုံးသည် ကစားငွေဖြစ်သဖြင့် လောင်းထားသည့် တစ်ခုတည်းသောအရာမှာ ဂိမ်းကိုယ်တိုင်ဖြစ်သည်။"]
     ],
     phoneH2: "ဖုန်းတွင် ကစားခြင်း",
     phoneP: "စားပွဲကို ဒက်စ်တော့အတွက်သာမက ထိတွေ့မျက်နှာပြင်အတွက်ပါ တည်ဆောက်ထားသည်: လောင်းကြေးအကွက်ကို နှိပ်လျှင် စနစ်ကီးဘုတ်အစား လှုပ်ရှားမှုဘားအတွင်း ဂဏန်းခလုတ်ခုံတစ်ခု ပွင့်သဖြင့် စားပွဲ ဘယ်တော့မှ မခုန်ပါ၊ ဆလိုက်ဒါသည် ဒက်စ်တော့ကလိုင်းယင့်ကဲ့သို့ တူညီသော အဆင့်များဖြင့် ရွေ့သည်။ အလှည့်အသိပေးချက်များသည် Fold နှင့် Check/Call ခလုတ်များပါလျက် သင့်ထံ ရောက်နိုင်သဖြင့် တက်ဘ်သို့ ပြန်မပြောင်းဘဲ လက်တစ်ခုကို ကစားနိုင်သည်။",
     friendsH2: "သူငယ်ချင်းများနှင့် ကစားခြင်း",
     friendsP: "စားပွဲတစ်ခု ဖန်တီးပါ၊ သီးသန့်ထားလိုလျှင် စကားဝှက် သတ်မှတ်ပြီး ဖိတ်ကြားလင့်ခ်ကို ပို့ပါ။ ၎င်းသည် စားပွဲကို တိုက်ရိုက် ဖွင့်သည် — ပင်မမျက်နှာပြင်သို့ ထည့်ထားလျှင် ထည့်သွင်းထားသော အက်ပ်တွင်၊ မဟုတ်လျှင် ဘရောက်ဇာတက်ဘ်တွင်။ မည်သူမျှ ဘာမျှ ထည့်သွင်းရန် သို့မဟုတ် အီးမေးလ်လိပ်စာ ပေးရန် မလိုပါ။",
     faqH2: "အမေးများသော မေးခွန်းများ",
-    faqP: function (h, c) { return "မည်သည့်မုဒ်တွင်မျှ ငွေ ဘယ်တော့မှ မပါဝင်ပါ။ သင့်ဆက်တင်များ၊ စတိုင်ပက်ကေ့ချ်များနှင့် အော့ဖ်လိုင်းတိုးတက်မှုသည် သင့်ကိုယ်ပိုင်စက်တွင်သာ ရှိသည်။ မျက်နှာပြင်ကို ဘာသာစကား ၈၃ မျိုးဖြင့် ရနိုင်ပြီး လှုပ်ရှားမှုစကားလုံး ငါးလုံး — Fold, Check, Call, Raise, All-In — သည် ကမ္ဘာပေါ်ရှိ စားပွဲတိုင်းတွင်ကဲ့သို့ အင်္ဂလိပ်လို ရှိနေသည်။ နောက်ထပ်ကို <a href=\"{faq}\">FAQ</a> တွင် ကြည့်ပါ။".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
+    faqP: function (h, c) { return "မည်သည့်မုဒ်တွင်မျှ ငွေ ဘယ်တော့မှ မပါဝင်ပါ။ သင့်ဆက်တင်များ၊ စတိုင်ပက်ကေ့ချ်များနှင့် လေ့ကျင့်ရေးတိုးတက်မှုသည် သင့်ကိုယ်ပိုင်စက်တွင်သာ ရှိပြီး pokerth.net အကောင့်ဖြင့် လော့ဂ်အင်ဝင်သည့်အခါ သင့်အခြားစက်များတွင်လည်း လိုက်ပါသည်။ မျက်နှာပြင်ကို ဘာသာစကား ၈၃ မျိုးဖြင့် ရနိုင်ပြီး လှုပ်ရှားမှုစကားလုံး ငါးလုံး — Fold, Check, Call, Raise, All-In — သည် ကမ္ဘာပေါ်ရှိ စားပွဲတိုင်းတွင်ကဲ့သို့ အင်္ဂလိပ်လို ရှိနေသည်။ နောက်ထပ်ကို <a href=\"{faq}\">FAQ</a> တွင် ကြည့်ပါ။".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
   },
   ka: {
     title: "როგორ ვითამაშოთ პოკერი ონლაინ უფასოდ — PokerTH Web",
@@ -2414,37 +2240,25 @@ var PARTS = {
     h1: "როგორ ვითამაშოთ პოკერი ონლაინ, უფასოდ, პირდაპირ ბრაუზერში",
     lead: function (h, c) { return "ეს არის მოკლე გზა ცარიელი ჩანართიდან PokerTH-ში თქვენს პირველ Texas Hold’em დარიგებამდე. თუ თავად წესები გაინტერესებთ — ბლაინდები, ფსონების რაუნდები და რომელი ხელი რომელს სჯობნის — დაიწყეთ <a href=\"{rules}\">წესების გვერდით</a> და <a href=\"{hands}\">კომბინაციებით</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); },
     steps: [
-      [
-        "გახსენით საიტი — დასაყენებელი არაფერია",
-        "PokerTH პირდაპირ ბრაუზერში მუშაობს. ჩამოტვირთვა, ანგარიში და plugin არ არის საჭირო. ტელეფონზე შეგიძლიათ ბრაუზერის მენიუდან მთავარ ეკრანზე დაამატოთ; შემდეგ სრულეკრანიან აპივით იხსნება და ოფლაინ რეჟიმსაც უჭერს მხარს.",
-      ],
-      [
-        "აირჩიეთ, სად გსურთ თამაში",
-        "სამი რეჟიმი. <strong>Offline practice</strong> დაუყოვნებლივ გაძლევთ კომპიუტერული მოწინააღმდეგეების მაგიდას და საერთოდ არ საჭიროებს ინტერნეტკავშირს — ეს საუკეთესო ადგილია სწავლისთვის. <strong>pokerth.net</strong> ოფიციალური ქსელია: რეალური მოწინააღმდეგეები, სეზონური რეიტინგები და უფასო მეტსახელი, რომელსაც ერთხელ არეგისტრირებთ. <strong>LAN / private server</strong> გაკავშირებთ dedicated PokerTH სერვერთან — თქვენს ან სხვის სერვერთან.",
-      ],
-      [
-        "დაჯექით მაგიდასთან",
-        "ლობიში ან სიიდან უერთდებით მაგიდას, ან ქმნით საკუთარს. შექმნისას შეგიძლიათ განსაზღვროთ ადგილების რაოდენობა, საწყისი სტეკი, ბლაინდების ზრდის სიჩქარე და პაროლით დაცვა. გაუზიარეთ მოწვევის ბმული მეგობარს და ის პირდაპირ თქვენს მაგიდასთან მოხვდება ბრაუზერში, დამატებითი რეგისტრაციის გარეშე.",
-      ],
-      [
-        "ითამაშეთ დარიგება",
-        "გირიგდებათ ორი პირადი კარტი. ფსონების რაუნდი ტარდება Flop-მდე და შემდეგ კიდევ ერთხელ Flop-ის, Turn-ისა და River-ის შემდეგ. როცა თქვენი სვლაა, მოქმედებების ზოლი ინთება და მხოლოდ დაშვებულ არჩევანს გთავაზობთ: Fold, Check ან Call, Raise ან All-In. ფსონის თანხა შეგიძლიათ აკრიფოთ, სლაიდერით შეცვალოთ ან ერთი შეხებით აირჩიოთ Min, ბანკის ნახევარი, მთელი ბანკი ან მთელი სტეკი.",
-      ],
-      [
-        "წაიკითხეთ მაგიდის მდგომარეობა",
-        "კარტების გახსნისას თქვენი მიმდინარე საუკეთესო ხელი სახელით ჩანს დაფის ქვემოთ. ბანკი, ყველა სტეკი და ბლაინდის დონე ყოველთვის ეკრანზეა; dealer ღილაკი აჩვენებს, ვინ მოქმედებს ბოლოს, ხოლო უკუთვლა — რამდენი დრო დაგრჩათ. Showdown-ის დროს თითოეული ხელის შემქმნელი ხუთი კარტი გამოიკვეთება.",
-      ],
-      [
-        "მოიგეთ ტურნირი",
-        "PokerTH-ის თამაშები sit-and-go ტურნირებია: ყველა ერთნაირი სტეკით იწყებს, ბლაინდები დროის მიხედვით იზრდება, ხოლო მოთამაშეები თანდათან გამოდიან თამაშიდან, სანამ ერთი მათგანი ყველა ჩიპს არ მოაგროვებს. არაფერი ღირს ფული და ჩიპების ყიდვა შეუძლებელია — ყველაფერი მხოლოდ სათამაშო ფულია, ამიტომ ფსონზე მხოლოდ თავად თამაში დგას.",
-      ],
+      ["გახსენით საიტი — დასაყენებელი არაფერია",
+       "PokerTH პირდაპირ ბრაუზერში მუშაობს. ჩამოტვირთვა და plugin არ არის საჭირო, ხოლო ვარჯიშისთვის ან სტუმრის თამაშებისთვის ანგარიშიც არა. შეგიძლიათ აპივით დააყენოთ — iPhone-სა და iPad-ზე Share → Add to Home Screen, სხვაგან ბრაუზერის მენიუ ან ინსტალაციის ღილაკი — და სრულეკრანიანად იხსნება, ოფლაინ რეჟიმსაც უჭერს მხარს. სურვილისამებრ, ტუზის დახმარება, კუთხეში მყოფი ტუზი, ყოველ ეკრანს განგიმარტავთ."],
+      ["აირჩიეთ, სად გსურთ თამაში",
+       "სამი რეჟიმი. <strong>ლოკალური / სავარჯიშო</strong> დაუყოვნებლივ გაძლევთ კომპიუტერული მოწინააღმდეგეების მაგიდას და საერთოდ არ საჭიროებს ინტერნეტკავშირს — ეს საუკეთესო ადგილია სწავლისთვის. <strong>pokerth.net</strong> ოფიციალური ქსელია: რეალური მოწინააღმდეგეები, სტუმრებისთვის ღია Normal თამაშები და სეზონური რეიტინგებით Ranking game-ები უფასო ანგარიშის მქონე მოთამაშეებისთვის. <strong>LAN / private server</strong> გაკავშირებთ dedicated PokerTH სერვერთან — თქვენს ან სხვის სერვერთან."],
+      ["დაჯექით მაგიდასთან",
+       "ლობიში ან სიიდან უერთდებით მაგიდას, უყურებთ მიმდინარე თამაშს, ან ქმნით საკუთარს. შექმნისას ირჩევთ თამაშის ტიპს (Normal, მხოლოდ რეგისტრირებული მოთამაშეები, მხოლოდ მოწვეული მოთამაშეები ან Ranking game) და განსაზღვრავთ ადგილების რაოდენობას, საწყის სტეკს, ბლაინდების ზრდის სიჩქარეს, სვლის დროს, შეუძლიათ თუ არა მაყურებლებს ყურება და არის თუ არა მაგიდა პაროლით დაცული. გაუზიარეთ მოწვევის ბმული მეგობარს და ის პირდაპირ თქვენს მაგიდასთან მოხვდება ბრაუზერში — Normal თამაშში რეგისტრაციის გარეშე."],
+      ["ითამაშეთ დარიგება",
+       "გირიგდებათ ორი პირადი კარტი. ფსონების რაუნდი ტარდება Flop-მდე და შემდეგ კიდევ ერთხელ Flop-ის, Turn-ისა და River-ის შემდეგ. როცა თქვენი სვლაა, მოქმედებების ზოლი ინთება და მხოლოდ დაშვებულ არჩევანს გთავაზობთ: Fold, Check ან Call, Raise ან All-In. ფსონის თანხა შეგიძლიათ აკრიფოთ, სლაიდერით შეცვალოთ ან ერთი შეხებით აირჩიოთ ბანკის მესამედი, ბანკის ნახევარი ან მთელი ბანკი."],
+      ["წაიკითხეთ მაგიდის მდგომარეობა",
+       "ჩანართი “ალბათობები” ასახელებს თქვენს მიმდინარე საუკეთესო ხელს და მოგების შანსს კარტების გახსნისას. ბანკი, ყველა სტეკი და ბლაინდის დონე ყოველთვის ეკრანზეა; dealer ღილაკი აჩვენებს, ვინ მოქმედებს ბოლოს, ხოლო უკუთვლა — რამდენი დრო დაგრჩათ. Showdown-ის დროს მოგებული კომბინაცია დასახელებულია საერთო კარტების ქვემოთ."],
+      ["მოიგეთ ტურნირი",
+       "PokerTH-ის თამაშები ტურნირებია: ყველა ერთნაირი სტეკით იწყებს, ბლაინდები ყოველ რამდენიმე დარიგებაში ან წუთში იზრდება, ხოლო მოთამაშეები თანდათან გამოდიან თამაშიდან, სანამ ერთი მათგანი ყველა ჩიპს არ მოაგროვებს. არაფერი ღირს ფული და ჩიპების ყიდვა შეუძლებელია — ყველაფერი მხოლოდ სათამაშო ფულია, ამიტომ ფსონზე მხოლოდ თავად თამაში დგას."]
     ],
     phoneH2: "ტელეფონზე თამაში",
     phoneP: "მაგიდა სენსორული ეკრანისთვისაც ისევეა შექმნილი, როგორც კომპიუტერისთვის: ფსონის ველზე შეხება სისტემური კლავიატურის ნაცვლად მოქმედებების ზოლში ციფრულ კლავიატურას ხსნის, ამიტომ მაგიდა ადგილს არ იცვლის, ხოლო სლაიდერი იმავე ნაბიჯებით მოძრაობს, როგორც დესკტოპ კლიენტში. თქვენი სვლის შეტყობინებაზე Fold და Check/Call ღილაკებიც შეიძლება გამოჩნდეს, ამიტომ დარიგების თამაში ჩანართში დაბრუნების გარეშეც შეგიძლიათ.",
     friendsH2: "მეგობრებთან თამაში",
     friendsP: "შექმენით მაგიდა, სურვილის შემთხვევაში დააყენეთ პაროლი და გაუგზავნეთ მოწვევის ბმული. ის მაგიდას პირდაპირ გახსნის — დაყენებულ აპში, თუ მეგობარს ის მთავარ ეკრანზე აქვს დამატებული, ან ჩვეულებრივ ბრაუზერის ჩანართში. არაფრის დაყენება და ელფოსტის მისამართის გაზიარება არ არის საჭირო.",
     faqH2: "ხშირად დასმული კითხვები",
-    faqP: function (h, c) { return "რეალური ფული არც ერთ რეჟიმში არ გამოიყენება. თქვენი პარამეტრები, სტილის პაკეტები და ოფლაინ პროგრესი თქვენს მოწყობილობაზე რჩება. ინტერფეისი ხელმისაწვდომია 83 ენაზე, ხოლო მოქმედებების ხუთი სიტყვა — Fold, Check, Call, Raise, All-In — ინგლისურად რჩება, როგორც მსოფლიოს ყველა პოკერის მაგიდაზე. მეტი იხილეთ <a href=\"{faq}\">FAQ-ში</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); },
+    faqP: function (h, c) { return "რეალური ფული არც ერთ რეჟიმში არ გამოიყენება. თქვენი პარამეტრები, სტილის პაკეტები და სავარჯიშო პროგრესი თქვენს მოწყობილობაზე რჩება და pokerth.net ანგარიშით შესვლისას სხვა მოწყობილობებზეც გადადის. ინტერფეისი ხელმისაწვდომია 83 ენაზე, ხოლო მოქმედებების ხუთი სიტყვა — Fold, Check, Call, Raise, All-In — ინგლისურად რჩება, როგორც მსოფლიოს ყველა პოკერის მაგიდაზე. მეტი იხილეთ <a href=\"{faq}\">FAQ-ში</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); },
   },
   kk: {
     title: "Онлайн покерді қалай тегін ойнауға болады — PokerTH Web",
@@ -2454,37 +2268,25 @@ var PARTS = {
     h1: "Онлайн покерді браузеріңізде қалай тегін ойнауға болады",
     lead: function (h, c) { return "Бұл — бос қойындыдан PokerTH-тегі алғашқы Texas Hold’em таратуыңызға дейінгі қысқа нұсқа. Егер сізді ережелердің өзі қызықтырса — блайндтар, ставка раундтары, не нені жеңеді — онда <a href=\"{rules}\">ережелер бетінен</a> және <a href=\"{hands}\">комбинациялардан</a> бастаңыз.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); },
     steps: [
-      [
-        "Сайтты ашыңыз — ештеңе орнатудың қажеті жоқ",
-        "PokerTH браузерде жұмыс істейді. Жүктеу де, тіркелгі де, плагин де жоқ. Телефонда оны браузер мәзірінен басты экранға қоса аласыз, сонда ол қолданба сияқты толық экранда және офлайн жұмыс істей алатындай ашылады.",
-      ],
-      [
-        "Қайда ойнағыңыз келетінін таңдаңыз",
-        "Үш режим бар. <strong>Офлайн жаттығу</strong> сізге бірден компьютер қарсыластары бар үстел береді және ешқандай қосылымды қажет етпейді — үйренуге арналған орын. <strong>pokerth.net</strong> — ресми желі: нақты қарсыластар, маусымдық рейтингтер, бір рет тіркейтін тегін лақап ат. <strong>LAN / жеке сервер</strong> өзіңіздің немесе басқа біреудің арнайы PokerTH серверіне қосылады.",
-      ],
-      [
-        "Үстелге отырыңыз",
-        "Лоббиде тізімдегі үстелге қосыласыз немесе өзіңіздікін құрасыз. Құрған кезде орындар санын, бастапқы стекті, блайндтардың қаншалықты жылдам көтерілетінін және үстелдің құпиясөзбен қорғалуын орната аласыз. Шақыру сілтемесімен бөліссеңіз, досыңыз ештеңе тіркемей-ақ өз браузерінде тікелей үстеліңізге түседі.",
-      ],
-      [
-        "Таратуды ойнаңыз",
-        "Сізге екі жеке карта таратылады. Ставкалар флопқа дейін үстелді айналып өтеді, содан кейін флоптан, тёрннен және риверден кейін тағы қайталанады. Кезегіңіз келгенде әрекеттер жолағы жанып, тек рұқсат етілгенді ғана ұсынады: Fold, Check немесе Call, Raise немесе All-In. Ставка сомасын теруге, жүгірткімен сүйреуге немесе бір түртумен Min, банктің жартысы, банк немесе бүкіл стегіңіз ретінде орнатуға болады.",
-      ],
-      [
-        "Үстелді оқыңыз",
-        "Карталар ашылған сайын ағымдағы ең үздік комбинацияңыз бордтың астында аталып тұрады. Банк, әр стек және блайнд деңгейі әрдайым экранда, дилер түймесі кімнің соңғы болып әрекет ететінін, ал кері санақ сізде қанша уақыт қалғанын көрсетеді. Шоудаунда әр комбинацияны құраған бес карта бөлектеледі.",
-      ],
-      [
-        "Турнирді ұтыңыз",
-        "PokerTH ойындары — sit-and-go турнирлері: бәрі бірдей стекпен бастайды, блайндтар таймер бойынша көтеріледі, ал ойыншылар біреуі барлық фишканы жинағанша шығып қала береді. Ештеңе ақша тұрмайды және фишка сатып алуға болмайды — бәрі ойын ақшасы, сондықтан тігілген жалғыз нәрсе — ойынның өзі.",
-      ],
+      ["Сайтты ашыңыз — ештеңе орнатудың қажеті жоқ",
+       "PokerTH браузерде жұмыс істейді. Жүктеу де, плагин де жоқ, жаттығу мен қонақ ретінде ойнау үшін тіркелгі де қажет емес. Оны қолданба сияқты орнатуға болады — iPhone мен iPad-та «Бөлісу» → «Басты экранға қосу», басқа жерде браузер мәзірі немесе орнату түймесі — сонда ол толық экранда ашылады және офлайн жұмыс істей алады. Қаласаңыз, бұрыштағы Тұз — Тұздың көмегі — әр экранды түсіндіреді."],
+      ["Қайда ойнағыңыз келетінін таңдаңыз",
+       "Үш режим бар. <strong>Жергілікті / жаттығу</strong> сізге бірден компьютер қарсыластары бар үстел береді және ешқандай қосылымды қажет етпейді — үйренуге арналған орын. <strong>pokerth.net</strong> — ресми желі: нақты қарсыластар, қонақтарға ашық «Қалыпты» ойындар және тегін тіркелгісі бар ойыншыларға арналған маусымдық рейтингі бар «Рейтингтік ойын». <strong>LAN / жеке сервер</strong> өзіңіздің немесе басқа біреудің арнайы PokerTH серверіне қосылады."],
+      ["Үстелге отырыңыз",
+       "Лоббиде тізімдегі үстелге қосыласыз, жүріп жатқан ойынды көресіз немесе өзіңіздікін құрасыз. Құрған кезде ойын түрін («Қалыпты», тек тіркелген ойыншылар, тек шақырылған ойыншылар немесе «Рейтингтік ойын») таңдап, орындар санын, бастапқы стекті, блайндтардың қаншалықты жылдам көтерілетінін, әрекетке берілетін уақытты, көрермендерге көруге рұқсат берілетінін және үстелдің құпиясөзбен қорғалуын орната аласыз. Шақыру сілтемесімен бөліссеңіз, досыңыз өз браузерінде тікелей үстеліңізге түседі — «Қалыпты» ойында ештеңе тіркемей-ақ."],
+      ["Таратуды ойнаңыз",
+       "Сізге екі жеке карта таратылады. Ставкалар флопқа дейін үстелді айналып өтеді, содан кейін флоптан, тёрннен және риверден кейін тағы қайталанады. Кезегіңіз келгенде әрекеттер жолағы жанып, тек рұқсат етілгенді ғана ұсынады: Fold, Check немесе Call, Raise немесе All-In. Ставка сомасын теруге, жүгірткімен сүйреуге немесе бір түртумен банктің үштен бірі, банктің жартысы немесе банк ретінде орнатуға болады."],
+      ["Үстелді оқыңыз",
+       "«Ықтималдық» қойындысы карталар ашылған сайын ағымдағы ең үздік комбинацияңызды және ұту мүмкіндігіңізді атап тұрады. Банк, әр стек және блайнд деңгейі әрдайым экранда, дилер түймесі кімнің соңғы болып әрекет ететінін, ал кері санақ сізде қанша уақыт қалғанын көрсетеді. Шоудаунда ұтқан комбинация ортақ карталардың астында аталады."],
+      ["Турнирді ұтыңыз",
+       "PokerTH ойындары — турнирлер: бәрі бірдей стекпен бастайды, блайндтар бірнеше таратудан немесе минуттан кейін көтеріледі, ал ойыншылар біреуі барлық фишканы жинағанша шығып қала береді. Ештеңе ақша тұрмайды және фишка сатып алуға болмайды — бәрі ойын ақшасы, сондықтан тігілген жалғыз нәрсе — ойынның өзі."]
     ],
     phoneH2: "Телефонда ойнау",
     phoneP: "Үстел компьютерге де, сенсорлық экранға да бірдей есептелген: ставка өрісін түрту жүйелік пернетақтаның орнына әрекеттер жолағының ішінде сандық пернетақтаны ашады, сондықтан үстел ешқашан секірмейді, ал жүгірткі жұмыс үстелі клиентіндегідей қадамдармен жылжиды. Кезек туралы хабарландырулар Fold және Check/Call түймелерімен бірге келе алады: таратуды қойындыға оралмай-ақ ойнауға болады.",
     friendsH2: "Достармен ойнау",
     friendsP: "Үстел құрыңыз, оны жеке еткіңіз келсе құпиясөз қойыңыз да, шақыру сілтемесін жіберіңіз. Ол үстелді тікелей ашады — достарыңыз қолданбаны басты экранға қосқан болса, орнатылған қолданбада, әйтпесе браузер қойындысында. Ешкімге ештеңе орнатудың немесе электрондық пошта мекенжайын берудің қажеті жоқ.",
     faqH2: "Жиі қойылатын сұрақтар",
-    faqP: function (h, c) { return "Ешбір режимде ешқашан ақша қатыспайды. Баптауларыңыз, стиль пакеттеріңіз және офлайн прогресіңіз құрылғыңызда қалады. Интерфейс 83 тілде бар, ал бес әрекет сөзі — Fold, Check, Call, Raise, All-In — әлемнің барлық үстеліндегідей ағылшынша қалады. Жалғасы <a href=\"{faq}\">жиі қойылатын сұрақтар</a> бетінде.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); },
+    faqP: function (h, c) { return "Ешбір режимде ешқашан ақша қатыспайды. Баптауларыңыз, стиль пакеттеріңіз және жаттығу прогресіңіз құрылғыңызда қалады және pokerth.net тіркелгісімен кірсеңіз, басқа құрылғыларыңызға да ілеседі. Интерфейс 83 тілде бар, ал бес әрекет сөзі — Fold, Check, Call, Raise, All-In — әлемнің барлық үстеліндегідей ағылшынша қалады. Жалғасы <a href=\"{faq}\">жиі қойылатын сұрақтар</a> бетінде.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); },
   },
   ky: {
     title: "Онлайн покерди акысыз кантип ойнош керек — PokerTH Web",
@@ -2494,37 +2296,25 @@ var PARTS = {
     h1: "Онлайн покерди браузериңизде акысыз кантип ойнош керек",
     lead: function (h, c) { return "Кыскача мындай: бош баракчадан PokerTH'теги биринчи Texas Hold’em колуңузга чейин. Эрежелердин өзү кызыктырса — блайнддар, ставка раунддары, эмне эмнени жеңет — <a href=\"{rules}\">эрежелер барагынан</a> жана <a href=\"{hands}\">комбинациялардан</a> баштаңыз.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); },
     steps: [
-      [
-        "Баракчаны ачыңыз — эч нерсе орнотуунун кереги жок",
-        "PokerTH браузерде иштейт. Жүктөө жок, аккаунт жок, кошумча программа жок. Телефондо аны браузердин менюсунан башкы экранга кошо аласыз, ошондо ал колдонмодой толук экранда ачылат жана оффлайн иштей алат.",
-      ],
-      [
-        "Кайда ойноорун тандаңыз",
-        "Үч режим. <strong>Оффлайн машыгуу</strong> заматта компьютер атаандаштары бар үстөл берет жана эч кандай байланышты талап кылбайт — үйрөнүү үчүн жер. <strong>pokerth.net</strong> — расмий тармак: чыныгы атаандаштар, сезондук рейтинг, бир жолу каттала турган акысыз лакап ат. <strong>LAN / жеке сервер</strong> өзүңүздүн же башка бирөөнүн PokerTH атайын серверине туташат.",
-      ],
-      [
-        "Үстөлгө отуруңуз",
-        "Лоббиде тизмеден үстөлгө кошулуңуз же өзүңүздүкүн түзүңүз. Түзүүдө орундардын санын, баштапкы стекти, блайнддар канчалык тез өсөрүн жана үстөл сырсөз менен корголобу, ошону коё аласыз. Чакыруу шилтемесин бөлүшүңүз — досуңуз эч нерсеге катталбай эле, өз браузеринде түз үстөлүңүзгө келет.",
-      ],
-      [
-        "Колду ойноңуз",
-        "Сизге эки жеке карта таратылат. Ставкалар флопко чейин, ошондой эле флоптон, тёрндөн жана риверден кийин үстөлдү айланат. Кезегиңиз келгенде аракеттер панели жанып, уруксат берилгенди гана сунуштайт: Fold, Check же Call, Raise же All-In. Ставка суммасын жазса, сыдырмада сүйрөсө же бир басуу менен эң азына, банктын жарымына, банкка же бүт стегиңизге койсо болот.",
-      ],
-      [
-        "Үстөлдү окуңуз",
-        "Карталар ачылган сайын учурдагы эң мыкты комбинацияңыз үстөлдүн астында аталат. Банк, ар бир стек жана блайнддардын деңгээли дайыма экранда, дилер баскычы ким акыркы сүйлөөрүн көрсөтөт, ал эми артка эсептөө канча убактыңыз бар экенин көрсөтөт. Шоудаунда ар бир комбинацияны түзгөн беш карта белгиленет.",
-      ],
-      [
-        "Турнирде жеңиңиз",
-        "PokerTH оюндары — sit-and-go турнирлери: баары бирдей стек менен баштайт, блайнддар саат боюнча өсөт, ал эми бирөө бардык чиптерге ээ болгонго чейин оюнчулар чыгып калат. Эч нерсе акча турбайт жана чиптерди сатып алууга болбойт — баары оюн акчасы, ошондуктан коркунучта оюндун өзү гана.",
-      ],
+      ["Баракчаны ачыңыз — эч нерсе орнотуунун кереги жок",
+       "PokerTH браузерде иштейт. Жүктөө жок, кошумча программа жок, ал эми машыгуу же конок оюндары үчүн аккаунт да керек эмес. Аны колдонмодой орнотсоңуз болот — iPhone жана iPad түзмөктөрүндө Бөлүшүү → «Башкы экранга кошуу», башка жерде браузердин менюсу же орнотуу баскычы — ошондо ал толук экранда ачылат жана оффлайн иштей алат. Кааласаңыз, бурчтагы Туз — Туздун жардамы — ар бир экранды түшүндүрөт."],
+      ["Кайда ойноорун тандаңыз",
+       "Үч режим. <strong>Локалдык / машыгуу</strong> заматта компьютер атаандаштары бар үстөл берет жана эч кандай байланышты талап кылбайт — үйрөнүү үчүн жер. <strong>pokerth.net</strong> — расмий тармак: чыныгы атаандаштар, конокторго ачык «Кадимки» оюндар жана акысыз аккаунту бар оюнчуларга сезондук рейтинги бар «Рейтингдик оюн». <strong>LAN / жеке сервер</strong> өзүңүздүн же башка бирөөнүн PokerTH атайын серверине туташат."],
+      ["Үстөлгө отуруңуз",
+       "Лоббиде тизмеден үстөлгө кошуласыз, жүрүп жаткан оюнду көрөсүз же өзүңүздүкүн түзөсүз. Түзүүдө оюндун түрүн («Кадимки», катталган оюнчулар гана, чакырылган оюнчулар гана же «Рейтингдик оюн») тандап, орундардын санын, баштапкы стекти, блайнддар канчалык тез өсөрүн жана аракет кылуу убактысын коюп, көрүүчүлөргө уруксат берүүнү жана үстөлдү сырсөз менен коргоону тандай аласыз. Чакыруу шилтемесин бөлүшүңүз — досуңуз өз браузеринде түз үстөлүңүзгө келет, «Кадимки» оюнда эч нерсеге катталбай эле."],
+      ["Колду ойноңуз",
+       "Сизге эки жеке карта таратылат. Ставкалар флопко чейин, ошондой эле флоптон, тёрндөн жана риверден кийин үстөлдү айланат. Кезегиңиз келгенде аракеттер панели жанып, уруксат берилгенди гана сунуштайт: Fold, Check же Call, Raise же All-In. Ставка суммасын жазса, сыдырмада сүйрөсө же бир басуу менен банктын үчтөн бирине, банктын жарымына же банкка койсо болот."],
+      ["Үстөлдү окуңуз",
+       "«Мүмкүнчүлүктөр» өтмөгү карталар ачылган сайын учурдагы эң мыкты колуңузду жана жеңүү мүмкүнчүлүгүңүздү атайт. Банк, ар бир стек жана блайнддардын деңгээли дайыма экранда, дилер баскычы ким акыркы сүйлөөрүн көрсөтөт, ал эми артка эсептөө канча убактыңыз бар экенин көрсөтөт. Шоудаунда жеңген комбинация жалпы карталардын астында аталат."],
+      ["Турнирде жеңиңиз",
+       "PokerTH оюндары — турнирлер: баары бирдей стек менен баштайт, блайнддар бир нече колдон же мүнөттөн кийин өсөт, ал эми бирөө бардык чиптерге ээ болгонго чейин оюнчулар чыгып калат. Эч нерсе акча турбайт жана чиптерди сатып алууга болбойт — баары оюн акчасы, ошондуктан коркунучта оюндун өзү гана."]
     ],
     phoneH2: "Телефондо ойноо",
     phoneP: "Үстөл компьютер үчүн кандай ыңгайлаштырылса, сенсордук экрандар үчүн да ошондой ыңгайлаштырылган: ставка талаасына тийүү системалык баскычтоптун ордуна аракеттер панелинин ичинде сан баскычтобун ачат, ошондуктан үстөл эч качан секирбейт, ал эми сыдырма десктоп колдонмосундагыдай эле кадамдар менен жылат. Кезек жөнүндө билдирме түз эле Fold жана Check/Call баскычтары менен келиши мүмкүн: колду баракчага кайтпай эле ойносо болот.",
     friendsH2: "Достор менен ойноо",
     friendsP: "Үстөл түзүңүз, жеке болушун кааласаңыз сырсөз коюңуз жана чакыруу шилтемесин жөнөтүңүз. Ал үстөлдү түз ачат — досторуңуз аны башкы экранына кошкон болсо орнотулган колдонмодо, болбосо браузердин өтмөгүндө. Эч кимге эч нерсе орнотуунун же электрондук почта дарегин берүүнүн кереги жок.",
     faqH2: "Көп берилүүчү суроолор",
-    faqP: function (h, c) { return "Эч бир режимде акча катышпайт. Жөндөөлөрүңүз, стиль топтомдору жана оффлайн прогрессиңиз түзмөгүңүздө калат. Интерфейс 83 тилде жеткиликтүү, ал эми беш аракет сөзү — Fold, Check, Call, Raise, All-In — дүйнөдөгү ар бир үстөлдөгүдөй англисче калат. Көбүрөөк маалымат <a href=\"{faq}\">көп берилүүчү суроолордо</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); },
+    faqP: function (h, c) { return "Эч бир режимде акча катышпайт. Жөндөөлөрүңүз, стиль топтомдору жана машыгуу прогрессиңиз түзмөгүңүздө калат жана pokerth.net аккаунту менен киргениңизде башка түзмөктөрүңүзгө да көчөт. Интерфейс 83 тилде жеткиликтүү, ал эми беш аракет сөзү — Fold, Check, Call, Raise, All-In — дүйнөдөгү ар бир үстөлдөгүдөй англисче калат. Көбүрөөк маалымат <a href=\"{faq}\">көп берилүүчү суроолордо</a>.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); },
   },
   si: {
     title: "නොමිලේ මාර්ගගත පෝකර් ක්‍රීඩා කරන ආකාරය — PokerTH",
@@ -2534,37 +2324,25 @@ var PARTS = {
     h1: "ඔබේ බ්‍රවුසරයේ නොමිලේ මාර්ගගත පෝකර් ක්‍රීඩා කරන ආකාරය",
     lead: function (h, c) { return "මෙය හිස් පටිත්තක සිට PokerTH හි ඔබේ පළමු Texas Hold’em අත දක්වා වූ කෙටි අනුවාදයයි. ඔබට උනන්දුව ඇත්තේ නීති ගැනම නම් — බ්ලයින්ඩ්, ඔට්ටු වට, කුමක් කුමක් පරදවයිද — ඒ වෙනුවට <a href=\"{rules}\">නීති පිටුවෙන්</a> සහ <a href=\"{hands}\">පෝකර් අත්වලින්</a> පටන් ගන්න.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); },
     steps: [
-      [
-        "වෙබ් අඩවිය විවෘත කරන්න — ස්ථාපනය කිරීමට කිසිවක් නැත",
-        "PokerTH බ්‍රවුසරයේ ධාවනය වේ. බාගැනීමක්, ගිණුමක්, ප්ලගිනයක් නැත. දුරකථනයකදී බ්‍රවුසර මෙනුවෙන් එය මුල් තිරයට එක් කළ හැකි අතර එවිට එය යෙදුමක් මෙන් සම්පූර්ණ තිරයෙන්, මාර්ගගත නොවීත් ක්‍රියා කළ හැකිව විවෘත වේ.",
-      ],
-      [
-        "ක්‍රීඩා කිරීමට අවශ්‍ය තැන තෝරන්න",
-        "ප්‍රකාර තුනකි. <strong>මාර්ගගත නොවන පුහුණුව</strong> වහාම පරිගණක ප්‍රතිවාදීන්ගේ මේසයක් ලබාදෙන අතර කිසිදු සම්බන්ධතාවක් අවශ්‍ය නැත — ඉගෙනීමට සුදුසු තැන. <strong>pokerth.net</strong> නිල ජාලයයි: සැබෑ ප්‍රතිවාදීන්, වාර ශ්‍රේණිගත කිරීම්, එක් වරක් ලියාපදිංචි කරන නොමිලේ අන්වර්ථ නාමයක්. <strong>LAN / පෞද්ගලික සේවාදායකය</strong> ඔබේ හෝ වෙනත් අයෙකුගේ කැපවූ PokerTH සේවාදායකයකට සම්බන්ධ වේ.",
-      ],
-      [
-        "මේසයක හිඳගන්න",
-        "ලොබියේදී ඔබ ලැයිස්තුවෙන් මේසයකට එක්වේ, නැතහොත් ඔබේම එකක් සාදයි. එකක් සෑදීමෙන් ආසන ගණන, ආරම්භක ස්ටැක්, බ්ලයින්ඩ් ඉහළ යන වේගය සහ මේසය මුරපදයකින් ආරක්ෂිතද යන්න සැකසිය හැක. ආරාධනා සබැඳිය බෙදාගත් විට මිතුරෙකු කිසිවක් ලියාපදිංචි නොකර, තම බ්‍රවුසරයෙන්, සෘජුවම ඔබේ මේසයට පැමිණේ.",
-      ],
-      [
-        "අත ක්‍රීඩා කරන්න",
-        "ඔබට පෞද්ගලික කාඩ් දෙකක් බෙදනු ලැබේ. ෆ්ලොප් එකට පෙර ද, නැවත ෆ්ලොප්, ටර්න් සහ රිවර් එකෙන් පසුව ද ඔට්ටු මේසය වටා යයි. ඔබේ වාරය වූ විට ක්‍රියා තීරුව දැල්වී නීත්‍යනුකූල දේ පමණක් ලබාදෙයි: Fold, Check හෝ Call, Raise හෝ All-In. ඔට්ටු මුදල ටයිප් කළ හැක, ස්ලයිඩරයෙන් ඇදිය හැක, හෝ Min, පොට් එකෙන් අඩක්, පොට් එක හෝ ඔබේ සම්පූර්ණ ස්ටැක් එක යන්නෙන් එක් තට්ටුවකින් සැකසිය හැක.",
-      ],
-      [
-        "මේසය කියවන්න",
-        "කාඩ් එළියට එන විට ඔබේ වත්මන් හොඳම අත බෝඩ් එකට යටින් නම් කෙරේ. පොට් එක, සෑම ස්ටැක් එකක්ම සහ බ්ලයින්ඩ් මට්ටම සැමවිටම තිරයේ ඇත; ඩීලර් බොත්තම අවසානයට ක්‍රියා කරන්නේ කවුදැයි පෙන්වන අතර ගණකයක් ඔබට ඇති කාලය පෙන්වයි. ෂෝඩවුන්හිදී එක් එක් අත සෑදූ කාඩ් පහ උද්දීපනය කෙරේ.",
-      ],
-      [
-        "තරඟාවලිය දිනන්න",
-        "PokerTH ක්‍රීඩා sit-and-go තරඟාවලි වේ: සියල්ලෝම එකම ස්ටැක් එකකින් ආරම්භ කරති, බ්ලයින්ඩ් කාල ගණකයකට අනුව ඉහළ යයි, එක් අයෙකු සියලු චිප්ස් අත්කරගන්නා තුරු ක්‍රීඩකයන් ඉවත් වේ. කිසිවකට මුදල් වැය නොවන අතර චිප්ස් මිලදී ගත නොහැක — සියල්ල ක්‍රීඩා මුදල් බැවින් අවදානමට ලක්වන එකම දෙය ක්‍රීඩාව පමණි.",
-      ],
+      ["වෙබ් අඩවිය විවෘත කරන්න — ස්ථාපනය කිරීමට කිසිවක් නැත",
+       "PokerTH බ්‍රවුසරයේ ධාවනය වේ. බාගැනීමක්, ප්ලගිනයක් නැත, පුහුණුව සහ අමුත්තන්ගේ ක්‍රීඩා සඳහා ගිණුමක්ද නැත. ඔබට එය යෙදුමක් මෙන් ස්ථාපනය කළ හැක — iPhone සහ iPad හි බෙදාගැනීම → “Add to Home Screen”, වෙනත් තැන්වල බ්‍රවුසර මෙනුව හෝ ස්ථාපන බොත්තම — එවිට එය සම්පූර්ණ තිරයෙන්, මාර්ගගත නොවීත් ක්‍රියා කළ හැකිව විවෘත වේ. ඔබට අවශ්‍ය නම්, ඒස්ගේ උදව් — කෙළවරේ සිටින ඒස් — සෑම තිරයක්ම පැහැදිලි කරයි."],
+      ["ක්‍රීඩා කිරීමට අවශ්‍ය තැන තෝරන්න",
+       "ප්‍රකාර තුනකි. <strong>දේශීය / පුහුණුව</strong> වහාම පරිගණක ප්‍රතිවාදීන්ගේ මේසයක් ලබාදෙන අතර කිසිදු සම්බන්ධතාවක් අවශ්‍ය නැත — ඉගෙනීමට සුදුසු තැන. <strong>pokerth.net</strong> නිල ජාලයයි: සැබෑ ප්‍රතිවාදීන්, අමුත්තන්ට විවෘත සාමාන්‍ය ක්‍රීඩා, සහ නොමිලේ ගිණුමක් ඇති ක්‍රීඩකයන් සඳහා වාර ශ්‍රේණිගත කිරීම් සහිත ශ්‍රේණිගත ක්‍රීඩා. <strong>LAN / පෞද්ගලික සේවාදායකය</strong> ඔබේ හෝ වෙනත් අයෙකුගේ කැපවූ PokerTH සේවාදායකයකට සම්බන්ධ වේ."],
+      ["මේසයක හිඳගන්න",
+       "ලොබියේදී ඔබ ලැයිස්තුවෙන් මේසයකට එක්වේ, පවතින ක්‍රීඩාවක් නරඹයි, නැතහොත් ඔබේම එකක් සාදයි. එකක් සෑදීමෙන් ක්‍රීඩා වර්ගය (සාමාන්‍ය, ලියාපදිංචි ක්‍රීඩකයන් පමණි, ආරාධිත ක්‍රීඩකයන් පමණි හෝ ශ්‍රේණිගත ක්‍රීඩාව) තෝරා, ආසන ගණන, ආරම්භක ස්ටැක්, බ්ලයින්ඩ් ඉහළ යන වේගය, ක්‍රියා කිරීමට කාලය, නරඹන්නන්ට නැරඹිය හැකිද සහ මේසය මුරපදයකින් ආරක්ෂිතද යන්න සැකසිය හැක. ආරාධනා සබැඳිය බෙදාගත් විට මිතුරෙකු තම බ්‍රවුසරයෙන්, සෘජුවම ඔබේ මේසයට පැමිණේ — සාමාන්‍ය ක්‍රීඩාවක කිසිවක් ලියාපදිංචි නොකර."],
+      ["අත ක්‍රීඩා කරන්න",
+       "ඔබට පෞද්ගලික කාඩ් දෙකක් බෙදනු ලැබේ. ෆ්ලොප් එකට පෙර ද, නැවත ෆ්ලොප්, ටර්න් සහ රිවර් එකෙන් පසුව ද ඔට්ටු මේසය වටා යයි. ඔබේ වාරය වූ විට ක්‍රියා තීරුව දැල්වී නීත්‍යනුකූල දේ පමණක් ලබාදෙයි: Fold, Check හෝ Call, Raise හෝ All-In. ඔට්ටු මුදල ටයිප් කළ හැක, ස්ලයිඩරයෙන් ඇදිය හැක, හෝ පොට් එකෙන් තුනෙන් එකක්, පොට් එකෙන් අඩක් හෝ පොට් එක යන්නෙන් එක් තට්ටුවකින් සැකසිය හැක."],
+      ["මේසය කියවන්න",
+       "සම්භාවිතා ටැබය කාඩ් එළියට එන විට ඔබේ වත්මන් හොඳම අත සහ ජය ගැනීමේ ඔබේ සම්භාවිතාව නම් කරයි. පොට් එක, සෑම ස්ටැක් එකක්ම සහ බ්ලයින්ඩ් මට්ටම සැමවිටම තිරයේ ඇත; ඩීලර් බොත්තම අවසානයට ක්‍රියා කරන්නේ කවුදැයි පෙන්වන අතර ගණකයක් ඔබට ඇති කාලය පෙන්වයි. ෂෝඩවුන්හිදී ජයග්‍රාහී සංයෝජනය පොදු කාඩ්වලට යටින් නම් කෙරේ."],
+      ["තරඟාවලිය දිනන්න",
+       "PokerTH ක්‍රීඩා තරඟාවලි වේ: සියල්ලෝම එකම ස්ටැක් එකකින් ආරම්භ කරති, බ්ලයින්ඩ් හැම අත් කිහිපයකට හෝ විනාඩි කිහිපයකට වරක් ඉහළ යයි, එක් අයෙකු සියලු චිප්ස් අත්කරගන්නා තුරු ක්‍රීඩකයන් ඉවත් වේ. කිසිවකට මුදල් වැය නොවන අතර චිප්ස් මිලදී ගත නොහැක — සියල්ල ක්‍රීඩා මුදල් බැවින් අවදානමට ලක්වන එකම දෙය ක්‍රීඩාව පමණි."]
     ],
     phoneH2: "දුරකථනයකින් ක්‍රීඩා කිරීම",
     phoneP: "මේසය පරිගණකයට මෙන්ම ස්පර්ශ තිරයටත් නිර්මාණය කර ඇත: ඔට්ටු ක්ෂේත්‍රය තට්ටු කළ විට පද්ධති යතුරුපුවරුව වෙනුවට ක්‍රියා තීරුව තුළම අංක පුවරුවක් විවෘත වන බැවින් මේසය කිසිවිටෙක නොපනින අතර, ස්ලයිඩරය ඩෙස්ක්ටොප් සේවාලාභියාගේ පියවරවලින්ම ගමන් කරයි. වාර දැනුම්දීම් Fold සහ Check/Call බොත්තම් සමඟම ඔබ වෙත පැමිණිය හැක: පටිත්තට ආපසු නොගොස් අතක් ක්‍රීඩා කළ හැක.",
     friendsH2: "මිතුරන් සමඟ ක්‍රීඩා කිරීම",
     friendsP: "මේසයක් සාදා, එය පෞද්ගලික විය යුතු නම් මුරපදයක් යොදා, ආරාධනා සබැඳිය යවන්න. එය මේසය සෘජුවම විවෘත කරයි — ඔබේ මිතුරන් එය මුල් තිරයට එක් කර ඇත්නම් ස්ථාපිත යෙදුමේ, නැතහොත් බ්‍රවුසර පටිත්තක. කිසිවෙකුට කිසිවක් ස්ථාපනය කිරීමට හෝ විද්‍යුත් තැපැල් ලිපිනයක් දීමට අවශ්‍ය නැත.",
     faqH2: "නිති අසන ප්‍රශ්න",
-    faqP: function (h, c) { return "කිසිදු ප්‍රකාරයකදී කිසිවිටෙක මුදල් සම්බන්ධ නොවේ. ඔබේ සැකසුම්, ශෛලි පැකේජ සහ මාර්ගගත නොවන ප්‍රගතිය ඔබේ උපාංගයේම රැඳේ. අතුරුමුහුණත භාෂා 83 කින් ඇති අතර, ක්‍රියා පද පහ — Fold, Check, Call, Raise, All-In — ලොව සෑම මේසයකම මෙන් ඉංග්‍රීසියෙන් පවතී. වැඩි විස්තර <a href=\"{faq}\">නිති අසන පැන</a> තුළ.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); },
+    faqP: function (h, c) { return "කිසිදු ප්‍රකාරයකදී කිසිවිටෙක මුදල් සම්බන්ධ නොවේ. ඔබේ සැකසුම්, ශෛලි පැකේජ සහ පුහුණු ප්‍රගතිය ඔබේ උපාංගයේම රැඳෙන අතර, ඔබ pokerth.net ගිණුමකින් පිවිසෙන විට ඔබේ අනෙක් උපාංගවලටද ඔබ පසුපස එයි. අතුරුමුහුණත භාෂා 83 කින් ඇති අතර, ක්‍රියා පද පහ — Fold, Check, Call, Raise, All-In — ලොව සෑම මේසයකම මෙන් ඉංග්‍රීසියෙන් පවතී. වැඩි විස්තර <a href=\"{faq}\">නිති අසන පැන</a> තුළ.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); },
   },
   ta: {
     title: "இணையத்தில் இலவசமாக போக்கர் விளையாடுவது எப்படி — PokerTH வலை",
@@ -2575,24 +2353,24 @@ var PARTS = {
     lead: function (h, c) { return "இது சுருக்கமான வழி: வெறும் தாவலிலிருந்து PokerTH-இல் உங்கள் முதல் டெக்சாஸ் ஹோல்டெம் கை வரை. நீங்கள் தேடுவது விதிகளையே என்றால் — கட்டாயப் பணயம், பந்தய சுற்றுகள், எது எதை வெல்லும் — முதலில் <a href=\"{rules}\">விதிகள் பக்கத்தையும</a> <a href=\"{hands}\">சீட்டுக் கோர்வைகளையும்</a> பாருங்கள்.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); },
     steps: [
       ["தளத்தைத் திறங்கள் — நிறுவ எதுவும் இல்லை",
-       "PokerTH உலாவியிலேயே இயங்குகிறது. பதிவிறக்கம் இல்லை, கணக்கு இல்லை, செருகுநிரல் இல்லை. கைபேசியில் உலாவி பட்டியலிலிருந்து இதை முகப்புத் திரையில் சேர்க்கலாம்; பிறகு இது ஒரு செயலி போலவே முழுத் திரையில் திறக்கும், இணையம் இல்லாமலும் இயங்கும்."],
+       "PokerTH உலாவியிலேயே இயங்குகிறது. பதிவிறக்கம் இல்லை, செருகுநிரல் இல்லை; பயிற்சிக்கும் விருந்தினர் ஆட்டங்களுக்கும் கணக்கும் தேவையில்லை. இதை ஒரு செயலியைப் போல நிறுவலாம் — iPhone, iPad-இல் பகிர் → முகப்புத் திரையில் சேர், மற்றவற்றில் உலாவி பட்டியல் அல்லது நிறுவு பொத்தான் — அது முழுத் திரையில் திறக்கும், இணையம் இல்லாமலும் இயங்கும். விரும்பினால், மூலையில் உள்ள ஏஸின் உதவி ஒவ்வொரு திரையையும் விளக்கும்."],
       ["எங்கே விளையாட விரும்புகிறீர்கள் என்பதைத் தேர்வுசெய்யுங்கள்",
-       "மூன்று வழிகள். <strong>இணையம் இல்லாத பயிற்சி</strong> உடனடியாக கணினி எதிராளிகள் அமர்ந்த மேசையில் உங்களை அமர்த்தும், இணைப்பே தேவையில்லை — கற்றுக்கொள்ள இதுவே சரியான இடம். <strong>pokerth.net</strong> அதிகாரப்பூர்வ வலையமைப்பு: உண்மையான எதிராளிகள், பருவகால தரவரிசைகள், ஒருமுறை மட்டும் பதிவுசெய்யும் இலவச புனைபெயர். <strong>LAN / தனிப்பட்ட சேவையகம்</strong> உங்களுடையதோ பிறருடையதோ ஆன ஒரு PokerTH சேவையகத்துடன் இணைக்கும்."],
+       "மூன்று வழிகள். <strong>உள்ளூர் / பயிற்சி</strong> உடனடியாக கணினி எதிராளிகள் அமர்ந்த மேசையில் உங்களை அமர்த்தும், இணைப்பே தேவையில்லை — கற்றுக்கொள்ள இதுவே சரியான இடம். <strong>pokerth.net</strong> அதிகாரப்பூர்வ வலையமைப்பு: உண்மையான எதிராளிகள், விருந்தினர்களுக்குத் திறந்த சாதாரண ஆட்டங்கள், இலவசக் கணக்கு உள்ள வீரர்களுக்கான பருவகால தரவரிசைகளுடன் கூடிய தரவரிசை ஆட்டங்கள். <strong>LAN / தனிப்பட்ட சேவையகம்</strong> உங்களுடையதோ பிறருடையதோ ஆன ஒரு PokerTH சேவையகத்துடன் இணைக்கும்."],
       ["ஒரு மேசையில் அமருங்கள்",
-       "நுழைவறையில் பட்டியலிலிருந்து ஒரு மேசையில் சேரலாம், அல்லது உங்கள் சொந்த மேசையை உருவாக்கலாம். உருவாக்கும்போது இருக்கைகளின் எண்ணிக்கை, தொடக்கக் காசுகள், கட்டாயப் பணயம் எவ்வளவு வேகமாக உயரும், மேசைக்குக் கடவுச்சொல் வேண்டுமா என்பதை நீங்களே அமைக்கிறீர்கள். அழைப்பு இணைப்பைப் பகிர்ந்தால், நண்பர் எதையும் பதிவுசெய்யாமல், தன் உலாவியிலேயே நேராக உங்கள் மேசைக்கு வந்துவிடுவார்."],
+       "நுழைவறையில் பட்டியலிலிருந்து ஒரு மேசையில் சேரலாம், நடந்துகொண்டிருக்கும் ஆட்டத்தைப் பார்க்கலாம், அல்லது உங்கள் சொந்த மேசையை உருவாக்கலாம். உருவாக்கும்போது ஆட்ட வகையை (சாதாரண, பதிவு செய்த வீரர்கள் மட்டும், அழைக்கப்பட்ட வீரர்கள் மட்டும் அல்லது தரவரிசை ஆட்டம்) தேர்ந்தெடுத்து, இருக்கைகளின் எண்ணிக்கை, தொடக்கக் காசுகள், கட்டாயப் பணயம் எவ்வளவு வேகமாக உயரும், செயல்பட நேரம், பார்வையாளர்கள் பார்க்கலாமா, மேசைக்குக் கடவுச்சொல் வேண்டுமா என்பதை நீங்களே அமைக்கிறீர்கள். அழைப்பு இணைப்பைப் பகிர்ந்தால், நண்பர் தன் உலாவியிலேயே நேராக உங்கள் மேசைக்கு வந்துவிடுவார் — சாதாரண ஆட்டத்தில் எதையும் பதிவுசெய்யாமல்."],
       ["கையை விளையாடுங்கள்",
-       "உங்களுக்கு இரண்டு மறைமுக சீட்டுகள் வழங்கப்படும். ஃப்ளாப்புக்கு முன் பந்தயம் மேசையைச் சுற்றி வரும், பிறகு ஃப்ளாப், டர்ன், ரிவர் ஒவ்வொன்றுக்குப் பிறகும் மீண்டும். உங்கள் முறை வரும்போது செயல் பட்டை ஒளிரும், அனுமதிக்கப்பட்டவற்றை மட்டுமே காட்டும்: Fold, Check அல்லது Call, Raise அல்லது All-In. தொகையைத் தட்டச்சு செய்யலாம், நழுவியில் இழுக்கலாம், அல்லது ஒரே தொடுதலில் குறைந்தபட்சம், பானையில் பாதி, முழுப் பானை, அல்லது உங்கள் அனைத்துக் காசுகள் என அமைக்கலாம்."],
+       "உங்களுக்கு இரண்டு மறைமுக சீட்டுகள் வழங்கப்படும். ஃப்ளாப்புக்கு முன் பந்தயம் மேசையைச் சுற்றி வரும், பிறகு ஃப்ளாப், டர்ன், ரிவர் ஒவ்வொன்றுக்குப் பிறகும் மீண்டும். உங்கள் முறை வரும்போது செயல் பட்டை ஒளிரும், அனுமதிக்கப்பட்டவற்றை மட்டுமே காட்டும்: Fold, Check அல்லது Call, Raise அல்லது All-In. தொகையைத் தட்டச்சு செய்யலாம், நழுவியில் இழுக்கலாம், அல்லது ஒரே தொடுதலில் பானையின் மூன்றில் ஒரு பங்கு, பானையில் பாதி அல்லது முழுப் பானை என அமைக்கலாம்."],
       ["மேசையைப் படியுங்கள்",
-       "சீட்டுகள் திறக்கத் திறக்க, அந்நேரத்தில் உங்கள் சிறந்த கோர்வையின் பெயர் மேசைக்குக் கீழே எழுதப்படும். பானை, ஒவ்வொருவரின் காசுகள், கட்டாயப் பணய நிலை ஆகியவை எப்போதும் திரையில் இருக்கும்; வழங்குநர் பொத்தான் கடைசியாகப் பேசுபவர் யார் என்பதைக் காட்டும், எண்ணிக்கை உங்களுக்கு எவ்வளவு நேரம் உள்ளது என்பதைக் காட்டும். சீட்டு திறக்கும்போது ஒவ்வொரு கையையும் உருவாக்கிய ஐந்து சீட்டுகள் தனித்துக் காட்டப்படும்."],
+       "வாய்ப்புகள் தாவல் சீட்டுகள் திறக்கத் திறக்க உங்கள் தற்போதைய சிறந்த கையின் பெயரையும் வெல்லும் வாய்ப்பையும் காட்டும். பானை, ஒவ்வொருவரின் காசுகள், கட்டாயப் பணய நிலை ஆகியவை எப்போதும் திரையில் இருக்கும்; வழங்குநர் பொத்தான் கடைசியாகப் பேசுபவர் யார் என்பதைக் காட்டும், எண்ணிக்கை உங்களுக்கு எவ்வளவு நேரம் உள்ளது என்பதைக் காட்டும். சீட்டு திறக்கும்போது வெற்றிபெற்ற கோர்வையின் பெயர் பொதுச் சீட்டுகளுக்குக் கீழே காட்டப்படும்."],
       ["போட்டியை வெல்லுங்கள்",
-       "PokerTH ஆட்டங்கள் sit-and-go வகைப் போட்டிகள்: அனைவரும் ஒரே அளவு காசுகளுடன் தொடங்குகிறார்கள், கட்டாயப் பணயம் நேரத்துக்கேற்ப உயரும், ஒருவரிடம் அனைத்துக் காசுகளும் சேரும் வரை ஆட்டக்காரர்கள் வெளியேறுவார்கள். எதற்கும் பணம் தேவையில்லை, காசுகளை வாங்கவும் முடியாது — அனைத்தும் விளையாட்டுக் காசுகளே, எனவே பணயத்தில் இருப்பது ஆட்டம் மட்டுமே."]
+       "PokerTH ஆட்டங்கள் போட்டிகள்: அனைவரும் ஒரே அளவு காசுகளுடன் தொடங்குகிறார்கள், கட்டாயப் பணயம் சில கைகளுக்கு அல்லது நிமிடங்களுக்கு ஒருமுறை உயரும், ஒருவரிடம் அனைத்துக் காசுகளும் சேரும் வரை ஆட்டக்காரர்கள் வெளியேறுவார்கள். எதற்கும் பணம் தேவையில்லை, காசுகளை வாங்கவும் முடியாது — அனைத்தும் விளையாட்டுக் காசுகளே, எனவே பணயத்தில் இருப்பது ஆட்டம் மட்டுமே."]
     ],
     phoneH2: "கைபேசியில் விளையாடுவது",
     phoneP: "மேசை கணினிக்குப் போலவே தொடுதிரைக்கும் வடிவமைக்கப்பட்டுள்ளது: பந்தயப் புலத்தைத் தொட்டால் அமைப்பின் விசைப்பலகைக்குப் பதிலாக செயல் பட்டைக்குள்ளேயே எண் பலகை திறக்கும், எனவே மேசை ஒருபோதும் குதிக்காது; நழுவியும் கணினிச் செயலியின் அதே படிகளில் நகரும். உங்கள் முறை குறித்த அறிவிப்புகளில் Fold மற்றும் Check/Call பொத்தான்களே இருக்கலாம், எனவே தாவலுக்குத் திரும்பாமலேயே ஒரு கையை விளையாடி முடிக்கலாம்.",
     friendsH2: "நண்பர்களுடன் விளையாடுவது",
     friendsP: "ஒரு மேசையை உருவாக்குங்கள், தனிப்பட்டதாக வேண்டுமெனில் கடவுச்சொல் இடுங்கள், அழைப்பு இணைப்பை அனுப்புங்கள். அந்த இணைப்பு மேசையை நேரடியாகத் திறக்கும் — முகப்புத் திரையில் செயலியைச் சேர்த்திருந்தால் நிறுவப்பட்ட செயலியில், இல்லையெனில் உலாவித் தாவலில். யாரும் எதையும் நிறுவவோ மின்னஞ்சல் முகவரி தரவோ தேவையில்லை.",
     faqH2: "அடிக்கடி கேட்கப்படுபவை",
-    faqP: function (h, c) { return "எந்த முறையிலும் பணம் சம்பந்தப்படுவதில்லை. உங்கள் அமைப்புகள், தோற்றத் தொகுப்புகள், இணையமில்லா முன்னேற்றம் அனைத்தும் உங்கள் சாதனத்திலேயே இருக்கும். இடைமுகம் 83 மொழிகளில் கிடைக்கிறது; ஐந்து செயல் சொற்கள் — Fold, Check, Call, Raise, All-In — உலகின் எந்த மேசையிலும் போலவே ஆங்கிலத்திலேயே இருக்கும். மேலும் <a href=\"{faq}\">அடிக்கடி கேட்கப்படுபவை</a> பக்கத்தில்.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
+    faqP: function (h, c) { return "எந்த முறையிலும் பணம் சம்பந்தப்படுவதில்லை. உங்கள் அமைப்புகள், தோற்றத் தொகுப்புகள், பயிற்சி முன்னேற்றம் அனைத்தும் உங்கள் சாதனத்திலேயே இருக்கும்; pokerth.net கணக்குடன் உள்நுழைந்தால் அவை உங்கள் மற்ற சாதனங்களிலும் தொடரும். இடைமுகம் 83 மொழிகளில் கிடைக்கிறது; ஐந்து செயல் சொற்கள் — Fold, Check, Call, Raise, All-In — உலகின் எந்த மேசையிலும் போலவே ஆங்கிலத்திலேயே இருக்கும். மேலும் <a href=\"{faq}\">அடிக்கடி கேட்கப்படுபவை</a> பக்கத்தில்.".replace('{rules}', h('rules', c)).replace('{hands}', h('hands', c)).replace('{faq}', h('faq', c)); }
   }
 
 };

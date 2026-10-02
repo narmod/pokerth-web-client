@@ -132,7 +132,14 @@ node scripts/test-seo-glossary-i18n.mjs
 node scripts/test-seo-howto-i18n.mjs
 node scripts/test-seo-nav-lang.mjs
 node scripts/test-seo-ssr.mjs
+node scripts/test-seo-sync.mjs           # translations match the current English
 ```
+
+When you change the English of /faq, /rules, /how-to-play, /glossary or
+/hand-rankings in `proxy.js`, `test-seo-sync` fails on purpose: bring the 82
+translations up to date (same facts, same number of FAQ entries, rules
+headings, items and paragraphs), then refresh the fingerprint with
+`node scripts/test-seo-sync.mjs --update`.
 
 Plus `node --check` on every modified JS/MJS and a JSON parse of
 `package.json`.
