@@ -76,6 +76,18 @@ ok(G.danceFor(90) === 'hiphop' && G.danceFor(114.5) === 'hiphop', '90–114: hip
 ok(G.danceFor(115) === 'disco' && G.danceFor(135) === 'disco', '115–135: disco');
 ok(G.danceFor(136) === 'techno' && G.danceFor(175) === 'techno', '> 135: techno');
 ok(G.danceFor(G.GENERIC_BPM) === 'hiphop', 'generic tempo dances hip-hop');
+// ── Several dances per range (web.282): a different one each bar ──
+ok(G.rangeFor(80) === 'slow' && G.rangeFor(100) === 'mid' && G.rangeFor(0) === 'mid' && G.rangeFor(125) === 'fast' && G.rangeFor(150) === 'rush', 'tempo ranges');
+ok(G.POOLS.slow.length === 4 && G.POOLS.mid.length === 5, 'slow: 4 dances, mid: 5 dances');
+{
+  let prev = null, rep = 0, seen = new Set(), out = 0;
+  for (let i = 0; i < 400; i++) { const d = G.pickDance(i % 2 ? 80 : 100, prev, rnd); if (d === prev) rep++; if (G.POOLS[G.rangeFor(i % 2 ? 80 : 100)].indexOf(d) < 0) out++; seen.add(d); prev = d; }
+  ok(rep === 0, 'never the same dance two bars in a row');
+  ok(out === 0, 'always a dance of the tempo range');
+  ok(seen.size === 9, `every slow and mid dance comes up (${seen.size}/9)`);
+}
+{ let prev = null, ok1 = true; for (let i = 0; i < 20; i++) { const d = G.pickDance(150, prev, rnd); if (d !== 'techno') ok1 = false; prev = d; } ok(ok1, 'one dance in a range: it repeats'); }
+
 
 // ── End to end on synthetic audio: analyser emulation (Blackman window,
 // 1024-point FFT, dB → bytes as getByteFrequencyData) + the band-energy onset
@@ -143,7 +155,11 @@ ok(/function beatLevel\(\)/.test(music) && /beatLevel: beatLevel/.test(music), '
 ok(/_beatAn\.smoothingTimeConstant = 0/.test(music) && /_tail\.connect\(_beatAn\); _tail = _beatAn;/.test(music), 'rhythm analyser unsmoothed, in series');
 ok(/\[_srcNode, _gain, _analyser, _beatAn, _panner\]/.test(music) && /_beatAn = null; _beatBuf = null;/.test(music), 'rhythm analyser torn down with the graph');
 const dance = read('public/modules/mascot/acts-dance.mjs');
-ok(['sway', 'hiphop', 'disco', 'techno'].every((s) => new RegExp('function ' + s + '\\(H, b, t0, beats\\)').test(dance)), 'four dances');
+{
+  const names = [].concat(G.POOLS.slow, G.POOLS.mid, G.POOLS.fast, G.POOLS.rush);
+  ok(names.every((n) => new RegExp('function ' + n + '\\(H, b, t0, beats\\)').test(dance)), `${names.length} dances implemented`);
+  ok(new RegExp('STYLES = \\{ ' + names.slice().sort().join(', ').replace(/\W/g, '') + ' \\}').test('') || names.every((n) => new RegExp('STYLES = \\{[^}]*\\b' + n + '\\b').test(dance)), 'every dance registered in STYLES');
+}
 ok(/export const DANCE = \{ groove \}/.test(dance), 'action groove exported');
 const eng = read('public/modules/mascot/engine.mjs');
 ok(/import \{ DANCE \} from '\.\/acts-dance\.mjs'/.test(eng) && /SOCIAL, DANCE\)/.test(eng) && /'groove', 'none'\]/.test(eng), 'engine plays groove');

@@ -1,4 +1,7 @@
-2026-10-02 version 2.1.9-web.281 (current series):
+2026-10-02 version 2.1.9-web.282 (current series):
+- improvement: the Ace has more dances and changes them every bar — on slow songs a slow dance with floating hearts, reggae and a waltz (besides the sway); on mid-tempo songs the robot, a moonwalk on the beat, the floss and the Charleston (besides the hip-hop)
+
+2026-10-02 version 2.1.9-web.281:
 - new: the Ace dances to the music player — play a track and leave the screen alone for 10 seconds on the home screen or in the lobby: he comes and dances on the beat until you touch anything. Four dances follow the tempo (slow sway, hip-hop, disco, techno) and change with the song; on iPhone with the default player (no in-app volume) he dances a generic groove. Can be switched off in Advanced options → Assistance
 
 2026-10-02 version 2.1.9-web.280:

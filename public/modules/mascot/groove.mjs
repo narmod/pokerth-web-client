@@ -26,13 +26,27 @@ export const GENERIC_BPM = 105;        // no ear: a mid-tempo groove
 export const CONF_MIN = 0.15;          // below: the guess is not trusted
 const BPM_LO = 60, BPM_HI = 190;
 
-/** Dance style for a tempo (bpm 0 / null: the generic groove). */
-export function danceFor(bpm) {
-  if (!bpm) return 'hiphop';
-  if (bpm < 90) return 'sway';
-  if (bpm < 115) return 'hiphop';
-  if (bpm <= 135) return 'disco';
-  return 'techno';
+/** Tempo range: slow (< 90), mid (90–114, also the generic groove), fast (115–135), rush (> 135). */
+export function rangeFor(bpm) {
+  if (!bpm) return 'mid';
+  if (bpm < 90) return 'slow';
+  if (bpm < 115) return 'mid';
+  if (bpm <= 135) return 'fast';
+  return 'rush';
+}
+/** The dances of each range (modules/mascot/acts-dance.mjs); the first one leads. */
+export const POOLS = {
+  slow: ['sway', 'slowdance', 'reggae', 'waltz'],
+  mid: ['hiphop', 'robot', 'moon', 'floss', 'charleston'],
+  fast: ['disco'],
+  rush: ['techno'],
+};
+/** Lead dance of a tempo (bpm 0 / null: the generic groove). */
+export function danceFor(bpm) { return POOLS[rangeFor(bpm)][0]; }
+/** Next dance for a bar: from the tempo's range, never the one just danced (when there is a choice). */
+export function pickDance(bpm, prev, rnd = Math.random) {
+  const pool = POOLS[rangeFor(bpm)], list = pool.length > 1 ? pool.filter((d) => d !== prev) : pool;
+  return list[Math.floor(rnd() * list.length) % list.length];
 }
 
 function lerp(a, i) {

@@ -1035,7 +1035,7 @@ const H = {
   get cur() { return cur; }, get E() { return cur.E; }, get st() { return cur.st; }, friend, refs,
   play, track, cycle, wait, faceWin, suitWin, fxWin, bubble, floorFx, puffAt, walkWin, notesWin, worldProp, clearProps,
   walkMs, stepCycles, fallMs, clampX, tr,
-  P, rot, sq, ry, facing, K, SW, EIO, HOP, STEP_F, STEP_B, SWING_F, SWING_B, KICK_F, KICK_B, FLAIL_L, FLAIL_R,
+  P, rot, sq, ry, facing, K, SW, EIO, HOP, STEP_F, STEP_B, SWING_F, SWING_B, KICK_F, KICK_B, FLAIL_L, FLAIL_R, mwFrames, mwFramesB,
   SPADE, HEART, DIAMOND, CLUB,
   F: { GRIN, SURPRISED, DIZZY, WINK, YAWN, ASLEEP, FOCUS, LOVE, ANGRY, CRY, TEETH },
   grim: () => actGrim(),
