@@ -201,7 +201,7 @@ export default {
   hsGameChatIn: 'Escriu un missatge per als jugadors d’aquesta taula.',
   hsReactMute: 'Amaga les reaccions dels altres jugadors a la teva pantalla.',
   hsReactPick: 'Envia aquesta reacció: tothom a la taula la veu.',
-  hsGipLog: 'El registre: tota la partida, mà a mà, cada acció i cada import.',
+  hsGipLog: 'L’historial: tota la partida, mà a mà, cada acció i cada import.',
   hsGipOdds: 'Les teves probabilitats ara mateix: la probabilitat de cada mà amb què pots acabar.',
   hsGipStats: 'Les teves estadístiques d’aquesta sessió: mans jugades, guanyades, flops vistos…',
   hsGipExport: 'Desa el registre de la partida en un fitxer.',

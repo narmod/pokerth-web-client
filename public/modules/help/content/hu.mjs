@@ -109,9 +109,9 @@ export const help = {
       id: 'info', icon: '\uD83D\uDCCA', title: 'Az információs panel',
       sections: [
         { id: 'open', t: 'A panel megnyitása',
-          b: ['Játék közben az információs panel a fejlécből nyílik (vagy Alt+L / Alt+I), és három lapja van: Napló, Esélyek és Statisztikák. Telefonon az asztal fölött lebeg; nagyobb képernyőkön mozgatható és átméretezhető ablak — fogd meg a \u28ff fogantyút a mozgatáshoz, a széleket az átméretezéshez. A helyzete megjegyzésre kerül.'] },
+          b: ['Játék közben az információs panel a fejlécből nyílik (vagy Alt+L / Alt+I), és három lapja van: Előzmények, Esélyek és Statisztikák. Telefonon az asztal fölött lebeg; nagyobb képernyőkön mozgatható és átméretezhető ablak — fogd meg a \u28ff fogantyút a mozgatáshoz, a széleket az átméretezéshez. A helyzete megjegyzésre kerül.'] },
         { id: 'log', t: 'Játéknapló',
-          b: ['A Napló lap az egész játszmát leosztásról leosztásra rögzíti: a vakokat, minden akciót az összegekkel, a felfedett lapokat és a győzteseket, mindent színezve a gyors olvashatóságért. Az exportálás gomb fájlba menti a naplót, ha később át akarod nézni a munkamenetet.'] },
+          b: ['Az Előzmények lap az egész játszmát leosztásról leosztásra rögzíti: a vakokat, minden akciót az összegekkel, a felfedett lapokat és a győzteseket, mindent színezve a gyors olvashatóságért. Az exportálás gomb fájlba menti a naplót, ha később át akarod nézni a munkamenetet.'] },
         { id: 'odds', t: 'Esélyek (valószínűség-figyelő)',
           b: ['Az Esélyek lap az aktuális kezedhez élőben mutatja annak valószínűségét, hogy a 10 kézkategória mindegyikével végzel — a High Cardtól a Royal Flushig — mindegyikhez ikon, százalék és sáv tartozik. A kijelzés elszürkül, amint bedobsz. Csak a saját lapjaidat és a közös lapokat használja: semmit sem lát, amit az ellenfeleid nem mutatnak meg.'] },
         { id: 'journal', t: 'Leosztásnaplók és a \u201eNaplók\u201d ablak',

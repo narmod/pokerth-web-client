@@ -909,7 +909,7 @@ export const strings = {
     removedReason_startFailed: "No se pudo iniciar la partida.",
     removedReason_closed: "La partida ha terminado.",
     advChatTimestamps: "Mostrar la hora en los mensajes del chat",
-    advShowOdds: "Mostrar probabilidades en el panel de Posibilidades",
+    advShowOdds: "Mostrar probabilidades en la pestaña Probabilidades",
     advChatAbbrev: "Explicar las abreviaturas del chat (gg, nh, utg…) al pasar el mouse",
     abbr_gg: "buena partida",
     abbr_vgg: "muy buena partida",

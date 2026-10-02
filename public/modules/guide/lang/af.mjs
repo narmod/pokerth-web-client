@@ -201,7 +201,7 @@ export default {
   hsGameChatIn: 'Tik ’n boodskap vir die spelers by hierdie tafel.',
   hsReactMute: 'Versteek die ander spelers se reaksies op jou skerm.',
   hsReactPick: 'Stuur hierdie reaksie: almal by die tafel sien dit.',
-  hsGipLog: 'Die logboek: die hele spel, hand vir hand, elke aksie en bedrag.',
+  hsGipLog: 'Geskiedenis: die hele spel, hand vir hand, elke aksie en bedrag.',
   hsGipOdds: 'Jou kanse nou: die kans op elke hand waarmee jy kan eindig.',
   hsGipStats: 'Jou statistieke vir hierdie sessie: hande gespeel, gewen, flops gesien…',
   hsGipExport: 'Stoor die spellogboek as ’n lêer.',

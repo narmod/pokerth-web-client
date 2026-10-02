@@ -201,7 +201,7 @@ export default {
   hsGameChatIn: 'Nhập tin nhắn cho những người chơi ở bàn này.',
   hsReactMute: 'Ẩn biểu cảm của những người chơi khác trên màn hình của bạn.',
   hsReactPick: 'Gửi biểu cảm này: mọi người ở bàn đều thấy.',
-  hsGipLog: 'Nhật ký: toàn bộ ván, từng ván bài một, mọi hành động và số tiền.',
+  hsGipLog: 'Lịch sử: toàn bộ ván, từng ván bài một, mọi hành động và số tiền.',
   hsGipOdds: 'Tỷ lệ của bạn ngay lúc này: khả năng của từng bộ bài bạn có thể có.',
   hsGipStats: 'Thống kê của bạn trong phiên này: số ván đã chơi, đã thắng, flop đã thấy…',
   hsGipExport: 'Lưu nhật ký ván thành một tệp.',

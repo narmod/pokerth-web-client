@@ -201,7 +201,7 @@ export default {
   hsGameChatIn: 'Napíš správu hráčom pri tomto stole.',
   hsReactMute: 'Skryje reakcie ostatných hráčov na tvojej obrazovke.',
   hsReactPick: 'Odošle túto reakciu: uvidia ju všetci pri stole.',
-  hsGipLog: 'Záznam: celá hra, ruka po ruke, každá akcia a každá suma.',
+  hsGipLog: 'História: celá hra, ruka po ruke, každá akcia a každá suma.',
   hsGipOdds: 'Tvoje šance práve teraz: pravdepodobnosť každej ruky, ktorú môžeš získať.',
   hsGipStats: 'Tvoje štatistiky za toto sedenie: odohraté a vyhraté ruky, videné flopy…',
   hsGipExport: 'Uloží záznam hry do súboru.',

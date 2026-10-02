@@ -201,7 +201,7 @@ export default {
   hsGameChatIn: 'Bu masadaki oyunculara bir mesaj yaz.',
   hsReactMute: 'Diğer oyuncuların tepkilerini ekranında gizler.',
   hsReactPick: 'Bu tepkiyi gönderir: masadaki herkes görür.',
-  hsGipLog: 'Günlük: tüm oyun, el el, her hamle ve tutar.',
+  hsGipLog: 'Geçmiş: tüm oyun, el el, her hamle ve tutar.',
   hsGipOdds: 'Şu anki olasılıkların: sonunda elde edebileceğin her elin şansı.',
   hsGipStats: 'Bu oturumdaki istatistiklerin: oynanan ve kazanılan eller, görülen flop’lar…',
   hsGipExport: 'Oyun günlüğünü dosya olarak kaydeder.',

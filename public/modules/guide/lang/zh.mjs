@@ -201,7 +201,7 @@ export default {
   hsGameChatIn: '给这张牌桌的玩家发一条消息。',
   hsReactMute: '在你的屏幕上隐藏其他玩家的表情。',
   hsReactPick: '发送这个表情：牌桌上所有人都能看到。',
-  hsGipLog: '日志：整局游戏，一手牌接一手牌，每个动作和金额。',
+  hsGipLog: '历史记录：整局游戏，一手牌接一手牌，每个动作和金额。',
   hsGipOdds: '你现在的胜率：你可能成牌的每种牌型的概率。',
   hsGipStats: '你在本次游戏中的统计：已玩手数、赢下手数、看过的翻牌…',
   hsGipExport: '将游戏日志保存为文件。',

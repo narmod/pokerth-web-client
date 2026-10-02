@@ -201,7 +201,7 @@ export default {
   hsGameChatIn: 'Kirjoita viesti tämän pöydän pelaajille.',
   hsReactMute: 'Piilottaa muiden pelaajien reaktiot näytöltäsi.',
   hsReactPick: 'Lähettää tämän reaktion: kaikki pöydässä näkevät sen.',
-  hsGipLog: 'Loki: koko peli käsi kädeltä, jokainen toiminto ja summa.',
+  hsGipLog: 'Historia: koko peli käsi kädeltä, jokainen toiminto ja summa.',
   hsGipOdds: 'Mahdollisuutesi juuri nyt: jokaisen käden todennäköisyys, johon voit päätyä.',
   hsGipStats: 'Tämän istunnon tilastosi: pelatut ja voitetut kädet, nähdyt floppit…',
   hsGipExport: 'Tallentaa pelin lokin tiedostona.',

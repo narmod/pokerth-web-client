@@ -109,9 +109,9 @@ export const help = {
       id: 'info', icon: '\uD83D\uDCCA', title: 'El panell d\u2019informació',
       sections: [
         { id: 'open', t: 'Obrir el panell',
-          b: ['Durant una partida, el panell d\u2019informació s\u2019obre des de la capçalera (o Alt+L / Alt+I) i té tres pestanyes: Registre, Probabilitats i Estadístiques. Al mòbil sura sobre la taula; en pantalles més grans és una finestra que es pot moure i redimensionar — agafa la nansa \u28ff per moure-la, les vores per canviar-ne la mida. La posició es recorda.'] },
+          b: ['Durant una partida, el panell d\u2019informació s\u2019obre des de la capçalera (o Alt+L / Alt+I) i té tres pestanyes: Historial, Probabilitats i Estadístiques. Al mòbil sura sobre la taula; en pantalles més grans és una finestra que es pot moure i redimensionar — agafa la nansa \u28ff per moure-la, les vores per canviar-ne la mida. La posició es recorda.'] },
         { id: 'log', t: 'Registre de la partida',
-          b: ['La pestanya Registre anota tota la partida mà per mà: les cegues, cada acció amb les quantitats, les cartes mostrades i els guanyadors, tot acolorit per llegir-ho de pressa. El botó d\u2019exportació desa el registre en un fitxer si vols repassar una sessió més tard.'] },
+          b: ['La pestanya Historial anota tota la partida mà per mà: les cegues, cada acció amb les quantitats, les cartes mostrades i els guanyadors, tot acolorit per llegir-ho de pressa. El botó d\u2019exportació desa el registre en un fitxer si vols repassar una sessió més tard.'] },
         { id: 'odds', t: 'Probabilitats (monitor de probabilitats)',
           b: ['La pestanya Probabilitats mostra, per a la teva mà actual, la probabilitat en directe d\u2019acabar amb cadascuna de les 10 categories de mans — de High Card a Royal Flush — cadascuna amb la seva icona, el seu percentatge i la seva barra. La visualització s\u2019enfosqueix així que abandones. Només fa servir les teves cartes i les comunitàries: no veu res que els rivals no ensenyin.'] },
         { id: 'journal', t: 'Registres de mans i la finestra \u00abRegistres\u00bb',

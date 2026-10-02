@@ -201,7 +201,7 @@ export default {
   hsGameChatIn: 'Írj üzenetet az asztal játékosainak.',
   hsReactMute: 'Elrejti a többi játékos reakcióit a képernyődön.',
   hsReactPick: 'Elküldi ezt a reakciót: mindenki látja az asztalnál.',
-  hsGipLog: 'A napló: az egész játék, kézről kézre, minden akció és összeg.',
+  hsGipLog: 'Az előzmények: az egész játék, kézről kézre, minden akció és összeg.',
   hsGipOdds: 'Az esélyeid most: az egyes kezek valószínűsége, amelyekkel végezhetsz.',
   hsGipStats: 'A statisztikáid ebből a munkamenetből: lejátszott és megnyert kezek, látott flopok…',
   hsGipExport: 'Fájlként menti a játék naplóját.',

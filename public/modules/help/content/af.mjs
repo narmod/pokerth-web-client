@@ -109,9 +109,9 @@ export const help = {
       id: 'info', icon: '\uD83D\uDCCA', title: 'Die inligtingspaneel',
       sections: [
         { id: 'open', t: 'Maak die paneel oop',
-          b: ['Tydens \u2019n spel word die inligtingspaneel vanuit die kopstuk oopgemaak (of Alt+L / Alt+I) en het drie oortjies: Log, Kanse en Statistieke. Op die foon sweef dit bo die tafel; op groter skerms is dit \u2019n skuifbare venster met verstelbare grootte — gryp die \u28ff-handvatsel om dit te skuif, die rande om die grootte te verander. Die posisie word onthou.'] },
+          b: ['Tydens \u2019n spel word die inligtingspaneel vanuit die kopstuk oopgemaak (of Alt+L / Alt+I) en het drie oortjies: Geskiedenis, Kanse en Statistieke. Op die foon sweef dit bo die tafel; op groter skerms is dit \u2019n skuifbare venster met verstelbare grootte — gryp die \u28ff-handvatsel om dit te skuif, die rande om die grootte te verander. Die posisie word onthou.'] },
         { id: 'log', t: 'Spellog',
-          b: ['Die Log-oortjie teken die hele spel hand vir hand aan: die blinds, elke aksie met bedrae, gewysde kaarte en wenners, alles gekleur vir vinnige lees. Die uitvoerknoppie stoor die log in \u2019n lêer as jy \u2019n sessie later wil deurgaan.'] },
+          b: ['Die Geskiedenis-oortjie teken die hele spel hand vir hand aan: die blinds, elke aksie met bedrae, gewysde kaarte en wenners, alles gekleur vir vinnige lees. Die uitvoerknoppie stoor die log in \u2019n lêer as jy \u2019n sessie later wil deurgaan.'] },
         { id: 'odds', t: 'Kanse (waarskynlikheidsmonitor)',
           b: ['Die Kanse-oortjie wys vir jou huidige hand die lewendige waarskynlikheid om met elk van die 10 handkategorieë te eindig — van High Card tot Royal Flush — elk met \u2019n ikoon, \u2019n persentasie en \u2019n balkie. Die vertoning verdof sodra jy fold. Dit gebruik slegs jou eie kaarte en die gemeenskaplikes: dit sien niks wat jou teenstanders nie wys nie.'] },
         { id: 'journal', t: 'Handlogboeke en die \u201cLogs\u201d-venster',

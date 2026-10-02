@@ -1,4 +1,7 @@
-2026-10-02 version 2.1.9-web.279 (current series):
+2026-10-02 version 2.1.9-web.280 (current series):
+- improvement: the info panel tabs (history and odds) now carry the official client’s names in its 28 other languages — in the app, the help, Ace’s Help and the public pages
+
+2026-10-02 version 2.1.9-web.279:
 - improvement: English — the info panel tabs are named like the official client: History and Odds (were Log and Odds, with « Chances » in the help, an option and the public pages)
 
 2026-10-02 version 2.1.9-web.278:

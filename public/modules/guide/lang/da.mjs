@@ -201,7 +201,7 @@ export default {
   hsGameChatIn: 'Skriv en besked til spillerne ved dette bord.',
   hsReactMute: 'Skjuler de andre spilleres reaktioner på din skærm.',
   hsReactPick: 'Sender denne reaktion: alle ved bordet kan se den.',
-  hsGipLog: 'Loggen: hele spillet, hånd for hånd, hver handling og hvert beløb.',
+  hsGipLog: 'Historik: hele spillet, hånd for hånd, hver handling og hvert beløb.',
   hsGipOdds: 'Dine odds lige nu: chancen for hver hånd, du kan ende med.',
   hsGipStats: 'Din statistik for denne session: spillede og vundne hænder, sete flops…',
   hsGipExport: 'Gemmer spillets log som en fil.',

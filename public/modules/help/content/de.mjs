@@ -109,9 +109,9 @@ export const help = {
       id: 'info', icon: '\uD83D\uDCCA', title: 'Info-Panel',
       sections: [
         { id: 'open', t: 'Das Panel öffnen',
-          b: ['Während eines Spiels öffnet sich das Info-Panel über den Header (oder Alt+L / Alt+I) und hat drei Reiter: Log, Chancen und Stats. Auf Telefonen schwebt es über dem Tisch; auf größeren Bildschirmen ist es ein verschieb- und größenveränderbares Fenster — greife den \u28ff-Griff zum Verschieben, die Ränder zum Vergrößern. Seine Position wird gemerkt.'] },
+          b: ['Während eines Spiels öffnet sich das Info-Panel über den Header (oder Alt+L / Alt+I) und hat drei Reiter: Verlauf, Chancen und Stats. Auf Telefonen schwebt es über dem Tisch; auf größeren Bildschirmen ist es ein verschieb- und größenveränderbares Fenster — greife den \u28ff-Griff zum Verschieben, die Ränder zum Vergrößern. Seine Position wird gemerkt.'] },
         { id: 'log', t: 'Spielprotokoll',
-          b: ['Der Log-Reiter zeichnet das ganze Spiel Hand für Hand auf: Blinds, jede Aktion mit Beträgen, aufgedeckte Karten und Gewinner, farbcodiert zum schnellen Lesen. Die Export-Schaltfläche speichert das Protokoll als Datei, wenn du eine Sitzung später auswerten willst.'] },
+          b: ['Der Verlauf-Reiter zeichnet das ganze Spiel Hand für Hand auf: Blinds, jede Aktion mit Beträgen, aufgedeckte Karten und Gewinner, farbcodiert zum schnellen Lesen. Die Export-Schaltfläche speichert das Protokoll als Datei, wenn du eine Sitzung später auswerten willst.'] },
         { id: 'odds', t: 'Chancen (Wahrscheinlichkeits-Monitor)',
           b: ['Der Chancen-Reiter zeigt für deine aktuelle Hand die Live-Wahrscheinlichkeit, mit jeder der 10 Handkategorien zu enden — von High Card bis Royal Flush — jeweils mit Symbol, Prozentwert und Balken. Die Anzeige wird ausgegraut, sobald du foldest. Sie nutzt ausschließlich deine eigenen Karten und die Gemeinschaftskarten: Sie sieht nichts, was deine Gegner nicht zeigen.'] },
         { id: 'journal', t: 'Hand-Protokolle und das Logs-Fenster',

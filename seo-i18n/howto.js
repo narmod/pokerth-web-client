@@ -184,7 +184,7 @@ var PARTS = {
       ["Jogue a mão",
        "Você recebe duas cartas fechadas. As apostas dão a volta na mesa antes do flop e de novo depois do flop, do turn e do river. Quando chega a sua vez, a barra de ações acende e oferece só o que é permitido: Fold, Check ou Call, Raise ou All-In. O valor pode ser digitado, arrastado no controle deslizante ou definido com um toque em um terço do pote, metade do pote ou o pote."],
       ["Leia a mesa",
-       "A aba Probabilidades mostra o nome da sua melhor mão do momento e a sua chance de vitória conforme as cartas saem. O pote, cada pilha de fichas e o nível dos blinds ficam sempre na tela, o botão do dealer mostra quem fala por último e uma contagem regressiva indica quanto tempo você tem. No showdown, a combinação vencedora aparece nomeada abaixo das cartas comunitárias."],
+       "A aba Chances mostra o nome da sua melhor mão do momento e a sua chance de vitória conforme as cartas saem. O pote, cada pilha de fichas e o nível dos blinds ficam sempre na tela, o botão do dealer mostra quem fala por último e uma contagem regressiva indica quanto tempo você tem. No showdown, a combinação vencedora aparece nomeada abaixo das cartas comunitárias."],
       ["Vença o torneio",
        "As partidas do PokerTH são torneios: todos começam com as mesmas fichas, os blinds sobem a cada poucas mãos ou minutos e os jogadores vão sendo eliminados até que um fique com tudo. Nada custa dinheiro e não dá para comprar fichas — é tudo dinheiro fictício, então o único risco é o do próprio jogo."]
     ],
@@ -358,7 +358,7 @@ var PARTS = {
       ["Eli oynayın",
        "Size kapalı iki kart dağıtılır. Bahis flop öncesinde masayı dolaşır, sonra flop, turn ve river’dan sonra yeniden. Sıra size geldiğinde işlem çubuğu yanar ve yalnızca kurallara uyanı sunar: Fold, Check ya da Call, Raise ya da All-In. Tutarı yazabilir, kaydırıcıyla sürükleyebilir ya da tek dokunuşla potun üçte biri, potun yarısı veya pot olarak ayarlayabilirsiniz."],
       ["Masayı okuyun",
-       "Kartlar açıldıkça Olasılıklar sekmesi o anki en iyi elinizi ve kazanma şansınızı adlandırır. Pot, herkesin çipi ve kör seviyesi sürekli ekrandadır, dağıtıcı düğmesi en son kimin konuşacağını gösterir, geri sayım ise ne kadar süreniz kaldığını. Açılışta kazanan kombinasyon ortak kartların altında adıyla yazılır."],
+       "Kartlar açıldıkça Şanslar sekmesi o anki en iyi elinizi ve kazanma şansınızı adlandırır. Pot, herkesin çipi ve kör seviyesi sürekli ekrandadır, dağıtıcı düğmesi en son kimin konuşacağını gösterir, geri sayım ise ne kadar süreniz kaldığını. Açılışta kazanan kombinasyon ortak kartların altında adıyla yazılır."],
       ["Turnuvayı kazanın",
        "PokerTH oyunları turnuvalardır: herkes aynı çiple başlar, körler birkaç elde veya dakikada bir yükselir ve tüm çipler tek kişide toplanana dek oyuncular elenir. Hiçbir şey para tutmaz ve çip satın alınamaz — hepsi oyun parasıdır, dolayısıyla ortada yalnızca oyunun kendisi vardır."]
     ],
@@ -416,7 +416,7 @@ var PARTS = {
       ["ハンドをプレイする",
        "手札が2枚配られます。ベットはフロップ前にテーブルを一周し、フロップ、ターン、リバーの後にもう一度行われます。自分の番になるとアクションバーが点灯し、その場で認められている選択肢だけを表示します：Fold、Check または Call、Raise または All-In。金額は入力、スライダー操作、あるいはワンタップでポットの3分の1・ポットの半分・ポットに設定できます。"],
       ["テーブルを読む",
-       "「オッズ」タブには、カードが開かれるたびに現在のあなたの最強の役と勝つ確率が表示されます。ポット、各プレイヤーのスタック、ブラインドのレベルは常に画面上にあり、ディーラーボタンは誰が最後に行動するかを示し、カウントダウンが残り時間を知らせます。ショーダウンでは、勝った組み合わせの名前が共通カードの下に表示されます。"],
+       "「勝率」タブには、カードが開かれるたびに現在のあなたの最強の役と勝つ確率が表示されます。ポット、各プレイヤーのスタック、ブラインドのレベルは常に画面上にあり、ディーラーボタンは誰が最後に行動するかを示し、カウントダウンが残り時間を知らせます。ショーダウンでは、勝った組み合わせの名前が共通カードの下に表示されます。"],
       ["トーナメントで勝つ",
        "PokerTH のゲームはトーナメントです。全員が同じスタックで始まり、ブラインドは数ハンドまたは数分ごとに上がり、1人がすべてのチップを持つまで脱落が続きます。費用は一切かからず、チップを購入することもできません——すべて遊び用のチップなので、賭かっているのはゲームそのものだけです。"]
     ],
@@ -503,7 +503,7 @@ var PARTS = {
       ["Chơi ván bài",
        "Bạn được chia hai lá tẩy. Vòng cược đi quanh bàn trước khi lật bài chung, rồi lặp lại sau flop, turn và river. Đến lượt bạn, thanh thao tác sáng lên và chỉ đưa ra những lựa chọn hợp lệ: Fold, Check hoặc Call, Raise hoặc All-In. Số tiền cược có thể gõ vào, kéo trên thanh trượt, hoặc đặt bằng một chạm ở mức một phần ba pot, nửa pot hay cả pot."],
       ["Đọc bàn chơi",
-       "Tab Tỷ lệ thắng ghi tên tay bài mạnh nhất hiện tại của bạn và khả năng thắng của bạn khi các lá được lật. Pot, số chip của từng người và mức cược mù luôn hiển thị trên màn hình, nút chia bài cho biết ai nói sau cùng, và đồng hồ đếm ngược cho biết bạn còn bao nhiêu thời gian. Khi lật bài, tay bài thắng được ghi tên ngay dưới bài chung."],
+       "Tab Cơ hội ghi tên tay bài mạnh nhất hiện tại của bạn và khả năng thắng của bạn khi các lá được lật. Pot, số chip của từng người và mức cược mù luôn hiển thị trên màn hình, nút chia bài cho biết ai nói sau cùng, và đồng hồ đếm ngược cho biết bạn còn bao nhiêu thời gian. Khi lật bài, tay bài thắng được ghi tên ngay dưới bài chung."],
       ["Thắng giải đấu",
        "Các ván PokerTH là giải đấu: mọi người bắt đầu với cùng số chip, tiền cược mù tăng sau vài ván hoặc vài phút, và người chơi lần lượt bị loại cho đến khi một người giữ toàn bộ chip. Không tốn tiền và cũng không mua được chip — tất cả đều là chip ảo, nên thứ duy nhất đặt cược chính là ván bài."]
     ],
@@ -905,7 +905,7 @@ var PARTS = {
       ["Spela handen",
        "Du får två dolda kort. Budgivningen går runt bordet före floppen och sedan igen efter floppen, turn och river. När det blir din tur tänds åtgärdsraden och erbjuder bara det som är tillåtet: Fold, Check eller Call, Raise eller All-In. Beloppet kan skrivas in, dras på reglaget eller sättas med en tryckning på en tredjedel av potten, halva potten eller potten."],
       ["Läs bordet",
-       "Fliken Odds namnger din bästa hand för stunden och din chans att vinna allteftersom korten kommer. Potten, varje stack och mörknivån syns hela tiden, dealerknappen visar vem som agerar sist och en nedräkning visar hur lång tid du har. Vid showdown namnges den vinnande kombinationen under de gemensamma korten."],
+       "Fliken Chanser namnger din bästa hand för stunden och din chans att vinna allteftersom korten kommer. Potten, varje stack och mörknivån syns hela tiden, dealerknappen visar vem som agerar sist och en nedräkning visar hur lång tid du har. Vid showdown namnges den vinnande kombinationen under de gemensamma korten."],
       ["Vinn turneringen",
        "Spelen i PokerTH är turneringar: alla börjar med samma stack, mörkarna höjs med några givars eller minuters mellanrum och spelare slås ut tills en enda har alla marker. Ingenting kostar pengar och marker går inte att köpa — allt är låtsaspengar, så det enda som står på spel är själva spelet."]
     ],
@@ -934,7 +934,7 @@ var PARTS = {
       ["Spil hånden",
        "Du får to lukkede kort. Der bydes rundt om bordet før floppen og igen efter floppen, turn og river. Når det bliver din tur, lyser handlingslinjen op og tilbyder kun det, der er tilladt: Fold, Check eller Call, Raise eller All-In. Beløbet kan tastes, trækkes på skyderen eller sættes med ét tryk til en tredjedel af puljen, halvdelen af puljen eller puljen."],
       ["Læs bordet",
-       "Fanen Odds navngiver din bedste hånd lige nu og din chance for at vinde, efterhånden som kortene kommer. Puljen, hver stak og blindniveauet er på skærmen hele tiden, dealerknappen viser, hvem der handler sidst, og en nedtælling viser, hvor lang tid du har. Ved showdown navngives den vindende kombination under fælleskortene."],
+       "Fanen Chancer navngiver din bedste hånd lige nu og din chance for at vinde, efterhånden som kortene kommer. Puljen, hver stak og blindniveauet er på skærmen hele tiden, dealerknappen viser, hvem der handler sidst, og en nedtælling viser, hvor lang tid du har. Ved showdown navngives den vindende kombination under fælleskortene."],
       ["Vind turneringen",
        "Spillene i PokerTH er turneringer: alle starter med samme stak, blinds stiger hver få hænder eller minutter, og spillere ryger ud, indtil én sidder med alle jetoner. Intet koster penge, og jetoner kan ikke købes — det hele er legepenge, så det eneste, der står på spil, er selve spillet."]
     ],
@@ -963,7 +963,7 @@ var PARTS = {
       ["Spill hånden",
        "Du får to lukkede kort. Det bys rundt bordet før floppen, og igjen etter floppen, turn og river. Når turen kommer til deg, lyser handlingslinjen opp og tilbyr bare det som er lov: Fold, Check eller Call, Raise eller All-In. Beløpet kan skrives inn, dras på glidebryteren eller settes med ett trykk på en tredjedel av potten, halve potten eller potten."],
       ["Les bordet",
-       "Odds-fanen navngir den beste hånden du har akkurat nå og sjansen din til å vinne etter hvert som kortene kommer. Potten, hver stack og blindnivået vises hele tiden, dealerknappen viser hvem som handler sist, og en nedtelling viser hvor lang tid du har. Ved showdown navngis vinnerkombinasjonen under felleskortene."],
+       "Sjanser-fanen navngir den beste hånden du har akkurat nå og sjansen din til å vinne etter hvert som kortene kommer. Potten, hver stack og blindnivået vises hele tiden, dealerknappen viser hvem som handler sist, og en nedtelling viser hvor lang tid du har. Ved showdown navngis vinnerkombinasjonen under felleskortene."],
       ["Vinn turneringen",
        "Spillene i PokerTH er turneringer: alle starter med samme stack, blindene stiger etter noen få hender eller minutter, og spillere slås ut til én sitter med alle sjetongene. Ingenting koster penger, og sjetonger kan ikke kjøpes — alt er lekepenger, så det eneste som står på spill, er selve spillet."]
     ],
@@ -1020,7 +1020,7 @@ var PARTS = {
       ["Pelaa käsi",
        "Saat kaksi omaa korttia. Panostus kiertää pöydän ennen floppia ja uudelleen flopin, turnin ja riverin jälkeen. Kun vuoro on sinun, toimintopalkki syttyy ja tarjoaa vain sallitut vaihtoehdot: Fold, Check tai Call, Raise tai All-In. Summan voi kirjoittaa, vetää liukusäätimellä tai asettaa yhdellä napautuksella kolmasosaan potista, puoleen pottiin tai pottiin."],
       ["Lue pöytää",
-       "Todennäköisyydet-välilehti nimeää parhaan käden ja voittotodennäköisyytesi sitä mukaa kuin kortit tulevat. Potti, jokaisen pino ja blinditaso näkyvät koko ajan, jakajanappula kertoo kuka puhuu viimeisenä, ja lähtölaskenta näyttää paljonko aikaa sinulla on. Korttien näyttövaiheessa voittava yhdistelmä nimetään yhteisten korttien alla."],
+       "Mahdollisuudet-välilehti nimeää parhaan käden ja voittotodennäköisyytesi sitä mukaa kuin kortit tulevat. Potti, jokaisen pino ja blinditaso näkyvät koko ajan, jakajanappula kertoo kuka puhuu viimeisenä, ja lähtölaskenta näyttää paljonko aikaa sinulla on. Korttien näyttövaiheessa voittava yhdistelmä nimetään yhteisten korttien alla."],
       ["Voita turnaus",
        "PokerTH:n pelit ovat turnauksia: kaikki aloittavat samalla pinolla, blindit nousevat muutaman jaon tai minuutin välein ja pelaajia putoaa, kunnes yhdellä on kaikki pelimerkit. Mikään ei maksa rahaa eikä pelimerkkejä voi ostaa — kaikki on leikkirahaa, joten pelissä on vain peli itse."]
     ],
@@ -1453,7 +1453,7 @@ var PARTS = {
       ["Xoga a man",
        "Recibes dúas cartas tapadas. Apóstase arredor da mesa antes do flop e outra vez despois do flop, o turn e o river. Cando che toca, a barra de accións acéndese e só ofrece o permitido: Fold, Check ou Call, Raise ou All-In. A cantidade pódese escribir, arrastrar no desprazador ou fixar cun toque nun terzo do bote, na metade do bote ou no bote."],
       ["Le a mesa",
-       "A pestana Probabilidades nomea a túa mellor xogada do momento e a túa probabilidade de gañar a medida que saen as cartas. O bote, as fichas de cada quen e o nivel das cegas están sempre na pantalla, o botón de repartidor indica quen fala en último lugar e unha conta atrás amosa canto tempo che queda. Na apertura de cartas, a combinación gañadora nómease baixo as cartas comunitarias."],
+       "A pestana Posibilidades nomea a túa mellor xogada do momento e a túa probabilidade de gañar a medida que saen as cartas. O bote, as fichas de cada quen e o nivel das cegas están sempre na pantalla, o botón de repartidor indica quen fala en último lugar e unha conta atrás amosa canto tempo che queda. Na apertura de cartas, a combinación gañadora nómease baixo as cartas comunitarias."],
       ["Gaña o torneo",
        "As partidas de PokerTH son torneos: todo o mundo comeza coas mesmas fichas, as cegas soben cada poucas mans ou minutos e os xogadores van caendo ata que un ten todas as fichas. Nada custa cartos e non se poden mercar fichas — todo son cartos ficticios, así que o único en xogo é a propia partida."]
     ],
@@ -1482,7 +1482,7 @@ var PARTS = {
       ["Sužaiskite ranką",
        "Jums išdalijamos dvi uždaros kortos. Statoma ratu prieš flopą ir dar kartą po flopo, terno bei riverio. Kai ateina jūsų eilė, veiksmų juosta įsižiebia ir siūlo tik tai, kas leidžiama: Fold, Check arba Call, Raise ar All-In. Sumą galima įvesti, patempti šliaužikliu arba vienu palietimu nustatyti į trečdalį banko, pusę banko ar visą banką."],
       ["Skaitykite stalą",
-       "Skirtuke Šansai nurodomas jūsų geriausias esamas derinys ir laimėjimo tikimybė, kortoms atsiverčiant. Bankas, kiekvieno žetonai ir aklųjų statymų lygis visą laiką matomi ekrane, dalytojo mygtukas rodo, kas kalba paskutinis, o atgalinis laikmatis — kiek jums liko laiko. Atskleidžiant kortas po bendromis kortomis įvardijamas laimintis derinys."],
+       "Skirtuke Tikimybės nurodomas jūsų geriausias esamas derinys ir laimėjimo tikimybė, kortoms atsiverčiant. Bankas, kiekvieno žetonai ir aklųjų statymų lygis visą laiką matomi ekrane, dalytojo mygtukas rodo, kas kalba paskutinis, o atgalinis laikmatis — kiek jums liko laiko. Atskleidžiant kortas po bendromis kortomis įvardijamas laimintis derinys."],
       ["Laimėkite turnyrą",
        "PokerTH žaidimai yra turnyrai: visi pradeda su tokiu pat žetonų kiekiu, aklieji statymai kyla kas kelis išdalijimus ar minutes, o žaidėjai iškrenta, kol vienam atitenka visi žetonai. Niekas nekainuoja pinigų ir žetonų nusipirkti negalima — visi jie žaidimo, tad statoma tik pati partija."]
     ],
@@ -2164,7 +2164,7 @@ var PARTS = {
       ["Cluich an làmh",
        "Gheibh thu dà chairt dhùinte. Thèid geall a chur mun cuairt a’ bhùird ron fhlop, agus a-rithist às dèidh an fhlop, an turn agus an river. Nuair a thig do chuairt, lasaidh am bàr gnìomhan agus cha nochd ach na tha ceadaichte: Fold, Check no Call, Raise no All-In. Gabhaidh an t-suim a sgrìobhadh, a shlaodadh air an t-sleamhnachan, no a shuidheachadh le aon bhuille air trian a’ phota, leth a’ phota no am pota."],
       ["Leugh am bòrd",
-       "Ainmichidh an taba Seansan an làmh as fheàrr a th’ agad an-dràsta agus an cothrom a th’ agad air buannachadh mar a thig na cairtean a-mach. Tha am pota, gach stoc agus ìre nan dallabhan air an sgrion fad na h-ùine, seallaidh putan an neach-riarachaidh cò bhruidhneas mu dheireadh, agus innsidh an cunntas-sìos dè an ùine a th’ agad. Aig an showdown, thèid an cur-ri-chèile buadhach ainmeachadh fo na cairtean coitcheann."],
+       "Ainmichidh an taba Cothroman an làmh as fheàrr a th’ agad an-dràsta agus an cothrom a th’ agad air buannachadh mar a thig na cairtean a-mach. Tha am pota, gach stoc agus ìre nan dallabhan air an sgrion fad na h-ùine, seallaidh putan an neach-riarachaidh cò bhruidhneas mu dheireadh, agus innsidh an cunntas-sìos dè an ùine a th’ agad. Aig an showdown, thèid an cur-ri-chèile buadhach ainmeachadh fo na cairtean coitcheann."],
       ["Buannaich am farpais",
        "’S e farpaisean a th’ anns na geamannan ann am PokerTH: tòisichidh a h-uile duine leis an aon stoc, èiridh na dallabhan gach beagan làmhan no mhionaidean, agus thèid cluicheadairean a-mach gus am bi na sliseagan uile aig aon neach. Cha chosg dad airgead agus chan urrainn sliseagan a cheannach — ’s e airgead cluiche a th’ anns a h-uile gin, agus mar sin chan eil ach an geama fhèin an geall."]
     ],

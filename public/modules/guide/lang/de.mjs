@@ -201,7 +201,7 @@ export default {
   hsGameChatIn: 'Schreibe eine Nachricht an die Spieler an diesem Tisch.',
   hsReactMute: 'Verbirgt die Reaktionen der anderen Spieler auf deinem Bildschirm.',
   hsReactPick: 'Sendet diese Reaktion: alle am Tisch sehen sie.',
-  hsGipLog: 'Das Protokoll: das ganze Spiel, Hand für Hand, jede Aktion und jeder Betrag.',
+  hsGipLog: 'Der Verlauf: das ganze Spiel, Hand für Hand, jede Aktion und jeder Betrag.',
   hsGipOdds: 'Deine Chancen jetzt: die Wahrscheinlichkeit jeder Hand, mit der du enden kannst.',
   hsGipStats: 'Deine Statistiken für diese Sitzung: gespielte und gewonnene Hände, gesehene Flops…',
   hsGipExport: 'Speichert das Spielprotokoll als Datei.',

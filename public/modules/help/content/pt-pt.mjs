@@ -110,7 +110,7 @@ export const help = {
       sections: [
         { id: 'open', t: 'Abrir o painel',
           b: ['Durante uma partida, o painel de informações abre-se a partir do cabeçalho (ou Alt+L / Alt+I) e tem três separadores: Histórico, Probabilidades e Estatísticas. No telemóvel flutua sobre a mesa; em ecrãs maiores é uma janela móvel e redimensionável — agarra a pega \u28ff para a mover, as bordas para a redimensionar. A posição fica memorizada.'] },
-        { id: 'log', t: 'Registo da partida',
+        { id: 'log', t: 'Histórico da partida',
           b: ['O separador Histórico regista a partida inteira mão a mão: blinds, cada ação com os montantes, cartas mostradas e vencedores, tudo colorido para uma leitura rápida. O botão de exportação guarda o registo num ficheiro se quiseres rever uma sessão mais tarde.'] },
         { id: 'odds', t: 'Probabilidades (monitor de probabilidades)',
           b: ['O separador Probabilidades mostra, para a tua mão atual, a probabilidade em direto de terminares com cada uma das 10 categorias de mãos — de High Card a Royal Flush — cada uma com o seu ícone, a sua percentagem e a sua barra. A visualização esbate-se assim que desistes. Usa apenas as tuas cartas e as comunitárias: não vê nada que os adversários não mostrem.'] },

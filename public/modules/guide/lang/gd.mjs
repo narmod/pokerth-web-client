@@ -201,7 +201,7 @@ export default {
   hsGameChatIn: 'Sgrìobh teachdaireachd dha na cluicheadairean aig a’ bhòrd seo.',
   hsReactMute: 'Falaichidh e freagairtean nan cluicheadairean eile air an sgrìn agad.',
   hsReactPick: 'Cuiridh e am freagairt seo: chì a h-uile duine aig a’ bhòrd e.',
-  hsGipLog: 'An loga: an geama gu lèir, làmh air làimh, gach gnìomh agus suim.',
+  hsGipLog: 'An eachdraidh: an geama gu lèir, làmh air làimh, gach gnìomh agus suim.',
   hsGipOdds: 'Na seansan agad an-dràsta: coltas gach làmh a dh’fhaodadh a bhith agad aig a’ cheann thall.',
   hsGipStats: 'Na staitistigean agad airson an t-seisein seo: làmhan a chaidh a chluich, a bhuannaich thu, flopan a chunnaic thu…',
   hsGipExport: 'Sàbhalaidh e loga a’ gheama mar fhaidhle.',
