@@ -19,7 +19,7 @@ export const strings = {
     // Mascotte animée (modules/mascot, extra web)
     mascotHello:'નમસ્તે!', mascotBye:'ફરી મળીશું!', mascotTada:'ટા-ડા!', mascotKing:'ટેબલનો રાજા!', mascotAnyone:'કોઈ છે?', mascotCheese:'ચીઝ!', mascotTable:'એક નવું ટેબલ!', mascotMail:'તમારો સંદેશ આવ્યો છે!', mascotBravo:'શાબાશ!',
     // Aide de l'As (modules/guide) — bouton / entrée de menu + option
-    guideBtn:'એક્કાની મદદ', advGuide:'એક્કાની મદદ: એક્કો ઍપને પગલું-દર-પગલું સમજાવે છે',
+    guideBtn:'એક્કાની મદદ', advGuide:'એક્કાની મદદ: એક્કો ઍપને પગલું-દર-પગલું સમજાવે છે', advAceDance:'એક્કો મ્યુઝિક પ્લેયરના સંગીત પર નાચે છે',
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'મારી નોંધ', nvRating:'રેટિંગ', nvPlaceholder:'કોઈ પણ 3-bet ને Call કરે છે…', nvSaved:'સેવ થયું', nvTagNone:'લેબલ નથી', nvTagRed:'જોખમ', nvTagOrange:'આક્રમક', nvTagYellow:'સાવધાન', nvTagGreen:'ફિશ', nvTagBlue:'ટાઇટ', nvTagPurple:'ચાલાક', nvLabelPh:'લેબલનું નામ', nvLabelTip:'આ લેબલનું નામ બદલો — આ રંગના બધા ખેલાડીઓને લાગુ પડે છે',
     ppMyStats:'મારા આંકડા',

@@ -1,4 +1,7 @@
-2026-10-02 version 2.1.9-web.280 (current series):
+2026-10-02 version 2.1.9-web.281 (current series):
+- new: the Ace dances to the music player — play a track and leave the screen alone for 10 seconds on the home screen or in the lobby: he comes and dances on the beat until you touch anything. Four dances follow the tempo (slow sway, hip-hop, disco, techno) and change with the song; on iPhone with the default player (no in-app volume) he dances a generic groove. Can be switched off in Advanced options → Assistance
+
+2026-10-02 version 2.1.9-web.280:
 - improvement: the info panel tabs (history and odds) now carry the official client’s names in its 28 other languages — in the app, the help, Ace’s Help and the public pages
 
 2026-10-02 version 2.1.9-web.279:

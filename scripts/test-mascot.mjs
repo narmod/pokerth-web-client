@@ -164,7 +164,7 @@ const js = fs.readFileSync('public/pokerth.js', 'utf8');
 ok(!/sync\('adv-mascot'/.test(js), 'option no longer synced');
 ok(js.indexOf("window._mascotApply") >= 0, 'applyAdvOpts still re-arms the loader');
 const sw = fs.readFileSync('public/sw.js', 'utf8');
-ok(['index', 'engine', 'plan', 'panel', 'acts-extra', 'acts-props', 'acts-social'].every((n) => sw.indexOf(`'/modules/mascot/${n}.mjs'`) >= 0), 'mascot modules precached');
+ok(['index', 'engine', 'plan', 'panel', 'acts-extra', 'acts-props', 'acts-social', 'acts-dance', 'groove'].every((n) => sw.indexOf(`'/modules/mascot/${n}.mjs'`) >= 0), 'mascot modules precached');
 const loader = fs.readFileSync('public/modules/mascot/index.mjs', 'utf8');
 ok(/SCREENS = \['s-connect', 's-lobby'\]/.test(loader) && loader.indexOf("'s-game'") >= 0, 'only the home screen and the lobby (a table stops him)');
 ok(/import\('\.\/engine\.mjs'\)/.test(loader) && !/^import .*engine/m.test(loader), 'engine loaded on demand only');

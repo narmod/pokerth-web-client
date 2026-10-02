@@ -35,6 +35,13 @@
 // only, until the player is back on the home screen or in the lobby and no
 // tip is on screen, then he cheers once (several reasons: one cheer; kept
 // CHEER_TTL at most).
+// Dancing (web.281): while the music player plays, the Ace comes after
+// DANCE_IDLE without input (instead of IDLE_MS, no cooldown) and dances to
+// the beat until the next input (action 'groove', modules/mascot/acts-dance.mjs).
+// Option « ace_dance » (Advanced options, on by default; admin kill switch
+// featureOff.ace_dance). The ear (modules/mascot/groove.mjs) listens
+// while the music plays on the home screen or in the lobby, so the tempo is
+// already known when he walks in.
 // Test panel (hidden): ?mascot=panel or mascotPanel() in the console opens
 // modules/mascot/panel.mjs — every entry / action / exit / costume on demand,
 // slow motion, loop. The idle timer is off while it is open.
@@ -42,6 +49,8 @@
 
 const IDLE_MS = 30000;
 const COOLDOWN_MS = 120000;
+const DANCE_IDLE = 10000;
+let dancing = false;   // the running appearance is a dance (action 'groove')
 const SCREENS = ['s-connect', 's-lobby'];
 
 let enabled = false;
@@ -57,6 +66,15 @@ const REACT_GAP = 60000, REACT_WARMUP = 8000;
 const lastReact = {};
 let cheer = 0, cheerTimer = 0;   // a pending « Well done! » (when it was earned)
 const CHEER_TTL = 600000, CHEER_SETTLE = 1500;
+
+/** Option « The Ace dances to the music player » (on by default; admin kill switch). */
+function danceOpt() {
+  try { if (window._pthFeatureOff && window._pthFeatureOff.ace_dance) return false; } catch (e) {}
+  try { return localStorage.getItem('pth_ace_dance') !== '0'; } catch (e) { return true; }
+}
+function musicOn() { try { return !!(window.Music && window.Music.isPlaying()); } catch (e) { return false; } }
+/** The music plays and the option is on: he dances instead of playing a scene. */
+function wantsDance() { return enabled && danceOpt() && musicOn(); }
 
 /** Idle scenes are always on — except under automation, unless a test opts in. */
 function allowed() {
@@ -134,6 +152,7 @@ function arm() {
   if (panel && panel.isOpen()) return;
   if (preview) { timer = setTimeout(fire, 3000); return; }
   if (!enabled) return;
+  if (wantsDance()) { timer = setTimeout(fire, DANCE_IDLE); return; }
   const wait = Math.max(IDLE_MS, lastEnd ? lastEnd + COOLDOWN_MS - Date.now() : 0);
   timer = setTimeout(fire, wait);
 }
@@ -153,12 +172,16 @@ async function fire() {
     if (preview.action === 'peek') opts.entry = 'peek';
     else if (preview.action) opts.action = preview.action;
     preview = null;
+  } else if (wantsDance()) {
+    opts.action = 'groove';
   }
+  dancing = opts.action === 'groove';
   withHome(opts);
   try { await (await loadEngine()).appear(opts); }
   catch (e) { try { console.warn('[mascot]', e); } catch (e2) {} }
   if (opts.arrive) opts.arrive(true);   // whatever happened, the docked Ace is back
   running = false;
+  dancing = false;
   lastEnd = Date.now();
   arm();
 }
@@ -176,7 +199,26 @@ function apply() {
   const was = enabled;
   enabled = allowed();
   if (!enabled && was) stopNow();
+  if (dancing && !danceOpt()) { try { if (engine && engine.isPlaying()) engine.dismiss(); } catch (e) {} }   // option switched off while he dances
+  watchMusic();
   if (!running) arm();
+}
+
+// The ear listens while the music plays on the home screen or in the lobby.
+let ear = null, earOn = false, musicWas = false;
+function watchMusic() {
+  const m = wantsDance();
+  const listen = m && onMascotScreen() && !document.hidden && !motionOff();
+  if (listen !== earOn) {
+    earOn = listen;
+    if (listen) {
+      import('./groove.mjs').then((g) => {
+        ear = g;
+        if (earOn) g.start(() => (window.Music && window.Music.beatLevel ? window.Music.beatLevel() : null));
+      }).catch(() => {});
+    } else if (ear) ear.stop();
+  }
+  if (m !== musicWas) { musicWas = m; if (!running) arm(); }   // music started / stopped: dance timer or scene timer
 }
 
 function onScreenChange() {
@@ -193,7 +235,7 @@ function init() {
   try {
     const q = new URLSearchParams(location.search).get('mascot');
     if (q === 'panel') setTimeout(() => window.mascotPanel(), 800);
-    else if (q) preview = { action: /^(moon|climb|magic|king|knight|grim|sleep|juggle|peek)$/.test(q) ? q : '' };
+    else if (q) preview = { action: /^(moon|climb|magic|king|knight|grim|sleep|juggle|peek|groove)$/.test(q) ? q : '' };
   } catch (e) {}
   enabled = allowed();
   if (onMascotScreen()) screenSince = Date.now();
@@ -215,6 +257,7 @@ function init() {
     const el = document.getElementById(id);
     if (el) mo.observe(el, { attributes: true, attributeFilter: ['class'] });
   }
+  setInterval(watchMusic, 1000);
   arm();
 }
 

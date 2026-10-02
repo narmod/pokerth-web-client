@@ -28,6 +28,7 @@
 //   window.Music.mount(bodyEl)   — render the player UI into a container element
 //   window.Music.refresh()       — re-fetch the manifest + re-render the list
 //   window.Music.isPlaying() / current() / tracks()
+//   window.Music.beatLevel()     — onset strength for the dancing Ace (null: no graph)
 // ─────────────────────────────────────────────────────────────────────────
 
 // Manifest entries may also be LIVE RADIO STREAMS: { stream: true, file: <url> }.
@@ -64,6 +65,10 @@ let _lcdRemain = false; // LCD time display: false = elapsed, true = remaining (
 // element's own volume (the pre-existing behaviour, fine off iOS).
 let _ctx = null, _srcNode = null, _gain = null, _waReady = false, _waFailed = false;
 let _panner = null, _analyser = null, _vuData = null, _vuRAF = 0, _vuDead = false, _vuZeroFrames = 0;
+// Second analyser for the dancing Ace (modules/mascot/groove.mjs): unsmoothed,
+// finer FFT, in series after the VU's so it is fed on iOS too. _beatPrev =
+// last [log kick-band energy, log mid-band energy].
+let _beatAn = null, _beatBuf = null, _beatPrev = null;
 // Consecutive graph rebuilds after an iOS interruption (see _rebuildWebAudio).
 const WA_MAX_REBUILD = 4;
 const WA_REFILL_MS   = 10000;   // sustained playback needed before the rebuild budget refills
@@ -441,6 +446,8 @@ function _ensureWebAudio() {
     _srcNode.connect(_gain);
     var _tail = _gain;
     if (_analyser) { _tail.connect(_analyser); _tail = _analyser; }   // series tap
+    try { _beatAn = _ctx.createAnalyser(); _beatAn.fftSize = 1024; _beatAn.smoothingTimeConstant = 0; } catch (e) { _beatAn = null; }
+    if (_beatAn) { _tail.connect(_beatAn); _tail = _beatAn; }         // series tap (rhythm)
     if (_ctx.createStereoPanner) {
       _panner = _ctx.createStereoPanner();
       try { _panner.pan.value = getBalance(); } catch (e) {}
@@ -484,11 +491,12 @@ function _rebuildWebAudio(force) {
     try { loop = !!old.loop; } catch (e) {}
     try { old.pause(); old.removeAttribute('src'); old.load(); } catch (e) {}
   }
-  [_srcNode, _gain, _analyser, _panner].forEach(function (n) {
+  [_srcNode, _gain, _analyser, _beatAn, _panner].forEach(function (n) {
     if (n) { try { n.disconnect(); } catch (e) {} }
   });
   if (_ctx) { try { var c = _ctx.close(); if (c && c.catch) c.catch(function () {}); } catch (e) {} }
   _ctx = null; _srcNode = null; _gain = null; _analyser = null; _panner = null;
+  _beatAn = null; _beatBuf = null; _beatPrev = null;
   _waReady = false; _waFailed = false;    // let _ensureWebAudio try again on the new element
   _vuData = null; _vuDead = false; _vuZeroFrames = 0;   // the VU died with the old graph
   _audio = null;                          // _el() builds AND wires a fresh element
@@ -1350,12 +1358,45 @@ try { _shuffle = (localStorage.getItem(LS_SHUFFLE) === '1'); } catch (e) {}
 try { _shade = (localStorage.getItem('pth_music_shade') === '1'); } catch (e) {}
 try { var _mm = localStorage.getItem(LS_MODE); if (_mm === 'pl' || _mm === 'radio') _mode = _mm; } catch (e) {}
 
+// ── Rhythm for the dancing Ace (modules/mascot/groove.mjs) ──
+// Onset strength: rise of the log energy of the kick band (< 180 Hz, weight
+// 0.7) and of the 180 Hz–2.6 kHz band (0.3), from the unsmoothed analyser.
+// Band energies (not per-bin flux) so a steady bass line or pad does not
+// flicker into fake beats, and a hi-hat spread over many bins cannot outweigh
+// the kick. null when there is nothing to measure (no graph: iOS default,
+// radio fallback; paused); 0 when the graph runs silent. Cheap: one 512-bin
+// read per call (~50 Hz, only while the Ace listens).
+function beatLevel() {
+  if (!_beatAn || _bypass || !_ctx || !isPlaying()) return null;
+  try {
+    var n = _beatAn.frequencyBinCount;
+    if (!_beatBuf || _beatBuf.length !== n) _beatBuf = new Uint8Array(n);
+    _beatAn.getByteFrequencyData(_beatBuf);
+    var hz = _ctx.sampleRate / _beatAn.fftSize;
+    var hi = Math.min(n - 1, Math.round(2600 / hz)), lb = Math.max(2, Math.round(180 / hz));
+    var dbMin = _beatAn.minDecibels, dbSpan = (_beatAn.maxDecibels - dbMin) / 255;
+    var lo = 0, mid = 0, sum = 0;
+    for (var i = 1; i <= hi; i++) {
+      var v = _beatBuf[i];
+      sum += v;
+      var amp = Math.pow(10, (dbMin + v * dbSpan) / 20);
+      if (i <= lb) lo += amp; else mid += amp;
+    }
+    if (sum === 0) { _beatPrev = null; return 0; }
+    var lL = Math.log(lo + 1e-6), lM = Math.log(mid + 1e-6), p = _beatPrev;
+    _beatPrev = [lL, lM];
+    if (!p) return 0;
+    return 0.7 * Math.max(0, lL - p[0]) + 0.3 * Math.max(0, lM - p[1]);
+  } catch (e) { return null; }
+}
+
 const Music = {
   loadManifest: loadManifest,
   refresh: refresh,
   tracks: tracks,
   current: current,
   isPlaying: isPlaying,
+  beatLevel: beatLevel,
   play: play,
   pause: pause,
   stop: stop,

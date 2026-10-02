@@ -50,7 +50,7 @@ const LABELS = {
   banana: 'Banana peel', bluff: 'Bluff (7-2)', ledge: 'Sit on a window', hang: 'Hang under a window', knock: 'Knock on the screen', push: 'Push the edge',
   duel: 'Duel (King of hearts)', joker: 'Joker prank', 'r-table': 'React: new table', 'r-mail': 'React: private message', 'r-bravo': 'React: better rank',
   santa: 'Santa hat', pumpkin: 'Pumpkin', beanie: 'Beanie', jester: 'Jester cap',
-  dealer: 'Dealer', tower: 'Chip tower', felt: 'Lonely felt', umbrella: 'Rain cloud', selfie: 'Selfie', bubbles: 'Soap bubbles', guitar: 'Guitar', dance: 'Dance', none: '— greeting only —', duck: 'Duck (after peek)',
+  dealer: 'Dealer', tower: 'Chip tower', felt: 'Lonely felt', umbrella: 'Rain cloud', selfie: 'Selfie', bubbles: 'Soap bubbles', guitar: 'Guitar', dance: 'Dance', groove: 'Dance to the music (player)', none: '— greeting only —', duck: 'Duck (after peek)',
   tophat: 'Top hat', wizard: 'Wizard', crown: 'Crown', helmet: 'Helmet', fedora: 'Fedora', nightcap: 'Nightcap', cowboy: 'Cowboy hat',
   wand: 'Wand', scepter: 'Scepter', sword: 'Sword', cane: 'Cane', pistol: 'Pistol',
 };

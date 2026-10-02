@@ -21,7 +21,7 @@ export const strings = {
     // Mascotte animée (modules/mascot, extra web)
     mascotHello:'Здраво!', mascotBye:'Се гледаме!', mascotTada:'Тадаа!', mascotKing:'Кралот на масата!', mascotAnyone:'Има ли некој?', mascotCheese:'Сирење!', mascotTable:'Нова маса!', mascotMail:'Имаш порака!', mascotBravo:'Браво!',
     // Aide de l'As (modules/guide) — bouton / entrée de menu + option
-    guideBtn:'Помош од кецот', advGuide:'Помош од кецот: кецот ја објаснува апликацијата чекор по чекор',
+    guideBtn:'Помош од кецот', advGuide:'Помош од кецот: кецот ја објаснува апликацијата чекор по чекор', advAceDance:'Кецот танцува на музиката од плеерот',
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'Мојата белешка', nvRating:'Оцена', nvPlaceholder:'Плаќа секој 3-bet…', nvSaved:'Зачувано', nvTagNone:'Без ознака', nvTagRed:'Опасен', nvTagOrange:'Агресивен', nvTagYellow:'Следи', nvTagGreen:'Риба', nvTagBlue:'Стегнат', nvTagPurple:'Лукав', nvLabelPh:'Име на ознаката', nvLabelTip:'Преименувај ја оваа ознака — важи за сите играчи со оваа боја',
     ppMyStats:'Моја статистика',

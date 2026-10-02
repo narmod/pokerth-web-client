@@ -19,7 +19,7 @@ export const strings = {
     // Mascotte animée (modules/mascot, extra web)
     mascotHello:'ሰላም!', mascotBye:'በኋላ እንገናኝ!', mascotTada:'ታ-ዳ!', mascotKing:'የጠረጴዛው ንጉሥ!', mascotAnyone:'ማንም አለ?', mascotCheese:'ፈገግ በሉ!', mascotTable:'አዲስ ጠረጴዛ!', mascotMail:'መልዕክት አለዎት!', mascotBravo:'ጎበዝ!',
     // Aide de l'As (modules/guide) — bouton / entrée de menu + option
-    guideBtn:'የኤሱ እገዛ', advGuide:'የኤሱ እገዛ፦ ኤሱ መተግበሪያውን ደረጃ በደረጃ ያብራራል',
+    guideBtn:'የኤሱ እገዛ', advGuide:'የኤሱ እገዛ፦ ኤሱ መተግበሪያውን ደረጃ በደረጃ ያብራራል', advAceDance:'ኤሱ በሙዚቃ ማጫወቻው ሙዚቃ ይደንሳል',
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'የእኔ ማስታወሻ', nvRating:'ደረጃ', nvPlaceholder:'ማንኛውንም 3-bet ይጠራል…', nvSaved:'ተቀምጧል', nvTagNone:'መለያ የለም', nvTagRed:'አደገኛ', nvTagOrange:'ጠበኛ', nvTagYellow:'ይከታተሉ', nvTagGreen:'ደካማ', nvTagBlue:'ጥብቅ', nvTagPurple:'ተንኮለኛ', nvLabelPh:'የመለያ ስም', nvLabelTip:'ይህን መለያ እንደገና ይሰይሙ — በዚህ ቀለም ላለው እያንዳንዱ ተጫዋች ይተገበራል',
     ppMyStats:'የእኔ ስታቲስቲክስ',

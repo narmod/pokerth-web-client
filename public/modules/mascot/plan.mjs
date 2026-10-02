@@ -214,6 +214,7 @@ export function costumeFor(action, rnd = Math.random) {
     case 'hang': case 'knock': case 'push': case 'umbrella': case 'bubbles': case 'selfie': return { hat: 'none', tool: 'none', mood: 'smile' };
     case 'guitar': return { hat: 'cowboy', tool: 'none', mood: 'smile' };
     case 'dance': return { hat: 'fedora', tool: 'none', mood: 'smile' };
+    case 'groove': { const r = rnd(); return { hat: r < 0.4 ? 'fedora' : r < 0.7 ? 'none' : 'tophat', tool: 'none', mood: 'smile' }; }
     case 'duel': return { hat: 'cowboy', tool: 'pistol', mood: 'smile' };
     case 'joker': case 'r-mail': return { hat: 'none', tool: 'none', mood: 'smile' };
     case 'r-bravo': return { hat: 'crown', tool: 'none', mood: 'smile' };

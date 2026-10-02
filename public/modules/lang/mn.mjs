@@ -22,7 +22,7 @@ export const strings = {
     // Mascotte animée (modules/mascot, extra web)
     mascotHello:'Сайн уу!', mascotBye:'Дараа уулзъя!', mascotTada:'Та-да!', mascotKing:'Ширээний хаан!', mascotAnyone:'Хүн байна уу?', mascotCheese:'Бяслаг!', mascotTable:'Шинэ ширээ!', mascotMail:'Танд захидал ирлээ!', mascotBravo:'Сайн байна!',
     // Aide de l'As (modules/guide) — bouton / entrée de menu + option
-    guideBtn:'Тамгын тусламж', advGuide:'Тамгын тусламж: тамга аппыг алхам алхмаар тайлбарлана',
+    guideBtn:'Тамгын тусламж', advGuide:'Тамгын тусламж: тамга аппыг алхам алхмаар тайлбарлана', advAceDance:'Тамга тоглуулагчийн хөгжимд бүжиглэнэ',
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'Миний тэмдэглэл', nvRating:'Үнэлгээ', nvPlaceholder:'Ямар ч 3-bet-д call хийдэг…', nvSaved:'Хадгалсан', nvTagNone:'Шошгогүй', nvTagRed:'Аюул', nvTagOrange:'Түрэмгий', nvTagYellow:'Болгоомжтой', nvTagGreen:'Загас', nvTagBlue:'Тайт', nvTagPurple:'Зальтай', nvLabelPh:'Шошгоны нэр', nvLabelTip:'Энэ шошгоны нэрийг өөрчлөх — энэ өнгөтэй бүх тоглогчид нөлөөлнө',
     ppMyStats:'Миний статистик',

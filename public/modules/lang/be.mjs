@@ -22,7 +22,7 @@ export const strings = {
     // Mascotte animée (modules/mascot, extra web)
     mascotHello:'Прывітанне!', mascotBye:'Да сустрэчы!', mascotTada:'Та-да!', mascotKing:'Кароль стала!', mascotAnyone:'Ёсць тут хто?', mascotCheese:'Скажы «сыр»!', mascotTable:'Новы стол!', mascotMail:'Вам ліст!', mascotBravo:'Малайчына!',
     // Aide de l'As (modules/guide) — bouton / entrée de menu + option
-    guideBtn:'Дапамога туза', advGuide:'Дапамога туза: туз тлумачыць праграму крок за крокам',
+    guideBtn:'Дапамога туза', advGuide:'Дапамога туза: туз тлумачыць праграму крок за крокам', advAceDance:'Туз танцуе пад музыку з плэера',
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'Мая нататка', nvRating:'Ацэнка', nvPlaceholder:'Коліць любы 3-bet…', nvSaved:'Захавана', nvTagNone:'Без меткі', nvTagRed:'Небяспека', nvTagOrange:'Агрэсіўны', nvTagYellow:'Увага', nvTagGreen:'Рыба', nvTagBlue:'Тайтавы', nvTagPurple:'Хітры', nvLabelPh:'Назва меткі', nvLabelTip:'Перайменаваць гэтую метку — прымяняецца да ўсіх гульцоў з гэтым колерам',
     ppMyStats:'Мая статыстыка',

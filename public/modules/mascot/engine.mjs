@@ -10,7 +10,9 @@
 // One appearance = entry (door / poof / edge / peek over a panel's top edge)
 // → greeting → one action (moonwalk, climb & fall, magic, king, knight,
 // grimaces, nap, juggling) → exit. A short peek visit just says hello from
-// behind the panel and ducks back down.
+// behind the panel and ducks back down. While the music player plays, the
+// loader asks for 'groove' instead: he dances to the beat until an input
+// (modules/mascot/acts-dance.mjs, tempo from modules/mascot/groove.mjs).
 // Positions come from modules/mascot/plan.mjs and scale with the screen.
 // The overlay never takes a click (pointer-events: none); any input makes
 // the Ace vanish in a puff (index.mjs calls dismiss()).
@@ -23,6 +25,7 @@ import {
 import { EXTRA } from './acts-extra.mjs';
 import { PROPS } from './acts-props.mjs';
 import { SOCIAL } from './acts-social.mjs';
+import { DANCE } from './acts-dance.mjs';
 
 const tr = (k, d) => { try { const s = window.t ? window.t(k) : d; return s && s !== k ? s : d; } catch (e) { return d; } };
 
@@ -1132,7 +1135,7 @@ export const CATALOG = {
   actions: ['moon', 'climb', 'magic', 'king', 'knight', 'grim', 'sleep', 'juggle', 'pistol', 'rope',
     'banana', 'bluff', 'ledge', 'hang', 'knock', 'push',
     'dealer', 'tower', 'felt', 'umbrella', 'selfie', 'bubbles', 'guitar', 'dance', 'duel', 'joker',
-    'r-table', 'r-mail', 'r-bravo', 'none'],
+    'r-table', 'r-mail', 'r-bravo', 'groove', 'none'],
   exits: ['door', 'poof', 'edge', 'duck'],
   hats: ['none', 'tophat', 'wizard', 'crown', 'helmet', 'fedora', 'nightcap', 'cowboy', 'santa', 'pumpkin', 'beanie', 'jester'],
   tools: ['none', 'wand', 'scepter', 'sword', 'cane', 'pistol'],
@@ -1193,7 +1196,7 @@ export async function appear(opts = {}) {
   const ENTRY = { door: enterDoor, poof: enterPoof, edge: enterEdge, peek: () => enterPeek(peek), home: (r) => enterHome(r, /^r-/.test(seq.actions[0] || '')) };
   const ACT = { moon: actMoon, climb: () => actClimb(plan), magic: () => actMagic(plan), king: actKing, knight: actKnight, grim: actGrim, sleep: actSleep, juggle: actJuggle, pistol: actPistol, rope: actRope };
   const where = { plan, peek, ledge, hang, rects };
-  const MORE = Object.assign({}, EXTRA, PROPS, SOCIAL);
+  const MORE = Object.assign({}, EXTRA, PROPS, SOCIAL, DANCE);
   Object.keys(MORE).forEach((a) => { ACT[a] = async () => { try { await MORE[a](H, where); } finally { if (cur === c) clearProps(); } }; });
   const EXIT = { door: exitDoor, poof: exitPoof, edge: exitEdge, duck: () => exitDuck(peek), home: exitHome, homeDoor: exitHomeDoor, homePoof: exitHomePoof };
   try {

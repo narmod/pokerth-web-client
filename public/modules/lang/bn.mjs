@@ -21,7 +21,7 @@ export const strings = {
     // Mascotte animée (modules/mascot, extra web)
     mascotHello:'হাই!', mascotBye:'আবার দেখা হবে!', mascotTada:'টা-ডা!', mascotKing:'টেবিলের রাজা!', mascotAnyone:'কেউ আছেন?', mascotCheese:'চিজ!', mascotTable:'একটা নতুন টেবিল!', mascotMail:'আপনার বার্তা এসেছে!', mascotBravo:'সাবাশ!',
     // Aide de l'As (modules/guide) — bouton / entrée de menu + option
-    guideBtn:'টেক্কার সহায়তা', advGuide:'টেক্কার সহায়তা: টেক্কা ধাপে ধাপে অ্যাপটি বুঝিয়ে দেয়',
+    guideBtn:'টেক্কার সহায়তা', advGuide:'টেক্কার সহায়তা: টেক্কা ধাপে ধাপে অ্যাপটি বুঝিয়ে দেয়', advAceDance:'টেক্কা মিউজিক প্লেয়ারের গানের তালে নাচে',
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'আমার নোট', nvRating:'রেটিং', nvPlaceholder:'যেকোনো 3-bet কল করে…', nvSaved:'সংরক্ষিত', nvTagNone:'কোনো লেবেল নেই', nvTagRed:'বিপজ্জনক', nvTagOrange:'আক্রমণাত্মক', nvTagYellow:'নজরে রাখুন', nvTagGreen:'ফিশ', nvTagBlue:'টাইট', nvTagPurple:'ধূর্ত', nvLabelPh:'লেবেলের নাম', nvLabelTip:'লেবেলের নাম বদলান — এই রঙের সব খেলোয়াড়ের ক্ষেত্রে প্রযোজ্য',
     ppMyStats:'আমার পরিসংখ্যান',

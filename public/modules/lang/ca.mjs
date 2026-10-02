@@ -15,7 +15,7 @@ export const strings = {
     // Mascotte animée (modules/mascot, extra web)
     mascotHello:'Hola!', mascotBye:'Fins aviat!', mascotTada:'Tatxan!', mascotKing:'El rei del tapet!', mascotAnyone:'Hi ha algú?', mascotCheese:'Patata!', mascotTable:'Una taula nova!', mascotMail:'Tens un missatge!', mascotBravo:'Ben fet!',
     // Aide de l'As (modules/guide) — bouton / entrée de menu + option
-    guideBtn:'Ajuda de l’As', advGuide:'Ajuda de l’As: l’As explica l’aplicació pas a pas',
+    guideBtn:'Ajuda de l’As', advGuide:'Ajuda de l’As: l’As explica l’aplicació pas a pas', advAceDance:'L’As balla amb la música del reproductor',
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'La meva nota', nvRating:'Valoració', nvPlaceholder:'Paga qualsevol 3-bet…', nvSaved:'Desat', nvTagNone:'Sense etiqueta', nvTagRed:'Perillós', nvTagOrange:'Agressiu', nvTagYellow:'Vigilar', nvTagGreen:'Peix', nvTagBlue:'Tancat', nvTagPurple:'Astut', nvLabelPh:'Nom de l’etiqueta', nvLabelTip:'Canvia el nom de l’etiqueta — s’aplica a tots els jugadors amb aquest color',
     ppMyStats:'Les meves estadístiques',

@@ -14,7 +14,7 @@ export const strings = {
     // Mascotte animée (modules/mascot, extra web)
     mascotHello:'やあ！', mascotBye:'またね！', mascotTada:'ジャジャーン！', mascotKing:'テーブルの王様！', mascotAnyone:'誰かいる？', mascotCheese:'はい、チーズ！', mascotTable:'新しいテーブル！', mascotMail:'メッセージが届いたよ！', mascotBravo:'よくやった！',
     // Aide de l'As (modules/guide) — bouton / entrée de menu + option
-    guideBtn:'エースのヘルプ', advGuide:'エースのヘルプ：操作に合わせてエースがアプリを説明',
+    guideBtn:'エースのヘルプ', advGuide:'エースのヘルプ：操作に合わせてエースがアプリを説明', advAceDance:'プレーヤーの音楽に合わせてエースが踊る',
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'メモ', nvRating:'評価', nvPlaceholder:'どんな3-betもコールする…', nvSaved:'保存済み', nvTagNone:'ラベルなし', nvTagRed:'危険', nvTagOrange:'アグレッシブ', nvTagYellow:'要注意', nvTagGreen:'フィッシュ', nvTagBlue:'タイト', nvTagPurple:'トリッキー', nvLabelPh:'ラベル名', nvLabelTip:'ラベル名を変更 — この色のすべてのプレイヤーに適用されます',
     ppMyStats:'自分の統計',

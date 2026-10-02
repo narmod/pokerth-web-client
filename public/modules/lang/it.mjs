@@ -20,7 +20,7 @@ export const strings = {
     // Mascotte animée (modules/mascot, extra web)
     mascotHello:'Ciao!', mascotBye:'A presto!', mascotTada:'Ta-dà!', mascotKing:'Il re del tavolo!', mascotAnyone:'C’è qualcuno?', mascotCheese:'Cheese!', mascotTable:'Un nuovo tavolo!', mascotMail:'Hai posta!', mascotBravo:'Ben fatto!',
     // Aide de l'As (modules/guide) — bouton / entrée de menu + option
-    guideBtn:'Aiuto dell’Asso', advGuide:'Aiuto dell’Asso: l’Asso spiega l’app passo dopo passo',
+    guideBtn:'Aiuto dell’Asso', advGuide:'Aiuto dell’Asso: l’Asso spiega l’app passo dopo passo', advAceDance:'L’Asso balla sulla musica del lettore',
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'La mia nota', nvRating:'Valutazione', nvPlaceholder:'Paga qualsiasi 3-bet…', nvSaved:'Salvato', nvTagNone:'Nessuna etichetta', nvTagRed:'Pericolo', nvTagOrange:'Aggressivo', nvTagYellow:'Da osservare', nvTagGreen:'Pesce', nvTagBlue:'Stretto', nvTagPurple:'Astuto', nvLabelPh:'Nome dell’etichetta', nvLabelTip:'Rinomina questa etichetta — vale per tutti i giocatori con questo colore',
     ppMyStats:'Le mie statistiche',

@@ -14,7 +14,7 @@ export const strings = {
     // Mascotte animée (modules/mascot, extra web)
     mascotHello:'Moi!', mascotBye:'Nähdään!', mascotTada:'Tadaa!', mascotKing:'Pöydän kuningas!', mascotAnyone:'Onko ketään?', mascotCheese:'Muikku!', mascotTable:'Uusi pöytä!', mascotMail:'Sinulle on postia!', mascotBravo:'Hienoa!',
     // Aide de l'As (modules/guide) — bouton / entrée de menu + option
-    guideBtn:'Ässän apu', advGuide:'Ässän apu: ässä selittää sovelluksen askel askeleelta',
+    guideBtn:'Ässän apu', advGuide:'Ässän apu: ässä selittää sovelluksen askel askeleelta', advAceDance:'Ässä tanssii soittimen musiikin tahtiin',
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'Muistiinpanoni', nvRating:'Arvio', nvPlaceholder:'Maksaa jokaisen 3-betin…', nvSaved:'Tallennettu', nvTagNone:'Ei tunnistetta', nvTagRed:'Vaarallinen', nvTagOrange:'Aggressiivinen', nvTagYellow:'Tarkkaile', nvTagGreen:'Kala', nvTagBlue:'Tiukka', nvTagPurple:'Ovela', nvLabelPh:'Tunnisteen nimi', nvLabelTip:'Nimeä tunniste uudelleen — koskee kaikkia tämän värin pelaajia',
     ppMyStats:'Omat tilastoni',

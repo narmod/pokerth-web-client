@@ -19,7 +19,7 @@ export const strings = {
     // Mascotte animée (modules/mascot, extra web)
     mascotHello:'ഹായ്!', mascotBye:'വീണ്ടും കാണാം!', mascotTada:'ടാ-ഡാ!', mascotKing:'മേശയുടെ രാജാവ്!', mascotAnyone:'ആരെങ്കിലുമുണ്ടോ?', mascotCheese:'ചീസ്!', mascotTable:'ഒരു പുതിയ മേശ!', mascotMail:'നിങ്ങൾക്ക് സന്ദേശമുണ്ട്!', mascotBravo:'കൊള്ളാം!',
     // Aide de l'As (modules/guide) — bouton / entrée de menu + option
-    guideBtn:'എയ്സിന്റെ സഹായം', advGuide:'എയ്സിന്റെ സഹായം: എയ്സ് ആപ്പ് ഘട്ടം ഘട്ടമായി വിശദീകരിക്കുന്നു',
+    guideBtn:'എയ്സിന്റെ സഹായം', advGuide:'എയ്സിന്റെ സഹായം: എയ്സ് ആപ്പ് ഘട്ടം ഘട്ടമായി വിശദീകരിക്കുന്നു', advAceDance:'പ്ലെയറിലെ സംഗീതത്തിനൊത്ത് എയ്സ് നൃത്തം ചെയ്യുന്നു',
     // Notes de joueur + étiquettes (modules/notes, extra web)
     nvTitle:'എന്റെ കുറിപ്പ്', nvRating:'റേറ്റിംഗ്', nvPlaceholder:'ഏത് 3-bet നും Call ചെയ്യും…', nvSaved:'സേവ് ചെയ്തു', nvTagNone:'ലേബൽ ഇല്ല', nvTagRed:'അപകടം', nvTagOrange:'ആക്രമണകാരി', nvTagYellow:'ശ്രദ്ധിക്കുക', nvTagGreen:'ഫിഷ്', nvTagBlue:'ടൈറ്റ്', nvTagPurple:'കൗശലക്കാരൻ', nvLabelPh:'ലേബലിന്റെ പേര്', nvLabelTip:'ഈ ലേബലിന്റെ പേര് മാറ്റുക — ഈ നിറമുള്ള എല്ലാ കളിക്കാർക്കും ബാധകം',
     ppMyStats:'എന്റെ സ്ഥിതിവിവരക്കണക്കുകൾ',
